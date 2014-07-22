@@ -1,0 +1,9 @@
+CMSIS
+=====
+
+link: http://www.arm.com/products/processors/cortex-m/cortex-microcontroller-software-interface-standard.php
+package name: CMSIS-SP-00300-r4p1-00rel0
+package version: V3.30
+download date: 2014-07-22
+
+Only headers from CMSIS-SP-00300-r4p1-00rel0\CMSIS\Include were copied from the package.
