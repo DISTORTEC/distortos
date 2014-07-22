@@ -1,0 +1,27 @@
+From 258f3b94c641e9b10357738ac83782232cc06838 Mon Sep 17 00:00:00 2001
+From: Kamil Szczygiel <distortec@distortec.com>
+Date: Tue, 22 Jul 2014 11:53:35 +0200
+Subject: [PATCH] architecture/ARM/external/CMSIS/core_cmFunc.h: add simple fix
+ for warning
+
+"unused parameter 'fpscr' [-Wunused-parameter]"
+---
+ source/architecture/ARM/external/CMSIS/core_cmFunc.h | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/source/architecture/ARM/external/CMSIS/core_cmFunc.h b/source/architecture/ARM/external/CMSIS/core_cmFunc.h
+index 0ff9386..53d39e7 100644
+--- a/source/architecture/ARM/external/CMSIS/core_cmFunc.h
++++ b/source/architecture/ARM/external/CMSIS/core_cmFunc.h
+@@ -601,6 +601,8 @@ __attribute__( ( always_inline ) ) __STATIC_INLINE void __set_FPSCR(uint32_t fps
+   __ASM volatile ("");
+   __ASM volatile ("VMSR fpscr, %0" : : "r" (fpscr) : "vfpcc");
+   __ASM volatile ("");
++#else
++  (void)fpscr;
+ #endif
+ }
+ 
+-- 
+1.8.1.msysgit.1
+
