@@ -1,6 +1,9 @@
 # tup database
 .tup/
 
+# build output
+output/
+
 # Eclipse project files
 .cproject
 .project
