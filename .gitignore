@@ -1,2 +1,7 @@
 # tup database
 .tup/
+
+# Eclipse project files
+.cproject
+.project
+.settings/
