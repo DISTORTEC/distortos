@@ -8,11 +8,11 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-07-21
+ * \date 2014-07-22
  */
 
-#ifndef ARMV7_M_SPECIALREGISTERS_H_
-#define ARMV7_M_SPECIALREGISTERS_H_
+#ifndef SOURCE_ARCHITECTURE_ARM_ARMV7_M_ARMV7_M_SPECIALREGISTERS_H_
+#define SOURCE_ARCHITECTURE_ARM_ARMV7_M_ARMV7_M_SPECIALREGISTERS_H_
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | PRIMASK - Register to mask out configurable exceptions
@@ -40,4 +40,4 @@
 #define CONTROL_THREAD_UNPRIVILEGED			(1 << CONTROL_THREAD_UNPRIVILEGED_bit)
 #define CONTROL_ALTERNATE_STACK				(1 << CONTROL_ALTERNATE_STACK_bit)
 
-#endif	// ARMV7_M_SPECIALREGISTERS_H_
+#endif	// SOURCE_ARCHITECTURE_ARM_ARMV7_M_ARMV7_M_SPECIALREGISTERS_H_
