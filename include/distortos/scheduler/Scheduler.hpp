@@ -40,6 +40,12 @@ public:
 
 	void * switchContext(void *stack_pointer);
 
+	/**
+	 * \brief Yields time slot of the scheduler to next thread.
+	 */
+
+	void yield() const;
+
 	 ThreadControlBlock *threadControlBlocks[2];
 
 	 ThreadControlBlock *currentThreadControlBlock;
