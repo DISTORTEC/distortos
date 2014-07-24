@@ -40,7 +40,6 @@ void * test1(void *)
 		++i;
 		++d;
 		d = sin(cos(d *  M_PI / 180.0) * M_PI / 180.0);
-		distortos::scheduler::schedulerInstance.yield();
 	}
 
 	return nullptr;
@@ -60,7 +59,6 @@ void * test2(void *)
 		++i;
 		++d;
 		d = tan(1 / (tan(d *  M_PI / 180.0) * M_PI / 180.0));
-		distortos::scheduler::schedulerInstance.yield();
 	}
 
 	return nullptr;
