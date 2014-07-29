@@ -8,11 +8,14 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-07-24
+ * \date 2014-07-29
  */
 
 #ifndef INCLUDE_DISTORTOS_SCHEDULER_SCHEDULER_HPP_
 #define INCLUDE_DISTORTOS_SCHEDULER_SCHEDULER_HPP_
+
+#include <list>
+#include <functional>
 
 namespace distortos
 {
@@ -27,6 +30,9 @@ class ThreadControlBlock;
 class Scheduler
 {
 public:
+
+	/// underlying type of list of ThreadControlBlock elements
+	using ThreadControlBlockList = std::list<std::reference_wrapper<ThreadControlBlock>>;
 
 	/**
 	 * \brief Called by architecture-specific code to do final context switch.
@@ -46,9 +52,11 @@ public:
 
 	void yield() const;
 
-	 ThreadControlBlock *threadControlBlocks[2];
+	/// iterator to the currently active ThreadControlBlock
+	ThreadControlBlockList::iterator currentThreadControlBlock;
 
-	 ThreadControlBlock *currentThreadControlBlock;
+	/// list of ThreadControlBlock elements
+	ThreadControlBlockList threadControlBlockList;
 };
 
 }	// namespace scheduler

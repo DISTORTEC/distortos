@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-07-24
+ * \date 2014-07-29
  */
 
 #include "distortos/scheduler/schedulerInstance.hpp"
@@ -20,15 +20,14 @@
 +---------------------------------------------------------------------------------------------------------------------*/
 
 /**
- * \brief Wrapper for
- * void * distortos::scheduler::schedulerInstance.currentThreadControlBlock->getStack().getStackPointer()
+ * \brief Wrapper for getStack().getStackPointer() of schedulerInstance.currentThreadControlBlock element
  *
  * \return current value of stack pointer for first task
  */
 
 extern "C" void * getStackPointerWrapper()
 {
-	return distortos::scheduler::schedulerInstance.currentThreadControlBlock->getStack().getStackPointer();
+	return (*distortos::scheduler::schedulerInstance.currentThreadControlBlock).get().getStack().getStackPointer();
 }
 
 /**

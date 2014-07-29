@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-07-24
+ * \date 2014-07-29
  */
 
 #include "distortos/scheduler/Scheduler.hpp"
@@ -27,12 +27,15 @@ namespace scheduler
 
 void * Scheduler::switchContext(void *stack_pointer)
 {
-	currentThreadControlBlock->getStack().setStackPointer(stack_pointer);
+	(*currentThreadControlBlock).get().getStack().setStackPointer(stack_pointer);
 
-	currentThreadControlBlock = (currentThreadControlBlock == threadControlBlocks[0]) ? threadControlBlocks[1] :
-			threadControlBlocks[0];
+	const auto previous_thread_control_block = *currentThreadControlBlock;
+	threadControlBlockList.erase(currentThreadControlBlock);
+	threadControlBlockList.emplace_back(previous_thread_control_block);
 
-	return currentThreadControlBlock->getStack().getStackPointer();
+	currentThreadControlBlock = threadControlBlockList.begin();
+
+	return (*currentThreadControlBlock).get().getStack().getStackPointer();
 }
 
 }	// namespace scheduler

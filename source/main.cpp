@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-07-24
+ * \date 2014-07-29
  */
 
 #include "distortos/scheduler/ThreadControlBlock.hpp"
@@ -92,9 +92,11 @@ distortos::scheduler::ThreadControlBlock tcb2 {stack2, sizeof(stack2), test2, nu
 
 int main()
 {
-	distortos::scheduler::schedulerInstance.threadControlBlocks[0] = &tcb1;
-	distortos::scheduler::schedulerInstance.threadControlBlocks[1] = &tcb2;
-	distortos::scheduler::schedulerInstance.currentThreadControlBlock = &tcb1;
+	distortos::scheduler::schedulerInstance.threadControlBlockList.emplace_back(tcb1);
+	distortos::scheduler::schedulerInstance.threadControlBlockList.emplace_back(tcb2);
+
+	distortos::scheduler::schedulerInstance.currentThreadControlBlock =
+			distortos::scheduler::schedulerInstance.threadControlBlockList.begin();
 
 	distortos::architecture::startScheduling();
 
