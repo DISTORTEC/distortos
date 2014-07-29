@@ -29,12 +29,12 @@ namespace scheduler
 
 void Scheduler::add(ThreadControlBlock &thread_control_block)
 {
-	threadControlBlockList.emplace_back(thread_control_block);
+	threadControlBlockList_.emplace_back(thread_control_block);
 }
 
 void Scheduler::start()
 {
-	currentThreadControlBlock = threadControlBlockList.begin();
+	currentThreadControlBlock_ = threadControlBlockList_.begin();
 
 	architecture::startScheduling();
 }
@@ -43,13 +43,13 @@ void * Scheduler::switchContext(void *stack_pointer)
 {
 	getCurrentThreadControlBlock().getStack().setStackPointer(stack_pointer);
 
-	const auto previous_thread_control_block = *currentThreadControlBlock;
-	threadControlBlockList.erase(currentThreadControlBlock);
-	threadControlBlockList.emplace_back(previous_thread_control_block);
+	const auto previous_thread_control_block = *currentThreadControlBlock_;
+	threadControlBlockList_.erase(currentThreadControlBlock_);
+	threadControlBlockList_.emplace_back(previous_thread_control_block);
 
-	currentThreadControlBlock = threadControlBlockList.begin();
+	currentThreadControlBlock_ = threadControlBlockList_.begin();
 
-	return (*currentThreadControlBlock).get().getStack().getStackPointer();
+	return (*currentThreadControlBlock_).get().getStack().getStackPointer();
 }
 
 }	// namespace scheduler

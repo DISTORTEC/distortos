@@ -46,7 +46,7 @@ public:
 	 * \return reference to currently active ThreadControlBlock
 	 */
 
-	ThreadControlBlock & getCurrentThreadControlBlock() const { return *currentThreadControlBlock; }
+	ThreadControlBlock & getCurrentThreadControlBlock() const { return *currentThreadControlBlock_; }
 
 	/**
 	 * \brief Starts scheduling.
@@ -75,11 +75,13 @@ public:
 
 	void yield() const;
 
+private:
+
 	/// iterator to the currently active ThreadControlBlock
-	ThreadControlBlockList::iterator currentThreadControlBlock;
+	ThreadControlBlockList::iterator currentThreadControlBlock_;
 
 	/// list of ThreadControlBlock elements
-	ThreadControlBlockList threadControlBlockList;
+	ThreadControlBlockList threadControlBlockList_;
 };
 
 }	// namespace scheduler
