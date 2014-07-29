@@ -29,6 +29,8 @@ namespace scheduler
 
 void Scheduler::start()
 {
+	currentThreadControlBlock = threadControlBlockList.begin();
+
 	architecture::startScheduling();
 }
 

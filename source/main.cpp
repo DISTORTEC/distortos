@@ -156,9 +156,6 @@ int main()
 	distortos::scheduler::schedulerInstance.threadControlBlockList.emplace_back(tcb3);
 	distortos::scheduler::schedulerInstance.threadControlBlockList.emplace_back(tcb4);
 
-	distortos::scheduler::schedulerInstance.currentThreadControlBlock =
-			distortos::scheduler::schedulerInstance.threadControlBlockList.begin();
-
 	distortos::scheduler::schedulerInstance.start();
 
 	return 0;
