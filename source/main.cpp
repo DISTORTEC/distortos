@@ -14,7 +14,6 @@
 #include "distortos/scheduler/ThreadControlBlock.hpp"
 #include "distortos/scheduler/schedulerInstance.hpp"
 #include "distortos/scheduler/Scheduler.hpp"
-#include "distortos/architecture.hpp"
 
 #include <random>
 
@@ -160,7 +159,7 @@ int main()
 	distortos::scheduler::schedulerInstance.currentThreadControlBlock =
 			distortos::scheduler::schedulerInstance.threadControlBlockList.begin();
 
-	distortos::architecture::startScheduling();
+	distortos::scheduler::schedulerInstance.start();
 
 	return 0;
 }
