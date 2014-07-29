@@ -35,6 +35,15 @@ public:
 	using ThreadControlBlockList = std::list<std::reference_wrapper<ThreadControlBlock>>;
 
 	/**
+	 * \brief Starts scheduling.
+	 *
+	 * Initializes scheduler and all required hardware/software to perform context switching and starts the scheduling.
+	 */
+
+	__attribute__ ((noreturn))
+	void start();
+
+	/**
 	 * \brief Called by architecture-specific code to do final context switch.
 	 *
 	 * Current task is suspended and the next available task is started.

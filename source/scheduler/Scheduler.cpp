@@ -15,6 +15,8 @@
 
 #include "distortos/scheduler/ThreadControlBlock.hpp"
 
+#include "distortos/architecture.hpp"
+
 namespace distortos
 {
 
@@ -24,6 +26,11 @@ namespace scheduler
 /*---------------------------------------------------------------------------------------------------------------------+
 | public functions
 +---------------------------------------------------------------------------------------------------------------------*/
+
+void Scheduler::start()
+{
+	architecture::startScheduling();
+}
 
 void * Scheduler::switchContext(void *stack_pointer)
 {
