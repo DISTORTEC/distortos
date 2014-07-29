@@ -26,6 +26,30 @@ namespace architecture
 {
 
 /**
+ * \brief Disables interrupt masking.
+ *
+ * Restores previous interrupt masking state (before matching enableInterruptMasking() was called), enabling some (maybe
+ * all) interrupts.
+ *
+ * \param [in] interrupt_mask is the value of interrupts' mask, must come from previous call to enableInterruptMasking()
+ */
+
+void disableInterruptMasking(InterruptMask interrupt_mask);
+
+/**
+ * \brief Enables interrupt masking.
+ *
+ * Disables normal-priority interrupts.
+ *
+ * \note High-priority interrupts are not controlled by distortos, so they may be left enabled. Support for that feature
+ * is architecture-dependent.
+ *
+ * \return previous value of interrupts' mask, must be used for matched disableInterruptMasking() call
+ */
+
+InterruptMask enableInterruptMasking();
+
+/**
  * \brief Architecture-specific stack initialization.
  *
  * This function fills provided buffer with hardware and software stack frame and calculates value of stack pointer
