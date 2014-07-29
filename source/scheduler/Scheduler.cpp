@@ -41,7 +41,7 @@ void Scheduler::start()
 
 void * Scheduler::switchContext(void *stack_pointer)
 {
-	(*currentThreadControlBlock).get().getStack().setStackPointer(stack_pointer);
+	getCurrentThreadControlBlock().getStack().setStackPointer(stack_pointer);
 
 	const auto previous_thread_control_block = *currentThreadControlBlock;
 	threadControlBlockList.erase(currentThreadControlBlock);
