@@ -20,14 +20,14 @@
 +---------------------------------------------------------------------------------------------------------------------*/
 
 /**
- * \brief Wrapper for getStack().getStackPointer() of schedulerInstance.currentThreadControlBlock element
+ * \brief Wrapper for getStack().getStackPointer() of current ThreadControlBlock element
  *
  * \return current value of stack pointer for first task
  */
 
 extern "C" void * getStackPointerWrapper()
 {
-	return (*distortos::scheduler::schedulerInstance.currentThreadControlBlock).get().getStack().getStackPointer();
+	return distortos::scheduler::schedulerInstance.getCurrentThreadControlBlock().getStack().getStackPointer();
 }
 
 /**
