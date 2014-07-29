@@ -151,10 +151,10 @@ distortos::scheduler::ThreadControlBlock tcb4 {stack4, sizeof(stack4), test4, nu
 
 int main()
 {
-	distortos::scheduler::schedulerInstance.threadControlBlockList.emplace_back(tcb1);
-	distortos::scheduler::schedulerInstance.threadControlBlockList.emplace_back(tcb2);
-	distortos::scheduler::schedulerInstance.threadControlBlockList.emplace_back(tcb3);
-	distortos::scheduler::schedulerInstance.threadControlBlockList.emplace_back(tcb4);
+	distortos::scheduler::schedulerInstance.add(tcb1);
+	distortos::scheduler::schedulerInstance.add(tcb2);
+	distortos::scheduler::schedulerInstance.add(tcb3);
+	distortos::scheduler::schedulerInstance.add(tcb4);
 
 	distortos::scheduler::schedulerInstance.start();
 
