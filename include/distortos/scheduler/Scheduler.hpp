@@ -43,6 +43,12 @@ public:
 	void add(ThreadControlBlock &thread_control_block);
 
 	/**
+	 * \return reference to currently active ThreadControlBlock
+	 */
+
+	ThreadControlBlock & getCurrentThreadControlBlock() const { return *currentThreadControlBlock; }
+
+	/**
 	 * \brief Starts scheduling.
 	 *
 	 * Initializes scheduler and all required hardware/software to perform context switching and starts the scheduling.
