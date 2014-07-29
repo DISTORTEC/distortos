@@ -27,6 +27,11 @@ namespace scheduler
 | public functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
+void Scheduler::add(ThreadControlBlock &thread_control_block)
+{
+	threadControlBlockList.emplace_back(thread_control_block);
+}
+
 void Scheduler::start()
 {
 	currentThreadControlBlock = threadControlBlockList.begin();

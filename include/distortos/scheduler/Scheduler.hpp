@@ -35,6 +35,14 @@ public:
 	using ThreadControlBlockList = std::list<std::reference_wrapper<ThreadControlBlock>>;
 
 	/**
+	 * \brief Adds new ThreadControlBlock to scheduler.
+	 *
+	 * \param [in] thread_control_block is a reference to added ThreadControlBlock object
+	 */
+
+	void add(ThreadControlBlock &thread_control_block);
+
+	/**
 	 * \brief Starts scheduling.
 	 *
 	 * Initializes scheduler and all required hardware/software to perform context switching and starts the scheduling.
