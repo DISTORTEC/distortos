@@ -76,6 +76,16 @@ public:
 	void * switchContext(void *stack_pointer);
 
 	/**
+	 * \brief Handler of "tick" interrupt.
+	 *
+	 * \note this must not be called by user code
+	 *
+	 * \return true if context switch is required, false otherwise
+	 */
+
+	bool tickInterruptHandler();
+
+	/**
 	 * \brief Yields time slot of the scheduler to next thread.
 	 */
 

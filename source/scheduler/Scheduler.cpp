@@ -55,6 +55,11 @@ void * Scheduler::switchContext(void *stack_pointer)
 	return getCurrentThreadControlBlock().getStack().getStackPointer();
 }
 
+bool Scheduler::tickInterruptHandler()
+{
+	return true;
+}
+
 }	// namespace scheduler
 
 }	// namespace distortos
