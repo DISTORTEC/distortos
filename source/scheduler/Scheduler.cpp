@@ -16,6 +16,7 @@
 #include "distortos/scheduler/ThreadControlBlock.hpp"
 
 #include "distortos/architecture.hpp"
+#include "distortos/architecture/InterruptMaskingLock.hpp"
 
 namespace distortos
 {
@@ -57,6 +58,8 @@ void * Scheduler::switchContext(void *stack_pointer)
 
 bool Scheduler::tickInterruptHandler()
 {
+	architecture::InterruptMaskingLock lock;
+
 	return true;
 }
 
