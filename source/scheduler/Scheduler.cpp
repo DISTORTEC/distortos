@@ -48,13 +48,11 @@ void * Scheduler::switchContext(void *stack_pointer)
 {
 	getCurrentThreadControlBlock().getStack().setStackPointer(stack_pointer);
 
-	const auto previous_thread_control_block = *currentThreadControlBlock_;
-	threadControlBlockList_.erase(currentThreadControlBlock_);
-	threadControlBlockList_.emplace_back(previous_thread_control_block);
-
+	// move current thread to the end of same-priority group to implement round-robin scheduling
+	threadControlBlockList_.splice(threadControlBlockList_.end(), threadControlBlockList_, currentThreadControlBlock_);
 	currentThreadControlBlock_ = threadControlBlockList_.begin();
 
-	return (*currentThreadControlBlock_).get().getStack().getStackPointer();
+	return getCurrentThreadControlBlock().getStack().getStackPointer();
 }
 
 }	// namespace scheduler
