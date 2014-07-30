@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-07-29
+ * \date 2014-07-30
  */
 
 #ifndef INCLUDE_DISTORTOS_SCHEDULER_SCHEDULER_HPP_
@@ -33,6 +33,12 @@ public:
 
 	/// underlying type of list of ThreadControlBlock elements
 	using ThreadControlBlockList = std::list<std::reference_wrapper<ThreadControlBlock>>;
+
+	/**
+	 * \brief Scheduler's constructor
+	 */
+
+	Scheduler();
 
 	/**
 	 * \brief Adds new ThreadControlBlock to scheduler.
