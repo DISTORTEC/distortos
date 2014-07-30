@@ -18,6 +18,8 @@
 #include "distortos/architecture.hpp"
 #include "distortos/architecture/InterruptMaskingLock.hpp"
 
+#include "distortos/distortosConfiguration.h"
+
 namespace distortos
 {
 
@@ -43,6 +45,16 @@ uint64_t Scheduler::getTickCount() const
 {
 	architecture::InterruptMaskingLock lock;
 	return tickCount_;
+}
+
+Scheduler::TimePoint Scheduler::getTimePoint() const
+{
+	using TickDuration = std::chrono::duration<TimePoint::duration::rep, std::ratio<1, CONFIG_TICK_RATE_HZ>>;
+
+	const auto tick_count = getTickCount();
+	const TickDuration duration {tick_count};
+	const TimePoint time_point {duration};
+	return time_point;
 }
 
 void Scheduler::start()

@@ -16,6 +16,7 @@
 
 #include <list>
 #include <functional>
+#include <chrono>
 
 namespace distortos
 {
@@ -30,6 +31,16 @@ class ThreadControlBlock;
 class Scheduler
 {
 public:
+
+	/// Scheduler's clock (as in std::chrono)
+	struct Clock
+	{
+		/// duration (as in std::chrono) used by Scheduler's clock
+		using duration = std::chrono::nanoseconds;
+	};
+
+	/// time point (as in std::chrono) of Scheduler
+	using TimePoint = std::chrono::time_point<Clock>;
 
 	/// underlying type of list of ThreadControlBlock elements
 	using ThreadControlBlockList = std::list<std::reference_wrapper<ThreadControlBlock>>;
@@ -59,6 +70,12 @@ public:
 	 */
 
 	uint64_t getTickCount() const;
+
+	/**
+	 * \return current time point of Scheduler's clock
+	 */
+
+	TimePoint getTimePoint() const;
 
 	/**
 	 * \brief Starts scheduling.
