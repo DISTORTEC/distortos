@@ -28,7 +28,8 @@ namespace scheduler
 | public functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-Scheduler::Scheduler()
+Scheduler::Scheduler() :
+		tickCount_{0}
 {
 
 }
@@ -59,6 +60,8 @@ void * Scheduler::switchContext(void *stack_pointer)
 bool Scheduler::tickInterruptHandler()
 {
 	architecture::InterruptMaskingLock lock;
+
+	++tickCount_;
 
 	return true;
 }

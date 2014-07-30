@@ -98,6 +98,9 @@ private:
 
 	/// list of ThreadControlBlock elements
 	ThreadControlBlockList threadControlBlockList_;
+
+	/// tick count
+	uint64_t tickCount_;
 };
 
 }	// namespace scheduler
