@@ -55,6 +55,12 @@ public:
 	ThreadControlBlock & getCurrentThreadControlBlock() const { return *currentThreadControlBlock_; }
 
 	/**
+	 * \return current value of tick count
+	 */
+
+	uint64_t getTickCount() const;
+
+	/**
 	 * \brief Starts scheduling.
 	 *
 	 * Initializes scheduler and all required hardware/software to perform context switching and starts the scheduling.

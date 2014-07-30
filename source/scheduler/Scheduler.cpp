@@ -39,6 +39,12 @@ void Scheduler::add(ThreadControlBlock &thread_control_block)
 	threadControlBlockList_.emplace_back(thread_control_block);
 }
 
+uint64_t Scheduler::getTickCount() const
+{
+	architecture::InterruptMaskingLock lock;
+	return tickCount_;
+}
+
 void Scheduler::start()
 {
 	currentThreadControlBlock_ = threadControlBlockList_.begin();
