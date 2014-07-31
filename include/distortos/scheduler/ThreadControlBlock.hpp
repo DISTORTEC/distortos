@@ -29,6 +29,15 @@ class ThreadControlBlock
 {
 public:
 
+	/// state of the thread
+	enum class State : uint8_t
+	{
+		/// state in which thread is created, before being added to Scheduler
+		New,
+		/// thread is runnable
+		Runnable,
+	};
+
 	/**
 	 * \brief ThreadControlBlock constructor.
 	 *
@@ -50,6 +59,12 @@ public:
 	/// \return priority of ThreadControlBlock
 	uint8_t getPriority() const { return priority_; }
 
+	/// \return current state of object
+	State getState() const { return state_; }
+
+	/// \param [in] state is the new state of object
+	void setState(const State state) { state_ = state; }
+
 private:
 
 	/// internal stack object
@@ -57,6 +72,9 @@ private:
 
 	/// thread's priority, 0 - lowest, UINT8_MAX - highest
 	uint8_t priority_;
+
+	/// current state of object
+	State state_;
 };
 
 }	// namespace scheduler
