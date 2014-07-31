@@ -119,6 +119,11 @@ bool Scheduler::tickInterruptHandler()
 	return true;
 }
 
+void Scheduler::yield() const
+{
+	architecture::requestContextSwitch();
+}
+
 }	// namespace scheduler
 
 }	// namespace distortos
