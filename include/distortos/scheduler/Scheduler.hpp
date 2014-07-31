@@ -124,6 +124,9 @@ private:
 	/// list of ThreadControlBlock elements in "runnable" state
 	ThreadControlBlockList runnableList_;
 
+	/// list of ThreadControlBlock elements in "sleeping" state
+	ThreadControlBlockList sleepingList_;
+
 	/// tick count
 	uint64_t tickCount_;
 };
