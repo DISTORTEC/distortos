@@ -50,6 +50,8 @@ void * test1(void * const argument)
 		++i;
 		d = distribution(generator);
 		d = sin(cos(d *  M_PI / 180.0) * M_PI / 180.0);
+
+		distortos::scheduler::schedulerInstance.sleepFor(1000);
 	}
 
 	return nullptr;
@@ -78,6 +80,8 @@ void * test2(void * const argument)
 		++i;
 		d = distribution(generator);
 		d = tan(1 / (tan(d *  M_PI / 180.0) * M_PI / 180.0));
+
+		distortos::scheduler::schedulerInstance.sleepFor(2000);
 	}
 
 	return nullptr;
@@ -106,6 +110,8 @@ void * test3(void * const argument)
 		++i;
 		d = distribution(generator);
 		d = log10(d * 11);
+
+		distortos::scheduler::schedulerInstance.sleepFor(3000);
 	}
 
 	return nullptr;
@@ -134,6 +140,8 @@ void * test4(void * const argument)
 		++i;
 		d = distribution(generator);
 		d = log2(d * 3);
+
+		distortos::scheduler::schedulerInstance.sleepFor(4000);
 	}
 
 	return nullptr;
