@@ -70,6 +70,8 @@ void Scheduler::add(ThreadControlBlock &thread_control_block)
 	const auto priority = thread_control_block.getPriority();
 	const auto insert_position = findInsertPosition_(threadControlBlockList_, priority);
 	threadControlBlockList_.emplace(insert_position, thread_control_block);
+
+	thread_control_block.setState(ThreadControlBlock::State::Runnable);
 }
 
 uint64_t Scheduler::getTickCount() const
