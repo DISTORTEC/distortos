@@ -8,15 +8,11 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-07-28
+ * \date 2014-07-31
  */
 
 #include "distortos/scheduler/schedulerInstance.hpp"
 #include "distortos/scheduler/Scheduler.hpp"
-
-#include "distortos/distortosConfiguration.h"
-
-#include "distortos/chip/CMSIS-proxy.h"
 
 
 /*---------------------------------------------------------------------------------------------------------------------+
@@ -49,22 +45,14 @@ extern "C" __attribute__ ((naked)) void PendSV_Handler()
 			"	mrs		r0, PSP								\n"	// save context of current thread
 			"	stmdb	r0!, {r4-r11}						\n"
 			"												\n"
-			"	mov		r1, %[basepri]						\n"	// disable interrupts below configured priority
-			"	msr		BASEPRI, r1							\n"
-			"												\n"
 			"	mov		r4, lr								\n"
 			"	bl		schedulerSwitchContextWrapper		\n"	// switch context
 			"	mov		lr, r4								\n"
-			"												\n"
-			"	mov		r1, #0								\n"	// enable all interrupts
-			"	msr		BASEPRI, r1							\n"
 			"												\n"
 			"	ldmia	r0!, {r4-r11}						\n"	// load context of new thread
 			"	msr		PSP, r0								\n"
 			"												\n"
 			"	bx		lr									\n"	// return to new thread
-
-			:: [basepri] "i" (CONFIG_ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI << __NVIC_PRIO_BITS)
 	);
 
 	__builtin_unreachable();
