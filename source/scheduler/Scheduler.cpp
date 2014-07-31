@@ -126,6 +126,19 @@ bool Scheduler::tickInterruptHandler()
 
 	++tickCount_;
 
+	auto iterator = sleepingList_.begin();
+
+	// wake all threads that reached their timeout
+	while (iterator != sleepingList_.end() && iterator->get().getSleepUntil() <= tickCount_)
+	{
+		const auto priority = iterator->get().getPriority();
+		const auto insert_position = findInsertPosition_(runnableList_, priority);
+		runnableList_.splice(insert_position, sleepingList_, iterator);
+		iterator->get().setState(ThreadControlBlock::State::Runnable);
+
+		++iterator;
+	}
+
 	return true;
 }
 
