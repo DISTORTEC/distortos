@@ -103,10 +103,15 @@ void * Scheduler::switchContext(void *stack_pointer)
 
 	getCurrentThreadControlBlock().getStack().setStackPointer(stack_pointer);
 
-	// move current thread to the end of same-priority group to implement round-robin scheduling
-	const auto priority = getCurrentThreadControlBlock().getPriority();
-	const auto insert_position = findInsertPosition_(threadControlBlockList_, priority);
-	threadControlBlockList_.splice(insert_position, threadControlBlockList_, currentThreadControlBlock_);
+	// do the rotation only if the object is on the "runnable" list
+	if (getCurrentThreadControlBlock().getState() == ThreadControlBlock::State::Runnable)
+	{
+		// move current thread to the end of same-priority group to implement round-robin scheduling
+		const auto priority = getCurrentThreadControlBlock().getPriority();
+		const auto insert_position = findInsertPosition_(threadControlBlockList_, priority);
+		threadControlBlockList_.splice(insert_position, threadControlBlockList_, currentThreadControlBlock_);
+	}
+
 	currentThreadControlBlock_ = threadControlBlockList_.begin();
 
 	return getCurrentThreadControlBlock().getStack().getStackPointer();
