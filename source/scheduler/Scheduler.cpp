@@ -198,12 +198,13 @@ bool Scheduler::tickInterruptHandler()
 		++iterator;
 	}
 
-	return true;
+	return isContextSwitchRequired_();
 }
 
 void Scheduler::yield() const
 {
-	architecture::requestContextSwitch();
+	if (isContextSwitchRequired_() == true)
+		architecture::requestContextSwitch();
 }
 
 /*---------------------------------------------------------------------------------------------------------------------+
