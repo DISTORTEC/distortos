@@ -68,8 +68,8 @@ void Scheduler::add(ThreadControlBlock &thread_control_block)
 	architecture::InterruptMaskingLock lock;
 
 	const auto priority = thread_control_block.getPriority();
-	const auto insert_position = findInsertPosition_(threadControlBlockList_, priority);
-	threadControlBlockList_.emplace(insert_position, thread_control_block);
+	const auto insert_position = findInsertPosition_(runnableList_, priority);
+	runnableList_.emplace(insert_position, thread_control_block);
 
 	thread_control_block.setState(ThreadControlBlock::State::Runnable);
 }
@@ -92,7 +92,7 @@ Scheduler::TimePoint Scheduler::getTimePoint() const
 
 void Scheduler::start()
 {
-	currentThreadControlBlock_ = threadControlBlockList_.begin();
+	currentThreadControlBlock_ = runnableList_.begin();
 
 	architecture::startScheduling();
 }
@@ -108,11 +108,11 @@ void * Scheduler::switchContext(void *stack_pointer)
 	{
 		// move current thread to the end of same-priority group to implement round-robin scheduling
 		const auto priority = getCurrentThreadControlBlock().getPriority();
-		const auto insert_position = findInsertPosition_(threadControlBlockList_, priority);
-		threadControlBlockList_.splice(insert_position, threadControlBlockList_, currentThreadControlBlock_);
+		const auto insert_position = findInsertPosition_(runnableList_, priority);
+		runnableList_.splice(insert_position, runnableList_, currentThreadControlBlock_);
 	}
 
-	currentThreadControlBlock_ = threadControlBlockList_.begin();
+	currentThreadControlBlock_ = runnableList_.begin();
 
 	return getCurrentThreadControlBlock().getStack().getStackPointer();
 }

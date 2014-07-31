@@ -121,8 +121,8 @@ private:
 	/// iterator to the currently active ThreadControlBlock
 	ThreadControlBlockList::iterator currentThreadControlBlock_;
 
-	/// list of ThreadControlBlock elements
-	ThreadControlBlockList threadControlBlockList_;
+	/// list of ThreadControlBlock elements in "runnable" state
+	ThreadControlBlockList runnableList_;
 
 	/// tick count
 	uint64_t tickCount_;
