@@ -80,6 +80,18 @@ public:
 	TimePoint getTimePoint() const;
 
 	/**
+	 * \brief Makes the calling (current) thread sleep for at least given number of ticks.
+	 *
+	 * Current thread's state is changed to "sleeping".
+	 *
+	 * \note To fulfill the "at least" requirement, one additional tick is always added to the sleep duration.
+	 *
+	 * \param [in] ticks is the number of ticks after which the thread will be woken
+	 */
+
+	void sleepFor(uint64_t ticks);
+
+	/**
 	 * \brief Makes the calling (current) thread sleep until some tick value is reached.
 	 *
 	 * Current thread's state is changed to "sleeping".

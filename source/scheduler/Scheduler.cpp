@@ -111,6 +111,11 @@ Scheduler::TimePoint Scheduler::getTimePoint() const
 	return time_point;
 }
 
+void Scheduler::sleepFor(const uint64_t ticks)
+{
+	sleepUntil(getTickCount() + ticks + 1);
+}
+
 void Scheduler::sleepUntil(const uint64_t tick_value)
 {
 	architecture::InterruptMaskingLock lock;
