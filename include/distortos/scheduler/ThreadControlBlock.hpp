@@ -59,8 +59,14 @@ public:
 	/// \return priority of ThreadControlBlock
 	uint8_t getPriority() const { return priority_; }
 
+	/// \return tick count value for waking the thread from sleeping state
+	uint64_t getSleepUntil() const { return sleepUntil_; }
+
 	/// \return current state of object
 	State getState() const { return state_; }
+
+	/// \param [in] sleep_until is the tick count value for waking the thread from sleeping state
+	void setSleepUntil(const uint64_t sleep_until) { sleepUntil_ = sleep_until; }
 
 	/// \param [in] state is the new state of object
 	void setState(const State state) { state_ = state; }
