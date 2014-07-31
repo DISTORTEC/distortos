@@ -31,8 +31,11 @@ namespace
  * \brief Test thread
  */
 
-void * test1(void *)
+void * test1(void * const argument)
 {
+	volatile auto name = static_cast<const char *>(argument);
+	(void)name;
+
 	volatile uint32_t i = 0;
 	volatile double d;
 	std::default_random_engine generator;
@@ -40,6 +43,10 @@ void * test1(void *)
 
 	while (1)
 	{
+		const volatile auto nanoseconds =
+				distortos::scheduler::schedulerInstance.getTimePoint().time_since_epoch().count();
+		(void)nanoseconds;
+
 		++i;
 		d = distribution(generator);
 		d = sin(cos(d *  M_PI / 180.0) * M_PI / 180.0);
@@ -52,8 +59,11 @@ void * test1(void *)
  * \brief Test thread
  */
 
-void * test2(void *)
+void * test2(void * const argument)
 {
+	volatile auto name = static_cast<const char *>(argument);
+	(void)name;
+
 	volatile uint32_t i = 0;
 	volatile double d;
 	std::default_random_engine generator;
@@ -61,6 +71,10 @@ void * test2(void *)
 
 	while (1)
 	{
+		const volatile auto nanoseconds =
+				distortos::scheduler::schedulerInstance.getTimePoint().time_since_epoch().count();
+		(void)nanoseconds;
+
 		++i;
 		d = distribution(generator);
 		d = tan(1 / (tan(d *  M_PI / 180.0) * M_PI / 180.0));
@@ -73,8 +87,11 @@ void * test2(void *)
  * \brief Test thread
  */
 
-void * test3(void *)
+void * test3(void * const argument)
 {
+	volatile auto name = static_cast<const char *>(argument);
+	(void)name;
+
 	volatile uint32_t i = 0;
 	volatile double d;
 	std::default_random_engine generator;
@@ -82,6 +99,10 @@ void * test3(void *)
 
 	while (1)
 	{
+		const volatile auto nanoseconds =
+				distortos::scheduler::schedulerInstance.getTimePoint().time_since_epoch().count();
+		(void)nanoseconds;
+
 		++i;
 		d = distribution(generator);
 		d = log10(d * 11);
@@ -94,8 +115,11 @@ void * test3(void *)
  * \brief Test thread
  */
 
-void * test4(void *)
+void * test4(void * const argument)
 {
+	volatile auto name = static_cast<const char *>(argument);
+	(void)name;
+
 	volatile uint32_t i = 0;
 	volatile double d;
 	std::default_random_engine generator;
@@ -103,6 +127,10 @@ void * test4(void *)
 
 	while (1)
 	{
+		const volatile auto nanoseconds =
+				distortos::scheduler::schedulerInstance.getTimePoint().time_since_epoch().count();
+		(void)nanoseconds;
+
 		++i;
 		d = distribution(generator);
 		d = log2(d * 3);
@@ -128,16 +156,16 @@ uint64_t stack3[128];
 uint64_t stack4[128];
 
 /// TCB with thread1
-distortos::scheduler::ThreadControlBlock tcb1 {stack1, sizeof(stack1), test1, nullptr, 1};
+distortos::scheduler::ThreadControlBlock tcb1 {stack1, sizeof(stack1), test1, const_cast<char *>("one"), 1};
 
 /// TCB with thread2
-distortos::scheduler::ThreadControlBlock tcb2 {stack2, sizeof(stack2), test2, nullptr, 1};
+distortos::scheduler::ThreadControlBlock tcb2 {stack2, sizeof(stack2), test2, const_cast<char *>("two"), 1};
 
 /// TCB with thread3
-distortos::scheduler::ThreadControlBlock tcb3 {stack3, sizeof(stack3), test3, nullptr, 1};
+distortos::scheduler::ThreadControlBlock tcb3 {stack3, sizeof(stack3), test3, const_cast<char *>("three"), 1};
 
 /// TCB with thread4
-distortos::scheduler::ThreadControlBlock tcb4 {stack4, sizeof(stack4), test4, nullptr, 1};
+distortos::scheduler::ThreadControlBlock tcb4 {stack4, sizeof(stack4), test4, const_cast<char *>("four"), 1};
 
 }	// namespace
 
