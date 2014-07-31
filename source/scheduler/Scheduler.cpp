@@ -52,6 +52,26 @@ Scheduler::ThreadControlBlockList::iterator findInsertPosition_(Scheduler::Threa
 	);
 }
 
+/**
+ * \brief Finds insert position after elements with smaller "sleep until" tick value.
+ *
+ * \param [in] list is a reference to searched list of elements
+ * \param [in] tick_value is the "sleep until" tick value which is searched
+ *
+ * \return iterator to insert position - element after the last element with lower "sleep until" tick value
+ */
+
+Scheduler::ThreadControlBlockList::iterator findInsertPosition_(Scheduler::ThreadControlBlockList &list,
+		const uint64_t tick_value)
+{
+	return std::find_if(list.begin(), list.end(),
+			[tick_value](const std::remove_reference<decltype(list)>::type::value_type &tcb) -> bool
+			{
+				return tcb.get().getSleepUntil() > tick_value;
+			}
+	);
+}
+
 }	// namespace
 
 /*---------------------------------------------------------------------------------------------------------------------+
@@ -89,6 +109,20 @@ Scheduler::TimePoint Scheduler::getTimePoint() const
 	const TickDuration duration {tick_count};
 	const TimePoint time_point {duration};
 	return time_point;
+}
+
+void Scheduler::sleepUntil(const uint64_t tick_value)
+{
+	architecture::InterruptMaskingLock lock;
+
+	getCurrentThreadControlBlock().setSleepUntil(tick_value);
+
+	const auto insert_position = findInsertPosition_(sleepingList_, tick_value);
+	sleepingList_.splice(insert_position, runnableList_, currentThreadControlBlock_);
+
+	getCurrentThreadControlBlock().setState(ThreadControlBlock::State::Sleeping);
+
+	yield();
 }
 
 void Scheduler::start()

@@ -80,6 +80,16 @@ public:
 	TimePoint getTimePoint() const;
 
 	/**
+	 * \brief Makes the calling (current) thread sleep until some tick value is reached.
+	 *
+	 * Current thread's state is changed to "sleeping".
+	 *
+	 * \param [in] tick_value is the tick value at which the thread will be woken
+	 */
+
+	void sleepUntil(uint64_t tick_value);
+
+	/**
 	 * \brief Starts scheduling.
 	 *
 	 * Initializes scheduler and all required hardware/software to perform context switching and starts the scheduling.
