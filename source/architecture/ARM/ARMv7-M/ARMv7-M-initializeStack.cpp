@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-07-24
+ * \date 2014-07-31
  */
 
 #include "distortos/architecture.hpp"
@@ -32,7 +32,7 @@ void * initializeStack(void * const buffer, const size_t size, void * (&function
 {
 	auto stack_pointer = reinterpret_cast<uint32_t *>(static_cast<uint8_t *>(buffer) + size);
 
-	using StackElement = std::remove_reference<decltype(*stack_pointer)>::type;
+	using StackElement = std::decay<decltype(*stack_pointer)>::type;
 
 	*--stack_pointer = 0x01000000;										// xPSR
 	*--stack_pointer = reinterpret_cast<StackElement>(&function);		// pc
