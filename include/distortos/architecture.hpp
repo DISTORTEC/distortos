@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-07-29
+ * \date 2014-07-31
  */
 
 #ifndef INCLUDE_DISTORTOS_ARCHITECTURE_HPP_
@@ -67,6 +67,16 @@ InterruptMask enableInterruptMasking();
  */
 
 void * initializeStack(void *buffer, size_t size, void * (&function)(void *), void *arguments, void (&trap)(void *));
+
+/**
+ * \brief Architecture-specific request for context switch.
+ *
+ * Causes the architecture to do context save, call scheduler::schedulerInstance.switchContext() and do context restore.
+ * The call to scheduler::schedulerInstance.switchContext() must be done from the context in which such call is valid
+ * (usually system interrupt).
+ */
+
+void requestContextSwitch();
 
 /**
  * \brief Architecture-specific start of scheduling.
