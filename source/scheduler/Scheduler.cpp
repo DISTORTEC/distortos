@@ -14,6 +14,7 @@
 #include "distortos/scheduler/Scheduler.hpp"
 
 #include "distortos/scheduler/ThreadControlBlock.hpp"
+#include "distortos/scheduler/idleThreadControlBlock.hpp"
 
 #include "distortos/architecture.hpp"
 #include "distortos/architecture/InterruptMaskingLock.hpp"
@@ -92,6 +93,8 @@ Scheduler::TimePoint Scheduler::getTimePoint() const
 
 void Scheduler::start()
 {
+	add(idleThreadControlBlock);
+
 	currentThreadControlBlock_ = runnableList_.begin();
 
 	architecture::startScheduling();
