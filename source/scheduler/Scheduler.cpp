@@ -97,6 +97,8 @@ void Scheduler::start()
 
 void * Scheduler::switchContext(void *stack_pointer)
 {
+	architecture::InterruptMaskingLock lock;
+
 	getCurrentThreadControlBlock().getStack().setStackPointer(stack_pointer);
 
 	// move current thread to the end of same-priority group to implement round-robin scheduling
