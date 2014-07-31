@@ -33,6 +33,34 @@ namespace
 {
 
 /**
+ * \brief Finds insert position in sorted list.
+ *
+ * Finds the insert position where Compare of value returned by Function called for list element and provided value
+ * returns true.
+ *
+ * \param T is the type of compared value
+ * \param Function is the function used to obtain values from elements of list
+ * \param Compare is a type of compare object used for comparision, std::less results in descending order, while
+ * std::greater - ascending
+ *
+ * \param [in] list is a reference to searched list of elements
+ * \param [in] value is the value which will be compared with elements of the list
+ *
+ * \return iterator to insert position - element after the last element with given priority
+ */
+
+template<typename T, T (ThreadControlBlock::*Function)() const, typename Compare>
+Scheduler::ThreadControlBlockList::iterator findInsertPosition_(Scheduler::ThreadControlBlockList &list, const T value)
+{
+	return std::find_if(list.begin(), list.end(),
+			[value](const std::decay<decltype(list)>::type::value_type &tcb) -> bool
+			{
+				return Compare{}((tcb.get().*Function)(), value);
+			}
+	);
+}
+
+/**
  * \brief Finds insert position after elements of the same priority.
  *
  * \param [in] list is a reference to searched list of elements
@@ -44,12 +72,8 @@ namespace
 Scheduler::ThreadControlBlockList::iterator findInsertPosition_(Scheduler::ThreadControlBlockList &list,
 		const uint8_t priority)
 {
-	return std::find_if(list.begin(), list.end(),
-			[priority](const std::remove_reference<decltype(list)>::type::value_type &tcb) -> bool
-			{
-				return tcb.get().getPriority() < priority;
-			}
-	);
+	using Type = std::decay<decltype(priority)>::type;
+	return findInsertPosition_<Type, &ThreadControlBlock::getPriority, std::less<Type>>(list, priority);
 }
 
 /**
@@ -64,12 +88,8 @@ Scheduler::ThreadControlBlockList::iterator findInsertPosition_(Scheduler::Threa
 Scheduler::ThreadControlBlockList::iterator findInsertPosition_(Scheduler::ThreadControlBlockList &list,
 		const uint64_t tick_value)
 {
-	return std::find_if(list.begin(), list.end(),
-			[tick_value](const std::remove_reference<decltype(list)>::type::value_type &tcb) -> bool
-			{
-				return tcb.get().getSleepUntil() > tick_value;
-			}
-	);
+	using Type = std::decay<decltype(tick_value)>::type;
+	return findInsertPosition_<Type, &ThreadControlBlock::getSleepUntil, std::greater<Type>>(list, tick_value);
 }
 
 }	// namespace
