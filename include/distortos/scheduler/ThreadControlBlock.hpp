@@ -47,6 +47,9 @@ public:
 	/// \return const reference to internal Stack object
 	const architecture::Stack & getStack() const { return stack_; }
 
+	/// \return priority of ThreadControlBlock
+	uint8_t getPriority() const { return priority_; }
+
 private:
 
 	/// internal stack object
