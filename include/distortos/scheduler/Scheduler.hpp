@@ -140,6 +140,17 @@ public:
 
 private:
 
+	/**
+	 * \brief Tests whether context switch is required or not.
+	 *
+	 * Context switch is required when current thread is no longer in "runnable" state and when there is a
+	 * higher-priority or same-priority (round-robin scheduling) thread available.
+	 *
+	 * \return true if context switch is required
+	 */
+
+	bool isContextSwitchRequired_() const;
+
 	/// iterator to the currently active ThreadControlBlock
 	ThreadControlBlockList::iterator currentThreadControlBlock_;
 

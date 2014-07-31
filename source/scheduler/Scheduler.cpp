@@ -206,6 +206,29 @@ void Scheduler::yield() const
 	architecture::requestContextSwitch();
 }
 
+/*---------------------------------------------------------------------------------------------------------------------+
+| private functions
++---------------------------------------------------------------------------------------------------------------------*/
+
+bool Scheduler::isContextSwitchRequired_() const
+{
+	if (getCurrentThreadControlBlock().getState() != ThreadControlBlock::State::Runnable)
+		return true;
+
+	if (runnableList_.size() == 1)	// single thread available?
+		return false;				// no context switch possible
+
+	if (runnableList_.begin() != currentThreadControlBlock_)	// is there a higher-priority thread available?
+		return true;
+
+	const auto next_thread = ++runnableList_.begin();
+	const auto next_thread_priority = next_thread->get().getPriority();
+	if (getCurrentThreadControlBlock().getPriority() == next_thread_priority)	// next thread has the same priority?
+		return true;	// switch context to do round-robin scheduling
+
+	return false;
+}
+
 }	// namespace scheduler
 
 }	// namespace distortos
