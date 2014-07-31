@@ -36,6 +36,8 @@ public:
 		New,
 		/// thread is runnable
 		Runnable,
+		/// thread is sleeping
+		Sleeping,
 	};
 
 	/**
