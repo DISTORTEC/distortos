@@ -70,6 +70,9 @@ private:
 	/// internal stack object
 	architecture::Stack stack_;
 
+	/// tick count value for waking the thread from sleeping state
+	uint64_t sleepUntil_;
+
 	/// thread's priority, 0 - lowest, UINT8_MAX - highest
 	uint8_t priority_;
 

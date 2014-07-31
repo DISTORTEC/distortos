@@ -28,6 +28,7 @@ namespace scheduler
 ThreadControlBlock::ThreadControlBlock(void * const buffer, const size_t size, void * (&function)(void *),
 		void * const arguments, const uint8_t priority) :
 		stack_{buffer, size, function, arguments, threadReturnTrap},
+		sleepUntil_{},
 		priority_{priority},
 		state_{State::New}
 {
