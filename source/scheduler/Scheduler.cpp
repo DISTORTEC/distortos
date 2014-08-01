@@ -106,14 +106,11 @@ bool Scheduler::tickInterruptHandler()
 
 	++tickCount_;
 
-	auto iterator = sleepingList_.begin();
-
 	// wake all threads that reached their timeout
-	while (iterator != sleepingList_.end() && iterator->get().getSleepUntil() <= tickCount_)
-	{
+	for (auto iterator = sleepingList_.begin();
+			iterator != sleepingList_.end() && iterator->get().getSleepUntil() <= tickCount_;
+			iterator = sleepingList_.begin())
 		runnableList_.sortedSplice(sleepingList_, iterator);
-		++iterator;
-	}
 
 	return isContextSwitchRequired_();
 }
