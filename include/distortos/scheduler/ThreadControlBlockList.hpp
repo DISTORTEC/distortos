@@ -51,6 +51,7 @@ public:
 	using typename Base::value_type;
 
 	using Base::begin;
+	using Base::empty;
 	using Base::end;
 	using Base::size;
 
