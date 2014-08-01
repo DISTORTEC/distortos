@@ -8,14 +8,14 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-07-31
+ * \date 2014-08-01
  */
 
 #ifndef INCLUDE_DISTORTOS_SCHEDULER_SCHEDULER_HPP_
 #define INCLUDE_DISTORTOS_SCHEDULER_SCHEDULER_HPP_
 
-#include <list>
-#include <functional>
+#include "distortos/scheduler/ThreadControlBlockList.hpp"
+
 #include <chrono>
 
 namespace distortos
@@ -24,8 +24,6 @@ namespace distortos
 /// scheduler namespace has symbols related to scheduling
 namespace scheduler
 {
-
-class ThreadControlBlock;
 
 /// Scheduler class is a system's scheduler
 class Scheduler
@@ -41,9 +39,6 @@ public:
 
 	/// time point (as in std::chrono) of Scheduler
 	using TimePoint = std::chrono::time_point<Clock>;
-
-	/// underlying type of list of ThreadControlBlock elements
-	using ThreadControlBlockList = std::list<std::reference_wrapper<ThreadControlBlock>>;
 
 	/**
 	 * \brief Scheduler's constructor
@@ -140,6 +135,9 @@ public:
 
 private:
 
+	/// generic iterator for all variants of ThreadControlBlockList
+	using Iterator = containers::SortedContainerBase<std::list<ThreadControlBlockListValueType>>::iterator;
+
 	/**
 	 * \brief Tests whether context switch is required or not.
 	 *
@@ -152,13 +150,13 @@ private:
 	bool isContextSwitchRequired_() const;
 
 	/// iterator to the currently active ThreadControlBlock
-	ThreadControlBlockList::iterator currentThreadControlBlock_;
+	Iterator currentThreadControlBlock_;
 
-	/// list of ThreadControlBlock elements in "runnable" state
-	ThreadControlBlockList runnableList_;
+	/// list of ThreadControlBlock elements in "runnable" state, sorted by priority in descending order
+	PriorityThreadControlBlockList runnableList_;
 
-	/// list of ThreadControlBlock elements in "sleeping" state
-	ThreadControlBlockList sleepingList_;
+	/// list of ThreadControlBlock elements in "sleeping" state, sorted by "sleep until" in ascending order
+	SleepUntilThreadControlBlockList sleepingList_;
 
 	/// tick count
 	uint64_t tickCount_;
