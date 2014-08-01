@@ -57,6 +57,21 @@ public:
 	void add(ThreadControlBlock &thread_control_block);
 
 	/**
+	 * \brief Blocks current thread, transferring it to provided container.
+	 *
+	 * \param Container is the type of destination container for current thread
+	 *
+	 * \param [in] container is a reference to destination container to which the thread will be transferred
+	 */
+
+	template<typename Container>
+	void block(Container &container)
+	{
+		container.sortedSplice(runnableList_, currentThreadControlBlock_);
+		yield();
+	}
+
+	/**
 	 * \return reference to currently active ThreadControlBlock
 	 */
 
@@ -126,6 +141,24 @@ public:
 	 */
 
 	bool tickInterruptHandler();
+
+	/**
+	 * \brief Unblocks provided thread, transferring it from provided container to "runnable" container.
+	 *
+	 * \param Container is the type of source container of unblocked thread
+	 * \param Iterator is the type of iterator which points to unblocked thread
+	 *
+	 * \param [in] container is a reference to source container from which the thread will be transferred
+	 * \param [in] iterator is the iterator which points to unblocked thread
+	 *
+	 */
+
+	template<typename Container, typename Iterator>
+	void unblock(Container &container, Iterator iterator)
+	{
+		runnableList_.sortedSplice(container, iterator);
+		yield();
+	}
 
 	/**
 	 * \brief Yields time slot of the scheduler to next thread.
