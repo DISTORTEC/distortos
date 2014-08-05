@@ -184,6 +184,14 @@ private:
 
 	bool isContextSwitchRequired_() const;
 
+	/**
+	 * \brief Requests unconditional context switch.
+	 *
+	 * Wrapper for architecture::requestContextSwitch()
+	 */
+
+	void requestContextSwitch_() const;
+
 	/// iterator to the currently active ThreadControlBlock
 	Iterator currentThreadControlBlock_;
 

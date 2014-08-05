@@ -155,6 +155,11 @@ bool Scheduler::isContextSwitchRequired_() const
 	return false;
 }
 
+void Scheduler::requestContextSwitch_() const
+{
+	architecture::requestContextSwitch();
+}
+
 }	// namespace scheduler
 
 }	// namespace distortos
