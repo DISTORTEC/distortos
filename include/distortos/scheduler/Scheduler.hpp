@@ -68,7 +68,7 @@ public:
 	void block(Container &container)
 	{
 		container.sortedSplice(runnableList_, currentThreadControlBlock_);
-		yield();
+		requestContextSwitch_();
 	}
 
 	/**

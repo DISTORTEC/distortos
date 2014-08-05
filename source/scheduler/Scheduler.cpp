@@ -72,7 +72,7 @@ void Scheduler::sleepUntil(const uint64_t tick_value)
 	getCurrentThreadControlBlock().setSleepUntil(tick_value);
 	sleepingList_.sortedSplice(runnableList_, currentThreadControlBlock_);
 
-	yield();
+	requestContextSwitch_();
 }
 
 void Scheduler::start()
@@ -125,7 +125,7 @@ bool Scheduler::tickInterruptHandler()
 void Scheduler::yield() const
 {
 	if (isContextSwitchRequired_() == true)
-		architecture::requestContextSwitch();
+		requestContextSwitch_();
 }
 
 /*---------------------------------------------------------------------------------------------------------------------+
