@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-08-01
+ * \date 2014-08-05
  */
 
 #include "distortos/scheduler/Scheduler.hpp"
@@ -81,6 +81,8 @@ void Scheduler::start()
 
 	currentThreadControlBlock_ = runnableList_.begin();
 
+	getCurrentThreadControlBlock().getRoundRobinQuantum().reset();
+
 	architecture::startScheduling();
 }
 
@@ -90,12 +92,15 @@ void * Scheduler::switchContext(void *stack_pointer)
 
 	getCurrentThreadControlBlock().getStack().setStackPointer(stack_pointer);
 
-	// if the object is on the "runnable" list do the rotation - move current thread to the end of same-priority group
-	// to implement round-robin scheduling
-	if (getCurrentThreadControlBlock().getState() == ThreadControlBlock::State::Runnable)
+	// if the object is on the "runnable" list and it used its round-robin quantum - do the rotation
+	// move current thread to the end of same-priority group to implement round-robin scheduling
+	if (getCurrentThreadControlBlock().getState() == ThreadControlBlock::State::Runnable &&
+			getCurrentThreadControlBlock().getRoundRobinQuantum().get() == 0)
 		runnableList_.sortedSplice(runnableList_, currentThreadControlBlock_);
 
 	currentThreadControlBlock_ = runnableList_.begin();
+
+	getCurrentThreadControlBlock().getRoundRobinQuantum().reset();
 
 	return getCurrentThreadControlBlock().getStack().getStackPointer();
 }
@@ -105,6 +110,8 @@ bool Scheduler::tickInterruptHandler()
 	architecture::InterruptMaskingLock lock;
 
 	++tickCount_;
+
+	getCurrentThreadControlBlock().getRoundRobinQuantum().decrement();
 
 	// wake all threads that reached their timeout
 	for (auto iterator = sleepingList_.begin();
@@ -136,10 +143,14 @@ bool Scheduler::isContextSwitchRequired_() const
 	if (runnableList_.begin() != currentThreadControlBlock_)	// is there a higher-priority thread available?
 		return true;
 
-	const auto next_thread = ++runnableList_.begin();
-	const auto next_thread_priority = next_thread->get().getPriority();
-	if (getCurrentThreadControlBlock().getPriority() == next_thread_priority)	// next thread has the same priority?
-		return true;	// switch context to do round-robin scheduling
+	if (getCurrentThreadControlBlock().getRoundRobinQuantum().get() == 0)
+	{
+		const auto next_thread = ++runnableList_.begin();
+		const auto next_thread_priority = next_thread->get().getPriority();
+		// thread with same priority available?
+		if (getCurrentThreadControlBlock().getPriority() == next_thread_priority)
+			return true;	// switch context to do round-robin scheduling
+	}
 
 	return false;
 }

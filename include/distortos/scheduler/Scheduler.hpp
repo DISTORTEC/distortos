@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-08-01
+ * \date 2014-08-05
  */
 
 #ifndef INCLUDE_DISTORTOS_SCHEDULER_SCHEDULER_HPP_
@@ -174,8 +174,10 @@ private:
 	/**
 	 * \brief Tests whether context switch is required or not.
 	 *
-	 * Context switch is required when current thread is no longer in "runnable" state and when there is a
-	 * higher-priority or same-priority (round-robin scheduling) thread available.
+	 * Context switch is required in following situations:
+	 * - current thread is no longer in "runnable" state,
+	 * - there is a higher-priority thread available,
+	 * - current thread used its round-robin quantum and same-priority thread is available.
 	 *
 	 * \return true if context switch is required
 	 */
