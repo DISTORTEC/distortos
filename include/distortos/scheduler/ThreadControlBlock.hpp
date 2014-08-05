@@ -8,11 +8,13 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-08-01
+ * \date 2014-08-05
  */
 
 #ifndef INCLUDE_DISTORTOS_SCHEDULER_THREADCONTROLBLOCK_HPP_
 #define INCLUDE_DISTORTOS_SCHEDULER_THREADCONTROLBLOCK_HPP_
+
+#include "distortos/scheduler/RoundRobinQuantum.hpp"
 
 #include "distortos/architecture/Stack.hpp"
 
@@ -63,6 +65,12 @@ public:
 	/// \return priority of ThreadControlBlock
 	uint8_t getPriority() const { return priority_; }
 
+	/// \return reference to internal RoundRobinQuantum object
+	RoundRobinQuantum & getRoundRobinQuantum() { return roundRobinQuantum_; }
+
+	/// \return const reference to internal RoundRobinQuantum object
+	const RoundRobinQuantum & getRoundRobinQuantum() const { return roundRobinQuantum_; }
+
 	/// \return tick count value for waking the thread from sleeping state
 	uint64_t getSleepUntil() const { return sleepUntil_; }
 
@@ -85,6 +93,9 @@ private:
 
 	/// thread's priority, 0 - lowest, UINT8_MAX - highest
 	uint8_t priority_;
+
+	/// round-robin quantum
+	RoundRobinQuantum roundRobinQuantum_;
 
 	/// current state of object
 	State state_;
