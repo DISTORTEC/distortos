@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-07-29
+ * \date 2014-08-06
  */
 
 #ifndef INCLUDE_DISTORTOS_ARCHITECTURE_INTERRUPTMASKINGLOCK_HPP_
@@ -22,7 +22,7 @@ namespace distortos
 namespace architecture
 {
 
-/// InterruptMaskingLock class is a RAII wrapper for enableInterruptMasking() / disableInterruptMasking()
+/// InterruptMaskingLock class is a RAII wrapper for enableInterruptMasking() / restoreInterruptMasking()
 class InterruptMaskingLock
 {
 public:
@@ -45,7 +45,7 @@ public:
 
 	~InterruptMaskingLock()
 	{
-		disableInterruptMasking(interruptMask_);
+		restoreInterruptMasking(interruptMask_);
 	}
 
 	InterruptMaskingLock(const InterruptMaskingLock &) = delete;

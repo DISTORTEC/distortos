@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-07-31
+ * \date 2014-08-06
  */
 
 #ifndef INCLUDE_DISTORTOS_ARCHITECTURE_HPP_
@@ -26,17 +26,6 @@ namespace architecture
 {
 
 /**
- * \brief Disables interrupt masking.
- *
- * Restores previous interrupt masking state (before matching enableInterruptMasking() was called), enabling some (maybe
- * all) interrupts.
- *
- * \param [in] interrupt_mask is the value of interrupts' mask, must come from previous call to enableInterruptMasking()
- */
-
-void disableInterruptMasking(InterruptMask interrupt_mask);
-
-/**
  * \brief Enables interrupt masking.
  *
  * Disables normal-priority interrupts.
@@ -44,7 +33,7 @@ void disableInterruptMasking(InterruptMask interrupt_mask);
  * \note High-priority interrupts are not controlled by distortos, so they may be left enabled. Support for that feature
  * is architecture-dependent.
  *
- * \return previous value of interrupts' mask, must be used for matched disableInterruptMasking() call
+ * \return previous value of interrupts' mask, must be used for matched restoreInterruptMasking() call
  */
 
 InterruptMask enableInterruptMasking();
@@ -67,6 +56,17 @@ InterruptMask enableInterruptMasking();
  */
 
 void * initializeStack(void *buffer, size_t size, void * (&function)(void *), void *arguments, void (&trap)(void *));
+
+/**
+ * \brief Restores interrupt masking.
+ *
+ * Restores previous interrupt masking state (before matching enableInterruptMasking() was called), enabling some (maybe
+ * all) interrupts.
+ *
+ * \param [in] interrupt_mask is the value of interrupts' mask, must come from previous call to enableInterruptMasking()
+ */
+
+void restoreInterruptMasking(InterruptMask interrupt_mask);
 
 /**
  * \brief Architecture-specific request for context switch.
