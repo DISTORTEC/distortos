@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-08-05
+ * \date 2014-08-06
  */
 
 #include "distortos/scheduler/Scheduler.hpp"
@@ -48,16 +48,6 @@ uint64_t Scheduler::getTickCount() const
 {
 	architecture::InterruptMaskingLock lock;
 	return tickCount_;
-}
-
-Scheduler::TimePoint Scheduler::getTimePoint() const
-{
-	using TickDuration = std::chrono::duration<TimePoint::duration::rep, std::ratio<1, CONFIG_TICK_RATE_HZ>>;
-
-	const auto tick_count = getTickCount();
-	const TickDuration duration {tick_count};
-	const TimePoint time_point {duration};
-	return time_point;
 }
 
 void Scheduler::sleepFor(const uint64_t ticks)

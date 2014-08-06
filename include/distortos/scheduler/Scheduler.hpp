@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-08-05
+ * \date 2014-08-06
  */
 
 #ifndef INCLUDE_DISTORTOS_SCHEDULER_SCHEDULER_HPP_
@@ -29,16 +29,6 @@ namespace scheduler
 class Scheduler
 {
 public:
-
-	/// Scheduler's clock (as in std::chrono)
-	struct Clock
-	{
-		/// duration (as in std::chrono) used by Scheduler's clock
-		using duration = std::chrono::nanoseconds;
-	};
-
-	/// time point (as in std::chrono) of Scheduler
-	using TimePoint = std::chrono::time_point<Clock>;
 
 	/**
 	 * \brief Scheduler's constructor
@@ -82,12 +72,6 @@ public:
 	 */
 
 	uint64_t getTickCount() const;
-
-	/**
-	 * \return current time point of Scheduler's clock
-	 */
-
-	TimePoint getTimePoint() const;
 
 	/**
 	 * \brief Makes the calling (current) thread sleep for at least given number of ticks.
