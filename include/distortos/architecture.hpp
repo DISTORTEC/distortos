@@ -26,6 +26,16 @@ namespace architecture
 {
 
 /**
+ * \brief Disables interrupt masking.
+ *
+ * Enables normal-priority interrupts.
+ *
+ * \return previous value of interrupts' mask, must be used for matched restoreInterruptMasking() call
+ */
+
+InterruptMask disableInterruptMasking();
+
+/**
  * \brief Enables interrupt masking.
  *
  * Disables normal-priority interrupts.
@@ -60,10 +70,11 @@ void * initializeStack(void *buffer, size_t size, void * (&function)(void *), vo
 /**
  * \brief Restores interrupt masking.
  *
- * Restores previous interrupt masking state (before matching enableInterruptMasking() was called), enabling some (maybe
- * all) interrupts.
+ * Restores previous interrupt masking state (before matching enableInterruptMasking() or disableInterruptMasking() was
+ * called), enabling some (maybe all, maybe none) interrupts.
  *
  * \param [in] interrupt_mask is the value of interrupts' mask, must come from previous call to enableInterruptMasking()
+ * or disableInterruptMasking()
  */
 
 void restoreInterruptMasking(InterruptMask interrupt_mask);
