@@ -14,7 +14,7 @@
 #ifndef INCLUDE_DISTORTOS_ARCHITECTURE_INTERRUPTMASKINGLOCK_HPP_
 #define INCLUDE_DISTORTOS_ARCHITECTURE_INTERRUPTMASKINGLOCK_HPP_
 
-#include "distortos/architecture.hpp"
+#include "distortos/architecture/InterruptMaskingUnmaskingLock.hpp"
 
 namespace distortos
 {
@@ -23,41 +23,7 @@ namespace architecture
 {
 
 /// InterruptMaskingLock class is a RAII wrapper for enableInterruptMasking() / restoreInterruptMasking()
-class InterruptMaskingLock
-{
-public:
-
-	/**
-	 * \brief InterruptMaskingLock's constructor
-	 *
-	 * Enables interrupt masking, saving current interrupt mask for use in destructor.
-	 */
-
-	InterruptMaskingLock() :
-			interruptMask_{enableInterruptMasking()}
-	{}
-
-	/**
-	 * \brief InterruptMaskingLock's destructor
-	 *
-	 * Disables interrupt masking, restoring interrupt mask saved in constructor.
-	 */
-
-	~InterruptMaskingLock()
-	{
-		restoreInterruptMasking(interruptMask_);
-	}
-
-	InterruptMaskingLock(const InterruptMaskingLock &) = delete;
-	InterruptMaskingLock(InterruptMaskingLock &&) = delete;
-	InterruptMaskingLock & operator= (const InterruptMaskingLock &) = delete;
-	InterruptMaskingLock & operator= (InterruptMaskingLock &&) = delete;
-
-private:
-
-	/// interrupt mask
-	const InterruptMask interruptMask_;
-};
+using InterruptMaskingLock = InterruptMaskingUnmaskingLock<enableInterruptMasking>;
 
 }	// namespace architecture
 
