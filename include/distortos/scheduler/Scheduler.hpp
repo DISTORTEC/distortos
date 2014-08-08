@@ -199,7 +199,7 @@ private:
 	Iterator currentThreadControlBlock_;
 
 	/// list of ThreadControlBlock elements in "runnable" state, sorted by priority in descending order
-	PriorityThreadControlBlockList runnableList_;
+	ThreadControlBlockList runnableList_;
 
 	/// internal SoftwareTimerControlBlockSupervisor object
 	SoftwareTimerControlBlockSupervisor softwareTimerControlBlockSupervisor_;

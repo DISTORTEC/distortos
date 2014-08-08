@@ -37,10 +37,10 @@ namespace
 struct WakeUpParameter
 {
 	/// reference to "runnable" list into which the thread will be transfered
-	PriorityThreadControlBlockList &runnableList;
+	ThreadControlBlockList &runnableList;
 
 	/// reference to "sleeping" list with one thread that will be transfered to "runnable" list
-	PriorityThreadControlBlockList &sleepingList;
+	ThreadControlBlockList &sleepingList;
 };
 
 /*---------------------------------------------------------------------------------------------------------------------+
@@ -97,7 +97,7 @@ void Scheduler::sleepFor(const uint64_t ticks)
 
 void Scheduler::sleepUntil(const uint64_t tick_value)
 {
-	PriorityThreadControlBlockList sleeping_list {ThreadControlBlock::State::Sleeping};
+	ThreadControlBlockList sleeping_list {ThreadControlBlock::State::Sleeping};
 	WakeUpParameter wake_up_parameter {runnableList_, sleeping_list};
 	SoftwareTimerControlBlock software_timer {wakeUp_, &wake_up_parameter};
 

@@ -29,15 +29,30 @@ namespace scheduler
 /// type held by ThreadControlBlockList
 using ThreadControlBlockListValueType = std::reference_wrapper<ThreadControlBlock>;
 
-/**
- * \brief ThreadControlBlockList is a sorted list of ThreadControlBlock references that configures state of kept objects
- *
- * \param Compare is a type of functor used for comparison, std::less or similar results in descending order,
- * std::greater or similar - in ascending order.
- */
+/// functor which gives descending priority order of elements on the list
+struct ThreadControlBlockDescendingPriority
+{
+	/**
+	 * \brief operator()
+	 *
+	 * \param [in] left is the object on the left side of comparison
+	 * \param [in] right is the object on the right side of comparison
+	 *
+	 * \return true if left's priority is less than right's priority
+	 */
 
-template<typename Compare>
-class ThreadControlBlockList : private containers::SortedContainer<std::list<ThreadControlBlockListValueType>, Compare>
+	bool operator() (const ThreadControlBlockListValueType &left, const ThreadControlBlockListValueType &right)
+	{
+		return left.get().getPriority() < right.get().getPriority();
+	}
+};
+
+/// base of ThreadControlBlockList
+using ThreadControlBlockListBase =
+		containers::SortedContainer<std::list<ThreadControlBlockListValueType>, ThreadControlBlockDescendingPriority>;
+
+/// List of ThreadControlBlock objects in descending order of priority that configures state of kept objects
+class ThreadControlBlockList : private ThreadControlBlockListBase
 {
 public:
 
@@ -45,7 +60,7 @@ public:
 	friend class containers::SortedContainer;
 
 	/// base of ThreadControlBlockList
-	using Base = containers::SortedContainer<std::list<ThreadControlBlockListValueType>, Compare>;
+	using Base = ThreadControlBlockListBase;
 
 	using typename Base::iterator;
 	using typename Base::value_type;
@@ -112,27 +127,6 @@ private:
 	/// state of ThreadControlBlock objects kept in this list
 	const ThreadControlBlock::State state_;
 };
-
-/// functor which gives descending priority order of elements on the list
-struct ThreadControlBlockDescendingPriority
-{
-	/**
-	 * \brief operator()
-	 *
-	 * \param [in] left is the object on the left side of comparison
-	 * \param [in] right is the object on the right side of comparison
-	 *
-	 * \return true if left's priority is less than right's priority
-	 */
-
-	bool operator() (const ThreadControlBlockListValueType &left, const ThreadControlBlockListValueType &right)
-	{
-		return left.get().getPriority() < right.get().getPriority();
-	}
-};
-
-/// list of ThreadControlBlock objects in descending order of priority
-using PriorityThreadControlBlockList = ThreadControlBlockList<ThreadControlBlockDescendingPriority>;
 
 }	// namespace scheduler
 
