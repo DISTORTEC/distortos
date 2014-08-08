@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-08-06
+ * \date 2014-08-08
  */
 
 #ifndef INCLUDE_DISTORTOS_SCHEDULER_THREADCONTROLBLOCKLIST_HPP_
@@ -131,29 +131,8 @@ struct ThreadControlBlockDescendingPriority
 	}
 };
 
-/// functor which gives ascending "sleep until" order of elements on the list
-struct ThreadControlBlockAscendingSleepUntil
-{
-	/**
-	 * \brief operator()
-	 *
-	 * \param [in] left is the object on the left side of comparison
-	 * \param [in] right is the object on the right side of comparison
-	 *
-	 * \return true if left's "sleep until" is greater than right's "sleep until"
-	 */
-
-	bool operator() (const ThreadControlBlockListValueType &left, const ThreadControlBlockListValueType &right)
-	{
-		return left.get().getSleepUntil() > right.get().getSleepUntil();
-	}
-};
-
 /// list of ThreadControlBlock objects in descending order of priority
 using PriorityThreadControlBlockList = ThreadControlBlockList<ThreadControlBlockDescendingPriority>;
-
-/// list of ThreadControlBlock objects in ascending order of "sleep until"
-using SleepUntilThreadControlBlockList = ThreadControlBlockList<ThreadControlBlockAscendingSleepUntil>;
 
 }	// namespace scheduler
 
