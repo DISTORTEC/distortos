@@ -86,7 +86,12 @@ void Scheduler::add(ThreadControlBlock &thread_control_block)
 
 void Scheduler::block(ThreadControlBlockList &container)
 {
-	container.sortedSplice(runnableList_, currentThreadControlBlock_);
+	{
+		architecture::InterruptMaskingLock interrupt_masking_lock;
+		container.sortedSplice(runnableList_, currentThreadControlBlock_);
+	}
+
+	architecture::InterruptUnmaskingLock interrupt_unmasking_lock;
 	requestContextSwitch_();
 }
 
@@ -163,6 +168,8 @@ bool Scheduler::tickInterruptHandler()
 
 void Scheduler::unblock(ThreadControlBlockList &container, const ThreadControlBlockList::iterator iterator)
 {
+	architecture::InterruptMaskingLock interrupt_masking_lock;
+
 	runnableList_.sortedSplice(container, iterator);
 	yield();
 }
