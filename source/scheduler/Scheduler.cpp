@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-08-06
+ * \date 2014-08-08
  */
 
 #include "distortos/scheduler/Scheduler.hpp"
@@ -33,6 +33,7 @@ Scheduler::Scheduler() :
 		currentThreadControlBlock_{},
 		runnableList_{ThreadControlBlock::State::Runnable},
 		sleepingList_{ThreadControlBlock::State::Sleeping},
+		softwareTimerControlBlockSupervisor_{},
 		tickCount_{0}
 {
 
@@ -108,6 +109,8 @@ bool Scheduler::tickInterruptHandler()
 			iterator != sleepingList_.end() && iterator->get().getSleepUntil() <= tickCount_;
 			iterator = sleepingList_.begin())
 		runnableList_.sortedSplice(sleepingList_, iterator);
+
+	softwareTimerControlBlockSupervisor_.tickInterruptHandler(TickClock::time_point{TickClock::duration{tickCount_}});
 
 	return isContextSwitchRequired_();
 }

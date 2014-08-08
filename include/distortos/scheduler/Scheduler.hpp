@@ -8,13 +8,14 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-08-06
+ * \date 2014-08-08
  */
 
 #ifndef INCLUDE_DISTORTOS_SCHEDULER_SCHEDULER_HPP_
 #define INCLUDE_DISTORTOS_SCHEDULER_SCHEDULER_HPP_
 
 #include "distortos/scheduler/ThreadControlBlockList.hpp"
+#include "distortos/scheduler/SoftwareTimerControlBlockSupervisor.hpp"
 
 #include <chrono>
 
@@ -66,6 +67,24 @@ public:
 	 */
 
 	ThreadControlBlock & getCurrentThreadControlBlock() const { return *currentThreadControlBlock_; }
+
+	/**
+	 * \return reference to internal SoftwareTimerControlBlockSupervisor object
+	 */
+
+	SoftwareTimerControlBlockSupervisor & getSoftwareTimerSupervisor()
+	{
+		return softwareTimerControlBlockSupervisor_;
+	}
+
+	/**
+	 * \return const reference to internal SoftwareTimerControlBlockSupervisor object
+	 */
+
+	const SoftwareTimerControlBlockSupervisor & getSoftwareTimerSupervisor() const
+	{
+		return softwareTimerControlBlockSupervisor_;
+	}
 
 	/**
 	 * \return current value of tick count
@@ -184,6 +203,9 @@ private:
 
 	/// list of ThreadControlBlock elements in "sleeping" state, sorted by "sleep until" in ascending order
 	SleepUntilThreadControlBlockList sleepingList_;
+
+	/// internal SoftwareTimerControlBlockSupervisor object
+	SoftwareTimerControlBlockSupervisor softwareTimerControlBlockSupervisor_;
 
 	/// tick count
 	uint64_t tickCount_;
