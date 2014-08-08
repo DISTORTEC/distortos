@@ -16,6 +16,7 @@
 #include "distortos/scheduler/idleThreadControlBlock.hpp"
 
 #include "distortos/architecture/InterruptMaskingLock.hpp"
+#include "distortos/architecture/InterruptUnmaskingLock.hpp"
 
 #include "distortos/distortosConfiguration.h"
 
@@ -25,6 +26,45 @@ namespace distortos
 namespace scheduler
 {
 
+namespace
+{
+
+/*---------------------------------------------------------------------------------------------------------------------+
+| local types
++---------------------------------------------------------------------------------------------------------------------*/
+
+/// parameters required for waking sleeping thread
+struct WakeUpParameter
+{
+	/// reference to "runnable" list into which the thread will be transfered
+	PriorityThreadControlBlockList &runnableList;
+
+	/// reference to "sleeping" list with one thread that will be transfered to "runnable" list
+	PriorityThreadControlBlockList &sleepingList;
+};
+
+/*---------------------------------------------------------------------------------------------------------------------+
+| local functions
++---------------------------------------------------------------------------------------------------------------------*/
+
+/**
+ * \brief Wakes up one sleeping thread.
+ *
+ * This is called by software timer.
+ *
+ * \param [in] argument is a pointer to WakeUpParameter object
+ *
+ */
+
+void wakeUp_(void * const argument)
+{
+	 const auto &wake_up_parameter = *static_cast<WakeUpParameter *>(argument);
+	 wake_up_parameter.runnableList.sortedSplice(wake_up_parameter.sleepingList,
+			 wake_up_parameter.sleepingList.begin());
+}
+
+}	// namespace
+
 /*---------------------------------------------------------------------------------------------------------------------+
 | public functions
 +---------------------------------------------------------------------------------------------------------------------*/
@@ -32,7 +72,6 @@ namespace scheduler
 Scheduler::Scheduler() :
 		currentThreadControlBlock_{},
 		runnableList_{ThreadControlBlock::State::Runnable},
-		sleepingList_{ThreadControlBlock::State::Sleeping},
 		softwareTimerControlBlockSupervisor_{},
 		tickCount_{0}
 {
@@ -58,11 +97,18 @@ void Scheduler::sleepFor(const uint64_t ticks)
 
 void Scheduler::sleepUntil(const uint64_t tick_value)
 {
-	architecture::InterruptMaskingLock lock;
+	PriorityThreadControlBlockList sleeping_list {ThreadControlBlock::State::Sleeping};
+	WakeUpParameter wake_up_parameter {runnableList_, sleeping_list};
+	SoftwareTimerControlBlock software_timer {wakeUp_, &wake_up_parameter};
 
-	getCurrentThreadControlBlock().setSleepUntil(tick_value);
-	sleepingList_.sortedSplice(runnableList_, currentThreadControlBlock_);
+	{
+		architecture::InterruptMaskingLock interrupt_masking_lock;
 
+		sleeping_list.sortedSplice(runnableList_, currentThreadControlBlock_);
+		software_timer.start(TickClock::time_point{TickClock::duration{tick_value}});
+	}
+
+	architecture::InterruptUnmaskingLock interrupt_unmasking_lock;
 	requestContextSwitch_();
 }
 
@@ -103,12 +149,6 @@ bool Scheduler::tickInterruptHandler()
 	++tickCount_;
 
 	getCurrentThreadControlBlock().getRoundRobinQuantum().decrement();
-
-	// wake all threads that reached their timeout
-	for (auto iterator = sleepingList_.begin();
-			iterator != sleepingList_.end() && iterator->get().getSleepUntil() <= tickCount_;
-			iterator = sleepingList_.begin())
-		runnableList_.sortedSplice(sleepingList_, iterator);
 
 	softwareTimerControlBlockSupervisor_.tickInterruptHandler(TickClock::time_point{TickClock::duration{tickCount_}});
 

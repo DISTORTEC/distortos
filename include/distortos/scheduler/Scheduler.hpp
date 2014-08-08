@@ -201,9 +201,6 @@ private:
 	/// list of ThreadControlBlock elements in "runnable" state, sorted by priority in descending order
 	PriorityThreadControlBlockList runnableList_;
 
-	/// list of ThreadControlBlock elements in "sleeping" state, sorted by "sleep until" in ascending order
-	SleepUntilThreadControlBlockList sleepingList_;
-
 	/// internal SoftwareTimerControlBlockSupervisor object
 	SoftwareTimerControlBlockSupervisor softwareTimerControlBlockSupervisor_;
 
