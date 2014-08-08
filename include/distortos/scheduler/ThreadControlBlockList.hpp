@@ -56,9 +56,6 @@ class ThreadControlBlockList : private ThreadControlBlockListBase
 {
 public:
 
-	template<typename OtherContainer, typename OtherCompare>
-	friend class containers::SortedContainer;
-
 	/// base of ThreadControlBlockList
 	using Base = ThreadControlBlockListBase;
 
@@ -108,15 +105,11 @@ public:
 	 *
 	 * Sets state of transfered element.
 	 *
-	 * \param OtherContainer is the type of container from which the object is transfered
-	 * \param OtherIterator is the type of iterator in OtherContainer
-	 *
 	 * \param [in] other is the container from which the object is transfered
 	 * \param [in] other_position is the position of the transfered object in the other container
 	 */
 
-	template<typename Container, typename Iterator>
-	void sortedSplice(Container &other, Iterator other_position)
+	void sortedSplice(ThreadControlBlockList &other, const iterator other_position)
 	{
 		Base::sortedSplice(other, other_position);
 		other_position->get().setState(state_);

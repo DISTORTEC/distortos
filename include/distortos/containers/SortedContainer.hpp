@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-08-07
+ * \date 2014-08-08
  */
 
 #ifndef INCLUDE_DISTORTOS_CONTAINERS_SORTEDCONTAINER_HPP_
@@ -53,9 +53,6 @@ public:
 template<typename Container, typename Compare>
 class SortedContainer : private SortedContainerBase<Container>
 {
-	template<typename OtherContainer, typename OtherCompare>
-	friend class SortedContainer;
-
 public:
 
 	/**
@@ -105,15 +102,11 @@ public:
 	/**
 	 * \brief Sorted splice()
 	 *
-	 * \param OtherContainer is the type of container from which the object is transfered
-	 * \param OtherIterator is the type of iterator in OtherContainer
-	 *
 	 * \param [in] other is the container from which the object is transfered
 	 * \param [in] other_position is the position of the transfered object in the other container
 	 */
 
-	template<typename OtherContainer, typename OtherIterator>
-	void sortedSplice(OtherContainer &other, OtherIterator other_position)
+	void sortedSplice(SortedContainer &other, const iterator other_position)
 	{
 		const auto insert_position = findInsertPosition_(*other_position);
 		Base::splice(insert_position, other, other_position);
