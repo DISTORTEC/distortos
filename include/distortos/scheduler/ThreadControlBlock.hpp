@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-08-05
+ * \date 2014-08-08
  */
 
 #ifndef INCLUDE_DISTORTOS_SCHEDULER_THREADCONTROLBLOCK_HPP_
@@ -71,14 +71,8 @@ public:
 	/// \return const reference to internal RoundRobinQuantum object
 	const RoundRobinQuantum & getRoundRobinQuantum() const { return roundRobinQuantum_; }
 
-	/// \return tick count value for waking the thread from sleeping state
-	uint64_t getSleepUntil() const { return sleepUntil_; }
-
 	/// \return current state of object
 	State getState() const { return state_; }
-
-	/// \param [in] sleep_until is the tick count value for waking the thread from sleeping state
-	void setSleepUntil(const uint64_t sleep_until) { sleepUntil_ = sleep_until; }
 
 	/// \param [in] state is the new state of object
 	void setState(const State state) { state_ = state; }
@@ -87,9 +81,6 @@ private:
 
 	/// internal stack object
 	architecture::Stack stack_;
-
-	/// tick count value for waking the thread from sleeping state
-	uint64_t sleepUntil_;
 
 	/// thread's priority, 0 - lowest, UINT8_MAX - highest
 	uint8_t priority_;
