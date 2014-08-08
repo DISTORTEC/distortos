@@ -50,13 +50,10 @@ public:
 	/**
 	 * \brief Blocks current thread, transferring it to provided container.
 	 *
-	 * \param Container is the type of destination container for current thread
-	 *
 	 * \param [in] container is a reference to destination container to which the thread will be transferred
 	 */
 
-	template<typename Container>
-	void block(Container &container)
+	void block(ThreadControlBlockList &container)
 	{
 		container.sortedSplice(runnableList_, currentThreadControlBlock_);
 		requestContextSwitch_();
@@ -148,16 +145,12 @@ public:
 	/**
 	 * \brief Unblocks provided thread, transferring it from provided container to "runnable" container.
 	 *
-	 * \param Container is the type of source container of unblocked thread
-	 * \param Iterator is the type of iterator which points to unblocked thread
-	 *
 	 * \param [in] container is a reference to source container from which the thread will be transferred
 	 * \param [in] iterator is the iterator which points to unblocked thread
 	 *
 	 */
 
-	template<typename Container, typename Iterator>
-	void unblock(Container &container, Iterator iterator)
+	void unblock(ThreadControlBlockList &container, const ThreadControlBlockList::iterator iterator)
 	{
 		runnableList_.sortedSplice(container, iterator);
 		yield();
