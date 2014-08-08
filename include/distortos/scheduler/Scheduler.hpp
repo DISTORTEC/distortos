@@ -53,11 +53,7 @@ public:
 	 * \param [in] container is a reference to destination container to which the thread will be transferred
 	 */
 
-	void block(ThreadControlBlockList &container)
-	{
-		container.sortedSplice(runnableList_, currentThreadControlBlock_);
-		requestContextSwitch_();
-	}
+	void block(ThreadControlBlockList &container);
 
 	/**
 	 * \return reference to currently active ThreadControlBlock
@@ -147,14 +143,9 @@ public:
 	 *
 	 * \param [in] container is a reference to source container from which the thread will be transferred
 	 * \param [in] iterator is the iterator which points to unblocked thread
-	 *
 	 */
 
-	void unblock(ThreadControlBlockList &container, const ThreadControlBlockList::iterator iterator)
-	{
-		runnableList_.sortedSplice(container, iterator);
-		yield();
-	}
+	void unblock(ThreadControlBlockList &container, ThreadControlBlockList::iterator iterator);
 
 	/**
 	 * \brief Yields time slot of the scheduler to next thread.

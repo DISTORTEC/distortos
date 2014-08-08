@@ -84,6 +84,12 @@ void Scheduler::add(ThreadControlBlock &thread_control_block)
 	runnableList_.sortedEmplace(thread_control_block);
 }
 
+void Scheduler::block(ThreadControlBlockList &container)
+{
+	container.sortedSplice(runnableList_, currentThreadControlBlock_);
+	requestContextSwitch_();
+}
+
 uint64_t Scheduler::getTickCount() const
 {
 	architecture::InterruptMaskingLock lock;
@@ -153,6 +159,12 @@ bool Scheduler::tickInterruptHandler()
 	softwareTimerControlBlockSupervisor_.tickInterruptHandler(TickClock::time_point{TickClock::duration{tickCount_}});
 
 	return isContextSwitchRequired_();
+}
+
+void Scheduler::unblock(ThreadControlBlockList &container, const ThreadControlBlockList::iterator iterator)
+{
+	runnableList_.sortedSplice(container, iterator);
+	yield();
 }
 
 void Scheduler::yield() const
