@@ -42,7 +42,7 @@ Scheduler::Scheduler() :
 
 void Scheduler::add(ThreadControlBlock &thread_control_block)
 {
-	architecture::InterruptMaskingLock lock;
+	architecture::InterruptMaskingLock interrupt_masking_lock;
 	runnableList_.sortedEmplace(thread_control_block);
 }
 
@@ -59,7 +59,7 @@ void Scheduler::block(ThreadControlBlockList &container)
 
 uint64_t Scheduler::getTickCount() const
 {
-	architecture::InterruptMaskingLock lock;
+	architecture::InterruptMaskingLock interrupt_masking_lock;
 	return tickCount_;
 }
 
@@ -71,6 +71,7 @@ void Scheduler::sleepFor(const uint64_t ticks)
 void Scheduler::sleepUntil(const uint64_t tick_value)
 {
 	architecture::InterruptMaskingLock interrupt_masking_lock;
+
 	ThreadControlBlockList sleeping_list {ThreadControlBlock::State::Sleeping};
 	auto software_timer =
 			makeSoftwareTimer(&Scheduler::unblockInternal_, this, std::ref(sleeping_list), currentThreadControlBlock_);
@@ -92,7 +93,7 @@ void Scheduler::start()
 
 void * Scheduler::switchContext(void *stack_pointer)
 {
-	architecture::InterruptMaskingLock lock;
+	architecture::InterruptMaskingLock interrupt_masking_lock;
 
 	getCurrentThreadControlBlock().getStack().setStackPointer(stack_pointer);
 
@@ -111,7 +112,7 @@ void * Scheduler::switchContext(void *stack_pointer)
 
 bool Scheduler::tickInterruptHandler()
 {
-	architecture::InterruptMaskingLock lock;
+	architecture::InterruptMaskingLock interrupt_masking_lock;
 
 	++tickCount_;
 
