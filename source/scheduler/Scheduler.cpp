@@ -8,12 +8,13 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-08-08
+ * \date 2014-08-09
  */
 
 #include "distortos/scheduler/Scheduler.hpp"
 
 #include "distortos/scheduler/idleThreadControlBlock.hpp"
+#include "distortos/scheduler/SoftwareTimer.hpp"
 
 #include "distortos/architecture/InterruptMaskingLock.hpp"
 #include "distortos/architecture/InterruptUnmaskingLock.hpp"
@@ -110,7 +111,7 @@ void Scheduler::sleepUntil(const uint64_t tick_value)
 {
 	ThreadControlBlockList sleeping_list {ThreadControlBlock::State::Sleeping};
 	WakeUpParameter wake_up_parameter {runnableList_, sleeping_list};
-	SoftwareTimerControlBlock software_timer {wakeUp_, &wake_up_parameter};
+	auto software_timer = makeSoftwareTimer(wakeUp_, &wake_up_parameter);
 
 	{
 		architecture::InterruptMaskingLock interrupt_masking_lock;

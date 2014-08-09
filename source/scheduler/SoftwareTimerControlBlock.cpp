@@ -1,6 +1,6 @@
 /**
  * \file
- * \brief SoftwareTimer class implementation
+ * \brief SoftwareTimerControlBlock class implementation
  *
  * \author Copyright (C) 2014 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-08-08
+ * \date 2014-08-09
  */
 
 #include "distortos/scheduler/SoftwareTimerControlBlock.hpp"
@@ -28,10 +28,8 @@ namespace scheduler
 | public functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-SoftwareTimerControlBlock::SoftwareTimerControlBlock(void (&function)(void *), void * const argument) :
+SoftwareTimerControlBlock::SoftwareTimerControlBlock() :
 		timePoint_{},
-		function_{function},
-		argument_{argument},
 		list_{},
 		iterator_{}
 {

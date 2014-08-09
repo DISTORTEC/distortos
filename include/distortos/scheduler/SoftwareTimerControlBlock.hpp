@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-08-08
+ * \date 2014-08-09
  */
 
 #ifndef INCLUDE_DISTORTOS_SCHEDULER_SOFTWARETIMERCONTROLBLOCK_HPP_
@@ -33,12 +33,9 @@ public:
 
 	/**
 	 * \brief SoftwareTimerControlBlock's constructor
-	 *
-	 * \param [in] function is a reference to function that will be executed from interrupt context at a later time
-	 * \param [in] argument is an argument for function
 	 */
 
-	SoftwareTimerControlBlock(void (&function)(void *), void *argument);
+	SoftwareTimerControlBlock();
 
 	/**
 	 * \brief SoftwareTimerControlBlock's destructor
@@ -49,12 +46,14 @@ public:
 	~SoftwareTimerControlBlock();
 
 	/**
-	 * \brief Executes internal function with argument.
+	 * \brief Execute software timer's function.
+	 *
+	 * Calls internal pure virtual execute_(), which should be provided by derived classes.
 	 *
 	 * \note this should only be called by SoftwareTimerSupervisor::tickInterruptHandler()
 	 */
 
-	void execute() const { function_(argument_); }
+	void execute() const { execute_(); }
 
 	/**
 	 * \return const reference to expiration time point
@@ -124,14 +123,16 @@ public:
 
 private:
 
+	/**
+	 * \brief Software timer's internal function.
+	 *
+	 * \note this should be provided by derived classes
+	 */
+
+	virtual void execute_() const = 0;
+
 	///time point of expiration
 	TickClock::time_point timePoint_;
-
-	/// reference to function that will be executed from interrupt context at a later time
-	void (&function_)(void *);
-
-	/// argument for function_
-	void *argument_;
 
 	/// pointer to list that has this object
 	SoftwareTimerControlBlockList *list_;
