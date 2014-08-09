@@ -179,6 +179,17 @@ private:
 
 	void requestContextSwitch_() const;
 
+	/**
+	 * \brief Unblocks provided thread, transferring it from provided container to "runnable" container.
+	 *
+	 * Internal version - without interrupt masking and yield()
+	 *
+	 * \param [in] container is a reference to source container from which the thread will be transferred
+	 * \param [in] iterator is the iterator which points to unblocked thread
+	 */
+
+	void unblockInternal_(ThreadControlBlockList &container, ThreadControlBlockList::iterator iterator);
+
 	/// iterator to the currently active ThreadControlBlock
 	Iterator currentThreadControlBlock_;
 

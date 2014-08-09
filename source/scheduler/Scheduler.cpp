@@ -171,7 +171,7 @@ void Scheduler::unblock(ThreadControlBlockList &container, const ThreadControlBl
 {
 	architecture::InterruptMaskingLock interrupt_masking_lock;
 
-	runnableList_.sortedSplice(container, iterator);
+	unblockInternal_(container, iterator);
 	yield();
 }
 
@@ -211,6 +211,11 @@ bool Scheduler::isContextSwitchRequired_() const
 void Scheduler::requestContextSwitch_() const
 {
 	architecture::requestContextSwitch();
+}
+
+void Scheduler::unblockInternal_(ThreadControlBlockList &container, const ThreadControlBlockList::iterator iterator)
+{
+	runnableList_.sortedSplice(container, iterator);
 }
 
 }	// namespace scheduler
