@@ -70,19 +70,13 @@ void Scheduler::sleepFor(const uint64_t ticks)
 
 void Scheduler::sleepUntil(const uint64_t tick_value)
 {
+	architecture::InterruptMaskingLock interrupt_masking_lock;
 	ThreadControlBlockList sleeping_list {ThreadControlBlock::State::Sleeping};
 	auto software_timer =
 			makeSoftwareTimer(&Scheduler::unblockInternal_, this, std::ref(sleeping_list), currentThreadControlBlock_);
+	software_timer.start(TickClock::time_point{TickClock::duration{tick_value}});
 
-	{
-		architecture::InterruptMaskingLock interrupt_masking_lock;
-
-		sleeping_list.sortedSplice(runnableList_, currentThreadControlBlock_);
-		software_timer.start(TickClock::time_point{TickClock::duration{tick_value}});
-	}
-
-	architecture::InterruptUnmaskingLock interrupt_unmasking_lock;
-	requestContextSwitch_();
+	block(sleeping_list);
 }
 
 void Scheduler::start()
