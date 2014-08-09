@@ -27,45 +27,6 @@ namespace distortos
 namespace scheduler
 {
 
-namespace
-{
-
-/*---------------------------------------------------------------------------------------------------------------------+
-| local types
-+---------------------------------------------------------------------------------------------------------------------*/
-
-/// parameters required for waking sleeping thread
-struct WakeUpParameter
-{
-	/// reference to "runnable" list into which the thread will be transfered
-	ThreadControlBlockList &runnableList;
-
-	/// reference to "sleeping" list with one thread that will be transfered to "runnable" list
-	ThreadControlBlockList &sleepingList;
-};
-
-/*---------------------------------------------------------------------------------------------------------------------+
-| local functions
-+---------------------------------------------------------------------------------------------------------------------*/
-
-/**
- * \brief Wakes up one sleeping thread.
- *
- * This is called by software timer.
- *
- * \param [in] argument is a pointer to WakeUpParameter object
- *
- */
-
-void wakeUp_(void * const argument)
-{
-	 const auto &wake_up_parameter = *static_cast<WakeUpParameter *>(argument);
-	 wake_up_parameter.runnableList.sortedSplice(wake_up_parameter.sleepingList,
-			 wake_up_parameter.sleepingList.begin());
-}
-
-}	// namespace
-
 /*---------------------------------------------------------------------------------------------------------------------+
 | public functions
 +---------------------------------------------------------------------------------------------------------------------*/
@@ -110,8 +71,8 @@ void Scheduler::sleepFor(const uint64_t ticks)
 void Scheduler::sleepUntil(const uint64_t tick_value)
 {
 	ThreadControlBlockList sleeping_list {ThreadControlBlock::State::Sleeping};
-	WakeUpParameter wake_up_parameter {runnableList_, sleeping_list};
-	auto software_timer = makeSoftwareTimer(wakeUp_, &wake_up_parameter);
+	auto software_timer =
+			makeSoftwareTimer(&Scheduler::unblockInternal_, this, std::ref(sleeping_list), currentThreadControlBlock_);
 
 	{
 		architecture::InterruptMaskingLock interrupt_masking_lock;
