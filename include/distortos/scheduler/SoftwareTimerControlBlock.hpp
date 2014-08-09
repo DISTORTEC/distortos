@@ -38,14 +38,6 @@ public:
 	SoftwareTimerControlBlock();
 
 	/**
-	 * \brief SoftwareTimerControlBlock's destructor
-	 *
-	 * If the timer is running it is stopped.
-	 */
-
-	~SoftwareTimerControlBlock();
-
-	/**
 	 * \brief Execute software timer's function.
 	 *
 	 * Calls internal pure virtual execute_(), which should be provided by derived classes.
@@ -120,6 +112,16 @@ public:
 	{
 		start(std::chrono::time_point_cast<TickClock::duration>(time_point));
 	}
+
+protected:
+
+	/**
+	 * \brief SoftwareTimerControlBlock's destructor
+	 *
+	 * If the timer is running it is stopped.
+	 */
+
+	~SoftwareTimerControlBlock();
 
 private:
 

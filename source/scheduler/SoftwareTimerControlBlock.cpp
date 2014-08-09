@@ -36,14 +36,6 @@ SoftwareTimerControlBlock::SoftwareTimerControlBlock() :
 
 }
 
-SoftwareTimerControlBlock::~SoftwareTimerControlBlock()
-{
-	architecture::InterruptMaskingLock interrupt_masking_lock;
-
-	if (list_ != nullptr)
-		list_->erase(iterator_);
-}
-
 void SoftwareTimerControlBlock::start(const TickClock::duration duration)
 {
 	const auto now = TickClock::now();
@@ -55,6 +47,18 @@ void SoftwareTimerControlBlock::start(const TickClock::time_point time_point)
 	timePoint_ = time_point;
 
 	iterator_ = schedulerInstance.getSoftwareTimerSupervisor().add(*this);
+}
+
+/*---------------------------------------------------------------------------------------------------------------------+
+| protected functions
++---------------------------------------------------------------------------------------------------------------------*/
+
+SoftwareTimerControlBlock::~SoftwareTimerControlBlock()
+{
+	architecture::InterruptMaskingLock interrupt_masking_lock;
+
+	if (list_ != nullptr)
+		list_->erase(iterator_);
 }
 
 }	// namespace scheduler
