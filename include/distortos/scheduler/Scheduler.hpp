@@ -103,6 +103,19 @@ public:
 	uint64_t getTickCount() const;
 
 	/**
+	 * \brief Resumes suspended thread.
+	 *
+	 * The thread must be in "suspended" state - trying to resume thread that is not suspended is an error.
+	 *
+	 * \param [in] iterator is the iterator to the thread that will be resumed
+	 *
+	 * \return 0 on success, error code otherwise:
+	 * - EINVAL - provided thread is not in "suspended" state;
+	 */
+
+	int resume(Iterator iterator);
+
+	/**
 	 * \brief Makes the calling (current) thread sleep for at least given number of ticks.
 	 *
 	 * Current thread's state is changed to "sleeping".
@@ -132,6 +145,25 @@ public:
 
 	__attribute__ ((noreturn))
 	void start();
+
+	/**
+	 * \brief Suspends current thread.
+	 */
+
+	void suspend();
+
+	/**
+	 * \brief Suspends thread.
+	 *
+	 * The thread must be in "runnable" state - trying to suspend thread in other state is an error.
+	 *
+	 * \param [in] iterator is the iterator to the thread that will be suspended
+	 *
+	 * \return 0 on success, error code otherwise:
+	 * - EINVAL - provided thread is not in "runnable" state;
+	 */
+
+	int suspend(Iterator iterator);
 
 	/**
 	 * \brief Called by architecture-specific code to do final context switch.
@@ -209,6 +241,9 @@ private:
 
 	/// list of ThreadControlBlock elements in "runnable" state, sorted by priority in descending order
 	ThreadControlBlockList runnableList_;
+
+	/// list of ThreadControlBlock elements in "suspended" state, sorted by priority in descending order
+	ThreadControlBlockList suspendedList_;
 
 	/// internal SoftwareTimerControlBlockSupervisor object
 	SoftwareTimerControlBlockSupervisor softwareTimerControlBlockSupervisor_;

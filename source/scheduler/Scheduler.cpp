@@ -36,6 +36,7 @@ namespace scheduler
 Scheduler::Scheduler() :
 		currentThreadControlBlock_{},
 		runnableList_{ThreadControlBlock::State::Runnable},
+		suspendedList_{ThreadControlBlock::State::Suspended},
 		softwareTimerControlBlockSupervisor_{},
 		tickCount_{0}
 {
@@ -79,6 +80,17 @@ uint64_t Scheduler::getTickCount() const
 	return tickCount_;
 }
 
+int Scheduler::resume(const Iterator iterator)
+{
+	architecture::InterruptMaskingLock interrupt_masking_lock;
+
+	if (iterator->get().getState() != ThreadControlBlock::State::Suspended)
+		return EINVAL;
+
+	unblock(suspendedList_, iterator);
+	return 0;
+}
+
 void Scheduler::sleepFor(const uint64_t ticks)
 {
 	sleepUntil(getTickCount() + ticks + 1);
@@ -105,6 +117,16 @@ void Scheduler::start()
 	getCurrentThreadControlBlock().getRoundRobinQuantum().reset();
 
 	architecture::startScheduling();
+}
+
+void Scheduler::suspend()
+{
+	suspend(currentThreadControlBlock_);
+}
+
+int Scheduler::suspend(const Iterator iterator)
+{
+	return block(suspendedList_, iterator);
 }
 
 void * Scheduler::switchContext(void *stack_pointer)
