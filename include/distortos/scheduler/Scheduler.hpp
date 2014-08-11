@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-08-08
+ * \date 2014-08-11
  */
 
 #ifndef INCLUDE_DISTORTOS_SCHEDULER_SCHEDULER_HPP_
@@ -30,6 +30,9 @@ namespace scheduler
 class Scheduler
 {
 public:
+
+	/// generic iterator for all variants of ThreadControlBlockList
+	using Iterator = containers::SortedContainerBase<std::list<ThreadControlBlockListValueType>>::iterator;
 
 	/**
 	 * \brief Scheduler's constructor
@@ -154,9 +157,6 @@ public:
 	void yield() const;
 
 private:
-
-	/// generic iterator for all variants of ThreadControlBlockList
-	using Iterator = containers::SortedContainerBase<std::list<ThreadControlBlockListValueType>>::iterator;
 
 	/**
 	 * \brief Tests whether context switch is required or not.
