@@ -21,6 +21,8 @@
 
 #include "distortos/distortosConfiguration.h"
 
+#include <cerrno>
+
 namespace distortos
 {
 
@@ -48,13 +50,27 @@ void Scheduler::add(ThreadControlBlock &thread_control_block)
 
 void Scheduler::block(ThreadControlBlockList &container)
 {
+	block(container, currentThreadControlBlock_);
+}
+
+int Scheduler::block(ThreadControlBlockList &container, const Iterator iterator)
+{
 	{
 		architecture::InterruptMaskingLock interrupt_masking_lock;
-		container.sortedSplice(runnableList_, currentThreadControlBlock_);
+
+		if (iterator->get().getState() != ThreadControlBlock::State::Runnable)
+			return EINVAL;
+
+		container.sortedSplice(runnableList_, iterator);
+
+		if (iterator != currentThreadControlBlock_)	// blocked thread is not current thread - no forced switch required
+			return 0;
 	}
 
 	architecture::InterruptUnmaskingLock interrupt_unmasking_lock;
 	requestContextSwitch_();
+
+	return 0;
 }
 
 uint64_t Scheduler::getTickCount() const

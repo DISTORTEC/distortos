@@ -59,6 +59,20 @@ public:
 	void block(ThreadControlBlockList &container);
 
 	/**
+	 * \brief Blocks thread, transferring it to provided container.
+	 *
+	 * The thread must be in "runnable" state - trying to block thread in other state is an error.
+	 *
+	 * \param [in] container is a reference to destination container to which the thread will be transferred
+	 * \param [in] iterator is the iterator to the thread that will be blocked
+	 *
+	 * \return 0 on success, error code otherwise:
+	 * - EINVAL - provided thread is not in "runnable" state;
+	 */
+
+	int block(ThreadControlBlockList &container, Iterator iterator);
+
+	/**
 	 * \return reference to currently active ThreadControlBlock
 	 */
 
