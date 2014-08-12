@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-08-11
+ * \date 2014-08-12
  */
 
 #include "distortos/scheduler/Scheduler.hpp"
@@ -161,7 +161,7 @@ bool Scheduler::tickInterruptHandler()
 	return isContextSwitchRequired_();
 }
 
-void Scheduler::unblock(ThreadControlBlockList &container, const ThreadControlBlockList::iterator iterator)
+void Scheduler::unblock(ThreadControlBlockList &container, const Iterator iterator)
 {
 	architecture::InterruptMaskingLock interrupt_masking_lock;
 
@@ -209,7 +209,7 @@ void Scheduler::requestContextSwitch_() const
 	architecture::requestContextSwitch();
 }
 
-void Scheduler::unblockInternal_(ThreadControlBlockList &container, const ThreadControlBlockList::iterator iterator)
+void Scheduler::unblockInternal_(ThreadControlBlockList &container, const Iterator iterator)
 {
 	runnableList_.sortedSplice(container, iterator);
 }
