@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-08-11
+ * \date 2014-08-13
  */
 
 #ifndef INCLUDE_DISTORTOS_SCHEDULER_THREADCONTROLBLOCK_HPP_
@@ -81,8 +81,32 @@ public:
 
 private:
 
+	/**
+	 * \brief Trampoline for run_()
+	 *
+	 * \param [in] argument is a pointer to ThreadControlBlock object (this)
+	 *
+	 * \return value returned by run_()
+	 */
+
+	static void* runTrampoline_(void* argument);
+
+	/**
+	 * \brief "Run" function of thread
+	 *
+	 * \return value returned by function_(arguments_)
+	 */
+
+	void* run_() const;
+
 	/// internal stack object
 	architecture::Stack stack_;
+
+	/// reference to thread's function
+	void* (&function_)(void*);
+
+	/// argument for function
+	void* const arguments_;
 
 	/// thread's priority, 0 - lowest, UINT8_MAX - highest
 	uint8_t priority_;
