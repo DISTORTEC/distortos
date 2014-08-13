@@ -8,12 +8,12 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-07-31
+ * \date 2014-08-13
  */
 
 #include "distortos/scheduler/idleThreadControlBlock.hpp"
 
-#include "distortos/scheduler/ThreadControlBlock.hpp"
+#include "distortos/scheduler/ThreadBase.hpp"
 
 namespace distortos
 {
@@ -60,7 +60,7 @@ void * idleThread_(void *)
 | global objects
 +---------------------------------------------------------------------------------------------------------------------*/
 
-ThreadControlBlock idleThreadControlBlock {idleThreadStack_, sizeof(idleThreadStack_), idleThread_, nullptr, 0};
+ThreadBase idleThreadControlBlock {idleThreadStack_, sizeof(idleThreadStack_), idleThread_, nullptr, 0};
 
 }	// namespace scheduler
 

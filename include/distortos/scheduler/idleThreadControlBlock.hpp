@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-07-31
+ * \date 2014-08-13
  */
 
 #ifndef INCLUDE_DISTORTOS_SCHEDULER_IDLETHREADCONTROLBLOCK_HPP_
@@ -20,10 +20,10 @@ namespace distortos
 namespace scheduler
 {
 
-class ThreadControlBlock;
+class ThreadBase;
 
 /// idle thread's ThreadControlBlock
-extern ThreadControlBlock idleThreadControlBlock;
+extern ThreadBase idleThreadControlBlock;
 
 }	// namespace scheduler
 

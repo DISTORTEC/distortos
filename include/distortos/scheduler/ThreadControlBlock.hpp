@@ -51,12 +51,10 @@ public:
 	 *
 	 * \param [in] buffer is a pointer to stack's buffer
 	 * \param [in] size is the size of stack's buffer, bytes
-	 * \param [in] function is a reference to thread's function
-	 * \param [in] arguments is an argument for function
 	 * \param [in] priority is the thread's priority, 0 - lowest, UINT8_MAX - highest
 	 */
 
-	ThreadControlBlock(void *buffer, size_t size, void * (&function)(void *), void *arguments, uint8_t priority);
+	ThreadControlBlock(void* buffer, size_t size, uint8_t priority);
 
 	/// \return reference to internal Stack object
 	architecture::Stack & getStack() { return stack_; }
@@ -94,19 +92,15 @@ private:
 	/**
 	 * \brief "Run" function of thread
 	 *
-	 * \return value returned by function_(arguments_)
+	 * This should be overridden by derived classes.
+	 *
+	 * \return value returned by thread's function
 	 */
 
-	void* run_() const;
+	virtual void* run_() const = 0;
 
 	/// internal stack object
 	architecture::Stack stack_;
-
-	/// reference to thread's function
-	void* (&function_)(void*);
-
-	/// argument for function
-	void* const arguments_;
 
 	/// thread's priority, 0 - lowest, UINT8_MAX - highest
 	uint8_t priority_;

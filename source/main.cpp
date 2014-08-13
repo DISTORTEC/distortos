@@ -8,10 +8,10 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-07-31
+ * \date 2014-08-13
  */
 
-#include "distortos/scheduler/ThreadControlBlock.hpp"
+#include "distortos/scheduler/ThreadBase.hpp"
 #include "distortos/scheduler/schedulerInstance.hpp"
 #include "distortos/scheduler/Scheduler.hpp"
 
@@ -164,16 +164,16 @@ uint64_t stack3[128];
 uint64_t stack4[128];
 
 /// TCB with thread1
-distortos::scheduler::ThreadControlBlock tcb1 {stack1, sizeof(stack1), test1, const_cast<char *>("one"), 1};
+distortos::scheduler::ThreadBase tcb1 {stack1, sizeof(stack1), test1, const_cast<char *>("one"), 1};
 
 /// TCB with thread2
-distortos::scheduler::ThreadControlBlock tcb2 {stack2, sizeof(stack2), test2, const_cast<char *>("two"), 1};
+distortos::scheduler::ThreadBase tcb2 {stack2, sizeof(stack2), test2, const_cast<char *>("two"), 1};
 
 /// TCB with thread3
-distortos::scheduler::ThreadControlBlock tcb3 {stack3, sizeof(stack3), test3, const_cast<char *>("three"), 1};
+distortos::scheduler::ThreadBase tcb3 {stack3, sizeof(stack3), test3, const_cast<char *>("three"), 1};
 
 /// TCB with thread4
-distortos::scheduler::ThreadControlBlock tcb4 {stack4, sizeof(stack4), test4, const_cast<char *>("four"), 1};
+distortos::scheduler::ThreadBase tcb4 {stack4, sizeof(stack4), test4, const_cast<char *>("four"), 1};
 
 }	// namespace
 

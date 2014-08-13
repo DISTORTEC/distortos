@@ -1,6 +1,6 @@
 /**
  * \file
- * \brief ThreadControlBlock class implementation
+ * \brief ThreadBase class implementation
  *
  * \author Copyright (C) 2014 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
@@ -11,9 +11,7 @@
  * \date 2014-08-13
  */
 
-#include "distortos/scheduler/ThreadControlBlock.hpp"
-
-#include "distortos/scheduler/threadReturnTrap.hpp"
+#include "distortos/scheduler/ThreadBase.hpp"
 
 namespace distortos
 {
@@ -25,23 +23,22 @@ namespace scheduler
 | public functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-ThreadControlBlock::ThreadControlBlock(void* const buffer, const size_t size, const uint8_t priority) :
-		stack_{buffer, size, runTrampoline_, this, threadReturnTrap},
-		priority_{priority},
-		roundRobinQuantum_{},
-		state_{State::New}
+ThreadBase::ThreadBase(void* const buffer, const size_t size, void* (&function)(void*), void* const arguments,
+		const uint8_t priority) :
+		ThreadControlBlock{buffer, size, priority},
+		function_{function},
+		arguments_{arguments}
 {
 
 }
 
 /*---------------------------------------------------------------------------------------------------------------------+
-| private static functions
+| private functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-void* ThreadControlBlock::runTrampoline_(void* const argument)
+void* ThreadBase::run_() const
 {
-	auto& that = *reinterpret_cast<const ThreadControlBlock*>(argument);
-	return that.run_();
+	return function_(arguments_);
 }
 
 }	// namespace scheduler
