@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-08-08
+ * \date 2014-08-14
  */
 
 #ifndef INCLUDE_DISTORTOS_SCHEDULER_SEMAPHORE_HPP_
@@ -77,24 +77,7 @@ public:
 	 * the highest priority thread that has been waiting the longest shall be unblocked.
 	 */
 
-	void unlock();
-
-	/**
-	 * \brief Locks the semaphore.
-	 *
-	 * Similar to sem_wait() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/sem_trywait.html#
-	 *
-	 * This function shall lock the semaphore by performing a semaphore lock operation on that semaphore. If the
-	 * semaphore value is currently zero, then the calling thread shall not return from the call to lock() until it
-	 * either locks the semaphore or the call is interrupted by a signal. Upon successful return, the state of the
-	 * semaphore shall be locked and shall remain locked until unlock() function is executed.
-	 *
-	 * \return zero if the calling process successfully performed the semaphore lock operation, error code otherwise:
-	 * - EDEADLK - a deadlock condition was detected,
-	 * - EINTR - a signal interrupted this function;
-	 */
-
-	int lock();
+	void post();
 
 	/**
 	 * \brief Tries to lock the semaphore.
@@ -111,7 +94,24 @@ public:
 	 * - EINTR - a signal interrupted this function;
 	 */
 
-	int tryLock();
+	int tryWait();
+
+	/**
+	 * \brief Locks the semaphore.
+	 *
+	 * Similar to sem_wait() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/sem_trywait.html#
+	 *
+	 * This function shall lock the semaphore by performing a semaphore lock operation on that semaphore. If the
+	 * semaphore value is currently zero, then the calling thread shall not return from the call to lock() until it
+	 * either locks the semaphore or the call is interrupted by a signal. Upon successful return, the state of the
+	 * semaphore shall be locked and shall remain locked until unlock() function is executed.
+	 *
+	 * \return zero if the calling process successfully performed the semaphore lock operation, error code otherwise:
+	 * - EDEADLK - a deadlock condition was detected,
+	 * - EINTR - a signal interrupted this function;
+	 */
+
+	int wait();
 
 private:
 

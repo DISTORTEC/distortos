@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-08-04
+ * \date 2014-08-14
  */
 
 #include "distortos/scheduler/Semaphore.hpp"
@@ -42,7 +42,7 @@ Semaphore::~Semaphore()
 
 }
 
-void Semaphore::unlock()
+void Semaphore::post()
 {
 	architecture::InterruptMaskingLock interrupt_masking_lock;
 
@@ -52,19 +52,7 @@ void Semaphore::unlock()
 		schedulerInstance.unblock(blockedList_, blockedList_.begin());
 }
 
-int Semaphore::lock()
-{
-	architecture::InterruptMaskingLock interrupt_masking_lock;
-
-	--value_;
-
-	if (value_ < 0)
-		schedulerInstance.block(blockedList_);
-
-	return 0;
-}
-
-int Semaphore::tryLock()
+int Semaphore::tryWait()
 {
 	architecture::InterruptMaskingLock interrupt_masking_lock;
 
@@ -75,6 +63,18 @@ int Semaphore::tryLock()
 	}
 
 	return EAGAIN;
+}
+
+int Semaphore::wait()
+{
+	architecture::InterruptMaskingLock interrupt_masking_lock;
+
+	--value_;
+
+	if (value_ < 0)
+		schedulerInstance.block(blockedList_);
+
+	return 0;
 }
 
 }	// namespace scheduler
