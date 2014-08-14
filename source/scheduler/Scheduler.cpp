@@ -8,13 +8,13 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-08-13
+ * \date 2014-08-14
  */
 
 #include "distortos/scheduler/Scheduler.hpp"
 
 #include "distortos/scheduler/idleThreadControlBlock.hpp"
-#include "distortos/scheduler/ThreadBase.hpp"
+#include "distortos/scheduler/Thread.hpp"
 #include "distortos/scheduler/SoftwareTimer.hpp"
 
 #include "distortos/architecture/InterruptMaskingLock.hpp"
