@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-08-13
+ * \date 2014-08-14
  */
 
 #include "distortos/scheduler/ThreadControlBlock.hpp"
@@ -41,7 +41,8 @@ ThreadControlBlock::ThreadControlBlock(void* const buffer, const size_t size, co
 void* ThreadControlBlock::runTrampoline_(void* const argument)
 {
 	auto& that = *reinterpret_cast<const ThreadControlBlock*>(argument);
-	return that.run_();
+	that.run_();
+	return nullptr;
 }
 
 }	// namespace scheduler

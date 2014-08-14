@@ -106,11 +106,9 @@ private:
 	 * \brief "Run" function of thread
 	 *
 	 * This should be overridden by derived classes.
-	 *
-	 * \return value returned by thread's function
 	 */
 
-	virtual void* run_() const = 0;
+	virtual void run_() const = 0;
 
 	/// internal stack object
 	architecture::Stack stack_;
