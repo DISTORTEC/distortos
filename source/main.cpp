@@ -187,10 +187,10 @@ auto tcb4 = distortos::scheduler::makeThread(stack4, sizeof(stack4), 1, test4, c
 
 int main()
 {
-	distortos::scheduler::schedulerInstance.add(tcb1);
-	distortos::scheduler::schedulerInstance.add(tcb2);
-	distortos::scheduler::schedulerInstance.add(tcb3);
-	distortos::scheduler::schedulerInstance.add(tcb4);
+	tcb1.start();
+	tcb2.start();
+	tcb3.start();
+	tcb4.start();
 
 	distortos::scheduler::schedulerInstance.start();
 

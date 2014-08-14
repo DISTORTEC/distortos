@@ -13,6 +13,10 @@
 
 #include "distortos/scheduler/ThreadBase.hpp"
 
+#include "distortos/scheduler/Scheduler.hpp"
+
+#include <cerrno>
+
 namespace distortos
 {
 
@@ -27,6 +31,15 @@ ThreadBase::ThreadBase(void* const buffer, const size_t size, const uint8_t prio
 		ThreadControlBlock{buffer, size, priority}
 {
 
+}
+
+int ThreadBase::start(Scheduler& scheduler)
+{
+	if (getState() != ThreadControlBlock::State::New)
+		return EINVAL;
+
+	scheduler.add(*this);
+	return 0;
 }
 
 }	// namespace scheduler

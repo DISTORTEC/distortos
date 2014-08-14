@@ -40,7 +40,7 @@ Scheduler::Scheduler(Thread<void (&)()>& idleThread) :
 		softwareTimerControlBlockSupervisor_{},
 		tickCount_{0}
 {
-	add(idleThread);
+	idleThread.start(*this);
 }
 
 void Scheduler::add(ThreadControlBlock &thread_control_block)
