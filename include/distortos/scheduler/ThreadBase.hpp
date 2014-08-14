@@ -25,7 +25,7 @@ namespace scheduler
 {
 
 /// ThreadBase class is a base for threads
-class ThreadBase : public ThreadControlBlock
+class ThreadBase : private ThreadControlBlock
 {
 public:
 

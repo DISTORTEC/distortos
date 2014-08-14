@@ -33,7 +33,7 @@ namespace scheduler
  */
 
 template<typename Function, typename... Args>
-class Thread : public ThreadBase
+class Thread : private ThreadBase
 {
 public:
 
@@ -53,6 +53,8 @@ public:
 	{
 
 	}
+
+	using ThreadBase::start;
 
 private:
 
