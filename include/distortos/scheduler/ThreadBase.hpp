@@ -52,6 +52,19 @@ public:
 	 */
 
 	int start(Scheduler& scheduler = schedulerInstance);
+
+protected:
+
+	/**
+	 * \brief ThreadBase's destructor
+	 *
+	 * \note Polymorphic objects of ThreadBase type must not be deleted via pointer/reference
+	 */
+
+	~ThreadBase()
+	{
+
+	}
 };
 
 }	// namespace scheduler
