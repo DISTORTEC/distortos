@@ -40,7 +40,7 @@ ThreadControlBlock::ThreadControlBlock(void* const buffer, const size_t size, co
 
 void* ThreadControlBlock::runTrampoline_(void* const argument)
 {
-	auto& that = *reinterpret_cast<const ThreadControlBlock*>(argument);
+	auto& that = *reinterpret_cast<ThreadControlBlock*>(argument);
 	that.run_();
 	return nullptr;
 }

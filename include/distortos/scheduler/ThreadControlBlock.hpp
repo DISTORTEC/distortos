@@ -108,7 +108,7 @@ private:
 	 * This should be overridden by derived classes.
 	 */
 
-	virtual void run_() const = 0;
+	virtual void run_() = 0;
 
 	/// internal stack object
 	architecture::Stack stack_;

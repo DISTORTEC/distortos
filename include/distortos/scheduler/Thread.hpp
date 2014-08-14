@@ -64,7 +64,7 @@ private:
 	 * Executes bound function object.
 	 */
 
-	virtual void run_() const override { boundFunction_(); }
+	virtual void run_() override { boundFunction_(); }
 
 	/// bound function object
 	decltype(std::bind(std::declval<Function>(), std::declval<Args>()...)) boundFunction_;
