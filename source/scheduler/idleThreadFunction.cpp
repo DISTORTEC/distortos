@@ -1,6 +1,6 @@
 /**
  * \file
- * \brief idleThreadControlBlock object definition
+ * \brief idleThreadFunction() definition
  *
  * \author Copyright (C) 2014 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
@@ -11,11 +11,9 @@
  * \date 2014-08-14
  */
 
-#include "distortos/scheduler/idleThreadControlBlock.hpp"
-
 #include "distortos/scheduler/idleThreadFunction.hpp"
 
-#include "distortos/scheduler/Thread.hpp"
+#include <cstdint>
 
 namespace distortos
 {
@@ -23,27 +21,19 @@ namespace distortos
 namespace scheduler
 {
 
-namespace
+/*---------------------------------------------------------------------------------------------------------------------+
+| global functions
++---------------------------------------------------------------------------------------------------------------------*/
+
+void idleThreadFunction()
 {
+	volatile uint64_t i {};
 
-/*---------------------------------------------------------------------------------------------------------------------+
-| local objects
-+---------------------------------------------------------------------------------------------------------------------*/
-
-/// size of idle thread's stack, bytes
-constexpr size_t idleThreadStackSize_ {128};
-
-/// idle thread's stack
-uint64_t idleThreadStack_[idleThreadStackSize_ / sizeof(uint64_t)];
-
-}	// namespace
-
-/*---------------------------------------------------------------------------------------------------------------------+
-| global objects
-+---------------------------------------------------------------------------------------------------------------------*/
-
-Thread<void (&)()> idleThreadControlBlock = makeThread(idleThreadStack_, sizeof(idleThreadStack_), 0,
-		idleThreadFunction);
+	while (1)
+	{
+		++i;
+	}
+}
 
 }	// namespace scheduler
 
