@@ -37,16 +37,15 @@ constexpr size_t idleThreadStackSize_ {128};
 /// idle thread's stack
 uint64_t idleThreadStack_[idleThreadStackSize_ / sizeof(uint64_t)];
 
+auto idleThread_ = makeThread(idleThreadStack_, sizeof(idleThreadStack_), 0, idleThreadFunction);
+
 }	// namespace
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | global objects
 +---------------------------------------------------------------------------------------------------------------------*/
 
-Thread<void (&)()> idleThreadControlBlock = makeThread(idleThreadStack_, sizeof(idleThreadStack_), 0,
-		idleThreadFunction);
-
-Scheduler schedulerInstance;
+Scheduler schedulerInstance {idleThread_};
 
 }	// namespace scheduler
 

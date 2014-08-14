@@ -13,7 +13,6 @@
 
 #include "distortos/scheduler/Scheduler.hpp"
 
-#include "distortos/scheduler/idleThreadControlBlock.hpp"
 #include "distortos/scheduler/Thread.hpp"
 #include "distortos/scheduler/SoftwareTimer.hpp"
 
@@ -34,14 +33,14 @@ namespace scheduler
 | public functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-Scheduler::Scheduler() :
+Scheduler::Scheduler(Thread<void (&)()>& idleThread) :
 		currentThreadControlBlock_{},
 		runnableList_{ThreadControlBlock::State::Runnable},
 		suspendedList_{ThreadControlBlock::State::Suspended},
 		softwareTimerControlBlockSupervisor_{},
 		tickCount_{0}
 {
-
+	add(idleThread);
 }
 
 void Scheduler::add(ThreadControlBlock &thread_control_block)
@@ -111,8 +110,6 @@ void Scheduler::sleepUntil(const uint64_t tick_value)
 
 void Scheduler::start()
 {
-	add(idleThreadControlBlock);
-
 	currentThreadControlBlock_ = runnableList_.begin();
 
 	getCurrentThreadControlBlock().getRoundRobinQuantum().reset();
