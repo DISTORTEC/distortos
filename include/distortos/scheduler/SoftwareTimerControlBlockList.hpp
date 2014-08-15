@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-08-08
+ * \date 2014-08-15
  */
 
 #ifndef INCLUDE_DISTORTOS_SCHEDULER_SOFTWARETIMERCONTROLBLOCKLIST_HPP_
@@ -36,8 +36,8 @@ struct SoftwareTimerControlBlockAscendingTimePoint
 	 * \return true if left's expiration time point is greater than right's expiration time point
 	 */
 
-	bool operator() (const SoftwareTimerControlBlockListValueType &left,
-			const SoftwareTimerControlBlockListValueType &right)
+	bool operator() (const SoftwareTimerControlBlockListValueType& left,
+			const SoftwareTimerControlBlockListValueType& right)
 	{
 		return left.get().getTimePoint() > right.get().getTimePoint();
 	}

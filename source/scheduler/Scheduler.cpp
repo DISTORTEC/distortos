@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-08-14
+ * \date 2014-08-15
  */
 
 #include "distortos/scheduler/Scheduler.hpp"
@@ -43,18 +43,18 @@ Scheduler::Scheduler(Thread<void (&)()>& idleThread) :
 	idleThread.start(*this);
 }
 
-void Scheduler::add(ThreadControlBlock &thread_control_block)
+void Scheduler::add(ThreadControlBlock& thread_control_block)
 {
 	architecture::InterruptMaskingLock interrupt_masking_lock;
 	runnableList_.sortedEmplace(thread_control_block);
 }
 
-void Scheduler::block(ThreadControlBlockList &container)
+void Scheduler::block(ThreadControlBlockList& container)
 {
 	block(container, currentThreadControlBlock_);
 }
 
-int Scheduler::block(ThreadControlBlockList &container, const Iterator iterator)
+int Scheduler::block(ThreadControlBlockList& container, const Iterator iterator)
 {
 	{
 		architecture::InterruptMaskingLock interrupt_masking_lock;
@@ -127,7 +127,7 @@ int Scheduler::suspend(const Iterator iterator)
 	return block(suspendedList_, iterator);
 }
 
-void * Scheduler::switchContext(void *stack_pointer)
+void* Scheduler::switchContext(void* stack_pointer)
 {
 	architecture::InterruptMaskingLock interrupt_masking_lock;
 
@@ -159,7 +159,7 @@ bool Scheduler::tickInterruptHandler()
 	return isContextSwitchRequired_();
 }
 
-void Scheduler::unblock(ThreadControlBlockList &container, const Iterator iterator)
+void Scheduler::unblock(ThreadControlBlockList& container, const Iterator iterator)
 {
 	architecture::InterruptMaskingLock interrupt_masking_lock;
 
@@ -207,7 +207,7 @@ void Scheduler::requestContextSwitch_() const
 	architecture::requestContextSwitch();
 }
 
-void Scheduler::unblockInternal_(ThreadControlBlockList &container, const Iterator iterator)
+void Scheduler::unblockInternal_(ThreadControlBlockList& container, const Iterator iterator)
 {
 	runnableList_.sortedSplice(container, iterator);
 }

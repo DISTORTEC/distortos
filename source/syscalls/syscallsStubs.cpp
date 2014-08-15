@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-07-29
+ * \date 2014-08-15
  */
 
 #include <sys/stat.h>
@@ -30,7 +30,7 @@ extern "C"
  */
 
 __attribute__ ((weak))
-int _close_r(_reent *, int)
+int _close_r(_reent*, int)
 {
 	errno = EBADF;
 	return -1;
@@ -43,7 +43,7 @@ int _close_r(_reent *, int)
  */
 
 __attribute__ ((weak))
-int _execve_r(_reent *, const char *, char *const [], char *const [])
+int _execve_r(_reent*, const char*, char* const [], char* const [])
 {
 	errno = ENOMEM;
 	return -1;
@@ -66,7 +66,7 @@ void _exit(int)
  */
 
 __attribute__ ((weak))
-pid_t _fork_r(_reent *)
+pid_t _fork_r(_reent*)
 {
 
 	errno = EAGAIN;
@@ -80,7 +80,7 @@ pid_t _fork_r(_reent *)
  */
 
 __attribute__ ((weak))
-int _fstat_r(_reent *, int, struct stat *)
+int _fstat_r(_reent*, int, struct stat*)
 {
 	errno = EBADF;
 	return -1;
@@ -93,7 +93,7 @@ int _fstat_r(_reent *, int, struct stat *)
  */
 
 __attribute__ ((weak))
-pid_t _getpid_r(_reent *)
+pid_t _getpid_r(_reent*)
 {
 	return 1;
 }
@@ -105,7 +105,7 @@ pid_t _getpid_r(_reent *)
  */
 
 __attribute__ ((weak))
-int _isatty_r(_reent *, int)
+int _isatty_r(_reent*, int)
 {
 	errno = EBADF;
 	return 0;
@@ -118,7 +118,7 @@ int _isatty_r(_reent *, int)
  */
 
 __attribute__ ((weak))
-int _kill_r(_reent *, pid_t, int)
+int _kill_r(_reent*, pid_t, int)
 {
 	errno = EINVAL;
 	return -1;
@@ -131,7 +131,7 @@ int _kill_r(_reent *, pid_t, int)
  */
 
 __attribute__ ((weak))
-int _link_r(_reent *, const char *, const char *)
+int _link_r(_reent*, const char*, const char*)
 {
 	errno = EMLINK;
 	return -1;
@@ -144,7 +144,7 @@ int _link_r(_reent *, const char *, const char *)
  */
 
 __attribute__ ((weak))
-off_t _lseek_r(_reent *, int, off_t, int)
+off_t _lseek_r(_reent*, int, off_t, int)
 {
 	errno = EBADF;
 	return -1;
@@ -157,7 +157,7 @@ off_t _lseek_r(_reent *, int, off_t, int)
  */
 
 __attribute__ ((weak))
-int _open_r(_reent *, const char *, int, int)
+int _open_r(_reent*, const char*, int, int)
 {
 	errno = EMFILE;
 	return -1;
@@ -170,7 +170,7 @@ int _open_r(_reent *, const char *, int, int)
  */
 
 __attribute__ ((weak))
-ssize_t _read_r(_reent *, int, void *, size_t)
+ssize_t _read_r(_reent*, int, void*, size_t)
 {
 	errno = EBADF;
 	return -1;
@@ -183,7 +183,7 @@ ssize_t _read_r(_reent *, int, void *, size_t)
 */
 
 __attribute__ ((weak))
-caddr_t _sbrk_r(_reent *, intptr_t)
+caddr_t _sbrk_r(_reent*, intptr_t)
 {
 	errno = ENOMEM;
 	return reinterpret_cast<caddr_t>(-1);
@@ -196,7 +196,7 @@ caddr_t _sbrk_r(_reent *, intptr_t)
  */
 
 __attribute__ ((weak))
-int _stat_r(_reent *, const char *, struct stat *)
+int _stat_r(_reent*, const char*, struct stat*)
 {
 	errno = ENOENT;
 	return -1;
@@ -209,7 +209,7 @@ int _stat_r(_reent *, const char *, struct stat *)
  */
 
 __attribute__ ((weak))
-clock_t _times_r(_reent *, tms *)
+clock_t _times_r(_reent*, tms*)
 {
 	return -1;
 }
@@ -221,7 +221,7 @@ clock_t _times_r(_reent *, tms *)
  */
 
 __attribute__ ((weak))
-int _unlink_r(_reent *, const char *)
+int _unlink_r(_reent*, const char*)
 {
 	errno = ENOENT;
 	return -1;
@@ -234,7 +234,7 @@ int _unlink_r(_reent *, const char *)
  */
 
 __attribute__ ((weak))
-pid_t _wait_r(_reent *, int *)
+pid_t _wait_r(_reent*, int*)
 {
 	errno = ECHILD;
 	return -1;
@@ -247,7 +247,7 @@ pid_t _wait_r(_reent *, int *)
  */
 
 __attribute__ ((weak))
-ssize_t _write_r(_reent *, int, const void *, size_t)
+ssize_t _write_r(_reent*, int, const void*, size_t)
 {
 	errno = EBADF;
 	return -1;

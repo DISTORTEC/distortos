@@ -30,7 +30,7 @@ namespace architecture
 void* initializeStack(void* const buffer, const size_t size, void (&function)(void*), void* const arguments,
 		void (&trap)(void*))
 {
-	auto stack_pointer = reinterpret_cast<uint32_t *>(static_cast<uint8_t *>(buffer) + size);
+	auto stack_pointer = reinterpret_cast<uint32_t*>(static_cast<uint8_t*>(buffer) + size);
 
 	using StackElement = std::decay<decltype(*stack_pointer)>::type;
 

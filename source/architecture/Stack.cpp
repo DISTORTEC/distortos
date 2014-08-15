@@ -39,11 +39,11 @@ namespace
  * \return adjusted buffer's address
  */
 
-void *adjustBuffer_(void * const buffer, const size_t stack_alignment)
+void* adjustBuffer_(void* const buffer, const size_t stack_alignment)
 {
 	const auto buffer_size_t = reinterpret_cast<size_t>(buffer);
 	const auto offset = (-buffer_size_t) & (stack_alignment - 1);
-	return reinterpret_cast<void *>(buffer_size_t + offset);
+	return reinterpret_cast<void*>(buffer_size_t + offset);
 }
 
 /**
@@ -57,9 +57,9 @@ void *adjustBuffer_(void * const buffer, const size_t stack_alignment)
  * \return adjusted buffer's size
  */
 
-size_t adjustSize_(void * const buffer, const size_t size, void * const adjusted_buffer, const size_t divisibility)
+size_t adjustSize_(void* const buffer, const size_t size, void* const adjusted_buffer, const size_t divisibility)
 {
-	const auto offset = static_cast<uint8_t *>(adjusted_buffer) - static_cast<uint8_t *>(buffer);
+	const auto offset = static_cast<uint8_t*>(adjusted_buffer) - static_cast<uint8_t*>(buffer);
 	return ((size - offset) / divisibility) * divisibility;
 }
 

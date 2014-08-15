@@ -53,7 +53,7 @@ public:
 	 * \return current value of stack pointer
 	 */
 
-	void * getStackPointer() const { return stackPointer_; }
+	void* getStackPointer() const { return stackPointer_; }
 
 	/**
 	 * \brief Sets value of stack pointer.
@@ -61,18 +61,18 @@ public:
 	 * \param [in] stack_pointer is the new value of stack pointer
 	 */
 
-	void setStackPointer(void * const stack_pointer) { stackPointer_ = stack_pointer; }
+	void setStackPointer(void* const stack_pointer) { stackPointer_ = stack_pointer; }
 
 private:
 
 	/// adjusted address of stack's buffer
-	void * const adjustedBuffer_;
+	void* const adjustedBuffer_;
 
 	/// adjusted size of stack's buffer
 	const size_t adjustedSize_;
 
 	/// current value of stack pointer register
-	void *stackPointer_;
+	void* stackPointer_;
 };
 
 }	// namespace architecture

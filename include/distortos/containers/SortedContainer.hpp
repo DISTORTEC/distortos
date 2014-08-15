@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-08-08
+ * \date 2014-08-15
  */
 
 #ifndef INCLUDE_DISTORTOS_CONTAINERS_SORTEDCONTAINER_HPP_
@@ -106,7 +106,7 @@ public:
 	 * \param [in] other_position is the position of the transfered object in the other container
 	 */
 
-	void sortedSplice(SortedContainer &other, const iterator other_position)
+	void sortedSplice(SortedContainer& other, const iterator other_position)
 	{
 		const auto insert_position = findInsertPosition_(*other_position);
 		Base::splice(insert_position, other, other_position);
@@ -122,10 +122,10 @@ private:
 	 * \param [in] value is the value that is going to be emplaced/transfered
 	 */
 
-	iterator findInsertPosition_(const value_type &value)
+	iterator findInsertPosition_(const value_type& value)
 	{
 		return std::find_if(begin(), end(),
-				[this, &value](const value_type &element) -> bool
+				[this, &value](const value_type& element) -> bool
 				{
 					return compare_(element, value);
 				}

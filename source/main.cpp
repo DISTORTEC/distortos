@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-08-14
+ * \date 2014-08-15
  */
 
 #include "distortos/scheduler/Thread.hpp"
@@ -31,9 +31,9 @@ namespace
  * \brief Test thread
  */
 
-void * test1(void * const argument)
+void* test1(void* const argument)
 {
-	volatile auto name = static_cast<const char *>(argument);
+	volatile auto name = static_cast<const char*>(argument);
 	(void)name;
 
 	volatile uint32_t i = 0;
@@ -61,9 +61,9 @@ void * test1(void * const argument)
  * \brief Test thread
  */
 
-void * test2(void * const argument)
+void* test2(void* const argument)
 {
-	volatile auto name = static_cast<const char *>(argument);
+	volatile auto name = static_cast<const char*>(argument);
 	(void)name;
 
 	volatile uint32_t i = 0;
@@ -91,9 +91,9 @@ void * test2(void * const argument)
  * \brief Test thread
  */
 
-void * test3(void * const argument)
+void* test3(void* const argument)
 {
-	volatile auto name = static_cast<const char *>(argument);
+	volatile auto name = static_cast<const char*>(argument);
 	(void)name;
 
 	volatile uint32_t i = 0;
@@ -121,9 +121,9 @@ void * test3(void * const argument)
  * \brief Test thread
  */
 
-void * test4(void * const argument)
+void* test4(void* const argument)
 {
-	volatile auto name = static_cast<const char *>(argument);
+	volatile auto name = static_cast<const char*>(argument);
 	(void)name;
 
 	volatile uint32_t i = 0;
@@ -164,16 +164,16 @@ uint64_t stack3[128];
 uint64_t stack4[128];
 
 /// TCB with thread1
-auto tcb1 = distortos::scheduler::makeThread(stack1, sizeof(stack1), 1, test1, const_cast<char *>("one"));
+auto tcb1 = distortos::scheduler::makeThread(stack1, sizeof(stack1), 1, test1, const_cast<char*>("one"));
 
 /// TCB with thread2
-auto tcb2 = distortos::scheduler::makeThread(stack2, sizeof(stack2), 1, test2, const_cast<char *>("two"));
+auto tcb2 = distortos::scheduler::makeThread(stack2, sizeof(stack2), 1, test2, const_cast<char*>("two"));
 
 /// TCB with thread3
-auto tcb3 = distortos::scheduler::makeThread(stack3, sizeof(stack3), 1, test3, const_cast<char *>("three"));
+auto tcb3 = distortos::scheduler::makeThread(stack3, sizeof(stack3), 1, test3, const_cast<char*>("three"));
 
 /// TCB with thread4
-auto tcb4 = distortos::scheduler::makeThread(stack4, sizeof(stack4), 1, test4, const_cast<char *>("four"));
+auto tcb4 = distortos::scheduler::makeThread(stack4, sizeof(stack4), 1, test4, const_cast<char*>("four"));
 
 }	// namespace
 

@@ -57,19 +57,19 @@ public:
 	ThreadControlBlock(void* buffer, size_t size, uint8_t priority);
 
 	/// \return reference to internal Stack object
-	architecture::Stack & getStack() { return stack_; }
+	architecture::Stack& getStack() { return stack_; }
 
 	/// \return const reference to internal Stack object
-	const architecture::Stack & getStack() const { return stack_; }
+	const architecture::Stack& getStack() const { return stack_; }
 
 	/// \return priority of ThreadControlBlock
 	uint8_t getPriority() const { return priority_; }
 
 	/// \return reference to internal RoundRobinQuantum object
-	RoundRobinQuantum & getRoundRobinQuantum() { return roundRobinQuantum_; }
+	RoundRobinQuantum& getRoundRobinQuantum() { return roundRobinQuantum_; }
 
 	/// \return const reference to internal RoundRobinQuantum object
-	const RoundRobinQuantum & getRoundRobinQuantum() const { return roundRobinQuantum_; }
+	const RoundRobinQuantum& getRoundRobinQuantum() const { return roundRobinQuantum_; }
 
 	/// \return current state of object
 	State getState() const { return state_; }

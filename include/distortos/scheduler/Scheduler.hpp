@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-08-14
+ * \date 2014-08-15
  */
 
 #ifndef INCLUDE_DISTORTOS_SCHEDULER_SCHEDULER_HPP_
@@ -53,7 +53,7 @@ public:
 	 * \param [in] thread_control_block is a reference to added ThreadControlBlock object
 	 */
 
-	void add(ThreadControlBlock &thread_control_block);
+	void add(ThreadControlBlock& thread_control_block);
 
 	/**
 	 * \brief Blocks current thread, transferring it to provided container.
@@ -61,7 +61,7 @@ public:
 	 * \param [in] container is a reference to destination container to which the thread will be transferred
 	 */
 
-	void block(ThreadControlBlockList &container);
+	void block(ThreadControlBlockList& container);
 
 	/**
 	 * \brief Blocks thread, transferring it to provided container.
@@ -75,19 +75,19 @@ public:
 	 * - EINVAL - provided thread is not in "runnable" state;
 	 */
 
-	int block(ThreadControlBlockList &container, Iterator iterator);
+	int block(ThreadControlBlockList& container, Iterator iterator);
 
 	/**
 	 * \return reference to currently active ThreadControlBlock
 	 */
 
-	ThreadControlBlock & getCurrentThreadControlBlock() const { return *currentThreadControlBlock_; }
+	ThreadControlBlock& getCurrentThreadControlBlock() const { return *currentThreadControlBlock_; }
 
 	/**
 	 * \return reference to internal SoftwareTimerControlBlockSupervisor object
 	 */
 
-	SoftwareTimerControlBlockSupervisor & getSoftwareTimerSupervisor()
+	SoftwareTimerControlBlockSupervisor& getSoftwareTimerSupervisor()
 	{
 		return softwareTimerControlBlockSupervisor_;
 	}
@@ -96,7 +96,7 @@ public:
 	 * \return const reference to internal SoftwareTimerControlBlockSupervisor object
 	 */
 
-	const SoftwareTimerControlBlockSupervisor & getSoftwareTimerSupervisor() const
+	const SoftwareTimerControlBlockSupervisor& getSoftwareTimerSupervisor() const
 	{
 		return softwareTimerControlBlockSupervisor_;
 	}
@@ -180,7 +180,7 @@ public:
 	 * \return new thread's stack pointer
 	 */
 
-	void * switchContext(void *stack_pointer);
+	void* switchContext(void* stack_pointer);
 
 	/**
 	 * \brief Handler of "tick" interrupt.
@@ -199,7 +199,7 @@ public:
 	 * \param [in] iterator is the iterator which points to unblocked thread
 	 */
 
-	void unblock(ThreadControlBlockList &container, Iterator iterator);
+	void unblock(ThreadControlBlockList& container, Iterator iterator);
 
 	/**
 	 * \brief Yields time slot of the scheduler to next thread.
@@ -239,7 +239,7 @@ private:
 	 * \param [in] iterator is the iterator which points to unblocked thread
 	 */
 
-	void unblockInternal_(ThreadControlBlockList &container, Iterator iterator);
+	void unblockInternal_(ThreadControlBlockList& container, Iterator iterator);
 
 	/// iterator to the currently active ThreadControlBlock
 	Iterator currentThreadControlBlock_;

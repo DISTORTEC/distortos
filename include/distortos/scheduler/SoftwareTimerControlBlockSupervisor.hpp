@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-08-08
+ * \date 2014-08-15
  */
 
 #ifndef INCLUDE_DISTORTOS_SCHEDULER_SOFTWARETIMERCONTROLBLOCKSUPERVISOR_HPP_
@@ -41,7 +41,7 @@ public:
 	 * \return iterator to added SoftwareTimerControlBlock object on the list
 	 */
 
-	SoftwareTimerControlBlockListIterator add(SoftwareTimerControlBlock &software_timer_control_block);
+	SoftwareTimerControlBlockListIterator add(SoftwareTimerControlBlock& software_timer_control_block);
 
 	/**
 	 * \brief Handler of "tick" interrupt.

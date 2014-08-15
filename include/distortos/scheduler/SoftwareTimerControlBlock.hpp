@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-08-09
+ * \date 2014-08-15
  */
 
 #ifndef INCLUDE_DISTORTOS_SCHEDULER_SOFTWARETIMERCONTROLBLOCK_HPP_
@@ -51,7 +51,7 @@ public:
 	 * \return const reference to expiration time point
 	 */
 
-	const TickClock::time_point & getTimePoint() const { return timePoint_; }
+	const TickClock::time_point& getTimePoint() const { return timePoint_; }
 
 	/**
 	 * \brief Sets the list that has this object.
@@ -59,7 +59,7 @@ public:
 	 * \param [in] list is a pointer to list that has this object
 	 */
 
-	void setList(SoftwareTimerControlBlockList * const list)
+	void setList(SoftwareTimerControlBlockList* const list)
 	{
 		list_ = list;
 	}
@@ -137,7 +137,7 @@ private:
 	TickClock::time_point timePoint_;
 
 	/// pointer to list that has this object
-	SoftwareTimerControlBlockList *list_;
+	SoftwareTimerControlBlockList* list_;
 
 	/// iterator of this object on the list, valid after it has been added to some list
 	SoftwareTimerControlBlockListIterator iterator_;

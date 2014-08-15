@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-08-06
+ * \date 2014-08-15
  */
 
 #ifndef INCLUDE_DISTORTOS_ARCHITECTURE_INTERRUPTMASKINGUNMASKINGLOCK_HPP_
@@ -55,10 +55,10 @@ public:
 		restoreInterruptMasking(interruptMask_);
 	}
 
-	InterruptMaskingUnmaskingLock(const InterruptMaskingUnmaskingLock &) = delete;
-	InterruptMaskingUnmaskingLock(InterruptMaskingUnmaskingLock &&) = delete;
-	InterruptMaskingUnmaskingLock & operator= (const InterruptMaskingUnmaskingLock &) = delete;
-	InterruptMaskingUnmaskingLock & operator= (InterruptMaskingUnmaskingLock &&) = delete;
+	InterruptMaskingUnmaskingLock(const InterruptMaskingUnmaskingLock&) = delete;
+	InterruptMaskingUnmaskingLock(InterruptMaskingUnmaskingLock&&) = delete;
+	InterruptMaskingUnmaskingLock& operator=(const InterruptMaskingUnmaskingLock&) = delete;
+	InterruptMaskingUnmaskingLock& operator=(InterruptMaskingUnmaskingLock&&) = delete;
 
 private:
 

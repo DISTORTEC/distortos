@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-08-08
+ * \date 2014-08-15
  */
 
 #ifndef INCLUDE_DISTORTOS_SCHEDULER_THREADCONTROLBLOCKLIST_HPP_
@@ -41,7 +41,7 @@ struct ThreadControlBlockDescendingPriority
 	 * \return true if left's priority is less than right's priority
 	 */
 
-	bool operator() (const ThreadControlBlockListValueType &left, const ThreadControlBlockListValueType &right)
+	bool operator() (const ThreadControlBlockListValueType& left, const ThreadControlBlockListValueType& right)
 	{
 		return left.get().getPriority() < right.get().getPriority();
 	}
@@ -109,7 +109,7 @@ public:
 	 * \param [in] other_position is the position of the transfered object in the other container
 	 */
 
-	void sortedSplice(ThreadControlBlockList &other, const iterator other_position)
+	void sortedSplice(ThreadControlBlockList& other, const iterator other_position)
 	{
 		Base::sortedSplice(other, other_position);
 		other_position->get().setState(state_);

@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-07-29
+ * \date 2014-08-15
  */
 
 #include <cerrno>
@@ -32,7 +32,7 @@ extern "C"
  * \return pointer to new data space
  */
 
-void *_sbrk_r(_reent *, const intptr_t size)
+void* _sbrk_r(_reent*, const intptr_t size)
 {
 	extern char __heap_start[];						// imported from linker script
 	extern char __heap_end[];						// imported from linker script
@@ -41,7 +41,7 @@ void *_sbrk_r(_reent *, const intptr_t size)
 	if (currentHeapEnd_ + size > __heap_end)		// is there enough space on the heap left?
 	{
 		errno = ENOMEM;
-		return reinterpret_cast<void *>(-1);
+		return reinterpret_cast<void*>(-1);
 	}
 
 	const auto previous_heap_end = currentHeapEnd_;
