@@ -38,12 +38,11 @@ ThreadControlBlock::ThreadControlBlock(void* const buffer, const size_t size, co
 | private static functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-void* ThreadControlBlock::runTrampoline_(void* const argument)
+void ThreadControlBlock::runTrampoline_(void* const argument)
 {
 	auto& that = *reinterpret_cast<ThreadControlBlock*>(argument);
 	that.run_();
 	that.terminationHook_();
-	return nullptr;
 }
 
 }	// namespace scheduler

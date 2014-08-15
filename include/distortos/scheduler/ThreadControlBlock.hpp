@@ -96,11 +96,9 @@ private:
 	 * \brief Trampoline for run_()
 	 *
 	 * \param [in] argument is a pointer to ThreadControlBlock object (this)
-	 *
-	 * \return value returned by run_()
 	 */
 
-	static void* runTrampoline_(void* argument);
+	static void runTrampoline_(void* argument);
 
 	/**
 	 * \brief "Run" function of thread

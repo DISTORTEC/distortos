@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-07-29
+ * \date 2014-08-15
  */
 
 #include "distortos/architecture/Stack.hpp"
@@ -69,8 +69,8 @@ size_t adjustSize_(void * const buffer, const size_t size, void * const adjusted
 | public functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-Stack::Stack(void * const buffer, const size_t size, void * (&function)(void *), void * const arguments,
-		void (&trap)(void *)) :
+Stack::Stack(void* const buffer, const size_t size, void (&function)(void*), void* const arguments,
+		void (&trap)(void*)) :
 		adjustedBuffer_{adjustBuffer_(buffer, stackAlignment)},
 		adjustedSize_{adjustSize_(buffer, size, adjustedBuffer_, stackSizeDivisibility)},
 		stackPointer_{initializeStack(adjustedBuffer_, adjustedSize_, function, arguments, trap)}

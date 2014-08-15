@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-07-31
+ * \date 2014-08-15
  */
 
 #include "distortos/architecture.hpp"
@@ -27,8 +27,8 @@ namespace architecture
 | global functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-void * initializeStack(void * const buffer, const size_t size, void * (&function)(void *), void * const arguments,
-		void (&trap)(void *))
+void* initializeStack(void* const buffer, const size_t size, void (&function)(void*), void* const arguments,
+		void (&trap)(void*))
 {
 	auto stack_pointer = reinterpret_cast<uint32_t *>(static_cast<uint8_t *>(buffer) + size);
 
