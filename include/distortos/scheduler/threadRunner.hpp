@@ -20,13 +20,15 @@ namespace distortos
 namespace scheduler
 {
 
+class ThreadControlBlock;
+
 /**
  * \brief Thread runner function - entry point of threads.
  *
- * \param [in] argument is a pointer to ThreadControlBlock object (this)
+ * \param [in] threadControlBlock is a reference to ThreadControlBlock object that is being run
  */
 
-extern "C" void threadRunner(void* argument);
+extern "C" void threadRunner(ThreadControlBlock& threadControlBlock);
 
 }	// namespace scheduler
 

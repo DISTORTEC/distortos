@@ -21,6 +21,13 @@
 namespace distortos
 {
 
+namespace scheduler
+{
+
+class ThreadControlBlock;
+
+}	// namespace scheduler
+
 /// architecture namespace has symbols that need to be provided by selected architecture
 namespace architecture
 {
@@ -59,13 +66,14 @@ InterruptMask enableInterruptMasking();
  * \param [in] buffer is a pointer to stack's buffer
  * \param [in] size is the size of stack's buffer, bytes
  * \param [in] function is a reference to thread's function
- * \param [in] arguments is an argument for function
+ * \param [in] threadControlBlock is a reference to scheduler::ThreadControlBlock object passed to function
  * \param [in] trap is a reference to trap function called when thread function returns
  *
  * \return value that can be used as thread's stack pointer, ready for context switching
  */
 
-void* initializeStack(void* buffer, size_t size, void (&function)(void*), void* arguments, void (&trap)());
+void* initializeStack(void* buffer, size_t size, void (&function)(scheduler::ThreadControlBlock&),
+		scheduler::ThreadControlBlock& threadControlBlock, void (&trap)());
 
 /**
  * \brief Restores interrupt masking.

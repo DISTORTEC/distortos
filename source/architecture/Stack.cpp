@@ -69,10 +69,11 @@ size_t adjustSize_(void* const buffer, const size_t size, void* const adjusted_b
 | public functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-Stack::Stack(void* const buffer, const size_t size, void (&function)(void*), void* const arguments, void (&trap)()) :
+Stack::Stack(void* const buffer, const size_t size, void (&function)(scheduler::ThreadControlBlock&),
+		scheduler::ThreadControlBlock& threadControlBlock, void (&trap)()) :
 		adjustedBuffer_{adjustBuffer_(buffer, stackAlignment)},
 		adjustedSize_{adjustSize_(buffer, size, adjustedBuffer_, stackSizeDivisibility)},
-		stackPointer_{initializeStack(adjustedBuffer_, adjustedSize_, function, arguments, trap)}
+		stackPointer_{initializeStack(adjustedBuffer_, adjustedSize_, function, threadControlBlock, trap)}
 {
 	/// \todo implement minimal size check
 }

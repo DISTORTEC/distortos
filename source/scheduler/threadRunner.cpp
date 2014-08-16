@@ -25,11 +25,10 @@ namespace scheduler
 | global functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-void threadRunner(void* const argument)
+void threadRunner(ThreadControlBlock& threadControlBlock)
 {
-	auto& that = *reinterpret_cast<ThreadControlBlock*>(argument);
-	that.run_();
-	that.terminationHook_();
+	threadControlBlock.run_();
+	threadControlBlock.terminationHook_();
 }
 
 }	// namespace scheduler

@@ -19,6 +19,13 @@
 namespace distortos
 {
 
+namespace scheduler
+{
+
+class ThreadControlBlock;
+
+}	// namespace scheduler
+
 namespace architecture
 {
 
@@ -41,11 +48,12 @@ public:
 	 * \param [in] buffer is a pointer to stack's buffer
 	 * \param [in] size is the size of stack's buffer, bytes
 	 * \param [in] function is a reference to thread's function
-	 * \param [in] arguments is an argument for function
+	 * \param [in] threadControlBlock is a reference to scheduler::ThreadControlBlock object passed to function
 	 * \param [in] trap is a reference to trap function called when thread function returns
 	 */
 
-	Stack(void* buffer, size_t size, void (&function)(void*), void* arguments, void (&trap)());
+	Stack(void* buffer, size_t size, void (&function)(scheduler::ThreadControlBlock&),
+			scheduler::ThreadControlBlock& threadControlBlock, void (&trap)());
 
 	/**
 	 * \brief Gets current value of stack pointer.

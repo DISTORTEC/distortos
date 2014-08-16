@@ -93,7 +93,7 @@ protected:
 
 private:
 
-	friend void threadRunner(void* argument);
+	friend void threadRunner(ThreadControlBlock& threadControlBlock);
 
 	/**
 	 * \brief "Run" function of thread

@@ -26,7 +26,7 @@ namespace scheduler
 +---------------------------------------------------------------------------------------------------------------------*/
 
 ThreadControlBlock::ThreadControlBlock(void* const buffer, const size_t size, const uint8_t priority) :
-		stack_{buffer, size, threadRunner, this, threadReturnTrap},
+		stack_{buffer, size, threadRunner, *this, threadReturnTrap},
 		priority_{priority},
 		roundRobinQuantum_{},
 		state_{State::New}
