@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-08-15
+ * \date 2014-08-16
  */
 
 #ifndef INCLUDE_DISTORTOS_ARCHITECTURE_STACK_HPP_
@@ -45,7 +45,7 @@ public:
 	 * \param [in] trap is a reference to trap function called when thread function returns
 	 */
 
-	Stack(void* buffer, size_t size, void (&function)(void*), void* arguments, void (&trap)(void*));
+	Stack(void* buffer, size_t size, void (&function)(void*), void* arguments, void (&trap)());
 
 	/**
 	 * \brief Gets current value of stack pointer.

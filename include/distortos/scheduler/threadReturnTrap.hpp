@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-08-15
+ * \date 2014-08-16
  */
 
 #ifndef INCLUDE_DISTORTOS_SCHEDULER_THREADRETURNTRAP_HPP_
@@ -22,11 +22,9 @@ namespace scheduler
 
 /**
  * \brief Trap function called when thread's function returns.
- *
- * \param [in] retval is the value returned from thread's function
  */
 
-void threadReturnTrap(void* retval);
+void threadReturnTrap();
 
 }	// namespace scheduler
 
