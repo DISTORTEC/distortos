@@ -45,6 +45,8 @@ public:
 		BlockedOnSemaphore,
 		/// thread is suspended
 		Suspended,
+		/// thread is terminated
+		Terminated,
 	};
 
 	/**
