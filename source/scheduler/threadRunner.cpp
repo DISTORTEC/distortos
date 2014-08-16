@@ -1,6 +1,6 @@
 /**
  * \file
- * \brief ThreadControlBlock class implementation
+ * \brief threadRunner() definition
  *
  * \author Copyright (C) 2014 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
@@ -11,9 +11,9 @@
  * \date 2014-08-16
  */
 
-#include "distortos/scheduler/ThreadControlBlock.hpp"
+#include "distortos/scheduler/threadRunner.hpp"
 
-#include "distortos/scheduler/threadReturnTrap.hpp"
+#include "distortos/scheduler/ThreadControlBlock.hpp"
 
 namespace distortos
 {
@@ -22,16 +22,14 @@ namespace scheduler
 {
 
 /*---------------------------------------------------------------------------------------------------------------------+
-| public functions
+| global functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-ThreadControlBlock::ThreadControlBlock(void* const buffer, const size_t size, const uint8_t priority) :
-		stack_{buffer, size, threadRunner, this, threadReturnTrap},
-		priority_{priority},
-		roundRobinQuantum_{},
-		state_{State::New}
+void threadRunner(void* const argument)
 {
-
+	auto& that = *reinterpret_cast<ThreadControlBlock*>(argument);
+	that.run_();
+	that.terminationHook_();
 }
 
 }	// namespace scheduler
