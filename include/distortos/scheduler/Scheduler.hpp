@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-08-15
+ * \date 2014-08-16
  */
 
 #ifndef INCLUDE_DISTORTOS_SCHEDULER_SCHEDULER_HPP_
@@ -106,6 +106,19 @@ public:
 	 */
 
 	uint64_t getTickCount() const;
+
+	/**
+	 * \brief Removes current thread from Scheduler's control.
+	 *
+	 * Thread's state is changed to "terminated".
+	 *
+	 * \note This function can be used only after thread's function returns an all cleanup is done.
+	 *
+	 * \return 0 on success, error code otherwise:
+	 * - EINVAL - provided thread is not in "runnable" state and cannot be removed/terminated;
+	 */
+
+	int remove();
 
 	/**
 	 * \brief Resumes suspended thread.
