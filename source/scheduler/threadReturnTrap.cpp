@@ -13,6 +13,9 @@
 
 #include "distortos/scheduler/threadReturnTrap.hpp"
 
+#include "distortos/scheduler/schedulerInstance.hpp"
+#include "distortos/scheduler/Scheduler.hpp"
+
 namespace distortos
 {
 
@@ -25,6 +28,8 @@ namespace scheduler
 
 void threadReturnTrap()
 {
+	schedulerInstance.remove();
+
 	while (1);
 }
 

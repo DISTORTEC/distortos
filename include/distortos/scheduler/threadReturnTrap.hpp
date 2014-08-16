@@ -22,6 +22,8 @@ namespace scheduler
 
 /**
  * \brief Trap function called when thread's function returns.
+ *
+ * Removes current thread, effectively terminating it.
  */
 
 void threadReturnTrap();
