@@ -31,10 +31,10 @@ namespace
  * \brief Test thread
  */
 
-void* test1(void* const argument)
+void* test1(const char* const volatile name)
 {
-	volatile auto name = static_cast<const char*>(argument);
-	(void)name;
+	volatile auto name2 = name;
+	(void)name2;
 
 	volatile uint32_t i = 0;
 	volatile double d;
@@ -61,10 +61,10 @@ void* test1(void* const argument)
  * \brief Test thread
  */
 
-void* test2(void* const argument)
+void* test2(const char* const volatile name)
 {
-	volatile auto name = static_cast<const char*>(argument);
-	(void)name;
+	volatile auto name2 = name;
+	(void)name2;
 
 	volatile uint32_t i = 0;
 	volatile double d;
@@ -91,10 +91,10 @@ void* test2(void* const argument)
  * \brief Test thread
  */
 
-void* test3(void* const argument)
+void* test3(const char* const volatile name)
 {
-	volatile auto name = static_cast<const char*>(argument);
-	(void)name;
+	volatile auto name2 = name;
+	(void)name2;
 
 	volatile uint32_t i = 0;
 	volatile double d;
@@ -121,10 +121,10 @@ void* test3(void* const argument)
  * \brief Test thread
  */
 
-void* test4(void* const argument)
+void* test4(const char* const volatile name)
 {
-	volatile auto name = static_cast<const char*>(argument);
-	(void)name;
+	volatile auto name2 = name;
+	(void)name2;
 
 	volatile uint32_t i = 0;
 	volatile double d;
@@ -151,17 +151,17 @@ void* test4(void* const argument)
 | local objects
 +---------------------------------------------------------------------------------------------------------------------*/
 
-/// TCB with thread1
-auto tcb1 = distortos::scheduler::makeStaticThread<2048>(1, test1, const_cast<char*>("one"));
+/// test thread 1
+auto thread1 = distortos::scheduler::makeStaticThread<2048>(1, test1, "one");
 
-/// TCB with thread2
-auto tcb2 = distortos::scheduler::makeStaticThread<2048>(1, test2, const_cast<char*>("two"));
+/// test thread 2
+auto thread2 = distortos::scheduler::makeStaticThread<2048>(1, test2, "two");
 
-/// TCB with thread3
-auto tcb3 = distortos::scheduler::makeStaticThread<2048>(1, test3, const_cast<char*>("three"));
+/// test thread 3
+auto thread3 = distortos::scheduler::makeStaticThread<2048>(1, test3, "three");
 
-/// TCB with thread4
-auto tcb4 = distortos::scheduler::makeStaticThread<2048>(1, test4, const_cast<char*>("four"));
+/// test thread 4
+auto thread4 = distortos::scheduler::makeStaticThread<2048>(1, test4, "four");
 
 }	// namespace
 
@@ -175,10 +175,10 @@ auto tcb4 = distortos::scheduler::makeStaticThread<2048>(1, test4, const_cast<ch
 
 int main()
 {
-	tcb1.start();
-	tcb2.start();
-	tcb3.start();
-	tcb4.start();
+	thread1.start();
+	thread2.start();
+	thread3.start();
+	thread4.start();
 
 	distortos::scheduler::schedulerInstance.start();
 
