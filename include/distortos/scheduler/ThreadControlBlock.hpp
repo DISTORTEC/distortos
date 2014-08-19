@@ -49,6 +49,8 @@ public:
 		Terminated,
 		/// thread is blocked on Mutex
 		BlockedOnMutex,
+		/// thread is blocked on ConditionVariable
+		BlockedOnConditionVariable,
 	};
 
 	/**
