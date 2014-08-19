@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-08-15
+ * \date 2014-08-19
  */
 
 #include "distortos/scheduler/ThreadBase.hpp"
@@ -28,9 +28,20 @@ namespace scheduler
 +---------------------------------------------------------------------------------------------------------------------*/
 
 ThreadBase::ThreadBase(void* const buffer, const size_t size, const uint8_t priority) :
-		ThreadControlBlock{buffer, size, priority}
+		ThreadControlBlock{buffer, size, priority},
+		joinSemaphore_{0}
 {
 
+}
+
+int ThreadBase::join()
+{
+	if (this == &schedulerInstance.getCurrentThreadControlBlock())
+		return EDEADLK;
+
+	int ret;
+	while ((ret = joinSemaphore_.wait()) == EINTR);
+	return ret;
 }
 
 int ThreadBase::start(Scheduler& scheduler)
@@ -48,7 +59,7 @@ int ThreadBase::start(Scheduler& scheduler)
 
 void ThreadBase::terminationHook_()
 {
-
+	joinSemaphore_.post();
 }
 
 }	// namespace scheduler

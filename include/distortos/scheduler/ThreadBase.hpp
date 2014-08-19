@@ -8,13 +8,15 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-08-15
+ * \date 2014-08-19
  */
 
 #ifndef INCLUDE_DISTORTOS_SCHEDULER_THREADBASE_HPP_
 #define INCLUDE_DISTORTOS_SCHEDULER_THREADBASE_HPP_
 
 #include "distortos/scheduler/ThreadControlBlock.hpp"
+
+#include "distortos/scheduler/Semaphore.hpp"
 
 #include "distortos/scheduler/schedulerInstance.hpp"
 
@@ -38,6 +40,23 @@ public:
 	 */
 
 	ThreadBase(void* buffer, size_t size, uint8_t priority);
+
+	/**
+	 * \brief Waits for thread termination.
+	 *
+	 * Similar to std::thread::join() - http://en.cppreference.com/w/cpp/thread/thread/join
+	 * Similar to POSIX pthread_join() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_join.html
+	 *
+	 * Blocks current thread until this thread finishes its execution. The results of multiple simultaneous calls to
+	 * join() on the same target thread are undefined.
+	 *
+	 * \return 0 on success, error code otherwise:
+	 * - EDEADLK - deadlock condition was detected,
+	 * - EINVAL - this thread is not joinable,
+	 * - ...
+	 */
+
+	int join();
 
 	/**
 	 * \brief Starts the thread.
@@ -75,6 +94,9 @@ private:
 	 */
 
 	virtual void terminationHook_() override;
+
+	/// semaphore used by join()
+	Semaphore joinSemaphore_;
 };
 
 }	// namespace scheduler
