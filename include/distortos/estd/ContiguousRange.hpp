@@ -1,0 +1,136 @@
+/**
+ * \file
+ * \brief ContiguousRange template class header.
+ *
+ * \author Copyright (C) 2014 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ *
+ * \par License
+ * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
+ * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ *
+ * \date 2014-08-23
+ */
+
+#ifndef ESTD_CONTIGUOUSRANGE_HPP_
+#define ESTD_CONTIGUOUSRANGE_HPP_
+
+#include <iterator>
+
+#include <cstddef>
+
+namespace estd
+{
+
+/**
+ * \brief ContiguousRange template class is a pair of iterators to contiguous sequence of elements in memory
+ *
+ * \param T is the type of data in the range
+ */
+
+template<typename T>
+class ContiguousRange
+{
+public:
+
+	/// value_type type
+	using value_type = T;
+
+	/// pointer type
+	using pointer = value_type*;
+
+	/// const_pointer type
+	using const_pointer = const value_type*;
+
+	/// reference type
+	using reference = value_type&;
+
+	/// const_reference type
+	using const_reference = const value_type&;
+
+	/// iterator type
+	using iterator = value_type*;
+
+	/// const_iterator type
+	using const_iterator = const value_type*;
+
+	/// size_type type
+	using size_type = std::size_t;
+
+	/// difference_type type
+	using difference_type = std::ptrdiff_t;
+
+	/// reverse_iterator type
+	using reverse_iterator = std::reverse_iterator<iterator>;
+
+	/// const_reverse_iterator type
+	using const_reverse_iterator = std::reverse_iterator<const_iterator>;
+
+	/**
+	 * \brief ContiguousRange's constructor.
+	 *
+	 * \param [in] beginn is an iterator to first element in the range
+	 * \param [in] endd is an iterator to "one past the last" element in the range
+	 */
+
+	constexpr ContiguousRange(const iterator beginn, const iterator endd) noexcept :
+			begin_{beginn},
+			end_{endd}
+	{
+
+	}
+
+	/**
+	 * \brief Empty ContiguousRange's constructor.
+	 */
+
+	constexpr ContiguousRange() noexcept :
+			ContiguousRange{nullptr, nullptr}
+	{
+
+	}
+
+	/**
+	 * \brief ContiguousRange's constructor using C-style array.
+	 *
+	 * \param N is the number of elements in the array
+	 *
+	 * \param [in] array is the array used to initialize the range
+	 */
+
+	template<size_t N>
+	constexpr ContiguousRange(T (&array)[N]) noexcept :
+			ContiguousRange{array, array + N}
+	{
+
+	}
+
+	/// \return iterator to first element in the range
+	constexpr iterator begin() const noexcept
+	{
+		return begin_;
+	}
+
+	/// \return iterator to "one past the last" element in the range
+	constexpr iterator end() const noexcept
+	{
+		return end_;
+	}
+
+	/// \return number of elements in the range
+	constexpr size_type size() const noexcept
+	{
+		return end_ - begin_;
+	}
+
+private:
+
+	/// iterator to first element in the range
+	const iterator begin_;
+
+	/// iterator to "one past the last" element in the range
+	const iterator end_;
+};
+
+}	// namespace estd
+
+#endif	// ESTD_CONTIGUOUSRANGE_HPP_
