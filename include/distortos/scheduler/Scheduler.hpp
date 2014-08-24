@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-08-16
+ * \date 2014-08-24
  */
 
 #ifndef INCLUDE_DISTORTOS_SCHEDULER_SCHEDULER_HPP_
@@ -221,6 +221,14 @@ public:
 	void yield() const;
 
 private:
+
+	/**
+	 * \brief Forces unconditional context switch.
+	 *
+	 * Temporarily disables any interrupt masking and requests unconditional context switch.
+	 */
+
+	void forceContextSwitch_() const;
 
 	/**
 	 * \brief Tests whether context switch is required or not.
