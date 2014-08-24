@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-08-19
+ * \date 2014-08-24
  */
 
 #ifndef INCLUDE_DISTORTOS_SCHEDULER_THREADCONTROLBLOCK_HPP_
@@ -83,6 +83,17 @@ public:
 
 	/// \param [in] state is the new state of object
 	void setState(const State state) { state_ = state; }
+
+	/**
+	 * \brief Termination hook function of thread
+	 *
+	 * \attention This function should be called only by Scheduler::remove().
+	 */
+
+	void terminationHook()
+	{
+		terminationHook_();
+	}
 
 protected:
 
