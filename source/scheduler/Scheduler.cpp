@@ -68,8 +68,7 @@ int Scheduler::block(ThreadControlBlockList& container, const Iterator iterator)
 			return 0;
 	}
 
-	architecture::InterruptUnmaskingLock interrupt_unmasking_lock;
-	requestContextSwitch_();
+	forceContextSwitch_();
 
 	return 0;
 }
