@@ -57,12 +57,11 @@ void Scheduler::block(ThreadControlBlockList& container)
 int Scheduler::block(ThreadControlBlockList& container, const Iterator iterator)
 {
 	{
-		architecture::InterruptMaskingLock interrupt_masking_lock;
+		architecture::InterruptMaskingLock interruptMaskingLock;
 
-		if (iterator->get().getState() != ThreadControlBlock::State::Runnable)
-			return EINVAL;
-
-		container.sortedSplice(runnableList_, iterator);
+		const auto ret = blockInternal_(container, iterator);
+		if (ret != 0)
+			return ret;
 
 		if (iterator != currentThreadControlBlock_)	// blocked thread is not current thread - no forced switch required
 			return 0;
