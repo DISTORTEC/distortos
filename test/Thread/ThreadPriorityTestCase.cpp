@@ -16,7 +16,6 @@
 #include "SequenceAsserter.hpp"
 
 #include "distortos/scheduler/StaticThread.hpp"
-#include "distortos/scheduler/Scheduler.hpp"
 
 namespace distortos
 {
@@ -179,8 +178,6 @@ bool ThreadPriorityTestCase::run_() const
 
 		for (auto& thread : threads)
 			thread.join();
-
-		scheduler::schedulerInstance.sleepFor(20);	/// \todo temporary fix for bug in thread join/termination/removal
 
 		if (sequenceAsserter.assertSequence(totalThreads) == false)
 			return false;
