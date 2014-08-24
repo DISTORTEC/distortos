@@ -184,6 +184,16 @@ void Scheduler::yield() const
 | private functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
+int Scheduler::blockInternal_(ThreadControlBlockList& container, const Iterator iterator)
+{
+	if (iterator->get().getState() != ThreadControlBlock::State::Runnable)
+		return EINVAL;
+
+	container.sortedSplice(runnableList_, iterator);
+
+	return 0;
+}
+
 void Scheduler::forceContextSwitch_() const
 {
 	architecture::InterruptUnmaskingLock interruptUnmaskingLock;

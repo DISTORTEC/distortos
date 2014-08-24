@@ -223,6 +223,20 @@ public:
 private:
 
 	/**
+	 * \brief Blocks thread, transferring it to provided container.
+	 *
+	 * Internal version - without interrupt masking and forced context switch.
+	 *
+	 * \param [in] container is a reference to destination container to which the thread will be transferred
+	 * \param [in] iterator is the iterator to the thread that will be blocked
+	 *
+	 * \return 0 on success, error code otherwise:
+	 * - EINVAL - provided thread is not in "runnable" state;
+	 */
+
+	int blockInternal_(ThreadControlBlockList& container, Iterator iterator);
+
+	/**
 	 * \brief Forces unconditional context switch.
 	 *
 	 * Temporarily disables any interrupt masking and requests unconditional context switch.
