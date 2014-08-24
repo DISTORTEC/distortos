@@ -87,6 +87,8 @@ int Scheduler::remove()
 		const auto ret = blockInternal_(terminatedList, currentThreadControlBlock_);
 		if (ret != 0)
 			return ret;
+
+		terminatedList.begin()->get().terminationHook();
 	}
 
 	forceContextSwitch_();

@@ -110,7 +110,7 @@ public:
 	/**
 	 * \brief Removes current thread from Scheduler's control.
 	 *
-	 * Thread's state is changed to "terminated".
+	 * Thread's state is changed to "terminated" and it's terminationHook() is called.
 	 *
 	 * \note This function can be used only after thread's function returns an all cleanup is done.
 	 *
