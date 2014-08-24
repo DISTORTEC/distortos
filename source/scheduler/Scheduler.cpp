@@ -80,8 +80,18 @@ uint64_t Scheduler::getTickCount() const
 
 int Scheduler::remove()
 {
-	ThreadControlBlockList terminatedList {ThreadControlBlock::State::Terminated};
-	return block(terminatedList, currentThreadControlBlock_);
+	{
+		ThreadControlBlockList terminatedList {ThreadControlBlock::State::Terminated};
+		architecture::InterruptMaskingLock interruptMaskingLock;
+
+		const auto ret = blockInternal_(terminatedList, currentThreadControlBlock_);
+		if (ret != 0)
+			return ret;
+	}
+
+	forceContextSwitch_();
+
+	return 0;
 }
 
 int Scheduler::resume(const Iterator iterator)
