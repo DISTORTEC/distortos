@@ -213,11 +213,13 @@ void Scheduler::forceContextSwitch_() const
 
 bool Scheduler::isContextSwitchRequired_() const
 {
+	// this check must be first, because during early startup currentThreadControlBlock_ is not yet initialized (so
+	// futher conditions would dereference nullptr) and no threads are available
+	if (runnableList_.size() <= 1)	// no threads or single thread available?
+		return false;				// no context switch possible
+
 	if (getCurrentThreadControlBlock().getState() != ThreadControlBlock::State::Runnable)
 		return true;
-
-	if (runnableList_.size() == 1)	// single thread available?
-		return false;				// no context switch possible
 
 	if (runnableList_.begin() != currentThreadControlBlock_)	// is there a higher-priority thread available?
 		return true;
