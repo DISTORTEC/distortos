@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-08-24
+ * \date 2014-08-25
  */
 
 #include "distortos/scheduler/Scheduler.hpp"
@@ -81,8 +81,8 @@ uint64_t Scheduler::getTickCount() const
 int Scheduler::remove()
 {
 	{
-		ThreadControlBlockList terminatedList {ThreadControlBlock::State::Terminated};
 		architecture::InterruptMaskingLock interruptMaskingLock;
+		ThreadControlBlockList terminatedList {ThreadControlBlock::State::Terminated};
 
 		const auto ret = blockInternal_(terminatedList, currentThreadControlBlock_);
 		if (ret != 0)
