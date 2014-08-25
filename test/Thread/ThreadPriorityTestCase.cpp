@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-08-24
+ * \date 2014-08-25
  */
 
 #include "ThreadPriorityTestCase.hpp"
@@ -16,6 +16,8 @@
 #include "SequenceAsserter.hpp"
 
 #include "distortos/scheduler/StaticThread.hpp"
+
+#include "distortos/architecture/InterruptMaskingLock.hpp"
 
 namespace distortos
 {
@@ -173,8 +175,12 @@ bool ThreadPriorityTestCase::run_() const
 				makeTestThread(phase.first[phase.second[9]], sequenceAsserter),
 		}};
 
-		for (auto& thread : threads)
-			thread.start();
+		{
+			architecture::InterruptMaskingLock interruptMaskingLock;
+
+			for (auto& thread : threads)
+				thread.start();
+		}
 
 		for (auto& thread : threads)
 			thread.join();
