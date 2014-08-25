@@ -28,7 +28,7 @@ constexpr size_t testThreadStackSize {10240};
 
 /// test thread
 auto testThread =
-		distortos::scheduler::makeStaticThread<testThreadStackSize>(UINT8_MAX, distortos::test::testThreadFunction);
+		distortos::scheduler::makeStaticThread<testThreadStackSize>(UINT8_MAX / 2, distortos::test::testThreadFunction);
 
 }	// namespace
 

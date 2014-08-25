@@ -101,31 +101,31 @@ TestThread makeTestThread(const ThreadParameters &threadParameters, SequenceAsse
 /// array with unique priorities and expected sequence points
 const std::array<ThreadParameters, totalThreads> uniquePriorities
 {{
-		{10, 0},
-		{9, 1},
-		{8, 2},
-		{7, 3},
-		{6, 4},
-		{5, 5},
-		{4, 6},
-		{3, 7},
-		{2, 8},
-		{1, 9},
+		{UINT8_MAX - 0, 0},
+		{UINT8_MAX - 1, 1},
+		{UINT8_MAX - 2, 2},
+		{UINT8_MAX - 3, 3},
+		{UINT8_MAX - 4, 4},
+		{UINT8_MAX - 5, 5},
+		{UINT8_MAX - 6, 6},
+		{UINT8_MAX - 7, 7},
+		{UINT8_MAX - 8, 8},
+		{UINT8_MAX - 9, 9},
 }};
 
 /// array with non-unique priorities and expected sequence points
 const std::array<ThreadParameters, totalThreads> nonUniquePriorities
 {{
-		{2, 0},
-		{2, 1},
-		{2, 2},
-		{2, 3},
-		{2, 4},
-		{1, 5},
-		{1, 6},
-		{1, 7},
-		{1, 8},
-		{1, 9},
+		{UINT8_MAX - 0, 0},
+		{UINT8_MAX - 0, 1},
+		{UINT8_MAX - 0, 2},
+		{UINT8_MAX - 0, 3},
+		{UINT8_MAX - 0, 4},
+		{UINT8_MAX - 1, 5},
+		{UINT8_MAX - 1, 6},
+		{UINT8_MAX - 1, 7},
+		{UINT8_MAX - 1, 8},
+		{UINT8_MAX - 1, 9},
 }};
 
 /// array with test phases
