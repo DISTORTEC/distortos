@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-08-25
+ * \date 2014-08-27
  */
 
 #include "distortos/scheduler/Scheduler.hpp"
@@ -40,7 +40,7 @@ Scheduler::Scheduler(Thread<void (&)()>& idleThread) :
 		softwareTimerControlBlockSupervisor_{},
 		tickCount_{0}
 {
-	idleThread.start(*this);
+	idleThread.start();
 }
 
 void Scheduler::add(ThreadControlBlock& thread_control_block)

@@ -8,12 +8,13 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-08-24
+ * \date 2014-08-27
  */
 
 #include "testThreadFunction.hpp"
 
 #include "distortos/scheduler/StaticThread.hpp"
+#include "distortos/scheduler/schedulerInstance.hpp"
 #include "distortos/scheduler/Scheduler.hpp"
 
 namespace

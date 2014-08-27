@@ -8,11 +8,12 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-08-19
+ * \date 2014-08-27
  */
 
 #include "distortos/scheduler/ThreadBase.hpp"
 
+#include "distortos/scheduler/schedulerInstance.hpp"
 #include "distortos/scheduler/Scheduler.hpp"
 
 #include <cerrno>
@@ -44,12 +45,12 @@ int ThreadBase::join()
 	return ret;
 }
 
-int ThreadBase::start(Scheduler& scheduler)
+int ThreadBase::start()
 {
 	if (getState() != ThreadControlBlock::State::New)
 		return EINVAL;
 
-	scheduler.add(*this);
+	schedulerInstance.add(*this);
 	return 0;
 }
 
