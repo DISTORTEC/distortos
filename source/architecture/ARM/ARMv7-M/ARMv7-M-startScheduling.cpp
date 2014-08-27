@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-07-24
+ * \date 2014-07-27
  */
 
 #include "distortos/architecture.hpp"
@@ -37,13 +37,6 @@ void startScheduling()
 	SysTick->LOAD = CONFIG_TICK_CLOCK / CONFIG_TICK_RATE_HZ - 1;
 	SysTick->VAL = 0;
 	SysTick->CTRL = SysTick_CTRL_ENABLE_Msk | SysTick_CTRL_CLKSOURCE_Msk | SysTick_CTRL_TICKINT_Msk;
-
-	asm volatile
-	(
-			"	svc		0		\n"	// request first context switch
-	);
-
-	__builtin_unreachable();
 }
 
 }	// namespace architecture

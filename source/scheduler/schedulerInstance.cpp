@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-08-14
+ * \date 2014-08-27
  */
 
 #include "distortos/scheduler/schedulerInstance.hpp"
@@ -17,6 +17,7 @@
 
 #include "distortos/scheduler/Thread.hpp"
 #include "distortos/scheduler/idleThreadFunction.hpp"
+#include "distortos/scheduler/MainThreadControlBlock.hpp"
 
 namespace distortos
 {
@@ -37,7 +38,11 @@ constexpr size_t idleThreadStackSize_ {128};
 /// idle thread's stack
 uint64_t idleThreadStack_[idleThreadStackSize_ / sizeof(uint64_t)];
 
+/// idle thread instance
 auto idleThread_ = makeThread(idleThreadStack_, sizeof(idleThreadStack_), 0, idleThreadFunction);
+
+/// main thread instance
+MainThreadControlBlock mainThreadControlBlock_ {UINT8_MAX};
 
 }	// namespace
 
@@ -45,7 +50,7 @@ auto idleThread_ = makeThread(idleThreadStack_, sizeof(idleThreadStack_), 0, idl
 | global objects
 +---------------------------------------------------------------------------------------------------------------------*/
 
-Scheduler schedulerInstance {idleThread_};
+Scheduler schedulerInstance {mainThreadControlBlock_, idleThread_};
 
 }	// namespace scheduler
 

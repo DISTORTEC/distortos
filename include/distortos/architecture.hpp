@@ -113,7 +113,6 @@ void requestContextSwitch();
  * Initializes all required hardware/software to perform context switching and starts the scheduling.
  */
 
-__attribute__ ((noreturn))
 void startScheduling();
 
 }	// namespace architecture

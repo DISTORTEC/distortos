@@ -15,6 +15,7 @@
 
 #include "distortos/scheduler/Thread.hpp"
 #include "distortos/scheduler/SoftwareTimer.hpp"
+#include "distortos/scheduler/MainThreadControlBlock.hpp"
 
 #include "distortos/architecture/InterruptMaskingLock.hpp"
 #include "distortos/architecture/InterruptUnmaskingLock.hpp"
@@ -33,14 +34,19 @@ namespace scheduler
 | public functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-Scheduler::Scheduler(Thread<void (&)()>& idleThread) :
+Scheduler::Scheduler(MainThreadControlBlock& mainThreadControlBlock, Thread<void (&)()>& idleThread) :
 		currentThreadControlBlock_{},
 		runnableList_{ThreadControlBlock::State::Runnable},
 		suspendedList_{ThreadControlBlock::State::Suspended},
 		softwareTimerControlBlockSupervisor_{},
 		tickCount_{0}
 {
+	add(mainThreadControlBlock);
+	currentThreadControlBlock_ = runnableList_.begin();
+
 	idleThread.start();
+
+	start();
 }
 
 void Scheduler::add(ThreadControlBlock& thread_control_block)

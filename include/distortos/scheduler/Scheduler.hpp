@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-08-24
+ * \date 2014-08-27
  */
 
 #ifndef INCLUDE_DISTORTOS_SCHEDULER_SCHEDULER_HPP_
@@ -28,6 +28,7 @@ namespace scheduler
 
 template<typename Function, typename... Args>
 class Thread;
+class MainThreadControlBlock;
 
 /// Scheduler class is a system's scheduler
 class Scheduler
@@ -40,10 +41,13 @@ public:
 	/**
 	 * \brief Scheduler's constructor
 	 *
+	 * \attention Priority of main thread must be higher than priority of idle thread.
+	 *
+	 * \param [in] mainThreadControlBlock is a reference to main thread
 	 * \param [in] idleThread is a reference to idle thread
 	 */
 
-	Scheduler(Thread<void (&)()>& idleThread);
+	Scheduler(MainThreadControlBlock& mainThreadControlBlock, Thread<void (&)()>& idleThread);
 
 	/**
 	 * \brief Adds new ThreadControlBlock to scheduler.
@@ -161,7 +165,6 @@ public:
 	 * Initializes scheduler and all required hardware/software to perform context switching and starts the scheduling.
 	 */
 
-	__attribute__ ((noreturn))
 	void start();
 
 	/**

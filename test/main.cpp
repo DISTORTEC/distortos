@@ -14,8 +14,6 @@
 #include "testThreadFunction.hpp"
 
 #include "distortos/scheduler/StaticThread.hpp"
-#include "distortos/scheduler/schedulerInstance.hpp"
-#include "distortos/scheduler/Scheduler.hpp"
 
 namespace
 {
@@ -44,8 +42,7 @@ auto testThread =
 int main()
 {
 	testThread.start();
-
-	distortos::scheduler::schedulerInstance.start();
+	testThread.join();
 
 	return 0;
 }
