@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-08-24
+ * \date 2014-08-27
  */
 
 #ifndef INCLUDE_DISTORTOS_SCHEDULER_THREADCONTROLBLOCK_HPP_
@@ -96,6 +96,17 @@ public:
 	}
 
 protected:
+
+	/**
+	 * \brief ThreadControlBlock constructor.
+	 *
+	 * This constructor is meant for MainThreadControlBlock.
+	 *
+	 * \param [in] stack is an rvalue reference to stack of main()
+	 * \param [in] priority is the thread's priority, 0 - lowest, UINT8_MAX - highest
+	 */
+
+	ThreadControlBlock(architecture::Stack&& stack, uint8_t priority);
 
 	/**
 	 * \brief ThreadControlBlock's destructor
