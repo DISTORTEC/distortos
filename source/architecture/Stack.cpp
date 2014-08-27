@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-08-16
+ * \date 2014-08-27
  */
 
 #include "distortos/architecture/Stack.hpp"
@@ -74,6 +74,14 @@ Stack::Stack(void* const buffer, const size_t size, void (&function)(scheduler::
 		adjustedBuffer_{adjustBuffer_(buffer, stackAlignment)},
 		adjustedSize_{adjustSize_(buffer, size, adjustedBuffer_, stackSizeDivisibility)},
 		stackPointer_{initializeStack(adjustedBuffer_, adjustedSize_, function, threadControlBlock, trap)}
+{
+	/// \todo implement minimal size check
+}
+
+Stack::Stack(void* const buffer, const size_t size) :
+		adjustedBuffer_{buffer},
+		adjustedSize_{size},
+		stackPointer_{}
 {
 	/// \todo implement minimal size check
 }
