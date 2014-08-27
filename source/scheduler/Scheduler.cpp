@@ -53,6 +53,7 @@ void Scheduler::add(ThreadControlBlock& thread_control_block)
 {
 	architecture::InterruptMaskingLock interrupt_masking_lock;
 	runnableList_.sortedEmplace(thread_control_block);
+	yield();
 }
 
 void Scheduler::block(ThreadControlBlockList& container)
