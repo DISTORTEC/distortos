@@ -8,13 +8,15 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-08-16
+ * \date 2014-08-27
  */
 
 #ifndef INCLUDE_DISTORTOS_ARCHITECTURE_HPP_
 #define INCLUDE_DISTORTOS_ARCHITECTURE_HPP_
 
 #include "distortos/architecture/parameters.hpp"
+
+#include <utility>
 
 #include <cstddef>
 
@@ -54,6 +56,14 @@ InterruptMask disableInterruptMasking();
  */
 
 InterruptMask enableInterruptMasking();
+
+/**
+ * \brief Gets the stack used to run main().
+ *
+ * \return beginning of stack and its size in bytes
+ */
+
+std::pair<void*, size_t> getMainStack();
 
 /**
  * \brief Architecture-specific stack initialization.
