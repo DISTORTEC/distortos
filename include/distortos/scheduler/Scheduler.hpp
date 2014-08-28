@@ -138,26 +138,26 @@ public:
 	int resume(Iterator iterator);
 
 	/**
-	 * \brief Makes the calling (current) thread sleep for at least given number of ticks.
+	 * \brief Makes the calling (current) thread sleep for at least given duration.
 	 *
 	 * Current thread's state is changed to "sleeping".
 	 *
 	 * \note To fulfill the "at least" requirement, one additional tick is always added to the sleep duration.
 	 *
-	 * \param [in] ticks is the number of ticks after which the thread will be woken
+	 * \param [in] duration is the duration after which the thread will be woken
 	 */
 
-	void sleepFor(uint64_t ticks);
+	void sleepFor(TickClock::duration duration);
 
 	/**
-	 * \brief Makes the calling (current) thread sleep until some tick value is reached.
+	 * \brief Makes the calling (current) thread sleep until some time point is reached.
 	 *
 	 * Current thread's state is changed to "sleeping".
 	 *
-	 * \param [in] tick_value is the tick value at which the thread will be woken
+	 * \param [in] time_point is the time point at which the thread will be woken
 	 */
 
-	void sleepUntil(uint64_t tick_value);
+	void sleepUntil(TickClock::time_point time_point);
 
 	/**
 	 * \brief Suspends current thread.

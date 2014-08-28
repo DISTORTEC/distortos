@@ -115,19 +115,19 @@ int Scheduler::resume(const Iterator iterator)
 	return 0;
 }
 
-void Scheduler::sleepFor(const uint64_t ticks)
+void Scheduler::sleepFor(const TickClock::duration duration)
 {
-	sleepUntil(getTickCount() + ticks + 1);
+	sleepUntil(TickClock::now() + duration + TickClock::duration{1});
 }
 
-void Scheduler::sleepUntil(const uint64_t tick_value)
+void Scheduler::sleepUntil(const TickClock::time_point time_point)
 {
 	architecture::InterruptMaskingLock interrupt_masking_lock;
 
 	ThreadControlBlockList sleeping_list {ThreadControlBlock::State::Sleeping};
 	auto software_timer =
 			makeSoftwareTimer(&Scheduler::unblockInternal_, this, std::ref(sleeping_list), currentThreadControlBlock_);
-	software_timer.start(TickClock::time_point{TickClock::duration{tick_value}});
+	software_timer.start(time_point);
 
 	block(sleeping_list);
 }
