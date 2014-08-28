@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-08-27
+ * \date 2014-08-28
  */
 
 #ifndef INCLUDE_DISTORTOS_SCHEDULER_SCHEDULER_HPP_
@@ -158,14 +158,6 @@ public:
 	 */
 
 	void sleepUntil(uint64_t tick_value);
-
-	/**
-	 * \brief Starts scheduling.
-	 *
-	 * Initializes scheduler and all required hardware/software to perform context switching and starts the scheduling.
-	 */
-
-	void start();
 
 	/**
 	 * \brief Suspends current thread.

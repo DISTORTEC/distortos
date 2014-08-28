@@ -47,7 +47,7 @@ Scheduler::Scheduler(MainThreadControlBlock& mainThreadControlBlock, Thread<void
 
 	idleThread.start();
 
-	start();
+	architecture::startScheduling();
 }
 
 void Scheduler::add(ThreadControlBlock& thread_control_block)
@@ -130,15 +130,6 @@ void Scheduler::sleepUntil(const uint64_t tick_value)
 	software_timer.start(TickClock::time_point{TickClock::duration{tick_value}});
 
 	block(sleeping_list);
-}
-
-void Scheduler::start()
-{
-	currentThreadControlBlock_ = runnableList_.begin();
-
-	getCurrentThreadControlBlock().getRoundRobinQuantum().reset();
-
-	architecture::startScheduling();
 }
 
 void Scheduler::suspend()
