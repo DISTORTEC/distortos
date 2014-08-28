@@ -15,6 +15,7 @@
 
 #include "ThreadPriorityTestCase.hpp"
 #include "ThreadFunctionTypesTestCase.hpp"
+#include "ThreadSleepForTestCase.hpp"
 
 namespace distortos
 {
@@ -35,11 +36,15 @@ const ThreadPriorityTestCase priorityTestCase;
 /// ThreadFunctionTypesTestCase instance
 const ThreadFunctionTypesTestCase functionTypesTestCase;
 
+/// ThreadSleepForTestCase instance
+const ThreadSleepForTestCase sleepForTestCase;
+
 /// array with references to TestCase objects related to threads
 const TestCaseRange::value_type threadTestCases_[]
 {
 		priorityTestCase,
 		functionTypesTestCase,
+		sleepForTestCase,
 };
 
 }	// namespace
