@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-08-27
+ * \date 2014-08-28
  */
 
 #include "distortos/scheduler/Scheduler.hpp"
@@ -41,6 +41,7 @@ Scheduler::Scheduler(MainThreadControlBlock& mainThreadControlBlock, Thread<void
 		softwareTimerControlBlockSupervisor_{},
 		tickCount_{0}
 {
+	mainThreadControlBlock.getRoundRobinQuantum().reset();
 	add(mainThreadControlBlock);
 	currentThreadControlBlock_ = runnableList_.begin();
 
