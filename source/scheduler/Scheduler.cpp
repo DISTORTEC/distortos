@@ -115,11 +115,6 @@ int Scheduler::resume(const Iterator iterator)
 	return 0;
 }
 
-void Scheduler::sleepFor(const TickClock::duration duration)
-{
-	sleepUntil(TickClock::now() + duration + TickClock::duration{1});
-}
-
 void Scheduler::sleepUntil(const TickClock::time_point time_point)
 {
 	architecture::InterruptMaskingLock interrupt_masking_lock;

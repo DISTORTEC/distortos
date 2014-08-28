@@ -29,6 +29,16 @@ namespace ThisThread
 | global functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
+void sleepFor(const TickClock::duration duration)
+{
+	sleepUntil(TickClock::now() + duration + TickClock::duration{1});
+}
+
+void sleepUntil(const TickClock::time_point time_point)
+{
+	schedulerInstance.sleepUntil(time_point);
+}
+
 void yield()
 {
 	schedulerInstance.yield();
