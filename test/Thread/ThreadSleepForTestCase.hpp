@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-08-28
+ * \date 2014-09-01
  */
 
 #ifndef TEST_THREAD_THREADSLEEPFORTESTCASE_HPP_
@@ -26,7 +26,7 @@ namespace test
  * \brief Tests "sleep for" functionality of threads.
  *
  * Starts 10 small threads (in varying order) which sleep for varying amount of time, asserting that they finish in the
- * right order.
+ * right order and sleep for requested duration.
  */
 
 class ThreadSleepForTestCase : public TestCase
