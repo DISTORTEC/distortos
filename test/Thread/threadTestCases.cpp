@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-08-28
+ * \date 2014-09-01
  */
 
 #include "threadTestCases.hpp"
@@ -16,6 +16,7 @@
 #include "ThreadPriorityTestCase.hpp"
 #include "ThreadFunctionTypesTestCase.hpp"
 #include "ThreadSleepForTestCase.hpp"
+#include "ThreadSleepUntilTestCase.hpp"
 
 namespace distortos
 {
@@ -39,12 +40,16 @@ const ThreadFunctionTypesTestCase functionTypesTestCase;
 /// ThreadSleepForTestCase instance
 const ThreadSleepForTestCase sleepForTestCase;
 
+/// ThreadSleepUntilTestCase instance
+const ThreadSleepUntilTestCase sleepUntilTestCase;
+
 /// array with references to TestCase objects related to threads
 const TestCaseRange::value_type threadTestCases_[]
 {
 		priorityTestCase,
 		functionTypesTestCase,
 		sleepForTestCase,
+		sleepUntilTestCase,
 };
 
 }	// namespace
