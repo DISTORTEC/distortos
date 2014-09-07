@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-08-28
+ * \date 2014-09-07
  */
 
 #ifndef INCLUDE_DISTORTOS_SCHEDULER_SCHEDULER_HPP_
@@ -103,6 +103,15 @@ public:
 	const SoftwareTimerControlBlockSupervisor& getSoftwareTimerSupervisor() const
 	{
 		return softwareTimerControlBlockSupervisor_;
+	}
+
+	/**
+	 * \return const reference to internal ThreadControlBlockListAllocator object
+	 */
+
+	const ThreadControlBlockListAllocator& getThreadControlBlockListAllocator() const
+	{
+		return threadControlBlockListAllocator_;
 	}
 
 	/**
@@ -261,6 +270,12 @@ private:
 
 	/// iterator to the currently active ThreadControlBlock
 	Iterator currentThreadControlBlock_;
+
+	/// pool instance used by threadControlBlockListAllocator_
+	ThreadControlBlockListAllocator::Pool threadControlBlockListAllocatorPool_;
+
+	/// PoolAllocator<> of ThreadControlBlockList
+	ThreadControlBlockListAllocator threadControlBlockListAllocator_;
 
 	/// list of ThreadControlBlock elements in "runnable" state, sorted by priority in descending order
 	ThreadControlBlockList runnableList_;
