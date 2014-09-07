@@ -38,8 +38,8 @@ Scheduler::Scheduler(MainThreadControlBlock& mainThreadControlBlock, Thread<void
 		currentThreadControlBlock_{},
 		threadControlBlockListAllocatorPool_{},
 		threadControlBlockListAllocator_{threadControlBlockListAllocatorPool_},
-		runnableList_{ThreadControlBlock::State::Runnable},
-		suspendedList_{ThreadControlBlock::State::Suspended},
+		runnableList_{threadControlBlockListAllocator_, ThreadControlBlock::State::Runnable},
+		suspendedList_{threadControlBlockListAllocator_, ThreadControlBlock::State::Suspended},
 		softwareTimerControlBlockSupervisor_{},
 		tickCount_{0}
 {
@@ -93,7 +93,7 @@ int Scheduler::remove()
 {
 	{
 		architecture::InterruptMaskingLock interruptMaskingLock;
-		ThreadControlBlockList terminatedList {ThreadControlBlock::State::Terminated};
+		ThreadControlBlockList terminatedList {threadControlBlockListAllocator_, ThreadControlBlock::State::Terminated};
 
 		const auto ret = blockInternal_(terminatedList, currentThreadControlBlock_);
 		if (ret != 0)
@@ -122,7 +122,7 @@ void Scheduler::sleepUntil(const TickClock::time_point time_point)
 {
 	architecture::InterruptMaskingLock interrupt_masking_lock;
 
-	ThreadControlBlockList sleeping_list {ThreadControlBlock::State::Sleeping};
+	ThreadControlBlockList sleeping_list {threadControlBlockListAllocator_, ThreadControlBlock::State::Sleeping};
 	auto software_timer =
 			makeSoftwareTimer(&Scheduler::unblockInternal_, this, std::ref(sleeping_list), currentThreadControlBlock_);
 	software_timer.start(time_point);

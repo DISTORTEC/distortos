@@ -55,8 +55,11 @@ struct ThreadControlBlockDescendingPriority
 };
 
 /// base of ThreadControlBlockList
-using ThreadControlBlockListBase =
-		containers::SortedContainer<std::list<ThreadControlBlockListValueType>, ThreadControlBlockDescendingPriority>;
+using ThreadControlBlockListBase = containers::SortedContainer
+		<
+				std::list<ThreadControlBlockListValueType, ThreadControlBlockListAllocator>,
+				ThreadControlBlockDescendingPriority
+		>;
 
 /// List of ThreadControlBlock objects in descending order of priority that configures state of kept objects
 class ThreadControlBlockList : private ThreadControlBlockListBase
@@ -77,11 +80,13 @@ public:
 	/**
 	 * \brief ThreadControlBlockList's constructor
 	 *
+	 * \param [in] allocator is a reference to ThreadControlBlockListAllocator object used to copy-construct allocator
+	 * of base container
 	 * \param [in] state is the state of ThreadControlBlock objects kept in this list
 	 */
 
-	ThreadControlBlockList(const ThreadControlBlock::State state) :
-			Base{},
+	ThreadControlBlockList(const ThreadControlBlockListAllocator& allocator, const ThreadControlBlock::State state) :
+			Base{allocator},
 			state_{state}
 	{
 

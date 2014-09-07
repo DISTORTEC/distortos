@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-08-14
+ * \date 2014-09-07
  */
 
 #include "distortos/scheduler/Semaphore.hpp"
@@ -31,7 +31,10 @@ namespace scheduler
 +---------------------------------------------------------------------------------------------------------------------*/
 
 Semaphore::Semaphore(int value) :
-		blockedList_{ThreadControlBlock::State::BlockedOnSemaphore},
+		blockedList_
+		{
+				schedulerInstance.getThreadControlBlockListAllocator(), ThreadControlBlock::State::BlockedOnSemaphore
+		},
 		value_{value}
 {
 
