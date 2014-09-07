@@ -55,6 +55,7 @@ Scheduler::Scheduler(MainThreadControlBlock& mainThreadControlBlock, Thread<void
 void Scheduler::add(ThreadControlBlock& thread_control_block)
 {
 	architecture::InterruptMaskingLock interrupt_masking_lock;
+	threadControlBlockListAllocatorPool_.feed(thread_control_block.getLink());
 	runnableList_.sortedEmplace(thread_control_block);
 	yield();
 }
