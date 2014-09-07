@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-08-15
+ * \date 2014-09-07
  */
 
 #include "distortos/scheduler/SoftwareTimerControlBlockSupervisor.hpp"
@@ -26,6 +26,8 @@ namespace scheduler
 +---------------------------------------------------------------------------------------------------------------------*/
 
 SoftwareTimerControlBlockSupervisor::SoftwareTimerControlBlockSupervisor() :
+		allocatorPool_{},
+		allocator_{allocatorPool_},
 		activeList_{},
 		dormantList_{}
 {

@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-08-15
+ * \date 2014-09-07
  */
 
 #ifndef INCLUDE_DISTORTOS_SCHEDULER_SOFTWARETIMERCONTROLBLOCKSUPERVISOR_HPP_
@@ -54,6 +54,12 @@ public:
 	void tickInterruptHandler(TickClock::time_point time_point);
 
 private:
+
+	/// pool instance used by allocator_
+	SoftwareTimerControlBlockListAllocator::Pool allocatorPool_;
+
+	/// PoolAllocator<> of SoftwareTimerControlBlockList
+	SoftwareTimerControlBlockListAllocator allocator_;
 
 	/// list of active software timers (waiting for execution)
 	SoftwareTimerControlBlockList activeList_;
