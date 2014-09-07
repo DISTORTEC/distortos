@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-08-15
+ * \date 2014-09-07
  */
 
 #ifndef INCLUDE_DISTORTOS_CONTAINERS_SORTEDCONTAINER_HPP_
@@ -58,14 +58,11 @@ public:
 	/**
 	 * \brief SortedContainer's constructor
 	 *
-	 * \param Args are types of argument for Compare object
-	 *
-	 * \param [in] args are arguments for Compare object constructor
+	 * \param [in] compare is a reference to Compare object used to copy-construct comparison functor
 	 */
 
-	template<typename... Args>
-	SortedContainer(Args&&... args) :
-            compare_{std::forward<Args>(args)...}
+	explicit SortedContainer(const Compare& compare = Compare{}) :
+            compare_(compare)
 	{}
 
 	/// base of SortedContainer
