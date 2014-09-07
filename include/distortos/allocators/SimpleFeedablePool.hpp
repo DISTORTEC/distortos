@@ -81,6 +81,20 @@ public:
 		size_ = size;
 	}
 
+	/**
+	 * \brief Template interface for feed().
+	 *
+	 * \param T is the type of object fed into the pool as storage
+	 *
+	 * \param [in] storage is a reference to raw storage
+	 */
+
+	template<typename T>
+	void feed(T& storage)
+	{
+		feed(&storage, sizeof(storage));
+	}
+
 	SimpleFeedablePool(const SimpleFeedablePool&) = delete;
 	SimpleFeedablePool& operator=(const SimpleFeedablePool&) = delete;
 
