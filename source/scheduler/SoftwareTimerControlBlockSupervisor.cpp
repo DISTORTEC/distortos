@@ -39,6 +39,7 @@ SoftwareTimerControlBlockSupervisor::add(SoftwareTimerControlBlock& software_tim
 {
 	architecture::InterruptMaskingLock interrupt_masking_lock;
 
+	allocatorPool_.feed(software_timer_control_block.getLink());
 	software_timer_control_block.setList(&activeList_);
 	return activeList_.sortedEmplace(software_timer_control_block);
 }
