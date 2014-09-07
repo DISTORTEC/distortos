@@ -28,8 +28,8 @@ namespace scheduler
 SoftwareTimerControlBlockSupervisor::SoftwareTimerControlBlockSupervisor() :
 		allocatorPool_{},
 		allocator_{allocatorPool_},
-		activeList_{},
-		dormantList_{}
+		activeList_{allocator_},
+		dormantList_{allocator_}
 {
 
 }

@@ -37,7 +37,8 @@ using SoftwareTimerControlBlockListAllocator =
 		allocators::PoolAllocator<SoftwareTimerControlBlockListValueType, allocators::SimpleFeedablePool>;
 
 /// underlying unsorted container of SoftwareTimerControlBlockList
-using SoftwareTimerControlBlockListContainer = std::list<SoftwareTimerControlBlockListValueType>;
+using SoftwareTimerControlBlockListContainer =
+		std::list<SoftwareTimerControlBlockListValueType, SoftwareTimerControlBlockListAllocator>;
 
 /// generic iterator for SoftwareTimerControlBlockList
 using SoftwareTimerControlBlockListIterator =
