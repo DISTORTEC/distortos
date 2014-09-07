@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-08-15
+ * \date 2014-09-07
  */
 
 #ifndef INCLUDE_DISTORTOS_SCHEDULER_SOFTWARETIMERCONTROLBLOCKLIST_HPP_
@@ -53,7 +53,9 @@ using SoftwareTimerControlBlockListBase = containers::SortedContainer
 /// list of SoftwareTimerControlBlock objects in ascending order of expiration time point
 class SoftwareTimerControlBlockList : public SoftwareTimerControlBlockListBase
 {
+public:
 
+	using SoftwareTimerControlBlockListBase::SoftwareTimerControlBlockListBase;
 };
 
 }	// namespace scheduler
