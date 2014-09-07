@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-08-15
+ * \date 2014-09-07
  */
 
 #ifndef INCLUDE_DISTORTOS_SCHEDULER_THREADCONTROLBLOCKLIST_HPP_
@@ -17,6 +17,9 @@
 #include "distortos/scheduler/ThreadControlBlock.hpp"
 
 #include "distortos/containers/SortedContainer.hpp"
+
+#include "distortos/allocators/PoolAllocator.hpp"
+#include "distortos/allocators/SimpleFeedablePool.hpp"
 
 #include <list>
 
@@ -28,6 +31,10 @@ namespace scheduler
 
 /// type held by ThreadControlBlockList
 using ThreadControlBlockListValueType = std::reference_wrapper<ThreadControlBlock>;
+
+/// type of allocator used by ThreadControlBlockList
+using ThreadControlBlockListAllocator =
+		allocators::PoolAllocator<ThreadControlBlockListValueType, allocators::SimpleFeedablePool>;
 
 /// functor which gives descending priority order of elements on the list
 struct ThreadControlBlockDescendingPriority
