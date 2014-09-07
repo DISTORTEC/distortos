@@ -78,6 +78,19 @@ public:
 
 	}
 
+	/**
+	 * \brief SortedContainer's constructor
+	 *
+	 * \param [in] allocator is a reference to allocator_type object used to copy-construct allocator of base container
+	 */
+
+	explicit SortedContainer(const allocator_type& allocator) :
+			Base{allocator},
+			compare_{}
+	{
+
+	}
+
 	using Base::begin;
 	using Base::empty;
 	using Base::erase;
