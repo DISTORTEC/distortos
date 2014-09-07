@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-08-15
+ * \date 2014-09-07
  */
 
 #ifndef INCLUDE_DISTORTOS_SCHEDULER_SOFTWARETIMERCONTROLBLOCK_HPP_
@@ -31,6 +31,9 @@ class SoftwareTimerControlBlock
 {
 public:
 
+	/// type of object used as storage for SoftwareTimerControlBlockList elements - 3 pointers
+	using Link = std::array<std::aligned_storage<sizeof(void*), alignof(void*)>::type, 3>;
+
 	/**
 	 * \brief SoftwareTimerControlBlock's constructor
 	 */
@@ -46,6 +49,18 @@ public:
 	 */
 
 	void execute() const { execute_(); }
+
+	/**
+	 * \return reference to internal storage for list link
+	 */
+
+	Link& getLink() { return link_; }
+
+	/**
+	 * \return const reference to internal storage for list link
+	 */
+
+	const Link& getLink() const { return link_; }
 
 	/**
 	 * \return const reference to expiration time point
@@ -135,6 +150,9 @@ private:
 
 	///time point of expiration
 	TickClock::time_point timePoint_;
+
+	/// storage for list link
+	Link link_;
 
 	/// pointer to list that has this object
 	SoftwareTimerControlBlockList* list_;
