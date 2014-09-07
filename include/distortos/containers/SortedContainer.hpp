@@ -37,6 +37,8 @@ public:
 
 	/// base of SortedContainerBase
 	using Base = Container;
+
+	using Base::Base;
 };
 
 /**
@@ -45,7 +47,7 @@ public:
  * \note The elements are sorted as long as the user does not modify the contents via iterators.
  *
  * \param Container is the underlying container, it must provide following functions: begin(), emplace(), end(), size()
- * and splice(). It must contain following types: iterator and value_type.
+ * and splice(). It must contain following types: allocator_type, iterator and value_type.
  * \param Compare is a type of functor used for comparison, std::less results in descending order, std::greater - in
  * ascending order.
  */
@@ -55,21 +57,26 @@ class SortedContainer : private SortedContainerBase<Container>
 {
 public:
 
-	/**
-	 * \brief SortedContainer's constructor
-	 *
-	 * \param [in] compare is a reference to Compare object used to copy-construct comparison functor
-	 */
-
-	explicit SortedContainer(const Compare& compare = Compare{}) :
-            compare_(compare)
-	{}
-
 	/// base of SortedContainer
 	using Base = SortedContainerBase<Container>;
 
 	using typename Base::iterator;
 	using typename Base::value_type;
+	using typename Base::allocator_type;
+
+	/**
+	 * \brief SortedContainer's constructor
+	 *
+	 * \param [in] compare is a reference to Compare object used to copy-construct comparison functor
+	 * \param [in] allocator is a reference to allocator_type object used to copy-construct allocator of base container
+	 */
+
+	explicit SortedContainer(const Compare& compare = Compare{}, const allocator_type& allocator = allocator_type{}) :
+			Base{allocator},
+            compare_(compare)
+	{
+
+	}
 
 	using Base::begin;
 	using Base::empty;
