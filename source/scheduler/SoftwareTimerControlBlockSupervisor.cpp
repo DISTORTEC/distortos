@@ -28,8 +28,7 @@ namespace scheduler
 SoftwareTimerControlBlockSupervisor::SoftwareTimerControlBlockSupervisor() :
 		allocatorPool_{},
 		allocator_{allocatorPool_},
-		activeList_{allocator_},
-		dormantList_{allocator_}
+		activeList_{allocator_}
 {
 
 }
@@ -52,8 +51,8 @@ void SoftwareTimerControlBlockSupervisor::tickInterruptHandler(const TickClock::
 			iterator = activeList_.begin())
 	{
 		iterator->get().execute();
-		iterator->get().setList(&dormantList_);
-		dormantList_.sortedSplice(activeList_, iterator);
+		iterator->get().setList(nullptr);
+		activeList_.erase(iterator);
 	}
 }
 

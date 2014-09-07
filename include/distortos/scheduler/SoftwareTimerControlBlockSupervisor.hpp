@@ -63,9 +63,6 @@ private:
 
 	/// list of active software timers (waiting for execution)
 	SoftwareTimerControlBlockList activeList_;
-
-	/// list of dormant software timers (already executed)
-	SoftwareTimerControlBlockList dormantList_;
 };
 
 }	// namespace scheduler
