@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-09-07
+ * \date 2014-09-09
  */
 
 #ifndef INCLUDE_DISTORTOS_SCHEDULER_SCHEDULER_HPP_
@@ -34,9 +34,6 @@ class MainThreadControlBlock;
 class Scheduler
 {
 public:
-
-	/// generic iterator for all variants of ThreadControlBlockList
-	using Iterator = containers::SortedContainerBase<std::list<ThreadControlBlockListValueType>>::iterator;
 
 	/**
 	 * \brief Scheduler's constructor
@@ -79,7 +76,7 @@ public:
 	 * - EINVAL - provided thread is not in "runnable" state;
 	 */
 
-	int block(ThreadControlBlockList& container, Iterator iterator);
+	int block(ThreadControlBlockList& container, ThreadControlBlockListIterator iterator);
 
 	/**
 	 * \return reference to currently active ThreadControlBlock
@@ -144,7 +141,7 @@ public:
 	 * - EINVAL - provided thread is not in "suspended" state;
 	 */
 
-	int resume(Iterator iterator);
+	int resume(ThreadControlBlockListIterator iterator);
 
 	/**
 	 * \brief Makes the calling (current) thread sleep until some time point is reached.
@@ -173,7 +170,7 @@ public:
 	 * - EINVAL - provided thread is not in "runnable" state;
 	 */
 
-	int suspend(Iterator iterator);
+	int suspend(ThreadControlBlockListIterator iterator);
 
 	/**
 	 * \brief Called by architecture-specific code to do final context switch.
@@ -204,7 +201,7 @@ public:
 	 * \param [in] iterator is the iterator which points to unblocked thread
 	 */
 
-	void unblock(ThreadControlBlockList& container, Iterator iterator);
+	void unblock(ThreadControlBlockList& container, ThreadControlBlockListIterator iterator);
 
 	/**
 	 * \brief Yields time slot of the scheduler to next thread.
@@ -226,7 +223,7 @@ private:
 	 * - EINVAL - provided thread is not in "runnable" state;
 	 */
 
-	int blockInternal_(ThreadControlBlockList& container, Iterator iterator);
+	int blockInternal_(ThreadControlBlockList& container, ThreadControlBlockListIterator iterator);
 
 	/**
 	 * \brief Forces unconditional context switch.
@@ -266,10 +263,10 @@ private:
 	 * \param [in] iterator is the iterator which points to unblocked thread
 	 */
 
-	void unblockInternal_(ThreadControlBlockList& container, Iterator iterator);
+	void unblockInternal_(ThreadControlBlockList& container, ThreadControlBlockListIterator iterator);
 
 	/// iterator to the currently active ThreadControlBlock
-	Iterator currentThreadControlBlock_;
+	ThreadControlBlockListIterator currentThreadControlBlock_;
 
 	/// pool instance used by threadControlBlockListAllocator_
 	ThreadControlBlockListAllocator::Pool threadControlBlockListAllocatorPool_;

@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-09-07
+ * \date 2014-09-09
  */
 
 #include "distortos/scheduler/Scheduler.hpp"
@@ -65,7 +65,7 @@ void Scheduler::block(ThreadControlBlockList& container)
 	block(container, currentThreadControlBlock_);
 }
 
-int Scheduler::block(ThreadControlBlockList& container, const Iterator iterator)
+int Scheduler::block(ThreadControlBlockList& container, const ThreadControlBlockListIterator iterator)
 {
 	{
 		architecture::InterruptMaskingLock interruptMaskingLock;
@@ -107,7 +107,7 @@ int Scheduler::remove()
 	return 0;
 }
 
-int Scheduler::resume(const Iterator iterator)
+int Scheduler::resume(const ThreadControlBlockListIterator iterator)
 {
 	architecture::InterruptMaskingLock interrupt_masking_lock;
 
@@ -135,7 +135,7 @@ void Scheduler::suspend()
 	suspend(currentThreadControlBlock_);
 }
 
-int Scheduler::suspend(const Iterator iterator)
+int Scheduler::suspend(const ThreadControlBlockListIterator iterator)
 {
 	return block(suspendedList_, iterator);
 }
@@ -172,7 +172,7 @@ bool Scheduler::tickInterruptHandler()
 	return isContextSwitchRequired_();
 }
 
-void Scheduler::unblock(ThreadControlBlockList& container, const Iterator iterator)
+void Scheduler::unblock(ThreadControlBlockList& container, const ThreadControlBlockListIterator iterator)
 {
 	architecture::InterruptMaskingLock interrupt_masking_lock;
 
@@ -192,7 +192,7 @@ void Scheduler::yield() const
 | private functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-int Scheduler::blockInternal_(ThreadControlBlockList& container, const Iterator iterator)
+int Scheduler::blockInternal_(ThreadControlBlockList& container, const ThreadControlBlockListIterator iterator)
 {
 	if (iterator->get().getState() != ThreadControlBlock::State::Runnable)
 		return EINVAL;
@@ -238,7 +238,7 @@ void Scheduler::requestContextSwitch_() const
 	architecture::requestContextSwitch();
 }
 
-void Scheduler::unblockInternal_(ThreadControlBlockList& container, const Iterator iterator)
+void Scheduler::unblockInternal_(ThreadControlBlockList& container, const ThreadControlBlockListIterator iterator)
 {
 	runnableList_.sortedSplice(container, iterator);
 }
