@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-09-07
+ * \date 2014-09-11
  */
 
 #ifndef INCLUDE_DISTORTOS_SCHEDULER_THREADCONTROLBLOCK_HPP_
@@ -28,6 +28,8 @@ namespace distortos
 
 namespace scheduler
 {
+
+class ThreadControlBlockList;
 
 /// ThreadControlBlock class is a simple description of a Thread
 class ThreadControlBlock
@@ -91,6 +93,17 @@ public:
 
 	/// \return current state of object
 	State getState() const { return state_; }
+
+	/**
+	 * \brief Sets the list that has this object.
+	 *
+	 * \param [in] list is a pointer to list that has this object
+	 */
+
+	void setList(ThreadControlBlockList* const list)
+	{
+		list_ = list;
+	}
 
 	/// \param [in] state is the new state of object
 	void setState(const State state) { state_ = state; }
@@ -157,6 +170,9 @@ private:
 
 	/// storage for list link
 	Link link_;
+
+	/// pointer to list that has this object
+	ThreadControlBlockList* list_;
 
 	/// thread's priority, 0 - lowest, UINT8_MAX - highest
 	uint8_t priority_;
