@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-09-09
+ * \date 2014-09-11
  */
 
 #ifndef INCLUDE_DISTORTOS_SCHEDULER_THREADCONTROLBLOCKLIST_HPP_
@@ -81,9 +81,21 @@ public:
 	}
 
 	/**
+	 * \brief ThreadControlBlockList's destructor
+	 *
+	 * Clears list pointers in all elements.
+	 */
+
+	~ThreadControlBlockList()
+	{
+		for (auto& item : *this)
+			item.get().setList(nullptr);
+	}
+
+	/**
 	 * \brief Wrapper for sortedEmplace()
 	 *
-	 * Sets state of emplaced element.
+	 * Sets list pointer and state of emplaced element.
 	 *
 	 * \param Args are types of argument for value_type constructor
 	 *
@@ -96,6 +108,7 @@ public:
 	iterator sortedEmplace(Args&&... args)
 	{
 		const auto it = Base::sortedEmplace(std::forward<Args>(args)...);
+		it->get().setList(this);
 		it->get().setState(state_);
 		return it;
 	}
@@ -103,7 +116,7 @@ public:
 	/**
 	 * \brief Wrapper for sortedSplice()
 	 *
-	 * Sets state of transfered element.
+	 * Sets list pointer and state of transfered element.
 	 *
 	 * \param [in] other is the container from which the object is transfered
 	 * \param [in] other_position is the position of the transfered object in the other container
@@ -112,6 +125,7 @@ public:
 	void sortedSplice(ThreadControlBlockList& other, const iterator other_position)
 	{
 		Base::sortedSplice(other, other_position);
+		other_position->get().setList(this);
 		other_position->get().setState(state_);
 	}
 
