@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-09-11
+ * \date 2014-09-13
  */
 
 #ifndef INCLUDE_DISTORTOS_SCHEDULER_THREADCONTROLBLOCK_HPP_
@@ -16,6 +16,7 @@
 
 #include "distortos/scheduler/RoundRobinQuantum.hpp"
 #include "distortos/scheduler/threadRunner.hpp"
+#include "distortos/scheduler/ThreadControlBlockList-types.hpp"
 
 #include "distortos/architecture/Stack.hpp"
 
@@ -93,6 +94,17 @@ public:
 
 	/// \return current state of object
 	State getState() const { return state_; }
+
+	/**
+	 * \brief Sets the iterator to the element on the list.
+	 *
+	 * \param [in] iterator is an iterator to the element on the list
+	 */
+
+	void setIterator(const ThreadControlBlockListIterator iterator)
+	{
+		iterator_ = iterator;
+	}
 
 	/**
 	 * \brief Sets the list that has this object.
@@ -173,6 +185,9 @@ private:
 
 	/// pointer to list that has this object
 	ThreadControlBlockList* list_;
+
+	/// iterator to the element on the list, valid only when list_ != nullptr
+	ThreadControlBlockListIterator iterator_;
 
 	/// thread's priority, 0 - lowest, UINT8_MAX - highest
 	uint8_t priority_;
