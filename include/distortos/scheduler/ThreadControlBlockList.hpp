@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-09-11
+ * \date 2014-09-13
  */
 
 #ifndef INCLUDE_DISTORTOS_SCHEDULER_THREADCONTROLBLOCKLIST_HPP_
@@ -95,7 +95,7 @@ public:
 	/**
 	 * \brief Wrapper for sortedEmplace()
 	 *
-	 * Sets list pointer and state of emplaced element.
+	 * Sets list pointer, iterator and state of emplaced element.
 	 *
 	 * \param Args are types of argument for value_type constructor
 	 *
@@ -108,8 +108,10 @@ public:
 	iterator sortedEmplace(Args&&... args)
 	{
 		const auto it = Base::sortedEmplace(std::forward<Args>(args)...);
-		it->get().setList(this);
-		it->get().setState(state_);
+		auto& threadControlBlock = it->get();
+		threadControlBlock.setList(this);
+		threadControlBlock.setIterator(it);
+		threadControlBlock.setState(state_);
 		return it;
 	}
 
