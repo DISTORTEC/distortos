@@ -71,6 +71,9 @@ public:
 
 	ThreadControlBlock(void* buffer, size_t size, uint8_t priority);
 
+	/// \return iterator to the element on the list, valid only when list_ != nullptr
+	ThreadControlBlockListIterator getIterator() const { return iterator_; }
+
 	/// \return reference to internal storage for list link
 	Link& getLink() { return link_; }
 
