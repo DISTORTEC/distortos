@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-09-13
+ * \date 2014-09-14
  */
 
 #ifndef INCLUDE_DISTORTOS_SCHEDULER_THREADCONTROLBLOCK_HPP_
@@ -76,6 +76,9 @@ public:
 
 	/// \return const reference to internal storage for list link
 	const Link& getLink() const { return link_; }
+
+	/// \return pointer to list that has this object
+	ThreadControlBlockList* getList() const { return list_; }
 
 	/// \return reference to internal Stack object
 	architecture::Stack& getStack() { return stack_; }
