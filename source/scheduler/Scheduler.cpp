@@ -83,6 +83,31 @@ int Scheduler::block(ThreadControlBlockList& container, const ThreadControlBlock
 	return 0;
 }
 
+int Scheduler::blockUntil(ThreadControlBlockList& container, const TickClock::time_point timePoint)
+{
+	architecture::InterruptMaskingLock interruptMaskingLock;
+
+	const auto iterator = currentThreadControlBlock_;
+	bool timedOut {};
+	// This lambda unblocks the thread only if it wasn't already unblocked - this is necessary because double unblock
+	// should be avoided (it could mess the order of threads of the same priority). In that case it also marks the
+	// "timed out" reason of unblocking.
+	auto softwareTimer = makeSoftwareTimer(
+			[this, iterator, &timedOut]()
+			{
+				if (iterator->get().getList() != &runnableList_)
+				{
+					unblockInternal_(iterator);
+					timedOut = true;
+				}
+			});
+	softwareTimer.start(timePoint);
+
+	block(container);
+
+	return timedOut == false ? 0 : ETIMEDOUT;
+}
+
 uint64_t Scheduler::getTickCount() const
 {
 	architecture::InterruptMaskingLock interrupt_masking_lock;

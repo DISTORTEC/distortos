@@ -79,6 +79,18 @@ public:
 	int block(ThreadControlBlockList& container, ThreadControlBlockListIterator iterator);
 
 	/**
+	 * \brief Blocks current thread with timeout, transferring it to provided container.
+	 *
+	 * \param [in] container is a reference to destination container to which the thread will be transferred
+	 * \param [in] timePoint is the time point at which the thread will be unblocked (if not already unblocked)
+	 *
+	 * \return 0 on success, error code otherwise:
+	 * - ETIMEDOUT - thread was unblocked because timePoint was reached;
+	 */
+
+	int blockUntil(ThreadControlBlockList& container, TickClock::time_point timePoint);
+
+	/**
 	 * \return reference to currently active ThreadControlBlock
 	 */
 
