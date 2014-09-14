@@ -67,13 +67,13 @@ public:
 	/**
 	 * \brief Blocks thread, transferring it to provided container.
 	 *
-	 * The thread must be in "runnable" state - trying to block thread in other state is an error.
+	 * The thread must be on "runnable" list - trying to block thread in other state is an error.
 	 *
 	 * \param [in] container is a reference to destination container to which the thread will be transferred
 	 * \param [in] iterator is the iterator to the thread that will be blocked
 	 *
 	 * \return 0 on success, error code otherwise:
-	 * - EINVAL - provided thread is not in "runnable" state;
+	 * - EINVAL - provided thread is not on "runnable" list;
 	 */
 
 	int block(ThreadControlBlockList& container, ThreadControlBlockListIterator iterator);
@@ -125,7 +125,7 @@ public:
 	 * \note This function can be used only after thread's function returns an all cleanup is done.
 	 *
 	 * \return 0 on success, error code otherwise:
-	 * - EINVAL - provided thread is not in "runnable" state and cannot be removed/terminated;
+	 * - EINVAL - provided thread is not on "runnable" list and cannot be removed/terminated;
 	 */
 
 	int remove();
@@ -133,12 +133,12 @@ public:
 	/**
 	 * \brief Resumes suspended thread.
 	 *
-	 * The thread must be in "suspended" state - trying to resume thread that is not suspended is an error.
+	 * The thread must be on the "suspended" list - trying to resume thread that is not suspended is an error.
 	 *
 	 * \param [in] iterator is the iterator to the thread that will be resumed
 	 *
 	 * \return 0 on success, error code otherwise:
-	 * - EINVAL - provided thread is not in "suspended" state;
+	 * - EINVAL - provided thread is not on "suspended" list;
 	 */
 
 	int resume(ThreadControlBlockListIterator iterator);
@@ -162,12 +162,12 @@ public:
 	/**
 	 * \brief Suspends thread.
 	 *
-	 * The thread must be in "runnable" state - trying to suspend thread in other state is an error.
+	 * The thread must be on "runnable" list - trying to suspend thread in other state is an error.
 	 *
 	 * \param [in] iterator is the iterator to the thread that will be suspended
 	 *
 	 * \return 0 on success, error code otherwise:
-	 * - EINVAL - provided thread is not in "runnable" state;
+	 * - EINVAL - provided thread is not on "runnable" list;
 	 */
 
 	int suspend(ThreadControlBlockListIterator iterator);
@@ -221,7 +221,7 @@ private:
 	 * \param [in] iterator is the iterator to the thread that will be blocked
 	 *
 	 * \return 0 on success, error code otherwise:
-	 * - EINVAL - provided thread is not in "runnable" state;
+	 * - EINVAL - provided thread is not on "runnable" list;
 	 */
 
 	int blockInternal_(ThreadControlBlockList& container, ThreadControlBlockListIterator iterator);
@@ -238,7 +238,7 @@ private:
 	 * \brief Tests whether context switch is required or not.
 	 *
 	 * Context switch is required in following situations:
-	 * - current thread is no longer in "runnable" state,
+	 * - current thread is no longer on "runnable" list,
 	 * - there is a higher-priority thread available,
 	 * - current thread used its round-robin quantum and same-priority thread is available.
 	 *

@@ -111,7 +111,7 @@ int Scheduler::resume(const ThreadControlBlockListIterator iterator)
 {
 	architecture::InterruptMaskingLock interrupt_masking_lock;
 
-	if (iterator->get().getState() != ThreadControlBlock::State::Suspended)
+	if (iterator->get().getList() != &suspendedList_)
 		return EINVAL;
 
 	unblock(iterator);
@@ -148,7 +148,7 @@ void* Scheduler::switchContext(void* stack_pointer)
 
 	// if the object is on the "runnable" list and it used its round-robin quantum - do the rotation
 	// move current thread to the end of same-priority group to implement round-robin scheduling
-	if (getCurrentThreadControlBlock().getState() == ThreadControlBlock::State::Runnable &&
+	if (getCurrentThreadControlBlock().getList() == &runnableList_ &&
 			getCurrentThreadControlBlock().getRoundRobinQuantum().get() == 0)
 		runnableList_.sortedSplice(runnableList_, currentThreadControlBlock_);
 
@@ -194,7 +194,7 @@ void Scheduler::yield() const
 
 int Scheduler::blockInternal_(ThreadControlBlockList& container, const ThreadControlBlockListIterator iterator)
 {
-	if (iterator->get().getState() != ThreadControlBlock::State::Runnable)
+	if (iterator->get().getList() != &runnableList_)
 		return EINVAL;
 
 	container.sortedSplice(runnableList_, iterator);
@@ -215,7 +215,7 @@ bool Scheduler::isContextSwitchRequired_() const
 	if (runnableList_.size() <= 1)	// no threads or single thread available?
 		return false;				// no context switch possible
 
-	if (getCurrentThreadControlBlock().getState() != ThreadControlBlock::State::Runnable)
+	if (getCurrentThreadControlBlock().getList() != &runnableList_)
 		return true;
 
 	if (runnableList_.begin() != currentThreadControlBlock_)	// is there a higher-priority thread available?
