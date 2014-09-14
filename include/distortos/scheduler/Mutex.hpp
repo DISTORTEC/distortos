@@ -8,13 +8,14 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-08-19
+ * \date 2014-09-14
  */
 
 #ifndef INCLUDE_DISTORTOS_SCHEDULER_MUTEX_HPP_
 #define INCLUDE_DISTORTOS_SCHEDULER_MUTEX_HPP_
 
 #include "distortos/scheduler/ThreadControlBlockList.hpp"
+#include "distortos/scheduler/TickClock.hpp"
 
 namespace distortos
 {
@@ -72,6 +73,86 @@ public:
 	 */
 
 	bool tryLock();
+
+	/**
+	 * \brief Tries to lock the mutex for given duration of time.
+	 *
+	 * Similar to std::timed_mutex::try_lock_for() - http://en.cppreference.com/w/cpp/thread/timed_mutex/try_lock_for
+	 * Similar to pthread_mutex_timedlock() -
+	 * http://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_mutex_timedlock.html#
+	 *
+	 * If the mutex is already locked, the calling thread shall block until the mutex becomes available as in lock()
+	 * function. If the mutex cannot be locked without waiting for another thread to unlock the mutex, this wait shall
+	 * be terminated when the specified timeout expires.
+	 *
+	 * Under no circumstance shall the function fail with a timeout if the mutex can be locked immediately. The validity
+	 * of the duration parameter need not be checked if the mutex can be locked immediately.
+	 *
+	 * \param [in] duration is the duration after which the wait will be terminated without locking the mutex
+	 *
+	 * \return true if the calling thread successfully performed the lock operation, false otherwise
+	 */
+
+	bool tryLockFor(TickClock::duration duration);
+
+	/**
+	 * Tries to lock the mutex for given duration of time.
+	 *
+	 * Template variant of tryLockFor(TickClock::duration duration).
+	 *
+	 * \param Rep is type of tick counter
+	 * \param Period is std::ratio type representing the tick period of the clock, in seconds
+	 *
+	 * \param [in] duration is the duration after which the wait will be terminated without locking the mutex
+	 *
+	 * \return true if the calling thread successfully performed the lock operation, false otherwise
+	 */
+
+	template<typename Rep, typename Period>
+	bool tryLockFor(const std::chrono::duration<Rep, Period> duration)
+	{
+		return tryLockFor(std::chrono::duration_cast<TickClock::duration>(duration));
+	}
+
+	/**
+	 * \brief Tries to lock the mutex until given time point.
+	 *
+	 * Similar to std::timed_mutex::try_lock_until() -
+	 * http://en.cppreference.com/w/cpp/thread/timed_mutex/try_lock_until
+	 * Similar to pthread_mutex_timedlock() -
+	 * http://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_mutex_timedlock.html#
+	 *
+	 * If the mutex is already locked, the calling thread shall block until the mutex becomes available as in lock()
+	 * function. If the mutex cannot be locked without waiting for another thread to unlock the mutex, this wait shall
+	 * be terminated when the specified timeout expires.
+	 *
+	 * Under no circumstance shall the function fail with a timeout if the mutex can be locked immediately. The validity
+	 * of the timePoint parameter need not be checked if the mutex can be locked immediately.
+	 *
+	 * \param [in] timePoint is the time point at which the wait will be terminated without locking the mutex
+	 *
+	 * \return true if the calling thread successfully performed the lock operation, false otherwise
+	 */
+
+	bool tryLockUntil(TickClock::time_point timePoint);
+
+	/**
+	 * \brief Tries to lock the mutex until given time point.
+	 *
+	 * Template variant of tryLockUntil(TickClock::time_point timePoint).
+	 *
+	 * \param Duration is a std::chrono::duration type used to measure duration
+	 *
+	 * \param [in] timePoint is the time point at which the wait will be terminated without locking the mutex
+	 *
+	 * \return true if the calling thread successfully performed the lock operation, false otherwise
+	 */
+
+	template<typename Duration>
+	bool tryLockUntil(const std::chrono::time_point<TickClock, Duration> timePoint)
+	{
+		return tryLockUntil(std::chrono::time_point_cast<TickClock::duration>(timePoint));
+	}
 
 	/**
 	 * \brief Unlocks the mutex.
