@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-09-07
+ * \date 2014-09-14
  */
 
 #include "distortos/scheduler/ConditionVariable.hpp"
@@ -44,7 +44,7 @@ void ConditionVariable::notifyAll()
 	architecture::InterruptMaskingLock interruptMaskingLock;
 
 	while (blockedList_.empty() == false)
-		schedulerInstance.unblock(blockedList_, blockedList_.begin());
+		schedulerInstance.unblock(blockedList_.begin());
 }
 
 void ConditionVariable::notifyOne()
@@ -52,7 +52,7 @@ void ConditionVariable::notifyOne()
 	architecture::InterruptMaskingLock interruptMaskingLock;
 
 	if (blockedList_.empty() == false)
-		schedulerInstance.unblock(blockedList_, blockedList_.begin());
+		schedulerInstance.unblock(blockedList_.begin());
 }
 
 void ConditionVariable::wait(Mutex& mutex)

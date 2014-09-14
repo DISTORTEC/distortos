@@ -114,7 +114,7 @@ int Scheduler::resume(const ThreadControlBlockListIterator iterator)
 	if (iterator->get().getState() != ThreadControlBlock::State::Suspended)
 		return EINVAL;
 
-	unblock(suspendedList_, iterator);
+	unblock(iterator);
 	return 0;
 }
 
@@ -172,7 +172,7 @@ bool Scheduler::tickInterruptHandler()
 	return isContextSwitchRequired_();
 }
 
-void Scheduler::unblock(ThreadControlBlockList& container, const ThreadControlBlockListIterator iterator)
+void Scheduler::unblock(const ThreadControlBlockListIterator iterator)
 {
 	architecture::InterruptMaskingLock interrupt_masking_lock;
 

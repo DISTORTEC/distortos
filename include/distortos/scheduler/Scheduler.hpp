@@ -195,13 +195,14 @@ public:
 	bool tickInterruptHandler();
 
 	/**
-	 * \brief Unblocks provided thread, transferring it from provided container to "runnable" container.
+	 * \brief Unblocks provided thread, transferring it from it's current container to "runnable" container.
 	 *
-	 * \param [in] container is a reference to source container from which the thread will be transferred
+	 * Current container of the thread is obtained with ThreadControlBlock::getList().
+	 *
 	 * \param [in] iterator is the iterator which points to unblocked thread
 	 */
 
-	void unblock(ThreadControlBlockList& container, ThreadControlBlockListIterator iterator);
+	void unblock(ThreadControlBlockListIterator iterator);
 
 	/**
 	 * \brief Yields time slot of the scheduler to next thread.
