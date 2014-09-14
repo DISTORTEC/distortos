@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-08-28
+ * \date 2014-09-14
  */
 
 #ifndef INCLUDE_DISTORTOS_SCHEDULER_THISTHREAD_HPP_
@@ -52,7 +52,7 @@ void sleepFor(TickClock::duration duration);
  */
 
 template<typename Rep, typename Period>
-void sleepFor(const std::chrono::duration<Rep,Period> duration)
+void sleepFor(const std::chrono::duration<Rep, Period> duration)
 {
 	sleepFor(std::chrono::duration_cast<TickClock::duration>(duration));
 }

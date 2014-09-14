@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-09-07
+ * \date 2014-09-14
  */
 
 #ifndef INCLUDE_DISTORTOS_SCHEDULER_SOFTWARETIMERCONTROLBLOCK_HPP_
@@ -101,7 +101,7 @@ public:
 	 */
 
 	template<typename Rep, typename Period>
-	void start(const std::chrono::duration<Rep,Period> duration)
+	void start(const std::chrono::duration<Rep, Period> duration)
 	{
 		start(std::chrono::duration_cast<TickClock::duration>(duration));
 	}
