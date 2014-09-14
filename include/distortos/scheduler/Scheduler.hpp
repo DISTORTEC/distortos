@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-09-09
+ * \date 2014-09-14
  */
 
 #ifndef INCLUDE_DISTORTOS_SCHEDULER_SCHEDULER_HPP_
@@ -255,15 +255,16 @@ private:
 	void requestContextSwitch_() const;
 
 	/**
-	 * \brief Unblocks provided thread, transferring it from provided container to "runnable" container.
+	 * \brief Unblocks provided thread, transferring it from it's current container to "runnable" container.
 	 *
-	 * Internal version - without interrupt masking and yield()
+	 * Current container of the thread is obtained with ThreadControlBlock::getList().
 	 *
-	 * \param [in] container is a reference to source container from which the thread will be transferred
+	 * \note Internal version - without interrupt masking and yield()
+	 *
 	 * \param [in] iterator is the iterator which points to unblocked thread
 	 */
 
-	void unblockInternal_(ThreadControlBlockList& container, ThreadControlBlockListIterator iterator);
+	void unblockInternal_(ThreadControlBlockListIterator iterator);
 
 	/// iterator to the currently active ThreadControlBlock
 	ThreadControlBlockListIterator currentThreadControlBlock_;

@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-09-09
+ * \date 2014-09-14
  */
 
 #include "distortos/scheduler/Scheduler.hpp"
@@ -124,7 +124,7 @@ void Scheduler::sleepUntil(const TickClock::time_point time_point)
 
 	ThreadControlBlockList sleeping_list {threadControlBlockListAllocator_, ThreadControlBlock::State::Sleeping};
 	auto software_timer =
-			makeSoftwareTimer(&Scheduler::unblockInternal_, this, std::ref(sleeping_list), currentThreadControlBlock_);
+			makeSoftwareTimer(&Scheduler::unblockInternal_, this, currentThreadControlBlock_);
 	software_timer.start(time_point);
 
 	block(sleeping_list);
@@ -176,7 +176,7 @@ void Scheduler::unblock(ThreadControlBlockList& container, const ThreadControlBl
 {
 	architecture::InterruptMaskingLock interrupt_masking_lock;
 
-	unblockInternal_(container, iterator);
+	unblockInternal_(iterator);
 	yield();
 }
 
@@ -238,9 +238,9 @@ void Scheduler::requestContextSwitch_() const
 	architecture::requestContextSwitch();
 }
 
-void Scheduler::unblockInternal_(ThreadControlBlockList& container, const ThreadControlBlockListIterator iterator)
+void Scheduler::unblockInternal_(const ThreadControlBlockListIterator iterator)
 {
-	runnableList_.sortedSplice(container, iterator);
+	runnableList_.sortedSplice(*iterator->get().getList(), iterator);
 }
 
 }	// namespace scheduler
