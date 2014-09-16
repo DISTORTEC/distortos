@@ -36,11 +36,11 @@ public:
 	/**
 	 * \brief RoundRobinQuantum's constructor
 	 *
-	 * Initializes quantum value to 0.
+	 * Initializes quantum value to initial value - just like after call to reset().
 	 */
 
 	constexpr RoundRobinQuantum() :
-			quantum_{}
+			quantum_{quantumRawInitializer_}
 	{}
 
 	/**
