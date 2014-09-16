@@ -192,7 +192,7 @@ void Scheduler::yield() const
 	architecture::InterruptMaskingLock interruptMaskingLock;
 
 	if (isContextSwitchRequired() == true)
-		requestContextSwitch();
+		architecture::requestContextSwitch();
 }
 
 /*---------------------------------------------------------------------------------------------------------------------+
@@ -212,7 +212,7 @@ int Scheduler::blockInternal(ThreadControlBlockList& container, const ThreadCont
 void Scheduler::forceContextSwitch() const
 {
 	architecture::InterruptUnmaskingLock interruptUnmaskingLock;
-	requestContextSwitch();
+	architecture::requestContextSwitch();
 }
 
 bool Scheduler::isContextSwitchRequired() const
@@ -238,11 +238,6 @@ bool Scheduler::isContextSwitchRequired() const
 	}
 
 	return false;
-}
-
-void Scheduler::requestContextSwitch() const
-{
-	architecture::requestContextSwitch();
 }
 
 void Scheduler::unblockInternal(const ThreadControlBlockListIterator iterator)

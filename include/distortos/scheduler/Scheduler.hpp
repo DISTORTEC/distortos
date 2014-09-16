@@ -251,14 +251,6 @@ private:
 	bool isContextSwitchRequired() const;
 
 	/**
-	 * \brief Requests unconditional context switch.
-	 *
-	 * Wrapper for architecture::requestContextSwitch()
-	 */
-
-	void requestContextSwitch() const;
-
-	/**
 	 * \brief Unblocks provided thread, transferring it from it's current container to "runnable" container.
 	 *
 	 * Current container of the thread is obtained with ThreadControlBlock::getList(). Round-robin quantum of thread is
