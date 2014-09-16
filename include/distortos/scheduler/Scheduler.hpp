@@ -17,8 +17,6 @@
 #include "distortos/scheduler/ThreadControlBlockList.hpp"
 #include "distortos/scheduler/SoftwareTimerControlBlockSupervisor.hpp"
 
-#include <chrono>
-
 namespace distortos
 {
 

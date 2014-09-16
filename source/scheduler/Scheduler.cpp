@@ -20,8 +20,6 @@
 #include "distortos/architecture/InterruptMaskingLock.hpp"
 #include "distortos/architecture/InterruptUnmaskingLock.hpp"
 
-#include "distortos/distortosConfiguration.h"
-
 #include <cerrno>
 
 namespace distortos
