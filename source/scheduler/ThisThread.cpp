@@ -36,7 +36,9 @@ void sleepFor(const TickClock::duration duration)
 
 void sleepUntil(const TickClock::time_point timePoint)
 {
-	schedulerInstance.sleepUntil(timePoint);
+	ThreadControlBlockList sleepingList {schedulerInstance.getThreadControlBlockListAllocator(),
+			ThreadControlBlock::State::Sleeping};
+	schedulerInstance.blockUntil(sleepingList, timePoint);
 }
 
 void yield()
