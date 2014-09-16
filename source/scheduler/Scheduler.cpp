@@ -51,8 +51,6 @@ Scheduler::Scheduler(MainThreadControlBlock& mainThreadControlBlock, Thread<void
 
 void Scheduler::add(ThreadControlBlock& threadControlBlock)
 {
-	threadControlBlock.getRoundRobinQuantum().reset();
-
 	architecture::InterruptMaskingLock interruptMaskingLock;
 	threadControlBlockListAllocatorPool_.feed(threadControlBlock.getLink());
 	runnableList_.sortedEmplace(threadControlBlock);
