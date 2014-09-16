@@ -35,10 +35,41 @@ void wasteTime(scheduler::TickClock::duration duration);
 /**
  * \brief Wastes time.
  *
+ * \note Wasted duration must not be shorter, so one additional tick is always added to the duration.
+ *
+ * \param Rep is type of tick counter
+ * \param Period is std::ratio type representing the tick period of the clock, in seconds
+ *
+ * \param [in] duration is the duration of time to waste
+ */
+
+template<typename Rep, typename Period>
+void wasteTime(const std::chrono::duration<Rep, Period> duration)
+{
+	wasteTime(std::chrono::duration_cast<scheduler::TickClock::duration>(duration));
+}
+
+/**
+ * \brief Wastes time.
+ *
  * \param [in] timePoint is the time point at which the function will return
  */
 
 void wasteTime(scheduler::TickClock::time_point timePoint);
+
+/**
+ * \brief Wastes time.
+ *
+ * \param Duration is a std::chrono::duration type used to measure duration
+ *
+ * \param [in] timePoint is the time point at which the function will return
+ */
+
+template<typename Duration>
+void wasteTime(const std::chrono::time_point<scheduler::TickClock, Duration> timePoint)
+{
+	wasteTime(std::chrono::time_point_cast<scheduler::TickClock::duration>(timePoint));
+}
 
 }	// namespace test
 
