@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-08-05
+ * \date 2014-09-16
  */
 
 #include "distortos/scheduler/RoundRobinQuantum.hpp"
@@ -44,7 +44,7 @@ static_assert(quantumInitializer_ <= UINT8_MAX,
 
 void RoundRobinQuantum::decrement()
 {
-	if (quantum_ > 0)
+	if (isZero() == false)
 		--quantum_;
 }
 
