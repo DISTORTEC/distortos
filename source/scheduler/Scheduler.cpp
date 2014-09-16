@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-09-14
+ * \date 2014-09-16
  */
 
 #include "distortos/scheduler/Scheduler.hpp"
@@ -171,12 +171,6 @@ void* Scheduler::switchContext(void* stack_pointer)
 
 	getCurrentThreadControlBlock().getStack().setStackPointer(stack_pointer);
 
-	// if the object is on the "runnable" list and it used its round-robin quantum - do the rotation
-	// move current thread to the end of same-priority group to implement round-robin scheduling
-	if (getCurrentThreadControlBlock().getList() == &runnableList_ &&
-			getCurrentThreadControlBlock().getRoundRobinQuantum().get() == 0)
-		runnableList_.sortedSplice(runnableList_, currentThreadControlBlock_);
-
 	currentThreadControlBlock_ = runnableList_.begin();
 
 	getCurrentThreadControlBlock().getRoundRobinQuantum().reset();
@@ -191,6 +185,12 @@ bool Scheduler::tickInterruptHandler()
 	++tickCount_;
 
 	getCurrentThreadControlBlock().getRoundRobinQuantum().decrement();
+
+	// if the object is on the "runnable" list and it used its round-robin quantum, then do the "rotation": move current
+	// thread to the end of same-priority group to implement round-robin scheduling
+	if (getCurrentThreadControlBlock().getList() == &runnableList_ &&
+			getCurrentThreadControlBlock().getRoundRobinQuantum().get() == 0)
+		runnableList_.sortedSplice(runnableList_, currentThreadControlBlock_);
 
 	softwareTimerControlBlockSupervisor_.tickInterruptHandler(TickClock::time_point{TickClock::duration{tickCount_}});
 
