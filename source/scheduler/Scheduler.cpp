@@ -56,7 +56,7 @@ void Scheduler::add(ThreadControlBlock& threadControlBlock)
 	architecture::InterruptMaskingLock interruptMaskingLock;
 	threadControlBlockListAllocatorPool_.feed(threadControlBlock.getLink());
 	runnableList_.sortedEmplace(threadControlBlock);
-	yield();
+	maybeRequestContextSwitch();
 }
 
 void Scheduler::block(ThreadControlBlockList& container)
@@ -184,7 +184,7 @@ void Scheduler::unblock(const ThreadControlBlockListIterator iterator)
 	architecture::InterruptMaskingLock interruptMaskingLock;
 
 	unblockInternal(iterator);
-	yield();
+	maybeRequestContextSwitch();
 }
 
 void Scheduler::yield() const
