@@ -34,6 +34,15 @@ public:
 	using Duration = std::chrono::duration<Representation, TickClock::period>;
 
 	/**
+	 * \return initial value for round-robin quantum
+	 */
+
+	constexpr static Duration getInitial()
+	{
+		return Duration{quantumRawInitializer_};
+	}
+
+	/**
 	 * \brief RoundRobinQuantum's constructor
 	 *
 	 * Initializes quantum value to initial value - just like after call to reset().
