@@ -49,7 +49,7 @@ public:
 	 */
 
 	constexpr RoundRobinQuantum() :
-			quantum_{quantumRawInitializer_}
+			quantum_{getInitial()}
 	{}
 
 	/**
@@ -94,7 +94,7 @@ public:
 
 	void reset()
 	{
-		quantum_ = Duration{quantumRawInitializer_};
+		quantum_ = getInitial();
 	}
 
 private:
