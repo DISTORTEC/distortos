@@ -52,7 +52,11 @@ public:
 	 * \note this function must be called with enabled interrupt masking
 	 */
 
-	void decrement();
+	void decrement()
+	{
+		if (isZero() == false)
+			--quantum_;
+	}
 
 	/**
 	 * \brief Gets current value of round-robin's quantum.
@@ -79,9 +83,22 @@ public:
 	 * This function should be called from context switcher after selecting new task that will be run.
 	 */
 
-	void reset();
+	void reset()
+	{
+		quantum_ = Duration{quantumRawInitializer_};
+	}
 
 private:
+
+	static_assert(CONFIG_TICK_RATE_HZ > 0, "CONFIG_TICK_RATE_HZ must be positive and non-zero!");
+	static_assert(CONFIG_ROUND_ROBIN_RATE_HZ > 0, "CONFIG_ROUND_ROBIN_RATE_HZ must be positive and non-zero!");
+
+	/// raw initializer value for round-robin quantum, calculated with rounding to nearest
+	constexpr static auto quantumRawInitializer_ = (CONFIG_TICK_RATE_HZ + CONFIG_ROUND_ROBIN_RATE_HZ / 2) /
+			CONFIG_ROUND_ROBIN_RATE_HZ;
+
+	static_assert(quantumRawInitializer_ > 0 || quantumRawInitializer_ <= UINT8_MAX,
+			"CONFIG_TICK_RATE_HZ and CONFIG_ROUND_ROBIN_RATE_HZ values produce invalid round-robin quantum!");
 
 	/// round-robin quantum
 	Duration quantum_;
