@@ -51,13 +51,13 @@ Scheduler::Scheduler(MainThreadControlBlock& mainThreadControlBlock, Thread<void
 	architecture::startScheduling();
 }
 
-void Scheduler::add(ThreadControlBlock& thread_control_block)
+void Scheduler::add(ThreadControlBlock& threadControlBlock)
 {
-	thread_control_block.getRoundRobinQuantum().reset();
+	threadControlBlock.getRoundRobinQuantum().reset();
 
-	architecture::InterruptMaskingLock interrupt_masking_lock;
-	threadControlBlockListAllocatorPool_.feed(thread_control_block.getLink());
-	runnableList_.sortedEmplace(thread_control_block);
+	architecture::InterruptMaskingLock interruptMaskingLock;
+	threadControlBlockListAllocatorPool_.feed(threadControlBlock.getLink());
+	runnableList_.sortedEmplace(threadControlBlock);
 	yield();
 }
 
@@ -71,7 +71,7 @@ int Scheduler::block(ThreadControlBlockList& container, const ThreadControlBlock
 	{
 		architecture::InterruptMaskingLock interruptMaskingLock;
 
-		const auto ret = blockInternal_(container, iterator);
+		const auto ret = blockInternal(container, iterator);
 		if (ret != 0)
 			return ret;
 
@@ -79,7 +79,7 @@ int Scheduler::block(ThreadControlBlockList& container, const ThreadControlBlock
 			return 0;
 	}
 
-	forceContextSwitch_();
+	forceContextSwitch();
 
 	return 0;
 }
@@ -98,7 +98,7 @@ int Scheduler::blockUntil(ThreadControlBlockList& container, const TickClock::ti
 			{
 				if (iterator->get().getList() != &runnableList_)
 				{
-					unblockInternal_(iterator);
+					unblockInternal(iterator);
 					timedOut = true;
 				}
 			});
@@ -111,7 +111,7 @@ int Scheduler::blockUntil(ThreadControlBlockList& container, const TickClock::ti
 
 uint64_t Scheduler::getTickCount() const
 {
-	architecture::InterruptMaskingLock interrupt_masking_lock;
+	architecture::InterruptMaskingLock interruptMaskingLock;
 	return tickCount_;
 }
 
@@ -121,21 +121,21 @@ int Scheduler::remove()
 		architecture::InterruptMaskingLock interruptMaskingLock;
 		ThreadControlBlockList terminatedList {threadControlBlockListAllocator_, ThreadControlBlock::State::Terminated};
 
-		const auto ret = blockInternal_(terminatedList, currentThreadControlBlock_);
+		const auto ret = blockInternal(terminatedList, currentThreadControlBlock_);
 		if (ret != 0)
 			return ret;
 
 		terminatedList.begin()->get().terminationHook();
 	}
 
-	forceContextSwitch_();
+	forceContextSwitch();
 
 	return 0;
 }
 
 int Scheduler::resume(const ThreadControlBlockListIterator iterator)
 {
-	architecture::InterruptMaskingLock interrupt_masking_lock;
+	architecture::InterruptMaskingLock interruptMaskingLock;
 
 	if (iterator->get().getList() != &suspendedList_)
 		return EINVAL;
@@ -144,16 +144,16 @@ int Scheduler::resume(const ThreadControlBlockListIterator iterator)
 	return 0;
 }
 
-void Scheduler::sleepUntil(const TickClock::time_point time_point)
+void Scheduler::sleepUntil(const TickClock::time_point timePoint)
 {
-	architecture::InterruptMaskingLock interrupt_masking_lock;
+	architecture::InterruptMaskingLock interruptMaskingLock;
 
-	ThreadControlBlockList sleeping_list {threadControlBlockListAllocator_, ThreadControlBlock::State::Sleeping};
-	auto software_timer =
-			makeSoftwareTimer(&Scheduler::unblockInternal_, this, currentThreadControlBlock_);
-	software_timer.start(time_point);
+	ThreadControlBlockList sleepingList {threadControlBlockListAllocator_, ThreadControlBlock::State::Sleeping};
+	auto softwareTimer =
+			makeSoftwareTimer(&Scheduler::unblockInternal, this, currentThreadControlBlock_);
+	softwareTimer.start(timePoint);
 
-	block(sleeping_list);
+	block(sleepingList);
 }
 
 void Scheduler::suspend()
@@ -166,17 +166,17 @@ int Scheduler::suspend(const ThreadControlBlockListIterator iterator)
 	return block(suspendedList_, iterator);
 }
 
-void* Scheduler::switchContext(void* stack_pointer)
+void* Scheduler::switchContext(void* const stackPointer)
 {
-	architecture::InterruptMaskingLock interrupt_masking_lock;
-	getCurrentThreadControlBlock().getStack().setStackPointer(stack_pointer);
+	architecture::InterruptMaskingLock interruptMaskingLock;
+	getCurrentThreadControlBlock().getStack().setStackPointer(stackPointer);
 	currentThreadControlBlock_ = runnableList_.begin();
 	return getCurrentThreadControlBlock().getStack().getStackPointer();
 }
 
 bool Scheduler::tickInterruptHandler()
 {
-	architecture::InterruptMaskingLock interrupt_masking_lock;
+	architecture::InterruptMaskingLock interruptMaskingLock;
 
 	++tickCount_;
 
@@ -190,30 +190,30 @@ bool Scheduler::tickInterruptHandler()
 
 	softwareTimerControlBlockSupervisor_.tickInterruptHandler(TickClock::time_point{TickClock::duration{tickCount_}});
 
-	return isContextSwitchRequired_();
+	return isContextSwitchRequired();
 }
 
 void Scheduler::unblock(const ThreadControlBlockListIterator iterator)
 {
-	architecture::InterruptMaskingLock interrupt_masking_lock;
+	architecture::InterruptMaskingLock interruptMaskingLock;
 
-	unblockInternal_(iterator);
+	unblockInternal(iterator);
 	yield();
 }
 
 void Scheduler::yield() const
 {
-	architecture::InterruptMaskingLock interrupt_masking_lock;
+	architecture::InterruptMaskingLock interruptMaskingLock;
 
-	if (isContextSwitchRequired_() == true)
-		requestContextSwitch_();
+	if (isContextSwitchRequired() == true)
+		requestContextSwitch();
 }
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | private functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-int Scheduler::blockInternal_(ThreadControlBlockList& container, const ThreadControlBlockListIterator iterator)
+int Scheduler::blockInternal(ThreadControlBlockList& container, const ThreadControlBlockListIterator iterator)
 {
 	if (iterator->get().getList() != &runnableList_)
 		return EINVAL;
@@ -223,13 +223,13 @@ int Scheduler::blockInternal_(ThreadControlBlockList& container, const ThreadCon
 	return 0;
 }
 
-void Scheduler::forceContextSwitch_() const
+void Scheduler::forceContextSwitch() const
 {
 	architecture::InterruptUnmaskingLock interruptUnmaskingLock;
-	requestContextSwitch_();
+	requestContextSwitch();
 }
 
-bool Scheduler::isContextSwitchRequired_() const
+bool Scheduler::isContextSwitchRequired() const
 {
 	// this check must be first, because during early startup currentThreadControlBlock_ is not yet initialized (so
 	// futher conditions would dereference nullptr) and no threads are available
@@ -244,22 +244,22 @@ bool Scheduler::isContextSwitchRequired_() const
 
 	if (getCurrentThreadControlBlock().getRoundRobinQuantum().get() == 0)
 	{
-		const auto next_thread = ++runnableList_.begin();
-		const auto next_thread_priority = next_thread->get().getPriority();
+		const auto nextThread = ++runnableList_.begin();
+		const auto nextThreadPriority = nextThread->get().getPriority();
 		// thread with same priority available?
-		if (getCurrentThreadControlBlock().getPriority() == next_thread_priority)
+		if (getCurrentThreadControlBlock().getPriority() == nextThreadPriority)
 			return true;	// switch context to do round-robin scheduling
 	}
 
 	return false;
 }
 
-void Scheduler::requestContextSwitch_() const
+void Scheduler::requestContextSwitch() const
 {
 	architecture::requestContextSwitch();
 }
 
-void Scheduler::unblockInternal_(const ThreadControlBlockListIterator iterator)
+void Scheduler::unblockInternal(const ThreadControlBlockListIterator iterator)
 {
 	runnableList_.sortedSplice(*iterator->get().getList(), iterator);
 	iterator->get().getRoundRobinQuantum().reset();

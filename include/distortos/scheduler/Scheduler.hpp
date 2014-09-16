@@ -51,10 +51,10 @@ public:
 	 *
 	 * ThreadControlBlock's state is changed to "runnable" and it's round-robin quantum is reset.
 	 *
-	 * \param [in] thread_control_block is a reference to added ThreadControlBlock object
+	 * \param [in] threadControlBlock is a reference to added ThreadControlBlock object
 	 */
 
-	void add(ThreadControlBlock& thread_control_block);
+	void add(ThreadControlBlock& threadControlBlock);
 
 	/**
 	 * \brief Blocks current thread, transferring it to provided container.
@@ -94,7 +94,10 @@ public:
 	 * \return reference to currently active ThreadControlBlock
 	 */
 
-	ThreadControlBlock& getCurrentThreadControlBlock() const { return *currentThreadControlBlock_; }
+	ThreadControlBlock& getCurrentThreadControlBlock() const
+	{
+		return *currentThreadControlBlock_;
+	}
 
 	/**
 	 * \return reference to internal SoftwareTimerControlBlockSupervisor object
@@ -160,10 +163,10 @@ public:
 	 *
 	 * Current thread's state is changed to "sleeping".
 	 *
-	 * \param [in] time_point is the time point at which the thread will be woken
+	 * \param [in] timePoint is the time point at which the thread will be woken
 	 */
 
-	void sleepUntil(TickClock::time_point time_point);
+	void sleepUntil(TickClock::time_point timePoint);
 
 	/**
 	 * \brief Suspends current thread.
@@ -189,12 +192,12 @@ public:
 	 *
 	 * Current task is suspended and the next available task is started.
 	 *
-	 * \param [in] stack_pointer is the current value of current thread's stack pointer
+	 * \param [in] stackPointer is the current value of current thread's stack pointer
 	 *
 	 * \return new thread's stack pointer
 	 */
 
-	void* switchContext(void* stack_pointer);
+	void* switchContext(void* stackPointer);
 
 	/**
 	 * \brief Handler of "tick" interrupt.
@@ -236,7 +239,7 @@ private:
 	 * - EINVAL - provided thread is not on "runnable" list;
 	 */
 
-	int blockInternal_(ThreadControlBlockList& container, ThreadControlBlockListIterator iterator);
+	int blockInternal(ThreadControlBlockList& container, ThreadControlBlockListIterator iterator);
 
 	/**
 	 * \brief Forces unconditional context switch.
@@ -244,7 +247,7 @@ private:
 	 * Temporarily disables any interrupt masking and requests unconditional context switch.
 	 */
 
-	void forceContextSwitch_() const;
+	void forceContextSwitch() const;
 
 	/**
 	 * \brief Tests whether context switch is required or not.
@@ -257,7 +260,7 @@ private:
 	 * \return true if context switch is required
 	 */
 
-	bool isContextSwitchRequired_() const;
+	bool isContextSwitchRequired() const;
 
 	/**
 	 * \brief Requests unconditional context switch.
@@ -265,7 +268,7 @@ private:
 	 * Wrapper for architecture::requestContextSwitch()
 	 */
 
-	void requestContextSwitch_() const;
+	void requestContextSwitch() const;
 
 	/**
 	 * \brief Unblocks provided thread, transferring it from it's current container to "runnable" container.
@@ -278,7 +281,7 @@ private:
 	 * \param [in] iterator is the iterator which points to unblocked thread
 	 */
 
-	void unblockInternal_(ThreadControlBlockListIterator iterator);
+	void unblockInternal(ThreadControlBlockListIterator iterator);
 
 	/// iterator to the currently active ThreadControlBlock
 	ThreadControlBlockListIterator currentThreadControlBlock_;
