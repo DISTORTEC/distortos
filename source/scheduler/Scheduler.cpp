@@ -170,7 +170,10 @@ bool Scheduler::tickInterruptHandler()
 	// thread to the end of same-priority group to implement round-robin scheduling
 	if (getCurrentThreadControlBlock().getList() == &runnableList_ &&
 			getCurrentThreadControlBlock().getRoundRobinQuantum().isZero() == true)
+	{
+		getCurrentThreadControlBlock().getRoundRobinQuantum().reset();
 		runnableList_.sortedSplice(runnableList_, currentThreadControlBlock_);
+	}
 
 	softwareTimerControlBlockSupervisor_.tickInterruptHandler(TickClock::time_point{TickClock::duration{tickCount_}});
 
