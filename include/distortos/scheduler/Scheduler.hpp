@@ -159,16 +159,6 @@ public:
 	int resume(ThreadControlBlockListIterator iterator);
 
 	/**
-	 * \brief Makes the calling (current) thread sleep until some time point is reached.
-	 *
-	 * Current thread's state is changed to "sleeping".
-	 *
-	 * \param [in] timePoint is the time point at which the thread will be woken
-	 */
-
-	void sleepUntil(TickClock::time_point timePoint);
-
-	/**
 	 * \brief Suspends current thread.
 	 */
 

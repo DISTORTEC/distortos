@@ -144,18 +144,6 @@ int Scheduler::resume(const ThreadControlBlockListIterator iterator)
 	return 0;
 }
 
-void Scheduler::sleepUntil(const TickClock::time_point timePoint)
-{
-	architecture::InterruptMaskingLock interruptMaskingLock;
-
-	ThreadControlBlockList sleepingList {threadControlBlockListAllocator_, ThreadControlBlock::State::Sleeping};
-	auto softwareTimer =
-			makeSoftwareTimer(&Scheduler::unblockInternal, this, currentThreadControlBlock_);
-	softwareTimer.start(timePoint);
-
-	block(sleepingList);
-}
-
 void Scheduler::suspend()
 {
 	suspend(currentThreadControlBlock_);
