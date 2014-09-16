@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-08-05
+ * \date 2014-09-16
  */
 
 #ifndef INCLUDE_DISTORTOS_SCHEDULER_ROUNDROBINQUANTUM_HPP_
@@ -55,6 +55,17 @@ public:
 	 */
 
 	uint8_t get() const { return quantum_; }
+
+	/**
+	 * \brief Convenience function to test whether the quantum is already at 0.
+	 *
+	 * \return true if quantum is zero, false otherwise
+	 */
+
+	bool isZero() const
+	{
+		return quantum_ == 0;
+	}
 
 	/**
 	 * \brief Resets value of round-robin's quantum.
