@@ -187,12 +187,12 @@ void Scheduler::unblock(const ThreadControlBlockListIterator iterator)
 	maybeRequestContextSwitch();
 }
 
-void Scheduler::yield() const
+void Scheduler::yield()
 {
 	architecture::InterruptMaskingLock interruptMaskingLock;
 
-	if (isContextSwitchRequired() == true)
-		architecture::requestContextSwitch();
+	runnableList_.sortedSplice(runnableList_, currentThreadControlBlock_);
+	maybeRequestContextSwitch();
 }
 
 /*---------------------------------------------------------------------------------------------------------------------+

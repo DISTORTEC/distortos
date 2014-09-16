@@ -211,7 +211,7 @@ public:
 	 * \brief Yields time slot of the scheduler to next thread.
 	 */
 
-	void yield() const;
+	void yield();
 
 private:
 
