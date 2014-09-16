@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-09-14
+ * \date 2014-09-16
  */
 
 #ifndef INCLUDE_DISTORTOS_SCHEDULER_SCHEDULER_HPP_
@@ -49,7 +49,7 @@ public:
 	/**
 	 * \brief Adds new ThreadControlBlock to scheduler.
 	 *
-	 * ThreadControlBlock's state is changed to "runnable".
+	 * ThreadControlBlock's state is changed to "runnable" and it's round-robin quantum is reset.
 	 *
 	 * \param [in] thread_control_block is a reference to added ThreadControlBlock object
 	 */
@@ -270,7 +270,8 @@ private:
 	/**
 	 * \brief Unblocks provided thread, transferring it from it's current container to "runnable" container.
 	 *
-	 * Current container of the thread is obtained with ThreadControlBlock::getList().
+	 * Current container of the thread is obtained with ThreadControlBlock::getList(). Round-robin quantum of thread is
+	 * reset.
 	 *
 	 * \note Internal version - without interrupt masking and yield()
 	 *

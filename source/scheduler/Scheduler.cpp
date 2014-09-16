@@ -43,7 +43,6 @@ Scheduler::Scheduler(MainThreadControlBlock& mainThreadControlBlock, Thread<void
 		softwareTimerControlBlockSupervisor_{},
 		tickCount_{0}
 {
-	mainThreadControlBlock.getRoundRobinQuantum().reset();
 	add(mainThreadControlBlock);
 	currentThreadControlBlock_ = runnableList_.begin();
 
@@ -54,6 +53,8 @@ Scheduler::Scheduler(MainThreadControlBlock& mainThreadControlBlock, Thread<void
 
 void Scheduler::add(ThreadControlBlock& thread_control_block)
 {
+	thread_control_block.getRoundRobinQuantum().reset();
+
 	architecture::InterruptMaskingLock interrupt_masking_lock;
 	threadControlBlockListAllocatorPool_.feed(thread_control_block.getLink());
 	runnableList_.sortedEmplace(thread_control_block);
@@ -168,13 +169,8 @@ int Scheduler::suspend(const ThreadControlBlockListIterator iterator)
 void* Scheduler::switchContext(void* stack_pointer)
 {
 	architecture::InterruptMaskingLock interrupt_masking_lock;
-
 	getCurrentThreadControlBlock().getStack().setStackPointer(stack_pointer);
-
 	currentThreadControlBlock_ = runnableList_.begin();
-
-	getCurrentThreadControlBlock().getRoundRobinQuantum().reset();
-
 	return getCurrentThreadControlBlock().getStack().getStackPointer();
 }
 
@@ -266,6 +262,7 @@ void Scheduler::requestContextSwitch_() const
 void Scheduler::unblockInternal_(const ThreadControlBlockListIterator iterator)
 {
 	runnableList_.sortedSplice(*iterator->get().getList(), iterator);
+	iterator->get().getRoundRobinQuantum().reset();
 }
 
 }	// namespace scheduler
