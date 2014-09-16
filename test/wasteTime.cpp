@@ -23,6 +23,11 @@ namespace test
 | global functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
+void wasteTime(const scheduler::TickClock::duration duration)
+{
+	wasteTime(scheduler::TickClock::now() + duration + decltype(duration){1});
+}
+
 void wasteTime(const scheduler::TickClock::time_point timePoint)
 {
 	while (timePoint < scheduler::TickClock::now());

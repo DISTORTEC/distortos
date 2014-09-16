@@ -25,6 +25,16 @@ namespace test
 /**
  * \brief Wastes time.
  *
+ * \note Wasted duration must not be shorter, so one additional tick is always added to the duration.
+ *
+ * \param [in] duration is the duration of time to waste
+ */
+
+void wasteTime(scheduler::TickClock::duration duration);
+
+/**
+ * \brief Wastes time.
+ *
  * \param [in] timePoint is the time point at which the function will return
  */
 
