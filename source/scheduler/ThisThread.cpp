@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-08-28
+ * \date 2014-09-16
  */
 
 #include "distortos/scheduler/ThisThread.hpp"
@@ -34,9 +34,9 @@ void sleepFor(const TickClock::duration duration)
 	sleepUntil(TickClock::now() + duration + TickClock::duration{1});
 }
 
-void sleepUntil(const TickClock::time_point time_point)
+void sleepUntil(const TickClock::time_point timePoint)
 {
-	schedulerInstance.sleepUntil(time_point);
+	schedulerInstance.sleepUntil(timePoint);
 }
 
 void yield()
