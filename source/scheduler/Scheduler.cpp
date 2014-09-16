@@ -171,7 +171,7 @@ bool Scheduler::tickInterruptHandler()
 	// if the object is on the "runnable" list and it used its round-robin quantum, then do the "rotation": move current
 	// thread to the end of same-priority group to implement round-robin scheduling
 	if (getCurrentThreadControlBlock().getList() == &runnableList_ &&
-			getCurrentThreadControlBlock().getRoundRobinQuantum().get() == 0)
+			getCurrentThreadControlBlock().getRoundRobinQuantum().isZero() == true)
 		runnableList_.sortedSplice(runnableList_, currentThreadControlBlock_);
 
 	softwareTimerControlBlockSupervisor_.tickInterruptHandler(TickClock::time_point{TickClock::duration{tickCount_}});
@@ -228,7 +228,7 @@ bool Scheduler::isContextSwitchRequired() const
 	if (runnableList_.begin() != currentThreadControlBlock_)	// is there a higher-priority thread available?
 		return true;
 
-	if (getCurrentThreadControlBlock().getRoundRobinQuantum().get() == 0)
+	if (getCurrentThreadControlBlock().getRoundRobinQuantum().isZero() == true)
 	{
 		const auto nextThread = ++runnableList_.begin();
 		const auto nextThreadPriority = nextThread->get().getPriority();
