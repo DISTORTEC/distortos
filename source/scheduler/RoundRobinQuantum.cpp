@@ -13,8 +13,6 @@
 
 #include "distortos/scheduler/RoundRobinQuantum.hpp"
 
-#include "distortos/distortosConfiguration.h"
-
 namespace distortos
 {
 
@@ -50,7 +48,7 @@ void RoundRobinQuantum::decrement()
 
 void RoundRobinQuantum::reset()
 {
-	quantum_ = quantumInitializer_;
+	quantum_ = Duration{quantumInitializer_};
 }
 
 }	// namespace scheduler

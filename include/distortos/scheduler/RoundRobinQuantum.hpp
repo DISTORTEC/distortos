@@ -14,7 +14,7 @@
 #ifndef INCLUDE_DISTORTOS_SCHEDULER_ROUNDROBINQUANTUM_HPP_
 #define INCLUDE_DISTORTOS_SCHEDULER_ROUNDROBINQUANTUM_HPP_
 
-#include <cstdint>
+#include "distortos/scheduler/TickClock.hpp"
 
 namespace distortos
 {
@@ -26,6 +26,12 @@ namespace scheduler
 class RoundRobinQuantum
 {
 public:
+
+	/// type of quantum counter
+	using Representation = uint8_t;
+
+	/// duration type used for quantum
+	using Duration = std::chrono::duration<Representation, TickClock::period>;
 
 	/**
 	 * \brief RoundRobinQuantum's constructor
@@ -54,7 +60,7 @@ public:
 	 * \return current value of round-robin's quantum of the thread
 	 */
 
-	uint8_t get() const { return quantum_; }
+	Duration get() const { return quantum_; }
 
 	/**
 	 * \brief Convenience function to test whether the quantum is already at 0.
@@ -64,7 +70,7 @@ public:
 
 	bool isZero() const
 	{
-		return quantum_ == 0;
+		return quantum_ == Duration{0};
 	}
 
 	/**
@@ -78,7 +84,7 @@ public:
 private:
 
 	/// round-robin quantum
-	uint8_t quantum_;
+	Duration quantum_;
 };
 
 }	// namespace scheduler
