@@ -240,6 +240,12 @@ bool Scheduler::isContextSwitchRequired() const
 	return false;
 }
 
+void Scheduler::maybeRequestContextSwitch() const
+{
+	if (isContextSwitchRequired() == true)
+		architecture::requestContextSwitch();
+}
+
 void Scheduler::unblockInternal(const ThreadControlBlockListIterator iterator)
 {
 	runnableList_.sortedSplice(*iterator->get().getList(), iterator);

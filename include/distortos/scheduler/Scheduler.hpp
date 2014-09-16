@@ -251,6 +251,14 @@ private:
 	bool isContextSwitchRequired() const;
 
 	/**
+	 * \brief Requests context switch if it is needed.
+	 *
+	 * \attention This function must be called with interrupt masking enabled.
+	 */
+
+	void maybeRequestContextSwitch() const;
+
+	/**
 	 * \brief Unblocks provided thread, transferring it from it's current container to "runnable" container.
 	 *
 	 * Current container of the thread is obtained with ThreadControlBlock::getList(). Round-robin quantum of thread is
