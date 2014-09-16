@@ -73,7 +73,10 @@ public:
 	 * \return current value of round-robin's quantum of the thread
 	 */
 
-	Duration get() const { return quantum_; }
+	Duration get() const
+	{
+		return quantum_;
+	}
 
 	/**
 	 * \brief Convenience function to test whether the quantum is already at 0.
