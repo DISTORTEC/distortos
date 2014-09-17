@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-09-16
+ * \date 2014-09-17
  */
 
 #ifndef INCLUDE_DISTORTOS_SCHEDULER_SCHEDULER_HPP_
@@ -131,6 +131,14 @@ public:
 	uint64_t getTickCount() const;
 
 	/**
+	 * \brief Requests context switch if it is needed.
+	 *
+	 * \attention This function must be called with interrupt masking enabled.
+	 */
+
+	void maybeRequestContextSwitch() const;
+
+	/**
 	 * \brief Removes current thread from Scheduler's control.
 	 *
 	 * Thread's state is changed to "terminated" and it's terminationHook() is called.
@@ -249,14 +257,6 @@ private:
 	 */
 
 	bool isContextSwitchRequired() const;
-
-	/**
-	 * \brief Requests context switch if it is needed.
-	 *
-	 * \attention This function must be called with interrupt masking enabled.
-	 */
-
-	void maybeRequestContextSwitch() const;
 
 	/**
 	 * \brief Unblocks provided thread, transferring it from it's current container to "runnable" container.
