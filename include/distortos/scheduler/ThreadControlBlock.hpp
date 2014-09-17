@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-09-14
+ * \date 2014-09-17
  */
 
 #ifndef INCLUDE_DISTORTOS_SCHEDULER_THREADCONTROLBLOCK_HPP_
@@ -19,10 +19,6 @@
 #include "distortos/scheduler/ThreadControlBlockList-types.hpp"
 
 #include "distortos/architecture/Stack.hpp"
-
-#include <array>
-
-#include <cstdint>
 
 namespace distortos
 {
@@ -71,35 +67,95 @@ public:
 
 	ThreadControlBlock(void* buffer, size_t size, uint8_t priority);
 
-	/// \return iterator to the element on the list, valid only when list_ != nullptr
-	ThreadControlBlockListIterator getIterator() const { return iterator_; }
+	/**
+	 * \return iterator to the element on the list, valid only when list_ != nullptr
+	 */
 
-	/// \return reference to internal storage for list link
-	Link& getLink() { return link_; }
+	ThreadControlBlockListIterator getIterator() const
+	{
+		return iterator_;
+	}
 
-	/// \return const reference to internal storage for list link
-	const Link& getLink() const { return link_; }
+	/**
+	 * \return reference to internal storage for list link
+	 */
 
-	/// \return pointer to list that has this object
-	ThreadControlBlockList* getList() const { return list_; }
+	Link& getLink()
+	{
+		return link_;
+	}
 
-	/// \return reference to internal Stack object
-	architecture::Stack& getStack() { return stack_; }
+	/**
+	 * \return const reference to internal storage for list link
+	 */
 
-	/// \return const reference to internal Stack object
-	const architecture::Stack& getStack() const { return stack_; }
+	const Link& getLink() const
+	{
+		return link_;
+	}
 
-	/// \return priority of ThreadControlBlock
-	uint8_t getPriority() const { return priority_; }
+	/**
+	 * \return pointer to list that has this object
+	 */
 
-	/// \return reference to internal RoundRobinQuantum object
-	RoundRobinQuantum& getRoundRobinQuantum() { return roundRobinQuantum_; }
+	ThreadControlBlockList* getList() const
+	{
+		return list_;
+	}
 
-	/// \return const reference to internal RoundRobinQuantum object
-	const RoundRobinQuantum& getRoundRobinQuantum() const { return roundRobinQuantum_; }
+	/**
+	 * \return priority of ThreadControlBlock
+	 */
 
-	/// \return current state of object
-	State getState() const { return state_; }
+	uint8_t getPriority() const
+	{
+		return priority_;
+	}
+
+	/**
+	 * \return reference to internal RoundRobinQuantum object
+	 */
+
+	RoundRobinQuantum& getRoundRobinQuantum()
+	{
+		return roundRobinQuantum_;
+	}
+
+	/**
+	 * \return const reference to internal RoundRobinQuantum object
+	 */
+
+	const RoundRobinQuantum& getRoundRobinQuantum() const
+	{
+		return roundRobinQuantum_;
+	}
+
+	/**
+	 * \return reference to internal Stack object
+	 */
+
+	architecture::Stack& getStack()
+	{
+		return stack_;
+	}
+
+	/**
+	 * \return const reference to internal Stack object
+	 */
+
+	const architecture::Stack& getStack() const
+	{
+		return stack_;
+	}
+
+	/**
+	 * \return current state of object
+	 */
+
+	State getState() const
+	{
+		return state_;
+	}
 
 	/**
 	 * \brief Sets the iterator to the element on the list.
@@ -123,8 +179,14 @@ public:
 		list_ = list;
 	}
 
-	/// \param [in] state is the new state of object
-	void setState(const State state) { state_ = state; }
+	/**
+	 * \param [in] state is the new state of object
+	 */
+
+	void setState(const State state)
+	{
+		state_ = state;
+	}
 
 	/**
 	 * \brief Termination hook function of thread
