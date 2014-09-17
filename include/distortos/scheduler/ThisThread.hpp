@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-09-16
+ * \date 2014-09-17
  */
 
 #ifndef INCLUDE_DISTORTOS_SCHEDULER_THISTHREAD_HPP_
@@ -25,6 +25,20 @@ namespace scheduler
 /// ThisThread namespace groups functions used to control current thread
 namespace ThisThread
 {
+
+/**
+ * \return priority of calling (current) thread
+ */
+
+uint8_t getPriority();
+
+/**
+ * Changes priority of calling (current) thread.
+ *
+ * \param [in] priority is the new priority for thread
+ */
+
+void setPriority(uint8_t priority);
 
 /**
  * \brief Makes the calling (current) thread sleep for at least given duration.
