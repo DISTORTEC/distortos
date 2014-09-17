@@ -180,6 +180,16 @@ public:
 	}
 
 	/**
+	 * Changes priority of thread.
+	 *
+	 * If the priority really changes, the position in the thread list is adjusted and context switch may be requested.
+	 *
+	 * \param [in] priority is the new priority of thread
+	 */
+
+	void setPriority(uint8_t priority);
+
+	/**
 	 * \param [in] state is the new state of object
 	 */
 
