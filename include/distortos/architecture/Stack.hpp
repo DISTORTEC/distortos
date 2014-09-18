@@ -79,10 +79,10 @@ public:
 	/**
 	 * \brief Sets value of stack pointer.
 	 *
-	 * \param [in] stack_pointer is the new value of stack pointer
+	 * \param [in] stackPointer is the new value of stack pointer
 	 */
 
-	void setStackPointer(void* const stack_pointer) { stackPointer_ = stack_pointer; }
+	void setStackPointer(void* const stackPointer) { stackPointer_ = stackPointer; }
 
 private:
 

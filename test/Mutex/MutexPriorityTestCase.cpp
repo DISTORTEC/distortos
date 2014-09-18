@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-08-28
+ * \date 2014-09-18
  */
 
 #include "MutexPriorityTestCase.hpp"
@@ -39,14 +39,14 @@ constexpr size_t testThreadStackSize {256};
 | local functions' declarations
 +---------------------------------------------------------------------------------------------------------------------*/
 
-void thread_(SequenceAsserter& sequenceAsserter, unsigned int sequencePoint, scheduler::Mutex& mutex);
+void thread(SequenceAsserter& sequenceAsserter, unsigned int sequencePoint, scheduler::Mutex& mutex);
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | local types
 +---------------------------------------------------------------------------------------------------------------------*/
 
 /// type of test thread
-using TestThread = decltype(scheduler::makeStaticThread<testThreadStackSize>({}, thread_,
+using TestThread = decltype(scheduler::makeStaticThread<testThreadStackSize>({}, thread,
 		std::ref(std::declval<SequenceAsserter&>()), std::declval<unsigned int>(),
 		std::ref(std::declval<scheduler::Mutex&>())));
 
@@ -64,7 +64,7 @@ using TestThread = decltype(scheduler::makeStaticThread<testThreadStackSize>({},
  * \param [in] mutex is a reference to shared mutex
  */
 
-void thread_(SequenceAsserter& sequenceAsserter, const unsigned int sequencePoint, scheduler::Mutex& mutex)
+void thread(SequenceAsserter& sequenceAsserter, const unsigned int sequencePoint, scheduler::Mutex& mutex)
 {
 	mutex.lock();
 	sequenceAsserter.sequencePoint(sequencePoint);
@@ -84,7 +84,7 @@ void thread_(SequenceAsserter& sequenceAsserter, const unsigned int sequencePoin
 TestThread makeTestThread(const ThreadParameters &threadParameters,
 		SequenceAsserter& sequenceAsserter, scheduler::Mutex& mutex)
 {
-	return scheduler::makeStaticThread<testThreadStackSize>(threadParameters.first, thread_,
+	return scheduler::makeStaticThread<testThreadStackSize>(threadParameters.first, thread,
 			std::ref(sequenceAsserter), static_cast<unsigned int>(threadParameters.second), std::ref(mutex));
 }
 

@@ -35,16 +35,16 @@ namespace
  * \brief Adjusts buffer's address to suit architecture's alignment requirements.
  *
  * \param [in] buffer is a pointer to stack's buffer
- * \param [in] stack_alignment is required stack alignment
+ * \param [in] stackAlignment is required stack alignment
  *
  * \return adjusted buffer's address
  */
 
-void* adjustBuffer_(void* const buffer, const size_t stack_alignment)
+void* adjustBuffer(void* const buffer, const size_t stackAlignment)
 {
-	const auto buffer_size_t = reinterpret_cast<size_t>(buffer);
-	const auto offset = (-buffer_size_t) & (stack_alignment - 1);
-	return reinterpret_cast<void*>(buffer_size_t + offset);
+	const auto bufferSizeT = reinterpret_cast<size_t>(buffer);
+	const auto offset = (-bufferSizeT) & (stackAlignment - 1);
+	return reinterpret_cast<void*>(bufferSizeT + offset);
 }
 
 /**
@@ -52,15 +52,15 @@ void* adjustBuffer_(void* const buffer, const size_t stack_alignment)
  *
  * \param [in] buffer is a pointer to stack's buffer
  * \param [in] size is the size of stack's buffer, bytes
- * \param [in] adjusted_buffer is an adjusted buffer's address
+ * \param [in] adjustedBuffer is an adjusted buffer's address
  * \param [in] divisibility is required stack's size divisibility
  *
  * \return adjusted buffer's size
  */
 
-size_t adjustSize_(void* const buffer, const size_t size, void* const adjusted_buffer, const size_t divisibility)
+size_t adjustSize(void* const buffer, const size_t size, void* const adjustedBuffer, const size_t divisibility)
 {
-	const auto offset = static_cast<uint8_t*>(adjusted_buffer) - static_cast<uint8_t*>(buffer);
+	const auto offset = static_cast<uint8_t*>(adjustedBuffer) - static_cast<uint8_t*>(buffer);
 	return ((size - offset) / divisibility) * divisibility;
 }
 
@@ -90,8 +90,8 @@ void* initializeStackProxy(void* const buffer, const size_t size, void (&functio
 
 Stack::Stack(void* const buffer, const size_t size, void (&function)(scheduler::ThreadControlBlock&),
 		scheduler::ThreadControlBlock& threadControlBlock) :
-		adjustedBuffer_{adjustBuffer_(buffer, stackAlignment)},
-		adjustedSize_{adjustSize_(buffer, size, adjustedBuffer_, stackSizeDivisibility)},
+		adjustedBuffer_{adjustBuffer(buffer, stackAlignment)},
+		adjustedSize_{adjustSize(buffer, size, adjustedBuffer_, stackSizeDivisibility)},
 		stackPointer_{initializeStackProxy(adjustedBuffer_, adjustedSize_, function, threadControlBlock)}
 {
 	/// \todo implement minimal size check

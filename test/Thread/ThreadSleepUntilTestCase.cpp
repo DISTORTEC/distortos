@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-09-01
+ * \date 2014-09-18
  */
 
 #include "ThreadSleepUntilTestCase.hpp"
@@ -44,7 +44,7 @@ constexpr uint8_t timePointOffset {2};
 | local functions' declarations
 +---------------------------------------------------------------------------------------------------------------------*/
 
-void thread_(scheduler::TickClock::time_point sleepUntil, SequenceAsserter& sequenceAsserter,
+void thread(scheduler::TickClock::time_point sleepUntil, SequenceAsserter& sequenceAsserter,
 		unsigned int sequencePoint, scheduler::TickClock::duration& timePointDeviation);
 
 /*---------------------------------------------------------------------------------------------------------------------+
@@ -52,7 +52,7 @@ void thread_(scheduler::TickClock::time_point sleepUntil, SequenceAsserter& sequ
 +---------------------------------------------------------------------------------------------------------------------*/
 
 /// type of test thread
-using TestThread = decltype(scheduler::makeStaticThread<testThreadStackSize>({}, thread_,
+using TestThread = decltype(scheduler::makeStaticThread<testThreadStackSize>({}, thread,
 		std::declval<scheduler::TickClock::time_point>(), std::ref(std::declval<SequenceAsserter&>()),
 		std::declval<unsigned int>(), std::ref(std::declval<scheduler::TickClock::duration&>())));
 
@@ -72,7 +72,7 @@ using TestThread = decltype(scheduler::makeStaticThread<testThreadStackSize>({},
  * \param [out] timePointDeviation is a reference to variable for storing deviation of time point of waking up
  */
 
-void thread_(const scheduler::TickClock::time_point sleepUntil, SequenceAsserter& sequenceAsserter,
+void thread(const scheduler::TickClock::time_point sleepUntil, SequenceAsserter& sequenceAsserter,
 		const unsigned int sequencePoint, scheduler::TickClock::duration& timePointDeviation)
 {
 	scheduler::ThisThread::sleepUntil(sleepUntil);
@@ -97,7 +97,7 @@ void thread_(const scheduler::TickClock::time_point sleepUntil, SequenceAsserter
 TestThread makeTestThread(const scheduler::TickClock::time_point now, const ThreadParameters &threadParameters,
 		SequenceAsserter& sequenceAsserter, scheduler::TickClock::duration& timePointDeviation)
 {
-	return scheduler::makeStaticThread<testThreadStackSize>(1, thread_,
+	return scheduler::makeStaticThread<testThreadStackSize>(1, thread,
 			now + scheduler::TickClock::duration{UINT8_MAX - threadParameters.first + timePointOffset},
 			std::ref(sequenceAsserter), static_cast<unsigned int>(threadParameters.second),
 			std::ref(timePointDeviation));

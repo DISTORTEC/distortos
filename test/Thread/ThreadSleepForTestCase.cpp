@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-09-01
+ * \date 2014-09-18
  */
 
 #include "ThreadSleepForTestCase.hpp"
@@ -41,7 +41,7 @@ constexpr size_t testThreadStackSize {384};
 | local functions' declarations
 +---------------------------------------------------------------------------------------------------------------------*/
 
-void thread_(uint8_t sleepFor, SequenceAsserter& sequenceAsserter, unsigned int sequencePoint,
+void thread(uint8_t sleepFor, SequenceAsserter& sequenceAsserter, unsigned int sequencePoint,
 		scheduler::TickClock::duration& durationDeviation);
 
 /*---------------------------------------------------------------------------------------------------------------------+
@@ -49,7 +49,7 @@ void thread_(uint8_t sleepFor, SequenceAsserter& sequenceAsserter, unsigned int 
 +---------------------------------------------------------------------------------------------------------------------*/
 
 /// type of test thread
-using TestThread = decltype(scheduler::makeStaticThread<testThreadStackSize>({}, thread_, std::declval<uint8_t>(),
+using TestThread = decltype(scheduler::makeStaticThread<testThreadStackSize>({}, thread, std::declval<uint8_t>(),
 		std::ref(std::declval<SequenceAsserter&>()), std::declval<unsigned int>(),
 		std::ref(std::declval<scheduler::TickClock::duration&>())));
 
@@ -69,7 +69,7 @@ using TestThread = decltype(scheduler::makeStaticThread<testThreadStackSize>({},
  * \param [out] durationDeviation is a reference to variable for storing deviation of sleep duration
  */
 
-void thread_(const uint8_t sleepFor, SequenceAsserter& sequenceAsserter, const unsigned int sequencePoint,
+void thread(const uint8_t sleepFor, SequenceAsserter& sequenceAsserter, const unsigned int sequencePoint,
 		scheduler::TickClock::duration& durationDeviation)
 {
 	const auto sleepForDuration = scheduler::TickClock::duration{sleepFor};
@@ -97,7 +97,7 @@ void thread_(const uint8_t sleepFor, SequenceAsserter& sequenceAsserter, const u
 TestThread makeTestThread(const ThreadParameters &threadParameters, SequenceAsserter& sequenceAsserter,
 		scheduler::TickClock::duration& durationDeviation)
 {
-	return scheduler::makeStaticThread<testThreadStackSize>(1, thread_,
+	return scheduler::makeStaticThread<testThreadStackSize>(1, thread,
 			static_cast<uint8_t>(UINT8_MAX - threadParameters.first), std::ref(sequenceAsserter),
 			static_cast<unsigned int>(threadParameters.second), std::ref(durationDeviation));
 }

@@ -90,11 +90,11 @@ void* initializeStack(void* buffer, size_t size, void (&function)(scheduler::Thr
  * Restores previous interrupt masking state (before matching enableInterruptMasking() or disableInterruptMasking() was
  * called), enabling some (maybe all, maybe none) interrupts.
  *
- * \param [in] interrupt_mask is the value of interrupts' mask, must come from previous call to enableInterruptMasking()
+ * \param [in] interruptMask is the value of interrupts' mask, must come from previous call to enableInterruptMasking()
  * or disableInterruptMasking()
  */
 
-void restoreInterruptMasking(InterruptMask interrupt_mask);
+void restoreInterruptMasking(InterruptMask interruptMask);
 
 /**
  * \brief Architecture-specific request for context switch.

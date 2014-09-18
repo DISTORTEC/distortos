@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-09-13
+ * \date 2014-09-18
  */
 
 #ifndef INCLUDE_DISTORTOS_SCHEDULER_THREADCONTROLBLOCKLIST_HPP_
@@ -121,14 +121,14 @@ public:
 	 * Sets list pointer and state of transfered element.
 	 *
 	 * \param [in] other is the container from which the object is transfered
-	 * \param [in] other_position is the position of the transfered object in the other container
+	 * \param [in] otherPosition is the position of the transfered object in the other container
 	 */
 
-	void sortedSplice(ThreadControlBlockList& other, const iterator other_position)
+	void sortedSplice(ThreadControlBlockList& other, const iterator otherPosition)
 	{
-		Base::sortedSplice(other, other_position);
-		other_position->get().setList(this);
-		other_position->get().setState(state_);
+		Base::sortedSplice(other, otherPosition);
+		otherPosition->get().setList(this);
+		otherPosition->get().setState(state_);
 	}
 
 private:

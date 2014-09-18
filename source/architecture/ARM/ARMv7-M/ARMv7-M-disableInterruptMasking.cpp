@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-08-06
+ * \date 2014-09-18
  */
 
 #include "distortos/architecture.hpp"
@@ -27,9 +27,9 @@ namespace architecture
 
 InterruptMask disableInterruptMasking()
 {
-	const auto interrupt_mask = __get_BASEPRI();
+	const auto interruptMask = __get_BASEPRI();
 	__set_BASEPRI(0);
-	return interrupt_mask;
+	return interruptMask;
 }
 
 }	// namespace architecture

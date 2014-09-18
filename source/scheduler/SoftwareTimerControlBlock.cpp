@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-08-09
+ * \date 2014-09-18
  */
 
 #include "distortos/scheduler/SoftwareTimerControlBlock.hpp"
@@ -42,9 +42,9 @@ void SoftwareTimerControlBlock::start(const TickClock::duration duration)
 	start(now + duration + decltype(duration){1});
 }
 
-void SoftwareTimerControlBlock::start(const TickClock::time_point time_point)
+void SoftwareTimerControlBlock::start(const TickClock::time_point timePoint)
 {
-	timePoint_ = time_point;
+	timePoint_ = timePoint;
 
 	iterator_ = schedulerInstance.getSoftwareTimerSupervisor().add(*this);
 }
@@ -55,7 +55,7 @@ void SoftwareTimerControlBlock::start(const TickClock::time_point time_point)
 
 SoftwareTimerControlBlock::~SoftwareTimerControlBlock()
 {
-	architecture::InterruptMaskingLock interrupt_masking_lock;
+	architecture::InterruptMaskingLock interruptMaskingLock;
 
 	if (list_ != nullptr)
 		list_->erase(iterator_);

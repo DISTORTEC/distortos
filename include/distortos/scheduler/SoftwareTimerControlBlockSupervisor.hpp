@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-09-07
+ * \date 2014-09-18
  */
 
 #ifndef INCLUDE_DISTORTOS_SCHEDULER_SOFTWARETIMERCONTROLBLOCKSUPERVISOR_HPP_
@@ -36,22 +36,22 @@ public:
 	/**
 	 * \brief Adds SoftwareTimerControlBlock to supervisor, effectively starting the software timer.
 	 *
-	 * \param [in] software_timer_control_block is the SoftwareTimerControlBlock being added/started
+	 * \param [in] softwareTimerControlBlock is the SoftwareTimerControlBlock being added/started
 	 *
 	 * \return iterator to added SoftwareTimerControlBlock object on the list
 	 */
 
-	SoftwareTimerControlBlockListIterator add(SoftwareTimerControlBlock& software_timer_control_block);
+	SoftwareTimerControlBlockListIterator add(SoftwareTimerControlBlock& softwareTimerControlBlock);
 
 	/**
 	 * \brief Handler of "tick" interrupt.
 	 *
 	 * \note this must not be called by user code
 	 *
-	 * \param [in] time_point is the current time point
+	 * \param [in] timePoint is the current time point
 	 */
 
-	void tickInterruptHandler(TickClock::time_point time_point);
+	void tickInterruptHandler(TickClock::time_point timePoint);
 
 private:
 

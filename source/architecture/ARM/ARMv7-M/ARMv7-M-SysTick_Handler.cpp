@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-08-06
+ * \date 2014-09-18
  */
 
 #include "distortos/scheduler/schedulerInstance.hpp"
@@ -28,7 +28,7 @@
 
 extern "C" void SysTick_Handler()
 {
-	const auto context_switch_required = distortos::scheduler::schedulerInstance.tickInterruptHandler();
-	if (context_switch_required == true)
+	const auto contextSwitchRequired = distortos::scheduler::schedulerInstance.tickInterruptHandler();
+	if (contextSwitchRequired == true)
 		distortos::architecture::requestContextSwitch();
 }

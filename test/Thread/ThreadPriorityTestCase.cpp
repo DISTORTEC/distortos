@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-08-28
+ * \date 2014-09-18
  */
 
 #include "ThreadPriorityTestCase.hpp"
@@ -40,14 +40,14 @@ constexpr size_t testThreadStackSize {192};
 | local functions' declarations
 +---------------------------------------------------------------------------------------------------------------------*/
 
-void thread_(SequenceAsserter& sequenceAsserter, unsigned int sequencePoint);
+void thread(SequenceAsserter& sequenceAsserter, unsigned int sequencePoint);
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | local types
 +---------------------------------------------------------------------------------------------------------------------*/
 
 /// type of test thread
-using TestThread = decltype(scheduler::makeStaticThread<testThreadStackSize>({}, thread_,
+using TestThread = decltype(scheduler::makeStaticThread<testThreadStackSize>({}, thread,
 		std::ref(std::declval<SequenceAsserter&>()), std::declval<unsigned int>()));
 
 /*---------------------------------------------------------------------------------------------------------------------+
@@ -63,7 +63,7 @@ using TestThread = decltype(scheduler::makeStaticThread<testThreadStackSize>({},
  * \param [in] sequencePoint is the sequence point of this instance
  */
 
-void thread_(SequenceAsserter& sequenceAsserter, const unsigned int sequencePoint)
+void thread(SequenceAsserter& sequenceAsserter, const unsigned int sequencePoint)
 {
 	sequenceAsserter.sequencePoint(sequencePoint);
 }
@@ -79,7 +79,7 @@ void thread_(SequenceAsserter& sequenceAsserter, const unsigned int sequencePoin
 
 TestThread makeTestThread(const ThreadParameters &threadParameters, SequenceAsserter& sequenceAsserter)
 {
-	return scheduler::makeStaticThread<testThreadStackSize>(threadParameters.first, thread_, std::ref(sequenceAsserter),
+	return scheduler::makeStaticThread<testThreadStackSize>(threadParameters.first, thread, std::ref(sequenceAsserter),
 		static_cast<unsigned int>(threadParameters.second));
 }
 

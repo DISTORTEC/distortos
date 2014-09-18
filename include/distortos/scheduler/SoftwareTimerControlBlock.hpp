@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-09-14
+ * \date 2014-09-18
  */
 
 #ifndef INCLUDE_DISTORTOS_SCHEDULER_SOFTWARETIMERCONTROLBLOCK_HPP_
@@ -109,23 +109,23 @@ public:
 	/**
 	 * \brief Starts the timer.
 	 *
-	 * \param [in] time_point is the time point at which the function will be executed
+	 * \param [in] timePoint is the time point at which the function will be executed
 	 */
 
-	void start(TickClock::time_point time_point);
+	void start(TickClock::time_point timePoint);
 
 	/**
 	 * \brief Starts the timer.
 	 *
 	 * \param Duration is a std::chrono::duration type used to measure duration
 	 *
-	 * \param [in] time_point is the time point at which the function will be executed
+	 * \param [in] timePoint is the time point at which the function will be executed
 	 */
 
 	template<typename Duration>
-	void start(std::chrono::time_point<TickClock, Duration> time_point)
+	void start(std::chrono::time_point<TickClock, Duration> timePoint)
 	{
-		start(std::chrono::time_point_cast<TickClock::duration>(time_point));
+		start(std::chrono::time_point_cast<TickClock::duration>(timePoint));
 	}
 
 protected:

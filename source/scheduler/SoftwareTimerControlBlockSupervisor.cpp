@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-09-07
+ * \date 2014-09-18
  */
 
 #include "distortos/scheduler/SoftwareTimerControlBlockSupervisor.hpp"
@@ -34,20 +34,20 @@ SoftwareTimerControlBlockSupervisor::SoftwareTimerControlBlockSupervisor() :
 }
 
 SoftwareTimerControlBlockListIterator
-SoftwareTimerControlBlockSupervisor::add(SoftwareTimerControlBlock& software_timer_control_block)
+SoftwareTimerControlBlockSupervisor::add(SoftwareTimerControlBlock& softwareTimerControlBlock)
 {
-	architecture::InterruptMaskingLock interrupt_masking_lock;
+	architecture::InterruptMaskingLock interruptMaskingLock;
 
-	allocatorPool_.feed(software_timer_control_block.getLink());
-	software_timer_control_block.setList(&activeList_);
-	return activeList_.sortedEmplace(software_timer_control_block);
+	allocatorPool_.feed(softwareTimerControlBlock.getLink());
+	softwareTimerControlBlock.setList(&activeList_);
+	return activeList_.sortedEmplace(softwareTimerControlBlock);
 }
 
-void SoftwareTimerControlBlockSupervisor::tickInterruptHandler(const TickClock::time_point time_point)
+void SoftwareTimerControlBlockSupervisor::tickInterruptHandler(const TickClock::time_point timePoint)
 {
 	// execute all software timers that reached their time point
 	for (auto iterator = activeList_.begin();
-			iterator != activeList_.end() && iterator->get().getTimePoint() <= time_point;
+			iterator != activeList_.end() && iterator->get().getTimePoint() <= timePoint;
 			iterator = activeList_.begin())
 	{
 		iterator->get().execute();
