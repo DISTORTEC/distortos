@@ -79,7 +79,7 @@ ThreadControlBlock::ThreadControlBlock(architecture::Stack&& stack, const uint8_
 
 void ThreadControlBlock::threadRunner(ThreadControlBlock& threadControlBlock)
 {
-	threadControlBlock.run_();
+	threadControlBlock.run();
 	schedulerInstance.remove();
 
 	while (1);

@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-08-27
+ * \date 2014-09-18
  */
 
 #include "distortos/scheduler/MainThreadControlBlock.hpp"
@@ -59,7 +59,7 @@ MainThreadControlBlock::MainThreadControlBlock(const uint8_t priority) :
 | private functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-void MainThreadControlBlock::run_()
+void MainThreadControlBlock::run()
 {
 	while (1);	/// \todo add some form of assertion that this never gets called
 }

@@ -250,12 +250,12 @@ private:
 	 * This should be overridden by derived classes.
 	 */
 
-	virtual void run_() = 0;
+	virtual void run() = 0;
 
 	/**
 	 * \brief Termination hook function of thread
 	 *
-	 * This function is called after run_() completes.
+	 * This function is called after run() completes.
 	 *
 	 * This should be overridden by derived classes.
 	 */

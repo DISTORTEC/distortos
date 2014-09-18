@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-09-17
+ * \date 2014-09-18
  */
 
 #ifndef INCLUDE_DISTORTOS_SCHEDULER_THREAD_HPP_
@@ -70,7 +70,7 @@ private:
 	 * Executes bound function object.
 	 */
 
-	virtual void run_() override { boundFunction_(); }
+	virtual void run() override { boundFunction_(); }
 
 	/// bound function object
 	decltype(std::bind(std::declval<Function>(), std::declval<Args>()...)) boundFunction_;
