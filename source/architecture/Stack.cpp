@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-08-28
+ * \date 2014-09-18
  */
 
 #include "distortos/architecture/Stack.hpp"
@@ -69,18 +69,17 @@ size_t adjustSize_(void* const buffer, const size_t size, void* const adjusted_b
  *
  * \param [in] buffer is a pointer to stack's buffer
  * \param [in] size is the size of stack's buffer, bytes
- * \param [in] function is a reference to thread's function
+ * \param [in] function is a reference to thread's function, this function must not return
  * \param [in] threadControlBlock is a reference to scheduler::ThreadControlBlock object passed to function
- * \param [in] trap is a reference to trap function called when thread function returns
  *
  * \return value that can be used as thread's stack pointer, ready for context switching
  */
 
 void* initializeStackProxy(void* const buffer, const size_t size, void (&function)(scheduler::ThreadControlBlock&),
-		scheduler::ThreadControlBlock& threadControlBlock, void (&trap)())
+		scheduler::ThreadControlBlock& threadControlBlock)
 {
 	memset(buffer, 0, size);
-	return initializeStack(buffer, size, function, threadControlBlock, trap);
+	return initializeStack(buffer, size, function, threadControlBlock);
 }
 
 }	// namespace
@@ -90,10 +89,10 @@ void* initializeStackProxy(void* const buffer, const size_t size, void (&functio
 +---------------------------------------------------------------------------------------------------------------------*/
 
 Stack::Stack(void* const buffer, const size_t size, void (&function)(scheduler::ThreadControlBlock&),
-		scheduler::ThreadControlBlock& threadControlBlock, void (&trap)()) :
+		scheduler::ThreadControlBlock& threadControlBlock) :
 		adjustedBuffer_{adjustBuffer_(buffer, stackAlignment)},
 		adjustedSize_{adjustSize_(buffer, size, adjustedBuffer_, stackSizeDivisibility)},
-		stackPointer_{initializeStackProxy(adjustedBuffer_, adjustedSize_, function, threadControlBlock, trap)}
+		stackPointer_{initializeStackProxy(adjustedBuffer_, adjustedSize_, function, threadControlBlock)}
 {
 	/// \todo implement minimal size check
 }

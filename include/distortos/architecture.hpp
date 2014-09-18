@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-08-27
+ * \date 2014-09-18
  */
 
 #ifndef INCLUDE_DISTORTOS_ARCHITECTURE_HPP_
@@ -75,15 +75,14 @@ std::pair<void*, size_t> getMainStack();
  *
  * \param [in] buffer is a pointer to stack's buffer
  * \param [in] size is the size of stack's buffer, bytes
- * \param [in] function is a reference to thread's function
+ * \param [in] function is a reference to thread's function, this function must not return
  * \param [in] threadControlBlock is a reference to scheduler::ThreadControlBlock object passed to function
- * \param [in] trap is a reference to trap function called when thread function returns
  *
  * \return value that can be used as thread's stack pointer, ready for context switching
  */
 
 void* initializeStack(void* buffer, size_t size, void (&function)(scheduler::ThreadControlBlock&),
-		scheduler::ThreadControlBlock& threadControlBlock, void (&trap)());
+		scheduler::ThreadControlBlock& threadControlBlock);
 
 /**
  * \brief Restores interrupt masking.
