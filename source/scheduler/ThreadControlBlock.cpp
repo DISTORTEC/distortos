@@ -15,7 +15,6 @@
 
 #include "distortos/scheduler/schedulerInstance.hpp"
 #include "distortos/scheduler/Scheduler.hpp"
-#include "distortos/scheduler/threadReturnTrap.hpp"
 
 #include "distortos/architecture/InterruptMaskingLock.hpp"
 
@@ -81,7 +80,9 @@ ThreadControlBlock::ThreadControlBlock(architecture::Stack&& stack, const uint8_
 void ThreadControlBlock::threadRunner(ThreadControlBlock& threadControlBlock)
 {
 	threadControlBlock.run_();
-	threadReturnTrap();
+	schedulerInstance.remove();
+
+	while (1);
 }
 
 }	// namespace scheduler
