@@ -64,12 +64,6 @@ void MainThreadControlBlock::run_()
 	while (1);	/// \todo add some form of assertion that this never gets called
 }
 
-/**
- * \brief Termination hook function of thread
- *
- * This function is called after run_() completes.
- */
-
 void MainThreadControlBlock::terminationHook_()
 {
 	while (1);	/// \todo add some form of assertion that this never gets called
