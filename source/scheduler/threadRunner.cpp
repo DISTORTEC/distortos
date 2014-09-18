@@ -8,12 +8,13 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-08-24
+ * \date 2014-09-18
  */
 
 #include "distortos/scheduler/threadRunner.hpp"
 
 #include "distortos/scheduler/ThreadControlBlock.hpp"
+#include "distortos/scheduler/threadReturnTrap.hpp"
 
 namespace distortos
 {
@@ -28,6 +29,7 @@ namespace scheduler
 void threadRunner(ThreadControlBlock& threadControlBlock)
 {
 	threadControlBlock.run_();
+	threadReturnTrap();
 }
 
 }	// namespace scheduler
