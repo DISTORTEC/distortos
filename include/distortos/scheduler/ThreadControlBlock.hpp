@@ -8,14 +8,13 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-09-17
+ * \date 2014-09-18
  */
 
 #ifndef INCLUDE_DISTORTOS_SCHEDULER_THREADCONTROLBLOCK_HPP_
 #define INCLUDE_DISTORTOS_SCHEDULER_THREADCONTROLBLOCK_HPP_
 
 #include "distortos/scheduler/RoundRobinQuantum.hpp"
-#include "distortos/scheduler/threadRunner.hpp"
 #include "distortos/scheduler/ThreadControlBlockList-types.hpp"
 
 #include "distortos/architecture/Stack.hpp"
@@ -235,7 +234,15 @@ protected:
 
 private:
 
-	friend void threadRunner(ThreadControlBlock& threadControlBlock);
+	/**
+	 * \brief Thread runner function - entry point of threads.
+	 *
+	 * After return from actual thread function, thread is terminated, so this function never returns.
+	 *
+	 * \param [in] threadControlBlock is a reference to ThreadControlBlock object that is being run
+	 */
+
+	static void threadRunner(ThreadControlBlock& threadControlBlock) __attribute__ ((noreturn));
 
 	/**
 	 * \brief "Run" function of thread
