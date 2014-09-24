@@ -52,9 +52,11 @@ public:
 	 * Similar to std::mutex::mutex() - http://en.cppreference.com/w/cpp/thread/mutex/mutex
 	 * Similar to pthread_mutex_init() -
 	 * http://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_mutex_init.html
+	 *
+	 * \param [in] type is the type of mutex, default - Type::Normal
 	 */
 
-	Mutex();
+	explicit Mutex(Type type = Type::Normal);
 
 	/**
 	 * \brief Locks the mutex.
@@ -187,6 +189,9 @@ private:
 
 	/// owner of the mutex
 	ThreadControlBlock* owner_;
+
+	/// type of mutex
+	Type type_;
 };
 
 }	// namespace scheduler
