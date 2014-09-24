@@ -36,7 +36,7 @@ Mutex::Mutex(const Type type) :
 
 }
 
-void Mutex::lock()
+int Mutex::lock()
 {
 	architecture::InterruptMaskingLock interruptMaskingLock;
 
@@ -44,6 +44,8 @@ void Mutex::lock()
 		schedulerInstance.block(blockedList_);
 	else
 		owner_ = &schedulerInstance.getCurrentThreadControlBlock();
+
+	return 0;
 }
 
 bool Mutex::tryLock()

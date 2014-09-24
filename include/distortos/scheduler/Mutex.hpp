@@ -68,9 +68,14 @@ public:
 	 * If the mutex is already locked by another thread, the calling thread shall block until the mutex becomes
 	 * available. This function shall return with the mutex in the locked state with the calling thread as its owner. If
 	 * a thread attempts to relock a mutex that it has already locked, deadlock occurs.
+	 *
+	 * \return zero if the caller successfully locked the mutex, error code otherwise:
+	 * - EAGAIN - the mutex could not be acquired because the maximum number of recursive locks for mutex has been
+	 * exceeded;
+	 * - EDEADLK - the mutex type is ErrorChecking and the current thread already owns the mutex;
 	 */
 
-	void lock();
+	int lock();
 
 	/**
 	 * \brief Tries to lock the mutex.
