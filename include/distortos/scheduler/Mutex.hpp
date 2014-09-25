@@ -111,10 +111,14 @@ public:
 	 *
 	 * \param [in] duration is the duration after which the wait will be terminated without locking the mutex
 	 *
-	 * \return true if the calling thread successfully performed the lock operation, false otherwise
+	 * \return zero if the caller successfully locked the mutex, error code otherwise:
+	 * - EAGAIN - the mutex could not be acquired because the maximum number of recursive locks for mutex has been
+	 * exceeded;
+	 * - EDEADLK - the mutex type is ErrorChecking and the current thread already owns the mutex;
+	 * - ETIMEDOUT - the mutex could not be locked before the specified timeout expired;
 	 */
 
-	bool tryLockFor(TickClock::duration duration);
+	int tryLockFor(TickClock::duration duration);
 
 	/**
 	 * Tries to lock the mutex for given duration of time.
@@ -126,11 +130,15 @@ public:
 	 *
 	 * \param [in] duration is the duration after which the wait will be terminated without locking the mutex
 	 *
-	 * \return true if the calling thread successfully performed the lock operation, false otherwise
+	 * \return zero if the caller successfully locked the mutex, error code otherwise:
+	 * - EAGAIN - the mutex could not be acquired because the maximum number of recursive locks for mutex has been
+	 * exceeded;
+	 * - EDEADLK - the mutex type is ErrorChecking and the current thread already owns the mutex;
+	 * - ETIMEDOUT - the mutex could not be locked before the specified timeout expired;
 	 */
 
 	template<typename Rep, typename Period>
-	bool tryLockFor(const std::chrono::duration<Rep, Period> duration)
+	int tryLockFor(const std::chrono::duration<Rep, Period> duration)
 	{
 		return tryLockFor(std::chrono::duration_cast<TickClock::duration>(duration));
 	}
@@ -152,10 +160,14 @@ public:
 	 *
 	 * \param [in] timePoint is the time point at which the wait will be terminated without locking the mutex
 	 *
-	 * \return true if the calling thread successfully performed the lock operation, false otherwise
+	 * \return zero if the caller successfully locked the mutex, error code otherwise:
+	 * - EAGAIN - the mutex could not be acquired because the maximum number of recursive locks for mutex has been
+	 * exceeded;
+	 * - EDEADLK - the mutex type is ErrorChecking and the current thread already owns the mutex;
+	 * - ETIMEDOUT - the mutex could not be locked before the specified timeout expired;
 	 */
 
-	bool tryLockUntil(TickClock::time_point timePoint);
+	int tryLockUntil(TickClock::time_point timePoint);
 
 	/**
 	 * \brief Tries to lock the mutex until given time point.
@@ -166,11 +178,15 @@ public:
 	 *
 	 * \param [in] timePoint is the time point at which the wait will be terminated without locking the mutex
 	 *
-	 * \return true if the calling thread successfully performed the lock operation, false otherwise
+	 * \return zero if the caller successfully locked the mutex, error code otherwise:
+	 * - EAGAIN - the mutex could not be acquired because the maximum number of recursive locks for mutex has been
+	 * exceeded;
+	 * - EDEADLK - the mutex type is ErrorChecking and the current thread already owns the mutex;
+	 * - ETIMEDOUT - the mutex could not be locked before the specified timeout expired;
 	 */
 
 	template<typename Duration>
-	bool tryLockUntil(const std::chrono::time_point<TickClock, Duration> timePoint)
+	int tryLockUntil(const std::chrono::time_point<TickClock, Duration> timePoint)
 	{
 		return tryLockUntil(std::chrono::time_point_cast<TickClock::duration>(timePoint));
 	}

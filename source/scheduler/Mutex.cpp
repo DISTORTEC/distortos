@@ -66,23 +66,22 @@ int Mutex::tryLock()
 	return 0;
 }
 
-bool Mutex::tryLockFor(const TickClock::duration duration)
+int Mutex::tryLockFor(const TickClock::duration duration)
 {
 	return tryLockUntil(TickClock::now() + duration + TickClock::duration{1});
 }
 
-bool Mutex::tryLockUntil(const TickClock::time_point timePoint)
+int Mutex::tryLockUntil(const TickClock::time_point timePoint)
 {
 	architecture::InterruptMaskingLock interruptMaskingLock;
 
 	if (owner_ != nullptr)
 	{
-		const auto ret = schedulerInstance.blockUntil(blockedList_, timePoint);
-		return ret == 0;
+		return schedulerInstance.blockUntil(blockedList_, timePoint);
 	}
 
 	owner_ = &schedulerInstance.getCurrentThreadControlBlock();
-	return true;
+	return 0;
 }
 
 void Mutex::unlock()
