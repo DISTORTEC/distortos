@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-09-24
+ * \date 2014-09-25
  */
 
 #ifndef INCLUDE_DISTORTOS_SCHEDULER_MUTEX_HPP_
@@ -87,10 +87,13 @@ public:
 	 * This function shall be equivalent to lock(), except that if the mutex is currently locked (by any thread,
 	 * including the current thread), the call shall return immediately.
 	 *
-	 * \return true if the calling thread successfully performed the lock operation, false otherwise
+	 * \return zero if the caller successfully locked the mutex, error code otherwise:
+	 * - EAGAIN - the mutex could not be acquired because the maximum number of recursive locks for mutex has been
+	 * exceeded;
+	 * - EBUSY - the mutex could not be acquired because it was already locked;
 	 */
 
-	bool tryLock();
+	int tryLock();
 
 	/**
 	 * \brief Tries to lock the mutex for given duration of time.
