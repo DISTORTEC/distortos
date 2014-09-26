@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-09-25
+ * \date 2014-09-26
  */
 
 #ifndef INCLUDE_DISTORTOS_SCHEDULER_MUTEX_HPP_
@@ -202,9 +202,12 @@ public:
 	 * blocked on this mutex, the highest priority waiting thread shall be unblocked, and if there is more than one
 	 * highest priority thread blocked waiting, then the highest priority thread that has been waiting the longest shall
 	 * be unblocked.
+	 *
+	 * \return zero if the caller successfully unlocked the mutex, error code otherwise:
+	 * - EPERM - the mutex type is ErrorChecking or Recursive, and the current thread does not own the mutex;
 	 */
 
-	void unlock();
+	int unlock();
 
 private:
 

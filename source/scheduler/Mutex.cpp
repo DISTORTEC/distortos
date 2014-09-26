@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-09-25
+ * \date 2014-09-26
  */
 
 #include "distortos/scheduler/Mutex.hpp"
@@ -84,7 +84,7 @@ int Mutex::tryLockUntil(const TickClock::time_point timePoint)
 	return 0;
 }
 
-void Mutex::unlock()
+int Mutex::unlock()
 {
 	architecture::InterruptMaskingLock interruptMaskingLock;
 
@@ -95,6 +95,8 @@ void Mutex::unlock()
 	}
 	else
 		owner_ = nullptr;
+
+	return 0;
 }
 
 }	// namespace scheduler
