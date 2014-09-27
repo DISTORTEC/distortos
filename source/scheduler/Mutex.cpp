@@ -44,11 +44,8 @@ int Mutex::lock()
 	architecture::InterruptMaskingLock interruptMaskingLock;
 
 	const auto ret = tryLockInternal();
-	if (ret == 0 || ret == EAGAIN)	// lock successful or recursive lock not possible?
+	if (ret != EBUSY)	// lock successful, recursive lock not possible or deadlock detected?
 		return ret;
-
-	if (type_ == Type::ErrorChecking && owner_ == &schedulerInstance.getCurrentThreadControlBlock())
-		return EDEADLK;
 
 	schedulerInstance.block(blockedList_);
 	return 0;
