@@ -43,11 +43,9 @@ int Mutex::lock()
 {
 	architecture::InterruptMaskingLock interruptMaskingLock;
 
-	if (owner_ == nullptr)
-	{
-		owner_ = &schedulerInstance.getCurrentThreadControlBlock();
-		return 0;
-	}
+	const auto ret = tryLockInternal();
+	if (ret == 0 || ret == EAGAIN)	// lock successful or recursive lock not possible?
+		return ret;
 
 	if (type_ == Type::ErrorChecking && owner_ == &schedulerInstance.getCurrentThreadControlBlock())
 		return EDEADLK;
