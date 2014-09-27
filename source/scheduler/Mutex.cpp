@@ -69,11 +69,9 @@ int Mutex::tryLockUntil(const TickClock::time_point timePoint)
 {
 	architecture::InterruptMaskingLock interruptMaskingLock;
 
-	if (owner_ == nullptr)
-	{
-		owner_ = &schedulerInstance.getCurrentThreadControlBlock();
-		return 0;
-	}
+	const auto ret = tryLockInternal();
+	if (ret == 0 || ret == EAGAIN)	// lock successful or recursive lock not possible?
+		return ret;
 
 	return schedulerInstance.blockUntil(blockedList_, timePoint);
 }
