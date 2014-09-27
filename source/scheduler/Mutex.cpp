@@ -68,7 +68,7 @@ int Mutex::tryLockUntil(const TickClock::time_point timePoint)
 	architecture::InterruptMaskingLock interruptMaskingLock;
 
 	const auto ret = tryLockInternal();
-	if (ret == 0 || ret == EAGAIN)	// lock successful or recursive lock not possible?
+	if (ret != EBUSY)	// lock successful, recursive lock not possible or deadlock detected?
 		return ret;
 
 	return schedulerInstance.blockUntil(blockedList_, timePoint);
