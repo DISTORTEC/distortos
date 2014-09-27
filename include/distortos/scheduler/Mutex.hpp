@@ -214,12 +214,14 @@ private:
 	/**
 	 * \brief Internal version of tryLock().
 	 *
-	 * Internal version with no interrupt masking.
+	 * Internal version with no interrupt masking and additional code for ErrorChecking type (which is not required for
+	 * tryLock()).
 	 *
 	 * \return zero if the caller successfully locked the mutex, error code otherwise:
 	 * - EAGAIN - the mutex could not be acquired because the maximum number of recursive locks for mutex has been
 	 * exceeded;
 	 * - EBUSY - the mutex could not be acquired because it was already locked;
+	 * - EDEADLK - the mutex type is ErrorChecking and the current thread already owns the mutex;
 	 */
 
 	int tryLockInternal();

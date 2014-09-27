@@ -116,13 +116,22 @@ int Mutex::tryLockInternal()
 		return 0;
 	}
 
-	if (type_ == Type::Recursive && owner_ == &schedulerInstance.getCurrentThreadControlBlock())
-	{
-		if (recursiveLocksCount_ == std::numeric_limits<decltype(recursiveLocksCount_)>::max())
-			return EAGAIN;
+	if (type_ == Type::Normal)
+		return EBUSY;
 
-		++recursiveLocksCount_;
-		return 0;
+	if (owner_ == &schedulerInstance.getCurrentThreadControlBlock())
+	{
+		if (type_ == Type::ErrorChecking)
+			return EDEADLK;
+
+		if (type_ == Type::Recursive)
+		{
+			if (recursiveLocksCount_ == std::numeric_limits<decltype(recursiveLocksCount_)>::max())
+				return EAGAIN;
+
+			++recursiveLocksCount_;
+			return 0;
+		}
 	}
 
 	return EBUSY;
