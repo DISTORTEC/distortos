@@ -43,16 +43,16 @@ int Mutex::lock()
 {
 	architecture::InterruptMaskingLock interruptMaskingLock;
 
-	if (owner_ != nullptr)
+	if (owner_ == nullptr)
 	{
-		if (type_ == Type::ErrorChecking && owner_ == &schedulerInstance.getCurrentThreadControlBlock())
-			return EDEADLK;
-
-		schedulerInstance.block(blockedList_);
-	}
-	else
 		owner_ = &schedulerInstance.getCurrentThreadControlBlock();
+		return 0;
+	}
 
+	if (type_ == Type::ErrorChecking && owner_ == &schedulerInstance.getCurrentThreadControlBlock())
+		return EDEADLK;
+
+	schedulerInstance.block(blockedList_);
 	return 0;
 }
 
