@@ -59,14 +59,7 @@ int Mutex::lock()
 int Mutex::tryLock()
 {
 	architecture::InterruptMaskingLock interruptMaskingLock;
-
-	if (owner_ == nullptr)
-	{
-		owner_ = &schedulerInstance.getCurrentThreadControlBlock();
-		return 0;
-	}
-
-	return EBUSY;
+	return tryLockInternal();
 }
 
 int Mutex::tryLockFor(const TickClock::duration duration)
