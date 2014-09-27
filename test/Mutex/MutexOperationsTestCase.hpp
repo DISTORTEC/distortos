@@ -25,7 +25,7 @@ namespace test
 /**
  * \brief Tests various mutex operations.
  *
- * Tests locking (lock(), tryLock(), tryLockFor() and tryLockUntil()) and unlocking of Normal mutex type.
+ * Tests locking (lock(), tryLock(), tryLockFor() and tryLockUntil()) and unlocking of all 3 mutex types.
  */
 
 class MutexOperationsTestCase : public TestCase
