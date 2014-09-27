@@ -78,13 +78,13 @@ int Mutex::tryLockUntil(const TickClock::time_point timePoint)
 {
 	architecture::InterruptMaskingLock interruptMaskingLock;
 
-	if (owner_ != nullptr)
+	if (owner_ == nullptr)
 	{
-		return schedulerInstance.blockUntil(blockedList_, timePoint);
+		owner_ = &schedulerInstance.getCurrentThreadControlBlock();
+		return 0;
 	}
 
-	owner_ = &schedulerInstance.getCurrentThreadControlBlock();
-	return 0;
+	return schedulerInstance.blockUntil(blockedList_, timePoint);
 }
 
 int Mutex::unlock()
