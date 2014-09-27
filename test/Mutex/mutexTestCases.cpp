@@ -15,6 +15,7 @@
 
 #include "MutexPriorityTestCase.hpp"
 #include "MutexOperationsTestCase.hpp"
+#include "MutexErrorCheckingOperationsTestCase.hpp"
 
 namespace distortos
 {
@@ -35,11 +36,15 @@ const MutexPriorityTestCase priorityTestCase;
 /// MutexOperationsTestCase instance
 const MutexOperationsTestCase operationsTestCase;
 
+/// MutexErrorCheckingOperationsTestCase instance
+const MutexErrorCheckingOperationsTestCase errorCheckingOperationsTestCase;
+
 /// array with references to TestCase objects related to mutexes
 const TestCaseRange::value_type mutexTestCases_[]
 {
 		priorityTestCase,
 		operationsTestCase,
+		errorCheckingOperationsTestCase,
 };
 
 }	// namespace
