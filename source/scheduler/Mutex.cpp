@@ -33,6 +33,7 @@ namespace scheduler
 Mutex::Mutex(const Type type) :
 		blockedList_{schedulerInstance.getThreadControlBlockListAllocator(), ThreadControlBlock::State::BlockedOnMutex},
 		owner_{},
+		recursiveLocksCount_{},
 		type_{type}
 {
 

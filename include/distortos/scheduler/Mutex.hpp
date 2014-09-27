@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-09-26
+ * \date 2014-09-27
  */
 
 #ifndef INCLUDE_DISTORTOS_SCHEDULER_MUTEX_HPP_
@@ -216,6 +216,9 @@ private:
 
 	/// owner of the mutex
 	ThreadControlBlock* owner_;
+
+	/// number of recursive locks, used when mutex type is Recursive
+	uint16_t recursiveLocksCount_;
 
 	/// type of mutex
 	Type type_;
