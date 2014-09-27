@@ -105,6 +105,21 @@ int Mutex::unlock()
 	return 0;
 }
 
+/*---------------------------------------------------------------------------------------------------------------------+
+| private functions
++---------------------------------------------------------------------------------------------------------------------*/
+
+int Mutex::tryLockInternal()
+{
+	if (owner_ == nullptr)
+	{
+		owner_ = &schedulerInstance.getCurrentThreadControlBlock();
+		return 0;
+	}
+
+	return EBUSY;
+}
+
 }	// namespace scheduler
 
 }	// namespace distortos
