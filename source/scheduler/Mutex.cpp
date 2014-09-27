@@ -57,7 +57,8 @@ int Mutex::lock()
 int Mutex::tryLock()
 {
 	architecture::InterruptMaskingLock interruptMaskingLock;
-	return tryLockInternal();
+	const auto ret = tryLockInternal();
+	return ret != EDEADLK ? ret : EBUSY;
 }
 
 int Mutex::tryLockFor(const TickClock::duration duration)
