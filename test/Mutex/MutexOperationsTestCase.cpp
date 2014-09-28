@@ -8,11 +8,12 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-09-27
+ * \date 2014-09-28
  */
 
 #include "MutexOperationsTestCase.hpp"
 
+#include "mutexTestTryLockWhenLocked.hpp"
 #include "waitForNextTick.hpp"
 
 #include "distortos/scheduler/Mutex.hpp"
@@ -85,37 +86,6 @@ void lockUnlockThread(distortos::scheduler::Mutex& mutex, bool& sharedRet, disto
 }
 
 /**
- * \brief Tests Mutex::tryLock() when mutex is locked - it must succeed immediately and return EBUSY
- *
- * Mutex::tryLock() is called from another thread.
- *
- * \param [in] mutex is a reference to mutex that will be tested
- *
- * \return true if test succeeded, false otherwise
- */
-
-bool testTryLockWhenLocked(distortos::scheduler::Mutex& mutex)
-{
-	using distortos::scheduler::makeStaticThread;
-
-	bool sharedRet {};
-	auto tryLockThreadObject = makeStaticThread<testThreadStackSize>(UINT8_MAX,
-			[&mutex, &sharedRet]()
-			{
-				using distortos::scheduler::TickClock;
-
-				const auto start = TickClock::now();
-				const auto ret = mutex.tryLock();
-				sharedRet = ret == EBUSY && start == TickClock::now();
-			});
-	waitForNextTick();
-	tryLockThreadObject.start();
-	tryLockThreadObject.join();
-
-	return sharedRet;
-}
-
-/**
  * \brief Tests Mutex::unlock() - it must succeed immediately
  *
  * \param [in] mutex is a reference to mutex that will be unlocked
@@ -168,7 +138,7 @@ bool phase1(const distortos::scheduler::Mutex::Type type)
 	}
 
 	{
-		const auto ret = testTryLockWhenLocked(mutex);
+		const auto ret = mutexTestTryLockWhenLocked(mutex);
 		if (ret != true)
 			return ret;
 	}
@@ -225,7 +195,7 @@ bool phase2(distortos::scheduler::Mutex::Type type)
 	}
 
 	{
-		const auto ret = testTryLockWhenLocked(mutex);
+		const auto ret = mutexTestTryLockWhenLocked(mutex);
 		if (ret != true)
 			return ret;
 	}
@@ -246,7 +216,7 @@ bool phase2(distortos::scheduler::Mutex::Type type)
 	}
 
 	{
-		const auto ret = testTryLockWhenLocked(mutex);
+		const auto ret = mutexTestTryLockWhenLocked(mutex);
 		if (ret != true)
 			return ret;
 	}
@@ -267,7 +237,7 @@ bool phase2(distortos::scheduler::Mutex::Type type)
 	}
 
 	{
-		const auto ret = testTryLockWhenLocked(mutex);
+		const auto ret = mutexTestTryLockWhenLocked(mutex);
 		if (ret != true)
 			return ret;
 	}
