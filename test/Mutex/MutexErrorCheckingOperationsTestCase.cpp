@@ -99,6 +99,15 @@ bool MutexErrorCheckingOperationsTestCase::run_() const
 			return false;
 	}
 
+	{
+		// excessive unlock - must fail with EPERM immediately
+		waitForNextTick();
+		const auto start = TickClock::now();
+		const auto ret = mutex.unlock();
+		if (ret != EPERM || start != TickClock::now())
+			return false;
+	}
+
 	return true;
 }
 
