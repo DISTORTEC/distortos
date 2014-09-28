@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-09-27
+ * \date 2014-09-28
  */
 
 #ifndef INCLUDE_DISTORTOS_SCHEDULER_MUTEX_HPP_
@@ -35,6 +35,9 @@ class Mutex
 {
 public:
 
+	/// type used for counting recursive locks
+	using RecursiveLocksCount = uint16_t;
+
 	/// type of mutex
 	enum class Type : uint8_t
 	{
@@ -45,6 +48,19 @@ public:
 		/// recursive mutex, similar to PTHREAD_MUTEX_RECURSIVE
 		Recursive
 	};
+
+	/**
+	 * \brief Gets the maximum number of recursive locks possible before returning EAGAIN
+	 *
+	 * \note Actual number of lock() operations possible is getMaxRecursiveLocks() + 1.
+	 *
+	 * \return maximum number of recursive locks possible before returning EAGAIN
+	 */
+
+	constexpr static RecursiveLocksCount getMaxRecursiveLocks()
+	{
+		return std::numeric_limits<RecursiveLocksCount>::max();
+	}
 
 	/**
 	 * \brief Mutex constructor
@@ -233,7 +249,7 @@ private:
 	ThreadControlBlock* owner_;
 
 	/// number of recursive locks, used when mutex type is Recursive
-	uint16_t recursiveLocksCount_;
+	RecursiveLocksCount recursiveLocksCount_;
 
 	/// type of mutex
 	Type type_;
