@@ -5,8 +5,8 @@ Advanced real-time operating system for deeply embedded targets
 
 - fully preemptive
 - round-robin and FIFO scheduling
-- all basic primitives aim for maximum compatibility with <pthread.h> from POSIX, thread support library from C++11 and 
-  other established standards
+- all basic primitives aim for maximum compatibility with POSIX, thread support library from C++11 and other established
+standards
 - POSIX pthread implementation
 - support for various mutex types (normal, error-checking, recursive) and mutex protocols (normal, priority inheritance,
   priority protection) 
