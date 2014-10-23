@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-09-18
+ * \date 2014-10-23
  */
 
 #ifndef INCLUDE_DISTORTOS_SCHEDULER_THREADCONTROLBLOCK_HPP_
@@ -184,9 +184,12 @@ public:
 	 * If the priority really changes, the position in the thread list is adjusted and context switch may be requested.
 	 *
 	 * \param [in] priority is the new priority of thread
+	 * \param [in] alwaysBehind selects the method of ordering when lowering the priority
+	 * - false - the thread is moved to the head of the group of threads with the new priority (default),
+	 * - true - the thread is moved to the tail of the group of threads with the new priority.
 	 */
 
-	void setPriority(uint8_t priority);
+	void setPriority(uint8_t priority, bool alwaysBehind = {});
 
 	/**
 	 * \param [in] state is the new state of object

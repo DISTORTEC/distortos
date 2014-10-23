@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-09-18
+ * \date 2014-10-23
  */
 
 #include "distortos/scheduler/ThreadControlBlock.hpp"
@@ -39,21 +39,28 @@ ThreadControlBlock::ThreadControlBlock(void* const buffer, const size_t size, co
 
 }
 
-void ThreadControlBlock::setPriority(const uint8_t priority)
+void ThreadControlBlock::setPriority(const uint8_t priority, const bool alwaysBehind)
 {
 	architecture::InterruptMaskingLock interruptMaskingLock;
 
 	if (priority_ == priority)
 		return;
 
+	// special case of new priority UINT8_MAX does need to be handled, as it will never be "lowering" of priority anyway
+	const auto loweringBefore = alwaysBehind == false && priority_ > priority;
+
 	priority_ = priority;
 
 	if (list_ == nullptr)
 		return;
 
+	if (loweringBefore == true)
+		++priority_;	// effectively causes new position to be "before" threads with the same priority
+
 	list_->sortedSplice(*list_, iterator_);
-	/// \todo implement position change according to POSIX spec -
-	/// http://pubs.opengroup.org/onlinepubs/9699919799/functions/V2_chap02.html#tag_15_08_04_02
+
+	if (loweringBefore == true)
+		--priority_;
 
 	schedulerInstance.maybeRequestContextSwitch();
 }
