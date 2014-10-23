@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-09-16
+ * \date 2014-10-23
  */
 
 #include "ThreadRoundRobinSchedulingTestCase.hpp"
@@ -102,7 +102,7 @@ TestThread makeTestThread(SequenceAsserter& sequenceAsserter, const unsigned int
 		const unsigned int sequenceStep)
 {
 	return scheduler::makeStaticThread<testThreadStackSize>(testThreadPriority, thread, std::ref(sequenceAsserter),
-		static_cast<unsigned int>(sequencePoint), static_cast<unsigned int>(sequenceStep));
+			static_cast<unsigned int>(sequencePoint), static_cast<unsigned int>(sequenceStep));
 }
 
 }	// namespace

@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-09-18
+ * \date 2014-10-23
  */
 
 #include "ThreadPriorityTestCase.hpp"
@@ -77,10 +77,10 @@ void thread(SequenceAsserter& sequenceAsserter, const unsigned int sequencePoint
  * \return constructed TestThread object
  */
 
-TestThread makeTestThread(const ThreadParameters &threadParameters, SequenceAsserter& sequenceAsserter)
+TestThread makeTestThread(const ThreadParameters& threadParameters, SequenceAsserter& sequenceAsserter)
 {
 	return scheduler::makeStaticThread<testThreadStackSize>(threadParameters.first, thread, std::ref(sequenceAsserter),
-		static_cast<unsigned int>(threadParameters.second));
+			static_cast<unsigned int>(threadParameters.second));
 }
 
 }	// namespace

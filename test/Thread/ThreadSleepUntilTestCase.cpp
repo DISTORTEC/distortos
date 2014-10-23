@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-09-18
+ * \date 2014-10-23
  */
 
 #include "ThreadSleepUntilTestCase.hpp"
@@ -94,7 +94,7 @@ void thread(const scheduler::TickClock::time_point sleepUntil, SequenceAsserter&
  * \return constructed TestThread object
  */
 
-TestThread makeTestThread(const scheduler::TickClock::time_point now, const ThreadParameters &threadParameters,
+TestThread makeTestThread(const scheduler::TickClock::time_point now, const ThreadParameters& threadParameters,
 		SequenceAsserter& sequenceAsserter, scheduler::TickClock::duration& timePointDeviation)
 {
 	return scheduler::makeStaticThread<testThreadStackSize>(1, thread,
