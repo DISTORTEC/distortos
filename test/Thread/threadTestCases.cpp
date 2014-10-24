@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-09-16
+ * \date 2014-10-24
  */
 
 #include "threadTestCases.hpp"
@@ -18,6 +18,7 @@
 #include "ThreadSleepForTestCase.hpp"
 #include "ThreadSleepUntilTestCase.hpp"
 #include "ThreadRoundRobinSchedulingTestCase.hpp"
+#include "ThreadPriorityChangeTestCase.hpp"
 
 namespace distortos
 {
@@ -47,6 +48,9 @@ const ThreadSleepUntilTestCase sleepUntilTestCase;
 /// ThreadRoundRobinSchedulingTestCase instance
 const ThreadRoundRobinSchedulingTestCase roundRobinSchedulingTestCase;
 
+/// ThreadPriorityChangeTestCase instance
+const ThreadPriorityChangeTestCase priorityChangeTestCase;
+
 /// array with references to TestCase objects related to threads
 const TestCaseRange::value_type threadTestCases_[]
 {
@@ -55,6 +59,7 @@ const TestCaseRange::value_type threadTestCases_[]
 		sleepForTestCase,
 		sleepUntilTestCase,
 		roundRobinSchedulingTestCase,
+		priorityChangeTestCase,
 };
 
 }	// namespace
