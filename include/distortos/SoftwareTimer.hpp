@@ -8,11 +8,11 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-08-09
+ * \date 2014-10-25
  */
 
-#ifndef INCLUDE_DISTORTOS_SCHEDULER_SOFTWARETIMER_HPP_
-#define INCLUDE_DISTORTOS_SCHEDULER_SOFTWARETIMER_HPP_
+#ifndef INCLUDE_DISTORTOS_SOFTWARETIMER_HPP_
+#define INCLUDE_DISTORTOS_SOFTWARETIMER_HPP_
 
 #include "distortos/scheduler/SoftwareTimerControlBlock.hpp"
 
@@ -89,4 +89,4 @@ SoftwareTimer<Function, Args...> makeSoftwareTimer(Function&& function, Args&&..
 
 }	// namespace distortos
 
-#endif	// INCLUDE_DISTORTOS_SCHEDULER_SOFTWARETIMER_HPP_
+#endif	// INCLUDE_DISTORTOS_SOFTWARETIMER_HPP_
