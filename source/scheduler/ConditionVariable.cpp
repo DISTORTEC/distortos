@@ -13,7 +13,7 @@
 
 #include "distortos/ConditionVariable.hpp"
 
-#include "distortos/scheduler/Mutex.hpp"
+#include "distortos/Mutex.hpp"
 #include "distortos/scheduler/schedulerInstance.hpp"
 #include "distortos/scheduler/Scheduler.hpp"
 
