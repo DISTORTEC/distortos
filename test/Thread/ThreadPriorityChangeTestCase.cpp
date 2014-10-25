@@ -16,7 +16,7 @@
 #include "SequenceAsserter.hpp"
 
 #include "distortos/StaticThread.hpp"
-#include "distortos/scheduler/ThisThread.hpp"
+#include "distortos/ThisThread.hpp"
 
 namespace distortos
 {
