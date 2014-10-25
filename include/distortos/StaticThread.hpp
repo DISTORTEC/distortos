@@ -14,7 +14,7 @@
 #ifndef INCLUDE_DISTORTOS_STATICTHREAD_HPP_
 #define INCLUDE_DISTORTOS_STATICTHREAD_HPP_
 
-#include "distortos/scheduler/Thread.hpp"
+#include "distortos/Thread.hpp"
 
 namespace distortos
 {

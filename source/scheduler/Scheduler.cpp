@@ -13,7 +13,7 @@
 
 #include "distortos/scheduler/Scheduler.hpp"
 
-#include "distortos/scheduler/Thread.hpp"
+#include "distortos/Thread.hpp"
 #include "distortos/SoftwareTimer.hpp"
 #include "distortos/scheduler/MainThreadControlBlock.hpp"
 
