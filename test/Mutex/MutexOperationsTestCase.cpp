@@ -17,7 +17,7 @@
 #include "waitForNextTick.hpp"
 
 #include "distortos/Mutex.hpp"
-#include "distortos/scheduler/StaticThread.hpp"
+#include "distortos/StaticThread.hpp"
 
 #include <cerrno>
 

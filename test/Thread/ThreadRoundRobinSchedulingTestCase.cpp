@@ -8,14 +8,14 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-10-23
+ * \date 2014-10-25
  */
 
 #include "ThreadRoundRobinSchedulingTestCase.hpp"
 
 #include "SequenceAsserter.hpp"
 
-#include "distortos/scheduler/StaticThread.hpp"
+#include "distortos/StaticThread.hpp"
 #include "distortos/scheduler/ThisThread.hpp"
 
 #include "distortos/architecture/InterruptMaskingLock.hpp"

@@ -16,7 +16,7 @@
 #include "priorityTestPhases.hpp"
 #include "SequenceAsserter.hpp"
 
-#include "distortos/scheduler/StaticThread.hpp"
+#include "distortos/StaticThread.hpp"
 #include "distortos/Mutex.hpp"
 
 namespace distortos
