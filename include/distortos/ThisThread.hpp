@@ -14,7 +14,7 @@
 #ifndef INCLUDE_DISTORTOS_THISTHREAD_HPP_
 #define INCLUDE_DISTORTOS_THISTHREAD_HPP_
 
-#include "distortos/scheduler/TickClock.hpp"
+#include "distortos/TickClock.hpp"
 
 namespace distortos
 {

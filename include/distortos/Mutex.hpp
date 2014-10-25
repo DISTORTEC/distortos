@@ -15,7 +15,7 @@
 #define INCLUDE_DISTORTOS_MUTEX_HPP_
 
 #include "distortos/scheduler/ThreadControlBlockList.hpp"
-#include "distortos/scheduler/TickClock.hpp"
+#include "distortos/TickClock.hpp"
 
 namespace distortos
 {
