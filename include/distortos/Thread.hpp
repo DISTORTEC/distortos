@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-10-25
+ * \date 2014-10-27
  */
 
 #ifndef INCLUDE_DISTORTOS_THREAD_HPP_
@@ -22,9 +22,6 @@
 namespace distortos
 {
 
-namespace scheduler
-{
-
 /**
  * \brief Thread class is a templated interface for thread
  *
@@ -33,7 +30,7 @@ namespace scheduler
  */
 
 template<typename Function, typename... Args>
-class Thread : private ThreadBase
+class Thread : private scheduler::ThreadBase
 {
 public:
 
@@ -94,8 +91,6 @@ Thread<Function, Args...> makeThread(void* const buffer, const size_t size, cons
 {
 	return {buffer, size, priority, std::forward<Function>(function), std::forward<Args>(args)...};
 }
-
-}	// namespace scheduler
 
 }	// namespace distortos
 

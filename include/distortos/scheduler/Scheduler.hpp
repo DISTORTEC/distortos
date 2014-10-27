@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-09-17
+ * \date 2014-10-27
  */
 
 #ifndef INCLUDE_DISTORTOS_SCHEDULER_SCHEDULER_HPP_
@@ -20,12 +20,13 @@
 namespace distortos
 {
 
+template<typename Function, typename... Args>
+class Thread;
+
 /// scheduler namespace has symbols related to scheduling
 namespace scheduler
 {
 
-template<typename Function, typename... Args>
-class Thread;
 class MainThreadControlBlock;
 
 /// Scheduler class is a system's scheduler
