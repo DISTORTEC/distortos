@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-10-25
+ * \date 2014-10-27
  */
 
 #include "MutexOperationsTestCase.hpp"
@@ -35,7 +35,7 @@ namespace
 +---------------------------------------------------------------------------------------------------------------------*/
 
 /// single duration used in tests
-constexpr auto singleDuration = distortos::scheduler::TickClock::duration{1};
+constexpr auto singleDuration = distortos::TickClock::duration{1};
 
 /// size of stack for test thread, bytes
 constexpr size_t testThreadStackSize {256};
@@ -62,7 +62,7 @@ constexpr size_t testThreadStackSize {256};
 
 void lockUnlockThread(distortos::scheduler::Mutex& mutex, bool& sharedRet, distortos::scheduler::Mutex& semaphoreMutex)
 {
-	using distortos::scheduler::TickClock;
+	using distortos::TickClock;
 
 	{
 		// simple lock - must succeed immediately
@@ -95,7 +95,7 @@ void lockUnlockThread(distortos::scheduler::Mutex& mutex, bool& sharedRet, disto
 
 bool testUnlock(distortos::scheduler::Mutex& mutex)
 {
-	using distortos::scheduler::TickClock;
+	using distortos::TickClock;
 
 	waitForNextTick();
 	const auto start = TickClock::now();
@@ -118,7 +118,7 @@ bool testUnlock(distortos::scheduler::Mutex& mutex)
 
 bool phase1(const distortos::scheduler::Mutex::Type type)
 {
-	using distortos::scheduler::TickClock;
+	using distortos::TickClock;
 	using distortos::scheduler::makeStaticThread;
 
 	distortos::scheduler::Mutex mutex{type};
@@ -181,7 +181,7 @@ bool phase1(const distortos::scheduler::Mutex::Type type)
 
 bool phase2(distortos::scheduler::Mutex::Type type)
 {
-	using distortos::scheduler::TickClock;
+	using distortos::TickClock;
 
 	distortos::scheduler::Mutex mutex{type};
 

@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-10-25
+ * \date 2014-10-27
  */
 
 #include "ThreadSleepForTestCase.hpp"
@@ -42,7 +42,7 @@ constexpr size_t testThreadStackSize {384};
 +---------------------------------------------------------------------------------------------------------------------*/
 
 void thread(uint8_t sleepFor, SequenceAsserter& sequenceAsserter, unsigned int sequencePoint,
-		scheduler::TickClock::duration& durationDeviation);
+		TickClock::duration& durationDeviation);
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | local types
@@ -51,7 +51,7 @@ void thread(uint8_t sleepFor, SequenceAsserter& sequenceAsserter, unsigned int s
 /// type of test thread
 using TestThread = decltype(scheduler::makeStaticThread<testThreadStackSize>({}, thread, std::declval<uint8_t>(),
 		std::ref(std::declval<SequenceAsserter&>()), std::declval<unsigned int>(),
-		std::ref(std::declval<scheduler::TickClock::duration&>())));
+		std::ref(std::declval<TickClock::duration&>())));
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | local functions
@@ -70,14 +70,14 @@ using TestThread = decltype(scheduler::makeStaticThread<testThreadStackSize>({},
  */
 
 void thread(const uint8_t sleepFor, SequenceAsserter& sequenceAsserter, const unsigned int sequencePoint,
-		scheduler::TickClock::duration& durationDeviation)
+		TickClock::duration& durationDeviation)
 {
-	const auto sleepForDuration = scheduler::TickClock::duration{sleepFor};
-	const auto sleepStart = scheduler::TickClock::now();
+	const auto sleepForDuration = TickClock::duration{sleepFor};
+	const auto sleepStart = TickClock::now();
 
 	scheduler::ThisThread::sleepFor(sleepForDuration);
 
-	const auto durationSlept = scheduler::TickClock::now() - sleepStart;
+	const auto durationSlept = TickClock::now() - sleepStart;
 	sequenceAsserter.sequencePoint(sequencePoint);
 	durationDeviation = durationSlept - sleepForDuration;
 }
@@ -95,7 +95,7 @@ void thread(const uint8_t sleepFor, SequenceAsserter& sequenceAsserter, const un
  */
 
 TestThread makeTestThread(const ThreadParameters& threadParameters, SequenceAsserter& sequenceAsserter,
-		scheduler::TickClock::duration& durationDeviation)
+		TickClock::duration& durationDeviation)
 {
 	return scheduler::makeStaticThread<testThreadStackSize>(1, thread,
 			static_cast<uint8_t>(UINT8_MAX - threadParameters.first), std::ref(sequenceAsserter),
@@ -113,7 +113,7 @@ bool ThreadSleepForTestCase::run_() const
 	for (const auto& phase : priorityTestPhases)
 	{
 		SequenceAsserter sequenceAsserter;
-		std::array<scheduler::TickClock::duration, totalThreads> durationDeviations {{}};
+		std::array<TickClock::duration, totalThreads> durationDeviations {{}};
 
 		std::array<TestThread, totalThreads> threads
 		{{
@@ -147,7 +147,7 @@ bool ThreadSleepForTestCase::run_() const
 
 		// sleepFor() always sleeps one tick longer
 		for (const auto& durationDeviation : durationDeviations)
-			if (durationDeviation != scheduler::TickClock::duration{1})
+			if (durationDeviation != TickClock::duration{1})
 				return false;
 	}
 

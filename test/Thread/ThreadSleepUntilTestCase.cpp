@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-10-25
+ * \date 2014-10-27
  */
 
 #include "ThreadSleepUntilTestCase.hpp"
@@ -44,8 +44,8 @@ constexpr uint8_t timePointOffset {2};
 | local functions' declarations
 +---------------------------------------------------------------------------------------------------------------------*/
 
-void thread(scheduler::TickClock::time_point sleepUntil, SequenceAsserter& sequenceAsserter,
-		unsigned int sequencePoint, scheduler::TickClock::duration& timePointDeviation);
+void thread(TickClock::time_point sleepUntil, SequenceAsserter& sequenceAsserter, unsigned int sequencePoint,
+		TickClock::duration& timePointDeviation);
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | local types
@@ -53,8 +53,8 @@ void thread(scheduler::TickClock::time_point sleepUntil, SequenceAsserter& seque
 
 /// type of test thread
 using TestThread = decltype(scheduler::makeStaticThread<testThreadStackSize>({}, thread,
-		std::declval<scheduler::TickClock::time_point>(), std::ref(std::declval<SequenceAsserter&>()),
-		std::declval<unsigned int>(), std::ref(std::declval<scheduler::TickClock::duration&>())));
+		std::declval<TickClock::time_point>(), std::ref(std::declval<SequenceAsserter&>()),
+		std::declval<unsigned int>(), std::ref(std::declval<TickClock::duration&>())));
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | local functions
@@ -72,12 +72,12 @@ using TestThread = decltype(scheduler::makeStaticThread<testThreadStackSize>({},
  * \param [out] timePointDeviation is a reference to variable for storing deviation of time point of waking up
  */
 
-void thread(const scheduler::TickClock::time_point sleepUntil, SequenceAsserter& sequenceAsserter,
-		const unsigned int sequencePoint, scheduler::TickClock::duration& timePointDeviation)
+void thread(const TickClock::time_point sleepUntil, SequenceAsserter& sequenceAsserter,
+		const unsigned int sequencePoint, TickClock::duration& timePointDeviation)
 {
 	scheduler::ThisThread::sleepUntil(sleepUntil);
 
-	timePointDeviation = scheduler::TickClock::now() - sleepUntil;
+	timePointDeviation = TickClock::now() - sleepUntil;
 	sequenceAsserter.sequencePoint(sequencePoint);
 }
 
@@ -94,13 +94,12 @@ void thread(const scheduler::TickClock::time_point sleepUntil, SequenceAsserter&
  * \return constructed TestThread object
  */
 
-TestThread makeTestThread(const scheduler::TickClock::time_point now, const ThreadParameters& threadParameters,
-		SequenceAsserter& sequenceAsserter, scheduler::TickClock::duration& timePointDeviation)
+TestThread makeTestThread(const TickClock::time_point now, const ThreadParameters& threadParameters,
+		SequenceAsserter& sequenceAsserter, TickClock::duration& timePointDeviation)
 {
 	return scheduler::makeStaticThread<testThreadStackSize>(1, thread,
-			now + scheduler::TickClock::duration{UINT8_MAX - threadParameters.first + timePointOffset},
-			std::ref(sequenceAsserter), static_cast<unsigned int>(threadParameters.second),
-			std::ref(timePointDeviation));
+			now + TickClock::duration{UINT8_MAX - threadParameters.first + timePointOffset}, std::ref(sequenceAsserter),
+			static_cast<unsigned int>(threadParameters.second), std::ref(timePointDeviation));
 }
 
 }	// namespace
@@ -114,8 +113,8 @@ bool ThreadSleepUntilTestCase::run_() const
 	for (const auto& phase : priorityTestPhases)
 	{
 		SequenceAsserter sequenceAsserter;
-		std::array<scheduler::TickClock::duration, totalThreads> timePointDeviations {{}};
-		const auto now = scheduler::TickClock::now();
+		std::array<TickClock::duration, totalThreads> timePointDeviations {{}};
+		const auto now = TickClock::now();
 
 		std::array<TestThread, totalThreads> threads
 		{{
@@ -145,7 +144,7 @@ bool ThreadSleepUntilTestCase::run_() const
 			return false;
 
 		for (const auto& timePointDeviation : timePointDeviations)
-			if (timePointDeviation != scheduler::TickClock::duration{})
+			if (timePointDeviation != TickClock::duration{})
 				return false;
 	}
 

@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-10-25
+ * \date 2014-10-27
  */
 
 #ifndef TEST_WASTETIME_HPP_
@@ -30,7 +30,7 @@ namespace test
  * \param [in] duration is the duration of time to waste
  */
 
-void wasteTime(scheduler::TickClock::duration duration);
+void wasteTime(TickClock::duration duration);
 
 /**
  * \brief Wastes time.
@@ -46,7 +46,7 @@ void wasteTime(scheduler::TickClock::duration duration);
 template<typename Rep, typename Period>
 void wasteTime(const std::chrono::duration<Rep, Period> duration)
 {
-	wasteTime(std::chrono::duration_cast<scheduler::TickClock::duration>(duration));
+	wasteTime(std::chrono::duration_cast<TickClock::duration>(duration));
 }
 
 /**
@@ -55,7 +55,7 @@ void wasteTime(const std::chrono::duration<Rep, Period> duration)
  * \param [in] timePoint is the time point at which the function will return
  */
 
-void wasteTime(scheduler::TickClock::time_point timePoint);
+void wasteTime(TickClock::time_point timePoint);
 
 /**
  * \brief Wastes time.
@@ -66,9 +66,9 @@ void wasteTime(scheduler::TickClock::time_point timePoint);
  */
 
 template<typename Duration>
-void wasteTime(const std::chrono::time_point<scheduler::TickClock, Duration> timePoint)
+void wasteTime(const std::chrono::time_point<TickClock, Duration> timePoint)
 {
-	wasteTime(std::chrono::time_point_cast<scheduler::TickClock::duration>(timePoint));
+	wasteTime(std::chrono::time_point_cast<TickClock::duration>(timePoint));
 }
 
 }	// namespace test

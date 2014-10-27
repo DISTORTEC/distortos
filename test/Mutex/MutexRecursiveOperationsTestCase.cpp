@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-10-25
+ * \date 2014-10-27
  */
 
 #include "MutexRecursiveOperationsTestCase.hpp"
@@ -35,7 +35,7 @@ namespace
 +---------------------------------------------------------------------------------------------------------------------*/
 
 /// single duration used in tests
-constexpr auto singleDuration = distortos::scheduler::TickClock::duration{1};
+constexpr auto singleDuration = distortos::TickClock::duration{1};
 
 }	// namespace
 
@@ -45,7 +45,7 @@ constexpr auto singleDuration = distortos::scheduler::TickClock::duration{1};
 
 bool MutexRecursiveOperationsTestCase::run_() const
 {
-	using distortos::scheduler::TickClock;
+	using distortos::TickClock;
 
 	distortos::scheduler::Mutex mutex {distortos::scheduler::Mutex::Type::Recursive};
 

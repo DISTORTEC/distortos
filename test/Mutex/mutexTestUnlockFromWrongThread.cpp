@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-10-25
+ * \date 2014-10-27
  */
 
 #include "mutexTestUnlockFromWrongThread.hpp"
@@ -44,7 +44,7 @@ constexpr size_t testThreadStackSize {256};
 
 bool mutexTestUnlockFromWrongThread(distortos::scheduler::Mutex& mutex)
 {
-	using distortos::scheduler::TickClock;
+	using distortos::TickClock;
 	using distortos::scheduler::makeStaticThread;
 
 	// unlock from a wrong thread - must fail with EPERM immediately
@@ -52,7 +52,7 @@ bool mutexTestUnlockFromWrongThread(distortos::scheduler::Mutex& mutex)
 	auto unlockThreadObject = makeStaticThread<testThreadStackSize>(UINT8_MAX,
 			[&mutex, &sharedRet]()
 			{
-				using distortos::scheduler::TickClock;
+				using distortos::TickClock;
 
 				const auto start = TickClock::now();
 				const auto ret = mutex.unlock();

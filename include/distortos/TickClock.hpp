@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-10-25
+ * \date 2014-10-27
  */
 
 #ifndef INCLUDE_DISTORTOS_TICKCLOCK_HPP_
@@ -19,9 +19,6 @@
 #include <chrono>
 
 namespace distortos
-{
-
-namespace scheduler
 {
 
 /// TickClock is a std::chrono clock, equivalent of std::chrono::steady_clock
@@ -47,8 +44,6 @@ public:
 	/// this is a steady clock - it cannot be adjusted
 	static constexpr bool is_steady = true;
 };
-
-}	// namespace scheduler
 
 }	// namespace distortos
 

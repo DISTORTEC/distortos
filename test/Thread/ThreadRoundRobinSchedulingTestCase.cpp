@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-10-25
+ * \date 2014-10-27
  */
 
 #include "ThreadRoundRobinSchedulingTestCase.hpp"
@@ -81,9 +81,9 @@ void thread(SequenceAsserter& sequenceAsserter, const unsigned int sequencePoint
 
 		// this loop waits for a context switch, which is detected by checking the time between subsequent reads of
 		// TickClock - if the thread is not preempted, max difference is 1 tick
-		auto previous = scheduler::TickClock::now();
+		auto previous = TickClock::now();
 		decltype(previous) now;
-		while ((now = scheduler::TickClock::now()) - previous <= scheduler::TickClock::duration{1})
+		while ((now = TickClock::now()) - previous <= TickClock::duration{1})
 			previous = now;
 	}
 }
@@ -139,7 +139,7 @@ bool ThreadRoundRobinSchedulingTestCase::run_() const
 				while (dummyThreadTerminate != true);
 			});
 
-	decltype(scheduler::TickClock::now()) testStart;
+	decltype(TickClock::now()) testStart;
 
 	{
 		architecture::InterruptMaskingLock interruptMaskingLock;
@@ -152,13 +152,13 @@ bool ThreadRoundRobinSchedulingTestCase::run_() const
 
 		dummyThread.start();
 
-		testStart = scheduler::TickClock::now();
+		testStart = TickClock::now();
 	}
 
 	for (auto& thread : threads)
 		thread.join();
 
-	const auto testDuration = scheduler::TickClock::now() - testStart;
+	const auto testDuration = TickClock::now() - testStart;
 
 	dummyThreadTerminate = true;
 	dummyThread.join();
