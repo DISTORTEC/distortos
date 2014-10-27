@@ -145,7 +145,7 @@ bool ThreadRoundRobinSchedulingTestCase::run_() const
 		architecture::InterruptMaskingLock interruptMaskingLock;
 
 		// wait for beginning of next tick - test threads should be started in the same tick
-		scheduler::ThisThread::sleepFor({});
+		ThisThread::sleepFor({});
 
 		for (auto& thread : threads)
 			thread.start();

@@ -75,7 +75,7 @@ void thread(const uint8_t sleepFor, SequenceAsserter& sequenceAsserter, const un
 	const auto sleepForDuration = TickClock::duration{sleepFor};
 	const auto sleepStart = TickClock::now();
 
-	scheduler::ThisThread::sleepFor(sleepForDuration);
+	ThisThread::sleepFor(sleepForDuration);
 
 	const auto durationSlept = TickClock::now() - sleepStart;
 	sequenceAsserter.sequencePoint(sequencePoint);
@@ -133,7 +133,7 @@ bool ThreadSleepForTestCase::run_() const
 			architecture::InterruptMaskingLock interruptMaskingLock;
 
 			// wait for beginning of next tick - test threads should be started in the same tick
-			scheduler::ThisThread::sleepFor({});
+			ThisThread::sleepFor({});
 
 			for (auto& thread : threads)
 				thread.start();

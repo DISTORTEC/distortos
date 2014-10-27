@@ -75,7 +75,7 @@ using TestThread = decltype(scheduler::makeStaticThread<testThreadStackSize>({},
 void thread(const TickClock::time_point sleepUntil, SequenceAsserter& sequenceAsserter,
 		const unsigned int sequencePoint, TickClock::duration& timePointDeviation)
 {
-	scheduler::ThisThread::sleepUntil(sleepUntil);
+	ThisThread::sleepUntil(sleepUntil);
 
 	timePointDeviation = TickClock::now() - sleepUntil;
 	sequenceAsserter.sequencePoint(sequencePoint);

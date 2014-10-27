@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-10-25
+ * \date 2014-10-27
  */
 
 #include "distortos/ThisThread.hpp"
@@ -17,9 +17,6 @@
 #include "distortos/scheduler/Scheduler.hpp"
 
 namespace distortos
-{
-
-namespace scheduler
 {
 
 namespace ThisThread
@@ -31,12 +28,12 @@ namespace ThisThread
 
 uint8_t getPriority()
 {
-	return schedulerInstance.getCurrentThreadControlBlock().getPriority();
+	return scheduler::schedulerInstance.getCurrentThreadControlBlock().getPriority();
 }
 
 void setPriority(const uint8_t priority, const bool alwaysBehind)
 {
-	schedulerInstance.getCurrentThreadControlBlock().setPriority(priority, alwaysBehind);
+	scheduler::schedulerInstance.getCurrentThreadControlBlock().setPriority(priority, alwaysBehind);
 }
 
 void sleepFor(const TickClock::duration duration)
@@ -46,18 +43,16 @@ void sleepFor(const TickClock::duration duration)
 
 void sleepUntil(const TickClock::time_point timePoint)
 {
-	ThreadControlBlockList sleepingList {schedulerInstance.getThreadControlBlockListAllocator(),
-			ThreadControlBlock::State::Sleeping};
-	schedulerInstance.blockUntil(sleepingList, timePoint);
+	scheduler::ThreadControlBlockList sleepingList {scheduler::schedulerInstance.getThreadControlBlockListAllocator(),
+			scheduler::ThreadControlBlock::State::Sleeping};
+	scheduler::schedulerInstance.blockUntil(sleepingList, timePoint);
 }
 
 void yield()
 {
-	schedulerInstance.yield();
+	scheduler::schedulerInstance.yield();
 }
 
 }	// namespace ThisThread
-
-}	// namespace scheduler
 
 }	// namespace distortos
