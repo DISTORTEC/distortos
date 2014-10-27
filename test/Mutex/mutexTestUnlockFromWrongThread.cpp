@@ -44,9 +44,6 @@ constexpr size_t testThreadStackSize {256};
 
 bool mutexTestUnlockFromWrongThread(Mutex& mutex)
 {
-	using distortos::TickClock;
-	using distortos::scheduler::makeStaticThread;
-
 	// unlock from a wrong thread - must fail with EPERM immediately
 	bool sharedRet {};
 	auto unlockThreadObject = makeStaticThread<testThreadStackSize>(UINT8_MAX,

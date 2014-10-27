@@ -118,9 +118,6 @@ bool testUnlock(Mutex& mutex)
 
 bool phase1(const Mutex::Type type)
 {
-	using distortos::TickClock;
-	using distortos::scheduler::makeStaticThread;
-
 	Mutex mutex{type};
 	bool sharedRet {};
 	Mutex semaphoreMutex;

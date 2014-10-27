@@ -49,7 +49,7 @@ void thread(uint8_t sleepFor, SequenceAsserter& sequenceAsserter, unsigned int s
 +---------------------------------------------------------------------------------------------------------------------*/
 
 /// type of test thread
-using TestThread = decltype(scheduler::makeStaticThread<testThreadStackSize>({}, thread, std::declval<uint8_t>(),
+using TestThread = decltype(makeStaticThread<testThreadStackSize>({}, thread, std::declval<uint8_t>(),
 		std::ref(std::declval<SequenceAsserter&>()), std::declval<unsigned int>(),
 		std::ref(std::declval<TickClock::duration&>())));
 
@@ -97,9 +97,9 @@ void thread(const uint8_t sleepFor, SequenceAsserter& sequenceAsserter, const un
 TestThread makeTestThread(const ThreadParameters& threadParameters, SequenceAsserter& sequenceAsserter,
 		TickClock::duration& durationDeviation)
 {
-	return scheduler::makeStaticThread<testThreadStackSize>(1, thread,
-			static_cast<uint8_t>(UINT8_MAX - threadParameters.first), std::ref(sequenceAsserter),
-			static_cast<unsigned int>(threadParameters.second), std::ref(durationDeviation));
+	return makeStaticThread<testThreadStackSize>(1, thread, static_cast<uint8_t>(UINT8_MAX - threadParameters.first),
+			std::ref(sequenceAsserter), static_cast<unsigned int>(threadParameters.second),
+			std::ref(durationDeviation));
 }
 
 }	// namespace

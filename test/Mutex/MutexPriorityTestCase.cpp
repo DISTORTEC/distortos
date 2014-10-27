@@ -46,7 +46,7 @@ void thread(SequenceAsserter& sequenceAsserter, unsigned int sequencePoint, Mute
 +---------------------------------------------------------------------------------------------------------------------*/
 
 /// type of test thread
-using TestThread = decltype(scheduler::makeStaticThread<testThreadStackSize>({}, thread,
+using TestThread = decltype(makeStaticThread<testThreadStackSize>({}, thread,
 		std::ref(std::declval<SequenceAsserter&>()), std::declval<unsigned int>(), std::ref(std::declval<Mutex&>())));
 
 /*---------------------------------------------------------------------------------------------------------------------+
@@ -82,8 +82,8 @@ void thread(SequenceAsserter& sequenceAsserter, const unsigned int sequencePoint
 
 TestThread makeTestThread(const ThreadParameters& threadParameters, SequenceAsserter& sequenceAsserter, Mutex& mutex)
 {
-	return scheduler::makeStaticThread<testThreadStackSize>(threadParameters.first, thread,
-			std::ref(sequenceAsserter), static_cast<unsigned int>(threadParameters.second), std::ref(mutex));
+	return makeStaticThread<testThreadStackSize>(threadParameters.first, thread, std::ref(sequenceAsserter),
+			static_cast<unsigned int>(threadParameters.second), std::ref(mutex));
 }
 
 }	// namespace

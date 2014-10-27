@@ -56,7 +56,7 @@ void thread(SequenceAsserter& sequenceAsserter, unsigned int sequencePoint, unsi
 +---------------------------------------------------------------------------------------------------------------------*/
 
 /// type of test thread
-using TestThread = decltype(scheduler::makeStaticThread<testThreadStackSize>({}, thread,
+using TestThread = decltype(makeStaticThread<testThreadStackSize>({}, thread,
 		std::ref(std::declval<SequenceAsserter&>()), std::declval<unsigned int>(), std::declval<unsigned int>()));
 
 /*---------------------------------------------------------------------------------------------------------------------+
@@ -101,7 +101,7 @@ void thread(SequenceAsserter& sequenceAsserter, const unsigned int sequencePoint
 TestThread makeTestThread(SequenceAsserter& sequenceAsserter, const unsigned int sequencePoint,
 		const unsigned int sequenceStep)
 {
-	return scheduler::makeStaticThread<testThreadStackSize>(testThreadPriority, thread, std::ref(sequenceAsserter),
+	return makeStaticThread<testThreadStackSize>(testThreadPriority, thread, std::ref(sequenceAsserter),
 			static_cast<unsigned int>(sequencePoint), static_cast<unsigned int>(sequenceStep));
 }
 
@@ -133,7 +133,7 @@ bool ThreadRoundRobinSchedulingTestCase::run_() const
 
 	// this thread is needed, because test threads need at least one other thread (which would preempt them) to
 	// exit their wait loop, so there is a problem with ending the very last iteration of the very last thread...
-	auto dummyThread = scheduler::makeStaticThread<testThreadStackSize>(testThreadPriority,
+	auto dummyThread = makeStaticThread<testThreadStackSize>(testThreadPriority,
 			[&dummyThreadTerminate]()
 			{
 				while (dummyThreadTerminate != true);

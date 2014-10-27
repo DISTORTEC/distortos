@@ -52,9 +52,9 @@ void thread(TickClock::time_point sleepUntil, SequenceAsserter& sequenceAsserter
 +---------------------------------------------------------------------------------------------------------------------*/
 
 /// type of test thread
-using TestThread = decltype(scheduler::makeStaticThread<testThreadStackSize>({}, thread,
-		std::declval<TickClock::time_point>(), std::ref(std::declval<SequenceAsserter&>()),
-		std::declval<unsigned int>(), std::ref(std::declval<TickClock::duration&>())));
+using TestThread = decltype(makeStaticThread<testThreadStackSize>({}, thread, std::declval<TickClock::time_point>(),
+		std::ref(std::declval<SequenceAsserter&>()), std::declval<unsigned int>(),
+		std::ref(std::declval<TickClock::duration&>())));
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | local functions
@@ -97,7 +97,7 @@ void thread(const TickClock::time_point sleepUntil, SequenceAsserter& sequenceAs
 TestThread makeTestThread(const TickClock::time_point now, const ThreadParameters& threadParameters,
 		SequenceAsserter& sequenceAsserter, TickClock::duration& timePointDeviation)
 {
-	return scheduler::makeStaticThread<testThreadStackSize>(1, thread,
+	return makeStaticThread<testThreadStackSize>(1, thread,
 			now + TickClock::duration{UINT8_MAX - threadParameters.first + timePointOffset}, std::ref(sequenceAsserter),
 			static_cast<unsigned int>(threadParameters.second), std::ref(timePointDeviation));
 }

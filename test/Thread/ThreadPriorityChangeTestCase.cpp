@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-10-25
+ * \date 2014-10-27
  */
 
 #include "ThreadPriorityChangeTestCase.hpp"
@@ -48,7 +48,7 @@ void thread(SequenceAsserter& sequenceAsserter, unsigned int sequencePoint);
 +---------------------------------------------------------------------------------------------------------------------*/
 
 /// type of test thread
-using TestThread = decltype(scheduler::makeStaticThread<testThreadStackSize>({}, thread,
+using TestThread = decltype(makeStaticThread<testThreadStackSize>({}, thread,
 		std::ref(std::declval<SequenceAsserter&>()), std::declval<unsigned int>()));
 
 /*---------------------------------------------------------------------------------------------------------------------+
@@ -81,7 +81,7 @@ void thread(SequenceAsserter& sequenceAsserter, const unsigned int sequencePoint
 
 TestThread makeTestThread(const uint8_t priority, SequenceAsserter& sequenceAsserter, const unsigned int sequencePoint)
 {
-	return scheduler::makeStaticThread<testThreadStackSize>(priority, thread, std::ref(sequenceAsserter),
+	return makeStaticThread<testThreadStackSize>(priority, thread, std::ref(sequenceAsserter),
 			static_cast<unsigned int>(sequencePoint));
 }
 
@@ -93,8 +93,6 @@ TestThread makeTestThread(const uint8_t priority, SequenceAsserter& sequenceAsse
 
 bool ThreadPriorityChangeTestCase::run_() const
 {
-	using namespace scheduler;
-
 	const auto thisThreadPriority = ThisThread::getPriority();
 	const decltype(thisThreadPriority) testThreadPriority = thisThreadPriority / 2;
 

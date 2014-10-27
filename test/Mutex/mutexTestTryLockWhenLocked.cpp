@@ -44,8 +44,6 @@ constexpr size_t testThreadStackSize {256};
 
 bool mutexTestTryLockWhenLocked(Mutex& mutex)
 {
-	using distortos::scheduler::makeStaticThread;
-
 	bool sharedRet {};
 	auto tryLockThreadObject = makeStaticThread<testThreadStackSize>(UINT8_MAX,
 			[&mutex, &sharedRet]()
