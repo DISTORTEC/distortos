@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-10-25
+ * \date 2014-10-27
  */
 
 #include "distortos/Mutex.hpp"
@@ -23,15 +23,13 @@
 namespace distortos
 {
 
-namespace scheduler
-{
-
 /*---------------------------------------------------------------------------------------------------------------------+
 | public functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
 Mutex::Mutex(const Type type) :
-		blockedList_{schedulerInstance.getThreadControlBlockListAllocator(), ThreadControlBlock::State::BlockedOnMutex},
+		blockedList_{scheduler::schedulerInstance.getThreadControlBlockListAllocator(),
+				scheduler::ThreadControlBlock::State::BlockedOnMutex},
 		owner_{},
 		recursiveLocksCount_{},
 		type_{type}
@@ -47,7 +45,7 @@ int Mutex::lock()
 	if (ret != EBUSY)	// lock successful, recursive lock not possible or deadlock detected?
 		return ret;
 
-	schedulerInstance.block(blockedList_);
+	scheduler::schedulerInstance.block(blockedList_);
 	return 0;
 }
 
@@ -71,7 +69,7 @@ int Mutex::tryLockUntil(const TickClock::time_point timePoint)
 	if (ret != EBUSY)	// lock successful, recursive lock not possible or deadlock detected?
 		return ret;
 
-	return schedulerInstance.blockUntil(blockedList_, timePoint);
+	return scheduler::schedulerInstance.blockUntil(blockedList_, timePoint);
 }
 
 int Mutex::unlock()
@@ -80,7 +78,7 @@ int Mutex::unlock()
 
 	if (type_ != Type::Normal)
 	{
-		if (owner_ != &schedulerInstance.getCurrentThreadControlBlock())
+		if (owner_ != &scheduler::schedulerInstance.getCurrentThreadControlBlock())
 			return EPERM;
 
 		if (type_ == Type::Recursive && recursiveLocksCount_ != 0)
@@ -93,7 +91,7 @@ int Mutex::unlock()
 	if (blockedList_.empty() == false)
 	{
 		owner_ = &blockedList_.begin()->get();	// pass ownership to the unblocked thread
-		schedulerInstance.unblock(blockedList_.begin());
+		scheduler::schedulerInstance.unblock(blockedList_.begin());
 	}
 	else
 		owner_ = nullptr;
@@ -109,14 +107,14 @@ int Mutex::tryLockInternal()
 {
 	if (owner_ == nullptr)
 	{
-		owner_ = &schedulerInstance.getCurrentThreadControlBlock();
+		owner_ = &scheduler::schedulerInstance.getCurrentThreadControlBlock();
 		return 0;
 	}
 
 	if (type_ == Type::Normal)
 		return EBUSY;
 
-	if (owner_ == &schedulerInstance.getCurrentThreadControlBlock())
+	if (owner_ == &scheduler::schedulerInstance.getCurrentThreadControlBlock())
 	{
 		if (type_ == Type::ErrorChecking)
 			return EDEADLK;
@@ -133,7 +131,5 @@ int Mutex::tryLockInternal()
 
 	return EBUSY;
 }
-
-}	// namespace scheduler
 
 }	// namespace distortos

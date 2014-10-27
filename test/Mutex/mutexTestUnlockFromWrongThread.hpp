@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-09-28
+ * \date 2014-10-27
  */
 
 #ifndef TEST_MUTEX_MUTEXTESTUNLOCKFROMWRONGTHREAD_HPP_
@@ -17,12 +17,7 @@
 namespace distortos
 {
 
-namespace scheduler
-{
-
 class Mutex;
-
-}	// namespace scheduler
 
 namespace test
 {
@@ -37,7 +32,7 @@ namespace test
  * \return true if test succeeded, false otherwise
  */
 
-bool mutexTestUnlockFromWrongThread(distortos::scheduler::Mutex& mutex);
+bool mutexTestUnlockFromWrongThread(Mutex& mutex);
 
 }	// namespace test
 

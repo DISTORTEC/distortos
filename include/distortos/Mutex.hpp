@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-10-25
+ * \date 2014-10-27
  */
 
 #ifndef INCLUDE_DISTORTOS_MUTEX_HPP_
@@ -18,9 +18,6 @@
 #include "distortos/TickClock.hpp"
 
 namespace distortos
-{
-
-namespace scheduler
 {
 
 /**
@@ -243,10 +240,10 @@ private:
 	int tryLockInternal();
 
 	/// ThreadControlBlock objects blocked on this mutex
-	ThreadControlBlockList blockedList_;
+	scheduler::ThreadControlBlockList blockedList_;
 
 	/// owner of the mutex
-	ThreadControlBlock* owner_;
+	scheduler::ThreadControlBlock* owner_;
 
 	/// number of recursive locks, used when mutex type is Recursive
 	RecursiveLocksCount recursiveLocksCount_;
@@ -254,8 +251,6 @@ private:
 	/// type of mutex
 	Type type_;
 };
-
-}	// namespace scheduler
 
 }	// namespace distortos
 

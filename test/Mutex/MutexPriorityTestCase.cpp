@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-10-25
+ * \date 2014-10-27
  */
 
 #include "MutexPriorityTestCase.hpp"
@@ -39,7 +39,7 @@ constexpr size_t testThreadStackSize {256};
 | local functions' declarations
 +---------------------------------------------------------------------------------------------------------------------*/
 
-void thread(SequenceAsserter& sequenceAsserter, unsigned int sequencePoint, scheduler::Mutex& mutex);
+void thread(SequenceAsserter& sequenceAsserter, unsigned int sequencePoint, Mutex& mutex);
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | local types
@@ -47,8 +47,7 @@ void thread(SequenceAsserter& sequenceAsserter, unsigned int sequencePoint, sche
 
 /// type of test thread
 using TestThread = decltype(scheduler::makeStaticThread<testThreadStackSize>({}, thread,
-		std::ref(std::declval<SequenceAsserter&>()), std::declval<unsigned int>(),
-		std::ref(std::declval<scheduler::Mutex&>())));
+		std::ref(std::declval<SequenceAsserter&>()), std::declval<unsigned int>(), std::ref(std::declval<Mutex&>())));
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | local functions
@@ -64,7 +63,7 @@ using TestThread = decltype(scheduler::makeStaticThread<testThreadStackSize>({},
  * \param [in] mutex is a reference to shared mutex
  */
 
-void thread(SequenceAsserter& sequenceAsserter, const unsigned int sequencePoint, scheduler::Mutex& mutex)
+void thread(SequenceAsserter& sequenceAsserter, const unsigned int sequencePoint, Mutex& mutex)
 {
 	mutex.lock();
 	sequenceAsserter.sequencePoint(sequencePoint);
@@ -81,8 +80,7 @@ void thread(SequenceAsserter& sequenceAsserter, const unsigned int sequencePoint
  * \return constructed TestThread object
  */
 
-TestThread makeTestThread(const ThreadParameters& threadParameters,
-		SequenceAsserter& sequenceAsserter, scheduler::Mutex& mutex)
+TestThread makeTestThread(const ThreadParameters& threadParameters, SequenceAsserter& sequenceAsserter, Mutex& mutex)
 {
 	return scheduler::makeStaticThread<testThreadStackSize>(threadParameters.first, thread,
 			std::ref(sequenceAsserter), static_cast<unsigned int>(threadParameters.second), std::ref(mutex));
@@ -99,7 +97,7 @@ bool MutexPriorityTestCase::run_() const
 	for (const auto& phase : priorityTestPhases)
 	{
 		SequenceAsserter sequenceAsserter;
-		scheduler::Mutex mutex;
+		Mutex mutex;
 
 		std::array<TestThread, totalThreads> threads
 		{{

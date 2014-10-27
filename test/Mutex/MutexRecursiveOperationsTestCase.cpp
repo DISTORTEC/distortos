@@ -35,7 +35,7 @@ namespace
 +---------------------------------------------------------------------------------------------------------------------*/
 
 /// single duration used in tests
-constexpr auto singleDuration = distortos::TickClock::duration{1};
+constexpr auto singleDuration = TickClock::duration{1};
 
 }	// namespace
 
@@ -47,7 +47,7 @@ bool MutexRecursiveOperationsTestCase::run_() const
 {
 	using distortos::TickClock;
 
-	distortos::scheduler::Mutex mutex {distortos::scheduler::Mutex::Type::Recursive};
+	Mutex mutex {Mutex::Type::Recursive};
 
 	size_t lockCount {};
 

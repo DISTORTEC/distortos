@@ -35,7 +35,7 @@ namespace
 +---------------------------------------------------------------------------------------------------------------------*/
 
 /// single duration used in tests
-constexpr auto singleDuration = distortos::TickClock::duration{1};
+constexpr auto singleDuration = TickClock::duration{1};
 
 /// size of stack for test thread, bytes
 constexpr size_t testThreadStackSize {256};
@@ -60,7 +60,7 @@ constexpr size_t testThreadStackSize {256};
  * \param [in] semaphoreMutex is a mutex used as semaphore, must be locked
  */
 
-void lockUnlockThread(distortos::scheduler::Mutex& mutex, bool& sharedRet, distortos::scheduler::Mutex& semaphoreMutex)
+void lockUnlockThread(Mutex& mutex, bool& sharedRet, Mutex& semaphoreMutex)
 {
 	using distortos::TickClock;
 
@@ -93,7 +93,7 @@ void lockUnlockThread(distortos::scheduler::Mutex& mutex, bool& sharedRet, disto
  * \return true if test succeeded, false otherwise
  */
 
-bool testUnlock(distortos::scheduler::Mutex& mutex)
+bool testUnlock(Mutex& mutex)
 {
 	using distortos::TickClock;
 
@@ -116,14 +116,14 @@ bool testUnlock(distortos::scheduler::Mutex& mutex)
  * \return true if test succeeded, false otherwise
  */
 
-bool phase1(const distortos::scheduler::Mutex::Type type)
+bool phase1(const Mutex::Type type)
 {
 	using distortos::TickClock;
 	using distortos::scheduler::makeStaticThread;
 
-	distortos::scheduler::Mutex mutex{type};
+	Mutex mutex{type};
 	bool sharedRet {};
-	distortos::scheduler::Mutex semaphoreMutex;
+	Mutex semaphoreMutex;
 	semaphoreMutex.lock();
 
 	auto lockUnlockThreadObject = makeStaticThread<testThreadStackSize>(UINT8_MAX, lockUnlockThread,
@@ -179,11 +179,11 @@ bool phase1(const distortos::scheduler::Mutex::Type type)
  * \return true if test succeeded, false otherwise
  */
 
-bool phase2(distortos::scheduler::Mutex::Type type)
+bool phase2(Mutex::Type type)
 {
 	using distortos::TickClock;
 
-	distortos::scheduler::Mutex mutex{type};
+	Mutex mutex{type};
 
 	{
 		// mutex is unlocked, so tryLock() must succeed immediately
@@ -259,11 +259,11 @@ bool phase2(distortos::scheduler::Mutex::Type type)
 
 bool MutexOperationsTestCase::run_() const
 {
-	const static distortos::scheduler::Mutex::Type types[]
+	const static Mutex::Type types[]
 	{
-			distortos::scheduler::Mutex::Type::Normal,
-			distortos::scheduler::Mutex::Type::ErrorChecking,
-			distortos::scheduler::Mutex::Type::Recursive
+			Mutex::Type::Normal,
+			Mutex::Type::ErrorChecking,
+			Mutex::Type::Recursive
 	};
 
 	for (const auto type : types)

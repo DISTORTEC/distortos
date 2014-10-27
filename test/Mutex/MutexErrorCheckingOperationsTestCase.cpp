@@ -46,7 +46,7 @@ bool MutexErrorCheckingOperationsTestCase::run_() const
 {
 	using distortos::TickClock;
 
-	distortos::scheduler::Mutex mutex {distortos::scheduler::Mutex::Type::ErrorChecking};
+	distortos::Mutex mutex {distortos::Mutex::Type::ErrorChecking};
 
 	{
 		// simple lock - must succeed immediately

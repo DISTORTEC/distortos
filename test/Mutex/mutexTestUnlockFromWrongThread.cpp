@@ -42,7 +42,7 @@ constexpr size_t testThreadStackSize {256};
 | global functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-bool mutexTestUnlockFromWrongThread(distortos::scheduler::Mutex& mutex)
+bool mutexTestUnlockFromWrongThread(Mutex& mutex)
 {
 	using distortos::TickClock;
 	using distortos::scheduler::makeStaticThread;

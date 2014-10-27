@@ -42,7 +42,7 @@ constexpr size_t testThreadStackSize {256};
 | global functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-bool mutexTestTryLockWhenLocked(distortos::scheduler::Mutex& mutex)
+bool mutexTestTryLockWhenLocked(Mutex& mutex)
 {
 	using distortos::scheduler::makeStaticThread;
 
