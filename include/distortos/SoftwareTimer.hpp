@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-10-25
+ * \date 2014-10-27
  */
 
 #ifndef INCLUDE_DISTORTOS_SOFTWARETIMER_HPP_
@@ -19,9 +19,6 @@
 namespace distortos
 {
 
-namespace scheduler
-{
-
 /**
  * \brief SoftwareTimer class is a templated interface for software timer
  *
@@ -30,7 +27,7 @@ namespace scheduler
  */
 
 template<typename Function, typename... Args>
-class SoftwareTimer : private SoftwareTimerControlBlock
+class SoftwareTimer : private scheduler::SoftwareTimerControlBlock
 {
 public:
 
@@ -84,8 +81,6 @@ SoftwareTimer<Function, Args...> makeSoftwareTimer(Function&& function, Args&&..
 {
 	return {std::forward<Function>(function), std::forward<Args>(args)...};
 }
-
-}	// namespace scheduler
 
 }	// namespace distortos
 
