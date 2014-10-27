@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-10-25
+ * \date 2014-10-27
  */
 
 #include "distortos/ConditionVariable.hpp"
@@ -22,19 +22,13 @@
 namespace distortos
 {
 
-namespace scheduler
-{
-
 /*---------------------------------------------------------------------------------------------------------------------+
 | public functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
 ConditionVariable::ConditionVariable() :
-		blockedList_
-		{
-				schedulerInstance.getThreadControlBlockListAllocator(),
-				ThreadControlBlock::State::BlockedOnConditionVariable
-		}
+		blockedList_{scheduler::schedulerInstance.getThreadControlBlockListAllocator(),
+				scheduler::ThreadControlBlock::State::BlockedOnConditionVariable}
 {
 
 }
@@ -44,7 +38,7 @@ void ConditionVariable::notifyAll()
 	architecture::InterruptMaskingLock interruptMaskingLock;
 
 	while (blockedList_.empty() == false)
-		schedulerInstance.unblock(blockedList_.begin());
+		scheduler::schedulerInstance.unblock(blockedList_.begin());
 }
 
 void ConditionVariable::notifyOne()
@@ -52,7 +46,7 @@ void ConditionVariable::notifyOne()
 	architecture::InterruptMaskingLock interruptMaskingLock;
 
 	if (blockedList_.empty() == false)
-		schedulerInstance.unblock(blockedList_.begin());
+		scheduler::schedulerInstance.unblock(blockedList_.begin());
 }
 
 void ConditionVariable::wait(Mutex& mutex)
@@ -61,14 +55,12 @@ void ConditionVariable::wait(Mutex& mutex)
 		architecture::InterruptMaskingLock interruptMaskingLock;
 
 		mutex.unlock();
-		schedulerInstance.block(blockedList_);
+		scheduler::schedulerInstance.block(blockedList_);
 	}
 
 	// --- blocked ---
 
 	mutex.lock();
 }
-
-}	// namespace scheduler
 
 }	// namespace distortos

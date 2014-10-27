@@ -21,9 +21,6 @@ namespace distortos
 
 class Mutex;
 
-namespace scheduler
-{
-
 /**
  * \brief ConditionVariable is an advanced synchronization primitive
  *
@@ -112,10 +109,8 @@ public:
 private:
 
 	/// ThreadControlBlock objects blocked on this condition variable
-	ThreadControlBlockList blockedList_;
+	scheduler::ThreadControlBlockList blockedList_;
 };
-
-}	// namespace scheduler
 
 }	// namespace distortos
 
