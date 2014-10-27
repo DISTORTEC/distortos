@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-10-25
+ * \date 2014-10-27
  */
 
 #ifndef INCLUDE_DISTORTOS_SEMAPHORE_HPP_
@@ -17,9 +17,6 @@
 #include "distortos/scheduler/ThreadControlBlockList.hpp"
 
 namespace distortos
-{
-
-namespace scheduler
 {
 
 /**
@@ -116,13 +113,11 @@ public:
 private:
 
 	/// ThreadControlBlock objects blocked on this semaphore
-	ThreadControlBlockList blockedList_;
+	scheduler::ThreadControlBlockList blockedList_;
 
 	/// internal value of the semaphore
 	int value_;
 };
-
-}	// namespace scheduler
 
 }	// namespace distortos
 
