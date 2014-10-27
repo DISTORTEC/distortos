@@ -49,8 +49,6 @@ bool mutexTestUnlockFromWrongThread(Mutex& mutex)
 	auto unlockThreadObject = makeStaticThread<testThreadStackSize>(UINT8_MAX,
 			[&mutex, &sharedRet]()
 			{
-				using distortos::TickClock;
-
 				const auto start = TickClock::now();
 				const auto ret = mutex.unlock();
 				sharedRet = ret == EPERM && start == TickClock::now();

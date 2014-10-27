@@ -48,8 +48,6 @@ bool mutexTestTryLockWhenLocked(Mutex& mutex)
 	auto tryLockThreadObject = makeStaticThread<testThreadStackSize>(UINT8_MAX,
 			[&mutex, &sharedRet]()
 			{
-				using distortos::TickClock;
-
 				const auto start = TickClock::now();
 				const auto ret = mutex.tryLock();
 				sharedRet = ret == EBUSY && start == TickClock::now();

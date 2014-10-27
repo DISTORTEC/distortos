@@ -45,8 +45,6 @@ constexpr auto singleDuration = TickClock::duration{1};
 
 bool MutexRecursiveOperationsTestCase::run_() const
 {
-	using distortos::TickClock;
-
 	Mutex mutex {Mutex::Type::Recursive};
 
 	size_t lockCount {};

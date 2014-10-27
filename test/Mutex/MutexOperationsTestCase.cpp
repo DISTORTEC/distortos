@@ -62,8 +62,6 @@ constexpr size_t testThreadStackSize {256};
 
 void lockUnlockThread(Mutex& mutex, bool& sharedRet, Mutex& semaphoreMutex)
 {
-	using distortos::TickClock;
-
 	{
 		// simple lock - must succeed immediately
 		const auto start = TickClock::now();
@@ -95,8 +93,6 @@ void lockUnlockThread(Mutex& mutex, bool& sharedRet, Mutex& semaphoreMutex)
 
 bool testUnlock(Mutex& mutex)
 {
-	using distortos::TickClock;
-
 	waitForNextTick();
 	const auto start = TickClock::now();
 	const auto ret = mutex.unlock();
@@ -178,8 +174,6 @@ bool phase1(const Mutex::Type type)
 
 bool phase2(Mutex::Type type)
 {
-	using distortos::TickClock;
-
 	Mutex mutex{type};
 
 	{

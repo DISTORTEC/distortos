@@ -34,7 +34,7 @@ namespace
 +---------------------------------------------------------------------------------------------------------------------*/
 
 /// single duration used in tests
-constexpr auto singleDuration = distortos::TickClock::duration{1};
+constexpr auto singleDuration = TickClock::duration{1};
 
 }	// namespace
 
@@ -44,9 +44,7 @@ constexpr auto singleDuration = distortos::TickClock::duration{1};
 
 bool MutexErrorCheckingOperationsTestCase::run_() const
 {
-	using distortos::TickClock;
-
-	distortos::Mutex mutex {distortos::Mutex::Type::ErrorChecking};
+	Mutex mutex {Mutex::Type::ErrorChecking};
 
 	{
 		// simple lock - must succeed immediately
