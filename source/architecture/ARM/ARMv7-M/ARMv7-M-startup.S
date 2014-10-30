@@ -120,7 +120,7 @@ Reset_Handler:
 	b		.
 
 /*---------------------------------------------------------------------------------------------------------------------+
-| defaultLowLevelInitialization_() - replacement for undefined lowLevelInitialization{0,1,2}(). This function just
+| defaultLowLevelInitialization() - replacement for undefined lowLevelInitialization{0,1,2}(). This function just
 | returns.
 +---------------------------------------------------------------------------------------------------------------------*/
 
@@ -129,27 +129,27 @@ Reset_Handler:
 .syntax unified
 .thumb
 .thumb_func
-.global defaultLowLevelInitialization_
+.global defaultLowLevelInitialization
 
-defaultLowLevelInitialization_:
+defaultLowLevelInitialization:
 	bx		lr
 
 /*---------------------------------------------------------------------------------------------------------------------+
-| assign undefined lowLevelInitialization0() and/or lowLevelInitialization2() to defaultLowLevelInitialization_()
+| assign undefined lowLevelInitialization0() and/or lowLevelInitialization2() to defaultLowLevelInitialization()
 +---------------------------------------------------------------------------------------------------------------------*/
 
 .weak lowLevelInitialization0
 .global lowLevelInitialization0
-.set lowLevelInitialization0, defaultLowLevelInitialization_
+.set lowLevelInitialization0, defaultLowLevelInitialization
 
 #ifdef __USES_CXX
 
 .weak lowLevelInitialization1
 .global lowLevelInitialization1
-.set lowLevelInitialization1, defaultLowLevelInitialization_
+.set lowLevelInitialization1, defaultLowLevelInitialization
 
 #endif	// __USES_CXX
 
 .weak lowLevelInitialization2
 .global lowLevelInitialization2
-.set lowLevelInitialization2, defaultLowLevelInitialization_
+.set lowLevelInitialization2, defaultLowLevelInitialization
