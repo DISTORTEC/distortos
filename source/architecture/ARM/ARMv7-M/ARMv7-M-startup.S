@@ -90,6 +90,10 @@ Reset_Handler:
 
 #ifdef __USES_CXX
 
+	// Branch to lowLevelInitialization1() function (global and static constructors not yet executed)
+	ldr		r0, =lowLevelInitialization1
+	blx		r0
+
 	// Call C++ constructors for global and static objects
 	ldr		r0, =__libc_init_array
 	blx		r0
@@ -116,8 +120,8 @@ Reset_Handler:
 	b		.
 
 /*---------------------------------------------------------------------------------------------------------------------+
-| defaultLowLevelInitialization_() - replacement for undefined lowLevelInitialization0() and/or
-| lowLevelInitialization2(). This function just returns.
+| defaultLowLevelInitialization_() - replacement for undefined lowLevelInitialization{0,1,2}(). This function just
+| returns.
 +---------------------------------------------------------------------------------------------------------------------*/
 
 .text
@@ -137,6 +141,14 @@ defaultLowLevelInitialization_:
 .weak lowLevelInitialization0
 .global lowLevelInitialization0
 .set lowLevelInitialization0, defaultLowLevelInitialization_
+
+#ifdef __USES_CXX
+
+.weak lowLevelInitialization1
+.global lowLevelInitialization1
+.set lowLevelInitialization1, defaultLowLevelInitialization_
+
+#endif	// __USES_CXX
 
 .weak lowLevelInitialization2
 .global lowLevelInitialization2
