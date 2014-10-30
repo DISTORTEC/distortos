@@ -11,35 +11,36 @@ standards
 - support for various mutex types (normal, error-checking, recursive) and mutex protocols (normal, priority inheritance,
   priority protection) 
 - software timers
+- static design where it is possible and makes sense
 - object-oriented design
 - written in C++11
 
 Targets
 -------
 
-Currently supported targets for distortos are:
+Currently supported targets for *distortos* are:
 
 - ARM Cortex-M3
 
 Motivation and goals
 --------------------
 
-First of all - distortos doesn't aim to be *the smallest* or *the fastest* RTOS available. It's size and execution
+First of all - *distortos* doesn't aim to be *the smallest* or *the fastest* RTOS available. It's size and execution
 overhead are proportional to the features offered. This of course doesn't mean that it uses hundreds of kilobytes of ROM
 and RAM! It uses "just enough" to implement its functionality in a portable and efficient way.
 
 There are many RTOSes available in many flavours and for many platforms, so why another? There are many reasons, but
-generally distortos was born of dissatisfaction with all of these existing solutions... Distortos aims to have *all*
+generally *distortos* was born of dissatisfaction with all of these existing solutions... *Distortos* aims to have *all*
 good features and *none* of the broken ones.
 
 The second important reason is the state of support for various C++ features in existing RTOSes, which usually varies
 from "non existent" to "explicitly disabled" (with minor exceptions of course).
 
 Despite the popular belief, using C++ does not automatically lead to slow/bloated/incomprehensible/... code, which
-distortos will try to demonstrate. Source code of distortos is self-explanatory, simple and consists of short functions.
-This contrasts with "typical" RTOS source code in the form of extremely long functions with very complex control flow
-and heavy use of macros. And that would be the third reason - showing that source code of fully-featured RTOS can be
-*simple*, while still being *efficient*.
+*distortos* will try to demonstrate. Source code of *distortos* is self-explanatory, simple and consists of short
+functions. This contrasts with "typical" RTOS source code in the form of extremely long functions with very complex
+control flow and heavy use of macros. And that would be the third reason - showing that source code of fully-featured
+RTOS can be *simple*, while still being *efficient*.
 
 Last, but not the least, most of these existing RTOSes require the developer to state some values during configuration -
 max number of threads in the system, max number of supported priorities, etc. - this makes no sense at all, because a
@@ -55,7 +56,7 @@ are answered in the [MPL 2.0 FAQ](https://www.mozilla.org/MPL/2.0/FAQ.html).
 Building
 --------
 
-To build distortos you need:
+To build *distortos* you need:
 - [tup](http://gittup.org/tup/) build system, version 0.7.3 or above
 - [arm-none-eabi bleeding-edge-toolchain](https://sourceforge.net/projects/bleeding-edge/), alternatively you can try
   any other arm-none-eabi toolchain, but C++ exception handling code will increase the size of binary
