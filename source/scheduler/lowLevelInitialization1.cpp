@@ -11,7 +11,7 @@
  * \date 2014-10-30
  */
 
-#include "distortos/Thread.hpp"
+#include "distortos/StaticThread.hpp"
 
 #include "distortos/scheduler/getScheduler.hpp"
 #include "distortos/scheduler/Scheduler.hpp"
@@ -36,11 +36,8 @@ namespace
 /// size of idle thread's stack, bytes
 constexpr size_t idleThreadStackSize {128};
 
-/// idle thread's stack
-uint64_t idleThreadStack[idleThreadStackSize / sizeof(uint64_t)];
-
 /// type of idle thread
-using IdleThread = decltype(makeThread(idleThreadStack, sizeof(idleThreadStack), 0, idleThreadFunction));
+using IdleThread = decltype(makeStaticThread<idleThreadStackSize>(0, idleThreadFunction));
 
 /// storage for idle thread instance
 std::aligned_storage<sizeof(IdleThread), alignof(IdleThread)>::type idleThreadStorage;
@@ -68,8 +65,7 @@ extern "C" void lowLevelInitialization1()
 	auto& schedulerInstance = getScheduler();
 	new (&schedulerInstance) Scheduler {mainThreadControlBlock};
 	
-	auto& idleThread = *new (&idleThreadStorage) IdleThread {idleThreadStack, sizeof(idleThreadStack), 0,
-			idleThreadFunction};
+	auto& idleThread = *new (&idleThreadStorage) IdleThread {0, idleThreadFunction};
 	idleThread.start();
 	
 	architecture::startScheduling();
