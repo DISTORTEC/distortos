@@ -15,9 +15,7 @@
 
 #include "distortos/scheduler/Scheduler.hpp"
 
-#include "distortos/Thread.hpp"
-#include "distortos/scheduler/idleThreadFunction.hpp"
-#include "distortos/scheduler/MainThreadControlBlock.hpp"
+#include <type_traits>
 
 namespace distortos
 {
@@ -32,20 +30,8 @@ namespace
 | local objects
 +---------------------------------------------------------------------------------------------------------------------*/
 
-/// size of idle thread's stack, bytes
-constexpr size_t idleThreadStackSize_ {128};
-
-/// idle thread's stack
-uint64_t idleThreadStack_[idleThreadStackSize_ / sizeof(uint64_t)];
-
-/// idle thread instance
-auto idleThread_ = makeThread(idleThreadStack_, sizeof(idleThreadStack_), 0, idleThreadFunction);
-
-/// main thread instance
-MainThreadControlBlock mainThreadControlBlock_ {UINT8_MAX};
-
-/// main instance of system's Scheduler
-Scheduler schedulerInstance {mainThreadControlBlock_, idleThread_};
+/// storage for main instance of system's Scheduler
+std::aligned_storage<sizeof(Scheduler), alignof(Scheduler)>::type schedulerInstanceStorage;
 
 }	// namespace
 
@@ -55,7 +41,7 @@ Scheduler schedulerInstance {mainThreadControlBlock_, idleThread_};
 
 Scheduler& getScheduler()
 {
-	return schedulerInstance;
+	return reinterpret_cast<Scheduler&>(schedulerInstanceStorage);
 }
 
 }	// namespace scheduler
