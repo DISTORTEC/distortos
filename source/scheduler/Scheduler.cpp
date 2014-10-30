@@ -8,12 +8,11 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-10-25
+ * \date 2014-10-30
  */
 
 #include "distortos/scheduler/Scheduler.hpp"
 
-#include "distortos/Thread.hpp"
 #include "distortos/SoftwareTimer.hpp"
 #include "distortos/scheduler/MainThreadControlBlock.hpp"
 
@@ -32,7 +31,7 @@ namespace scheduler
 | public functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-Scheduler::Scheduler(MainThreadControlBlock& mainThreadControlBlock, Thread<void (&)()>& idleThread) :
+Scheduler::Scheduler(MainThreadControlBlock& mainThreadControlBlock) :
 		currentThreadControlBlock_{},
 		threadControlBlockListAllocatorPool_{},
 		threadControlBlockListAllocator_{threadControlBlockListAllocatorPool_},
@@ -43,10 +42,6 @@ Scheduler::Scheduler(MainThreadControlBlock& mainThreadControlBlock, Thread<void
 {
 	add(mainThreadControlBlock);
 	currentThreadControlBlock_ = runnableList_.begin();
-
-	idleThread.start();
-
-	architecture::startScheduling();
 }
 
 void Scheduler::add(ThreadControlBlock& threadControlBlock)

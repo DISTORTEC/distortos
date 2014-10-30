@@ -18,6 +18,8 @@
 #include "distortos/scheduler/idleThreadFunction.hpp"
 #include "distortos/scheduler/MainThreadControlBlock.hpp"
 
+#include "distortos/architecture/architecture.hpp"
+
 namespace distortos
 {
 
@@ -54,7 +56,7 @@ std::aligned_storage<sizeof(MainThreadControlBlock), alignof(MainThreadControlBl
 +---------------------------------------------------------------------------------------------------------------------*/
 
 /**
- * \brief Initializes main instance of system's Scheduler
+ * \brief Initializes main instance of system's Scheduler, starts idle thread and starts scheduling.
  *
  * This function is called before constructors for global and static objects.
  */
@@ -62,11 +64,15 @@ std::aligned_storage<sizeof(MainThreadControlBlock), alignof(MainThreadControlBl
 extern "C" void lowLevelInitialization1()
 {
 	auto& mainThreadControlBlock = *new (&mainThreadControlBlockStorage) MainThreadControlBlock {UINT8_MAX};
-	auto& idleThread = *new (&idleThreadStorage) IdleThread {idleThreadStack, sizeof(idleThreadStack), 0,
-			idleThreadFunction};
 
 	auto& schedulerInstance = getScheduler();
-	new (&schedulerInstance) Scheduler {mainThreadControlBlock, idleThread};
+	new (&schedulerInstance) Scheduler {mainThreadControlBlock};
+	
+	auto& idleThread = *new (&idleThreadStorage) IdleThread {idleThreadStack, sizeof(idleThreadStack), 0,
+			idleThreadFunction};
+	idleThread.start();
+	
+	architecture::startScheduling();
 }
 
 }	// namespace scheduler
