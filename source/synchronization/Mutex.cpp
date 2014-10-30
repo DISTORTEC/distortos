@@ -8,12 +8,12 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-10-27
+ * \date 2014-10-30
  */
 
 #include "distortos/Mutex.hpp"
 
-#include "distortos/scheduler/schedulerInstance.hpp"
+#include "distortos/scheduler/getScheduler.hpp"
 #include "distortos/scheduler/Scheduler.hpp"
 
 #include "distortos/architecture/InterruptMaskingLock.hpp"
@@ -28,7 +28,7 @@ namespace distortos
 +---------------------------------------------------------------------------------------------------------------------*/
 
 Mutex::Mutex(const Type type) :
-		blockedList_{scheduler::schedulerInstance.getThreadControlBlockListAllocator(),
+		blockedList_{scheduler::getScheduler().getThreadControlBlockListAllocator(),
 				scheduler::ThreadControlBlock::State::BlockedOnMutex},
 		owner_{},
 		recursiveLocksCount_{},
@@ -45,7 +45,7 @@ int Mutex::lock()
 	if (ret != EBUSY)	// lock successful, recursive lock not possible or deadlock detected?
 		return ret;
 
-	scheduler::schedulerInstance.block(blockedList_);
+	scheduler::getScheduler().block(blockedList_);
 	return 0;
 }
 
@@ -69,7 +69,7 @@ int Mutex::tryLockUntil(const TickClock::time_point timePoint)
 	if (ret != EBUSY)	// lock successful, recursive lock not possible or deadlock detected?
 		return ret;
 
-	return scheduler::schedulerInstance.blockUntil(blockedList_, timePoint);
+	return scheduler::getScheduler().blockUntil(blockedList_, timePoint);
 }
 
 int Mutex::unlock()
@@ -78,7 +78,7 @@ int Mutex::unlock()
 
 	if (type_ != Type::Normal)
 	{
-		if (owner_ != &scheduler::schedulerInstance.getCurrentThreadControlBlock())
+		if (owner_ != &scheduler::getScheduler().getCurrentThreadControlBlock())
 			return EPERM;
 
 		if (type_ == Type::Recursive && recursiveLocksCount_ != 0)
@@ -91,7 +91,7 @@ int Mutex::unlock()
 	if (blockedList_.empty() == false)
 	{
 		owner_ = &blockedList_.begin()->get();	// pass ownership to the unblocked thread
-		scheduler::schedulerInstance.unblock(blockedList_.begin());
+		scheduler::getScheduler().unblock(blockedList_.begin());
 	}
 	else
 		owner_ = nullptr;
@@ -107,14 +107,14 @@ int Mutex::tryLockInternal()
 {
 	if (owner_ == nullptr)
 	{
-		owner_ = &scheduler::schedulerInstance.getCurrentThreadControlBlock();
+		owner_ = &scheduler::getScheduler().getCurrentThreadControlBlock();
 		return 0;
 	}
 
 	if (type_ == Type::Normal)
 		return EBUSY;
 
-	if (owner_ == &scheduler::schedulerInstance.getCurrentThreadControlBlock())
+	if (owner_ == &scheduler::getScheduler().getCurrentThreadControlBlock())
 	{
 		if (type_ == Type::ErrorChecking)
 			return EDEADLK;

@@ -8,12 +8,12 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-08-27
+ * \date 2014-10-30
  */
 
 #include "distortos/scheduler/ThreadBase.hpp"
 
-#include "distortos/scheduler/schedulerInstance.hpp"
+#include "distortos/scheduler/getScheduler.hpp"
 #include "distortos/scheduler/Scheduler.hpp"
 
 #include <cerrno>
@@ -37,7 +37,7 @@ ThreadBase::ThreadBase(void* const buffer, const size_t size, const uint8_t prio
 
 int ThreadBase::join()
 {
-	if (this == &schedulerInstance.getCurrentThreadControlBlock())
+	if (this == &getScheduler().getCurrentThreadControlBlock())
 		return EDEADLK;
 
 	int ret;
@@ -50,7 +50,7 @@ int ThreadBase::start()
 	if (getState() != ThreadControlBlock::State::New)
 		return EINVAL;
 
-	schedulerInstance.add(*this);
+	getScheduler().add(*this);
 	return 0;
 }
 

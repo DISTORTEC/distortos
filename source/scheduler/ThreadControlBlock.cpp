@@ -8,12 +8,12 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-10-23
+ * \date 2014-10-30
  */
 
 #include "distortos/scheduler/ThreadControlBlock.hpp"
 
-#include "distortos/scheduler/schedulerInstance.hpp"
+#include "distortos/scheduler/getScheduler.hpp"
 #include "distortos/scheduler/Scheduler.hpp"
 
 #include "distortos/architecture/InterruptMaskingLock.hpp"
@@ -62,7 +62,7 @@ void ThreadControlBlock::setPriority(const uint8_t priority, const bool alwaysBe
 	if (loweringBefore == true)
 		--priority_;
 
-	schedulerInstance.maybeRequestContextSwitch();
+	getScheduler().maybeRequestContextSwitch();
 }
 
 /*---------------------------------------------------------------------------------------------------------------------+
@@ -87,7 +87,7 @@ ThreadControlBlock::ThreadControlBlock(architecture::Stack&& stack, const uint8_
 void ThreadControlBlock::threadRunner(ThreadControlBlock& threadControlBlock)
 {
 	threadControlBlock.run();
-	schedulerInstance.remove();
+	getScheduler().remove();
 
 	while (1);
 }

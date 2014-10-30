@@ -8,12 +8,12 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-09-18
+ * \date 2014-10-30
  */
 
 #include "distortos/scheduler/SoftwareTimerControlBlock.hpp"
 
-#include "distortos/scheduler/schedulerInstance.hpp"
+#include "distortos/scheduler/getScheduler.hpp"
 #include "distortos/scheduler/Scheduler.hpp"
 
 #include "distortos/architecture/InterruptMaskingLock.hpp"
@@ -46,7 +46,7 @@ void SoftwareTimerControlBlock::start(const TickClock::time_point timePoint)
 {
 	timePoint_ = timePoint;
 
-	iterator_ = schedulerInstance.getSoftwareTimerSupervisor().add(*this);
+	iterator_ = getScheduler().getSoftwareTimerSupervisor().add(*this);
 }
 
 /*---------------------------------------------------------------------------------------------------------------------+

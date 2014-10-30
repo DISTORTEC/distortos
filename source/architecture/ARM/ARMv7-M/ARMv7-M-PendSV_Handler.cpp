@@ -8,10 +8,10 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-09-18
+ * \date 2014-10-30
  */
 
-#include "distortos/scheduler/schedulerInstance.hpp"
+#include "distortos/scheduler/getScheduler.hpp"
 #include "distortos/scheduler/Scheduler.hpp"
 
 
@@ -20,7 +20,7 @@
 +---------------------------------------------------------------------------------------------------------------------*/
 
 /**
- * \brief Wrapper for void* distortos::scheduler::schedulerInstance.switchContext(void*)
+ * \brief Wrapper for void* distortos::scheduler::getScheduler().switchContext(void*)
  *
  * \param [in] stackPointer is the current value of current thread's stack pointer
  *
@@ -29,7 +29,7 @@
 
 extern "C" void* schedulerSwitchContextWrapper(void* const stackPointer)
 {
-	return distortos::scheduler::schedulerInstance.switchContext(stackPointer);
+	return distortos::scheduler::getScheduler().switchContext(stackPointer);
 }
 
 /**

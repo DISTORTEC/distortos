@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-10-27
+ * \date 2014-10-30
  */
 
 #ifndef INCLUDE_DISTORTOS_ARCHITECTURE_ARCHITECTURE_HPP_
@@ -99,8 +99,8 @@ void restoreInterruptMasking(InterruptMask interruptMask);
 /**
  * \brief Architecture-specific request for context switch.
  *
- * Causes the architecture to do context save, call scheduler::schedulerInstance.switchContext() and do context restore.
- * The call to scheduler::schedulerInstance.switchContext() must be done from the context in which such call is valid
+ * Causes the architecture to do context save, call scheduler::getScheduler().switchContext() and do context restore.
+ * The call to scheduler::getScheduler().switchContext() must be done from the context in which such call is valid
  * (usually system interrupt).
  */
 

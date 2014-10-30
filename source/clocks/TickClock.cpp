@@ -8,12 +8,12 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-10-27
+ * \date 2014-10-30
  */
 
 #include "distortos/TickClock.hpp"
 
-#include "distortos/scheduler/schedulerInstance.hpp"
+#include "distortos/scheduler/getScheduler.hpp"
 #include "distortos/scheduler/Scheduler.hpp"
 
 namespace distortos
@@ -21,7 +21,7 @@ namespace distortos
 
 TickClock::time_point TickClock::now()
 {
-	const auto tickCount = scheduler::schedulerInstance.getTickCount();
+	const auto tickCount = scheduler::getScheduler().getTickCount();
 	return time_point{duration{tickCount}};
 }
 
