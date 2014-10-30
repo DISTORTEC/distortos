@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-07-21
+ * \date 2014-10-30
  */
 
 #ifdef __USES_TWO_STACKS
@@ -96,8 +96,8 @@ Reset_Handler:
 
 #endif	// __USES_CXX
 
-	// Branch to lowLevelInitialization1() function
-	ldr		r0, =lowLevelInitialization1
+	// Branch to lowLevelInitialization2() function
+	ldr		r0, =lowLevelInitialization2
 	blx		r0
 
 	// Branch to main() with link
@@ -117,7 +117,7 @@ Reset_Handler:
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | defaultLowLevelInitialization_() - replacement for undefined lowLevelInitialization0() and/or
-| lowLevelInitialization1(). This function just returns.
+| lowLevelInitialization2(). This function just returns.
 +---------------------------------------------------------------------------------------------------------------------*/
 
 .text
@@ -131,13 +131,13 @@ defaultLowLevelInitialization_:
 	bx		lr
 
 /*---------------------------------------------------------------------------------------------------------------------+
-| assign undefined lowLevelInitialization0() and/or lowLevelInitialization1() to defaultLowLevelInitialization_()
+| assign undefined lowLevelInitialization0() and/or lowLevelInitialization2() to defaultLowLevelInitialization_()
 +---------------------------------------------------------------------------------------------------------------------*/
 
 .weak lowLevelInitialization0
 .global lowLevelInitialization0
 .set lowLevelInitialization0, defaultLowLevelInitialization_
 
-.weak lowLevelInitialization1
-.global lowLevelInitialization1
-.set lowLevelInitialization1, defaultLowLevelInitialization_
+.weak lowLevelInitialization2
+.global lowLevelInitialization2
+.set lowLevelInitialization2, defaultLowLevelInitialization_
