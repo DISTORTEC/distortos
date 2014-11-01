@@ -33,13 +33,9 @@ public:
 
 	/**
 	 * \brief Scheduler's constructor
-	 *
-	 * \attention Priority of main thread must be higher than priority of idle thread.
-	 *
-	 * \param [in] mainThreadControlBlock is a reference to main thread
 	 */
 
-	Scheduler(MainThreadControlBlock& mainThreadControlBlock);
+	Scheduler();
 
 	/**
 	 * \brief Adds new ThreadControlBlock to scheduler.

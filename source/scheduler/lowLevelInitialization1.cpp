@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-10-30
+ * \date 2014-11-01
  */
 
 #include "distortos/StaticThread.hpp"
@@ -60,10 +60,11 @@ std::aligned_storage<sizeof(MainThreadControlBlock), alignof(MainThreadControlBl
 
 extern "C" void lowLevelInitialization1()
 {
-	auto& mainThreadControlBlock = *new (&mainThreadControlBlockStorage) MainThreadControlBlock {UINT8_MAX};
-
 	auto& schedulerInstance = getScheduler();
-	new (&schedulerInstance) Scheduler {mainThreadControlBlock};
+	new (&schedulerInstance) Scheduler;
+
+	auto& mainThreadControlBlock = *new (&mainThreadControlBlockStorage) MainThreadControlBlock {UINT8_MAX};
+	schedulerInstance.initialize(mainThreadControlBlock);
 	
 	auto& idleThread = *new (&idleThreadStorage) IdleThread {0, idleThreadFunction};
 	idleThread.start();

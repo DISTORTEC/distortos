@@ -31,7 +31,7 @@ namespace scheduler
 | public functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-Scheduler::Scheduler(MainThreadControlBlock& mainThreadControlBlock) :
+Scheduler::Scheduler() :
 		currentThreadControlBlock_{},
 		threadControlBlockListAllocatorPool_{},
 		threadControlBlockListAllocator_{threadControlBlockListAllocatorPool_},
@@ -40,7 +40,7 @@ Scheduler::Scheduler(MainThreadControlBlock& mainThreadControlBlock) :
 		softwareTimerControlBlockSupervisor_{},
 		tickCount_{0}
 {
-	initialize(mainThreadControlBlock);
+
 }
 
 void Scheduler::add(ThreadControlBlock& threadControlBlock)
