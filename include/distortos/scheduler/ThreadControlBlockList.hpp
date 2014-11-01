@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-09-18
+ * \date 2014-11-01
  */
 
 #ifndef INCLUDE_DISTORTOS_SCHEDULER_THREADCONTROLBLOCKLIST_HPP_
@@ -24,8 +24,8 @@ namespace distortos
 namespace scheduler
 {
 
-/// functor which gives descending priority order of elements on the list
-struct ThreadControlBlockDescendingPriority
+/// functor which gives descending effective priority order of elements on the list
+struct ThreadControlBlockDescendingEffectivePriority
 {
 	/**
 	 * \brief operator()
@@ -33,12 +33,12 @@ struct ThreadControlBlockDescendingPriority
 	 * \param [in] left is the object on the left side of comparison
 	 * \param [in] right is the object on the right side of comparison
 	 *
-	 * \return true if left's priority is less than right's priority
+	 * \return true if left's effective priority is less than right's effective priority
 	 */
 
 	bool operator() (const ThreadControlBlockListValueType& left, const ThreadControlBlockListValueType& right)
 	{
-		return left.get().getPriority() < right.get().getPriority();
+		return left.get().getEffectivePriority() < right.get().getEffectivePriority();
 	}
 };
 
@@ -46,10 +46,10 @@ struct ThreadControlBlockDescendingPriority
 using ThreadControlBlockListBase = containers::SortedContainer
 		<
 				ThreadControlBlockListContainer,
-				ThreadControlBlockDescendingPriority
+				ThreadControlBlockDescendingEffectivePriority
 		>;
 
-/// List of ThreadControlBlock objects in descending order of priority that configures state of kept objects
+/// List of ThreadControlBlock objects in descending order of effective priority that configures state of kept objects
 class ThreadControlBlockList : private ThreadControlBlockListBase
 {
 public:
