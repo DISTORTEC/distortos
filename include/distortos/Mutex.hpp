@@ -24,7 +24,7 @@ namespace distortos
  * \brief Mutex is the basic synchronization primitive
  *
  * Similar to std::mutex - http://en.cppreference.com/w/cpp/thread/mutex
- * Similar to POSIX pthread_mutex_t, NORMAL, non-robust -
+ * Similar to POSIX pthread_mutex_t -
  * http://pubs.opengroup.org/onlinepubs/9699919799/functions/V2_chap02.html#tag_15_09 -> 2.9.3 Thread Mutexes
  */
 
