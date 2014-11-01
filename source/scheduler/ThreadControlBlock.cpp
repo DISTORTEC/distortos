@@ -50,9 +50,10 @@ void ThreadControlBlock::setPriority(const uint8_t priority, const bool alwaysBe
 	// special case of new priority UINT8_MAX does need to be handled, as it will never be "lowering" of priority anyway
 	const auto loweringBefore = alwaysBehind == false && priority_ > priority;
 
+	const auto previousEffectivePriority = getEffectivePriority();
 	priority_ = priority;
 
-	if (list_ == nullptr)
+	if (previousEffectivePriority == getEffectivePriority() || list_ == nullptr)
 		return;
 
 	if (loweringBefore == true)
