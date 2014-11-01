@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-10-30
+ * \date 2014-11-01
  */
 
 #ifndef INCLUDE_DISTORTOS_SCHEDULER_SCHEDULER_HPP_
@@ -126,6 +126,17 @@ public:
 	 */
 
 	uint64_t getTickCount() const;
+
+	/**
+	 * \brief Scheduler's initialization
+	 *
+	 * \attention This must be called after constructor, before enabling any scheduling. Priority of main thread must
+	 * be higher than priority of idle thread
+	 *
+	 * \param [in] mainThreadControlBlock is a reference to main thread
+	 */
+
+	void initialize(MainThreadControlBlock& mainThreadControlBlock);
 
 	/**
 	 * \brief Requests context switch if it is needed.

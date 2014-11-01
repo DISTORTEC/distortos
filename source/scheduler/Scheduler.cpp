@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-10-30
+ * \date 2014-11-01
  */
 
 #include "distortos/scheduler/Scheduler.hpp"
@@ -40,8 +40,7 @@ Scheduler::Scheduler(MainThreadControlBlock& mainThreadControlBlock) :
 		softwareTimerControlBlockSupervisor_{},
 		tickCount_{0}
 {
-	add(mainThreadControlBlock);
-	currentThreadControlBlock_ = runnableList_.begin();
+	initialize(mainThreadControlBlock);
 }
 
 void Scheduler::add(ThreadControlBlock& threadControlBlock)
@@ -104,6 +103,12 @@ uint64_t Scheduler::getTickCount() const
 {
 	architecture::InterruptMaskingLock interruptMaskingLock;
 	return tickCount_;
+}
+
+void Scheduler::initialize(MainThreadControlBlock& mainThreadControlBlock)
+{
+	add(mainThreadControlBlock);
+	currentThreadControlBlock_ = runnableList_.begin();
 }
 
 void Scheduler::maybeRequestContextSwitch() const
