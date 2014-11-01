@@ -33,6 +33,7 @@ ThreadControlBlock::ThreadControlBlock(void* const buffer, const size_t size, co
 		list_{},
 		iterator_{},
 		priority_{priority},
+		boostedPriority_{},
 		roundRobinQuantum_{},
 		state_{State::New}
 {
@@ -74,6 +75,7 @@ ThreadControlBlock::ThreadControlBlock(architecture::Stack&& stack, const uint8_
 		list_{},
 		iterator_{},
 		priority_{priority},
+		boostedPriority_{},
 		roundRobinQuantum_{},
 		state_{State::New}
 {
