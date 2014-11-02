@@ -93,7 +93,7 @@ int Mutex::unlock()
 		scheduler::getScheduler().unblock(controlBlock_.getBlockedList().begin());
 	}
 	else
-		controlBlock_.getOwner() = nullptr;
+		controlBlock_.unlock();
 
 	return 0;
 }

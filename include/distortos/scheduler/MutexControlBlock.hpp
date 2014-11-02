@@ -59,6 +59,14 @@ public:
 
 	void lock();
 
+	/**
+	 * \brief Performs actual unlocking of previously locked mutex.
+	 *
+	 * \attention mutex must be locked and blockedList_ must be empty
+	 */
+
+	void unlock();
+
 private:
 
 	/// ThreadControlBlock objects blocked on mutex

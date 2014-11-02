@@ -38,6 +38,11 @@ void MutexControlBlock::lock()
 	owner_ = &getScheduler().getCurrentThreadControlBlock();
 }
 
+void MutexControlBlock::unlock()
+{
+	owner_ = nullptr;
+}
+
 }	// namespace scheduler
 
 }	// namespace distortos
