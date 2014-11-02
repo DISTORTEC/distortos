@@ -43,10 +43,10 @@ public:
 	}
 
 	/**
-	 * \return reference to pointer to owner of the mutex
+	 * \return owner of the mutex, nullptr if mutex is currently unlocked
 	 */
 
-	ThreadControlBlock*& getOwner()
+	ThreadControlBlock* getOwner() const
 	{
 		return owner_;
 	}
