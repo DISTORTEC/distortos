@@ -51,15 +51,6 @@ public:
 	int blockUntil(TickClock::time_point timePoint);
 
 	/**
-	 * \return reference to ThreadControlBlock objects blocked on mutex
-	 */
-
-	ThreadControlBlockList& getBlockedList()
-	{
-		return blockedList_;
-	}
-
-	/**
 	 * \return owner of the mutex, nullptr if mutex is currently unlocked
 	 */
 
