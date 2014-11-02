@@ -33,6 +33,11 @@ MutexControlBlock::MutexControlBlock() :
 
 }
 
+void MutexControlBlock::block()
+{
+	getScheduler().block(blockedList_);
+}
+
 void MutexControlBlock::lock()
 {
 	owner_ = &getScheduler().getCurrentThreadControlBlock();

@@ -34,6 +34,12 @@ public:
 	explicit MutexControlBlock();
 
 	/**
+	 * \brief Blocks current thread, transferring it to blockedList_.
+	 */
+
+	void block();
+
+	/**
 	 * \return reference to ThreadControlBlock objects blocked on mutex
 	 */
 

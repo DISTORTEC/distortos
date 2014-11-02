@@ -43,7 +43,7 @@ int Mutex::lock()
 	if (ret != EBUSY)	// lock successful, recursive lock not possible or deadlock detected?
 		return ret;
 
-	scheduler::getScheduler().block(controlBlock_.getBlockedList());
+	controlBlock_.block();
 	return 0;
 }
 
