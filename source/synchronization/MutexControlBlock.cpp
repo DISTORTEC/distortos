@@ -28,7 +28,8 @@ namespace scheduler
 
 MutexControlBlock::MutexControlBlock() :
 		blockedList_{getScheduler().getThreadControlBlockListAllocator(), ThreadControlBlock::State::BlockedOnMutex},
-		owner_{}
+		owner_{},
+		protocol_{Protocol::None}
 {
 
 }

@@ -111,6 +111,9 @@ private:
 
 	/// owner of the mutex
 	ThreadControlBlock* owner_;
+
+	/// mutex protocol
+	Protocol protocol_;
 };
 
 }	// namespace scheduler
