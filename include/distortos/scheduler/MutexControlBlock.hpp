@@ -27,6 +27,17 @@ class MutexControlBlock
 {
 public:
 
+	/// mutex protocols
+	enum class Protocol : uint8_t
+	{
+		/// no protocol, similar to PTHREAD_PRIO_NONE
+		None,
+		/// priority inheritance protocol, similar to PTHREAD_PRIO_INHERIT
+		PriorityInheritance,
+		/// priority protection protocol (Immediate Ceiling Priority Protocol), similar to PTHREAD_PRIO_PROTECT
+		PriorityProtect,
+	};
+
 	/**
 	 * \brief MutexControlBlock constructor
 	 */
