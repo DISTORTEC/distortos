@@ -106,7 +106,7 @@ int Mutex::tryLockInternal()
 {
 	if (controlBlock_.getOwner() == nullptr)
 	{
-		controlBlock_.getOwner() = &scheduler::getScheduler().getCurrentThreadControlBlock();
+		controlBlock_.lock();
 		return 0;
 	}
 

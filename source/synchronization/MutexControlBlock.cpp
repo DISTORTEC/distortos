@@ -33,6 +33,11 @@ MutexControlBlock::MutexControlBlock() :
 
 }
 
+void MutexControlBlock::lock()
+{
+	owner_ = &getScheduler().getCurrentThreadControlBlock();
+}
+
 }	// namespace scheduler
 
 }	// namespace distortos

@@ -51,6 +51,14 @@ public:
 		return owner_;
 	}
 
+	/**
+	 * \brief Performs actual locking of previously unlocked mutex.
+	 *
+	 * \attention mutex must be unlocked
+	 */
+
+	void lock();
+
 private:
 
 	/// ThreadControlBlock objects blocked on mutex
