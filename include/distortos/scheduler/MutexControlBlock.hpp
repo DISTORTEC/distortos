@@ -114,6 +114,9 @@ private:
 
 	/// mutex protocol
 	Protocol protocol_;
+
+	/// priority ceiling of mutex, valid only when protocol_ == Protocol::PriorityProtect
+	uint8_t priorityCeiling_;
 };
 
 }	// namespace scheduler
