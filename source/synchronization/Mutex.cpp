@@ -86,10 +86,7 @@ int Mutex::unlock()
 		}
 	}
 
-	if (controlBlock_.getBlockedList().empty() == false)
-		controlBlock_.transferLock();
-	else
-		controlBlock_.unlock();
+	controlBlock_.unlockOrTransferLock();
 
 	return 0;
 }
