@@ -67,7 +67,7 @@ int Mutex::tryLockUntil(const TickClock::time_point timePoint)
 	if (ret != EBUSY)	// lock successful, recursive lock not possible or deadlock detected?
 		return ret;
 
-	return scheduler::getScheduler().blockUntil(controlBlock_.getBlockedList(), timePoint);
+	return controlBlock_.blockUntil(timePoint);
 }
 
 int Mutex::unlock()

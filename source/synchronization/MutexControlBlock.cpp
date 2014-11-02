@@ -38,6 +38,11 @@ void MutexControlBlock::block()
 	getScheduler().block(blockedList_);
 }
 
+int MutexControlBlock::blockUntil(const TickClock::time_point timePoint)
+{
+	return getScheduler().blockUntil(blockedList_, timePoint);
+}
+
 void MutexControlBlock::lock()
 {
 	owner_ = &getScheduler().getCurrentThreadControlBlock();

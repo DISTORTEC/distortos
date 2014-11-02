@@ -40,6 +40,17 @@ public:
 	void block();
 
 	/**
+	 * \brief Blocks current thread with timeout, transferring it to blockedList_.
+	 *
+	 * \param [in] timePoint is the time point at which the thread will be unblocked (if not already unblocked)
+	 *
+	 * \return 0 on success, error code otherwise:
+	 * - ETIMEDOUT - thread was unblocked because timePoint was reached;
+	 */
+
+	int blockUntil(TickClock::time_point timePoint);
+
+	/**
 	 * \return reference to ThreadControlBlock objects blocked on mutex
 	 */
 
