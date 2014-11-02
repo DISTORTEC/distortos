@@ -8,12 +8,13 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-10-27
+ * \date 2014-11-02
  */
 
 #ifndef INCLUDE_DISTORTOS_MUTEX_HPP_
 #define INCLUDE_DISTORTOS_MUTEX_HPP_
 
+#include "distortos/scheduler/MutexControlBlock.hpp"
 #include "distortos/scheduler/ThreadControlBlockList.hpp"
 #include "distortos/TickClock.hpp"
 
@@ -238,6 +239,9 @@ private:
 	 */
 
 	int tryLockInternal();
+
+	/// instance of control block
+	scheduler::MutexControlBlock controlBlock_;
 
 	/// ThreadControlBlock objects blocked on this mutex
 	scheduler::ThreadControlBlockList blockedList_;
