@@ -60,6 +60,16 @@ public:
 	void lock();
 
 	/**
+	 * \brief Performs unlocking or transfer of lock from current owner to next thread on the list.
+	 *
+	 * Mutex is unlocked if blockedList_ is empty, otherwise the ownership is transfered to the next thread.
+	 *
+	 * \attention mutex must be locked
+	 */
+
+	void unlockOrTransferLock();
+
+	/**
 	 * \brief Performs transfer of lock from current owner to next thread on the list.
 	 *
 	 * \attention mutex must be locked and blockedList_ must not be empty
