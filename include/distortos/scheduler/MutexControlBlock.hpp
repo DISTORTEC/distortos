@@ -14,6 +14,8 @@
 #ifndef INCLUDE_DISTORTOS_SCHEDULER_MUTEXCONTROLBLOCK_HPP_
 #define INCLUDE_DISTORTOS_SCHEDULER_MUTEXCONTROLBLOCK_HPP_
 
+#include "distortos/scheduler/ThreadControlBlockList.hpp"
+
 namespace distortos
 {
 
@@ -30,6 +32,32 @@ public:
 	 */
 
 	explicit MutexControlBlock();
+
+	/**
+	 * \return reference to ThreadControlBlock objects blocked on mutex
+	 */
+
+	ThreadControlBlockList& getBlockedList()
+	{
+		return blockedList_;
+	}
+
+	/**
+	 * \return reference to pointer to owner of the mutex
+	 */
+
+	ThreadControlBlock*& getOwner()
+	{
+		return owner_;
+	}
+
+private:
+
+	/// ThreadControlBlock objects blocked on mutex
+	ThreadControlBlockList blockedList_;
+
+	/// owner of the mutex
+	ThreadControlBlock* owner_;
 };
 
 }	// namespace scheduler

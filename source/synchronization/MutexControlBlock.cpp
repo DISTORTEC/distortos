@@ -13,6 +13,9 @@
 
 #include "distortos/scheduler/MutexControlBlock.hpp"
 
+#include "distortos/scheduler/getScheduler.hpp"
+#include "distortos/scheduler/Scheduler.hpp"
+
 namespace distortos
 {
 
@@ -23,7 +26,9 @@ namespace scheduler
 | public functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-MutexControlBlock::MutexControlBlock()
+MutexControlBlock::MutexControlBlock() :
+		blockedList_{getScheduler().getThreadControlBlockListAllocator(), ThreadControlBlock::State::BlockedOnMutex},
+		owner_{}
 {
 
 }

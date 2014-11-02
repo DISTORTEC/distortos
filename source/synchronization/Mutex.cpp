@@ -29,9 +29,6 @@ namespace distortos
 
 Mutex::Mutex(const Type type) :
 		controlBlock_{},
-		blockedList_{scheduler::getScheduler().getThreadControlBlockListAllocator(),
-				scheduler::ThreadControlBlock::State::BlockedOnMutex},
-		owner_{},
 		recursiveLocksCount_{},
 		type_{type}
 {
@@ -46,7 +43,7 @@ int Mutex::lock()
 	if (ret != EBUSY)	// lock successful, recursive lock not possible or deadlock detected?
 		return ret;
 
-	scheduler::getScheduler().block(blockedList_);
+	scheduler::getScheduler().block(controlBlock_.getBlockedList());
 	return 0;
 }
 
@@ -70,7 +67,7 @@ int Mutex::tryLockUntil(const TickClock::time_point timePoint)
 	if (ret != EBUSY)	// lock successful, recursive lock not possible or deadlock detected?
 		return ret;
 
-	return scheduler::getScheduler().blockUntil(blockedList_, timePoint);
+	return scheduler::getScheduler().blockUntil(controlBlock_.getBlockedList(), timePoint);
 }
 
 int Mutex::unlock()
@@ -79,7 +76,7 @@ int Mutex::unlock()
 
 	if (type_ != Type::Normal)
 	{
-		if (owner_ != &scheduler::getScheduler().getCurrentThreadControlBlock())
+		if (controlBlock_.getOwner() != &scheduler::getScheduler().getCurrentThreadControlBlock())
 			return EPERM;
 
 		if (type_ == Type::Recursive && recursiveLocksCount_ != 0)
@@ -89,13 +86,14 @@ int Mutex::unlock()
 		}
 	}
 
-	if (blockedList_.empty() == false)
+	if (controlBlock_.getBlockedList().empty() == false)
 	{
-		owner_ = &blockedList_.begin()->get();	// pass ownership to the unblocked thread
-		scheduler::getScheduler().unblock(blockedList_.begin());
+		// pass ownership to the unblocked thread
+		controlBlock_.getOwner() = &controlBlock_.getBlockedList().begin()->get();
+		scheduler::getScheduler().unblock(controlBlock_.getBlockedList().begin());
 	}
 	else
-		owner_ = nullptr;
+		controlBlock_.getOwner() = nullptr;
 
 	return 0;
 }
@@ -106,16 +104,16 @@ int Mutex::unlock()
 
 int Mutex::tryLockInternal()
 {
-	if (owner_ == nullptr)
+	if (controlBlock_.getOwner() == nullptr)
 	{
-		owner_ = &scheduler::getScheduler().getCurrentThreadControlBlock();
+		controlBlock_.getOwner() = &scheduler::getScheduler().getCurrentThreadControlBlock();
 		return 0;
 	}
 
 	if (type_ == Type::Normal)
 		return EBUSY;
 
-	if (owner_ == &scheduler::getScheduler().getCurrentThreadControlBlock())
+	if (controlBlock_.getOwner() == &scheduler::getScheduler().getCurrentThreadControlBlock())
 	{
 		if (type_ == Type::ErrorChecking)
 			return EDEADLK;

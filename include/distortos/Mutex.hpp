@@ -15,7 +15,6 @@
 #define INCLUDE_DISTORTOS_MUTEX_HPP_
 
 #include "distortos/scheduler/MutexControlBlock.hpp"
-#include "distortos/scheduler/ThreadControlBlockList.hpp"
 #include "distortos/TickClock.hpp"
 
 namespace distortos
@@ -242,12 +241,6 @@ private:
 
 	/// instance of control block
 	scheduler::MutexControlBlock controlBlock_;
-
-	/// ThreadControlBlock objects blocked on this mutex
-	scheduler::ThreadControlBlockList blockedList_;
-
-	/// owner of the mutex
-	scheduler::ThreadControlBlock* owner_;
 
 	/// number of recursive locks, used when mutex type is Recursive
 	RecursiveLocksCount recursiveLocksCount_;
