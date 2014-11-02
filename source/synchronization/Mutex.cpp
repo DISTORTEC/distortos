@@ -87,11 +87,7 @@ int Mutex::unlock()
 	}
 
 	if (controlBlock_.getBlockedList().empty() == false)
-	{
-		// pass ownership to the unblocked thread
-		controlBlock_.getOwner() = &controlBlock_.getBlockedList().begin()->get();
-		scheduler::getScheduler().unblock(controlBlock_.getBlockedList().begin());
-	}
+		controlBlock_.transferLock();
 	else
 		controlBlock_.unlock();
 

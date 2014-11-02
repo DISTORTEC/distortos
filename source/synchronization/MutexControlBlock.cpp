@@ -38,6 +38,12 @@ void MutexControlBlock::lock()
 	owner_ = &getScheduler().getCurrentThreadControlBlock();
 }
 
+void MutexControlBlock::transferLock()
+{
+	owner_ = &blockedList_.begin()->get();	// pass ownership to the unblocked thread
+	scheduler::getScheduler().unblock(blockedList_.begin());
+}
+
 void MutexControlBlock::unlock()
 {
 	owner_ = nullptr;

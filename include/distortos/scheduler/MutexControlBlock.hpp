@@ -60,6 +60,14 @@ public:
 	void lock();
 
 	/**
+	 * \brief Performs transfer of lock from current owner to next thread on the list.
+	 *
+	 * \attention mutex must be locked and blockedList_ must not be empty
+	 */
+
+	void transferLock();
+
+	/**
 	 * \brief Performs actual unlocking of previously locked mutex.
 	 *
 	 * \attention mutex must be locked and blockedList_ must be empty
