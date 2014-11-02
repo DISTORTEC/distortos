@@ -1,6 +1,6 @@
 /**
  * \file
- * \brief MutexControlBlock class header
+ * \brief MutexControlBlock class implementation
  *
  * \author Copyright (C) 2014 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
@@ -11,8 +11,7 @@
  * \date 2014-11-02
  */
 
-#ifndef INCLUDE_DISTORTOS_SCHEDULER_MUTEXCONTROLBLOCK_HPP_
-#define INCLUDE_DISTORTOS_SCHEDULER_MUTEXCONTROLBLOCK_HPP_
+#include "distortos/scheduler/MutexControlBlock.hpp"
 
 namespace distortos
 {
@@ -20,20 +19,15 @@ namespace distortos
 namespace scheduler
 {
 
-/// MutexControlBlock class is a control block for Mutex
-class MutexControlBlock
+/*---------------------------------------------------------------------------------------------------------------------+
+| public functions
++---------------------------------------------------------------------------------------------------------------------*/
+
+MutexControlBlock::MutexControlBlock()
 {
-public:
 
-	/**
-	 * \brief MutexControlBlock constructor
-	 */
-
-	explicit MutexControlBlock();
-};
+}
 
 }	// namespace scheduler
 
 }	// namespace distortos
-
-#endif	// INCLUDE_DISTORTOS_SCHEDULER_MUTEXCONTROLBLOCK_HPP_
