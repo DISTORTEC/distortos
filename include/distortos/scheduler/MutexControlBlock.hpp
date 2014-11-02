@@ -69,6 +69,8 @@ public:
 
 	void unlockOrTransferLock();
 
+private:
+
 	/**
 	 * \brief Performs transfer of lock from current owner to next thread on the list.
 	 *
@@ -84,8 +86,6 @@ public:
 	 */
 
 	void unlock();
-
-private:
 
 	/// ThreadControlBlock objects blocked on mutex
 	ThreadControlBlockList blockedList_;

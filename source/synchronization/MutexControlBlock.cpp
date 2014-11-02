@@ -46,6 +46,10 @@ void MutexControlBlock::unlockOrTransferLock()
 		unlock();
 }
 
+/*---------------------------------------------------------------------------------------------------------------------+
+| private functions
++---------------------------------------------------------------------------------------------------------------------*/
+
 void MutexControlBlock::transferLock()
 {
 	owner_ = &blockedList_.begin()->get();	// pass ownership to the unblocked thread
