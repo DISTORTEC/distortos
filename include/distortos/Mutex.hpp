@@ -32,6 +32,9 @@ class Mutex
 {
 public:
 
+	/// mutex protocols
+	using Protocol = scheduler::MutexControlBlock::Protocol;
+
 	/// type used for counting recursive locks
 	using RecursiveLocksCount = uint16_t;
 
