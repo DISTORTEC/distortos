@@ -40,9 +40,12 @@ public:
 
 	/**
 	 * \brief MutexControlBlock constructor
+	 *
+	 * \param [in] protocol is the mutex protocol
+	 * \param [in] priorityCeiling is the priority ceiling of mutex, ignored when protocol != Protocol::PriorityProtect
 	 */
 
-	explicit MutexControlBlock();
+	MutexControlBlock(Protocol protocol, uint8_t priorityCeiling);
 
 	/**
 	 * \brief Blocks current thread, transferring it to blockedList_.

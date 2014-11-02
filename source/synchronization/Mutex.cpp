@@ -28,7 +28,7 @@ namespace distortos
 +---------------------------------------------------------------------------------------------------------------------*/
 
 Mutex::Mutex(const Type type) :
-		controlBlock_{},
+		controlBlock_{Protocol::None, {}},
 		recursiveLocksCount_{},
 		type_{type}
 {

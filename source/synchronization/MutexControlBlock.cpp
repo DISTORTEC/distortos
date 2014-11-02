@@ -26,11 +26,11 @@ namespace scheduler
 | public functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-MutexControlBlock::MutexControlBlock() :
+MutexControlBlock::MutexControlBlock(const Protocol protocol, const uint8_t priorityCeiling) :
 		blockedList_{getScheduler().getThreadControlBlockListAllocator(), ThreadControlBlock::State::BlockedOnMutex},
 		owner_{},
-		protocol_{Protocol::None},
-		priorityCeiling_{}
+		protocol_{protocol},
+		priorityCeiling_{priorityCeiling}
 {
 
 }
