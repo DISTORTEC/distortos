@@ -88,6 +88,15 @@ public:
 	}
 
 	/**
+	 * \return priority ceiling of mutex, valid only when protocol_ == Protocol::PriorityProtect
+	 */
+
+	uint8_t getPriorityCeiling() const
+	{
+		return priorityCeiling_;
+	}
+
+	/**
 	 * \return mutex protocol
 	 */
 
