@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-11-02
+ * \date 2014-11-03
  */
 
 #include "distortos/Mutex.hpp"
@@ -27,8 +27,8 @@ namespace distortos
 | public functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-Mutex::Mutex(const Type type) :
-		controlBlock_{Protocol::None, {}},
+Mutex::Mutex(const Type type, const Protocol protocol, const uint8_t priorityCeiling) :
+		controlBlock_{protocol, priorityCeiling},
 		recursiveLocksCount_{},
 		type_{type}
 {

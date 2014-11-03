@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-11-02
+ * \date 2014-11-03
  */
 
 #ifndef INCLUDE_DISTORTOS_MUTEX_HPP_
@@ -70,9 +70,12 @@ public:
 	 * http://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_mutex_init.html
 	 *
 	 * \param [in] type is the type of mutex, default - Type::Normal
+	 * \param [in] protocol is the mutex protocol, default - Protocol::None
+	 * \param [in] priorityCeiling is the priority ceiling of mutex, ignored when protocol != Protocol::PriorityProtect,
+	 * default - 0
 	 */
 
-	explicit Mutex(Type type = Type::Normal);
+	explicit Mutex(Type type = Type::Normal, Protocol protocol = Protocol::None, uint8_t priorityCeiling = {});
 
 	/**
 	 * \brief Locks the mutex.
