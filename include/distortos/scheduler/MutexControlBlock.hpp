@@ -88,6 +88,15 @@ public:
 	}
 
 	/**
+	 * \return mutex protocol
+	 */
+
+	Protocol getProtocol() const
+	{
+		return protocol_;
+	}
+
+	/**
 	 * \brief Performs actual locking of previously unlocked mutex.
 	 *
 	 * \attention mutex must be unlocked
