@@ -47,6 +47,21 @@ int MutexControlBlock::blockUntil(const TickClock::time_point timePoint)
 	return getScheduler().blockUntil(blockedList_, timePoint);
 }
 
+uint8_t MutexControlBlock::getBoostedPriority() const
+{
+	if (protocol_ == Protocol::PriorityInheritance)
+	{
+		if (blockedList_.empty() == true)
+			return 0;
+		return blockedList_.begin()->get().getEffectivePriority();
+	}
+
+	if (protocol_ == Protocol::PriorityProtect)
+		return priorityCeiling_;
+
+	return 0;
+}
+
 void MutexControlBlock::lock()
 {
 	auto& scheduler = scheduler::getScheduler();
