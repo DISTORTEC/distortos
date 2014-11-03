@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-08-23
+ * \date 2014-11-03
  */
 
 #ifndef ESTD_CONTIGUOUSRANGE_HPP_
@@ -83,7 +83,7 @@ public:
 	 * \brief Empty ContiguousRange's constructor.
 	 */
 
-	constexpr ContiguousRange() noexcept :
+	constexpr explicit ContiguousRange() noexcept :
 			ContiguousRange{nullptr, nullptr}
 	{
 
@@ -98,7 +98,7 @@ public:
 	 */
 
 	template<size_t N>
-	constexpr ContiguousRange(T (&array)[N]) noexcept :
+	constexpr explicit ContiguousRange(T (&array)[N]) noexcept :
 			ContiguousRange{array, array + N}
 	{
 
