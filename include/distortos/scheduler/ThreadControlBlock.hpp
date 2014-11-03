@@ -239,6 +239,15 @@ public:
 		terminationHook_();
 	}
 
+	/**
+	 * \brief Updates boosted priority of the thread.
+	 *
+	 * This function should be called after all operations involving this thread and a mutex with enabled priority
+	 * protocol.
+	 */
+
+	void updateBoostedPriority();
+
 protected:
 
 	/**

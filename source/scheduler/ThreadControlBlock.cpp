@@ -15,6 +15,7 @@
 
 #include "distortos/scheduler/getScheduler.hpp"
 #include "distortos/scheduler/Scheduler.hpp"
+#include "distortos/scheduler/MutexControlBlock.hpp"
 
 #include "distortos/architecture/InterruptMaskingLock.hpp"
 
@@ -59,6 +60,31 @@ void ThreadControlBlock::setPriority(const uint8_t priority, const bool alwaysBe
 
 	if (previousEffectivePriority == getEffectivePriority() || list_ == nullptr)
 		return;
+
+	reposition(loweringBefore);
+}
+
+void ThreadControlBlock::updateBoostedPriority()
+{
+	decltype(boostedPriority_) newBoostedPriority {};
+
+	for (const auto &mutexControlBlock : ownedProtocolMutexControlBlocksList_)
+	{
+		const auto mutexBoostedPriority = mutexControlBlock.get().getBoostedPriority();
+		newBoostedPriority = std::max(newBoostedPriority, mutexBoostedPriority);
+	}
+
+	if (boostedPriority_ == newBoostedPriority)
+		return;
+
+	const auto oldEffectivePriority = getEffectivePriority();
+	boostedPriority_ = newBoostedPriority;
+	const auto newEffectivePriority = getEffectivePriority();
+
+	if (oldEffectivePriority == newEffectivePriority || list_ == nullptr)
+		return;
+
+	const auto loweringBefore = newEffectivePriority < oldEffectivePriority;
 
 	reposition(loweringBefore);
 }
