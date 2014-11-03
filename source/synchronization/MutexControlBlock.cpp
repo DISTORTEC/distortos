@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-11-02
+ * \date 2014-11-03
  */
 
 #include "distortos/scheduler/MutexControlBlock.hpp"
@@ -28,6 +28,8 @@ namespace scheduler
 
 MutexControlBlock::MutexControlBlock(const Protocol protocol, const uint8_t priorityCeiling) :
 		blockedList_{getScheduler().getThreadControlBlockListAllocator(), ThreadControlBlock::State::BlockedOnMutex},
+		list_{},
+		iterator_{},
 		owner_{},
 		protocol_{protocol},
 		priorityCeiling_{priorityCeiling}

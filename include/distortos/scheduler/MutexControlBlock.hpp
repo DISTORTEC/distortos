@@ -118,6 +118,12 @@ private:
 	/// storage for list link
 	Link link_;
 
+	/// pointer to list that has this object
+	scheduler::MutexControlBlockList* list_;
+
+	/// iterator to the element on the list, valid only when list_ != nullptr
+	scheduler::MutexControlBlockList::iterator iterator_;
+
 	/// owner of the mutex
 	ThreadControlBlock* owner_;
 
