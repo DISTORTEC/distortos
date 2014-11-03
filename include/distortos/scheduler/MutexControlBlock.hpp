@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-11-02
+ * \date 2014-11-03
  */
 
 #ifndef INCLUDE_DISTORTOS_SCHEDULER_MUTEXCONTROLBLOCK_HPP_
@@ -93,6 +93,9 @@ public:
 
 private:
 
+	/// type of object used as storage for MutexControlBlockList elements - 3 pointers
+	using Link = std::array<std::aligned_storage<sizeof(void*), alignof(void*)>::type, 3>;
+
 	/**
 	 * \brief Performs transfer of lock from current owner to next thread on the list.
 	 *
@@ -111,6 +114,9 @@ private:
 
 	/// ThreadControlBlock objects blocked on mutex
 	ThreadControlBlockList blockedList_;
+
+	/// storage for list link
+	Link link_;
 
 	/// owner of the mutex
 	ThreadControlBlock* owner_;
