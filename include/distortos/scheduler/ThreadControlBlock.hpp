@@ -113,6 +113,24 @@ public:
 	}
 
 	/**
+	 * \return reference to list of mutex control blocks with enabled priority protocol owned by this thread
+	 */
+
+	MutexControlBlockList& getOwnedProtocolMutexControlBlocksList()
+	{
+		return ownedProtocolMutexControlBlocksList_;
+	}
+
+	/**
+	 * \return const reference to list of mutex control blocks with enabled priority protocol owned by this thread
+	 */
+
+	const MutexControlBlockList& getOwnedProtocolMutexControlBlocksList() const
+	{
+		return ownedProtocolMutexControlBlocksList_;
+	}
+
+	/**
 	 * \return priority of ThreadControlBlock
 	 */
 
