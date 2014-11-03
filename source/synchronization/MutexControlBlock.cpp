@@ -74,14 +74,28 @@ void MutexControlBlock::lock()
 	list_ = &owner_->getOwnedProtocolMutexControlBlocksList();
 	list_->emplace_front(*this);
 	iterator_ = list_->begin();
+
+	owner_->updateBoostedPriority();
 }
 
 void MutexControlBlock::unlockOrTransferLock()
 {
+	auto& oldOwner = *owner_;
+
 	if (blockedList_.empty() == false)
 		transferLock();
 	else
 		unlock();
+
+	if (protocol_ == Protocol::None)
+		return;
+
+	oldOwner.updateBoostedPriority();
+
+	if (owner_ == nullptr)
+		return;
+
+	owner_->updateBoostedPriority();
 }
 
 /*---------------------------------------------------------------------------------------------------------------------+
