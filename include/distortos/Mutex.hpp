@@ -92,6 +92,8 @@ public:
 	 * - EAGAIN - the mutex could not be acquired because the maximum number of recursive locks for mutex has been
 	 * exceeded;
 	 * - EDEADLK - the mutex type is ErrorChecking and the current thread already owns the mutex;
+	 * - EINVAL - the mutex was created with the protocol attribute having the value PriorityProtect and the calling
+	 * thread's priority is higher than the mutex's current priority ceiling;
 	 */
 
 	int lock();
@@ -110,6 +112,8 @@ public:
 	 * - EAGAIN - the mutex could not be acquired because the maximum number of recursive locks for mutex has been
 	 * exceeded;
 	 * - EBUSY - the mutex could not be acquired because it was already locked;
+	 * - EINVAL - the mutex was created with the protocol attribute having the value PriorityProtect and the calling
+	 * thread's priority is higher than the mutex's current priority ceiling;
 	 */
 
 	int tryLock();
@@ -134,6 +138,8 @@ public:
 	 * - EAGAIN - the mutex could not be acquired because the maximum number of recursive locks for mutex has been
 	 * exceeded;
 	 * - EDEADLK - the mutex type is ErrorChecking and the current thread already owns the mutex;
+	 * - EINVAL - the mutex was created with the protocol attribute having the value PriorityProtect and the calling
+	 * thread's priority is higher than the mutex's current priority ceiling;
 	 * - ETIMEDOUT - the mutex could not be locked before the specified timeout expired;
 	 */
 
@@ -153,6 +159,8 @@ public:
 	 * - EAGAIN - the mutex could not be acquired because the maximum number of recursive locks for mutex has been
 	 * exceeded;
 	 * - EDEADLK - the mutex type is ErrorChecking and the current thread already owns the mutex;
+	 * - EINVAL - the mutex was created with the protocol attribute having the value PriorityProtect and the calling
+	 * thread's priority is higher than the mutex's current priority ceiling;
 	 * - ETIMEDOUT - the mutex could not be locked before the specified timeout expired;
 	 */
 
@@ -183,6 +191,8 @@ public:
 	 * - EAGAIN - the mutex could not be acquired because the maximum number of recursive locks for mutex has been
 	 * exceeded;
 	 * - EDEADLK - the mutex type is ErrorChecking and the current thread already owns the mutex;
+	 * - EINVAL - the mutex was created with the protocol attribute having the value PriorityProtect and the calling
+	 * thread's priority is higher than the mutex's current priority ceiling;
 	 * - ETIMEDOUT - the mutex could not be locked before the specified timeout expired;
 	 */
 
@@ -201,6 +211,8 @@ public:
 	 * - EAGAIN - the mutex could not be acquired because the maximum number of recursive locks for mutex has been
 	 * exceeded;
 	 * - EDEADLK - the mutex type is ErrorChecking and the current thread already owns the mutex;
+	 * - EINVAL - the mutex was created with the protocol attribute having the value PriorityProtect and the calling
+	 * thread's priority is higher than the mutex's current priority ceiling;
 	 * - ETIMEDOUT - the mutex could not be locked before the specified timeout expired;
 	 */
 
@@ -241,6 +253,8 @@ private:
 	 * exceeded;
 	 * - EBUSY - the mutex could not be acquired because it was already locked;
 	 * - EDEADLK - the mutex type is ErrorChecking and the current thread already owns the mutex;
+	 * - EINVAL - the mutex was created with the protocol attribute having the value PriorityProtect and the calling
+	 * thread's priority is higher than the mutex's current priority ceiling;
 	 */
 
 	int tryLockInternal();
