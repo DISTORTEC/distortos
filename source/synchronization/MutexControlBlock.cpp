@@ -49,7 +49,16 @@ int MutexControlBlock::blockUntil(const TickClock::time_point timePoint)
 
 void MutexControlBlock::lock()
 {
-	owner_ = &getScheduler().getCurrentThreadControlBlock();
+	auto& scheduler = scheduler::getScheduler();
+	owner_ = &scheduler.getCurrentThreadControlBlock();
+
+	if (protocol_ == Protocol::None)
+		return;
+
+	scheduler.getMutexControlBlockListAllocatorPool().feed(link_);
+	list_ = &owner_->getOwnedProtocolMutexControlBlocksList();
+	list_->emplace_front(*this);
+	iterator_ = list_->begin();
 }
 
 void MutexControlBlock::unlockOrTransferLock()
@@ -68,11 +77,24 @@ void MutexControlBlock::transferLock()
 {
 	owner_ = &blockedList_.begin()->get();	// pass ownership to the unblocked thread
 	scheduler::getScheduler().unblock(blockedList_.begin());
+
+	if (list_ == nullptr)
+		return;
+
+	auto& oldList = *list_;
+	list_ = &owner_->getOwnedProtocolMutexControlBlocksList();
+	list_->splice(list_->begin(), oldList, iterator_);
 }
 
 void MutexControlBlock::unlock()
 {
 	owner_ = nullptr;
+
+	if (list_ == nullptr)
+		return;
+
+	list_->erase(iterator_);
+	list_ = nullptr;
 }
 
 }	// namespace scheduler
