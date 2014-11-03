@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-10-30
+ * \date 2014-11-03
  */
 
 #include "distortos/scheduler/ThreadControlBlock.hpp"
@@ -30,6 +30,10 @@ namespace scheduler
 
 ThreadControlBlock::ThreadControlBlock(void* const buffer, const size_t size, const uint8_t priority) :
 		stack_{buffer, size, threadRunner, *this},
+		ownedProtocolMutexControlBlocksList_
+		{
+				MutexControlBlockListAllocator{getScheduler().getMutexControlBlockListAllocatorPool()}
+		},
 		list_{},
 		iterator_{},
 		priority_{priority},
@@ -73,6 +77,10 @@ void ThreadControlBlock::setPriority(const uint8_t priority, const bool alwaysBe
 
 ThreadControlBlock::ThreadControlBlock(architecture::Stack&& stack, const uint8_t priority) :
 		stack_{stack},
+		ownedProtocolMutexControlBlocksList_
+		{
+				MutexControlBlockListAllocator{getScheduler().getMutexControlBlockListAllocatorPool()}
+		},
 		list_{},
 		iterator_{},
 		priority_{priority},

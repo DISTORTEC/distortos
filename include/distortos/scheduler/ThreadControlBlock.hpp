@@ -281,6 +281,9 @@ private:
 	/// storage for list link
 	Link link_;
 
+	/// list of mutex control blocks with enabled priority protocol owned by this thread
+	MutexControlBlockList ownedProtocolMutexControlBlocksList_;
+
 	/// pointer to list that has this object
 	ThreadControlBlockList* list_;
 
