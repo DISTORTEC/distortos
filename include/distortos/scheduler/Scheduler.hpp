@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-11-01
+ * \date 2014-11-03
  */
 
 #ifndef INCLUDE_DISTORTOS_SCHEDULER_SCHEDULER_HPP_
@@ -277,6 +277,9 @@ private:
 
 	/// iterator to the currently active ThreadControlBlock
 	ThreadControlBlockListIterator currentThreadControlBlock_;
+
+	/// pool instance used by MutexControlBlockListAllocator
+	MutexControlBlockListAllocator::Pool mutexControlBlockListAllocatorPool_;
 
 	/// pool instance used by threadControlBlockListAllocator_
 	ThreadControlBlockListAllocator::Pool threadControlBlockListAllocatorPool_;

@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-11-01
+ * \date 2014-11-03
  */
 
 #include "distortos/scheduler/Scheduler.hpp"
@@ -33,6 +33,7 @@ namespace scheduler
 
 Scheduler::Scheduler() :
 		currentThreadControlBlock_{},
+		mutexControlBlockListAllocatorPool_{},
 		threadControlBlockListAllocatorPool_{},
 		threadControlBlockListAllocator_{threadControlBlockListAllocatorPool_},
 		runnableList_{threadControlBlockListAllocator_, ThreadControlBlock::State::Runnable},

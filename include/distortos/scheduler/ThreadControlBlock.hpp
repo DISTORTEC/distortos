@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-10-23
+ * \date 2014-11-03
  */
 
 #ifndef INCLUDE_DISTORTOS_SCHEDULER_THREADCONTROLBLOCK_HPP_
@@ -16,6 +16,7 @@
 
 #include "distortos/scheduler/RoundRobinQuantum.hpp"
 #include "distortos/scheduler/ThreadControlBlockList-types.hpp"
+#include "distortos/scheduler/MutexControlBlockList.hpp"
 
 #include "distortos/architecture/Stack.hpp"
 
