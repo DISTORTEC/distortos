@@ -91,6 +91,24 @@ public:
 	}
 
 	/**
+	 * \return reference to internal MutexControlBlockListAllocator::Pool object
+	 */
+
+	MutexControlBlockListAllocator::Pool& getMutexControlBlockListAllocatorPool()
+	{
+		return mutexControlBlockListAllocatorPool_;
+	}
+
+	/**
+	 * \return const reference to internal MutexControlBlockListAllocator:Pool object
+	 */
+
+	const MutexControlBlockListAllocator::Pool& getMutexControlBlockListAllocatorPool() const
+	{
+		return mutexControlBlockListAllocatorPool_;
+	}
+
+	/**
 	 * \return reference to internal SoftwareTimerControlBlockSupervisor object
 	 */
 
