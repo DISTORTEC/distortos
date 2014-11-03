@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-11-03
+ * \date 2014-11-04
  */
 
 #ifndef INCLUDE_DISTORTOS_SCHEDULER_THREADCONTROLBLOCK_HPP_
@@ -274,6 +274,22 @@ private:
 	 */
 
 	static void threadRunner(ThreadControlBlock& threadControlBlock) __attribute__ ((noreturn));
+
+	/**
+	 * \brief Repositions the thread on the list it's currently on.
+	 *
+	 * This function should be called when thread's effective priority changes.
+	 *
+	 * \attention list_ must not be nullptr
+	 *
+	 * \param [in] loweringBefore selects the method of ordering when lowering the priority (it must be false when the
+	 * priority is raised!):
+	 * - true - the thread is moved to the head of the group of threads with the new priority, this is accomplished by
+	 * temporarily boosting effective priority by 1,
+	 * - false - the thread is moved to the tail of the group of threads with the new priority.
+	 */
+
+	void reposition(bool loweringBefore);
 
 	/**
 	 * \brief "Run" function of thread

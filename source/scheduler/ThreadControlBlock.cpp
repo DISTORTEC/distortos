@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-11-03
+ * \date 2014-11-04
  */
 
 #include "distortos/scheduler/ThreadControlBlock.hpp"
@@ -60,15 +60,7 @@ void ThreadControlBlock::setPriority(const uint8_t priority, const bool alwaysBe
 	if (previousEffectivePriority == getEffectivePriority() || list_ == nullptr)
 		return;
 
-	if (loweringBefore == true)
-		++priority_;	// effectively causes new position to be "before" threads with the same priority
-
-	list_->sortedSplice(*list_, iterator_);
-
-	if (loweringBefore == true)
-		--priority_;
-
-	getScheduler().maybeRequestContextSwitch();
+	reposition(loweringBefore);
 }
 
 /*---------------------------------------------------------------------------------------------------------------------+
@@ -101,6 +93,25 @@ void ThreadControlBlock::threadRunner(ThreadControlBlock& threadControlBlock)
 	getScheduler().remove();
 
 	while (1);
+}
+
+/*---------------------------------------------------------------------------------------------------------------------+
+| private functions
++---------------------------------------------------------------------------------------------------------------------*/
+
+void ThreadControlBlock::reposition(const bool loweringBefore)
+{
+	const auto oldPriority = priority_;
+
+	if (loweringBefore == true)
+		priority_ = getEffectivePriority() + 1;
+
+	list_->sortedSplice(*list_, iterator_);
+
+	if (loweringBefore == true)
+		priority_ = oldPriority;
+
+	getScheduler().maybeRequestContextSwitch();
 }
 
 }	// namespace scheduler
