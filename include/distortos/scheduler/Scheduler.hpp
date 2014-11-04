@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-11-03
+ * \date 2014-11-04
  */
 
 #ifndef INCLUDE_DISTORTOS_SCHEDULER_SCHEDULER_HPP_
@@ -313,6 +313,9 @@ private:
 
 	/// internal SoftwareTimerControlBlockSupervisor object
 	SoftwareTimerControlBlockSupervisor softwareTimerControlBlockSupervisor_;
+
+	/// number of context switches
+	uint64_t contextSwitchCount_;
 
 	/// tick count
 	uint64_t tickCount_;
