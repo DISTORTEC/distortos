@@ -101,6 +101,12 @@ int Scheduler::blockUntil(ThreadControlBlockList& container, const TickClock::ti
 	return timedOut == false ? 0 : ETIMEDOUT;
 }
 
+uint64_t Scheduler::getContextSwitchCount() const
+{
+	architecture::InterruptMaskingLock interruptMaskingLock;
+	return contextSwitchCount_;
+}
+
 uint64_t Scheduler::getTickCount() const
 {
 	architecture::InterruptMaskingLock interruptMaskingLock;

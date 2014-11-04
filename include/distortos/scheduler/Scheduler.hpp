@@ -82,6 +82,12 @@ public:
 	int blockUntil(ThreadControlBlockList& container, TickClock::time_point timePoint);
 
 	/**
+	 * \return number of context switches
+	 */
+
+	uint64_t getContextSwitchCount() const;
+
+	/**
 	 * \return reference to currently active ThreadControlBlock
 	 */
 
