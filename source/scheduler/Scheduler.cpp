@@ -161,6 +161,7 @@ int Scheduler::suspend(const ThreadControlBlockListIterator iterator)
 void* Scheduler::switchContext(void* const stackPointer)
 {
 	architecture::InterruptMaskingLock interruptMaskingLock;
+	++contextSwitchCount_;
 	getCurrentThreadControlBlock().getStack().setStackPointer(stackPointer);
 	currentThreadControlBlock_ = runnableList_.begin();
 	return getCurrentThreadControlBlock().getStack().getStackPointer();
