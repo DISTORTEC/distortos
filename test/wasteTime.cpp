@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-11-03
+ * \date 2014-11-04
  */
 
 #include "wasteTime.hpp"
@@ -25,7 +25,9 @@ namespace test
 
 void wasteTime(const TickClock::duration duration)
 {
-	wasteTime(TickClock::now() + duration + decltype(duration){1});
+	/// \todo implementat something more precise and reliable
+	for (TickClock::duration d {}; d <= duration; ++d)
+		wasteTime(TickClock::now() + decltype(duration){1});
 }
 
 void wasteTime(const TickClock::time_point timePoint)
