@@ -19,6 +19,7 @@
 #include "distortos/StaticThread.hpp"
 #include "distortos/Mutex.hpp"
 #include "distortos/ThisThread.hpp"
+#include "distortos/statistics.hpp"
 
 #include "distortos/estd/ContiguousRange.hpp"
 
@@ -195,6 +196,8 @@ bool MutexPriorityProtocolTestCase::run_() const
 	const TestStepRange stepsRange4 {steps4};
 	const TestStepRange stepsRange5 {steps5};
 
+	const auto contextSwitchCount = statistics::getContextSwitchCount();
+
 	SequenceAsserter sequenceAsserter;
 	const auto now = TickClock::now();
 
@@ -212,6 +215,10 @@ bool MutexPriorityProtocolTestCase::run_() const
 
 	for (auto& thread : threads)
 		thread.join();
+
+	// 9 context switches for to the test scenario itself, 6 context switches for delayed start of each test thread
+	if (statistics::getContextSwitchCount() - contextSwitchCount != 15)
+		return false;
 
 	const auto totalSequencePoints = 2 * (stepsRange1.size() + stepsRange2.size() + stepsRange3.size() +
 			stepsRange4.size() + stepsRange5.size());
