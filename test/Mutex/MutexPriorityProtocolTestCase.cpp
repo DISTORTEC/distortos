@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-11-04
+ * \date 2014-11-05
  */
 
 #include "MutexPriorityProtocolTestCase.hpp"
@@ -69,6 +69,11 @@ constexpr size_t totalThreads {5};
 
 /// duration unit used in test
 constexpr TickClock::duration durationUnit {10};
+
+// "9" is the length (in durationUnit) of the longest test thread
+/// \todo remove when FIFO scheduling for threads is implemented
+static_assert((durationUnit * 9).count() < CONFIG_TICK_RATE_HZ / CONFIG_ROUND_ROBIN_RATE_HZ,
+		"Invalid configuration for test case - there may be no preemptions due to round-robin scheduling.");
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | local functions' declarations
