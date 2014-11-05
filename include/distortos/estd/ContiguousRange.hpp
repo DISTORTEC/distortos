@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-11-03
+ * \date 2014-11-05
  */
 
 #ifndef ESTD_CONTIGUOUSRANGE_HPP_
@@ -120,6 +120,28 @@ public:
 	constexpr size_type size() const noexcept
 	{
 		return end_ - begin_;
+	}
+
+	/**
+	 * \param [in] i is the index of element that will be accessed
+	 *
+	 * \return reference to element at given index
+	 */
+
+	reference operator[](const size_type i) noexcept
+	{
+		return begin_[i];
+	}
+
+	/**
+	 * \param [in] i is the index of element that will be accessed
+	 *
+	 * \return const reference to element at given index
+	 */
+
+	const_reference operator[](const size_type i) const noexcept
+	{
+		return begin_[i];
 	}
 
 private:
