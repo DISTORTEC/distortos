@@ -141,6 +141,47 @@ TestThread makeTestThread(const uint8_t priority, const TickClock::time_point sl
 			std::ref(sequenceAsserter), std::ref(steps));
 }
 
+/**
+ * \brief Common code to run the test
+ *
+ * \param [in] delays is an array with delays for each test thread
+ * \param [in] stepsRanges is an array with TestStepRange elements for each test thread
+ * \param [in] expectedContextSwitchesCount is the expected count of context switches for the whole test
+ *
+ * \return true if the test case succeeded, false otherwise
+ */
+
+bool testRunner(const std::array<int, totalThreads>& delays, const std::array<TestStepRange, totalThreads>& stepsRanges,
+		const size_t expectedContextSwitchesCount)
+{
+	const auto contextSwitchCount = statistics::getContextSwitchCount();
+
+	SequenceAsserter sequenceAsserter;
+	const auto now = TickClock::now();
+
+	std::array<TestThread, totalThreads> threads
+	{{
+			makeTestThread(1, now + durationUnit * delays[0], sequenceAsserter, stepsRanges[0]),
+			makeTestThread(2, now + durationUnit * delays[1], sequenceAsserter, stepsRanges[1]),
+			makeTestThread(3, now + durationUnit * delays[2], sequenceAsserter, stepsRanges[2]),
+			makeTestThread(4, now + durationUnit * delays[3], sequenceAsserter, stepsRanges[3]),
+			makeTestThread(5, now + durationUnit * delays[4], sequenceAsserter, stepsRanges[4]),
+	}};
+
+	for (auto& thread : threads)
+		thread.start();
+
+	for (auto& thread : threads)
+		thread.join();
+
+	if (statistics::getContextSwitchCount() - contextSwitchCount != expectedContextSwitchesCount)
+		return false;
+
+	const auto totalSequencePoints = 2 * (stepsRanges[0].size() + stepsRanges[1].size() + stepsRanges[2].size() +
+			stepsRanges[3].size() + stepsRanges[4].size());
+	return sequenceAsserter.assertSequence(totalSequencePoints);
+}
+
 }	// namespace
 
 /*---------------------------------------------------------------------------------------------------------------------+
@@ -190,39 +231,21 @@ bool MutexPriorityProtocolTestCase::run_() const
 			{&mutex35, &Mutex::lock, 18, 19, durationUnit * 2},
 			{&mutex35, &Mutex::unlock, 20, 21, durationUnit * 1},
 	};
-	const TestStepRange stepsRange1 {steps1};
-	const TestStepRange stepsRange2 {steps2};
-	const TestStepRange stepsRange3 {steps3};
-	const TestStepRange stepsRange4 {steps4};
-	const TestStepRange stepsRange5 {steps5};
-
-	const auto contextSwitchCount = statistics::getContextSwitchCount();
-
-	SequenceAsserter sequenceAsserter;
-	const auto now = TickClock::now();
-
-	std::array<TestThread, totalThreads> threads
+	const std::array<TestStepRange, totalThreads> stepsRanges
 	{{
-			makeTestThread(1, now + durationUnit * 0, sequenceAsserter, stepsRange1),
-			makeTestThread(2, now + durationUnit * 3, sequenceAsserter, stepsRange2),
-			makeTestThread(3, now + durationUnit * 6, sequenceAsserter, stepsRange3),
-			makeTestThread(4, now + durationUnit * 10, sequenceAsserter, stepsRange4),
-			makeTestThread(5, now + durationUnit * 11, sequenceAsserter, stepsRange5),
+			TestStepRange{steps1},
+			TestStepRange{steps2},
+			TestStepRange{steps3},
+			TestStepRange{steps4},
+			TestStepRange{steps5},
+	}};
+	const std::array<int, totalThreads> delays
+	{{
+			0, 3, 6, 10, 11,
 	}};
 
-	for (auto& thread : threads)
-		thread.start();
-
-	for (auto& thread : threads)
-		thread.join();
-
 	// 9 context switches for to the test scenario itself, 6 context switches for delayed start of each test thread
-	if (statistics::getContextSwitchCount() - contextSwitchCount != 15)
-		return false;
-
-	const auto totalSequencePoints = 2 * (stepsRange1.size() + stepsRange2.size() + stepsRange3.size() +
-			stepsRange4.size() + stepsRange5.size());
-	return sequenceAsserter.assertSequence(totalSequencePoints);
+	return testRunner(delays, stepsRanges, 15);
 }
 
 }	// namespace test
