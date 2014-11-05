@@ -104,19 +104,28 @@ public:
 
 	}
 
-	/// \return iterator to first element in the range
+	/**
+	 * \return iterator to first element in the range
+	 */
+
 	constexpr iterator begin() const noexcept
 	{
 		return begin_;
 	}
 
-	/// \return iterator to "one past the last" element in the range
+	/**
+	 * \return iterator to "one past the last" element in the range
+	 */
+
 	constexpr iterator end() const noexcept
 	{
 		return end_;
 	}
 
-	/// \return number of elements in the range
+	/**
+	 * \return number of elements in the range
+	 */
+
 	constexpr size_type size() const noexcept
 	{
 		return end_ - begin_;
