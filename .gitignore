@@ -4,8 +4,8 @@
 # build output
 output/
 
-# doxygen documentation
-documentation/
+# doxygen documentation output
+documentation/html/
 
 # Eclipse project files
 .cproject
