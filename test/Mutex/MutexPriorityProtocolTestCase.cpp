@@ -119,7 +119,7 @@ void thread(const TickClock::time_point sleepUntil, SequenceAsserter& sequenceAs
 		if (step.mutex != nullptr && step.function != nullptr)
 			(step.mutex->*step.function)();
 		sequenceAsserter.sequencePoint(step.sequencePointAfter);
-		wasteTime(step.duration);
+		wasteTime(TickClock::now() + step.duration);
 	}
 }
 
