@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-11-05
+ * \date 2014-11-06
  */
 
 #include "MutexPriorityProtocolTestCase.hpp"
@@ -69,11 +69,11 @@ constexpr size_t testThreadStackSize {384};
 constexpr size_t totalThreads {5};
 
 /// duration unit used in test
-constexpr TickClock::duration durationUnit {10};
+constexpr TickClock::duration durationUnit {8};
 
-// "9" is the length (in durationUnit) of the longest test thread
+// "12" is the length (in durationUnit) of the longest test thread
 /// \todo remove when FIFO scheduling for threads is implemented
-static_assert((durationUnit * 9).count() < CONFIG_TICK_RATE_HZ / CONFIG_ROUND_ROBIN_RATE_HZ,
+static_assert((durationUnit * 12).count() < CONFIG_TICK_RATE_HZ / CONFIG_ROUND_ROBIN_RATE_HZ,
 		"Invalid configuration for test case - there may be no preemptions due to round-robin scheduling.");
 
 /*---------------------------------------------------------------------------------------------------------------------+
@@ -201,15 +201,17 @@ bool MutexPriorityProtocolTestCase::run_() const
 			{&mutex13, &Mutex::lock, 2, 3, durationUnit * 1},
 			{&mutex12, &Mutex::lock, 4, 5, durationUnit * 5},
 			{&mutex13, &Mutex::unlock, 6, 29, durationUnit * 1},
-			{&mutex12, &Mutex::unlock, 30, 41, durationUnit * 1},
+			{&mutex13, &Mutex::lock, 30, 31, durationUnit * 2},
+			{&mutex12, &Mutex::unlock, 32, 33, durationUnit * 1},
+			{&mutex13, &Mutex::unlock, 34, 45, durationUnit * 1},
 	};
 	const TestStep steps2[]
 	{
-			{nullptr, nullptr, 31, 32, durationUnit * 1},
-			{&mutex23, &Mutex::lock, 33, 34, durationUnit * 1},
-			{&mutex12, &Mutex::lock, 35, 36, durationUnit * 2},
-			{&mutex23, &Mutex::unlock, 37, 38, durationUnit * 1},
-			{&mutex12, &Mutex::unlock, 39, 40, durationUnit * 1},
+			{nullptr, nullptr, 35, 36, durationUnit * 1},
+			{&mutex23, &Mutex::lock, 37, 38, durationUnit * 1},
+			{&mutex12, &Mutex::lock, 39, 40, durationUnit * 2},
+			{&mutex23, &Mutex::unlock, 41, 42, durationUnit * 1},
+			{&mutex12, &Mutex::unlock, 43, 44, durationUnit * 1},
 	};
 	const TestStep steps3[]
 	{

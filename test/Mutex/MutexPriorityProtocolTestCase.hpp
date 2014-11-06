@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-11-05
+ * \date 2014-11-06
  */
 
 #ifndef TEST_MUTEX_MUTEXPRIORITYPROTOCOLTESTCASE_HPP_
@@ -37,25 +37,26 @@ namespace test
  * - solid outline with background - thread is running
  * - dashed outline without background - thread is preempted
  * - gray background - thread doesn't hold any mutexes
- * - orange background - thread holds one mutex
- * - red background - thread holds two mutexes
- * - pink background - thread holds three mutexes
- * - arrows - priority changes due to operation of PriorityProtect protocol
+ * - yellow background - thread holds one mutex
+ * - orange background - thread holds two mutexes
+ * - red background - thread holds three mutexes
+ * - arrows - priority changes due to operation of PriorityInheritance or PriorityProtect protocol
  *
  * Vertical scale - priority, T1 - lowest, T5 - highest
  * Horizontal scale - time
  *
- * \image html without-priority-protect-scenario.png "Without \"PriorityProtect\" protocol enabled"
+ * \image html without-PriorityInheritance-or-PriorityProtect.png "Without \"PriorityInheritance\" or \"PriorityProtect\""
  *
  * This scenario demonstrates typical priority inversion problem - highest priority thread T5 is delayed because lower
  * priority thread T4 executes and doesn't allow other lower priority threads (which hold mutex required by thread T5)
- * to continue. This is what happens in each marked time point:
+ * to continue. The same happens with thread T3 which is delayed by thread T2 when it needs thread T1 to unlock mutex
+ * "13". This is what happens in each marked time point:
  * - at t0 thread T1 starts executing
  * - at t1 thread T1 successfully locks mutex "13"
  * - at t2 thread T1 successfully locks mutex "12"
  * - at t3 thread T2 starts executing and preempts thread T1
  * - at t4 thread T2 successfully locks mutex "23"
- * - at t5 thread T2 tries to lock mutex "12" which is currently held by thread T1, thread T1 is allowed to continue,
+ * - at t5 thread T2 tries to lock mutex "12" which is currently held by thread T1, thread T1 is allowed to continue
  * - at t6 thread T3 starts executing and preempts thread T1
  * - at t7 thread T3 successfully locks mutex "35"
  * - at t8 thread T2 tries to lock mutex "23" which is currently held by thread T2, thread T1 is allowed to continue (as
@@ -67,26 +68,29 @@ namespace test
  * - at t12 thread T4 terminates and allows thread T1 to continue (as thread T5 is blocked on mutex "35", thread T3 - on
  * mutex "23" and thread T2 - on mutex "12")
  * - at t13 thread T1 unlocks mutex "13"
- * - at t14 thread T1 unlocks mutex "12", ownership of the mutex is passed to thread T2, which is allowed to continue
- * - at t15 thread T2 unlocks mutex "23", ownership of the mutex is passed to thread T3, which is allowed to continue
- * - at t16 thread T3 successfully locks mutex "13"
- * - at t17 thread T3 unlocks mutex "35", ownership of the mutex is passed to thread T5, which is allowed to continue
- * - at t18 thread T5 unlocks mutex "35"
- * - at t19 thread T5 terminates and allows thread T3 to continue
- * - at t20 thread T3 unlocks mutex "23"
- * - at t21 thread T3 unlocks mutex "13"
- * - at t22 thread T3 terminates and allows thread T2 to continue
- * - at t23 thread T2 unlocks mutex "12"
- * - at t24 thread T2 terminates and allows thread T1 to continue
- * - at t25 thread T1 terminates
+ * - at t14 thread T1 successfully locks mutex "13"
+ * - at t15 thread T1 unlocks mutex "12", ownership of the mutex is passed to thread T2, which is allowed to continue
+ * - at t16 thread T2 unlocks mutex "23", ownership of the mutex is passed to thread T3, which is allowed to continue
+ * - at t17 thread T3 tries to lock mutex "13" which is currently held by thread T1, thread T2 is allowed to continue
+ * (as thread T5 is blocked on mutex "35")
+ * - at t18 thread T2 unlocks mutex "12"
+ * - at t19 thread T2 terminates and allows thread T1 to continue
+ * - at t20 thread T1 unlocks mutex "13", ownership of the mutex is passed to thread T3, which is allowed to continue
+ * - at t21 thread T3 unlocks mutex "35", ownership of the mutex is passed to thread T5, which is allowed to continue
+ * - at t22 thread T5 unlocks mutex "35"
+ * - at t23 thread T5 terminates and allows thread T3 to continue
+ * - at t24 thread T3 unlocks mutex "23"
+ * - at t25 thread T3 unlocks mutex "13"
+ * - at t26 thread T3 terminates and allows thread T1 to continue
+ * - at t27 thread T1 terminates
  *
- * \image html with-priority-protect-scenario.png "With \"PriorityProtect\" protocol enabled"
+ * \image html with-PriorityProtect.png "With \"PriorityProtect\""
  *
  * This is the same situation as in previous scenario, but now all mutexes have PriorityProtect protocol enabled.
  * Changes of priority due to this protocol allow highest priority thread T5 to acquire ownership of the mutex much
  * sooner than previously. Additionally the most important critical sections (where mutex with high priority ceiling is
- * used) are as short as possible. This scenario has 9 context switches, which is much less than 16 in scenario without
- * PriorityProtect protocol. This is what happens in each marked time point:
+ * used) are as short as possible. This scenario has 9 context switches, which is much less than 18 in scenario without
+ * PriorityInheritance or PriorityProtect protocol. This is what happens in each marked time point:
  * - at t0 thread T1 starts executing
  * - at t1 thread T1 successfully locks mutex "13" and it's priority is boosted to the priority ceiling of this mutex,
  * which is equal to priority of thread T3
@@ -118,16 +122,19 @@ namespace test
  * - at t16 thread T3 unlocks mutex "13"
  * - at t17 thread T3 terminates and allows thread T1 (its effective priority is equal to priority of thread T2, but
  * thread T1 was first) to continue
- * - at t18 thread T1 unlocks mutex "12" and it's priority is lowered to its original value, thread T1 is preempted and
- * thread T2 is allowed to continue
- * - at t19 thread T2 successfully locks mutex "23" and it's priority is boosted to the priority ceiling of this mutex,
+ * - at t18 thread T1 successfully locks mutex "13" and it's priority is boosted to the priority ceiling of this mutex,
  * which is equal to priority of thread T3
- * - at t20 thread T2 successfully locks mutex "12", there is no priority boost as priority ceiling of mutex "12" is
+ * - at t19 thread T1 unlocks mutex "12"
+ * - at t20 thread T1 unlocks mutex "13" and it's priority is lowered to its original value, thread T1 is preempted and
+ * thread T2 is allowed to continue
+ * - at t21 thread T2 successfully locks mutex "23" and it's priority is boosted to the priority ceiling of this mutex,
+ * which is equal to priority of thread T3
+ * - at t22 thread T2 successfully locks mutex "12", there is no priority boost as priority ceiling of mutex "12" is
  * lower than priority ceiling of mutex "23"
- * - at t21 thread T2 unlocks mutex "23" and it's priority is lowered to its original value
- * - at t22 thread T2 unlocks mutex "12"
- * - at t23 thread T2 terminates and allows thread T1 to continue
- * - at t24 thread T1 terminates
+ * - at t23 thread T2 unlocks mutex "23" and it's priority is lowered to its original value
+ * - at t24 thread T2 unlocks mutex "12"
+ * - at t25 thread T2 terminates and allows thread T1 to continue
+ * - at t26 thread T1 terminates
  */
 
 class MutexPriorityProtocolTestCase : public TestCase
