@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-11-03
+ * \date 2014-11-06
  */
 
 #include "distortos/scheduler/MutexControlBlock.hpp"
@@ -75,7 +75,8 @@ void MutexControlBlock::lock()
 	list_->emplace_front(*this);
 	iterator_ = list_->begin();
 
-	owner_->updateBoostedPriority();
+	if (protocol_ == Protocol::PriorityProtect)
+		owner_->updateBoostedPriority();
 }
 
 void MutexControlBlock::unlockOrTransferLock()
