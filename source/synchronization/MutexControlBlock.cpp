@@ -125,8 +125,12 @@ void MutexControlBlock::unlockOrTransferLock()
 
 void MutexControlBlock::priorityInheritanceBeforeBlock() const
 {
+	auto& currentThreadControlBlock = getScheduler().getCurrentThreadControlBlock();
+
+	currentThreadControlBlock.setPriorityInheritanceMutexControlBlock(this);
+
 	// calling thread is not yet on the blocked list, that's why it's effective priority is given explicitly
-	owner_->updateBoostedPriority(getScheduler().getCurrentThreadControlBlock().getEffectivePriority());
+	owner_->updateBoostedPriority(currentThreadControlBlock.getEffectivePriority());
 }
 
 void MutexControlBlock::transferLock()
