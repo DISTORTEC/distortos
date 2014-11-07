@@ -207,7 +207,7 @@ public:
 	}
 
 	/**
-	 * Changes priority of thread.
+	 * \brief Changes priority of thread.
 	 *
 	 * If the priority really changes, the position in the thread list is adjusted and context switch may be requested.
 	 *
