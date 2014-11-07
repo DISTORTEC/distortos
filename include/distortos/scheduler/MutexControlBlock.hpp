@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-11-03
+ * \date 2014-11-07
  */
 
 #ifndef INCLUDE_DISTORTOS_SCHEDULER_MUTEXCONTROLBLOCK_HPP_
@@ -127,6 +127,16 @@ private:
 
 	/// type of object used as storage for MutexControlBlockList elements - 3 pointers
 	using Link = std::array<std::aligned_storage<sizeof(void*), alignof(void*)>::type, 3>;
+
+	/**
+	 * \brief Performs action required for priority inheritance before actually blocking on the mutex.
+	 *
+	 * This must be called in block() and blockUntil() before actually blocking of the calling thread.
+	 *
+	 * \attantion mutex's protocol must be PriorityInheritance
+	 */
+
+	void priorityInheritanceBeforeBlock() const;
 
 	/**
 	 * \brief Performs transfer of lock from current owner to next thread on the list.

@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-11-06
+ * \date 2014-11-07
  */
 
 #include "distortos/scheduler/MutexControlBlock.hpp"
@@ -102,6 +102,12 @@ void MutexControlBlock::unlockOrTransferLock()
 /*---------------------------------------------------------------------------------------------------------------------+
 | private functions
 +---------------------------------------------------------------------------------------------------------------------*/
+
+void MutexControlBlock::priorityInheritanceBeforeBlock() const
+{
+	// calling thread is not yet on the blocked list, that's why it's effective priority is given explicitly
+	owner_->updateBoostedPriority(getScheduler().getCurrentThreadControlBlock().getEffectivePriority());
+}
 
 void MutexControlBlock::transferLock()
 {
