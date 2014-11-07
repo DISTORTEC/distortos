@@ -16,6 +16,8 @@
 #include "distortos/scheduler/getScheduler.hpp"
 #include "distortos/scheduler/Scheduler.hpp"
 
+#include <cerrno>
+
 namespace distortos
 {
 
@@ -50,7 +52,13 @@ int MutexControlBlock::blockUntil(const TickClock::time_point timePoint)
 	if (protocol_ == Protocol::PriorityInheritance)
 		priorityInheritanceBeforeBlock();
 
-	return getScheduler().blockUntil(blockedList_, timePoint);
+	const auto ret = getScheduler().blockUntil(blockedList_, timePoint);
+
+	// waiting for mutex timed-out and mutex is still locked?
+	if (protocol_ == Protocol::PriorityInheritance && ret == ETIMEDOUT && owner_ != nullptr)
+		owner_->updateBoostedPriority();
+
+	return ret;
 }
 
 uint8_t MutexControlBlock::getBoostedPriority() const
