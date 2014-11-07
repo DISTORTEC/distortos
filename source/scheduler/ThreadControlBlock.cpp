@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-11-04
+ * \date 2014-11-07
  */
 
 #include "distortos/scheduler/ThreadControlBlock.hpp"
@@ -64,9 +64,9 @@ void ThreadControlBlock::setPriority(const uint8_t priority, const bool alwaysBe
 	reposition(loweringBefore);
 }
 
-void ThreadControlBlock::updateBoostedPriority()
+void ThreadControlBlock::updateBoostedPriority(const uint8_t boostedPriority)
 {
-	decltype(boostedPriority_) newBoostedPriority {};
+	decltype(boostedPriority_) newBoostedPriority {boostedPriority};
 
 	for (const auto &mutexControlBlock : ownedProtocolMutexControlBlocksList_)
 	{

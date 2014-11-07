@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-11-04
+ * \date 2014-11-07
  */
 
 #ifndef INCLUDE_DISTORTOS_SCHEDULER_THREADCONTROLBLOCK_HPP_
@@ -244,9 +244,12 @@ public:
 	 *
 	 * This function should be called after all operations involving this thread and a mutex with enabled priority
 	 * protocol.
+	 *
+	 * \param [in] boostedPriority is the initial boosted priority, this should be effective priority of the thread that
+	 * is about to be blocked on a mutex owned by this thread, default - 0
 	 */
 
-	void updateBoostedPriority();
+	void updateBoostedPriority(uint8_t boostedPriority = {});
 
 protected:
 
