@@ -39,11 +39,17 @@ MutexControlBlock::MutexControlBlock(const Protocol protocol, const uint8_t prio
 
 void MutexControlBlock::block()
 {
+	if (protocol_ == Protocol::PriorityInheritance)
+		priorityInheritanceBeforeBlock();
+
 	getScheduler().block(blockedList_);
 }
 
 int MutexControlBlock::blockUntil(const TickClock::time_point timePoint)
 {
+	if (protocol_ == Protocol::PriorityInheritance)
+		priorityInheritanceBeforeBlock();
+
 	return getScheduler().blockUntil(blockedList_, timePoint);
 }
 
