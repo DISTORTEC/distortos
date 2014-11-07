@@ -82,6 +82,9 @@ const std::array<int, totalThreads> threadDelays
 		0, 3, 6, 10, 11,
 }};
 
+/// number of context switches caused by delayed start of test threads
+constexpr size_t delayedStartContextSwitchesCount {6};
+
 /*---------------------------------------------------------------------------------------------------------------------+
 | local functions' declarations
 +---------------------------------------------------------------------------------------------------------------------*/
@@ -248,8 +251,7 @@ bool MutexPriorityProtocolTestCase::run_() const
 			TestStepRange{steps5},
 	}};
 
-	// 9 context switches for to the test scenario itself, 6 context switches for delayed start of each test thread
-	return testRunner(threadDelays, stepsRanges, 15);
+	return testRunner(threadDelays, stepsRanges, 9 + delayedStartContextSwitchesCount);
 }
 
 }	// namespace test
