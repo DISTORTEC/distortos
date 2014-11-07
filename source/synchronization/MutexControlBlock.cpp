@@ -140,6 +140,9 @@ void MutexControlBlock::transferLock()
 	auto& oldList = *list_;
 	list_ = &owner_->getOwnedProtocolMutexControlBlocksList();
 	list_->splice(list_->begin(), oldList, iterator_);
+
+	if (protocol_ == Protocol::PriorityInheritance)
+		owner_->setPriorityInheritanceMutexControlBlock(nullptr);
 }
 
 void MutexControlBlock::unlock()
