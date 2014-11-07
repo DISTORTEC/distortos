@@ -191,13 +191,13 @@ bool testRunner(const std::array<int, totalThreads>& delays, const std::array<Te
 	return sequenceAsserter.assertSequence(totalSequencePoints);
 }
 
-}	// namespace
+/**
+ * \brief Test phase of PriorityProtect protocol.
+ *
+ * \return true if the test phase succeeded, false otherwise
+ */
 
-/*---------------------------------------------------------------------------------------------------------------------+
-| private functions
-+---------------------------------------------------------------------------------------------------------------------*/
-
-bool MutexPriorityProtocolTestCase::run_() const
+bool priorityProtectPhase()
 {
 	Mutex mutex12 {Mutex::Type::Normal, Mutex::Protocol::PriorityProtect, 2};	// shared by thread 1 and 2
 	Mutex mutex13 {Mutex::Type::Normal, Mutex::Protocol::PriorityProtect, 3};	// shared by thread 1 and 3
@@ -252,6 +252,17 @@ bool MutexPriorityProtocolTestCase::run_() const
 	}};
 
 	return testRunner(threadDelays, stepsRanges, 9 + delayedStartContextSwitchesCount);
+}
+
+}	// namespace
+
+/*---------------------------------------------------------------------------------------------------------------------+
+| private functions
++---------------------------------------------------------------------------------------------------------------------*/
+
+bool MutexPriorityProtocolTestCase::run_() const
+{
+	return priorityProtectPhase();
 }
 
 }	// namespace test
