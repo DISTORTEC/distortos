@@ -88,6 +88,9 @@ void ThreadControlBlock::updateBoostedPriority(const uint8_t boostedPriority)
 	const auto loweringBefore = newEffectivePriority < oldEffectivePriority;
 
 	reposition(loweringBefore);
+
+	if (priorityInheritanceMutexControlBlock_ != nullptr)
+		priorityInheritanceMutexControlBlock_->getOwner()->updateBoostedPriority();
 }
 
 /*---------------------------------------------------------------------------------------------------------------------+
