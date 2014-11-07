@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-11-06
+ * \date 2014-11-07
  */
 
 #include "MutexPriorityProtocolTestCase.hpp"
@@ -75,6 +75,12 @@ constexpr TickClock::duration durationUnit {8};
 /// \todo remove when FIFO scheduling for threads is implemented
 static_assert((durationUnit * 12).count() < CONFIG_TICK_RATE_HZ / CONFIG_ROUND_ROBIN_RATE_HZ,
 		"Invalid configuration for test case - there may be no preemptions due to round-robin scheduling.");
+
+/// array with delays of test threads (in durationUnit)
+const std::array<int, totalThreads> threadDelays
+{{
+		0, 3, 6, 10, 11,
+}};
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | local functions' declarations
@@ -241,13 +247,9 @@ bool MutexPriorityProtocolTestCase::run_() const
 			TestStepRange{steps4},
 			TestStepRange{steps5},
 	}};
-	const std::array<int, totalThreads> delays
-	{{
-			0, 3, 6, 10, 11,
-	}};
 
 	// 9 context switches for to the test scenario itself, 6 context switches for delayed start of each test thread
-	return testRunner(delays, stepsRanges, 15);
+	return testRunner(threadDelays, stepsRanges, 15);
 }
 
 }	// namespace test
