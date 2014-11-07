@@ -35,6 +35,7 @@ ThreadControlBlock::ThreadControlBlock(void* const buffer, const size_t size, co
 		{
 				MutexControlBlockListAllocator{getScheduler().getMutexControlBlockListAllocatorPool()}
 		},
+		priorityInheritanceMutexControlBlock_{},
 		list_{},
 		iterator_{},
 		priority_{priority},
@@ -99,6 +100,7 @@ ThreadControlBlock::ThreadControlBlock(architecture::Stack&& stack, const uint8_
 		{
 				MutexControlBlockListAllocator{getScheduler().getMutexControlBlockListAllocatorPool()}
 		},
+		priorityInheritanceMutexControlBlock_{},
 		list_{},
 		iterator_{},
 		priority_{priority},
