@@ -220,6 +220,16 @@ public:
 	void setPriority(uint8_t priority, bool alwaysBehind = {});
 
 	/**
+	 * \param [in] priorityInheritanceMutexControlBlock is a pointer to MutexControlBlock (with PriorityInheritance
+	 * protocol) that blocks this thread
+	 */
+
+	void setPriorityInheritanceMutexControlBlock(const MutexControlBlock* const priorityInheritanceMutexControlBlock)
+	{
+		priorityInheritanceMutexControlBlock_ = priorityInheritanceMutexControlBlock;
+	}
+
+	/**
 	 * \param [in] state is the new state of object
 	 */
 
