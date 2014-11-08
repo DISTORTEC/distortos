@@ -27,7 +27,7 @@ namespace test
 
 bool SequenceAsserter::assertSequence(const unsigned int sequencePoints)
 {
-	return expectedSequencePoint_ == sequencePoints;
+	return expectedSequencePoint_ == sequencePoints && sequencePointsCount_ == sequencePoints;
 }
 
 void SequenceAsserter::sequencePoint(const unsigned int sequencePointt)
