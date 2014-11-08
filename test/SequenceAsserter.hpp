@@ -54,7 +54,7 @@ public:
 	bool assertSequence(unsigned int sequencePoints);
 
 	/**
-	 * \brief Increments the sequence by 1 if the order of calls matches.
+	 * \brief Increments the sequence by 1 if the order of calls matches. Each entry to this function is counted.
 	 *
 	 * Entry to this function is synchronized with interrupt masking lock.
 	 *

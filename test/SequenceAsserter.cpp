@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-08-27
+ * \date 2014-11-08
  */
 
 #include "SequenceAsserter.hpp"
@@ -33,6 +33,8 @@ bool SequenceAsserter::assertSequence(const unsigned int sequencePoints)
 void SequenceAsserter::sequencePoint(const unsigned int sequencePointt)
 {
 	architecture::InterruptMaskingLock interruptMaskingLock;
+
+	++sequencePointsCount_;
 
 	if (expectedSequencePoint_ == sequencePointt)
 		++expectedSequencePoint_;
