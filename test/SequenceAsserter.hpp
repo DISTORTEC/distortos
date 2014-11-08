@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-08-27
+ * \date 2014-11-08
  */
 
 #ifndef TEST_SEQUENCEASSERTER_HPP_
@@ -37,7 +37,8 @@ public:
 	 */
 
 	constexpr SequenceAsserter() :
-			expectedSequencePoint_{}
+			expectedSequencePoint_{},
+			sequencePointsCount_{}
 	{
 
 	}
@@ -66,6 +67,9 @@ private:
 
 	/// next expected sequence point
 	unsigned int expectedSequencePoint_;
+
+	/// count of calls to sequencePoint()
+	unsigned int sequencePointsCount_;
 };
 
 }	// namespace test
