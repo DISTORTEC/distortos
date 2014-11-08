@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-11-07
+ * \date 2014-11-08
  */
 
 #include "MutexPriorityProtocolTestCase.hpp"
@@ -200,6 +200,7 @@ bool testRunner(const std::array<int, totalThreads>& delays, const std::array<Te
 bool priorityProtectPhase()
 {
 	Mutex mutex12 {Mutex::Type::Normal, Mutex::Protocol::PriorityProtect, 2};	// shared by thread 1 and 2
+	Mutex mutex123 {Mutex::Type::Normal, Mutex::Protocol::PriorityProtect, 3};	// shared by thread 1, 2 and 3
 	Mutex mutex13 {Mutex::Type::Normal, Mutex::Protocol::PriorityProtect, 3};	// shared by thread 1 and 3
 	Mutex mutex23 {Mutex::Type::Normal, Mutex::Protocol::PriorityProtect, 3};	// shared by thread 2 and 3
 	Mutex mutex35 {Mutex::Type::Normal, Mutex::Protocol::PriorityProtect, 5};	// shared by thread 3 and 5
@@ -208,39 +209,45 @@ bool priorityProtectPhase()
 	{
 			{nullptr, nullptr, 0, 1, durationUnit * 1},
 			{&mutex13, &Mutex::lock, 2, 3, durationUnit * 1},
-			{&mutex12, &Mutex::lock, 4, 5, durationUnit * 5},
-			{&mutex13, &Mutex::unlock, 6, 29, durationUnit * 1},
-			{&mutex13, &Mutex::lock, 30, 31, durationUnit * 2},
-			{&mutex12, &Mutex::unlock, 32, 33, durationUnit * 1},
-			{&mutex13, &Mutex::unlock, 34, 45, durationUnit * 1},
+			{&mutex123, &Mutex::lock, 4, 5, durationUnit * 1},
+			{&mutex12, &Mutex::lock, 6, 7, durationUnit * 2},
+			{nullptr, nullptr, 8, 9, durationUnit * 2},
+			{&mutex13, &Mutex::unlock, 10, 11, durationUnit * 1},
+			{&mutex123, &Mutex::unlock, 12, 41, durationUnit * 1},
+			{&mutex12, &Mutex::unlock, 42, 57, durationUnit * 1},
 	};
 	const TestStep steps2[]
 	{
-			{nullptr, nullptr, 35, 36, durationUnit * 1},
-			{&mutex23, &Mutex::lock, 37, 38, durationUnit * 1},
-			{&mutex12, &Mutex::lock, 39, 40, durationUnit * 2},
-			{&mutex23, &Mutex::unlock, 41, 42, durationUnit * 1},
-			{&mutex12, &Mutex::unlock, 43, 44, durationUnit * 1},
+			{nullptr, nullptr, 43, 44, durationUnit * 1},
+			{&mutex23, &Mutex::lock, 45, 46, durationUnit * 1},
+			{&mutex123, &Mutex::lock, 47, 48, durationUnit * 1},
+			{&mutex12, &Mutex::lock, 49, 50, durationUnit * 2},
+			{&mutex23, &Mutex::unlock, 51, 52, durationUnit * 1},
+			{&mutex123, &Mutex::unlock, 53, 54, durationUnit * 1},
+			{&mutex12, &Mutex::unlock, 55, 56, durationUnit * 1},
 	};
 	const TestStep steps3[]
 	{
-			{nullptr, nullptr, 7, 8, durationUnit * 1},
-			{&mutex35, &Mutex::lock, 9, 10, durationUnit * 1},
-			{&mutex23, &Mutex::lock, 11, 12, durationUnit * 1},
-			{&mutex13, &Mutex::lock, 13, 14, durationUnit * 2},
-			{&mutex35, &Mutex::unlock, 15, 24, durationUnit * 1},
-			{&mutex23, &Mutex::unlock, 25, 26, durationUnit * 1},
-			{&mutex13, &Mutex::unlock, 27, 28, durationUnit * 1},
+			{nullptr, nullptr, 13, 14, durationUnit * 1},
+			{&mutex35, &Mutex::lock, 15, 16, durationUnit * 1},
+			{&mutex13, &Mutex::lock, 17, 18, durationUnit * 1},
+			{&mutex23, &Mutex::lock, 19, 20, durationUnit * 1},
+			{&mutex123, &Mutex::lock, 21, 22, durationUnit * 2},
+			{&mutex35, &Mutex::unlock, 23, 34, durationUnit * 1},
+			{&mutex123, &Mutex::unlock, 35, 36, durationUnit * 1},
+			{&mutex23, &Mutex::unlock, 37, 38, durationUnit * 1},
+			{&mutex13, &Mutex::unlock, 39, 40, durationUnit * 1},
 	};
 	const TestStep steps4[]
 	{
-			{nullptr, nullptr, 22, 23, durationUnit * 5},
+			{nullptr, nullptr, 30, 31, durationUnit * 2},
+			{nullptr, nullptr, 32, 33, durationUnit * 3},
 	};
 	const TestStep steps5[]
 	{
-			{nullptr, nullptr, 16, 17, durationUnit * 1},
-			{&mutex35, &Mutex::lock, 18, 19, durationUnit * 2},
-			{&mutex35, &Mutex::unlock, 20, 21, durationUnit * 1},
+			{nullptr, nullptr, 24, 25, durationUnit * 1},
+			{&mutex35, &Mutex::lock, 26, 27, durationUnit * 2},
+			{&mutex35, &Mutex::unlock, 28, 29, durationUnit * 1},
 	};
 	const std::array<TestStepRange, totalThreads> stepsRanges
 	{{
