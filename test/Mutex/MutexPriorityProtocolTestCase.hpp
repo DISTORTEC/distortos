@@ -61,7 +61,7 @@ namespace test
  * and successfully locks mutex "12"
  * - at t6 thread T3 starts executing and preempts thread T1
  * - at t7 thread T3 successfully locks mutex "35"
- * - at t8 thread T2 tries to lock mutex "13" which is currently held by thread T1, thread T1 is allowed to continue (as
+ * - at t8 thread T3 tries to lock mutex "13" which is currently held by thread T1, thread T1 is allowed to continue (as
  * thread T2 is blocked on mutex "123")
  * - at t9 thread T4 starts executing and preempts thread T1
  * - at t10 thread T5 starts executing and preempts thread T4
@@ -89,13 +89,63 @@ namespace test
  * - at t29 thread T2 terminates and allows thread T1 to continue
  * - at t30 thread T1 terminates
  *
+ * \image html with-PriorityInheritance.png "With \"PriorityInheritance\""
+ *
+ * This is the same situation as in previous scenario, but now all mutexes have PriorityInheritance protocol enabled.
+ * Changes of priority due to this protocol prevent the delay of thread T5 caused by thread T4. This is what happens in
+ * each marked time point:
+ * - at t0 thread T1 starts executing
+ * - at t1 thread T1 successfully locks mutex "13"
+ * - at t2 thread T1 successfully locks mutex "123"
+ * - at t3 thread T2 starts executing and preempts thread T1
+ * - at t4 thread T2 successfully locks mutex "23"
+ * - at t5 thread T2 tries to lock mutex "123" which is currently held by thread T1 - thread T1 inherits priority of
+ * thread T2, thread T1 is allowed to continue and successfully locks mutex "12"
+ * - at t6 thread T3 starts executing and preempts thread T1
+ * - at t7 thread T3 successfully locks mutex "35"
+ * - at t8 thread T3 tries to lock mutex "13" which is currently held by thread T1 - thread T1 inherits priority of
+ * thread T3, thread T1 is allowed to continue (as thread T2 is blocked on mutex "123")
+ * - at t9 thread T4 starts executing and preempts thread T1
+ * - at t10 thread T5 starts executing and preempts thread T4
+ * - at t11 thread T5 tries to lock mutex "35" which is currently held by thread T3 - thread T3 inherits priority of
+ * thread T5, this new priority is also transitively inherited by thread T1, thread T1 is allowed to continue
+ * - at t12 thread T1 unlocks mutex "13" - it's priority is lowered to the value inherited from thread T2, ownership of
+ * the mutex is passed to thread T3, which is allowed to continue
+ * - at t13 thread T3 tries to lock mutex "23" which is currently held by thread T2 - thread T2 inherits effective
+ * priority of thread T3 (equal to priority of thread T5), this new priority is also transitively inherited by thread
+ * T1, thread T1 is allowed to continue
+ * - at t14 thread T1 unlocks mutex "123" and it's priority is lowered to its original value, ownership of the mutex is
+ * passed to thread T2, which is allowed to continue
+ * - at t15 thread T2 tries to lock mutex "12" which is currently held by thread T1 - thread T1 inherits effective
+ * priority of thread T2 (equal to priority of thread T5), thread T1 is allowed to continue
+ * - at t16 thread T1 unlocks mutex "12" and it's priority is lowered to its original value, ownership of the mutex is
+ * passed to thread T2, which is allowed to continue
+ * - at t17 thread T2 unlocks mutex "23" and it's priority is lowered to its original value, ownership of the mutex is
+ * passed to thread T3, which is allowed to continue
+ * - at t18 thread T3 tries to lock mutex "123" which is currently held by thread T2 - thread T2 inherits effective
+ * priority of thread T3 (equal to priority of thread T5), thread T2 is allowed to continue
+ * - at t19 thread T2 unlocks mutex "123" and it's priority is lowered to its original value, ownership of the mutex is
+ * passed to thread T3, which is allowed to continue
+ * - at t20 thread T3 unlocks mutex "35" and it's priority is lowered to its original value, ownership of the mutex is
+ * passed to thread T5, which is allowed to continue
+ * - at t21 thread T5 unlocks mutex "35"
+ * - at t22 thread T5 terminates and allows thread T4 to continue
+ * - at t23 thread T4 terminates and allows thread T3 to continue
+ * - at t24 thread T3 unlocks mutex "123"
+ * - at t25 thread T3 unlocks mutex "23"
+ * - at t26 thread T3 unlocks mutex "13"
+ * - at t27 thread T3 terminates and allows thread T2 to continue
+ * - at t28 thread T2 unlocks mutex "12"
+ * - at t29 thread T2 terminates and allows thread T1 to continue
+ * - at t30 thread T1 terminates
+ *
  * \image html with-PriorityProtect.png "With \"PriorityProtect\""
  *
  * This is the same situation as in previous scenario, but now all mutexes have PriorityProtect protocol enabled.
  * Changes of priority due to this protocol allow highest priority thread T5 to acquire ownership of the mutex much
  * sooner than previously. Additionally the most important critical sections (where mutex with high priority ceiling is
- * used) are as short as possible. This scenario has 9 context switches, which is much less than 22 in scenario without
- * PriorityInheritance or PriorityProtect protocol. This is what happens in each marked time point:
+ * used) are as short as possible. This scenario has 9 context switches, which is much less than 22 in both previous
+ * scenarios. This is what happens in each marked time point:
  * - at t0 thread T1 starts executing
  * - at t1 thread T1 successfully locks mutex "13" and it's priority is boosted to the priority ceiling of this mutex,
  * which is equal to priority of thread T3

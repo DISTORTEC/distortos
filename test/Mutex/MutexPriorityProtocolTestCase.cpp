@@ -192,6 +192,76 @@ bool testRunner(const std::array<int, totalThreads>& delays, const std::array<Te
 }
 
 /**
+ * \brief Test phase of PriorityInheritance protocol.
+ *
+ * \return true if the test phase succeeded, false otherwise
+ */
+
+bool priorityInheritancePhase()
+{
+	Mutex mutex12 {Mutex::Type::Normal, Mutex::Protocol::PriorityInheritance};	// shared by thread 1 and 2
+	Mutex mutex123 {Mutex::Type::Normal, Mutex::Protocol::PriorityInheritance};	// shared by thread 1, 2 and 3
+	Mutex mutex13 {Mutex::Type::Normal, Mutex::Protocol::PriorityInheritance};	// shared by thread 1 and 3
+	Mutex mutex23 {Mutex::Type::Normal, Mutex::Protocol::PriorityInheritance};	// shared by thread 2 and 3
+	Mutex mutex35 {Mutex::Type::Normal, Mutex::Protocol::PriorityInheritance};	// shared by thread 3 and 5
+
+	const TestStep steps1[]
+	{
+			{nullptr, nullptr, 0, 1, durationUnit * 1},
+			{&mutex13, &Mutex::lock, 2, 3, durationUnit * 1},
+			{&mutex123, &Mutex::lock, 4, 5, durationUnit * 1},
+			{&mutex12, &Mutex::lock, 11, 12, durationUnit * 2},
+			{nullptr, nullptr, 18, 19, durationUnit * 2},
+			{&mutex13, &Mutex::unlock, 25, 28, durationUnit * 1},
+			{&mutex123, &Mutex::unlock, 29, 32, durationUnit * 1},
+			{&mutex12, &Mutex::unlock, 33, 57, durationUnit * 1},
+	};
+	const TestStep steps2[]
+	{
+			{nullptr, nullptr, 6, 7, durationUnit * 1},
+			{&mutex23, &Mutex::lock, 8, 9, durationUnit * 1},
+			{&mutex123, &Mutex::lock, 10, 30, durationUnit * 1},
+			{&mutex12, &Mutex::lock, 31, 34, durationUnit * 2},
+			{&mutex23, &Mutex::unlock, 35, 38, durationUnit * 1},
+			{&mutex123, &Mutex::unlock, 39, 54, durationUnit * 1},
+			{&mutex12, &Mutex::unlock, 55, 56, durationUnit * 1},
+	};
+	const TestStep steps3[]
+	{
+			{nullptr, nullptr, 13, 14, durationUnit * 1},
+			{&mutex35, &Mutex::lock, 15, 16, durationUnit * 1},
+			{&mutex13, &Mutex::lock, 17, 26, durationUnit * 1},
+			{&mutex23, &Mutex::lock, 27, 36, durationUnit * 1},
+			{&mutex123, &Mutex::lock, 37, 40, durationUnit * 2},
+			{&mutex35, &Mutex::unlock, 41, 47, durationUnit * 1},
+			{&mutex123, &Mutex::unlock, 48, 49, durationUnit * 1},
+			{&mutex23, &Mutex::unlock, 50, 51, durationUnit * 1},
+			{&mutex13, &Mutex::unlock, 52, 53, durationUnit * 1},
+	};
+	const TestStep steps4[]
+	{
+			{nullptr, nullptr, 20, 21, durationUnit * 2},
+			{nullptr, nullptr, 45, 46, durationUnit * 3},
+	};
+	const TestStep steps5[]
+	{
+			{nullptr, nullptr, 22, 23, durationUnit * 1},
+			{&mutex35, &Mutex::lock, 24, 42, durationUnit * 2},
+			{&mutex35, &Mutex::unlock, 43, 44, durationUnit * 1},
+	};
+	const std::array<TestStepRange, totalThreads> stepsRanges
+	{{
+			TestStepRange{steps1},
+			TestStepRange{steps2},
+			TestStepRange{steps3},
+			TestStepRange{steps4},
+			TestStepRange{steps5},
+	}};
+
+	return testRunner(threadDelays, stepsRanges, 22 + delayedStartContextSwitchesCount);
+}
+
+/**
  * \brief Test phase of PriorityProtect protocol.
  *
  * \return true if the test phase succeeded, false otherwise
@@ -269,6 +339,10 @@ bool priorityProtectPhase()
 
 bool MutexPriorityProtocolTestCase::run_() const
 {
+	const auto priorityInheritancePhaseResult = priorityInheritancePhase();
+	if (priorityInheritancePhaseResult == false)
+		return priorityInheritancePhaseResult;
+
 	return priorityProtectPhase();
 }
 
