@@ -18,6 +18,7 @@
 #include "waitForNextTick.hpp"
 
 #include "distortos/Mutex.hpp"
+#include "distortos/ThisThread.hpp"
 
 #include <cerrno>
 
@@ -37,12 +38,17 @@ namespace
 /// single duration used in tests
 constexpr auto singleDuration = TickClock::duration{1};
 
+/// priority of current test thread
+constexpr uint8_t testThreadPriority {UINT8_MAX - 1};
+
 /*---------------------------------------------------------------------------------------------------------------------+
 | local functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
 /**
  * \brief Runs the test case.
+ *
+ * \attention this function expects the priority of test thread to be testThreadPriority
  *
  * \return true if the test case succeeded, false otherwise
  */
@@ -153,7 +159,7 @@ bool testRunner_()
 	}
 
 	{
-		const auto ret = mutexTestTryLockWhenLocked(mutex);
+		const auto ret = mutexTestTryLockWhenLocked(mutex, testThreadPriority);
 		if (ret != true)
 			return ret;
 	}
@@ -175,7 +181,7 @@ bool testRunner_()
 	}
 
 	{
-		const auto ret = mutexTestTryLockWhenLocked(mutex);
+		const auto ret = mutexTestTryLockWhenLocked(mutex, testThreadPriority);
 		if (ret != true)
 			return ret;
 	}
@@ -209,7 +215,11 @@ bool testRunner_()
 
 bool MutexRecursiveOperationsTestCase::run_() const
 {
-	return testRunner_();
+	const auto thisThreadPriority = ThisThread::getPriority();
+	ThisThread::setPriority(testThreadPriority);
+	const auto ret = testRunner_();
+	ThisThread::setPriority(thisThreadPriority);
+	return ret;
 }
 
 }	// namespace test
