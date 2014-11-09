@@ -8,11 +8,13 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-10-27
+ * \date 2014-11-09
  */
 
 #ifndef TEST_MUTEX_MUTEXTESTTRYLOCKWHENLOCKED_HPP_
 #define TEST_MUTEX_MUTEXTESTTRYLOCKWHENLOCKED_HPP_
+
+#include <cstdint>
 
 namespace distortos
 {
@@ -28,11 +30,12 @@ namespace test
  * Mutex::tryLock() is called from another thread.
  *
  * \param [in] mutex is a reference to mutex that will be tested
+ * \param [in] priority is the priority of the created thread, default - max
  *
  * \return true if test succeeded, false otherwise
  */
 
-bool mutexTestTryLockWhenLocked(Mutex& mutex);
+bool mutexTestTryLockWhenLocked(Mutex& mutex, uint8_t priority = UINT8_MAX);
 
 }	// namespace test
 

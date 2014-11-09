@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-10-27
+ * \date 2014-11-09
  */
 
 #include "mutexTestTryLockWhenLocked.hpp"
@@ -42,10 +42,10 @@ constexpr size_t testThreadStackSize {256};
 | global functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-bool mutexTestTryLockWhenLocked(Mutex& mutex)
+bool mutexTestTryLockWhenLocked(Mutex& mutex, const uint8_t priority)
 {
 	bool sharedRet {};
-	auto tryLockThreadObject = makeStaticThread<testThreadStackSize>(UINT8_MAX,
+	auto tryLockThreadObject = makeStaticThread<testThreadStackSize>(priority,
 			[&mutex, &sharedRet]()
 			{
 				const auto start = TickClock::now();
