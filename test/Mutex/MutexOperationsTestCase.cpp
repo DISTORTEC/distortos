@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-10-27
+ * \date 2014-11-09
  */
 
 #include "MutexOperationsTestCase.hpp"
@@ -107,14 +107,16 @@ bool testUnlock(Mutex& mutex)
  *
  * Tests whether all tryLock*() functions properly return some error when dealing with locked mutex.
  *
- * \param [in] type is the type of mutex that will be checked
+ * \param [in] type is the type of mutex
+ * \param [in] protocol is the mutex protocol
+ * \param [in] priorityCeiling is the priority ceiling of mutex, ignored when protocol != Protocol::PriorityProtect
  *
  * \return true if test succeeded, false otherwise
  */
 
-bool phase1(const Mutex::Type type)
+bool phase1(const Mutex::Type type, const Mutex::Protocol protocol, const uint8_t priorityCeiling)
 {
-	Mutex mutex{type};
+	Mutex mutex{type, protocol, priorityCeiling};
 	bool sharedRet {};
 	Mutex semaphoreMutex;
 	semaphoreMutex.lock();
@@ -167,14 +169,16 @@ bool phase1(const Mutex::Type type)
  *
  * Tests whether all tryLock*() functions properly lock unlocked mutex.
  *
- * \param [in] type is the type of mutex that will be checked
+ * \param [in] type is the type of mutex
+ * \param [in] protocol is the mutex protocol
+ * \param [in] priorityCeiling is the priority ceiling of mutex, ignored when protocol != Protocol::PriorityProtect
  *
  * \return true if test succeeded, false otherwise
  */
 
-bool phase2(Mutex::Type type)
+bool phase2(const Mutex::Type type, const Mutex::Protocol protocol, const uint8_t priorityCeiling)
 {
-	Mutex mutex{type};
+	Mutex mutex{type, protocol, priorityCeiling};
 
 	{
 		// mutex is unlocked, so tryLock() must succeed immediately
@@ -259,11 +263,11 @@ bool MutexOperationsTestCase::run_() const
 
 	for (const auto type : types)
 	{
-		const auto ret1 = phase1(type);
+		const auto ret1 = phase1(type, Mutex::Protocol::None, {});
 		if (ret1 != true)
 			return ret1;
 
-		const auto ret2 = phase2(type);
+		const auto ret2 = phase2(type, Mutex::Protocol::None, {});
 		if (ret2 != true)
 			return ret2;
 	}
