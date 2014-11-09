@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-09-27
+ * \date 2014-11-09
  */
 
 #ifndef TEST_MUTEX_MUTEXOPERATIONSTESTCASE_HPP_
@@ -25,7 +25,8 @@ namespace test
 /**
  * \brief Tests various mutex operations.
  *
- * Tests locking (lock(), tryLock(), tryLockFor() and tryLockUntil()) and unlocking of all 3 mutex types.
+ * Tests locking (lock(), tryLock(), tryLockFor() and tryLockUntil()) and unlocking of all valid combinations of mutex
+ * types, protocols and priority ceilings.
  */
 
 class MutexOperationsTestCase : public TestCase

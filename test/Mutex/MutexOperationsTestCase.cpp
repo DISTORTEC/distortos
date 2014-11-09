@@ -261,20 +261,30 @@ bool phase2(const Mutex::Type type, const Mutex::Protocol protocol, const uint8_
 
 bool testRunner_()
 {
-	const static Mutex::Type types[]
+	using Parameters = std::tuple<Mutex::Type, Mutex::Protocol, uint8_t>;
+	static const Parameters parametersArray[]
 	{
-			Mutex::Type::Normal,
-			Mutex::Type::ErrorChecking,
-			Mutex::Type::Recursive
+			Parameters{Mutex::Type::Normal, Mutex::Protocol::None, {}},
+			Parameters{Mutex::Type::Normal, Mutex::Protocol::PriorityProtect, UINT8_MAX},
+			Parameters{Mutex::Type::Normal, Mutex::Protocol::PriorityProtect, testThreadPriority},
+			Parameters{Mutex::Type::Normal, Mutex::Protocol::PriorityInheritance, {}},
+			Parameters{Mutex::Type::ErrorChecking, Mutex::Protocol::None, {}},
+			Parameters{Mutex::Type::ErrorChecking, Mutex::Protocol::PriorityProtect, UINT8_MAX},
+			Parameters{Mutex::Type::ErrorChecking, Mutex::Protocol::PriorityProtect, testThreadPriority},
+			Parameters{Mutex::Type::ErrorChecking, Mutex::Protocol::PriorityInheritance, {}},
+			Parameters{Mutex::Type::Recursive, Mutex::Protocol::None, {}},
+			Parameters{Mutex::Type::Recursive, Mutex::Protocol::PriorityProtect, UINT8_MAX},
+			Parameters{Mutex::Type::Recursive, Mutex::Protocol::PriorityProtect, testThreadPriority},
+			Parameters{Mutex::Type::Recursive, Mutex::Protocol::PriorityInheritance, {}},
 	};
 
-	for (const auto type : types)
+	for (const auto& parameters : parametersArray)
 	{
-		const auto ret1 = phase1(type, Mutex::Protocol::None, {});
+		const auto ret1 = phase1(std::get<0>(parameters), std::get<1>(parameters), std::get<2>(parameters));
 		if (ret1 != true)
 			return ret1;
 
-		const auto ret2 = phase2(type, Mutex::Protocol::None, {});
+		const auto ret2 = phase2(std::get<0>(parameters), std::get<1>(parameters), std::get<2>(parameters));
 		if (ret2 != true)
 			return ret2;
 	}
