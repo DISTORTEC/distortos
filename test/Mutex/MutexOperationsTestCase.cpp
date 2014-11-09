@@ -138,7 +138,7 @@ bool phase1(const Mutex::Type type, const Mutex::Protocol protocol, const uint8_
 	}
 
 	{
-		const auto ret = mutexTestTryLockWhenLocked(mutex);
+		const auto ret = mutexTestTryLockWhenLocked(mutex, testThreadPriority);
 		if (ret != true)
 			return ret;
 	}
@@ -195,7 +195,7 @@ bool phase2(const Mutex::Type type, const Mutex::Protocol protocol, const uint8_
 	}
 
 	{
-		const auto ret = mutexTestTryLockWhenLocked(mutex);
+		const auto ret = mutexTestTryLockWhenLocked(mutex, testThreadPriority);
 		if (ret != true)
 			return ret;
 	}
@@ -216,7 +216,7 @@ bool phase2(const Mutex::Type type, const Mutex::Protocol protocol, const uint8_
 	}
 
 	{
-		const auto ret = mutexTestTryLockWhenLocked(mutex);
+		const auto ret = mutexTestTryLockWhenLocked(mutex, testThreadPriority);
 		if (ret != true)
 			return ret;
 	}
@@ -237,7 +237,7 @@ bool phase2(const Mutex::Type type, const Mutex::Protocol protocol, const uint8_
 	}
 
 	{
-		const auto ret = mutexTestTryLockWhenLocked(mutex);
+		const auto ret = mutexTestTryLockWhenLocked(mutex, testThreadPriority);
 		if (ret != true)
 			return ret;
 	}
