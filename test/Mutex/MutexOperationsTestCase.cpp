@@ -18,6 +18,7 @@
 
 #include "distortos/Mutex.hpp"
 #include "distortos/StaticThread.hpp"
+#include "distortos/ThisThread.hpp"
 
 #include <cerrno>
 
@@ -126,6 +127,7 @@ bool phase1(const Mutex::Type type, const Mutex::Protocol protocol, const uint8_
 
 	waitForNextTick();
 	lockUnlockThreadObject.start();
+	ThisThread::yield();
 	if (sharedRet == false)
 	{
 		lockUnlockThreadObject.join();
