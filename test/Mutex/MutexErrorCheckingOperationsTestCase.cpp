@@ -54,66 +54,78 @@ constexpr uint8_t testThreadPriority {UINT8_MAX - 1};
 
 bool testRunner_()
 {
-	Mutex mutex {Mutex::Type::ErrorChecking};
-
+	using Parameters = std::pair<Mutex::Protocol, uint8_t>;
+	static const Parameters parametersArray[]
 	{
-		// simple lock - must succeed immediately
-		waitForNextTick();
-		const auto start = TickClock::now();
-		const auto ret = mutex.lock();
-		if (ret != 0 || start != TickClock::now())
-			return false;
-	}
+			Parameters{Mutex::Protocol::None, {}},
+			Parameters{Mutex::Protocol::PriorityProtect, UINT8_MAX},
+			Parameters{Mutex::Protocol::PriorityProtect, testThreadPriority},
+			Parameters{Mutex::Protocol::PriorityInheritance, {}},
+	};
 
+	for (const auto& parameters : parametersArray)
 	{
-		// re-lock attempt - must fail with EDEADLK immediately
-		waitForNextTick();
-		const auto start = TickClock::now();
-		const auto ret = mutex.lock();
-		if (ret != EDEADLK || start != TickClock::now())
-			return false;
-	}
+		Mutex mutex {Mutex::Type::ErrorChecking, parameters.first, parameters.second};
 
-	{
-		// re-lock attempt - must fail with EDEADLK immediately
-		waitForNextTick();
-		const auto start = TickClock::now();
-		const auto ret = mutex.tryLockFor(singleDuration);
-		if (ret != EDEADLK || start != TickClock::now())
-			return false;
-	}
+		{
+			// simple lock - must succeed immediately
+			waitForNextTick();
+			const auto start = TickClock::now();
+			const auto ret = mutex.lock();
+			if (ret != 0 || start != TickClock::now())
+				return false;
+		}
 
-	{
-		// re-lock attempt - must fail with EDEADLK immediately
-		waitForNextTick();
-		const auto start = TickClock::now();
-		const auto ret = mutex.tryLockUntil(start + singleDuration);
-		if (ret != EDEADLK || start != TickClock::now())
-			return false;
-	}
+		{
+			// re-lock attempt - must fail with EDEADLK immediately
+			waitForNextTick();
+			const auto start = TickClock::now();
+			const auto ret = mutex.lock();
+			if (ret != EDEADLK || start != TickClock::now())
+				return false;
+		}
 
-	{
-		const auto ret = mutexTestUnlockFromWrongThread(mutex);
-		if (ret != true)
-			return ret;
-	}
+		{
+			// re-lock attempt - must fail with EDEADLK immediately
+			waitForNextTick();
+			const auto start = TickClock::now();
+			const auto ret = mutex.tryLockFor(singleDuration);
+			if (ret != EDEADLK || start != TickClock::now())
+				return false;
+		}
 
-	{
-		// simple unlock - must succeed immediately
-		waitForNextTick();
-		const auto start = TickClock::now();
-		const auto ret = mutex.unlock();
-		if (ret != 0 || start != TickClock::now())
-			return false;
-	}
+		{
+			// re-lock attempt - must fail with EDEADLK immediately
+			waitForNextTick();
+			const auto start = TickClock::now();
+			const auto ret = mutex.tryLockUntil(start + singleDuration);
+			if (ret != EDEADLK || start != TickClock::now())
+				return false;
+		}
 
-	{
-		// excessive unlock - must fail with EPERM immediately
-		waitForNextTick();
-		const auto start = TickClock::now();
-		const auto ret = mutex.unlock();
-		if (ret != EPERM || start != TickClock::now())
-			return false;
+		{
+			const auto ret = mutexTestUnlockFromWrongThread(mutex);
+			if (ret != true)
+				return ret;
+		}
+
+		{
+			// simple unlock - must succeed immediately
+			waitForNextTick();
+			const auto start = TickClock::now();
+			const auto ret = mutex.unlock();
+			if (ret != 0 || start != TickClock::now())
+				return false;
+		}
+
+		{
+			// excessive unlock - must fail with EPERM immediately
+			waitForNextTick();
+			const auto start = TickClock::now();
+			const auto ret = mutex.unlock();
+			if (ret != EPERM || start != TickClock::now())
+				return false;
+		}
 	}
 
 	return true;
