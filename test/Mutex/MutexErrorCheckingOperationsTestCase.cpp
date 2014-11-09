@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-10-27
+ * \date 2014-11-09
  */
 
 #include "MutexErrorCheckingOperationsTestCase.hpp"
@@ -36,13 +36,17 @@ namespace
 /// single duration used in tests
 constexpr auto singleDuration = TickClock::duration{1};
 
-}	// namespace
-
 /*---------------------------------------------------------------------------------------------------------------------+
-| private functions
+| local functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-bool MutexErrorCheckingOperationsTestCase::run_() const
+/**
+ * \brief Runs the test case.
+ *
+ * \return true if the test case succeeded, false otherwise
+ */
+
+bool testRunner_()
 {
 	Mutex mutex {Mutex::Type::ErrorChecking};
 
@@ -107,6 +111,17 @@ bool MutexErrorCheckingOperationsTestCase::run_() const
 	}
 
 	return true;
+}
+
+}	// namespace
+
+/*---------------------------------------------------------------------------------------------------------------------+
+| private functions
++---------------------------------------------------------------------------------------------------------------------*/
+
+bool MutexErrorCheckingOperationsTestCase::run_() const
+{
+	return testRunner_();
 }
 
 }	// namespace test
