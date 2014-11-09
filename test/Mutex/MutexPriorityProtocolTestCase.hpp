@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-11-08
+ * \date 2014-11-09
  */
 
 #ifndef TEST_MUTEX_MUTEXPRIORITYPROTOCOLTESTCASE_HPP_
@@ -23,7 +23,8 @@ namespace test
 {
 
 /**
- * \brief Executes typical "priority inversion" scenario using mutexes with PriorityProtect protocol.
+ * \brief Executes typical "priority inversion" scenario using mutexes with PriorityInheritance or PriorityProtect
+ * protocol.
  *
  * 5 threads are executed and they are expected to execute and preempt each other in exact sequence.
  *
