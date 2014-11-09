@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-10-27
+ * \date 2014-11-09
  */
 
 #include "MutexPriorityTestCase.hpp"
@@ -18,6 +18,7 @@
 
 #include "distortos/StaticThread.hpp"
 #include "distortos/Mutex.hpp"
+#include "distortos/ThisThread.hpp"
 
 namespace distortos
 {
@@ -112,6 +113,9 @@ bool MutexPriorityTestCase::run_() const
 				makeTestThread(phase.first[phase.second[8]], sequenceAsserter, mutex),
 				makeTestThread(phase.first[phase.second[9]], sequenceAsserter, mutex),
 		}};
+
+		// make sure all test threads are blocked on mutex, even if this thread inherits their high priority
+		ThisThread::sleepFor(TickClock::duration{2});
 
 		mutex.lock();
 
