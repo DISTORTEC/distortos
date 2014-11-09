@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-11-04
+ * \date 2014-11-09
  */
 
 #include "mutexTestCases.hpp"
@@ -18,6 +18,7 @@
 #include "MutexErrorCheckingOperationsTestCase.hpp"
 #include "MutexRecursiveOperationsTestCase.hpp"
 #include "MutexPriorityProtocolTestCase.hpp"
+#include "MutexPriorityProtectOperationsTestCase.hpp"
 
 namespace distortos
 {
@@ -47,6 +48,9 @@ const MutexRecursiveOperationsTestCase recursiveOperationsTestCase;
 /// MutexPriorityProtocolTestCase instance
 const MutexPriorityProtocolTestCase priorityProtocolTestCase;
 
+/// MutexPriorityProtectOperationsTestCase instance
+const MutexPriorityProtectOperationsTestCase priorityProtectOperationsTestCase;
+
 /// array with references to TestCase objects related to mutexes
 const TestCaseRange::value_type mutexTestCases_[]
 {
@@ -55,6 +59,7 @@ const TestCaseRange::value_type mutexTestCases_[]
 		errorCheckingOperationsTestCase,
 		recursiveOperationsTestCase,
 		priorityProtocolTestCase,
+		priorityProtectOperationsTestCase,
 };
 
 }	// namespace
