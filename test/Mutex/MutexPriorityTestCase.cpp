@@ -95,41 +95,56 @@ TestThread makeTestThread(const ThreadParameters& threadParameters, SequenceAsse
 
 bool MutexPriorityTestCase::run_() const
 {
-	for (const auto& phase : priorityTestPhases)
+	using Parameters = std::tuple<Mutex::Type, Mutex::Protocol, uint8_t>;
+	static const Parameters parametersArray[]
 	{
-		SequenceAsserter sequenceAsserter;
-		Mutex mutex;
+			Parameters{Mutex::Type::Normal, Mutex::Protocol::None, {}},
+			Parameters{Mutex::Type::Normal, Mutex::Protocol::PriorityProtect, UINT8_MAX},
+			Parameters{Mutex::Type::Normal, Mutex::Protocol::PriorityInheritance, {}},
+			Parameters{Mutex::Type::ErrorChecking, Mutex::Protocol::None, {}},
+			Parameters{Mutex::Type::ErrorChecking, Mutex::Protocol::PriorityProtect, UINT8_MAX},
+			Parameters{Mutex::Type::ErrorChecking, Mutex::Protocol::PriorityInheritance, {}},
+			Parameters{Mutex::Type::Recursive, Mutex::Protocol::None, {}},
+			Parameters{Mutex::Type::Recursive, Mutex::Protocol::PriorityProtect, UINT8_MAX},
+			Parameters{Mutex::Type::Recursive, Mutex::Protocol::PriorityInheritance, {}},
+	};
 
-		std::array<TestThread, totalThreads> threads
-		{{
-				makeTestThread(phase.first[phase.second[0]], sequenceAsserter, mutex),
-				makeTestThread(phase.first[phase.second[1]], sequenceAsserter, mutex),
-				makeTestThread(phase.first[phase.second[2]], sequenceAsserter, mutex),
-				makeTestThread(phase.first[phase.second[3]], sequenceAsserter, mutex),
-				makeTestThread(phase.first[phase.second[4]], sequenceAsserter, mutex),
-				makeTestThread(phase.first[phase.second[5]], sequenceAsserter, mutex),
-				makeTestThread(phase.first[phase.second[6]], sequenceAsserter, mutex),
-				makeTestThread(phase.first[phase.second[7]], sequenceAsserter, mutex),
-				makeTestThread(phase.first[phase.second[8]], sequenceAsserter, mutex),
-				makeTestThread(phase.first[phase.second[9]], sequenceAsserter, mutex),
-		}};
+	for (const auto& parameters : parametersArray)
+		for (const auto& phase : priorityTestPhases)
+		{
+			SequenceAsserter sequenceAsserter;
+			Mutex mutex {std::get<0>(parameters), std::get<1>(parameters), std::get<2>(parameters)};
 
-		// make sure all test threads are blocked on mutex, even if this thread inherits their high priority
-		ThisThread::sleepFor(TickClock::duration{2});
+			std::array<TestThread, totalThreads> threads
+			{{
+					makeTestThread(phase.first[phase.second[0]], sequenceAsserter, mutex),
+					makeTestThread(phase.first[phase.second[1]], sequenceAsserter, mutex),
+					makeTestThread(phase.first[phase.second[2]], sequenceAsserter, mutex),
+					makeTestThread(phase.first[phase.second[3]], sequenceAsserter, mutex),
+					makeTestThread(phase.first[phase.second[4]], sequenceAsserter, mutex),
+					makeTestThread(phase.first[phase.second[5]], sequenceAsserter, mutex),
+					makeTestThread(phase.first[phase.second[6]], sequenceAsserter, mutex),
+					makeTestThread(phase.first[phase.second[7]], sequenceAsserter, mutex),
+					makeTestThread(phase.first[phase.second[8]], sequenceAsserter, mutex),
+					makeTestThread(phase.first[phase.second[9]], sequenceAsserter, mutex),
+			}};
 
-		mutex.lock();
+			mutex.lock();
 
-		for (auto& thread : threads)
-			thread.start();
+			for (auto& thread : threads)
+				thread.start();
 
-		mutex.unlock();
+			// make sure all test threads are blocked on mutex, even if this thread inherits their high priority
+			ThisThread::sleepFor(TickClock::duration{2});
 
-		for (auto& thread : threads)
-			thread.join();
+			mutex.unlock();
 
-		if (sequenceAsserter.assertSequence(totalThreads) == false)
-			return false;
-	}
+			for (auto& thread : threads)
+				thread.join();
+
+			if (sequenceAsserter.assertSequence(totalThreads) == false)
+				return false;
+		}
 
 	return true;
 }
