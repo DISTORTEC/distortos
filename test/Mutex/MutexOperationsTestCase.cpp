@@ -41,6 +41,9 @@ constexpr auto singleDuration = TickClock::duration{1};
 /// size of stack for test thread, bytes
 constexpr size_t testThreadStackSize {256};
 
+/// priority of current test thread and lock-unlock test thread
+constexpr uint8_t testThreadPriority {UINT8_MAX - 1};
+
 /*---------------------------------------------------------------------------------------------------------------------+
 | local functions
 +---------------------------------------------------------------------------------------------------------------------*/
@@ -122,7 +125,7 @@ bool phase1(const Mutex::Type type, const Mutex::Protocol protocol, const uint8_
 	Mutex semaphoreMutex;
 	semaphoreMutex.lock();
 
-	auto lockUnlockThreadObject = makeStaticThread<testThreadStackSize>(UINT8_MAX, lockUnlockThread,
+	auto lockUnlockThreadObject = makeStaticThread<testThreadStackSize>(testThreadPriority, lockUnlockThread,
 			std::ref(mutex), std::ref(sharedRet), std::ref(semaphoreMutex));
 
 	waitForNextTick();
@@ -251,6 +254,8 @@ bool phase2(const Mutex::Type type, const Mutex::Protocol protocol, const uint8_
 /**
  * \brief Runs the test case.
  *
+ * \attention this function expects the priority of test thread to be testThreadPriority
+ *
  * \return true if the test case succeeded, false otherwise
  */
 
@@ -285,7 +290,11 @@ bool testRunner_()
 
 bool MutexOperationsTestCase::run_() const
 {
-	return testRunner_();
+	const auto thisThreadPriority = ThisThread::getPriority();
+	ThisThread::setPriority(testThreadPriority);
+	const auto ret = testRunner_();
+	ThisThread::setPriority(thisThreadPriority);
+	return ret;
 }
 
 }	// namespace test
