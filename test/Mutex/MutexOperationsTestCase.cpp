@@ -248,13 +248,13 @@ bool phase2(const Mutex::Type type, const Mutex::Protocol protocol, const uint8_
 	return true;
 }
 
-}	// namespace
+/**
+ * \brief Runs the test case.
+ *
+ * \return true if the test case succeeded, false otherwise
+ */
 
-/*---------------------------------------------------------------------------------------------------------------------+
-| private functions
-+---------------------------------------------------------------------------------------------------------------------*/
-
-bool MutexOperationsTestCase::run_() const
+bool testRunner_()
 {
 	const static Mutex::Type types[]
 	{
@@ -275,6 +275,17 @@ bool MutexOperationsTestCase::run_() const
 	}
 
 	return true;
+}
+
+}	// namespace
+
+/*---------------------------------------------------------------------------------------------------------------------+
+| private functions
++---------------------------------------------------------------------------------------------------------------------*/
+
+bool MutexOperationsTestCase::run_() const
+{
+	return testRunner_();
 }
 
 }	// namespace test
