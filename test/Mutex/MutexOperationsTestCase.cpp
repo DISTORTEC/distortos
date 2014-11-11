@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-11-09
+ * \date 2014-11-11
  */
 
 #include "MutexOperationsTestCase.hpp"
@@ -259,7 +259,7 @@ bool phase2(const Mutex::Type type, const Mutex::Protocol protocol, const uint8_
  * \return true if the test case succeeded, false otherwise
  */
 
-bool testRunner_()
+bool testRunner()
 {
 	using Parameters = std::tuple<Mutex::Type, Mutex::Protocol, uint8_t>;
 	static const Parameters parametersArray[]
@@ -302,7 +302,7 @@ bool MutexOperationsTestCase::run_() const
 {
 	const auto thisThreadPriority = ThisThread::getPriority();
 	ThisThread::setPriority(testThreadPriority);
-	const auto ret = testRunner_();
+	const auto ret = testRunner();
 	ThisThread::setPriority(thisThreadPriority);
 	return ret;
 }

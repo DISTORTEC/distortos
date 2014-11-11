@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-11-09
+ * \date 2014-11-11
  */
 
 #include "MutexRecursiveOperationsTestCase.hpp"
@@ -53,7 +53,7 @@ constexpr uint8_t testThreadPriority {UINT8_MAX - 1};
  * \return true if the test case succeeded, false otherwise
  */
 
-bool testRunner_()
+bool testRunner()
 {
 	using Parameters = std::pair<Mutex::Protocol, uint8_t>;
 	static const Parameters parametersArray[]
@@ -229,7 +229,7 @@ bool MutexRecursiveOperationsTestCase::run_() const
 {
 	const auto thisThreadPriority = ThisThread::getPriority();
 	ThisThread::setPriority(testThreadPriority);
-	const auto ret = testRunner_();
+	const auto ret = testRunner();
 	ThisThread::setPriority(thisThreadPriority);
 	return ret;
 }

@@ -102,7 +102,7 @@ bool testInvalidLockAttempt(const Mutex::Type type)
  * \return true if the test case succeeded, false otherwise
  */
 
-bool testRunner_()
+bool testRunner()
 {
 	static const Mutex::Type types[]
 	{
@@ -131,7 +131,7 @@ bool MutexPriorityProtectOperationsTestCase::run_() const
 {
 	const auto thisThreadPriority = ThisThread::getPriority();
 	ThisThread::setPriority(testThreadPriority);
-	const auto ret = testRunner_();
+	const auto ret = testRunner();
 	ThisThread::setPriority(thisThreadPriority);
 	return ret;
 }
