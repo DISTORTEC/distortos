@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-11-09
+ * \date 2014-11-11
  */
 
 #include "MutexPriorityProtectOperationsTestCase.hpp"
@@ -37,7 +37,7 @@ namespace
 constexpr auto singleDuration = TickClock::duration{1};
 
 /// priority of current test thread
-constexpr uint8_t testThreadPriority {UINT8_MAX};
+constexpr uint8_t testThreadPriority {1};
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | local functions
