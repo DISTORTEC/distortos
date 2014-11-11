@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-11-09
+ * \date 2014-11-11
  */
 
 #ifndef TEST_MUTEX_MUTEXPRIORITYPROTECTOPERATIONSTESTCASE_HPP_
@@ -26,7 +26,7 @@ namespace test
  * \brief Tests operations in scenarios specific for PriorityProtect protocol of mutex.
  *
  * Tests detection of lock attempts (lock(), tryLock(), tryLockFor() and tryLockUntil()) from thread with priority above
- * priority ceiling.
+ * priority ceiling and changes of priority resulting from locking mutexes with this protocol.
  */
 
 class MutexPriorityProtectOperationsTestCase : public TestCase

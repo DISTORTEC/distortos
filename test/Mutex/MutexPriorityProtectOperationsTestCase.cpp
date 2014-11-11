@@ -95,6 +95,102 @@ bool testInvalidLockAttempt(const Mutex::Type type)
 }
 
 /**
+ * \brief Tests changes of priority resulting from locking mutexes with PriorityProtect protocol.
+ *
+ * \param [in] type is the Mutex::Type that will be tested
+ *
+ * \return true if the test case succeeded, false otherwise
+ */
+
+bool testPriorityChanges(const Mutex::Type type)
+{
+	// function (lock/unlock), index of mutex ([0;4] only!), expected effective priority
+	using Operation = std::tuple<int (Mutex::*)(), uint8_t, uint8_t>;
+	static const Operation operations[]
+	{
+			// ascending
+			Operation{&Mutex::lock, 0, testThreadPriority + 0},		// *----
+			Operation{&Mutex::lock, 1, testThreadPriority + 1},		// **---
+			Operation{&Mutex::lock, 2, testThreadPriority + 2},		// ***--
+			Operation{&Mutex::lock, 3, testThreadPriority + 3},		// ****-
+			Operation{&Mutex::lock, 4, testThreadPriority + 4},		// *****
+			Operation{&Mutex::unlock, 0, testThreadPriority + 4},	// -****
+			Operation{&Mutex::unlock, 1, testThreadPriority + 4},	// --***
+			Operation{&Mutex::unlock, 2, testThreadPriority + 4},	// ---**
+			Operation{&Mutex::unlock, 3, testThreadPriority + 4},	// ----*
+			Operation{&Mutex::unlock, 4, testThreadPriority + 0},	// -----
+			// descending
+			Operation{&Mutex::lock, 4, testThreadPriority + 4},		// ----*
+			Operation{&Mutex::lock, 3, testThreadPriority + 4},		// ---**
+			Operation{&Mutex::lock, 2, testThreadPriority + 4},		// --***
+			Operation{&Mutex::lock, 1, testThreadPriority + 4},		// -****
+			Operation{&Mutex::lock, 0, testThreadPriority + 4},		// *****
+			Operation{&Mutex::unlock, 4, testThreadPriority + 3},	// ****-
+			Operation{&Mutex::unlock, 3, testThreadPriority + 2},	// ***--
+			Operation{&Mutex::unlock, 2, testThreadPriority + 1},	// **---
+			Operation{&Mutex::unlock, 1, testThreadPriority + 0},	// *----
+			Operation{&Mutex::unlock, 0, testThreadPriority + 0},	// -----
+			// "random"
+			Operation{&Mutex::lock, 1, testThreadPriority + 1},		// -*---
+			Operation{&Mutex::lock, 0, testThreadPriority + 1},		// **---
+			Operation{&Mutex::lock, 3, testThreadPriority + 3},		// **-*-
+			Operation{&Mutex::lock, 2, testThreadPriority + 3},		// ****-
+			Operation{&Mutex::lock, 4, testThreadPriority + 4},		// *****
+			Operation{&Mutex::unlock, 4, testThreadPriority + 3},	// ****-
+			Operation{&Mutex::unlock, 2, testThreadPriority + 3},	// **-*-
+			Operation{&Mutex::unlock, 3, testThreadPriority + 1},	// **---
+			Operation{&Mutex::unlock, 0, testThreadPriority + 1},	// -*---
+			Operation{&Mutex::unlock, 1, testThreadPriority + 0},	// -----
+			// mixed sequence
+			Operation{&Mutex::lock, 0, testThreadPriority + 0},		// *----
+			Operation{&Mutex::lock, 1, testThreadPriority + 1},		// **---
+			Operation{&Mutex::unlock, 0, testThreadPriority + 1},	// -*---
+			Operation{&Mutex::lock, 2, testThreadPriority + 2},		// -**--
+			Operation{&Mutex::unlock, 1, testThreadPriority + 2},	// --*--
+			Operation{&Mutex::lock, 3, testThreadPriority + 3},		// --**-
+			Operation{&Mutex::unlock, 2, testThreadPriority + 3},	// ---*-
+			Operation{&Mutex::lock, 4, testThreadPriority + 4},		// ---**
+			Operation{&Mutex::unlock, 3, testThreadPriority + 4},	// ----*
+			Operation{&Mutex::lock, 3, testThreadPriority + 4},		// ---**
+			Operation{&Mutex::lock, 1, testThreadPriority + 4},		// -*-**
+			Operation{&Mutex::unlock, 4, testThreadPriority + 3},	// -*-*-
+			Operation{&Mutex::lock, 2, testThreadPriority + 3},		// -***-
+			Operation{&Mutex::lock, 0, testThreadPriority + 3},		// ****-
+			Operation{&Mutex::unlock, 3, testThreadPriority + 2},	// ***--
+			Operation{&Mutex::lock, 4, testThreadPriority + 4},		// ***-*
+			Operation{&Mutex::unlock, 2, testThreadPriority + 4},	// **--*
+			Operation{&Mutex::lock, 3, testThreadPriority + 4},		// **-**
+			Operation{&Mutex::unlock, 0, testThreadPriority + 4},	// -*-**
+			Operation{&Mutex::unlock, 4, testThreadPriority + 3},	// -*-*-
+			Operation{&Mutex::unlock, 3, testThreadPriority + 1},	// -*---
+			Operation{&Mutex::unlock, 1, testThreadPriority + 0},	// -----
+	};
+
+	Mutex mutexes[]
+	{
+			Mutex{type, Mutex::Protocol::PriorityProtect, testThreadPriority + 0},
+			Mutex{type, Mutex::Protocol::PriorityProtect, testThreadPriority + 1},
+			Mutex{type, Mutex::Protocol::PriorityProtect, testThreadPriority + 2},
+			Mutex{type, Mutex::Protocol::PriorityProtect, testThreadPriority + 3},
+			Mutex{type, Mutex::Protocol::PriorityProtect, testThreadPriority + 4},
+	};
+
+	bool result {true};
+
+	for (const auto& operation : operations)
+	{
+		const auto function = std::get<0>(operation);
+		const auto index = std::get<1>(operation);	/// \todo check index of mutex
+		const auto expectedEffectivePriority = std::get<2>(operation);
+		const auto ret = (mutexes[index].*function)();
+		if (ret != 0 || ThisThread::getEffectivePriority() != expectedEffectivePriority)
+			result = false;
+	}
+
+	return result;
+}
+
+/**
  * \brief Runs the test case.
  *
  * \attention this function expects the priority of test thread to be testThreadPriority
@@ -113,9 +209,17 @@ bool testRunner()
 
 	for (const auto type : types)
 	{
-		const auto result = testInvalidLockAttempt(type);
-		if (result != true)
-			return result;
+		{
+			const auto result = testInvalidLockAttempt(type);
+			if (result != true)
+				return result;
+		}
+
+		{
+			const auto result = testPriorityChanges(type);
+			if (result != true)
+				return result;
+		}
 	}
 
 	return true;
