@@ -44,6 +44,57 @@ constexpr uint8_t testThreadPriority {1};
 +---------------------------------------------------------------------------------------------------------------------*/
 
 /**
+ * \brief Tests invalid lock attempts.
+ *
+ * \param [in] type is the Mutex::Type that will be tested
+ *
+ * \return true if the test case succeeded, false otherwise
+ */
+
+bool testInvalidLockAttempt(const Mutex::Type type)
+{
+	Mutex mutex {type, Mutex::Protocol::PriorityProtect, testThreadPriority - 1};
+
+	{
+		// invalid lock attempt - must fail with EINVAL immediately
+		waitForNextTick();
+		const auto start = TickClock::now();
+		const auto ret = mutex.lock();
+		if (ret != EINVAL || start != TickClock::now())
+			return false;
+	}
+
+	{
+		// invalid lock attempt - must fail with EINVAL immediately
+		waitForNextTick();
+		const auto start = TickClock::now();
+		const auto ret = mutex.tryLock();
+		if (ret != EINVAL || start != TickClock::now())
+			return false;
+	}
+
+	{
+		// invalid lock attempt - must fail with EINVAL immediately
+		waitForNextTick();
+		const auto start = TickClock::now();
+		const auto ret = mutex.tryLockFor(singleDuration);
+		if (ret != EINVAL || start != TickClock::now())
+			return false;
+	}
+
+	{
+		// invalid lock attempt - must fail with EINVAL immediately
+		waitForNextTick();
+		const auto start = TickClock::now();
+		const auto ret = mutex.tryLockUntil(start + singleDuration);
+		if (ret != EINVAL || start != TickClock::now())
+			return false;
+	}
+
+	return true;
+}
+
+/**
  * \brief Runs the test case.
  *
  * \attention this function expects the priority of test thread to be testThreadPriority
@@ -62,43 +113,9 @@ bool testRunner_()
 
 	for (const auto type : types)
 	{
-		Mutex mutex {type, Mutex::Protocol::PriorityProtect, testThreadPriority - 1};
-
-		{
-			// invalid lock attempt - must fail with EINVAL immediately
-			waitForNextTick();
-			const auto start = TickClock::now();
-			const auto ret = mutex.lock();
-			if (ret != EINVAL || start != TickClock::now())
-				return false;
-		}
-
-		{
-			// invalid lock attempt - must fail with EINVAL immediately
-			waitForNextTick();
-			const auto start = TickClock::now();
-			const auto ret = mutex.tryLock();
-			if (ret != EINVAL || start != TickClock::now())
-				return false;
-		}
-
-		{
-			// invalid lock attempt - must fail with EINVAL immediately
-			waitForNextTick();
-			const auto start = TickClock::now();
-			const auto ret = mutex.tryLockFor(singleDuration);
-			if (ret != EINVAL || start != TickClock::now())
-				return false;
-		}
-
-		{
-			// invalid lock attempt - must fail with EINVAL immediately
-			waitForNextTick();
-			const auto start = TickClock::now();
-			const auto ret = mutex.tryLockUntil(start + singleDuration);
-			if (ret != EINVAL || start != TickClock::now())
-				return false;
-		}
+		const auto result = testInvalidLockAttempt(type);
+		if (result != true)
+			return result;
 	}
 
 	return true;
