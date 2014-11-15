@@ -36,19 +36,19 @@ namespace
 +---------------------------------------------------------------------------------------------------------------------*/
 
 /// functor class used in testBasicPriorityInheritance() - it locks 0-3 mutexes and unlocks them afterwards
-class BasicPriorityInheritanceThread
+class LockThread
 {
 public:
 
 	/**
-	 * \brief BasicPriorityInheritanceThread's constructor
+	 * \brief LockThread's constructor
 	 *
 	 * \param [in] mutex1 is a pointer to first mutex
 	 * \param [in] mutex2 is a pointer to second mutex
 	 * \param [in] mutex3 is a pointer to third mutex
 	 */
 
-	constexpr BasicPriorityInheritanceThread(Mutex* const mutex1, Mutex* const mutex2, Mutex* const mutex3) :
+	constexpr LockThread(Mutex* const mutex1, Mutex* const mutex2, Mutex* const mutex3) :
 			mutexes_{mutex1, mutex2, mutex3},
 			ret_{}
 	{
@@ -265,16 +265,16 @@ bool testBasicPriorityInheritance(const Mutex::Type type)
 	Mutex mutex110 {type, Mutex::Protocol::PriorityInheritance};
 	Mutex mutex111 {type, Mutex::Protocol::PriorityInheritance};
 
-	BasicPriorityInheritanceThread threadObject0 {&mutex00, &mutex01, &mutex0};
-	BasicPriorityInheritanceThread threadObject1 {&mutex10, &mutex11, &mutex1};
-	BasicPriorityInheritanceThread threadObject00 {&mutex00, nullptr, nullptr};
-	BasicPriorityInheritanceThread threadObject01 {&mutex01, nullptr, nullptr};
-	BasicPriorityInheritanceThread threadObject10 {&mutex100, &mutex101, &mutex10};
-	BasicPriorityInheritanceThread threadObject11 {&mutex110, &mutex111, &mutex11};
-	BasicPriorityInheritanceThread threadObject100 {&mutex100, nullptr, nullptr};
-	BasicPriorityInheritanceThread threadObject101 {&mutex101, nullptr, nullptr};
-	BasicPriorityInheritanceThread threadObject110 {&mutex110, nullptr, nullptr};
-	BasicPriorityInheritanceThread threadObject111 {&mutex111, nullptr, nullptr};
+	LockThread threadObject0 {&mutex00, &mutex01, &mutex0};
+	LockThread threadObject1 {&mutex10, &mutex11, &mutex1};
+	LockThread threadObject00 {&mutex00, nullptr, nullptr};
+	LockThread threadObject01 {&mutex01, nullptr, nullptr};
+	LockThread threadObject10 {&mutex100, &mutex101, &mutex10};
+	LockThread threadObject11 {&mutex110, &mutex111, &mutex11};
+	LockThread threadObject100 {&mutex100, nullptr, nullptr};
+	LockThread threadObject101 {&mutex101, nullptr, nullptr};
+	LockThread threadObject110 {&mutex110, nullptr, nullptr};
+	LockThread threadObject111 {&mutex111, nullptr, nullptr};
 
 	auto thread0 =
 			makeStaticThread<testThreadStackSize>(testThreadPriority + priorityBoosts[0][0], std::ref(threadObject0));
