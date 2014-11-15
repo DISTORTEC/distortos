@@ -489,7 +489,7 @@ bool testCanceledLock(const Mutex::Type type)
 
 bool testPriorityChange(const Mutex::Type type)
 {
-	constexpr size_t testThreadStackSize {384};
+	constexpr size_t testThreadStackSize {256};
 	constexpr size_t totalThreads {10};
 
 	// index of thread ([0;4] only!), new priority
