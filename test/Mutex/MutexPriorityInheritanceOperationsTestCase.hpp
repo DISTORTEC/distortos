@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-11-12
+ * \date 2014-11-15
  */
 
 #ifndef TEST_MUTEX_MUTEXPRIORITYINHERITANCEOPERATIONSTESTCASE_HPP_
@@ -25,7 +25,9 @@ namespace test
 /**
  * \brief Tests operations in scenarios specific for PriorityInheritance protocol of mutex.
  *
- * Tests basic priority inheritance mechanism of mutexes with PriorityInheritance protocol.
+ * Tests:
+ * - basic priority inheritance mechanism of mutexes with PriorityInheritance protocol,
+ * - behavior of priority inheritance mechanism of mutexes in the event of canceled (timed-out) lock attempt.
  */
 
 class MutexPriorityInheritanceOperationsTestCase : public TestCase

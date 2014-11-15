@@ -18,6 +18,9 @@
 #include "distortos/StaticThread.hpp"
 
 #include "distortos/estd/ReferenceHolder.hpp"
+#include "distortos/estd/ReverseAdaptor.hpp"
+
+#include <cerrno>
 
 namespace distortos
 {
@@ -92,6 +95,81 @@ private:
 	std::array<Mutex*, 3> mutexes_;
 
 	/// combined return value of Mutex::lock() / Mutex::unlock()
+	int ret_;
+};
+
+/// functor class used in testCanceledLock() - it locks 1 or 2 mutexes (last one with timeout) and unlocks them
+/// afterwards
+class TryLockForThread
+{
+public:
+
+	/**
+	 * \brief TryLockForThread's constructor
+	 *
+	 * \param [in] unlockedMutex is a pointer to unlocked mutex which will be locked with no timeout, nullptr to skip
+	 * this step
+	 * \param [in] lockedMutex is a pointer to locked mutex on which lock attempt with timeout will be executed
+	 * \param [in] duration is the duration used as argument for Mutex::tryLockFor()
+	 */
+
+	constexpr TryLockForThread(Mutex* const unlockedMutex, Mutex& lockedMutex, const TickClock::duration duration) :
+			duration_{duration},
+			unlockedMutex_{unlockedMutex},
+			lockedMutex_(lockedMutex),
+			ret_{}
+	{
+
+	}
+
+	/**
+	 * \return return value of Mutex::tryLockFor()
+	 */
+
+	int getRet() const
+	{
+		return ret_;
+	}
+
+	/**
+	 * \brief Main function of the thread.
+	 *
+	 * Following steps are performed:
+	 * 1. "unlocked mutex" is locked with no timeout (if it was provided)
+	 * 2. attempt to lock "locked mutex" with given timeout is executed
+	 * 3. if operation from step 2. succeeds (which should _NOT_ happen), this mutex is unlocked
+	 * 4. "unlocked mutex" is unlocked (if it was provided)
+	 *
+	 * \note Values returned by operations in step 1, 3 and 4 are not checked to simplify this test.
+	 */
+
+	void operator()()
+	{
+		if (unlockedMutex_ != nullptr)
+			unlockedMutex_->lock();
+
+		ret_ = lockedMutex_.tryLockFor(duration_);
+
+		// safety in case of problems with test - normally the mutex should _NOT_ be locked by this thread
+		if (ret_ == 0)
+			lockedMutex_.unlock();
+
+		if (unlockedMutex_ != nullptr)
+			unlockedMutex_->unlock();
+	}
+
+private:
+
+	/// duration used as argument for Mutex::tryLockFor()
+	TickClock::duration duration_;
+
+	/// pointer to unlocked mutex which will be locked with no timeout, nullptr to skip this step
+	Mutex* unlockedMutex_;
+
+	/// reference to locked mutex on which lock attempt with timeout will be executed
+	Mutex& lockedMutex_;
+
+	/// return value of Mutex::tryLockFor()
 	int ret_;
 };
 
@@ -283,6 +361,104 @@ bool testBasicPriorityInheritance(const Mutex::Type type)
 }
 
 /**
+ * \brief Tests behavior of priority inheritance mechanism of mutexes in the event of canceled (timed-out) lock attempt.
+ *
+ * 10 threads are created and "connected" into a "vertical" hierarchy with current thread using mutexes (2 for each
+ * thread, except the last one). Each mutex "connects" two adjacent threads. Each thread locks the first mutex
+ * "normally" (with no timeout) and the second one with timeout, with exception of main thread - which locks its only
+ * mutex with no timeout - and last thread - which locks its only mutex with timeout. Timeouts of each thread are
+ * selected so that the highest priority thread time-outs first, and the lowest priority thread - last.
+ *
+ * Main thread is expected to inherit priority of each started test thread when this thread blocks on the mutex. After
+ * last thread is started main thread will inherit priority of thread T9 through a chain of 10 mutexes blocking 10
+ * threads. After each thread cancels block on its mutex (due to timeout) main thread's priority is expected to
+ * decrease by one - to the value inherited from the new last thread in the chain.
+ *
+ * \param [in] type is the Mutex::Type that will be tested
+ *
+ * \return true if the test case succeeded, false otherwise
+ */
+
+bool testCanceledLock(const Mutex::Type type)
+{
+	constexpr TickClock::duration durationUnit {10};
+	constexpr size_t testThreadStackSize {384};
+	constexpr size_t totalThreads {10};
+
+	Mutex mutex0 {type, Mutex::Protocol::PriorityInheritance};
+	Mutex mutex1 {type, Mutex::Protocol::PriorityInheritance};
+	Mutex mutex2 {type, Mutex::Protocol::PriorityInheritance};
+	Mutex mutex3 {type, Mutex::Protocol::PriorityInheritance};
+	Mutex mutex4 {type, Mutex::Protocol::PriorityInheritance};
+	Mutex mutex5 {type, Mutex::Protocol::PriorityInheritance};
+	Mutex mutex6 {type, Mutex::Protocol::PriorityInheritance};
+	Mutex mutex7 {type, Mutex::Protocol::PriorityInheritance};
+	Mutex mutex8 {type, Mutex::Protocol::PriorityInheritance};
+	Mutex mutex9 {type, Mutex::Protocol::PriorityInheritance};
+
+	TryLockForThread threadObject0 {&mutex1, mutex0, durationUnit * 10};
+	TryLockForThread threadObject1 {&mutex2, mutex1, durationUnit * 9};
+	TryLockForThread threadObject2 {&mutex3, mutex2, durationUnit * 8};
+	TryLockForThread threadObject3 {&mutex4, mutex3, durationUnit * 7};
+	TryLockForThread threadObject4 {&mutex5, mutex4, durationUnit * 6};
+	TryLockForThread threadObject5 {&mutex6, mutex5, durationUnit * 5};
+	TryLockForThread threadObject6 {&mutex7, mutex6, durationUnit * 4};
+	TryLockForThread threadObject7 {&mutex8, mutex7, durationUnit * 3};
+	TryLockForThread threadObject8 {&mutex9, mutex8, durationUnit * 2};
+	TryLockForThread threadObject9 {nullptr, mutex9, durationUnit * 1};
+
+	using TestThread = decltype(makeStaticThread<testThreadStackSize>({}, std::ref(std::declval<TryLockForThread&>())));
+	std::array<TestThread, totalThreads> threads
+	{{
+			makeStaticThread<testThreadStackSize>(testThreadPriority + 1, std::ref(threadObject0)),
+			makeStaticThread<testThreadStackSize>(testThreadPriority + 2, std::ref(threadObject1)),
+			makeStaticThread<testThreadStackSize>(testThreadPriority + 3, std::ref(threadObject2)),
+			makeStaticThread<testThreadStackSize>(testThreadPriority + 4, std::ref(threadObject3)),
+			makeStaticThread<testThreadStackSize>(testThreadPriority + 5, std::ref(threadObject4)),
+			makeStaticThread<testThreadStackSize>(testThreadPriority + 6, std::ref(threadObject5)),
+			makeStaticThread<testThreadStackSize>(testThreadPriority + 7, std::ref(threadObject6)),
+			makeStaticThread<testThreadStackSize>(testThreadPriority + 8, std::ref(threadObject7)),
+			makeStaticThread<testThreadStackSize>(testThreadPriority + 9, std::ref(threadObject8)),
+			makeStaticThread<testThreadStackSize>(testThreadPriority + 10, std::ref(threadObject9)),
+	}};
+
+	bool result {true};
+
+	{
+		const auto ret = mutex0.lock();
+		if (ret != 0)
+			result = false;
+	}
+
+	for (auto& thread : threads)
+	{
+		thread.start();
+		if (ThisThread::getEffectivePriority() != thread.getEffectivePriority())
+			result = false;
+	}
+
+	for (auto& thread : estd::makeReverseAdaptor(threads))
+	{
+		thread.join();
+		if (ThisThread::getEffectivePriority() != thread.getEffectivePriority() - 1)
+			result = false;
+	}
+
+	{
+		const auto ret = mutex0.unlock();
+		if (ret != 0)
+			result = false;
+	}
+
+	for (const auto& threadObject : {threadObject0, threadObject1, threadObject2, threadObject3, threadObject4,
+			threadObject5, threadObject6, threadObject7, threadObject8, threadObject9})
+		if (threadObject.getRet() != ETIMEDOUT)
+			result = false;
+
+	return result;
+}
+
+/**
  * \brief Runs the test case.
  *
  * \attention this function expects the priority of test thread to be testThreadPriority
@@ -303,6 +479,12 @@ bool testRunner()
 	{
 		{
 			const auto result = testBasicPriorityInheritance(type);
+			if (result != true)
+				return result;
+		}
+
+		{
+			const auto result = testCanceledLock(type);
 			if (result != true)
 				return result;
 		}
