@@ -27,7 +27,8 @@ namespace test
  *
  * Tests:
  * - basic priority inheritance mechanism of mutexes with PriorityInheritance protocol,
- * - behavior of priority inheritance mechanism of mutexes in the event of canceled (timed-out) lock attempt.
+ * - behavior of priority inheritance mechanism of mutexes in the event of canceled (timed-out) lock attempt,
+ * - behavior of priority inheritance mechanism of mutexes in the event of priority change.
  */
 
 class MutexPriorityInheritanceOperationsTestCase : public TestCase

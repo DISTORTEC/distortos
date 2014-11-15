@@ -35,7 +35,8 @@ namespace
 | local types
 +---------------------------------------------------------------------------------------------------------------------*/
 
-/// functor class used in testBasicPriorityInheritance() - it locks 0-3 mutexes and unlocks them afterwards
+/// functor class used in testBasicPriorityInheritance() and testPriorityChange() - it locks 0-3 mutexes and unlocks
+/// them afterwards
 class LockThread
 {
 public:
@@ -469,6 +470,141 @@ bool testCanceledLock(const Mutex::Type type)
 }
 
 /**
+ * \brief Tests behavior of priority inheritance mechanism of mutexes in the event of priority change.
+ *
+ * 10 threads are created and "connected" into a "vertical" hierarchy with current thread using mutexes (2 for each
+ * thread, except the last one). Each mutex "connects" two adjacent threads.
+ *
+ * Main thread is expected to inherit priority of each started test thread when this thread blocks on the mutex. After
+ * last thread is started main thread will inherit priority of thread T9 through a chain of 10 mutexes blocking 10
+ * threads.
+ *
+ * Change of priority applied to any of the threads in the chain is expected to propagate "up" this chain, up to main
+ * thread.
+ *
+ * \param [in] type is the Mutex::Type that will be tested
+ *
+ * \return true if the test case succeeded, false otherwise
+ */
+
+bool testPriorityChange(const Mutex::Type type)
+{
+	constexpr size_t testThreadStackSize {384};
+	constexpr size_t totalThreads {10};
+
+	// index of thread ([0;4] only!), new priority
+	static const std::pair<uint8_t, uint8_t> priorityChanges[]
+	{
+			// set all to testThreadPriority (minimal value that is not idle priority)
+			{9, testThreadPriority}, {8, testThreadPriority}, {7, testThreadPriority}, {6, testThreadPriority},
+			{5, testThreadPriority}, {4, testThreadPriority}, {3, testThreadPriority}, {2, testThreadPriority},
+			{1, testThreadPriority}, {0, testThreadPriority},
+
+			// restore what was set previously, in reverse order
+			{0, testThreadPriority + 1}, {1, testThreadPriority + 2}, {2, testThreadPriority + 3},
+			{3, testThreadPriority + 4}, {4, testThreadPriority + 5}, {5, testThreadPriority + 6},
+			{6, testThreadPriority + 7}, {7, testThreadPriority + 8}, {8, testThreadPriority + 9},
+			{9, testThreadPriority + 10},
+
+			// max priority for each thread, restore previous value after each change
+			{0, UINT8_MAX}, {0, testThreadPriority + 1}, {1, UINT8_MAX}, {1, testThreadPriority + 2},
+			{2, UINT8_MAX}, {2, testThreadPriority + 3}, {3, UINT8_MAX}, {3, testThreadPriority + 4},
+			{4, UINT8_MAX}, {4, testThreadPriority + 5}, {5, UINT8_MAX}, {5, testThreadPriority + 6},
+			{6, UINT8_MAX}, {6, testThreadPriority + 7}, {7, UINT8_MAX}, {7, testThreadPriority + 8},
+			{8, UINT8_MAX}, {8, testThreadPriority + 9}, {9, UINT8_MAX}, {9, testThreadPriority + 10},
+	};
+
+	Mutex mutex0 {type, Mutex::Protocol::PriorityInheritance};
+	Mutex mutex1 {type, Mutex::Protocol::PriorityInheritance};
+	Mutex mutex2 {type, Mutex::Protocol::PriorityInheritance};
+	Mutex mutex3 {type, Mutex::Protocol::PriorityInheritance};
+	Mutex mutex4 {type, Mutex::Protocol::PriorityInheritance};
+	Mutex mutex5 {type, Mutex::Protocol::PriorityInheritance};
+	Mutex mutex6 {type, Mutex::Protocol::PriorityInheritance};
+	Mutex mutex7 {type, Mutex::Protocol::PriorityInheritance};
+	Mutex mutex8 {type, Mutex::Protocol::PriorityInheritance};
+	Mutex mutex9 {type, Mutex::Protocol::PriorityInheritance};
+
+	LockThread threadObject0 {&mutex1, &mutex0, nullptr};
+	LockThread threadObject1 {&mutex2, &mutex1, nullptr};
+	LockThread threadObject2 {&mutex3, &mutex2, nullptr};
+	LockThread threadObject3 {&mutex4, &mutex3, nullptr};
+	LockThread threadObject4 {&mutex5, &mutex4, nullptr};
+	LockThread threadObject5 {&mutex6, &mutex5, nullptr};
+	LockThread threadObject6 {&mutex7, &mutex6, nullptr};
+	LockThread threadObject7 {&mutex8, &mutex7, nullptr};
+	LockThread threadObject8 {&mutex9, &mutex8, nullptr};
+	LockThread threadObject9 {&mutex9, nullptr, nullptr};
+
+	using TestThread = decltype(makeStaticThread<testThreadStackSize>({}, std::ref(std::declval<LockThread&>())));
+	std::array<TestThread, totalThreads> threads
+	{{
+			makeStaticThread<testThreadStackSize>(testThreadPriority + 1, std::ref(threadObject0)),
+			makeStaticThread<testThreadStackSize>(testThreadPriority + 2, std::ref(threadObject1)),
+			makeStaticThread<testThreadStackSize>(testThreadPriority + 3, std::ref(threadObject2)),
+			makeStaticThread<testThreadStackSize>(testThreadPriority + 4, std::ref(threadObject3)),
+			makeStaticThread<testThreadStackSize>(testThreadPriority + 5, std::ref(threadObject4)),
+			makeStaticThread<testThreadStackSize>(testThreadPriority + 6, std::ref(threadObject5)),
+			makeStaticThread<testThreadStackSize>(testThreadPriority + 7, std::ref(threadObject6)),
+			makeStaticThread<testThreadStackSize>(testThreadPriority + 8, std::ref(threadObject7)),
+			makeStaticThread<testThreadStackSize>(testThreadPriority + 9, std::ref(threadObject8)),
+			makeStaticThread<testThreadStackSize>(testThreadPriority + 10, std::ref(threadObject9)),
+	}};
+
+	bool result {true};
+
+	{
+		const auto ret = mutex0.lock();
+		if (ret != 0)
+			result = false;
+	}
+
+	for (auto& thread : threads)
+	{
+		thread.start();
+		if (ThisThread::getEffectivePriority() != thread.getEffectivePriority())
+			result = false;
+	}
+
+	for (const auto& priorityChange : priorityChanges)
+	{
+		threads[priorityChange.first].setPriority(priorityChange.second);	/// \todo check index of thread
+
+		uint8_t inheritedPriority {};
+
+		for (const auto& thread : estd::makeReverseAdaptor(threads))
+		{
+			const auto expectedEffectivePriority = std::max(inheritedPriority, thread.getPriority());
+			const auto effectivePriority = thread.getEffectivePriority();
+			if (expectedEffectivePriority != effectivePriority)
+				result = false;
+			inheritedPriority = effectivePriority;
+		}
+
+		const auto expectedEffectivePriority = std::max(inheritedPriority, ThisThread::getPriority());
+		const auto effectivePriority = ThisThread::getEffectivePriority();
+		if (expectedEffectivePriority != effectivePriority)
+			result = false;
+	}
+
+	{
+		const auto ret = mutex0.unlock();
+		if (ret != 0)
+			result = false;
+	}
+
+	for (auto& thread : threads)
+		thread.join();
+
+	for (const auto& threadObject : {threadObject0, threadObject1, threadObject2, threadObject3, threadObject4,
+			threadObject5, threadObject6, threadObject7, threadObject8, threadObject9})
+		if (threadObject.getRet() != 0)
+			result = false;
+
+	return result;
+}
+
+/**
  * \brief Runs the test case.
  *
  * \attention this function expects the priority of test thread to be testThreadPriority
@@ -495,6 +631,12 @@ bool testRunner()
 
 		{
 			const auto result = testCanceledLock(type);
+			if (result != true)
+				return result;
+		}
+
+		{
+			const auto result = testPriorityChange(type);
 			if (result != true)
 				return result;
 		}
