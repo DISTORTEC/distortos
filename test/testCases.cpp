@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-08-27
+ * \date 2014-11-15
  */
 
 #include "testCases.hpp"
@@ -32,8 +32,8 @@ namespace
 /// array with references to TestCaseRange objects
 const TestCaseRangeRange::value_type testCases_[]
 {
-		threadTestCases,
-		mutexTestCases,
+		TestCaseRangeRange::value_type{threadTestCases},
+		TestCaseRangeRange::value_type{mutexTestCases},
 };
 
 }	// namespace

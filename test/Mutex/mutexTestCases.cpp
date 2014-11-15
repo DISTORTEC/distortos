@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-11-12
+ * \date 2014-11-15
  */
 
 #include "mutexTestCases.hpp"
@@ -58,13 +58,13 @@ const MutexPriorityInheritanceOperationsTestCase priorityInheritanceOperationsTe
 /// array with references to TestCase objects related to mutexes
 const TestCaseRange::value_type mutexTestCases_[]
 {
-		priorityTestCase,
-		operationsTestCase,
-		errorCheckingOperationsTestCase,
-		recursiveOperationsTestCase,
-		priorityProtocolTestCase,
-		priorityProtectOperationsTestCase,
-		priorityInheritanceOperationsTestCase,
+		TestCaseRange::value_type{priorityTestCase},
+		TestCaseRange::value_type{operationsTestCase},
+		TestCaseRange::value_type{errorCheckingOperationsTestCase},
+		TestCaseRange::value_type{recursiveOperationsTestCase},
+		TestCaseRange::value_type{priorityProtocolTestCase},
+		TestCaseRange::value_type{priorityProtectOperationsTestCase},
+		TestCaseRange::value_type{priorityInheritanceOperationsTestCase},
 };
 
 }	// namespace

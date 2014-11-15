@@ -297,9 +297,19 @@ bool testBasicPriorityInheritance(const Mutex::Type type)
 	auto thread111 =
 			makeStaticThread<testThreadStackSize>(testThreadPriority + priorityBoosts[0][9], std::ref(threadObject111));
 
-	std::array<estd::ReferenceHolder<decltype(thread0)>, totalThreads> threads
+	using TestThreadHolder = estd::ReferenceHolder<decltype(thread0)>;
+	std::array<TestThreadHolder, totalThreads> threads
 	{{
-			thread0, thread1, thread00, thread01, thread10, thread11, thread100, thread101, thread110, thread111,
+			TestThreadHolder{thread0},
+			TestThreadHolder{thread1},
+			TestThreadHolder{thread00},
+			TestThreadHolder{thread01},
+			TestThreadHolder{thread10},
+			TestThreadHolder{thread11},
+			TestThreadHolder{thread100},
+			TestThreadHolder{thread101},
+			TestThreadHolder{thread110},
+			TestThreadHolder{thread111},
 	}};
 
 	bool result {true};
