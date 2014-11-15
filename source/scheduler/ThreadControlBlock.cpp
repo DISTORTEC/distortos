@@ -92,6 +92,9 @@ void ThreadControlBlock::updateBoostedPriority(const uint8_t boostedPriority)
 
 	reposition(loweringBefore);
 
+	// this code is placed here, even though it could be moved to ThreadControlBlock::reposition(), simplifying
+	// ThreadControlBlock::setPriority(). This way optimizer can remove recursive calls to this function, reducing
+	// memory usage of threads.
 	if (priorityInheritanceMutexControlBlock_ != nullptr)
 		priorityInheritanceMutexControlBlock_->getOwner()->updateBoostedPriority();
 }
