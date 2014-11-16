@@ -35,9 +35,10 @@ public:
 	 * \param [in] buffer is a pointer to stack's buffer
 	 * \param [in] size is the size of stack's buffer, bytes
 	 * \param [in] priority is the thread's priority, 0 - lowest, UINT8_MAX - highest
+	 * \param [in] schedulingPolicy is the scheduling policy of the thread
 	 */
 
-	ThreadBase(void* buffer, size_t size, uint8_t priority);
+	ThreadBase(void* buffer, size_t size, uint8_t priority, SchedulingPolicy schedulingPolicy);
 
 	/**
 	 * \brief Waits for thread termination.

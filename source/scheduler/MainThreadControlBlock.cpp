@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-10-27
+ * \date 2014-11-16
  */
 
 #include "distortos/scheduler/MainThreadControlBlock.hpp"
@@ -50,7 +50,7 @@ architecture::Stack stackWrapper(const std::pair<void*, size_t> stackBuffer)
 +---------------------------------------------------------------------------------------------------------------------*/
 
 MainThreadControlBlock::MainThreadControlBlock(const uint8_t priority) :
-		ThreadControlBlock{stackWrapper(architecture::getMainStack()), priority}
+		ThreadControlBlock{stackWrapper(architecture::getMainStack()), priority, SchedulingPolicy::RoundRobin}
 {
 
 }

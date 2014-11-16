@@ -39,12 +39,29 @@ public:
 	 * \brief StaticThread's constructor
 	 *
 	 * \param [in] priority is the thread's priority, 0 - lowest, UINT8_MAX - highest
+	 * \param [in] schedulingPolicy is the scheduling policy of the thread
+	 * \param [in] function is a function that will be executed in separate thread
+	 * \param [in] args are arguments for function
+	 */
+
+	StaticThread(const uint8_t priority, const SchedulingPolicy schedulingPolicy, Function&& function, Args&&... args) :
+			Base{&stack_, sizeof(stack_), priority, schedulingPolicy, std::forward<Function>(function),
+					std::forward<Args>(args)...}
+	{
+
+	}
+
+	/**
+	 * \brief StaticThread's constructor
+	 *
+	 * \param [in] priority is the thread's priority, 0 - lowest, UINT8_MAX - highest
 	 * \param [in] function is a function that will be executed in separate thread
 	 * \param [in] args are arguments for function
 	 */
 
 	StaticThread(const uint8_t priority, Function&& function, Args&&... args) :
-			Base{&stack_, sizeof(stack_), priority, std::forward<Function>(function), std::forward<Args>(args)...}
+			StaticThread{priority, SchedulingPolicy::RoundRobin, std::forward<Function>(function),
+					std::forward<Args>(args)...}
 	{
 
 	}
@@ -68,6 +85,28 @@ private:
 	/// stack buffer
 	typename std::aligned_storage<StackSize>::type stack_;
 };
+
+/**
+ * \brief Helper factory function to make StaticThread object with partially deduced template arguments
+ *
+ * \param StackSize is the size of stack, bytes
+ * \param Function is the function that will be executed
+ * \param Args are the arguments for Function
+ *
+ * \param [in] priority is the thread's priority, 0 - lowest, UINT8_MAX - highest
+ * \param [in] schedulingPolicy is the scheduling policy of the thread
+ * \param [in] function is a function that will be executed in separate thread
+ * \param [in] args are arguments for function
+ *
+ * \return StaticThread object with partially deduced template arguments
+ */
+
+template<size_t StackSize, typename Function, typename... Args>
+StaticThread<StackSize, Function, Args...> makeStaticThread(const uint8_t priority,
+		const SchedulingPolicy schedulingPolicy, Function&& function, Args&&... args)
+{
+	return {priority, schedulingPolicy, std::forward<Function>(function), std::forward<Args>(args)...};
+}
 
 /**
  * \brief Helper factory function to make StaticThread object with partially deduced template arguments

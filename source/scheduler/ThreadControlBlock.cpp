@@ -29,7 +29,8 @@ namespace scheduler
 | public functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-ThreadControlBlock::ThreadControlBlock(void* const buffer, const size_t size, const uint8_t priority) :
+ThreadControlBlock::ThreadControlBlock(void* const buffer, const size_t size, const uint8_t priority,
+		const SchedulingPolicy schedulingPolicy) :
 		stack_{buffer, size, threadRunner, *this},
 		ownedProtocolMutexControlBlocksList_
 		{
@@ -41,7 +42,7 @@ ThreadControlBlock::ThreadControlBlock(void* const buffer, const size_t size, co
 		priority_{priority},
 		boostedPriority_{},
 		roundRobinQuantum_{},
-		schedulingPolicy_{SchedulingPolicy::RoundRobin},
+		schedulingPolicy_{schedulingPolicy},
 		state_{State::New}
 {
 
@@ -112,7 +113,8 @@ void ThreadControlBlock::updateBoostedPriority(const uint8_t boostedPriority)
 | protected functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-ThreadControlBlock::ThreadControlBlock(architecture::Stack&& stack, const uint8_t priority) :
+ThreadControlBlock::ThreadControlBlock(architecture::Stack&& stack, const uint8_t priority,
+		const SchedulingPolicy schedulingPolicy) :
 		stack_{stack},
 		ownedProtocolMutexControlBlocksList_
 		{
@@ -124,7 +126,7 @@ ThreadControlBlock::ThreadControlBlock(architecture::Stack&& stack, const uint8_
 		priority_{priority},
 		boostedPriority_{},
 		roundRobinQuantum_{},
-		schedulingPolicy_{SchedulingPolicy::RoundRobin},
+		schedulingPolicy_{schedulingPolicy},
 		state_{State::New}
 {
 

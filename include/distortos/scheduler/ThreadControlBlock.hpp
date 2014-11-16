@@ -65,9 +65,10 @@ public:
 	 * \param [in] buffer is a pointer to stack's buffer
 	 * \param [in] size is the size of stack's buffer, bytes
 	 * \param [in] priority is the thread's priority, 0 - lowest, UINT8_MAX - highest
+	 * \param [in] schedulingPolicy is the scheduling policy of the thread
 	 */
 
-	ThreadControlBlock(void* buffer, size_t size, uint8_t priority);
+	ThreadControlBlock(void* buffer, size_t size, uint8_t priority, SchedulingPolicy schedulingPolicy);
 
 	/**
 	 * \return effective priority of ThreadControlBlock
@@ -287,9 +288,10 @@ protected:
 	 *
 	 * \param [in] stack is an rvalue reference to stack of main()
 	 * \param [in] priority is the thread's priority, 0 - lowest, UINT8_MAX - highest
+	 * \param [in] schedulingPolicy is the scheduling policy of the thread
 	 */
 
-	ThreadControlBlock(architecture::Stack&& stack, uint8_t priority);
+	ThreadControlBlock(architecture::Stack&& stack, uint8_t priority, SchedulingPolicy schedulingPolicy);
 
 	/**
 	 * \brief ThreadControlBlock's destructor
