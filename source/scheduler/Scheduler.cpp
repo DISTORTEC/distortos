@@ -181,9 +181,11 @@ bool Scheduler::tickInterruptHandler()
 
 	getCurrentThreadControlBlock().getRoundRobinQuantum().decrement();
 
-	// if the object is on the "runnable" list and it used its round-robin quantum, then do the "rotation": move current
-	// thread to the end of same-priority group to implement round-robin scheduling
+	// if the object is on the "runnable" list, it uses SchedulingPolicy::RoundRobin and it used its round-robin
+	// quantum, then do the "rotation": move current thread to the end of same-priority group to implement round-robin
+	// scheduling
 	if (getCurrentThreadControlBlock().getList() == &runnableList_ &&
+			getCurrentThreadControlBlock().getSchedulingPolicy() == SchedulingPolicy::RoundRobin &&
 			getCurrentThreadControlBlock().getRoundRobinQuantum().isZero() == true)
 	{
 		getCurrentThreadControlBlock().getRoundRobinQuantum().reset();
