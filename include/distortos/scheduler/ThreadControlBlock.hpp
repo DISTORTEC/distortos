@@ -160,6 +160,15 @@ public:
 	}
 
 	/**
+	 * \return scheduling policy of the thread
+	 */
+
+	SchedulingPolicy getSchedulingPolicy() const
+	{
+		return schedulingPolicy_;
+	}
+
+	/**
 	 * \return reference to internal Stack object
 	 */
 
