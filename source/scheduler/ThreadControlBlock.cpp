@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-11-15
+ * \date 2014-11-16
  */
 
 #include "distortos/scheduler/ThreadControlBlock.hpp"
@@ -41,6 +41,7 @@ ThreadControlBlock::ThreadControlBlock(void* const buffer, const size_t size, co
 		priority_{priority},
 		boostedPriority_{},
 		roundRobinQuantum_{},
+		schedulingPolicy_{SchedulingPolicy::RoundRobin},
 		state_{State::New}
 {
 
@@ -115,6 +116,7 @@ ThreadControlBlock::ThreadControlBlock(architecture::Stack&& stack, const uint8_
 		priority_{priority},
 		boostedPriority_{},
 		roundRobinQuantum_{},
+		schedulingPolicy_{SchedulingPolicy::RoundRobin},
 		state_{State::New}
 {
 

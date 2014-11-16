@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-11-07
+ * \date 2014-11-16
  */
 
 #ifndef INCLUDE_DISTORTOS_SCHEDULER_THREADCONTROLBLOCK_HPP_
@@ -19,6 +19,8 @@
 #include "distortos/scheduler/MutexControlBlockList.hpp"
 
 #include "distortos/architecture/Stack.hpp"
+
+#include "distortos/SchedulingPolicy.hpp"
 
 namespace distortos
 {
@@ -357,6 +359,9 @@ private:
 
 	/// round-robin quantum
 	RoundRobinQuantum roundRobinQuantum_;
+
+	/// scheduling policy of the thread
+	SchedulingPolicy schedulingPolicy_;
 
 	/// current state of object
 	State state_;
