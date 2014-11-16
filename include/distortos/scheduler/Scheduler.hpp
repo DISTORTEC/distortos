@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-11-04
+ * \date 2014-11-16
  */
 
 #ifndef INCLUDE_DISTORTOS_SCHEDULER_SCHEDULER_HPP_
@@ -278,8 +278,8 @@ private:
 	 *
 	 * Context switch is required in following situations:
 	 * - current thread is no longer on "runnable" list,
-	 * - there is a higher-priority thread available,
-	 * - current thread used its round-robin quantum and same-priority thread is available.
+	 * - current thread is no longer on the beggining of the "runnable" list (because higher-priority thread is
+	 * available or current thread was "rotated" due to round-robin scheduling policy).
 	 *
 	 * \return true if context switch is required
 	 */

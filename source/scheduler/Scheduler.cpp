@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-11-04
+ * \date 2014-11-16
  */
 
 #include "distortos/scheduler/Scheduler.hpp"
@@ -243,15 +243,6 @@ bool Scheduler::isContextSwitchRequired() const
 
 	if (runnableList_.begin() != currentThreadControlBlock_)	// is there a higher-priority thread available?
 		return true;
-
-	if (getCurrentThreadControlBlock().getRoundRobinQuantum().isZero() == true)
-	{
-		const auto nextThread = ++runnableList_.begin();
-		const auto nextThreadPriority = nextThread->get().getPriority();
-		// thread with same priority available?
-		if (getCurrentThreadControlBlock().getPriority() == nextThreadPriority)
-			return true;	// switch context to do round-robin scheduling
-	}
 
 	return false;
 }
