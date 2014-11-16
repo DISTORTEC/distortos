@@ -40,6 +40,9 @@ public:
 	/**
 	 * \brief Thread's constructor
 	 *
+	 * \param [in] buffer is a pointer to stack's buffer
+	 * \param [in] size is the size of stack's buffer, bytes
+	 * \param [in] priority is the thread's priority, 0 - lowest, UINT8_MAX - highest
 	 * \param [in] function is a function that will be executed in separate thread
 	 * \param [in] args are arguments for function
 	 */
@@ -85,6 +88,9 @@ private:
  * \param Function is the function that will be executed
  * \param Args are the arguments for Function
  *
+ * \param [in] buffer is a pointer to stack's buffer
+ * \param [in] size is the size of stack's buffer, bytes
+ * \param [in] priority is the thread's priority, 0 - lowest, UINT8_MAX - highest
  * \param [in] function is a function that will be executed in separate thread
  * \param [in] args are arguments for function
  *
