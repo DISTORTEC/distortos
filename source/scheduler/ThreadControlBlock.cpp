@@ -69,6 +69,14 @@ void ThreadControlBlock::setPriority(const uint8_t priority, const bool alwaysBe
 		priorityInheritanceMutexControlBlock_->getOwner()->updateBoostedPriority();
 }
 
+void ThreadControlBlock::setSchedulingPolicy(const SchedulingPolicy schedulingPolicy)
+{
+	architecture::InterruptMaskingLock interruptMaskingLock;
+
+	schedulingPolicy_ = schedulingPolicy;
+	roundRobinQuantum_.reset();
+}
+
 void ThreadControlBlock::updateBoostedPriority(const uint8_t boostedPriority)
 {
 	decltype(boostedPriority_) newBoostedPriority {boostedPriority};

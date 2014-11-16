@@ -241,6 +241,12 @@ public:
 	}
 
 	/**
+	 * param [in] schedulingPolicy is the new scheduling policy of the thread
+	 */
+
+	void setSchedulingPolicy(SchedulingPolicy schedulingPolicy);
+
+	/**
 	 * \param [in] state is the new state of object
 	 */
 
