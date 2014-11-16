@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-11-08
+ * \date 2014-11-16
  */
 
 #include "MutexPriorityProtocolTestCase.hpp"
@@ -69,12 +69,7 @@ constexpr size_t testThreadStackSize {384};
 constexpr size_t totalThreads {5};
 
 /// duration unit used in test
-constexpr TickClock::duration durationUnit {8};
-
-// "12" is the length (in durationUnit) of the longest test thread
-/// \todo remove when FIFO scheduling for threads is implemented
-static_assert((durationUnit * 12).count() < CONFIG_TICK_RATE_HZ / CONFIG_ROUND_ROBIN_RATE_HZ,
-		"Invalid configuration for test case - there may be no preemptions due to round-robin scheduling.");
+constexpr TickClock::duration durationUnit {10};
 
 /// array with delays of test threads (in durationUnit)
 const std::array<int, totalThreads> threadDelays
@@ -96,7 +91,7 @@ void thread(TickClock::time_point sleepUntil, SequenceAsserter& sequenceAsserter
 +---------------------------------------------------------------------------------------------------------------------*/
 
 /// type of test thread
-using TestThread = decltype(makeStaticThread<testThreadStackSize>({}, thread, std::declval<TickClock::time_point>(),
+using TestThread = decltype(makeStaticThread<testThreadStackSize>({}, {}, thread, std::declval<TickClock::time_point>(),
 		std::ref(std::declval<SequenceAsserter&>()), std::ref(std::declval<const TestStepRange&>())));
 
 /*---------------------------------------------------------------------------------------------------------------------+
@@ -146,7 +141,7 @@ void thread(const TickClock::time_point sleepUntil, SequenceAsserter& sequenceAs
 TestThread makeTestThread(const uint8_t priority, const TickClock::time_point sleepUntil,
 		SequenceAsserter& sequenceAsserter, const TestStepRange& steps)
 {
-	return makeStaticThread<testThreadStackSize>(priority, thread, static_cast<TickClock::time_point>(sleepUntil),
+	return makeStaticThread<testThreadStackSize>(priority, SchedulingPolicy::Fifo, thread, static_cast<TickClock::time_point>(sleepUntil),
 			std::ref(sequenceAsserter), std::ref(steps));
 }
 
