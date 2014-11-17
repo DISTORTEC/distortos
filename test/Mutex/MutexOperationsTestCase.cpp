@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-11-11
+ * \date 2014-11-17
  */
 
 #include "MutexOperationsTestCase.hpp"
@@ -120,7 +120,7 @@ bool testUnlock(Mutex& mutex)
 
 bool phase1(const Mutex::Type type, const Mutex::Protocol protocol, const uint8_t priorityCeiling)
 {
-	Mutex mutex{type, protocol, priorityCeiling};
+	Mutex mutex {type, protocol, priorityCeiling};
 	bool sharedRet {};
 	Mutex semaphoreMutex;
 	semaphoreMutex.lock();
@@ -183,7 +183,7 @@ bool phase1(const Mutex::Type type, const Mutex::Protocol protocol, const uint8_
 
 bool phase2(const Mutex::Type type, const Mutex::Protocol protocol, const uint8_t priorityCeiling)
 {
-	Mutex mutex{type, protocol, priorityCeiling};
+	Mutex mutex {type, protocol, priorityCeiling};
 
 	{
 		// mutex is unlocked, so tryLock() must succeed immediately
