@@ -1,6 +1,6 @@
 /**
  * \file
- * \brief ThreadRoundRobinSchedulingTestCase class header
+ * \brief ThreadSchedulingPolicyTestCase class header
  *
  * \author Copyright (C) 2014 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
@@ -8,11 +8,11 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-09-16
+ * \date 2014-11-17
  */
 
-#ifndef TEST_THREAD_THREADROUNDROBINSCHEDULINGTESTCASE_HPP_
-#define TEST_THREAD_THREADROUNDROBINSCHEDULINGTESTCASE_HPP_
+#ifndef TEST_THREAD_THREADSCHEDULINGPOLICYTESTCASE_HPP_
+#define TEST_THREAD_THREADSCHEDULINGPOLICYTESTCASE_HPP_
 
 #include "TestCase.hpp"
 
@@ -29,7 +29,7 @@ namespace test
  * scheduling).
  */
 
-class ThreadRoundRobinSchedulingTestCase : public TestCase
+class ThreadSchedulingPolicyTestCase : public TestCase
 {
 private:
 
@@ -46,4 +46,4 @@ private:
 
 }	// namespace distortos
 
-#endif	// TEST_THREAD_THREADROUNDROBINSCHEDULINGTESTCASE_HPP_
+#endif	// TEST_THREAD_THREADSCHEDULINGPOLICYTESTCASE_HPP_
