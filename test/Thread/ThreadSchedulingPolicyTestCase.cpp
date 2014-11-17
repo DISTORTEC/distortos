@@ -91,16 +91,18 @@ void thread(SequenceAsserter& sequenceAsserter, const SequencePoints sequencePoi
 /**
  * \brief Builder of TestThread objects.
  *
+ * \param [in] schedulingPolicy is the scheduling policy of the test thread
  * \param [in] sequenceAsserter is a reference to SequenceAsserter shared object
  * \param [in] sequencePoints is a pair of sequence points for this instance
  *
  * \return constructed TestThread object
  */
 
-TestThread makeTestThread(SequenceAsserter& sequenceAsserter, const SequencePoints sequencePoints)
+TestThread makeTestThread(const SchedulingPolicy schedulingPolicy, SequenceAsserter& sequenceAsserter,
+		const SequencePoints sequencePoints)
 {
-	return makeStaticThread<testThreadStackSize>(testThreadPriority, thread, std::ref(sequenceAsserter),
-			static_cast<SequencePoints>(sequencePoints));
+	return makeStaticThread<testThreadStackSize>(testThreadPriority, schedulingPolicy, thread,
+			std::ref(sequenceAsserter), static_cast<SequencePoints>(sequencePoints));
 }
 
 }	// namespace
@@ -115,16 +117,16 @@ bool ThreadSchedulingPolicyTestCase::run_() const
 
 	std::array<TestThread, totalThreads> threads
 	{{
-			makeTestThread(sequenceAsserter, {0, 0 + totalThreads}),
-			makeTestThread(sequenceAsserter, {1, 1 + totalThreads}),
-			makeTestThread(sequenceAsserter, {2, 2 + totalThreads}),
-			makeTestThread(sequenceAsserter, {3, 3 + totalThreads}),
-			makeTestThread(sequenceAsserter, {4, 4 + totalThreads}),
-			makeTestThread(sequenceAsserter, {5, 5 + totalThreads}),
-			makeTestThread(sequenceAsserter, {6, 6 + totalThreads}),
-			makeTestThread(sequenceAsserter, {7, 7 + totalThreads}),
-			makeTestThread(sequenceAsserter, {8, 8 + totalThreads}),
-			makeTestThread(sequenceAsserter, {9, 9 + totalThreads}),
+			makeTestThread(SchedulingPolicy::RoundRobin, sequenceAsserter, {0, 0 + totalThreads}),
+			makeTestThread(SchedulingPolicy::RoundRobin, sequenceAsserter, {1, 1 + totalThreads}),
+			makeTestThread(SchedulingPolicy::RoundRobin, sequenceAsserter, {2, 2 + totalThreads}),
+			makeTestThread(SchedulingPolicy::RoundRobin, sequenceAsserter, {3, 3 + totalThreads}),
+			makeTestThread(SchedulingPolicy::RoundRobin, sequenceAsserter, {4, 4 + totalThreads}),
+			makeTestThread(SchedulingPolicy::RoundRobin, sequenceAsserter, {5, 5 + totalThreads}),
+			makeTestThread(SchedulingPolicy::RoundRobin, sequenceAsserter, {6, 6 + totalThreads}),
+			makeTestThread(SchedulingPolicy::RoundRobin, sequenceAsserter, {7, 7 + totalThreads}),
+			makeTestThread(SchedulingPolicy::RoundRobin, sequenceAsserter, {8, 8 + totalThreads}),
+			makeTestThread(SchedulingPolicy::RoundRobin, sequenceAsserter, {9, 9 + totalThreads}),
 	}};
 
 	decltype(TickClock::now()) testStart;
