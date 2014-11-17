@@ -113,47 +113,62 @@ TestThread makeTestThread(const SchedulingPolicy schedulingPolicy, SequenceAsser
 
 bool ThreadSchedulingPolicyTestCase::run_() const
 {
-	SequenceAsserter sequenceAsserter;
-
-	std::array<TestThread, totalThreads> threads
-	{{
-			makeTestThread(SchedulingPolicy::RoundRobin, sequenceAsserter, {0, 0 + totalThreads}),
-			makeTestThread(SchedulingPolicy::RoundRobin, sequenceAsserter, {1, 1 + totalThreads}),
-			makeTestThread(SchedulingPolicy::RoundRobin, sequenceAsserter, {2, 2 + totalThreads}),
-			makeTestThread(SchedulingPolicy::RoundRobin, sequenceAsserter, {3, 3 + totalThreads}),
-			makeTestThread(SchedulingPolicy::RoundRobin, sequenceAsserter, {4, 4 + totalThreads}),
-			makeTestThread(SchedulingPolicy::RoundRobin, sequenceAsserter, {5, 5 + totalThreads}),
-			makeTestThread(SchedulingPolicy::RoundRobin, sequenceAsserter, {6, 6 + totalThreads}),
-			makeTestThread(SchedulingPolicy::RoundRobin, sequenceAsserter, {7, 7 + totalThreads}),
-			makeTestThread(SchedulingPolicy::RoundRobin, sequenceAsserter, {8, 8 + totalThreads}),
-			makeTestThread(SchedulingPolicy::RoundRobin, sequenceAsserter, {9, 9 + totalThreads}),
-	}};
-
-	decltype(TickClock::now()) testStart;
-
+	// scheduling policy, sequence point multiplier, sequence point step
+	using Parameters = std::tuple<SchedulingPolicy, unsigned int, unsigned int>;
+	static const Parameters parametersArray[]
 	{
-		architecture::InterruptMaskingLock interruptMaskingLock;
+			Parameters{SchedulingPolicy::Fifo, 2, 1},
+			Parameters{SchedulingPolicy::RoundRobin, 1, totalThreads},
+	};
 
-		// wait for beginning of next tick - test threads should be started in the same tick
-		ThisThread::sleepFor({});
+	for (const auto& parameters : parametersArray)
+	{
+		const auto schedulingPolicy = std::get<0>(parameters);
+		const auto multiplier = std::get<1>(parameters);
+		const auto step = std::get<2>(parameters);
+
+		SequenceAsserter sequenceAsserter;
+
+		std::array<TestThread, totalThreads> threads
+		{{
+				makeTestThread(schedulingPolicy, sequenceAsserter, {0 * multiplier, 0 * multiplier + step}),
+				makeTestThread(schedulingPolicy, sequenceAsserter, {1 * multiplier, 1 * multiplier + step}),
+				makeTestThread(schedulingPolicy, sequenceAsserter, {2 * multiplier, 2 * multiplier + step}),
+				makeTestThread(schedulingPolicy, sequenceAsserter, {3 * multiplier, 3 * multiplier + step}),
+				makeTestThread(schedulingPolicy, sequenceAsserter, {4 * multiplier, 4 * multiplier + step}),
+				makeTestThread(schedulingPolicy, sequenceAsserter, {5 * multiplier, 5 * multiplier + step}),
+				makeTestThread(schedulingPolicy, sequenceAsserter, {6 * multiplier, 6 * multiplier + step}),
+				makeTestThread(schedulingPolicy, sequenceAsserter, {7 * multiplier, 7 * multiplier + step}),
+				makeTestThread(schedulingPolicy, sequenceAsserter, {8 * multiplier, 8 * multiplier + step}),
+				makeTestThread(schedulingPolicy, sequenceAsserter, {9 * multiplier, 9 * multiplier + step}),
+		}};
+
+		decltype(TickClock::now()) testStart;
+
+		{
+			architecture::InterruptMaskingLock interruptMaskingLock;
+
+			// wait for beginning of next tick - test threads should be started in the same tick
+			ThisThread::sleepFor({});
+
+			for (auto& thread : threads)
+				thread.start();
+
+			testStart = TickClock::now();
+		}
 
 		for (auto& thread : threads)
-			thread.start();
+			thread.join();
 
-		testStart = TickClock::now();
+		const auto testDuration = TickClock::now() - testStart;
+
+		if (sequenceAsserter.assertSequence(totalThreads * 2) == false)
+			return false;
+
+		// exact time cannot be calculated, because wasteTime() is not precise when context switches occur during it
+		if (testDuration < testThreadDuration * totalThreads)
+			return false;
 	}
-
-	for (auto& thread : threads)
-		thread.join();
-
-	const auto testDuration = TickClock::now() - testStart;
-
-	if (sequenceAsserter.assertSequence(totalThreads * 2) == false)
-		return false;
-
-	// exact time cannot be calculated, because wasteTime() is not precise when context switches occur during it
-	if (testDuration < testThreadDuration * totalThreads)
-		return false;
 
 	return true;
 }
