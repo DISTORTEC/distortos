@@ -55,8 +55,7 @@ public:
 	 *
 	 * Similar to sem_getvalue() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/sem_getvalue.html#
 	 *
-	 * \return current value of semaphore, positive value if semaphore is not locked, negative value or zero otherwise;
-	 * negative value represents the number of threads waiting on this semaphore
+	 * \return current value of semaphore, positive value if semaphore is not locked, zero otherwise
 	 */
 
 	int getValue() const

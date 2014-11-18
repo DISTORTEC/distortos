@@ -47,10 +47,13 @@ int Semaphore::post()
 	if (value_ == std::numeric_limits<decltype(value_)>::max())
 		return EOVERFLOW;
 
-	++value_;
-
 	if (blockedList_.empty() == false)
+	{
 		scheduler::getScheduler().unblock(blockedList_.begin());
+		return 0;
+	}
+
+	++value_;
 
 	return 0;
 }
@@ -69,7 +72,6 @@ int Semaphore::wait()
 	if (ret != EAGAIN)	// lock successful?
 		return ret;
 
-	--value_;
 	scheduler::getScheduler().block(blockedList_);
 	return 0;
 }
@@ -80,7 +82,7 @@ int Semaphore::wait()
 
 int Semaphore::tryWaitInternal()
 {
-	if (value_ <= 0)	// lock not possible?
+	if (value_ == 0)	// lock not possible?
 		return EAGAIN;
 
 	--value_;
