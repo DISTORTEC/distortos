@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-10-30
+ * \date 2014-11-18
  */
 
 #include "distortos/Semaphore.hpp"
@@ -54,13 +54,12 @@ int Semaphore::tryWait()
 {
 	architecture::InterruptMaskingLock interruptMaskingLock;
 
-	if (value_ > 0)	// lock possible?
-	{
-		--value_;
-		return 0;
-	}
+	if (value_ <= 0)	// lock not possible?
+		return EAGAIN;
 
-	return EAGAIN;
+	--value_;
+
+	return 0;
 }
 
 int Semaphore::wait()
