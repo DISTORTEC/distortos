@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-11-17
+ * \date 2014-11-18
  */
 
 #include "MutexOperationsTestCase.hpp"
@@ -37,9 +37,6 @@ namespace
 
 /// single duration used in tests
 constexpr auto singleDuration = TickClock::duration{1};
-
-/// size of stack for test thread, bytes
-constexpr size_t testThreadStackSize {256};
 
 /// priority of current test thread and lock-unlock test thread
 constexpr uint8_t testThreadPriority {UINT8_MAX - 1};
@@ -120,6 +117,8 @@ bool testUnlock(Mutex& mutex)
 
 bool phase1(const Mutex::Type type, const Mutex::Protocol protocol, const uint8_t priorityCeiling)
 {
+	constexpr size_t testThreadStackSize {256};
+
 	Mutex mutex {type, protocol, priorityCeiling};
 	bool sharedRet {};
 	Mutex semaphoreMutex;
