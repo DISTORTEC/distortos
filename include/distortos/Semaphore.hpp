@@ -109,6 +109,26 @@ public:
 	int tryWait();
 
 	/**
+	 * \brief Tries to lock the semaphore until given time point.
+	 *
+	 * Similar to sem_timedwait() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/sem_timedwait.html#
+	 *
+	 * If the semaphore is already locked, the calling thread shall block until the semaphore becomes available as in
+	 * wait() function. If the semaphore cannot be locked without waiting for another thread to unlock the semaphore,
+	 * this wait shall be terminated when the specified timeout expires.
+	 *
+	 * Under no circumstance shall the function fail with a timeout if the semaphore can be locked immediately. The
+	 * validity of the timePoint parameter need not be checked if the semaphore can be locked immediately.
+	 *
+	 * \param [in] timePoint is the time point at which the wait will be terminated without locking the semaphore
+	 *
+	 * \return zero if the calling process successfully performed the semaphore lock operation, error code otherwise:
+	 * - ETIMEDOUT - the semaphore could not be locked before the specified timeout expired;
+	 */
+
+	int tryWaitUntil(TickClock::time_point timePoint);
+
+	/**
 	 * \brief Locks the semaphore.
 	 *
 	 * Similar to sem_wait() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/sem_trywait.html#

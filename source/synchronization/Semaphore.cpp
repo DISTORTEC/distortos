@@ -64,6 +64,17 @@ int Semaphore::tryWait()
 	return tryWaitInternal();
 }
 
+int Semaphore::tryWaitUntil(const TickClock::time_point timePoint)
+{
+	architecture::InterruptMaskingLock interruptMaskingLock;
+
+	const auto ret = tryWaitInternal();
+	if (ret != EAGAIN)	// lock successful?
+		return ret;
+
+	return scheduler::getScheduler().blockUntil(blockedList_, timePoint);
+}
+
 int Semaphore::wait()
 {
 	architecture::InterruptMaskingLock interruptMaskingLock;
