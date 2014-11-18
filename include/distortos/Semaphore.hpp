@@ -37,7 +37,7 @@ public:
 	 * \param [in] value is the initial value of the semaphore
 	 */
 
-	Semaphore(int value);
+	explicit Semaphore(int value);
 
 	/**
 	 * \brief Semaphore destructor
