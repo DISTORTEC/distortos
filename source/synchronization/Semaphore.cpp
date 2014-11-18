@@ -65,13 +65,12 @@ int Semaphore::wait()
 {
 	architecture::InterruptMaskingLock interruptMaskingLock;
 
+	const auto ret = tryWaitInternal();
+	if (ret != EAGAIN)	// lock successful?
+		return ret;
+
 	--value_;
-
-	if (value_ >= 0)
-		return 0;
-
 	scheduler::getScheduler().block(blockedList_);
-
 	return 0;
 }
 
