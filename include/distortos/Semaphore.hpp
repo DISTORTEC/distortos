@@ -114,6 +114,17 @@ public:
 
 private:
 
+	/**
+	 * \brief Internal version of tryWait().
+	 *
+	 * Internal version with no interrupt masking.
+	 *
+	 * \return zero if the calling process successfully performed the semaphore lock operation, error code otherwise:
+	 * - EAGAIN - semaphore was already locked, so it cannot be immediately locked by the tryWait() operation;
+	 */
+
+	int tryWaitInternal();
+
 	/// ThreadControlBlock objects blocked on this semaphore
 	scheduler::ThreadControlBlockList blockedList_;
 
