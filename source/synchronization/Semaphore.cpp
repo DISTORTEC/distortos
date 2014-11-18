@@ -68,8 +68,10 @@ int Semaphore::wait()
 
 	--value_;
 
-	if (value_ < 0)
-		scheduler::getScheduler().block(blockedList_);
+	if (value_ >= 0)
+		return 0;
+
+	scheduler::getScheduler().block(blockedList_);
 
 	return 0;
 }
