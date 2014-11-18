@@ -27,7 +27,7 @@ namespace distortos
 | public functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-Semaphore::Semaphore(int value) :
+Semaphore::Semaphore(const Value value) :
 		blockedList_{scheduler::getScheduler().getThreadControlBlockListAllocator(),
 				scheduler::ThreadControlBlock::State::BlockedOnSemaphore},
 		value_{value}

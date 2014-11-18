@@ -29,6 +29,9 @@ class Semaphore
 {
 public:
 
+	/// type used for semaphore's "value"
+	using Value = uint16_t;
+
 	/**
 	 * \brief Semaphore constructor
 	 *
@@ -37,7 +40,7 @@ public:
 	 * \param [in] value is the initial value of the semaphore
 	 */
 
-	explicit Semaphore(int value);
+	explicit Semaphore(Value value);
 
 	/**
 	 * \brief Semaphore destructor
@@ -58,7 +61,7 @@ public:
 	 * \return current value of semaphore, positive value if semaphore is not locked, zero otherwise
 	 */
 
-	int getValue() const
+	Value getValue() const
 	{
 		return value_;
 	}
@@ -128,7 +131,7 @@ private:
 	scheduler::ThreadControlBlockList blockedList_;
 
 	/// internal value of the semaphore
-	int value_;
+	Value value_;
 };
 
 }	// namespace distortos
