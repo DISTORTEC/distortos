@@ -89,9 +89,7 @@ public:
 	 * semaphore shall be locked and shall remain locked until unlock() function is executed.
 	 *
 	 * \return zero if the calling process successfully performed the semaphore lock operation, error code otherwise:
-	 * - EAGAIN - semaphore was already locked, so it cannot be immediately locked by the tryWait() operation,
-	 * - EDEADLK - a deadlock condition was detected,
-	 * - EINTR - a signal interrupted this function;
+	 * - EAGAIN - semaphore was already locked, so it cannot be immediately locked by the tryWait() operation;
 	 */
 
 	int tryWait();
@@ -106,9 +104,7 @@ public:
 	 * either locks the semaphore or the call is interrupted by a signal. Upon successful return, the state of the
 	 * semaphore shall be locked and shall remain locked until unlock() function is executed.
 	 *
-	 * \return zero if the calling process successfully performed the semaphore lock operation, error code otherwise:
-	 * - EDEADLK - a deadlock condition was detected,
-	 * - EINTR - a signal interrupted this function;
+	 * \return zero if the calling process successfully performed the semaphore lock operation, error code otherwise
 	 */
 
 	int wait();
