@@ -58,13 +58,7 @@ int Semaphore::post()
 int Semaphore::tryWait()
 {
 	architecture::InterruptMaskingLock interruptMaskingLock;
-
-	if (value_ <= 0)	// lock not possible?
-		return EAGAIN;
-
-	--value_;
-
-	return 0;
+	return tryWaitInternal();
 }
 
 int Semaphore::wait()
