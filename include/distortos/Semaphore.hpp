@@ -75,9 +75,12 @@ public:
 	 * semaphore shall be allowed to return successfully from its call to lock() - the highest priority waiting thread
 	 * shall be unblocked, and if there is more than one highest priority thread blocked waiting for the semaphore, then
 	 * the highest priority thread that has been waiting the longest shall be unblocked.
+	 *
+	 * \return zero if the calling process successfully "posted" the semaphore, error code otherwise:
+	 * - EOVERFLOW - the maximum allowable value for a semaphore would be exceeded;
 	 */
 
-	void post();
+	int post();
 
 	/**
 	 * \brief Tries to lock the semaphore.

@@ -40,14 +40,19 @@ Semaphore::~Semaphore()
 
 }
 
-void Semaphore::post()
+int Semaphore::post()
 {
 	architecture::InterruptMaskingLock interruptMaskingLock;
+
+	if (value_ == std::numeric_limits<decltype(value_)>::max())
+		return EOVERFLOW;
 
 	++value_;
 
 	if (blockedList_.empty() == false)
 		scheduler::getScheduler().unblock(blockedList_.begin());
+
+	return 0;
 }
 
 int Semaphore::tryWait()
