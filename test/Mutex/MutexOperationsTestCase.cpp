@@ -38,6 +38,9 @@ namespace
 /// single duration used in tests
 constexpr auto singleDuration = TickClock::duration{1};
 
+/// long duration used in tests
+constexpr auto longDuration = singleDuration * 10;
+
 /// priority of current test thread and lock-unlock test thread
 constexpr uint8_t testThreadPriority {UINT8_MAX - 1};
 
@@ -251,6 +254,120 @@ bool phase2(const Mutex::Type type, const Mutex::Protocol protocol, const uint8_
 }
 
 /**
+ * \brief Phase 3 of test case.
+ *
+ * Tests typical lock transfer scenario in lock(), tryLockFor() and tryLockUntil() functions. Mutex is locked in another
+ * thread and main (current) thread waits for this mutex to become available. Test thread unlocks the mutex at specified
+ * time point, main thread is expected to acquire ownership of this mutex in the same moment.
+ *
+ * \param [in] type is the type of mutex
+ * \param [in] protocol is the mutex protocol
+ * \param [in] priorityCeiling is the priority ceiling of mutex, ignored when protocol != Protocol::PriorityProtect
+ *
+ * \return true if test succeeded, false otherwise
+ */
+
+bool phase3(const Mutex::Type type, const Mutex::Protocol protocol, const uint8_t priorityCeiling)
+{
+	constexpr size_t testThreadStackSize {384};
+
+	Mutex mutex {type, protocol, priorityCeiling};
+
+	const auto sleepUntilFunctor = [&mutex](const TickClock::time_point timePoint)
+			{
+				mutex.lock();
+				ThisThread::sleepUntil(timePoint);
+				mutex.unlock();
+			};
+
+	{
+		const auto wakeUpTimePoint = TickClock::now() + longDuration;
+		auto thread = makeStaticThread<testThreadStackSize>(testThreadPriority, sleepUntilFunctor, wakeUpTimePoint);
+
+		waitForNextTick();
+		thread.start();
+		ThisThread::yield();
+
+		// mutex is currently locked, but lock() should succeed at expected time
+		const auto ret = mutex.lock();
+		const auto wokenUpTimePoint = TickClock::now();
+		thread.join();
+		if (ret != 0 || wakeUpTimePoint != wokenUpTimePoint)
+			return false;
+	}
+
+	{
+		const auto ret = mutexTestTryLockWhenLocked(mutex, testThreadPriority);
+		if (ret != true)
+			return ret;
+	}
+
+	{
+		const auto ret = testUnlock(mutex);
+		if (ret != true)
+			return ret;
+	}
+
+	{
+		const auto wakeUpTimePoint = TickClock::now() + longDuration;
+		auto thread = makeStaticThread<testThreadStackSize>(testThreadPriority, sleepUntilFunctor, wakeUpTimePoint);
+
+		waitForNextTick();
+		thread.start();
+		ThisThread::yield();
+
+		// mutex is currently locked, but tryLockFor() should succeed at expected time
+		const auto ret = mutex.tryLockFor(wakeUpTimePoint - TickClock::now() + longDuration);
+		const auto wokenUpTimePoint = TickClock::now();
+		thread.join();
+		if (ret != 0 || wakeUpTimePoint != wokenUpTimePoint)
+			return false;
+	}
+
+	{
+		const auto ret = mutexTestTryLockWhenLocked(mutex, testThreadPriority);
+		if (ret != true)
+			return ret;
+	}
+
+	{
+		const auto ret = testUnlock(mutex);
+		if (ret != true)
+			return ret;
+	}
+
+	{
+		const auto wakeUpTimePoint = TickClock::now() + longDuration;
+		auto thread = makeStaticThread<testThreadStackSize>(testThreadPriority, sleepUntilFunctor, wakeUpTimePoint);
+
+		waitForNextTick();
+		thread.start();
+		ThisThread::yield();
+
+		// mutex is locked, but tryLockUntil() should succeed at expected time
+		const auto ret = mutex.tryLockUntil(wakeUpTimePoint + longDuration);
+		const auto wokenUpTimePoint = TickClock::now();
+		thread.join();
+		if (ret != 0 || wakeUpTimePoint != wokenUpTimePoint)
+			return false;
+	}
+
+	{
+		const auto ret = mutexTestTryLockWhenLocked(mutex, testThreadPriority);
+		if (ret != true)
+			return ret;
+	}
+
+	{
+		const auto ret = testUnlock(mutex);
+		if (ret != true)
+			return ret;
+	}
+
+	return true;
+}
+
+/**
  * \brief Runs the test case.
  *
  * \attention this function expects the priority of test thread to be testThreadPriority
@@ -286,6 +403,10 @@ bool testRunner()
 		const auto ret2 = phase2(std::get<0>(parameters), std::get<1>(parameters), std::get<2>(parameters));
 		if (ret2 != true)
 			return ret2;
+
+		const auto ret3 = phase3(std::get<0>(parameters), std::get<1>(parameters), std::get<2>(parameters));
+		if (ret3 != true)
+			return ret3;
 	}
 
 	return true;
