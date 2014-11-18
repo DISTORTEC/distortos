@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-11-15
+ * \date 2014-11-18
  */
 
 #include "mutexTestCases.hpp"
@@ -17,9 +17,9 @@
 #include "MutexOperationsTestCase.hpp"
 #include "MutexErrorCheckingOperationsTestCase.hpp"
 #include "MutexRecursiveOperationsTestCase.hpp"
-#include "MutexPriorityProtocolTestCase.hpp"
 #include "MutexPriorityProtectOperationsTestCase.hpp"
 #include "MutexPriorityInheritanceOperationsTestCase.hpp"
+#include "MutexPriorityProtocolTestCase.hpp"
 
 namespace distortos
 {
@@ -46,14 +46,14 @@ const MutexErrorCheckingOperationsTestCase errorCheckingOperationsTestCase;
 /// MutexRecursiveOperationsTestCase instance
 const MutexRecursiveOperationsTestCase recursiveOperationsTestCase;
 
-/// MutexPriorityProtocolTestCase instance
-const MutexPriorityProtocolTestCase priorityProtocolTestCase;
-
 /// MutexPriorityProtectOperationsTestCase instance
 const MutexPriorityProtectOperationsTestCase priorityProtectOperationsTestCase;
 
 /// MutexPriorityInheritanceOperationsTestCase instance
 const MutexPriorityInheritanceOperationsTestCase priorityInheritanceOperationsTestCase;
+
+/// MutexPriorityProtocolTestCase instance
+const MutexPriorityProtocolTestCase priorityProtocolTestCase;
 
 /// array with references to TestCase objects related to mutexes
 const TestCaseRange::value_type mutexTestCases_[]
@@ -62,9 +62,9 @@ const TestCaseRange::value_type mutexTestCases_[]
 		TestCaseRange::value_type{operationsTestCase},
 		TestCaseRange::value_type{errorCheckingOperationsTestCase},
 		TestCaseRange::value_type{recursiveOperationsTestCase},
-		TestCaseRange::value_type{priorityProtocolTestCase},
 		TestCaseRange::value_type{priorityProtectOperationsTestCase},
 		TestCaseRange::value_type{priorityInheritanceOperationsTestCase},
+		TestCaseRange::value_type{priorityProtocolTestCase},
 };
 
 }	// namespace
