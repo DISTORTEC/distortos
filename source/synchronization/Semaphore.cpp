@@ -64,6 +64,11 @@ int Semaphore::tryWait()
 	return tryWaitInternal();
 }
 
+int Semaphore::tryWaitFor(const TickClock::duration duration)
+{
+	return tryWaitUntil(TickClock::now() + duration + TickClock::duration{1});
+}
+
 int Semaphore::tryWaitUntil(const TickClock::time_point timePoint)
 {
 	architecture::InterruptMaskingLock interruptMaskingLock;
