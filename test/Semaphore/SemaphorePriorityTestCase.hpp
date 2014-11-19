@@ -14,7 +14,7 @@
 #ifndef TEST_SEMAPHORE_SEMAPHOREPRIORITYTESTCASE_HPP_
 #define TEST_SEMAPHORE_SEMAPHOREPRIORITYTESTCASE_HPP_
 
-#include "TestCase.hpp"
+#include "PrioritizedTestCase.hpp"
 
 namespace distortos
 {
@@ -29,17 +29,39 @@ namespace test
  * that they start and finish in the expected order, using exact number of context switches.
  */
 
-class SemaphorePriorityTestCase : public TestCase
+class SemaphorePriorityTestCase : public PrioritizedTestCase
 {
-private:
+	/// priority at which this test case should be executed
+	constexpr static uint8_t testCasePriority_ {1};
+
+public:
+
+	/// internal implementation of SemaphorePriorityTestCase
+	class Implementation : public TestCase
+	{
+	private:
+
+		/**
+		 * \brief Runs the test case.
+		 *
+		 * \return true if the test case succeeded, false otherwise
+		 */
+
+		virtual bool run_() const override;
+	};
 
 	/**
-	 * \brief Runs the test case.
+	 * \brief SemaphorePriorityTestCase's constructor
 	 *
-	 * \return true if the test case succeeded, false otherwise
+	 * \param [in] implementation is a reference to SemaphorePriorityTestCase::Implementation object used by this
+	 * instance
 	 */
 
-	virtual bool run_() const override;
+	constexpr explicit SemaphorePriorityTestCase(const Implementation& implementation) :
+			PrioritizedTestCase{implementation, testCasePriority_}
+	{
+
+	}
 };
 
 }	// namespace test

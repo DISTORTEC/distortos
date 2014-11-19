@@ -28,8 +28,11 @@ namespace
 | local objects
 +---------------------------------------------------------------------------------------------------------------------*/
 
+/// SemaphorePriorityTestCase::Implementation instance
+const SemaphorePriorityTestCase::Implementation priorityTestCaseImplementation;
+
 /// SemaphorePriorityTestCase instance
-const SemaphorePriorityTestCase priorityTestCase;
+const SemaphorePriorityTestCase priorityTestCase {priorityTestCaseImplementation};
 
 /// array with references to TestCase objects related to semaphores
 const TestCaseRange::value_type semaphoreTestCases_[]

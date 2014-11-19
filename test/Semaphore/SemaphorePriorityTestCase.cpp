@@ -177,7 +177,7 @@ bool testRunner()
 | private functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-bool SemaphorePriorityTestCase::run_() const
+bool SemaphorePriorityTestCase::Implementation::run_() const
 {
 	const auto thisThreadPriority = ThisThread::getPriority();
 	ThisThread::setPriority(testThreadPriority);
