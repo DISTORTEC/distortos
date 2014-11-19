@@ -8,13 +8,13 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-10-24
+ * \date 2014-11-19
  */
 
 #ifndef TEST_THREAD_THREADPRIORITYCHANGETESTCASE_HPP_
 #define TEST_THREAD_THREADPRIORITYCHANGETESTCASE_HPP_
 
-#include "TestCase.hpp"
+#include "PrioritizedTestCase.hpp"
 
 namespace distortos
 {
@@ -30,17 +30,39 @@ namespace test
  * threads to run.
  */
 
-class ThreadPriorityChangeTestCase : public TestCase
+class ThreadPriorityChangeTestCase : public PrioritizedTestCase
 {
-private:
+	/// priority at which this test case should be executed
+	constexpr static uint8_t testCasePriority_ {UINT8_MAX / 2};
+
+public:
+
+	/// internal implementation of ThreadPriorityChangeTestCase
+	class Implementation : public TestCase
+	{
+	private:
+
+		/**
+		 * \brief Runs the test case.
+		 *
+		 * \return true if the test case succeeded, false otherwise
+		 */
+
+		virtual bool run_() const override;
+	};
 
 	/**
-	 * \brief Runs the test case.
+	 * \brief ThreadPriorityChangeTestCase's constructor
 	 *
-	 * \return true if the test case succeeded, false otherwise
+	 * \param [in] implementation is a reference to ThreadPriorityChangeTestCase::Implementation object used by this
+	 * instance
 	 */
 
-	virtual bool run_() const override;
+	constexpr explicit ThreadPriorityChangeTestCase(const Implementation& implementation) :
+			PrioritizedTestCase{implementation, testCasePriority_}
+	{
+
+	}
 };
 
 }	// namespace test

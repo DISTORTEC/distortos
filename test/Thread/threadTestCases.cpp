@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-11-17
+ * \date 2014-11-19
  */
 
 #include "threadTestCases.hpp"
@@ -48,8 +48,11 @@ const ThreadSleepUntilTestCase sleepUntilTestCase;
 /// ThreadSchedulingPolicyTestCase instance
 const ThreadSchedulingPolicyTestCase schedulingPolicyTestCase;
 
+/// ThreadPriorityChangeTestCase::Implementation instance
+const ThreadPriorityChangeTestCase::Implementation priorityChangeTestCaseImplementation;
+
 /// ThreadPriorityChangeTestCase instance
-const ThreadPriorityChangeTestCase priorityChangeTestCase;
+const ThreadPriorityChangeTestCase priorityChangeTestCase {priorityChangeTestCaseImplementation};
 
 /// array with references to TestCase objects related to threads
 const TestCaseRange::value_type threadTestCases_[]
