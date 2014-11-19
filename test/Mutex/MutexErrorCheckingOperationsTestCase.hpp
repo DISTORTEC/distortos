@@ -8,13 +8,13 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-09-27
+ * \date 2014-11-19
  */
 
 #ifndef TEST_MUTEX_MUTEXERRORCHECKINGOPERATIONSTESTCASE_HPP_
 #define TEST_MUTEX_MUTEXERRORCHECKINGOPERATIONSTESTCASE_HPP_
 
-#include "TestCase.hpp"
+#include "PrioritizedTestCase.hpp"
 
 namespace distortos
 {
@@ -28,17 +28,39 @@ namespace test
  * Tests locking (lock(), tryLock(), tryLockFor() and tryLockUntil()) and unlocking.
  */
 
-class MutexErrorCheckingOperationsTestCase : public TestCase
+class MutexErrorCheckingOperationsTestCase : public PrioritizedTestCase
 {
-private:
+	/// priority at which this test case should be executed
+	constexpr static uint8_t testCasePriority_ {UINT8_MAX - 1};
+
+public:
+
+	/// internal implementation of MutexErrorCheckingOperationsTestCase
+	class Implementation : public TestCase
+	{
+	private:
+
+		/**
+		 * \brief Runs the test case.
+		 *
+		 * \return true if the test case succeeded, false otherwise
+		 */
+
+		virtual bool run_() const override;
+	};
 
 	/**
-	 * \brief Runs the test case.
+	 * \brief MutexErrorCheckingOperationsTestCase's constructor
 	 *
-	 * \return true if the test case succeeded, false otherwise
+	 * \param [in] implementation is a reference to MutexErrorCheckingOperationsTestCase::Implementation object used by
+	 * this instance
 	 */
 
-	virtual bool run_() const override;
+	constexpr explicit MutexErrorCheckingOperationsTestCase(const Implementation& implementation) :
+			PrioritizedTestCase{implementation, testCasePriority_}
+	{
+
+	}
 };
 
 }	// namespace test
