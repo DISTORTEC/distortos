@@ -234,8 +234,8 @@ int Scheduler::blockInternal(ThreadControlBlockList& container, const ThreadCont
 
 void Scheduler::forceContextSwitch() const
 {
-	architecture::InterruptUnmaskingLock interruptUnmaskingLock;
 	architecture::requestContextSwitch();
+	architecture::InterruptUnmaskingLock interruptUnmaskingLock;
 }
 
 bool Scheduler::isContextSwitchRequired() const
