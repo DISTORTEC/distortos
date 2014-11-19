@@ -17,7 +17,6 @@
 #include "mutexTestUnlockFromWrongThread.hpp"
 
 #include "distortos/Mutex.hpp"
-#include "distortos/ThisThread.hpp"
 
 #include <cerrno>
 
@@ -37,29 +36,20 @@ namespace
 /// single duration used in tests
 constexpr auto singleDuration = TickClock::duration{1};
 
-/// priority of current test thread
-constexpr uint8_t testThreadPriority {UINT8_MAX - 1};
+}	// namespace
 
 /*---------------------------------------------------------------------------------------------------------------------+
-| local functions
+| private functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-/**
- * \brief Runs the test case.
- *
- * \attention this function expects the priority of test thread to be testThreadPriority
- *
- * \return true if the test case succeeded, false otherwise
- */
-
-bool testRunner()
+bool MutexErrorCheckingOperationsTestCase::Implementation::run_() const
 {
 	using Parameters = std::pair<Mutex::Protocol, uint8_t>;
 	static const Parameters parametersArray[]
 	{
 			Parameters{Mutex::Protocol::None, {}},
 			Parameters{Mutex::Protocol::PriorityProtect, UINT8_MAX},
-			Parameters{Mutex::Protocol::PriorityProtect, testThreadPriority},
+			Parameters{Mutex::Protocol::PriorityProtect, testCasePriority_},
 			Parameters{Mutex::Protocol::PriorityInheritance, {}},
 	};
 
@@ -129,21 +119,6 @@ bool testRunner()
 	}
 
 	return true;
-}
-
-}	// namespace
-
-/*---------------------------------------------------------------------------------------------------------------------+
-| private functions
-+---------------------------------------------------------------------------------------------------------------------*/
-
-bool MutexErrorCheckingOperationsTestCase::Implementation::run_() const
-{
-	const auto thisThreadPriority = ThisThread::getPriority();
-	ThisThread::setPriority(testThreadPriority);
-	const auto ret = testRunner();
-	ThisThread::setPriority(thisThreadPriority);
-	return ret;
 }
 
 }	// namespace test
