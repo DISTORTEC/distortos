@@ -37,7 +37,7 @@ namespace
 constexpr auto singleDuration = TickClock::duration{1};
 
 /// priority of current test thread
-constexpr uint8_t testThreadPriority {1};
+constexpr uint8_t testThreadPriority {MutexPriorityProtectOperationsTestCase::getTestCasePriority()};
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | local functions
@@ -190,15 +190,13 @@ bool testPriorityChanges(const Mutex::Type type)
 	return result;
 }
 
-/**
- * \brief Runs the test case.
- *
- * \attention this function expects the priority of test thread to be testThreadPriority
- *
- * \return true if the test case succeeded, false otherwise
- */
+}	// namespace
 
-bool testRunner()
+/*---------------------------------------------------------------------------------------------------------------------+
+| private functions
++---------------------------------------------------------------------------------------------------------------------*/
+
+bool MutexPriorityProtectOperationsTestCase::Implementation::run_() const
 {
 	static const Mutex::Type types[]
 	{
@@ -223,21 +221,6 @@ bool testRunner()
 	}
 
 	return true;
-}
-
-}	// namespace
-
-/*---------------------------------------------------------------------------------------------------------------------+
-| private functions
-+---------------------------------------------------------------------------------------------------------------------*/
-
-bool MutexPriorityProtectOperationsTestCase::Implementation::run_() const
-{
-	const auto thisThreadPriority = ThisThread::getPriority();
-	ThisThread::setPriority(testThreadPriority);
-	const auto ret = testRunner();
-	ThisThread::setPriority(thisThreadPriority);
-	return ret;
 }
 
 }	// namespace test
