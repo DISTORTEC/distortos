@@ -93,11 +93,11 @@ TestThread makeTestThread(const uint8_t priority, SequenceAsserter& sequenceAsse
 
 bool ThreadPriorityChangeTestCase::Implementation::run_() const
 {
+	// difference required for this whole test to work
+	static_assert(testCasePriority_ / 2 > 3, "Invalid test case priority");
+
 	const auto thisThreadPriority = ThisThread::getPriority();
 	const decltype(thisThreadPriority) testThreadPriority = thisThreadPriority / 2;
-
-	if (thisThreadPriority - testThreadPriority < 3)	// difference required for this whole test to work
-		return false;
 
 	SequenceAsserter sequenceAsserter;
 
