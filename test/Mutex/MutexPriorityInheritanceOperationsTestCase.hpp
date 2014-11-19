@@ -8,13 +8,13 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-11-15
+ * \date 2014-11-19
  */
 
 #ifndef TEST_MUTEX_MUTEXPRIORITYINHERITANCEOPERATIONSTESTCASE_HPP_
 #define TEST_MUTEX_MUTEXPRIORITYINHERITANCEOPERATIONSTESTCASE_HPP_
 
-#include "TestCase.hpp"
+#include "PrioritizedTestCase.hpp"
 
 namespace distortos
 {
@@ -31,17 +31,48 @@ namespace test
  * - behavior of priority inheritance mechanism of mutexes in the event of priority change.
  */
 
-class MutexPriorityInheritanceOperationsTestCase : public TestCase
+class MutexPriorityInheritanceOperationsTestCase : public PrioritizedTestCase
 {
-private:
+	/// priority at which this test case should be executed
+	constexpr static uint8_t testCasePriority_ {1};
+
+public:
 
 	/**
-	 * \brief Runs the test case.
-	 *
-	 * \return true if the test case succeeded, false otherwise
+	 * \return priority at which this test case should be executed
 	 */
 
-	virtual bool run_() const override;
+	constexpr static uint8_t getTestCasePriority()
+	{
+		return testCasePriority_;
+	}
+
+	/// internal implementation of MutexPriorityInheritanceOperationsTestCase
+	class Implementation : public TestCase
+	{
+	private:
+
+		/**
+		 * \brief Runs the test case.
+		 *
+		 * \return true if the test case succeeded, false otherwise
+		 */
+
+		virtual bool run_() const override;
+	};
+
+	/**
+	 * \brief MutexPriorityInheritanceOperationsTestCase's constructor
+	 *
+	 * \param [in] implementation is a reference to MutexPriorityInheritanceOperationsTestCase::Implementation object
+	 * used by this instance
+	 */
+
+	constexpr explicit MutexPriorityInheritanceOperationsTestCase(const Implementation& implementation) :
+			PrioritizedTestCase{implementation, testCasePriority_}
+	{
+
+	}
 };
 
 }	// namespace test
