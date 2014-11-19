@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-11-11
+ * \date 2014-11-19
  */
 
 #include "MutexRecursiveOperationsTestCase.hpp"
@@ -225,7 +225,7 @@ bool testRunner()
 | private functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-bool MutexRecursiveOperationsTestCase::run_() const
+bool MutexRecursiveOperationsTestCase::Implementation::run_() const
 {
 	const auto thisThreadPriority = ThisThread::getPriority();
 	ThisThread::setPriority(testThreadPriority);
