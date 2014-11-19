@@ -17,7 +17,6 @@
 #include "SequenceAsserter.hpp"
 
 #include "distortos/StaticThread.hpp"
-#include "distortos/ThisThread.hpp"
 #include "distortos/statistics.hpp"
 
 namespace distortos
@@ -39,9 +38,6 @@ using SequencePoints = std::pair<unsigned int, unsigned int>;
 /*---------------------------------------------------------------------------------------------------------------------+
 | local constants
 +---------------------------------------------------------------------------------------------------------------------*/
-
-/// priority of current test thread - just above idle, lower than any value in priorityTestPhases array
-constexpr uint8_t testThreadPriority {1};
 
 /// size of stack for test thread, bytes
 constexpr size_t testThreadStackSize {256};
@@ -102,15 +98,13 @@ TestThread makeTestThread(const unsigned int firstSequencePoint, const ThreadPar
 			SequencePoints{firstSequencePoint, threadParameters.second + totalThreads}, std::ref(semaphore));
 }
 
-/**
- * \brief Runs the test case.
- *
- * \attention this function expects the priority of test thread to be testThreadPriority
- *
- * \return true if the test case succeeded, false otherwise
- */
+}	// namespace
 
-bool testRunner()
+/*---------------------------------------------------------------------------------------------------------------------+
+| private functions
++---------------------------------------------------------------------------------------------------------------------*/
+
+bool SemaphorePriorityTestCase::Implementation::run_() const
 {
 	const auto contextSwitchCount = statistics::getContextSwitchCount();
 	std::remove_const<decltype(contextSwitchCount)>::type expectedContextSwitchCount {};
@@ -169,21 +163,6 @@ bool testRunner()
 		return false;
 
 	return true;
-}
-
-}	// namespace
-
-/*---------------------------------------------------------------------------------------------------------------------+
-| private functions
-+---------------------------------------------------------------------------------------------------------------------*/
-
-bool SemaphorePriorityTestCase::Implementation::run_() const
-{
-	const auto thisThreadPriority = ThisThread::getPriority();
-	ThisThread::setPriority(testThreadPriority);
-	const auto ret = testRunner();
-	ThisThread::setPriority(thisThreadPriority);
-	return ret;
 }
 
 }	// namespace test
