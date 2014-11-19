@@ -14,6 +14,7 @@
 #include "semaphoreTestCases.hpp"
 
 #include "SemaphorePriorityTestCase.hpp"
+#include "SemaphoreOperationsTestCase.hpp"
 
 namespace distortos
 {
@@ -34,10 +35,14 @@ const SemaphorePriorityTestCase::Implementation priorityTestCaseImplementation;
 /// SemaphorePriorityTestCase instance
 const SemaphorePriorityTestCase priorityTestCase {priorityTestCaseImplementation};
 
+/// SemaphoreOperationsTestCase instance
+const SemaphoreOperationsTestCase operationsTestCase;
+
 /// array with references to TestCase objects related to semaphores
 const TestCaseRange::value_type semaphoreTestCases_[]
 {
 		TestCaseRange::value_type{priorityTestCase},
+		TestCaseRange::value_type{operationsTestCase},
 };
 
 }	// namespace
