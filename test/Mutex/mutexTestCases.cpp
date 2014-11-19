@@ -37,8 +37,11 @@ namespace
 /// MutexPriorityTestCase instance
 const MutexPriorityTestCase priorityTestCase;
 
+/// MutexOperationsTestCase::Implementation instance
+const MutexOperationsTestCase::Implementation operationsTestCaseImplementation;
+
 /// MutexOperationsTestCase instance
-const MutexOperationsTestCase operationsTestCase;
+const MutexOperationsTestCase operationsTestCase {operationsTestCaseImplementation};
 
 /// MutexErrorCheckingOperationsTestCase::Implementation instance
 const MutexErrorCheckingOperationsTestCase::Implementation errorCheckingOperationsTestCaseImplementation;
