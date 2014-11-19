@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-11-18
+ * \date 2014-11-19
  */
 
 #ifndef INCLUDE_DISTORTOS_SEMAPHORE_HPP_
@@ -127,6 +127,26 @@ public:
 	 */
 
 	int tryWaitFor(TickClock::duration duration);
+
+	/**
+	 * Tries to lock the semaphore for given duration of time.
+	 *
+	 * Template variant of tryWaitFor(TickClock::duration duration).
+	 *
+	 * \param Rep is type of tick counter
+	 * \param Period is std::ratio type representing the tick period of the clock, in seconds
+	 *
+	 * \param [in] duration is the duration after which the wait will be terminated without locking the semaphore
+	 *
+	 * \return zero if the calling process successfully performed the semaphore lock operation, error code otherwise:
+	 * - ETIMEDOUT - the semaphore could not be locked before the specified timeout expired;
+	 */
+
+	template<typename Rep, typename Period>
+	int tryWaitFor(const std::chrono::duration<Rep, Period> duration)
+	{
+		return tryLockFor(std::chrono::duration_cast<TickClock::duration>(duration));
+	}
 
 	/**
 	 * \brief Tries to lock the semaphore until given time point.
