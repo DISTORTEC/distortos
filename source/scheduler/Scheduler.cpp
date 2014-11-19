@@ -48,8 +48,7 @@ Scheduler::Scheduler() :
 void Scheduler::add(ThreadControlBlock& threadControlBlock)
 {
 	architecture::InterruptMaskingLock interruptMaskingLock;
-	threadControlBlockListAllocatorPool_.feed(threadControlBlock.getLink());
-	runnableList_.sortedEmplace(threadControlBlock);
+	addInternal(threadControlBlock);
 	maybeRequestContextSwitch();
 }
 
