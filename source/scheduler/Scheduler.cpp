@@ -114,7 +114,7 @@ uint64_t Scheduler::getTickCount() const
 
 void Scheduler::initialize(MainThreadControlBlock& mainThreadControlBlock)
 {
-	add(mainThreadControlBlock);
+	addInternal(mainThreadControlBlock);
 	currentThreadControlBlock_ = runnableList_.begin();
 }
 
