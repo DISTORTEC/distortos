@@ -55,8 +55,14 @@ const MutexErrorCheckingOperationsTestCase errorCheckingOperationsTestCase
 /// MutexRecursiveOperationsTestCase instance
 const MutexRecursiveOperationsTestCase recursiveOperationsTestCase;
 
+/// MutexPriorityProtectOperationsTestCase::Implementation instance
+const MutexPriorityProtectOperationsTestCase::Implementation priorityProtectOperationsTestCaseImplementation;
+
 /// MutexPriorityProtectOperationsTestCase instance
-const MutexPriorityProtectOperationsTestCase priorityProtectOperationsTestCase;
+const MutexPriorityProtectOperationsTestCase priorityProtectOperationsTestCase
+{
+		priorityProtectOperationsTestCaseImplementation
+};
 
 /// MutexPriorityInheritanceOperationsTestCase::Implementation instance
 const MutexPriorityInheritanceOperationsTestCase::Implementation priorityInheritanceOperationsTestCaseImplementation;
