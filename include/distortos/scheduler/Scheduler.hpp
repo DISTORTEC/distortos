@@ -252,6 +252,16 @@ public:
 private:
 
 	/**
+	 * \brief Adds new ThreadControlBlock to scheduler.
+	 *
+	 * Internal version - without interrupt masking and call to Scheduler::maybeRequestContextSwitch()
+	 *
+	 * \param [in] threadControlBlock is a reference to added ThreadControlBlock object
+	 */
+
+	void addInternal(ThreadControlBlock& threadControlBlock);
+
+	/**
 	 * \brief Blocks thread, transferring it to provided container.
 	 *
 	 * Internal version - without interrupt masking and forced context switch.
