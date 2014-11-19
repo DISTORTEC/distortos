@@ -169,6 +169,25 @@ public:
 	int tryWaitUntil(TickClock::time_point timePoint);
 
 	/**
+	 * \brief Tries to lock the semaphore until given time point.
+	 *
+	 * Template variant of tryWaitUntil(TickClock::time_point timePoint).
+	 *
+	 * \param Duration is a std::chrono::duration type used to measure duration
+	 *
+	 * \param [in] timePoint is the time point at which the wait will be terminated without locking the semaphore
+	 *
+	 * \return zero if the calling process successfully performed the semaphore lock operation, error code otherwise:
+	 * - ETIMEDOUT - the semaphore could not be locked before the specified timeout expired;
+	 */
+
+	template<typename Duration>
+	int tryWaitUntil(const std::chrono::time_point<TickClock, Duration> timePoint)
+	{
+		return tryLockUntil(std::chrono::time_point_cast<TickClock::duration>(timePoint));
+	}
+
+	/**
 	 * \brief Locks the semaphore.
 	 *
 	 * Similar to sem_wait() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/sem_trywait.html#
