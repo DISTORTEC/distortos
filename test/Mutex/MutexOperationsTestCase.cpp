@@ -42,7 +42,7 @@ constexpr auto singleDuration = TickClock::duration{1};
 constexpr auto longDuration = singleDuration * 10;
 
 /// priority of current test thread and lock-unlock test thread
-constexpr uint8_t testThreadPriority {UINT8_MAX - 1};
+constexpr uint8_t testThreadPriority {MutexOperationsTestCase::getTestCasePriority()};
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | local functions
@@ -367,15 +367,13 @@ bool phase3(const Mutex::Type type, const Mutex::Protocol protocol, const uint8_
 	return true;
 }
 
-/**
- * \brief Runs the test case.
- *
- * \attention this function expects the priority of test thread to be testThreadPriority
- *
- * \return true if the test case succeeded, false otherwise
- */
+}	// namespace
 
-bool testRunner()
+/*---------------------------------------------------------------------------------------------------------------------+
+| private functions
++---------------------------------------------------------------------------------------------------------------------*/
+
+bool MutexOperationsTestCase::Implementation::run_() const
 {
 	using Parameters = std::tuple<Mutex::Type, Mutex::Protocol, uint8_t>;
 	static const Parameters parametersArray[]
@@ -410,21 +408,6 @@ bool testRunner()
 	}
 
 	return true;
-}
-
-}	// namespace
-
-/*---------------------------------------------------------------------------------------------------------------------+
-| private functions
-+---------------------------------------------------------------------------------------------------------------------*/
-
-bool MutexOperationsTestCase::Implementation::run_() const
-{
-	const auto thisThreadPriority = ThisThread::getPriority();
-	ThisThread::setPriority(testThreadPriority);
-	const auto ret = testRunner();
-	ThisThread::setPriority(thisThreadPriority);
-	return ret;
 }
 
 }	// namespace test
