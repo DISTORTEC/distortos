@@ -107,7 +107,7 @@ private:
 	/// contained variable - used to return result
 	uint32_t variable_;
 
-	/// value which will be assigned to contained variable variable - used as argument
+	/// value which will be assigned to contained variable - used as argument
 	const uint32_t magicValue_;
 };
 
