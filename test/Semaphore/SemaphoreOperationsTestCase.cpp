@@ -413,12 +413,27 @@ bool phase4()
 
 bool SemaphoreOperationsTestCase::run_() const
 {
+	constexpr auto phase1ExpectedContextSwitchCount = 3 * waitForNextTickContextSwitchCount +
+			2 * phase1TryWaitForUntilContextSwitchCount;
+	constexpr auto phase2ExpectedContextSwitchCount = 9 * waitForNextTickContextSwitchCount;
+	constexpr auto phase3ExpectedContextSwitchCount = 6 * waitForNextTickContextSwitchCount +
+			3 * phase3ThreadContextSwitchCount;
+	constexpr auto phase4ExpectedContextSwitchCount = 6 * waitForNextTickContextSwitchCount +
+			3 * phase4SoftwareTimerContextSwitchCount;
+	constexpr auto expectedContextSwitchCount = phase1ExpectedContextSwitchCount + phase2ExpectedContextSwitchCount +
+			phase3ExpectedContextSwitchCount + phase4ExpectedContextSwitchCount;
+
+	const auto contextSwitchCount = statistics::getContextSwitchCount();
+
 	for (const auto& function : {phase1, phase2, phase3, phase4})
 	{
 		const auto ret = function();
 		if (ret != true)
 			return ret;
 	}
+
+	if (statistics::getContextSwitchCount() - contextSwitchCount != expectedContextSwitchCount)
+		return false;
 
 	return true;
 }
