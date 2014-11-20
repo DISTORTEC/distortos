@@ -168,6 +168,36 @@ public:
 	}
 
 	/**
+	 * \brief Waits for predicate to become true for given duration of time.
+	 *
+	 * Similar to std::condition_variable::wait_for() -
+	 * http://en.cppreference.com/w/cpp/thread/condition_variable/wait_for
+	 * Similar to pthread_cond_timedwait() -
+	 * http://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_cond_timedwait.html#
+	 *
+	 * Overload for waitFor() which also checks the predicate. This function will return only if the predicate is true
+	 * or when given duration of time expires.
+	 *
+	 * \param Rep is type of tick counter
+	 * \param Period is std::ratio type representing the tick period of the clock, in seconds
+	 * \param Predicate is a type of functor to check the predicate
+	 *
+	 * \param [in] mutex is a reference to mutex which must be owned by calling thread
+	 * \param [in] duration is the duration after which the wait for notification will be terminated
+	 * \param [in] predicate is the predicate that will be checked
+	 *
+	 * \return zero if the wait was completed successfully, error code otherwise:
+	 * - EPERM - the mutex type is ErrorChecking or Recursive, and the current thread does not own the mutex;
+	 * - ETIMEDOUT - no notification was received before the specified timeout expired;
+	 */
+
+	template<typename Rep, typename Period, typename Predicate>
+	int waitFor(Mutex& mutex, const std::chrono::duration<Rep, Period> duration, Predicate predicate)
+	{
+		return waitUntil(mutex, TickClock::now() + duration + TickClock::duration{1}, std::move(predicate));
+	}
+
+	/**
 	 * \brief Waits for notification until given time point.
 	 *
 	 * Similar to std::condition_variable::wait_until() -
