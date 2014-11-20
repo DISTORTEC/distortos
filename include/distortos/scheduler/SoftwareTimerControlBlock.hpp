@@ -137,6 +137,12 @@ public:
 		start(std::chrono::time_point_cast<TickClock::duration>(timePoint));
 	}
 
+	/**
+	 * \brief Stops the timer.
+	 */
+
+	void stop();
+
 protected:
 
 	/**
