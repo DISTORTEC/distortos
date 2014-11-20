@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-11-19
+ * \date 2014-11-20
  */
 
 #include "SemaphoreOperationsTestCase.hpp"
@@ -40,6 +40,25 @@ constexpr auto singleDuration = TickClock::duration{1};
 
 /// long duration used in tests
 constexpr auto longDuration = singleDuration * 10;
+
+/// expected number of context switches in waitForNextTick(): main -> idle -> main
+constexpr decltype(statistics::getContextSwitchCount()) waitForNextTickContextSwitchCount {2};
+
+/// expected number of context switches in phase3 block involving test thread: 1 & 2 - waitForNextTick() (main ->
+/// idle -> main), 3 - test thread starts (main -> test), 4 - test thread goes to sleep (test -> main), 5 - main thread
+/// blocks on semaphore (main -> idle), 6 - test thread wakes (idle -> test), 7 - test thread terminates (test -> main)
+constexpr decltype(statistics::getContextSwitchCount()) phase3ThreadContextSwitchCount
+{
+		waitForNextTickContextSwitchCount + 5
+};
+
+/// expected number of context switches in phase4 block involving software timer: 1 & 2 - waitForNextTick() (main ->
+/// idle -> main), 3 - main thread blocks on semaphore (main -> idle), 4 - main thread is unblocked by interrupt
+/// (idle -> main)
+constexpr decltype(statistics::getContextSwitchCount()) phase4SoftwareTimerContextSwitchCount
+{
+		waitForNextTickContextSwitchCount + 2
+};
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | local functions
@@ -210,10 +229,6 @@ bool phase2()
 bool phase3()
 {
 	constexpr size_t testThreadStackSize {384};
-	// 1 & 2 - waitForNextTick() (main -> idle -> main), 3 - test thread starts (main -> test), 4 - test thread goes to
-	// sleep (test -> main), 5 - main thread blocks on semaphore (main -> idle), 6 - test thread wakes (idle -> test),
-	// 7 - test thread terminates (test -> main)
-	constexpr decltype(statistics::getContextSwitchCount()) expectedContextSwitchCount {7};
 
 	Semaphore semaphore {0};
 
@@ -238,7 +253,7 @@ bool phase3()
 		const auto wokenUpTimePoint = TickClock::now();
 		thread.join();
 		if (ret != 0 || wakeUpTimePoint != wokenUpTimePoint || semaphore.getValue() != 0 ||
-				statistics::getContextSwitchCount() - contextSwitchCount != expectedContextSwitchCount)
+				statistics::getContextSwitchCount() - contextSwitchCount != phase3ThreadContextSwitchCount)
 			return false;
 	}
 
@@ -263,7 +278,7 @@ bool phase3()
 		const auto wokenUpTimePoint = TickClock::now();
 		thread.join();
 		if (ret != 0 || wakeUpTimePoint != wokenUpTimePoint || semaphore.getValue() != 0 ||
-				statistics::getContextSwitchCount() - contextSwitchCount != expectedContextSwitchCount)
+				statistics::getContextSwitchCount() - contextSwitchCount != phase3ThreadContextSwitchCount)
 			return false;
 	}
 
@@ -288,7 +303,7 @@ bool phase3()
 		const auto wokenUpTimePoint = TickClock::now();
 		thread.join();
 		if (ret != 0 || wakeUpTimePoint != wokenUpTimePoint || semaphore.getValue() != 0 ||
-				statistics::getContextSwitchCount() - contextSwitchCount != expectedContextSwitchCount)
+				statistics::getContextSwitchCount() - contextSwitchCount != phase3ThreadContextSwitchCount)
 			return false;
 	}
 
@@ -313,10 +328,6 @@ bool phase3()
 
 bool phase4()
 {
-	// 1 & 2 - waitForNextTick() (main -> idle -> main), 3 - main thread blocks on semaphore (main -> idle), 4 - main
-	// thread is unblocked by interrupt (idle -> main)
-	constexpr decltype(statistics::getContextSwitchCount()) expectedContextSwitchCount {4};
-
 	Semaphore semaphore {0};
 	auto softwareTimer = makeSoftwareTimer(&Semaphore::post, std::ref(semaphore));
 
@@ -332,7 +343,7 @@ bool phase4()
 		const auto ret = semaphore.wait();
 		const auto wokenUpTimePoint = TickClock::now();
 		if (ret != 0 || wakeUpTimePoint != wokenUpTimePoint || semaphore.getValue() != 0 ||
-				statistics::getContextSwitchCount() - contextSwitchCount != expectedContextSwitchCount)
+				statistics::getContextSwitchCount() - contextSwitchCount != phase4SoftwareTimerContextSwitchCount)
 			return false;
 	}
 
@@ -354,7 +365,7 @@ bool phase4()
 		const auto ret = semaphore.tryWaitFor(wakeUpTimePoint - TickClock::now() + longDuration);
 		const auto wokenUpTimePoint = TickClock::now();
 		if (ret != 0 || wakeUpTimePoint != wokenUpTimePoint || semaphore.getValue() != 0 ||
-				statistics::getContextSwitchCount() - contextSwitchCount != expectedContextSwitchCount)
+				statistics::getContextSwitchCount() - contextSwitchCount != phase4SoftwareTimerContextSwitchCount)
 			return false;
 	}
 
@@ -376,7 +387,7 @@ bool phase4()
 		const auto ret = semaphore.tryWaitUntil(wakeUpTimePoint + longDuration);
 		const auto wokenUpTimePoint = TickClock::now();
 		if (ret != 0 || wakeUpTimePoint != wokenUpTimePoint || semaphore.getValue() != 0 ||
-				statistics::getContextSwitchCount() - contextSwitchCount != expectedContextSwitchCount)
+				statistics::getContextSwitchCount() - contextSwitchCount != phase4SoftwareTimerContextSwitchCount)
 			return false;
 	}
 
