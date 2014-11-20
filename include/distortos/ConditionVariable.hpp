@@ -162,6 +162,32 @@ public:
 
 	int waitUntil(Mutex& mutex, TickClock::time_point timePoint);
 
+	/**
+	 * \brief Waits for notification until given time point.
+	 *
+	 * Similar to std::condition_variable::wait_until() -
+	 * http://en.cppreference.com/w/cpp/thread/condition_variable/wait_until
+	 * Similar to pthread_cond_timedwait() -
+	 * http://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_cond_timedwait.html#
+	 *
+	 * Template variant of waitUntil(Mutex& mutex, TickClock::time_point timePoint).
+	 *
+	 * \param Duration is a std::chrono::duration type used to measure duration
+	 *
+	 * \param [in] mutex is a reference to mutex which must be owned by calling thread
+	 * \param [in] timePoint is the time point at which the wait for notification will be terminated
+	 *
+	 * \return zero if the wait was completed successfully, error code otherwise:
+	 * - EPERM - the mutex type is ErrorChecking or Recursive, and the current thread does not own the mutex;
+	 * - ETIMEDOUT - no notification was received before the specified timeout expired;
+	 */
+
+	template<typename Duration>
+	int waitUntil(Mutex& mutex, const std::chrono::time_point<TickClock, Duration> timePoint)
+	{
+		return waitUntil(mutex, std::chrono::time_point_cast<TickClock::duration>(timePoint));
+	}
+
 private:
 
 	/// ThreadControlBlock objects blocked on this condition variable
