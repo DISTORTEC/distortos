@@ -44,21 +44,14 @@ constexpr auto longDuration = singleDuration * 10;
 /// expected number of context switches in waitForNextTick(): main -> idle -> main
 constexpr decltype(statistics::getContextSwitchCount()) waitForNextTickContextSwitchCount {2};
 
-/// expected number of context switches in phase3 block involving test thread: 1 & 2 - waitForNextTick() (main ->
-/// idle -> main), 3 - test thread starts (main -> test), 4 - test thread goes to sleep (test -> main), 5 - main thread
-/// blocks on semaphore (main -> idle), 6 - test thread wakes (idle -> test), 7 - test thread terminates (test -> main)
-constexpr decltype(statistics::getContextSwitchCount()) phase3ThreadContextSwitchCount
-{
-		waitForNextTickContextSwitchCount + 5
-};
+/// expected number of context switches in phase3 block involving test thread (excluding waitForNextTick()): 1 - test
+/// thread starts (main -> test), 2 - test thread goes to sleep (test -> main), 3 - main thread blocks on semaphore
+/// (main -> idle), 4 - test thread wakes (idle -> test), 5 - test thread terminates (test -> main)
+constexpr decltype(statistics::getContextSwitchCount()) phase3ThreadContextSwitchCount {5};
 
-/// expected number of context switches in phase4 block involving software timer: 1 & 2 - waitForNextTick() (main ->
-/// idle -> main), 3 - main thread blocks on semaphore (main -> idle), 4 - main thread is unblocked by interrupt
-/// (idle -> main)
-constexpr decltype(statistics::getContextSwitchCount()) phase4SoftwareTimerContextSwitchCount
-{
-		waitForNextTickContextSwitchCount + 2
-};
+/// expected number of context switches in phase4 block involving software timer (excluding waitForNextTick()): 1 - main
+/// thread blocks on semaphore (main -> idle), 2 - main thread is unblocked by interrupt (idle -> main)
+constexpr decltype(statistics::getContextSwitchCount()) phase4SoftwareTimerContextSwitchCount {2};
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | local functions
@@ -239,12 +232,12 @@ bool phase3()
 			};
 
 	{
-		const auto contextSwitchCount = statistics::getContextSwitchCount();
+		waitForNextTick();
 
+		const auto contextSwitchCount = statistics::getContextSwitchCount();
 		const auto wakeUpTimePoint = TickClock::now() + longDuration;
 		auto thread = makeStaticThread<testThreadStackSize>(UINT8_MAX, sleepUntilFunctor, wakeUpTimePoint);
 
-		waitForNextTick();
 		thread.start();
 		ThisThread::yield();
 
@@ -264,12 +257,12 @@ bool phase3()
 	}
 
 	{
-		const auto contextSwitchCount = statistics::getContextSwitchCount();
+		waitForNextTick();
 
+		const auto contextSwitchCount = statistics::getContextSwitchCount();
 		const auto wakeUpTimePoint = TickClock::now() + longDuration;
 		auto thread = makeStaticThread<testThreadStackSize>(UINT8_MAX, sleepUntilFunctor, wakeUpTimePoint);
 
-		waitForNextTick();
 		thread.start();
 		ThisThread::yield();
 
@@ -289,12 +282,12 @@ bool phase3()
 	}
 
 	{
-		const auto contextSwitchCount = statistics::getContextSwitchCount();
+		waitForNextTick();
 
+		const auto contextSwitchCount = statistics::getContextSwitchCount();
 		const auto wakeUpTimePoint = TickClock::now() + longDuration;
 		auto thread = makeStaticThread<testThreadStackSize>(UINT8_MAX, sleepUntilFunctor, wakeUpTimePoint);
 
-		waitForNextTick();
 		thread.start();
 		ThisThread::yield();
 
@@ -332,11 +325,11 @@ bool phase4()
 	auto softwareTimer = makeSoftwareTimer(&Semaphore::post, std::ref(semaphore));
 
 	{
-		const auto contextSwitchCount = statistics::getContextSwitchCount();
+		waitForNextTick();
 
+		const auto contextSwitchCount = statistics::getContextSwitchCount();
 		const auto wakeUpTimePoint = TickClock::now() + longDuration;
 
-		waitForNextTick();
 		softwareTimer.start(wakeUpTimePoint);
 
 		// semaphore is currently locked, but wait() should succeed at expected time
@@ -354,11 +347,11 @@ bool phase4()
 	}
 
 	{
-		const auto contextSwitchCount = statistics::getContextSwitchCount();
+		waitForNextTick();
 
+		const auto contextSwitchCount = statistics::getContextSwitchCount();
 		const auto wakeUpTimePoint = TickClock::now() + longDuration;
 
-		waitForNextTick();
 		softwareTimer.start(wakeUpTimePoint);
 
 		// semaphore is currently locked, but tryWaitFor() should succeed at expected time
@@ -376,11 +369,11 @@ bool phase4()
 	}
 
 	{
-		const auto contextSwitchCount = statistics::getContextSwitchCount();
+		waitForNextTick();
 
+		const auto contextSwitchCount = statistics::getContextSwitchCount();
 		const auto wakeUpTimePoint = TickClock::now() + longDuration;
 
-		waitForNextTick();
 		softwareTimer.start(wakeUpTimePoint);
 
 		// semaphore is locked, but tryWaitUntil() should succeed at expected time
