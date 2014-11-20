@@ -54,15 +54,14 @@ int ConditionVariable::wait(Mutex& mutex)
 	{
 		architecture::InterruptMaskingLock interruptMaskingLock;
 
-		mutex.unlock();
+		const auto ret = mutex.unlock();
+		if (ret != 0)
+			return ret;
+
 		scheduler::getScheduler().block(blockedList_);
 	}
 
-	// --- blocked ---
-
-	mutex.lock();
-
-	return 0;
+	return mutex.lock();
 }
 
 }	// namespace distortos

@@ -82,7 +82,8 @@ public:
 	 *
 	 * \param [in] mutex is a reference to mutex which must be owned by calling thread
 	 *
-	 * \return zero if the wait was completed successfully, error code otherwise
+	 * \return zero if the wait was completed successfully, error code otherwise:
+	 * - EPERM - the mutex type is ErrorChecking or Recursive, and the current thread does not own the mutex;
 	 */
 
 	int wait(Mutex& mutex);
@@ -100,7 +101,8 @@ public:
 	 * \param [in] mutex is a reference to mutex which must be owned by calling thread
 	 * \param [in] predicate is the predicate that will be checked
 	 *
-	 * \return zero if the wait was completed successfully, error code otherwise
+	 * \return zero if the wait was completed successfully, error code otherwise:
+	 * - EPERM - the mutex type is ErrorChecking or Recursive, and the current thread does not own the mutex;
 	 */
 
 	template<typename Predicate>
