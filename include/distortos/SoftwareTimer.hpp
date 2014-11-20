@@ -49,6 +49,8 @@ public:
 
 	using SoftwareTimerControlBlock::start;
 
+	using SoftwareTimerControlBlock::stop;
+
 private:
 
 	/**
