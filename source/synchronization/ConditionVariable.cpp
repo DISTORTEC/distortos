@@ -64,4 +64,22 @@ int ConditionVariable::wait(Mutex& mutex)
 	return mutex.lock();
 }
 
+int ConditionVariable::waitUntil(Mutex& mutex, const TickClock::time_point timePoint)
+{
+	int blockUntilRet {};
+
+	{
+		architecture::InterruptMaskingLock interruptMaskingLock;
+
+		const auto ret = mutex.unlock();
+		if (ret != 0)
+			return ret;
+
+		blockUntilRet = scheduler::getScheduler().blockUntil(blockedList_, timePoint);
+	}
+
+	const auto ret = mutex.lock();
+	return ret != 0 ? ret : blockUntilRet;
+}
+
 }	// namespace distortos
