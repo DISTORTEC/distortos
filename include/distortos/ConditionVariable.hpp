@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-10-27
+ * \date 2014-11-20
  */
 
 #ifndef INCLUDE_DISTORTOS_CONDITIONVARIABLE_HPP_
@@ -81,9 +81,11 @@ public:
 	 * reacquired and wait exits.
 	 *
 	 * \param [in] mutex is a reference to mutex which must be owned by calling thread
+	 *
+	 * \return zero if the wait was completed successfully, error code otherwise
 	 */
 
-	void wait(Mutex& mutex);
+	int wait(Mutex& mutex);
 
 	/**
 	 * \brief Waits for predicate to become true.
@@ -97,13 +99,21 @@ public:
 	 *
 	 * \param [in] mutex is a reference to mutex which must be owned by calling thread
 	 * \param [in] predicate is the predicate that will be checked
+	 *
+	 * \return zero if the wait was completed successfully, error code otherwise
 	 */
 
 	template<typename Predicate>
-	void wait(Mutex& mutex, Predicate predicate)
+	int wait(Mutex& mutex, Predicate predicate)
 	{
 		while (predicate() == false)
-			wait(mutex);
+		{
+			const auto ret = wait(mutex);
+			if (ret != 0)
+				return ret;
+		}
+
+		return 0;
 	}
 
 private:
