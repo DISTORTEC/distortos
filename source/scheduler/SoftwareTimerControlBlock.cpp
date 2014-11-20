@@ -66,10 +66,7 @@ void SoftwareTimerControlBlock::stop()
 
 SoftwareTimerControlBlock::~SoftwareTimerControlBlock()
 {
-	architecture::InterruptMaskingLock interruptMaskingLock;
-
-	if (list_ != nullptr)
-		list_->erase(iterator_);
+	stop();
 }
 
 }	// namespace scheduler
