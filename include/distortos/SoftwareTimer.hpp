@@ -45,6 +45,8 @@ public:
 
 	}
 
+	using SoftwareTimerControlBlock::isRunning;
+
 	using SoftwareTimerControlBlock::start;
 
 private:
