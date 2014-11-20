@@ -141,6 +141,33 @@ public:
 	int waitFor(Mutex& mutex, TickClock::duration duration);
 
 	/**
+	 * \brief Waits for notification for given duration of time.
+	 *
+	 * Similar to std::condition_variable::wait_for() -
+	 * http://en.cppreference.com/w/cpp/thread/condition_variable/wait_for
+	 * Similar to pthread_cond_timedwait() -
+	 * http://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_cond_timedwait.html#
+	 *
+	 * Template variant of waitFor(Mutex& mutex, TickClock::duration duration).
+	 *
+	 * \param Rep is type of tick counter
+	 * \param Period is std::ratio type representing the tick period of the clock, in seconds
+	 *
+	 * \param [in] mutex is a reference to mutex which must be owned by calling thread
+	 * \param [in] duration is the duration after which the wait for notification will be terminated
+	 *
+	 * \return zero if the wait was completed successfully, error code otherwise:
+	 * - EPERM - the mutex type is ErrorChecking or Recursive, and the current thread does not own the mutex;
+	 * - ETIMEDOUT - no notification was received before the specified timeout expired;
+	 */
+
+	template<typename Rep, typename Period>
+	int waitFor(Mutex& mutex, const std::chrono::duration<Rep, Period> duration)
+	{
+		return waitFor(mutex, std::chrono::duration_cast<TickClock::duration>(duration));
+	}
+
+	/**
 	 * \brief Waits for notification until given time point.
 	 *
 	 * Similar to std::condition_variable::wait_until() -
