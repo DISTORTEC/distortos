@@ -188,6 +188,42 @@ public:
 		return waitUntil(mutex, std::chrono::time_point_cast<TickClock::duration>(timePoint));
 	}
 
+	/**
+	 * \brief Waits for predicate to become true until given time point.
+	 *
+	 * Similar to std::condition_variable::wait_until() -
+	 * http://en.cppreference.com/w/cpp/thread/condition_variable/wait_until
+	 * Similar to pthread_cond_timedwait() -
+	 * http://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_cond_timedwait.html#
+	 *
+	 * Overload for waitUntil() which also checks the predicate. This function will return only if the predicate is true
+	 * or when given time point is reached.
+	 *
+	 * \param Duration is a std::chrono::duration type used to measure duration
+	 * \param Predicate is a type of functor to check the predicate
+	 *
+	 * \param [in] mutex is a reference to mutex which must be owned by calling thread
+	 * \param [in] timePoint is the time point at which the wait for notification will be terminated
+	 * \param [in] predicate is the predicate that will be checked
+	 *
+	 * \return zero if the wait was completed successfully, error code otherwise:
+	 * - EPERM - the mutex type is ErrorChecking or Recursive, and the current thread does not own the mutex;
+	 * - ETIMEDOUT - no notification was received before the specified timeout expired;
+	 */
+
+	template<typename Duration, typename Predicate>
+	int waitUntil(Mutex& mutex, const std::chrono::time_point<TickClock, Duration> timePoint, Predicate predicate)
+	{
+		while (predicate() == false)
+		{
+			const auto ret = waitUntil(mutex, timePoint);
+			if (ret != 0)
+				return ret;
+		}
+
+		return 0;
+	}
+
 private:
 
 	/// ThreadControlBlock objects blocked on this condition variable
