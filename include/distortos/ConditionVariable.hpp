@@ -119,6 +119,28 @@ public:
 	}
 
 	/**
+	 * \brief Waits for notification for given duration of time.
+	 *
+	 * Similar to std::condition_variable::wait_for() -
+	 * http://en.cppreference.com/w/cpp/thread/condition_variable/wait_for
+	 * Similar to pthread_cond_timedwait() -
+	 * http://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_cond_timedwait.html#
+	 *
+	 * Atomically releases supplied mutex and blocks current thread until the condition variable is notified. The thread
+	 * will be unblocked when notifyAll() or notifyOne() is executed or when given duration of time expires. When
+	 * unblocked, regardless of the reason, lock is reacquired and wait exits.
+	 *
+	 * \param [in] mutex is a reference to mutex which must be owned by calling thread
+	 * \param [in] duration is the duration after which the wait for notification will be terminated
+	 *
+	 * \return zero if the wait was completed successfully, error code otherwise:
+	 * - EPERM - the mutex type is ErrorChecking or Recursive, and the current thread does not own the mutex;
+	 * - ETIMEDOUT - no notification was received before the specified timeout expired;
+	 */
+
+	int waitFor(Mutex& mutex, TickClock::duration duration);
+
+	/**
 	 * \brief Waits for notification until given time point.
 	 *
 	 * Similar to std::condition_variable::wait_until() -

@@ -64,6 +64,11 @@ int ConditionVariable::wait(Mutex& mutex)
 	return mutex.lock();
 }
 
+int ConditionVariable::waitFor(Mutex& mutex, TickClock::duration duration)
+{
+	return waitUntil(mutex, TickClock::now() + duration + TickClock::duration{1});
+}
+
 int ConditionVariable::waitUntil(Mutex& mutex, const TickClock::time_point timePoint)
 {
 	int blockUntilRet {};
