@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-10-27
+ * \date 2014-11-20
  */
 
 #include "ThreadFunctionTypesTestCase.hpp"
@@ -63,7 +63,7 @@ public:
 	 * \param [in] magicValue is the value which will be assigned to shared variable
 	 */
 
-	void operator()(uint32_t& sharedVariable, const uint32_t magicValue)
+	void operator()(uint32_t& sharedVariable, const uint32_t magicValue) const
 	{
 		sharedVariable = magicValue;
 	}
