@@ -44,6 +44,10 @@ constexpr auto longDuration = singleDuration * 10;
 /// expected number of context switches in waitForNextTick(): main -> idle -> main
 constexpr decltype(statistics::getContextSwitchCount()) waitForNextTickContextSwitchCount {2};
 
+/// expected number of context switches in phase1 block involving tryWaitFor() or tryWaitUntil() (excluding
+/// waitForNextTick()): 1 - main thread blocks on semaphore (main -> idle), 2 - main thread wakes up (idle -> main)
+constexpr decltype(statistics::getContextSwitchCount()) phase1TryWaitForUntilContextSwitchCount {2};
+
 /// expected number of context switches in phase3 block involving test thread (excluding waitForNextTick()): 1 - test
 /// thread starts (main -> test), 2 - test thread goes to sleep (test -> main), 3 - main thread blocks on semaphore
 /// (main -> idle), 4 - test thread wakes (idle -> test), 5 - test thread terminates (test -> main)
@@ -109,22 +113,30 @@ bool phase1()
 	}
 
 	{
-		// semaphore is locked, so tryWaitFor() should time-out at expected time
 		waitForNextTick();
+
+		const auto contextSwitchCount = statistics::getContextSwitchCount();
+
+		// semaphore is locked, so tryWaitFor() should time-out at expected time
 		const auto start = TickClock::now();
 		const auto ret = semaphore.tryWaitFor(singleDuration);
 		const auto realDuration = TickClock::now() - start;
 		if (ret != ETIMEDOUT || realDuration != singleDuration + decltype(singleDuration){1} ||
-				semaphore.getValue() != 0)
+				semaphore.getValue() != 0 ||
+				statistics::getContextSwitchCount() - contextSwitchCount != phase1TryWaitForUntilContextSwitchCount)
 			return false;
 	}
 
 	{
-		// semaphore is locked, so tryWaitUntil() should time-out at exact expected time
 		waitForNextTick();
+
+		const auto contextSwitchCount = statistics::getContextSwitchCount();
+
+		// semaphore is locked, so tryWaitUntil() should time-out at exact expected time
 		const auto requestedTimePoint = TickClock::now() + singleDuration;
 		const auto ret = semaphore.tryWaitUntil(requestedTimePoint);
-		if (ret != ETIMEDOUT || requestedTimePoint != TickClock::now() || semaphore.getValue() != 0)
+		if (ret != ETIMEDOUT || requestedTimePoint != TickClock::now() || semaphore.getValue() != 0 ||
+				statistics::getContextSwitchCount() - contextSwitchCount != phase1TryWaitForUntilContextSwitchCount)
 			return false;
 	}
 
