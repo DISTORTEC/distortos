@@ -69,6 +69,15 @@ public:
 	const TickClock::time_point& getTimePoint() const { return timePoint_; }
 
 	/**
+	 * \return true if the timer is running, false otherwise
+	 */
+
+	bool isRunning() const
+	{
+		return list_ != nullptr;
+	}
+
+	/**
 	 * \brief Sets the list that has this object.
 	 *
 	 * \param [in] list is a pointer to list that has this object
