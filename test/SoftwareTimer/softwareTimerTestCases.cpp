@@ -14,6 +14,7 @@
 #include "softwareTimerTestCases.hpp"
 
 #include "SoftwareTimerOrderingTestCase.hpp"
+#include "SoftwareTimerOperationsTestCase.hpp"
 
 namespace distortos
 {
@@ -31,10 +32,14 @@ namespace
 /// SoftwareTimerOrderingTestCase instance
 const SoftwareTimerOrderingTestCase orderingTestCase;
 
+/// SoftwareTimerOperationsTestCase instance
+const SoftwareTimerOperationsTestCase operationsTestCase;
+
 /// array with references to TestCase objects related to software timers
 const TestCaseRange::value_type softwareTimerTestCases_[]
 {
 		TestCaseRange::value_type{orderingTestCase},
+		TestCaseRange::value_type{operationsTestCase},
 };
 
 }	// namespace
