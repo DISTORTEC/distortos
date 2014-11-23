@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-07-21
+ * \date 2014-11-23
  */
 
 SEARCH_DIR(.);
@@ -289,3 +289,6 @@ PROVIDE(__data_size = __data_end - __data_start);
 PROVIDE(__bss_size = __bss_end - __bss_start);
 PROVIDE(__stack_size = __stack_end - __stack_start);
 PROVIDE(__heap_size = __heap_end - __heap_start);
+
+PROVIDE(__bss_start__ = __bss_start);
+PROVIDE(__bss_end__ = __bss_end);
