@@ -117,6 +117,12 @@ bool ConditionVariablePriorityTestCase::Implementation::run_() const
 			Parameters{Mutex::Type::Recursive, Mutex::Protocol::PriorityInheritance, {}},
 	}};
 
+	const auto notifyOne = [](ConditionVariable& conditionVariable)
+			{
+				for (size_t i = 0; i < totalThreads; ++i)
+					conditionVariable.notifyOne();
+			};
+
 	const auto contextSwitchCount = statistics::getContextSwitchCount();
 	std::remove_const<decltype(contextSwitchCount)>::type expectedContextSwitchCount {};
 
@@ -153,8 +159,7 @@ bool ConditionVariablePriorityTestCase::Implementation::run_() const
 					result = false;
 			}
 
-			for (size_t i = 0; i < threads.size(); ++i)
-				conditionVariable.notifyOne();
+			notifyOne(conditionVariable);
 
 			// for each test thread there are 2 context switches: into" the unblocked thread and "back" to main thread
 			// when test thread terminates
