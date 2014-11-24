@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-11-21
+ * \date 2014-11-24
  */
 
 #include "ConditionVariablePriorityTestCase.hpp"
@@ -154,13 +154,13 @@ bool ConditionVariablePriorityTestCase::Implementation::run_() const
 			}
 
 			for (size_t i = 0; i < threads.size(); ++i)
-			{
 				conditionVariable.notifyOne();
-				// 2 context switches: into" the unblocked thread and "back" to main thread when test thread terminates
-				expectedContextSwitchCount += 2;
-				if (statistics::getContextSwitchCount() - contextSwitchCount != expectedContextSwitchCount)
-					result = false;
-			}
+
+			// for each test thread there are 2 context switches: into" the unblocked thread and "back" to main thread
+			// when test thread terminates
+			expectedContextSwitchCount += 2 * threads.size();
+			if (statistics::getContextSwitchCount() - contextSwitchCount != expectedContextSwitchCount)
+				result = false;
 
 			for (auto& thread : threads)
 				thread.join();
