@@ -122,60 +122,77 @@ bool ConditionVariablePriorityTestCase::Implementation::run_() const
 				for (size_t i = 0; i < totalThreads; ++i)
 					conditionVariable.notifyOne();
 			};
+	// notifyOne() unblocks one thread at a time, for each test thread there are 2 context switches: into" the unblocked
+	// thread and "back" to main thread when test thread terminates
+	constexpr uint8_t notifyOneContextSwitches {2 * totalThreads};
+
+	const auto notifyAll = [](ConditionVariable& conditionVariable)
+			{
+				conditionVariable.notifyAll();
+			};
+	// notifyAll() unblocks all threads simultaneously from a lock zone, so there is 1 context switch for each unblocked
+	// thread and one final context switch when all test threads terminate
+	constexpr uint8_t notifyAllContextSwitches {totalThreads + 1};
+
+	using Notifier = void(ConditionVariable&);
+	const std::array<std::pair<const Notifier* const, uint8_t>, 2> notifiers
+	{{
+		{notifyOne, notifyOneContextSwitches},
+		{notifyAll, notifyAllContextSwitches},
+	}};
 
 	const auto contextSwitchCount = statistics::getContextSwitchCount();
 	std::remove_const<decltype(contextSwitchCount)>::type expectedContextSwitchCount {};
 
-	for (const auto& parameters : parametersArray)
-		for (const auto& phase : priorityTestPhases)
-		{
-			SequenceAsserter sequenceAsserter;
-			ConditionVariable conditionVariable;
-			Mutex mutex {std::get<0>(parameters), std::get<1>(parameters), std::get<2>(parameters)};
-
-			std::array<TestThread, totalThreads> threads
-			{{
-					makeTestThread(phase.first[phase.second[0]], sequenceAsserter, conditionVariable, mutex),
-					makeTestThread(phase.first[phase.second[1]], sequenceAsserter, conditionVariable, mutex),
-					makeTestThread(phase.first[phase.second[2]], sequenceAsserter, conditionVariable, mutex),
-					makeTestThread(phase.first[phase.second[3]], sequenceAsserter, conditionVariable, mutex),
-					makeTestThread(phase.first[phase.second[4]], sequenceAsserter, conditionVariable, mutex),
-					makeTestThread(phase.first[phase.second[5]], sequenceAsserter, conditionVariable, mutex),
-					makeTestThread(phase.first[phase.second[6]], sequenceAsserter, conditionVariable, mutex),
-					makeTestThread(phase.first[phase.second[7]], sequenceAsserter, conditionVariable, mutex),
-					makeTestThread(phase.first[phase.second[8]], sequenceAsserter, conditionVariable, mutex),
-					makeTestThread(phase.first[phase.second[9]], sequenceAsserter, conditionVariable, mutex),
-			}};
-
-			bool result {true};
-
-			for (auto& thread : threads)
+	for (const auto& notifier : notifiers)
+		for (const auto& parameters : parametersArray)
+			for (const auto& phase : priorityTestPhases)
 			{
-				thread.start();
-				// 2 context switches: "into" the thread and "back" to main thread when test thread blocks on condition
-				// variable
-				expectedContextSwitchCount += 2;
+				SequenceAsserter sequenceAsserter;
+				ConditionVariable conditionVariable;
+				Mutex mutex {std::get<0>(parameters), std::get<1>(parameters), std::get<2>(parameters)};
+
+				std::array<TestThread, totalThreads> threads
+				{{
+						makeTestThread(phase.first[phase.second[0]], sequenceAsserter, conditionVariable, mutex),
+						makeTestThread(phase.first[phase.second[1]], sequenceAsserter, conditionVariable, mutex),
+						makeTestThread(phase.first[phase.second[2]], sequenceAsserter, conditionVariable, mutex),
+						makeTestThread(phase.first[phase.second[3]], sequenceAsserter, conditionVariable, mutex),
+						makeTestThread(phase.first[phase.second[4]], sequenceAsserter, conditionVariable, mutex),
+						makeTestThread(phase.first[phase.second[5]], sequenceAsserter, conditionVariable, mutex),
+						makeTestThread(phase.first[phase.second[6]], sequenceAsserter, conditionVariable, mutex),
+						makeTestThread(phase.first[phase.second[7]], sequenceAsserter, conditionVariable, mutex),
+						makeTestThread(phase.first[phase.second[8]], sequenceAsserter, conditionVariable, mutex),
+						makeTestThread(phase.first[phase.second[9]], sequenceAsserter, conditionVariable, mutex),
+				}};
+
+				bool result {true};
+
+				for (auto& thread : threads)
+				{
+					thread.start();
+					// 2 context switches: "into" the thread and "back" to main thread when test thread blocks on
+					// condition variable
+					expectedContextSwitchCount += 2;
+					if (statistics::getContextSwitchCount() - contextSwitchCount != expectedContextSwitchCount)
+						result = false;
+				}
+
+				notifier.first(conditionVariable);
+
+				expectedContextSwitchCount += notifier.second;
 				if (statistics::getContextSwitchCount() - contextSwitchCount != expectedContextSwitchCount)
 					result = false;
+
+				for (auto& thread : threads)
+					thread.join();
+
+				if (result == false || sequenceAsserter.assertSequence(totalThreads) == false)
+					return false;
 			}
 
-			notifyOne(conditionVariable);
-
-			// for each test thread there are 2 context switches: into" the unblocked thread and "back" to main thread
-			// when test thread terminates
-			expectedContextSwitchCount += 2 * threads.size();
-			if (statistics::getContextSwitchCount() - contextSwitchCount != expectedContextSwitchCount)
-				result = false;
-
-			for (auto& thread : threads)
-				thread.join();
-
-			if (result == false || sequenceAsserter.assertSequence(totalThreads) == false)
-				return false;
-		}
-
-	if (statistics::getContextSwitchCount() - contextSwitchCount != 4 * totalThreads * priorityTestPhases.size() *
-			parametersArray.size())
+	if (statistics::getContextSwitchCount() - contextSwitchCount != priorityTestPhases.size() * parametersArray.size() *
+			(4 * totalThreads + notifyOneContextSwitches + notifyAllContextSwitches))
 		return false;
 
 	return true;
