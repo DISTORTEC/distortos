@@ -33,15 +33,6 @@ public:
 	using Value = uint16_t;
 
 	/**
-	 * \return maximum allowed semaphore's "value"
-	 */
-
-	constexpr static Value getMaxValue()
-	{
-		return std::numeric_limits<Value>::max();
-	}
-
-	/**
 	 * \brief Semaphore constructor
 	 *
 	 * Similar to sem_init() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/sem_init.html#
