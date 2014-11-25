@@ -45,7 +45,7 @@ int Semaphore::post()
 {
 	architecture::InterruptMaskingLock interruptMaskingLock;
 
-	if (value_ == getMaxValue())
+	if (value_ == maxValue_)
 		return EOVERFLOW;
 
 	if (blockedList_.empty() == false)
