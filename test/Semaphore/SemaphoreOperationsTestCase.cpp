@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-11-20
+ * \date 2014-11-25
  */
 
 #include "SemaphoreOperationsTestCase.hpp"
@@ -405,6 +405,38 @@ bool phase4()
 	return true;
 }
 
+/**
+ * \brief Phase 5 of test case.
+ *
+ * Tests correction of invalid initialization and overflow detection of semaphore with explicit max value. Semaphore's
+ * initial value cannot be higher than given max value - value must be truncated in the constructor. Semaphore's value
+ * must never be higher than the max value - any call to Semaphore::post() after the value reached max value must result
+ * in EOVERFLOW error.
+ *
+ * \return true if test succeeded, false otherwise
+ */
+
+bool phase5()
+{
+	constexpr auto initialValue = std::numeric_limits<Semaphore::Value>::max();
+	constexpr auto maxValue = initialValue / 2;
+
+	Semaphore semaphore {initialValue, maxValue};
+
+	if (semaphore.getValue() != maxValue)
+		return false;
+
+	{
+		waitForNextTick();
+		const auto start = TickClock::now();
+		const auto ret = semaphore.post();
+		if (ret != EOVERFLOW || start != TickClock::now() || semaphore.getValue() != maxValue)
+			return false;
+	}
+
+	return true;
+}
+
 }	// namespace
 
 /*---------------------------------------------------------------------------------------------------------------------+
@@ -420,12 +452,13 @@ bool SemaphoreOperationsTestCase::run_() const
 			3 * phase3ThreadContextSwitchCount;
 	constexpr auto phase4ExpectedContextSwitchCount = 6 * waitForNextTickContextSwitchCount +
 			3 * phase4SoftwareTimerContextSwitchCount;
+	constexpr auto phase5ExpectedContextSwitchCount = 1 * waitForNextTickContextSwitchCount;
 	constexpr auto expectedContextSwitchCount = phase1ExpectedContextSwitchCount + phase2ExpectedContextSwitchCount +
-			phase3ExpectedContextSwitchCount + phase4ExpectedContextSwitchCount;
+			phase3ExpectedContextSwitchCount + phase4ExpectedContextSwitchCount + phase5ExpectedContextSwitchCount;
 
 	const auto contextSwitchCount = statistics::getContextSwitchCount();
 
-	for (const auto& function : {phase1, phase2, phase3, phase4})
+	for (const auto& function : {phase1, phase2, phase3, phase4, phase5})
 	{
 		const auto ret = function();
 		if (ret != true)
