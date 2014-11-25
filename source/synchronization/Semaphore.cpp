@@ -27,11 +27,11 @@ namespace distortos
 | public functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-Semaphore::Semaphore(const Value value) :
+Semaphore::Semaphore(const Value value, const Value maxValue) :
 		blockedList_{scheduler::getScheduler().getThreadControlBlockListAllocator(),
 				scheduler::ThreadControlBlock::State::BlockedOnSemaphore},
 		value_{value},
-		maxValue_{getMaxValue()}
+		maxValue_{maxValue}
 {
 
 }

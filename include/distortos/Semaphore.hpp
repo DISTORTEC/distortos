@@ -47,9 +47,11 @@ public:
 	 * Similar to sem_init() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/sem_init.html#
 	 *
 	 * \param [in] value is the initial value of the semaphore
+	 * \param [in] maxValue is the max value of the semaphore before post() returns EOVERFLOW, default - max for Value
+	 * type
 	 */
 
-	explicit Semaphore(Value value);
+	explicit Semaphore(Value value, Value maxValue = std::numeric_limits<Value>::max());
 
 	/**
 	 * \brief Semaphore destructor
