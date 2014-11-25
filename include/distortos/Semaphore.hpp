@@ -30,7 +30,7 @@ class Semaphore
 public:
 
 	/// type used for semaphore's "value"
-	using Value = uint16_t;
+	using Value = unsigned int;
 
 	/**
 	 * \brief Semaphore constructor
