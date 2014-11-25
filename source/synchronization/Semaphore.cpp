@@ -30,7 +30,7 @@ namespace distortos
 Semaphore::Semaphore(const Value value, const Value maxValue) :
 		blockedList_{scheduler::getScheduler().getThreadControlBlockListAllocator(),
 				scheduler::ThreadControlBlock::State::BlockedOnSemaphore},
-		value_{value},
+		value_{value <= maxValue ? value : maxValue},
 		maxValue_{maxValue}
 {
 

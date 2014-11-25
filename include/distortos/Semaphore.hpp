@@ -37,7 +37,8 @@ public:
 	 *
 	 * Similar to sem_init() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/sem_init.html#
 	 *
-	 * \param [in] value is the initial value of the semaphore
+	 * \param [in] value is the initial value of the semaphore, if this value is greater than maxValue, it will be
+	 * truncated
 	 * \param [in] maxValue is the max value of the semaphore before post() returns EOVERFLOW, default - max for Value
 	 * type
 	 */
