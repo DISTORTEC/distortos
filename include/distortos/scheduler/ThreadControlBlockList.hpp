@@ -16,6 +16,8 @@
 
 #include "distortos/scheduler/ThreadControlBlock.hpp"
 
+#include "distortos/containers/SortedContainer.hpp"
+
 namespace distortos
 {
 
