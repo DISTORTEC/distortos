@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-11-20
+ * \date 2014-11-29
  */
 
 #ifndef INCLUDE_DISTORTOS_SCHEDULER_SOFTWARETIMERCONTROLBLOCK_HPP_
@@ -17,6 +17,8 @@
 #include "distortos/scheduler/SoftwareTimerControlBlockList-types.hpp"
 
 #include "distortos/TickClock.hpp"
+
+#include <array>
 
 namespace distortos
 {
