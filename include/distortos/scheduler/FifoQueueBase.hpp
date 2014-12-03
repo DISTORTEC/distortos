@@ -157,6 +157,32 @@ protected:
 	}
 
 	/**
+	 * \brief Pops the oldest (first) element from the queue.
+	 *
+	 * \param T is the type of data popped from queue
+	 *
+	 * \param [out] value is a reference to object that will be used to return popped value, its contents are swapped
+	 * with the value in the queue's storage and destructed when no longer needed
+	 *
+	 * \return zero if element was popped successfully, error code otherwise:
+	 * - error codes returned by Semaphore::wait();
+	 * - error codes returned by Semaphore::post();
+	 */
+
+	template<typename T>
+	int pop(T& value)
+	{
+		auto swapFunctor = makeBoundedFunctor<T>(
+				[&value](Storage<T>* const storage)
+				{
+					auto& swappedValue = *reinterpret_cast<T*>(storage);
+					std::swap(value, swappedValue);
+					swappedValue.~T();
+				});
+		return popImplementation(swapFunctor);
+	}
+
+	/**
 	 * \brief Pushes the element to the queue.
 	 *
 	 * \param T is the type of data pushed to queue
