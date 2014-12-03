@@ -182,6 +182,19 @@ protected:
 private:
 
 	/**
+	 * \brief Implementation of pop() using type-erased functor
+	 *
+	 * \param [in] functor is a reference to Functor which will execute actions related to popping - it will get a
+	 * reference to readPosition_ as argument
+	 *
+	 * \return zero if element was popped successfully, error code otherwise:
+	 * - error codes returned by Semaphore::wait();
+	 * - error codes returned by Semaphore::post();
+	 */
+
+	int popImplementation(Functor& functor);
+
+	/**
 	 * \brief Implementation of push() using type-erased functor
 	 *
 	 * \param [in] functor is a reference to Functor which will execute actions related to pushing - it will get a
