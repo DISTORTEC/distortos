@@ -25,36 +25,21 @@ namespace scheduler
 | public functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-int FifoQueueBase::popImplementation(Functor& functor)
+int FifoQueueBase::popPushImplementation(Functor& functor, Semaphore& waitSemaphore, Semaphore& postSemaphore,
+		void*& storage)
 {
 	architecture::InterruptMaskingLock interruptMaskingLock;
 
-	const auto ret = popSemaphore_.wait();
+	const auto ret = waitSemaphore.wait();
 	if (ret != 0)
 		return ret;
 
-	functor(readPosition_);
+	functor(storage);
 
-	if (readPosition_ == storageEnd_)
-		readPosition_ = storageBegin_;
+	if (storage == storageEnd_)
+		storage = storageBegin_;
 
-	return pushSemaphore_.post();
-}
-
-int FifoQueueBase::pushImplementation(Functor& functor)
-{
-	architecture::InterruptMaskingLock interruptMaskingLock;
-
-	const auto ret = pushSemaphore_.wait();
-	if (ret != 0)
-		return ret;
-
-	functor(writePosition_);
-
-	if (writePosition_ == storageEnd_)
-		writePosition_ = storageBegin_;
-
-	return popSemaphore_.post();
+	return postSemaphore.post();
 }
 
 }	// namespace scheduler

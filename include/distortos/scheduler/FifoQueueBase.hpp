@@ -218,7 +218,29 @@ private:
 	 * - error codes returned by Semaphore::post();
 	 */
 
-	int popImplementation(Functor& functor);
+	int popImplementation(Functor& functor)
+	{
+		return popPushImplementation(functor, popSemaphore_, pushSemaphore_, readPosition_);
+	}
+
+	/**
+	 * \brief Implementation of pop() and push() using type-erased functor
+	 *
+	 * \param [in] functor is a reference to Functor which will execute actions related to popping/pushing - it will get
+	 * a reference to \a storage as argument
+	 * \param [in] waitSemaphore is a reference to semaphore that will be waited for, \a popSemaphore_ for pop(), \a
+	 * pushSemaphore_ for push()
+	 * \param [in] postSemaphore is a reference to semaphore that will be posted after the operation, \a pushSemaphore_
+	 * for pop(), \a popSemaphore_ for push()
+	 * \param [in] storage is a reference to appropriate pointer to storage, which will be passed to \a functor, \a
+	 * readPosition_ for pop(), \a writePosition_ for push()
+	 *
+	 * \return zero if operation was successful, error code otherwise:
+	 * - error codes returned by Semaphore::wait();
+	 * - error codes returned by Semaphore::post();
+	 */
+
+	int popPushImplementation(Functor& functor, Semaphore& waitSemaphore, Semaphore& postSemaphore, void*& storage);
 
 	/**
 	 * \brief Implementation of push() using type-erased functor
@@ -231,7 +253,10 @@ private:
 	 * - error codes returned by Semaphore::post();
 	 */
 
-	int pushImplementation(Functor& functor);
+	int pushImplementation(Functor& functor)
+	{
+		return popPushImplementation(functor, pushSemaphore_, popSemaphore_, writePosition_);
+	}
 
 	/// semaphore guarding access to "pop" functions - its value is equal to the number of available elements
 	Semaphore popSemaphore_;
