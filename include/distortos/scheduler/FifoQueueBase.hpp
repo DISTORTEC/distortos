@@ -205,6 +205,30 @@ protected:
 		return pushImplementation(copyFunctor);
 	}
 
+	/**
+	 * \brief Pushes the element to the queue.
+	 *
+	 * \param T is the type of data pushed to queue
+	 *
+	 * \param [in] value is a rvalue reference to object that will be pushed, value in queue's storage is
+	 * move-constructed
+	 *
+	 * \return zero if element was pushed successfully, error code otherwise:
+	 * - error codes returned by Semaphore::wait();
+	 * - error codes returned by Semaphore::post();
+	 */
+
+	template<typename T>
+	int push(T&& value)
+	{
+		auto moveFunctor = makeBoundedFunctor<T>(
+				[&value](Storage<T>* const storage)
+				{
+					new (storage) T{std::move(value)};
+				});
+		return pushImplementation(moveFunctor);
+	}
+
 private:
 
 	/**
