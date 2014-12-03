@@ -82,6 +82,24 @@ public:
 	{
 		return FifoQueueBase::push(value);
 	}
+
+	/**
+	 * \brief Pushes the element to the queue.
+	 *
+	 * Wrapper for scheduler::FifoQueueBase::push(T&&)
+	 *
+	 * \param [in] value is a rvalue reference to object that will be pushed, value in queue's storage is
+	 * move-constructed
+	 *
+	 * \return zero if element was pushed successfully, error code otherwise:
+	 * - error codes returned by Semaphore::wait();
+	 * - error codes returned by Semaphore::post();
+	 */
+
+	int push(T&& value)
+	{
+		return FifoQueueBase::push(std::move(value));
+	}
 };
 
 }	// namespace distortos
