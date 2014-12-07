@@ -27,7 +27,8 @@ Motivation and goals
 
 First of all - *distortos* doesn't aim to be *the smallest* or *the fastest* RTOS available. It's size and execution
 overhead are proportional to the features offered. This of course doesn't mean that it uses hundreds of kilobytes of ROM
-and RAM! It uses "just enough" to implement its functionality in a portable and efficient way.
+and RAM or all available processing power! It uses "just enough" to implement its functionality in a portable and
+efficient way.
 
 There are many RTOSes available in many flavours and for many platforms, so why another? There are many reasons, but
 generally *distortos* was born of dissatisfaction with all of these existing solutions... *Distortos* aims to have *all*
@@ -40,7 +41,7 @@ Despite the popular belief, using C++ does not automatically lead to slow/bloate
 *distortos* will try to demonstrate. Source code of *distortos* is self-explanatory, simple and consists of short
 functions. This contrasts with "typical" RTOS source code in the form of extremely long functions with very complex
 control flow and heavy use of macros. And that would be the third reason - showing that source code of fully-featured
-RTOS can be *simple*, while still being *efficient*.
+RTOS can be *simple*, while still being *efficient* and *feature-rich*.
 
 Last, but not the least, most of these existing RTOSes require the developer to state some values during configuration -
 max number of threads in the system, max number of supported priorities, etc. - this makes no sense at all, because a
