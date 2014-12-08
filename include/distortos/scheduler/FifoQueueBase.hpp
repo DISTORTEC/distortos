@@ -177,7 +177,8 @@ protected:
 					std::swap(value, swappedValue);
 					swappedValue.~T();
 				});
-		return popImplementation(swapFunctor);
+		const SemaphoreWaitFunctor semaphoreWaitFunctor;
+		return popImplementation(semaphoreWaitFunctor, swapFunctor);
 	}
 
 	/**
@@ -200,7 +201,8 @@ protected:
 				{
 					new (storage) T{value};
 				});
-		return pushImplementation(copyFunctor);
+		const SemaphoreWaitFunctor semaphoreWaitFunctor;
+		return pushImplementation(semaphoreWaitFunctor, copyFunctor);
 	}
 
 	/**
@@ -224,7 +226,8 @@ protected:
 				{
 					new (storage) T{std::move(value)};
 				});
-		return pushImplementation(moveFunctor);
+		const SemaphoreWaitFunctor semaphoreWaitFunctor;
+		return pushImplementation(semaphoreWaitFunctor, moveFunctor);
 	}
 
 private:
@@ -232,18 +235,18 @@ private:
 	/**
 	 * \brief Implementation of pop() using type-erased functor
 	 *
+	 * \param [in] waitSemaphoreFunctor is a reference to SemaphoreFunctor which will be executed with \a popSemaphore_
 	 * \param [in] functor is a reference to Functor which will execute actions related to popping - it will get a
 	 * reference to readPosition_ as argument
 	 *
 	 * \return zero if element was popped successfully, error code otherwise:
-	 * - error codes returned by Semaphore::wait();
+	 * - error codes returned by \a waitSemaphoreFunctor's operator() call;
 	 * - error codes returned by Semaphore::post();
 	 */
 
-	int popImplementation(const Functor& functor)
+	int popImplementation(const SemaphoreFunctor& waitSemaphoreFunctor, const Functor& functor)
 	{
-		const SemaphoreWaitFunctor semaphoreWaitFunctor;
-		return popPushImplementation(semaphoreWaitFunctor, functor, popSemaphore_, pushSemaphore_, readPosition_);
+		return popPushImplementation(waitSemaphoreFunctor, functor, popSemaphore_, pushSemaphore_, readPosition_);
 	}
 
 	/**
@@ -270,18 +273,18 @@ private:
 	/**
 	 * \brief Implementation of push() using type-erased functor
 	 *
+	 * \param [in] waitSemaphoreFunctor is a reference to SemaphoreFunctor which will be executed with \a pushSemaphore_
 	 * \param [in] functor is a reference to Functor which will execute actions related to pushing - it will get a
 	 * reference to writePosition_ as argument
 	 *
 	 * \return zero if element was pushed successfully, error code otherwise:
-	 * - error codes returned by Semaphore::wait();
+	 * - error codes returned by \a waitSemaphoreFunctor's operator() call;
 	 * - error codes returned by Semaphore::post();
 	 */
 
-	int pushImplementation(const Functor& functor)
+	int pushImplementation(const SemaphoreFunctor& waitSemaphoreFunctor, const Functor& functor)
 	{
-		const SemaphoreWaitFunctor semaphoreWaitFunctor;
-		return popPushImplementation(semaphoreWaitFunctor, functor, pushSemaphore_, popSemaphore_, writePosition_);
+		return popPushImplementation(waitSemaphoreFunctor, functor, pushSemaphore_, popSemaphore_, writePosition_);
 	}
 
 	/// semaphore guarding access to "pop" functions - its value is equal to the number of available elements
