@@ -25,12 +25,12 @@ namespace scheduler
 | public functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-int FifoQueueBase::popPushImplementation(const Functor& functor, Semaphore& waitSemaphore, Semaphore& postSemaphore,
-		void*& storage)
+int FifoQueueBase::popPushImplementation(const SemaphoreFunctor& waitSemaphoreFunctor, const Functor& functor,
+		Semaphore& waitSemaphore, Semaphore& postSemaphore, void*& storage)
 {
 	architecture::InterruptMaskingLock interruptMaskingLock;
 
-	const auto ret = waitSemaphore.wait();
+	const auto ret = waitSemaphoreFunctor(waitSemaphore);
 	if (ret != 0)
 		return ret;
 

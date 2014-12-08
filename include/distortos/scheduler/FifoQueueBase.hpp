@@ -16,7 +16,7 @@
 
 #include "distortos/Semaphore.hpp"
 
-#include "distortos/estd/TypeErasedFunctor.hpp"
+#include "distortos/scheduler/SemaphoreWaitFunctor.hpp"
 
 namespace distortos
 {
@@ -242,12 +242,14 @@ private:
 
 	int popImplementation(const Functor& functor)
 	{
-		return popPushImplementation(functor, popSemaphore_, pushSemaphore_, readPosition_);
+		const SemaphoreWaitFunctor semaphoreWaitFunctor;
+		return popPushImplementation(semaphoreWaitFunctor, functor, popSemaphore_, pushSemaphore_, readPosition_);
 	}
 
 	/**
 	 * \brief Implementation of pop() and push() using type-erased functor
 	 *
+	 * \param [in] waitSemaphoreFunctor is a reference to SemaphoreFunctor which will be executed with \a waitSemaphore
 	 * \param [in] functor is a reference to Functor which will execute actions related to popping/pushing - it will get
 	 * a reference to \a storage as argument
 	 * \param [in] waitSemaphore is a reference to semaphore that will be waited for, \a popSemaphore_ for pop(), \a
@@ -258,12 +260,12 @@ private:
 	 * readPosition_ for pop(), \a writePosition_ for push()
 	 *
 	 * \return zero if operation was successful, error code otherwise:
-	 * - error codes returned by Semaphore::wait();
+	 * - error codes returned by \a waitSemaphoreFunctor's operator() call;
 	 * - error codes returned by Semaphore::post();
 	 */
 
-	int popPushImplementation(const Functor& functor, Semaphore& waitSemaphore, Semaphore& postSemaphore,
-			void*& storage);
+	int popPushImplementation(const SemaphoreFunctor& waitSemaphoreFunctor, const Functor& functor,
+			Semaphore& waitSemaphore, Semaphore& postSemaphore, void*& storage);
 
 	/**
 	 * \brief Implementation of push() using type-erased functor
@@ -278,7 +280,8 @@ private:
 
 	int pushImplementation(const Functor& functor)
 	{
-		return popPushImplementation(functor, pushSemaphore_, popSemaphore_, writePosition_);
+		const SemaphoreWaitFunctor semaphoreWaitFunctor;
+		return popPushImplementation(semaphoreWaitFunctor, functor, pushSemaphore_, popSemaphore_, writePosition_);
 	}
 
 	/// semaphore guarding access to "pop" functions - its value is equal to the number of available elements
