@@ -8,13 +8,15 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-12-06
+ * \date 2014-12-10
  */
 
 #ifndef INCLUDE_DISTORTOS_SCHEDULER_FIFOQUEUEBASE_HPP_
 #define INCLUDE_DISTORTOS_SCHEDULER_FIFOQUEUEBASE_HPP_
 
 #include "distortos/Semaphore.hpp"
+
+#include "distortos/estd/TypeErasedFunctor.hpp"
 
 namespace distortos
 {
@@ -38,21 +40,17 @@ private:
 	template<typename T>
 	using Storage = typename std::aligned_storage<sizeof(T), alignof(T)>::type;
 
-	/// Functor class is an interface for type-erased functors which can execute actions on queue's storage
-	class Functor
-	{
-	public:
 
-		/**
-		 * \brief Used to execute some action on queue's storage (like copy-constructing, swapping, destroying,
-		 * emplacing, ...)
-		 *
-		 * \param [in,out] storage is a reference to pointer to queue's storage - after executing functor's action, the
-		 * pointer should be incremented to next position (using the actual size of element)
-		 */
+	/**
+	 * \brief Functor is a type-erased interface for functors which execute some action on queue's storage (like
+	 * copy-constructing, swapping, destroying, emplacing, ...).
+	 *
+	 * The functor will be called by FifoQueueBase internals with one argument - \a storage - which is a reference to
+	 * pointer to queue's storage - after executing functor's action, the pointer should be incremented to next position
+	 * (using the actual size of element)
+	 */
 
-		virtual void operator()(void*& storage) = 0;
-	};
+	using Functor = estd::TypeErasedFunctor<void(void*&)>;
 
 	/**
 	 * \brief BoundedFunctor is a type-erased Functor which calls its bounded functor to execute actions on queue's
@@ -89,7 +87,7 @@ private:
 		 * pointer will be incremented to next position (using the actual size of element)
 		 */
 
-		virtual void operator()(void*& storage) override
+		virtual void operator()(void*& storage) const override
 		{
 			auto typedStorage = static_cast<Storage<T>*>(storage);
 			boundedFunctor_(typedStorage);
@@ -172,7 +170,7 @@ protected:
 	template<typename T>
 	int pop(T& value)
 	{
-		auto swapFunctor = makeBoundedFunctor<T>(
+		const auto swapFunctor = makeBoundedFunctor<T>(
 				[&value](Storage<T>* const storage)
 				{
 					auto& swappedValue = *reinterpret_cast<T*>(storage);
@@ -197,7 +195,7 @@ protected:
 	template<typename T>
 	int push(const T& value)
 	{
-		auto copyFunctor = makeBoundedFunctor<T>(
+		const auto copyFunctor = makeBoundedFunctor<T>(
 				[&value](Storage<T>* const storage)
 				{
 					new (storage) T{value};
@@ -221,7 +219,7 @@ protected:
 	template<typename T>
 	int push(T&& value)
 	{
-		auto moveFunctor = makeBoundedFunctor<T>(
+		const auto moveFunctor = makeBoundedFunctor<T>(
 				[&value](Storage<T>* const storage)
 				{
 					new (storage) T{std::move(value)};
@@ -242,7 +240,7 @@ private:
 	 * - error codes returned by Semaphore::post();
 	 */
 
-	int popImplementation(Functor& functor)
+	int popImplementation(const Functor& functor)
 	{
 		return popPushImplementation(functor, popSemaphore_, pushSemaphore_, readPosition_);
 	}
@@ -264,7 +262,8 @@ private:
 	 * - error codes returned by Semaphore::post();
 	 */
 
-	int popPushImplementation(Functor& functor, Semaphore& waitSemaphore, Semaphore& postSemaphore, void*& storage);
+	int popPushImplementation(const Functor& functor, Semaphore& waitSemaphore, Semaphore& postSemaphore,
+			void*& storage);
 
 	/**
 	 * \brief Implementation of push() using type-erased functor
@@ -277,7 +276,7 @@ private:
 	 * - error codes returned by Semaphore::post();
 	 */
 
-	int pushImplementation(Functor& functor)
+	int pushImplementation(const Functor& functor)
 	{
 		return popPushImplementation(functor, pushSemaphore_, popSemaphore_, writePosition_);
 	}
