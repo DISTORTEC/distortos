@@ -209,13 +209,8 @@ protected:
 	template<typename T>
 	int push(T&& value)
 	{
-		const auto moveFunctor = makeBoundedFunctor<T>(
-				[&value](Storage<T>* const storage)
-				{
-					new (storage) T{std::move(value)};
-				});
 		const SemaphoreWaitFunctor semaphoreWaitFunctor;
-		return pushImplementation(semaphoreWaitFunctor, moveFunctor);
+		return pushInternal(semaphoreWaitFunctor, std::move(value));
 	}
 
 private:
@@ -328,6 +323,33 @@ private:
 					new (storage) T{value};
 				});
 		return pushImplementation(waitSemaphoreFunctor, copyFunctor);
+	}
+
+	/**
+	 * \brief Pushes the element to the queue.
+	 *
+	 * Internal version - builds the Functor object.
+	 *
+	 * \param T is the type of data pushed to queue
+	 *
+	 * \param [in] waitSemaphoreFunctor is a reference to SemaphoreFunctor which will be executed with \a pushSemaphore_
+	 * \param [in] value is a rvalue reference to object that will be pushed, value in queue's storage is
+	 * move-constructed
+	 *
+	 * \return zero if element was pushed successfully, error code otherwise:
+	 * - error codes returned by \a waitSemaphoreFunctor's operator() call;
+	 * - error codes returned by Semaphore::post();
+	 */
+
+	template<typename T>
+	int pushInternal(const SemaphoreFunctor& waitSemaphoreFunctor, T&& value)
+	{
+		const auto moveFunctor = makeBoundedFunctor<T>(
+				[&value](Storage<T>* const storage)
+				{
+					new (storage) T{std::move(value)};
+				});
+		return pushImplementation(waitSemaphoreFunctor, moveFunctor);
 	}
 
 	/// semaphore guarding access to "pop" functions - its value is equal to the number of available elements
