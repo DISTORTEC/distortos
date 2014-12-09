@@ -118,6 +118,23 @@ public:
 	{
 		return FifoQueueBase::tryPop(value);
 	}
+
+	/**
+	 * \brief Tries to push the element to the queue.
+	 *
+	 * Wrapper for scheduler::FifoQueueBase::tryPush(const T&)
+	 *
+	 * \param [in] value is a reference to object that will be pushed, value in queue's storage is copy-constructed
+	 *
+	 * \return zero if element was pushed successfully, error code otherwise:
+	 * - error codes returned by Semaphore::tryWait();
+	 * - error codes returned by Semaphore::post();
+	 */
+
+	int tryPush(const T& value)
+	{
+		return FifoQueueBase::tryPush(value);
+	}
 };
 
 }	// namespace distortos
