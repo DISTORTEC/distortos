@@ -253,6 +253,26 @@ protected:
 		return pushInternal(semaphoreTryWaitFunctor, value);
 	}
 
+	/**
+	 * \brief Tries to push the element to the queue.
+	 *
+	 * \param T is the type of data pushed to queue
+	 *
+	 * \param [in] value is a rvalue reference to object that will be pushed, value in queue's storage is
+	 * move-constructed
+	 *
+	 * \return zero if element was pushed successfully, error code otherwise:
+	 * - error codes returned by Semaphore::tryWait();
+	 * - error codes returned by Semaphore::post();
+	 */
+
+	template<typename T>
+	int tryPush(T&& value)
+	{
+		const SemaphoreTryWaitFunctor semaphoreTryWaitFunctor;
+		return pushInternal(semaphoreTryWaitFunctor, std::move(value));
+	}
+
 private:
 
 	/**
