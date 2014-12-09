@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-12-04
+ * \date 2014-12-09
  */
 
 #ifndef INCLUDE_DISTORTOS_FIFOQUEUE_HPP_
@@ -99,6 +99,24 @@ public:
 	int push(T&& value)
 	{
 		return FifoQueueBase::push(std::move(value));
+	}
+
+	/**
+	 * \brief Tries to pop the oldest (first) element from the queue.
+	 *
+	 * Wrapper for scheduler::FifoQueueBase::tryPop(T&)
+	 *
+	 * \param [out] value is a reference to object that will be used to return popped value, its contents are swapped
+	 * with the value in the queue's storage and destructed when no longer needed
+	 *
+	 * \return zero if element was popped successfully, error code otherwise:
+	 * - error codes returned by Semaphore::tryWait();
+	 * - error codes returned by Semaphore::post();
+	 */
+
+	int tryPop(T& value)
+	{
+		return FifoQueueBase::tryPop(value);
 	}
 };
 
