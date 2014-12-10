@@ -18,6 +18,7 @@
 
 #include "distortos/scheduler/SemaphoreWaitFunctor.hpp"
 #include "distortos/scheduler/SemaphoreTryWaitFunctor.hpp"
+#include "distortos/scheduler/SemaphoreTryWaitForFunctor.hpp"
 
 namespace distortos
 {
@@ -232,6 +233,27 @@ protected:
 	{
 		SemaphoreTryWaitFunctor semaphoreTryWaitFunctor;
 		return popInternal(semaphoreTryWaitFunctor, value);
+	}
+
+	/**
+	 * \brief Tries to pop the oldest (first) element from the queue for a given duration of time.
+	 *
+	 * \param T is the type of data popped from queue
+	 *
+	 * \param [in] duration is the duration after which the call will be terminated without popping the element
+	 * \param [out] value is a reference to object that will be used to return popped value, its contents are swapped
+	 * with the value in the queue's storage and destructed when no longer needed
+	 *
+	 * \return zero if element was popped successfully, error code otherwise:
+	 * - error codes returned by Semaphore::tryWaitFor();
+	 * - error codes returned by Semaphore::post();
+	 */
+
+	template<typename T>
+	int tryPopFor(const TickClock::duration duration, T& value)
+	{
+		const SemaphoreTryWaitForFunctor semaphoreTryWaitForFunctor {duration};
+		return popInternal(semaphoreTryWaitForFunctor, value);
 	}
 
 	/**
