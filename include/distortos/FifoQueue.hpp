@@ -246,6 +246,25 @@ public:
 	{
 		return FifoQueueBase::tryPushUntil(timePoint, value);
 	}
+
+	/**
+	 * \brief Tries to push the element to the queue until a given time point.
+	 *
+	 * Wrapper for scheduler::FifoQueueBase::tryPushUntil(TickClock::time_point, T&&)
+	 *
+	 * \param [in] timePoint is the time point at which the call will be terminated without pushing the element
+	 * \param [in] value is a rvalue reference to object that will be pushed, value in queue's storage is
+	 * move-constructed
+	 *
+	 * \return zero if element was pushed successfully, error code otherwise:
+	 * - error codes returned by Semaphore::tryWaitUntil();
+	 * - error codes returned by Semaphore::post();
+	 */
+
+	int tryPushUntil(const TickClock::time_point timePoint, T&& value)
+	{
+		return FifoQueueBase::tryPushUntil(timePoint, std::move(value));
+	}
 };
 
 }	// namespace distortos
