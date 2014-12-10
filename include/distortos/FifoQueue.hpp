@@ -139,6 +139,25 @@ public:
 	}
 
 	/**
+	 * \brief Tries to pop the oldest (first) element from the queue until a given time point.
+	 *
+	 * Wrapper for scheduler::FifoQueueBase::tryPopUntil(TickClock::time_point, T&)
+	 *
+	 * \param [in] timePoint is the time point at which the call will be terminated without popping the element
+	 * \param [out] value is a reference to object that will be used to return popped value, its contents are swapped
+	 * with the value in the queue's storage and destructed when no longer needed
+	 *
+	 * \return zero if element was popped successfully, error code otherwise:
+	 * - error codes returned by Semaphore::tryWaitUntil();
+	 * - error codes returned by Semaphore::post();
+	 */
+
+	int tryPopUntil(const TickClock::time_point timePoint, T& value)
+	{
+		return FifoQueueBase::tryPopUntil(timePoint, value);
+	}
+
+	/**
 	 * \brief Tries to push the element to the queue.
 	 *
 	 * Wrapper for scheduler::FifoQueueBase::tryPush(const T&)
