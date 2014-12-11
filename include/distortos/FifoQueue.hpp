@@ -139,6 +139,29 @@ public:
 	}
 
 	/**
+	 * \brief Tries to pop the oldest (first) element from the queue for a given duration of time.
+	 *
+	 * Template variant of tryPopFor(TickClock::duration, T&).
+	 *
+	 * \param Rep is type of tick counter
+	 * \param Period is std::ratio type representing the tick period of the clock, in seconds
+	 *
+	 * \param [in] duration is the duration after which the call will be terminated without popping the element
+	 * \param [out] value is a reference to object that will be used to return popped value, its contents are swapped
+	 * with the value in the queue's storage and destructed when no longer needed
+	 *
+	 * \return zero if element was popped successfully, error code otherwise:
+	 * - error codes returned by Semaphore::tryWaitFor();
+	 * - error codes returned by Semaphore::post();
+	 */
+
+	template<typename Rep, typename Period>
+	int tryPopFor(const std::chrono::duration<Rep, Period> duration, T& value)
+	{
+		return tryPopFor(std::chrono::duration_cast<TickClock::duration>(duration), value);
+	}
+
+	/**
 	 * \brief Tries to pop the oldest (first) element from the queue until a given time point.
 	 *
 	 * Wrapper for scheduler::FifoQueueBase::tryPopUntil(TickClock::time_point, T&)
