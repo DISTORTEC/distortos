@@ -236,6 +236,28 @@ public:
 	/**
 	 * \brief Tries to push the element to the queue for a given duration of time.
 	 *
+	 * Template variant of tryPushFor(TickClock::duration, const T&).
+	 *
+	 * \param Rep is type of tick counter
+	 * \param Period is std::ratio type representing the tick period of the clock, in seconds
+	 *
+	 * \param [in] duration is the duration after which the wait will be terminated without pushing the element
+	 * \param [in] value is a reference to object that will be pushed, value in queue's storage is copy-constructed
+	 *
+	 * \return zero if element was pushed successfully, error code otherwise:
+	 * - error codes returned by Semaphore::tryWaitFor();
+	 * - error codes returned by Semaphore::post();
+	 */
+
+	template<typename Rep, typename Period>
+	int tryPushFor(const std::chrono::duration<Rep, Period> duration, const T& value)
+	{
+		return tryPushFor(std::chrono::duration_cast<TickClock::duration>(duration), value);
+	}
+
+	/**
+	 * \brief Tries to push the element to the queue for a given duration of time.
+	 *
 	 * Wrapper for scheduler::FifoQueueBase::tryPushFor(TickClock::duration, T&&)
 	 *
 	 * \param [in] duration is the duration after which the call will be terminated without pushing the element
