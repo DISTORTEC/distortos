@@ -181,6 +181,28 @@ public:
 	}
 
 	/**
+	 * \brief Tries to pop the oldest (first) element from the queue until a given time point.
+	 *
+	 * Template variant of tryPopUntil(TickClock::time_point, T&).
+	 *
+	 * \param Duration is a std::chrono::duration type used to measure duration
+	 *
+	 * \param [in] timePoint is the time point at which the call will be terminated without popping the element
+	 * \param [out] value is a reference to object that will be used to return popped value, its contents are swapped
+	 * with the value in the queue's storage and destructed when no longer needed
+	 *
+	 * \return zero if element was popped successfully, error code otherwise:
+	 * - error codes returned by Semaphore::tryWaitUntil();
+	 * - error codes returned by Semaphore::post();
+	 */
+
+	template<typename Duration>
+	int tryPopUntil(const std::chrono::time_point<TickClock, Duration> timePoint, T& value)
+	{
+		return tryPopUntil(std::chrono::time_point_cast<TickClock::duration>(timePoint), value);
+	}
+
+	/**
 	 * \brief Tries to push the element to the queue.
 	 *
 	 * Wrapper for scheduler::FifoQueueBase::tryPush(const T&)
