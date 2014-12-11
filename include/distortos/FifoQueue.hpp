@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-12-10
+ * \date 2014-12-11
  */
 
 #ifndef INCLUDE_DISTORTOS_FIFOQUEUE_HPP_
@@ -28,12 +28,12 @@ namespace distortos
  */
 
 template<typename T>
-class FifoQueue : private scheduler::FifoQueueBase
+class FifoQueue
 {
 public:
 
 	/// type of uninitialized storage for data
-	using Storage = Storage<T>;
+	using Storage = scheduler::FifoQueueBase::Storage<T>;
 
 	/**
 	 * \brief FifoQueue's constructor
@@ -43,7 +43,7 @@ public:
 	 */
 
 	FifoQueue(Storage* const storage, const size_t maxElements) :
-			FifoQueueBase{storage, maxElements, TypeTag<T>{}}
+			fifoQueueBase_{storage, maxElements, scheduler::FifoQueueBase::TypeTag<T>{}}
 	{
 
 	}
@@ -63,7 +63,7 @@ public:
 
 	int pop(T& value)
 	{
-		return FifoQueueBase::pop(value);
+		return fifoQueueBase_.pop(value);
 	}
 
 	/**
@@ -80,7 +80,7 @@ public:
 
 	int push(const T& value)
 	{
-		return FifoQueueBase::push(value);
+		return fifoQueueBase_.push(value);
 	}
 
 	/**
@@ -98,7 +98,7 @@ public:
 
 	int push(T&& value)
 	{
-		return FifoQueueBase::push(std::move(value));
+		return fifoQueueBase_.push(std::move(value));
 	}
 
 	/**
@@ -116,7 +116,7 @@ public:
 
 	int tryPop(T& value)
 	{
-		return FifoQueueBase::tryPop(value);
+		return fifoQueueBase_.tryPop(value);
 	}
 
 	/**
@@ -135,7 +135,7 @@ public:
 
 	int tryPopFor(const TickClock::duration duration, T& value)
 	{
-		return FifoQueueBase::tryPopFor(duration, value);
+		return fifoQueueBase_.tryPopFor(duration, value);
 	}
 
 	/**
@@ -154,7 +154,7 @@ public:
 
 	int tryPopUntil(const TickClock::time_point timePoint, T& value)
 	{
-		return FifoQueueBase::tryPopUntil(timePoint, value);
+		return fifoQueueBase_.tryPopUntil(timePoint, value);
 	}
 
 	/**
@@ -171,7 +171,7 @@ public:
 
 	int tryPush(const T& value)
 	{
-		return FifoQueueBase::tryPush(value);
+		return fifoQueueBase_.tryPush(value);
 	}
 
 	/**
@@ -189,7 +189,7 @@ public:
 
 	int tryPush(T&& value)
 	{
-		return FifoQueueBase::tryPush(std::move(value));
+		return fifoQueueBase_.tryPush(std::move(value));
 	}
 
 	/**
@@ -207,7 +207,7 @@ public:
 
 	int tryPushFor(const TickClock::duration duration, const T& value)
 	{
-		return FifoQueueBase::tryPushFor(duration, value);
+		return fifoQueueBase_.tryPushFor(duration, value);
 	}
 
 	/**
@@ -226,7 +226,7 @@ public:
 
 	int tryPushFor(const TickClock::duration duration, T&& value)
 	{
-		return FifoQueueBase::tryPushFor(duration, std::move(value));
+		return fifoQueueBase_.tryPushFor(duration, std::move(value));
 	}
 
 	/**
@@ -244,7 +244,7 @@ public:
 
 	int tryPushUntil(const TickClock::time_point timePoint, const T& value)
 	{
-		return FifoQueueBase::tryPushUntil(timePoint, value);
+		return fifoQueueBase_.tryPushUntil(timePoint, value);
 	}
 
 	/**
@@ -263,8 +263,13 @@ public:
 
 	int tryPushUntil(const TickClock::time_point timePoint, T&& value)
 	{
-		return FifoQueueBase::tryPushUntil(timePoint, std::move(value));
+		return fifoQueueBase_.tryPushUntil(timePoint, std::move(value));
 	}
+
+private:
+
+	/// contained scheduler::FifoQueueBase object which implements whole functionality
+	scheduler::FifoQueueBase fifoQueueBase_;
 };
 
 }	// namespace distortos
