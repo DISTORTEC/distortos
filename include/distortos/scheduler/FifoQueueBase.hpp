@@ -27,10 +27,10 @@ namespace distortos
 namespace scheduler
 {
 
-/// FifoQueueBase class is a base for FifoQueue template class
+/// FifoQueueBase class implements whole functionality of FifoQueue template class
 class FifoQueueBase
 {
-private:
+public:
 
 	/// required by templated constructor to deduce type
 	template<typename T>
@@ -42,86 +42,6 @@ private:
 	/// type of uninitialized storage for data
 	template<typename T>
 	using Storage = typename std::aligned_storage<sizeof(T), alignof(T)>::type;
-
-
-	/**
-	 * \brief Functor is a type-erased interface for functors which execute some action on queue's storage (like
-	 * copy-constructing, swapping, destroying, emplacing, ...).
-	 *
-	 * The functor will be called by FifoQueueBase internals with one argument - \a storage - which is a reference to
-	 * pointer to queue's storage - after executing functor's action, the pointer should be incremented to next position
-	 * (using the actual size of element)
-	 */
-
-	using Functor = estd::TypeErasedFunctor<void(void*&)>;
-
-	/**
-	 * \brief BoundedFunctor is a type-erased Functor which calls its bounded functor to execute actions on queue's
-	 * storage and deals with the pointer increments
-	 *
-	 * \param T is the type of element
-	 * \param F is the type of bounded functor, it will be called with <em>Storage<T>*</em> as only argument
-	 */
-
-	template<typename T, typename F>
-	class BoundedFunctor : public Functor
-	{
-	public:
-
-		/**
-		 * \brief BoundedFunctor's constructor
-		 *
-		 * \param [in] boundedFunctor is a rvalue reference to bounded functor which will be used to move-construct
-		 * internal bounded functor
-		 */
-
-		constexpr explicit BoundedFunctor(F&& boundedFunctor) :
-				boundedFunctor_{std::move(boundedFunctor)}
-		{
-
-		}
-
-		/**
-		 * \brief Calls the bounded functor which will execute some action on queue's storage (like copy-constructing,
-		 * swapping, destroying, emplacing, ...) and increments the storage pointer to next position (using the actual
-		 * size of element)
-		 *
-		 * \param [in,out] storage is a reference to pointer to queue's storage - after executing bounded functor, the
-		 * pointer will be incremented to next position (using the actual size of element)
-		 */
-
-		virtual void operator()(void*& storage) const override
-		{
-			auto typedStorage = static_cast<Storage<T>*>(storage);
-			boundedFunctor_(typedStorage);
-			storage = typedStorage + 1;
-		}
-
-	private:
-
-		/// bounded functor
-		F boundedFunctor_;
-	};
-
-	/**
-	 * \brief Helper factory function to make BoundedFunctor object with partially deduced template arguments
-	 *
-	 * \param T is the type of element
-	 * \param F is the type of bounded functor, it will be called with <em>Storage<T>*</em> as only argument
-	 *
-	 * \param [in] boundedFunctor is a rvalue reference to bounded functor which will be used to move-construct internal
-	 * bounded functor
-	 *
-	 * \return BoundedFunctor object with partially deduced template arguments
-	 */
-
-	template<typename T, typename F>
-	constexpr static BoundedFunctor<T, F> makeBoundedFunctor(F&& boundedFunctor)
-	{
-		return BoundedFunctor<T, F>{std::move(boundedFunctor)};
-	}
-
-protected:
 
 	/**
 	 * \brief FifoQueueBase's constructor
@@ -389,6 +309,83 @@ protected:
 	}
 
 private:
+
+	/**
+	 * \brief Functor is a type-erased interface for functors which execute some action on queue's storage (like
+	 * copy-constructing, swapping, destroying, emplacing, ...).
+	 *
+	 * The functor will be called by FifoQueueBase internals with one argument - \a storage - which is a reference to
+	 * pointer to queue's storage - after executing functor's action, the pointer should be incremented to next position
+	 * (using the actual size of element)
+	 */
+
+	using Functor = estd::TypeErasedFunctor<void(void*&)>;
+
+	/**
+	 * \brief BoundedFunctor is a type-erased Functor which calls its bounded functor to execute actions on queue's
+	 * storage and deals with the pointer increments
+	 *
+	 * \param T is the type of element
+	 * \param F is the type of bounded functor, it will be called with <em>Storage<T>*</em> as only argument
+	 */
+
+	template<typename T, typename F>
+	class BoundedFunctor : public Functor
+	{
+	public:
+
+		/**
+		 * \brief BoundedFunctor's constructor
+		 *
+		 * \param [in] boundedFunctor is a rvalue reference to bounded functor which will be used to move-construct
+		 * internal bounded functor
+		 */
+
+		constexpr explicit BoundedFunctor(F&& boundedFunctor) :
+				boundedFunctor_{std::move(boundedFunctor)}
+		{
+
+		}
+
+		/**
+		 * \brief Calls the bounded functor which will execute some action on queue's storage (like copy-constructing,
+		 * swapping, destroying, emplacing, ...) and increments the storage pointer to next position (using the actual
+		 * size of element)
+		 *
+		 * \param [in,out] storage is a reference to pointer to queue's storage - after executing bounded functor, the
+		 * pointer will be incremented to next position (using the actual size of element)
+		 */
+
+		virtual void operator()(void*& storage) const override
+		{
+			auto typedStorage = static_cast<Storage<T>*>(storage);
+			boundedFunctor_(typedStorage);
+			storage = typedStorage + 1;
+		}
+
+	private:
+
+		/// bounded functor
+		F boundedFunctor_;
+	};
+
+	/**
+	 * \brief Helper factory function to make BoundedFunctor object with partially deduced template arguments
+	 *
+	 * \param T is the type of element
+	 * \param F is the type of bounded functor, it will be called with <em>Storage<T>*</em> as only argument
+	 *
+	 * \param [in] boundedFunctor is a rvalue reference to bounded functor which will be used to move-construct internal
+	 * bounded functor
+	 *
+	 * \return BoundedFunctor object with partially deduced template arguments
+	 */
+
+	template<typename T, typename F>
+	constexpr static BoundedFunctor<T, F> makeBoundedFunctor(F&& boundedFunctor)
+	{
+		return BoundedFunctor<T, F>{std::move(boundedFunctor)};
+	}
 
 	/**
 	 * \brief Implementation of pop() using type-erased functor
