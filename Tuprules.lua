@@ -6,7 +6,7 @@
 -- This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 -- distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 --
--- date: 2014-09-24
+-- date: 2014-12-12
 --
 
 ------------------------------------------------------------------------------------------------------------------------
@@ -146,7 +146,7 @@ end
 
 -- dump symbols from file named input (elf) to file named output
 function dmp(input, output)
-	tup.rule(input, "$(OBJDUMP) -x --syms %f > %o", output)
+	tup.rule(input, "$(OBJDUMP) -x --syms --demangle %f > %o", output)
 end
 
 -- generate disassembly of file named input (elf) to file named output
