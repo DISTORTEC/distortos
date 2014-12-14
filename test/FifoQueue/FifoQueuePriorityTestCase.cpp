@@ -30,6 +30,13 @@ namespace
 {
 
 /*---------------------------------------------------------------------------------------------------------------------+
+| local constants
++---------------------------------------------------------------------------------------------------------------------*/
+
+/// size of stack for test thread, bytes
+constexpr size_t testThreadStackSize {256};
+
+/*---------------------------------------------------------------------------------------------------------------------+
 | local types
 +---------------------------------------------------------------------------------------------------------------------*/
 
@@ -45,25 +52,11 @@ using TestFifoQueue = FifoQueue<TestType>;
 /// StaticFifoQueue with \a TestType, with storage for \a totalThreads elements
 using TestStaticFifoQueue = StaticFifoQueue<TestType, totalThreads>;
 
-/*---------------------------------------------------------------------------------------------------------------------+
-| local constants
-+---------------------------------------------------------------------------------------------------------------------*/
-
-/// size of stack for test thread, bytes
-constexpr size_t testThreadStackSize {256};
-
-/*---------------------------------------------------------------------------------------------------------------------+
-| local functions' declarations
-+---------------------------------------------------------------------------------------------------------------------*/
-
-void thread(SequenceAsserter& sequenceAsserter, SequencePoints sequencePoints, TestFifoQueue& fifoQueue);
-
-/*---------------------------------------------------------------------------------------------------------------------+
-| local types
-+---------------------------------------------------------------------------------------------------------------------*/
+/// type of test thread function
+using TestThreadFunction = void(SequenceAsserter&, SequencePoints, TestFifoQueue&);
 
 /// type of test thread
-using TestThread = decltype(makeStaticThread<testThreadStackSize>({}, thread,
+using TestThread = decltype(makeStaticThread<testThreadStackSize>({}, std::declval<TestThreadFunction>(),
 		std::ref(std::declval<SequenceAsserter&>()), std::declval<SequencePoints>(),
 		std::ref(std::declval<TestFifoQueue&>())));
 
