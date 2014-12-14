@@ -60,6 +60,19 @@ using TestThread = decltype(makeStaticThread<testThreadStackSize>({}, std::declv
 		std::ref(std::declval<SequenceAsserter&>()), std::declval<SequencePoints>(),
 		std::ref(std::declval<TestFifoQueue&>())));
 
+/// function executed to prepare queue for test
+using Prepare = void(TestFifoQueue&);
+
+/// function executed on queue to trigger unblocking of test thread
+using Trigger = bool(TestFifoQueue&, size_t);
+
+/// function with final check of queue's contents after all test threads are terminated
+using FinalCheck = bool(TestFifoQueue&);
+
+/// tuple with functions for one stage, Prepare and FinalCheck may be nullptr
+using Stage = std::tuple<const TestThreadFunction&, const Prepare* const, const Trigger* const,
+		const FinalCheck* const>;
+
 /*---------------------------------------------------------------------------------------------------------------------+
 | local functions
 +---------------------------------------------------------------------------------------------------------------------*/
@@ -118,6 +131,16 @@ TestThread makeTestThread(const TestThreadFunction& testThreadFunction, const un
 			SequencePoints{firstSequencePoint, threadParameters.second + totalThreads}, std::ref(fifoQueue));
 }
 
+/*---------------------------------------------------------------------------------------------------------------------+
+| local constants
++---------------------------------------------------------------------------------------------------------------------*/
+
+/// test stages
+const std::array<Stage, 1> stages
+{{
+		Stage{popThread, nullptr, pushTrigger, nullptr},
+}};
+
 }	// namespace
 
 /*---------------------------------------------------------------------------------------------------------------------+
@@ -129,54 +152,64 @@ bool FifoQueuePriorityTestCase::Implementation::run_() const
 	const auto contextSwitchCount = statistics::getContextSwitchCount();
 	std::remove_const<decltype(contextSwitchCount)>::type expectedContextSwitchCount {};
 
-	for (const auto& phase : priorityTestPhases)
-	{
-		SequenceAsserter sequenceAsserter;
-		TestStaticFifoQueue fifoQueue;
-
-		std::array<TestThread, totalThreads> threads
-		{{
-				makeTestThread(popThread, 0, phase.first[phase.second[0]], sequenceAsserter, fifoQueue),
-				makeTestThread(popThread, 1, phase.first[phase.second[1]], sequenceAsserter, fifoQueue),
-				makeTestThread(popThread, 2, phase.first[phase.second[2]], sequenceAsserter, fifoQueue),
-				makeTestThread(popThread, 3, phase.first[phase.second[3]], sequenceAsserter, fifoQueue),
-				makeTestThread(popThread, 4, phase.first[phase.second[4]], sequenceAsserter, fifoQueue),
-				makeTestThread(popThread, 5, phase.first[phase.second[5]], sequenceAsserter, fifoQueue),
-				makeTestThread(popThread, 6, phase.first[phase.second[6]], sequenceAsserter, fifoQueue),
-				makeTestThread(popThread, 7, phase.first[phase.second[7]], sequenceAsserter, fifoQueue),
-				makeTestThread(popThread, 8, phase.first[phase.second[8]], sequenceAsserter, fifoQueue),
-				makeTestThread(popThread, 9, phase.first[phase.second[9]], sequenceAsserter, fifoQueue),
-		}};
-
-		bool result {true};
-
-		for (auto& thread : threads)
+	for (const auto& stage : stages)
+		for (const auto& phase : priorityTestPhases)
 		{
-			thread.start();
-			// 2 context switches: "into" the thread and "back" to main thread when test thread blocks on FIFO queue
-			expectedContextSwitchCount += 2;
-			if (statistics::getContextSwitchCount() - contextSwitchCount != expectedContextSwitchCount)
+			SequenceAsserter sequenceAsserter;
+			TestStaticFifoQueue fifoQueue;
+
+			const auto& threadFunction = std::get<0>(stage);
+			std::array<TestThread, totalThreads> threads
+			{{
+					makeTestThread(threadFunction, 0, phase.first[phase.second[0]], sequenceAsserter, fifoQueue),
+					makeTestThread(threadFunction, 1, phase.first[phase.second[1]], sequenceAsserter, fifoQueue),
+					makeTestThread(threadFunction, 2, phase.first[phase.second[2]], sequenceAsserter, fifoQueue),
+					makeTestThread(threadFunction, 3, phase.first[phase.second[3]], sequenceAsserter, fifoQueue),
+					makeTestThread(threadFunction, 4, phase.first[phase.second[4]], sequenceAsserter, fifoQueue),
+					makeTestThread(threadFunction, 5, phase.first[phase.second[5]], sequenceAsserter, fifoQueue),
+					makeTestThread(threadFunction, 6, phase.first[phase.second[6]], sequenceAsserter, fifoQueue),
+					makeTestThread(threadFunction, 7, phase.first[phase.second[7]], sequenceAsserter, fifoQueue),
+					makeTestThread(threadFunction, 8, phase.first[phase.second[8]], sequenceAsserter, fifoQueue),
+					makeTestThread(threadFunction, 9, phase.first[phase.second[9]], sequenceAsserter, fifoQueue),
+			}};
+
+			// execute Prepare
+			if (std::get<1>(stage) != nullptr)
+				std::get<1>(stage)(fifoQueue);
+
+			bool result {true};
+
+			for (auto& thread : threads)
+			{
+				thread.start();
+				// 2 context switches: "into" the thread and "back" to main thread when test thread blocks on FIFO queue
+				expectedContextSwitchCount += 2;
+				if (statistics::getContextSwitchCount() - contextSwitchCount != expectedContextSwitchCount)
+					result = false;
+			}
+
+			if (sequenceAsserter.assertSequence(totalThreads) == false)
 				result = false;
-		}
 
-		if (sequenceAsserter.assertSequence(totalThreads) == false)
-			result = false;
+			for (size_t i = 0; i < threads.size(); ++i)
+			{
+				std::get<2>(stage)(fifoQueue, i);
+				// 2 context switches: into" the unblocked thread and "back" to main thread when test thread terminates
+				expectedContextSwitchCount += 2;
+				if (statistics::getContextSwitchCount() - contextSwitchCount != expectedContextSwitchCount)
+					result = false;
+			}
 
-		for (size_t i = 0; i < threads.size(); ++i)
-		{
-			pushTrigger(fifoQueue, i);
-			// 2 context switches: into" the unblocked thread and "back" to main thread when test thread terminates
-			expectedContextSwitchCount += 2;
-			if (statistics::getContextSwitchCount() - contextSwitchCount != expectedContextSwitchCount)
+			for (auto& thread : threads)
+				thread.join();
+
+			// execute FinalCheck
+			if (std::get<3>(stage) != nullptr && std::get<3>(stage)(fifoQueue) == false)
 				result = false;
+
+			if (result == false || sequenceAsserter.assertSequence(totalThreads * 2) == false)
+				return false;
 		}
-
-		for (auto& thread : threads)
-			thread.join();
-
-		if (result == false || sequenceAsserter.assertSequence(totalThreads * 2) == false)
-			return false;
-	}
 
 	if (statistics::getContextSwitchCount() - contextSwitchCount != 4 * totalThreads * priorityTestPhases.size())
 		return false;
