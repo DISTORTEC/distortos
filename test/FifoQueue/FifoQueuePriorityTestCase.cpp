@@ -65,7 +65,7 @@ using TestThread = decltype(makeStaticThread<testThreadStackSize>({}, std::declv
 +---------------------------------------------------------------------------------------------------------------------*/
 
 /**
- * \brief Test thread.
+ * \brief FifoQueue::pop() test thread
  *
  * Marks the first sequence point in SequenceAsserter, waits for the last sequence point from FIFO queue and marks it in
  * SequenceAsserter.
@@ -75,7 +75,7 @@ using TestThread = decltype(makeStaticThread<testThreadStackSize>({}, std::declv
  * \param [in] fifoQueue is a reference to shared FIFO queue
  */
 
-void thread(SequenceAsserter& sequenceAsserter, const SequencePoints sequencePoints, TestFifoQueue& fifoQueue)
+void popThread(SequenceAsserter& sequenceAsserter, const SequencePoints sequencePoints, TestFifoQueue& fifoQueue)
 {
 	sequenceAsserter.sequencePoint(sequencePoints.first);
 	unsigned int lastSequencePoint {};
@@ -98,7 +98,7 @@ void thread(SequenceAsserter& sequenceAsserter, const SequencePoints sequencePoi
 TestThread makeTestThread(const unsigned int firstSequencePoint, const ThreadParameters& threadParameters,
 		SequenceAsserter& sequenceAsserter, TestFifoQueue& fifoQueue)
 {
-	return makeStaticThread<testThreadStackSize>(threadParameters.first, thread, std::ref(sequenceAsserter),
+	return makeStaticThread<testThreadStackSize>(threadParameters.first, popThread, std::ref(sequenceAsserter),
 			SequencePoints{firstSequencePoint, threadParameters.second + totalThreads}, std::ref(fifoQueue));
 }
 
