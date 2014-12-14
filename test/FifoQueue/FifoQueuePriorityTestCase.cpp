@@ -84,6 +84,21 @@ void popThread(SequenceAsserter& sequenceAsserter, const SequencePoints sequence
 }
 
 /**
+ * \brief Trigger action with FifoQueue::push().
+ *
+ * \param [in] fifoQueue is a reference to shared FIFO queue
+ * \param [in] i is the iteration counter
+ *
+ * \return true if trigger check succeeded, false otherwise
+ */
+
+bool pushTrigger(TestFifoQueue& fifoQueue, const size_t i)
+{
+	fifoQueue.push(i + totalThreads);
+	return true;
+}
+
+/**
  * \brief Builder of TestThread objects.
  *
  * \param [in] testThreadFunction is a reference to test thread function that will be used in TestThread
@@ -149,7 +164,7 @@ bool FifoQueuePriorityTestCase::Implementation::run_() const
 
 		for (size_t i = 0; i < threads.size(); ++i)
 		{
-			fifoQueue.push(i + totalThreads);
+			pushTrigger(fifoQueue, i);
 			// 2 context switches: into" the unblocked thread and "back" to main thread when test thread terminates
 			expectedContextSwitchCount += 2;
 			if (statistics::getContextSwitchCount() - contextSwitchCount != expectedContextSwitchCount)
