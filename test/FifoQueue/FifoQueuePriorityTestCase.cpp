@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-12-06
+ * \date 2014-12-14
  */
 
 #include "FifoQueuePriorityTestCase.hpp"
@@ -33,6 +33,9 @@ namespace
 | local types
 +---------------------------------------------------------------------------------------------------------------------*/
 
+/// pair of sequence points
+using SequencePoints = std::pair<unsigned int, unsigned int>;
+
 /// type of elements of \a TestFifoQueue
 using TestType = unsigned int;
 
@@ -53,7 +56,7 @@ constexpr size_t testThreadStackSize {256};
 | local functions' declarations
 +---------------------------------------------------------------------------------------------------------------------*/
 
-void thread(SequenceAsserter& sequenceAsserter, unsigned int firstSequencePoint, TestFifoQueue& fifoQueue);
+void thread(SequenceAsserter& sequenceAsserter, SequencePoints sequencePoints, TestFifoQueue& fifoQueue);
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | local types
@@ -61,7 +64,7 @@ void thread(SequenceAsserter& sequenceAsserter, unsigned int firstSequencePoint,
 
 /// type of test thread
 using TestThread = decltype(makeStaticThread<testThreadStackSize>({}, thread,
-		std::ref(std::declval<SequenceAsserter&>()), std::declval<unsigned int>(),
+		std::ref(std::declval<SequenceAsserter&>()), std::declval<SequencePoints>(),
 		std::ref(std::declval<TestFifoQueue&>())));
 
 /*---------------------------------------------------------------------------------------------------------------------+
@@ -75,14 +78,13 @@ using TestThread = decltype(makeStaticThread<testThreadStackSize>({}, thread,
  * SequenceAsserter.
  *
  * \param [in] sequenceAsserter is a reference to SequenceAsserter shared object
- * \param [in] firstSequencePoint is the first sequence point for this instance - equal to the order in which this
- * thread will be started
+ * \param [in] sequencePoints is a pair of sequence points for this instance (second one is ignored)
  * \param [in] fifoQueue is a reference to shared FIFO queue
  */
 
-void thread(SequenceAsserter& sequenceAsserter, const unsigned int firstSequencePoint, TestFifoQueue& fifoQueue)
+void thread(SequenceAsserter& sequenceAsserter, const SequencePoints sequencePoints, TestFifoQueue& fifoQueue)
 {
-	sequenceAsserter.sequencePoint(firstSequencePoint);
+	sequenceAsserter.sequencePoint(sequencePoints.first);
 	unsigned int lastSequencePoint {};
 	fifoQueue.pop(lastSequencePoint);
 	sequenceAsserter.sequencePoint(lastSequencePoint);
@@ -104,7 +106,7 @@ TestThread makeTestThread(const unsigned int firstSequencePoint, const ThreadPar
 		SequenceAsserter& sequenceAsserter, TestFifoQueue& fifoQueue)
 {
 	return makeStaticThread<testThreadStackSize>(threadParameters.first, thread, std::ref(sequenceAsserter),
-			static_cast<unsigned int>(firstSequencePoint), std::ref(fifoQueue));
+			SequencePoints{firstSequencePoint, threadParameters.second + totalThreads}, std::ref(fifoQueue));
 }
 
 }	// namespace
