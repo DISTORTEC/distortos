@@ -86,6 +86,7 @@ void popThread(SequenceAsserter& sequenceAsserter, const SequencePoints sequence
 /**
  * \brief Builder of TestThread objects.
  *
+ * \param [in] testThreadFunction is a reference to test thread function that will be used in TestThread
  * \param [in] firstSequencePoint is the first sequence point for this instance - equal to the order in which this
  * thread will be started
  * \param [in] threadParameters is a reference to ThreadParameters object
@@ -95,10 +96,10 @@ void popThread(SequenceAsserter& sequenceAsserter, const SequencePoints sequence
  * \return constructed TestThread object
  */
 
-TestThread makeTestThread(const unsigned int firstSequencePoint, const ThreadParameters& threadParameters,
-		SequenceAsserter& sequenceAsserter, TestFifoQueue& fifoQueue)
+TestThread makeTestThread(const TestThreadFunction& testThreadFunction, const unsigned int firstSequencePoint,
+		const ThreadParameters& threadParameters, SequenceAsserter& sequenceAsserter, TestFifoQueue& fifoQueue)
 {
-	return makeStaticThread<testThreadStackSize>(threadParameters.first, popThread, std::ref(sequenceAsserter),
+	return makeStaticThread<testThreadStackSize>(threadParameters.first, testThreadFunction, std::ref(sequenceAsserter),
 			SequencePoints{firstSequencePoint, threadParameters.second + totalThreads}, std::ref(fifoQueue));
 }
 
@@ -120,16 +121,16 @@ bool FifoQueuePriorityTestCase::Implementation::run_() const
 
 		std::array<TestThread, totalThreads> threads
 		{{
-				makeTestThread(0, phase.first[phase.second[0]], sequenceAsserter, fifoQueue),
-				makeTestThread(1, phase.first[phase.second[1]], sequenceAsserter, fifoQueue),
-				makeTestThread(2, phase.first[phase.second[2]], sequenceAsserter, fifoQueue),
-				makeTestThread(3, phase.first[phase.second[3]], sequenceAsserter, fifoQueue),
-				makeTestThread(4, phase.first[phase.second[4]], sequenceAsserter, fifoQueue),
-				makeTestThread(5, phase.first[phase.second[5]], sequenceAsserter, fifoQueue),
-				makeTestThread(6, phase.first[phase.second[6]], sequenceAsserter, fifoQueue),
-				makeTestThread(7, phase.first[phase.second[7]], sequenceAsserter, fifoQueue),
-				makeTestThread(8, phase.first[phase.second[8]], sequenceAsserter, fifoQueue),
-				makeTestThread(9, phase.first[phase.second[9]], sequenceAsserter, fifoQueue),
+				makeTestThread(popThread, 0, phase.first[phase.second[0]], sequenceAsserter, fifoQueue),
+				makeTestThread(popThread, 1, phase.first[phase.second[1]], sequenceAsserter, fifoQueue),
+				makeTestThread(popThread, 2, phase.first[phase.second[2]], sequenceAsserter, fifoQueue),
+				makeTestThread(popThread, 3, phase.first[phase.second[3]], sequenceAsserter, fifoQueue),
+				makeTestThread(popThread, 4, phase.first[phase.second[4]], sequenceAsserter, fifoQueue),
+				makeTestThread(popThread, 5, phase.first[phase.second[5]], sequenceAsserter, fifoQueue),
+				makeTestThread(popThread, 6, phase.first[phase.second[6]], sequenceAsserter, fifoQueue),
+				makeTestThread(popThread, 7, phase.first[phase.second[7]], sequenceAsserter, fifoQueue),
+				makeTestThread(popThread, 8, phase.first[phase.second[8]], sequenceAsserter, fifoQueue),
+				makeTestThread(popThread, 9, phase.first[phase.second[9]], sequenceAsserter, fifoQueue),
 		}};
 
 		bool result {true};
