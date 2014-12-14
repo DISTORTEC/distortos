@@ -78,6 +78,41 @@ using Stage = std::tuple<const TestThreadFunction&, const Prepare* const, const 
 +---------------------------------------------------------------------------------------------------------------------*/
 
 /**
+ * \brief Final check for "pop" stage.
+ *
+ * The queue should contain "second" sequence points of test threads in the same order as expected by SequenceAsserter.
+ *
+ * \param [in] fifoQueue is a reference to shared FIFO queue
+ *
+ * \return true if final check check succeeded, false otherwise
+ */
+
+bool popFinalCheck(TestFifoQueue& fifoQueue)
+{
+	for (size_t i = 0; i < totalThreads; ++i)
+	{
+		TestType testValue {};
+		const auto ret = fifoQueue.tryPop(testValue);
+		if (ret != 0 || testValue != i + totalThreads)
+			return false;
+	}
+
+	return true;
+}
+
+/**
+ * \brief Prepares queue for "pop" stage - just fills it completely with increasing values.
+ *
+ * \param [in] fifoQueue is a reference to shared FIFO queue
+ */
+
+void popPrepare(TestFifoQueue& fifoQueue)
+{
+	for (size_t i = 0; i < totalThreads; ++i)
+		fifoQueue.tryPush(i);
+}
+
+/**
  * \brief FifoQueue::pop() test thread
  *
  * Marks the first sequence point in SequenceAsserter, waits for the last sequence point from FIFO queue and marks it in
@@ -94,6 +129,40 @@ void popThread(SequenceAsserter& sequenceAsserter, const SequencePoints sequence
 	unsigned int lastSequencePoint {};
 	fifoQueue.pop(lastSequencePoint);
 	sequenceAsserter.sequencePoint(lastSequencePoint);
+}
+
+/**
+ * \brief Trigger action with FifoQueue::pop().
+ *
+ * \param [in] fifoQueue is a reference to shared FIFO queue
+ * \param [in] i is the iteration counter
+ *
+ * \return true if trigger check succeeded, false otherwise
+ */
+
+bool popTrigger(TestFifoQueue& fifoQueue, const size_t i)
+{
+	TestType testValue {};
+	fifoQueue.pop(testValue);
+	return testValue == i;
+}
+
+/**
+ * \brief FifoQueue::push() test thread
+ *
+ * Marks the first sequence point in SequenceAsserter, waits for free space in FIFO queue and marks last sequence point
+ * in SequenceAsserter.
+ *
+ * \param [in] sequenceAsserter is a reference to SequenceAsserter shared object
+ * \param [in] sequencePoints is a pair of sequence points for this instance
+ * \param [in] fifoQueue is a reference to shared FIFO queue
+ */
+
+void pushThread(SequenceAsserter& sequenceAsserter, const SequencePoints sequencePoints, TestFifoQueue& fifoQueue)
+{
+	sequenceAsserter.sequencePoint(sequencePoints.first);
+	fifoQueue.push(sequencePoints.second);
+	sequenceAsserter.sequencePoint(sequencePoints.second);
 }
 
 /**
@@ -136,9 +205,10 @@ TestThread makeTestThread(const TestThreadFunction& testThreadFunction, const un
 +---------------------------------------------------------------------------------------------------------------------*/
 
 /// test stages
-const std::array<Stage, 1> stages
+const std::array<Stage, 2> stages
 {{
 		Stage{popThread, nullptr, pushTrigger, nullptr},
+		Stage{pushThread, popPrepare, popTrigger, popFinalCheck},
 }};
 
 }	// namespace
@@ -211,7 +281,7 @@ bool FifoQueuePriorityTestCase::Implementation::run_() const
 				return false;
 		}
 
-	if (statistics::getContextSwitchCount() - contextSwitchCount != 4 * totalThreads * priorityTestPhases.size())
+	if (statistics::getContextSwitchCount() - contextSwitchCount != 2 * 4 * totalThreads * priorityTestPhases.size())
 		return false;
 
 	return true;
