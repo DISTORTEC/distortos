@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-12-11
+ * \date 2014-12-15
  */
 
 #ifndef INCLUDE_DISTORTOS_SCHEDULER_FIFOQUEUEBASE_HPP_
@@ -55,16 +55,7 @@ public:
 	 */
 
 	template<typename T>
-	FifoQueueBase(Storage<T>* const storage, const size_t maxElements, TypeTag<T>) :
-			popSemaphore_{0, maxElements},
-			pushSemaphore_{maxElements, maxElements},
-			storageBegin_{storage},
-			storageEnd_{storage + maxElements},
-			readPosition_{storage},
-			writePosition_{storage}
-	{
-
-	}
+	FifoQueueBase(Storage<T>* const storage, size_t maxElements, TypeTag<T>);
 
 	/**
 	 * \brief Pops the oldest (first) element from the queue.
@@ -421,17 +412,7 @@ private:
 	 */
 
 	template<typename T>
-	int popInternal(const SemaphoreFunctor& waitSemaphoreFunctor, T& value)
-	{
-		const auto swapFunctor = makeBoundedFunctor<T>(
-				[&value](Storage<T>* const storage)
-				{
-					auto& swappedValue = *reinterpret_cast<T*>(storage);
-					std::swap(value, swappedValue);
-					swappedValue.~T();
-				});
-		return popImplementation(waitSemaphoreFunctor, swapFunctor);
-	}
+	int popInternal(const SemaphoreFunctor& waitSemaphoreFunctor, T& value);
 
 	/**
 	 * \brief Implementation of pop() and push() using type-erased functor
@@ -487,15 +468,7 @@ private:
 	 */
 
 	template<typename T>
-	int pushInternal(const SemaphoreFunctor& waitSemaphoreFunctor, const T& value)
-	{
-		const auto copyFunctor = makeBoundedFunctor<T>(
-				[&value](Storage<T>* const storage)
-				{
-					new (storage) T{value};
-				});
-		return pushImplementation(waitSemaphoreFunctor, copyFunctor);
-	}
+	int pushInternal(const SemaphoreFunctor& waitSemaphoreFunctor, const T& value);
 
 	/**
 	 * \brief Pushes the element to the queue.
@@ -514,15 +487,7 @@ private:
 	 */
 
 	template<typename T>
-	int pushInternal(const SemaphoreFunctor& waitSemaphoreFunctor, T&& value)
-	{
-		const auto moveFunctor = makeBoundedFunctor<T>(
-				[&value](Storage<T>* const storage)
-				{
-					new (storage) T{std::move(value)};
-				});
-		return pushImplementation(waitSemaphoreFunctor, moveFunctor);
-	}
+	int pushInternal(const SemaphoreFunctor& waitSemaphoreFunctor, T&& value);
 
 	/// semaphore guarding access to "pop" functions - its value is equal to the number of available elements
 	Semaphore popSemaphore_;
@@ -542,6 +507,53 @@ private:
 	/// pointer to first free slot available for writing
 	void* writePosition_;
 };
+
+template<typename T>
+FifoQueueBase::FifoQueueBase(Storage<T>* const storage, const size_t maxElements, TypeTag<T>) :
+		popSemaphore_{0, maxElements},
+		pushSemaphore_{maxElements, maxElements},
+		storageBegin_{storage},
+		storageEnd_{storage + maxElements},
+		readPosition_{storage},
+		writePosition_{storage}
+{
+
+}
+
+template<typename T>
+int FifoQueueBase::popInternal(const SemaphoreFunctor& waitSemaphoreFunctor, T& value)
+{
+	const auto swapFunctor = makeBoundedFunctor<T>(
+			[&value](Storage<T>* const storage)
+			{
+				auto& swappedValue = *reinterpret_cast<T*>(storage);
+				std::swap(value, swappedValue);
+				swappedValue.~T();
+			});
+	return popImplementation(waitSemaphoreFunctor, swapFunctor);
+}
+
+template<typename T>
+int FifoQueueBase::pushInternal(const SemaphoreFunctor& waitSemaphoreFunctor, const T& value)
+{
+	const auto copyFunctor = makeBoundedFunctor<T>(
+			[&value](Storage<T>* const storage)
+			{
+				new (storage) T{value};
+			});
+	return pushImplementation(waitSemaphoreFunctor, copyFunctor);
+}
+
+template<typename T>
+int FifoQueueBase::pushInternal(const SemaphoreFunctor& waitSemaphoreFunctor, T&& value)
+{
+	const auto moveFunctor = makeBoundedFunctor<T>(
+			[&value](Storage<T>* const storage)
+			{
+				new (storage) T{std::move(value)};
+			});
+	return pushImplementation(waitSemaphoreFunctor, moveFunctor);
+}
 
 }	// namespace scheduler
 
