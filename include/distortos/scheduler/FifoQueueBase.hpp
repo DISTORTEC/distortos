@@ -527,7 +527,8 @@ int FifoQueueBase::popInternal(const SemaphoreFunctor& waitSemaphoreFunctor, T& 
 			[&value](Storage<T>* const storage)
 			{
 				auto& swappedValue = *reinterpret_cast<T*>(storage);
-				std::swap(value, swappedValue);
+				using std::swap;
+				swap(value, swappedValue);
 				swappedValue.~T();
 			});
 	return popImplementation(waitSemaphoreFunctor, swapFunctor);
