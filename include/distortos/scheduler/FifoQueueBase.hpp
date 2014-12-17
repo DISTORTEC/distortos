@@ -152,6 +152,23 @@ public:
 	}
 
 	/**
+	 * \brief Implementation of push() using type-erased functor
+	 *
+	 * \param [in] waitSemaphoreFunctor is a reference to SemaphoreFunctor which will be executed with \a pushSemaphore_
+	 * \param [in] functor is a reference to Functor which will execute actions related to pushing - it will get a
+	 * reference to writePosition_ as argument
+	 *
+	 * \return zero if element was pushed successfully, error code otherwise:
+	 * - error codes returned by \a waitSemaphoreFunctor's operator() call;
+	 * - error codes returned by Semaphore::post();
+	 */
+
+	int pushImplementation(const SemaphoreFunctor& waitSemaphoreFunctor, const Functor& functor)
+	{
+		return popPushImplementation(waitSemaphoreFunctor, functor, pushSemaphore_, popSemaphore_, writePosition_);
+	}
+
+	/**
 	 * \brief Pushes the element to the queue.
 	 *
 	 * Internal version - builds the Functor object.
@@ -210,23 +227,6 @@ private:
 
 	int popPushImplementation(const SemaphoreFunctor& waitSemaphoreFunctor, const Functor& functor,
 			Semaphore& waitSemaphore, Semaphore& postSemaphore, void*& storage);
-
-	/**
-	 * \brief Implementation of push() using type-erased functor
-	 *
-	 * \param [in] waitSemaphoreFunctor is a reference to SemaphoreFunctor which will be executed with \a pushSemaphore_
-	 * \param [in] functor is a reference to Functor which will execute actions related to pushing - it will get a
-	 * reference to writePosition_ as argument
-	 *
-	 * \return zero if element was pushed successfully, error code otherwise:
-	 * - error codes returned by \a waitSemaphoreFunctor's operator() call;
-	 * - error codes returned by Semaphore::post();
-	 */
-
-	int pushImplementation(const SemaphoreFunctor& waitSemaphoreFunctor, const Functor& functor)
-	{
-		return popPushImplementation(waitSemaphoreFunctor, functor, pushSemaphore_, popSemaphore_, writePosition_);
-	}
 
 	/// semaphore guarding access to "pop" functions - its value is equal to the number of available elements
 	Semaphore popSemaphore_;
