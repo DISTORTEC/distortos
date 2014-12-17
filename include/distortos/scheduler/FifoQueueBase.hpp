@@ -152,25 +152,6 @@ public:
 	}
 
 	/**
-	 * \brief Pops the oldest (first) element from the queue.
-	 *
-	 * Internal version - builds the Functor object.
-	 *
-	 * \param T is the type of data popped from queue
-	 *
-	 * \param [in] waitSemaphoreFunctor is a reference to SemaphoreFunctor which will be executed with \a popSemaphore_
-	 * \param [out] value is a reference to object that will be used to return popped value, its contents are swapped
-	 * with the value in the queue's storage and destructed when no longer needed
-	 *
-	 * \return zero if element was popped successfully, error code otherwise:
-	 * - error codes returned by \a waitSemaphoreFunctor's operator() call;
-	 * - error codes returned by Semaphore::post();
-	 */
-
-	template<typename T>
-	int popInternal(const SemaphoreFunctor& waitSemaphoreFunctor, T& value);
-
-	/**
 	 * \brief Pushes the element to the queue.
 	 *
 	 * \param T is the type of data pushed to queue
@@ -436,20 +417,6 @@ FifoQueueBase::FifoQueueBase(Storage<T>* const storage, const size_t maxElements
 		writePosition_{storage}
 {
 
-}
-
-template<typename T>
-int FifoQueueBase::popInternal(const SemaphoreFunctor& waitSemaphoreFunctor, T& value)
-{
-	const auto swapFunctor = makeBoundedFunctor<T>(
-			[&value](Storage<T>* const storage)
-			{
-				auto& swappedValue = *reinterpret_cast<T*>(storage);
-				using std::swap;
-				swap(value, swappedValue);
-				swappedValue.~T();
-			});
-	return popImplementation(waitSemaphoreFunctor, swapFunctor);
 }
 
 template<typename T>

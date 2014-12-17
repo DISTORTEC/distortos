@@ -62,7 +62,7 @@ public:
 	int pop(T& value)
 	{
 		const scheduler::SemaphoreWaitFunctor semaphoreWaitFunctor;
-		return fifoQueueBase_.popInternal(semaphoreWaitFunctor, value);
+		return popInternal(semaphoreWaitFunctor, value);
 	}
 
 	/**
@@ -114,7 +114,7 @@ public:
 	int tryPop(T& value)
 	{
 		scheduler::SemaphoreTryWaitFunctor semaphoreTryWaitFunctor;
-		return fifoQueueBase_.popInternal(semaphoreTryWaitFunctor, value);
+		return popInternal(semaphoreTryWaitFunctor, value);
 	}
 
 	/**
@@ -132,7 +132,7 @@ public:
 	int tryPopFor(const TickClock::duration duration, T& value)
 	{
 		const scheduler::SemaphoreTryWaitForFunctor semaphoreTryWaitForFunctor {duration};
-		return fifoQueueBase_.popInternal(semaphoreTryWaitForFunctor, value);
+		return popInternal(semaphoreTryWaitForFunctor, value);
 	}
 
 	/**
@@ -173,7 +173,7 @@ public:
 	int tryPopUntil(const TickClock::time_point timePoint, T& value)
 	{
 		const scheduler::SemaphoreTryWaitUntilFunctor semaphoreTryWaitUntilFunctor {timePoint};
-		return fifoQueueBase_.popInternal(semaphoreTryWaitUntilFunctor, value);
+		return popInternal(semaphoreTryWaitUntilFunctor, value);
 	}
 
 	/**
@@ -397,9 +397,39 @@ public:
 
 private:
 
+	/**
+	 * \brief Pops the oldest (first) element from the queue.
+	 *
+	 * Internal version - builds the Functor object.
+	 *
+	 * \param [in] waitSemaphoreFunctor is a reference to SemaphoreFunctor which will be executed with \a popSemaphore_
+	 * \param [out] value is a reference to object that will be used to return popped value, its contents are swapped
+	 * with the value in the queue's storage and destructed when no longer needed
+	 *
+	 * \return zero if element was popped successfully, error code otherwise:
+	 * - error codes returned by \a waitSemaphoreFunctor's operator() call;
+	 * - error codes returned by Semaphore::post();
+	 */
+
+	int popInternal(const scheduler::SemaphoreFunctor& waitSemaphoreFunctor, T& value);
+
 	/// contained scheduler::FifoQueueBase object which implements whole functionality
 	scheduler::FifoQueueBase fifoQueueBase_;
 };
+
+template<typename T>
+int FifoQueue<T>::popInternal(const scheduler::SemaphoreFunctor& waitSemaphoreFunctor, T& value)
+{
+	const auto swapFunctor = scheduler::FifoQueueBase::makeBoundedFunctor<T>(
+			[&value](Storage* const storage)
+			{
+				auto& swappedValue = *reinterpret_cast<T*>(storage);
+				using std::swap;
+				swap(value, swappedValue);
+				swappedValue.~T();
+			});
+	return fifoQueueBase_.popImplementation(waitSemaphoreFunctor, swapFunctor);
+}
 
 }	// namespace distortos
 
