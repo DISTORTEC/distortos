@@ -84,8 +84,6 @@ public:
 	/**
 	 * \brief Pushes the element to the queue.
 	 *
-	 * Wrapper for scheduler::FifoQueueBase::push(T&&)
-	 *
 	 * \param [in] value is a rvalue reference to object that will be pushed, value in queue's storage is
 	 * move-constructed
 	 *
@@ -96,7 +94,8 @@ public:
 
 	int push(T&& value)
 	{
-		return fifoQueueBase_.push(std::move(value));
+		const scheduler::SemaphoreWaitFunctor semaphoreWaitFunctor;
+		return fifoQueueBase_.pushInternal(semaphoreWaitFunctor, std::move(value));
 	}
 
 	/**

@@ -154,26 +154,6 @@ public:
 	/**
 	 * \brief Pushes the element to the queue.
 	 *
-	 * \param T is the type of data pushed to queue
-	 *
-	 * \param [in] value is a rvalue reference to object that will be pushed, value in queue's storage is
-	 * move-constructed
-	 *
-	 * \return zero if element was pushed successfully, error code otherwise:
-	 * - error codes returned by Semaphore::wait();
-	 * - error codes returned by Semaphore::post();
-	 */
-
-	template<typename T>
-	int push(T&& value)
-	{
-		const SemaphoreWaitFunctor semaphoreWaitFunctor;
-		return pushInternal(semaphoreWaitFunctor, std::move(value));
-	}
-
-	/**
-	 * \brief Pushes the element to the queue.
-	 *
 	 * Internal version - builds the Functor object.
 	 *
 	 * \param T is the type of data pushed to queue
