@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-12-17
+ * \date 2014-12-18
  */
 
 #ifndef INCLUDE_DISTORTOS_FIFOQUEUE_HPP_
@@ -26,7 +26,7 @@ namespace distortos
 
 /**
  * \brief FifoQueue class is a simple FIFO queue for thread-thread, thread-interrupt or interrupt-interrupt
- * communication. It supports multiple readers and multiple writers. It is implemented as a thin wrapper for
+ * communication. It supports multiple readers and multiple writers. It is implemented as a wrapper for
  * scheduler::FifoQueueBase.
  *
  * \param T is the type of data in queue
