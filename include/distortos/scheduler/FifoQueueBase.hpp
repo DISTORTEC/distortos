@@ -191,6 +191,43 @@ public:
 	}
 
 	/**
+	 * \brief Pushes the element to the queue.
+	 *
+	 * Internal version - builds the Functor object.
+	 *
+	 * \param T is the type of data pushed to queue
+	 *
+	 * \param [in] waitSemaphoreFunctor is a reference to SemaphoreFunctor which will be executed with \a pushSemaphore_
+	 * \param [in] value is a reference to object that will be pushed, value in queue's storage is copy-constructed
+	 *
+	 * \return zero if element was pushed successfully, error code otherwise:
+	 * - error codes returned by \a waitSemaphoreFunctor's operator() call;
+	 * - error codes returned by Semaphore::post();
+	 */
+
+	template<typename T>
+	int pushInternal(const SemaphoreFunctor& waitSemaphoreFunctor, const T& value);
+
+	/**
+	 * \brief Pushes the element to the queue.
+	 *
+	 * Internal version - builds the Functor object.
+	 *
+	 * \param T is the type of data pushed to queue
+	 *
+	 * \param [in] waitSemaphoreFunctor is a reference to SemaphoreFunctor which will be executed with \a pushSemaphore_
+	 * \param [in] value is a rvalue reference to object that will be pushed, value in queue's storage is
+	 * move-constructed
+	 *
+	 * \return zero if element was pushed successfully, error code otherwise:
+	 * - error codes returned by \a waitSemaphoreFunctor's operator() call;
+	 * - error codes returned by Semaphore::post();
+	 */
+
+	template<typename T>
+	int pushInternal(const SemaphoreFunctor& waitSemaphoreFunctor, T&& value);
+
+	/**
 	 * \brief Tries to push the element to the queue.
 	 *
 	 * \param T is the type of data pushed to queue
@@ -350,43 +387,6 @@ private:
 	{
 		return popPushImplementation(waitSemaphoreFunctor, functor, pushSemaphore_, popSemaphore_, writePosition_);
 	}
-
-	/**
-	 * \brief Pushes the element to the queue.
-	 *
-	 * Internal version - builds the Functor object.
-	 *
-	 * \param T is the type of data pushed to queue
-	 *
-	 * \param [in] waitSemaphoreFunctor is a reference to SemaphoreFunctor which will be executed with \a pushSemaphore_
-	 * \param [in] value is a reference to object that will be pushed, value in queue's storage is copy-constructed
-	 *
-	 * \return zero if element was pushed successfully, error code otherwise:
-	 * - error codes returned by \a waitSemaphoreFunctor's operator() call;
-	 * - error codes returned by Semaphore::post();
-	 */
-
-	template<typename T>
-	int pushInternal(const SemaphoreFunctor& waitSemaphoreFunctor, const T& value);
-
-	/**
-	 * \brief Pushes the element to the queue.
-	 *
-	 * Internal version - builds the Functor object.
-	 *
-	 * \param T is the type of data pushed to queue
-	 *
-	 * \param [in] waitSemaphoreFunctor is a reference to SemaphoreFunctor which will be executed with \a pushSemaphore_
-	 * \param [in] value is a rvalue reference to object that will be pushed, value in queue's storage is
-	 * move-constructed
-	 *
-	 * \return zero if element was pushed successfully, error code otherwise:
-	 * - error codes returned by \a waitSemaphoreFunctor's operator() call;
-	 * - error codes returned by Semaphore::post();
-	 */
-
-	template<typename T>
-	int pushInternal(const SemaphoreFunctor& waitSemaphoreFunctor, T&& value);
 
 	/// semaphore guarding access to "pop" functions - its value is equal to the number of available elements
 	Semaphore popSemaphore_;
