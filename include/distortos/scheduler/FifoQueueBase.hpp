@@ -29,13 +29,6 @@ class FifoQueueBase
 {
 public:
 
-	/// required by templated constructor to deduce type
-	template<typename T>
-	class TypeTag
-	{
-
-	};
-
 	/// type of uninitialized storage for data
 	template<typename T>
 	using Storage = typename std::aligned_storage<sizeof(T), alignof(T)>::type;
@@ -54,16 +47,12 @@ public:
 	/**
 	 * \brief FifoQueueBase's constructor
 	 *
-	 * \param T is the type of data in queue
-	 *
-	 * \param [in] storage is an array of Storage<T> elements
-	 * \param [in] maxElements is the number of elements in storage array
-	 * \param [in] typeTag is used to deduce T, as deduction from storage is not possible (nested-name-specifier, so a
-	 * non-deduced context)
+	 * \param [in] storageBegin is the beginning of storage for queue elements
+	 * \param [in] storageEnd is the pointer to past-the-last element of storage for queue elements
+	 * \param [in] maxElements is the number of elements in storage
 	 */
 
-	template<typename T>
-	FifoQueueBase(Storage<T>* const storage, size_t maxElements, TypeTag<T>);
+	FifoQueueBase(void* storageBegin, const void* storageEnd, size_t maxElements);
 
 	/**
 	 * \brief Implementation of pop() using type-erased functor
@@ -128,11 +117,11 @@ private:
 	/// semaphore guarding access to "push" functions - its value is equal to the number of free slots
 	Semaphore pushSemaphore_;
 
-	/// beginning of array with Storage elements
+	/// beginning of storage for queue elements
 	void* const storageBegin_;
 
-	/// pointer to past-the-last element of array with Storage elements
-	void* const storageEnd_;
+	/// pointer to past-the-last element of storage for queue elements
+	const void* const storageEnd_;
 
 	/// pointer to first element available for reading
 	void* readPosition_;
@@ -140,18 +129,6 @@ private:
 	/// pointer to first free slot available for writing
 	void* writePosition_;
 };
-
-template<typename T>
-FifoQueueBase::FifoQueueBase(Storage<T>* const storage, const size_t maxElements, TypeTag<T>) :
-		popSemaphore_{0, maxElements},
-		pushSemaphore_{maxElements, maxElements},
-		storageBegin_{storage},
-		storageEnd_{storage + maxElements},
-		readPosition_{storage},
-		writePosition_{storage}
-{
-
-}
 
 }	// namespace scheduler
 

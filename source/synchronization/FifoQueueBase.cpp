@@ -22,6 +22,21 @@ namespace scheduler
 {
 
 /*---------------------------------------------------------------------------------------------------------------------+
+| public functions
++---------------------------------------------------------------------------------------------------------------------*/
+
+FifoQueueBase::FifoQueueBase(void* const storageBegin, const void* const storageEnd, const size_t maxElements) :
+		popSemaphore_{0, maxElements},
+		pushSemaphore_{maxElements, maxElements},
+		storageBegin_{storageBegin},
+		storageEnd_{storageEnd},
+		readPosition_{storageBegin},
+		writePosition_{storageBegin}
+{
+
+}
+
+/*---------------------------------------------------------------------------------------------------------------------+
 | private functions
 +---------------------------------------------------------------------------------------------------------------------*/
 

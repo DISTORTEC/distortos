@@ -48,7 +48,7 @@ public:
 	 */
 
 	FifoQueue(Storage* const storage, const size_t maxElements) :
-			fifoQueueBase_{storage, maxElements, scheduler::FifoQueueBase::TypeTag<T>{}}
+			fifoQueueBase_{storage, storage + maxElements, maxElements}
 	{
 
 	}
