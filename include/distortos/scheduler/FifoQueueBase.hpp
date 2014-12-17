@@ -103,6 +103,24 @@ public:
 	};
 
 	/**
+	 * \brief Helper factory function to make BoundedFunctor object with partially deduced template arguments
+	 *
+	 * \param T is the type of element
+	 * \param F is the type of bounded functor, it will be called with <em>Storage<T>*</em> as only argument
+	 *
+	 * \param [in] boundedFunctor is a rvalue reference to bounded functor which will be used to move-construct internal
+	 * bounded functor
+	 *
+	 * \return BoundedFunctor object with partially deduced template arguments
+	 */
+
+	template<typename T, typename F>
+	constexpr static BoundedFunctor<T, F> makeBoundedFunctor(F&& boundedFunctor)
+	{
+		return BoundedFunctor<T, F>{std::move(boundedFunctor)};
+	}
+
+	/**
 	 * \brief FifoQueueBase's constructor
 	 *
 	 * \param T is the type of data in queue
@@ -296,24 +314,6 @@ public:
 	}
 
 private:
-
-	/**
-	 * \brief Helper factory function to make BoundedFunctor object with partially deduced template arguments
-	 *
-	 * \param T is the type of element
-	 * \param F is the type of bounded functor, it will be called with <em>Storage<T>*</em> as only argument
-	 *
-	 * \param [in] boundedFunctor is a rvalue reference to bounded functor which will be used to move-construct internal
-	 * bounded functor
-	 *
-	 * \return BoundedFunctor object with partially deduced template arguments
-	 */
-
-	template<typename T, typename F>
-	constexpr static BoundedFunctor<T, F> makeBoundedFunctor(F&& boundedFunctor)
-	{
-		return BoundedFunctor<T, F>{std::move(boundedFunctor)};
-	}
 
 	/**
 	 * \brief Implementation of pop() using type-erased functor
