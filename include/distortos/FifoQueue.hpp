@@ -78,7 +78,7 @@ public:
 	int push(const T& value)
 	{
 		const scheduler::SemaphoreWaitFunctor semaphoreWaitFunctor;
-		return fifoQueueBase_.pushInternal(semaphoreWaitFunctor, value);
+		return pushInternal(semaphoreWaitFunctor, value);
 	}
 
 	/**
@@ -95,7 +95,7 @@ public:
 	int push(T&& value)
 	{
 		const scheduler::SemaphoreWaitFunctor semaphoreWaitFunctor;
-		return fifoQueueBase_.pushInternal(semaphoreWaitFunctor, std::move(value));
+		return pushInternal(semaphoreWaitFunctor, std::move(value));
 	}
 
 	/**
@@ -209,7 +209,7 @@ public:
 	int tryPush(const T& value)
 	{
 		const scheduler::SemaphoreTryWaitFunctor semaphoreTryWaitFunctor;
-		return fifoQueueBase_.pushInternal(semaphoreTryWaitFunctor, value);
+		return pushInternal(semaphoreTryWaitFunctor, value);
 	}
 
 	/**
@@ -226,7 +226,7 @@ public:
 	int tryPush(T&& value)
 	{
 		const scheduler::SemaphoreTryWaitFunctor semaphoreTryWaitFunctor;
-		return fifoQueueBase_.pushInternal(semaphoreTryWaitFunctor, std::move(value));
+		return pushInternal(semaphoreTryWaitFunctor, std::move(value));
 	}
 
 	/**
@@ -243,7 +243,7 @@ public:
 	int tryPushFor(const TickClock::duration duration, const T& value)
 	{
 		const scheduler::SemaphoreTryWaitForFunctor semaphoreTryWaitForFunctor {duration};
-		return fifoQueueBase_.pushInternal(semaphoreTryWaitForFunctor, value);
+		return pushInternal(semaphoreTryWaitForFunctor, value);
 	}
 
 	/**
@@ -283,7 +283,7 @@ public:
 	int tryPushFor(const TickClock::duration duration, T&& value)
 	{
 		const scheduler::SemaphoreTryWaitForFunctor semaphoreTryWaitForFunctor {duration};
-		return fifoQueueBase_.pushInternal(semaphoreTryWaitForFunctor, std::move(value));
+		return pushInternal(semaphoreTryWaitForFunctor, std::move(value));
 	}
 
 	/**
@@ -323,7 +323,7 @@ public:
 	int tryPushUntil(const TickClock::time_point timePoint, const T& value)
 	{
 		const scheduler::SemaphoreTryWaitUntilFunctor semaphoreTryWaitUntilFunctor {timePoint};
-		return fifoQueueBase_.pushInternal(semaphoreTryWaitUntilFunctor, value);
+		return pushInternal(semaphoreTryWaitUntilFunctor, value);
 	}
 
 	/**
@@ -362,7 +362,7 @@ public:
 	int tryPushUntil(const TickClock::time_point timePoint, T&& value)
 	{
 		const scheduler::SemaphoreTryWaitUntilFunctor semaphoreTryWaitUntilFunctor {timePoint};
-		return fifoQueueBase_.pushInternal(semaphoreTryWaitUntilFunctor, std::move(value));
+		return pushInternal(semaphoreTryWaitUntilFunctor, std::move(value));
 	}
 
 	/**
@@ -405,6 +405,37 @@ private:
 
 	int popInternal(const scheduler::SemaphoreFunctor& waitSemaphoreFunctor, T& value);
 
+	/**
+	 * \brief Pushes the element to the queue.
+	 *
+	 * Internal version - builds the Functor object.
+	 *
+	 * \param [in] waitSemaphoreFunctor is a reference to SemaphoreFunctor which will be executed with \a pushSemaphore_
+	 * \param [in] value is a reference to object that will be pushed, value in queue's storage is copy-constructed
+	 *
+	 * \return zero if element was pushed successfully, error code otherwise:
+	 * - error codes returned by \a waitSemaphoreFunctor's operator() call;
+	 * - error codes returned by Semaphore::post();
+	 */
+
+	int pushInternal(const scheduler::SemaphoreFunctor& waitSemaphoreFunctor, const T& value);
+
+	/**
+	 * \brief Pushes the element to the queue.
+	 *
+	 * Internal version - builds the Functor object.
+	 *
+	 * \param [in] waitSemaphoreFunctor is a reference to SemaphoreFunctor which will be executed with \a pushSemaphore_
+	 * \param [in] value is a rvalue reference to object that will be pushed, value in queue's storage is
+	 * move-constructed
+	 *
+	 * \return zero if element was pushed successfully, error code otherwise:
+	 * - error codes returned by \a waitSemaphoreFunctor's operator() call;
+	 * - error codes returned by Semaphore::post();
+	 */
+
+	int pushInternal(const scheduler::SemaphoreFunctor& waitSemaphoreFunctor, T&& value);
+
 	/// contained scheduler::FifoQueueBase object which implements whole functionality
 	scheduler::FifoQueueBase fifoQueueBase_;
 };
@@ -421,6 +452,28 @@ int FifoQueue<T>::popInternal(const scheduler::SemaphoreFunctor& waitSemaphoreFu
 				swappedValue.~T();
 			});
 	return fifoQueueBase_.popImplementation(waitSemaphoreFunctor, swapFunctor);
+}
+
+template<typename T>
+int FifoQueue<T>::pushInternal(const scheduler::SemaphoreFunctor& waitSemaphoreFunctor, const T& value)
+{
+	const auto copyFunctor = scheduler::FifoQueueBase::makeBoundedFunctor<T>(
+			[&value](Storage* const storage)
+			{
+				new (storage) T{value};
+			});
+	return fifoQueueBase_.pushImplementation(waitSemaphoreFunctor, copyFunctor);
+}
+
+template<typename T>
+int FifoQueue<T>::pushInternal(const scheduler::SemaphoreFunctor& waitSemaphoreFunctor, T&& value)
+{
+	const auto moveFunctor = scheduler::FifoQueueBase::makeBoundedFunctor<T>(
+			[&value](Storage* const storage)
+			{
+				new (storage) T{std::move(value)};
+			});
+	return fifoQueueBase_.pushImplementation(waitSemaphoreFunctor, moveFunctor);
 }
 
 }	// namespace distortos

@@ -168,43 +168,6 @@ public:
 		return popPushImplementation(waitSemaphoreFunctor, functor, pushSemaphore_, popSemaphore_, writePosition_);
 	}
 
-	/**
-	 * \brief Pushes the element to the queue.
-	 *
-	 * Internal version - builds the Functor object.
-	 *
-	 * \param T is the type of data pushed to queue
-	 *
-	 * \param [in] waitSemaphoreFunctor is a reference to SemaphoreFunctor which will be executed with \a pushSemaphore_
-	 * \param [in] value is a reference to object that will be pushed, value in queue's storage is copy-constructed
-	 *
-	 * \return zero if element was pushed successfully, error code otherwise:
-	 * - error codes returned by \a waitSemaphoreFunctor's operator() call;
-	 * - error codes returned by Semaphore::post();
-	 */
-
-	template<typename T>
-	int pushInternal(const SemaphoreFunctor& waitSemaphoreFunctor, const T& value);
-
-	/**
-	 * \brief Pushes the element to the queue.
-	 *
-	 * Internal version - builds the Functor object.
-	 *
-	 * \param T is the type of data pushed to queue
-	 *
-	 * \param [in] waitSemaphoreFunctor is a reference to SemaphoreFunctor which will be executed with \a pushSemaphore_
-	 * \param [in] value is a rvalue reference to object that will be pushed, value in queue's storage is
-	 * move-constructed
-	 *
-	 * \return zero if element was pushed successfully, error code otherwise:
-	 * - error codes returned by \a waitSemaphoreFunctor's operator() call;
-	 * - error codes returned by Semaphore::post();
-	 */
-
-	template<typename T>
-	int pushInternal(const SemaphoreFunctor& waitSemaphoreFunctor, T&& value);
-
 private:
 
 	/**
@@ -257,28 +220,6 @@ FifoQueueBase::FifoQueueBase(Storage<T>* const storage, const size_t maxElements
 		writePosition_{storage}
 {
 
-}
-
-template<typename T>
-int FifoQueueBase::pushInternal(const SemaphoreFunctor& waitSemaphoreFunctor, const T& value)
-{
-	const auto copyFunctor = makeBoundedFunctor<T>(
-			[&value](Storage<T>* const storage)
-			{
-				new (storage) T{value};
-			});
-	return pushImplementation(waitSemaphoreFunctor, copyFunctor);
-}
-
-template<typename T>
-int FifoQueueBase::pushInternal(const SemaphoreFunctor& waitSemaphoreFunctor, T&& value)
-{
-	const auto moveFunctor = makeBoundedFunctor<T>(
-			[&value](Storage<T>* const storage)
-			{
-				new (storage) T{std::move(value)};
-			});
-	return pushImplementation(waitSemaphoreFunctor, moveFunctor);
 }
 
 }	// namespace scheduler
