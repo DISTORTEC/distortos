@@ -215,8 +215,6 @@ public:
 	/**
 	 * \brief Tries to push the element to the queue.
 	 *
-	 * Wrapper for scheduler::FifoQueueBase::tryPush(T&&)
-	 *
 	 * \param [in] value is a rvalue reference to object that will be pushed, value in queue's storage is
 	 * move-constructed
 	 *
@@ -227,7 +225,8 @@ public:
 
 	int tryPush(T&& value)
 	{
-		return fifoQueueBase_.tryPush(std::move(value));
+		const scheduler::SemaphoreTryWaitFunctor semaphoreTryWaitFunctor;
+		return fifoQueueBase_.pushInternal(semaphoreTryWaitFunctor, std::move(value));
 	}
 
 	/**
