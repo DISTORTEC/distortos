@@ -390,6 +390,70 @@ public:
 private:
 
 	/**
+	 * \brief BoundedFunctor is a type-erased scheduler::FifoQueueBase::Functor which calls its bounded functor to
+	 * execute actions on queue's storage and deals with the pointer increments
+	 *
+	 * \param F is the type of bounded functor, it will be called with <em>Storage*</em> as only argument
+	 */
+
+	template<typename F>
+	class BoundedFunctor : public scheduler::FifoQueueBase::Functor
+	{
+	public:
+
+		/**
+		 * \brief BoundedFunctor's constructor
+		 *
+		 * \param [in] boundedFunctor is a rvalue reference to bounded functor which will be used to move-construct
+		 * internal bounded functor
+		 */
+
+		constexpr explicit BoundedFunctor(F&& boundedFunctor) :
+				boundedFunctor_{std::move(boundedFunctor)}
+		{
+
+		}
+
+		/**
+		 * \brief Calls the bounded functor which will execute some action on queue's storage (like copy-constructing,
+		 * swapping, destroying, emplacing, ...) and increments the storage pointer to next position (using the actual
+		 * size of element)
+		 *
+		 * \param [in,out] storage is a reference to pointer to queue's storage - after executing bounded functor, the
+		 * pointer will be incremented to next position (using the actual size of element)
+		 */
+
+		virtual void operator()(void*& storage) const override
+		{
+			auto typedStorage = static_cast<Storage*>(storage);
+			boundedFunctor_(typedStorage);
+			storage = typedStorage + 1;
+		}
+
+	private:
+
+		/// bounded functor
+		F boundedFunctor_;
+	};
+
+	/**
+	 * \brief Helper factory function to make BoundedFunctor object with partially deduced template arguments
+	 *
+	 * \param F is the type of bounded functor, it will be called with <em>Storage*</em> as only argument
+	 *
+	 * \param [in] boundedFunctor is a rvalue reference to bounded functor which will be used to move-construct internal
+	 * bounded functor
+	 *
+	 * \return BoundedFunctor object with partially deduced template arguments
+	 */
+
+	template<typename F>
+	constexpr static BoundedFunctor<F> makeBoundedFunctor(F&& boundedFunctor)
+	{
+		return BoundedFunctor<F>{std::move(boundedFunctor)};
+	}
+
+	/**
 	 * \brief Pops the oldest (first) element from the queue.
 	 *
 	 * Internal version - builds the Functor object.
@@ -443,7 +507,7 @@ private:
 template<typename T>
 int FifoQueue<T>::popInternal(const scheduler::SemaphoreFunctor& waitSemaphoreFunctor, T& value)
 {
-	const auto swapFunctor = scheduler::FifoQueueBase::makeBoundedFunctor<T>(
+	const auto swapFunctor = makeBoundedFunctor(
 			[&value](Storage* const storage)
 			{
 				auto& swappedValue = *reinterpret_cast<T*>(storage);
@@ -457,7 +521,7 @@ int FifoQueue<T>::popInternal(const scheduler::SemaphoreFunctor& waitSemaphoreFu
 template<typename T>
 int FifoQueue<T>::pushInternal(const scheduler::SemaphoreFunctor& waitSemaphoreFunctor, const T& value)
 {
-	const auto copyFunctor = scheduler::FifoQueueBase::makeBoundedFunctor<T>(
+	const auto copyFunctor = makeBoundedFunctor(
 			[&value](Storage* const storage)
 			{
 				new (storage) T{value};
@@ -468,7 +532,7 @@ int FifoQueue<T>::pushInternal(const scheduler::SemaphoreFunctor& waitSemaphoreF
 template<typename T>
 int FifoQueue<T>::pushInternal(const scheduler::SemaphoreFunctor& waitSemaphoreFunctor, T&& value)
 {
-	const auto moveFunctor = scheduler::FifoQueueBase::makeBoundedFunctor<T>(
+	const auto moveFunctor = makeBoundedFunctor(
 			[&value](Storage* const storage)
 			{
 				new (storage) T{std::move(value)};
