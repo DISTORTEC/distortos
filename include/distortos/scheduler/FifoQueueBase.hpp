@@ -189,27 +189,6 @@ public:
 	int pushInternal(const SemaphoreFunctor& waitSemaphoreFunctor, T&& value);
 
 	/**
-	 * \brief Tries to push the element to the queue for a given duration of time.
-	 *
-	 * \param T is the type of data pushed to queue
-	 *
-	 * \param [in] duration is the duration after which the call will be terminated without pushing the element
-	 * \param [in] value is a rvalue reference to object that will be pushed, value in queue's storage is
-	 * move-constructed
-	 *
-	 * \return zero if element was pushed successfully, error code otherwise:
-	 * - error codes returned by Semaphore::tryWaitFor();
-	 * - error codes returned by Semaphore::post();
-	 */
-
-	template<typename T>
-	int tryPushFor(const TickClock::duration duration, T&& value)
-	{
-		const SemaphoreTryWaitForFunctor semaphoreTryWaitForFunctor {duration};
-		return pushInternal(semaphoreTryWaitForFunctor, std::move(value));
-	}
-
-	/**
 	 * \brief Tries to push the element to the queue until a given time point.
 	 *
 	 * \param T is the type of data pushed to queue
