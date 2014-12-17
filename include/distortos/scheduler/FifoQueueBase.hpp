@@ -16,10 +16,7 @@
 
 #include "distortos/Semaphore.hpp"
 
-#include "distortos/scheduler/SemaphoreWaitFunctor.hpp"
-#include "distortos/scheduler/SemaphoreTryWaitFunctor.hpp"
-#include "distortos/scheduler/SemaphoreTryWaitForFunctor.hpp"
-#include "distortos/scheduler/SemaphoreTryWaitUntilFunctor.hpp"
+#include "distortos/scheduler/SemaphoreFunctor.hpp"
 
 namespace distortos
 {
