@@ -312,8 +312,6 @@ public:
 	/**
 	 * \brief Tries to push the element to the queue until a given time point.
 	 *
-	 * Wrapper for scheduler::FifoQueueBase::tryPushUntil(TickClock::time_point, const T&)
-	 *
 	 * \param [in] timePoint is the time point at which the call will be terminated without pushing the element
 	 * \param [in] value is a reference to object that will be pushed, value in queue's storage is copy-constructed
 	 *
@@ -324,7 +322,8 @@ public:
 
 	int tryPushUntil(const TickClock::time_point timePoint, const T& value)
 	{
-		return fifoQueueBase_.tryPushUntil(timePoint, value);
+		const scheduler::SemaphoreTryWaitUntilFunctor semaphoreTryWaitUntilFunctor {timePoint};
+		return fifoQueueBase_.pushInternal(semaphoreTryWaitUntilFunctor, value);
 	}
 
 	/**

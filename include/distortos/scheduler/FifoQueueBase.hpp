@@ -194,26 +194,6 @@ public:
 	 * \param T is the type of data pushed to queue
 	 *
 	 * \param [in] timePoint is the time point at which the call will be terminated without pushing the element
-	 * \param [in] value is a reference to object that will be pushed, value in queue's storage is copy-constructed
-	 *
-	 * \return zero if element was pushed successfully, error code otherwise:
-	 * - error codes returned by Semaphore::tryWaitUntil();
-	 * - error codes returned by Semaphore::post();
-	 */
-
-	template<typename T>
-	int tryPushUntil(const TickClock::time_point timePoint, const T& value)
-	{
-		const SemaphoreTryWaitUntilFunctor semaphoreTryWaitUntilFunctor {timePoint};
-		return pushInternal(semaphoreTryWaitUntilFunctor, value);
-	}
-
-	/**
-	 * \brief Tries to push the element to the queue until a given time point.
-	 *
-	 * \param T is the type of data pushed to queue
-	 *
-	 * \param [in] timePoint is the time point at which the call will be terminated without pushing the element
 	 * \param [in] value is a rvalue reference to object that will be pushed, value in queue's storage is
 	 * move-constructed
 	 *
