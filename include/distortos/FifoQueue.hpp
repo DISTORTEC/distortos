@@ -232,8 +232,6 @@ public:
 	/**
 	 * \brief Tries to push the element to the queue for a given duration of time.
 	 *
-	 * Wrapper for scheduler::FifoQueueBase::tryPushFor(TickClock::duration, const T&)
-	 *
 	 * \param [in] duration is the duration after which the wait will be terminated without pushing the element
 	 * \param [in] value is a reference to object that will be pushed, value in queue's storage is copy-constructed
 	 *
@@ -244,7 +242,8 @@ public:
 
 	int tryPushFor(const TickClock::duration duration, const T& value)
 	{
-		return fifoQueueBase_.tryPushFor(duration, value);
+		const scheduler::SemaphoreTryWaitForFunctor semaphoreTryWaitForFunctor {duration};
+		return fifoQueueBase_.pushInternal(semaphoreTryWaitForFunctor, value);
 	}
 
 	/**
