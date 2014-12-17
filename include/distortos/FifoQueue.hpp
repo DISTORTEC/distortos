@@ -199,8 +199,6 @@ public:
 	/**
 	 * \brief Tries to push the element to the queue.
 	 *
-	 * Wrapper for scheduler::FifoQueueBase::tryPush(const T&)
-	 *
 	 * \param [in] value is a reference to object that will be pushed, value in queue's storage is copy-constructed
 	 *
 	 * \return zero if element was pushed successfully, error code otherwise:
@@ -210,7 +208,8 @@ public:
 
 	int tryPush(const T& value)
 	{
-		return fifoQueueBase_.tryPush(value);
+		const scheduler::SemaphoreTryWaitFunctor semaphoreTryWaitFunctor;
+		return fifoQueueBase_.pushInternal(semaphoreTryWaitFunctor, value);
 	}
 
 	/**
