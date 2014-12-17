@@ -68,8 +68,6 @@ public:
 	/**
 	 * \brief Pushes the element to the queue.
 	 *
-	 * Wrapper for scheduler::FifoQueueBase::push(const T&)
-	 *
 	 * \param [in] value is a reference to object that will be pushed, value in queue's storage is copy-constructed
 	 *
 	 * \return zero if element was pushed successfully, error code otherwise:
@@ -79,7 +77,8 @@ public:
 
 	int push(const T& value)
 	{
-		return fifoQueueBase_.push(value);
+		const scheduler::SemaphoreWaitFunctor semaphoreWaitFunctor;
+		return fifoQueueBase_.pushInternal(semaphoreWaitFunctor, value);
 	}
 
 	/**
