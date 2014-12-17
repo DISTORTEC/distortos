@@ -120,8 +120,6 @@ public:
 	/**
 	 * \brief Tries to pop the oldest (first) element from the queue for a given duration of time.
 	 *
-	 * Wrapper for scheduler::FifoQueueBase::tryPopFor(TickClock::duration, T&)
-	 *
 	 * \param [in] duration is the duration after which the call will be terminated without popping the element
 	 * \param [out] value is a reference to object that will be used to return popped value, its contents are swapped
 	 * with the value in the queue's storage and destructed when no longer needed
@@ -133,7 +131,8 @@ public:
 
 	int tryPopFor(const TickClock::duration duration, T& value)
 	{
-		return fifoQueueBase_.tryPopFor(duration, value);
+		const scheduler::SemaphoreTryWaitForFunctor semaphoreTryWaitForFunctor {duration};
+		return fifoQueueBase_.popInternal(semaphoreTryWaitForFunctor, value);
 	}
 
 	/**
