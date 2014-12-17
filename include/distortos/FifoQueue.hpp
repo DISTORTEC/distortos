@@ -451,7 +451,7 @@ int FifoQueue<T>::popInternal(const scheduler::SemaphoreFunctor& waitSemaphoreFu
 				swap(value, swappedValue);
 				swappedValue.~T();
 			});
-	return fifoQueueBase_.popImplementation(waitSemaphoreFunctor, swapFunctor);
+	return fifoQueueBase_.pop(waitSemaphoreFunctor, swapFunctor);
 }
 
 template<typename T>
@@ -462,7 +462,7 @@ int FifoQueue<T>::pushInternal(const scheduler::SemaphoreFunctor& waitSemaphoreF
 			{
 				new (storage) T{value};
 			});
-	return fifoQueueBase_.pushImplementation(waitSemaphoreFunctor, copyFunctor);
+	return fifoQueueBase_.push(waitSemaphoreFunctor, copyFunctor);
 }
 
 template<typename T>
@@ -473,7 +473,7 @@ int FifoQueue<T>::pushInternal(const scheduler::SemaphoreFunctor& waitSemaphoreF
 			{
 				new (storage) T{std::move(value)};
 			});
-	return fifoQueueBase_.pushImplementation(waitSemaphoreFunctor, moveFunctor);
+	return fifoQueueBase_.push(waitSemaphoreFunctor, moveFunctor);
 }
 
 }	// namespace distortos

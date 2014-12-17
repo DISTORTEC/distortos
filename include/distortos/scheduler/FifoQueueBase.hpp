@@ -146,9 +146,9 @@ public:
 	 * - error codes returned by Semaphore::post();
 	 */
 
-	int popImplementation(const SemaphoreFunctor& waitSemaphoreFunctor, const Functor& functor)
+	int pop(const SemaphoreFunctor& waitSemaphoreFunctor, const Functor& functor)
 	{
-		return popPushImplementation(waitSemaphoreFunctor, functor, popSemaphore_, pushSemaphore_, readPosition_);
+		return popPush(waitSemaphoreFunctor, functor, popSemaphore_, pushSemaphore_, readPosition_);
 	}
 
 	/**
@@ -163,9 +163,9 @@ public:
 	 * - error codes returned by Semaphore::post();
 	 */
 
-	int pushImplementation(const SemaphoreFunctor& waitSemaphoreFunctor, const Functor& functor)
+	int push(const SemaphoreFunctor& waitSemaphoreFunctor, const Functor& functor)
 	{
-		return popPushImplementation(waitSemaphoreFunctor, functor, pushSemaphore_, popSemaphore_, writePosition_);
+		return popPush(waitSemaphoreFunctor, functor, pushSemaphore_, popSemaphore_, writePosition_);
 	}
 
 private:
@@ -188,8 +188,8 @@ private:
 	 * - error codes returned by Semaphore::post();
 	 */
 
-	int popPushImplementation(const SemaphoreFunctor& waitSemaphoreFunctor, const Functor& functor,
-			Semaphore& waitSemaphore, Semaphore& postSemaphore, void*& storage);
+	int popPush(const SemaphoreFunctor& waitSemaphoreFunctor, const Functor& functor, Semaphore& waitSemaphore,
+			Semaphore& postSemaphore, void*& storage);
 
 	/// semaphore guarding access to "pop" functions - its value is equal to the number of available elements
 	Semaphore popSemaphore_;
