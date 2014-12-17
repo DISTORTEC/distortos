@@ -51,7 +51,7 @@ int FifoQueueBase::popPush(const SemaphoreFunctor& waitSemaphoreFunctor, const F
 
 	functor(storage);
 
-	if (storage == storageEnd_)
+	if (storage >= storageEnd_)
 		storage = storageBegin_;
 
 	return postSemaphore.post();
