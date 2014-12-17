@@ -38,7 +38,7 @@ class FifoQueue
 public:
 
 	/// type of uninitialized storage for data
-	using Storage = scheduler::FifoQueueBase::Storage<T>;
+	using Storage = typename std::aligned_storage<sizeof(T), alignof(T)>::type;
 
 	/**
 	 * \brief FifoQueue's constructor

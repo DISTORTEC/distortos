@@ -29,10 +29,6 @@ class FifoQueueBase
 {
 public:
 
-	/// type of uninitialized storage for data
-	template<typename T>
-	using Storage = typename std::aligned_storage<sizeof(T), alignof(T)>::type;
-
 	/**
 	 * \brief Functor is a type-erased interface for functors which execute some action on queue's storage (like
 	 * copy-constructing, swapping, destroying, emplacing, ...).
