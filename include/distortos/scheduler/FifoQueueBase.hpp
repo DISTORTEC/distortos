@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-12-15
+ * \date 2014-12-17
  */
 
 #ifndef INCLUDE_DISTORTOS_SCHEDULER_FIFOQUEUEBASE_HPP_
@@ -76,6 +76,25 @@ public:
 		const SemaphoreWaitFunctor semaphoreWaitFunctor;
 		return popInternal(semaphoreWaitFunctor, value);
 	}
+
+	/**
+	 * \brief Pops the oldest (first) element from the queue.
+	 *
+	 * Internal version - builds the Functor object.
+	 *
+	 * \param T is the type of data popped from queue
+	 *
+	 * \param [in] waitSemaphoreFunctor is a reference to SemaphoreFunctor which will be executed with \a popSemaphore_
+	 * \param [out] value is a reference to object that will be used to return popped value, its contents are swapped
+	 * with the value in the queue's storage and destructed when no longer needed
+	 *
+	 * \return zero if element was popped successfully, error code otherwise:
+	 * - error codes returned by \a waitSemaphoreFunctor's operator() call;
+	 * - error codes returned by Semaphore::post();
+	 */
+
+	template<typename T>
+	int popInternal(const SemaphoreFunctor& waitSemaphoreFunctor, T& value);
 
 	/**
 	 * \brief Pushes the element to the queue.
@@ -394,25 +413,6 @@ private:
 	{
 		return popPushImplementation(waitSemaphoreFunctor, functor, popSemaphore_, pushSemaphore_, readPosition_);
 	}
-
-	/**
-	 * \brief Pops the oldest (first) element from the queue.
-	 *
-	 * Internal version - builds the Functor object.
-	 *
-	 * \param T is the type of data popped from queue
-	 *
-	 * \param [in] waitSemaphoreFunctor is a reference to SemaphoreFunctor which will be executed with \a popSemaphore_
-	 * \param [out] value is a reference to object that will be used to return popped value, its contents are swapped
-	 * with the value in the queue's storage and destructed when no longer needed
-	 *
-	 * \return zero if element was popped successfully, error code otherwise:
-	 * - error codes returned by \a waitSemaphoreFunctor's operator() call;
-	 * - error codes returned by Semaphore::post();
-	 */
-
-	template<typename T>
-	int popInternal(const SemaphoreFunctor& waitSemaphoreFunctor, T& value);
 
 	/**
 	 * \brief Implementation of pop() and push() using type-erased functor
