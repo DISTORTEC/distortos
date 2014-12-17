@@ -44,6 +44,17 @@ public:
 	using Storage = typename std::aligned_storage<sizeof(T), alignof(T)>::type;
 
 	/**
+	 * \brief Functor is a type-erased interface for functors which execute some action on queue's storage (like
+	 * copy-constructing, swapping, destroying, emplacing, ...).
+	 *
+	 * The functor will be called by FifoQueueBase internals with one argument - \a storage - which is a reference to
+	 * pointer to queue's storage - after executing functor's action, the pointer should be incremented to next position
+	 * (using the actual size of element)
+	 */
+
+	using Functor = estd::TypeErasedFunctor<void(void*&)>;
+
+	/**
 	 * \brief FifoQueueBase's constructor
 	 *
 	 * \param T is the type of data in queue
@@ -237,17 +248,6 @@ public:
 	}
 
 private:
-
-	/**
-	 * \brief Functor is a type-erased interface for functors which execute some action on queue's storage (like
-	 * copy-constructing, swapping, destroying, emplacing, ...).
-	 *
-	 * The functor will be called by FifoQueueBase internals with one argument - \a storage - which is a reference to
-	 * pointer to queue's storage - after executing functor's action, the pointer should be incremented to next position
-	 * (using the actual size of element)
-	 */
-
-	using Functor = estd::TypeErasedFunctor<void(void*&)>;
 
 	/**
 	 * \brief BoundedFunctor is a type-erased Functor which calls its bounded functor to execute actions on queue's
