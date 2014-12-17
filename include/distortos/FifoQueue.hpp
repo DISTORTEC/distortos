@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-12-11
+ * \date 2014-12-17
  */
 
 #ifndef INCLUDE_DISTORTOS_FIFOQUEUE_HPP_
@@ -51,8 +51,6 @@ public:
 	/**
 	 * \brief Pops the oldest (first) element from the queue.
 	 *
-	 * Wrapper for scheduler::FifoQueueBase::pop(T&)
-	 *
 	 * \param [out] value is a reference to object that will be used to return popped value, its contents are swapped
 	 * with the value in the queue's storage and destructed when no longer needed
 	 *
@@ -63,7 +61,8 @@ public:
 
 	int pop(T& value)
 	{
-		return fifoQueueBase_.pop(value);
+		const scheduler::SemaphoreWaitFunctor semaphoreWaitFunctor;
+		return fifoQueueBase_.popInternal(semaphoreWaitFunctor, value);
 	}
 
 	/**

@@ -60,26 +60,6 @@ public:
 	/**
 	 * \brief Pops the oldest (first) element from the queue.
 	 *
-	 * \param T is the type of data popped from queue
-	 *
-	 * \param [out] value is a reference to object that will be used to return popped value, its contents are swapped
-	 * with the value in the queue's storage and destructed when no longer needed
-	 *
-	 * \return zero if element was popped successfully, error code otherwise:
-	 * - error codes returned by Semaphore::wait();
-	 * - error codes returned by Semaphore::post();
-	 */
-
-	template<typename T>
-	int pop(T& value)
-	{
-		const SemaphoreWaitFunctor semaphoreWaitFunctor;
-		return popInternal(semaphoreWaitFunctor, value);
-	}
-
-	/**
-	 * \brief Pops the oldest (first) element from the queue.
-	 *
 	 * Internal version - builds the Functor object.
 	 *
 	 * \param T is the type of data popped from queue
