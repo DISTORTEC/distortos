@@ -135,6 +135,23 @@ public:
 	FifoQueueBase(Storage<T>* const storage, size_t maxElements, TypeTag<T>);
 
 	/**
+	 * \brief Implementation of pop() using type-erased functor
+	 *
+	 * \param [in] waitSemaphoreFunctor is a reference to SemaphoreFunctor which will be executed with \a popSemaphore_
+	 * \param [in] functor is a reference to Functor which will execute actions related to popping - it will get a
+	 * reference to readPosition_ as argument
+	 *
+	 * \return zero if element was popped successfully, error code otherwise:
+	 * - error codes returned by \a waitSemaphoreFunctor's operator() call;
+	 * - error codes returned by Semaphore::post();
+	 */
+
+	int popImplementation(const SemaphoreFunctor& waitSemaphoreFunctor, const Functor& functor)
+	{
+		return popPushImplementation(waitSemaphoreFunctor, functor, popSemaphore_, pushSemaphore_, readPosition_);
+	}
+
+	/**
 	 * \brief Pops the oldest (first) element from the queue.
 	 *
 	 * Internal version - builds the Functor object.
@@ -314,23 +331,6 @@ public:
 	}
 
 private:
-
-	/**
-	 * \brief Implementation of pop() using type-erased functor
-	 *
-	 * \param [in] waitSemaphoreFunctor is a reference to SemaphoreFunctor which will be executed with \a popSemaphore_
-	 * \param [in] functor is a reference to Functor which will execute actions related to popping - it will get a
-	 * reference to readPosition_ as argument
-	 *
-	 * \return zero if element was popped successfully, error code otherwise:
-	 * - error codes returned by \a waitSemaphoreFunctor's operator() call;
-	 * - error codes returned by Semaphore::post();
-	 */
-
-	int popImplementation(const SemaphoreFunctor& waitSemaphoreFunctor, const Functor& functor)
-	{
-		return popPushImplementation(waitSemaphoreFunctor, functor, popSemaphore_, pushSemaphore_, readPosition_);
-	}
 
 	/**
 	 * \brief Implementation of pop() and push() using type-erased functor
