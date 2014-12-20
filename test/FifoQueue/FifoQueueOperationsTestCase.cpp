@@ -154,7 +154,7 @@ bool phase1()
 		TestType::resetCounters();
 		waitForNextTick();
 		const auto start = TickClock::now();
-		const auto ret = fifoQueue.tryPush({});	// 1 construction, 1 destruction
+		const auto ret = fifoQueue.tryPush(TestType{});	// 1 construction, 1 destruction
 		if (ret != EAGAIN || start != TickClock::now() || TestType::checkCounters(1, 0, 0, 1, 0, 0, 0) != true)
 			return false;
 	}
@@ -183,7 +183,7 @@ bool phase1()
 
 		// FIFO queue is both full and empty, so tryPushFor(..., T&&) should time-out at expected time
 		const auto start = TickClock::now();
-		const auto ret = fifoQueue.tryPushFor(singleDuration, {});	// 1 construction, 1 destruction
+		const auto ret = fifoQueue.tryPushFor(singleDuration, TestType{});	// 1 construction, 1 destruction
 		const auto realDuration = TickClock::now() - start;
 		if (ret != ETIMEDOUT || realDuration != singleDuration + decltype(singleDuration){1} ||
 				TestType::checkCounters(1, 0, 0, 1, 0, 0, 0) != true ||
@@ -214,7 +214,7 @@ bool phase1()
 
 		// FIFO queue is both full and empty, so tryPushUntil(..., T&&) should time-out at exact expected time
 		const auto requestedTimePoint = TickClock::now() + singleDuration;
-		const auto ret = fifoQueue.tryPushUntil(requestedTimePoint, {});	// 1 construction, 1 destruction
+		const auto ret = fifoQueue.tryPushUntil(requestedTimePoint, TestType{});	// 1 construction, 1 destruction
 		if (ret != ETIMEDOUT || requestedTimePoint != TickClock::now() ||
 				TestType::checkCounters(1, 0, 0, 1, 0, 0, 0) != true ||
 				statistics::getContextSwitchCount() - contextSwitchCount != phase1TryPopPushForUntilContextSwitchCount)
@@ -308,7 +308,7 @@ bool phase2()
 		TestType::resetCounters();
 		waitForNextTick();
 		const auto start = TickClock::now();
-		const auto ret = fifoQueue.tryPush({});	// 1 construction, 1 move construction, 1 destruction
+		const auto ret = fifoQueue.tryPush(TestType{});	// 1 construction, 1 move construction, 1 destruction
 		if (ret != 0 || start != TickClock::now() || TestType::checkCounters(1, 0, 1, 1, 0, 0, 0) != true)
 			return false;
 	}
@@ -369,7 +369,7 @@ bool phase2()
 		waitForNextTick();
 		const auto start = TickClock::now();
 		// 1 construction, 1 move construction, 1 destruction
-		const auto ret = fifoQueue.tryPushFor(singleDuration, {});
+		const auto ret = fifoQueue.tryPushFor(singleDuration, TestType{});
 		if (ret != 0 || start != TickClock::now() || TestType::checkCounters(1, 0, 1, 1, 0, 0, 0) != true)
 			return false;
 	}
@@ -430,7 +430,7 @@ bool phase2()
 		waitForNextTick();
 		const auto start = TickClock::now();
 		// 1 construction, 1 move construction, 1 destruction
-		const auto ret = fifoQueue.tryPushUntil(start + singleDuration, {});
+		const auto ret = fifoQueue.tryPushUntil(start + singleDuration, TestType{});
 		if (ret != 0 || start != TickClock::now() || TestType::checkCounters(1, 0, 1, 1, 0, 0, 0) != true)
 			return false;
 	}
