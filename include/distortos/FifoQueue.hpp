@@ -132,6 +132,31 @@ public:
 		return pushInternal(semaphoreWaitFunctor, std::move(value));
 	}
 
+#if DISTORTOS_FIFOQUEUE_EMPLACE_SUPPORTED == 1 || DOXYGEN == 1
+
+	/**
+	 * \brief Tries to emplace the element in the queue.
+	 *
+	 * \note This function requires GCC 4.9.
+	 *
+	 * \param Args are types of arguments for constructor of T
+	 *
+	 * \param [in] args are arguments for constructor of T
+	 *
+	 * \return zero if element was emplaced successfully, error code otherwise:
+	 * - error codes returned by Semaphore::tryWait();
+	 * - error codes returned by Semaphore::post();
+	 */
+
+	template<typename... Args>
+	int tryEmplace(Args&&... args)
+	{
+		const scheduler::SemaphoreTryWaitFunctor semaphoreTryWaitFunctor;
+		return emplaceInternal(semaphoreTryWaitFunctor, std::forward<Args>(args)...);
+	}
+
+#endif	// DISTORTOS_FIFOQUEUE_EMPLACE_SUPPORTED == 1 || DOXYGEN == 1
+
 	/**
 	 * \brief Tries to pop the oldest (first) element from the queue.
 	 *
