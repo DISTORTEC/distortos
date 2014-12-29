@@ -57,6 +57,31 @@ public:
 
 	}
 
+#if DISTORTOS_FIFOQUEUE_EMPLACE_SUPPORTED == 1 || DOXYGEN == 1
+
+	/**
+	 * \brief Emplaces the element in the queue.
+	 *
+	 * \note This function requires GCC 4.9.
+	 *
+	 * \param Args are types of arguments for constructor of T
+	 *
+	 * \param [in] args are arguments for constructor of T
+	 *
+	 * \return zero if element was emplaced successfully, error code otherwise:
+	 * - error codes returned by Semaphore::wait();
+	 * - error codes returned by Semaphore::post();
+	 */
+
+	template<typename... Args>
+	int emplace(Args&&... args)
+	{
+		const scheduler::SemaphoreWaitFunctor semaphoreWaitFunctor;
+		return emplaceInternal(semaphoreWaitFunctor, std::forward<Args>(args)...);
+	}
+
+#endif	// DISTORTOS_FIFOQUEUE_EMPLACE_SUPPORTED == 1 || DOXYGEN == 1
+
 	/**
 	 * \brief Pops the oldest (first) element from the queue.
 	 *
