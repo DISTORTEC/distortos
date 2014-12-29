@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-12-15
+ * \date 2014-12-29
  */
 
 #include "FifoQueueOperationsTestCase.hpp"
@@ -58,10 +58,10 @@ constexpr auto longDuration = singleDuration * 10;
 /// expected number of context switches in waitForNextTick(): main -> idle -> main
 constexpr decltype(statistics::getContextSwitchCount()) waitForNextTickContextSwitchCount {2};
 
-/// expected number of context switches in phase1 block involving tryPopFor(), tryPopUntil(), tryPushFor() or
-/// tryPushUntil() (excluding waitForNextTick()): 1 - main thread blocks on FIFO queue (main -> idle), 2 - main thread
-/// wakes up (idle -> main)
-constexpr decltype(statistics::getContextSwitchCount()) phase1TryPopPushForUntilContextSwitchCount {2};
+/// expected number of context switches in phase1 block involving tryEmplaceFor(), tryEmplaceUntil(), tryPopFor(),
+/// tryPopUntil(), tryPushFor() or tryPushUntil() (excluding waitForNextTick()): 1 - main thread blocks on FIFO queue
+/// (main -> idle), 2 - main thread wakes up (idle -> main)
+constexpr decltype(statistics::getContextSwitchCount()) phase1TryForUntilContextSwitchCount {2};
 
 /// expected number of context switches in phase3 and phase4 block involving software timer (excluding
 /// waitForNextTick()): 1 - main thread blocks on FIFO queue (main -> idle), 2 - main thread is unblocked by interrupt
@@ -131,8 +131,8 @@ bool testTryPushWhenFull(TestFifoQueue& fifoQueue)
 /**
  * \brief Phase 1 of test case.
  *
- * Tests whether all tryPush*() and tryPop*() functions properly return some error when dealing with full or empty FIFO
- * queue.
+ * Tests whether all tryEmplace*(), tryPush*() and tryPop*() functions properly return some error when dealing with full
+ * or empty FIFO queue.
  *
  * \return true if test succeeded, false otherwise
  */
@@ -171,7 +171,7 @@ bool phase1()
 		const auto realDuration = TickClock::now() - start;
 		if (ret != ETIMEDOUT || realDuration != singleDuration + decltype(singleDuration){1} ||
 				TestType::checkCounters(0, 0, 0, 0, 0, 0, 0) != true ||
-				statistics::getContextSwitchCount() - contextSwitchCount != phase1TryPopPushForUntilContextSwitchCount)
+				statistics::getContextSwitchCount() - contextSwitchCount != phase1TryForUntilContextSwitchCount)
 			return false;
 	}
 
@@ -187,7 +187,7 @@ bool phase1()
 		const auto realDuration = TickClock::now() - start;
 		if (ret != ETIMEDOUT || realDuration != singleDuration + decltype(singleDuration){1} ||
 				TestType::checkCounters(1, 0, 0, 1, 0, 0, 0) != true ||
-				statistics::getContextSwitchCount() - contextSwitchCount != phase1TryPopPushForUntilContextSwitchCount)
+				statistics::getContextSwitchCount() - contextSwitchCount != phase1TryForUntilContextSwitchCount)
 			return false;
 	}
 
@@ -202,7 +202,7 @@ bool phase1()
 		const auto ret = fifoQueue.tryPushUntil(requestedTimePoint, constTestValue);
 		if (ret != ETIMEDOUT || requestedTimePoint != TickClock::now() ||
 				TestType::checkCounters(0, 0, 0, 0, 0, 0, 0) != true ||
-				statistics::getContextSwitchCount() - contextSwitchCount != phase1TryPopPushForUntilContextSwitchCount)
+				statistics::getContextSwitchCount() - contextSwitchCount != phase1TryForUntilContextSwitchCount)
 			return false;
 	}
 
@@ -217,7 +217,7 @@ bool phase1()
 		const auto ret = fifoQueue.tryPushUntil(requestedTimePoint, TestType{});	// 1 construction, 1 destruction
 		if (ret != ETIMEDOUT || requestedTimePoint != TickClock::now() ||
 				TestType::checkCounters(1, 0, 0, 1, 0, 0, 0) != true ||
-				statistics::getContextSwitchCount() - contextSwitchCount != phase1TryPopPushForUntilContextSwitchCount)
+				statistics::getContextSwitchCount() - contextSwitchCount != phase1TryForUntilContextSwitchCount)
 			return false;
 	}
 
@@ -239,7 +239,7 @@ bool phase1()
 		const auto realDuration = TickClock::now() - start;
 		if (ret != ETIMEDOUT || realDuration != singleDuration + decltype(singleDuration){1} ||
 				TestType::checkCounters(0, 0, 0, 0, 0, 0, 0) != true ||
-				statistics::getContextSwitchCount() - contextSwitchCount != phase1TryPopPushForUntilContextSwitchCount)
+				statistics::getContextSwitchCount() - contextSwitchCount != phase1TryForUntilContextSwitchCount)
 			return false;
 	}
 
@@ -254,9 +254,54 @@ bool phase1()
 		const auto ret = fifoQueue.tryPopUntil(requestedTimePoint, nonConstTestValue);
 		if (ret != ETIMEDOUT || requestedTimePoint != TickClock::now() ||
 				TestType::checkCounters(0, 0, 0, 0, 0, 0, 0) != true ||
-				statistics::getContextSwitchCount() - contextSwitchCount != phase1TryPopPushForUntilContextSwitchCount)
+				statistics::getContextSwitchCount() - contextSwitchCount != phase1TryForUntilContextSwitchCount)
 			return false;
 	}
+
+#if DISTORTOS_FIFOQUEUE_EMPLACE_SUPPORTED == 1 || DOXYGEN == 1
+
+	{
+		// FIFO queue is both full and empty, so tryEmplace(Args&&...) should fail immediately
+		TestType::resetCounters();
+		waitForNextTick();
+		const auto start = TickClock::now();
+		const auto ret = fifoQueue.tryEmplace();
+		if (ret != EAGAIN || start != TickClock::now() || TestType::checkCounters(0, 0, 0, 0, 0, 0, 0) != true)
+			return false;
+	}
+
+	{
+		TestType::resetCounters();
+		waitForNextTick();
+
+		const auto contextSwitchCount = statistics::getContextSwitchCount();
+
+		// FIFO queue is both full and empty, so tryEmplaceFor(..., Args&&...) should time-out at expected time
+		const auto start = TickClock::now();
+		const auto ret = fifoQueue.tryEmplaceFor(singleDuration);
+		const auto realDuration = TickClock::now() - start;
+		if (ret != ETIMEDOUT || realDuration != singleDuration + decltype(singleDuration){1} ||
+				TestType::checkCounters(0, 0, 0, 0, 0, 0, 0) != true ||
+				statistics::getContextSwitchCount() - contextSwitchCount != phase1TryForUntilContextSwitchCount)
+			return false;
+	}
+
+	{
+		TestType::resetCounters();
+		waitForNextTick();
+
+		const auto contextSwitchCount = statistics::getContextSwitchCount();
+
+		// FIFO queue is both full and empty, so tryEmplaceUntil(..., Args&&...) should time-out at exact expected time
+		const auto requestedTimePoint = TickClock::now() + singleDuration;
+		const auto ret = fifoQueue.tryEmplaceUntil(requestedTimePoint);
+		if (ret != ETIMEDOUT || requestedTimePoint != TickClock::now() ||
+				TestType::checkCounters(0, 0, 0, 0, 0, 0, 0) != true ||
+				statistics::getContextSwitchCount() - contextSwitchCount != phase1TryForUntilContextSwitchCount)
+			return false;
+	}
+
+#endif	// DISTORTOS_FIFOQUEUE_EMPLACE_SUPPORTED == 1 || DOXYGEN == 1
 
 	return true;
 }
@@ -264,7 +309,8 @@ bool phase1()
 /**
  * \brief Phase 2 of test case.
  *
- * Tests whether all tryPush*() and tryPop*() functions properly send data via non-full or non-empty FIFO queue.
+ * Tests whether all tryEmplace*(), tryPush*() and tryPop*() functions properly send data via non-full or non-empty FIFO
+ * queue.
  *
  * \return true if test succeeded, false otherwise
  */
@@ -453,6 +499,94 @@ bool phase2()
 			return ret;
 	}
 
+#if DISTORTOS_FIFOQUEUE_EMPLACE_SUPPORTED == 1 || DOXYGEN == 1
+
+	{
+		// FIFO queue is not full, so tryEmplace(Args&&...) must succeed immediately
+		TestType::resetCounters();
+		waitForNextTick();
+		const auto start = TickClock::now();
+		const auto ret = fifoQueue.tryEmplace();	// 1 construction
+		if (ret != 0 || start != TickClock::now() || TestType::checkCounters(1, 0, 0, 0, 0, 0, 0) != true)
+			return false;
+	}
+
+	{
+		const auto ret = testTryPushWhenFull(fifoQueue);
+		if (ret != true)
+			return ret;
+	}
+
+	{
+		const auto ret = testTryPopWhenNotEmpty(fifoQueue);
+		if (ret != true)
+			return ret;
+	}
+
+	{
+		const auto ret = testTryPopWhenEmpty(fifoQueue);
+		if (ret != true)
+			return ret;
+	}
+
+	{
+		// FIFO queue is not full, so tryEmplaceFor(..., Args&&...) must succeed immediately
+		TestType::resetCounters();
+		waitForNextTick();
+		const auto start = TickClock::now();
+		const auto ret = fifoQueue.tryEmplaceFor(singleDuration);	// 1 construction
+		if (ret != 0 || start != TickClock::now() || TestType::checkCounters(1, 0, 0, 0, 0, 0, 0) != true)
+			return false;
+	}
+
+	{
+		const auto ret = testTryPushWhenFull(fifoQueue);
+		if (ret != true)
+			return ret;
+	}
+
+	{
+		const auto ret = testTryPopWhenNotEmpty(fifoQueue);
+		if (ret != true)
+			return ret;
+	}
+
+	{
+		const auto ret = testTryPopWhenEmpty(fifoQueue);
+		if (ret != true)
+			return ret;
+	}
+
+	{
+		// FIFO queue is not full, so tryEmplaceUntil(..., Args&&...) must succeed immediately
+		TestType::resetCounters();
+		waitForNextTick();
+		const auto start = TickClock::now();
+		const auto ret = fifoQueue.tryEmplaceUntil(start + singleDuration);	// 1 construction
+		if (ret != 0 || start != TickClock::now() || TestType::checkCounters(1, 0, 0, 0, 0, 0, 0) != true)
+			return false;
+	}
+
+	{
+		const auto ret = testTryPushWhenFull(fifoQueue);
+		if (ret != true)
+			return ret;
+	}
+
+	{
+		const auto ret = testTryPopWhenNotEmpty(fifoQueue);
+		if (ret != true)
+			return ret;
+	}
+
+	{
+		const auto ret = testTryPopWhenEmpty(fifoQueue);
+		if (ret != true)
+			return ret;
+	}
+
+#endif	// DISTORTOS_FIFOQUEUE_EMPLACE_SUPPORTED == 1 || DOXYGEN == 1
+
 	return true;
 }
 
@@ -560,8 +694,8 @@ bool phase3()
  *
  * Tests thread -> interrupt communication scenario. Main (current) thread pushes data to FIFO queue (which is initially
  * full). Software timer pops last value (which should match the one pushed previously) from the same FIFO queue at
- * specified time point from interrupt context, main thread is expected to succeed in pushing new value (with push(),
- * tryPushFor() and tryPushUntil()) in the same moment.
+ * specified time point from interrupt context, main thread is expected to succeed in pushing new value (with emplace(),
+ * push(), tryEmplaceFor(), tryEmplaceUntil(), tryPushFor() and tryPushUntil()) in the same moment.
  *
  * \return true if test succeeded, false otherwise
  */
@@ -707,6 +841,71 @@ bool phase4()
 			return false;
 	}
 
+#if DISTORTOS_FIFOQUEUE_EMPLACE_SUPPORTED == 1 || DOXYGEN == 1
+
+	{
+		TestType::resetCounters();
+		waitForNextTick();
+
+		const auto contextSwitchCount = statistics::getContextSwitchCount();
+		const auto wakeUpTimePoint = TickClock::now() + longDuration;
+		softwareTimer.start(wakeUpTimePoint);	// in timer: 1 swap, 1 destruction
+
+		// FIFO queue is currently full, but emplace(Args&&...) should succeed at expected time
+		const decltype(currentMagicValue) expectedTestValue {currentMagicValue};	// 1 copy construction
+		const TestType::Value value = 0x9a158581;
+		currentMagicValue = TestType{value};	// 1 construction, 1 move assignment, 1 destruction
+		const auto ret = fifoQueue.emplace(value);	// 1 construction
+		const auto wokenUpTimePoint = TickClock::now();
+		if (ret != 0 || wakeUpTimePoint != wokenUpTimePoint || receivedTestValue != expectedTestValue ||
+				TestType::checkCounters(2, 1, 0, 2, 0, 1, 1) != true ||
+				statistics::getContextSwitchCount() - contextSwitchCount != phase34SoftwareTimerContextSwitchCount)
+			return false;
+	}
+
+	{
+		TestType::resetCounters();
+		waitForNextTick();
+
+		const auto contextSwitchCount = statistics::getContextSwitchCount();
+		const auto wakeUpTimePoint = TickClock::now() + longDuration;
+		softwareTimer.start(wakeUpTimePoint);	// in timer: 1 swap, 1 destruction
+
+		// FIFO queue is currently full, but tryEmplaceFor(..., Args&&...) should succeed at expected time
+		const decltype(currentMagicValue) expectedTestValue {currentMagicValue};	// 1 copy construction
+		const TestType::Value value = 0xb61b399c;
+		currentMagicValue = TestType{value};	// 1 construction, 1 move assignment, 1 destruction
+		// 1 construction
+		const auto ret = fifoQueue.tryEmplaceFor(wakeUpTimePoint - TickClock::now() + longDuration, value);
+		const auto wokenUpTimePoint = TickClock::now();
+		if (ret != 0 || wakeUpTimePoint != wokenUpTimePoint || receivedTestValue != expectedTestValue ||
+				TestType::checkCounters(2, 1, 0, 2, 0, 1, 1) != true ||
+				statistics::getContextSwitchCount() - contextSwitchCount != phase34SoftwareTimerContextSwitchCount)
+			return false;
+	}
+
+	{
+		TestType::resetCounters();
+		waitForNextTick();
+
+		const auto contextSwitchCount = statistics::getContextSwitchCount();
+		const auto wakeUpTimePoint = TickClock::now() + longDuration;
+		softwareTimer.start(wakeUpTimePoint);	// in timer: 1 swap, 1 destruction
+
+		// FIFO queue is currently full, but tryEmplaceUntil(..., Args&&...) should succeed at expected time
+		const decltype(currentMagicValue) expectedTestValue {currentMagicValue};	// 1 copy construction
+		const TestType::Value value = 0x4d1f62c0;
+		currentMagicValue = TestType{value};	// 1 construction, 1 move assignment, 1 destruction
+		const auto ret = fifoQueue.tryEmplaceUntil(wakeUpTimePoint + longDuration, value);	// 1 construction
+		const auto wokenUpTimePoint = TickClock::now();
+		if (ret != 0 || wakeUpTimePoint != wokenUpTimePoint || receivedTestValue != expectedTestValue ||
+				TestType::checkCounters(2, 1, 0, 2, 0, 1, 1) != true ||
+				statistics::getContextSwitchCount() - contextSwitchCount != phase34SoftwareTimerContextSwitchCount)
+			return false;
+	}
+
+#endif	// DISTORTOS_FIFOQUEUE_EMPLACE_SUPPORTED == 1 || DOXYGEN == 1
+
 	return true;
 }
 
@@ -718,13 +917,18 @@ bool phase4()
 
 bool FifoQueueOperationsTestCase::run_() const
 {
-	constexpr auto phase1ExpectedContextSwitchCount = 9 * waitForNextTickContextSwitchCount +
-			6 * phase1TryPopPushForUntilContextSwitchCount;
-	constexpr auto phase2ExpectedContextSwitchCount = 24 * waitForNextTickContextSwitchCount;
+	constexpr auto emplace = DISTORTOS_FIFOQUEUE_EMPLACE_SUPPORTED == 1;
+
+	constexpr auto phase1ExpectedContextSwitchCount = emplace == true ?
+			12 * waitForNextTickContextSwitchCount + 8 * phase1TryForUntilContextSwitchCount :
+			9 * waitForNextTickContextSwitchCount + 6 * phase1TryForUntilContextSwitchCount;
+	constexpr auto phase2ExpectedContextSwitchCount = emplace == true ? 36 * waitForNextTickContextSwitchCount :
+			24 * waitForNextTickContextSwitchCount;
 	constexpr auto phase3ExpectedContextSwitchCount = 6 * waitForNextTickContextSwitchCount +
 			3 * phase34SoftwareTimerContextSwitchCount;
-	constexpr auto phase4ExpectedContextSwitchCount = 7 * waitForNextTickContextSwitchCount +
-			6 * phase34SoftwareTimerContextSwitchCount;
+	constexpr auto phase4ExpectedContextSwitchCount = emplace == true ?
+			10 * waitForNextTickContextSwitchCount + 9 * phase34SoftwareTimerContextSwitchCount :
+			7 * waitForNextTickContextSwitchCount + 6 * phase34SoftwareTimerContextSwitchCount;
 	constexpr auto expectedContextSwitchCount = phase1ExpectedContextSwitchCount + phase2ExpectedContextSwitchCount +
 			phase3ExpectedContextSwitchCount + phase4ExpectedContextSwitchCount;
 
