@@ -155,6 +155,28 @@ public:
 		return emplaceInternal(semaphoreTryWaitFunctor, std::forward<Args>(args)...);
 	}
 
+	/**
+	 * \brief Tries to emplace the element in the queue for a given duration of time.
+	 *
+	 * \note This function requires GCC 4.9.
+	 *
+	 * \param Args are types of arguments for constructor of T
+	 *
+	 * \param [in] duration is the duration after which the wait will be terminated without emplacing the element
+	 * \param [in] args are arguments for constructor of T
+	 *
+	 * \return zero if element was emplaced successfully, error code otherwise:
+	 * - error codes returned by Semaphore::tryWaitFor();
+	 * - error codes returned by Semaphore::post();
+	 */
+
+	template<typename... Args>
+	int tryEmplaceFor(const TickClock::duration duration, Args&&... args)
+	{
+		const scheduler::SemaphoreTryWaitForFunctor semaphoreTryWaitForFunctor {duration};
+		return emplaceInternal(semaphoreTryWaitForFunctor, std::forward<Args>(args)...);
+	}
+
 #endif	// DISTORTOS_FIFOQUEUE_EMPLACE_SUPPORTED == 1 || DOXYGEN == 1
 
 	/**
