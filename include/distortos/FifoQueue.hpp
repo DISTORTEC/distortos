@@ -178,6 +178,31 @@ public:
 	}
 
 	/**
+	 * \brief Tries to emplace the element in the queue for a given duration of time.
+	 *
+	 * Template variant of FifoQueue::tryEmplaceFor(TickClock::duration, Args&&...).
+	 *
+	 * \note This function requires GCC 4.9.
+	 *
+	 * \param Rep is type of tick counter
+	 * \param Period is std::ratio type representing the tick period of the clock, in seconds
+	 * \param Args are types of arguments for constructor of T
+	 *
+	 * \param [in] duration is the duration after which the wait will be terminated without emplacing the element
+	 * \param [in] args are arguments for constructor of T
+	 *
+	 * \return zero if element was emplaced successfully, error code otherwise:
+	 * - error codes returned by Semaphore::tryWaitFor();
+	 * - error codes returned by Semaphore::post();
+	 */
+
+	template<typename Rep, typename Period, typename... Args>
+	int tryEmplaceFor(const std::chrono::duration<Rep, Period> duration, Args&&... args)
+	{
+		return tryEmplaceFor(std::chrono::duration_cast<TickClock::duration>(duration), std::forward<Args>(args)...);
+	}
+
+	/**
 	 * \brief Tries to emplace the element in the queue until a given time point.
 	 *
 	 * \note This function requires GCC 4.9.
