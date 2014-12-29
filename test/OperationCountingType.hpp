@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-12-15
+ * \date 2014-12-29
  */
 
 #ifndef TEST_OPERATIONCOUNTINGTYPE_HPP_
@@ -30,13 +30,16 @@ class OperationCountingType
 {
 public:
 
+	/// type used for OperationCountingType's "value"
+	using Value = unsigned int;
+
 	/**
 	 * \brief OperationCountingType's constructor
 	 *
 	 * \param [in] value is the value held by object, default - zero
 	 */
 
-	explicit OperationCountingType(const unsigned int value = {}) :
+	explicit OperationCountingType(const Value value = {}) :
 			value_{value}
 	{
 		++constructed_;
@@ -162,7 +165,7 @@ public:
 private:
 
 	/// value held by object
-	unsigned int value_;
+	Value value_;
 
 	/// counter of constructor calls since last resetCounters() call
 	static size_t constructed_;
