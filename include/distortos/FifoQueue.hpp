@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-12-18
+ * \date 2014-12-29
  */
 
 #ifndef INCLUDE_DISTORTOS_FIFOQUEUE_HPP_
@@ -20,6 +20,10 @@
 #include "distortos/scheduler/SemaphoreTryWaitFunctor.hpp"
 #include "distortos/scheduler/SemaphoreTryWaitForFunctor.hpp"
 #include "distortos/scheduler/SemaphoreTryWaitUntilFunctor.hpp"
+
+/// GCC 4.9 is needed for all FifoQueue::*emplace*() functions - earlier versions don't support parameter pack expansion
+/// in lambdas
+#define DISTORTOS_FIFOQUEUE_EMPLACE_SUPPORTED	__GNUC_PREREQ(4, 9)
 
 namespace distortos
 {
@@ -458,6 +462,30 @@ private:
 		return BoundedFunctor<F>{std::move(boundedFunctor)};
 	}
 
+#if DISTORTOS_FIFOQUEUE_EMPLACE_SUPPORTED == 1 || DOXYGEN == 1
+
+	/**
+	 * \brief Emplaces the element in the queue.
+	 *
+	 * Internal version - builds the Functor object.
+	 *
+	 * \note This function requires GCC 4.9.
+	 *
+	 * \param Args are types of arguments for constructor of T
+	 *
+	 * \param [in] waitSemaphoreFunctor is a reference to SemaphoreFunctor which will be executed with \a pushSemaphore_
+	 * \param [in] args are arguments for constructor of T
+	 *
+	 * \return zero if element was emplaced successfully, error code otherwise:
+	 * - error codes returned by \a waitSemaphoreFunctor's operator() call;
+	 * - error codes returned by Semaphore::post();
+	 */
+
+	template<typename... Args>
+	int emplaceInternal(const scheduler::SemaphoreFunctor& waitSemaphoreFunctor, Args&&... args);
+
+#endif	// DISTORTOS_FIFOQUEUE_EMPLACE_SUPPORTED == 1 || DOXYGEN == 1
+
 	/**
 	 * \brief Pops the oldest (first) element from the queue.
 	 *
@@ -508,6 +536,22 @@ private:
 	/// contained scheduler::FifoQueueBase object which implements whole functionality
 	scheduler::FifoQueueBase fifoQueueBase_;
 };
+
+#if DISTORTOS_FIFOQUEUE_EMPLACE_SUPPORTED == 1 || DOXYGEN == 1
+
+template<typename T>
+template<typename... Args>
+int FifoQueue<T>::emplaceInternal(const scheduler::SemaphoreFunctor& waitSemaphoreFunctor, Args&&... args)
+{
+	const auto emplaceFunctor = makeBoundedFunctor(
+			[&args...](Storage* const storage)
+			{
+				new (storage) T{std::forward<Args>(args)...};
+			});
+	return fifoQueueBase_.push(waitSemaphoreFunctor, emplaceFunctor);
+}
+
+#endif	// DISTORTOS_FIFOQUEUE_EMPLACE_SUPPORTED == 1 || DOXYGEN == 1
 
 template<typename T>
 int FifoQueue<T>::popInternal(const scheduler::SemaphoreFunctor& waitSemaphoreFunctor, T& value)
