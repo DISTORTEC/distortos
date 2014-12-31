@@ -14,6 +14,7 @@
 #include "distortos/RawFifoQueue.hpp"
 
 #include <cstring>
+#include <cerrno>
 
 namespace distortos
 {
@@ -77,6 +78,20 @@ RawFifoQueue::RawFifoQueue(void* const storage, const size_t elementSize, const 
 		elementSize_{elementSize}
 {
 
+}
+
+/*---------------------------------------------------------------------------------------------------------------------+
+| private functions
++---------------------------------------------------------------------------------------------------------------------*/
+
+int RawFifoQueue::pushInternal(const scheduler::SemaphoreFunctor& waitSemaphoreFunctor, const void* const data,
+		const size_t size)
+{
+	if (size != elementSize_)
+		return EMSGSIZE;
+
+	const PushFunctor pushFunctor {data, size};
+	return fifoQueueBase_.push(waitSemaphoreFunctor, pushFunctor);
 }
 
 }	// namespace distortos
