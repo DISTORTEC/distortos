@@ -13,6 +13,8 @@
 
 #include "distortos/RawFifoQueue.hpp"
 
+#include "distortos/scheduler/SemaphoreWaitFunctor.hpp"
+
 #include <cstring>
 #include <cerrno>
 
@@ -78,6 +80,12 @@ RawFifoQueue::RawFifoQueue(void* const storage, const size_t elementSize, const 
 		elementSize_{elementSize}
 {
 
+}
+
+int RawFifoQueue::push(const void* const data, const size_t size)
+{
+	const scheduler::SemaphoreWaitFunctor semaphoreWaitFunctor;
+	return pushInternal(semaphoreWaitFunctor, data, size);
 }
 
 /*---------------------------------------------------------------------------------------------------------------------+
