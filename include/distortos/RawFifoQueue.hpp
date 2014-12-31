@@ -51,6 +51,25 @@ public:
 
 	int push(const void* data, size_t size);
 
+	/**
+	 * \brief Pushes the element to the queue.
+	 *
+	 * \param T is the type of data pushed to the queue
+	 *
+	 * \param [in] data is a reference to data that will be pushed to RawFifoQueue
+	 *
+	 * \return zero if element was pushed successfully, error code otherwise:
+	 * - EMSGSIZE - sizeof(T) doesn't match the \a elementSize attribute of RawFifoQueue;
+	 * - error codes returned by Semaphore::wait();
+	 * - error codes returned by Semaphore::post();
+	 */
+
+	template<typename T>
+	int push(const T& data)
+	{
+		return push(&data, sizeof(data));
+	}
+
 private:
 
 	/**
