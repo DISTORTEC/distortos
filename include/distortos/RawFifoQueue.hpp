@@ -118,6 +118,25 @@ public:
 	int tryPop(void* buffer, size_t size);
 
 	/**
+	 * \brief Tries to pop the oldest (first) element from the queue.
+	 *
+	 * \param T is the type of data popped from the queue
+	 *
+	 * \param [out] buffer is a reference to object that will be used to return popped value
+	 *
+	 * \return zero if element was popped successfully, error code otherwise:
+	 * - EMSGSIZE - sizeof(T) doesn't match the \a elementSize attribute of RawFifoQueue;
+	 * - error codes returned by Semaphore::tryWait();
+	 * - error codes returned by Semaphore::post();
+	 */
+
+	template<typename T>
+	int tryPop(T& buffer)
+	{
+		return tryPop(&buffer, sizeof(buffer));
+	}
+
+	/**
 	 * \brief Tries to push the element to the queue.
 	 *
 	 * \param [in] data is a pointer to data that will be pushed to RawFifoQueue
