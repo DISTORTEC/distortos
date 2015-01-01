@@ -306,6 +306,30 @@ public:
 
 	int tryPushUntil(TickClock::time_point timePoint, const void* data, size_t size);
 
+	/**
+	 * \brief Tries to push the element to the queue until a given time point.
+	 *
+	 * Template variant of tryPushUntil(TickClock::time_point, const void*, size_t).
+	 *
+	 * \param Duration is a std::chrono::duration type used to measure duration
+	 *
+	 * \param [in] timePoint is the time point at which the call will be terminated without pushing the element
+	 * \param [in] data is a pointer to data that will be pushed to RawFifoQueue
+	 * \param [in] size is the size of \a data, bytes - must be equal to the \a elementSize attribute of RawFifoQueue
+	 *
+	 * \return zero if element was pushed successfully, error code otherwise:
+	 * - EMSGSIZE - \a size doesn't match the \a elementSize attribute of RawFifoQueue;
+	 * - error codes returned by Semaphore::tryWaitUntil();
+	 * - error codes returned by Semaphore::post();
+	 */
+
+	template<typename Duration>
+	int tryPushUntil(const std::chrono::time_point<TickClock, Duration> timePoint, const void* const data,
+			const size_t size)
+	{
+		return tryPushUntil(std::chrono::time_point_cast<TickClock::duration>(timePoint), data, size);
+	}
+
 private:
 
 	/**
