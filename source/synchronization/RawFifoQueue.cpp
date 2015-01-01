@@ -16,6 +16,7 @@
 #include "distortos/scheduler/SemaphoreWaitFunctor.hpp"
 #include "distortos/scheduler/SemaphoreTryWaitFunctor.hpp"
 #include "distortos/scheduler/SemaphoreTryWaitForFunctor.hpp"
+#include "distortos/scheduler/SemaphoreTryWaitUntilFunctor.hpp"
 
 #include <cstring>
 #include <cerrno>
@@ -159,6 +160,12 @@ int RawFifoQueue::tryPushFor(const TickClock::duration duration, const void* con
 {
 	const scheduler::SemaphoreTryWaitForFunctor semaphoreTryWaitForFunctor {duration};
 	return pushInternal(semaphoreTryWaitForFunctor, data, size);
+}
+
+int RawFifoQueue::tryPushUntil(const TickClock::time_point timePoint, const void* const data, const size_t size)
+{
+	const scheduler::SemaphoreTryWaitUntilFunctor semaphoreTryWaitUntilFunctor {timePoint};
+	return pushInternal(semaphoreTryWaitUntilFunctor, data, size);
 }
 
 /*---------------------------------------------------------------------------------------------------------------------+
