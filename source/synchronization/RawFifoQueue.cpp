@@ -150,6 +150,12 @@ int RawFifoQueue::tryPopFor(const TickClock::duration duration, void* const buff
 	return popInternal(semaphoreTryWaitForFunctor, buffer, size);
 }
 
+int RawFifoQueue::tryPopUntil(const TickClock::time_point timePoint, void* const buffer, const size_t size)
+{
+	const scheduler::SemaphoreTryWaitUntilFunctor semaphoreTryWaitUntilFunctor {timePoint};
+	return popInternal(semaphoreTryWaitUntilFunctor, buffer, size);
+}
+
 int RawFifoQueue::tryPush(const void* const data, const size_t size)
 {
 	const scheduler::SemaphoreTryWaitFunctor semaphoreTryWaitFunctor;
