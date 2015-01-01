@@ -184,6 +184,30 @@ public:
 
 	int tryPushFor(TickClock::duration duration, const void* data, size_t size);
 
+	/**
+	 * \brief Tries to push the element to the queue for a given duration of time.
+	 *
+	 * Template variant of tryPushFor(TickClock::duration, const void*, size_t).
+	 *
+	 * \param Rep is type of tick counter
+	 * \param Period is std::ratio type representing the tick period of the clock, in seconds
+	 *
+	 * \param [in] duration is the duration after which the wait will be terminated without pushing the element
+	 * \param [in] data is a pointer to data that will be pushed to RawFifoQueue
+	 * \param [in] size is the size of \a data, bytes - must be equal to the \a elementSize attribute of RawFifoQueue
+	 *
+	 * \return zero if element was pushed successfully, error code otherwise:
+	 * - EMSGSIZE - \a size doesn't match the \a elementSize attribute of RawFifoQueue;
+	 * - error codes returned by Semaphore::tryWaitFor();
+	 * - error codes returned by Semaphore::post();
+	 */
+
+	template<typename Rep, typename Period>
+	int tryPushFor(const std::chrono::duration<Rep, Period> duration, const void* const data, const size_t size)
+	{
+		return tryPushFor(std::chrono::duration_cast<TickClock::duration>(duration), data, size);
+	}
+
 private:
 
 	/**
