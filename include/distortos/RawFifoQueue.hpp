@@ -213,6 +213,29 @@ public:
 	int tryPopUntil(TickClock::time_point timePoint, void* buffer, size_t size);
 
 	/**
+	 * \brief Tries to pop the oldest (first) element from the queue until a given time point.
+	 *
+	 * Template variant of tryPopUntil(TickClock::time_point, void*, size_t).
+	 *
+	 * \param Duration is a std::chrono::duration type used to measure duration
+	 *
+	 * \param [in] timePoint is the time point at which the call will be terminated without popping the element
+	 * \param [out] buffer is a pointer to buffer for popped element
+	 * \param [in] size is the size of \a buffer, bytes - must be equal to the \a elementSize attribute of RawFifoQueue
+	 *
+	 * \return zero if element was popped successfully, error code otherwise:
+	 * - EMSGSIZE - \a size doesn't match the \a elementSize attribute of RawFifoQueue;
+	 * - error codes returned by Semaphore::tryWaitUntil();
+	 * - error codes returned by Semaphore::post();
+	 */
+
+	template<typename Duration>
+	int tryPopUntil(const std::chrono::time_point<TickClock, Duration> timePoint, void* const buffer, const size_t size)
+	{
+		return tryPopUntil(std::chrono::time_point_cast<TickClock::duration>(timePoint), buffer, size);
+	}
+
+	/**
 	 * \brief Tries to push the element to the queue.
 	 *
 	 * \param [in] data is a pointer to data that will be pushed to RawFifoQueue
