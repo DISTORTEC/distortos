@@ -136,6 +136,12 @@ int RawFifoQueue::push(const void* const data, const size_t size)
 	return pushInternal(semaphoreWaitFunctor, data, size);
 }
 
+int RawFifoQueue::tryPop(void* const buffer, const size_t size)
+{
+	const scheduler::SemaphoreTryWaitFunctor semaphoreTryWaitFunctor;
+	return popInternal(semaphoreTryWaitFunctor, buffer, size);
+}
+
 int RawFifoQueue::tryPush(const void* const data, const size_t size)
 {
 	const scheduler::SemaphoreTryWaitFunctor semaphoreTryWaitFunctor;
