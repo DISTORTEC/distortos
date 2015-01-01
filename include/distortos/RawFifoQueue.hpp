@@ -176,6 +176,28 @@ public:
 	}
 
 	/**
+	 * \brief Tries to pop the oldest (first) element from the queue for a given duration of time.
+	 *
+	 * \param Rep is type of tick counter
+	 * \param Period is std::ratio type representing the tick period of the clock, in seconds
+	 * \param T is the type of data popped from the queue
+	 *
+	 * \param [in] duration is the duration after which the call will be terminated without popping the element
+	 * \param [out] buffer is a reference to object that will be used to return popped value
+	 *
+	 * \return zero if element was popped successfully, error code otherwise:
+	 * - EMSGSIZE - sizeof(T) doesn't match the \a elementSize attribute of RawFifoQueue;
+	 * - error codes returned by Semaphore::tryWaitFor();
+	 * - error codes returned by Semaphore::post();
+	 */
+
+	template<typename Rep, typename Period, typename T>
+	int tryPopFor(const std::chrono::duration<Rep, Period> duration, T& buffer)
+	{
+		return tryPopFor(std::chrono::duration_cast<TickClock::duration>(duration), &buffer, sizeof(buffer));
+	}
+
+	/**
 	 * \brief Tries to push the element to the queue.
 	 *
 	 * \param [in] data is a pointer to data that will be pushed to RawFifoQueue
