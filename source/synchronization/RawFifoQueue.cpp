@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-12-31
+ * \date 2015-01-01
  */
 
 #include "distortos/RawFifoQueue.hpp"
@@ -27,6 +27,47 @@ namespace
 /*---------------------------------------------------------------------------------------------------------------------+
 | local types
 +---------------------------------------------------------------------------------------------------------------------*/
+
+/// PopFunctor is a functor used for popping of data from the RawFifoQueue
+class PopFunctor : public scheduler::FifoQueueBase::Functor
+{
+public:
+
+	/**
+	 * \brief PopFunctor's constructor
+	 *
+	 * \param [out] buffer is a pointer to buffer for popped element
+	 * \param [in] size is the size of \a buffer, bytes
+	 */
+
+	constexpr PopFunctor(void* const buffer, const size_t size) :
+			buffer_{buffer},
+			size_{size}
+	{
+
+	}
+
+	/**
+	 * \brief Copies the data from RawFifoQueue's storage (with memcpy()) and increments the storage pointer to next
+	 * position (using the size of element).
+	 *
+	 * \param [in,out] storage is a reference to pointer to queue's storage
+	 */
+
+	virtual void operator()(void*& storage) const override
+	{
+		memcpy(buffer_, storage, size_);
+		storage = static_cast<uint8_t*>(storage) + size_;
+	}
+
+private:
+
+	/// pointer to buffer for popped element
+	void* const buffer_;
+
+	/// size of \a buffer_, bytes
+	const size_t size_;
+};
 
 /// PushFunctor is a functor used for pushing of data to the RawFifoQueue
 class PushFunctor : public scheduler::FifoQueueBase::Functor
