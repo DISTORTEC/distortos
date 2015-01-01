@@ -169,6 +169,21 @@ public:
 		return tryPush(&data, sizeof(data));
 	}
 
+	/**
+	 * \brief Tries to push the element to the queue for a given duration of time.
+	 *
+	 * \param [in] duration is the duration after which the wait will be terminated without pushing the element
+	 * \param [in] data is a pointer to data that will be pushed to RawFifoQueue
+	 * \param [in] size is the size of \a data, bytes - must be equal to the \a elementSize attribute of RawFifoQueue
+	 *
+	 * \return zero if element was pushed successfully, error code otherwise:
+	 * - EMSGSIZE - \a size doesn't match the \a elementSize attribute of RawFifoQueue;
+	 * - error codes returned by Semaphore::tryWaitFor();
+	 * - error codes returned by Semaphore::post();
+	 */
+
+	int tryPushFor(TickClock::duration duration, const void* data, size_t size);
+
 private:
 
 	/**
