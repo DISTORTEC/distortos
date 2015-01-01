@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-12-31
+ * \date 2015-01-01
  */
 
 #ifndef INCLUDE_DISTORTOS_RAWFIFOQUEUE_HPP_
@@ -71,6 +71,23 @@ public:
 	}
 
 private:
+
+	/**
+	 * \brief Pops the oldest (first) element from the queue.
+	 *
+	 * Internal version - builds the Functor object.
+	 *
+	 * \param [in] waitSemaphoreFunctor is a reference to SemaphoreFunctor which will be executed with \a popSemaphore_
+	 * \param [out] buffer is a pointer to buffer for popped element
+	 * \param [in] size is the size of \a buffer, bytes - must be equal to the \a elementSize attribute of RawFifoQueue
+	 *
+	 * \return zero if element was popped successfully, error code otherwise:
+	 * - EMSGSIZE - \a size doesn't match the \a elementSize attribute of RawFifoQueue;
+	 * - error codes returned by \a waitSemaphoreFunctor's operator() call;
+	 * - error codes returned by Semaphore::post();
+	 */
+
+	int popInternal(const scheduler::SemaphoreFunctor& waitSemaphoreFunctor, void* buffer, size_t size);
 
 	/**
 	 * \brief Pushes the element to the queue.

@@ -133,6 +133,16 @@ int RawFifoQueue::push(const void* const data, const size_t size)
 | private functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
+int RawFifoQueue::popInternal(const scheduler::SemaphoreFunctor& waitSemaphoreFunctor, void* const buffer,
+		const size_t size)
+{
+	if (size != elementSize_)
+		return EMSGSIZE;
+
+	const PopFunctor popFunctor {buffer, size};
+	return fifoQueueBase_.pop(waitSemaphoreFunctor, popFunctor);
+}
+
 int RawFifoQueue::pushInternal(const scheduler::SemaphoreFunctor& waitSemaphoreFunctor, const void* const data,
 		const size_t size)
 {
