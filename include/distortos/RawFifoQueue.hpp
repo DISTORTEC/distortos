@@ -55,6 +55,23 @@ public:
 	}
 
 	/**
+	 * \brief RawFifoQueue's constructor
+	 *
+	 * \param T is the type of data in queue
+	 * \param N is the number of elements in \a storage memory block
+	 *
+	 * \param [in] storage is a reference to std::array that will be used as storage for \a N elements, each sizeof(T)
+	 * bytes long
+	 */
+
+	template<typename T, size_t N>
+	explicit RawFifoQueue(std::array<T, N>& storage) :
+			RawFifoQueue{storage.data(), sizeof(*storage.data()), storage.size()}
+	{
+
+	}
+
+	/**
 	 * \brief Pops the oldest (first) element from the queue.
 	 *
 	 * \param [out] buffer is a pointer to buffer for popped element
