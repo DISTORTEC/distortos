@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-01-01
+ * \date 2015-01-02
  */
 
 #ifndef INCLUDE_DISTORTOS_RAWFIFOQUEUE_HPP_
@@ -36,6 +36,23 @@ public:
 	 */
 
 	RawFifoQueue(void* storage, size_t elementSize, size_t maxElements);
+
+	/**
+	 * \brief RawFifoQueue's constructor
+	 *
+	 * \param T is the type of data in queue
+	 * \param N is the number of elements in \a storage memory block
+	 *
+	 * \param [in] storage is a reference to array that will be used as storage for \a N elements, each sizeof(T) bytes
+	 * long
+	 */
+
+	template<typename T, size_t N>
+	explicit RawFifoQueue(T (& storage)[N]) :
+			RawFifoQueue{storage, sizeof(*storage), sizeof(storage) / sizeof(*storage)}
+	{
+
+	}
 
 	/**
 	 * \brief Pops the oldest (first) element from the queue.
