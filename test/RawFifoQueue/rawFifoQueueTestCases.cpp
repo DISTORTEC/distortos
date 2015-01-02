@@ -14,6 +14,7 @@
 #include "rawFifoQueueTestCases.hpp"
 
 #include "RawFifoQueuePriorityTestCase.hpp"
+#include "RawFifoQueueOperationsTestCase.hpp"
 
 namespace distortos
 {
@@ -34,10 +35,14 @@ const RawFifoQueuePriorityTestCase::Implementation priorityTestCaseImplementatio
 /// RawFifoQueuePriorityTestCase instance
 const RawFifoQueuePriorityTestCase priorityTestCase {priorityTestCaseImplementation};
 
+/// RawFifoQueueOperationsTestCase instance
+const RawFifoQueueOperationsTestCase operationsTestCase;
+
 /// array with references to TestCase objects related to raw FIFO queue
 const TestCaseRange::value_type fifoQueueTestCases_[]
 {
 		TestCaseRange::value_type{priorityTestCase},
+		TestCaseRange::value_type{operationsTestCase},
 };
 
 }	// namespace
