@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-12-14
+ * \date 2015-01-02
  */
 
 #include "FifoQueuePriorityTestCase.hpp"
@@ -84,7 +84,7 @@ using Stage = std::tuple<const TestThreadFunction&, const Prepare* const, const 
  *
  * \param [in] fifoQueue is a reference to shared FIFO queue
  *
- * \return true if final check check succeeded, false otherwise
+ * \return true if final check succeeded, false otherwise
  */
 
 bool popFinalCheck(TestFifoQueue& fifoQueue)
