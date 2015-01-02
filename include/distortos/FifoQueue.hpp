@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-12-29
+ * \date 2015-01-02
  */
 
 #ifndef INCLUDE_DISTORTOS_FIFOQUEUE_HPP_
@@ -53,6 +53,21 @@ public:
 
 	FifoQueue(Storage* const storage, const size_t maxElements) :
 			fifoQueueBase_{storage, storage + maxElements, maxElements}
+	{
+
+	}
+
+	/**
+	 * \brief FifoQueue's constructor
+	 *
+	 * \param N is the number of elements in \a storage array
+	 *
+	 * \param [in] storage is a reference to array of Storage elements
+	 */
+
+	template<size_t N>
+	explicit FifoQueue(Storage (& storage)[N]) :
+			FifoQueue{storage, sizeof(storage) / sizeof(*storage)}
 	{
 
 	}
