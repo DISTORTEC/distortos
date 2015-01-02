@@ -72,6 +72,21 @@ public:
 
 	}
 
+	/**
+	 * \brief FifoQueue's constructor
+	 *
+	 * \param N is the number of elements in \a storage array
+	 *
+	 * \param [in] storage is a reference to std::array of Storage elements
+	 */
+
+	template<size_t N>
+	explicit FifoQueue(std::array<Storage, N>& storage) :
+			FifoQueue{storage.data(), storage.size()}
+	{
+
+	}
+
 #if DISTORTOS_FIFOQUEUE_EMPLACE_SUPPORTED == 1 || DOXYGEN == 1
 
 	/**
