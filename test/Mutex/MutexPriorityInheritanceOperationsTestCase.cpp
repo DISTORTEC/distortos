@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-11-19
+ * \date 2015-01-05
  */
 
 #include "MutexPriorityInheritanceOperationsTestCase.hpp"
@@ -237,7 +237,7 @@ constexpr uint8_t testThreadPriority {MutexPriorityInheritanceOperationsTestCase
 
 bool testBasicPriorityInheritance(const Mutex::Type type)
 {
-	constexpr size_t testThreadStackSize {256};
+	constexpr size_t testThreadStackSize {384};
 	constexpr size_t totalThreads {10};
 
 	// effective priority (relative to testThreadPriority) for each test thread in each test step
@@ -393,7 +393,7 @@ bool testBasicPriorityInheritance(const Mutex::Type type)
 bool testCanceledLock(const Mutex::Type type)
 {
 	constexpr TickClock::duration durationUnit {10};
-	constexpr size_t testThreadStackSize {384};
+	constexpr size_t testThreadStackSize {512};
 	constexpr size_t totalThreads {10};
 
 	Mutex mutex0 {type, Mutex::Protocol::PriorityInheritance};
@@ -489,7 +489,7 @@ bool testCanceledLock(const Mutex::Type type)
 
 bool testPriorityChange(const Mutex::Type type)
 {
-	constexpr size_t testThreadStackSize {256};
+	constexpr size_t testThreadStackSize {512};
 	constexpr size_t totalThreads {10};
 
 	// index of thread ([0;4] only!), new priority

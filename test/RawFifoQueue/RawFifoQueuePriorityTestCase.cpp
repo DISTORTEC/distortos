@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-01-02
+ * \date 2015-01-05
  */
 
 #include "RawFifoQueuePriorityTestCase.hpp"
@@ -34,7 +34,7 @@ namespace
 +---------------------------------------------------------------------------------------------------------------------*/
 
 /// size of stack for test thread, bytes
-constexpr size_t testThreadStackSize {256};
+constexpr size_t testThreadStackSize {384};
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | local types

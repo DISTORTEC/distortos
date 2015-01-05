@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-11-17
+ * \date 2015-01-05
  */
 
 #include "ThreadSchedulingPolicyTestCase.hpp"
@@ -42,7 +42,7 @@ using SequencePoints = std::pair<unsigned int, unsigned int>;
 +---------------------------------------------------------------------------------------------------------------------*/
 
 /// size of stack for test thread, bytes
-constexpr size_t testThreadStackSize {192};
+constexpr size_t testThreadStackSize {256};
 
 /// priority of test thread
 constexpr uint8_t testThreadPriority {1};
