@@ -58,7 +58,7 @@ Building
 --------
 
 To build *distortos* you need:
-- [tup](http://gittup.org/tup/) build system, version 0.7.3 or above
+- [GNU Make](http://www.gnu.org/software/make/) or [tup](http://gittup.org/tup/) (version 0.7.3 or above) build system
 - [arm-none-eabi bleeding-edge-toolchain](https://sourceforge.net/projects/bleeding-edge/), alternatively you can try
   any other arm-none-eabi toolchain, but C++ exception handling code will increase the size of binary
   (bleeding-edge-toolchain has the exceptions properly disabled - see
@@ -67,13 +67,13 @@ To build *distortos* you need:
 
 Make sure the tools are available in your system's *PATH* environment variable.
 
-To build just execute `tup` command in the main directory of the project.
+To build just execute `make` (if using GNU Make) or `tup` (if using tup) command in the main directory of the project.
 
-#### If you use Linux
+#### If you use tup and Linux
 
 You need to set *suid* bit on your *tup* executable (`` sudo chmod +s `which tup` ``) and you need to make sure that
 `fuse.conf` (usually `/etc/fuse.conf`) has `user_allow_other` option enabled.
 
-#### If you use Windows
+#### If you use tup and Windows
 
 Don't use 64-bit toolchain (even if you have 64-bit system), as *tup* cannot currently handle 64-bit executables.
