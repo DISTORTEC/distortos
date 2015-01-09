@@ -28,8 +28,8 @@ namespace containers
  * \note The elements are sorted as long as the user does not modify the contents via iterators.
  *
  * \param Container is the underlying container, it must provide following functions: begin(), emplace(), empty(),
- * end(), erase(), size() and splice(). It must contain following types: allocator_type, const_iterator, iterator and
- * value_type.
+ * end() and splice(). It must contain following types: allocator_type, const_iterator, iterator and value_type.
+ * Optionally functions erase() and size() of Container are forwarded if they exist.
  * \param Compare is a type of functor used for comparison, std::less results in descending order, std::greater - in
  * ascending order.
  */
@@ -118,19 +118,24 @@ public:
 
 	/**
 	 * \brief Forwarding of Container::erase(...)
+	 *
+	 * \note forwarded only if Container::erase(Args&&...) exists
 	 */
 
-	template<typename... Args>
-	auto erase(Args&&... args) -> decltype(std::declval<Container>().erase(std::forward<Args>(args)...))
+	template<typename... Args, typename C = Container>
+	auto erase(Args&&... args) -> decltype(std::declval<C>().erase(std::forward<Args>(args)...))
 	{
 		return container_.erase(std::forward<Args>(args)...);
 	}
 
 	/**
 	 * \brief Forwarding of Container::size() const
+	 *
+	 * \note forwarded only if Container::size() const exists
 	 */
 
-	decltype(std::declval<const Container>().size()) size() const
+	template<typename C = Container>
+	decltype(std::declval<const C>().size()) size() const
 	{
 		return container_.size();
 	}
