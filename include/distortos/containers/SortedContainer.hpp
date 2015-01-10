@@ -28,8 +28,8 @@ namespace containers
  * \note The elements are sorted as long as the user does not modify the contents via iterators.
  *
  * \param Container is the underlying container, it must provide following functions: begin(), emplace(), empty(),
- * end() and splice(). It must contain following types: allocator_type, const_iterator, iterator and value_type.
- * Optionally functions erase() and size() of Container are forwarded if they exist.
+ * end(), pop_front() and splice(). It must contain following types: allocator_type, const_iterator, iterator and
+ * value_type. Optionally functions erase() and size() of Container are forwarded if they exist.
  * \param Compare is a type of functor used for comparison, std::less results in descending order, std::greater - in
  * ascending order.
  */
@@ -126,6 +126,15 @@ public:
 	auto erase(Args&&... args) -> decltype(std::declval<C>().erase(std::forward<Args>(args)...))
 	{
 		return container_.erase(std::forward<Args>(args)...);
+	}
+
+	/**
+	 * \brief Forwarding of Container::pop_front()
+	 */
+
+	decltype(std::declval<Container>().pop_front()) pop_front()
+	{
+		return container_.pop_front();
 	}
 
 	/**
