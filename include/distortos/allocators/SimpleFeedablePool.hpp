@@ -2,13 +2,13 @@
  * \file
  * \brief SimpleFeedablePool class header
  *
- * \author Copyright (C) 2014 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-09-07
+ * \date 2015-01-10
  */
 
 #ifndef INCLUDE_DISTORTOS_ALLOCATORS_SIMPLEFEEDABLEPOOL_HPP_
@@ -54,7 +54,7 @@ public:
 	 * \return pointer to raw allocated storage
 	 */
 
-    void* allocate(size_t size);
+	void* allocate(size_t size);
 
 	/**
 	 * \brief Deallocates chunk of raw memory.
@@ -63,10 +63,10 @@ public:
 	 * \param [in] size is the size of storage, bytes
 	 */
 
-    void deallocate(void*, size_t) const
-    {
+	void deallocate(void*, size_t) const
+	{
 
-    }
+	}
 
 	/**
 	 * \brief Feeds chunk of raw storage to pool.

@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-01-09
+ * \date 2015-01-10
  */
 
 #ifndef INCLUDE_DISTORTOS_CONTAINERS_SORTEDCONTAINER_HPP_
@@ -53,7 +53,7 @@ public:
 
 	explicit SortedContainer(const Compare& compare = Compare{}, const allocator_type& allocator = allocator_type{}) :
 			container_{allocator},
-            compare_(compare)
+			compare_(compare)
 	{
 
 	}

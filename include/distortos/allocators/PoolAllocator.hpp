@@ -2,13 +2,13 @@
  * \file
  * \brief PoolAllocator class header
  *
- * \author Copyright (C) 2014 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-09-07
+ * \date 2015-01-10
  */
 
 #ifndef INCLUDE_DISTORTOS_ALLOCATORS_POOLALLOCATOR_HPP_
@@ -141,7 +141,7 @@ private:
 template<typename T1, typename T2, typename OtherPoolType>
 inline bool operator==(const PoolAllocator<T1, OtherPoolType>& left, const PoolAllocator<T2, OtherPoolType>& right)
 {
-    return &left.pool_ == &right.pool_;
+	return &left.pool_ == &right.pool_;
 }
 
 /**
@@ -160,7 +160,7 @@ inline bool operator==(const PoolAllocator<T1, OtherPoolType>& left, const PoolA
 template<typename T1, typename T2, typename OtherPoolType>
 inline bool operator!=(const PoolAllocator<T1, OtherPoolType>& left, const PoolAllocator<T2, OtherPoolType>& right)
 {
-    return !(left == right);
+	return !(left == right);
 }
 
 }	// namespace allocators
