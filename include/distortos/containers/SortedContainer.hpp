@@ -48,6 +48,54 @@ public:
 	using allocator_type = typename Container::allocator_type;
 
 	/**
+	 * \brief Primary template used to test presence of C::splice()
+	 *
+	 * \param C is the type of container that will be tested
+	 * \param Signature is the signature of C::splice() that will be tested
+	 */
+
+	template<typename C, typename Signature>
+	struct TestHasSplice;
+
+	/**
+	 * \brief Template used to test presence of R C::splice(Args...)
+	 *
+	 * \param C is the type of container that will be tested
+	 * \param R is the type returned by tested C::splice()
+	 * \param Args are the types of arguments for tested C::splice()
+	 */
+
+	template<typename C, typename R, typename... Args>
+	struct TestHasSplice<C, R(Args...)>
+	{
+		/**
+		* \brief Overload selected when R C::splice(Args...) function is present.
+		*
+		* \return std::true_type
+		*/
+
+		template<typename CC = C>
+		constexpr static auto test(CC* p) ->
+				typename std::is_same<decltype(p->splice(std::declval<Args>()...)), R>::type;
+
+		/**
+		* \brief Overload selected when R C::splice(Args...) function is not present.
+		*
+		* \return std::false_type
+		*/
+
+		constexpr static auto test(...) -> std::false_type;
+	};
+
+	/**
+	 * \brief Predicate telling whether void Container::splice(const_iterator, Container&, const_iterator) function is
+	 * present (it inherits from std::true_type in that case) or not (inherits from std::false_type).
+	 */
+
+	using HasSplice = decltype(TestHasSplice<Container, void(const_iterator, Container&, const_iterator)>::
+			test(std::declval<Container*>()));
+
+	/**
 	 * \brief SortedContainerBase's constructor
 	 *
 	 * \param [in] allocator is a reference to allocator_type object used to copy-construct allocator of container
