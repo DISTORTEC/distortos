@@ -162,8 +162,7 @@ public:
 	template<typename... Args>
 	iterator sortedEmplace(Args&&... args)
 	{
-		container_.emplace(begin(), std::forward<Args>(args)...);
-		const auto it = begin();
+		const auto it = container_.emplace(begin(), std::forward<Args>(args)...);
 		sortedSplice(*this, it);
 		return it;
 	}
