@@ -201,9 +201,10 @@ protected:
  * value_type. Optionally functions erase() and size() of Container are forwarded if they exist.
  * \param Compare is a type of functor used for comparison, std::less results in descending order, std::greater - in
  * ascending order.
+ * \param HasSplice selects implementation - std::true_type to use Container::emplace() and Container::splice()
  */
 
-template<typename Container, typename Compare>
+template<typename Container, typename Compare, typename HasSplice = typename SortedContainerBase<Container>::HasSplice>
 class SortedContainer : public SortedContainerBase<Container>
 {
 public:
