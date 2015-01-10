@@ -23,50 +23,38 @@ namespace containers
 {
 
 /**
- * \brief SortedContainer class is a container that keeps the elements sorted during emplace of transfer.
- *
- * \note The elements are sorted as long as the user does not modify the contents via iterators.
+ * \brief SortedContainerBase class is a wrapper around Container which can be used as base of SortedContainer
  *
  * \param Container is the underlying container, it must provide following functions: begin(), emplace(), empty(),
  * end(), pop_front() and splice(). It must contain following types: allocator_type, const_iterator, iterator and
  * value_type. Optionally functions erase() and size() of Container are forwarded if they exist.
- * \param Compare is a type of functor used for comparison, std::less results in descending order, std::greater - in
- * ascending order.
  */
 
-template<typename Container, typename Compare>
-class SortedContainer
+template<typename Container>
+class SortedContainerBase
 {
 public:
 
+	/// iterator
 	using iterator = typename Container::iterator;
+
+	/// const_iterator
 	using const_iterator = typename Container::const_iterator;
+
+	/// value_type
 	using value_type = typename Container::value_type;
+
+	/// allocator_type
 	using allocator_type = typename Container::allocator_type;
 
 	/**
-	 * \brief SortedContainer's constructor
-	 *
-	 * \param [in] compare is a reference to Compare object used to copy-construct comparison functor
-	 * \param [in] allocator is a reference to allocator_type object used to copy-construct allocator of container
-	 */
-
-	explicit SortedContainer(const Compare& compare = Compare{}, const allocator_type& allocator = allocator_type{}) :
-			container_{allocator},
-			compare_(compare)
-	{
-
-	}
-
-	/**
-	 * \brief SortedContainer's constructor
+	 * \brief SortedContainerBase's constructor
 	 *
 	 * \param [in] allocator is a reference to allocator_type object used to copy-construct allocator of container
 	 */
 
-	explicit SortedContainer(const allocator_type& allocator) :
-			container_{allocator},
-			compare_{}
+	explicit SortedContainerBase(const allocator_type& allocator = allocator_type{}) :
+			container_{allocator}
 	{
 
 	}
@@ -149,6 +137,61 @@ public:
 		return container_.size();
 	}
 
+protected:
+
+	/// container used for keeping elements
+	Container container_;
+};
+
+/**
+ * \brief SortedContainer class is a container that keeps the elements sorted during emplace of transfer.
+ *
+ * \note The elements are sorted as long as the user does not modify the contents via iterators.
+ *
+ * \param Container is the underlying container, it must provide following functions: begin(), emplace(), empty(),
+ * end(), pop_front() and splice(). It must contain following types: allocator_type, const_iterator, iterator and
+ * value_type. Optionally functions erase() and size() of Container are forwarded if they exist.
+ * \param Compare is a type of functor used for comparison, std::less results in descending order, std::greater - in
+ * ascending order.
+ */
+
+template<typename Container, typename Compare>
+class SortedContainer : public SortedContainerBase<Container>
+{
+public:
+
+	/// base of SortedContainer
+	using Base = SortedContainerBase<Container>;
+
+	/// import iterator type alias from Base
+	using typename Base::iterator;
+
+	/// import const_iterator type alias from Base
+	using typename Base::const_iterator;
+
+	/// import value_type type alias from Base
+	using typename Base::value_type;
+
+	/// import allocator_type type alias from Base
+	using typename Base::allocator_type;
+
+	/// import Base's constructor
+	using Base::Base;
+
+	/**
+	 * \brief SortedContainer's constructor
+	 *
+	 * \param [in] compare is a reference to Compare object used to copy-construct comparison functor
+	 * \param [in] allocator is a reference to allocator_type object used to copy-construct allocator of container
+	 */
+
+	explicit SortedContainer(const Compare& compare = Compare{}, const allocator_type& allocator = allocator_type{}) :
+			Base{allocator},
+			compare_(compare)
+	{
+
+	}
+
 	/**
 	 * \brief Sorted emplace()
 	 *
@@ -162,7 +205,7 @@ public:
 	template<typename... Args>
 	iterator sortedEmplace(Args&&... args)
 	{
-		const auto it = container_.emplace(begin(), std::forward<Args>(args)...);
+		const auto it = Base::container_.emplace(Base::begin(), std::forward<Args>(args)...);
 		sortedSplice(*this, it);
 		return it;
 	}
@@ -177,7 +220,7 @@ public:
 	void sortedSplice(SortedContainer& other, const iterator otherPosition)
 	{
 		const auto insertPosition = findInsertPosition(*otherPosition);
-		container_.splice(insertPosition, other.container_, otherPosition);
+		Base::container_.splice(insertPosition, other.container_, otherPosition);
 	}
 
 private:
@@ -192,16 +235,13 @@ private:
 
 	iterator findInsertPosition(const value_type& value)
 	{
-		return std::find_if(begin(), end(),
+		return std::find_if(Base::begin(), Base::end(),
 				[this, &value](const value_type& element) -> bool
 				{
 					return compare_(element, value);
 				}
 		);
 	}
-
-	/// container used for keeping elements
-	Container container_;
 
 	/// instance of functor used for comparison
 	Compare compare_;
