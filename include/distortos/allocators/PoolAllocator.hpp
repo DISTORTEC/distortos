@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-01-10
+ * \date 2015-01-11
  */
 
 #ifndef INCLUDE_DISTORTOS_ALLOCATORS_POOLALLOCATOR_HPP_
@@ -96,7 +96,7 @@ public:
 	 * \return pointer to allocated storage
 	 */
 
-	pointer allocate(size_type size, const void* = nullptr)
+	pointer allocate(const size_type size, const void* = nullptr)
 	{
 		return static_cast<T*>(pool_.allocate(size * sizeof(T)));
 	}
@@ -108,7 +108,7 @@ public:
 	 * \param [in] size is the number of elements (each of size sizeof(value_type)) to be deallocated
 	 */
 
-	void deallocate(pointer storage, size_type size)
+	void deallocate(const pointer storage, const size_type size)
 	{
 		pool_.deallocate(storage, size);
 	}
