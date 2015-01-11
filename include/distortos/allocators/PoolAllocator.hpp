@@ -110,7 +110,7 @@ public:
 
 	void deallocate(const pointer storage, const size_type size)
 	{
-		pool_.deallocate(storage, size);
+		pool_.deallocate(storage, size * sizeof(T));
 	}
 
 private:
