@@ -202,7 +202,7 @@ public:
 	template<typename... Args>
 	int tryEmplaceFor(const TickClock::duration duration, Args&&... args)
 	{
-		const scheduler::SemaphoreTryWaitForFunctor semaphoreTryWaitForFunctor {duration};
+		const synchronization::SemaphoreTryWaitForFunctor semaphoreTryWaitForFunctor {duration};
 		return emplaceInternal(semaphoreTryWaitForFunctor, std::forward<Args>(args)...);
 	}
 
@@ -311,7 +311,7 @@ public:
 
 	int tryPopFor(const TickClock::duration duration, T& value)
 	{
-		const scheduler::SemaphoreTryWaitForFunctor semaphoreTryWaitForFunctor {duration};
+		const synchronization::SemaphoreTryWaitForFunctor semaphoreTryWaitForFunctor {duration};
 		return popInternal(semaphoreTryWaitForFunctor, value);
 	}
 
@@ -424,7 +424,7 @@ public:
 
 	int tryPushFor(const TickClock::duration duration, const T& value)
 	{
-		const scheduler::SemaphoreTryWaitForFunctor semaphoreTryWaitForFunctor {duration};
+		const synchronization::SemaphoreTryWaitForFunctor semaphoreTryWaitForFunctor {duration};
 		return pushInternal(semaphoreTryWaitForFunctor, value);
 	}
 
@@ -464,7 +464,7 @@ public:
 
 	int tryPushFor(const TickClock::duration duration, T&& value)
 	{
-		const scheduler::SemaphoreTryWaitForFunctor semaphoreTryWaitForFunctor {duration};
+		const synchronization::SemaphoreTryWaitForFunctor semaphoreTryWaitForFunctor {duration};
 		return pushInternal(semaphoreTryWaitForFunctor, std::move(value));
 	}
 

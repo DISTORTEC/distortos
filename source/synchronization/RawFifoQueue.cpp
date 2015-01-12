@@ -146,7 +146,7 @@ int RawFifoQueue::tryPop(void* const buffer, const size_t size)
 
 int RawFifoQueue::tryPopFor(const TickClock::duration duration, void* const buffer, const size_t size)
 {
-	const scheduler::SemaphoreTryWaitForFunctor semaphoreTryWaitForFunctor {duration};
+	const synchronization::SemaphoreTryWaitForFunctor semaphoreTryWaitForFunctor {duration};
 	return popInternal(semaphoreTryWaitForFunctor, buffer, size);
 }
 
@@ -164,7 +164,7 @@ int RawFifoQueue::tryPush(const void* const data, const size_t size)
 
 int RawFifoQueue::tryPushFor(const TickClock::duration duration, const void* const data, const size_t size)
 {
-	const scheduler::SemaphoreTryWaitForFunctor semaphoreTryWaitForFunctor {duration};
+	const synchronization::SemaphoreTryWaitForFunctor semaphoreTryWaitForFunctor {duration};
 	return pushInternal(semaphoreTryWaitForFunctor, data, size);
 }
 
