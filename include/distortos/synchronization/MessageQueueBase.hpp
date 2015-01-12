@@ -18,6 +18,8 @@
 
 #include "distortos/allocators/FeedablePool.hpp"
 
+#include "distortos/estd/TypeErasedFunctor.hpp"
+
 #include <forward_list>
 
 namespace distortos
@@ -57,6 +59,16 @@ public:
 		/// storage for the entry
 		void* storage;
 	};
+
+	/**
+	 * \brief Functor is a type-erased interface for functors which execute some action on queue's storage (like
+	 * copy-constructing, swapping, destroying, emplacing, ...).
+	 *
+	 * The functor will be called by MessageQueueBase internals with one argument - \a storage - which is a pointer to
+	 * storage with/for element.
+	 */
+
+	using Functor = estd::TypeErasedFunctor<void(void*)>;
 
 	/// link and Entry
 	using LinkAndEntry = std::pair<void*, Entry>;
