@@ -14,8 +14,7 @@
 #ifndef INCLUDE_DISTORTOS_FIFOQUEUE_HPP_
 #define INCLUDE_DISTORTOS_FIFOQUEUE_HPP_
 
-#include "distortos/scheduler/FifoQueueBase.hpp"
-
+#include "distortos/synchronization/FifoQueueBase.hpp"
 #include "distortos/synchronization/SemaphoreWaitFunctor.hpp"
 #include "distortos/synchronization/SemaphoreTryWaitFunctor.hpp"
 #include "distortos/synchronization/SemaphoreTryWaitForFunctor.hpp"
