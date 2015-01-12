@@ -15,7 +15,7 @@
 
 #include "distortos/synchronization/SemaphoreWaitFunctor.hpp"
 #include "distortos/synchronization/SemaphoreTryWaitFunctor.hpp"
-#include "distortos/scheduler/SemaphoreTryWaitForFunctor.hpp"
+#include "distortos/synchronization/SemaphoreTryWaitForFunctor.hpp"
 #include "distortos/scheduler/SemaphoreTryWaitUntilFunctor.hpp"
 
 #include <cstring>

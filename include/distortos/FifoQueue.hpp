@@ -18,7 +18,7 @@
 
 #include "distortos/synchronization/SemaphoreWaitFunctor.hpp"
 #include "distortos/synchronization/SemaphoreTryWaitFunctor.hpp"
-#include "distortos/scheduler/SemaphoreTryWaitForFunctor.hpp"
+#include "distortos/synchronization/SemaphoreTryWaitForFunctor.hpp"
 #include "distortos/scheduler/SemaphoreTryWaitUntilFunctor.hpp"
 
 /// GCC 4.9 is needed for all FifoQueue::*emplace*() functions - earlier versions don't support parameter pack expansion
