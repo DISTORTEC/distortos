@@ -17,7 +17,7 @@
 #include "distortos/scheduler/FifoQueueBase.hpp"
 
 #include "distortos/synchronization/SemaphoreWaitFunctor.hpp"
-#include "distortos/scheduler/SemaphoreTryWaitFunctor.hpp"
+#include "distortos/synchronization/SemaphoreTryWaitFunctor.hpp"
 #include "distortos/scheduler/SemaphoreTryWaitForFunctor.hpp"
 #include "distortos/scheduler/SemaphoreTryWaitUntilFunctor.hpp"
 
