@@ -8,12 +8,12 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-01-09
+ * \date 2015-01-12
  */
 
 #include "distortos/RawFifoQueue.hpp"
 
-#include "distortos/scheduler/SemaphoreWaitFunctor.hpp"
+#include "distortos/synchronization/SemaphoreWaitFunctor.hpp"
 #include "distortos/scheduler/SemaphoreTryWaitFunctor.hpp"
 #include "distortos/scheduler/SemaphoreTryWaitForFunctor.hpp"
 #include "distortos/scheduler/SemaphoreTryWaitUntilFunctor.hpp"
