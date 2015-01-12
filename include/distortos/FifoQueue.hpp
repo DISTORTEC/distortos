@@ -180,7 +180,7 @@ public:
 	template<typename... Args>
 	int tryEmplace(Args&&... args)
 	{
-		const scheduler::SemaphoreTryWaitFunctor semaphoreTryWaitFunctor;
+		const synchronization::SemaphoreTryWaitFunctor semaphoreTryWaitFunctor;
 		return emplaceInternal(semaphoreTryWaitFunctor, std::forward<Args>(args)...);
 	}
 
@@ -293,7 +293,7 @@ public:
 
 	int tryPop(T& value)
 	{
-		scheduler::SemaphoreTryWaitFunctor semaphoreTryWaitFunctor;
+		synchronization::SemaphoreTryWaitFunctor semaphoreTryWaitFunctor;
 		return popInternal(semaphoreTryWaitFunctor, value);
 	}
 
@@ -390,7 +390,7 @@ public:
 
 	int tryPush(const T& value)
 	{
-		const scheduler::SemaphoreTryWaitFunctor semaphoreTryWaitFunctor;
+		const synchronization::SemaphoreTryWaitFunctor semaphoreTryWaitFunctor;
 		return pushInternal(semaphoreTryWaitFunctor, value);
 	}
 
@@ -407,7 +407,7 @@ public:
 
 	int tryPush(T&& value)
 	{
-		const scheduler::SemaphoreTryWaitFunctor semaphoreTryWaitFunctor;
+		const synchronization::SemaphoreTryWaitFunctor semaphoreTryWaitFunctor;
 		return pushInternal(semaphoreTryWaitFunctor, std::move(value));
 	}
 
