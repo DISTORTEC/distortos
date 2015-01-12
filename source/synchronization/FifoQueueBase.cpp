@@ -18,7 +18,7 @@
 namespace distortos
 {
 
-namespace scheduler
+namespace synchronization
 {
 
 /*---------------------------------------------------------------------------------------------------------------------+
@@ -40,7 +40,7 @@ FifoQueueBase::FifoQueueBase(void* const storageBegin, const void* const storage
 | private functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-int FifoQueueBase::popPush(const synchronization::SemaphoreFunctor& waitSemaphoreFunctor, const Functor& functor,
+int FifoQueueBase::popPush(const SemaphoreFunctor& waitSemaphoreFunctor, const Functor& functor,
 		Semaphore& waitSemaphore, Semaphore& postSemaphore, void*& storage)
 {
 	architecture::InterruptMaskingLock interruptMaskingLock;
@@ -57,6 +57,6 @@ int FifoQueueBase::popPush(const synchronization::SemaphoreFunctor& waitSemaphor
 	return postSemaphore.post();
 }
 
-}	// namespace scheduler
+}	// namespace synchronization
 
 }	// namespace distortos

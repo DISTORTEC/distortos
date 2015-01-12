@@ -32,7 +32,7 @@ namespace
 +---------------------------------------------------------------------------------------------------------------------*/
 
 /// PopFunctor is a functor used for popping of data from the RawFifoQueue
-class PopFunctor : public scheduler::FifoQueueBase::Functor
+class PopFunctor : public synchronization::FifoQueueBase::Functor
 {
 public:
 
@@ -73,7 +73,7 @@ private:
 };
 
 /// PushFunctor is a functor used for pushing of data to the RawFifoQueue
-class PushFunctor : public scheduler::FifoQueueBase::Functor
+class PushFunctor : public synchronization::FifoQueueBase::Functor
 {
 public:
 

@@ -481,7 +481,7 @@ private:
 	int pushInternal(const synchronization::SemaphoreFunctor& waitSemaphoreFunctor, const void* data, size_t size);
 
 	/// contained scheduler::FifoQueueBase object which implements base functionality
-	scheduler::FifoQueueBase fifoQueueBase_;
+	synchronization::FifoQueueBase fifoQueueBase_;
 
 	/// size of single queue element, bytes
 	const size_t elementSize_;

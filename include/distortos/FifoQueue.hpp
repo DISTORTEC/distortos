@@ -579,7 +579,7 @@ private:
 	 */
 
 	template<typename F>
-	class BoundedFunctor : public scheduler::FifoQueueBase::Functor
+	class BoundedFunctor : public synchronization::FifoQueueBase::Functor
 	{
 	public:
 
@@ -707,7 +707,7 @@ private:
 	int pushInternal(const synchronization::SemaphoreFunctor& waitSemaphoreFunctor, T&& value);
 
 	/// contained scheduler::FifoQueueBase object which implements whole functionality
-	scheduler::FifoQueueBase fifoQueueBase_;
+	synchronization::FifoQueueBase fifoQueueBase_;
 };
 
 #if DISTORTOS_FIFOQUEUE_EMPLACE_SUPPORTED == 1 || DOXYGEN == 1
