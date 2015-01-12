@@ -23,7 +23,7 @@ namespace scheduler
 {
 
 /// SemaphoreTryWaitFunctor class is a SemaphoreFunctor which calls Semaphore::tryWait()
-class SemaphoreTryWaitFunctor : public SemaphoreFunctor
+class SemaphoreTryWaitFunctor : public synchronization::SemaphoreFunctor
 {
 public:
 

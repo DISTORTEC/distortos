@@ -23,7 +23,7 @@ namespace scheduler
 {
 
 /// SemaphoreWaitFunctor class is a SemaphoreFunctor which calls Semaphore::wait()
-class SemaphoreWaitFunctor : public SemaphoreFunctor
+class SemaphoreWaitFunctor : public synchronization::SemaphoreFunctor
 {
 public:
 

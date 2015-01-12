@@ -461,7 +461,7 @@ private:
 	 * - error codes returned by Semaphore::post();
 	 */
 
-	int popInternal(const scheduler::SemaphoreFunctor& waitSemaphoreFunctor, void* buffer, size_t size);
+	int popInternal(const synchronization::SemaphoreFunctor& waitSemaphoreFunctor, void* buffer, size_t size);
 
 	/**
 	 * \brief Pushes the element to the queue.
@@ -478,7 +478,7 @@ private:
 	 * - error codes returned by Semaphore::post();
 	 */
 
-	int pushInternal(const scheduler::SemaphoreFunctor& waitSemaphoreFunctor, const void* data, size_t size);
+	int pushInternal(const synchronization::SemaphoreFunctor& waitSemaphoreFunctor, const void* data, size_t size);
 
 	/// contained scheduler::FifoQueueBase object which implements base functionality
 	scheduler::FifoQueueBase fifoQueueBase_;

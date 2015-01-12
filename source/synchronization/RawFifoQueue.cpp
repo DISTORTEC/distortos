@@ -178,7 +178,7 @@ int RawFifoQueue::tryPushUntil(const TickClock::time_point timePoint, const void
 | private functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-int RawFifoQueue::popInternal(const scheduler::SemaphoreFunctor& waitSemaphoreFunctor, void* const buffer,
+int RawFifoQueue::popInternal(const synchronization::SemaphoreFunctor& waitSemaphoreFunctor, void* const buffer,
 		const size_t size)
 {
 	if (size != elementSize_)
@@ -188,7 +188,7 @@ int RawFifoQueue::popInternal(const scheduler::SemaphoreFunctor& waitSemaphoreFu
 	return fifoQueueBase_.pop(waitSemaphoreFunctor, popFunctor);
 }
 
-int RawFifoQueue::pushInternal(const scheduler::SemaphoreFunctor& waitSemaphoreFunctor, const void* const data,
+int RawFifoQueue::pushInternal(const synchronization::SemaphoreFunctor& waitSemaphoreFunctor, const void* const data,
 		const size_t size)
 {
 	if (size != elementSize_)

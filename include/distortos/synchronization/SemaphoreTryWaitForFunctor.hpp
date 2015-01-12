@@ -25,7 +25,7 @@ namespace scheduler
 {
 
 /// SemaphoreTryWaitForFunctor class is a SemaphoreFunctor which calls Semaphore::tryWaitFor() with bounded duration
-class SemaphoreTryWaitForFunctor : public SemaphoreFunctor
+class SemaphoreTryWaitForFunctor : public synchronization::SemaphoreFunctor
 {
 public:
 

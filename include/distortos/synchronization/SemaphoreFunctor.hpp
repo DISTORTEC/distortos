@@ -21,7 +21,7 @@ namespace distortos
 
 class Semaphore;
 
-namespace scheduler
+namespace synchronization
 {
 
 /**
@@ -35,7 +35,7 @@ namespace scheduler
 
 using SemaphoreFunctor = estd::TypeErasedFunctor<int(Semaphore&)>;
 
-}	// namespace scheduler
+}	// namespace synchronization
 
 }	// namespace distortos
 

@@ -655,7 +655,7 @@ private:
 	 */
 
 	template<typename... Args>
-	int emplaceInternal(const scheduler::SemaphoreFunctor& waitSemaphoreFunctor, Args&&... args);
+	int emplaceInternal(const synchronization::SemaphoreFunctor& waitSemaphoreFunctor, Args&&... args);
 
 #endif	// DISTORTOS_FIFOQUEUE_EMPLACE_SUPPORTED == 1 || DOXYGEN == 1
 
@@ -673,7 +673,7 @@ private:
 	 * - error codes returned by Semaphore::post();
 	 */
 
-	int popInternal(const scheduler::SemaphoreFunctor& waitSemaphoreFunctor, T& value);
+	int popInternal(const synchronization::SemaphoreFunctor& waitSemaphoreFunctor, T& value);
 
 	/**
 	 * \brief Pushes the element to the queue.
@@ -688,7 +688,7 @@ private:
 	 * - error codes returned by Semaphore::post();
 	 */
 
-	int pushInternal(const scheduler::SemaphoreFunctor& waitSemaphoreFunctor, const T& value);
+	int pushInternal(const synchronization::SemaphoreFunctor& waitSemaphoreFunctor, const T& value);
 
 	/**
 	 * \brief Pushes the element to the queue.
@@ -704,7 +704,7 @@ private:
 	 * - error codes returned by Semaphore::post();
 	 */
 
-	int pushInternal(const scheduler::SemaphoreFunctor& waitSemaphoreFunctor, T&& value);
+	int pushInternal(const synchronization::SemaphoreFunctor& waitSemaphoreFunctor, T&& value);
 
 	/// contained scheduler::FifoQueueBase object which implements whole functionality
 	scheduler::FifoQueueBase fifoQueueBase_;
@@ -714,7 +714,7 @@ private:
 
 template<typename T>
 template<typename... Args>
-int FifoQueue<T>::emplaceInternal(const scheduler::SemaphoreFunctor& waitSemaphoreFunctor, Args&&... args)
+int FifoQueue<T>::emplaceInternal(const synchronization::SemaphoreFunctor& waitSemaphoreFunctor, Args&&... args)
 {
 	const auto emplaceFunctor = makeBoundedFunctor(
 			[&args...](Storage* const storage)
@@ -727,7 +727,7 @@ int FifoQueue<T>::emplaceInternal(const scheduler::SemaphoreFunctor& waitSemapho
 #endif	// DISTORTOS_FIFOQUEUE_EMPLACE_SUPPORTED == 1 || DOXYGEN == 1
 
 template<typename T>
-int FifoQueue<T>::popInternal(const scheduler::SemaphoreFunctor& waitSemaphoreFunctor, T& value)
+int FifoQueue<T>::popInternal(const synchronization::SemaphoreFunctor& waitSemaphoreFunctor, T& value)
 {
 	const auto swapFunctor = makeBoundedFunctor(
 			[&value](Storage* const storage)
@@ -741,7 +741,7 @@ int FifoQueue<T>::popInternal(const scheduler::SemaphoreFunctor& waitSemaphoreFu
 }
 
 template<typename T>
-int FifoQueue<T>::pushInternal(const scheduler::SemaphoreFunctor& waitSemaphoreFunctor, const T& value)
+int FifoQueue<T>::pushInternal(const synchronization::SemaphoreFunctor& waitSemaphoreFunctor, const T& value)
 {
 	const auto copyFunctor = makeBoundedFunctor(
 			[&value](Storage* const storage)
@@ -752,7 +752,7 @@ int FifoQueue<T>::pushInternal(const scheduler::SemaphoreFunctor& waitSemaphoreF
 }
 
 template<typename T>
-int FifoQueue<T>::pushInternal(const scheduler::SemaphoreFunctor& waitSemaphoreFunctor, T&& value)
+int FifoQueue<T>::pushInternal(const synchronization::SemaphoreFunctor& waitSemaphoreFunctor, T&& value)
 {
 	const auto moveFunctor = makeBoundedFunctor(
 			[&value](Storage* const storage)
