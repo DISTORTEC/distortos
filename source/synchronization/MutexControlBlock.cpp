@@ -21,7 +21,7 @@
 namespace distortos
 {
 
-namespace scheduler
+namespace synchronization
 {
 
 /*---------------------------------------------------------------------------------------------------------------------+
@@ -29,7 +29,8 @@ namespace scheduler
 +---------------------------------------------------------------------------------------------------------------------*/
 
 MutexControlBlock::MutexControlBlock(const Protocol protocol, const uint8_t priorityCeiling) :
-		blockedList_{getScheduler().getThreadControlBlockListAllocator(), ThreadControlBlock::State::BlockedOnMutex},
+		blockedList_{scheduler::getScheduler().getThreadControlBlockListAllocator(),
+				scheduler::ThreadControlBlock::State::BlockedOnMutex},
 		list_{},
 		iterator_{},
 		owner_{},
@@ -44,7 +45,7 @@ void MutexControlBlock::block()
 	if (protocol_ == Protocol::PriorityInheritance)
 		priorityInheritanceBeforeBlock();
 
-	getScheduler().block(blockedList_);
+	scheduler::getScheduler().block(blockedList_);
 }
 
 int MutexControlBlock::blockUntil(const TickClock::time_point timePoint)
@@ -52,7 +53,7 @@ int MutexControlBlock::blockUntil(const TickClock::time_point timePoint)
 	if (protocol_ == Protocol::PriorityInheritance)
 		priorityInheritanceBeforeBlock();
 
-	auto& scheduler = getScheduler();
+	auto& scheduler = scheduler::getScheduler();
 	const auto ret = scheduler.blockUntil(blockedList_, timePoint);
 
 	if (protocol_ == Protocol::PriorityInheritance)
@@ -125,7 +126,7 @@ void MutexControlBlock::unlockOrTransferLock()
 
 void MutexControlBlock::priorityInheritanceBeforeBlock() const
 {
-	auto& currentThreadControlBlock = getScheduler().getCurrentThreadControlBlock();
+	auto& currentThreadControlBlock = scheduler::getScheduler().getCurrentThreadControlBlock();
 
 	currentThreadControlBlock.setPriorityInheritanceMutexControlBlock(this);
 
@@ -160,6 +161,6 @@ void MutexControlBlock::unlock()
 	list_ = nullptr;
 }
 
-}	// namespace scheduler
+}	// namespace synchronization
 
 }	// namespace distortos

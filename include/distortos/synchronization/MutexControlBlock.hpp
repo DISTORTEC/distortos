@@ -19,7 +19,7 @@
 namespace distortos
 {
 
-namespace scheduler
+namespace synchronization
 {
 
 /// MutexControlBlock class is a control block for Mutex
@@ -82,7 +82,7 @@ public:
 	 * \return owner of the mutex, nullptr if mutex is currently unlocked
 	 */
 
-	ThreadControlBlock* getOwner() const
+	scheduler::ThreadControlBlock* getOwner() const
 	{
 		return owner_;
 	}
@@ -155,7 +155,7 @@ private:
 	void unlock();
 
 	/// ThreadControlBlock objects blocked on mutex
-	ThreadControlBlockList blockedList_;
+	scheduler::ThreadControlBlockList blockedList_;
 
 	/// storage for list link
 	Link link_;
@@ -167,7 +167,7 @@ private:
 	scheduler::MutexControlBlockList::iterator iterator_;
 
 	/// owner of the mutex
-	ThreadControlBlock* owner_;
+	scheduler::ThreadControlBlock* owner_;
 
 	/// mutex protocol
 	Protocol protocol_;
@@ -176,7 +176,7 @@ private:
 	uint8_t priorityCeiling_;
 };
 
-}	// namespace scheduler
+}	// namespace synchronization
 
 }	// namespace distortos
 
