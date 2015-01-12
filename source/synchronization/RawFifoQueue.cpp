@@ -128,13 +128,13 @@ RawFifoQueue::RawFifoQueue(void* const storage, const size_t elementSize, const 
 
 int RawFifoQueue::pop(void* const buffer, const size_t size)
 {
-	const scheduler::SemaphoreWaitFunctor semaphoreWaitFunctor;
+	const synchronization::SemaphoreWaitFunctor semaphoreWaitFunctor;
 	return popInternal(semaphoreWaitFunctor, buffer, size);
 }
 
 int RawFifoQueue::push(const void* const data, const size_t size)
 {
-	const scheduler::SemaphoreWaitFunctor semaphoreWaitFunctor;
+	const synchronization::SemaphoreWaitFunctor semaphoreWaitFunctor;
 	return pushInternal(semaphoreWaitFunctor, data, size);
 }
 

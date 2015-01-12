@@ -19,11 +19,11 @@
 namespace distortos
 {
 
-namespace scheduler
+namespace synchronization
 {
 
 /// SemaphoreWaitFunctor class is a SemaphoreFunctor which calls Semaphore::wait()
-class SemaphoreWaitFunctor : public synchronization::SemaphoreFunctor
+class SemaphoreWaitFunctor : public SemaphoreFunctor
 {
 public:
 
@@ -38,7 +38,7 @@ public:
 	virtual int operator()(Semaphore& semaphore) const override;
 };
 
-}	// namespace scheduler
+}	// namespace synchronization
 
 }	// namespace distortos
 
