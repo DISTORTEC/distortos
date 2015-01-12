@@ -249,7 +249,7 @@ public:
 	template<typename... Args>
 	int tryEmplaceUntil(const TickClock::time_point timePoint, Args&&... args)
 	{
-		const scheduler::SemaphoreTryWaitUntilFunctor semaphoreTryWaitUntilFunctor {timePoint};
+		const synchronization::SemaphoreTryWaitUntilFunctor semaphoreTryWaitUntilFunctor {timePoint};
 		return emplaceInternal(semaphoreTryWaitUntilFunctor, std::forward<Args>(args)...);
 	}
 
@@ -352,7 +352,7 @@ public:
 
 	int tryPopUntil(const TickClock::time_point timePoint, T& value)
 	{
-		const scheduler::SemaphoreTryWaitUntilFunctor semaphoreTryWaitUntilFunctor {timePoint};
+		const synchronization::SemaphoreTryWaitUntilFunctor semaphoreTryWaitUntilFunctor {timePoint};
 		return popInternal(semaphoreTryWaitUntilFunctor, value);
 	}
 
@@ -504,7 +504,7 @@ public:
 
 	int tryPushUntil(const TickClock::time_point timePoint, const T& value)
 	{
-		const scheduler::SemaphoreTryWaitUntilFunctor semaphoreTryWaitUntilFunctor {timePoint};
+		const synchronization::SemaphoreTryWaitUntilFunctor semaphoreTryWaitUntilFunctor {timePoint};
 		return pushInternal(semaphoreTryWaitUntilFunctor, value);
 	}
 
@@ -543,7 +543,7 @@ public:
 
 	int tryPushUntil(const TickClock::time_point timePoint, T&& value)
 	{
-		const scheduler::SemaphoreTryWaitUntilFunctor semaphoreTryWaitUntilFunctor {timePoint};
+		const synchronization::SemaphoreTryWaitUntilFunctor semaphoreTryWaitUntilFunctor {timePoint};
 		return pushInternal(semaphoreTryWaitUntilFunctor, std::move(value));
 	}
 

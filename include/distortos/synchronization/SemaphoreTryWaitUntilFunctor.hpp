@@ -21,12 +21,12 @@
 namespace distortos
 {
 
-namespace scheduler
+namespace synchronization
 {
 
 /// SemaphoreTryWaitUntilFunctor class is a SemaphoreFunctor which calls Semaphore::tryWaitUntil() with bounded time
 /// point
-class SemaphoreTryWaitUntilFunctor : public synchronization::SemaphoreFunctor
+class SemaphoreTryWaitUntilFunctor : public SemaphoreFunctor
 {
 public:
 
@@ -58,7 +58,7 @@ private:
 	const TickClock::time_point timePoint_;
 };
 
-}	// namespace scheduler
+}	// namespace synchronization
 
 }	// namespace distortos
 
