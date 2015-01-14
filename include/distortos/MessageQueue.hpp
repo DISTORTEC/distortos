@@ -52,6 +52,66 @@ public:
 
 private:
 
+	/**
+	 * \brief BoundedFunctor is a type-erased synchronization::MessageQueueBase::Functor which calls its bounded functor
+	 * to execute actions on queue's storage
+	 *
+	 * \param F is the type of bounded functor, it will be called with <em>void*</em> as only argument
+	 */
+
+	template<typename F>
+	class BoundedFunctor : public synchronization::MessageQueueBase::Functor
+	{
+	public:
+
+		/**
+		 * \brief BoundedFunctor's constructor
+		 *
+		 * \param [in] boundedFunctor is a rvalue reference to bounded functor which will be used to move-construct
+		 * internal bounded functor
+		 */
+
+		constexpr explicit BoundedFunctor(F&& boundedFunctor) :
+				boundedFunctor_{std::move(boundedFunctor)}
+		{
+
+		}
+
+		/**
+		 * \brief Calls the bounded functor which will execute some action on queue's storage (like copy-constructing,
+		 * swapping, destroying, emplacing, ...)
+		 *
+		 * \param [in,out] storage is a pointer to storage with/for element
+		 */
+
+		virtual void operator()(void* storage) const override
+		{
+			boundedFunctor_(storage);
+		}
+
+	private:
+
+		/// bounded functor
+		F boundedFunctor_;
+	};
+
+	/**
+	 * \brief Helper factory function to make BoundedFunctor object with partially deduced template arguments
+	 *
+	 * \param F is the type of bounded functor, it will be called with <em>void*</em> as only argument
+	 *
+	 * \param [in] boundedFunctor is a rvalue reference to bounded functor which will be used to move-construct internal
+	 * bounded functor
+	 *
+	 * \return BoundedFunctor object with partially deduced template arguments
+	 */
+
+	template<typename F>
+	constexpr static BoundedFunctor<F> makeBoundedFunctor(F&& boundedFunctor)
+	{
+		return BoundedFunctor<F>{std::move(boundedFunctor)};
+	}
+
 	/// contained synchronization::MessageQueueBase object which implements whole functionality
 	synchronization::MessageQueueBase messageQueueBase_;
 };
