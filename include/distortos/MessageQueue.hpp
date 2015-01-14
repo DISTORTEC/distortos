@@ -112,9 +112,37 @@ private:
 		return BoundedFunctor<F>{std::move(boundedFunctor)};
 	}
 
+	/**
+	 * \brief Pushes the element to the queue.
+	 *
+	 * Internal version - builds the Functor object.
+	 *
+	 * \param [in] waitSemaphoreFunctor is a reference to SemaphoreFunctor which will be executed with \a pushSemaphore_
+	 * \param [in] priority is the priority of new element
+	 * \param [in] value is a reference to object that will be pushed, value in queue's storage is copy-constructed
+	 *
+	 * \return zero if element was pushed successfully, error code otherwise:
+	 * - error codes returned by \a waitSemaphoreFunctor's operator() call;
+	 * - error codes returned by Semaphore::post();
+	 */
+
+	int pushInternal(const synchronization::SemaphoreFunctor& waitSemaphoreFunctor, uint8_t priority, const T& value);
+
 	/// contained synchronization::MessageQueueBase object which implements whole functionality
 	synchronization::MessageQueueBase messageQueueBase_;
 };
+
+template<typename T>
+int MessageQueue<T>::pushInternal(const synchronization::SemaphoreFunctor& waitSemaphoreFunctor, const uint8_t priority,
+		const T& value)
+{
+	const auto copyFunctor = makeBoundedFunctor(
+			[&value](void* const storage)
+			{
+				new (storage) T{value};
+			});
+	return messageQueueBase_.push(waitSemaphoreFunctor, priority, copyFunctor);
+}
 
 }	// namespace distortos
 
