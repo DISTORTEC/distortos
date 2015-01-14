@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-01-12
+ * \date 2015-01-14
  */
 
 #ifndef INCLUDE_DISTORTOS_RAWFIFOQUEUE_HPP_
@@ -480,7 +480,7 @@ private:
 
 	int pushInternal(const synchronization::SemaphoreFunctor& waitSemaphoreFunctor, const void* data, size_t size);
 
-	/// contained scheduler::FifoQueueBase object which implements base functionality
+	/// contained synchronization::FifoQueueBase object which implements base functionality
 	synchronization::FifoQueueBase fifoQueueBase_;
 
 	/// size of single queue element, bytes
