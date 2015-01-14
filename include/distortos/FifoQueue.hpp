@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-01-12
+ * \date 2015-01-14
  */
 
 #ifndef INCLUDE_DISTORTOS_FIFOQUEUE_HPP_
@@ -30,7 +30,7 @@ namespace distortos
 /**
  * \brief FifoQueue class is a simple FIFO queue for thread-thread, thread-interrupt or interrupt-interrupt
  * communication. It supports multiple readers and multiple writers. It is implemented as a wrapper for
- * scheduler::FifoQueueBase.
+ * synchronization::FifoQueueBase.
  *
  * \param T is the type of data in queue
  */
@@ -572,7 +572,7 @@ public:
 private:
 
 	/**
-	 * \brief BoundedFunctor is a type-erased scheduler::FifoQueueBase::Functor which calls its bounded functor to
+	 * \brief BoundedFunctor is a type-erased synchronization::FifoQueueBase::Functor which calls its bounded functor to
 	 * execute actions on queue's storage and deals with the pointer increments
 	 *
 	 * \param F is the type of bounded functor, it will be called with <em>Storage*</em> as only argument
@@ -706,7 +706,7 @@ private:
 
 	int pushInternal(const synchronization::SemaphoreFunctor& waitSemaphoreFunctor, T&& value);
 
-	/// contained scheduler::FifoQueueBase object which implements whole functionality
+	/// contained synchronization::FifoQueueBase object which implements whole functionality
 	synchronization::FifoQueueBase fifoQueueBase_;
 };
 
