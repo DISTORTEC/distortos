@@ -133,6 +133,23 @@ private:
 	}
 
 	/**
+	 * \brief Pops oldest element with highest priority from the queue.
+	 *
+	 * Internal version - builds the Functor object.
+	 *
+	 * \param [in] waitSemaphoreFunctor is a reference to SemaphoreFunctor which will be executed with \a popSemaphore_
+	 * \param [out] priority is a reference to variable that will be used to return priority of popped value
+	 * \param [out] value is a reference to object that will be used to return popped value, its contents are swapped
+	 * with the value in the queue's storage and destructed when no longer needed
+	 *
+	 * \return zero if element was popped successfully, error code otherwise:
+	 * - error codes returned by \a waitSemaphoreFunctor's operator() call;
+	 * - error codes returned by Semaphore::post();
+	 */
+
+	int popInternal(const synchronization::SemaphoreFunctor& waitSemaphoreFunctor, uint8_t& priority, T& value);
+
+	/**
 	 * \brief Pushes the element to the queue.
 	 *
 	 * Internal version - builds the Functor object.
@@ -151,6 +168,21 @@ private:
 	/// contained synchronization::MessageQueueBase object which implements whole functionality
 	synchronization::MessageQueueBase messageQueueBase_;
 };
+
+template<typename T>
+int MessageQueue<T>::popInternal(const synchronization::SemaphoreFunctor& waitSemaphoreFunctor, uint8_t& priority,
+		T& value)
+{
+	const auto swapFunctor = makeBoundedFunctor(
+			[&value](void* const storage)
+			{
+				auto& swappedValue = *reinterpret_cast<T*>(storage);
+				using std::swap;
+				swap(value, swappedValue);
+				swappedValue.~T();
+			});
+	return messageQueueBase_.pop(waitSemaphoreFunctor, priority, swapFunctor);
+}
 
 template<typename T>
 int MessageQueue<T>::pushInternal(const synchronization::SemaphoreFunctor& waitSemaphoreFunctor, const uint8_t priority,
