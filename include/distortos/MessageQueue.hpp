@@ -18,6 +18,7 @@
 #include "distortos/synchronization/SemaphoreWaitFunctor.hpp"
 #include "distortos/synchronization/SemaphoreTryWaitFunctor.hpp"
 #include "distortos/synchronization/SemaphoreTryWaitForFunctor.hpp"
+#include "distortos/synchronization/SemaphoreTryWaitUntilFunctor.hpp"
 
 namespace distortos
 {
@@ -414,6 +415,26 @@ public:
 	int tryPushFor(const std::chrono::duration<Rep, Period> duration, const uint8_t priority, T&& value)
 	{
 		return tryPushFor(std::chrono::duration_cast<TickClock::duration>(duration), priority, std::move(value));
+	}
+
+	/**
+	 * \brief Tries to push the element to the queue until a given time point.
+	 *
+	 * Similar to mq_timedsend() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/mq_send.html#
+	 *
+	 * \param [in] timePoint is the time point at which the call will be terminated without pushing the element
+	 * \param [in] priority is the priority of new element
+	 * \param [in] value is a reference to object that will be pushed, value in queue's storage is copy-constructed
+	 *
+	 * \return zero if element was pushed successfully, error code otherwise:
+	 * - error codes returned by Semaphore::tryWaitUntil();
+	 * - error codes returned by Semaphore::post();
+	 */
+
+	int tryPushUntil(const TickClock::time_point timePoint, const uint8_t priority, const T& value)
+	{
+		const synchronization::SemaphoreTryWaitUntilFunctor semaphoreTryWaitUntilFunctor {timePoint};
+		return pushInternal(semaphoreTryWaitUntilFunctor, priority, value);
 	}
 
 private:
