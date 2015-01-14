@@ -150,6 +150,21 @@ public:
 	}
 
 	/**
+	 * \brief Implementation of pop() using type-erased functor
+	 *
+	 * \param [in] waitSemaphoreFunctor is a reference to SemaphoreFunctor which will be executed with \a popSemaphore_
+	 * \param [out] priority is a reference to variable that will be used to return priority of popped value
+	 * \param [in] functor is a reference to Functor which will execute actions related to popping - it will get a
+	 * pointer to storage with element
+	 *
+	 * \return zero if element was popped successfully, error code otherwise:
+	 * - error codes returned by \a waitSemaphoreFunctor's operator() call;
+	 * - error codes returned by Semaphore::post();
+	 */
+
+	int pop(const SemaphoreFunctor& waitSemaphoreFunctor, uint8_t& priority, const Functor& functor);
+
+	/**
 	 * \brief Implementation of push() using type-erased functor
 	 *
 	 * \param [in] waitSemaphoreFunctor is a reference to SemaphoreFunctor which will be executed with \a pushSemaphore_

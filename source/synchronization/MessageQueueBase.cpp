@@ -137,6 +137,12 @@ private:
 | public functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
+int MessageQueueBase::pop(const SemaphoreFunctor& waitSemaphoreFunctor, uint8_t& priority, const Functor& functor)
+{
+	const PopInternalFunctor popInternalFunctor {priority, functor};
+	return popPush(waitSemaphoreFunctor, popInternalFunctor, popSemaphore_, pushSemaphore_);
+}
+
 int MessageQueueBase::push(const SemaphoreFunctor& waitSemaphoreFunctor, const uint8_t priority, const Functor& functor)
 {
 	const PushInternalFunctor pushInternalFunctor {priority, functor};
