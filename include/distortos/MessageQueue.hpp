@@ -460,6 +460,27 @@ public:
 		return tryPushUntil(std::chrono::time_point_cast<TickClock::duration>(timePoint), priority, value);
 	}
 
+	/**
+	 * \brief Tries to push the element to the queue until a given time point.
+	 *
+	 * Similar to mq_timedsend() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/mq_send.html#
+	 *
+	 * \param [in] timePoint is the time point at which the call will be terminated without pushing the element
+	 * \param [in] priority is the priority of new element
+	 * \param [in] value is a rvalue reference to object that will be pushed, value in queue's storage is
+	 * move-constructed
+	 *
+	 * \return zero if element was pushed successfully, error code otherwise:
+	 * - error codes returned by Semaphore::tryWaitUntil();
+	 * - error codes returned by Semaphore::post();
+	 */
+
+	int tryPushUntil(const TickClock::time_point timePoint, const uint8_t priority, T&& value)
+	{
+		const synchronization::SemaphoreTryWaitUntilFunctor semaphoreTryWaitUntilFunctor {timePoint};
+		return pushInternal(semaphoreTryWaitUntilFunctor, priority, std::move(value));
+	}
+
 private:
 
 	/**
