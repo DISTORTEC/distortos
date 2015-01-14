@@ -170,6 +170,31 @@ public:
 		return emplaceInternal(semaphoreTryWaitFunctor, priority, std::forward<Args>(args)...);
 	}
 
+	/**
+	 * \brief Tries to emplace the element in the queue for a given duration of time.
+	 *
+	 * Similar to mq_timedsend() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/mq_send.html#
+	 *
+	 * \note This function requires GCC 4.9.
+	 *
+	 * \param Args are types of arguments for constructor of T
+	 *
+	 * \param [in] duration is the duration after which the wait will be terminated without emplacing the element
+	 * \param [in] priority is the priority of new element
+	 * \param [in] args are arguments for constructor of T
+	 *
+	 * \return zero if element was emplaced successfully, error code otherwise:
+	 * - error codes returned by Semaphore::tryWaitFor();
+	 * - error codes returned by Semaphore::post();
+	 */
+
+	template<typename... Args>
+	int tryEmplaceFor(const TickClock::duration duration, const uint8_t priority, Args&&... args)
+	{
+		const synchronization::SemaphoreTryWaitForFunctor semaphoreTryWaitForFunctor {duration};
+		return emplaceInternal(semaphoreTryWaitForFunctor, priority, std::forward<Args>(args)...);
+	}
+
 #endif	// DISTORTOS_MESSAGEQUEUE_EMPLACE_SUPPORTED == 1 || DOXYGEN == 1
 
 	/**
