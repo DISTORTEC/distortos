@@ -21,6 +21,66 @@ namespace distortos
 namespace synchronization
 {
 
+namespace
+{
+
+/*---------------------------------------------------------------------------------------------------------------------+
+| local types
++---------------------------------------------------------------------------------------------------------------------*/
+
+/// PushInternalFunctor class is a MessageQueueBase::InternalFunctor used for pushing of elements to the queue
+class PushInternalFunctor : public MessageQueueBase::InternalFunctor
+{
+public:
+
+	/**
+	 * \brief PushInternalFunctor's constructor
+	 *
+	 * \param [in] priority is the priority of new element
+	 * \param [in] functor is a reference to Functor which will execute actions related to pushing - it will get a
+	 * pointer to storage for element
+	 */
+
+	constexpr PushInternalFunctor(const uint8_t priority, const MessageQueueBase::Functor& functor) :
+			functor_(functor),
+			priority_{priority}
+	{
+
+	}
+
+	/**
+	 * \brief PushInternalFunctor's function call operator
+	 *
+	 * Pops one entry from \a freeEntryList, passes the storage to \a functor_ and pushes this entry to \a entryList.
+	 *
+	 * \param [in] entryList is a reference to EntryList of MessageQueueBase
+	 * \param [in] freeEntryList is a reference to FreeEntryList of MessageQueueBase
+	 */
+
+	virtual void operator()(MessageQueueBase::EntryList& entryList, MessageQueueBase::FreeEntryList& freeEntryList)
+			const override
+	{
+		auto entry = *freeEntryList.begin();
+		freeEntryList.pop_front();
+
+		entry.priority = priority_;
+
+		functor_(entry.storage);
+
+		entryList.sortedEmplace(entry);
+	}
+
+private:
+
+	/// reference to Functor which will execute actions related to pushing
+	const MessageQueueBase::Functor& functor_;
+
+	/// priority of new element
+	const uint8_t priority_;
+};
+
+}	// namespace
+
 /*---------------------------------------------------------------------------------------------------------------------+
 | private functions
 +---------------------------------------------------------------------------------------------------------------------*/
