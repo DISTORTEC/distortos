@@ -82,6 +82,16 @@ private:
 }	// namespace
 
 /*---------------------------------------------------------------------------------------------------------------------+
+| public functions
++---------------------------------------------------------------------------------------------------------------------*/
+
+int MessageQueueBase::push(const SemaphoreFunctor& waitSemaphoreFunctor, const uint8_t priority, const Functor& functor)
+{
+	const PushInternalFunctor pushInternalFunctor {priority, functor};
+	return popPush(waitSemaphoreFunctor, pushInternalFunctor, pushSemaphore_, popSemaphore_);
+}
+
+/*---------------------------------------------------------------------------------------------------------------------+
 | private functions
 +---------------------------------------------------------------------------------------------------------------------*/
 

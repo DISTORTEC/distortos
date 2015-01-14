@@ -149,6 +149,21 @@ public:
 		}
 	}
 
+	/**
+	 * \brief Implementation of push() using type-erased functor
+	 *
+	 * \param [in] waitSemaphoreFunctor is a reference to SemaphoreFunctor which will be executed with \a pushSemaphore_
+	 * \param [in] priority is the priority of new element
+	 * \param [in] functor is a reference to Functor which will execute actions related to pushing - it will get a
+	 * pointer to storage for element
+	 *
+	 * \return zero if element was pushed successfully, error code otherwise:
+	 * - error codes returned by \a waitSemaphoreFunctor's operator() call;
+	 * - error codes returned by Semaphore::post();
+	 */
+
+	int push(const SemaphoreFunctor& waitSemaphoreFunctor, uint8_t priority, const Functor& functor);
+
 private:
 
 	/**
