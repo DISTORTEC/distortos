@@ -52,6 +52,26 @@ public:
 	}
 
 	/**
+	 * \brief Pops oldest element with highest priority from the queue.
+	 *
+	 * Similar to mq_receive() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/mq_receive.html#
+	 *
+	 * \param [out] priority is a reference to variable that will be used to return priority of popped value
+	 * \param [out] value is a reference to object that will be used to return popped value, its contents are swapped
+	 * with the value in the queue's storage and destructed when no longer needed
+	 *
+	 * \return zero if element was popped successfully, error code otherwise:
+	 * - error codes returned by Semaphore::wait();
+	 * - error codes returned by Semaphore::post();
+	 */
+
+	int pop(uint8_t& priority, T& value)
+	{
+		const synchronization::SemaphoreWaitFunctor semaphoreWaitFunctor;
+		return popInternal(semaphoreWaitFunctor, priority, value);
+	}
+
+	/**
 	 * \brief Pushes the element to the queue.
 	 *
 	 * Similar to mq_send() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/mq_send.html#
