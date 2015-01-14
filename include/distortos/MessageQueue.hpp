@@ -248,6 +248,33 @@ public:
 		return emplaceInternal(semaphoreTryWaitUntilFunctor, priority, std::forward<Args>(args)...);
 	}
 
+	/**
+	 * \brief Tries to emplace the element in the queue until a given time point.
+	 *
+	 * Template variant of FifoQueue::tryEmplaceUntil(TickClock::time_point, uint8_t, Args&&...).
+	 *
+	 * \note This function requires GCC 4.9.
+	 *
+	 * \param Duration is a std::chrono::duration type used to measure duration
+	 * \param Args are types of arguments for constructor of T
+	 *
+	 * \param [in] timePoint is the time point at which the call will be terminated without emplacing the element
+	 * \param [in] priority is the priority of new element
+	 * \param [in] args are arguments for constructor of T
+	 *
+	 * \return zero if element was emplaced successfully, error code otherwise:
+	 * - error codes returned by Semaphore::tryWaitUntil();
+	 * - error codes returned by Semaphore::post();
+	 */
+
+	template<typename Duration, typename... Args>
+	int tryEmplaceUntil(const std::chrono::time_point<TickClock, Duration> timePoint, const uint8_t priority,
+			Args&&... args)
+	{
+		return tryEmplaceUntil(std::chrono::time_point_cast<TickClock::duration>(timePoint), priority,
+				std::forward<Args>(args)...);
+	}
+
 #endif	// DISTORTOS_MESSAGEQUEUE_EMPLACE_SUPPORTED == 1 || DOXYGEN == 1
 
 	/**
