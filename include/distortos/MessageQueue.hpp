@@ -16,6 +16,7 @@
 
 #include "distortos/synchronization/MessageQueueBase.hpp"
 #include "distortos/synchronization/SemaphoreWaitFunctor.hpp"
+#include "distortos/synchronization/SemaphoreTryWaitFunctor.hpp"
 
 namespace distortos
 {
@@ -140,6 +141,25 @@ public:
 	{
 		const synchronization::SemaphoreWaitFunctor semaphoreWaitFunctor;
 		return pushInternal(semaphoreWaitFunctor, priority, std::move(value));
+	}
+
+	/**
+	 * \brief Tries to push the element to the queue.
+	 *
+	 * Similar to mq_send() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/mq_send.html#
+	 *
+	 * \param [in] priority is the priority of new element
+	 * \param [in] value is a reference to object that will be pushed, value in queue's storage is copy-constructed
+	 *
+	 * \return zero if element was pushed successfully, error code otherwise:
+	 * - error codes returned by Semaphore::tryWait();
+	 * - error codes returned by Semaphore::post();
+	 */
+
+	int tryPush(const uint8_t priority, const T& value)
+	{
+		const synchronization::SemaphoreTryWaitFunctor semaphoreTryWaitFunctor;
+		return pushInternal(semaphoreTryWaitFunctor, priority, value);
 	}
 
 private:
