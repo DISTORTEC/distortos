@@ -291,6 +291,27 @@ public:
 	}
 
 	/**
+	 * \brief Tries to pop oldest element with highest priority from the queue until a given time point.
+	 *
+	 * Similar to mq_timedreceive() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/mq_receive.html#
+	 *
+	 * \param [in] timePoint is the time point at which the call will be terminated without popping the element
+	 * \param [out] priority is a reference to variable that will be used to return priority of popped value
+	 * \param [out] value is a reference to object that will be used to return popped value, its contents are swapped
+	 * with the value in the queue's storage and destructed when no longer needed
+	 *
+	 * \return zero if element was popped successfully, error code otherwise:
+	 * - error codes returned by Semaphore::tryWaitUntil();
+	 * - error codes returned by Semaphore::post();
+	 */
+
+	int tryPopUntil(const TickClock::time_point timePoint, uint8_t& priority, T& value)
+	{
+		const synchronization::SemaphoreTryWaitUntilFunctor semaphoreTryWaitUntilFunctor {timePoint};
+		return popInternal(semaphoreTryWaitUntilFunctor, priority, value);
+	}
+
+	/**
 	 * \brief Tries to push the element to the queue.
 	 *
 	 * Similar to mq_send() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/mq_send.html#
