@@ -20,6 +20,10 @@
 namespace distortos
 {
 
+/// GCC 4.9 is needed for all MessageQueue::*emplace*() functions - earlier versions don't support parameter pack
+/// expansion in lambdas
+#define DISTORTOS_MESSAGEQUEUE_EMPLACE_SUPPORTED	__GNUC_PREREQ(4, 9)
+
 /**
  * \brief MessageQueue class is a message queue for thread-thread, thread-interrupt or interrupt-interrupt
  * communication. It supports multiple readers and multiple writers. It is implemented as a wrapper for
@@ -172,6 +176,32 @@ private:
 		return BoundedFunctor<F>{std::move(boundedFunctor)};
 	}
 
+#if DISTORTOS_MESSAGEQUEUE_EMPLACE_SUPPORTED == 1 || DOXYGEN == 1
+
+	/**
+	 * \brief Emplaces the element in the queue.
+	 *
+	 * Internal version - builds the Functor object.
+	 *
+	 * \note This function requires GCC 4.9.
+	 *
+	 * \param Args are types of arguments for constructor of T
+	 *
+	 * \param [in] waitSemaphoreFunctor is a reference to SemaphoreFunctor which will be executed with \a pushSemaphore_
+	 * \param [in] priority is the priority of new element
+	 * \param [in] args are arguments for constructor of T
+	 *
+	 * \return zero if element was emplaced successfully, error code otherwise:
+	 * - error codes returned by \a waitSemaphoreFunctor's operator() call;
+	 * - error codes returned by Semaphore::post();
+	 */
+
+	template<typename... Args>
+	int emplaceInternal(const synchronization::SemaphoreFunctor& waitSemaphoreFunctor, uint8_t priority,
+			Args&&... args);
+
+#endif	// DISTORTOS_MESSAGEQUEUE_EMPLACE_SUPPORTED == 1 || DOXYGEN == 1
+
 	/**
 	 * \brief Pops oldest element with highest priority from the queue.
 	 *
@@ -225,6 +255,23 @@ private:
 	/// contained synchronization::MessageQueueBase object which implements whole functionality
 	synchronization::MessageQueueBase messageQueueBase_;
 };
+
+#if DISTORTOS_MESSAGEQUEUE_EMPLACE_SUPPORTED == 1 || DOXYGEN == 1
+
+template<typename T>
+template<typename... Args>
+int MessageQueue<T>::emplaceInternal(const synchronization::SemaphoreFunctor& waitSemaphoreFunctor,
+		const uint8_t priority, Args&&... args)
+{
+	const auto emplaceFunctor = makeBoundedFunctor(
+			[&args...](void* const storage)
+			{
+				new (storage) T{std::forward<Args>(args)...};
+			});
+	return messageQueueBase_.push(waitSemaphoreFunctor, priority, emplaceFunctor);
+}
+
+#endif	// DISTORTOS_MESSAGEQUEUE_EMPLACE_SUPPORTED == 1 || DOXYGEN == 1
 
 template<typename T>
 int MessageQueue<T>::popInternal(const synchronization::SemaphoreFunctor& waitSemaphoreFunctor, uint8_t& priority,
