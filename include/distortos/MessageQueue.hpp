@@ -90,6 +90,26 @@ public:
 		return pushInternal(semaphoreWaitFunctor, priority, value);
 	}
 
+	/**
+	 * \brief Pushes the element to the queue.
+	 *
+	 * Similar to mq_send() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/mq_send.html#
+	 *
+	 * \param [in] priority is the priority of new element
+	 * \param [in] value is a rvalue reference to object that will be pushed, value in queue's storage is
+	 * move-constructed
+	 *
+	 * \return zero if element was pushed successfully, error code otherwise:
+	 * - error codes returned by Semaphore::wait();
+	 * - error codes returned by Semaphore::post();
+	 */
+
+	int push(const uint8_t priority, T&& value)
+	{
+		const synchronization::SemaphoreWaitFunctor semaphoreWaitFunctor;
+		return pushInternal(semaphoreWaitFunctor, priority, std::move(value));
+	}
+
 private:
 
 	/**
