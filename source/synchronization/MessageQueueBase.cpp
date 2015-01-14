@@ -28,6 +28,58 @@ namespace
 | local types
 +---------------------------------------------------------------------------------------------------------------------*/
 
+/// PopInternalFunctor class is a MessageQueueBase::InternalFunctor used for popping of elements from the queue
+class PopInternalFunctor : public MessageQueueBase::InternalFunctor
+{
+public:
+
+	/**
+	 * \brief PopInternalFunctor's constructor
+	 *
+	 * \param [out] priority is a reference to variable that will be used to return priority of popped value
+	 * \param [in] functor is a reference to Functor which will execute actions related to popping - it will get a
+	 * pointer to storage with element
+	 */
+
+	constexpr PopInternalFunctor(uint8_t& priority, const MessageQueueBase::Functor& functor) :
+			priority_(priority),
+			functor_(functor)
+	{
+
+	}
+
+	/**
+	 * \brief PushInternalFunctor's function call operator
+	 *
+	 * Pops oldest entry with highest priority from \a entryList, passes the storage to \a functor_ and pushes this (now
+	 * free) entry to \a freeEntryList.
+	 *
+	 * \param [in] entryList is a reference to EntryList of MessageQueueBase
+	 * \param [in] freeEntryList is a reference to FreeEntryList of MessageQueueBase
+	 */
+
+	virtual void operator()(MessageQueueBase::EntryList& entryList, MessageQueueBase::FreeEntryList& freeEntryList)
+			const override
+	{
+		const auto entry = *entryList.begin();
+		entryList.pop_front();
+
+		priority_ = entry.priority;
+
+		functor_(entry.storage);
+
+		freeEntryList.emplace_front(entry);
+	}
+
+private:
+
+	/// reference to variable that will be used to return priority of popped value
+	uint8_t& priority_;
+
+	/// reference to Functor which will execute actions related to popping
+	const MessageQueueBase::Functor& functor_;
+};
+
 /// PushInternalFunctor class is a MessageQueueBase::InternalFunctor used for pushing of elements to the queue
 class PushInternalFunctor : public MessageQueueBase::InternalFunctor
 {
