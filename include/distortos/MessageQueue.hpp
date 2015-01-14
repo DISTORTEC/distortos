@@ -143,6 +143,34 @@ public:
 		return pushInternal(semaphoreWaitFunctor, priority, std::move(value));
 	}
 
+#if DISTORTOS_MESSAGEQUEUE_EMPLACE_SUPPORTED == 1 || DOXYGEN == 1
+
+	/**
+	 * \brief Tries to emplace the element in the queue.
+	 *
+	 * Similar to mq_send() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/mq_send.html#
+	 *
+	 * \note This function requires GCC 4.9.
+	 *
+	 * \param Args are types of arguments for constructor of T
+	 *
+	 * \param [in] priority is the priority of new element
+	 * \param [in] args are arguments for constructor of T
+	 *
+	 * \return zero if element was emplaced successfully, error code otherwise:
+	 * - error codes returned by Semaphore::tryWait();
+	 * - error codes returned by Semaphore::post();
+	 */
+
+	template<typename... Args>
+	int tryEmplace(const uint8_t priority, Args&&... args)
+	{
+		const synchronization::SemaphoreTryWaitFunctor semaphoreTryWaitFunctor;
+		return emplaceInternal(semaphoreTryWaitFunctor, priority, std::forward<Args>(args)...);
+	}
+
+#endif	// DISTORTOS_MESSAGEQUEUE_EMPLACE_SUPPORTED == 1 || DOXYGEN == 1
+
 	/**
 	 * \brief Tries to pop oldest element with highest priority from the queue.
 	 *
