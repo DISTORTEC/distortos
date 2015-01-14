@@ -120,6 +120,16 @@ public:
 	using FreeEntryList = std::forward_list<Entry, PoolAllocator>;
 
 	/**
+	 * \brief InternalFunctor is a type-erased interface for functors which execute common code of pop() and push()
+	 * operations.
+	 *
+	 * The functor will be called by MessageQueueBase internals with references to \a entryList_ and \a freeEntryList_.
+	 * It should perform common actions and execute the Functor passed from callers.
+	 */
+
+	using InternalFunctor = estd::TypeErasedFunctor<void(EntryList&, FreeEntryList&)>;
+
+	/**
 	 * \brief MessageQueueBase's constructor
 	 *
 	 * \param T is the type of data in queue
