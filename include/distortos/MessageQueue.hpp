@@ -15,6 +15,7 @@
 #define INCLUDE_DISTORTOS_MESSAGEQUEUE_HPP_
 
 #include "distortos/synchronization/MessageQueueBase.hpp"
+#include "distortos/synchronization/SemaphoreWaitFunctor.hpp"
 
 namespace distortos
 {
@@ -48,6 +49,25 @@ public:
 			messageQueueBase_{storage, maxElements}
 	{
 
+	}
+
+	/**
+	 * \brief Pushes the element to the queue.
+	 *
+	 * Similar to mq_send() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/mq_send.html#
+	 *
+	 * \param [in] priority is the priority of new element
+	 * \param [in] value is a reference to object that will be pushed, value in queue's storage is copy-constructed
+	 *
+	 * \return zero if element was pushed successfully, error code otherwise:
+	 * - error codes returned by Semaphore::wait();
+	 * - error codes returned by Semaphore::post();
+	 */
+
+	int push(const uint8_t priority, const T& value)
+	{
+		const synchronization::SemaphoreWaitFunctor semaphoreWaitFunctor;
+		return pushInternal(semaphoreWaitFunctor, priority, value);
 	}
 
 private:
