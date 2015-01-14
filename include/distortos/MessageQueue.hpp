@@ -437,6 +437,29 @@ public:
 		return pushInternal(semaphoreTryWaitUntilFunctor, priority, value);
 	}
 
+	/**
+	 * \brief Tries to push the element to the queue until a given time point.
+	 *
+	 * Template variant of tryPushUntil(TickClock::time_point, uint8_t, const T&).
+	 *
+	 * \param Duration is a std::chrono::duration type used to measure duration
+	 *
+	 * \param [in] timePoint is the time point at which the call will be terminated without pushing the element
+	 * \param [in] priority is the priority of new element
+	 * \param [in] value is a reference to object that will be pushed, value in queue's storage is copy-constructed
+	 *
+	 * \return zero if element was pushed successfully, error code otherwise:
+	 * - error codes returned by Semaphore::tryWaitUntil();
+	 * - error codes returned by Semaphore::post();
+	 */
+
+	template<typename Duration>
+	int tryPushUntil(const std::chrono::time_point<TickClock, Duration> timePoint, const uint8_t priority,
+			const T& value)
+	{
+		return tryPushUntil(std::chrono::time_point_cast<TickClock::duration>(timePoint), priority, value);
+	}
+
 private:
 
 	/**
