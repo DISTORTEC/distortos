@@ -13,6 +13,8 @@
 
 #include "distortos/synchronization/MessageQueueBase.hpp"
 
+#include "distortos/architecture/InterruptMaskingLock.hpp"
+
 namespace distortos
 {
 
@@ -32,6 +34,20 @@ MessageQueueBase::MessageQueueBase(const size_t maxElements) :
 		freeEntryList_{poolAllocator_}
 {
 
+}
+
+int MessageQueueBase::popPush(const SemaphoreFunctor& waitSemaphoreFunctor, const InternalFunctor& internalFunctor,
+		Semaphore& waitSemaphore, Semaphore& postSemaphore)
+{
+	architecture::InterruptMaskingLock interruptMaskingLock;
+
+	const auto ret = waitSemaphoreFunctor(waitSemaphore);
+	if (ret != 0)
+		return ret;
+
+	internalFunctor(entryList_, freeEntryList_);
+
+	return postSemaphore.post();
 }
 
 }	// namespace synchronization

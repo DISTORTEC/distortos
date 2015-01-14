@@ -16,9 +16,9 @@
 
 #include "distortos/Semaphore.hpp"
 
-#include "distortos/allocators/FeedablePool.hpp"
+#include "distortos/synchronization/SemaphoreFunctor.hpp"
 
-#include "distortos/estd/TypeErasedFunctor.hpp"
+#include "distortos/allocators/FeedablePool.hpp"
 
 #include <forward_list>
 
@@ -158,6 +158,25 @@ private:
 	 */
 
 	explicit MessageQueueBase(size_t maxElements);
+
+	/**
+	 * \brief Implementation of pop() and push() using type-erased internal functor
+	 *
+	 * \param [in] waitSemaphoreFunctor is a reference to SemaphoreFunctor which will be executed with \a waitSemaphore
+	 * \param [in] internalFunctor is a reference to InternalFunctor which will execute actions related to
+	 * popping/pushing
+	 * \param [in] waitSemaphore is a reference to semaphore that will be waited for, \a popSemaphore_ for pop(), \a
+	 * pushSemaphore_ for push()
+	 * \param [in] postSemaphore is a reference to semaphore that will be posted after the operation, \a pushSemaphore_
+	 * for pop(), \a popSemaphore_ for push()
+	 *
+	 * \return zero if operation was successful, error code otherwise:
+	 * - error codes returned by \a waitSemaphoreFunctor's operator() call;
+	 * - error codes returned by Semaphore::post();
+	 */
+
+	int popPush(const SemaphoreFunctor& waitSemaphoreFunctor, const InternalFunctor& internalFunctor,
+			Semaphore& waitSemaphore, Semaphore& postSemaphore);
 
 	/// semaphore guarding access to "pop" functions - its value is equal to the number of available elements
 	Semaphore popSemaphore_;
