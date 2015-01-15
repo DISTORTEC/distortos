@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-01-14
+ * \date 2015-01-15
  */
 
 #ifndef INCLUDE_DISTORTOS_SYNCHRONIZATION_MESSAGEQUEUEBASE_HPP_
@@ -139,15 +139,7 @@ public:
 	 */
 
 	template<typename T>
-	MessageQueueBase(Storage<T>* const storage, const size_t maxElements) :
-			MessageQueueBase{maxElements}
-	{
-		for (size_t i = 0; i < maxElements; ++i)
-		{
-			pool_.feed(storage[i].entryStorage);
-			freeEntryList_.emplace_front(uint8_t{}, &storage[i].valueStorage);
-		}
-	}
+	MessageQueueBase(Storage<T>* storage, size_t maxElements);
 
 	/**
 	 * \brief Implementation of pop() using type-erased functor
@@ -226,6 +218,17 @@ private:
 	/// list of "free" entries
 	FreeEntryList freeEntryList_;
 };
+
+template<typename T>
+MessageQueueBase::MessageQueueBase(Storage<T>* const storage, const size_t maxElements) :
+		MessageQueueBase{maxElements}
+{
+	for (size_t i = 0; i < maxElements; ++i)
+	{
+		pool_.feed(storage[i].entryStorage);
+		freeEntryList_.emplace_front(uint8_t{}, &storage[i].valueStorage);
+	}
+}
 
 }	// namespace synchronization
 
