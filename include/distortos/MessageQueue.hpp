@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-01-14
+ * \date 2015-01-15
  */
 
 #ifndef INCLUDE_DISTORTOS_MESSAGEQUEUE_HPP_
@@ -54,6 +54,21 @@ public:
 
 	MessageQueue(Storage* const storage, const size_t maxElements) :
 			messageQueueBase_{storage, maxElements}
+	{
+
+	}
+
+	/**
+	 * \brief MessageQueue's constructor
+	 *
+	 * \param N is the number of elements in \a storage array
+	 *
+	 * \param [in] storage is a reference to array of Storage elements
+	 */
+
+	template<size_t N>
+	explicit MessageQueue(Storage (& storage)[N]) :
+			MessageQueue{storage, sizeof(storage) / sizeof(*storage)}
 	{
 
 	}
