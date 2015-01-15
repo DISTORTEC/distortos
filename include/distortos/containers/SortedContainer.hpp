@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-01-10
+ * \date 2015-01-15
  */
 
 #ifndef INCLUDE_DISTORTOS_CONTAINERS_SORTEDCONTAINER_HPP_
@@ -88,11 +88,15 @@ public:
 	};
 
 	/**
-	 * \brief Predicate telling whether void Container::splice(const_iterator, Container&, const_iterator) function is
-	 * present (it inherits from std::true_type in that case) or not (inherits from std::false_type).
+	 * \brief Predicate telling whether void Container::splice(iterator, Container&, iterator) function is present (it
+	 * inherits from std::true_type in that case) or not (inherits from std::false_type).
+	 *
+	 * \note Correct prototype should be <em>void Container::splice(const_iterator, Container&, const_iterator)</em>,
+	 * but libstdc++v3 used \a iterator instead of \a const_iterator until release of GCC 4.9. The prototype used below
+	 * works in any case, as \a iterator is convertible to \a const_iterator, but not the other way around.
 	 */
 
-	using HasSplice = decltype(TestHasSplice<Container, void(const_iterator, Container&, const_iterator)>::
+	using HasSplice = decltype(TestHasSplice<Container, void(iterator, Container&, iterator)>::
 			test(std::declval<Container*>()));
 
 	/**
