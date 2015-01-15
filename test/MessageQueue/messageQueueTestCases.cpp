@@ -14,6 +14,7 @@
 #include "messageQueueTestCases.hpp"
 
 #include "MessageQueuePriorityTestCase.hpp"
+#include "MessageQueueOperationsTestCase.hpp"
 
 namespace distortos
 {
@@ -34,10 +35,14 @@ const MessageQueuePriorityTestCase::Implementation priorityTestCaseImplementatio
 /// MessageQueuePriorityTestCase instance
 const MessageQueuePriorityTestCase priorityTestCase {priorityTestCaseImplementation};
 
+/// MessageQueueOperationsTestCase instance
+const MessageQueueOperationsTestCase operationsTestCase;
+
 /// array with references to TestCase objects related to message queue
 const TestCaseRange::value_type messageQueueTestCases_[]
 {
 		TestCaseRange::value_type{priorityTestCase},
+		TestCaseRange::value_type{operationsTestCase},
 };
 
 }	// namespace
