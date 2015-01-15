@@ -73,6 +73,21 @@ public:
 
 	}
 
+	/**
+	 * \brief MessageQueue's constructor
+	 *
+	 * \param N is the number of elements in \a storage array
+	 *
+	 * \param [in] storage is a reference to std::array of Storage elements
+	 */
+
+	template<size_t N>
+	explicit MessageQueue(std::array<Storage, N>& storage) :
+			MessageQueue{storage.data(), storage.size()}
+	{
+
+	}
+
 #if DISTORTOS_MESSAGEQUEUE_EMPLACE_SUPPORTED == 1 || DOXYGEN == 1
 
 	/**
