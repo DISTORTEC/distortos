@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-01-15
+ * \date 2015-01-17
  */
 
 #ifndef INCLUDE_DISTORTOS_SYNCHRONIZATION_MESSAGEQUEUEBASE_HPP_
@@ -73,6 +73,9 @@ public:
 	/// link and Entry
 	using LinkAndEntry = std::pair<void*, Entry>;
 
+	/// type of uninitialized storage for Entry with link
+	using EntryStorage = typename std::aligned_storage<sizeof(LinkAndEntry), alignof(LinkAndEntry)>::type;
+
 	/**
 	 * type of uninitialized storage for data
 	 *
@@ -83,7 +86,7 @@ public:
 	struct Storage
 	{
 		/// storage for Entry
-		typename std::aligned_storage<sizeof(LinkAndEntry), alignof(LinkAndEntry)>::type entryStorage;
+		EntryStorage entryStorage;
 
 		/// storage for value
 		typename std::aligned_storage<sizeof(T), alignof(T)>::type valueStorage;
