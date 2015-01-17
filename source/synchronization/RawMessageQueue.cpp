@@ -112,6 +112,12 @@ private:
 | public functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
+int RawMessageQueue::pop(uint8_t& priority, void* const buffer, const size_t size)
+{
+	const synchronization::SemaphoreWaitFunctor semaphoreWaitFunctor;
+	return popInternal(semaphoreWaitFunctor, priority, buffer, size);
+}
+
 int RawMessageQueue::push(const uint8_t priority, const void* const data, const size_t size)
 {
 	const synchronization::SemaphoreWaitFunctor semaphoreWaitFunctor;
