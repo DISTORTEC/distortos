@@ -28,6 +28,45 @@ namespace
 | local types
 +---------------------------------------------------------------------------------------------------------------------*/
 
+/// PopFunctor is a functor used for popping of data from the RawMessageQueue
+class PopFunctor : public synchronization::MessageQueueBase::Functor
+{
+public:
+
+	/**
+	 * \brief PopFunctor's constructor
+	 *
+	 * \param [out] buffer is a pointer to buffer for popped element
+	 * \param [in] size is the size of \a buffer, bytes
+	 */
+
+	constexpr PopFunctor(void* const buffer, const size_t size) :
+			buffer_{buffer},
+			size_{size}
+	{
+
+	}
+
+	/**
+	 * \brief Copies the data from RawMessageQueue's storage (with memcpy()).
+	 *
+	 * \param [in,out] storage is a pointer to storage for element
+	 */
+
+	virtual void operator()(void* const storage) const override
+	{
+		memcpy(buffer_, storage, size_);
+	}
+
+private:
+
+	/// pointer to buffer for popped element
+	void* const buffer_;
+
+	/// size of \a buffer_, bytes
+	const size_t size_;
+};
+
 /// PushFunctor is a functor used for pushing of data to the RawMessageQueue
 class PushFunctor : public synchronization::MessageQueueBase::Functor
 {
