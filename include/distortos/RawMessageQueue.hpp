@@ -107,6 +107,28 @@ public:
 
 	int push(uint8_t priority, const void* data, size_t size);
 
+	/**
+	 * \brief Pushes the element to the queue.
+	 *
+	 * Similar to mq_send() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/mq_send.html#
+	 *
+	 * \param T is the type of data pushed to the queue
+	 *
+	 * \param [in] priority is the priority of new element
+	 * \param [in] data is a reference to data that will be pushed to RawMessageQueue
+	 *
+	 * \return zero if element was pushed successfully, error code otherwise:
+	 * - EMSGSIZE - sizeof(T) doesn't match the \a elementSize attribute of RawMessageQueue;
+	 * - error codes returned by Semaphore::wait();
+	 * - error codes returned by Semaphore::post();
+	 */
+
+	template<typename T>
+	int push(const uint8_t priority, const T& data)
+	{
+		return push(priority, &data, sizeof(data));
+	}
+
 private:
 
 	/**
