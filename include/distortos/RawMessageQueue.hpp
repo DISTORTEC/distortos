@@ -109,6 +109,28 @@ public:
 	int pop(uint8_t& priority, void* buffer, size_t size);
 
 	/**
+	 * \brief Pops oldest element with highest priority from the queue.
+	 *
+	 * Similar to mq_receive() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/mq_receive.html#
+	 *
+	 * \param T is the type of data popped from the queue
+	 *
+	 * \param [out] priority is a reference to variable that will be used to return priority of popped value
+	 * \param [out] buffer is a reference to object that will be used to return popped value
+	 *
+	 * \return zero if element was popped successfully, error code otherwise:
+	 * - EMSGSIZE - sizeof(T) doesn't match the \a elementSize attribute of RawMessageQueue;
+	 * - error codes returned by Semaphore::wait();
+	 * - error codes returned by Semaphore::post();
+	 */
+
+	template<typename T>
+	int pop(uint8_t& priority, T& buffer)
+	{
+		return pop(priority, &buffer, sizeof(buffer));
+	}
+
+	/**
 	 * \brief Pushes the element to the queue.
 	 *
 	 * Similar to mq_send() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/mq_send.html#
