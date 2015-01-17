@@ -132,6 +132,26 @@ public:
 private:
 
 	/**
+	 * \brief Pops oldest element with highest priority from the queue.
+	 *
+	 * Internal version - builds the Functor object.
+	 *
+	 * \param [in] waitSemaphoreFunctor is a reference to SemaphoreFunctor which will be executed with \a popSemaphore_
+	 * \param [out] priority is a reference to variable that will be used to return priority of popped value
+	 * \param [out] buffer is a pointer to buffer for popped element
+	 * \param [in] size is the size of \a buffer, bytes - must be equal to the \a elementSize attribute of
+	 * RawMessageQueue
+	 *
+	 * \return zero if element was popped successfully, error code otherwise:
+	 * - EMSGSIZE - \a size doesn't match the \a elementSize attribute of RawMessageQueue;
+	 * - error codes returned by \a waitSemaphoreFunctor's operator() call;
+	 * - error codes returned by Semaphore::post();
+	 */
+
+	int popInternal(const synchronization::SemaphoreFunctor& waitSemaphoreFunctor, uint8_t& priority, void* buffer,
+			size_t size);
+
+	/**
 	 * \brief Pushes the element to the queue.
 	 *
 	 * Internal version - builds the Functor object.

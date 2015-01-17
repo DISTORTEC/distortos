@@ -122,6 +122,16 @@ int RawMessageQueue::push(const uint8_t priority, const void* const data, const 
 | private functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
+int RawMessageQueue::popInternal(const synchronization::SemaphoreFunctor& waitSemaphoreFunctor, uint8_t& priority,
+		void* const buffer, const size_t size)
+{
+	if (size != elementSize_)
+		return EMSGSIZE;
+
+	const PopFunctor popFunctor {buffer, size};
+	return messageQueueBase_.pop(waitSemaphoreFunctor, priority, popFunctor);
+}
+
 int RawMessageQueue::pushInternal(const synchronization::SemaphoreFunctor& waitSemaphoreFunctor, const uint8_t priority,
 		const void* const data, const size_t size)
 {
