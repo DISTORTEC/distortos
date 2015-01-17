@@ -72,6 +72,24 @@ public:
 
 	}
 
+	/**
+	 * \brief RawMessageQueue's constructor
+	 *
+	 * \param T is the type of data in queue
+	 * \param N is the number of elements in \a entryStorage array and \a valueStorage memory block
+	 *
+	 * \param [in] entryStorage is a reference to an std::array of \a N EntryStorage elements
+	 * \param [in] valueStorage is a reference to std::array that will be used as storage for \a N elements, each
+	 * sizeof(T) bytes long
+	 */
+
+	template<typename T, size_t N>
+	RawMessageQueue(std::array<EntryStorage, N>& entryStorage, std::array<T, N>& valueStorage) :
+			RawMessageQueue{entryStorage.data(), valueStorage.data(), sizeof(*valueStorage.data()), valueStorage.size()}
+	{
+
+	}
+
 private:
 
 	/// contained synchronization::MessageQueueBase object which implements base functionality
