@@ -14,6 +14,7 @@
 #include "distortos/RawMessageQueue.hpp"
 
 #include <cstring>
+#include <cerrno>
 
 namespace distortos
 {
@@ -65,5 +66,19 @@ private:
 };
 
 }	// namespace
+
+/*---------------------------------------------------------------------------------------------------------------------+
+| private functions
++---------------------------------------------------------------------------------------------------------------------*/
+
+int RawMessageQueue::pushInternal(const synchronization::SemaphoreFunctor& waitSemaphoreFunctor, const uint8_t priority,
+		const void* const data, const size_t size)
+{
+	if (size != elementSize_)
+		return EMSGSIZE;
+
+	const PushFunctor pushFunctor {data, size};
+	return messageQueueBase_.push(waitSemaphoreFunctor, priority, pushFunctor);
+}
 
 }	// namespace distortos

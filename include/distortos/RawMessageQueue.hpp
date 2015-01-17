@@ -92,6 +92,25 @@ public:
 
 private:
 
+	/**
+	 * \brief Pushes the element to the queue.
+	 *
+	 * Internal version - builds the Functor object.
+	 *
+	 * \param [in] waitSemaphoreFunctor is a reference to SemaphoreFunctor which will be executed with \a pushSemaphore_
+	 * \param [in] priority is the priority of new element
+	 * \param [in] data is a pointer to data that will be pushed to RawMessageQueue
+	 * \param [in] size is the size of \a data, bytes - must be equal to the \a elementSize attribute of RawMessageQueue
+	 *
+	 * \return zero if element was pushed successfully, error code otherwise:
+	 * - EMSGSIZE - \a size doesn't match the \a elementSize attribute of RawMessageQueue;
+	 * - error codes returned by \a waitSemaphoreFunctor's operator() call;
+	 * - error codes returned by Semaphore::post();
+	 */
+
+	int pushInternal(const synchronization::SemaphoreFunctor& waitSemaphoreFunctor, uint8_t priority, const void* data,
+			size_t size);
+
 	/// contained synchronization::MessageQueueBase object which implements base functionality
 	synchronization::MessageQueueBase messageQueueBase_;
 
