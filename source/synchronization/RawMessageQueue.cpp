@@ -13,6 +13,8 @@
 
 #include "distortos/RawMessageQueue.hpp"
 
+#include "distortos/synchronization/SemaphoreWaitFunctor.hpp"
+
 #include <cstring>
 #include <cerrno>
 
@@ -66,6 +68,16 @@ private:
 };
 
 }	// namespace
+
+/*---------------------------------------------------------------------------------------------------------------------+
+| public functions
++---------------------------------------------------------------------------------------------------------------------*/
+
+int RawMessageQueue::push(const uint8_t priority, const void* const data, const size_t size)
+{
+	const synchronization::SemaphoreWaitFunctor semaphoreWaitFunctor;
+	return pushInternal(semaphoreWaitFunctor, priority, data, size);
+}
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | private functions
