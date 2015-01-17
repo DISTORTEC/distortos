@@ -145,6 +145,18 @@ public:
 	MessageQueueBase(Storage<T>* storage, size_t maxElements);
 
 	/**
+	 * \brief MessageQueueBase's constructor
+	 *
+	 * \param [in] entryStorage is an array of EntryStorage elements
+	 * \param [in] valueStorage is a memory block for elements, sufficiently large for \a maxElements, each
+	 * \a elementSize bytes long
+	 * \param [in] elementSize is the size of single queue element, bytes
+	 * \param [in] maxElements is the number of elements in \a entryStorage array and valueStorage memory block
+	 */
+
+	MessageQueueBase(EntryStorage* entryStorage, void* valueStorage, size_t elementSize, size_t maxElements);
+
+	/**
 	 * \brief Implementation of pop() using type-erased functor
 	 *
 	 * \param [in] waitSemaphoreFunctor is a reference to SemaphoreFunctor which will be executed with \a popSemaphore_

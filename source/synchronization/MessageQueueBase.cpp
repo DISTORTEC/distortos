@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-01-14
+ * \date 2015-01-17
  */
 
 #include "distortos/synchronization/MessageQueueBase.hpp"
@@ -136,6 +136,17 @@ private:
 /*---------------------------------------------------------------------------------------------------------------------+
 | public functions
 +---------------------------------------------------------------------------------------------------------------------*/
+
+MessageQueueBase::MessageQueueBase(EntryStorage* const entryStorage, void* const valueStorage, const size_t elementSize,
+		const size_t maxElements) :
+		MessageQueueBase{maxElements}
+{
+	for (size_t i = 0; i < maxElements; ++i)
+	{
+		pool_.feed(entryStorage[i]);
+		freeEntryList_.emplace_front(uint8_t{}, &reinterpret_cast<uint8_t*>(valueStorage)[elementSize * i]);
+	}
+}
 
 int MessageQueueBase::pop(const SemaphoreFunctor& waitSemaphoreFunctor, uint8_t& priority, const Functor& functor)
 {
