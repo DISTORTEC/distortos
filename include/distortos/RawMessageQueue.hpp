@@ -300,6 +300,32 @@ public:
 	int tryPopUntil(TickClock::time_point timePoint, uint8_t& priority, void* buffer, size_t size);
 
 	/**
+	 * \brief Tries to pop the oldest element with highest priority from the queue until a given time point.
+	 *
+	 * Template variant of tryPopUntil(TickClock::time_point, uint8_t&, void*, size_t).
+	 *
+	 * \param Duration is a std::chrono::duration type used to measure duration
+	 *
+	 * \param [in] timePoint is the time point at which the call will be terminated without popping the element
+	 * \param [out] priority is a reference to variable that will be used to return priority of popped value
+	 * \param [out] buffer is a pointer to buffer for popped element
+	 * \param [in] size is the size of \a buffer, bytes - must be equal to the \a elementSize attribute of
+	 * RawMessageQueue
+	 *
+	 * \return zero if element was popped successfully, error code otherwise:
+	 * - EMSGSIZE - \a size doesn't match the \a elementSize attribute of RawMessageQueue;
+	 * - error codes returned by Semaphore::tryWaitUntil();
+	 * - error codes returned by Semaphore::post();
+	 */
+
+	template<typename Duration>
+	int tryPopUntil(const std::chrono::time_point<TickClock, Duration> timePoint, uint8_t& priority, void* const buffer,
+			const size_t size)
+	{
+		return tryPopUntil(std::chrono::time_point_cast<TickClock::duration>(timePoint), priority, buffer, size);
+	}
+
+	/**
 	 * \brief Tries to push the element to the queue.
 	 *
 	 * Similar to mq_send() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/mq_send.html#
