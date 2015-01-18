@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-01-09
+ * \date 2015-01-18
  */
 
 #include "RawFifoQueuePriorityTestCase.hpp"
@@ -261,7 +261,9 @@ bool RawFifoQueuePriorityTestCase::Implementation::run_() const
 
 			for (size_t i = 0; i < threads.size(); ++i)
 			{
-				std::get<2>(stage)(rawFifoQueue, i);
+				const auto triggerResult = std::get<2>(stage)(rawFifoQueue, i);
+				if (triggerResult == false)
+					result = false;
 				// 2 context switches: into" the unblocked thread and "back" to main thread when test thread terminates
 				expectedContextSwitchCount += 2;
 				if (statistics::getContextSwitchCount() - contextSwitchCount != expectedContextSwitchCount)
