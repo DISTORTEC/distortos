@@ -125,6 +125,12 @@ int RawMessageQueue::push(const uint8_t priority, const void* const data, const 
 	return pushInternal(semaphoreWaitFunctor, priority, data, size);
 }
 
+int RawMessageQueue::tryPop(uint8_t& priority, void* const buffer, const size_t size)
+{
+	const synchronization::SemaphoreTryWaitFunctor semaphoreTryWaitFunctor;
+	return popInternal(semaphoreTryWaitFunctor, priority, buffer, size);
+}
+
 int RawMessageQueue::tryPush(const uint8_t priority, const void* const data, const size_t size)
 {
 	const synchronization::SemaphoreTryWaitFunctor semaphoreTryWaitFunctor;
