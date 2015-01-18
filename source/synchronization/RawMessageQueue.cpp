@@ -15,6 +15,7 @@
 
 #include "distortos/synchronization/SemaphoreWaitFunctor.hpp"
 #include "distortos/synchronization/SemaphoreTryWaitFunctor.hpp"
+#include "distortos/synchronization/SemaphoreTryWaitForFunctor.hpp"
 
 #include <cstring>
 #include <cerrno>
@@ -135,6 +136,13 @@ int RawMessageQueue::tryPush(const uint8_t priority, const void* const data, con
 {
 	const synchronization::SemaphoreTryWaitFunctor semaphoreTryWaitFunctor;
 	return pushInternal(semaphoreTryWaitFunctor, priority, data, size);
+}
+
+int RawMessageQueue::tryPushFor(const TickClock::duration duration, const uint8_t priority, const void* const data,
+		const size_t size)
+{
+	const synchronization::SemaphoreTryWaitForFunctor semaphoreTryWaitForFunctor {duration};
+	return pushInternal(semaphoreTryWaitForFunctor, priority, data, size);
 }
 
 /*---------------------------------------------------------------------------------------------------------------------+
