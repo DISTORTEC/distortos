@@ -266,6 +266,32 @@ public:
 
 	int tryPushFor(TickClock::duration duration, uint8_t priority, const void* data, size_t size);
 
+	/**
+	 * \brief Tries to push the element to the queue for a given duration of time.
+	 *
+	 * Template variant of tryPushFor(TickClock::duration, uint8_t, const void*, size_t).
+	 *
+	 * \param Rep is type of tick counter
+	 * \param Period is std::ratio type representing the tick period of the clock, in seconds
+	 *
+	 * \param [in] duration is the duration after which the wait will be terminated without pushing the element
+	 * \param [in] priority is the priority of new element
+	 * \param [in] data is a pointer to data that will be pushed to RawMessageQueue
+	 * \param [in] size is the size of \a data, bytes - must be equal to the \a elementSize attribute of RawMessageQueue
+	 *
+	 * \return zero if element was pushed successfully, error code otherwise:
+	 * - EMSGSIZE - \a size doesn't match the \a elementSize attribute of RawMessageQueue;
+	 * - error codes returned by Semaphore::tryWaitFor();
+	 * - error codes returned by Semaphore::post();
+	 */
+
+	template<typename Rep, typename Period>
+	int tryPushFor(const std::chrono::duration<Rep, Period> duration, const uint8_t priority, const void* const data,
+			const size_t size)
+	{
+		return tryPushFor(std::chrono::duration_cast<TickClock::duration>(duration), priority, data, size);
+	}
+
 private:
 
 	/**
