@@ -210,6 +210,25 @@ public:
 	}
 
 	/**
+	 * \brief Tries to pop the oldest element with highest priority from the queue for a given duration of time.
+	 *
+	 * Similar to mq_timedreceive() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/mq_receive.html#
+	 *
+	 * \param [in] duration is the duration after which the call will be terminated without popping the element
+	 * \param [out] priority is a reference to variable that will be used to return priority of popped value
+	 * \param [out] buffer is a pointer to buffer for popped element
+	 * \param [in] size is the size of \a buffer, bytes - must be equal to the \a elementSize attribute of
+	 * RawMessageQueue
+	 *
+	 * \return zero if element was popped successfully, error code otherwise:
+	 * - EMSGSIZE - \a size doesn't match the \a elementSize attribute of RawMessageQueue;
+	 * - error codes returned by Semaphore::tryWaitFor();
+	 * - error codes returned by Semaphore::post();
+	 */
+
+	int tryPopFor(TickClock::duration duration, uint8_t& priority, void* buffer, size_t size);
+
+	/**
 	 * \brief Tries to push the element to the queue.
 	 *
 	 * Similar to mq_send() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/mq_send.html#

@@ -132,6 +132,13 @@ int RawMessageQueue::tryPop(uint8_t& priority, void* const buffer, const size_t 
 	return popInternal(semaphoreTryWaitFunctor, priority, buffer, size);
 }
 
+int RawMessageQueue::tryPopFor(const TickClock::duration duration, uint8_t& priority, void* const buffer,
+		const size_t size)
+{
+	const synchronization::SemaphoreTryWaitForFunctor semaphoreTryWaitForFunctor {duration};
+	return popInternal(semaphoreTryWaitForFunctor, priority, buffer, size);
+}
+
 int RawMessageQueue::tryPush(const uint8_t priority, const void* const data, const size_t size)
 {
 	const synchronization::SemaphoreTryWaitFunctor semaphoreTryWaitFunctor;
