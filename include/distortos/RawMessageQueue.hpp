@@ -326,6 +326,31 @@ public:
 	}
 
 	/**
+	 * \brief Tries to pop the oldest element with highest priority from the queue until a given time point.
+	 *
+	 * Similar to mq_timedreceive() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/mq_receive.html#
+	 *
+	 * \param Duration is a std::chrono::duration type used to measure duration
+	 * \param T is the type of data popped from the queue
+	 *
+	 * \param [in] timePoint is the time point at which the call will be terminated without popping the element
+	 * \param [out] priority is a reference to variable that will be used to return priority of popped value
+	 * \param [out] buffer is a reference to object that will be used to return popped value
+	 *
+	 * \return zero if element was popped successfully, error code otherwise:
+	 * - EMSGSIZE - sizeof(T) doesn't match the \a elementSize attribute of RawMessageQueue;
+	 * - error codes returned by Semaphore::tryWaitUntil();
+	 * - error codes returned by Semaphore::post();
+	 */
+
+	template<typename Duration, typename T>
+	int tryPopUntil(const std::chrono::time_point<TickClock, Duration> timePoint, uint8_t& priority, T& buffer)
+	{
+		return tryPopUntil(std::chrono::time_point_cast<TickClock::duration>(timePoint), priority, &buffer,
+				sizeof(buffer));
+	}
+
+	/**
 	 * \brief Tries to push the element to the queue.
 	 *
 	 * Similar to mq_send() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/mq_send.html#
