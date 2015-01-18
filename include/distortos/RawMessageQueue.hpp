@@ -431,6 +431,32 @@ public:
 		return tryPushUntil(std::chrono::time_point_cast<TickClock::duration>(timePoint), priority, data, size);
 	}
 
+	/**
+	 * \brief Tries to push the element to the queue until a given time point.
+	 *
+	 * Similar to mq_timedsend() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/mq_send.html#
+	 *
+	 * \param Duration is a std::chrono::duration type used to measure duration
+	 * \param T is the type of data pushed to the queue
+	 *
+	 * \param [in] timePoint is the time point at which the call will be terminated without pushing the element
+	 * \param [in] priority is the priority of new element
+	 * \param [in] data is a reference to data that will be pushed to RawMessageQueue
+	 *
+	 * \return zero if element was pushed successfully, error code otherwise:
+	 * - EMSGSIZE - sizeof(T) doesn't match the \a elementSize attribute of RawMessageQueue;
+	 * - error codes returned by Semaphore::tryWaitUntil();
+	 * - error codes returned by Semaphore::post();
+	 */
+
+	template<typename Duration, typename T>
+	int tryPushUntil(const std::chrono::time_point<TickClock, Duration> timePoint, const uint8_t priority,
+			const T& data)
+	{
+		return tryPushUntil(std::chrono::time_point_cast<TickClock::duration>(timePoint), priority, &data,
+				sizeof(data));
+	}
+
 private:
 
 	/**
