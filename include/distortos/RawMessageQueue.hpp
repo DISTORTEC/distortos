@@ -292,6 +292,31 @@ public:
 		return tryPushFor(std::chrono::duration_cast<TickClock::duration>(duration), priority, data, size);
 	}
 
+	/**
+	 * \brief Tries to push the element to the queue for a given duration of time.
+	 *
+	 * Similar to mq_timedsend() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/mq_send.html#
+	 *
+	 * \param Rep is type of tick counter
+	 * \param Period is std::ratio type representing the tick period of the clock, in seconds
+	 * \param T is the type of data pushed to the queue
+	 *
+	 * \param [in] duration is the duration after which the wait will be terminated without pushing the element
+	 * \param [in] priority is the priority of new element
+	 * \param [in] data is a reference to data that will be pushed to RawMessageQueue
+	 *
+	 * \return zero if element was pushed successfully, error code otherwise:
+	 * - EMSGSIZE - sizeof(T) doesn't match the \a elementSize attribute of RawMessageQueue;
+	 * - error codes returned by Semaphore::tryWaitFor();
+	 * - error codes returned by Semaphore::post();
+	 */
+
+	template<typename Rep, typename Period, typename T>
+	int tryPushFor(const std::chrono::duration<Rep, Period> duration, const uint8_t priority, const T& data)
+	{
+		return tryPushFor(std::chrono::duration_cast<TickClock::duration>(duration), priority, &data, sizeof(data));
+	}
+
 private:
 
 	/**
