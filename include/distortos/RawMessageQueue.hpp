@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-01-17
+ * \date 2015-01-18
  */
 
 #ifndef INCLUDE_DISTORTOS_RAWMESSAGEQUEUE_HPP_
@@ -168,6 +168,23 @@ public:
 	{
 		return push(priority, &data, sizeof(data));
 	}
+
+	/**
+	 * \brief Tries to push the element to the queue.
+	 *
+	 * Similar to mq_send() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/mq_send.html#
+	 *
+	 * \param [in] priority is the priority of new element
+	 * \param [in] data is a pointer to data that will be pushed to RawMessageQueue
+	 * \param [in] size is the size of \a data, bytes - must be equal to the \a elementSize attribute of RawMessageQueue
+	 *
+	 * \return zero if element was pushed successfully, error code otherwise:
+	 * - EMSGSIZE - \a size doesn't match the \a elementSize attribute of RawMessageQueue;
+	 * - error codes returned by Semaphore::tryWait();
+	 * - error codes returned by Semaphore::post();
+	 */
+
+	int tryPush(uint8_t priority, const void* data, size_t size);
 
 private:
 

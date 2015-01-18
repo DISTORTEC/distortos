@@ -8,12 +8,13 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-01-17
+ * \date 2015-01-18
  */
 
 #include "distortos/RawMessageQueue.hpp"
 
 #include "distortos/synchronization/SemaphoreWaitFunctor.hpp"
+#include "distortos/synchronization/SemaphoreTryWaitFunctor.hpp"
 
 #include <cstring>
 #include <cerrno>
@@ -122,6 +123,12 @@ int RawMessageQueue::push(const uint8_t priority, const void* const data, const 
 {
 	const synchronization::SemaphoreWaitFunctor semaphoreWaitFunctor;
 	return pushInternal(semaphoreWaitFunctor, priority, data, size);
+}
+
+int RawMessageQueue::tryPush(const uint8_t priority, const void* const data, const size_t size)
+{
+	const synchronization::SemaphoreTryWaitFunctor semaphoreTryWaitFunctor;
+	return pushInternal(semaphoreTryWaitFunctor, priority, data, size);
 }
 
 /*---------------------------------------------------------------------------------------------------------------------+
