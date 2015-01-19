@@ -488,6 +488,97 @@ bool phase4()
 	return true;
 }
 
+/**
+ * \brief Phase 5 of test case.
+ *
+ * Tests whether all \*push\*() and \*pop\*() functions properly return some error when given invalid size of buffer.
+ *
+ * \return true if test succeeded, false otherwise
+ */
+
+bool phase5()
+{
+	TestStaticRawFifoQueue<0> rawMessageQueue;	// size 0, so queue is both full and empty at the same time
+	const TestType constTestValue {};
+	TestType nonConstTestValue {};
+
+	{
+		// invalid size is given, so push(const void*, size_t) should fail immediately
+		waitForNextTick();
+		const auto start = TickClock::now();
+		const auto ret = rawMessageQueue.push(&constTestValue, sizeof(constTestValue) - 1);
+		if (ret != EMSGSIZE || TickClock::now() != start)
+			return false;
+	}
+
+	{
+		// invalid size is given, so tryPush(const void*, size_t) should fail immediately
+		waitForNextTick();
+		const auto start = TickClock::now();
+		const auto ret = rawMessageQueue.tryPush(&constTestValue, sizeof(constTestValue) - 1);
+		if (ret != EMSGSIZE || TickClock::now() != start)
+			return false;
+	}
+
+	{
+		// invalid size is given, so tryPushFor(..., const void*, size_t) should fail immediately
+		waitForNextTick();
+		const auto start = TickClock::now();
+		const auto ret = rawMessageQueue.tryPushFor(singleDuration, &constTestValue, sizeof(constTestValue) - 1);
+		if (ret != EMSGSIZE || TickClock::now() != start)
+			return false;
+	}
+
+	{
+		// invalid size is given, so tryPushUntil(..., const void*, size_t) should fail immediately
+		waitForNextTick();
+		const auto start = TickClock::now();
+		const auto ret = rawMessageQueue.tryPushUntil(TickClock::now() + singleDuration, &constTestValue,
+				sizeof(constTestValue) - 1);
+		if (ret != EMSGSIZE || TickClock::now() != start)
+			return false;
+	}
+
+	{
+		// invalid size is given, so pop(void*, size_t) should fail immediately
+		waitForNextTick();
+		const auto start = TickClock::now();
+		const auto ret = rawMessageQueue.pop(&nonConstTestValue, sizeof(nonConstTestValue) - 1);
+		if (ret != EMSGSIZE || TickClock::now() != start)
+			return false;
+	}
+
+	{
+		// invalid size is given, so tryPop(void*, size_t) should fail immediately
+		waitForNextTick();
+		const auto start = TickClock::now();
+		const auto ret = rawMessageQueue.tryPop(&nonConstTestValue, sizeof(nonConstTestValue) - 1);
+		if (ret != EMSGSIZE || TickClock::now() != start)
+			return false;
+	}
+
+	{
+		// invalid size is given, so tryPopFor(..., void*, size_t) should fail immediately
+		waitForNextTick();
+		const auto start = TickClock::now();
+		const auto ret = rawMessageQueue.tryPopFor(singleDuration, &nonConstTestValue, sizeof(nonConstTestValue) - 1);
+		if (ret != EMSGSIZE || TickClock::now() != start)
+			return false;
+	}
+
+	{
+		// invalid size is given, so tryPopUntil(..., void*, size_t) should fail immediately
+		waitForNextTick();
+		const auto start = TickClock::now();
+		const auto ret = rawMessageQueue.tryPopUntil(TickClock::now() + singleDuration, &nonConstTestValue,
+				sizeof(nonConstTestValue) - 1);
+		if (ret != EMSGSIZE || TickClock::now() != start)
+			return false;
+	}
+
+	return true;
+}
+
 }	// namespace
 
 /*---------------------------------------------------------------------------------------------------------------------+
@@ -503,12 +594,13 @@ bool RawFifoQueueOperationsTestCase::run_() const
 			3 * phase34SoftwareTimerContextSwitchCount;
 	constexpr auto phase4ExpectedContextSwitchCount = 4 * waitForNextTickContextSwitchCount +
 			3 * phase34SoftwareTimerContextSwitchCount;
+	constexpr auto phase5ExpectedContextSwitchCount = 8 * waitForNextTickContextSwitchCount;
 	constexpr auto expectedContextSwitchCount = phase1ExpectedContextSwitchCount + phase2ExpectedContextSwitchCount +
-			phase3ExpectedContextSwitchCount + phase4ExpectedContextSwitchCount;
+			phase3ExpectedContextSwitchCount + phase4ExpectedContextSwitchCount + phase5ExpectedContextSwitchCount;
 
 	const auto contextSwitchCount = statistics::getContextSwitchCount();
 
-	for (const auto& function : {phase1, phase2, phase3, phase4})
+	for (const auto& function : {phase1, phase2, phase3, phase4, phase5})
 	{
 		const auto ret = function();
 		if (ret != true)
