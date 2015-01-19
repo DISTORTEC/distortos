@@ -120,8 +120,7 @@ private:
 +---------------------------------------------------------------------------------------------------------------------*/
 
 RawFifoQueue::RawFifoQueue(void* const storage, const size_t elementSize, const size_t maxElements) :
-		fifoQueueBase_{storage, static_cast<uint8_t*>(storage) + elementSize * maxElements, elementSize, maxElements},
-		elementSize_{elementSize}
+		fifoQueueBase_{storage, static_cast<uint8_t*>(storage) + elementSize * maxElements, elementSize, maxElements}
 {
 
 }
@@ -181,7 +180,7 @@ int RawFifoQueue::tryPushUntil(const TickClock::time_point timePoint, const void
 int RawFifoQueue::popInternal(const synchronization::SemaphoreFunctor& waitSemaphoreFunctor, void* const buffer,
 		const size_t size)
 {
-	if (size != elementSize_)
+	if (size != fifoQueueBase_.getElementSize())
 		return EMSGSIZE;
 
 	const PopFunctor popFunctor {buffer, size};
@@ -191,7 +190,7 @@ int RawFifoQueue::popInternal(const synchronization::SemaphoreFunctor& waitSemap
 int RawFifoQueue::pushInternal(const synchronization::SemaphoreFunctor& waitSemaphoreFunctor, const void* const data,
 		const size_t size)
 {
-	if (size != elementSize_)
+	if (size != fifoQueueBase_.getElementSize())
 		return EMSGSIZE;
 
 	const PushFunctor pushFunctor {data, size};
