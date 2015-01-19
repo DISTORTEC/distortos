@@ -575,7 +575,7 @@ private:
 	 * \brief BoundedFunctor is a type-erased synchronization::QueueFunctor which calls its bounded functor to execute
 	 * actions on queue's storage
 	 *
-	 * \param F is the type of bounded functor, it will be called with <em>Storage*</em> as only argument
+	 * \param F is the type of bounded functor, it will be called with <em>void*</em> as only argument
 	 */
 
 	template<typename F>
@@ -605,8 +605,7 @@ private:
 
 		virtual void operator()(void* storage) const override
 		{
-			auto typedStorage = static_cast<Storage*>(storage);
-			boundedFunctor_(typedStorage);
+			boundedFunctor_(storage);
 		}
 
 	private:
@@ -618,7 +617,7 @@ private:
 	/**
 	 * \brief Helper factory function to make BoundedFunctor object with partially deduced template arguments
 	 *
-	 * \param F is the type of bounded functor, it will be called with <em>Storage*</em> as only argument
+	 * \param F is the type of bounded functor, it will be called with <em>void*</em> as only argument
 	 *
 	 * \param [in] boundedFunctor is a rvalue reference to bounded functor which will be used to move-construct internal
 	 * bounded functor
@@ -714,7 +713,7 @@ template<typename... Args>
 int FifoQueue<T>::emplaceInternal(const synchronization::SemaphoreFunctor& waitSemaphoreFunctor, Args&&... args)
 {
 	const auto emplaceFunctor = makeBoundedFunctor(
-			[&args...](Storage* const storage)
+			[&args...](void* const storage)
 			{
 				new (storage) T{std::forward<Args>(args)...};
 			});
@@ -727,7 +726,7 @@ template<typename T>
 int FifoQueue<T>::popInternal(const synchronization::SemaphoreFunctor& waitSemaphoreFunctor, T& value)
 {
 	const auto swapFunctor = makeBoundedFunctor(
-			[&value](Storage* const storage)
+			[&value](void* const storage)
 			{
 				auto& swappedValue = *reinterpret_cast<T*>(storage);
 				using std::swap;
@@ -741,7 +740,7 @@ template<typename T>
 int FifoQueue<T>::pushInternal(const synchronization::SemaphoreFunctor& waitSemaphoreFunctor, const T& value)
 {
 	const auto copyFunctor = makeBoundedFunctor(
-			[&value](Storage* const storage)
+			[&value](void* const storage)
 			{
 				new (storage) T{value};
 			});
@@ -752,7 +751,7 @@ template<typename T>
 int FifoQueue<T>::pushInternal(const synchronization::SemaphoreFunctor& waitSemaphoreFunctor, T&& value)
 {
 	const auto moveFunctor = makeBoundedFunctor(
-			[&value](Storage* const storage)
+			[&value](void* const storage)
 			{
 				new (storage) T{std::move(value)};
 			});
