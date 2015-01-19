@@ -14,6 +14,7 @@
 #include "distortos/RawFifoQueue.hpp"
 
 #include "distortos/synchronization/MemcpyPopQueueFunctor.hpp"
+#include "distortos/synchronization/MemcpyPushQueueFunctor.hpp"
 #include "distortos/synchronization/SemaphoreWaitFunctor.hpp"
 #include "distortos/synchronization/SemaphoreTryWaitFunctor.hpp"
 #include "distortos/synchronization/SemaphoreTryWaitForFunctor.hpp"
@@ -24,54 +25,6 @@
 
 namespace distortos
 {
-
-namespace
-{
-
-/*---------------------------------------------------------------------------------------------------------------------+
-| local types
-+---------------------------------------------------------------------------------------------------------------------*/
-
-/// PushFunctor is a functor used for pushing of data to the RawFifoQueue
-class PushFunctor : public synchronization::QueueFunctor
-{
-public:
-
-	/**
-	 * \brief PushFunctor's constructor
-	 *
-	 * \param [in] data is a pointer to data that will be pushed to RawFifoQueue
-	 * \param [in] size is the size of \a data, bytes
-	 */
-
-	constexpr PushFunctor(const void* const data, const size_t size) :
-			data_{data},
-			size_{size}
-	{
-
-	}
-
-	/**
-	 * \brief Copies the data to RawFifoQueue's storage (with memcpy()).
-	 *
-	 * \param [in,out] storage is a pointer to storage for element
-	 */
-
-	virtual void operator()(void* storage) const override
-	{
-		memcpy(storage, data_, size_);
-	}
-
-private:
-
-	/// pointer to data that will be pushed to RawFifoQueue
-	const void* const data_;
-
-	/// size of \a data_, bytes
-	const size_t size_;
-};
-
-}	// namespace
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | public functions
@@ -151,8 +104,8 @@ int RawFifoQueue::pushInternal(const synchronization::SemaphoreFunctor& waitSema
 	if (size != fifoQueueBase_.getElementSize())
 		return EMSGSIZE;
 
-	const PushFunctor pushFunctor {data, size};
-	return fifoQueueBase_.push(waitSemaphoreFunctor, pushFunctor);
+	const synchronization::MemcpyPushQueueFunctor memcpyPushQueueFunctor {data, size};
+	return fifoQueueBase_.push(waitSemaphoreFunctor, memcpyPushQueueFunctor);
 }
 
 }	// namespace distortos
