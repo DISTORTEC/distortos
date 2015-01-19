@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-01-12
+ * \date 2015-01-19
  */
 
 #include "distortos/RawFifoQueue.hpp"
@@ -120,7 +120,7 @@ private:
 +---------------------------------------------------------------------------------------------------------------------*/
 
 RawFifoQueue::RawFifoQueue(void* const storage, const size_t elementSize, const size_t maxElements) :
-		fifoQueueBase_{storage, static_cast<uint8_t*>(storage) + elementSize * maxElements, maxElements},
+		fifoQueueBase_{storage, static_cast<uint8_t*>(storage) + elementSize * maxElements, elementSize, maxElements},
 		elementSize_{elementSize}
 {
 

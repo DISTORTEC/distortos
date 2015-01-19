@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-01-12
+ * \date 2015-01-19
  */
 
 #ifndef INCLUDE_DISTORTOS_SYNCHRONIZATION_FIFOQUEUEBASE_HPP_
@@ -45,10 +45,11 @@ public:
 	 *
 	 * \param [in] storageBegin is the beginning of storage for queue elements
 	 * \param [in] storageEnd is the pointer to past-the-last element of storage for queue elements
+	 * \param [in] elementSize is the size of single queue element, bytes
 	 * \param [in] maxElements is the number of elements in storage
 	 */
 
-	FifoQueueBase(void* storageBegin, const void* storageEnd, size_t maxElements);
+	FifoQueueBase(void* storageBegin, const void* storageEnd, size_t elementSize, size_t maxElements);
 
 	/**
 	 * \brief Implementation of pop() using type-erased functor
@@ -124,6 +125,9 @@ private:
 
 	/// pointer to first free slot available for writing
 	void* writePosition_;
+
+	/// size of single queue element, bytes
+	const size_t elementSize_;
 };
 
 }	// namespace synchronization
