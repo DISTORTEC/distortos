@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-01-18
+ * \date 2015-01-19
  */
 
 #include "distortos/RawMessageQueue.hpp"
@@ -32,7 +32,7 @@ namespace
 +---------------------------------------------------------------------------------------------------------------------*/
 
 /// PopFunctor is a functor used for popping of data from the RawMessageQueue
-class PopFunctor : public synchronization::MessageQueueBase::Functor
+class PopFunctor : public synchronization::QueueFunctor
 {
 public:
 
@@ -71,7 +71,7 @@ private:
 };
 
 /// PushFunctor is a functor used for pushing of data to the RawMessageQueue
-class PushFunctor : public synchronization::MessageQueueBase::Functor
+class PushFunctor : public synchronization::QueueFunctor
 {
 public:
 

@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-01-17
+ * \date 2015-01-19
  */
 
 #ifndef INCLUDE_DISTORTOS_SYNCHRONIZATION_MESSAGEQUEUEBASE_HPP_
@@ -16,6 +16,7 @@
 
 #include "distortos/Semaphore.hpp"
 
+#include "distortos/synchronization/QueueFunctor.hpp"
 #include "distortos/synchronization/SemaphoreFunctor.hpp"
 
 #include "distortos/allocators/FeedablePool.hpp"
@@ -59,16 +60,6 @@ public:
 		/// storage for the entry
 		void* storage;
 	};
-
-	/**
-	 * \brief Functor is a type-erased interface for functors which execute some action on queue's storage (like
-	 * copy-constructing, swapping, destroying, emplacing, ...).
-	 *
-	 * The functor will be called by MessageQueueBase internals with one argument - \a storage - which is a pointer to
-	 * storage with/for element.
-	 */
-
-	using Functor = estd::TypeErasedFunctor<void(void*)>;
 
 	/// link and Entry
 	using LinkAndEntry = std::pair<void*, Entry>;
@@ -127,7 +118,7 @@ public:
 	 * operations.
 	 *
 	 * The functor will be called by MessageQueueBase internals with references to \a entryList_ and \a freeEntryList_.
-	 * It should perform common actions and execute the Functor passed from callers.
+	 * It should perform common actions and execute the QueueFunctor passed from callers.
 	 */
 
 	using InternalFunctor = estd::TypeErasedFunctor<void(EntryList&, FreeEntryList&)>;
@@ -161,7 +152,7 @@ public:
 	 *
 	 * \param [in] waitSemaphoreFunctor is a reference to SemaphoreFunctor which will be executed with \a popSemaphore_
 	 * \param [out] priority is a reference to variable that will be used to return priority of popped value
-	 * \param [in] functor is a reference to Functor which will execute actions related to popping - it will get a
+	 * \param [in] functor is a reference to QueueFunctor which will execute actions related to popping - it will get a
 	 * pointer to storage with element
 	 *
 	 * \return zero if element was popped successfully, error code otherwise:
@@ -169,14 +160,14 @@ public:
 	 * - error codes returned by Semaphore::post();
 	 */
 
-	int pop(const SemaphoreFunctor& waitSemaphoreFunctor, uint8_t& priority, const Functor& functor);
+	int pop(const SemaphoreFunctor& waitSemaphoreFunctor, uint8_t& priority, const QueueFunctor& functor);
 
 	/**
 	 * \brief Implementation of push() using type-erased functor
 	 *
 	 * \param [in] waitSemaphoreFunctor is a reference to SemaphoreFunctor which will be executed with \a pushSemaphore_
 	 * \param [in] priority is the priority of new element
-	 * \param [in] functor is a reference to Functor which will execute actions related to pushing - it will get a
+	 * \param [in] functor is a reference to QueueFunctor which will execute actions related to pushing - it will get a
 	 * pointer to storage for element
 	 *
 	 * \return zero if element was pushed successfully, error code otherwise:
@@ -184,7 +175,7 @@ public:
 	 * - error codes returned by Semaphore::post();
 	 */
 
-	int push(const SemaphoreFunctor& waitSemaphoreFunctor, uint8_t priority, const Functor& functor);
+	int push(const SemaphoreFunctor& waitSemaphoreFunctor, uint8_t priority, const QueueFunctor& functor);
 
 private:
 

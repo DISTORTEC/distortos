@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-01-15
+ * \date 2015-01-19
  */
 
 #ifndef INCLUDE_DISTORTOS_MESSAGEQUEUE_HPP_
@@ -633,14 +633,14 @@ public:
 private:
 
 	/**
-	 * \brief BoundedFunctor is a type-erased synchronization::MessageQueueBase::Functor which calls its bounded functor
-	 * to execute actions on queue's storage
+	 * \brief BoundedFunctor is a type-erased synchronization::QueueFunctor which calls its bounded functor to execute
+	 * actions on queue's storage
 	 *
 	 * \param F is the type of bounded functor, it will be called with <em>void*</em> as only argument
 	 */
 
 	template<typename F>
-	class BoundedFunctor : public synchronization::MessageQueueBase::Functor
+	class BoundedFunctor : public synchronization::QueueFunctor
 	{
 	public:
 
