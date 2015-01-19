@@ -573,7 +573,7 @@ private:
 
 	/**
 	 * \brief BoundedFunctor is a type-erased synchronization::FifoQueueBase::Functor which calls its bounded functor to
-	 * execute actions on queue's storage and deals with the pointer increments
+	 * execute actions on queue's storage
 	 *
 	 * \param F is the type of bounded functor, it will be called with <em>Storage*</em> as only argument
 	 */
@@ -598,18 +598,15 @@ private:
 
 		/**
 		 * \brief Calls the bounded functor which will execute some action on queue's storage (like copy-constructing,
-		 * swapping, destroying, emplacing, ...) and increments the storage pointer to next position (using the actual
-		 * size of element)
+		 * swapping, destroying, emplacing, ...)
 		 *
-		 * \param [in,out] storage is a reference to pointer to queue's storage - after executing bounded functor, the
-		 * pointer will be incremented to next position (using the actual size of element)
+		 * \param [in,out] storage is a pointer to storage with/for element
 		 */
 
-		virtual void operator()(void*& storage) const override
+		virtual void operator()(void* storage) const override
 		{
 			auto typedStorage = static_cast<Storage*>(storage);
 			boundedFunctor_(typedStorage);
-			storage = typedStorage + 1;
 		}
 
 	private:

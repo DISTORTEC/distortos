@@ -53,6 +53,7 @@ int FifoQueueBase::popPush(const SemaphoreFunctor& waitSemaphoreFunctor, const F
 
 	functor(storage);
 
+	storage = static_cast<uint8_t*>(storage) + elementSize_;
 	if (storage >= storageEnd_)
 		storage = storageBegin_;
 

@@ -33,12 +33,11 @@ public:
 	 * \brief Functor is a type-erased interface for functors which execute some action on queue's storage (like
 	 * copy-constructing, swapping, destroying, emplacing, ...).
 	 *
-	 * The functor will be called by FifoQueueBase internals with one argument - \a storage - which is a reference to
-	 * pointer to queue's storage - after executing functor's action, the pointer should be incremented to next position
-	 * (using the actual size of element)
+	 * The functor will be called by FifoQueueBase internals with one argument - \a storage - which is a pointer to
+	 * storage with/for element
 	 */
 
-	using Functor = estd::TypeErasedFunctor<void(void*&)>;
+	using Functor = estd::TypeErasedFunctor<void(void*)>;
 
 	/**
 	 * \brief FifoQueueBase's constructor
@@ -64,8 +63,8 @@ public:
 	 * \brief Implementation of pop() using type-erased functor
 	 *
 	 * \param [in] waitSemaphoreFunctor is a reference to SemaphoreFunctor which will be executed with \a popSemaphore_
-	 * \param [in] functor is a reference to Functor which will execute actions related to popping - it will get a
-	 * reference to readPosition_ as argument
+	 * \param [in] functor is a reference to Functor which will execute actions related to popping - it will get
+	 * readPosition_ as argument
 	 *
 	 * \return zero if element was popped successfully, error code otherwise:
 	 * - error codes returned by \a waitSemaphoreFunctor's operator() call;
@@ -81,8 +80,8 @@ public:
 	 * \brief Implementation of push() using type-erased functor
 	 *
 	 * \param [in] waitSemaphoreFunctor is a reference to SemaphoreFunctor which will be executed with \a pushSemaphore_
-	 * \param [in] functor is a reference to Functor which will execute actions related to pushing - it will get a
-	 * reference to writePosition_ as argument
+	 * \param [in] functor is a reference to Functor which will execute actions related to pushing - it will get
+	 * writePosition_ as argument
 	 *
 	 * \return zero if element was pushed successfully, error code otherwise:
 	 * - error codes returned by \a waitSemaphoreFunctor's operator() call;
@@ -101,7 +100,7 @@ private:
 	 *
 	 * \param [in] waitSemaphoreFunctor is a reference to SemaphoreFunctor which will be executed with \a waitSemaphore
 	 * \param [in] functor is a reference to Functor which will execute actions related to popping/pushing - it will get
-	 * a reference to \a storage as argument
+	 * \a storage as argument
 	 * \param [in] waitSemaphore is a reference to semaphore that will be waited for, \a popSemaphore_ for pop(), \a
 	 * pushSemaphore_ for push()
 	 * \param [in] postSemaphore is a reference to semaphore that will be posted after the operation, \a pushSemaphore_

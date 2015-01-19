@@ -51,16 +51,14 @@ public:
 	}
 
 	/**
-	 * \brief Copies the data from RawFifoQueue's storage (with memcpy()) and increments the storage pointer to next
-	 * position (using the size of element).
+	 * \brief Copies the data from RawFifoQueue's storage (with memcpy()).
 	 *
-	 * \param [in,out] storage is a reference to pointer to queue's storage
+	 * \param [in,out] storage is a pointer to storage for element
 	 */
 
-	virtual void operator()(void*& storage) const override
+	virtual void operator()(void* storage) const override
 	{
 		memcpy(buffer_, storage, size_);
-		storage = static_cast<uint8_t*>(storage) + size_;
 	}
 
 private:
@@ -92,16 +90,14 @@ public:
 	}
 
 	/**
-	 * \brief Copies the data to RawFifoQueue's storage (with memcpy()) and increments the storage pointer to next
-	 * position (using the size of element).
+	 * \brief Copies the data to RawFifoQueue's storage (with memcpy()).
 	 *
-	 * \param [in,out] storage is a reference to pointer to queue's storage
+	 * \param [in,out] storage is a pointer to storage for element
 	 */
 
-	virtual void operator()(void*& storage) const override
+	virtual void operator()(void* storage) const override
 	{
 		memcpy(storage, data_, size_);
-		storage = static_cast<uint8_t*>(storage) + size_;
 	}
 
 private:
