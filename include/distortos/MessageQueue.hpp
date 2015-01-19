@@ -16,6 +16,7 @@
 
 #include "distortos/synchronization/MessageQueueBase.hpp"
 #include "distortos/synchronization/CopyConstructQueueFunctor.hpp"
+#include "distortos/synchronization/MoveConstructQueueFunctor.hpp"
 #include "distortos/synchronization/SemaphoreWaitFunctor.hpp"
 #include "distortos/synchronization/SemaphoreTryWaitFunctor.hpp"
 #include "distortos/synchronization/SemaphoreTryWaitForFunctor.hpp"
@@ -817,12 +818,8 @@ template<typename T>
 int MessageQueue<T>::pushInternal(const synchronization::SemaphoreFunctor& waitSemaphoreFunctor, const uint8_t priority,
 		T&& value)
 {
-	const auto moveFunctor = makeBoundedFunctor(
-			[&value](void* const storage)
-			{
-				new (storage) T{std::move(value)};
-			});
-	return messageQueueBase_.push(waitSemaphoreFunctor, priority, moveFunctor);
+	const synchronization::MoveConstructQueueFunctor<T> moveConstructQueueFunctor {std::move(value)};
+	return messageQueueBase_.push(waitSemaphoreFunctor, priority, moveConstructQueueFunctor);
 }
 
 }	// namespace distortos
