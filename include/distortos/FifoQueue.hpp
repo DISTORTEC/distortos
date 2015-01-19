@@ -17,6 +17,7 @@
 #include "distortos/synchronization/FifoQueueBase.hpp"
 #include "distortos/synchronization/CopyConstructQueueFunctor.hpp"
 #include "distortos/synchronization/MoveConstructQueueFunctor.hpp"
+#include "distortos/synchronization/SwapPopQueueFunctor.hpp"
 #include "distortos/synchronization/SemaphoreWaitFunctor.hpp"
 #include "distortos/synchronization/SemaphoreTryWaitFunctor.hpp"
 #include "distortos/synchronization/SemaphoreTryWaitForFunctor.hpp"
@@ -727,15 +728,8 @@ int FifoQueue<T>::emplaceInternal(const synchronization::SemaphoreFunctor& waitS
 template<typename T>
 int FifoQueue<T>::popInternal(const synchronization::SemaphoreFunctor& waitSemaphoreFunctor, T& value)
 {
-	const auto swapFunctor = makeBoundedFunctor(
-			[&value](void* const storage)
-			{
-				auto& swappedValue = *reinterpret_cast<T*>(storage);
-				using std::swap;
-				swap(value, swappedValue);
-				swappedValue.~T();
-			});
-	return fifoQueueBase_.pop(waitSemaphoreFunctor, swapFunctor);
+	const synchronization::SwapPopQueueFunctor<T> swapPopQueueFunctor {value};
+	return fifoQueueBase_.pop(waitSemaphoreFunctor, swapPopQueueFunctor);
 }
 
 template<typename T>
