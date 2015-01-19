@@ -14,6 +14,7 @@
 #include "distortos/RawMessageQueue.hpp"
 
 #include "distortos/synchronization/MemcpyPopQueueFunctor.hpp"
+#include "distortos/synchronization/MemcpyPushQueueFunctor.hpp"
 #include "distortos/synchronization/SemaphoreWaitFunctor.hpp"
 #include "distortos/synchronization/SemaphoreTryWaitFunctor.hpp"
 #include "distortos/synchronization/SemaphoreTryWaitForFunctor.hpp"
@@ -24,54 +25,6 @@
 
 namespace distortos
 {
-
-namespace
-{
-
-/*---------------------------------------------------------------------------------------------------------------------+
-| local types
-+---------------------------------------------------------------------------------------------------------------------*/
-
-/// PushFunctor is a functor used for pushing of data to the RawMessageQueue
-class PushFunctor : public synchronization::QueueFunctor
-{
-public:
-
-	/**
-	 * \brief PushFunctor's constructor
-	 *
-	 * \param [in] data is a pointer to data that will be pushed to RawMessageQueue
-	 * \param [in] size is the size of \a data, bytes
-	 */
-
-	constexpr PushFunctor(const void* const data, const size_t size) :
-			data_{data},
-			size_{size}
-	{
-
-	}
-
-	/**
-	 * \brief Copies the data to RawMessageQueue's storage (with memcpy()).
-	 *
-	 * \param [in,out] storage is a pointer to storage for element
-	 */
-
-	virtual void operator()(void* const storage) const override
-	{
-		memcpy(storage, data_, size_);
-	}
-
-private:
-
-	/// pointer to data that will be pushed to RawMessageQueue
-	const void* const data_;
-
-	/// size of \a data_, bytes
-	const size_t size_;
-};
-
-}	// namespace
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | public functions
@@ -149,8 +102,8 @@ int RawMessageQueue::pushInternal(const synchronization::SemaphoreFunctor& waitS
 	if (size != elementSize_)
 		return EMSGSIZE;
 
-	const PushFunctor pushFunctor {data, size};
-	return messageQueueBase_.push(waitSemaphoreFunctor, priority, pushFunctor);
+	const synchronization::MemcpyPushQueueFunctor memcpyPushQueueFunctor {data, size};
+	return messageQueueBase_.push(waitSemaphoreFunctor, priority, memcpyPushQueueFunctor);
 }
 
 }	// namespace distortos
