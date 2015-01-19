@@ -17,6 +17,7 @@
 #include "distortos/synchronization/MessageQueueBase.hpp"
 #include "distortos/synchronization/CopyConstructQueueFunctor.hpp"
 #include "distortos/synchronization/MoveConstructQueueFunctor.hpp"
+#include "distortos/synchronization/SwapPopQueueFunctor.hpp"
 #include "distortos/synchronization/SemaphoreWaitFunctor.hpp"
 #include "distortos/synchronization/SemaphoreTryWaitFunctor.hpp"
 #include "distortos/synchronization/SemaphoreTryWaitForFunctor.hpp"
@@ -795,15 +796,8 @@ template<typename T>
 int MessageQueue<T>::popInternal(const synchronization::SemaphoreFunctor& waitSemaphoreFunctor, uint8_t& priority,
 		T& value)
 {
-	const auto swapFunctor = makeBoundedFunctor(
-			[&value](void* const storage)
-			{
-				auto& swappedValue = *reinterpret_cast<T*>(storage);
-				using std::swap;
-				swap(value, swappedValue);
-				swappedValue.~T();
-			});
-	return messageQueueBase_.pop(waitSemaphoreFunctor, priority, swapFunctor);
+	const synchronization::SwapPopQueueFunctor<T> swapPopQueueFunctor {value};
+	return messageQueueBase_.pop(waitSemaphoreFunctor, priority, swapPopQueueFunctor);
 }
 
 template<typename T>
