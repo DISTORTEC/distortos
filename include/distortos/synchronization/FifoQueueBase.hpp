@@ -52,6 +52,15 @@ public:
 	FifoQueueBase(void* storageBegin, const void* storageEnd, size_t elementSize, size_t maxElements);
 
 	/**
+	 * \return size of single queue element, bytes
+	 */
+
+	size_t getElementSize() const
+	{
+		return elementSize_;
+	}
+
+	/**
 	 * \brief Implementation of pop() using type-erased functor
 	 *
 	 * \param [in] waitSemaphoreFunctor is a reference to SemaphoreFunctor which will be executed with \a popSemaphore_
