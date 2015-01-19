@@ -13,6 +13,7 @@
 
 #include "distortos/RawMessageQueue.hpp"
 
+#include "distortos/synchronization/MemcpyPopQueueFunctor.hpp"
 #include "distortos/synchronization/SemaphoreWaitFunctor.hpp"
 #include "distortos/synchronization/SemaphoreTryWaitFunctor.hpp"
 #include "distortos/synchronization/SemaphoreTryWaitForFunctor.hpp"
@@ -30,45 +31,6 @@ namespace
 /*---------------------------------------------------------------------------------------------------------------------+
 | local types
 +---------------------------------------------------------------------------------------------------------------------*/
-
-/// PopFunctor is a functor used for popping of data from the RawMessageQueue
-class PopFunctor : public synchronization::QueueFunctor
-{
-public:
-
-	/**
-	 * \brief PopFunctor's constructor
-	 *
-	 * \param [out] buffer is a pointer to buffer for popped element
-	 * \param [in] size is the size of \a buffer, bytes
-	 */
-
-	constexpr PopFunctor(void* const buffer, const size_t size) :
-			buffer_{buffer},
-			size_{size}
-	{
-
-	}
-
-	/**
-	 * \brief Copies the data from RawMessageQueue's storage (with memcpy()).
-	 *
-	 * \param [in,out] storage is a pointer to storage for element
-	 */
-
-	virtual void operator()(void* const storage) const override
-	{
-		memcpy(buffer_, storage, size_);
-	}
-
-private:
-
-	/// pointer to buffer for popped element
-	void* const buffer_;
-
-	/// size of \a buffer_, bytes
-	const size_t size_;
-};
 
 /// PushFunctor is a functor used for pushing of data to the RawMessageQueue
 class PushFunctor : public synchronization::QueueFunctor
@@ -177,8 +139,8 @@ int RawMessageQueue::popInternal(const synchronization::SemaphoreFunctor& waitSe
 	if (size != elementSize_)
 		return EMSGSIZE;
 
-	const PopFunctor popFunctor {buffer, size};
-	return messageQueueBase_.pop(waitSemaphoreFunctor, priority, popFunctor);
+	const synchronization::MemcpyPopQueueFunctor memcpyPopQueueFunctor {buffer, size};
+	return messageQueueBase_.pop(waitSemaphoreFunctor, priority, memcpyPopQueueFunctor);
 }
 
 int RawMessageQueue::pushInternal(const synchronization::SemaphoreFunctor& waitSemaphoreFunctor, const uint8_t priority,
