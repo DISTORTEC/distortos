@@ -13,6 +13,7 @@
 
 #include "distortos/RawFifoQueue.hpp"
 
+#include "distortos/synchronization/MemcpyPopQueueFunctor.hpp"
 #include "distortos/synchronization/SemaphoreWaitFunctor.hpp"
 #include "distortos/synchronization/SemaphoreTryWaitFunctor.hpp"
 #include "distortos/synchronization/SemaphoreTryWaitForFunctor.hpp"
@@ -30,45 +31,6 @@ namespace
 /*---------------------------------------------------------------------------------------------------------------------+
 | local types
 +---------------------------------------------------------------------------------------------------------------------*/
-
-/// PopFunctor is a functor used for popping of data from the RawFifoQueue
-class PopFunctor : public synchronization::QueueFunctor
-{
-public:
-
-	/**
-	 * \brief PopFunctor's constructor
-	 *
-	 * \param [out] buffer is a pointer to buffer for popped element
-	 * \param [in] size is the size of \a buffer, bytes
-	 */
-
-	constexpr PopFunctor(void* const buffer, const size_t size) :
-			buffer_{buffer},
-			size_{size}
-	{
-
-	}
-
-	/**
-	 * \brief Copies the data from RawFifoQueue's storage (with memcpy()).
-	 *
-	 * \param [in,out] storage is a pointer to storage for element
-	 */
-
-	virtual void operator()(void* storage) const override
-	{
-		memcpy(buffer_, storage, size_);
-	}
-
-private:
-
-	/// pointer to buffer for popped element
-	void* const buffer_;
-
-	/// size of \a buffer_, bytes
-	const size_t size_;
-};
 
 /// PushFunctor is a functor used for pushing of data to the RawFifoQueue
 class PushFunctor : public synchronization::QueueFunctor
@@ -179,8 +141,8 @@ int RawFifoQueue::popInternal(const synchronization::SemaphoreFunctor& waitSemap
 	if (size != fifoQueueBase_.getElementSize())
 		return EMSGSIZE;
 
-	const PopFunctor popFunctor {buffer, size};
-	return fifoQueueBase_.pop(waitSemaphoreFunctor, popFunctor);
+	const synchronization::MemcpyPopQueueFunctor memcpyPopQueueFunctor {buffer, size};
+	return fifoQueueBase_.pop(waitSemaphoreFunctor, memcpyPopQueueFunctor);
 }
 
 int RawFifoQueue::pushInternal(const synchronization::SemaphoreFunctor& waitSemaphoreFunctor, const void* const data,
