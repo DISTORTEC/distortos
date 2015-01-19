@@ -15,6 +15,7 @@
 #define INCLUDE_DISTORTOS_FIFOQUEUE_HPP_
 
 #include "distortos/synchronization/FifoQueueBase.hpp"
+#include "distortos/synchronization/CopyConstructQueueFunctor.hpp"
 #include "distortos/synchronization/SemaphoreWaitFunctor.hpp"
 #include "distortos/synchronization/SemaphoreTryWaitFunctor.hpp"
 #include "distortos/synchronization/SemaphoreTryWaitForFunctor.hpp"
@@ -739,12 +740,8 @@ int FifoQueue<T>::popInternal(const synchronization::SemaphoreFunctor& waitSemap
 template<typename T>
 int FifoQueue<T>::pushInternal(const synchronization::SemaphoreFunctor& waitSemaphoreFunctor, const T& value)
 {
-	const auto copyFunctor = makeBoundedFunctor(
-			[&value](void* const storage)
-			{
-				new (storage) T{value};
-			});
-	return fifoQueueBase_.push(waitSemaphoreFunctor, copyFunctor);
+	const synchronization::CopyConstructQueueFunctor<T> copyConstructQueueFunctor {value};
+	return fifoQueueBase_.push(waitSemaphoreFunctor, copyConstructQueueFunctor);
 }
 
 template<typename T>
