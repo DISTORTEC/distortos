@@ -572,14 +572,14 @@ public:
 private:
 
 	/**
-	 * \brief BoundedFunctor is a type-erased synchronization::FifoQueueBase::Functor which calls its bounded functor to
-	 * execute actions on queue's storage
+	 * \brief BoundedFunctor is a type-erased synchronization::QueueFunctor which calls its bounded functor to execute
+	 * actions on queue's storage
 	 *
 	 * \param F is the type of bounded functor, it will be called with <em>Storage*</em> as only argument
 	 */
 
 	template<typename F>
-	class BoundedFunctor : public synchronization::FifoQueueBase::Functor
+	class BoundedFunctor : public synchronization::QueueFunctor
 	{
 	public:
 

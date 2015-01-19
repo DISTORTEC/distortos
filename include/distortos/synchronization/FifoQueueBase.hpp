@@ -16,6 +16,7 @@
 
 #include "distortos/Semaphore.hpp"
 
+#include "distortos/synchronization/QueueFunctor.hpp"
 #include "distortos/synchronization/SemaphoreFunctor.hpp"
 
 namespace distortos
@@ -28,16 +29,6 @@ namespace synchronization
 class FifoQueueBase
 {
 public:
-
-	/**
-	 * \brief Functor is a type-erased interface for functors which execute some action on queue's storage (like
-	 * copy-constructing, swapping, destroying, emplacing, ...).
-	 *
-	 * The functor will be called by FifoQueueBase internals with one argument - \a storage - which is a pointer to
-	 * storage with/for element
-	 */
-
-	using Functor = estd::TypeErasedFunctor<void(void*)>;
 
 	/**
 	 * \brief FifoQueueBase's constructor
@@ -63,7 +54,7 @@ public:
 	 * \brief Implementation of pop() using type-erased functor
 	 *
 	 * \param [in] waitSemaphoreFunctor is a reference to SemaphoreFunctor which will be executed with \a popSemaphore_
-	 * \param [in] functor is a reference to Functor which will execute actions related to popping - it will get
+	 * \param [in] functor is a reference to QueueFunctor which will execute actions related to popping - it will get
 	 * readPosition_ as argument
 	 *
 	 * \return zero if element was popped successfully, error code otherwise:
@@ -71,7 +62,7 @@ public:
 	 * - error codes returned by Semaphore::post();
 	 */
 
-	int pop(const SemaphoreFunctor& waitSemaphoreFunctor, const Functor& functor)
+	int pop(const SemaphoreFunctor& waitSemaphoreFunctor, const QueueFunctor& functor)
 	{
 		return popPush(waitSemaphoreFunctor, functor, popSemaphore_, pushSemaphore_, readPosition_);
 	}
@@ -80,7 +71,7 @@ public:
 	 * \brief Implementation of push() using type-erased functor
 	 *
 	 * \param [in] waitSemaphoreFunctor is a reference to SemaphoreFunctor which will be executed with \a pushSemaphore_
-	 * \param [in] functor is a reference to Functor which will execute actions related to pushing - it will get
+	 * \param [in] functor is a reference to QueueFunctor which will execute actions related to pushing - it will get
 	 * writePosition_ as argument
 	 *
 	 * \return zero if element was pushed successfully, error code otherwise:
@@ -88,7 +79,7 @@ public:
 	 * - error codes returned by Semaphore::post();
 	 */
 
-	int push(const SemaphoreFunctor& waitSemaphoreFunctor, const Functor& functor)
+	int push(const SemaphoreFunctor& waitSemaphoreFunctor, const QueueFunctor& functor)
 	{
 		return popPush(waitSemaphoreFunctor, functor, pushSemaphore_, popSemaphore_, writePosition_);
 	}
@@ -99,8 +90,8 @@ private:
 	 * \brief Implementation of pop() and push() using type-erased functor
 	 *
 	 * \param [in] waitSemaphoreFunctor is a reference to SemaphoreFunctor which will be executed with \a waitSemaphore
-	 * \param [in] functor is a reference to Functor which will execute actions related to popping/pushing - it will get
-	 * \a storage as argument
+	 * \param [in] functor is a reference to QueueFunctor which will execute actions related to popping/pushing - it
+	 * will get \a storage as argument
 	 * \param [in] waitSemaphore is a reference to semaphore that will be waited for, \a popSemaphore_ for pop(), \a
 	 * pushSemaphore_ for push()
 	 * \param [in] postSemaphore is a reference to semaphore that will be posted after the operation, \a pushSemaphore_
@@ -113,7 +104,7 @@ private:
 	 * - error codes returned by Semaphore::post();
 	 */
 
-	int popPush(const SemaphoreFunctor& waitSemaphoreFunctor, const Functor& functor, Semaphore& waitSemaphore,
+	int popPush(const SemaphoreFunctor& waitSemaphoreFunctor, const QueueFunctor& functor, Semaphore& waitSemaphore,
 			Semaphore& postSemaphore, void*& storage);
 
 	/// semaphore guarding access to "pop" functions - its value is equal to the number of available elements

@@ -42,7 +42,7 @@ FifoQueueBase::FifoQueueBase(void* const storageBegin, const void* const storage
 | private functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-int FifoQueueBase::popPush(const SemaphoreFunctor& waitSemaphoreFunctor, const Functor& functor,
+int FifoQueueBase::popPush(const SemaphoreFunctor& waitSemaphoreFunctor, const QueueFunctor& functor,
 		Semaphore& waitSemaphore, Semaphore& postSemaphore, void*& storage)
 {
 	architecture::InterruptMaskingLock interruptMaskingLock;
