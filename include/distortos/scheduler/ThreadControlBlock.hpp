@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-01-12
+ * \date 2015-01-22
  */
 
 #ifndef INCLUDE_DISTORTOS_SCHEDULER_THREADCONTROLBLOCK_HPP_
@@ -56,6 +56,15 @@ public:
 		BlockedOnMutex,
 		/// thread is blocked on ConditionVariable
 		BlockedOnConditionVariable,
+	};
+
+	/// reason of thread unblocking
+	enum class UnblockReason : uint8_t
+	{
+		/// explicit request to unblock the thread - normal unblock
+		UnblockRequest,
+		/// timeout - unblock via software timer
+		Timeout,
 	};
 
 	/// type of object used as storage for ThreadControlBlockList elements - 3 pointers
