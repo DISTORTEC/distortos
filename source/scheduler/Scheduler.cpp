@@ -80,24 +80,20 @@ int Scheduler::blockUntil(ThreadControlBlockList& container, const TickClock::ti
 	architecture::InterruptMaskingLock interruptMaskingLock;
 
 	const auto iterator = currentThreadControlBlock_;
-	bool timedOut {};
 	// This lambda unblocks the thread only if it wasn't already unblocked - this is necessary because double unblock
-	// should be avoided (it could mess the order of threads of the same priority). In that case it also marks the
-	// "timed out" reason of unblocking.
-	auto softwareTimer = makeSoftwareTimer(
-			[this, iterator, &timedOut]()
+	// should be avoided (it could mess the order of threads of the same priority). In that case it also sets
+	// UnblockReason::Timeout.
+	auto softwareTimer = makeSoftwareTimer([this, iterator]()
 			{
 				if (iterator->get().getList() != &runnableList_)
-				{
-					unblockInternal(iterator);
-					timedOut = true;
-				}
+					unblockInternal(iterator, ThreadControlBlock::UnblockReason::Timeout);
 			});
 	softwareTimer.start(timePoint);
 
 	block(container);
 
-	return timedOut == false ? 0 : ETIMEDOUT;
+	const auto unblockReason = currentThreadControlBlock_->get().getUnblockReason();
+	return unblockReason == ThreadControlBlock::UnblockReason::UnblockRequest ? 0 : ETIMEDOUT;
 }
 
 uint64_t Scheduler::getContextSwitchCount() const
