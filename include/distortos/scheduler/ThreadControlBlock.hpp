@@ -208,6 +208,15 @@ public:
 	}
 
 	/**
+	 * \return reason of previous unblocking of the thread
+	 */
+
+	UnblockReason getUnblockReason() const
+	{
+		return unblockReason_;
+	}
+
+	/**
 	 * \brief Sets the iterator to the element on the list.
 	 *
 	 * \param [in] iterator is an iterator to the element on the list
@@ -266,6 +275,15 @@ public:
 	void setState(const State state)
 	{
 		state_ = state;
+	}
+
+	/**
+	 * \param [in] unblockReason is the new reason of unblocking of the thread
+	 */
+
+	void setUnblockReason(const UnblockReason unblockReason)
+	{
+		unblockReason_ = unblockReason;
 	}
 
 	/**
