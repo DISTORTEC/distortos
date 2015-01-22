@@ -394,6 +394,9 @@ private:
 
 	/// current state of object
 	State state_;
+
+	/// reason of previous unblocking of the thread
+	UnblockReason unblockReason_;
 };
 
 }	// namespace scheduler
