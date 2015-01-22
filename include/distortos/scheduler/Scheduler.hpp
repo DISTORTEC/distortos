@@ -2,13 +2,13 @@
  * \file
  * \brief Scheduler class header
  *
- * \author Copyright (C) 2014 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-11-19
+ * \date 2015-01-22
  */
 
 #ifndef INCLUDE_DISTORTOS_SCHEDULER_SCHEDULER_HPP_
@@ -305,9 +305,12 @@ private:
 	 * \note Internal version - without interrupt masking and yield()
 	 *
 	 * \param [in] iterator is the iterator which points to unblocked thread
+	 * \param [in] unblockReason is the reason of unblocking of the thread, default -
+	 * ThreadControlBlock::UnblockReason::UnblockRequest
 	 */
 
-	void unblockInternal(ThreadControlBlockListIterator iterator);
+	void unblockInternal(ThreadControlBlockListIterator iterator,
+			ThreadControlBlock::UnblockReason unblockReason = ThreadControlBlock::UnblockReason::UnblockRequest);
 
 	/// iterator to the currently active ThreadControlBlock
 	ThreadControlBlockListIterator currentThreadControlBlock_;
