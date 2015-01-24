@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-01-22
+ * \date 2015-01-24
  */
 
 #include "distortos/scheduler/Scheduler.hpp"
@@ -26,6 +26,27 @@ namespace distortos
 
 namespace scheduler
 {
+
+namespace
+{
+
+/*---------------------------------------------------------------------------------------------------------------------+
+| local functions
++---------------------------------------------------------------------------------------------------------------------*/
+
+/**
+ * \brief Forces unconditional context switch.
+ *
+ * Temporarily disables any interrupt masking and requests unconditional context switch.
+ */
+
+void forceContextSwitch()
+{
+	architecture::requestContextSwitch();
+	architecture::InterruptUnmaskingLock interruptUnmaskingLock;
+}
+
+}	// namespace
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | public functions
@@ -226,12 +247,6 @@ int Scheduler::blockInternal(ThreadControlBlockList& container, const ThreadCont
 	container.sortedSplice(runnableList_, iterator);
 
 	return 0;
-}
-
-void Scheduler::forceContextSwitch() const
-{
-	architecture::requestContextSwitch();
-	architecture::InterruptUnmaskingLock interruptUnmaskingLock;
 }
 
 bool Scheduler::isContextSwitchRequired() const

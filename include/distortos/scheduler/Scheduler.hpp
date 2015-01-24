@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-01-22
+ * \date 2015-01-24
  */
 
 #ifndef INCLUDE_DISTORTOS_SCHEDULER_SCHEDULER_HPP_
@@ -274,14 +274,6 @@ private:
 	 */
 
 	int blockInternal(ThreadControlBlockList& container, ThreadControlBlockListIterator iterator);
-
-	/**
-	 * \brief Forces unconditional context switch.
-	 *
-	 * Temporarily disables any interrupt masking and requests unconditional context switch.
-	 */
-
-	void forceContextSwitch() const;
 
 	/**
 	 * \brief Tests whether context switch is required or not.
