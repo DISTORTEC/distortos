@@ -284,15 +284,6 @@ public:
 	}
 
 	/**
-	 * \param [in] unblockReason is the new reason of unblocking of the thread
-	 */
-
-	void setUnblockReason(const UnblockReason unblockReason)
-	{
-		unblockReason_ = unblockReason;
-	}
-
-	/**
 	 * \brief Termination hook function of thread
 	 *
 	 * \attention This function should be called only by Scheduler::remove().
