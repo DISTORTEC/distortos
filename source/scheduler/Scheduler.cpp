@@ -97,7 +97,8 @@ int Scheduler::block(ThreadControlBlockList& container, const ThreadControlBlock
 	return 0;
 }
 
-int Scheduler::blockUntil(ThreadControlBlockList& container, const TickClock::time_point timePoint)
+int Scheduler::blockUntil(ThreadControlBlockList& container, const TickClock::time_point timePoint,
+		const ThreadControlBlock::UnblockFunctor* const unblockFunctor)
 {
 	architecture::InterruptMaskingLock interruptMaskingLock;
 
@@ -112,7 +113,7 @@ int Scheduler::blockUntil(ThreadControlBlockList& container, const TickClock::ti
 			});
 	softwareTimer.start(timePoint);
 
-	block(container);
+	block(container, unblockFunctor);
 
 	const auto unblockReason = currentThreadControlBlock_->get().getUnblockReason();
 	return unblockReason == ThreadControlBlock::UnblockReason::UnblockRequest ? 0 : ETIMEDOUT;
