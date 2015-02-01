@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-01-22
+ * \date 2015-02-01
  */
 
 #ifndef INCLUDE_DISTORTOS_SCHEDULER_THREADCONTROLBLOCK_HPP_
@@ -21,6 +21,8 @@
 #include "distortos/architecture/Stack.hpp"
 
 #include "distortos/SchedulingPolicy.hpp"
+
+#include "distortos/estd/TypeErasedFunctor.hpp"
 
 #include <functional>
 
@@ -69,6 +71,10 @@ public:
 
 	/// type of object used as storage for ThreadControlBlockList elements - 3 pointers
 	using Link = std::array<std::aligned_storage<sizeof(void*), alignof(void*)>::type, 3>;
+
+	/// UnblockFunctor is a functor executed when unblocking the thread, it receives one parameter - a reference to
+	/// ThreadControlBlock that is being unblocked
+	using UnblockFunctor = estd::TypeErasedFunctor<void(ThreadControlBlock&)>;
 
 	/**
 	 * \brief ThreadControlBlock constructor.
