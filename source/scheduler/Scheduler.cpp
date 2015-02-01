@@ -73,17 +73,18 @@ void Scheduler::add(ThreadControlBlock& threadControlBlock)
 	maybeRequestContextSwitch();
 }
 
-void Scheduler::block(ThreadControlBlockList& container)
+void Scheduler::block(ThreadControlBlockList& container, const ThreadControlBlock::UnblockFunctor* const unblockFunctor)
 {
-	block(container, currentThreadControlBlock_);
+	block(container, currentThreadControlBlock_, unblockFunctor);
 }
 
-int Scheduler::block(ThreadControlBlockList& container, const ThreadControlBlockListIterator iterator)
+int Scheduler::block(ThreadControlBlockList& container, const ThreadControlBlockListIterator iterator,
+		const ThreadControlBlock::UnblockFunctor* const unblockFunctor)
 {
 	{
 		architecture::InterruptMaskingLock interruptMaskingLock;
 
-		const auto ret = blockInternal(container, iterator, {});
+		const auto ret = blockInternal(container, iterator, unblockFunctor);
 		if (ret != 0)
 			return ret;
 

@@ -51,9 +51,11 @@ public:
 	 * \brief Blocks current thread, transferring it to provided container.
 	 *
 	 * \param [in] container is a reference to destination container to which the thread will be transferred
+	 * \param [in] unblockFunctor is a pointer to ThreadControlBlock::UnblockFunctor which will be executed in
+	 * ThreadControlBlock::unblockHook(), default - nullptr (no functor will be executed)
 	 */
 
-	void block(ThreadControlBlockList& container);
+	void block(ThreadControlBlockList& container, const ThreadControlBlock::UnblockFunctor* unblockFunctor = {});
 
 	/**
 	 * \brief Blocks thread, transferring it to provided container.
@@ -62,12 +64,15 @@ public:
 	 *
 	 * \param [in] container is a reference to destination container to which the thread will be transferred
 	 * \param [in] iterator is the iterator to the thread that will be blocked
+	 * \param [in] unblockFunctor is a pointer to ThreadControlBlock::UnblockFunctor which will be executed in
+	 * ThreadControlBlock::unblockHook(), default - nullptr (no functor will be executed)
 	 *
 	 * \return 0 on success, error code otherwise:
 	 * - EINVAL - provided thread is not on "runnable" list;
 	 */
 
-	int block(ThreadControlBlockList& container, ThreadControlBlockListIterator iterator);
+	int block(ThreadControlBlockList& container, ThreadControlBlockListIterator iterator,
+			const ThreadControlBlock::UnblockFunctor* unblockFunctor = {});
 
 	/**
 	 * \brief Blocks current thread with timeout, transferring it to provided container.
