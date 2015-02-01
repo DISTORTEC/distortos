@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-01-12
+ * \date 2015-02-01
  */
 
 #include "distortos/synchronization/MutexControlBlock.hpp"
@@ -23,6 +23,60 @@ namespace distortos
 
 namespace synchronization
 {
+
+namespace
+{
+
+/*---------------------------------------------------------------------------------------------------------------------+
+| local types
++---------------------------------------------------------------------------------------------------------------------*/
+
+/// PriorityInheritanceMutexControlBlockUnblockFunctor is a functor executed when unblocking a thread that is blocked on
+/// a mutex with PriorityInheritance protocol
+class PriorityInheritanceMutexControlBlockUnblockFunctor : public scheduler::ThreadControlBlock::UnblockFunctor
+{
+public:
+
+	/**
+	 * \brief PriorityInheritanceMutexControlBlockUnblockFunctor's constructor
+	 *
+	 * \param [in] mutexControlBlock is a reference to MutexControlBlock that blocked the thread
+	 */
+
+	constexpr explicit PriorityInheritanceMutexControlBlockUnblockFunctor(const MutexControlBlock& mutexControlBlock) :
+			mutexControlBlock_(mutexControlBlock)
+	{
+
+	}
+
+	/**
+	 * \brief PriorityInheritanceMutexControlBlockUnblockFunctor's function call operator
+	 *
+	 * If the wait for mutex was interrupted, requests update of boosted priority of current owner of the mutex. Pointer
+	 * to MutexControlBlock with PriorityInheritance protocol which caused the thread to block is reset to nullptr.
+	 *
+	 * \param [in] threadControlBlock is a reference to ThreadControlBlock that is being unblocked
+	 */
+
+	void operator()(scheduler::ThreadControlBlock& threadControlBlock) const override
+	{
+		const auto owner = mutexControlBlock_.getOwner();
+
+		// waiting for mutex was interrupted and some thread still holds it?
+		if (threadControlBlock.getUnblockReason() != scheduler::ThreadControlBlock::UnblockReason::UnblockRequest &&
+				owner != nullptr)
+			owner->updateBoostedPriority();
+
+		threadControlBlock.setPriorityInheritanceMutexControlBlock(nullptr);
+	}
+
+private:
+
+	/// reference to MutexControlBlock that blocked the thread
+	const MutexControlBlock& mutexControlBlock_;
+};
+
+}	// namespace
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | public functions
