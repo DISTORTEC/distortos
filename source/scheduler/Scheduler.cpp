@@ -245,6 +245,7 @@ int Scheduler::blockInternal(ThreadControlBlockList& container, const ThreadCont
 		return EINVAL;
 
 	container.sortedSplice(runnableList_, iterator);
+	iterator->get().blockHook({});
 
 	return 0;
 }
