@@ -304,6 +304,18 @@ public:
 	}
 
 	/**
+	 * \brief Unblock hook function of thread
+	 *
+	 * Resets round-robin's quantum and sets unblock reason
+	 *
+	 * \attention This function should be called only by Scheduler::unblockInternal().
+	 *
+	 * \param [in] unblockReason is the new reason of unblocking of the thread
+	 */
+
+	void unblockHook(UnblockReason unblockReason);
+
+	/**
 	 * \brief Updates boosted priority of the thread.
 	 *
 	 * This function should be called after all operations involving this thread and a mutex with enabled priority
