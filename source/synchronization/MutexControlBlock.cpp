@@ -107,19 +107,9 @@ int MutexControlBlock::blockUntil(const TickClock::time_point timePoint)
 	if (protocol_ == Protocol::PriorityInheritance)
 		priorityInheritanceBeforeBlock();
 
-	auto& scheduler = scheduler::getScheduler();
-	const auto ret = scheduler.blockUntil(blockedList_, timePoint);
-
-	if (protocol_ == Protocol::PriorityInheritance)
-	{
-		// waiting for mutex timed-out and mutex is still locked?
-		if (ret == ETIMEDOUT && owner_ != nullptr)
-			owner_->updateBoostedPriority();
-
-		scheduler.getCurrentThreadControlBlock().setPriorityInheritanceMutexControlBlock(nullptr);
-	}
-
-	return ret;
+	const PriorityInheritanceMutexControlBlockUnblockFunctor unblockFunctor {*this};
+	return scheduler::getScheduler().blockUntil(blockedList_, timePoint,
+			protocol_ == Protocol::PriorityInheritance ? &unblockFunctor : nullptr);
 }
 
 uint8_t MutexControlBlock::getBoostedPriority() const
