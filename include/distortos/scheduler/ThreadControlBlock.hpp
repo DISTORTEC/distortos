@@ -88,6 +88,21 @@ public:
 	ThreadControlBlock(void* buffer, size_t size, uint8_t priority, SchedulingPolicy schedulingPolicy);
 
 	/**
+	 * \brief Block hook function of thread
+	 *
+	 * Saves pointer to UnblockFunctor.
+	 *
+	 * \attention This function should be called only by Scheduler::blockInternal().
+	 *
+	 * \param [in] unblockFunctor is a pointer to UnblockFunctor which will be executed in unblockHook()
+	 */
+
+	void blockHook(const UnblockFunctor* const unblockFunctor)
+	{
+		unblockFunctor_ = unblockFunctor;
+	}
+
+	/**
 	 * \return effective priority of ThreadControlBlock
 	 */
 
