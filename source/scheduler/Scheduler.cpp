@@ -83,7 +83,7 @@ int Scheduler::block(ThreadControlBlockList& container, const ThreadControlBlock
 	{
 		architecture::InterruptMaskingLock interruptMaskingLock;
 
-		const auto ret = blockInternal(container, iterator);
+		const auto ret = blockInternal(container, iterator, {});
 		if (ret != 0)
 			return ret;
 
@@ -147,7 +147,7 @@ int Scheduler::remove()
 		architecture::InterruptMaskingLock interruptMaskingLock;
 		ThreadControlBlockList terminatedList {threadControlBlockListAllocator_, ThreadControlBlock::State::Terminated};
 
-		const auto ret = blockInternal(terminatedList, currentThreadControlBlock_);
+		const auto ret = blockInternal(terminatedList, currentThreadControlBlock_, {});
 		if (ret != 0)
 			return ret;
 
@@ -239,13 +239,14 @@ void Scheduler::addInternal(ThreadControlBlock& threadControlBlock)
 	runnableList_.sortedEmplace(threadControlBlock);
 }
 
-int Scheduler::blockInternal(ThreadControlBlockList& container, const ThreadControlBlockListIterator iterator)
+int Scheduler::blockInternal(ThreadControlBlockList& container, const ThreadControlBlockListIterator iterator,
+		const ThreadControlBlock::UnblockFunctor* const unblockFunctor)
 {
 	if (iterator->get().getList() != &runnableList_)
 		return EINVAL;
 
 	container.sortedSplice(runnableList_, iterator);
-	iterator->get().blockHook({});
+	iterator->get().blockHook(unblockFunctor);
 
 	return 0;
 }

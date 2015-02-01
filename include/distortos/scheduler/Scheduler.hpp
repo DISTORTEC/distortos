@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-01-24
+ * \date 2015-02-01
  */
 
 #ifndef INCLUDE_DISTORTOS_SCHEDULER_SCHEDULER_HPP_
@@ -268,12 +268,15 @@ private:
 	 *
 	 * \param [in] container is a reference to destination container to which the thread will be transferred
 	 * \param [in] iterator is the iterator to the thread that will be blocked
+	 * \param [in] unblockFunctor is a pointer to ThreadControlBlock::UnblockFunctor which will be executed in
+	 * ThreadControlBlock::unblockHook()
 	 *
 	 * \return 0 on success, error code otherwise:
 	 * - EINVAL - provided thread is not on "runnable" list;
 	 */
 
-	int blockInternal(ThreadControlBlockList& container, ThreadControlBlockListIterator iterator);
+	int blockInternal(ThreadControlBlockList& container, ThreadControlBlockListIterator iterator,
+			const ThreadControlBlock::UnblockFunctor* unblockFunctor);
 
 	/**
 	 * \brief Tests whether context switch is required or not.
