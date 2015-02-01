@@ -83,7 +83,10 @@ void ThreadControlBlock::setSchedulingPolicy(const SchedulingPolicy schedulingPo
 void ThreadControlBlock::unblockHook(const UnblockReason unblockReason)
 {
 	roundRobinQuantum_.reset();
+	const auto unblockFunctor = unblockFunctor_;
 	unblockReason_ = unblockReason;
+	if (unblockFunctor != nullptr)
+		(*unblockFunctor)(*this);
 }
 
 void ThreadControlBlock::updateBoostedPriority(const uint8_t boostedPriority)
