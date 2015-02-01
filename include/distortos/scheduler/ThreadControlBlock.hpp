@@ -407,6 +407,16 @@ private:
 	/// iterator to the element on the list, valid only when list_ != nullptr
 	ThreadControlBlockListIterator iterator_;
 
+	/// information related to unblocking
+	union
+	{
+		/// functor executed in unblockHook() - valid only when thread is blocked
+		const UnblockFunctor* unblockFunctor_;
+
+		/// reason of previous unblocking of the thread - valid only when thread is not blocked
+		UnblockReason unblockReason_;
+	};
+
 	/// thread's priority, 0 - lowest, UINT8_MAX - highest
 	uint8_t priority_;
 
@@ -421,9 +431,6 @@ private:
 
 	/// current state of object
 	State state_;
-
-	/// reason of previous unblocking of the thread
-	UnblockReason unblockReason_;
 };
 
 }	// namespace scheduler

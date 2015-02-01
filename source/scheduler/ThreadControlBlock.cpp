@@ -40,12 +40,12 @@ ThreadControlBlock::ThreadControlBlock(void* const buffer, const size_t size, co
 		priorityInheritanceMutexControlBlock_{},
 		list_{},
 		iterator_{},
+		unblockReason_{},
 		priority_{priority},
 		boostedPriority_{},
 		roundRobinQuantum_{},
 		schedulingPolicy_{schedulingPolicy},
-		state_{State::New},
-		unblockReason_{}
+		state_{State::New}
 {
 
 }
@@ -131,6 +131,7 @@ ThreadControlBlock::ThreadControlBlock(architecture::Stack&& stack, const uint8_
 		priorityInheritanceMutexControlBlock_{},
 		list_{},
 		iterator_{},
+		unblockReason_{},
 		priority_{priority},
 		boostedPriority_{},
 		roundRobinQuantum_{},
