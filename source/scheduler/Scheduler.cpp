@@ -172,9 +172,9 @@ int Scheduler::resume(const ThreadControlBlockListIterator iterator)
 	return 0;
 }
 
-void Scheduler::suspend()
+int Scheduler::suspend()
 {
-	suspend(currentThreadControlBlock_);
+	return suspend(currentThreadControlBlock_);
 }
 
 int Scheduler::suspend(const ThreadControlBlockListIterator iterator)

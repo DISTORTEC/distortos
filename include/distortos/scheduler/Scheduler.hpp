@@ -204,9 +204,11 @@ public:
 
 	/**
 	 * \brief Suspends current thread.
+	 *
+	 * \return 0 on success, error code otherwise
 	 */
 
-	void suspend();
+	int suspend();
 
 	/**
 	 * \brief Suspends thread.
