@@ -54,7 +54,8 @@ public:
 	 * \param [in] unblockFunctor is a pointer to ThreadControlBlock::UnblockFunctor which will be executed in
 	 * ThreadControlBlock::unblockHook(), default - nullptr (no functor will be executed)
 	 *
-	 * \return 0 on success, error code otherwise
+	 * \return 0 on success, error code otherwise:
+	 * - ETIMEDOUT - thread was unblocked with ThreadControlBlock::UnblockReason::Timeout;
 	 */
 
 	int block(ThreadControlBlockList& container, const ThreadControlBlock::UnblockFunctor* unblockFunctor = {});
@@ -71,6 +72,8 @@ public:
 	 *
 	 * \return 0 on success, error code otherwise:
 	 * - EINVAL - provided thread is not on "runnable" list;
+	 * - ETIMEDOUT - thread was unblocked with ThreadControlBlock::UnblockReason::Timeout (possible only when blocking
+	 * current thread);
 	 */
 
 	int block(ThreadControlBlockList& container, ThreadControlBlockListIterator iterator,

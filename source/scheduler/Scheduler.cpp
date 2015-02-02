@@ -94,7 +94,8 @@ int Scheduler::block(ThreadControlBlockList& container, const ThreadControlBlock
 
 	forceContextSwitch();
 
-	return 0;
+	const auto unblockReason = currentThreadControlBlock_->get().getUnblockReason();
+	return unblockReason == ThreadControlBlock::UnblockReason::UnblockRequest ? 0 : ETIMEDOUT;
 }
 
 int Scheduler::blockUntil(ThreadControlBlockList& container, const TickClock::time_point timePoint,
@@ -113,10 +114,7 @@ int Scheduler::blockUntil(ThreadControlBlockList& container, const TickClock::ti
 			});
 	softwareTimer.start(timePoint);
 
-	block(container, unblockFunctor);
-
-	const auto unblockReason = currentThreadControlBlock_->get().getUnblockReason();
-	return unblockReason == ThreadControlBlock::UnblockReason::UnblockRequest ? 0 : ETIMEDOUT;
+	return block(container, unblockFunctor);
 }
 
 uint64_t Scheduler::getContextSwitchCount() const
