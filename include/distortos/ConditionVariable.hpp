@@ -2,13 +2,13 @@
  * \file
  * \brief ConditionVariable class header
  *
- * \author Copyright (C) 2014 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-11-20
+ * \date 2015-02-02
  */
 
 #ifndef INCLUDE_DISTORTOS_CONDITIONVARIABLE_HPP_
@@ -77,8 +77,8 @@ public:
 	 * Similar to pthread_cond_wait() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_cond_wait.html
 	 *
 	 * Atomically releases supplied mutex and blocks current thread until the condition variable is notified. The thread
-	 * will be unblocked when notifyAll() or notifyOne() is executed. When unblocked, regardless of the reason, lock is
-	 * reacquired and wait exits.
+	 * will be unblocked when notifyAll() or notifyOne() is executed. It may also be unblocked spuriously. When
+	 * unblocked, regardless of the reason, lock is reacquired and wait exits.
 	 *
 	 * \param [in] mutex is a reference to mutex which must be owned by calling thread
 	 *
@@ -127,8 +127,8 @@ public:
 	 * http://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_cond_timedwait.html#
 	 *
 	 * Atomically releases supplied mutex and blocks current thread until the condition variable is notified. The thread
-	 * will be unblocked when notifyAll() or notifyOne() is executed or when given duration of time expires. When
-	 * unblocked, regardless of the reason, lock is reacquired and wait exits.
+	 * will be unblocked when notifyAll() or notifyOne() is executed or when given duration of time expires. It may also
+	 * be unblocked spuriously. When unblocked, regardless of the reason, lock is reacquired and wait exits.
 	 *
 	 * \param [in] mutex is a reference to mutex which must be owned by calling thread
 	 * \param [in] duration is the duration after which the wait for notification will be terminated
@@ -206,8 +206,8 @@ public:
 	 * http://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_cond_timedwait.html#
 	 *
 	 * Atomically releases supplied mutex and blocks current thread until the condition variable is notified. The thread
-	 * will be unblocked when notifyAll() or notifyOne() is executed or when given time point is reached. When
-	 * unblocked, regardless of the reason, lock is reacquired and wait exits.
+	 * will be unblocked when notifyAll() or notifyOne() is executed or when given time point is reached. It may also be
+	 * unblocked spuriously. When unblocked, regardless of the reason, lock is reacquired and wait exits.
 	 *
 	 * \param [in] mutex is a reference to mutex which must be owned by calling thread
 	 * \param [in] timePoint is the time point at which the wait for notification will be terminated
