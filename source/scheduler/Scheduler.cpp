@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-02-01
+ * \date 2015-02-02
  */
 
 #include "distortos/scheduler/Scheduler.hpp"
@@ -73,9 +73,9 @@ void Scheduler::add(ThreadControlBlock& threadControlBlock)
 	maybeRequestContextSwitch();
 }
 
-void Scheduler::block(ThreadControlBlockList& container, const ThreadControlBlock::UnblockFunctor* const unblockFunctor)
+int Scheduler::block(ThreadControlBlockList& container, const ThreadControlBlock::UnblockFunctor* const unblockFunctor)
 {
-	block(container, currentThreadControlBlock_, unblockFunctor);
+	return block(container, currentThreadControlBlock_, unblockFunctor);
 }
 
 int Scheduler::block(ThreadControlBlockList& container, const ThreadControlBlockListIterator iterator,
