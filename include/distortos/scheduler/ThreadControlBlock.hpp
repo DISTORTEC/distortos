@@ -299,6 +299,19 @@ public:
 	}
 
 	/**
+	 * \brief Hook function called when context is switched to this thread.
+	 *
+	 * Sets global _impure_ptr (from newlib) to thread's \a reent_ member variable.
+	 *
+	 * \attention This function should be called only by Scheduler::switchContext().
+	 */
+
+	void switchedToHook()
+	{
+		_impure_ptr = &reent_;
+	}
+
+	/**
 	 * \brief Termination hook function of thread
 	 *
 	 * \attention This function should be called only by Scheduler::remove().
