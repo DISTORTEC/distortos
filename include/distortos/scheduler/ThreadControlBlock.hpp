@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-02-01
+ * \date 2015-02-03
  */
 
 #ifndef INCLUDE_DISTORTOS_SCHEDULER_THREADCONTROLBLOCK_HPP_
@@ -353,10 +353,7 @@ protected:
 	 * \note Polymorphic objects of ThreadControlBlock type must not be deleted via pointer/reference
 	 */
 
-	~ThreadControlBlock()
-	{
-
-	}
+	~ThreadControlBlock();
 
 private:
 
@@ -431,6 +428,9 @@ private:
 		/// reason of previous unblocking of the thread - valid only when thread is not blocked
 		UnblockReason unblockReason_;
 	};
+
+	/// newlib's _reent structure with thread-specific data
+	_reent reent_;
 
 	/// thread's priority, 0 - lowest, UINT8_MAX - highest
 	uint8_t priority_;
