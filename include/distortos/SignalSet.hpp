@@ -103,6 +103,22 @@ public:
 		return set(signalNumber, true);
 	}
 
+	/**
+	 * \brief Clears single bit.
+	 *
+	 * Similar to sigdelset() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/sigdelset.html#
+	 *
+	 * \param [in] signalNumber is the bit position that will be cleared, [0; 31]
+	 *
+	 * \return 0 on success, error code otherwise:
+	 * - EINVAL - \a signalNumber value is invalid;
+	 */
+
+	int remove(const uint8_t signalNumber)
+	{
+		return set(signalNumber, false);
+	}
+
 private:
 
 	/**
