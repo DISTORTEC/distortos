@@ -89,6 +89,18 @@ public:
 
 private:
 
+	/**
+	 * \brief Sets value of single bit.
+	 *
+	 * \param [in] signalNumber is the bit position that will be modified, [0; 31]
+	 * \param [in] value is the new value for selected bit
+	 *
+	 * \return 0 on success, error code otherwise:
+	 * - EINVAL - \a signalNumber value is invalid;
+	 */
+
+	int set(uint8_t signalNumber, bool value);
+
 	/// internal bitset for 32 signals
 	std::bitset<32> bitset_;
 };
