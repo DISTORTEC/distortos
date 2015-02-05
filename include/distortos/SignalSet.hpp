@@ -87,6 +87,22 @@ public:
 
 	}
 
+	/**
+	 * \brief Sets single bit.
+	 *
+	 * Similar to sigaddset() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/sigaddset.html#
+	 *
+	 * \param [in] signalNumber is the bit position that will be set, [0; 31]
+	 *
+	 * \return 0 on success, error code otherwise:
+	 * - EINVAL - \a signalNumber value is invalid;
+	 */
+
+	int add(const uint8_t signalNumber)
+	{
+		return set(signalNumber, true);
+	}
+
 private:
 
 	/**
