@@ -56,6 +56,8 @@ public:
 		BlockedOnMutex,
 		/// thread is blocked on ConditionVariable
 		BlockedOnConditionVariable,
+		/// thread is waiting for signal
+		WaitingForSignal,
 	};
 
 	/// reason of thread unblocking
