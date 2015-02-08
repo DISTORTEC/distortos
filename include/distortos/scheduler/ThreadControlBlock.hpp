@@ -286,6 +286,15 @@ public:
 	}
 
 	/**
+	 * \param [in] signalSet is a reference to set of signals that will be "waited for"
+	 */
+
+	void setWaitingSignalSet(const SignalSet& signalSet)
+	{
+		waitingSignalSet_ = &signalSet;
+	}
+
+	/**
 	 * \brief Hook function called when context is switched to this thread.
 	 *
 	 * Sets global _impure_ptr (from newlib) to thread's \a reent_ member variable.
