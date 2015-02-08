@@ -379,6 +379,9 @@ private:
 	/// set of pending signals
 	SignalSet pendingSignalSet_;
 
+	/// pointer to set of "waited for" signals, nullptr if thread is not waiting for any signals
+	const SignalSet* waitingSignalSet_;
+
 	/// newlib's _reent structure with thread-specific data
 	_reent reent_;
 

@@ -43,6 +43,7 @@ ThreadControlBlock::ThreadControlBlock(architecture::Stack&& stack, const uint8_
 		iterator_{},
 		unblockReason_{},
 		pendingSignalSet_{SignalSet::empty},
+		waitingSignalSet_{},
 		reent_(_REENT_INIT(reent_)),
 		priority_{priority},
 		boostedPriority_{},
