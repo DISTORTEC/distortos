@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-02-05
+ * \date 2015-02-08
  */
 
 #ifndef INCLUDE_DISTORTOS_SIGNALSET_HPP_
@@ -118,6 +118,19 @@ public:
 	{
 		return set(signalNumber, false);
 	}
+
+	/**
+	 * \brief Tests whether the bit is set.
+	 *
+	 * Similar to sigismember() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/sigismember.html#
+	 *
+	 * \param [in] signalNumber is the bit position that will be tested, [0; 31]
+	 *
+	 * \return pair with return code (0 on success, error code otherwise) and value of selected bit; error codes:
+	 * - EINVAL - \a signalNumber value is invalid;
+	 */
+
+	std::pair<int, bool> test(uint8_t signalNumber) const;
 
 private:
 
