@@ -58,6 +58,12 @@ ThreadControlBlock::~ThreadControlBlock()
 	_reclaim_reent(&reent_);
 }
 
+SignalSet ThreadControlBlock::getPendingSignalSet() const
+{
+	architecture::InterruptMaskingLock interruptMaskingLock;
+	return pendingSignalSet_;
+}
+
 void ThreadControlBlock::setPriority(const uint8_t priority, const bool alwaysBehind)
 {
 	architecture::InterruptMaskingLock interruptMaskingLock;

@@ -165,6 +165,12 @@ public:
 	}
 
 	/**
+	 * \return set of currently pending signals
+	 */
+
+	SignalSet getPendingSignalSet() const;
+
+	/**
 	 * \return priority of ThreadControlBlock
 	 */
 
