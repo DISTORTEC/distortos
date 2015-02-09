@@ -106,6 +106,10 @@ public:
 		return set(signalNumber, true);
 	}
 
+	/**
+	 * \return copy of internal bitset
+	 */
+
 	Bitset getBitset() const
 	{
 		return bitset_;
