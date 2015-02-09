@@ -59,6 +59,12 @@ ThreadControlBlock::~ThreadControlBlock()
 	_reclaim_reent(&reent_);
 }
 
+int ThreadControlBlock::acceptPendingSignal(const uint8_t signalNumber)
+{
+	architecture::InterruptMaskingLock interruptMaskingLock;
+	return pendingSignalSet_.remove(signalNumber);
+}
+
 SignalSet ThreadControlBlock::getPendingSignalSet() const
 {
 	architecture::InterruptMaskingLock interruptMaskingLock;

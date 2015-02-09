@@ -96,6 +96,19 @@ public:
 	~ThreadControlBlock();
 
 	/**
+	 * \brief Accepts (clears) one of signals pending for thread.
+	 *
+	 * This should be called when the signal is "accepted".
+	 *
+	 * \param [in] signalNumber is the signal that will be accepted, [0; 31]
+	 *
+	 * \return 0 on success, error code otherwise:
+	 * - EINVAL - \a signalNumber value is invalid;
+	 */
+
+	int acceptPendingSignal(uint8_t signalNumber);
+
+	/**
 	 * \brief Block hook function of thread
 	 *
 	 * Saves pointer to UnblockFunctor.
