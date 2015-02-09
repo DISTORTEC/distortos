@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-02-08
+ * \date 2015-02-09
  */
 
 #ifndef INCLUDE_DISTORTOS_SIGNALSET_HPP_
@@ -28,6 +28,9 @@ namespace distortos
 class SignalSet
 {
 public:
+
+	/// type of internal bitset for 32 signals
+	using Bitset = std::bitset<32>;
 
 	/// tag struct to construct empty SignalSet
 	struct Empty
@@ -103,6 +106,11 @@ public:
 		return set(signalNumber, true);
 	}
 
+	Bitset getBitset() const
+	{
+		return bitset_;
+	}
+
 	/**
 	 * \brief Clears single bit.
 	 *
@@ -147,7 +155,7 @@ private:
 	int set(uint8_t signalNumber, bool value);
 
 	/// internal bitset for 32 signals
-	std::bitset<32> bitset_;
+	Bitset bitset_;
 };
 
 }	// namespace distortos
