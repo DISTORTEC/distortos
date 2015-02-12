@@ -140,15 +140,6 @@ public:
 	}
 
 	/**
-	 * \return const reference to internal storage for list link
-	 */
-
-	const Link& getLink() const
-	{
-		return link_;
-	}
-
-	/**
 	 * \return pointer to list that has this object
 	 */
 
@@ -162,15 +153,6 @@ public:
 	 */
 
 	MutexControlBlockList& getOwnedProtocolMutexControlBlocksList()
-	{
-		return ownedProtocolMutexControlBlocksList_;
-	}
-
-	/**
-	 * \return const reference to list of mutex control blocks with enabled priority protocol owned by this thread
-	 */
-
-	const MutexControlBlockList& getOwnedProtocolMutexControlBlocksList() const
 	{
 		return ownedProtocolMutexControlBlocksList_;
 	}
@@ -194,15 +176,6 @@ public:
 	}
 
 	/**
-	 * \return const reference to internal RoundRobinQuantum object
-	 */
-
-	const RoundRobinQuantum& getRoundRobinQuantum() const
-	{
-		return roundRobinQuantum_;
-	}
-
-	/**
 	 * \return scheduling policy of the thread
 	 */
 
@@ -216,15 +189,6 @@ public:
 	 */
 
 	architecture::Stack& getStack()
-	{
-		return stack_;
-	}
-
-	/**
-	 * \return const reference to internal Stack object
-	 */
-
-	const architecture::Stack& getStack() const
 	{
 		return stack_;
 	}
