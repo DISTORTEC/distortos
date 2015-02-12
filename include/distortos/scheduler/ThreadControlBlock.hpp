@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-02-03
+ * \date 2015-02-12
  */
 
 #ifndef INCLUDE_DISTORTOS_SCHEDULER_THREADCONTROLBLOCK_HPP_
@@ -86,6 +86,18 @@ public:
 	 */
 
 	ThreadControlBlock(void* buffer, size_t size, uint8_t priority, SchedulingPolicy schedulingPolicy);
+
+	/**
+	 * \brief ThreadControlBlock constructor.
+	 *
+	 * This constructor is meant for MainThreadControlBlock.
+	 *
+	 * \param [in] stack is an rvalue reference to stack of main()
+	 * \param [in] priority is the thread's priority, 0 - lowest, UINT8_MAX - highest
+	 * \param [in] schedulingPolicy is the scheduling policy of the thread
+	 */
+
+	ThreadControlBlock(architecture::Stack&& stack, uint8_t priority, SchedulingPolicy schedulingPolicy);
 
 	/**
 	 * \brief Block hook function of thread
@@ -347,18 +359,6 @@ public:
 	void updateBoostedPriority(uint8_t boostedPriority = {});
 
 protected:
-
-	/**
-	 * \brief ThreadControlBlock constructor.
-	 *
-	 * This constructor is meant for MainThreadControlBlock.
-	 *
-	 * \param [in] stack is an rvalue reference to stack of main()
-	 * \param [in] priority is the thread's priority, 0 - lowest, UINT8_MAX - highest
-	 * \param [in] schedulingPolicy is the scheduling policy of the thread
-	 */
-
-	ThreadControlBlock(architecture::Stack&& stack, uint8_t priority, SchedulingPolicy schedulingPolicy);
 
 	/**
 	 * \brief ThreadControlBlock's destructor
