@@ -90,9 +90,7 @@ public:
 	/**
 	 * \brief ThreadControlBlock constructor.
 	 *
-	 * This constructor is meant for MainThreadControlBlock.
-	 *
-	 * \param [in] stack is an rvalue reference to stack of main()
+	 * \param [in] stack is an rvalue reference to architecture::Stack object which will be adopted for this thread
 	 * \param [in] priority is the thread's priority, 0 - lowest, UINT8_MAX - highest
 	 * \param [in] schedulingPolicy is the scheduling policy of the thread
 	 */

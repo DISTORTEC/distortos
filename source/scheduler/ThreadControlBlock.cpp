@@ -32,21 +32,7 @@ namespace scheduler
 
 ThreadControlBlock::ThreadControlBlock(void* const buffer, const size_t size, const uint8_t priority,
 		const SchedulingPolicy schedulingPolicy) :
-		stack_{buffer, size, threadRunner, *this},
-		ownedProtocolMutexControlBlocksList_
-		{
-				MutexControlBlockListAllocator{getScheduler().getMutexControlBlockListAllocatorPool()}
-		},
-		priorityInheritanceMutexControlBlock_{},
-		list_{},
-		iterator_{},
-		unblockReason_{},
-		reent_(_REENT_INIT(reent_)),
-		priority_{priority},
-		boostedPriority_{},
-		roundRobinQuantum_{},
-		schedulingPolicy_{schedulingPolicy},
-		state_{State::New}
+		ThreadControlBlock{{buffer, size, threadRunner, *this}, priority, schedulingPolicy}
 {
 
 }
