@@ -24,8 +24,6 @@
 
 #include "distortos/estd/TypeErasedFunctor.hpp"
 
-#include <functional>
-
 namespace distortos
 {
 
