@@ -62,6 +62,7 @@ ThreadControlBlock::ThreadControlBlock(architecture::Stack&& stack, const uint8_
 		list_{},
 		iterator_{},
 		unblockReason_{},
+		reent_(_REENT_INIT(reent_)),
 		priority_{priority},
 		boostedPriority_{},
 		roundRobinQuantum_{},
