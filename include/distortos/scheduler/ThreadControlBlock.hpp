@@ -333,8 +333,6 @@ protected:
 
 	~ThreadControlBlock();
 
-private:
-
 	/**
 	 * \brief Thread runner function - entry point of threads.
 	 *
@@ -344,6 +342,8 @@ private:
 	 */
 
 	static void threadRunner(ThreadControlBlock& threadControlBlock) __attribute__ ((noreturn));
+
+private:
 
 	/**
 	 * \brief Repositions the thread on the list it's currently on.

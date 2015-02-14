@@ -138,7 +138,7 @@ ThreadControlBlock::~ThreadControlBlock()
 }
 
 /*---------------------------------------------------------------------------------------------------------------------+
-| private static functions
+| protected static functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
 void ThreadControlBlock::threadRunner(ThreadControlBlock& threadControlBlock)
