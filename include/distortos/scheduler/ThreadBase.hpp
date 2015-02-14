@@ -41,6 +41,16 @@ public:
 	ThreadBase(void* buffer, size_t size, uint8_t priority, SchedulingPolicy schedulingPolicy);
 
 	/**
+	 * \brief ThreadBase's constructor.
+	 *
+	 * \param [in] stack is an rvalue reference to architecture::Stack object which will be adopted for this thread
+	 * \param [in] priority is the thread's priority, 0 - lowest, UINT8_MAX - highest
+	 * \param [in] schedulingPolicy is the scheduling policy of the thread
+	 */
+
+	ThreadBase(architecture::Stack&& stack, uint8_t priority, SchedulingPolicy schedulingPolicy);
+
+	/**
 	 * \brief Waits for thread termination.
 	 *
 	 * Similar to std::thread::join() - http://en.cppreference.com/w/cpp/thread/thread/join
