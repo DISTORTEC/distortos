@@ -30,8 +30,7 @@ namespace scheduler
 
 ThreadBase::ThreadBase(void* const buffer, const size_t size, const uint8_t priority,
 		const SchedulingPolicy schedulingPolicy) :
-		ThreadControlBlock{buffer, size, priority, schedulingPolicy},
-		joinSemaphore_{0}
+		ThreadBase{{buffer, size, threadRunner, *this}, priority, schedulingPolicy}
 {
 
 }
