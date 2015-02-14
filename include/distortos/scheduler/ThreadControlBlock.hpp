@@ -77,17 +77,6 @@ public:
 	/**
 	 * \brief ThreadControlBlock constructor.
 	 *
-	 * \param [in] buffer is a pointer to stack's buffer
-	 * \param [in] size is the size of stack's buffer, bytes
-	 * \param [in] priority is the thread's priority, 0 - lowest, UINT8_MAX - highest
-	 * \param [in] schedulingPolicy is the scheduling policy of the thread
-	 */
-
-	ThreadControlBlock(void* buffer, size_t size, uint8_t priority, SchedulingPolicy schedulingPolicy);
-
-	/**
-	 * \brief ThreadControlBlock constructor.
-	 *
 	 * \param [in] stack is an rvalue reference to architecture::Stack object which will be adopted for this thread
 	 * \param [in] priority is the thread's priority, 0 - lowest, UINT8_MAX - highest
 	 * \param [in] schedulingPolicy is the scheduling policy of the thread

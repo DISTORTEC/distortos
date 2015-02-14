@@ -30,13 +30,6 @@ namespace scheduler
 | public functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-ThreadControlBlock::ThreadControlBlock(void* const buffer, const size_t size, const uint8_t priority,
-		const SchedulingPolicy schedulingPolicy) :
-		ThreadControlBlock{{buffer, size, threadRunner, *this}, priority, schedulingPolicy}
-{
-
-}
-
 ThreadControlBlock::ThreadControlBlock(architecture::Stack&& stack, const uint8_t priority,
 		const SchedulingPolicy schedulingPolicy) :
 		stack_{std::move(stack)},
