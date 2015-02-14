@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-02-12
+ * \date 2015-02-14
  */
 
 #ifndef INCLUDE_DISTORTOS_SCHEDULER_THREADCONTROLBLOCK_HPP_
@@ -317,6 +317,11 @@ public:
 	 */
 
 	void updateBoostedPriority(uint8_t boostedPriority = {});
+
+	ThreadControlBlock(const ThreadControlBlock&) = delete;
+	ThreadControlBlock(ThreadControlBlock&&) = default;
+	const ThreadControlBlock& operator=(const ThreadControlBlock&) = delete;
+	ThreadControlBlock& operator=(ThreadControlBlock&&) = delete;
 
 protected:
 
