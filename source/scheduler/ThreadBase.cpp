@@ -68,7 +68,7 @@ int ThreadBase::start()
 void ThreadBase::threadRunner(ThreadBase& threadBase)
 {
 	threadBase.run();
-	getScheduler().remove();
+	getScheduler().remove(&ThreadControlBlock::terminationHook);
 
 	while (1);
 }
