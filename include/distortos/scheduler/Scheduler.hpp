@@ -101,6 +101,15 @@ public:
 	uint64_t getContextSwitchCount() const;
 
 	/**
+	 * \return reference to currently active ThreadBase
+	 */
+
+	ThreadBase& getCurrentThreadBase() const
+	{
+		return getCurrentThreadControlBlock().getOwner();
+	}
+
+	/**
 	 * \return reference to currently active ThreadControlBlock
 	 */
 
