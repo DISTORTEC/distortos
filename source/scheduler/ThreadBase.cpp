@@ -36,7 +36,7 @@ ThreadBase::ThreadBase(void* const buffer, const size_t size, const uint8_t prio
 }
 
 ThreadBase::ThreadBase(architecture::Stack&& stack, const uint8_t priority, const SchedulingPolicy schedulingPolicy) :
-		ThreadControlBlock{std::move(stack), priority, schedulingPolicy},
+		ThreadControlBlock{std::move(stack), priority, schedulingPolicy, *this},
 		joinSemaphore_{0}
 {
 

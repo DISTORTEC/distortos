@@ -31,8 +31,9 @@ namespace scheduler
 +---------------------------------------------------------------------------------------------------------------------*/
 
 ThreadControlBlock::ThreadControlBlock(architecture::Stack&& stack, const uint8_t priority,
-		const SchedulingPolicy schedulingPolicy) :
+		const SchedulingPolicy schedulingPolicy, ThreadBase& owner) :
 		stack_{std::move(stack)},
+		owner_(owner),
 		ownedProtocolMutexControlBlocksList_
 		{
 				MutexControlBlockListAllocator{getScheduler().getMutexControlBlockListAllocatorPool()}

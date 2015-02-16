@@ -80,9 +80,11 @@ public:
 	 * \param [in] stack is an rvalue reference to architecture::Stack object which will be adopted for this thread
 	 * \param [in] priority is the thread's priority, 0 - lowest, UINT8_MAX - highest
 	 * \param [in] schedulingPolicy is the scheduling policy of the thread
+	 * \param [in] owner is a reference to ThreadBase object that owns this ThreadControlBlock
 	 */
 
-	ThreadControlBlock(architecture::Stack&& stack, uint8_t priority, SchedulingPolicy schedulingPolicy);
+	ThreadControlBlock(architecture::Stack&& stack, uint8_t priority, SchedulingPolicy schedulingPolicy,
+			ThreadBase& owner);
 
 	/**
 	 * \brief Block hook function of thread
@@ -355,6 +357,9 @@ private:
 
 	/// storage for list link
 	Link link_;
+
+	/// reference to ThreadBase object that owns this ThreadControlBlock
+	ThreadBase& owner_;
 
 	/// list of mutex control blocks with enabled priority protocol owned by this thread
 	MutexControlBlockList ownedProtocolMutexControlBlocksList_;
