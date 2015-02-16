@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-02-14
+ * \date 2015-02-16
  */
 
 #ifndef INCLUDE_DISTORTOS_SCHEDULER_THREADBASE_HPP_
@@ -104,6 +104,15 @@ protected:
 	~ThreadBase()
 	{
 
+	}
+
+	/**
+	 * \return reference to base ThreadControlBlock object
+	 */
+
+	ThreadControlBlock& getThreadControlBlock()
+	{
+		return *this;
 	}
 
 private:
