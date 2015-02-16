@@ -78,6 +78,15 @@ public:
 	}
 
 	/**
+	 * \return current state of thread
+	 */
+
+	ThreadControlBlock::State getState() const
+	{
+		return ThreadControlBlock::getState();
+	}
+
+	/**
 	 * \brief Waits for thread termination.
 	 *
 	 * Similar to std::thread::join() - http://en.cppreference.com/w/cpp/thread/thread/join
