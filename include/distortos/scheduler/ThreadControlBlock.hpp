@@ -147,6 +147,15 @@ public:
 	}
 
 	/**
+	 * \return reference to ThreadBase object that owns this ThreadControlBlock
+	 */
+
+	ThreadBase& getOwner() const
+	{
+		return owner_;
+	}
+
+	/**
 	 * \return priority of ThreadControlBlock
 	 */
 
