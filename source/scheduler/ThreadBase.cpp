@@ -11,7 +11,7 @@
  * \date 2015-02-16
  */
 
-#include "distortos/scheduler/ThreadBase.hpp"
+#include "distortos/ThreadBase.hpp"
 
 #include "distortos/scheduler/getScheduler.hpp"
 #include "distortos/scheduler/Scheduler.hpp"

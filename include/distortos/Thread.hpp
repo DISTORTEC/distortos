@@ -14,7 +14,7 @@
 #ifndef INCLUDE_DISTORTOS_THREAD_HPP_
 #define INCLUDE_DISTORTOS_THREAD_HPP_
 
-#include "distortos/scheduler/ThreadBase.hpp"
+#include "distortos/ThreadBase.hpp"
 
 namespace distortos
 {
