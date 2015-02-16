@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-02-14
+ * \date 2015-02-16
  */
 
 #ifndef INCLUDE_DISTORTOS_THREAD_HPP_
@@ -27,7 +27,7 @@ namespace distortos
  */
 
 template<typename Function, typename... Args>
-class Thread : private scheduler::ThreadBase
+class Thread : public scheduler::ThreadBase
 {
 public:
 
@@ -69,20 +69,6 @@ public:
 	{
 
 	}
-
-	using ThreadBase::getEffectivePriority;
-
-	using ThreadBase::getPriority;
-
-	using ThreadBase::getSchedulingPolicy;
-
-	using ThreadBase::join;
-
-	using ThreadBase::setPriority;
-
-	using ThreadBase::setSchedulingPolicy;
-
-	using ThreadBase::start;
 
 	Thread(const Thread&) = delete;
 	Thread(Thread&&) = default;
