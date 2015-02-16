@@ -27,7 +27,7 @@ namespace distortos
  */
 
 template<typename Function, typename... Args>
-class Thread : public scheduler::ThreadBase
+class Thread : public ThreadBase
 {
 public:
 

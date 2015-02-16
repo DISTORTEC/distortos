@@ -21,9 +21,6 @@
 namespace distortos
 {
 
-namespace scheduler
-{
-
 /// ThreadBase class is a base for threads
 class ThreadBase
 {
@@ -81,7 +78,7 @@ public:
 	 * \return current state of thread
 	 */
 
-	ThreadControlBlock::State getState() const
+	scheduler::ThreadControlBlock::State getState() const
 	{
 		return threadControlBlock_.getState();
 	}
@@ -161,7 +158,7 @@ protected:
 	 * \return reference to internal ThreadControlBlock object
 	 */
 
-	ThreadControlBlock& getThreadControlBlock()
+	scheduler::ThreadControlBlock& getThreadControlBlock()
 	{
 		return threadControlBlock_;
 	}
@@ -195,13 +192,11 @@ private:
 	void terminationHook();
 
 	/// internal ThreadControlBlock object
-	ThreadControlBlock threadControlBlock_;
+	scheduler::ThreadControlBlock threadControlBlock_;
 
 	/// semaphore used by join()
 	Semaphore joinSemaphore_;
 };
-
-}	// namespace scheduler
 
 }	// namespace distortos
 

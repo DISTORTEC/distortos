@@ -27,8 +27,7 @@ namespace architecture
 | global functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-void* initializeStack(void* const buffer, const size_t size, void (&function)(scheduler::ThreadBase&),
-		scheduler::ThreadBase& threadBase)
+void* initializeStack(void* const buffer, const size_t size, void (&function)(ThreadBase&), ThreadBase& threadBase)
 {
 	auto stackPointer = reinterpret_cast<uint32_t*>(static_cast<uint8_t*>(buffer) + size);
 

@@ -19,12 +19,7 @@
 namespace distortos
 {
 
-namespace scheduler
-{
-
 class ThreadBase;
-
-}	// namespace scheduler
 
 namespace architecture
 {
@@ -48,10 +43,10 @@ public:
 	 * \param [in] buffer is a pointer to stack's buffer
 	 * \param [in] size is the size of stack's buffer, bytes
 	 * \param [in] function is a reference to thread's function, this function must not return
-	 * \param [in] threadBase is a reference to scheduler::ThreadBase object passed to function
+	 * \param [in] threadBase is a reference to ThreadBase object passed to function
 	 */
 
-	Stack(void* buffer, size_t size, void (&function)(scheduler::ThreadBase&), scheduler::ThreadBase& threadBase);
+	Stack(void* buffer, size_t size, void (&function)(ThreadBase&), ThreadBase& threadBase);
 
 	/**
 	 * \brief Stack's constructor

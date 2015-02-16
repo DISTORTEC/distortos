@@ -21,9 +21,6 @@
 namespace distortos
 {
 
-namespace scheduler
-{
-
 /*---------------------------------------------------------------------------------------------------------------------+
 | public functions
 +---------------------------------------------------------------------------------------------------------------------*/
@@ -44,7 +41,7 @@ ThreadBase::ThreadBase(architecture::Stack&& stack, const uint8_t priority, cons
 
 int ThreadBase::join()
 {
-	if (&threadControlBlock_ == &getScheduler().getCurrentThreadControlBlock())
+	if (&threadControlBlock_ == &scheduler::getScheduler().getCurrentThreadControlBlock())
 		return EDEADLK;
 
 	int ret;
@@ -54,10 +51,10 @@ int ThreadBase::join()
 
 int ThreadBase::start()
 {
-	if (getState() != ThreadControlBlock::State::New)
+	if (getState() != scheduler::ThreadControlBlock::State::New)
 		return EINVAL;
 
-	getScheduler().add(threadControlBlock_);
+	scheduler::getScheduler().add(threadControlBlock_);
 	return 0;
 }
 
@@ -68,7 +65,7 @@ int ThreadBase::start()
 void ThreadBase::threadRunner(ThreadBase& threadBase)
 {
 	threadBase.run();
-	getScheduler().remove(&ThreadBase::terminationHook);
+	scheduler::getScheduler().remove(&ThreadBase::terminationHook);
 
 	while (1);
 }
@@ -81,7 +78,5 @@ void ThreadBase::terminationHook()
 {
 	joinSemaphore_.post();
 }
-
-}	// namespace scheduler
 
 }	// namespace distortos
