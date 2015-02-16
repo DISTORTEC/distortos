@@ -87,6 +87,12 @@ public:
 			ThreadBase& owner);
 
 	/**
+	 * \brief ThreadControlBlock's destructor
+	 */
+
+	~ThreadControlBlock();
+
+	/**
 	 * \brief Block hook function of thread
 	 *
 	 * Saves pointer to UnblockFunctor.
@@ -311,16 +317,6 @@ public:
 	ThreadControlBlock(ThreadControlBlock&&) = default;
 	const ThreadControlBlock& operator=(const ThreadControlBlock&) = delete;
 	ThreadControlBlock& operator=(ThreadControlBlock&&) = delete;
-
-protected:
-
-	/**
-	 * \brief ThreadControlBlock's destructor
-	 *
-	 * \note Polymorphic objects of ThreadControlBlock type must not be deleted via pointer/reference
-	 */
-
-	~ThreadControlBlock();
 
 private:
 

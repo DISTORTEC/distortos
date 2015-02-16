@@ -52,6 +52,11 @@ ThreadControlBlock::ThreadControlBlock(architecture::Stack&& stack, const uint8_
 
 }
 
+ThreadControlBlock::~ThreadControlBlock()
+{
+	_reclaim_reent(&reent_);
+}
+
 void ThreadControlBlock::setPriority(const uint8_t priority, const bool alwaysBehind)
 {
 	architecture::InterruptMaskingLock interruptMaskingLock;
@@ -120,15 +125,6 @@ void ThreadControlBlock::updateBoostedPriority(const uint8_t boostedPriority)
 	// memory usage of threads.
 	if (priorityInheritanceMutexControlBlock_ != nullptr)
 		priorityInheritanceMutexControlBlock_->getOwner()->updateBoostedPriority();
-}
-
-/*---------------------------------------------------------------------------------------------------------------------+
-| protected functions
-+---------------------------------------------------------------------------------------------------------------------*/
-
-ThreadControlBlock::~ThreadControlBlock()
-{
-	_reclaim_reent(&reent_);
 }
 
 /*---------------------------------------------------------------------------------------------------------------------+
