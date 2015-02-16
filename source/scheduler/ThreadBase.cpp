@@ -36,7 +36,7 @@ ThreadBase::ThreadBase(void* const buffer, const size_t size, const uint8_t prio
 }
 
 ThreadBase::ThreadBase(architecture::Stack&& stack, const uint8_t priority, const SchedulingPolicy schedulingPolicy) :
-		ThreadControlBlock{std::move(stack), priority, schedulingPolicy, *this},
+		threadControlBlock_{std::move(stack), priority, schedulingPolicy, *this},
 		joinSemaphore_{0}
 {
 
@@ -44,7 +44,7 @@ ThreadBase::ThreadBase(architecture::Stack&& stack, const uint8_t priority, cons
 
 int ThreadBase::join()
 {
-	if (this == &getScheduler().getCurrentThreadControlBlock())
+	if (&threadControlBlock_ == &getScheduler().getCurrentThreadControlBlock())
 		return EDEADLK;
 
 	int ret;
@@ -57,7 +57,7 @@ int ThreadBase::start()
 	if (getState() != ThreadControlBlock::State::New)
 		return EINVAL;
 
-	getScheduler().add(*this);
+	getScheduler().add(threadControlBlock_);
 	return 0;
 }
 

@@ -25,7 +25,7 @@ namespace scheduler
 {
 
 /// ThreadBase class is a base for threads
-class ThreadBase : private ThreadControlBlock
+class ThreadBase
 {
 public:
 
@@ -56,7 +56,7 @@ public:
 
 	uint8_t getEffectivePriority() const
 	{
-		return ThreadControlBlock::getEffectivePriority();
+		return threadControlBlock_.getEffectivePriority();
 	}
 
 	/**
@@ -65,7 +65,7 @@ public:
 
 	uint8_t getPriority() const
 	{
-		return ThreadControlBlock::getPriority();
+		return threadControlBlock_.getPriority();
 	}
 
 	/**
@@ -74,7 +74,7 @@ public:
 
 	SchedulingPolicy getSchedulingPolicy() const
 	{
-		return ThreadControlBlock::getSchedulingPolicy();
+		return threadControlBlock_.getSchedulingPolicy();
 	}
 
 	/**
@@ -83,7 +83,7 @@ public:
 
 	ThreadControlBlock::State getState() const
 	{
-		return ThreadControlBlock::getState();
+		return threadControlBlock_.getState();
 	}
 
 	/**
@@ -116,7 +116,7 @@ public:
 
 	void setPriority(const uint8_t priority, const bool alwaysBehind = {})
 	{
-		ThreadControlBlock::setPriority(priority, alwaysBehind);
+		threadControlBlock_.setPriority(priority, alwaysBehind);
 	}
 
 	/**
@@ -125,7 +125,7 @@ public:
 
 	void setSchedulingPolicy(const SchedulingPolicy schedulingPolicy)
 	{
-		ThreadControlBlock::setSchedulingPolicy(schedulingPolicy);
+		threadControlBlock_.setSchedulingPolicy(schedulingPolicy);
 	}
 
 	/**
@@ -158,12 +158,12 @@ protected:
 	}
 
 	/**
-	 * \return reference to base ThreadControlBlock object
+	 * \return reference to internal ThreadControlBlock object
 	 */
 
 	ThreadControlBlock& getThreadControlBlock()
 	{
-		return *this;
+		return threadControlBlock_;
 	}
 
 private:
@@ -193,6 +193,9 @@ private:
 	 */
 
 	void terminationHook();
+
+	/// internal ThreadControlBlock object
+	ThreadControlBlock threadControlBlock_;
 
 	/// semaphore used by join()
 	Semaphore joinSemaphore_;
