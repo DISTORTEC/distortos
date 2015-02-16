@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-02-14
+ * \date 2015-02-16
  */
 
 #ifndef INCLUDE_DISTORTOS_STATICTHREAD_HPP_
@@ -28,7 +28,7 @@ namespace distortos
  */
 
 template<size_t StackSize, typename Function, typename... Args>
-class StaticThread : private Thread<Function, Args...>
+class StaticThread : public Thread<Function, Args...>
 {
 public:
 
@@ -65,20 +65,6 @@ public:
 	{
 
 	}
-
-	using Base::getEffectivePriority;
-
-	using Base::getPriority;
-
-	using Base::getSchedulingPolicy;
-
-	using Base::join;
-
-	using Base::setPriority;
-
-	using Base::setSchedulingPolicy;
-
-	using Base::start;
 
 	StaticThread(const StaticThread&) = delete;
 	StaticThread(StaticThread&&) = default;
