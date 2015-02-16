@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-02-14
+ * \date 2015-02-16
  */
 
 #include "distortos/scheduler/ThreadControlBlock.hpp"
@@ -128,18 +128,6 @@ void ThreadControlBlock::updateBoostedPriority(const uint8_t boostedPriority)
 ThreadControlBlock::~ThreadControlBlock()
 {
 	_reclaim_reent(&reent_);
-}
-
-/*---------------------------------------------------------------------------------------------------------------------+
-| protected static functions
-+---------------------------------------------------------------------------------------------------------------------*/
-
-void ThreadControlBlock::threadRunner(ThreadControlBlock& threadControlBlock)
-{
-	threadControlBlock.run();
-	getScheduler().remove();
-
-	while (1);
 }
 
 /*---------------------------------------------------------------------------------------------------------------------+

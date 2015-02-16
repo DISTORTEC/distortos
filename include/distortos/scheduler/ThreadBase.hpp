@@ -118,6 +118,24 @@ protected:
 private:
 
 	/**
+	 * \brief Thread runner function - entry point of threads.
+	 *
+	 * After return from actual thread function, thread is terminated, so this function never returns.
+	 *
+	 * \param [in] threadBase is a reference to ThreadBase object that is being run
+	 */
+
+	static void threadRunner(ThreadBase& threadBase) __attribute__ ((noreturn));
+
+	/**
+	 * \brief "Run" function of thread
+	 *
+	 * This should be overridden by derived classes.
+	 */
+
+	virtual void run() = 0;
+
+	/**
 	 * \brief Termination hook function of thread
 	 *
 	 * This function is called after run() completes.

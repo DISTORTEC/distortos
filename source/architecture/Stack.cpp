@@ -2,13 +2,13 @@
  * \file
  * \brief Stack class implementation
  *
- * \author Copyright (C) 2014 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-10-27
+ * \date 2015-02-16
  */
 
 #include "distortos/architecture/Stack.hpp"
@@ -70,16 +70,16 @@ size_t adjustSize(void* const buffer, const size_t size, void* const adjustedBuf
  * \param [in] buffer is a pointer to stack's buffer
  * \param [in] size is the size of stack's buffer, bytes
  * \param [in] function is a reference to thread's function, this function must not return
- * \param [in] threadControlBlock is a reference to scheduler::ThreadControlBlock object passed to function
+ * \param [in] threadBase is a reference to scheduler::ThreadBase object passed to function
  *
  * \return value that can be used as thread's stack pointer, ready for context switching
  */
 
-void* initializeStackProxy(void* const buffer, const size_t size, void (&function)(scheduler::ThreadControlBlock&),
-		scheduler::ThreadControlBlock& threadControlBlock)
+void* initializeStackProxy(void* const buffer, const size_t size, void (&function)(scheduler::ThreadBase&),
+		scheduler::ThreadBase& threadBase)
 {
 	memset(buffer, 0, size);
-	return initializeStack(buffer, size, function, threadControlBlock);
+	return initializeStack(buffer, size, function, threadBase);
 }
 
 }	// namespace
@@ -88,11 +88,11 @@ void* initializeStackProxy(void* const buffer, const size_t size, void (&functio
 | public functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-Stack::Stack(void* const buffer, const size_t size, void (&function)(scheduler::ThreadControlBlock&),
-		scheduler::ThreadControlBlock& threadControlBlock) :
+Stack::Stack(void* const buffer, const size_t size, void (&function)(scheduler::ThreadBase&),
+		scheduler::ThreadBase& threadBase) :
 		adjustedBuffer_{adjustBuffer(buffer, stackAlignment)},
 		adjustedSize_{adjustSize(buffer, size, adjustedBuffer_, stackSizeDivisibility)},
-		stackPointer_{initializeStackProxy(adjustedBuffer_, adjustedSize_, function, threadControlBlock)}
+		stackPointer_{initializeStackProxy(adjustedBuffer_, adjustedSize_, function, threadBase)}
 {
 	/// \todo implement minimal size check
 }

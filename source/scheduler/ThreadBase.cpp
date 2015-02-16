@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-02-14
+ * \date 2015-02-16
  */
 
 #include "distortos/scheduler/ThreadBase.hpp"
@@ -59,6 +59,18 @@ int ThreadBase::start()
 
 	getScheduler().add(*this);
 	return 0;
+}
+
+/*---------------------------------------------------------------------------------------------------------------------+
+| private static functions
++---------------------------------------------------------------------------------------------------------------------*/
+
+void ThreadBase::threadRunner(ThreadBase& threadBase)
+{
+	threadBase.run();
+	getScheduler().remove();
+
+	while (1);
 }
 
 /*---------------------------------------------------------------------------------------------------------------------+
