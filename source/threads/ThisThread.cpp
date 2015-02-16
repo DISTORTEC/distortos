@@ -53,9 +53,10 @@ void sleepFor(const TickClock::duration duration)
 
 void sleepUntil(const TickClock::time_point timePoint)
 {
-	scheduler::ThreadControlBlockList sleepingList {scheduler::getScheduler().getThreadControlBlockListAllocator(),
+	auto& scheduler = scheduler::getScheduler();
+	scheduler::ThreadControlBlockList sleepingList {scheduler.getThreadControlBlockListAllocator(),
 			scheduler::ThreadControlBlock::State::Sleeping};
-	scheduler::getScheduler().blockUntil(sleepingList, timePoint);
+	scheduler.blockUntil(sleepingList, timePoint);
 }
 
 void yield()
