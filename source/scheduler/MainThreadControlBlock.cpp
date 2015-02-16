@@ -1,6 +1,6 @@
 /**
  * \file
- * \brief MainThreadControlBlock class implementation
+ * \brief MainThread class implementation
  *
  * \author Copyright (C) 2014-2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
@@ -49,7 +49,7 @@ architecture::Stack stackWrapper(const std::pair<void*, size_t> stackBuffer)
 | public functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-MainThreadControlBlock::MainThreadControlBlock(const uint8_t priority) :
+MainThread::MainThread(const uint8_t priority) :
 		ThreadBase{stackWrapper(architecture::getMainStack()), priority, SchedulingPolicy::RoundRobin}
 {
 
@@ -59,7 +59,7 @@ MainThreadControlBlock::MainThreadControlBlock(const uint8_t priority) :
 | private functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-void MainThreadControlBlock::run()
+void MainThread::run()
 {
 	while (1);	/// \todo add some form of assertion that this never gets called
 }

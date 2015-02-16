@@ -43,8 +43,7 @@ using IdleThread = decltype(makeStaticThread<idleThreadStackSize>(0, idleThreadF
 std::aligned_storage<sizeof(IdleThread), alignof(IdleThread)>::type idleThreadStorage;
 
 /// storage for main thread instance
-std::aligned_storage<sizeof(MainThreadControlBlock), alignof(MainThreadControlBlock)>::type
-		mainThreadControlBlockStorage;
+std::aligned_storage<sizeof(MainThread), alignof(MainThread)>::type mainThreadStorage;
 
 }	// namespace
 
@@ -63,9 +62,9 @@ extern "C" void lowLevelInitialization1()
 	auto& schedulerInstance = getScheduler();
 	new (&schedulerInstance) Scheduler;
 
-	auto& mainThreadControlBlock = *new (&mainThreadControlBlockStorage) MainThreadControlBlock {UINT8_MAX};
-	schedulerInstance.initialize(mainThreadControlBlock);
-	mainThreadControlBlock.getThreadControlBlock().switchedToHook();
+	auto& mainThread = *new (&mainThreadStorage) MainThread {UINT8_MAX};
+	schedulerInstance.initialize(mainThread);
+	mainThread.getThreadControlBlock().switchedToHook();
 	
 	auto& idleThread = *new (&idleThreadStorage) IdleThread {0, idleThreadFunction};
 	idleThread.start();

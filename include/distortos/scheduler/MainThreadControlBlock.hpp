@@ -1,6 +1,6 @@
 /**
  * \file
- * \brief MainThreadControlBlock class header
+ * \brief MainThread class header
  *
  * \author Copyright (C) 2014-2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
@@ -22,18 +22,18 @@ namespace distortos
 namespace scheduler
 {
 
-/// MainThreadControlBlock class is a ThreadBase for main()
-class MainThreadControlBlock : public ThreadBase
+/// MainThread class is a ThreadBase for main()
+class MainThread : public ThreadBase
 {
 public:
 
 	/**
-	 * \brief MainThreadControlBlock's constructor.
+	 * \brief MainThread's constructor.
 	 *
 	 * \param [in] priority is the thread's priority, 0 - lowest, UINT8_MAX - highest
 	 */
 
-	MainThreadControlBlock(uint8_t priority);
+	MainThread(uint8_t priority);
 
 	using ThreadBase::getThreadControlBlock;
 

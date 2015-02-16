@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-02-02
+ * \date 2015-02-16
  */
 
 #ifndef INCLUDE_DISTORTOS_SCHEDULER_SCHEDULER_HPP_
@@ -24,7 +24,7 @@ namespace distortos
 namespace scheduler
 {
 
-class MainThreadControlBlock;
+class MainThread;
 
 /// Scheduler class is a system's scheduler
 class Scheduler
@@ -166,10 +166,10 @@ public:
 	 * \attention This must be called after constructor, before enabling any scheduling. Priority of main thread must
 	 * be higher than priority of idle thread
 	 *
-	 * \param [in] mainThreadControlBlock is a reference to main thread
+	 * \param [in] mainThread is a reference to main thread
 	 */
 
-	void initialize(MainThreadControlBlock& mainThreadControlBlock);
+	void initialize(MainThread& mainThread);
 
 	/**
 	 * \brief Requests context switch if it is needed.

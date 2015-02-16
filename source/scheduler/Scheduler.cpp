@@ -129,9 +129,9 @@ uint64_t Scheduler::getTickCount() const
 	return tickCount_;
 }
 
-void Scheduler::initialize(MainThreadControlBlock& mainThreadControlBlock)
+void Scheduler::initialize(MainThread& mainThread)
 {
-	addInternal(mainThreadControlBlock.getThreadControlBlock());
+	addInternal(mainThread.getThreadControlBlock());
 	currentThreadControlBlock_ = runnableList_.begin();
 }
 
