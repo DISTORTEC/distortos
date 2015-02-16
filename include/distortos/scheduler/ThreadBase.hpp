@@ -51,6 +51,33 @@ public:
 	ThreadBase(architecture::Stack&& stack, uint8_t priority, SchedulingPolicy schedulingPolicy);
 
 	/**
+	 * \return effective priority of thread
+	 */
+
+	uint8_t getEffectivePriority() const
+	{
+		return ThreadControlBlock::getEffectivePriority();
+	}
+
+	/**
+	 * \return priority of thread
+	 */
+
+	uint8_t getPriority() const
+	{
+		return ThreadControlBlock::getPriority();
+	}
+
+	/**
+	 * \return scheduling policy of the thread
+	 */
+
+	SchedulingPolicy getSchedulingPolicy() const
+	{
+		return ThreadControlBlock::getSchedulingPolicy();
+	}
+
+	/**
 	 * \brief Waits for thread termination.
 	 *
 	 * Similar to std::thread::join() - http://en.cppreference.com/w/cpp/thread/thread/join
@@ -68,6 +95,31 @@ public:
 	int join();
 
 	/**
+	 * \brief Changes priority of thread.
+	 *
+	 * If the priority really changes, the position in the thread list is adjusted and context switch may be requested.
+	 *
+	 * \param [in] priority is the new priority of thread
+	 * \param [in] alwaysBehind selects the method of ordering when lowering the priority
+	 * - false - the thread is moved to the head of the group of threads with the new priority (default),
+	 * - true - the thread is moved to the tail of the group of threads with the new priority.
+	 */
+
+	void setPriority(const uint8_t priority, const bool alwaysBehind = {})
+	{
+		ThreadControlBlock::setPriority(priority, alwaysBehind);
+	}
+
+	/**
+	 * param [in] schedulingPolicy is the new scheduling policy of the thread
+	 */
+
+	void setSchedulingPolicy(const SchedulingPolicy schedulingPolicy)
+	{
+		ThreadControlBlock::setSchedulingPolicy(schedulingPolicy);
+	}
+
+	/**
 	 * \brief Starts the thread.
 	 *
 	 * This operation can be performed on threads in "New" state only.
@@ -77,16 +129,6 @@ public:
 	 */
 
 	int start();
-
-	using ThreadControlBlock::getEffectivePriority;
-
-	using ThreadControlBlock::getPriority;
-
-	using ThreadControlBlock::getSchedulingPolicy;
-
-	using ThreadControlBlock::setPriority;
-
-	using ThreadControlBlock::setSchedulingPolicy;
 
 	ThreadBase(const ThreadBase&) = delete;
 	ThreadBase(ThreadBase&&) = default;
