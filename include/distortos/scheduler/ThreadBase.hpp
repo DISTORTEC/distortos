@@ -138,10 +138,10 @@ private:
 	/**
 	 * \brief Termination hook function of thread
 	 *
-	 * This function is called after run() completes.
+	 * This function is called after run() completes, from Scheduler::remove().
 	 */
 
-	virtual void terminationHook_() override;
+	void terminationHook();
 
 	/// semaphore used by join()
 	Semaphore joinSemaphore_;

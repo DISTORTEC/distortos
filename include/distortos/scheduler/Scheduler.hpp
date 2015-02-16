@@ -186,14 +186,14 @@ public:
 	 *
 	 * \note This function can be used only after thread's function returns an all cleanup is done.
 	 *
-	 * \param [in] terminationHook is a pointer to member function of ThreadControlBlock that will be called from within
-	 * lock zone just before forced context switch
+	 * \param [in] terminationHook is a pointer to member function of ThreadBase that will be called from within lock
+	 * zone just before forced context switch
 	 *
 	 * \return 0 on success, error code otherwise:
 	 * - EINVAL - provided thread is not on "runnable" list and cannot be removed/terminated;
 	 */
 
-	int remove(void (ThreadControlBlock::*terminationHook)());
+	int remove(void (ThreadBase::*terminationHook)());
 
 	/**
 	 * \brief Resumes suspended thread.

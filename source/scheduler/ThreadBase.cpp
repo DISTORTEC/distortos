@@ -68,7 +68,7 @@ int ThreadBase::start()
 void ThreadBase::threadRunner(ThreadBase& threadBase)
 {
 	threadBase.run();
-	getScheduler().remove(&ThreadControlBlock::terminationHook);
+	getScheduler().remove(&ThreadBase::terminationHook);
 
 	while (1);
 }
@@ -77,7 +77,7 @@ void ThreadBase::threadRunner(ThreadBase& threadBase)
 | private functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-void ThreadBase::terminationHook_()
+void ThreadBase::terminationHook()
 {
 	joinSemaphore_.post();
 }

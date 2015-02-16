@@ -141,7 +141,7 @@ void Scheduler::maybeRequestContextSwitch() const
 		architecture::requestContextSwitch();
 }
 
-int Scheduler::remove(void (ThreadControlBlock::*terminationHook)())
+int Scheduler::remove(void (ThreadBase::*terminationHook)())
 {
 	{
 		architecture::InterruptMaskingLock interruptMaskingLock;
@@ -151,7 +151,7 @@ int Scheduler::remove(void (ThreadControlBlock::*terminationHook)())
 		if (ret != 0)
 			return ret;
 
-		(terminatedList.begin()->get().*terminationHook)();
+		(terminatedList.begin()->get().getOwner().*terminationHook)();
 	}
 
 	forceContextSwitch();

@@ -284,17 +284,6 @@ public:
 	}
 
 	/**
-	 * \brief Termination hook function of thread
-	 *
-	 * \attention This function should be called only by Scheduler::remove().
-	 */
-
-	void terminationHook()
-	{
-		terminationHook_();
-	}
-
-	/**
 	 * \brief Unblock hook function of thread
 	 *
 	 * Resets round-robin's quantum, sets unblock reason and executes unblock functor saved in blockHook().
@@ -350,16 +339,6 @@ private:
 	 */
 
 	void reposition(bool loweringBefore);
-
-	/**
-	 * \brief Termination hook function of thread
-	 *
-	 * This function is called after run() completes.
-	 *
-	 * This should be overridden by derived classes.
-	 */
-
-	virtual void terminationHook_() = 0;
 
 	/// internal stack object
 	architecture::Stack stack_;
