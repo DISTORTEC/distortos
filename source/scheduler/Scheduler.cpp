@@ -14,7 +14,7 @@
 #include "distortos/scheduler/Scheduler.hpp"
 
 #include "distortos/SoftwareTimer.hpp"
-#include "distortos/scheduler/MainThreadControlBlock.hpp"
+#include "distortos/scheduler/MainThread.hpp"
 
 #include "distortos/architecture/InterruptMaskingLock.hpp"
 #include "distortos/architecture/InterruptUnmaskingLock.hpp"

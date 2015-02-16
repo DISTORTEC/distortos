@@ -16,7 +16,7 @@
 #include "distortos/scheduler/getScheduler.hpp"
 #include "distortos/scheduler/Scheduler.hpp"
 #include "distortos/scheduler/idleThreadFunction.hpp"
-#include "distortos/scheduler/MainThreadControlBlock.hpp"
+#include "distortos/scheduler/MainThread.hpp"
 
 #include "distortos/architecture/architecture.hpp"
 

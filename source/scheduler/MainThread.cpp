@@ -11,7 +11,7 @@
  * \date 2015-02-16
  */
 
-#include "distortos/scheduler/MainThreadControlBlock.hpp"
+#include "distortos/scheduler/MainThread.hpp"
 
 #include "distortos/architecture/architecture.hpp"
 
