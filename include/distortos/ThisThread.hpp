@@ -2,13 +2,13 @@
  * \file
  * \brief ThisThread namespace header
  *
- * \author Copyright (C) 2014 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-11-11
+ * \date 2015-02-16
  */
 
 #ifndef INCLUDE_DISTORTOS_THISTHREAD_HPP_
@@ -19,9 +19,17 @@
 namespace distortos
 {
 
+class ThreadBase;
+
 /// ThisThread namespace groups functions used to control current thread
 namespace ThisThread
 {
+
+/**
+ * \return reference to ThreadBase object of currently active thread
+ */
+
+ThreadBase& get();
 
 /**
  * \return effective priority of calling (current) thread
