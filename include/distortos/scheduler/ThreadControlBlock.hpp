@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-02-16
+ * \date 2015-02-17
  */
 
 #ifndef INCLUDE_DISTORTOS_SCHEDULER_THREADCONTROLBLOCK_HPP_
@@ -21,6 +21,7 @@
 #include "distortos/architecture/Stack.hpp"
 
 #include "distortos/SchedulingPolicy.hpp"
+#include "distortos/SignalSet.hpp"
 
 #include "distortos/estd/TypeErasedFunctor.hpp"
 
@@ -368,6 +369,9 @@ private:
 		/// reason of previous unblocking of the thread - valid only when thread is not blocked
 		UnblockReason unblockReason_;
 	};
+
+	/// set of pending signals
+	SignalSet pendingSignalSet_;
 
 	/// newlib's _reent structure with thread-specific data
 	_reent reent_;
