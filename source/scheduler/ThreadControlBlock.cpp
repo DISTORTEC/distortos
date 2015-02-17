@@ -71,6 +71,28 @@ SignalSet ThreadControlBlock::getPendingSignalSet() const
 	return pendingSignalSet_;
 }
 
+int ThreadControlBlock::generateSignal(const uint8_t signalNumber)
+{
+	architecture::InterruptMaskingLock interruptMaskingLock;
+
+	const auto ret = pendingSignalSet_.add(signalNumber);
+	if (ret != 0)
+		return ret;
+
+	if (waitingSignalSet_ == nullptr)
+		return 0;
+
+	const auto testResult = waitingSignalSet_->test(signalNumber);
+	if (testResult.first != 0)
+		return testResult.first;
+	if (testResult.second == false)	// signalNumber is not "waited for"?
+		return 0;
+
+	getScheduler().unblock(iterator_);
+	waitingSignalSet_ = {};
+	return 0;
+}
+
 void ThreadControlBlock::setPriority(const uint8_t priority, const bool alwaysBehind)
 {
 	architecture::InterruptMaskingLock interruptMaskingLock;
