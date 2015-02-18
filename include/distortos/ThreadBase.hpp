@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-02-16
+ * \date 2015-02-18
  */
 
 #ifndef INCLUDE_DISTORTOS_THREADBASE_HPP_
@@ -46,6 +46,25 @@ public:
 	 */
 
 	ThreadBase(architecture::Stack&& stack, uint8_t priority, SchedulingPolicy schedulingPolicy);
+
+	/**
+	 * \brief Generates signal for thread.
+	 *
+	 * Similar to pthread_kill() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_kill.html
+	 *
+	 * Adds the signalNumber to set of pending signals. If this thread is currently waiting for this signal, it will be
+	 * unblocked.
+	 *
+	 * \param [in] signalNumber is the signal that will be generated, [0; 31]
+	 *
+	 * \return 0 on success, error code otherwise:
+	 * - EINVAL - \a signalNumber value is invalid;
+	 */
+
+	int generateSignal(const uint8_t signalNumber)
+	{
+		return threadControlBlock_.generateSignal(signalNumber);
+	}
 
 	/**
 	 * \return effective priority of thread
