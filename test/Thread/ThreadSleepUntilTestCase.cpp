@@ -2,13 +2,13 @@
  * \file
  * \brief ThreadSleepUntilTestCase class implementation
  *
- * \author Copyright (C) 2014 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-10-27
+ * \date 2015-02-18
  */
 
 #include "ThreadSleepUntilTestCase.hpp"
@@ -38,7 +38,7 @@ namespace
 constexpr size_t testThreadStackSize {384};
 
 /// offset added to sleepUntil time points - there is some time between configuring thread and actually starting it...
-constexpr uint8_t timePointOffset {2};
+constexpr uint8_t timePointOffset {10};
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | local functions' declarations
