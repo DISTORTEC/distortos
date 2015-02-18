@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-01-19
+ * \date 2015-02-18
  */
 
 #include "testCases.hpp"
@@ -22,6 +22,7 @@
 #include "RawFifoQueue/rawFifoQueueTestCases.hpp"
 #include "MessageQueue/messageQueueTestCases.hpp"
 #include "RawMessageQueue/rawMessageQueueTestCases.hpp"
+#include "Signals/signalsTestCases.hpp"
 
 namespace distortos
 {
@@ -48,6 +49,7 @@ const TestCaseRangeRange::value_type testCases_[]
 		TestCaseRangeRange::value_type{rawFifoQueueTestCases},
 		TestCaseRangeRange::value_type{messageQueueTestCases},
 		TestCaseRangeRange::value_type{rawMessageQueueTestCases},
+		TestCaseRangeRange::value_type{signalsTestCases},
 };
 
 }	// namespace
