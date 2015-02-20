@@ -71,13 +71,19 @@ private:
 	SignalSet& pendingSignalSet_;
 };
 
-}	// namespace
-
 /*---------------------------------------------------------------------------------------------------------------------+
-| global functions
+| local functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-std::pair<int, uint8_t> wait(const SignalSet& signalSet)
+/**
+ * \brief Implementation of distortos::ThisThread::Signals::wait().
+ *
+ * \param [in] signalSet is a reference to set of signals that will be waited for
+ *
+ * \return pair with return code (0 on success, error code otherwise) and signal number of signal that was accepted
+ */
+
+std::pair<int, uint8_t> waitImplementation(const SignalSet& signalSet)
 {
 	architecture::InterruptMaskingLock interruptMaskingLock;
 
@@ -109,6 +115,17 @@ std::pair<int, uint8_t> wait(const SignalSet& signalSet)
 	const auto signalNumber = __builtin_ffsl(intersectionValue) - 1;
 	const auto ret = currentThreadControlBlock.acceptPendingSignal(signalNumber);
 	return {ret, signalNumber};
+}
+
+}	// namespace
+
+/*---------------------------------------------------------------------------------------------------------------------+
+| global functions
++---------------------------------------------------------------------------------------------------------------------*/
+
+std::pair<int, uint8_t> wait(const SignalSet& signalSet)
+{
+	return waitImplementation(signalSet);
 }
 
 }	// namespace Signals
