@@ -18,6 +18,8 @@
 
 #include "distortos/architecture/InterruptMaskingLock.hpp"
 
+#include <cerrno>
+
 namespace distortos
 {
 
@@ -79,11 +81,14 @@ private:
  * \brief Implementation of distortos::ThisThread::Signals::wait().
  *
  * \param [in] signalSet is a reference to set of signals that will be waited for
+ * \param [in] nonBlocking selects whether this function operates in blocking mode (false) or non-blocking mode (true)
  *
- * \return pair with return code (0 on success, error code otherwise) and signal number of signal that was accepted
+ * \return pair with return code (0 on success, error code otherwise) and signal number of signal that was accepted;
+ * error codes:
+ * - EAGAIN - no signal specified by \a signalSet was pending and non-blocking mode was selected;
  */
 
-std::pair<int, uint8_t> waitImplementation(const SignalSet& signalSet)
+std::pair<int, uint8_t> waitImplementation(const SignalSet& signalSet, const bool nonBlocking)
 {
 	architecture::InterruptMaskingLock interruptMaskingLock;
 
@@ -97,6 +102,9 @@ std::pair<int, uint8_t> waitImplementation(const SignalSet& signalSet)
 
 	if (intersection.none() == true)	// none of desired signals is pending, so current thread must be blocked
 	{
+		if (nonBlocking == true)
+			return {EAGAIN, {}};
+
 		scheduler::ThreadControlBlockList waitingList {scheduler.getThreadControlBlockListAllocator(),
 				scheduler::ThreadControlBlock::State::WaitingForSignal};
 
@@ -125,7 +133,7 @@ std::pair<int, uint8_t> waitImplementation(const SignalSet& signalSet)
 
 std::pair<int, uint8_t> wait(const SignalSet& signalSet)
 {
-	return waitImplementation(signalSet);
+	return waitImplementation(signalSet, false);	// blocking mode
 }
 
 }	// namespace Signals
