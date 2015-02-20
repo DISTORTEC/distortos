@@ -133,7 +133,7 @@ std::pair<int, uint8_t> tryWaitUntil(const SignalSet& signalSet,
 }
 
 /**
- * \brief Waits for signal.
+ * \brief Waits for signals.
  *
  * Similar to sigwait() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/sigwait.html
  *
