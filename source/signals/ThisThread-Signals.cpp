@@ -142,6 +142,11 @@ std::pair<int, uint8_t> tryWait(const SignalSet& signalSet)
 	return waitImplementation(signalSet, true, nullptr);	// non-blocking mode
 }
 
+std::pair<int, uint8_t> tryWaitUntil(const SignalSet& signalSet, const TickClock::time_point timePoint)
+{
+	return waitImplementation(signalSet, false, &timePoint);	// blocking mode, with timeout
+}
+
 std::pair<int, uint8_t> wait(const SignalSet& signalSet)
 {
 	return waitImplementation(signalSet, false, nullptr);	// blocking mode, no timeout

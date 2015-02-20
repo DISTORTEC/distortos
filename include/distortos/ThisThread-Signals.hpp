@@ -14,6 +14,8 @@
 #ifndef INCLUDE_DISTORTOS_THISTHREAD_SIGNALS_HPP_
 #define INCLUDE_DISTORTOS_THISTHREAD_SIGNALS_HPP_
 
+#include "distortos/TickClock.hpp"
+
 #include <utility>
 
 #include <cstdint>
@@ -47,6 +49,25 @@ namespace Signals
  */
 
 std::pair<int, uint8_t> tryWait(const SignalSet& signalSet);
+
+/**
+ * \brief Tries to wait for signals until given time point.
+ *
+ * Similar to sigtimedwait() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/sigtimedwait.html
+ *
+ * This function shall select the lowest pending signal from provided set, atomically clear it from current thread's set
+ * of pending signals and return that signal number. If no signal in provided set is pending at the time of the call,
+ * the thread shall be suspended until one or more becomes pending or until given time point is reached
+ *
+ * \param [in] signalSet is a reference to set of signals that will be waited for
+ * \param [in] timePoint is the time point at which the wait for signals will be terminated
+ *
+ * \return pair with return code (0 on success, error code otherwise) and signal number of signal that was accepted;
+ * error codes:
+ * - ETIMEDOUT - no signal specified by \a signalSet was generated before specified \a timePoint;
+ */
+
+std::pair<int, uint8_t> tryWaitUntil(const SignalSet& signalSet, TickClock::time_point timePoint);
 
 /**
  * \brief Waits for signal.
