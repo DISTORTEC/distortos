@@ -78,7 +78,7 @@ private:
 +---------------------------------------------------------------------------------------------------------------------*/
 
 /**
- * \brief Implementation of distortos::ThisThread::Signals::wait().
+ * \brief Implementation of distortos::ThisThread::Signals::wait() and distortos::ThisThread::Signals::tryWait().
  *
  * \param [in] signalSet is a reference to set of signals that will be waited for
  * \param [in] nonBlocking selects whether this function operates in blocking mode (false) or non-blocking mode (true)
@@ -130,6 +130,11 @@ std::pair<int, uint8_t> waitImplementation(const SignalSet& signalSet, const boo
 /*---------------------------------------------------------------------------------------------------------------------+
 | global functions
 +---------------------------------------------------------------------------------------------------------------------*/
+
+std::pair<int, uint8_t> tryWait(const SignalSet& signalSet)
+{
+	return waitImplementation(signalSet, true);	// non-blocking mode
+}
 
 std::pair<int, uint8_t> wait(const SignalSet& signalSet)
 {
