@@ -70,6 +70,28 @@ std::pair<int, uint8_t> tryWait(const SignalSet& signalSet);
 std::pair<int, uint8_t> tryWaitFor(const SignalSet& signalSet, TickClock::duration duration);
 
 /**
+ * \brief Tries to wait for signals for given duration of time.
+ *
+ * Template variant of tryWaitFor(const SignalSet&, TickClock::duration).
+ *
+ * \param Rep is type of tick counter
+ * \param Period is std::ratio type representing the tick period of the clock, in seconds
+ *
+ * \param [in] signalSet is a reference to set of signals that will be waited for
+ * \param [in] duration is the duration after which the wait for signals will be terminated
+ *
+ * \return pair with return code (0 on success, error code otherwise) and signal number of signal that was accepted;
+ * error codes:
+ * - ETIMEDOUT - no signal specified by \a signalSet was generated before the specified \a duration passed;
+ */
+
+template<typename Rep, typename Period>
+std::pair<int, uint8_t> tryWaitFor(const SignalSet& signalSet, const std::chrono::duration<Rep, Period> duration)
+{
+	return tryWaitFor(signalSet, std::chrono::duration_cast<TickClock::duration>(duration));
+}
+
+/**
  * \brief Tries to wait for signals until given time point.
  *
  * Similar to sigtimedwait() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/sigtimedwait.html
