@@ -78,17 +78,22 @@ private:
 +---------------------------------------------------------------------------------------------------------------------*/
 
 /**
- * \brief Implementation of distortos::ThisThread::Signals::wait() and distortos::ThisThread::Signals::tryWait().
+ * \brief Implementation of distortos::ThisThread::Signals::wait(), distortos::ThisThread::Signals::tryWait() and
+ * distortos::ThisThread::Signals::tryWaitUntil().
  *
  * \param [in] signalSet is a reference to set of signals that will be waited for
  * \param [in] nonBlocking selects whether this function operates in blocking mode (false) or non-blocking mode (true)
+ * \param [in] timePoint is a pointer to time point at which the wait for signals will be terminated, used only if
+ * blocking mode is selected, nullptr to block without timeout
  *
  * \return pair with return code (0 on success, error code otherwise) and signal number of signal that was accepted;
  * error codes:
  * - EAGAIN - no signal specified by \a signalSet was pending and non-blocking mode was selected;
+ * - ETIMEDOUT - no signal specified by \a signalSet was generated before specified \a timePoint;
  */
 
-std::pair<int, uint8_t> waitImplementation(const SignalSet& signalSet, const bool nonBlocking)
+std::pair<int, uint8_t> waitImplementation(const SignalSet& signalSet, const bool nonBlocking,
+		const TickClock::time_point* const timePoint)
 {
 	architecture::InterruptMaskingLock interruptMaskingLock;
 
@@ -110,7 +115,8 @@ std::pair<int, uint8_t> waitImplementation(const SignalSet& signalSet, const boo
 
 		currentThreadControlBlock.setWaitingSignalSet(&signalSet);
 		const SignalsWaitUnblockFunctor signalsWaitUnblockFunctor {pendingSignalSet};
-		const auto ret = scheduler.block(waitingList, &signalsWaitUnblockFunctor);
+		const auto ret = timePoint == nullptr ? scheduler.block(waitingList, &signalsWaitUnblockFunctor) :
+				scheduler.blockUntil(waitingList, *timePoint, &signalsWaitUnblockFunctor);
 		if (ret != 0)
 			return {ret, {}};
 
@@ -133,12 +139,12 @@ std::pair<int, uint8_t> waitImplementation(const SignalSet& signalSet, const boo
 
 std::pair<int, uint8_t> tryWait(const SignalSet& signalSet)
 {
-	return waitImplementation(signalSet, true);	// non-blocking mode
+	return waitImplementation(signalSet, true, nullptr);	// non-blocking mode
 }
 
 std::pair<int, uint8_t> wait(const SignalSet& signalSet)
 {
-	return waitImplementation(signalSet, false);	// blocking mode
+	return waitImplementation(signalSet, false, nullptr);	// blocking mode, no timeout
 }
 
 }	// namespace Signals
