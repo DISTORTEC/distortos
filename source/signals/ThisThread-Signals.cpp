@@ -145,6 +145,11 @@ int generateSignal(const uint8_t signalNumber)
 	return ThisThread::get().generateSignal(signalNumber);
 }
 
+SignalSet getPendingSignalSet()
+{
+	return ThisThread::get().getPendingSignalSet();
+}
+
 std::pair<int, uint8_t> tryWait(const SignalSet& signalSet)
 {
 	return waitImplementation(signalSet, true, nullptr);	// non-blocking mode

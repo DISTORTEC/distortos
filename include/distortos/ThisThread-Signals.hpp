@@ -48,6 +48,18 @@ namespace Signals
 int generateSignal(uint8_t signalNumber);
 
 /**
+ * \brief Gets set of currently pending signals for current thread .
+ *
+ * Similar to sigpending() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/sigpending.html
+ *
+ * This function shall return the set of signals that are blocked from delivery and are pending on the current thread.
+ *
+ * \return set of currently pending signals for current thread
+ */
+
+SignalSet getPendingSignalSet();
+
+/**
  * \brief Tries to accept pending signals.
  *
  * Similar to sigtimedwait() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/sigtimedwait.html
