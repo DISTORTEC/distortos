@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-02-18
+ * \date 2015-02-21
  */
 
 #ifndef INCLUDE_DISTORTOS_THREADBASE_HPP_
@@ -73,6 +73,21 @@ public:
 	uint8_t getEffectivePriority() const
 	{
 		return threadControlBlock_.getEffectivePriority();
+	}
+
+	/**
+	 * \brief Gets set of currently pending signals.
+	 *
+	 * Similar to sigpending() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/sigpending.html
+	 *
+	 * This function shall return the set of signals that are blocked from delivery and are pending on the thread.
+	 *
+	 * \return set of currently pending signals
+	 */
+
+	SignalSet getPendingSignalSet() const
+	{
+		return threadControlBlock_.getPendingSignalSet();
 	}
 
 	/**
