@@ -34,25 +34,25 @@ namespace
 | local types
 +---------------------------------------------------------------------------------------------------------------------*/
 
-/// SavePendingSignalSetUnblockFunctor is a functor executed when unblocking a thread that is waiting for signal
-class SavePendingSignalSetUnblockFunctor : public scheduler::ThreadControlBlock::UnblockFunctor
+/// SignalsWaitUnblockFunctor is a functor executed when unblocking a thread that is waiting for signal
+class SignalsWaitUnblockFunctor : public scheduler::ThreadControlBlock::UnblockFunctor
 {
 public:
 
 	/**
-	 * \brief SavePendingSignalSetUnblockFunctor's constructor
+	 * \brief SignalsWaitUnblockFunctor's constructor
 	 *
 	 * \param [in] pendingSignalSet is a reference to SignalSet that will be used to return saved pending signal set
 	 */
 
-	constexpr explicit SavePendingSignalSetUnblockFunctor(SignalSet& pendingSignalSet) :
+	constexpr explicit SignalsWaitUnblockFunctor(SignalSet& pendingSignalSet) :
 			pendingSignalSet_(pendingSignalSet)
 	{
 
 	}
 
 	/**
-	 * \brief SavePendingSignalSetUnblockFunctor's function call operator
+	 * \brief SignalsWaitUnblockFunctor's function call operator
 	 *
 	 * Saves pending signal set of unblocked thread.
 	 *
@@ -94,8 +94,8 @@ std::pair<int, uint8_t> wait(const SignalSet& signalSet)
 				scheduler::ThreadControlBlock::State::WaitingForSignal};
 
 		currentThreadControlBlock.setWaitingSignalSet(&signalSet);
-		const SavePendingSignalSetUnblockFunctor savePendingSignalSetUnblockFunctor {pendingSignalSet};
-		const auto ret = scheduler.block(waitingList, &savePendingSignalSetUnblockFunctor);
+		const SignalsWaitUnblockFunctor signalsWaitUnblockFunctor {pendingSignalSet};
+		const auto ret = scheduler.block(waitingList, &signalsWaitUnblockFunctor);
 		if (ret != 0)
 			return {ret, {}};
 
