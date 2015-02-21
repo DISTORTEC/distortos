@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-02-17
+ * \date 2015-02-21
  */
 
 #include "distortos/ThisThread-Signals.hpp"
@@ -93,7 +93,7 @@ std::pair<int, uint8_t> wait(const SignalSet& signalSet)
 		scheduler::ThreadControlBlockList waitingList {scheduler.getThreadControlBlockListAllocator(),
 				scheduler::ThreadControlBlock::State::WaitingForSignal};
 
-		currentThreadControlBlock.setWaitingSignalSet(signalSet);
+		currentThreadControlBlock.setWaitingSignalSet(&signalSet);
 		const SavePendingSignalSetUnblockFunctor savePendingSignalSetUnblockFunctor {pendingSignalSet};
 		const auto ret = scheduler.block(waitingList, &savePendingSignalSetUnblockFunctor);
 		if (ret != 0)

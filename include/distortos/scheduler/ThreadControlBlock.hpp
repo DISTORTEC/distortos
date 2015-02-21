@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-02-17
+ * \date 2015-02-21
  */
 
 #ifndef INCLUDE_DISTORTOS_SCHEDULER_THREADCONTROLBLOCK_HPP_
@@ -315,12 +315,12 @@ public:
 	}
 
 	/**
-	 * \param [in] signalSet is a reference to set of signals that will be "waited for"
+	 * \param [in] signalSet is a pointer to set of signals that will be "waited for", nullptr when wait was terminated
 	 */
 
-	void setWaitingSignalSet(const SignalSet& signalSet)
+	void setWaitingSignalSet(const SignalSet* const signalSet)
 	{
-		waitingSignalSet_ = &signalSet;
+		waitingSignalSet_ = signalSet;
 	}
 
 	/**
