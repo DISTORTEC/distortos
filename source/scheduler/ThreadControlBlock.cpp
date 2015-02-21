@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-02-17
+ * \date 2015-02-21
  */
 
 #include "distortos/scheduler/ThreadControlBlock.hpp"
@@ -89,7 +89,6 @@ int ThreadControlBlock::generateSignal(const uint8_t signalNumber)
 		return 0;
 
 	getScheduler().unblock(iterator_);
-	waitingSignalSet_ = {};
 	return 0;
 }
 
