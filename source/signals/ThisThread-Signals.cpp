@@ -54,7 +54,7 @@ public:
 	/**
 	 * \brief SignalsWaitUnblockFunctor's function call operator
 	 *
-	 * Saves pending signal set of unblocked thread.
+	 * Saves pending signal set of unblocked thread and clears pointer to set of signals that were "waited for".
 	 *
 	 * \param [in] threadControlBlock is a reference to ThreadControlBlock that is being unblocked
 	 */
@@ -62,6 +62,7 @@ public:
 	void operator()(scheduler::ThreadControlBlock& threadControlBlock) const override
 	{
 		pendingSignalSet_ = threadControlBlock.getPendingSignalSet();
+		threadControlBlock.setWaitingSignalSet(nullptr);
 	}
 
 private:
