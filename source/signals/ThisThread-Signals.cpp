@@ -13,6 +13,9 @@
 
 #include "distortos/ThisThread-Signals.hpp"
 
+#include "distortos/ThisThread.hpp"
+#include "distortos/ThreadBase.hpp"
+
 #include "distortos/scheduler/getScheduler.hpp"
 #include "distortos/scheduler/Scheduler.hpp"
 
@@ -136,6 +139,11 @@ std::pair<int, uint8_t> waitImplementation(const SignalSet& signalSet, const boo
 /*---------------------------------------------------------------------------------------------------------------------+
 | global functions
 +---------------------------------------------------------------------------------------------------------------------*/
+
+int generateSignal(const uint8_t signalNumber)
+{
+	return ThisThread::get().generateSignal(signalNumber);
+}
 
 std::pair<int, uint8_t> tryWait(const SignalSet& signalSet)
 {

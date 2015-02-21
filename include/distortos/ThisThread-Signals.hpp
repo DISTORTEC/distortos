@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-02-20
+ * \date 2015-02-21
  */
 
 #ifndef INCLUDE_DISTORTOS_THISTHREAD_SIGNALS_HPP_
@@ -31,6 +31,21 @@ namespace ThisThread
 /// Signals namespace groups signals-related functions operating on current thread
 namespace Signals
 {
+
+/**
+ * \brief Generates signal for current thread.
+ *
+ * Similar to raise() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/raise.html
+ *
+ * Adds the signalNumber to set of pending signals of current thread.
+ *
+ * \param [in] signalNumber is the signal that will be generated, [0; 31]
+ *
+ * \return 0 on success, error code otherwise:
+ * - EINVAL - \a signalNumber value is invalid;
+ */
+
+int generateSignal(uint8_t signalNumber);
 
 /**
  * \brief Tries to accept pending signals.
