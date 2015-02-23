@@ -26,6 +26,15 @@ extern "C"
 /** pointer to function taking an int argument (required by newlib's signal.h) */
 typedef void (*_sig_func_ptr)(int);
 
+/** standard sigval union - integer and void pointer */
+union sigval
+{
+	/** integer signal value */
+	int sival_int;
+	/** pointer signal value */
+	void* sival_ptr;
+};
+
 #ifdef __cplusplus
 }	/* extern "C" */
 #endif	/* def __cplusplus */
