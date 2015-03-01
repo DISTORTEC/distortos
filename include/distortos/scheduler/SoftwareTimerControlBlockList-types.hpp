@@ -36,11 +36,11 @@ using SoftwareTimerControlBlockListAllocator =
 		allocators::PoolAllocator<SoftwareTimerControlBlockListValueType, allocators::SimpleFeedablePool>;
 
 /// underlying unsorted container of SoftwareTimerControlBlockList
-using SoftwareTimerControlBlockListContainer =
+using SoftwareTimerControlBlockUnsortedList =
 		std::list<SoftwareTimerControlBlockListValueType, SoftwareTimerControlBlockListAllocator>;
 
 /// generic iterator for SoftwareTimerControlBlockList
-using SoftwareTimerControlBlockListIterator = SoftwareTimerControlBlockListContainer::iterator;
+using SoftwareTimerControlBlockListIterator = SoftwareTimerControlBlockUnsortedList::iterator;
 
 }	// namespace scheduler
 

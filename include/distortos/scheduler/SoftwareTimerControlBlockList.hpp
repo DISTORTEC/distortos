@@ -46,7 +46,7 @@ struct SoftwareTimerControlBlockAscendingTimePoint
 /// base of SoftwareTimerControlBlockList
 using SoftwareTimerControlBlockListBase = containers::SortedContainer
 		<
-				SoftwareTimerControlBlockListContainer,
+				SoftwareTimerControlBlockUnsortedList,
 				SoftwareTimerControlBlockAscendingTimePoint
 		>;
 
