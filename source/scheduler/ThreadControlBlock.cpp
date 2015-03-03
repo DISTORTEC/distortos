@@ -59,6 +59,10 @@ ThreadControlBlock::ThreadControlBlock(architecture::Stack&& stack, const uint8_
 ThreadControlBlock::~ThreadControlBlock()
 {
 	architecture::InterruptMaskingLock interruptMaskingLock;
+
+	if (threadGroupList_ != nullptr)
+		threadGroupList_->erase(threadGroupIterator_);
+
 	_reclaim_reent(&reent_);
 }
 
