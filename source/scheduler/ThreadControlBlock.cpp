@@ -41,6 +41,7 @@ ThreadControlBlock::ThreadControlBlock(architecture::Stack&& stack, const uint8_
 		priorityInheritanceMutexControlBlock_{},
 		list_{},
 		iterator_{},
+		threadGroupList_{},
 		unblockReason_{},
 		pendingSignalSet_{SignalSet::empty},
 		waitingSignalSet_{},

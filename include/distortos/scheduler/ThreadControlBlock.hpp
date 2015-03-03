@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-03-01
+ * \date 2015-03-03
  */
 
 #ifndef INCLUDE_DISTORTOS_SCHEDULER_THREADCONTROLBLOCK_HPP_
@@ -415,6 +415,9 @@ private:
 
 	/// iterator to the element on the list, valid only when list_ != nullptr
 	ThreadControlBlockListIterator iterator_;
+
+	/// pointer to ThreadGroupControlBlock's list that has this object
+	ThreadControlBlockUnsortedList* threadGroupList_;
 
 	/// information related to unblocking
 	union
