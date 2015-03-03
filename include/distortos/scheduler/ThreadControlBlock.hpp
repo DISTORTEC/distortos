@@ -419,6 +419,9 @@ private:
 	/// pointer to ThreadGroupControlBlock's list that has this object
 	ThreadControlBlockUnsortedList* threadGroupList_;
 
+	/// iterator to the element on the ThreadGroupControlBlock's list, valid only when threadGroupList_ != nullptr
+	ThreadControlBlockListIterator threadGroupIterator_;
+
 	/// information related to unblocking
 	union
 	{

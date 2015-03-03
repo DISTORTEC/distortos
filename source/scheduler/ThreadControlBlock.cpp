@@ -42,6 +42,7 @@ ThreadControlBlock::ThreadControlBlock(architecture::Stack&& stack, const uint8_
 		list_{},
 		iterator_{},
 		threadGroupList_{},
+		threadGroupIterator_{},
 		unblockReason_{},
 		pendingSignalSet_{SignalSet::empty},
 		waitingSignalSet_{},
