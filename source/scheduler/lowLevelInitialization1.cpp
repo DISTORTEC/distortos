@@ -70,7 +70,7 @@ extern "C" void lowLevelInitialization1()
 	auto& mainThreadGroupControlBlock = *new (&mainThreadGroupControlBlockStorage) ThreadGroupControlBlock;
 
 	auto& mainThread = *new (&mainThreadStorage) MainThread {UINT8_MAX, mainThreadGroupControlBlock};
-	schedulerInstance.initialize(mainThread);
+	schedulerInstance.initialize(mainThread);	/// \todo error handling?
 	mainThread.getThreadControlBlock().switchedToHook();
 
 	auto& idleThread = *new (&idleThreadStorage) IdleThread {0, idleThreadFunction};
