@@ -55,8 +55,7 @@ int ThreadBase::start()
 	if (getState() != scheduler::ThreadControlBlock::State::New)
 		return EINVAL;
 
-	scheduler::getScheduler().add(threadControlBlock_);
-	return 0;
+	return scheduler::getScheduler().add(threadControlBlock_);
 }
 
 /*---------------------------------------------------------------------------------------------------------------------+

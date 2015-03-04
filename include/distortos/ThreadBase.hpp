@@ -171,7 +171,8 @@ public:
 	 * This operation can be performed on threads in "New" state only.
 	 *
 	 * \return 0 on success, error code otherwise:
-	 * - EINVAL - thread is already started
+	 * - EINVAL - thread is already started;
+	 * - error codes returned by scheduler::Scheduler::add();
 	 */
 
 	int start();
