@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-02-16
+ * \date 2015-03-04
  */
 
 #include "distortos/StaticThread.hpp"
@@ -17,6 +17,7 @@
 #include "distortos/scheduler/Scheduler.hpp"
 #include "distortos/scheduler/idleThreadFunction.hpp"
 #include "distortos/scheduler/MainThread.hpp"
+#include "distortos/scheduler/ThreadGroupControlBlock.hpp"
 
 #include "distortos/architecture/architecture.hpp"
 
@@ -45,6 +46,10 @@ std::aligned_storage<sizeof(IdleThread), alignof(IdleThread)>::type idleThreadSt
 /// storage for main thread instance
 std::aligned_storage<sizeof(MainThread), alignof(MainThread)>::type mainThreadStorage;
 
+/// storage for main thread group instance
+std::aligned_storage<sizeof(ThreadGroupControlBlock), alignof(ThreadGroupControlBlock)>::type
+		mainThreadGroupControlBlockStorage;
+
 }	// namespace
 
 /*---------------------------------------------------------------------------------------------------------------------+
@@ -62,10 +67,12 @@ extern "C" void lowLevelInitialization1()
 	auto& schedulerInstance = getScheduler();
 	new (&schedulerInstance) Scheduler;
 
-	auto& mainThread = *new (&mainThreadStorage) MainThread {UINT8_MAX};
+	auto& mainThreadGroupControlBlock = *new (&mainThreadGroupControlBlockStorage) ThreadGroupControlBlock;
+
+	auto& mainThread = *new (&mainThreadStorage) MainThread {UINT8_MAX, mainThreadGroupControlBlock};
 	schedulerInstance.initialize(mainThread);
 	mainThread.getThreadControlBlock().switchedToHook();
-	
+
 	auto& idleThread = *new (&idleThreadStorage) IdleThread {0, idleThreadFunction};
 	idleThread.start();
 	

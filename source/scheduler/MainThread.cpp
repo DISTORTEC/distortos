@@ -49,8 +49,9 @@ architecture::Stack stackWrapper(const std::pair<void*, size_t> stackBuffer)
 | public functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-MainThread::MainThread(const uint8_t priority) :
-		ThreadBase{stackWrapper(architecture::getMainStack()), priority, SchedulingPolicy::RoundRobin, nullptr}
+MainThread::MainThread(const uint8_t priority, ThreadGroupControlBlock& threadGroupControlBlock) :
+		ThreadBase{stackWrapper(architecture::getMainStack()), priority, SchedulingPolicy::RoundRobin,
+				&threadGroupControlBlock}
 {
 
 }
