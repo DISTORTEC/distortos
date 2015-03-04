@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-03-03
+ * \date 2015-03-04
  */
 
 #ifndef INCLUDE_DISTORTOS_SCHEDULER_SCHEDULER_HPP_
@@ -275,9 +275,11 @@ private:
 	 * Internal version - without interrupt masking and call to Scheduler::maybeRequestContextSwitch()
 	 *
 	 * \param [in] threadControlBlock is a reference to added ThreadControlBlock object
+	 *
+	 * \return 0 on success, error code otherwise
 	 */
 
-	void addInternal(ThreadControlBlock& threadControlBlock);
+	int addInternal(ThreadControlBlock& threadControlBlock);
 
 	/**
 	 * \brief Blocks thread, transferring it to provided container.
