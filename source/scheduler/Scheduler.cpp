@@ -66,11 +66,17 @@ Scheduler::Scheduler() :
 
 }
 
-void Scheduler::add(ThreadControlBlock& threadControlBlock)
+int Scheduler::add(ThreadControlBlock& threadControlBlock)
 {
 	architecture::InterruptMaskingLock interruptMaskingLock;
-	addInternal(threadControlBlock);
+
+	const auto ret = addInternal(threadControlBlock);
+	if (ret != 0)
+		return ret;
+
 	maybeRequestContextSwitch();
+
+	return 0;
 }
 
 int Scheduler::block(ThreadControlBlockList& container, const ThreadControlBlock::UnblockFunctor* const unblockFunctor)

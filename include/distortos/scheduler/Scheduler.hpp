@@ -43,9 +43,12 @@ public:
 	 * ThreadControlBlock's state is changed to "runnable".
 	 *
 	 * \param [in] threadControlBlock is a reference to added ThreadControlBlock object
+	 *
+	 * \return 0 on success, error code otherwise:
+	 * - error codes returned by Scheduler::addInternal();
 	 */
 
-	void add(ThreadControlBlock& threadControlBlock);
+	int add(ThreadControlBlock& threadControlBlock);
 
 	/**
 	 * \brief Blocks current thread, transferring it to provided container.
