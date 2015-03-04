@@ -247,6 +247,10 @@ void Scheduler::yield()
 
 int Scheduler::addInternal(ThreadControlBlock& threadControlBlock)
 {
+	const auto ret = threadControlBlock.addHook();
+	if (ret != 0)
+		return ret;
+
 	threadControlBlockListAllocatorPool_.feed(threadControlBlock.getLink());
 	runnableList_.sortedEmplace(threadControlBlock);
 

@@ -282,7 +282,8 @@ private:
 	 *
 	 * \param [in] threadControlBlock is a reference to added ThreadControlBlock object
 	 *
-	 * \return 0 on success, error code otherwise
+	 * \return 0 on success, error code otherwise:
+	 * - error codes returned by ThreadControlBlock::addHook();
 	 */
 
 	int addInternal(ThreadControlBlock& threadControlBlock);
