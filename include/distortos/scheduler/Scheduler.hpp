@@ -167,9 +167,12 @@ public:
 	 * be higher than priority of idle thread
 	 *
 	 * \param [in] mainThread is a reference to main thread
+	 *
+	 * \return 0 on success, error code otherwise:
+	 * - error codes returned by Scheduler::addInternal();
 	 */
 
-	void initialize(MainThread& mainThread);
+	int initialize(MainThread& mainThread);
 
 	/**
 	 * \brief Requests context switch if it is needed.

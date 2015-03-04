@@ -129,10 +129,15 @@ uint64_t Scheduler::getTickCount() const
 	return tickCount_;
 }
 
-void Scheduler::initialize(MainThread& mainThread)
+int Scheduler::initialize(MainThread& mainThread)
 {
-	addInternal(mainThread.getThreadControlBlock());
+	const auto ret = addInternal(mainThread.getThreadControlBlock());
+	if (ret != 0)
+		return ret;
+
 	currentThreadControlBlock_ = runnableList_.begin();
+
+	return 0;
 }
 
 void Scheduler::maybeRequestContextSwitch() const
