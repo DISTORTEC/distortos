@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-02-16
+ * \date 2015-03-04
  */
 
 #include "distortos/ThreadBase.hpp"
@@ -33,7 +33,7 @@ ThreadBase::ThreadBase(void* const buffer, const size_t size, const uint8_t prio
 }
 
 ThreadBase::ThreadBase(architecture::Stack&& stack, const uint8_t priority, const SchedulingPolicy schedulingPolicy) :
-		threadControlBlock_{std::move(stack), priority, schedulingPolicy, *this},
+		threadControlBlock_{std::move(stack), priority, schedulingPolicy, nullptr, *this},
 		joinSemaphore_{0}
 {
 

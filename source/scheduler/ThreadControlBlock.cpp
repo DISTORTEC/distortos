@@ -31,7 +31,8 @@ namespace scheduler
 +---------------------------------------------------------------------------------------------------------------------*/
 
 ThreadControlBlock::ThreadControlBlock(architecture::Stack&& stack, const uint8_t priority,
-		const SchedulingPolicy schedulingPolicy, ThreadBase& owner) :
+		const SchedulingPolicy schedulingPolicy, ThreadGroupControlBlock* const threadGroupControlBlock,
+		ThreadBase& owner) :
 		stack_{std::move(stack)},
 		owner_(owner),
 		ownedProtocolMutexControlBlocksList_
@@ -41,7 +42,7 @@ ThreadControlBlock::ThreadControlBlock(architecture::Stack&& stack, const uint8_
 		priorityInheritanceMutexControlBlock_{},
 		list_{},
 		iterator_{},
-		threadGroupControlBlock_{},
+		threadGroupControlBlock_{threadGroupControlBlock},
 		threadGroupList_{},
 		threadGroupIterator_{},
 		unblockReason_{},

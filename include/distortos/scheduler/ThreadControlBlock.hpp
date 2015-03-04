@@ -84,11 +84,13 @@ public:
 	 * \param [in] stack is an rvalue reference to architecture::Stack object which will be adopted for this thread
 	 * \param [in] priority is the thread's priority, 0 - lowest, UINT8_MAX - highest
 	 * \param [in] schedulingPolicy is the scheduling policy of the thread
+	 * \param [in] threadGroupControlBlock is a pointer to scheduler::ThreadGroupControlBlock to which this object will
+	 * be added, nullptr to inherit thread group from currently running thread
 	 * \param [in] owner is a reference to ThreadBase object that owns this ThreadControlBlock
 	 */
 
 	ThreadControlBlock(architecture::Stack&& stack, uint8_t priority, SchedulingPolicy schedulingPolicy,
-			ThreadBase& owner);
+			ThreadGroupControlBlock* threadGroupControlBlock, ThreadBase& owner);
 
 	/**
 	 * \brief ThreadControlBlock's destructor
