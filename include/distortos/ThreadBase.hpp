@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-02-21
+ * \date 2015-03-04
  */
 
 #ifndef INCLUDE_DISTORTOS_THREADBASE_HPP_
@@ -33,9 +33,12 @@ public:
 	 * \param [in] size is the size of stack's buffer, bytes
 	 * \param [in] priority is the thread's priority, 0 - lowest, UINT8_MAX - highest
 	 * \param [in] schedulingPolicy is the scheduling policy of the thread
+	 * \param [in] threadGroupControlBlock is a pointer to scheduler::ThreadGroupControlBlock to which this object will
+	 * be added, nullptr to inherit thread group from currently running thread
 	 */
 
-	ThreadBase(void* buffer, size_t size, uint8_t priority, SchedulingPolicy schedulingPolicy);
+	ThreadBase(void* buffer, size_t size, uint8_t priority, SchedulingPolicy schedulingPolicy,
+			scheduler::ThreadGroupControlBlock* threadGroupControlBlock);
 
 	/**
 	 * \brief ThreadBase's constructor.
@@ -43,9 +46,12 @@ public:
 	 * \param [in] stack is an rvalue reference to architecture::Stack object which will be adopted for this thread
 	 * \param [in] priority is the thread's priority, 0 - lowest, UINT8_MAX - highest
 	 * \param [in] schedulingPolicy is the scheduling policy of the thread
+	 * \param [in] threadGroupControlBlock is a pointer to scheduler::ThreadGroupControlBlock to which this object will
+	 * be added, nullptr to inherit thread group from currently running thread
 	 */
 
-	ThreadBase(architecture::Stack&& stack, uint8_t priority, SchedulingPolicy schedulingPolicy);
+	ThreadBase(architecture::Stack&& stack, uint8_t priority, SchedulingPolicy schedulingPolicy,
+			scheduler::ThreadGroupControlBlock* threadGroupControlBlock);
 
 	/**
 	 * \brief Generates signal for thread.

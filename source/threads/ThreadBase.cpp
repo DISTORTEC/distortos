@@ -26,14 +26,15 @@ namespace distortos
 +---------------------------------------------------------------------------------------------------------------------*/
 
 ThreadBase::ThreadBase(void* const buffer, const size_t size, const uint8_t priority,
-		const SchedulingPolicy schedulingPolicy) :
-		ThreadBase{{buffer, size, threadRunner, *this}, priority, schedulingPolicy}
+		const SchedulingPolicy schedulingPolicy, scheduler::ThreadGroupControlBlock* const threadGroupControlBlock) :
+		ThreadBase{{buffer, size, threadRunner, *this}, priority, schedulingPolicy, threadGroupControlBlock}
 {
 
 }
 
-ThreadBase::ThreadBase(architecture::Stack&& stack, const uint8_t priority, const SchedulingPolicy schedulingPolicy) :
-		threadControlBlock_{std::move(stack), priority, schedulingPolicy, nullptr, *this},
+ThreadBase::ThreadBase(architecture::Stack&& stack, const uint8_t priority, const SchedulingPolicy schedulingPolicy,
+		scheduler::ThreadGroupControlBlock* const threadGroupControlBlock) :
+		threadControlBlock_{std::move(stack), priority, schedulingPolicy, threadGroupControlBlock, *this},
 		joinSemaphore_{0}
 {
 
