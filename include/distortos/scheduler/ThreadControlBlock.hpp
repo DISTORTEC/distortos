@@ -112,6 +112,20 @@ public:
 	int acceptPendingSignal(uint8_t signalNumber);
 
 	/**
+	 * \brief Hook function executed when thread is added to scheduler.
+	 *
+	 * If threadGroupControlBlock_ is nullptr, it is inherited from currently running thread. Then this object is added
+	 * to the thread group (if it is valid).
+	 *
+	 * \attention This function should be called only by Scheduler::addInternal().
+	 *
+	 * \return 0 on success, error code otherwise:
+	 * - EINVAL - inherited thread group is invalid;
+	 */
+
+	int addHook();
+
+	/**
 	 * \brief Block hook function of thread
 	 *
 	 * Saves pointer to UnblockFunctor.

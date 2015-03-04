@@ -15,10 +15,13 @@
 
 #include "distortos/scheduler/getScheduler.hpp"
 #include "distortos/scheduler/Scheduler.hpp"
+#include "distortos/scheduler/ThreadGroupControlBlock.hpp"
 
 #include "distortos/synchronization/MutexControlBlock.hpp"
 
 #include "distortos/architecture/InterruptMaskingLock.hpp"
+
+#include <cerrno>
 
 namespace distortos
 {
@@ -72,6 +75,21 @@ int ThreadControlBlock::acceptPendingSignal(const uint8_t signalNumber)
 {
 	architecture::InterruptMaskingLock interruptMaskingLock;
 	return pendingSignalSet_.remove(signalNumber);
+}
+
+int ThreadControlBlock::addHook()
+{
+	if (threadGroupControlBlock_ == nullptr)
+	{
+		threadGroupControlBlock_ = getScheduler().getCurrentThreadControlBlock().threadGroupControlBlock_;
+		if (threadGroupControlBlock_ == nullptr)
+			return EINVAL;
+	}
+
+	const auto addRet = threadGroupControlBlock_->add(*this);
+	threadGroupList_ = &addRet.first;
+	threadGroupIterator_ = addRet.second;
+	return 0;
 }
 
 SignalSet ThreadControlBlock::getPendingSignalSet() const
