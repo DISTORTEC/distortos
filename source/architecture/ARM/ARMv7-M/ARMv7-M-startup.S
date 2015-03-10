@@ -96,8 +96,8 @@ Reset_Handler:
 
 #endif	// __USES_CXX
 
-	// Branch to lowLevelInitialization2() function
-	ldr		r0, =lowLevelInitialization2
+	// Branch to lowLevelInitialization1() function
+	ldr		r0, =lowLevelInitialization1
 	blx		r0
 
 	// Branch to main() with link
@@ -131,13 +131,13 @@ defaultLowLevelInitialization:
 	bx		lr
 
 /*---------------------------------------------------------------------------------------------------------------------+
-| assign undefined lowLevelInitialization0() and/or lowLevelInitialization2() to defaultLowLevelInitialization()
+| assign undefined lowLevelInitialization0() and/or lowLevelInitialization1() to defaultLowLevelInitialization()
 +---------------------------------------------------------------------------------------------------------------------*/
 
 .weak lowLevelInitialization0
 .global lowLevelInitialization0
 .set lowLevelInitialization0, defaultLowLevelInitialization
 
-.weak lowLevelInitialization2
-.global lowLevelInitialization2
-.set lowLevelInitialization2, defaultLowLevelInitialization
+.weak lowLevelInitialization1
+.global lowLevelInitialization1
+.set lowLevelInitialization1, defaultLowLevelInitialization
