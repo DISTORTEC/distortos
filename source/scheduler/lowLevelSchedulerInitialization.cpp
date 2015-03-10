@@ -33,13 +33,6 @@ namespace
 {
 
 /*---------------------------------------------------------------------------------------------------------------------+
-| local types
-+---------------------------------------------------------------------------------------------------------------------*/
-
-/// pointer to function taking no arguments and returning no value
-using FunctionPointer = void(*)();
-
-/*---------------------------------------------------------------------------------------------------------------------+
 | local objects
 +---------------------------------------------------------------------------------------------------------------------*/
 
@@ -81,16 +74,6 @@ void lowLevelSchedulerInitialization()
 	
 	architecture::startScheduling();
 }
-
-/*---------------------------------------------------------------------------------------------------------------------+
-| global objects
-+---------------------------------------------------------------------------------------------------------------------*/
-
-/// array of pointers to functions executed before constructors for global and static objects
-const FunctionPointer distortosPreinitArray[] __attribute__ ((section(".preinit_array"), used))
-{
-		lowLevelSchedulerInitialization,
-};
 
 }	// namespace scheduler
 
