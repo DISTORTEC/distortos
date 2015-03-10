@@ -2,13 +2,13 @@
  * \file
  * \brief ARMv7-M (Cortex-M3 / Cortex-M4) assembly startup code
  *
- * \author Copyright (C) 2014 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-10-30
+ * \date 2015-03-10
  */
 
 #ifdef __USES_TWO_STACKS
@@ -90,10 +90,6 @@ Reset_Handler:
 
 #ifdef __USES_CXX
 
-	// Branch to lowLevelInitialization1() function (global and static constructors not yet executed)
-	ldr		r0, =lowLevelInitialization1
-	blx		r0
-
 	// Call C++ constructors for global and static objects
 	ldr		r0, =__libc_init_array
 	blx		r0
@@ -141,14 +137,6 @@ defaultLowLevelInitialization:
 .weak lowLevelInitialization0
 .global lowLevelInitialization0
 .set lowLevelInitialization0, defaultLowLevelInitialization
-
-#ifdef __USES_CXX
-
-.weak lowLevelInitialization1
-.global lowLevelInitialization1
-.set lowLevelInitialization1, defaultLowLevelInitialization
-
-#endif	// __USES_CXX
 
 .weak lowLevelInitialization2
 .global lowLevelInitialization2
