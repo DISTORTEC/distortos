@@ -11,6 +11,8 @@
  * \date 2015-03-10
  */
 
+#include "distortos/scheduler/lowLevelSchedulerInitialization.hpp"
+
 #include "distortos/StaticThread.hpp"
 
 #include "distortos/scheduler/getScheduler.hpp"
@@ -62,12 +64,6 @@ std::aligned_storage<sizeof(ThreadGroupControlBlock), alignof(ThreadGroupControl
 /*---------------------------------------------------------------------------------------------------------------------+
 | global functions
 +---------------------------------------------------------------------------------------------------------------------*/
-
-/**
- * \brief Initializes main instance of system's Scheduler, starts idle thread and starts scheduling.
- *
- * This function is called before constructors for global and static objects.
- */
 
 void lowLevelSchedulerInitialization()
 {
