@@ -25,7 +25,7 @@ namespace scheduler
 +---------------------------------------------------------------------------------------------------------------------*/
 
 /**
- * \brief Initializes main instance of system's Scheduler, starts idle thread and starts scheduling.
+ * \brief Initializes main instance of system's Scheduler, main thread with its group and starts idle thread.
  *
  * This function is called before constructors for global and static objects from __libc_init_array() via address in
  * distortosPreinitArray[].

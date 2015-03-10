@@ -13,6 +13,8 @@
 
 #include "distortos/scheduler/lowLevelSchedulerInitialization.hpp"
 
+#include "distortos/architecture/architecture.hpp"
+
 namespace distortos
 {
 
@@ -37,6 +39,7 @@ using FunctionPointer = void(*)();
 const FunctionPointer distortosPreinitArray[] __attribute__ ((section(".preinit_array"), used))
 {
 		lowLevelSchedulerInitialization,
+		architecture::startScheduling,
 };
 
 }	// namespace

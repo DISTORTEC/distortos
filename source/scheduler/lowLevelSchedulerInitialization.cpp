@@ -21,8 +21,6 @@
 #include "distortos/scheduler/MainThread.hpp"
 #include "distortos/scheduler/ThreadGroupControlBlock.hpp"
 
-#include "distortos/architecture/architecture.hpp"
-
 namespace distortos
 {
 
@@ -71,8 +69,6 @@ void lowLevelSchedulerInitialization()
 
 	auto& idleThread = *new (&idleThreadStorage) IdleThread {0, idleThreadFunction};
 	idleThread.start();
-	
-	architecture::startScheduling();
 }
 
 }	// namespace scheduler
