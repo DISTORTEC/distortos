@@ -12,3 +12,6 @@ documentation/html/
 .project
 .settings/
 *.launch
+
+# other
+.gdbinit
