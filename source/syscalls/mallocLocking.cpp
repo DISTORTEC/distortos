@@ -42,6 +42,26 @@ void mallocLockingInitialization()
 	new (&mallocLockingMutexStorage) Mutex {Mutex::Type::Recursive, Mutex::Protocol::PriorityInheritance};
 }
 
+/**
+ * \brief Recursively locks malloc()'s mutex.
+ */
+
+extern "C" void __malloc_lock()
+{
+	auto& mallocLockingMutex = *reinterpret_cast<Mutex*>(&mallocLockingMutexStorage);
+	mallocLockingMutex.lock();
+}
+
+/**
+ * \brief Recursively unlocks malloc()'s mutex.
+ */
+
+extern "C" void __malloc_unlock()
+{
+	auto& mallocLockingMutex = *reinterpret_cast<Mutex*>(&mallocLockingMutexStorage);
+	mallocLockingMutex.unlock();
+}
+
 }	// namespace syscalls
 
 }	// namespace distortos
