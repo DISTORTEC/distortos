@@ -30,7 +30,10 @@ namespace architecture
 InterruptMask enableInterruptMasking()
 {
 	const auto interruptMask = __get_BASEPRI();
-	__set_BASEPRI(CONFIG_ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI << (8 - __NVIC_PRIO_BITS));
+	constexpr auto basepriValue = CONFIG_ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI << (8 - __NVIC_PRIO_BITS);
+	static_assert(basepriValue >= 0 && basepriValue <= UINT8_MAX,
+			"Invalid CONFIG_ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI value!");
+	__set_BASEPRI(basepriValue);
 	return interruptMask;
 }
 
