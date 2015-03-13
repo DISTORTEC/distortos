@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-01-19
+ * \date 2015-03-13
  */
 
 #ifndef INCLUDE_DISTORTOS_SYNCHRONIZATION_MESSAGEQUEUEBASE_HPP_
@@ -87,7 +87,7 @@ public:
 	struct DescendingPriority
 	{
 		/**
-		 * \brief operator()
+		 * \brief DescendingPriority's function call operator
 		 *
 		 * \param [in] left is the object on the left side of comparison
 		 * \param [in] right is the object on the right side of comparison
@@ -95,7 +95,7 @@ public:
 		 * \return true if left's priority is less than right's priority
 		 */
 
-		bool operator()(const Entry& left, const Entry& right)
+		bool operator()(const Entry& left, const Entry& right) const
 		{
 			return left.priority < right.priority;
 		}
