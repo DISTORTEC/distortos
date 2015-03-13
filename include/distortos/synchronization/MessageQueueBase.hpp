@@ -107,11 +107,11 @@ public:
 	/// type of pool allocator
 	using PoolAllocator = allocators::PoolAllocator<Entry, Pool>;
 
-	/// type of entry list
-	using EntryList = containers::SortedContainer<std::forward_list<Entry, PoolAllocator>, DescendingPriority>;
-
 	/// type of free entry list
 	using FreeEntryList = std::forward_list<Entry, PoolAllocator>;
+
+	/// type of entry list
+	using EntryList = containers::SortedContainer<FreeEntryList, DescendingPriority>;
 
 	/**
 	 * \brief InternalFunctor is a type-erased interface for functors which execute common code of pop() and push()
