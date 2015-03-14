@@ -60,6 +60,12 @@ public:
 	int acceptPendingSignal(uint8_t signalNumber) const;
 
 	/**
+	 * \return set of currently pending signals
+	 */
+
+	SignalSet getPendingSignalSet() const;
+
+	/**
 	 * \param [in] threadControlBlock is a reference to associated ThreadControlBlock
 	 */
 
