@@ -68,10 +68,12 @@ public:
 
 	void operator()(scheduler::ThreadControlBlock& threadControlBlock) const override
 	{
-		pendingSignalSet_ = threadControlBlock.getPendingSignalSet();
 		const auto signalsReceiverControlBlock = threadControlBlock.getSignalsReceiverControlBlock();
-		if (signalsReceiverControlBlock != nullptr)
-			signalsReceiverControlBlock->setWaitingSignalSet(nullptr);
+		if (signalsReceiverControlBlock == nullptr)
+			return;
+
+		pendingSignalSet_ = signalsReceiverControlBlock->getPendingSignalSet();
+		signalsReceiverControlBlock->setWaitingSignalSet(nullptr);
 	}
 
 private:
