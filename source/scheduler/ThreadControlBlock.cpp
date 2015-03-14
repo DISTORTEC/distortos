@@ -95,6 +95,10 @@ int ThreadControlBlock::addHook()
 	const auto addRet = threadGroupControlBlock_->add(*this);
 	threadGroupList_ = &addRet.first;
 	threadGroupIterator_ = addRet.second;
+
+	if (signalsReceiverControlBlock_ != nullptr)
+		signalsReceiverControlBlock_->setThreadControlBlock(*this);
+
 	return 0;
 }
 
