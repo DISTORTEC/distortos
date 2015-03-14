@@ -46,4 +46,10 @@
 
 #define CONFIG_ROUND_ROBIN_RATE_HZ	10
 
+/**
+ * \brief selects whether reception of signals is enabled (1) or disabled (0) for main thread
+ */
+
+#define CONFIG_MAIN_THREAD_CAN_RECEIVE_SIGNALS	0
+
 #endif	/* INCLUDE_DISTORTOS_DISTORTOSCONFIGURATION_H_ */
