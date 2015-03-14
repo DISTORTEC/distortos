@@ -17,6 +17,8 @@
 namespace distortos
 {
 
+class SignalSet;
+
 namespace scheduler
 {
 
@@ -50,6 +52,12 @@ public:
 	{
 		threadControlBlock_ = &threadControlBlock;
 	}
+
+	/**
+	 * \param [in] signalSet is a pointer to set of signals that will be "waited for", nullptr when wait was terminated
+	 */
+
+	void setWaitingSignalSet(const SignalSet* signalSet) const;
 
 private:
 
