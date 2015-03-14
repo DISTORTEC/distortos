@@ -35,6 +35,14 @@ int SignalsReceiverControlBlock::acceptPendingSignal(const uint8_t signalNumber)
 	return threadControlBlock_->acceptPendingSignal(signalNumber);
 }
 
+int SignalsReceiverControlBlock::generateSignal(const uint8_t signalNumber) const
+{
+	if (threadControlBlock_ == nullptr)
+		return ENOTSUP;
+
+	return threadControlBlock_->generateSignal(signalNumber);
+}
+
 SignalSet SignalsReceiverControlBlock::getPendingSignalSet() const
 {
 	if (threadControlBlock_ == nullptr)

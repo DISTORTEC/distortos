@@ -60,6 +60,22 @@ public:
 	int acceptPendingSignal(uint8_t signalNumber) const;
 
 	/**
+	 * \brief Generates signal for associated thread.
+	 *
+	 * Similar to pthread_kill() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_kill.html
+	 *
+	 * Adds the signalNumber to set of pending signals. If associated thread is currently waiting for this signal, it
+	 * will be unblocked.
+	 *
+	 * \param [in] signalNumber is the signal that will be generated, [0; 31]
+	 *
+	 * \return 0 on success, error code otherwise:
+	 * - EINVAL - \a signalNumber value is invalid;
+	 */
+
+	int generateSignal(uint8_t signalNumber) const;
+
+	/**
 	 * \return set of currently pending signals
 	 */
 
