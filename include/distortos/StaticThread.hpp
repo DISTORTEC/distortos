@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-02-16
+ * \date 2015-03-14
  */
 
 #ifndef INCLUDE_DISTORTOS_STATICTHREAD_HPP_
@@ -20,14 +20,15 @@ namespace distortos
 {
 
 /**
- * \brief StaticThread class is a templated interface for thread that has automatic storage of stack.
+ * \brief StaticThread class is a templated interface for thread that has automatic storage for stack.
  *
  * \param StackSize is the size of stack, bytes
+ * \param CanReceiveSignals selects whether reception of signals is enabled (true) or disabled (false) for this thread
  * \param Function is the function that will be executed in separate thread
  * \param Args are the arguments for Function
  */
 
-template<size_t StackSize, typename Function, typename... Args>
+template<size_t StackSize, bool CanReceiveSignals, typename Function, typename... Args>
 class StaticThread : public Thread<Function, Args...>
 {
 public:
@@ -81,6 +82,7 @@ private:
  * \brief Helper factory function to make StaticThread object with partially deduced template arguments
  *
  * \param StackSize is the size of stack, bytes
+ * \param CanReceiveSignals selects whether reception of signals is enabled (true) or disabled (false) for this thread
  * \param Function is the function that will be executed
  * \param Args are the arguments for Function
  *
@@ -92,8 +94,8 @@ private:
  * \return StaticThread object with partially deduced template arguments
  */
 
-template<size_t StackSize, typename Function, typename... Args>
-StaticThread<StackSize, Function, Args...> makeStaticThread(const uint8_t priority,
+template<size_t StackSize, bool CanReceiveSignals = {}, typename Function, typename... Args>
+StaticThread<StackSize, CanReceiveSignals, Function, Args...> makeStaticThread(const uint8_t priority,
 		const SchedulingPolicy schedulingPolicy, Function&& function, Args&&... args)
 {
 	return {priority, schedulingPolicy, std::forward<Function>(function), std::forward<Args>(args)...};
@@ -103,6 +105,7 @@ StaticThread<StackSize, Function, Args...> makeStaticThread(const uint8_t priori
  * \brief Helper factory function to make StaticThread object with partially deduced template arguments
  *
  * \param StackSize is the size of stack, bytes
+ * \param CanReceiveSignals selects whether reception of signals is enabled (true) or disabled (false) for this thread
  * \param Function is the function that will be executed
  * \param Args are the arguments for Function
  *
@@ -113,8 +116,9 @@ StaticThread<StackSize, Function, Args...> makeStaticThread(const uint8_t priori
  * \return StaticThread object with partially deduced template arguments
  */
 
-template<size_t StackSize, typename Function, typename... Args>
-StaticThread<StackSize, Function, Args...> makeStaticThread(const uint8_t priority, Function&& function, Args&&... args)
+template<size_t StackSize, bool CanReceiveSignals = {}, typename Function, typename... Args>
+StaticThread<StackSize, CanReceiveSignals, Function, Args...> makeStaticThread(const uint8_t priority,
+		Function&& function, Args&&... args)
 {
 	return {priority, std::forward<Function>(function), std::forward<Args>(args)...};
 }
