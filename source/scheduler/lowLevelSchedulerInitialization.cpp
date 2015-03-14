@@ -50,6 +50,21 @@ std::aligned_storage<sizeof(MainThread), alignof(MainThread)>::type mainThreadSt
 std::aligned_storage<sizeof(ThreadGroupControlBlock), alignof(ThreadGroupControlBlock)>::type
 		mainThreadGroupControlBlockStorage;
 
+#if CONFIG_MAIN_THREAD_CAN_RECEIVE_SIGNALS == 1
+
+/// SignalsReceiver object for main thread
+SignalsReceiver mainThreadSignalsReceiver;
+
+/// pointer to \a mainThreadSignalsReceiver
+constexpr auto mainThreadSignalsReceiverPointer = &mainThreadSignalsReceiver;
+
+#else
+
+/// nullptr - reception of signals is disabled for main thread
+constexpr auto mainThreadSignalsReceiverPointer = nullptr;
+
+#endif	// CONFIG_MAIN_THREAD_CAN_RECEIVE_SIGNALS == 1
+
 }	// namespace
 
 /*---------------------------------------------------------------------------------------------------------------------+
@@ -63,7 +78,8 @@ void lowLevelSchedulerInitialization()
 
 	auto& mainThreadGroupControlBlock = *new (&mainThreadGroupControlBlockStorage) ThreadGroupControlBlock;
 
-	auto& mainThread = *new (&mainThreadStorage) MainThread {UINT8_MAX, mainThreadGroupControlBlock, nullptr};
+	auto& mainThread = *new (&mainThreadStorage) MainThread {UINT8_MAX, mainThreadGroupControlBlock,
+			mainThreadSignalsReceiverPointer};
 	schedulerInstance.initialize(mainThread);	/// \todo error handling?
 	mainThread.getThreadControlBlock().switchedToHook();
 
