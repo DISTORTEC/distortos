@@ -43,6 +43,15 @@ ThreadBase::ThreadBase(architecture::Stack&& stack, const uint8_t priority, cons
 
 }
 
+SignalSet ThreadBase::getPendingSignalSet() const
+{
+	const auto signalsReceiverControlBlock = threadControlBlock_.getSignalsReceiverControlBlock();
+	if (signalsReceiverControlBlock == nullptr)
+		return SignalSet{SignalSet::empty};
+
+	return signalsReceiverControlBlock->getPendingSignalSet();
+}
+
 int ThreadBase::join()
 {
 	if (&threadControlBlock_ == &scheduler::getScheduler().getCurrentThreadControlBlock())

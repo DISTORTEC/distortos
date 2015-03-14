@@ -104,14 +104,7 @@ public:
 	 * \return set of currently pending signals
 	 */
 
-	SignalSet getPendingSignalSet() const
-	{
-		const auto signalsReceiverControlBlock = threadControlBlock_.getSignalsReceiverControlBlock();
-		if (signalsReceiverControlBlock == nullptr)
-			return SignalSet{SignalSet::empty};
-
-		return signalsReceiverControlBlock->getPendingSignalSet();
-	}
+	SignalSet getPendingSignalSet() const;
 
 	/**
 	 * \return priority of thread
