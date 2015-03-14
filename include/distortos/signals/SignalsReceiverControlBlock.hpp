@@ -17,13 +17,35 @@
 namespace distortos
 {
 
+namespace scheduler
+{
+
+class ThreadControlBlock;
+
+}	// namespace scheduler
+
 namespace synchronization
 {
 
 /// SignalsReceiverControlBlock class is a structure required by threads for "receiving" of signals
 class SignalsReceiverControlBlock
 {
+public:
 
+	/**
+	 * \brief SignalsReceiverControlBlock's constructor
+	 */
+
+	constexpr SignalsReceiverControlBlock() :
+			threadControlBlock_{}
+	{
+
+	}
+
+private:
+
+	/// pointer to associated ThreadControlBlock
+	scheduler::ThreadControlBlock* threadControlBlock_;
 };
 
 }	// namespace synchronization
