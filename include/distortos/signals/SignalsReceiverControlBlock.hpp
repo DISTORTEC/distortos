@@ -42,6 +42,15 @@ public:
 
 	}
 
+	/**
+	 * \param [in] threadControlBlock is a reference to associated ThreadControlBlock
+	 */
+
+	void setThreadControlBlock(scheduler::ThreadControlBlock& threadControlBlock)
+	{
+		threadControlBlock_ = &threadControlBlock;
+	}
+
 private:
 
 	/// pointer to associated ThreadControlBlock
