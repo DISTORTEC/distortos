@@ -31,6 +31,18 @@ class SignalsReceiver
 {
 	friend class scheduler::ThreadControlBlock;
 
+public:
+
+	/**
+	 * \brief SignalsReceiver's constructor
+	 */
+
+	constexpr SignalsReceiver() :
+			signalsReceiverControlBlock_{}
+	{
+
+	}
+
 private:
 
 	/// contained synchronization::SignalsReceiverControlBlock object
