@@ -13,7 +13,10 @@
 
 #include "distortos/signals/SignalsReceiverControlBlock.hpp"
 
-#include "distortos/scheduler/ThreadControlBlock.hpp"
+#include "distortos/scheduler/getScheduler.hpp"
+#include "distortos/scheduler/Scheduler.hpp"
+
+#include "distortos/architecture/InterruptMaskingLock.hpp"
 
 #include <cerrno>
 
@@ -27,36 +30,34 @@ namespace synchronization
 | public functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-int SignalsReceiverControlBlock::acceptPendingSignal(const uint8_t signalNumber) const
+int SignalsReceiverControlBlock::generateSignal(const uint8_t signalNumber)
 {
 	if (threadControlBlock_ == nullptr)
-		return ENOTSUP;
+		return EINVAL;
 
-	return threadControlBlock_->acceptPendingSignal(signalNumber);
-}
+	architecture::InterruptMaskingLock interruptMaskingLock;
 
-int SignalsReceiverControlBlock::generateSignal(const uint8_t signalNumber) const
-{
-	if (threadControlBlock_ == nullptr)
-		return ENOTSUP;
+	const auto ret = pendingSignalSet_.add(signalNumber);
+	if (ret != 0)
+		return ret;
 
-	return threadControlBlock_->generateSignal(signalNumber);
+	if (waitingSignalSet_ == nullptr)
+		return 0;
+
+	const auto testResult = waitingSignalSet_->test(signalNumber);
+	if (testResult.first != 0)
+		return testResult.first;
+	if (testResult.second == false)	// signalNumber is not "waited for"?
+		return 0;
+
+	scheduler::getScheduler().unblock(threadControlBlock_->getIterator());
+	return 0;
 }
 
 SignalSet SignalsReceiverControlBlock::getPendingSignalSet() const
 {
-	if (threadControlBlock_ == nullptr)
-		return SignalSet{SignalSet::empty};
-
-	return threadControlBlock_->getPendingSignalSet();
-}
-
-void SignalsReceiverControlBlock::setWaitingSignalSet(const SignalSet* const signalSet) const
-{
-	if (threadControlBlock_ == nullptr)
-		return;
-
-	threadControlBlock_->setWaitingSignalSet(signalSet);
+	architecture::InterruptMaskingLock interruptMaskingLock;
+	return pendingSignalSet_;
 }
 
 }	// namespace synchronization

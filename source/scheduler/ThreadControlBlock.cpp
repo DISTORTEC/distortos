@@ -56,8 +56,6 @@ ThreadControlBlock::ThreadControlBlock(architecture::Stack&& stack, const uint8_
 		{
 				signalsReceiver != nullptr ? &signalsReceiver->signalsReceiverControlBlock_ : nullptr
 		},
-		pendingSignalSet_{SignalSet::empty},
-		waitingSignalSet_{},
 		priority_{priority},
 		boostedPriority_{},
 		roundRobinQuantum_{},
@@ -77,12 +75,6 @@ ThreadControlBlock::~ThreadControlBlock()
 	_reclaim_reent(&reent_);
 }
 
-int ThreadControlBlock::acceptPendingSignal(const uint8_t signalNumber)
-{
-	architecture::InterruptMaskingLock interruptMaskingLock;
-	return pendingSignalSet_.remove(signalNumber);
-}
-
 int ThreadControlBlock::addHook()
 {
 	if (threadGroupControlBlock_ == nullptr)
@@ -99,36 +91,6 @@ int ThreadControlBlock::addHook()
 	if (signalsReceiverControlBlock_ != nullptr)
 		signalsReceiverControlBlock_->setThreadControlBlock(*this);
 
-	return 0;
-}
-
-SignalSet ThreadControlBlock::getPendingSignalSet() const
-{
-	architecture::InterruptMaskingLock interruptMaskingLock;
-	return pendingSignalSet_;
-}
-
-int ThreadControlBlock::generateSignal(const uint8_t signalNumber)
-{
-	if (signalsReceiverControlBlock_ == nullptr)
-		return ENOTSUP;
-
-	architecture::InterruptMaskingLock interruptMaskingLock;
-
-	const auto ret = pendingSignalSet_.add(signalNumber);
-	if (ret != 0)
-		return ret;
-
-	if (waitingSignalSet_ == nullptr)
-		return 0;
-
-	const auto testResult = waitingSignalSet_->test(signalNumber);
-	if (testResult.first != 0)
-		return testResult.first;
-	if (testResult.second == false)	// signalNumber is not "waited for"?
-		return 0;
-
-	getScheduler().unblock(iterator_);
 	return 0;
 }
 

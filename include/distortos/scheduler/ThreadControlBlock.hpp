@@ -21,7 +21,6 @@
 #include "distortos/architecture/Stack.hpp"
 
 #include "distortos/SchedulingPolicy.hpp"
-#include "distortos/SignalSet.hpp"
 
 #include "distortos/estd/TypeErasedFunctor.hpp"
 
@@ -110,19 +109,6 @@ public:
 	~ThreadControlBlock();
 
 	/**
-	 * \brief Accepts (clears) one of signals pending for thread.
-	 *
-	 * This should be called when the signal is "accepted".
-	 *
-	 * \param [in] signalNumber is the signal that will be accepted, [0; 31]
-	 *
-	 * \return 0 on success, error code otherwise:
-	 * - EINVAL - \a signalNumber value is invalid;
-	 */
-
-	int acceptPendingSignal(uint8_t signalNumber);
-
-	/**
 	 * \brief Hook function executed when thread is added to scheduler.
 	 *
 	 * If threadGroupControlBlock_ is nullptr, it is inherited from currently running thread. Then this object is added
@@ -150,23 +136,6 @@ public:
 	{
 		unblockFunctor_ = unblockFunctor;
 	}
-
-	/**
-	 * \brief Generates signal for thread.
-	 *
-	 * Similar to pthread_kill() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_kill.html
-	 *
-	 * Adds the signalNumber to set of pending signals. If this thread is currently waiting for this signal, it will be
-	 * unblocked.
-	 *
-	 * \param [in] signalNumber is the signal that will be generated, [0; 31]
-	 *
-	 * \return 0 on success, error code otherwise:
-	 * - EINVAL - \a signalNumber value is invalid;
-	 * - ENOTSUP - reception of signals is disabled for this thread;
-	 */
-
-	int generateSignal(uint8_t signalNumber);
 
 	/**
 	 * \return effective priority of ThreadControlBlock
@@ -221,12 +190,6 @@ public:
 	{
 		return owner_;
 	}
-
-	/**
-	 * \return set of currently pending signals
-	 */
-
-	SignalSet getPendingSignalSet() const;
 
 	/**
 	 * \return priority of ThreadControlBlock
@@ -363,15 +326,6 @@ public:
 	}
 
 	/**
-	 * \param [in] signalSet is a pointer to set of signals that will be "waited for", nullptr when wait was terminated
-	 */
-
-	void setWaitingSignalSet(const SignalSet* const signalSet)
-	{
-		waitingSignalSet_ = signalSet;
-	}
-
-	/**
 	 * \brief Hook function called when context is switched to this thread.
 	 *
 	 * Sets global _impure_ptr (from newlib) to thread's \a reent_ member variable.
@@ -477,12 +431,6 @@ private:
 	/// pointer to synchronization::SignalsReceiverControlBlock object for this thread, nullptr if this thread cannot
 	/// receive signals
 	synchronization::SignalsReceiverControlBlock* signalsReceiverControlBlock_;
-
-	/// set of pending signals
-	SignalSet pendingSignalSet_;
-
-	/// pointer to set of "waited for" signals, nullptr if thread is not waiting for any signals
-	const SignalSet* waitingSignalSet_;
 
 	/// newlib's _reent structure with thread-specific data
 	_reent reent_;

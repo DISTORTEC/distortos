@@ -14,12 +14,12 @@
 #ifndef INCLUDE_DISTORTOS_SIGNALS_SIGNALSRECEIVERCONTROLBLOCK_HPP_
 #define INCLUDE_DISTORTOS_SIGNALS_SIGNALSRECEIVERCONTROLBLOCK_HPP_
 
+#include "distortos/SignalSet.hpp"
+
 #include <cstdint>
 
 namespace distortos
 {
-
-class SignalSet;
 
 namespace scheduler
 {
@@ -41,7 +41,9 @@ public:
 	 */
 
 	constexpr SignalsReceiverControlBlock() :
-			threadControlBlock_{}
+			threadControlBlock_{},
+			pendingSignalSet_{SignalSet::empty},
+			waitingSignalSet_{}
 	{
 
 	}
@@ -57,7 +59,10 @@ public:
 	 * - EINVAL - \a signalNumber value is invalid;
 	 */
 
-	int acceptPendingSignal(uint8_t signalNumber) const;
+	int acceptPendingSignal(const uint8_t signalNumber)
+	{
+		return pendingSignalSet_.remove(signalNumber);
+	}
 
 	/**
 	 * \brief Generates signal for associated thread.
@@ -73,7 +78,7 @@ public:
 	 * - EINVAL - \a signalNumber value is invalid;
 	 */
 
-	int generateSignal(uint8_t signalNumber) const;
+	int generateSignal(uint8_t signalNumber);
 
 	/**
 	 * \return set of currently pending signals
@@ -94,12 +99,21 @@ public:
 	 * \param [in] signalSet is a pointer to set of signals that will be "waited for", nullptr when wait was terminated
 	 */
 
-	void setWaitingSignalSet(const SignalSet* signalSet) const;
+	void setWaitingSignalSet(const SignalSet* const signalSet)
+	{
+		waitingSignalSet_ = signalSet;
+	}
 
 private:
 
 	/// pointer to associated ThreadControlBlock
 	scheduler::ThreadControlBlock* threadControlBlock_;
+
+	/// set of pending signals
+	SignalSet pendingSignalSet_;
+
+	/// pointer to set of "waited for" signals, nullptr if associated thread is not waiting for any signals
+	const SignalSet* waitingSignalSet_;
 };
 
 }	// namespace synchronization
