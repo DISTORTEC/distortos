@@ -15,6 +15,8 @@
 
 #include "distortos/scheduler/ThreadControlBlock.hpp"
 
+#include <cerrno>
+
 namespace distortos
 {
 
@@ -24,6 +26,14 @@ namespace synchronization
 /*---------------------------------------------------------------------------------------------------------------------+
 | public functions
 +---------------------------------------------------------------------------------------------------------------------*/
+
+int SignalsReceiverControlBlock::acceptPendingSignal(const uint8_t signalNumber) const
+{
+	if (threadControlBlock_ == nullptr)
+		return ENOTSUP;
+
+	return threadControlBlock_->acceptPendingSignal(signalNumber);
+}
 
 void SignalsReceiverControlBlock::setWaitingSignalSet(const SignalSet* const signalSet) const
 {

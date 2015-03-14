@@ -14,6 +14,8 @@
 #ifndef INCLUDE_DISTORTOS_SIGNALS_SIGNALSRECEIVERCONTROLBLOCK_HPP_
 #define INCLUDE_DISTORTOS_SIGNALS_SIGNALSRECEIVERCONTROLBLOCK_HPP_
 
+#include <cstdint>
+
 namespace distortos
 {
 
@@ -43,6 +45,19 @@ public:
 	{
 
 	}
+
+	/**
+	 * \brief Accepts (clears) one of signals that are pending.
+	 *
+	 * This should be called when the signal is "accepted".
+	 *
+	 * \param [in] signalNumber is the signal that will be accepted, [0; 31]
+	 *
+	 * \return 0 on success, error code otherwise:
+	 * - EINVAL - \a signalNumber value is invalid;
+	 */
+
+	int acceptPendingSignal(uint8_t signalNumber) const;
 
 	/**
 	 * \param [in] threadControlBlock is a reference to associated ThreadControlBlock
