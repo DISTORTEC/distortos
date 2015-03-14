@@ -16,6 +16,8 @@
 #include "distortos/scheduler/getScheduler.hpp"
 #include "distortos/scheduler/Scheduler.hpp"
 
+#include "distortos/architecture/InterruptMaskingLock.hpp"
+
 #include <cerrno>
 
 namespace distortos
@@ -58,6 +60,7 @@ SignalSet ThreadBase::getPendingSignalSet() const
 	if (signalsReceiverControlBlock == nullptr)
 		return SignalSet{SignalSet::empty};
 
+	architecture::InterruptMaskingLock interruptMaskingLock;
 	return signalsReceiverControlBlock->getPendingSignalSet();
 }
 
