@@ -19,6 +19,8 @@
 #include "distortos/scheduler/getScheduler.hpp"
 #include "distortos/scheduler/Scheduler.hpp"
 
+#include "distortos/signals/SignalsReceiverControlBlock.hpp"
+
 #include "distortos/architecture/InterruptMaskingLock.hpp"
 
 #include <cerrno>
@@ -67,7 +69,9 @@ public:
 	void operator()(scheduler::ThreadControlBlock& threadControlBlock) const override
 	{
 		pendingSignalSet_ = threadControlBlock.getPendingSignalSet();
-		threadControlBlock.setWaitingSignalSet(nullptr);
+		const auto signalsReceiverControlBlock = threadControlBlock.getSignalsReceiverControlBlock();
+		if (signalsReceiverControlBlock != nullptr)
+			signalsReceiverControlBlock->setWaitingSignalSet(nullptr);
 	}
 
 private:
