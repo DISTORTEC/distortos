@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-02-18
+ * \date 2015-03-14
  */
 
 #include "SignalsWaitTestCase.hpp"
@@ -44,7 +44,7 @@ constexpr size_t testThreadStackSize {384};
 using TestThreadFunction = void(SequenceAsserter&, unsigned int);
 
 /// type of test thread
-using TestThread = decltype(makeStaticThread<testThreadStackSize>({}, std::declval<TestThreadFunction>(),
+using TestThread = decltype(makeStaticThread<testThreadStackSize, true>({}, std::declval<TestThreadFunction>(),
 		std::ref(std::declval<SequenceAsserter&>()), std::declval<unsigned int>()));
 
 /*---------------------------------------------------------------------------------------------------------------------+
@@ -83,7 +83,7 @@ void thread(SequenceAsserter& sequenceAsserter, const unsigned int firstSequence
 
 TestThread makeTestThread(SequenceAsserter& sequenceAsserter, const unsigned int firstSequencePoint)
 {
-	return makeStaticThread<testThreadStackSize>(UINT8_MAX, thread, std::ref(sequenceAsserter),
+	return makeStaticThread<testThreadStackSize, true>(UINT8_MAX, thread, std::ref(sequenceAsserter),
 			static_cast<unsigned int>(firstSequencePoint));
 }
 
