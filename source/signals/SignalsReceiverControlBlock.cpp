@@ -56,7 +56,6 @@ int SignalsReceiverControlBlock::generateSignal(const uint8_t signalNumber)
 
 SignalSet SignalsReceiverControlBlock::getPendingSignalSet() const
 {
-	architecture::InterruptMaskingLock interruptMaskingLock;
 	return pendingSignalSet_;
 }
 
