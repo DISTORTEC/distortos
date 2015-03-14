@@ -255,6 +255,16 @@ public:
 	}
 
 	/**
+	 * \return pointer to synchronization::SignalsReceiverControlBlock object for this thread, nullptr if this thread
+	 * cannot receive signals
+	 */
+
+	synchronization::SignalsReceiverControlBlock* getSignalsReceiverControlBlock() const
+	{
+		return signalsReceiverControlBlock_;
+	}
+
+	/**
 	 * \return reference to internal Stack object
 	 */
 
