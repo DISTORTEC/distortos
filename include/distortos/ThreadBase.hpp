@@ -20,6 +20,8 @@
 
 #include "distortos/Semaphore.hpp"
 
+#include <cerrno>
+
 namespace distortos
 {
 
@@ -74,9 +76,13 @@ public:
 	 * - ENOTSUP - reception of signals is disabled for this thread;
 	 */
 
-	int generateSignal(const uint8_t signalNumber)
+	int generateSignal(const uint8_t signalNumber) const
 	{
-		return threadControlBlock_.generateSignal(signalNumber);
+		const auto signalsReceiverControlBlock = threadControlBlock_.getSignalsReceiverControlBlock();
+		if (signalsReceiverControlBlock == nullptr)
+			return ENOTSUP;
+
+		return signalsReceiverControlBlock->generateSignal(signalNumber);
 	}
 
 	/**
