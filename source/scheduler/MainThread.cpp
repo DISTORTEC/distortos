@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-03-04
+ * \date 2015-03-14
  */
 
 #include "distortos/scheduler/MainThread.hpp"
@@ -51,7 +51,7 @@ architecture::Stack stackWrapper(const std::pair<void*, size_t> stackBuffer)
 
 MainThread::MainThread(const uint8_t priority, ThreadGroupControlBlock& threadGroupControlBlock) :
 		ThreadBase{stackWrapper(architecture::getMainStack()), priority, SchedulingPolicy::RoundRobin,
-				&threadGroupControlBlock}
+				&threadGroupControlBlock, nullptr}
 {
 
 }

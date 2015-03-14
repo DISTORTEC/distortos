@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-03-04
+ * \date 2015-03-14
  */
 
 #ifndef INCLUDE_DISTORTOS_THREADBASE_HPP_
@@ -35,10 +35,12 @@ public:
 	 * \param [in] schedulingPolicy is the scheduling policy of the thread
 	 * \param [in] threadGroupControlBlock is a pointer to scheduler::ThreadGroupControlBlock to which this object will
 	 * be added, nullptr to inherit thread group from currently running thread
+	 * \param [in] signalsReceiver is a pointer to SignalsReceiver object for this thread, nullptr to disable reception
+	 * of signals for this thread
 	 */
 
 	ThreadBase(void* buffer, size_t size, uint8_t priority, SchedulingPolicy schedulingPolicy,
-			scheduler::ThreadGroupControlBlock* threadGroupControlBlock);
+			scheduler::ThreadGroupControlBlock* threadGroupControlBlock, SignalsReceiver* signalsReceiver);
 
 	/**
 	 * \brief ThreadBase's constructor.
@@ -48,10 +50,12 @@ public:
 	 * \param [in] schedulingPolicy is the scheduling policy of the thread
 	 * \param [in] threadGroupControlBlock is a pointer to scheduler::ThreadGroupControlBlock to which this object will
 	 * be added, nullptr to inherit thread group from currently running thread
+	 * \param [in] signalsReceiver is a pointer to SignalsReceiver object for this thread, nullptr to disable reception
+	 * of signals for this thread
 	 */
 
 	ThreadBase(architecture::Stack&& stack, uint8_t priority, SchedulingPolicy schedulingPolicy,
-			scheduler::ThreadGroupControlBlock* threadGroupControlBlock);
+			scheduler::ThreadGroupControlBlock* threadGroupControlBlock, SignalsReceiver* signalsReceiver);
 
 	/**
 	 * \brief Generates signal for thread.
