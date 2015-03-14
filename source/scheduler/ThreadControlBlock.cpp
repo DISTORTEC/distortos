@@ -21,6 +21,8 @@
 
 #include "distortos/architecture/InterruptMaskingLock.hpp"
 
+#include "distortos/SignalsReceiver.hpp"
+
 #include <cerrno>
 #include <cstring>
 
@@ -36,7 +38,7 @@ namespace scheduler
 
 ThreadControlBlock::ThreadControlBlock(architecture::Stack&& stack, const uint8_t priority,
 		const SchedulingPolicy schedulingPolicy, ThreadGroupControlBlock* const threadGroupControlBlock,
-		ThreadBase& owner) :
+		SignalsReceiver* const signalsReceiver, ThreadBase& owner) :
 		stack_{std::move(stack)},
 		owner_(owner),
 		ownedProtocolMutexControlBlocksList_
@@ -50,7 +52,10 @@ ThreadControlBlock::ThreadControlBlock(architecture::Stack&& stack, const uint8_
 		threadGroupList_{},
 		threadGroupIterator_{},
 		unblockReason_{},
-		signalsReceiverControlBlock_{},
+		signalsReceiverControlBlock_
+		{
+				signalsReceiver != nullptr ? &signalsReceiver->signalsReceiverControlBlock_ : nullptr
+		},
 		pendingSignalSet_{SignalSet::empty},
 		waitingSignalSet_{},
 		priority_{priority},

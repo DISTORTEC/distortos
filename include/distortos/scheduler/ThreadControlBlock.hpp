@@ -28,6 +28,8 @@
 namespace distortos
 {
 
+class SignalsReceiver;
+
 namespace synchronization
 {
 
@@ -93,11 +95,13 @@ public:
 	 * \param [in] schedulingPolicy is the scheduling policy of the thread
 	 * \param [in] threadGroupControlBlock is a pointer to scheduler::ThreadGroupControlBlock to which this object will
 	 * be added, nullptr to inherit thread group from currently running thread
+	 * \param [in] signalsReceiver is a pointer to SignalsReceiver object for this thread, nullptr to disable reception
+	 * of signals for this thread
 	 * \param [in] owner is a reference to ThreadBase object that owns this ThreadControlBlock
 	 */
 
 	ThreadControlBlock(architecture::Stack&& stack, uint8_t priority, SchedulingPolicy schedulingPolicy,
-			ThreadGroupControlBlock* threadGroupControlBlock, ThreadBase& owner);
+			ThreadGroupControlBlock* threadGroupControlBlock, SignalsReceiver* signalsReceiver, ThreadBase& owner);
 
 	/**
 	 * \brief ThreadControlBlock's destructor
