@@ -54,11 +54,6 @@ int SignalsReceiverControlBlock::generateSignal(const uint8_t signalNumber)
 	return 0;
 }
 
-SignalSet SignalsReceiverControlBlock::getPendingSignalSet() const
-{
-	return pendingSignalSet_;
-}
-
 }	// namespace synchronization
 
 }	// namespace distortos

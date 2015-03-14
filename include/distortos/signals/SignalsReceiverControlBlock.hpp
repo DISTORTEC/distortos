@@ -84,7 +84,10 @@ public:
 	 * \return set of currently pending signals
 	 */
 
-	SignalSet getPendingSignalSet() const;
+	SignalSet getPendingSignalSet() const
+	{
+		return pendingSignalSet_;
+	}
 
 	/**
 	 * \param [in] threadControlBlock is a reference to associated ThreadControlBlock
