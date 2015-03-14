@@ -189,6 +189,30 @@ Thread<Function, Args...> makeThread(void* const buffer, const size_t size, cons
  * \param [in] buffer is a pointer to stack's buffer
  * \param [in] size is the size of stack's buffer, bytes
  * \param [in] priority is the thread's priority, 0 - lowest, UINT8_MAX - highest
+ * \param [in] signalsReceiver is a pointer to SignalsReceiver object for this thread, nullptr to disable reception of
+ * signals for this thread
+ * \param [in] function is a function that will be executed in separate thread
+ * \param [in] args are arguments for function
+ *
+ * \return Thread object with deduced template arguments
+ */
+
+template<typename Function, typename... Args>
+Thread<Function, Args...> makeThread(void* const buffer, const size_t size, const uint8_t priority,
+		SignalsReceiver* const signalsReceiver, Function&& function, Args&&... args)
+{
+	return {buffer, size, priority, signalsReceiver, std::forward<Function>(function), std::forward<Args>(args)...};
+}
+
+/**
+ * \brief Helper factory function to make Thread object with deduced template arguments
+ *
+ * \param Function is the function that will be executed
+ * \param Args are the arguments for Function
+ *
+ * \param [in] buffer is a pointer to stack's buffer
+ * \param [in] size is the size of stack's buffer, bytes
+ * \param [in] priority is the thread's priority, 0 - lowest, UINT8_MAX - highest
  * \param [in] function is a function that will be executed in separate thread
  * \param [in] args are arguments for function
  *
