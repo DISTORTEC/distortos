@@ -16,6 +16,8 @@
 
 #include "distortos/scheduler/ThreadControlBlock.hpp"
 
+#include "distortos/signals/SignalsReceiverControlBlock.hpp"
+
 #include "distortos/Semaphore.hpp"
 
 namespace distortos
@@ -98,7 +100,11 @@ public:
 
 	SignalSet getPendingSignalSet() const
 	{
-		return threadControlBlock_.getPendingSignalSet();
+		const auto signalsReceiverControlBlock = threadControlBlock_.getSignalsReceiverControlBlock();
+		if (signalsReceiverControlBlock == nullptr)
+			return SignalSet{SignalSet::empty};
+
+		return signalsReceiverControlBlock->getPendingSignalSet();
 	}
 
 	/**
