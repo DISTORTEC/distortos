@@ -123,7 +123,7 @@ std::pair<int, uint8_t> waitImplementation(const SignalSet& signalSet, const boo
 		scheduler::ThreadControlBlockList waitingList {scheduler.getThreadControlBlockListAllocator(),
 				scheduler::ThreadControlBlock::State::WaitingForSignal};
 
-		currentThreadControlBlock.setWaitingSignalSet(&signalSet);
+		signalsReceiverControlBlock->setWaitingSignalSet(&signalSet);
 		const SignalsWaitUnblockFunctor signalsWaitUnblockFunctor {pendingSignalSet};
 		const auto ret = timePoint == nullptr ? scheduler.block(waitingList, &signalsWaitUnblockFunctor) :
 				scheduler.blockUntil(waitingList, *timePoint, &signalsWaitUnblockFunctor);
