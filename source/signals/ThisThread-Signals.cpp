@@ -105,15 +105,14 @@ std::pair<int, uint8_t> waitImplementation(const SignalSet& signalSet, const boo
 		const TickClock::time_point* const timePoint)
 {
 	auto& scheduler = scheduler::getScheduler();
-	auto& currentThreadControlBlock = scheduler.getCurrentThreadControlBlock();
-	const auto signalsReceiverControlBlock = currentThreadControlBlock.getSignalsReceiverControlBlock();
+	const auto signalsReceiverControlBlock = scheduler.getCurrentThreadControlBlock().getSignalsReceiverControlBlock();
 	if (signalsReceiverControlBlock == nullptr)
 		return {ENOTSUP, {}};
 
 	architecture::InterruptMaskingLock interruptMaskingLock;
 
 	const auto bitset = signalSet.getBitset();
-	auto pendingSignalSet = currentThreadControlBlock.getPendingSignalSet();
+	auto pendingSignalSet = signalsReceiverControlBlock->getPendingSignalSet();
 	auto pendingBitset = pendingSignalSet.getBitset();
 	auto intersection = bitset & pendingBitset;
 
