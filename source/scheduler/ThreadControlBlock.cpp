@@ -110,6 +110,9 @@ SignalSet ThreadControlBlock::getPendingSignalSet() const
 
 int ThreadControlBlock::generateSignal(const uint8_t signalNumber)
 {
+	if (signalsReceiverControlBlock_ == nullptr)
+		return ENOTSUP;
+
 	architecture::InterruptMaskingLock interruptMaskingLock;
 
 	const auto ret = pendingSignalSet_.add(signalNumber);

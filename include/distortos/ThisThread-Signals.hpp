@@ -43,6 +43,7 @@ namespace Signals
  *
  * \return 0 on success, error code otherwise:
  * - EINVAL - \a signalNumber value is invalid;
+ * - ENOTSUP - reception of signals is disabled for current thread;
  */
 
 int generateSignal(uint8_t signalNumber);

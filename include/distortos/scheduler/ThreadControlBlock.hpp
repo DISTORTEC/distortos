@@ -163,6 +163,7 @@ public:
 	 *
 	 * \return 0 on success, error code otherwise:
 	 * - EINVAL - \a signalNumber value is invalid;
+	 * - ENOTSUP - reception of signals is disabled for this thread;
 	 */
 
 	int generateSignal(uint8_t signalNumber);
