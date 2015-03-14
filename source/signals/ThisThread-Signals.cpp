@@ -137,7 +137,7 @@ std::pair<int, uint8_t> waitImplementation(const SignalSet& signalSet, const boo
 	const auto intersectionValue = intersection.to_ulong();
 	// GCC builtin - "find first set" - https://gcc.gnu.org/onlinedocs/gcc/Other-Builtins.html
 	const auto signalNumber = __builtin_ffsl(intersectionValue) - 1;
-	const auto ret = currentThreadControlBlock.acceptPendingSignal(signalNumber);
+	const auto ret = signalsReceiverControlBlock->acceptPendingSignal(signalNumber);
 	return {ret, signalNumber};
 }
 
