@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-03-07
+ * \date 2015-03-14
  */
 
 #include "testThreadFunction.hpp"
@@ -30,7 +30,8 @@ constexpr size_t testThreadStackSize {20480};
 #endif	// def _REENT_SMALL
 
 /// test thread
-auto testThread = distortos::makeStaticThread<testThreadStackSize>(UINT8_MAX / 2, distortos::test::testThreadFunction);
+auto testThread = distortos::makeStaticThread<testThreadStackSize, true>(UINT8_MAX / 2,
+		distortos::test::testThreadFunction);
 
 }	// namespace
 
