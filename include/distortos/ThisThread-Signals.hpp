@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-02-21
+ * \date 2015-03-14
  */
 
 #ifndef INCLUDE_DISTORTOS_THISTHREAD_SIGNALS_HPP_
@@ -73,6 +73,7 @@ SignalSet getPendingSignalSet();
  * \return pair with return code (0 on success, error code otherwise) and signal number of signal that was accepted;
  * error codes:
  * - EAGAIN - no signal specified by \a signalSet was pending;
+ * - ENOTSUP - reception of signals is disabled for current thread;
  */
 
 std::pair<int, uint8_t> tryWait(const SignalSet& signalSet);
@@ -91,6 +92,7 @@ std::pair<int, uint8_t> tryWait(const SignalSet& signalSet);
  *
  * \return pair with return code (0 on success, error code otherwise) and signal number of signal that was accepted;
  * error codes:
+ * - ENOTSUP - reception of signals is disabled for current thread;
  * - ETIMEDOUT - no signal specified by \a signalSet was generated before the specified \a duration passed;
  */
 
@@ -109,6 +111,7 @@ std::pair<int, uint8_t> tryWaitFor(const SignalSet& signalSet, TickClock::durati
  *
  * \return pair with return code (0 on success, error code otherwise) and signal number of signal that was accepted;
  * error codes:
+ * - ENOTSUP - reception of signals is disabled for current thread;
  * - ETIMEDOUT - no signal specified by \a signalSet was generated before the specified \a duration passed;
  */
 
@@ -132,6 +135,7 @@ std::pair<int, uint8_t> tryWaitFor(const SignalSet& signalSet, const std::chrono
  *
  * \return pair with return code (0 on success, error code otherwise) and signal number of signal that was accepted;
  * error codes:
+ * - ENOTSUP - reception of signals is disabled for current thread;
  * - ETIMEDOUT - no signal specified by \a signalSet was generated before specified \a timePoint;
  */
 
@@ -149,6 +153,7 @@ std::pair<int, uint8_t> tryWaitUntil(const SignalSet& signalSet, TickClock::time
  *
  * \return pair with return code (0 on success, error code otherwise) and signal number of signal that was accepted;
  * error codes:
+ * - ENOTSUP - reception of signals is disabled for current thread;
  * - ETIMEDOUT - no signal specified by \a signalSet was generated before specified \a timePoint;
  */
 
@@ -170,7 +175,9 @@ std::pair<int, uint8_t> tryWaitUntil(const SignalSet& signalSet,
  *
  * \param [in] signalSet is a reference to set of signals that will be waited for
  *
- * \return pair with return code (0 on success, error code otherwise) and signal number of signal that was accepted
+ * \return pair with return code (0 on success, error code otherwise) and signal number of signal that was accepted;
+ * error codes:
+ * - ENOTSUP - reception of signals is disabled for current thread;
  */
 
 std::pair<int, uint8_t> wait(const SignalSet& signalSet);

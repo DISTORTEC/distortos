@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-02-21
+ * \date 2015-03-14
  */
 
 #include "distortos/ThisThread-Signals.hpp"
@@ -98,10 +98,13 @@ private:
 std::pair<int, uint8_t> waitImplementation(const SignalSet& signalSet, const bool nonBlocking,
 		const TickClock::time_point* const timePoint)
 {
-	architecture::InterruptMaskingLock interruptMaskingLock;
-
 	auto& scheduler = scheduler::getScheduler();
 	auto& currentThreadControlBlock = scheduler.getCurrentThreadControlBlock();
+	const auto signalsReceiverControlBlock = currentThreadControlBlock.getSignalsReceiverControlBlock();
+	if (signalsReceiverControlBlock == nullptr)
+		return {ENOTSUP, {}};
+
+	architecture::InterruptMaskingLock interruptMaskingLock;
 
 	const auto bitset = signalSet.getBitset();
 	auto pendingSignalSet = currentThreadControlBlock.getPendingSignalSet();
