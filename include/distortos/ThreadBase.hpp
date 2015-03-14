@@ -76,14 +76,7 @@ public:
 	 * - ENOTSUP - reception of signals is disabled for this thread;
 	 */
 
-	int generateSignal(const uint8_t signalNumber) const
-	{
-		const auto signalsReceiverControlBlock = threadControlBlock_.getSignalsReceiverControlBlock();
-		if (signalsReceiverControlBlock == nullptr)
-			return ENOTSUP;
-
-		return signalsReceiverControlBlock->generateSignal(signalNumber);
-	}
+	int generateSignal(const uint8_t signalNumber) const;
 
 	/**
 	 * \return effective priority of thread

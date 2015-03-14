@@ -43,6 +43,15 @@ ThreadBase::ThreadBase(architecture::Stack&& stack, const uint8_t priority, cons
 
 }
 
+int ThreadBase::generateSignal(const uint8_t signalNumber) const
+{
+	const auto signalsReceiverControlBlock = threadControlBlock_.getSignalsReceiverControlBlock();
+	if (signalsReceiverControlBlock == nullptr)
+		return ENOTSUP;
+
+	return signalsReceiverControlBlock->generateSignal(signalNumber);
+}
+
 SignalSet ThreadBase::getPendingSignalSet() const
 {
 	const auto signalsReceiverControlBlock = threadControlBlock_.getSignalsReceiverControlBlock();
