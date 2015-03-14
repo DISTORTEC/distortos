@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-03-10
+ * \date 2015-03-14
  */
 
 #include "distortos/scheduler/lowLevelSchedulerInitialization.hpp"
@@ -63,7 +63,7 @@ void lowLevelSchedulerInitialization()
 
 	auto& mainThreadGroupControlBlock = *new (&mainThreadGroupControlBlockStorage) ThreadGroupControlBlock;
 
-	auto& mainThread = *new (&mainThreadStorage) MainThread {UINT8_MAX, mainThreadGroupControlBlock};
+	auto& mainThread = *new (&mainThreadStorage) MainThread {UINT8_MAX, mainThreadGroupControlBlock, nullptr};
 	schedulerInstance.initialize(mainThread);	/// \todo error handling?
 	mainThread.getThreadControlBlock().switchedToHook();
 
