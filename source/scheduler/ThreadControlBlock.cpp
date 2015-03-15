@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-03-14
+ * \date 2015-03-15
  */
 
 #include "distortos/scheduler/ThreadControlBlock.hpp"
@@ -87,9 +87,6 @@ int ThreadControlBlock::addHook()
 	const auto addRet = threadGroupControlBlock_->add(*this);
 	threadGroupList_ = &addRet.first;
 	threadGroupIterator_ = addRet.second;
-
-	if (signalsReceiverControlBlock_ != nullptr)
-		signalsReceiverControlBlock_->setThreadControlBlock(*this);
 
 	return 0;
 }
