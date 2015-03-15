@@ -11,7 +11,7 @@
  * \date 2015-03-15
  */
 
-#include "distortos/signals/SignalsReceiverControlBlock.hpp"
+#include "distortos/synchronization/SignalsReceiverControlBlock.hpp"
 
 #include "distortos/scheduler/getScheduler.hpp"
 #include "distortos/scheduler/Scheduler.hpp"
