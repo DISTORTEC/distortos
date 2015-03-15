@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-03-14
+ * \date 2015-03-15
  */
 
 #ifndef INCLUDE_DISTORTOS_SIGNALS_SIGNALSRECEIVERCONTROLBLOCK_HPP_
@@ -73,12 +73,13 @@ public:
 	 * will be unblocked.
 	 *
 	 * \param [in] signalNumber is the signal that will be generated, [0; 31]
+	 * \param [in] threadControlBlock is a reference to associated ThreadControlBlock
 	 *
 	 * \return 0 on success, error code otherwise:
 	 * - EINVAL - \a signalNumber value is invalid;
 	 */
 
-	int generateSignal(uint8_t signalNumber);
+	int generateSignal(uint8_t signalNumber, const scheduler::ThreadControlBlock& threadControlBlock);
 
 	/**
 	 * \return set of currently pending signals

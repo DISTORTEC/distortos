@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-03-14
+ * \date 2015-03-15
  */
 
 #include "distortos/signals/SignalsReceiverControlBlock.hpp"
@@ -30,11 +30,9 @@ namespace synchronization
 | public functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-int SignalsReceiverControlBlock::generateSignal(const uint8_t signalNumber)
+int SignalsReceiverControlBlock::generateSignal(const uint8_t signalNumber,
+		const scheduler::ThreadControlBlock& threadControlBlock)
 {
-	if (threadControlBlock_ == nullptr)
-		return EINVAL;
-
 	architecture::InterruptMaskingLock interruptMaskingLock;
 
 	const auto ret = pendingSignalSet_.add(signalNumber);
@@ -50,7 +48,7 @@ int SignalsReceiverControlBlock::generateSignal(const uint8_t signalNumber)
 	if (testResult.second == false)	// signalNumber is not "waited for"?
 		return 0;
 
-	scheduler::getScheduler().unblock(threadControlBlock_->getIterator());
+	scheduler::getScheduler().unblock(threadControlBlock.getIterator());
 	return 0;
 }
 
