@@ -41,7 +41,6 @@ public:
 	 */
 
 	constexpr SignalsReceiverControlBlock() :
-			threadControlBlock_{},
 			pendingSignalSet_{SignalSet::empty},
 			waitingSignalSet_{}
 	{
@@ -91,15 +90,6 @@ public:
 	}
 
 	/**
-	 * \param [in] threadControlBlock is a reference to associated ThreadControlBlock
-	 */
-
-	void setThreadControlBlock(scheduler::ThreadControlBlock& threadControlBlock)
-	{
-		threadControlBlock_ = &threadControlBlock;
-	}
-
-	/**
 	 * \param [in] signalSet is a pointer to set of signals that will be "waited for", nullptr when wait was terminated
 	 */
 
@@ -109,9 +99,6 @@ public:
 	}
 
 private:
-
-	/// pointer to associated ThreadControlBlock
-	scheduler::ThreadControlBlock* threadControlBlock_;
 
 	/// set of pending signals
 	SignalSet pendingSignalSet_;
