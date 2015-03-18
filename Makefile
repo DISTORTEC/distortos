@@ -6,7 +6,7 @@
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #
-# date: 2015-01-07
+# date: 2015-03-18
 #
 
 #-----------------------------------------------------------------------------------------------------------------------
@@ -35,7 +35,7 @@ OUTPUT = output/
 PROJECT = distortos
 
 # core type
-COREFLAGS = -mcpu=cortex-m4 -mthumb
+COREFLAGS = -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16
 
 # linker flags related to linker script
 LDFLAGS = -Lsource/chip/STMicroelectronics/STM32F4 -Lsource/architecture/ARM/ARMv7-M -TSTM32F4xxxG.ld
