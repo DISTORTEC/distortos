@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-02-16
+ * \date 2015-03-18
  */
 
 #ifndef INCLUDE_DISTORTOS_ARCHITECTURE_ARCHITECTURE_HPP_
@@ -75,6 +75,15 @@ std::pair<void*, size_t> getMainStack();
  */
 
 void* initializeStack(void* buffer, size_t size, void (&function)(ThreadBase&), ThreadBase& threadBase);
+
+/**
+ * \brief Low level architecture initialization.
+ *
+ * This function is called before constructors for global and static objects from __libc_init_array() via address in
+ * distortosPreinitArray[].
+ */
+
+void lowLevelInitialization();
 
 /**
  * \brief Restores interrupt masking.
