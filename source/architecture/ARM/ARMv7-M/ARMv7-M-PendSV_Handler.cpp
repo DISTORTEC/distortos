@@ -2,17 +2,19 @@
  * \file
  * \brief PendSV_Handler() for ARMv7-M (Cortex-M3 / Cortex-M4)
  *
- * \author Copyright (C) 2014 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-10-30
+ * \date 2015-03-19
  */
 
 #include "distortos/scheduler/getScheduler.hpp"
 #include "distortos/scheduler/Scheduler.hpp"
+
+#include "distortos/chip/CMSIS-proxy.h"
 
 
 /*---------------------------------------------------------------------------------------------------------------------+
@@ -42,14 +44,22 @@ extern "C" __attribute__ ((naked)) void PendSV_Handler()
 {
 	asm volatile
 	(
-			"	mrs		r0, PSP								\n"	// save context of current thread
-			"	stmdb	r0!, {r4-r11}						\n"
-			"												\n"
+			"	mrs		r0, PSP								\n"
+#if __FPU_PRESENT == 1 && __FPU_USED == 1
+			"	stmdb	r0!, {r4-r11, lr}					\n"	// save context of current thread
+#else
+			"	stmdb	r0!, {r4-r11}						\n"	// save context of current thread
 			"	mov		r4, lr								\n"
-			"	bl		schedulerSwitchContextWrapper		\n"	// switch context
-			"	mov		lr, r4								\n"
+#endif	// __FPU_PRESENT == 1 && __FPU_USED == 1
 			"												\n"
+			"	bl		schedulerSwitchContextWrapper		\n"	// switch context
+			"												\n"
+#if __FPU_PRESENT == 1 && __FPU_USED == 1
+			"	ldmia	r0!, {r4-r11, lr}					\n"	// load context of new thread
+#else
+			"	mov		lr, r4								\n"
 			"	ldmia	r0!, {r4-r11}						\n"	// load context of new thread
+#endif	// __FPU_PRESENT == 1 && __FPU_USED == 1
 			"	msr		PSP, r0								\n"
 			"												\n"
 			"	bx		lr									\n"	// return to new thread

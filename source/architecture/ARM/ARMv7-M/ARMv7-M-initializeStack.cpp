@@ -8,10 +8,12 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-02-16
+ * \date 2015-03-19
  */
 
 #include "distortos/architecture/architecture.hpp"
+
+#include "distortos/chip/CMSIS-proxy.h"
 
 #include <type_traits>
 
@@ -41,6 +43,9 @@ void* initializeStack(void* const buffer, const size_t size, void (&function)(Th
 	*--stackPointer = 0x22222222;									// r2
 	*--stackPointer = 0x11111111;									// r1
 	*--stackPointer = reinterpret_cast<StackElement>(&threadBase);	// r0
+#if __FPU_PRESENT == 1 && __FPU_USED == 1
+	*--stackPointer = 0xfffffffd;									// lr
+#endif	// __FPU_PRESENT == 1 && __FPU_USED == 1
 	*--stackPointer = 0xbbbbbbbb;									// r11
 	*--stackPointer = 0xaaaaaaaa;									// r10
 	*--stackPointer = 0x99999999;									// r9
