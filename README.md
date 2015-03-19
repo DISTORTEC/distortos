@@ -21,6 +21,7 @@ Targets
 Currently supported targets for *distortos* are:
 
 - ARM Cortex-M3
+- ARM Cortex-M4(F)
 
 Motivation and goals
 --------------------
