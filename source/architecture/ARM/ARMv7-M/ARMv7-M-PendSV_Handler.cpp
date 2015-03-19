@@ -46,7 +46,10 @@ extern "C" __attribute__ ((naked)) void PendSV_Handler()
 	(
 			"	mrs			r0, PSP							\n"
 #if __FPU_PRESENT == 1 && __FPU_USED == 1
-			"	stmdb		r0!, {r4-r11, lr}				\n"	// save context of current thread
+			"	tst			lr, #(1 << 4)					\n"	// was floating-point used by the thread?
+			"	it			eq								\n"
+			"	vstmdbeq	r0!, {s16-s31}					\n"	// save "floating-point" context of current thread
+			"	stmdb		r0!, {r4-r11, lr}				\n"	// save "regular" context of current thread
 #else
 			"	stmdb		r0!, {r4-r11}					\n"	// save context of current thread
 			"	mov			r4, lr							\n"
@@ -55,7 +58,10 @@ extern "C" __attribute__ ((naked)) void PendSV_Handler()
 			"	bl			schedulerSwitchContextWrapper	\n"	// switch context
 			"												\n"
 #if __FPU_PRESENT == 1 && __FPU_USED == 1
-			"	ldmia		r0!, {r4-r11, lr}				\n"	// load context of new thread
+			"	ldmia		r0!, {r4-r11, lr}				\n"	// load "regular" context of new thread
+			"	tst			lr, #(1 << 4)					\n"	// was floating-point used by the thread?
+			"	it			eq								\n"
+			"	vldmiaeq	r0!, {s16-s31}					\n"	// load "floating-point" context of new thread
 #else
 			"	mov			lr, r4							\n"
 			"	ldmia		r0!, {r4-r11}					\n"	// load context of new thread
