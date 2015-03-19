@@ -44,25 +44,25 @@ extern "C" __attribute__ ((naked)) void PendSV_Handler()
 {
 	asm volatile
 	(
-			"	mrs		r0, PSP								\n"
+			"	mrs			r0, PSP							\n"
 #if __FPU_PRESENT == 1 && __FPU_USED == 1
-			"	stmdb	r0!, {r4-r11, lr}					\n"	// save context of current thread
+			"	stmdb		r0!, {r4-r11, lr}				\n"	// save context of current thread
 #else
-			"	stmdb	r0!, {r4-r11}						\n"	// save context of current thread
-			"	mov		r4, lr								\n"
+			"	stmdb		r0!, {r4-r11}					\n"	// save context of current thread
+			"	mov			r4, lr							\n"
 #endif	// __FPU_PRESENT == 1 && __FPU_USED == 1
 			"												\n"
-			"	bl		schedulerSwitchContextWrapper		\n"	// switch context
+			"	bl			schedulerSwitchContextWrapper	\n"	// switch context
 			"												\n"
 #if __FPU_PRESENT == 1 && __FPU_USED == 1
-			"	ldmia	r0!, {r4-r11, lr}					\n"	// load context of new thread
+			"	ldmia		r0!, {r4-r11, lr}				\n"	// load context of new thread
 #else
-			"	mov		lr, r4								\n"
-			"	ldmia	r0!, {r4-r11}						\n"	// load context of new thread
+			"	mov			lr, r4							\n"
+			"	ldmia		r0!, {r4-r11}					\n"	// load context of new thread
 #endif	// __FPU_PRESENT == 1 && __FPU_USED == 1
-			"	msr		PSP, r0								\n"
+			"	msr			PSP, r0							\n"
 			"												\n"
-			"	bx		lr									\n"	// return to new thread
+			"	bx			lr								\n"	// return to new thread
 	);
 
 	__builtin_unreachable();
