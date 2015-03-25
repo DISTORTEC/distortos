@@ -2,9 +2,9 @@ CMSIS
 =====
 
 link: http://www.arm.com/products/processors/cortex-m/cortex-microcontroller-software-interface-standard.php
-package name: CMSIS-SP-00300-r4p1-00rel0
-package version: V3.30
-download date: 2014-07-22
+package name: CMSIS-SP-00300-r4p3-00rel0
+package version: 4.3
+download date: 2015-03-25
 
-Only headers from CMSIS-SP-00300-r4p1-00rel0\CMSIS\Include were copied from the package. Files were patched with
-0001-architecture-ARM-external-CMSIS-core_cmFunc.h-add-si.patch
+Only headers from CMSIS-SP-00300-r4p3-00rel0/CMSIS/Include were copied from the package. Files were patched with
+CMSIS.patch
