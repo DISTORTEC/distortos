@@ -18,7 +18,7 @@ ASFLAGS_$(d)/ARMv7-M-startup.S := -D__USES_TWO_STACKS -D__USES_CXX
 CXXFLAGS_$(d) := -DSTM32F407xx
 CXXFLAGS_$(d) := $(CXXFLAGS_$(d)) -Iinclude
 CXXFLAGS_$(d) := $(CXXFLAGS_$(d)) -Isource/chip/STMicroelectronics/STM32F4/include
-CXXFLAGS_$(d) := $(CXXFLAGS_$(d)) -Isource/chip/STMicroelectronics/STM32F4/external/CMSIS
+CXXFLAGS_$(d) := $(CXXFLAGS_$(d)) -Iexternal/CMSIS-STM32F4
 CXXFLAGS_$(d) := $(CXXFLAGS_$(d)) -Iexternal/CMSIS
 CXXFLAGS_$(d) := $(CXXFLAGS_$(d)) -Isource/architecture/ARM/ARMv7-M/include
 

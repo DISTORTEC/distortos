@@ -16,7 +16,7 @@ CXXFLAGS += "-DSTM32F407xx"
 CXXFLAGS += "-I" .. TOP .. "/include"
 
 CXXFLAGS += "-I" .. TOP .. "/source/chip/STMicroelectronics/STM32F4/include"
-CXXFLAGS += "-I" .. TOP .. "/source/chip/STMicroelectronics/STM32F4/external/CMSIS"
+CXXFLAGS += "-I" .. TOP .. "/external/CMSIS-STM32F4"
 CXXFLAGS += "-I" .. TOP .. "/external/CMSIS"
 
 CXXFLAGS += "-I" .. TOP .. "/source/architecture/ARM/ARMv7-M/include"
