@@ -15,7 +15,7 @@
 #define INCLUDE_DISTORTOS_STATICTHREAD_HPP_
 
 #include "distortos/Thread.hpp"
-#include "distortos/SignalsReceiver.hpp"
+#include "distortos/StaticSignalsReceiver.hpp"
 
 namespace distortos
 {
@@ -81,7 +81,7 @@ private:
 
 /**
  * \brief StaticThread class is a templated interface for thread that has automatic storage for stack and internal
- * SignalsReceiver object.
+ * StaticSignalsReceiver object.
  *
  * Specialization for threads with enabled reception of signals (CanReceiveSignals == true)
  *
@@ -108,9 +108,9 @@ public:
 	 */
 
 	StaticThread(const uint8_t priority, const SchedulingPolicy schedulingPolicy, Function&& function, Args&&... args) :
-			Base{&stack_, sizeof(stack_), priority, schedulingPolicy, &signalsReceiver_,
+			Base{&stack_, sizeof(stack_), priority, schedulingPolicy, &staticSignalsReceiver_,
 					std::forward<Function>(function), std::forward<Args>(args)...},
-			signalsReceiver_{}
+			staticSignalsReceiver_{}
 	{
 
 	}
@@ -140,8 +140,8 @@ private:
 	/// stack buffer
 	typename std::aligned_storage<StackSize>::type stack_;
 
-	/// internal SignalsReceiver object
-	SignalsReceiver signalsReceiver_;
+	/// internal StaticSignalsReceiver object
+	StaticSignalsReceiver staticSignalsReceiver_;
 };
 
 /**
