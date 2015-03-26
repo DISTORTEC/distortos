@@ -15,6 +15,7 @@
 #define INCLUDE_DISTORTOS_STATICSIGNALSRECEIVER_HPP_
 
 #include "distortos/SignalsReceiver.hpp"
+#include "distortos/StaticSignalInformationQueueWrapper.hpp"
 
 namespace distortos
 {
@@ -36,10 +37,16 @@ public:
 	 */
 
 	StaticSignalsReceiver() :
-			SignalsReceiver{nullptr}
+			SignalsReceiver{&staticSignalInformationQueueWrapper_},
+			staticSignalInformationQueueWrapper_{}
 	{
 
 	}
+
+private:
+
+	/// internal StaticSignalInformationQueueWrapper object
+	StaticSignalInformationQueueWrapper<QueuedSignals> staticSignalInformationQueueWrapper_;
 };
 
 /**
