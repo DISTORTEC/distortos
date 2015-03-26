@@ -41,9 +41,12 @@ public:
 
 	/**
 	 * \brief SignalInformationQueue's constructor
+	 *
+	 * \param [in] storage is an array of Storage elements
+	 * \param [in] maxElements is the number of elements in \a storage array
 	 */
 
-	SignalInformationQueue();
+	SignalInformationQueue(Storage* storage, size_t maxElements);
 
 private:
 

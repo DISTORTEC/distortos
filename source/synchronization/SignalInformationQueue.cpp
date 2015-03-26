@@ -23,13 +23,17 @@ namespace synchronization
 | public functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-SignalInformationQueue::SignalInformationQueue() :
+SignalInformationQueue::SignalInformationQueue(Storage* const storage, const size_t maxElements) :
 		pool_{},
 		poolAllocator_{pool_},
 		signalInformationList_{poolAllocator_},
 		freeSignalInformationList_{poolAllocator_}
 {
-
+	for (size_t i {}; i < maxElements; ++i)
+	{
+		pool_.feed(storage[i]);
+		freeSignalInformationList_.emplace_front(uint8_t{}, SignalInformation::Code{}, sigval{});
+	}
 }
 
 }	// namespace synchronization
