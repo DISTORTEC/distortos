@@ -38,7 +38,7 @@ public:
 	 */
 
 	SignalsReceiver() :
-			signalsReceiverControlBlock_{}
+			signalsReceiverControlBlock_{nullptr}
 	{
 
 	}

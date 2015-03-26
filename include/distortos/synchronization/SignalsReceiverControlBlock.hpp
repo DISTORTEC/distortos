@@ -21,6 +21,8 @@
 namespace distortos
 {
 
+class SignalInformationQueueWrapper;
+
 namespace scheduler
 {
 
@@ -40,9 +42,12 @@ public:
 
 	/**
 	 * \brief SignalsReceiverControlBlock's constructor
+	 *
+	 * \param [in] signalInformationQueueWrapper is a pointer to SignalInformationQueueWrapper for this receiver,
+	 * nullptr to disable queuing of signals for this receiver
 	 */
 
-	SignalsReceiverControlBlock();
+	explicit SignalsReceiverControlBlock(SignalInformationQueueWrapper* signalInformationQueueWrapper);
 
 	/**
 	 * \brief Accepts (clears) one of signals that are pending.

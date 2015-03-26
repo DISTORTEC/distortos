@@ -18,6 +18,8 @@
 
 #include "distortos/architecture/InterruptMaskingLock.hpp"
 
+#include "distortos/SignalInformationQueueWrapper.hpp"
+
 #include <cerrno>
 
 namespace distortos
@@ -30,10 +32,15 @@ namespace synchronization
 | public functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-SignalsReceiverControlBlock::SignalsReceiverControlBlock() :
+SignalsReceiverControlBlock::SignalsReceiverControlBlock(SignalInformationQueueWrapper* const
+		signalInformationQueueWrapper) :
 		pendingSignalSet_{SignalSet::empty},
 		waitingSignalSet_{},
-		signalInformationQueue_{}
+		signalInformationQueue_
+		{
+				signalInformationQueueWrapper != nullptr ? &signalInformationQueueWrapper->signalInformationQueue_ :
+						nullptr
+		}
 {
 
 }
