@@ -42,6 +42,29 @@ public:
 	}
 };
 
+/**
+ * \brief StaticSignalsReceiver class is a templated interface for SignalsReceiver that has automatic storage for queued
+ * signals.
+ *
+ * Specialization for receiver with disabled queuing of signals (QueuedSignals == 0)
+ */
+
+template<>
+class StaticSignalsReceiver<0> : public SignalsReceiver
+{
+public:
+
+	/**
+	 * \brief StaticSignalsReceiver's constructor
+	 */
+
+	StaticSignalsReceiver() :
+			SignalsReceiver{nullptr}
+	{
+
+	}
+};
+
 }	// namespace distortos
 
 #endif	// INCLUDE_DISTORTOS_STATICSIGNALSRECEIVER_HPP_
