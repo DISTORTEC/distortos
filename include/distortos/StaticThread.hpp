@@ -25,11 +25,13 @@ namespace distortos
  *
  * \param StackSize is the size of stack, bytes
  * \param CanReceiveSignals selects whether reception of signals is enabled (true) or disabled (false) for this thread
+ * \param QueuedSignals is the max number of queued signals for this thread, relevant only if CanReceiveSignals == true,
+ * 0 to disable queuing of signals for this thread
  * \param Function is the function that will be executed in separate thread
  * \param Args are the arguments for Function
  */
 
-template<size_t StackSize, bool CanReceiveSignals, typename Function, typename... Args>
+template<size_t StackSize, bool CanReceiveSignals, size_t QueuedSignals, typename Function, typename... Args>
 class StaticThread : public Thread<Function, Args...>
 {
 public:
@@ -86,12 +88,14 @@ private:
  * Specialization for threads with enabled reception of signals (CanReceiveSignals == true)
  *
  * \param StackSize is the size of stack, bytes
+ * \param QueuedSignals is the max number of queued signals for this thread, 0 to disable queuing of signals for this
+ * thread
  * \param Function is the function that will be executed in separate thread
  * \param Args are the arguments for Function
  */
 
-template<size_t StackSize, typename Function, typename... Args>
-class StaticThread<StackSize, true, Function, Args...> : public Thread<Function, Args...>
+template<size_t StackSize, size_t QueuedSignals, typename Function, typename... Args>
+class StaticThread<StackSize, true, QueuedSignals, Function, Args...> : public Thread<Function, Args...>
 {
 public:
 
@@ -149,6 +153,8 @@ private:
  *
  * \param StackSize is the size of stack, bytes
  * \param CanReceiveSignals selects whether reception of signals is enabled (true) or disabled (false) for this thread
+ * \param QueuedSignals is the max number of queued signals for this thread, relevant only if CanReceiveSignals == true,
+ * 0 to disable queuing of signals for this thread
  * \param Function is the function that will be executed
  * \param Args are the arguments for Function
  *
@@ -160,8 +166,8 @@ private:
  * \return StaticThread object with partially deduced template arguments
  */
 
-template<size_t StackSize, bool CanReceiveSignals = {}, typename Function, typename... Args>
-StaticThread<StackSize, CanReceiveSignals, Function, Args...> makeStaticThread(const uint8_t priority,
+template<size_t StackSize, bool CanReceiveSignals = {}, size_t QueuedSignals = {}, typename Function, typename... Args>
+StaticThread<StackSize, CanReceiveSignals, QueuedSignals, Function, Args...> makeStaticThread(const uint8_t priority,
 		const SchedulingPolicy schedulingPolicy, Function&& function, Args&&... args)
 {
 	return {priority, schedulingPolicy, std::forward<Function>(function), std::forward<Args>(args)...};
@@ -172,6 +178,8 @@ StaticThread<StackSize, CanReceiveSignals, Function, Args...> makeStaticThread(c
  *
  * \param StackSize is the size of stack, bytes
  * \param CanReceiveSignals selects whether reception of signals is enabled (true) or disabled (false) for this thread
+ * \param QueuedSignals is the max number of queued signals for this thread, relevant only if CanReceiveSignals == true,
+ * 0 to disable queuing of signals for this thread
  * \param Function is the function that will be executed
  * \param Args are the arguments for Function
  *
@@ -182,8 +190,8 @@ StaticThread<StackSize, CanReceiveSignals, Function, Args...> makeStaticThread(c
  * \return StaticThread object with partially deduced template arguments
  */
 
-template<size_t StackSize, bool CanReceiveSignals = {}, typename Function, typename... Args>
-StaticThread<StackSize, CanReceiveSignals, Function, Args...> makeStaticThread(const uint8_t priority,
+template<size_t StackSize, bool CanReceiveSignals = {}, size_t QueuedSignals = {}, typename Function, typename... Args>
+StaticThread<StackSize, CanReceiveSignals, QueuedSignals, Function, Args...> makeStaticThread(const uint8_t priority,
 		Function&& function, Args&&... args)
 {
 	return {priority, std::forward<Function>(function), std::forward<Args>(args)...};
