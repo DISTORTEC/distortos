@@ -49,6 +49,21 @@ public:
 
 	}
 
+	/**
+	 * \brief SignalInformationQueueWrapper's constructor
+	 *
+	 * \param N is the number of elements in \a storage array
+	 *
+	 * \param [in] storage is a reference to array of Storage elements
+	 */
+
+	template<size_t N>
+	explicit SignalInformationQueueWrapper(Storage (& storage)[N]) :
+			SignalInformationQueueWrapper{storage, sizeof(storage) / sizeof(*storage)}
+	{
+
+	}
+
 private:
 
 	/// contained synchronization::SignalInformationQueue object
