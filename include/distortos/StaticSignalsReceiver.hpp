@@ -22,8 +22,11 @@ namespace distortos
 /**
  * \brief StaticSignalsReceiver class is a templated interface for SignalsReceiver that has automatic storage for queued
  * signals.
+ *
+ * \param QueuedSignals is the max number of queued signals, 0 to disable queuing of signals for this receiver
  */
 
+template<size_t QueuedSignals>
 class StaticSignalsReceiver : public SignalsReceiver
 {
 public:

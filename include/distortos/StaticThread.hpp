@@ -145,7 +145,7 @@ private:
 	typename std::aligned_storage<StackSize>::type stack_;
 
 	/// internal StaticSignalsReceiver object
-	StaticSignalsReceiver staticSignalsReceiver_;
+	StaticSignalsReceiver<QueuedSignals> staticSignalsReceiver_;
 };
 
 /**
