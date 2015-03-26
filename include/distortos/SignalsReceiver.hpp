@@ -35,10 +35,13 @@ public:
 
 	/**
 	 * \brief SignalsReceiver's constructor
+	 *
+	 * \param [in] signalInformationQueueWrapper is a pointer to SignalInformationQueueWrapper for this receiver,
+	 * nullptr to disable queuing of signals for this receiver
 	 */
 
-	SignalsReceiver() :
-			signalsReceiverControlBlock_{nullptr}
+	explicit SignalsReceiver(SignalInformationQueueWrapper* const signalInformationQueueWrapper) :
+			signalsReceiverControlBlock_{signalInformationQueueWrapper}
 	{
 
 	}

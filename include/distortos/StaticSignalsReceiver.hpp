@@ -33,7 +33,7 @@ public:
 	 */
 
 	StaticSignalsReceiver() :
-			SignalsReceiver{}
+			SignalsReceiver{nullptr}
 	{
 
 	}
