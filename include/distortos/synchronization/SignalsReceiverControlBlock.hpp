@@ -42,13 +42,7 @@ public:
 	 * \brief SignalsReceiverControlBlock's constructor
 	 */
 
-	constexpr SignalsReceiverControlBlock() :
-			pendingSignalSet_{SignalSet::empty},
-			waitingSignalSet_{},
-			signalInformationQueue_{}
-	{
-
-	}
+	SignalsReceiverControlBlock();
 
 	/**
 	 * \brief Accepts (clears) one of signals that are pending.
