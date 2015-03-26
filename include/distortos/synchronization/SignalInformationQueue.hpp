@@ -39,6 +39,12 @@ public:
 	using Storage =
 			typename std::aligned_storage<sizeof(LinkAndSignalInformation), alignof(LinkAndSignalInformation)>::type;
 
+	/**
+	 * \brief SignalInformationQueue's constructor
+	 */
+
+	SignalInformationQueue();
+
 private:
 
 	/// type of allocator used by \a List
@@ -46,6 +52,18 @@ private:
 
 	/// type of container with SignalInformation objects
 	using List = std::forward_list<SignalInformation, PoolAllocator>;
+
+	/// PoolAllocator::Pool used by \a poolAllocator_
+	PoolAllocator::Pool pool_;
+
+	/// PoolAllocator used by \a signalInformationList_ and \a freeSignalInformationList_
+	PoolAllocator poolAllocator_;
+
+	/// list of queued SignalInformation objects
+	List signalInformationList_;
+
+	/// list of "free" SignalInformation objects
+	List freeSignalInformationList_;
 };
 
 }	// namespace synchronization
