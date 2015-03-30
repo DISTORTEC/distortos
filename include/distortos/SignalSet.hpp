@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-02-09
+ * \date 2015-03-30
  */
 
 #ifndef INCLUDE_DISTORTOS_SIGNALSET_HPP_
@@ -58,6 +58,18 @@ public:
 
 	constexpr explicit SignalSet(uint32_t bitmask) :
 			bitset_{bitmask}
+	{
+
+	}
+
+	/**
+	 * \brief SignalSet's constructor
+	 *
+	 * \param [in] bitset is a reference to Bitset from which internal bitset is copy-constructed
+	 */
+
+	constexpr explicit SignalSet(const Bitset& bitset) :
+			bitset_{bitset}
 	{
 
 	}
