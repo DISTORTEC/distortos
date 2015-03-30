@@ -69,7 +69,12 @@ int SignalsReceiverControlBlock::generateSignal(const uint8_t signalNumber,
 
 SignalSet SignalsReceiverControlBlock::getPendingSignalSet() const
 {
-	return pendingSignalSet_;
+	const auto pendingSignalSet = pendingSignalSet_;
+	if (signalInformationQueue_ == nullptr)
+		return pendingSignalSet;
+
+	const auto queuedSignalSet = signalInformationQueue_->getQueuedSignalSet();
+	return SignalSet{pendingSignalSet.getBitset() | queuedSignalSet.getBitset()};
 }
 
 }	// namespace synchronization
