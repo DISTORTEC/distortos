@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-03-14
+ * \date 2015-03-31
  */
 
 #include "SignalsWaitTestCase.hpp"
@@ -68,7 +68,10 @@ void thread(SequenceAsserter& sequenceAsserter, const unsigned int firstSequence
 	const auto waitResult = ThisThread::Signals::wait(signalSet);
 	if (waitResult.first != 0)
 		return;
-	sequenceAsserter.sequencePoint(waitResult.second);
+	auto& signalInformation = waitResult.second;
+	if (signalInformation.getCode() != SignalInformation::Code::Generated)
+		return;
+	sequenceAsserter.sequencePoint(signalInformation.getSignalNumber());
 }
 
 /**

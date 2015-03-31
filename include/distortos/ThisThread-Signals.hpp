@@ -178,12 +178,12 @@ std::pair<int, SignalInformation> tryWaitUntil(const SignalSet& signalSet,
  *
  * \param [in] signalSet is a reference to set of signals that will be waited for
  *
- * \return pair with return code (0 on success, error code otherwise) and signal number of signal that was accepted;
+ * \return pair with return code (0 on success, error code otherwise) and SignalInformation object for accepted signal;
  * error codes:
  * - ENOTSUP - reception of signals is disabled for current thread;
  */
 
-std::pair<int, uint8_t> wait(const SignalSet& signalSet);
+std::pair<int, SignalInformation> wait(const SignalSet& signalSet);
 
 }	// namespace Signals
 

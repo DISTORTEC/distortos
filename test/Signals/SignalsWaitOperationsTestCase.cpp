@@ -275,7 +275,10 @@ bool phase2()
 		// no signals are currently pending, but ThisThread::Signals::wait() should succeed at expected time
 		const auto waitResult = ThisThread::Signals::wait(fullSignalSet);
 		const auto wokenUpTimePoint = TickClock::now();
-		if (waitResult.first != 0 || waitResult.second != sharedSignalNumber || wakeUpTimePoint != wokenUpTimePoint ||
+		auto& signalInformation = waitResult.second;
+		if (waitResult.first != 0 || signalInformation.getSignalNumber() != sharedSignalNumber ||
+				signalInformation.getCode() != SignalInformation::Code::Generated ||
+				wakeUpTimePoint != wokenUpTimePoint ||
 				statistics::getContextSwitchCount() - contextSwitchCount != phase2SoftwareTimerContextSwitchCount)
 			return false;
 	}

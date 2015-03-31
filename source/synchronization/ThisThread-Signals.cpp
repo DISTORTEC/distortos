@@ -174,10 +174,9 @@ std::pair<int, SignalInformation> tryWaitUntil(const SignalSet& signalSet, const
 	return waitImplementation(signalSet, false, &timePoint);	// blocking mode, with timeout
 }
 
-std::pair<int, uint8_t> wait(const SignalSet& signalSet)
+std::pair<int, SignalInformation> wait(const SignalSet& signalSet)
 {
-	const auto result = waitImplementation(signalSet, false, nullptr);	// blocking mode, no timeout
-	return {result.first, result.second.getSignalNumber()};
+	return waitImplementation(signalSet, false, nullptr);	// blocking mode, no timeout
 }
 
 }	// namespace Signals
