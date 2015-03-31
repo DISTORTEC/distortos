@@ -85,6 +85,21 @@ SignalSet SignalsReceiverControlBlock::getPendingSignalSet() const
 	return SignalSet{pendingSignalSet.getBitset() | queuedSignalSet.getBitset()};
 }
 
+int SignalsReceiverControlBlock::queueSignal(const uint8_t signalNumber, const sigval value,
+		const scheduler::ThreadControlBlock& threadControlBlock) const
+{
+	if (signalInformationQueue_ == nullptr)
+		return ENOTSUP;
+
+	architecture::InterruptMaskingLock interruptMaskingLock;
+
+	const auto ret = signalInformationQueue_->queueSignal(signalNumber, value);
+	if (ret != 0)
+		return ret;
+
+	return postGenerate(signalNumber, threadControlBlock);
+}
+
 /*---------------------------------------------------------------------------------------------------------------------+
 | private functions
 +---------------------------------------------------------------------------------------------------------------------*/

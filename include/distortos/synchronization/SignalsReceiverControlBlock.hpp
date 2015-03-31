@@ -18,6 +18,8 @@
 
 #include <cstdint>
 
+union sigval;
+
 namespace distortos
 {
 
@@ -87,6 +89,27 @@ public:
 	 */
 
 	SignalSet getPendingSignalSet() const;
+
+	/**
+	 * \brief Queues signal for associated thread.
+	 *
+	 * Similar to sigqueue() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/sigqueue.html
+	 *
+	 * Queues the signalNumber and signal value (sigval union) in associated SignalInformationQueue object. If
+	 * associated thread is currently waiting for this signal, it will be unblocked.
+	 *
+	 * \param [in] signalNumber is the signal that will be queued, [0; 31]
+	 * \param [in] value is the signal value
+	 * \param [in] threadControlBlock is a reference to associated ThreadControlBlock
+	 *
+	 * \return 0 on success, error code otherwise:
+	 * - EAGAIN - no resources are available to queue the signal, maximal number of signals is already queued in
+	 * associated SignalInformationQueue object;
+	 * - EINVAL - \a signalNumber value is invalid;
+	 * - ENOTSUP - queuing of signals is disabled for this receiver;
+	 */
+
+	int queueSignal(uint8_t signalNumber, sigval value, const scheduler::ThreadControlBlock& threadControlBlock) const;
 
 	/**
 	 * \param [in] signalSet is a pointer to set of signals that will be "waited for", nullptr when wait was terminated
