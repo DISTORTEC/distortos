@@ -71,6 +71,29 @@ SignalSet SignalInformationQueue::getQueuedSignalSet() const
 	return queuedSignalSet;
 }
 
+int SignalInformationQueue::queueSignal(const uint8_t signalNumber, const sigval value)
+{
+	if (signalNumber >= SignalSet::Bitset{}.size())
+		return EINVAL;
+
+	if (freeSignalInformationList_.empty() == true)
+		return EAGAIN;
+
+	auto it = signalInformationList_.before_begin();
+	auto next = signalInformationList_.begin();
+	const auto last = signalInformationList_.end();
+
+	while (next != last)	// find the iterator to the last element on the list ("before end")
+	{
+		it = next;
+		++next;
+	}
+
+	freeSignalInformationList_.pop_front();
+	signalInformationList_.emplace_after(it, signalNumber, SignalInformation::Code::Queued, value);
+	return 0;
+}
+
 }	// namespace synchronization
 
 }	// namespace distortos

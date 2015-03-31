@@ -70,6 +70,19 @@ public:
 
 	SignalSet getQueuedSignalSet() const;
 
+	/**
+	 * \brief Adds the signalNumber and signal value (sigval union) to list of queued SignalInformation objects.
+	 *
+	 * \param [in] signalNumber is the signal that will be queued, [0; 31]
+	 * \param [in] value is the signal value
+	 *
+	 * \return 0 on success, error code otherwise:
+	 * - EAGAIN - no resources are available to queue the signal, \a maxElements signals are already queued;
+	 * - EINVAL - \a signalNumber value is invalid;
+	 */
+
+	int queueSignal(uint8_t signalNumber, sigval value);
+
 private:
 
 	/// type of allocator used by \a List
