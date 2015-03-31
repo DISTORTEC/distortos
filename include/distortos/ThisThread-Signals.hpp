@@ -62,6 +62,25 @@ int generateSignal(uint8_t signalNumber);
 SignalSet getPendingSignalSet();
 
 /**
+ * \brief Queues signal for current thread.
+ *
+ * Similar to sigqueue() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/sigqueue.html
+ *
+ * Adds the signalNumber and signal value (sigval union) to queue of SignalInformation objects.
+ *
+ * \param [in] signalNumber is the signal that will be queued, [0; 31]
+ * \param [in] value is the signal value
+ *
+ * \return 0 on success, error code otherwise:
+ * - EAGAIN - no resources are available to queue the signal, maximal number of signals is already queued in
+ * associated queue of SignalInformation objects;
+ * - EINVAL - \a signalNumber value is invalid;
+ * - ENOTSUP - reception or queuing of signals are disabled for current thread;
+ */
+
+int queueSignal(uint8_t signalNumber, sigval value);
+
+/**
  * \brief Tries to accept pending signals.
  *
  * Similar to sigtimedwait() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/sigtimedwait.html

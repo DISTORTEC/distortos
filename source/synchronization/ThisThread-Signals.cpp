@@ -159,6 +159,11 @@ SignalSet getPendingSignalSet()
 	return ThisThread::get().getPendingSignalSet();
 }
 
+int queueSignal(const uint8_t signalNumber, const sigval value)
+{
+	return ThisThread::get().queueSignal(signalNumber, value);
+}
+
 std::pair<int, SignalInformation> tryWait(const SignalSet& signalSet)
 {
 	return waitImplementation(signalSet, true, nullptr);	// non-blocking mode
