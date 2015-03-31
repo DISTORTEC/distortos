@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-03-15
+ * \date 2015-03-31
  */
 
 #include "distortos/ThisThread-Signals.hpp"
@@ -136,6 +136,8 @@ std::pair<int, uint8_t> waitImplementation(const SignalSet& signalSet, const boo
 	}
 
 	const auto intersectionValue = intersection.to_ulong();
+	static_assert(sizeof(intersectionValue) == intersection.size() / 8,
+			"Size of intersectionValue doesn't match size of intersection!");
 	// GCC builtin - "find first set" - https://gcc.gnu.org/onlinedocs/gcc/Other-Builtins.html
 	const auto signalNumber = __builtin_ffsl(intersectionValue) - 1;
 	const auto ret = signalsReceiverControlBlock->acceptPendingSignal(signalNumber);
