@@ -124,7 +124,7 @@ bool SignalsWaitTestCase::Implementation::run_() const
 		for (auto& thread : threads)
 		{
 			thread.start();
-			// 2 context switches: "into" the thread and "back" to main thread when test thread blocks on queue
+			// 2 context switches: "into" the thread and "back" to main thread when test thread blocks
 			expectedContextSwitchCount += 2;
 			if (statistics::getContextSwitchCount() - contextSwitchCount != expectedContextSwitchCount)
 				result = false;
