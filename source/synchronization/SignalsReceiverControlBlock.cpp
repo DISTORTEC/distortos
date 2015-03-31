@@ -47,6 +47,13 @@ SignalsReceiverControlBlock::SignalsReceiverControlBlock(SignalInformationQueueW
 
 std::pair<int, SignalInformation> SignalsReceiverControlBlock::acceptPendingSignal(const uint8_t signalNumber)
 {
+	if (signalInformationQueue_ != nullptr)
+	{
+		const auto acceptQueuedSignalResult = signalInformationQueue_->acceptQueuedSignal(signalNumber);
+		if (acceptQueuedSignalResult.first != EAGAIN)	// signal was accepted or fatal error?
+			return acceptQueuedSignalResult;
+	}
+
 	const auto testResult = pendingSignalSet_.test(signalNumber);
 	if (testResult.first != 0)
 		return {testResult.first, SignalInformation{uint8_t{}, SignalInformation::Code{}, sigval{}}};
