@@ -96,19 +96,19 @@ private:
  * \param [in] timePoint is a pointer to time point at which the wait for signals will be terminated, used only if
  * blocking mode is selected, nullptr to block without timeout
  *
- * \return pair with return code (0 on success, error code otherwise) and signal number of signal that was accepted;
+ * \return pair with return code (0 on success, error code otherwise) and SignalInformation object for accepted signal;
  * error codes:
  * - EAGAIN - no signal specified by \a signalSet was pending and non-blocking mode was selected;
  * - ETIMEDOUT - no signal specified by \a signalSet was generated before specified \a timePoint;
  */
 
-std::pair<int, uint8_t> waitImplementation(const SignalSet& signalSet, const bool nonBlocking,
+std::pair<int, SignalInformation> waitImplementation(const SignalSet& signalSet, const bool nonBlocking,
 		const TickClock::time_point* const timePoint)
 {
 	auto& scheduler = scheduler::getScheduler();
 	const auto signalsReceiverControlBlock = scheduler.getCurrentThreadControlBlock().getSignalsReceiverControlBlock();
 	if (signalsReceiverControlBlock == nullptr)
-		return {ENOTSUP, {}};
+		return {ENOTSUP, SignalInformation{uint8_t{}, SignalInformation::Code{}, sigval{}}};
 
 	architecture::InterruptMaskingLock interruptMaskingLock;
 
@@ -120,7 +120,7 @@ std::pair<int, uint8_t> waitImplementation(const SignalSet& signalSet, const boo
 	if (intersection.none() == true)	// none of desired signals is pending, so current thread must be blocked
 	{
 		if (nonBlocking == true)
-			return {EAGAIN, {}};
+			return {EAGAIN, SignalInformation{uint8_t{}, SignalInformation::Code{}, sigval{}}};
 
 		scheduler::ThreadControlBlockList waitingList {scheduler.getThreadControlBlockListAllocator(),
 				scheduler::ThreadControlBlock::State::WaitingForSignal};
@@ -130,7 +130,7 @@ std::pair<int, uint8_t> waitImplementation(const SignalSet& signalSet, const boo
 		const auto ret = timePoint == nullptr ? scheduler.block(waitingList, &signalsWaitUnblockFunctor) :
 				scheduler.blockUntil(waitingList, *timePoint, &signalsWaitUnblockFunctor);
 		if (ret != 0)
-			return {ret, {}};
+			return {ret, SignalInformation{uint8_t{}, SignalInformation::Code{}, sigval{}}};
 
 		pendingBitset = pendingSignalSet.getBitset();
 		intersection = bitset & pendingBitset;
@@ -141,8 +141,7 @@ std::pair<int, uint8_t> waitImplementation(const SignalSet& signalSet, const boo
 			"Size of intersectionValue doesn't match size of intersection!");
 	// GCC builtin - "find first set" - https://gcc.gnu.org/onlinedocs/gcc/Other-Builtins.html
 	const auto signalNumber = __builtin_ffsl(intersectionValue) - 1;
-	const auto acceptPendingSignalResult = signalsReceiverControlBlock->acceptPendingSignal(signalNumber);
-	return {acceptPendingSignalResult.first, signalNumber};
+	return signalsReceiverControlBlock->acceptPendingSignal(signalNumber);
 }
 
 }	// namespace
@@ -163,7 +162,8 @@ SignalSet getPendingSignalSet()
 
 std::pair<int, uint8_t> tryWait(const SignalSet& signalSet)
 {
-	return waitImplementation(signalSet, true, nullptr);	// non-blocking mode
+	const auto result = waitImplementation(signalSet, true, nullptr);	// non-blocking mode
+	return {result.first, result.second.getSignalNumber()};
 }
 
 std::pair<int, uint8_t> tryWaitFor(const SignalSet& signalSet, const TickClock::duration duration)
@@ -173,12 +173,14 @@ std::pair<int, uint8_t> tryWaitFor(const SignalSet& signalSet, const TickClock::
 
 std::pair<int, uint8_t> tryWaitUntil(const SignalSet& signalSet, const TickClock::time_point timePoint)
 {
-	return waitImplementation(signalSet, false, &timePoint);	// blocking mode, with timeout
+	const auto result = waitImplementation(signalSet, false, &timePoint);	// blocking mode, with timeout
+	return {result.first, result.second.getSignalNumber()};
 }
 
 std::pair<int, uint8_t> wait(const SignalSet& signalSet)
 {
-	return waitImplementation(signalSet, false, nullptr);	// blocking mode, no timeout
+	const auto result = waitImplementation(signalSet, false, nullptr);	// blocking mode, no timeout
+	return {result.first, result.second.getSignalNumber()};
 }
 
 }	// namespace Signals
