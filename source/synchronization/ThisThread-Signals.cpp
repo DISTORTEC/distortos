@@ -15,7 +15,6 @@
 
 #include "distortos/ThisThread.hpp"
 #include "distortos/ThreadBase.hpp"
-#include "distortos/SignalInformation.hpp"
 
 #include "distortos/scheduler/getScheduler.hpp"
 #include "distortos/scheduler/Scheduler.hpp"
@@ -160,10 +159,9 @@ SignalSet getPendingSignalSet()
 	return ThisThread::get().getPendingSignalSet();
 }
 
-std::pair<int, uint8_t> tryWait(const SignalSet& signalSet)
+std::pair<int, SignalInformation> tryWait(const SignalSet& signalSet)
 {
-	const auto result = waitImplementation(signalSet, true, nullptr);	// non-blocking mode
-	return {result.first, result.second.getSignalNumber()};
+	return waitImplementation(signalSet, true, nullptr);	// non-blocking mode
 }
 
 std::pair<int, uint8_t> tryWaitFor(const SignalSet& signalSet, const TickClock::duration duration)

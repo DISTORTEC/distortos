@@ -8,12 +8,13 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-03-14
+ * \date 2015-03-31
  */
 
 #ifndef INCLUDE_DISTORTOS_THISTHREAD_SIGNALS_HPP_
 #define INCLUDE_DISTORTOS_THISTHREAD_SIGNALS_HPP_
 
+#include "distortos/SignalInformation.hpp"
 #include "distortos/TickClock.hpp"
 
 #include <utility>
@@ -71,13 +72,13 @@ SignalSet getPendingSignalSet();
  *
  * \param [in] signalSet is a reference to set of signals that may be accepted
  *
- * \return pair with return code (0 on success, error code otherwise) and signal number of signal that was accepted;
+ * \return pair with return code (0 on success, error code otherwise) and SignalInformation object for accepted signal;
  * error codes:
  * - EAGAIN - no signal specified by \a signalSet was pending;
  * - ENOTSUP - reception of signals is disabled for current thread;
  */
 
-std::pair<int, uint8_t> tryWait(const SignalSet& signalSet);
+std::pair<int, SignalInformation> tryWait(const SignalSet& signalSet);
 
 /**
  * \brief Tries to wait for signals for given duration of time.

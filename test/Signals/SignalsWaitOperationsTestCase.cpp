@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-02-21
+ * \date 2015-03-31
  */
 
 #include "SignalsWaitOperationsTestCase.hpp"
@@ -150,7 +150,9 @@ bool phase1()
 			waitForNextTick();
 			const auto start = TickClock::now();
 			const auto tryWaitResult = ThisThread::Signals::tryWait(fullSignalSet);
-			if (tryWaitResult.first != 0 || tryWaitResult.second != testSignalNumber || start != TickClock::now())
+			auto& signalInformation = tryWaitResult.second;
+			if (tryWaitResult.first != 0 || signalInformation.getSignalNumber() != testSignalNumber ||
+					signalInformation.getCode() != SignalInformation::Code::Generated || start != TickClock::now())
 				return false;
 		}
 	}
