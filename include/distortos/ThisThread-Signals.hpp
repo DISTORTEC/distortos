@@ -135,13 +135,13 @@ std::pair<int, uint8_t> tryWaitFor(const SignalSet& signalSet, const std::chrono
  * \param [in] signalSet is a reference to set of signals that will be waited for
  * \param [in] timePoint is the time point at which the wait for signals will be terminated
  *
- * \return pair with return code (0 on success, error code otherwise) and signal number of signal that was accepted;
+ * \return pair with return code (0 on success, error code otherwise) and SignalInformation object for accepted signal;
  * error codes:
  * - ENOTSUP - reception of signals is disabled for current thread;
  * - ETIMEDOUT - no signal specified by \a signalSet was generated before specified \a timePoint;
  */
 
-std::pair<int, uint8_t> tryWaitUntil(const SignalSet& signalSet, TickClock::time_point timePoint);
+std::pair<int, SignalInformation> tryWaitUntil(const SignalSet& signalSet, TickClock::time_point timePoint);
 
 /**
  * \brief Tries to wait for signals until given time point.
@@ -153,14 +153,14 @@ std::pair<int, uint8_t> tryWaitUntil(const SignalSet& signalSet, TickClock::time
  * \param [in] signalSet is a reference to set of signals that will be waited for
  * \param [in] timePoint is the time point at which the wait for signals will be terminated
  *
- * \return pair with return code (0 on success, error code otherwise) and signal number of signal that was accepted;
+ * \return pair with return code (0 on success, error code otherwise) and SignalInformation object for accepted signal;
  * error codes:
  * - ENOTSUP - reception of signals is disabled for current thread;
  * - ETIMEDOUT - no signal specified by \a signalSet was generated before specified \a timePoint;
  */
 
 template<typename Duration>
-std::pair<int, uint8_t> tryWaitUntil(const SignalSet& signalSet,
+std::pair<int, SignalInformation> tryWaitUntil(const SignalSet& signalSet,
 		const std::chrono::time_point<TickClock, Duration> timePoint)
 {
 	return tryWaitUntil(signalSet, std::chrono::time_point_cast<TickClock::duration>(timePoint));

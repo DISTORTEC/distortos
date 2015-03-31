@@ -230,7 +230,9 @@ bool phase1()
 			waitForNextTick();
 			const auto start = TickClock::now();
 			const auto tryWaitResult = ThisThread::Signals::tryWaitUntil(fullSignalSet, start + singleDuration);
-			if (tryWaitResult.first != 0 || tryWaitResult.second != testSignalNumber || start != TickClock::now())
+			auto& signalInformation = tryWaitResult.second;
+			if (tryWaitResult.first != 0 || signalInformation.getSignalNumber() != testSignalNumber ||
+					signalInformation.getCode() != SignalInformation::Code::Generated || start != TickClock::now())
 				return false;
 		}
 	}
@@ -317,7 +319,9 @@ bool phase2()
 		// no signals are currently pending, but ThisThread::Signals::tryWaitUntil() should succeed at expected time
 		const auto tryWaitResult = ThisThread::Signals::tryWaitUntil(fullSignalSet, wakeUpTimePoint + longDuration);
 		const auto wokenUpTimePoint = TickClock::now();
-		if (tryWaitResult.first != 0 || tryWaitResult.second != sharedSignalNumber ||
+		auto& signalInformation = tryWaitResult.second;
+		if (tryWaitResult.first != 0 || signalInformation.getSignalNumber() != sharedSignalNumber ||
+				signalInformation.getCode() != SignalInformation::Code::Generated ||
 				wakeUpTimePoint != wokenUpTimePoint ||
 				statistics::getContextSwitchCount() - contextSwitchCount != phase2SoftwareTimerContextSwitchCount)
 			return false;
