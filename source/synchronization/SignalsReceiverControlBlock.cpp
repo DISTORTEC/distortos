@@ -72,6 +72,26 @@ int SignalsReceiverControlBlock::generateSignal(const uint8_t signalNumber,
 	if (ret != 0)
 		return ret;
 
+	return postGenerate(signalNumber, threadControlBlock);
+}
+
+SignalSet SignalsReceiverControlBlock::getPendingSignalSet() const
+{
+	const auto pendingSignalSet = pendingSignalSet_;
+	if (signalInformationQueue_ == nullptr)
+		return pendingSignalSet;
+
+	const auto queuedSignalSet = signalInformationQueue_->getQueuedSignalSet();
+	return SignalSet{pendingSignalSet.getBitset() | queuedSignalSet.getBitset()};
+}
+
+/*---------------------------------------------------------------------------------------------------------------------+
+| private functions
++---------------------------------------------------------------------------------------------------------------------*/
+
+int SignalsReceiverControlBlock::postGenerate(const uint8_t signalNumber,
+		const scheduler::ThreadControlBlock& threadControlBlock) const
+{
 	if (waitingSignalSet_ == nullptr)
 		return 0;
 
@@ -83,16 +103,6 @@ int SignalsReceiverControlBlock::generateSignal(const uint8_t signalNumber,
 
 	scheduler::getScheduler().unblock(threadControlBlock.getIterator());
 	return 0;
-}
-
-SignalSet SignalsReceiverControlBlock::getPendingSignalSet() const
-{
-	const auto pendingSignalSet = pendingSignalSet_;
-	if (signalInformationQueue_ == nullptr)
-		return pendingSignalSet;
-
-	const auto queuedSignalSet = signalInformationQueue_->getQueuedSignalSet();
-	return SignalSet{pendingSignalSet.getBitset() | queuedSignalSet.getBitset()};
 }
 
 }	// namespace synchronization

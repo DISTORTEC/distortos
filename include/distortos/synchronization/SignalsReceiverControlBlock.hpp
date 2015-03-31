@@ -99,6 +99,20 @@ public:
 
 private:
 
+	/**
+	 * \brief Actions executed after signal is "generated" with generateSignal() or queueSignal().
+	 *
+	 * If associated thread is currently waiting for the signal that was generated, it will be unblocked.
+	 *
+	 * \param [in] signalNumber is the signal that was generated, [0; 31]
+	 * \param [in] threadControlBlock is a reference to associated ThreadControlBlock
+	 *
+	 * \return 0 on success, error code otherwise:
+	 * - EINVAL - \a signalNumber value is invalid;
+	 */
+
+	int postGenerate(uint8_t signalNumber, const scheduler::ThreadControlBlock& threadControlBlock) const;
+
 	/// set of pending signals
 	SignalSet pendingSignalSet_;
 
