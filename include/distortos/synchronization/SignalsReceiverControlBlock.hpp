@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-03-30
+ * \date 2015-03-31
  */
 
 #ifndef INCLUDE_DISTORTOS_SYNCHRONIZATION_SIGNALSRECEIVERCONTROLBLOCK_HPP_
@@ -60,10 +60,7 @@ public:
 	 * - EINVAL - \a signalNumber value is invalid;
 	 */
 
-	int acceptPendingSignal(const uint8_t signalNumber)
-	{
-		return pendingSignalSet_.remove(signalNumber);
-	}
+	int acceptPendingSignal(uint8_t signalNumber);
 
 	/**
 	 * \brief Generates signal for associated thread.

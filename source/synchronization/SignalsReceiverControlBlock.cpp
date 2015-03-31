@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-03-30
+ * \date 2015-03-31
  */
 
 #include "distortos/synchronization/SignalsReceiverControlBlock.hpp"
@@ -43,6 +43,11 @@ SignalsReceiverControlBlock::SignalsReceiverControlBlock(SignalInformationQueueW
 		}
 {
 
+}
+
+int SignalsReceiverControlBlock::acceptPendingSignal(const uint8_t signalNumber)
+{
+	return pendingSignalSet_.remove(signalNumber);
 }
 
 int SignalsReceiverControlBlock::generateSignal(const uint8_t signalNumber,
