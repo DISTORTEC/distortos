@@ -8,12 +8,14 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-03-30
+ * \date 2015-03-31
  */
 
 #include "distortos/synchronization/SignalInformationQueue.hpp"
 
 #include "distortos/SignalSet.hpp"
+
+#include <cerrno>
 
 namespace distortos
 {
@@ -36,6 +38,29 @@ SignalInformationQueue::SignalInformationQueue(Storage* const storage, const siz
 		pool_.feed(storage[i]);
 		freeSignalInformationList_.emplace_front(uint8_t{}, SignalInformation::Code{}, sigval{});
 	}
+}
+
+std::pair<int, SignalInformation> SignalInformationQueue::acceptQueuedSignal(const uint8_t signalNumber)
+{
+	auto it = signalInformationList_.before_begin();
+	auto next = signalInformationList_.begin();
+	const auto last = signalInformationList_.end();
+
+	while (next != last)
+	{
+		if (next->getSignalNumber() == signalNumber)
+		{
+			const auto signalInformation = *next;
+			signalInformationList_.erase_after(it);
+			freeSignalInformationList_.emplace_front(uint8_t{}, SignalInformation::Code{}, sigval{});
+			return {0, signalInformation};
+		}
+
+		it = next;
+		++next;
+	}
+
+	return {EAGAIN, SignalInformation{uint8_t{}, SignalInformation::Code{}, sigval{}}};
 }
 
 SignalSet SignalInformationQueue::getQueuedSignalSet() const

@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-03-30
+ * \date 2015-03-31
  */
 
 #ifndef INCLUDE_DISTORTOS_SYNCHRONIZATION_SIGNALINFORMATIONQUEUE_HPP_
@@ -49,6 +49,20 @@ public:
 	 */
 
 	SignalInformationQueue(Storage* storage, size_t maxElements);
+
+	/**
+	 * \brief Accepts (dequeues) one of signals that are queued.
+	 *
+	 * This should be called when the signal is "accepted".
+	 *
+	 * \param [in] signalNumber is the signal that will be accepted, [0; 31]
+	 *
+	 * \return pair with return code (0 on success, error code otherwise) and dequeued SignalInformation object;
+	 * error codes:
+	 * - EAGAIN - no SignalInformation object with signal number equal to \a signalNumber was queued;
+	 */
+
+	std::pair<int, SignalInformation> acceptQueuedSignal(uint8_t signalNumber);
 
 	/**
 	 * \return set of currently queued signals
