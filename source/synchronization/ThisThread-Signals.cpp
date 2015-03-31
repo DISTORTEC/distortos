@@ -15,6 +15,7 @@
 
 #include "distortos/ThisThread.hpp"
 #include "distortos/ThreadBase.hpp"
+#include "distortos/SignalInformation.hpp"
 
 #include "distortos/scheduler/getScheduler.hpp"
 #include "distortos/scheduler/Scheduler.hpp"
@@ -140,8 +141,8 @@ std::pair<int, uint8_t> waitImplementation(const SignalSet& signalSet, const boo
 			"Size of intersectionValue doesn't match size of intersection!");
 	// GCC builtin - "find first set" - https://gcc.gnu.org/onlinedocs/gcc/Other-Builtins.html
 	const auto signalNumber = __builtin_ffsl(intersectionValue) - 1;
-	const auto ret = signalsReceiverControlBlock->acceptPendingSignal(signalNumber);
-	return {ret, signalNumber};
+	const auto acceptPendingSignalResult = signalsReceiverControlBlock->acceptPendingSignal(signalNumber);
+	return {acceptPendingSignalResult.first, signalNumber};
 }
 
 }	// namespace

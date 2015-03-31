@@ -45,14 +45,15 @@ SignalsReceiverControlBlock::SignalsReceiverControlBlock(SignalInformationQueueW
 
 }
 
-int SignalsReceiverControlBlock::acceptPendingSignal(const uint8_t signalNumber)
+std::pair<int, SignalInformation> SignalsReceiverControlBlock::acceptPendingSignal(const uint8_t signalNumber)
 {
 	const auto testResult = pendingSignalSet_.test(signalNumber);
 	if (testResult.first != 0)
-		return testResult.first;
+		return {testResult.first, SignalInformation{uint8_t{}, SignalInformation::Code{}, sigval{}}};
 	if (testResult.second == false)
-		return EAGAIN;
-	return pendingSignalSet_.remove(signalNumber);
+		return {EAGAIN, SignalInformation{uint8_t{}, SignalInformation::Code{}, sigval{}}};
+	const auto ret = pendingSignalSet_.remove(signalNumber);
+	return {ret, SignalInformation{signalNumber, SignalInformation::Code::Generated, sigval{}}};
 }
 
 int SignalsReceiverControlBlock::generateSignal(const uint8_t signalNumber,

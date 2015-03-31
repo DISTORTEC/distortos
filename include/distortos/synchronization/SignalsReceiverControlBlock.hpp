@@ -21,6 +21,7 @@
 namespace distortos
 {
 
+class SignalInformation;
 class SignalInformationQueueWrapper;
 
 namespace scheduler
@@ -56,12 +57,13 @@ public:
 	 *
 	 * \param [in] signalNumber is the signal that will be accepted, [0; 31]
 	 *
-	 * \return 0 on success, error code otherwise:
+	 * \return pair with return code (0 on success, error code otherwise) and SignalInformation object for accepted
+	 * signal; error codes:
 	 * - EAGAIN - no signal specified by \a signalSet was pending;
 	 * - EINVAL - \a signalNumber value is invalid;
 	 */
 
-	int acceptPendingSignal(uint8_t signalNumber);
+	std::pair<int, SignalInformation> acceptPendingSignal(uint8_t signalNumber);
 
 	/**
 	 * \brief Generates signal for associated thread.
