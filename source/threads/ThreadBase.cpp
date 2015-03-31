@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-03-15
+ * \date 2015-03-31
  */
 
 #include "distortos/ThreadBase.hpp"
@@ -19,6 +19,7 @@
 #include "distortos/architecture/InterruptMaskingLock.hpp"
 
 #include <cerrno>
+#include <csignal>
 
 namespace distortos
 {
@@ -72,6 +73,15 @@ int ThreadBase::join()
 	int ret;
 	while ((ret = joinSemaphore_.wait()) == EINTR);
 	return ret;
+}
+
+int ThreadBase::queueSignal(const uint8_t signalNumber, const sigval value) const
+{
+	const auto signalsReceiverControlBlock = threadControlBlock_.getSignalsReceiverControlBlock();
+	if (signalsReceiverControlBlock == nullptr)
+		return ENOTSUP;
+
+	return signalsReceiverControlBlock->queueSignal(signalNumber, value, threadControlBlock_);
 }
 
 int ThreadBase::start()
