@@ -47,6 +47,11 @@ SignalsReceiverControlBlock::SignalsReceiverControlBlock(SignalInformationQueueW
 
 int SignalsReceiverControlBlock::acceptPendingSignal(const uint8_t signalNumber)
 {
+	const auto testResult = pendingSignalSet_.test(signalNumber);
+	if (testResult.first != 0)
+		return testResult.first;
+	if (testResult.second == false)
+		return EAGAIN;
 	return pendingSignalSet_.remove(signalNumber);
 }
 
