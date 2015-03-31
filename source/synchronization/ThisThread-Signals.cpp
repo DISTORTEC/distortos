@@ -164,10 +164,9 @@ std::pair<int, SignalInformation> tryWait(const SignalSet& signalSet)
 	return waitImplementation(signalSet, true, nullptr);	// non-blocking mode
 }
 
-std::pair<int, uint8_t> tryWaitFor(const SignalSet& signalSet, const TickClock::duration duration)
+std::pair<int, SignalInformation> tryWaitFor(const SignalSet& signalSet, const TickClock::duration duration)
 {
-	const auto result = tryWaitUntil(signalSet, TickClock::now() + duration + TickClock::duration{1});
-	return {result.first, result.second.getSignalNumber()};
+	return tryWaitUntil(signalSet, TickClock::now() + duration + TickClock::duration{1});
 }
 
 std::pair<int, SignalInformation> tryWaitUntil(const SignalSet& signalSet, const TickClock::time_point timePoint)

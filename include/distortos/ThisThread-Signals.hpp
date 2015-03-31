@@ -92,13 +92,13 @@ std::pair<int, SignalInformation> tryWait(const SignalSet& signalSet);
  * \param [in] signalSet is a reference to set of signals that will be waited for
  * \param [in] duration is the duration after which the wait for signals will be terminated
  *
- * \return pair with return code (0 on success, error code otherwise) and signal number of signal that was accepted;
+ * \return pair with return code (0 on success, error code otherwise) and SignalInformation object for accepted signal;
  * error codes:
  * - ENOTSUP - reception of signals is disabled for current thread;
  * - ETIMEDOUT - no signal specified by \a signalSet was generated before the specified \a duration passed;
  */
 
-std::pair<int, uint8_t> tryWaitFor(const SignalSet& signalSet, TickClock::duration duration);
+std::pair<int, SignalInformation> tryWaitFor(const SignalSet& signalSet, TickClock::duration duration);
 
 /**
  * \brief Tries to wait for signals for given duration of time.
@@ -111,14 +111,15 @@ std::pair<int, uint8_t> tryWaitFor(const SignalSet& signalSet, TickClock::durati
  * \param [in] signalSet is a reference to set of signals that will be waited for
  * \param [in] duration is the duration after which the wait for signals will be terminated
  *
- * \return pair with return code (0 on success, error code otherwise) and signal number of signal that was accepted;
+ * \return pair with return code (0 on success, error code otherwise) and SignalInformation object for accepted signal;
  * error codes:
  * - ENOTSUP - reception of signals is disabled for current thread;
  * - ETIMEDOUT - no signal specified by \a signalSet was generated before the specified \a duration passed;
  */
 
 template<typename Rep, typename Period>
-std::pair<int, uint8_t> tryWaitFor(const SignalSet& signalSet, const std::chrono::duration<Rep, Period> duration)
+std::pair<int, SignalInformation> tryWaitFor(const SignalSet& signalSet,
+		const std::chrono::duration<Rep, Period> duration)
 {
 	return tryWaitFor(signalSet, std::chrono::duration_cast<TickClock::duration>(duration));
 }
