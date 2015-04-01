@@ -37,6 +37,12 @@ namespace
 /// size of stack for test thread, bytes
 constexpr size_t testThreadStackSize {384};
 
+/// bit shift of signal number encoded in signal value
+constexpr size_t signalNumberShift {(sizeof(decltype(sigval{}.sival_int)) / 2) * 8};
+
+/// mask used to obtain sequence point from signal value (by removing encoded signal number)
+constexpr decltype(sigval{}.sival_int) signalValueMask {(1 << signalNumberShift) - 1};
+
 /*---------------------------------------------------------------------------------------------------------------------+
 | local types
 +---------------------------------------------------------------------------------------------------------------------*/
@@ -121,6 +127,69 @@ bool generatedSignalsTrigger(TestThread& thread, const size_t index, const TestP
 }
 
 /**
+ * \brief Test thread for signals that were "queued"
+ *
+ * Marks the first sequence point in SequenceAsserter, waits for any possible signal. Value of each accepted signal
+ * is split into two parts:
+ * - sequence point which is obtained by masking with \a signalValueMask,
+ * - signal number which is obtained by shifting right by \a signalNumberShift.
+ * Signal number taken from SignalInformation object must be equal to signal number encoded in signal value.
+ *
+ * \param [in] sequenceAsserter is a reference to SequenceAsserter shared object
+ * \param [in] firstSequencePoint is the first sequence point of this instance
+ */
+
+void queuedSignalsThread(SequenceAsserter& sequenceAsserter, const unsigned int firstSequencePoint)
+{
+	sequenceAsserter.sequencePoint(firstSequencePoint);
+	const SignalSet signalSet {SignalSet::full};
+	auto waitResult = ThisThread::Signals::wait(signalSet);
+	if (waitResult.first != 0)
+		return;
+	const auto& signalInformation = waitResult.second;
+	if (signalInformation.getCode() != SignalInformation::Code::Queued)
+		return;
+
+	const auto signalNumber = signalInformation.getSignalNumber();
+	const auto signalValue = signalInformation.getValue().sival_int;
+	if (signalNumber != signalValue >> signalNumberShift)
+		return;
+	sequenceAsserter.sequencePoint(signalValue & signalValueMask);
+
+	while (waitResult = ThisThread::Signals::tryWait(signalSet), waitResult.first == 0 &&
+			signalInformation.getCode() == SignalInformation::Code::Queued &&
+			signalInformation.getSignalNumber() == signalInformation.getValue().sival_int >> signalNumberShift)
+		sequenceAsserter.sequencePoint(signalInformation.getValue().sival_int & signalValueMask);
+}
+
+/**
+ * \brief Trigger function that "queues" signals.
+ *
+ * \param [in] thread is a reference to TestThread that will be triggered
+ * \param [in] index is the index of currently triggered thread - equal to the order in which this function is called
+ * during single phase
+ * \param [in] phase is a reference to current TestPhase
+ *
+ * \return true if trigger check succeeded, false otherwise
+ */
+
+bool queuedSignalsTrigger(TestThread& thread, const size_t index, const TestPhase& phase)
+{
+	for (size_t i = 0; i < phase.second.size(); ++i)
+	{
+		const auto signalNumber = UINT8_MAX - phase.first[phase.second[i]].first;
+		const decltype(sigval{}.sival_int) signalValue =
+				(totalThreads * (index + 1) + phase.first[phase.second[i]].second) |
+				(signalNumber << signalNumberShift);
+		const auto ret = thread.queueSignal(signalNumber, sigval{signalValue});
+		if (ret != 0)
+			return false;
+	}
+
+	return true;
+}
+
+/**
  * \brief Builder of TestThread objects.
  *
  * \param [in] testThreadFunction is a reference to test thread function that will be used in TestThread
@@ -144,9 +213,10 @@ TestThread makeTestThread(const TestThreadFunction& testThreadFunction, const ui
 +---------------------------------------------------------------------------------------------------------------------*/
 
 /// test stages
-const std::array<Stage, 1> stages
+const std::array<Stage, 2> stages
 {{
 		{generatedSignalsThread, generatedSignalsTrigger},
+		{queuedSignalsThread, queuedSignalsTrigger},
 }};
 
 }	// namespace
