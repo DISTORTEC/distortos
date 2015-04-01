@@ -48,6 +48,12 @@ using TestThreadFunction = void(SequenceAsserter&, unsigned int);
 using TestThread = decltype(makeStaticThread<testThreadStackSize, true, totalThreads>({},
 		std::declval<TestThreadFunction>(), std::ref(std::declval<SequenceAsserter&>()), std::declval<unsigned int>()));
 
+/// function executed to trigger unblocking of test thread
+using Trigger = bool(TestThread&, size_t, const TestPhase&);
+
+/// pair with functions for one stage
+using Stage = std::pair<const TestThreadFunction&, const Trigger&>;
+
 /*---------------------------------------------------------------------------------------------------------------------+
 | local functions
 +---------------------------------------------------------------------------------------------------------------------*/
@@ -133,6 +139,16 @@ TestThread makeTestThread(const TestThreadFunction& testThreadFunction, const ui
 			std::ref(sequenceAsserter), static_cast<unsigned int>(firstSequencePoint));
 }
 
+/*---------------------------------------------------------------------------------------------------------------------+
+| local constants
++---------------------------------------------------------------------------------------------------------------------*/
+
+/// test stages
+const std::array<Stage, 1> stages
+{{
+		{generatedSignalsThread, generatedSignalsTrigger},
+}};
+
 }	// namespace
 
 /*---------------------------------------------------------------------------------------------------------------------+
@@ -149,62 +165,65 @@ bool SignalsWaitTestCase::Implementation::run_() const
 	const auto contextSwitchCount = statistics::getContextSwitchCount();
 	std::remove_const<decltype(contextSwitchCount)>::type expectedContextSwitchCount {};
 
-	for (const auto& phase : priorityTestPhases)
-	{
-		SequenceAsserter sequenceAsserter;
-
-		std::array<TestThread, totalThreads> threads
-		{{
-				makeTestThread(generatedSignalsThread, testThreadPriority, sequenceAsserter, 0),
-				makeTestThread(generatedSignalsThread, testThreadPriority, sequenceAsserter, 1),
-				makeTestThread(generatedSignalsThread, testThreadPriority, sequenceAsserter, 2),
-				makeTestThread(generatedSignalsThread, testThreadPriority, sequenceAsserter, 3),
-				makeTestThread(generatedSignalsThread, testThreadPriority, sequenceAsserter, 4),
-				makeTestThread(generatedSignalsThread, testThreadPriority, sequenceAsserter, 5),
-				makeTestThread(generatedSignalsThread, testThreadPriority, sequenceAsserter, 6),
-				makeTestThread(generatedSignalsThread, testThreadPriority, sequenceAsserter, 7),
-				makeTestThread(generatedSignalsThread, testThreadPriority, sequenceAsserter, 8),
-				makeTestThread(generatedSignalsThread, testThreadPriority, sequenceAsserter, 9),
-		}};
-
-		bool result {true};
-
-		for (auto& thread : threads)
+	for (const auto& stage : stages)
+		for (const auto& phase : priorityTestPhases)
 		{
-			thread.start();
-			// 2 context switches: "into" the thread and "back" to main thread when test thread blocks
-			expectedContextSwitchCount += 2;
-			if (statistics::getContextSwitchCount() - contextSwitchCount != expectedContextSwitchCount)
+			SequenceAsserter sequenceAsserter;
+
+			auto& threadFunction = stage.first;
+			std::array<TestThread, totalThreads> threads
+			{{
+					makeTestThread(threadFunction, testThreadPriority, sequenceAsserter, 0),
+					makeTestThread(threadFunction, testThreadPriority, sequenceAsserter, 1),
+					makeTestThread(threadFunction, testThreadPriority, sequenceAsserter, 2),
+					makeTestThread(threadFunction, testThreadPriority, sequenceAsserter, 3),
+					makeTestThread(threadFunction, testThreadPriority, sequenceAsserter, 4),
+					makeTestThread(threadFunction, testThreadPriority, sequenceAsserter, 5),
+					makeTestThread(threadFunction, testThreadPriority, sequenceAsserter, 6),
+					makeTestThread(threadFunction, testThreadPriority, sequenceAsserter, 7),
+					makeTestThread(threadFunction, testThreadPriority, sequenceAsserter, 8),
+					makeTestThread(threadFunction, testThreadPriority, sequenceAsserter, 9),
+			}};
+
+			bool result {true};
+
+			for (auto& thread : threads)
+			{
+				thread.start();
+				// 2 context switches: "into" the thread and "back" to main thread when test thread blocks
+				expectedContextSwitchCount += 2;
+				if (statistics::getContextSwitchCount() - contextSwitchCount != expectedContextSwitchCount)
+					result = false;
+			}
+
+			if (sequenceAsserter.assertSequence(totalThreads) == false)
 				result = false;
+
+			for (size_t i = 0; i < phase.second.size(); ++i)
+			{
+				auto& thread = threads[phase.second[i]];
+				ThisThread::setPriority(aboveTestThreadPriority);
+
+				const auto triggerResult = stage.second(thread, i, phase);	// execute "trigger"
+				if (triggerResult == false)
+					result = false;
+
+				ThisThread::setPriority(testCasePriority_);
+				// 2 context switches: into" the unblocked thread and "back" to main thread when test thread terminates
+				expectedContextSwitchCount += 2;
+				if (statistics::getContextSwitchCount() - contextSwitchCount != expectedContextSwitchCount)
+					result = false;
+			}
+
+			for (auto& thread : threads)
+				thread.join();
+
+			if (result == false || sequenceAsserter.assertSequence(totalThreads * (totalThreads + 1)) == false)
+				return false;
 		}
 
-		if (sequenceAsserter.assertSequence(totalThreads) == false)
-			result = false;
-
-		for (size_t i = 0; i < phase.second.size(); ++i)
-		{
-			auto& thread = threads[phase.second[i]];
-			ThisThread::setPriority(aboveTestThreadPriority);
-
-			const auto triggerResult = generatedSignalsTrigger(thread, i, phase);
-			if (triggerResult == false)
-				result = false;
-
-			ThisThread::setPriority(testCasePriority_);
-			// 2 context switches: into" the unblocked thread and "back" to main thread when test thread terminates
-			expectedContextSwitchCount += 2;
-			if (statistics::getContextSwitchCount() - contextSwitchCount != expectedContextSwitchCount)
-				result = false;
-		}
-
-		for (auto& thread : threads)
-			thread.join();
-
-		if (result == false || sequenceAsserter.assertSequence(totalThreads * (totalThreads + 1)) == false)
-			return false;
-	}
-
-	if (statistics::getContextSwitchCount() - contextSwitchCount != 4 * totalThreads * priorityTestPhases.size())
+	constexpr auto totalContextSwitches = 4 * totalThreads * priorityTestPhases.size() * stages.size();
+	if (statistics::getContextSwitchCount() - contextSwitchCount != totalContextSwitches)
 		return false;
 
 	return true;
