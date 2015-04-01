@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-03-31
+ * \date 2015-04-01
  */
 
 #include "SignalsWaitTestCase.hpp"
@@ -19,6 +19,7 @@
 #include "distortos/StaticThread.hpp"
 #include "distortos/statistics.hpp"
 #include "distortos/ThisThread-Signals.hpp"
+#include "distortos/ThisThread.hpp"
 
 namespace distortos
 {
@@ -77,6 +78,7 @@ void thread(SequenceAsserter& sequenceAsserter, const unsigned int firstSequence
 /**
  * \brief Builder of TestThread objects.
  *
+ * \param [in] priority is the thread's priority
  * \param [in] sequenceAsserter is a reference to SequenceAsserter shared object
  * \param [in] firstSequencePoint is the first sequence point for this instance - equal to the order in which this
  * thread will be started
@@ -84,9 +86,10 @@ void thread(SequenceAsserter& sequenceAsserter, const unsigned int firstSequence
  * \return constructed TestThread object
  */
 
-TestThread makeTestThread(SequenceAsserter& sequenceAsserter, const unsigned int firstSequencePoint)
+TestThread makeTestThread(const uint8_t priority, SequenceAsserter& sequenceAsserter,
+		const unsigned int firstSequencePoint)
 {
-	return makeStaticThread<testThreadStackSize, true>(UINT8_MAX, thread, std::ref(sequenceAsserter),
+	return makeStaticThread<testThreadStackSize, true>(priority, thread, std::ref(sequenceAsserter),
 			static_cast<unsigned int>(firstSequencePoint));
 }
 
@@ -98,6 +101,11 @@ TestThread makeTestThread(SequenceAsserter& sequenceAsserter, const unsigned int
 
 bool SignalsWaitTestCase::Implementation::run_() const
 {
+	// priority required for this whole test to work
+	static_assert(testCasePriority_ + 2 <= UINT8_MAX, "Invalid test case priority");
+	constexpr decltype(testCasePriority_) testThreadPriority {testCasePriority_ + 1};
+	constexpr decltype(testCasePriority_) aboveTestThreadPriority {testThreadPriority + 1};
+
 	const auto contextSwitchCount = statistics::getContextSwitchCount();
 	std::remove_const<decltype(contextSwitchCount)>::type expectedContextSwitchCount {};
 
@@ -107,16 +115,16 @@ bool SignalsWaitTestCase::Implementation::run_() const
 
 		std::array<TestThread, totalThreads> threads
 		{{
-				makeTestThread(sequenceAsserter, 0),
-				makeTestThread(sequenceAsserter, 1),
-				makeTestThread(sequenceAsserter, 2),
-				makeTestThread(sequenceAsserter, 3),
-				makeTestThread(sequenceAsserter, 4),
-				makeTestThread(sequenceAsserter, 5),
-				makeTestThread(sequenceAsserter, 6),
-				makeTestThread(sequenceAsserter, 7),
-				makeTestThread(sequenceAsserter, 8),
-				makeTestThread(sequenceAsserter, 9),
+				makeTestThread(testThreadPriority, sequenceAsserter, 0),
+				makeTestThread(testThreadPriority, sequenceAsserter, 1),
+				makeTestThread(testThreadPriority, sequenceAsserter, 2),
+				makeTestThread(testThreadPriority, sequenceAsserter, 3),
+				makeTestThread(testThreadPriority, sequenceAsserter, 4),
+				makeTestThread(testThreadPriority, sequenceAsserter, 5),
+				makeTestThread(testThreadPriority, sequenceAsserter, 6),
+				makeTestThread(testThreadPriority, sequenceAsserter, 7),
+				makeTestThread(testThreadPriority, sequenceAsserter, 8),
+				makeTestThread(testThreadPriority, sequenceAsserter, 9),
 		}};
 
 		bool result {true};
@@ -136,9 +144,11 @@ bool SignalsWaitTestCase::Implementation::run_() const
 		for (size_t i = 0; i < phase.second.size(); ++i)
 		{
 			const auto threadIndex = phase.second[i];
+			ThisThread::setPriority(aboveTestThreadPriority);
 			const auto ret = threads[threadIndex].generateSignal(totalThreads + i);
 			if (ret != 0)
 				result = false;
+			ThisThread::setPriority(testCasePriority_);
 			// 2 context switches: into" the unblocked thread and "back" to main thread when test thread terminates
 			expectedContextSwitchCount += 2;
 			if (statistics::getContextSwitchCount() - contextSwitchCount != expectedContextSwitchCount)
