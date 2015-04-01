@@ -53,7 +53,7 @@ using TestThread = decltype(makeStaticThread<testThreadStackSize, true, totalThr
 +---------------------------------------------------------------------------------------------------------------------*/
 
 /**
- * \brief Test thread.
+ * \brief Test thread for signals that were "generated"
  *
  * Marks the first sequence point in SequenceAsserter, waits for any possible signal. The signal number of first
  * accepted signal is used to calculate "sequence point offset". This value is then used to mark sequence points for all
@@ -71,7 +71,7 @@ using TestThread = decltype(makeStaticThread<testThreadStackSize, true, totalThr
  * \param [in] firstSequencePoint is the first sequence point of this instance
  */
 
-void thread(SequenceAsserter& sequenceAsserter, const unsigned int firstSequencePoint)
+void generatedSignalsThread(SequenceAsserter& sequenceAsserter, const unsigned int firstSequencePoint)
 {
 	sequenceAsserter.sequencePoint(firstSequencePoint);
 	const SignalSet signalSet {SignalSet::full};
@@ -105,8 +105,8 @@ void thread(SequenceAsserter& sequenceAsserter, const unsigned int firstSequence
 TestThread makeTestThread(const uint8_t priority, SequenceAsserter& sequenceAsserter,
 		const unsigned int firstSequencePoint)
 {
-	return makeStaticThread<testThreadStackSize, true, totalThreads>(priority, thread, std::ref(sequenceAsserter),
-			static_cast<unsigned int>(firstSequencePoint));
+	return makeStaticThread<testThreadStackSize, true, totalThreads>(priority, generatedSignalsThread,
+			std::ref(sequenceAsserter), static_cast<unsigned int>(firstSequencePoint));
 }
 
 }	// namespace
