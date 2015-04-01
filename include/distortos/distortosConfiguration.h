@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-03-14
+ * \date 2015-04-01
  */
 
 #ifndef INCLUDE_DISTORTOS_DISTORTOSCONFIGURATION_H_
@@ -51,5 +51,12 @@
  */
 
 #define CONFIG_MAIN_THREAD_CAN_RECEIVE_SIGNALS	0
+
+/**
+ * \brief max number of queued signals for main thread, relevant only if CONFIG_MAIN_THREAD_CAN_RECEIVE_SIGNALS == 1,
+ * 0 to disable queuing of signals for main thread
+ */
+
+#define CONFIG_MAIN_THREAD_QUEUED_SIGNALS	0
 
 #endif	/* INCLUDE_DISTORTOS_DISTORTOSCONFIGURATION_H_ */
