@@ -55,8 +55,17 @@ using TestThread = decltype(makeStaticThread<testThreadStackSize, true>({}, std:
 /**
  * \brief Test thread.
  *
- * Marks the first sequence point in SequenceAsserter, waits for any possible signal and uses the accepted signal as the
- * last sequence point - marking it in SequenceAsserter.
+ * Marks the first sequence point in SequenceAsserter, waits for any possible signal. The signal number of first
+ * accepted signal is used to calculate "sequence point offset". This value is then used to mark sequence points for all
+ * following signals that will be accepted.
+ *
+ * It is assumed that \a totalThreads signals will be generated for each test thread.
+ *
+ * First \a totalThreads sequence points will be marked before test threads block waiting for signal. Then each test
+ * thread must mark sequence points in the range <em>[totalThreads * (i + 1); totalThreads * (i + 2))</em>, where \a i
+ * is the index of unblocked thread in <em>[0; totalThreads)</em> range. Because it is not possible to fit all required
+ * sequence points into signal number values, these are "encoded". The ranges of sequence points mentioned earlier are
+ * obtained from ranges of received signal numbers in the following form <em>[0 + 1; totalThreads + i)</em>.
  *
  * \param [in] sequenceAsserter is a reference to SequenceAsserter shared object
  * \param [in] firstSequencePoint is the first sequence point of this instance
@@ -65,14 +74,21 @@ using TestThread = decltype(makeStaticThread<testThreadStackSize, true>({}, std:
 void thread(SequenceAsserter& sequenceAsserter, const unsigned int firstSequencePoint)
 {
 	sequenceAsserter.sequencePoint(firstSequencePoint);
-	SignalSet signalSet {SignalSet::full};
-	const auto waitResult = ThisThread::Signals::wait(signalSet);
+	const SignalSet signalSet {SignalSet::full};
+	auto waitResult = ThisThread::Signals::wait(signalSet);
 	if (waitResult.first != 0)
 		return;
-	auto& signalInformation = waitResult.second;
+	const auto& signalInformation = waitResult.second;
 	if (signalInformation.getCode() != SignalInformation::Code::Generated)
 		return;
-	sequenceAsserter.sequencePoint(signalInformation.getSignalNumber());
+
+	const auto signalNumber = signalInformation.getSignalNumber();
+	const auto sequencePointOffset = totalThreads + totalThreads * signalNumber - signalNumber;
+	sequenceAsserter.sequencePoint(signalNumber + sequencePointOffset);
+
+	while (waitResult = ThisThread::Signals::tryWait(signalSet), waitResult.first == 0 &&
+			signalInformation.getCode() == SignalInformation::Code::Generated)
+		sequenceAsserter.sequencePoint(signalInformation.getSignalNumber() + sequencePointOffset);
 }
 
 /**
@@ -145,9 +161,14 @@ bool SignalsWaitTestCase::Implementation::run_() const
 		{
 			const auto threadIndex = phase.second[i];
 			ThisThread::setPriority(aboveTestThreadPriority);
-			const auto ret = threads[threadIndex].generateSignal(totalThreads + i);
-			if (ret != 0)
-				result = false;
+
+			for (size_t j = 0; j < phase.second.size(); ++j)
+			{
+				const auto ret = threads[threadIndex].generateSignal(i + phase.second[j]);
+				if (ret != 0)
+					result = false;
+			}
+
 			ThisThread::setPriority(testCasePriority_);
 			// 2 context switches: into" the unblocked thread and "back" to main thread when test thread terminates
 			expectedContextSwitchCount += 2;
@@ -158,7 +179,7 @@ bool SignalsWaitTestCase::Implementation::run_() const
 		for (auto& thread : threads)
 			thread.join();
 
-		if (result == false || sequenceAsserter.assertSequence(totalThreads * 2) == false)
+		if (result == false || sequenceAsserter.assertSequence(totalThreads * (totalThreads + 1)) == false)
 			return false;
 	}
 

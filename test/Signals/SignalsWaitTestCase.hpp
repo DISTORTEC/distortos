@@ -25,8 +25,8 @@ namespace test
 /**
  * \brief Tests waiting for signals
  *
- * Starts 10 small threads which wait for any signal, asserting that they receive the same signal that was generated,
- * start and finish in the expected order, using exact number of context switches.
+ * Starts 10 small threads which wait for any signals, asserting that they receive the same signals that were generated
+ * (ordered numerically), start and finish in the expected order, using exact number of context switches.
  */
 
 class SignalsWaitTestCase : public PrioritizedTestCase
