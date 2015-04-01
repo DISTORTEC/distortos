@@ -47,21 +47,9 @@ class SignalsWaitUnblockFunctor : public scheduler::ThreadControlBlock::UnblockF
 public:
 
 	/**
-	 * \brief SignalsWaitUnblockFunctor's constructor
-	 *
-	 * \param [in] pendingSignalSet is a reference to SignalSet that will be used to return saved pending signal set
-	 */
-
-	constexpr explicit SignalsWaitUnblockFunctor(SignalSet& pendingSignalSet) :
-			pendingSignalSet_(pendingSignalSet)
-	{
-
-	}
-
-	/**
 	 * \brief SignalsWaitUnblockFunctor's function call operator
 	 *
-	 * Saves pending signal set of unblocked thread and clears pointer to set of signals that were "waited for".
+	 * Clears pointer to set of signals that were "waited for".
 	 *
 	 * \param [in] threadControlBlock is a reference to ThreadControlBlock that is being unblocked
 	 */
@@ -72,14 +60,8 @@ public:
 		if (signalsReceiverControlBlock == nullptr)
 			return;
 
-		pendingSignalSet_ = signalsReceiverControlBlock->getPendingSignalSet();
 		signalsReceiverControlBlock->setWaitingSignalSet(nullptr);
 	}
-
-private:
-
-	/// reference to SignalSet that will be used to return saved pending signal set
-	SignalSet& pendingSignalSet_;
 };
 
 /*---------------------------------------------------------------------------------------------------------------------+
@@ -125,7 +107,7 @@ std::pair<int, SignalInformation> waitImplementation(const SignalSet& signalSet,
 				scheduler::ThreadControlBlock::State::WaitingForSignal};
 
 		signalsReceiverControlBlock->setWaitingSignalSet(&signalSet);
-		const SignalsWaitUnblockFunctor signalsWaitUnblockFunctor {pendingSignalSet};
+		const SignalsWaitUnblockFunctor signalsWaitUnblockFunctor;
 		const auto ret = timePoint == nullptr ? scheduler.block(waitingList, &signalsWaitUnblockFunctor) :
 				scheduler.blockUntil(waitingList, *timePoint, &signalsWaitUnblockFunctor);
 		if (ret != 0)
