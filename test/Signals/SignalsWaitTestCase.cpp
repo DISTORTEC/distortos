@@ -45,8 +45,8 @@ constexpr size_t testThreadStackSize {384};
 using TestThreadFunction = void(SequenceAsserter&, unsigned int);
 
 /// type of test thread
-using TestThread = decltype(makeStaticThread<testThreadStackSize, true>({}, std::declval<TestThreadFunction>(),
-		std::ref(std::declval<SequenceAsserter&>()), std::declval<unsigned int>()));
+using TestThread = decltype(makeStaticThread<testThreadStackSize, true, totalThreads>({},
+		std::declval<TestThreadFunction>(), std::ref(std::declval<SequenceAsserter&>()), std::declval<unsigned int>()));
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | local functions
@@ -105,7 +105,7 @@ void thread(SequenceAsserter& sequenceAsserter, const unsigned int firstSequence
 TestThread makeTestThread(const uint8_t priority, SequenceAsserter& sequenceAsserter,
 		const unsigned int firstSequencePoint)
 {
-	return makeStaticThread<testThreadStackSize, true>(priority, thread, std::ref(sequenceAsserter),
+	return makeStaticThread<testThreadStackSize, true, totalThreads>(priority, thread, std::ref(sequenceAsserter),
 			static_cast<unsigned int>(firstSequencePoint));
 }
 
