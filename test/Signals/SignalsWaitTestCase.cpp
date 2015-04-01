@@ -92,6 +92,29 @@ void generatedSignalsThread(SequenceAsserter& sequenceAsserter, const unsigned i
 }
 
 /**
+ * \brief Trigger function that "generates" signals.
+ *
+ * \param [in] thread is a reference to TestThread that will be triggered
+ * \param [in] index is the index of currently triggered thread - equal to the order in which this function is called
+ * during single phase
+ * \param [in] phase is a reference to current TestPhase
+ *
+ * \return true if trigger check succeeded, false otherwise
+ */
+
+bool generatedSignalsTrigger(TestThread& thread, const size_t index, const TestPhase& phase)
+{
+	for (size_t i = 0; i < phase.second.size(); ++i)
+	{
+		const auto ret = thread.generateSignal(index + phase.second[i]);
+		if (ret != 0)
+			return false;
+	}
+
+	return true;
+}
+
+/**
  * \brief Builder of TestThread objects.
  *
  * \param [in] priority is the thread's priority
@@ -159,15 +182,12 @@ bool SignalsWaitTestCase::Implementation::run_() const
 
 		for (size_t i = 0; i < phase.second.size(); ++i)
 		{
-			const auto threadIndex = phase.second[i];
+			auto& thread = threads[phase.second[i]];
 			ThisThread::setPriority(aboveTestThreadPriority);
 
-			for (size_t j = 0; j < phase.second.size(); ++j)
-			{
-				const auto ret = threads[threadIndex].generateSignal(i + phase.second[j]);
-				if (ret != 0)
-					result = false;
-			}
+			const auto triggerResult = generatedSignalsTrigger(thread, i, phase);
+			if (triggerResult == false)
+				result = false;
 
 			ThisThread::setPriority(testCasePriority_);
 			// 2 context switches: into" the unblocked thread and "back" to main thread when test thread terminates
