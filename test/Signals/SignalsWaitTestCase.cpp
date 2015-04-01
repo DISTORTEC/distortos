@@ -117,6 +117,7 @@ bool generatedSignalsTrigger(TestThread& thread, const size_t index, const TestP
 /**
  * \brief Builder of TestThread objects.
  *
+ * \param [in] testThreadFunction is a reference to test thread function that will be used in TestThread
  * \param [in] priority is the thread's priority
  * \param [in] sequenceAsserter is a reference to SequenceAsserter shared object
  * \param [in] firstSequencePoint is the first sequence point for this instance - equal to the order in which this
@@ -125,10 +126,10 @@ bool generatedSignalsTrigger(TestThread& thread, const size_t index, const TestP
  * \return constructed TestThread object
  */
 
-TestThread makeTestThread(const uint8_t priority, SequenceAsserter& sequenceAsserter,
-		const unsigned int firstSequencePoint)
+TestThread makeTestThread(const TestThreadFunction& testThreadFunction, const uint8_t priority,
+		SequenceAsserter& sequenceAsserter, const unsigned int firstSequencePoint)
 {
-	return makeStaticThread<testThreadStackSize, true, totalThreads>(priority, generatedSignalsThread,
+	return makeStaticThread<testThreadStackSize, true, totalThreads>(priority, testThreadFunction,
 			std::ref(sequenceAsserter), static_cast<unsigned int>(firstSequencePoint));
 }
 
@@ -154,16 +155,16 @@ bool SignalsWaitTestCase::Implementation::run_() const
 
 		std::array<TestThread, totalThreads> threads
 		{{
-				makeTestThread(testThreadPriority, sequenceAsserter, 0),
-				makeTestThread(testThreadPriority, sequenceAsserter, 1),
-				makeTestThread(testThreadPriority, sequenceAsserter, 2),
-				makeTestThread(testThreadPriority, sequenceAsserter, 3),
-				makeTestThread(testThreadPriority, sequenceAsserter, 4),
-				makeTestThread(testThreadPriority, sequenceAsserter, 5),
-				makeTestThread(testThreadPriority, sequenceAsserter, 6),
-				makeTestThread(testThreadPriority, sequenceAsserter, 7),
-				makeTestThread(testThreadPriority, sequenceAsserter, 8),
-				makeTestThread(testThreadPriority, sequenceAsserter, 9),
+				makeTestThread(generatedSignalsThread, testThreadPriority, sequenceAsserter, 0),
+				makeTestThread(generatedSignalsThread, testThreadPriority, sequenceAsserter, 1),
+				makeTestThread(generatedSignalsThread, testThreadPriority, sequenceAsserter, 2),
+				makeTestThread(generatedSignalsThread, testThreadPriority, sequenceAsserter, 3),
+				makeTestThread(generatedSignalsThread, testThreadPriority, sequenceAsserter, 4),
+				makeTestThread(generatedSignalsThread, testThreadPriority, sequenceAsserter, 5),
+				makeTestThread(generatedSignalsThread, testThreadPriority, sequenceAsserter, 6),
+				makeTestThread(generatedSignalsThread, testThreadPriority, sequenceAsserter, 7),
+				makeTestThread(generatedSignalsThread, testThreadPriority, sequenceAsserter, 8),
+				makeTestThread(generatedSignalsThread, testThreadPriority, sequenceAsserter, 9),
 		}};
 
 		bool result {true};
