@@ -16,6 +16,7 @@
 #include "SignalsWaitTestCase.hpp"
 #include "SignalsWaitOperationsTestCase.hpp"
 #include "SignalsGenerationOperationsTestCase.hpp"
+#include "SignalsQueuedOperationsTestCase.hpp"
 
 namespace distortos
 {
@@ -42,12 +43,16 @@ const SignalsWaitOperationsTestCase waitOperationsTestCase;
 /// SignalsGenerationOperationsTestCase instance
 const SignalsGenerationOperationsTestCase generationOperationsTestCase;
 
+/// SignalsQueuedOperationsTestCase instance
+const SignalsQueuedOperationsTestCase queuedOperationsTestCase;
+
 /// array with references to TestCase objects related to signals
 const TestCaseRange::value_type messageQueueTestCases_[]
 {
 		TestCaseRange::value_type{waitTestCase},
 		TestCaseRange::value_type{waitOperationsTestCase},
 		TestCaseRange::value_type{generationOperationsTestCase},
+		TestCaseRange::value_type{queuedOperationsTestCase},
 };
 
 }	// namespace
