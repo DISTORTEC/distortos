@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-04-01
+ * \date 2015-04-02
  */
 
 #ifndef INCLUDE_DISTORTOS_DISTORTOSCONFIGURATION_H_
@@ -24,6 +24,8 @@
  * \brief max priority (inclusive) of interrupt handlers that can use system's functions
  *
  * \note "lower" priority has "higher" numeric value
+ *
+ * \warning this value must not be equal to 0
  */
 
 #define CONFIG_ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI 8
