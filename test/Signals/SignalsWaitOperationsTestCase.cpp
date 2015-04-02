@@ -37,7 +37,7 @@ namespace
 +---------------------------------------------------------------------------------------------------------------------*/
 
 /// type of function used to send signal to selected thread
-using SendSignal = int(const ThreadBase&, uint8_t);
+using SendSignal = int(const ThreadBase&, uint8_t, int);
 
 /// type of function used to test received SignalInformation object
 using TestReceivedSignalInformation = bool(const SignalInformation&, uint8_t);
@@ -75,11 +75,12 @@ constexpr decltype(statistics::getContextSwitchCount()) phase2SoftwareTimerConte
  * \brief Wrapper for ThreadBase::generateSignal().
  *
  * \param [in] signalNumber is the signal that will be generated, [0; 31]
+ * \param [in] value is the signal value (ignored)
  *
  * \return values returned by ThreadBase::generateSignal()
  */
 
-int generateSignalWrapper(const ThreadBase& thread, const uint8_t signalNumber)
+int generateSignalWrapper(const ThreadBase& thread, const uint8_t signalNumber, int)
 {
 	return thread.generateSignal(signalNumber);
 }
@@ -142,11 +143,12 @@ bool testSelfOneSignalPending(const uint8_t signalNumber)
  *
  * \param [in] sendSignal is a reference to function used to send signal to current thread
  * \param [in] signalNumber is the signal number that will be generated
+ * \param [in] value is the signal value
  *
  * \return true if test succeeded, false otherwise
  */
 
-bool testSelfSendSignal(const SendSignal& sendSignal, const uint8_t signalNumber)
+bool testSelfSendSignal(const SendSignal& sendSignal, const uint8_t signalNumber, const int value)
 {
 	{
 		const auto ret = testSelfNoSignalsPending();	// initially no signals may be pending
@@ -156,7 +158,7 @@ bool testSelfSendSignal(const SendSignal& sendSignal, const uint8_t signalNumber
 
 	{
 		const auto& mainThread = ThisThread::get();
-		const auto ret = sendSignal(mainThread, signalNumber);
+		const auto ret = sendSignal(mainThread, signalNumber, value);
 		if (ret != 0)
 			return false;
 	}
@@ -183,9 +185,10 @@ bool phase1(const SendSignal& sendSignal, const TestReceivedSignalInformation& t
 
 	{
 		constexpr uint8_t testSignalNumber {19};
+		constexpr int testValue {0x3bb0e679};
 
 		{
-			const auto ret = testSelfSendSignal(sendSignal, testSignalNumber);
+			const auto ret = testSelfSendSignal(sendSignal, testSignalNumber, testValue);
 			if (ret != true)
 				return ret;
 		}
@@ -220,9 +223,10 @@ bool phase1(const SendSignal& sendSignal, const TestReceivedSignalInformation& t
 
 	{
 		constexpr uint8_t testSignalNumber {8};
+		constexpr int testValue {0x10514ecb};
 
 		{
-			const auto ret = testSelfSendSignal(sendSignal, testSignalNumber);
+			const auto ret = testSelfSendSignal(sendSignal, testSignalNumber, testValue);
 			if (ret != true)
 				return ret;
 		}
@@ -261,9 +265,10 @@ bool phase1(const SendSignal& sendSignal, const TestReceivedSignalInformation& t
 
 	{
 		constexpr uint8_t testSignalNumber {22};
+		constexpr int testValue {0x1d931dc7};
 
 		{
-			const auto ret = testSelfSendSignal(sendSignal, testSignalNumber);
+			const auto ret = testSelfSendSignal(sendSignal, testSignalNumber, testValue);
 			if (ret != true)
 				return ret;
 		}
@@ -325,10 +330,11 @@ bool phase2(const SendSignal& sendSignal, const TestReceivedSignalInformation& t
 	const SignalSet fullSignalSet {SignalSet::full};
 	const auto& mainThread = ThisThread::get();
 	uint8_t sharedSignalNumber {};
+	int sharedValue {};
 	auto softwareTimer = makeSoftwareTimer(
-			[&sendSignal, &mainThread, &sharedSignalNumber]()
+			[&sendSignal, &mainThread, &sharedSignalNumber, &sharedValue]()
 			{
-				sendSignal(mainThread, sharedSignalNumber);
+				sendSignal(mainThread, sharedSignalNumber, sharedValue);
 			});
 
 	{
@@ -337,6 +343,7 @@ bool phase2(const SendSignal& sendSignal, const TestReceivedSignalInformation& t
 		const auto contextSwitchCount = statistics::getContextSwitchCount();
 		const auto wakeUpTimePoint = TickClock::now() + longDuration;
 		sharedSignalNumber = 3;
+		sharedValue = 0x5b518098;
 		softwareTimer.start(wakeUpTimePoint);
 
 		// no signals are currently pending, but ThisThread::Signals::wait() should succeed at expected time
@@ -361,6 +368,7 @@ bool phase2(const SendSignal& sendSignal, const TestReceivedSignalInformation& t
 		const auto contextSwitchCount = statistics::getContextSwitchCount();
 		const auto wakeUpTimePoint = TickClock::now() + longDuration;
 		sharedSignalNumber = 26;
+		sharedValue = 0x7b3b5785;
 		softwareTimer.start(wakeUpTimePoint);
 
 		// no signals are currently pending, but ThisThread::Signals::tryWaitFor() should succeed at expected time
@@ -386,6 +394,7 @@ bool phase2(const SendSignal& sendSignal, const TestReceivedSignalInformation& t
 		const auto contextSwitchCount = statistics::getContextSwitchCount();
 		const auto wakeUpTimePoint = TickClock::now() + longDuration;
 		sharedSignalNumber = 5;
+		sharedValue = 0x7b352231;
 		softwareTimer.start(wakeUpTimePoint);
 
 		// no signals are currently pending, but ThisThread::Signals::tryWaitUntil() should succeed at expected time
