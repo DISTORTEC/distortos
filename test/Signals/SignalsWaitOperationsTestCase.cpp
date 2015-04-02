@@ -163,16 +163,11 @@ bool testSelfNoSignalsPending()
 
 bool testSelfOneSignalPending(const uint8_t signalNumber)
 {
-	auto pendingSignalSet = ThisThread::Signals::getPendingSignalSet();
-	const auto testResult = pendingSignalSet.test(signalNumber);
-	if (testResult.first != 0 || testResult.second != true)	// selected signal number must be pending
+	SignalSet expectedSignalSet {SignalSet::empty};
+	if (expectedSignalSet.add(signalNumber) != 0)
 		return false;
-	// no other signal may be pending
-	const auto ret = pendingSignalSet.remove(signalNumber);
-	if (ret != 0)
-		return false;
-	const auto pendingBitset = pendingSignalSet.getBitset();
-	return pendingBitset.none();
+
+	return ThisThread::Signals::getPendingSignalSet().getBitset() == expectedSignalSet.getBitset();
 }
 
 /**
