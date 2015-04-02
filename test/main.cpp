@@ -30,7 +30,7 @@ constexpr size_t testThreadStackSize {20480};
 #endif	// def _REENT_SMALL
 
 /// test thread
-auto testThread = distortos::makeStaticThread<testThreadStackSize, true, 1>(UINT8_MAX / 2,
+auto testThread = distortos::makeStaticThread<testThreadStackSize, true, 10>(UINT8_MAX / 2,
 		distortos::test::testThreadFunction);
 
 }	// namespace
