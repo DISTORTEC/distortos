@@ -36,6 +36,9 @@ namespace
 | local types
 +---------------------------------------------------------------------------------------------------------------------*/
 
+/// type of function used to send signal to selected thread
+using SendSignal = int(const ThreadBase&, uint8_t);
+
 /// type of function used to test received SignalInformation object
 using TestReceivedSignalInformation = bool(const SignalInformation&, uint8_t);
 
@@ -129,17 +132,18 @@ bool testSelfOneSignalPending(const uint8_t signalNumber)
 }
 
 /**
- * \brief Tests generation of signal for current thread.
+ * \brief Tests sending of signal to current thread.
  *
- * Initially no signals may be pending for current thread. After call to ThisThread::Signals::generateSignal() exactly
- * one signal - \a signalNumber - must be pending.
+ * Initially no signals may be pending for current thread. After call to \a sendSignal() exactly one signal -
+ * \a signalNumber - must be pending.
  *
+ * \param [in] sendSignal is a reference to function used to send signal to current thread
  * \param [in] signalNumber is the signal number that will be generated
  *
  * \return true if test succeeded, false otherwise
  */
 
-bool testSelfGenerateSignal(const uint8_t signalNumber)
+bool testSelfSendSignal(const SendSignal& sendSignal, const uint8_t signalNumber)
 {
 	{
 		const auto ret = testSelfNoSignalsPending();	// initially no signals may be pending
@@ -149,7 +153,7 @@ bool testSelfGenerateSignal(const uint8_t signalNumber)
 
 	{
 		const auto& mainThread = ThisThread::get();
-		const auto ret = generateSignalWrapper(mainThread, signalNumber);
+		const auto ret = sendSignal(mainThread, signalNumber);
 		if (ret != 0)
 			return false;
 	}
@@ -177,7 +181,7 @@ bool phase1(const TestReceivedSignalInformation& testReceivedSignalInformation)
 		constexpr uint8_t testSignalNumber {19};
 
 		{
-			const auto ret = testSelfGenerateSignal(testSignalNumber);
+			const auto ret = testSelfSendSignal(generateSignalWrapper, testSignalNumber);
 			if (ret != true)
 				return ret;
 		}
@@ -214,7 +218,7 @@ bool phase1(const TestReceivedSignalInformation& testReceivedSignalInformation)
 		constexpr uint8_t testSignalNumber {8};
 
 		{
-			const auto ret = testSelfGenerateSignal(testSignalNumber);
+			const auto ret = testSelfSendSignal(generateSignalWrapper, testSignalNumber);
 			if (ret != true)
 				return ret;
 		}
@@ -255,7 +259,7 @@ bool phase1(const TestReceivedSignalInformation& testReceivedSignalInformation)
 		constexpr uint8_t testSignalNumber {22};
 
 		{
-			const auto ret = testSelfGenerateSignal(testSignalNumber);
+			const auto ret = testSelfSendSignal(generateSignalWrapper, testSignalNumber);
 			if (ret != true)
 				return ret;
 		}
