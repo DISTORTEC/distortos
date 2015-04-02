@@ -86,6 +86,20 @@ int generateSignalWrapper(const ThreadBase& thread, const uint8_t signalNumber, 
 }
 
 /**
+ * \brief Wrapper for ThreadBase::queueSignal().
+ *
+ * \param [in] signalNumber is the signal that will be queued, [0; 31]
+ * \param [in] value is the signal value
+ *
+ * \return values returned by ThreadBase::queueSignal()
+ */
+
+int queueSignalWrapper(const ThreadBase& thread, const uint8_t signalNumber, const int value)
+{
+	return thread.queueSignal(signalNumber, sigval{value});
+}
+
+/**
  * \brief Tests whether received SignalInformation object matches the signal that was generated.
  *
  * \param [in] signalInformation is a reference to received SignalInformation object
@@ -99,6 +113,23 @@ bool testReceivedGeneratedSignal(const SignalInformation& signalInformation, con
 {
 	return signalInformation.getSignalNumber() == signalNumber &&
 			signalInformation.getCode() == SignalInformation::Code::Generated;
+}
+
+/**
+ * \brief Tests whether received SignalInformation object matches the signal that was queued.
+ *
+ * \param [in] signalInformation is a reference to received SignalInformation object
+ * \param [in] signalNumber is the signal number that was queued
+ * \param [in] value is the signal value that was queued
+ *
+ * \return true if test succeeded, false otherwise
+ */
+
+bool testReceivedQueuedSignal(const SignalInformation& signalInformation, const uint8_t signalNumber, const int value)
+{
+	return signalInformation.getSignalNumber() == signalNumber &&
+			signalInformation.getCode() == SignalInformation::Code::Queued &&
+			signalInformation.getValue().sival_int == value;
 }
 
 /**
@@ -425,9 +456,10 @@ bool phase2(const SendSignal& sendSignal, const TestReceivedSignalInformation& t
 +---------------------------------------------------------------------------------------------------------------------*/
 
 /// test stages
-const std::array<Stage, 1> stages
+const std::array<Stage, 2> stages
 {{
 		{generateSignalWrapper, testReceivedGeneratedSignal},
+		{queueSignalWrapper, testReceivedQueuedSignal},
 }};
 
 }	// namespace
