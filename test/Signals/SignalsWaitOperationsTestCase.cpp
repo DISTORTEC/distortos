@@ -66,6 +66,19 @@ constexpr decltype(statistics::getContextSwitchCount()) phase2SoftwareTimerConte
 +---------------------------------------------------------------------------------------------------------------------*/
 
 /**
+ * \brief Wrapper for ThreadBase::generateSignal().
+ *
+ * \param [in] signalNumber is the signal that will be generated, [0; 31]
+ *
+ * \return values returned by ThreadBase::generateSignal()
+ */
+
+int generateSignalWrapper(const ThreadBase& thread, const uint8_t signalNumber)
+{
+	return thread.generateSignal(signalNumber);
+}
+
+/**
  * \brief Tests whether received SignalInformation object matches the signal that was generated.
  *
  * \param [in] signalInformation is a reference to received SignalInformation object
@@ -300,12 +313,12 @@ bool phase1(const TestReceivedSignalInformation& testReceivedSignalInformation)
 bool phase2(const TestReceivedSignalInformation& testReceivedSignalInformation)
 {
 	const SignalSet fullSignalSet {SignalSet::full};
-	auto& mainThread = ThisThread::get();
+	const auto& mainThread = ThisThread::get();
 	uint8_t sharedSignalNumber {};
 	auto softwareTimer = makeSoftwareTimer(
 			[&mainThread, &sharedSignalNumber]()
 			{
-				mainThread.generateSignal(sharedSignalNumber);
+				generateSignalWrapper(mainThread, sharedSignalNumber);
 			});
 
 	{
