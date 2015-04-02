@@ -20,6 +20,7 @@
 #include "distortos/ThreadBase.hpp"
 #include "distortos/SoftwareTimer.hpp"
 #include "distortos/statistics.hpp"
+#include "distortos/StaticThread.hpp"
 
 #include <cerrno>
 
@@ -49,6 +50,9 @@ using Stage = std::pair<const SendSignal&, const TestReceivedSignalInformation&>
 | local constants
 +---------------------------------------------------------------------------------------------------------------------*/
 
+/// size of stack for test thread, bytes
+constexpr size_t testThreadStackSize {384};
+
 /// single duration used in tests
 constexpr auto singleDuration = TickClock::duration{1};
 
@@ -66,6 +70,10 @@ constexpr decltype(statistics::getContextSwitchCount()) phase1TimedOutWaitContex
 /// expected number of context switches in phase2 block involving software timer (excluding waitForNextTick()): 1 - main
 /// thread blocks waiting for signals (main -> idle), 2 - main thread is unblocked by interrupt (idle -> main)
 constexpr decltype(statistics::getContextSwitchCount()) phase2SoftwareTimerContextSwitchCount {2};
+
+/// expected number of context switches in phase3 block involving thread: 1 - main thread is preempted by test thread
+/// (main -> test), 2 - test thread terminates (test -> main)
+constexpr decltype(statistics::getContextSwitchCount()) phase3ThreadContextSwitchCount {2};
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | local functions
@@ -196,6 +204,57 @@ bool testSelfSendSignal(const SendSignal& sendSignal, const uint8_t signalNumber
 	}
 
 	return testSelfOneSignalPending(signalNumber);
+}
+
+/**
+ * \brief Wrapper for ThisThread::Signals::tryWait() that can be used in phase3().
+ *
+ * \param [in] signalSet is a reference to SignalSet passed to ThisThread::Signals::tryWait()
+ * \param [out] sharedRet is a reference to variable in which error code from ThisThread::Signals::tryWait() will be
+ * saved
+ */
+
+void tryWaitWrapper(const SignalSet& signalSet, int& sharedRet)
+{
+	std::tie(sharedRet, std::ignore) = ThisThread::Signals::tryWait(signalSet);
+}
+
+/**
+ * \brief Wrapper for ThisThread::Signals::tryWaitFor() that can be used in phase3().
+ *
+ * \param [in] signalSet is a reference to SignalSet passed to ThisThread::Signals::tryWaitFor()
+ * \param [out] sharedRet is a reference to variable in which error code from ThisThread::Signals::tryWaitFor() will be
+ * saved
+ */
+
+void tryWaitForWrapper(const SignalSet& signalSet, int& sharedRet)
+{
+	std::tie(sharedRet, std::ignore) = ThisThread::Signals::tryWaitFor(signalSet, TickClock::duration{});
+}
+
+/**
+ * \brief Wrapper for ThisThread::Signals::tryWaitUntil() that can be used in phase3().
+ *
+ * \param [in] signalSet is a reference to SignalSet passed to ThisThread::Signals::tryWaitUntil()
+ * \param [out] sharedRet is a reference to variable in which error code from ThisThread::Signals::tryWaitUntil() will
+ * be saved
+ */
+
+void tryWaitUntilWrapper(const SignalSet& signalSet, int& sharedRet)
+{
+	std::tie(sharedRet, std::ignore) = ThisThread::Signals::tryWaitUntil(signalSet, TickClock::time_point{});
+}
+
+/**
+ * \brief Wrapper for ThisThread::Signals::wait() that can be used in phase3().
+ *
+ * \param [in] signalSet is a reference to SignalSet passed to ThisThread::Signals::wait()
+ * \param [out] sharedRet is a reference to variable in which error code from ThisThread::Signals::wait() will be saved
+ */
+
+void waitWrapper(const SignalSet& signalSet, int& sharedRet)
+{
+	std::tie(sharedRet, std::ignore) = ThisThread::Signals::wait(signalSet);
 }
 
 /**
@@ -451,6 +510,84 @@ bool phase2(const SendSignal& sendSignal, const TestReceivedSignalInformation& t
 	return true;
 }
 
+/**
+ * \brief Phase 3 of test case.
+ *
+ * Tests various error cases:
+ * - attempt to send a signal with invalid signal number must fail with EINVAL;
+ * - attempt to send a signal to thread that has disabled reception of signals must fail with ENOTSUP;
+ * - attempt to call ThisThread::Signals::wait(), ThisThread::Signals::tryWait(), ThisThread::Signals::tryWaitFor() or
+ * ThisThread::Signals::tryWaitUntil() from thread that has disabled reception of signals must fail with ENOTSUP;
+ *
+ * \param [in] sendSignal is a reference to function used to send signal to selected thread
+ * \param [in] testReceivedSignalInformation is a reference to TestReceivedSignalInformation function used to test
+ * received SignalInformation object (ignored)
+ *
+ * \return true if test succeeded, false otherwise
+ */
+
+bool phase3(const SendSignal& sendSignal, const TestReceivedSignalInformation&)
+{
+	const auto& mainThread = ThisThread::get();
+	for (auto signalNumber = SignalSet::Bitset{}.size(); signalNumber <= UINT8_MAX; ++signalNumber)
+	{
+		const auto ret = sendSignal(mainThread, signalNumber, {});
+		if (ret != EINVAL)
+			return false;
+	}
+
+	{
+		const auto testThread = makeStaticThread<testThreadStackSize, false, 0>(0, [](){});
+		const auto ret = sendSignal(testThread, {}, {});
+		if (ret != ENOTSUP)
+			return false;
+	}
+
+	const SignalSet signalSet {SignalSet::full};
+
+	{
+		int sharedRet {};
+		auto testThread = makeStaticThread<testThreadStackSize, false, 0>(UINT8_MAX, waitWrapper, std::ref(signalSet),
+				std::ref(sharedRet));
+		testThread.start();
+		testThread.join();
+		if (sharedRet != ENOTSUP)
+			return false;
+	}
+
+	{
+		int sharedRet {};
+		auto testThread = makeStaticThread<testThreadStackSize, false, 0>(UINT8_MAX, tryWaitWrapper,
+				std::ref(signalSet), std::ref(sharedRet));
+		testThread.start();
+		testThread.join();
+		if (sharedRet != ENOTSUP)
+			return false;
+	}
+
+	{
+		int sharedRet {};
+		auto testThread = makeStaticThread<testThreadStackSize, false, 0>(UINT8_MAX, tryWaitForWrapper,
+				std::ref(signalSet), std::ref(sharedRet));
+		testThread.start();
+		testThread.join();
+		if (sharedRet != ENOTSUP)
+			return false;
+	}
+
+	{
+		int sharedRet {};
+		auto testThread = makeStaticThread<testThreadStackSize, false, 0>(UINT8_MAX, tryWaitUntilWrapper,
+				std::ref(signalSet), std::ref(sharedRet));
+		testThread.start();
+		testThread.join();
+		if (sharedRet != ENOTSUP)
+			return false;
+	}
+
+	return true;
+}
+
 /*---------------------------------------------------------------------------------------------------------------------+
 | local constants
 +---------------------------------------------------------------------------------------------------------------------*/
@@ -474,13 +611,14 @@ bool SignalsWaitOperationsTestCase::run_() const
 			2 * phase1TimedOutWaitContextSwitchCount;
 	constexpr auto phase2ExpectedContextSwitchCount = 3 * waitForNextTickContextSwitchCount +
 			3 * phase2SoftwareTimerContextSwitchCount;
-	constexpr auto expectedContextSwitchCount = (phase1ExpectedContextSwitchCount + phase2ExpectedContextSwitchCount) *
-			stages.size();
+	constexpr auto phase3ExpectedContextSwitchCount = 4 * phase3ThreadContextSwitchCount;
+	constexpr auto expectedContextSwitchCount = (phase1ExpectedContextSwitchCount + phase2ExpectedContextSwitchCount +
+			phase3ExpectedContextSwitchCount) * stages.size();
 
 	const auto contextSwitchCount = statistics::getContextSwitchCount();
 
 	for (auto& stage : stages)
-		for (const auto& function : {phase1, phase2})
+		for (const auto& function : {phase1, phase2, phase3})
 		{
 			{
 				const auto ret = testSelfNoSignalsPending();	// initially no signals may be pending
