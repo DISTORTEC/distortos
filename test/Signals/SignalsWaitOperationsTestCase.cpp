@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-03-31
+ * \date 2015-04-02
  */
 
 #include "SignalsWaitOperationsTestCase.hpp"
@@ -72,6 +72,28 @@ bool testSelfNoSignalsPending()
 }
 
 /**
+ * \brief Tests whether exactly one signal is pending for current thread.
+ *
+ * \param [in] signalNumber is the signal number that may be pending for current thread
+ *
+ * \return true if test succeeded, false otherwise
+ */
+
+bool testSelfOneSignalPending(const uint8_t signalNumber)
+{
+	auto pendingSignalSet = ThisThread::Signals::getPendingSignalSet();
+	const auto testResult = pendingSignalSet.test(signalNumber);
+	if (testResult.first != 0 || testResult.second != true)	// selected signal number must be pending
+		return false;
+	// no other signal may be pending
+	const auto ret = pendingSignalSet.remove(signalNumber);
+	if (ret != 0)
+		return false;
+	const auto pendingBitset = pendingSignalSet.getBitset();
+	return pendingBitset.none();
+}
+
+/**
  * \brief Tests generation of signal for current thread.
  *
  * Initially no signals may be pending for current thread. After call to ThisThread::Signals::generateSignal() exactly
@@ -96,16 +118,7 @@ bool testSelfGenerateSignal(const uint8_t signalNumber)
 			return false;
 	}
 
-	auto pendingSignalSet = ThisThread::Signals::getPendingSignalSet();
-	const auto testResult = pendingSignalSet.test(signalNumber);
-	if (testResult.first != 0 || testResult.second != true)	// selected signal number must be pending
-		return false;
-	// no other signal may be pending
-	const auto ret = pendingSignalSet.remove(signalNumber);
-	if (ret != 0)
-		return false;
-	const auto pendingBitset = pendingSignalSet.getBitset();
-	return pendingBitset.none();
+	return testSelfOneSignalPending(signalNumber);
 }
 
 /**
