@@ -42,6 +42,9 @@ using SendSignal = int(const ThreadBase&, uint8_t);
 /// type of function used to test received SignalInformation object
 using TestReceivedSignalInformation = bool(const SignalInformation&, uint8_t);
 
+/// pair with functions for one stage
+using Stage = std::pair<const SendSignal&, const TestReceivedSignalInformation&>;
+
 /*---------------------------------------------------------------------------------------------------------------------+
 | local constants
 +---------------------------------------------------------------------------------------------------------------------*/
@@ -404,6 +407,16 @@ bool phase2(const SendSignal& sendSignal, const TestReceivedSignalInformation& t
 	return true;
 }
 
+/*---------------------------------------------------------------------------------------------------------------------+
+| local constants
++---------------------------------------------------------------------------------------------------------------------*/
+
+/// test stages
+const std::array<Stage, 1> stages
+{{
+		{generateSignalWrapper, testReceivedGeneratedSignal},
+}};
+
 }	// namespace
 
 /*---------------------------------------------------------------------------------------------------------------------+
@@ -416,22 +429,24 @@ bool SignalsWaitOperationsTestCase::run_() const
 			2 * phase1TimedOutWaitContextSwitchCount;
 	constexpr auto phase2ExpectedContextSwitchCount = 3 * waitForNextTickContextSwitchCount +
 			3 * phase2SoftwareTimerContextSwitchCount;
-	constexpr auto expectedContextSwitchCount = phase1ExpectedContextSwitchCount + phase2ExpectedContextSwitchCount;
+	constexpr auto expectedContextSwitchCount = (phase1ExpectedContextSwitchCount + phase2ExpectedContextSwitchCount) *
+			stages.size();
 
 	const auto contextSwitchCount = statistics::getContextSwitchCount();
 
-	for (const auto& function : {phase1, phase2})
-	{
+	for (auto& stage : stages)
+		for (const auto& function : {phase1, phase2})
 		{
-			const auto ret = testSelfNoSignalsPending();	// initially no signals may be pending
+			{
+				const auto ret = testSelfNoSignalsPending();	// initially no signals may be pending
+				if (ret != true)
+					return ret;
+			}
+
+			const auto ret = function(stage.first, stage.second);
 			if (ret != true)
 				return ret;
 		}
-
-		const auto ret = function(generateSignalWrapper, testReceivedGeneratedSignal);
-		if (ret != true)
-			return ret;
-	}
 
 	const auto ret = testSelfNoSignalsPending();	// after the test no signals may be pending
 	if (ret != true)
