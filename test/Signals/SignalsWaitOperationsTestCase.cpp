@@ -167,13 +167,14 @@ bool testSelfSendSignal(const SendSignal& sendSignal, const uint8_t signalNumber
  * Tests whether all ThisThread::Signals::tryWait*() functions properly ignore pending signal that is not included in
  * SignalSet and accept it otherwise.
  *
+ * \param [in] sendSignal is a reference to function used to send signal to current thread
  * \param [in] testReceivedSignalInformation is a reference to TestReceivedSignalInformation function used to test
  * received SignalInformation object
  *
  * \return true if test succeeded, false otherwise
  */
 
-bool phase1(const TestReceivedSignalInformation& testReceivedSignalInformation)
+bool phase1(const SendSignal& sendSignal, const TestReceivedSignalInformation& testReceivedSignalInformation)
 {
 	const SignalSet fullSignalSet {SignalSet::full};
 
@@ -181,7 +182,7 @@ bool phase1(const TestReceivedSignalInformation& testReceivedSignalInformation)
 		constexpr uint8_t testSignalNumber {19};
 
 		{
-			const auto ret = testSelfSendSignal(generateSignalWrapper, testSignalNumber);
+			const auto ret = testSelfSendSignal(sendSignal, testSignalNumber);
 			if (ret != true)
 				return ret;
 		}
@@ -218,7 +219,7 @@ bool phase1(const TestReceivedSignalInformation& testReceivedSignalInformation)
 		constexpr uint8_t testSignalNumber {8};
 
 		{
-			const auto ret = testSelfSendSignal(generateSignalWrapper, testSignalNumber);
+			const auto ret = testSelfSendSignal(sendSignal, testSignalNumber);
 			if (ret != true)
 				return ret;
 		}
@@ -259,7 +260,7 @@ bool phase1(const TestReceivedSignalInformation& testReceivedSignalInformation)
 		constexpr uint8_t testSignalNumber {22};
 
 		{
-			const auto ret = testSelfSendSignal(generateSignalWrapper, testSignalNumber);
+			const auto ret = testSelfSendSignal(sendSignal, testSignalNumber);
 			if (ret != true)
 				return ret;
 		}
@@ -309,21 +310,22 @@ bool phase1(const TestReceivedSignalInformation& testReceivedSignalInformation)
  * (with ThisThread::Signals::wait(), ThisThread::Signals::tryWaitFor() and ThisThread::Signals::tryWaitUntil()) in the
  * same moment.
  *
+ * \param [in] sendSignal is a reference to function used to send signal to current thread
  * \param [in] testReceivedSignalInformation is a reference to TestReceivedSignalInformation function used to test
  * received SignalInformation object
  *
  * \return true if test succeeded, false otherwise
  */
 
-bool phase2(const TestReceivedSignalInformation& testReceivedSignalInformation)
+bool phase2(const SendSignal& sendSignal, const TestReceivedSignalInformation& testReceivedSignalInformation)
 {
 	const SignalSet fullSignalSet {SignalSet::full};
 	const auto& mainThread = ThisThread::get();
 	uint8_t sharedSignalNumber {};
 	auto softwareTimer = makeSoftwareTimer(
-			[&mainThread, &sharedSignalNumber]()
+			[&sendSignal, &mainThread, &sharedSignalNumber]()
 			{
-				generateSignalWrapper(mainThread, sharedSignalNumber);
+				sendSignal(mainThread, sharedSignalNumber);
 			});
 
 	{
@@ -426,7 +428,7 @@ bool SignalsWaitOperationsTestCase::run_() const
 				return ret;
 		}
 
-		const auto ret = function(testReceivedGeneratedSignal);
+		const auto ret = function(generateSignalWrapper, testReceivedGeneratedSignal);
 		if (ret != true)
 			return ret;
 	}
