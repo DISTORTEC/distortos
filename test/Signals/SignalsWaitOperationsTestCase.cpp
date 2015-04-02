@@ -148,7 +148,8 @@ bool testSelfGenerateSignal(const uint8_t signalNumber)
 	}
 
 	{
-		const auto ret = ThisThread::Signals::generateSignal(signalNumber);
+		const auto& mainThread = ThisThread::get();
+		const auto ret = generateSignalWrapper(mainThread, signalNumber);
 		if (ret != 0)
 			return false;
 	}
