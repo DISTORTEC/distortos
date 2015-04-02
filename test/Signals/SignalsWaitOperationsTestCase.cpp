@@ -33,6 +33,13 @@ namespace
 {
 
 /*---------------------------------------------------------------------------------------------------------------------+
+| local types
++---------------------------------------------------------------------------------------------------------------------*/
+
+/// type of function used to test received SignalInformation object
+using TestReceivedSignalInformation = bool(const SignalInformation&, uint8_t);
+
+/*---------------------------------------------------------------------------------------------------------------------+
 | local constants
 +---------------------------------------------------------------------------------------------------------------------*/
 
@@ -142,10 +149,13 @@ bool testSelfGenerateSignal(const uint8_t signalNumber)
  * Tests whether all ThisThread::Signals::tryWait*() functions properly ignore pending signal that is not included in
  * SignalSet and accept it otherwise.
  *
+ * \param [in] testReceivedSignalInformation is a reference to TestReceivedSignalInformation function used to test
+ * received SignalInformation object
+ *
  * \return true if test succeeded, false otherwise
  */
 
-bool phase1()
+bool phase1(const TestReceivedSignalInformation& testReceivedSignalInformation)
 {
 	const SignalSet fullSignalSet {SignalSet::full};
 
@@ -179,7 +189,8 @@ bool phase1()
 			const auto start = TickClock::now();
 			const auto tryWaitResult = ThisThread::Signals::tryWait(fullSignalSet);
 			auto& signalInformation = tryWaitResult.second;
-			if (tryWaitResult.first != 0 || testReceivedGeneratedSignal(signalInformation, testSignalNumber) != true ||
+			if (tryWaitResult.first != 0 ||
+					testReceivedSignalInformation(signalInformation, testSignalNumber) != true ||
 					start != TickClock::now())
 				return false;
 		}
@@ -219,7 +230,8 @@ bool phase1()
 			const auto start = TickClock::now();
 			const auto tryWaitResult = ThisThread::Signals::tryWaitFor(fullSignalSet, singleDuration);
 			auto& signalInformation = tryWaitResult.second;
-			if (tryWaitResult.first != 0 || testReceivedGeneratedSignal(signalInformation, testSignalNumber) != true ||
+			if (tryWaitResult.first != 0 ||
+					testReceivedSignalInformation(signalInformation, testSignalNumber) != true ||
 					start != TickClock::now())
 				return false;
 		}
@@ -261,7 +273,8 @@ bool phase1()
 			const auto start = TickClock::now();
 			const auto tryWaitResult = ThisThread::Signals::tryWaitUntil(fullSignalSet, start + singleDuration);
 			auto& signalInformation = tryWaitResult.second;
-			if (tryWaitResult.first != 0 || testReceivedGeneratedSignal(signalInformation, testSignalNumber) != true ||
+			if (tryWaitResult.first != 0 ||
+					testReceivedSignalInformation(signalInformation, testSignalNumber) != true ||
 					start != TickClock::now())
 				return false;
 		}
@@ -278,10 +291,13 @@ bool phase1()
  * (with ThisThread::Signals::wait(), ThisThread::Signals::tryWaitFor() and ThisThread::Signals::tryWaitUntil()) in the
  * same moment.
  *
+ * \param [in] testReceivedSignalInformation is a reference to TestReceivedSignalInformation function used to test
+ * received SignalInformation object
+ *
  * \return true if test succeeded, false otherwise
  */
 
-bool phase2()
+bool phase2(const TestReceivedSignalInformation& testReceivedSignalInformation)
 {
 	const SignalSet fullSignalSet {SignalSet::full};
 	auto& mainThread = ThisThread::get();
@@ -304,7 +320,7 @@ bool phase2()
 		const auto waitResult = ThisThread::Signals::wait(fullSignalSet);
 		const auto wokenUpTimePoint = TickClock::now();
 		auto& signalInformation = waitResult.second;
-		if (waitResult.first != 0 || testReceivedGeneratedSignal(signalInformation, sharedSignalNumber) != true ||
+		if (waitResult.first != 0 || testReceivedSignalInformation(signalInformation, sharedSignalNumber) != true ||
 				wakeUpTimePoint != wokenUpTimePoint ||
 				statistics::getContextSwitchCount() - contextSwitchCount != phase2SoftwareTimerContextSwitchCount)
 			return false;
@@ -329,7 +345,7 @@ bool phase2()
 				longDuration);
 		const auto wokenUpTimePoint = TickClock::now();
 		auto& signalInformation = tryWaitResult.second;
-		if (tryWaitResult.first != 0 || testReceivedGeneratedSignal(signalInformation, sharedSignalNumber) != true ||
+		if (tryWaitResult.first != 0 || testReceivedSignalInformation(signalInformation, sharedSignalNumber) != true ||
 				wakeUpTimePoint != wokenUpTimePoint ||
 				statistics::getContextSwitchCount() - contextSwitchCount != phase2SoftwareTimerContextSwitchCount)
 			return false;
@@ -353,7 +369,7 @@ bool phase2()
 		const auto tryWaitResult = ThisThread::Signals::tryWaitUntil(fullSignalSet, wakeUpTimePoint + longDuration);
 		const auto wokenUpTimePoint = TickClock::now();
 		auto& signalInformation = tryWaitResult.second;
-		if (tryWaitResult.first != 0 || testReceivedGeneratedSignal(signalInformation, sharedSignalNumber) != true ||
+		if (tryWaitResult.first != 0 || testReceivedSignalInformation(signalInformation, sharedSignalNumber) != true ||
 				wakeUpTimePoint != wokenUpTimePoint ||
 				statistics::getContextSwitchCount() - contextSwitchCount != phase2SoftwareTimerContextSwitchCount)
 			return false;
@@ -392,7 +408,7 @@ bool SignalsWaitOperationsTestCase::run_() const
 				return ret;
 		}
 
-		const auto ret = function();
+		const auto ret = function(testReceivedGeneratedSignal);
 		if (ret != true)
 			return ret;
 	}
