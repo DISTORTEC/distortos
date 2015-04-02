@@ -59,6 +59,21 @@ constexpr decltype(statistics::getContextSwitchCount()) phase2SoftwareTimerConte
 +---------------------------------------------------------------------------------------------------------------------*/
 
 /**
+ * \brief Tests whether received SignalInformation object matches the signal that was generated.
+ *
+ * \param [in] signalInformation is a reference to received SignalInformation object
+ * \param [in] signalNumber is the signal number that was generated
+ *
+ * \return true if test succeeded, false otherwise
+ */
+
+bool testReceivedGeneratedSignal(const SignalInformation& signalInformation, const uint8_t signalNumber)
+{
+	return signalInformation.getSignalNumber() == signalNumber &&
+			signalInformation.getCode() == SignalInformation::Code::Generated;
+}
+
+/**
  * \brief Tests whether no signals are pending for current thread.
  *
  * \return true if test succeeded, false otherwise
@@ -164,8 +179,8 @@ bool phase1()
 			const auto start = TickClock::now();
 			const auto tryWaitResult = ThisThread::Signals::tryWait(fullSignalSet);
 			auto& signalInformation = tryWaitResult.second;
-			if (tryWaitResult.first != 0 || signalInformation.getSignalNumber() != testSignalNumber ||
-					signalInformation.getCode() != SignalInformation::Code::Generated || start != TickClock::now())
+			if (tryWaitResult.first != 0 || testReceivedGeneratedSignal(signalInformation, testSignalNumber) != true ||
+					start != TickClock::now())
 				return false;
 		}
 	}
@@ -204,8 +219,8 @@ bool phase1()
 			const auto start = TickClock::now();
 			const auto tryWaitResult = ThisThread::Signals::tryWaitFor(fullSignalSet, singleDuration);
 			auto& signalInformation = tryWaitResult.second;
-			if (tryWaitResult.first != 0 || signalInformation.getSignalNumber() != testSignalNumber ||
-					signalInformation.getCode() != SignalInformation::Code::Generated || start != TickClock::now())
+			if (tryWaitResult.first != 0 || testReceivedGeneratedSignal(signalInformation, testSignalNumber) != true ||
+					start != TickClock::now())
 				return false;
 		}
 	}
@@ -246,8 +261,8 @@ bool phase1()
 			const auto start = TickClock::now();
 			const auto tryWaitResult = ThisThread::Signals::tryWaitUntil(fullSignalSet, start + singleDuration);
 			auto& signalInformation = tryWaitResult.second;
-			if (tryWaitResult.first != 0 || signalInformation.getSignalNumber() != testSignalNumber ||
-					signalInformation.getCode() != SignalInformation::Code::Generated || start != TickClock::now())
+			if (tryWaitResult.first != 0 || testReceivedGeneratedSignal(signalInformation, testSignalNumber) != true ||
+					start != TickClock::now())
 				return false;
 		}
 	}
@@ -289,8 +304,7 @@ bool phase2()
 		const auto waitResult = ThisThread::Signals::wait(fullSignalSet);
 		const auto wokenUpTimePoint = TickClock::now();
 		auto& signalInformation = waitResult.second;
-		if (waitResult.first != 0 || signalInformation.getSignalNumber() != sharedSignalNumber ||
-				signalInformation.getCode() != SignalInformation::Code::Generated ||
+		if (waitResult.first != 0 || testReceivedGeneratedSignal(signalInformation, sharedSignalNumber) != true ||
 				wakeUpTimePoint != wokenUpTimePoint ||
 				statistics::getContextSwitchCount() - contextSwitchCount != phase2SoftwareTimerContextSwitchCount)
 			return false;
@@ -315,8 +329,7 @@ bool phase2()
 				longDuration);
 		const auto wokenUpTimePoint = TickClock::now();
 		auto& signalInformation = tryWaitResult.second;
-		if (tryWaitResult.first != 0 || signalInformation.getSignalNumber() != sharedSignalNumber ||
-				signalInformation.getCode() != SignalInformation::Code::Generated ||
+		if (tryWaitResult.first != 0 || testReceivedGeneratedSignal(signalInformation, sharedSignalNumber) != true ||
 				wakeUpTimePoint != wokenUpTimePoint ||
 				statistics::getContextSwitchCount() - contextSwitchCount != phase2SoftwareTimerContextSwitchCount)
 			return false;
@@ -340,8 +353,7 @@ bool phase2()
 		const auto tryWaitResult = ThisThread::Signals::tryWaitUntil(fullSignalSet, wakeUpTimePoint + longDuration);
 		const auto wokenUpTimePoint = TickClock::now();
 		auto& signalInformation = tryWaitResult.second;
-		if (tryWaitResult.first != 0 || signalInformation.getSignalNumber() != sharedSignalNumber ||
-				signalInformation.getCode() != SignalInformation::Code::Generated ||
+		if (tryWaitResult.first != 0 || testReceivedGeneratedSignal(signalInformation, sharedSignalNumber) != true ||
 				wakeUpTimePoint != wokenUpTimePoint ||
 				statistics::getContextSwitchCount() - contextSwitchCount != phase2SoftwareTimerContextSwitchCount)
 			return false;
