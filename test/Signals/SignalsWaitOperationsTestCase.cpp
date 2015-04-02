@@ -13,6 +13,8 @@
 
 #include "SignalsWaitOperationsTestCase.hpp"
 
+#include "signalsTestSelfOneSignalPending.hpp"
+
 #include "waitForNextTick.hpp"
 
 #include "distortos/ThisThread-Signals.hpp"
@@ -154,23 +156,6 @@ bool testSelfNoSignalsPending()
 }
 
 /**
- * \brief Tests whether exactly one signal is pending for current thread.
- *
- * \param [in] signalNumber is the signal number that may be pending for current thread
- *
- * \return true if test succeeded, false otherwise
- */
-
-bool testSelfOneSignalPending(const uint8_t signalNumber)
-{
-	SignalSet expectedSignalSet {SignalSet::empty};
-	if (expectedSignalSet.add(signalNumber) != 0)
-		return false;
-
-	return ThisThread::Signals::getPendingSignalSet().getBitset() == expectedSignalSet.getBitset();
-}
-
-/**
  * \brief Tests sending of signal to current thread.
  *
  * Initially no signals may be pending for current thread. After call to \a sendSignal() exactly one signal -
@@ -198,7 +183,7 @@ bool testSelfSendSignal(const SendSignal& sendSignal, const uint8_t signalNumber
 			return false;
 	}
 
-	return testSelfOneSignalPending(signalNumber);
+	return signalsTestSelfOneSignalPending(signalNumber);
 }
 
 /**
