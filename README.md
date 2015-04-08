@@ -79,3 +79,9 @@ You need to set *suid* bit on your *tup* executable (`` sudo chmod +s `which tup
 #### If you use tup and Windows
 
 Don't use 64-bit toolchain (even if you have 64-bit system), as *tup* cannot currently handle 64-bit executables.
+
+Mailing list
+------------
+
+[distortos-development](https://lists.sourceforge.net/lists/listinfo/distortos-development) is a mailing list dedicated
+to discussions about development of distortos.
