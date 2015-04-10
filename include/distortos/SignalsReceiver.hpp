@@ -38,10 +38,13 @@ public:
 	 *
 	 * \param [in] signalInformationQueueWrapper is a pointer to SignalInformationQueueWrapper for this receiver,
 	 * nullptr to disable queuing of signals for this receiver
+	 * \param [in] signalsCatcher is a pointer to SignalsCatcher for this receiver, nullptr if this receiver cannot
+	 * catch/handle signals
 	 */
 
-	explicit SignalsReceiver(SignalInformationQueueWrapper* const signalInformationQueueWrapper) :
-			signalsReceiverControlBlock_{signalInformationQueueWrapper, nullptr}
+	explicit SignalsReceiver(SignalInformationQueueWrapper* const signalInformationQueueWrapper,
+			SignalsCatcher* const signalsCatcher) :
+			signalsReceiverControlBlock_{signalInformationQueueWrapper, signalsCatcher}
 	{
 
 	}
