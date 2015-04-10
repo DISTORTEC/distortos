@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-03-31
+ * \date 2015-04-10
  */
 
 #ifndef INCLUDE_DISTORTOS_SYNCHRONIZATION_SIGNALSRECEIVERCONTROLBLOCK_HPP_
@@ -36,6 +36,7 @@ class ThreadControlBlock;
 namespace synchronization
 {
 
+class SignalsCatcherControlBlock;
 class SignalInformationQueue;
 
 /// SignalsReceiverControlBlock class is a structure required by threads for "receiving" of signals
@@ -141,6 +142,9 @@ private:
 
 	/// pointer to set of "waited for" signals, nullptr if associated thread is not waiting for any signals
 	const SignalSet* waitingSignalSet_;
+
+	/// pointer to SignalsCatcherControlBlock for this receiver, nullptr if this receiver cannot catch/handle signals
+	SignalsCatcherControlBlock* signalsCatcherControlBlock_;
 
 	/// pointer to SignalInformationQueue for this receiver, nullptr if this receiver cannot queue signals
 	SignalInformationQueue* signalInformationQueue_;
