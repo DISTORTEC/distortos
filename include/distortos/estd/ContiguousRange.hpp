@@ -147,18 +147,7 @@ public:
 	 * \return reference to element at given index
 	 */
 
-	reference operator[](const size_type i) noexcept
-	{
-		return begin_[i];
-	}
-
-	/**
-	 * \param [in] i is the index of element that will be accessed
-	 *
-	 * \return const reference to element at given index
-	 */
-
-	const_reference operator[](const size_type i) const noexcept
+	reference operator[](const size_type i) const noexcept
 	{
 		return begin_[i];
 	}
