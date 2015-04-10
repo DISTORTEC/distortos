@@ -23,6 +23,7 @@ union sigval;
 namespace distortos
 {
 
+class SignalsCatcher;
 class SignalInformation;
 class SignalInformationQueueWrapper;
 
@@ -49,9 +50,12 @@ public:
 	 *
 	 * \param [in] signalInformationQueueWrapper is a pointer to SignalInformationQueueWrapper for this receiver,
 	 * nullptr to disable queuing of signals for this receiver
+	 * \param [in] signalsCatcher is a pointer to SignalsCatcher for this receiver, nullptr if this receiver cannot
+	 * catch/handle signals
 	 */
 
-	explicit SignalsReceiverControlBlock(SignalInformationQueueWrapper* signalInformationQueueWrapper);
+	explicit SignalsReceiverControlBlock(SignalInformationQueueWrapper* signalInformationQueueWrapper,
+			SignalsCatcher* signalsCatcher);
 
 	/**
 	 * \brief Accepts (clears) one of signals that are pending.
