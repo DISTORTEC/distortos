@@ -39,7 +39,7 @@ public:
 	 */
 
 	StaticSignalsReceiver() :
-			SignalsReceiver{&staticSignalInformationQueueWrapper_, nullptr},
+			SignalsReceiver{&staticSignalInformationQueueWrapper_, &staticSignalsCatcher_},
 			staticSignalInformationQueueWrapper_{}
 	{
 
@@ -49,6 +49,9 @@ private:
 
 	/// internal StaticSignalInformationQueueWrapper object
 	StaticSignalInformationQueueWrapper<QueuedSignals> staticSignalInformationQueueWrapper_;
+
+	/// internal StaticSignalsCatcher object
+	StaticSignalsCatcher<CaughtSignals> staticSignalsCatcher_;
 };
 
 /**
