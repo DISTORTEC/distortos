@@ -38,10 +38,15 @@ public:
 
 	/**
 	 * \brief SignalsCatcher's constructor
+	 *
+	 * \param [in] storageBegin is a pointer to first element of storage for
+	 * synchronization::SignalsCatcherControlBlock::Association objects
+	 * \param [in] storageEnd is a pointer to "one past the last" element of storage for
+	 * synchronization::SignalsCatcherControlBlock::Association objects
 	 */
 
-	constexpr SignalsCatcher() :
-			signalsCatcherControlBlock_{{}, {}}
+	constexpr SignalsCatcher(Storage* const storageBegin, Storage* const storageEnd) :
+			signalsCatcherControlBlock_{storageBegin, storageEnd}
 	{
 
 	}
