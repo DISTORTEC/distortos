@@ -16,6 +16,8 @@
 
 #include "distortos/synchronization/SignalsCatcherControlBlock.hpp"
 
+#include <array>
+
 namespace distortos
 {
 
@@ -62,6 +64,21 @@ public:
 	template<size_t N>
 	constexpr explicit SignalsCatcher(Storage (& storage)[N]) :
 			SignalsCatcher{std::begin(storage), std::end(storage)}
+	{
+
+	}
+
+	/**
+	 * \brief SignalsCatcher's constructor
+	 *
+	 * \param N is the number of elements in \a storage array
+	 *
+	 * \param [in] storage is a reference to std::array of Storage elements
+	 */
+
+	template<size_t N>
+	constexpr explicit SignalsCatcher(std::array<Storage, N>& storage) :
+			SignalsCatcher{storage.begin(), storage.end()}
 	{
 
 	}
