@@ -54,6 +54,38 @@ private:
  * \brief StaticSignalsReceiver class is a templated interface for SignalsReceiver that has automatic storage for queued
  * signals and SignalAction associations required for catching signals.
  *
+ * \param QueuedSignals is the max number of queued signals
+ *
+ * Specialization for receiver with enabled queuing (QueuedSignals != 0) and disabled catching (CaughtSignals == 0) of
+ * signals
+ */
+
+template<size_t QueuedSignals>
+class StaticSignalsReceiver<QueuedSignals, 0> : public SignalsReceiver
+{
+public:
+
+	/**
+	 * \brief StaticSignalsReceiver's constructor
+	 */
+
+	StaticSignalsReceiver() :
+			SignalsReceiver{&staticSignalInformationQueueWrapper_, nullptr},
+			staticSignalInformationQueueWrapper_{}
+	{
+
+	}
+
+private:
+
+	/// internal StaticSignalInformationQueueWrapper object
+	StaticSignalInformationQueueWrapper<QueuedSignals> staticSignalInformationQueueWrapper_;
+};
+
+/**
+ * \brief StaticSignalsReceiver class is a templated interface for SignalsReceiver that has automatic storage for queued
+ * signals and SignalAction associations required for catching signals.
+ *
  * Specialization for receiver with disabled queuing (QueuedSignals == 0) and catching (CaughtSignals == 0) of signals
  */
 
