@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-04-10
+ * \date 2015-04-16
  */
 
 #ifndef INCLUDE_DISTORTOS_STATICSIGNALSRECEIVER_HPP_
@@ -22,12 +22,13 @@ namespace distortos
 
 /**
  * \brief StaticSignalsReceiver class is a templated interface for SignalsReceiver that has automatic storage for queued
- * signals.
+ * signals and SignalAction associations required for catching signals.
  *
  * \param QueuedSignals is the max number of queued signals, 0 to disable queuing of signals for this receiver
+ * \param CaughtSignals is the max number of caught signals, 0 to disable catching of signals for this receiver
  */
 
-template<size_t QueuedSignals>
+template<size_t QueuedSignals, size_t CaughtSignals>
 class StaticSignalsReceiver : public SignalsReceiver
 {
 public:
@@ -51,13 +52,13 @@ private:
 
 /**
  * \brief StaticSignalsReceiver class is a templated interface for SignalsReceiver that has automatic storage for queued
- * signals.
+ * signals and SignalAction associations required for catching signals.
  *
- * Specialization for receiver with disabled queuing of signals (QueuedSignals == 0)
+ * Specialization for receiver with disabled queuing (QueuedSignals == 0) and catching (CaughtSignals == 0) of signals
  */
 
 template<>
-class StaticSignalsReceiver<0> : public SignalsReceiver
+class StaticSignalsReceiver<0, 0> : public SignalsReceiver
 {
 public:
 

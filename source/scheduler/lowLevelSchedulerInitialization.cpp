@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-04-01
+ * \date 2015-04-16
  */
 
 #include "distortos/scheduler/lowLevelSchedulerInitialization.hpp"
@@ -52,8 +52,12 @@ std::aligned_storage<sizeof(ThreadGroupControlBlock), alignof(ThreadGroupControl
 
 #if CONFIG_MAIN_THREAD_CAN_RECEIVE_SIGNALS == 1
 
-/// StaticSignalsReceiver object for main thread
-StaticSignalsReceiver<CONFIG_MAIN_THREAD_QUEUED_SIGNALS> mainThreadStaticSignalsReceiver;
+/// type of StaticSignalsReceiver for main thread
+using MainThreadStaticSignalsReceiver =
+		StaticSignalsReceiver<CONFIG_MAIN_THREAD_QUEUED_SIGNALS, CONFIG_MAIN_THREAD_CAUGHT_SIGNALS>;
+
+/// MainThreadStaticSignalsReceiver object for main thread
+MainThreadStaticSignalsReceiver mainThreadStaticSignalsReceiver;
 
 /// pointer to \a mainThreadStaticSignalsReceiver
 constexpr auto mainThreadStaticSignalsReceiverPointer = &mainThreadStaticSignalsReceiver;
