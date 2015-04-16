@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-04-10
+ * \date 2015-04-16
  */
 
 #ifndef INCLUDE_DISTORTOS_SYNCHRONIZATION_SIGNALSCATCHERCONTROLBLOCK_HPP_
@@ -23,7 +23,16 @@ namespace synchronization
 /// SignalsCatcherControlBlock class is a structure required by threads for "catching" and "handling" of signals
 class SignalsCatcherControlBlock
 {
+public:
 
+	/**
+	 * \brief SignalsCatcherControlBlock's constructor
+	 */
+
+	constexpr SignalsCatcherControlBlock()
+	{
+
+	}
 };
 
 }	// namespace synchronization
