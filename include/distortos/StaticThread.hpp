@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-03-26
+ * \date 2015-04-16
  */
 
 #ifndef INCLUDE_DISTORTOS_STATICTHREAD_HPP_
@@ -27,11 +27,14 @@ namespace distortos
  * \param CanReceiveSignals selects whether reception of signals is enabled (true) or disabled (false) for this thread
  * \param QueuedSignals is the max number of queued signals for this thread, relevant only if CanReceiveSignals == true,
  * 0 to disable queuing of signals for this thread
+ * \param CaughtSignals is the max number of caught signals for this thread, relevant only if CanReceiveSignals == true,
+ * 0 to disable catching of signals for this thread
  * \param Function is the function that will be executed in separate thread
  * \param Args are the arguments for Function
  */
 
-template<size_t StackSize, bool CanReceiveSignals, size_t QueuedSignals, typename Function, typename... Args>
+template<size_t StackSize, bool CanReceiveSignals, size_t QueuedSignals, size_t CaughtSignals, typename Function,
+		typename... Args>
 class StaticThread : public Thread<Function, Args...>
 {
 public:
@@ -90,12 +93,14 @@ private:
  * \param StackSize is the size of stack, bytes
  * \param QueuedSignals is the max number of queued signals for this thread, 0 to disable queuing of signals for this
  * thread
+ * \param CaughtSignals is the max number of caught signals for this thread, 0 to disable catching of signals for this
+ * thread
  * \param Function is the function that will be executed in separate thread
  * \param Args are the arguments for Function
  */
 
-template<size_t StackSize, size_t QueuedSignals, typename Function, typename... Args>
-class StaticThread<StackSize, true, QueuedSignals, Function, Args...> : public Thread<Function, Args...>
+template<size_t StackSize, size_t QueuedSignals, size_t CaughtSignals, typename Function, typename... Args>
+class StaticThread<StackSize, true, QueuedSignals, CaughtSignals, Function, Args...> : public Thread<Function, Args...>
 {
 public:
 
@@ -155,6 +160,8 @@ private:
  * \param CanReceiveSignals selects whether reception of signals is enabled (true) or disabled (false) for this thread
  * \param QueuedSignals is the max number of queued signals for this thread, relevant only if CanReceiveSignals == true,
  * 0 to disable queuing of signals for this thread
+ * \param CaughtSignals is the max number of caught signals for this thread, relevant only if CanReceiveSignals == true,
+ * 0 to disable catching of signals for this thread
  * \param Function is the function that will be executed
  * \param Args are the arguments for Function
  *
@@ -166,9 +173,10 @@ private:
  * \return StaticThread object with partially deduced template arguments
  */
 
-template<size_t StackSize, bool CanReceiveSignals = {}, size_t QueuedSignals = {}, typename Function, typename... Args>
-StaticThread<StackSize, CanReceiveSignals, QueuedSignals, Function, Args...> makeStaticThread(const uint8_t priority,
-		const SchedulingPolicy schedulingPolicy, Function&& function, Args&&... args)
+template<size_t StackSize, bool CanReceiveSignals = {}, size_t QueuedSignals = {}, size_t CaughtSignals = {},
+		typename Function, typename... Args>
+StaticThread<StackSize, CanReceiveSignals, QueuedSignals, CaughtSignals, Function, Args...>
+makeStaticThread(const uint8_t priority, const SchedulingPolicy schedulingPolicy, Function&& function, Args&&... args)
 {
 	return {priority, schedulingPolicy, std::forward<Function>(function), std::forward<Args>(args)...};
 }
@@ -180,6 +188,8 @@ StaticThread<StackSize, CanReceiveSignals, QueuedSignals, Function, Args...> mak
  * \param CanReceiveSignals selects whether reception of signals is enabled (true) or disabled (false) for this thread
  * \param QueuedSignals is the max number of queued signals for this thread, relevant only if CanReceiveSignals == true,
  * 0 to disable queuing of signals for this thread
+ * \param CaughtSignals is the max number of caught signals for this thread, relevant only if CanReceiveSignals == true,
+ * 0 to disable catching of signals for this thread
  * \param Function is the function that will be executed
  * \param Args are the arguments for Function
  *
@@ -190,9 +200,10 @@ StaticThread<StackSize, CanReceiveSignals, QueuedSignals, Function, Args...> mak
  * \return StaticThread object with partially deduced template arguments
  */
 
-template<size_t StackSize, bool CanReceiveSignals = {}, size_t QueuedSignals = {}, typename Function, typename... Args>
-StaticThread<StackSize, CanReceiveSignals, QueuedSignals, Function, Args...> makeStaticThread(const uint8_t priority,
-		Function&& function, Args&&... args)
+template<size_t StackSize, bool CanReceiveSignals = {}, size_t QueuedSignals = {}, size_t CaughtSignals = {},
+		typename Function, typename... Args>
+StaticThread<StackSize, CanReceiveSignals, QueuedSignals, CaughtSignals, Function, Args...>
+makeStaticThread(const uint8_t priority, Function&& function, Args&&... args)
 {
 	return {priority, std::forward<Function>(function), std::forward<Args>(args)...};
 }
