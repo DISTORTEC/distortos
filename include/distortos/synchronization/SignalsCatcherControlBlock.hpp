@@ -35,12 +35,15 @@ public:
 
 	/**
 	 * \brief SignalsCatcherControlBlock's constructor
+	 *
+	 * \param [in] storageBegin is a pointer to first element of storage for Association objects
+	 * \param [in] storageEnd is a pointer to "one past the last" element of storage for Association objects
 	 */
 
-	constexpr SignalsCatcherControlBlock() :
-			associationsBegin_{},
-			storageBegin_{},
-			storageEnd_{}
+	constexpr SignalsCatcherControlBlock(Storage* const storageBegin, Storage* const storageEnd) :
+			associationsBegin_{reinterpret_cast<decltype(associationsBegin_)>(storageBegin)},
+			storageBegin_{storageBegin},
+			storageEnd_{storageEnd}
 	{
 
 	}
