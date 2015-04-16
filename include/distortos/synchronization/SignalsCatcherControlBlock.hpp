@@ -14,6 +14,8 @@
 #ifndef INCLUDE_DISTORTOS_SYNCHRONIZATION_SIGNALSCATCHERCONTROLBLOCK_HPP_
 #define INCLUDE_DISTORTOS_SYNCHRONIZATION_SIGNALSCATCHERCONTROLBLOCK_HPP_
 
+#include "distortos/SignalAction.hpp"
+
 namespace distortos
 {
 
@@ -24,6 +26,12 @@ namespace synchronization
 class SignalsCatcherControlBlock
 {
 public:
+
+	/// association of signal number with SignalAction
+	using Association = std::pair<uint8_t, SignalAction>;
+
+	/// type of uninitialized storage for Association objects
+	using Storage = std::aligned_storage<sizeof(Association), alignof(Association)>::type;
 
 	/**
 	 * \brief SignalsCatcherControlBlock's constructor
