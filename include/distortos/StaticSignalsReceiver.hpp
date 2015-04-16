@@ -16,6 +16,7 @@
 
 #include "distortos/SignalsReceiver.hpp"
 #include "distortos/StaticSignalInformationQueueWrapper.hpp"
+#include "distortos/StaticSignalsCatcher.hpp"
 
 namespace distortos
 {
@@ -80,6 +81,38 @@ private:
 
 	/// internal StaticSignalInformationQueueWrapper object
 	StaticSignalInformationQueueWrapper<QueuedSignals> staticSignalInformationQueueWrapper_;
+};
+
+/**
+ * \brief StaticSignalsReceiver class is a templated interface for SignalsReceiver that has automatic storage for queued
+ * signals and SignalAction associations required for catching signals.
+ *
+ * \param CaughtSignals is the max number of caught signals
+ *
+ * Specialization for receiver with disabled queuing (QueuedSignals == 0) and enabled catching (CaughtSignals != 0) of
+ * signals
+ */
+
+template<size_t CaughtSignals>
+class StaticSignalsReceiver<0, CaughtSignals> : public SignalsReceiver
+{
+public:
+
+	/**
+	 * \brief StaticSignalsReceiver's constructor
+	 */
+
+	StaticSignalsReceiver() :
+			SignalsReceiver{nullptr, &staticSignalsCatcher_},
+			staticSignalsCatcher_{}
+	{
+
+	}
+
+private:
+
+	/// internal StaticSignalsCatcher object
+	StaticSignalsCatcher<CaughtSignals> staticSignalsCatcher_;
 };
 
 /**
