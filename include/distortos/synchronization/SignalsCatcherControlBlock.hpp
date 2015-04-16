@@ -37,10 +37,31 @@ public:
 	 * \brief SignalsCatcherControlBlock's constructor
 	 */
 
-	constexpr SignalsCatcherControlBlock()
+	constexpr SignalsCatcherControlBlock() :
+			associationsBegin_{},
+			storageBegin_{},
+			storageEnd_{}
 	{
 
 	}
+
+private:
+
+	/// pointer to first element of range of Association objects
+	Association* associationsBegin_;
+
+	/// union binds \a associationsEnd_ and \a storageBegin_ - these point to the same address
+	union
+	{
+		/// pointer to "one past the last" element of range of Association objects
+		Association* associationsEnd_;
+
+		/// pointer to first element of range of Storage objects
+		Storage* storageBegin_;
+	};
+
+	/// pointer to "one past the last" element of range of Storage objects
+	Storage* storageEnd_;
 };
 
 }	// namespace synchronization
