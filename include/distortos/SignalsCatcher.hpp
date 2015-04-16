@@ -33,6 +33,9 @@ class SignalsCatcher
 
 public:
 
+	/// import Storage type alias from synchronization::SignalsCatcherControlBlock
+	using Storage = synchronization::SignalsCatcherControlBlock::Storage;
+
 	/**
 	 * \brief SignalsCatcher's constructor
 	 */
