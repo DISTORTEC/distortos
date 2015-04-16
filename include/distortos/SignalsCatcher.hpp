@@ -51,6 +51,21 @@ public:
 
 	}
 
+	/**
+	 * \brief SignalsCatcher's constructor
+	 *
+	 * \param N is the number of elements in \a storage array
+	 *
+	 * \param [in] storage is a reference to array of Storage elements
+	 */
+
+	template<size_t N>
+	constexpr explicit SignalsCatcher(Storage (& storage)[N]) :
+			SignalsCatcher{std::begin(storage), std::end(storage)}
+	{
+
+	}
+
 private:
 
 	/// contained synchronization::SignalsCatcherControlBlock object
