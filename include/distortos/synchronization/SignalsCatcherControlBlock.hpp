@@ -58,6 +58,15 @@ public:
 		return signalMask_;
 	}
 
+	/**
+	 * \param [in] signalMask is the SignalSet with new signal mask for associated thread
+	 */
+
+	void setSignalMask(const SignalSet signalMask)
+	{
+		signalMask_ = signalMask;
+	}
+
 private:
 
 	/// SignalSet with signal mask for associated thread
