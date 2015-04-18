@@ -69,6 +69,17 @@ public:
 
 private:
 
+	/**
+	 * \brief Clears association for given signal number.
+	 *
+	 * \param [in] signalNumber is the signal for which the association will be cleared, [0; 31]
+	 *
+	 * \return SignalAction that was associated with \a signalNumber, default-constructed object if no association was
+	 * found
+	 */
+
+	SignalAction clearAssociation(uint8_t signalNumber);
+
 	/// SignalSet with signal mask for associated thread
 	SignalSet signalMask_;
 
