@@ -15,6 +15,8 @@
 
 #include <algorithm>
 
+#include <cerrno>
+
 namespace distortos
 {
 
@@ -50,6 +52,38 @@ SignalsCatcherControlBlock::Association* findAssociation(SignalsCatcherControlBl
 }
 
 }	// namespace
+
+/*---------------------------------------------------------------------------------------------------------------------+
+| public functions
++---------------------------------------------------------------------------------------------------------------------*/
+
+std::pair<int, SignalAction> SignalsCatcherControlBlock::setAssociation(const uint8_t signalNumber,
+		const SignalAction& signalAction)
+{
+	if (signalNumber >= SignalSet::Bitset{}.size())
+		return {EINVAL, {}};
+
+	if (signalAction.getHandler() == SignalAction{}.getHandler())	// default handler is being set?
+	{
+		const auto previousSignalAction = clearAssociation(signalNumber);
+		return {{}, previousSignalAction};
+	}
+
+	const auto association = findAssociation(associationsBegin_, associationsEnd_, signalNumber);
+	if (association != associationsEnd_)	// there is an association for this signal number?
+	{
+		const auto previousSignalAction = association->second;
+		association->second = signalAction;
+		return {{}, previousSignalAction};
+	}
+
+	if (std::distance(storageBegin_, storageEnd_) == 0)	// no storage for new association?
+		return {EAGAIN, {}};
+
+	new (associationsEnd_) Association{signalNumber, signalAction};
+	++associationsEnd_;
+	return {{}, {}};
+}
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | private functions

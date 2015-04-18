@@ -59,6 +59,22 @@ public:
 	}
 
 	/**
+	 * \brief Sets association for given signal number.
+	 *
+	 * \param [in] signalNumber is the signal for which the association will be set, [0; 31]
+	 * \param [in] signalAction is a reference to SignalAction that will be associated with given signal number, object
+	 * in internal storage is copy-constructed
+	 *
+	 * \return pair with return code (0 on success, error code otherwise) and SignalAction that was associated with
+	 * \a signalNumber, default-constructed object if no association was found;
+	 * error codes:
+	 * - EAGAIN - no resources are available to associate \a signalNumber with \a signalAction;
+	 * - EINVAL - \a signalNumber value is invalid;
+	 */
+
+	std::pair<int, SignalAction> setAssociation(uint8_t signalNumber, const SignalAction& signalAction);
+
+	/**
 	 * \param [in] signalMask is the SignalSet with new signal mask for associated thread
 	 */
 
