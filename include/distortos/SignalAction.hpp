@@ -60,6 +60,16 @@ public:
 
 	}
 
+	/**
+	 * \return pointer to handler function (similar to \a sa_sigaction member of \a sigaction), nullptr if use of
+	 * default handler was configured (similar to \a SIG_DFL)
+	 */
+
+	Handler* getHandler() const
+	{
+		return handler_;
+	}
+
 private:
 
 	/// additional set of signals to be masked during execution of signal-catching function (similar to \a sa_mask
