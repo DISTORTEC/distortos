@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-04-16
+ * \date 2015-04-18
  */
 
 #ifndef INCLUDE_DISTORTOS_SYNCHRONIZATION_SIGNALSCATCHERCONTROLBLOCK_HPP_
@@ -41,6 +41,7 @@ public:
 	 */
 
 	constexpr SignalsCatcherControlBlock(Storage* const storageBegin, Storage* const storageEnd) :
+			signalMask_{SignalSet::empty},
 			associationsBegin_{reinterpret_cast<decltype(associationsBegin_)>(storageBegin)},
 			storageBegin_{storageBegin},
 			storageEnd_{storageEnd}
@@ -49,6 +50,9 @@ public:
 	}
 
 private:
+
+	/// SignalSet with signal mask for associated thread
+	SignalSet signalMask_;
 
 	/// pointer to first element of range of Association objects
 	Association* associationsBegin_;
