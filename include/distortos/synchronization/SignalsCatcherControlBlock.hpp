@@ -49,6 +49,15 @@ public:
 
 	}
 
+	/**
+	 * \return SignalSet with signal mask for associated thread
+	 */
+
+	SignalSet getSignalMask() const
+	{
+		return signalMask_;
+	}
+
 private:
 
 	/// SignalSet with signal mask for associated thread
