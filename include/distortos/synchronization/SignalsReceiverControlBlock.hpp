@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-04-10
+ * \date 2015-04-20
  */
 
 #ifndef INCLUDE_DISTORTOS_SYNCHRONIZATION_SIGNALSRECEIVERCONTROLBLOCK_HPP_
@@ -94,6 +94,16 @@ public:
 	 */
 
 	SignalSet getPendingSignalSet() const;
+
+	/**
+	 * \brief Gets signal mask for associated thread.
+	 *
+	 * Similar to pthread_sigmask() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_sigmask.html#
+	 * 
+	 * \return SignalSet with signal mask for associated thread
+	 */
+
+	SignalSet getSignalMask() const;
 
 	/**
 	 * \brief Queues signal for associated thread.

@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-04-10
+ * \date 2015-04-20
  */
 
 #include "distortos/synchronization/SignalsReceiverControlBlock.hpp"
@@ -85,6 +85,14 @@ SignalSet SignalsReceiverControlBlock::getPendingSignalSet() const
 
 	const auto queuedSignalSet = signalInformationQueue_->getQueuedSignalSet();
 	return SignalSet{pendingSignalSet.getBitset() | queuedSignalSet.getBitset()};
+}
+
+SignalSet SignalsReceiverControlBlock::getSignalMask() const
+{
+	if (signalsCatcherControlBlock_ == nullptr)
+		return SignalSet{SignalSet::full};
+
+	return signalsCatcherControlBlock_->getSignalMask();
 }
 
 int SignalsReceiverControlBlock::queueSignal(const uint8_t signalNumber, const sigval value,
