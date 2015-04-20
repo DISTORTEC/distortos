@@ -157,6 +157,16 @@ int queueSignal(const uint8_t signalNumber, const sigval value)
 	return ThisThread::get().queueSignal(signalNumber, value);
 }
 
+int setSignalMask(const SignalSet signalMask)
+{
+	const auto signalsReceiverControlBlock =
+			scheduler::getScheduler().getCurrentThreadControlBlock().getSignalsReceiverControlBlock();
+	if (signalsReceiverControlBlock == nullptr)
+		return ENOTSUP;
+
+	return signalsReceiverControlBlock->setSignalMask(signalMask);
+}
+
 std::pair<int, SignalInformation> tryWait(const SignalSet& signalSet)
 {
 	return waitImplementation(signalSet, true, nullptr);	// non-blocking mode

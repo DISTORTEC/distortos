@@ -91,6 +91,19 @@ SignalSet getSignalMask();
 int queueSignal(uint8_t signalNumber, sigval value);
 
 /**
+ * \brief Sets signal mask for current thread.
+ *
+ * Similar to pthread_sigmask() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_sigmask.html#
+ *
+ * \param [in] signalMask is the SignalSet with new signal mask for current thread
+ *
+ * \return 0 on success, error code otherwise:
+ * - ENOTSUP - reception or catching/handling of signals are disabled for current thread;
+ */
+
+int setSignalMask(SignalSet signalMask);
+
+/**
  * \brief Tries to accept pending signals.
  *
  * Similar to sigtimedwait() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/sigtimedwait.html
