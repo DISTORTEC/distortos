@@ -142,6 +142,16 @@ SignalSet getPendingSignalSet()
 	return ThisThread::get().getPendingSignalSet();
 }
 
+SignalSet getSignalMask()
+{
+	const auto signalsReceiverControlBlock =
+			scheduler::getScheduler().getCurrentThreadControlBlock().getSignalsReceiverControlBlock();
+	if (signalsReceiverControlBlock == nullptr)
+		return SignalSet{SignalSet::full};
+
+	return signalsReceiverControlBlock->getSignalMask();
+}
+
 int queueSignal(const uint8_t signalNumber, const sigval value)
 {
 	return ThisThread::get().queueSignal(signalNumber, value);

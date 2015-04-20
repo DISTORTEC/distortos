@@ -62,6 +62,16 @@ int generateSignal(uint8_t signalNumber);
 SignalSet getPendingSignalSet();
 
 /**
+ * \brief Gets signal mask for current thread.
+ *
+ * Similar to pthread_sigmask() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_sigmask.html#
+ *
+ * \return SignalSet with signal mask for current thread
+ */
+
+SignalSet getSignalMask();
+
+/**
  * \brief Queues signal for current thread.
  *
  * Similar to sigqueue() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/sigqueue.html
