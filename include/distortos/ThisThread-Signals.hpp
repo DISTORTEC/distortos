@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-03-31
+ * \date 2015-04-20
  */
 
 #ifndef INCLUDE_DISTORTOS_THISTHREAD_SIGNALS_HPP_
@@ -50,7 +50,7 @@ namespace Signals
 int generateSignal(uint8_t signalNumber);
 
 /**
- * \brief Gets set of currently pending signals for current thread .
+ * \brief Gets set of currently pending signals for current thread.
  *
  * Similar to sigpending() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/sigpending.html
  *
