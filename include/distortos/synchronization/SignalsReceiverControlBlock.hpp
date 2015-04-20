@@ -127,6 +127,19 @@ public:
 	int queueSignal(uint8_t signalNumber, sigval value, const scheduler::ThreadControlBlock& threadControlBlock) const;
 
 	/**
+	 * \brief Sets signal mask for associated thread.
+	 *
+	 * Similar to pthread_sigmask() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_sigmask.html#
+	 *
+	 * \param [in] signalMask is the SignalSet with new signal mask for associated thread
+	 * 
+	 * \return 0 on success, error code otherwise:
+	 * - ENOTSUP - catching/handling of signals is disabled for this receiver;
+	 */
+
+	int setSignalMask(SignalSet signalMask);
+
+	/**
 	 * \param [in] signalSet is a pointer to set of signals that will be "waited for", nullptr when wait was terminated
 	 */
 

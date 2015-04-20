@@ -110,6 +110,15 @@ int SignalsReceiverControlBlock::queueSignal(const uint8_t signalNumber, const s
 	return postGenerate(signalNumber, threadControlBlock);
 }
 
+int SignalsReceiverControlBlock::setSignalMask(const SignalSet signalMask)
+{
+	if (signalsCatcherControlBlock_ == nullptr)
+		return ENOTSUP;
+
+	signalsCatcherControlBlock_->setSignalMask(signalMask);
+	return 0;
+}
+
 /*---------------------------------------------------------------------------------------------------------------------+
 | private functions
 +---------------------------------------------------------------------------------------------------------------------*/
