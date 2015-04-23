@@ -19,6 +19,13 @@
 namespace distortos
 {
 
+namespace scheduler
+{
+
+class ThreadControlBlock;
+
+}	// namespace scheduler
+
 namespace synchronization
 {
 
@@ -70,6 +77,20 @@ public:
 	{
 		return signalMask_;
 	}
+
+	/**
+	 * \brief Part of SignalsReceiverControlBlock::postGenerate() specific to catching unmasked signals.
+	 *
+	 * Currently just a stub.
+	 *
+	 * \param [in] signalNumber is the unmasked signal that was generated, [0; 31]
+	 * \param [in] threadControlBlock is a reference to associated ThreadControlBlock
+	 *
+	 * \return 0 on success, error code otherwise:
+	 * - EINVAL - \a signalNumber value is invalid;
+	 */
+
+	int postGenerate(uint8_t signalNumber, const scheduler::ThreadControlBlock& threadControlBlock) const;
 
 	/**
 	 * \brief Sets association for given signal number.

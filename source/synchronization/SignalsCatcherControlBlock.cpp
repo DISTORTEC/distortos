@@ -69,6 +69,11 @@ std::pair<int, SignalAction> SignalsCatcherControlBlock::getAssociation(const ui
 	return {{}, association->second};
 }
 
+int SignalsCatcherControlBlock::postGenerate(uint8_t, const scheduler::ThreadControlBlock&) const
+{
+	return 0;
+}
+
 std::pair<int, SignalAction> SignalsCatcherControlBlock::setAssociation(const uint8_t signalNumber,
 		const SignalAction& signalAction)
 {
