@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-04-18
+ * \date 2015-04-23
  */
 
 #ifndef INCLUDE_DISTORTOS_SYNCHRONIZATION_SIGNALSCATCHERCONTROLBLOCK_HPP_
@@ -48,6 +48,19 @@ public:
 	{
 
 	}
+
+	/**
+	 * \brief Gets SignalAction associated with given signal number.
+	 *
+	 * \param [in] signalNumber is the signal for which the association is requested, [0; 31]
+	 *
+	 * \return pair with return code (0 on success, error code otherwise) and SignalAction that is associated with
+	 * \a signalNumber, default-constructed object if no association was found;
+	 * error codes:
+	 * - EINVAL - \a signalNumber value is invalid;
+	 */
+
+	std::pair<int, SignalAction> getAssociation(uint8_t signalNumber) const;
 
 	/**
 	 * \return SignalSet with signal mask for associated thread
