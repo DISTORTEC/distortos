@@ -16,8 +16,6 @@
 
 #include "distortos/architecture/parameters.hpp"
 
-#include <utility>
-
 namespace distortos
 {
 
@@ -26,14 +24,6 @@ class ThreadBase;
 /// architecture namespace has symbols that need to be provided by selected architecture
 namespace architecture
 {
-
-/**
- * \brief Gets the stack used to run main().
- *
- * \return beginning of stack and its size in bytes
- */
-
-std::pair<void*, size_t> getMainStack();
 
 /**
  * \brief Architecture-specific stack initialization.
