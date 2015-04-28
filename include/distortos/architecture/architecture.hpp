@@ -28,19 +28,6 @@ namespace architecture
 {
 
 /**
- * \brief Enables interrupt masking.
- *
- * Disables normal-priority interrupts.
- *
- * \note High-priority interrupts are not controlled by distortos, so they may be left enabled. Support for that feature
- * is architecture-dependent.
- *
- * \return previous value of interrupts' mask, must be used for matched restoreInterruptMasking() call
- */
-
-InterruptMask enableInterruptMasking();
-
-/**
  * \brief Gets the stack used to run main().
  *
  * \return beginning of stack and its size in bytes
