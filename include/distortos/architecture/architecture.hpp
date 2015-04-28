@@ -24,15 +24,6 @@ namespace architecture
 {
 
 /**
- * \brief Low level architecture initialization.
- *
- * This function is called before constructors for global and static objects from __libc_init_array() via address in
- * distortosPreinitArray[].
- */
-
-void lowLevelInitialization();
-
-/**
  * \brief Restores interrupt masking.
  *
  * Restores previous interrupt masking state (before matching enableInterruptMasking() or disableInterruptMasking() was
