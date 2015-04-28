@@ -813,15 +813,15 @@ __attribute__ ((weak)) void DMA2D_IRQHandler(void)
 | local types
 +---------------------------------------------------------------------------------------------------------------------*/
 
-/// single vector - pointer to function with no arguments and no return value
-typedef void (*Vector_)(void);
+/// single interrupt vector - pointer to function with no arguments and no return value
+typedef void (*InterruptVector)(void);
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | global variables
 +---------------------------------------------------------------------------------------------------------------------*/
 
 /// chip vector table
-const Vector_ chipVectors[] __attribute__ ((section(".chipVectors"))) =
+const InterruptVector chipVectors[] __attribute__ ((section(".chipVectors"))) =
 {
 		WWDG_IRQHandler,					// Window WatchDog
 		PVD_IRQHandler,						// PVD through EXTI Line detection
