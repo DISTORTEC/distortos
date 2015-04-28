@@ -22,16 +22,6 @@ namespace architecture
 {
 
 /**
- * \brief Architecture-specific request for context switch.
- *
- * Causes the architecture to do context save, call scheduler::getScheduler().switchContext() and do context restore.
- * The call to scheduler::getScheduler().switchContext() must be done from the context in which such call is valid
- * (usually system interrupt).
- */
-
-void requestContextSwitch();
-
-/**
  * \brief Architecture-specific start of scheduling.
  *
  * Initializes all required hardware/software to perform context switching and starts the scheduling.

@@ -18,7 +18,7 @@
 
 #include "distortos/architecture/InterruptMaskingLock.hpp"
 #include "distortos/architecture/InterruptUnmaskingLock.hpp"
-#include "distortos/architecture/architecture.hpp"
+#include "distortos/architecture/requestContextSwitch.hpp"
 
 #include <cerrno>
 
