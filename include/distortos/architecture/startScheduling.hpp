@@ -1,6 +1,6 @@
 /**
  * \file
- * \brief Architecture specific symbols
+ * \brief startScheduling() declaration
  *
  * \author Copyright (C) 2014-2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
@@ -11,13 +11,12 @@
  * \date 2015-04-28
  */
 
-#ifndef INCLUDE_DISTORTOS_ARCHITECTURE_ARCHITECTURE_HPP_
-#define INCLUDE_DISTORTOS_ARCHITECTURE_ARCHITECTURE_HPP_
+#ifndef INCLUDE_DISTORTOS_ARCHITECTURE_STARTSCHEDULING_HPP_
+#define INCLUDE_DISTORTOS_ARCHITECTURE_STARTSCHEDULING_HPP_
 
 namespace distortos
 {
 
-/// architecture namespace has symbols that need to be provided by selected architecture
 namespace architecture
 {
 
@@ -33,4 +32,4 @@ void startScheduling();
 
 }	// namespace distortos
 
-#endif	// INCLUDE_DISTORTOS_ARCHITECTURE_ARCHITECTURE_HPP_
+#endif	// INCLUDE_DISTORTOS_ARCHITECTURE_STARTSCHEDULING_HPP_

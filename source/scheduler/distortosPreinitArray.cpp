@@ -16,7 +16,7 @@
 #include "distortos/syscalls/mallocLockingInitialization.hpp"
 
 #include "distortos/architecture/lowLevelInitialization.hpp"
-#include "distortos/architecture/architecture.hpp"
+#include "distortos/architecture/startScheduling.hpp"
 
 namespace distortos
 {
