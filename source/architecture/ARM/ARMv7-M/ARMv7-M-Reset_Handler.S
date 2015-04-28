@@ -1,6 +1,6 @@
 /**
  * \file
- * \brief ARMv7-M (Cortex-M3 / Cortex-M4) assembly startup code
+ * \brief Reset_Handler() (startup code) for ARMv7-M (Cortex-M3 / Cortex-M4)
  *
  * \author Copyright (C) 2014-2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-03-13
+ * \date 2015-04-28
  */
 
 #ifdef __USES_TWO_STACKS

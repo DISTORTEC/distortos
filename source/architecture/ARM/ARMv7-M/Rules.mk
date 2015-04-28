@@ -6,14 +6,14 @@
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #
-# date: 2015-03-25
+# date: 2015-04-28
 #
 
 #-----------------------------------------------------------------------------------------------------------------------
 # compilation flags
 #-----------------------------------------------------------------------------------------------------------------------
 
-ASFLAGS_$(d)/ARMv7-M-startup.S := -D__USES_TWO_STACKS -D__USES_CXX
+ASFLAGS_$(d)/ARMv7-M-Reset_Handler.S := -D__USES_TWO_STACKS -D__USES_CXX
 
 CXXFLAGS_$(d) := -DSTM32F407xx
 CXXFLAGS_$(d) := $(CXXFLAGS_$(d)) -Iinclude
