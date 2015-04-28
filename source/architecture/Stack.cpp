@@ -8,14 +8,14 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-02-16
+ * \date 2015-04-28
  */
 
 #include "distortos/architecture/Stack.hpp"
 
-#include "distortos/architecture/architecture.hpp"
+#include "distortos/architecture/initializeStack.hpp"
+#include "distortos/architecture/parameters.hpp"
 
-#include <cstdint>
 #include <cstring>
 
 namespace distortos
@@ -75,7 +75,8 @@ size_t adjustSize(void* const buffer, const size_t size, void* const adjustedBuf
  * \return value that can be used as thread's stack pointer, ready for context switching
  */
 
-void* initializeStackProxy(void* const buffer, const size_t size, void (&function)(ThreadBase&), ThreadBase& threadBase)
+void* initializeStackProxy(void* const buffer, const size_t size, void (& function)(ThreadBase&),
+		ThreadBase& threadBase)
 {
 	memset(buffer, 0, size);
 	return initializeStack(buffer, size, function, threadBase);
@@ -87,7 +88,7 @@ void* initializeStackProxy(void* const buffer, const size_t size, void (&functio
 | public functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-Stack::Stack(void* const buffer, const size_t size, void (&function)(ThreadBase&), ThreadBase& threadBase) :
+Stack::Stack(void* const buffer, const size_t size, void (& function)(ThreadBase&), ThreadBase& threadBase) :
 		adjustedBuffer_{adjustBuffer(buffer, stackAlignment)},
 		adjustedSize_{adjustSize(buffer, size, adjustedBuffer_, stackSizeDivisibility)},
 		stackPointer_{initializeStackProxy(adjustedBuffer_, adjustedSize_, function, threadBase)}

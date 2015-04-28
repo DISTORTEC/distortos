@@ -8,16 +8,14 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-03-19
+ * \date 2015-04-28
  */
 
-#include "distortos/architecture/architecture.hpp"
+#include "distortos/architecture/initializeStack.hpp"
 
 #include "distortos/chip/CMSIS-proxy.h"
 
 #include <type_traits>
-
-#include <cstdint>
 
 namespace distortos
 {
@@ -29,7 +27,7 @@ namespace architecture
 | global functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-void* initializeStack(void* const buffer, const size_t size, void (&function)(ThreadBase&), ThreadBase& threadBase)
+void* initializeStack(void* const buffer, const size_t size, void (& function)(ThreadBase&), ThreadBase& threadBase)
 {
 	auto stackPointer = reinterpret_cast<uint32_t*>(static_cast<uint8_t*>(buffer) + size);
 
