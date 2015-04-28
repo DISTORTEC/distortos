@@ -103,8 +103,8 @@ __attribute__ ((weak)) void SysTick_Handler(void)
 | local types
 +---------------------------------------------------------------------------------------------------------------------*/
 
-/// single vector - pointer to function with no arguments and no return value
-typedef void (*Vector_)(void);
+/// single interrupt vector - pointer to function with no arguments and no return value
+typedef void (*InterruptVector)(void);
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | global symbols' declarations
@@ -119,22 +119,22 @@ void Reset_Handler(void);				// import the address of Reset_Handler()
 +---------------------------------------------------------------------------------------------------------------------*/
 
 /// core vector table
-const Vector_ coreVectors[] __attribute__ ((section(".coreVectors"))) =
+const InterruptVector coreVectors[] __attribute__ ((section(".coreVectors"))) =
 {
-		(Vector_)__main_stack_end,		// Main stack end address
-		Reset_Handler,					// Reset
-		NMI_Handler,					// Non maskable interrupt
-		HardFault_Handler,				// All class of fault
-		MemManage_Handler,				// Memory management
-		BusFault_Handler,				// Pre-fetch fault, memory access fault
-		UsageFault_Handler,				// Undefined instruction or illegal state
-		__Reserved_0x1C_Handler,		// Reserved 0x1C
-		__Reserved_0x20_Handler,		// Reserved 0x20
-		__Reserved_0x24_Handler,		// Reserved 0x24
-		__Reserved_0x28_Handler,		// Reserved 0x28
-		SVC_Handler,					// System service call via SVC instruction
-		DebugMon_Handler,				// Debug Monitor
-		__Reserved_0x34_Handler,		// Reserved 0x34
-		PendSV_Handler,					// Pendable request for system service
-		SysTick_Handler,				// System tick timer
+		(InterruptVector)__main_stack_end,		// Main stack end address
+		Reset_Handler,							// Reset
+		NMI_Handler,							// Non maskable interrupt
+		HardFault_Handler,						// All class of fault
+		MemManage_Handler,						// Memory management
+		BusFault_Handler,						// Pre-fetch fault, memory access fault
+		UsageFault_Handler,						// Undefined instruction or illegal state
+		__Reserved_0x1C_Handler,				// Reserved 0x1C
+		__Reserved_0x20_Handler,				// Reserved 0x20
+		__Reserved_0x24_Handler,				// Reserved 0x24
+		__Reserved_0x28_Handler,				// Reserved 0x28
+		SVC_Handler,							// System service call via SVC instruction
+		DebugMon_Handler,						// Debug Monitor
+		__Reserved_0x34_Handler,				// Reserved 0x34
+		PendSV_Handler,							// Pendable request for system service
+		SysTick_Handler,						// System tick timer
 };
