@@ -14,26 +14,12 @@
 #ifndef INCLUDE_DISTORTOS_ARCHITECTURE_ARCHITECTURE_HPP_
 #define INCLUDE_DISTORTOS_ARCHITECTURE_ARCHITECTURE_HPP_
 
-#include "distortos/architecture/parameters.hpp"
-
 namespace distortos
 {
 
 /// architecture namespace has symbols that need to be provided by selected architecture
 namespace architecture
 {
-
-/**
- * \brief Restores interrupt masking.
- *
- * Restores previous interrupt masking state (before matching enableInterruptMasking() or disableInterruptMasking() was
- * called), enabling some (maybe all, maybe none) interrupts.
- *
- * \param [in] interruptMask is the value of interrupts' mask, must come from previous call to enableInterruptMasking()
- * or disableInterruptMasking()
- */
-
-void restoreInterruptMasking(InterruptMask interruptMask);
 
 /**
  * \brief Architecture-specific request for context switch.
