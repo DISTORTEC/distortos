@@ -8,11 +8,12 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-04-01
+ * \date 2015-04-29
  */
 
 #include "distortos/ThisThread-Signals.hpp"
 
+#include "distortos/SignalAction.hpp"
 #include "distortos/ThisThread.hpp"
 #include "distortos/ThreadBase.hpp"
 
@@ -140,6 +141,17 @@ int generateSignal(const uint8_t signalNumber)
 SignalSet getPendingSignalSet()
 {
 	return ThisThread::get().getPendingSignalSet();
+}
+
+std::pair<int, SignalAction> getSignalAction(const uint8_t signalNumber)
+{
+	const auto signalsReceiverControlBlock =
+			scheduler::getScheduler().getCurrentThreadControlBlock().getSignalsReceiverControlBlock();
+	if (signalsReceiverControlBlock == nullptr)
+		return {ENOTSUP, {}};
+
+	architecture::InterruptMaskingLock interruptMaskingLock;
+	return signalsReceiverControlBlock->getSignalAction(signalNumber);
 }
 
 SignalSet getSignalMask()
