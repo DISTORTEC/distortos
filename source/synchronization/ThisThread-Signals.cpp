@@ -169,6 +169,17 @@ int queueSignal(const uint8_t signalNumber, const sigval value)
 	return ThisThread::get().queueSignal(signalNumber, value);
 }
 
+std::pair<int, SignalAction> setSignalAction(const uint8_t signalNumber, const SignalAction& signalAction)
+{
+	const auto signalsReceiverControlBlock =
+			scheduler::getScheduler().getCurrentThreadControlBlock().getSignalsReceiverControlBlock();
+	if (signalsReceiverControlBlock == nullptr)
+		return {ENOTSUP, {}};
+
+	architecture::InterruptMaskingLock interruptMaskingLock;
+	return signalsReceiverControlBlock->setSignalAction(signalNumber, signalAction);
+}
+
 int setSignalMask(const SignalSet signalMask)
 {
 	const auto signalsReceiverControlBlock =

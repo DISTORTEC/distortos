@@ -108,6 +108,25 @@ SignalSet getSignalMask();
 int queueSignal(uint8_t signalNumber, sigval value);
 
 /**
+ * \brief Sets association for given signal number.
+ *
+ * Similar to sigaction() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/sigaction.html
+ *
+ * \param [in] signalNumber is the signal for which the association will be set, [0; 31]
+ * \param [in] signalAction is a reference to SignalAction that will be associated with given signal number, object in
+ * internal storage is copy-constructed
+ *
+ * \return pair with return code (0 on success, error code otherwise) and SignalAction that was associated with
+ * \a signalNumber, default-constructed object if no association was found;
+ * error codes:
+ * - EAGAIN - no resources are available to associate \a signalNumber with \a signalAction;
+ * - EINVAL - \a signalNumber value is invalid;
+ * - ENOTSUP - reception or catching/handling of signals are disabled for current thread;
+ */
+
+std::pair<int, SignalAction> setSignalAction(uint8_t signalNumber, const SignalAction& signalAction);
+
+/**
  * \brief Sets signal mask for current thread.
  *
  * Similar to pthread_sigmask() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_sigmask.html#
