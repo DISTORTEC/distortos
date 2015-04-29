@@ -8,10 +8,14 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-04-23
+ * \date 2015-04-29
  */
 
 #include "distortos/synchronization/SignalsCatcherControlBlock.hpp"
+
+#include "distortos/synchronization/deliverSignals.hpp"
+
+#include "distortos/architecture/requestFunctionExecution.hpp"
 
 #include <algorithm>
 
@@ -69,13 +73,16 @@ std::pair<int, SignalAction> SignalsCatcherControlBlock::getAssociation(const ui
 	return {{}, association->second};
 }
 
-int SignalsCatcherControlBlock::postGenerate(const uint8_t signalNumber, const scheduler::ThreadControlBlock&) const
+int SignalsCatcherControlBlock::postGenerate(const uint8_t signalNumber,
+		const scheduler::ThreadControlBlock& threadControlBlock) const
 {
 	const auto getAssociationResult = getAssociation(signalNumber);
 	if (getAssociationResult.first != 0)
 		return getAssociationResult.first;
 	if (getAssociationResult.second.getHandler() == SignalAction{}.getHandler())	// default handler?
 		return 0;	// ignore signal
+
+	architecture::requestFunctionExecution(threadControlBlock, deliverSignals);
 
 	return 0;
 }
