@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-04-20
+ * \date 2015-04-29
  */
 
 #ifndef INCLUDE_DISTORTOS_SYNCHRONIZATION_SIGNALSRECEIVERCONTROLBLOCK_HPP_
@@ -23,6 +23,7 @@ union sigval;
 namespace distortos
 {
 
+class SignalAction;
 class SignalsCatcher;
 class SignalInformation;
 class SignalInformationQueueWrapper;
@@ -94,6 +95,22 @@ public:
 	 */
 
 	SignalSet getPendingSignalSet() const;
+
+	/**
+	 * \brief Gets SignalAction associated with given signal number.
+	 *
+	 * Similar to sigaction() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/sigaction.html
+	 *
+	 * \param [in] signalNumber is the signal for which the association is requested, [0; 31]
+	 *
+	 * \return pair with return code (0 on success, error code otherwise) and SignalAction that is associated with
+	 * \a signalNumber, default-constructed object if no association was found;
+	 * error codes:
+	 * - EINVAL - \a signalNumber value is invalid;
+	 * - ENOTSUP - catching/handling of signals is disabled for this receiver;
+	 */
+
+	std::pair<int, SignalAction> getSignalAction(uint8_t signalNumber) const;
 
 	/**
 	 * \brief Gets signal mask for associated thread.
