@@ -118,6 +118,15 @@ int SignalsReceiverControlBlock::queueSignal(const uint8_t signalNumber, const s
 	return postGenerate(signalNumber, threadControlBlock);
 }
 
+std::pair<int, SignalAction> SignalsReceiverControlBlock::setSignalAction(const uint8_t signalNumber,
+		const SignalAction& signalAction) const
+{
+	if (signalsCatcherControlBlock_ == nullptr)
+		return {ENOTSUP, {}};
+
+	return signalsCatcherControlBlock_->setAssociation(signalNumber, signalAction);
+}
+
 int SignalsReceiverControlBlock::setSignalMask(const SignalSet signalMask)
 {
 	if (signalsCatcherControlBlock_ == nullptr)
