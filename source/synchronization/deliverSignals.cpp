@@ -8,10 +8,13 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-04-28
+ * \date 2015-04-30
  */
 
 #include "distortos/synchronization/deliverSignals.hpp"
+
+#include "distortos/scheduler/getScheduler.hpp"
+#include "distortos/scheduler/Scheduler.hpp"
 
 namespace distortos
 {
@@ -25,7 +28,10 @@ namespace synchronization
 
 void deliverSignals()
 {
-
+	const auto signalsReceiverControlBlock =
+			scheduler::getScheduler().getCurrentThreadControlBlock().getSignalsReceiverControlBlock();
+	if (signalsReceiverControlBlock == nullptr)
+		return;	/// \todo error handling?
 }
 
 }	// namespace synchronization
