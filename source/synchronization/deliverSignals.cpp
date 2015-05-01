@@ -18,6 +18,7 @@
 #include "distortos/scheduler/getScheduler.hpp"
 #include "distortos/scheduler/Scheduler.hpp"
 
+#include "distortos/SignalAction.hpp"
 #include "distortos/SignalInformation.hpp"
 
 #include <cerrno>
@@ -83,7 +84,15 @@ void deliverSignals()
 	while (std::tie(ret, signalInformation) = acceptPendingUnblockedSignal(*signalsReceiverControlBlock, signalMask),
 			ret == 0)
 	{
-
+		const auto signalNumber = signalInformation.getSignalNumber();
+		SignalAction signalAction;
+		std::tie(ret, signalAction) = signalsReceiverControlBlock->getSignalAction(signalNumber);
+		if (ret == 0)
+		{
+			const auto handler = signalAction.getHandler();
+			if (handler != nullptr)
+				(*handler)(signalInformation);
+		}
 	}
 }
 
