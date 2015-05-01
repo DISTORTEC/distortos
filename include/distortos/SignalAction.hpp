@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-04-18
+ * \date 2015-05-01
  */
 
 #ifndef INCLUDE_DISTORTOS_SIGNALACTION_HPP_
@@ -68,6 +68,16 @@ public:
 	Handler* getHandler() const
 	{
 		return handler_;
+	}
+
+	/**
+	 * \return additional set of signals to be masked during execution of signal-catching function (similar to
+	 * \a sa_mask member of \a sigaction)
+	 */
+
+	SignalSet getSignalMask() const
+	{
+		return signalMask_;
 	}
 
 private:
