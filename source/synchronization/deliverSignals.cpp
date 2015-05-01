@@ -78,6 +78,7 @@ void deliverSignals()
 		return;	/// \todo error handling?
 
 	const auto signalMask = signalsReceiverControlBlock->getSignalMask();
+	const auto savedErrno = errno;
 
 	int ret;
 	SignalInformation signalInformation {uint8_t{}, SignalInformation::Code{}, sigval{}};
@@ -103,6 +104,8 @@ void deliverSignals()
 			}
 		}
 	}
+
+	errno = savedErrno;	// restore errno value
 }
 
 }	// namespace synchronization
