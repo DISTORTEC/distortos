@@ -91,7 +91,16 @@ void deliverSignals()
 		{
 			const auto handler = signalAction.getHandler();
 			if (handler != nullptr)
+			{
+				SignalSet newSignalMask {signalMask.getBitset() | signalAction.getSignalMask().getBitset()};
+				newSignalMask.add(signalNumber);	// signalNumber is valid (checked above)
+				// this call may not fail, because SignalsReceiverControlBlock that is used here must support
+				// catching/handling of signals - otherwise the call to SignalsReceiverControlBlock::getSignalAction()
+				// above would fail
+				signalsReceiverControlBlock->setSignalMask(newSignalMask);	/// \todo add assertion just to be sure
 				(*handler)(signalInformation);
+				signalsReceiverControlBlock->setSignalMask(signalMask);	// restore previous signal mask
+			}
 		}
 	}
 }
