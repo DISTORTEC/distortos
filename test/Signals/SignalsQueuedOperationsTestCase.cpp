@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-04-02
+ * \date 2015-05-02
  */
 
 #include "SignalsQueuedOperationsTestCase.hpp"
@@ -123,6 +123,9 @@ bool phase2()
 
 bool SignalsQueuedOperationsTestCase::run_() const
 {
+	if (ThisThread::Signals::setSignalMask(SignalSet{SignalSet::full}) != 0)
+		return false;
+
 	for (const auto& function : {phase1, phase2})
 	{
 		// initially no signals may be pending

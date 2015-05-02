@@ -587,6 +587,9 @@ const std::array<Stage, 2> stages
 
 bool SignalsWaitOperationsTestCase::run_() const
 {
+	if (ThisThread::Signals::setSignalMask(SignalSet{SignalSet::full}) != 0)
+		return false;
+
 	constexpr auto phase1ExpectedContextSwitchCount = 6 * waitForNextTickContextSwitchCount +
 			2 * phase1TimedOutWaitContextSwitchCount;
 	constexpr auto phase2ExpectedContextSwitchCount = 3 * waitForNextTickContextSwitchCount +
