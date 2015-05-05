@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-04-28
+ * \date 2015-05-05
  */
 
 #ifndef ESTD_CONTIGUOUSRANGE_HPP_
@@ -155,10 +155,10 @@ public:
 private:
 
 	/// iterator to first element in the range
-	const iterator begin_;
+	iterator begin_;
 
 	/// iterator to "one past the last" element in the range
-	const iterator end_;
+	iterator end_;
 };
 
 }	// namespace estd
