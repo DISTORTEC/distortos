@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-04-23
+ * \date 2015-05-09
  */
 
 #ifndef INCLUDE_DISTORTOS_SYNCHRONIZATION_SIGNALSCATCHERCONTROLBLOCK_HPP_
@@ -81,7 +81,7 @@ public:
 	/**
 	 * \brief Part of SignalsReceiverControlBlock::postGenerate() specific to catching unmasked signals.
 	 *
-	 * Currently just a stub.
+	 * Requests delivery of signals to associated thread if there is some non-default signal handler for the signal.
 	 *
 	 * \param [in] signalNumber is the unmasked signal that was generated, [0; 31]
 	 * \param [in] threadControlBlock is a reference to associated ThreadControlBlock
