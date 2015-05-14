@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-05-09
+ * \date 2015-05-14
  */
 
 #ifndef INCLUDE_DISTORTOS_SYNCHRONIZATION_SIGNALSCATCHERCONTROLBLOCK_HPP_
@@ -34,8 +34,8 @@ class SignalsCatcherControlBlock
 {
 public:
 
-	/// association of signal number with SignalAction
-	using Association = std::pair<uint8_t, SignalAction>;
+	/// association of signal numbers (as SignalSet) with SignalAction
+	using Association = std::pair<SignalSet, SignalAction>;
 
 	/// type of uninitialized storage for Association objects
 	using Storage = std::aligned_storage<sizeof(Association), alignof(Association)>::type;
