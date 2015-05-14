@@ -87,6 +87,28 @@ SignalsCatcherControlBlock::Association* findAssociation(SignalsCatcherControlBl
 }
 
 /**
+ * \brief Tries to find SignalsCatcherControlBlock::Association for given SignalAction in given range.
+ *
+ * \param [in] begin is a pointer to first element of range of SignalsCatcherControlBlock::Association objects
+ * \param [in] end is a pointer to "one past the last" element of range of SignalsCatcherControlBlock::Association
+ * objects
+ * \param [in] signalAction is a reference to SignalAction object for which the association will be searched
+ *
+ * \return pointer to found SignalsCatcherControlBlock::Association object, \e end if no match was found
+ */
+
+SignalsCatcherControlBlock::Association* findAssociation(SignalsCatcherControlBlock::Association* const begin,
+		SignalsCatcherControlBlock::Association* const end, const SignalAction& signalAction)
+{
+	return std::find_if(begin, end,
+			[&signalAction](const SignalsCatcherControlBlock::Association& association)
+			{
+				return association.second.getHandler() == signalAction.getHandler() &&
+						association.second.getSignalMask().getBitset() == signalAction.getSignalMask().getBitset();
+			});
+}
+
+/**
  * \brief Delivers all unmasked signals that are pending/queued for current thread.
  */
 
@@ -172,20 +194,39 @@ std::pair<int, SignalAction> SignalsCatcherControlBlock::setAssociation(const ui
 		return {{}, previousSignalAction};
 	}
 
-	const auto association = findAssociation(associationsBegin_, associationsEnd_, signalNumber);
-	if (association != associationsEnd_)	// there is an association for this signal number?
+	const auto numberAssociation = findAssociation(associationsBegin_, associationsEnd_, signalNumber);
+	const auto actionAssociation = findAssociation(associationsBegin_, associationsEnd_, signalAction);
+
+	if (actionAssociation != associationsEnd_)	// there is an association for this SignalAction?
 	{
-		const auto previousSignalAction = association->second;
-		association->second = signalAction;
+		if (numberAssociation == actionAssociation)	// no change?
+			return {{}, signalAction};
+
+		actionAssociation->first.add(signalNumber);
+		const auto previousSignalAction = numberAssociation != associationsEnd_ ?
+				clearAssociation(signalNumber, *numberAssociation) : SignalAction{};
 		return {{}, previousSignalAction};
 	}
 
-	if (std::distance(storageBegin_, storageEnd_) == 0)	// no storage for new association?
+	// there is no association for this SignalAction?
+
+	SignalSet signalSet {1u << signalNumber};
+
+	// there is no storage for new association if all conditions are true:
+	// - there are no free associations,
+	// - no Association object was found for signal number or Association object found for signal number has more
+	// than one signal number associated.
+	if (std::distance(storageBegin_, storageEnd_) == 0 && (numberAssociation == associationsEnd_ ||
+			numberAssociation->first.getBitset() == signalSet.getBitset()))
 		return {EAGAIN, {}};
 
-	new (associationsEnd_) Association{SignalSet{1u << signalNumber}, signalAction};
+	const auto previousSignalAction = numberAssociation != associationsEnd_ ?
+			clearAssociation(signalNumber, *numberAssociation) : SignalAction{};
+	if (storageBegin_ == storageEnd_)
+		abort();	/// \todo replace with assertion
+	new (associationsEnd_) Association{signalSet, signalAction};
 	++associationsEnd_;
-	return {{}, {}};
+	return {{}, previousSignalAction};
 }
 
 /*---------------------------------------------------------------------------------------------------------------------+
