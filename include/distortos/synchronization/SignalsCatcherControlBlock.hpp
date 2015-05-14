@@ -130,6 +130,18 @@ private:
 
 	SignalAction clearAssociation(uint8_t signalNumber);
 
+	/**
+	 * \brief Clears given association for given signal number.
+	 *
+	 * \param [in] signalNumber is the signal for which the association will be cleared, [0; 31]
+	 * \param [in] association is a reference to Association object from <em>[associationsBegin_; associationsEnd_)</em>
+	 * range that will be removed
+	 *
+	 * \return SignalAction from \a association
+	 */
+
+	SignalAction clearAssociation(uint8_t signalNumber, Association& association);
+
 	/// SignalSet with signal mask for associated thread
 	SignalSet signalMask_;
 
