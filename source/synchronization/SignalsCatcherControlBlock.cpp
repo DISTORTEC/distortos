@@ -199,10 +199,18 @@ SignalAction SignalsCatcherControlBlock::clearAssociation(const uint8_t signalNu
 		return {};
 
 	const auto previousSignalAction = association->second;
-	const auto& lastAssociation = *(associationsEnd_ - 1);
-	*association = lastAssociation;	// replace removed association with the last association in the range
-	lastAssociation.~Association();
-	--associationsEnd_;
+
+	association->first.remove(signalNumber);	// signal number is valid (checked by caller)
+
+	// can this association be removed (it has no more signal numbers associated)?
+	if (association->first.getBitset().none() == true)
+	{
+		const auto& lastAssociation = *(associationsEnd_ - 1);
+		*association = lastAssociation;	// replace removed association with the last association in the range
+		lastAssociation.~Association();
+		--associationsEnd_;
+	}
+
 	return previousSignalAction;
 }
 
