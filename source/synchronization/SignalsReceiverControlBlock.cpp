@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-04-29
+ * \date 2015-05-14
  */
 
 #include "distortos/synchronization/SignalsReceiverControlBlock.hpp"
@@ -139,6 +139,22 @@ int SignalsReceiverControlBlock::setSignalMask(const SignalSet signalMask)
 /*---------------------------------------------------------------------------------------------------------------------+
 | private functions
 +---------------------------------------------------------------------------------------------------------------------*/
+
+std::pair<int, bool> SignalsReceiverControlBlock::isSignalIgnored(const uint8_t signalNumber) const
+{
+	if (signalNumber >= SignalSet::Bitset{}.size())
+		return {EINVAL, {}};
+
+	if (signalsCatcherControlBlock_ == nullptr)
+		return {{}, false};
+
+	SignalAction signalAction;
+	// this will never fail, because signal number is valid (checked above)
+	std::tie(std::ignore, signalAction) = signalsCatcherControlBlock_->getAssociation(signalNumber);
+
+	// default handler == signal is ignored
+	return {{}, signalAction.getHandler() == SignalAction{}.getHandler() ? true : false};
+}
 
 int SignalsReceiverControlBlock::postGenerate(const uint8_t signalNumber,
 		const scheduler::ThreadControlBlock& threadControlBlock) const

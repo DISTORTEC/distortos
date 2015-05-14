@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-04-29
+ * \date 2015-05-14
  */
 
 #ifndef INCLUDE_DISTORTOS_SYNCHRONIZATION_SIGNALSRECEIVERCONTROLBLOCK_HPP_
@@ -185,6 +185,22 @@ public:
 	}
 
 private:
+
+	/**
+	 * \brief Checks whether signal is ignored.
+	 *
+	 * Signal is ignored if it has no SignalAction object associated. Signal is never ignored if catching/handling of
+	 * signals is disabled for this receiver.
+	 *
+	 * \param [in] signalNumber is the signal for which the check will be performed, [0; 31]
+	 *
+	 * \return pair with return code (0 on success, error code otherwise) and boolean telling whether the signal is
+	 * ignored (true) or not (false);
+	 * error codes:
+	 * - EINVAL - \a signalNumber value is invalid;
+	 */
+
+	std::pair<int, bool> isSignalIgnored(uint8_t signalNumber) const;
 
 	/**
 	 * \brief Actions executed after signal is "generated" with generateSignal() or queueSignal().
