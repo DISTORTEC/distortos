@@ -8,13 +8,13 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-04-02
+ * \date 2015-05-16
  */
 
 #ifndef TEST_SIGNALS_SIGNALSQUEUEDOPERATIONSTESTCASE_HPP_
 #define TEST_SIGNALS_SIGNALSQUEUEDOPERATIONSTESTCASE_HPP_
 
-#include "TestCase.hpp"
+#include "TestCaseCommon.hpp"
 
 namespace distortos
 {
@@ -28,7 +28,7 @@ namespace test
  * Tests queuing of signals and error cases specific to queued signals.
  */
 
-class SignalsQueuedOperationsTestCase : public TestCase
+class SignalsQueuedOperationsTestCase : public TestCaseCommon
 {
 private:
 

@@ -8,13 +8,13 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-01-15
+ * \date 2015-05-16
  */
 
 #ifndef TEST_MESSAGEQUEUE_MESSAGEQUEUEOPERATIONSTESTCASE_HPP_
 #define TEST_MESSAGEQUEUE_MESSAGEQUEUEOPERATIONSTESTCASE_HPP_
 
-#include "TestCase.hpp"
+#include "TestCaseCommon.hpp"
 
 namespace distortos
 {
@@ -32,7 +32,7 @@ namespace test
  * constructor types, destructor, swap, ...).
  */
 
-class MessageQueueOperationsTestCase : public TestCase
+class MessageQueueOperationsTestCase : public TestCaseCommon
 {
 private:
 

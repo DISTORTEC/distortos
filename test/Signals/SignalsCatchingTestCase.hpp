@@ -8,13 +8,13 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-05-05
+ * \date 2015-05-16
  */
 
 #ifndef TEST_SIGNALS_SIGNALSCATCHINGTESTCASE_HPP_
 #define TEST_SIGNALS_SIGNALSCATCHINGTESTCASE_HPP_
 
-#include "TestCase.hpp"
+#include "TestCaseCommon.hpp"
 
 namespace distortos
 {
@@ -31,7 +31,7 @@ namespace test
  * Currently only the simplest scenario is tested - current thread generating/queuing signals for itself.
  */
 
-class SignalsCatchingTestCase : public TestCase
+class SignalsCatchingTestCase : public TestCaseCommon
 {
 private:
 
