@@ -37,7 +37,7 @@ void mainTestThreadFunction()
 +---------------------------------------------------------------------------------------------------------------------*/
 
 MainTestThread mainTestThread = makeStaticThread<mainTestThreadStackSize, mainTestThreadCanReceiveSignals,
-		mainTestThreadQueuedSignals, mainTestThreadCaughtSignals>(mainTestThreadPriority, mainTestThreadFunction);
+		mainTestThreadQueuedSignals, mainTestThreadSignalActions>(mainTestThreadPriority, mainTestThreadFunction);
 
 }	// namespace test
 

@@ -29,8 +29,8 @@ constexpr bool mainTestThreadCanReceiveSignals {true};
 /// main test thread can have 10 signals queued
 constexpr size_t mainTestThreadQueuedSignals {10};
 
-/// main test thread can have 10 signal handlers
-constexpr size_t mainTestThreadCaughtSignals {10};
+/// main test thread can have 10 different SignalAction objects
+constexpr size_t mainTestThreadSignalActions {10};
 
 /// priority of main test thread
 constexpr uint8_t mainTestThreadPriority {UINT8_MAX / 2};

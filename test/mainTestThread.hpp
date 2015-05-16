@@ -47,7 +47,7 @@ constexpr size_t mainTestThreadStackSize {20480};
 
 /// type of main test thread
 using MainTestThread = decltype(makeStaticThread<mainTestThreadStackSize, mainTestThreadCanReceiveSignals,
-		mainTestThreadQueuedSignals, mainTestThreadCaughtSignals>(mainTestThreadPriority, mainTestThreadFunction));
+		mainTestThreadQueuedSignals, mainTestThreadSignalActions>(mainTestThreadPriority, mainTestThreadFunction));
 
 /// main test thread object
 extern MainTestThread mainTestThread;
