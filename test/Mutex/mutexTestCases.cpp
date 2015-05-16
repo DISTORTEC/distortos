@@ -2,13 +2,13 @@
  * \file
  * \brief mutexTestCases object definition
  *
- * \author Copyright (C) 2014 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-11-19
+ * \date 2015-05-16
  */
 
 #include "mutexTestCases.hpp"
@@ -20,6 +20,8 @@
 #include "MutexPriorityProtectOperationsTestCase.hpp"
 #include "MutexPriorityInheritanceOperationsTestCase.hpp"
 #include "MutexPriorityProtocolTestCase.hpp"
+
+#include "TestCaseGroup.hpp"
 
 namespace distortos
 {
@@ -80,15 +82,15 @@ const MutexPriorityInheritanceOperationsTestCase priorityInheritanceOperationsTe
 const MutexPriorityProtocolTestCase priorityProtocolTestCase;
 
 /// array with references to TestCase objects related to mutexes
-const TestCaseRange::value_type mutexTestCases_[]
+const TestCaseGroup::Range::value_type mutexTestCases_[]
 {
-		TestCaseRange::value_type{priorityTestCase},
-		TestCaseRange::value_type{operationsTestCase},
-		TestCaseRange::value_type{errorCheckingOperationsTestCase},
-		TestCaseRange::value_type{recursiveOperationsTestCase},
-		TestCaseRange::value_type{priorityProtectOperationsTestCase},
-		TestCaseRange::value_type{priorityInheritanceOperationsTestCase},
-		TestCaseRange::value_type{priorityProtocolTestCase},
+		TestCaseGroup::Range::value_type{priorityTestCase},
+		TestCaseGroup::Range::value_type{operationsTestCase},
+		TestCaseGroup::Range::value_type{errorCheckingOperationsTestCase},
+		TestCaseGroup::Range::value_type{recursiveOperationsTestCase},
+		TestCaseGroup::Range::value_type{priorityProtectOperationsTestCase},
+		TestCaseGroup::Range::value_type{priorityInheritanceOperationsTestCase},
+		TestCaseGroup::Range::value_type{priorityProtocolTestCase},
 };
 
 }	// namespace
@@ -97,7 +99,7 @@ const TestCaseRange::value_type mutexTestCases_[]
 | global objects
 +---------------------------------------------------------------------------------------------------------------------*/
 
-const TestCaseRange mutexTestCases {mutexTestCases_};
+const TestCaseGroup mutexTestCases {TestCaseGroup::Range{mutexTestCases_}};
 
 }	// namespace test
 
