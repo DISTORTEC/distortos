@@ -46,6 +46,7 @@ const TestCaseRange::value_type groupsWrapper_[]
 		TestCaseRange::value_type{softwareTimerTestCases},
 		TestCaseRange::value_type{semaphoreTestCases},
 		TestCaseRange::value_type{mutexTestCases},
+		TestCaseRange::value_type{conditionVariableTestCases},
 };
 
 /// range of references to TestCaseGroup objects
@@ -55,7 +56,6 @@ const TestCaseRange groupsWrapper {groupsWrapper_};
 const TestCaseRangeRange::value_type testCases_[]
 {
 		TestCaseRangeRange::value_type{groupsWrapper},
-		TestCaseRangeRange::value_type{conditionVariableTestCases},
 		TestCaseRangeRange::value_type{fifoQueueTestCases},
 		TestCaseRangeRange::value_type{rawFifoQueueTestCases},
 		TestCaseRangeRange::value_type{messageQueueTestCases},

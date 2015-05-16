@@ -2,19 +2,21 @@
  * \file
  * \brief conditionVariableTestCases object definition
  *
- * \author Copyright (C) 2014 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-11-24
+ * \date 2015-05-16
  */
 
 #include "conditionVariableTestCases.hpp"
 
 #include "ConditionVariablePriorityTestCase.hpp"
 #include "ConditionVariableOperationsTestCase.hpp"
+
+#include "TestCaseGroup.hpp"
 
 namespace distortos
 {
@@ -39,10 +41,10 @@ const ConditionVariablePriorityTestCase priorityTestCase {priorityTestCaseImplem
 const ConditionVariableOperationsTestCase operationsTestCase;
 
 /// array with references to TestCase objects related to condition variables
-const TestCaseRange::value_type conditionVariableTestCases_[]
+const TestCaseGroup::Range::value_type conditionVariableTestCases_[]
 {
-		TestCaseRange::value_type{priorityTestCase},
-		TestCaseRange::value_type{operationsTestCase},
+		TestCaseGroup::Range::value_type{priorityTestCase},
+		TestCaseGroup::Range::value_type{operationsTestCase},
 };
 
 }	// namespace
@@ -51,7 +53,7 @@ const TestCaseRange::value_type conditionVariableTestCases_[]
 | global objects
 +---------------------------------------------------------------------------------------------------------------------*/
 
-const TestCaseRange conditionVariableTestCases {conditionVariableTestCases_};
+const TestCaseGroup conditionVariableTestCases {TestCaseGroup::Range{conditionVariableTestCases_}};
 
 }	// namespace test
 
