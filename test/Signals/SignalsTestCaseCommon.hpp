@@ -51,6 +51,16 @@ public:
 protected:
 
 	/**
+	 * \brief Finalizes the test case.
+	 *
+	 * Calls PrioritizedTestCase::finalize().
+	 *
+	 * \return true if finalization succeeded, false otherwise
+	 */
+
+	virtual bool finalize() const override;
+
+	/**
 	 * \brief Initializes the test case.
 	 *
 	 * Calls PrioritizedTestCase::initialize().

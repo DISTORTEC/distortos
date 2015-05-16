@@ -23,6 +23,11 @@ namespace test
 | protected functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
+bool SignalsTestCaseCommon::finalize() const
+{
+	return PrioritizedTestCase::finalize();
+}
+
 bool SignalsTestCaseCommon::initialize() const
 {
 	return PrioritizedTestCase::initialize();
