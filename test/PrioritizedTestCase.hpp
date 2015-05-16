@@ -26,7 +26,7 @@ namespace test
 
 /**
  * \brief PrioritizedTestCase class is a wrapper for TestCase which runs the internal TestCase at specific priority,
- * restoring original priority afterwards.
+ * restoring original priority of main test thread afterwards.
  */
 
 class PrioritizedTestCase : public TestCaseCommon
