@@ -29,6 +29,7 @@ namespace test
  *
  * During initialization:
  * - configured priority is set;
+ * - configured signal mask is set;
  *
  * During finalization:
  * - empty signal mask is restored;
@@ -70,7 +71,7 @@ protected:
 	/**
 	 * \brief Initializes the test case.
 	 *
-	 * Calls PrioritizedTestCase::initialize().
+	 * Calls PrioritizedTestCase::initialize() and sets configured signal mask.
 	 *
 	 * \return true if initialization succeeded, false otherwise
 	 */

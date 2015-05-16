@@ -46,7 +46,10 @@ bool SignalsTestCaseCommon::finalize() const
 
 bool SignalsTestCaseCommon::initialize() const
 {
-	return PrioritizedTestCase::initialize();
+	if (PrioritizedTestCase::initialize() == false)
+		return false;
+
+	return ThisThread::Signals::setSignalMask(signalMask_) == 0;
 }
 
 }	// namespace test
