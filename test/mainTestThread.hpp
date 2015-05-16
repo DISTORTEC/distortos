@@ -14,6 +14,8 @@
 #ifndef TEST_MAINTESTTHREAD_HPP_
 #define TEST_MAINTESTTHREAD_HPP_
 
+#include "mainTestThreadParameters.hpp"
+
 #include "distortos/StaticThread.hpp"
 
 namespace distortos
@@ -42,18 +44,6 @@ constexpr size_t mainTestThreadStackSize {10240};
 #else
 constexpr size_t mainTestThreadStackSize {20480};
 #endif	// def _REENT_SMALL
-
-/// main test thread can receive signals
-constexpr bool mainTestThreadCanReceiveSignals {true};
-
-/// main test thread can have 10 signals queued
-constexpr size_t mainTestThreadQueuedSignals {10};
-
-/// main test thread can have 10 signal handlers
-constexpr size_t mainTestThreadCaughtSignals {10};
-
-/// priority of main test thread
-constexpr uint8_t mainTestThreadPriority {UINT8_MAX / 2};
 
 /// type of main test thread
 using MainTestThread = decltype(makeStaticThread<mainTestThreadStackSize, mainTestThreadCanReceiveSignals,
