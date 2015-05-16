@@ -47,6 +47,18 @@ public:
 
 	}
 
+protected:
+
+	/**
+	 * \brief Finalizes the test case.
+	 *
+	 * Restores original priority of main test thread.
+	 *
+	 * \return true if finalization succeeded, false otherwise
+	 */
+
+	virtual bool finalize() const override;
+
 private:
 
 	/**

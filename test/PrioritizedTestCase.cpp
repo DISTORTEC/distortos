@@ -24,15 +24,23 @@ namespace test
 {
 
 /*---------------------------------------------------------------------------------------------------------------------+
+| protected functions
++---------------------------------------------------------------------------------------------------------------------*/
+
+bool PrioritizedTestCase::finalize() const
+{
+	ThisThread::setPriority(mainTestThreadPriority);
+	return true;
+}
+
+/*---------------------------------------------------------------------------------------------------------------------+
 | private functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
 bool PrioritizedTestCase::run_() const
 {
 	ThisThread::setPriority(priority_);
-	const auto ret = testCase_.run();
-	ThisThread::setPriority(mainTestThreadPriority);
-	return ret;
+	return testCase_.run();
 }
 
 }	// namespace test
