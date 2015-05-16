@@ -38,10 +38,7 @@ public:
 	 * \return true if the test case succeeded, false otherwise
 	 */
 
-	bool run() const
-	{
-		return run_();
-	}
+	bool run() const;
 
 protected:
 
