@@ -16,6 +16,8 @@
 
 #include "SignalsTestCaseCommon.hpp"
 
+#include "abortSignalHandler.hpp"
+
 namespace distortos
 {
 
@@ -41,7 +43,8 @@ public:
 	 */
 
 	constexpr SignalsGenerationOperationsTestCase() :
-			SignalsTestCaseCommon{testCasePriority_, SignalSet{SignalSet::full}}
+			SignalsTestCaseCommon{testCasePriority_, SignalSet{SignalSet::full},
+					{abortSignalHandler, SignalSet{SignalSet::full}}}
 	{
 
 	}
