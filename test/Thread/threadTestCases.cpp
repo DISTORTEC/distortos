@@ -2,13 +2,13 @@
  * \file
  * \brief threadTestCases object definition
  *
- * \author Copyright (C) 2014 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-11-19
+ * \date 2015-05-16
  */
 
 #include "threadTestCases.hpp"
@@ -19,6 +19,8 @@
 #include "ThreadSleepUntilTestCase.hpp"
 #include "ThreadSchedulingPolicyTestCase.hpp"
 #include "ThreadPriorityChangeTestCase.hpp"
+
+#include "TestCaseGroup.hpp"
 
 namespace distortos
 {
@@ -55,14 +57,14 @@ const ThreadPriorityChangeTestCase::Implementation priorityChangeTestCaseImpleme
 const ThreadPriorityChangeTestCase priorityChangeTestCase {priorityChangeTestCaseImplementation};
 
 /// array with references to TestCase objects related to threads
-const TestCaseRange::value_type threadTestCases_[]
+const TestCaseGroup::Range::value_type threadTestCases_[]
 {
-		TestCaseRange::value_type{priorityTestCase},
-		TestCaseRange::value_type{functionTypesTestCase},
-		TestCaseRange::value_type{sleepForTestCase},
-		TestCaseRange::value_type{sleepUntilTestCase},
-		TestCaseRange::value_type{schedulingPolicyTestCase},
-		TestCaseRange::value_type{priorityChangeTestCase},
+		TestCaseGroup::Range::value_type{priorityTestCase},
+		TestCaseGroup::Range::value_type{functionTypesTestCase},
+		TestCaseGroup::Range::value_type{sleepForTestCase},
+		TestCaseGroup::Range::value_type{sleepUntilTestCase},
+		TestCaseGroup::Range::value_type{schedulingPolicyTestCase},
+		TestCaseGroup::Range::value_type{priorityChangeTestCase},
 };
 
 }	// namespace
@@ -71,7 +73,7 @@ const TestCaseRange::value_type threadTestCases_[]
 | global objects
 +---------------------------------------------------------------------------------------------------------------------*/
 
-const TestCaseRange threadTestCases {threadTestCases_};
+const TestCaseGroup threadTestCases {TestCaseGroup::Range{threadTestCases_}};
 
 }	// namespace test
 

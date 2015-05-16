@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-02-18
+ * \date 2015-05-16
  */
 
 #include "testCases.hpp"
@@ -24,6 +24,8 @@
 #include "RawMessageQueue/rawMessageQueueTestCases.hpp"
 #include "Signals/signalsTestCases.hpp"
 
+#include "TestCaseGroup.hpp"
+
 namespace distortos
 {
 
@@ -37,10 +39,19 @@ namespace
 | local objects
 +---------------------------------------------------------------------------------------------------------------------*/
 
+/// array with references to TestCaseGroup objects
+const TestCaseRange::value_type groupsWrapper_[]
+{
+		TestCaseRange::value_type{threadTestCases},
+};
+
+/// range of references to TestCaseGroup objects
+const TestCaseRange groupsWrapper {groupsWrapper_};
+
 /// array with references to TestCaseRange objects
 const TestCaseRangeRange::value_type testCases_[]
 {
-		TestCaseRangeRange::value_type{threadTestCases},
+		TestCaseRangeRange::value_type{groupsWrapper},
 		TestCaseRangeRange::value_type{softwareTimerTestCases},
 		TestCaseRangeRange::value_type{semaphoreTestCases},
 		TestCaseRangeRange::value_type{mutexTestCases},
