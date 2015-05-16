@@ -25,7 +25,17 @@ namespace test
 /// TestCaseCommon class implements common parts of TestCase
 class TestCaseCommon : public TestCase
 {
+protected:
 
+	/**
+	 * \brief Initializes the test case.
+	 *
+	 * Empty stub.
+	 *
+	 * \return true if initialization succeeded, false otherwise
+	 */
+
+	virtual bool initialize() const override;
 };
 
 }	// namespace test
