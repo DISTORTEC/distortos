@@ -46,6 +46,16 @@ public:
 protected:
 
 	/**
+	 * \brief Finalizes the test case.
+	 *
+	 * \note this should be provided by derived classes
+	 *
+	 * \return true if finalization succeeded, false otherwise
+	 */
+
+	virtual bool finalize() const = 0;
+
+	/**
 	 * \brief Initializes the test case.
 	 *
 	 * \note this should be provided by derived classes

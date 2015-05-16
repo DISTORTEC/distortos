@@ -28,6 +28,16 @@ class TestCaseCommon : public TestCase
 protected:
 
 	/**
+	 * \brief Finalizes the test case.
+	 *
+	 * Empty stub.
+	 *
+	 * \return true if finalization succeeded, false otherwise
+	 */
+
+	virtual bool finalize() const override;
+
+	/**
 	 * \brief Initializes the test case.
 	 *
 	 * Empty stub.

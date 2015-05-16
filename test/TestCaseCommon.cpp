@@ -23,6 +23,11 @@ namespace test
 | protected functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
+bool TestCaseCommon::finalize() const
+{
+	return true;
+}
+
 bool TestCaseCommon::initialize() const
 {
 	return true;
