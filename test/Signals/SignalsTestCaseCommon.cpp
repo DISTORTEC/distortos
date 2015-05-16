@@ -13,8 +13,10 @@
 
 #include "SignalsTestCaseCommon.hpp"
 
-#include "distortos/SignalSet.hpp"
+#include "distortos/SignalAction.hpp"
 #include "distortos/ThisThread-Signals.hpp"
+
+#include <tuple>
 
 namespace distortos
 {
@@ -30,6 +32,14 @@ bool SignalsTestCaseCommon::finalize() const
 {
 	if (ThisThread::Signals::setSignalMask(SignalSet{SignalSet::empty}) != 0)
 		return false;
+
+	for (uint8_t signalNumber {}; signalNumber < SignalSet::Bitset{}.size(); ++signalNumber)
+	{
+		int ret;
+		std::tie(ret, std::ignore) = ThisThread::Signals::setSignalAction(signalNumber, {});
+		if (ret != 0)
+			return false;
+	}
 
 	return PrioritizedTestCase::finalize();
 }

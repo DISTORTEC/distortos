@@ -30,6 +30,7 @@ namespace test
  *
  * During finalization:
  * - empty signal mask is restored;
+ * - default signal actions are restored for all signal numbers;
  * - original priority of main test thread is restored;
  */
 
@@ -54,7 +55,8 @@ protected:
 	/**
 	 * \brief Finalizes the test case.
 	 *
-	 * Restores empty signal mask and calls PrioritizedTestCase::finalize().
+	 * Restores empty signal mask, restores default signal actions for all signal numbers and calls
+	 * PrioritizedTestCase::finalize().
 	 *
 	 * \return true if finalization succeeded, false otherwise
 	 */
