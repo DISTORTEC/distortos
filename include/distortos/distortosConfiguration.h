@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-04-29
+ * \date 2015-05-16
  */
 
 #ifndef INCLUDE_DISTORTOS_DISTORTOSCONFIGURATION_H_
@@ -62,10 +62,10 @@
 #define CONFIG_MAIN_THREAD_QUEUED_SIGNALS	0
 
 /**
- * \brief max number of caught signals for main thread, relevant only if CONFIG_MAIN_THREAD_CAN_RECEIVE_SIGNALS == 1,
- * 0 to disable catching of signals for main thread
+ * \brief max number of different SignalAction objects for main thread, relevant only if
+ * CONFIG_MAIN_THREAD_CAN_RECEIVE_SIGNALS == 1, 0 to disable catching of signals for main thread
  */
 
-#define CONFIG_MAIN_THREAD_CAUGHT_SIGNALS	0
+#define CONFIG_MAIN_THREAD_SIGNAL_ACTIONS	0
 
 #endif	/* INCLUDE_DISTORTOS_DISTORTOSCONFIGURATION_H_ */
