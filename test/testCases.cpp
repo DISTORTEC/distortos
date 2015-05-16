@@ -43,6 +43,7 @@ namespace
 const TestCaseRange::value_type groupsWrapper_[]
 {
 		TestCaseRange::value_type{threadTestCases},
+		TestCaseRange::value_type{softwareTimerTestCases},
 };
 
 /// range of references to TestCaseGroup objects
@@ -52,7 +53,6 @@ const TestCaseRange groupsWrapper {groupsWrapper_};
 const TestCaseRangeRange::value_type testCases_[]
 {
 		TestCaseRangeRange::value_type{groupsWrapper},
-		TestCaseRangeRange::value_type{softwareTimerTestCases},
 		TestCaseRangeRange::value_type{semaphoreTestCases},
 		TestCaseRangeRange::value_type{mutexTestCases},
 		TestCaseRangeRange::value_type{conditionVariableTestCases},

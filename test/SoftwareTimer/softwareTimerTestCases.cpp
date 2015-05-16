@@ -2,13 +2,13 @@
  * \file
  * \brief softwareTimerTestCases object definition
  *
- * \author Copyright (C) 2014 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-11-20
+ * \date 2015-05-16
  */
 
 #include "softwareTimerTestCases.hpp"
@@ -16,6 +16,8 @@
 #include "SoftwareTimerOrderingTestCase.hpp"
 #include "SoftwareTimerOperationsTestCase.hpp"
 #include "SoftwareTimerFunctionTypesTestCase.hpp"
+
+#include "TestCaseGroup.hpp"
 
 namespace distortos
 {
@@ -40,11 +42,11 @@ const SoftwareTimerOperationsTestCase operationsTestCase;
 const SoftwareTimerFunctionTypesTestCase functionTypesTestCase;
 
 /// array with references to TestCase objects related to software timers
-const TestCaseRange::value_type softwareTimerTestCases_[]
+const TestCaseGroup::Range::value_type softwareTimerTestCases_[]
 {
-		TestCaseRange::value_type{orderingTestCase},
-		TestCaseRange::value_type{operationsTestCase},
-		TestCaseRange::value_type{functionTypesTestCase},
+		TestCaseGroup::Range::value_type{orderingTestCase},
+		TestCaseGroup::Range::value_type{operationsTestCase},
+		TestCaseGroup::Range::value_type{functionTypesTestCase},
 };
 
 }	// namespace
@@ -53,7 +55,7 @@ const TestCaseRange::value_type softwareTimerTestCases_[]
 | global objects
 +---------------------------------------------------------------------------------------------------------------------*/
 
-const TestCaseRange softwareTimerTestCases {softwareTimerTestCases_};
+const TestCaseGroup softwareTimerTestCases {TestCaseGroup::Range{softwareTimerTestCases_}};
 
 }	// namespace test
 
