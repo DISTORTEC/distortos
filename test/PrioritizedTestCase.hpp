@@ -25,8 +25,8 @@ namespace test
 {
 
 /**
- * \brief PrioritizedTestCase class is a wrapper for TestCase which runs the internal TestCase at specific priority,
- * restoring original priority of main test thread afterwards.
+ * \brief PrioritizedTestCase class is a TestCase which runs at specific priority, restoring original priority of main
+ * test thread afterwards.
  */
 
 class PrioritizedTestCase : public TestCaseCommon
@@ -36,12 +36,10 @@ public:
 	/**
 	 * \brief PrioritizedTestCase's constructor
 	 *
-	 * \param [in] testCase is a reference to TestCase run by that object
-	 * \param [in] priority is the priority at which testCase will be executed
+	 * \param [in] priority is the priority at which test case will be executed
 	 */
 
-	constexpr PrioritizedTestCase(const TestCase& testCase, const uint8_t priority) :
-			testCase_(testCase),
+	constexpr explicit PrioritizedTestCase(const uint8_t priority) :
 			priority_{priority}
 	{
 
@@ -70,17 +68,6 @@ protected:
 	virtual bool initialize() const override;
 
 private:
-
-	/**
-	 * \brief Runs the test case.
-	 *
-	 * \return true if the test case succeeded, false otherwise
-	 */
-
-	virtual bool run_() const override;
-
-	/// reference to TestCase run by that object
-	const TestCase& testCase_;
 
 	/// priority at which testCase_ will be executed
 	const uint8_t priority_;

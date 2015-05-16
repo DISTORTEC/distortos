@@ -34,11 +34,8 @@ namespace
 | local objects
 +---------------------------------------------------------------------------------------------------------------------*/
 
-/// SignalsWaitTestCase::Implementation instance
-const SignalsWaitTestCase::Implementation waitTestCaseImplementation;
-
 /// SignalsWaitTestCase instance
-const SignalsWaitTestCase waitTestCase {waitTestCaseImplementation};
+const SignalsWaitTestCase waitTestCase;
 
 /// SignalsWaitOperationsTestCase instance
 const SignalsWaitOperationsTestCase waitOperationsTestCase;

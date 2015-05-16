@@ -35,32 +35,25 @@ class MutexRecursiveOperationsTestCase : public PrioritizedTestCase
 
 public:
 
-	/// internal implementation of MutexRecursiveOperationsTestCase
-	class Implementation : public TestCaseCommon
-	{
-	private:
-
-		/**
-		 * \brief Runs the test case.
-		 *
-		 * \return true if the test case succeeded, false otherwise
-		 */
-
-		virtual bool run_() const override;
-	};
-
 	/**
 	 * \brief MutexRecursiveOperationsTestCase's constructor
-	 *
-	 * \param [in] implementation is a reference to MutexRecursiveOperationsTestCase::Implementation object used by this
-	 * instance
 	 */
 
-	constexpr explicit MutexRecursiveOperationsTestCase(const Implementation& implementation) :
-			PrioritizedTestCase{implementation, testCasePriority_}
+	constexpr MutexRecursiveOperationsTestCase() :
+			PrioritizedTestCase{testCasePriority_}
 	{
 
 	}
+
+private:
+
+	/**
+	 * \brief Runs the test case.
+	 *
+	 * \return true if the test case succeeded, false otherwise
+	 */
+
+	virtual bool run_() const override;
 };
 
 }	// namespace test

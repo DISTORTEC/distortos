@@ -50,11 +50,8 @@ const ThreadSleepUntilTestCase sleepUntilTestCase;
 /// ThreadSchedulingPolicyTestCase instance
 const ThreadSchedulingPolicyTestCase schedulingPolicyTestCase;
 
-/// ThreadPriorityChangeTestCase::Implementation instance
-const ThreadPriorityChangeTestCase::Implementation priorityChangeTestCaseImplementation;
-
 /// ThreadPriorityChangeTestCase instance
-const ThreadPriorityChangeTestCase priorityChangeTestCase {priorityChangeTestCaseImplementation};
+const ThreadPriorityChangeTestCase priorityChangeTestCase;
 
 /// array with references to TestCase objects related to threads
 const TestCaseGroup::Range::value_type threadTestCases_[]

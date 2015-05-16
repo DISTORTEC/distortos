@@ -31,11 +31,9 @@ namespace
 | local objects
 +---------------------------------------------------------------------------------------------------------------------*/
 
-/// SemaphorePriorityTestCase::Implementation instance
-const SemaphorePriorityTestCase::Implementation priorityTestCaseImplementation;
 
 /// SemaphorePriorityTestCase instance
-const SemaphorePriorityTestCase priorityTestCase {priorityTestCaseImplementation};
+const SemaphorePriorityTestCase priorityTestCase;
 
 /// SemaphoreOperationsTestCase instance
 const SemaphoreOperationsTestCase operationsTestCase;

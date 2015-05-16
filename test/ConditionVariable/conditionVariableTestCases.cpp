@@ -31,11 +31,8 @@ namespace
 | local objects
 +---------------------------------------------------------------------------------------------------------------------*/
 
-/// ConditionVariablePriorityTestCase::Implementation instance
-const ConditionVariablePriorityTestCase::Implementation priorityTestCaseImplementation;
-
 /// ConditionVariablePriorityTestCase instance
-const ConditionVariablePriorityTestCase priorityTestCase {priorityTestCaseImplementation};
+const ConditionVariablePriorityTestCase priorityTestCase;
 
 /// ConditionVariableOperationsTestCase instance
 const ConditionVariableOperationsTestCase operationsTestCase;

@@ -45,31 +45,25 @@ public:
 		return testCasePriority_;
 	}
 
-	/// internal implementation of MutexOperationsTestCase
-	class Implementation : public TestCaseCommon
-	{
-	private:
-
-		/**
-		 * \brief Runs the test case.
-		 *
-		 * \return true if the test case succeeded, false otherwise
-		 */
-
-		virtual bool run_() const override;
-	};
-
 	/**
 	 * \brief MutexOperationsTestCase's constructor
-	 *
-	 * \param [in] implementation is a reference to MutexOperationsTestCase::Implementation object used by this instance
 	 */
 
-	constexpr explicit MutexOperationsTestCase(const Implementation& implementation) :
-			PrioritizedTestCase{implementation, testCasePriority_}
+	constexpr MutexOperationsTestCase() :
+			PrioritizedTestCase{testCasePriority_}
 	{
 
 	}
+
+private:
+
+	/**
+	 * \brief Runs the test case.
+	 *
+	 * \return true if the test case succeeded, false otherwise
+	 */
+
+	virtual bool run_() const override;
 };
 
 }	// namespace test

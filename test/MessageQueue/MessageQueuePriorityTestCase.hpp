@@ -38,32 +38,25 @@ class MessageQueuePriorityTestCase : public PrioritizedTestCase
 
 public:
 
-	/// internal implementation of MessageQueuePriorityTestCase
-	class Implementation : public TestCaseCommon
-	{
-	private:
-
-		/**
-		 * \brief Runs the test case.
-		 *
-		 * \return true if the test case succeeded, false otherwise
-		 */
-
-		virtual bool run_() const override;
-	};
-
 	/**
 	 * \brief MessageQueuePriorityTestCase's constructor
-	 *
-	 * \param [in] implementation is a reference to MessageQueuePriorityTestCase::Implementation object used by this
-	 * instance
 	 */
 
-	constexpr explicit MessageQueuePriorityTestCase(const Implementation& implementation) :
-			PrioritizedTestCase{implementation, testCasePriority_}
+	constexpr MessageQueuePriorityTestCase() :
+			PrioritizedTestCase{testCasePriority_}
 	{
 
 	}
+
+private:
+
+	/**
+	 * \brief Runs the test case.
+	 *
+	 * \return true if the test case succeeded, false otherwise
+	 */
+
+	virtual bool run_() const override;
 };
 
 }	// namespace test

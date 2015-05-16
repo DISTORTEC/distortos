@@ -36,32 +36,25 @@ class SignalsWaitTestCase : public PrioritizedTestCase
 
 public:
 
-	/// internal implementation of SignalsWaitTestCase
-	class Implementation : public TestCaseCommon
-	{
-	private:
-
-		/**
-		 * \brief Runs the test case.
-		 *
-		 * \return true if the test case succeeded, false otherwise
-		 */
-
-		virtual bool run_() const override;
-	};
-
 	/**
 	 * \brief SignalsWaitTestCase's constructor
-	 *
-	 * \param [in] implementation is a reference to SignalsWaitTestCase::Implementation object used by this
-	 * instance
 	 */
 
-	constexpr explicit SignalsWaitTestCase(const Implementation& implementation) :
-			PrioritizedTestCase{implementation, testCasePriority_}
+	constexpr SignalsWaitTestCase() :
+			PrioritizedTestCase{testCasePriority_}
 	{
 
 	}
+
+private:
+
+	/**
+	 * \brief Runs the test case.
+	 *
+	 * \return true if the test case succeeded, false otherwise
+	 */
+
+	virtual bool run_() const override;
 };
 
 }	// namespace test

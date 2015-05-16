@@ -35,32 +35,25 @@ class MutexErrorCheckingOperationsTestCase : public PrioritizedTestCase
 
 public:
 
-	/// internal implementation of MutexErrorCheckingOperationsTestCase
-	class Implementation : public TestCaseCommon
-	{
-	private:
-
-		/**
-		 * \brief Runs the test case.
-		 *
-		 * \return true if the test case succeeded, false otherwise
-		 */
-
-		virtual bool run_() const override;
-	};
-
 	/**
 	 * \brief MutexErrorCheckingOperationsTestCase's constructor
-	 *
-	 * \param [in] implementation is a reference to MutexErrorCheckingOperationsTestCase::Implementation object used by
-	 * this instance
 	 */
 
-	constexpr explicit MutexErrorCheckingOperationsTestCase(const Implementation& implementation) :
-			PrioritizedTestCase{implementation, testCasePriority_}
+	constexpr MutexErrorCheckingOperationsTestCase() :
+			PrioritizedTestCase{testCasePriority_}
 	{
 
 	}
+
+private:
+
+	/**
+	 * \brief Runs the test case.
+	 *
+	 * \return true if the test case succeeded, false otherwise
+	 */
+
+	virtual bool run_() const override;
 };
 
 }	// namespace test

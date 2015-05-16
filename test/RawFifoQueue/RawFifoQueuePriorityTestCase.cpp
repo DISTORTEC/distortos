@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-01-18
+ * \date 2015-05-16
  */
 
 #include "RawFifoQueuePriorityTestCase.hpp"
@@ -214,7 +214,7 @@ const std::array<Stage, 2> stages
 | private functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-bool RawFifoQueuePriorityTestCase::Implementation::run_() const
+bool RawFifoQueuePriorityTestCase::run_() const
 {
 	const auto contextSwitchCount = statistics::getContextSwitchCount();
 	std::remove_const<decltype(contextSwitchCount)>::type expectedContextSwitchCount {};

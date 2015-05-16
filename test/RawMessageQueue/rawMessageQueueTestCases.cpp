@@ -31,11 +31,8 @@ namespace
 | local objects
 +---------------------------------------------------------------------------------------------------------------------*/
 
-/// RawMessageQueuePriorityTestCase::Implementation instance
-const RawMessageQueuePriorityTestCase::Implementation priorityTestCaseImplementation;
-
 /// RawMessageQueuePriorityTestCase instance
-const RawMessageQueuePriorityTestCase priorityTestCase {priorityTestCaseImplementation};
+const RawMessageQueuePriorityTestCase priorityTestCase;
 
 /// RawMessageQueueOperationsTestCase instance
 const RawMessageQueueOperationsTestCase operationsTestCase;

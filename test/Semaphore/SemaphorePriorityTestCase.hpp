@@ -36,32 +36,25 @@ class SemaphorePriorityTestCase : public PrioritizedTestCase
 
 public:
 
-	/// internal implementation of SemaphorePriorityTestCase
-	class Implementation : public TestCaseCommon
-	{
-	private:
-
-		/**
-		 * \brief Runs the test case.
-		 *
-		 * \return true if the test case succeeded, false otherwise
-		 */
-
-		virtual bool run_() const override;
-	};
-
 	/**
 	 * \brief SemaphorePriorityTestCase's constructor
-	 *
-	 * \param [in] implementation is a reference to SemaphorePriorityTestCase::Implementation object used by this
-	 * instance
 	 */
 
-	constexpr explicit SemaphorePriorityTestCase(const Implementation& implementation) :
-			PrioritizedTestCase{implementation, testCasePriority_}
+	constexpr SemaphorePriorityTestCase() :
+			PrioritizedTestCase{testCasePriority_}
 	{
 
 	}
+
+private:
+
+	/**
+	 * \brief Runs the test case.
+	 *
+	 * \return true if the test case succeeded, false otherwise
+	 */
+
+	virtual bool run_() const override;
 };
 
 }	// namespace test

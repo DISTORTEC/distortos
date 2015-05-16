@@ -39,15 +39,6 @@ bool PrioritizedTestCase::initialize() const
 	return true;
 }
 
-/*---------------------------------------------------------------------------------------------------------------------+
-| private functions
-+---------------------------------------------------------------------------------------------------------------------*/
-
-bool PrioritizedTestCase::run_() const
-{
-	return testCase_.run();
-}
-
 }	// namespace test
 
 }	// namespace distortos

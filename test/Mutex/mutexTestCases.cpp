@@ -39,44 +39,20 @@ namespace
 /// MutexPriorityTestCase instance
 const MutexPriorityTestCase priorityTestCase;
 
-/// MutexOperationsTestCase::Implementation instance
-const MutexOperationsTestCase::Implementation operationsTestCaseImplementation;
-
 /// MutexOperationsTestCase instance
-const MutexOperationsTestCase operationsTestCase {operationsTestCaseImplementation};
-
-/// MutexErrorCheckingOperationsTestCase::Implementation instance
-const MutexErrorCheckingOperationsTestCase::Implementation errorCheckingOperationsTestCaseImplementation;
+const MutexOperationsTestCase operationsTestCase;
 
 /// MutexErrorCheckingOperationsTestCase instance
-const MutexErrorCheckingOperationsTestCase errorCheckingOperationsTestCase
-{
-		errorCheckingOperationsTestCaseImplementation
-};
-
-/// MutexRecursiveOperationsTestCase::Implementation instance
-const MutexRecursiveOperationsTestCase::Implementation recursiveOperationsTestCaseImplementation;
+const MutexErrorCheckingOperationsTestCase errorCheckingOperationsTestCase;
 
 /// MutexRecursiveOperationsTestCase instance
-const MutexRecursiveOperationsTestCase recursiveOperationsTestCase {recursiveOperationsTestCaseImplementation};
-
-/// MutexPriorityProtectOperationsTestCase::Implementation instance
-const MutexPriorityProtectOperationsTestCase::Implementation priorityProtectOperationsTestCaseImplementation;
+const MutexRecursiveOperationsTestCase recursiveOperationsTestCase;
 
 /// MutexPriorityProtectOperationsTestCase instance
-const MutexPriorityProtectOperationsTestCase priorityProtectOperationsTestCase
-{
-		priorityProtectOperationsTestCaseImplementation
-};
-
-/// MutexPriorityInheritanceOperationsTestCase::Implementation instance
-const MutexPriorityInheritanceOperationsTestCase::Implementation priorityInheritanceOperationsTestCaseImplementation;
+const MutexPriorityProtectOperationsTestCase priorityProtectOperationsTestCase;
 
 /// MutexPriorityInheritanceOperationsTestCase instance
-const MutexPriorityInheritanceOperationsTestCase priorityInheritanceOperationsTestCase
-{
-		priorityInheritanceOperationsTestCaseImplementation
-};
+const MutexPriorityInheritanceOperationsTestCase priorityInheritanceOperationsTestCase;
 
 /// MutexPriorityProtocolTestCase instance
 const MutexPriorityProtocolTestCase priorityProtocolTestCase;

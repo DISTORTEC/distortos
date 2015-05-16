@@ -37,32 +37,25 @@ class RawFifoQueuePriorityTestCase : public PrioritizedTestCase
 
 public:
 
-	/// internal implementation of RawFifoQueuePriorityTestCase
-	class Implementation : public TestCaseCommon
-	{
-	private:
-
-		/**
-		 * \brief Runs the test case.
-		 *
-		 * \return true if the test case succeeded, false otherwise
-		 */
-
-		virtual bool run_() const override;
-	};
-
 	/**
 	 * \brief RawFifoQueuePriorityTestCase's constructor
-	 *
-	 * \param [in] implementation is a reference to RawFifoQueuePriorityTestCase::Implementation object used by this
-	 * instance
 	 */
 
-	constexpr explicit RawFifoQueuePriorityTestCase(const Implementation& implementation) :
-			PrioritizedTestCase{implementation, testCasePriority_}
+	constexpr RawFifoQueuePriorityTestCase() :
+			PrioritizedTestCase{testCasePriority_}
 	{
 
 	}
+
+private:
+
+	/**
+	 * \brief Runs the test case.
+	 *
+	 * \return true if the test case succeeded, false otherwise
+	 */
+
+	virtual bool run_() const override;
 };
 
 }	// namespace test

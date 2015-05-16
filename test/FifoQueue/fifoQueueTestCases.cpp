@@ -31,11 +31,8 @@ namespace
 | local objects
 +---------------------------------------------------------------------------------------------------------------------*/
 
-/// FifoQueuePriorityTestCase::Implementation instance
-const FifoQueuePriorityTestCase::Implementation priorityTestCaseImplementation;
-
 /// FifoQueuePriorityTestCase instance
-const FifoQueuePriorityTestCase priorityTestCase {priorityTestCaseImplementation};
+const FifoQueuePriorityTestCase priorityTestCase;
 
 /// FifoQueueOperationsTestCase instance
 const FifoQueueOperationsTestCase operationsTestCase;

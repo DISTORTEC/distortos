@@ -36,32 +36,25 @@ class ConditionVariablePriorityTestCase : public PrioritizedTestCase
 
 public:
 
-	/// internal implementation of ConditionVariablePriorityTestCase
-	class Implementation : public TestCaseCommon
-	{
-	private:
-
-		/**
-		 * \brief Runs the test case.
-		 *
-		 * \return true if the test case succeeded, false otherwise
-		 */
-
-		virtual bool run_() const override;
-	};
-
 	/**
 	 * \brief ConditionVariablePriorityTestCase's constructor
-	 *
-	 * \param [in] implementation is a reference to ConditionVariablePriorityTestCase::Implementation object used by
-	 * this instance
 	 */
 
-	constexpr explicit ConditionVariablePriorityTestCase(const Implementation& implementation) :
-			PrioritizedTestCase{implementation, testCasePriority_}
+	constexpr ConditionVariablePriorityTestCase() :
+			PrioritizedTestCase{testCasePriority_}
 	{
 
 	}
+
+private:
+
+	/**
+	 * \brief Runs the test case.
+	 *
+	 * \return true if the test case succeeded, false otherwise
+	 */
+
+	virtual bool run_() const override;
 };
 
 }	// namespace test

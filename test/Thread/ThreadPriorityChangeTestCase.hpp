@@ -37,32 +37,25 @@ class ThreadPriorityChangeTestCase : public PrioritizedTestCase
 
 public:
 
-	/// internal implementation of ThreadPriorityChangeTestCase
-	class Implementation : public TestCaseCommon
-	{
-	private:
-
-		/**
-		 * \brief Runs the test case.
-		 *
-		 * \return true if the test case succeeded, false otherwise
-		 */
-
-		virtual bool run_() const override;
-	};
-
 	/**
 	 * \brief ThreadPriorityChangeTestCase's constructor
-	 *
-	 * \param [in] implementation is a reference to ThreadPriorityChangeTestCase::Implementation object used by this
-	 * instance
 	 */
 
-	constexpr explicit ThreadPriorityChangeTestCase(const Implementation& implementation) :
-			PrioritizedTestCase{implementation, testCasePriority_}
+	constexpr ThreadPriorityChangeTestCase() :
+			PrioritizedTestCase{testCasePriority_}
 	{
 
 	}
+
+private:
+
+	/**
+	 * \brief Runs the test case.
+	 *
+	 * \return true if the test case succeeded, false otherwise
+	 */
+
+	virtual bool run_() const override;
 };
 
 }	// namespace test

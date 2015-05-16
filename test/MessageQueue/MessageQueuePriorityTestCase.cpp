@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-01-15
+ * \date 2015-05-16
  */
 
 #include "MessageQueuePriorityTestCase.hpp"
@@ -226,7 +226,7 @@ const std::array<Stage, 2> stages
 | private functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-bool MessageQueuePriorityTestCase::Implementation::run_() const
+bool MessageQueuePriorityTestCase::run_() const
 {
 	const auto contextSwitchCount = statistics::getContextSwitchCount();
 	std::remove_const<decltype(contextSwitchCount)>::type expectedContextSwitchCount {};

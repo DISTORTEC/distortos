@@ -31,11 +31,8 @@ namespace
 | local objects
 +---------------------------------------------------------------------------------------------------------------------*/
 
-/// MessageQueuePriorityTestCase::Implementation instance
-const MessageQueuePriorityTestCase::Implementation priorityTestCaseImplementation;
-
 /// MessageQueuePriorityTestCase instance
-const MessageQueuePriorityTestCase priorityTestCase {priorityTestCaseImplementation};
+const MessageQueuePriorityTestCase priorityTestCase;
 
 /// MessageQueueOperationsTestCase instance
 const MessageQueueOperationsTestCase operationsTestCase;
