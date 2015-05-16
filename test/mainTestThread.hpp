@@ -14,8 +14,6 @@
 #ifndef TEST_MAINTESTTHREAD_HPP_
 #define TEST_MAINTESTTHREAD_HPP_
 
-#include "testThreadFunction.hpp"
-
 #include "distortos/StaticThread.hpp"
 
 namespace distortos
@@ -23,6 +21,16 @@ namespace distortos
 
 namespace test
 {
+
+/*---------------------------------------------------------------------------------------------------------------------+
+| global functions' declarations
++---------------------------------------------------------------------------------------------------------------------*/
+
+/**
+ * \brief Main test thread function which runs all functional tests.
+ */
+
+void mainTestThreadFunction();
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | global objects
@@ -49,7 +57,7 @@ constexpr uint8_t mainTestThreadPriority {UINT8_MAX / 2};
 
 /// type of main test thread
 using MainTestThread = decltype(makeStaticThread<mainTestThreadStackSize, mainTestThreadCanReceiveSignals,
-		mainTestThreadQueuedSignals, mainTestThreadCaughtSignals>(mainTestThreadPriority, testThreadFunction));
+		mainTestThreadQueuedSignals, mainTestThreadCaughtSignals>(mainTestThreadPriority, mainTestThreadFunction));
 
 /// main test thread object
 extern MainTestThread mainTestThread;

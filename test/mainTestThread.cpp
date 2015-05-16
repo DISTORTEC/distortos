@@ -13,6 +13,9 @@
 
 #include "mainTestThread.hpp"
 
+#include "TestCaseGroup.hpp"
+#include "testCases.hpp"
+
 namespace distortos
 {
 
@@ -20,11 +23,21 @@ namespace test
 {
 
 /*---------------------------------------------------------------------------------------------------------------------+
+| global functions
++---------------------------------------------------------------------------------------------------------------------*/
+
+void mainTestThreadFunction()
+{
+	if (testCases.run() == false)
+		while (1);
+}
+
+/*---------------------------------------------------------------------------------------------------------------------+
 | global objects
 +---------------------------------------------------------------------------------------------------------------------*/
 
 MainTestThread mainTestThread = makeStaticThread<mainTestThreadStackSize, mainTestThreadCanReceiveSignals,
-		mainTestThreadQueuedSignals, mainTestThreadCaughtSignals>(mainTestThreadPriority, testThreadFunction);
+		mainTestThreadQueuedSignals, mainTestThreadCaughtSignals>(mainTestThreadPriority, mainTestThreadFunction);
 
 }	// namespace test
 
