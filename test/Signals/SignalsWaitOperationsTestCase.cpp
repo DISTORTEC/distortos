@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-04-02
+ * \date 2015-05-16
  */
 
 #include "SignalsWaitOperationsTestCase.hpp"
@@ -19,12 +19,9 @@
 
 #include "distortos/ThisThread-Signals.hpp"
 #include "distortos/ThisThread.hpp"
-#include "distortos/ThreadBase.hpp"
 #include "distortos/SoftwareTimer.hpp"
 #include "distortos/statistics.hpp"
 #include "distortos/StaticThread.hpp"
-
-#include <cerrno>
 
 namespace distortos
 {
@@ -587,9 +584,6 @@ const std::array<Stage, 2> stages
 
 bool SignalsWaitOperationsTestCase::run_() const
 {
-	if (ThisThread::Signals::setSignalMask(SignalSet{SignalSet::full}) != 0)
-		return false;
-
 	constexpr auto phase1ExpectedContextSwitchCount = 6 * waitForNextTickContextSwitchCount +
 			2 * phase1TimedOutWaitContextSwitchCount;
 	constexpr auto phase2ExpectedContextSwitchCount = 3 * waitForNextTickContextSwitchCount +

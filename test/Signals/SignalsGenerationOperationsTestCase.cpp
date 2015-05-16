@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-05-02
+ * \date 2015-05-16
  */
 
 #include "SignalsGenerationOperationsTestCase.hpp"
@@ -16,7 +16,6 @@
 #include "signalsTestSelfOneSignalPending.hpp"
 
 #include "distortos/ThisThread-Signals.hpp"
-#include "distortos/SignalSet.hpp"
 
 namespace distortos
 {
@@ -30,9 +29,6 @@ namespace test
 
 bool SignalsGenerationOperationsTestCase::run_() const
 {
-	if (ThisThread::Signals::setSignalMask(SignalSet{SignalSet::full}) != 0)
-		return false;
-
 	constexpr uint8_t testSignalNumber {2};
 
 	if (ThisThread::Signals::getPendingSignalSet().getBitset().none() == false)	// initially no signals may be pending
