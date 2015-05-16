@@ -1,6 +1,6 @@
 /**
  * \file
- * \brief Main code block.
+ * \brief mainTestThread object definition
  *
  * \author Copyright (C) 2014-2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
@@ -13,18 +13,19 @@
 
 #include "mainTestThread.hpp"
 
+namespace distortos
+{
+
+namespace test
+{
+
 /*---------------------------------------------------------------------------------------------------------------------+
-| global functions
+| global objects
 +---------------------------------------------------------------------------------------------------------------------*/
 
-/**
- * \brief main code block
- */
+MainTestThread mainTestThread = makeStaticThread<mainTestThreadStackSize, mainTestThreadCanReceiveSignals,
+		mainTestThreadQueuedSignals, mainTestThreadCaughtSignals>(mainTestThreadPriority, testThreadFunction);
 
-int main()
-{
-	distortos::test::mainTestThread.start();
-	distortos::test::mainTestThread.join();
+}	// namespace test
 
-	return 0;
-}
+}	// namespace distortos
