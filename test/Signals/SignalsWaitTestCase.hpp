@@ -41,7 +41,7 @@ public:
 	 */
 
 	constexpr SignalsWaitTestCase() :
-			SignalsTestCaseCommon{testCasePriority_}
+			SignalsTestCaseCommon{testCasePriority_, SignalSet{SignalSet::empty}}
 	{
 
 	}

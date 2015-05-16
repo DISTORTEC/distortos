@@ -41,7 +41,7 @@ public:
 	 */
 
 	constexpr SignalsGenerationOperationsTestCase() :
-			SignalsTestCaseCommon{testCasePriority_}
+			SignalsTestCaseCommon{testCasePriority_, SignalSet{SignalSet::full}}
 	{
 
 	}

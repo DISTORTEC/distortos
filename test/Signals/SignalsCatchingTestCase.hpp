@@ -43,7 +43,7 @@ public:
 	 */
 
 	constexpr SignalsCatchingTestCase() :
-			SignalsTestCaseCommon{testCasePriority_}
+			SignalsTestCaseCommon{testCasePriority_, SignalSet{SignalSet::empty}}
 	{
 
 	}

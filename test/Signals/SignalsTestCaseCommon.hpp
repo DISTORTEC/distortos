@@ -16,6 +16,8 @@
 
 #include "PrioritizedTestCase.hpp"
 
+#include "distortos/SignalSet.hpp"
+
 namespace distortos
 {
 
@@ -42,10 +44,12 @@ public:
 	 * \brief SignalsTestCaseCommon's constructor
 	 *
 	 * \param [in] priority is the priority at which test case will be executed
+	 * \param [in] signalMask is the SignalSet with signal mask for test case
 	 */
 
-	constexpr explicit SignalsTestCaseCommon(const uint8_t priority) :
-			PrioritizedTestCase{priority}
+	constexpr SignalsTestCaseCommon(const uint8_t priority, const SignalSet signalMask) :
+			PrioritizedTestCase{priority},
+			signalMask_{signalMask}
 	{
 
 	}
@@ -72,6 +76,11 @@ protected:
 	 */
 
 	virtual bool initialize() const override;
+
+private:
+
+	/// SignalSet with signal mask for test case
+	SignalSet signalMask_;
 };
 
 }	// namespace test

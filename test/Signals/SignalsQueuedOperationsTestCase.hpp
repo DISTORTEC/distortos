@@ -40,7 +40,7 @@ public:
 	 */
 
 	constexpr SignalsQueuedOperationsTestCase() :
-			SignalsTestCaseCommon{testCasePriority_}
+			SignalsTestCaseCommon{testCasePriority_, SignalSet{SignalSet::full}}
 	{
 
 	}
