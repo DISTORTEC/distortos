@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-04-16
+ * \date 2015-05-16
  */
 
 #ifndef INCLUDE_DISTORTOS_STATICSIGNALSRECEIVER_HPP_
@@ -26,10 +26,11 @@ namespace distortos
  * signals and SignalAction associations required for catching signals.
  *
  * \param QueuedSignals is the max number of queued signals, 0 to disable queuing of signals for this receiver
- * \param CaughtSignals is the max number of caught signals, 0 to disable catching of signals for this receiver
+ * \param SignalActions is the max number of different SignalAction objects, 0 to disable catching of signals for this
+ * receiver
  */
 
-template<size_t QueuedSignals, size_t CaughtSignals>
+template<size_t QueuedSignals, size_t SignalActions>
 class StaticSignalsReceiver : public SignalsReceiver
 {
 public:
@@ -51,7 +52,7 @@ private:
 	StaticSignalInformationQueueWrapper<QueuedSignals> staticSignalInformationQueueWrapper_;
 
 	/// internal StaticSignalsCatcher object
-	StaticSignalsCatcher<CaughtSignals> staticSignalsCatcher_;
+	StaticSignalsCatcher<SignalActions> staticSignalsCatcher_;
 };
 
 /**
@@ -60,7 +61,7 @@ private:
  *
  * \param QueuedSignals is the max number of queued signals
  *
- * Specialization for receiver with enabled queuing (QueuedSignals != 0) and disabled catching (CaughtSignals == 0) of
+ * Specialization for receiver with enabled queuing (QueuedSignals != 0) and disabled catching (SignalActions == 0) of
  * signals
  */
 
@@ -90,14 +91,14 @@ private:
  * \brief StaticSignalsReceiver class is a templated interface for SignalsReceiver that has automatic storage for queued
  * signals and SignalAction associations required for catching signals.
  *
- * \param CaughtSignals is the max number of caught signals
+ * \param SignalActions is the max number of different SignalAction objects
  *
- * Specialization for receiver with disabled queuing (QueuedSignals == 0) and enabled catching (CaughtSignals != 0) of
+ * Specialization for receiver with disabled queuing (QueuedSignals == 0) and enabled catching (SignalActions != 0) of
  * signals
  */
 
-template<size_t CaughtSignals>
-class StaticSignalsReceiver<0, CaughtSignals> : public SignalsReceiver
+template<size_t SignalActions>
+class StaticSignalsReceiver<0, SignalActions> : public SignalsReceiver
 {
 public:
 
@@ -115,14 +116,14 @@ public:
 private:
 
 	/// internal StaticSignalsCatcher object
-	StaticSignalsCatcher<CaughtSignals> staticSignalsCatcher_;
+	StaticSignalsCatcher<SignalActions> staticSignalsCatcher_;
 };
 
 /**
  * \brief StaticSignalsReceiver class is a templated interface for SignalsReceiver that has automatic storage for queued
  * signals and SignalAction associations required for catching signals.
  *
- * Specialization for receiver with disabled queuing (QueuedSignals == 0) and catching (CaughtSignals == 0) of signals
+ * Specialization for receiver with disabled queuing (QueuedSignals == 0) and catching (SignalActions == 0) of signals
  */
 
 template<>
