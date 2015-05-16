@@ -14,7 +14,7 @@
 #ifndef TEST_SIGNALS_SIGNALSWAITOPERATIONSTESTCASE_HPP_
 #define TEST_SIGNALS_SIGNALSWAITOPERATIONSTESTCASE_HPP_
 
-#include "TestCaseCommon.hpp"
+#include "SignalsTestCaseCommon.hpp"
 
 namespace distortos
 {
@@ -31,8 +31,23 @@ namespace test
  * finish within expected time frame.
  */
 
-class SignalsWaitOperationsTestCase : public TestCaseCommon
+class SignalsWaitOperationsTestCase : public SignalsTestCaseCommon
 {
+	/// priority at which this test case should be executed
+	constexpr static uint8_t testCasePriority_ {UINT8_MAX / 2};
+
+public:
+
+	/**
+	 * \brief SignalsWaitOperationsTestCase's constructor
+	 */
+
+	constexpr SignalsWaitOperationsTestCase() :
+			SignalsTestCaseCommon{testCasePriority_}
+	{
+
+	}
+
 private:
 
 	/**

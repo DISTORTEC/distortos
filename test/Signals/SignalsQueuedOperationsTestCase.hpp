@@ -14,7 +14,7 @@
 #ifndef TEST_SIGNALS_SIGNALSQUEUEDOPERATIONSTESTCASE_HPP_
 #define TEST_SIGNALS_SIGNALSQUEUEDOPERATIONSTESTCASE_HPP_
 
-#include "TestCaseCommon.hpp"
+#include "SignalsTestCaseCommon.hpp"
 
 namespace distortos
 {
@@ -28,8 +28,23 @@ namespace test
  * Tests queuing of signals and error cases specific to queued signals.
  */
 
-class SignalsQueuedOperationsTestCase : public TestCaseCommon
+class SignalsQueuedOperationsTestCase : public SignalsTestCaseCommon
 {
+	/// priority at which this test case should be executed
+	constexpr static uint8_t testCasePriority_ {UINT8_MAX / 2};
+
+public:
+
+	/**
+	 * \brief SignalsQueuedOperationsTestCase's constructor
+	 */
+
+	constexpr SignalsQueuedOperationsTestCase() :
+			SignalsTestCaseCommon{testCasePriority_}
+	{
+
+	}
+
 private:
 
 	/**

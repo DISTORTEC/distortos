@@ -14,7 +14,7 @@
 #ifndef TEST_SIGNALS_SIGNALSWAITTESTCASE_HPP_
 #define TEST_SIGNALS_SIGNALSWAITTESTCASE_HPP_
 
-#include "PrioritizedTestCase.hpp"
+#include "SignalsTestCaseCommon.hpp"
 
 namespace distortos
 {
@@ -29,7 +29,7 @@ namespace test
  * or queued (ordered numerically), start and finish in the expected order, using exact number of context switches.
  */
 
-class SignalsWaitTestCase : public PrioritizedTestCase
+class SignalsWaitTestCase : public SignalsTestCaseCommon
 {
 	/// priority at which this test case should be executed
 	constexpr static uint8_t testCasePriority_ {UINT8_MAX / 2};
@@ -41,7 +41,7 @@ public:
 	 */
 
 	constexpr SignalsWaitTestCase() :
-			PrioritizedTestCase{testCasePriority_}
+			SignalsTestCaseCommon{testCasePriority_}
 	{
 
 	}

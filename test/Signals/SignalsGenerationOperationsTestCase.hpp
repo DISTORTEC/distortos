@@ -14,7 +14,7 @@
 #ifndef TEST_SIGNALS_SIGNALSGENERATIONOPERATIONSTESTCASE_HPP_
 #define TEST_SIGNALS_SIGNALSGENERATIONOPERATIONSTESTCASE_HPP_
 
-#include "TestCaseCommon.hpp"
+#include "SignalsTestCaseCommon.hpp"
 
 namespace distortos
 {
@@ -29,8 +29,23 @@ namespace test
  * call to ThisThread::Signals::tryWait() (or any other similar function) should be enough to clear the pending signal.
  */
 
-class SignalsGenerationOperationsTestCase : public TestCaseCommon
+class SignalsGenerationOperationsTestCase : public SignalsTestCaseCommon
 {
+	/// priority at which this test case should be executed
+	constexpr static uint8_t testCasePriority_ {UINT8_MAX / 2};
+
+public:
+
+	/**
+	 * \brief SignalsGenerationOperationsTestCase's constructor
+	 */
+
+	constexpr SignalsGenerationOperationsTestCase() :
+			SignalsTestCaseCommon{testCasePriority_}
+	{
+
+	}
+
 private:
 
 	/**

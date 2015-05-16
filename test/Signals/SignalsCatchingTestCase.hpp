@@ -14,7 +14,7 @@
 #ifndef TEST_SIGNALS_SIGNALSCATCHINGTESTCASE_HPP_
 #define TEST_SIGNALS_SIGNALSCATCHINGTESTCASE_HPP_
 
-#include "TestCaseCommon.hpp"
+#include "SignalsTestCaseCommon.hpp"
 
 namespace distortos
 {
@@ -31,8 +31,23 @@ namespace test
  * Currently only the simplest scenario is tested - current thread generating/queuing signals for itself.
  */
 
-class SignalsCatchingTestCase : public TestCaseCommon
+class SignalsCatchingTestCase : public SignalsTestCaseCommon
 {
+	/// priority at which this test case should be executed
+	constexpr static uint8_t testCasePriority_ {UINT8_MAX / 2};
+
+public:
+
+	/**
+	 * \brief SignalsCatchingTestCase's constructor
+	 */
+
+	constexpr SignalsCatchingTestCase() :
+			SignalsTestCaseCommon{testCasePriority_}
+	{
+
+	}
+
 private:
 
 	/**
