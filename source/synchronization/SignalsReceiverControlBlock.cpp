@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-05-14
+ * \date 2015-05-16
  */
 
 #include "distortos/synchronization/SignalsReceiverControlBlock.hpp"
@@ -70,9 +70,13 @@ int SignalsReceiverControlBlock::generateSignal(const uint8_t signalNumber,
 {
 	architecture::InterruptMaskingLock interruptMaskingLock;
 
-	const auto ret = pendingSignalSet_.add(signalNumber);
-	if (ret != 0)
-		return ret;
+	const auto isSignalIgnoredResult = isSignalIgnored(signalNumber);
+	if (isSignalIgnoredResult.first != 0)
+		return isSignalIgnoredResult.first;
+	if (isSignalIgnoredResult.second == true)	// is signal ignored?
+		return 0;
+
+	pendingSignalSet_.add(signalNumber);	// signal number is valid (checked above)
 
 	return postGenerate(signalNumber, threadControlBlock);
 }
