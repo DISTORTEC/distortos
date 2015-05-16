@@ -47,6 +47,18 @@ public:
 	{
 
 	}
+
+protected:
+
+	/**
+	 * \brief Initializes the test case.
+	 *
+	 * Calls PrioritizedTestCase::initialize().
+	 *
+	 * \return true if initialization succeeded, false otherwise
+	 */
+
+	virtual bool initialize() const override;
 };
 
 }	// namespace test
