@@ -25,7 +25,13 @@ namespace test
 
 bool TestCase::run() const
 {
-	return run_();
+	if (initialize() == false)
+		return false;
+
+	if (run_() == false)
+		return false;
+
+	return finalize();
 }
 
 }	// namespace test
