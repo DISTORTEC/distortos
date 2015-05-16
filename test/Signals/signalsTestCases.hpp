@@ -8,13 +8,11 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-02-18
+ * \date 2015-05-16
  */
 
 #ifndef TEST_SIGNALS_SIGNALSTESTCASES_HPP_
 #define TEST_SIGNALS_SIGNALSTESTCASES_HPP_
-
-#include "TestCaseRange.hpp"
 
 namespace distortos
 {
@@ -22,12 +20,14 @@ namespace distortos
 namespace test
 {
 
+class TestCaseGroup;
+
 /*---------------------------------------------------------------------------------------------------------------------+
 | global objects
 +---------------------------------------------------------------------------------------------------------------------*/
 
-/// range of references to TestCase objects related to signals
-extern const TestCaseRange signalsTestCases;
+/// group of test cases related to signals
+extern const TestCaseGroup signalsTestCases;
 
 }	// namespace test
 

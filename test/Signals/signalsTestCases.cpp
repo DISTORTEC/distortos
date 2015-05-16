@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-05-05
+ * \date 2015-05-16
  */
 
 #include "signalsTestCases.hpp"
@@ -18,6 +18,8 @@
 #include "SignalsGenerationOperationsTestCase.hpp"
 #include "SignalsQueuedOperationsTestCase.hpp"
 #include "SignalsCatchingTestCase.hpp"
+
+#include "TestCaseGroup.hpp"
 
 namespace distortos
 {
@@ -51,13 +53,13 @@ const SignalsQueuedOperationsTestCase queuedOperationsTestCase;
 const SignalsCatchingTestCase catchingTestCase;
 
 /// array with references to TestCase objects related to signals
-const TestCaseRange::value_type messageQueueTestCases_[]
+const TestCaseGroup::Range::value_type messageQueueTestCases_[]
 {
-		TestCaseRange::value_type{waitTestCase},
-		TestCaseRange::value_type{waitOperationsTestCase},
-		TestCaseRange::value_type{generationOperationsTestCase},
-		TestCaseRange::value_type{queuedOperationsTestCase},
-		TestCaseRange::value_type{catchingTestCase},
+		TestCaseGroup::Range::value_type{waitTestCase},
+		TestCaseGroup::Range::value_type{waitOperationsTestCase},
+		TestCaseGroup::Range::value_type{generationOperationsTestCase},
+		TestCaseGroup::Range::value_type{queuedOperationsTestCase},
+		TestCaseGroup::Range::value_type{catchingTestCase},
 };
 
 }	// namespace
@@ -66,7 +68,7 @@ const TestCaseRange::value_type messageQueueTestCases_[]
 | global objects
 +---------------------------------------------------------------------------------------------------------------------*/
 
-const TestCaseRange signalsTestCases {messageQueueTestCases_};
+const TestCaseGroup signalsTestCases {TestCaseGroup::Range{messageQueueTestCases_}};
 
 }	// namespace test
 
