@@ -39,28 +39,19 @@ namespace
 | local objects
 +---------------------------------------------------------------------------------------------------------------------*/
 
-/// array with references to TestCaseGroup objects
-const TestCaseRange::value_type groupsWrapper_[]
+/// array with references to TestCase objects
+const TestCaseGroup::Range::value_type testCases_[]
 {
-		TestCaseRange::value_type{threadTestCases},
-		TestCaseRange::value_type{softwareTimerTestCases},
-		TestCaseRange::value_type{semaphoreTestCases},
-		TestCaseRange::value_type{mutexTestCases},
-		TestCaseRange::value_type{conditionVariableTestCases},
-		TestCaseRange::value_type{fifoQueueTestCases},
-		TestCaseRange::value_type{rawFifoQueueTestCases},
-		TestCaseRange::value_type{messageQueueTestCases},
-		TestCaseRange::value_type{rawMessageQueueTestCases},
-		TestCaseRange::value_type{signalsTestCases},
-};
-
-/// range of references to TestCaseGroup objects
-const TestCaseRange groupsWrapper {groupsWrapper_};
-
-/// array with references to TestCaseRange objects
-const TestCaseRangeRange::value_type testCases_[]
-{
-		TestCaseRangeRange::value_type{groupsWrapper},
+		TestCaseGroup::Range::value_type{threadTestCases},
+		TestCaseGroup::Range::value_type{softwareTimerTestCases},
+		TestCaseGroup::Range::value_type{semaphoreTestCases},
+		TestCaseGroup::Range::value_type{mutexTestCases},
+		TestCaseGroup::Range::value_type{conditionVariableTestCases},
+		TestCaseGroup::Range::value_type{fifoQueueTestCases},
+		TestCaseGroup::Range::value_type{rawFifoQueueTestCases},
+		TestCaseGroup::Range::value_type{messageQueueTestCases},
+		TestCaseGroup::Range::value_type{rawMessageQueueTestCases},
+		TestCaseGroup::Range::value_type{signalsTestCases},
 };
 
 }	// namespace
@@ -69,7 +60,7 @@ const TestCaseRangeRange::value_type testCases_[]
 | global objects
 +---------------------------------------------------------------------------------------------------------------------*/
 
-const TestCaseRangeRange testCases {testCases_};
+const TestCaseGroup testCases {TestCaseGroup::Range{testCases_}};
 
 }	// namespace test
 
