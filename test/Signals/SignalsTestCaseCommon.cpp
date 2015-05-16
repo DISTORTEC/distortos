@@ -13,6 +13,9 @@
 
 #include "SignalsTestCaseCommon.hpp"
 
+#include "distortos/SignalSet.hpp"
+#include "distortos/ThisThread-Signals.hpp"
+
 namespace distortos
 {
 
@@ -25,6 +28,9 @@ namespace test
 
 bool SignalsTestCaseCommon::finalize() const
 {
+	if (ThisThread::Signals::setSignalMask(SignalSet{SignalSet::empty}) != 0)
+		return false;
+
 	return PrioritizedTestCase::finalize();
 }
 

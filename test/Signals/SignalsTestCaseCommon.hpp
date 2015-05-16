@@ -29,6 +29,7 @@ namespace test
  * - configured priority is set;
  *
  * During finalization:
+ * - empty signal mask is restored;
  * - original priority of main test thread is restored;
  */
 
@@ -53,7 +54,7 @@ protected:
 	/**
 	 * \brief Finalizes the test case.
 	 *
-	 * Calls PrioritizedTestCase::finalize().
+	 * Restores empty signal mask and calls PrioritizedTestCase::finalize().
 	 *
 	 * \return true if finalization succeeded, false otherwise
 	 */
