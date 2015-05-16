@@ -115,6 +115,12 @@ int SignalsReceiverControlBlock::queueSignal(const uint8_t signalNumber, const s
 
 	architecture::InterruptMaskingLock interruptMaskingLock;
 
+	const auto isSignalIgnoredResult = isSignalIgnored(signalNumber);
+	if (isSignalIgnoredResult.first != 0)
+		return isSignalIgnoredResult.first;
+	if (isSignalIgnoredResult.second == true)	// is signal ignored?
+		return 0;
+
 	const auto ret = signalInformationQueue_->queueSignal(signalNumber, value);
 	if (ret != 0)
 		return ret;
