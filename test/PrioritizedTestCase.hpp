@@ -59,6 +59,16 @@ protected:
 
 	virtual bool finalize() const override;
 
+	/**
+	 * \brief Initializes the test case.
+	 *
+	 * Sets configured priority.
+	 *
+	 * \return true if initialization succeeded, false otherwise
+	 */
+
+	virtual bool initialize() const override;
+
 private:
 
 	/**

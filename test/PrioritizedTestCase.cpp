@@ -33,13 +33,18 @@ bool PrioritizedTestCase::finalize() const
 	return true;
 }
 
+bool PrioritizedTestCase::initialize() const
+{
+	ThisThread::setPriority(priority_);
+	return true;
+}
+
 /*---------------------------------------------------------------------------------------------------------------------+
 | private functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
 bool PrioritizedTestCase::run_() const
 {
-	ThisThread::setPriority(priority_);
 	return testCase_.run();
 }
 
