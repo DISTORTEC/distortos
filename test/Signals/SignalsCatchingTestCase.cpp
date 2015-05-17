@@ -86,6 +86,39 @@ private:
 	uint8_t signalNumber_;
 };
 
+/// test step that sets signal mask
+class SignalMaskStep
+{
+public:
+
+	/**
+	 * \brief SignalMaskStep's constructor
+	 *
+	 * \param [in] signalMask is the signal mask that will be set for current thread
+	 */
+
+	constexpr explicit SignalMaskStep(const SignalSet signalMask) :
+			signalMask_{signalMask}
+	{
+
+	}
+
+	/**
+	 * \brief SignalMaskStep's function call operator
+	 *
+	 * Sets configured signal mask for current thread.
+	 *
+	 * \return 0 on success, error code otherwise
+	 */
+
+	int operator()() const;
+
+private:
+
+	/// signal mask that will be set for current thread
+	SignalSet signalMask_;
+};
+
 /// test step executed in signal handler
 class HandlerStep
 {
@@ -163,6 +196,8 @@ public:
 	{
 		/// GenerateQueueSignalStep
 		GenerateQueueSignal,
+		/// SignalMaskStep
+		SignalMask,
 	};
 
 	/**
@@ -178,6 +213,23 @@ public:
 			generateQueueSignalStep_{generateQueueSignalStep},
 			sequencePoints_{firstSequencePoint, lastSequencePoint},
 			type_{Type::GenerateQueueSignal}
+	{
+
+	}
+
+	/**
+	 * \brief ThreadStep's constructor for SignalMask type.
+	 *
+	 * \param [in] firstSequencePoint is the first sequence point of test step
+	 * \param [in] lastSequencePoint is the last sequence point of test step
+	 * \param [in] signalMaskStep is the SignalMaskStep that will be executed in test step
+	 */
+
+	constexpr ThreadStep(const unsigned int firstSequencePoint, const unsigned int lastSequencePoint,
+			const SignalMaskStep signalMaskStep) :
+			signalMaskStep_{signalMaskStep},
+			sequencePoints_{firstSequencePoint, lastSequencePoint},
+			type_{Type::SignalMask}
 	{
 
 	}
@@ -201,6 +253,9 @@ private:
 	{
 		/// GenerateQueueSignalStep test step - valid only if type_ == Type::GenerateQueueSignal
 		GenerateQueueSignalStep generateQueueSignalStep_;
+
+		/// SignalMaskStep test step - valid only if type_ == Type::SignalMask
+		SignalMaskStep signalMaskStep_;
 	};
 
 	/// sequence points of test step
@@ -255,6 +310,15 @@ int HandlerStep::operator()(const SignalInformation& signalInformation, Sequence
 }
 
 /*---------------------------------------------------------------------------------------------------------------------+
+| SignalMaskStep's public functions
++---------------------------------------------------------------------------------------------------------------------*/
+
+int SignalMaskStep::operator()() const
+{
+	return ThisThread::Signals::setSignalMask(signalMask_);
+}
+
+/*---------------------------------------------------------------------------------------------------------------------+
 | ThreadStep's public functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
@@ -262,7 +326,7 @@ int ThreadStep::operator()(SequenceAsserter& sequenceAsserter) const
 {
 	sequenceAsserter.sequencePoint(sequencePoints_.first);
 
-	const auto ret = generateQueueSignalStep_();
+	const auto ret = type_ == Type::GenerateQueueSignal ? generateQueueSignalStep_() : signalMaskStep_();
 
 	sequenceAsserter.sequencePoint(sequencePoints_.second);
 
