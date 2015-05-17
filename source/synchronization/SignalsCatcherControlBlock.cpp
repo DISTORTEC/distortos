@@ -174,7 +174,7 @@ std::pair<int, SignalAction> SignalsCatcherControlBlock::getAssociation(const ui
 }
 
 int SignalsCatcherControlBlock::postGenerate(const uint8_t signalNumber,
-		const scheduler::ThreadControlBlock& threadControlBlock) const
+		const scheduler::ThreadControlBlock& threadControlBlock)
 {
 	const auto getAssociationResult = getAssociation(signalNumber);
 	if (getAssociationResult.first != 0)
@@ -282,8 +282,9 @@ SignalAction SignalsCatcherControlBlock::clearAssociation(const uint8_t signalNu
 	return previousSignalAction;
 }
 
-void SignalsCatcherControlBlock::requestDeliveryOfSignals(const scheduler::ThreadControlBlock& threadControlBlock) const
+void SignalsCatcherControlBlock::requestDeliveryOfSignals(const scheduler::ThreadControlBlock& threadControlBlock)
 {
+	deliveryIsPending_ = true;
 	architecture::requestFunctionExecution(threadControlBlock, deliverSignals);
 }
 

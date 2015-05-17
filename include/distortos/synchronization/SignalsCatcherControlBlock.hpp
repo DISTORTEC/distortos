@@ -106,7 +106,7 @@ public:
 	 * - EINVAL - \a signalNumber value is invalid;
 	 */
 
-	int postGenerate(uint8_t signalNumber, const scheduler::ThreadControlBlock& threadControlBlock) const;
+	int postGenerate(uint8_t signalNumber, const scheduler::ThreadControlBlock& threadControlBlock);
 
 	/**
 	 * \brief Sets association for given signal number.
@@ -168,7 +168,7 @@ private:
 	 * \param [in] threadControlBlock is a reference to associated ThreadControlBlock
 	 */
 
-	void requestDeliveryOfSignals(const scheduler::ThreadControlBlock& threadControlBlock) const;
+	void requestDeliveryOfSignals(const scheduler::ThreadControlBlock& threadControlBlock);
 
 	/// SignalSet with signal mask for associated thread
 	SignalSet signalMask_;
