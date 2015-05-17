@@ -120,6 +120,9 @@ void deliverSignals()
 	if (signalsReceiverControlBlock == nullptr)
 		return;	/// \todo error handling?
 
+	if (signalsReceiverControlBlock->deliveryOfSignalsStartedHook() != 0)
+		return; /// \todo error handling?
+
 	const auto signalMask = signalsReceiverControlBlock->getSignalMask();
 	const auto savedErrno = errno;
 
