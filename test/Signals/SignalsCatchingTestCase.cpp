@@ -94,7 +94,8 @@ public:
 	/**
 	 * \brief HandlerStep's constructor
 	 *
-	 * \param [in] sequencePoint is the sequence point of test step
+	 * \param [in] firstSequencePoint is the first sequence point of test step
+	 * \param [in] lastSequencePoint is the last sequence point of test step
 	 * \param [in] pendingSignalSet is the expected set of currently pending signals for current thread
 	 * \param [in] signalMask is the expected signal mask for current thread
 	 * \param [in] code is the expected signal code in received SignalInformation object
@@ -103,10 +104,10 @@ public:
 	 * constructed int value
 	 */
 
-	constexpr HandlerStep(const unsigned int sequencePoint, const SignalSet pendingSignalSet,
-			const SignalSet signalMask, const SignalInformation::Code code, const uint8_t signalNumber,
-			const int value = {}) :
-			sequencePoint_{sequencePoint},
+	constexpr HandlerStep(const unsigned int firstSequencePoint, const unsigned int lastSequencePoint,
+			const SignalSet pendingSignalSet, const SignalSet signalMask, const SignalInformation::Code code,
+			const uint8_t signalNumber, const int value = {}) :
+			sequencePoints_{firstSequencePoint, lastSequencePoint},
 			pendingSignalSet_{pendingSignalSet},
 			signalMask_{signalMask},
 			value_{value},
@@ -132,8 +133,8 @@ public:
 
 private:
 
-	/// sequence point of test step
-	unsigned int sequencePoint_;
+	/// sequence points of test step
+	SequencePoints sequencePoints_;
 
 	/// expected set of currently pending signals for current thread
 	SignalSet pendingSignalSet_;
@@ -241,17 +242,16 @@ int GenerateQueueSignalStep::operator()() const
 
 int HandlerStep::operator()(const SignalInformation& signalInformation, SequenceAsserter& sequenceAsserter) const
 {
-	sequenceAsserter.sequencePoint(sequencePoint_);
+	sequenceAsserter.sequencePoint(sequencePoints_.first);
 
-	if (ThisThread::Signals::getPendingSignalSet().getBitset() != pendingSignalSet_.getBitset())
-		return EINVAL;
-	if (ThisThread::Signals::getSignalMask().getBitset() != signalMask_.getBitset())
-		return EINVAL;
-	if (signalInformation.getCode() != code_ || signalInformation.getSignalNumber() != signalNumber_ ||
-			signalInformation.getValue().sival_int != value_)
-		return EINVAL;
+	const auto ret = ThisThread::Signals::getPendingSignalSet().getBitset() == pendingSignalSet_.getBitset() &&
+			ThisThread::Signals::getSignalMask().getBitset() == signalMask_.getBitset() &&
+			signalInformation.getCode() == code_ && signalInformation.getSignalNumber() == signalNumber_ &&
+			signalInformation.getValue().sival_int == value_ ? 0 : EINVAL;
 
-	return 0;
+	sequenceAsserter.sequencePoint(sequencePoints_.second);
+
+	return ret;
 }
 
 /*---------------------------------------------------------------------------------------------------------------------+
@@ -329,50 +329,50 @@ bool phase1()
 {
 	static const ThreadStep threadSteps[]
 	{
-			{0, 2, GenerateQueueSignalStep{SignalInformation::Code::Generated, 0}},
-			{3, 5, GenerateQueueSignalStep{SignalInformation::Code::Generated, 1}},
-			{6, 8, GenerateQueueSignalStep{SignalInformation::Code::Generated, 2}},
-			{9, 11, GenerateQueueSignalStep{SignalInformation::Code::Generated, 3}},
-			{12, 14, GenerateQueueSignalStep{SignalInformation::Code::Generated, 4}},
-			{15, 17, GenerateQueueSignalStep{SignalInformation::Code::Generated, 5}},
-			{18, 20, GenerateQueueSignalStep{SignalInformation::Code::Generated, 6}},
-			{21, 23, GenerateQueueSignalStep{SignalInformation::Code::Generated, 7}},
-			{24, 26, GenerateQueueSignalStep{SignalInformation::Code::Generated, 8}},
-			{27, 29, GenerateQueueSignalStep{SignalInformation::Code::Generated, 9}},
-			{30, 32, GenerateQueueSignalStep{SignalInformation::Code::Queued, 0, 0x6c3d9ebc}},
-			{33, 35, GenerateQueueSignalStep{SignalInformation::Code::Queued, 1, 0x52e04282}},
-			{36, 38, GenerateQueueSignalStep{SignalInformation::Code::Queued, 2, 0x29f9fc86}},
-			{39, 41, GenerateQueueSignalStep{SignalInformation::Code::Queued, 3, 0x19677883}},
-			{42, 44, GenerateQueueSignalStep{SignalInformation::Code::Queued, 4, 0x7f2d693b}},
-			{45, 47, GenerateQueueSignalStep{SignalInformation::Code::Queued, 5, 0x1a98ab78}},
-			{48, 50, GenerateQueueSignalStep{SignalInformation::Code::Queued, 6, 0x6b96c96b}},
-			{51, 53, GenerateQueueSignalStep{SignalInformation::Code::Queued, 7, 0x463445cc}},
-			{54, 56, GenerateQueueSignalStep{SignalInformation::Code::Queued, 8, 0x38dccfd2}},
-			{57, 59, GenerateQueueSignalStep{SignalInformation::Code::Queued, 9, 0x1e8ac134}},
+			{0, 3, GenerateQueueSignalStep{SignalInformation::Code::Generated, 0}},
+			{4, 7, GenerateQueueSignalStep{SignalInformation::Code::Generated, 1}},
+			{8, 11, GenerateQueueSignalStep{SignalInformation::Code::Generated, 2}},
+			{12, 15, GenerateQueueSignalStep{SignalInformation::Code::Generated, 3}},
+			{16, 19, GenerateQueueSignalStep{SignalInformation::Code::Generated, 4}},
+			{20, 23, GenerateQueueSignalStep{SignalInformation::Code::Generated, 5}},
+			{24, 27, GenerateQueueSignalStep{SignalInformation::Code::Generated, 6}},
+			{28, 31, GenerateQueueSignalStep{SignalInformation::Code::Generated, 7}},
+			{32, 35, GenerateQueueSignalStep{SignalInformation::Code::Generated, 8}},
+			{36, 39, GenerateQueueSignalStep{SignalInformation::Code::Generated, 9}},
+			{40, 43, GenerateQueueSignalStep{SignalInformation::Code::Queued, 0, 0x6c3d9ebc}},
+			{44, 47, GenerateQueueSignalStep{SignalInformation::Code::Queued, 1, 0x52e04282}},
+			{48, 51, GenerateQueueSignalStep{SignalInformation::Code::Queued, 2, 0x29f9fc86}},
+			{52, 55, GenerateQueueSignalStep{SignalInformation::Code::Queued, 3, 0x19677883}},
+			{56, 59, GenerateQueueSignalStep{SignalInformation::Code::Queued, 4, 0x7f2d693b}},
+			{60, 63, GenerateQueueSignalStep{SignalInformation::Code::Queued, 5, 0x1a98ab78}},
+			{64, 67, GenerateQueueSignalStep{SignalInformation::Code::Queued, 6, 0x6b96c96b}},
+			{68, 71, GenerateQueueSignalStep{SignalInformation::Code::Queued, 7, 0x463445cc}},
+			{72, 75, GenerateQueueSignalStep{SignalInformation::Code::Queued, 8, 0x38dccfd2}},
+			{76, 79, GenerateQueueSignalStep{SignalInformation::Code::Queued, 9, 0x1e8ac134}},
 	};
 
 	static const HandlerStep handlerSteps[]
 	{
-			{1, SignalSet{SignalSet::empty}, getSignalMask(0), SignalInformation::Code::Generated, 0},
-			{4, SignalSet{SignalSet::empty}, getSignalMask(1), SignalInformation::Code::Generated, 1},
-			{7, SignalSet{SignalSet::empty}, getSignalMask(2), SignalInformation::Code::Generated, 2},
-			{10, SignalSet{SignalSet::empty}, getSignalMask(3), SignalInformation::Code::Generated, 3},
-			{13, SignalSet{SignalSet::empty}, getSignalMask(4), SignalInformation::Code::Generated, 4},
-			{16, SignalSet{SignalSet::empty}, getSignalMask(5), SignalInformation::Code::Generated, 5},
-			{19, SignalSet{SignalSet::empty}, getSignalMask(6), SignalInformation::Code::Generated, 6},
-			{22, SignalSet{SignalSet::empty}, getSignalMask(7), SignalInformation::Code::Generated, 7},
-			{25, SignalSet{SignalSet::empty}, getSignalMask(8), SignalInformation::Code::Generated, 8},
-			{28, SignalSet{SignalSet::empty}, getSignalMask(9), SignalInformation::Code::Generated, 9},
-			{31, SignalSet{SignalSet::empty}, getSignalMask(0), SignalInformation::Code::Queued, 0, 0x6c3d9ebc},
-			{34, SignalSet{SignalSet::empty}, getSignalMask(1), SignalInformation::Code::Queued, 1, 0x52e04282},
-			{37, SignalSet{SignalSet::empty}, getSignalMask(2), SignalInformation::Code::Queued, 2, 0x29f9fc86},
-			{40, SignalSet{SignalSet::empty}, getSignalMask(3), SignalInformation::Code::Queued, 3, 0x19677883},
-			{43, SignalSet{SignalSet::empty}, getSignalMask(4), SignalInformation::Code::Queued, 4, 0x7f2d693b},
-			{46, SignalSet{SignalSet::empty}, getSignalMask(5), SignalInformation::Code::Queued, 5, 0x1a98ab78},
-			{49, SignalSet{SignalSet::empty}, getSignalMask(6), SignalInformation::Code::Queued, 6, 0x6b96c96b},
-			{52, SignalSet{SignalSet::empty}, getSignalMask(7), SignalInformation::Code::Queued, 7, 0x463445cc},
-			{55, SignalSet{SignalSet::empty}, getSignalMask(8), SignalInformation::Code::Queued, 8, 0x38dccfd2},
-			{58, SignalSet{SignalSet::empty}, getSignalMask(9), SignalInformation::Code::Queued, 9, 0x1e8ac134},
+			{1, 2, SignalSet{SignalSet::empty}, getSignalMask(0), SignalInformation::Code::Generated, 0},
+			{5, 6, SignalSet{SignalSet::empty}, getSignalMask(1), SignalInformation::Code::Generated, 1},
+			{9, 10, SignalSet{SignalSet::empty}, getSignalMask(2), SignalInformation::Code::Generated, 2},
+			{13, 14, SignalSet{SignalSet::empty}, getSignalMask(3), SignalInformation::Code::Generated, 3},
+			{17, 18, SignalSet{SignalSet::empty}, getSignalMask(4), SignalInformation::Code::Generated, 4},
+			{21, 22, SignalSet{SignalSet::empty}, getSignalMask(5), SignalInformation::Code::Generated, 5},
+			{25, 26, SignalSet{SignalSet::empty}, getSignalMask(6), SignalInformation::Code::Generated, 6},
+			{29, 30, SignalSet{SignalSet::empty}, getSignalMask(7), SignalInformation::Code::Generated, 7},
+			{33, 34, SignalSet{SignalSet::empty}, getSignalMask(8), SignalInformation::Code::Generated, 8},
+			{37, 38, SignalSet{SignalSet::empty}, getSignalMask(9), SignalInformation::Code::Generated, 9},
+			{41, 42, SignalSet{SignalSet::empty}, getSignalMask(0), SignalInformation::Code::Queued, 0, 0x6c3d9ebc},
+			{45, 46, SignalSet{SignalSet::empty}, getSignalMask(1), SignalInformation::Code::Queued, 1, 0x52e04282},
+			{49, 50, SignalSet{SignalSet::empty}, getSignalMask(2), SignalInformation::Code::Queued, 2, 0x29f9fc86},
+			{53, 54, SignalSet{SignalSet::empty}, getSignalMask(3), SignalInformation::Code::Queued, 3, 0x19677883},
+			{57, 58, SignalSet{SignalSet::empty}, getSignalMask(4), SignalInformation::Code::Queued, 4, 0x7f2d693b},
+			{61, 62, SignalSet{SignalSet::empty}, getSignalMask(5), SignalInformation::Code::Queued, 5, 0x1a98ab78},
+			{65, 66, SignalSet{SignalSet::empty}, getSignalMask(6), SignalInformation::Code::Queued, 6, 0x6b96c96b},
+			{69, 70, SignalSet{SignalSet::empty}, getSignalMask(7), SignalInformation::Code::Queued, 7, 0x463445cc},
+			{73, 74, SignalSet{SignalSet::empty}, getSignalMask(8), SignalInformation::Code::Queued, 8, 0x38dccfd2},
+			{77, 78, SignalSet{SignalSet::empty}, getSignalMask(9), SignalInformation::Code::Queued, 9, 0x1e8ac134},
 	};
 
 	handlerStepsRange = decltype(handlerStepsRange){handlerSteps};
@@ -384,7 +384,7 @@ bool phase1()
 
 	const size_t handlerStepsSize = std::end(handlerSteps) - std::begin(handlerSteps);
 	const size_t threadStepsSize = std::end(threadSteps) - std::begin(threadSteps);
-	if (sharedSequenceAsserter.assertSequence(handlerStepsSize + 2 * threadStepsSize) == false)
+	if (sharedSequenceAsserter.assertSequence(2 * (handlerStepsSize + threadStepsSize)) == false)
 		return false;
 
 	return testResult;
