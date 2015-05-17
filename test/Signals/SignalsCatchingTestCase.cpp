@@ -154,6 +154,13 @@ class ThreadStep
 {
 public:
 
+	/// type of test step
+	enum class Type : uint8_t
+	{
+		/// GenerateQueueSignalStep
+		GenerateQueueSignal,
+	};
+
 	/**
 	 * \brief ThreadStep's constructor for GenerateQueueSignal type.
 	 *
@@ -163,7 +170,8 @@ public:
 
 	constexpr ThreadStep(const unsigned int sequencePoint, const GenerateQueueSignalStep generateQueueSignalStep) :
 			generateQueueSignalStep_{generateQueueSignalStep},
-			sequencePoint_{sequencePoint}
+			sequencePoint_{sequencePoint},
+			type_{Type::GenerateQueueSignal}
 	{
 
 	}
@@ -182,11 +190,18 @@ public:
 
 private:
 
-	/// GenerateQueueSignalStep that will be executed in test step
-	GenerateQueueSignalStep generateQueueSignalStep_;
+	/// internal test step that will be executed
+	union
+	{
+		/// GenerateQueueSignalStep test step - valid only if type_ == Type::GenerateQueueSignal
+		GenerateQueueSignalStep generateQueueSignalStep_;
+	};
 
 	/// sequence point of test step
 	unsigned int sequencePoint_;
+
+	/// type of test step
+	Type type_;
 };
 
 /*---------------------------------------------------------------------------------------------------------------------+
