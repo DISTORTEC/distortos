@@ -29,6 +29,8 @@ class ThreadControlBlock;
 namespace synchronization
 {
 
+class SignalsReceiverControlBlock;
+
 /// SignalsCatcherControlBlock class is a structure required by threads for "catching" and "handling" of signals
 class SignalsCatcherControlBlock
 {
@@ -109,10 +111,14 @@ public:
 	std::pair<int, SignalAction> setAssociation(uint8_t signalNumber, const SignalAction& signalAction);
 
 	/**
+	 * \brief Sets signal mask for associated thread.
+	 *
 	 * \param [in] signalMask is the SignalSet with new signal mask for associated thread
+	 * \param [in] owner selects whether delivery of signals will be requested if any pending signal is unblocked
+	 * (pointer to owner SignalsReceiverControlBlock object) or not (nullptr)
 	 */
 
-	void setSignalMask(SignalSet signalMask);
+	void setSignalMask(SignalSet signalMask, const SignalsReceiverControlBlock* owner);
 
 private:
 

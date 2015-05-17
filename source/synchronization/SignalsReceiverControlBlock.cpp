@@ -137,12 +137,12 @@ std::pair<int, SignalAction> SignalsReceiverControlBlock::setSignalAction(const 
 	return signalsCatcherControlBlock_->setAssociation(signalNumber, signalAction);
 }
 
-int SignalsReceiverControlBlock::setSignalMask(const SignalSet signalMask, bool)
+int SignalsReceiverControlBlock::setSignalMask(const SignalSet signalMask, const bool requestDelivery)
 {
 	if (signalsCatcherControlBlock_ == nullptr)
 		return ENOTSUP;
 
-	signalsCatcherControlBlock_->setSignalMask(signalMask);
+	signalsCatcherControlBlock_->setSignalMask(signalMask, requestDelivery == true ? this : nullptr);
 	return 0;
 }
 

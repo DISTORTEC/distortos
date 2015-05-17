@@ -230,7 +230,7 @@ std::pair<int, SignalAction> SignalsCatcherControlBlock::setAssociation(const ui
 	return {{}, previousSignalAction};
 }
 
-void SignalsCatcherControlBlock::setSignalMask(const SignalSet signalMask)
+void SignalsCatcherControlBlock::setSignalMask(const SignalSet signalMask, const SignalsReceiverControlBlock*)
 {
 	signalMask_ = signalMask;
 }
