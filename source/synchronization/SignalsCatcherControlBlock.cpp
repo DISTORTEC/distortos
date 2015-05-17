@@ -182,7 +182,7 @@ int SignalsCatcherControlBlock::postGenerate(const uint8_t signalNumber,
 	if (getAssociationResult.second.getHandler() == SignalAction{}.getHandler())	// default handler?
 		return 0;	// ignore signal
 
-	architecture::requestFunctionExecution(threadControlBlock, deliverSignals);
+	requestDeliveryOfSignals(threadControlBlock);
 
 	return 0;
 }
