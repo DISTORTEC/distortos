@@ -113,6 +113,9 @@ public:
 	/**
 	 * \brief Sets signal mask for associated thread.
 	 *
+	 * If any pending signal is unblocked and \a owner doesn't equal nullptr, then delivery of signals to associated
+	 * thread will be requested.
+	 *
 	 * \param [in] signalMask is the SignalSet with new signal mask for associated thread
 	 * \param [in] owner selects whether delivery of signals will be requested if any pending signal is unblocked
 	 * (pointer to owner SignalsReceiverControlBlock object) or not (nullptr)
