@@ -33,8 +33,11 @@ namespace
 {
 
 /*---------------------------------------------------------------------------------------------------------------------+
-| local objects
+| local types
 +---------------------------------------------------------------------------------------------------------------------*/
+
+/// pair of sequence points
+using SequencePoints = std::pair<unsigned int, unsigned int>;
 
 /// test step that generates of queues a signal
 class GenerateQueueSignalStep
@@ -164,13 +167,15 @@ public:
 	/**
 	 * \brief ThreadStep's constructor for GenerateQueueSignal type.
 	 *
-	 * \param [in] sequencePoint is the sequence point of test step
+	 * \param [in] firstSequencePoint is the first sequence point of test step
+	 * \param [in] lastSequencePoint is the last sequence point of test step
 	 * \param [in] generateQueueSignalStep is the GenerateQueueSignalStep that will be executed in test step
 	 */
 
-	constexpr ThreadStep(const unsigned int sequencePoint, const GenerateQueueSignalStep generateQueueSignalStep) :
+	constexpr ThreadStep(const unsigned int firstSequencePoint, const unsigned int lastSequencePoint,
+			const GenerateQueueSignalStep generateQueueSignalStep) :
 			generateQueueSignalStep_{generateQueueSignalStep},
-			sequencePoint_{sequencePoint},
+			sequencePoints_{firstSequencePoint, lastSequencePoint},
 			type_{Type::GenerateQueueSignal}
 	{
 
@@ -179,7 +184,7 @@ public:
 	/**
 	 * \brief ThreadStep's function call operator
 	 *
-	 * Marks sequence point and executes internal test step.
+	 * Marks first sequence point, executes internal test step and marks last sequence point.
 	 *
 	 * \param [in] sequenceAsserter is a reference to shared SequenceAsserter object
 	 *
@@ -197,8 +202,8 @@ private:
 		GenerateQueueSignalStep generateQueueSignalStep_;
 	};
 
-	/// sequence point of test step
-	unsigned int sequencePoint_;
+	/// sequence points of test step
+	SequencePoints sequencePoints_;
 
 	/// type of test step
 	Type type_;
@@ -255,9 +260,13 @@ int HandlerStep::operator()(const SignalInformation& signalInformation, Sequence
 
 int ThreadStep::operator()(SequenceAsserter& sequenceAsserter) const
 {
-	sequenceAsserter.sequencePoint(sequencePoint_);
+	sequenceAsserter.sequencePoint(sequencePoints_.first);
 
-	return generateQueueSignalStep_();
+	const auto ret = generateQueueSignalStep_();
+
+	sequenceAsserter.sequencePoint(sequencePoints_.second);
+
+	return ret;
 }
 
 /*---------------------------------------------------------------------------------------------------------------------+
@@ -320,50 +329,50 @@ bool phase1()
 {
 	static const ThreadStep threadSteps[]
 	{
-			{0, GenerateQueueSignalStep{SignalInformation::Code::Generated, 0}},
-			{2, GenerateQueueSignalStep{SignalInformation::Code::Generated, 1}},
-			{4, GenerateQueueSignalStep{SignalInformation::Code::Generated, 2}},
-			{6, GenerateQueueSignalStep{SignalInformation::Code::Generated, 3}},
-			{8, GenerateQueueSignalStep{SignalInformation::Code::Generated, 4}},
-			{10, GenerateQueueSignalStep{SignalInformation::Code::Generated, 5}},
-			{12, GenerateQueueSignalStep{SignalInformation::Code::Generated, 6}},
-			{14, GenerateQueueSignalStep{SignalInformation::Code::Generated, 7}},
-			{16, GenerateQueueSignalStep{SignalInformation::Code::Generated, 8}},
-			{18, GenerateQueueSignalStep{SignalInformation::Code::Generated, 9}},
-			{20, GenerateQueueSignalStep{SignalInformation::Code::Queued, 0, 0x6c3d9ebc}},
-			{22, GenerateQueueSignalStep{SignalInformation::Code::Queued, 1, 0x52e04282}},
-			{24, GenerateQueueSignalStep{SignalInformation::Code::Queued, 2, 0x29f9fc86}},
-			{26, GenerateQueueSignalStep{SignalInformation::Code::Queued, 3, 0x19677883}},
-			{28, GenerateQueueSignalStep{SignalInformation::Code::Queued, 4, 0x7f2d693b}},
-			{30, GenerateQueueSignalStep{SignalInformation::Code::Queued, 5, 0x1a98ab78}},
-			{32, GenerateQueueSignalStep{SignalInformation::Code::Queued, 6, 0x6b96c96b}},
-			{34, GenerateQueueSignalStep{SignalInformation::Code::Queued, 7, 0x463445cc}},
-			{36, GenerateQueueSignalStep{SignalInformation::Code::Queued, 8, 0x38dccfd2}},
-			{38, GenerateQueueSignalStep{SignalInformation::Code::Queued, 9, 0x1e8ac134}},
+			{0, 2, GenerateQueueSignalStep{SignalInformation::Code::Generated, 0}},
+			{3, 5, GenerateQueueSignalStep{SignalInformation::Code::Generated, 1}},
+			{6, 8, GenerateQueueSignalStep{SignalInformation::Code::Generated, 2}},
+			{9, 11, GenerateQueueSignalStep{SignalInformation::Code::Generated, 3}},
+			{12, 14, GenerateQueueSignalStep{SignalInformation::Code::Generated, 4}},
+			{15, 17, GenerateQueueSignalStep{SignalInformation::Code::Generated, 5}},
+			{18, 20, GenerateQueueSignalStep{SignalInformation::Code::Generated, 6}},
+			{21, 23, GenerateQueueSignalStep{SignalInformation::Code::Generated, 7}},
+			{24, 26, GenerateQueueSignalStep{SignalInformation::Code::Generated, 8}},
+			{27, 29, GenerateQueueSignalStep{SignalInformation::Code::Generated, 9}},
+			{30, 32, GenerateQueueSignalStep{SignalInformation::Code::Queued, 0, 0x6c3d9ebc}},
+			{33, 35, GenerateQueueSignalStep{SignalInformation::Code::Queued, 1, 0x52e04282}},
+			{36, 38, GenerateQueueSignalStep{SignalInformation::Code::Queued, 2, 0x29f9fc86}},
+			{39, 41, GenerateQueueSignalStep{SignalInformation::Code::Queued, 3, 0x19677883}},
+			{42, 44, GenerateQueueSignalStep{SignalInformation::Code::Queued, 4, 0x7f2d693b}},
+			{45, 47, GenerateQueueSignalStep{SignalInformation::Code::Queued, 5, 0x1a98ab78}},
+			{48, 50, GenerateQueueSignalStep{SignalInformation::Code::Queued, 6, 0x6b96c96b}},
+			{51, 53, GenerateQueueSignalStep{SignalInformation::Code::Queued, 7, 0x463445cc}},
+			{54, 56, GenerateQueueSignalStep{SignalInformation::Code::Queued, 8, 0x38dccfd2}},
+			{57, 59, GenerateQueueSignalStep{SignalInformation::Code::Queued, 9, 0x1e8ac134}},
 	};
 
 	static const HandlerStep handlerSteps[]
 	{
 			{1, SignalSet{SignalSet::empty}, getSignalMask(0), SignalInformation::Code::Generated, 0},
-			{3, SignalSet{SignalSet::empty}, getSignalMask(1), SignalInformation::Code::Generated, 1},
-			{5, SignalSet{SignalSet::empty}, getSignalMask(2), SignalInformation::Code::Generated, 2},
-			{7, SignalSet{SignalSet::empty}, getSignalMask(3), SignalInformation::Code::Generated, 3},
-			{9, SignalSet{SignalSet::empty}, getSignalMask(4), SignalInformation::Code::Generated, 4},
-			{11, SignalSet{SignalSet::empty}, getSignalMask(5), SignalInformation::Code::Generated, 5},
-			{13, SignalSet{SignalSet::empty}, getSignalMask(6), SignalInformation::Code::Generated, 6},
-			{15, SignalSet{SignalSet::empty}, getSignalMask(7), SignalInformation::Code::Generated, 7},
-			{17, SignalSet{SignalSet::empty}, getSignalMask(8), SignalInformation::Code::Generated, 8},
-			{19, SignalSet{SignalSet::empty}, getSignalMask(9), SignalInformation::Code::Generated, 9},
-			{21, SignalSet{SignalSet::empty}, getSignalMask(0), SignalInformation::Code::Queued, 0, 0x6c3d9ebc},
-			{23, SignalSet{SignalSet::empty}, getSignalMask(1), SignalInformation::Code::Queued, 1, 0x52e04282},
-			{25, SignalSet{SignalSet::empty}, getSignalMask(2), SignalInformation::Code::Queued, 2, 0x29f9fc86},
-			{27, SignalSet{SignalSet::empty}, getSignalMask(3), SignalInformation::Code::Queued, 3, 0x19677883},
-			{29, SignalSet{SignalSet::empty}, getSignalMask(4), SignalInformation::Code::Queued, 4, 0x7f2d693b},
-			{31, SignalSet{SignalSet::empty}, getSignalMask(5), SignalInformation::Code::Queued, 5, 0x1a98ab78},
-			{33, SignalSet{SignalSet::empty}, getSignalMask(6), SignalInformation::Code::Queued, 6, 0x6b96c96b},
-			{35, SignalSet{SignalSet::empty}, getSignalMask(7), SignalInformation::Code::Queued, 7, 0x463445cc},
-			{37, SignalSet{SignalSet::empty}, getSignalMask(8), SignalInformation::Code::Queued, 8, 0x38dccfd2},
-			{39, SignalSet{SignalSet::empty}, getSignalMask(9), SignalInformation::Code::Queued, 9, 0x1e8ac134},
+			{4, SignalSet{SignalSet::empty}, getSignalMask(1), SignalInformation::Code::Generated, 1},
+			{7, SignalSet{SignalSet::empty}, getSignalMask(2), SignalInformation::Code::Generated, 2},
+			{10, SignalSet{SignalSet::empty}, getSignalMask(3), SignalInformation::Code::Generated, 3},
+			{13, SignalSet{SignalSet::empty}, getSignalMask(4), SignalInformation::Code::Generated, 4},
+			{16, SignalSet{SignalSet::empty}, getSignalMask(5), SignalInformation::Code::Generated, 5},
+			{19, SignalSet{SignalSet::empty}, getSignalMask(6), SignalInformation::Code::Generated, 6},
+			{22, SignalSet{SignalSet::empty}, getSignalMask(7), SignalInformation::Code::Generated, 7},
+			{25, SignalSet{SignalSet::empty}, getSignalMask(8), SignalInformation::Code::Generated, 8},
+			{28, SignalSet{SignalSet::empty}, getSignalMask(9), SignalInformation::Code::Generated, 9},
+			{31, SignalSet{SignalSet::empty}, getSignalMask(0), SignalInformation::Code::Queued, 0, 0x6c3d9ebc},
+			{34, SignalSet{SignalSet::empty}, getSignalMask(1), SignalInformation::Code::Queued, 1, 0x52e04282},
+			{37, SignalSet{SignalSet::empty}, getSignalMask(2), SignalInformation::Code::Queued, 2, 0x29f9fc86},
+			{40, SignalSet{SignalSet::empty}, getSignalMask(3), SignalInformation::Code::Queued, 3, 0x19677883},
+			{43, SignalSet{SignalSet::empty}, getSignalMask(4), SignalInformation::Code::Queued, 4, 0x7f2d693b},
+			{46, SignalSet{SignalSet::empty}, getSignalMask(5), SignalInformation::Code::Queued, 5, 0x1a98ab78},
+			{49, SignalSet{SignalSet::empty}, getSignalMask(6), SignalInformation::Code::Queued, 6, 0x6b96c96b},
+			{52, SignalSet{SignalSet::empty}, getSignalMask(7), SignalInformation::Code::Queued, 7, 0x463445cc},
+			{55, SignalSet{SignalSet::empty}, getSignalMask(8), SignalInformation::Code::Queued, 8, 0x38dccfd2},
+			{58, SignalSet{SignalSet::empty}, getSignalMask(9), SignalInformation::Code::Queued, 9, 0x1e8ac134},
 	};
 
 	handlerStepsRange = decltype(handlerStepsRange){handlerSteps};
@@ -375,7 +384,7 @@ bool phase1()
 
 	const size_t handlerStepsSize = std::end(handlerSteps) - std::begin(handlerSteps);
 	const size_t threadStepsSize = std::end(threadSteps) - std::begin(threadSteps);
-	if (sharedSequenceAsserter.assertSequence(handlerStepsSize + threadStepsSize) == false)
+	if (sharedSequenceAsserter.assertSequence(handlerStepsSize + 2 * threadStepsSize) == false)
 		return false;
 
 	return testResult;
