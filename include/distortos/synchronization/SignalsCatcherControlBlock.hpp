@@ -53,7 +53,8 @@ public:
 			signalMask_{SignalSet::empty},
 			associationsBegin_{reinterpret_cast<decltype(associationsBegin_)>(storageBegin)},
 			storageBegin_{storageBegin},
-			storageEnd_{storageEnd}
+			storageEnd_{storageEnd},
+			deliveryIsPending_{}
 	{
 
 	}
@@ -166,6 +167,9 @@ private:
 
 	/// pointer to "one past the last" element of range of Storage objects
 	Storage* storageEnd_;
+
+	/// true if signal delivery is pending, false otherwise
+	bool deliveryIsPending_;
 };
 
 }	// namespace synchronization
