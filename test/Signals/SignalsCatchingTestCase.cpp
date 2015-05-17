@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-05-16
+ * \date 2015-05-17
  */
 
 #include "SignalsCatchingTestCase.hpp"
@@ -35,6 +35,53 @@ namespace
 /*---------------------------------------------------------------------------------------------------------------------+
 | local objects
 +---------------------------------------------------------------------------------------------------------------------*/
+
+/// test step that generates of queues a signal
+class GenerateQueueSignalStep
+{
+public:
+
+	/**
+	 * \brief GenerateQueueSignalStep's constructor
+	 *
+	 * \param [in] code selects whether the signal will be generated (SignalInformation::Code::Generated) or queued
+	 * (SignalInformation::Code::Queued)
+	 * \param [in] signalNumber is the signal number that will be generated or queued
+	 * \param [in] value is the value that will be queued with the signal, relevant only if \a code is
+	 * SignalInformation::Code::Generated, default - default constructed int value
+	 */
+
+	constexpr GenerateQueueSignalStep(const SignalInformation::Code code, const uint8_t signalNumber,
+			const int value = {}) :
+			value_{value},
+			code_{code},
+			signalNumber_{signalNumber}
+	{
+
+	}
+
+	/**
+	 * \brief GenerateQueueSignalStep's function call operator
+	 *
+	 * Generates or queues selected signal.
+	 *
+	 * \return 0 on success, error code otherwise
+	 */
+
+	int operator()() const;
+
+private:
+
+	/// value that will be queued with the signal, relevant only if \a code_ is SignalInformation::Code::Generated
+	int value_;
+
+	/// selects whether the signal will be generated (SignalInformation::Code::Generated) or queued
+	/// (SignalInformation::Code::Queued)
+	SignalInformation::Code code_;
+
+	/// signal number that will be generated or queued
+	uint8_t signalNumber_;
+};
 
 /// test step executed in signal handler
 class HandlerStep
@@ -108,22 +155,15 @@ class ThreadStep
 public:
 
 	/**
-	 * \brief ThreadStep's constructor
+	 * \brief ThreadStep's constructor for GenerateQueueSignal type.
 	 *
 	 * \param [in] sequencePoint is the sequence point of test step
-	 * \param [in] code selects whether the signal will be generated (SignalInformation::Code::Generated) or queued
-	 * (SignalInformation::Code::Queued)
-	 * \param [in] signalNumber is the signal number that will be generated or queued
-	 * \param [in] value is the value that will be queued with the signal, relevant only if \a code is
-	 * SignalInformation::Code::Generated, default - default constructed int value
+	 * \param [in] generateQueueSignalStep is the GenerateQueueSignalStep that will be executed in test step
 	 */
 
-	constexpr ThreadStep(const unsigned int sequencePoint, const SignalInformation::Code code,
-			const uint8_t signalNumber, const int value = {}) :
-			sequencePoint_{sequencePoint},
-			value_{value},
-			code_{code},
-			signalNumber_{signalNumber}
+	constexpr ThreadStep(const unsigned int sequencePoint, const GenerateQueueSignalStep generateQueueSignalStep) :
+			generateQueueSignalStep_{generateQueueSignalStep},
+			sequencePoint_{sequencePoint}
 	{
 
 	}
@@ -131,7 +171,7 @@ public:
 	/**
 	 * \brief ThreadStep's function call operator
 	 *
-	 * Generates or queues selected signal.
+	 * Marks sequence point and executes internal test step.
 	 *
 	 * \param [in] sequenceAsserter is a reference to shared SequenceAsserter object
 	 *
@@ -142,18 +182,11 @@ public:
 
 private:
 
+	/// GenerateQueueSignalStep that will be executed in test step
+	GenerateQueueSignalStep generateQueueSignalStep_;
+
 	/// sequence point of test step
 	unsigned int sequencePoint_;
-
-	/// value that will be queued with the signal, relevant only if \a code_ is SignalInformation::Code::Generated
-	int value_;
-
-	/// selects whether the signal will be generated (SignalInformation::Code::Generated) or queued
-	/// (SignalInformation::Code::Queued)
-	SignalInformation::Code code_;
-
-	/// signal number that will be generated or queued
-	uint8_t signalNumber_;
 };
 
 /*---------------------------------------------------------------------------------------------------------------------+
@@ -171,6 +204,16 @@ sig_atomic_t sharedSigAtomic;
 
 /// shared SequenceAsserter object, is is reset before each test phase
 SequenceAsserter sharedSequenceAsserter;
+
+/*---------------------------------------------------------------------------------------------------------------------+
+| GenerateQueueSignalStep's public functions
++---------------------------------------------------------------------------------------------------------------------*/
+
+int GenerateQueueSignalStep::operator()() const
+{
+	return code_ == SignalInformation::Code::Generated ?  ThisThread::Signals::generateSignal(signalNumber_) :
+			ThisThread::Signals::queueSignal(signalNumber_, sigval{value_});
+}
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | HandlerStep's public functions
@@ -199,8 +242,7 @@ int ThreadStep::operator()(SequenceAsserter& sequenceAsserter) const
 {
 	sequenceAsserter.sequencePoint(sequencePoint_);
 
-	return code_ == SignalInformation::Code::Generated ?  ThisThread::Signals::generateSignal(signalNumber_) :
-			ThisThread::Signals::queueSignal(signalNumber_, sigval{value_});
+	return generateQueueSignalStep_();
 }
 
 /*---------------------------------------------------------------------------------------------------------------------+
@@ -263,26 +305,26 @@ bool phase1()
 {
 	static const ThreadStep threadSteps[]
 	{
-			{0, SignalInformation::Code::Generated, 0},
-			{2, SignalInformation::Code::Generated, 1},
-			{4, SignalInformation::Code::Generated, 2},
-			{6, SignalInformation::Code::Generated, 3},
-			{8, SignalInformation::Code::Generated, 4},
-			{10, SignalInformation::Code::Generated, 5},
-			{12, SignalInformation::Code::Generated, 6},
-			{14, SignalInformation::Code::Generated, 7},
-			{16, SignalInformation::Code::Generated, 8},
-			{18, SignalInformation::Code::Generated, 9},
-			{20, SignalInformation::Code::Queued, 0, 0x6c3d9ebc},
-			{22, SignalInformation::Code::Queued, 1, 0x52e04282},
-			{24, SignalInformation::Code::Queued, 2, 0x29f9fc86},
-			{26, SignalInformation::Code::Queued, 3, 0x19677883},
-			{28, SignalInformation::Code::Queued, 4, 0x7f2d693b},
-			{30, SignalInformation::Code::Queued, 5, 0x1a98ab78},
-			{32, SignalInformation::Code::Queued, 6, 0x6b96c96b},
-			{34, SignalInformation::Code::Queued, 7, 0x463445cc},
-			{36, SignalInformation::Code::Queued, 8, 0x38dccfd2},
-			{38, SignalInformation::Code::Queued, 9, 0x1e8ac134},
+			{0, GenerateQueueSignalStep{SignalInformation::Code::Generated, 0}},
+			{2, GenerateQueueSignalStep{SignalInformation::Code::Generated, 1}},
+			{4, GenerateQueueSignalStep{SignalInformation::Code::Generated, 2}},
+			{6, GenerateQueueSignalStep{SignalInformation::Code::Generated, 3}},
+			{8, GenerateQueueSignalStep{SignalInformation::Code::Generated, 4}},
+			{10, GenerateQueueSignalStep{SignalInformation::Code::Generated, 5}},
+			{12, GenerateQueueSignalStep{SignalInformation::Code::Generated, 6}},
+			{14, GenerateQueueSignalStep{SignalInformation::Code::Generated, 7}},
+			{16, GenerateQueueSignalStep{SignalInformation::Code::Generated, 8}},
+			{18, GenerateQueueSignalStep{SignalInformation::Code::Generated, 9}},
+			{20, GenerateQueueSignalStep{SignalInformation::Code::Queued, 0, 0x6c3d9ebc}},
+			{22, GenerateQueueSignalStep{SignalInformation::Code::Queued, 1, 0x52e04282}},
+			{24, GenerateQueueSignalStep{SignalInformation::Code::Queued, 2, 0x29f9fc86}},
+			{26, GenerateQueueSignalStep{SignalInformation::Code::Queued, 3, 0x19677883}},
+			{28, GenerateQueueSignalStep{SignalInformation::Code::Queued, 4, 0x7f2d693b}},
+			{30, GenerateQueueSignalStep{SignalInformation::Code::Queued, 5, 0x1a98ab78}},
+			{32, GenerateQueueSignalStep{SignalInformation::Code::Queued, 6, 0x6b96c96b}},
+			{34, GenerateQueueSignalStep{SignalInformation::Code::Queued, 7, 0x463445cc}},
+			{36, GenerateQueueSignalStep{SignalInformation::Code::Queued, 8, 0x38dccfd2}},
+			{38, GenerateQueueSignalStep{SignalInformation::Code::Queued, 9, 0x1e8ac134}},
 	};
 
 	static const HandlerStep handlerSteps[]
