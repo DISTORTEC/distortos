@@ -65,6 +65,15 @@ std::pair<int, SignalInformation> SignalsReceiverControlBlock::acceptPendingSign
 	return {ret, SignalInformation{signalNumber, SignalInformation::Code::Generated, sigval{}}};
 }
 
+int SignalsReceiverControlBlock::deliveryOfSignalsStartedHook() const
+{
+	if (signalsCatcherControlBlock_ == nullptr)
+		return ENOTSUP;
+
+	signalsCatcherControlBlock_->deliveryOfSignalsStartedHook();
+	return 0;
+}
+
 int SignalsReceiverControlBlock::generateSignal(const uint8_t signalNumber,
 		const scheduler::ThreadControlBlock& threadControlBlock)
 {

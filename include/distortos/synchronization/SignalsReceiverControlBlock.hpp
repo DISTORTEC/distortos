@@ -74,6 +74,19 @@ public:
 	std::pair<int, SignalInformation> acceptPendingSignal(uint8_t signalNumber);
 
 	/**
+	 * \brief Hook function executed when delivery of signals is started.
+	 *
+	 * Calls SignalsCatcherControlBlock::deliveryOfSignalsStartedHook().
+	 *
+	 * \attention This function should be called only by the function that delivers signals (<em>deliverSignals()</em>).
+	 *
+	 * \return 0 on success, error code otherwise:
+	 * - ENOTSUP - catching/handling of signals is disabled for this receiver;
+	 */
+
+	int deliveryOfSignalsStartedHook() const;
+
+	/**
 	 * \brief Generates signal for associated thread.
 	 *
 	 * Similar to pthread_kill() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_kill.html
