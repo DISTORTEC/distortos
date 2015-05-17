@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-05-14
+ * \date 2015-05-17
  */
 
 #include "distortos/synchronization/SignalsCatcherControlBlock.hpp"
@@ -227,6 +227,11 @@ std::pair<int, SignalAction> SignalsCatcherControlBlock::setAssociation(const ui
 	new (associationsEnd_) Association{signalSet, signalAction};
 	++associationsEnd_;
 	return {{}, previousSignalAction};
+}
+
+void SignalsCatcherControlBlock::setSignalMask(const SignalSet signalMask)
+{
+	signalMask_ = signalMask;
 }
 
 /*---------------------------------------------------------------------------------------------------------------------+
