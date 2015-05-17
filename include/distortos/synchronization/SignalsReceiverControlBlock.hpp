@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-05-14
+ * \date 2015-05-17
  */
 
 #ifndef INCLUDE_DISTORTOS_SYNCHRONIZATION_SIGNALSRECEIVERCONTROLBLOCK_HPP_
@@ -168,12 +168,14 @@ public:
 	 * Similar to pthread_sigmask() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_sigmask.html#
 	 *
 	 * \param [in] signalMask is the SignalSet with new signal mask for associated thread
+	 * \param [in] requestDelivery selects whether delivery of signals will be requested if any pending signal is
+	 * unblocked (true) or not (false)
 	 * 
 	 * \return 0 on success, error code otherwise:
 	 * - ENOTSUP - catching/handling of signals is disabled for this receiver;
 	 */
 
-	int setSignalMask(SignalSet signalMask);
+	int setSignalMask(SignalSet signalMask, bool requestDelivery);
 
 	/**
 	 * \param [in] signalSet is a pointer to set of signals that will be "waited for", nullptr when wait was terminated

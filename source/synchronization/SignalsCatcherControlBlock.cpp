@@ -140,9 +140,10 @@ void deliverSignals()
 				// this call may not fail, because SignalsReceiverControlBlock that is used here must support
 				// catching/handling of signals - otherwise the call to SignalsReceiverControlBlock::getSignalAction()
 				// above would fail
-				signalsReceiverControlBlock->setSignalMask(newSignalMask);	/// \todo add assertion just to be sure
+				/// \todo add assertion just to be sure
+				signalsReceiverControlBlock->setSignalMask(newSignalMask, false);
 				(*handler)(signalInformation);
-				signalsReceiverControlBlock->setSignalMask(signalMask);	// restore previous signal mask
+				signalsReceiverControlBlock->setSignalMask(signalMask, false);	// restore previous signal mask
 			}
 		}
 	}
