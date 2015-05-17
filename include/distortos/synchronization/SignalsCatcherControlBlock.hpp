@@ -162,6 +162,14 @@ private:
 
 	SignalAction clearAssociation(uint8_t signalNumber, Association& association);
 
+	/**
+	 * \brief Requests delivery of signals to associated thread.
+	 *
+	 * \param [in] threadControlBlock is a reference to associated ThreadControlBlock
+	 */
+
+	void requestDeliveryOfSignals(const scheduler::ThreadControlBlock& threadControlBlock) const;
+
 	/// SignalSet with signal mask for associated thread
 	SignalSet signalMask_;
 

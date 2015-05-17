@@ -282,6 +282,11 @@ SignalAction SignalsCatcherControlBlock::clearAssociation(const uint8_t signalNu
 	return previousSignalAction;
 }
 
+void SignalsCatcherControlBlock::requestDeliveryOfSignals(const scheduler::ThreadControlBlock& threadControlBlock) const
+{
+	architecture::requestFunctionExecution(threadControlBlock, deliverSignals);
+}
+
 }	// namespace synchronization
 
 }	// namespace distortos
