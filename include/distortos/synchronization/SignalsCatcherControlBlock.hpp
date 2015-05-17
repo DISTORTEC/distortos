@@ -60,6 +60,19 @@ public:
 	}
 
 	/**
+	 * \brief Hook function executed when delivery of signals is started.
+	 *
+	 * Clears "delivery pending" flag.
+	 *
+	 * \attention This function should be called only by SignalsReceiverControlBlock::deliveryOfSignalsFinishedHook().
+	 */
+
+	void deliveryOfSignalsStartedHook()
+	{
+		deliveryIsPending_ = false;
+	}
+
+	/**
 	 * \brief Gets SignalAction associated with given signal number.
 	 *
 	 * \param [in] signalNumber is the signal for which the association is requested, [0; 31]
