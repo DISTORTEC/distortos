@@ -248,7 +248,7 @@ void SignalsCatcherControlBlock::setSignalMask(const SignalSet signalMask,
 	if (pendingUnblockedBitset.none() == true)	// no pending & unblocked signals?
 		return;
 
-	architecture::requestFunctionExecution(scheduler::getScheduler().getCurrentThreadControlBlock(), deliverSignals);
+	requestDeliveryOfSignals(scheduler::getScheduler().getCurrentThreadControlBlock());
 }
 
 /*---------------------------------------------------------------------------------------------------------------------+
