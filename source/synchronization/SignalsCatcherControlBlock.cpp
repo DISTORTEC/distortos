@@ -284,6 +284,9 @@ SignalAction SignalsCatcherControlBlock::clearAssociation(const uint8_t signalNu
 
 void SignalsCatcherControlBlock::requestDeliveryOfSignals(const scheduler::ThreadControlBlock& threadControlBlock)
 {
+	if (deliveryIsPending_ == true)
+		return;
+
 	deliveryIsPending_ = true;
 	architecture::requestFunctionExecution(threadControlBlock, deliverSignals);
 }
