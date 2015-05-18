@@ -434,14 +434,16 @@ constexpr SignalSet getSignalMask(const uint8_t signalNumber)
  * \brief Signal handler
  *
  * If \a handlerStepsRange is empty, error is marked (test handler is unexpected). Otherwise first element if removed
- * from the range and executed.
+ * from the range and executed. Whole sequence is repeated if HandlerStep::shouldExecuteMore() of the test step that was
+ * just executed returns true.
  *
  * \param [in] signalInformation is a reference to received SignalInformation object
  */
 
 void handler(const SignalInformation& signalInformation)
 {
-	if (handlerStepsRange.size() != 0)
+	bool more {true};
+	while (more == true && handlerStepsRange.size() != 0)
 	{
 		// remove the first element from the range
 		auto& handlerStep = *handlerStepsRange.begin();
@@ -450,8 +452,11 @@ void handler(const SignalInformation& signalInformation)
 		const auto ret = handlerStep(signalInformation, sharedSequenceAsserter);
 		if (ret != 0)
 			sharedSigAtomic = ret;
+
+		more = handlerStep.shouldExecuteMore();
 	}
-	else
+
+	if (more == true)
 		sharedSigAtomic = EINVAL;	// execution of signal handler was not expected
 }
 
