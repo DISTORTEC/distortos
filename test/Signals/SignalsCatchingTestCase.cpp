@@ -222,6 +222,15 @@ public:
 
 	int operator()(const SignalInformation& signalInformation, SequenceAsserter& sequenceAsserter) const;
 
+	/**
+	 * \return true if another available HandlerStep should be executed in the same signal handler, false otherwise
+	 */
+
+	bool shouldExecuteMore() const
+	{
+		return more_;
+	}
+
 private:
 
 	/// internal test step that will be executed
