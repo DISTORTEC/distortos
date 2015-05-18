@@ -182,8 +182,15 @@ class HandlerStep
 {
 public:
 
+	/// type of test step
+	enum class Type : uint8_t
+	{
+		/// BasicHandlerStep
+		Basic,
+	};
+
 	/**
-	 * \brief HandlerStep's constructor
+	 * \brief HandlerStep's constructor for Basic type.
 	 *
 	 * \param [in] firstSequencePoint is the first sequence point of test step
 	 * \param [in] lastSequencePoint is the last sequence point of test step
@@ -193,7 +200,8 @@ public:
 	constexpr HandlerStep(const unsigned int firstSequencePoint, const unsigned int lastSequencePoint,
 			const BasicHandlerStep basicHandlerStep) :
 			basicHandlerStep_{basicHandlerStep},
-			sequencePoints_{firstSequencePoint, lastSequencePoint}
+			sequencePoints_{firstSequencePoint, lastSequencePoint},
+			type_{Type::Basic}
 	{
 
 	}
@@ -213,11 +221,18 @@ public:
 
 private:
 
-	/// BasicHandlerStep test step
-	BasicHandlerStep basicHandlerStep_;
+	/// internal test step that will be executed
+	union
+	{
+		/// BasicHandlerStep test step - valid only if type_ == Type::Basic
+		BasicHandlerStep basicHandlerStep_;
+	};
 
 	/// sequence points of test step
 	SequencePoints sequencePoints_;
+
+	/// type of test step
+	Type type_;
 };
 
 /// test step executed in thread
