@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-05-18
+ * \date 2015-05-20
  */
 
 #include "SignalsCatchingTestCase.hpp"
@@ -187,6 +187,8 @@ public:
 	{
 		/// BasicHandlerStep
 		Basic,
+		/// GenerateQueueSignalStep
+		GenerateQueueSignal,
 	};
 
 	/**
@@ -205,6 +207,26 @@ public:
 			sequencePoints_{firstSequencePoint, lastSequencePoint},
 			more_{more},
 			type_{Type::Basic}
+	{
+
+	}
+
+	/**
+	 * \brief HandlerStep's constructor for GenerateQueueSignal type.
+	 *
+	 * \param [in] firstSequencePoint is the first sequence point of test step
+	 * \param [in] lastSequencePoint is the last sequence point of test step
+	 * \param [in] more selects whether another available HandlerStep should be executed in the same signal handler
+	 * (true) or not (false)
+	 * \param [in] generateQueueSignalStep is the GenerateQueueSignalStep that will be executed in test step
+	 */
+
+	constexpr HandlerStep(const unsigned int firstSequencePoint, const unsigned int lastSequencePoint, const bool more,
+			const GenerateQueueSignalStep generateQueueSignalStep) :
+			generateQueueSignalStep_{generateQueueSignalStep},
+			sequencePoints_{firstSequencePoint, lastSequencePoint},
+			more_{more},
+			type_{Type::GenerateQueueSignal}
 	{
 
 	}
@@ -238,6 +260,9 @@ private:
 	{
 		/// BasicHandlerStep test step - valid only if type_ == Type::Basic
 		BasicHandlerStep basicHandlerStep_;
+
+		/// GenerateQueueSignalStep test step - valid only if type_ == Type::GenerateQueueSignal
+		GenerateQueueSignalStep generateQueueSignalStep_;
 	};
 
 	/// sequence points of test step
@@ -376,7 +401,7 @@ int HandlerStep::operator()(const SignalInformation& signalInformation, Sequence
 {
 	sequenceAsserter.sequencePoint(sequencePoints_.first);
 
-	const auto ret = basicHandlerStep_(signalInformation);
+	const auto ret = type_ == Type::Basic ? basicHandlerStep_(signalInformation) : generateQueueSignalStep_();
 
 	sequenceAsserter.sequencePoint(sequencePoints_.second);
 
