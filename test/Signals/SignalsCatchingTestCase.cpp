@@ -523,6 +523,7 @@ bool phase1()
 {
 	static const ThreadStep threadSteps[]
 	{
+			// part 1 - normal generated signals
 			{0, 3, GenerateQueueSignalStep{SignalInformation::Code::Generated, 0}},
 			{4, 7, GenerateQueueSignalStep{SignalInformation::Code::Generated, 1}},
 			{8, 11, GenerateQueueSignalStep{SignalInformation::Code::Generated, 2}},
@@ -533,6 +534,7 @@ bool phase1()
 			{28, 31, GenerateQueueSignalStep{SignalInformation::Code::Generated, 7}},
 			{32, 35, GenerateQueueSignalStep{SignalInformation::Code::Generated, 8}},
 			{36, 39, GenerateQueueSignalStep{SignalInformation::Code::Generated, 9}},
+			// part 2 - normal queued signals
 			{40, 43, GenerateQueueSignalStep{SignalInformation::Code::Queued, 0, 0x6c3d9ebc}},
 			{44, 47, GenerateQueueSignalStep{SignalInformation::Code::Queued, 1, 0x52e04282}},
 			{48, 51, GenerateQueueSignalStep{SignalInformation::Code::Queued, 2, 0x29f9fc86}},
@@ -543,6 +545,7 @@ bool phase1()
 			{68, 71, GenerateQueueSignalStep{SignalInformation::Code::Queued, 7, 0x463445cc}},
 			{72, 75, GenerateQueueSignalStep{SignalInformation::Code::Queued, 8, 0x38dccfd2}},
 			{76, 79, GenerateQueueSignalStep{SignalInformation::Code::Queued, 9, 0x1e8ac134}},
+			// part 3 - unmasking of pending generated signals
 			{80, 81, SignalMaskStep{SignalSet{SignalSet::full}}},
 			{82, 83, GenerateQueueSignalStep{SignalInformation::Code::Generated, 3}},
 			{84, 85, GenerateQueueSignalStep{SignalInformation::Code::Generated, 8}},
@@ -555,6 +558,7 @@ bool phase1()
 			{98, 99, GenerateQueueSignalStep{SignalInformation::Code::Generated, 6}},
 			{100, 101, GenerateQueueSignalStep{SignalInformation::Code::Generated, 2}},
 			{102, 123, SignalMaskStep{SignalSet{SignalSet::empty}}},
+			// part 4 - unmasking of pending queued signals
 			{124, 125, SignalMaskStep{SignalSet{SignalSet::full}}},
 			{126, 127, GenerateQueueSignalStep{SignalInformation::Code::Queued, 7, 0x08055dbe}},
 			{128, 129, GenerateQueueSignalStep{SignalInformation::Code::Queued, 2, 0x2c9530e7}},
@@ -567,6 +571,7 @@ bool phase1()
 			{142, 143, GenerateQueueSignalStep{SignalInformation::Code::Queued, 7, 0x2b56f970}},
 			{144, 145, GenerateQueueSignalStep{SignalInformation::Code::Queued, 2, 0x3898dc9e}},
 			{146, 167, SignalMaskStep{SignalSet{SignalSet::empty}}},
+			// part 5 - unmasking of pending signals
 			{168, 169, SignalMaskStep{SignalSet{SignalSet::full}}},
 			{170, 171, GenerateQueueSignalStep{SignalInformation::Code::Generated, 4}},
 			{172, 173, GenerateQueueSignalStep{SignalInformation::Code::Generated, 6}},
@@ -589,6 +594,7 @@ bool phase1()
 			{206, 207, GenerateQueueSignalStep{SignalInformation::Code::Queued, 1, 0x1cfc75b5}},
 			{208, 209, GenerateQueueSignalStep{SignalInformation::Code::Queued, 2, 0x15c508ba}},
 			{210, 251, SignalMaskStep{SignalSet{SignalSet::empty}}},
+			// part 6 - unmasking of pending signals - one at a time
 			{252, 253, SignalMaskStep{SignalSet{SignalSet::full}}},
 			{254, 255, GenerateQueueSignalStep{SignalInformation::Code::Generated, 4}},
 			{256, 257, GenerateQueueSignalStep{SignalInformation::Code::Generated, 3}},
@@ -620,8 +626,11 @@ bool phase1()
 			{336, 341, SignalMaskStep{SignalSet{(UINT32_MAX << 10) | 0b0000010001}}},
 			{342, 347, SignalMaskStep{SignalSet{(UINT32_MAX << 10) | 0b0000000001}}},
 			{348, 353, SignalMaskStep{SignalSet{(UINT32_MAX << 10) | 0b0000000000}}},
+			// part 7 - nested signal handlers - generate signal from within signal handler
 			{354, 433, GenerateQueueSignalStep{SignalInformation::Code::Generated, 0}},
+			// part 8 - nested signal handlers - queue signal from within signal handler
 			{434, 513, GenerateQueueSignalStep{SignalInformation::Code::Queued, 0, 0x39a52149}},
+			// part 9 - nested signal handlers - unmasking of pending signals (one at a time) from within signal handler
 			{514, 515, SignalMaskStep{SignalSet{SignalSet::full}}},
 			{516, 517, GenerateQueueSignalStep{SignalInformation::Code::Generated, 0}},
 			{518, 519, GenerateQueueSignalStep{SignalInformation::Code::Generated, 4}},
@@ -649,6 +658,7 @@ bool phase1()
 
 	static const HandlerStep handlerSteps[]
 	{
+			// part 1 - normal generated signals
 			{1, 2, false, BasicHandlerStep{SignalSet{SignalSet::empty}, getSignalMask(0),
 					SignalInformation::Code::Generated, 0}},
 			{5, 6, false, BasicHandlerStep{SignalSet{SignalSet::empty}, getSignalMask(1),
@@ -669,6 +679,7 @@ bool phase1()
 					SignalInformation::Code::Generated, 8}},
 			{37, 38, false, BasicHandlerStep{SignalSet{SignalSet::empty}, getSignalMask(9),
 					SignalInformation::Code::Generated, 9}},
+			// part 2 - normal queued signals
 			{41, 42, false, BasicHandlerStep{SignalSet{SignalSet::empty}, getSignalMask(0),
 					SignalInformation::Code::Queued, 0, 0x6c3d9ebc}},
 			{45, 46, false, BasicHandlerStep{SignalSet{SignalSet::empty}, getSignalMask(1),
@@ -689,6 +700,7 @@ bool phase1()
 					SignalInformation::Code::Queued, 8, 0x38dccfd2}},
 			{77, 78, false, BasicHandlerStep{SignalSet{SignalSet::empty}, getSignalMask(9),
 					SignalInformation::Code::Queued, 9, 0x1e8ac134}},
+			// part 3 - unmasking of pending generated signals
 			{103, 104, false, BasicHandlerStep{SignalSet{0b1111111110}, getSignalMask(0),
 					SignalInformation::Code::Generated, 0}},
 			{105, 106, false, BasicHandlerStep{SignalSet{0b1111111100}, getSignalMask(1),
@@ -709,6 +721,7 @@ bool phase1()
 					SignalInformation::Code::Generated, 8}},
 			{121, 122, false, BasicHandlerStep{SignalSet{SignalSet::empty}, getSignalMask(9),
 					SignalInformation::Code::Generated, 9}},
+			// part 4 - unmasking of pending queued signals
 			{147, 148, false, BasicHandlerStep{SignalSet{0b10000100}, getSignalMask(2), SignalInformation::Code::Queued,
 					2, 0x2c9530e7}},
 			{149, 150, false, BasicHandlerStep{SignalSet{0b10000100}, getSignalMask(2), SignalInformation::Code::Queued,
@@ -729,6 +742,7 @@ bool phase1()
 					7, 0x4f8d74b5}},
 			{165, 166, false, BasicHandlerStep{SignalSet{SignalSet::empty}, getSignalMask(7),
 					SignalInformation::Code::Queued, 7, 0x2b56f970}},
+			// part 5 - unmasking of pending signals
 			{211, 212, false, BasicHandlerStep{SignalSet{0b1111111111}, getSignalMask(0),
 					SignalInformation::Code::Queued, 0, 0x44bcee3c}},
 			{213, 214, false, BasicHandlerStep{SignalSet{0b1111111110}, getSignalMask(0),
@@ -769,6 +783,7 @@ bool phase1()
 					SignalInformation::Code::Queued, 9, 0x299d82f6}},
 			{249, 250, false, BasicHandlerStep{SignalSet{SignalSet::empty}, getSignalMask(9),
 					SignalInformation::Code::Generated, 9}},
+			// part 6 - unmasking of pending signals - one at a time
 			{295, 296, false, BasicHandlerStep{SignalSet{0b1111111111}, SignalSet{SignalSet::full},
 					SignalInformation::Code::Queued, 2, 0x7abf0fb2}},
 			{297, 298, false, BasicHandlerStep{SignalSet{0b1111111011}, SignalSet{SignalSet::full},
@@ -809,6 +824,7 @@ bool phase1()
 					SignalInformation::Code::Queued, 0, 0x3d982f37}},
 			{351, 352, false, BasicHandlerStep{SignalSet{SignalSet::empty},
 					SignalSet{(UINT32_MAX << 10) | 0b0000000001}, SignalInformation::Code::Generated, 0}},
+			// part 7 - nested signal handlers - generate signal from within signal handler
 			{355, 356, true, BasicHandlerStep{SignalSet{SignalSet::empty}, SignalSet{(UINT32_MAX << 10) | 0b0000000001},
 					SignalInformation::Code::Generated, 0}},
 			{357, 358, true, GenerateQueueSignalStep{SignalInformation::Code::Generated, 0}},
@@ -868,6 +884,7 @@ bool phase1()
 					SignalInformation::Code::Generated, 1}},
 			{431, 432, false, BasicHandlerStep{SignalSet{SignalSet::empty},
 					SignalSet{(UINT32_MAX << 10) | 0b0000000001}, SignalInformation::Code::Generated, 0}},
+			// part 8 - nested signal handlers - queue signal from within signal handler
 			{435, 436, true, BasicHandlerStep{SignalSet{SignalSet::empty}, SignalSet{(UINT32_MAX << 10) | 0b0000000001},
 					SignalInformation::Code::Queued, 0, 0x39a52149}},
 			{437, 438, true, GenerateQueueSignalStep{SignalInformation::Code::Queued, 0, 0x69eb4368}},
@@ -927,6 +944,7 @@ bool phase1()
 					SignalInformation::Code::Queued, 1, 0x59a40114}},
 			{511, 512, false, BasicHandlerStep{SignalSet{SignalSet::empty},
 					SignalSet{(UINT32_MAX << 10) | 0b0000000001}, SignalInformation::Code::Queued, 0, 0x69eb4368}},
+			// part 9 - nested signal handlers - unmasking of pending signals (one at a time) from within signal handler
 			{557, 558, true, BasicHandlerStep{SignalSet{0b1111111111}, SignalSet{SignalSet::full},
 					SignalInformation::Code::Queued, 4, 0x248f49de}},
 			{559, 612, false, SignalMaskStep{SignalSet{(UINT32_MAX << 10) | 0b1101111111}}},
