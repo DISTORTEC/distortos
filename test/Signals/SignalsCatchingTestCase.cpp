@@ -189,6 +189,8 @@ public:
 		Basic,
 		/// GenerateQueueSignalStep
 		GenerateQueueSignal,
+		/// SignalMaskStep
+		SignalMask,
 	};
 
 	/**
@@ -232,6 +234,26 @@ public:
 	}
 
 	/**
+	 * \brief HandlerStep's constructor for SignalMask type.
+	 *
+	 * \param [in] firstSequencePoint is the first sequence point of test step
+	 * \param [in] lastSequencePoint is the last sequence point of test step
+	 * \param [in] more selects whether another available HandlerStep should be executed in the same signal handler
+	 * (true) or not (false)
+	 * \param [in] signalMaskStep is the SignalMaskStep that will be executed in test step
+	 */
+
+	constexpr HandlerStep(const unsigned int firstSequencePoint, const unsigned int lastSequencePoint, const bool more,
+			const SignalMaskStep signalMaskStep) :
+			signalMaskStep_{signalMaskStep},
+			sequencePoints_{firstSequencePoint, lastSequencePoint},
+			more_{more},
+			type_{Type::SignalMask}
+	{
+
+	}
+
+	/**
 	 * \brief HandlerStep's function call operator
 	 *
 	 * Marks first sequence point, executes internal test step and marks last sequence point.
@@ -263,6 +285,9 @@ private:
 
 		/// GenerateQueueSignalStep test step - valid only if type_ == Type::GenerateQueueSignal
 		GenerateQueueSignalStep generateQueueSignalStep_;
+
+		/// SignalMaskStep test step - valid only if type_ == Type::SignalMask
+		SignalMaskStep signalMaskStep_;
 	};
 
 	/// sequence points of test step
@@ -401,7 +426,8 @@ int HandlerStep::operator()(const SignalInformation& signalInformation, Sequence
 {
 	sequenceAsserter.sequencePoint(sequencePoints_.first);
 
-	const auto ret = type_ == Type::Basic ? basicHandlerStep_(signalInformation) : generateQueueSignalStep_();
+	const auto ret = type_ == Type::Basic ? basicHandlerStep_(signalInformation) :
+			type_ == Type::GenerateQueueSignal ? generateQueueSignalStep_() : signalMaskStep_();
 
 	sequenceAsserter.sequencePoint(sequencePoints_.second);
 
