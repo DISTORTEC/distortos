@@ -36,6 +36,73 @@ namespace architecture
 
 int supervisorCall(int (& function)(int, int, int, int), int argument1, int argument2, int argument3, int argument4);
 
+/**
+ * \brief Supervisor call - overload with 3 arguments
+ *
+ * Requests execution of \a function with arguments from SVC_Handler().
+ *
+ * \param [in] function is a reference to function that will be executed
+ * \param [in] argument1 is the first argument for \a function
+ * \param [in] argument2 is the second argument for \a function
+ * \param [in] argument3 is the third argument for \a function
+ *
+ * \return value returned by \a function
+ */
+
+inline int supervisorCall(int (& function)(int, int, int), const int argument1, const int argument2,
+		const int argument3)
+{
+	return supervisorCall(reinterpret_cast<int(&)(int, int, int, int)>(function), argument1, argument2, argument3, {});
+}
+
+/**
+ * \brief Supervisor call - overload with 2 arguments
+ *
+ * Requests execution of \a function with arguments from SVC_Handler().
+ *
+ * \param [in] function is a reference to function that will be executed
+ * \param [in] argument1 is the first argument for \a function
+ * \param [in] argument2 is the second argument for \a function
+ *
+ * \return value returned by \a function
+ */
+
+inline int supervisorCall(int (& function)(int, int), const int argument1, const int argument2)
+{
+	return supervisorCall(reinterpret_cast<int(&)(int, int, int, int)>(function), argument1, argument2, {}, {});
+}
+
+/**
+ * \brief Supervisor call - overload with 1 argument
+ *
+ * Requests execution of \a function with arguments from SVC_Handler().
+ *
+ * \param [in] function is a reference to function that will be executed
+ * \param [in] argument is the argument for \a function
+ *
+ * \return value returned by \a function
+ */
+
+inline int supervisorCall(int (& function)(int), const int argument)
+{
+	return supervisorCall(reinterpret_cast<int(&)(int, int, int, int)>(function), argument, {}, {}, {});
+}
+
+/**
+ * \brief Supervisor call - overload with no arguments
+ *
+ * Requests execution of \a function with arguments from SVC_Handler().
+ *
+ * \param [in] function is a reference to function that will be executed
+ *
+ * \return value returned by \a function
+ */
+
+inline int supervisorCall(int (& function)())
+{
+	return supervisorCall(reinterpret_cast<int(&)(int, int, int, int)>(function), {}, {}, {}, {});
+}
+
 }	// namespace architecture
 
 }	// namespace distortos
