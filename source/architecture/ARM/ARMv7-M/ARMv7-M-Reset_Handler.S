@@ -37,7 +37,7 @@ Reset_Handler:
 	msr		PSP, r0
 
 	// Thread mode uses process stack (PSP) and is privileged
-	movs	r0, #CONTROL_ALTERNATE_STACK
+	movs	r0, #CONTROL_SPSEL
 	msr		CONTROL, r0
 	isb
 

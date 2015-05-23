@@ -18,10 +18,10 @@
 | CONTROL - The special-purpose control register
 +---------------------------------------------------------------------------------------------------------------------*/
 
-#define CONTROL_THREAD_UNPRIVILEGED_bit		0
-#define CONTROL_ALTERNATE_STACK_bit			1
+#define CONTROL_nPRIV_bit					0
+#define CONTROL_SPSEL_bit					1
 
-#define CONTROL_THREAD_UNPRIVILEGED			(1 << CONTROL_THREAD_UNPRIVILEGED_bit)
-#define CONTROL_ALTERNATE_STACK				(1 << CONTROL_ALTERNATE_STACK_bit)
+#define CONTROL_nPRIV						(1 << CONTROL_nPRIV_bit)
+#define CONTROL_SPSEL						(1 << CONTROL_SPSEL_bit)
 
 #endif	// SOURCE_ARCHITECTURE_ARM_ARMV7_M_ARMV7_M_CONTROL_H_
