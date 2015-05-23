@@ -2,33 +2,17 @@
  * \file
  * \brief Header with definition of bits in special registers in ARMv7-M core (Cortex-M3 / Cortex-M4).
  *
- * \author Copyright (C) 2014 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-07-22
+ * \date 2015-05-23
  */
 
 #ifndef SOURCE_ARCHITECTURE_ARM_ARMV7_M_ARMV7_M_SPECIALREGISTERS_H_
 #define SOURCE_ARCHITECTURE_ARM_ARMV7_M_ARMV7_M_SPECIALREGISTERS_H_
-
-/*---------------------------------------------------------------------------------------------------------------------+
-| PRIMASK - Register to mask out configurable exceptions
-+---------------------------------------------------------------------------------------------------------------------*/
-
-#define PRIMASK_MASK_EXCEPTIONS_bit			0
-
-#define PRIMASK_MASK_EXCEPTIONS				(1 << PRIMASK_MASK_EXCEPTIONS_bit)
-
-/*---------------------------------------------------------------------------------------------------------------------+
-| FAULTMASK - Register to raise priority to the HardFault level
-+---------------------------------------------------------------------------------------------------------------------*/
-
-#define FAULTMASK_MASK_EXCEPTIONS_bit		0
-
-#define FAULTMASK_MASK_EXCEPTIONS			(1 << FAULTMASK_MASK_EXCEPTIONS_bit)
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | CONTROL - The special-purpose control register
