@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-05-20
+ * \date 2015-05-23
  */
 
 #include "SignalsCatchingTestCase.hpp"
@@ -301,6 +301,103 @@ private:
 	Type type_;
 };
 
+/// test step executed in interrupt (via software timer)
+class InterruptStep
+{
+public:
+
+	/// type of test step
+	enum class Type : uint8_t
+	{
+		/// GenerateQueueSignalStep
+		GenerateQueueSignal,
+		/// SignalMaskStep
+		SignalMask,
+	};
+
+	/**
+	 * \brief InterruptStep's constructor for GenerateQueueSignal type.
+	 *
+	 * \param [in] firstSequencePoint is the first sequence point of test step
+	 * \param [in] lastSequencePoint is the last sequence point of test step
+	 * \param [in] more selects whether another available InterruptStep should be executed in the same interrupt (true)
+	 * or not (false)
+	 * \param [in] generateQueueSignalStep is the GenerateQueueSignalStep that will be executed in test step
+	 */
+
+	constexpr InterruptStep(const unsigned int firstSequencePoint, const unsigned int lastSequencePoint,
+			const bool more, const GenerateQueueSignalStep generateQueueSignalStep) :
+			generateQueueSignalStep_{generateQueueSignalStep},
+			sequencePoints_{firstSequencePoint, lastSequencePoint},
+			more_{more},
+			type_{Type::GenerateQueueSignal}
+	{
+
+	}
+
+	/**
+	 * \brief InterruptStep's constructor for SignalMask type.
+	 *
+	 * \param [in] firstSequencePoint is the first sequence point of test step
+	 * \param [in] lastSequencePoint is the last sequence point of test step
+	 * \param [in] more selects whether another available InterruptStep should be executed in the same interrupt (true)
+	 * or not (false)
+	 * \param [in] signalMaskStep is the SignalMaskStep that will be executed in test step
+	 */
+
+	constexpr InterruptStep(const unsigned int firstSequencePoint, const unsigned int lastSequencePoint,
+			const bool more, const SignalMaskStep signalMaskStep) :
+			signalMaskStep_{signalMaskStep},
+			sequencePoints_{firstSequencePoint, lastSequencePoint},
+			more_{more},
+			type_{Type::SignalMask}
+	{
+
+	}
+
+	/**
+	 * \brief InterruptStep's function call operator
+	 *
+	 * Marks first sequence point, executes internal test step and marks last sequence point.
+	 *
+	 * \param [in] sequenceAsserter is a reference to shared SequenceAsserter object
+	 *
+	 * \return 0 on success, error code otherwise
+	 */
+
+	int operator()(SequenceAsserter& sequenceAsserter) const;
+
+	/**
+	 * \return true if another available InterruptStep should be executed in the same interrupt, false otherwise
+	 */
+
+	bool shouldExecuteMore() const
+	{
+		return more_;
+	}
+
+private:
+
+	/// internal test step that will be executed
+	union
+	{
+		/// GenerateQueueSignalStep test step - valid only if type_ == Type::GenerateQueueSignal
+		GenerateQueueSignalStep generateQueueSignalStep_;
+
+		/// SignalMaskStep test step - valid only if type_ == Type::SignalMask
+		SignalMaskStep signalMaskStep_;
+	};
+
+	/// sequence points of test step
+	SequencePoints sequencePoints_;
+
+	/// selects whether another available InterruptStep should be executed in the same interrupt (true) or not (false)
+	bool more_;
+
+	/// type of test step
+	Type type_;
+};
+
 /// test step executed in thread
 class ThreadStep
 {
@@ -428,6 +525,21 @@ int HandlerStep::operator()(const SignalInformation& signalInformation, Sequence
 
 	const auto ret = type_ == Type::Basic ? basicHandlerStep_(signalInformation) :
 			type_ == Type::GenerateQueueSignal ? generateQueueSignalStep_() : signalMaskStep_();
+
+	sequenceAsserter.sequencePoint(sequencePoints_.second);
+
+	return ret;
+}
+
+/*---------------------------------------------------------------------------------------------------------------------+
+| InterruptStep's public functions
++---------------------------------------------------------------------------------------------------------------------*/
+
+int InterruptStep::operator()(SequenceAsserter& sequenceAsserter) const
+{
+	sequenceAsserter.sequencePoint(sequencePoints_.first);
+
+	const auto ret = type_ == Type::GenerateQueueSignal ? generateQueueSignalStep_() : signalMaskStep_();
 
 	sequenceAsserter.sequencePoint(sequencePoints_.second);
 
