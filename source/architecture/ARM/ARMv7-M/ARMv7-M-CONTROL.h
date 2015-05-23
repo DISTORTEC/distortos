@@ -1,6 +1,6 @@
 /**
  * \file
- * \brief Header with definition of bits in special registers in ARMv7-M core (Cortex-M3 / Cortex-M4).
+ * \brief Header with definition of bits in CONTROL register in ARMv7-M core (Cortex-M3 / Cortex-M4).
  *
  * \author Copyright (C) 2014-2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
@@ -11,8 +11,8 @@
  * \date 2015-05-23
  */
 
-#ifndef SOURCE_ARCHITECTURE_ARM_ARMV7_M_ARMV7_M_SPECIALREGISTERS_H_
-#define SOURCE_ARCHITECTURE_ARM_ARMV7_M_ARMV7_M_SPECIALREGISTERS_H_
+#ifndef SOURCE_ARCHITECTURE_ARM_ARMV7_M_ARMV7_M_CONTROL_H_
+#define SOURCE_ARCHITECTURE_ARM_ARMV7_M_ARMV7_M_CONTROL_H_
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | CONTROL - The special-purpose control register
@@ -24,4 +24,4 @@
 #define CONTROL_THREAD_UNPRIVILEGED			(1 << CONTROL_THREAD_UNPRIVILEGED_bit)
 #define CONTROL_ALTERNATE_STACK				(1 << CONTROL_ALTERNATE_STACK_bit)
 
-#endif	// SOURCE_ARCHITECTURE_ARM_ARMV7_M_ARMV7_M_SPECIALREGISTERS_H_
+#endif	// SOURCE_ARCHITECTURE_ARM_ARMV7_M_ARMV7_M_CONTROL_H_
