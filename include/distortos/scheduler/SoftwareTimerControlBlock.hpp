@@ -65,15 +65,6 @@ public:
 	}
 
 	/**
-	 * \return const reference to internal storage for list link
-	 */
-
-	const Link& getLink() const
-	{
-		return link_;
-	}
-
-	/**
 	 * \return const reference to expiration time point
 	 */
 
