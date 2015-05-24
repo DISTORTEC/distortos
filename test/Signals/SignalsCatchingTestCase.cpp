@@ -438,6 +438,8 @@ public:
 		GenerateQueueSignal,
 		/// SignalMaskStep
 		SignalMask,
+		/// SoftwareTimerStep
+		SoftwareTimer,
 	};
 
 	/**
@@ -475,16 +477,34 @@ public:
 	}
 
 	/**
+	 * \brief ThreadStep's constructor for SoftwareTimer type.
+	 *
+	 * \param [in] firstSequencePoint is the first sequence point of test step
+	 * \param [in] lastSequencePoint is the last sequence point of test step
+	 * \param [in] softwareTimerStep is the SoftwareTimerStep that will be executed in test step
+	 */
+
+	constexpr ThreadStep(const unsigned int firstSequencePoint, const unsigned int lastSequencePoint,
+			const SoftwareTimerStep softwareTimerStep) :
+			softwareTimerStep_{softwareTimerStep},
+			sequencePoints_{firstSequencePoint, lastSequencePoint},
+			type_{Type::SoftwareTimer}
+	{
+
+	}
+
+	/**
 	 * \brief ThreadStep's function call operator
 	 *
 	 * Marks first sequence point, executes internal test step and marks last sequence point.
 	 *
 	 * \param [in] sequenceAsserter is a reference to shared SequenceAsserter object
+	 * \param [in] softwareTimer is a pointer to software timer, required only for SoftwareTimerStep, default - nullptr
 	 *
 	 * \return 0 on success, error code otherwise
 	 */
 
-	int operator()(SequenceAsserter& sequenceAsserter) const;
+	int operator()(SequenceAsserter& sequenceAsserter, SoftwareTimerBase* softwareTimer = {}) const;
 
 private:
 
@@ -496,6 +516,9 @@ private:
 
 		/// SignalMaskStep test step - valid only if type_ == Type::SignalMask
 		SignalMaskStep signalMaskStep_;
+
+		/// SoftwareTimerStep test step - valid only if type_ == Type::SoftwareTimer
+		SoftwareTimerStep softwareTimerStep_;
 	};
 
 	/// sequence points of test step
@@ -601,11 +624,13 @@ int SoftwareTimerStep::operator()(SoftwareTimerBase& softwareTimer) const
 | ThreadStep's public functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-int ThreadStep::operator()(SequenceAsserter& sequenceAsserter) const
+int ThreadStep::operator()(SequenceAsserter& sequenceAsserter, SoftwareTimerBase* const softwareTimer) const
 {
 	sequenceAsserter.sequencePoint(sequencePoints_.first);
 
-	const auto ret = type_ == Type::GenerateQueueSignal ? generateQueueSignalStep_() : signalMaskStep_();
+	const auto ret = type_ == Type::GenerateQueueSignal ? generateQueueSignalStep_() :
+			type_ == Type::SignalMask ? signalMaskStep_() :
+			type_ == Type::SoftwareTimer && softwareTimer != nullptr ? softwareTimerStep_(*softwareTimer) : EINVAL;
 
 	sequenceAsserter.sequencePoint(sequencePoints_.second);
 
