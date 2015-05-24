@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-03-19
+ * \date 2015-05-24
  */
 
 #include "distortos/scheduler/getScheduler.hpp"
@@ -16,9 +16,14 @@
 
 #include "distortos/chip/CMSIS-proxy.h"
 
+namespace distortos
+{
+
+namespace
+{
 
 /*---------------------------------------------------------------------------------------------------------------------+
-| global functions
+| local functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
 /**
@@ -29,10 +34,16 @@
  * \return new thread's stack pointer
  */
 
-extern "C" void* schedulerSwitchContextWrapper(void* const stackPointer)
+void* schedulerSwitchContextWrapper(void* const stackPointer)
 {
-	return distortos::scheduler::getScheduler().switchContext(stackPointer);
+	return scheduler::getScheduler().switchContext(stackPointer);
 }
+
+}	// namespace
+
+/*---------------------------------------------------------------------------------------------------------------------+
+| global functions
++---------------------------------------------------------------------------------------------------------------------*/
 
 /**
  * \brief PendSV_Handler() for ARMv7-M (Cortex-M3 / Cortex-M4)
@@ -55,7 +66,7 @@ extern "C" __attribute__ ((naked)) void PendSV_Handler()
 			"	mov			r4, lr							\n"
 #endif	// __FPU_PRESENT == 1 && __FPU_USED == 1
 			"												\n"
-			"	bl			schedulerSwitchContextWrapper	\n"	// switch context
+			"	bl			%[schedulerSwitchContext]		\n"	// switch context
 			"												\n"
 #if __FPU_PRESENT == 1 && __FPU_USED == 1
 			"	ldmia		r0!, {r4-r11, lr}				\n"	// load "regular" context of new thread
@@ -69,7 +80,11 @@ extern "C" __attribute__ ((naked)) void PendSV_Handler()
 			"	msr			PSP, r0							\n"
 			"												\n"
 			"	bx			lr								\n"	// return to new thread
+
+			::	[schedulerSwitchContext] "i" (schedulerSwitchContextWrapper)
 	);
 
 	__builtin_unreachable();
 }
+
+}	// namespace distortos
