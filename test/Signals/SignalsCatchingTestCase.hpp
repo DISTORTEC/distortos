@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-05-16
+ * \date 2015-05-24
  */
 
 #ifndef TEST_SIGNALS_SIGNALSCATCHINGTESTCASE_HPP_
@@ -28,7 +28,9 @@ namespace test
  * Generates or queues various signals in different scenarios, asserting all events occur in the expected order, using
  * exact number of context switches.
  *
- * Currently only the simplest scenario is tested - current thread generating/queuing signals for itself.
+ * Currently only two scenarios are tested:
+ * - current thread generating/queuing signals for itself;
+ * - interrupt generating/queuing signals for current thread;
  */
 
 class SignalsCatchingTestCase : public SignalsTestCaseCommon

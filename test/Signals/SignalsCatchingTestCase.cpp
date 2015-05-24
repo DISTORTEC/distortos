@@ -528,6 +528,9 @@ private:
 	Type type_;
 };
 
+/// range of test steps for interrupt
+using InterruptStepsRange = estd::ContiguousRange<const InterruptStep>;
+
 /*---------------------------------------------------------------------------------------------------------------------+
 | local objects
 +---------------------------------------------------------------------------------------------------------------------*/
@@ -688,6 +691,36 @@ void handler(const SignalInformation& signalInformation)
 
 	if (more == true)
 		sharedSigAtomic = EINVAL;	// execution of signal handler was not expected
+}
+
+/**
+ * \brief Function executed via software timer from interrupt
+ *
+ * If \a interruptStepsRange is empty, error is marked (function call is unexpected). Otherwise first element if removed
+ * from the range and executed. Whole sequence is repeated if InterruptStep::shouldExecuteMore() of the test step that
+ * was just executed returns true.
+ *
+ * \param [in] interruptStepsRange is a reference to range of test steps for interrupt
+ */
+
+void softwareTimerFunction(InterruptStepsRange& interruptStepsRange)
+{
+	bool more {true};
+	while (more == true && interruptStepsRange.size() != 0)
+	{
+		// remove the first element from the range
+		auto& interruptStep = *interruptStepsRange.begin();
+		interruptStepsRange = {interruptStepsRange.begin() + 1, interruptStepsRange.end()};
+
+		const auto ret = interruptStep(sharedSequenceAsserter);
+		if (ret != 0)
+			sharedSigAtomic = ret;
+
+		more = interruptStep.shouldExecuteMore();
+	}
+
+	if (more == true)
+		sharedSigAtomic = EINVAL;	// function call was not expected
 }
 
 /**
@@ -1190,6 +1223,264 @@ bool phase1()
 	return testResult;
 }
 
+/**
+ * \brief Phase 2 of test case.
+ *
+ * Tests catching of signals generated/queued by interrupt (via software timer) for current thread.
+ *
+ * \return true if test succeeded, false otherwise
+ */
+
+bool phase2()
+{
+	static const ThreadStep threadSteps[]
+	{
+			// part 1 - normal generated signals
+			{0, 5, SoftwareTimerStep{}},
+			{6, 11, SoftwareTimerStep{}},
+			{12, 17, SoftwareTimerStep{}},
+			{18, 23, SoftwareTimerStep{}},
+			{24, 29, SoftwareTimerStep{}},
+			{30, 35, SoftwareTimerStep{}},
+			{36, 41, SoftwareTimerStep{}},
+			{42, 47, SoftwareTimerStep{}},
+			{48, 53, SoftwareTimerStep{}},
+			{54, 59, SoftwareTimerStep{}},
+			// part 2 - normal queued signals
+			{60, 65, SoftwareTimerStep{}},
+			{66, 71, SoftwareTimerStep{}},
+			{72, 77, SoftwareTimerStep{}},
+			{78, 83, SoftwareTimerStep{}},
+			{84, 89, SoftwareTimerStep{}},
+			{90, 95, SoftwareTimerStep{}},
+			{96, 101, SoftwareTimerStep{}},
+			{102, 107, SoftwareTimerStep{}},
+			{108, 113, SoftwareTimerStep{}},
+			{114, 119, SoftwareTimerStep{}},
+			// part 3 - multiple generated signals
+			{120, 161, SoftwareTimerStep{}},
+			// part 4 - multiple queued signals
+			{162, 203, SoftwareTimerStep{}},
+			// part 5 - multiple signals
+			{204, 285, SoftwareTimerStep{}},
+	};
+
+	static const InterruptStep interruptSteps[]
+	{
+			// part 1 - normal generated signals
+			{1, 2, false, GenerateQueueSignalStep{SignalInformation::Code::Generated, 0}},
+			{7, 8, false, GenerateQueueSignalStep{SignalInformation::Code::Generated, 1}},
+			{13, 14, false, GenerateQueueSignalStep{SignalInformation::Code::Generated, 2}},
+			{19, 20, false, GenerateQueueSignalStep{SignalInformation::Code::Generated, 3}},
+			{25, 26, false, GenerateQueueSignalStep{SignalInformation::Code::Generated, 4}},
+			{31, 32, false, GenerateQueueSignalStep{SignalInformation::Code::Generated, 5}},
+			{37, 38, false, GenerateQueueSignalStep{SignalInformation::Code::Generated, 6}},
+			{43, 44, false, GenerateQueueSignalStep{SignalInformation::Code::Generated, 7}},
+			{49, 50, false, GenerateQueueSignalStep{SignalInformation::Code::Generated, 8}},
+			{55, 56, false, GenerateQueueSignalStep{SignalInformation::Code::Generated, 9}},
+			// part 2 - normal queued signals
+			{61, 62, false, GenerateQueueSignalStep{SignalInformation::Code::Queued, 0, 0x7bbee7c7}},
+			{67, 68, false, GenerateQueueSignalStep{SignalInformation::Code::Queued, 1, 0x144006e1}},
+			{73, 74, false, GenerateQueueSignalStep{SignalInformation::Code::Queued, 2, 0x3c2f74c3}},
+			{79, 80, false, GenerateQueueSignalStep{SignalInformation::Code::Queued, 3, 0x6842c269}},
+			{85, 86, false, GenerateQueueSignalStep{SignalInformation::Code::Queued, 4, 0x282ea423}},
+			{91, 92, false, GenerateQueueSignalStep{SignalInformation::Code::Queued, 5, 0x4ac997a6}},
+			{97, 98, false, GenerateQueueSignalStep{SignalInformation::Code::Queued, 6, 0x60375e15}},
+			{103, 104, false, GenerateQueueSignalStep{SignalInformation::Code::Queued, 7, 0x5025b208}},
+			{109, 110, false, GenerateQueueSignalStep{SignalInformation::Code::Queued, 8, 0x0ff3e7c1}},
+			{115, 116, false, GenerateQueueSignalStep{SignalInformation::Code::Queued, 9, 0x6fc765af}},
+			// part 3 - multiple generated signals
+			{121, 122, true, GenerateQueueSignalStep{SignalInformation::Code::Generated, 2}},
+			{123, 124, true, GenerateQueueSignalStep{SignalInformation::Code::Generated, 0}},
+			{125, 126, true, GenerateQueueSignalStep{SignalInformation::Code::Generated, 7}},
+			{127, 128, true, GenerateQueueSignalStep{SignalInformation::Code::Generated, 1}},
+			{129, 130, true, GenerateQueueSignalStep{SignalInformation::Code::Generated, 5}},
+			{131, 132, true, GenerateQueueSignalStep{SignalInformation::Code::Generated, 8}},
+			{133, 134, true, GenerateQueueSignalStep{SignalInformation::Code::Generated, 6}},
+			{135, 136, true, GenerateQueueSignalStep{SignalInformation::Code::Generated, 9}},
+			{137, 138, true, GenerateQueueSignalStep{SignalInformation::Code::Generated, 3}},
+			{139, 140, false, GenerateQueueSignalStep{SignalInformation::Code::Generated, 4}},
+			// part 4 - multiple queued signals
+			{163, 164, true, GenerateQueueSignalStep{SignalInformation::Code::Queued, 9, 0x7230a2cc}},
+			{165, 166, true, GenerateQueueSignalStep{SignalInformation::Code::Queued, 3, 0x183c1811}},
+			{167, 168, true, GenerateQueueSignalStep{SignalInformation::Code::Queued, 9, 0x4be507b0}},
+			{169, 170, true, GenerateQueueSignalStep{SignalInformation::Code::Queued, 3, 0x249cd4e7}},
+			{171, 172, true, GenerateQueueSignalStep{SignalInformation::Code::Queued, 9, 0x44e1258a}},
+			{173, 174, true, GenerateQueueSignalStep{SignalInformation::Code::Queued, 3, 0x4ea5f291}},
+			{175, 176, true, GenerateQueueSignalStep{SignalInformation::Code::Queued, 9, 0x2a31564c}},
+			{177, 178, true, GenerateQueueSignalStep{SignalInformation::Code::Queued, 3, 0x7a15bc72}},
+			{179, 180, true, GenerateQueueSignalStep{SignalInformation::Code::Queued, 9, 0x7739addf}},
+			{181, 182, false, GenerateQueueSignalStep{SignalInformation::Code::Queued, 3, 0x66583e56}},
+			// part 5 - multiple signals
+			{205, 206, true, GenerateQueueSignalStep{SignalInformation::Code::Generated, 1}},
+			{207, 208, true, GenerateQueueSignalStep{SignalInformation::Code::Generated, 2}},
+			{209, 210, true, GenerateQueueSignalStep{SignalInformation::Code::Generated, 6}},
+			{211, 212, true, GenerateQueueSignalStep{SignalInformation::Code::Generated, 3}},
+			{213, 214, true, GenerateQueueSignalStep{SignalInformation::Code::Generated, 0}},
+			{215, 216, true, GenerateQueueSignalStep{SignalInformation::Code::Generated, 7}},
+			{217, 218, true, GenerateQueueSignalStep{SignalInformation::Code::Generated, 8}},
+			{219, 220, true, GenerateQueueSignalStep{SignalInformation::Code::Generated, 4}},
+			{221, 222, true, GenerateQueueSignalStep{SignalInformation::Code::Generated, 9}},
+			{223, 224, true, GenerateQueueSignalStep{SignalInformation::Code::Generated, 5}},
+			{225, 226, true, GenerateQueueSignalStep{SignalInformation::Code::Queued, 4, 0x3e9c82fe}},
+			{227, 228, true, GenerateQueueSignalStep{SignalInformation::Code::Queued, 6, 0x011c51eb}},
+			{229, 230, true, GenerateQueueSignalStep{SignalInformation::Code::Queued, 5, 0x7eb45b48}},
+			{231, 232, true, GenerateQueueSignalStep{SignalInformation::Code::Queued, 3, 0x6a4f49c6}},
+			{233, 234, true, GenerateQueueSignalStep{SignalInformation::Code::Queued, 1, 0x2961cf0c}},
+			{235, 236, true, GenerateQueueSignalStep{SignalInformation::Code::Queued, 8, 0x4eac6e95}},
+			{237, 238, true, GenerateQueueSignalStep{SignalInformation::Code::Queued, 2, 0x0ac99377}},
+			{239, 240, true, GenerateQueueSignalStep{SignalInformation::Code::Queued, 9, 0x7fd0446b}},
+			{241, 242, true, GenerateQueueSignalStep{SignalInformation::Code::Queued, 7, 0x6df7494e}},
+			{243, 244, false, GenerateQueueSignalStep{SignalInformation::Code::Queued, 0, 0x3ce8f20c}},
+	};
+
+	static const HandlerStep handlerSteps[]
+	{
+			// part 1 - normal generated signals
+			{3, 4, false, BasicHandlerStep{SignalSet{SignalSet::empty}, getSignalMask(0),
+					SignalInformation::Code::Generated, 0}},
+			{9, 10, false, BasicHandlerStep{SignalSet{SignalSet::empty}, getSignalMask(1),
+					SignalInformation::Code::Generated, 1}},
+			{15, 16, false, BasicHandlerStep{SignalSet{SignalSet::empty}, getSignalMask(2),
+					SignalInformation::Code::Generated, 2}},
+			{21, 22, false, BasicHandlerStep{SignalSet{SignalSet::empty}, getSignalMask(3),
+					SignalInformation::Code::Generated, 3}},
+			{27, 28, false, BasicHandlerStep{SignalSet{SignalSet::empty}, getSignalMask(4),
+					SignalInformation::Code::Generated, 4}},
+			{33, 34, false, BasicHandlerStep{SignalSet{SignalSet::empty}, getSignalMask(5),
+					SignalInformation::Code::Generated, 5}},
+			{39, 40, false, BasicHandlerStep{SignalSet{SignalSet::empty}, getSignalMask(6),
+					SignalInformation::Code::Generated, 6}},
+			{45, 46, false, BasicHandlerStep{SignalSet{SignalSet::empty}, getSignalMask(7),
+					SignalInformation::Code::Generated, 7}},
+			{51, 52, false, BasicHandlerStep{SignalSet{SignalSet::empty}, getSignalMask(8),
+					SignalInformation::Code::Generated, 8}},
+			{57, 58, false, BasicHandlerStep{SignalSet{SignalSet::empty}, getSignalMask(9),
+					SignalInformation::Code::Generated, 9}},
+			// part 2 - normal queued signals
+			{63, 64, false, BasicHandlerStep{SignalSet{SignalSet::empty}, getSignalMask(0),
+					SignalInformation::Code::Queued, 0, 0x7bbee7c7}},
+			{69, 70, false, BasicHandlerStep{SignalSet{SignalSet::empty}, getSignalMask(1),
+					SignalInformation::Code::Queued, 1, 0x144006e1}},
+			{75, 76, false, BasicHandlerStep{SignalSet{SignalSet::empty}, getSignalMask(2),
+					SignalInformation::Code::Queued, 2, 0x3c2f74c3}},
+			{81, 82, false, BasicHandlerStep{SignalSet{SignalSet::empty}, getSignalMask(3),
+					SignalInformation::Code::Queued, 3, 0x6842c269}},
+			{87, 88, false, BasicHandlerStep{SignalSet{SignalSet::empty}, getSignalMask(4),
+					SignalInformation::Code::Queued, 4, 0x282ea423}},
+			{93, 94, false, BasicHandlerStep{SignalSet{SignalSet::empty}, getSignalMask(5),
+					SignalInformation::Code::Queued, 5, 0x4ac997a6}},
+			{99, 100, false, BasicHandlerStep{SignalSet{SignalSet::empty}, getSignalMask(6),
+					SignalInformation::Code::Queued, 6, 0x60375e15}},
+			{105, 106, false, BasicHandlerStep{SignalSet{SignalSet::empty}, getSignalMask(7),
+					SignalInformation::Code::Queued, 7, 0x5025b208}},
+			{111, 112, false, BasicHandlerStep{SignalSet{SignalSet::empty}, getSignalMask(8),
+					SignalInformation::Code::Queued, 8, 0x0ff3e7c1}},
+			{117, 118, false, BasicHandlerStep{SignalSet{SignalSet::empty}, getSignalMask(9),
+					SignalInformation::Code::Queued, 9, 0x6fc765af}},
+			// part 3 - multiple generated signals
+			{141, 142, false, BasicHandlerStep{SignalSet{0b1111111110}, getSignalMask(0),
+					SignalInformation::Code::Generated, 0}},
+			{143, 144, false, BasicHandlerStep{SignalSet{0b1111111100}, getSignalMask(1),
+					SignalInformation::Code::Generated, 1}},
+			{145, 146, false, BasicHandlerStep{SignalSet{0b1111111000}, getSignalMask(2),
+					SignalInformation::Code::Generated, 2}},
+			{147, 148, false, BasicHandlerStep{SignalSet{0b1111110000}, getSignalMask(3),
+					SignalInformation::Code::Generated, 3}},
+			{149, 150, false, BasicHandlerStep{SignalSet{0b1111100000}, getSignalMask(4),
+					SignalInformation::Code::Generated, 4}},
+			{151, 152, false, BasicHandlerStep{SignalSet{0b1111000000}, getSignalMask(5),
+					SignalInformation::Code::Generated, 5}},
+			{153, 154, false, BasicHandlerStep{SignalSet{0b1110000000}, getSignalMask(6),
+					SignalInformation::Code::Generated, 6}},
+			{155, 156, false, BasicHandlerStep{SignalSet{0b1100000000}, getSignalMask(7),
+					SignalInformation::Code::Generated, 7}},
+			{157, 158, false, BasicHandlerStep{SignalSet{0b1000000000}, getSignalMask(8),
+					SignalInformation::Code::Generated, 8}},
+			{159, 160, false, BasicHandlerStep{SignalSet{SignalSet::empty}, getSignalMask(9),
+					SignalInformation::Code::Generated, 9}},
+			// part 4 - multiple queued signals
+			{183, 184, false, BasicHandlerStep{SignalSet{0b1000001000}, getSignalMask(3),
+					SignalInformation::Code::Queued, 3, 0x183c1811}},
+			{185, 186, false, BasicHandlerStep{SignalSet{0b1000001000}, getSignalMask(3),
+					SignalInformation::Code::Queued, 3, 0x249cd4e7}},
+			{187, 188, false, BasicHandlerStep{SignalSet{0b1000001000}, getSignalMask(3),
+					SignalInformation::Code::Queued, 3, 0x4ea5f291}},
+			{189, 190, false, BasicHandlerStep{SignalSet{0b1000001000}, getSignalMask(3),
+					SignalInformation::Code::Queued, 3, 0x7a15bc72}},
+			{191, 192, false, BasicHandlerStep{SignalSet{0b1000000000}, getSignalMask(3),
+					SignalInformation::Code::Queued, 3, 0x66583e56}},
+			{193, 194, false, BasicHandlerStep{SignalSet{0b1000000000}, getSignalMask(9),
+					SignalInformation::Code::Queued, 9, 0x7230a2cc}},
+			{195, 196, false, BasicHandlerStep{SignalSet{0b1000000000}, getSignalMask(9),
+					SignalInformation::Code::Queued, 9, 0x4be507b0}},
+			{197, 198, false, BasicHandlerStep{SignalSet{0b1000000000}, getSignalMask(9),
+					SignalInformation::Code::Queued, 9, 0x44e1258a}},
+			{199, 200, false, BasicHandlerStep{SignalSet{0b1000000000}, getSignalMask(9),
+					SignalInformation::Code::Queued, 9, 0x2a31564c}},
+			{201, 202, false, BasicHandlerStep{SignalSet{SignalSet::empty}, getSignalMask(9),
+					SignalInformation::Code::Queued, 9, 0x7739addf}},
+			// part 5 - multiple signals
+			{245, 246, false, BasicHandlerStep{SignalSet{0b1111111111}, getSignalMask(0),
+					SignalInformation::Code::Queued, 0, 0x3ce8f20c}},
+			{247, 248, false, BasicHandlerStep{SignalSet{0b1111111110}, getSignalMask(0),
+					SignalInformation::Code::Generated, 0}},
+			{249, 250, false, BasicHandlerStep{SignalSet{0b1111111110}, getSignalMask(1),
+					SignalInformation::Code::Queued, 1, 0x2961cf0c}},
+			{251, 252, false, BasicHandlerStep{SignalSet{0b1111111100}, getSignalMask(1),
+					SignalInformation::Code::Generated, 1}},
+			{253, 254, false, BasicHandlerStep{SignalSet{0b1111111100}, getSignalMask(2),
+					SignalInformation::Code::Queued, 2, 0x0ac99377}},
+			{255, 256, false, BasicHandlerStep{SignalSet{0b1111111000}, getSignalMask(2),
+					SignalInformation::Code::Generated, 2}},
+			{257, 258, false, BasicHandlerStep{SignalSet{0b1111111000}, getSignalMask(3),
+					SignalInformation::Code::Queued, 3, 0x6a4f49c6}},
+			{259, 260, false, BasicHandlerStep{SignalSet{0b1111110000}, getSignalMask(3),
+					SignalInformation::Code::Generated, 3}},
+			{261, 262, false, BasicHandlerStep{SignalSet{0b1111110000}, getSignalMask(4),
+					SignalInformation::Code::Queued, 4, 0x3e9c82fe}},
+			{263, 264, false, BasicHandlerStep{SignalSet{0b1111100000}, getSignalMask(4),
+					SignalInformation::Code::Generated, 4}},
+			{265, 266, false, BasicHandlerStep{SignalSet{0b1111100000}, getSignalMask(5),
+					SignalInformation::Code::Queued, 5, 0x7eb45b48}},
+			{267, 268, false, BasicHandlerStep{SignalSet{0b1111000000}, getSignalMask(5),
+					SignalInformation::Code::Generated, 5}},
+			{269, 270, false, BasicHandlerStep{SignalSet{0b1111000000}, getSignalMask(6),
+					SignalInformation::Code::Queued, 6, 0x011c51eb}},
+			{271, 272, false, BasicHandlerStep{SignalSet{0b1110000000}, getSignalMask(6),
+					SignalInformation::Code::Generated, 6}},
+			{273, 274, false, BasicHandlerStep{SignalSet{0b1110000000}, getSignalMask(7),
+					SignalInformation::Code::Queued, 7, 0x6df7494e}},
+			{275, 276, false, BasicHandlerStep{SignalSet{0b1100000000}, getSignalMask(7),
+					SignalInformation::Code::Generated, 7}},
+			{277, 278, false, BasicHandlerStep{SignalSet{0b1100000000}, getSignalMask(8),
+					SignalInformation::Code::Queued, 8, 0x4eac6e95}},
+			{279, 280, false, BasicHandlerStep{SignalSet{0b1000000000}, getSignalMask(8),
+					SignalInformation::Code::Generated, 8}},
+			{281, 282, false, BasicHandlerStep{SignalSet{0b1000000000}, getSignalMask(9),
+					SignalInformation::Code::Queued, 9, 0x7fd0446b}},
+			{283, 284, false, BasicHandlerStep{SignalSet{SignalSet::empty}, getSignalMask(9),
+					SignalInformation::Code::Generated, 9}},
+	};
+
+	auto interruptStepsRange = estd::ContiguousRange<const InterruptStep>{interruptSteps};
+	handlerStepsRange = decltype(handlerStepsRange){handlerSteps};
+	auto softwareTimer = makeSoftwareTimer(softwareTimerFunction, std::ref(interruptStepsRange));
+	bool testResult {true};
+
+	for (auto& step : threadSteps)
+		if (step(sharedSequenceAsserter, &softwareTimer) != 0)
+			testResult = false;
+
+	const size_t threadStepsSize = std::end(threadSteps) - std::begin(threadSteps);
+	const size_t interruptStepsSize = std::end(interruptSteps) - std::begin(interruptSteps);
+	const size_t handlerStepsSize = std::end(handlerSteps) - std::begin(handlerSteps);
+	if (sharedSequenceAsserter.assertSequence(2 * (threadStepsSize + interruptStepsSize + handlerStepsSize)) == false)
+		return false;
+
+	return testResult;
+}
+
 }	// namespace
 
 /*---------------------------------------------------------------------------------------------------------------------+
@@ -1208,7 +1499,7 @@ bool SignalsCatchingTestCase::run_() const
 			return false;
 	}
 
-	for (const auto& function : {phase1})
+	for (const auto& function : {phase1, phase2})
 	{
 		// initially no signals may be pending
 		if (ThisThread::Signals::getPendingSignalSet().getBitset().any() == true)
