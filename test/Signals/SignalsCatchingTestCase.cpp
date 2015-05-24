@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-05-23
+ * \date 2015-05-24
  */
 
 #include "SignalsCatchingTestCase.hpp"
@@ -16,6 +16,7 @@
 #include "SequenceAsserter.hpp"
 
 #include "distortos/SignalAction.hpp"
+#include "distortos/SoftwareTimer.hpp"
 #include "distortos/statistics.hpp"
 #include "distortos/ThisThread-Signals.hpp"
 
@@ -175,6 +176,33 @@ private:
 
 	/// signal mask that will be set for current thread
 	SignalSet signalMask_;
+};
+
+/// test step that starts software timer and waits until it stops
+class SoftwareTimerStep
+{
+public:
+
+	/**
+	 * \brief SoftwareTimerStep's constructor
+	 */
+
+	constexpr SoftwareTimerStep()
+	{
+
+	}
+
+	/**
+	 * \brief SoftwareTimerStep's function call operator
+	 *
+	 * Starts \a softwareTimer and waits until it stops.
+	 *
+	 * \param [in] softwareTimer is a reference to software timer
+	 *
+	 * \return 0 on success, error code otherwise
+	 */
+
+	int operator()(SoftwareTimerBase& softwareTimer) const;
 };
 
 /// test step executed in signal handler
@@ -553,6 +581,20 @@ int InterruptStep::operator()(SequenceAsserter& sequenceAsserter) const
 int SignalMaskStep::operator()() const
 {
 	return ThisThread::Signals::setSignalMask(signalMask_);
+}
+
+/*---------------------------------------------------------------------------------------------------------------------+
+| SoftwareTimerStep's public functions
++---------------------------------------------------------------------------------------------------------------------*/
+
+int SoftwareTimerStep::operator()(SoftwareTimerBase& softwareTimer) const
+{
+	if (softwareTimer.isRunning() == true)
+		return EINVAL;
+
+	softwareTimer.start(TickClock::duration{});
+	while (softwareTimer.isRunning() == true);
+	return 0;
 }
 
 /*---------------------------------------------------------------------------------------------------------------------+
