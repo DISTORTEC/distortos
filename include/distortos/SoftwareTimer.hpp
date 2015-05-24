@@ -14,7 +14,7 @@
 #ifndef INCLUDE_DISTORTOS_SOFTWARETIMER_HPP_
 #define INCLUDE_DISTORTOS_SOFTWARETIMER_HPP_
 
-#include "distortos/scheduler/SoftwareTimerControlBlock.hpp"
+#include "distortos/SoftwareTimerBase.hpp"
 
 #include <functional>
 
@@ -29,7 +29,7 @@ namespace distortos
  */
 
 template<typename Function, typename... Args>
-class SoftwareTimer : private scheduler::SoftwareTimerControlBlock
+class SoftwareTimer : public SoftwareTimerBase
 {
 public:
 
@@ -41,17 +41,11 @@ public:
 	 */
 
 	SoftwareTimer(Function&& function, Args&&... args) :
-			SoftwareTimerControlBlock{},
+			SoftwareTimerBase{},
 			boundFunction_{std::bind(std::forward<Function>(function), std::forward<Args>(args)...)}
 	{
 
 	}
-
-	using SoftwareTimerControlBlock::isRunning;
-
-	using SoftwareTimerControlBlock::start;
-
-	using SoftwareTimerControlBlock::stop;
 
 private:
 
