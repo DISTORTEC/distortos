@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-05-24
+ * \date 2015-05-26
  */
 
 #include "SignalsCatchingTestCase.hpp"
@@ -219,6 +219,8 @@ public:
 		GenerateQueueSignal,
 		/// SignalMaskStep
 		SignalMask,
+		/// SoftwareTimerStep
+		SoftwareTimer,
 	};
 
 	/**
@@ -282,17 +284,39 @@ public:
 	}
 
 	/**
+	 * \brief HandlerStep's constructor for SoftwareTimer type.
+	 *
+	 * \param [in] firstSequencePoint is the first sequence point of test step
+	 * \param [in] lastSequencePoint is the last sequence point of test step
+	 * \param [in] more selects whether another available HandlerStep should be executed in the same signal handler
+	 * (true) or not (false)
+	 * \param [in] softwareTimerStep is the SoftwareTimerStep that will be executed in test step
+	 */
+
+	constexpr HandlerStep(const unsigned int firstSequencePoint, const unsigned int lastSequencePoint, const bool more,
+			const SoftwareTimerStep softwareTimerStep) :
+			softwareTimerStep_{softwareTimerStep},
+			sequencePoints_{firstSequencePoint, lastSequencePoint},
+			more_{more},
+			type_{Type::SoftwareTimer}
+	{
+
+	}
+
+	/**
 	 * \brief HandlerStep's function call operator
 	 *
 	 * Marks first sequence point, executes internal test step and marks last sequence point.
 	 *
 	 * \param [in] signalInformation is a reference to received SignalInformation object
 	 * \param [in] sequenceAsserter is a reference to shared SequenceAsserter object
+	 * \param [in] softwareTimer is a pointer to software timer, required only for SoftwareTimerStep, default - nullptr
 	 *
 	 * \return 0 on success, error code otherwise
 	 */
 
-	int operator()(const SignalInformation& signalInformation, SequenceAsserter& sequenceAsserter) const;
+	int operator()(const SignalInformation& signalInformation, SequenceAsserter& sequenceAsserter,
+			SoftwareTimerBase* softwareTimer = {}) const;
 
 	/**
 	 * \return true if another available HandlerStep should be executed in the same signal handler, false otherwise
@@ -316,6 +340,9 @@ private:
 
 		/// SignalMaskStep test step - valid only if type_ == Type::SignalMask
 		SignalMaskStep signalMaskStep_;
+
+		/// SoftwareTimerStep test step - valid only if type_ == Type::SoftwareTimer
+		SoftwareTimerStep softwareTimerStep_;
 	};
 
 	/// sequence points of test step
@@ -573,12 +600,15 @@ int GenerateQueueSignalStep::operator()() const
 | HandlerStep's public functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-int HandlerStep::operator()(const SignalInformation& signalInformation, SequenceAsserter& sequenceAsserter) const
+int HandlerStep::operator()(const SignalInformation& signalInformation, SequenceAsserter& sequenceAsserter,
+		SoftwareTimerBase* const softwareTimer) const
 {
 	sequenceAsserter.sequencePoint(sequencePoints_.first);
 
 	const auto ret = type_ == Type::Basic ? basicHandlerStep_(signalInformation) :
-			type_ == Type::GenerateQueueSignal ? generateQueueSignalStep_() : signalMaskStep_();
+			type_ == Type::GenerateQueueSignal ? generateQueueSignalStep_() :
+			type_ == Type::SignalMask ? signalMaskStep_() :
+			type_ == Type::SoftwareTimer && softwareTimer != nullptr ? softwareTimerStep_(*softwareTimer) : EINVAL;
 
 	sequenceAsserter.sequencePoint(sequencePoints_.second);
 
