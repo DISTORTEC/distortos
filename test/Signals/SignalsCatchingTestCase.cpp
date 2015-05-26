@@ -310,13 +310,13 @@ public:
 	 *
 	 * \param [in] signalInformation is a reference to received SignalInformation object
 	 * \param [in] sequenceAsserter is a reference to shared SequenceAsserter object
-	 * \param [in] softwareTimer is a pointer to software timer, required only for SoftwareTimerStep, default - nullptr
+	 * \param [in] softwareTimer is a pointer to software timer, required only for SoftwareTimerStep
 	 *
 	 * \return 0 on success, error code otherwise
 	 */
 
 	int operator()(const SignalInformation& signalInformation, SequenceAsserter& sequenceAsserter,
-			SoftwareTimerBase* softwareTimer = {}) const;
+			SoftwareTimerBase* softwareTimer) const;
 
 	/**
 	 * \return true if another available HandlerStep should be executed in the same signal handler, false otherwise
@@ -574,6 +574,9 @@ sig_atomic_t sharedSigAtomic;
 /// shared SequenceAsserter object, is is reset before each test phase
 SequenceAsserter sharedSequenceAsserter;
 
+/// pointer to current instance of software timer
+SoftwareTimerBase* softwareTimerPointer;
+
 /*---------------------------------------------------------------------------------------------------------------------+
 | BasicHandlerStep's public functions
 +---------------------------------------------------------------------------------------------------------------------*/
@@ -712,7 +715,7 @@ void handler(const SignalInformation& signalInformation)
 		auto& handlerStep = *handlerStepsRange.begin();
 		handlerStepsRange = {handlerStepsRange.begin() + 1, handlerStepsRange.end()};
 
-		const auto ret = handlerStep(signalInformation, sharedSequenceAsserter);
+		const auto ret = handlerStep(signalInformation, sharedSequenceAsserter, softwareTimerPointer);
 		if (ret != 0)
 			sharedSigAtomic = ret;
 
@@ -1496,11 +1499,14 @@ bool phase2()
 	auto interruptStepsRange = estd::ContiguousRange<const InterruptStep>{interruptSteps};
 	handlerStepsRange = decltype(handlerStepsRange){handlerSteps};
 	auto softwareTimer = makeSoftwareTimer(softwareTimerFunction, std::ref(interruptStepsRange));
+	softwareTimerPointer = &softwareTimer;
 	bool testResult {true};
 
 	for (auto& step : threadSteps)
 		if (step(sharedSequenceAsserter, &softwareTimer) != 0)
 			testResult = false;
+
+	softwareTimerPointer = {};
 
 	const size_t threadStepsSize = std::end(threadSteps) - std::begin(threadSteps);
 	const size_t interruptStepsSize = std::end(interruptSteps) - std::begin(interruptSteps);
