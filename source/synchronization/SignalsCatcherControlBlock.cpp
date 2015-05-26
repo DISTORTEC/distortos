@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-05-17
+ * \date 2015-05-26
  */
 
 #include "distortos/synchronization/SignalsCatcherControlBlock.hpp"
@@ -63,6 +63,8 @@ std::pair<int, SignalInformation> acceptPendingUnblockedSignal(SignalsReceiverCo
 			"Size of pendingUnblockedValue doesn't match size of pendingUnblockedBitset!");
 	// GCC builtin - "find first set" - https://gcc.gnu.org/onlinedocs/gcc/Other-Builtins.html
 	const auto signalNumber = __builtin_ffsl(pendingUnblockedValue) - 1;
+
+	architecture::InterruptMaskingLock interruptMaskingLock;
 	return signalsReceiverControlBlock.acceptPendingSignal(signalNumber);
 }
 
