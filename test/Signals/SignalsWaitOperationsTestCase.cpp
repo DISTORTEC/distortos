@@ -37,7 +37,7 @@ namespace
 +---------------------------------------------------------------------------------------------------------------------*/
 
 /// type of function used to send signal to selected thread
-using SendSignal = int(const ThreadBase&, uint8_t, int);
+using SendSignal = int(ThreadBase&, uint8_t, int);
 
 /// type of function used to test received SignalInformation object
 using TestReceivedSignalInformation = bool(const SignalInformation&, uint8_t, int);
@@ -88,7 +88,7 @@ constexpr decltype(statistics::getContextSwitchCount()) phase3ThreadContextSwitc
  * \return values returned by ThreadBase::generateSignal()
  */
 
-int generateSignalWrapper(const ThreadBase& thread, const uint8_t signalNumber, int)
+int generateSignalWrapper(ThreadBase& thread, const uint8_t signalNumber, int)
 {
 	return thread.generateSignal(signalNumber);
 }
@@ -103,7 +103,7 @@ int generateSignalWrapper(const ThreadBase& thread, const uint8_t signalNumber, 
  * \return values returned by ThreadBase::queueSignal()
  */
 
-int queueSignalWrapper(const ThreadBase& thread, const uint8_t signalNumber, const int value)
+int queueSignalWrapper(ThreadBase& thread, const uint8_t signalNumber, const int value)
 {
 	return thread.queueSignal(signalNumber, sigval{value});
 }
@@ -176,7 +176,7 @@ bool testSelfSendSignal(const SendSignal& sendSignal, const uint8_t signalNumber
 	}
 
 	{
-		const auto& mainThread = ThisThread::get();
+		auto& mainThread = ThisThread::get();
 		const auto ret = sendSignal(mainThread, signalNumber, value);
 		if (ret != 0)
 			return false;
@@ -398,7 +398,7 @@ bool phase1(const SendSignal& sendSignal, const TestReceivedSignalInformation& t
 bool phase2(const SendSignal& sendSignal, const TestReceivedSignalInformation& testReceivedSignalInformation)
 {
 	const SignalSet fullSignalSet {SignalSet::full};
-	const auto& mainThread = ThisThread::get();
+	auto& mainThread = ThisThread::get();
 	uint8_t sharedSignalNumber {};
 	int sharedValue {};
 	auto softwareTimer = makeSoftwareTimer(
@@ -507,7 +507,7 @@ bool phase2(const SendSignal& sendSignal, const TestReceivedSignalInformation& t
 
 bool phase3(const SendSignal& sendSignal, const TestReceivedSignalInformation&)
 {
-	const auto& mainThread = ThisThread::get();
+	auto& mainThread = ThisThread::get();
 	for (auto signalNumber = SignalSet::Bitset{}.size(); signalNumber <= UINT8_MAX; ++signalNumber)
 	{
 		const auto ret = sendSignal(mainThread, signalNumber, {});
@@ -516,7 +516,7 @@ bool phase3(const SendSignal& sendSignal, const TestReceivedSignalInformation&)
 	}
 
 	{
-		const auto testThread = makeStaticThread<testThreadStackSize, false, 0>(0, [](){});
+		auto testThread = makeStaticThread<testThreadStackSize, false, 0>(0, [](){});
 		const auto ret = sendSignal(testThread, {}, {});
 		if (ret != ENOTSUP)
 			return false;
