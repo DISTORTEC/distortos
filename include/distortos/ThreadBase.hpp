@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-03-31
+ * \date 2015-05-27
  */
 
 #ifndef INCLUDE_DISTORTOS_THREADBASE_HPP_
@@ -76,7 +76,7 @@ public:
 	 * - ENOTSUP - reception of signals is disabled for this thread;
 	 */
 
-	int generateSignal(const uint8_t signalNumber) const;
+	int generateSignal(const uint8_t signalNumber);
 
 	/**
 	 * \return effective priority of thread
