@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-05-17
+ * \date 2015-05-27
  */
 
 #ifndef INCLUDE_DISTORTOS_SYNCHRONIZATION_SIGNALSCATCHERCONTROLBLOCK_HPP_
@@ -106,7 +106,7 @@ public:
 	 * - EINVAL - \a signalNumber value is invalid;
 	 */
 
-	int postGenerate(uint8_t signalNumber, const scheduler::ThreadControlBlock& threadControlBlock);
+	int postGenerate(uint8_t signalNumber, scheduler::ThreadControlBlock& threadControlBlock);
 
 	/**
 	 * \brief Sets association for given signal number.
