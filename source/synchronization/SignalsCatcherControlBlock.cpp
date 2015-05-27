@@ -284,7 +284,7 @@ SignalAction SignalsCatcherControlBlock::clearAssociation(const uint8_t signalNu
 	return previousSignalAction;
 }
 
-void SignalsCatcherControlBlock::requestDeliveryOfSignals(const scheduler::ThreadControlBlock& threadControlBlock)
+void SignalsCatcherControlBlock::requestDeliveryOfSignals(scheduler::ThreadControlBlock& threadControlBlock)
 {
 	if (deliveryIsPending_ == true)
 		return;

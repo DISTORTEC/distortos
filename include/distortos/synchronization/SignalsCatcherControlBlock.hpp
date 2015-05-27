@@ -168,7 +168,7 @@ private:
 	 * \param [in] threadControlBlock is a reference to associated ThreadControlBlock
 	 */
 
-	void requestDeliveryOfSignals(const scheduler::ThreadControlBlock& threadControlBlock);
+	void requestDeliveryOfSignals(scheduler::ThreadControlBlock& threadControlBlock);
 
 	/// SignalSet with signal mask for associated thread
 	SignalSet signalMask_;
