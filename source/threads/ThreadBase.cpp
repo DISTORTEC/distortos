@@ -75,7 +75,7 @@ int ThreadBase::join()
 	return ret;
 }
 
-int ThreadBase::queueSignal(const uint8_t signalNumber, const sigval value) const
+int ThreadBase::queueSignal(const uint8_t signalNumber, const sigval value)
 {
 	const auto signalsReceiverControlBlock = threadControlBlock_.getSignalsReceiverControlBlock();
 	if (signalsReceiverControlBlock == nullptr)

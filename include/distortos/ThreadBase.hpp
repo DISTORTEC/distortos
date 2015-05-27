@@ -161,7 +161,7 @@ public:
 	 * - ENOTSUP - reception or queuing of signals are disabled for this thread;
 	 */
 
-	int queueSignal(uint8_t signalNumber, sigval value) const;
+	int queueSignal(uint8_t signalNumber, sigval value);
 
 	/**
 	 * \brief Changes priority of thread.
