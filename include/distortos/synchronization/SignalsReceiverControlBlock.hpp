@@ -229,7 +229,7 @@ private:
 	 * - EINVAL - \a signalNumber value is invalid;
 	 */
 
-	int postGenerate(uint8_t signalNumber, const scheduler::ThreadControlBlock& threadControlBlock) const;
+	int postGenerate(uint8_t signalNumber, scheduler::ThreadControlBlock& threadControlBlock) const;
 
 	/// set of pending signals
 	SignalSet pendingSignalSet_;

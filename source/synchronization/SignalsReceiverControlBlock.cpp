@@ -176,7 +176,7 @@ std::pair<int, bool> SignalsReceiverControlBlock::isSignalIgnored(const uint8_t 
 }
 
 int SignalsReceiverControlBlock::postGenerate(const uint8_t signalNumber,
-		const scheduler::ThreadControlBlock& threadControlBlock) const
+		scheduler::ThreadControlBlock& threadControlBlock) const
 {
 	/// \todo add some form of assertion for validity of \a signalNumber
 
