@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-05-24
+ * \date 2015-05-27
  */
 
 #include "distortos/scheduler/getScheduler.hpp"
@@ -60,7 +60,8 @@ extern "C" __attribute__ ((naked)) void PendSV_Handler()
 			"	tst			lr, #(1 << 4)					\n"	// was floating-point used by the thread?
 			"	it			eq								\n"
 			"	vstmdbeq	r0!, {s16-s31}					\n"	// save "floating-point" context of current thread
-			"	stmdb		r0!, {r4-r11, lr}				\n"	// save "regular" context of current thread
+			// save "regular" context of current thread (r12 is saved just to keep double-word alignment) 
+			"	stmdb		r0!, {r4-r12, lr}				\n"	
 #else
 			"	stmdb		r0!, {r4-r11}					\n"	// save context of current thread
 			"	mov			r4, lr							\n"
@@ -69,7 +70,7 @@ extern "C" __attribute__ ((naked)) void PendSV_Handler()
 			"	bl			%[schedulerSwitchContext]		\n"	// switch context
 			"												\n"
 #if __FPU_PRESENT == 1 && __FPU_USED == 1
-			"	ldmia		r0!, {r4-r11, lr}				\n"	// load "regular" context of new thread
+			"	ldmia		r0!, {r4-r12, lr}				\n"	// load "regular" context of new thread
 			"	tst			lr, #(1 << 4)					\n"	// was floating-point used by the thread?
 			"	it			eq								\n"
 			"	vldmiaeq	r0!, {s16-s31}					\n"	// load "floating-point" context of new thread
