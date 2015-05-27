@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-05-16
+ * \date 2015-05-27
  */
 
 #include "SignalsQueuedOperationsTestCase.hpp"
@@ -104,7 +104,7 @@ bool phase1()
 bool phase2()
 {
 	{
-		const auto testThread = makeStaticThread<testThreadStackSize, true, 0>({}, [](){});
+		auto testThread = makeStaticThread<testThreadStackSize, true, 0>({}, [](){});
 		if (testThread.queueSignal({}, {}) != ENOTSUP)
 			return false;
 	}
