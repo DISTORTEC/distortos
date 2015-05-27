@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-05-23
+ * \date 2015-05-27
  */
 
 #include "distortos/architecture/requestFunctionExecution.hpp"
@@ -110,7 +110,7 @@ void functionTrampoline(void (& function)(), const void* const savedStackPointer
 | global functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-void requestFunctionExecution(const scheduler::ThreadControlBlock& threadControlBlock, void (& function)())
+void requestFunctionExecution(scheduler::ThreadControlBlock& threadControlBlock, void (& function)())
 {
 	const auto& currentThreadControlBlock = scheduler::getScheduler().getCurrentThreadControlBlock();
 	if (&threadControlBlock == &currentThreadControlBlock)	// request to current thread?

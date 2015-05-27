@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-04-28
+ * \date 2015-05-27
  */
 
 #ifndef INCLUDE_DISTORTOS_ARCHITECTURE_REQUESTFUNCTIONEXECUTION_HPP_
@@ -46,7 +46,7 @@ namespace architecture
  * \a threadControlBlock
  */
 
-void requestFunctionExecution(const scheduler::ThreadControlBlock& threadControlBlock, void (& function)());
+void requestFunctionExecution(scheduler::ThreadControlBlock& threadControlBlock, void (& function)());
 
 }	// namespace architecture
 
