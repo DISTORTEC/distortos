@@ -154,7 +154,7 @@ public:
 	 * - ENOTSUP - queuing of signals is disabled for this receiver;
 	 */
 
-	int queueSignal(uint8_t signalNumber, sigval value, const scheduler::ThreadControlBlock& threadControlBlock) const;
+	int queueSignal(uint8_t signalNumber, sigval value, scheduler::ThreadControlBlock& threadControlBlock) const;
 
 	/**
 	 * \brief Sets association for given signal number.

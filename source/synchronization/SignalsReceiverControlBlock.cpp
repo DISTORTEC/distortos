@@ -117,7 +117,7 @@ SignalSet SignalsReceiverControlBlock::getSignalMask() const
 }
 
 int SignalsReceiverControlBlock::queueSignal(const uint8_t signalNumber, const sigval value,
-		const scheduler::ThreadControlBlock& threadControlBlock) const
+		scheduler::ThreadControlBlock& threadControlBlock) const
 {
 	if (signalInformationQueue_ == nullptr)
 		return ENOTSUP;
