@@ -10,28 +10,18 @@
 #
 
 #-----------------------------------------------------------------------------------------------------------------------
-# subdirectories
-#-----------------------------------------------------------------------------------------------------------------------
-
-SUBDIRECTORIES += architecture/ARM/ARMv7-M
-SUBDIRECTORIES += ConditionVariable
-SUBDIRECTORIES += FifoQueue
-SUBDIRECTORIES += MessageQueue
-SUBDIRECTORIES += Mutex
-SUBDIRECTORIES += RawFifoQueue
-SUBDIRECTORIES += RawMessageQueue
-SUBDIRECTORIES += Semaphore
-SUBDIRECTORIES += Signals
-SUBDIRECTORIES += SoftwareTimer
-SUBDIRECTORIES += Thread
-
-#-----------------------------------------------------------------------------------------------------------------------
 # compilation flags
 #-----------------------------------------------------------------------------------------------------------------------
 
-CXXFLAGS_$(d) := -I$(d)
+CXXFLAGS_$(d) := -DSTM32F407xx
+
+CXXFLAGS_$(d) := $(CXXFLAGS_$(d)) -I$(d)
+CXXFLAGS_$(d) := $(CXXFLAGS_$(d)) -Itest
 CXXFLAGS_$(d) := $(CXXFLAGS_$(d)) -Iinclude
 CXXFLAGS_$(d) := $(CXXFLAGS_$(d)) -Isource/architecture/ARM/ARMv7-M/include
+CXXFLAGS_$(d) := $(CXXFLAGS_$(d)) -Isource/chip/STMicroelectronics/STM32F4/include
+CXXFLAGS_$(d) := $(CXXFLAGS_$(d)) -Iexternal/CMSIS-STM32F4
+CXXFLAGS_$(d) := $(CXXFLAGS_$(d)) -Iexternal/CMSIS
 
 #-----------------------------------------------------------------------------------------------------------------------
 # standard footer
