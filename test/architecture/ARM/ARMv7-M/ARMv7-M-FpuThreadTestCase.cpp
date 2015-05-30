@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-05-28
+ * \date 2015-05-30
  */
 
 #include "ARMv7-M-FpuThreadTestCase.hpp"
@@ -16,6 +16,8 @@
 #include "distortos/chip/CMSIS-proxy.h"
 
 #if __FPU_PRESENT == 1 && __FPU_USED == 1
+
+#include "setFpuRegisters.hpp"
 
 #include "distortos/StaticThread.hpp"
 #include "distortos/statistics.hpp"
@@ -79,48 +81,7 @@ void thread(uint32_t value, bool& sharedResult)
 {
 	for (uint32_t iteration {}; iteration < sequenceIterations && sharedResult == true; ++iteration)
 	{
-		uint32_t fpscr;
-		asm volatile
-		(
-				"	vmsr	FPSCR, %[value]	\n"	// move test value in FPSCR
-				"	vmrs	%[fpscr], FPSCR	\n"	// read FPSCR to variable (not all fields of FPSCR are writable)
-				"	vmov	s0, %[value]	\n"	// move test value to FPU register
-				"	vmov	s1, %[value]	\n"
-				"	vmov	s2, %[value]	\n"
-				"	vmov	s3, %[value]	\n"
-				"	vmov	s4, %[value]	\n"
-				"	vmov	s5, %[value]	\n"
-				"	vmov	s6, %[value]	\n"
-				"	vmov	s7, %[value]	\n"
-				"	vmov	s8, %[value]	\n"
-				"	vmov	s9, %[value]	\n"
-				"	vmov	s10, %[value]	\n"
-				"	vmov	s11, %[value]	\n"
-				"	vmov	s12, %[value]	\n"
-				"	vmov	s13, %[value]	\n"
-				"	vmov	s14, %[value]	\n"
-				"	vmov	s15, %[value]	\n"
-				"	vmov	s16, %[value]	\n"
-				"	vmov	s17, %[value]	\n"
-				"	vmov	s18, %[value]	\n"
-				"	vmov	s19, %[value]	\n"
-				"	vmov	s20, %[value]	\n"
-				"	vmov	s21, %[value]	\n"
-				"	vmov	s22, %[value]	\n"
-				"	vmov	s23, %[value]	\n"
-				"	vmov	s24, %[value]	\n"
-				"	vmov	s25, %[value]	\n"
-				"	vmov	s26, %[value]	\n"
-				"	vmov	s27, %[value]	\n"
-				"	vmov	s28, %[value]	\n"
-				"	vmov	s29, %[value]	\n"
-				"	vmov	s30, %[value]	\n"
-				"	vmov	s31, %[value]	\n"
-
-				:	[fpscr] "=r" (fpscr)
-				:	[value] "r" (value)
-		);
-
+		const auto fpscr = setFpuRegisters(value);
 		ThisThread::yield();	// cause context switch
 
 		asm volatile

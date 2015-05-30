@@ -1,0 +1,85 @@
+/**
+ * \file
+ * \brief setFpuRegisters() definition for ARMv7-M (Cortex-M3 / Cortex-M4)
+ *
+ * \author Copyright (C) 2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ *
+ * \par License
+ * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
+ * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ *
+ * \date 2015-05-30
+ */
+
+#include "setFpuRegisters.hpp"
+
+#include "distortos/chip/CMSIS-proxy.h"
+
+namespace distortos
+{
+
+namespace test
+{
+
+/*---------------------------------------------------------------------------------------------------------------------+
+| global functions
++---------------------------------------------------------------------------------------------------------------------*/
+
+uint32_t setFpuRegisters(const uint32_t value)
+{
+#if __FPU_PRESENT == 1 && __FPU_USED == 1
+
+	uint32_t fpscr;
+	asm volatile
+	(
+			"	vmov	s0, %[value]	\n"	// move test value to FPU register
+			"	vmov	s1, %[value]	\n"
+			"	vmov	s2, %[value]	\n"
+			"	vmov	s3, %[value]	\n"
+			"	vmov	s4, %[value]	\n"
+			"	vmov	s5, %[value]	\n"
+			"	vmov	s6, %[value]	\n"
+			"	vmov	s7, %[value]	\n"
+			"	vmov	s8, %[value]	\n"
+			"	vmov	s9, %[value]	\n"
+			"	vmov	s10, %[value]	\n"
+			"	vmov	s11, %[value]	\n"
+			"	vmov	s12, %[value]	\n"
+			"	vmov	s13, %[value]	\n"
+			"	vmov	s14, %[value]	\n"
+			"	vmov	s15, %[value]	\n"
+			"	vmov	s16, %[value]	\n"
+			"	vmov	s17, %[value]	\n"
+			"	vmov	s18, %[value]	\n"
+			"	vmov	s19, %[value]	\n"
+			"	vmov	s20, %[value]	\n"
+			"	vmov	s21, %[value]	\n"
+			"	vmov	s22, %[value]	\n"
+			"	vmov	s23, %[value]	\n"
+			"	vmov	s24, %[value]	\n"
+			"	vmov	s25, %[value]	\n"
+			"	vmov	s26, %[value]	\n"
+			"	vmov	s27, %[value]	\n"
+			"	vmov	s28, %[value]	\n"
+			"	vmov	s29, %[value]	\n"
+			"	vmov	s30, %[value]	\n"
+			"	vmov	s31, %[value]	\n"
+			"	vmsr	FPSCR, %[value]	\n"	// move test value to FPSCR
+			"	vmrs	%[fpscr], FPSCR	\n"	// read FPSCR to variable (not all fields of FPSCR are writable)
+
+			:	[fpscr] "=r" (fpscr)
+			:	[value] "r" (value)
+	);
+
+	return fpscr;
+
+#else
+
+	return value;
+
+#endif	// __FPU_PRESENT == 1 && __FPU_USED == 1
+}
+
+}	// namespace test
+
+}	// namespace distortos
