@@ -17,6 +17,7 @@
 
 #if __FPU_PRESENT == 1 && __FPU_USED == 1
 
+#include "checkFpuRegisters.hpp"
 #include "setFpuRegisters.hpp"
 
 #include "distortos/StaticThread.hpp"
@@ -83,154 +84,9 @@ void thread(uint32_t value, bool& sharedResult)
 	{
 		const auto fpscr = setFpuRegisters(value);
 		ThisThread::yield();	// cause context switch
-
-		asm volatile
-		(
-				"	vmov	r0, s0					\n"	// move test value from FPU register
-				"	cmp		r0, %[value]			\n"	// compare with expected value
-				"	it		ne						\n"	// no match?
-				"	bne		1f						\n"	// branch to error handling
-				"	vmov	r0, s1					\n"
-				"	cmp		r0, %[value]			\n"
-				"	it		ne						\n"
-				"	bne		1f						\n"
-				"	vmov	r0, s2					\n"
-				"	cmp		r0, %[value]			\n"
-				"	it		ne						\n"
-				"	bne		1f						\n"
-				"	vmov	r0, s3					\n"
-				"	cmp		r0, %[value]			\n"
-				"	it		ne						\n"
-				"	bne		1f						\n"
-				"	vmov	r0, s4					\n"
-				"	cmp		r0, %[value]			\n"
-				"	it		ne						\n"
-				"	bne		1f						\n"
-				"	vmov	r0, s5					\n"
-				"	cmp		r0, %[value]			\n"
-				"	it		ne						\n"
-				"	bne		1f						\n"
-				"	vmov	r0, s6					\n"
-				"	cmp		r0, %[value]			\n"
-				"	it		ne						\n"
-				"	bne		1f						\n"
-				"	vmov	r0, s7					\n"
-				"	cmp		r0, %[value]			\n"
-				"	it		ne						\n"
-				"	bne		1f						\n"
-				"	vmov	r0, s8					\n"
-				"	cmp		r0, %[value]			\n"
-				"	it		ne						\n"
-				"	bne		1f						\n"
-				"	vmov	r0, s9					\n"
-				"	cmp		r0, %[value]			\n"
-				"	it		ne						\n"
-				"	bne		1f						\n"
-				"	vmov	r0, s10					\n"
-				"	cmp		r0, %[value]			\n"
-				"	it		ne						\n"
-				"	bne		1f						\n"
-				"	vmov	r0, s11					\n"
-				"	cmp		r0, %[value]			\n"
-				"	it		ne						\n"
-				"	bne		1f						\n"
-				"	vmov	r0, s12					\n"
-				"	cmp		r0, %[value]			\n"
-				"	it		ne						\n"
-				"	bne		1f						\n"
-				"	vmov	r0, s13					\n"
-				"	cmp		r0, %[value]			\n"
-				"	it		ne						\n"
-				"	bne		1f						\n"
-				"	vmov	r0, s14					\n"
-				"	cmp		r0, %[value]			\n"
-				"	it		ne						\n"
-				"	bne		1f						\n"
-				"	vmov	r0, s15					\n"
-				"	cmp		r0, %[value]			\n"
-				"	it		ne						\n"
-				"	bne		1f						\n"
-				"	vmov	r0, s16					\n"
-				"	cmp		r0, %[value]			\n"
-				"	it		ne						\n"
-				"	bne		1f						\n"
-				"	vmov	r0, s17					\n"
-				"	cmp		r0, %[value]			\n"
-				"	it		ne						\n"
-				"	bne		1f						\n"
-				"	vmov	r0, s18					\n"
-				"	cmp		r0, %[value]			\n"
-				"	it		ne						\n"
-				"	bne		1f						\n"
-				"	vmov	r0, s19					\n"
-				"	cmp		r0, %[value]			\n"
-				"	it		ne						\n"
-				"	bne		1f						\n"
-				"	vmov	r0, s20					\n"
-				"	cmp		r0, %[value]			\n"
-				"	it		ne						\n"
-				"	bne		1f						\n"
-				"	vmov	r0, s21					\n"
-				"	cmp		r0, %[value]			\n"
-				"	it		ne						\n"
-				"	bne		1f						\n"
-				"	vmov	r0, s22					\n"
-				"	cmp		r0, %[value]			\n"
-				"	it		ne						\n"
-				"	bne		1f						\n"
-				"	vmov	r0, s23					\n"
-				"	cmp		r0, %[value]			\n"
-				"	it		ne						\n"
-				"	bne		1f						\n"
-				"	vmov	r0, s24					\n"
-				"	cmp		r0, %[value]			\n"
-				"	it		ne						\n"
-				"	bne		1f						\n"
-				"	vmov	r0, s25					\n"
-				"	cmp		r0, %[value]			\n"
-				"	it		ne						\n"
-				"	bne		1f						\n"
-				"	vmov	r0, s26					\n"
-				"	cmp		r0, %[value]			\n"
-				"	it		ne						\n"
-				"	bne		1f						\n"
-				"	vmov	r0, s27					\n"
-				"	cmp		r0, %[value]			\n"
-				"	it		ne						\n"
-				"	bne		1f						\n"
-				"	vmov	r0, s28					\n"
-				"	cmp		r0, %[value]			\n"
-				"	it		ne						\n"
-				"	bne		1f						\n"
-				"	vmov	r0, s29					\n"
-				"	cmp		r0, %[value]			\n"
-				"	it		ne						\n"
-				"	bne		1f						\n"
-				"	vmov	r0, s30					\n"
-				"	cmp		r0, %[value]			\n"
-				"	it		ne						\n"
-				"	bne		1f						\n"
-				"	vmov	r0, s31					\n"
-				"	cmp		r0, %[value]			\n"
-				"	it		ne						\n"
-				"	bne		1f						\n"
-				"	vmrs	r0, FPSCR				\n"	// move test value from FPSCR
-				"	cmp		r0, %[fpscr]			\n"	// compare with saved FPSCR value
-
-				"	it		eq						\n"
-				"	beq		2f						\n"	// branch "out" if all compared values were equal
-
-				"1:									\n"	// error handling
-				"	mov		r0, #0					\n"
-				"	strb	r0, [%[sharedResult]]	\n"	// sharedResult = false;
-
-				"2:									\n"
-
-				::	[value] "r" (value),
-				 	[sharedResult] "r" (&sharedResult),
-					[fpscr] "r" (fpscr)
-				: 	"r0"
-		);
+		const auto result = checkFpuRegisters(value, fpscr);
+		if (result == false)
+			sharedResult = result;
 
 		value++;
 	}
