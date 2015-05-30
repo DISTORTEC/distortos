@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-05-27
+ * \date 2015-05-30
  */
 
 #include "distortos/architecture/requestFunctionExecution.hpp"
@@ -127,6 +127,14 @@ void requestFunctionExecution(scheduler::ThreadControlBlock& threadControlBlock,
 			const auto exceptionFpuStackFrame = reinterpret_cast<ExceptionFpuStackFrame*>(stackPointer) - 1;
 
 #if __FPU_PRESENT == 1 && __FPU_USED == 1
+
+			const auto fpccr = FPU->FPCCR;
+			// last FPU stack frame was allocated in thread mode and the stacking is still pending?
+			// this condition will be false in following situations:
+			// - thread doesn't use FPU - there was no FPU stack frame allocated in thread mode,
+			// - thread uses FPU, but the registers are already stacked.
+			if ((fpccr & FPU_FPCCR_THREAD_Msk) != 0 && (fpccr & FPU_FPCCR_LSPACT_Msk) != 0)
+				asm volatile ("vmov s0, s0");	// force stacking of FPU context
 
 			memset(exceptionFpuStackFrame, 0, sizeof(*exceptionFpuStackFrame));
 			exceptionFpuStackFrame->fpscr = reinterpret_cast<void*>(FPU->FPDSCR);
