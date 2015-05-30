@@ -104,6 +104,47 @@ void functionTrampoline(void (& function)(), const void* const savedStackPointer
 	__builtin_unreachable();
 }
 
+/**
+ * \brief Handles request coming from interrupt context to execute provided function in current thread.
+ *
+ * \param [in] function is a reference to function that should be executed in current thread
+ */
+
+void fromInterruptToCurrentThread(void (& function)())
+{
+	const auto stackPointer = __get_PSP();
+	// it's not possible to know whether the thread has active FPU context, so the only option is to assume it does;
+	// ExceptionFpuStackFrame is equal to ExceptionStackFrame in case of compilation with disabled FPU, so no memory is
+	// wasted in that case
+	const auto exceptionFpuStackFrame = reinterpret_cast<ExceptionFpuStackFrame*>(stackPointer) - 1;
+
+#if __FPU_PRESENT == 1 && __FPU_USED == 1
+
+	const auto fpccr = FPU->FPCCR;
+	// last FPU stack frame was allocated in thread mode and the stacking is still pending?
+	// this condition will be false in following situations:
+	// - thread doesn't use FPU - there was no FPU stack frame allocated in thread mode,
+	// - thread uses FPU, but the registers are already stacked.
+	if ((fpccr & FPU_FPCCR_THREAD_Msk) != 0 && (fpccr & FPU_FPCCR_LSPACT_Msk) != 0)
+		asm volatile ("vmov s0, s0");	// force stacking of FPU context
+
+	memset(exceptionFpuStackFrame, 0, sizeof(*exceptionFpuStackFrame));
+	exceptionFpuStackFrame->fpscr = reinterpret_cast<void*>(FPU->FPDSCR);
+
+#endif	// __FPU_PRESENT == 1 && __FPU_USED == 1
+
+	exceptionFpuStackFrame->exceptionStackFrame.r0 = reinterpret_cast<void*>(&function);
+	exceptionFpuStackFrame->exceptionStackFrame.r1 = reinterpret_cast<void*>(stackPointer);
+	exceptionFpuStackFrame->exceptionStackFrame.r2 = reinterpret_cast<void*>(0x22222222);
+	exceptionFpuStackFrame->exceptionStackFrame.r3 = reinterpret_cast<void*>(0x33333333);
+	exceptionFpuStackFrame->exceptionStackFrame.r12 = reinterpret_cast<void*>(0xcccccccc);
+	exceptionFpuStackFrame->exceptionStackFrame.lr = nullptr;
+	exceptionFpuStackFrame->exceptionStackFrame.pc = reinterpret_cast<void*>(&functionTrampoline);
+	exceptionFpuStackFrame->exceptionStackFrame.xpsr = ExceptionStackFrame::defaultXpsr;
+
+	__set_PSP(reinterpret_cast<uint32_t>(exceptionFpuStackFrame));
+}
+
 }	// namespace
 
 /*---------------------------------------------------------------------------------------------------------------------+
@@ -119,39 +160,7 @@ void requestFunctionExecution(scheduler::ThreadControlBlock& threadControlBlock,
 		if (inInterrupt == false)	// current thread is sending the request to itself?
 			function();				// execute function right away
 		else						// interrupt is sending the request to current thread?
-		{
-			const auto stackPointer = __get_PSP();
-			// it's not possible to know whether the thread has active FPU context, so the only option is to assume it
-			// does; ExceptionFpuStackFrame is equal to ExceptionStackFrame in case of compilation with disabled FPU, so
-			// no memory is wasted in that case
-			const auto exceptionFpuStackFrame = reinterpret_cast<ExceptionFpuStackFrame*>(stackPointer) - 1;
-
-#if __FPU_PRESENT == 1 && __FPU_USED == 1
-
-			const auto fpccr = FPU->FPCCR;
-			// last FPU stack frame was allocated in thread mode and the stacking is still pending?
-			// this condition will be false in following situations:
-			// - thread doesn't use FPU - there was no FPU stack frame allocated in thread mode,
-			// - thread uses FPU, but the registers are already stacked.
-			if ((fpccr & FPU_FPCCR_THREAD_Msk) != 0 && (fpccr & FPU_FPCCR_LSPACT_Msk) != 0)
-				asm volatile ("vmov s0, s0");	// force stacking of FPU context
-
-			memset(exceptionFpuStackFrame, 0, sizeof(*exceptionFpuStackFrame));
-			exceptionFpuStackFrame->fpscr = reinterpret_cast<void*>(FPU->FPDSCR);
-
-#endif	// __FPU_PRESENT == 1 && __FPU_USED == 1
-
-			exceptionFpuStackFrame->exceptionStackFrame.r0 = reinterpret_cast<void*>(&function);
-			exceptionFpuStackFrame->exceptionStackFrame.r1 = reinterpret_cast<void*>(stackPointer);
-			exceptionFpuStackFrame->exceptionStackFrame.r2 = reinterpret_cast<void*>(0x22222222);
-			exceptionFpuStackFrame->exceptionStackFrame.r3 = reinterpret_cast<void*>(0x33333333);
-			exceptionFpuStackFrame->exceptionStackFrame.r12 = reinterpret_cast<void*>(0xcccccccc);
-			exceptionFpuStackFrame->exceptionStackFrame.lr = nullptr;
-			exceptionFpuStackFrame->exceptionStackFrame.pc = reinterpret_cast<void*>(&functionTrampoline);
-			exceptionFpuStackFrame->exceptionStackFrame.xpsr = ExceptionStackFrame::defaultXpsr;
-
-			__set_PSP(reinterpret_cast<uint32_t>(exceptionFpuStackFrame));
-		}
+			fromInterruptToCurrentThread(function);
 	}
 }
 
