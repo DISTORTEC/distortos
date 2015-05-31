@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-05-30
+ * \date 2015-05-31
  */
 
 #include "ARMv7-M-FpuThreadTestCase.hpp"
@@ -82,7 +82,7 @@ void thread(uint32_t value, bool& sharedResult)
 {
 	for (uint32_t iteration {}; iteration < sequenceIterations && sharedResult == true; ++iteration)
 	{
-		const auto fpscr = setFpuRegisters(value);
+		const auto fpscr = setFpuRegisters(value, true);
 		ThisThread::yield();	// cause context switch
 		const auto result = checkFpuRegisters(value, fpscr);
 		if (result == false)

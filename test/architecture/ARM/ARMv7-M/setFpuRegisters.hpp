@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-05-30
+ * \date 2015-05-31
  */
 
 #ifndef TEST_ARCHITECTURE_ARM_ARMV7_M_SETFPUREGISTERS_HPP_
@@ -23,14 +23,15 @@ namespace test
 {
 
 /**
- * \brief Sets all FPU registers (including FPSCR) to given value.
+ * \brief Sets FPU registers (including FPSCR) to given value.
  *
  * \param [in] value is the value that will be written to FPU registers
+ * \param [in] full selects whether all FPU registers will be modified (true) or only s0-s15 and FPSCR (false)
  *
  * \return value read from FPSCR register (not all fields of this register are writable)
  */
 
-uint32_t setFpuRegisters(uint32_t value);
+uint32_t setFpuRegisters(uint32_t value, bool full);
 
 }	// namespace test
 
