@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-05-27
+ * \date 2015-06-01
  */
 
 #include "distortos/scheduler/getScheduler.hpp"
@@ -53,8 +53,15 @@ void* schedulerSwitchContextWrapper(void* const stackPointer)
 
 extern "C" __attribute__ ((naked)) void PendSV_Handler()
 {
+	constexpr auto basepriValue = CONFIG_ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI << (8 - __NVIC_PRIO_BITS);
+	static_assert(basepriValue > 0 && basepriValue <= UINT8_MAX,
+			"Invalid CONFIG_ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI value!");
+
 	asm volatile
 	(
+			"	mov			r0, %[basepriValue]				\n"
+			"	msr			basepri, r0						\n"	// enable interrupt masking
+			"												\n"
 			"	mrs			r0, PSP							\n"
 #if __FPU_PRESENT == 1 && __FPU_USED == 1
 			"	tst			lr, #(1 << 4)					\n"	// was floating-point used by the thread?
@@ -80,9 +87,13 @@ extern "C" __attribute__ ((naked)) void PendSV_Handler()
 #endif	// __FPU_PRESENT == 1 && __FPU_USED == 1
 			"	msr			PSP, r0							\n"
 			"												\n"
+			"	mov			r0, #0							\n"
+			"	msr			basepri, r0						\n"	// disable interrupt masking
+			"												\n"
 			"	bx			lr								\n"	// return to new thread
 
-			::	[schedulerSwitchContext] "i" (schedulerSwitchContextWrapper)
+			::	[schedulerSwitchContext] "i" (schedulerSwitchContextWrapper),
+				[basepriValue] "i" (basepriValue)
 	);
 
 	__builtin_unreachable();
