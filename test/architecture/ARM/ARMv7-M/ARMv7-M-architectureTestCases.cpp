@@ -8,12 +8,13 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-05-28
+ * \date 2015-06-01
  */
 
 #include "architecture/architectureTestCases.hpp"
 
 #include "ARMv7-M-FpuThreadTestCase.hpp"
+#include "ARMv7-M-FpuSignalTestCase.hpp"
 
 #include "TestCaseGroup.hpp"
 
@@ -33,10 +34,14 @@ namespace
 /// FpuThreadTestCase instance
 const FpuThreadTestCase fpuThreadTestCase;
 
+/// FpuSignalTestCase instance
+const FpuSignalTestCase fpuSignalTestCase;
+
 /// array with references to architecture-specific test cases
 const TestCaseGroup::Range::value_type threadTestCases_[]
 {
 		TestCaseGroup::Range::value_type{fpuThreadTestCase},
+		TestCaseGroup::Range::value_type{fpuSignalTestCase},
 };
 
 }	// namespace
