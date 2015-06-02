@@ -112,7 +112,15 @@ void functionTrampoline(void (& function)(), const void* const savedStackPointer
 
 void fromCurrentThreadToCurrentThread(void (& function)())
 {
+#if __FPU_PRESENT == 1 && __FPU_USED == 1
+	const auto control = __get_CONTROL();
+#endif	// __FPU_PRESENT == 1 && __FPU_USED == 1
+
 	function();	// execute function right away
+
+#if __FPU_PRESENT == 1 && __FPU_USED == 1
+	__set_CONTROL(control);	// restore previous value of CONTROL register, possibly deactivating FPU context
+#endif	// __FPU_PRESENT == 1 && __FPU_USED == 1
 }
 
 /**
