@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-05-30
+ * \date 2015-06-02
  */
 
 #include "distortos/architecture/requestFunctionExecution.hpp"
@@ -105,6 +105,17 @@ void functionTrampoline(void (& function)(), const void* const savedStackPointer
 }
 
 /**
+ * \brief Handles request from current thread to itself.
+ *
+ * \param [in] function is a reference to function that should be executed in current thread
+ */
+
+void fromCurrentThreadToCurrentThread(void (& function)())
+{
+	function();	// execute function right away
+}
+
+/**
  * \brief Handles request coming from interrupt context to execute provided function in current thread.
  *
  * \param [in] function is a reference to function that should be executed in current thread
@@ -158,7 +169,7 @@ void requestFunctionExecution(scheduler::ThreadControlBlock& threadControlBlock,
 	{
 		const auto inInterrupt = __get_IPSR() != 0;
 		if (inInterrupt == false)	// current thread is sending the request to itself?
-			function();				// execute function right away
+			fromCurrentThreadToCurrentThread(function);
 		else						// interrupt is sending the request to current thread?
 			fromInterruptToCurrentThread(function);
 	}
