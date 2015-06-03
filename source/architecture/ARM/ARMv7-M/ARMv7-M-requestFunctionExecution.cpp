@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-06-02
+ * \date 2015-06-03
  */
 
 #include "distortos/architecture/requestFunctionExecution.hpp"
@@ -65,39 +65,60 @@ void removeStackFrame(const void* const savedStackPointer)
  *
  * \param [in] function is a reference to function that will be executed
  * \param [in] savedStackPointer is the stack pointer value before new stack frame was created
+ * \param [in] fullContext is an information about type of previous stack frame - "full", when the thread was not
+ * running (true) or "interrupt", when the thread was running and was interrupted (false)
  */
 
 __attribute__ ((naked))
-void functionTrampoline(void (& function)(), const void* const savedStackPointer)
+void functionTrampoline(void (& function)(), const void* const savedStackPointer, const bool fullContext)
 {
 	using SupervisorCall = int(int (&)(int, int, int, int), int, int, int, int);	// type of supervisorCall()
 
 	asm volatile
 	(
 #if __FPU_PRESENT == 1 && __FPU_USED == 1
-			"	mrs		r2, CONTROL					\n"		// save current value of CONTROL register
-#endif	// __FPU_PRESENT == 1 && __FPU_USED == 1
-			// push savedStackPointer and value of CONTROL register to stack
-			"	push	{r1, r2}					\n"
-			"	blx		%[function]					\n"		// execute function
-			// restore savedStackPointer (2nd supervisorCall() argument) and value of CONTROL register, don't update SP
-			"	ldm		sp, {r1, r2}				\n"
-			"	mov		r3, #0						\n"		// 4th supervisorCall() argument - 0
-			"	str		r3, [sp]					\n"		// 5th supervisorCall() argument - 0
-#if __FPU_PRESENT == 1 && __FPU_USED == 1
-			// restore previous value of CONTROL register, possibly deactivating FPU context
-			"	msr		CONTROL, r2					\n"
-			// 3rd supervisorCall() argument - extracted CONTROL.FPCA, 1 if FPU context is active, 0 otherwise
-			"	ubfx	r2, r2, #2, #1				\n"
+			"	mrs			r3, CONTROL					\n"	// save current value of CONTROL register
+			"	push		{r0-r3}						\n"	// push all arguments and value of CONTROL register to stack
 #else
-			"	mov		r2, r3						\n"		// 3rd supervisorCall() argument - 0
+			"	push		{r1-r2}						\n"	// push last two arguments to stack
 #endif	// __FPU_PRESENT == 1 && __FPU_USED == 1
-			"	ldr		r0, =%[removeStackFrame]	\n"		// 1st supervisorCall() argument - removeStackFrame
-			"	b		%[supervisorCall]			\n"		// jump to supervisorCall(), this does not return
+			"	blx			%[function]					\n"	// execute function
+#if __FPU_PRESENT == 1 && __FPU_USED == 1
+			// restore all arguments and value of CONTROL register, don't update SP
+			"	ldm			sp, {r0-r3}					\n"
+			// restore previous value of CONTROL register, possibly deactivating FPU context
+			"	msr			CONTROL, r3					\n"
+#else
+			"	ldm			sp, {r1-r2}					\n"	// restore last two arguments, don't update SP
+#endif	// __FPU_PRESENT == 1 && __FPU_USED == 1
+			"	cmp			r2, #0						\n"
+#if __FPU_PRESENT == 1 && __FPU_USED == 1
+			"	itt			eq							\n"	// if (fullContext == false) {
+			// 3rd supervisorCall() argument - extracted CONTROL.FPCA, 1 if FPU context is active, 0 otherwise
+			"	ubfxeq		r2, r3, #2, #1				\n"
+			"	beq			1f							\n"	// } else {
+			"	ldmia		r1!, {r4-r12, lr}			\n"	// load "regular" context of thread
+			"	ubfx		r2, lr, #4, #1				\n"	// was floating-point used by the thread?
+			// 3rd supervisorCall() argument - 1 if FPU context is active, 0 otherwise
+			"	eors		r2, #(1 << 0)				\n"
+			"	it			ne							\n"
+			"	vldmiane	r1!, {s16-s31}				\n"	// load "floating-point" context of thread
+			"1:											\n"	// }
+#else
+			"	itt			ne							\n"	// if (fullContext == true) {
+			"	ldmiane		r1!, {r4-r11}				\n"	// load context of thread
+			"	movne		r2, #0						\n"	// 3rd supervisorCall() argument - 0
+			"											\n"	// }
+#endif	// __FPU_PRESENT == 1 && __FPU_USED == 1
+			"	mov			r3, #0						\n"	// 4th supervisorCall() argument - 0
+			"	str			r3, [sp]					\n"	// 5th supervisorCall() argument - 0
+			"	ldr			r0, =%[removeStackFrame]	\n"	// 1st supervisorCall() argument - removeStackFrame
+			"	b			%[supervisorCall]			\n"	// jump to supervisorCall(), this does not return
 
-			::	[function] "r"	(function),
-				[removeStackFrame] "i" (removeStackFrame),
+			::	[function] "r" (function),
 				[savedStackPointer] "r" (savedStackPointer),
+				[fullContext] "r" (fullContext),
+				[removeStackFrame] "i" (removeStackFrame),
 				[supervisorCall] "i" (static_cast<SupervisorCall&>(supervisorCall))
 	);
 
@@ -154,7 +175,7 @@ void fromInterruptToCurrentThread(void (& function)())
 
 	exceptionFpuStackFrame->exceptionStackFrame.r0 = reinterpret_cast<void*>(&function);
 	exceptionFpuStackFrame->exceptionStackFrame.r1 = reinterpret_cast<void*>(stackPointer);
-	exceptionFpuStackFrame->exceptionStackFrame.r2 = reinterpret_cast<void*>(0x22222222);
+	exceptionFpuStackFrame->exceptionStackFrame.r2 = reinterpret_cast<void*>(false);
 	exceptionFpuStackFrame->exceptionStackFrame.r3 = reinterpret_cast<void*>(0x33333333);
 	exceptionFpuStackFrame->exceptionStackFrame.r12 = reinterpret_cast<void*>(0xcccccccc);
 	exceptionFpuStackFrame->exceptionStackFrame.lr = nullptr;
