@@ -1012,18 +1012,16 @@ bool phase1()
 	};
 
 	handlerStepsRange = decltype(handlerStepsRange){handlerSteps};
-	bool testResult {true};
+	auto threadStepsRange = TestStepsRange{threadSteps};
 
-	for (auto& step : threadSteps)
-		if (step(sharedSequenceAsserter, nullptr, nullptr) != 0)
-			testResult = false;
+	testStepsRunner(threadStepsRange);
 
 	const size_t handlerStepsSize = std::end(handlerSteps) - std::begin(handlerSteps);
 	const size_t threadStepsSize = std::end(threadSteps) - std::begin(threadSteps);
 	if (sharedSequenceAsserter.assertSequence(2 * (handlerStepsSize + threadStepsSize)) == false)
 		return false;
 
-	return testResult;
+	return true;
 }
 
 /**
@@ -1358,11 +1356,9 @@ bool phase2()
 	handlerStepsRange = decltype(handlerStepsRange){handlerSteps};
 	auto softwareTimer = makeSoftwareTimer(testStepsRunner, std::ref(interruptStepsRange));
 	softwareTimerPointer = &softwareTimer;
-	bool testResult {true};
+	auto threadStepsRange = TestStepsRange{threadSteps};
 
-	for (auto& step : threadSteps)
-		if (step(sharedSequenceAsserter, &softwareTimer, nullptr) != 0)
-			testResult = false;
+	testStepsRunner(threadStepsRange);
 
 	softwareTimerPointer = {};
 
@@ -1372,7 +1368,7 @@ bool phase2()
 	if (sharedSequenceAsserter.assertSequence(2 * (threadStepsSize + interruptStepsSize + handlerStepsSize)) == false)
 		return false;
 
-	return testResult;
+	return true;
 }
 
 }	// namespace
