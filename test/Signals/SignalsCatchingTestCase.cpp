@@ -205,8 +205,8 @@ public:
 	int operator()(SoftwareTimerBase& softwareTimer) const;
 };
 
-/// test step executed in signal handler
-class HandlerStep
+/// single test step
+class TestStep
 {
 public:
 
@@ -214,7 +214,7 @@ public:
 	enum class Type : uint8_t
 	{
 		/// BasicHandlerStep
-		Basic,
+		BasicHandler,
 		/// GenerateQueueSignalStep
 		GenerateQueueSignal,
 		/// SignalMaskStep
@@ -224,36 +224,36 @@ public:
 	};
 
 	/**
-	 * \brief HandlerStep's constructor for Basic type.
+	 * \brief TestStep's constructor for BasicHandler type.
 	 *
 	 * \param [in] firstSequencePoint is the first sequence point of test step
 	 * \param [in] lastSequencePoint is the last sequence point of test step
-	 * \param [in] more selects whether another available HandlerStep should be executed in the same signal handler
-	 * (true) or not (false)
+	 * \param [in] more selects whether another available TestStep should be executed in the same iteration (true) or
+	 * not (false)
 	 * \param [in] basicHandlerStep is the BasicHandlerStep that will be executed in test step
 	 */
 
-	constexpr HandlerStep(const unsigned int firstSequencePoint, const unsigned int lastSequencePoint, const bool more,
+	constexpr TestStep(const unsigned int firstSequencePoint, const unsigned int lastSequencePoint, const bool more,
 			const BasicHandlerStep basicHandlerStep) :
 			basicHandlerStep_{basicHandlerStep},
 			sequencePoints_{firstSequencePoint, lastSequencePoint},
 			more_{more},
-			type_{Type::Basic}
+			type_{Type::BasicHandler}
 	{
 
 	}
 
 	/**
-	 * \brief HandlerStep's constructor for GenerateQueueSignal type.
+	 * \brief TestStep's constructor for GenerateQueueSignal type.
 	 *
 	 * \param [in] firstSequencePoint is the first sequence point of test step
 	 * \param [in] lastSequencePoint is the last sequence point of test step
-	 * \param [in] more selects whether another available HandlerStep should be executed in the same signal handler
-	 * (true) or not (false)
+	 * \param [in] more selects whether another available TestStep should be executed in the same iteration (true) or
+	 * not (false)
 	 * \param [in] generateQueueSignalStep is the GenerateQueueSignalStep that will be executed in test step
 	 */
 
-	constexpr HandlerStep(const unsigned int firstSequencePoint, const unsigned int lastSequencePoint, const bool more,
+	constexpr TestStep(const unsigned int firstSequencePoint, const unsigned int lastSequencePoint, const bool more,
 			const GenerateQueueSignalStep generateQueueSignalStep) :
 			generateQueueSignalStep_{generateQueueSignalStep},
 			sequencePoints_{firstSequencePoint, lastSequencePoint},
@@ -264,16 +264,16 @@ public:
 	}
 
 	/**
-	 * \brief HandlerStep's constructor for SignalMask type.
+	 * \brief TestStep's constructor for SignalMask type.
 	 *
 	 * \param [in] firstSequencePoint is the first sequence point of test step
 	 * \param [in] lastSequencePoint is the last sequence point of test step
-	 * \param [in] more selects whether another available HandlerStep should be executed in the same signal handler
-	 * (true) or not (false)
+	 * \param [in] more selects whether another available TestStep should be executed in the same iteration (true) or
+	 * not (false)
 	 * \param [in] signalMaskStep is the SignalMaskStep that will be executed in test step
 	 */
 
-	constexpr HandlerStep(const unsigned int firstSequencePoint, const unsigned int lastSequencePoint, const bool more,
+	constexpr TestStep(const unsigned int firstSequencePoint, const unsigned int lastSequencePoint, const bool more,
 			const SignalMaskStep signalMaskStep) :
 			signalMaskStep_{signalMaskStep},
 			sequencePoints_{firstSequencePoint, lastSequencePoint},
@@ -284,16 +284,16 @@ public:
 	}
 
 	/**
-	 * \brief HandlerStep's constructor for SoftwareTimer type.
+	 * \brief TestStep's constructor for SoftwareTimer type.
 	 *
 	 * \param [in] firstSequencePoint is the first sequence point of test step
 	 * \param [in] lastSequencePoint is the last sequence point of test step
-	 * \param [in] more selects whether another available HandlerStep should be executed in the same signal handler
-	 * (true) or not (false)
+	 * \param [in] more selects whether another available TestStep should be executed in the same iteration (true) or
+	 * not (false)
 	 * \param [in] softwareTimerStep is the SoftwareTimerStep that will be executed in test step
 	 */
 
-	constexpr HandlerStep(const unsigned int firstSequencePoint, const unsigned int lastSequencePoint, const bool more,
+	constexpr TestStep(const unsigned int firstSequencePoint, const unsigned int lastSequencePoint, const bool more,
 			const SoftwareTimerStep softwareTimerStep) :
 			softwareTimerStep_{softwareTimerStep},
 			sequencePoints_{firstSequencePoint, lastSequencePoint},
@@ -304,7 +304,7 @@ public:
 	}
 
 	/**
-	 * \brief HandlerStep's function call operator
+	 * \brief TestStep's function call operator
 	 *
 	 * Marks first sequence point, executes internal test step and marks last sequence point.
 	 *
@@ -320,7 +320,7 @@ public:
 			const SignalInformation* signalInformation) const;
 
 	/**
-	 * \return true if another available HandlerStep should be executed in the same signal handler, false otherwise
+	 * \return true if another available TestStep should be executed in the same iteration, false otherwise
 	 */
 
 	bool shouldExecuteMore() const
@@ -333,7 +333,7 @@ private:
 	/// internal test step that will be executed
 	union
 	{
-		/// BasicHandlerStep test step - valid only if type_ == Type::Basic
+		/// BasicHandlerStep test step - valid only if type_ == Type::BasicHandler
 		BasicHandlerStep basicHandlerStep_;
 
 		/// GenerateQueueSignalStep test step - valid only if type_ == Type::GenerateQueueSignal
@@ -349,8 +349,7 @@ private:
 	/// sequence points of test step
 	SequencePoints sequencePoints_;
 
-	/// selects whether another available HandlerStep should be executed in the same signal handler (true) or not
-	/// (false)
+	/// selects whether another available TestStep should be executed in the same iteration (true) or not (false)
 	bool more_;
 
 	/// type of test step
@@ -358,7 +357,7 @@ private:
 };
 
 /// range of test steps
-using HandlerStepsRange = estd::ContiguousRange<const HandlerStep>;
+using TestStepsRange = estd::ContiguousRange<const TestStep>;
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | local objects
@@ -368,7 +367,7 @@ using HandlerStepsRange = estd::ContiguousRange<const HandlerStep>;
 constexpr size_t totalSignals {10};
 
 /// range of test steps for signal handler
-HandlerStepsRange handlerStepsRange;
+TestStepsRange handlerStepsRange;
 
 /// shared return code of signal handler, is is reset before each test phase
 sig_atomic_t sharedSigAtomic;
@@ -402,15 +401,16 @@ int GenerateQueueSignalStep::operator()() const
 }
 
 /*---------------------------------------------------------------------------------------------------------------------+
-| HandlerStep's public functions
+| TestStep's public functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-int HandlerStep::operator()(SequenceAsserter& sequenceAsserter, SoftwareTimerBase* const softwareTimer,
+int TestStep::operator()(SequenceAsserter& sequenceAsserter, SoftwareTimerBase* const softwareTimer,
 		const SignalInformation* const signalInformation) const
 {
 	sequenceAsserter.sequencePoint(sequencePoints_.first);
 
-	const auto ret = type_ == Type::Basic && signalInformation != nullptr ? basicHandlerStep_(*signalInformation) :
+	const auto ret =
+			type_ == Type::BasicHandler && signalInformation != nullptr ? basicHandlerStep_(*signalInformation) :
 			type_ == Type::GenerateQueueSignal ? generateQueueSignalStep_() :
 			type_ == Type::SignalMask ? signalMaskStep_() :
 			type_ == Type::SoftwareTimer && softwareTimer != nullptr ? softwareTimerStep_(*softwareTimer) : EINVAL;
@@ -470,7 +470,7 @@ constexpr SignalSet getSignalMask(const uint8_t signalNumber)
  * \brief Signal handler
  *
  * If \a handlerStepsRange is empty, error is marked (test handler is unexpected). Otherwise first element if removed
- * from the range and executed. Whole sequence is repeated if HandlerStep::shouldExecuteMore() of the test step that was
+ * from the range and executed. Whole sequence is repeated if TestStep::shouldExecuteMore() of the test step that was
  * just executed returns true.
  *
  * \param [in] signalInformation is a reference to received SignalInformation object
@@ -500,13 +500,13 @@ void handler(const SignalInformation& signalInformation)
  * \brief Function executed via software timer from interrupt
  *
  * If \a stepsRange is empty, error is marked (function call is unexpected). Otherwise first element if removed from the
- * range and executed. Whole sequence is repeated if HandlerStep::shouldExecuteMore() of the test step that was just
+ * range and executed. Whole sequence is repeated if TestStep::shouldExecuteMore() of the test step that was just
  * executed returns true.
  *
  * \param [in] stepsRange is a reference to range of test steps
  */
 
-void softwareTimerFunction(HandlerStepsRange& stepsRange)
+void softwareTimerFunction(TestStepsRange& stepsRange)
 {
 	bool more {true};
 	while (more == true && stepsRange.size() != 0)
@@ -536,7 +536,7 @@ void softwareTimerFunction(HandlerStepsRange& stepsRange)
 
 bool phase1()
 {
-	static const HandlerStep threadSteps[]
+	static const TestStep threadSteps[]
 	{
 			// part 1 - normal generated signals
 			{0, 3, true, GenerateQueueSignalStep{SignalInformation::Code::Generated, 0}},
@@ -671,7 +671,7 @@ bool phase1()
 			{616, 617, false, SignalMaskStep{SignalSet{SignalSet::empty}}},
 	};
 
-	static const HandlerStep handlerSteps[]
+	static const TestStep handlerSteps[]
 	{
 			// part 1 - normal generated signals
 			{1, 2, false, BasicHandlerStep{SignalSet{SignalSet::empty}, getSignalMask(0),
@@ -1036,7 +1036,7 @@ bool phase1()
 
 bool phase2()
 {
-	static const HandlerStep threadSteps[]
+	static const TestStep threadSteps[]
 	{
 			// part 1 - normal generated signals
 			{0, 5, true, SoftwareTimerStep{}},
@@ -1074,7 +1074,7 @@ bool phase2()
 			{408, 409, false, SignalMaskStep{SignalSet{SignalSet::empty}}},
 	};
 
-	static const HandlerStep interruptSteps[]
+	static const TestStep interruptSteps[]
 	{
 			// part 1 - normal generated signals
 			{1, 2, false, GenerateQueueSignalStep{SignalInformation::Code::Generated, 0}},
@@ -1165,7 +1165,7 @@ bool phase2()
 			{394, 395, false, GenerateQueueSignalStep{SignalInformation::Code::Queued, 1, 0x4f8adea0}},
 	};
 
-	static const HandlerStep handlerSteps[]
+	static const TestStep handlerSteps[]
 	{
 			// part 1 - normal generated signals
 			{3, 4, false, BasicHandlerStep{SignalSet{SignalSet::empty}, getSignalMask(0),
@@ -1354,7 +1354,7 @@ bool phase2()
 					SignalSet{(UINT32_MAX << 10) | 0b1111111111}, SignalInformation::Code::Queued, 1, 0x4f8adea0}},
 	};
 
-	auto interruptStepsRange = HandlerStepsRange{interruptSteps};
+	auto interruptStepsRange = TestStepsRange{interruptSteps};
 	handlerStepsRange = decltype(handlerStepsRange){handlerSteps};
 	auto softwareTimer = makeSoftwareTimer(softwareTimerFunction, std::ref(interruptStepsRange));
 	softwareTimerPointer = &softwareTimer;
