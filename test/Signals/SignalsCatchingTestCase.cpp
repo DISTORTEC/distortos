@@ -542,6 +542,15 @@ public:
 
 	int operator()(SequenceAsserter& sequenceAsserter, SoftwareTimerBase* softwareTimer = {}) const;
 
+	/**
+	 * \return true if another available ThreadStep should be executed in the same iteration, false otherwise
+	 */
+
+	bool shouldExecuteMore() const
+	{
+		return more_;
+	}
+
 private:
 
 	/// internal test step that will be executed
