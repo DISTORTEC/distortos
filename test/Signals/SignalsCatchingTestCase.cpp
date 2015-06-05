@@ -497,29 +497,29 @@ void handler(const SignalInformation& signalInformation)
 }
 
 /**
- * \brief Function executed via software timer from interrupt
+ * \brief Runner of test steps.
  *
- * If \a stepsRange is empty, error is marked (function call is unexpected). Otherwise first element if removed from the
- * range and executed. Whole sequence is repeated if TestStep::shouldExecuteMore() of the test step that was just
+ * If \a testStepsRange is empty, error is marked (function call is unexpected). Otherwise first element if removed from
+ * the range and executed. Whole sequence is repeated if TestStep::shouldExecuteMore() of the test step that was just
  * executed returns true.
  *
- * \param [in] stepsRange is a reference to range of test steps
+ * \param [in] testStepsRange is a reference to range of test steps
  */
 
-void softwareTimerFunction(TestStepsRange& stepsRange)
+void testStepsRunner(TestStepsRange& testStepsRange)
 {
 	bool more {true};
-	while (more == true && stepsRange.size() != 0)
+	while (more == true && testStepsRange.size() != 0)
 	{
 		// remove the first element from the range
-		auto& interruptStep = *stepsRange.begin();
-		stepsRange = {stepsRange.begin() + 1, stepsRange.end()};
+		auto& testStep = *testStepsRange.begin();
+		testStepsRange = {testStepsRange.begin() + 1, testStepsRange.end()};
 
-		const auto ret = interruptStep(sharedSequenceAsserter, nullptr, nullptr);
+		const auto ret = testStep(sharedSequenceAsserter, softwareTimerPointer, nullptr);
 		if (ret != 0)
 			sharedSigAtomic = ret;
 
-		more = interruptStep.shouldExecuteMore();
+		more = testStep.shouldExecuteMore();
 	}
 
 	if (more == true)
@@ -1356,7 +1356,7 @@ bool phase2()
 
 	auto interruptStepsRange = TestStepsRange{interruptSteps};
 	handlerStepsRange = decltype(handlerStepsRange){handlerSteps};
-	auto softwareTimer = makeSoftwareTimer(softwareTimerFunction, std::ref(interruptStepsRange));
+	auto softwareTimer = makeSoftwareTimer(testStepsRunner, std::ref(interruptStepsRange));
 	softwareTimerPointer = &softwareTimer;
 	bool testResult {true};
 
