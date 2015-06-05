@@ -308,15 +308,15 @@ public:
 	 *
 	 * Marks first sequence point, executes internal test step and marks last sequence point.
 	 *
-	 * \param [in] signalInformation is a reference to received SignalInformation object
 	 * \param [in] sequenceAsserter is a reference to shared SequenceAsserter object
 	 * \param [in] softwareTimer is a pointer to software timer, required only for SoftwareTimerStep
+	 * \param [in] signalInformation is a reference to received SignalInformation object
 	 *
 	 * \return 0 on success, error code otherwise
 	 */
 
-	int operator()(const SignalInformation& signalInformation, SequenceAsserter& sequenceAsserter,
-			SoftwareTimerBase* softwareTimer) const;
+	int operator()(SequenceAsserter& sequenceAsserter, SoftwareTimerBase* softwareTimer,
+			const SignalInformation& signalInformation) const;
 
 	/**
 	 * \return true if another available HandlerStep should be executed in the same signal handler, false otherwise
@@ -527,8 +527,8 @@ int GenerateQueueSignalStep::operator()() const
 | HandlerStep's public functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-int HandlerStep::operator()(const SignalInformation& signalInformation, SequenceAsserter& sequenceAsserter,
-		SoftwareTimerBase* const softwareTimer) const
+int HandlerStep::operator()(SequenceAsserter& sequenceAsserter, SoftwareTimerBase* const softwareTimer,
+		const SignalInformation& signalInformation) const
 {
 	sequenceAsserter.sequencePoint(sequencePoints_.first);
 
@@ -624,7 +624,7 @@ void handler(const SignalInformation& signalInformation)
 		auto& handlerStep = *handlerStepsRange.begin();
 		handlerStepsRange = {handlerStepsRange.begin() + 1, handlerStepsRange.end()};
 
-		const auto ret = handlerStep(signalInformation, sharedSequenceAsserter, softwareTimerPointer);
+		const auto ret = handlerStep(sharedSequenceAsserter, softwareTimerPointer, signalInformation);
 		if (ret != 0)
 			sharedSigAtomic = ret;
 
