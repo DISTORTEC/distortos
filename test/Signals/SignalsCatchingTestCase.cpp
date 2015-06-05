@@ -356,103 +356,6 @@ private:
 	Type type_;
 };
 
-/// test step executed in interrupt (via software timer)
-class InterruptStep
-{
-public:
-
-	/// type of test step
-	enum class Type : uint8_t
-	{
-		/// GenerateQueueSignalStep
-		GenerateQueueSignal,
-		/// SignalMaskStep
-		SignalMask,
-	};
-
-	/**
-	 * \brief InterruptStep's constructor for GenerateQueueSignal type.
-	 *
-	 * \param [in] firstSequencePoint is the first sequence point of test step
-	 * \param [in] lastSequencePoint is the last sequence point of test step
-	 * \param [in] more selects whether another available InterruptStep should be executed in the same interrupt (true)
-	 * or not (false)
-	 * \param [in] generateQueueSignalStep is the GenerateQueueSignalStep that will be executed in test step
-	 */
-
-	constexpr InterruptStep(const unsigned int firstSequencePoint, const unsigned int lastSequencePoint,
-			const bool more, const GenerateQueueSignalStep generateQueueSignalStep) :
-			generateQueueSignalStep_{generateQueueSignalStep},
-			sequencePoints_{firstSequencePoint, lastSequencePoint},
-			more_{more},
-			type_{Type::GenerateQueueSignal}
-	{
-
-	}
-
-	/**
-	 * \brief InterruptStep's constructor for SignalMask type.
-	 *
-	 * \param [in] firstSequencePoint is the first sequence point of test step
-	 * \param [in] lastSequencePoint is the last sequence point of test step
-	 * \param [in] more selects whether another available InterruptStep should be executed in the same interrupt (true)
-	 * or not (false)
-	 * \param [in] signalMaskStep is the SignalMaskStep that will be executed in test step
-	 */
-
-	constexpr InterruptStep(const unsigned int firstSequencePoint, const unsigned int lastSequencePoint,
-			const bool more, const SignalMaskStep signalMaskStep) :
-			signalMaskStep_{signalMaskStep},
-			sequencePoints_{firstSequencePoint, lastSequencePoint},
-			more_{more},
-			type_{Type::SignalMask}
-	{
-
-	}
-
-	/**
-	 * \brief InterruptStep's function call operator
-	 *
-	 * Marks first sequence point, executes internal test step and marks last sequence point.
-	 *
-	 * \param [in] sequenceAsserter is a reference to shared SequenceAsserter object
-	 *
-	 * \return 0 on success, error code otherwise
-	 */
-
-	int operator()(SequenceAsserter& sequenceAsserter) const;
-
-	/**
-	 * \return true if another available InterruptStep should be executed in the same interrupt, false otherwise
-	 */
-
-	bool shouldExecuteMore() const
-	{
-		return more_;
-	}
-
-private:
-
-	/// internal test step that will be executed
-	union
-	{
-		/// GenerateQueueSignalStep test step - valid only if type_ == Type::GenerateQueueSignal
-		GenerateQueueSignalStep generateQueueSignalStep_;
-
-		/// SignalMaskStep test step - valid only if type_ == Type::SignalMask
-		SignalMaskStep signalMaskStep_;
-	};
-
-	/// sequence points of test step
-	SequencePoints sequencePoints_;
-
-	/// selects whether another available InterruptStep should be executed in the same interrupt (true) or not (false)
-	bool more_;
-
-	/// type of test step
-	Type type_;
-};
-
 /// test step executed in thread
 class ThreadStep
 {
@@ -576,8 +479,8 @@ private:
 	Type type_;
 };
 
-/// range of test steps for interrupt
-using InterruptStepsRange = estd::ContiguousRange<const InterruptStep>;
+/// range of test steps
+using ThreadStepsRange = estd::ContiguousRange<const ThreadStep>;
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | local objects
@@ -633,21 +536,6 @@ int HandlerStep::operator()(const SignalInformation& signalInformation, Sequence
 			type_ == Type::GenerateQueueSignal ? generateQueueSignalStep_() :
 			type_ == Type::SignalMask ? signalMaskStep_() :
 			type_ == Type::SoftwareTimer && softwareTimer != nullptr ? softwareTimerStep_(*softwareTimer) : EINVAL;
-
-	sequenceAsserter.sequencePoint(sequencePoints_.second);
-
-	return ret;
-}
-
-/*---------------------------------------------------------------------------------------------------------------------+
-| InterruptStep's public functions
-+---------------------------------------------------------------------------------------------------------------------*/
-
-int InterruptStep::operator()(SequenceAsserter& sequenceAsserter) const
-{
-	sequenceAsserter.sequencePoint(sequencePoints_.first);
-
-	const auto ret = type_ == Type::GenerateQueueSignal ? generateQueueSignalStep_() : signalMaskStep_();
 
 	sequenceAsserter.sequencePoint(sequencePoints_.second);
 
@@ -750,21 +638,21 @@ void handler(const SignalInformation& signalInformation)
 /**
  * \brief Function executed via software timer from interrupt
  *
- * If \a interruptStepsRange is empty, error is marked (function call is unexpected). Otherwise first element if removed
- * from the range and executed. Whole sequence is repeated if InterruptStep::shouldExecuteMore() of the test step that
- * was just executed returns true.
+ * If \a stepsRange is empty, error is marked (function call is unexpected). Otherwise first element if removed from the
+ * range and executed. Whole sequence is repeated if ThreadStep::shouldExecuteMore() of the test step that was just
+ * executed returns true.
  *
- * \param [in] interruptStepsRange is a reference to range of test steps for interrupt
+ * \param [in] stepsRange is a reference to range of test steps
  */
 
-void softwareTimerFunction(InterruptStepsRange& interruptStepsRange)
+void softwareTimerFunction(ThreadStepsRange& stepsRange)
 {
 	bool more {true};
-	while (more == true && interruptStepsRange.size() != 0)
+	while (more == true && stepsRange.size() != 0)
 	{
 		// remove the first element from the range
-		auto& interruptStep = *interruptStepsRange.begin();
-		interruptStepsRange = {interruptStepsRange.begin() + 1, interruptStepsRange.end()};
+		auto& interruptStep = *stepsRange.begin();
+		stepsRange = {stepsRange.begin() + 1, stepsRange.end()};
 
 		const auto ret = interruptStep(sharedSequenceAsserter);
 		if (ret != 0)
@@ -1325,7 +1213,7 @@ bool phase2()
 			{408, 409, false, SignalMaskStep{SignalSet{SignalSet::empty}}},
 	};
 
-	static const InterruptStep interruptSteps[]
+	static const ThreadStep interruptSteps[]
 	{
 			// part 1 - normal generated signals
 			{1, 2, false, GenerateQueueSignalStep{SignalInformation::Code::Generated, 0}},
@@ -1605,7 +1493,7 @@ bool phase2()
 					SignalSet{(UINT32_MAX << 10) | 0b1111111111}, SignalInformation::Code::Queued, 1, 0x4f8adea0}},
 	};
 
-	auto interruptStepsRange = estd::ContiguousRange<const InterruptStep>{interruptSteps};
+	auto interruptStepsRange = ThreadStepsRange{interruptSteps};
 	handlerStepsRange = decltype(handlerStepsRange){handlerSteps};
 	auto softwareTimer = makeSoftwareTimer(softwareTimerFunction, std::ref(interruptStepsRange));
 	softwareTimerPointer = &softwareTimer;
