@@ -310,13 +310,14 @@ public:
 	 *
 	 * \param [in] sequenceAsserter is a reference to shared SequenceAsserter object
 	 * \param [in] softwareTimer is a pointer to software timer, required only for SoftwareTimerStep
-	 * \param [in] signalInformation is a reference to received SignalInformation object
+	 * \param [in] signalInformation is a pointer to received SignalInformation object, required only for
+	 * BasicHandlerStep
 	 *
 	 * \return 0 on success, error code otherwise
 	 */
 
 	int operator()(SequenceAsserter& sequenceAsserter, SoftwareTimerBase* softwareTimer,
-			const SignalInformation& signalInformation) const;
+			const SignalInformation* signalInformation) const;
 
 	/**
 	 * \return true if another available HandlerStep should be executed in the same signal handler, false otherwise
@@ -528,11 +529,11 @@ int GenerateQueueSignalStep::operator()() const
 +---------------------------------------------------------------------------------------------------------------------*/
 
 int HandlerStep::operator()(SequenceAsserter& sequenceAsserter, SoftwareTimerBase* const softwareTimer,
-		const SignalInformation& signalInformation) const
+		const SignalInformation* const signalInformation) const
 {
 	sequenceAsserter.sequencePoint(sequencePoints_.first);
 
-	const auto ret = type_ == Type::Basic ? basicHandlerStep_(signalInformation) :
+	const auto ret = type_ == Type::Basic && signalInformation != nullptr ? basicHandlerStep_(*signalInformation) :
 			type_ == Type::GenerateQueueSignal ? generateQueueSignalStep_() :
 			type_ == Type::SignalMask ? signalMaskStep_() :
 			type_ == Type::SoftwareTimer && softwareTimer != nullptr ? softwareTimerStep_(*softwareTimer) : EINVAL;
@@ -624,7 +625,7 @@ void handler(const SignalInformation& signalInformation)
 		auto& handlerStep = *handlerStepsRange.begin();
 		handlerStepsRange = {handlerStepsRange.begin() + 1, handlerStepsRange.end()};
 
-		const auto ret = handlerStep(sharedSequenceAsserter, softwareTimerPointer, signalInformation);
+		const auto ret = handlerStep(sharedSequenceAsserter, softwareTimerPointer, &signalInformation);
 		if (ret != 0)
 			sharedSigAtomic = ret;
 
