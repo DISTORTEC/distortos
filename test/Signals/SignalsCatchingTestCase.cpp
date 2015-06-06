@@ -280,6 +280,8 @@ public:
 		BasicHandler,
 		/// GenerateQueueSignalStep
 		GenerateQueueSignal,
+		/// ThreadPriorityStep
+		ThreadPriority,
 		/// SignalMaskStep
 		SignalMask,
 		/// SoftwareTimerStep
@@ -322,6 +324,26 @@ public:
 			sequencePoints_{firstSequencePoint, lastSequencePoint},
 			more_{more},
 			type_{Type::GenerateQueueSignal}
+	{
+
+	}
+
+	/**
+	 * \brief TestStep's constructor for ThreadPriority type.
+	 *
+	 * \param [in] firstSequencePoint is the first sequence point of test step
+	 * \param [in] lastSequencePoint is the last sequence point of test step
+	 * \param [in] more selects whether another available TestStep should be executed in the same iteration (true) or
+	 * not (false)
+	 * \param [in] threadPriorityStep is the ThreadPriorityStep that will be executed in test step
+	 */
+
+	constexpr TestStep(const unsigned int firstSequencePoint, const unsigned int lastSequencePoint, const bool more,
+			const ThreadPriorityStep threadPriorityStep) :
+			threadPriorityStep_{threadPriorityStep},
+			sequencePoints_{firstSequencePoint, lastSequencePoint},
+			more_{more},
+			type_{Type::ThreadPriority}
 	{
 
 	}
@@ -403,6 +425,9 @@ private:
 		/// GenerateQueueSignalStep test step - valid only if type_ == Type::GenerateQueueSignal
 		GenerateQueueSignalStep generateQueueSignalStep_;
 
+		/// ThreadPriorityStep test step - valid only if type_ == Type::ThreadPriority
+		ThreadPriorityStep threadPriorityStep_;
+
 		/// SignalMaskStep test step - valid only if type_ == Type::SignalMask
 		SignalMaskStep signalMaskStep_;
 
@@ -470,6 +495,7 @@ int TestStep::operator()(SequenceAsserter& sequenceAsserter, TestStepsRange& tes
 	const auto ret =
 			type_ == Type::BasicHandler && signalInformation != nullptr ? basicHandlerStep_(*signalInformation) :
 			type_ == Type::GenerateQueueSignal ? generateQueueSignalStep_(thread) :
+			type_ == Type::ThreadPriority ? threadPriorityStep_(thread) :
 			type_ == Type::SignalMask ? signalMaskStep_() :
 			type_ == Type::SoftwareTimer ? softwareTimerStep_(testStepsRange, thread) : EINVAL;
 
