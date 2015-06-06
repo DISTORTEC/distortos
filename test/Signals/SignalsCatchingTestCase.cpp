@@ -189,7 +189,7 @@ class SoftwareTimerStep
 public:
 
 	/// type of function for software timer
-	using Function = void(TestStepsRange& testStepsRange);
+	using Function = void(TestStepsRange& testStepsRange, const SignalInformation*);
 
 	/**
 	 * \brief SoftwareTimerStep's constructor
@@ -445,7 +445,7 @@ int SignalMaskStep::operator()() const
 
 int SoftwareTimerStep::operator()(TestStepsRange& testStepsRange) const
 {
-	auto softwareTimer = makeSoftwareTimer(function_, std::ref(testStepsRange));
+	auto softwareTimer = makeSoftwareTimer(function_, std::ref(testStepsRange), nullptr);
 	softwareTimer.start(TickClock::duration{});
 	while (softwareTimer.isRunning() == true);
 	return 0;
@@ -512,9 +512,11 @@ void handler(const SignalInformation& signalInformation)
  * executed returns true.
  *
  * \param [in] testStepsRange is a reference to range of test steps
+ * \param [in] signalInformation is a pointer to received SignalInformation object, nullptr if function is not executed
+ * from signal handler
  */
 
-void testStepsRunner(TestStepsRange& testStepsRange)
+void testStepsRunner(TestStepsRange& testStepsRange, const SignalInformation* const signalInformation)
 {
 	bool more {true};
 	while (more == true && testStepsRange.size() != 0)
@@ -523,7 +525,7 @@ void testStepsRunner(TestStepsRange& testStepsRange)
 		auto& testStep = *testStepsRange.begin();
 		testStepsRange = {testStepsRange.begin() + 1, testStepsRange.end()};
 
-		const auto ret = testStep(sharedSequenceAsserter, testStepsRange, nullptr);
+		const auto ret = testStep(sharedSequenceAsserter, testStepsRange, signalInformation);
 		if (ret != 0)
 			sharedSigAtomic = ret;
 
@@ -1022,7 +1024,7 @@ bool phase1()
 	handlerStepsRange = decltype(handlerStepsRange){handlerSteps};
 	auto threadStepsRange = TestStepsRange{threadSteps};
 
-	testStepsRunner(threadStepsRange);
+	testStepsRunner(threadStepsRange, nullptr);
 
 	const size_t handlerStepsSize = std::end(handlerSteps) - std::begin(handlerSteps);
 	const size_t threadStepsSize = std::end(threadSteps) - std::begin(threadSteps);
@@ -1352,7 +1354,7 @@ bool phase2()
 	handlerStepsRange = decltype(handlerStepsRange){handlerSteps};
 	auto threadStepsRange = TestStepsRange{threadSteps};
 
-	testStepsRunner(threadStepsRange);
+	testStepsRunner(threadStepsRange, nullptr);
 
 	const size_t threadStepsSize = std::end(threadSteps) - std::begin(threadSteps);
 	const size_t handlerStepsSize = std::end(handlerSteps) - std::begin(handlerSteps);
