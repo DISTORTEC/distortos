@@ -326,14 +326,13 @@ public:
 	 *
 	 * \param [in] sequenceAsserter is a reference to shared SequenceAsserter object
 	 * \param [in] testStepsRange is a reference to range of test steps
-	 * \param [in] softwareTimer is a pointer to software timer, required only for SoftwareTimerStep
 	 * \param [in] signalInformation is a pointer to received SignalInformation object, required only for
 	 * BasicHandlerStep
 	 *
 	 * \return 0 on success, error code otherwise
 	 */
 
-	int operator()(SequenceAsserter& sequenceAsserter, TestStepsRange& testStepsRange, SoftwareTimerBase* softwareTimer,
+	int operator()(SequenceAsserter& sequenceAsserter, TestStepsRange& testStepsRange,
 			const SignalInformation* signalInformation) const;
 
 	/**
@@ -389,9 +388,6 @@ sig_atomic_t sharedSigAtomic;
 /// shared SequenceAsserter object, is is reset before each test phase
 SequenceAsserter sharedSequenceAsserter;
 
-/// pointer to current instance of software timer
-SoftwareTimerBase* softwareTimerPointer;
-
 /*---------------------------------------------------------------------------------------------------------------------+
 | BasicHandlerStep's public functions
 +---------------------------------------------------------------------------------------------------------------------*/
@@ -418,7 +414,7 @@ int GenerateQueueSignalStep::operator()() const
 | TestStep's public functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-int TestStep::operator()(SequenceAsserter& sequenceAsserter, TestStepsRange& testStepsRange, SoftwareTimerBase*,
+int TestStep::operator()(SequenceAsserter& sequenceAsserter, TestStepsRange& testStepsRange,
 		const SignalInformation* const signalInformation) const
 {
 	sequenceAsserter.sequencePoint(sequencePoints_.first);
@@ -497,8 +493,7 @@ void handler(const SignalInformation& signalInformation)
 		auto& handlerStep = *handlerStepsRange.begin();
 		handlerStepsRange = {handlerStepsRange.begin() + 1, handlerStepsRange.end()};
 
-		const auto ret = handlerStep(sharedSequenceAsserter, handlerStepsRange, softwareTimerPointer,
-				&signalInformation);
+		const auto ret = handlerStep(sharedSequenceAsserter, handlerStepsRange, &signalInformation);
 		if (ret != 0)
 			sharedSigAtomic = ret;
 
@@ -528,7 +523,7 @@ void testStepsRunner(TestStepsRange& testStepsRange)
 		auto& testStep = *testStepsRange.begin();
 		testStepsRange = {testStepsRange.begin() + 1, testStepsRange.end()};
 
-		const auto ret = testStep(sharedSequenceAsserter, testStepsRange, softwareTimerPointer, nullptr);
+		const auto ret = testStep(sharedSequenceAsserter, testStepsRange, nullptr);
 		if (ret != 0)
 			sharedSigAtomic = ret;
 
