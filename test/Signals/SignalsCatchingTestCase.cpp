@@ -337,13 +337,14 @@ public:
 	 *
 	 * \param [in] sequenceAsserter is a reference to shared SequenceAsserter object
 	 * \param [in] testStepsRange is a reference to range of test steps
+	 * \param [in] thread is a reference to ThreadBase passed to internal test step
 	 * \param [in] signalInformation is a pointer to received SignalInformation object, required only for
 	 * BasicHandlerStep
 	 *
 	 * \return 0 on success, error code otherwise
 	 */
 
-	int operator()(SequenceAsserter& sequenceAsserter, TestStepsRange& testStepsRange,
+	int operator()(SequenceAsserter& sequenceAsserter, TestStepsRange& testStepsRange, ThreadBase& thread,
 			const SignalInformation* signalInformation) const;
 
 	/**
@@ -425,14 +426,14 @@ int GenerateQueueSignalStep::operator()(ThreadBase& thread) const
 | TestStep's public functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-int TestStep::operator()(SequenceAsserter& sequenceAsserter, TestStepsRange& testStepsRange,
+int TestStep::operator()(SequenceAsserter& sequenceAsserter, TestStepsRange& testStepsRange, ThreadBase& thread,
 		const SignalInformation* const signalInformation) const
 {
 	sequenceAsserter.sequencePoint(sequencePoints_.first);
 
 	const auto ret =
 			type_ == Type::BasicHandler && signalInformation != nullptr ? basicHandlerStep_(*signalInformation) :
-			type_ == Type::GenerateQueueSignal ? generateQueueSignalStep_(ThisThread::get()) :
+			type_ == Type::GenerateQueueSignal ? generateQueueSignalStep_(thread) :
 			type_ == Type::SignalMask ? signalMaskStep_() :
 			type_ == Type::SoftwareTimer ? softwareTimerStep_(testStepsRange) : EINVAL;
 
@@ -506,7 +507,7 @@ void testStepsRunner(TestStepsRange& testStepsRange, const SignalInformation* co
 		auto& testStep = *testStepsRange.begin();
 		testStepsRange = {testStepsRange.begin() + 1, testStepsRange.end()};
 
-		const auto ret = testStep(sharedSequenceAsserter, testStepsRange, signalInformation);
+		const auto ret = testStep(sharedSequenceAsserter, testStepsRange, ThisThread::get(), signalInformation);
 		if (ret != 0)
 			sharedSigAtomic = ret;
 
