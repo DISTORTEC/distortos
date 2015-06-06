@@ -161,6 +161,41 @@ private:
 	uint8_t signalNumber_;
 };
 
+/// test step that changes thread's priority
+class ThreadPriorityStep
+{
+public:
+
+	/**
+	 * \brief ThreadPriorityStep's constructor
+	 *
+	 * \param [in] priority is the priority that will be set for thread
+	 */
+
+	constexpr explicit ThreadPriorityStep(const uint8_t priority) :
+			priority_{priority}
+	{
+
+	}
+
+	/**
+	 * \brief ThreadPriorityStep's function call operator
+	 *
+	 * Changes priority of \a thread.
+	 *
+	 * \param [in] thread is a reference to ThreadBase of which the priority will be changed
+	 *
+	 * \return 0 on success, error code otherwise
+	 */
+
+	int operator()(ThreadBase& thread) const;
+
+private:
+
+	/// priority that will be set for thread
+	uint8_t priority_;
+};
+
 /// test step that sets signal mask
 class SignalMaskStep
 {
@@ -441,6 +476,16 @@ int TestStep::operator()(SequenceAsserter& sequenceAsserter, TestStepsRange& tes
 	sequenceAsserter.sequencePoint(sequencePoints_.second);
 
 	return ret;
+}
+
+/*---------------------------------------------------------------------------------------------------------------------+
+| ThreadPriorityStep's public functions
++---------------------------------------------------------------------------------------------------------------------*/
+
+int ThreadPriorityStep::operator()(ThreadBase& thread) const
+{
+	thread.setPriority(priority_);
+	return 0;
 }
 
 /*---------------------------------------------------------------------------------------------------------------------+
