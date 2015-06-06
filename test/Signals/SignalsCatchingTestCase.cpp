@@ -200,7 +200,7 @@ class SoftwareTimerStep
 public:
 
 	/// type of function for software timer
-	using Function = void(TestStepsRange& testStepsRange, const SignalInformation*);
+	using Function = void(TestStepsRange& testStepsRange, ThreadBase&, const SignalInformation*);
 
 	/**
 	 * \brief SoftwareTimerStep's constructor
@@ -456,9 +456,9 @@ int SignalMaskStep::operator()() const
 | SoftwareTimerStep's public functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-int SoftwareTimerStep::operator()(TestStepsRange& testStepsRange, ThreadBase&) const
+int SoftwareTimerStep::operator()(TestStepsRange& testStepsRange, ThreadBase& thread) const
 {
-	auto softwareTimer = makeSoftwareTimer(function_, std::ref(testStepsRange), nullptr);
+	auto softwareTimer = makeSoftwareTimer(function_, std::ref(testStepsRange), std::ref(thread), nullptr);
 	softwareTimer.start(TickClock::duration{});
 	while (softwareTimer.isRunning() == true);
 	return 0;
@@ -495,11 +495,13 @@ constexpr SignalSet getSignalMask(const uint8_t signalNumber)
  * executed returns true.
  *
  * \param [in] testStepsRange is a reference to range of test steps
+ * \param [in] thread is a reference to ThreadBase passed to test steps
  * \param [in] signalInformation is a pointer to received SignalInformation object, nullptr if function is not executed
  * from signal handler
  */
 
-void testStepsRunner(TestStepsRange& testStepsRange, const SignalInformation* const signalInformation)
+void testStepsRunner(TestStepsRange& testStepsRange, ThreadBase& thread,
+		const SignalInformation* const signalInformation)
 {
 	bool more {true};
 	while (more == true && testStepsRange.size() != 0)
@@ -508,7 +510,7 @@ void testStepsRunner(TestStepsRange& testStepsRange, const SignalInformation* co
 		auto& testStep = *testStepsRange.begin();
 		testStepsRange = {testStepsRange.begin() + 1, testStepsRange.end()};
 
-		const auto ret = testStep(sharedSequenceAsserter, testStepsRange, ThisThread::get(), signalInformation);
+		const auto ret = testStep(sharedSequenceAsserter, testStepsRange, thread, signalInformation);
 		if (ret != 0)
 			sharedSigAtomic = ret;
 
@@ -529,7 +531,7 @@ void testStepsRunner(TestStepsRange& testStepsRange, const SignalInformation* co
 
 void handler(const SignalInformation& signalInformation)
 {
-	testStepsRunner(handlerStepsRange, &signalInformation);
+	testStepsRunner(handlerStepsRange, ThisThread::get(), &signalInformation);
 }
 
 /*---------------------------------------------------------------------------------------------------------------------+
@@ -1361,7 +1363,7 @@ bool SignalsCatchingTestCase::run_() const
 		handlerStepsRange = stage.signalHandlerStepsRange;
 		auto currentThreadStepsRange = stage.mainTestThreadStepsRange;
 
-		testStepsRunner(currentThreadStepsRange, nullptr);
+		testStepsRunner(currentThreadStepsRange, ThisThread::get(), nullptr);
 
 		const auto threadStepsSize = stage.mainTestThreadStepsRange.size();
 		const auto handlerStepsSize = stage.signalHandlerStepsRange.size();
