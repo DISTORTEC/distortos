@@ -49,6 +49,9 @@ struct Stage
 
 	/// range of test steps for signal handler
 	TestStepsRange signalHandlerStepsRange;
+
+	/// expected number of context switches for this stage
+	decltype(statistics::getContextSwitchCount()) contextSwitchCount;
 };
 
 /// pair of sequence points
@@ -1399,9 +1402,9 @@ const TestStep phase2SignalHandlerSteps[]
 const Stage stages[]
 {
 		// tests catching of signals generated/queued by current thread for itself
-		{TestStepsRange{phase1MainTestThreadSteps}, TestStepsRange{phase1SignalHandlerSteps}},
+		{TestStepsRange{phase1MainTestThreadSteps}, TestStepsRange{phase1SignalHandlerSteps}, 0},
 		// tests catching of signals generated/queued by interrupt (via software timer) for current thread
-		{TestStepsRange{phase2MainTestThreadSteps}, TestStepsRange{phase2SignalHandlerSteps}},
+		{TestStepsRange{phase2MainTestThreadSteps}, TestStepsRange{phase2SignalHandlerSteps}, 0},
 };
 
 }	// namespace
@@ -1413,6 +1416,7 @@ const Stage stages[]
 bool SignalsCatchingTestCase::run_() const
 {
 	const auto contextSwitchCount = statistics::getContextSwitchCount();
+	auto expectedContextSwitchCount = decltype(contextSwitchCount){};
 
 	for (uint8_t signalNumber {}; signalNumber < totalSignals; ++signalNumber)
 	{
@@ -1443,13 +1447,17 @@ bool SignalsCatchingTestCase::run_() const
 
 		if (sharedSigAtomic != 0)
 			return false;
+
+		expectedContextSwitchCount += stage.contextSwitchCount;
+		if (statistics::getContextSwitchCount() - contextSwitchCount != expectedContextSwitchCount)
+			return false;
 	}
 
 	// after the test no signals may be pending
 	if (ThisThread::Signals::getPendingSignalSet().getBitset().any() == true)
 		return false;
 
-	if (statistics::getContextSwitchCount() - contextSwitchCount != 0)
+	if (statistics::getContextSwitchCount() - contextSwitchCount != expectedContextSwitchCount)
 		return false;
 
 	return true;
