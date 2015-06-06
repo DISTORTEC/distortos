@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-05-24
+ * \date 2015-06-06
  */
 
 #ifndef TEST_SIGNALS_SIGNALSCATCHINGTESTCASE_HPP_
@@ -39,6 +39,15 @@ class SignalsCatchingTestCase : public SignalsTestCaseCommon
 	constexpr static uint8_t testCasePriority_ {UINT8_MAX / 2};
 
 public:
+
+	/**
+	 * \return priority at which this test case should be executed
+	 */
+
+	constexpr static uint8_t getTestCasePriority()
+	{
+		return testCasePriority_;
+	}
 
 	/**
 	 * \brief SignalsCatchingTestCase's constructor
