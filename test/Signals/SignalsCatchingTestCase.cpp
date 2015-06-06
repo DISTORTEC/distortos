@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-06-05
+ * \date 2015-06-06
  */
 
 #include "SignalsCatchingTestCase.hpp"
@@ -202,12 +202,13 @@ public:
 	 *
 	 * Starts \a softwareTimer and waits until it stops.
 	 *
+	 * \param [in] testStepsRange is a reference to range of test steps
 	 * \param [in] softwareTimer is a reference to software timer
 	 *
 	 * \return 0 on success, error code otherwise
 	 */
 
-	int operator()(SoftwareTimerBase& softwareTimer) const;
+	int operator()(TestStepsRange& testStepsRange, SoftwareTimerBase& softwareTimer) const;
 };
 
 /// single test step
@@ -407,8 +408,8 @@ int GenerateQueueSignalStep::operator()() const
 | TestStep's public functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-int TestStep::operator()(SequenceAsserter& sequenceAsserter, TestStepsRange&, SoftwareTimerBase* const softwareTimer,
-		const SignalInformation* const signalInformation) const
+int TestStep::operator()(SequenceAsserter& sequenceAsserter, TestStepsRange& testStepsRange,
+		SoftwareTimerBase* const softwareTimer, const SignalInformation* const signalInformation) const
 {
 	sequenceAsserter.sequencePoint(sequencePoints_.first);
 
@@ -416,7 +417,8 @@ int TestStep::operator()(SequenceAsserter& sequenceAsserter, TestStepsRange&, So
 			type_ == Type::BasicHandler && signalInformation != nullptr ? basicHandlerStep_(*signalInformation) :
 			type_ == Type::GenerateQueueSignal ? generateQueueSignalStep_() :
 			type_ == Type::SignalMask ? signalMaskStep_() :
-			type_ == Type::SoftwareTimer && softwareTimer != nullptr ? softwareTimerStep_(*softwareTimer) : EINVAL;
+			type_ == Type::SoftwareTimer && softwareTimer != nullptr ?
+					softwareTimerStep_(testStepsRange, *softwareTimer) : EINVAL;
 
 	sequenceAsserter.sequencePoint(sequencePoints_.second);
 
@@ -436,7 +438,7 @@ int SignalMaskStep::operator()() const
 | SoftwareTimerStep's public functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-int SoftwareTimerStep::operator()(SoftwareTimerBase& softwareTimer) const
+int SoftwareTimerStep::operator()(TestStepsRange&, SoftwareTimerBase& softwareTimer) const
 {
 	if (softwareTimer.isRunning() == true)
 		return EINVAL;
