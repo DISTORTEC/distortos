@@ -28,9 +28,10 @@ namespace test
  * Generates or queues various signals in different scenarios, asserting all events occur in the expected order, using
  * exact number of context switches.
  *
- * Currently only two scenarios are tested:
+ * Three scenarios are tested:
  * - current thread generating/queuing signals for itself;
  * - interrupt generating/queuing signals for current thread;
+ * - second test thread generating/queuing signals for main test thread;
  */
 
 class SignalsCatchingTestCase : public SignalsTestCaseCommon
