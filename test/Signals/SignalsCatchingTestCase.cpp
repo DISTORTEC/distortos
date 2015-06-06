@@ -183,16 +183,22 @@ private:
 	SignalSet signalMask_;
 };
 
-/// test step that starts software timer and waits until it stops
+/// test step that creates software timer, starts it and waits until it stops
 class SoftwareTimerStep
 {
 public:
 
+	/// type of function for software timer
+	using Function = void(TestStepsRange& testStepsRange);
+
 	/**
 	 * \brief SoftwareTimerStep's constructor
+	 *
+	 * \param [in] function is a reference to function executed by software timer
 	 */
 
-	constexpr SoftwareTimerStep()
+	constexpr SoftwareTimerStep(Function& function) :
+			function_{function}
 	{
 
 	}
@@ -200,15 +206,19 @@ public:
 	/**
 	 * \brief SoftwareTimerStep's function call operator
 	 *
-	 * Starts \a softwareTimer and waits until it stops.
+	 * Creates software timer with provided range of test steps, starts it and waits until it stops.
 	 *
 	 * \param [in] testStepsRange is a reference to range of test steps
-	 * \param [in] softwareTimer is a reference to software timer
 	 *
 	 * \return 0 on success, error code otherwise
 	 */
 
-	int operator()(TestStepsRange& testStepsRange, SoftwareTimerBase& softwareTimer) const;
+	int operator()(TestStepsRange& testStepsRange) const;
+
+private:
+
+	/// reference to function executed by software timer
+	Function& function_;
 };
 
 /// single test step
@@ -408,8 +418,8 @@ int GenerateQueueSignalStep::operator()() const
 | TestStep's public functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-int TestStep::operator()(SequenceAsserter& sequenceAsserter, TestStepsRange& testStepsRange,
-		SoftwareTimerBase* const softwareTimer, const SignalInformation* const signalInformation) const
+int TestStep::operator()(SequenceAsserter& sequenceAsserter, TestStepsRange& testStepsRange, SoftwareTimerBase*,
+		const SignalInformation* const signalInformation) const
 {
 	sequenceAsserter.sequencePoint(sequencePoints_.first);
 
@@ -417,8 +427,7 @@ int TestStep::operator()(SequenceAsserter& sequenceAsserter, TestStepsRange& tes
 			type_ == Type::BasicHandler && signalInformation != nullptr ? basicHandlerStep_(*signalInformation) :
 			type_ == Type::GenerateQueueSignal ? generateQueueSignalStep_() :
 			type_ == Type::SignalMask ? signalMaskStep_() :
-			type_ == Type::SoftwareTimer && softwareTimer != nullptr ?
-					softwareTimerStep_(testStepsRange, *softwareTimer) : EINVAL;
+			type_ == Type::SoftwareTimer ? softwareTimerStep_(testStepsRange) : EINVAL;
 
 	sequenceAsserter.sequencePoint(sequencePoints_.second);
 
@@ -438,11 +447,9 @@ int SignalMaskStep::operator()() const
 | SoftwareTimerStep's public functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-int SoftwareTimerStep::operator()(TestStepsRange&, SoftwareTimerBase& softwareTimer) const
+int SoftwareTimerStep::operator()(TestStepsRange& testStepsRange) const
 {
-	if (softwareTimer.isRunning() == true)
-		return EINVAL;
-
+	auto softwareTimer = makeSoftwareTimer(function_, std::ref(testStepsRange));
 	softwareTimer.start(TickClock::duration{});
 	while (softwareTimer.isRunning() == true);
 	return 0;
@@ -1043,66 +1050,49 @@ bool phase2()
 	static const TestStep threadSteps[]
 	{
 			// part 1 - normal generated signals
-			{0, 5, true, SoftwareTimerStep{}},
-			{6, 11, true, SoftwareTimerStep{}},
-			{12, 17, true, SoftwareTimerStep{}},
-			{18, 23, true, SoftwareTimerStep{}},
-			{24, 29, true, SoftwareTimerStep{}},
-			{30, 35, true, SoftwareTimerStep{}},
-			{36, 41, true, SoftwareTimerStep{}},
-			{42, 47, true, SoftwareTimerStep{}},
-			{48, 53, true, SoftwareTimerStep{}},
-			{54, 59, true, SoftwareTimerStep{}},
-			// part 2 - normal queued signals
-			{60, 65, true, SoftwareTimerStep{}},
-			{66, 71, true, SoftwareTimerStep{}},
-			{72, 77, true, SoftwareTimerStep{}},
-			{78, 83, true, SoftwareTimerStep{}},
-			{84, 89, true, SoftwareTimerStep{}},
-			{90, 95, true, SoftwareTimerStep{}},
-			{96, 101, true, SoftwareTimerStep{}},
-			{102, 107, true, SoftwareTimerStep{}},
-			{108, 113, true, SoftwareTimerStep{}},
-			{114, 119, true, SoftwareTimerStep{}},
-			// part 3 - multiple generated signals
-			{120, 161, true, SoftwareTimerStep{}},
-			// part 4 - multiple queued signals
-			{162, 203, true, SoftwareTimerStep{}},
-			// part 5 - multiple signals
-			{204, 285, true, SoftwareTimerStep{}},
-			// part 6 - nested signal handlers - generate signal from interrupt while signal handler is still running
-			{286, 287, true, SignalMaskStep{SignalSet{UINT32_MAX << 10}}},
-			{288, 347, true, SoftwareTimerStep{}},
-			// part 7 - nested signal handlers - queue signal from interrupt while signal handler is still running
-			{348, 407, true, SoftwareTimerStep{}},
-			{408, 409, false, SignalMaskStep{SignalSet{SignalSet::empty}}},
-	};
-
-	static const TestStep interruptSteps[]
-	{
-			// part 1 - normal generated signals
+			{0, 5, true, SoftwareTimerStep{testStepsRunner}},
 			{1, 2, false, GenerateQueueSignalStep{SignalInformation::Code::Generated, 0}},
+			{6, 11, true, SoftwareTimerStep{testStepsRunner}},
 			{7, 8, false, GenerateQueueSignalStep{SignalInformation::Code::Generated, 1}},
+			{12, 17, true, SoftwareTimerStep{testStepsRunner}},
 			{13, 14, false, GenerateQueueSignalStep{SignalInformation::Code::Generated, 2}},
+			{18, 23, true, SoftwareTimerStep{testStepsRunner}},
 			{19, 20, false, GenerateQueueSignalStep{SignalInformation::Code::Generated, 3}},
+			{24, 29, true, SoftwareTimerStep{testStepsRunner}},
 			{25, 26, false, GenerateQueueSignalStep{SignalInformation::Code::Generated, 4}},
+			{30, 35, true, SoftwareTimerStep{testStepsRunner}},
 			{31, 32, false, GenerateQueueSignalStep{SignalInformation::Code::Generated, 5}},
+			{36, 41, true, SoftwareTimerStep{testStepsRunner}},
 			{37, 38, false, GenerateQueueSignalStep{SignalInformation::Code::Generated, 6}},
+			{42, 47, true, SoftwareTimerStep{testStepsRunner}},
 			{43, 44, false, GenerateQueueSignalStep{SignalInformation::Code::Generated, 7}},
+			{48, 53, true, SoftwareTimerStep{testStepsRunner}},
 			{49, 50, false, GenerateQueueSignalStep{SignalInformation::Code::Generated, 8}},
+			{54, 59, true, SoftwareTimerStep{testStepsRunner}},
 			{55, 56, false, GenerateQueueSignalStep{SignalInformation::Code::Generated, 9}},
 			// part 2 - normal queued signals
+			{60, 65, true, SoftwareTimerStep{testStepsRunner}},
 			{61, 62, false, GenerateQueueSignalStep{SignalInformation::Code::Queued, 0, 0x7bbee7c7}},
+			{66, 71, true, SoftwareTimerStep{testStepsRunner}},
 			{67, 68, false, GenerateQueueSignalStep{SignalInformation::Code::Queued, 1, 0x144006e1}},
+			{72, 77, true, SoftwareTimerStep{testStepsRunner}},
 			{73, 74, false, GenerateQueueSignalStep{SignalInformation::Code::Queued, 2, 0x3c2f74c3}},
+			{78, 83, true, SoftwareTimerStep{testStepsRunner}},
 			{79, 80, false, GenerateQueueSignalStep{SignalInformation::Code::Queued, 3, 0x6842c269}},
+			{84, 89, true, SoftwareTimerStep{testStepsRunner}},
 			{85, 86, false, GenerateQueueSignalStep{SignalInformation::Code::Queued, 4, 0x282ea423}},
+			{90, 95, true, SoftwareTimerStep{testStepsRunner}},
 			{91, 92, false, GenerateQueueSignalStep{SignalInformation::Code::Queued, 5, 0x4ac997a6}},
+			{96, 101, true, SoftwareTimerStep{testStepsRunner}},
 			{97, 98, false, GenerateQueueSignalStep{SignalInformation::Code::Queued, 6, 0x60375e15}},
+			{102, 107, true, SoftwareTimerStep{testStepsRunner}},
 			{103, 104, false, GenerateQueueSignalStep{SignalInformation::Code::Queued, 7, 0x5025b208}},
+			{108, 113, true, SoftwareTimerStep{testStepsRunner}},
 			{109, 110, false, GenerateQueueSignalStep{SignalInformation::Code::Queued, 8, 0x0ff3e7c1}},
+			{114, 119, true, SoftwareTimerStep{testStepsRunner}},
 			{115, 116, false, GenerateQueueSignalStep{SignalInformation::Code::Queued, 9, 0x6fc765af}},
 			// part 3 - multiple generated signals
+			{120, 161, true, SoftwareTimerStep{testStepsRunner}},
 			{121, 122, true, GenerateQueueSignalStep{SignalInformation::Code::Generated, 2}},
 			{123, 124, true, GenerateQueueSignalStep{SignalInformation::Code::Generated, 0}},
 			{125, 126, true, GenerateQueueSignalStep{SignalInformation::Code::Generated, 7}},
@@ -1114,6 +1104,7 @@ bool phase2()
 			{137, 138, true, GenerateQueueSignalStep{SignalInformation::Code::Generated, 3}},
 			{139, 140, false, GenerateQueueSignalStep{SignalInformation::Code::Generated, 4}},
 			// part 4 - multiple queued signals
+			{162, 203, true, SoftwareTimerStep{testStepsRunner}},
 			{163, 164, true, GenerateQueueSignalStep{SignalInformation::Code::Queued, 9, 0x7230a2cc}},
 			{165, 166, true, GenerateQueueSignalStep{SignalInformation::Code::Queued, 3, 0x183c1811}},
 			{167, 168, true, GenerateQueueSignalStep{SignalInformation::Code::Queued, 9, 0x4be507b0}},
@@ -1125,6 +1116,7 @@ bool phase2()
 			{179, 180, true, GenerateQueueSignalStep{SignalInformation::Code::Queued, 9, 0x7739addf}},
 			{181, 182, false, GenerateQueueSignalStep{SignalInformation::Code::Queued, 3, 0x66583e56}},
 			// part 5 - multiple signals
+			{204, 285, true, SoftwareTimerStep{testStepsRunner}},
 			{205, 206, true, GenerateQueueSignalStep{SignalInformation::Code::Generated, 1}},
 			{207, 208, true, GenerateQueueSignalStep{SignalInformation::Code::Generated, 2}},
 			{209, 210, true, GenerateQueueSignalStep{SignalInformation::Code::Generated, 6}},
@@ -1146,27 +1138,13 @@ bool phase2()
 			{241, 242, true, GenerateQueueSignalStep{SignalInformation::Code::Queued, 7, 0x6df7494e}},
 			{243, 244, false, GenerateQueueSignalStep{SignalInformation::Code::Queued, 0, 0x3ce8f20c}},
 			// part 6 - nested signal handlers - generate signal from interrupt while signal handler is still running
+			{286, 287, true, SignalMaskStep{SignalSet{UINT32_MAX << 10}}},
+			{288, 347, true, SoftwareTimerStep{testStepsRunner}},
 			{289, 290, false, GenerateQueueSignalStep{SignalInformation::Code::Generated, 5}},
-			{294, 295, false, GenerateQueueSignalStep{SignalInformation::Code::Generated, 2}},
-			{299, 300, false, GenerateQueueSignalStep{SignalInformation::Code::Generated, 1}},
-			{304, 305, false, GenerateQueueSignalStep{SignalInformation::Code::Generated, 7}},
-			{309, 310, false, GenerateQueueSignalStep{SignalInformation::Code::Generated, 6}},
-			{314, 315, false, GenerateQueueSignalStep{SignalInformation::Code::Generated, 9}},
-			{319, 320, false, GenerateQueueSignalStep{SignalInformation::Code::Generated, 3}},
-			{324, 325, false, GenerateQueueSignalStep{SignalInformation::Code::Generated, 0}},
-			{329, 330, false, GenerateQueueSignalStep{SignalInformation::Code::Generated, 4}},
-			{334, 335, false, GenerateQueueSignalStep{SignalInformation::Code::Generated, 8}},
 			// part 7 - nested signal handlers - queue signal from interrupt while signal handler is still running
+			{348, 407, true, SoftwareTimerStep{testStepsRunner}},
 			{349, 350, false, GenerateQueueSignalStep{SignalInformation::Code::Queued, 6, 0x388c64c3}},
-			{354, 355, false, GenerateQueueSignalStep{SignalInformation::Code::Queued, 3, 0x49020a59}},
-			{359, 360, false, GenerateQueueSignalStep{SignalInformation::Code::Queued, 0, 0x7e8842b9}},
-			{364, 365, false, GenerateQueueSignalStep{SignalInformation::Code::Queued, 7, 0x19ccf80b}},
-			{369, 370, false, GenerateQueueSignalStep{SignalInformation::Code::Queued, 9, 0x207e6915}},
-			{374, 375, false, GenerateQueueSignalStep{SignalInformation::Code::Queued, 4, 0x68e46a0f}},
-			{379, 380, false, GenerateQueueSignalStep{SignalInformation::Code::Queued, 2, 0x3bf7a491}},
-			{384, 385, false, GenerateQueueSignalStep{SignalInformation::Code::Queued, 5, 0x5ff85ef6}},
-			{389, 390, false, GenerateQueueSignalStep{SignalInformation::Code::Queued, 8, 0x7a66bbc6}},
-			{394, 395, false, GenerateQueueSignalStep{SignalInformation::Code::Queued, 1, 0x4f8adea0}},
+			{408, 409, false, SignalMaskStep{SignalSet{SignalSet::empty}}},
 	};
 
 	static const TestStep handlerSteps[]
@@ -1299,79 +1277,91 @@ bool phase2()
 			// part 6 - nested signal handlers - generate signal from interrupt while signal handler is still running
 			{291, 292, true, BasicHandlerStep{SignalSet{SignalSet::empty}, SignalSet{(UINT32_MAX << 10) | 0b0000100000},
 					SignalInformation::Code::Generated, 5}},
-			{293, 346, false, SoftwareTimerStep{}},
+			{293, 346, false, SoftwareTimerStep{testStepsRunner}},
+			{294, 295, false, GenerateQueueSignalStep{SignalInformation::Code::Generated, 2}},
 			{296, 297, true, BasicHandlerStep{SignalSet{SignalSet::empty}, SignalSet{(UINT32_MAX << 10) | 0b0000100100},
 					SignalInformation::Code::Generated, 2}},
-			{298, 345, false, SoftwareTimerStep{}},
+			{298, 345, false, SoftwareTimerStep{testStepsRunner}},
+			{299, 300, false, GenerateQueueSignalStep{SignalInformation::Code::Generated, 1}},
 			{301, 302, true, BasicHandlerStep{SignalSet{SignalSet::empty}, SignalSet{(UINT32_MAX << 10) | 0b0000100110},
 					SignalInformation::Code::Generated, 1}},
-			{303, 344, false, SoftwareTimerStep{}},
+			{303, 344, false, SoftwareTimerStep{testStepsRunner}},
+			{304, 305, false, GenerateQueueSignalStep{SignalInformation::Code::Generated, 7}},
 			{306, 307, true, BasicHandlerStep{SignalSet{SignalSet::empty}, SignalSet{(UINT32_MAX << 10) | 0b0010100110},
 					SignalInformation::Code::Generated, 7}},
-			{308, 343, false, SoftwareTimerStep{}},
+			{308, 343, false, SoftwareTimerStep{testStepsRunner}},
+			{309, 310, false, GenerateQueueSignalStep{SignalInformation::Code::Generated, 6}},
 			{311, 312, true, BasicHandlerStep{SignalSet{SignalSet::empty}, SignalSet{(UINT32_MAX << 10) | 0b0011100110},
 					SignalInformation::Code::Generated, 6}},
-			{313, 342, false, SoftwareTimerStep{}},
+			{313, 342, false, SoftwareTimerStep{testStepsRunner}},
+			{314, 315, false, GenerateQueueSignalStep{SignalInformation::Code::Generated, 9}},
 			{316, 317, true, BasicHandlerStep{SignalSet{SignalSet::empty}, SignalSet{(UINT32_MAX << 10) | 0b1011100110},
 					SignalInformation::Code::Generated, 9}},
-			{318, 341, false, SoftwareTimerStep{}},
+			{318, 341, false, SoftwareTimerStep{testStepsRunner}},
+			{319, 320, false, GenerateQueueSignalStep{SignalInformation::Code::Generated, 3}},
 			{321, 322, true, BasicHandlerStep{SignalSet{SignalSet::empty}, SignalSet{(UINT32_MAX << 10) | 0b1011101110},
 					SignalInformation::Code::Generated, 3}},
-			{323, 340, false, SoftwareTimerStep{}},
+			{323, 340, false, SoftwareTimerStep{testStepsRunner}},
+			{324, 325, false, GenerateQueueSignalStep{SignalInformation::Code::Generated, 0}},
 			{326, 327, true, BasicHandlerStep{SignalSet{SignalSet::empty}, SignalSet{(UINT32_MAX << 10) | 0b1011101111},
 					SignalInformation::Code::Generated, 0}},
-			{328, 339, false, SoftwareTimerStep{}},
+			{328, 339, false, SoftwareTimerStep{testStepsRunner}},
+			{329, 330, false, GenerateQueueSignalStep{SignalInformation::Code::Generated, 4}},
 			{331, 332, true, BasicHandlerStep{SignalSet{SignalSet::empty}, SignalSet{(UINT32_MAX << 10) | 0b1011111111},
 					SignalInformation::Code::Generated, 4}},
-			{333, 338, false, SoftwareTimerStep{}},
+			{333, 338, false, SoftwareTimerStep{testStepsRunner}},
+			{334, 335, false, GenerateQueueSignalStep{SignalInformation::Code::Generated, 8}},
 			{336, 337, false, BasicHandlerStep{SignalSet{SignalSet::empty},
 					SignalSet{(UINT32_MAX << 10) | 0b1111111111}, SignalInformation::Code::Generated, 8}},
 			// part 7 - nested signal handlers - queue signal from interrupt while signal handler is still running
 			{351, 352, true, BasicHandlerStep{SignalSet{SignalSet::empty}, SignalSet{(UINT32_MAX << 10) | 0b0001000000},
 					SignalInformation::Code::Queued, 6, 0x388c64c3}},
-			{353, 406, false, SoftwareTimerStep{}},
+			{353, 406, false, SoftwareTimerStep{testStepsRunner}},
+			{354, 355, false, GenerateQueueSignalStep{SignalInformation::Code::Queued, 3, 0x49020a59}},
 			{356, 357, true, BasicHandlerStep{SignalSet{SignalSet::empty}, SignalSet{(UINT32_MAX << 10) | 0b0001001000},
 					SignalInformation::Code::Queued, 3, 0x49020a59}},
-			{358, 405, false, SoftwareTimerStep{}},
+			{358, 405, false, SoftwareTimerStep{testStepsRunner}},
+			{359, 360, false, GenerateQueueSignalStep{SignalInformation::Code::Queued, 0, 0x7e8842b9}},
 			{361, 362, true, BasicHandlerStep{SignalSet{SignalSet::empty}, SignalSet{(UINT32_MAX << 10) | 0b0001001001},
 					SignalInformation::Code::Queued, 0, 0x7e8842b9}},
-			{363, 404, false, SoftwareTimerStep{}},
+			{363, 404, false, SoftwareTimerStep{testStepsRunner}},
+			{364, 365, false, GenerateQueueSignalStep{SignalInformation::Code::Queued, 7, 0x19ccf80b}},
 			{366, 367, true, BasicHandlerStep{SignalSet{SignalSet::empty}, SignalSet{(UINT32_MAX << 10) | 0b0011001001},
 					SignalInformation::Code::Queued, 7, 0x19ccf80b}},
-			{368, 403, false, SoftwareTimerStep{}},
+			{368, 403, false, SoftwareTimerStep{testStepsRunner}},
+			{369, 370, false, GenerateQueueSignalStep{SignalInformation::Code::Queued, 9, 0x207e6915}},
 			{371, 372, true, BasicHandlerStep{SignalSet{SignalSet::empty}, SignalSet{(UINT32_MAX << 10) | 0b1011001001},
 					SignalInformation::Code::Queued, 9, 0x207e6915}},
-			{373, 402, false, SoftwareTimerStep{}},
+			{373, 402, false, SoftwareTimerStep{testStepsRunner}},
+			{374, 375, false, GenerateQueueSignalStep{SignalInformation::Code::Queued, 4, 0x68e46a0f}},
 			{376, 377, true, BasicHandlerStep{SignalSet{SignalSet::empty}, SignalSet{(UINT32_MAX << 10) | 0b1011011001},
 					SignalInformation::Code::Queued, 4, 0x68e46a0f}},
-			{378, 401, false, SoftwareTimerStep{}},
+			{378, 401, false, SoftwareTimerStep{testStepsRunner}},
+			{379, 380, false, GenerateQueueSignalStep{SignalInformation::Code::Queued, 2, 0x3bf7a491}},
 			{381, 382, true, BasicHandlerStep{SignalSet{SignalSet::empty}, SignalSet{(UINT32_MAX << 10) | 0b1011011101},
 					SignalInformation::Code::Queued, 2, 0x3bf7a491}},
-			{383, 400, false, SoftwareTimerStep{}},
+			{383, 400, false, SoftwareTimerStep{testStepsRunner}},
+			{384, 385, false, GenerateQueueSignalStep{SignalInformation::Code::Queued, 5, 0x5ff85ef6}},
 			{386, 387, true, BasicHandlerStep{SignalSet{SignalSet::empty}, SignalSet{(UINT32_MAX << 10) | 0b1011111101},
 					SignalInformation::Code::Queued, 5, 0x5ff85ef6}},
-			{388, 399, false, SoftwareTimerStep{}},
+			{388, 399, false, SoftwareTimerStep{testStepsRunner}},
+			{389, 390, false, GenerateQueueSignalStep{SignalInformation::Code::Queued, 8, 0x7a66bbc6}},
 			{391, 392, true, BasicHandlerStep{SignalSet{SignalSet::empty}, SignalSet{(UINT32_MAX << 10) | 0b1111111101},
 					SignalInformation::Code::Queued, 8, 0x7a66bbc6}},
-			{393, 398, false, SoftwareTimerStep{}},
+			{393, 398, false, SoftwareTimerStep{testStepsRunner}},
+			{394, 395, false, GenerateQueueSignalStep{SignalInformation::Code::Queued, 1, 0x4f8adea0}},
 			{396, 397, false, BasicHandlerStep{SignalSet{SignalSet::empty},
 					SignalSet{(UINT32_MAX << 10) | 0b1111111111}, SignalInformation::Code::Queued, 1, 0x4f8adea0}},
 	};
 
-	auto interruptStepsRange = TestStepsRange{interruptSteps};
 	handlerStepsRange = decltype(handlerStepsRange){handlerSteps};
-	auto softwareTimer = makeSoftwareTimer(testStepsRunner, std::ref(interruptStepsRange));
-	softwareTimerPointer = &softwareTimer;
 	auto threadStepsRange = TestStepsRange{threadSteps};
 
 	testStepsRunner(threadStepsRange);
 
-	softwareTimerPointer = {};
-
 	const size_t threadStepsSize = std::end(threadSteps) - std::begin(threadSteps);
-	const size_t interruptStepsSize = std::end(interruptSteps) - std::begin(interruptSteps);
 	const size_t handlerStepsSize = std::end(handlerSteps) - std::begin(handlerSteps);
-	if (sharedSequenceAsserter.assertSequence(2 * (threadStepsSize + interruptStepsSize + handlerStepsSize)) == false)
+	if (sharedSequenceAsserter.assertSequence(2 * (threadStepsSize + handlerStepsSize)) == false)
 		return false;
 
 	return true;
