@@ -15,14 +15,13 @@
 
 #include "SequenceAsserter.hpp"
 
-#include "distortos/SignalAction.hpp"
 #include "distortos/SoftwareTimer.hpp"
 #include "distortos/statistics.hpp"
+#include "distortos/ThisThread.hpp"
 #include "distortos/ThisThread-Signals.hpp"
+#include "distortos/ThreadBase.hpp"
 
 #include "distortos/estd/ContiguousRange.hpp"
-
-#include <cerrno>
 
 namespace distortos
 {
@@ -142,10 +141,12 @@ public:
 	 *
 	 * Generates or queues selected signal.
 	 *
+	 * \param [in] thread is a reference to ThreadBase to which the signal will be generated/queued
+	 *
 	 * \return 0 on success, error code otherwise
 	 */
 
-	int operator()() const;
+	int operator()(ThreadBase& thread) const;
 
 private:
 
@@ -414,10 +415,10 @@ int BasicHandlerStep::operator()(const SignalInformation& signalInformation) con
 | GenerateQueueSignalStep's public functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-int GenerateQueueSignalStep::operator()() const
+int GenerateQueueSignalStep::operator()(ThreadBase& thread) const
 {
-	return code_ == SignalInformation::Code::Generated ?  ThisThread::Signals::generateSignal(signalNumber_) :
-			ThisThread::Signals::queueSignal(signalNumber_, sigval{value_});
+	return code_ == SignalInformation::Code::Generated ? thread.generateSignal(signalNumber_) :
+			thread.queueSignal(signalNumber_, sigval{value_});
 }
 
 /*---------------------------------------------------------------------------------------------------------------------+
@@ -431,7 +432,7 @@ int TestStep::operator()(SequenceAsserter& sequenceAsserter, TestStepsRange& tes
 
 	const auto ret =
 			type_ == Type::BasicHandler && signalInformation != nullptr ? basicHandlerStep_(*signalInformation) :
-			type_ == Type::GenerateQueueSignal ? generateQueueSignalStep_() :
+			type_ == Type::GenerateQueueSignal ? generateQueueSignalStep_(ThisThread::get()) :
 			type_ == Type::SignalMask ? signalMaskStep_() :
 			type_ == Type::SoftwareTimer ? softwareTimerStep_(testStepsRange) : EINVAL;
 
