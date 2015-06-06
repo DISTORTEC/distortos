@@ -220,11 +220,12 @@ public:
 	 * Creates software timer with provided range of test steps, starts it and waits until it stops.
 	 *
 	 * \param [in] testStepsRange is a reference to range of test steps
+	 * \param [in] thread is a reference to ThreadBase passed to software timer
 	 *
 	 * \return 0 on success, error code otherwise
 	 */
 
-	int operator()(TestStepsRange& testStepsRange) const;
+	int operator()(TestStepsRange& testStepsRange, ThreadBase& thread) const;
 
 private:
 
@@ -435,7 +436,7 @@ int TestStep::operator()(SequenceAsserter& sequenceAsserter, TestStepsRange& tes
 			type_ == Type::BasicHandler && signalInformation != nullptr ? basicHandlerStep_(*signalInformation) :
 			type_ == Type::GenerateQueueSignal ? generateQueueSignalStep_(thread) :
 			type_ == Type::SignalMask ? signalMaskStep_() :
-			type_ == Type::SoftwareTimer ? softwareTimerStep_(testStepsRange) : EINVAL;
+			type_ == Type::SoftwareTimer ? softwareTimerStep_(testStepsRange, thread) : EINVAL;
 
 	sequenceAsserter.sequencePoint(sequencePoints_.second);
 
@@ -455,7 +456,7 @@ int SignalMaskStep::operator()() const
 | SoftwareTimerStep's public functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-int SoftwareTimerStep::operator()(TestStepsRange& testStepsRange) const
+int SoftwareTimerStep::operator()(TestStepsRange& testStepsRange, ThreadBase&) const
 {
 	auto softwareTimer = makeSoftwareTimer(function_, std::ref(testStepsRange), nullptr);
 	softwareTimer.start(TickClock::duration{});
