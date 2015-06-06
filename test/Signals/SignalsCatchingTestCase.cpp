@@ -16,10 +16,10 @@
 #include "SequenceAsserter.hpp"
 
 #include "distortos/SoftwareTimer.hpp"
+#include "distortos/StaticThread.hpp"
 #include "distortos/statistics.hpp"
 #include "distortos/ThisThread.hpp"
 #include "distortos/ThisThread-Signals.hpp"
-#include "distortos/ThreadBase.hpp"
 
 #include "distortos/estd/ContiguousRange.hpp"
 
@@ -49,6 +49,9 @@ struct Stage
 
 	/// range of test steps for signal handler
 	TestStepsRange signalHandlerStepsRange;
+
+	/// range of test steps for second test thread
+	TestStepsRange secondTestThreadStepsRange;
 
 	/// expected number of context switches for this stage
 	decltype(statistics::getContextSwitchCount()) contextSwitchCount;
@@ -451,6 +454,18 @@ private:
 /*---------------------------------------------------------------------------------------------------------------------+
 | local objects
 +---------------------------------------------------------------------------------------------------------------------*/
+
+/// original priority of main test thread
+constexpr auto mainTestThreadPriority = SignalsCatchingTestCase::getTestCasePriority();
+
+/// priority of second test thread - just below \a mainTestThreadPriority
+constexpr decltype(mainTestThreadPriority) secondTestThreadPriority {mainTestThreadPriority - 1};
+
+/// low priority of main test thread - just below \a secondTestThreadPriority
+constexpr decltype(mainTestThreadPriority) lowPriority {secondTestThreadPriority - 1};
+
+/// size of stack for second test thread, bytes
+constexpr size_t secondTestThreadStackSize {512};
 
 /// total number of signals that are tested
 constexpr size_t totalSignals {10};
@@ -1402,9 +1417,9 @@ const TestStep phase2SignalHandlerSteps[]
 const Stage stages[]
 {
 		// tests catching of signals generated/queued by current thread for itself
-		{TestStepsRange{phase1MainTestThreadSteps}, TestStepsRange{phase1SignalHandlerSteps}, 0},
+		{TestStepsRange{phase1MainTestThreadSteps}, TestStepsRange{phase1SignalHandlerSteps}, TestStepsRange{}, 0},
 		// tests catching of signals generated/queued by interrupt (via software timer) for current thread
-		{TestStepsRange{phase2MainTestThreadSteps}, TestStepsRange{phase2SignalHandlerSteps}, 0},
+		{TestStepsRange{phase2MainTestThreadSteps}, TestStepsRange{phase2SignalHandlerSteps}, TestStepsRange{}, 0},
 };
 
 }	// namespace
@@ -1426,6 +1441,8 @@ bool SignalsCatchingTestCase::run_() const
 			return false;
 	}
 
+	auto& currentThread = ThisThread::get();
+
 	for (auto& stage : stages)
 	{
 		// initially no signals may be pending
@@ -1437,12 +1454,26 @@ bool SignalsCatchingTestCase::run_() const
 
 		handlerStepsRange = stage.signalHandlerStepsRange;
 		auto currentThreadStepsRange = stage.mainTestThreadStepsRange;
+		auto secondTestThreadStepsRange = stage.secondTestThreadStepsRange;
 
-		testStepsRunner(currentThreadStepsRange, ThisThread::get(), nullptr);
+		auto secondThread = makeStaticThread<secondTestThreadStackSize>(secondTestThreadPriority, testStepsRunner,
+				std::ref(secondTestThreadStepsRange), std::ref(currentThread), nullptr);
 
-		const auto threadStepsSize = stage.mainTestThreadStepsRange.size();
-		const auto handlerStepsSize = stage.signalHandlerStepsRange.size();
-		if (sharedSequenceAsserter.assertSequence(2 * (threadStepsSize + handlerStepsSize)) == false)
+		const auto isSecondThreadNeeded = secondTestThreadStepsRange.size() != 0;
+		if (isSecondThreadNeeded == true)
+			secondThread.start();
+
+		testStepsRunner(currentThreadStepsRange, currentThread, nullptr);
+
+		if (isSecondThreadNeeded == true)
+			secondThread.join();
+
+		const auto mainTestThreadStepsRangeSize = stage.mainTestThreadStepsRange.size();
+		const auto signalHandlerStepsRangeSize = stage.signalHandlerStepsRange.size();
+		const auto secondTestThreadStepsRangeSize = stage.secondTestThreadStepsRange.size();
+		const auto totalTestStepsRangeSize = mainTestThreadStepsRangeSize + signalHandlerStepsRangeSize +
+				secondTestThreadStepsRangeSize;
+		if (sharedSequenceAsserter.assertSequence(2 * totalTestStepsRangeSize) == false)
 			return false;
 
 		if (sharedSigAtomic != 0)
