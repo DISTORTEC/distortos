@@ -58,6 +58,16 @@ struct Stage
 	int signalValue;
 };
 
+/// description of single test phase
+struct Phase
+{
+	/// type of "sender" function
+	using Sender = int(const Stage&);
+
+	/// reference to "sender" function
+	Sender& sender;
+};
+
 /*---------------------------------------------------------------------------------------------------------------------+
 | local constants
 +---------------------------------------------------------------------------------------------------------------------*/
@@ -150,6 +160,12 @@ int queueSignalFromInterrupt(const Stage& stage)
 | local constants
 +---------------------------------------------------------------------------------------------------------------------*/
 
+/// test phasese
+const Phase phases[]
+{
+		{queueSignalFromInterrupt},
+};
+
 /// test stages
 const Stage stages[]
 {
@@ -206,25 +222,26 @@ bool FpuSignalTestCase::run_() const
 			return false;
 	}
 
-	for (auto& stage : stages)
-	{
-		disableFpuContext();
+	for (auto& phase : phases)
+		for (auto& stage : stages)
+		{
+			disableFpuContext();
 
-		decltype(setFpuRegisters({}, {})) fpscr {};
-		if (stage.threadValue != 0)	// should FPU be used in main thread?
-			fpscr = setFpuRegisters(stage.threadValue, true);
+			decltype(setFpuRegisters({}, {})) fpscr {};
+			if (stage.threadValue != 0)	// should FPU be used in main thread?
+				fpscr = setFpuRegisters(stage.threadValue, true);
 
-		if (queueSignalFromInterrupt(stage) != 0)
-			return false;
-
-		// FPU context may be active only if FPU was used in main thread
-		if (isFpuContextActive() != (stage.threadValue != 0))
-			return false;
-
-		if (stage.threadValue != 0)	// was FPU used in main thread?
-			if (checkFpuRegisters(stage.threadValue, fpscr) == false)
+			if (phase.sender(stage) != 0)
 				return false;
-	}
+
+			// FPU context may be active only if FPU was used in main thread
+			if (isFpuContextActive() != (stage.threadValue != 0))
+				return false;
+
+			if (stage.threadValue != 0)	// was FPU used in main thread?
+				if (checkFpuRegisters(stage.threadValue, fpscr) == false)
+					return false;
+		}
 
 	return true;
 
