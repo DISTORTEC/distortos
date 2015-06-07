@@ -130,6 +130,24 @@ bool isFpuContextActive()
 }
 
 /**
+ * \brief Test wrapper for ThisThread::Signals::queueSignal() that also modifies FPU registers.
+ *
+ * \param [in] stage is a reference to test stage
+ * \param [in] sharedRet is a reference to int variable which will be written with 0 on success, error code otherwise
+ */
+
+void queueSignalWrapper(const Stage& stage, int& sharedRet)
+{
+	if (stage.interruptValueBefore != 0)	// should FPU be used at the beginning of interrupt?
+		setFpuRegisters(stage.interruptValueBefore, false);
+
+	sharedRet = ThisThread::Signals::queueSignal(testSignalNumber, sigval{stage.signalValue});
+
+	if (stage.interruptValueAfter != 0)	// should FPU be used at the end of interrupt?
+		setFpuRegisters(stage.interruptValueAfter, false);
+}
+
+/**
  * \brief Queues signal from interrupt (via software timer) to current thread.
  *
  * \param [in] stage is a reference to test stage
@@ -141,17 +159,7 @@ bool isFpuContextActive()
 int queueSignalFromInterrupt(const Stage& stage)
 {
 	int sharedRet {EINVAL};
-	auto softwareTimer = makeSoftwareTimer(
-			[&sharedRet, &stage]()
-			{
-				if (stage.interruptValueBefore != 0)	// should FPU be used at the beginning of interrupt?
-					setFpuRegisters(stage.interruptValueBefore, false);
-
-				sharedRet = ThisThread::Signals::queueSignal(testSignalNumber, sigval{stage.signalValue});
-
-				if (stage.interruptValueAfter != 0)	// should FPU be used at the end of interrupt?
-					setFpuRegisters(stage.interruptValueAfter, false);
-			});
+	auto softwareTimer = makeSoftwareTimer(queueSignalWrapper, std::ref(stage), std::ref(sharedRet));
 
 	softwareTimer.start(TickClock::duration{});
 	while (softwareTimer.isRunning() == true);
