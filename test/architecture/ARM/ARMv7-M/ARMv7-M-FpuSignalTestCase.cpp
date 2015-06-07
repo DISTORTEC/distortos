@@ -129,6 +129,36 @@ bool isFpuContextActive()
 	return (control & CONTROL_FPCA_Msk) != 0;
 }
 
+/**
+ * \brief Queues signal from interrupt (via software timer) to current thread.
+ *
+ * \param [in] stage is a reference to test stage
+ *
+ * \return 0 on success, error code otherwise:
+ * - error codes returned by ThisThread::Signals::queueSignal();
+ */
+
+int queueSignalFromInterrupt(const Stage& stage)
+{
+	int sharedRet {EINVAL};
+	auto softwareTimer = makeSoftwareTimer(
+			[&sharedRet, &stage]()
+			{
+				if (stage.interruptValueBefore != 0)	// should FPU be used at the beginning of interrupt?
+					setFpuRegisters(stage.interruptValueBefore, false);
+
+				sharedRet = ThisThread::Signals::queueSignal(testSignalNumber, sigval{stage.signalValue});
+
+				if (stage.interruptValueAfter != 0)	// should FPU be used at the end of interrupt?
+					setFpuRegisters(stage.interruptValueAfter, false);
+			});
+
+	softwareTimer.start(TickClock::duration{});
+	while (softwareTimer.isRunning() == true);
+
+	return sharedRet;
+}
+
 }	// namespace
 
 #endif	// __FPU_PRESENT == 1 && __FPU_USED == 1
@@ -172,23 +202,7 @@ bool FpuSignalTestCase::run_() const
 		if (stage.threadValue != 0)	// should FPU be used in main thread?
 			fpscr = setFpuRegisters(stage.threadValue, true);
 
-		int sharedRet {EINVAL};
-		auto softwareTimer = makeSoftwareTimer(
-				[&sharedRet, &stage]()
-				{
-					if (stage.interruptValueBefore != 0)	// should FPU be used at the beginning of interrupt?
-						setFpuRegisters(stage.interruptValueBefore, false);
-
-					sharedRet = ThisThread::Signals::queueSignal(testSignalNumber, sigval{stage.signalValue});
-
-					if (stage.interruptValueAfter != 0)	// should FPU be used at the end of interrupt?
-						setFpuRegisters(stage.interruptValueAfter, false);
-				});
-
-		softwareTimer.start(TickClock::duration{});
-		while (softwareTimer.isRunning() == true);
-
-		if (sharedRet != 0)
+		if (queueSignalFromInterrupt(stage) != 0)
 			return false;
 
 		// FPU context may be active only if FPU was used in main thread
