@@ -21,7 +21,9 @@
 #include "setFpuRegisters.hpp"
 
 #include "distortos/SoftwareTimer.hpp"
+#include "distortos/StaticThread.hpp"
 #include "distortos/statistics.hpp"
+#include "distortos/ThisThread.hpp"
 #include "distortos/ThisThread-Signals.hpp"
 
 #include <cerrno>
@@ -63,7 +65,7 @@ struct Stage
 struct Phase
 {
 	/// type of "sender" function
-	using Sender = int(const Stage&);
+	using Sender = int(ThreadBase&, const Stage&);
 
 	/// reference to "sender" function
 	Sender& sender;
@@ -123,19 +125,20 @@ bool isFpuContextActive()
 }
 
 /**
- * \brief Test wrapper for ThisThread::Signals::queueSignal() that also modifies FPU registers.
+ * \brief Test wrapper for ThreadBase::queueSignal() that also modifies FPU registers.
  *
+ * \param [in] thread is a reference to thread to which the signal will be queued
  * \param [in] stage is a reference to test stage
  * \param [in] full is the \a full argument passed to setFpuRegisters()
  * \param [in] sharedRet is a reference to int variable which will be written with 0 on success, error code otherwise
  */
 
-void queueSignalWrapper(const Stage& stage, const bool full, int& sharedRet)
+void queueSignalWrapper(ThreadBase& thread, const Stage& stage, const bool full, int& sharedRet)
 {
 	if (stage.senderValueBefore != 0)	// should FPU be used at the beginning of "sender"?
 		setFpuRegisters(stage.senderValueBefore, full);
 
-	sharedRet = ThisThread::Signals::queueSignal(testSignalNumber, sigval{stage.signalValue});
+	sharedRet = thread.queueSignal(testSignalNumber, sigval{stage.signalValue});
 
 	if (stage.senderValueAfter != 0)	// should FPU be used at th"sender""sender"?
 		setFpuRegisters(stage.senderValueAfter, full);
@@ -144,16 +147,18 @@ void queueSignalWrapper(const Stage& stage, const bool full, int& sharedRet)
 /**
  * \brief Queues signal from interrupt (via software timer) to current thread.
  *
+ * \param [in] thread is a reference to thread to which the signal will be queued
  * \param [in] stage is a reference to test stage
  *
  * \return 0 on success, error code otherwise:
- * - error codes returned by ThisThread::Signals::queueSignal();
+ * - error codes returned by ThreadBase::queueSignal();
  */
 
-int queueSignalFromInterrupt(const Stage& stage)
+int queueSignalFromInterrupt(ThreadBase& thread, const Stage& stage)
 {
 	int sharedRet {EINVAL};
-	auto softwareTimer = makeSoftwareTimer(queueSignalWrapper, std::ref(stage), false, std::ref(sharedRet));
+	auto softwareTimer = makeSoftwareTimer(queueSignalWrapper, std::ref(thread), std::ref(stage), false,
+			std::ref(sharedRet));
 
 	softwareTimer.start(TickClock::duration{});
 	while (softwareTimer.isRunning() == true);
@@ -230,6 +235,8 @@ bool FpuSignalTestCase::run_() const
 			return false;
 	}
 
+	auto& currentThread = ThisThread::get();
+
 	for (auto& phase : phases)
 		for (auto& stage : stages)
 		{
@@ -239,7 +246,7 @@ bool FpuSignalTestCase::run_() const
 			if (stage.threadValue != 0)	// should FPU be used in main thread?
 				fpscr = setFpuRegisters(stage.threadValue, true);
 
-			if (phase.sender(stage) != 0)
+			if (phase.sender(currentThread, stage) != 0)
 				return false;
 
 			// FPU context may be active only if FPU was used in main thread
