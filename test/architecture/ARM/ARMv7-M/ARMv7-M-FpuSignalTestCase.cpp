@@ -48,11 +48,11 @@ struct Stage
 	/// value written to all FPU registers in main thread, don't use FPU in main thread if 0
 	uint32_t threadValue;
 
-	/// value written to "lower" FPU registers in interrupt before queuing of signal, skip this step if 0
-	uint32_t interruptValueBefore;
+	/// value written to "lower" FPU registers in "sender" before queuing of signal, skip this step if 0
+	uint32_t senderValueBefore;
 
-	/// value written to "lower" FPU registers in interrupt after queuing of signal, skip this step if 0
-	uint32_t interruptValueAfter;
+	/// value written to "lower" FPU registers in "sender" after queuing of signal, skip this step if 0
+	uint32_t senderValueAfter;
 
 	/// signal value, written to "lower" FPU registers in handler, don't use FPU in handler if 0
 	int signalValue;
@@ -70,19 +70,19 @@ const Stage stages[]
 {
 		{0, 0, 0, 0},								// don't use FPU in all contexts
 		{0, 0, 0, 0x0b39fa96},						// in handler
-		{0, 0, 0x8606151d, 0},						// in interrupt (at the end)
-		{0, 0, 0x8bdd3b5e, 0x7d21d1c6},				// in interrupt (at the end) and in handler
-		{0, 0x2f884196, 0, 0},						// in interrupt (at the beginning)
-		{0, 0x0b0bbc86, 0, 0x0e43811b},				// in interrupt (at the beginning) and in handler
-		{0, 0xb72b2917, 0x8c27baa7, 0},				// in interrupt
-		{0, 0xa83b80c2, 0xd2b7dd4d, 0x626ca399},	// in interrupt and in handler
+		{0, 0, 0x8606151d, 0},						// in "sender" (at the end)
+		{0, 0, 0x8bdd3b5e, 0x7d21d1c6},				// in "sender" (at the end) and in handler
+		{0, 0x2f884196, 0, 0},						// in "sender" (at the beginning)
+		{0, 0x0b0bbc86, 0, 0x0e43811b},				// in "sender" (at the beginning) and in handler
+		{0, 0xb72b2917, 0x8c27baa7, 0},				// in "sender"
+		{0, 0xa83b80c2, 0xd2b7dd4d, 0x626ca399},	// in "sender" and in handler
 		{0xb4e40525, 0, 0, 0},						// in main thread
 		{0x772bdf91, 0, 0, 0x0bb325b7},				// in main thread and in handler
-		{0x8a19625e, 0, 0x32378f7b, 0},				// in main thread and in interrupt (at the end)
-		{0xd17a21db, 0, 0xaa807a91, 0x03caf264},	// in main thread, in interrupt (at the end) and in handler
-		{0xe4b44073, 0xa88c0cf5, 0, 0},				// in main thread and in interrupt (at the beginning)
-		{0xb94c722b, 0x5f8ca773, 0, 0x288301cf},	// in main thread, in interrupt (at the beginning) and in handler
-		{0x347ecfc5, 0xcb4a3584, 0x5a8bf219, 0},	// in main thread and in interrupt
+		{0x8a19625e, 0, 0x32378f7b, 0},				// in main thread and in "sender" (at the end)
+		{0xd17a21db, 0, 0xaa807a91, 0x03caf264},	// in main thread, in "sender" (at the end) and in handler
+		{0xe4b44073, 0xa88c0cf5, 0, 0},				// in main thread and in "sender" (at the beginning)
+		{0xb94c722b, 0x5f8ca773, 0, 0x288301cf},	// in main thread, in "sender" (at the beginning) and in handler
+		{0x347ecfc5, 0xcb4a3584, 0x5a8bf219, 0},	// in main thread and in "sender"
 		{0x788ed92e, 0x4b0ddff9, 0x73776a21, 0x48fb1969},	// in all contexts
 };
 
@@ -138,13 +138,13 @@ bool isFpuContextActive()
 
 void queueSignalWrapper(const Stage& stage, int& sharedRet)
 {
-	if (stage.interruptValueBefore != 0)	// should FPU be used at the beginning of interrupt?
-		setFpuRegisters(stage.interruptValueBefore, false);
+	if (stage.senderValueBefore != 0)	// should FPU be used at the beginning of "sender"?
+		setFpuRegisters(stage.senderValueBefore, false);
 
 	sharedRet = ThisThread::Signals::queueSignal(testSignalNumber, sigval{stage.signalValue});
 
-	if (stage.interruptValueAfter != 0)	// should FPU be used at the end of interrupt?
-		setFpuRegisters(stage.interruptValueAfter, false);
+	if (stage.senderValueAfter != 0)	// should FPU be used at th"sender""sender"?
+		setFpuRegisters(stage.senderValueAfter, false);
 }
 
 /**
