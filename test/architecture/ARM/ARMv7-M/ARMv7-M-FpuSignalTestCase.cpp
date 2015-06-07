@@ -21,6 +21,7 @@
 #include "setFpuRegisters.hpp"
 
 #include "distortos/SoftwareTimer.hpp"
+#include "distortos/statistics.hpp"
 #include "distortos/ThisThread-Signals.hpp"
 
 #include <cerrno>
@@ -66,6 +67,9 @@ struct Phase
 
 	/// reference to "sender" function
 	Sender& sender;
+
+	/// expected number of context switches for single stage executed in this phase
+	decltype(statistics::getContextSwitchCount()) contextSwitchCount;
 };
 
 /*---------------------------------------------------------------------------------------------------------------------+
@@ -164,7 +168,7 @@ int queueSignalFromInterrupt(const Stage& stage)
 /// test phasese
 const Phase phases[]
 {
-		{queueSignalFromInterrupt},
+		{queueSignalFromInterrupt, 0},
 };
 
 /// test stages
@@ -215,6 +219,9 @@ bool FpuSignalTestCase::run_() const
 {
 #if __FPU_PRESENT == 1 && __FPU_USED == 1
 
+	const auto contextSwitchCount = statistics::getContextSwitchCount();
+	auto expectedContextSwitchCount = decltype(contextSwitchCount){};
+
 	{
 		int ret;
 		std::tie(ret, std::ignore) = ThisThread::Signals::setSignalAction(testSignalNumber,
@@ -242,7 +249,14 @@ bool FpuSignalTestCase::run_() const
 			if (stage.threadValue != 0)	// was FPU used in main thread?
 				if (checkFpuRegisters(stage.threadValue, fpscr) == false)
 					return false;
+
+			expectedContextSwitchCount += phase.contextSwitchCount;
+			if (statistics::getContextSwitchCount() - contextSwitchCount != expectedContextSwitchCount)
+				return false;
 		}
+
+	if (statistics::getContextSwitchCount() - contextSwitchCount != expectedContextSwitchCount)
+		return false;
 
 	return true;
 
