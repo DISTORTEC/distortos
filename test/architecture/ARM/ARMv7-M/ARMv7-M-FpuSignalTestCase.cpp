@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-06-01
+ * \date 2015-06-07
  */
 
 #include "ARMv7-M-FpuSignalTestCase.hpp"
@@ -22,6 +22,8 @@
 
 #include "distortos/SoftwareTimer.hpp"
 #include "distortos/ThisThread-Signals.hpp"
+
+#include <cerrno>
 
 #endif	// __FPU_PRESENT == 1 && __FPU_USED == 1
 
@@ -170,7 +172,7 @@ bool FpuSignalTestCase::run_() const
 		if (stage.threadValue != 0)	// should FPU be used in main thread?
 			fpscr = setFpuRegisters(stage.threadValue, true);
 
-		int sharedRet {true};
+		int sharedRet {EINVAL};
 		auto softwareTimer = makeSoftwareTimer(
 				[&sharedRet, &stage]()
 				{
