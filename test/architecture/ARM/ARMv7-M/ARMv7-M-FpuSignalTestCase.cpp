@@ -122,18 +122,19 @@ bool isFpuContextActive()
  * \brief Test wrapper for ThisThread::Signals::queueSignal() that also modifies FPU registers.
  *
  * \param [in] stage is a reference to test stage
+ * \param [in] full is the \a full argument passed to setFpuRegisters()
  * \param [in] sharedRet is a reference to int variable which will be written with 0 on success, error code otherwise
  */
 
-void queueSignalWrapper(const Stage& stage, int& sharedRet)
+void queueSignalWrapper(const Stage& stage, const bool full, int& sharedRet)
 {
 	if (stage.senderValueBefore != 0)	// should FPU be used at the beginning of "sender"?
-		setFpuRegisters(stage.senderValueBefore, false);
+		setFpuRegisters(stage.senderValueBefore, full);
 
 	sharedRet = ThisThread::Signals::queueSignal(testSignalNumber, sigval{stage.signalValue});
 
 	if (stage.senderValueAfter != 0)	// should FPU be used at th"sender""sender"?
-		setFpuRegisters(stage.senderValueAfter, false);
+		setFpuRegisters(stage.senderValueAfter, full);
 }
 
 /**
@@ -148,7 +149,7 @@ void queueSignalWrapper(const Stage& stage, int& sharedRet)
 int queueSignalFromInterrupt(const Stage& stage)
 {
 	int sharedRet {EINVAL};
-	auto softwareTimer = makeSoftwareTimer(queueSignalWrapper, std::ref(stage), std::ref(sharedRet));
+	auto softwareTimer = makeSoftwareTimer(queueSignalWrapper, std::ref(stage), false, std::ref(sharedRet));
 
 	softwareTimer.start(TickClock::duration{});
 	while (softwareTimer.isRunning() == true);
