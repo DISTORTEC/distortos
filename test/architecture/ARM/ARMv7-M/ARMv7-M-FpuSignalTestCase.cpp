@@ -81,6 +81,9 @@ struct Phase
 /// tested signal number
 constexpr uint8_t testSignalNumber {16};
 
+/// size of stack for test thread, bytes
+constexpr size_t testThreadStackSize {512};
+
 /*---------------------------------------------------------------------------------------------------------------------+
 | local functions
 +---------------------------------------------------------------------------------------------------------------------*/
@@ -166,6 +169,33 @@ int queueSignalFromInterrupt(ThreadBase& thread, const Stage& stage)
 	return sharedRet;
 }
 
+/**
+ * \brief Queues signal from thread to non-current thread.
+ *
+ * \param [in] thread is a reference to thread to which the signal will be queued
+ * \param [in] stage is a reference to test stage
+ *
+ * \return 0 on success, error code otherwise:
+ * - error codes returned by ThreadBase::queueSignal();
+ */
+
+int queueSignalFromThread(ThreadBase& thread, const Stage& stage)
+{
+	constexpr decltype(FpuSignalTestCase::getTestCasePriority()) highPriority
+	{
+			FpuSignalTestCase::getTestCasePriority() + 1
+	};
+
+	int sharedRet {EINVAL};
+	auto testThread = makeStaticThread<testThreadStackSize>(highPriority, queueSignalWrapper, std::ref(thread),
+			std::ref(stage), true, std::ref(sharedRet));
+
+	testThread.start();
+	testThread.join();
+
+	return sharedRet;
+}
+
 /*---------------------------------------------------------------------------------------------------------------------+
 | local constants
 +---------------------------------------------------------------------------------------------------------------------*/
@@ -174,6 +204,7 @@ int queueSignalFromInterrupt(ThreadBase& thread, const Stage& stage)
 const Phase phases[]
 {
 		{queueSignalFromInterrupt, 0},
+		{queueSignalFromThread, 2},
 };
 
 /// test stages

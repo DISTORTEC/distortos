@@ -23,10 +23,10 @@ namespace test
 {
 
 /**
- * \brief Tests saving of FPU context between thread, interrupt and signal handler.
+ * \brief Tests saving of FPU context between thread, signal sender (interrupt or another thread) and signal handler.
  *
- * Various combinations of FPU usage (in main thread only, in interrupt only, in signal handler only and all possible
- * combinations) are tested.
+ * Various combinations of FPU usage (in main thread only, in signal sender (interrupt or another thread) only, in
+ * signal handler only and all possible combinations) are tested.
  */
 
 class FpuSignalTestCase : public SignalsTestCaseCommon
