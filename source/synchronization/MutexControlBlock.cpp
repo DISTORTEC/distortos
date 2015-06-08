@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-02-01
+ * \date 2015-06-08
  */
 
 #include "distortos/synchronization/MutexControlBlock.hpp"
@@ -56,15 +56,16 @@ public:
 	 * to MutexControlBlock with PriorityInheritance protocol which caused the thread to block is reset to nullptr.
 	 *
 	 * \param [in] threadControlBlock is a reference to ThreadControlBlock that is being unblocked
+	 * \param [in] unblockReason is the reason of thread unblocking
 	 */
 
-	void operator()(scheduler::ThreadControlBlock& threadControlBlock) const override
+	void operator()(scheduler::ThreadControlBlock& threadControlBlock,
+			const scheduler::ThreadControlBlock::UnblockReason unblockReason) const override
 	{
 		const auto owner = mutexControlBlock_.getOwner();
 
 		// waiting for mutex was interrupted and some thread still holds it?
-		if (threadControlBlock.getUnblockReason() != scheduler::ThreadControlBlock::UnblockReason::UnblockRequest &&
-				owner != nullptr)
+		if (unblockReason != scheduler::ThreadControlBlock::UnblockReason::UnblockRequest && owner != nullptr)
 			owner->updateBoostedPriority();
 
 		threadControlBlock.setPriorityInheritanceMutexControlBlock(nullptr);
