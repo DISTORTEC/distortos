@@ -412,15 +412,8 @@ private:
 	/// iterator to the element on the ThreadGroupControlBlock's list, valid only when threadGroupList_ != nullptr
 	ThreadControlBlockListIterator threadGroupIterator_;
 
-	/// information related to unblocking
-	union
-	{
-		/// functor executed in unblockHook() - valid only when thread is blocked
-		const UnblockFunctor* unblockFunctor_;
-
-		/// reason of previous unblocking of the thread - valid only when thread is not blocked
-		UnblockReason unblockReason_;
-	};
+	/// functor executed in unblockHook()
+	const UnblockFunctor* unblockFunctor_;
 
 	/// pointer to synchronization::SignalsReceiverControlBlock object for this thread, nullptr if this thread cannot
 	/// receive signals

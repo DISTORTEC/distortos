@@ -51,7 +51,7 @@ ThreadControlBlock::ThreadControlBlock(architecture::Stack&& stack, const uint8_
 		threadGroupControlBlock_{threadGroupControlBlock},
 		threadGroupList_{},
 		threadGroupIterator_{},
-		unblockReason_{},
+		unblockFunctor_{},
 		signalsReceiverControlBlock_
 		{
 				signalsReceiver != nullptr ? &signalsReceiver->signalsReceiverControlBlock_ : nullptr
