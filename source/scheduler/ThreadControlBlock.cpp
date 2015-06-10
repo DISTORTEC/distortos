@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-06-08
+ * \date 2015-06-10
  */
 
 #include "distortos/scheduler/ThreadControlBlock.hpp"
@@ -125,7 +125,7 @@ void ThreadControlBlock::unblockHook(const UnblockReason unblockReason)
 {
 	roundRobinQuantum_.reset();
 	const auto unblockFunctor = unblockFunctor_;
-	unblockReason_ = unblockReason;
+	unblockFunctor_ = {};
 	if (unblockFunctor != nullptr)
 		(*unblockFunctor)(*this, unblockReason);
 }

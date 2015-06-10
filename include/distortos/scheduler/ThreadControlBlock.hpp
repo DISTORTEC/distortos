@@ -335,7 +335,7 @@ public:
 	/**
 	 * \brief Unblock hook function of thread
 	 *
-	 * Resets round-robin's quantum, sets unblock reason and executes unblock functor saved in blockHook().
+	 * Resets round-robin's quantum and executes unblock functor saved in blockHook().
 	 *
 	 * \attention This function should be called only by Scheduler::unblockInternal().
 	 *
