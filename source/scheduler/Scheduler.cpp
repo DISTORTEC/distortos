@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-06-01
+ * \date 2015-06-10
  */
 
 #include "distortos/scheduler/Scheduler.hpp"
@@ -30,6 +30,57 @@ namespace scheduler
 
 namespace
 {
+
+/*---------------------------------------------------------------------------------------------------------------------+
+| local types
++---------------------------------------------------------------------------------------------------------------------*/
+
+/// UnblockReasonUnblockFunctorWrapper is a wrapper for ThreadControlBlock::UnblockFunctor that saves reason of thread
+/// unblocking
+class UnblockReasonUnblockFunctorWrapper : public ThreadControlBlock::UnblockFunctor
+{
+public:
+
+	/**
+	 * \brief UnblockReasonUnblockFunctorWrapper's constructor
+	 *
+	 * \param [in] unblockFunctor is a pointer to wrapped unblock functor
+	 * \param [out] unblockReason is a reference to variable in which the reason of thread unblocking will be stored
+	 */
+
+	constexpr UnblockReasonUnblockFunctorWrapper(const ThreadControlBlock::UnblockFunctor* const unblockFunctor,
+			ThreadControlBlock::UnblockReason& unblockReason) :
+			unblockFunctor_{unblockFunctor},
+			unblockReason_{unblockReason}
+	{
+
+	}
+
+	/**
+	 * \brief UnblockReasonUnblockFunctorWrapper's function call operator
+	 *
+	 * Saves reason of thread unblocking and executes wrapped functor (if any was provided).
+	 *
+	 * \param [in] threadControlBlock is a reference to ThreadControlBlock that is being unblocked
+	 * \param [in] unblockReason is the reason of thread unblocking
+	 */
+
+	virtual void operator()(ThreadControlBlock& threadControlBlock,
+			const ThreadControlBlock::UnblockReason unblockReason) const override
+	{
+		unblockReason_ = unblockReason;
+		if (unblockFunctor_ != nullptr)
+			(*unblockFunctor_)(threadControlBlock, unblockReason);
+	}
+
+private:
+
+	/// pointer to wrapped unblock functor
+	const ThreadControlBlock::UnblockFunctor* unblockFunctor_;
+
+	/// reference to variable in which the reason of thread unblocking will be stored
+	ThreadControlBlock::UnblockReason& unblockReason_;
+};
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | local functions
