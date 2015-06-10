@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-06-08
+ * \date 2015-06-10
  */
 
 #ifndef INCLUDE_DISTORTOS_SCHEDULER_THREADCONTROLBLOCK_HPP_
@@ -256,15 +256,6 @@ public:
 	Link& getThreadGroupLink()
 	{
 		return threadGroupLink_;
-	}
-
-	/**
-	 * \return reason of previous unblocking of the thread
-	 */
-
-	UnblockReason getUnblockReason() const
-	{
-		return unblockReason_;
 	}
 
 	/**
