@@ -139,20 +139,25 @@ int Scheduler::block(ThreadControlBlockList& container, const ThreadControlBlock
 int Scheduler::block(ThreadControlBlockList& container, const ThreadControlBlockListIterator iterator,
 		const ThreadControlBlock::UnblockFunctor* const unblockFunctor)
 {
+	ThreadControlBlock::UnblockReason unblockReason {};
+	const UnblockReasonUnblockFunctorWrapper unblockReasonUnblockFunctorWrapper {unblockFunctor, unblockReason};
+	const auto blockingCurrentThread = iterator == currentThreadControlBlock_;
+
 	{
 		architecture::InterruptMaskingLock interruptMaskingLock;
 
-		const auto ret = blockInternal(container, iterator, unblockFunctor);
+		// if blocking current thread, use unblockReasonUnblockFunctorWrapper, otherwise use provided unblockFunctor
+		const auto ret = blockInternal(container, iterator, blockingCurrentThread == true ?
+				&unblockReasonUnblockFunctorWrapper : unblockFunctor);
 		if (ret != 0)
 			return ret;
 
-		if (iterator != currentThreadControlBlock_)	// blocked thread is not current thread - no forced switch required
+		if (blockingCurrentThread == false)	// blocked thread is not current thread - no forced switch required
 			return 0;
 	}
 
 	forceContextSwitch();
 
-	const auto unblockReason = currentThreadControlBlock_->get().getUnblockReason();
 	return unblockReason == ThreadControlBlock::UnblockReason::UnblockRequest ? 0 : ETIMEDOUT;
 }
 
