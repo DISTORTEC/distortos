@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-06-08
+ * \date 2015-06-10
  */
 
 #include "distortos/ThisThread-Signals.hpp"
@@ -56,7 +56,7 @@ public:
 	 * \param [in] unblockReason is the reason of thread unblocking
 	 */
 
-	void operator()(scheduler::ThreadControlBlock& threadControlBlock,
+	virtual void operator()(scheduler::ThreadControlBlock& threadControlBlock,
 			scheduler::ThreadControlBlock::UnblockReason) const override
 	{
 		const auto signalsReceiverControlBlock = threadControlBlock.getSignalsReceiverControlBlock();
