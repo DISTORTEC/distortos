@@ -95,13 +95,13 @@ MutexControlBlock::MutexControlBlock(const Protocol protocol, const uint8_t prio
 
 }
 
-void MutexControlBlock::block()
+int MutexControlBlock::block()
 {
 	if (protocol_ == Protocol::PriorityInheritance)
 		priorityInheritanceBeforeBlock();
 
 	const PriorityInheritanceMutexControlBlockUnblockFunctor unblockFunctor {*this};
-	scheduler::getScheduler().block(blockedList_, protocol_ == Protocol::PriorityInheritance ? &unblockFunctor :
+	return scheduler::getScheduler().block(blockedList_, protocol_ == Protocol::PriorityInheritance ? &unblockFunctor :
 			nullptr);
 }
 
