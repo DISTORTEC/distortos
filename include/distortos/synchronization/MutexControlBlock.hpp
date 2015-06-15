@@ -62,7 +62,7 @@ public:
 	 * \param [in] timePoint is the time point at which the thread will be unblocked (if not already unblocked)
 	 *
 	 * \return 0 on success, error code otherwise:
-	 * - ETIMEDOUT - thread was unblocked because timePoint was reached;
+	 * - values returned by Scheduler::blockUntil();
 	 */
 
 	int blockUntil(TickClock::time_point timePoint);
