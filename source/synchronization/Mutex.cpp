@@ -63,11 +63,13 @@ int Mutex::tryLockUntil(const TickClock::time_point timePoint)
 {
 	architecture::InterruptMaskingLock interruptMaskingLock;
 
-	const auto ret = tryLockInternal();
-	if (ret != EBUSY)	// lock successful, recursive lock not possible or deadlock detected?
-		return ret;
-
-	return controlBlock_.blockUntil(timePoint);
+	int ret;
+	// break the loop when one of following conditions is true:
+	// - lock successful, recursive lock not possible or deadlock detected;
+	// - lock transferred successfully;
+	// - timeout expired;
+	while ((ret = tryLockInternal()) == EBUSY && (ret = controlBlock_.blockUntil(timePoint)) == EINTR);
+	return ret;
 }
 
 int Mutex::unlock()
