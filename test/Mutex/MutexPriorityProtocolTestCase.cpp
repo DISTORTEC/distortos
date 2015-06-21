@@ -2,13 +2,13 @@
  * \file
  * \brief MutexPriorityProtocolTestCase class implementation
  *
- * \author Copyright (C) 2014 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-11-16
+ * \date 2015-06-21
  */
 
 #include "MutexPriorityProtocolTestCase.hpp"
@@ -141,8 +141,8 @@ void thread(const TickClock::time_point sleepUntil, SequenceAsserter& sequenceAs
 TestThread makeTestThread(const uint8_t priority, const TickClock::time_point sleepUntil,
 		SequenceAsserter& sequenceAsserter, const TestStepRange& steps)
 {
-	return makeStaticThread<testThreadStackSize>(priority, SchedulingPolicy::Fifo, thread, static_cast<TickClock::time_point>(sleepUntil),
-			std::ref(sequenceAsserter), std::ref(steps));
+	return makeStaticThread<testThreadStackSize>(priority, SchedulingPolicy::Fifo, thread,
+			static_cast<TickClock::time_point>(sleepUntil), std::ref(sequenceAsserter), std::ref(steps));
 }
 
 /**
