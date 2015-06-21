@@ -78,7 +78,7 @@ const std::array<int, totalThreads> threadDelays
 }};
 
 /// number of context switches caused by delayed start of test threads
-constexpr size_t delayedStartContextSwitchesCount {6};
+constexpr size_t delayedStartContextSwitchesCount {4};
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | local functions' declarations

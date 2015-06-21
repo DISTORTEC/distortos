@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-06-10
+ * \date 2015-06-21
  */
 
 #include "distortos/scheduler/Scheduler.hpp"
@@ -167,6 +167,14 @@ int Scheduler::blockUntil(ThreadControlBlockList& container, const TickClock::ti
 	architecture::InterruptMaskingLock interruptMaskingLock;
 
 	const auto iterator = currentThreadControlBlock_;
+
+	if (timePoint <= TickClock::now())
+	{
+		if (unblockFunctor != nullptr)
+			(*unblockFunctor)(*iterator, ThreadControlBlock::UnblockReason::Timeout);
+		return ETIMEDOUT;
+	}
+
 	// This lambda unblocks the thread only if it wasn't already unblocked - this is necessary because double unblock
 	// should be avoided (it could mess the order of threads of the same priority). In that case it also sets
 	// UnblockReason::Timeout.
