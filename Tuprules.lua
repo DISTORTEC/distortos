@@ -6,7 +6,7 @@
 -- This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 -- distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 --
--- date: 2015-04-07
+-- date: 2015-06-22
 --
 
 ------------------------------------------------------------------------------------------------------------------------
@@ -110,28 +110,28 @@ end
 -- assemble file named input
 function as(input)
 	specific_flags = getSpecificFlags(ASFLAGS, input)
-	output = {OUTPUT .. tup.getrelativedir(TOP) .. '/%B.o', '$(TOP)/<objects>'}
+	output = {OUTPUT .. tup.getrelativedir(TOP) .. "/%B.o", "$(TOP)/<objects>"}
 	tup.rule(input, "^c^ $(AS) $(ASFLAGS) $(specific_flags) -c %f -o %o", output)
 end
 
 -- compile (C) file named input
 function cc(input)
 	specific_flags = getSpecificFlags(CFLAGS, input)
-	output = {OUTPUT .. tup.getrelativedir(TOP) .. '/%B.o', '$(TOP)/<objects>'}
+	output = {OUTPUT .. tup.getrelativedir(TOP) .. "/%B.o", "$(TOP)/<objects>"}
 	tup.rule(input, "^c^ $(CC) $(CFLAGS) $(specific_flags) -c %f -o %o", output)
 end
 
 -- compile (C++) file named input
 function cxx(input)
 	specific_flags = getSpecificFlags(CXXFLAGS, input)
-	output = {OUTPUT .. tup.getrelativedir(TOP) .. '/%B.o', '$(TOP)/<objects>'}
+	output = {OUTPUT .. tup.getrelativedir(TOP) .. "/%B.o", "$(TOP)/<objects>"}
 	tup.rule(input, "^c^ $(CXX) $(CXXFLAGS) $(specific_flags) -c %f -o %o", output)
 end
 
 -- link all objects from $(TOP)/<objects> into file named output
 function link(output)
 	extra_output = {OUTPUT .. PROJECT .. ".map"}
-	tup.rule({'$(TOP)/<objects>'}, "$(LD) $(LDFLAGS) %<objects> -o %o", {output, extra_outputs = extra_output})
+	tup.rule({"$(TOP)/<objects>"}, "$(LD) $(LDFLAGS) %<objects> -o %o", {output, extra_outputs = extra_output})
 end
 
 -- convert file named input (elf) to intel hex file named output
