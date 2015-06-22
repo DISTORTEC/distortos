@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-04-28
+ * \date 2015-06-22
  */
 
 #include "distortos/distortosConfiguration.h"
@@ -45,7 +45,7 @@ __attribute__ ((weak)) void PVD_IRQHandler(void)
 	while (1);
 }
 
-// Tamper and TimeStamps through the EXTI line
+// Tamper and TimeStamp through the EXTI line
 __attribute__ ((weak)) void TAMP_STAMP_IRQHandler(void)
 {
 	while (1);
@@ -825,7 +825,7 @@ const InterruptVector chipVectors[] __attribute__ ((section(".chipVectors"))) =
 {
 		WWDG_IRQHandler,					// Window WatchDog
 		PVD_IRQHandler,						// PVD through EXTI Line detection
-		TAMP_STAMP_IRQHandler,				// Tamper and TimeStamps through the EXTI line
+		TAMP_STAMP_IRQHandler,				// Tamper and TimeStamp through the EXTI line
 		RTC_WKUP_IRQHandler,				// RTC Wakeup through the EXTI line
 		FLASH_IRQHandler,					// FLASH
 		RCC_IRQHandler,						// RCC
