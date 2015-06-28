@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-06-10
+ * \date 2015-06-28
  */
 
 #ifndef INCLUDE_DISTORTOS_SCHEDULER_THREADCONTROLBLOCK_HPP_
@@ -77,6 +77,8 @@ public:
 		UnblockRequest,
 		/// timeout - unblock via software timer
 		Timeout,
+		/// signal handler - unblock to deliver unmasked signal
+		Signal,
 	};
 
 	/// type of object used as storage for ThreadControlBlockList elements - 3 pointers
