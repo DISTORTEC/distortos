@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-03-04
+ * \date 2015-06-28
  */
 
 #ifndef INCLUDE_DISTORTOS_SCHEDULER_SCHEDULER_HPP_
@@ -74,6 +74,8 @@ public:
 	 * ThreadControlBlock::unblockHook(), default - nullptr (no functor will be executed)
 	 *
 	 * \return 0 on success, error code otherwise:
+	 * - EINTR - thread was unblocked with ThreadControlBlock::UnblockReason::Signal (possible only when blocking
+	 * current thread);
 	 * - EINVAL - provided thread is not on "runnable" list;
 	 * - ETIMEDOUT - thread was unblocked with ThreadControlBlock::UnblockReason::Timeout (possible only when blocking
 	 * current thread);
