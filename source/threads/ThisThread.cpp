@@ -8,13 +8,15 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-03-03
+ * \date 2015-06-28
  */
 
 #include "distortos/ThisThread.hpp"
 
 #include "distortos/scheduler/getScheduler.hpp"
 #include "distortos/scheduler/Scheduler.hpp"
+
+#include <cerrno>
 
 namespace distortos
 {
@@ -51,12 +53,13 @@ void sleepFor(const TickClock::duration duration)
 	sleepUntil(TickClock::now() + duration + TickClock::duration{1});
 }
 
-void sleepUntil(const TickClock::time_point timePoint)
+int sleepUntil(const TickClock::time_point timePoint)
 {
 	auto& scheduler = scheduler::getScheduler();
 	scheduler::ThreadControlBlockList sleepingList {scheduler.getThreadControlBlockListAllocator(),
 			scheduler::ThreadControlBlock::State::Sleeping};
-	scheduler.blockUntil(sleepingList, timePoint);
+	const auto ret = scheduler.blockUntil(sleepingList, timePoint);
+	return ret == ETIMEDOUT ? 0 : ret;
 }
 
 void yield()

@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-02-16
+ * \date 2015-06-28
  */
 
 #ifndef INCLUDE_DISTORTOS_THISTHREAD_HPP_
@@ -91,9 +91,12 @@ void sleepFor(const std::chrono::duration<Rep, Period> duration)
  * Current thread's state is changed to "sleeping".
  *
  * \param [in] timePoint is the time point at which the thread will be woken
+ *
+ * \return 0 on success, error code otherwise:
+ * - EINTR - the sleep was interrupted by an unmasked, caught signal;
  */
 
-void sleepUntil(TickClock::time_point timePoint);
+int sleepUntil(TickClock::time_point timePoint);
 
 /**
  * \brief Makes the calling (current) thread sleep until some time point is reached.
@@ -103,12 +106,15 @@ void sleepUntil(TickClock::time_point timePoint);
  * \param Duration is a std::chrono::duration type used to measure duration
  *
  * \param [in] timePoint is the time point at which the thread will be woken
+ *
+ * \return 0 on success, error code otherwise:
+ * - EINTR - the sleep was interrupted by an unmasked, caught signal;
  */
 
 template<typename Duration>
-void sleepUntil(const std::chrono::time_point<TickClock, Duration> timePoint)
+int sleepUntil(const std::chrono::time_point<TickClock, Duration> timePoint)
 {
-	sleepUntil(std::chrono::time_point_cast<TickClock::duration>(timePoint));
+	return sleepUntil(std::chrono::time_point_cast<TickClock::duration>(timePoint));
 }
 
 /**
