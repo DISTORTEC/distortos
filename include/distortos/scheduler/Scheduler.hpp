@@ -58,6 +58,7 @@ public:
 	 * ThreadControlBlock::unblockHook(), default - nullptr (no functor will be executed)
 	 *
 	 * \return 0 on success, error code otherwise:
+	 * - EINTR - thread was unblocked with ThreadControlBlock::UnblockReason::Signal;
 	 * - ETIMEDOUT - thread was unblocked with ThreadControlBlock::UnblockReason::Timeout;
 	 */
 
@@ -93,6 +94,7 @@ public:
 	 * ThreadControlBlock::unblockHook(), default - nullptr (no functor will be executed)
 	 *
 	 * \return 0 on success, error code otherwise:
+	 * - EINTR - thread was unblocked with ThreadControlBlock::UnblockReason::Signal;
 	 * - ETIMEDOUT - thread was unblocked because timePoint was reached;
 	 */
 
@@ -219,7 +221,8 @@ public:
 	/**
 	 * \brief Suspends current thread.
 	 *
-	 * \return 0 on success, error code otherwise
+	 * \return 0 on success, error code otherwise:
+	 * - EINTR - thread was unblocked with ThreadControlBlock::UnblockReason::Signal;
 	 */
 
 	int suspend();
@@ -232,6 +235,7 @@ public:
 	 * \param [in] iterator is the iterator to the thread that will be suspended
 	 *
 	 * \return 0 on success, error code otherwise:
+	 * - EINTR - thread was unblocked with ThreadControlBlock::UnblockReason::Signal;
 	 * - EINVAL - provided thread is not on "runnable" list;
 	 */
 

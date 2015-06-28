@@ -2,13 +2,13 @@
  * \file
  * \brief Semaphore class header
  *
- * \author Copyright (C) 2014 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-11-25
+ * \date 2015-06-28
  */
 
 #ifndef INCLUDE_DISTORTOS_SEMAPHORE_HPP_
@@ -117,6 +117,7 @@ public:
 	 * \param [in] duration is the duration after which the wait will be terminated without locking the semaphore
 	 *
 	 * \return zero if the calling process successfully performed the semaphore lock operation, error code otherwise:
+	 * - EINTR - the wait was interrupted by an unmasked, caught signal;
 	 * - ETIMEDOUT - the semaphore could not be locked before the specified timeout expired;
 	 */
 
@@ -133,6 +134,7 @@ public:
 	 * \param [in] duration is the duration after which the wait will be terminated without locking the semaphore
 	 *
 	 * \return zero if the calling process successfully performed the semaphore lock operation, error code otherwise:
+	 * - EINTR - the wait was interrupted by an unmasked, caught signal;
 	 * - ETIMEDOUT - the semaphore could not be locked before the specified timeout expired;
 	 */
 
@@ -157,6 +159,7 @@ public:
 	 * \param [in] timePoint is the time point at which the wait will be terminated without locking the semaphore
 	 *
 	 * \return zero if the calling process successfully performed the semaphore lock operation, error code otherwise:
+	 * - EINTR - the wait was interrupted by an unmasked, caught signal;
 	 * - ETIMEDOUT - the semaphore could not be locked before the specified timeout expired;
 	 */
 
@@ -172,6 +175,7 @@ public:
 	 * \param [in] timePoint is the time point at which the wait will be terminated without locking the semaphore
 	 *
 	 * \return zero if the calling process successfully performed the semaphore lock operation, error code otherwise:
+	 * - EINTR - the wait was interrupted by an unmasked, caught signal;
 	 * - ETIMEDOUT - the semaphore could not be locked before the specified timeout expired;
 	 */
 
@@ -191,7 +195,8 @@ public:
 	 * either locks the semaphore or the call is interrupted by a signal. Upon successful return, the state of the
 	 * semaphore shall be locked and shall remain locked until unlock() function is executed.
 	 *
-	 * \return zero if the calling process successfully performed the semaphore lock operation, error code otherwise
+	 * \return zero if the calling process successfully performed the semaphore lock operation, error code otherwise:
+	 * - EINTR - the wait was interrupted by an unmasked, caught signal;
 	 */
 
 	int wait();

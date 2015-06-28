@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-06-10
+ * \date 2015-06-28
  */
 
 #include "distortos/ThisThread-Signals.hpp"
@@ -83,6 +83,7 @@ public:
  * \return pair with return code (0 on success, error code otherwise) and SignalInformation object for accepted signal;
  * error codes:
  * - EAGAIN - no signal specified by \a signalSet was pending and non-blocking mode was selected;
+ * - EINTR - the wait was interrupted by an unmasked, caught signal;
  * - ETIMEDOUT - no signal specified by \a signalSet was generated before specified \a timePoint;
  */
 

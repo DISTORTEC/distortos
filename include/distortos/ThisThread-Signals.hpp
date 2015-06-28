@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-04-29
+ * \date 2015-06-28
  */
 
 #ifndef INCLUDE_DISTORTOS_THISTHREAD_SIGNALS_HPP_
@@ -172,6 +172,7 @@ std::pair<int, SignalInformation> tryWait(const SignalSet& signalSet);
  *
  * \return pair with return code (0 on success, error code otherwise) and SignalInformation object for accepted signal;
  * error codes:
+ * - EINTR - the wait was interrupted by an unmasked, caught signal;
  * - ENOTSUP - reception of signals is disabled for current thread;
  * - ETIMEDOUT - no signal specified by \a signalSet was generated before the specified \a duration passed;
  */
@@ -191,6 +192,7 @@ std::pair<int, SignalInformation> tryWaitFor(const SignalSet& signalSet, TickClo
  *
  * \return pair with return code (0 on success, error code otherwise) and SignalInformation object for accepted signal;
  * error codes:
+ * - EINTR - the wait was interrupted by an unmasked, caught signal;
  * - ENOTSUP - reception of signals is disabled for current thread;
  * - ETIMEDOUT - no signal specified by \a signalSet was generated before the specified \a duration passed;
  */
@@ -216,6 +218,7 @@ std::pair<int, SignalInformation> tryWaitFor(const SignalSet& signalSet,
  *
  * \return pair with return code (0 on success, error code otherwise) and SignalInformation object for accepted signal;
  * error codes:
+ * - EINTR - the wait was interrupted by an unmasked, caught signal;
  * - ENOTSUP - reception of signals is disabled for current thread;
  * - ETIMEDOUT - no signal specified by \a signalSet was generated before specified \a timePoint;
  */
@@ -234,6 +237,7 @@ std::pair<int, SignalInformation> tryWaitUntil(const SignalSet& signalSet, TickC
  *
  * \return pair with return code (0 on success, error code otherwise) and SignalInformation object for accepted signal;
  * error codes:
+ * - EINTR - the wait was interrupted by an unmasked, caught signal;
  * - ENOTSUP - reception of signals is disabled for current thread;
  * - ETIMEDOUT - no signal specified by \a signalSet was generated before specified \a timePoint;
  */
@@ -258,6 +262,7 @@ std::pair<int, SignalInformation> tryWaitUntil(const SignalSet& signalSet,
  *
  * \return pair with return code (0 on success, error code otherwise) and SignalInformation object for accepted signal;
  * error codes:
+ * - EINTR - the wait was interrupted by an unmasked, caught signal;
  * - ENOTSUP - reception of signals is disabled for current thread;
  */
 
