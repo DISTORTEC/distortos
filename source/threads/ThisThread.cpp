@@ -48,9 +48,9 @@ void setPriority(const uint8_t priority, const bool alwaysBehind)
 	scheduler::getScheduler().getCurrentThreadControlBlock().setPriority(priority, alwaysBehind);
 }
 
-void sleepFor(const TickClock::duration duration)
+int sleepFor(const TickClock::duration duration)
 {
-	sleepUntil(TickClock::now() + duration + TickClock::duration{1});
+	return sleepUntil(TickClock::now() + duration + TickClock::duration{1});
 }
 
 int sleepUntil(const TickClock::time_point timePoint)

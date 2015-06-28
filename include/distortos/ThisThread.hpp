@@ -62,9 +62,12 @@ void setPriority(uint8_t priority, bool alwaysBehind = {});
  * \note To fulfill the "at least" requirement, one additional tick is always added to the sleep duration.
  *
  * \param [in] duration is the duration after which the thread will be woken
+ *
+ * \return 0 on success, error code otherwise:
+ * - EINTR - the sleep was interrupted by an unmasked, caught signal;
  */
 
-void sleepFor(TickClock::duration duration);
+int sleepFor(TickClock::duration duration);
 
 /**
  * \brief Makes the calling (current) thread sleep for at least given duration.
@@ -77,12 +80,15 @@ void sleepFor(TickClock::duration duration);
  * \param Period is std::ratio type representing the tick period of the clock, in seconds
  *
  * \param [in] duration is the duration after which the thread will be woken
+ *
+ * \return 0 on success, error code otherwise:
+ * - EINTR - the sleep was interrupted by an unmasked, caught signal;
  */
 
 template<typename Rep, typename Period>
-void sleepFor(const std::chrono::duration<Rep, Period> duration)
+int sleepFor(const std::chrono::duration<Rep, Period> duration)
 {
-	sleepFor(std::chrono::duration_cast<TickClock::duration>(duration));
+	return sleepFor(std::chrono::duration_cast<TickClock::duration>(duration));
 }
 
 /**
