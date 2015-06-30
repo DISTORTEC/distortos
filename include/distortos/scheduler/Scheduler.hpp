@@ -336,12 +336,10 @@ private:
 	 * \note Internal version - without interrupt masking and yield()
 	 *
 	 * \param [in] iterator is the iterator which points to unblocked thread
-	 * \param [in] unblockReason is the reason of unblocking of the thread, default -
-	 * ThreadControlBlock::UnblockReason::UnblockRequest
+	 * \param [in] unblockReason is the reason of unblocking of the thread
 	 */
 
-	void unblockInternal(ThreadControlBlockListIterator iterator,
-			ThreadControlBlock::UnblockReason unblockReason = ThreadControlBlock::UnblockReason::UnblockRequest);
+	void unblockInternal(ThreadControlBlockListIterator iterator, ThreadControlBlock::UnblockReason unblockReason);
 
 	/// iterator to the currently active ThreadControlBlock
 	ThreadControlBlockListIterator currentThreadControlBlock_;
