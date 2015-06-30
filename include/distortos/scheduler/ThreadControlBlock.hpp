@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-06-28
+ * \date 2015-06-30
  */
 
 #ifndef INCLUDE_DISTORTOS_SCHEDULER_THREADCONTROLBLOCK_HPP_
@@ -54,14 +54,14 @@ public:
 		New,
 		/// thread is runnable
 		Runnable,
+		/// thread is terminated
+		Terminated,
 		/// thread is sleeping
 		Sleeping,
 		/// thread is blocked on Semaphore
 		BlockedOnSemaphore,
 		/// thread is suspended
 		Suspended,
-		/// thread is terminated
-		Terminated,
 		/// thread is blocked on Mutex
 		BlockedOnMutex,
 		/// thread is blocked on ConditionVariable
