@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-05-27
+ * \date 2015-06-30
  */
 
 #ifndef INCLUDE_DISTORTOS_SYNCHRONIZATION_SIGNALSCATCHERCONTROLBLOCK_HPP_
@@ -164,6 +164,9 @@ private:
 
 	/**
 	 * \brief Requests delivery of signals to associated thread.
+	 *
+	 * Delivery of signals (via special function executed in the associated thread) is requested only if it's not
+	 * already pending. The thread is unblocked if it was blocked.
 	 *
 	 * \param [in] threadControlBlock is a reference to associated ThreadControlBlock
 	 */

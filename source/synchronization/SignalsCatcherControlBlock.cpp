@@ -291,6 +291,12 @@ void SignalsCatcherControlBlock::requestDeliveryOfSignals(scheduler::ThreadContr
 		deliveryIsPending_ = true;
 		architecture::requestFunctionExecution(threadControlBlock, deliverSignals);
 	}
+
+	const auto state = threadControlBlock.getState();
+	// is thread blocked (not "runnable" and can be unblocked)?
+	if (state != decltype(state)::New && state != decltype(state)::Runnable && state != decltype(state)::Terminated)
+		scheduler::getScheduler().unblock(threadControlBlock.getIterator(),
+				scheduler::ThreadControlBlock::UnblockReason::Signal);
 }
 
 }	// namespace synchronization
