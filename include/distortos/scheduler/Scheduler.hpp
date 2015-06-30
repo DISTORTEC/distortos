@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-06-28
+ * \date 2015-06-30
  */
 
 #ifndef INCLUDE_DISTORTOS_SCHEDULER_SCHEDULER_HPP_
@@ -269,9 +269,12 @@ public:
 	 * Current container of the thread is obtained with ThreadControlBlock::getList().
 	 *
 	 * \param [in] iterator is the iterator which points to unblocked thread
+	 * \param [in] unblockReason is the reason of unblocking of the thread, default -
+	 * ThreadControlBlock::UnblockReason::UnblockRequest
 	 */
 
-	void unblock(ThreadControlBlockListIterator iterator);
+	void unblock(ThreadControlBlockListIterator iterator,
+			ThreadControlBlock::UnblockReason unblockReason = ThreadControlBlock::UnblockReason::UnblockRequest);
 
 	/**
 	 * \brief Yields time slot of the scheduler to next thread.
