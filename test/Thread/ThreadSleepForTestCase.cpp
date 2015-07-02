@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-06-28
+ * \date 2015-07-02
  */
 
 #include "ThreadSleepForTestCase.hpp"
@@ -42,7 +42,7 @@ constexpr size_t testThreadStackSize {384};
 +---------------------------------------------------------------------------------------------------------------------*/
 
 void thread(uint8_t sleepFor, SequenceAsserter& sequenceAsserter, unsigned int sequencePoint,
-		TickClock::duration& durationDeviation, int& sharedRet);
+		const TickClock::time_point& sleepStart, TickClock::duration& durationDeviation, int& sharedRet);
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | local types
@@ -51,7 +51,8 @@ void thread(uint8_t sleepFor, SequenceAsserter& sequenceAsserter, unsigned int s
 /// type of test thread
 using TestThread = decltype(makeStaticThread<testThreadStackSize>({}, thread, std::declval<uint8_t>(),
 		std::ref(std::declval<SequenceAsserter&>()), std::declval<unsigned int>(),
-		std::ref(std::declval<TickClock::duration&>()), std::ref(std::declval<int&>())));
+		std::cref(std::declval<const TickClock::time_point&>()), std::ref(std::declval<TickClock::duration&>()),
+		std::ref(std::declval<int&>())));
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | local functions
@@ -66,15 +67,16 @@ using TestThread = decltype(makeStaticThread<testThreadStackSize>({}, thread, st
  * \param [in] sleepFor is the number of ticks the thread will sleep before marking sequence point
  * \param [in] sequenceAsserter is a reference to SequenceAsserter shared object
  * \param [in] sequencePoint is the sequence point of this instance
+ * \param [in] sleepStart is a reference to variable with time point of sleep's start - it is used for deviation of
+ * sleep duration calculation
  * \param [out] durationDeviation is a reference to variable for storing deviation of sleep duration
  * \param [out] sharedRet is a reference to variable for storing return value of ThisThread::sleepFor()
  */
 
 void thread(const uint8_t sleepFor, SequenceAsserter& sequenceAsserter, const unsigned int sequencePoint,
-		TickClock::duration& durationDeviation, int& sharedRet)
+		const TickClock::time_point& sleepStart, TickClock::duration& durationDeviation, int& sharedRet)
 {
 	const auto sleepForDuration = TickClock::duration{sleepFor};
-	const auto sleepStart = TickClock::now();
 
 	sharedRet = ThisThread::sleepFor(sleepForDuration);
 
@@ -90,6 +92,8 @@ void thread(const uint8_t sleepFor, SequenceAsserter& sequenceAsserter, const un
  *
  * \param [in] threadParameters is a reference to ThreadParameters object
  * \param [in] sequenceAsserter is a reference to SequenceAsserter shared object
+ * \param [in] sleepStart is a reference to variable with time point of sleep's start - it is used for deviation of
+ * sleep duration calculation
  * \param [out] durationDeviation is a reference to variable for storing deviation of sleep duration
  * \param [out] sharedRet is a reference to variable for storing return value of ThisThread::sleepFor()
  *
@@ -97,11 +101,11 @@ void thread(const uint8_t sleepFor, SequenceAsserter& sequenceAsserter, const un
  */
 
 TestThread makeTestThread(const ThreadParameters& threadParameters, SequenceAsserter& sequenceAsserter,
-		TickClock::duration& durationDeviation, int& sharedRet)
+		const TickClock::time_point& sleepStart, TickClock::duration& durationDeviation, int& sharedRet)
 {
 	return makeStaticThread<testThreadStackSize>(1, thread, static_cast<uint8_t>(UINT8_MAX - threadParameters.first),
-			std::ref(sequenceAsserter), static_cast<unsigned int>(threadParameters.second), std::ref(durationDeviation),
-			std::ref(sharedRet));
+			std::ref(sequenceAsserter), static_cast<unsigned int>(threadParameters.second), std::cref(sleepStart),
+			std::ref(durationDeviation), std::ref(sharedRet));
 }
 
 }	// namespace
@@ -117,19 +121,30 @@ bool ThreadSleepForTestCase::run_() const
 		SequenceAsserter sequenceAsserter;
 		std::array<TickClock::duration, totalThreads> durationDeviations {{}};
 		std::array<int, totalThreads> sharedRets {{}};
+		TickClock::time_point sleepStart;
 
 		std::array<TestThread, totalThreads> threads
 		{{
-				makeTestThread(phase.first[phase.second[0]], sequenceAsserter, durationDeviations[0], sharedRets[0]),
-				makeTestThread(phase.first[phase.second[1]], sequenceAsserter, durationDeviations[1], sharedRets[1]),
-				makeTestThread(phase.first[phase.second[2]], sequenceAsserter, durationDeviations[2], sharedRets[2]),
-				makeTestThread(phase.first[phase.second[3]], sequenceAsserter, durationDeviations[3], sharedRets[3]),
-				makeTestThread(phase.first[phase.second[4]], sequenceAsserter, durationDeviations[4], sharedRets[4]),
-				makeTestThread(phase.first[phase.second[5]], sequenceAsserter, durationDeviations[5], sharedRets[5]),
-				makeTestThread(phase.first[phase.second[6]], sequenceAsserter, durationDeviations[6], sharedRets[6]),
-				makeTestThread(phase.first[phase.second[7]], sequenceAsserter, durationDeviations[7], sharedRets[7]),
-				makeTestThread(phase.first[phase.second[8]], sequenceAsserter, durationDeviations[8], sharedRets[8]),
-				makeTestThread(phase.first[phase.second[9]], sequenceAsserter, durationDeviations[9], sharedRets[9]),
+				makeTestThread(phase.first[phase.second[0]], sequenceAsserter, sleepStart, durationDeviations[0],
+						sharedRets[0]),
+				makeTestThread(phase.first[phase.second[1]], sequenceAsserter, sleepStart, durationDeviations[1],
+						sharedRets[1]),
+				makeTestThread(phase.first[phase.second[2]], sequenceAsserter, sleepStart, durationDeviations[2],
+						sharedRets[2]),
+				makeTestThread(phase.first[phase.second[3]], sequenceAsserter, sleepStart, durationDeviations[3],
+						sharedRets[3]),
+				makeTestThread(phase.first[phase.second[4]], sequenceAsserter, sleepStart, durationDeviations[4],
+						sharedRets[4]),
+				makeTestThread(phase.first[phase.second[5]], sequenceAsserter, sleepStart, durationDeviations[5],
+						sharedRets[5]),
+				makeTestThread(phase.first[phase.second[6]], sequenceAsserter, sleepStart, durationDeviations[6],
+						sharedRets[6]),
+				makeTestThread(phase.first[phase.second[7]], sequenceAsserter, sleepStart, durationDeviations[7],
+						sharedRets[7]),
+				makeTestThread(phase.first[phase.second[8]], sequenceAsserter, sleepStart, durationDeviations[8],
+						sharedRets[8]),
+				makeTestThread(phase.first[phase.second[9]], sequenceAsserter, sleepStart, durationDeviations[9],
+						sharedRets[9]),
 		}};
 
 		{
@@ -137,6 +152,7 @@ bool ThreadSleepForTestCase::run_() const
 
 			// wait for beginning of next tick - test threads should be started in the same tick
 			ThisThread::sleepFor({});
+			sleepStart = TickClock::now();
 
 			for (auto& thread : threads)
 				thread.start();
