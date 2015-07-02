@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-05-16
+ * \date 2015-07-02
  */
 
 #include "signalsTestCases.hpp"
@@ -18,6 +18,7 @@
 #include "SignalsGenerationOperationsTestCase.hpp"
 #include "SignalsQueuedOperationsTestCase.hpp"
 #include "SignalsCatchingTestCase.hpp"
+#include "SignalsInterruptionTestCase.hpp"
 
 #include "TestCaseGroup.hpp"
 
@@ -49,6 +50,9 @@ const SignalsQueuedOperationsTestCase queuedOperationsTestCase;
 /// SignalsCatchingTestCase instance
 const SignalsCatchingTestCase catchingTestCase;
 
+/// SignalsInterruptionTestCase instance
+const SignalsInterruptionTestCase interruptionTestCase;
+
 /// array with references to TestCase objects related to signals
 const TestCaseGroup::Range::value_type messageQueueTestCases_[]
 {
@@ -57,6 +61,7 @@ const TestCaseGroup::Range::value_type messageQueueTestCases_[]
 		TestCaseGroup::Range::value_type{generationOperationsTestCase},
 		TestCaseGroup::Range::value_type{queuedOperationsTestCase},
 		TestCaseGroup::Range::value_type{catchingTestCase},
+		TestCaseGroup::Range::value_type{interruptionTestCase},
 };
 
 }	// namespace
