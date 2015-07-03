@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-05-27
+ * \date 2015-07-03
  */
 
 #include "SignalsWaitOperationsTestCase.hpp"
@@ -567,6 +567,44 @@ bool phase3(const SendSignal& sendSignal, const TestReceivedSignalInformation&)
 	return true;
 }
 
+/**
+ * \brief Phase 4 of test case.
+ *
+ * Tests ignoring of pending signal and sending of ignored signal.
+ *
+ * \param [in] sendSignal is a reference to function used to send signal to selected thread
+ * \param [in] testReceivedSignalInformation is a reference to TestReceivedSignalInformation function used to test
+ * received SignalInformation object (ignored)
+ *
+ * \return true if test succeeded, false otherwise
+ */
+
+bool phase4(const SendSignal& sendSignal, const TestReceivedSignalInformation&)
+{
+	constexpr uint8_t testSignalNumber {14};
+	if (testSelfSendSignal(sendSignal, testSignalNumber, {}) == false)
+		return false;
+
+	// ignore pending signal
+	const auto setSignalActionResult = ThisThread::Signals::setSignalAction(testSignalNumber, SignalAction{});
+	if (setSignalActionResult.first != 0)
+		return false;
+
+	if (testSelfNoSignalsPending() == false)	// no signals may be pending
+		return false;
+
+	if (sendSignal(ThisThread::get(), testSignalNumber, {}) != 0)	// send ignored signal
+		return false;
+
+	if (testSelfNoSignalsPending() == false)	// no signals may be pending
+		return false;
+
+	int ret;
+	// restore previous signal action
+	std::tie(ret, std::ignore) = ThisThread::Signals::setSignalAction(testSignalNumber, setSignalActionResult.second);
+	return ret == 0;
+}
+
 /*---------------------------------------------------------------------------------------------------------------------+
 | local constants
 +---------------------------------------------------------------------------------------------------------------------*/
@@ -597,7 +635,7 @@ bool SignalsWaitOperationsTestCase::run_() const
 	const auto contextSwitchCount = statistics::getContextSwitchCount();
 
 	for (auto& stage : stages)
-		for (const auto& function : {phase1, phase2, phase3})
+		for (const auto& function : {phase1, phase2, phase3, phase4})
 		{
 			{
 				const auto ret = testSelfNoSignalsPending();	// initially no signals may be pending
