@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-05-27
+ * \date 2015-07-03
  */
 
 #ifndef INCLUDE_DISTORTOS_SYNCHRONIZATION_SIGNALSRECEIVERCONTROLBLOCK_HPP_
@@ -173,7 +173,7 @@ public:
 	 * - ENOTSUP - catching/handling of signals is disabled for this receiver;
 	 */
 
-	std::pair<int, SignalAction> setSignalAction(uint8_t signalNumber, const SignalAction& signalAction) const;
+	std::pair<int, SignalAction> setSignalAction(uint8_t signalNumber, const SignalAction& signalAction);
 
 	/**
 	 * \brief Sets signal mask for associated thread.
