@@ -143,6 +143,17 @@ std::pair<int, SignalAction> SignalsReceiverControlBlock::setSignalAction(const 
 	if (signalsCatcherControlBlock_ == nullptr)
 		return {ENOTSUP, {}};
 
+	if (signalAction.getHandler() == SignalAction{}.getHandler())	// new signal action is to ignore the signal?
+	{
+		int ret;
+		// discard all pending signals
+		// this can be done before the signal is actually changed, because clearing association (changing signal action
+		// to "ignore") may not fail (if the signal number is valid)
+		while (std::tie(ret, std::ignore) = acceptPendingSignal(signalNumber), ret == 0);
+		if (ret != EAGAIN)	// fatal error?
+			return {ret, {}};
+	}
+
 	return signalsCatcherControlBlock_->setAssociation(signalNumber, signalAction);
 }
 
