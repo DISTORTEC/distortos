@@ -67,7 +67,7 @@ public:
 	 *
 	 * \return pair with return code (0 on success, error code otherwise) and SignalInformation object for accepted
 	 * signal; error codes:
-	 * - EAGAIN - no signal specified by \a signalSet was pending;
+	 * - EAGAIN - no signal specified by \a signalNumber was pending;
 	 * - EINVAL - \a signalNumber value is invalid;
 	 */
 
