@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-06-29
+ * \date 2015-07-03
  */
 
 #include "distortos/synchronization/SignalsCatcherControlBlock.hpp"
@@ -224,7 +224,7 @@ std::pair<int, SignalAction> SignalsCatcherControlBlock::setAssociation(const ui
 	// - no Association object was found for signal number or Association object found for signal number has more
 	// than one signal number associated.
 	if (std::distance(storageBegin_, storageEnd_) == 0 && (numberAssociation == associationsEnd_ ||
-			numberAssociation->first.getBitset() == signalSet.getBitset()))
+			numberAssociation->first.getBitset() != signalSet.getBitset()))
 		return {EAGAIN, {}};
 
 	const auto previousSignalAction = numberAssociation != associationsEnd_ ?
