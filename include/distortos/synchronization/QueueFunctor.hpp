@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-01-19
+ * \date 2015-07-09
  */
 
 #ifndef INCLUDE_DISTORTOS_SYNCHRONIZATION_QUEUEFUNCTOR_HPP_
@@ -30,7 +30,10 @@ namespace synchronization
  * element
  */
 
-using QueueFunctor = estd::TypeErasedFunctor<void(void*)>;
+class QueueFunctor : public estd::TypeErasedFunctor<void(void*)>
+{
+
+};
 
 }	// namespace synchronization
 
