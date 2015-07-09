@@ -113,6 +113,18 @@ private:
 		return BoundedFunctor<F>{std::move(boundedFunctor)};
 	}
 
+	/**
+	 * \brief Implements callOnce() using type-erased functor.
+	 *
+	 * Does nothing if any function was already called for this object. If the function is currently being executed, but
+	 * not yet done, then the calling thread is blocked. In other case the function is executed and - after it is done -
+	 * all blocked threads are unblocked.
+	 *
+	 * \param [in] functor is a reference to functor which will execute bounded function with bounded arguments
+	 */
+
+	void callOnceImplementation(const Functor& functor);
+
 	/// pointer to stack-allocated list of ThreadControlBlock objects blocked on associated OnceFlag
 	scheduler::ThreadControlBlockList* blockedList_;
 
