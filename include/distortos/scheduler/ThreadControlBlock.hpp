@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-06-30
+ * \date 2015-07-09
  */
 
 #ifndef INCLUDE_DISTORTOS_SCHEDULER_THREADCONTROLBLOCK_HPP_
@@ -68,6 +68,8 @@ public:
 		BlockedOnConditionVariable,
 		/// thread is waiting for signal
 		WaitingForSignal,
+		/// thread is blocked on OnceFlag
+		BlockedOnOnceFlag
 	};
 
 	/// reason of thread unblocking
