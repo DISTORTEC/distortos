@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-03-13
+ * \date 2015-07-09
  */
 
 #ifndef INCLUDE_DISTORTOS_SYNCHRONIZATION_MESSAGEQUEUEBASE_HPP_
@@ -121,7 +121,10 @@ public:
 	 * It should perform common actions and execute the QueueFunctor passed from callers.
 	 */
 
-	using InternalFunctor = estd::TypeErasedFunctor<void(EntryList&, FreeEntryList&)>;
+	class InternalFunctor : public estd::TypeErasedFunctor<void(EntryList&, FreeEntryList&)>
+	{
+
+	};
 
 	/**
 	 * \brief MessageQueueBase's constructor
