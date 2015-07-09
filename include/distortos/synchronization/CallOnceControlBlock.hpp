@@ -16,6 +16,8 @@
 
 #include "distortos/estd/TypeErasedFunctor.hpp"
 
+#include <utility>
+
 namespace distortos
 {
 
@@ -51,6 +53,47 @@ private:
 	class Functor : public estd::TypeErasedFunctor<void()>
 	{
 
+	};
+
+	/**
+	 * \brief BoundedFunctor is a type-erased Functor which calls its bounded functor
+	 *
+	 * \param F is the type of bounded functor
+	 */
+
+	template<typename F>
+	class BoundedFunctor : public Functor
+	{
+	public:
+
+		/**
+		 * \brief BoundedFunctor's constructor
+		 *
+		 * \param [in] boundedFunctor is a rvalue reference to bounded functor which will be used to move-construct
+		 * internal bounded functor
+		 */
+
+		constexpr explicit BoundedFunctor(F&& boundedFunctor) :
+				boundedFunctor_{std::move(boundedFunctor)}
+		{
+
+		}
+
+		/**
+		 * \brief BoundedFunctor's function call operator
+		 *
+		 * Calls the bounded functor.
+		 */
+
+		virtual void operator()() const override
+		{
+			boundedFunctor_();
+		}
+
+	private:
+
+		/// bounded functor
+		F boundedFunctor_;
 	};
 
 	/// pointer to stack-allocated list of ThreadControlBlock objects blocked on associated OnceFlag
