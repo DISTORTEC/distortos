@@ -96,6 +96,23 @@ private:
 		F boundedFunctor_;
 	};
 
+	/**
+	 * \brief Helper factory function to make BoundedFunctor object with deduced template arguments
+	 *
+	 * \param F is the type of bounded functor
+	 *
+	 * \param [in] boundedFunctor is a rvalue reference to bounded functor which will be used to move-construct internal
+	 * bounded functor
+	 *
+	 * \return BoundedFunctor object with deduced template arguments
+	 */
+
+	template<typename F>
+	constexpr static BoundedFunctor<F> makeBoundedFunctor(F&& boundedFunctor)
+	{
+		return BoundedFunctor<F>{std::move(boundedFunctor)};
+	}
+
 	/// pointer to stack-allocated list of ThreadControlBlock objects blocked on associated OnceFlag
 	scheduler::ThreadControlBlockList* blockedList_;
 
