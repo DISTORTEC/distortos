@@ -14,6 +14,8 @@
 #ifndef INCLUDE_DISTORTOS_SYNCHRONIZATION_CALLONCECONTROLBLOCK_HPP_
 #define INCLUDE_DISTORTOS_SYNCHRONIZATION_CALLONCECONTROLBLOCK_HPP_
 
+#include "distortos/estd/TypeErasedFunctor.hpp"
+
 namespace distortos
 {
 
@@ -44,6 +46,12 @@ public:
 	}
 
 private:
+
+	/// Functor is a type-erased interface for functors which execute bounded function with bounded arguments
+	class Functor : public estd::TypeErasedFunctor<void()>
+	{
+
+	};
 
 	/// pointer to stack-allocated list of ThreadControlBlock objects blocked on associated OnceFlag
 	scheduler::ThreadControlBlockList* blockedList_;
