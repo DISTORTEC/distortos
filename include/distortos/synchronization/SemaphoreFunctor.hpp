@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-01-12
+ * \date 2015-07-09
  */
 
 #ifndef INCLUDE_DISTORTOS_SYNCHRONIZATION_SEMAPHOREFUNCTOR_HPP_
@@ -33,7 +33,10 @@ namespace synchronization
  * otherwise.
  */
 
-using SemaphoreFunctor = estd::TypeErasedFunctor<int(Semaphore&)>;
+class SemaphoreFunctor : public estd::TypeErasedFunctor<int(Semaphore&)>
+{
+
+};
 
 }	// namespace synchronization
 
