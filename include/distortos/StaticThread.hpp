@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-05-16
+ * \date 2015-07-15
  */
 
 #ifndef INCLUDE_DISTORTOS_STATICTHREAD_HPP_
@@ -30,7 +30,7 @@ namespace distortos
  * \param SignalActions is the max number of different SignalAction objects for this thread, relevant only if
  * CanReceiveSignals == true, 0 to disable catching of signals for this thread
  * \param Function is the function that will be executed in separate thread
- * \param Args are the arguments for Function
+ * \param Args are the arguments for \a Function
  */
 
 template<size_t StackSize, bool CanReceiveSignals, size_t QueuedSignals, size_t SignalActions, typename Function,
@@ -96,7 +96,7 @@ private:
  * \param SignalActions is the max number of different SignalAction objects for this thread, relevant only if
  * CanReceiveSignals == true, 0 to disable catching of signals for this thread
  * \param Function is the function that will be executed in separate thread
- * \param Args are the arguments for Function
+ * \param Args are the arguments for \a Function
  */
 
 template<size_t StackSize, size_t QueuedSignals, size_t SignalActions, typename Function, typename... Args>
@@ -163,7 +163,7 @@ private:
  * \param SignalActions is the max number of different SignalAction objects for this thread, relevant only if
  * CanReceiveSignals == true, 0 to disable catching of signals for this thread
  * \param Function is the function that will be executed
- * \param Args are the arguments for Function
+ * \param Args are the arguments for \a Function
  *
  * \param [in] priority is the thread's priority, 0 - lowest, UINT8_MAX - highest
  * \param [in] schedulingPolicy is the scheduling policy of the thread
@@ -191,7 +191,7 @@ makeStaticThread(const uint8_t priority, const SchedulingPolicy schedulingPolicy
  * \param SignalActions is the max number of different SignalAction objects for this thread, relevant only if
  * CanReceiveSignals == true, 0 to disable catching of signals for this thread
  * \param Function is the function that will be executed
- * \param Args are the arguments for Function
+ * \param Args are the arguments for \a Function
  *
  * \param [in] priority is the thread's priority, 0 - lowest, UINT8_MAX - highest
  * \param [in] function is a function that will be executed in separate thread
