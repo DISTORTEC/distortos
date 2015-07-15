@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-03-14
+ * \date 2015-07-15
  */
 
 #ifndef INCLUDE_DISTORTOS_THREAD_HPP_
@@ -23,7 +23,7 @@ namespace distortos
  * \brief Thread class is a templated interface for thread
  *
  * \param Function is the function that will be executed in separate thread
- * \param Args are the arguments for Function
+ * \param Args are the arguments for \a Function
  */
 
 template<typename Function, typename... Args>
@@ -134,7 +134,7 @@ private:
  * \brief Helper factory function to make Thread object with deduced template arguments
  *
  * \param Function is the function that will be executed
- * \param Args are the arguments for Function
+ * \param Args are the arguments for \a Function
  *
  * \param [in] buffer is a pointer to stack's buffer
  * \param [in] size is the size of stack's buffer, bytes
@@ -161,7 +161,7 @@ Thread<Function, Args...> makeThread(void* const buffer, const size_t size, cons
  * \brief Helper factory function to make Thread object with deduced template arguments
  *
  * \param Function is the function that will be executed
- * \param Args are the arguments for Function
+ * \param Args are the arguments for \a Function
  *
  * \param [in] buffer is a pointer to stack's buffer
  * \param [in] size is the size of stack's buffer, bytes
@@ -184,7 +184,7 @@ Thread<Function, Args...> makeThread(void* const buffer, const size_t size, cons
  * \brief Helper factory function to make Thread object with deduced template arguments
  *
  * \param Function is the function that will be executed
- * \param Args are the arguments for Function
+ * \param Args are the arguments for \a Function
  *
  * \param [in] buffer is a pointer to stack's buffer
  * \param [in] size is the size of stack's buffer, bytes
@@ -208,7 +208,7 @@ Thread<Function, Args...> makeThread(void* const buffer, const size_t size, cons
  * \brief Helper factory function to make Thread object with deduced template arguments
  *
  * \param Function is the function that will be executed
- * \param Args are the arguments for Function
+ * \param Args are the arguments for \a Function
  *
  * \param [in] buffer is a pointer to stack's buffer
  * \param [in] size is the size of stack's buffer, bytes
