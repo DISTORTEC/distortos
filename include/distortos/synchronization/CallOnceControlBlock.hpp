@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-07-09
+ * \date 2015-07-15
  */
 
 #ifndef INCLUDE_DISTORTOS_SYNCHRONIZATION_CALLONCECONTROLBLOCK_HPP_
@@ -18,8 +18,16 @@
 
 #include <utility>
 
+#include <sys/features.h>
+
 namespace distortos
 {
+
+/// GCC 4.9 is needed for CallOnceControlBlock::operator()() function - and thus for OnceFlag and callOnce() - earlier
+/// versions don't support parameter pack expansion in lambdas
+#define DISTORTOS_CALLONCE_SUPPORTED	__GNUC_PREREQ(4, 9)
+
+#if DISTORTOS_CALLONCE_SUPPORTED == 1 || DOXYGEN == 1
 
 namespace scheduler
 {
@@ -32,6 +40,7 @@ namespace synchronization
 {
 
 /// CallOnceControlBlock class implements functionality of OnceFlag class and callOnce()
+/// \note This class requires GCC 4.9.
 class CallOnceControlBlock
 {
 public:
@@ -133,6 +142,8 @@ private:
 };
 
 }	// namespace synchronization
+
+#endif	// DISTORTOS_CALLONCE_SUPPORTED == 1 || DOXYGEN == 1
 
 }	// namespace distortos
 

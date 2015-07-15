@@ -8,10 +8,12 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-07-09
+ * \date 2015-07-15
  */
 
 #include "distortos/synchronization/CallOnceControlBlock.hpp"
+
+#if DISTORTOS_CALLONCE_SUPPORTED == 1 || DOXYGEN == 1
 
 #include "distortos/architecture/InterruptMaskingLock.hpp"
 
@@ -58,3 +60,5 @@ void CallOnceControlBlock::callOnceImplementation(const Functor& functor)
 }	// namespace synchronization
 
 }	// namespace distortos
+
+#endif	// DISTORTOS_CALLONCE_SUPPORTED == 1 || DOXYGEN == 1
