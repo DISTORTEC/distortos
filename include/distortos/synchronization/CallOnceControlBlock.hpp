@@ -14,9 +14,8 @@
 #ifndef INCLUDE_DISTORTOS_SYNCHRONIZATION_CALLONCECONTROLBLOCK_HPP_
 #define INCLUDE_DISTORTOS_SYNCHRONIZATION_CALLONCECONTROLBLOCK_HPP_
 
+#include "distortos/estd/invoke.hpp"
 #include "distortos/estd/TypeErasedFunctor.hpp"
-
-#include <utility>
 
 #include <sys/features.h>
 
@@ -54,6 +53,33 @@ public:
 			done_{}
 	{
 
+	}
+
+	/**
+	 * \brief CallOnceControlBlock's function call operator
+	 *
+	 * Does nothing if any function was already called for this object. In other case provided function and arguments
+	 * are wrapped in a type-erased functor and passed to callOnceImplementation().
+	 *
+	 * \param Function is the function object that will be executed
+	 * \param Args are the arguments for \a Function
+	 *
+	 * \param [in] function is the function object that will be executed
+	 * \param [in] args are arguments for \a function
+	 */
+
+	template<typename Function, typename... Args>
+	void operator()(Function&& function, Args&&... args)
+	{
+		if (done_ == true)	// function already executed?
+			return;
+
+		const auto functor = makeBoundedFunctor(
+				[&function, &args...]()
+				{
+					estd::invoke(std::forward<Function>(function), std::forward<Args>(args)...);
+				});
+		callOnceImplementation(functor);
 	}
 
 private:
