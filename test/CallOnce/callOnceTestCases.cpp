@@ -8,11 +8,12 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-07-15
+ * \date 2015-07-16
  */
 
 #include "callOnceTestCases.hpp"
 
+#include "CallOnceOperationsTestCase.hpp"
 #include "CallOnceFunctionTypesTestCase.hpp"
 
 #include "TestCaseGroup.hpp"
@@ -30,12 +31,16 @@ namespace
 | local objects
 +---------------------------------------------------------------------------------------------------------------------*/
 
+/// CallOnceOperationsTestCase instance
+const CallOnceOperationsTestCase operationsTestCase;
+
 /// CallOnceFunctionTypesTestCase instance
 const CallOnceFunctionTypesTestCase functionTypesTestCase;
 
 /// array with references to TestCase objects related to callOnce()
 const TestCaseGroup::Range::value_type callOnceTestCases_[]
 {
+		TestCaseGroup::Range::value_type{operationsTestCase},
 		TestCaseGroup::Range::value_type{functionTypesTestCase},
 };
 
