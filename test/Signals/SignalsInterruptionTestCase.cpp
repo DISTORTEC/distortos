@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-07-02
+ * \date 2015-07-16
  */
 
 #include "SignalsInterruptionTestCase.hpp"
@@ -349,7 +349,7 @@ public:
 			TestStep{8, 11, 2, 3, 6, 4},
 			mutexLockerThread_{highPriority, &MutexTestStep::mutexLockerThreadFunction, std::ref(*this)},
 			mutex_{},
-			sequenceAsserter_{sequenceAsserter},
+			sequenceAsserter_(sequenceAsserter),
 			type_{type}
 	{
 
