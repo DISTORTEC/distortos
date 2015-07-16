@@ -1,0 +1,174 @@
+/**
+ * \file
+ * \brief CallOnceOperationsTestCase class implementation
+ *
+ * \author Copyright (C) 2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ *
+ * \par License
+ * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
+ * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ *
+ * \date 2015-07-16
+ */
+
+#include "CallOnceOperationsTestCase.hpp"
+
+#include "SequenceAsserter.hpp"
+#include "waitForNextTick.hpp"
+
+#include "distortos/callOnce.hpp"
+#include "distortos/StaticThread.hpp"
+#include "distortos/statistics.hpp"
+#include "distortos/ThisThread.hpp"
+
+namespace distortos
+{
+
+namespace test
+{
+
+#if DISTORTOS_CALLONCE_SUPPORTED == 1 || DOXYGEN == 1
+
+namespace
+{
+
+/*---------------------------------------------------------------------------------------------------------------------+
+| local constants
++---------------------------------------------------------------------------------------------------------------------*/
+
+/// sleepFor() duration used in function() passed to callOnce()
+constexpr auto sleepForDuration = TickClock::duration{10};
+
+/// size of stack for test thread, bytes
+constexpr size_t testThreadStackSize {512};
+
+/// number of test threads
+constexpr size_t totalThreads {10};
+
+/// expected number of context switches in waitForNextTick(): main -> idle -> main
+constexpr decltype(statistics::getContextSwitchCount()) waitForNextTickContextSwitchCount {2};
+
+/*---------------------------------------------------------------------------------------------------------------------+
+| local types
++---------------------------------------------------------------------------------------------------------------------*/
+
+/// pair of sequence points
+using SequencePoints = std::pair<unsigned int, unsigned int>;
+
+/*---------------------------------------------------------------------------------------------------------------------+
+| local functions
++---------------------------------------------------------------------------------------------------------------------*/
+
+/**
+ * \brief Test function passed to callOnce().
+ *
+ * This function marks first sequence point, executes ThisThread::sleepFor() and marks second sequence point.
+ *
+ * \param [in] sequenceAsserter is a reference to SequenceAsserter shared object
+ */
+
+void function(SequenceAsserter& sequenceAsserter)
+{
+	sequenceAsserter.sequencePoint(1);
+	ThisThread::sleepFor(sleepForDuration);
+	sequenceAsserter.sequencePoint(totalThreads + 1);
+}
+
+/**
+ * \brief Test thread function.
+ *
+ * This function marks first sequence point, passes function() to callOnce() and marks second sequence point.
+ *
+ * \param [in] sequenceAsserter is a reference to SequenceAsserter shared object
+ * \param [in] sequencePoints is a pair of sequence points for this instance
+ * \param [in] onceFlag is a reference to OnceFlag shared object
+ */
+
+void thread(SequenceAsserter& sequenceAsserter, const SequencePoints sequencePoints, OnceFlag& onceFlag)
+{
+	sequenceAsserter.sequencePoint(sequencePoints.first);
+	callOnce(onceFlag, function, sequenceAsserter);
+	sequenceAsserter.sequencePoint(sequencePoints.second);
+}
+
+/**
+ * \brief Builder of TestThread objects.
+ *
+ * \param [in] priority is the thread's priority
+ * \param [in] sequenceAsserter is a reference to SequenceAsserter shared object
+ * \param [in] sequencePoints is a pair of sequence points for this instance
+ * \param [in] onceFlag is a reference to OnceFlag shared object
+ *
+ * \return constructed TestThread object
+ */
+
+auto makeTestThread(const uint8_t priority, SequenceAsserter& sequenceAsserter, const SequencePoints sequencePoints,
+		OnceFlag& onceFlag) ->
+		decltype(makeStaticThread<testThreadStackSize>(priority, thread, std::ref(sequenceAsserter), sequencePoints,
+				std::ref(onceFlag)))
+{
+	return makeStaticThread<testThreadStackSize>(priority, thread, std::ref(sequenceAsserter), sequencePoints,
+			std::ref(onceFlag));
+}
+
+}	// namespace
+
+#endif	// DISTORTOS_CALLONCE_SUPPORTED == 1 || DOXYGEN == 1
+
+/*---------------------------------------------------------------------------------------------------------------------+
+| private functions
++---------------------------------------------------------------------------------------------------------------------*/
+
+bool CallOnceOperationsTestCase::run_() const
+{
+#if DISTORTOS_CALLONCE_SUPPORTED == 1 || DOXYGEN == 1
+
+	const auto contextSwitchCount = statistics::getContextSwitchCount();
+
+	SequenceAsserter sequenceAsserter;
+	OnceFlag onceFlag;
+
+	using TestThread = decltype(makeTestThread(uint8_t{}, sequenceAsserter, SequencePoints{}, onceFlag));
+	std::array<TestThread, totalThreads> threads
+	{{
+			makeTestThread(testCasePriority_ - 1, sequenceAsserter, SequencePoints{0, 12}, onceFlag),
+			makeTestThread(testCasePriority_ - 1, sequenceAsserter, SequencePoints{2, 13}, onceFlag),
+			makeTestThread(testCasePriority_ - 1, sequenceAsserter, SequencePoints{3, 14}, onceFlag),
+			makeTestThread(testCasePriority_ - 1, sequenceAsserter, SequencePoints{4, 15}, onceFlag),
+			makeTestThread(testCasePriority_ - 1, sequenceAsserter, SequencePoints{5, 16}, onceFlag),
+			makeTestThread(testCasePriority_ - 1, sequenceAsserter, SequencePoints{6, 17}, onceFlag),
+			makeTestThread(testCasePriority_ - 1, sequenceAsserter, SequencePoints{7, 18}, onceFlag),
+			makeTestThread(testCasePriority_ - 1, sequenceAsserter, SequencePoints{8, 19}, onceFlag),
+			makeTestThread(testCasePriority_ - 1, sequenceAsserter, SequencePoints{9, 20}, onceFlag),
+			makeTestThread(testCasePriority_ - 1, sequenceAsserter, SequencePoints{10, 21}, onceFlag),
+	}};
+
+	waitForNextTick();
+	const auto start = TickClock::now();
+
+	for (auto& thread : threads)
+		thread.start();
+
+	ThisThread::setPriority(testCasePriority_ - 2);
+
+	for (auto& thread : threads)
+		thread.join();
+
+	if (TickClock::now() - start != sleepForDuration + decltype(sleepForDuration){1})
+		return false;
+
+	if (sequenceAsserter.assertSequence(totalThreads * 2 + 2) == false)
+		return false;
+
+	constexpr auto totalContextSwitches = 2 * totalThreads + 3 + waitForNextTickContextSwitchCount;
+	if (statistics::getContextSwitchCount() - contextSwitchCount != totalContextSwitches)
+		return false;
+
+#endif	// DISTORTOS_CALLONCE_SUPPORTED == 1 || DOXYGEN == 1
+
+	return true;
+}
+
+}	// namespace test
+
+}	// namespace distortos
