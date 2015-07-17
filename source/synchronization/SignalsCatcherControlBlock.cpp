@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-07-03
+ * \date 2015-07-17
  */
 
 #include "distortos/synchronization/SignalsCatcherControlBlock.hpp"
@@ -83,7 +83,7 @@ SignalsCatcherControlBlock::Association* findAssociation(SignalsCatcherControlBl
 		SignalsCatcherControlBlock::Association* const end, const uint8_t signalNumber)
 {
 	return std::find_if(begin, end,
-			[signalNumber](const SignalsCatcherControlBlock::Association& association)
+			[signalNumber](const SignalsCatcherControlBlock::Association& association) -> bool
 			{
 				return association.first.getBitset()[signalNumber];
 			});
