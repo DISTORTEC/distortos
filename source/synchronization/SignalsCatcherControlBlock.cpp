@@ -104,7 +104,7 @@ SignalsCatcherControlBlock::Association* findAssociation(SignalsCatcherControlBl
 		SignalsCatcherControlBlock::Association* const end, const SignalAction& signalAction)
 {
 	return std::find_if(begin, end,
-			[&signalAction](const SignalsCatcherControlBlock::Association& association)
+			[&signalAction](const SignalsCatcherControlBlock::Association& association) -> bool
 			{
 				return association.second.getHandler() == signalAction.getHandler() &&
 						association.second.getSignalMask().getBitset() == signalAction.getSignalMask().getBitset();
