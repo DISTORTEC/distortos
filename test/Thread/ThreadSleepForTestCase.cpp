@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-07-02
+ * \date 2015-07-17
  */
 
 #include "ThreadSleepForTestCase.hpp"
@@ -103,9 +103,10 @@ void thread(const uint8_t sleepFor, SequenceAsserter& sequenceAsserter, const un
 TestThread makeTestThread(const ThreadParameters& threadParameters, SequenceAsserter& sequenceAsserter,
 		const TickClock::time_point& sleepStart, TickClock::duration& durationDeviation, int& sharedRet)
 {
-	return makeStaticThread<testThreadStackSize>(1, thread, static_cast<uint8_t>(UINT8_MAX - threadParameters.first),
-			std::ref(sequenceAsserter), static_cast<unsigned int>(threadParameters.second), std::cref(sleepStart),
-			std::ref(durationDeviation), std::ref(sharedRet));
+	return makeStaticThread<testThreadStackSize>(UINT8_MAX, thread,
+			static_cast<uint8_t>(UINT8_MAX - threadParameters.first), std::ref(sequenceAsserter),
+			static_cast<unsigned int>(threadParameters.second), std::cref(sleepStart), std::ref(durationDeviation),
+			std::ref(sharedRet));
 }
 
 }	// namespace
