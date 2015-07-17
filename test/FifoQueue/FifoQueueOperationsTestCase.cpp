@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-01-09
+ * \date 2015-07-17
  */
 
 #include "FifoQueueOperationsTestCase.hpp"
@@ -930,12 +930,13 @@ bool FifoQueueOperationsTestCase::run_() const
 			10 * waitForNextTickContextSwitchCount + 9 * phase34SoftwareTimerContextSwitchCount :
 			7 * waitForNextTickContextSwitchCount + 6 * phase34SoftwareTimerContextSwitchCount;
 	constexpr auto expectedContextSwitchCount = phase1ExpectedContextSwitchCount + phase2ExpectedContextSwitchCount +
-			phase3ExpectedContextSwitchCount + phase4ExpectedContextSwitchCount;
+			phase3ExpectedContextSwitchCount + phase4ExpectedContextSwitchCount + 4 * waitForNextTickContextSwitchCount;
 
 	const auto contextSwitchCount = statistics::getContextSwitchCount();
 
 	for (const auto& function : {phase1, phase2, phase3, phase4})
 	{
+		waitForNextTick();
 		const auto ret = function();
 		if (ret != true)
 			return ret;
