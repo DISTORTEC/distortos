@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-05-16
+ * \date 2015-08-14
  */
 
 #ifndef INCLUDE_DISTORTOS_DISTORTOSCONFIGURATION_H_
@@ -49,10 +49,10 @@
 #define CONFIG_ROUND_ROBIN_RATE_HZ	10
 
 /**
- * \brief selects whether reception of signals is enabled (1) or disabled (0) for main thread
+ * \brief define to enable reception of signals for main thread, undefine otherwise
  */
 
-#define CONFIG_MAIN_THREAD_CAN_RECEIVE_SIGNALS	0
+#undef CONFIG_MAIN_THREAD_CAN_RECEIVE_SIGNALS
 
 /**
  * \brief max number of queued signals for main thread, relevant only if CONFIG_MAIN_THREAD_CAN_RECEIVE_SIGNALS == 1,
