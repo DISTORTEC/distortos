@@ -6,11 +6,12 @@ Advanced real-time operating system for deeply embedded targets
 - fully preemptive
 - round-robin and FIFO scheduling
 - all basic primitives aim for maximum compatibility with POSIX, thread support library from C++11 and other established
-standards
+  standards
 - POSIX pthread implementation
 - support for various mutex types (normal, error-checking, recursive) and mutex protocols (normal, priority inheritance,
   priority protection) 
 - software timers
+- POSIX-style signals
 - static design where it is possible and makes sense
 - object-oriented design
 - written in C++11
@@ -59,17 +60,18 @@ Building
 --------
 
 To build *distortos* you need:
-- [GNU Make](http://www.gnu.org/software/make/) or [tup](http://gittup.org/tup/) (version 0.7.3 or above) build system
+- [GNU Make](http://www.gnu.org/software/make/) or [tup](http://gittup.org/tup/) (version 0.7.3 or above) build system;
 - [arm-none-eabi bleeding-edge-toolchain](https://sourceforge.net/projects/bleeding-edge/); alternatively you can try
   any other arm-none-eabi toolchain, but C++ exception handling code will increase the size of binary and incorrect
   newlib's _reent struct configuration will dramatically increase RAM requirements (bleeding-edge-toolchain has the
   exceptions properly disabled and uses small variant of _reent struct - see
   [here](http://www.freddiechopin.info/en/articles/35-arm/87-bleeding-edge-toolchain-o-co-chodzi)) - such combinations
-  are not tested extensively
+  are not tested extensively;
 
 Make sure the tools are available in your system's *PATH* environment variable.
 
-To build just execute `make` (if using GNU Make) or `tup` (if using tup) command in the main directory of the project.
+To build just execute `make` (if using *GNU Make*) or `tup` (if using *tup*) command in the main directory of the
+project.
 
 #### If you use tup and Linux
 
@@ -78,7 +80,7 @@ You need to set *suid* bit on your *tup* executable (`` sudo chmod +s `which tup
 
 #### If you use tup and Windows
 
-Don't use 64-bit toolchain (even if you have 64-bit system), as *tup* cannot currently handle 64-bit executables.
+Don't use 64-bit tools (even if you have 64-bit system), as *tup* cannot currently handle 64-bit executables.
 
 Mailing list
 ------------
