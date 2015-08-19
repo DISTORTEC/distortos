@@ -7,6 +7,9 @@ output/
 # doxygen documentation output
 documentation/html/
 
+# generated headers
+include/distortos/distortosConfiguration.h
+
 # Eclipse project files
 .cproject
 .project

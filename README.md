@@ -67,6 +67,7 @@ To build *distortos* you need:
   exceptions properly disabled and uses small variant of _reent struct - see
   [here](http://www.freddiechopin.info/en/articles/35-arm/87-bleeding-edge-toolchain-o-co-chodzi)) - such combinations
   are not tested extensively;
+- [AWK](https://en.wikipedia.org/wiki/AWK);
 
 Make sure the tools are available in your system's *PATH* environment variable.
 
@@ -81,6 +82,13 @@ You need to set *suid* bit on your *tup* executable (`` sudo chmod +s `which tup
 #### If you use tup and Windows
 
 Don't use 64-bit tools (even if you have 64-bit system), as *tup* cannot currently handle 64-bit executables.
+
+#### Tools for Windows
+
+You can get *GNU Make* and *AWK* (*GAWK*) by installing [MSYS2](https://msys2.github.io/) and executing
+`pacman -S gawk make` in the shell of this software distro - the binaries will be placed in
+`<installation path>\usr\bin` folder. *tup* and *arm-none-eabi bleeding-edge-toolchain* binaries for Windows are
+available from their main websites.
 
 Mailing list
 ------------

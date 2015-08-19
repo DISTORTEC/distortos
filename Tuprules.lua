@@ -6,7 +6,7 @@
 -- This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 -- distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 --
--- date: 2015-08-19
+-- date: 2015-08-20
 --
 
 ------------------------------------------------------------------------------------------------------------------------
@@ -110,22 +110,25 @@ end
 -- assemble file named input
 function as(input)
 	specific_flags = getSpecificFlags(ASFLAGS, input)
+	inputs = {input, extra_inputs = {"$(TOP)/include/distortos/distortosConfiguration.h"}}
 	outputs = {OUTPUT .. tup.getrelativedir(TOP) .. "/%B.o", "$(TOP)/<objects>"}
-	tup.rule(input, "^c^ $(AS) $(ASFLAGS) $(specific_flags) -c %f -o %o", outputs)
+	tup.rule(inputs, "^c^ $(AS) $(ASFLAGS) $(specific_flags) -c %f -o %o", outputs)
 end
 
 -- compile (C) file named input
 function cc(input)
 	specific_flags = getSpecificFlags(CFLAGS, input)
+	inputs = {input, extra_inputs = {"$(TOP)/include/distortos/distortosConfiguration.h"}}
 	outputs = {OUTPUT .. tup.getrelativedir(TOP) .. "/%B.o", "$(TOP)/<objects>"}
-	tup.rule(input, "^c^ $(CC) $(CFLAGS) $(specific_flags) -c %f -o %o", outputs)
+	tup.rule(inputs, "^c^ $(CC) $(CFLAGS) $(specific_flags) -c %f -o %o", outputs)
 end
 
 -- compile (C++) file named input
 function cxx(input)
 	specific_flags = getSpecificFlags(CXXFLAGS, input)
+	inputs = {input, extra_inputs = {"$(TOP)/include/distortos/distortosConfiguration.h"}}
 	outputs = {OUTPUT .. tup.getrelativedir(TOP) .. "/%B.o", "$(TOP)/<objects>"}
-	tup.rule(input, "^c^ $(CXX) $(CXXFLAGS) $(specific_flags) -c %f -o %o", outputs)
+	tup.rule(inputs, "^c^ $(CXX) $(CXXFLAGS) $(specific_flags) -c %f -o %o", outputs)
 end
 
 -- link all objects from $(TOP)/<objects> into file named output
