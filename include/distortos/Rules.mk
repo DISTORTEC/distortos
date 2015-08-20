@@ -13,8 +13,14 @@
 # generated headers
 #-----------------------------------------------------------------------------------------------------------------------
 
-$(d)/distortosConfiguration.h: distortosConfiguration.mk scripts/makeDistortosConfiguration.awk $(d)/Rules.mk
+$(d)/distortosConfiguration.h: configurations/STM32F4DISCOVERY/test/distortosConfiguration.mk
 	./scripts/makeDistortosConfiguration.awk $< > $@
+
+#-----------------------------------------------------------------------------------------------------------------------
+# generated headers depend on this Rules.mk and the script that generates them
+#-----------------------------------------------------------------------------------------------------------------------
+
+$(d)/distortosConfiguration.h: $(d)/Rules.mk scripts/makeDistortosConfiguration.awk
 
 #-----------------------------------------------------------------------------------------------------------------------
 # add generated headers to list of generated files

@@ -9,4 +9,6 @@
 -- date: 2015-08-20
 --
 
-tup.rule("$(TOP)/distortosConfiguration.mk", "$(TOP)/scripts/makeDistortosConfiguration.awk %f > %o", "%B.h")
+distortosConfigurationSource = "$(TOP)/configurations/STM32F4DISCOVERY/test/distortosConfiguration.mk"
+
+tup.rule(distortosConfigurationSource, "$(TOP)/scripts/makeDistortosConfiguration.awk %f > %o", "%B.h")
