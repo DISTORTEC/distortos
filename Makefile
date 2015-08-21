@@ -6,7 +6,7 @@
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #
-# date: 2015-08-20
+# date: 2015-08-21
 #
 
 #-----------------------------------------------------------------------------------------------------------------------
@@ -27,6 +27,9 @@ RM = rm -f
 #-----------------------------------------------------------------------------------------------------------------------
 # project configuration
 #-----------------------------------------------------------------------------------------------------------------------
+
+# file with $(CONFIG_SELECTED_CONFIGURATION) variable
+include selectedConfiguration.mk
 
 # output folder
 OUTPUT = output/
