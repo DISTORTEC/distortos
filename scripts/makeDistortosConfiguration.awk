@@ -8,14 +8,14 @@
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #
-# date: 2015-08-19
+# date: 2015-08-21
 #
 
 BEGIN {
 	configPattern = "CONFIG_[A-Za-z0-9_]+"
 	booleanTrueConfigPattern = "^" configPattern "=y$"
 	booleanFalseConfigPattern = "^" configPattern "=n$"
-	notSetConfigPattern = "# " configPattern " is not set$"
+	notSetConfigPattern = "^# " configPattern " is not set$"
 	numericConfigPattern = "^" configPattern "=[[:digit:]]+$"
 	stringConfigPattern = "^" configPattern "=\"([^\"\\\\]|\\\\.)*\"$"
 
