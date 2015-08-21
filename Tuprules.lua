@@ -33,6 +33,9 @@ SIZE = TOOLCHAIN .. "size"
 -- project configuration
 ------------------------------------------------------------------------------------------------------------------------
 
+-- file with $(CONFIG_SELECTED_CONFIGURATION) variable
+tup.include("selectedConfiguration.mk")
+
 -- output folder
 OUTPUT = TOP .. "/output/"
 
