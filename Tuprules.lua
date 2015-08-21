@@ -75,6 +75,34 @@ CSTD = "-std=gnu99"
 DBGFLAGS = "-g -ggdb3"
 
 ------------------------------------------------------------------------------------------------------------------------
+-- load configuration variables from distortosConfiguration.mk file selected by user
+------------------------------------------------------------------------------------------------------------------------
+
+local file = assert(io.open("./" .. CONFIG_SELECTED_CONFIGURATION .. "/distortosConfiguration.mk", "r"))
+for line in file:lines() do
+	local configPattern = "CONFIG_[A-Za-z0-9_]+"
+	local standardConfigPattern = "^(" .. configPattern .. ")=(.*)$"
+	local name, value = line:match(standardConfigPattern)
+	if name ~= nil and value ~= nil then
+		local unquotedValue = value:match("^\"(.*)\"$")
+		if unquotedValue ~= nil then
+			value = unquotedValue
+		end	
+	else
+		local notSetConfigPattern = "^# (" .. configPattern .. ") is not set$"
+		name = line:match(notSetConfigPattern)
+		if name ~= nil then
+			value = "n"
+		end
+	end
+
+	if name ~= nil and value ~= nil then
+		_G[name] = value
+	end
+end
+file:close()
+
+------------------------------------------------------------------------------------------------------------------------
 -- compilation flags
 ------------------------------------------------------------------------------------------------------------------------
 
