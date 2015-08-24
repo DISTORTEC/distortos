@@ -18,4 +18,11 @@ config TICK_CLOCK
 	help
 		Frequency of timer used for system ticks, Hz.
 
+config TICK_RATE_HZ
+	int "Tick rate, Hz"
+	range 1 TICK_CLOCK
+	default 1000
+	help
+		System's tick rate, Hz.
+
 endmenu
