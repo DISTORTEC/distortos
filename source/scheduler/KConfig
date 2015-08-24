@@ -47,4 +47,13 @@ config MAIN_THREAD_QUEUED_SIGNALS
 		Maximal number of queued signals for main thread. 0 disables queuing of
 		signals for main thread.
 
+config MAIN_THREAD_SIGNAL_ACTIONS
+	int "Number of SignalAction objects for main thread"
+	range 0 32
+	default 0
+	depends on MAIN_THREAD_CAN_RECEIVE_SIGNALS
+	help
+		Maximal number of different SignalAction objects for main thread. 0
+		disables catching of signals for main thread.
+
 endmenu
