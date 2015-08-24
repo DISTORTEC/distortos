@@ -27,10 +27,20 @@ SUBDIRECTORIES += test
 # generated headers
 #-----------------------------------------------------------------------------------------------------------------------
 
-DISTORTOS_CONFIGURATION_H := include/distortos/distortosConfiguration.h
+DISTORTOS_CONFIGURATION_H := $(OUTPUT)include/distortos/distortosConfiguration.h
 
 $(DISTORTOS_CONFIGURATION_H): ./$(subst ",,$(CONFIG_SELECTED_CONFIGURATION))/distortosConfiguration.mk
 	./scripts/makeDistortosConfiguration.awk $< > $@
+
+#-----------------------------------------------------------------------------------------------------------------------
+# rule to create output folder for generated headers
+#-----------------------------------------------------------------------------------------------------------------------
+
+DISTORTOS_CONFIGURATION_H_DIRECTORY := $(dir $(DISTORTOS_CONFIGURATION_H))
+
+$(DISTORTOS_CONFIGURATION_H): | $(DISTORTOS_CONFIGURATION_H_DIRECTORY)
+$(DISTORTOS_CONFIGURATION_H_DIRECTORY):
+	mkdir -p $(DISTORTOS_CONFIGURATION_H_DIRECTORY)
 
 #-----------------------------------------------------------------------------------------------------------------------
 # generated headers depend on this Rules.mk, the script that generates them and the selectedConfiguration.mk file

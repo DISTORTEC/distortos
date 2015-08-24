@@ -31,6 +31,7 @@ SUBDIRECTORIES += Thread
 #-----------------------------------------------------------------------------------------------------------------------
 
 CXXFLAGS_$(d) := $(CXXFLAGS_$(d)) -I$(d)
+CXXFLAGS_$(d) := $(CXXFLAGS_$(d)) -I$(OUTPUT)include
 CXXFLAGS_$(d) := $(CXXFLAGS_$(d)) -Iinclude
 CXXFLAGS_$(d) := $(CXXFLAGS_$(d)) -Isource/architecture/ARM/ARMv7-M/include
 

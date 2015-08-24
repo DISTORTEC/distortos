@@ -16,6 +16,7 @@
 ASFLAGS_$(d)/ARMv7-M-Reset_Handler.S := -D__USES_TWO_STACKS -D__USES_CXX
 
 CXXFLAGS_$(d) := $(CXXFLAGS_$(d)) -DSTM32F407xx
+CXXFLAGS_$(d) := $(CXXFLAGS_$(d)) -I$(OUTPUT)include
 CXXFLAGS_$(d) := $(CXXFLAGS_$(d)) -Iinclude
 CXXFLAGS_$(d) := $(CXXFLAGS_$(d)) -Isource/chip/STMicroelectronics/STM32F4/include
 CXXFLAGS_$(d) := $(CXXFLAGS_$(d)) -Iexternal/CMSIS-STM32F4

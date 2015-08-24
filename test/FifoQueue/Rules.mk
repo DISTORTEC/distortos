@@ -15,6 +15,7 @@
 
 CXXFLAGS_$(d) := $(CXXFLAGS_$(d)) -I$(d)
 CXXFLAGS_$(d) := $(CXXFLAGS_$(d)) -Itest
+CXXFLAGS_$(d) := $(CXXFLAGS_$(d)) -I$(OUTPUT)include
 CXXFLAGS_$(d) := $(CXXFLAGS_$(d)) -Iinclude
 
 #-----------------------------------------------------------------------------------------------------------------------

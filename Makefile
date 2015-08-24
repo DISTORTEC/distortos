@@ -6,7 +6,7 @@
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #
-# date: 2015-08-21
+# date: 2015-08-24
 #
 
 #-----------------------------------------------------------------------------------------------------------------------
@@ -137,9 +137,9 @@ include Rules.mk
 $(call PARSE_SUBDIRECTORIES,$(SUBDIRECTORIES))
 
 .PHONY: targets
-targets: include/distortos/distortosConfiguration.h $(OBJECTS) $(ELF) $(HEX) $(BIN) $(DMP) $(LSS) size
+targets: $(OUTPUT)include/distortos/distortosConfiguration.h $(OBJECTS) $(ELF) $(HEX) $(BIN) $(DMP) $(LSS) size
 
-$(OBJECTS): Makefile include/distortos/distortosConfiguration.h
+$(OBJECTS): Makefile $(OUTPUT)include/distortos/distortosConfiguration.h
 
 $(OUTPUT)%.o: %.S
 	$(AS) $(ASFLAGS) $(ASFLAGS_$(<)) -c $< -o $@
