@@ -6,14 +6,14 @@
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #
-# date: 2015-01-07
+# date: 2015-08-24
 #
 
 #-----------------------------------------------------------------------------------------------------------------------
 # compilation flags
 #-----------------------------------------------------------------------------------------------------------------------
 
-CFLAGS_$(d) := -Iinclude
+CFLAGS_$(d) := $(CFLAGS_$(d)) -Iinclude
 
 #-----------------------------------------------------------------------------------------------------------------------
 # linker scripts (used as explicit dependency of .elf file)
