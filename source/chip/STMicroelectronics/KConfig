@@ -1,0 +1,28 @@
+#
+# file: KConfig
+#
+# author: Copyright (C) 2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+#
+# This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
+# distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+#
+# date: 2015-08-24
+#
+
+choice
+	prompt "STM32 chip family"
+	default CHIP_STM32F4
+	depends on CHIP_STM32
+	help
+		Select STM32 chip family
+
+config CHIP_STM32F4
+	bool "STM32F4"
+	help
+		STMicroelectronics STM32F4 chip family
+
+endchoice
+
+if CHIP_STM32F4
+source source/chip/STMicroelectronics/STM32F4/KConfig
+endif
