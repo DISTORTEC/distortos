@@ -38,4 +38,13 @@ config MAIN_THREAD_CAN_RECEIVE_SIGNALS
 	help
 		Enable reception of signals for main thread.
 
+config MAIN_THREAD_QUEUED_SIGNALS
+	int "Number of queued signals for main thread"
+	range 0 4294967295
+	default 0
+	depends on MAIN_THREAD_CAN_RECEIVE_SIGNALS
+	help
+		Maximal number of queued signals for main thread. 0 disables queuing of
+		signals for main thread.
+
 endmenu
