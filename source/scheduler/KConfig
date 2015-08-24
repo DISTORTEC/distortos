@@ -25,4 +25,11 @@ config TICK_RATE_HZ
 	help
 		System's tick rate, Hz.
 
+config ROUND_ROBIN_RATE_HZ
+	int "Round-robin rate, Hz"
+	range 1 TICK_RATE_HZ
+	default 10
+	help
+		Round-robin rate, Hz.
+
 endmenu
