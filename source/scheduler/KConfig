@@ -32,4 +32,10 @@ config ROUND_ROBIN_RATE_HZ
 	help
 		Round-robin rate, Hz.
 
+config MAIN_THREAD_CAN_RECEIVE_SIGNALS
+	bool "Enable reception of signals for main thread"
+	default n
+	help
+		Enable reception of signals for main thread.
+
 endmenu
