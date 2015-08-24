@@ -10,3 +10,4 @@
 #
 
 source source/chip/KConfig
+source source/architecture/KConfig

@@ -9,21 +9,10 @@
 # date: 2015-08-24
 #
 
-choice
-	prompt "STM32 chip family"
-	default CHIP_STM32F4
-	depends on CHIP_STM32
-	help
-		Select STM32 chip family
+config ARCHITECTURE_ARMV7_M
+	bool
+	default n
 
-config CHIP_STM32F4
-	bool "STM32F4"
-	select ARCHITECTURE_ARMV7_M
-	help
-		STMicroelectronics STM32F4 chip family
-
-endchoice
-
-if CHIP_STM32F4
-source source/chip/STMicroelectronics/STM32F4/KConfig
+if ARCHITECTURE_ARMV7_M
+source source/architecture/ARM/ARMv7-M/KConfig
 endif
