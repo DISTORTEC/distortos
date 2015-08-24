@@ -33,10 +33,10 @@ $(DISTORTOS_CONFIGURATION_H): ./$(subst ",,$(CONFIG_SELECTED_CONFIGURATION))/dis
 	./scripts/makeDistortosConfiguration.awk $< > $@
 
 #-----------------------------------------------------------------------------------------------------------------------
-# generated headers depend on this Rules.mk and the script that generates them
+# generated headers depend on this Rules.mk, the script that generates them and the selectedConfiguration.mk file
 #-----------------------------------------------------------------------------------------------------------------------
 
-$(DISTORTOS_CONFIGURATION_H): $(d)/Rules.mk scripts/makeDistortosConfiguration.awk
+$(DISTORTOS_CONFIGURATION_H): Rules.mk scripts/makeDistortosConfiguration.awk selectedConfiguration.mk
 
 #-----------------------------------------------------------------------------------------------------------------------
 # final targets
