@@ -10,7 +10,7 @@
 --
 
 local distortosConfigurationMk = TOP .. "/" .. CONFIG_SELECTED_CONFIGURATION .. "/distortosConfiguration.mk"
-local distortosConfigurationOutputs = {TOP .. "/include/distortos/%B.h", "$(TOP)/<headers>"}
+local distortosConfigurationOutputs = {OUTPUT .. "include/distortos/%B.h", "$(TOP)/<headers>"}
 
 tup.rule(distortosConfigurationMk, "$(TOP)/scripts/makeDistortosConfiguration.awk %f > %o",
 		distortosConfigurationOutputs)

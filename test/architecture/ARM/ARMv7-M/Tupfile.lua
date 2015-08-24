@@ -6,12 +6,13 @@
 -- This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 -- distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 --
--- date: 2015-05-28
+-- date: 2015-08-24
 --
 
 CXXFLAGS += "-DSTM32F407xx"
 
 CXXFLAGS += "-I" .. TOP .. "/test"
+CXXFLAGS += "-I" .. OUTPUT .. "include"
 CXXFLAGS += "-I" .. TOP .. "/include"
 CXXFLAGS += "-I" .. TOP .. "/source/architecture/ARM/ARMv7-M/include"
 CXXFLAGS += "-I" .. TOP .. "/source/chip/STMicroelectronics/STM32F4/include"
