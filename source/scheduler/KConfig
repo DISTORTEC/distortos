@@ -9,6 +9,13 @@
 # date: 2015-08-24
 #
 
-source source/chip/KConfig
-source source/architecture/KConfig
-source source/scheduler/KConfig
+menu "Scheduler configuration"
+
+config TICK_CLOCK
+	int "Tick clock frequency, Hz"
+	range 1 4294967295
+	default 16000000
+	help
+		Frequency of timer used for system ticks, Hz.
+
+endmenu
