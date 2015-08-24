@@ -6,14 +6,13 @@
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #
-# date: 2015-08-20
+# date: 2015-08-24
 #
 
 #-----------------------------------------------------------------------------------------------------------------------
 # subdirectories
 #-----------------------------------------------------------------------------------------------------------------------
 
-SUBDIRECTORIES += include/distortos
 SUBDIRECTORIES += source/allocators
 SUBDIRECTORIES += source/architecture
 SUBDIRECTORIES += source/chip/STMicroelectronics/STM32F4
@@ -23,6 +22,21 @@ SUBDIRECTORIES += source/synchronization
 SUBDIRECTORIES += source/syscalls
 SUBDIRECTORIES += source/threads
 SUBDIRECTORIES += test
+
+#-----------------------------------------------------------------------------------------------------------------------
+# generated headers
+#-----------------------------------------------------------------------------------------------------------------------
+
+DISTORTOS_CONFIGURATION_H := include/distortos/distortosConfiguration.h
+
+$(DISTORTOS_CONFIGURATION_H): ./$(subst ",,$(CONFIG_SELECTED_CONFIGURATION))/distortosConfiguration.mk
+	./scripts/makeDistortosConfiguration.awk $< > $@
+
+#-----------------------------------------------------------------------------------------------------------------------
+# generated headers depend on this Rules.mk and the script that generates them
+#-----------------------------------------------------------------------------------------------------------------------
+
+$(DISTORTOS_CONFIGURATION_H): $(d)/Rules.mk scripts/makeDistortosConfiguration.awk
 
 #-----------------------------------------------------------------------------------------------------------------------
 # final targets
@@ -41,7 +55,7 @@ LSS := $(LSS) $(OUTPUT)$(PROJECT).lss
 $(ELF): Rules.mk
 
 #-----------------------------------------------------------------------------------------------------------------------
-# add final targets to list of generated files
+# add generated headers and final targets to list of generated files
 #-----------------------------------------------------------------------------------------------------------------------
 
-GENERATED := $(GENERATED) $(ELF) $(HEX) $(BIN) $(DMP) $(LSS) $(OUTPUT)$(PROJECT).map
+GENERATED := $(GENERATED) $(DISTORTOS_CONFIGURATION_H) $(ELF) $(HEX) $(BIN) $(DMP) $(LSS) $(OUTPUT)$(PROJECT).map
