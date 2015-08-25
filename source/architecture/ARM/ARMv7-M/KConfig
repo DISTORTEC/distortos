@@ -6,7 +6,7 @@
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #
-# date: 2015-08-24
+# date: 2015-08-25
 #
 
 comment "ARMv7-M architecture options"
@@ -25,3 +25,15 @@ config ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI
 		functions.
 
 		Note - "lower" logical priority has "higher" numeric value!
+
+config ARCHITECTURE_ARM_CORTEX_M3
+	bool
+	default n
+
+config ARCHITECTURE_ARM_CORTEX_M4
+	bool
+	default n
+
+config ARCHITECTURE_ARM_CORTEX_M7
+	bool
+	default n
