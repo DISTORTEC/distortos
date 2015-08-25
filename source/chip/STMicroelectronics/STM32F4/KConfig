@@ -6,7 +6,7 @@
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #
-# date: 2015-08-24
+# date: 2015-08-25
 #
 
 choice
@@ -18,20 +18,16 @@ choice
 
 config CHIP_STM32F407VGT
 	bool "STM32F407VGT"
-	select CHIP_STM32F407VG
-	select CHIP_STM32F407V
-	select CHIP_STM32F407
 	select CHIP_STM32F40
+	select CHIP_STM32F407
+	select CHIP_STM32F407V
+	select CHIP_STM32F407VG
 	help
 		STMicroelectronics STM32F407VGT chip
 
 endchoice
 
-config CHIP_STM32F407VG
-	bool
-	default n
-
-config CHIP_STM32F407V
+config CHIP_STM32F40
 	bool
 	default n
 
@@ -39,6 +35,10 @@ config CHIP_STM32F407
 	bool
 	default n
 
-config CHIP_STM32F40
+config CHIP_STM32F407V
+	bool
+	default n
+
+config CHIP_STM32F407VG
 	bool
 	default n
