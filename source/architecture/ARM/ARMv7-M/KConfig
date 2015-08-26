@@ -6,10 +6,26 @@
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #
-# date: 2015-08-25
+# date: 2015-08-26
 #
 
 comment "ARMv7-M architecture options"
+
+config ARCHITECTURE_ARMV7_M_PROCESS_STACK_SIZE
+	int "main() thread stack size, bytes"
+	range 8 4294967295
+	default 2048
+	help
+		Size (in bytes) of "process" stack used by thread with main() function
+		in Thread mode.
+
+config ARCHITECTURE_ARMV7_M_MAIN_STACK_SIZE
+	int "Interrupt stack size, bytes"
+	range 8 4294967295
+	default 2048
+	help
+		Size (in bytes) of "main" stack used by core exceptions and interrupts
+		in Handler mode.
 
 config ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI
 	int "BASEPRI value used in critical sections"
