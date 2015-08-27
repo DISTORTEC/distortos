@@ -1,15 +1,19 @@
 /**
  * \file
- * \brief Linker script for STM32F4xxxG chip (1MB Flash, 112kB SRAM, 16kB aux SRAM, 64kB CCM RAM and 4kB backup SRAM).
- * Only main block o SRAM (112kB) is used.
+ * \brief Linker script for STM32F4xxxG chip:
+ * - 1MB flash;
+ * - 112kB SRAM1;
+ * - 16kB SRAM2;
+ * - 64kB CCM;
+ * - 4kB BKPSRAM;
  *
- * \author Copyright (C) 2014 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-07-21
+ * \date 2015-08-27
  */
 
 SEARCH_DIR(.);
@@ -22,9 +26,9 @@ MEMORY
 {
 	rom (rx)		: org = 0x08000000, len = 1M
 	ram (rwx)		: org = 0x20000000, len = 112k
-	aux_ram (rwx)	: org = 0x2001C000, len = 16k
-	ccm_ram (rw)	: org = 0x10000000, len = 64k
-	bkp_ram (rwx)	: org = 0x40024000, len = 4k
+	sram2 (rwx)		: org = 0x2001C000, len = 16k
+	ccm (rw)		: org = 0x10000000, len = 64k
+	bkpsram (rwx)	: org = 0x40024000, len = 4k
 }
 
 /*---------------------------------------------------------------------------------------------------------------------+
