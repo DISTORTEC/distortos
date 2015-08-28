@@ -142,7 +142,9 @@ $(call PARSE_SUBDIRECTORIES,$(SUBDIRECTORIES))
 .PHONY: targets
 targets: $(OUTPUT)include/distortos/distortosConfiguration.h $(OBJECTS) $(ELF) $(HEX) $(BIN) $(DMP) $(LSS) size
 
-$(OBJECTS): Makefile $(OUTPUT)include/distortos/distortosConfiguration.h
+$(OBJECTS): $(OUTPUT)include/distortos/distortosConfiguration.h
+
+$(GENERATED): Makefile
 
 $(OUTPUT)%.o: %.S
 	$(AS) $(ASFLAGS) $(ASFLAGS_$(<)) -c $< -o $@
