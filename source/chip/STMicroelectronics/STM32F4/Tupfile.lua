@@ -9,7 +9,9 @@
 -- date: 2015-08-28
 --
 
-tup.rule(DISTORTOS_CONFIGURATION_MK, "./STM32F4.ld.sh \"%f\" > \"%o\"", OUTPUT .. CONFIG_CHIP .. ".ld")
+local ldscriptOutputs = {LDSCRIPT, "$(TOP)/<ldscripts>"}
+
+tup.rule(DISTORTOS_CONFIGURATION_MK, "./STM32F4.ld.sh \"%f\" > \"%o\"", ldscriptOutputs)
 
 CFLAGS += "-I" .. OUTPUT .. "include"
 CFLAGS += "-I" .. TOP .. "/include"

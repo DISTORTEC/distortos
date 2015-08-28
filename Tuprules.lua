@@ -48,9 +48,6 @@ PROJECT = "distortos"
 -- core type
 COREFLAGS = "-mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16"
 
--- linker script
-LDSCRIPT = "-Lsource/chip/STMicroelectronics/STM32F4 -Lsource/architecture/ARM/ARMv7-M -TSTM32F4xxxG.ld"
-
 -- global C++ flags
 CXXFLAGS = ""
 
@@ -76,6 +73,9 @@ CSTD = "-std=gnu99"
 
 -- debug flags
 DBGFLAGS = "-g -ggdb3"
+
+-- linker flags
+LDFLAGS = ""
 
 ------------------------------------------------------------------------------------------------------------------------
 -- load configuration variables from distortosConfiguration.mk file selected by user
@@ -126,8 +126,11 @@ CXXFLAGS += CXXSTD
 CXXFLAGS += DBGFLAGS
 CXXFLAGS += "-ffunction-sections -fdata-sections -fno-rtti -fno-exceptions"
 
+-- path to linker script (generated automatically)
+LDSCRIPT = OUTPUT .. CONFIG_CHIP .. ".ld"
+
+LDFLAGS += "-T" .. LDSCRIPT
 LDFLAGS += COREFLAGS
-LDFLAGS += LDSCRIPT
 LDFLAGS += "-g -Wl,-Map=" .. OUTPUT .. PROJECT .. ".map,--cref,--gc-sections"
 
 ------------------------------------------------------------------------------------------------------------------------
@@ -169,8 +172,9 @@ end
 
 -- link all objects from $(TOP)/<objects> into file named output
 function link(output)
+	inputs = {"$(TOP)/<objects>", extra_inputs = {"$(TOP)/<ldscripts>"}}
 	extra_output = {OUTPUT .. PROJECT .. ".map"}
-	tup.rule({"$(TOP)/<objects>"}, "$(LD) $(LDFLAGS) %<objects> -o %o", {output, extra_outputs = extra_output})
+	tup.rule(inputs, "$(LD) $(LDFLAGS) %<objects> -o %o", {output, extra_outputs = extra_output})
 end
 
 -- convert file named input (elf) to intel hex file named output
