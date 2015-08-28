@@ -6,13 +6,13 @@
 -- This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 -- distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 --
--- date: 2015-08-24
+-- date: 2015-08-28
 --
 
 local distortosConfigurationMk = TOP .. "/" .. CONFIG_SELECTED_CONFIGURATION .. "/distortosConfiguration.mk"
 local distortosConfigurationOutputs = {OUTPUT .. "include/distortos/%B.h", "$(TOP)/<headers>"}
 
-tup.rule(distortosConfigurationMk, "$(TOP)/scripts/makeDistortosConfiguration.awk %f > %o",
+tup.rule(distortosConfigurationMk, "$(TOP)/scripts/makeDistortosConfiguration.awk \"%f\" > \"%o\"",
 		distortosConfigurationOutputs)
 
 link("$(OUTPUT)$(PROJECT).elf")
