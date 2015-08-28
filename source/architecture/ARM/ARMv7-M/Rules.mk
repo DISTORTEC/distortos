@@ -6,7 +6,7 @@
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #
-# date: 2015-08-24
+# date: 2015-08-28
 #
 
 #-----------------------------------------------------------------------------------------------------------------------
@@ -22,12 +22,6 @@ CXXFLAGS_$(d) := $(CXXFLAGS_$(d)) -Isource/chip/STMicroelectronics/STM32F4/inclu
 CXXFLAGS_$(d) := $(CXXFLAGS_$(d)) -Iexternal/CMSIS-STM32F4
 CXXFLAGS_$(d) := $(CXXFLAGS_$(d)) -Iexternal/CMSIS
 CXXFLAGS_$(d) := $(CXXFLAGS_$(d)) -Isource/architecture/ARM/ARMv7-M/include
-
-#-----------------------------------------------------------------------------------------------------------------------
-# linker scripts (used as explicit dependency of .elf file)
-#-----------------------------------------------------------------------------------------------------------------------
-
-LDSCRIPTS := $(LDSCRIPTS) $(d)/ARMv7-M.ld
 
 #-----------------------------------------------------------------------------------------------------------------------
 # standard footer

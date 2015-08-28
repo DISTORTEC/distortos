@@ -43,9 +43,6 @@ PROJECT = distortos
 # core type
 COREFLAGS = -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16
 
-# linker flags related to linker script
-LDFLAGS = -Lsource/chip/STMicroelectronics/STM32F4 -Lsource/architecture/ARM/ARMv7-M -TSTM32F4xxxG.ld
-
 # global assembler flags
 ASFLAGS =
 
@@ -71,6 +68,9 @@ CSTD = -std=gnu99
 
 # debug flags
 DBGFLAGS = -g -ggdb3
+
+# linker flags
+LDFLAGS =
 
 #-----------------------------------------------------------------------------------------------------------------------
 # load configuration variables from distortosConfiguration.mk file selected by user
@@ -100,6 +100,10 @@ CXXFLAGS += $(CXXSTD)
 CXXFLAGS += $(DBGFLAGS)
 CXXFLAGS += -ffunction-sections -fdata-sections -fno-rtti -fno-exceptions -MD -MP
 
+# path to linker script (generated automatically)
+LDSCRIPT = $(OUTPUT)$(subst ",,$(CONFIG_CHIP)).ld
+
+LDFLAGS += -T$(LDSCRIPT)
 LDFLAGS += $(COREFLAGS)
 LDFLAGS += -g -Wl,-Map=$(OUTPUT)$(PROJECT).map,--cref,--gc-sections
 
@@ -155,7 +159,7 @@ $(OUTPUT)%.o: %.c
 $(OUTPUT)%.o: %.cpp
 	$(CXX) $(CXXFLAGS) $(CXXFLAGS_$(<)) -c $< -o $@
 
-$(OUTPUT)%.elf: $(OBJECTS) $(LDSCRIPTS)
+$(OUTPUT)%.elf: $(OBJECTS) $(LDSCRIPT)
 	$(LD) $(LDFLAGS) $(OBJECTS) -o $@
 
 $(OUTPUT)%.hex: $(ELF)
