@@ -6,7 +6,7 @@
 -- This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 -- distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 --
--- date: 2015-08-24
+-- date: 2015-08-28
 --
 
 ------------------------------------------------------------------------------------------------------------------------
@@ -35,6 +35,9 @@ SIZE = TOOLCHAIN .. "size"
 
 -- file with $(CONFIG_SELECTED_CONFIGURATION) variable
 tup.include("selectedConfiguration.mk")
+
+-- path to distortosConfiguration.mk file selected by $(CONFIG_SELECTED_CONFIGURATION) variable
+DISTORTOS_CONFIGURATION_MK = TOP .. "/" .. CONFIG_SELECTED_CONFIGURATION .. "/distortosConfiguration.mk"
 
 -- output folder
 OUTPUT = TOP .. "/output/"

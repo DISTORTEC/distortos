@@ -9,10 +9,9 @@
 -- date: 2015-08-28
 --
 
-local distortosConfigurationMk = TOP .. "/" .. CONFIG_SELECTED_CONFIGURATION .. "/distortosConfiguration.mk"
 local distortosConfigurationOutputs = {OUTPUT .. "include/distortos/%B.h", "$(TOP)/<headers>"}
 
-tup.rule(distortosConfigurationMk, "$(TOP)/scripts/makeDistortosConfiguration.awk \"%f\" > \"%o\"",
+tup.rule(DISTORTOS_CONFIGURATION_MK, "$(TOP)/scripts/makeDistortosConfiguration.awk \"%f\" > \"%o\"",
 		distortosConfigurationOutputs)
 
 link("$(OUTPUT)$(PROJECT).elf")
