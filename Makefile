@@ -6,7 +6,7 @@
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #
-# date: 2015-08-24
+# date: 2015-08-28
 #
 
 #-----------------------------------------------------------------------------------------------------------------------
@@ -30,6 +30,9 @@ RM = rm -f
 
 # file with $(CONFIG_SELECTED_CONFIGURATION) variable
 include selectedConfiguration.mk
+
+# path to distortosConfiguration.mk file selected by $(CONFIG_SELECTED_CONFIGURATION) variable
+DISTORTOS_CONFIGURATION_MK = ./$(subst ",,$(CONFIG_SELECTED_CONFIGURATION))/distortosConfiguration.mk
 
 # output folder
 OUTPUT = output/
@@ -73,7 +76,7 @@ DBGFLAGS = -g -ggdb3
 # load configuration variables from distortosConfiguration.mk file selected by user
 #-----------------------------------------------------------------------------------------------------------------------
 
-include ./$(subst ",,$(CONFIG_SELECTED_CONFIGURATION))/distortosConfiguration.mk
+include $(DISTORTOS_CONFIGURATION_MK)
 
 #-----------------------------------------------------------------------------------------------------------------------
 # compilation flags

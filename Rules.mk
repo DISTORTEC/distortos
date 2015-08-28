@@ -29,7 +29,7 @@ SUBDIRECTORIES += test
 
 DISTORTOS_CONFIGURATION_H := $(OUTPUT)include/distortos/distortosConfiguration.h
 
-$(DISTORTOS_CONFIGURATION_H): ./$(subst ",,$(CONFIG_SELECTED_CONFIGURATION))/distortosConfiguration.mk
+$(DISTORTOS_CONFIGURATION_H): $(DISTORTOS_CONFIGURATION_MK)
 	./scripts/makeDistortosConfiguration.awk "$<" > "$@"
 
 #-----------------------------------------------------------------------------------------------------------------------
