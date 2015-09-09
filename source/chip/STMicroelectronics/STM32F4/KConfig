@@ -6,7 +6,12 @@
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #
-# date: 2015-08-25
+# date: 2015-09-09
+#
+
+#
+# This file covers devices and their memories as described in following places:
+# - DS8626 datasheet (STM32F405xx, STM32F407xx), Revision 5, 2015-03-04, devices listed on website at 2015-09-09;
 #
 
 choice
@@ -15,6 +20,96 @@ choice
 	depends on CHIP_STM32F4
 	help
 		Select STM32F4 chip
+
+config CHIP_STM32F405OEY
+	bool "STM32F405OEY"
+	select CHIP_STM32F40
+	select CHIP_STM32F405
+	select CHIP_STM32F405O
+	select CHIP_STM32F405OE
+	help
+		STMicroelectronics STM32F405OEY chip
+
+config CHIP_STM32F405OGY
+	bool "STM32F405OGY"
+	select CHIP_STM32F40
+	select CHIP_STM32F405
+	select CHIP_STM32F405O
+	select CHIP_STM32F405OG
+	help
+		STMicroelectronics STM32F405OGY chip
+
+config CHIP_STM32F405RGT
+	bool "STM32F405RGT"
+	select CHIP_STM32F40
+	select CHIP_STM32F405
+	select CHIP_STM32F405R
+	select CHIP_STM32F405RG
+	help
+		STMicroelectronics STM32F405RGT chip
+
+config CHIP_STM32F405VGT
+	bool "STM32F405VGT"
+	select CHIP_STM32F40
+	select CHIP_STM32F405
+	select CHIP_STM32F405V
+	select CHIP_STM32F405VG
+	help
+		STMicroelectronics STM32F405VGT chip
+
+config CHIP_STM32F405ZGT
+	bool "STM32F405ZGT"
+	select CHIP_STM32F40
+	select CHIP_STM32F405
+	select CHIP_STM32F405Z
+	select CHIP_STM32F405ZG
+	help
+		STMicroelectronics STM32F405ZGT chip
+
+config CHIP_STM32F407IEH
+	bool "STM32F407IEH"
+	select CHIP_STM32F40
+	select CHIP_STM32F407
+	select CHIP_STM32F407I
+	select CHIP_STM32F407IE
+	help
+		STMicroelectronics STM32F407IEH chip
+
+config CHIP_STM32F407IET
+	bool "STM32F407IET"
+	select CHIP_STM32F40
+	select CHIP_STM32F407
+	select CHIP_STM32F407I
+	select CHIP_STM32F407IE
+	help
+		STMicroelectronics STM32F407IET chip
+
+config CHIP_STM32F407IGH
+	bool "STM32F407IGH"
+	select CHIP_STM32F40
+	select CHIP_STM32F407
+	select CHIP_STM32F407I
+	select CHIP_STM32F407IG
+	help
+		STMicroelectronics STM32F407IGH chip
+
+config CHIP_STM32F407IGT
+	bool "STM32F407IGT"
+	select CHIP_STM32F40
+	select CHIP_STM32F407
+	select CHIP_STM32F407I
+	select CHIP_STM32F407IG
+	help
+		STMicroelectronics STM32F407IGT chip
+
+config CHIP_STM32F407VET
+	bool "STM32F407VET"
+	select CHIP_STM32F40
+	select CHIP_STM32F407
+	select CHIP_STM32F407V
+	select CHIP_STM32F407VE
+	help
+		STMicroelectronics STM32F407VET chip
 
 config CHIP_STM32F407VGT
 	bool "STM32F407VGT"
@@ -25,9 +120,67 @@ config CHIP_STM32F407VGT
 	help
 		STMicroelectronics STM32F407VGT chip
 
+config CHIP_STM32F407ZET
+	bool "STM32F407ZET"
+	select CHIP_STM32F40
+	select CHIP_STM32F407
+	select CHIP_STM32F407Z
+	select CHIP_STM32F407ZE
+	help
+		STMicroelectronics STM32F407ZET chip
+
+config CHIP_STM32F407ZGT
+	bool "STM32F407ZGT"
+	select CHIP_STM32F40
+	select CHIP_STM32F407
+	select CHIP_STM32F407Z
+	select CHIP_STM32F407ZG
+	help
+		STMicroelectronics STM32F407ZGT chip
+
 endchoice
 
 config CHIP_STM32F40
+	bool
+	default n
+
+config CHIP_STM32F405
+	bool
+	default n
+
+config CHIP_STM32F405O
+	bool
+	default n
+
+config CHIP_STM32F405OE
+	bool
+	default n
+
+config CHIP_STM32F405OG
+	bool
+	default n
+
+config CHIP_STM32F405R
+	bool
+	default n
+
+config CHIP_STM32F405RG
+	bool
+	default n
+
+config CHIP_STM32F405V
+	bool
+	default n
+
+config CHIP_STM32F405VG
+	bool
+	default n
+
+config CHIP_STM32F405Z
+	bool
+	default n
+
+config CHIP_STM32F405ZG
 	bool
 	default n
 
@@ -35,7 +188,23 @@ config CHIP_STM32F407
 	bool
 	default n
 
+config CHIP_STM32F407I
+	bool
+	default n
+
+config CHIP_STM32F407IE
+	bool
+	default n
+
+config CHIP_STM32F407IG
+	bool
+	default n
+
 config CHIP_STM32F407V
+	bool
+	default n
+
+config CHIP_STM32F407VE
 	bool
 	default n
 
@@ -43,9 +212,21 @@ config CHIP_STM32F407VG
 	bool
 	default n
 
+config CHIP_STM32F407Z
+	bool
+	default n
+
+config CHIP_STM32F407ZE
+	bool
+	default n
+
+config CHIP_STM32F407ZG
+	bool
+	default n
+
 config CHIP_STM32F4_BKPSRAM_SIZE
 	int
-	default 4096 if CHIP_STM32F407
+	default 4096 if CHIP_STM32F405 || CHIP_STM32F407
 	default 0
 
 config CHIP_STM32F4_BKPSRAM_ADDRESS
@@ -55,7 +236,7 @@ config CHIP_STM32F4_BKPSRAM_ADDRESS
 
 config CHIP_STM32F4_CCM_SIZE
 	int
-	default 65536 if CHIP_STM32F407
+	default 65536 if CHIP_STM32F405 || CHIP_STM32F407
 	default 0
 
 config CHIP_STM32F4_CCM_ADDRESS
@@ -65,7 +246,9 @@ config CHIP_STM32F4_CCM_ADDRESS
 
 config CHIP_STM32F4_FLASH_SIZE
 	int
-	default 1048576 if CHIP_STM32F407VG
+	default 524288 if CHIP_STM32F405OE || CHIP_STM32F407IE || CHIP_STM32F407VE || CHIP_STM32F407ZE
+	default 1048576 if CHIP_STM32F405OG || CHIP_STM32F405RG || CHIP_STM32F405VG || CHIP_STM32F405ZG || \
+		CHIP_STM32F407IG || CHIP_STM32F407VG || CHIP_STM32F407ZG
 	default 0
 
 config CHIP_STM32F4_FLASH_ADDRESS
@@ -75,7 +258,7 @@ config CHIP_STM32F4_FLASH_ADDRESS
 
 config CHIP_STM32F4_SRAM1_SIZE
 	int
-	default 114688 if CHIP_STM32F407
+	default 114688 if CHIP_STM32F405 || CHIP_STM32F407
 	default 0
 
 config CHIP_STM32F4_SRAM1_ADDRESS
@@ -85,7 +268,7 @@ config CHIP_STM32F4_SRAM1_ADDRESS
 
 config CHIP_STM32F4_SRAM2_SIZE
 	int
-	default 16384 if CHIP_STM32F407
+	default 16384 if CHIP_STM32F405 || CHIP_STM32F407
 	default 0
 
 config CHIP_STM32F4_SRAM2_ADDRESS
@@ -104,4 +287,16 @@ config CHIP_STM32F4_SRAM3_ADDRESS
 
 config CHIP
 	string
+	default "STM32F405OEY" if CHIP_STM32F405OEY
+	default "STM32F405OGY" if CHIP_STM32F405OGY
+	default "STM32F405RGT" if CHIP_STM32F405RGT
+	default "STM32F405VGT" if CHIP_STM32F405VGT
+	default "STM32F405ZGT" if CHIP_STM32F405ZGT
+	default "STM32F407IEH" if CHIP_STM32F407IEH
+	default "STM32F407IET" if CHIP_STM32F407IET
+	default "STM32F407IGH" if CHIP_STM32F407IGH
+	default "STM32F407IGT" if CHIP_STM32F407IGT
+	default "STM32F407VET" if CHIP_STM32F407VET
 	default "STM32F407VGT" if CHIP_STM32F407VGT
+	default "STM32F407ZET" if CHIP_STM32F407ZET
+	default "STM32F407ZGT" if CHIP_STM32F407ZGT
