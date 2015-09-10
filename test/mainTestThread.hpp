@@ -14,8 +14,6 @@
 #ifndef TEST_MAINTESTTHREAD_HPP_
 #define TEST_MAINTESTTHREAD_HPP_
 
-#include "mainTestThreadParameters.hpp"
-
 #include "distortos/StaticThread.hpp"
 
 namespace distortos
@@ -50,7 +48,7 @@ using MainTestThread = decltype(makeStaticThread<mainTestThreadStackSize,
 #ifdef CONFIG_MAIN_THREAD_CAN_RECEIVE_SIGNALS
 		true, CONFIG_MAIN_THREAD_QUEUED_SIGNALS, CONFIG_MAIN_THREAD_SIGNAL_ACTIONS
 #endif	// def CONFIG_MAIN_THREAD_CAN_RECEIVE_SIGNALS
-		>(mainTestThreadPriority, mainTestThreadFunction));
+		>(CONFIG_MAIN_THREAD_PRIORITY, mainTestThreadFunction));
 
 /// main test thread object
 extern MainTestThread mainTestThread;

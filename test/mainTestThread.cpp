@@ -40,7 +40,7 @@ MainTestThread mainTestThread = makeStaticThread<mainTestThreadStackSize,
 #ifdef CONFIG_MAIN_THREAD_CAN_RECEIVE_SIGNALS
 		true, CONFIG_MAIN_THREAD_QUEUED_SIGNALS, CONFIG_MAIN_THREAD_SIGNAL_ACTIONS
 #endif	// def CONFIG_MAIN_THREAD_CAN_RECEIVE_SIGNALS
-		>(mainTestThreadPriority, mainTestThreadFunction);
+		>(CONFIG_MAIN_THREAD_PRIORITY, mainTestThreadFunction);
 
 }	// namespace test
 
