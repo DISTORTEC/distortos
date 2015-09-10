@@ -8,7 +8,7 @@
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #
-# date: 2015-08-28
+# date: 2015-09-10
 #
 
 set -e
@@ -32,6 +32,8 @@ if [ $CONFIG_CHIP_STM32F4_FLASH_SIZE -eq 0 ] || [ $CONFIG_CHIP_STM32F4_SRAM1_SIZ
 	echo "CONFIG_CHIP_STM32F4_FLASH_SIZE and CONFIG_CHIP_STM32F4_SRAM1_SIZE cannot be 0!" >&2
 	exit -1
 fi
+
+PROCESS_STACK_SIZE=$CONFIG_MAIN_THREAD_STACK_SIZE
 
 cat<<EOF
 /**
@@ -80,7 +82,7 @@ OUTPUT_ARCH(arm);
 /* Thread mode can use main stack (default after reset) or process stack - selected in CONTROL special register */
 
 __main_stack_size = $CONFIG_ARCHITECTURE_ARMV7_M_MAIN_STACK_SIZE;
-__process_stack_size = $CONFIG_ARCHITECTURE_ARMV7_M_PROCESS_STACK_SIZE;
+__process_stack_size = $PROCESS_STACK_SIZE;
 
 PROVIDE(__main_stack_size = __main_stack_size);
 PROVIDE(__process_stack_size = __process_stack_size);

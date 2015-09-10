@@ -32,6 +32,13 @@ config ROUND_ROBIN_RATE_HZ
 	help
 		Round-robin rate, Hz.
 
+config MAIN_THREAD_STACK_SIZE
+	int "main() thread stack size, bytes"
+	range 8 4294967295
+	default 2048
+	help
+		Size (in bytes) of stack used by thread with main() function.
+
 config MAIN_THREAD_PRIORITY
 	int "Priority of main thread"
 	range 1 255
