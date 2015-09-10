@@ -8,13 +8,12 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-07-03
+ * \date 2015-09-10
  */
 
 #include "SignalCatchingOperationsTestCase.hpp"
 
 #include "abortSignalHandler.hpp"
-#include "mainTestThreadParameters.hpp"
 
 #include "distortos/StaticThread.hpp"
 #include "distortos/statistics.hpp"
@@ -50,12 +49,12 @@ constexpr decltype(statistics::getContextSwitchCount()) phase2ThreadContextSwitc
  * Tests various aspects of setting signal action, aiming for full coverage of execution paths through
  * SignalsCatcherControlBlock::setAssociation(). Following cases are tested:
  * - setting identical signal actions for multiple signal numbers must succeed as long as no more than
- * \a mainTestThreadSignalActions different signal actions are used at the same time;
+ * \a CONFIG_MAIN_THREAD_SIGNAL_ACTIONS different signal actions are used at the same time;
  * - setting the same signal action as the one that is currently set must always succeed;
  * - clearing signal action must always succeed;
- * - trying to change signal action for signal number must fail with EAGAIN if \a mainTestThreadSignalActions different
- * signal actions are already used and the one that is changed is used by multiple signal numbers;
- * - trying to set new signal action for signal number must fail with EAGAIN when \a mainTestThreadSignalActions
+ * - trying to change signal action for signal number must fail with EAGAIN if \a CONFIG_MAIN_THREAD_SIGNAL_ACTIONS
+ * different signal actions are already used and the one that is changed is used by multiple signal numbers;
+ * - trying to set new signal action for signal number must fail with EAGAIN when \a CONFIG_MAIN_THREAD_SIGNAL_ACTIONS
  * different signal actions are already used;
  *
  * \return true if test succeeded, false otherwise
@@ -63,14 +62,16 @@ constexpr decltype(statistics::getContextSwitchCount()) phase2ThreadContextSwitc
 
 bool phase1()
 {
+	constexpr size_t mainThreadSignalActions {CONFIG_MAIN_THREAD_SIGNAL_ACTIONS};
+
 	// the second to last iteration is used to set the same signal action as in the first iteration
 	// the last iteration is used to set the same signal action as the one that is currently set
-	for (size_t shift {}; shift <= mainTestThreadSignalActions + 1; ++shift)
+	for (size_t shift {}; shift <= mainThreadSignalActions + 1; ++shift)
 		for (uint8_t signalNumber {}; signalNumber < SignalSet::Bitset{}.size(); ++signalNumber)
 		{
 			// last iteration? clip the value so that it is identical to the one from previous iteration
-			const auto realShift = shift <= mainTestThreadSignalActions ? shift : mainTestThreadSignalActions;
-			const SignalSet signalMask {1u << ((realShift + signalNumber) % mainTestThreadSignalActions)};
+			const auto realShift = shift <= mainThreadSignalActions ? shift : mainThreadSignalActions;
+			const SignalSet signalMask {1u << ((realShift + signalNumber) % mainThreadSignalActions)};
 			const auto setSignalActionResult = ThisThread::Signals::setSignalAction(signalNumber,
 					{abortSignalHandler, signalMask});
 			if (setSignalActionResult.first != 0)
@@ -82,7 +83,7 @@ bool phase1()
 			}
 			else	// compare returned signal action with the expected one
 			{
-				const SignalSet previousSignalMask {1u << ((shift - 1 + signalNumber) % mainTestThreadSignalActions)};
+				const SignalSet previousSignalMask {1u << ((shift - 1 + signalNumber) % mainThreadSignalActions)};
 				if (setSignalActionResult.second.getHandler() != abortSignalHandler ||
 						setSignalActionResult.second.getSignalMask().getBitset() != previousSignalMask.getBitset())
 					return false;
