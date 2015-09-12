@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-09-10
+ * \date 2015-09-12
  */
 
 #ifndef TEST_MAINTESTTHREAD_HPP_
@@ -36,15 +36,8 @@ void mainTestThreadFunction();
 | global objects
 +---------------------------------------------------------------------------------------------------------------------*/
 
-/// size of stack for main test thread, bytes
-#ifdef _REENT_SMALL
-constexpr size_t mainTestThreadStackSize {10240};
-#else
-constexpr size_t mainTestThreadStackSize {20480};
-#endif	// def _REENT_SMALL
-
 /// type of main test thread
-using MainTestThread = decltype(makeStaticThread<mainTestThreadStackSize,
+using MainTestThread = decltype(makeStaticThread<CONFIG_MAIN_THREAD_STACK_SIZE,
 #ifdef CONFIG_MAIN_THREAD_CAN_RECEIVE_SIGNALS
 		true, CONFIG_MAIN_THREAD_QUEUED_SIGNALS, CONFIG_MAIN_THREAD_SIGNAL_ACTIONS
 #endif	// def CONFIG_MAIN_THREAD_CAN_RECEIVE_SIGNALS

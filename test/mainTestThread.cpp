@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-09-10
+ * \date 2015-09-12
  */
 
 #include "mainTestThread.hpp"
@@ -36,7 +36,7 @@ void mainTestThreadFunction()
 | global objects
 +---------------------------------------------------------------------------------------------------------------------*/
 
-MainTestThread mainTestThread = makeStaticThread<mainTestThreadStackSize,
+MainTestThread mainTestThread = makeStaticThread<CONFIG_MAIN_THREAD_STACK_SIZE,
 #ifdef CONFIG_MAIN_THREAD_CAN_RECEIVE_SIGNALS
 		true, CONFIG_MAIN_THREAD_QUEUED_SIGNALS, CONFIG_MAIN_THREAD_SIGNAL_ACTIONS
 #endif	// def CONFIG_MAIN_THREAD_CAN_RECEIVE_SIGNALS
