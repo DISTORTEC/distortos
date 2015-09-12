@@ -18,6 +18,8 @@
 #include "distortos/architecture/lowLevelInitialization.hpp"
 #include "distortos/architecture/startScheduling.hpp"
 
+#include "distortos/chip/lowLevelInitialization.hpp"
+
 namespace distortos
 {
 
@@ -44,6 +46,7 @@ const FunctionPointer distortosPreinitArray[] __attribute__ ((section(".preinit_
 		scheduler::lowLevelInitialization,
 		syscalls::mallocLockingInitialization,
 		architecture::lowLevelInitialization,
+		chip::lowLevelInitialization,
 		architecture::startScheduling,
 };
 
