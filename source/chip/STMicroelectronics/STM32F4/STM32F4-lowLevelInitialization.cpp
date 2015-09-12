@@ -29,7 +29,13 @@ namespace chip
 
 void lowLevelInitialization()
 {
-	architecture::configureSysTick(CONFIG_TICK_CLOCK / CONFIG_TICK_RATE_HZ, false);
+	constexpr uint32_t period {CONFIG_TICK_CLOCK / CONFIG_TICK_RATE_HZ};
+	constexpr uint32_t periodDividedBy8 {period / 8};
+	constexpr bool divideBy8 {period > architecture::maxSysTickPeriod};
+	// at least one of the periods must be valid
+	static_assert(period <= architecture::maxSysTickPeriod || periodDividedBy8 <= architecture::maxSysTickPeriod,
+			"Invalid SysTick configuration!");
+	architecture::configureSysTick(divideBy8 == false ? period : periodDividedBy8, divideBy8);
 }
 
 }	// namespace chip
