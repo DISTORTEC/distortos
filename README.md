@@ -69,6 +69,7 @@ To build *distortos* you need:
   are not tested extensively;
 - [AWK](https://en.wikipedia.org/wiki/AWK);
 - [Bash](https://www.gnu.org/software/bash/) or Bash-compatible shell;
+- [GNU Coreutils](http://www.gnu.org/software/coreutils/coreutils.html) or a set of compatible utilities;
 
 Make sure the tools are available in your system's *PATH* environment variable.
 
@@ -86,8 +87,8 @@ Don't use 64-bit tools (even if you have 64-bit system), as *tup* cannot current
 
 #### Tools for Windows
 
-You can get *GNU Make*, *AWK* (*GAWK*) and *Bash* by installing [MSYS2](https://msys2.github.io/) and executing
-`pacman -S gawk make` in the shell of this software distro - the binaries will be placed in
+You can get *GNU Make*, *AWK* (*GAWK*), *Bash* and *GNU Coreutils* by installing [MSYS2](https://msys2.github.io/) and
+executing `pacman -S gawk make` in the shell of this software distro - the binaries will be placed in
 `<installation path>\usr\bin` folder. *tup* and *arm-none-eabi bleeding-edge-toolchain* binaries for Windows are
 available from their main websites.
 
