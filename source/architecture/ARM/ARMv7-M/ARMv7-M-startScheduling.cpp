@@ -8,10 +8,12 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-04-28
+ * \date 2015-09-12
  */
 
 #include "distortos/architecture/startScheduling.hpp"
+
+#include "distortos/architecture/configureSysTick.hpp"
 
 #include "distortos/distortosConfiguration.h"
 
@@ -34,9 +36,9 @@ void startScheduling()
 	NVIC_SetPriority(PendSV_IRQn, 0xff);
 
 	// configure SysTick timer as the tick timer
-	SysTick->LOAD = CONFIG_TICK_CLOCK / CONFIG_TICK_RATE_HZ - 1;
+	configureSysTick(CONFIG_TICK_CLOCK / CONFIG_TICK_RATE_HZ, false);
 	SysTick->VAL = 0;
-	SysTick->CTRL = SysTick_CTRL_ENABLE_Msk | SysTick_CTRL_CLKSOURCE_Msk | SysTick_CTRL_TICKINT_Msk;
+	SysTick->CTRL |= SysTick_CTRL_ENABLE_Msk | SysTick_CTRL_TICKINT_Msk;
 }
 
 }	// namespace architecture
