@@ -41,7 +41,7 @@ using FunctionPointer = void(*)();
 /// array of pointers to functions executed before constructors for global and static objects from __libc_init_array()
 const FunctionPointer distortosPreinitArray[] __attribute__ ((section(".preinit_array"), used))
 {
-		scheduler::lowLevelSchedulerInitialization,
+		scheduler::lowLevelInitialization,
 		syscalls::mallocLockingInitialization,
 		architecture::lowLevelInitialization,
 		architecture::startScheduling,
