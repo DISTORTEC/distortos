@@ -13,6 +13,10 @@
 
 #include "distortos/chip/lowLevelInitialization.hpp"
 
+#include "distortos/architecture/configureSysTick.hpp"
+
+#include "distortos/distortosConfiguration.h"
+
 namespace distortos
 {
 
@@ -25,7 +29,7 @@ namespace chip
 
 void lowLevelInitialization()
 {
-
+	architecture::configureSysTick(CONFIG_TICK_CLOCK / CONFIG_TICK_RATE_HZ, false);
 }
 
 }	// namespace chip

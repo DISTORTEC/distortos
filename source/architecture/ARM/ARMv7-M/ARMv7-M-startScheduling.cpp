@@ -13,10 +13,6 @@
 
 #include "distortos/architecture/startScheduling.hpp"
 
-#include "distortos/architecture/configureSysTick.hpp"
-
-#include "distortos/distortosConfiguration.h"
-
 #include "distortos/chip/CMSIS-proxy.h"
 
 namespace distortos
@@ -35,8 +31,7 @@ void startScheduling()
 	NVIC_SetPriority(SysTick_IRQn, 0xff);
 	NVIC_SetPriority(PendSV_IRQn, 0xff);
 
-	// configure SysTick timer as the tick timer
-	configureSysTick(CONFIG_TICK_CLOCK / CONFIG_TICK_RATE_HZ, false);
+	// enable SysTick timer as the tick timer
 	SysTick->VAL = 0;
 	SysTick->CTRL |= SysTick_CTRL_ENABLE_Msk | SysTick_CTRL_TICKINT_Msk;
 }
