@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-04-28
+ * \date 2015-09-12
  */
 
 #include "distortos/scheduler/lowLevelSchedulerInitialization.hpp"
@@ -41,7 +41,7 @@ using FunctionPointer = void(*)();
 /// array of pointers to functions executed before constructors for global and static objects from __libc_init_array()
 const FunctionPointer distortosPreinitArray[] __attribute__ ((section(".preinit_array"), used))
 {
-		lowLevelSchedulerInitialization,
+		scheduler::lowLevelSchedulerInitialization,
 		syscalls::mallocLockingInitialization,
 		architecture::lowLevelInitialization,
 		architecture::startScheduling,
