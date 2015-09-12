@@ -11,7 +11,7 @@
  * \date 2015-09-12
  */
 
-#include "distortos/scheduler/lowLevelSchedulerInitialization.hpp"
+#include "distortos/scheduler/lowLevelInitialization.hpp"
 
 #include "distortos/syscalls/mallocLockingInitialization.hpp"
 
