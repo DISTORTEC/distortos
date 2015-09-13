@@ -6,7 +6,7 @@
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #
-# date: 2015-09-10
+# date: 2015-09-12
 #
 
 menu "Scheduler configuration"
@@ -31,6 +31,8 @@ config ROUND_ROBIN_RATE_HZ
 	default 10
 	help
 		Round-robin rate, Hz.
+
+comment "main() thread options"
 
 config MAIN_THREAD_STACK_SIZE
 	int "main() thread stack size, bytes"
