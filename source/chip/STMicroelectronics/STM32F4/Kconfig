@@ -6,7 +6,7 @@
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #
-# date: 2015-09-09
+# date: 2015-09-14
 #
 
 #
@@ -139,6 +139,68 @@ config CHIP_STM32F407ZGT
 		STMicroelectronics STM32F407ZGT chip
 
 endchoice
+
+comment "STM32F4 chip options"
+
+config CHIP_STM32F4_VDD_MV
+	int "Vdd supply voltage, mV"
+	range 1800 3600
+	default 3300
+	help
+		Vdd supply voltage of the chip, mV.
+
+config CHIP_STM32F4_FLASH_PREFETCH_ENABLE
+	bool "Enable flash prefetch"
+	default y
+	help
+		Enable flash prefetch option in FLASH->ACR register. Early revisions of
+		older STM32F4 devices don't support this feature. Enabling this feature
+		may also increase noise of ADC. Check device errata sheet of selected
+		chip to see whether it is affected by any of these issues.
+
+menu "RCC configuration"
+
+config CHIP_STM32F4_RCC_STANDARD_CLOCK_CONFIGURATION_ENABLE
+	bool "Enable standard configuration of RCC clocks"
+	default y
+	help
+		Enable standard configuration of RCC clocks.
+
+if CHIP_STM32F4_RCC_STANDARD_CLOCK_CONFIGURATION_ENABLE
+
+config CHIP_STM32F4_RCC_HSE_ENABLE
+	bool "Enable HSE"
+	default n
+	help
+		Enable HSE (crystal/ceramic resonator or external user clock).
+
+if CHIP_STM32F4_RCC_HSE_ENABLE
+
+config CHIP_STM32F4_RCC_HSE_CLOCK_BYPASS
+	bool "HSE Clock Bypass"
+	default n
+	help
+		Selects whether HSE generator is bypassed. If enabled, external user
+		clock connected to OSC_IN must be used. Crystal or ceramic resonator
+		connected to OSC_IN and OSC_OUT must be used otherwise.
+
+config CHIP_STM32F4_RCC_HSE_HZ
+	int "Frequency of HSE clock, Hz"
+	range 1000000 50000000 if CHIP_STM32F4_RCC_HSE_CLOCK_BYPASS
+	range 4000000 26000000
+	default 8000000
+	help
+		Frequency of HSE clock, Hz. This can be:
+		- "HSE Clock Bypass" disabled - crystal/ceramic resonator connected to
+		OSC_IN and OSC_OUT [4MHz; 26MHz];
+		- "HSE Clock Bypass" enabled - external user clock connected to OSC_IN
+		[1MHz; 50MHz];
+
+endif	# CHIP_STM32F4_RCC_HSE_ENABLE
+
+endif	# CHIP_STM32F4_RCC_STANDARD_CLOCK_CONFIGURATION_ENABLE
+
+endmenu
 
 config CHIP_STM32F40
 	bool
