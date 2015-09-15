@@ -13,6 +13,8 @@
 
 #include "distortos/chip/lowLevelInitialization.hpp"
 
+#include "distortos/chip/STM32F4-RCC.hpp"
+
 #include "distortos/architecture/configureSysTick.hpp"
 
 #include "distortos/distortosConfiguration.h"
@@ -29,6 +31,21 @@ namespace chip
 
 void lowLevelInitialization()
 {
+#ifdef CONFIG_CHIP_STM32F4_RCC_STANDARD_CLOCK_CONFIGURATION_ENABLE
+
+#ifdef CONFIG_CHIP_STM32F4_RCC_HSE_ENABLE
+
+#ifdef CONFIG_CHIP_STM32F4_RCC_HSE_CLOCK_BYPASS
+	constexpr bool hseClockBypass {true};
+#else	// !def CONFIG_CHIP_STM32F4_RCC_HSE_CLOCK_BYPASS
+	constexpr bool hseClockBypass {};
+#endif	// !def CONFIG_CHIP_STM32F4_RCC_HSE_CLOCK_BYPASS
+	enableHse(hseClockBypass);
+
+#endif	// def CONFIG_CHIP_STM32F4_RCC_HSE_ENABLE
+
+#endif	// def CONFIG_CHIP_STM32F4_RCC_STANDARD_CLOCK_CONFIGURATION_ENABLE
+
 	constexpr uint32_t period {CONFIG_TICK_CLOCK / CONFIG_TICK_RATE_HZ};
 	constexpr uint32_t periodDividedBy8 {period / 8};
 	constexpr bool divideBy8 {period > architecture::maxSysTickPeriod};
