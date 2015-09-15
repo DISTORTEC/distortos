@@ -27,6 +27,13 @@ namespace chip
 | global functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
+void enableHse(const bool bypass)
+{
+	RCC_CR_HSEON_bb = 1;
+	RCC_CR_HSEBYP_bb = bypass;
+	while (RCC_CR_HSERDY_bb == 0);	// wait until HSE oscillator is stable
+}
+
 void disableHse()
 {
 	RCC_CR_HSEON_bb = 0;
