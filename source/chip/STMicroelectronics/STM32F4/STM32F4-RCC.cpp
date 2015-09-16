@@ -17,6 +17,8 @@
 
 #include "distortos/chip/CMSIS-proxy.h"
 
+#include <cerrno>
+
 namespace distortos
 {
 
@@ -30,6 +32,15 @@ namespace chip
 void configurePllClockSource(const bool hse)
 {
 	RCC_PLLCFGR_PLLSRC_bb = hse;
+}
+
+int configurePllInputClockDivider(const uint8_t pllm)
+{
+	if (pllm < minPllm || pllm > maxPllm)
+		return EINVAL;
+
+	RCC->PLLCFGR = (RCC->PLLCFGR & ~RCC_PLLCFGR_PLLM) | (pllm << RCC_PLLCFGR_PLLM_bit);
+	return 0;
 }
 
 void enableHse(const bool bypass)

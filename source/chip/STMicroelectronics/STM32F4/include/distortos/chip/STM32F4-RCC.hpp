@@ -14,11 +14,27 @@
 #ifndef SOURCE_CHIP_STMICROELECTRONICS_STM32F4_INCLUDE_DISTORTOS_CHIP_STM32F4_RCC_HPP_
 #define SOURCE_CHIP_STMICROELECTRONICS_STM32F4_INCLUDE_DISTORTOS_CHIP_STM32F4_RCC_HPP_
 
+#include <cstdint>
+
 namespace distortos
 {
 
 namespace chip
 {
+
+/*---------------------------------------------------------------------------------------------------------------------+
+| global constants
++---------------------------------------------------------------------------------------------------------------------*/
+
+/// minimum allowed value for PLLM
+constexpr uint8_t minPllm {2};
+
+/// maximum allowed value for PLLM
+constexpr uint8_t maxPllm {63};
+
+/*---------------------------------------------------------------------------------------------------------------------+
+| global functions' declarations
++---------------------------------------------------------------------------------------------------------------------*/
 
 /**
  * \brief Configures clock source of main PLL and audio PLLI2S.
@@ -30,6 +46,20 @@ namespace chip
  */
 
 void configurePllClockSource(bool hse);
+
+/**
+ * \brief Configures divider of PLL input clock (PLLM value) for main PLL and audio PLLI2S.
+ *
+ * \warning Before changing configuration of main PLL and/or audio PLLI2S make sure that they are not used in any way
+ * (as core clock or as source of peripheral clocks) and that they are disabled.
+ *
+ * \param [in] pllm is the PLLM value for main PLL and audio PLLI2S, [2; 63] or [minPllm; maxPllm]
+ *
+ * \return 0 on success, error code otherwise:
+ * - EINVAL - \a pllm value is invalid;
+ */
+
+int configurePllInputClockDivider(uint8_t pllm);
 
 /**
  * \brief Enables HSE clock.
