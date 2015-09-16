@@ -50,6 +50,20 @@ void enableHse(const bool bypass)
 	while (RCC_CR_HSERDY_bb == 0);	// wait until HSE oscillator is stable
 }
 
+int enablePll(const uint16_t plln, const uint8_t pllp, const uint8_t pllq)
+{
+	if (plln < minPlln || plln > maxPlln ||
+			(pllp != pllpDiv2 && pllp != pllpDiv4 && pllp != pllpDiv6 && pllp != pllpDiv8) ||
+			pllq < minPllq || pllq > maxPllq)
+		return EINVAL;
+
+	RCC->PLLCFGR = (RCC->PLLCFGR & ~(RCC_PLLCFGR_PLLN | RCC_PLLCFGR_PLLP | RCC_PLLCFGR_PLLQ)) |
+			(plln << RCC_PLLCFGR_PLLN_bit) | ((pllp / 2 - 1) << RCC_PLLCFGR_PLLP_bit) | (pllq << RCC_PLLCFGR_PLLQ_bit);
+	RCC_CR_PLLON_bb = 1;
+	while (RCC_CR_PLLRDY_bb == 0);	// wait until PLL is stable
+	return 0;
+}
+
 void disableHse()
 {
 	RCC_CR_HSEON_bb = 0;

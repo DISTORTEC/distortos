@@ -32,6 +32,30 @@ constexpr uint8_t minPllm {2};
 /// maximum allowed value for PLLM
 constexpr uint8_t maxPllm {63};
 
+/// minimum allowed value for PLLN
+constexpr uint16_t minPlln {192};
+
+/// maximum allowed value for PLLN
+constexpr uint16_t maxPlln {432};
+
+/// minimum allowed value for PLLQ
+constexpr uint8_t minPllq {2};
+
+/// maximum allowed value for PLLQ
+constexpr uint8_t maxPllq {15};
+
+/// first allowed value for PLLP - 2
+constexpr uint8_t pllpDiv2 {2};
+
+/// second allowed value for PLLP - 4
+constexpr uint8_t pllpDiv4 {4};
+
+/// third allowed value for PLLP - 6
+constexpr uint8_t pllpDiv6 {6};
+
+/// fourth allowed value for PLLP - 8
+constexpr uint8_t pllpDiv8 {8};
+
 /*---------------------------------------------------------------------------------------------------------------------+
 | global functions' declarations
 +---------------------------------------------------------------------------------------------------------------------*/
@@ -74,6 +98,24 @@ int configurePllInputClockDivider(uint8_t pllm);
  */
 
 void enableHse(bool bypass);
+
+/**
+ * \brief Enables main PLL.
+ *
+ * Enables main PLL using selected parameters and waits until it is stable.
+ *
+ * \warning Before changing configuration of main PLL make sure that it is not used in any way (as core clock or as
+ * source of peripheral clocks) and that it is disabled.
+ *
+ * \param [in] plln is the PLLN value for main PLL, [192; 432] or [minPlln; maxPlln]
+ * \param [in] pllp is the PLLP value for main PLL, {2, 4, 6, 8} or {pllpDiv2, pllpDiv4, pllpDiv6, pllpDiv8}
+ * \param [in] pllq is the PLLQ value for main PLL, [2; 15] or [minPllq; maxPllq]
+ *
+ * \return 0 on success, error code otherwise:
+ * - EINVAL - \a plln or \a pllp or \a pllq value is invalid;
+ */
+
+int enablePll(uint16_t plln, uint8_t pllp, uint8_t pllq);
 
 /**
  * \brief Disables HSE clock.
