@@ -198,6 +198,102 @@ config CHIP_STM32F4_RCC_HSE_HZ
 
 endif	# CHIP_STM32F4_RCC_HSE_ENABLE
 
+config CHIP_STM32F4_RCC_PLL_ENABLE
+	bool "Enable PLL"
+	default y
+	help
+		Enable PLL.
+
+if CHIP_STM32F4_RCC_PLL_ENABLE
+
+choice
+	prompt "PLL and PLLI2S source"
+	default CHIP_STM32F4_RCC_PLLSRC_HSI
+	help
+		Select PLL and PLLI2S source.
+
+config CHIP_STM32F4_RCC_PLLSRC_HSI
+	bool "HSI"
+	help
+		Select HSI as PLL and PLLI2S source.
+
+config CHIP_STM32F4_RCC_PLLSRC_HSE
+	bool "HSE"
+	depends on CHIP_STM32F4_RCC_HSE_ENABLE
+	help
+		Select HSE as PLL and PLLI2S source.
+
+endchoice
+
+config CHIP_STM32F4_RCC_PLLM
+	int "PLLM value"
+	range 2 63
+	default 8 if CHIP_STM32F4_RCC_PLLSRC_HSE
+	default 16
+	help
+		PLLM value for main PLL and audio PLLI2S. It is used to divide PLL
+		input clock (PLLin) before it is fed to VCO. VCO input frequency
+		(VCOin) must be in the range [1MHz; 2MHz], 2MHz is recommended to limit
+		PLL jitter.
+		
+		VCOin = PLLin / PLLM
+
+config CHIP_STM32F4_RCC_PLLN
+	int "PLLN value"
+	range 192 432
+	default 336
+	help
+		PLLN value for main PLL. It is used to multiply VCO input frequency
+		(VCOin). Resulting VCO output frequency (VCOout) must be in the range
+		[192MHz; 432MHz].
+		
+		VCOout = VCOin * PLLN = PLLin / PLLM * PLLN
+
+choice
+	prompt "PLLP value"
+	default CHIP_STM32F4_RCC_PLLP_DIV2
+	help
+		PLLP value for main PLL. It is used to divide VCO output frequency
+		(VCOout). PLL output frequency (PLLout) must not exceed 168MHz.
+		
+		PLLout = VCOout / PLLP = PLLin / PLLM * PLLN / PLLP
+
+config CHIP_STM32F4_RCC_PLLP_DIV2
+	bool "2"
+	help
+		PLLP == 2
+
+config CHIP_STM32F4_RCC_PLLP_DIV4
+	bool "4"
+	help
+		PLLP == 4
+
+config CHIP_STM32F4_RCC_PLLP_DIV6
+	bool "6"
+	help
+		PLLP == 6
+
+config CHIP_STM32F4_RCC_PLLP_DIV8
+	bool "8"
+	help
+		PLLP == 8
+
+endchoice
+
+config CHIP_STM32F4_RCC_PLLQ
+	int "PLLQ value"
+	range 2 15
+	default 7
+	help
+		PLLQ value for main PLL. It is used to divide VCO output frequency
+		(VCOout) to produce clock for USB OTG FS, SDIO and RNG (PLLQout). USB
+		OTG FS requires a 48MHz clock for correct operation, while SDIO and RNG
+		need a frequency lower than or equal to 48MHz to work correctly.
+		
+		PLLQout = VCOout / PLLQ = PLLin / PLLM * PLLN / PLLQ
+
+endif	# CHIP_STM32F4_RCC_PLL_ENABLE
+
 endif	# CHIP_STM32F4_RCC_STANDARD_CLOCK_CONFIGURATION_ENABLE
 
 endmenu
