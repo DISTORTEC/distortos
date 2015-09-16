@@ -27,6 +27,11 @@ namespace chip
 | global functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
+void configurePllClockSource(const bool hse)
+{
+	RCC_PLLCFGR_PLLSRC_bb = hse;
+}
+
 void enableHse(const bool bypass)
 {
 	RCC_CR_HSEON_bb = 1;

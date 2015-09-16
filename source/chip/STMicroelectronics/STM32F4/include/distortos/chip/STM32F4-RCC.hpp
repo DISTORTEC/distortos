@@ -21,6 +21,17 @@ namespace chip
 {
 
 /**
+ * \brief Configures clock source of main PLL and audio PLLI2S.
+ *
+ * \warning Before changing configuration of main PLL and/or audio PLLI2S make sure that they are not used in any way
+ * (as core clock or as source of peripheral clocks) and that they are disabled.
+ *
+ * \param [in] hse selects whether HSI (false) or HSE (true) is used as clock source of main PLL and audio PLLI2S
+ */
+
+void configurePllClockSource(bool hse);
+
+/**
  * \brief Enables HSE clock.
  *
  * Enables HSE clock using crystal/ceramic resonator (bypass disabled) or external user clock (bypass enabled). This
