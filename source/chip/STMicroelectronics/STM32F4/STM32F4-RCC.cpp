@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-09-16
+ * \date 2015-09-17
  */
 
 #include "distortos/chip/STM32F4-RCC.hpp"
@@ -16,6 +16,8 @@
 #include "distortos/chip/STM32F4-RCC-bits.h"
 
 #include "distortos/chip/CMSIS-proxy.h"
+
+#include <utility>
 
 #include <cerrno>
 
@@ -28,6 +30,31 @@ namespace chip
 /*---------------------------------------------------------------------------------------------------------------------+
 | global functions
 +---------------------------------------------------------------------------------------------------------------------*/
+
+int configureAhbClockDivider(const uint16_t hpre)
+{
+	static const std::pair<decltype(hpre), decltype(RCC_CFGR_HPRE_DIV1)> associations[]
+	{
+		{hpreDiv1, RCC_CFGR_HPRE_DIV1},
+		{hpreDiv2, RCC_CFGR_HPRE_DIV2},
+		{hpreDiv4, RCC_CFGR_HPRE_DIV4},
+		{hpreDiv8, RCC_CFGR_HPRE_DIV8},
+		{hpreDiv16, RCC_CFGR_HPRE_DIV16},
+		{hpreDiv64, RCC_CFGR_HPRE_DIV64},
+		{hpreDiv128, RCC_CFGR_HPRE_DIV128},
+		{hpreDiv256, RCC_CFGR_HPRE_DIV256},
+		{hpreDiv512, RCC_CFGR_HPRE_DIV512},
+	};
+
+	for (auto& association : associations)
+		if (association.first == hpre)
+		{
+			RCC->CFGR = (RCC->CFGR & ~RCC_CFGR_HPRE) | association.second;
+			return 0;
+		}
+
+	return EINVAL;
+}
 
 void configurePllClockSource(const bool hse)
 {
