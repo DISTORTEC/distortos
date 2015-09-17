@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-09-16
+ * \date 2015-09-17
  */
 
 #ifndef SOURCE_CHIP_STMICROELECTRONICS_STM32F4_INCLUDE_DISTORTOS_CHIP_STM32F4_RCC_HPP_
@@ -55,6 +55,9 @@ constexpr uint8_t pllpDiv6 {6};
 
 /// fourth allowed value for PLLP - 8
 constexpr uint8_t pllpDiv8 {8};
+
+/// HSI clock frequency, Hz
+constexpr uint32_t hsiHz {16000000};
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | global functions' declarations
