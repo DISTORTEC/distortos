@@ -17,6 +17,8 @@
 
 #include "distortos/chip/CMSIS-proxy.h"
 
+#include <cerrno>
+
 namespace distortos
 {
 
@@ -26,6 +28,15 @@ namespace chip
 /*---------------------------------------------------------------------------------------------------------------------+
 | global functions
 +---------------------------------------------------------------------------------------------------------------------*/
+
+int configureFlashLatency(const uint8_t latency)
+{
+	if (latency > maxFlashLatency)
+		return EINVAL;
+
+	FLASH->ACR = (FLASH->ACR & ~FLASH_ACR_LATENCY) | (latency << FLASH_ACR_LATENCY_bit);
+	return 0;
+}
 
 void configureInstructionPrefetch(const bool enable)
 {

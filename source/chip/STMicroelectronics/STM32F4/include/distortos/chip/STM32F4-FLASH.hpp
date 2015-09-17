@@ -14,11 +14,41 @@
 #ifndef SOURCE_CHIP_STMICROELECTRONICS_STM32F4_INCLUDE_DISTORTOS_CHIP_STM32F4_FLASH_HPP_
 #define SOURCE_CHIP_STMICROELECTRONICS_STM32F4_INCLUDE_DISTORTOS_CHIP_STM32F4_FLASH_HPP_
 
+#include "distortos/distortosConfiguration.h"
+
+#include <cstdint>
+
 namespace distortos
 {
 
 namespace chip
 {
+
+/*---------------------------------------------------------------------------------------------------------------------+
+| global constants
++---------------------------------------------------------------------------------------------------------------------*/
+
+/// maximum allowed value of flash latency
+#if defined(CONFIG_CHIP_STM32F42) || defined(CONFIG_CHIP_STM32F43)
+constexpr uint8_t maxFlashLatency {15};
+#else
+constexpr uint8_t maxFlashLatency {7};
+#endif
+
+/*---------------------------------------------------------------------------------------------------------------------+
+| global functions' declarations
++---------------------------------------------------------------------------------------------------------------------*/
+
+/**
+ * \brief Configures flash latency.
+ *
+ * \param [in] latency is the new flash latency, [0; maxFlashLatency]
+ *
+ * \return 0 on success, error code otherwise:
+ * - EINVAL - \a latency value is invalid;
+ */
+
+int configureFlashLatency(uint8_t latency);
 
 /**
  * \brief Configures instruction prefetch.
