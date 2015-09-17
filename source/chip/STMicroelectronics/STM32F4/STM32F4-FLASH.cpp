@@ -27,6 +27,11 @@ namespace chip
 | global functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
+void configureInstructionPrefetch(const bool enable)
+{
+	FLASH_ACR_PRFTEN_bb = enable;
+}
+
 void disableDataCache()
 {
 	FLASH_ACR_DCEN_bb = 0;

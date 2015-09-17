@@ -21,6 +21,14 @@ namespace chip
 {
 
 /**
+ * \brief Configures instruction prefetch.
+ *
+ * \param [in] enable selects whether instruction prefetch will be disabled (false) or enabled (true)
+ */
+
+void configureInstructionPrefetch(bool enable);
+
+/**
  * \brief Disables data cache.
  */
 
