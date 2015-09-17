@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-09-12
+ * \date 2015-09-17
  */
 
 #include "distortos/chip/lowLevelInitialization.hpp"
@@ -46,7 +46,7 @@ void lowLevelInitialization()
 
 #endif	// def CONFIG_CHIP_STM32F4_RCC_STANDARD_CLOCK_CONFIGURATION_ENABLE
 
-	constexpr uint32_t period {CONFIG_TICK_CLOCK / CONFIG_TICK_RATE_HZ};
+	constexpr uint32_t period {hsiHz / CONFIG_TICK_RATE_HZ};
 	constexpr uint32_t periodDividedBy8 {period / 8};
 	constexpr bool divideBy8 {period > architecture::maxSysTickPeriod};
 	// at least one of the periods must be valid
