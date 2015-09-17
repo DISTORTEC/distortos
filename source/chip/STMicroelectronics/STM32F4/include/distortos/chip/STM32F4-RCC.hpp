@@ -59,6 +59,24 @@ constexpr uint8_t pllpDiv8 {8};
 /// HSI clock frequency, Hz
 constexpr uint32_t hsiHz {16000000};
 
+/// minimum allowed value for VCO input frequency, Hz
+constexpr uint32_t minVcoInHz {1000000};
+
+/// maximum allowed value for VCO input frequency, Hz
+constexpr uint32_t maxVcoInHz {2000000};
+
+/// minimum allowed value for VCO output frequency, Hz
+constexpr uint32_t minVcoOutHz {192000000};
+
+/// maximum allowed value for VCO output frequency, Hz
+constexpr uint32_t maxVcoOutHz {432000000};
+
+/// maximum allowed value for PLL output frequency, Hz
+constexpr uint32_t maxPllOutHz {168000000};
+
+/// maximum allowed value for PLL "Q" output frequency, Hz
+constexpr uint32_t maxPllqOutHz {48000000};
+
 /*---------------------------------------------------------------------------------------------------------------------+
 | global functions' declarations
 +---------------------------------------------------------------------------------------------------------------------*/
