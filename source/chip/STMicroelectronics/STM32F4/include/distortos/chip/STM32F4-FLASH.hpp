@@ -26,6 +26,12 @@ namespace chip
 
 void disableDataCache();
 
+/**
+ * \brief Disables instruction cache.
+ */
+
+void disableInstructionCache();
+
 }	// namespace chip
 
 }	// namespace distortos
