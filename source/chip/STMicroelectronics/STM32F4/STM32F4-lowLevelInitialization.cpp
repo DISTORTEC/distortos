@@ -13,11 +13,10 @@
 
 #include "distortos/chip/lowLevelInitialization.hpp"
 
+#include "distortos/chip/STM32F4-FLASH.hpp"
 #include "distortos/chip/STM32F4-RCC.hpp"
 
 #include "distortos/architecture/configureSysTick.hpp"
-
-#include "distortos/distortosConfiguration.h"
 
 namespace distortos
 {
@@ -31,6 +30,14 @@ namespace chip
 
 void lowLevelInitialization()
 {
+#ifdef CONFIG_CHIP_STM32F4_FLASH_PREFETCH_ENABLE
+	configureInstructionPrefetch(true);
+#else	// !def CONFIG_CHIP_STM32F4_FLASH_PREFETCH_ENABLE
+	configureInstructionPrefetch(false);
+#endif	// !def CONFIG_CHIP_STM32F4_FLASH_PREFETCH_ENABLE
+	enableInstructionCache();
+	enableDataCache();
+
 #ifdef CONFIG_CHIP_STM32F4_RCC_STANDARD_CLOCK_CONFIGURATION_ENABLE
 
 #ifdef CONFIG_CHIP_STM32F4_RCC_HSE_ENABLE
