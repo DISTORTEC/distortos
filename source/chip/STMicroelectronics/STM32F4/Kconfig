@@ -294,6 +294,158 @@ config CHIP_STM32F4_RCC_PLLQ
 
 endif	# CHIP_STM32F4_RCC_PLL_ENABLE
 
+choice
+	prompt "System clock source"
+	default CHIP_STM32F4_RCC_SYSCLK_PLL
+	help
+		Select system clock source.
+
+config CHIP_STM32F4_RCC_SYSCLK_HSI
+	bool "HSI"
+	help
+		HSI oscillator selected as system clock.
+
+config CHIP_STM32F4_RCC_SYSCLK_HSE
+	bool "HSE"
+	depends on CHIP_STM32F4_RCC_HSE_ENABLE
+	help
+		HSE oscillator selected as system clock.
+
+config CHIP_STM32F4_RCC_SYSCLK_PLL
+	bool "PLL"
+	depends on CHIP_STM32F4_RCC_PLL_ENABLE
+	help
+		Main PLL selected as system clock.
+
+endchoice
+
+choice
+	prompt "AHB divider"
+	default CHIP_STM32F4_RCC_AHB_DIV1
+	help
+		AHB clock division factor
+
+		AHBclk = SYSclk / AHBdivider
+
+config CHIP_STM32F4_RCC_AHB_DIV1
+	bool "1"
+	help
+		System clock not divided
+
+config CHIP_STM32F4_RCC_AHB_DIV2
+	bool "2"
+	help
+		System clock divided by 2
+
+config CHIP_STM32F4_RCC_AHB_DIV4
+	bool "4"
+	help
+		System clock divided by 4
+
+config CHIP_STM32F4_RCC_AHB_DIV8
+	bool "8"
+	help
+		System clock divided by 8
+
+config CHIP_STM32F4_RCC_AHB_DIV16
+	bool "16"
+	help
+		System clock divided by 16
+
+config CHIP_STM32F4_RCC_AHB_DIV64
+	bool "64"
+	help
+		System clock divided by 64
+
+config CHIP_STM32F4_RCC_AHB_DIV128
+	bool "128"
+	help
+		System clock divided by 128
+
+config CHIP_STM32F4_RCC_AHB_DIV256
+	bool "256"
+	help
+		System clock divided by 256
+
+config CHIP_STM32F4_RCC_AHB_DIV512
+	bool "512"
+	help
+		System clock divided by 512
+
+endchoice
+
+choice
+	prompt "APB1 (low speed) divider"
+	default CHIP_STM32F4_RCC_APB1_DIV4
+	help
+		APB1 (low speed) clock division factor. APB1 clock must not exceed
+		42MHz.
+
+		APB1clk = AHBclk / APB1divider
+
+config CHIP_STM32F4_RCC_APB1_DIV1
+	bool "1"
+	help
+		AHB clock not divided
+
+config CHIP_STM32F4_RCC_APB1_DIV2
+	bool "2"
+	help
+		AHB clock divided by 2
+
+config CHIP_STM32F4_RCC_APB1_DIV4
+	bool "4"
+	help
+		AHB clock divided by 4
+
+config CHIP_STM32F4_RCC_APB1_DIV8
+	bool "8"
+	help
+		AHB clock divided by 8
+
+config CHIP_STM32F4_RCC_APB1_DIV16
+	bool "16"
+	help
+		AHB clock divided by 16
+
+endchoice
+
+choice
+	prompt "APB2 (high speed) divider"
+	default CHIP_STM32F4_RCC_APB2_DIV2
+	help
+		APB2 (high speed) clock division factor. APB2 clock must not exceed
+		84MHz.
+
+		APB2clk = AHBclk / APB2divider
+
+config CHIP_STM32F4_RCC_APB2_DIV1
+	bool "1"
+	help
+		AHB clock not divided
+
+config CHIP_STM32F4_RCC_APB2_DIV2
+	bool "2"
+	help
+		AHB clock divided by 2
+
+config CHIP_STM32F4_RCC_APB2_DIV4
+	bool "4"
+	help
+		AHB clock divided by 4
+
+config CHIP_STM32F4_RCC_APB2_DIV8
+	bool "8"
+	help
+		AHB clock divided by 8
+
+config CHIP_STM32F4_RCC_APB2_DIV16
+	bool "16"
+	help
+		AHB clock divided by 16
+
+endchoice
+
 endif	# CHIP_STM32F4_RCC_STANDARD_CLOCK_CONFIGURATION_ENABLE
 
 endmenu
