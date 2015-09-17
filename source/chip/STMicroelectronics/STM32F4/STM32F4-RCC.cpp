@@ -17,6 +17,7 @@
 
 #include "distortos/chip/CMSIS-proxy.h"
 
+#include <array>
 #include <utility>
 
 #include <cerrno>
@@ -50,6 +51,28 @@ int configureAhbClockDivider(const uint16_t hpre)
 		if (association.first == hpre)
 		{
 			RCC->CFGR = (RCC->CFGR & ~RCC_CFGR_HPRE) | association.second;
+			return 0;
+		}
+
+	return EINVAL;
+}
+
+int configureApbClockDivider(const bool ppre2, const uint8_t ppre)
+{
+	static const std::pair<decltype(ppre), std::array<decltype(RCC_CFGR_PPRE1_DIV1), 2>> associations[]
+	{
+		{ppreDiv1, {RCC_CFGR_PPRE1_DIV1, RCC_CFGR_PPRE2_DIV1}},
+		{ppreDiv2, {RCC_CFGR_PPRE1_DIV2, RCC_CFGR_PPRE2_DIV2}},
+		{ppreDiv4, {RCC_CFGR_PPRE1_DIV4, RCC_CFGR_PPRE2_DIV4}},
+		{ppreDiv8, {RCC_CFGR_PPRE1_DIV8, RCC_CFGR_PPRE2_DIV8}},
+		{ppreDiv16, {RCC_CFGR_PPRE1_DIV16, RCC_CFGR_PPRE2_DIV16}},
+	};
+
+	for (auto& association : associations)
+		if (association.first == ppre)
+		{
+			static const decltype(RCC_CFGR_PPRE1) masks[] {RCC_CFGR_PPRE1, RCC_CFGR_PPRE2};
+			RCC->CFGR = (RCC->CFGR & ~masks[ppre2]) | association.second[ppre2];
 			return 0;
 		}
 

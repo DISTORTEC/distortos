@@ -136,6 +136,18 @@ constexpr uint8_t ppreDiv16 {16};
 int configureAhbClockDivider(uint16_t hpre);
 
 /**
+ * \brief Configures divider of APB1 or APB2 clock (PPRE1 or PPRE2 value).
+ *
+ * \param [in] ppre2 selects whether PPRE1 (false) or PPRE2 (true) is configured
+ * \param [in] ppre is the PPRE value, {1, 2, 4, 8, 16} or {ppreDiv1, ppreDiv2, ppreDiv4, ppreDiv8, ppreDiv16}
+ *
+ * \return 0 on success, error code otherwise:
+ * - EINVAL - \a ppre value is invalid;
+ */
+
+int configureApbClockDivider(bool ppre2, uint8_t ppre);
+
+/**
  * \brief Configures clock source of main PLL and audio PLLI2S.
  *
  * \warning Before changing configuration of main PLL and/or audio PLLI2S make sure that they are not used in any way
