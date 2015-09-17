@@ -92,6 +92,12 @@ constexpr uint32_t maxPllOutHz {168000000};
 /// maximum allowed value for PLL "Q" output frequency, Hz
 constexpr uint32_t maxPllqOutHz {48000000};
 
+/// maximum allowed APB1 (low speed) frequency, Hz
+constexpr uint32_t maxApb1Hz {maxPllOutHz / 4};
+
+/// maximum allowed APB2 (high speed) frequency, Hz
+constexpr uint32_t maxApb2Hz {maxPllOutHz / 2};
+
 /// first allowed value for AHB divider - 1
 constexpr uint16_t hpreDiv1 {1};
 
