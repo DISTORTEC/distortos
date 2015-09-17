@@ -40,6 +40,14 @@ void disableInstructionCache();
 
 void enableDataCache();
 
+/**
+ * \brief Enables instruction cache.
+ *
+ * The cache is first disabled, then reset and finally enabled.
+ */
+
+void enableInstructionCache();
+
 }	// namespace chip
 
 }	// namespace distortos

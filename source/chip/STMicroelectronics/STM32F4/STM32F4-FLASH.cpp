@@ -45,6 +45,14 @@ void enableDataCache()
 	FLASH_ACR_DCEN_bb = 1;
 }
 
+void enableInstructionCache()
+{
+	disableInstructionCache();
+	FLASH_ACR_ICRST_bb = 1;	// reset instruction cache
+	FLASH_ACR_ICRST_bb = 0;
+	FLASH_ACR_ICEN_bb = 1;
+}
+
 }	// namespace chip
 
 }	// namespace distortos
