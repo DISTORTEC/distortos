@@ -6,7 +6,7 @@
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #
-# date: 2015-09-14
+# date: 2015-09-18
 #
 
 #
@@ -447,6 +447,21 @@ config CHIP_STM32F4_RCC_APB2_DIV16
 endchoice
 
 endif	# CHIP_STM32F4_RCC_STANDARD_CLOCK_CONFIGURATION_ENABLE
+
+if !CHIP_STM32F4_RCC_STANDARD_CLOCK_CONFIGURATION_ENABLE
+
+config CHIP_STM32F4_RCC_AHB_HZ
+	int "Frequency of AHB clock, Hz"
+	range 1 180000000 if CHIP_STM32F42 || CHIP_STM32F43 || CHIP_STM32F44 || CHIP_STM32F47
+	range 1 168000000 if CHIP_STM32F405 || CHIP_STM32F407 || CHIP_STM32F415 || CHIP_STM32F4
+	range 1 100000000 if CHIP_STM32F411
+	range 1 84000000
+	default 16000000
+	help
+		Frequency of AHB clock, Hz. RCC must be configured by user to achieve
+		that frequency.
+
+endif	# !CHIP_STM32F4_RCC_STANDARD_CLOCK_CONFIGURATION_ENABLE
 
 endmenu
 
