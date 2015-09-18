@@ -625,3 +625,7 @@ config CHIP
 	default "STM32F407VGT" if CHIP_STM32F407VGT
 	default "STM32F407ZET" if CHIP_STM32F407ZET
 	default "STM32F407ZGT" if CHIP_STM32F407ZGT
+
+config CHIP_INCLUDES
+	string
+	default "source/chip/STMicroelectronics/STM32F4/include external/CMSIS-STM32F4 external/CMSIS"
