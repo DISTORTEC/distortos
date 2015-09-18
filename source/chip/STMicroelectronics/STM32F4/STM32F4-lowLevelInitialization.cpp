@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-09-17
+ * \date 2015-09-18
  */
 
 #include "distortos/chip/lowLevelInitialization.hpp"
@@ -154,7 +154,11 @@ void lowLevelInitialization()
 	static_assert(apb2Hz <= maxApb2Hz, "Invalid APB2 (high speed) frequency!");
 	configureApbClockDivider(true, ppre2);
 
-#endif	// def CONFIG_CHIP_STM32F4_RCC_STANDARD_CLOCK_CONFIGURATION_ENABLE
+#else	// !def CONFIG_CHIP_STM32F4_RCC_STANDARD_CLOCK_CONFIGURATION_ENABLE
+
+	constexpr uint32_t ahbHz {CONFIG_CHIP_STM32F4_RCC_AHB_HZ};
+
+#endif	// !def CONFIG_CHIP_STM32F4_RCC_STANDARD_CLOCK_CONFIGURATION_ENABLE
 
 #if CONFIG_CHIP_STM32F4_VDD_MV < 2100
 	constexpr uint32_t frequencyThresholdHz {20000000};
