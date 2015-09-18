@@ -6,7 +6,7 @@
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #
-# date: 2015-09-10
+# date: 2015-09-18
 #
 
 comment "ARMv7-M architecture options"
@@ -45,3 +45,7 @@ config ARCHITECTURE_ARM_CORTEX_M4
 config ARCHITECTURE_ARM_CORTEX_M7
 	bool
 	default n
+
+config ARCHITECTURE_INCLUDES
+	string
+	default "source/architecture/ARM/ARMv7-M/include"
