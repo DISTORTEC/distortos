@@ -6,18 +6,16 @@
 -- This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 -- distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 --
--- date: 2015-09-12
+-- date: 2015-09-18
 --
 
 local ldscriptOutputs = {LDSCRIPT, "$(TOP)/<ldscripts>"}
 
 tup.rule(DISTORTOS_CONFIGURATION_MK, "./STM32F4.ld.sh \"%f\" > \"%o\"", ldscriptOutputs)
 
-CFLAGS += "-I" .. OUTPUT .. "include"
-CFLAGS += "-I" .. TOP .. "/include"
+CFLAGS += STANDARD_INCLUDES
 
-CXXFLAGS += "-I" .. OUTPUT .. "include"
-CXXFLAGS += "-I" .. TOP .. "/include"
+CXXFLAGS += STANDARD_INCLUDES
 CXXFLAGS += "-I" .. TOP .. "/source/architecture/ARM/ARMv7-M/include"
 CXXFLAGS += "-I" .. TOP .. "/source/chip/STMicroelectronics/STM32F4/include"
 CXXFLAGS += "-I" .. TOP .. "/external/CMSIS-STM32F4"
