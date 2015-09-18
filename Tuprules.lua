@@ -140,6 +140,9 @@ LDFLAGS += "-g -Wl,-Map=" .. OUTPUT .. PROJECT .. ".map,--cref,--gc-sections"
 -- "standard" includes
 STANDARD_INCLUDES += "-I" .. OUTPUT .. "include -I" .. TOP .. "/include"
 
+-- architecture includes
+ARCHITECTURE_INCLUDES += CONFIG_ARCHITECTURE_INCLUDES:gsub("(%g+)", "-I" .. TOP .. "/%1")
+
 ------------------------------------------------------------------------------------------------------------------------
 -- tup/lua functions
 ------------------------------------------------------------------------------------------------------------------------

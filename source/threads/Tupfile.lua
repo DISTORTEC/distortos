@@ -10,6 +10,6 @@
 --
 
 CXXFLAGS += STANDARD_INCLUDES
-CXXFLAGS += "-I" .. TOP .. "/source/architecture/ARM/ARMv7-M/include"
+CXXFLAGS += ARCHITECTURE_INCLUDES
 
 tup.include(TOP .. "/compile.lua")

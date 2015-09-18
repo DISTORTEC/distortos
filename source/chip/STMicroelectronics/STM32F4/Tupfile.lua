@@ -16,7 +16,7 @@ tup.rule(DISTORTOS_CONFIGURATION_MK, "./STM32F4.ld.sh \"%f\" > \"%o\"", ldscript
 CFLAGS += STANDARD_INCLUDES
 
 CXXFLAGS += STANDARD_INCLUDES
-CXXFLAGS += "-I" .. TOP .. "/source/architecture/ARM/ARMv7-M/include"
+CXXFLAGS += ARCHITECTURE_INCLUDES
 CXXFLAGS += "-I" .. TOP .. "/source/chip/STMicroelectronics/STM32F4/include"
 CXXFLAGS += "-I" .. TOP .. "/external/CMSIS-STM32F4"
 CXXFLAGS += "-I" .. TOP .. "/external/CMSIS"
