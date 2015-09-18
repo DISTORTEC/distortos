@@ -117,6 +117,9 @@ STANDARD_INCLUDES += -I$(OUTPUT)include -Iinclude
 # architecture includes
 ARCHITECTURE_INCLUDES += $(patsubst %,-I%,$(subst ",,$(CONFIG_ARCHITECTURE_INCLUDES)))
 
+# chip includes
+CHIP_INCLUDES += $(patsubst %,-I%,$(subst ",,$(CONFIG_CHIP_INCLUDES)))
+
 #-----------------------------------------------------------------------------------------------------------------------
 # build macros
 #-----------------------------------------------------------------------------------------------------------------------

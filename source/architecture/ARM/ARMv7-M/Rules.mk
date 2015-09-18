@@ -16,10 +16,8 @@
 ASFLAGS_$(d)/ARMv7-M-Reset_Handler.S := -D__USES_TWO_STACKS -D__USES_CXX
 
 CXXFLAGS_$(d) := $(CXXFLAGS_$(d)) $(STANDARD_INCLUDES)
-CXXFLAGS_$(d) := $(CXXFLAGS_$(d)) -Isource/chip/STMicroelectronics/STM32F4/include
-CXXFLAGS_$(d) := $(CXXFLAGS_$(d)) -Iexternal/CMSIS-STM32F4
-CXXFLAGS_$(d) := $(CXXFLAGS_$(d)) -Iexternal/CMSIS
 CXXFLAGS_$(d) := $(CXXFLAGS_$(d)) $(ARCHITECTURE_INCLUDES)
+CXXFLAGS_$(d) := $(CXXFLAGS_$(d)) $(CHIP_INCLUDES)
 
 #-----------------------------------------------------------------------------------------------------------------------
 # standard footer
