@@ -143,6 +143,9 @@ STANDARD_INCLUDES += "-I" .. OUTPUT .. "include -I" .. TOP .. "/include"
 -- architecture includes
 ARCHITECTURE_INCLUDES += CONFIG_ARCHITECTURE_INCLUDES:gsub("(%g+)", "-I" .. TOP .. "/%1")
 
+-- chip includes
+CHIP_INCLUDES += CONFIG_CHIP_INCLUDES:gsub("(%g+)", "-I" .. TOP .. "/%1")
+
 ------------------------------------------------------------------------------------------------------------------------
 -- tup/lua functions
 ------------------------------------------------------------------------------------------------------------------------

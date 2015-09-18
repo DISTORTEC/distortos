@@ -13,8 +13,6 @@ ASFLAGS["ARMv7-M-Reset_Handler.S"] = "-D__USES_TWO_STACKS -D__USES_CXX"
 
 CXXFLAGS += STANDARD_INCLUDES
 CXXFLAGS += ARCHITECTURE_INCLUDES
-CXXFLAGS += "-I" .. TOP .. "/source/chip/STMicroelectronics/STM32F4/include"
-CXXFLAGS += "-I" .. TOP .. "/external/CMSIS-STM32F4"
-CXXFLAGS += "-I" .. TOP .. "/external/CMSIS"
+CXXFLAGS += CHIP_INCLUDES
 
 tup.include(TOP .. "/compile.lua")
