@@ -114,6 +114,9 @@ LDFLAGS += -g -Wl,-Map=$(OUTPUT)$(PROJECT).map,--cref,--gc-sections
 # "standard" includes
 STANDARD_INCLUDES += -I$(OUTPUT)include -Iinclude
 
+# architecture includes
+ARCHITECTURE_INCLUDES += $(patsubst %,-I%,$(subst ",,$(CONFIG_ARCHITECTURE_INCLUDES)))
+
 #-----------------------------------------------------------------------------------------------------------------------
 # build macros
 #-----------------------------------------------------------------------------------------------------------------------

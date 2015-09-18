@@ -20,7 +20,7 @@ SUBDIRECTORIES += ARM/ARMv7-M
 #-----------------------------------------------------------------------------------------------------------------------
 
 CXXFLAGS_$(d) := $(CXXFLAGS_$(d)) $(STANDARD_INCLUDES)
-CXXFLAGS_$(d) := $(CXXFLAGS_$(d)) -Isource/architecture/ARM/ARMv7-M/include
+CXXFLAGS_$(d) := $(CXXFLAGS_$(d)) $(ARCHITECTURE_INCLUDES)
 
 #-----------------------------------------------------------------------------------------------------------------------
 # standard footer
