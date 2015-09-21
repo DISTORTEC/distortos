@@ -56,10 +56,10 @@ This project is licensed under the terms of [Mozilla Public License Version 2.0]
 relatively new license is something in between other popular open source licenses like GPL or BSD. Most of the questions
 are answered in the [MPL 2.0 FAQ](https://www.mozilla.org/MPL/2.0/FAQ.html).
 
-Building
---------
+Configuration & building
+------------------------
 
-To build *distortos* you need:
+To configure & build *distortos* you need:
 - [GNU Make](http://www.gnu.org/software/make/) or [tup](http://gittup.org/tup/) (version 0.7.3 or above) build system;
 - [arm-none-eabi bleeding-edge-toolchain](https://sourceforge.net/projects/bleeding-edge/); alternatively you can try
   any other arm-none-eabi toolchain, but C++ exception handling code will increase the size of binary and incorrect
@@ -70,8 +70,26 @@ To build *distortos* you need:
 - [AWK](https://en.wikipedia.org/wiki/AWK);
 - [Bash](https://www.gnu.org/software/bash/) or Bash-compatible shell;
 - [GNU Coreutils](http://www.gnu.org/software/coreutils/coreutils.html) or a set of compatible utilities;
+- [kconfig-frontends](http://ymorin.is-a-geek.org/projects/kconfig-frontends) (especially *mconf* tool) to create or
+  edit the configurations;
 
 Make sure the tools are available in your system's *PATH* environment variable.
+
+To create or edit a configuration run `kconfig-mconf Kconfig` in the root of the project. You can either start from
+scratch or edit one of existing configurations (from `configurations/<board>/<variant>` folder). When creating a
+new configuration make sure the name of created file is `distortosConfiguration.mk`.
+
+DO NOT edit `distortosConfiguration.mk` files manually! *kconfig-frontends* tools make sure that multiple pre- and
+post-conditions are satisfied, and these conditions can easily be violated by manual modifications of the configuration.
+
+To select the configuration of your choice execute `configure.sh` script with the relative path to selected
+`distortosConfiguration.mk` file - `./configure.sh <path-to-distortosConfiguration.mk>` (on *Windows* use
+`sh configure.sh <path-to-distortosConfiguration.mk>`). This script will create `selectedConfiguration.mk`
+file which is needed to build *distortos*. If the path to selected `distortosConfiguration.mk` file is in the form
+`configurations/<board>/<variant>`, you can omit `configurations/` prefix -
+`./configure.sh configurations/STM32F4DISCOVERY/test` and `./configure.sh STM32F4DISCOVERY/test` will both
+select the same configuration. You can execute `configure.sh` with no arguments if the selected
+`distortosConfiguration.mk` file is in the main folder of the project - in that case `.` is used as the path.
 
 To build just execute `make` (if using *GNU Make*) or `tup` (if using *tup*) command in the main directory of the
 project.
@@ -89,8 +107,9 @@ Don't use 64-bit tools (even if you have 64-bit system), as *tup* cannot current
 
 You can get *GNU Make*, *AWK* (*GAWK*), *Bash* and *GNU Coreutils* by installing [MSYS2](https://msys2.github.io/) and
 executing `pacman -S gawk make` in the shell of this software distro - the binaries will be placed in
-`<installation path>\usr\bin` folder. *tup* and *arm-none-eabi bleeding-edge-toolchain* binaries for Windows are
-available from their main websites.
+`<installation path>\usr\bin` folder. *kconfig-frontends* binaries for *Windows* can be downloaded from
+[uvc.de](http://uvc.de/posts/linux-kernel-configuration-tool-kconfig-under-windows.html) website. *tup* and
+*arm-none-eabi bleeding-edge-toolchain* binaries for *Windows* are available from their main websites.
 
 Mailing list
 ------------
