@@ -94,6 +94,9 @@ select the same configuration. You can execute `configure.sh` with no arguments 
 To build just execute `make` (if using *GNU Make*) or `tup` (if using *tup*) command in the main directory of the
 project.
 
+To remove all generated files (*tup* database, build outputs, *doxygen* outputs and `selectedConfiguration.mk` file)
+you can run `./scripts/distclean.sh` (or `sh scripts/distclean.sh` on *Windows*).
+
 #### If you use tup and Linux
 
 You need to set *suid* bit on your *tup* executable (`` sudo chmod +s `which tup` ``) and you need to make sure that
