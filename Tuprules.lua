@@ -153,42 +153,42 @@ CHIP_INCLUDES += CONFIG_CHIP_INCLUDES:gsub("(%g+)", "-I" .. TOP .. "/%1")
 
 -- get "file specific flags" from table (ASFLAGS, CFLAGS or CXXFLAGS) for file named filename
 function getSpecificFlags(table, filename)
-	local specific_flags = {}
+	local specificFlags = {}
 	if table[filename] ~= nil then
-		specific_flags = table[filename]
+		specificFlags = table[filename]
 	end
-	return specific_flags
+	return specificFlags
 end
 
 -- assemble file named input
 function as(input)
-	local specific_flags = getSpecificFlags(ASFLAGS, input)
+	local specificFlags = getSpecificFlags(ASFLAGS, input)
 	local inputs = {input, extra_inputs = {"$(TOP)/<headers>"}}
 	local outputs = {OUTPUT .. tup.getrelativedir(TOP) .. "/%B.o", "$(TOP)/<objects>"}
-	tup.rule(inputs, "^c^ $(AS) $(ASFLAGS) $(specific_flags) -c %f -o %o", outputs)
+	tup.rule(inputs, "^c^ $(AS) $(ASFLAGS) $(specificFlags) -c %f -o %o", outputs)
 end
 
 -- compile (C) file named input
 function cc(input)
-	local specific_flags = getSpecificFlags(CFLAGS, input)
+	local specificFlags = getSpecificFlags(CFLAGS, input)
 	local inputs = {input, extra_inputs = {"$(TOP)/<headers>"}}
 	local outputs = {OUTPUT .. tup.getrelativedir(TOP) .. "/%B.o", "$(TOP)/<objects>"}
-	tup.rule(inputs, "^c^ $(CC) $(CFLAGS) $(specific_flags) -c %f -o %o", outputs)
+	tup.rule(inputs, "^c^ $(CC) $(CFLAGS) $(specificFlags) -c %f -o %o", outputs)
 end
 
 -- compile (C++) file named input
 function cxx(input)
-	local specific_flags = getSpecificFlags(CXXFLAGS, input)
+	local specificFlags = getSpecificFlags(CXXFLAGS, input)
 	local inputs = {input, extra_inputs = {"$(TOP)/<headers>"}}
 	local outputs = {OUTPUT .. tup.getrelativedir(TOP) .. "/%B.o", "$(TOP)/<objects>"}
-	tup.rule(inputs, "^c^ $(CXX) $(CXXFLAGS) $(specific_flags) -c %f -o %o", outputs)
+	tup.rule(inputs, "^c^ $(CXX) $(CXXFLAGS) $(specificFlags) -c %f -o %o", outputs)
 end
 
 -- link all objects from $(TOP)/<objects> into file named output
 function link(output)
 	local inputs = {"$(TOP)/<objects>", extra_inputs = {"$(TOP)/<ldscripts>"}}
-	local extra_output = {OUTPUT .. PROJECT .. ".map"}
-	tup.rule(inputs, "$(LD) $(LDFLAGS) %<objects> -o %o", {output, extra_outputs = extra_output})
+	local extraOutput = {OUTPUT .. PROJECT .. ".map"}
+	tup.rule(inputs, "$(LD) $(LDFLAGS) %<objects> -o %o", {output, extra_outputs = extraOutput})
 end
 
 -- convert file named input (elf) to intel hex file named output
