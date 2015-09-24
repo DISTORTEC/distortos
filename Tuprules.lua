@@ -6,7 +6,7 @@
 -- This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 -- distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 --
--- date: 2015-09-18
+-- date: 2015-09-24
 --
 
 ------------------------------------------------------------------------------------------------------------------------
@@ -24,6 +24,7 @@ TOOLCHAIN = "arm-none-eabi-"
 AS = TOOLCHAIN .. "gcc"
 CC = TOOLCHAIN .. "gcc"
 CXX = TOOLCHAIN .. "g++"
+AR = TOOLCHAIN .. "ar"
 LD = TOOLCHAIN .. "g++"
 OBJCOPY = TOOLCHAIN .. "objcopy"
 OBJDUMP = TOOLCHAIN .. "objdump"
