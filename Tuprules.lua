@@ -151,6 +151,17 @@ CHIP_INCLUDES += CONFIG_CHIP_INCLUDES:gsub("(%g+)", "-I" .. TOP .. "/%1")
 -- tup/lua functions
 ------------------------------------------------------------------------------------------------------------------------
 
+-- group of <objects>
+objectsGroup = nil
+
+-- starts new group of <objects>
+function startObjectsGroup()
+	objectsGroup = tup.getcwd() .. "/<objects>"
+end
+
+-- start default group of <objects> - all generated objects
+startObjectsGroup()
+
 -- get "file specific flags" from table (ASFLAGS, CFLAGS or CXXFLAGS) for file named filename
 function getSpecificFlags(table, filename)
 	if table[filename] ~= nil then
