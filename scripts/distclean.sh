@@ -13,7 +13,6 @@
 
 set -e
 set -u
-set -o pipefail
 
 if [ -d .tup ]; then
 	echo "Removing tup database..."
@@ -36,3 +35,4 @@ if [ -f selectedConfiguration.mk ]; then
 fi
 
 echo "Project cleaned successfully."
+
