@@ -6,7 +6,7 @@
 -- This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 -- distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 --
--- date: 2015-09-24
+-- date: 2015-09-26
 --
 
 ------------------------------------------------------------------------------------------------------------------------
@@ -153,7 +153,7 @@ CHIP_INCLUDES += CONFIG_CHIP_INCLUDES:gsub("(%g+)", "-I" .. TOP .. "/%1")
 
 -- get "file specific flags" from table (ASFLAGS, CFLAGS or CXXFLAGS) for file named filename
 function getSpecificFlags(table, filename)
-	local specificFlags = {}
+	specificFlags = {}
 	if table[filename] ~= nil then
 		specificFlags = table[filename]
 	end
