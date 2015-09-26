@@ -13,7 +13,6 @@
 
 set -e
 set -u
-set -o pipefail
 
 path=.
 
@@ -29,7 +28,7 @@ if [ ! -f $path/distortosConfiguration.mk ]; then
 	if [ ! -f $path/distortosConfiguration.mk ]; then
 		echo "Trying $path/distortosConfiguration.mk... Not found!"
 		echo "Error - no suitable configuration found!"
-		exit -1
+		exit 1
 	fi	
 fi
 

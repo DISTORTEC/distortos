@@ -13,7 +13,6 @@
 
 set -e
 set -u
-set -o pipefail
 
 if [ -d .tup ]; then
 	echo "Removing tup database..."

@@ -13,16 +13,15 @@
 
 set -e
 set -u
-set -o pipefail
 
 if [ $# -ne 1 ]; then
 	echo "This script requires exactly one argument!" >&2
-	exit -1
+	exit 1
 fi
 
 if [ ! -f $1 ]; then
 	echo "Configuation file $1 does not exist!" >&2
-	exit -1
+	exit 2
 fi
 
 # "execute" the configuration file provided as argument to read all the configuration variables
@@ -30,7 +29,7 @@ fi
 
 if [ $CONFIG_CHIP_STM32F4_FLASH_SIZE -eq 0 ] || [ $CONFIG_CHIP_STM32F4_SRAM1_SIZE -eq 0 ]; then
 	echo "CONFIG_CHIP_STM32F4_FLASH_SIZE and CONFIG_CHIP_STM32F4_SRAM1_SIZE cannot be 0!" >&2
-	exit -1
+	exit 3
 fi
 
 PROCESS_STACK_SIZE=$CONFIG_MAIN_THREAD_STACK_SIZE
