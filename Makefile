@@ -6,7 +6,7 @@
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #
-# date: 2015-09-24
+# date: 2015-09-26
 #
 
 #-----------------------------------------------------------------------------------------------------------------------
@@ -125,6 +125,15 @@ CHIP_INCLUDES += $(patsubst %,-I%,$(subst ",,$(CONFIG_CHIP_INCLUDES)))
 # build macros
 #-----------------------------------------------------------------------------------------------------------------------
 
+define DIRECTORY_DEPENDENCY
+$(1): | $(dir $(1))
+endef
+
+define MAKE_DIRECTORY
+$(1):
+	mkdir -p $(1)
+endef
+
 define PARSE_SUBDIRECTORY
 ifdef d
 dir := $$(d)/$(1)
@@ -156,6 +165,14 @@ all: targets
 # trigger parsing of all Rules.mk files
 include Rules.mk
 $(call PARSE_SUBDIRECTORIES,$(SUBDIRECTORIES))
+
+# generated files depend (order-only) on their directories
+$(foreach file,$(GENERATED),$(eval $(call DIRECTORY_DEPENDENCY,$(file))))
+
+# create rules to make missing output directories
+DIRECTORIES = $(sort $(dir $(GENERATED)))
+MISSING_DIRECTORIES = $(filter-out $(wildcard $(DIRECTORIES)),$(DIRECTORIES))
+$(foreach directory,$(MISSING_DIRECTORIES),$(eval $(call MAKE_DIRECTORY,$(directory))))
 
 .PHONY: targets
 targets: $(OUTPUT)include/distortos/distortosConfiguration.h $(OBJECTS) $(ELF) $(HEX) $(BIN) $(DMP) $(LSS) size

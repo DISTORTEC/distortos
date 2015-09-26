@@ -1,12 +1,12 @@
 #
-# file: Rules.mk
+# file: footer.mk
 #
 # author: Copyright (C) 2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
 #
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #
-# date: 2015-01-07
+# date: 2015-09-26
 #
 
 #-----------------------------------------------------------------------------------------------------------------------
@@ -39,15 +39,6 @@ GENERATED := $(GENERATED) $(OBJECTS_$(d)) $(DEPENDENCIES_$(d))
 #-----------------------------------------------------------------------------------------------------------------------
 
 $(OBJECTS_$(d)): $(d)/Rules.mk footer.mk
-
-#-----------------------------------------------------------------------------------------------------------------------
-# rule to create output folder
-#-----------------------------------------------------------------------------------------------------------------------
-
-$(OBJECTS_$(d)): | $(OUTPUT)$(d)
-$(OUTPUT)$(d): DIRECTORY := $(OUTPUT)$(d)
-$(OUTPUT)$(d):
-	mkdir -p $(DIRECTORY)
 
 #-----------------------------------------------------------------------------------------------------------------------
 # set compilation flags
