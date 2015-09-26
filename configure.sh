@@ -35,4 +35,3 @@ fi
 echo "Trying $path/distortosConfiguration.mk... Found."
 echo "CONFIG_SELECTED_CONFIGURATION=\"$path\"" > selectedConfiguration.mk
 echo "\"selectedConfiguration.mk\" file generated successfully."
-

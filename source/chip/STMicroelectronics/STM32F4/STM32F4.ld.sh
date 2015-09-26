@@ -419,4 +419,3 @@ PROVIDE(__heap_size = __heap_end - __heap_start);
 PROVIDE(__bss_start__ = __bss_start);
 PROVIDE(__bss_end__ = __bss_end);
 EOF
-

@@ -35,4 +35,3 @@ if [ -f selectedConfiguration.mk ]; then
 fi
 
 echo "Project cleaned successfully."
-
