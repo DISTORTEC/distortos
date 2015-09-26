@@ -13,14 +13,7 @@
 # subdirectories
 #-----------------------------------------------------------------------------------------------------------------------
 
-SUBDIRECTORIES += source/allocators
-SUBDIRECTORIES += source/architecture
-SUBDIRECTORIES += source/chip/STMicroelectronics/STM32F4
-SUBDIRECTORIES += source/clocks
-SUBDIRECTORIES += source/scheduler
-SUBDIRECTORIES += source/synchronization
-SUBDIRECTORIES += source/syscalls
-SUBDIRECTORIES += source/threads
+SUBDIRECTORIES += source
 SUBDIRECTORIES += test
 
 #-----------------------------------------------------------------------------------------------------------------------
