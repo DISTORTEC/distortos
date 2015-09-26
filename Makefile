@@ -145,8 +145,6 @@ dirstack_$$(sp) := $$(d)
 d := $$(dir)
 SUBDIRECTORIES :=
 include $$(dir)/Rules.mk
-$$(call PARSE_SUBDIRECTORIES,$$(SUBDIRECTORIES))
--include $$(DEPENDENCIES_$$(d))
 d := $$(dirstack_$$(sp))
 sp := $$(basename $$(sp))
 endef
@@ -164,7 +162,6 @@ all: targets
 
 # trigger parsing of all Rules.mk files
 include Rules.mk
-$(call PARSE_SUBDIRECTORIES,$(SUBDIRECTORIES))
 
 # generated files depend (order-only) on their directories
 $(foreach file,$(GENERATED),$(eval $(call DIRECTORY_DEPENDENCY,$(file))))
