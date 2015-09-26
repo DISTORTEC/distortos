@@ -8,21 +8,20 @@
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #
-# date: 2015-09-25
+# date: 2015-09-26
 #
 
 set -e
 set -u
-set -o pipefail
 
 if [ $# -ne 1 ]; then
 	echo "This script requires exactly one argument!" >&2
-	exit -1
+	exit 1
 fi
 
 if [ ! -f $1 ]; then
 	echo "Configuation file $1 does not exist!" >&2
-	exit -1
+	exit 2
 fi
 
 # "execute" the configuration file provided as argument to read all the configuration variables
@@ -30,7 +29,7 @@ fi
 
 if [ $CONFIG_CHIP_STM32F4_FLASH_SIZE -eq 0 ] || [ $CONFIG_CHIP_STM32F4_SRAM1_SIZE -eq 0 ]; then
 	echo "CONFIG_CHIP_STM32F4_FLASH_SIZE and CONFIG_CHIP_STM32F4_SRAM1_SIZE cannot be 0!" >&2
-	exit -1
+	exit 3
 fi
 
 PROCESS_STACK_SIZE=$CONFIG_MAIN_THREAD_STACK_SIZE
