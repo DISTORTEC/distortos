@@ -67,3 +67,9 @@ $(OUTPUT)$(PROJECT).hex: $(OUTPUT)$(PROJECT).elf Rules.mk
 $(OUTPUT)$(PROJECT).bin: $(OUTPUT)$(PROJECT).elf Rules.mk
 $(OUTPUT)$(PROJECT).dmp: $(OUTPUT)$(PROJECT).elf Rules.mk
 $(OUTPUT)$(PROJECT).lss: $(OUTPUT)$(PROJECT).elf Rules.mk
+
+#-----------------------------------------------------------------------------------------------------------------------
+# print size of generated .elf file
+#-----------------------------------------------------------------------------------------------------------------------
+
+size: $(OUTPUT)$(PROJECT).elf

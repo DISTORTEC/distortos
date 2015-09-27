@@ -214,8 +214,8 @@ $(OUTPUT)%.lss:
 	$(OBJDUMP) --demangle -S $(filter %.elf,$(^)) > $@
 
 .PHONY: size
-size: $(ELF)
-	$(SIZE) -B $^
+size:
+	$(SIZE) -B $(filter %.elf,$(^))
 
 .PHONY: clean
 clean:
