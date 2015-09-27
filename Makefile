@@ -207,8 +207,8 @@ $(OUTPUT)%.hex:
 $(OUTPUT)%.bin:
 	$(OBJCOPY) -O binary $(filter %.elf,$(^)) $@
 
-$(OUTPUT)%.dmp: $(ELF)
-	$(OBJDUMP) -x --syms --demangle $< > $@
+$(OUTPUT)%.dmp:
+	$(OBJDUMP) -x --syms --demangle $(filter %.elf,$(^)) > $@
 
 $(OUTPUT)%.lss: $(ELF)
 	$(OBJDUMP) --demangle -S $< > $@

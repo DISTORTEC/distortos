@@ -60,8 +60,9 @@ include footer.mk
 $(OUTPUT)$(PROJECT).elf: $(OBJECTS) $(LDSCRIPT) Rules.mk
 
 #-----------------------------------------------------------------------------------------------------------------------
-# .hex and .bin files depends on .elf file and this Rules.mk
+# .hex, .bin and .dmp files depends on .elf file and this Rules.mk
 #-----------------------------------------------------------------------------------------------------------------------
 
 $(OUTPUT)$(PROJECT).hex: $(OUTPUT)$(PROJECT).elf Rules.mk
 $(OUTPUT)$(PROJECT).bin: $(OUTPUT)$(PROJECT).elf Rules.mk
+$(OUTPUT)$(PROJECT).dmp: $(OUTPUT)$(PROJECT).elf Rules.mk
