@@ -191,7 +191,8 @@ $(OUTPUT)%.a:
 	$(AR) rcs $@ $(filter %.o,$(^))
 
 $(OUTPUT)%.elf:
-	$(LD) $(LDFLAGS) -T$(filter %.ld,$(^)) $(filter %.o,$(^)) -o $@
+	$(eval ARCHIVES_$@ := -Wl,--whole-archive $(addprefix -l:,$(filter %.a,$(^))) -Wl,--no-whole-archive)
+	$(LD) $(LDFLAGS) -T$(filter %.ld,$(^)) $(filter %.o,$(^)) $(ARCHIVES_$(@)) -o $@
 
 $(OUTPUT)%.hex:
 	$(OBJCOPY) -O ihex $(filter %.elf,$(^)) $@
