@@ -204,8 +204,8 @@ $(OUTPUT)%.elf:
 $(OUTPUT)%.hex:
 	$(OBJCOPY) -O ihex $(filter %.elf,$(^)) $@
 
-$(OUTPUT)%.bin: $(ELF)
-	$(OBJCOPY) -O binary $< $@
+$(OUTPUT)%.bin:
+	$(OBJCOPY) -O binary $(filter %.elf,$(^)) $@
 
 $(OUTPUT)%.dmp: $(ELF)
 	$(OBJDUMP) -x --syms --demangle $< > $@
