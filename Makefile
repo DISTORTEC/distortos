@@ -171,15 +171,7 @@ MISSING_DIRECTORIES = $(filter-out $(wildcard $(DIRECTORIES)),$(DIRECTORIES))
 $(foreach directory,$(MISSING_DIRECTORIES),$(eval $(call MAKE_DIRECTORY,$(directory))))
 
 .PHONY: targets
-targets: $(OUTPUT)include/distortos/distortosConfiguration.h
-targets: $(OBJECTS)
-targets: $(ARCHIVES)
-targets: $(ELF)
-targets: $(HEX)
-targets: $(BIN)
-targets: $(DMP)
-targets: $(LSS)
-targets: size
+targets: $(GENERATED) size
 
 $(OBJECTS): $(OUTPUT)include/distortos/distortosConfiguration.h
 

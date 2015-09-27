@@ -35,11 +35,11 @@ $(DISTORTOS_CONFIGURATION_H): Rules.mk scripts/makeDistortosConfiguration.awk se
 # final targets
 #-----------------------------------------------------------------------------------------------------------------------
 
-ELF := $(ELF) $(OUTPUT)$(PROJECT).elf
-HEX := $(HEX) $(OUTPUT)$(PROJECT).hex
-BIN := $(BIN) $(OUTPUT)$(PROJECT).bin
-DMP := $(DMP) $(OUTPUT)$(PROJECT).dmp
-LSS := $(LSS) $(OUTPUT)$(PROJECT).lss
+ELF := $(OUTPUT)$(PROJECT).elf
+HEX := $(OUTPUT)$(PROJECT).hex
+BIN := $(OUTPUT)$(PROJECT).bin
+DMP := $(OUTPUT)$(PROJECT).dmp
+LSS := $(OUTPUT)$(PROJECT).lss
 
 #-----------------------------------------------------------------------------------------------------------------------
 # add generated headers and final targets to list of generated files
@@ -57,19 +57,19 @@ include footer.mk
 # .elf file depends on all objects, linker script and this Rules.mk
 #-----------------------------------------------------------------------------------------------------------------------
 
-$(OUTPUT)$(PROJECT).elf: $(OBJECTS) $(LDSCRIPT) Rules.mk
+$(ELF): $(OBJECTS) $(LDSCRIPT) Rules.mk
 
 #-----------------------------------------------------------------------------------------------------------------------
 # .hex, .bin, .dmp and .lss files depends on .elf file and this Rules.mk
 #-----------------------------------------------------------------------------------------------------------------------
 
-$(OUTPUT)$(PROJECT).hex: $(OUTPUT)$(PROJECT).elf Rules.mk
-$(OUTPUT)$(PROJECT).bin: $(OUTPUT)$(PROJECT).elf Rules.mk
-$(OUTPUT)$(PROJECT).dmp: $(OUTPUT)$(PROJECT).elf Rules.mk
-$(OUTPUT)$(PROJECT).lss: $(OUTPUT)$(PROJECT).elf Rules.mk
+$(HEX): $(ELF) Rules.mk
+$(BIN): $(ELF) Rules.mk
+$(DMP): $(ELF) Rules.mk
+$(LSS): $(ELF) Rules.mk
 
 #-----------------------------------------------------------------------------------------------------------------------
 # print size of generated .elf file
 #-----------------------------------------------------------------------------------------------------------------------
 
-size: $(OUTPUT)$(PROJECT).elf
+size: $(ELF)
