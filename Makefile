@@ -201,8 +201,8 @@ $(OUTPUT)%.a:
 $(OUTPUT)%.elf:
 	$(LD) $(LDFLAGS) -T$(filter %.ld,$(^)) $(filter %.o,$(^)) -o $@
 
-$(OUTPUT)%.hex: $(ELF)
-	$(OBJCOPY) -O ihex $< $@
+$(OUTPUT)%.hex:
+	$(OBJCOPY) -O ihex $(filter %.elf,$(^)) $@
 
 $(OUTPUT)%.bin: $(ELF)
 	$(OBJCOPY) -O binary $< $@
