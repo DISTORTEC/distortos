@@ -6,7 +6,7 @@
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #
-# date: 2015-09-26
+# date: 2015-09-27
 #
 
 #-----------------------------------------------------------------------------------------------------------------------
@@ -104,7 +104,6 @@ CXXFLAGS += -ffunction-sections -fdata-sections -fno-rtti -fno-exceptions -MD -M
 # path to linker script (generated automatically)
 LDSCRIPT = $(OUTPUT)$(subst ",,$(CONFIG_CHIP)).ld
 
-LDFLAGS += -T$(LDSCRIPT)
 LDFLAGS += $(COREFLAGS)
 LDFLAGS += -g -Wl,-Map=$(OUTPUT)$(PROJECT).map,--cref,--gc-sections
 
@@ -199,8 +198,8 @@ $(OUTPUT)%.a:
 	rm -f $@
 	$(AR) rcs $@ $(filter %.o,$(^))
 
-$(OUTPUT)%.elf: $(OBJECTS) $(LDSCRIPT)
-	$(LD) $(LDFLAGS) $(OBJECTS) -o $@
+$(OUTPUT)%.elf:
+	$(LD) $(LDFLAGS) -T$(filter %.ld,$(^)) $(filter %.o,$(^)) -o $@
 
 $(OUTPUT)%.hex: $(ELF)
 	$(OBJCOPY) -O ihex $< $@
