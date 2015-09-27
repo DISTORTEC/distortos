@@ -105,7 +105,7 @@ CXXFLAGS += -ffunction-sections -fdata-sections -fno-rtti -fno-exceptions -MD -M
 LDSCRIPT = $(OUTPUT)$(subst ",,$(CONFIG_CHIP)).ld
 
 LDFLAGS += $(COREFLAGS)
-LDFLAGS += -g -Wl,-Map=$(OUTPUT)$(PROJECT).map,--cref,--gc-sections
+LDFLAGS += -g -Wl,-Map=$(@:.elf=.map),--cref,--gc-sections
 
 #-----------------------------------------------------------------------------------------------------------------------
 # "constants" with include paths
