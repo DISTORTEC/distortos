@@ -210,8 +210,8 @@ $(OUTPUT)%.bin:
 $(OUTPUT)%.dmp:
 	$(OBJDUMP) -x --syms --demangle $(filter %.elf,$(^)) > $@
 
-$(OUTPUT)%.lss: $(ELF)
-	$(OBJDUMP) --demangle -S $< > $@
+$(OUTPUT)%.lss:
+	$(OBJDUMP) --demangle -S $(filter %.elf,$(^)) > $@
 
 .PHONY: size
 size: $(ELF)
