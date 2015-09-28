@@ -151,10 +151,10 @@ CHIP_INCLUDES += CONFIG_CHIP_INCLUDES:gsub("(%g+)", "-I" .. TOP .. "/%1")
 -- tup/lua functions
 ------------------------------------------------------------------------------------------------------------------------
 
--- group of <objects>
+-- group of <objects>, used as output in as(), cc() and cxx()
 objectsGroup = nil
 
--- starts new group of <objects>
+-- starts new group of <objects>, used as output in as(), cc() and cxx()
 function startObjectsGroup()
 	objectsGroup = tup.getcwd() .. "/<objects>"
 end
@@ -174,7 +174,7 @@ end
 function as(input)
 	local specificFlags = getSpecificFlags(ASFLAGS, input)
 	local inputs = {input, extra_inputs = {"$(TOP)/<headers>"}}
-	local outputs = {OUTPUT .. tup.getrelativedir(TOP) .. "/%B.o", "$(TOP)/<objects>"}
+	local outputs = {OUTPUT .. tup.getrelativedir(TOP) .. "/%B.o", objectsGroup}
 	tup.rule(inputs, "^c^ $(AS) $(ASFLAGS) " .. specificFlags .. " -c %f -o %o", outputs)
 end
 
@@ -182,7 +182,7 @@ end
 function cc(input)
 	local specificFlags = getSpecificFlags(CFLAGS, input)
 	local inputs = {input, extra_inputs = {"$(TOP)/<headers>"}}
-	local outputs = {OUTPUT .. tup.getrelativedir(TOP) .. "/%B.o", "$(TOP)/<objects>"}
+	local outputs = {OUTPUT .. tup.getrelativedir(TOP) .. "/%B.o", objectsGroup}
 	tup.rule(inputs, "^c^ $(CC) $(CFLAGS) " .. specificFlags .. " -c %f -o %o", outputs)
 end
 
@@ -190,7 +190,7 @@ end
 function cxx(input)
 	local specificFlags = getSpecificFlags(CXXFLAGS, input)
 	local inputs = {input, extra_inputs = {"$(TOP)/<headers>"}}
-	local outputs = {OUTPUT .. tup.getrelativedir(TOP) .. "/%B.o", "$(TOP)/<objects>"}
+	local outputs = {OUTPUT .. tup.getrelativedir(TOP) .. "/%B.o", objectsGroup}
 	tup.rule(inputs, "^c^ $(CXX) $(CXXFLAGS) " .. specificFlags .. " -c %f -o %o", outputs)
 end
 
