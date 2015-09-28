@@ -6,7 +6,7 @@
 -- This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 -- distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 --
--- date: 2015-09-26
+-- date: 2015-09-28
 --
 
 ------------------------------------------------------------------------------------------------------------------------
@@ -153,11 +153,10 @@ CHIP_INCLUDES += CONFIG_CHIP_INCLUDES:gsub("(%g+)", "-I" .. TOP .. "/%1")
 
 -- get "file specific flags" from table (ASFLAGS, CFLAGS or CXXFLAGS) for file named filename
 function getSpecificFlags(table, filename)
-	specificFlags = {}
 	if table[filename] ~= nil then
-		specificFlags = table[filename]
+		return table[filename]
 	end
-	return specificFlags
+	return ""
 end
 
 -- assemble file named input
@@ -165,7 +164,7 @@ function as(input)
 	local specificFlags = getSpecificFlags(ASFLAGS, input)
 	local inputs = {input, extra_inputs = {"$(TOP)/<headers>"}}
 	local outputs = {OUTPUT .. tup.getrelativedir(TOP) .. "/%B.o", "$(TOP)/<objects>"}
-	tup.rule(inputs, "^c^ $(AS) $(ASFLAGS) $(specificFlags) -c %f -o %o", outputs)
+	tup.rule(inputs, "^c^ $(AS) $(ASFLAGS) " .. specificFlags .. " -c %f -o %o", outputs)
 end
 
 -- compile (C) file named input
@@ -173,7 +172,7 @@ function cc(input)
 	local specificFlags = getSpecificFlags(CFLAGS, input)
 	local inputs = {input, extra_inputs = {"$(TOP)/<headers>"}}
 	local outputs = {OUTPUT .. tup.getrelativedir(TOP) .. "/%B.o", "$(TOP)/<objects>"}
-	tup.rule(inputs, "^c^ $(CC) $(CFLAGS) $(specificFlags) -c %f -o %o", outputs)
+	tup.rule(inputs, "^c^ $(CC) $(CFLAGS) " .. specificFlags .. " -c %f -o %o", outputs)
 end
 
 -- compile (C++) file named input
@@ -181,7 +180,7 @@ function cxx(input)
 	local specificFlags = getSpecificFlags(CXXFLAGS, input)
 	local inputs = {input, extra_inputs = {"$(TOP)/<headers>"}}
 	local outputs = {OUTPUT .. tup.getrelativedir(TOP) .. "/%B.o", "$(TOP)/<objects>"}
-	tup.rule(inputs, "^c^ $(CXX) $(CXXFLAGS) $(specificFlags) -c %f -o %o", outputs)
+	tup.rule(inputs, "^c^ $(CXX) $(CXXFLAGS) " .. specificFlags .. " -c %f -o %o", outputs)
 end
 
 -- link all objects from $(TOP)/<objects> into file named output
