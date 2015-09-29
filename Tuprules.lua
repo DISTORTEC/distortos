@@ -6,7 +6,7 @@
 -- This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 -- distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 --
--- date: 2015-09-29
+-- date: 2015-09-30
 --
 
 ------------------------------------------------------------------------------------------------------------------------
@@ -201,6 +201,24 @@ function cxx(input)
 	local inputs = {input, extra_inputs = {"$(TOP)/<headers>"}}
 	local outputs = {OUTPUT .. tup.getrelativedir(TOP) .. "/%B.o", objectsGroup}
 	tup.rule(inputs, "^c^ $(CXX) $(CXXFLAGS) " .. specificFlags .. " -c %f -o %o", outputs)
+end
+
+-- archive all objects from groups given in the vararg into file named output; all elements of vararg are parsed by
+-- filenameToGroup() before use;
+function ar(output, ...)
+	local inputs = {}
+	local objects = ""
+	for i, element in ipairs({...}) do
+		element = filenameToGroup(element)
+		local path, group = element:match("^([^<]*)(<[^>]+>)$")
+		if path ~= nil and group ~= nil then
+			table.insert(inputs, path .. group)
+			objects = objects .. " %" .. group
+		end
+	end
+
+	local outputs = {output, filenameToGroup(output)}
+	tup.rule(inputs , "$(AR) rcs %o " .. objects, outputs)
 end
 
 -- link all objects from groups given in the vararg into file named output; all elements of vararg are parsed by
