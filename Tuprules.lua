@@ -6,7 +6,7 @@
 -- This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 -- distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 --
--- date: 2015-09-28
+-- date: 2015-09-29
 --
 
 ------------------------------------------------------------------------------------------------------------------------
@@ -194,11 +194,21 @@ function cxx(input)
 	tup.rule(inputs, "^c^ $(CXX) $(CXXFLAGS) " .. specificFlags .. " -c %f -o %o", outputs)
 end
 
--- link all objects from $(TOP)/<objects> into file named output
-function link(output)
-	local inputs = {"$(TOP)/<objects>", extra_inputs = {"$(TOP)/<ldscripts>"}}
+-- link all objects from groups given in the vararg into file named output
+function link(output, ...)
+	local inputs = {extra_inputs = {"$(TOP)/<ldscripts>"}}
+	local objects = ""
+	for i, element in ipairs({...}) do
+		local path, group = element:match("^([^<]*)(<[^>]+>)$")
+		if path ~= nil and group ~= nil then
+			table.insert(inputs, path .. group)
+			objects = objects .. " %" .. group
+		end
+	end
+
+	local inputsString = objects
 	local extraOutput = {OUTPUT .. PROJECT .. ".map"}
-	tup.rule(inputs, "$(LD) $(LDFLAGS) %<objects> -o %o", {output, extra_outputs = extraOutput})
+	tup.rule(inputs, "$(LD) $(LDFLAGS) " .. inputsString .. " -o %o", {output, extra_outputs = extraOutput})
 end
 
 -- convert file named input (elf) to intel hex file named output
