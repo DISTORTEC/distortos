@@ -131,7 +131,7 @@ CXXFLAGS += "-ffunction-sections -fdata-sections -fno-rtti -fno-exceptions"
 LDSCRIPT = OUTPUT .. CONFIG_CHIP .. ".ld"
 
 LDFLAGS += COREFLAGS
-LDFLAGS += "-g -Wl,-Map=" .. OUTPUT .. PROJECT .. ".map,--cref,--gc-sections"
+LDFLAGS += "-g -Wl,--cref,--gc-sections"
 
 ------------------------------------------------------------------------------------------------------------------------
 -- "constants" with include paths
@@ -229,8 +229,10 @@ function link(output, ...)
 	end
 
 	local inputsString = ldScripts .. objects .. " -Wl,--whole-archive " .. archives .. " -Wl,--no-whole-archive"
-	local extraOutput = {OUTPUT .. PROJECT .. ".map"}
-	tup.rule(inputs, "$(LD) $(LDFLAGS) " .. inputsString .. " -o %o", {output, extra_outputs = extraOutput})
+	local map = output:match("^(.*)" .. tup.ext(output) .. "$") .. "map"
+	local mapString = "-Wl,-Map=" .. map
+	local outputs = {output, extra_outputs = {map}}
+	tup.rule(inputs, "$(LD) $(LDFLAGS) " .. mapString .. " " .. inputsString .. " -o %o", outputs)
 end
 
 -- convert file named input (elf) to intel hex file named output
