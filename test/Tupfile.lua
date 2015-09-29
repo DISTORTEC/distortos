@@ -6,7 +6,7 @@
 -- This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 -- distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 --
--- date: 2015-09-29
+-- date: 2015-09-30
 --
 
 CXXFLAGS += STANDARD_INCLUDES
@@ -21,7 +21,7 @@ local binFilename = filename .. ".bin"
 local dmpFilename = filename .. ".dmp"
 local lssFilename = filename .. ".lss"
 
-link(elfFilename, TOP .. "/<objects>", LDSCRIPT)
+link(elfFilename, OUTPUT .. "libdistortos.a", "<objects>", LDSCRIPT)
 size(elfFilename)
 hex(elfFilename, hexFilename)
 bin(elfFilename, binFilename)

@@ -1,5 +1,5 @@
 --
--- file: Tupfile.lua
+-- file: Tuprules.lua
 --
 -- author: Copyright (C) 2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
 --
@@ -9,4 +9,5 @@
 -- date: 2015-09-30
 --
 
-ar(OUTPUT .. "libdistortos.a", "<objects>")
+-- start group of <objects> for test application
+startObjectsGroup()
