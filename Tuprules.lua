@@ -204,11 +204,13 @@ function cxx(input)
 	tup.rule(inputs, "^c^ $(CXX) $(CXXFLAGS) " .. specificFlags .. " -c %f -o %o", outputs)
 end
 
--- link all objects from groups given in the vararg into file named output
+-- link all objects from groups given in the vararg into file named output; all elements of vararg are parsed by
+-- filenameToGroup() before use;
 function link(output, ...)
 	local inputs = {extra_inputs = {"$(TOP)/<ldscripts>"}}
 	local objects = ""
 	for i, element in ipairs({...}) do
+		element = filenameToGroup(element)
 		local path, group = element:match("^([^<]*)(<[^>]+>)$")
 		if path ~= nil and group ~= nil then
 			table.insert(inputs, path .. group)
