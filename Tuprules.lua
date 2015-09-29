@@ -206,10 +206,12 @@ end
 -- link all objects from groups given in the vararg into file named output; all elements of vararg are parsed by
 -- filenameToGroup() before use; vararg may also contain:
 -- - paths to linker scripts (.ld extension);
+-- - paths to archives (.a extension);
 function link(output, ...)
 	local inputs = {}
 	local objects = ""
 	local ldScripts = ""
+	local archives = ""
 	for i, element in ipairs({...}) do
 		element = filenameToGroup(element)
 		local path, group = element:match("^([^<]*)(<[^>]+>)$")
@@ -218,13 +220,15 @@ function link(output, ...)
 			local extension = group:match("%.([a-zA-Z0-9]+)>$")
 			if extension == "ld" then
 				ldScripts = ldScripts .. " -T%" .. group
+			elseif extension == "a" then
+				archives = archives .. " -l:%" .. group
 			else
 				objects = objects .. " %" .. group
 			end
 		end
 	end
 
-	local inputsString = ldScripts .. objects
+	local inputsString = ldScripts .. objects .. " -Wl,--whole-archive " .. archives .. " -Wl,--no-whole-archive"
 	local extraOutput = {OUTPUT .. PROJECT .. ".map"}
 	tup.rule(inputs, "$(LD) $(LDFLAGS) " .. inputsString .. " -o %o", {output, extra_outputs = extraOutput})
 end
