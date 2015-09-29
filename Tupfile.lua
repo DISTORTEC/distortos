@@ -14,7 +14,7 @@ local distortosConfigurationOutputs = {OUTPUT .. "include/distortos/%B.h", "$(TO
 tup.rule(DISTORTOS_CONFIGURATION_MK, "$(TOP)/scripts/makeDistortosConfiguration.awk \"%f\" > \"%o\"",
 		distortosConfigurationOutputs)
 
-link("$(OUTPUT)$(PROJECT).elf", "<objects>")
+link("$(OUTPUT)$(PROJECT).elf", "<objects>", LDSCRIPT)
 size("$(OUTPUT)$(PROJECT).elf")
 hex("$(OUTPUT)$(PROJECT).elf", "$(OUTPUT)$(PROJECT).hex")
 bin("$(OUTPUT)$(PROJECT).elf", "$(OUTPUT)$(PROJECT).bin")

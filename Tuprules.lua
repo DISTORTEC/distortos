@@ -130,7 +130,6 @@ CXXFLAGS += "-ffunction-sections -fdata-sections -fno-rtti -fno-exceptions"
 -- path to linker script (generated automatically)
 LDSCRIPT = OUTPUT .. CONFIG_CHIP .. ".ld"
 
-LDFLAGS += "-T" .. LDSCRIPT
 LDFLAGS += COREFLAGS
 LDFLAGS += "-g -Wl,-Map=" .. OUTPUT .. PROJECT .. ".map,--cref,--gc-sections"
 
@@ -205,20 +204,27 @@ function cxx(input)
 end
 
 -- link all objects from groups given in the vararg into file named output; all elements of vararg are parsed by
--- filenameToGroup() before use;
+-- filenameToGroup() before use; vararg may also contain:
+-- - paths to linker scripts (.ld extension);
 function link(output, ...)
-	local inputs = {extra_inputs = {filenameToGroup(LDSCRIPT)}}
+	local inputs = {}
 	local objects = ""
+	local ldScripts = ""
 	for i, element in ipairs({...}) do
 		element = filenameToGroup(element)
 		local path, group = element:match("^([^<]*)(<[^>]+>)$")
 		if path ~= nil and group ~= nil then
 			table.insert(inputs, path .. group)
-			objects = objects .. " %" .. group
+			local extension = group:match("%.([a-zA-Z0-9]+)>$")
+			if extension == "ld" then
+				ldScripts = ldScripts .. " -T%" .. group
+			else
+				objects = objects .. " %" .. group
+			end
 		end
 	end
 
-	local inputsString = objects
+	local inputsString = ldScripts .. objects
 	local extraOutput = {OUTPUT .. PROJECT .. ".map"}
 	tup.rule(inputs, "$(LD) $(LDFLAGS) " .. inputsString .. " -o %o", {output, extra_outputs = extraOutput})
 end
