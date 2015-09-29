@@ -207,7 +207,7 @@ end
 -- link all objects from groups given in the vararg into file named output; all elements of vararg are parsed by
 -- filenameToGroup() before use;
 function link(output, ...)
-	local inputs = {extra_inputs = {"$(TOP)/<ldscripts>"}}
+	local inputs = {extra_inputs = {filenameToGroup(LDSCRIPT)}}
 	local objects = ""
 	for i, element in ipairs({...}) do
 		element = filenameToGroup(element)
