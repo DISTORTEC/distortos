@@ -162,6 +162,16 @@ end
 -- start default group of <objects> - all generated objects
 startObjectsGroup()
 
+-- converts filename "some/path/to/file.ext" to group "some/path/to/<file.ext>"; if filename is already a group, then no
+-- change is performed
+function filenameToGroup(filename)
+	local lastSlash = filename:match("^.*()[/\\]") or 0
+	local path = string.sub(filename, 1, lastSlash)
+	local name = string.sub(filename, (lastSlash) + 1)
+	name = name:match("^<?([^>]*)>?$")
+	return path .. "<" .. name .. ">"
+end
+
 -- get "file specific flags" from table (ASFLAGS, CFLAGS or CXXFLAGS) for file named filename
 function getSpecificFlags(table, filename)
 	if table[filename] ~= nil then
