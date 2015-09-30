@@ -182,25 +182,25 @@ end
 -- assemble file named input
 function as(input)
 	local specificFlags = getSpecificFlags(ASFLAGS, input)
-	local inputs = {input, extra_inputs = {"$(TOP)/<headers>"}}
+	local inputs = {input, extra_inputs = {TOP .. "/<headers>"}}
 	local outputs = {OUTPUT .. tup.getrelativedir(TOP) .. "/%B.o", objectsGroup}
-	tup.rule(inputs, "^c^ $(AS) $(ASFLAGS) " .. specificFlags .. " -c %f -o %o", outputs)
+	tup.rule(inputs, "^c^ " .. AS .. " " .. tostring(ASFLAGS) .. " " .. specificFlags .. " -c %f -o %o", outputs)
 end
 
 -- compile (C) file named input
 function cc(input)
 	local specificFlags = getSpecificFlags(CFLAGS, input)
-	local inputs = {input, extra_inputs = {"$(TOP)/<headers>"}}
+	local inputs = {input, extra_inputs = {TOP .. "/<headers>"}}
 	local outputs = {OUTPUT .. tup.getrelativedir(TOP) .. "/%B.o", objectsGroup}
-	tup.rule(inputs, "^c^ $(CC) $(CFLAGS) " .. specificFlags .. " -c %f -o %o", outputs)
+	tup.rule(inputs, "^c^ " .. CC .. " " .. tostring(CFLAGS) .. " " .. specificFlags .. " -c %f -o %o", outputs)
 end
 
 -- compile (C++) file named input
 function cxx(input)
 	local specificFlags = getSpecificFlags(CXXFLAGS, input)
-	local inputs = {input, extra_inputs = {"$(TOP)/<headers>"}}
+	local inputs = {input, extra_inputs = {TOP .. "/<headers>"}}
 	local outputs = {OUTPUT .. tup.getrelativedir(TOP) .. "/%B.o", objectsGroup}
-	tup.rule(inputs, "^c^ $(CXX) $(CXXFLAGS) " .. specificFlags .. " -c %f -o %o", outputs)
+	tup.rule(inputs, "^c^ " .. CXX .. " " .. tostring(CXXFLAGS) .. " " .. specificFlags .. " -c %f -o %o", outputs)
 end
 
 -- archive all objects from groups given in the vararg into file named output; all elements of vararg are parsed by
@@ -218,7 +218,7 @@ function ar(output, ...)
 	end
 
 	local outputs = {output, filenameToGroup(output)}
-	tup.rule(inputs , "$(AR) rcs %o " .. objects, outputs)
+	tup.rule(inputs , AR .. " rcs %o " .. objects, outputs)
 end
 
 -- link all objects from groups given in the vararg into file named output; all elements of vararg are parsed by
@@ -250,30 +250,30 @@ function link(output, ...)
 	local map = output:match("^(.*)" .. tup.ext(output) .. "$") .. "map"
 	local mapString = "-Wl,-Map=" .. map
 	local outputs = {output, extra_outputs = {map}}
-	tup.rule(inputs, "$(LD) $(LDFLAGS) " .. mapString .. " " .. inputsString .. " -o %o", outputs)
+	tup.rule(inputs, LD .. " " .. tostring(LDFLAGS) .. " " .. mapString .. " " .. inputsString .. " -o %o", outputs)
 end
 
 -- convert file named input (elf) to intel hex file named output
 function hex(input, output)
-	tup.rule(input, "$(OBJCOPY) -O ihex %f %o", output)
+	tup.rule(input, OBJCOPY .. " -O ihex %f %o", output)
 end
 
 -- convert file named input (elf) to binary file named output
 function bin(input, output)
-	tup.rule(input, "$(OBJCOPY) -O binary %f %o", output)
+	tup.rule(input, OBJCOPY .. " -O binary %f %o", output)
 end
 
 -- dump symbols from file named input (elf) to file named output
 function dmp(input, output)
-	tup.rule(input, "$(OBJDUMP) -x --syms --demangle %f > %o", output)
+	tup.rule(input, OBJDUMP .. " -x --syms --demangle %f > %o", output)
 end
 
 -- generate disassembly of file named input (elf) to file named output
 function lss(input, output)
-	tup.rule(input, "$(OBJDUMP) --demangle -S %f > %o", output)
+	tup.rule(input, OBJDUMP .. " --demangle -S %f > %o", output)
 end
 
 -- print size of file named input (elf)
 function size(input)
-	tup.rule({input}, "$(SIZE) -B %f")
+	tup.rule({input}, SIZE .. " -B %f")
 end
