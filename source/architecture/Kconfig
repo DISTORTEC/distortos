@@ -19,6 +19,13 @@ config ARCHITECTURE_ARM
 	bool
 	default n
 
+config ARCHITECTURE_FPU
+	bool "Enable FPU"
+	default y
+	depends on ARCHITECTURE_HAVE_FPU
+	help
+		Enables FPU.
+
 if ARCHITECTURE_ARM
 source source/architecture/ARM/Kconfig
 endif
