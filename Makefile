@@ -6,8 +6,20 @@
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #
-# date: 2015-09-27
+# date: 2015-10-02
 #
+
+#-----------------------------------------------------------------------------------------------------------------------
+# load configuration variables from distortosConfiguration.mk file selected by user
+#-----------------------------------------------------------------------------------------------------------------------
+
+# file with $(CONFIG_SELECTED_CONFIGURATION) variable
+include selectedConfiguration.mk
+
+# path to distortosConfiguration.mk file selected by $(CONFIG_SELECTED_CONFIGURATION) variable
+DISTORTOS_CONFIGURATION_MK = ./$(subst ",,$(CONFIG_SELECTED_CONFIGURATION))/distortosConfiguration.mk
+
+include $(DISTORTOS_CONFIGURATION_MK)
 
 #-----------------------------------------------------------------------------------------------------------------------
 # toolchain configuration
@@ -28,12 +40,6 @@ RM = rm -f
 #-----------------------------------------------------------------------------------------------------------------------
 # project configuration
 #-----------------------------------------------------------------------------------------------------------------------
-
-# file with $(CONFIG_SELECTED_CONFIGURATION) variable
-include selectedConfiguration.mk
-
-# path to distortosConfiguration.mk file selected by $(CONFIG_SELECTED_CONFIGURATION) variable
-DISTORTOS_CONFIGURATION_MK = ./$(subst ",,$(CONFIG_SELECTED_CONFIGURATION))/distortosConfiguration.mk
 
 # output folder
 OUTPUT = output/
@@ -72,12 +78,6 @@ DBGFLAGS = -g -ggdb3
 
 # linker flags
 LDFLAGS =
-
-#-----------------------------------------------------------------------------------------------------------------------
-# load configuration variables from distortosConfiguration.mk file selected by user
-#-----------------------------------------------------------------------------------------------------------------------
-
-include $(DISTORTOS_CONFIGURATION_MK)
 
 #-----------------------------------------------------------------------------------------------------------------------
 # compilation flags
