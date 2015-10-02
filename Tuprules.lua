@@ -6,14 +6,49 @@
 -- This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 -- distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 --
--- date: 2015-09-30
+-- date: 2015-10-02
 --
 
 ------------------------------------------------------------------------------------------------------------------------
 -- tup build configuration
 ------------------------------------------------------------------------------------------------------------------------
 
+-- relative path to top-level directory of the project
 TOP = tup.getcwd()
+
+------------------------------------------------------------------------------------------------------------------------
+-- load configuration variables from distortosConfiguration.mk file selected by user
+------------------------------------------------------------------------------------------------------------------------
+
+-- file with $(CONFIG_SELECTED_CONFIGURATION) variable
+tup.include("selectedConfiguration.mk")
+
+-- path to distortosConfiguration.mk file selected by $(CONFIG_SELECTED_CONFIGURATION) variable
+DISTORTOS_CONFIGURATION_MK = TOP .. "/" .. CONFIG_SELECTED_CONFIGURATION .. "/distortosConfiguration.mk"
+
+local file = assert(io.open("./" .. CONFIG_SELECTED_CONFIGURATION .. "/distortosConfiguration.mk", "r"))
+for line in file:lines() do
+	local configPattern = "CONFIG_[A-Za-z0-9_]+"
+	local standardConfigPattern = "^(" .. configPattern .. ")=(.*)$"
+	local name, value = line:match(standardConfigPattern)
+	if name ~= nil and value ~= nil then
+		local unquotedValue = value:match("^\"(.*)\"$")
+		if unquotedValue ~= nil then
+			value = unquotedValue
+		end	
+	else
+		local notSetConfigPattern = "^# (" .. configPattern .. ") is not set$"
+		name = line:match(notSetConfigPattern)
+		if name ~= nil then
+			value = "n"
+		end
+	end
+
+	if name ~= nil and value ~= nil then
+		_G[name] = value
+	end
+end
+file:close()
 
 ------------------------------------------------------------------------------------------------------------------------
 -- toolchain configuration
@@ -33,12 +68,6 @@ SIZE = TOOLCHAIN .. "size"
 ------------------------------------------------------------------------------------------------------------------------
 -- project configuration
 ------------------------------------------------------------------------------------------------------------------------
-
--- file with $(CONFIG_SELECTED_CONFIGURATION) variable
-tup.include("selectedConfiguration.mk")
-
--- path to distortosConfiguration.mk file selected by $(CONFIG_SELECTED_CONFIGURATION) variable
-DISTORTOS_CONFIGURATION_MK = TOP .. "/" .. CONFIG_SELECTED_CONFIGURATION .. "/distortosConfiguration.mk"
 
 -- output folder
 OUTPUT = TOP .. "/output/"
@@ -77,34 +106,6 @@ DBGFLAGS = "-g -ggdb3"
 
 -- linker flags
 LDFLAGS = ""
-
-------------------------------------------------------------------------------------------------------------------------
--- load configuration variables from distortosConfiguration.mk file selected by user
-------------------------------------------------------------------------------------------------------------------------
-
-local file = assert(io.open("./" .. CONFIG_SELECTED_CONFIGURATION .. "/distortosConfiguration.mk", "r"))
-for line in file:lines() do
-	local configPattern = "CONFIG_[A-Za-z0-9_]+"
-	local standardConfigPattern = "^(" .. configPattern .. ")=(.*)$"
-	local name, value = line:match(standardConfigPattern)
-	if name ~= nil and value ~= nil then
-		local unquotedValue = value:match("^\"(.*)\"$")
-		if unquotedValue ~= nil then
-			value = unquotedValue
-		end	
-	else
-		local notSetConfigPattern = "^# (" .. configPattern .. ") is not set$"
-		name = line:match(notSetConfigPattern)
-		if name ~= nil then
-			value = "n"
-		end
-	end
-
-	if name ~= nil and value ~= nil then
-		_G[name] = value
-	end
-end
-file:close()
 
 ------------------------------------------------------------------------------------------------------------------------
 -- compilation flags
