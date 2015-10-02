@@ -25,16 +25,16 @@ include $(DISTORTOS_CONFIGURATION_MK)
 # toolchain configuration
 #-----------------------------------------------------------------------------------------------------------------------
 
-TOOLCHAIN = arm-none-eabi-
+CONFIG_TOOLCHAIN_PREFIX := $(subst ",,$(CONFIG_TOOLCHAIN_PREFIX))
 
-AS = $(TOOLCHAIN)gcc
-CC = $(TOOLCHAIN)gcc
-CXX = $(TOOLCHAIN)g++
-AR = $(TOOLCHAIN)ar
-LD = $(TOOLCHAIN)g++
-OBJCOPY = $(TOOLCHAIN)objcopy
-OBJDUMP = $(TOOLCHAIN)objdump
-SIZE = $(TOOLCHAIN)size
+AS = $(CONFIG_TOOLCHAIN_PREFIX)gcc
+CC = $(CONFIG_TOOLCHAIN_PREFIX)gcc
+CXX = $(CONFIG_TOOLCHAIN_PREFIX)g++
+AR = $(CONFIG_TOOLCHAIN_PREFIX)ar
+LD = $(CONFIG_TOOLCHAIN_PREFIX)g++
+OBJCOPY = $(CONFIG_TOOLCHAIN_PREFIX)objcopy
+OBJDUMP = $(CONFIG_TOOLCHAIN_PREFIX)objdump
+SIZE = $(CONFIG_TOOLCHAIN_PREFIX)size
 RM = rm -f
 
 #-----------------------------------------------------------------------------------------------------------------------
