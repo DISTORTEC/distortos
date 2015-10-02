@@ -73,9 +73,6 @@ OUTPUT = TOP .. "/output/"
 -- project name
 PROJECT = "distortos"
 
--- core type
-COREFLAGS = "-mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16"
-
 -- global C++ flags
 CXXFLAGS = ""
 
@@ -109,17 +106,17 @@ LDFLAGS = ""
 -- compilation flags
 ------------------------------------------------------------------------------------------------------------------------
 
-ASFLAGS += COREFLAGS
+ASFLAGS += CONFIG_ARCHITECTURE_FLAGS
 ASFLAGS += DBGFLAGS
 
-CFLAGS += COREFLAGS
+CFLAGS += CONFIG_ARCHITECTURE_FLAGS
 CFLAGS += OPTIMIZATION
 CFLAGS += CWARNINGS
 CFLAGS += CSTD
 CFLAGS += DBGFLAGS
 CFLAGS += "-ffunction-sections -fdata-sections"
 
-CXXFLAGS += COREFLAGS
+CXXFLAGS += CONFIG_ARCHITECTURE_FLAGS
 CXXFLAGS += OPTIMIZATION
 CXXFLAGS += CXXWARNINGS
 CXXFLAGS += CXXSTD
@@ -129,7 +126,7 @@ CXXFLAGS += "-ffunction-sections -fdata-sections -fno-rtti -fno-exceptions"
 -- path to linker script (generated automatically)
 LDSCRIPT = OUTPUT .. CONFIG_CHIP .. ".ld"
 
-LDFLAGS += COREFLAGS
+LDFLAGS += CONFIG_ARCHITECTURE_FLAGS
 LDFLAGS += "-g -Wl,--cref,--gc-sections"
 
 ------------------------------------------------------------------------------------------------------------------------
