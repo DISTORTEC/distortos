@@ -8,7 +8,7 @@
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #
-# date: 2015-09-25
+# date: 2015-10-02
 #
 
 BEGIN {
@@ -54,8 +54,8 @@ $0 ~ numericConfigPattern {
 }
 
 $0 ~ stringConfigPattern {
-	split($0, array, "=")
-	print "#define " array[1] " " array[2]
+	equalsSign = index($0, "=")
+	print "#define " substr($0, 1, equalsSign - 1) " " substr($0, equalsSign + 1)
 }
 
 END {
