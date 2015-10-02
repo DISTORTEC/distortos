@@ -47,9 +47,6 @@ OUTPUT = output/
 # project name
 PROJECT = distortos
 
-# core type
-COREFLAGS = -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16
-
 # global assembler flags
 ASFLAGS =
 
@@ -83,18 +80,20 @@ LDFLAGS =
 # compilation flags
 #-----------------------------------------------------------------------------------------------------------------------
 
-ASFLAGS += $(COREFLAGS)
+CONFIG_ARCHITECTURE_FLAGS := $(subst ",,$(CONFIG_ARCHITECTURE_FLAGS))
+
+ASFLAGS += $(CONFIG_ARCHITECTURE_FLAGS)
 ASFLAGS += $(DBGFLAGS)
 ASFLAGS += -MD -MP
 
-CFLAGS += $(COREFLAGS)
+CFLAGS += $(CONFIG_ARCHITECTURE_FLAGS)
 CFLAGS += $(OPTIMIZATION)
 CFLAGS += $(CWARNINGS)
 CFLAGS += $(CSTD)
 CFLAGS += $(DBGFLAGS)
 CFLAGS += -ffunction-sections -fdata-sections -MD -MP
 
-CXXFLAGS += $(COREFLAGS)
+CXXFLAGS += $(CONFIG_ARCHITECTURE_FLAGS)
 CXXFLAGS += $(OPTIMIZATION)
 CXXFLAGS += $(CXXWARNINGS)
 CXXFLAGS += $(CXXSTD)
@@ -104,7 +103,7 @@ CXXFLAGS += -ffunction-sections -fdata-sections -fno-rtti -fno-exceptions -MD -M
 # path to linker script (generated automatically)
 LDSCRIPT = $(OUTPUT)$(subst ",,$(CONFIG_CHIP)).ld
 
-LDFLAGS += $(COREFLAGS)
+LDFLAGS += $(CONFIG_ARCHITECTURE_FLAGS)
 LDFLAGS += -g -Wl,-Map=$(@:.elf=.map),--cref,--gc-sections
 
 #-----------------------------------------------------------------------------------------------------------------------
