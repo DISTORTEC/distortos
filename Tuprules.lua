@@ -6,7 +6,7 @@
 -- This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 -- distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 --
--- date: 2015-10-02
+-- date: 2015-10-03
 --
 
 ------------------------------------------------------------------------------------------------------------------------
@@ -82,10 +82,6 @@ CFLAGS = ""
 -- global assembler flags
 ASFLAGS = ""
 
--- optimization flags ("-O0" - no optimization, "-O1" - optimize, "-O2" - optimize even more, "-Os" - optimize for size
--- or "-O3" - optimize yet more)
-OPTIMIZATION = "-O2"
-
 -- define warning options here
 CXXWARNINGS = "-Wall -Wextra -Wshadow"
 CWARNINGS = "-Wall -Wstrict-prototypes -Wextra -Wshadow"
@@ -110,14 +106,14 @@ ASFLAGS += CONFIG_ARCHITECTURE_FLAGS
 ASFLAGS += DBGFLAGS
 
 CFLAGS += CONFIG_ARCHITECTURE_FLAGS
-CFLAGS += OPTIMIZATION
+CFLAGS += CONFIG_BUILD_OPTIMIZATION
 CFLAGS += CWARNINGS
 CFLAGS += CSTD
 CFLAGS += DBGFLAGS
 CFLAGS += "-ffunction-sections -fdata-sections"
 
 CXXFLAGS += CONFIG_ARCHITECTURE_FLAGS
-CXXFLAGS += OPTIMIZATION
+CXXFLAGS += CONFIG_BUILD_OPTIMIZATION
 CXXFLAGS += CXXWARNINGS
 CXXFLAGS += CXXSTD
 CXXFLAGS += DBGFLAGS
