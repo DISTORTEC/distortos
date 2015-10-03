@@ -6,7 +6,58 @@
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #
-# date: 2015-09-09
+# date: 2015-10-03
 #
 
 source source/Kconfig
+
+menu "Build configuration"
+
+choice
+	prompt "Optimization level"
+	default BUILD_OPTIMIZATION_O2
+	help
+		Selects optimization level.
+
+config BUILD_OPTIMIZATION_O0
+	bool "No optimization (-O0)"
+	help
+		Disable all optimizations.
+
+config BUILD_OPTIMIZATION_O1
+	bool "Optimize (-O1)"
+	help
+		Optimize.
+
+config BUILD_OPTIMIZATION_O2
+	bool "Optimize even more (-O2)"
+	help
+		Optimize even more.
+
+config BUILD_OPTIMIZATION_O3
+	bool "Optimize yet more (-O3)"
+	help
+		Optimize yet more.
+
+config BUILD_OPTIMIZATION_OS
+	bool "Optimize for size (-Os)"
+	help
+		Optimize for size.
+
+config BUILD_OPTIMIZATION_OG
+	bool "Optimize debugging experience (-Og)"
+	help
+		Optimize debugging experience.
+
+endchoice
+
+config BUILD_OPTIMIZATION
+	string
+	default "-O0" if BUILD_OPTIMIZATION_O0
+	default "-O1" if BUILD_OPTIMIZATION_O1
+	default "-O2" if BUILD_OPTIMIZATION_O2
+	default "-O3" if BUILD_OPTIMIZATION_O3
+	default "-Os" if BUILD_OPTIMIZATION_OS
+	default "-Og" if BUILD_OPTIMIZATION_OG
+
+endmenu
