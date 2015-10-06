@@ -13,12 +13,11 @@
 
 #include "queueTestCases.hpp"
 
+#include "QueueOperationsTestCase.hpp"
 #include "FifoQueuePriorityTestCase.hpp"
-#include "FifoQueueOperationsTestCase.hpp"
 #include "RawFifoQueuePriorityTestCase.hpp"
 #include "RawFifoQueueOperationsTestCase.hpp"
 #include "MessageQueuePriorityTestCase.hpp"
-#include "MessageQueueOperationsTestCase.hpp"
 #include "RawMessageQueuePriorityTestCase.hpp"
 #include "RawMessageQueueOperationsTestCase.hpp"
 
@@ -37,11 +36,11 @@ namespace
 | local objects
 +---------------------------------------------------------------------------------------------------------------------*/
 
+/// QueueOperationsTestCase instance
+const QueueOperationsTestCase operationsTestCase;
+
 /// FifoQueuePriorityTestCase instance
 const FifoQueuePriorityTestCase fifoQueuePriorityTestCase;
-
-/// FifoQueueOperationsTestCase instance
-const FifoQueueOperationsTestCase fifoQueueOperationsTestCase;
 
 /// RawFifoQueuePriorityTestCase instance
 const RawFifoQueuePriorityTestCase rawFifoQueuePriorityTestCase;
@@ -52,9 +51,6 @@ const RawFifoQueueOperationsTestCase rawFifoQueueOperationsTestCase;
 /// MessageQueuePriorityTestCase instance
 const MessageQueuePriorityTestCase messageQueuePriorityTestCase;
 
-/// MessageQueueOperationsTestCase instance
-const MessageQueueOperationsTestCase messageQueueOperationsTestCase;
-
 /// RawMessageQueuePriorityTestCase instance
 const RawMessageQueuePriorityTestCase rawMessageQueuePriorityTestCase;
 
@@ -64,12 +60,11 @@ const RawMessageQueueOperationsTestCase rawMessageQueueOperationsTestCase;
 /// array with references to TestCase objects related to queue
 const TestCaseGroup::Range::value_type queueTestCases_[]
 {
+		TestCaseGroup::Range::value_type{operationsTestCase},
 		TestCaseGroup::Range::value_type{fifoQueuePriorityTestCase},
-		TestCaseGroup::Range::value_type{fifoQueueOperationsTestCase},
 		TestCaseGroup::Range::value_type{rawFifoQueuePriorityTestCase},
 		TestCaseGroup::Range::value_type{rawFifoQueueOperationsTestCase},
 		TestCaseGroup::Range::value_type{messageQueuePriorityTestCase},
-		TestCaseGroup::Range::value_type{messageQueueOperationsTestCase},
 		TestCaseGroup::Range::value_type{rawMessageQueuePriorityTestCase},
 		TestCaseGroup::Range::value_type{rawMessageQueueOperationsTestCase},
 };

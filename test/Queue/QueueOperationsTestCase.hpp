@@ -1,6 +1,6 @@
 /**
  * \file
- * \brief MessageQueueOperationsTestCase class header
+ * \brief QueueOperationsTestCase class header
  *
  * \author Copyright (C) 2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
@@ -11,8 +11,8 @@
  * \date 2015-10-06
  */
 
-#ifndef TEST_QUEUE_MESSAGEQUEUEOPERATIONSTESTCASE_HPP_
-#define TEST_QUEUE_MESSAGEQUEUEOPERATIONSTESTCASE_HPP_
+#ifndef TEST_QUEUE_QUEUEOPERATIONSTESTCASE_HPP_
+#define TEST_QUEUE_QUEUEOPERATIONSTESTCASE_HPP_
 
 #include "TestCaseCommon.hpp"
 
@@ -23,16 +23,16 @@ namespace test
 {
 
 /**
- * \brief Tests various MessageQueue operations.
+ * \brief Tests various {Fifo,Message}Queue operations.
  *
  * Tests emplacing (emplace(), tryEmplace(), tryEmplaceFor() and tryEmplaceUntil()), pushing (push(), tryPush(),
- * tryPushFor() and tryPushUntil()) and popping (pop(), tryPop(), tryPopFor() and tryPopUntil()) to/from MessageQueue,
- * both from thread and from interrupt context - these operations must return expected result, cause expected number of
- * context switches, finish within expected time frame and execute expected actions on transferred object (various
- * constructor types, destructor, swap, ...).
+ * tryPushFor() and tryPushUntil()) and popping (pop(), tryPop(), tryPopFor() and tryPopUntil()) to/from
+ * {Fifo,Message}Queue, both from thread and from interrupt context - these operations must return expected result,
+ * cause expected number of context switches, finish within expected time frame and execute expected actions on
+ * transferred object (various constructor types, destructor, swap, ...).
  */
 
-class MessageQueueOperationsTestCase : public TestCaseCommon
+class QueueOperationsTestCase : public TestCaseCommon
 {
 private:
 
@@ -49,4 +49,4 @@ private:
 
 }	// namespace distortos
 
-#endif	// TEST_QUEUE_MESSAGEQUEUEOPERATIONSTESTCASE_HPP_
+#endif	// TEST_QUEUE_QUEUEOPERATIONSTESTCASE_HPP_
