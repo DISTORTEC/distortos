@@ -6,7 +6,7 @@
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #
-# date: 2015-10-05
+# date: 2015-10-06
 #
 
 #-----------------------------------------------------------------------------------------------------------------------
@@ -35,7 +35,7 @@ LD = $(CONFIG_TOOLCHAIN_PREFIX)g++
 OBJCOPY = $(CONFIG_TOOLCHAIN_PREFIX)objcopy
 OBJDUMP = $(CONFIG_TOOLCHAIN_PREFIX)objdump
 SIZE = $(CONFIG_TOOLCHAIN_PREFIX)size
-RM = rm -rf
+RM = rm -f
 
 #-----------------------------------------------------------------------------------------------------------------------
 # project configuration
@@ -208,4 +208,4 @@ size:
 
 .PHONY: clean
 clean:
-	$(RM) $(OUTPUT)
+	$(RM) -r $(OUTPUT)
