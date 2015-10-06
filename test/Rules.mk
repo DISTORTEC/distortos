@@ -6,7 +6,7 @@
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #
-# date: 2015-10-04
+# date: 2015-10-06
 #
 
 ifeq ($(CONFIG_TEST_APPLICATION_ENABLE),y)
@@ -18,11 +18,8 @@ ifeq ($(CONFIG_TEST_APPLICATION_ENABLE),y)
 SUBDIRECTORIES += architecture/ARM/ARMv7-M
 SUBDIRECTORIES += CallOnce
 SUBDIRECTORIES += ConditionVariable
-SUBDIRECTORIES += FifoQueue
-SUBDIRECTORIES += MessageQueue
 SUBDIRECTORIES += Mutex
-SUBDIRECTORIES += RawFifoQueue
-SUBDIRECTORIES += RawMessageQueue
+SUBDIRECTORIES += Queue
 SUBDIRECTORIES += Semaphore
 SUBDIRECTORIES += Signals
 SUBDIRECTORIES += SoftwareTimer

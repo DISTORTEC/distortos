@@ -1,6 +1,6 @@
 /**
  * \file
- * \brief RawMessageQueueOperationsTestCase class header
+ * \brief RawFifoQueueOperationsTestCase class header
  *
  * \author Copyright (C) 2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
@@ -8,11 +8,11 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-05-16
+ * \date 2015-10-06
  */
 
-#ifndef TEST_RAWMESSAGEQUEUE_RAWMESSAGEQUEUEOPERATIONSTESTCASE_HPP_
-#define TEST_RAWMESSAGEQUEUE_RAWMESSAGEQUEUEOPERATIONSTESTCASE_HPP_
+#ifndef TEST_QUEUE_RAWFIFOQUEUEOPERATIONSTESTCASE_HPP_
+#define TEST_QUEUE_RAWFIFOQUEUEOPERATIONSTESTCASE_HPP_
 
 #include "TestCaseCommon.hpp"
 
@@ -23,14 +23,14 @@ namespace test
 {
 
 /**
- * \brief Tests various RawMessageQueue operations.
+ * \brief Tests various RawFifoQueue operations.
  *
  * Tests pushing (push(), tryPush(), tryPushFor() and tryPushUntil()) and popping (pop(), tryPop(), tryPopFor() and
- * tryPopUntil()) to/from RawMessageQueue, both from thread and from interrupt context - these operations must return
+ * tryPopUntil()) to/from RawFifoQueue, both from thread and from interrupt context - these operations must return
  * expected result, cause expected number of context switches and finish within expected time frame.
  */
 
-class RawMessageQueueOperationsTestCase : public TestCaseCommon
+class RawFifoQueueOperationsTestCase : public TestCaseCommon
 {
 private:
 
@@ -47,4 +47,4 @@ private:
 
 }	// namespace distortos
 
-#endif	// TEST_RAWMESSAGEQUEUE_RAWMESSAGEQUEUEOPERATIONSTESTCASE_HPP_
+#endif	// TEST_QUEUE_RAWFIFOQUEUEOPERATIONSTESTCASE_HPP_

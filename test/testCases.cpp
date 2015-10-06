@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-07-15
+ * \date 2015-10-06
  */
 
 #include "testCases.hpp"
@@ -18,10 +18,7 @@
 #include "Semaphore/semaphoreTestCases.hpp"
 #include "Mutex/mutexTestCases.hpp"
 #include "ConditionVariable/conditionVariableTestCases.hpp"
-#include "FifoQueue/fifoQueueTestCases.hpp"
-#include "RawFifoQueue/rawFifoQueueTestCases.hpp"
-#include "MessageQueue/messageQueueTestCases.hpp"
-#include "RawMessageQueue/rawMessageQueueTestCases.hpp"
+#include "Queue/queueTestCases.hpp"
 #include "Signals/signalsTestCases.hpp"
 #include "CallOnce/callOnceTestCases.hpp"
 #include "architecture/architectureTestCases.hpp"
@@ -49,10 +46,7 @@ const TestCaseGroup::Range::value_type testCases_[]
 		TestCaseGroup::Range::value_type{semaphoreTestCases},
 		TestCaseGroup::Range::value_type{mutexTestCases},
 		TestCaseGroup::Range::value_type{conditionVariableTestCases},
-		TestCaseGroup::Range::value_type{fifoQueueTestCases},
-		TestCaseGroup::Range::value_type{rawFifoQueueTestCases},
-		TestCaseGroup::Range::value_type{messageQueueTestCases},
-		TestCaseGroup::Range::value_type{rawMessageQueueTestCases},
+		TestCaseGroup::Range::value_type{queueTestCases},
 		TestCaseGroup::Range::value_type{signalsTestCases},
 		TestCaseGroup::Range::value_type{callOnceTestCases},
 		TestCaseGroup::Range::value_type{architectureTestCases},
