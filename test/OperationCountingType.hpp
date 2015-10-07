@@ -2,13 +2,13 @@
  * \file
  * \brief OperationCountingType class header
  *
- * \author Copyright (C) 2014 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-12-29
+ * \date 2015-10-07
  */
 
 #ifndef TEST_OPERATIONCOUNTINGTYPE_HPP_
@@ -137,6 +137,15 @@ public:
 	friend bool operator==(const OperationCountingType& left, const OperationCountingType& right)
 	{
 		return left.value_ == right.value_;
+	}
+
+	/**
+	 * \return value held by object
+	 */
+
+	Value getValue() const
+	{
+		return value_;
 	}
 
 	/**
