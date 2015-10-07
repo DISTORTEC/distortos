@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-10-06
+ * \date 2015-10-07
  */
 
 #include "QueueOperationsTestCase.hpp"
@@ -175,8 +175,14 @@ public:
 	virtual int tryPushUntil(TickClock::time_point timePoint, uint8_t priority, TestType&& value) const = 0;
 };
 
+/// common implementation of QueueWrapper for {Fifo,Message}Queue
+class NonRawQueueWrapper : public QueueWrapper
+{
+
+};
+
 /// implementation of QueueWrapper for FifoQueue
-class FifoQueueWrapper : public QueueWrapper
+class FifoQueueWrapper : public NonRawQueueWrapper
 {
 public:
 
@@ -402,7 +408,7 @@ private:
 };
 
 /// implementation of QueueWrapper for MessageQueue
-class MessageQueueWrapper : public QueueWrapper
+class MessageQueueWrapper : public NonRawQueueWrapper
 {
 public:
 
