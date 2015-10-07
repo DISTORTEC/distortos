@@ -69,6 +69,16 @@ public:
 
 	virtual bool check(uint8_t priority1, const TestType& value1, uint8_t priority2, const TestType& value2) const = 0;
 
+	/**
+	 * \brief Wrapper for TestType::checkCounters().
+	 *
+	 * If the wrapped queue is a "raw" queue, then this function should be a stub which returns true, otherwise it
+	 * should just call TestType::checkCounters().
+	 */
+
+	virtual bool checkCounters(size_t constructed, size_t copyConstructed, size_t moveConstructed, size_t destructed,
+			size_t copyAssigned, size_t moveAssigned, size_t swapped) const = 0;
+
 #if DISTORTOS_QUEUE_EMPLACE_SUPPORTED == 1 || DOXYGEN == 1
 
 	/**
@@ -178,7 +188,21 @@ public:
 /// common implementation of QueueWrapper for {Fifo,Message}Queue
 class NonRawQueueWrapper : public QueueWrapper
 {
+public:
 
+	/**
+	 * \brief Wrapper for TestType::checkCounters().
+	 *
+	 * Just calls TestType::checkCounters().
+	 */
+
+	virtual bool checkCounters(const size_t constructed, const size_t copyConstructed, const size_t moveConstructed,
+			const size_t destructed, const size_t copyAssigned, const size_t moveAssigned, const size_t swapped) const
+			override
+	{
+		return TestType::checkCounters(constructed, copyConstructed, moveConstructed, destructed, copyAssigned,
+				moveAssigned, swapped);
+	}
 };
 
 /// implementation of QueueWrapper for FifoQueue
@@ -679,7 +703,7 @@ bool testTryPopWhenEmpty(const QueueWrapper& queueWrapper)
 	uint8_t priority {};
 	TestType testValue {};	// 1 construction
 	const auto ret = queueWrapper.tryPop(priority, testValue);
-	return ret == EAGAIN && TickClock::now() == start && TestType::checkCounters(1, 0, 0, 0, 0, 0, 0) == true;
+	return ret == EAGAIN && TickClock::now() == start && queueWrapper.checkCounters(1, 0, 0, 0, 0, 0, 0) == true;
 }
 
 /**
@@ -698,7 +722,7 @@ bool testTryPopWhenNotEmpty(const QueueWrapper& queueWrapper)
 	uint8_t priority {};
 	TestType testValue {};	// 1 construction
 	const auto ret = queueWrapper.tryPop(priority, testValue);	// 1 swap, 1 destruction
-	return ret == 0 && start == TickClock::now() && TestType::checkCounters(1, 0, 0, 1, 0, 0, 1) == true;
+	return ret == 0 && start == TickClock::now() && queueWrapper.checkCounters(1, 0, 0, 1, 0, 0, 1) == true;
 }
 
 /**
@@ -718,7 +742,7 @@ bool testTryPushWhenFull(const QueueWrapper& queueWrapper)
 	const uint8_t priority {};
 	const TestType testValue {};	// 1 construction
 	const auto ret = queueWrapper.tryPush(priority, testValue);
-	return ret == EAGAIN && TickClock::now() == start && TestType::checkCounters(1, 0, 0, 0, 0, 0, 0) == true;
+	return ret == EAGAIN && TickClock::now() == start && queueWrapper.checkCounters(1, 0, 0, 0, 0, 0, 0) == true;
 }
 
 /**
@@ -761,7 +785,7 @@ bool phase1()
 			waitForNextTick();
 			const auto start = TickClock::now();
 			const auto ret = queueWrapper.tryPush(constPriority, TestType{});	// 1 construction, 1 destruction
-			if (ret != EAGAIN || start != TickClock::now() || TestType::checkCounters(1, 0, 0, 1, 0, 0, 0) != true)
+			if (ret != EAGAIN || start != TickClock::now() || queueWrapper.checkCounters(1, 0, 0, 1, 0, 0, 0) != true)
 				return false;
 		}
 
@@ -776,7 +800,7 @@ bool phase1()
 			const auto ret = queueWrapper.tryPushFor(singleDuration, constPriority, constTestValue);
 			const auto realDuration = TickClock::now() - start;
 			if (ret != ETIMEDOUT || realDuration != singleDuration + decltype(singleDuration){1} ||
-					TestType::checkCounters(0, 0, 0, 0, 0, 0, 0) != true ||
+					queueWrapper.checkCounters(0, 0, 0, 0, 0, 0, 0) != true ||
 					statistics::getContextSwitchCount() - contextSwitchCount != phase1TryForUntilContextSwitchCount)
 				return false;
 		}
@@ -793,7 +817,7 @@ bool phase1()
 			const auto ret = queueWrapper.tryPushFor(singleDuration, constPriority, TestType{});
 			const auto realDuration = TickClock::now() - start;
 			if (ret != ETIMEDOUT || realDuration != singleDuration + decltype(singleDuration){1} ||
-					TestType::checkCounters(1, 0, 0, 1, 0, 0, 0) != true ||
+					queueWrapper.checkCounters(1, 0, 0, 1, 0, 0, 0) != true ||
 					statistics::getContextSwitchCount() - contextSwitchCount != phase1TryForUntilContextSwitchCount)
 				return false;
 		}
@@ -808,7 +832,7 @@ bool phase1()
 			const auto requestedTimePoint = TickClock::now() + singleDuration;
 			const auto ret = queueWrapper.tryPushUntil(requestedTimePoint, constPriority, constTestValue);
 			if (ret != ETIMEDOUT || requestedTimePoint != TickClock::now() ||
-					TestType::checkCounters(0, 0, 0, 0, 0, 0, 0) != true ||
+					queueWrapper.checkCounters(0, 0, 0, 0, 0, 0, 0) != true ||
 					statistics::getContextSwitchCount() - contextSwitchCount != phase1TryForUntilContextSwitchCount)
 				return false;
 		}
@@ -824,7 +848,7 @@ bool phase1()
 			// 1 construction, 1 destruction
 			const auto ret = queueWrapper.tryPushUntil(requestedTimePoint, constPriority, TestType{});
 			if (ret != ETIMEDOUT || requestedTimePoint != TickClock::now() ||
-					TestType::checkCounters(1, 0, 0, 1, 0, 0, 0) != true ||
+					queueWrapper.checkCounters(1, 0, 0, 1, 0, 0, 0) != true ||
 					statistics::getContextSwitchCount() - contextSwitchCount != phase1TryForUntilContextSwitchCount)
 				return false;
 		}
@@ -846,7 +870,7 @@ bool phase1()
 			const auto ret = queueWrapper.tryPopFor(singleDuration, nonConstPriority, nonConstTestValue);
 			const auto realDuration = TickClock::now() - start;
 			if (ret != ETIMEDOUT || realDuration != singleDuration + decltype(singleDuration){1} ||
-					TestType::checkCounters(0, 0, 0, 0, 0, 0, 0) != true ||
+					queueWrapper.checkCounters(0, 0, 0, 0, 0, 0, 0) != true ||
 					statistics::getContextSwitchCount() - contextSwitchCount != phase1TryForUntilContextSwitchCount)
 				return false;
 		}
@@ -861,7 +885,7 @@ bool phase1()
 			const auto requestedTimePoint = TickClock::now() + singleDuration;
 			const auto ret = queueWrapper.tryPopUntil(requestedTimePoint, nonConstPriority, nonConstTestValue);
 			if (ret != ETIMEDOUT || requestedTimePoint != TickClock::now() ||
-					TestType::checkCounters(0, 0, 0, 0, 0, 0, 0) != true ||
+					queueWrapper.checkCounters(0, 0, 0, 0, 0, 0, 0) != true ||
 					statistics::getContextSwitchCount() - contextSwitchCount != phase1TryForUntilContextSwitchCount)
 				return false;
 		}
@@ -874,7 +898,7 @@ bool phase1()
 			waitForNextTick();
 			const auto start = TickClock::now();
 			const auto ret = queueWrapper.tryEmplace(constPriority);
-			if (ret != EAGAIN || start != TickClock::now() || TestType::checkCounters(0, 0, 0, 0, 0, 0, 0) != true)
+			if (ret != EAGAIN || start != TickClock::now() || queueWrapper.checkCounters(0, 0, 0, 0, 0, 0, 0) != true)
 				return false;
 		}
 
@@ -889,7 +913,7 @@ bool phase1()
 			const auto ret = queueWrapper.tryEmplaceFor(singleDuration, constPriority);
 			const auto realDuration = TickClock::now() - start;
 			if (ret != ETIMEDOUT || realDuration != singleDuration + decltype(singleDuration){1} ||
-					TestType::checkCounters(0, 0, 0, 0, 0, 0, 0) != true ||
+					queueWrapper.checkCounters(0, 0, 0, 0, 0, 0, 0) != true ||
 					statistics::getContextSwitchCount() - contextSwitchCount != phase1TryForUntilContextSwitchCount)
 				return false;
 		}
@@ -904,7 +928,7 @@ bool phase1()
 			const auto requestedTimePoint = TickClock::now() + singleDuration;
 			const auto ret = queueWrapper.tryEmplaceUntil(requestedTimePoint, constPriority);
 			if (ret != ETIMEDOUT || requestedTimePoint != TickClock::now() ||
-					TestType::checkCounters(0, 0, 0, 0, 0, 0, 0) != true ||
+					queueWrapper.checkCounters(0, 0, 0, 0, 0, 0, 0) != true ||
 					statistics::getContextSwitchCount() - contextSwitchCount != phase1TryForUntilContextSwitchCount)
 				return false;
 		}
@@ -949,7 +973,7 @@ bool phase2()
 			waitForNextTick();
 			const auto start = TickClock::now();
 			const auto ret = queueWrapper.tryPush(constPriority, constTestValue);	// 1 copy construction
-			if (ret != 0 || start != TickClock::now() || TestType::checkCounters(0, 1, 0, 0, 0, 0, 0) != true)
+			if (ret != 0 || start != TickClock::now() || queueWrapper.checkCounters(0, 1, 0, 0, 0, 0, 0) != true)
 				return false;
 		}
 
@@ -978,7 +1002,7 @@ bool phase2()
 			const auto start = TickClock::now();
 			// 1 construction, 1 move construction, 1 destruction
 			const auto ret = queueWrapper.tryPush(constPriority, TestType{});
-			if (ret != 0 || start != TickClock::now() || TestType::checkCounters(1, 0, 1, 1, 0, 0, 0) != true)
+			if (ret != 0 || start != TickClock::now() || queueWrapper.checkCounters(1, 0, 1, 1, 0, 0, 0) != true)
 				return false;
 		}
 
@@ -1007,7 +1031,7 @@ bool phase2()
 			const auto start = TickClock::now();
 			// 1 copy construction
 			const auto ret = queueWrapper.tryPushFor(singleDuration, constPriority, constTestValue);
-			if (ret != 0 || start != TickClock::now() || TestType::checkCounters(0, 1, 0, 0, 0, 0, 0) != true)
+			if (ret != 0 || start != TickClock::now() || queueWrapper.checkCounters(0, 1, 0, 0, 0, 0, 0) != true)
 				return false;
 		}
 
@@ -1024,7 +1048,7 @@ bool phase2()
 			const auto start = TickClock::now();
 			// 1 swap, 1 destruction
 			const auto ret = queueWrapper.tryPopFor(singleDuration, nonConstPriority, nonConstTestValue);
-			if (ret != 0 || start != TickClock::now() || TestType::checkCounters(0, 0, 0, 1, 0, 0, 1) != true)
+			if (ret != 0 || start != TickClock::now() || queueWrapper.checkCounters(0, 0, 0, 1, 0, 0, 1) != true)
 				return false;
 		}
 
@@ -1041,7 +1065,7 @@ bool phase2()
 			const auto start = TickClock::now();
 			// 1 construction, 1 move construction, 1 destruction
 			const auto ret = queueWrapper.tryPushFor(singleDuration, constPriority, TestType{});
-			if (ret != 0 || start != TickClock::now() || TestType::checkCounters(1, 0, 1, 1, 0, 0, 0) != true)
+			if (ret != 0 || start != TickClock::now() || queueWrapper.checkCounters(1, 0, 1, 1, 0, 0, 0) != true)
 				return false;
 		}
 
@@ -1070,7 +1094,7 @@ bool phase2()
 			const auto start = TickClock::now();
 			// 1 copy construction
 			const auto ret = queueWrapper.tryPushUntil(start + singleDuration, constPriority, constTestValue);
-			if (ret != 0 || start != TickClock::now() || TestType::checkCounters(0, 1, 0, 0, 0, 0, 0) != true)
+			if (ret != 0 || start != TickClock::now() || queueWrapper.checkCounters(0, 1, 0, 0, 0, 0, 0) != true)
 				return false;
 		}
 
@@ -1087,7 +1111,7 @@ bool phase2()
 			const auto start = TickClock::now();
 			// 1 swap, 1 destruction
 			const auto ret = queueWrapper.tryPopUntil(start + singleDuration, nonConstPriority, nonConstTestValue);
-			if (ret != 0 || start != TickClock::now() || TestType::checkCounters(0, 0, 0, 1, 0, 0, 1) != true)
+			if (ret != 0 || start != TickClock::now() || queueWrapper.checkCounters(0, 0, 0, 1, 0, 0, 1) != true)
 				return false;
 		}
 
@@ -1104,7 +1128,7 @@ bool phase2()
 			const auto start = TickClock::now();
 			// 1 construction, 1 move construction, 1 destruction
 			const auto ret = queueWrapper.tryPushUntil(start + singleDuration, constPriority, TestType{});
-			if (ret != 0 || start != TickClock::now() || TestType::checkCounters(1, 0, 1, 1, 0, 0, 0) != true)
+			if (ret != 0 || start != TickClock::now() || queueWrapper.checkCounters(1, 0, 1, 1, 0, 0, 0) != true)
 				return false;
 		}
 
@@ -1134,7 +1158,7 @@ bool phase2()
 			waitForNextTick();
 			const auto start = TickClock::now();
 			const auto ret = queueWrapper.tryEmplace(constPriority);	// 1 construction
-			if (ret != 0 || start != TickClock::now() || TestType::checkCounters(1, 0, 0, 0, 0, 0, 0) != true)
+			if (ret != 0 || start != TickClock::now() || queueWrapper.checkCounters(1, 0, 0, 0, 0, 0, 0) != true)
 				return false;
 		}
 
@@ -1162,7 +1186,7 @@ bool phase2()
 			waitForNextTick();
 			const auto start = TickClock::now();
 			const auto ret = queueWrapper.tryEmplaceFor(singleDuration, constPriority);	// 1 construction
-			if (ret != 0 || start != TickClock::now() || TestType::checkCounters(1, 0, 0, 0, 0, 0, 0) != true)
+			if (ret != 0 || start != TickClock::now() || queueWrapper.checkCounters(1, 0, 0, 0, 0, 0, 0) != true)
 				return false;
 		}
 
@@ -1190,7 +1214,7 @@ bool phase2()
 			waitForNextTick();
 			const auto start = TickClock::now();
 			const auto ret = queueWrapper.tryEmplaceUntil(start + singleDuration, constPriority);	// 1 construction
-			if (ret != 0 || start != TickClock::now() || TestType::checkCounters(1, 0, 0, 0, 0, 0, 0) != true)
+			if (ret != 0 || start != TickClock::now() || queueWrapper.checkCounters(1, 0, 0, 0, 0, 0, 0) != true)
 				return false;
 		}
 
@@ -1267,7 +1291,7 @@ bool phase3()
 			const auto wokenUpTimePoint = TickClock::now();
 			if (ret != 0 || wakeUpTimePoint != wokenUpTimePoint ||
 					queueWrapper.check(sharedMagicPriority, sharedMagicValue, priority, testValue) == false ||
-					TestType::checkCounters(2, 1, 0, 2, 0, 1, 1) != true ||
+					queueWrapper.checkCounters(2, 1, 0, 2, 0, 1, 1) != true ||
 					statistics::getContextSwitchCount() - contextSwitchCount != phase34SoftwareTimerContextSwitchCount)
 				return false;
 		}
@@ -1297,7 +1321,7 @@ bool phase3()
 			const auto wokenUpTimePoint = TickClock::now();
 			if (ret != 0 || wakeUpTimePoint != wokenUpTimePoint ||
 					queueWrapper.check(sharedMagicPriority, sharedMagicValue, priority, testValue) == false ||
-					TestType::checkCounters(2, 1, 0, 2, 0, 1, 1) != true ||
+					queueWrapper.checkCounters(2, 1, 0, 2, 0, 1, 1) != true ||
 					statistics::getContextSwitchCount() - contextSwitchCount != phase34SoftwareTimerContextSwitchCount)
 				return false;
 		}
@@ -1326,7 +1350,7 @@ bool phase3()
 			const auto wokenUpTimePoint = TickClock::now();
 			if (ret != 0 || wakeUpTimePoint != wokenUpTimePoint ||
 					queueWrapper.check(sharedMagicPriority, sharedMagicValue, priority, testValue) == false ||
-					TestType::checkCounters(2, 1, 0, 2, 0, 1, 1) != true ||
+					queueWrapper.checkCounters(2, 1, 0, 2, 0, 1, 1) != true ||
 					statistics::getContextSwitchCount() - contextSwitchCount != phase34SoftwareTimerContextSwitchCount)
 				return false;
 		}
@@ -1383,7 +1407,7 @@ bool phase4()
 			waitForNextTick();
 			const auto start = TickClock::now();
 			const auto ret = queueWrapper.tryPush(currentMagicPriority, currentMagicValue);	// 1 copy construction
-			if (ret != 0 || start != TickClock::now() || TestType::checkCounters(0, 1, 0, 0, 0, 0, 0) != true)
+			if (ret != 0 || start != TickClock::now() || queueWrapper.checkCounters(0, 1, 0, 0, 0, 0, 0) != true)
 				return false;
 		}
 
@@ -1404,7 +1428,7 @@ bool phase4()
 			const auto wokenUpTimePoint = TickClock::now();
 			if (ret != 0 || wakeUpTimePoint != wokenUpTimePoint ||
 					queueWrapper.check(expectedPriority, expectedTestValue, receivedPriority, receivedTestValue) ==
-							false || TestType::checkCounters(1, 2, 0, 2, 0, 1, 1) != true ||
+							false || queueWrapper.checkCounters(1, 2, 0, 2, 0, 1, 1) != true ||
 					statistics::getContextSwitchCount() - contextSwitchCount != phase34SoftwareTimerContextSwitchCount)
 				return false;
 		}
@@ -1427,7 +1451,7 @@ bool phase4()
 			const auto wokenUpTimePoint = TickClock::now();
 			if (ret != 0 || wakeUpTimePoint != wokenUpTimePoint ||
 					queueWrapper.check(expectedPriority, expectedTestValue, receivedPriority, receivedTestValue) ==
-							false || TestType::checkCounters(1, 2, 1, 3, 0, 1, 1) != true ||
+							false || queueWrapper.checkCounters(1, 2, 1, 3, 0, 1, 1) != true ||
 					statistics::getContextSwitchCount() - contextSwitchCount != phase34SoftwareTimerContextSwitchCount)
 				return false;
 		}
@@ -1450,7 +1474,7 @@ bool phase4()
 			const auto wokenUpTimePoint = TickClock::now();
 			if (ret != 0 || wakeUpTimePoint != wokenUpTimePoint ||
 					queueWrapper.check(expectedPriority, expectedTestValue, receivedPriority, receivedTestValue) ==
-							false || TestType::checkCounters(1, 2, 0, 2, 0, 1, 1) != true ||
+							false || queueWrapper.checkCounters(1, 2, 0, 2, 0, 1, 1) != true ||
 					statistics::getContextSwitchCount() - contextSwitchCount != phase34SoftwareTimerContextSwitchCount)
 				return false;
 		}
@@ -1474,7 +1498,7 @@ bool phase4()
 			const auto wokenUpTimePoint = TickClock::now();
 			if (ret != 0 || wakeUpTimePoint != wokenUpTimePoint ||
 					queueWrapper.check(expectedPriority, expectedTestValue, receivedPriority, receivedTestValue) ==
-							false || TestType::checkCounters(1, 2, 1, 3, 0, 1, 1) != true ||
+							false || queueWrapper.checkCounters(1, 2, 1, 3, 0, 1, 1) != true ||
 					statistics::getContextSwitchCount() - contextSwitchCount != phase34SoftwareTimerContextSwitchCount)
 				return false;
 		}
@@ -1497,7 +1521,7 @@ bool phase4()
 			const auto wokenUpTimePoint = TickClock::now();
 			if (ret != 0 || wakeUpTimePoint != wokenUpTimePoint ||
 					queueWrapper.check(expectedPriority, expectedTestValue, receivedPriority, receivedTestValue) ==
-							false || TestType::checkCounters(1, 2, 0, 2, 0, 1, 1) != true ||
+							false || queueWrapper.checkCounters(1, 2, 0, 2, 0, 1, 1) != true ||
 					statistics::getContextSwitchCount() - contextSwitchCount != phase34SoftwareTimerContextSwitchCount)
 				return false;
 		}
@@ -1520,7 +1544,7 @@ bool phase4()
 			const auto wokenUpTimePoint = TickClock::now();
 			if (ret != 0 || wakeUpTimePoint != wokenUpTimePoint ||
 					queueWrapper.check(expectedPriority, expectedTestValue, receivedPriority, receivedTestValue) ==
-							false || TestType::checkCounters(1, 2, 1, 3, 0, 1, 1) != true ||
+							false || queueWrapper.checkCounters(1, 2, 1, 3, 0, 1, 1) != true ||
 					statistics::getContextSwitchCount() - contextSwitchCount != phase34SoftwareTimerContextSwitchCount)
 				return false;
 		}
@@ -1545,7 +1569,7 @@ bool phase4()
 			const auto wokenUpTimePoint = TickClock::now();
 			if (ret != 0 || wakeUpTimePoint != wokenUpTimePoint ||
 					queueWrapper.check(expectedPriority, expectedTestValue, receivedPriority, receivedTestValue) ==
-							false || TestType::checkCounters(2, 1, 0, 2, 0, 1, 1) != true ||
+							false || queueWrapper.checkCounters(2, 1, 0, 2, 0, 1, 1) != true ||
 					statistics::getContextSwitchCount() - contextSwitchCount != phase34SoftwareTimerContextSwitchCount)
 				return false;
 		}
@@ -1569,7 +1593,7 @@ bool phase4()
 			const auto wokenUpTimePoint = TickClock::now();
 			if (ret != 0 || wakeUpTimePoint != wokenUpTimePoint ||
 					queueWrapper.check(expectedPriority, expectedTestValue, receivedPriority, receivedTestValue) ==
-							false || TestType::checkCounters(2, 1, 0, 2, 0, 1, 1) != true ||
+							false || queueWrapper.checkCounters(2, 1, 0, 2, 0, 1, 1) != true ||
 					statistics::getContextSwitchCount() - contextSwitchCount != phase34SoftwareTimerContextSwitchCount)
 				return false;
 		}
@@ -1593,7 +1617,7 @@ bool phase4()
 			const auto wokenUpTimePoint = TickClock::now();
 			if (ret != 0 || wakeUpTimePoint != wokenUpTimePoint ||
 					queueWrapper.check(expectedPriority, expectedTestValue, receivedPriority, receivedTestValue) ==
-							false || TestType::checkCounters(2, 1, 0, 2, 0, 1, 1) != true ||
+							false || queueWrapper.checkCounters(2, 1, 0, 2, 0, 1, 1) != true ||
 					statistics::getContextSwitchCount() - contextSwitchCount != phase34SoftwareTimerContextSwitchCount)
 				return false;
 		}
