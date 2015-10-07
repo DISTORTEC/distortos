@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-10-07
+ * \date 2015-10-08
  */
 
 #include "QueueOperationsTestCase.hpp"
@@ -18,6 +18,8 @@
 
 #include "distortos/StaticFifoQueue.hpp"
 #include "distortos/StaticMessageQueue.hpp"
+#include "distortos/StaticRawFifoQueue.hpp"
+#include "distortos/StaticRawMessageQueue.hpp"
 #include "distortos/SoftwareTimer.hpp"
 #include "distortos/statistics.hpp"
 
@@ -51,7 +53,7 @@ using TestFifoQueue = FifoQueue<TestType>;
 /// MessageQueue with \a TestType
 using TestMessageQueue = MessageQueue<TestType>;
 
-/// wrapper for {Fifo,Message}Queue
+/// wrapper for [Raw]{Fifo,Message}Queue
 class QueueWrapper
 {
 public:
@@ -82,7 +84,7 @@ public:
 #if DISTORTOS_QUEUE_EMPLACE_SUPPORTED == 1 || DOXYGEN == 1
 
 	/**
-	 * \brief Wrapper for {Fifo,Message}Queue::emplace()
+	 * \brief Wrapper for {Fifo,Message}Queue::emplace() or Raw{Fifo,Message}Queue::push()
 	 */
 
 	virtual int emplace(uint8_t priority, TestType::Value value = {}) const = 0;
@@ -90,19 +92,19 @@ public:
 #endif	// DISTORTOS_QUEUE_EMPLACE_SUPPORTED == 1 || DOXYGEN == 1
 
 	/**
-	 * \brief Wrapper for {Fifo,Message}Queue::pop()
+	 * \brief Wrapper for [Raw]{Fifo,Message}Queue::pop()
 	 */
 
 	virtual int pop(uint8_t& priority, TestType& value) const = 0;
 
 	/**
-	 * \brief Wrapper for {Fifo,Message}Queue::push(..., const TestType&)
+	 * \brief Wrapper for {Fifo,Message}Queue::push(..., const TestType&) or Raw{Fifo,Message}Queue::push()
 	 */
 
 	virtual int push(uint8_t priority, const TestType& value) const = 0;
 
 	/**
-	 * \brief Wrapper for {Fifo,Message}Queue::push(..., TestType&&)
+	 * \brief Wrapper for {Fifo,Message}Queue::push(..., TestType&&) or Raw{Fifo,Message}Queue::push()
 	 */
 
 	virtual int push(uint8_t priority, TestType&& value) const = 0;
@@ -110,19 +112,19 @@ public:
 #if DISTORTOS_QUEUE_EMPLACE_SUPPORTED == 1 || DOXYGEN == 1
 
 	/**
-	 * \brief Wrapper for {Fifo,Message}Queue::tryEmplace()
+	 * \brief Wrapper for {Fifo,Message}Queue::tryEmplace() or Raw{Fifo,Message}Queue::tryPush()
 	 */
 
 	virtual int tryEmplace(uint8_t priority, TestType::Value value = {}) const = 0;
 
 	/**
-	 * \brief Wrapper for {Fifo,Message}Queue::tryEmplaceFor()
+	 * \brief Wrapper for {Fifo,Message}Queue::tryEmplaceFor() or Raw{Fifo,Message}Queue::tryPushFor()
 	 */
 
 	virtual int tryEmplaceFor(TickClock::duration duration, uint8_t priority, TestType::Value value = {}) const = 0;
 
 	/**
-	 * \brief Wrapper for {Fifo,Message}Queue::tryEmplaceUntil()
+	 * \brief Wrapper for {Fifo,Message}Queue::tryEmplaceUntil() or Raw{Fifo,Message}Queue::tryPushUntil()
 	 */
 
 	virtual int tryEmplaceUntil(TickClock::time_point timePoint, uint8_t priority, TestType::Value value = {}) const =
@@ -131,55 +133,56 @@ public:
 #endif	// DISTORTOS_QUEUE_EMPLACE_SUPPORTED == 1 || DOXYGEN == 1
 
 	/**
-	 * \brief Wrapper for {Fifo,Message}Queue::tryPop()
+	 * \brief Wrapper for [Raw]{Fifo,Message}Queue::tryPop()
 	 */
 
 	virtual int tryPop(uint8_t& priority, TestType& value) const = 0;
 
 	/**
-	 * \brief Wrapper for {Fifo,Message}Queue::tryPopFor()
+	 * \brief Wrapper for [Raw]{Fifo,Message}Queue::tryPopFor()
 	 */
 
 	virtual int tryPopFor(TickClock::duration duration, uint8_t& priority, TestType& value) const = 0;
 
 	/**
-	 * \brief Wrapper for {Fifo,Message}Queue::tryPopUntil()
+	 * \brief Wrapper for [Raw]{Fifo,Message}Queue::tryPopUntil()
 	 */
 
 	virtual int tryPopUntil(TickClock::time_point timePoint, uint8_t& priority, TestType& value) const = 0;
 
 	/**
-	 * \brief Wrapper for {Fifo,Message}Queue::tryPush(..., const TestType&)
+	 * \brief Wrapper for {Fifo,Message}Queue::tryPush(..., const TestType&) or Raw{Fifo,Message}Queue::tryPush()
 	 */
 
 	virtual int tryPush(uint8_t priority, const TestType& value) const = 0;
 
 	/**
-	 * \brief Wrapper for {Fifo,Message}Queue::tryPush(..., TestType&&)
+	 * \brief Wrapper for {Fifo,Message}Queue::tryPush(..., TestType&&) or Raw{Fifo,Message}Queue::tryPush()
 	 */
 
 	virtual int tryPush(uint8_t priority, TestType&& value) const = 0;
 
 	/**
-	 * \brief Wrapper for {Fifo,Message}Queue::tryPushFor(..., const TestType&)
+	 * \brief Wrapper for {Fifo,Message}Queue::tryPushFor(..., const TestType&) or Raw{Fifo,Message}Queue::tryPushFor()
 	 */
 
 	virtual int tryPushFor(TickClock::duration duration, uint8_t priority, const TestType& value) const = 0;
 
 	/**
-	 * \brief Wrapper for {Fifo,Message}Queue::tryPushFor(..., TestType&&)
+	 * \brief Wrapper for {Fifo,Message}Queue::tryPushFor(..., TestType&&) or Raw{Fifo,Message}Queue::tryPushFor()
 	 */
 
 	virtual int tryPushFor(TickClock::duration duration, uint8_t priority, TestType&& value) const = 0;
 
 	/**
-	 * \brief Wrapper for {Fifo,Message}Queue::tryPushUntil(..., const TestType&)
+	 * \brief Wrapper for {Fifo,Message}Queue::tryPushUntil(..., const TestType&) or
+	 * Raw{Fifo,Message}Queue::tryPushUntil()
 	 */
 
 	virtual int tryPushUntil(TickClock::time_point timePoint, uint8_t priority, const TestType& value) const = 0;
 
 	/**
-	 * \brief Wrapper for {Fifo,Message}Queue::tryPushUntil(..., TestType&&)
+	 * \brief Wrapper for {Fifo,Message}Queue::tryPushUntil(..., TestType&&) or Raw{Fifo,Message}Queue::tryPushUntil()
 	 */
 
 	virtual int tryPushUntil(TickClock::time_point timePoint, uint8_t priority, TestType&& value) const = 0;
@@ -656,6 +659,540 @@ private:
 	StaticMessageQueue<TestType, QueueSize> messageQueue_;
 };
 
+/// common implementation of QueueWrapper for Raw{Fifo,Message}Queue
+class RawQueueWrapper : public QueueWrapper
+{
+public:
+
+	/**
+	 * \brief Wrapper for TestType::checkCounters().
+	 *
+	 * A stub which returns true.
+	 */
+
+	virtual bool checkCounters(size_t, size_t, size_t, size_t, size_t, size_t, size_t) const override
+	{
+		return true;
+	}
+
+#if DISTORTOS_QUEUE_EMPLACE_SUPPORTED == 1 || DOXYGEN == 1
+
+	/**
+	 * \brief Redirects the call to "raw" push().
+	 */
+
+	virtual int emplace(const uint8_t priority, const TestType::Value value = {}) const final override
+	{
+		return push(priority, &value, sizeof(value));
+	}
+
+#endif	// DISTORTOS_QUEUE_EMPLACE_SUPPORTED == 1 || DOXYGEN == 1
+
+	/**
+	 * \brief Wrapper for Raw{Fifo,Message}Queue::pop()
+	 */
+
+	virtual int pop(uint8_t& priority, void* buffer, size_t size) const = 0;
+
+	/**
+	 * \brief Redirects the call to "raw" pop().
+	 */
+
+	virtual int pop(uint8_t& priority, TestType& value) const final override
+	{
+		TestType::Value rawValue;
+		const auto ret = pop(priority, &rawValue, sizeof(rawValue));
+		value = TestType{rawValue};
+		return ret;
+	}
+
+	/**
+	 * \brief Wrapper for Raw{Fifo,Message}Queue::push()
+	 */
+
+	virtual int push(uint8_t priority, const void* data, size_t size) const = 0;
+
+	/**
+	 * \brief Redirects the call to "raw" push().
+	 */
+
+	virtual int push(const uint8_t priority, const TestType& value) const final override
+	{
+		const auto rawValue = value.getValue();
+		return push(priority, &rawValue, sizeof(rawValue));
+	}
+
+	/**
+	 * \brief Redirects the call to push(..., const TestType&).
+	 */
+
+	virtual int push(const uint8_t priority, TestType&& value) const final override
+	{
+		return push(priority, value);
+	}
+
+#if DISTORTOS_QUEUE_EMPLACE_SUPPORTED == 1 || DOXYGEN == 1
+
+	/**
+	 * \brief Redirects the call to "raw" tryPush().
+	 */
+
+	virtual int tryEmplace(const uint8_t priority, const TestType::Value value = {}) const final override
+	{
+		return tryPush(priority, &value, sizeof(value));
+	}
+
+	/**
+	 * \brief Redirects the call to "raw" tryPushFor().
+	 */
+
+	virtual int tryEmplaceFor(const TickClock::duration duration, const uint8_t priority,
+			const TestType::Value value = {}) const final override
+	{
+		return tryPushFor(duration, priority, &value, sizeof(value));
+	}
+
+	/**
+	 * \brief Redirects the call to "raw" tryPushUntil().
+	 */
+
+	virtual int tryEmplaceUntil(const TickClock::time_point timePoint, const uint8_t priority,
+			const TestType::Value value = {}) const final override
+	{
+		return tryPushUntil(timePoint, priority, &value, sizeof(value));
+	}
+
+#endif	// DISTORTOS_QUEUE_EMPLACE_SUPPORTED == 1 || DOXYGEN == 1
+
+	/**
+	 * \brief Wrapper for Raw{Fifo,Message}Queue::tryPop()
+	 */
+
+	virtual int tryPop(uint8_t& priority, void* buffer, size_t size) const = 0;
+
+	/**
+	 * \brief Redirects the call to "raw" tryPop().
+	 */
+
+	virtual int tryPop(uint8_t& priority, TestType& value) const final override
+	{
+		TestType::Value rawValue;
+		const auto ret = tryPop(priority, &rawValue, sizeof(rawValue));
+		value = TestType{rawValue};
+		return ret;
+	}
+
+	/**
+	 * \brief Wrapper for Raw{Fifo,Message}Queue::tryPopFor()
+	 */
+
+	virtual int tryPopFor(TickClock::duration duration, uint8_t& priority, void* buffer, size_t size) const = 0;
+
+	/**
+	 * \brief Redirects the call to "raw" tryPopFor().
+	 */
+
+	virtual int tryPopFor(const TickClock::duration duration, uint8_t& priority, TestType& value) const final override
+	{
+		TestType::Value rawValue;
+		const auto ret = tryPopFor(duration, priority, &rawValue, sizeof(rawValue));
+		value = TestType{rawValue};
+		return ret;
+	}
+
+	/**
+	 * \brief Wrapper for Raw{Fifo,Message}Queue::tryPopUntil()
+	 */
+
+	virtual int tryPopUntil(TickClock::time_point timePoint, uint8_t& priority, void* buffer, size_t size) const = 0;
+
+	/**
+	 * \brief Redirects the call to "raw" tryPopUntil().
+	 */
+
+	virtual int tryPopUntil(const TickClock::time_point timePoint, uint8_t& priority, TestType& value) const final
+			override
+	{
+		TestType::Value rawValue;
+		const auto ret = tryPopUntil(timePoint, priority, &rawValue, sizeof(rawValue));
+		value = TestType{rawValue};
+		return ret;
+	}
+
+	/**
+	 * \brief Wrapper for Raw{Fifo,Message}Queue::tryPush()
+	 */
+
+	virtual int tryPush(uint8_t priority, const void* data, size_t size) const = 0;
+
+	/**
+	 * \brief Redirects the call to "raw" tryPush().
+	 */
+
+	virtual int tryPush(const uint8_t priority, const TestType& value) const final override
+	{
+		const auto rawValue = value.getValue();
+		return tryPush(priority, &rawValue, sizeof(rawValue));
+	}
+
+	/**
+	 * \brief Redirects the call to tryPush(..., const TestType&).
+	 */
+
+	virtual int tryPush(const uint8_t priority, TestType&& value) const final override
+	{
+		return tryPush(priority, value);
+	}
+
+	/**
+	 * \brief Wrapper for Raw{Fifo,Message}Queue::tryPushFor()
+	 */
+
+	virtual int tryPushFor(TickClock::duration duration, uint8_t priority, const void* data, size_t size) const = 0;
+
+	/**
+	 * \brief Redirects the call to "raw" tryPushFor().
+	 */
+
+	virtual int tryPushFor(const TickClock::duration duration, const uint8_t priority, const TestType& value) const
+			final override
+	{
+		const auto rawValue = value.getValue();
+		return tryPushFor(duration, priority, &rawValue, sizeof(rawValue));
+	}
+
+	/**
+	 * \brief Redirects the call to tryPushFor(..., const TestType&).
+	 */
+
+	virtual int tryPushFor(const TickClock::duration duration, const uint8_t priority, TestType&& value) const final
+			override
+	{
+		return tryPushFor(duration, priority, value);
+	}
+
+	/**
+	 * \brief Wrapper for Raw{Fifo,Message}Queue::tryPushUntil()
+	 */
+
+	virtual int tryPushUntil(TickClock::time_point timePoint, uint8_t priority, const void* data, size_t size) const =
+			0;
+
+	/**
+	 * \brief Redirects the call to "raw" tryPushUntil().
+	 */
+
+	virtual int tryPushUntil(const TickClock::time_point timePoint, const uint8_t priority, const TestType& value) const
+			final override
+	{
+		const auto rawValue = value.getValue();
+		return tryPushUntil(timePoint, priority, &rawValue, sizeof(rawValue));
+	}
+
+	/**
+	 * \brief Redirects the call to tryPushUntil(..., const TestType&).
+	 */
+
+	virtual int tryPushUntil(const TickClock::time_point timePoint, const uint8_t priority, TestType&& value) const
+			final override
+	{
+		return tryPushUntil(timePoint, priority, value);
+	}
+};
+
+/// implementation of RawQueueWrapper for RawFifoQueue
+class RawFifoQueueWrapper : public RawQueueWrapper
+{
+public:
+
+	/**
+	 * \brief RawFifoQueueWrapper's constructor
+	 *
+	 * \param [in] rawFifoQueue is a reference to wrapped \a RawFifoQueue object
+	 */
+
+	constexpr explicit RawFifoQueueWrapper(RawFifoQueue& rawFifoQueue) :
+			rawFifoQueue_{rawFifoQueue}
+	{
+
+	}
+
+	/**
+	 * \brief Tests whether pushed and popped data match.
+	 *
+	 * As RawFifoQueue doesn't support priority, \a priority1 and \a priority2 values are ignored.
+	 *
+	 * \param [in] priority1 is the priority used for *push*() or *emplace*()
+	 * \param [in] value1 is a reference to TestType object used for *push*() or *emplace*()
+	 * \param [in] priority2 is the priority returned by *pop*()
+	 * \param [in] value2 is a reference to TestType object returned by *pop*()
+	 *
+	 * \return true if pushed and popped data matches, false otherwise
+	 */
+
+	virtual bool check(uint8_t, const TestType& value1, uint8_t, const TestType& value2) const override
+	{
+		return value1 == value2;
+	}
+
+	/**
+	 * \brief Wrapper for RawFifoQueue::pop()
+	 */
+
+	virtual int pop(uint8_t& priority, void* const buffer, const size_t size) const override
+	{
+		priority = {};
+		return rawFifoQueue_.pop(buffer, size);
+	}
+
+	/**
+	 * \brief Wrapper for RawFifoQueue::push()
+	 */
+
+	virtual int push(uint8_t, const void* const data, const size_t size) const override
+	{
+		return rawFifoQueue_.push(data, size);
+	}
+
+	/**
+	 * \brief Wrapper for RawFifoQueue::tryPop()
+	 */
+
+	virtual int tryPop(uint8_t& priority, void* const buffer, const size_t size) const override
+	{
+		priority = {};
+		return rawFifoQueue_.tryPop(buffer, size);
+	}
+
+	/**
+	 * \brief Wrapper for RawFifoQueue::tryPopFor()
+	 */
+
+	virtual int tryPopFor(const TickClock::duration duration, uint8_t& priority, void* const buffer, const size_t size)
+			const override
+	{
+		priority = {};
+		return rawFifoQueue_.tryPopFor(duration, buffer, size);
+	}
+
+	/**
+	 * \brief Wrapper for RawFifoQueue::tryPopUntil()
+	 */
+
+	virtual int tryPopUntil(const TickClock::time_point timePoint, uint8_t& priority, void* const buffer,
+			const size_t size) const override
+	{
+		priority = {};
+		return rawFifoQueue_.tryPopUntil(timePoint, buffer, size);
+	}
+
+	/**
+	 * \brief Wrapper for RawFifoQueue::tryPush()
+	 */
+
+	virtual int tryPush(uint8_t, const void* const data, const size_t size) const override
+	{
+		return rawFifoQueue_.tryPush(data, size);
+	}
+
+	/**
+	 * \brief Wrapper for RawFifoQueue::tryPushFor()
+	 */
+
+	virtual int tryPushFor(const TickClock::duration duration, uint8_t, const void* const data, const size_t size) const
+			override
+	{
+		return rawFifoQueue_.tryPushFor(duration, data, size);
+	}
+
+	/**
+	 * \brief Wrapper for RawFifoQueue::tryPushUntil()
+	 */
+
+	virtual int tryPushUntil(const TickClock::time_point timePoint, uint8_t, const void* const data, const size_t size)
+			const override
+	{
+		return rawFifoQueue_.tryPushUntil(timePoint, data, size);
+	}
+
+private:
+
+	/// reference to wrapped \a RawFifoQueue object
+	RawFifoQueue& rawFifoQueue_;
+};
+
+/**
+ * \brief StaticRawFifoQueueWrapper class is a variant of RawFifoQueueWrapper that has automatic storage for queue's
+ * contents.
+ *
+ * \param QueueSize is the maximum number of elements in queue
+ */
+
+template<size_t QueueSize>
+class StaticRawFifoQueueWrapper : public RawFifoQueueWrapper
+{
+public:
+
+	/**
+	 * \brief StaticFifoQueueWrapper's constructor
+	 */
+
+	constexpr StaticRawFifoQueueWrapper() :
+			RawFifoQueueWrapper{rawFifoQueue_}
+	{
+
+	}
+
+private:
+
+	/// internal StaticRawFifoQueue<> object that will be wrapped
+	StaticRawFifoQueue<TestType::Value, QueueSize> rawFifoQueue_;
+};
+
+/// implementation of RawQueueWrapper for RawMessageQueue
+class RawMessageQueueWrapper : public RawQueueWrapper
+{
+public:
+
+	/**
+	 * \brief RawMessageQueueWrapper's constructor
+	 *
+	 * \param [in] rawMessageQueue is a reference to wrapped \a RawMessageQueue object
+	 */
+
+	constexpr explicit RawMessageQueueWrapper(RawMessageQueue& rawMessageQueue) :
+			rawMessageQueue_{rawMessageQueue}
+	{
+
+	}
+
+	/**
+	 * \brief Tests whether pushed and popped data match.
+	 *
+	 * \param [in] priority1 is the priority used for *push*() or *emplace*()
+	 * \param [in] value1 is a reference to TestType object used for *push*() or *emplace*()
+	 * \param [in] priority2 is the priority returned by *pop*()
+	 * \param [in] value2 is a reference to TestType object returned by *pop*()
+	 *
+	 * \return true if pushed and popped data matches, false otherwise
+	 */
+
+	virtual bool check(const uint8_t priority1, const TestType& value1, const uint8_t priority2, const TestType& value2)
+			const override
+	{
+		return priority1 == priority2 && value1 == value2;
+	}
+
+	/**
+	 * \brief Wrapper for RawMessageQueue::pop()
+	 */
+
+	virtual int pop(uint8_t& priority, void* const buffer, const size_t size) const override
+	{
+		return rawMessageQueue_.pop(priority, buffer, size);
+	}
+
+	/**
+	 * \brief Wrapper for RawMessageQueue::push()
+	 */
+
+	virtual int push(const uint8_t priority, const void* const data, const size_t size) const override
+	{
+		return rawMessageQueue_.push(priority, data, size);
+	}
+
+	/**
+	 * \brief Wrapper for RawMessageQueue::tryPop()
+	 */
+
+	virtual int tryPop(uint8_t& priority, void* const buffer, const size_t size) const override
+	{
+		return rawMessageQueue_.tryPop(priority, buffer, size);
+	}
+
+	/**
+	 * \brief Wrapper for RawMessageQueue::tryPopFor()
+	 */
+
+	virtual int tryPopFor(const TickClock::duration duration, uint8_t& priority, void* const buffer, const size_t size)
+			const override
+	{
+		return rawMessageQueue_.tryPopFor(duration, priority, buffer, size);
+	}
+
+	/**
+	 * \brief Wrapper for RawMessageQueue::tryPopUntil()
+	 */
+
+	virtual int tryPopUntil(const TickClock::time_point timePoint, uint8_t& priority, void* const buffer,
+			const size_t size) const override
+	{
+		return rawMessageQueue_.tryPopUntil(timePoint, priority, buffer, size);
+	}
+
+	/**
+	 * \brief Wrapper for RawMessageQueue::tryPush()
+	 */
+
+	virtual int tryPush(const uint8_t priority, const void* const data, const size_t size) const override
+	{
+		return rawMessageQueue_.tryPush(priority, data, size);
+	}
+
+	/**
+	 * \brief Wrapper for RawMessageQueue::tryPushFor()
+	 */
+
+	virtual int tryPushFor(const TickClock::duration duration, const uint8_t priority, const void* const data,
+			const size_t size) const override
+	{
+		return rawMessageQueue_.tryPushFor(duration, priority, data, size);
+	}
+
+	/**
+	 * \brief Wrapper for RawMessageQueue::tryPushUntil()
+	 */
+
+	virtual int tryPushUntil(const TickClock::time_point timePoint, const uint8_t priority, const void* const data,
+			const size_t size) const override
+	{
+		return rawMessageQueue_.tryPushUntil(timePoint, priority, data, size);
+	}
+
+private:
+
+	/// reference to wrapped \a RawMessageQueue object
+	RawMessageQueue& rawMessageQueue_;
+};
+
+/**
+ * \brief StaticRawMessageQueueWrapper class is a variant of RawMessageQueueWrapper that has automatic storage for
+ * queue's contents.
+ *
+ * \param QueueSize is the maximum number of elements in queue
+ */
+
+template<size_t QueueSize>
+class StaticRawMessageQueueWrapper : public RawMessageQueueWrapper
+{
+public:
+
+	/**
+	 * \brief StaticMessageQueueWrapper's constructor
+	 */
+
+	constexpr StaticRawMessageQueueWrapper() :
+			RawMessageQueueWrapper{rawMessageQueue_}
+	{
+
+	}
+
+private:
+
+	/// internal StaticRawMessageQueue<> object that will be wrapped
+	StaticRawMessageQueue<TestType::Value, QueueSize> rawMessageQueue_;
+};
+
 /// ReferenceHolder with const QueueWrapper
 using QueueWrapperHolder = estd::ReferenceHolder<const QueueWrapper>;
 
@@ -759,10 +1296,14 @@ bool phase1()
 	// size 0, so queues are both full and empty at the same time
 	StaticFifoQueueWrapper<0> fifoQueueWrapper;
 	StaticMessageQueueWrapper<0> messageQueueWrapper;
+	StaticRawFifoQueueWrapper<0> rawFifoQueueWrapper;
+	StaticRawMessageQueueWrapper<0> rawMessageQueueWrapper;
 	const QueueWrapperHolder queueWrappers[]
 	{
 			QueueWrapperHolder{fifoQueueWrapper},
 			QueueWrapperHolder{messageQueueWrapper},
+			QueueWrapperHolder{rawFifoQueueWrapper},
+			QueueWrapperHolder{rawMessageQueueWrapper},
 	};
 
 	for (auto& queueWrapperHolder : queueWrappers)
@@ -953,10 +1494,14 @@ bool phase2()
 {
 	StaticFifoQueueWrapper<1> fifoQueueWrapper;
 	StaticMessageQueueWrapper<1> messageQueueWrapper;
+	StaticRawFifoQueueWrapper<1> rawFifoQueueWrapper;
+	StaticRawMessageQueueWrapper<1> rawMessageQueueWrapper;
 	const QueueWrapperHolder queueWrappers[]
 	{
 			QueueWrapperHolder{fifoQueueWrapper},
 			QueueWrapperHolder{messageQueueWrapper},
+			QueueWrapperHolder{rawFifoQueueWrapper},
+			QueueWrapperHolder{rawMessageQueueWrapper},
 	};
 
 	for (auto& queueWrapperHolder : queueWrappers)
@@ -1257,10 +1802,14 @@ bool phase3()
 {
 	StaticFifoQueueWrapper<1> fifoQueueWrapper;
 	StaticMessageQueueWrapper<1> messageQueueWrapper;
+	StaticRawFifoQueueWrapper<1> rawFifoQueueWrapper;
+	StaticRawMessageQueueWrapper<1> rawMessageQueueWrapper;
 	const QueueWrapperHolder queueWrappers[]
 	{
 			QueueWrapperHolder{fifoQueueWrapper},
 			QueueWrapperHolder{messageQueueWrapper},
+			QueueWrapperHolder{rawFifoQueueWrapper},
+			QueueWrapperHolder{rawMessageQueueWrapper},
 	};
 
 	for (auto& queueWrapperHolder : queueWrappers)
@@ -1381,10 +1930,14 @@ bool phase4()
 {
 	StaticFifoQueueWrapper<1> fifoQueueWrapper;
 	StaticMessageQueueWrapper<1> messageQueueWrapper;
+	StaticRawFifoQueueWrapper<1> rawFifoQueueWrapper;
+	StaticRawMessageQueueWrapper<1> rawMessageQueueWrapper;
 	const QueueWrapperHolder queueWrappers[]
 	{
 			QueueWrapperHolder{fifoQueueWrapper},
 			QueueWrapperHolder{messageQueueWrapper},
+			QueueWrapperHolder{rawFifoQueueWrapper},
+			QueueWrapperHolder{rawMessageQueueWrapper},
 	};
 
 	for (auto& queueWrapperHolder : queueWrappers)
@@ -1629,6 +2182,116 @@ bool phase4()
 	return true;
 }
 
+/**
+ * \brief Phase 5 of test case.
+ *
+ * Tests whether all \*push\*() and \*pop\*() functions of "raw" queue properly return some error when given invalid
+ * size of buffer.
+ *
+ * \return true if test succeeded, false otherwise
+ */
+
+bool phase5()
+{
+	// size 0, so queues are both full and empty at the same time
+	StaticRawFifoQueueWrapper<0> rawFifoQueueWrapper;
+	StaticRawMessageQueueWrapper<0> rawMessageQueueWrapper;
+	using RawQueueWrapperHolder = estd::ReferenceHolder<const RawQueueWrapper>;
+	const RawQueueWrapperHolder rawQueueWrappers[]
+	{
+			RawQueueWrapperHolder{rawFifoQueueWrapper},
+			RawQueueWrapperHolder{rawMessageQueueWrapper},
+	};
+
+	for (auto& rawQueueWrapperHolder : rawQueueWrappers)
+	{
+		auto& rawQueueWrapper = rawQueueWrapperHolder.get();
+		const uint8_t constPriority {};
+		const TestType constTestValue {};
+		uint8_t nonConstPriority {};
+		TestType nonConstTestValue {};
+
+		{
+			// invalid size is given, so push(..., const void*, size_t) should fail immediately
+			waitForNextTick();
+			const auto start = TickClock::now();
+			const auto ret = rawQueueWrapper.push(constPriority, &constTestValue, sizeof(constTestValue) - 1);
+			if (ret != EMSGSIZE || TickClock::now() != start)
+				return false;
+		}
+
+		{
+			// invalid size is given, so tryPush(..., const void*, size_t) should fail immediately
+			waitForNextTick();
+			const auto start = TickClock::now();
+			const auto ret = rawQueueWrapper.tryPush(constPriority, &constTestValue, sizeof(constTestValue) - 1);
+			if (ret != EMSGSIZE || TickClock::now() != start)
+				return false;
+		}
+
+		{
+			// invalid size is given, so tryPushFor(..., const void*, size_t) should fail immediately
+			waitForNextTick();
+			const auto start = TickClock::now();
+			const auto ret = rawQueueWrapper.tryPushFor(singleDuration, constPriority, &constTestValue,
+					sizeof(constTestValue) - 1);
+			if (ret != EMSGSIZE || TickClock::now() != start)
+				return false;
+		}
+
+		{
+			// invalid size is given, so tryPushUntil(..., const void*, size_t) should fail immediately
+			waitForNextTick();
+			const auto start = TickClock::now();
+			const auto ret = rawQueueWrapper.tryPushUntil(TickClock::now() + singleDuration, constPriority,
+					&constTestValue, sizeof(constTestValue) - 1);
+			if (ret != EMSGSIZE || TickClock::now() != start)
+				return false;
+		}
+
+		{
+			// invalid size is given, so pop(..., void*, size_t) should fail immediately
+			waitForNextTick();
+			const auto start = TickClock::now();
+			const auto ret = rawQueueWrapper.pop(nonConstPriority, &nonConstTestValue, sizeof(nonConstTestValue) - 1);
+			if (ret != EMSGSIZE || TickClock::now() != start)
+				return false;
+		}
+
+		{
+			// invalid size is given, so tryPop(..., void*, size_t) should fail immediately
+			waitForNextTick();
+			const auto start = TickClock::now();
+			const auto ret = rawQueueWrapper.tryPop(nonConstPriority, &nonConstTestValue,
+					sizeof(nonConstTestValue) - 1);
+			if (ret != EMSGSIZE || TickClock::now() != start)
+				return false;
+		}
+
+		{
+			// invalid size is given, so tryPopFor(..., void*, size_t) should fail immediately
+			waitForNextTick();
+			const auto start = TickClock::now();
+			const auto ret = rawQueueWrapper.tryPopFor(singleDuration, nonConstPriority, &nonConstTestValue,
+					sizeof(nonConstTestValue) - 1);
+			if (ret != EMSGSIZE || TickClock::now() != start)
+				return false;
+		}
+
+		{
+			// invalid size is given, so tryPopUntil(..., void*, size_t) should fail immediately
+			waitForNextTick();
+			const auto start = TickClock::now();
+			const auto ret = rawQueueWrapper.tryPopUntil(TickClock::now() + singleDuration, nonConstPriority,
+					&nonConstTestValue, sizeof(nonConstTestValue) - 1);
+			if (ret != EMSGSIZE || TickClock::now() != start)
+				return false;
+		}
+	}
+
+	return true;
+}
+
 }	// namespace
 
 /*---------------------------------------------------------------------------------------------------------------------+
@@ -1639,7 +2302,9 @@ bool QueueOperationsTestCase::run_() const
 {
 	constexpr auto emplace = DISTORTOS_QUEUE_EMPLACE_SUPPORTED == 1;
 
-	constexpr size_t queueTypes {2};
+	constexpr size_t nonRawQueueTypes {2};
+	constexpr size_t rawQueueTypes {2};
+	constexpr size_t queueTypes {nonRawQueueTypes + rawQueueTypes};
 	constexpr auto phase1ExpectedContextSwitchCount = queueTypes * (emplace == true ?
 			12 * waitForNextTickContextSwitchCount + 8 * phase1TryForUntilContextSwitchCount :
 			9 * waitForNextTickContextSwitchCount + 6 * phase1TryForUntilContextSwitchCount);
@@ -1650,12 +2315,13 @@ bool QueueOperationsTestCase::run_() const
 	constexpr auto phase4ExpectedContextSwitchCount = queueTypes * (emplace == true ?
 			10 * waitForNextTickContextSwitchCount + 9 * phase34SoftwareTimerContextSwitchCount :
 			7 * waitForNextTickContextSwitchCount + 6 * phase34SoftwareTimerContextSwitchCount);
+	constexpr auto phase5ExpectedContextSwitchCount = rawQueueTypes * 8 * waitForNextTickContextSwitchCount;
 	constexpr auto expectedContextSwitchCount = phase1ExpectedContextSwitchCount + phase2ExpectedContextSwitchCount +
-			phase3ExpectedContextSwitchCount + phase4ExpectedContextSwitchCount;
+			phase3ExpectedContextSwitchCount + phase4ExpectedContextSwitchCount + phase5ExpectedContextSwitchCount;
 
 	const auto contextSwitchCount = statistics::getContextSwitchCount();
 
-	for (const auto& function : {phase1, phase2, phase3, phase4})
+	for (const auto& function : {phase1, phase2, phase3, phase4, phase5})
 	{
 		const auto ret = function();
 		if (ret != true)
