@@ -68,7 +68,7 @@ To configure & build *distortos* you need:
   [here](http://www.freddiechopin.info/en/articles/35-arm/87-bleeding-edge-toolchain-o-co-chodzi)) - such combinations
   are not tested extensively;
 - [AWK](https://en.wikipedia.org/wiki/AWK);
-- [Bash](https://www.gnu.org/software/bash/) or Bash-compatible shell;
+- POSIX-compatible shell (e.g. [Bash](https://www.gnu.org/software/bash/));
 - [GNU Coreutils](http://www.gnu.org/software/coreutils/coreutils.html) or a set of compatible utilities;
 - [kconfig-frontends](http://ymorin.is-a-geek.org/projects/kconfig-frontends) (especially *mconf* tool) to create or
   edit the configurations;
