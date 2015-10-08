@@ -6,7 +6,7 @@
 -- This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 -- distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 --
--- date: 2015-10-03
+-- date: 2015-10-08
 --
 
 ------------------------------------------------------------------------------------------------------------------------
@@ -24,9 +24,9 @@ TOP = tup.getcwd()
 tup.include("selectedConfiguration.mk")
 
 -- path to distortosConfiguration.mk file selected by $(CONFIG_SELECTED_CONFIGURATION) variable
-DISTORTOS_CONFIGURATION_MK = TOP .. "/" .. CONFIG_SELECTED_CONFIGURATION .. "/distortosConfiguration.mk"
+DISTORTOS_CONFIGURATION_MK = TOP .. "/" .. CONFIG_SELECTED_CONFIGURATION
 
-local file = assert(io.open("./" .. CONFIG_SELECTED_CONFIGURATION .. "/distortosConfiguration.mk", "r"))
+local file = assert(io.open("./" .. CONFIG_SELECTED_CONFIGURATION, "r"))
 for line in file:lines() do
 	local configPattern = "CONFIG_[A-Za-z0-9_]+"
 	local standardConfigPattern = "^(" .. configPattern .. ")=(.*)$"

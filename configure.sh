@@ -8,7 +8,7 @@
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #
-# date: 2015-09-26
+# date: 2015-10-08
 #
 
 set -e
@@ -22,16 +22,18 @@ if [ $# -ge 1 ]; then
 	path=$1
 fi
 
-if [ ! -f $path/distortosConfiguration.mk ]; then
-	echo "Trying $path/distortosConfiguration.mk... Not found!"
+path=$path/distortosConfiguration.mk
+
+if [ ! -f $path ]; then
+	echo "Trying $path... Not found!"
 	path=configurations/$path
-	if [ ! -f $path/distortosConfiguration.mk ]; then
-		echo "Trying $path/distortosConfiguration.mk... Not found!"
+	if [ ! -f $path ]; then
+		echo "Trying $path... Not found!"
 		echo "Error - no suitable configuration found!"
 		exit 1
 	fi	
 fi
 
-echo "Trying $path/distortosConfiguration.mk... Found."
+echo "Trying $path... Found."
 echo "CONFIG_SELECTED_CONFIGURATION=\"$path\"" > selectedConfiguration.mk
 echo "\"selectedConfiguration.mk\" file generated successfully."
