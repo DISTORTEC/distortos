@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-05-16
+ * \date 2015-10-09
  */
 
 #include "MutexPriorityInheritanceOperationsTestCase.hpp"
@@ -255,62 +255,69 @@ bool testBasicPriorityInheritance(const Mutex::Type type)
 			{4, 10, 3, 4, 8, 10, 7, 8, 9, 10},
 	}};
 
-	Mutex mutex0 {type, Mutex::Protocol::PriorityInheritance};
-	Mutex mutex1 {type, Mutex::Protocol::PriorityInheritance};
-	Mutex mutex00 {type, Mutex::Protocol::PriorityInheritance};
-	Mutex mutex01 {type, Mutex::Protocol::PriorityInheritance};
-	Mutex mutex10 {type, Mutex::Protocol::PriorityInheritance};
-	Mutex mutex11 {type, Mutex::Protocol::PriorityInheritance};
-	Mutex mutex100 {type, Mutex::Protocol::PriorityInheritance};
-	Mutex mutex101 {type, Mutex::Protocol::PriorityInheritance};
-	Mutex mutex110 {type, Mutex::Protocol::PriorityInheritance};
-	Mutex mutex111 {type, Mutex::Protocol::PriorityInheritance};
-
-	LockThread threadObject0 {&mutex00, &mutex01, &mutex0};
-	LockThread threadObject1 {&mutex10, &mutex11, &mutex1};
-	LockThread threadObject00 {&mutex00, nullptr, nullptr};
-	LockThread threadObject01 {&mutex01, nullptr, nullptr};
-	LockThread threadObject10 {&mutex100, &mutex101, &mutex10};
-	LockThread threadObject11 {&mutex110, &mutex111, &mutex11};
-	LockThread threadObject100 {&mutex100, nullptr, nullptr};
-	LockThread threadObject101 {&mutex101, nullptr, nullptr};
-	LockThread threadObject110 {&mutex110, nullptr, nullptr};
-	LockThread threadObject111 {&mutex111, nullptr, nullptr};
-
-	auto thread0 =
-			makeStaticThread<testThreadStackSize>(testThreadPriority + priorityBoosts[0][0], std::ref(threadObject0));
-	auto thread1 =
-			makeStaticThread<testThreadStackSize>(testThreadPriority + priorityBoosts[0][1], std::ref(threadObject1));
-	auto thread00 =
-			makeStaticThread<testThreadStackSize>(testThreadPriority + priorityBoosts[0][2], std::ref(threadObject00));
-	auto thread01 =
-			makeStaticThread<testThreadStackSize>(testThreadPriority + priorityBoosts[0][3], std::ref(threadObject01));
-	auto thread10 =
-			makeStaticThread<testThreadStackSize>(testThreadPriority + priorityBoosts[0][4], std::ref(threadObject10));
-	auto thread11 =
-			makeStaticThread<testThreadStackSize>(testThreadPriority + priorityBoosts[0][5], std::ref(threadObject11));
-	auto thread100 =
-			makeStaticThread<testThreadStackSize>(testThreadPriority + priorityBoosts[0][6], std::ref(threadObject100));
-	auto thread101 =
-			makeStaticThread<testThreadStackSize>(testThreadPriority + priorityBoosts[0][7], std::ref(threadObject101));
-	auto thread110 =
-			makeStaticThread<testThreadStackSize>(testThreadPriority + priorityBoosts[0][8], std::ref(threadObject110));
-	auto thread111 =
-			makeStaticThread<testThreadStackSize>(testThreadPriority + priorityBoosts[0][9], std::ref(threadObject111));
-
-	using TestThreadHolder = estd::ReferenceHolder<decltype(thread0)>;
-	std::array<TestThreadHolder, totalThreads> threads
+	std::array<Mutex, totalThreads> mutexes
 	{{
-			TestThreadHolder{thread0},
-			TestThreadHolder{thread1},
-			TestThreadHolder{thread00},
-			TestThreadHolder{thread01},
-			TestThreadHolder{thread10},
-			TestThreadHolder{thread11},
-			TestThreadHolder{thread100},
-			TestThreadHolder{thread101},
-			TestThreadHolder{thread110},
-			TestThreadHolder{thread111},
+			Mutex{type, Mutex::Protocol::PriorityInheritance},
+			Mutex{type, Mutex::Protocol::PriorityInheritance},
+			Mutex{type, Mutex::Protocol::PriorityInheritance},
+			Mutex{type, Mutex::Protocol::PriorityInheritance},
+			Mutex{type, Mutex::Protocol::PriorityInheritance},
+			Mutex{type, Mutex::Protocol::PriorityInheritance},
+			Mutex{type, Mutex::Protocol::PriorityInheritance},
+			Mutex{type, Mutex::Protocol::PriorityInheritance},
+			Mutex{type, Mutex::Protocol::PriorityInheritance},
+			Mutex{type, Mutex::Protocol::PriorityInheritance},
+	}};
+
+	auto& mutex0 = mutexes[0];
+	auto& mutex1 = mutexes[1];
+	auto& mutex00 = mutexes[2];
+	auto& mutex01 = mutexes[3];
+	auto& mutex10 = mutexes[4];
+	auto& mutex11 = mutexes[5];
+	auto& mutex100 = mutexes[6];
+	auto& mutex101 = mutexes[7];
+	auto& mutex110 = mutexes[8];
+	auto& mutex111 = mutexes[9];
+
+	std::array<LockThread, totalThreads> threadObjects
+	{{
+			{&mutex00, &mutex01, &mutex0},
+			{&mutex10, &mutex11, &mutex1},
+			{&mutex00, nullptr, nullptr},
+			{&mutex01, nullptr, nullptr},
+			{&mutex100, &mutex101, &mutex10},
+			{&mutex110, &mutex111, &mutex11},
+			{&mutex100, nullptr, nullptr},
+			{&mutex101, nullptr, nullptr},
+			{&mutex110, nullptr, nullptr},
+			{&mutex111, nullptr, nullptr},
+	}};
+
+	auto& threadObject0 = threadObjects[0];
+	auto& threadObject1 = threadObjects[1];
+	auto& threadObject00 = threadObjects[2];
+	auto& threadObject01 = threadObjects[3];
+	auto& threadObject10 = threadObjects[4];
+	auto& threadObject11 = threadObjects[5];
+	auto& threadObject100 = threadObjects[6];
+	auto& threadObject101 = threadObjects[7];
+	auto& threadObject110 = threadObjects[8];
+	auto& threadObject111 = threadObjects[9];
+
+	using TestThread = decltype(makeStaticThread<testThreadStackSize>({}, std::ref(std::declval<LockThread&>())));
+	std::array<TestThread, totalThreads> threads
+	{{
+			makeStaticThread<testThreadStackSize>(testThreadPriority + priorityBoosts[0][0], std::ref(threadObject0)),
+			makeStaticThread<testThreadStackSize>(testThreadPriority + priorityBoosts[0][1], std::ref(threadObject1)),
+			makeStaticThread<testThreadStackSize>(testThreadPriority + priorityBoosts[0][2], std::ref(threadObject00)),
+			makeStaticThread<testThreadStackSize>(testThreadPriority + priorityBoosts[0][3], std::ref(threadObject01)),
+			makeStaticThread<testThreadStackSize>(testThreadPriority + priorityBoosts[0][4], std::ref(threadObject10)),
+			makeStaticThread<testThreadStackSize>(testThreadPriority + priorityBoosts[0][5], std::ref(threadObject11)),
+			makeStaticThread<testThreadStackSize>(testThreadPriority + priorityBoosts[0][6], std::ref(threadObject100)),
+			makeStaticThread<testThreadStackSize>(testThreadPriority + priorityBoosts[0][7], std::ref(threadObject101)),
+			makeStaticThread<testThreadStackSize>(testThreadPriority + priorityBoosts[0][8], std::ref(threadObject110)),
+			makeStaticThread<testThreadStackSize>(testThreadPriority + priorityBoosts[0][9], std::ref(threadObject111)),
 	}};
 
 	bool result {true};
@@ -328,13 +335,13 @@ bool testBasicPriorityInheritance(const Mutex::Type type)
 
 	for (size_t i = 0; i < threads.size(); ++i)
 	{
-		auto& thread = threads[i].get();
+		auto& thread = threads[i];
 		thread.start();
 		if (ThisThread::getEffectivePriority() != thread.getEffectivePriority())
 			result = false;
 
 		for (size_t j = 0; j < threads.size(); ++j)
-			if (threads[j].get().getEffectivePriority() != testThreadPriority + priorityBoosts[i][j])
+			if (threads[j].getEffectivePriority() != testThreadPriority + priorityBoosts[i][j])
 				result = false;
 	}
 
@@ -344,7 +351,7 @@ bool testBasicPriorityInheritance(const Mutex::Type type)
 			result = false;
 	}
 
-	if (ThisThread::getEffectivePriority() != thread0.getEffectivePriority())
+	if (ThisThread::getEffectivePriority() != threads[0].getEffectivePriority())
 		result = false;
 
 	{
@@ -353,18 +360,17 @@ bool testBasicPriorityInheritance(const Mutex::Type type)
 			result = false;
 	}
 
-	for (const auto& thread : threads)
-		thread.get().join();
+	for (auto& thread : threads)
+		thread.join();
 
 	if (ThisThread::getEffectivePriority() != testThreadPriority)
 		result = false;
 
 	for (size_t i = 0; i < threads.size(); ++i)
-		if (threads[i].get().getEffectivePriority() != testThreadPriority + priorityBoosts[0][i])
+		if (threads[i].getEffectivePriority() != testThreadPriority + priorityBoosts[0][i])
 			result = false;
 
-	for (const auto& threadObject : {threadObject0, threadObject1, threadObject00, threadObject01, threadObject10,
-			threadObject11, threadObject100, threadObject101, threadObject110, threadObject111})
+	for (const auto& threadObject : threadObjects)
 		if (threadObject.getRet() != 0)
 			result = false;
 
@@ -396,27 +402,55 @@ bool testCanceledLock(const Mutex::Type type)
 	constexpr size_t testThreadStackSize {512};
 	constexpr size_t totalThreads {10};
 
-	Mutex mutex0 {type, Mutex::Protocol::PriorityInheritance};
-	Mutex mutex1 {type, Mutex::Protocol::PriorityInheritance};
-	Mutex mutex2 {type, Mutex::Protocol::PriorityInheritance};
-	Mutex mutex3 {type, Mutex::Protocol::PriorityInheritance};
-	Mutex mutex4 {type, Mutex::Protocol::PriorityInheritance};
-	Mutex mutex5 {type, Mutex::Protocol::PriorityInheritance};
-	Mutex mutex6 {type, Mutex::Protocol::PriorityInheritance};
-	Mutex mutex7 {type, Mutex::Protocol::PriorityInheritance};
-	Mutex mutex8 {type, Mutex::Protocol::PriorityInheritance};
-	Mutex mutex9 {type, Mutex::Protocol::PriorityInheritance};
+	std::array<Mutex, totalThreads> mutexes
+	{{
+			Mutex{type, Mutex::Protocol::PriorityInheritance},
+			Mutex{type, Mutex::Protocol::PriorityInheritance},
+			Mutex{type, Mutex::Protocol::PriorityInheritance},
+			Mutex{type, Mutex::Protocol::PriorityInheritance},
+			Mutex{type, Mutex::Protocol::PriorityInheritance},
+			Mutex{type, Mutex::Protocol::PriorityInheritance},
+			Mutex{type, Mutex::Protocol::PriorityInheritance},
+			Mutex{type, Mutex::Protocol::PriorityInheritance},
+			Mutex{type, Mutex::Protocol::PriorityInheritance},
+			Mutex{type, Mutex::Protocol::PriorityInheritance},
+	}};
 
-	TryLockForThread threadObject0 {&mutex1, mutex0, durationUnit * 10};
-	TryLockForThread threadObject1 {&mutex2, mutex1, durationUnit * 9};
-	TryLockForThread threadObject2 {&mutex3, mutex2, durationUnit * 8};
-	TryLockForThread threadObject3 {&mutex4, mutex3, durationUnit * 7};
-	TryLockForThread threadObject4 {&mutex5, mutex4, durationUnit * 6};
-	TryLockForThread threadObject5 {&mutex6, mutex5, durationUnit * 5};
-	TryLockForThread threadObject6 {&mutex7, mutex6, durationUnit * 4};
-	TryLockForThread threadObject7 {&mutex8, mutex7, durationUnit * 3};
-	TryLockForThread threadObject8 {&mutex9, mutex8, durationUnit * 2};
-	TryLockForThread threadObject9 {nullptr, mutex9, durationUnit * 1};
+	auto& mutex0 = mutexes[0];
+	auto& mutex1 = mutexes[1];
+	auto& mutex2 = mutexes[2];
+	auto& mutex3 = mutexes[3];
+	auto& mutex4 = mutexes[4];
+	auto& mutex5 = mutexes[5];
+	auto& mutex6 = mutexes[6];
+	auto& mutex7 = mutexes[7];
+	auto& mutex8 = mutexes[8];
+	auto& mutex9 = mutexes[9];
+
+	std::array<TryLockForThread, totalThreads> threadObjects
+	{{
+			{&mutex1, mutex0, durationUnit * 10},
+			{&mutex2, mutex1, durationUnit * 9},
+			{&mutex3, mutex2, durationUnit * 8},
+			{&mutex4, mutex3, durationUnit * 7},
+			{&mutex5, mutex4, durationUnit * 6},
+			{&mutex6, mutex5, durationUnit * 5},
+			{&mutex7, mutex6, durationUnit * 4},
+			{&mutex8, mutex7, durationUnit * 3},
+			{&mutex9, mutex8, durationUnit * 2},
+			{nullptr, mutex9, durationUnit * 1},
+	}};
+
+	auto& threadObject0 = threadObjects[0];
+	auto& threadObject1 = threadObjects[1];
+	auto& threadObject2 = threadObjects[2];
+	auto& threadObject3 = threadObjects[3];
+	auto& threadObject4 = threadObjects[4];
+	auto& threadObject5 = threadObjects[5];
+	auto& threadObject6 = threadObjects[6];
+	auto& threadObject7 = threadObjects[7];
+	auto& threadObject8 = threadObjects[8];
+	auto& threadObject9 = threadObjects[9];
 
 	using TestThread = decltype(makeStaticThread<testThreadStackSize>({}, std::ref(std::declval<TryLockForThread&>())));
 	std::array<TestThread, totalThreads> threads
@@ -514,27 +548,55 @@ bool testPriorityChange(const Mutex::Type type)
 			{8, UINT8_MAX}, {8, testThreadPriority + 9}, {9, UINT8_MAX}, {9, testThreadPriority + 10},
 	};
 
-	Mutex mutex0 {type, Mutex::Protocol::PriorityInheritance};
-	Mutex mutex1 {type, Mutex::Protocol::PriorityInheritance};
-	Mutex mutex2 {type, Mutex::Protocol::PriorityInheritance};
-	Mutex mutex3 {type, Mutex::Protocol::PriorityInheritance};
-	Mutex mutex4 {type, Mutex::Protocol::PriorityInheritance};
-	Mutex mutex5 {type, Mutex::Protocol::PriorityInheritance};
-	Mutex mutex6 {type, Mutex::Protocol::PriorityInheritance};
-	Mutex mutex7 {type, Mutex::Protocol::PriorityInheritance};
-	Mutex mutex8 {type, Mutex::Protocol::PriorityInheritance};
-	Mutex mutex9 {type, Mutex::Protocol::PriorityInheritance};
+	std::array<Mutex, totalThreads> mutexes
+	{{
+			Mutex{type, Mutex::Protocol::PriorityInheritance},
+			Mutex{type, Mutex::Protocol::PriorityInheritance},
+			Mutex{type, Mutex::Protocol::PriorityInheritance},
+			Mutex{type, Mutex::Protocol::PriorityInheritance},
+			Mutex{type, Mutex::Protocol::PriorityInheritance},
+			Mutex{type, Mutex::Protocol::PriorityInheritance},
+			Mutex{type, Mutex::Protocol::PriorityInheritance},
+			Mutex{type, Mutex::Protocol::PriorityInheritance},
+			Mutex{type, Mutex::Protocol::PriorityInheritance},
+			Mutex{type, Mutex::Protocol::PriorityInheritance},
+	}};
 
-	LockThread threadObject0 {&mutex1, &mutex0, nullptr};
-	LockThread threadObject1 {&mutex2, &mutex1, nullptr};
-	LockThread threadObject2 {&mutex3, &mutex2, nullptr};
-	LockThread threadObject3 {&mutex4, &mutex3, nullptr};
-	LockThread threadObject4 {&mutex5, &mutex4, nullptr};
-	LockThread threadObject5 {&mutex6, &mutex5, nullptr};
-	LockThread threadObject6 {&mutex7, &mutex6, nullptr};
-	LockThread threadObject7 {&mutex8, &mutex7, nullptr};
-	LockThread threadObject8 {&mutex9, &mutex8, nullptr};
-	LockThread threadObject9 {&mutex9, nullptr, nullptr};
+	auto& mutex0 = mutexes[0];
+	auto& mutex1 = mutexes[1];
+	auto& mutex2 = mutexes[2];
+	auto& mutex3 = mutexes[3];
+	auto& mutex4 = mutexes[4];
+	auto& mutex5 = mutexes[5];
+	auto& mutex6 = mutexes[6];
+	auto& mutex7 = mutexes[7];
+	auto& mutex8 = mutexes[8];
+	auto& mutex9 = mutexes[9];
+
+	std::array<LockThread, totalThreads> threadObjects
+	{{
+			{&mutex1, &mutex0, nullptr},
+			{&mutex2, &mutex1, nullptr},
+			{&mutex3, &mutex2, nullptr},
+			{&mutex4, &mutex3, nullptr},
+			{&mutex5, &mutex4, nullptr},
+			{&mutex6, &mutex5, nullptr},
+			{&mutex7, &mutex6, nullptr},
+			{&mutex8, &mutex7, nullptr},
+			{&mutex9, &mutex8, nullptr},
+			{&mutex9, nullptr, nullptr},
+	}};
+
+	auto& threadObject0 = threadObjects[0];
+	auto& threadObject1 = threadObjects[1];
+	auto& threadObject2 = threadObjects[2];
+	auto& threadObject3 = threadObjects[3];
+	auto& threadObject4 = threadObjects[4];
+	auto& threadObject5 = threadObjects[5];
+	auto& threadObject6 = threadObjects[6];
+	auto& threadObject7 = threadObjects[7];
+	auto& threadObject8 = threadObjects[8];
+	auto& threadObject9 = threadObjects[9];
 
 	using TestThread = decltype(makeStaticThread<testThreadStackSize>({}, std::ref(std::declval<LockThread&>())));
 	std::array<TestThread, totalThreads> threads
