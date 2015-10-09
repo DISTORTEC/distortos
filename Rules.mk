@@ -6,7 +6,7 @@
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #
-# date: 2015-09-27
+# date: 2015-10-09
 #
 
 #-----------------------------------------------------------------------------------------------------------------------
@@ -23,7 +23,7 @@ SUBDIRECTORIES += test
 DISTORTOS_CONFIGURATION_H := $(OUTPUT)include/distortos/distortosConfiguration.h
 
 $(DISTORTOS_CONFIGURATION_H): $(DISTORTOS_CONFIGURATION_MK)
-	./scripts/makeDistortosConfiguration.awk "$<" > "$@"
+	./scripts/makeDistortosConfiguration.awk "$(dir $<)$(notdir $<)" > "$@"
 
 #-----------------------------------------------------------------------------------------------------------------------
 # generated headers depend on this Rules.mk, the script that generates them and the selectedConfiguration.mk file
