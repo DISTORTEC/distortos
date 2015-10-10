@@ -1,4 +1,4 @@
-#!/bin/awk -f
+#!/usr/bin/awk -f
 
 #
 # file: makeDistortosConfiguration.awk
