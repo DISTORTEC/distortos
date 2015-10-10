@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-10-08
+ * \date 2015-10-10
  */
 
 #include "QueueOperationsTestCase.hpp"
@@ -44,14 +44,11 @@ namespace
 | local types
 +---------------------------------------------------------------------------------------------------------------------*/
 
-/// type of elements of \a Test{Fifo,Message}Queue
-using TestType = OperationCountingType;
+/// FifoQueue with \a OperationCountingType
+using TestFifoQueue = FifoQueue<OperationCountingType>;
 
-/// FifoQueue with \a TestType
-using TestFifoQueue = FifoQueue<TestType>;
-
-/// MessageQueue with \a TestType
-using TestMessageQueue = MessageQueue<TestType>;
+/// MessageQueue with \a OperationCountingType
+using TestMessageQueue = MessageQueue<OperationCountingType>;
 
 /// wrapper for [Raw]{Fifo,Message}Queue
 class QueueWrapper
@@ -62,20 +59,21 @@ public:
 	 * \brief Tests whether pushed and popped data match.
 	 *
 	 * \param [in] priority1 is the priority used for *push*() or *emplace*()
-	 * \param [in] value1 is a reference to TestType object used for *push*() or *emplace*()
+	 * \param [in] value1 is a reference to OperationCountingType object used for *push*() or *emplace*()
 	 * \param [in] priority2 is the priority returned by *pop*()
-	 * \param [in] value2 is a reference to TestType object returned by *pop*()
+	 * \param [in] value2 is a reference to OperationCountingType object returned by *pop*()
 	 *
 	 * \return true if pushed and popped data matches, false otherwise
 	 */
 
-	virtual bool check(uint8_t priority1, const TestType& value1, uint8_t priority2, const TestType& value2) const = 0;
+	virtual bool check(uint8_t priority1, const OperationCountingType& value1, uint8_t priority2,
+			const OperationCountingType& value2) const = 0;
 
 	/**
-	 * \brief Wrapper for TestType::checkCounters().
+	 * \brief Wrapper for OperationCountingType::checkCounters().
 	 *
 	 * If the wrapped queue is a "raw" queue, then this function should be a stub which returns true, otherwise it
-	 * should just call TestType::checkCounters().
+	 * should just call OperationCountingType::checkCounters().
 	 */
 
 	virtual bool checkCounters(size_t constructed, size_t copyConstructed, size_t moveConstructed, size_t destructed,
@@ -87,7 +85,7 @@ public:
 	 * \brief Wrapper for {Fifo,Message}Queue::emplace() or Raw{Fifo,Message}Queue::push()
 	 */
 
-	virtual int emplace(uint8_t priority, TestType::Value value = {}) const = 0;
+	virtual int emplace(uint8_t priority, OperationCountingType::Value value = {}) const = 0;
 
 #endif	// DISTORTOS_QUEUE_EMPLACE_SUPPORTED == 1 || DOXYGEN == 1
 
@@ -95,19 +93,19 @@ public:
 	 * \brief Wrapper for [Raw]{Fifo,Message}Queue::pop()
 	 */
 
-	virtual int pop(uint8_t& priority, TestType& value) const = 0;
+	virtual int pop(uint8_t& priority, OperationCountingType& value) const = 0;
 
 	/**
-	 * \brief Wrapper for {Fifo,Message}Queue::push(..., const TestType&) or Raw{Fifo,Message}Queue::push()
+	 * \brief Wrapper for {Fifo,Message}Queue::push(..., const OperationCountingType&) or Raw{Fifo,Message}Queue::push()
 	 */
 
-	virtual int push(uint8_t priority, const TestType& value) const = 0;
+	virtual int push(uint8_t priority, const OperationCountingType& value) const = 0;
 
 	/**
-	 * \brief Wrapper for {Fifo,Message}Queue::push(..., TestType&&) or Raw{Fifo,Message}Queue::push()
+	 * \brief Wrapper for {Fifo,Message}Queue::push(..., OperationCountingType&&) or Raw{Fifo,Message}Queue::push()
 	 */
 
-	virtual int push(uint8_t priority, TestType&& value) const = 0;
+	virtual int push(uint8_t priority, OperationCountingType&& value) const = 0;
 
 #if DISTORTOS_QUEUE_EMPLACE_SUPPORTED == 1 || DOXYGEN == 1
 
@@ -115,20 +113,21 @@ public:
 	 * \brief Wrapper for {Fifo,Message}Queue::tryEmplace() or Raw{Fifo,Message}Queue::tryPush()
 	 */
 
-	virtual int tryEmplace(uint8_t priority, TestType::Value value = {}) const = 0;
+	virtual int tryEmplace(uint8_t priority, OperationCountingType::Value value = {}) const = 0;
 
 	/**
 	 * \brief Wrapper for {Fifo,Message}Queue::tryEmplaceFor() or Raw{Fifo,Message}Queue::tryPushFor()
 	 */
 
-	virtual int tryEmplaceFor(TickClock::duration duration, uint8_t priority, TestType::Value value = {}) const = 0;
+	virtual int tryEmplaceFor(TickClock::duration duration, uint8_t priority, OperationCountingType::Value value = {})
+			const = 0;
 
 	/**
 	 * \brief Wrapper for {Fifo,Message}Queue::tryEmplaceUntil() or Raw{Fifo,Message}Queue::tryPushUntil()
 	 */
 
-	virtual int tryEmplaceUntil(TickClock::time_point timePoint, uint8_t priority, TestType::Value value = {}) const =
-			0;
+	virtual int tryEmplaceUntil(TickClock::time_point timePoint, uint8_t priority,
+			OperationCountingType::Value value = {}) const = 0;
 
 #endif	// DISTORTOS_QUEUE_EMPLACE_SUPPORTED == 1 || DOXYGEN == 1
 
@@ -136,56 +135,64 @@ public:
 	 * \brief Wrapper for [Raw]{Fifo,Message}Queue::tryPop()
 	 */
 
-	virtual int tryPop(uint8_t& priority, TestType& value) const = 0;
+	virtual int tryPop(uint8_t& priority, OperationCountingType& value) const = 0;
 
 	/**
 	 * \brief Wrapper for [Raw]{Fifo,Message}Queue::tryPopFor()
 	 */
 
-	virtual int tryPopFor(TickClock::duration duration, uint8_t& priority, TestType& value) const = 0;
+	virtual int tryPopFor(TickClock::duration duration, uint8_t& priority, OperationCountingType& value) const = 0;
 
 	/**
 	 * \brief Wrapper for [Raw]{Fifo,Message}Queue::tryPopUntil()
 	 */
 
-	virtual int tryPopUntil(TickClock::time_point timePoint, uint8_t& priority, TestType& value) const = 0;
+	virtual int tryPopUntil(TickClock::time_point timePoint, uint8_t& priority, OperationCountingType& value) const = 0;
 
 	/**
-	 * \brief Wrapper for {Fifo,Message}Queue::tryPush(..., const TestType&) or Raw{Fifo,Message}Queue::tryPush()
+	 * \brief Wrapper for {Fifo,Message}Queue::tryPush(..., const OperationCountingType&) or
+	 * Raw{Fifo,Message}Queue::tryPush()
 	 */
 
-	virtual int tryPush(uint8_t priority, const TestType& value) const = 0;
+	virtual int tryPush(uint8_t priority, const OperationCountingType& value) const = 0;
 
 	/**
-	 * \brief Wrapper for {Fifo,Message}Queue::tryPush(..., TestType&&) or Raw{Fifo,Message}Queue::tryPush()
+	 * \brief Wrapper for {Fifo,Message}Queue::tryPush(..., OperationCountingType&&) or
+	 * Raw{Fifo,Message}Queue::tryPush()
 	 */
 
-	virtual int tryPush(uint8_t priority, TestType&& value) const = 0;
+	virtual int tryPush(uint8_t priority, OperationCountingType&& value) const = 0;
 
 	/**
-	 * \brief Wrapper for {Fifo,Message}Queue::tryPushFor(..., const TestType&) or Raw{Fifo,Message}Queue::tryPushFor()
+	 * \brief Wrapper for {Fifo,Message}Queue::tryPushFor(..., const OperationCountingType&) or
+	 * Raw{Fifo,Message}Queue::tryPushFor()
 	 */
 
-	virtual int tryPushFor(TickClock::duration duration, uint8_t priority, const TestType& value) const = 0;
+	virtual int tryPushFor(TickClock::duration duration, uint8_t priority, const OperationCountingType& value) const =
+			0;
 
 	/**
-	 * \brief Wrapper for {Fifo,Message}Queue::tryPushFor(..., TestType&&) or Raw{Fifo,Message}Queue::tryPushFor()
+	 * \brief Wrapper for {Fifo,Message}Queue::tryPushFor(..., OperationCountingType&&) or
+	 * Raw{Fifo,Message}Queue::tryPushFor()
 	 */
 
-	virtual int tryPushFor(TickClock::duration duration, uint8_t priority, TestType&& value) const = 0;
+	virtual int tryPushFor(TickClock::duration duration, uint8_t priority, OperationCountingType&& value) const = 0;
 
 	/**
-	 * \brief Wrapper for {Fifo,Message}Queue::tryPushUntil(..., const TestType&) or
+	 * \brief Wrapper for {Fifo,Message}Queue::tryPushUntil(..., const OperationCountingType&) or
 	 * Raw{Fifo,Message}Queue::tryPushUntil()
 	 */
 
-	virtual int tryPushUntil(TickClock::time_point timePoint, uint8_t priority, const TestType& value) const = 0;
+	virtual int tryPushUntil(TickClock::time_point timePoint, uint8_t priority, const OperationCountingType& value)
+			const = 0;
 
 	/**
-	 * \brief Wrapper for {Fifo,Message}Queue::tryPushUntil(..., TestType&&) or Raw{Fifo,Message}Queue::tryPushUntil()
+	 * \brief Wrapper for {Fifo,Message}Queue::tryPushUntil(..., OperationCountingType&&) or
+	 * Raw{Fifo,Message}Queue::tryPushUntil()
 	 */
 
-	virtual int tryPushUntil(TickClock::time_point timePoint, uint8_t priority, TestType&& value) const = 0;
+	virtual int tryPushUntil(TickClock::time_point timePoint, uint8_t priority, OperationCountingType&& value) const =
+			0;
 };
 
 /// common implementation of QueueWrapper for {Fifo,Message}Queue
@@ -194,17 +201,17 @@ class NonRawQueueWrapper : public QueueWrapper
 public:
 
 	/**
-	 * \brief Wrapper for TestType::checkCounters().
+	 * \brief Wrapper for OperationCountingType::checkCounters().
 	 *
-	 * Just calls TestType::checkCounters().
+	 * Just calls OperationCountingType::checkCounters().
 	 */
 
 	virtual bool checkCounters(const size_t constructed, const size_t copyConstructed, const size_t moveConstructed,
 			const size_t destructed, const size_t copyAssigned, const size_t moveAssigned, const size_t swapped) const
 			override
 	{
-		return TestType::checkCounters(constructed, copyConstructed, moveConstructed, destructed, copyAssigned,
-				moveAssigned, swapped);
+		return OperationCountingType::checkCounters(constructed, copyConstructed, moveConstructed, destructed,
+				copyAssigned, moveAssigned, swapped);
 	}
 };
 
@@ -231,14 +238,15 @@ public:
 	 * As FifoQueue doesn't support priority, \a priority1 and \a priority2 values are ignored.
 	 *
 	 * \param [in] priority1 is the priority used for *push*() or *emplace*()
-	 * \param [in] value1 is a reference to TestType object used for *push*() or *emplace*()
+	 * \param [in] value1 is a reference to OperationCountingType object used for *push*() or *emplace*()
 	 * \param [in] priority2 is the priority returned by *pop*()
-	 * \param [in] value2 is a reference to TestType object returned by *pop*()
+	 * \param [in] value2 is a reference to OperationCountingType object returned by *pop*()
 	 *
 	 * \return true if pushed and popped data matches, false otherwise
 	 */
 
-	virtual bool check(uint8_t, const TestType& value1, uint8_t, const TestType& value2) const override
+	virtual bool check(uint8_t, const OperationCountingType& value1, uint8_t, const OperationCountingType& value2) const
+			override
 	{
 		return value1 == value2;
 	}
@@ -249,7 +257,7 @@ public:
 	 * \brief Wrapper for FifoQueue::emplace()
 	 */
 
-	virtual int emplace(uint8_t, const TestType::Value value = {}) const override
+	virtual int emplace(uint8_t, const OperationCountingType::Value value = {}) const override
 	{
 		return fifoQueue_.emplace(value);
 	}
@@ -260,26 +268,26 @@ public:
 	 * \brief Wrapper for FifoQueue::pop()
 	 */
 
-	virtual int pop(uint8_t& priority, TestType& value) const override
+	virtual int pop(uint8_t& priority, OperationCountingType& value) const override
 	{
 		priority = {};
 		return fifoQueue_.pop(value);
 	}
 
 	/**
-	 * \brief Wrapper for FifoQueue::push(..., const TestType&)
+	 * \brief Wrapper for FifoQueue::push(..., const OperationCountingType&)
 	 */
 
-	virtual int push(uint8_t, const TestType& value) const override
+	virtual int push(uint8_t, const OperationCountingType& value) const override
 	{
 		return fifoQueue_.push(value);
 	}
 
 	/**
-	 * \brief Wrapper for FifoQueue::push(..., TestType&&)
+	 * \brief Wrapper for FifoQueue::push(..., OperationCountingType&&)
 	 */
 
-	virtual int push(uint8_t, TestType&& value) const override
+	virtual int push(uint8_t, OperationCountingType&& value) const override
 	{
 		return fifoQueue_.push(std::move(value));
 	}
@@ -290,7 +298,7 @@ public:
 	 * \brief Wrapper for FifoQueue::tryEmplace()
 	 */
 
-	virtual int tryEmplace(uint8_t, const TestType::Value value = {}) const override
+	virtual int tryEmplace(uint8_t, const OperationCountingType::Value value = {}) const override
 	{
 		return fifoQueue_.tryEmplace(value);
 	}
@@ -299,8 +307,8 @@ public:
 	 * \brief Wrapper for FifoQueue::tryEmplaceFor()
 	 */
 
-	virtual int tryEmplaceFor(const TickClock::duration duration, uint8_t, const TestType::Value value = {}) const
-			override
+	virtual int tryEmplaceFor(const TickClock::duration duration, uint8_t,
+			const OperationCountingType::Value value = {}) const override
 	{
 		return fifoQueue_.tryEmplaceFor(duration, value);
 	}
@@ -309,8 +317,8 @@ public:
 	 * \brief Wrapper for FifoQueue::tryEmplaceUntil()
 	 */
 
-	virtual int tryEmplaceUntil(const TickClock::time_point timePoint, uint8_t, const TestType::Value value = {}) const
-			override
+	virtual int tryEmplaceUntil(const TickClock::time_point timePoint, uint8_t,
+			const OperationCountingType::Value value = {}) const override
 	{
 		return fifoQueue_.tryEmplaceUntil(timePoint, value);
 	}
@@ -321,7 +329,7 @@ public:
 	 * \brief Wrapper for FifoQueue::tryPop()
 	 */
 
-	virtual int tryPop(uint8_t& priority, TestType& value) const override
+	virtual int tryPop(uint8_t& priority, OperationCountingType& value) const override
 	{
 		priority = {};
 		return fifoQueue_.tryPop(value);
@@ -331,7 +339,8 @@ public:
 	 * \brief Wrapper for FifoQueue::tryPopFor()
 	 */
 
-	virtual int tryPopFor(const TickClock::duration duration, uint8_t& priority, TestType& value) const override
+	virtual int tryPopFor(const TickClock::duration duration, uint8_t& priority, OperationCountingType& value) const
+			override
 	{
 		priority = {};
 		return fifoQueue_.tryPopFor(duration, value);
@@ -341,62 +350,66 @@ public:
 	 * \brief Wrapper for FifoQueue::tryPopUntil()
 	 */
 
-	virtual int tryPopUntil(const TickClock::time_point timePoint, uint8_t& priority, TestType& value) const override
+	virtual int tryPopUntil(const TickClock::time_point timePoint, uint8_t& priority, OperationCountingType& value)
+			const override
 	{
 		priority = {};
 		return fifoQueue_.tryPopUntil(timePoint, value);
 	}
 
 	/**
-	 * \brief Wrapper for FifoQueue::tryPush(..., const TestType&)
+	 * \brief Wrapper for FifoQueue::tryPush(..., const OperationCountingType&)
 	 */
 
-	virtual int tryPush(uint8_t, const TestType& value) const override
+	virtual int tryPush(uint8_t, const OperationCountingType& value) const override
 	{
 		return fifoQueue_.tryPush(value);
 	}
 
 	/**
-	 * \brief Wrapper for FifoQueue::tryPush(..., TestType&&)
+	 * \brief Wrapper for FifoQueue::tryPush(..., OperationCountingType&&)
 	 */
 
-	virtual int tryPush(uint8_t, TestType&& value) const override
+	virtual int tryPush(uint8_t, OperationCountingType&& value) const override
 	{
 		return fifoQueue_.tryPush(std::move(value));
 	}
 
 	/**
-	 * \brief Wrapper for FifoQueue::tryPushFor(..., const TestType&)
+	 * \brief Wrapper for FifoQueue::tryPushFor(..., const OperationCountingType&)
 	 */
 
-	virtual int tryPushFor(const TickClock::duration duration, uint8_t, const TestType& value) const override
+	virtual int tryPushFor(const TickClock::duration duration, uint8_t, const OperationCountingType& value) const
+			override
 	{
 		return fifoQueue_.tryPushFor(duration, value);
 	}
 
 	/**
-	 * \brief Wrapper for FifoQueue::tryPushFor(..., TestType&&)
+	 * \brief Wrapper for FifoQueue::tryPushFor(..., OperationCountingType&&)
 	 */
 
-	virtual int tryPushFor(const TickClock::duration duration, uint8_t, TestType&& value) const override
+	virtual int tryPushFor(const TickClock::duration duration, uint8_t, OperationCountingType&& value) const override
 	{
 		return fifoQueue_.tryPushFor(duration, std::move(value));
 	}
 
 	/**
-	 * \brief Wrapper for FifoQueue::tryPushUntil(..., const TestType&)
+	 * \brief Wrapper for FifoQueue::tryPushUntil(..., const OperationCountingType&)
 	 */
 
-	virtual int tryPushUntil(const TickClock::time_point timePoint, uint8_t, const TestType& value) const override
+	virtual int tryPushUntil(const TickClock::time_point timePoint, uint8_t, const OperationCountingType& value) const
+			override
 	{
 		return fifoQueue_.tryPushUntil(timePoint, value);
 	}
 
 	/**
-	 * \brief Wrapper for FifoQueue::tryPushUntil(..., TestType&&)
+	 * \brief Wrapper for FifoQueue::tryPushUntil(..., OperationCountingType&&)
 	 */
 
-	virtual int tryPushUntil(const TickClock::time_point timePoint, uint8_t, TestType&& value) const override
+	virtual int tryPushUntil(const TickClock::time_point timePoint, uint8_t, OperationCountingType&& value) const
+			override
 	{
 		return fifoQueue_.tryPushUntil(timePoint, std::move(value));
 	}
@@ -431,7 +444,7 @@ public:
 private:
 
 	/// internal StaticFifoQueue<> object that will be wrapped
-	StaticFifoQueue<TestType, QueueSize> fifoQueue_;
+	StaticFifoQueue<OperationCountingType, QueueSize> fifoQueue_;
 };
 
 /// implementation of QueueWrapper for MessageQueue
@@ -455,15 +468,15 @@ public:
 	 * \brief Tests whether pushed and popped data match.
 	 *
 	 * \param [in] priority1 is the priority used for *push*() or *emplace*()
-	 * \param [in] value1 is a reference to TestType object used for *push*() or *emplace*()
+	 * \param [in] value1 is a reference to OperationCountingType object used for *push*() or *emplace*()
 	 * \param [in] priority2 is the priority returned by *pop*()
-	 * \param [in] value2 is a reference to TestType object returned by *pop*()
+	 * \param [in] value2 is a reference to OperationCountingType object returned by *pop*()
 	 *
 	 * \return true if pushed and popped data matches, false otherwise
 	 */
 
-	virtual bool check(const uint8_t priority1, const TestType& value1, const uint8_t priority2, const TestType& value2)
-			const override
+	virtual bool check(const uint8_t priority1, const OperationCountingType& value1, const uint8_t priority2,
+			const OperationCountingType& value2) const override
 	{
 		return priority1 == priority2 && value1 == value2;
 	}
@@ -474,7 +487,7 @@ public:
 	 * \brief Wrapper for MessageQueue::emplace()
 	 */
 
-	virtual int emplace(const uint8_t priority, const TestType::Value value = {}) const override
+	virtual int emplace(const uint8_t priority, const OperationCountingType::Value value = {}) const override
 	{
 		return messageQueue_.emplace(priority, value);
 	}
@@ -485,25 +498,25 @@ public:
 	 * \brief Wrapper for MessageQueue::pop()
 	 */
 
-	virtual int pop(uint8_t& priority, TestType& value) const override
+	virtual int pop(uint8_t& priority, OperationCountingType& value) const override
 	{
 		return messageQueue_.pop(priority, value);
 	}
 
 	/**
-	 * \brief Wrapper for MessageQueue::push(..., const TestType&)
+	 * \brief Wrapper for MessageQueue::push(..., const OperationCountingType&)
 	 */
 
-	virtual int push(const uint8_t priority, const TestType& value) const override
+	virtual int push(const uint8_t priority, const OperationCountingType& value) const override
 	{
 		return messageQueue_.push(priority, value);
 	}
 
 	/**
-	 * \brief Wrapper for MessageQueue::push(..., TestType&&)
+	 * \brief Wrapper for MessageQueue::push(..., OperationCountingType&&)
 	 */
 
-	virtual int push(const uint8_t priority, TestType&& value) const override
+	virtual int push(const uint8_t priority, OperationCountingType&& value) const override
 	{
 		return messageQueue_.push(priority, std::move(value));
 	}
@@ -514,7 +527,7 @@ public:
 	 * \brief Wrapper for MessageQueue::tryEmplace()
 	 */
 
-	virtual int tryEmplace(const uint8_t priority, const TestType::Value value = {}) const override
+	virtual int tryEmplace(const uint8_t priority, const OperationCountingType::Value value = {}) const override
 	{
 		return messageQueue_.tryEmplace(priority, value);
 	}
@@ -524,7 +537,7 @@ public:
 	 */
 
 	virtual int tryEmplaceFor(const TickClock::duration duration, const uint8_t priority,
-			const TestType::Value value = {}) const override
+			const OperationCountingType::Value value = {}) const override
 	{
 		return messageQueue_.tryEmplaceFor(duration, priority, value);
 	}
@@ -534,7 +547,7 @@ public:
 	 */
 
 	virtual int tryEmplaceUntil(const TickClock::time_point timePoint, const uint8_t priority,
-			const TestType::Value value = {}) const override
+			const OperationCountingType::Value value = {}) const override
 	{
 		return messageQueue_.tryEmplaceUntil(timePoint, priority, value);
 	}
@@ -545,7 +558,7 @@ public:
 	 * \brief Wrapper for MessageQueue::tryPop()
 	 */
 
-	virtual int tryPop(uint8_t& priority, TestType& value) const override
+	virtual int tryPop(uint8_t& priority, OperationCountingType& value) const override
 	{
 		return messageQueue_.tryPop(priority, value);
 	}
@@ -554,7 +567,8 @@ public:
 	 * \brief Wrapper for MessageQueue::tryPopFor()
 	 */
 
-	virtual int tryPopFor(const TickClock::duration duration, uint8_t& priority, TestType& value) const override
+	virtual int tryPopFor(const TickClock::duration duration, uint8_t& priority, OperationCountingType& value) const
+			override
 	{
 		return messageQueue_.tryPopFor(duration, priority, value);
 	}
@@ -563,64 +577,66 @@ public:
 	 * \brief Wrapper for MessageQueue::tryPopUntil()
 	 */
 
-	virtual int tryPopUntil(const TickClock::time_point timePoint, uint8_t& priority, TestType& value) const override
+	virtual int tryPopUntil(const TickClock::time_point timePoint, uint8_t& priority, OperationCountingType& value)
+			const override
 	{
 		return messageQueue_.tryPopUntil(timePoint, priority, value);
 	}
 
 	/**
-	 * \brief Wrapper for MessageQueue::tryPush(..., const TestType&)
+	 * \brief Wrapper for MessageQueue::tryPush(..., const OperationCountingType&)
 	 */
 
-	virtual int tryPush(const uint8_t priority, const TestType& value) const override
+	virtual int tryPush(const uint8_t priority, const OperationCountingType& value) const override
 	{
 		return messageQueue_.tryPush(priority, value);
 	}
 
 	/**
-	 * \brief Wrapper for MessageQueue::tryPush(..., TestType&&)
+	 * \brief Wrapper for MessageQueue::tryPush(..., OperationCountingType&&)
 	 */
 
-	virtual int tryPush(const uint8_t priority, TestType&& value) const override
+	virtual int tryPush(const uint8_t priority, OperationCountingType&& value) const override
 	{
 		return messageQueue_.tryPush(priority, std::move(value));
 	}
 
 	/**
-	 * \brief Wrapper for MessageQueue::tryPushFor(..., const TestType&)
+	 * \brief Wrapper for MessageQueue::tryPushFor(..., const OperationCountingType&)
 	 */
 
-	virtual int tryPushFor(const TickClock::duration duration, const uint8_t priority, const TestType& value) const
-			override
+	virtual int tryPushFor(const TickClock::duration duration, const uint8_t priority,
+			const OperationCountingType& value) const override
 	{
 		return messageQueue_.tryPushFor(duration, priority, value);
 	}
 
 	/**
-	 * \brief Wrapper for MessageQueue::tryPushFor(..., TestType&&)
+	 * \brief Wrapper for MessageQueue::tryPushFor(..., OperationCountingType&&)
 	 */
 
-	virtual int tryPushFor(const TickClock::duration duration, const uint8_t priority, TestType&& value) const override
+	virtual int tryPushFor(const TickClock::duration duration, const uint8_t priority, OperationCountingType&& value)
+			const override
 	{
 		return messageQueue_.tryPushFor(duration, priority, std::move(value));
 	}
 
 	/**
-	 * \brief Wrapper for MessageQueue::tryPushUntil(..., const TestType&)
+	 * \brief Wrapper for MessageQueue::tryPushUntil(..., const OperationCountingType&)
 	 */
 
-	virtual int tryPushUntil(const TickClock::time_point timePoint, const uint8_t priority, const TestType& value) const
-			override
+	virtual int tryPushUntil(const TickClock::time_point timePoint, const uint8_t priority,
+			const OperationCountingType& value) const override
 	{
 		return messageQueue_.tryPushUntil(timePoint, priority, value);
 	}
 
 	/**
-	 * \brief Wrapper for MessageQueue::tryPushUntil(..., TestType&&)
+	 * \brief Wrapper for MessageQueue::tryPushUntil(..., OperationCountingType&&)
 	 */
 
-	virtual int tryPushUntil(const TickClock::time_point timePoint, const uint8_t priority, TestType&& value) const
-			override
+	virtual int tryPushUntil(const TickClock::time_point timePoint, const uint8_t priority,
+			OperationCountingType&& value) const override
 	{
 		return messageQueue_.tryPushUntil(timePoint, priority, std::move(value));
 	}
@@ -656,7 +672,7 @@ public:
 private:
 
 	/// internal StaticMessageQueue<> object that will be wrapped
-	StaticMessageQueue<TestType, QueueSize> messageQueue_;
+	StaticMessageQueue<OperationCountingType, QueueSize> messageQueue_;
 };
 
 /// common implementation of QueueWrapper for Raw{Fifo,Message}Queue
@@ -665,7 +681,7 @@ class RawQueueWrapper : public QueueWrapper
 public:
 
 	/**
-	 * \brief Wrapper for TestType::checkCounters().
+	 * \brief Wrapper for OperationCountingType::checkCounters().
 	 *
 	 * A stub which returns true.
 	 */
@@ -681,7 +697,7 @@ public:
 	 * \brief Redirects the call to "raw" push().
 	 */
 
-	virtual int emplace(const uint8_t priority, const TestType::Value value = {}) const final override
+	virtual int emplace(const uint8_t priority, const OperationCountingType::Value value = {}) const final override
 	{
 		return push(priority, &value, sizeof(value));
 	}
@@ -698,11 +714,11 @@ public:
 	 * \brief Redirects the call to "raw" pop().
 	 */
 
-	virtual int pop(uint8_t& priority, TestType& value) const final override
+	virtual int pop(uint8_t& priority, OperationCountingType& value) const final override
 	{
-		TestType::Value rawValue;
+		OperationCountingType::Value rawValue;
 		const auto ret = pop(priority, &rawValue, sizeof(rawValue));
-		value = TestType{rawValue};
+		value = OperationCountingType{rawValue};
 		return ret;
 	}
 
@@ -716,17 +732,17 @@ public:
 	 * \brief Redirects the call to "raw" push().
 	 */
 
-	virtual int push(const uint8_t priority, const TestType& value) const final override
+	virtual int push(const uint8_t priority, const OperationCountingType& value) const final override
 	{
 		const auto rawValue = value.getValue();
 		return push(priority, &rawValue, sizeof(rawValue));
 	}
 
 	/**
-	 * \brief Redirects the call to push(..., const TestType&).
+	 * \brief Redirects the call to push(..., const OperationCountingType&).
 	 */
 
-	virtual int push(const uint8_t priority, TestType&& value) const final override
+	virtual int push(const uint8_t priority, OperationCountingType&& value) const final override
 	{
 		return push(priority, value);
 	}
@@ -737,7 +753,7 @@ public:
 	 * \brief Redirects the call to "raw" tryPush().
 	 */
 
-	virtual int tryEmplace(const uint8_t priority, const TestType::Value value = {}) const final override
+	virtual int tryEmplace(const uint8_t priority, const OperationCountingType::Value value = {}) const final override
 	{
 		return tryPush(priority, &value, sizeof(value));
 	}
@@ -747,7 +763,7 @@ public:
 	 */
 
 	virtual int tryEmplaceFor(const TickClock::duration duration, const uint8_t priority,
-			const TestType::Value value = {}) const final override
+			const OperationCountingType::Value value = {}) const final override
 	{
 		return tryPushFor(duration, priority, &value, sizeof(value));
 	}
@@ -757,7 +773,7 @@ public:
 	 */
 
 	virtual int tryEmplaceUntil(const TickClock::time_point timePoint, const uint8_t priority,
-			const TestType::Value value = {}) const final override
+			const OperationCountingType::Value value = {}) const final override
 	{
 		return tryPushUntil(timePoint, priority, &value, sizeof(value));
 	}
@@ -774,11 +790,11 @@ public:
 	 * \brief Redirects the call to "raw" tryPop().
 	 */
 
-	virtual int tryPop(uint8_t& priority, TestType& value) const final override
+	virtual int tryPop(uint8_t& priority, OperationCountingType& value) const final override
 	{
-		TestType::Value rawValue;
+		OperationCountingType::Value rawValue;
 		const auto ret = tryPop(priority, &rawValue, sizeof(rawValue));
-		value = TestType{rawValue};
+		value = OperationCountingType{rawValue};
 		return ret;
 	}
 
@@ -792,11 +808,12 @@ public:
 	 * \brief Redirects the call to "raw" tryPopFor().
 	 */
 
-	virtual int tryPopFor(const TickClock::duration duration, uint8_t& priority, TestType& value) const final override
+	virtual int tryPopFor(const TickClock::duration duration, uint8_t& priority, OperationCountingType& value) const
+			final override
 	{
-		TestType::Value rawValue;
+		OperationCountingType::Value rawValue;
 		const auto ret = tryPopFor(duration, priority, &rawValue, sizeof(rawValue));
-		value = TestType{rawValue};
+		value = OperationCountingType{rawValue};
 		return ret;
 	}
 
@@ -810,12 +827,12 @@ public:
 	 * \brief Redirects the call to "raw" tryPopUntil().
 	 */
 
-	virtual int tryPopUntil(const TickClock::time_point timePoint, uint8_t& priority, TestType& value) const final
-			override
+	virtual int tryPopUntil(const TickClock::time_point timePoint, uint8_t& priority, OperationCountingType& value)
+			const final override
 	{
-		TestType::Value rawValue;
+		OperationCountingType::Value rawValue;
 		const auto ret = tryPopUntil(timePoint, priority, &rawValue, sizeof(rawValue));
-		value = TestType{rawValue};
+		value = OperationCountingType{rawValue};
 		return ret;
 	}
 
@@ -829,17 +846,17 @@ public:
 	 * \brief Redirects the call to "raw" tryPush().
 	 */
 
-	virtual int tryPush(const uint8_t priority, const TestType& value) const final override
+	virtual int tryPush(const uint8_t priority, const OperationCountingType& value) const final override
 	{
 		const auto rawValue = value.getValue();
 		return tryPush(priority, &rawValue, sizeof(rawValue));
 	}
 
 	/**
-	 * \brief Redirects the call to tryPush(..., const TestType&).
+	 * \brief Redirects the call to tryPush(..., const OperationCountingType&).
 	 */
 
-	virtual int tryPush(const uint8_t priority, TestType&& value) const final override
+	virtual int tryPush(const uint8_t priority, OperationCountingType&& value) const final override
 	{
 		return tryPush(priority, value);
 	}
@@ -854,19 +871,19 @@ public:
 	 * \brief Redirects the call to "raw" tryPushFor().
 	 */
 
-	virtual int tryPushFor(const TickClock::duration duration, const uint8_t priority, const TestType& value) const
-			final override
+	virtual int tryPushFor(const TickClock::duration duration, const uint8_t priority,
+			const OperationCountingType& value) const final override
 	{
 		const auto rawValue = value.getValue();
 		return tryPushFor(duration, priority, &rawValue, sizeof(rawValue));
 	}
 
 	/**
-	 * \brief Redirects the call to tryPushFor(..., const TestType&).
+	 * \brief Redirects the call to tryPushFor(..., const OperationCountingType&).
 	 */
 
-	virtual int tryPushFor(const TickClock::duration duration, const uint8_t priority, TestType&& value) const final
-			override
+	virtual int tryPushFor(const TickClock::duration duration, const uint8_t priority, OperationCountingType&& value)
+			const final override
 	{
 		return tryPushFor(duration, priority, value);
 	}
@@ -882,19 +899,19 @@ public:
 	 * \brief Redirects the call to "raw" tryPushUntil().
 	 */
 
-	virtual int tryPushUntil(const TickClock::time_point timePoint, const uint8_t priority, const TestType& value) const
-			final override
+	virtual int tryPushUntil(const TickClock::time_point timePoint, const uint8_t priority,
+			const OperationCountingType& value) const final override
 	{
 		const auto rawValue = value.getValue();
 		return tryPushUntil(timePoint, priority, &rawValue, sizeof(rawValue));
 	}
 
 	/**
-	 * \brief Redirects the call to tryPushUntil(..., const TestType&).
+	 * \brief Redirects the call to tryPushUntil(..., const OperationCountingType&).
 	 */
 
-	virtual int tryPushUntil(const TickClock::time_point timePoint, const uint8_t priority, TestType&& value) const
-			final override
+	virtual int tryPushUntil(const TickClock::time_point timePoint, const uint8_t priority,
+			OperationCountingType&& value) const final override
 	{
 		return tryPushUntil(timePoint, priority, value);
 	}
@@ -923,14 +940,15 @@ public:
 	 * As RawFifoQueue doesn't support priority, \a priority1 and \a priority2 values are ignored.
 	 *
 	 * \param [in] priority1 is the priority used for *push*() or *emplace*()
-	 * \param [in] value1 is a reference to TestType object used for *push*() or *emplace*()
+	 * \param [in] value1 is a reference to OperationCountingType object used for *push*() or *emplace*()
 	 * \param [in] priority2 is the priority returned by *pop*()
-	 * \param [in] value2 is a reference to TestType object returned by *pop*()
+	 * \param [in] value2 is a reference to OperationCountingType object returned by *pop*()
 	 *
 	 * \return true if pushed and popped data matches, false otherwise
 	 */
 
-	virtual bool check(uint8_t, const TestType& value1, uint8_t, const TestType& value2) const override
+	virtual bool check(uint8_t, const OperationCountingType& value1, uint8_t, const OperationCountingType& value2) const
+			override
 	{
 		return value1 == value2;
 	}
@@ -1046,7 +1064,7 @@ public:
 private:
 
 	/// internal StaticRawFifoQueue<> object that will be wrapped
-	StaticRawFifoQueue<TestType::Value, QueueSize> rawFifoQueue_;
+	StaticRawFifoQueue<OperationCountingType::Value, QueueSize> rawFifoQueue_;
 };
 
 /// implementation of RawQueueWrapper for RawMessageQueue
@@ -1070,15 +1088,15 @@ public:
 	 * \brief Tests whether pushed and popped data match.
 	 *
 	 * \param [in] priority1 is the priority used for *push*() or *emplace*()
-	 * \param [in] value1 is a reference to TestType object used for *push*() or *emplace*()
+	 * \param [in] value1 is a reference to OperationCountingType object used for *push*() or *emplace*()
 	 * \param [in] priority2 is the priority returned by *pop*()
-	 * \param [in] value2 is a reference to TestType object returned by *pop*()
+	 * \param [in] value2 is a reference to OperationCountingType object returned by *pop*()
 	 *
 	 * \return true if pushed and popped data matches, false otherwise
 	 */
 
-	virtual bool check(const uint8_t priority1, const TestType& value1, const uint8_t priority2, const TestType& value2)
-			const override
+	virtual bool check(const uint8_t priority1, const OperationCountingType& value1, const uint8_t priority2,
+			const OperationCountingType& value2) const override
 	{
 		return priority1 == priority2 && value1 == value2;
 	}
@@ -1190,7 +1208,7 @@ public:
 private:
 
 	/// internal StaticRawMessageQueue<> object that will be wrapped
-	StaticRawMessageQueue<TestType::Value, QueueSize> rawMessageQueue_;
+	StaticRawMessageQueue<OperationCountingType::Value, QueueSize> rawMessageQueue_;
 };
 
 /// ReferenceHolder with const QueueWrapper
@@ -1234,11 +1252,11 @@ constexpr decltype(statistics::getContextSwitchCount()) phase34SoftwareTimerCont
 bool testTryPopWhenEmpty(const QueueWrapper& queueWrapper)
 {
 	// queue is empty, so tryPop(T&) should fail immediately
-	TestType::resetCounters();
+	OperationCountingType::resetCounters();
 	waitForNextTick();
 	const auto start = TickClock::now();
 	uint8_t priority {};
-	TestType testValue {};	// 1 construction
+	OperationCountingType testValue {};	// 1 construction
 	const auto ret = queueWrapper.tryPop(priority, testValue);
 	return ret == EAGAIN && TickClock::now() == start && queueWrapper.checkCounters(1, 0, 0, 0, 0, 0, 0) == true;
 }
@@ -1253,11 +1271,11 @@ bool testTryPopWhenEmpty(const QueueWrapper& queueWrapper)
 
 bool testTryPopWhenNotEmpty(const QueueWrapper& queueWrapper)
 {
-	TestType::resetCounters();
+	OperationCountingType::resetCounters();
 	waitForNextTick();
 	const auto start = TickClock::now();
 	uint8_t priority {};
-	TestType testValue {};	// 1 construction
+	OperationCountingType testValue {};	// 1 construction
 	const auto ret = queueWrapper.tryPop(priority, testValue);	// 1 swap, 1 destruction
 	return ret == 0 && start == TickClock::now() && queueWrapper.checkCounters(1, 0, 0, 1, 0, 0, 1) == true;
 }
@@ -1273,11 +1291,11 @@ bool testTryPopWhenNotEmpty(const QueueWrapper& queueWrapper)
 bool testTryPushWhenFull(const QueueWrapper& queueWrapper)
 {
 	// queue is full, so tryPush(..., const T&) should fail immediately
-	TestType::resetCounters();
+	OperationCountingType::resetCounters();
 	waitForNextTick();
 	const auto start = TickClock::now();
 	const uint8_t priority {};
-	const TestType testValue {};	// 1 construction
+	const OperationCountingType testValue {};	// 1 construction
 	const auto ret = queueWrapper.tryPush(priority, testValue);
 	return ret == EAGAIN && TickClock::now() == start && queueWrapper.checkCounters(1, 0, 0, 0, 0, 0, 0) == true;
 }
@@ -1310,9 +1328,9 @@ bool phase1()
 	{
 		auto& queueWrapper = queueWrapperHolder.get();
 		const uint8_t constPriority {};
-		const TestType constTestValue {};
+		const OperationCountingType constTestValue {};
 		uint8_t nonConstPriority {};
-		TestType nonConstTestValue {};
+		OperationCountingType nonConstTestValue {};
 
 		{
 			const auto ret = testTryPushWhenFull(queueWrapper);
@@ -1322,16 +1340,17 @@ bool phase1()
 
 		{
 			// queue is both full and empty, so tryPush(..., T&&) should fail immediately
-			TestType::resetCounters();
+			OperationCountingType::resetCounters();
 			waitForNextTick();
 			const auto start = TickClock::now();
-			const auto ret = queueWrapper.tryPush(constPriority, TestType{});	// 1 construction, 1 destruction
+			// 1 construction, 1 destruction
+			const auto ret = queueWrapper.tryPush(constPriority, OperationCountingType{});
 			if (ret != EAGAIN || start != TickClock::now() || queueWrapper.checkCounters(1, 0, 0, 1, 0, 0, 0) != true)
 				return false;
 		}
 
 		{
-			TestType::resetCounters();
+			OperationCountingType::resetCounters();
 			waitForNextTick();
 
 			const auto contextSwitchCount = statistics::getContextSwitchCount();
@@ -1347,7 +1366,7 @@ bool phase1()
 		}
 
 		{
-			TestType::resetCounters();
+			OperationCountingType::resetCounters();
 			waitForNextTick();
 
 			const auto contextSwitchCount = statistics::getContextSwitchCount();
@@ -1355,7 +1374,7 @@ bool phase1()
 			// queue is both full and empty, so tryPushFor(..., T&&) should time-out at expected time
 			const auto start = TickClock::now();
 			// 1 construction, 1 destruction
-			const auto ret = queueWrapper.tryPushFor(singleDuration, constPriority, TestType{});
+			const auto ret = queueWrapper.tryPushFor(singleDuration, constPriority, OperationCountingType{});
 			const auto realDuration = TickClock::now() - start;
 			if (ret != ETIMEDOUT || realDuration != singleDuration + decltype(singleDuration){1} ||
 					queueWrapper.checkCounters(1, 0, 0, 1, 0, 0, 0) != true ||
@@ -1364,7 +1383,7 @@ bool phase1()
 		}
 
 		{
-			TestType::resetCounters();
+			OperationCountingType::resetCounters();
 			waitForNextTick();
 
 			const auto contextSwitchCount = statistics::getContextSwitchCount();
@@ -1379,7 +1398,7 @@ bool phase1()
 		}
 
 		{
-			TestType::resetCounters();
+			OperationCountingType::resetCounters();
 			waitForNextTick();
 
 			const auto contextSwitchCount = statistics::getContextSwitchCount();
@@ -1387,7 +1406,7 @@ bool phase1()
 			// queue is both full and empty, so tryPushUntil(..., T&&) should time-out at exact expected time
 			const auto requestedTimePoint = TickClock::now() + singleDuration;
 			// 1 construction, 1 destruction
-			const auto ret = queueWrapper.tryPushUntil(requestedTimePoint, constPriority, TestType{});
+			const auto ret = queueWrapper.tryPushUntil(requestedTimePoint, constPriority, OperationCountingType{});
 			if (ret != ETIMEDOUT || requestedTimePoint != TickClock::now() ||
 					queueWrapper.checkCounters(1, 0, 0, 1, 0, 0, 0) != true ||
 					statistics::getContextSwitchCount() - contextSwitchCount != phase1TryForUntilContextSwitchCount)
@@ -1401,7 +1420,7 @@ bool phase1()
 		}
 
 		{
-			TestType::resetCounters();
+			OperationCountingType::resetCounters();
 			waitForNextTick();
 
 			const auto contextSwitchCount = statistics::getContextSwitchCount();
@@ -1417,7 +1436,7 @@ bool phase1()
 		}
 
 		{
-			TestType::resetCounters();
+			OperationCountingType::resetCounters();
 			waitForNextTick();
 
 			const auto contextSwitchCount = statistics::getContextSwitchCount();
@@ -1435,7 +1454,7 @@ bool phase1()
 
 		{
 			// queue is both full and empty, so tryEmplace(..., Args&&...) should fail immediately
-			TestType::resetCounters();
+			OperationCountingType::resetCounters();
 			waitForNextTick();
 			const auto start = TickClock::now();
 			const auto ret = queueWrapper.tryEmplace(constPriority);
@@ -1444,7 +1463,7 @@ bool phase1()
 		}
 
 		{
-			TestType::resetCounters();
+			OperationCountingType::resetCounters();
 			waitForNextTick();
 
 			const auto contextSwitchCount = statistics::getContextSwitchCount();
@@ -1460,7 +1479,7 @@ bool phase1()
 		}
 
 		{
-			TestType::resetCounters();
+			OperationCountingType::resetCounters();
 			waitForNextTick();
 
 			const auto contextSwitchCount = statistics::getContextSwitchCount();
@@ -1508,13 +1527,13 @@ bool phase2()
 	{
 		auto& queueWrapper = queueWrapperHolder.get();
 		const uint8_t constPriority {};
-		const TestType constTestValue {};
+		const OperationCountingType constTestValue {};
 		uint8_t nonConstPriority {};
-		TestType nonConstTestValue {};
+		OperationCountingType nonConstTestValue {};
 
 		{
 			// queue is not full, so tryPush(..., const T&) must succeed immediately
-			TestType::resetCounters();
+			OperationCountingType::resetCounters();
 			waitForNextTick();
 			const auto start = TickClock::now();
 			const auto ret = queueWrapper.tryPush(constPriority, constTestValue);	// 1 copy construction
@@ -1542,11 +1561,11 @@ bool phase2()
 
 		{
 			// queue is not full, so tryPush(..., T&&) must succeed immediately
-			TestType::resetCounters();
+			OperationCountingType::resetCounters();
 			waitForNextTick();
 			const auto start = TickClock::now();
 			// 1 construction, 1 move construction, 1 destruction
-			const auto ret = queueWrapper.tryPush(constPriority, TestType{});
+			const auto ret = queueWrapper.tryPush(constPriority, OperationCountingType{});
 			if (ret != 0 || start != TickClock::now() || queueWrapper.checkCounters(1, 0, 1, 1, 0, 0, 0) != true)
 				return false;
 		}
@@ -1571,7 +1590,7 @@ bool phase2()
 
 		{
 			// queue is not full, so tryPushFor(..., const T&) must succeed immediately
-			TestType::resetCounters();
+			OperationCountingType::resetCounters();
 			waitForNextTick();
 			const auto start = TickClock::now();
 			// 1 copy construction
@@ -1588,7 +1607,7 @@ bool phase2()
 
 		{
 			// queue is not empty, so tryPopFor(..., T&) must succeed immediately
-			TestType::resetCounters();
+			OperationCountingType::resetCounters();
 			waitForNextTick();
 			const auto start = TickClock::now();
 			// 1 swap, 1 destruction
@@ -1605,11 +1624,11 @@ bool phase2()
 
 		{
 			// queue is not full, so tryPushFor(..., T&&) must succeed immediately
-			TestType::resetCounters();
+			OperationCountingType::resetCounters();
 			waitForNextTick();
 			const auto start = TickClock::now();
 			// 1 construction, 1 move construction, 1 destruction
-			const auto ret = queueWrapper.tryPushFor(singleDuration, constPriority, TestType{});
+			const auto ret = queueWrapper.tryPushFor(singleDuration, constPriority, OperationCountingType{});
 			if (ret != 0 || start != TickClock::now() || queueWrapper.checkCounters(1, 0, 1, 1, 0, 0, 0) != true)
 				return false;
 		}
@@ -1634,7 +1653,7 @@ bool phase2()
 
 		{
 			// queue is not full, so tryPushUntil(..., const T&) must succeed immediately
-			TestType::resetCounters();
+			OperationCountingType::resetCounters();
 			waitForNextTick();
 			const auto start = TickClock::now();
 			// 1 copy construction
@@ -1651,7 +1670,7 @@ bool phase2()
 
 		{
 			// queue is not empty, so tryPopUntil(..., T&) must succeed immediately
-			TestType::resetCounters();
+			OperationCountingType::resetCounters();
 			waitForNextTick();
 			const auto start = TickClock::now();
 			// 1 swap, 1 destruction
@@ -1668,11 +1687,11 @@ bool phase2()
 
 		{
 			// queue is not full, so tryPushUntil(..., T&&) must succeed immediately
-			TestType::resetCounters();
+			OperationCountingType::resetCounters();
 			waitForNextTick();
 			const auto start = TickClock::now();
 			// 1 construction, 1 move construction, 1 destruction
-			const auto ret = queueWrapper.tryPushUntil(start + singleDuration, constPriority, TestType{});
+			const auto ret = queueWrapper.tryPushUntil(start + singleDuration, constPriority, OperationCountingType{});
 			if (ret != 0 || start != TickClock::now() || queueWrapper.checkCounters(1, 0, 1, 1, 0, 0, 0) != true)
 				return false;
 		}
@@ -1699,7 +1718,7 @@ bool phase2()
 
 		{
 			// queue is not full, so tryEmplace(..., Args&&...) must succeed immediately
-			TestType::resetCounters();
+			OperationCountingType::resetCounters();
 			waitForNextTick();
 			const auto start = TickClock::now();
 			const auto ret = queueWrapper.tryEmplace(constPriority);	// 1 construction
@@ -1727,7 +1746,7 @@ bool phase2()
 
 		{
 			// queue is not full, so tryEmplaceFor(..., Args&&...) must succeed immediately
-			TestType::resetCounters();
+			OperationCountingType::resetCounters();
 			waitForNextTick();
 			const auto start = TickClock::now();
 			const auto ret = queueWrapper.tryEmplaceFor(singleDuration, constPriority);	// 1 construction
@@ -1755,7 +1774,7 @@ bool phase2()
 
 		{
 			// queue is not full, so tryEmplaceUntil(..., Args&&...) must succeed immediately
-			TestType::resetCounters();
+			OperationCountingType::resetCounters();
 			waitForNextTick();
 			const auto start = TickClock::now();
 			const auto ret = queueWrapper.tryEmplaceUntil(start + singleDuration, constPriority);	// 1 construction
@@ -1816,7 +1835,7 @@ bool phase3()
 	{
 		auto& queueWrapper = queueWrapperHolder.get();
 		uint8_t sharedMagicPriority {};
-		TestType sharedMagicValue {};
+		OperationCountingType sharedMagicValue {};
 		auto softwareTimer = makeSoftwareTimer(
 				[&queueWrapper, &sharedMagicPriority, &sharedMagicValue]()
 				{
@@ -1824,18 +1843,18 @@ bool phase3()
 				});
 
 		{
-			TestType::resetCounters();
+			OperationCountingType::resetCounters();
 			waitForNextTick();
 
 			const auto contextSwitchCount = statistics::getContextSwitchCount();
 			const auto wakeUpTimePoint = TickClock::now() + longDuration;
 			sharedMagicPriority = 0x93;
-			sharedMagicValue = TestType{0x2f5be1a4};	// 1 construction, 1 move assignment, 1 destruction
+			sharedMagicValue = OperationCountingType{0x2f5be1a4};	// 1 construction, 1 move assignment, 1 destruction
 			softwareTimer.start(wakeUpTimePoint);	// in timer: 1 copy construction
 
 			// queue is currently empty, but pop() should succeed at expected time
 			uint8_t priority {};
-			TestType testValue {};	// 1 construction
+			OperationCountingType testValue {};	// 1 construction
 			const auto ret = queueWrapper.pop(priority, testValue);	// 1 swap, 1 destruction
 			const auto wokenUpTimePoint = TickClock::now();
 			if (ret != 0 || wakeUpTimePoint != wokenUpTimePoint ||
@@ -1852,18 +1871,18 @@ bool phase3()
 		}
 
 		{
-			TestType::resetCounters();
+			OperationCountingType::resetCounters();
 			waitForNextTick();
 
 			const auto contextSwitchCount = statistics::getContextSwitchCount();
 			const auto wakeUpTimePoint = TickClock::now() + longDuration;
 			sharedMagicPriority = 0x01;
-			sharedMagicValue = TestType{0xc1fe105a};	// 1 construction, 1 move assignment, 1 destruction
+			sharedMagicValue = OperationCountingType{0xc1fe105a};	// 1 construction, 1 move assignment, 1 destruction
 			softwareTimer.start(wakeUpTimePoint);	// in timer: 1 copy construction
 
 			// queue is currently empty, but tryPopFor() should succeed at expected time
 			uint8_t priority {};
-			TestType testValue {};	// 1 construction
+			OperationCountingType testValue {};	// 1 construction
 			// 1 swap, 1 destruction
 			const auto ret = queueWrapper.tryPopFor(wakeUpTimePoint - TickClock::now() + longDuration, priority,
 					testValue);
@@ -1882,18 +1901,18 @@ bool phase3()
 		}
 
 		{
-			TestType::resetCounters();
+			OperationCountingType::resetCounters();
 			waitForNextTick();
 
 			const auto contextSwitchCount = statistics::getContextSwitchCount();
 			const auto wakeUpTimePoint = TickClock::now() + longDuration;
 			sharedMagicPriority = 0x48;
-			sharedMagicValue = TestType{0xda0e4e30};	// 1 construction, 1 move assignment, 1 destruction
+			sharedMagicValue = OperationCountingType{0xda0e4e30};	// 1 construction, 1 move assignment, 1 destruction
 			softwareTimer.start(wakeUpTimePoint);	// in timer: 1 copy construction
 
 			// queue is currently empty, but tryPopUntil() should succeed at expected time
 			uint8_t priority {};
-			TestType testValue {};	// 1 construction
+			OperationCountingType testValue {};	// 1 construction
 			// 1 swap, 1 destruction
 			const auto ret = queueWrapper.tryPopUntil(wakeUpTimePoint + longDuration, priority, testValue);
 			const auto wokenUpTimePoint = TickClock::now();
@@ -1944,7 +1963,7 @@ bool phase4()
 	{
 		auto& queueWrapper = queueWrapperHolder.get();
 		uint8_t receivedPriority {};
-		TestType receivedTestValue {};
+		OperationCountingType receivedTestValue {};
 		auto softwareTimer = makeSoftwareTimer(
 				[&queueWrapper, &receivedPriority, &receivedTestValue]()
 				{
@@ -1952,11 +1971,11 @@ bool phase4()
 				});
 
 		uint8_t currentMagicPriority {0xc9};
-		TestType currentMagicValue {0xa810b166};
+		OperationCountingType currentMagicValue {0xa810b166};
 
 		{
 			// queue is not full, so push(..., const T&) must succeed immediately
-			TestType::resetCounters();
+			OperationCountingType::resetCounters();
 			waitForNextTick();
 			const auto start = TickClock::now();
 			const auto ret = queueWrapper.tryPush(currentMagicPriority, currentMagicValue);	// 1 copy construction
@@ -1965,7 +1984,7 @@ bool phase4()
 		}
 
 		{
-			TestType::resetCounters();
+			OperationCountingType::resetCounters();
 			waitForNextTick();
 
 			const auto contextSwitchCount = statistics::getContextSwitchCount();
@@ -1976,7 +1995,7 @@ bool phase4()
 			const decltype(currentMagicPriority) expectedPriority {currentMagicPriority};
 			const decltype(currentMagicValue) expectedTestValue {currentMagicValue};	// 1 copy construction
 			currentMagicPriority = 0x96;
-			currentMagicValue = TestType{0xc9e7e479};	// 1 construction, 1 move assignment, 1 destruction
+			currentMagicValue = OperationCountingType{0xc9e7e479};	// 1 construction, 1 move assignment, 1 destruction
 			const auto ret = queueWrapper.push(currentMagicPriority, currentMagicValue);	// 1 copy construction
 			const auto wokenUpTimePoint = TickClock::now();
 			if (ret != 0 || wakeUpTimePoint != wokenUpTimePoint ||
@@ -1987,7 +2006,7 @@ bool phase4()
 		}
 
 		{
-			TestType::resetCounters();
+			OperationCountingType::resetCounters();
 			waitForNextTick();
 
 			const auto contextSwitchCount = statistics::getContextSwitchCount();
@@ -1998,9 +2017,9 @@ bool phase4()
 			const decltype(currentMagicPriority) expectedPriority {currentMagicPriority};
 			const decltype(currentMagicValue) expectedTestValue {currentMagicValue};	// 1 copy construction
 			currentMagicPriority = 0x06;
-			currentMagicValue = TestType{0x51607941};	// 1 construction, 1 move assignment, 1 destruction
+			currentMagicValue = OperationCountingType{0x51607941};	// 1 construction, 1 move assignment, 1 destruction
 			// 1 copy construction, 1 move construction, 1 destruction
-			const auto ret = queueWrapper.push(currentMagicPriority, TestType{currentMagicValue});
+			const auto ret = queueWrapper.push(currentMagicPriority, OperationCountingType{currentMagicValue});
 			const auto wokenUpTimePoint = TickClock::now();
 			if (ret != 0 || wakeUpTimePoint != wokenUpTimePoint ||
 					queueWrapper.check(expectedPriority, expectedTestValue, receivedPriority, receivedTestValue) ==
@@ -2010,7 +2029,7 @@ bool phase4()
 		}
 
 		{
-			TestType::resetCounters();
+			OperationCountingType::resetCounters();
 			waitForNextTick();
 
 			const auto contextSwitchCount = statistics::getContextSwitchCount();
@@ -2021,7 +2040,7 @@ bool phase4()
 			const decltype(currentMagicPriority) expectedPriority {currentMagicPriority};
 			const decltype(currentMagicValue) expectedTestValue {currentMagicValue};	// 1 copy construction
 			currentMagicPriority = 0xcc;
-			currentMagicValue = TestType{0xb9f4b42e};	// 1 construction, 1 move assignment, 1 destruction
+			currentMagicValue = OperationCountingType{0xb9f4b42e};	// 1 construction, 1 move assignment, 1 destruction
 			const auto ret = queueWrapper.tryPushFor(wakeUpTimePoint - TickClock::now() + longDuration,
 					currentMagicPriority, currentMagicValue);	// 1 copy construction
 			const auto wokenUpTimePoint = TickClock::now();
@@ -2033,7 +2052,7 @@ bool phase4()
 		}
 
 		{
-			TestType::resetCounters();
+			OperationCountingType::resetCounters();
 			waitForNextTick();
 
 			const auto contextSwitchCount = statistics::getContextSwitchCount();
@@ -2044,10 +2063,10 @@ bool phase4()
 			const decltype(currentMagicPriority) expectedPriority {currentMagicPriority};
 			const decltype(currentMagicValue) expectedTestValue {currentMagicValue};	// 1 copy construction
 			currentMagicPriority = 0xf6;
-			currentMagicValue = TestType{0xbb0bfe00};	// 1 construction, 1 move assignment, 1 destruction
+			currentMagicValue = OperationCountingType{0xbb0bfe00};	// 1 construction, 1 move assignment, 1 destruction
 			// 1 copy construction, 1 move construction, 1 destruction
 			const auto ret = queueWrapper.tryPushFor(wakeUpTimePoint - TickClock::now() + longDuration,
-					currentMagicPriority, TestType{currentMagicValue});
+					currentMagicPriority, OperationCountingType{currentMagicValue});
 			const auto wokenUpTimePoint = TickClock::now();
 			if (ret != 0 || wakeUpTimePoint != wokenUpTimePoint ||
 					queueWrapper.check(expectedPriority, expectedTestValue, receivedPriority, receivedTestValue) ==
@@ -2057,7 +2076,7 @@ bool phase4()
 		}
 
 		{
-			TestType::resetCounters();
+			OperationCountingType::resetCounters();
 			waitForNextTick();
 
 			const auto contextSwitchCount = statistics::getContextSwitchCount();
@@ -2068,7 +2087,7 @@ bool phase4()
 			const decltype(currentMagicPriority) expectedPriority {currentMagicPriority};
 			const decltype(currentMagicValue) expectedTestValue {currentMagicValue};	// 1 copy construction
 			currentMagicPriority = 0x2e;
-			currentMagicValue = TestType{0x25eb4357};	// 1 construction, 1 move assignment, 1 destruction
+			currentMagicValue = OperationCountingType{0x25eb4357};	// 1 construction, 1 move assignment, 1 destruction
 			const auto ret = queueWrapper.tryPushUntil(wakeUpTimePoint + longDuration, currentMagicPriority,
 					currentMagicValue);	// 1 copy construction
 			const auto wokenUpTimePoint = TickClock::now();
@@ -2080,7 +2099,7 @@ bool phase4()
 		}
 
 		{
-			TestType::resetCounters();
+			OperationCountingType::resetCounters();
 			waitForNextTick();
 
 			const auto contextSwitchCount = statistics::getContextSwitchCount();
@@ -2091,9 +2110,10 @@ bool phase4()
 			const decltype(currentMagicPriority) expectedPriority {currentMagicPriority};
 			const decltype(currentMagicValue) expectedTestValue {currentMagicValue};	// 1 copy construction
 			currentMagicPriority = 0xb6;
-			currentMagicValue = TestType{0x625652d7};	// 1 construction, 1 move assignment, 1 destruction
+			currentMagicValue = OperationCountingType{0x625652d7};	// 1 construction, 1 move assignment, 1 destruction
+			// 1 copy construction, 1 move construction, 1 destruction
 			const auto ret = queueWrapper.tryPushUntil(wakeUpTimePoint + longDuration, currentMagicPriority,
-					TestType{currentMagicValue});	// 1 copy construction, 1 move construction, 1 destruction
+					OperationCountingType{currentMagicValue});
 			const auto wokenUpTimePoint = TickClock::now();
 			if (ret != 0 || wakeUpTimePoint != wokenUpTimePoint ||
 					queueWrapper.check(expectedPriority, expectedTestValue, receivedPriority, receivedTestValue) ==
@@ -2105,7 +2125,7 @@ bool phase4()
 #if DISTORTOS_QUEUE_EMPLACE_SUPPORTED == 1 || DOXYGEN == 1
 
 		{
-			TestType::resetCounters();
+			OperationCountingType::resetCounters();
 			waitForNextTick();
 
 			const auto contextSwitchCount = statistics::getContextSwitchCount();
@@ -2116,8 +2136,8 @@ bool phase4()
 			const decltype(currentMagicPriority) expectedPriority {currentMagicPriority};
 			const decltype(currentMagicValue) expectedTestValue {currentMagicValue};	// 1 copy construction
 			currentMagicPriority = 0xe7;
-			const TestType::Value value = 0x8de61877;
-			currentMagicValue = TestType{value};	// 1 construction, 1 move assignment, 1 destruction
+			const OperationCountingType::Value value = 0x8de61877;
+			currentMagicValue = OperationCountingType{value};	// 1 construction, 1 move assignment, 1 destruction
 			const auto ret = queueWrapper.emplace(currentMagicPriority, value);	// 1 construction
 			const auto wokenUpTimePoint = TickClock::now();
 			if (ret != 0 || wakeUpTimePoint != wokenUpTimePoint ||
@@ -2128,7 +2148,7 @@ bool phase4()
 		}
 
 		{
-			TestType::resetCounters();
+			OperationCountingType::resetCounters();
 			waitForNextTick();
 
 			const auto contextSwitchCount = statistics::getContextSwitchCount();
@@ -2139,8 +2159,8 @@ bool phase4()
 			const decltype(currentMagicPriority) expectedPriority {currentMagicPriority};
 			const decltype(currentMagicValue) expectedTestValue {currentMagicValue};	// 1 copy construction
 			currentMagicPriority = 0x98;
-			const TestType::Value value = 0x2b2cd349;
-			currentMagicValue = TestType{value};	// 1 construction, 1 move assignment, 1 destruction
+			const OperationCountingType::Value value = 0x2b2cd349;
+			currentMagicValue = OperationCountingType{value};	// 1 construction, 1 move assignment, 1 destruction
 			const auto ret = queueWrapper.tryEmplaceFor(wakeUpTimePoint - TickClock::now() + longDuration,
 					currentMagicPriority, value);	// 1 construction
 			const auto wokenUpTimePoint = TickClock::now();
@@ -2152,7 +2172,7 @@ bool phase4()
 		}
 
 		{
-			TestType::resetCounters();
+			OperationCountingType::resetCounters();
 			waitForNextTick();
 
 			const auto contextSwitchCount = statistics::getContextSwitchCount();
@@ -2163,8 +2183,8 @@ bool phase4()
 			const decltype(currentMagicPriority) expectedPriority {currentMagicPriority};
 			const decltype(currentMagicValue) expectedTestValue {currentMagicValue};	// 1 copy construction
 			currentMagicPriority = 0xa5;
-			const TestType::Value value = 0x7df8502a;
-			currentMagicValue = TestType{value};	// 1 construction, 1 move assignment, 1 destruction
+			const OperationCountingType::Value value = 0x7df8502a;
+			currentMagicValue = OperationCountingType{value};	// 1 construction, 1 move assignment, 1 destruction
 			// 1 construction
 			const auto ret = queueWrapper.tryEmplaceUntil(wakeUpTimePoint + longDuration, currentMagicPriority, value);
 			const auto wokenUpTimePoint = TickClock::now();
@@ -2207,9 +2227,9 @@ bool phase5()
 	{
 		auto& rawQueueWrapper = rawQueueWrapperHolder.get();
 		const uint8_t constPriority {};
-		const TestType constTestValue {};
+		const OperationCountingType constTestValue {};
 		uint8_t nonConstPriority {};
-		TestType nonConstTestValue {};
+		OperationCountingType nonConstTestValue {};
 
 		{
 			// invalid size is given, so push(..., const void*, size_t) should fail immediately
