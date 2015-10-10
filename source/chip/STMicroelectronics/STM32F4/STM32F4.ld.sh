@@ -25,7 +25,7 @@ if [ ! -f $1 ]; then
 fi
 
 # source the configuration file provided as argument to read all the configuration variables
-source $1
+. $1
 
 if [ $CONFIG_CHIP_STM32F4_FLASH_SIZE -eq 0 ] || [ $CONFIG_CHIP_STM32F4_SRAM1_SIZE -eq 0 ]; then
 	echo "CONFIG_CHIP_STM32F4_FLASH_SIZE and CONFIG_CHIP_STM32F4_SRAM1_SIZE cannot be 0!" >&2
