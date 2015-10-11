@@ -8,7 +8,7 @@
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #
-# date: 2015-10-09
+# date: 2015-10-11
 #
 
 set -e
@@ -25,7 +25,7 @@ if [ ! -f $1 ]; then
 fi
 
 # source the configuration file provided as argument to read all the configuration variables
-source $1
+. $1
 
 if [ $CONFIG_CHIP_STM32F4_FLASH_SIZE -eq 0 ] || [ $CONFIG_CHIP_STM32F4_SRAM1_SIZE -eq 0 ]; then
 	echo "CONFIG_CHIP_STM32F4_FLASH_SIZE and CONFIG_CHIP_STM32F4_SRAM1_SIZE cannot be 0!" >&2
