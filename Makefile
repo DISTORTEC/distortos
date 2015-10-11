@@ -6,26 +6,54 @@
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #
-# date: 2015-10-08
+# date: 2015-10-11
 #
+
+#-----------------------------------------------------------------------------------------------------------------------
+# make control/macros
+#-----------------------------------------------------------------------------------------------------------------------
+# defaults
+mk_do_inc := 1
+
+mk_simple_targets := clean configure distclean menuconfig help
+
+# This macro checks, if the make target list MAKECMDGOALS contains the given simple target $1. If so, it
+# executes mk_set_simple_target to set/clear some variables.
+#
+# parmeter 1 .. simple target to check
+mk_check_simple_target = $(if $(findstring $(filter $(1),$(MAKECMDGOALS)),$(1)),$(call mk_set_simple_target,$(1)))
+mk_set_simple_target = $(eval mk_do_inc := 0) \
+                       $(eval mk_tgt_$(1) := 1)
+
+# check all simple targets if present
+$(eval $(foreach tgt,$(mk_simple_targets),$(call mk_check_simple_target,$(tgt))))
+
+# remove all "
+unquote_d = $(subst ",,$(1))
+# " keep this line to improve the syntax highlighting of some editors
 
 #-----------------------------------------------------------------------------------------------------------------------
 # load configuration variables from distortosConfiguration.mk file selected by user
 #-----------------------------------------------------------------------------------------------------------------------
+ifeq ($(mk_do_inc),1)
+   ifeq ($(wildcard selectedConfiguration.mk),)
+      $(error Please run 'configure.sh' or 'make configure' first)
+   endif
 
-# file with $(CONFIG_SELECTED_CONFIGURATION) variable
-include selectedConfiguration.mk
+   # file with $(CONFIG_SELECTED_CONFIGURATION) variable
+   include selectedConfiguration.mk
 
-# path to distortosConfiguration.mk file selected by $(CONFIG_SELECTED_CONFIGURATION) variable
-DISTORTOS_CONFIGURATION_MK = ./$(subst ",,$(CONFIG_SELECTED_CONFIGURATION))
+   # path to distortosConfiguration.mk file selected by $(CONFIG_SELECTED_CONFIGURATION) variable
+   DISTORTOS_CONFIGURATION_MK = ./$(call unquote_d,$(CONFIG_SELECTED_CONFIGURATION))
 
-include $(DISTORTOS_CONFIGURATION_MK)
+   include $(DISTORTOS_CONFIGURATION_MK)
+endif
 
 #-----------------------------------------------------------------------------------------------------------------------
 # toolchain configuration
 #-----------------------------------------------------------------------------------------------------------------------
 
-CONFIG_TOOLCHAIN_PREFIX := $(subst ",,$(CONFIG_TOOLCHAIN_PREFIX))
+CONFIG_TOOLCHAIN_PREFIX := $(call unquote_d,$(CONFIG_TOOLCHAIN_PREFIX))
 
 AS = $(CONFIG_TOOLCHAIN_PREFIX)gcc
 CC = $(CONFIG_TOOLCHAIN_PREFIX)gcc
@@ -76,8 +104,8 @@ LDFLAGS =
 # compilation flags
 #-----------------------------------------------------------------------------------------------------------------------
 
-CONFIG_ARCHITECTURE_FLAGS := $(subst ",,$(CONFIG_ARCHITECTURE_FLAGS))
-CONFIG_BUILD_OPTIMIZATION := $(subst ",,$(CONFIG_BUILD_OPTIMIZATION))
+CONFIG_ARCHITECTURE_FLAGS := $(call unquote_d,$(CONFIG_ARCHITECTURE_FLAGS))
+CONFIG_BUILD_OPTIMIZATION := $(call unquote_d,$(CONFIG_BUILD_OPTIMIZATION))
 
 ASFLAGS += $(CONFIG_ARCHITECTURE_FLAGS)
 ASFLAGS += $(DBGFLAGS)
@@ -98,7 +126,7 @@ CXXFLAGS += $(DBGFLAGS)
 CXXFLAGS += -ffunction-sections -fdata-sections -fno-rtti -fno-exceptions -MD -MP
 
 # path to linker script (generated automatically)
-LDSCRIPT = $(OUTPUT)$(subst ",,$(CONFIG_CHIP)).ld
+LDSCRIPT = $(OUTPUT)$(call unquote_d,$(CONFIG_CHIP)).ld
 
 LDFLAGS += $(CONFIG_ARCHITECTURE_FLAGS)
 LDFLAGS += -g -Wl,-Map=$(@:.elf=.map),--cref,--gc-sections
@@ -111,10 +139,10 @@ LDFLAGS += -g -Wl,-Map=$(@:.elf=.map),--cref,--gc-sections
 STANDARD_INCLUDES += -I$(OUTPUT)include -Iinclude
 
 # architecture includes
-ARCHITECTURE_INCLUDES += $(patsubst %,-I%,$(subst ",,$(CONFIG_ARCHITECTURE_INCLUDES)))
+ARCHITECTURE_INCLUDES += $(patsubst %,-I%,$(call unquote_d,$(CONFIG_ARCHITECTURE_INCLUDES)))
 
 # chip includes
-CHIP_INCLUDES += $(patsubst %,-I%,$(subst ",,$(CONFIG_CHIP_INCLUDES)))
+CHIP_INCLUDES += $(patsubst %,-I%,$(call unquote_d,$(CONFIG_CHIP_INCLUDES)))
 
 #-----------------------------------------------------------------------------------------------------------------------
 # build macros
@@ -155,8 +183,10 @@ endef
 .PHONY: all
 all: targets
 
-# trigger parsing of all Rules.mk files
-include Rules.mk
+ifeq ($(mk_do_inc),1)
+   # trigger parsing of all Rules.mk files
+   include Rules.mk
+endif
 
 # generated files depend (order-only) on their directories
 $(foreach file,$(GENERATED),$(eval $(call DIRECTORY_DEPENDENCY,$(file))))
@@ -209,3 +239,27 @@ size:
 .PHONY: clean
 clean:
 	$(RM) -r $(OUTPUT)
+
+.PHONY: configure
+configure:
+	@./configure.sh $(CFG_PATH)
+
+.PHONY: distclean
+distclean:
+	@./scripts/distclean.sh
+
+.PHONY: menuconfig
+menuconfig:
+	@kconfig-mconf Kconfig
+
+.PHONY: help
+help:
+	@echo ''
+	@echo 'Available special targets:'
+	@echo '  menuconfig .. to configure distortos'
+	@echo '  configure  .. to execute configure.sh; use "make configure CFG_PATH=<path>"'
+	@echo '                <path> .. the path where distortosConfiguration.mk can'
+	@echo '                          be found; default "./"'
+	@echo '  distclean  .. remove all generated files and configuration files'
+	@echo '  clean      .. remove all generated files'
+	@echo ''
