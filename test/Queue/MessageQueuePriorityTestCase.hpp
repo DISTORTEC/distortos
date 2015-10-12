@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-10-06
+ * \date 2015-10-12
  */
 
 #ifndef TEST_QUEUE_MESSAGEQUEUEPRIORITYTESTCASE_HPP_
@@ -23,7 +23,7 @@ namespace test
 {
 
 /**
- * \brief Tests priority scheduling of message queue.
+ * \brief Tests priority scheduling of message queue (raw and non-raw).
  *
  * Starts 10 small threads (in various order) with varying priorities which wait either for a message from the message
  * queue or for free space in the message queue, asserting that they start and finish in the expected order, using exact
