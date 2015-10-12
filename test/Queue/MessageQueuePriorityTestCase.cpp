@@ -22,7 +22,7 @@
 #include "distortos/statistics.hpp"
 #include "distortos/ThisThread.hpp"
 
-#include "distortos/estd/ReferenceHolder.hpp"
+#include "estd/ReferenceHolder.hpp"
 
 namespace distortos
 {

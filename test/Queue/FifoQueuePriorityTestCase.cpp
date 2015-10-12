@@ -21,7 +21,7 @@
 #include "distortos/StaticThread.hpp"
 #include "distortos/statistics.hpp"
 
-#include "distortos/estd/ReferenceHolder.hpp"
+#include "estd/ReferenceHolder.hpp"
 
 namespace distortos
 {
