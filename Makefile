@@ -142,17 +142,17 @@ endef
 
 define PARSE_SUBDIRECTORY
 ifdef d
-dir := $$(d)/$(1)
+NEXT_DIRECTORY := $$(d)/$(1)
 else
-dir := $(1)
+NEXT_DIRECTORY := $(1)
 endif
-sp := $$(sp).x
-dirstack_$$(sp) := $$(d)
-d := $$(dir)
+STACK_POINTER := $$(STACK_POINTER).x
+DIRECTORY_STACK_$$(STACK_POINTER) := $$(d)
+d := $$(NEXT_DIRECTORY)
 SUBDIRECTORIES :=
-include $$(dir)/Rules.mk
-d := $$(dirstack_$$(sp))
-sp := $$(basename $$(sp))
+include $$(d)/Rules.mk
+d := $$(DIRECTORY_STACK_$$(STACK_POINTER))
+STACK_POINTER := $$(basename $$(STACK_POINTER))
 endef
 
 define PARSE_SUBDIRECTORIES
