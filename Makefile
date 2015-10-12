@@ -197,7 +197,7 @@ $(OUTPUT)%.o: %.cpp
 	$(Q)$(CXX) $(CXXFLAGS) $(CXXFLAGS_$(<)) -c $< -o $@
 
 $(OUTPUT)%.a:
-	$(Q)rm -f $@
+	$(Q)$(RM) $@
 	$(call PRETTY_PRINT," AR     " $@)
 	$(Q)$(AR) rcs $@ $(filter %.o,$(^))
 
