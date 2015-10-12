@@ -6,7 +6,7 @@
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #
-# date: 2015-10-09
+# date: 2015-10-12
 #
 
 #-----------------------------------------------------------------------------------------------------------------------
@@ -16,7 +16,8 @@
 STM32F4_LD_SH := $(d)/STM32F4.ld.sh
 
 $(LDSCRIPT): $(DISTORTOS_CONFIGURATION_MK)
-	./$(STM32F4_LD_SH) "$(dir $<)$(notdir $<)" > "$@"
+	@echo " SH     " $(STM32F4_LD_SH)
+	$(Q)./$(STM32F4_LD_SH) "$(dir $<)$(notdir $<)" > "$@"
 
 #-----------------------------------------------------------------------------------------------------------------------
 # generated linker script depends on this Rules.mk, the script that generates it and the selectedConfiguration.mk file

@@ -6,7 +6,7 @@
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #
-# date: 2015-10-08
+# date: 2015-10-12
 #
 
 #-----------------------------------------------------------------------------------------------------------------------
@@ -72,6 +72,9 @@ DBGFLAGS = -g -ggdb3
 # linker flags
 LDFLAGS =
 
+# build mode (0 - non-verbose, 1 - verbose)
+VERBOSE ?= 0
+
 #-----------------------------------------------------------------------------------------------------------------------
 # compilation flags
 #-----------------------------------------------------------------------------------------------------------------------
@@ -120,13 +123,19 @@ CHIP_INCLUDES += $(patsubst %,-I%,$(subst ",,$(CONFIG_CHIP_INCLUDES)))
 # build macros
 #-----------------------------------------------------------------------------------------------------------------------
 
+ifeq ($(VERBOSE),0)
+Q = @
+else
+Q =
+endif
+
 define DIRECTORY_DEPENDENCY
 $(1): | $(dir $(1))
 endef
 
 define MAKE_DIRECTORY
 $(1):
-	mkdir -p $(1)
+	$(Q)mkdir -p $(1)
 endef
 
 define PARSE_SUBDIRECTORY
@@ -174,37 +183,46 @@ $(OBJECTS): $(OUTPUT)include/distortos/distortosConfiguration.h
 $(GENERATED): Makefile
 
 $(OUTPUT)%.o: %.S
-	$(AS) $(ASFLAGS) $(ASFLAGS_$(<)) -c $< -o $@
+	@echo " AS     " $< 
+	$(Q)$(AS) $(ASFLAGS) $(ASFLAGS_$(<)) -c $< -o $@
 
 $(OUTPUT)%.o: %.c
-	$(CC) $(CFLAGS) $(CFLAGS_$(<)) -c $< -o $@
+	@echo " CC     " $<
+	$(Q)$(CC) $(CFLAGS) $(CFLAGS_$(<)) -c $< -o $@
 
 $(OUTPUT)%.o: %.cpp
-	$(CXX) $(CXXFLAGS) $(CXXFLAGS_$(<)) -c $< -o $@
+	@echo " CXX    " $<
+	$(Q)$(CXX) $(CXXFLAGS) $(CXXFLAGS_$(<)) -c $< -o $@
 
 $(OUTPUT)%.a:
-	rm -f $@
-	$(AR) rcs $@ $(filter %.o,$(^))
+	$(Q)rm -f $@
+	@echo " AR     " $@
+	$(Q)$(AR) rcs $@ $(filter %.o,$(^))
 
 $(OUTPUT)%.elf:
+	@echo " LD     " $@
 	$(eval ARCHIVES_$@ := -Wl,--whole-archive $(addprefix -l:,$(filter %.a,$(^))) -Wl,--no-whole-archive)
-	$(LD) $(LDFLAGS) -T$(filter %.ld,$(^)) $(filter %.o,$(^)) $(ARCHIVES_$(@)) -o $@
+	$(Q)$(LD) $(LDFLAGS) -T$(filter %.ld,$(^)) $(filter %.o,$(^)) $(ARCHIVES_$(@)) -o $@
 
 $(OUTPUT)%.hex:
-	$(OBJCOPY) -O ihex $(filter %.elf,$(^)) $@
+	@echo " HEX    " $@
+	$(Q)$(OBJCOPY) -O ihex $(filter %.elf,$(^)) $@
 
 $(OUTPUT)%.bin:
-	$(OBJCOPY) -O binary $(filter %.elf,$(^)) $@
+	@echo " BIN    " $@
+	$(Q)$(OBJCOPY) -O binary $(filter %.elf,$(^)) $@
 
 $(OUTPUT)%.dmp:
-	$(OBJDUMP) -x --syms --demangle $(filter %.elf,$(^)) > $@
+	@echo " DMP    " $@
+	$(Q)$(OBJDUMP) -x --syms --demangle $(filter %.elf,$(^)) > $@
 
 $(OUTPUT)%.lss:
-	$(OBJDUMP) --demangle -S $(filter %.elf,$(^)) > $@
+	@echo " LSS    " $@
+	$(Q)$(OBJDUMP) --demangle -S $(filter %.elf,$(^)) > $@
 
 .PHONY: size
 size:
-	$(SIZE) -B $(filter %.elf,$(^))
+	$(Q)$(SIZE) -B $(filter %.elf,$(^))
 
 .PHONY: clean
 clean:
