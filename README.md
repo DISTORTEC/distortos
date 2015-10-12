@@ -91,7 +91,8 @@ select the same configuration. You can execute `configure.sh` with no arguments 
 `distortosConfiguration.mk` file is in the main folder of the project - in that case `.` is used as the path.
 
 To build just execute `make` (if using *GNU Make*) or `tup` (if using *tup*) command in the main directory of the
-project.
+project. If you need to see verbose compilation log, execute `make VERBOSE=1` (if using *GNU Make*) or
+`tup --verbose` (if using *tup*).
 
 To remove all generated files (*tup* database, build outputs, *doxygen* outputs and `selectedConfiguration.mk` file)
 you can run `./scripts/distclean.sh` (or `sh scripts/distclean.sh` on *Windows*).
