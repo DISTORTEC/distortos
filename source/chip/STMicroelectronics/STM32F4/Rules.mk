@@ -16,7 +16,8 @@
 STM32F4_LD_SH := $(d)/STM32F4.ld.sh
 
 $(LDSCRIPT): $(DISTORTOS_CONFIGURATION_MK)
-	./$(STM32F4_LD_SH) "$(dir $<)$(notdir $<)" > "$@"
+	@echo " SH     " $(STM32F4_LD_SH)
+	$(Q)./$(STM32F4_LD_SH) "$(dir $<)$(notdir $<)" > "$@"
 
 #-----------------------------------------------------------------------------------------------------------------------
 # generated linker script depends on this Rules.mk, the script that generates it and the selectedConfiguration.mk file
