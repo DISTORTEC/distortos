@@ -15,7 +15,6 @@
 
 #include "QueueOperationsTestCase.hpp"
 #include "FifoQueuePriorityTestCase.hpp"
-#include "RawFifoQueuePriorityTestCase.hpp"
 #include "MessageQueuePriorityTestCase.hpp"
 
 #include "TestCaseGroup.hpp"
@@ -39,9 +38,6 @@ const QueueOperationsTestCase operationsTestCase;
 /// FifoQueuePriorityTestCase instance
 const FifoQueuePriorityTestCase fifoQueuePriorityTestCase;
 
-/// RawFifoQueuePriorityTestCase instance
-const RawFifoQueuePriorityTestCase rawFifoQueuePriorityTestCase;
-
 /// MessageQueuePriorityTestCase instance
 const MessageQueuePriorityTestCase messageQueuePriorityTestCase;
 
@@ -50,7 +46,6 @@ const TestCaseGroup::Range::value_type queueTestCases_[]
 {
 		TestCaseGroup::Range::value_type{operationsTestCase},
 		TestCaseGroup::Range::value_type{fifoQueuePriorityTestCase},
-		TestCaseGroup::Range::value_type{rawFifoQueuePriorityTestCase},
 		TestCaseGroup::Range::value_type{messageQueuePriorityTestCase},
 };
 
