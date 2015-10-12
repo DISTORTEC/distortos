@@ -125,8 +125,10 @@ CHIP_INCLUDES += $(patsubst %,-I%,$(subst ",,$(CONFIG_CHIP_INCLUDES)))
 
 ifeq ($(VERBOSE),0)
 Q = @
+PRETTY_PRINT = @echo $(1)
 else
 Q =
+PRETTY_PRINT =
 endif
 
 define DIRECTORY_DEPENDENCY
@@ -183,41 +185,41 @@ $(OBJECTS): $(OUTPUT)include/distortos/distortosConfiguration.h
 $(GENERATED): Makefile
 
 $(OUTPUT)%.o: %.S
-	@echo " AS     " $< 
+	$(call PRETTY_PRINT," AS     " $<) 
 	$(Q)$(AS) $(ASFLAGS) $(ASFLAGS_$(<)) -c $< -o $@
 
 $(OUTPUT)%.o: %.c
-	@echo " CC     " $<
+	$(call PRETTY_PRINT," CC     " $<)
 	$(Q)$(CC) $(CFLAGS) $(CFLAGS_$(<)) -c $< -o $@
 
 $(OUTPUT)%.o: %.cpp
-	@echo " CXX    " $<
+	$(call PRETTY_PRINT," CXX    " $<)
 	$(Q)$(CXX) $(CXXFLAGS) $(CXXFLAGS_$(<)) -c $< -o $@
 
 $(OUTPUT)%.a:
 	$(Q)rm -f $@
-	@echo " AR     " $@
+	$(call PRETTY_PRINT," AR     " $@)
 	$(Q)$(AR) rcs $@ $(filter %.o,$(^))
 
 $(OUTPUT)%.elf:
-	@echo " LD     " $@
+	$(call PRETTY_PRINT," LD     " $@)
 	$(eval ARCHIVES_$@ := -Wl,--whole-archive $(addprefix -l:,$(filter %.a,$(^))) -Wl,--no-whole-archive)
 	$(Q)$(LD) $(LDFLAGS) -T$(filter %.ld,$(^)) $(filter %.o,$(^)) $(ARCHIVES_$(@)) -o $@
 
 $(OUTPUT)%.hex:
-	@echo " HEX    " $@
+	$(call PRETTY_PRINT," HEX    " $@)
 	$(Q)$(OBJCOPY) -O ihex $(filter %.elf,$(^)) $@
 
 $(OUTPUT)%.bin:
-	@echo " BIN    " $@
+	$(call PRETTY_PRINT," BIN    " $@)
 	$(Q)$(OBJCOPY) -O binary $(filter %.elf,$(^)) $@
 
 $(OUTPUT)%.dmp:
-	@echo " DMP    " $@
+	$(call PRETTY_PRINT," DMP    " $@)
 	$(Q)$(OBJDUMP) -x --syms --demangle $(filter %.elf,$(^)) > $@
 
 $(OUTPUT)%.lss:
-	@echo " LSS    " $@
+	$(call PRETTY_PRINT," LSS    " $@)
 	$(Q)$(OBJDUMP) --demangle -S $(filter %.elf,$(^)) > $@
 
 .PHONY: size

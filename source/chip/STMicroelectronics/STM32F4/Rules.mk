@@ -16,7 +16,7 @@
 STM32F4_LD_SH := $(d)/STM32F4.ld.sh
 
 $(LDSCRIPT): $(DISTORTOS_CONFIGURATION_MK)
-	@echo " SH     " $(STM32F4_LD_SH)
+	$(call PRETTY_PRINT," SH     " $(STM32F4_LD_SH))
 	$(Q)./$(STM32F4_LD_SH) "$(dir $<)$(notdir $<)" > "$@"
 
 #-----------------------------------------------------------------------------------------------------------------------
