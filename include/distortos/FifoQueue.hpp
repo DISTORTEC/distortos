@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-01-19
+ * \date 2015-10-13
  */
 
 #ifndef INCLUDE_DISTORTOS_FIFOQUEUE_HPP_
@@ -88,6 +88,14 @@ public:
 	{
 
 	}
+
+	/**
+	 * \brief FifoQueue's destructor
+	 *
+	 * Pops all remaining elements from the queue.
+	 */
+
+	~FifoQueue();
 
 #if DISTORTOS_FIFOQUEUE_EMPLACE_SUPPORTED == 1 || DOXYGEN == 1
 
@@ -708,6 +716,13 @@ private:
 	/// contained synchronization::FifoQueueBase object which implements whole functionality
 	synchronization::FifoQueueBase fifoQueueBase_;
 };
+
+template<typename T>
+FifoQueue<T>::~FifoQueue()
+{
+	T value;
+	while (tryPop(value) == 0);
+}
 
 #if DISTORTOS_FIFOQUEUE_EMPLACE_SUPPORTED == 1 || DOXYGEN == 1
 
