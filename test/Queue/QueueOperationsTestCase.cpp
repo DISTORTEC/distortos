@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-10-12
+ * \date 2015-10-13
  */
 
 #include "QueueOperationsTestCase.hpp"
@@ -1138,6 +1138,42 @@ bool phase5()
 	return true;
 }
 
+/**
+ * \brief Phase 6 of test case.
+ *
+ * Tests whether destructor of "non-raw" queue properly destructs objects that remain in the queue.
+ *
+ * \return true if test succeeded, false otherwise
+ */
+
+bool phase6()
+{
+	const uint8_t constPriority {};
+	const OperationCountingType constTestValue {};
+
+	{
+		StaticFifoQueueWrapper<1>::TestStaticFifoQueue staticFifoQueue;
+		staticFifoQueue.push(constTestValue);
+		OperationCountingType::resetCounters();
+		// in destructor - 1 construction, 2 destructions and 1 swap
+	}
+
+	if (OperationCountingType::checkCounters(1, 0, 0, 2, 0, 0, 1) == false)
+		return false;
+
+	{
+		StaticMessageQueueWrapper<1>::TestStaticMessageQueue staticMessageQueue;
+		staticMessageQueue.push(constPriority, constTestValue);
+		OperationCountingType::resetCounters();
+		// in destructor - 1 construction, 2 destructions and 1 swap
+	}
+
+	if (OperationCountingType::checkCounters(1, 0, 0, 2, 0, 0, 1) == false)
+		return false;
+
+	return true;
+}
+
 }	// namespace
 
 /*---------------------------------------------------------------------------------------------------------------------+
@@ -1167,7 +1203,7 @@ bool QueueOperationsTestCase::run_() const
 
 	const auto contextSwitchCount = statistics::getContextSwitchCount();
 
-	for (const auto& function : {phase1, phase2, phase3, phase4, phase5})
+	for (const auto& function : {phase1, phase2, phase3, phase4, phase5, phase6})
 	{
 		const auto ret = function();
 		if (ret != true)
