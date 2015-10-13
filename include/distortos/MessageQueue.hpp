@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-01-19
+ * \date 2015-10-13
  */
 
 #ifndef INCLUDE_DISTORTOS_MESSAGEQUEUE_HPP_
@@ -90,6 +90,14 @@ public:
 	{
 
 	}
+
+	/**
+	 * \brief MessageQueue's destructor
+	 *
+	 * Pops all remaining elements from the queue.
+	 */
+
+	~MessageQueue();
 
 #if DISTORTOS_MESSAGEQUEUE_EMPLACE_SUPPORTED == 1 || DOXYGEN == 1
 
@@ -774,6 +782,14 @@ private:
 	/// contained synchronization::MessageQueueBase object which implements whole functionality
 	synchronization::MessageQueueBase messageQueueBase_;
 };
+
+template<typename T>
+MessageQueue<T>::~MessageQueue()
+{
+	uint8_t priority;
+	T value;
+	while (tryPop(priority, value) == 0);
+}
 
 #if DISTORTOS_MESSAGEQUEUE_EMPLACE_SUPPORTED == 1 || DOXYGEN == 1
 
