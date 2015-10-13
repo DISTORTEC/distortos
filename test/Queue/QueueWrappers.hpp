@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-10-10
+ * \date 2015-10-13
  */
 
 #ifndef TEST_QUEUE_QUEUEWRAPPERS_HPP_
@@ -355,6 +355,9 @@ class StaticFifoQueueWrapper : public FifoQueueWrapper
 {
 public:
 
+	/// StaticFifoQueue with \a OperationCountingType and storage for \a QueueSize elements
+	using TestStaticFifoQueue = StaticFifoQueue<OperationCountingType, QueueSize>;
+
 	/**
 	 * \brief StaticFifoQueueWrapper's constructor
 	 */
@@ -367,8 +370,8 @@ public:
 
 private:
 
-	/// internal StaticFifoQueue<> object that will be wrapped
-	StaticFifoQueue<OperationCountingType, QueueSize> fifoQueue_;
+	/// internal TestStaticFifoQueue object that will be wrapped
+	TestStaticFifoQueue fifoQueue_;
 };
 
 /// implementation of QueueWrapper for MessageQueue
@@ -534,6 +537,9 @@ class StaticMessageQueueWrapper : public MessageQueueWrapper
 {
 public:
 
+	/// StaticMessageQueue with \a OperationCountingType and storage for \a QueueSize elements
+	using TestStaticMessageQueue = StaticMessageQueue<OperationCountingType, QueueSize>;
+
 	/**
 	 * \brief StaticMessageQueueWrapper's constructor
 	 */
@@ -546,8 +552,8 @@ public:
 
 private:
 
-	/// internal StaticMessageQueue<> object that will be wrapped
-	StaticMessageQueue<OperationCountingType, QueueSize> messageQueue_;
+	/// internal TestStaticMessageQueue object that will be wrapped
+	TestStaticMessageQueue messageQueue_;
 };
 
 /// common implementation of QueueWrapper for Raw{Fifo,Message}Queue
@@ -828,6 +834,9 @@ class StaticRawFifoQueueWrapper : public RawFifoQueueWrapper
 {
 public:
 
+	/// StaticRawFifoQueue with \a OperationCountingType::Value and storage for \a QueueSize elements
+	using TestStaticRawFifoQueue = StaticRawFifoQueue<OperationCountingType::Value, QueueSize>;
+
 	/**
 	 * \brief StaticFifoQueueWrapper's constructor
 	 */
@@ -840,8 +849,8 @@ public:
 
 private:
 
-	/// internal StaticRawFifoQueue<> object that will be wrapped
-	StaticRawFifoQueue<OperationCountingType::Value, QueueSize> rawFifoQueue_;
+	/// internal TestStaticRawFifoQueue object that will be wrapped
+	TestStaticRawFifoQueue rawFifoQueue_;
 };
 
 /// implementation of RawQueueWrapper for RawMessageQueue
@@ -944,6 +953,9 @@ class StaticRawMessageQueueWrapper : public RawMessageQueueWrapper
 {
 public:
 
+	/// StaticRawMessageQueue with \a OperationCountingType::Value and storage for \a QueueSize elements
+	using TestStaticRawMessageQueue = StaticRawMessageQueue<OperationCountingType::Value, QueueSize>;
+
 	/**
 	 * \brief StaticMessageQueueWrapper's constructor
 	 */
@@ -956,8 +968,8 @@ public:
 
 private:
 
-	/// internal StaticRawMessageQueue<> object that will be wrapped
-	StaticRawMessageQueue<OperationCountingType::Value, QueueSize> rawMessageQueue_;
+	/// internal TestStaticRawMessageQueue object that will be wrapped
+	TestStaticRawMessageQueue rawMessageQueue_;
 };
 
 }	// namespace test
