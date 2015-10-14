@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-01-09
+ * \date 2015-10-15
  */
 
 #ifndef INCLUDE_DISTORTOS_STATICRAWFIFOQUEUE_HPP_
@@ -20,14 +20,17 @@ namespace distortos
 {
 
 /**
- * \brief StaticRawFifoQueue class is a variant of RawFifoQueue that has automatic storage for queue's contents.
+ * \brief StaticRawFifoQueue class is a wrapper for RawFifoQueue that also provides automatic storage for queue's
+ * contents.
+ *
+ * \note Objects of this class can be safely casted to (const) reference to RawFifoQueue.
  *
  * \param T is the type of data in queue
  * \param QueueSize is the maximum number of elements in queue
  */
 
 template<typename T, size_t QueueSize>
-class StaticRawFifoQueue : public RawFifoQueue
+class StaticRawFifoQueue
 {
 public:
 
@@ -36,15 +39,197 @@ public:
 	 */
 
 	explicit StaticRawFifoQueue() :
-			RawFifoQueue{storage_}
+			rawFifoQueue_{storage_}
 	{
 
+	}
+
+	/**
+	 * \brief conversion to RawFifoQueue&
+	 *
+	 * \return reference to internal RawFifoQueue object
+	 */
+
+	operator RawFifoQueue&()
+	{
+		return rawFifoQueue_;
+	}
+
+	/**
+	 * \brief conversion to const RawFifoQueue&
+	 *
+	 * \return const reference to internal RawFifoQueue object
+	 */
+
+	operator const RawFifoQueue&() const
+	{
+		return rawFifoQueue_;
+	}
+
+	/**
+	 * \brief Wrapper for RawFifoQueue::pop(void*, size_t)
+	 */
+
+	int pop(void* const buffer, const size_t size)
+	{
+		return rawFifoQueue_.pop(buffer, size);
+	}
+
+	/**
+	 * \brief Wrapper for RawFifoQueue::pop(T&)
+	 */
+
+	template<typename U>
+	int pop(U& buffer)
+	{
+		return rawFifoQueue_.pop(buffer);
+	}
+
+	/**
+	 * \brief Wrapper for RawFifoQueue::push(const void*, size_t)
+	 */
+
+	int push(const void* const data, const size_t size)
+	{
+		return rawFifoQueue_.push(data, size);
+	}
+
+	/**
+	 * \brief Wrapper for RawFifoQueue::push(const T&)
+	 */
+
+	template<typename U>
+	int push(const U& data)
+	{
+		return rawFifoQueue_.push(data);
+	}
+
+	/**
+	 * \brief Wrapper for RawFifoQueue::tryPop(void*, size_t)
+	 */
+
+	int tryPop(void* const buffer, const size_t size)
+	{
+		return rawFifoQueue_.tryPop(buffer, size);
+	}
+
+	/**
+	 * \brief Wrapper for RawFifoQueue::tryPop(T&)
+	 */
+
+	template<typename U>
+	int tryPop(U& buffer)
+	{
+		return rawFifoQueue_.tryPop(buffer);
+	}
+
+	/**
+	 * \brief Wrapper for RawFifoQueue::tryPopFor(std::chrono::duration<Rep, Period>, void*, size_t)
+	 */
+
+	template<typename Rep, typename Period>
+	int tryPopFor(const std::chrono::duration<Rep, Period> duration, void* const buffer, const size_t size)
+	{
+		return rawFifoQueue_.tryPopFor(duration, buffer, size);
+	}
+
+	/**
+	 * \brief Wrapper for RawFifoQueue::tryPopFor(std::chrono::duration<Rep, Period>, T&)
+	 */
+
+	template<typename Rep, typename Period, typename U>
+	int tryPopFor(const std::chrono::duration<Rep, Period> duration, U& buffer)
+	{
+		return rawFifoQueue_.tryPopFor(duration, buffer);
+	}
+
+	/**
+	 * \brief Wrapper for RawFifoQueue::tryPopUntil(std::chrono::time_point<TickClock, Duration>, void*, size_t)
+	 */
+
+	template<typename Duration>
+	int tryPopUntil(const std::chrono::time_point<TickClock, Duration> timePoint, void* const buffer, const size_t size)
+	{
+		return rawFifoQueue_.tryPopUntil(timePoint, buffer, size);
+	}
+
+	/**
+	 * \brief Wrapper for RawFifoQueue::tryPopUntil(std::chrono::time_point<TickClock, Duration>, T&)
+	 */
+
+	template<typename Duration, typename U>
+	int tryPopUntil(const std::chrono::time_point<TickClock, Duration> timePoint, U& buffer)
+	{
+		return rawFifoQueue_.tryPopUntil(timePoint, buffer);
+	}
+
+	/**
+	 * \brief Wrapper for RawFifoQueue::tryPush(const void*, size_t)
+	 */
+
+	int tryPush(const void* const data, const size_t size)
+	{
+		return rawFifoQueue_.tryPush(data, size);
+	}
+
+	/**
+	 * \brief Wrapper for RawFifoQueue::tryPush(const T&)
+	 */
+
+	template<typename U>
+	int tryPush(const U& data)
+	{
+		return rawFifoQueue_.tryPush(data);
+	}
+
+	/**
+	 * \brief Wrapper for RawFifoQueue::tryPushFor(std::chrono::duration<Rep, Period>, const void*, size_t)
+	 */
+
+	template<typename Rep, typename Period>
+	int tryPushFor(const std::chrono::duration<Rep, Period> duration, const void* const data, const size_t size)
+	{
+		return rawFifoQueue_.tryPushFor(duration, data, size);
+	}
+
+	/**
+	 * \brief Wrapper for RawFifoQueue::tryPushFor(std::chrono::duration<Rep, Period>, const T&)
+	 */
+
+	template<typename Rep, typename Period, typename U>
+	int tryPushFor(const std::chrono::duration<Rep, Period> duration, const U& data)
+	{
+		return rawFifoQueue_.tryPushFor(duration, data);
+	}
+
+	/**
+	 * \brief Wrapper for RawFifoQueue::tryPushUntil(std::chrono::time_point<TickClock, Duration>, const void*, size_t)
+	 */
+
+	template<typename Duration>
+	int tryPushUntil(const std::chrono::time_point<TickClock, Duration> timePoint, const void* const data,
+			const size_t size)
+	{
+		return rawFifoQueue_.tryPushUntil(timePoint, data, size);
+	}
+
+	/**
+	 * \brief Wrapper for RawFifoQueue::tryPushUntil(std::chrono::time_point<TickClock, Duration>, const T&)
+	 */
+
+	template<typename Duration, typename U>
+	int tryPushUntil(const std::chrono::time_point<TickClock, Duration> timePoint, const U& data)
+	{
+		return rawFifoQueue_.tryPushUntil(timePoint, data);
 	}
 
 private:
 
 	/// storage for queue's contents
 	std::array<typename std::aligned_storage<sizeof(T), alignof(T)>::type, QueueSize> storage_;
+
+	/// internal RawFifoQueue object
+	RawFifoQueue rawFifoQueue_;
 };
 
 /**
