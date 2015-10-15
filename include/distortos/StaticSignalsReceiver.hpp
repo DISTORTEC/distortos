@@ -15,8 +15,8 @@
 #define INCLUDE_DISTORTOS_STATICSIGNALSRECEIVER_HPP_
 
 #include "distortos/SignalInformationQueueWrapper.hpp"
+#include "distortos/SignalsCatcher.hpp"
 #include "distortos/SignalsReceiver.hpp"
-#include "distortos/StaticSignalsCatcher.hpp"
 
 namespace distortos
 {
@@ -40,8 +40,9 @@ public:
 	 */
 
 	StaticSignalsReceiver() :
-			SignalsReceiver{&signalInformationQueueWrapper_, &staticSignalsCatcher_},
-			signalInformationQueueWrapper_{signalInformationQueueWrapperStorage_}
+			SignalsReceiver{&signalInformationQueueWrapper_, &signalsCatcher_},
+			signalInformationQueueWrapper_{signalInformationQueueWrapperStorage_},
+			signalsCatcher_{signalsCatcherStorage_}
 	{
 
 	}
@@ -54,8 +55,11 @@ private:
 	/// internal SignalInformationQueueWrapper object
 	SignalInformationQueueWrapper signalInformationQueueWrapper_;
 
-	/// internal StaticSignalsCatcher object
-	StaticSignalsCatcher<SignalActions> staticSignalsCatcher_;
+	/// storage for \a signalsCatcher_
+	std::array<SignalsCatcher::Storage, SignalActions> signalsCatcherStorage_;
+
+	/// internal SignalsCatcher object
+	SignalsCatcher signalsCatcher_;
 };
 
 /**
@@ -113,16 +117,19 @@ public:
 	 */
 
 	StaticSignalsReceiver() :
-			SignalsReceiver{nullptr, &staticSignalsCatcher_},
-			staticSignalsCatcher_{}
+			SignalsReceiver{nullptr, &signalsCatcher_},
+			signalsCatcher_{signalsCatcherStorage_}
 	{
 
 	}
 
 private:
 
-	/// internal StaticSignalsCatcher object
-	StaticSignalsCatcher<SignalActions> staticSignalsCatcher_;
+	/// storage for \a signalsCatcher_
+	std::array<SignalsCatcher::Storage, SignalActions> signalsCatcherStorage_;
+
+	/// internal SignalsCatcher object
+	SignalsCatcher signalsCatcher_;
 };
 
 /**
