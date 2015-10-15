@@ -14,7 +14,7 @@
 #-----------------------------------------------------------------------------------------------------------------------
 
 DO_INCLUDE := 1
-SIMPLE_TARGETS := clean configure
+SIMPLE_TARGETS := clean configure distclean
 
 # This macro checks, if the make target list MAKECMDGOALS contains the given simple target $1. If so, it executes
 # SET_SIMPLE_TARGETS to set/clear some variables.
@@ -260,3 +260,7 @@ clean:
 .PHONY: configure
 configure:
 	./configure.sh $(CONFIG_PATH)
+
+.PHONY: distclean
+distclean:
+	./scripts/distclean.sh
