@@ -6,7 +6,7 @@
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #
-# date: 2015-10-15
+# date: 2015-10-16
 #
 
 #-----------------------------------------------------------------------------------------------------------------------
@@ -14,7 +14,7 @@
 #-----------------------------------------------------------------------------------------------------------------------
 
 DO_INCLUDE := 1
-SIMPLE_TARGETS := clean configure distclean menuconfig
+SIMPLE_TARGETS := clean configure distclean help menuconfig
 
 # This macro checks, if the make target list MAKECMDGOALS contains the given simple target $1. If so, it executes
 # SET_SIMPLE_TARGETS to set/clear some variables.
@@ -264,6 +264,29 @@ configure:
 .PHONY: distclean
 distclean:
 	./scripts/distclean.sh
+
+define NEWLINE
+
+
+endef
+
+define HELP_TEXT
+
+Available special targets:
+menuconfig .. to create/edit configuration of distortos
+configure  .. to execute configure.sh; use "make configure
+                [CONFIG_PATH=<path>]"
+                <path> .. the path where distortosConfiguration.mk can be
+                found; default "./"
+distclean  .. remove the build output, doxygen documentation and file created
+                by configure.sh
+clean      .. remove the build output
+
+endef
+
+.PHONY: help
+help:
+	@echo -e '$(subst $(NEWLINE),\n,${HELP_TEXT})'
 
 .PHONY: menuconfig
 menuconfig:
