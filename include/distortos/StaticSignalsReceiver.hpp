@@ -8,14 +8,14 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-05-16
+ * \date 2015-10-15
  */
 
 #ifndef INCLUDE_DISTORTOS_STATICSIGNALSRECEIVER_HPP_
 #define INCLUDE_DISTORTOS_STATICSIGNALSRECEIVER_HPP_
 
+#include "distortos/SignalInformationQueueWrapper.hpp"
 #include "distortos/SignalsReceiver.hpp"
-#include "distortos/StaticSignalInformationQueueWrapper.hpp"
 #include "distortos/StaticSignalsCatcher.hpp"
 
 namespace distortos
@@ -40,16 +40,19 @@ public:
 	 */
 
 	StaticSignalsReceiver() :
-			SignalsReceiver{&staticSignalInformationQueueWrapper_, &staticSignalsCatcher_},
-			staticSignalInformationQueueWrapper_{}
+			SignalsReceiver{&signalInformationQueueWrapper_, &staticSignalsCatcher_},
+			signalInformationQueueWrapper_{signalInformationQueueWrapperStorage_}
 	{
 
 	}
 
 private:
 
-	/// internal StaticSignalInformationQueueWrapper object
-	StaticSignalInformationQueueWrapper<QueuedSignals> staticSignalInformationQueueWrapper_;
+	/// storage for \a signalInformationQueueWrapper_
+	std::array<SignalInformationQueueWrapper::Storage, QueuedSignals> signalInformationQueueWrapperStorage_;
+
+	/// internal SignalInformationQueueWrapper object
+	SignalInformationQueueWrapper signalInformationQueueWrapper_;
 
 	/// internal StaticSignalsCatcher object
 	StaticSignalsCatcher<SignalActions> staticSignalsCatcher_;
@@ -75,16 +78,19 @@ public:
 	 */
 
 	StaticSignalsReceiver() :
-			SignalsReceiver{&staticSignalInformationQueueWrapper_, nullptr},
-			staticSignalInformationQueueWrapper_{}
+			SignalsReceiver{&signalInformationQueueWrapper_, nullptr},
+			signalInformationQueueWrapper_{signalInformationQueueWrapperStorage_}
 	{
 
 	}
 
 private:
 
-	/// internal StaticSignalInformationQueueWrapper object
-	StaticSignalInformationQueueWrapper<QueuedSignals> staticSignalInformationQueueWrapper_;
+	/// storage for \a signalInformationQueueWrapper_
+	std::array<SignalInformationQueueWrapper::Storage, QueuedSignals> signalInformationQueueWrapperStorage_;
+
+	/// internal SignalInformationQueueWrapper object
+	SignalInformationQueueWrapper signalInformationQueueWrapper_;
 };
 
 /**
