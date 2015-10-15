@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-09-12
+ * \date 2015-10-15
  */
 
 #include "distortos/scheduler/lowLevelInitialization.hpp"
@@ -59,15 +59,7 @@ using MainThreadStaticSignalsReceiver =
 /// MainThreadStaticSignalsReceiver object for main thread
 MainThreadStaticSignalsReceiver mainThreadStaticSignalsReceiver;
 
-/// pointer to \a mainThreadStaticSignalsReceiver
-constexpr auto mainThreadStaticSignalsReceiverPointer = &mainThreadStaticSignalsReceiver;
-
-#else	// !def CONFIG_MAIN_THREAD_CAN_RECEIVE_SIGNALS
-
-/// nullptr - reception of signals is disabled for main thread
-constexpr auto mainThreadStaticSignalsReceiverPointer = nullptr;
-
-#endif	// !def CONFIG_MAIN_THREAD_CAN_RECEIVE_SIGNALS
+#endif	// def CONFIG_MAIN_THREAD_CAN_RECEIVE_SIGNALS
 
 }	// namespace
 
@@ -81,6 +73,18 @@ void lowLevelInitialization()
 	new (&schedulerInstance) Scheduler;
 
 	auto& mainThreadGroupControlBlock = *new (&mainThreadGroupControlBlockStorage) ThreadGroupControlBlock;
+
+#ifdef CONFIG_MAIN_THREAD_CAN_RECEIVE_SIGNALS
+
+	// pointer to \a mainThreadStaticSignalsReceiver
+	const auto mainThreadStaticSignalsReceiverPointer = &static_cast<SignalsReceiver&>(mainThreadStaticSignalsReceiver);
+
+#else	// !def CONFIG_MAIN_THREAD_CAN_RECEIVE_SIGNALS
+
+	// nullptr - reception of signals is disabled for main thread
+	constexpr auto mainThreadStaticSignalsReceiverPointer = nullptr;
+
+#endif	// !def CONFIG_MAIN_THREAD_CAN_RECEIVE_SIGNALS
 
 	auto& mainThread = *new (&mainThreadStorage) MainThread {CONFIG_MAIN_THREAD_PRIORITY, mainThreadGroupControlBlock,
 			mainThreadStaticSignalsReceiverPointer};
