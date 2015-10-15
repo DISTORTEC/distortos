@@ -56,8 +56,9 @@ std::aligned_storage<sizeof(ThreadGroupControlBlock), alignof(ThreadGroupControl
 using MainThreadStaticSignalsReceiver =
 		StaticSignalsReceiver<CONFIG_MAIN_THREAD_QUEUED_SIGNALS, CONFIG_MAIN_THREAD_SIGNAL_ACTIONS>;
 
-/// MainThreadStaticSignalsReceiver object for main thread
-MainThreadStaticSignalsReceiver mainThreadStaticSignalsReceiver;
+/// storage for instance of MainThreadStaticSignalsReceiver for main thread
+std::aligned_storage<sizeof(MainThreadStaticSignalsReceiver), alignof(MainThreadStaticSignalsReceiver)>::type
+		mainThreadStaticSignalsReceiverStorage;
 
 #endif	// def CONFIG_MAIN_THREAD_CAN_RECEIVE_SIGNALS
 
@@ -76,7 +77,8 @@ void lowLevelInitialization()
 
 #ifdef CONFIG_MAIN_THREAD_CAN_RECEIVE_SIGNALS
 
-	// pointer to \a mainThreadStaticSignalsReceiver
+	auto& mainThreadStaticSignalsReceiver =
+			*new (&mainThreadStaticSignalsReceiverStorage) MainThreadStaticSignalsReceiver;
 	const auto mainThreadStaticSignalsReceiverPointer = &static_cast<SignalsReceiver&>(mainThreadStaticSignalsReceiver);
 
 #else	// !def CONFIG_MAIN_THREAD_CAN_RECEIVE_SIGNALS
