@@ -6,20 +6,36 @@
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #
-# date: 2015-10-12
+# date: 2015-10-15
 #
+
+#-----------------------------------------------------------------------------------------------------------------------
+# make control
+#-----------------------------------------------------------------------------------------------------------------------
+DO_INCLUDE := 1
+SIMPLE_TARGETS := clean
+
+# This macro checks, if the make target list MAKECMDGOALS contains the given simple target $1. If so, it executes
+# SET_SIMPLE_TARGETS to set/clear some variables.
+# parmeter 1 .. simple target to check
+CHECK_SIMPLE_TARGETS = $(if $(findstring $(filter $(1),$(MAKECMDGOALS)),$(1)),$(call SET_SIMPLE_TARGETS,$(1)))
+SET_SIMPLE_TARGETS = $(eval DO_INCLUDE := 0)
+
+# check all simple targets if present
+$(eval $(foreach tgt,$(SIMPLE_TARGETS),$(call CHECK_SIMPLE_TARGETS,$(tgt))))
 
 #-----------------------------------------------------------------------------------------------------------------------
 # load configuration variables from distortosConfiguration.mk file selected by user
 #-----------------------------------------------------------------------------------------------------------------------
+ifeq ($(DO_INCLUDE),1)
+   # file with $(CONFIG_SELECTED_CONFIGURATION) variable
+   include selectedConfiguration.mk
 
-# file with $(CONFIG_SELECTED_CONFIGURATION) variable
-include selectedConfiguration.mk
+   # path to distortosConfiguration.mk file selected by $(CONFIG_SELECTED_CONFIGURATION) variable
+   DISTORTOS_CONFIGURATION_MK = ./$(subst ",,$(CONFIG_SELECTED_CONFIGURATION))
 
-# path to distortosConfiguration.mk file selected by $(CONFIG_SELECTED_CONFIGURATION) variable
-DISTORTOS_CONFIGURATION_MK = ./$(subst ",,$(CONFIG_SELECTED_CONFIGURATION))
-
-include $(DISTORTOS_CONFIGURATION_MK)
+   include $(DISTORTOS_CONFIGURATION_MK)
+endif
 
 #-----------------------------------------------------------------------------------------------------------------------
 # toolchain configuration
@@ -166,8 +182,10 @@ endef
 .PHONY: all
 all: targets
 
-# trigger parsing of all Rules.mk files
-include Rules.mk
+ifeq ($(DO_INCLUDE),1)
+   # trigger parsing of all Rules.mk files
+   include Rules.mk
+endif
 
 # generated files depend (order-only) on their directories
 $(foreach file,$(GENERATED),$(eval $(call DIRECTORY_DEPENDENCY,$(file))))
