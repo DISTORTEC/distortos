@@ -14,7 +14,7 @@
 #-----------------------------------------------------------------------------------------------------------------------
 
 DO_INCLUDE := 1
-SIMPLE_TARGETS := clean
+SIMPLE_TARGETS := clean configure
 
 # This macro checks, if the make target list MAKECMDGOALS contains the given simple target $1. If so, it executes
 # SET_SIMPLE_TARGETS to set/clear some variables.
@@ -30,6 +30,11 @@ $(eval $(foreach target,$(SIMPLE_TARGETS),$(call CHECK_SIMPLE_TARGETS,$(target))
 #-----------------------------------------------------------------------------------------------------------------------
 
 ifeq ($(DO_INCLUDE),1)
+
+    ifeq ($(wildcard selectedConfiguration.mk),)
+        $(error Please run first 'configure.sh [<path to distortosConfiguration.mk>]' or 'make configure \
+			    [CONFIG_PATH=...]')
+    endif
 
     # file with $(CONFIG_SELECTED_CONFIGURATION) variable
     include selectedConfiguration.mk
@@ -251,3 +256,8 @@ size:
 .PHONY: clean
 clean:
 	$(RM) -r $(OUTPUT)
+
+.PHONY: configure
+configure:
+	./configure.sh $(CONFIG_PATH)
+
