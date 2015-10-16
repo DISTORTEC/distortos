@@ -9,7 +9,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-10-15
+ * \date 2015-10-16
  */
 
 #ifndef INCLUDE_DISTORTOS_STATICRAWMESSAGEQUEUE_HPP_
@@ -236,7 +236,7 @@ private:
 	std::array<RawMessageQueue::EntryStorage, QueueSize> entryStorage_;
 
 	/// storage for queue's contents
-	std::array<typename std::aligned_storage<sizeof(T), alignof(T)>::type, QueueSize> valueStorage_;
+	std::array<RawMessageQueue::ValueStorage<T>, QueueSize> valueStorage_;
 
 	/// internal RawMessageQueue object
 	RawMessageQueue rawMessageQueue_;
