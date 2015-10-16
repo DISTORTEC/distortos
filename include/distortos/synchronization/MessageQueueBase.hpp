@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-07-09
+ * \date 2015-10-16
  */
 
 #ifndef INCLUDE_DISTORTOS_SYNCHRONIZATION_MESSAGEQUEUEBASE_HPP_
@@ -68,6 +68,15 @@ public:
 	using EntryStorage = typename std::aligned_storage<sizeof(LinkAndEntry), alignof(LinkAndEntry)>::type;
 
 	/**
+	 * type of uninitialized storage for value
+	 *
+	 * \param T is the type of data in queue
+	 */
+
+	template<typename T>
+	using ValueStorage = typename std::aligned_storage<sizeof(T), alignof(T)>::type;
+
+	/**
 	 * type of uninitialized storage for data
 	 *
 	 * \param T is the type of data in queue
@@ -80,7 +89,7 @@ public:
 		EntryStorage entryStorage;
 
 		/// storage for value
-		typename std::aligned_storage<sizeof(T), alignof(T)>::type valueStorage;
+		ValueStorage<T> valueStorage;
 	};
 
 	/// functor which gives descending priority order of elements on the list
