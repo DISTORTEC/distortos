@@ -93,8 +93,7 @@ public:
 
 	template<typename T, size_t N>
 	RawMessageQueue(EntryStorage (& entryStorage)[N], T (& valueStorage)[N]) :
-			RawMessageQueue{entryStorage, valueStorage, sizeof(*valueStorage),
-					sizeof(valueStorage) / sizeof(*valueStorage)}
+			RawMessageQueue{entryStorage, valueStorage, sizeof(valueStorage) / sizeof(*valueStorage)}
 	{
 
 	}
@@ -112,7 +111,7 @@ public:
 
 	template<typename T, size_t N>
 	RawMessageQueue(std::array<EntryStorage, N>& entryStorage, std::array<T, N>& valueStorage) :
-			RawMessageQueue{entryStorage.data(), valueStorage.data(), sizeof(*valueStorage.data()), valueStorage.size()}
+			RawMessageQueue{entryStorage.data(), valueStorage.data(), valueStorage.size()}
 	{
 
 	}
