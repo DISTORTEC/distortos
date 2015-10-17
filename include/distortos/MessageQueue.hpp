@@ -98,6 +98,52 @@ public:
 	}
 
 	/**
+	 * \brief MessageQueue's constructor
+	 *
+	 * \param [in] entryStorage is an array of EntryStorage elements
+	 * \param [in] valueStorage is an array of ValueStorage elements
+	 * \param [in] maxElements is the number of elements in \a entryStorage and \a valueStorage arrays
+	 */
+
+	MessageQueue(EntryStorage* const entryStorage, ValueStorage* const valueStorage, const size_t maxElements) :
+			messageQueueBase_{entryStorage, valueStorage, sizeof(*valueStorage), maxElements}
+	{
+
+	}
+
+	/**
+	 * \brief MessageQueue's constructor
+	 *
+	 * \param N is the number of elements in \a entryStorage and \a valueStorage arrays
+	 *
+	 * \param [in] entryStorage is a reference to array of \a N EntryStorage elements
+	 * \param [in] valueStorage is a reference to array of \a N ValueStorage elements
+	 */
+
+	template<size_t N>
+	MessageQueue(EntryStorage (& entryStorage)[N], ValueStorage (& valueStorage)[N]) :
+			MessageQueue{entryStorage, valueStorage, sizeof(valueStorage) / sizeof(*valueStorage)}
+	{
+
+	}
+
+	/**
+	 * \brief MessageQueue's constructor
+	 *
+	 * \param N is the number of elements in \a entryStorage and \a valueStorage arrays
+	 *
+	 * \param [in] entryStorage is a reference to std::array of \a N EntryStorage elements
+	 * \param [in] valueStorage is a reference to std::array of \a N ValueStorage elements
+	 */
+
+	template<size_t N>
+	MessageQueue(std::array<EntryStorage, N>& entryStorage, std::array<ValueStorage, N>& valueStorage) :
+			MessageQueue{entryStorage.data(), valueStorage.data(), valueStorage.size()}
+	{
+
+	}
+
+	/**
 	 * \brief MessageQueue's destructor
 	 *
 	 * Pops all remaining elements from the queue.
