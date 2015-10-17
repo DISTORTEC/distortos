@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-04-16
+ * \date 2015-10-17
  */
 
 #ifndef INCLUDE_DISTORTOS_SIGNALSCATCHER_HPP_
@@ -41,14 +41,13 @@ public:
 	/**
 	 * \brief SignalsCatcher's constructor
 	 *
-	 * \param [in] storageBegin is a pointer to first element of storage for
-	 * synchronization::SignalsCatcherControlBlock::Association objects
-	 * \param [in] storageEnd is a pointer to "one past the last" element of storage for
-	 * synchronization::SignalsCatcherControlBlock::Association objects
+	 * \param [in] storage is a memory block for storage of synchronization::SignalsCatcherControlBlock::Association
+	 * objects, sufficiently large for \a storageSize elements
+	 * \param [in] storageSize is the number of elements in \a storage array
 	 */
 
-	constexpr SignalsCatcher(Storage* const storageBegin, Storage* const storageEnd) :
-			signalsCatcherControlBlock_{storageBegin, storageEnd}
+	constexpr SignalsCatcher(Storage* const storage, const size_t storageSize) :
+			signalsCatcherControlBlock_{storage, storage + storageSize}
 	{
 
 	}
@@ -63,7 +62,7 @@ public:
 
 	template<size_t N>
 	constexpr explicit SignalsCatcher(Storage (& storage)[N]) :
-			SignalsCatcher{std::begin(storage), std::end(storage)}
+			SignalsCatcher{storage, sizeof(storage) / sizeof(*storage)}
 	{
 
 	}
@@ -78,7 +77,7 @@ public:
 
 	template<size_t N>
 	constexpr explicit SignalsCatcher(std::array<Storage, N>& storage) :
-			SignalsCatcher{storage.begin(), storage.end()}
+			SignalsCatcher{storage.data(), storage.size()}
 	{
 
 	}
