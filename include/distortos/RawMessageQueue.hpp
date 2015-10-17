@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-10-16
+ * \date 2015-10-17
  */
 
 #ifndef INCLUDE_DISTORTOS_RAWMESSAGEQUEUE_HPP_
@@ -58,6 +58,24 @@ public:
 			const size_t maxElements) :
 			messageQueueBase_{entryStorage, valueStorage, elementSize, maxElements},
 			elementSize_{elementSize}
+	{
+
+	}
+
+	/**
+	 * \brief RawMessageQueue's constructor
+	 *
+	 * \param T is the type of data in queue
+	 *
+	 * \param [in] entryStorage is an array of EntryStorage elements
+	 * \param [in] valueStorage is a memory block for elements, sufficiently large for \a maxElements, each sizeof(T)
+	 * bytes long
+	 * \param [in] maxElements is the number of elements in \a entryStorage array and \a valueStorage memory block
+	 */
+
+	template<typename T>
+	RawMessageQueue(EntryStorage* const entryStorage, T* const valueStorage, const size_t maxElements) :
+			RawMessageQueue{entryStorage, valueStorage, sizeof(*valueStorage), maxElements}
 	{
 
 	}
