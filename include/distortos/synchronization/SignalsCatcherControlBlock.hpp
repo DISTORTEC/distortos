@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-06-30
+ * \date 2015-10-17
  */
 
 #ifndef INCLUDE_DISTORTOS_SYNCHRONIZATION_SIGNALSCATCHERCONTROLBLOCK_HPP_
@@ -45,15 +45,16 @@ public:
 	/**
 	 * \brief SignalsCatcherControlBlock's constructor
 	 *
-	 * \param [in] storageBegin is a pointer to first element of storage for Association objects
-	 * \param [in] storageEnd is a pointer to "one past the last" element of storage for Association objects
+	 * \param [in] storage is a memory block for storage of Association objects, sufficiently large for \a storageSize
+	 * elements
+	 * \param [in] storageSize is the number of elements in \a storage array
 	 */
 
-	constexpr SignalsCatcherControlBlock(Storage* const storageBegin, Storage* const storageEnd) :
+	constexpr SignalsCatcherControlBlock(Storage* const storage, const size_t storageSize) :
 			signalMask_{SignalSet::empty},
-			associationsBegin_{reinterpret_cast<decltype(associationsBegin_)>(storageBegin)},
-			storageBegin_{storageBegin},
-			storageEnd_{storageEnd},
+			associationsBegin_{reinterpret_cast<decltype(associationsBegin_)>(storage)},
+			storageBegin_{storage},
+			storageEnd_{storage + storageSize},
 			deliveryIsPending_{}
 	{
 

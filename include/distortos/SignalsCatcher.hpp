@@ -47,7 +47,7 @@ public:
 	 */
 
 	constexpr SignalsCatcher(Storage* const storage, const size_t storageSize) :
-			signalsCatcherControlBlock_{storage, storage + storageSize}
+			signalsCatcherControlBlock_{storage, storageSize}
 	{
 
 	}
