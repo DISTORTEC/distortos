@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-10-14
+ * \date 2015-10-17
  */
 
 #ifndef INCLUDE_DISTORTOS_STATICMESSAGEQUEUE_HPP_
@@ -39,7 +39,7 @@ public:
 	 */
 
 	explicit StaticMessageQueue() :
-			messageQueue_{storage_}
+			messageQueue_{entryStorage_, valueStorage_}
 	{
 
 	}
@@ -232,8 +232,11 @@ public:
 
 private:
 
+	/// storage for queue's entries
+	std::array<typename MessageQueue<T>::EntryStorage, QueueSize> entryStorage_;
+
 	/// storage for queue's contents
-	std::array<typename MessageQueue<T>::Storage, QueueSize> storage_;
+	std::array<typename MessageQueue<T>::ValueStorage, QueueSize> valueStorage_;
 
 	/// internal MessageQueue<T> object
 	MessageQueue<T> messageQueue_;
