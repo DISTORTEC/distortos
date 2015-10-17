@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-10-13
+ * \date 2015-10-17
  */
 
 #ifndef INCLUDE_DISTORTOS_MESSAGEQUEUE_HPP_
@@ -44,6 +44,12 @@ template<typename T>
 class MessageQueue
 {
 public:
+
+	/// type of uninitialized storage for Entry with link
+	using EntryStorage = synchronization::MessageQueueBase::EntryStorage;
+
+	/// type of uninitialized storage for value
+	using ValueStorage = synchronization::MessageQueueBase::ValueStorage<T>;
 
 	/// type of uninitialized storage for data
 	using Storage = synchronization::MessageQueueBase::Storage<T>;
