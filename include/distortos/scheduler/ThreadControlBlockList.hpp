@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-03-13
+ * \date 2015-10-18
  */
 
 #ifndef INCLUDE_DISTORTOS_SCHEDULER_THREADCONTROLBLOCKLIST_HPP_
@@ -73,7 +73,8 @@ public:
 	 * \param [in] state is the state of ThreadControlBlock objects kept in this list
 	 */
 
-	ThreadControlBlockList(const ThreadControlBlockListAllocator& allocator, const ThreadControlBlock::State state) :
+	constexpr ThreadControlBlockList(const ThreadControlBlockListAllocator& allocator,
+			const ThreadControlBlock::State state) :
 			Base{allocator},
 			state_{state}
 	{
@@ -86,11 +87,7 @@ public:
 	 * Clears list pointers in all elements.
 	 */
 
-	~ThreadControlBlockList()
-	{
-		for (auto& item : *this)
-			item.get().setList(nullptr);
-	}
+	~ThreadControlBlockList();
 
 	/**
 	 * \brief Wrapper for sortedEmplace()
@@ -105,15 +102,7 @@ public:
 	 */
 
 	template<typename... Args>
-	iterator sortedEmplace(Args&&... args)
-	{
-		const auto it = Base::sortedEmplace(std::forward<Args>(args)...);
-		auto& threadControlBlock = it->get();
-		threadControlBlock.setList(this);
-		threadControlBlock.setIterator(it);
-		threadControlBlock.setState(state_);
-		return it;
-	}
+	iterator sortedEmplace(Args&&... args);
 
 	/**
 	 * \brief Wrapper for sortedSplice()
@@ -124,18 +113,24 @@ public:
 	 * \param [in] otherPosition is the position of the transfered object in the other container
 	 */
 
-	void sortedSplice(ThreadControlBlockList& other, const iterator otherPosition)
-	{
-		Base::sortedSplice(other, otherPosition);
-		otherPosition->get().setList(this);
-		otherPosition->get().setState(state_);
-	}
+	void sortedSplice(ThreadControlBlockList& other, iterator otherPosition);
 
 private:
 
 	/// state of ThreadControlBlock objects kept in this list
 	const ThreadControlBlock::State state_;
 };
+
+template<typename... Args>
+ThreadControlBlockList::iterator ThreadControlBlockList::sortedEmplace(Args&&... args)
+{
+	const auto it = Base::sortedEmplace(std::forward<Args>(args)...);
+	auto& threadControlBlock = it->get();
+	threadControlBlock.setList(this);
+	threadControlBlock.setIterator(it);
+	threadControlBlock.setState(state_);
+	return it;
+}
 
 }	// namespace scheduler
 
