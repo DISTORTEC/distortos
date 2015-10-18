@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-04-28
+ * \date 2015-10-18
  */
 
 #ifndef INCLUDE_DISTORTOS_ARCHITECTURE_INTERRUPTMASKINGUNMASKINGLOCK_HPP_
@@ -42,7 +42,9 @@ public:
 
 	InterruptMaskingUnmaskingLock() :
 			interruptMask_{Function()}
-	{}
+	{
+
+	}
 
 	/**
 	 * \brief InterruptMaskingUnmaskingLock's destructor
