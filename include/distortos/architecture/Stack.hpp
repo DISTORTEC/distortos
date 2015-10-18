@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-04-28
+ * \date 2015-10-18
  */
 
 #ifndef INCLUDE_DISTORTOS_ARCHITECTURE_STACK_HPP_
@@ -68,7 +68,10 @@ public:
 	 * \return current value of stack pointer
 	 */
 
-	void* getStackPointer() const { return stackPointer_; }
+	void* getStackPointer() const
+	{
+		return stackPointer_;
+	}
 
 	/**
 	 * \brief Sets value of stack pointer.
@@ -76,7 +79,10 @@ public:
 	 * \param [in] stackPointer is the new value of stack pointer
 	 */
 
-	void setStackPointer(void* const stackPointer) { stackPointer_ = stackPointer; }
+	void setStackPointer(void* const stackPointer)
+	{
+		stackPointer_ = stackPointer;
+	}
 
 	Stack(const Stack&) = delete;
 	Stack(Stack&&) = default;
