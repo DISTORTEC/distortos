@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-01-19
+ * \date 2015-10-18
  */
 
 #ifndef INCLUDE_DISTORTOS_SYNCHRONIZATION_COPYCONSTRUCTQUEUEFUNCTOR_HPP_
@@ -40,7 +40,7 @@ public:
 	 */
 
 	constexpr explicit CopyConstructQueueFunctor(const T& value) :
-			value_(value)
+			value_{value}
 	{
 
 	}
