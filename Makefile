@@ -71,8 +71,9 @@ RM = rm -f
 # project configuration
 #-----------------------------------------------------------------------------------------------------------------------
 
-# output folder
-OUTPUT = output/
+# output folder (can be defined outside with and without a trailing '/')
+OUTPUT ?= output
+override OUTPUT := $(addsuffix /,$(patsubst %/,%,$(OUTPUT)))
 
 # project name
 PROJECT = distortos
