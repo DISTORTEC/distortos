@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-01-11
+ * \date 2015-10-18
  */
 
 #ifndef INCLUDE_DISTORTOS_ALLOCATORS_POOLALLOCATOR_HPP_
@@ -67,7 +67,7 @@ public:
 	 */
 
 	constexpr explicit PoolAllocator(Pool& pool) :
-			pool_(pool)
+			pool_{pool}
 	{
 
 	}
@@ -82,7 +82,7 @@ public:
 
 	template<typename U>
 	constexpr explicit PoolAllocator(const PoolAllocator<U, Pool>& other) :
-			pool_(other.pool_)
+			pool_{other.pool_}
 	{
 
 	}
@@ -96,7 +96,7 @@ public:
 	 * \return pointer to allocated storage
 	 */
 
-	pointer allocate(const size_type size, const void* = nullptr)
+	pointer allocate(const size_type size, const void* = {})
 	{
 		return static_cast<T*>(pool_.allocate(size * sizeof(T)));
 	}
@@ -160,7 +160,7 @@ inline bool operator==(const PoolAllocator<T1, OtherPoolType>& left, const PoolA
 template<typename T1, typename T2, typename OtherPoolType>
 inline bool operator!=(const PoolAllocator<T1, OtherPoolType>& left, const PoolAllocator<T2, OtherPoolType>& right)
 {
-	return !(left == right);
+	return (left == right) == false;
 }
 
 }	// namespace allocators
