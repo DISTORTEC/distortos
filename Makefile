@@ -6,7 +6,7 @@
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #
-# date: 2015-10-16
+# date: 2015-10-18
 #
 
 #-----------------------------------------------------------------------------------------------------------------------
@@ -154,11 +154,11 @@ CHIP_INCLUDES += $(patsubst %,-I%,$(call UNQUOTE_D,$(CONFIG_CHIP_INCLUDES)))
 #-----------------------------------------------------------------------------------------------------------------------
 
 ifeq ($(VERBOSE),0)
-Q = @
-PRETTY_PRINT = @echo $(1)
+    Q = @
+    PRETTY_PRINT = @echo $(1)
 else
-Q =
-PRETTY_PRINT =
+    Q =
+    PRETTY_PRINT =
 endif
 
 define DIRECTORY_DEPENDENCY
@@ -171,22 +171,22 @@ $(1):
 endef
 
 define PARSE_SUBDIRECTORY
-ifdef d
-NEXT_DIRECTORY := $$(d)/$(1)
-else
-NEXT_DIRECTORY := $(1)
-endif
-STACK_POINTER := $$(STACK_POINTER).x
-DIRECTORY_STACK_$$(STACK_POINTER) := $$(d)
-d := $$(NEXT_DIRECTORY)
-SUBDIRECTORIES :=
-include $$(d)/Rules.mk
-d := $$(DIRECTORY_STACK_$$(STACK_POINTER))
-STACK_POINTER := $$(basename $$(STACK_POINTER))
+	ifdef d
+		NEXT_DIRECTORY := $$(d)/$(1)
+	else
+		NEXT_DIRECTORY := $(1)
+	endif
+	STACK_POINTER := $$(STACK_POINTER).x
+	DIRECTORY_STACK_$$(STACK_POINTER) := $$(d)
+	d := $$(NEXT_DIRECTORY)
+	SUBDIRECTORIES :=
+	include $$(d)/Rules.mk
+	d := $$(DIRECTORY_STACK_$$(STACK_POINTER))
+	STACK_POINTER := $$(basename $$(STACK_POINTER))
 endef
 
 define PARSE_SUBDIRECTORIES
-$(foreach subdirectory,$(1),$(eval $(call PARSE_SUBDIRECTORY,$(subdirectory))))
+	$(foreach subdirectory,$(1),$(eval $(call PARSE_SUBDIRECTORY,$(subdirectory))))
 endef
 
 #-----------------------------------------------------------------------------------------------------------------------
@@ -197,8 +197,10 @@ endef
 all: targets
 
 ifeq ($(DO_INCLUDE),1)
+
     # trigger parsing of all Rules.mk files
     include Rules.mk
+
 endif
 
 # generated files depend (order-only) on their directories
