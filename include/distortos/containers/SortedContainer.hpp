@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-01-15
+ * \date 2015-10-18
  */
 
 #ifndef INCLUDE_DISTORTOS_CONTAINERS_SORTEDCONTAINER_HPP_
@@ -105,7 +105,7 @@ public:
 	 * \param [in] allocator is a reference to allocator_type object used to copy-construct allocator of container
 	 */
 
-	explicit SortedContainerBase(const allocator_type& allocator = allocator_type{}) :
+	constexpr explicit SortedContainerBase(const allocator_type& allocator = allocator_type{}) :
 			container_{allocator}
 	{
 
@@ -239,7 +239,8 @@ public:
 	 * \param [in] allocator is a reference to allocator_type object used to copy-construct allocator of container
 	 */
 
-	explicit SortedContainer(const Compare& compare = Compare{}, const allocator_type& allocator = allocator_type{}) :
+	constexpr explicit SortedContainer(const Compare& compare = Compare{},
+			const allocator_type& allocator = allocator_type{}) :
 			Base{allocator},
 			compare_(compare)
 	{
@@ -337,7 +338,8 @@ public:
 	 * \param [in] allocator is a reference to allocator_type object used to copy-construct allocator of container
 	 */
 
-	explicit SortedContainer(const Compare& compare = Compare{}, const allocator_type& allocator = allocator_type{}) :
+	constexpr explicit SortedContainer(const Compare& compare = Compare{},
+			const allocator_type& allocator = allocator_type{}) :
 			Base{allocator},
 			compare_(compare)
 	{
