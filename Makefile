@@ -25,6 +25,11 @@ SET_SIMPLE_TARGETS = $(eval DO_INCLUDE := 0)
 # check all simple targets if present
 $(eval $(foreach target,$(SIMPLE_TARGETS),$(call CHECK_SIMPLE_TARGETS,$(target))))
 
+# remove all "
+UNQUOTE_D = $(subst ",,$(1))
+# The single " in the macro will influence the syntax highlightig of some editors, so that it becomes unusable.
+# Adding another comment line with a single quote closes the first one.
+
 #-----------------------------------------------------------------------------------------------------------------------
 # load configuration variables from distortosConfiguration.mk file selected by user
 #-----------------------------------------------------------------------------------------------------------------------
@@ -40,7 +45,7 @@ ifeq ($(DO_INCLUDE),1)
     include selectedConfiguration.mk
 
     # path to distortosConfiguration.mk file selected by $(CONFIG_SELECTED_CONFIGURATION) variable
-    DISTORTOS_CONFIGURATION_MK = ./$(subst ",,$(CONFIG_SELECTED_CONFIGURATION))
+    DISTORTOS_CONFIGURATION_MK = ./$(call UNQUOTE_D,$(CONFIG_SELECTED_CONFIGURATION))
 
     include $(DISTORTOS_CONFIGURATION_MK)
 
@@ -50,7 +55,7 @@ endif
 # toolchain configuration
 #-----------------------------------------------------------------------------------------------------------------------
 
-CONFIG_TOOLCHAIN_PREFIX := $(subst ",,$(CONFIG_TOOLCHAIN_PREFIX))
+CONFIG_TOOLCHAIN_PREFIX := $(call UNQUOTE_D,$(CONFIG_TOOLCHAIN_PREFIX))
 
 AS = $(CONFIG_TOOLCHAIN_PREFIX)gcc
 CC = $(CONFIG_TOOLCHAIN_PREFIX)gcc
@@ -104,8 +109,8 @@ VERBOSE ?= 0
 # compilation flags
 #-----------------------------------------------------------------------------------------------------------------------
 
-CONFIG_ARCHITECTURE_FLAGS := $(subst ",,$(CONFIG_ARCHITECTURE_FLAGS))
-CONFIG_BUILD_OPTIMIZATION := $(subst ",,$(CONFIG_BUILD_OPTIMIZATION))
+CONFIG_ARCHITECTURE_FLAGS := $(call UNQUOTE_D,$(CONFIG_ARCHITECTURE_FLAGS))
+CONFIG_BUILD_OPTIMIZATION := $(call UNQUOTE_D,$(CONFIG_BUILD_OPTIMIZATION))
 
 ASFLAGS += $(CONFIG_ARCHITECTURE_FLAGS)
 ASFLAGS += $(DBGFLAGS)
@@ -126,7 +131,7 @@ CXXFLAGS += $(DBGFLAGS)
 CXXFLAGS += -ffunction-sections -fdata-sections -fno-rtti -fno-exceptions -MD -MP
 
 # path to linker script (generated automatically)
-LDSCRIPT = $(OUTPUT)$(subst ",,$(CONFIG_CHIP)).ld
+LDSCRIPT = $(OUTPUT)$(call UNQUOTE_D,$(CONFIG_CHIP)).ld
 
 LDFLAGS += $(CONFIG_ARCHITECTURE_FLAGS)
 LDFLAGS += -g -Wl,-Map=$(@:.elf=.map),--cref,--gc-sections
@@ -139,10 +144,10 @@ LDFLAGS += -g -Wl,-Map=$(@:.elf=.map),--cref,--gc-sections
 STANDARD_INCLUDES += -I$(OUTPUT)include -Iinclude
 
 # architecture includes
-ARCHITECTURE_INCLUDES += $(patsubst %,-I%,$(subst ",,$(CONFIG_ARCHITECTURE_INCLUDES)))
+ARCHITECTURE_INCLUDES += $(patsubst %,-I%,$(call UNQUOTE_D,$(CONFIG_ARCHITECTURE_INCLUDES)))
 
 # chip includes
-CHIP_INCLUDES += $(patsubst %,-I%,$(subst ",,$(CONFIG_CHIP_INCLUDES)))
+CHIP_INCLUDES += $(patsubst %,-I%,$(call UNQUOTE_D,$(CONFIG_CHIP_INCLUDES)))
 
 #-----------------------------------------------------------------------------------------------------------------------
 # build macros
