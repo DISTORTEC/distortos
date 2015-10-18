@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-02-02
+ * \date 2015-10-18
  */
 
 #ifndef INCLUDE_DISTORTOS_CONDITIONVARIABLE_HPP_
@@ -106,17 +106,7 @@ public:
 	 */
 
 	template<typename Predicate>
-	int wait(Mutex& mutex, Predicate predicate)
-	{
-		while (predicate() == false)
-		{
-			const auto ret = wait(mutex);
-			if (ret != 0)
-				return ret;
-		}
-
-		return 0;
-	}
+	int wait(Mutex& mutex, Predicate predicate);
 
 	/**
 	 * \brief Waits for notification for given duration of time.
@@ -269,23 +259,39 @@ public:
 	 */
 
 	template<typename Duration, typename Predicate>
-	int waitUntil(Mutex& mutex, const std::chrono::time_point<TickClock, Duration> timePoint, Predicate predicate)
-	{
-		while (predicate() == false)
-		{
-			const auto ret = waitUntil(mutex, timePoint);
-			if (ret != 0)
-				return ret;
-		}
-
-		return 0;
-	}
+	int waitUntil(Mutex& mutex, std::chrono::time_point<TickClock, Duration> timePoint, Predicate predicate);
 
 private:
 
 	/// ThreadControlBlock objects blocked on this condition variable
 	scheduler::ThreadControlBlockList blockedList_;
 };
+
+template<typename Predicate>
+int ConditionVariable::wait(Mutex& mutex, Predicate predicate)
+{
+	while (predicate() == false)
+	{
+		const auto ret = wait(mutex);
+		if (ret != 0)
+			return ret;
+	}
+
+	return 0;
+}
+
+template<typename Duration, typename Predicate>
+int ConditionVariable::waitUntil(Mutex& mutex, const std::chrono::time_point<TickClock, Duration> timePoint, Predicate predicate)
+{
+	while (predicate() == false)
+	{
+		const auto ret = waitUntil(mutex, timePoint);
+		if (ret != 0)
+			return ret;
+	}
+
+	return 0;
+}
 
 }	// namespace distortos
 
