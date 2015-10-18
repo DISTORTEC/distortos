@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-02-23
+ * \date 2015-10-18
  */
 
 #ifndef INCLUDE_SYS_SIGNAL_H_
@@ -24,13 +24,14 @@ extern "C"
 +---------------------------------------------------------------------------------------------------------------------*/
 
 /** pointer to function taking an int argument (required by newlib's signal.h) */
-typedef void (*_sig_func_ptr)(int);
+typedef void (* _sig_func_ptr)(int);
 
 /** standard sigval union - integer and void pointer */
 union sigval
 {
 	/** integer signal value */
 	int sival_int;
+
 	/** pointer signal value */
 	void* sival_ptr;
 };
