@@ -242,7 +242,7 @@ public:
 	constexpr explicit SortedContainer(const Compare& compare = Compare{},
 			const allocator_type& allocator = allocator_type{}) :
 			Base{allocator},
-			compare_(compare)
+			compare_{compare}
 	{
 
 	}
@@ -341,7 +341,7 @@ public:
 	constexpr explicit SortedContainer(const Compare& compare = Compare{},
 			const allocator_type& allocator = allocator_type{}) :
 			Base{allocator},
-			compare_(compare)
+			compare_{compare}
 	{
 
 	}
