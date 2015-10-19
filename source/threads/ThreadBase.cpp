@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-10-18
+ * \date 2015-10-19
  */
 
 #include "distortos/ThreadBase.hpp"
@@ -120,7 +120,7 @@ void ThreadBase::threadRunner(ThreadBase& threadBase)
 void ThreadBase::terminationHook()
 {
 	joinSemaphore_.post();
-	getThreadControlBlock().setList(nullptr);
+	threadControlBlock_.setList(nullptr);
 }
 
 }	// namespace distortos
