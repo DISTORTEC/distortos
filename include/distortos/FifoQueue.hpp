@@ -65,36 +65,6 @@ public:
 	}
 
 	/**
-	 * \brief FifoQueue's constructor
-	 *
-	 * \param N is the number of elements in \a storage array
-	 *
-	 * \param [in] storage is a reference to array of Storage elements
-	 */
-
-	template<size_t N>
-	explicit FifoQueue(Storage (& storage)[N]) :
-			FifoQueue{storage, sizeof(storage) / sizeof(*storage)}
-	{
-
-	}
-
-	/**
-	 * \brief FifoQueue's constructor
-	 *
-	 * \param N is the number of elements in \a storage array
-	 *
-	 * \param [in] storage is a reference to std::array of Storage elements
-	 */
-
-	template<size_t N>
-	explicit FifoQueue(std::array<Storage, N>& storage) :
-			FifoQueue{storage.data(), storage.size()}
-	{
-
-	}
-
-	/**
 	 * \brief FifoQueue's destructor
 	 *
 	 * Pops all remaining elements from the queue.
