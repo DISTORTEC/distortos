@@ -44,6 +44,12 @@ public:
 	FifoQueueBase(memory::StorageUniquePointer&& storageUniquePointer, size_t elementSize, size_t maxElements);
 
 	/**
+	 * \brief FifoQueueBase's destructor
+	 */
+
+	~FifoQueueBase();
+
+	/**
 	 * \return size of single queue element, bytes
 	 */
 
