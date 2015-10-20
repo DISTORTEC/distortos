@@ -8,11 +8,13 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-10-17
+ * \date 2015-10-20
  */
 
 #ifndef INCLUDE_DISTORTOS_FIFOQUEUE_HPP_
 #define INCLUDE_DISTORTOS_FIFOQUEUE_HPP_
+
+#include "distortos/memory/dummyDeleter.hpp"
 
 #include "distortos/synchronization/FifoQueueBase.hpp"
 #include "distortos/synchronization/CopyConstructQueueFunctor.hpp"
@@ -54,7 +56,7 @@ public:
 	 */
 
 	FifoQueue(Storage* const storage, const size_t maxElements) :
-			fifoQueueBase_{storage, sizeof(T), maxElements}
+			fifoQueueBase_{{storage, memory::dummyDeleter}, sizeof(T), maxElements}
 	{
 
 	}

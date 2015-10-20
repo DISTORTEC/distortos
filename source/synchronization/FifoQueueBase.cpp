@@ -15,8 +15,6 @@
 
 #include "distortos/architecture/InterruptMaskingLock.hpp"
 
-#include "distortos/memory/dummyDeleter.hpp"
-
 namespace distortos
 {
 
@@ -27,13 +25,13 @@ namespace synchronization
 | public functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-FifoQueueBase::FifoQueueBase(void* const storage, const size_t elementSize, const size_t maxElements) :
+FifoQueueBase::FifoQueueBase(memory::StorageUniquePointer&& storageUniquePointer, const size_t elementSize, const size_t maxElements) :
 		popSemaphore_{0, maxElements},
 		pushSemaphore_{maxElements, maxElements},
-		storageUniquePointer_{storage, memory::dummyDeleter},
-		storageEnd_{static_cast<uint8_t*>(storage) + elementSize * maxElements},
-		readPosition_{storage},
-		writePosition_{storage},
+		storageUniquePointer_{std::move(storageUniquePointer)},
+		storageEnd_{static_cast<uint8_t*>(storageUniquePointer_.get()) + elementSize * maxElements},
+		readPosition_{storageUniquePointer_.get()},
+		writePosition_{storageUniquePointer_.get()},
 		elementSize_{elementSize}
 {
 

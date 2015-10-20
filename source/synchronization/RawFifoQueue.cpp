@@ -8,10 +8,12 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-10-17
+ * \date 2015-10-20
  */
 
 #include "distortos/RawFifoQueue.hpp"
+
+#include "distortos/memory/dummyDeleter.hpp"
 
 #include "distortos/synchronization/MemcpyPopQueueFunctor.hpp"
 #include "distortos/synchronization/MemcpyPushQueueFunctor.hpp"
@@ -31,7 +33,7 @@ namespace distortos
 +---------------------------------------------------------------------------------------------------------------------*/
 
 RawFifoQueue::RawFifoQueue(void* const storage, const size_t elementSize, const size_t maxElements) :
-		fifoQueueBase_{storage, elementSize, maxElements}
+		fifoQueueBase_{{storage, memory::dummyDeleter}, elementSize, maxElements}
 {
 
 }
