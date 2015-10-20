@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-10-16
+ * \date 2015-10-20
  */
 
 #ifndef INCLUDE_DISTORTOS_DYNAMICFIFOQUEUE_HPP_
@@ -16,7 +16,7 @@
 
 #include "FifoQueue.hpp"
 
-#include <memory>
+#include "distortos/memory/dummyDeleter.hpp"
 
 namespace distortos
 {
@@ -252,7 +252,7 @@ private:
 template<typename T>
 DynamicFifoQueue<T>::DynamicFifoQueue(const size_t queueSize) :
 		storageUniquePointer_{new typename StorageUniquePointer::element_type[queueSize]},
-		fifoQueue_{storageUniquePointer_.get(), queueSize}
+		fifoQueue_{{storageUniquePointer_.get(), memory::dummyDeleter}, queueSize}
 {
 
 }

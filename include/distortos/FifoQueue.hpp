@@ -14,8 +14,6 @@
 #ifndef INCLUDE_DISTORTOS_FIFOQUEUE_HPP_
 #define INCLUDE_DISTORTOS_FIFOQUEUE_HPP_
 
-#include "distortos/memory/dummyDeleter.hpp"
-
 #include "distortos/synchronization/FifoQueueBase.hpp"
 #include "distortos/synchronization/CopyConstructQueueFunctor.hpp"
 #include "distortos/synchronization/MoveConstructQueueFunctor.hpp"
@@ -54,12 +52,13 @@ public:
 	/**
 	 * \brief FifoQueue's constructor
 	 *
-	 * \param [in] storage is an array of Storage elements
+	 * \param [in] storageUniquePointer is a rvalue reference to StorageUniquePointer with storage for queue elements
+	 * (sufficiently large for \a maxElements, each sizeof(T) bytes long) and appropriate deleter
 	 * \param [in] maxElements is the number of elements in storage array
 	 */
 
-	FifoQueue(Storage* const storage, const size_t maxElements) :
-			fifoQueueBase_{{storage, memory::dummyDeleter}, sizeof(T), maxElements}
+	FifoQueue(StorageUniquePointer&& storageUniquePointer, const size_t maxElements) :
+			fifoQueueBase_{{storageUniquePointer.release(), storageUniquePointer.get_deleter()}, sizeof(T), maxElements}
 	{
 
 	}
