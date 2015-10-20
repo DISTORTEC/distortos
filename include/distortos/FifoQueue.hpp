@@ -48,6 +48,9 @@ public:
 	/// type of uninitialized storage for data
 	using Storage = typename std::aligned_storage<sizeof(T), alignof(T)>::type;
 
+	/// unique_ptr (with deleter) to Storage[]
+	using StorageUniquePointer = std::unique_ptr<Storage[], memory::StorageUniquePointer::deleter_type>;
+
 	/**
 	 * \brief FifoQueue's constructor
 	 *
