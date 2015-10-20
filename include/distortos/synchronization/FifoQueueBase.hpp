@@ -8,13 +8,15 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-10-17
+ * \date 2015-10-20
  */
 
 #ifndef INCLUDE_DISTORTOS_SYNCHRONIZATION_FIFOQUEUEBASE_HPP_
 #define INCLUDE_DISTORTOS_SYNCHRONIZATION_FIFOQUEUEBASE_HPP_
 
 #include "distortos/Semaphore.hpp"
+
+#include "distortos/memory/StorageUniquePointer.hpp"
 
 #include "distortos/synchronization/QueueFunctor.hpp"
 #include "distortos/synchronization/SemaphoreFunctor.hpp"
@@ -113,8 +115,8 @@ private:
 	/// semaphore guarding access to "push" functions - its value is equal to the number of free slots
 	Semaphore pushSemaphore_;
 
-	/// beginning of storage for queue elements
-	void* const storageBegin_;
+	/// storage for queue elements
+	const memory::StorageUniquePointer storageUniquePointer_;
 
 	/// pointer to past-the-last element of storage for queue elements
 	const void* const storageEnd_;
