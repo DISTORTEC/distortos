@@ -164,14 +164,6 @@ public:
 private:
 
 	/**
-	 * \brief MessageQueueBase's constructor - internal version
-	 *
-	 * \param [in] maxElements is the maximum number of elements the queue can hold
-	 */
-
-	explicit MessageQueueBase(size_t maxElements);
-
-	/**
 	 * \brief Implementation of pop() and push() using type-erased internal functor
 	 *
 	 * \param [in] waitSemaphoreFunctor is a reference to SemaphoreFunctor which will be executed with \a waitSemaphore

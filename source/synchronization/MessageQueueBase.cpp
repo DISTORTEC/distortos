@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-10-18
+ * \date 2015-10-21
  */
 
 #include "distortos/synchronization/MessageQueueBase.hpp"
@@ -139,7 +139,12 @@ private:
 
 MessageQueueBase::MessageQueueBase(EntryStorage* const entryStorage, void* const valueStorage, const size_t elementSize,
 		const size_t maxElements) :
-		MessageQueueBase{maxElements}
+		popSemaphore_{0, maxElements},
+		pushSemaphore_{maxElements, maxElements},
+		pool_{},
+		poolAllocator_{pool_},
+		entryList_{poolAllocator_},
+		freeEntryList_{poolAllocator_}
 {
 	for (size_t i = 0; i < maxElements; ++i)
 	{
@@ -164,17 +169,6 @@ int MessageQueueBase::push(const SemaphoreFunctor& waitSemaphoreFunctor, const u
 /*---------------------------------------------------------------------------------------------------------------------+
 | private functions
 +---------------------------------------------------------------------------------------------------------------------*/
-
-MessageQueueBase::MessageQueueBase(const size_t maxElements) :
-		popSemaphore_{0, maxElements},
-		pushSemaphore_{maxElements, maxElements},
-		pool_{},
-		poolAllocator_{pool_},
-		entryList_{poolAllocator_},
-		freeEntryList_{poolAllocator_}
-{
-
-}
 
 int MessageQueueBase::popPush(const SemaphoreFunctor& waitSemaphoreFunctor, const InternalFunctor& internalFunctor,
 		Semaphore& waitSemaphore, Semaphore& postSemaphore)
