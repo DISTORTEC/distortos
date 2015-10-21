@@ -132,6 +132,12 @@ public:
 	MessageQueueBase(EntryStorage* entryStorage, void* valueStorage, size_t elementSize, size_t maxElements);
 
 	/**
+	 * \brief MessageQueueBase's destructor
+	 */
+
+	~MessageQueueBase();
+
+	/**
 	 * \brief Implementation of pop() using type-erased functor
 	 *
 	 * \param [in] waitSemaphoreFunctor is a reference to SemaphoreFunctor which will be executed with \a popSemaphore_

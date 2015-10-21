@@ -153,6 +153,11 @@ MessageQueueBase::MessageQueueBase(EntryStorage* const entryStorage, void* const
 	}
 }
 
+MessageQueueBase::~MessageQueueBase()
+{
+
+}
+
 int MessageQueueBase::pop(const SemaphoreFunctor& waitSemaphoreFunctor, uint8_t& priority, const QueueFunctor& functor)
 {
 	const PopInternalFunctor popInternalFunctor {priority, functor};
