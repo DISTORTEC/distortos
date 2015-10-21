@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-10-16
+ * \date 2015-10-21
  */
 
 #ifndef INCLUDE_DISTORTOS_SYNCHRONIZATION_MESSAGEQUEUEBASE_HPP_
@@ -76,22 +76,6 @@ public:
 	template<typename T>
 	using ValueStorage = typename std::aligned_storage<sizeof(T), alignof(T)>::type;
 
-	/**
-	 * type of uninitialized storage for data
-	 *
-	 * \param T is the type of data in queue
-	 */
-
-	template<typename T>
-	struct Storage
-	{
-		/// storage for Entry
-		EntryStorage entryStorage;
-
-		/// storage for value
-		ValueStorage<T> valueStorage;
-	};
-
 	/// functor which gives descending priority order of elements on the list
 	struct DescendingPriority
 	{
@@ -134,18 +118,6 @@ public:
 	{
 
 	};
-
-	/**
-	 * \brief MessageQueueBase's constructor
-	 *
-	 * \param T is the type of data in queue
-	 *
-	 * \param [in] storage is an array of Storage elements
-	 * \param [in] maxElements is the number of elements in \a storage array
-	 */
-
-	template<typename T>
-	MessageQueueBase(Storage<T>* storage, size_t maxElements);
 
 	/**
 	 * \brief MessageQueueBase's constructor
@@ -236,17 +208,6 @@ private:
 	/// list of "free" entries
 	FreeEntryList freeEntryList_;
 };
-
-template<typename T>
-MessageQueueBase::MessageQueueBase(Storage<T>* const storage, const size_t maxElements) :
-		MessageQueueBase{maxElements}
-{
-	for (size_t i = 0; i < maxElements; ++i)
-	{
-		pool_.feed(storage[i].entryStorage);
-		freeEntryList_.emplace_front(uint8_t{}, &storage[i].valueStorage);
-	}
-}
 
 }	// namespace synchronization
 
