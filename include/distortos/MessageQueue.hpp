@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-10-17
+ * \date 2015-10-21
  */
 
 #ifndef INCLUDE_DISTORTOS_MESSAGEQUEUE_HPP_
@@ -50,52 +50,6 @@ public:
 
 	/// type of uninitialized storage for value
 	using ValueStorage = synchronization::MessageQueueBase::ValueStorage<T>;
-
-	/// type of uninitialized storage for data
-	using Storage = synchronization::MessageQueueBase::Storage<T>;
-
-	/**
-	 * \brief MessageQueue's constructor
-	 *
-	 * \param [in] storage is an array of Storage elements
-	 * \param [in] maxElements is the number of elements in storage array
-	 */
-
-	MessageQueue(Storage* const storage, const size_t maxElements) :
-			messageQueueBase_{storage, maxElements}
-	{
-
-	}
-
-	/**
-	 * \brief MessageQueue's constructor
-	 *
-	 * \param N is the number of elements in \a storage array
-	 *
-	 * \param [in] storage is a reference to array of Storage elements
-	 */
-
-	template<size_t N>
-	explicit MessageQueue(Storage (& storage)[N]) :
-			MessageQueue{storage, sizeof(storage) / sizeof(*storage)}
-	{
-
-	}
-
-	/**
-	 * \brief MessageQueue's constructor
-	 *
-	 * \param N is the number of elements in \a storage array
-	 *
-	 * \param [in] storage is a reference to std::array of Storage elements
-	 */
-
-	template<size_t N>
-	explicit MessageQueue(std::array<Storage, N>& storage) :
-			MessageQueue{storage.data(), storage.size()}
-	{
-
-	}
 
 	/**
 	 * \brief MessageQueue's constructor
