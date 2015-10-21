@@ -29,13 +29,13 @@ public:
 	/**
 	 * \brief RawFifoQueue's constructor
 	 *
-	 * \param [in] storage is a memory block for elements, sufficiently large for \a maxElements, each \a elementSize
-	 * bytes long
+	 * \param [in] storageUniquePointer is a rvalue reference to StorageUniquePointer with storage for queue elements
+	 * (sufficiently large for \a maxElements, each \a elementSize bytes long) and appropriate deleter
 	 * \param [in] elementSize is the size of single queue element, bytes
 	 * \param [in] maxElements is the number of elements in storage memory block
 	 */
 
-	RawFifoQueue(void* storage, size_t elementSize, size_t maxElements);
+	RawFifoQueue(memory::StorageUniquePointer&& storageUniquePointer, size_t elementSize, size_t maxElements);
 
 	/**
 	 * \brief Pops the oldest (first) element from the queue.

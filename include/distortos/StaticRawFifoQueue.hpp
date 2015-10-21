@@ -16,6 +16,8 @@
 
 #include "RawFifoQueue.hpp"
 
+#include "distortos/memory/dummyDeleter.hpp"
+
 namespace distortos
 {
 
@@ -39,7 +41,7 @@ public:
 	 */
 
 	explicit StaticRawFifoQueue() :
-			rawFifoQueue_{storage_.data(), sizeof(*storage_.data()), storage_.size()}
+			rawFifoQueue_{{storage_.data(), memory::dummyDeleter}, sizeof(*storage_.data()), storage_.size()}
 	{
 
 	}
