@@ -13,7 +13,7 @@
 
 #include "distortos/DynamicRawFifoQueue.hpp"
 
-#include "distortos/memory/dummyDeleter.hpp"
+#include "distortos/memory/storageDeleter.hpp"
 
 namespace distortos
 {
@@ -23,13 +23,7 @@ namespace distortos
 +---------------------------------------------------------------------------------------------------------------------*/
 
 DynamicRawFifoQueue::DynamicRawFifoQueue(const size_t elementSize, const size_t queueSize) :
-		storageUniquePointer_{new uint8_t[elementSize * queueSize]},
-		rawFifoQueue_{{storageUniquePointer_.get(), memory::dummyDeleter}, elementSize, queueSize}
-{
-
-}
-
-DynamicRawFifoQueue::~DynamicRawFifoQueue()
+		RawFifoQueue{{new uint8_t[elementSize * queueSize], memory::storageDeleter<uint8_t>}, elementSize, queueSize}
 {
 
 }
