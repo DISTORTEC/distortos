@@ -66,60 +66,6 @@ public:
 	}
 
 	/**
-	 * \brief RawMessageQueue's constructor
-	 *
-	 * \param T is the type of data in queue
-	 *
-	 * \param [in] entryStorage is an array of EntryStorage elements
-	 * \param [in] valueStorage is a memory block for elements, sufficiently large for \a maxElements, each sizeof(T)
-	 * bytes long
-	 * \param [in] maxElements is the number of elements in \a entryStorage array and \a valueStorage memory block
-	 */
-
-	template<typename T>
-	RawMessageQueue(EntryStorage* const entryStorage, T* const valueStorage, const size_t maxElements) :
-			RawMessageQueue{entryStorage, valueStorage, sizeof(*valueStorage), maxElements}
-	{
-
-	}
-
-	/**
-	 * \brief RawMessageQueue's constructor
-	 *
-	 * \param T is the type of data in queue
-	 * \param N is the number of elements in \a entryStorage array and \a valueStorage memory block
-	 *
-	 * \param [in] entryStorage is a reference to an array of \a N EntryStorage elements
-	 * \param [in] valueStorage is a reference to array that will be used as storage for \a N elements, each sizeof(T)
-	 * bytes long
-	 */
-
-	template<typename T, size_t N>
-	RawMessageQueue(EntryStorage (& entryStorage)[N], T (& valueStorage)[N]) :
-			RawMessageQueue{entryStorage, valueStorage, sizeof(valueStorage) / sizeof(*valueStorage)}
-	{
-
-	}
-
-	/**
-	 * \brief RawMessageQueue's constructor
-	 *
-	 * \param T is the type of data in queue
-	 * \param N is the number of elements in \a entryStorage array and \a valueStorage memory block
-	 *
-	 * \param [in] entryStorage is a reference to an std::array of \a N EntryStorage elements
-	 * \param [in] valueStorage is a reference to std::array that will be used as storage for \a N elements, each
-	 * sizeof(T) bytes long
-	 */
-
-	template<typename T, size_t N>
-	RawMessageQueue(std::array<EntryStorage, N>& entryStorage, std::array<T, N>& valueStorage) :
-			RawMessageQueue{entryStorage.data(), valueStorage.data(), valueStorage.size()}
-	{
-
-	}
-
-	/**
 	 * \brief Pops oldest element with highest priority from the queue.
 	 *
 	 * Similar to mq_receive() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/mq_receive.html#
