@@ -15,8 +15,6 @@
 
 #include "distortos/architecture/InterruptMaskingLock.hpp"
 
-#include "distortos/memory/dummyDeleter.hpp"
-
 namespace distortos
 {
 
@@ -139,12 +137,12 @@ private:
 | public functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-MessageQueueBase::MessageQueueBase(EntryStorage* const entryStorage, void* const valueStorage, const size_t elementSize,
-		const size_t maxElements) :
+MessageQueueBase::MessageQueueBase(EntryStorageUniquePointer&& entryStorageUniquePointer,
+		memory::StorageUniquePointer&& valueStorageUniquePointer, size_t elementSize, size_t maxElements) :
 		popSemaphore_{0, maxElements},
 		pushSemaphore_{maxElements, maxElements},
-		entryStorageUniquePointer_{entryStorage, memory::dummyDeleter},
-		valueStorageUniquePointer_{valueStorage, memory::dummyDeleter},
+		entryStorageUniquePointer_{std::move(entryStorageUniquePointer)},
+		valueStorageUniquePointer_{std::move(valueStorageUniquePointer)},
 		pool_{},
 		poolAllocator_{pool_},
 		entryList_{poolAllocator_},
@@ -152,8 +150,9 @@ MessageQueueBase::MessageQueueBase(EntryStorage* const entryStorage, void* const
 {
 	for (size_t i = 0; i < maxElements; ++i)
 	{
-		pool_.feed(entryStorage[i]);
-		freeEntryList_.emplace_front(uint8_t{}, &reinterpret_cast<uint8_t*>(valueStorage)[elementSize * i]);
+		pool_.feed(entryStorageUniquePointer_[i]);
+		freeEntryList_.emplace_front(uint8_t{},
+				&reinterpret_cast<uint8_t*>(valueStorageUniquePointer_.get())[elementSize * i]);
 	}
 }
 

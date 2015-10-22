@@ -127,14 +127,16 @@ public:
 	/**
 	 * \brief MessageQueueBase's constructor
 	 *
-	 * \param [in] entryStorage is an array of EntryStorage elements
-	 * \param [in] valueStorage is a memory block for elements, sufficiently large for \a maxElements, each
-	 * \a elementSize bytes long
+	 * \param [in] entryStorageUniquePointer is a rvalue reference to EntryStorageUniquePointer with storage for queue
+	 * entries (sufficiently large for \a maxElements EntryStorage objects) and appropriate deleter
+	 * \param [in] valueStorageUniquePointer is a rvalue reference to StorageUniquePointer with storage for queue
+	 * elements (sufficiently large for \a maxElements, each \a elementSize bytes long) and appropriate deleter
 	 * \param [in] elementSize is the size of single queue element, bytes
 	 * \param [in] maxElements is the number of elements in \a entryStorage array and valueStorage memory block
 	 */
 
-	MessageQueueBase(EntryStorage* entryStorage, void* valueStorage, size_t elementSize, size_t maxElements);
+	MessageQueueBase(EntryStorageUniquePointer&& entryStorageUniquePointer,
+			memory::StorageUniquePointer&& valueStorageUniquePointer, size_t elementSize, size_t maxElements);
 
 	/**
 	 * \brief MessageQueueBase's destructor

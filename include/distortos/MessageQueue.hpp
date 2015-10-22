@@ -8,11 +8,13 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-10-21
+ * \date 2015-10-22
  */
 
 #ifndef INCLUDE_DISTORTOS_MESSAGEQUEUE_HPP_
 #define INCLUDE_DISTORTOS_MESSAGEQUEUE_HPP_
+
+#include "distortos/memory/dummyDeleter.hpp"
 
 #include "distortos/synchronization/MessageQueueBase.hpp"
 #include "distortos/synchronization/CopyConstructQueueFunctor.hpp"
@@ -60,7 +62,8 @@ public:
 	 */
 
 	MessageQueue(EntryStorage* const entryStorage, ValueStorage* const valueStorage, const size_t maxElements) :
-			messageQueueBase_{entryStorage, valueStorage, sizeof(*valueStorage), maxElements}
+			messageQueueBase_{{entryStorage, memory::dummyDeleter}, {valueStorage, memory::dummyDeleter},
+					sizeof(*valueStorage), maxElements}
 	{
 
 	}
