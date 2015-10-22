@@ -37,6 +37,9 @@ public:
 	/// type of uninitialized storage for Entry with link
 	using EntryStorage = synchronization::MessageQueueBase::EntryStorage;
 
+	/// import EntryStorageUniquePointer type from synchronization::MessageQueueBase class
+	using EntryStorageUniquePointer = synchronization::MessageQueueBase::EntryStorageUniquePointer;
+
 	/**
 	 * type of uninitialized storage for value
 	 *
