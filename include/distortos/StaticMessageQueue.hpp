@@ -16,6 +16,8 @@
 
 #include "MessageQueue.hpp"
 
+#include "distortos/memory/dummyDeleter.hpp"
+
 namespace distortos
 {
 
@@ -39,7 +41,8 @@ public:
 	 */
 
 	explicit StaticMessageQueue() :
-			messageQueue_{entryStorage_.data(), valueStorage_.data(), valueStorage_.size()}
+			messageQueue_{{entryStorage_.data(), memory::dummyDeleter}, {valueStorage_.data(), memory::dummyDeleter},
+					valueStorage_.size()}
 	{
 
 	}

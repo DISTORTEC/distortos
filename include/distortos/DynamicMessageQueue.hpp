@@ -16,7 +16,7 @@
 
 #include "MessageQueue.hpp"
 
-#include <memory>
+#include "distortos/memory/dummyDeleter.hpp"
 
 namespace distortos
 {
@@ -262,7 +262,8 @@ template<typename T>
 DynamicMessageQueue<T>::DynamicMessageQueue(const size_t queueSize) :
 		entryStorageUniquePointer_{new typename EntryStorageUniquePointer::element_type[queueSize]},
 		valueStorageUniquePointer_{new typename ValueStorageUniquePointer::element_type[queueSize]},
-		messageQueue_{entryStorageUniquePointer_.get(), valueStorageUniquePointer_.get(), queueSize}
+		messageQueue_{{entryStorageUniquePointer_.get(), memory::dummyDeleter},
+				{valueStorageUniquePointer_.get(), memory::dummyDeleter}, queueSize}
 {
 
 }

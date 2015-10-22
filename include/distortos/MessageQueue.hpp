@@ -14,8 +14,6 @@
 #ifndef INCLUDE_DISTORTOS_MESSAGEQUEUE_HPP_
 #define INCLUDE_DISTORTOS_MESSAGEQUEUE_HPP_
 
-#include "distortos/memory/dummyDeleter.hpp"
-
 #include "distortos/synchronization/MessageQueueBase.hpp"
 #include "distortos/synchronization/CopyConstructQueueFunctor.hpp"
 #include "distortos/synchronization/MoveConstructQueueFunctor.hpp"
@@ -62,14 +60,18 @@ public:
 	/**
 	 * \brief MessageQueue's constructor
 	 *
-	 * \param [in] entryStorage is an array of EntryStorage elements
-	 * \param [in] valueStorage is an array of ValueStorage elements
+	 * \param [in] entryStorageUniquePointer is a rvalue reference to EntryStorageUniquePointer with storage for queue
+	 * entries (sufficiently large for \a maxElements EntryStorage objects) and appropriate deleter
+	 * \param [in] valueStorageUniquePointer is a rvalue reference to StorageUniquePointer with storage for queue
+	 * elements (sufficiently large for \a maxElements, each sizeof(T) bytes long) and appropriate deleter
 	 * \param [in] maxElements is the number of elements in \a entryStorage and \a valueStorage arrays
 	 */
 
-	MessageQueue(EntryStorage* const entryStorage, ValueStorage* const valueStorage, const size_t maxElements) :
-			messageQueueBase_{{entryStorage, memory::dummyDeleter}, {valueStorage, memory::dummyDeleter},
-					sizeof(*valueStorage), maxElements}
+	MessageQueue(EntryStorageUniquePointer&& entryStorageUniquePointer,
+			ValueStorageUniquePointer&& valueStorageUniquePointer, const size_t maxElements) :
+			messageQueueBase_{std::move(entryStorageUniquePointer),
+					{valueStorageUniquePointer.release(), valueStorageUniquePointer.get_deleter()},
+					sizeof(*valueStorageUniquePointer.get()), maxElements}
 	{
 
 	}
