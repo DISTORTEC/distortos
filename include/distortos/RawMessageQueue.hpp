@@ -59,14 +59,7 @@ public:
 	 */
 
 	RawMessageQueue(EntryStorageUniquePointer&& entryStorageUniquePointer,
-			memory::StorageUniquePointer&& valueStorageUniquePointer, const size_t elementSize,
-			const size_t maxElements) :
-			messageQueueBase_{std::move(entryStorageUniquePointer), std::move(valueStorageUniquePointer), elementSize,
-					maxElements},
-			elementSize_{elementSize}
-	{
-
-	}
+			memory::StorageUniquePointer&& valueStorageUniquePointer, size_t elementSize, size_t maxElements);
 
 	/**
 	 * \brief Pops oldest element with highest priority from the queue.
