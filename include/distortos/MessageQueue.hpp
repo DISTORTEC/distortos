@@ -53,6 +53,9 @@ public:
 	/// type of uninitialized storage for value
 	using ValueStorage = synchronization::MessageQueueBase::ValueStorage<T>;
 
+	/// import EntryStorageUniquePointer type from synchronization::MessageQueueBase class
+	using EntryStorageUniquePointer = synchronization::MessageQueueBase::EntryStorageUniquePointer;
+
 	/// unique_ptr (with deleter) to ValueStorage[]
 	using ValueStorageUniquePointer = std::unique_ptr<ValueStorage[], memory::StorageUniquePointer::deleter_type>;
 
