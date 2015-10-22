@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-10-17
+ * \date 2015-10-22
  */
 
 #ifndef INCLUDE_DISTORTOS_STATICMESSAGEQUEUE_HPP_
@@ -39,7 +39,7 @@ public:
 	 */
 
 	explicit StaticMessageQueue() :
-			messageQueue_{entryStorage_, valueStorage_}
+			messageQueue_{entryStorage_.data(), valueStorage_.data(), valueStorage_.size()}
 	{
 
 	}
