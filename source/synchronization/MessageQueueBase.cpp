@@ -8,12 +8,14 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-10-21
+ * \date 2015-10-22
  */
 
 #include "distortos/synchronization/MessageQueueBase.hpp"
 
 #include "distortos/architecture/InterruptMaskingLock.hpp"
+
+#include "distortos/memory/dummyDeleter.hpp"
 
 namespace distortos
 {
@@ -141,6 +143,8 @@ MessageQueueBase::MessageQueueBase(EntryStorage* const entryStorage, void* const
 		const size_t maxElements) :
 		popSemaphore_{0, maxElements},
 		pushSemaphore_{maxElements, maxElements},
+		entryStorageUniquePointer_{entryStorage, memory::dummyDeleter},
+		valueStorageUniquePointer_{valueStorage, memory::dummyDeleter},
 		pool_{},
 		poolAllocator_{pool_},
 		entryList_{poolAllocator_},

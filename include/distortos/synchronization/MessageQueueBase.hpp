@@ -199,6 +199,12 @@ private:
 	/// semaphore guarding access to "push" functions - its value is equal to the number of free slots
 	Semaphore pushSemaphore_;
 
+	/// storage for queue entries
+	const EntryStorageUniquePointer entryStorageUniquePointer_;
+
+	/// storage for queue elements
+	const memory::StorageUniquePointer valueStorageUniquePointer_;
+
 	/// FeedablePool used by \a poolAllocator_
 	Pool pool_;
 
