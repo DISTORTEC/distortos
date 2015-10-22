@@ -72,38 +72,6 @@ public:
 	}
 
 	/**
-	 * \brief MessageQueue's constructor
-	 *
-	 * \param N is the number of elements in \a entryStorage and \a valueStorage arrays
-	 *
-	 * \param [in] entryStorage is a reference to array of \a N EntryStorage elements
-	 * \param [in] valueStorage is a reference to array of \a N ValueStorage elements
-	 */
-
-	template<size_t N>
-	MessageQueue(EntryStorage (& entryStorage)[N], ValueStorage (& valueStorage)[N]) :
-			MessageQueue{entryStorage, valueStorage, sizeof(valueStorage) / sizeof(*valueStorage)}
-	{
-
-	}
-
-	/**
-	 * \brief MessageQueue's constructor
-	 *
-	 * \param N is the number of elements in \a entryStorage and \a valueStorage arrays
-	 *
-	 * \param [in] entryStorage is a reference to std::array of \a N EntryStorage elements
-	 * \param [in] valueStorage is a reference to std::array of \a N ValueStorage elements
-	 */
-
-	template<size_t N>
-	MessageQueue(std::array<EntryStorage, N>& entryStorage, std::array<ValueStorage, N>& valueStorage) :
-			MessageQueue{entryStorage.data(), valueStorage.data(), valueStorage.size()}
-	{
-
-	}
-
-	/**
 	 * \brief MessageQueue's destructor
 	 *
 	 * Pops all remaining elements from the queue.
