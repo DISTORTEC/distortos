@@ -13,6 +13,8 @@
 
 #include "distortos/DynamicRawMessageQueue.hpp"
 
+#include "distortos/memory/dummyDeleter.hpp"
+
 namespace distortos
 {
 
@@ -23,7 +25,8 @@ namespace distortos
 DynamicRawMessageQueue::DynamicRawMessageQueue(const size_t elementSize, const size_t queueSize) :
 		entryStorageUniquePointer_{new typename EntryStorageUniquePointer::element_type[queueSize]},
 		valueStorageUniquePointer_{new uint8_t[elementSize * queueSize]},
-		rawMessageQueue_{entryStorageUniquePointer_.get(), valueStorageUniquePointer_.get(), elementSize, queueSize}
+		rawMessageQueue_{{entryStorageUniquePointer_.get(), memory::dummyDeleter},
+				{valueStorageUniquePointer_.get(), memory::dummyDeleter}, elementSize, queueSize}
 {
 
 }

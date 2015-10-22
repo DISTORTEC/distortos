@@ -14,8 +14,6 @@
 #ifndef INCLUDE_DISTORTOS_RAWMESSAGEQUEUE_HPP_
 #define INCLUDE_DISTORTOS_RAWMESSAGEQUEUE_HPP_
 
-#include "distortos/memory/dummyDeleter.hpp"
-
 #include "distortos/synchronization/MessageQueueBase.hpp"
 
 namespace distortos
@@ -52,16 +50,18 @@ public:
 	/**
 	 * \brief RawMessageQueue's constructor
 	 *
-	 * \param [in] entryStorage is an array of EntryStorage elements
-	 * \param [in] valueStorage is a memory block for elements, sufficiently large for \a maxElements, each
-	 * \a elementSize bytes long
+	 * \param [in] entryStorageUniquePointer is a rvalue reference to EntryStorageUniquePointer with storage for queue
+	 * entries (sufficiently large for \a maxElements EntryStorage objects) and appropriate deleter
+	 * \param [in] valueStorageUniquePointer is a rvalue reference to StorageUniquePointer with storage for queue
+	 * elements (sufficiently large for \a maxElements, each \a elementSize bytes long) and appropriate deleter
 	 * \param [in] elementSize is the size of single queue element, bytes
 	 * \param [in] maxElements is the number of elements in \a entryStorage array and \a valueStorage memory block
 	 */
 
-	RawMessageQueue(EntryStorage* const entryStorage, void* const valueStorage, const size_t elementSize,
+	RawMessageQueue(EntryStorageUniquePointer&& entryStorageUniquePointer,
+			memory::StorageUniquePointer&& valueStorageUniquePointer, const size_t elementSize,
 			const size_t maxElements) :
-			messageQueueBase_{{entryStorage, memory::dummyDeleter}, {valueStorage, memory::dummyDeleter}, elementSize,
+			messageQueueBase_{std::move(entryStorageUniquePointer), std::move(valueStorageUniquePointer), elementSize,
 					maxElements},
 			elementSize_{elementSize}
 	{

@@ -17,6 +17,8 @@
 
 #include "distortos/RawMessageQueue.hpp"
 
+#include "distortos/memory/dummyDeleter.hpp"
+
 namespace distortos
 {
 
@@ -40,8 +42,8 @@ public:
 	 */
 
 	explicit StaticRawMessageQueue() :
-			rawMessageQueue_{entryStorage_.data(), valueStorage_.data(), sizeof(*valueStorage_.data()),
-					valueStorage_.size()}
+			rawMessageQueue_{{entryStorage_.data(), memory::dummyDeleter}, {valueStorage_.data(), memory::dummyDeleter},
+					sizeof(*valueStorage_.data()), valueStorage_.size()}
 	{
 
 	}
