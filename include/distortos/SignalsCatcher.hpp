@@ -14,8 +14,6 @@
 #ifndef INCLUDE_DISTORTOS_SIGNALSCATCHER_HPP_
 #define INCLUDE_DISTORTOS_SIGNALSCATCHER_HPP_
 
-#include "distortos/memory/dummyDeleter.hpp"
-
 #include "distortos/synchronization/SignalsCatcherControlBlock.hpp"
 
 namespace distortos
@@ -44,13 +42,13 @@ public:
 	/**
 	 * \brief SignalsCatcher's constructor
 	 *
-	 * \param [in] storage is a memory block for storage of synchronization::SignalsCatcherControlBlock::Association
-	 * objects, sufficiently large for \a storageSize elements
+	 * \param [in] storageUniquePointer is a rvalue reference to StorageUniquePointer with storage for
+	 * synchronization::Association objects (sufficiently large for \a storageSize elements) and appropriate deleter
 	 * \param [in] storageSize is the number of elements in \a storage array
 	 */
 
-	SignalsCatcher(Storage* const storage, const size_t storageSize) :
-			signalsCatcherControlBlock_{{storage, memory::dummyDeleter}, storageSize}
+	SignalsCatcher(StorageUniquePointer&& storageUniquePointer, const size_t storageSize) :
+			signalsCatcherControlBlock_{std::move(storageUniquePointer), storageSize}
 	{
 
 	}
