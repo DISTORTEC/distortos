@@ -87,6 +87,11 @@ public:
 
 	int queueSignal(uint8_t signalNumber, sigval value);
 
+	SignalInformationQueue(const SignalInformationQueue&) = delete;
+	SignalInformationQueue(SignalInformationQueue&&) = default;
+	const SignalInformationQueue& operator=(const SignalInformationQueue&) = delete;
+	SignalInformationQueue& operator=(SignalInformationQueue&&) = delete;
+
 private:
 
 	/// type of allocator used by \a List
