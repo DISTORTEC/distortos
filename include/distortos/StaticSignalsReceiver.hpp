@@ -24,10 +24,8 @@ namespace distortos
 {
 
 /**
- * \brief StaticSignalsReceiver class is a templated wrapper for SignalsReceiver that also provides automatic storage
- * for queued signals and SignalAction associations required for catching signals.
- *
- * \note Objects of this class can be safely casted to (const) reference to SignalsReceiver.
+ * \brief StaticSignalsReceiver class is a templated interface for SignalsReceiver that has automatic storage for queued
+ * signals and SignalAction associations required for catching signals.
  *
  * \param QueuedSignals is the max number of queued signals, 0 to disable queuing of signals for this receiver
  * \param SignalActions is the max number of different SignalAction objects, 0 to disable catching of signals for this
@@ -35,7 +33,7 @@ namespace distortos
  */
 
 template<size_t QueuedSignals, size_t SignalActions>
-class StaticSignalsReceiver
+class StaticSignalsReceiver : public SignalsReceiver
 {
 public:
 
@@ -44,34 +42,12 @@ public:
 	 */
 
 	StaticSignalsReceiver() :
+			SignalsReceiver{&signalInformationQueueWrapper_, &signalsCatcher_},
 			signalInformationQueueWrapper_{{signalInformationQueueWrapperStorage_.data(), memory::dummyDeleter},
 					signalInformationQueueWrapperStorage_.size()},
-			signalsCatcher_{{signalsCatcherStorage_.data(), memory::dummyDeleter}, signalsCatcherStorage_.size()},
-			signalsReceiver_{&signalInformationQueueWrapper_, &signalsCatcher_}
+			signalsCatcher_{{signalsCatcherStorage_.data(), memory::dummyDeleter}, signalsCatcherStorage_.size()}
 	{
 
-	}
-
-	/**
-	 * \brief conversion to SignalsReceiver&
-	 *
-	 * \return reference to internal SignalsReceiver object
-	 */
-
-	operator SignalsReceiver&()
-	{
-		return signalsReceiver_;
-	}
-
-	/**
-	 * \brief conversion to const SignalsReceiver&
-	 *
-	 * \return const reference to internal SignalsReceiver object
-	 */
-
-	operator const SignalsReceiver&() const
-	{
-		return signalsReceiver_;
 	}
 
 private:
@@ -87,16 +63,11 @@ private:
 
 	/// internal SignalsCatcher object
 	SignalsCatcher signalsCatcher_;
-
-	/// internal SignalsReceiver object
-	SignalsReceiver signalsReceiver_;
 };
 
 /**
- * \brief StaticSignalsReceiver class is a templated wrapper for SignalsReceiver that also provides automatic storage
- * for queued signals and SignalAction associations required for catching signals.
- *
- * \note Objects of this class can be safely casted to (const) reference to SignalsReceiver.
+ * \brief StaticSignalsReceiver class is a templated interface for SignalsReceiver that has automatic storage for queued
+ * signals and SignalAction associations required for catching signals.
  *
  * \param QueuedSignals is the max number of queued signals
  *
@@ -105,7 +76,7 @@ private:
  */
 
 template<size_t QueuedSignals>
-class StaticSignalsReceiver<QueuedSignals, 0>
+class StaticSignalsReceiver<QueuedSignals, 0> : public SignalsReceiver
 {
 public:
 
@@ -114,33 +85,11 @@ public:
 	 */
 
 	StaticSignalsReceiver() :
+			SignalsReceiver{&signalInformationQueueWrapper_, nullptr},
 			signalInformationQueueWrapper_{{signalInformationQueueWrapperStorage_.data(), memory::dummyDeleter},
-					signalInformationQueueWrapperStorage_.size()},
-			signalsReceiver_{&signalInformationQueueWrapper_, nullptr}
+					signalInformationQueueWrapperStorage_.size()}
 	{
 
-	}
-
-	/**
-	 * \brief conversion to SignalsReceiver&
-	 *
-	 * \return reference to internal SignalsReceiver object
-	 */
-
-	operator SignalsReceiver&()
-	{
-		return signalsReceiver_;
-	}
-
-	/**
-	 * \brief conversion to const SignalsReceiver&
-	 *
-	 * \return const reference to internal SignalsReceiver object
-	 */
-
-	operator const SignalsReceiver&() const
-	{
-		return signalsReceiver_;
 	}
 
 private:
@@ -150,16 +99,11 @@ private:
 
 	/// internal SignalInformationQueueWrapper object
 	SignalInformationQueueWrapper signalInformationQueueWrapper_;
-
-	/// internal SignalsReceiver object
-	SignalsReceiver signalsReceiver_;
 };
 
 /**
- * \brief StaticSignalsReceiver class is a templated wrapper for SignalsReceiver that also provides automatic storage
- * for queued signals and SignalAction associations required for catching signals.
- *
- * \note Objects of this class can be safely casted to (const) reference to SignalsReceiver.
+ * \brief StaticSignalsReceiver class is a templated interface for SignalsReceiver that has automatic storage for queued
+ * signals and SignalAction associations required for catching signals.
  *
  * \param SignalActions is the max number of different SignalAction objects
  *
@@ -168,7 +112,7 @@ private:
  */
 
 template<size_t SignalActions>
-class StaticSignalsReceiver<0, SignalActions>
+class StaticSignalsReceiver<0, SignalActions> : public SignalsReceiver
 {
 public:
 
@@ -177,32 +121,10 @@ public:
 	 */
 
 	StaticSignalsReceiver() :
-			signalsCatcher_{{signalsCatcherStorage_.data(), memory::dummyDeleter}, signalsCatcherStorage_.size()},
-			signalsReceiver_{nullptr, &signalsCatcher_}
+			SignalsReceiver{nullptr, &signalsCatcher_},
+			signalsCatcher_{{signalsCatcherStorage_.data(), memory::dummyDeleter}, signalsCatcherStorage_.size()}
 	{
 
-	}
-
-	/**
-	 * \brief conversion to SignalsReceiver&
-	 *
-	 * \return reference to internal SignalsReceiver object
-	 */
-
-	operator SignalsReceiver&()
-	{
-		return signalsReceiver_;
-	}
-
-	/**
-	 * \brief conversion to const SignalsReceiver&
-	 *
-	 * \return const reference to internal SignalsReceiver object
-	 */
-
-	operator const SignalsReceiver&() const
-	{
-		return signalsReceiver_;
 	}
 
 private:
@@ -212,22 +134,17 @@ private:
 
 	/// internal SignalsCatcher object
 	SignalsCatcher signalsCatcher_;
-
-	/// internal SignalsReceiver object
-	SignalsReceiver signalsReceiver_;
 };
 
 /**
- * \brief StaticSignalsReceiver class is a templated wrapper for SignalsReceiver that also provides automatic storage
- * for queued signals and SignalAction associations required for catching signals.
- *
- * \note Objects of this class can be safely casted to (const) reference to SignalsReceiver.
+ * \brief StaticSignalsReceiver class is a templated interface for SignalsReceiver that has automatic storage for queued
+ * signals and SignalAction associations required for catching signals.
  *
  * Specialization for receiver with disabled queuing (QueuedSignals == 0) and catching (SignalActions == 0) of signals
  */
 
 template<>
-class StaticSignalsReceiver<0, 0>
+class StaticSignalsReceiver<0, 0> : public SignalsReceiver
 {
 public:
 
@@ -236,37 +153,10 @@ public:
 	 */
 
 	StaticSignalsReceiver() :
-			signalsReceiver_{nullptr, nullptr}
+			SignalsReceiver{nullptr, nullptr}
 	{
 
 	}
-
-	/**
-	 * \brief conversion to SignalsReceiver&
-	 *
-	 * \return reference to internal SignalsReceiver object
-	 */
-
-	operator SignalsReceiver&()
-	{
-		return signalsReceiver_;
-	}
-
-	/**
-	 * \brief conversion to const SignalsReceiver&
-	 *
-	 * \return const reference to internal SignalsReceiver object
-	 */
-
-	operator const SignalsReceiver&() const
-	{
-		return signalsReceiver_;
-	}
-
-private:
-
-	/// internal SignalsReceiver object
-	SignalsReceiver signalsReceiver_;
 };
 
 }	// namespace distortos
