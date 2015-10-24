@@ -22,21 +22,13 @@ namespace distortos
 {
 
 /**
- * \brief DynamicSignalsReceiver class is a wrapper for SignalsReceiver that also provides dynamic storage for queued
+ * \brief DynamicSignalsReceiver class is a templated interface for SignalsReceiver that has dynamic storage for queued
  * signals and SignalAction associations required for catching signals.
- *
- * \note Objects of this class can be safely casted to (const) reference to SignalsReceiver.
  */
 
-class DynamicSignalsReceiver
+class DynamicSignalsReceiver : public SignalsReceiver
 {
 public:
-
-	/// unique_ptr to SignalInformationQueueWrapper::Storage
-	using SignalInformationStorageUniquePointer = std::unique_ptr<SignalInformationQueueWrapper::Storage>;
-
-	/// unique_ptr to SignalsCatcher::Storage
-	using SignalsCatcherStorageUniquePointer = std::unique_ptr<SignalsCatcher::Storage>;
 
 	/**
 	 * \brief DynamicSignalsReceiver's constructor
@@ -48,55 +40,13 @@ public:
 
 	DynamicSignalsReceiver(size_t queuedSignals, size_t signalActions);
 
-	/**
-	 * \brief DynamicSignalsReceiver's destructor
-	 */
-
-	~DynamicSignalsReceiver();
-
-	/**
-	 * \brief conversion to SignalsReceiver&
-	 *
-	 * \return reference to internal SignalsReceiver object
-	 */
-
-	operator SignalsReceiver&()
-	{
-		return signalsReceiver_;
-	}
-
-	/**
-	 * \brief conversion to const SignalsReceiver&
-	 *
-	 * \return const reference to internal SignalsReceiver object
-	 */
-
-	operator const SignalsReceiver&() const
-	{
-		return signalsReceiver_;
-	}
-
-	DynamicSignalsReceiver(const DynamicSignalsReceiver&) = delete;
-	DynamicSignalsReceiver(DynamicSignalsReceiver&&) = default;
-	const DynamicSignalsReceiver& operator=(const DynamicSignalsReceiver&) = delete;
-	DynamicSignalsReceiver& operator=(DynamicSignalsReceiver&&) = delete;
-
 private:
-
-	/// unique_ptr to allocated storage for \a signalInformationQueueWrapper_
-	SignalInformationStorageUniquePointer signalInformationStorageUniquePointer_;
 
 	/// internal SignalInformationQueueWrapper object
 	SignalInformationQueueWrapper signalInformationQueueWrapper_;
 
-	/// unique_ptr to allocated storage for \a signalsCatcher_
-	SignalsCatcherStorageUniquePointer signalsCatcherStorageUniquePointer_;
-
 	/// internal SignalsCatcher object
 	SignalsCatcher signalsCatcher_;
-
-	/// internal SignalsReceiver object
-	SignalsReceiver signalsReceiver_;
 };
 
 }	// namespace distortos

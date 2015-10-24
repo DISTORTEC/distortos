@@ -13,7 +13,7 @@
 
 #include "distortos/DynamicSignalsReceiver.hpp"
 
-#include "distortos/memory/dummyDeleter.hpp"
+#include "distortos/memory/storageDeleter.hpp"
 
 namespace distortos
 {
@@ -23,20 +23,12 @@ namespace distortos
 +---------------------------------------------------------------------------------------------------------------------*/
 
 DynamicSignalsReceiver::DynamicSignalsReceiver(const size_t queuedSignals, const size_t signalActions) :
-		signalInformationStorageUniquePointer_{queuedSignals != 0 ?
-				new SignalInformationQueueWrapper::Storage[queuedSignals] : nullptr},
-		signalInformationQueueWrapper_{{signalInformationStorageUniquePointer_.get(), memory::dummyDeleter},
-				queuedSignals},
-		signalsCatcherStorageUniquePointer_{signalActions != 0 ?
-				new SignalsCatcher::Storage[signalActions]: nullptr},
-		signalsCatcher_{{signalsCatcherStorageUniquePointer_.get(), memory::dummyDeleter}, signalActions},
-		signalsReceiver_{queuedSignals != 0 ? &signalInformationQueueWrapper_ : nullptr,
-				signalActions != 0 ? &signalsCatcher_ : nullptr}
-{
-
-}
-
-DynamicSignalsReceiver::~DynamicSignalsReceiver()
+		SignalsReceiver{queuedSignals != 0 ? &signalInformationQueueWrapper_ : nullptr,
+				signalActions != 0 ? &signalsCatcher_ : nullptr},
+		signalInformationQueueWrapper_{{queuedSignals != 0 ? new SignalInformationQueueWrapper::Storage[queuedSignals] :
+				nullptr, memory::storageDeleter<SignalInformationQueueWrapper::Storage>}, queuedSignals},
+		signalsCatcher_{{signalActions != 0 ? new SignalsCatcher::Storage[signalActions] : nullptr,
+				memory::storageDeleter<SignalsCatcher::Storage>}, signalActions}
 {
 
 }
