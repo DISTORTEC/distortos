@@ -95,6 +95,9 @@ private:
 	/// type of container with SignalInformation objects
 	using List = std::forward_list<SignalInformation, PoolAllocator>;
 
+	/// storage for queue elements
+	StorageUniquePointer storageUniquePointer_;
+
 	/// PoolAllocator::Pool used by \a poolAllocator_
 	PoolAllocator::Pool pool_;
 
