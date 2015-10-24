@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-10-22
+ * \date 2015-10-24
  */
 
 #ifndef INCLUDE_DISTORTOS_SYNCHRONIZATION_MESSAGEQUEUEBASE_HPP_
@@ -70,7 +70,7 @@ public:
 	using EntryStorage = typename std::aligned_storage<sizeof(LinkAndEntry), alignof(LinkAndEntry)>::type;
 
 	/// unique_ptr (with deleter) to EntryStorage[]
-	using EntryStorageUniquePointer = std::unique_ptr<EntryStorage[], memory::StorageUniquePointer::deleter_type>;
+	using EntryStorageUniquePointer = std::unique_ptr<EntryStorage[], void(&)(EntryStorage*)>;
 
 	/**
 	 * type of uninitialized storage for value
