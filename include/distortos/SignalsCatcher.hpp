@@ -38,6 +38,9 @@ public:
 	/// import Storage type alias from synchronization::SignalsCatcherControlBlock
 	using Storage = synchronization::SignalsCatcherControlBlock::Storage;
 
+	/// import StorageUniquePointer type alias from synchronization::SignalsCatcherControlBlock
+	using StorageUniquePointer = synchronization::SignalsCatcherControlBlock::StorageUniquePointer;
+
 	/**
 	 * \brief SignalsCatcher's constructor
 	 *
