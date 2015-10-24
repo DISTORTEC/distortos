@@ -16,8 +16,6 @@
 
 #include "distortos/SignalAction.hpp"
 
-#include "distortos/memory/dummyDeleter.hpp"
-
 #include <memory>
 
 namespace distortos
@@ -57,16 +55,7 @@ public:
 	 * \param [in] storageSize is the number of elements in \a storage array
 	 */
 
-	SignalsCatcherControlBlock(Storage* const storage, const size_t storageSize) :
-			storageUniquePointer_{storage, memory::dummyDeleter},
-			signalMask_{SignalSet::empty},
-			associationsBegin_{reinterpret_cast<decltype(associationsBegin_)>(storage)},
-			storageBegin_{storage},
-			storageEnd_{storage + storageSize},
-			deliveryIsPending_{}
-	{
-
-	}
+	SignalsCatcherControlBlock(Storage* storage, size_t storageSize);
 
 	/**
 	 * \brief SignalsCatcherControlBlock's destructor
