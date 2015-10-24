@@ -8,11 +8,13 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-03-26
+ * \date 2015-10-24
  */
 
 #ifndef INCLUDE_DISTORTOS_SIGNALINFORMATIONQUEUEWRAPPER_HPP_
 #define INCLUDE_DISTORTOS_SIGNALINFORMATIONQUEUEWRAPPER_HPP_
+
+#include "distortos/memory/dummyDeleter.hpp"
 
 #include "distortos/synchronization/SignalInformationQueue.hpp"
 
@@ -46,7 +48,7 @@ public:
 	 */
 
 	SignalInformationQueueWrapper(Storage* storage, size_t maxElements) :
-			signalInformationQueue_{storage, maxElements}
+			signalInformationQueue_{{storage, memory::dummyDeleter}, maxElements}
 	{
 
 	}

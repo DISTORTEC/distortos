@@ -15,8 +15,6 @@
 
 #include "distortos/SignalSet.hpp"
 
-#include "distortos/memory/dummyDeleter.hpp"
-
 #include <cerrno>
 
 namespace distortos
@@ -29,8 +27,8 @@ namespace synchronization
 | public functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-SignalInformationQueue::SignalInformationQueue(Storage* const storage, const size_t maxElements) :
-		storageUniquePointer_{storage, memory::dummyDeleter},
+SignalInformationQueue::SignalInformationQueue(StorageUniquePointer&& storageUniquePointer, const size_t maxElements) :
+		storageUniquePointer_{std::move(storageUniquePointer)},
 		pool_{},
 		poolAllocator_{pool_},
 		signalInformationList_{poolAllocator_},
@@ -38,7 +36,7 @@ SignalInformationQueue::SignalInformationQueue(Storage* const storage, const siz
 {
 	for (size_t i {}; i < maxElements; ++i)
 	{
-		pool_.feed(storage[i]);
+		pool_.feed(storageUniquePointer_[i]);
 		freeSignalInformationList_.emplace_front(uint8_t{}, SignalInformation::Code{}, sigval{});
 	}
 }

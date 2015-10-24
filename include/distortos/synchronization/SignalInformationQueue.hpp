@@ -48,11 +48,12 @@ public:
 	/**
 	 * \brief SignalInformationQueue's constructor
 	 *
-	 * \param [in] storage is an array of Storage elements
+	 * \param [in] storageUniquePointer is a rvalue reference to StorageUniquePointer with storage for queue elements
+	 * (sufficiently large for \a maxElements Storage objects) and appropriate deleter
 	 * \param [in] maxElements is the number of elements in \a storage array
 	 */
 
-	SignalInformationQueue(Storage* storage, size_t maxElements);
+	SignalInformationQueue(StorageUniquePointer&& storageUniquePointer, size_t maxElements);
 
 	/**
 	 * \brief SignalInformationQueue's destructor
