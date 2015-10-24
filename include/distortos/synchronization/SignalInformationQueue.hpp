@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-03-31
+ * \date 2015-10-24
  */
 
 #ifndef INCLUDE_DISTORTOS_SYNCHRONIZATION_SIGNALINFORMATIONQUEUE_HPP_
@@ -20,6 +20,7 @@
 #include "distortos/SignalInformation.hpp"
 
 #include <forward_list>
+#include <memory>
 
 namespace distortos
 {
@@ -40,6 +41,9 @@ public:
 	/// type of uninitialized storage for SignalInformation with link
 	using Storage =
 			typename std::aligned_storage<sizeof(LinkAndSignalInformation), alignof(LinkAndSignalInformation)>::type;
+
+	/// unique_ptr (with deleter) to Storage[]
+	using StorageUniquePointer = std::unique_ptr<Storage[], void(&)(Storage*)>;
 
 	/**
 	 * \brief SignalInformationQueue's constructor
