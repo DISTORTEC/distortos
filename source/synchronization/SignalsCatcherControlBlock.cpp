@@ -18,8 +18,6 @@
 #include "distortos/architecture/InterruptMaskingLock.hpp"
 #include "distortos/architecture/requestFunctionExecution.hpp"
 
-#include "distortos/memory/dummyDeleter.hpp"
-
 #include "distortos/scheduler/getScheduler.hpp"
 #include "distortos/scheduler/Scheduler.hpp"
 
@@ -165,12 +163,13 @@ void deliverSignals()
 | public functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-SignalsCatcherControlBlock::SignalsCatcherControlBlock(Storage* const storage, const size_t storageSize) :
-		storageUniquePointer_{storage, memory::dummyDeleter},
+SignalsCatcherControlBlock::SignalsCatcherControlBlock(StorageUniquePointer&& storageUniquePointer,
+		const size_t storageSize) :
+		storageUniquePointer_{std::move(storageUniquePointer)},
 		signalMask_{SignalSet::empty},
-		associationsBegin_{reinterpret_cast<decltype(associationsBegin_)>(storage)},
-		storageBegin_{storage},
-		storageEnd_{storage + storageSize},
+		associationsBegin_{reinterpret_cast<decltype(associationsBegin_)>(storageUniquePointer_.get())},
+		storageBegin_{storageUniquePointer_.get()},
+		storageEnd_{&storageUniquePointer_[storageSize]},
 		deliveryIsPending_{}
 {
 

@@ -50,12 +50,12 @@ public:
 	/**
 	 * \brief SignalsCatcherControlBlock's constructor
 	 *
-	 * \param [in] storage is a memory block for storage of Association objects, sufficiently large for \a storageSize
-	 * elements
+	 * \param [in] storageUniquePointer is a rvalue reference to StorageUniquePointer with storage for Association
+	 * objects (sufficiently large for \a storageSize elements) and appropriate deleter
 	 * \param [in] storageSize is the number of elements in \a storage array
 	 */
 
-	SignalsCatcherControlBlock(Storage* storage, size_t storageSize);
+	SignalsCatcherControlBlock(StorageUniquePointer&& storageUniquePointer, size_t storageSize);
 
 	/**
 	 * \brief SignalsCatcherControlBlock's destructor

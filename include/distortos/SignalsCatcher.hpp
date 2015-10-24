@@ -14,6 +14,8 @@
 #ifndef INCLUDE_DISTORTOS_SIGNALSCATCHER_HPP_
 #define INCLUDE_DISTORTOS_SIGNALSCATCHER_HPP_
 
+#include "distortos/memory/dummyDeleter.hpp"
+
 #include "distortos/synchronization/SignalsCatcherControlBlock.hpp"
 
 #include <array>
@@ -47,7 +49,7 @@ public:
 	 */
 
 	SignalsCatcher(Storage* const storage, const size_t storageSize) :
-			signalsCatcherControlBlock_{storage, storageSize}
+			signalsCatcherControlBlock_{{storage, memory::dummyDeleter}, storageSize}
 	{
 
 	}
