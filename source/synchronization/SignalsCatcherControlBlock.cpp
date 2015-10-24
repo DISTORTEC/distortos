@@ -185,7 +185,7 @@ std::pair<int, SignalAction> SignalsCatcherControlBlock::getAssociation(const ui
 	if (signalNumber >= SignalSet::Bitset{}.size())
 		return {EINVAL, {}};
 
-	const auto association = findAssociation(associationsBegin_, associationsEnd_, signalNumber);
+	const auto association = findAssociation(getAssociationsBegin(), associationsEnd_, signalNumber);
 	if (association == associationsEnd_)	// there is no association for this signal number?
 		return {{}, {}};
 
@@ -218,8 +218,8 @@ std::pair<int, SignalAction> SignalsCatcherControlBlock::setAssociation(const ui
 		return {{}, previousSignalAction};
 	}
 
-	const auto numberAssociation = findAssociation(associationsBegin_, associationsEnd_, signalNumber);
-	const auto actionAssociation = findAssociation(associationsBegin_, associationsEnd_, signalAction);
+	const auto numberAssociation = findAssociation(getAssociationsBegin(), associationsEnd_, signalNumber);
+	const auto actionAssociation = findAssociation(getAssociationsBegin(), associationsEnd_, signalAction);
 
 	if (actionAssociation != associationsEnd_)	// there is an association for this SignalAction?
 	{
@@ -276,7 +276,7 @@ void SignalsCatcherControlBlock::setSignalMask(const SignalSet signalMask,
 
 SignalAction SignalsCatcherControlBlock::clearAssociation(const uint8_t signalNumber)
 {
-	const auto association = findAssociation(associationsBegin_, associationsEnd_, signalNumber);
+	const auto association = findAssociation(getAssociationsBegin(), associationsEnd_, signalNumber);
 	if (association == associationsEnd_)	// there is no association for this signal number?
 		return {};
 
