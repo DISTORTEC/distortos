@@ -55,6 +55,12 @@ public:
 	SignalInformationQueue(Storage* storage, size_t maxElements);
 
 	/**
+	 * \brief SignalInformationQueue's destructor
+	 */
+
+	~SignalInformationQueue();
+
+	/**
 	 * \brief Accepts (dequeues) one of signals that are queued.
 	 *
 	 * This should be called when the signal is "accepted".

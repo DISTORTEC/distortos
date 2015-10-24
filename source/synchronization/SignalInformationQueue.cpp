@@ -43,6 +43,11 @@ SignalInformationQueue::SignalInformationQueue(Storage* const storage, const siz
 	}
 }
 
+SignalInformationQueue::~SignalInformationQueue()
+{
+
+}
+
 std::pair<int, SignalInformation> SignalInformationQueue::acceptQueuedSignal(const uint8_t signalNumber)
 {
 	auto it = signalInformationList_.before_begin();
