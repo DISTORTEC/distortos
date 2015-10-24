@@ -167,7 +167,6 @@ SignalsCatcherControlBlock::SignalsCatcherControlBlock(StorageUniquePointer&& st
 		const size_t storageSize) :
 		storageUniquePointer_{std::move(storageUniquePointer)},
 		signalMask_{SignalSet::empty},
-		associationsBegin_{reinterpret_cast<decltype(associationsBegin_)>(storageUniquePointer_.get())},
 		storageBegin_{storageUniquePointer_.get()},
 		storageEnd_{&storageUniquePointer_[storageSize]},
 		deliveryIsPending_{}

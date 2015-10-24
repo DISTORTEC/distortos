@@ -197,9 +197,6 @@ private:
 	/// SignalSet with signal mask for associated thread
 	SignalSet signalMask_;
 
-	/// pointer to first element of range of Association objects
-	Association* associationsBegin_;
-
 	/// union binds \a associationsEnd_ and \a storageBegin_ - these point to the same address
 	union
 	{
