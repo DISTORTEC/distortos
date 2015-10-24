@@ -18,8 +18,6 @@
 
 #include "distortos/synchronization/SignalInformationQueue.hpp"
 
-#include <array>
-
 namespace distortos
 {
 
@@ -49,36 +47,6 @@ public:
 
 	SignalInformationQueueWrapper(Storage* storage, size_t maxElements) :
 			signalInformationQueue_{{storage, memory::dummyDeleter}, maxElements}
-	{
-
-	}
-
-	/**
-	 * \brief SignalInformationQueueWrapper's constructor
-	 *
-	 * \param N is the number of elements in \a storage array
-	 *
-	 * \param [in] storage is a reference to array of Storage elements
-	 */
-
-	template<size_t N>
-	explicit SignalInformationQueueWrapper(Storage (& storage)[N]) :
-			SignalInformationQueueWrapper{storage, sizeof(storage) / sizeof(*storage)}
-	{
-
-	}
-
-	/**
-	 * \brief SignalInformationQueueWrapper's constructor
-	 *
-	 * \param N is the number of elements in \a storage array
-	 *
-	 * \param [in] storage is a reference to std::array of Storage elements
-	 */
-
-	template<size_t N>
-	explicit SignalInformationQueueWrapper(std::array<Storage, N>& storage) :
-			SignalInformationQueueWrapper{storage.data(), storage.size()}
 	{
 
 	}
