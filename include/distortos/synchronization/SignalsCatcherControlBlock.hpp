@@ -172,6 +172,15 @@ private:
 	SignalAction clearAssociation(uint8_t signalNumber, Association& association);
 
 	/**
+	 * \return pointer to first element of range of Association objects
+	 */
+
+	Association* getAssociationsBegin() const
+	{
+		return reinterpret_cast<Association*>(storageUniquePointer_.get());
+	}
+
+	/**
 	 * \brief Requests delivery of signals to associated thread.
 	 *
 	 * Delivery of signals (via special function executed in the associated thread) is requested only if it's not
