@@ -16,14 +16,13 @@
 
 #include "distortos/Semaphore.hpp"
 
-#include "distortos/memory/StorageUniquePointer.hpp"
-
 #include "distortos/synchronization/QueueFunctor.hpp"
 #include "distortos/synchronization/SemaphoreFunctor.hpp"
 
 #include "distortos/allocators/FeedablePool.hpp"
 
 #include <forward_list>
+#include <memory>
 
 namespace distortos
 {
@@ -81,6 +80,9 @@ public:
 	template<typename T>
 	using ValueStorage = typename std::aligned_storage<sizeof(T), alignof(T)>::type;
 
+	/// unique_ptr (with deleter) to storage
+	using ValueStorageUniquePointer = std::unique_ptr<void, void(&)(void*)>;
+
 	/// functor which gives descending priority order of elements on the list
 	struct DescendingPriority
 	{
@@ -129,14 +131,14 @@ public:
 	 *
 	 * \param [in] entryStorageUniquePointer is a rvalue reference to EntryStorageUniquePointer with storage for queue
 	 * entries (sufficiently large for \a maxElements EntryStorage objects) and appropriate deleter
-	 * \param [in] valueStorageUniquePointer is a rvalue reference to StorageUniquePointer with storage for queue
+	 * \param [in] valueStorageUniquePointer is a rvalue reference to ValueStorageUniquePointer with storage for queue
 	 * elements (sufficiently large for \a maxElements, each \a elementSize bytes long) and appropriate deleter
 	 * \param [in] elementSize is the size of single queue element, bytes
 	 * \param [in] maxElements is the number of elements in \a entryStorage array and valueStorage memory block
 	 */
 
 	MessageQueueBase(EntryStorageUniquePointer&& entryStorageUniquePointer,
-			memory::StorageUniquePointer&& valueStorageUniquePointer, size_t elementSize, size_t maxElements);
+			ValueStorageUniquePointer&& valueStorageUniquePointer, size_t elementSize, size_t maxElements);
 
 	/**
 	 * \brief MessageQueueBase's destructor
@@ -205,7 +207,7 @@ private:
 	const EntryStorageUniquePointer entryStorageUniquePointer_;
 
 	/// storage for queue elements
-	const memory::StorageUniquePointer valueStorageUniquePointer_;
+	const ValueStorageUniquePointer valueStorageUniquePointer_;
 
 	/// FeedablePool used by \a poolAllocator_
 	Pool pool_;

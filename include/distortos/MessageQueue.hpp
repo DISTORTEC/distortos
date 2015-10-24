@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-10-22
+ * \date 2015-10-24
  */
 
 #ifndef INCLUDE_DISTORTOS_MESSAGEQUEUE_HPP_
@@ -55,14 +55,15 @@ public:
 	using EntryStorageUniquePointer = synchronization::MessageQueueBase::EntryStorageUniquePointer;
 
 	/// unique_ptr (with deleter) to ValueStorage[]
-	using ValueStorageUniquePointer = std::unique_ptr<ValueStorage[], memory::StorageUniquePointer::deleter_type>;
+	using ValueStorageUniquePointer =
+			std::unique_ptr<ValueStorage[], synchronization::MessageQueueBase::ValueStorageUniquePointer::deleter_type>;
 
 	/**
 	 * \brief MessageQueue's constructor
 	 *
 	 * \param [in] entryStorageUniquePointer is a rvalue reference to EntryStorageUniquePointer with storage for queue
 	 * entries (sufficiently large for \a maxElements EntryStorage objects) and appropriate deleter
-	 * \param [in] valueStorageUniquePointer is a rvalue reference to StorageUniquePointer with storage for queue
+	 * \param [in] valueStorageUniquePointer is a rvalue reference to ValueStorageUniquePointer with storage for queue
 	 * elements (sufficiently large for \a maxElements, each sizeof(T) bytes long) and appropriate deleter
 	 * \param [in] maxElements is the number of elements in \a entryStorage and \a valueStorage arrays
 	 */
