@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-10-17
+ * \date 2015-10-24
  */
 
 #ifndef INCLUDE_DISTORTOS_SIGNALSCATCHER_HPP_
@@ -46,7 +46,7 @@ public:
 	 * \param [in] storageSize is the number of elements in \a storage array
 	 */
 
-	constexpr SignalsCatcher(Storage* const storage, const size_t storageSize) :
+	SignalsCatcher(Storage* const storage, const size_t storageSize) :
 			signalsCatcherControlBlock_{storage, storageSize}
 	{
 
