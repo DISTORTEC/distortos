@@ -18,8 +18,6 @@
 
 #include "distortos/synchronization/SignalsCatcherControlBlock.hpp"
 
-#include <array>
-
 namespace distortos
 {
 
@@ -50,36 +48,6 @@ public:
 
 	SignalsCatcher(Storage* const storage, const size_t storageSize) :
 			signalsCatcherControlBlock_{{storage, memory::dummyDeleter}, storageSize}
-	{
-
-	}
-
-	/**
-	 * \brief SignalsCatcher's constructor
-	 *
-	 * \param N is the number of elements in \a storage array
-	 *
-	 * \param [in] storage is a reference to array of Storage elements
-	 */
-
-	template<size_t N>
-	constexpr explicit SignalsCatcher(Storage (& storage)[N]) :
-			SignalsCatcher{storage, sizeof(storage) / sizeof(*storage)}
-	{
-
-	}
-
-	/**
-	 * \brief SignalsCatcher's constructor
-	 *
-	 * \param N is the number of elements in \a storage array
-	 *
-	 * \param [in] storage is a reference to std::array of Storage elements
-	 */
-
-	template<size_t N>
-	constexpr explicit SignalsCatcher(std::array<Storage, N>& storage) :
-			SignalsCatcher{storage.data(), storage.size()}
 	{
 
 	}
