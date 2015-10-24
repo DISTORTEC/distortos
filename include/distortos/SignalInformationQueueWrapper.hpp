@@ -38,6 +38,9 @@ public:
 	/// import Storage type alias from synchronization::SignalInformationQueue
 	using Storage = synchronization::SignalInformationQueue::Storage;
 
+	/// import StorageUniquePointer type alias from synchronization::SignalInformationQueue
+	using StorageUniquePointer = synchronization::SignalInformationQueue::StorageUniquePointer;
+
 	/**
 	 * \brief SignalInformationQueueWrapper's constructor
 	 *
