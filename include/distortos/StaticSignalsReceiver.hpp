@@ -18,6 +18,8 @@
 #include "distortos/SignalsCatcher.hpp"
 #include "distortos/SignalsReceiver.hpp"
 
+#include "distortos/memory/dummyDeleter.hpp"
+
 namespace distortos
 {
 
@@ -42,7 +44,7 @@ public:
 	 */
 
 	StaticSignalsReceiver() :
-			signalInformationQueueWrapper_{signalInformationQueueWrapperStorage_.data(),
+			signalInformationQueueWrapper_{{signalInformationQueueWrapperStorage_.data(), memory::dummyDeleter},
 					signalInformationQueueWrapperStorage_.size()},
 			signalsCatcher_{signalsCatcherStorage_},
 			signalsReceiver_{&signalInformationQueueWrapper_, &signalsCatcher_}
@@ -112,7 +114,7 @@ public:
 	 */
 
 	StaticSignalsReceiver() :
-			signalInformationQueueWrapper_{signalInformationQueueWrapperStorage_.data(),
+			signalInformationQueueWrapper_{{signalInformationQueueWrapperStorage_.data(), memory::dummyDeleter},
 					signalInformationQueueWrapperStorage_.size()},
 			signalsReceiver_{&signalInformationQueueWrapper_, nullptr}
 	{

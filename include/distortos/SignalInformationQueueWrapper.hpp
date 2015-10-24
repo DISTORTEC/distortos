@@ -14,8 +14,6 @@
 #ifndef INCLUDE_DISTORTOS_SIGNALINFORMATIONQUEUEWRAPPER_HPP_
 #define INCLUDE_DISTORTOS_SIGNALINFORMATIONQUEUEWRAPPER_HPP_
 
-#include "distortos/memory/dummyDeleter.hpp"
-
 #include "distortos/synchronization/SignalInformationQueue.hpp"
 
 namespace distortos
@@ -44,12 +42,13 @@ public:
 	/**
 	 * \brief SignalInformationQueueWrapper's constructor
 	 *
-	 * \param [in] storage is an array of Storage elements
+	 * \param [in] storageUniquePointer is a rvalue reference to StorageUniquePointer with storage for queue elements
+	 * (sufficiently large for \a maxElements Storage objects) and appropriate deleter
 	 * \param [in] maxElements is the number of elements in \a storage array
 	 */
 
-	SignalInformationQueueWrapper(Storage* storage, size_t maxElements) :
-			signalInformationQueue_{{storage, memory::dummyDeleter}, maxElements}
+	SignalInformationQueueWrapper(StorageUniquePointer&& storageUniquePointer, const size_t maxElements) :
+			signalInformationQueue_{std::move(storageUniquePointer), maxElements}
 	{
 
 	}
