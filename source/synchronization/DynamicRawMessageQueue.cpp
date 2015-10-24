@@ -8,12 +8,12 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-10-22
+ * \date 2015-10-24
  */
 
 #include "distortos/DynamicRawMessageQueue.hpp"
 
-#include "distortos/memory/dummyDeleter.hpp"
+#include "distortos/memory/storageDeleter.hpp"
 
 namespace distortos
 {
@@ -23,19 +23,8 @@ namespace distortos
 +---------------------------------------------------------------------------------------------------------------------*/
 
 DynamicRawMessageQueue::DynamicRawMessageQueue(const size_t elementSize, const size_t queueSize) :
-		entryStorageUniquePointer_{new typename EntryStorageUniquePointer::element_type[queueSize]},
-		valueStorageUniquePointer_{new uint8_t[elementSize * queueSize]},
-		rawMessageQueue_{{entryStorageUniquePointer_.get(), memory::dummyDeleter},
-				{valueStorageUniquePointer_.get(), memory::dummyDeleter}, elementSize, queueSize}
-{
-
-}
-
-/**
- * \brief DynamicRawMessageQueue's destructor
- */
-
-DynamicRawMessageQueue::~DynamicRawMessageQueue()
+		RawMessageQueue{{new EntryStorage[queueSize], memory::storageDeleter<EntryStorage>},
+				{new uint8_t[elementSize * queueSize], memory::storageDeleter<uint8_t>}, elementSize, queueSize}
 {
 
 }
