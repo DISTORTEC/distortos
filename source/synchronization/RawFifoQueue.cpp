@@ -30,7 +30,7 @@ namespace distortos
 | public functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-RawFifoQueue::RawFifoQueue(memory::StorageUniquePointer&& storageUniquePointer, const size_t elementSize,
+RawFifoQueue::RawFifoQueue(StorageUniquePointer&& storageUniquePointer, const size_t elementSize,
 		const size_t maxElements) :
 		fifoQueueBase_{std::move(storageUniquePointer), elementSize, maxElements}
 {

@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-10-20
+ * \date 2015-10-24
  */
 
 #include "distortos/synchronization/FifoQueueBase.hpp"
@@ -25,7 +25,8 @@ namespace synchronization
 | public functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-FifoQueueBase::FifoQueueBase(memory::StorageUniquePointer&& storageUniquePointer, const size_t elementSize, const size_t maxElements) :
+FifoQueueBase::FifoQueueBase(StorageUniquePointer&& storageUniquePointer, const size_t elementSize,
+		const size_t maxElements) :
 		popSemaphore_{0, maxElements},
 		pushSemaphore_{maxElements, maxElements},
 		storageUniquePointer_{std::move(storageUniquePointer)},

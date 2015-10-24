@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-10-20
+ * \date 2015-10-24
  */
 
 #ifndef INCLUDE_DISTORTOS_FIFOQUEUE_HPP_
@@ -47,7 +47,8 @@ public:
 	using Storage = typename std::aligned_storage<sizeof(T), alignof(T)>::type;
 
 	/// unique_ptr (with deleter) to Storage[]
-	using StorageUniquePointer = std::unique_ptr<Storage[], memory::StorageUniquePointer::deleter_type>;
+	using StorageUniquePointer =
+			std::unique_ptr<Storage[], synchronization::FifoQueueBase::StorageUniquePointer::deleter_type>;
 
 	/**
 	 * \brief FifoQueue's constructor

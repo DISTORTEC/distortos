@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-10-20
+ * \date 2015-10-24
  */
 
 #ifndef INCLUDE_DISTORTOS_SYNCHRONIZATION_FIFOQUEUEBASE_HPP_
@@ -16,10 +16,10 @@
 
 #include "distortos/Semaphore.hpp"
 
-#include "distortos/memory/StorageUniquePointer.hpp"
-
 #include "distortos/synchronization/QueueFunctor.hpp"
 #include "distortos/synchronization/SemaphoreFunctor.hpp"
+
+#include <memory>
 
 namespace distortos
 {
@@ -32,6 +32,9 @@ class FifoQueueBase
 {
 public:
 
+	/// unique_ptr (with deleter) to storage
+	using StorageUniquePointer = std::unique_ptr<void, void(&)(void*)>;
+
 	/**
 	 * \brief FifoQueueBase's constructor
 	 *
@@ -41,7 +44,7 @@ public:
 	 * \param [in] maxElements is the number of elements in storage
 	 */
 
-	FifoQueueBase(memory::StorageUniquePointer&& storageUniquePointer, size_t elementSize, size_t maxElements);
+	FifoQueueBase(StorageUniquePointer&& storageUniquePointer, size_t elementSize, size_t maxElements);
 
 	/**
 	 * \brief FifoQueueBase's destructor
@@ -122,7 +125,7 @@ private:
 	Semaphore pushSemaphore_;
 
 	/// storage for queue elements
-	const memory::StorageUniquePointer storageUniquePointer_;
+	const StorageUniquePointer storageUniquePointer_;
 
 	/// pointer to past-the-last element of storage for queue elements
 	const void* const storageEnd_;
