@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-07-17
+ * \date 2015-10-24
  */
 
 #include "distortos/synchronization/SignalsCatcherControlBlock.hpp"
@@ -162,6 +162,11 @@ void deliverSignals()
 /*---------------------------------------------------------------------------------------------------------------------+
 | public functions
 +---------------------------------------------------------------------------------------------------------------------*/
+
+SignalsCatcherControlBlock::~SignalsCatcherControlBlock()
+{
+
+}
 
 std::pair<int, SignalAction> SignalsCatcherControlBlock::getAssociation(const uint8_t signalNumber) const
 {
