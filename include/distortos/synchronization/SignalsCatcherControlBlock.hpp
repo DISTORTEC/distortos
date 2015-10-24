@@ -16,6 +16,8 @@
 
 #include "distortos/SignalAction.hpp"
 
+#include <memory>
+
 namespace distortos
 {
 
@@ -41,6 +43,9 @@ public:
 
 	/// type of uninitialized storage for Association objects
 	using Storage = std::aligned_storage<sizeof(Association), alignof(Association)>::type;
+
+	/// unique_ptr (with deleter) to Storage[]
+	using StorageUniquePointer = std::unique_ptr<Storage[], void(&)(Storage*)>;
 
 	/**
 	 * \brief SignalsCatcherControlBlock's constructor
