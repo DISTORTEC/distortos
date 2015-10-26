@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-10-24
+ * \date 2015-10-26
  */
 
 #ifndef INCLUDE_DISTORTOS_STATICSIGNALSRECEIVER_HPP_
@@ -43,9 +43,11 @@ public:
 
 	StaticSignalsReceiver() :
 			SignalsReceiver{&signalInformationQueueWrapper_, &signalsCatcher_},
-			signalInformationQueueWrapper_{{signalInformationQueueWrapperStorage_.data(), memory::dummyDeleter},
+			signalInformationQueueWrapper_{{signalInformationQueueWrapperStorage_.data(),
+					memory::dummyDeleter<SignalInformationQueueWrapper::Storage>},
 					signalInformationQueueWrapperStorage_.size()},
-			signalsCatcher_{{signalsCatcherStorage_.data(), memory::dummyDeleter}, signalsCatcherStorage_.size()}
+			signalsCatcher_{{signalsCatcherStorage_.data(), memory::dummyDeleter<SignalsCatcher::Storage>},
+					signalsCatcherStorage_.size()}
 	{
 
 	}
@@ -86,7 +88,8 @@ public:
 
 	StaticSignalsReceiver() :
 			SignalsReceiver{&signalInformationQueueWrapper_, nullptr},
-			signalInformationQueueWrapper_{{signalInformationQueueWrapperStorage_.data(), memory::dummyDeleter},
+			signalInformationQueueWrapper_{{signalInformationQueueWrapperStorage_.data(),
+					memory::dummyDeleter<SignalInformationQueueWrapper::Storage>},
 					signalInformationQueueWrapperStorage_.size()}
 	{
 
@@ -122,7 +125,8 @@ public:
 
 	StaticSignalsReceiver() :
 			SignalsReceiver{nullptr, &signalsCatcher_},
-			signalsCatcher_{{signalsCatcherStorage_.data(), memory::dummyDeleter}, signalsCatcherStorage_.size()}
+			signalsCatcher_{{signalsCatcherStorage_.data(), memory::dummyDeleter<SignalsCatcher::Storage>},
+					signalsCatcherStorage_.size()}
 	{
 
 	}

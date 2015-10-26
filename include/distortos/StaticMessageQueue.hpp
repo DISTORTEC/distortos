@@ -44,8 +44,8 @@ public:
 	 */
 
 	explicit StaticMessageQueue() :
-			MessageQueue<T>{{entryStorage_.data(), memory::dummyDeleter}, {valueStorage_.data(), memory::dummyDeleter},
-					valueStorage_.size()}
+			MessageQueue<T>{{entryStorage_.data(), memory::dummyDeleter<EntryStorage>},
+					{valueStorage_.data(), memory::dummyDeleter<ValueStorage>}, valueStorage_.size()}
 	{
 
 	}

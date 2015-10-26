@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-10-24
+ * \date 2015-10-26
  */
 
 #ifndef INCLUDE_DISTORTOS_MEMORY_DUMMYDELETER_HPP_
@@ -27,13 +27,14 @@ namespace memory
 /**
  * \brief A "no-op" dummy deleter that can be used with std::unique_ptr and automatic storage.
  *
- * \param T is the type of \a storage pointer
+ * \param T is the real type of storage
+ * \param U is the type of \a storage pointer
  *
  * \param [in] storage is a pointer to storage that will be deleted
  */
 
-template<typename T>
-void dummyDeleter(T*)
+template<typename T, typename U>
+void dummyDeleter(U*)
 {
 
 }
