@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-10-21
+ * \date 2015-10-26
  */
 
 #ifndef INCLUDE_DISTORTOS_STATICRAWFIFOQUEUE_HPP_
@@ -33,6 +33,9 @@ class StaticRawFifoQueue : public RawFifoQueue
 {
 public:
 
+	/// type of uninitialized storage for data
+	using Storage = typename std::aligned_storage<sizeof(T), alignof(T)>::type;
+
 	/**
 	 * \brief StaticRawFifoQueue's constructor
 	 */
@@ -46,7 +49,7 @@ public:
 private:
 
 	/// storage for queue's contents
-	std::array<typename std::aligned_storage<sizeof(T), alignof(T)>::type, QueueSize> storage_;
+	std::array<Storage, QueueSize> storage_;
 };
 
 /**
