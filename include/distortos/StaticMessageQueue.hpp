@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-10-22
+ * \date 2015-10-26
  */
 
 #ifndef INCLUDE_DISTORTOS_STATICMESSAGEQUEUE_HPP_
@@ -33,6 +33,12 @@ class StaticMessageQueue : public MessageQueue<T>
 {
 public:
 
+	/// import EntryStorage type from base class
+	using typename MessageQueue<T>::EntryStorage;
+
+	/// import ValueStorage type from base class
+	using typename MessageQueue<T>::ValueStorage;
+
 	/**
 	 * \brief StaticMessageQueue's constructor
 	 */
@@ -47,10 +53,10 @@ public:
 private:
 
 	/// storage for queue's entries
-	std::array<typename MessageQueue<T>::EntryStorage, QueueSize> entryStorage_;
+	std::array<EntryStorage, QueueSize> entryStorage_;
 
 	/// storage for queue's contents
-	std::array<typename MessageQueue<T>::ValueStorage, QueueSize> valueStorage_;
+	std::array<ValueStorage, QueueSize> valueStorage_;
 };
 
 }	// namespace distortos
