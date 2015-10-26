@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-10-21
+ * \date 2015-10-26
  */
 
 #ifndef INCLUDE_DISTORTOS_STATICFIFOQUEUE_HPP_
@@ -33,6 +33,9 @@ class StaticFifoQueue : public FifoQueue<T>
 {
 public:
 
+	/// import Storage type from base class
+	using typename FifoQueue<T>::Storage;
+
 	/**
 	 * \brief StaticFifoQueue's constructor
 	 */
@@ -46,7 +49,7 @@ public:
 private:
 
 	/// storage for queue's contents
-	std::array<typename FifoQueue<T>::Storage, QueueSize> storage_;
+	std::array<Storage, QueueSize> storage_;
 };
 
 }	// namespace distortos
