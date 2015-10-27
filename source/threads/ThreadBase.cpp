@@ -18,8 +18,6 @@
 
 #include "distortos/architecture/InterruptMaskingLock.hpp"
 
-#include "distortos/memory/dummyDeleter.hpp"
-
 #include <cerrno>
 #include <csignal>
 
@@ -30,10 +28,10 @@ namespace distortos
 | public functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-ThreadBase::ThreadBase(void* const buffer, const size_t size, const uint8_t priority,
+ThreadBase::ThreadBase(StackStorageUniquePointer&& stackStorageUniquePointer, const size_t size, const uint8_t priority,
 		const SchedulingPolicy schedulingPolicy, scheduler::ThreadGroupControlBlock* const threadGroupControlBlock,
 		SignalsReceiver* const signalsReceiver) :
-		ThreadBase{{{buffer, memory::dummyDeleter<void*>}, size, threadRunner, *this}, priority, schedulingPolicy,
+		ThreadBase{{std::move(stackStorageUniquePointer), size, threadRunner, *this}, priority, schedulingPolicy,
 				threadGroupControlBlock, signalsReceiver}
 {
 

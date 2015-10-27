@@ -8,13 +8,15 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-07-15
+ * \date 2015-10-27
  */
 
 #ifndef INCLUDE_DISTORTOS_THREAD_HPP_
 #define INCLUDE_DISTORTOS_THREAD_HPP_
 
 #include "distortos/ThreadBase.hpp"
+
+#include "distortos/memory/dummyDeleter.hpp"
 
 namespace distortos
 {
@@ -49,7 +51,8 @@ public:
 
 	Thread(void* const buffer, const size_t size, const uint8_t priority, const SchedulingPolicy schedulingPolicy,
 			SignalsReceiver* const signalsReceiver, Function&& function, Args&&... args) :
-			ThreadBase{buffer, size, priority, schedulingPolicy, nullptr, signalsReceiver},
+			ThreadBase{{buffer, memory::dummyDeleter<void*>}, size, priority, schedulingPolicy, nullptr,
+					signalsReceiver},
 			boundFunction_{std::bind(std::forward<Function>(function), std::forward<Args>(args)...)}
 	{
 

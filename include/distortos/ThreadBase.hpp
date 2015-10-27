@@ -36,8 +36,9 @@ public:
 	/**
 	 * \brief ThreadBase's constructor.
 	 *
-	 * \param [in] buffer is a pointer to stack's buffer
-	 * \param [in] size is the size of stack's buffer, bytes
+	 * \param [in] stackStorageUniquePointer is a rvalue reference to StackStorageUniquePointer with storage for stack
+	 * (\a size bytes long) and appropriate deleter
+	 * \param [in] size is the size of stack's storage, bytes
 	 * \param [in] priority is the thread's priority, 0 - lowest, UINT8_MAX - highest
 	 * \param [in] schedulingPolicy is the scheduling policy of the thread
 	 * \param [in] threadGroupControlBlock is a pointer to scheduler::ThreadGroupControlBlock to which this object will
@@ -46,8 +47,9 @@ public:
 	 * of signals for this thread
 	 */
 
-	ThreadBase(void* buffer, size_t size, uint8_t priority, SchedulingPolicy schedulingPolicy,
-			scheduler::ThreadGroupControlBlock* threadGroupControlBlock, SignalsReceiver* signalsReceiver);
+	ThreadBase(StackStorageUniquePointer&& stackStorageUniquePointer, size_t size, uint8_t priority,
+			SchedulingPolicy schedulingPolicy, scheduler::ThreadGroupControlBlock* threadGroupControlBlock,
+			SignalsReceiver* signalsReceiver);
 
 	/**
 	 * \brief ThreadBase's constructor.
