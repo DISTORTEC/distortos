@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-10-17
+ * \date 2015-10-27
  */
 
 #ifndef INCLUDE_DISTORTOS_DYNAMICTHREAD_HPP_
@@ -16,6 +16,8 @@
 
 #include "distortos/DynamicSignalsReceiver.hpp"
 #include "distortos/Thread.hpp"
+
+#include "distortos/memory/dummyDeleter.hpp"
 
 namespace distortos
 {
@@ -347,7 +349,7 @@ DynamicThread<Function, Args...>::DynamicThread(const size_t stackSize, const bo
 		stackUniquePointer_{new uint8_t[stackSize]},
 		dynamicSignalsReceiver_{canReceiveSignals == true ? queuedSignals : 0,
 				canReceiveSignals == true ? signalActions : 0},
-		thread_{stackUniquePointer_.get(), stackSize, priority, schedulingPolicy,
+		thread_{{stackUniquePointer_.get(), memory::dummyDeleter<uint8_t>}, stackSize, priority, schedulingPolicy,
 				canReceiveSignals == true ? &static_cast<SignalsReceiver&>(dynamicSignalsReceiver_) : nullptr,
 				std::forward<Function>(function), std::forward<Args>(args)...}
 {

@@ -16,8 +16,6 @@
 
 #include "distortos/ThreadBase.hpp"
 
-#include "distortos/memory/dummyDeleter.hpp"
-
 namespace distortos
 {
 
@@ -39,8 +37,9 @@ public:
 	/**
 	 * \brief Thread's constructor
 	 *
-	 * \param [in] buffer is a pointer to stack's buffer
-	 * \param [in] size is the size of stack's buffer, bytes
+	 * \param [in] stackStorageUniquePointer is a rvalue reference to StackStorageUniquePointer with storage for stack
+	 * (\a size bytes long) and appropriate deleter
+	 * \param [in] size is the size of stack's storage, bytes
 	 * \param [in] priority is the thread's priority, 0 - lowest, UINT8_MAX - highest
 	 * \param [in] schedulingPolicy is the scheduling policy of the thread
 	 * \param [in] signalsReceiver is a pointer to SignalsReceiver object for this thread, nullptr to disable reception
@@ -49,9 +48,10 @@ public:
 	 * \param [in] args are arguments for function
 	 */
 
-	Thread(void* const buffer, const size_t size, const uint8_t priority, const SchedulingPolicy schedulingPolicy,
-			SignalsReceiver* const signalsReceiver, Function&& function, Args&&... args) :
-			ThreadBase{{buffer, memory::dummyDeleter<void*>}, size, priority, schedulingPolicy, nullptr,
+	Thread(StackStorageUniquePointer&& stackStorageUniquePointer, const size_t size, const uint8_t priority,
+			const SchedulingPolicy schedulingPolicy, SignalsReceiver* const signalsReceiver, Function&& function,
+			Args&&... args) :
+			ThreadBase{std::move(stackStorageUniquePointer), size, priority, schedulingPolicy, nullptr,
 					signalsReceiver},
 			boundFunction_{std::bind(std::forward<Function>(function), std::forward<Args>(args)...)}
 	{
@@ -61,37 +61,18 @@ public:
 	/**
 	 * \brief Thread's constructor
 	 *
-	 * \param [in] buffer is a pointer to stack's buffer
-	 * \param [in] size is the size of stack's buffer, bytes
+	 * \param [in] stackStorageUniquePointer is a rvalue reference to StackStorageUniquePointer with storage for stack
+	 * (\a size bytes long) and appropriate deleter
+	 * \param [in] size is the size of stack's storage, bytes
 	 * \param [in] priority is the thread's priority, 0 - lowest, UINT8_MAX - highest
 	 * \param [in] schedulingPolicy is the scheduling policy of the thread
 	 * \param [in] function is a function that will be executed in separate thread
 	 * \param [in] args are arguments for function
 	 */
 
-	Thread(void* const buffer, const size_t size, const uint8_t priority, const SchedulingPolicy schedulingPolicy,
-			Function&& function, Args&&... args) :
-			Thread{buffer, size, priority, schedulingPolicy, nullptr, std::forward<Function>(function),
-					std::forward<Args>(args)...}
-	{
-
-	}
-
-	/**
-	 * \brief Thread's constructor
-	 *
-	 * \param [in] buffer is a pointer to stack's buffer
-	 * \param [in] size is the size of stack's buffer, bytes
-	 * \param [in] priority is the thread's priority, 0 - lowest, UINT8_MAX - highest
-	 * \param [in] signalsReceiver is a pointer to SignalsReceiver object for this thread, nullptr to disable reception
-	 * of signals for this thread
-	 * \param [in] function is a function that will be executed in separate thread
-	 * \param [in] args are arguments for function
-	 */
-
-	Thread(void* const buffer, const size_t size, const uint8_t priority, SignalsReceiver* const signalsReceiver,
-			Function&& function, Args&&... args) :
-			Thread{buffer, size, priority, SchedulingPolicy::RoundRobin, signalsReceiver,
+	Thread(StackStorageUniquePointer&& stackStorageUniquePointer, const size_t size, const uint8_t priority,
+			const SchedulingPolicy schedulingPolicy, Function&& function, Args&&... args) :
+			Thread{std::move(stackStorageUniquePointer), size, priority, schedulingPolicy, nullptr,
 					std::forward<Function>(function), std::forward<Args>(args)...}
 	{
 
@@ -100,16 +81,39 @@ public:
 	/**
 	 * \brief Thread's constructor
 	 *
-	 * \param [in] buffer is a pointer to stack's buffer
-	 * \param [in] size is the size of stack's buffer, bytes
+	 * \param [in] stackStorageUniquePointer is a rvalue reference to StackStorageUniquePointer with storage for stack
+	 * (\a size bytes long) and appropriate deleter
+	 * \param [in] size is the size of stack's storage, bytes
+	 * \param [in] priority is the thread's priority, 0 - lowest, UINT8_MAX - highest
+	 * \param [in] signalsReceiver is a pointer to SignalsReceiver object for this thread, nullptr to disable reception
+	 * of signals for this thread
+	 * \param [in] function is a function that will be executed in separate thread
+	 * \param [in] args are arguments for function
+	 */
+
+	Thread(StackStorageUniquePointer&& stackStorageUniquePointer, const size_t size, const uint8_t priority,
+			SignalsReceiver* const signalsReceiver, Function&& function, Args&&... args) :
+			Thread{std::move(stackStorageUniquePointer), size, priority, SchedulingPolicy::RoundRobin, signalsReceiver,
+					std::forward<Function>(function), std::forward<Args>(args)...}
+	{
+
+	}
+
+	/**
+	 * \brief Thread's constructor
+	 *
+	 * \param [in] stackStorageUniquePointer is a rvalue reference to StackStorageUniquePointer with storage for stack
+	 * (\a size bytes long) and appropriate deleter
+	 * \param [in] size is the size of stack's storage, bytes
 	 * \param [in] priority is the thread's priority, 0 - lowest, UINT8_MAX - highest
 	 * \param [in] function is a function that will be executed in separate thread
 	 * \param [in] args are arguments for function
 	 */
 
-	Thread(void* const buffer, const size_t size, const uint8_t priority, Function&& function, Args&&... args) :
-			Thread{buffer, size, priority, SchedulingPolicy::RoundRobin, nullptr, std::forward<Function>(function),
-					std::forward<Args>(args)...}
+	Thread(StackStorageUniquePointer&& stackStorageUniquePointer, const size_t size, const uint8_t priority,
+			Function&& function, Args&&... args) :
+			Thread{std::move(stackStorageUniquePointer), size, priority, SchedulingPolicy::RoundRobin, nullptr,
+					std::forward<Function>(function), std::forward<Args>(args)...}
 	{
 
 	}

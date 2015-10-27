@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-10-16
+ * \date 2015-10-27
  */
 
 #ifndef INCLUDE_DISTORTOS_STATICTHREAD_HPP_
@@ -57,8 +57,8 @@ public:
 	 */
 
 	StaticThread(const uint8_t priority, const SchedulingPolicy schedulingPolicy, Function&& function, Args&&... args) :
-			thread_{&stack_, sizeof(stack_), priority, schedulingPolicy, std::forward<Function>(function),
-					std::forward<Args>(args)...}
+			thread_{{&stack_, memory::dummyDeleter<decltype(stack_)>}, sizeof(stack_), priority, schedulingPolicy,
+					std::forward<Function>(function), std::forward<Args>(args)...}
 	{
 
 	}
@@ -150,7 +150,7 @@ public:
 
 	StaticThread(const uint8_t priority, const SchedulingPolicy schedulingPolicy, Function&& function, Args&&... args) :
 			staticSignalsReceiver_{},
-			thread_{&stack_, sizeof(stack_), priority, schedulingPolicy,
+			thread_{{&stack_, memory::dummyDeleter<decltype(stack_)>}, sizeof(stack_), priority, schedulingPolicy,
 					&static_cast<SignalsReceiver&>(staticSignalsReceiver_), std::forward<Function>(function),
 					std::forward<Args>(args)...}
 	{
