@@ -66,6 +66,12 @@ public:
 	Stack(void* buffer, size_t size);
 
 	/**
+	 * \brief Stack's destructor
+	 */
+
+	~Stack();
+
+	/**
 	 * \brief Gets current value of stack pointer.
 	 *
 	 * \return current value of stack pointer
