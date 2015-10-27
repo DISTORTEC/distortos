@@ -8,13 +8,13 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-10-18
+ * \date 2015-10-27
  */
 
 #ifndef INCLUDE_DISTORTOS_ARCHITECTURE_STACK_HPP_
 #define INCLUDE_DISTORTOS_ARCHITECTURE_STACK_HPP_
 
-#include <cstddef>
+#include <memory>
 
 namespace distortos
 {
@@ -28,6 +28,9 @@ namespace architecture
 class Stack
 {
 public:
+
+	/// unique_ptr (with deleter) to storage
+	using StorageUniquePointer = std::unique_ptr<void, void(&)(void*)>;
 
 	/**
 	 * \brief Stack's constructor
