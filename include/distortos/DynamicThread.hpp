@@ -17,7 +17,7 @@
 #include "distortos/DynamicSignalsReceiver.hpp"
 #include "distortos/Thread.hpp"
 
-#include "distortos/memory/dummyDeleter.hpp"
+#include "distortos/memory/storageDeleter.hpp"
 
 namespace distortos
 {
@@ -143,25 +143,20 @@ struct DynamicThreadParameters
 };
 
 /**
- * \brief StaticThread class is a templated wrapper for thread that also provides dynamic storage for stack and internal
+ * \brief DynamicThread class is a templated interface for thread that has dynamic storage for stack and internal
  * DynamicSignalsReceiver object.
- *
- * \note Objects of this class can be safely casted to (const) reference to Thread
  *
  * \param Function is the function that will be executed in separate thread
  * \param Args are the arguments for \a Function
  */
 
 template<typename Function, typename... Args>
-class DynamicThread
+class DynamicThread : public Thread<Function, Args...>
 {
 public:
 
-	/// type of contained Thread object
-	using ThreadType = Thread<Function, Args...>;
-
-	/// unique_ptr to stack buffer
-	using StackUniquePointer = std::unique_ptr<uint8_t>;
+	/// base of DynamicThread
+	using Base = Thread<Function, Args...>;
 
 	/**
 	 * \brief DynamicThread's constructor
@@ -198,133 +193,6 @@ public:
 
 	}
 
-	/**
-	 * \brief DynamicThread's destructor
-	 */
-
-	~DynamicThread();
-
-	/**
-	 * \brief conversion to ThreadType&
-	 *
-	 * \return reference to internal ThreadType object
-	 */
-
-	operator ThreadType&()
-	{
-		return thread_;
-	}
-
-	/**
-	 * \brief conversion to const ThreadType&
-	 *
-	 * \return const reference to internal ThreadType object
-	 */
-
-	operator const ThreadType&() const
-	{
-		return thread_;
-	}
-
-	/**
-	 * \brief Wrapper for Thread::generateSignal()
-	 */
-
-	int generateSignal(const uint8_t signalNumber)
-	{
-		return thread_.generateSignal(signalNumber);
-	}
-
-	/**
-	 * \brief Wrapper for Thread::getEffectivePriority()
-	 */
-
-	uint8_t getEffectivePriority() const
-	{
-		return thread_.getEffectivePriority();
-	}
-
-	/**
-	 * \brief Wrapper for Thread::getPendingSignalSet()
-	 */
-
-	SignalSet getPendingSignalSet() const
-	{
-		return thread_.getPendingSignalSet();
-	}
-
-	/**
-	 * \brief Wrapper for Thread::getPriority()
-	 */
-
-	uint8_t getPriority() const
-	{
-		return thread_.getPriority();
-	}
-
-	/**
-	 * \brief Wrapper for Thread::getSchedulingPolicy()
-	 */
-
-	SchedulingPolicy getSchedulingPolicy() const
-	{
-		return thread_.getSchedulingPolicy();
-	}
-
-	/**
-	 * \brief Wrapper for Thread::getState()
-	 */
-
-	scheduler::ThreadControlBlock::State getState() const
-	{
-		return thread_.getState();
-	}
-
-	/**
-	 * \brief Wrapper for Thread::join()
-	 */
-
-	int join()
-	{
-		return thread_.join();
-	}
-
-	/**
-	 * \brief Wrapper for Thread::queueSignal()
-	 */
-
-	int queueSignal(const uint8_t signalNumber, const sigval value)
-	{
-		return thread_.queueSignal(signalNumber, value);
-	}
-
-	/**
-	 * \brief Wrapper for Thread::setPriority()
-	 */
-
-	void setPriority(const uint8_t priority, const bool alwaysBehind = {})
-	{
-		thread_.setPriority(priority, alwaysBehind);
-	}
-
-	/**
-	 * \brief Wrapper for Thread::setSchedulingPolicy()
-	 */
-
-	void setSchedulingPolicy(const SchedulingPolicy schedulingPolicy)
-	{
-		thread_.setSchedulingPolicy(schedulingPolicy);
-	}
-
-	/**
-	 * \brief Wrapper for Thread::start()
-	 */
-
-	int start()
-	{
-		return thread_.start();
-	}
-
 	DynamicThread(const DynamicThread&) = delete;
 	DynamicThread(DynamicThread&&) = default;
 	const DynamicThread& operator=(const DynamicThread&) = delete;
@@ -332,32 +200,19 @@ public:
 
 private:
 
-	/// unique_ptr to allocated stack buffer for \a thread_
-	StackUniquePointer stackUniquePointer_;
-
-	/// internal DynamicSignalsReceiver object for \a thread_
+	/// internal DynamicSignalsReceiver object
 	DynamicSignalsReceiver dynamicSignalsReceiver_;
-
-	/// internal ThreadType object
-	ThreadType thread_;
 };
 
 template<typename Function, typename... Args>
 DynamicThread<Function, Args...>::DynamicThread(const size_t stackSize, const bool canReceiveSignals,
 		const size_t queuedSignals, const size_t signalActions, const uint8_t priority,
 		const SchedulingPolicy schedulingPolicy, Function&& function, Args&&... args) :
-		stackUniquePointer_{new uint8_t[stackSize]},
+		Base{{new uint8_t[stackSize], memory::storageDeleter<uint8_t>}, stackSize, priority, schedulingPolicy,
+				canReceiveSignals == true ? &dynamicSignalsReceiver_ : nullptr, std::forward<Function>(function),
+				std::forward<Args>(args)...},
 		dynamicSignalsReceiver_{canReceiveSignals == true ? queuedSignals : 0,
-				canReceiveSignals == true ? signalActions : 0},
-		thread_{{stackUniquePointer_.get(), memory::dummyDeleter<uint8_t>}, stackSize, priority, schedulingPolicy,
-				canReceiveSignals == true ? &static_cast<SignalsReceiver&>(dynamicSignalsReceiver_) : nullptr,
-				std::forward<Function>(function), std::forward<Args>(args)...}
-{
-
-}
-
-template<typename Function, typename... Args>
-DynamicThread<Function, Args...>::~DynamicThread()
+				canReceiveSignals == true ? signalActions : 0}
 {
 
 }
