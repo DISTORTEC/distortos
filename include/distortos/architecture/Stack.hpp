@@ -100,6 +100,9 @@ public:
 
 private:
 
+	/// storage for stack
+	StorageUniquePointer storageUniquePointer_;
+
 	/// adjusted address of stack's buffer
 	void* const adjustedBuffer_;
 

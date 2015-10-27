@@ -16,6 +16,8 @@
 #include "distortos/architecture/initializeStack.hpp"
 #include "distortos/architecture/parameters.hpp"
 
+#include "distortos/memory/dummyDeleter.hpp"
+
 #include <cstring>
 
 namespace distortos
@@ -89,6 +91,7 @@ void* initializeStackProxy(void* const buffer, const size_t size, void (& functi
 +---------------------------------------------------------------------------------------------------------------------*/
 
 Stack::Stack(void* const buffer, const size_t size, void (& function)(ThreadBase&), ThreadBase& threadBase) :
+		storageUniquePointer_{buffer, memory::dummyDeleter<void*>},
 		adjustedBuffer_{adjustBuffer(buffer, stackAlignment)},
 		adjustedSize_{adjustSize(buffer, size, adjustedBuffer_, stackSizeDivisibility)},
 		stackPointer_{initializeStackProxy(adjustedBuffer_, adjustedSize_, function, threadBase)}
@@ -97,6 +100,7 @@ Stack::Stack(void* const buffer, const size_t size, void (& function)(ThreadBase
 }
 
 Stack::Stack(void* const buffer, const size_t size) :
+		storageUniquePointer_{buffer, memory::dummyDeleter<void*>},
 		adjustedBuffer_{buffer},
 		adjustedSize_{size},
 		stackPointer_{}
