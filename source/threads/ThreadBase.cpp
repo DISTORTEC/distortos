@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-10-19
+ * \date 2015-10-27
  */
 
 #include "distortos/ThreadBase.hpp"
@@ -17,6 +17,8 @@
 #include "distortos/scheduler/Scheduler.hpp"
 
 #include "distortos/architecture/InterruptMaskingLock.hpp"
+
+#include "distortos/memory/dummyDeleter.hpp"
 
 #include <cerrno>
 #include <csignal>
@@ -31,8 +33,8 @@ namespace distortos
 ThreadBase::ThreadBase(void* const buffer, const size_t size, const uint8_t priority,
 		const SchedulingPolicy schedulingPolicy, scheduler::ThreadGroupControlBlock* const threadGroupControlBlock,
 		SignalsReceiver* const signalsReceiver) :
-		ThreadBase{{buffer, size, threadRunner, *this}, priority, schedulingPolicy, threadGroupControlBlock,
-				signalsReceiver}
+		ThreadBase{{{buffer, memory::dummyDeleter<void*>}, size, threadRunner, *this}, priority, schedulingPolicy,
+				threadGroupControlBlock, signalsReceiver}
 {
 
 }

@@ -90,10 +90,11 @@ void* initializeStackProxy(void* const buffer, const size_t size, void (& functi
 | public functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-Stack::Stack(void* const buffer, const size_t size, void (& function)(ThreadBase&), ThreadBase& threadBase) :
-		storageUniquePointer_{buffer, memory::dummyDeleter<void*>},
-		adjustedBuffer_{adjustBuffer(buffer, stackAlignment)},
-		adjustedSize_{adjustSize(buffer, size, adjustedBuffer_, stackSizeDivisibility)},
+Stack::Stack(StorageUniquePointer&& storageUniquePointer, const size_t size, void (& function)(ThreadBase&),
+		ThreadBase& threadBase) :
+		storageUniquePointer_{std::move(storageUniquePointer)},
+		adjustedBuffer_{adjustBuffer(storageUniquePointer_.get(), stackAlignment)},
+		adjustedSize_{adjustSize(storageUniquePointer_.get(), size, adjustedBuffer_, stackSizeDivisibility)},
 		stackPointer_{initializeStackProxy(adjustedBuffer_, adjustedSize_, function, threadBase)}
 {
 	/// \todo implement minimal size check

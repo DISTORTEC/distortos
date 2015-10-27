@@ -35,21 +35,23 @@ public:
 	/**
 	 * \brief Stack's constructor
 	 *
-	 * This function initializes valid architecture-specific stack in provided buffer. This requires following steps:
-	 * - adjustment of buffer's address to suit architecture's alignment requirements,
-	 * - adjustment of buffer's size to suit architecture's divisibility requirements,
+	 * This function initializes valid architecture-specific stack in provided storage. This requires following steps:
+	 * - adjustment of storage's address to suit architecture's alignment requirements,
+	 * - adjustment of storage's size to suit architecture's divisibility requirements,
 	 * - creating hardware and software stack frame in suitable place in the stack,
 	 * - calculation of stack pointer register value.
 	 *
 	 * After this constructor completes, stack is ready for context switching.
 	 *
-	 * \param [in] buffer is a pointer to stack's buffer
-	 * \param [in] size is the size of stack's buffer, bytes
+	 * \param [in] storageUniquePointer is a rvalue reference to StorageUniquePointer with storage for stack (\a size
+	 * bytes long) and appropriate deleter
+	 * \param [in] size is the size of stack's storage, bytes
 	 * \param [in] function is a reference to thread's function, this function must not return
 	 * \param [in] threadBase is a reference to ThreadBase object passed to function
 	 */
 
-	Stack(void* buffer, size_t size, void (& function)(ThreadBase&), ThreadBase& threadBase);
+	Stack(StorageUniquePointer&& storageUniquePointer, size_t size, void (& function)(ThreadBase&),
+			ThreadBase& threadBase);
 
 	/**
 	 * \brief Stack's constructor
