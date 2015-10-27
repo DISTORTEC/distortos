@@ -56,16 +56,16 @@ public:
 	/**
 	 * \brief Stack's constructor
 	 *
-	 * This function adopts existing valid architecture-specific stack in provided buffer. No adjustments are done,
+	 * This function adopts existing valid architecture-specific stack in provided storage. No adjustments are done,
 	 * no stack frame is created and stack pointer register's value is not calculated.
 	 *
 	 * This is meant to adopt main()'s stack.
 	 *
-	 * \param [in] buffer is a pointer to stack's buffer
-	 * \param [in] size is the size of stack's buffer, bytes
+	 * \param [in] storage is a pointer to stack's storage
+	 * \param [in] size is the size of stack's storage, bytes
 	 */
 
-	Stack(void* buffer, size_t size);
+	Stack(void* storage, size_t size);
 
 	/**
 	 * \brief Stack's destructor
@@ -105,10 +105,10 @@ private:
 	/// storage for stack
 	StorageUniquePointer storageUniquePointer_;
 
-	/// adjusted address of stack's buffer
-	void* const adjustedBuffer_;
+	/// adjusted address of stack's storage
+	void* const adjustedStorage_;
 
-	/// adjusted size of stack's buffer
+	/// adjusted size of stack's storage
 	const size_t adjustedSize_;
 
 	/// current value of stack pointer register

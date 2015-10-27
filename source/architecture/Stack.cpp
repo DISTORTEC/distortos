@@ -34,54 +34,54 @@ namespace
 +---------------------------------------------------------------------------------------------------------------------*/
 
 /**
- * \brief Adjusts buffer's address to suit architecture's alignment requirements.
+ * \brief Adjusts storage's address to suit architecture's alignment requirements.
  *
- * \param [in] buffer is a pointer to stack's buffer
+ * \param [in] storage is a pointer to stack's storage
  * \param [in] stackAlignment is required stack alignment
  *
- * \return adjusted buffer's address
+ * \return adjusted storage's address
  */
 
-void* adjustBuffer(void* const buffer, const size_t stackAlignment)
+void* adjustStorage(void* const storage, const size_t stackAlignment)
 {
-	const auto bufferSizeT = reinterpret_cast<size_t>(buffer);
-	const auto offset = (-bufferSizeT) & (stackAlignment - 1);
-	return reinterpret_cast<void*>(bufferSizeT + offset);
+	const auto storageSizeT = reinterpret_cast<size_t>(storage);
+	const auto offset = (-storageSizeT) & (stackAlignment - 1);
+	return reinterpret_cast<void*>(storageSizeT + offset);
 }
 
 /**
- * \brief Adjusts buffer's size to suit architecture's divisibility requirements,
+ * \brief Adjusts storage's size to suit architecture's divisibility requirements,
  *
- * \param [in] buffer is a pointer to stack's buffer
- * \param [in] size is the size of stack's buffer, bytes
- * \param [in] adjustedBuffer is an adjusted buffer's address
+ * \param [in] storage is a pointer to stack's storage
+ * \param [in] size is the size of stack's storage, bytes
+ * \param [in] adjustedStorage is an adjusted storage's address
  * \param [in] divisibility is required stack's size divisibility
  *
- * \return adjusted buffer's size
+ * \return adjusted storage's size
  */
 
-size_t adjustSize(void* const buffer, const size_t size, void* const adjustedBuffer, const size_t divisibility)
+size_t adjustSize(void* const storage, const size_t size, void* const adjustedStorage, const size_t divisibility)
 {
-	const auto offset = static_cast<uint8_t*>(adjustedBuffer) - static_cast<uint8_t*>(buffer);
+	const auto offset = static_cast<uint8_t*>(adjustedStorage) - static_cast<uint8_t*>(storage);
 	return ((size - offset) / divisibility) * divisibility;
 }
 
 /**
  * \brief Proxy for initializeStack() which fills stack with 0 before actually initializing it.
  *
- * \param [in] buffer is a pointer to stack's buffer
- * \param [in] size is the size of stack's buffer, bytes
+ * \param [in] storage is a pointer to stack's storage
+ * \param [in] size is the size of stack's storage, bytes
  * \param [in] function is a reference to thread's function, this function must not return
  * \param [in] threadBase is a reference to ThreadBase object passed to function
  *
  * \return value that can be used as thread's stack pointer, ready for context switching
  */
 
-void* initializeStackProxy(void* const buffer, const size_t size, void (& function)(ThreadBase&),
+void* initializeStackProxy(void* const storage, const size_t size, void (& function)(ThreadBase&),
 		ThreadBase& threadBase)
 {
-	memset(buffer, 0, size);
-	return initializeStack(buffer, size, function, threadBase);
+	memset(storage, 0, size);
+	return initializeStack(storage, size, function, threadBase);
 }
 
 }	// namespace
@@ -93,16 +93,16 @@ void* initializeStackProxy(void* const buffer, const size_t size, void (& functi
 Stack::Stack(StorageUniquePointer&& storageUniquePointer, const size_t size, void (& function)(ThreadBase&),
 		ThreadBase& threadBase) :
 		storageUniquePointer_{std::move(storageUniquePointer)},
-		adjustedBuffer_{adjustBuffer(storageUniquePointer_.get(), stackAlignment)},
-		adjustedSize_{adjustSize(storageUniquePointer_.get(), size, adjustedBuffer_, stackSizeDivisibility)},
-		stackPointer_{initializeStackProxy(adjustedBuffer_, adjustedSize_, function, threadBase)}
+		adjustedStorage_{adjustStorage(storageUniquePointer_.get(), stackAlignment)},
+		adjustedSize_{adjustSize(storageUniquePointer_.get(), size, adjustedStorage_, stackSizeDivisibility)},
+		stackPointer_{initializeStackProxy(adjustedStorage_, adjustedSize_, function, threadBase)}
 {
 	/// \todo implement minimal size check
 }
 
-Stack::Stack(void* const buffer, const size_t size) :
-		storageUniquePointer_{buffer, memory::dummyDeleter<void*>},
-		adjustedBuffer_{buffer},
+Stack::Stack(void* const storage, const size_t size) :
+		storageUniquePointer_{storage, memory::dummyDeleter<void*>},
+		adjustedStorage_{storage},
 		adjustedSize_{size},
 		stackPointer_{}
 {
