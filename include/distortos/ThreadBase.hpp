@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-10-18
+ * \date 2015-10-27
  */
 
 #ifndef INCLUDE_DISTORTOS_THREADBASE_HPP_
@@ -29,6 +29,9 @@ namespace distortos
 class ThreadBase
 {
 public:
+
+	/// unique_ptr (with deleter) to storage for stack
+	using StackStorageUniquePointer = architecture::Stack::StorageUniquePointer;
 
 	/**
 	 * \brief ThreadBase's constructor.
