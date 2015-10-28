@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-10-13
+ * \date 2015-10-28
  */
 
 #include "QueueOperationsTestCase.hpp"
@@ -138,16 +138,16 @@ bool testTryPushWhenFull(const QueueWrapper& queueWrapper)
 bool phase1()
 {
 	// size 0, so queues are both full and empty at the same time
-	StaticFifoQueueWrapper<0> fifoQueueWrapper;
-	StaticMessageQueueWrapper<0> messageQueueWrapper;
-	StaticRawFifoQueueWrapper<0> rawFifoQueueWrapper;
-	StaticRawMessageQueueWrapper<0> rawMessageQueueWrapper;
+	StaticFifoQueueWrapper<0> staticFifoQueueWrapper;
+	StaticMessageQueueWrapper<0> staticMessageQueueWrapper;
+	StaticRawFifoQueueWrapper<0> staticRawFifoQueueWrapper;
+	StaticRawMessageQueueWrapper<0> staticRawMessageQueueWrapper;
 	const QueueWrapperHolder queueWrappers[]
 	{
-			QueueWrapperHolder{fifoQueueWrapper},
-			QueueWrapperHolder{messageQueueWrapper},
-			QueueWrapperHolder{rawFifoQueueWrapper},
-			QueueWrapperHolder{rawMessageQueueWrapper},
+			QueueWrapperHolder{staticFifoQueueWrapper},
+			QueueWrapperHolder{staticMessageQueueWrapper},
+			QueueWrapperHolder{staticRawFifoQueueWrapper},
+			QueueWrapperHolder{staticRawMessageQueueWrapper},
 	};
 
 	for (auto& queueWrapperHolder : queueWrappers)
@@ -337,16 +337,16 @@ bool phase1()
 
 bool phase2()
 {
-	StaticFifoQueueWrapper<1> fifoQueueWrapper;
-	StaticMessageQueueWrapper<1> messageQueueWrapper;
-	StaticRawFifoQueueWrapper<1> rawFifoQueueWrapper;
-	StaticRawMessageQueueWrapper<1> rawMessageQueueWrapper;
+	StaticFifoQueueWrapper<1> staticFifoQueueWrapper;
+	StaticMessageQueueWrapper<1> staticMessageQueueWrapper;
+	StaticRawFifoQueueWrapper<1> staticRawFifoQueueWrapper;
+	StaticRawMessageQueueWrapper<1> staticRawMessageQueueWrapper;
 	const QueueWrapperHolder queueWrappers[]
 	{
-			QueueWrapperHolder{fifoQueueWrapper},
-			QueueWrapperHolder{messageQueueWrapper},
-			QueueWrapperHolder{rawFifoQueueWrapper},
-			QueueWrapperHolder{rawMessageQueueWrapper},
+			QueueWrapperHolder{staticFifoQueueWrapper},
+			QueueWrapperHolder{staticMessageQueueWrapper},
+			QueueWrapperHolder{staticRawFifoQueueWrapper},
+			QueueWrapperHolder{staticRawMessageQueueWrapper},
 	};
 
 	for (auto& queueWrapperHolder : queueWrappers)
@@ -645,16 +645,16 @@ bool phase2()
 
 bool phase3()
 {
-	StaticFifoQueueWrapper<1> fifoQueueWrapper;
-	StaticMessageQueueWrapper<1> messageQueueWrapper;
-	StaticRawFifoQueueWrapper<1> rawFifoQueueWrapper;
-	StaticRawMessageQueueWrapper<1> rawMessageQueueWrapper;
+	StaticFifoQueueWrapper<1> staticFifoQueueWrapper;
+	StaticMessageQueueWrapper<1> staticMessageQueueWrapper;
+	StaticRawFifoQueueWrapper<1> staticRawFifoQueueWrapper;
+	StaticRawMessageQueueWrapper<1> staticRawMessageQueueWrapper;
 	const QueueWrapperHolder queueWrappers[]
 	{
-			QueueWrapperHolder{fifoQueueWrapper},
-			QueueWrapperHolder{messageQueueWrapper},
-			QueueWrapperHolder{rawFifoQueueWrapper},
-			QueueWrapperHolder{rawMessageQueueWrapper},
+			QueueWrapperHolder{staticFifoQueueWrapper},
+			QueueWrapperHolder{staticMessageQueueWrapper},
+			QueueWrapperHolder{staticRawFifoQueueWrapper},
+			QueueWrapperHolder{staticRawMessageQueueWrapper},
 	};
 
 	for (auto& queueWrapperHolder : queueWrappers)
@@ -773,16 +773,16 @@ bool phase3()
 
 bool phase4()
 {
-	StaticFifoQueueWrapper<1> fifoQueueWrapper;
-	StaticMessageQueueWrapper<1> messageQueueWrapper;
-	StaticRawFifoQueueWrapper<1> rawFifoQueueWrapper;
-	StaticRawMessageQueueWrapper<1> rawMessageQueueWrapper;
+	StaticFifoQueueWrapper<1> staticFifoQueueWrapper;
+	StaticMessageQueueWrapper<1> staticMessageQueueWrapper;
+	StaticRawFifoQueueWrapper<1> staticRawFifoQueueWrapper;
+	StaticRawMessageQueueWrapper<1> staticRawMessageQueueWrapper;
 	const QueueWrapperHolder queueWrappers[]
 	{
-			QueueWrapperHolder{fifoQueueWrapper},
-			QueueWrapperHolder{messageQueueWrapper},
-			QueueWrapperHolder{rawFifoQueueWrapper},
-			QueueWrapperHolder{rawMessageQueueWrapper},
+			QueueWrapperHolder{staticFifoQueueWrapper},
+			QueueWrapperHolder{staticMessageQueueWrapper},
+			QueueWrapperHolder{staticRawFifoQueueWrapper},
+			QueueWrapperHolder{staticRawMessageQueueWrapper},
 	};
 
 	for (auto& queueWrapperHolder : queueWrappers)
@@ -1040,13 +1040,13 @@ bool phase4()
 bool phase5()
 {
 	// size 0, so queues are both full and empty at the same time
-	StaticRawFifoQueueWrapper<0> rawFifoQueueWrapper;
-	StaticRawMessageQueueWrapper<0> rawMessageQueueWrapper;
+	StaticRawFifoQueueWrapper<0> staticRawFifoQueueWrapper;
+	StaticRawMessageQueueWrapper<0> staticRawMessageQueueWrapper;
 	using RawQueueWrapperHolder = estd::ReferenceHolder<const RawQueueWrapper>;
 	const RawQueueWrapperHolder rawQueueWrappers[]
 	{
-			RawQueueWrapperHolder{rawFifoQueueWrapper},
-			RawQueueWrapperHolder{rawMessageQueueWrapper},
+			RawQueueWrapperHolder{staticRawFifoQueueWrapper},
+			RawQueueWrapperHolder{staticRawMessageQueueWrapper},
 	};
 
 	for (auto& rawQueueWrapperHolder : rawQueueWrappers)
