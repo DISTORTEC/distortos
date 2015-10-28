@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-10-28
+ * \date 2015-10-29
  */
 
 #include "QueueWrappers.hpp"
@@ -508,6 +508,17 @@ int RawMessageQueueWrapper::tryPushUntil(const TickClock::time_point timePoint, 
 		const void* const data, const size_t size) const
 {
 	return rawMessageQueue_.tryPushUntil(timePoint, priority, data, size);
+}
+
+/*---------------------------------------------------------------------------------------------------------------------+
+| DynamicRawMessageQueueWrapper public functions
++---------------------------------------------------------------------------------------------------------------------*/
+
+DynamicRawMessageQueueWrapper::DynamicRawMessageQueueWrapper(const size_t queueSize) :
+		RawMessageQueueWrapper{rawMessageQueue_},
+		rawMessageQueue_{sizeof(OperationCountingType::Value), queueSize}
+{
+
 }
 
 }	// namespace test

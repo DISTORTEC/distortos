@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-10-28
+ * \date 2015-10-29
  */
 
 #ifndef TEST_QUEUE_QUEUEWRAPPERS_HPP_
@@ -19,6 +19,7 @@
 #include "distortos/DynamicFifoQueue.hpp"
 #include "distortos/DynamicMessageQueue.hpp"
 #include "distortos/DynamicRawFifoQueue.hpp"
+#include "distortos/DynamicRawMessageQueue.hpp"
 #include "distortos/StaticFifoQueue.hpp"
 #include "distortos/StaticMessageQueue.hpp"
 #include "distortos/StaticRawFifoQueue.hpp"
@@ -1016,6 +1017,29 @@ private:
 
 	/// reference to wrapped \a RawMessageQueue object
 	RawMessageQueue& rawMessageQueue_;
+};
+
+/**
+ * \brief DynamicRawMessageQueueWrapper class is a variant of RawMessageQueueWrapper that has dynamic storage for
+ * queue's contents.
+ */
+
+class DynamicRawMessageQueueWrapper : public RawMessageQueueWrapper
+{
+public:
+
+	/**
+	 * \brief DynamicMessageQueueWrapper's constructor
+	 *
+	 * \param [in] queueSize is the maximum number of elements in queue
+	 */
+
+	explicit DynamicRawMessageQueueWrapper(size_t queueSize);
+
+private:
+
+	/// internal DynamicRawMessageQueue object that will be wrapped
+	DynamicRawMessageQueue rawMessageQueue_;
 };
 
 /**
