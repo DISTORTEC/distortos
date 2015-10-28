@@ -1,6 +1,6 @@
 /**
  * \file
- * \brief QueueWrapper, [Non]RawQueueWrapper and [Static][Raw]{Fifo,Message}QueueWrapper classes header
+ * \brief QueueWrapper, [Non]RawQueueWrapper and [Dynamic|Static][Raw]{Fifo,Message}QueueWrapper classes header
  *
  * \author Copyright (C) 2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
@@ -16,6 +16,7 @@
 
 #include "OperationCountingType.hpp"
 
+#include "distortos/DynamicFifoQueue.hpp"
 #include "distortos/StaticFifoQueue.hpp"
 #include "distortos/StaticMessageQueue.hpp"
 #include "distortos/StaticRawFifoQueue.hpp"
@@ -342,6 +343,31 @@ private:
 
 	/// reference to wrapped \a TestFifoQueue object
 	TestFifoQueue& fifoQueue_;
+};
+
+/**
+ * \brief DynamicFifoQueueWrapper class is a variant of FifoQueueWrapper that has dynamic storage for queue's contents.
+ */
+
+class DynamicFifoQueueWrapper : public FifoQueueWrapper
+{
+public:
+
+	/// DynamicFifoQueue with \a OperationCountingType
+	using TestDynamicFifoQueue = DynamicFifoQueue<OperationCountingType>;
+
+	/**
+	 * \brief DynamicFifoQueueWrapper's constructor
+	 *
+	 * \param [in] queueSize is the maximum number of elements in queue
+	 */
+
+	explicit DynamicFifoQueueWrapper(size_t queueSize);
+
+private:
+
+	/// internal TestDynamicFifoQueue object that will be wrapped
+	TestDynamicFifoQueue fifoQueue_;
 };
 
 /**

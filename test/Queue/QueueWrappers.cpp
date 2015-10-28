@@ -1,6 +1,6 @@
 /**
  * \file
- * \brief QueueWrapper, [Non]RawQueueWrapper and [Static][Raw]{Fifo,Message}QueueWrapper classes implementation
+ * \brief QueueWrapper, [Non]RawQueueWrapper and [Dynamic|Static][Raw]{Fifo,Message}QueueWrapper classes implementation
  *
  * \author Copyright (C) 2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-10-10
+ * \date 2015-10-28
  */
 
 #include "QueueWrappers.hpp"
@@ -136,6 +136,17 @@ int FifoQueueWrapper::tryPushUntil(const TickClock::time_point timePoint, uint8_
 int FifoQueueWrapper::tryPushUntil(const TickClock::time_point timePoint, uint8_t, OperationCountingType&& value) const
 {
 	return fifoQueue_.tryPushUntil(timePoint, std::move(value));
+}
+
+/*---------------------------------------------------------------------------------------------------------------------+
+| DynamicFifoQueueWrapper public functions
++---------------------------------------------------------------------------------------------------------------------*/
+
+DynamicFifoQueueWrapper::DynamicFifoQueueWrapper(const size_t queueSize) :
+		FifoQueueWrapper{fifoQueue_},
+		fifoQueue_{queueSize}
+{
+
 }
 
 /*---------------------------------------------------------------------------------------------------------------------+
