@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-10-13
+ * \date 2015-10-28
  */
 
 #ifndef TEST_QUEUE_QUEUEWRAPPERS_HPP_
@@ -362,7 +362,7 @@ public:
 	 * \brief StaticFifoQueueWrapper's constructor
 	 */
 
-	constexpr StaticFifoQueueWrapper() :
+	StaticFifoQueueWrapper() :
 			FifoQueueWrapper{fifoQueue_}
 	{
 
@@ -544,7 +544,7 @@ public:
 	 * \brief StaticMessageQueueWrapper's constructor
 	 */
 
-	constexpr StaticMessageQueueWrapper() :
+	StaticMessageQueueWrapper() :
 			MessageQueueWrapper{messageQueue_}
 	{
 
@@ -841,7 +841,7 @@ public:
 	 * \brief StaticFifoQueueWrapper's constructor
 	 */
 
-	constexpr StaticRawFifoQueueWrapper() :
+	StaticRawFifoQueueWrapper() :
 			RawFifoQueueWrapper{rawFifoQueue_}
 	{
 
@@ -960,7 +960,7 @@ public:
 	 * \brief StaticMessageQueueWrapper's constructor
 	 */
 
-	constexpr StaticRawMessageQueueWrapper() :
+	StaticRawMessageQueueWrapper() :
 			RawMessageQueueWrapper{rawMessageQueue_}
 	{
 
