@@ -17,6 +17,7 @@
 #include "OperationCountingType.hpp"
 
 #include "distortos/DynamicFifoQueue.hpp"
+#include "distortos/DynamicMessageQueue.hpp"
 #include "distortos/StaticFifoQueue.hpp"
 #include "distortos/StaticMessageQueue.hpp"
 #include "distortos/StaticRawFifoQueue.hpp"
@@ -549,6 +550,32 @@ private:
 
 	/// reference to wrapped \a TestMessageQueue object
 	TestMessageQueue& messageQueue_;
+};
+
+/**
+ * \brief DynamicMessageQueueWrapper class is a variant of MessageQueueWrapper that has dynamic storage for queue's
+ * contents.
+ */
+
+class DynamicMessageQueueWrapper : public MessageQueueWrapper
+{
+public:
+
+	/// DynamicMessageQueue with \a OperationCountingType
+	using TestDynamicMessageQueue = DynamicMessageQueue<OperationCountingType>;
+
+	/**
+	 * \brief DynamicMessageQueueWrapper's constructor
+	 *
+	 * \param [in] queueSize is the maximum number of elements in queue
+	 */
+
+	explicit DynamicMessageQueueWrapper(size_t queueSize);
+
+private:
+
+	/// internal TestDynamicMessageQueue object that will be wrapped
+	TestDynamicMessageQueue messageQueue_;
 };
 
 /**

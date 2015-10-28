@@ -256,6 +256,17 @@ int MessageQueueWrapper::tryPushUntil(const TickClock::time_point timePoint, con
 }
 
 /*---------------------------------------------------------------------------------------------------------------------+
+| DynamicMessageQueueWrapper public functions
++---------------------------------------------------------------------------------------------------------------------*/
+
+DynamicMessageQueueWrapper::DynamicMessageQueueWrapper(const size_t queueSize) :
+		MessageQueueWrapper{messageQueue_},
+		messageQueue_{queueSize}
+{
+
+}
+
+/*---------------------------------------------------------------------------------------------------------------------+
 | RawQueueWrapper public functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
