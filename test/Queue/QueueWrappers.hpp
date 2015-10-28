@@ -18,6 +18,7 @@
 
 #include "distortos/DynamicFifoQueue.hpp"
 #include "distortos/DynamicMessageQueue.hpp"
+#include "distortos/DynamicRawFifoQueue.hpp"
 #include "distortos/StaticFifoQueue.hpp"
 #include "distortos/StaticMessageQueue.hpp"
 #include "distortos/StaticRawFifoQueue.hpp"
@@ -873,6 +874,29 @@ private:
 
 	/// reference to wrapped \a RawFifoQueue object
 	RawFifoQueue& rawFifoQueue_;
+};
+
+/**
+ * \brief DynamicRawFifoQueueWrapper class is a variant of RawFifoQueueWrapper that has dynamic storage for queue's
+ * contents.
+ */
+
+class DynamicRawFifoQueueWrapper : public RawFifoQueueWrapper
+{
+public:
+
+	/**
+	 * \brief DynamicFifoQueueWrapper's constructor
+	 *
+	 * \param [in] queueSize is the maximum number of elements in queue
+	 */
+
+	explicit DynamicRawFifoQueueWrapper(size_t queueSize);
+
+private:
+
+	/// internal DynamicRawFifoQueue object that will be wrapped
+	DynamicRawFifoQueue rawFifoQueue_;
 };
 
 /**

@@ -446,6 +446,17 @@ int RawFifoQueueWrapper::tryPushUntil(const TickClock::time_point timePoint, uin
 }
 
 /*---------------------------------------------------------------------------------------------------------------------+
+| DynamicRawFifoQueueWrapper public functions
++---------------------------------------------------------------------------------------------------------------------*/
+
+DynamicRawFifoQueueWrapper::DynamicRawFifoQueueWrapper(const size_t queueSize) :
+		RawFifoQueueWrapper{rawFifoQueue_},
+		rawFifoQueue_{sizeof(OperationCountingType::Value), queueSize}
+{
+
+}
+
+/*---------------------------------------------------------------------------------------------------------------------+
 | RawMessageQueueWrapper public functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
