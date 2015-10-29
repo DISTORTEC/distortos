@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-10-12
+ * \date 2015-10-29
  */
 
 #include "FifoQueuePriorityTestCase.hpp"
@@ -225,13 +225,13 @@ bool FifoQueuePriorityTestCase::run_() const
 	for (const auto& stage : stages)
 		for (const auto& phase : priorityTestPhases)
 		{
-			StaticFifoQueueWrapper<totalThreads> fifoQueueWrapper;
-			StaticRawFifoQueueWrapper<totalThreads> rawFifoQueueWrapper;
+			StaticFifoQueueWrapper<totalThreads> staticFifoQueueWrapper;
+			StaticRawFifoQueueWrapper<totalThreads> staticRawFifoQueueWrapper;
 			using QueueWrapperHolder = estd::ReferenceHolder<const QueueWrapper>;
 			const QueueWrapperHolder queueWrappers[fifoQueueTypes]
 			{
-					QueueWrapperHolder{fifoQueueWrapper},
-					QueueWrapperHolder{rawFifoQueueWrapper},
+					QueueWrapperHolder{staticFifoQueueWrapper},
+					QueueWrapperHolder{staticRawFifoQueueWrapper},
 			};
 
 			for (auto& queueWrapperHolder : queueWrappers)
