@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-10-12
+ * \date 2015-10-29
  */
 
 #ifndef TEST_QUEUE_FIFOQUEUEPRIORITYTESTCASE_HPP_
@@ -27,7 +27,8 @@ namespace test
  *
  * Starts 10 small threads (in various order) with varying priorities which wait either for a message from the FIFO
  * queue or for free space in the FIFO queue, asserting that they start and finish in the expected order, using exact
- * number of context switches and that the data received from the FIFO queue matches what was transferred.
+ * number of context switches, that the data received from the FIFO queue matches what was transferred and that no
+ * memory was leaked (in case of "dynamic" queue).
  */
 
 class FifoQueuePriorityTestCase : public PrioritizedTestCase
