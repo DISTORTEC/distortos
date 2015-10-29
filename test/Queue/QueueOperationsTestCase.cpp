@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-10-28
+ * \date 2015-10-29
  */
 
 #include "QueueOperationsTestCase.hpp"
@@ -21,6 +21,8 @@
 #include "distortos/statistics.hpp"
 
 #include "estd/ReferenceHolder.hpp"
+
+#include <malloc.h>
 
 #include <cerrno>
 
@@ -138,12 +140,20 @@ bool testTryPushWhenFull(const QueueWrapper& queueWrapper)
 bool phase1()
 {
 	// size 0, so queues are both full and empty at the same time
+	DynamicFifoQueueWrapper dynamicFifoQueueWrapper {0};
+	DynamicMessageQueueWrapper dynamicMessageQueueWrapper {0};
+	DynamicRawFifoQueueWrapper dynamicRawFifoQueueWrapper {0};
+	DynamicRawMessageQueueWrapper dynamicRawMessageQueueWrapper {0};
 	StaticFifoQueueWrapper<0> staticFifoQueueWrapper;
 	StaticMessageQueueWrapper<0> staticMessageQueueWrapper;
 	StaticRawFifoQueueWrapper<0> staticRawFifoQueueWrapper;
 	StaticRawMessageQueueWrapper<0> staticRawMessageQueueWrapper;
 	const QueueWrapperHolder queueWrappers[]
 	{
+			QueueWrapperHolder{dynamicFifoQueueWrapper},
+			QueueWrapperHolder{dynamicMessageQueueWrapper},
+			QueueWrapperHolder{dynamicRawFifoQueueWrapper},
+			QueueWrapperHolder{dynamicRawMessageQueueWrapper},
 			QueueWrapperHolder{staticFifoQueueWrapper},
 			QueueWrapperHolder{staticMessageQueueWrapper},
 			QueueWrapperHolder{staticRawFifoQueueWrapper},
@@ -337,12 +347,20 @@ bool phase1()
 
 bool phase2()
 {
+	DynamicFifoQueueWrapper dynamicFifoQueueWrapper {1};
+	DynamicMessageQueueWrapper dynamicMessageQueueWrapper {1};
+	DynamicRawFifoQueueWrapper dynamicRawFifoQueueWrapper {1};
+	DynamicRawMessageQueueWrapper dynamicRawMessageQueueWrapper {1};
 	StaticFifoQueueWrapper<1> staticFifoQueueWrapper;
 	StaticMessageQueueWrapper<1> staticMessageQueueWrapper;
 	StaticRawFifoQueueWrapper<1> staticRawFifoQueueWrapper;
 	StaticRawMessageQueueWrapper<1> staticRawMessageQueueWrapper;
 	const QueueWrapperHolder queueWrappers[]
 	{
+			QueueWrapperHolder{dynamicFifoQueueWrapper},
+			QueueWrapperHolder{dynamicMessageQueueWrapper},
+			QueueWrapperHolder{dynamicRawFifoQueueWrapper},
+			QueueWrapperHolder{dynamicRawMessageQueueWrapper},
 			QueueWrapperHolder{staticFifoQueueWrapper},
 			QueueWrapperHolder{staticMessageQueueWrapper},
 			QueueWrapperHolder{staticRawFifoQueueWrapper},
@@ -645,12 +663,20 @@ bool phase2()
 
 bool phase3()
 {
+	DynamicFifoQueueWrapper dynamicFifoQueueWrapper {1};
+	DynamicMessageQueueWrapper dynamicMessageQueueWrapper {1};
+	DynamicRawFifoQueueWrapper dynamicRawFifoQueueWrapper {1};
+	DynamicRawMessageQueueWrapper dynamicRawMessageQueueWrapper {1};
 	StaticFifoQueueWrapper<1> staticFifoQueueWrapper;
 	StaticMessageQueueWrapper<1> staticMessageQueueWrapper;
 	StaticRawFifoQueueWrapper<1> staticRawFifoQueueWrapper;
 	StaticRawMessageQueueWrapper<1> staticRawMessageQueueWrapper;
 	const QueueWrapperHolder queueWrappers[]
 	{
+			QueueWrapperHolder{dynamicFifoQueueWrapper},
+			QueueWrapperHolder{dynamicMessageQueueWrapper},
+			QueueWrapperHolder{dynamicRawFifoQueueWrapper},
+			QueueWrapperHolder{dynamicRawMessageQueueWrapper},
 			QueueWrapperHolder{staticFifoQueueWrapper},
 			QueueWrapperHolder{staticMessageQueueWrapper},
 			QueueWrapperHolder{staticRawFifoQueueWrapper},
@@ -773,12 +799,20 @@ bool phase3()
 
 bool phase4()
 {
+	DynamicFifoQueueWrapper dynamicFifoQueueWrapper {1};
+	DynamicMessageQueueWrapper dynamicMessageQueueWrapper {1};
+	DynamicRawFifoQueueWrapper dynamicRawFifoQueueWrapper {1};
+	DynamicRawMessageQueueWrapper dynamicRawMessageQueueWrapper {1};
 	StaticFifoQueueWrapper<1> staticFifoQueueWrapper;
 	StaticMessageQueueWrapper<1> staticMessageQueueWrapper;
 	StaticRawFifoQueueWrapper<1> staticRawFifoQueueWrapper;
 	StaticRawMessageQueueWrapper<1> staticRawMessageQueueWrapper;
 	const QueueWrapperHolder queueWrappers[]
 	{
+			QueueWrapperHolder{dynamicFifoQueueWrapper},
+			QueueWrapperHolder{dynamicMessageQueueWrapper},
+			QueueWrapperHolder{dynamicRawFifoQueueWrapper},
+			QueueWrapperHolder{dynamicRawMessageQueueWrapper},
 			QueueWrapperHolder{staticFifoQueueWrapper},
 			QueueWrapperHolder{staticMessageQueueWrapper},
 			QueueWrapperHolder{staticRawFifoQueueWrapper},
@@ -1040,11 +1074,15 @@ bool phase4()
 bool phase5()
 {
 	// size 0, so queues are both full and empty at the same time
+	DynamicRawFifoQueueWrapper dynamicRawFifoQueueWrapper {0};
+	DynamicRawMessageQueueWrapper dynamicRawMessageQueueWrapper {0};
 	StaticRawFifoQueueWrapper<0> staticRawFifoQueueWrapper;
 	StaticRawMessageQueueWrapper<0> staticRawMessageQueueWrapper;
 	using RawQueueWrapperHolder = estd::ReferenceHolder<const RawQueueWrapper>;
 	const RawQueueWrapperHolder rawQueueWrappers[]
 	{
+			RawQueueWrapperHolder{dynamicRawFifoQueueWrapper},
+			RawQueueWrapperHolder{dynamicRawMessageQueueWrapper},
 			RawQueueWrapperHolder{staticRawFifoQueueWrapper},
 			RawQueueWrapperHolder{staticRawMessageQueueWrapper},
 	};
@@ -1152,6 +1190,26 @@ bool phase6()
 	const OperationCountingType constTestValue {};
 
 	{
+		DynamicFifoQueueWrapper::TestDynamicFifoQueue dynamicFifoQueue {1};
+		dynamicFifoQueue.push(constTestValue);
+		OperationCountingType::resetCounters();
+		// in destructor - 1 construction, 2 destructions and 1 swap
+	}
+
+	if (OperationCountingType::checkCounters(1, 0, 0, 2, 0, 0, 1) == false)
+		return false;
+
+	{
+		DynamicMessageQueueWrapper::TestDynamicMessageQueue dynamicMessageQueue {1};
+		dynamicMessageQueue.push(constPriority, constTestValue);
+		OperationCountingType::resetCounters();
+		// in destructor - 1 construction, 2 destructions and 1 swap
+	}
+
+	if (OperationCountingType::checkCounters(1, 0, 0, 2, 0, 0, 1) == false)
+		return false;
+
+	{
 		StaticFifoQueueWrapper<1>::TestStaticFifoQueue staticFifoQueue;
 		staticFifoQueue.push(constTestValue);
 		OperationCountingType::resetCounters();
@@ -1184,8 +1242,8 @@ bool QueueOperationsTestCase::run_() const
 {
 	constexpr auto emplace = DISTORTOS_QUEUE_EMPLACE_SUPPORTED == 1;
 
-	constexpr size_t nonRawQueueTypes {2};
-	constexpr size_t rawQueueTypes {2};
+	constexpr size_t nonRawQueueTypes {4};
+	constexpr size_t rawQueueTypes {4};
 	constexpr size_t queueTypes {nonRawQueueTypes + rawQueueTypes};
 	constexpr auto phase1ExpectedContextSwitchCount = queueTypes * (emplace == true ?
 			12 * waitForNextTickContextSwitchCount + 8 * phase1TryForUntilContextSwitchCount :
@@ -1208,6 +1266,9 @@ bool QueueOperationsTestCase::run_() const
 		const auto ret = function();
 		if (ret != true)
 			return ret;
+
+		if (mallinfo().uordblks != 0)	// all dynamic memory must be deallocated after each test phase
+			return false;
 	}
 
 	if (statistics::getContextSwitchCount() - contextSwitchCount != expectedContextSwitchCount)
