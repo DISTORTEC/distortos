@@ -1,4 +1,4 @@
-distortos
+distortos [![Build Status](https://travis-ci.org/DISTORTEC/distortos.svg)](https://travis-ci.org/DISTORTEC/distortos)
 =========
 
 Advanced real-time operating system for deeply embedded targets
