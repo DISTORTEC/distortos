@@ -15,6 +15,11 @@ sudo: false
 # use minimal environment
 language: generic
 
+addons:
+    apt:
+        packages:
+            - flex
+
 # bleeding-edge-toolchain
 install:
     - wget http://sourceforge.net/projects/bleeding-edge/files/150928/gcc-arm-none-eabi-4_9-150928-linux-x64.tar.xz/download -O gcc-arm-none-eabi-4_9-150928-linux-x64.tar.xz
