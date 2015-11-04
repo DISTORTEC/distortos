@@ -20,6 +20,9 @@ install:
     - wget http://sourceforge.net/projects/bleeding-edge/files/150928/gcc-arm-none-eabi-4_9-150928-linux-x64.tar.xz/download -O gcc-arm-none-eabi-4_9-150928-linux-x64.tar.xz
     - tar -xvf gcc-arm-none-eabi-4_9-150928-linux-x64.tar.xz
     - export PATH=$PWD/gcc-arm-none-eabi-4_9-150928/bin:$PATH
+    - mkdir lib
+    - gcc -shared -o lib/libfl.so.2 -lfl
+    - export LD_LIBRARY_PATH=$PWD/lib
 
 # configurations that will be tested
 env:
