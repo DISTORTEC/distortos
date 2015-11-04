@@ -1,0 +1,31 @@
+#
+# file: .travis.yml
+#
+# author: Copyright (C) 2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+#
+# This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
+# distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+#
+# date: 2015-11-04
+#
+
+# use container-based infrastructure
+sudo: false
+
+# use minimal environment
+language: generic
+
+# bleeding-edge-toolchain
+install:
+ - wget http://sourceforge.net/projects/bleeding-edge/files/150928/gcc-arm-none-eabi-4_9-150928-linux-x64.tar.xz/download -O gcc-arm-none-eabi-4_9-150928-linux-x64.tar.xz
+ - tar -xvf gcc-arm-none-eabi-4_9-150928-linux-x64.tar.xz
+ - export PATH=$PWD/gcc-arm-none-eabi-4_9-150928/bin:$PATH
+
+# configurations that will be tested
+env:
+ - CONFIG_PATH=STM32F4DISCOVERY/test
+
+# configure and build selected configurations
+script:
+ - make configure
+ - make VERBOSE=1
