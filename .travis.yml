@@ -31,4 +31,4 @@ env:
 # configure and build selected configurations
 script:
     - make configure
-    - make VERBOSE=1
+    - make -j`nproc` VERBOSE=1
