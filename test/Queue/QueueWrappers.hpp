@@ -186,6 +186,9 @@ public:
 			0;
 };
 
+/// unique_ptr with QueueWrapper
+using QueueWrapperUniquePointer = std::unique_ptr<QueueWrapper>;
+
 /// common implementation of QueueWrapper for {Fifo,Message}Queue
 class NonRawQueueWrapper : public QueueWrapper
 {
@@ -793,6 +796,9 @@ public:
 			final override;
 };
 
+/// unique_ptr with RawQueueWrapper
+using RawQueueWrapperUniquePointer = std::unique_ptr<RawQueueWrapper>;
+
 /// implementation of RawQueueWrapper for RawFifoQueue
 class RawFifoQueueWrapper : public RawQueueWrapper
 {
@@ -1078,6 +1084,70 @@ private:
 	/// internal TestStaticRawMessageQueue object that will be wrapped
 	TestStaticRawMessageQueue rawMessageQueue_;
 };
+
+/**
+ * \brief RawQueueWrapper's factory function
+ *
+ * \param QueueSize is the maximum number of elements in queue
+ *
+ * \param [in] dynamic selects whether static (false) or dynamic (true) queue type will be constructed
+ * \param [in] fifo selects whether message (false) or fifo (true) queue type will be constructed
+ *
+ * \return RawQueueWrapperUniquePointer with constructed object - {Dynamic,Static}Raw{Fifo,Message}QueueWrapper
+ */
+
+template<size_t QueueSize>
+RawQueueWrapperUniquePointer makeRawQueueWrapper(const bool dynamic, const bool fifo)
+{
+	if (dynamic == false)
+	{
+		if (fifo == false)
+			return RawQueueWrapperUniquePointer {new StaticRawMessageQueueWrapper<QueueSize>};
+		else	// if (fifo != false)
+			return RawQueueWrapperUniquePointer {new StaticRawFifoQueueWrapper<QueueSize>};
+	}
+	else	// if (dynamic != false)
+	{
+		if (fifo == false)
+			return RawQueueWrapperUniquePointer {new DynamicRawMessageQueueWrapper {QueueSize}};
+		else	// if (fifo != false)
+			return RawQueueWrapperUniquePointer {new DynamicRawFifoQueueWrapper {QueueSize}};
+	}
+}
+
+/**
+ * \brief QueueWrapper's factory function
+ *
+ * \param QueueSize is the maximum number of elements in queue
+ *
+ * \param [in] dynamic selects whether static (false) or dynamic (true) queue type will be constructed
+ * \param [in] raw selects whether non-raw (false) or raw (true) queue type will be constructed
+ * \param [in] fifo selects whether message (false) or fifo (true) queue type will be constructed
+ *
+ * \return QueueWrapperUniquePointer with constructed object - {Dynamic,Static}[Raw]{Fifo,Message}QueueWrapper
+ */
+
+template<size_t QueueSize>
+QueueWrapperUniquePointer makeQueueWrapper(const bool dynamic, const bool raw, const bool fifo)
+{
+	if (raw == true)
+		return makeRawQueueWrapper<QueueSize>(dynamic, fifo);
+
+	if (dynamic == false)
+	{
+		if (fifo == false)
+			return QueueWrapperUniquePointer {new StaticMessageQueueWrapper<QueueSize>};
+		else	// if (fifo != false)
+			return QueueWrapperUniquePointer {new StaticFifoQueueWrapper<QueueSize>};
+	}
+	else	// if (dynamic != false)
+	{
+		if (fifo == false)
+			return QueueWrapperUniquePointer {new DynamicMessageQueueWrapper {QueueSize}};
+		else	// if (fifo != false)
+			return QueueWrapperUniquePointer {new DynamicFifoQueueWrapper {QueueSize}};
+	}
+}
 
 }	// namespace test
 
