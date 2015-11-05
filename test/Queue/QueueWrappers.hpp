@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-10-29
+ * \date 2015-11-05
  */
 
 #ifndef TEST_QUEUE_QUEUEWRAPPERS_HPP_
@@ -39,6 +39,12 @@ namespace test
 class QueueWrapper
 {
 public:
+
+	/**
+	 * \brief QueueWrapper's destructor
+	 */
+
+	virtual ~QueueWrapper() = 0;
 
 	/**
 	 * \brief Tests whether pushed and popped data match.
