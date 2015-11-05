@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-10-29
+ * \date 2015-11-05
  */
 
 #include "QueueOperationsTestCase.hpp"
@@ -19,8 +19,6 @@
 
 #include "distortos/SoftwareTimer.hpp"
 #include "distortos/statistics.hpp"
-
-#include "estd/ReferenceHolder.hpp"
 
 #include <malloc.h>
 
@@ -36,15 +34,11 @@ namespace
 {
 
 /*---------------------------------------------------------------------------------------------------------------------+
-| local types
-+---------------------------------------------------------------------------------------------------------------------*/
-
-/// ReferenceHolder with const QueueWrapper
-using QueueWrapperHolder = estd::ReferenceHolder<const QueueWrapper>;
-
-/*---------------------------------------------------------------------------------------------------------------------+
 | local constants
 +---------------------------------------------------------------------------------------------------------------------*/
+
+/// array with "false" and "true" bool values
+constexpr bool falseTrue[] {false, true};
 
 /// single duration used in tests
 constexpr auto singleDuration = TickClock::duration{1};
@@ -139,199 +133,194 @@ bool testTryPushWhenFull(const QueueWrapper& queueWrapper)
 
 bool phase1()
 {
-	// size 0, so queues are both full and empty at the same time
-	DynamicFifoQueueWrapper dynamicFifoQueueWrapper {0};
-	DynamicMessageQueueWrapper dynamicMessageQueueWrapper {0};
-	DynamicRawFifoQueueWrapper dynamicRawFifoQueueWrapper {0};
-	DynamicRawMessageQueueWrapper dynamicRawMessageQueueWrapper {0};
-	StaticFifoQueueWrapper<0> staticFifoQueueWrapper;
-	StaticMessageQueueWrapper<0> staticMessageQueueWrapper;
-	StaticRawFifoQueueWrapper<0> staticRawFifoQueueWrapper;
-	StaticRawMessageQueueWrapper<0> staticRawMessageQueueWrapper;
-	const QueueWrapperHolder queueWrappers[]
-	{
-			QueueWrapperHolder{dynamicFifoQueueWrapper},
-			QueueWrapperHolder{dynamicMessageQueueWrapper},
-			QueueWrapperHolder{dynamicRawFifoQueueWrapper},
-			QueueWrapperHolder{dynamicRawMessageQueueWrapper},
-			QueueWrapperHolder{staticFifoQueueWrapper},
-			QueueWrapperHolder{staticMessageQueueWrapper},
-			QueueWrapperHolder{staticRawFifoQueueWrapper},
-			QueueWrapperHolder{staticRawMessageQueueWrapper},
-	};
+	for (const auto dynamic : falseTrue)
+		for (const auto raw : falseTrue)
+			for (const auto fifo : falseTrue)
+			{
+				// size 0, so queue is both full and empty at the same time
+				const auto queueWrapper = makeQueueWrapper<0>(dynamic, raw, fifo);
+				const uint8_t constPriority {};
+				const OperationCountingType constTestValue {};
+				uint8_t nonConstPriority {};
+				OperationCountingType nonConstTestValue {};
 
-	for (auto& queueWrapperHolder : queueWrappers)
-	{
-		auto& queueWrapper = queueWrapperHolder.get();
-		const uint8_t constPriority {};
-		const OperationCountingType constTestValue {};
-		uint8_t nonConstPriority {};
-		OperationCountingType nonConstTestValue {};
+				{
+					const auto ret = testTryPushWhenFull(*queueWrapper);
+					if (ret != true)
+						return ret;
+				}
 
-		{
-			const auto ret = testTryPushWhenFull(queueWrapper);
-			if (ret != true)
-				return ret;
-		}
+				{
+					// queue is both full and empty, so tryPush(..., T&&) should fail immediately
+					OperationCountingType::resetCounters();
+					waitForNextTick();
+					const auto start = TickClock::now();
+					// 1 construction, 1 destruction
+					const auto ret = queueWrapper->tryPush(constPriority, OperationCountingType{});
+					if (ret != EAGAIN || start != TickClock::now() ||
+							queueWrapper->checkCounters(1, 0, 0, 1, 0, 0, 0) != true)
+						return false;
+				}
 
-		{
-			// queue is both full and empty, so tryPush(..., T&&) should fail immediately
-			OperationCountingType::resetCounters();
-			waitForNextTick();
-			const auto start = TickClock::now();
-			// 1 construction, 1 destruction
-			const auto ret = queueWrapper.tryPush(constPriority, OperationCountingType{});
-			if (ret != EAGAIN || start != TickClock::now() || queueWrapper.checkCounters(1, 0, 0, 1, 0, 0, 0) != true)
-				return false;
-		}
+				{
+					OperationCountingType::resetCounters();
+					waitForNextTick();
 
-		{
-			OperationCountingType::resetCounters();
-			waitForNextTick();
+					const auto contextSwitchCount = statistics::getContextSwitchCount();
 
-			const auto contextSwitchCount = statistics::getContextSwitchCount();
+					// queue is both full and empty, so tryPushFor(..., const T&) should time-out at expected time
+					const auto start = TickClock::now();
+					const auto ret = queueWrapper->tryPushFor(singleDuration, constPriority, constTestValue);
+					const auto realDuration = TickClock::now() - start;
+					if (ret != ETIMEDOUT || realDuration != singleDuration + decltype(singleDuration){1} ||
+							queueWrapper->checkCounters(0, 0, 0, 0, 0, 0, 0) != true ||
+							statistics::getContextSwitchCount() - contextSwitchCount !=
+									phase1TryForUntilContextSwitchCount)
+						return false;
+				}
 
-			// queue is both full and empty, so tryPushFor(..., const T&) should time-out at expected time
-			const auto start = TickClock::now();
-			const auto ret = queueWrapper.tryPushFor(singleDuration, constPriority, constTestValue);
-			const auto realDuration = TickClock::now() - start;
-			if (ret != ETIMEDOUT || realDuration != singleDuration + decltype(singleDuration){1} ||
-					queueWrapper.checkCounters(0, 0, 0, 0, 0, 0, 0) != true ||
-					statistics::getContextSwitchCount() - contextSwitchCount != phase1TryForUntilContextSwitchCount)
-				return false;
-		}
+				{
+					OperationCountingType::resetCounters();
+					waitForNextTick();
 
-		{
-			OperationCountingType::resetCounters();
-			waitForNextTick();
+					const auto contextSwitchCount = statistics::getContextSwitchCount();
 
-			const auto contextSwitchCount = statistics::getContextSwitchCount();
+					// queue is both full and empty, so tryPushFor(..., T&&) should time-out at expected time
+					const auto start = TickClock::now();
+					// 1 construction, 1 destruction
+					const auto ret = queueWrapper->tryPushFor(singleDuration, constPriority, OperationCountingType{});
+					const auto realDuration = TickClock::now() - start;
+					if (ret != ETIMEDOUT || realDuration != singleDuration + decltype(singleDuration){1} ||
+							queueWrapper->checkCounters(1, 0, 0, 1, 0, 0, 0) != true ||
+							statistics::getContextSwitchCount() - contextSwitchCount !=
+									phase1TryForUntilContextSwitchCount)
+						return false;
+				}
 
-			// queue is both full and empty, so tryPushFor(..., T&&) should time-out at expected time
-			const auto start = TickClock::now();
-			// 1 construction, 1 destruction
-			const auto ret = queueWrapper.tryPushFor(singleDuration, constPriority, OperationCountingType{});
-			const auto realDuration = TickClock::now() - start;
-			if (ret != ETIMEDOUT || realDuration != singleDuration + decltype(singleDuration){1} ||
-					queueWrapper.checkCounters(1, 0, 0, 1, 0, 0, 0) != true ||
-					statistics::getContextSwitchCount() - contextSwitchCount != phase1TryForUntilContextSwitchCount)
-				return false;
-		}
+				{
+					OperationCountingType::resetCounters();
+					waitForNextTick();
 
-		{
-			OperationCountingType::resetCounters();
-			waitForNextTick();
+					const auto contextSwitchCount = statistics::getContextSwitchCount();
 
-			const auto contextSwitchCount = statistics::getContextSwitchCount();
+					// queue is both full and empty, so tryPushUntil(..., const T&) should time-out at exact expected
+					// time
+					const auto requestedTimePoint = TickClock::now() + singleDuration;
+					const auto ret = queueWrapper->tryPushUntil(requestedTimePoint, constPriority, constTestValue);
+					if (ret != ETIMEDOUT || requestedTimePoint != TickClock::now() ||
+							queueWrapper->checkCounters(0, 0, 0, 0, 0, 0, 0) != true ||
+							statistics::getContextSwitchCount() - contextSwitchCount !=
+									phase1TryForUntilContextSwitchCount)
+						return false;
+				}
 
-			// queue is both full and empty, so tryPushUntil(..., const T&) should time-out at exact expected time
-			const auto requestedTimePoint = TickClock::now() + singleDuration;
-			const auto ret = queueWrapper.tryPushUntil(requestedTimePoint, constPriority, constTestValue);
-			if (ret != ETIMEDOUT || requestedTimePoint != TickClock::now() ||
-					queueWrapper.checkCounters(0, 0, 0, 0, 0, 0, 0) != true ||
-					statistics::getContextSwitchCount() - contextSwitchCount != phase1TryForUntilContextSwitchCount)
-				return false;
-		}
+				{
+					OperationCountingType::resetCounters();
+					waitForNextTick();
 
-		{
-			OperationCountingType::resetCounters();
-			waitForNextTick();
+					const auto contextSwitchCount = statistics::getContextSwitchCount();
 
-			const auto contextSwitchCount = statistics::getContextSwitchCount();
+					// queue is both full and empty, so tryPushUntil(..., T&&) should time-out at exact expected time
+					const auto requestedTimePoint = TickClock::now() + singleDuration;
+					// 1 construction, 1 destruction
+					const auto ret = queueWrapper->tryPushUntil(requestedTimePoint, constPriority,
+							OperationCountingType{});
+					if (ret != ETIMEDOUT || requestedTimePoint != TickClock::now() ||
+							queueWrapper->checkCounters(1, 0, 0, 1, 0, 0, 0) != true ||
+							statistics::getContextSwitchCount() - contextSwitchCount !=
+									phase1TryForUntilContextSwitchCount)
+						return false;
+				}
 
-			// queue is both full and empty, so tryPushUntil(..., T&&) should time-out at exact expected time
-			const auto requestedTimePoint = TickClock::now() + singleDuration;
-			// 1 construction, 1 destruction
-			const auto ret = queueWrapper.tryPushUntil(requestedTimePoint, constPriority, OperationCountingType{});
-			if (ret != ETIMEDOUT || requestedTimePoint != TickClock::now() ||
-					queueWrapper.checkCounters(1, 0, 0, 1, 0, 0, 0) != true ||
-					statistics::getContextSwitchCount() - contextSwitchCount != phase1TryForUntilContextSwitchCount)
-				return false;
-		}
+				{
+					const auto ret = testTryPopWhenEmpty(*queueWrapper);
+					if (ret != true)
+						return ret;
+				}
 
-		{
-			const auto ret = testTryPopWhenEmpty(queueWrapper);
-			if (ret != true)
-				return ret;
-		}
+				{
+					OperationCountingType::resetCounters();
+					waitForNextTick();
 
-		{
-			OperationCountingType::resetCounters();
-			waitForNextTick();
+					const auto contextSwitchCount = statistics::getContextSwitchCount();
 
-			const auto contextSwitchCount = statistics::getContextSwitchCount();
+					// queue is both full and empty, so tryPopFor(..., T&) should time-out at expected time
+					const auto start = TickClock::now();
+					const auto ret = queueWrapper->tryPopFor(singleDuration, nonConstPriority, nonConstTestValue);
+					const auto realDuration = TickClock::now() - start;
+					if (ret != ETIMEDOUT || realDuration != singleDuration + decltype(singleDuration){1} ||
+							queueWrapper->checkCounters(0, 0, 0, 0, 0, 0, 0) != true ||
+							statistics::getContextSwitchCount() - contextSwitchCount !=
+									phase1TryForUntilContextSwitchCount)
+						return false;
+				}
 
-			// queue is both full and empty, so tryPopFor(..., T&) should time-out at expected time
-			const auto start = TickClock::now();
-			const auto ret = queueWrapper.tryPopFor(singleDuration, nonConstPriority, nonConstTestValue);
-			const auto realDuration = TickClock::now() - start;
-			if (ret != ETIMEDOUT || realDuration != singleDuration + decltype(singleDuration){1} ||
-					queueWrapper.checkCounters(0, 0, 0, 0, 0, 0, 0) != true ||
-					statistics::getContextSwitchCount() - contextSwitchCount != phase1TryForUntilContextSwitchCount)
-				return false;
-		}
+				{
+					OperationCountingType::resetCounters();
+					waitForNextTick();
 
-		{
-			OperationCountingType::resetCounters();
-			waitForNextTick();
+					const auto contextSwitchCount = statistics::getContextSwitchCount();
 
-			const auto contextSwitchCount = statistics::getContextSwitchCount();
+					// queue is both full and empty, so tryPopUntil(..., T&) should time-out at exact expected time
+					const auto requestedTimePoint = TickClock::now() + singleDuration;
+					const auto ret = queueWrapper->tryPopUntil(requestedTimePoint, nonConstPriority, nonConstTestValue);
+					if (ret != ETIMEDOUT || requestedTimePoint != TickClock::now() ||
+							queueWrapper->checkCounters(0, 0, 0, 0, 0, 0, 0) != true ||
+							statistics::getContextSwitchCount() - contextSwitchCount !=
+									phase1TryForUntilContextSwitchCount)
+						return false;
+				}
 
-			// queue is both full and empty, so tryPopUntil(..., T&) should time-out at exact expected time
-			const auto requestedTimePoint = TickClock::now() + singleDuration;
-			const auto ret = queueWrapper.tryPopUntil(requestedTimePoint, nonConstPriority, nonConstTestValue);
-			if (ret != ETIMEDOUT || requestedTimePoint != TickClock::now() ||
-					queueWrapper.checkCounters(0, 0, 0, 0, 0, 0, 0) != true ||
-					statistics::getContextSwitchCount() - contextSwitchCount != phase1TryForUntilContextSwitchCount)
-				return false;
-		}
+		#if DISTORTOS_QUEUE_EMPLACE_SUPPORTED == 1 || DOXYGEN == 1
 
-#if DISTORTOS_QUEUE_EMPLACE_SUPPORTED == 1 || DOXYGEN == 1
+				{
+					// queue is both full and empty, so tryEmplace(..., Args&&...) should fail immediately
+					OperationCountingType::resetCounters();
+					waitForNextTick();
+					const auto start = TickClock::now();
+					const auto ret = queueWrapper->tryEmplace(constPriority);
+					if (ret != EAGAIN || start != TickClock::now() ||
+							queueWrapper->checkCounters(0, 0, 0, 0, 0, 0, 0) != true)
+						return false;
+				}
 
-		{
-			// queue is both full and empty, so tryEmplace(..., Args&&...) should fail immediately
-			OperationCountingType::resetCounters();
-			waitForNextTick();
-			const auto start = TickClock::now();
-			const auto ret = queueWrapper.tryEmplace(constPriority);
-			if (ret != EAGAIN || start != TickClock::now() || queueWrapper.checkCounters(0, 0, 0, 0, 0, 0, 0) != true)
-				return false;
-		}
+				{
+					OperationCountingType::resetCounters();
+					waitForNextTick();
 
-		{
-			OperationCountingType::resetCounters();
-			waitForNextTick();
+					const auto contextSwitchCount = statistics::getContextSwitchCount();
 
-			const auto contextSwitchCount = statistics::getContextSwitchCount();
+					// queue is both full and empty, so tryEmplaceFor(..., Args&&...) should time-out at expected time
+					const auto start = TickClock::now();
+					const auto ret = queueWrapper->tryEmplaceFor(singleDuration, constPriority);
+					const auto realDuration = TickClock::now() - start;
+					if (ret != ETIMEDOUT || realDuration != singleDuration + decltype(singleDuration){1} ||
+							queueWrapper->checkCounters(0, 0, 0, 0, 0, 0, 0) != true ||
+							statistics::getContextSwitchCount() - contextSwitchCount !=
+									phase1TryForUntilContextSwitchCount)
+						return false;
+				}
 
-			// queue is both full and empty, so tryEmplaceFor(..., Args&&...) should time-out at expected time
-			const auto start = TickClock::now();
-			const auto ret = queueWrapper.tryEmplaceFor(singleDuration, constPriority);
-			const auto realDuration = TickClock::now() - start;
-			if (ret != ETIMEDOUT || realDuration != singleDuration + decltype(singleDuration){1} ||
-					queueWrapper.checkCounters(0, 0, 0, 0, 0, 0, 0) != true ||
-					statistics::getContextSwitchCount() - contextSwitchCount != phase1TryForUntilContextSwitchCount)
-				return false;
-		}
+				{
+					OperationCountingType::resetCounters();
+					waitForNextTick();
 
-		{
-			OperationCountingType::resetCounters();
-			waitForNextTick();
+					const auto contextSwitchCount = statistics::getContextSwitchCount();
 
-			const auto contextSwitchCount = statistics::getContextSwitchCount();
+					// queue is both full and empty, so tryEmplaceUntil(..., Args&&...) should time-out at exact
+					// expected time
+					const auto requestedTimePoint = TickClock::now() + singleDuration;
+					const auto ret = queueWrapper->tryEmplaceUntil(requestedTimePoint, constPriority);
+					if (ret != ETIMEDOUT || requestedTimePoint != TickClock::now() ||
+							queueWrapper->checkCounters(0, 0, 0, 0, 0, 0, 0) != true ||
+							statistics::getContextSwitchCount() - contextSwitchCount !=
+									phase1TryForUntilContextSwitchCount)
+						return false;
+				}
 
-			// queue is both full and empty, so tryEmplaceUntil(..., Args&&...) should time-out at exact expected time
-			const auto requestedTimePoint = TickClock::now() + singleDuration;
-			const auto ret = queueWrapper.tryEmplaceUntil(requestedTimePoint, constPriority);
-			if (ret != ETIMEDOUT || requestedTimePoint != TickClock::now() ||
-					queueWrapper.checkCounters(0, 0, 0, 0, 0, 0, 0) != true ||
-					statistics::getContextSwitchCount() - contextSwitchCount != phase1TryForUntilContextSwitchCount)
-				return false;
-		}
+		#endif	// DISTORTOS_QUEUE_EMPLACE_SUPPORTED == 1 || DOXYGEN == 1
 
-#endif	// DISTORTOS_QUEUE_EMPLACE_SUPPORTED == 1 || DOXYGEN == 1
-
-	}
+			}
 
 	return true;
 }
@@ -347,306 +336,302 @@ bool phase1()
 
 bool phase2()
 {
-	DynamicFifoQueueWrapper dynamicFifoQueueWrapper {1};
-	DynamicMessageQueueWrapper dynamicMessageQueueWrapper {1};
-	DynamicRawFifoQueueWrapper dynamicRawFifoQueueWrapper {1};
-	DynamicRawMessageQueueWrapper dynamicRawMessageQueueWrapper {1};
-	StaticFifoQueueWrapper<1> staticFifoQueueWrapper;
-	StaticMessageQueueWrapper<1> staticMessageQueueWrapper;
-	StaticRawFifoQueueWrapper<1> staticRawFifoQueueWrapper;
-	StaticRawMessageQueueWrapper<1> staticRawMessageQueueWrapper;
-	const QueueWrapperHolder queueWrappers[]
-	{
-			QueueWrapperHolder{dynamicFifoQueueWrapper},
-			QueueWrapperHolder{dynamicMessageQueueWrapper},
-			QueueWrapperHolder{dynamicRawFifoQueueWrapper},
-			QueueWrapperHolder{dynamicRawMessageQueueWrapper},
-			QueueWrapperHolder{staticFifoQueueWrapper},
-			QueueWrapperHolder{staticMessageQueueWrapper},
-			QueueWrapperHolder{staticRawFifoQueueWrapper},
-			QueueWrapperHolder{staticRawMessageQueueWrapper},
-	};
+	for (const auto dynamic : falseTrue)
+		for (const auto raw : falseTrue)
+			for (const auto fifo : falseTrue)
+			{
+				const auto queueWrapper = makeQueueWrapper<1>(dynamic, raw, fifo);
+				const uint8_t constPriority {};
+				const OperationCountingType constTestValue {};
+				uint8_t nonConstPriority {};
+				OperationCountingType nonConstTestValue {};
 
-	for (auto& queueWrapperHolder : queueWrappers)
-	{
-		auto& queueWrapper = queueWrapperHolder.get();
-		const uint8_t constPriority {};
-		const OperationCountingType constTestValue {};
-		uint8_t nonConstPriority {};
-		OperationCountingType nonConstTestValue {};
+				{
+					// queue is not full, so tryPush(..., const T&) must succeed immediately
+					OperationCountingType::resetCounters();
+					waitForNextTick();
+					const auto start = TickClock::now();
+					const auto ret = queueWrapper->tryPush(constPriority, constTestValue);	// 1 copy construction
+					if (ret != 0 || start != TickClock::now() ||
+							queueWrapper->checkCounters(0, 1, 0, 0, 0, 0, 0) != true)
+						return false;
+				}
 
-		{
-			// queue is not full, so tryPush(..., const T&) must succeed immediately
-			OperationCountingType::resetCounters();
-			waitForNextTick();
-			const auto start = TickClock::now();
-			const auto ret = queueWrapper.tryPush(constPriority, constTestValue);	// 1 copy construction
-			if (ret != 0 || start != TickClock::now() || queueWrapper.checkCounters(0, 1, 0, 0, 0, 0, 0) != true)
-				return false;
-		}
+				{
+					const auto ret = testTryPushWhenFull(*queueWrapper);
+					if (ret != true)
+						return ret;
+				}
 
-		{
-			const auto ret = testTryPushWhenFull(queueWrapper);
-			if (ret != true)
-				return ret;
-		}
+				{
+					const auto ret = testTryPopWhenNotEmpty(*queueWrapper);
+					if (ret != true)
+						return ret;
+				}
 
-		{
-			const auto ret = testTryPopWhenNotEmpty(queueWrapper);
-			if (ret != true)
-				return ret;
-		}
+				{
+					const auto ret = testTryPopWhenEmpty(*queueWrapper);
+					if (ret != true)
+						return ret;
+				}
 
-		{
-			const auto ret = testTryPopWhenEmpty(queueWrapper);
-			if (ret != true)
-				return ret;
-		}
+				{
+					// queue is not full, so tryPush(..., T&&) must succeed immediately
+					OperationCountingType::resetCounters();
+					waitForNextTick();
+					const auto start = TickClock::now();
+					// 1 construction, 1 move construction, 1 destruction
+					const auto ret = queueWrapper->tryPush(constPriority, OperationCountingType{});
+					if (ret != 0 || start != TickClock::now() ||
+							queueWrapper->checkCounters(1, 0, 1, 1, 0, 0, 0) != true)
+						return false;
+				}
 
-		{
-			// queue is not full, so tryPush(..., T&&) must succeed immediately
-			OperationCountingType::resetCounters();
-			waitForNextTick();
-			const auto start = TickClock::now();
-			// 1 construction, 1 move construction, 1 destruction
-			const auto ret = queueWrapper.tryPush(constPriority, OperationCountingType{});
-			if (ret != 0 || start != TickClock::now() || queueWrapper.checkCounters(1, 0, 1, 1, 0, 0, 0) != true)
-				return false;
-		}
+				{
+					const auto ret = testTryPushWhenFull(*queueWrapper);
+					if (ret != true)
+						return ret;
+				}
 
-		{
-			const auto ret = testTryPushWhenFull(queueWrapper);
-			if (ret != true)
-				return ret;
-		}
+				{
+					const auto ret = testTryPopWhenNotEmpty(*queueWrapper);
+					if (ret != true)
+						return ret;
+				}
 
-		{
-			const auto ret = testTryPopWhenNotEmpty(queueWrapper);
-			if (ret != true)
-				return ret;
-		}
+				{
+					const auto ret = testTryPopWhenEmpty(*queueWrapper);
+					if (ret != true)
+						return ret;
+				}
 
-		{
-			const auto ret = testTryPopWhenEmpty(queueWrapper);
-			if (ret != true)
-				return ret;
-		}
+				{
+					// queue is not full, so tryPushFor(..., const T&) must succeed immediately
+					OperationCountingType::resetCounters();
+					waitForNextTick();
+					const auto start = TickClock::now();
+					// 1 copy construction
+					const auto ret = queueWrapper->tryPushFor(singleDuration, constPriority, constTestValue);
+					if (ret != 0 || start != TickClock::now() ||
+							queueWrapper->checkCounters(0, 1, 0, 0, 0, 0, 0) != true)
+						return false;
+				}
 
-		{
-			// queue is not full, so tryPushFor(..., const T&) must succeed immediately
-			OperationCountingType::resetCounters();
-			waitForNextTick();
-			const auto start = TickClock::now();
-			// 1 copy construction
-			const auto ret = queueWrapper.tryPushFor(singleDuration, constPriority, constTestValue);
-			if (ret != 0 || start != TickClock::now() || queueWrapper.checkCounters(0, 1, 0, 0, 0, 0, 0) != true)
-				return false;
-		}
+				{
+					const auto ret = testTryPushWhenFull(*queueWrapper);
+					if (ret != true)
+						return ret;
+				}
 
-		{
-			const auto ret = testTryPushWhenFull(queueWrapper);
-			if (ret != true)
-				return ret;
-		}
+				{
+					// queue is not empty, so tryPopFor(..., T&) must succeed immediately
+					OperationCountingType::resetCounters();
+					waitForNextTick();
+					const auto start = TickClock::now();
+					// 1 swap, 1 destruction
+					const auto ret = queueWrapper->tryPopFor(singleDuration, nonConstPriority, nonConstTestValue);
+					if (ret != 0 || start != TickClock::now() ||
+							queueWrapper->checkCounters(0, 0, 0, 1, 0, 0, 1) != true)
+						return false;
+				}
 
-		{
-			// queue is not empty, so tryPopFor(..., T&) must succeed immediately
-			OperationCountingType::resetCounters();
-			waitForNextTick();
-			const auto start = TickClock::now();
-			// 1 swap, 1 destruction
-			const auto ret = queueWrapper.tryPopFor(singleDuration, nonConstPriority, nonConstTestValue);
-			if (ret != 0 || start != TickClock::now() || queueWrapper.checkCounters(0, 0, 0, 1, 0, 0, 1) != true)
-				return false;
-		}
+				{
+					const auto ret = testTryPopWhenEmpty(*queueWrapper);
+					if (ret != true)
+						return ret;
+				}
 
-		{
-			const auto ret = testTryPopWhenEmpty(queueWrapper);
-			if (ret != true)
-				return ret;
-		}
+				{
+					// queue is not full, so tryPushFor(..., T&&) must succeed immediately
+					OperationCountingType::resetCounters();
+					waitForNextTick();
+					const auto start = TickClock::now();
+					// 1 construction, 1 move construction, 1 destruction
+					const auto ret = queueWrapper->tryPushFor(singleDuration, constPriority, OperationCountingType{});
+					if (ret != 0 || start != TickClock::now() ||
+							queueWrapper->checkCounters(1, 0, 1, 1, 0, 0, 0) != true)
+						return false;
+				}
 
-		{
-			// queue is not full, so tryPushFor(..., T&&) must succeed immediately
-			OperationCountingType::resetCounters();
-			waitForNextTick();
-			const auto start = TickClock::now();
-			// 1 construction, 1 move construction, 1 destruction
-			const auto ret = queueWrapper.tryPushFor(singleDuration, constPriority, OperationCountingType{});
-			if (ret != 0 || start != TickClock::now() || queueWrapper.checkCounters(1, 0, 1, 1, 0, 0, 0) != true)
-				return false;
-		}
+				{
+					const auto ret = testTryPushWhenFull(*queueWrapper);
+					if (ret != true)
+						return ret;
+				}
 
-		{
-			const auto ret = testTryPushWhenFull(queueWrapper);
-			if (ret != true)
-				return ret;
-		}
+				{
+					const auto ret = testTryPopWhenNotEmpty(*queueWrapper);
+					if (ret != true)
+						return ret;
+				}
 
-		{
-			const auto ret = testTryPopWhenNotEmpty(queueWrapper);
-			if (ret != true)
-				return ret;
-		}
+				{
+					const auto ret = testTryPopWhenEmpty(*queueWrapper);
+					if (ret != true)
+						return ret;
+				}
 
-		{
-			const auto ret = testTryPopWhenEmpty(queueWrapper);
-			if (ret != true)
-				return ret;
-		}
+				{
+					// queue is not full, so tryPushUntil(..., const T&) must succeed immediately
+					OperationCountingType::resetCounters();
+					waitForNextTick();
+					const auto start = TickClock::now();
+					// 1 copy construction
+					const auto ret = queueWrapper->tryPushUntil(start + singleDuration, constPriority, constTestValue);
+					if (ret != 0 || start != TickClock::now() ||
+							queueWrapper->checkCounters(0, 1, 0, 0, 0, 0, 0) != true)
+						return false;
+				}
 
-		{
-			// queue is not full, so tryPushUntil(..., const T&) must succeed immediately
-			OperationCountingType::resetCounters();
-			waitForNextTick();
-			const auto start = TickClock::now();
-			// 1 copy construction
-			const auto ret = queueWrapper.tryPushUntil(start + singleDuration, constPriority, constTestValue);
-			if (ret != 0 || start != TickClock::now() || queueWrapper.checkCounters(0, 1, 0, 0, 0, 0, 0) != true)
-				return false;
-		}
+				{
+					const auto ret = testTryPushWhenFull(*queueWrapper);
+					if (ret != true)
+						return ret;
+				}
 
-		{
-			const auto ret = testTryPushWhenFull(queueWrapper);
-			if (ret != true)
-				return ret;
-		}
+				{
+					// queue is not empty, so tryPopUntil(..., T&) must succeed immediately
+					OperationCountingType::resetCounters();
+					waitForNextTick();
+					const auto start = TickClock::now();
+					// 1 swap, 1 destruction
+					const auto ret = queueWrapper->tryPopUntil(start + singleDuration, nonConstPriority,
+							nonConstTestValue);
+					if (ret != 0 || start != TickClock::now() ||
+							queueWrapper->checkCounters(0, 0, 0, 1, 0, 0, 1) != true)
+						return false;
+				}
 
-		{
-			// queue is not empty, so tryPopUntil(..., T&) must succeed immediately
-			OperationCountingType::resetCounters();
-			waitForNextTick();
-			const auto start = TickClock::now();
-			// 1 swap, 1 destruction
-			const auto ret = queueWrapper.tryPopUntil(start + singleDuration, nonConstPriority, nonConstTestValue);
-			if (ret != 0 || start != TickClock::now() || queueWrapper.checkCounters(0, 0, 0, 1, 0, 0, 1) != true)
-				return false;
-		}
+				{
+					const auto ret = testTryPopWhenEmpty(*queueWrapper);
+					if (ret != true)
+						return ret;
+				}
 
-		{
-			const auto ret = testTryPopWhenEmpty(queueWrapper);
-			if (ret != true)
-				return ret;
-		}
+				{
+					// queue is not full, so tryPushUntil(..., T&&) must succeed immediately
+					OperationCountingType::resetCounters();
+					waitForNextTick();
+					const auto start = TickClock::now();
+					// 1 construction, 1 move construction, 1 destruction
+					const auto ret = queueWrapper->tryPushUntil(start + singleDuration, constPriority,
+							OperationCountingType{});
+					if (ret != 0 || start != TickClock::now() ||
+							queueWrapper->checkCounters(1, 0, 1, 1, 0, 0, 0) != true)
+						return false;
+				}
 
-		{
-			// queue is not full, so tryPushUntil(..., T&&) must succeed immediately
-			OperationCountingType::resetCounters();
-			waitForNextTick();
-			const auto start = TickClock::now();
-			// 1 construction, 1 move construction, 1 destruction
-			const auto ret = queueWrapper.tryPushUntil(start + singleDuration, constPriority, OperationCountingType{});
-			if (ret != 0 || start != TickClock::now() || queueWrapper.checkCounters(1, 0, 1, 1, 0, 0, 0) != true)
-				return false;
-		}
+				{
+					const auto ret = testTryPushWhenFull(*queueWrapper);
+					if (ret != true)
+						return ret;
+				}
 
-		{
-			const auto ret = testTryPushWhenFull(queueWrapper);
-			if (ret != true)
-				return ret;
-		}
+				{
+					const auto ret = testTryPopWhenNotEmpty(*queueWrapper);
+					if (ret != true)
+						return ret;
+				}
 
-		{
-			const auto ret = testTryPopWhenNotEmpty(queueWrapper);
-			if (ret != true)
-				return ret;
-		}
-
-		{
-			const auto ret = testTryPopWhenEmpty(queueWrapper);
-			if (ret != true)
-				return ret;
-		}
+				{
+					const auto ret = testTryPopWhenEmpty(*queueWrapper);
+					if (ret != true)
+						return ret;
+				}
 
 #if DISTORTOS_QUEUE_EMPLACE_SUPPORTED == 1 || DOXYGEN == 1
 
-		{
-			// queue is not full, so tryEmplace(..., Args&&...) must succeed immediately
-			OperationCountingType::resetCounters();
-			waitForNextTick();
-			const auto start = TickClock::now();
-			const auto ret = queueWrapper.tryEmplace(constPriority);	// 1 construction
-			if (ret != 0 || start != TickClock::now() || queueWrapper.checkCounters(1, 0, 0, 0, 0, 0, 0) != true)
-				return false;
-		}
+				{
+					// queue is not full, so tryEmplace(..., Args&&...) must succeed immediately
+					OperationCountingType::resetCounters();
+					waitForNextTick();
+					const auto start = TickClock::now();
+					const auto ret = queueWrapper->tryEmplace(constPriority);	// 1 construction
+					if (ret != 0 || start != TickClock::now() ||
+							queueWrapper->checkCounters(1, 0, 0, 0, 0, 0, 0) != true)
+						return false;
+				}
 
-		{
-			const auto ret = testTryPushWhenFull(queueWrapper);
-			if (ret != true)
-				return ret;
-		}
+				{
+					const auto ret = testTryPushWhenFull(*queueWrapper);
+					if (ret != true)
+						return ret;
+				}
 
-		{
-			const auto ret = testTryPopWhenNotEmpty(queueWrapper);
-			if (ret != true)
-				return ret;
-		}
+				{
+					const auto ret = testTryPopWhenNotEmpty(*queueWrapper);
+					if (ret != true)
+						return ret;
+				}
 
-		{
-			const auto ret = testTryPopWhenEmpty(queueWrapper);
-			if (ret != true)
-				return ret;
-		}
+				{
+					const auto ret = testTryPopWhenEmpty(*queueWrapper);
+					if (ret != true)
+						return ret;
+				}
 
-		{
-			// queue is not full, so tryEmplaceFor(..., Args&&...) must succeed immediately
-			OperationCountingType::resetCounters();
-			waitForNextTick();
-			const auto start = TickClock::now();
-			const auto ret = queueWrapper.tryEmplaceFor(singleDuration, constPriority);	// 1 construction
-			if (ret != 0 || start != TickClock::now() || queueWrapper.checkCounters(1, 0, 0, 0, 0, 0, 0) != true)
-				return false;
-		}
+				{
+					// queue is not full, so tryEmplaceFor(..., Args&&...) must succeed immediately
+					OperationCountingType::resetCounters();
+					waitForNextTick();
+					const auto start = TickClock::now();
+					const auto ret = queueWrapper->tryEmplaceFor(singleDuration, constPriority);	// 1 construction
+					if (ret != 0 || start != TickClock::now() ||
+							queueWrapper->checkCounters(1, 0, 0, 0, 0, 0, 0) != true)
+						return false;
+				}
 
-		{
-			const auto ret = testTryPushWhenFull(queueWrapper);
-			if (ret != true)
-				return ret;
-		}
+				{
+					const auto ret = testTryPushWhenFull(*queueWrapper);
+					if (ret != true)
+						return ret;
+				}
 
-		{
-			const auto ret = testTryPopWhenNotEmpty(queueWrapper);
-			if (ret != true)
-				return ret;
-		}
+				{
+					const auto ret = testTryPopWhenNotEmpty(*queueWrapper);
+					if (ret != true)
+						return ret;
+				}
 
-		{
-			const auto ret = testTryPopWhenEmpty(queueWrapper);
-			if (ret != true)
-				return ret;
-		}
+				{
+					const auto ret = testTryPopWhenEmpty(*queueWrapper);
+					if (ret != true)
+						return ret;
+				}
 
-		{
-			// queue is not full, so tryEmplaceUntil(..., Args&&...) must succeed immediately
-			OperationCountingType::resetCounters();
-			waitForNextTick();
-			const auto start = TickClock::now();
-			const auto ret = queueWrapper.tryEmplaceUntil(start + singleDuration, constPriority);	// 1 construction
-			if (ret != 0 || start != TickClock::now() || queueWrapper.checkCounters(1, 0, 0, 0, 0, 0, 0) != true)
-				return false;
-		}
+				{
+					// queue is not full, so tryEmplaceUntil(..., Args&&...) must succeed immediately
+					OperationCountingType::resetCounters();
+					waitForNextTick();
+					const auto start = TickClock::now();
+					// 1 construction
+					const auto ret = queueWrapper->tryEmplaceUntil(start + singleDuration, constPriority);
+					if (ret != 0 || start != TickClock::now() ||
+							queueWrapper->checkCounters(1, 0, 0, 0, 0, 0, 0) != true)
+						return false;
+				}
 
-		{
-			const auto ret = testTryPushWhenFull(queueWrapper);
-			if (ret != true)
-				return ret;
-		}
+				{
+					const auto ret = testTryPushWhenFull(*queueWrapper);
+					if (ret != true)
+						return ret;
+				}
 
-		{
-			const auto ret = testTryPopWhenNotEmpty(queueWrapper);
-			if (ret != true)
-				return ret;
-		}
+				{
+					const auto ret = testTryPopWhenNotEmpty(*queueWrapper);
+					if (ret != true)
+						return ret;
+				}
 
-		{
-			const auto ret = testTryPopWhenEmpty(queueWrapper);
-			if (ret != true)
-				return ret;
-		}
+				{
+					const auto ret = testTryPopWhenEmpty(*queueWrapper);
+					if (ret != true)
+						return ret;
+				}
 
 #endif	// DISTORTOS_QUEUE_EMPLACE_SUPPORTED == 1 || DOXYGEN == 1
 
-	}
+			}
 
 	return true;
 }
@@ -663,125 +648,113 @@ bool phase2()
 
 bool phase3()
 {
-	DynamicFifoQueueWrapper dynamicFifoQueueWrapper {1};
-	DynamicMessageQueueWrapper dynamicMessageQueueWrapper {1};
-	DynamicRawFifoQueueWrapper dynamicRawFifoQueueWrapper {1};
-	DynamicRawMessageQueueWrapper dynamicRawMessageQueueWrapper {1};
-	StaticFifoQueueWrapper<1> staticFifoQueueWrapper;
-	StaticMessageQueueWrapper<1> staticMessageQueueWrapper;
-	StaticRawFifoQueueWrapper<1> staticRawFifoQueueWrapper;
-	StaticRawMessageQueueWrapper<1> staticRawMessageQueueWrapper;
-	const QueueWrapperHolder queueWrappers[]
-	{
-			QueueWrapperHolder{dynamicFifoQueueWrapper},
-			QueueWrapperHolder{dynamicMessageQueueWrapper},
-			QueueWrapperHolder{dynamicRawFifoQueueWrapper},
-			QueueWrapperHolder{dynamicRawMessageQueueWrapper},
-			QueueWrapperHolder{staticFifoQueueWrapper},
-			QueueWrapperHolder{staticMessageQueueWrapper},
-			QueueWrapperHolder{staticRawFifoQueueWrapper},
-			QueueWrapperHolder{staticRawMessageQueueWrapper},
-	};
+	for (const auto dynamic : falseTrue)
+		for (const auto raw : falseTrue)
+			for (const auto fifo : falseTrue)
+			{
+				const auto queueWrapper = makeQueueWrapper<1>(dynamic, raw, fifo);
+				uint8_t sharedMagicPriority {};
+				OperationCountingType sharedMagicValue {};
+				auto softwareTimer = makeSoftwareTimer(
+						[&queueWrapper, &sharedMagicPriority, &sharedMagicValue]()
+						{
+							queueWrapper->tryPush(sharedMagicPriority, sharedMagicValue);
+						});
 
-	for (auto& queueWrapperHolder : queueWrappers)
-	{
-		auto& queueWrapper = queueWrapperHolder.get();
-		uint8_t sharedMagicPriority {};
-		OperationCountingType sharedMagicValue {};
-		auto softwareTimer = makeSoftwareTimer(
-				[&queueWrapper, &sharedMagicPriority, &sharedMagicValue]()
 				{
-					queueWrapper.tryPush(sharedMagicPriority, sharedMagicValue);
-				});
+					OperationCountingType::resetCounters();
+					waitForNextTick();
 
-		{
-			OperationCountingType::resetCounters();
-			waitForNextTick();
+					const auto contextSwitchCount = statistics::getContextSwitchCount();
+					const auto wakeUpTimePoint = TickClock::now() + longDuration;
+					sharedMagicPriority = 0x93;
+					// 1 construction, 1 move assignment, 1 destruction
+					sharedMagicValue = OperationCountingType{0x2f5be1a4};
+					softwareTimer.start(wakeUpTimePoint);	// in timer: 1 copy construction
 
-			const auto contextSwitchCount = statistics::getContextSwitchCount();
-			const auto wakeUpTimePoint = TickClock::now() + longDuration;
-			sharedMagicPriority = 0x93;
-			sharedMagicValue = OperationCountingType{0x2f5be1a4};	// 1 construction, 1 move assignment, 1 destruction
-			softwareTimer.start(wakeUpTimePoint);	// in timer: 1 copy construction
+					// queue is currently empty, but pop() should succeed at expected time
+					uint8_t priority {};
+					OperationCountingType testValue {};	// 1 construction
+					const auto ret = queueWrapper->pop(priority, testValue);	// 1 swap, 1 destruction
+					const auto wokenUpTimePoint = TickClock::now();
+					if (ret != 0 || wakeUpTimePoint != wokenUpTimePoint ||
+							queueWrapper->check(sharedMagicPriority, sharedMagicValue, priority, testValue) == false ||
+							queueWrapper->checkCounters(2, 1, 0, 2, 0, 1, 1) != true ||
+							statistics::getContextSwitchCount() - contextSwitchCount !=
+									phase34SoftwareTimerContextSwitchCount)
+						return false;
+				}
 
-			// queue is currently empty, but pop() should succeed at expected time
-			uint8_t priority {};
-			OperationCountingType testValue {};	// 1 construction
-			const auto ret = queueWrapper.pop(priority, testValue);	// 1 swap, 1 destruction
-			const auto wokenUpTimePoint = TickClock::now();
-			if (ret != 0 || wakeUpTimePoint != wokenUpTimePoint ||
-					queueWrapper.check(sharedMagicPriority, sharedMagicValue, priority, testValue) == false ||
-					queueWrapper.checkCounters(2, 1, 0, 2, 0, 1, 1) != true ||
-					statistics::getContextSwitchCount() - contextSwitchCount != phase34SoftwareTimerContextSwitchCount)
-				return false;
-		}
+				{
+					const auto ret = testTryPopWhenEmpty(*queueWrapper);
+					if (ret != true)
+						return ret;
+				}
 
-		{
-			const auto ret = testTryPopWhenEmpty(queueWrapper);
-			if (ret != true)
-				return ret;
-		}
+				{
+					OperationCountingType::resetCounters();
+					waitForNextTick();
 
-		{
-			OperationCountingType::resetCounters();
-			waitForNextTick();
+					const auto contextSwitchCount = statistics::getContextSwitchCount();
+					const auto wakeUpTimePoint = TickClock::now() + longDuration;
+					sharedMagicPriority = 0x01;
+					// 1 construction, 1 move assignment, 1 destruction
+					sharedMagicValue = OperationCountingType{0xc1fe105a};
+					softwareTimer.start(wakeUpTimePoint);	// in timer: 1 copy construction
 
-			const auto contextSwitchCount = statistics::getContextSwitchCount();
-			const auto wakeUpTimePoint = TickClock::now() + longDuration;
-			sharedMagicPriority = 0x01;
-			sharedMagicValue = OperationCountingType{0xc1fe105a};	// 1 construction, 1 move assignment, 1 destruction
-			softwareTimer.start(wakeUpTimePoint);	// in timer: 1 copy construction
+					// queue is currently empty, but tryPopFor() should succeed at expected time
+					uint8_t priority {};
+					OperationCountingType testValue {};	// 1 construction
+					// 1 swap, 1 destruction
+					const auto ret = queueWrapper->tryPopFor(wakeUpTimePoint - TickClock::now() + longDuration,
+							priority, testValue);
+					const auto wokenUpTimePoint = TickClock::now();
+					if (ret != 0 || wakeUpTimePoint != wokenUpTimePoint ||
+							queueWrapper->check(sharedMagicPriority, sharedMagicValue, priority, testValue) == false ||
+							queueWrapper->checkCounters(2, 1, 0, 2, 0, 1, 1) != true ||
+							statistics::getContextSwitchCount() - contextSwitchCount !=
+									phase34SoftwareTimerContextSwitchCount)
+						return false;
+				}
 
-			// queue is currently empty, but tryPopFor() should succeed at expected time
-			uint8_t priority {};
-			OperationCountingType testValue {};	// 1 construction
-			// 1 swap, 1 destruction
-			const auto ret = queueWrapper.tryPopFor(wakeUpTimePoint - TickClock::now() + longDuration, priority,
-					testValue);
-			const auto wokenUpTimePoint = TickClock::now();
-			if (ret != 0 || wakeUpTimePoint != wokenUpTimePoint ||
-					queueWrapper.check(sharedMagicPriority, sharedMagicValue, priority, testValue) == false ||
-					queueWrapper.checkCounters(2, 1, 0, 2, 0, 1, 1) != true ||
-					statistics::getContextSwitchCount() - contextSwitchCount != phase34SoftwareTimerContextSwitchCount)
-				return false;
-		}
+				{
+					const auto ret = testTryPopWhenEmpty(*queueWrapper);
+					if (ret != true)
+						return ret;
+				}
 
-		{
-			const auto ret = testTryPopWhenEmpty(queueWrapper);
-			if (ret != true)
-				return ret;
-		}
+				{
+					OperationCountingType::resetCounters();
+					waitForNextTick();
 
-		{
-			OperationCountingType::resetCounters();
-			waitForNextTick();
+					const auto contextSwitchCount = statistics::getContextSwitchCount();
+					const auto wakeUpTimePoint = TickClock::now() + longDuration;
+					sharedMagicPriority = 0x48;
+					// 1 construction, 1 move assignment, 1 destruction
+					sharedMagicValue = OperationCountingType{0xda0e4e30};
+					softwareTimer.start(wakeUpTimePoint);	// in timer: 1 copy construction
 
-			const auto contextSwitchCount = statistics::getContextSwitchCount();
-			const auto wakeUpTimePoint = TickClock::now() + longDuration;
-			sharedMagicPriority = 0x48;
-			sharedMagicValue = OperationCountingType{0xda0e4e30};	// 1 construction, 1 move assignment, 1 destruction
-			softwareTimer.start(wakeUpTimePoint);	// in timer: 1 copy construction
+					// queue is currently empty, but tryPopUntil() should succeed at expected time
+					uint8_t priority {};
+					OperationCountingType testValue {};	// 1 construction
+					// 1 swap, 1 destruction
+					const auto ret = queueWrapper->tryPopUntil(wakeUpTimePoint + longDuration, priority, testValue);
+					const auto wokenUpTimePoint = TickClock::now();
+					if (ret != 0 || wakeUpTimePoint != wokenUpTimePoint ||
+							queueWrapper->check(sharedMagicPriority, sharedMagicValue, priority, testValue) == false ||
+							queueWrapper->checkCounters(2, 1, 0, 2, 0, 1, 1) != true ||
+							statistics::getContextSwitchCount() - contextSwitchCount !=
+									phase34SoftwareTimerContextSwitchCount)
+						return false;
+				}
 
-			// queue is currently empty, but tryPopUntil() should succeed at expected time
-			uint8_t priority {};
-			OperationCountingType testValue {};	// 1 construction
-			// 1 swap, 1 destruction
-			const auto ret = queueWrapper.tryPopUntil(wakeUpTimePoint + longDuration, priority, testValue);
-			const auto wokenUpTimePoint = TickClock::now();
-			if (ret != 0 || wakeUpTimePoint != wokenUpTimePoint ||
-					queueWrapper.check(sharedMagicPriority, sharedMagicValue, priority, testValue) == false ||
-					queueWrapper.checkCounters(2, 1, 0, 2, 0, 1, 1) != true ||
-					statistics::getContextSwitchCount() - contextSwitchCount != phase34SoftwareTimerContextSwitchCount)
-				return false;
-		}
+				{
+					const auto ret = testTryPopWhenEmpty(*queueWrapper);
+					if (ret != true)
+						return ret;
+				}
 
-		{
-			const auto ret = testTryPopWhenEmpty(queueWrapper);
-			if (ret != true)
-				return ret;
-		}
-
-	}
+			}
 
 	return true;
 }
@@ -799,265 +772,278 @@ bool phase3()
 
 bool phase4()
 {
-	DynamicFifoQueueWrapper dynamicFifoQueueWrapper {1};
-	DynamicMessageQueueWrapper dynamicMessageQueueWrapper {1};
-	DynamicRawFifoQueueWrapper dynamicRawFifoQueueWrapper {1};
-	DynamicRawMessageQueueWrapper dynamicRawMessageQueueWrapper {1};
-	StaticFifoQueueWrapper<1> staticFifoQueueWrapper;
-	StaticMessageQueueWrapper<1> staticMessageQueueWrapper;
-	StaticRawFifoQueueWrapper<1> staticRawFifoQueueWrapper;
-	StaticRawMessageQueueWrapper<1> staticRawMessageQueueWrapper;
-	const QueueWrapperHolder queueWrappers[]
-	{
-			QueueWrapperHolder{dynamicFifoQueueWrapper},
-			QueueWrapperHolder{dynamicMessageQueueWrapper},
-			QueueWrapperHolder{dynamicRawFifoQueueWrapper},
-			QueueWrapperHolder{dynamicRawMessageQueueWrapper},
-			QueueWrapperHolder{staticFifoQueueWrapper},
-			QueueWrapperHolder{staticMessageQueueWrapper},
-			QueueWrapperHolder{staticRawFifoQueueWrapper},
-			QueueWrapperHolder{staticRawMessageQueueWrapper},
-	};
+	for (const auto dynamic : falseTrue)
+		for (const auto raw : falseTrue)
+			for (const auto fifo : falseTrue)
+			{
+				const auto queueWrapper = makeQueueWrapper<1>(dynamic, raw, fifo);
+				uint8_t receivedPriority {};
+				OperationCountingType receivedTestValue {};
+				auto softwareTimer = makeSoftwareTimer(
+						[&queueWrapper, &receivedPriority, &receivedTestValue]()
+						{
+							queueWrapper->tryPop(receivedPriority, receivedTestValue);
+						});
 
-	for (auto& queueWrapperHolder : queueWrappers)
-	{
-		auto& queueWrapper = queueWrapperHolder.get();
-		uint8_t receivedPriority {};
-		OperationCountingType receivedTestValue {};
-		auto softwareTimer = makeSoftwareTimer(
-				[&queueWrapper, &receivedPriority, &receivedTestValue]()
+				uint8_t currentMagicPriority {0xc9};
+				OperationCountingType currentMagicValue {0xa810b166};
+
 				{
-					queueWrapper.tryPop(receivedPriority, receivedTestValue);
-				});
+					// queue is not full, so push(..., const T&) must succeed immediately
+					OperationCountingType::resetCounters();
+					waitForNextTick();
+					const auto start = TickClock::now();
+					// 1 copy construction
+					const auto ret = queueWrapper->tryPush(currentMagicPriority, currentMagicValue);
+					if (ret != 0 || start != TickClock::now() ||
+							queueWrapper->checkCounters(0, 1, 0, 0, 0, 0, 0) != true)
+						return false;
+				}
 
-		uint8_t currentMagicPriority {0xc9};
-		OperationCountingType currentMagicValue {0xa810b166};
+				{
+					OperationCountingType::resetCounters();
+					waitForNextTick();
 
-		{
-			// queue is not full, so push(..., const T&) must succeed immediately
-			OperationCountingType::resetCounters();
-			waitForNextTick();
-			const auto start = TickClock::now();
-			const auto ret = queueWrapper.tryPush(currentMagicPriority, currentMagicValue);	// 1 copy construction
-			if (ret != 0 || start != TickClock::now() || queueWrapper.checkCounters(0, 1, 0, 0, 0, 0, 0) != true)
-				return false;
-		}
+					const auto contextSwitchCount = statistics::getContextSwitchCount();
+					const auto wakeUpTimePoint = TickClock::now() + longDuration;
+					softwareTimer.start(wakeUpTimePoint);	// in timer: 1 swap, 1 destruction
 
-		{
-			OperationCountingType::resetCounters();
-			waitForNextTick();
+					// queue is currently full, but push(..., const T&) should succeed at expected time
+					const decltype(currentMagicPriority) expectedPriority {currentMagicPriority};
+					const decltype(currentMagicValue) expectedTestValue {currentMagicValue};	// 1 copy construction
+					currentMagicPriority = 0x96;
+					// 1 construction, 1 move assignment, 1 destruction
+					currentMagicValue = OperationCountingType{0xc9e7e479};
+					// 1 copy construction
+					const auto ret = queueWrapper->push(currentMagicPriority, currentMagicValue);
+					const auto wokenUpTimePoint = TickClock::now();
+					if (ret != 0 || wakeUpTimePoint != wokenUpTimePoint ||
+							queueWrapper->check(expectedPriority, expectedTestValue, receivedPriority,
+									receivedTestValue) == false ||
+							queueWrapper->checkCounters(1, 2, 0, 2, 0, 1, 1) != true ||
+							statistics::getContextSwitchCount() - contextSwitchCount !=
+									phase34SoftwareTimerContextSwitchCount)
+						return false;
+				}
 
-			const auto contextSwitchCount = statistics::getContextSwitchCount();
-			const auto wakeUpTimePoint = TickClock::now() + longDuration;
-			softwareTimer.start(wakeUpTimePoint);	// in timer: 1 swap, 1 destruction
+				{
+					OperationCountingType::resetCounters();
+					waitForNextTick();
 
-			// queue is currently full, but push(..., const T&) should succeed at expected time
-			const decltype(currentMagicPriority) expectedPriority {currentMagicPriority};
-			const decltype(currentMagicValue) expectedTestValue {currentMagicValue};	// 1 copy construction
-			currentMagicPriority = 0x96;
-			currentMagicValue = OperationCountingType{0xc9e7e479};	// 1 construction, 1 move assignment, 1 destruction
-			const auto ret = queueWrapper.push(currentMagicPriority, currentMagicValue);	// 1 copy construction
-			const auto wokenUpTimePoint = TickClock::now();
-			if (ret != 0 || wakeUpTimePoint != wokenUpTimePoint ||
-					queueWrapper.check(expectedPriority, expectedTestValue, receivedPriority, receivedTestValue) ==
-							false || queueWrapper.checkCounters(1, 2, 0, 2, 0, 1, 1) != true ||
-					statistics::getContextSwitchCount() - contextSwitchCount != phase34SoftwareTimerContextSwitchCount)
-				return false;
-		}
+					const auto contextSwitchCount = statistics::getContextSwitchCount();
+					const auto wakeUpTimePoint = TickClock::now() + longDuration;
+					softwareTimer.start(wakeUpTimePoint);	// in timer: 1 swap, 1 destruction
 
-		{
-			OperationCountingType::resetCounters();
-			waitForNextTick();
+					// queue is currently full, but push(..., T&&) should succeed at expected time
+					const decltype(currentMagicPriority) expectedPriority {currentMagicPriority};
+					const decltype(currentMagicValue) expectedTestValue {currentMagicValue};	// 1 copy construction
+					currentMagicPriority = 0x06;
+					// 1 construction, 1 move assignment, 1 destruction
+					currentMagicValue = OperationCountingType{0x51607941};
+					// 1 copy construction, 1 move construction, 1 destruction
+					const auto ret = queueWrapper->push(currentMagicPriority, OperationCountingType{currentMagicValue});
+					const auto wokenUpTimePoint = TickClock::now();
+					if (ret != 0 || wakeUpTimePoint != wokenUpTimePoint ||
+							queueWrapper->check(expectedPriority, expectedTestValue, receivedPriority,
+									receivedTestValue) == false ||
+							queueWrapper->checkCounters(1, 2, 1, 3, 0, 1, 1) != true ||
+							statistics::getContextSwitchCount() - contextSwitchCount !=
+									phase34SoftwareTimerContextSwitchCount)
+						return false;
+				}
 
-			const auto contextSwitchCount = statistics::getContextSwitchCount();
-			const auto wakeUpTimePoint = TickClock::now() + longDuration;
-			softwareTimer.start(wakeUpTimePoint);	// in timer: 1 swap, 1 destruction
+				{
+					OperationCountingType::resetCounters();
+					waitForNextTick();
 
-			// queue is currently full, but push(..., T&&) should succeed at expected time
-			const decltype(currentMagicPriority) expectedPriority {currentMagicPriority};
-			const decltype(currentMagicValue) expectedTestValue {currentMagicValue};	// 1 copy construction
-			currentMagicPriority = 0x06;
-			currentMagicValue = OperationCountingType{0x51607941};	// 1 construction, 1 move assignment, 1 destruction
-			// 1 copy construction, 1 move construction, 1 destruction
-			const auto ret = queueWrapper.push(currentMagicPriority, OperationCountingType{currentMagicValue});
-			const auto wokenUpTimePoint = TickClock::now();
-			if (ret != 0 || wakeUpTimePoint != wokenUpTimePoint ||
-					queueWrapper.check(expectedPriority, expectedTestValue, receivedPriority, receivedTestValue) ==
-							false || queueWrapper.checkCounters(1, 2, 1, 3, 0, 1, 1) != true ||
-					statistics::getContextSwitchCount() - contextSwitchCount != phase34SoftwareTimerContextSwitchCount)
-				return false;
-		}
+					const auto contextSwitchCount = statistics::getContextSwitchCount();
+					const auto wakeUpTimePoint = TickClock::now() + longDuration;
+					softwareTimer.start(wakeUpTimePoint);	// in timer: 1 swap, 1 destruction
 
-		{
-			OperationCountingType::resetCounters();
-			waitForNextTick();
+					// queue is currently full, but tryPushFor(..., const T&) should succeed at expected time
+					const decltype(currentMagicPriority) expectedPriority {currentMagicPriority};
+					const decltype(currentMagicValue) expectedTestValue {currentMagicValue};	// 1 copy construction
+					currentMagicPriority = 0xcc;
+					// 1 construction, 1 move assignment, 1 destruction
+					currentMagicValue = OperationCountingType{0xb9f4b42e};
+					const auto ret = queueWrapper->tryPushFor(wakeUpTimePoint - TickClock::now() + longDuration,
+							currentMagicPriority, currentMagicValue);	// 1 copy construction
+					const auto wokenUpTimePoint = TickClock::now();
+					if (ret != 0 || wakeUpTimePoint != wokenUpTimePoint ||
+							queueWrapper->check(expectedPriority, expectedTestValue, receivedPriority,
+									receivedTestValue) == false ||
+							queueWrapper->checkCounters(1, 2, 0, 2, 0, 1, 1) != true ||
+							statistics::getContextSwitchCount() - contextSwitchCount !=
+									phase34SoftwareTimerContextSwitchCount)
+						return false;
+				}
 
-			const auto contextSwitchCount = statistics::getContextSwitchCount();
-			const auto wakeUpTimePoint = TickClock::now() + longDuration;
-			softwareTimer.start(wakeUpTimePoint);	// in timer: 1 swap, 1 destruction
+				{
+					OperationCountingType::resetCounters();
+					waitForNextTick();
 
-			// queue is currently full, but tryPushFor(..., const T&) should succeed at expected time
-			const decltype(currentMagicPriority) expectedPriority {currentMagicPriority};
-			const decltype(currentMagicValue) expectedTestValue {currentMagicValue};	// 1 copy construction
-			currentMagicPriority = 0xcc;
-			currentMagicValue = OperationCountingType{0xb9f4b42e};	// 1 construction, 1 move assignment, 1 destruction
-			const auto ret = queueWrapper.tryPushFor(wakeUpTimePoint - TickClock::now() + longDuration,
-					currentMagicPriority, currentMagicValue);	// 1 copy construction
-			const auto wokenUpTimePoint = TickClock::now();
-			if (ret != 0 || wakeUpTimePoint != wokenUpTimePoint ||
-					queueWrapper.check(expectedPriority, expectedTestValue, receivedPriority, receivedTestValue) ==
-							false || queueWrapper.checkCounters(1, 2, 0, 2, 0, 1, 1) != true ||
-					statistics::getContextSwitchCount() - contextSwitchCount != phase34SoftwareTimerContextSwitchCount)
-				return false;
-		}
+					const auto contextSwitchCount = statistics::getContextSwitchCount();
+					const auto wakeUpTimePoint = TickClock::now() + longDuration;
+					softwareTimer.start(wakeUpTimePoint);	// in timer: 1 swap, 1 destruction
 
-		{
-			OperationCountingType::resetCounters();
-			waitForNextTick();
+					// queue is currently full, but tryPushFor(..., T&&) should succeed at expected time
+					const decltype(currentMagicPriority) expectedPriority {currentMagicPriority};
+					const decltype(currentMagicValue) expectedTestValue {currentMagicValue};	// 1 copy construction
+					currentMagicPriority = 0xf6;
+					// 1 construction, 1 move assignment, 1 destruction
+					currentMagicValue = OperationCountingType{0xbb0bfe00};
+					// 1 copy construction, 1 move construction, 1 destruction
+					const auto ret = queueWrapper->tryPushFor(wakeUpTimePoint - TickClock::now() + longDuration,
+							currentMagicPriority, OperationCountingType{currentMagicValue});
+					const auto wokenUpTimePoint = TickClock::now();
+					if (ret != 0 || wakeUpTimePoint != wokenUpTimePoint ||
+							queueWrapper->check(expectedPriority, expectedTestValue, receivedPriority,
+									receivedTestValue) == false ||
+							queueWrapper->checkCounters(1, 2, 1, 3, 0, 1, 1) != true ||
+							statistics::getContextSwitchCount() - contextSwitchCount !=
+									phase34SoftwareTimerContextSwitchCount)
+						return false;
+				}
 
-			const auto contextSwitchCount = statistics::getContextSwitchCount();
-			const auto wakeUpTimePoint = TickClock::now() + longDuration;
-			softwareTimer.start(wakeUpTimePoint);	// in timer: 1 swap, 1 destruction
+				{
+					OperationCountingType::resetCounters();
+					waitForNextTick();
 
-			// queue is currently full, but tryPushFor(..., T&&) should succeed at expected time
-			const decltype(currentMagicPriority) expectedPriority {currentMagicPriority};
-			const decltype(currentMagicValue) expectedTestValue {currentMagicValue};	// 1 copy construction
-			currentMagicPriority = 0xf6;
-			currentMagicValue = OperationCountingType{0xbb0bfe00};	// 1 construction, 1 move assignment, 1 destruction
-			// 1 copy construction, 1 move construction, 1 destruction
-			const auto ret = queueWrapper.tryPushFor(wakeUpTimePoint - TickClock::now() + longDuration,
-					currentMagicPriority, OperationCountingType{currentMagicValue});
-			const auto wokenUpTimePoint = TickClock::now();
-			if (ret != 0 || wakeUpTimePoint != wokenUpTimePoint ||
-					queueWrapper.check(expectedPriority, expectedTestValue, receivedPriority, receivedTestValue) ==
-							false || queueWrapper.checkCounters(1, 2, 1, 3, 0, 1, 1) != true ||
-					statistics::getContextSwitchCount() - contextSwitchCount != phase34SoftwareTimerContextSwitchCount)
-				return false;
-		}
+					const auto contextSwitchCount = statistics::getContextSwitchCount();
+					const auto wakeUpTimePoint = TickClock::now() + longDuration;
+					softwareTimer.start(wakeUpTimePoint);	// in timer: 1 swap, 1 destruction
 
-		{
-			OperationCountingType::resetCounters();
-			waitForNextTick();
+					// queue is currently full, but tryPushUntil(..., const T&) should succeed at expected time
+					const decltype(currentMagicPriority) expectedPriority {currentMagicPriority};
+					const decltype(currentMagicValue) expectedTestValue {currentMagicValue};	// 1 copy construction
+					currentMagicPriority = 0x2e;
+					// 1 construction, 1 move assignment, 1 destruction
+					currentMagicValue = OperationCountingType{0x25eb4357};
+					const auto ret = queueWrapper->tryPushUntil(wakeUpTimePoint + longDuration, currentMagicPriority,
+							currentMagicValue);	// 1 copy construction
+					const auto wokenUpTimePoint = TickClock::now();
+					if (ret != 0 || wakeUpTimePoint != wokenUpTimePoint ||
+							queueWrapper->check(expectedPriority, expectedTestValue, receivedPriority,
+									receivedTestValue) == false ||
+							queueWrapper->checkCounters(1, 2, 0, 2, 0, 1, 1) != true ||
+							statistics::getContextSwitchCount() - contextSwitchCount !=
+									phase34SoftwareTimerContextSwitchCount)
+						return false;
+				}
 
-			const auto contextSwitchCount = statistics::getContextSwitchCount();
-			const auto wakeUpTimePoint = TickClock::now() + longDuration;
-			softwareTimer.start(wakeUpTimePoint);	// in timer: 1 swap, 1 destruction
+				{
+					OperationCountingType::resetCounters();
+					waitForNextTick();
 
-			// queue is currently full, but tryPushUntil(..., const T&) should succeed at expected time
-			const decltype(currentMagicPriority) expectedPriority {currentMagicPriority};
-			const decltype(currentMagicValue) expectedTestValue {currentMagicValue};	// 1 copy construction
-			currentMagicPriority = 0x2e;
-			currentMagicValue = OperationCountingType{0x25eb4357};	// 1 construction, 1 move assignment, 1 destruction
-			const auto ret = queueWrapper.tryPushUntil(wakeUpTimePoint + longDuration, currentMagicPriority,
-					currentMagicValue);	// 1 copy construction
-			const auto wokenUpTimePoint = TickClock::now();
-			if (ret != 0 || wakeUpTimePoint != wokenUpTimePoint ||
-					queueWrapper.check(expectedPriority, expectedTestValue, receivedPriority, receivedTestValue) ==
-							false || queueWrapper.checkCounters(1, 2, 0, 2, 0, 1, 1) != true ||
-					statistics::getContextSwitchCount() - contextSwitchCount != phase34SoftwareTimerContextSwitchCount)
-				return false;
-		}
+					const auto contextSwitchCount = statistics::getContextSwitchCount();
+					const auto wakeUpTimePoint = TickClock::now() + longDuration;
+					softwareTimer.start(wakeUpTimePoint);	// in timer: 1 swap, 1 destruction
 
-		{
-			OperationCountingType::resetCounters();
-			waitForNextTick();
-
-			const auto contextSwitchCount = statistics::getContextSwitchCount();
-			const auto wakeUpTimePoint = TickClock::now() + longDuration;
-			softwareTimer.start(wakeUpTimePoint);	// in timer: 1 swap, 1 destruction
-
-			// queue is currently full, but tryPushUntil(..., T&&) should succeed at expected time
-			const decltype(currentMagicPriority) expectedPriority {currentMagicPriority};
-			const decltype(currentMagicValue) expectedTestValue {currentMagicValue};	// 1 copy construction
-			currentMagicPriority = 0xb6;
-			currentMagicValue = OperationCountingType{0x625652d7};	// 1 construction, 1 move assignment, 1 destruction
-			// 1 copy construction, 1 move construction, 1 destruction
-			const auto ret = queueWrapper.tryPushUntil(wakeUpTimePoint + longDuration, currentMagicPriority,
-					OperationCountingType{currentMagicValue});
-			const auto wokenUpTimePoint = TickClock::now();
-			if (ret != 0 || wakeUpTimePoint != wokenUpTimePoint ||
-					queueWrapper.check(expectedPriority, expectedTestValue, receivedPriority, receivedTestValue) ==
-							false || queueWrapper.checkCounters(1, 2, 1, 3, 0, 1, 1) != true ||
-					statistics::getContextSwitchCount() - contextSwitchCount != phase34SoftwareTimerContextSwitchCount)
-				return false;
-		}
+					// queue is currently full, but tryPushUntil(..., T&&) should succeed at expected time
+					const decltype(currentMagicPriority) expectedPriority {currentMagicPriority};
+					const decltype(currentMagicValue) expectedTestValue {currentMagicValue};	// 1 copy construction
+					currentMagicPriority = 0xb6;
+					// 1 construction, 1 move assignment, 1 destruction
+					currentMagicValue = OperationCountingType{0x625652d7};
+					// 1 copy construction, 1 move construction, 1 destruction
+					const auto ret = queueWrapper->tryPushUntil(wakeUpTimePoint + longDuration, currentMagicPriority,
+							OperationCountingType{currentMagicValue});
+					const auto wokenUpTimePoint = TickClock::now();
+					if (ret != 0 || wakeUpTimePoint != wokenUpTimePoint ||
+							queueWrapper->check(expectedPriority, expectedTestValue, receivedPriority,
+									receivedTestValue) == false ||
+							queueWrapper->checkCounters(1, 2, 1, 3, 0, 1, 1) != true ||
+							statistics::getContextSwitchCount() - contextSwitchCount !=
+									phase34SoftwareTimerContextSwitchCount)
+						return false;
+				}
 
 #if DISTORTOS_QUEUE_EMPLACE_SUPPORTED == 1 || DOXYGEN == 1
 
-		{
-			OperationCountingType::resetCounters();
-			waitForNextTick();
+				{
+					OperationCountingType::resetCounters();
+					waitForNextTick();
 
-			const auto contextSwitchCount = statistics::getContextSwitchCount();
-			const auto wakeUpTimePoint = TickClock::now() + longDuration;
-			softwareTimer.start(wakeUpTimePoint);	// in timer: 1 swap, 1 destruction
+					const auto contextSwitchCount = statistics::getContextSwitchCount();
+					const auto wakeUpTimePoint = TickClock::now() + longDuration;
+					softwareTimer.start(wakeUpTimePoint);	// in timer: 1 swap, 1 destruction
 
-			// queue is currently full, but emplace(..., Args&&...) should succeed at expected time
-			const decltype(currentMagicPriority) expectedPriority {currentMagicPriority};
-			const decltype(currentMagicValue) expectedTestValue {currentMagicValue};	// 1 copy construction
-			currentMagicPriority = 0xe7;
-			const OperationCountingType::Value value = 0x8de61877;
-			currentMagicValue = OperationCountingType{value};	// 1 construction, 1 move assignment, 1 destruction
-			const auto ret = queueWrapper.emplace(currentMagicPriority, value);	// 1 construction
-			const auto wokenUpTimePoint = TickClock::now();
-			if (ret != 0 || wakeUpTimePoint != wokenUpTimePoint ||
-					queueWrapper.check(expectedPriority, expectedTestValue, receivedPriority, receivedTestValue) ==
-							false || queueWrapper.checkCounters(2, 1, 0, 2, 0, 1, 1) != true ||
-					statistics::getContextSwitchCount() - contextSwitchCount != phase34SoftwareTimerContextSwitchCount)
-				return false;
-		}
+					// queue is currently full, but emplace(..., Args&&...) should succeed at expected time
+					const decltype(currentMagicPriority) expectedPriority {currentMagicPriority};
+					const decltype(currentMagicValue) expectedTestValue {currentMagicValue};	// 1 copy construction
+					currentMagicPriority = 0xe7;
+					const OperationCountingType::Value value = 0x8de61877;
+					// 1 construction, 1 move assignment, 1 destruction
+					currentMagicValue = OperationCountingType{value};
+					const auto ret = queueWrapper->emplace(currentMagicPriority, value);	// 1 construction
+					const auto wokenUpTimePoint = TickClock::now();
+					if (ret != 0 || wakeUpTimePoint != wokenUpTimePoint ||
+							queueWrapper->check(expectedPriority, expectedTestValue, receivedPriority,
+									receivedTestValue) == false ||
+							queueWrapper->checkCounters(2, 1, 0, 2, 0, 1, 1) != true ||
+							statistics::getContextSwitchCount() - contextSwitchCount !=
+									phase34SoftwareTimerContextSwitchCount)
+						return false;
+				}
 
-		{
-			OperationCountingType::resetCounters();
-			waitForNextTick();
+				{
+					OperationCountingType::resetCounters();
+					waitForNextTick();
 
-			const auto contextSwitchCount = statistics::getContextSwitchCount();
-			const auto wakeUpTimePoint = TickClock::now() + longDuration;
-			softwareTimer.start(wakeUpTimePoint);	// in timer: 1 swap, 1 destruction
+					const auto contextSwitchCount = statistics::getContextSwitchCount();
+					const auto wakeUpTimePoint = TickClock::now() + longDuration;
+					softwareTimer.start(wakeUpTimePoint);	// in timer: 1 swap, 1 destruction
 
-			// queue is currently full, but tryEmplaceFor(..., Args&&...) should succeed at expected time
-			const decltype(currentMagicPriority) expectedPriority {currentMagicPriority};
-			const decltype(currentMagicValue) expectedTestValue {currentMagicValue};	// 1 copy construction
-			currentMagicPriority = 0x98;
-			const OperationCountingType::Value value = 0x2b2cd349;
-			currentMagicValue = OperationCountingType{value};	// 1 construction, 1 move assignment, 1 destruction
-			const auto ret = queueWrapper.tryEmplaceFor(wakeUpTimePoint - TickClock::now() + longDuration,
-					currentMagicPriority, value);	// 1 construction
-			const auto wokenUpTimePoint = TickClock::now();
-			if (ret != 0 || wakeUpTimePoint != wokenUpTimePoint ||
-					queueWrapper.check(expectedPriority, expectedTestValue, receivedPriority, receivedTestValue) ==
-							false || queueWrapper.checkCounters(2, 1, 0, 2, 0, 1, 1) != true ||
-					statistics::getContextSwitchCount() - contextSwitchCount != phase34SoftwareTimerContextSwitchCount)
-				return false;
-		}
+					// queue is currently full, but tryEmplaceFor(..., Args&&...) should succeed at expected time
+					const decltype(currentMagicPriority) expectedPriority {currentMagicPriority};
+					const decltype(currentMagicValue) expectedTestValue {currentMagicValue};	// 1 copy construction
+					currentMagicPriority = 0x98;
+					const OperationCountingType::Value value = 0x2b2cd349;
+					// 1 construction, 1 move assignment, 1 destruction
+					currentMagicValue = OperationCountingType{value};
+					const auto ret = queueWrapper->tryEmplaceFor(wakeUpTimePoint - TickClock::now() + longDuration,
+							currentMagicPriority, value);	// 1 construction
+					const auto wokenUpTimePoint = TickClock::now();
+					if (ret != 0 || wakeUpTimePoint != wokenUpTimePoint ||
+							queueWrapper->check(expectedPriority, expectedTestValue, receivedPriority,
+									receivedTestValue) == false ||
+							queueWrapper->checkCounters(2, 1, 0, 2, 0, 1, 1) != true ||
+							statistics::getContextSwitchCount() - contextSwitchCount !=
+									phase34SoftwareTimerContextSwitchCount)
+						return false;
+				}
 
-		{
-			OperationCountingType::resetCounters();
-			waitForNextTick();
+				{
+					OperationCountingType::resetCounters();
+					waitForNextTick();
 
-			const auto contextSwitchCount = statistics::getContextSwitchCount();
-			const auto wakeUpTimePoint = TickClock::now() + longDuration;
-			softwareTimer.start(wakeUpTimePoint);	// in timer: 1 swap, 1 destruction
+					const auto contextSwitchCount = statistics::getContextSwitchCount();
+					const auto wakeUpTimePoint = TickClock::now() + longDuration;
+					softwareTimer.start(wakeUpTimePoint);	// in timer: 1 swap, 1 destruction
 
-			// queue is currently full, but tryEmplaceUntil(..., Args&&...) should succeed at expected time
-			const decltype(currentMagicPriority) expectedPriority {currentMagicPriority};
-			const decltype(currentMagicValue) expectedTestValue {currentMagicValue};	// 1 copy construction
-			currentMagicPriority = 0xa5;
-			const OperationCountingType::Value value = 0x7df8502a;
-			currentMagicValue = OperationCountingType{value};	// 1 construction, 1 move assignment, 1 destruction
-			// 1 construction
-			const auto ret = queueWrapper.tryEmplaceUntil(wakeUpTimePoint + longDuration, currentMagicPriority, value);
-			const auto wokenUpTimePoint = TickClock::now();
-			if (ret != 0 || wakeUpTimePoint != wokenUpTimePoint ||
-					queueWrapper.check(expectedPriority, expectedTestValue, receivedPriority, receivedTestValue) ==
-							false || queueWrapper.checkCounters(2, 1, 0, 2, 0, 1, 1) != true ||
-					statistics::getContextSwitchCount() - contextSwitchCount != phase34SoftwareTimerContextSwitchCount)
-				return false;
-		}
+					// queue is currently full, but tryEmplaceUntil(..., Args&&...) should succeed at expected time
+					const decltype(currentMagicPriority) expectedPriority {currentMagicPriority};
+					const decltype(currentMagicValue) expectedTestValue {currentMagicValue};	// 1 copy construction
+					currentMagicPriority = 0xa5;
+					const OperationCountingType::Value value = 0x7df8502a;
+					// 1 construction, 1 move assignment, 1 destruction
+					currentMagicValue = OperationCountingType{value};
+					// 1 construction
+					const auto ret = queueWrapper->tryEmplaceUntil(wakeUpTimePoint + longDuration, currentMagicPriority,
+							value);
+					const auto wokenUpTimePoint = TickClock::now();
+					if (ret != 0 || wakeUpTimePoint != wokenUpTimePoint ||
+							queueWrapper->check(expectedPriority, expectedTestValue, receivedPriority,
+									receivedTestValue) == false ||
+							queueWrapper->checkCounters(2, 1, 0, 2, 0, 1, 1) != true ||
+							statistics::getContextSwitchCount() - contextSwitchCount !=
+									phase34SoftwareTimerContextSwitchCount)
+						return false;
+				}
 
 #endif	// DISTORTOS_QUEUE_EMPLACE_SUPPORTED == 1 || DOXYGEN == 1
 
-	}
+			}
 
 	return true;
 }
@@ -1073,105 +1059,94 @@ bool phase4()
 
 bool phase5()
 {
-	// size 0, so queues are both full and empty at the same time
-	DynamicRawFifoQueueWrapper dynamicRawFifoQueueWrapper {0};
-	DynamicRawMessageQueueWrapper dynamicRawMessageQueueWrapper {0};
-	StaticRawFifoQueueWrapper<0> staticRawFifoQueueWrapper;
-	StaticRawMessageQueueWrapper<0> staticRawMessageQueueWrapper;
-	using RawQueueWrapperHolder = estd::ReferenceHolder<const RawQueueWrapper>;
-	const RawQueueWrapperHolder rawQueueWrappers[]
-	{
-			RawQueueWrapperHolder{dynamicRawFifoQueueWrapper},
-			RawQueueWrapperHolder{dynamicRawMessageQueueWrapper},
-			RawQueueWrapperHolder{staticRawFifoQueueWrapper},
-			RawQueueWrapperHolder{staticRawMessageQueueWrapper},
-	};
-
-	for (auto& rawQueueWrapperHolder : rawQueueWrappers)
-	{
-		auto& rawQueueWrapper = rawQueueWrapperHolder.get();
-		const uint8_t constPriority {};
-		const OperationCountingType constTestValue {};
-		uint8_t nonConstPriority {};
-		OperationCountingType nonConstTestValue {};
-
+	for (const auto dynamic : falseTrue)
+		for (const auto fifo : falseTrue)
 		{
-			// invalid size is given, so push(..., const void*, size_t) should fail immediately
-			waitForNextTick();
-			const auto start = TickClock::now();
-			const auto ret = rawQueueWrapper.push(constPriority, &constTestValue, sizeof(constTestValue) - 1);
-			if (ret != EMSGSIZE || TickClock::now() != start)
-				return false;
-		}
+			// size 0, so queue is both full and empty at the same time
+			const auto rawQueueWrapper = makeRawQueueWrapper<0>(dynamic, fifo);
+			const uint8_t constPriority {};
+			const OperationCountingType constTestValue {};
+			uint8_t nonConstPriority {};
+			OperationCountingType nonConstTestValue {};
 
-		{
-			// invalid size is given, so tryPush(..., const void*, size_t) should fail immediately
-			waitForNextTick();
-			const auto start = TickClock::now();
-			const auto ret = rawQueueWrapper.tryPush(constPriority, &constTestValue, sizeof(constTestValue) - 1);
-			if (ret != EMSGSIZE || TickClock::now() != start)
-				return false;
-		}
+			{
+				// invalid size is given, so push(..., const void*, size_t) should fail immediately
+				waitForNextTick();
+				const auto start = TickClock::now();
+				const auto ret = rawQueueWrapper->push(constPriority, &constTestValue, sizeof(constTestValue) - 1);
+				if (ret != EMSGSIZE || TickClock::now() != start)
+					return false;
+			}
 
-		{
-			// invalid size is given, so tryPushFor(..., const void*, size_t) should fail immediately
-			waitForNextTick();
-			const auto start = TickClock::now();
-			const auto ret = rawQueueWrapper.tryPushFor(singleDuration, constPriority, &constTestValue,
-					sizeof(constTestValue) - 1);
-			if (ret != EMSGSIZE || TickClock::now() != start)
-				return false;
-		}
+			{
+				// invalid size is given, so tryPush(..., const void*, size_t) should fail immediately
+				waitForNextTick();
+				const auto start = TickClock::now();
+				const auto ret = rawQueueWrapper->tryPush(constPriority, &constTestValue, sizeof(constTestValue) - 1);
+				if (ret != EMSGSIZE || TickClock::now() != start)
+					return false;
+			}
 
-		{
-			// invalid size is given, so tryPushUntil(..., const void*, size_t) should fail immediately
-			waitForNextTick();
-			const auto start = TickClock::now();
-			const auto ret = rawQueueWrapper.tryPushUntil(TickClock::now() + singleDuration, constPriority,
-					&constTestValue, sizeof(constTestValue) - 1);
-			if (ret != EMSGSIZE || TickClock::now() != start)
-				return false;
-		}
+			{
+				// invalid size is given, so tryPushFor(..., const void*, size_t) should fail immediately
+				waitForNextTick();
+				const auto start = TickClock::now();
+				const auto ret = rawQueueWrapper->tryPushFor(singleDuration, constPriority, &constTestValue,
+						sizeof(constTestValue) - 1);
+				if (ret != EMSGSIZE || TickClock::now() != start)
+					return false;
+			}
 
-		{
-			// invalid size is given, so pop(..., void*, size_t) should fail immediately
-			waitForNextTick();
-			const auto start = TickClock::now();
-			const auto ret = rawQueueWrapper.pop(nonConstPriority, &nonConstTestValue, sizeof(nonConstTestValue) - 1);
-			if (ret != EMSGSIZE || TickClock::now() != start)
-				return false;
-		}
+			{
+				// invalid size is given, so tryPushUntil(..., const void*, size_t) should fail immediately
+				waitForNextTick();
+				const auto start = TickClock::now();
+				const auto ret = rawQueueWrapper->tryPushUntil(TickClock::now() + singleDuration, constPriority,
+						&constTestValue, sizeof(constTestValue) - 1);
+				if (ret != EMSGSIZE || TickClock::now() != start)
+					return false;
+			}
 
-		{
-			// invalid size is given, so tryPop(..., void*, size_t) should fail immediately
-			waitForNextTick();
-			const auto start = TickClock::now();
-			const auto ret = rawQueueWrapper.tryPop(nonConstPriority, &nonConstTestValue,
-					sizeof(nonConstTestValue) - 1);
-			if (ret != EMSGSIZE || TickClock::now() != start)
-				return false;
-		}
+			{
+				// invalid size is given, so pop(..., void*, size_t) should fail immediately
+				waitForNextTick();
+				const auto start = TickClock::now();
+				const auto ret = rawQueueWrapper->pop(nonConstPriority, &nonConstTestValue,
+						sizeof(nonConstTestValue) - 1);
+				if (ret != EMSGSIZE || TickClock::now() != start)
+					return false;
+			}
 
-		{
-			// invalid size is given, so tryPopFor(..., void*, size_t) should fail immediately
-			waitForNextTick();
-			const auto start = TickClock::now();
-			const auto ret = rawQueueWrapper.tryPopFor(singleDuration, nonConstPriority, &nonConstTestValue,
-					sizeof(nonConstTestValue) - 1);
-			if (ret != EMSGSIZE || TickClock::now() != start)
-				return false;
-		}
+			{
+				// invalid size is given, so tryPop(..., void*, size_t) should fail immediately
+				waitForNextTick();
+				const auto start = TickClock::now();
+				const auto ret = rawQueueWrapper->tryPop(nonConstPriority, &nonConstTestValue,
+						sizeof(nonConstTestValue) - 1);
+				if (ret != EMSGSIZE || TickClock::now() != start)
+					return false;
+			}
 
-		{
-			// invalid size is given, so tryPopUntil(..., void*, size_t) should fail immediately
-			waitForNextTick();
-			const auto start = TickClock::now();
-			const auto ret = rawQueueWrapper.tryPopUntil(TickClock::now() + singleDuration, nonConstPriority,
-					&nonConstTestValue, sizeof(nonConstTestValue) - 1);
-			if (ret != EMSGSIZE || TickClock::now() != start)
-				return false;
+			{
+				// invalid size is given, so tryPopFor(..., void*, size_t) should fail immediately
+				waitForNextTick();
+				const auto start = TickClock::now();
+				const auto ret = rawQueueWrapper->tryPopFor(singleDuration, nonConstPriority, &nonConstTestValue,
+						sizeof(nonConstTestValue) - 1);
+				if (ret != EMSGSIZE || TickClock::now() != start)
+					return false;
+			}
+
+			{
+				// invalid size is given, so tryPopUntil(..., void*, size_t) should fail immediately
+				waitForNextTick();
+				const auto start = TickClock::now();
+				const auto ret = rawQueueWrapper->tryPopUntil(TickClock::now() + singleDuration, nonConstPriority,
+						&nonConstTestValue, sizeof(nonConstTestValue) - 1);
+				if (ret != EMSGSIZE || TickClock::now() != start)
+					return false;
+			}
 		}
-	}
 
 	return true;
 }
@@ -1186,48 +1161,21 @@ bool phase5()
 
 bool phase6()
 {
-	const uint8_t constPriority {};
-	const OperationCountingType constTestValue {};
+	for (const auto dynamic : falseTrue)
+		for (const auto fifo : falseTrue)
+		{
+			const OperationCountingType constTestValue {};
 
-	{
-		DynamicFifoQueueWrapper::TestDynamicFifoQueue dynamicFifoQueue {1};
-		dynamicFifoQueue.push(constTestValue);
-		OperationCountingType::resetCounters();
-		// in destructor - 1 construction, 2 destructions and 1 swap
-	}
+			{
+				const auto queueWrapper = makeQueueWrapper<1>(dynamic, false, fifo);
+				queueWrapper->push({}, constTestValue);
+				OperationCountingType::resetCounters();
+				// in destructor - 1 construction, 2 destructions and 1 swap
+			}
 
-	if (OperationCountingType::checkCounters(1, 0, 0, 2, 0, 0, 1) == false)
-		return false;
-
-	{
-		DynamicMessageQueueWrapper::TestDynamicMessageQueue dynamicMessageQueue {1};
-		dynamicMessageQueue.push(constPriority, constTestValue);
-		OperationCountingType::resetCounters();
-		// in destructor - 1 construction, 2 destructions and 1 swap
-	}
-
-	if (OperationCountingType::checkCounters(1, 0, 0, 2, 0, 0, 1) == false)
-		return false;
-
-	{
-		StaticFifoQueueWrapper<1>::TestStaticFifoQueue staticFifoQueue;
-		staticFifoQueue.push(constTestValue);
-		OperationCountingType::resetCounters();
-		// in destructor - 1 construction, 2 destructions and 1 swap
-	}
-
-	if (OperationCountingType::checkCounters(1, 0, 0, 2, 0, 0, 1) == false)
-		return false;
-
-	{
-		StaticMessageQueueWrapper<1>::TestStaticMessageQueue staticMessageQueue;
-		staticMessageQueue.push(constPriority, constTestValue);
-		OperationCountingType::resetCounters();
-		// in destructor - 1 construction, 2 destructions and 1 swap
-	}
-
-	if (OperationCountingType::checkCounters(1, 0, 0, 2, 0, 0, 1) == false)
-		return false;
+			if (OperationCountingType::checkCounters(1, 0, 0, 2, 0, 0, 1) == false)
+				return false;
+		}
 
 	return true;
 }
