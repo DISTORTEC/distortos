@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-10-27
+ * \date 2015-11-09
  */
 
 #ifndef INCLUDE_DISTORTOS_DYNAMICTHREAD_HPP_
@@ -202,6 +202,9 @@ private:
 
 	/// internal DynamicSignalsReceiver object
 	DynamicSignalsReceiver dynamicSignalsReceiver_;
+
+	/// bound function object
+	std::function<void()> boundFunction_;
 };
 
 template<typename Function, typename... Args>
@@ -212,7 +215,8 @@ DynamicThread<Function, Args...>::DynamicThread(const size_t stackSize, const bo
 				canReceiveSignals == true ? &dynamicSignalsReceiver_ : nullptr, std::forward<Function>(function),
 				std::forward<Args>(args)...},
 		dynamicSignalsReceiver_{canReceiveSignals == true ? queuedSignals : 0,
-				canReceiveSignals == true ? signalActions : 0}
+				canReceiveSignals == true ? signalActions : 0},
+		boundFunction_{std::bind(std::forward<Function>(function), std::forward<Args>(args)...)}
 {
 
 }
