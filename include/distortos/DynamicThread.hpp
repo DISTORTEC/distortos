@@ -15,7 +15,7 @@
 #define INCLUDE_DISTORTOS_DYNAMICTHREAD_HPP_
 
 #include "distortos/DynamicSignalsReceiver.hpp"
-#include "distortos/Thread.hpp"
+#include "distortos/ThreadBase.hpp"
 
 #include "distortos/memory/storageDeleter.hpp"
 
@@ -151,12 +151,12 @@ struct DynamicThreadParameters
  */
 
 template<typename Function, typename... Args>
-class DynamicThread : public Thread<Function, Args...>
+class DynamicThread : public ThreadBase
 {
 public:
 
 	/// base of DynamicThread
-	using Base = Thread<Function, Args...>;
+	using Base = ThreadBase;
 
 	/**
 	 * \brief DynamicThread's constructor
@@ -222,9 +222,8 @@ template<typename Function, typename... Args>
 DynamicThread<Function, Args...>::DynamicThread(const size_t stackSize, const bool canReceiveSignals,
 		const size_t queuedSignals, const size_t signalActions, const uint8_t priority,
 		const SchedulingPolicy schedulingPolicy, Function&& function, Args&&... args) :
-		Base{{new uint8_t[stackSize], memory::storageDeleter<uint8_t>}, stackSize, priority, schedulingPolicy,
-				canReceiveSignals == true ? &dynamicSignalsReceiver_ : nullptr, std::forward<Function>(function),
-				std::forward<Args>(args)...},
+		Base{{new uint8_t[stackSize], memory::storageDeleter<uint8_t>}, stackSize, priority, schedulingPolicy, nullptr,
+				canReceiveSignals == true ? &dynamicSignalsReceiver_ : nullptr},
 		dynamicSignalsReceiver_{canReceiveSignals == true ? queuedSignals : 0,
 				canReceiveSignals == true ? signalActions : 0},
 		boundFunction_{std::bind(std::forward<Function>(function), std::forward<Args>(args)...)}
