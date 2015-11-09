@@ -200,6 +200,17 @@ public:
 
 private:
 
+	/**
+	 * \brief Thread's internal function.
+	 *
+	 * Executes bound function object.
+	 */
+
+	virtual void run() override
+	{
+		boundFunction_();
+	}
+
 	/// internal DynamicSignalsReceiver object
 	DynamicSignalsReceiver dynamicSignalsReceiver_;
 
