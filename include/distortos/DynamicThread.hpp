@@ -143,14 +143,10 @@ struct DynamicThreadParameters
 };
 
 /**
- * \brief DynamicThread class is a templated interface for thread that has dynamic storage for stack and internal
- * DynamicSignalsReceiver object.
- *
- * \param Function is the function that will be executed in separate thread
- * \param Args are the arguments for \a Function
+ * \brief DynamicThread class is a type-erased interface for thread that has dynamic storage for bounded function, stack
+ * and internal DynamicSignalsReceiver object.
  */
 
-template<typename Function, typename... Args>
 class DynamicThread : public ThreadBase
 {
 public:
@@ -160,6 +156,9 @@ public:
 
 	/**
 	 * \brief DynamicThread's constructor
+	 *
+	 * \param Function is the function that will be executed in separate thread
+	 * \param Args are the arguments for \a Function
 	 *
 	 * \param [in] stackSize is the size of stack, bytes
 	 * \param [in] canReceiveSignals selects whether reception of signals is enabled (true) or disabled (false) for this
@@ -174,17 +173,22 @@ public:
 	 * \param [in] args are arguments for \a function
 	 */
 
+	template<typename Function, typename... Args>
 	DynamicThread(size_t stackSize, bool canReceiveSignals, size_t queuedSignals, size_t signalActions,
 			uint8_t priority, SchedulingPolicy schedulingPolicy, Function&& function, Args&&... args);
 
 	/**
 	 * \brief DynamicThread's constructor
 	 *
+	 * \param Function is the function that will be executed in separate thread
+	 * \param Args are the arguments for \a Function
+	 *
 	 * \param [in] parameters is a DynamicThreadParameters struct with thread parameters
 	 * \param [in] function is a function that will be executed in separate thread
 	 * \param [in] args are arguments for \a function
 	 */
 
+	template<typename Function, typename... Args>
 	DynamicThread(const DynamicThreadParameters parameters, Function&& function, Args&&... args) :
 			DynamicThread{parameters.stackSize, parameters.canReceiveSignals, parameters.queuedSignals,
 					parameters.signalActions, parameters.priority, parameters.schedulingPolicy,
@@ -219,9 +223,9 @@ private:
 };
 
 template<typename Function, typename... Args>
-DynamicThread<Function, Args...>::DynamicThread(const size_t stackSize, const bool canReceiveSignals,
-		const size_t queuedSignals, const size_t signalActions, const uint8_t priority,
-		const SchedulingPolicy schedulingPolicy, Function&& function, Args&&... args) :
+DynamicThread::DynamicThread(const size_t stackSize, const bool canReceiveSignals, const size_t queuedSignals,
+		const size_t signalActions, const uint8_t priority, const SchedulingPolicy schedulingPolicy,
+		Function&& function, Args&&... args) :
 		Base{{new uint8_t[stackSize], memory::storageDeleter<uint8_t>}, stackSize, priority, schedulingPolicy, nullptr,
 				canReceiveSignals == true ? &dynamicSignalsReceiver_ : nullptr},
 		dynamicSignalsReceiver_{canReceiveSignals == true ? queuedSignals : 0,
@@ -232,7 +236,7 @@ DynamicThread<Function, Args...>::DynamicThread(const size_t stackSize, const bo
 }
 
 /**
- * \brief Helper factory function to make DynamicThread object with deduced template arguments
+ * \brief Helper factory function to make DynamicThread object
  *
  * \param Function is the function that will be executed
  * \param Args are the arguments for \a Function
@@ -249,20 +253,20 @@ DynamicThread<Function, Args...>::DynamicThread(const size_t stackSize, const bo
  * \param [in] function is a function that will be executed in separate thread
  * \param [in] args are arguments for \a function
  *
- * \return DynamicThread object with deduced template arguments
+ * \return DynamicThread object
  */
 
 template<typename Function, typename... Args>
-DynamicThread<Function, Args...> makeDynamicThread(const size_t stackSize, const bool canReceiveSignals,
-		const size_t queuedSignals, const size_t signalActions, const uint8_t priority,
-		const SchedulingPolicy schedulingPolicy, Function&& function, Args&&... args)
+DynamicThread makeDynamicThread(const size_t stackSize, const bool canReceiveSignals, const size_t queuedSignals,
+		const size_t signalActions, const uint8_t priority, const SchedulingPolicy schedulingPolicy,
+		Function&& function, Args&&... args)
 {
 	return {stackSize, canReceiveSignals, queuedSignals, signalActions, priority, schedulingPolicy,
 			std::forward<Function>(function), std::forward<Args>(args)...};
 }
 
 /**
- * \brief Helper factory function to make DynamicThread object with deduced template arguments
+ * \brief Helper factory function to make DynamicThread object
  *
  * \param Function is the function that will be executed
  * \param Args are the arguments for \a Function
@@ -271,12 +275,11 @@ DynamicThread<Function, Args...> makeDynamicThread(const size_t stackSize, const
  * \param [in] function is a function that will be executed in separate thread
  * \param [in] args are arguments for \a function
  *
- * \return DynamicThread object with deduced template arguments
+ * \return DynamicThread object
  */
 
 template<typename Function, typename... Args>
-DynamicThread<Function, Args...> makeDynamicThread(const DynamicThreadParameters parameters, Function&& function,
-		Args&&... args)
+DynamicThread makeDynamicThread(const DynamicThreadParameters parameters, Function&& function, Args&&... args)
 {
 	return {parameters, std::forward<Function>(function), std::forward<Args>(args)...};
 }
