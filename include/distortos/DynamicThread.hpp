@@ -210,10 +210,7 @@ private:
 	 * Executes bound function object.
 	 */
 
-	virtual void run() override
-	{
-		boundFunction_();
-	}
+	virtual void run() override;
 
 	/// internal DynamicSignalsReceiver object
 	DynamicSignalsReceiver dynamicSignalsReceiver_;
