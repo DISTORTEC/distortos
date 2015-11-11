@@ -2,13 +2,13 @@
  * \file
  * \brief SoftwareTimerFunctionTypesTestCase class implementation
  *
- * \author Copyright (C) 2014 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-11-20
+ * \date 2015-11-11
  */
 
 #include "SoftwareTimerFunctionTypesTestCase.hpp"
@@ -119,7 +119,8 @@ bool SoftwareTimerFunctionTypesTestCase::run_() const
 		uint32_t sharedVariable {};
 		constexpr uint32_t magicValue {0xd16807d9};
 
-		auto regularFunctionSoftwareTimer = makeSoftwareTimer(regularFunction, std::ref(sharedVariable), magicValue);
+		auto regularFunctionSoftwareTimer = makeStaticSoftwareTimer(regularFunction, std::ref(sharedVariable),
+				magicValue);
 		regularFunctionSoftwareTimer.start(singleDuration);
 		while (regularFunctionSoftwareTimer.isRunning() == true)
 		{
@@ -135,7 +136,7 @@ bool SoftwareTimerFunctionTypesTestCase::run_() const
 		uint32_t sharedVariable {};
 		constexpr uint32_t magicValue {0x6affeaca};
 
-		auto functorSoftwareTimer = makeSoftwareTimer(Functor{}, std::ref(sharedVariable), magicValue);
+		auto functorSoftwareTimer = makeStaticSoftwareTimer(Functor{}, std::ref(sharedVariable), magicValue);
 		functorSoftwareTimer.start(singleDuration);
 		while (functorSoftwareTimer.isRunning() == true)
 		{
@@ -151,7 +152,7 @@ bool SoftwareTimerFunctionTypesTestCase::run_() const
 		constexpr uint32_t magicValue {0x7a919ba8};
 		Object object {magicValue};
 
-		auto objectSoftwareTimer = makeSoftwareTimer(&Object::function, std::ref(object));
+		auto objectSoftwareTimer = makeStaticSoftwareTimer(&Object::function, std::ref(object));
 		objectSoftwareTimer.start(singleDuration);
 		while (objectSoftwareTimer.isRunning() == true)
 		{
@@ -167,7 +168,7 @@ bool SoftwareTimerFunctionTypesTestCase::run_() const
 		uint32_t sharedVariable {};
 		constexpr uint32_t magicValue {0x05da8b27};
 
-		auto capturingLambdaSoftwareTimer = makeSoftwareTimer(
+		auto capturingLambdaSoftwareTimer = makeStaticSoftwareTimer(
 				[&sharedVariable, magicValue]()
 				{
 					sharedVariable = magicValue;

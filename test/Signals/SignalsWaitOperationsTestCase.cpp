@@ -403,7 +403,7 @@ bool phase2(const SendSignal& sendSignal, const TestReceivedSignalInformation& t
 	auto& mainThread = ThisThread::get();
 	uint8_t sharedSignalNumber {};
 	int sharedValue {};
-	auto softwareTimer = makeSoftwareTimer(
+	auto softwareTimer = makeStaticSoftwareTimer(
 			[&sendSignal, &mainThread, &sharedSignalNumber, &sharedValue]()
 			{
 				sendSignal(mainThread, sharedSignalNumber, sharedValue);

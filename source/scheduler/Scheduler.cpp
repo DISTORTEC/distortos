@@ -179,7 +179,7 @@ int Scheduler::blockUntil(ThreadControlBlockList& container, const TickClock::ti
 	// This lambda unblocks the thread only if it wasn't already unblocked - this is necessary because double unblock
 	// should be avoided (it could mess the order of threads of the same priority). In that case it also sets
 	// UnblockReason::Timeout.
-	auto softwareTimer = makeSoftwareTimer([this, iterator]()
+	auto softwareTimer = makeStaticSoftwareTimer([this, iterator]()
 			{
 				if (iterator->get().getList() != &runnableList_)
 					unblockInternal(iterator, ThreadControlBlock::UnblockReason::Timeout);

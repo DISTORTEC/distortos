@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-11-05
+ * \date 2015-11-11
  */
 
 #include "QueueOperationsTestCase.hpp"
@@ -655,7 +655,7 @@ bool phase3()
 				const auto queueWrapper = makeQueueWrapper<1>(dynamic, raw, fifo);
 				uint8_t sharedMagicPriority {};
 				OperationCountingType sharedMagicValue {};
-				auto softwareTimer = makeSoftwareTimer(
+				auto softwareTimer = makeStaticSoftwareTimer(
 						[&queueWrapper, &sharedMagicPriority, &sharedMagicValue]()
 						{
 							queueWrapper->tryPush(sharedMagicPriority, sharedMagicValue);
@@ -779,7 +779,7 @@ bool phase4()
 				const auto queueWrapper = makeQueueWrapper<1>(dynamic, raw, fifo);
 				uint8_t receivedPriority {};
 				OperationCountingType receivedTestValue {};
-				auto softwareTimer = makeSoftwareTimer(
+				auto softwareTimer = makeStaticSoftwareTimer(
 						[&queueWrapper, &receivedPriority, &receivedTestValue]()
 						{
 							queueWrapper->tryPop(receivedPriority, receivedTestValue);

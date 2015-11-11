@@ -549,7 +549,7 @@ int SignalMaskStep::operator()() const
 
 int SoftwareTimerStep::operator()(TestStepsRange& testStepsRange, Thread& thread) const
 {
-	auto softwareTimer = makeSoftwareTimer(function_, std::ref(testStepsRange), std::ref(thread), nullptr);
+	auto softwareTimer = makeStaticSoftwareTimer(function_, std::ref(testStepsRange), std::ref(thread), nullptr);
 	softwareTimer.start(TickClock::duration{});
 	while (softwareTimer.isRunning() == true);
 	return 0;

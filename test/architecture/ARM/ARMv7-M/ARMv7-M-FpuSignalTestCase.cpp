@@ -160,7 +160,7 @@ void queueSignalWrapper(Thread& thread, const Stage& stage, const bool full, int
 int queueSignalFromInterrupt(Thread& thread, const Stage& stage)
 {
 	int sharedRet {EINVAL};
-	auto softwareTimer = makeSoftwareTimer(queueSignalWrapper, std::ref(thread), std::ref(stage), false,
+	auto softwareTimer = makeStaticSoftwareTimer(queueSignalWrapper, std::ref(thread), std::ref(stage), false,
 			std::ref(sharedRet));
 
 	softwareTimer.start(TickClock::duration{});
