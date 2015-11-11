@@ -15,7 +15,7 @@
 #define INCLUDE_DISTORTOS_STATICTHREAD_HPP_
 
 #include "distortos/StaticSignalsReceiver.hpp"
-#include "distortos/ThreadBase.hpp"
+#include "distortos/Thread.hpp"
 
 namespace distortos
 {

@@ -11,7 +11,7 @@
  * \date 2015-11-11
  */
 
-#include "distortos/ThreadBase.hpp"
+#include "distortos/Thread.hpp"
 
 #include "distortos/architecture/InterruptMaskingLock.hpp"
 

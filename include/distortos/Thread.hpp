@@ -11,8 +11,8 @@
  * \date 2015-11-11
  */
 
-#ifndef INCLUDE_DISTORTOS_THREADBASE_HPP_
-#define INCLUDE_DISTORTOS_THREADBASE_HPP_
+#ifndef INCLUDE_DISTORTOS_THREAD_HPP_
+#define INCLUDE_DISTORTOS_THREAD_HPP_
 
 #include "distortos/scheduler/ThreadControlBlock.hpp"
 
@@ -265,4 +265,4 @@ private:
 
 }	// namespace distortos
 
-#endif	// INCLUDE_DISTORTOS_THREADBASE_HPP_
+#endif	// INCLUDE_DISTORTOS_THREAD_HPP_

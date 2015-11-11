@@ -15,7 +15,7 @@
 #define INCLUDE_DISTORTOS_DYNAMICTHREAD_HPP_
 
 #include "distortos/DynamicSignalsReceiver.hpp"
-#include "distortos/ThreadBase.hpp"
+#include "distortos/Thread.hpp"
 
 #include "distortos/memory/storageDeleter.hpp"
 
