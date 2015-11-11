@@ -27,7 +27,7 @@ namespace distortos
  */
 
 template<typename Function, typename... Args>
-class StaticSoftwareTimer : public SoftwareTimerBase
+class StaticSoftwareTimer : public SoftwareTimer
 {
 public:
 
@@ -39,7 +39,7 @@ public:
 	 */
 
 	StaticSoftwareTimer(Function&& function, Args&&... args) :
-			SoftwareTimerBase{},
+			SoftwareTimer{},
 			boundFunction_{std::bind(std::forward<Function>(function), std::forward<Args>(args)...)}
 	{
 

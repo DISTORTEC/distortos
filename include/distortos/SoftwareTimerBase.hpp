@@ -1,6 +1,6 @@
 /**
  * \file
- * \brief SoftwareTimerBase class header
+ * \brief SoftwareTimer class header
  *
  * \author Copyright (C) 2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
@@ -19,16 +19,16 @@
 namespace distortos
 {
 
-/// SoftwareTimerBase is a base for software timers
-class SoftwareTimerBase : private scheduler::SoftwareTimerControlBlock
+/// SoftwareTimer is a base for software timers
+class SoftwareTimer : private scheduler::SoftwareTimerControlBlock
 {
 public:
 
 	/**
-	 * \brief SoftwareTimerBase's constructor
+	 * \brief SoftwareTimer's constructor
 	 */
 
-	SoftwareTimerBase() :
+	SoftwareTimer() :
 			SoftwareTimerControlBlock{}
 	{
 
@@ -43,12 +43,12 @@ public:
 protected:
 
 	/**
-	 * \brief SoftwareTimerBase's destructor
+	 * \brief SoftwareTimer's destructor
 	 *
-	 * \note Polymorphic objects of SoftwareTimerBase type must not be deleted via pointer/reference
+	 * \note Polymorphic objects of SoftwareTimer type must not be deleted via pointer/reference
 	 */
 
-	~SoftwareTimerBase()
+	~SoftwareTimer()
 	{
 
 	}
