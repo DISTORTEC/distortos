@@ -146,7 +146,7 @@ template<size_t StackSize, bool CanReceiveSignals, size_t QueuedSignals, size_t 
 		typename... Args>
 StaticThread<StackSize, CanReceiveSignals, QueuedSignals, SignalActions, Function, Args...>::
 StaticThread(const uint8_t priority, const SchedulingPolicy schedulingPolicy, Function&& function, Args&&... args) :
-		Base{{&stack_, memory::dummyDeleter<decltype(stack_)>}, sizeof(stack_), priority, schedulingPolicy,
+		Base{{&stack_, memory::dummyDeleter<decltype(stack_)>}, sizeof(stack_), priority, schedulingPolicy, nullptr,
 				std::forward<Function>(function), std::forward<Args>(args)...}
 {
 
