@@ -14,11 +14,76 @@
 #ifndef INCLUDE_DISTORTOS_STATICTHREAD_HPP_
 #define INCLUDE_DISTORTOS_STATICTHREAD_HPP_
 
-#include "distortos/Thread.hpp"
 #include "distortos/StaticSignalsReceiver.hpp"
+#include "distortos/ThreadBase.hpp"
 
 namespace distortos
 {
+
+namespace internal
+{
+
+/**
+ * \brief StaticThreadBase class is a templated common base for StaticThread
+ *
+ * \param Function is the function that will be executed in separate thread
+ * \param Args are the arguments for \a Function
+ */
+
+template<typename Function, typename... Args>
+class StaticThreadBase : public ThreadBase
+{
+public:
+
+	/// base of StaticThreadBase
+	using Base = ThreadBase;
+
+	/**
+	 * \brief StaticThreadBase's constructor
+	 *
+	 * \param [in] stackStorageUniquePointer is a rvalue reference to StackStorageUniquePointer with storage for stack
+	 * (\a size bytes long) and appropriate deleter
+	 * \param [in] size is the size of stack's storage, bytes
+	 * \param [in] priority is the thread's priority, 0 - lowest, UINT8_MAX - highest
+	 * \param [in] schedulingPolicy is the scheduling policy of the thread
+	 * \param [in] signalsReceiver is a pointer to SignalsReceiver object for this thread, nullptr to disable reception
+	 * of signals for this thread
+	 * \param [in] function is a function that will be executed in separate thread
+	 * \param [in] args are arguments for function
+	 */
+
+	StaticThreadBase(StackStorageUniquePointer&& stackStorageUniquePointer, const size_t size, const uint8_t priority,
+			const SchedulingPolicy schedulingPolicy, SignalsReceiver* const signalsReceiver, Function&& function,
+			Args&&... args) :
+			Base{std::move(stackStorageUniquePointer), size, priority, schedulingPolicy, nullptr, signalsReceiver},
+			boundFunction_{std::bind(std::forward<Function>(function), std::forward<Args>(args)...)}
+	{
+
+	}
+
+	StaticThreadBase(const StaticThreadBase&) = delete;
+	StaticThreadBase(StaticThreadBase&&) = default;
+	const StaticThreadBase& operator=(const StaticThreadBase&) = delete;
+	StaticThreadBase& operator=(StaticThreadBase&&) = delete;
+
+private:
+
+	/**
+	 * \brief StaticThreadBase's internal function.
+	 *
+	 * Executes bound function object.
+	 */
+
+	virtual void run() override
+	{
+		boundFunction_();
+	}
+
+	/// bound function object
+	decltype(std::bind(std::declval<Function>(), std::declval<Args>()...)) boundFunction_;
+};
+
+}	// namespace internal
 
 /**
  * \brief StaticThread class is a templated interface for thread that has automatic storage for stack.
@@ -35,12 +100,12 @@ namespace distortos
 
 template<size_t StackSize, bool CanReceiveSignals, size_t QueuedSignals, size_t SignalActions, typename Function,
 		typename... Args>
-class StaticThread : public Thread<Function, Args...>
+class StaticThread : public internal::StaticThreadBase<Function, Args...>
 {
 public:
 
 	/// base of StaticThread
-	using Base = Thread<Function, Args...>;
+	using Base = internal::StaticThreadBase<Function, Args...>;
 
 	/**
 	 * \brief StaticThread's constructor
@@ -95,12 +160,13 @@ private:
  */
 
 template<size_t StackSize, size_t QueuedSignals, size_t SignalActions, typename Function, typename... Args>
-class StaticThread<StackSize, true, QueuedSignals, SignalActions, Function, Args...> : public Thread<Function, Args...>
+class StaticThread<StackSize, true, QueuedSignals, SignalActions, Function, Args...> :
+		public internal::StaticThreadBase<Function, Args...>
 {
 public:
 
 	/// base of StaticThread
-	using Base = Thread<Function, Args...>;
+	using Base = internal::StaticThreadBase<Function, Args...>;
 
 	/**
 	 * \brief StaticThread's constructor
