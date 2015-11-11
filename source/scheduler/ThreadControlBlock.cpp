@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-10-18
+ * \date 2015-11-11
  */
 
 #include "distortos/scheduler/ThreadControlBlock.hpp"
@@ -38,7 +38,7 @@ namespace scheduler
 
 ThreadControlBlock::ThreadControlBlock(architecture::Stack&& stack, const uint8_t priority,
 		const SchedulingPolicy schedulingPolicy, ThreadGroupControlBlock* const threadGroupControlBlock,
-		SignalsReceiver* const signalsReceiver, ThreadBase& owner) :
+		SignalsReceiver* const signalsReceiver, Thread& owner) :
 		stack_{std::move(stack)},
 		owner_{owner},
 		ownedProtocolMutexControlBlocksList_

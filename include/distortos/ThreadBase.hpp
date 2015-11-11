@@ -1,6 +1,6 @@
 /**
  * \file
- * \brief ThreadBase class header
+ * \brief Thread class header
  *
  * \author Copyright (C) 2014-2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-11-08
+ * \date 2015-11-11
  */
 
 #ifndef INCLUDE_DISTORTOS_THREADBASE_HPP_
@@ -24,8 +24,8 @@
 namespace distortos
 {
 
-/// ThreadBase class is a base for threads
-class ThreadBase
+/// Thread class is a base for threads
+class Thread
 {
 public:
 
@@ -33,7 +33,7 @@ public:
 	using StackStorageUniquePointer = architecture::Stack::StorageUniquePointer;
 
 	/**
-	 * \brief ThreadBase's constructor.
+	 * \brief Thread's constructor.
 	 *
 	 * \param [in] stackStorageUniquePointer is a rvalue reference to StackStorageUniquePointer with storage for stack
 	 * (\a size bytes long) and appropriate deleter
@@ -46,12 +46,12 @@ public:
 	 * of signals for this thread
 	 */
 
-	ThreadBase(StackStorageUniquePointer&& stackStorageUniquePointer, size_t size, uint8_t priority,
+	Thread(StackStorageUniquePointer&& stackStorageUniquePointer, size_t size, uint8_t priority,
 			SchedulingPolicy schedulingPolicy, scheduler::ThreadGroupControlBlock* threadGroupControlBlock,
 			SignalsReceiver* signalsReceiver);
 
 	/**
-	 * \brief ThreadBase's constructor.
+	 * \brief Thread's constructor.
 	 *
 	 * \param [in] stack is an rvalue reference to architecture::Stack object which will be adopted for this thread
 	 * \param [in] priority is the thread's priority, 0 - lowest, UINT8_MAX - highest
@@ -62,7 +62,7 @@ public:
 	 * of signals for this thread
 	 */
 
-	ThreadBase(architecture::Stack&& stack, uint8_t priority, SchedulingPolicy schedulingPolicy,
+	Thread(architecture::Stack&& stack, uint8_t priority, SchedulingPolicy schedulingPolicy,
 			scheduler::ThreadGroupControlBlock* threadGroupControlBlock, SignalsReceiver* signalsReceiver);
 
 	/**
@@ -204,20 +204,20 @@ public:
 
 	int start();
 
-	ThreadBase(const ThreadBase&) = delete;
-	ThreadBase(ThreadBase&&) = default;
-	const ThreadBase& operator=(const ThreadBase&) = delete;
-	ThreadBase& operator=(ThreadBase&&) = delete;
+	Thread(const Thread&) = delete;
+	Thread(Thread&&) = default;
+	const Thread& operator=(const Thread&) = delete;
+	Thread& operator=(Thread&&) = delete;
 
 protected:
 
 	/**
-	 * \brief ThreadBase's destructor
+	 * \brief Thread's destructor
 	 *
-	 * \note Polymorphic objects of ThreadBase type must not be deleted via pointer/reference
+	 * \note Polymorphic objects of Thread type must not be deleted via pointer/reference
 	 */
 
-	~ThreadBase();
+	~Thread();
 
 	/**
 	 * \return reference to internal ThreadControlBlock object
@@ -235,10 +235,10 @@ private:
 	 *
 	 * After return from actual thread function, thread is terminated, so this function never returns.
 	 *
-	 * \param [in] threadBase is a reference to ThreadBase object that is being run
+	 * \param [in] thread is a reference to Thread object that is being run
 	 */
 
-	static void threadRunner(ThreadBase& threadBase) __attribute__ ((noreturn));
+	static void threadRunner(Thread& thread) __attribute__ ((noreturn));
 
 	/**
 	 * \brief "Run" function of thread

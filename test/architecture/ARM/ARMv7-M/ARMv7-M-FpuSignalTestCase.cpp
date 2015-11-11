@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-06-07
+ * \date 2015-11-11
  */
 
 #include "ARMv7-M-FpuSignalTestCase.hpp"
@@ -65,7 +65,7 @@ struct Stage
 struct Phase
 {
 	/// type of "sender" function
-	using Sender = int(ThreadBase&, const Stage&);
+	using Sender = int(Thread&, const Stage&);
 
 	/// reference to "sender" function
 	Sender& sender;
@@ -128,7 +128,7 @@ bool isFpuContextActive()
 }
 
 /**
- * \brief Test wrapper for ThreadBase::queueSignal() that also modifies FPU registers.
+ * \brief Test wrapper for Thread::queueSignal() that also modifies FPU registers.
  *
  * \param [in] thread is a reference to thread to which the signal will be queued
  * \param [in] stage is a reference to test stage
@@ -136,7 +136,7 @@ bool isFpuContextActive()
  * \param [in] sharedRet is a reference to int variable which will be written with 0 on success, error code otherwise
  */
 
-void queueSignalWrapper(ThreadBase& thread, const Stage& stage, const bool full, int& sharedRet)
+void queueSignalWrapper(Thread& thread, const Stage& stage, const bool full, int& sharedRet)
 {
 	if (stage.senderValueBefore != 0)	// should FPU be used at the beginning of "sender"?
 		setFpuRegisters(stage.senderValueBefore, full);
@@ -154,10 +154,10 @@ void queueSignalWrapper(ThreadBase& thread, const Stage& stage, const bool full,
  * \param [in] stage is a reference to test stage
  *
  * \return 0 on success, error code otherwise:
- * - error codes returned by ThreadBase::queueSignal();
+ * - error codes returned by Thread::queueSignal();
  */
 
-int queueSignalFromInterrupt(ThreadBase& thread, const Stage& stage)
+int queueSignalFromInterrupt(Thread& thread, const Stage& stage)
 {
 	int sharedRet {EINVAL};
 	auto softwareTimer = makeSoftwareTimer(queueSignalWrapper, std::ref(thread), std::ref(stage), false,
@@ -176,10 +176,10 @@ int queueSignalFromInterrupt(ThreadBase& thread, const Stage& stage)
  * \param [in] stage is a reference to test stage
  *
  * \return 0 on success, error code otherwise:
- * - error codes returned by ThreadBase::queueSignal();
+ * - error codes returned by Thread::queueSignal();
  */
 
-int queueSignalFromThread(ThreadBase& thread, const Stage& stage)
+int queueSignalFromThread(Thread& thread, const Stage& stage)
 {
 	constexpr decltype(FpuSignalTestCase::getTestCasePriority()) highPriority
 	{

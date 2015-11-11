@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-11-08
+ * \date 2015-11-11
  */
 
 #include "SignalsCatchingTestCase.hpp"
@@ -149,12 +149,12 @@ public:
 	 *
 	 * Generates or queues selected signal.
 	 *
-	 * \param [in] thread is a reference to ThreadBase to which the signal will be generated/queued
+	 * \param [in] thread is a reference to Thread to which the signal will be generated/queued
 	 *
 	 * \return 0 on success, error code otherwise
 	 */
 
-	int operator()(ThreadBase& thread) const;
+	int operator()(Thread& thread) const;
 
 private:
 
@@ -191,12 +191,12 @@ public:
 	 *
 	 * Changes priority of \a thread.
 	 *
-	 * \param [in] thread is a reference to ThreadBase of which the priority will be changed
+	 * \param [in] thread is a reference to Thread of which the priority will be changed
 	 *
 	 * \return 0 on success, error code otherwise
 	 */
 
-	int operator()(ThreadBase& thread) const;
+	int operator()(Thread& thread) const;
 
 private:
 
@@ -243,7 +243,7 @@ class SoftwareTimerStep
 public:
 
 	/// type of function for software timer
-	using Function = void(TestStepsRange& testStepsRange, ThreadBase&, const SignalInformation*);
+	using Function = void(TestStepsRange& testStepsRange, Thread&, const SignalInformation*);
 
 	/**
 	 * \brief SoftwareTimerStep's constructor
@@ -263,12 +263,12 @@ public:
 	 * Creates software timer with provided range of test steps, starts it and waits until it stops.
 	 *
 	 * \param [in] testStepsRange is a reference to range of test steps
-	 * \param [in] thread is a reference to ThreadBase passed to software timer
+	 * \param [in] thread is a reference to Thread passed to software timer
 	 *
 	 * \return 0 on success, error code otherwise
 	 */
 
-	int operator()(TestStepsRange& testStepsRange, ThreadBase& thread) const;
+	int operator()(TestStepsRange& testStepsRange, Thread& thread) const;
 
 private:
 
@@ -403,14 +403,14 @@ public:
 	 *
 	 * \param [in] sequenceAsserter is a reference to shared SequenceAsserter object
 	 * \param [in] testStepsRange is a reference to range of test steps
-	 * \param [in] thread is a reference to ThreadBase passed to internal test step
+	 * \param [in] thread is a reference to Thread passed to internal test step
 	 * \param [in] signalInformation is a pointer to received SignalInformation object, required only for
 	 * BasicHandlerStep
 	 *
 	 * \return 0 on success, error code otherwise
 	 */
 
-	int operator()(SequenceAsserter& sequenceAsserter, TestStepsRange& testStepsRange, ThreadBase& thread,
+	int operator()(SequenceAsserter& sequenceAsserter, TestStepsRange& testStepsRange, Thread& thread,
 			const SignalInformation* signalInformation) const;
 
 	/**
@@ -497,7 +497,7 @@ int BasicHandlerStep::operator()(const SignalInformation& signalInformation) con
 | GenerateQueueSignalStep's public functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-int GenerateQueueSignalStep::operator()(ThreadBase& thread) const
+int GenerateQueueSignalStep::operator()(Thread& thread) const
 {
 	return code_ == SignalInformation::Code::Generated ? thread.generateSignal(signalNumber_) :
 			thread.queueSignal(signalNumber_, sigval{value_});
@@ -507,7 +507,7 @@ int GenerateQueueSignalStep::operator()(ThreadBase& thread) const
 | TestStep's public functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-int TestStep::operator()(SequenceAsserter& sequenceAsserter, TestStepsRange& testStepsRange, ThreadBase& thread,
+int TestStep::operator()(SequenceAsserter& sequenceAsserter, TestStepsRange& testStepsRange, Thread& thread,
 		const SignalInformation* const signalInformation) const
 {
 	sequenceAsserter.sequencePoint(sequencePoints_.first);
@@ -528,7 +528,7 @@ int TestStep::operator()(SequenceAsserter& sequenceAsserter, TestStepsRange& tes
 | ThreadPriorityStep's public functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-int ThreadPriorityStep::operator()(ThreadBase& thread) const
+int ThreadPriorityStep::operator()(Thread& thread) const
 {
 	thread.setPriority(priority_);
 	return 0;
@@ -547,7 +547,7 @@ int SignalMaskStep::operator()() const
 | SoftwareTimerStep's public functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-int SoftwareTimerStep::operator()(TestStepsRange& testStepsRange, ThreadBase& thread) const
+int SoftwareTimerStep::operator()(TestStepsRange& testStepsRange, Thread& thread) const
 {
 	auto softwareTimer = makeSoftwareTimer(function_, std::ref(testStepsRange), std::ref(thread), nullptr);
 	softwareTimer.start(TickClock::duration{});
@@ -586,13 +586,12 @@ constexpr SignalSet getSignalMask(const uint8_t signalNumber)
  * executed returns true.
  *
  * \param [in] testStepsRange is a reference to range of test steps
- * \param [in] thread is a reference to ThreadBase passed to test steps
+ * \param [in] thread is a reference to Thread passed to test steps
  * \param [in] signalInformation is a pointer to received SignalInformation object, nullptr if function is not executed
  * from signal handler
  */
 
-void testStepsRunner(TestStepsRange& testStepsRange, ThreadBase& thread,
-		const SignalInformation* const signalInformation)
+void testStepsRunner(TestStepsRange& testStepsRange, Thread& thread, const SignalInformation* const signalInformation)
 {
 	bool more {true};
 	while (more == true && testStepsRange.size() != 0)

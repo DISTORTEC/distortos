@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-10-12
+ * \date 2015-11-11
  */
 
 #ifndef INCLUDE_DISTORTOS_SCHEDULER_THREADCONTROLBLOCK_HPP_
@@ -103,11 +103,11 @@ public:
 	 * be added, nullptr to inherit thread group from currently running thread
 	 * \param [in] signalsReceiver is a pointer to SignalsReceiver object for this thread, nullptr to disable reception
 	 * of signals for this thread
-	 * \param [in] owner is a reference to ThreadBase object that owns this ThreadControlBlock
+	 * \param [in] owner is a reference to Thread object that owns this ThreadControlBlock
 	 */
 
 	ThreadControlBlock(architecture::Stack&& stack, uint8_t priority, SchedulingPolicy schedulingPolicy,
-			ThreadGroupControlBlock* threadGroupControlBlock, SignalsReceiver* signalsReceiver, ThreadBase& owner);
+			ThreadGroupControlBlock* threadGroupControlBlock, SignalsReceiver* signalsReceiver, Thread& owner);
 
 	/**
 	 * \brief ThreadControlBlock's destructor
@@ -190,10 +190,10 @@ public:
 	}
 
 	/**
-	 * \return reference to ThreadBase object that owns this ThreadControlBlock
+	 * \return reference to Thread object that owns this ThreadControlBlock
 	 */
 
-	ThreadBase& getOwner() const
+	Thread& getOwner() const
 	{
 		return owner_;
 	}
@@ -392,8 +392,8 @@ private:
 	/// storage for thread group list link
 	Link threadGroupLink_;
 
-	/// reference to ThreadBase object that owns this ThreadControlBlock
-	ThreadBase& owner_;
+	/// reference to Thread object that owns this ThreadControlBlock
+	Thread& owner_;
 
 	/// list of mutex control blocks with enabled priority protocol owned by this thread
 	MutexControlBlockList ownedProtocolMutexControlBlocksList_;

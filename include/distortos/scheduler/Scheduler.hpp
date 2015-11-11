@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-06-30
+ * \date 2015-11-11
  */
 
 #ifndef INCLUDE_DISTORTOS_SCHEDULER_SCHEDULER_HPP_
@@ -196,14 +196,14 @@ public:
 	 *
 	 * \note This function can be used only after thread's function returns an all cleanup is done.
 	 *
-	 * \param [in] terminationHook is a pointer to member function of ThreadBase that will be called from within lock
-	 * zone just before forced context switch
+	 * \param [in] terminationHook is a pointer to member function of Thread that will be called from within lock zone
+	 * just before forced context switch
 	 *
 	 * \return 0 on success, error code otherwise:
 	 * - EINVAL - provided thread is not on "runnable" list and cannot be removed/terminated;
 	 */
 
-	int remove(void (ThreadBase::*terminationHook)());
+	int remove(void (Thread::*terminationHook)());
 
 	/**
 	 * \brief Resumes suspended thread.

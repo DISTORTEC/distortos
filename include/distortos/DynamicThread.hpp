@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-11-09
+ * \date 2015-11-11
  */
 
 #ifndef INCLUDE_DISTORTOS_DYNAMICTHREAD_HPP_
@@ -147,12 +147,12 @@ struct DynamicThreadParameters
  * and internal DynamicSignalsReceiver object.
  */
 
-class DynamicThread : public ThreadBase
+class DynamicThread : public Thread
 {
 public:
 
 	/// base of DynamicThread
-	using Base = ThreadBase;
+	using Base = Thread;
 
 	/**
 	 * \brief DynamicThread's constructor

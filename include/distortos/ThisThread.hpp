@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-06-28
+ * \date 2015-11-11
  */
 
 #ifndef INCLUDE_DISTORTOS_THISTHREAD_HPP_
@@ -19,17 +19,17 @@
 namespace distortos
 {
 
-class ThreadBase;
+class Thread;
 
 /// ThisThread namespace groups functions used to control current thread
 namespace ThisThread
 {
 
 /**
- * \return reference to ThreadBase object of currently active thread
+ * \return reference to Thread object of currently active thread
  */
 
-ThreadBase& get();
+Thread& get();
 
 /**
  * \return effective priority of calling (current) thread

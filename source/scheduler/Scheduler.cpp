@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-06-30
+ * \date 2015-11-11
  */
 
 #include "distortos/scheduler/Scheduler.hpp"
@@ -218,7 +218,7 @@ void Scheduler::maybeRequestContextSwitch() const
 		architecture::requestContextSwitch();
 }
 
-int Scheduler::remove(void (ThreadBase::*terminationHook)())
+int Scheduler::remove(void (Thread::*terminationHook)())
 {
 	{
 		architecture::InterruptMaskingLock interruptMaskingLock;

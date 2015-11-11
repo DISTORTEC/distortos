@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-11-08
+ * \date 2015-11-11
  */
 
 #include "SignalsWaitOperationsTestCase.hpp"
@@ -39,7 +39,7 @@ namespace
 +---------------------------------------------------------------------------------------------------------------------*/
 
 /// type of function used to send signal to selected thread
-using SendSignal = int(ThreadBase&, uint8_t, int);
+using SendSignal = int(Thread&, uint8_t, int);
 
 /// type of function used to test received SignalInformation object
 using TestReceivedSignalInformation = bool(const SignalInformation&, uint8_t, int);
@@ -81,31 +81,31 @@ constexpr decltype(statistics::getContextSwitchCount()) phase3ThreadContextSwitc
 +---------------------------------------------------------------------------------------------------------------------*/
 
 /**
- * \brief Wrapper for ThreadBase::generateSignal().
+ * \brief Wrapper for Thread::generateSignal().
  *
- * \param [in] thread is a reference to ThreadBase for which the signal will be generated
+ * \param [in] thread is a reference to Thread for which the signal will be generated
  * \param [in] signalNumber is the signal that will be generated, [0; 31]
  * \param [in] value is the signal value (ignored)
  *
- * \return values returned by ThreadBase::generateSignal()
+ * \return values returned by Thread::generateSignal()
  */
 
-int generateSignalWrapper(ThreadBase& thread, const uint8_t signalNumber, int)
+int generateSignalWrapper(Thread& thread, const uint8_t signalNumber, int)
 {
 	return thread.generateSignal(signalNumber);
 }
 
 /**
- * \brief Wrapper for ThreadBase::queueSignal().
+ * \brief Wrapper for Thread::queueSignal().
  *
- * \param [in] thread is a reference to ThreadBase for which the signal will be queued
+ * \param [in] thread is a reference to Thread for which the signal will be queued
  * \param [in] signalNumber is the signal that will be queued, [0; 31]
  * \param [in] value is the signal value
  *
- * \return values returned by ThreadBase::queueSignal()
+ * \return values returned by Thread::queueSignal()
  */
 
-int queueSignalWrapper(ThreadBase& thread, const uint8_t signalNumber, const int value)
+int queueSignalWrapper(Thread& thread, const uint8_t signalNumber, const int value)
 {
 	return thread.queueSignal(signalNumber, sigval{value});
 }

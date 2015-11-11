@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-10-27
+ * \date 2015-11-11
  */
 
 #ifndef INCLUDE_DISTORTOS_ARCHITECTURE_STACK_HPP_
@@ -19,7 +19,7 @@
 namespace distortos
 {
 
-class ThreadBase;
+class Thread;
 
 namespace architecture
 {
@@ -47,11 +47,10 @@ public:
 	 * bytes long) and appropriate deleter
 	 * \param [in] size is the size of stack's storage, bytes
 	 * \param [in] function is a reference to thread's function, this function must not return
-	 * \param [in] threadBase is a reference to ThreadBase object passed to function
+	 * \param [in] thread is a reference to Thread object passed to function
 	 */
 
-	Stack(StorageUniquePointer&& storageUniquePointer, size_t size, void (& function)(ThreadBase&),
-			ThreadBase& threadBase);
+	Stack(StorageUniquePointer&& storageUniquePointer, size_t size, void (& function)(Thread&), Thread& thread);
 
 	/**
 	 * \brief Stack's constructor

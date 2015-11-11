@@ -1,6 +1,6 @@
 /**
  * \file
- * \brief ThreadBase class implementation
+ * \brief Thread class implementation
  *
  * \author Copyright (C) 2014-2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-11-08
+ * \date 2015-11-11
  */
 
 #include "distortos/ThreadBase.hpp"
@@ -29,16 +29,16 @@ namespace distortos
 | public functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-ThreadBase::ThreadBase(StackStorageUniquePointer&& stackStorageUniquePointer, const size_t size, const uint8_t priority,
+Thread::Thread(StackStorageUniquePointer&& stackStorageUniquePointer, const size_t size, const uint8_t priority,
 		const SchedulingPolicy schedulingPolicy, scheduler::ThreadGroupControlBlock* const threadGroupControlBlock,
 		SignalsReceiver* const signalsReceiver) :
-		ThreadBase{{std::move(stackStorageUniquePointer), size, threadRunner, *this}, priority, schedulingPolicy,
+		Thread{{std::move(stackStorageUniquePointer), size, threadRunner, *this}, priority, schedulingPolicy,
 				threadGroupControlBlock, signalsReceiver}
 {
 
 }
 
-ThreadBase::ThreadBase(architecture::Stack&& stack, const uint8_t priority, const SchedulingPolicy schedulingPolicy,
+Thread::Thread(architecture::Stack&& stack, const uint8_t priority, const SchedulingPolicy schedulingPolicy,
 		scheduler::ThreadGroupControlBlock* const threadGroupControlBlock, SignalsReceiver* const signalsReceiver) :
 		threadControlBlock_{std::move(stack), priority, schedulingPolicy, threadGroupControlBlock, signalsReceiver,
 				*this},
@@ -47,7 +47,7 @@ ThreadBase::ThreadBase(architecture::Stack&& stack, const uint8_t priority, cons
 
 }
 
-int ThreadBase::generateSignal(const uint8_t signalNumber)
+int Thread::generateSignal(const uint8_t signalNumber)
 {
 	const auto signalsReceiverControlBlock = threadControlBlock_.getSignalsReceiverControlBlock();
 	if (signalsReceiverControlBlock == nullptr)
@@ -56,7 +56,7 @@ int ThreadBase::generateSignal(const uint8_t signalNumber)
 	return signalsReceiverControlBlock->generateSignal(signalNumber, threadControlBlock_);
 }
 
-SignalSet ThreadBase::getPendingSignalSet() const
+SignalSet Thread::getPendingSignalSet() const
 {
 	const auto signalsReceiverControlBlock = threadControlBlock_.getSignalsReceiverControlBlock();
 	if (signalsReceiverControlBlock == nullptr)
@@ -66,7 +66,7 @@ SignalSet ThreadBase::getPendingSignalSet() const
 	return signalsReceiverControlBlock->getPendingSignalSet();
 }
 
-int ThreadBase::join()
+int Thread::join()
 {
 	if (&threadControlBlock_ == &scheduler::getScheduler().getCurrentThreadControlBlock())
 		return EDEADLK;
@@ -76,7 +76,7 @@ int ThreadBase::join()
 	return ret;
 }
 
-int ThreadBase::queueSignal(const uint8_t signalNumber, const sigval value)
+int Thread::queueSignal(const uint8_t signalNumber, const sigval value)
 {
 	const auto signalsReceiverControlBlock = threadControlBlock_.getSignalsReceiverControlBlock();
 	if (signalsReceiverControlBlock == nullptr)
@@ -85,7 +85,7 @@ int ThreadBase::queueSignal(const uint8_t signalNumber, const sigval value)
 	return signalsReceiverControlBlock->queueSignal(signalNumber, value, threadControlBlock_);
 }
 
-int ThreadBase::start()
+int Thread::start()
 {
 	if (getState() != scheduler::ThreadControlBlock::State::New)
 		return EINVAL;
@@ -97,7 +97,7 @@ int ThreadBase::start()
 | protected functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-ThreadBase::~ThreadBase()
+Thread::~Thread()
 {
 
 }
@@ -106,10 +106,10 @@ ThreadBase::~ThreadBase()
 | private static functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-void ThreadBase::threadRunner(ThreadBase& threadBase)
+void Thread::threadRunner(Thread& thread)
 {
-	threadBase.run();
-	scheduler::getScheduler().remove(&ThreadBase::terminationHook);
+	thread.run();
+	scheduler::getScheduler().remove(&Thread::terminationHook);
 
 	while (1);
 }
@@ -118,7 +118,7 @@ void ThreadBase::threadRunner(ThreadBase& threadBase)
 | private functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-void ThreadBase::terminationHook()
+void Thread::terminationHook()
 {
 	joinSemaphore_.post();
 	threadControlBlock_.setList(nullptr);

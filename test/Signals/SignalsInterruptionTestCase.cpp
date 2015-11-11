@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-11-08
+ * \date 2015-11-11
  */
 
 #include "SignalsInterruptionTestCase.hpp"
@@ -175,10 +175,10 @@ private:
 	 * \brief Queues signal to provided thread.
 	 *
 	 * \param [in] sequenceAsserter is a reference to shared SequenceAsserter object
-	 * \param [in] thread is a reference to ThreadBase to which the signal will be queued
+	 * \param [in] thread is a reference to Thread to which the signal will be queued
 	 */
 
-	void signalingThreadFunction(SequenceAsserter& sequenceAsserter, ThreadBase& thread) const
+	void signalingThreadFunction(SequenceAsserter& sequenceAsserter, Thread& thread) const
 	{
 		sequenceAsserter.sequencePoint(signalingThreadSequencePoint1_);
 		thread.queueSignal(signalHandlerSequencePoint_, sigval{reinterpret_cast<int>(&sequenceAsserter)});

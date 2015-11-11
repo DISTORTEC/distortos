@@ -31,12 +31,12 @@ namespace internal
  */
 
 template<typename Function, typename... Args>
-class StaticThreadBase : public ThreadBase
+class StaticThreadBase : public Thread
 {
 public:
 
 	/// base of StaticThreadBase
-	using Base = ThreadBase;
+	using Base = Thread;
 
 	/**
 	 * \brief StaticThreadBase's constructor
