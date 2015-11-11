@@ -14,7 +14,7 @@
 #ifndef INCLUDE_DISTORTOS_STATICSOFTWARETIMER_HPP_
 #define INCLUDE_DISTORTOS_STATICSOFTWARETIMER_HPP_
 
-#include "distortos/SoftwareTimerBase.hpp"
+#include "distortos/SoftwareTimer.hpp"
 
 namespace distortos
 {
