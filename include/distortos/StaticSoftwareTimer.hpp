@@ -16,8 +16,6 @@
 
 #include "distortos/SoftwareTimerBase.hpp"
 
-#include <functional>
-
 namespace distortos
 {
 
