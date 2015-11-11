@@ -15,10 +15,10 @@
 
 #include "waitForNextTick.hpp"
 
+#include "distortos/StaticSoftwareTimer.hpp"
 #include "distortos/StaticThread.hpp"
-#include "distortos/ThisThread.hpp"
-#include "distortos/SoftwareTimer.hpp"
 #include "distortos/statistics.hpp"
+#include "distortos/ThisThread.hpp"
 
 #include <cerrno>
 

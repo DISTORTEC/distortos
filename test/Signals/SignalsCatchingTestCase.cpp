@@ -15,7 +15,7 @@
 
 #include "SequenceAsserter.hpp"
 
-#include "distortos/SoftwareTimer.hpp"
+#include "distortos/StaticSoftwareTimer.hpp"
 #include "distortos/StaticThread.hpp"
 #include "distortos/statistics.hpp"
 #include "distortos/ThisThread.hpp"

@@ -15,7 +15,7 @@
 
 #include "waitForNextTick.hpp"
 
-#include "distortos/SoftwareTimer.hpp"
+#include "distortos/StaticSoftwareTimer.hpp"
 #include "distortos/ThisThread.hpp"
 
 namespace distortos

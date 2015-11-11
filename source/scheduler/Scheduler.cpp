@@ -13,12 +13,13 @@
 
 #include "distortos/scheduler/Scheduler.hpp"
 
-#include "distortos/SoftwareTimer.hpp"
-#include "distortos/scheduler/MainThread.hpp"
+#include "distortos/StaticSoftwareTimer.hpp"
 
 #include "distortos/architecture/InterruptMaskingLock.hpp"
 #include "distortos/architecture/InterruptUnmaskingLock.hpp"
 #include "distortos/architecture/requestContextSwitch.hpp"
+
+#include "distortos/scheduler/MainThread.hpp"
 
 #include <cerrno>
 

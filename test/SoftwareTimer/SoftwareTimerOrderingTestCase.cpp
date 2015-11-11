@@ -17,7 +17,7 @@
 #include "SequenceAsserter.hpp"
 #include "waitForNextTick.hpp"
 
-#include "distortos/SoftwareTimer.hpp"
+#include "distortos/StaticSoftwareTimer.hpp"
 
 namespace distortos
 {

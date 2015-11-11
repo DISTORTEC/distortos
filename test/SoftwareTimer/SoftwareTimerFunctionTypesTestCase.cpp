@@ -13,7 +13,7 @@
 
 #include "SoftwareTimerFunctionTypesTestCase.hpp"
 
-#include "distortos/SoftwareTimer.hpp"
+#include "distortos/StaticSoftwareTimer.hpp"
 
 namespace distortos
 {
