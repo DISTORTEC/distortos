@@ -105,6 +105,11 @@ int Thread::queueSignal(const uint8_t signalNumber, const sigval value)
 	return signalsReceiverControlBlock->queueSignal(signalNumber, value, threadControlBlock_);
 }
 
+void Thread::setPriority(const uint8_t priority, const bool alwaysBehind)
+{
+	threadControlBlock_.setPriority(priority, alwaysBehind);
+}
+
 int Thread::start()
 {
 	if (getState() != scheduler::ThreadControlBlock::State::New)

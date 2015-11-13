@@ -166,10 +166,7 @@ public:
 	 * - true - the thread is moved to the tail of the group of threads with the new priority.
 	 */
 
-	void setPriority(const uint8_t priority, const bool alwaysBehind = {})
-	{
-		threadControlBlock_.setPriority(priority, alwaysBehind);
-	}
+	void setPriority(uint8_t priority, bool alwaysBehind = {});
 
 	/**
 	 * param [in] schedulingPolicy is the new scheduling policy of the thread
