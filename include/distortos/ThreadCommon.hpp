@@ -27,6 +27,24 @@ public:
 	/**
 	 * \brief ThreadCommon's constructor
 	 *
+	 * \param [in] stackStorageUniquePointer is a rvalue reference to StackStorageUniquePointer with storage for stack
+	 * (\a size bytes long) and appropriate deleter
+	 * \param [in] size is the size of stack's storage, bytes
+	 * \param [in] priority is the thread's priority, 0 - lowest, UINT8_MAX - highest
+	 * \param [in] schedulingPolicy is the scheduling policy of the thread
+	 * \param [in] threadGroupControlBlock is a pointer to scheduler::ThreadGroupControlBlock to which this object will
+	 * be added, nullptr to inherit thread group from currently running thread
+	 * \param [in] signalsReceiver is a pointer to SignalsReceiver object for this thread, nullptr to disable reception
+	 * of signals for this thread
+	 */
+
+	ThreadCommon(StackStorageUniquePointer&& stackStorageUniquePointer, size_t size, uint8_t priority,
+			SchedulingPolicy schedulingPolicy, scheduler::ThreadGroupControlBlock* threadGroupControlBlock,
+			SignalsReceiver* signalsReceiver);
+
+	/**
+	 * \brief ThreadCommon's constructor
+	 *
 	 * \param [in] stack is an rvalue reference to architecture::Stack object which will be adopted for this thread
 	 * \param [in] priority is the thread's priority, 0 - lowest, UINT8_MAX - highest
 	 * \param [in] schedulingPolicy is the scheduling policy of the thread
