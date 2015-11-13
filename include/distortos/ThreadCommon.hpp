@@ -199,13 +199,19 @@ protected:
 	 * \return reference to internal ThreadControlBlock object
 	 */
 
-	scheduler::ThreadControlBlock& getThreadControlBlock();
+	scheduler::ThreadControlBlock& getThreadControlBlock()
+	{
+		return threadControlBlock_;
+	}
 
 	/**
 	 * \return const reference to internal ThreadControlBlock object
 	 */
 
-	const scheduler::ThreadControlBlock& getThreadControlBlock() const;
+	const scheduler::ThreadControlBlock& getThreadControlBlock() const
+	{
+		return threadControlBlock_;
+	}
 
 private:
 

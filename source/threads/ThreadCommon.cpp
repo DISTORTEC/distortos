@@ -131,20 +131,6 @@ int ThreadCommon::start()
 }
 
 /*---------------------------------------------------------------------------------------------------------------------+
-| protected functions
-+---------------------------------------------------------------------------------------------------------------------*/
-
-scheduler::ThreadControlBlock& ThreadCommon::getThreadControlBlock()
-{
-	return threadControlBlock_;
-}
-
-const scheduler::ThreadControlBlock& ThreadCommon::getThreadControlBlock() const
-{
-	return threadControlBlock_;
-}
-
-/*---------------------------------------------------------------------------------------------------------------------+
 | private functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
