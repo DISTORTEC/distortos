@@ -104,10 +104,7 @@ public:
 	 * \return priority of thread
 	 */
 
-	uint8_t getPriority() const
-	{
-		return threadControlBlock_.getPriority();
-	}
+	uint8_t getPriority() const;
 
 	/**
 	 * \return scheduling policy of the thread

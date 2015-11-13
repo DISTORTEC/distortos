@@ -71,6 +71,11 @@ SignalSet Thread::getPendingSignalSet() const
 	return signalsReceiverControlBlock->getPendingSignalSet();
 }
 
+uint8_t Thread::getPriority() const
+{
+	return threadControlBlock_.getPriority();
+}
+
 int Thread::join()
 {
 	if (&threadControlBlock_ == &scheduler::getScheduler().getCurrentThreadControlBlock())
