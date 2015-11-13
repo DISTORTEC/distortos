@@ -16,8 +16,6 @@
 #include "distortos/scheduler/getScheduler.hpp"
 #include "distortos/scheduler/Scheduler.hpp"
 
-#include "distortos/synchronization/SignalsReceiverControlBlock.hpp"
-
 #include <cerrno>
 
 namespace distortos
@@ -46,16 +44,6 @@ int Thread::join()
 	int ret;
 	while ((ret = joinSemaphore_.wait()) == EINTR);
 	return ret;
-}
-
-int Thread::queueSignal(const uint8_t signalNumber, const sigval value)
-{
-	auto& threadControlBlock = getThreadControlBlock();
-	const auto signalsReceiverControlBlock = threadControlBlock.getSignalsReceiverControlBlock();
-	if (signalsReceiverControlBlock == nullptr)
-		return ENOTSUP;
-
-	return signalsReceiverControlBlock->queueSignal(signalNumber, value, threadControlBlock);
 }
 
 void Thread::setPriority(const uint8_t priority, const bool alwaysBehind)

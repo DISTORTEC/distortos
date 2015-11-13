@@ -84,6 +84,16 @@ scheduler::ThreadControlBlock::State ThreadCommon::getState() const
 	return getThreadControlBlock().getState();
 }
 
+int ThreadCommon::queueSignal(const uint8_t signalNumber, const sigval value)
+{
+	auto& threadControlBlock = getThreadControlBlock();
+	const auto signalsReceiverControlBlock = threadControlBlock.getSignalsReceiverControlBlock();
+	if (signalsReceiverControlBlock == nullptr)
+		return ENOTSUP;
+
+	return signalsReceiverControlBlock->queueSignal(signalNumber, value, threadControlBlock);
+}
+
 /*---------------------------------------------------------------------------------------------------------------------+
 | protected functions
 +---------------------------------------------------------------------------------------------------------------------*/

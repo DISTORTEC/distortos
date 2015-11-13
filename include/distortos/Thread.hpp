@@ -130,7 +130,7 @@ public:
 	 * - ENOTSUP - reception or queuing of signals are disabled for this thread;
 	 */
 
-	virtual int queueSignal(uint8_t signalNumber, sigval value);
+	virtual int queueSignal(uint8_t signalNumber, sigval value) = 0;
 
 	/**
 	 * \brief Changes priority of thread.
