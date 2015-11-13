@@ -47,6 +47,11 @@ ThreadCommon::ThreadCommon(architecture::Stack&& stack, const uint8_t priority, 
 
 }
 
+ThreadCommon::~ThreadCommon()
+{
+
+}
+
 int ThreadCommon::generateSignal(const uint8_t signalNumber)
 {
 	auto& threadControlBlock = getThreadControlBlock();

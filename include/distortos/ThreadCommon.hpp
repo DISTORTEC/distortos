@@ -62,6 +62,12 @@ public:
 			scheduler::ThreadGroupControlBlock* threadGroupControlBlock, SignalsReceiver* signalsReceiver);
 
 	/**
+	 * \brief ThreadCommon's destructor
+	 */
+
+	virtual ~ThreadCommon() override;
+
+	/**
 	 * \brief Generates signal for thread.
 	 *
 	 * Similar to pthread_kill() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_kill.html
