@@ -79,6 +79,11 @@ SchedulingPolicy ThreadCommon::getSchedulingPolicy() const
 	return getThreadControlBlock().getSchedulingPolicy();
 }
 
+scheduler::ThreadControlBlock::State ThreadCommon::getState() const
+{
+	return getThreadControlBlock().getState();
+}
+
 /*---------------------------------------------------------------------------------------------------------------------+
 | protected functions
 +---------------------------------------------------------------------------------------------------------------------*/

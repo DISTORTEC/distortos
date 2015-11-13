@@ -38,11 +38,6 @@ Thread::~Thread()
 
 }
 
-scheduler::ThreadControlBlock::State Thread::getState() const
-{
-	return getThreadControlBlock().getState();
-}
-
 int Thread::join()
 {
 	if (&getThreadControlBlock() == &scheduler::getScheduler().getCurrentThreadControlBlock())

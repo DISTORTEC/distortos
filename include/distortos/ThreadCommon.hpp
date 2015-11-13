@@ -104,6 +104,12 @@ public:
 
 	virtual SchedulingPolicy getSchedulingPolicy() const override;
 
+	/**
+	 * \return current state of thread
+	 */
+
+	virtual scheduler::ThreadControlBlock::State getState() const override;
+
 protected:
 
 	/**

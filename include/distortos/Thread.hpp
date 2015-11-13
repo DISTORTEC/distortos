@@ -93,7 +93,7 @@ public:
 	 * \return current state of thread
 	 */
 
-	virtual scheduler::ThreadControlBlock::State getState() const;
+	virtual scheduler::ThreadControlBlock::State getState() const = 0;
 
 	/**
 	 * \brief Waits for thread termination.
