@@ -64,6 +64,12 @@ public:
 			scheduler::ThreadGroupControlBlock* threadGroupControlBlock, SignalsReceiver* signalsReceiver);
 
 	/**
+	 * \brief Thread's destructor
+	 */
+
+	virtual ~Thread();
+
+	/**
 	 * \brief Generates signal for thread.
 	 *
 	 * Similar to pthread_kill() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_kill.html
@@ -190,14 +196,6 @@ public:
 	Thread& operator=(Thread&&) = delete;
 
 protected:
-
-	/**
-	 * \brief Thread's destructor
-	 *
-	 * \note Polymorphic objects of Thread type must not be deleted via pointer/reference
-	 */
-
-	~Thread();
 
 	/**
 	 * \return reference to internal ThreadControlBlock object

@@ -47,6 +47,11 @@ Thread::Thread(architecture::Stack&& stack, const uint8_t priority, const Schedu
 
 }
 
+Thread::~Thread()
+{
+
+}
+
 int Thread::generateSignal(const uint8_t signalNumber)
 {
 	const auto signalsReceiverControlBlock = threadControlBlock_.getSignalsReceiverControlBlock();
@@ -126,11 +131,6 @@ int Thread::start()
 /*---------------------------------------------------------------------------------------------------------------------+
 | protected functions
 +---------------------------------------------------------------------------------------------------------------------*/
-
-Thread::~Thread()
-{
-
-}
 
 scheduler::ThreadControlBlock& Thread::getThreadControlBlock()
 {
