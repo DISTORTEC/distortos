@@ -74,6 +74,11 @@ uint8_t ThreadCommon::getPriority() const
 	return getThreadControlBlock().getPriority();
 }
 
+SchedulingPolicy ThreadCommon::getSchedulingPolicy() const
+{
+	return getThreadControlBlock().getSchedulingPolicy();
+}
+
 /*---------------------------------------------------------------------------------------------------------------------+
 | protected functions
 +---------------------------------------------------------------------------------------------------------------------*/

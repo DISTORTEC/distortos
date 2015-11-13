@@ -38,11 +38,6 @@ Thread::~Thread()
 
 }
 
-SchedulingPolicy Thread::getSchedulingPolicy() const
-{
-	return getThreadControlBlock().getSchedulingPolicy();
-}
-
 scheduler::ThreadControlBlock::State Thread::getState() const
 {
 	return getThreadControlBlock().getState();

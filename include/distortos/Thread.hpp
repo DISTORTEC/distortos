@@ -87,7 +87,7 @@ public:
 	 * \return scheduling policy of the thread
 	 */
 
-	virtual SchedulingPolicy getSchedulingPolicy() const;
+	virtual SchedulingPolicy getSchedulingPolicy() const = 0;
 
 	/**
 	 * \return current state of thread

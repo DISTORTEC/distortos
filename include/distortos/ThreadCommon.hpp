@@ -98,6 +98,12 @@ public:
 
 	virtual uint8_t getPriority() const override;
 
+	/**
+	 * \return scheduling policy of the thread
+	 */
+
+	virtual SchedulingPolicy getSchedulingPolicy() const override;
+
 protected:
 
 	/**
