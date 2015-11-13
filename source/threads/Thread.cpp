@@ -128,6 +128,11 @@ scheduler::ThreadControlBlock& Thread::getThreadControlBlock()
 	return threadControlBlock_;
 }
 
+const scheduler::ThreadControlBlock& Thread::getThreadControlBlock() const
+{
+	return threadControlBlock_;
+}
+
 /*---------------------------------------------------------------------------------------------------------------------+
 | protected static functions
 +---------------------------------------------------------------------------------------------------------------------*/

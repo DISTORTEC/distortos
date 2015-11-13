@@ -186,6 +186,12 @@ protected:
 	virtual scheduler::ThreadControlBlock& getThreadControlBlock();
 
 	/**
+	 * \return const reference to internal ThreadControlBlock object
+	 */
+
+	virtual const scheduler::ThreadControlBlock& getThreadControlBlock() const;
+
+	/**
 	 * \brief Thread runner function - entry point of threads.
 	 *
 	 * After return from actual thread function, thread is terminated, so this function never returns.
