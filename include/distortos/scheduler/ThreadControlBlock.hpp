@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-11-11
+ * \date 2015-11-13
  */
 
 #ifndef INCLUDE_DISTORTOS_SCHEDULER_THREADCONTROLBLOCK_HPP_
@@ -21,6 +21,7 @@
 #include "distortos/architecture/Stack.hpp"
 
 #include "distortos/SchedulingPolicy.hpp"
+#include "distortos/ThreadState.hpp"
 
 #include "estd/TypeErasedFunctor.hpp"
 
@@ -46,31 +47,6 @@ class ThreadGroupControlBlock;
 class ThreadControlBlock
 {
 public:
-
-	/// state of the thread
-	enum class State : uint8_t
-	{
-		/// state in which thread is created, before being added to Scheduler
-		New,
-		/// thread is runnable
-		Runnable,
-		/// thread is terminated
-		Terminated,
-		/// thread is sleeping
-		Sleeping,
-		/// thread is blocked on Semaphore
-		BlockedOnSemaphore,
-		/// thread is suspended
-		Suspended,
-		/// thread is blocked on Mutex
-		BlockedOnMutex,
-		/// thread is blocked on ConditionVariable
-		BlockedOnConditionVariable,
-		/// thread is waiting for signal
-		WaitingForSignal,
-		/// thread is blocked on OnceFlag
-		BlockedOnOnceFlag
-	};
 
 	/// reason of thread unblocking
 	enum class UnblockReason : uint8_t
@@ -248,7 +224,7 @@ public:
 	 * \return current state of object
 	 */
 
-	State getState() const
+	ThreadState getState() const
 	{
 		return state_;
 	}
@@ -318,7 +294,7 @@ public:
 	 * \param [in] state is the new state of object
 	 */
 
-	void setState(const State state)
+	void setState(const ThreadState state)
 	{
 		state_ = state;
 	}
@@ -439,7 +415,7 @@ private:
 	SchedulingPolicy schedulingPolicy_;
 
 	/// current state of object
-	State state_;
+	ThreadState state_;
 };
 
 }	// namespace scheduler

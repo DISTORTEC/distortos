@@ -14,9 +14,9 @@
 #ifndef INCLUDE_DISTORTOS_THREAD_HPP_
 #define INCLUDE_DISTORTOS_THREAD_HPP_
 
+#include "distortos/SchedulingPolicy.hpp"
 #include "distortos/SignalSet.hpp"
-
-#include "distortos/scheduler/ThreadControlBlock.hpp"
+#include "distortos/ThreadState.hpp"
 
 #include <csignal>
 
@@ -85,7 +85,7 @@ public:
 	 * \return current state of thread
 	 */
 
-	virtual scheduler::ThreadControlBlock::State getState() const = 0;
+	virtual ThreadState getState() const = 0;
 
 	/**
 	 * \brief Waits for thread termination.

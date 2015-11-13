@@ -87,7 +87,7 @@ SchedulingPolicy ThreadCommon::getSchedulingPolicy() const
 	return getThreadControlBlock().getSchedulingPolicy();
 }
 
-scheduler::ThreadControlBlock::State ThreadCommon::getState() const
+ThreadState ThreadCommon::getState() const
 {
 	return getThreadControlBlock().getState();
 }
@@ -124,7 +124,7 @@ void ThreadCommon::setSchedulingPolicy(const SchedulingPolicy schedulingPolicy)
 
 int ThreadCommon::start()
 {
-	if (getState() != scheduler::ThreadControlBlock::State::New)
+	if (getState() != ThreadState::New)
 		return EINVAL;
 
 	return scheduler::getScheduler().add(getThreadControlBlock());

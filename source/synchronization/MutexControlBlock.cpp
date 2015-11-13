@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-10-18
+ * \date 2015-11-13
  */
 
 #include "distortos/synchronization/MutexControlBlock.hpp"
@@ -84,8 +84,7 @@ private:
 +---------------------------------------------------------------------------------------------------------------------*/
 
 MutexControlBlock::MutexControlBlock(const Protocol protocol, const uint8_t priorityCeiling) :
-		blockedList_{scheduler::getScheduler().getThreadControlBlockListAllocator(),
-				scheduler::ThreadControlBlock::State::BlockedOnMutex},
+		blockedList_{scheduler::getScheduler().getThreadControlBlockListAllocator(), ThreadState::BlockedOnMutex},
 		list_{},
 		iterator_{},
 		owner_{},

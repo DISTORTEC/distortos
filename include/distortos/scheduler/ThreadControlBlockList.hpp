@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-10-18
+ * \date 2015-11-13
  */
 
 #ifndef INCLUDE_DISTORTOS_SCHEDULER_THREADCONTROLBLOCKLIST_HPP_
@@ -73,8 +73,7 @@ public:
 	 * \param [in] state is the state of ThreadControlBlock objects kept in this list
 	 */
 
-	constexpr ThreadControlBlockList(const ThreadControlBlockListAllocator& allocator,
-			const ThreadControlBlock::State state) :
+	constexpr ThreadControlBlockList(const ThreadControlBlockListAllocator& allocator, const ThreadState state) :
 			Base{allocator},
 			state_{state}
 	{
@@ -118,7 +117,7 @@ public:
 private:
 
 	/// state of ThreadControlBlock objects kept in this list
-	const ThreadControlBlock::State state_;
+	const ThreadState state_;
 };
 
 template<typename... Args>

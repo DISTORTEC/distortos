@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-11-11
+ * \date 2015-11-13
  */
 
 #include "distortos/scheduler/Scheduler.hpp"
@@ -110,8 +110,8 @@ Scheduler::Scheduler() :
 		mutexControlBlockListAllocatorPool_{},
 		threadControlBlockListAllocatorPool_{},
 		threadControlBlockListAllocator_{threadControlBlockListAllocatorPool_},
-		runnableList_{threadControlBlockListAllocator_, ThreadControlBlock::State::Runnable},
-		suspendedList_{threadControlBlockListAllocator_, ThreadControlBlock::State::Suspended},
+		runnableList_{threadControlBlockListAllocator_, ThreadState::Runnable},
+		suspendedList_{threadControlBlockListAllocator_, ThreadState::Suspended},
 		softwareTimerControlBlockSupervisor_{},
 		contextSwitchCount_{},
 		tickCount_{}
@@ -223,7 +223,7 @@ int Scheduler::remove(void (Thread::*terminationHook)())
 {
 	{
 		architecture::InterruptMaskingLock interruptMaskingLock;
-		ThreadControlBlockList terminatedList {threadControlBlockListAllocator_, ThreadControlBlock::State::Terminated};
+		ThreadControlBlockList terminatedList {threadControlBlockListAllocator_, ThreadState::Terminated};
 
 		const auto ret = blockInternal(terminatedList, currentThreadControlBlock_, {});
 		if (ret != 0)

@@ -118,7 +118,7 @@ public:
 	 * \return current state of thread
 	 */
 
-	virtual scheduler::ThreadControlBlock::State getState() const override;
+	virtual ThreadState getState() const override;
 
 	/**
 	 * \brief Waits for thread termination.
