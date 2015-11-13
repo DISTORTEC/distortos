@@ -8,13 +8,13 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-11-11
+ * \date 2015-11-13
  */
 
 #ifndef INCLUDE_DISTORTOS_SCHEDULER_MAINTHREAD_HPP_
 #define INCLUDE_DISTORTOS_SCHEDULER_MAINTHREAD_HPP_
 
-#include "distortos/Thread.hpp"
+#include "distortos/ThreadCommon.hpp"
 
 namespace distortos
 {
@@ -23,7 +23,7 @@ namespace scheduler
 {
 
 /// MainThread class is a Thread for main()
-class MainThread : public Thread
+class MainThread : public ThreadCommon
 {
 public:
 
