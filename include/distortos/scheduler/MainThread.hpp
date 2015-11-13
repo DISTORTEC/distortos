@@ -38,7 +38,7 @@ public:
 
 	MainThread(uint8_t priority, ThreadGroupControlBlock& threadGroupControlBlock, SignalsReceiver* signalsReceiver);
 
-	using Thread::getThreadControlBlock;
+	using ThreadCommon::getThreadControlBlock;
 
 private:
 

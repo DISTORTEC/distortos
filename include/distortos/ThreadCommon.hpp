@@ -188,13 +188,13 @@ protected:
 	 * \return reference to internal ThreadControlBlock object
 	 */
 
-	virtual scheduler::ThreadControlBlock& getThreadControlBlock() override;
+	scheduler::ThreadControlBlock& getThreadControlBlock();
 
 	/**
 	 * \return const reference to internal ThreadControlBlock object
 	 */
 
-	virtual const scheduler::ThreadControlBlock& getThreadControlBlock() const override;
+	const scheduler::ThreadControlBlock& getThreadControlBlock() const;
 
 private:
 
