@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-11-11
+ * \date 2015-11-13
  */
 
 #ifndef INCLUDE_DISTORTOS_THREAD_HPP_
@@ -86,10 +86,7 @@ public:
 	 * \return effective priority of thread
 	 */
 
-	uint8_t getEffectivePriority() const
-	{
-		return threadControlBlock_.getEffectivePriority();
-	}
+	uint8_t getEffectivePriority() const;
 
 	/**
 	 * \brief Gets set of currently pending signals.

@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-11-11
+ * \date 2015-11-13
  */
 
 #include "distortos/Thread.hpp"
@@ -54,6 +54,11 @@ int Thread::generateSignal(const uint8_t signalNumber)
 		return ENOTSUP;
 
 	return signalsReceiverControlBlock->generateSignal(signalNumber, threadControlBlock_);
+}
+
+uint8_t Thread::getEffectivePriority() const
+{
+	return threadControlBlock_.getEffectivePriority();
 }
 
 SignalSet Thread::getPendingSignalSet() const
