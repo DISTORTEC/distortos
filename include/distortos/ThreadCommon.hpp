@@ -74,6 +74,12 @@ public:
 
 	virtual int generateSignal(uint8_t signalNumber) override;
 
+	/**
+	 * \return effective priority of thread
+	 */
+
+	virtual uint8_t getEffectivePriority() const override;
+
 protected:
 
 	/**

@@ -40,11 +40,6 @@ Thread::~Thread()
 
 }
 
-uint8_t Thread::getEffectivePriority() const
-{
-	return getThreadControlBlock().getEffectivePriority();
-}
-
 SignalSet Thread::getPendingSignalSet() const
 {
 	const auto signalsReceiverControlBlock = getThreadControlBlock().getSignalsReceiverControlBlock();

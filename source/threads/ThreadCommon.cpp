@@ -52,6 +52,11 @@ int ThreadCommon::generateSignal(const uint8_t signalNumber)
 	return signalsReceiverControlBlock->generateSignal(signalNumber, threadControlBlock);
 }
 
+uint8_t ThreadCommon::getEffectivePriority() const
+{
+	return getThreadControlBlock().getEffectivePriority();
+}
+
 /*---------------------------------------------------------------------------------------------------------------------+
 | protected functions
 +---------------------------------------------------------------------------------------------------------------------*/

@@ -63,7 +63,7 @@ public:
 	 * \return effective priority of thread
 	 */
 
-	virtual uint8_t getEffectivePriority() const;
+	virtual uint8_t getEffectivePriority() const = 0;
 
 	/**
 	 * \brief Gets set of currently pending signals.
