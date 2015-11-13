@@ -29,15 +29,6 @@ namespace distortos
 | public functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-Thread::Thread(StackStorageUniquePointer&& stackStorageUniquePointer, const size_t size, const uint8_t priority,
-		const SchedulingPolicy schedulingPolicy, scheduler::ThreadGroupControlBlock* const threadGroupControlBlock,
-		SignalsReceiver* const signalsReceiver) :
-		Thread{{std::move(stackStorageUniquePointer), size, threadRunner, *this}, priority, schedulingPolicy,
-				threadGroupControlBlock, signalsReceiver}
-{
-
-}
-
 Thread::Thread(architecture::Stack&& stack, const uint8_t priority, const SchedulingPolicy schedulingPolicy,
 		scheduler::ThreadGroupControlBlock* const threadGroupControlBlock, SignalsReceiver* const signalsReceiver) :
 		threadControlBlock_{std::move(stack), priority, schedulingPolicy, threadGroupControlBlock, signalsReceiver,
