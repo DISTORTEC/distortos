@@ -14,8 +14,6 @@
 #ifndef INCLUDE_DISTORTOS_THREAD_HPP_
 #define INCLUDE_DISTORTOS_THREAD_HPP_
 
-#include "distortos/scheduler/ThreadControlBlock.hpp"
-
 #include "distortos/Semaphore.hpp"
 #include "distortos/SignalSet.hpp"
 
