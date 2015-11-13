@@ -110,10 +110,7 @@ public:
 	 * \return scheduling policy of the thread
 	 */
 
-	SchedulingPolicy getSchedulingPolicy() const
-	{
-		return threadControlBlock_.getSchedulingPolicy();
-	}
+	SchedulingPolicy getSchedulingPolicy() const;
 
 	/**
 	 * \return current state of thread

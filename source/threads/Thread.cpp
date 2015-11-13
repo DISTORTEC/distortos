@@ -76,6 +76,11 @@ uint8_t Thread::getPriority() const
 	return threadControlBlock_.getPriority();
 }
 
+SchedulingPolicy Thread::getSchedulingPolicy() const
+{
+	return threadControlBlock_.getSchedulingPolicy();
+}
+
 int Thread::join()
 {
 	if (&threadControlBlock_ == &scheduler::getScheduler().getCurrentThreadControlBlock())
