@@ -203,8 +203,6 @@ protected:
 
 	scheduler::ThreadControlBlock& getThreadControlBlock();
 
-private:
-
 	/**
 	 * \brief Thread runner function - entry point of threads.
 	 *
@@ -214,6 +212,8 @@ private:
 	 */
 
 	static void threadRunner(Thread& thread) __attribute__ ((noreturn));
+
+private:
 
 	/**
 	 * \brief "Run" function of thread

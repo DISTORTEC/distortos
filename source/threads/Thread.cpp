@@ -138,7 +138,7 @@ scheduler::ThreadControlBlock& Thread::getThreadControlBlock()
 }
 
 /*---------------------------------------------------------------------------------------------------------------------+
-| private static functions
+| protected static functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
 void Thread::threadRunner(Thread& thread)
