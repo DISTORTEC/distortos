@@ -29,10 +29,7 @@ namespace distortos
 | public functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-Thread::Thread(architecture::Stack&& stack, const uint8_t priority, const SchedulingPolicy schedulingPolicy,
-		scheduler::ThreadGroupControlBlock* const threadGroupControlBlock, SignalsReceiver* const signalsReceiver) :
-		threadControlBlock_{std::move(stack), priority, schedulingPolicy, threadGroupControlBlock, signalsReceiver,
-				*this},
+Thread::Thread() :
 		joinSemaphore_{0}
 {
 
@@ -119,20 +116,6 @@ int Thread::start()
 		return EINVAL;
 
 	return scheduler::getScheduler().add(getThreadControlBlock());
-}
-
-/*---------------------------------------------------------------------------------------------------------------------+
-| protected functions
-+---------------------------------------------------------------------------------------------------------------------*/
-
-scheduler::ThreadControlBlock& Thread::getThreadControlBlock()
-{
-	return threadControlBlock_;
-}
-
-const scheduler::ThreadControlBlock& Thread::getThreadControlBlock() const
-{
-	return threadControlBlock_;
 }
 
 /*---------------------------------------------------------------------------------------------------------------------+

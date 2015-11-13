@@ -31,9 +31,25 @@ ThreadCommon::ThreadCommon(StackStorageUniquePointer&& stackStorageUniquePointer
 
 ThreadCommon::ThreadCommon(architecture::Stack&& stack, const uint8_t priority, const SchedulingPolicy schedulingPolicy,
 		scheduler::ThreadGroupControlBlock* const threadGroupControlBlock, SignalsReceiver* const signalsReceiver) :
-		Thread{std::move(stack), priority, schedulingPolicy, threadGroupControlBlock, signalsReceiver}
+		Thread{},
+		threadControlBlock_{std::move(stack), priority, schedulingPolicy, threadGroupControlBlock, signalsReceiver,
+				*this}
 {
 
+}
+
+/*---------------------------------------------------------------------------------------------------------------------+
+| protected functions
++---------------------------------------------------------------------------------------------------------------------*/
+
+scheduler::ThreadControlBlock& ThreadCommon::getThreadControlBlock()
+{
+	return threadControlBlock_;
+}
+
+const scheduler::ThreadControlBlock& ThreadCommon::getThreadControlBlock() const
+{
+	return threadControlBlock_;
 }
 
 }	// namespace distortos

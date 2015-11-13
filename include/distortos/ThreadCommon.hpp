@@ -56,6 +56,25 @@ public:
 
 	ThreadCommon(architecture::Stack&& stack, uint8_t priority, SchedulingPolicy schedulingPolicy,
 			scheduler::ThreadGroupControlBlock* threadGroupControlBlock, SignalsReceiver* signalsReceiver);
+
+protected:
+
+	/**
+	 * \return reference to internal ThreadControlBlock object
+	 */
+
+	virtual scheduler::ThreadControlBlock& getThreadControlBlock() override;
+
+	/**
+	 * \return const reference to internal ThreadControlBlock object
+	 */
+
+	virtual const scheduler::ThreadControlBlock& getThreadControlBlock() const override;
+
+private:
+
+	/// internal ThreadControlBlock object
+	scheduler::ThreadControlBlock threadControlBlock_;
 };
 
 }	// namespace distortos
