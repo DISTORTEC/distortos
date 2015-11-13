@@ -40,16 +40,6 @@ Thread::~Thread()
 
 }
 
-int Thread::generateSignal(const uint8_t signalNumber)
-{
-	auto& threadControlBlock = getThreadControlBlock();
-	const auto signalsReceiverControlBlock = threadControlBlock.getSignalsReceiverControlBlock();
-	if (signalsReceiverControlBlock == nullptr)
-		return ENOTSUP;
-
-	return signalsReceiverControlBlock->generateSignal(signalNumber, threadControlBlock);
-}
-
 uint8_t Thread::getEffectivePriority() const
 {
 	return getThreadControlBlock().getEffectivePriority();

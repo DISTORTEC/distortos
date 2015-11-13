@@ -57,7 +57,7 @@ public:
 	 * - ENOTSUP - reception of signals is disabled for this thread;
 	 */
 
-	virtual int generateSignal(const uint8_t signalNumber);
+	virtual int generateSignal(uint8_t signalNumber) = 0;
 
 	/**
 	 * \return effective priority of thread

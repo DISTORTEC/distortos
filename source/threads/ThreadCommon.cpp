@@ -13,6 +13,10 @@
 
 #include "distortos/ThreadCommon.hpp"
 
+#include "distortos/synchronization/SignalsReceiverControlBlock.hpp"
+
+#include <cerrno>
+
 namespace distortos
 {
 
@@ -36,6 +40,16 @@ ThreadCommon::ThreadCommon(architecture::Stack&& stack, const uint8_t priority, 
 				*this}
 {
 
+}
+
+int ThreadCommon::generateSignal(const uint8_t signalNumber)
+{
+	auto& threadControlBlock = getThreadControlBlock();
+	const auto signalsReceiverControlBlock = threadControlBlock.getSignalsReceiverControlBlock();
+	if (signalsReceiverControlBlock == nullptr)
+		return ENOTSUP;
+
+	return signalsReceiverControlBlock->generateSignal(signalNumber, threadControlBlock);
 }
 
 /*---------------------------------------------------------------------------------------------------------------------+
