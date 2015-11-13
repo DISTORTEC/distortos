@@ -99,6 +99,11 @@ void ThreadCommon::setPriority(const uint8_t priority, const bool alwaysBehind)
 	getThreadControlBlock().setPriority(priority, alwaysBehind);
 }
 
+void ThreadCommon::setSchedulingPolicy(const SchedulingPolicy schedulingPolicy)
+{
+	getThreadControlBlock().setSchedulingPolicy(schedulingPolicy);
+}
+
 /*---------------------------------------------------------------------------------------------------------------------+
 | protected functions
 +---------------------------------------------------------------------------------------------------------------------*/

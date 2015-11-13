@@ -46,11 +46,6 @@ int Thread::join()
 	return ret;
 }
 
-void Thread::setSchedulingPolicy(const SchedulingPolicy schedulingPolicy)
-{
-	getThreadControlBlock().setSchedulingPolicy(schedulingPolicy);
-}
-
 int Thread::start()
 {
 	if (getState() != scheduler::ThreadControlBlock::State::New)

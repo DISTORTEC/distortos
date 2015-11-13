@@ -143,6 +143,12 @@ public:
 
 	virtual void setPriority(uint8_t priority, bool alwaysBehind = {}) override;
 
+	/**
+	 * param [in] schedulingPolicy is the new scheduling policy of the thread
+	 */
+
+	virtual void setSchedulingPolicy(SchedulingPolicy schedulingPolicy) override;
+
 protected:
 
 	/**

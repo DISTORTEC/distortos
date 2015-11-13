@@ -149,7 +149,7 @@ public:
 	 * param [in] schedulingPolicy is the new scheduling policy of the thread
 	 */
 
-	virtual void setSchedulingPolicy(SchedulingPolicy schedulingPolicy);
+	virtual void setSchedulingPolicy(SchedulingPolicy schedulingPolicy) = 0;
 
 	/**
 	 * \brief Starts the thread.
