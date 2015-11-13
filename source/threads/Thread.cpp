@@ -81,6 +81,11 @@ SchedulingPolicy Thread::getSchedulingPolicy() const
 	return threadControlBlock_.getSchedulingPolicy();
 }
 
+scheduler::ThreadControlBlock::State Thread::getState() const
+{
+	return threadControlBlock_.getState();
+}
+
 int Thread::join()
 {
 	if (&threadControlBlock_ == &scheduler::getScheduler().getCurrentThreadControlBlock())

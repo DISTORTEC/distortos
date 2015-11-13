@@ -116,10 +116,7 @@ public:
 	 * \return current state of thread
 	 */
 
-	scheduler::ThreadControlBlock::State getState() const
-	{
-		return threadControlBlock_.getState();
-	}
+	scheduler::ThreadControlBlock::State getState() const;
 
 	/**
 	 * \brief Waits for thread termination.
