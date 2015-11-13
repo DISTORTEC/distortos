@@ -45,21 +45,22 @@ Thread::~Thread()
 
 int Thread::generateSignal(const uint8_t signalNumber)
 {
-	const auto signalsReceiverControlBlock = threadControlBlock_.getSignalsReceiverControlBlock();
+	auto& threadControlBlock = getThreadControlBlock();
+	const auto signalsReceiverControlBlock = threadControlBlock.getSignalsReceiverControlBlock();
 	if (signalsReceiverControlBlock == nullptr)
 		return ENOTSUP;
 
-	return signalsReceiverControlBlock->generateSignal(signalNumber, threadControlBlock_);
+	return signalsReceiverControlBlock->generateSignal(signalNumber, threadControlBlock);
 }
 
 uint8_t Thread::getEffectivePriority() const
 {
-	return threadControlBlock_.getEffectivePriority();
+	return getThreadControlBlock().getEffectivePriority();
 }
 
 SignalSet Thread::getPendingSignalSet() const
 {
-	const auto signalsReceiverControlBlock = threadControlBlock_.getSignalsReceiverControlBlock();
+	const auto signalsReceiverControlBlock = getThreadControlBlock().getSignalsReceiverControlBlock();
 	if (signalsReceiverControlBlock == nullptr)
 		return SignalSet{SignalSet::empty};
 
@@ -69,22 +70,22 @@ SignalSet Thread::getPendingSignalSet() const
 
 uint8_t Thread::getPriority() const
 {
-	return threadControlBlock_.getPriority();
+	return getThreadControlBlock().getPriority();
 }
 
 SchedulingPolicy Thread::getSchedulingPolicy() const
 {
-	return threadControlBlock_.getSchedulingPolicy();
+	return getThreadControlBlock().getSchedulingPolicy();
 }
 
 scheduler::ThreadControlBlock::State Thread::getState() const
 {
-	return threadControlBlock_.getState();
+	return getThreadControlBlock().getState();
 }
 
 int Thread::join()
 {
-	if (&threadControlBlock_ == &scheduler::getScheduler().getCurrentThreadControlBlock())
+	if (&getThreadControlBlock() == &scheduler::getScheduler().getCurrentThreadControlBlock())
 		return EDEADLK;
 
 	int ret;
@@ -94,21 +95,22 @@ int Thread::join()
 
 int Thread::queueSignal(const uint8_t signalNumber, const sigval value)
 {
-	const auto signalsReceiverControlBlock = threadControlBlock_.getSignalsReceiverControlBlock();
+	auto& threadControlBlock = getThreadControlBlock();
+	const auto signalsReceiverControlBlock = threadControlBlock.getSignalsReceiverControlBlock();
 	if (signalsReceiverControlBlock == nullptr)
 		return ENOTSUP;
 
-	return signalsReceiverControlBlock->queueSignal(signalNumber, value, threadControlBlock_);
+	return signalsReceiverControlBlock->queueSignal(signalNumber, value, threadControlBlock);
 }
 
 void Thread::setPriority(const uint8_t priority, const bool alwaysBehind)
 {
-	threadControlBlock_.setPriority(priority, alwaysBehind);
+	getThreadControlBlock().setPriority(priority, alwaysBehind);
 }
 
 void Thread::setSchedulingPolicy(const SchedulingPolicy schedulingPolicy)
 {
-	threadControlBlock_.setSchedulingPolicy(schedulingPolicy);
+	getThreadControlBlock().setSchedulingPolicy(schedulingPolicy);
 }
 
 int Thread::start()
@@ -116,7 +118,7 @@ int Thread::start()
 	if (getState() != scheduler::ThreadControlBlock::State::New)
 		return EINVAL;
 
-	return scheduler::getScheduler().add(threadControlBlock_);
+	return scheduler::getScheduler().add(getThreadControlBlock());
 }
 
 /*---------------------------------------------------------------------------------------------------------------------+
@@ -152,7 +154,7 @@ void Thread::threadRunner(Thread& thread)
 void Thread::terminationHook()
 {
 	joinSemaphore_.post();
-	threadControlBlock_.setList(nullptr);
+	getThreadControlBlock().setList(nullptr);
 }
 
 }	// namespace distortos
