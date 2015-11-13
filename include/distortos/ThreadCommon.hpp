@@ -14,6 +14,7 @@
 #ifndef INCLUDE_DISTORTOS_THREADCOMMON_HPP_
 #define INCLUDE_DISTORTOS_THREADCOMMON_HPP_
 
+#include "distortos/Semaphore.hpp"
 #include "distortos/Thread.hpp"
 
 namespace distortos
@@ -114,6 +115,23 @@ public:
 	virtual scheduler::ThreadControlBlock::State getState() const override;
 
 	/**
+	 * \brief Waits for thread termination.
+	 *
+	 * Similar to std::thread::join() - http://en.cppreference.com/w/cpp/thread/thread/join
+	 * Similar to POSIX pthread_join() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_join.html
+	 *
+	 * Blocks current thread until this thread finishes its execution. The results of multiple simultaneous calls to
+	 * join() on the same target thread are undefined.
+	 *
+	 * \return 0 on success, error code otherwise:
+	 * - EDEADLK - deadlock condition was detected,
+	 * - EINVAL - this thread is not joinable,
+	 * - ...
+	 */
+
+	virtual int join() override;
+
+	/**
 	 * \brief Queues signal for thread.
 	 *
 	 * Similar to sigqueue() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/sigqueue.html
@@ -180,8 +198,19 @@ protected:
 
 private:
 
+	/**
+	 * \brief Termination hook function of thread
+	 *
+	 * This function is called after run() completes, from Scheduler::remove().
+	 */
+
+	virtual void terminationHook() override;
+
 	/// internal ThreadControlBlock object
 	scheduler::ThreadControlBlock threadControlBlock_;
+
+	/// semaphore used by join()
+	Semaphore joinSemaphore_;
 };
 
 }	// namespace distortos

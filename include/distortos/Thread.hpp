@@ -14,30 +14,25 @@
 #ifndef INCLUDE_DISTORTOS_THREAD_HPP_
 #define INCLUDE_DISTORTOS_THREAD_HPP_
 
-#include "distortos/Semaphore.hpp"
 #include "distortos/SignalSet.hpp"
+
+#include "distortos/scheduler/ThreadControlBlock.hpp"
 
 #include <csignal>
 
 namespace distortos
 {
 
-/// Thread class is a base for threads
+/// Thread class is a pure abstract interface for threads
 class Thread
 {
 public:
 
 	/**
-	 * \brief Thread's constructor
-	 */
-
-	Thread();
-
-	/**
 	 * \brief Thread's destructor
 	 */
 
-	virtual ~Thread();
+	virtual ~Thread() = 0;
 
 	/**
 	 * \brief Generates signal for thread.
@@ -107,7 +102,7 @@ public:
 	 * - ...
 	 */
 
-	virtual int join();
+	virtual int join() = 0;
 
 	/**
 	 * \brief Queues signal for thread.
@@ -160,6 +155,7 @@ public:
 
 	virtual int start() = 0;
 
+	Thread() = default;
 	Thread(const Thread&) = delete;
 	Thread(Thread&&) = default;
 	const Thread& operator=(const Thread&) = delete;
@@ -205,10 +201,7 @@ private:
 	 * This function is called after run() completes, from Scheduler::remove().
 	 */
 
-	virtual void terminationHook();
-
-	/// semaphore used by join()
-	Semaphore joinSemaphore_;
+	virtual void terminationHook() = 0;
 };
 
 }	// namespace distortos

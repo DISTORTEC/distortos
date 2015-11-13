@@ -40,9 +40,9 @@ ThreadCommon::ThreadCommon(StackStorageUniquePointer&& stackStorageUniquePointer
 
 ThreadCommon::ThreadCommon(architecture::Stack&& stack, const uint8_t priority, const SchedulingPolicy schedulingPolicy,
 		scheduler::ThreadGroupControlBlock* const threadGroupControlBlock, SignalsReceiver* const signalsReceiver) :
-		Thread{},
 		threadControlBlock_{std::move(stack), priority, schedulingPolicy, threadGroupControlBlock, signalsReceiver,
-				*this}
+				*this},
+		joinSemaphore_{0}
 {
 
 }
@@ -87,6 +87,16 @@ scheduler::ThreadControlBlock::State ThreadCommon::getState() const
 	return getThreadControlBlock().getState();
 }
 
+int ThreadCommon::join()
+{
+	if (&getThreadControlBlock() == &scheduler::getScheduler().getCurrentThreadControlBlock())
+		return EDEADLK;
+
+	int ret;
+	while ((ret = joinSemaphore_.wait()) == EINTR);
+	return ret;
+}
+
 int ThreadCommon::queueSignal(const uint8_t signalNumber, const sigval value)
 {
 	auto& threadControlBlock = getThreadControlBlock();
@@ -127,6 +137,16 @@ scheduler::ThreadControlBlock& ThreadCommon::getThreadControlBlock()
 const scheduler::ThreadControlBlock& ThreadCommon::getThreadControlBlock() const
 {
 	return threadControlBlock_;
+}
+
+/*---------------------------------------------------------------------------------------------------------------------+
+| private functions
++---------------------------------------------------------------------------------------------------------------------*/
+
+void ThreadCommon::terminationHook()
+{
+	joinSemaphore_.post();
+	getThreadControlBlock().setList(nullptr);
 }
 
 }	// namespace distortos
