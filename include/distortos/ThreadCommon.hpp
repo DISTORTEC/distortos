@@ -80,6 +80,18 @@ public:
 
 	virtual uint8_t getEffectivePriority() const override;
 
+	/**
+	 * \brief Gets set of currently pending signals.
+	 *
+	 * Similar to sigpending() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/sigpending.html
+	 *
+	 * This function shall return the set of signals that are blocked from delivery and are pending on the thread.
+	 *
+	 * \return set of currently pending signals
+	 */
+
+	virtual SignalSet getPendingSignalSet() const override;
+
 protected:
 
 	/**

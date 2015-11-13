@@ -13,6 +13,8 @@
 
 #include "distortos/ThreadCommon.hpp"
 
+#include "distortos/architecture/InterruptMaskingLock.hpp"
+
 #include "distortos/synchronization/SignalsReceiverControlBlock.hpp"
 
 #include <cerrno>
@@ -55,6 +57,16 @@ int ThreadCommon::generateSignal(const uint8_t signalNumber)
 uint8_t ThreadCommon::getEffectivePriority() const
 {
 	return getThreadControlBlock().getEffectivePriority();
+}
+
+SignalSet ThreadCommon::getPendingSignalSet() const
+{
+	const auto signalsReceiverControlBlock = getThreadControlBlock().getSignalsReceiverControlBlock();
+	if (signalsReceiverControlBlock == nullptr)
+		return SignalSet{SignalSet::empty};
+
+	architecture::InterruptMaskingLock interruptMaskingLock;
+	return signalsReceiverControlBlock->getPendingSignalSet();
 }
 
 /*---------------------------------------------------------------------------------------------------------------------+

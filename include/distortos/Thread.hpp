@@ -75,7 +75,7 @@ public:
 	 * \return set of currently pending signals
 	 */
 
-	virtual SignalSet getPendingSignalSet() const;
+	virtual SignalSet getPendingSignalSet() const = 0;
 
 	/**
 	 * \return priority of thread

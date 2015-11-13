@@ -13,8 +13,6 @@
 
 #include "distortos/Thread.hpp"
 
-#include "distortos/architecture/InterruptMaskingLock.hpp"
-
 #include "distortos/scheduler/getScheduler.hpp"
 #include "distortos/scheduler/Scheduler.hpp"
 
@@ -38,16 +36,6 @@ Thread::Thread() :
 Thread::~Thread()
 {
 
-}
-
-SignalSet Thread::getPendingSignalSet() const
-{
-	const auto signalsReceiverControlBlock = getThreadControlBlock().getSignalsReceiverControlBlock();
-	if (signalsReceiverControlBlock == nullptr)
-		return SignalSet{SignalSet::empty};
-
-	architecture::InterruptMaskingLock interruptMaskingLock;
-	return signalsReceiverControlBlock->getPendingSignalSet();
 }
 
 uint8_t Thread::getPriority() const
