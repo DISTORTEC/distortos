@@ -84,13 +84,13 @@ public:
 	 * - ENOTSUP - reception of signals is disabled for this thread;
 	 */
 
-	int generateSignal(const uint8_t signalNumber);
+	virtual int generateSignal(const uint8_t signalNumber);
 
 	/**
 	 * \return effective priority of thread
 	 */
 
-	uint8_t getEffectivePriority() const;
+	virtual uint8_t getEffectivePriority() const;
 
 	/**
 	 * \brief Gets set of currently pending signals.
@@ -102,25 +102,25 @@ public:
 	 * \return set of currently pending signals
 	 */
 
-	SignalSet getPendingSignalSet() const;
+	virtual SignalSet getPendingSignalSet() const;
 
 	/**
 	 * \return priority of thread
 	 */
 
-	uint8_t getPriority() const;
+	virtual uint8_t getPriority() const;
 
 	/**
 	 * \return scheduling policy of the thread
 	 */
 
-	SchedulingPolicy getSchedulingPolicy() const;
+	virtual SchedulingPolicy getSchedulingPolicy() const;
 
 	/**
 	 * \return current state of thread
 	 */
 
-	scheduler::ThreadControlBlock::State getState() const;
+	virtual scheduler::ThreadControlBlock::State getState() const;
 
 	/**
 	 * \brief Waits for thread termination.
@@ -137,7 +137,7 @@ public:
 	 * - ...
 	 */
 
-	int join();
+	virtual int join();
 
 	/**
 	 * \brief Queues signal for thread.
@@ -157,7 +157,7 @@ public:
 	 * - ENOTSUP - reception or queuing of signals are disabled for this thread;
 	 */
 
-	int queueSignal(uint8_t signalNumber, sigval value);
+	virtual int queueSignal(uint8_t signalNumber, sigval value);
 
 	/**
 	 * \brief Changes priority of thread.
@@ -170,13 +170,13 @@ public:
 	 * - true - the thread is moved to the tail of the group of threads with the new priority.
 	 */
 
-	void setPriority(uint8_t priority, bool alwaysBehind = {});
+	virtual void setPriority(uint8_t priority, bool alwaysBehind = {});
 
 	/**
 	 * param [in] schedulingPolicy is the new scheduling policy of the thread
 	 */
 
-	void setSchedulingPolicy(SchedulingPolicy schedulingPolicy);
+	virtual void setSchedulingPolicy(SchedulingPolicy schedulingPolicy);
 
 	/**
 	 * \brief Starts the thread.
@@ -188,7 +188,7 @@ public:
 	 * - error codes returned by scheduler::Scheduler::add();
 	 */
 
-	int start();
+	virtual int start();
 
 	Thread(const Thread&) = delete;
 	Thread(Thread&&) = default;
@@ -201,7 +201,7 @@ protected:
 	 * \return reference to internal ThreadControlBlock object
 	 */
 
-	scheduler::ThreadControlBlock& getThreadControlBlock();
+	virtual scheduler::ThreadControlBlock& getThreadControlBlock();
 
 	/**
 	 * \brief Thread runner function - entry point of threads.
@@ -229,7 +229,7 @@ private:
 	 * This function is called after run() completes, from Scheduler::remove().
 	 */
 
-	void terminationHook();
+	virtual void terminationHook();
 
 	/// internal ThreadControlBlock object
 	scheduler::ThreadControlBlock threadControlBlock_;
