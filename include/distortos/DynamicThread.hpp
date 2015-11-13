@@ -8,14 +8,14 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-11-11
+ * \date 2015-11-13
  */
 
 #ifndef INCLUDE_DISTORTOS_DYNAMICTHREAD_HPP_
 #define INCLUDE_DISTORTOS_DYNAMICTHREAD_HPP_
 
 #include "distortos/DynamicSignalsReceiver.hpp"
-#include "distortos/Thread.hpp"
+#include "distortos/ThreadCommon.hpp"
 
 #include "distortos/memory/storageDeleter.hpp"
 
@@ -147,12 +147,12 @@ struct DynamicThreadParameters
  * and internal DynamicSignalsReceiver object.
  */
 
-class DynamicThread : public Thread
+class DynamicThread : public ThreadCommon
 {
 public:
 
 	/// base of DynamicThread
-	using Base = Thread;
+	using Base = ThreadCommon;
 
 	/**
 	 * \brief DynamicThread's constructor
