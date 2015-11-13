@@ -182,6 +182,11 @@ public:
 
 	virtual int start() override;
 
+	ThreadCommon(const ThreadCommon&) = delete;
+	ThreadCommon(ThreadCommon&&) = default;
+	const ThreadCommon& operator=(const ThreadCommon&) = delete;
+	ThreadCommon& operator=(ThreadCommon&&) = delete;
+
 protected:
 
 	/**
