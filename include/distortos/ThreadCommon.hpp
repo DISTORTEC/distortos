@@ -24,6 +24,9 @@ class ThreadCommon : public Thread
 {
 public:
 
+	/// unique_ptr (with deleter) to storage for stack
+	using StackStorageUniquePointer = architecture::Stack::StorageUniquePointer;
+
 	/**
 	 * \brief ThreadCommon's constructor
 	 *

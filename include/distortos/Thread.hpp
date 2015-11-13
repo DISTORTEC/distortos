@@ -27,9 +27,6 @@ class Thread
 {
 public:
 
-	/// unique_ptr (with deleter) to storage for stack
-	using StackStorageUniquePointer = architecture::Stack::StorageUniquePointer;
-
 	/**
 	 * \brief Thread's constructor
 	 */
