@@ -130,6 +130,19 @@ public:
 
 	virtual int queueSignal(uint8_t signalNumber, sigval value) override;
 
+	/**
+	 * \brief Changes priority of thread.
+	 *
+	 * If the priority really changes, the position in the thread list is adjusted and context switch may be requested.
+	 *
+	 * \param [in] priority is the new priority of thread
+	 * \param [in] alwaysBehind selects the method of ordering when lowering the priority
+	 * - false - the thread is moved to the head of the group of threads with the new priority (default),
+	 * - true - the thread is moved to the tail of the group of threads with the new priority.
+	 */
+
+	virtual void setPriority(uint8_t priority, bool alwaysBehind = {}) override;
+
 protected:
 
 	/**

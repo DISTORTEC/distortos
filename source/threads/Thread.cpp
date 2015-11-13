@@ -46,11 +46,6 @@ int Thread::join()
 	return ret;
 }
 
-void Thread::setPriority(const uint8_t priority, const bool alwaysBehind)
-{
-	getThreadControlBlock().setPriority(priority, alwaysBehind);
-}
-
 void Thread::setSchedulingPolicy(const SchedulingPolicy schedulingPolicy)
 {
 	getThreadControlBlock().setSchedulingPolicy(schedulingPolicy);

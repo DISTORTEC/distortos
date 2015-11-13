@@ -143,7 +143,7 @@ public:
 	 * - true - the thread is moved to the tail of the group of threads with the new priority.
 	 */
 
-	virtual void setPriority(uint8_t priority, bool alwaysBehind = {});
+	virtual void setPriority(uint8_t priority, bool alwaysBehind = {}) = 0;
 
 	/**
 	 * param [in] schedulingPolicy is the new scheduling policy of the thread

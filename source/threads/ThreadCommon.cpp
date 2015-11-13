@@ -94,6 +94,11 @@ int ThreadCommon::queueSignal(const uint8_t signalNumber, const sigval value)
 	return signalsReceiverControlBlock->queueSignal(signalNumber, value, threadControlBlock);
 }
 
+void ThreadCommon::setPriority(const uint8_t priority, const bool alwaysBehind)
+{
+	getThreadControlBlock().setPriority(priority, alwaysBehind);
+}
+
 /*---------------------------------------------------------------------------------------------------------------------+
 | protected functions
 +---------------------------------------------------------------------------------------------------------------------*/
