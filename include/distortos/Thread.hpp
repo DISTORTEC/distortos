@@ -205,10 +205,7 @@ protected:
 	 * \return reference to internal ThreadControlBlock object
 	 */
 
-	scheduler::ThreadControlBlock& getThreadControlBlock()
-	{
-		return threadControlBlock_;
-	}
+	scheduler::ThreadControlBlock& getThreadControlBlock();
 
 private:
 
