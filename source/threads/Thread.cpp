@@ -46,14 +46,6 @@ int Thread::join()
 	return ret;
 }
 
-int Thread::start()
-{
-	if (getState() != scheduler::ThreadControlBlock::State::New)
-		return EINVAL;
-
-	return scheduler::getScheduler().add(getThreadControlBlock());
-}
-
 /*---------------------------------------------------------------------------------------------------------------------+
 | protected static functions
 +---------------------------------------------------------------------------------------------------------------------*/

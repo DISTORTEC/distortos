@@ -161,7 +161,7 @@ public:
 	 * - error codes returned by scheduler::Scheduler::add();
 	 */
 
-	virtual int start();
+	virtual int start() = 0;
 
 	Thread(const Thread&) = delete;
 	Thread(Thread&&) = default;

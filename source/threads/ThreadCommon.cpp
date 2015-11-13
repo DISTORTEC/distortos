@@ -15,6 +15,9 @@
 
 #include "distortos/architecture/InterruptMaskingLock.hpp"
 
+#include "distortos/scheduler/getScheduler.hpp"
+#include "distortos/scheduler/Scheduler.hpp"
+
 #include "distortos/synchronization/SignalsReceiverControlBlock.hpp"
 
 #include <cerrno>
@@ -102,6 +105,14 @@ void ThreadCommon::setPriority(const uint8_t priority, const bool alwaysBehind)
 void ThreadCommon::setSchedulingPolicy(const SchedulingPolicy schedulingPolicy)
 {
 	getThreadControlBlock().setSchedulingPolicy(schedulingPolicy);
+}
+
+int ThreadCommon::start()
+{
+	if (getState() != scheduler::ThreadControlBlock::State::New)
+		return EINVAL;
+
+	return scheduler::getScheduler().add(getThreadControlBlock());
 }
 
 /*---------------------------------------------------------------------------------------------------------------------+
