@@ -38,11 +38,6 @@ Thread::~Thread()
 
 }
 
-uint8_t Thread::getPriority() const
-{
-	return getThreadControlBlock().getPriority();
-}
-
 SchedulingPolicy Thread::getSchedulingPolicy() const
 {
 	return getThreadControlBlock().getSchedulingPolicy();

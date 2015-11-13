@@ -69,6 +69,11 @@ SignalSet ThreadCommon::getPendingSignalSet() const
 	return signalsReceiverControlBlock->getPendingSignalSet();
 }
 
+uint8_t ThreadCommon::getPriority() const
+{
+	return getThreadControlBlock().getPriority();
+}
+
 /*---------------------------------------------------------------------------------------------------------------------+
 | protected functions
 +---------------------------------------------------------------------------------------------------------------------*/

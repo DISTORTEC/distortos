@@ -81,7 +81,7 @@ public:
 	 * \return priority of thread
 	 */
 
-	virtual uint8_t getPriority() const;
+	virtual uint8_t getPriority() const = 0;
 
 	/**
 	 * \return scheduling policy of the thread

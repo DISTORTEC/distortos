@@ -92,6 +92,12 @@ public:
 
 	virtual SignalSet getPendingSignalSet() const override;
 
+	/**
+	 * \return priority of thread
+	 */
+
+	virtual uint8_t getPriority() const override;
+
 protected:
 
 	/**
