@@ -110,6 +110,11 @@ void Thread::setPriority(const uint8_t priority, const bool alwaysBehind)
 	threadControlBlock_.setPriority(priority, alwaysBehind);
 }
 
+void Thread::setSchedulingPolicy(const SchedulingPolicy schedulingPolicy)
+{
+	threadControlBlock_.setSchedulingPolicy(schedulingPolicy);
+}
+
 int Thread::start()
 {
 	if (getState() != scheduler::ThreadControlBlock::State::New)

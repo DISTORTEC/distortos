@@ -172,10 +172,7 @@ public:
 	 * param [in] schedulingPolicy is the new scheduling policy of the thread
 	 */
 
-	void setSchedulingPolicy(const SchedulingPolicy schedulingPolicy)
-	{
-		threadControlBlock_.setSchedulingPolicy(schedulingPolicy);
-	}
+	void setSchedulingPolicy(SchedulingPolicy schedulingPolicy);
 
 	/**
 	 * \brief Starts the thread.
