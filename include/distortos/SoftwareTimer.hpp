@@ -52,6 +52,16 @@ protected:
 	{
 
 	}
+
+private:
+
+	/**
+	 * \brief Software timer's function runner
+	 *
+	 * \param [in] softwareTimer is a reference to SoftwareTimer object that is being run
+	 */
+
+	static void softwareTimerRunner(SoftwareTimer& softwareTimer);
 };
 
 }	// namespace distortos
