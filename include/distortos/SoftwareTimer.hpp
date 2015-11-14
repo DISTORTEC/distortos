@@ -29,7 +29,7 @@ public:
 	 */
 
 	SoftwareTimer() :
-			SoftwareTimerControlBlock{*this}
+			SoftwareTimerControlBlock{softwareTimerRunner, *this}
 	{
 
 	}

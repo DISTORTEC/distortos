@@ -28,8 +28,9 @@ namespace scheduler
 | public functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-SoftwareTimerControlBlock::SoftwareTimerControlBlock(SoftwareTimer& owner) :
+SoftwareTimerControlBlock::SoftwareTimerControlBlock(FunctionRunner& functionRunner, SoftwareTimer& owner) :
 		timePoint_{},
+		functionRunner_{functionRunner},
 		owner_{owner},
 		list_{},
 		iterator_{}

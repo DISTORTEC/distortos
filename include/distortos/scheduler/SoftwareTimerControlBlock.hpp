@@ -38,13 +38,17 @@ public:
 	/// type of object used as storage for SoftwareTimerControlBlockList elements - 3 pointers
 	using Link = std::array<std::aligned_storage<sizeof(void*), alignof(void*)>::type, 3>;
 
+	/// type of runner for software timer's function
+	using FunctionRunner = void(SoftwareTimer&);
+
 	/**
 	 * \brief SoftwareTimerControlBlock's constructor
 	 *
+	 * \param [in] functionRunner is a reference to runner for software timer's function
 	 * \param [in] owner is a reference to SoftwareTimer object that owns this SoftwareTimerControlBlock
 	 */
 
-	explicit SoftwareTimerControlBlock(SoftwareTimer& owner);
+	SoftwareTimerControlBlock(FunctionRunner& functionRunner, SoftwareTimer& owner);
 
 	/**
 	 * \brief Execute software timer's function.
@@ -177,6 +181,9 @@ private:
 
 	/// storage for list link
 	Link link_;
+
+	/// reference to runner for software timer's function
+	FunctionRunner& functionRunner_;
 
 	/// reference to SoftwareTimer object that owns this SoftwareTimerControlBlock
 	SoftwareTimer& owner_;
