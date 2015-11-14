@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-05-24
+ * \date 2015-11-14
  */
 
 #ifndef INCLUDE_DISTORTOS_SCHEDULER_SOFTWARETIMERCONTROLBLOCK_HPP_
@@ -22,6 +22,8 @@
 
 namespace distortos
 {
+
+class SoftwareTimer;
 
 namespace scheduler
 {
@@ -38,9 +40,11 @@ public:
 
 	/**
 	 * \brief SoftwareTimerControlBlock's constructor
+	 *
+	 * \param [in] owner is a reference to SoftwareTimer object that owns this SoftwareTimerControlBlock
 	 */
 
-	SoftwareTimerControlBlock();
+	explicit SoftwareTimerControlBlock(SoftwareTimer& owner);
 
 	/**
 	 * \brief Execute software timer's function.
@@ -173,6 +177,9 @@ private:
 
 	/// storage for list link
 	Link link_;
+
+	/// reference to SoftwareTimer object that owns this SoftwareTimerControlBlock
+	SoftwareTimer& owner_;
 
 	/// pointer to list that has this object
 	SoftwareTimerControlBlockList* volatile list_;
