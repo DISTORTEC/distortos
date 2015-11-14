@@ -47,10 +47,10 @@ struct DynamicThreadParameters
 	constexpr DynamicThreadParameters(const size_t stackSizee, const bool canReceiveSignalss,
 			const size_t queuedSignalss, const size_t signalActionss, const uint8_t priorityy,
 			const SchedulingPolicy schedulingPolicyy) :
-			stackSize{stackSizee},
-			canReceiveSignals{canReceiveSignalss},
 			queuedSignals{queuedSignalss},
 			signalActions{signalActionss},
+			stackSize{stackSizee},
+			canReceiveSignals{canReceiveSignalss},
 			priority{priorityy},
 			schedulingPolicy{schedulingPolicyy}
 	{
@@ -72,10 +72,10 @@ struct DynamicThreadParameters
 
 	constexpr DynamicThreadParameters(const size_t stackSizee, const bool canReceiveSignalss,
 			const size_t queuedSignalss, const size_t signalActionss, const uint8_t priorityy) :
-			stackSize{stackSizee},
-			canReceiveSignals{canReceiveSignalss},
 			queuedSignals{queuedSignalss},
 			signalActions{signalActionss},
+			stackSize{stackSizee},
+			canReceiveSignals{canReceiveSignalss},
 			priority{priorityy},
 			schedulingPolicy{SchedulingPolicy::RoundRobin}
 	{
@@ -92,10 +92,10 @@ struct DynamicThreadParameters
 
 	constexpr DynamicThreadParameters(const size_t stackSizee, const uint8_t priorityy,
 			const SchedulingPolicy schedulingPolicyy) :
-			stackSize{stackSizee},
-			canReceiveSignals{},
 			queuedSignals{},
 			signalActions{},
+			stackSize{stackSizee},
+			canReceiveSignals{},
 			priority{priorityy},
 			schedulingPolicy{schedulingPolicyy}
 	{
@@ -110,32 +110,32 @@ struct DynamicThreadParameters
 	 */
 
 	constexpr DynamicThreadParameters(const size_t stackSizee, const uint8_t priorityy) :
-			stackSize{stackSizee},
-			canReceiveSignals{},
 			queuedSignals{},
 			signalActions{},
+			stackSize{stackSizee},
+			canReceiveSignals{},
 			priority{priorityy},
 			schedulingPolicy{SchedulingPolicy::RoundRobin}
 	{
 
 	}
 
-	/// size of stack, bytes
-	const size_t stackSize;
-
-	/// selects whether reception of signals is enabled (true) or disabled (false) for this thread
-	const bool canReceiveSignals;
-
 	/// max number of queued signals for this thread, relevant only if \a canReceiveSignals == true, 0 to disable
 	/// queuing of signals for this thread
-	const size_t queuedSignals;
+	size_t queuedSignals;
 
 	/// max number of different SignalAction objects for this thread, relevant only if \a canReceiveSignals == true, 0
 	/// to disable catching of signals for this thread
-	const size_t signalActions;
+	size_t signalActions;
+
+	/// size of stack, bytes
+	size_t stackSize;
+
+	/// selects whether reception of signals is enabled (true) or disabled (false) for this thread
+	bool canReceiveSignals;
 
 	/// thread's priority, 0 - lowest, UINT8_MAX - highest
-	const uint8_t priority;
+	uint8_t priority;
 
 	/// scheduling policy of the thread
 	SchedulingPolicy schedulingPolicy;
