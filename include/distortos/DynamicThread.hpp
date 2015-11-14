@@ -15,132 +15,13 @@
 #define INCLUDE_DISTORTOS_DYNAMICTHREAD_HPP_
 
 #include "distortos/DynamicSignalsReceiver.hpp"
+#include "distortos/DynamicThreadParameters.hpp"
 #include "distortos/ThreadCommon.hpp"
 
 #include "distortos/memory/storageDeleter.hpp"
 
 namespace distortos
 {
-
-/**
- * \brief DynamicThreadParameters struct is a helper with parameters for DynamicThread's constructor
- *
- * This struct is a replacement for overloads of DynamicThread's constructor and makeDynamicThread() which -
- * unfortunately - cannot be used, as they would lead to compilation errors due to ambiguity.
- */
-
-struct DynamicThreadParameters
-{
-	/**
-	 * \brief DynamicThreadParameters's constructor
-	 *
-	 * \param [in] stackSizee is the size of stack, bytes
-	 * \param [in] canReceiveSignalss selects whether reception of signals is enabled (true) or disabled (false) for
-	 * this thread
-	 * \param [in] queuedSignalss is the max number of queued signals for this thread, relevant only if
-	 * \a canReceiveSignals == true, 0 to disable queuing of signals for this thread
-	 * \param [in] signalActionss is the max number of different SignalAction objects for this thread, relevant only if
-	 * \a canReceiveSignals == true, 0 to disable catching of signals for this thread
-	 * \param [in] priorityy is the thread's priority, 0 - lowest, UINT8_MAX - highest
-	 * \param [in] schedulingPolicyy is the scheduling policy of the thread
-	 */
-
-	constexpr DynamicThreadParameters(const size_t stackSizee, const bool canReceiveSignalss,
-			const size_t queuedSignalss, const size_t signalActionss, const uint8_t priorityy,
-			const SchedulingPolicy schedulingPolicyy) :
-			stackSize{stackSizee},
-			canReceiveSignals{canReceiveSignalss},
-			queuedSignals{queuedSignalss},
-			signalActions{signalActionss},
-			priority{priorityy},
-			schedulingPolicy{schedulingPolicyy}
-	{
-
-	}
-
-	/**
-	 * \brief DynamicThreadParameters's constructor
-	 *
-	 * \param [in] stackSizee is the size of stack, bytes
-	 * \param [in] canReceiveSignalss selects whether reception of signals is enabled (true) or disabled (false) for
-	 * this thread
-	 * \param [in] queuedSignalss is the max number of queued signals for this thread, relevant only if
-	 * \a canReceiveSignals == true, 0 to disable queuing of signals for this thread
-	 * \param [in] signalActionss is the max number of different SignalAction objects for this thread, relevant only if
-	 * \a canReceiveSignals == true, 0 to disable catching of signals for this thread
-	 * \param [in] priorityy is the thread's priority, 0 - lowest, UINT8_MAX - highest
-	 */
-
-	constexpr DynamicThreadParameters(const size_t stackSizee, const bool canReceiveSignalss,
-			const size_t queuedSignalss, const size_t signalActionss, const uint8_t priorityy) :
-			stackSize{stackSizee},
-			canReceiveSignals{canReceiveSignalss},
-			queuedSignals{queuedSignalss},
-			signalActions{signalActionss},
-			priority{priorityy},
-			schedulingPolicy{SchedulingPolicy::RoundRobin}
-	{
-
-	}
-
-	/**
-	 * \brief DynamicThreadParameters's constructor
-	 *
-	 * \param [in] stackSizee is the size of stack, bytes
-	 * \param [in] priorityy is the thread's priority, 0 - lowest, UINT8_MAX - highest
-	 * \param [in] schedulingPolicyy is the scheduling policy of the thread
-	 */
-
-	constexpr DynamicThreadParameters(const size_t stackSizee, const uint8_t priorityy,
-			const SchedulingPolicy schedulingPolicyy) :
-			stackSize{stackSizee},
-			canReceiveSignals{},
-			queuedSignals{},
-			signalActions{},
-			priority{priorityy},
-			schedulingPolicy{schedulingPolicyy}
-	{
-
-	}
-
-	/**
-	 * \brief DynamicThreadParameters's constructor
-	 *
-	 * \param [in] stackSizee is the size of stack, bytes
-	 * \param [in] priorityy is the thread's priority, 0 - lowest, UINT8_MAX - highest
-	 */
-
-	constexpr DynamicThreadParameters(const size_t stackSizee, const uint8_t priorityy) :
-			stackSize{stackSizee},
-			canReceiveSignals{},
-			queuedSignals{},
-			signalActions{},
-			priority{priorityy},
-			schedulingPolicy{SchedulingPolicy::RoundRobin}
-	{
-
-	}
-
-	/// size of stack, bytes
-	const size_t stackSize;
-
-	/// selects whether reception of signals is enabled (true) or disabled (false) for this thread
-	const bool canReceiveSignals;
-
-	/// max number of queued signals for this thread, relevant only if \a canReceiveSignals == true, 0 to disable
-	/// queuing of signals for this thread
-	const size_t queuedSignals;
-
-	/// max number of different SignalAction objects for this thread, relevant only if \a canReceiveSignals == true, 0
-	/// to disable catching of signals for this thread
-	const size_t signalActions;
-
-	/// thread's priority, 0 - lowest, UINT8_MAX - highest
-	const uint8_t priority;
-
-	/// scheduling policy of the thread
-	SchedulingPolicy schedulingPolicy;
-};
 
 /**
  * \brief DynamicThread class is a type-erased interface for thread that has dynamic storage for bounded function, stack
