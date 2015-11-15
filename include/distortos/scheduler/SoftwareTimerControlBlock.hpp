@@ -51,19 +51,6 @@ public:
 	SoftwareTimerControlBlock(FunctionRunner& functionRunner, SoftwareTimer& owner);
 
 	/**
-	 * \brief Execute software timer's function.
-	 *
-	 * Calls internal pure virtual execute_(), which should be provided by derived classes.
-	 *
-	 * \note this should only be called by SoftwareTimerSupervisor::tickInterruptHandler()
-	 */
-
-	void execute() const
-	{
-		execute_();
-	}
-
-	/**
 	 * \return reference to internal storage for list link
 	 */
 
