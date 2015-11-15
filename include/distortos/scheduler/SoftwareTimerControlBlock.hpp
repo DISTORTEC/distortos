@@ -51,6 +51,14 @@ public:
 	SoftwareTimerControlBlock(FunctionRunner& functionRunner, SoftwareTimer& owner);
 
 	/**
+	 * \brief SoftwareTimerControlBlock's destructor
+	 *
+	 * If the timer is running it is stopped.
+	 */
+
+	~SoftwareTimerControlBlock();
+
+	/**
 	 * \return reference to internal storage for list link
 	 */
 
@@ -150,16 +158,6 @@ public:
 	 */
 
 	void stop();
-
-protected:
-
-	/**
-	 * \brief SoftwareTimerControlBlock's destructor
-	 *
-	 * If the timer is running it is stopped.
-	 */
-
-	~SoftwareTimerControlBlock();
 
 private:
 

@@ -38,6 +38,11 @@ SoftwareTimerControlBlock::SoftwareTimerControlBlock(FunctionRunner& functionRun
 
 }
 
+SoftwareTimerControlBlock::~SoftwareTimerControlBlock()
+{
+	stop();
+}
+
 void SoftwareTimerControlBlock::run() const
 {
 	functionRunner_(owner_);
@@ -65,15 +70,6 @@ void SoftwareTimerControlBlock::stop()
 		list_->erase(iterator_);
 		list_ = nullptr;
 	}
-}
-
-/*---------------------------------------------------------------------------------------------------------------------+
-| protected functions
-+---------------------------------------------------------------------------------------------------------------------*/
-
-SoftwareTimerControlBlock::~SoftwareTimerControlBlock()
-{
-	stop();
 }
 
 }	// namespace scheduler
