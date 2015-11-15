@@ -48,17 +48,6 @@ public:
 private:
 
 	/**
-	 * \brief Software timer's internal function.
-	 *
-	 * Executes bound function object.
-	 */
-
-	virtual void execute_() const override
-	{
-		boundFunction_();
-	}
-
-	/**
 	 * \brief "Run" function of software timer
 	 *
 	 * Executes bound function object.
