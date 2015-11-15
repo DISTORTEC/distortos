@@ -20,6 +20,12 @@ namespace distortos
 | public functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
+SoftwareTimer::SoftwareTimer() :
+		softwareTimerControlBlock_{softwareTimerRunner, *this}
+{
+
+}
+
 SoftwareTimer::~SoftwareTimer()
 {
 

@@ -28,11 +28,7 @@ public:
 	 * \brief SoftwareTimer's constructor
 	 */
 
-	SoftwareTimer() :
-			softwareTimerControlBlock_{softwareTimerRunner, *this}
-	{
-
-	}
+	SoftwareTimer();
 
 	/**
 	 * \brief SoftwareTimer's destructor
