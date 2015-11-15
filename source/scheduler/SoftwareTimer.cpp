@@ -48,9 +48,10 @@ int SoftwareTimer::start(const TickClock::time_point timePoint)
 	return 0;
 }
 
-void SoftwareTimer::stop()
+int SoftwareTimer::stop()
 {
 	softwareTimerControlBlock_.stop();
+	return 0;
 }
 
 /*---------------------------------------------------------------------------------------------------------------------+

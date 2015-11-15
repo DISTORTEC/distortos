@@ -101,9 +101,11 @@ public:
 
 	/**
 	 * \brief Stops the timer.
+	 *
+	 * \return 0 on success, error code otherwise
 	 */
 
-	virtual void stop();
+	virtual int stop();
 
 protected:
 
