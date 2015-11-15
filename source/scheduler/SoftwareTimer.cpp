@@ -35,6 +35,11 @@ void SoftwareTimer::start(const TickClock::time_point timePoint)
 	softwareTimerControlBlock_.start(timePoint);
 }
 
+void SoftwareTimer::stop()
+{
+	softwareTimerControlBlock_.stop();
+}
+
 /*---------------------------------------------------------------------------------------------------------------------+
 | private static functions
 +---------------------------------------------------------------------------------------------------------------------*/

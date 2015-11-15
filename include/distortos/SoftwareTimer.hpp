@@ -93,10 +93,7 @@ public:
 	 * \brief Stops the timer.
 	 */
 
-	void stop()
-	{
-		softwareTimerControlBlock_.stop();
-	}
+	void stop();
 
 protected:
 
