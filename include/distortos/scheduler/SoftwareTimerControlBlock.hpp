@@ -117,41 +117,10 @@ public:
 	/**
 	 * \brief Starts the timer.
 	 *
-	 * \note The duration must not be shorter, so one additional tick is always added to the duration.
-	 *
-	 * \param Rep is type of tick counter
-	 * \param Period is std::ratio type representing the tick period of the clock, in seconds
-	 *
-	 * \param [in] duration is the duration after which the function will be executed
-	 */
-
-	template<typename Rep, typename Period>
-	void start(const std::chrono::duration<Rep, Period> duration)
-	{
-		start(std::chrono::duration_cast<TickClock::duration>(duration));
-	}
-
-	/**
-	 * \brief Starts the timer.
-	 *
 	 * \param [in] timePoint is the time point at which the function will be executed
 	 */
 
 	void start(TickClock::time_point timePoint);
-
-	/**
-	 * \brief Starts the timer.
-	 *
-	 * \param Duration is a std::chrono::duration type used to measure duration
-	 *
-	 * \param [in] timePoint is the time point at which the function will be executed
-	 */
-
-	template<typename Duration>
-	void start(std::chrono::time_point<TickClock, Duration> timePoint)
-	{
-		start(std::chrono::time_point_cast<TickClock::duration>(timePoint));
-	}
 
 	/**
 	 * \brief Stops the timer.
