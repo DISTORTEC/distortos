@@ -36,15 +36,16 @@ bool SoftwareTimer::isRunning() const
 	return softwareTimerControlBlock_.isRunning();
 }
 
-void SoftwareTimer::start(const TickClock::duration duration)
+int SoftwareTimer::start(const TickClock::duration duration)
 {
 	const auto now = TickClock::now();
-	start(now + duration + decltype(duration){1});
+	return start(now + duration + decltype(duration){1});
 }
 
-void SoftwareTimer::start(const TickClock::time_point timePoint)
+int SoftwareTimer::start(const TickClock::time_point timePoint)
 {
 	softwareTimerControlBlock_.start(timePoint);
+	return 0;
 }
 
 void SoftwareTimer::stop()
