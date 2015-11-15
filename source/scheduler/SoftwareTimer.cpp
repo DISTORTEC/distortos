@@ -38,7 +38,8 @@ bool SoftwareTimer::isRunning() const
 
 void SoftwareTimer::start(const TickClock::duration duration)
 {
-	softwareTimerControlBlock_.start(duration);
+	const auto now = TickClock::now();
+	start(now + duration + decltype(duration){1});
 }
 
 void SoftwareTimer::start(const TickClock::time_point timePoint)
