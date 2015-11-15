@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-11-14
+ * \date 2015-11-15
  */
 
 #include "distortos/scheduler/SoftwareTimerControlBlock.hpp"
@@ -36,6 +36,11 @@ SoftwareTimerControlBlock::SoftwareTimerControlBlock(FunctionRunner& functionRun
 		iterator_{}
 {
 
+}
+
+void SoftwareTimerControlBlock::run() const
+{
+	functionRunner_(owner_);
 }
 
 void SoftwareTimerControlBlock::start(const TickClock::duration duration)

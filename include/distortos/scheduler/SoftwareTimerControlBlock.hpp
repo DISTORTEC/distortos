@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-11-14
+ * \date 2015-11-15
  */
 
 #ifndef INCLUDE_DISTORTOS_SCHEDULER_SOFTWARETIMERCONTROLBLOCK_HPP_
@@ -89,6 +89,14 @@ public:
 	{
 		return list_ != nullptr;
 	}
+
+	/**
+	 * \brief Runs software timer's function.
+	 *
+	 * \note this should only be called by SoftwareTimerSupervisor::tickInterruptHandler()
+	 */
+
+	void run() const;
 
 	/**
 	 * \brief Sets the list that has this object.
