@@ -34,7 +34,14 @@ public:
 
 	}
 
-	using SoftwareTimerControlBlock::isRunning;
+	/**
+	 * \return true if the timer is running, false otherwise
+	 */
+
+	bool isRunning() const
+	{
+		return SoftwareTimerControlBlock::isRunning();
+	}
 
 	using SoftwareTimerControlBlock::start;
 
