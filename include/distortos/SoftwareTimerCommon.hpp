@@ -16,6 +16,8 @@
 
 #include "distortos/SoftwareTimer.hpp"
 
+#include "distortos/scheduler/SoftwareTimerControlBlock.hpp"
+
 namespace distortos
 {
 
@@ -35,6 +37,37 @@ public:
 	 */
 
 	virtual ~SoftwareTimerCommon() override;
+
+	/**
+	 * \return true if the timer is running, false otherwise
+	 */
+
+	virtual bool isRunning() const override;
+
+	/**
+	 * \brief Starts the timer.
+	 *
+	 * \param [in] timePoint is the time point at which the function will be executed
+	 *
+	 * \return 0 on success, error code otherwise
+	 */
+
+	virtual int start(TickClock::time_point timePoint) override;
+
+	using SoftwareTimer::start;
+
+	/**
+	 * \brief Stops the timer.
+	 *
+	 * \return 0 on success, error code otherwise
+	 */
+
+	virtual int stop() override;
+
+private:
+
+	/// internal SoftwareTimerControlBlock object
+	scheduler::SoftwareTimerControlBlock softwareTimerControlBlock_;
 };
 
 }	// namespace distortos

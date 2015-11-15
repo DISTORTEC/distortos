@@ -20,38 +20,15 @@ namespace distortos
 | public functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-SoftwareTimer::SoftwareTimer() :
-		softwareTimerControlBlock_{softwareTimerRunner, *this}
-{
-
-}
-
 SoftwareTimer::~SoftwareTimer()
 {
 
-}
-
-bool SoftwareTimer::isRunning() const
-{
-	return softwareTimerControlBlock_.isRunning();
 }
 
 int SoftwareTimer::start(const TickClock::duration duration)
 {
 	const auto now = TickClock::now();
 	return start(now + duration + decltype(duration){1});
-}
-
-int SoftwareTimer::start(const TickClock::time_point timePoint)
-{
-	softwareTimerControlBlock_.start(timePoint);
-	return 0;
-}
-
-int SoftwareTimer::stop()
-{
-	softwareTimerControlBlock_.stop();
-	return 0;
 }
 
 /*---------------------------------------------------------------------------------------------------------------------+

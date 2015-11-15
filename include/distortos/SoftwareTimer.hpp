@@ -14,21 +14,15 @@
 #ifndef INCLUDE_DISTORTOS_SOFTWARETIMER_HPP_
 #define INCLUDE_DISTORTOS_SOFTWARETIMER_HPP_
 
-#include "distortos/scheduler/SoftwareTimerControlBlock.hpp"
+#include "distortos/TickClock.hpp"
 
 namespace distortos
 {
 
-/// SoftwareTimer is a base for software timers
+/// SoftwareTimer class is an abstract interface for software timers
 class SoftwareTimer
 {
 public:
-
-	/**
-	 * \brief SoftwareTimer's constructor
-	 */
-
-	SoftwareTimer();
 
 	/**
 	 * \brief SoftwareTimer's destructor
@@ -40,7 +34,7 @@ public:
 	 * \return true if the timer is running, false otherwise
 	 */
 
-	virtual bool isRunning() const;
+	virtual bool isRunning() const = 0;
 
 	/**
 	 * \brief Starts the timer.
@@ -81,7 +75,7 @@ public:
 	 * \return 0 on success, error code otherwise
 	 */
 
-	virtual int start(TickClock::time_point timePoint);
+	virtual int start(TickClock::time_point timePoint) = 0;
 
 	/**
 	 * \brief Starts the timer.
@@ -105,7 +99,7 @@ public:
 	 * \return 0 on success, error code otherwise
 	 */
 
-	virtual int stop();
+	virtual int stop() = 0;
 
 protected:
 
@@ -126,9 +120,6 @@ private:
 	 */
 
 	virtual void run() = 0;
-
-	/// internal SoftwareTimerControlBlock object
-	scheduler::SoftwareTimerControlBlock softwareTimerControlBlock_;
 };
 
 }	// namespace distortos

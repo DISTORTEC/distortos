@@ -21,7 +21,7 @@ namespace distortos
 +---------------------------------------------------------------------------------------------------------------------*/
 
 SoftwareTimerCommon::SoftwareTimerCommon() :
-		SoftwareTimer{}
+		softwareTimerControlBlock_{softwareTimerRunner, *this}
 {
 
 }
@@ -29,6 +29,23 @@ SoftwareTimerCommon::SoftwareTimerCommon() :
 SoftwareTimerCommon::~SoftwareTimerCommon()
 {
 
+}
+
+bool SoftwareTimerCommon::isRunning() const
+{
+	return softwareTimerControlBlock_.isRunning();
+}
+
+int SoftwareTimerCommon::start(const TickClock::time_point timePoint)
+{
+	softwareTimerControlBlock_.start(timePoint);
+	return 0;
+}
+
+int SoftwareTimerCommon::stop()
+{
+	softwareTimerControlBlock_.stop();
+	return 0;
 }
 
 }	// namespace distortos
