@@ -14,7 +14,7 @@
 #ifndef INCLUDE_DISTORTOS_STATICSOFTWARETIMER_HPP_
 #define INCLUDE_DISTORTOS_STATICSOFTWARETIMER_HPP_
 
-#include "distortos/SoftwareTimer.hpp"
+#include "distortos/SoftwareTimerCommon.hpp"
 
 namespace distortos
 {
@@ -27,7 +27,7 @@ namespace distortos
  */
 
 template<typename Function, typename... Args>
-class StaticSoftwareTimer : public SoftwareTimer
+class StaticSoftwareTimer : public SoftwareTimerCommon
 {
 public:
 
@@ -39,7 +39,7 @@ public:
 	 */
 
 	StaticSoftwareTimer(Function&& function, Args&&... args) :
-			SoftwareTimer{},
+			SoftwareTimerCommon{},
 			boundFunction_{std::bind(std::forward<Function>(function), std::forward<Args>(args)...)}
 	{
 
