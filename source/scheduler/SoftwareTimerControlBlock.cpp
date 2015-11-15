@@ -48,12 +48,6 @@ void SoftwareTimerControlBlock::run() const
 	functionRunner_(owner_);
 }
 
-void SoftwareTimerControlBlock::start(const TickClock::duration duration)
-{
-	const auto now = TickClock::now();
-	start(now + duration + decltype(duration){1});
-}
-
 void SoftwareTimerControlBlock::start(const TickClock::time_point timePoint)
 {
 	timePoint_ = timePoint;

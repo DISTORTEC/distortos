@@ -107,16 +107,6 @@ public:
 	/**
 	 * \brief Starts the timer.
 	 *
-	 * \note The duration will never be shorter, so one additional tick is always added to the duration.
-	 *
-	 * \param [in] duration is the duration after which the function will be executed
-	 */
-
-	void start(TickClock::duration duration);
-
-	/**
-	 * \brief Starts the timer.
-	 *
 	 * \param [in] timePoint is the time point at which the function will be executed
 	 */
 
