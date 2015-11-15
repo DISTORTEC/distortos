@@ -38,10 +38,7 @@ public:
 	 * \return true if the timer is running, false otherwise
 	 */
 
-	bool isRunning() const
-	{
-		return softwareTimerControlBlock_.isRunning();
-	}
+	bool isRunning() const;
 
 	/**
 	 * \brief Starts the timer.
