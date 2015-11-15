@@ -26,4 +26,9 @@ SoftwareTimerCommon::SoftwareTimerCommon() :
 
 }
 
+SoftwareTimerCommon::~SoftwareTimerCommon()
+{
+
+}
+
 }	// namespace distortos

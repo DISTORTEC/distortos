@@ -29,6 +29,12 @@ public:
 	 */
 
 	SoftwareTimerCommon();
+
+	/**
+	 * \brief SoftwareTimerCommon's destructor
+	 */
+
+	virtual ~SoftwareTimerCommon() override;
 };
 
 }	// namespace distortos
