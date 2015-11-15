@@ -53,7 +53,7 @@ void SoftwareTimer::stop()
 }
 
 /*---------------------------------------------------------------------------------------------------------------------+
-| private static functions
+| protected static functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
 void SoftwareTimer::softwareTimerRunner(SoftwareTimer& softwareTimer)

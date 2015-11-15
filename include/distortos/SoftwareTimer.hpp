@@ -97,6 +97,16 @@ public:
 
 	void stop();
 
+protected:
+
+	/**
+	 * \brief Software timer's function runner
+	 *
+	 * \param [in] softwareTimer is a reference to SoftwareTimer object that is being run
+	 */
+
+	static void softwareTimerRunner(SoftwareTimer& softwareTimer);
+
 private:
 
 	/**
@@ -106,14 +116,6 @@ private:
 	 */
 
 	virtual void run() = 0;
-
-	/**
-	 * \brief Software timer's function runner
-	 *
-	 * \param [in] softwareTimer is a reference to SoftwareTimer object that is being run
-	 */
-
-	static void softwareTimerRunner(SoftwareTimer& softwareTimer);
 
 	/// internal SoftwareTimerControlBlock object
 	scheduler::SoftwareTimerControlBlock softwareTimerControlBlock_;
