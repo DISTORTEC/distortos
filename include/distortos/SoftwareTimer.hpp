@@ -20,7 +20,7 @@ namespace distortos
 {
 
 /// SoftwareTimer is a base for software timers
-class SoftwareTimer : private scheduler::SoftwareTimerControlBlock
+class SoftwareTimer
 {
 public:
 
@@ -29,7 +29,7 @@ public:
 	 */
 
 	SoftwareTimer() :
-			SoftwareTimerControlBlock{softwareTimerRunner, *this}
+			softwareTimerControlBlock_{softwareTimerRunner, *this}
 	{
 
 	}
@@ -40,7 +40,7 @@ public:
 
 	bool isRunning() const
 	{
-		return SoftwareTimerControlBlock::isRunning();
+		return softwareTimerControlBlock_.isRunning();
 	}
 
 	/**
@@ -53,7 +53,7 @@ public:
 
 	void start(const TickClock::duration duration)
 	{
-		SoftwareTimerControlBlock::start(duration);
+		softwareTimerControlBlock_.start(duration);
 	}
 
 	/**
@@ -81,7 +81,7 @@ public:
 
 	void start(const TickClock::time_point timePoint)
 	{
-		SoftwareTimerControlBlock::start(timePoint);
+		softwareTimerControlBlock_.start(timePoint);
 	}
 
 	/**
@@ -104,7 +104,7 @@ public:
 
 	void stop()
 	{
-		SoftwareTimerControlBlock::stop();
+		softwareTimerControlBlock_.stop();
 	}
 
 protected:
@@ -137,6 +137,9 @@ private:
 	 */
 
 	static void softwareTimerRunner(SoftwareTimer& softwareTimer);
+
+	/// internal SoftwareTimerControlBlock object
+	scheduler::SoftwareTimerControlBlock softwareTimerControlBlock_;
 };
 
 }	// namespace distortos
