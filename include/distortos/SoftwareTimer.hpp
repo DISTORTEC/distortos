@@ -98,7 +98,14 @@ public:
 		start(std::chrono::time_point_cast<TickClock::duration>(timePoint));
 	}
 
-	using SoftwareTimerControlBlock::stop;
+	/**
+	 * \brief Stops the timer.
+	 */
+
+	void stop()
+	{
+		SoftwareTimerControlBlock::stop();
+	}
 
 protected:
 
