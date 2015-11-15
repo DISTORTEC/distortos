@@ -25,6 +25,16 @@ bool SoftwareTimer::isRunning() const
 	return softwareTimerControlBlock_.isRunning();
 }
 
+void SoftwareTimer::start(const TickClock::duration duration)
+{
+	softwareTimerControlBlock_.start(duration);
+}
+
+void SoftwareTimer::start(const TickClock::time_point timePoint)
+{
+	softwareTimerControlBlock_.start(timePoint);
+}
+
 /*---------------------------------------------------------------------------------------------------------------------+
 | private static functions
 +---------------------------------------------------------------------------------------------------------------------*/

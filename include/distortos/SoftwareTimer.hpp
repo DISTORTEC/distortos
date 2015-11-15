@@ -48,10 +48,7 @@ public:
 	 * \param [in] duration is the duration after which the function will be executed
 	 */
 
-	void start(const TickClock::duration duration)
-	{
-		softwareTimerControlBlock_.start(duration);
-	}
+	void start(TickClock::duration duration);
 
 	/**
 	 * \brief Starts the timer.
@@ -76,10 +73,7 @@ public:
 	 * \param [in] timePoint is the time point at which the function will be executed
 	 */
 
-	void start(const TickClock::time_point timePoint)
-	{
-		softwareTimerControlBlock_.start(timePoint);
-	}
+	void start(TickClock::time_point timePoint);
 
 	/**
 	 * \brief Starts the timer.
