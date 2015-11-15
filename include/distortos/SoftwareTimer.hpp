@@ -40,7 +40,7 @@ public:
 	 * \return true if the timer is running, false otherwise
 	 */
 
-	bool isRunning() const;
+	virtual bool isRunning() const;
 
 	/**
 	 * \brief Starts the timer.
@@ -75,7 +75,7 @@ public:
 	 * \param [in] timePoint is the time point at which the function will be executed
 	 */
 
-	void start(TickClock::time_point timePoint);
+	virtual void start(TickClock::time_point timePoint);
 
 	/**
 	 * \brief Starts the timer.
@@ -95,7 +95,7 @@ public:
 	 * \brief Stops the timer.
 	 */
 
-	void stop();
+	virtual void stop();
 
 protected:
 
