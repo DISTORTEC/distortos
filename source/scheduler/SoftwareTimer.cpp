@@ -20,6 +20,11 @@ namespace distortos
 | public functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
+SoftwareTimer::~SoftwareTimer()
+{
+
+}
+
 bool SoftwareTimer::isRunning() const
 {
 	return softwareTimerControlBlock_.isRunning();

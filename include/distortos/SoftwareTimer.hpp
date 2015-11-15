@@ -35,6 +35,12 @@ public:
 	}
 
 	/**
+	 * \brief SoftwareTimer's destructor
+	 */
+
+	virtual ~SoftwareTimer() = 0;
+
+	/**
 	 * \return true if the timer is running, false otherwise
 	 */
 
@@ -94,19 +100,6 @@ public:
 	 */
 
 	void stop();
-
-protected:
-
-	/**
-	 * \brief SoftwareTimer's destructor
-	 *
-	 * \note Polymorphic objects of SoftwareTimer type must not be deleted via pointer/reference
-	 */
-
-	~SoftwareTimer()
-	{
-
-	}
 
 private:
 
