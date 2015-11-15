@@ -22,7 +22,13 @@ namespace distortos
 /// SoftwareTimerCommon class implements common functionality of software timers
 class SoftwareTimerCommon : public SoftwareTimer
 {
+public:
 
+	/**
+	 * \brief SoftwareTimerCommon's constructor
+	 */
+
+	SoftwareTimerCommon();
 };
 
 }	// namespace distortos
