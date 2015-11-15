@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-11-14
+ * \date 2015-11-15
  */
 
 #ifndef INCLUDE_DISTORTOS_SOFTWARETIMER_HPP_
@@ -54,6 +54,14 @@ protected:
 	}
 
 private:
+
+	/**
+	 * \brief "Run" function of software timer
+	 *
+	 * This should be overridden by derived classes.
+	 */
+
+	virtual void run() = 0;
 
 	/**
 	 * \brief Software timer's function runner
