@@ -6,7 +6,7 @@
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #
-# date: 2015-10-16
+# date: 2015-10-18
 #
 
 #-----------------------------------------------------------------------------------------------------------------------
@@ -25,6 +25,11 @@ SET_SIMPLE_TARGETS = $(eval DO_INCLUDE := 0)
 # check all simple targets if present
 $(eval $(foreach target,$(SIMPLE_TARGETS),$(call CHECK_SIMPLE_TARGETS,$(target))))
 
+# remove all "
+UNQUOTE_D = $(subst ",,$(1))
+# The single " in the macro will influence the syntax highlightig of some editors, so that it becomes unusable.
+# Adding another comment line with a single quote closes the first one.
+
 #-----------------------------------------------------------------------------------------------------------------------
 # load configuration variables from distortosConfiguration.mk file selected by user
 #-----------------------------------------------------------------------------------------------------------------------
@@ -40,7 +45,7 @@ ifeq ($(DO_INCLUDE),1)
     include selectedConfiguration.mk
 
     # path to distortosConfiguration.mk file selected by $(CONFIG_SELECTED_CONFIGURATION) variable
-    DISTORTOS_CONFIGURATION_MK = ./$(subst ",,$(CONFIG_SELECTED_CONFIGURATION))
+    DISTORTOS_CONFIGURATION_MK = ./$(call UNQUOTE_D,$(CONFIG_SELECTED_CONFIGURATION))
 
     include $(DISTORTOS_CONFIGURATION_MK)
 
@@ -50,7 +55,7 @@ endif
 # toolchain configuration
 #-----------------------------------------------------------------------------------------------------------------------
 
-CONFIG_TOOLCHAIN_PREFIX := $(subst ",,$(CONFIG_TOOLCHAIN_PREFIX))
+CONFIG_TOOLCHAIN_PREFIX := $(call UNQUOTE_D,$(CONFIG_TOOLCHAIN_PREFIX))
 
 AS = $(CONFIG_TOOLCHAIN_PREFIX)gcc
 CC = $(CONFIG_TOOLCHAIN_PREFIX)gcc
@@ -66,8 +71,9 @@ RM = rm -f
 # project configuration
 #-----------------------------------------------------------------------------------------------------------------------
 
-# output folder
-OUTPUT = output/
+# output folder (can be defined outside with and without a trailing '/')
+OUTPUT ?= output
+override OUTPUT := $(addsuffix /,$(patsubst %/,%,$(OUTPUT)))
 
 # project name
 PROJECT = distortos
@@ -104,8 +110,8 @@ VERBOSE ?= 0
 # compilation flags
 #-----------------------------------------------------------------------------------------------------------------------
 
-CONFIG_ARCHITECTURE_FLAGS := $(subst ",,$(CONFIG_ARCHITECTURE_FLAGS))
-CONFIG_BUILD_OPTIMIZATION := $(subst ",,$(CONFIG_BUILD_OPTIMIZATION))
+CONFIG_ARCHITECTURE_FLAGS := $(call UNQUOTE_D,$(CONFIG_ARCHITECTURE_FLAGS))
+CONFIG_BUILD_OPTIMIZATION := $(call UNQUOTE_D,$(CONFIG_BUILD_OPTIMIZATION))
 
 ASFLAGS += $(CONFIG_ARCHITECTURE_FLAGS)
 ASFLAGS += $(DBGFLAGS)
@@ -126,7 +132,7 @@ CXXFLAGS += $(DBGFLAGS)
 CXXFLAGS += -ffunction-sections -fdata-sections -fno-rtti -fno-exceptions -MD -MP
 
 # path to linker script (generated automatically)
-LDSCRIPT = $(OUTPUT)$(subst ",,$(CONFIG_CHIP)).ld
+LDSCRIPT = $(OUTPUT)$(call UNQUOTE_D,$(CONFIG_CHIP)).ld
 
 LDFLAGS += $(CONFIG_ARCHITECTURE_FLAGS)
 LDFLAGS += -g -Wl,-Map=$(@:.elf=.map),--cref,--gc-sections
@@ -139,22 +145,24 @@ LDFLAGS += -g -Wl,-Map=$(@:.elf=.map),--cref,--gc-sections
 STANDARD_INCLUDES += -I$(OUTPUT)include -Iinclude
 
 # architecture includes
-ARCHITECTURE_INCLUDES += $(patsubst %,-I%,$(subst ",,$(CONFIG_ARCHITECTURE_INCLUDES)))
+ARCHITECTURE_INCLUDES += $(patsubst %,-I%,$(call UNQUOTE_D,$(CONFIG_ARCHITECTURE_INCLUDES)))
 
 # chip includes
-CHIP_INCLUDES += $(patsubst %,-I%,$(subst ",,$(CONFIG_CHIP_INCLUDES)))
+CHIP_INCLUDES += $(patsubst %,-I%,$(call UNQUOTE_D,$(CONFIG_CHIP_INCLUDES)))
 
 #-----------------------------------------------------------------------------------------------------------------------
 # build macros
 #-----------------------------------------------------------------------------------------------------------------------
 
 ifeq ($(VERBOSE),0)
-Q = @
-PRETTY_PRINT = @echo $(1)
+    Q = @
+    DO_PRINT = @echo $(1)
 else
-Q =
-PRETTY_PRINT =
+    Q =
+    DO_PRINT =
 endif
+
+PRETTY_PRINT = $(call DO_PRINT," $(1)     " $(2))
 
 define DIRECTORY_DEPENDENCY
 $(1): | $(dir $(1))
@@ -166,22 +174,22 @@ $(1):
 endef
 
 define PARSE_SUBDIRECTORY
-ifdef d
-NEXT_DIRECTORY := $$(d)/$(1)
-else
-NEXT_DIRECTORY := $(1)
-endif
-STACK_POINTER := $$(STACK_POINTER).x
-DIRECTORY_STACK_$$(STACK_POINTER) := $$(d)
-d := $$(NEXT_DIRECTORY)
-SUBDIRECTORIES :=
-include $$(d)/Rules.mk
-d := $$(DIRECTORY_STACK_$$(STACK_POINTER))
-STACK_POINTER := $$(basename $$(STACK_POINTER))
+	ifdef d
+		NEXT_DIRECTORY := $$(d)/$(1)
+	else
+		NEXT_DIRECTORY := $(1)
+	endif
+	STACK_POINTER := $$(STACK_POINTER).x
+	DIRECTORY_STACK_$$(STACK_POINTER) := $$(d)
+	d := $$(NEXT_DIRECTORY)
+	SUBDIRECTORIES :=
+	include $$(d)/Rules.mk
+	d := $$(DIRECTORY_STACK_$$(STACK_POINTER))
+	STACK_POINTER := $$(basename $$(STACK_POINTER))
 endef
 
 define PARSE_SUBDIRECTORIES
-$(foreach subdirectory,$(1),$(eval $(call PARSE_SUBDIRECTORY,$(subdirectory))))
+	$(foreach subdirectory,$(1),$(eval $(call PARSE_SUBDIRECTORY,$(subdirectory))))
 endef
 
 #-----------------------------------------------------------------------------------------------------------------------
@@ -192,8 +200,10 @@ endef
 all: targets
 
 ifeq ($(DO_INCLUDE),1)
+
     # trigger parsing of all Rules.mk files
     include Rules.mk
+
 endif
 
 # generated files depend (order-only) on their directories
@@ -212,41 +222,41 @@ $(OBJECTS): $(OUTPUT)include/distortos/distortosConfiguration.h
 $(GENERATED): Makefile
 
 $(OUTPUT)%.o: %.S
-	$(call PRETTY_PRINT," AS     " $<) 
+	$(call PRETTY_PRINT,"AS ",$<) 
 	$(Q)$(AS) $(ASFLAGS) $(ASFLAGS_$(<)) -c $< -o $@
 
 $(OUTPUT)%.o: %.c
-	$(call PRETTY_PRINT," CC     " $<)
+	$(call PRETTY_PRINT,"CC ",$<)
 	$(Q)$(CC) $(CFLAGS) $(CFLAGS_$(<)) -c $< -o $@
 
 $(OUTPUT)%.o: %.cpp
-	$(call PRETTY_PRINT," CXX    " $<)
+	$(call PRETTY_PRINT,"CXX",$<)
 	$(Q)$(CXX) $(CXXFLAGS) $(CXXFLAGS_$(<)) -c $< -o $@
 
 $(OUTPUT)%.a:
 	$(Q)$(RM) $@
-	$(call PRETTY_PRINT," AR     " $@)
+	$(call PRETTY_PRINT,"AR ",$@)
 	$(Q)$(AR) rcs $@ $(filter %.o,$(^))
 
 $(OUTPUT)%.elf:
-	$(call PRETTY_PRINT," LD     " $@)
+	$(call PRETTY_PRINT,"LD ",$@)
 	$(eval ARCHIVES_$@ := -Wl,--whole-archive $(addprefix -l:,$(filter %.a,$(^))) -Wl,--no-whole-archive)
 	$(Q)$(LD) $(LDFLAGS) -T$(filter %.ld,$(^)) $(filter %.o,$(^)) $(ARCHIVES_$(@)) -o $@
 
 $(OUTPUT)%.hex:
-	$(call PRETTY_PRINT," HEX    " $@)
+	$(call PRETTY_PRINT,"HEX",$@)
 	$(Q)$(OBJCOPY) -O ihex $(filter %.elf,$(^)) $@
 
 $(OUTPUT)%.bin:
-	$(call PRETTY_PRINT," BIN    " $@)
+	$(call PRETTY_PRINT,"BIN",$@)
 	$(Q)$(OBJCOPY) -O binary $(filter %.elf,$(^)) $@
 
 $(OUTPUT)%.dmp:
-	$(call PRETTY_PRINT," DMP    " $@)
+	$(call PRETTY_PRINT,"DMP",$@)
 	$(Q)$(OBJDUMP) -x --syms --demangle $(filter %.elf,$(^)) > $@
 
 $(OUTPUT)%.lss:
-	$(call PRETTY_PRINT," LSS    " $@)
+	$(call PRETTY_PRINT,"LSS",$@)
 	$(Q)$(OBJDUMP) --demangle -S $(filter %.elf,$(^)) > $@
 
 .PHONY: size
