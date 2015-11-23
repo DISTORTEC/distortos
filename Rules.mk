@@ -6,7 +6,7 @@
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #
-# date: 2015-10-12
+# date: 2015-11-23
 #
 
 #-----------------------------------------------------------------------------------------------------------------------
@@ -31,7 +31,7 @@ $(DISTORTOS_CONFIGURATION_H): $(DISTORTOS_CONFIGURATION_MK)
 # generated headers depend on this Rules.mk, the script that generates them and the selectedConfiguration.mk file
 #-----------------------------------------------------------------------------------------------------------------------
 
-$(DISTORTOS_CONFIGURATION_H): Rules.mk $(MAKE_DISTORTOS_CONFIGURATION_AWK) selectedConfiguration.mk
+$(DISTORTOS_CONFIGURATION_H): $(d)/Rules.mk $(MAKE_DISTORTOS_CONFIGURATION_AWK) selectedConfiguration.mk
 
 #-----------------------------------------------------------------------------------------------------------------------
 # add generated headers to list of generated files
