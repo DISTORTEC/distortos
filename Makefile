@@ -194,7 +194,7 @@ all: targets
 
 ifeq ($(DO_INCLUDE),1)
     # trigger parsing of all Rules.mk files
-    include Rules.mk
+    $(call PARSE_SUBDIRECTORIES,.)
 endif
 
 # generated files depend (order-only) on their directories
