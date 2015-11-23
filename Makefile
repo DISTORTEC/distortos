@@ -6,7 +6,7 @@
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #
-# date: 2015-10-16
+# date: 2015-11-23
 #
 
 #-----------------------------------------------------------------------------------------------------------------------
@@ -171,6 +171,7 @@ NEXT_DIRECTORY := $$(d)/$(1)
 else
 NEXT_DIRECTORY := $(1)
 endif
+NEXT_DIRECTORY := $$(subst ./,,$$(NEXT_DIRECTORY))
 STACK_POINTER := $$(STACK_POINTER).x
 DIRECTORY_STACK_$$(STACK_POINTER) := $$(d)
 d := $$(NEXT_DIRECTORY)
