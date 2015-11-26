@@ -8,12 +8,12 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-09-12
+ * \date 2015-11-26
  */
 
 #include "distortos/scheduler/lowLevelInitialization.hpp"
 
-#include "distortos/syscalls/mallocLockingInitialization.hpp"
+#include "distortos/internal/memory/mallocLockingInitialization.hpp"
 
 #include "distortos/architecture/lowLevelInitialization.hpp"
 #include "distortos/architecture/startScheduling.hpp"
