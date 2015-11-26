@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-07-10
+ * \date 2015-11-26
  */
 
 #ifndef ESTD_INTEGERSEQUENCE_HPP_
@@ -57,7 +57,6 @@ public:
 template<std::size_t... Indexes>
 using IndexSequence = IntegerSequence<std::size_t, Indexes...>;
 
-/// internal namespace of estd - should not be used directly!
 namespace internal
 {
 
