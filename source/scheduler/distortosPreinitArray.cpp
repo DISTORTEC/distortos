@@ -44,7 +44,7 @@ using FunctionPointer = void(*)();
 const FunctionPointer distortosPreinitArray[] __attribute__ ((section(".preinit_array"), used))
 {
 		scheduler::lowLevelInitialization,
-		syscalls::mallocLockingInitialization,
+		internal::mallocLockingInitialization,
 		architecture::lowLevelInitialization,
 		chip::lowLevelInitialization,
 		architecture::startScheduling,

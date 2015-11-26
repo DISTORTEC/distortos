@@ -17,7 +17,7 @@
 namespace distortos
 {
 
-namespace syscalls
+namespace internal
 {
 
 /*---------------------------------------------------------------------------------------------------------------------+
@@ -33,7 +33,7 @@ namespace syscalls
 
 void mallocLockingInitialization();
 
-}	// namespace syscalls
+}	// namespace internal
 
 }	// namespace distortos
 

@@ -18,7 +18,7 @@
 namespace distortos
 {
 
-namespace syscalls
+namespace internal
 {
 
 namespace
@@ -62,6 +62,6 @@ extern "C" void __malloc_unlock()
 	mallocLockingMutex.unlock();
 }
 
-}	// namespace syscalls
+}	// namespace internal
 
 }	// namespace distortos
