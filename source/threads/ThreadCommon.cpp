@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-11-13
+ * \date 2015-11-26
  */
 
 #include "distortos/ThreadCommon.hpp"
@@ -137,7 +137,6 @@ int ThreadCommon::start()
 void ThreadCommon::terminationHook()
 {
 	joinSemaphore_.post();
-	getThreadControlBlock().setList(nullptr);
 }
 
 }	// namespace distortos
