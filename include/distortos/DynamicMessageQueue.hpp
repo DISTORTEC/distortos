@@ -49,8 +49,8 @@ public:
 
 template<typename T>
 DynamicMessageQueue<T>::DynamicMessageQueue(const size_t queueSize) :
-		MessageQueue<T>{{new EntryStorage[queueSize], memory::storageDeleter<EntryStorage>},
-				{new ValueStorage[queueSize], memory::storageDeleter<ValueStorage>}, queueSize}
+		MessageQueue<T>{{new EntryStorage[queueSize], internal::storageDeleter<EntryStorage>},
+				{new ValueStorage[queueSize], internal::storageDeleter<ValueStorage>}, queueSize}
 {
 
 }

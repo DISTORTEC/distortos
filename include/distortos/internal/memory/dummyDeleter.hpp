@@ -19,7 +19,7 @@
 namespace distortos
 {
 
-namespace memory
+namespace internal
 {
 
 /*---------------------------------------------------------------------------------------------------------------------+
@@ -40,10 +40,10 @@ template<typename T, typename U>
 void dummyDeleter(U*)
 {
 	static_assert(std::is_trivially_destructible<T>::value == true,
-			"memory::dummyDeleter() cannot be used with types that are not trivially destructible!");
+			"internal::dummyDeleter() cannot be used with types that are not trivially destructible!");
 }
 
-}	// namespace memory
+}	// namespace internal
 
 }	// namespace distortos
 

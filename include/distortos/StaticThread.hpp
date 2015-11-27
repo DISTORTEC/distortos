@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-11-13
+ * \date 2015-11-27
  */
 
 #ifndef INCLUDE_DISTORTOS_STATICTHREAD_HPP_
@@ -212,7 +212,7 @@ template<size_t StackSize, bool CanReceiveSignals, size_t QueuedSignals, size_t 
 		typename... Args>
 StaticThread<StackSize, CanReceiveSignals, QueuedSignals, SignalActions, Function, Args...>::
 StaticThread(const uint8_t priority, const SchedulingPolicy schedulingPolicy, Function&& function, Args&&... args) :
-		Base{{&stack_, memory::dummyDeleter<decltype(stack_)>}, sizeof(stack_), priority, schedulingPolicy, nullptr,
+		Base{{&stack_, internal::dummyDeleter<decltype(stack_)>}, sizeof(stack_), priority, schedulingPolicy, nullptr,
 				std::forward<Function>(function), std::forward<Args>(args)...}
 {
 
@@ -221,7 +221,7 @@ StaticThread(const uint8_t priority, const SchedulingPolicy schedulingPolicy, Fu
 template<size_t StackSize, size_t QueuedSignals, size_t SignalActions, typename Function, typename... Args>
 StaticThread<StackSize, true, QueuedSignals, SignalActions, Function, Args...>::StaticThread(const uint8_t priority,
 		const SchedulingPolicy schedulingPolicy, Function&& function, Args&&... args) :
-		Base{{&stack_, memory::dummyDeleter<decltype(stack_)>}, sizeof(stack_), priority, schedulingPolicy,
+		Base{{&stack_, internal::dummyDeleter<decltype(stack_)>}, sizeof(stack_), priority, schedulingPolicy,
 				&static_cast<SignalsReceiver&>(staticSignalsReceiver_), std::forward<Function>(function),
 				std::forward<Args>(args)...},
 		staticSignalsReceiver_{}

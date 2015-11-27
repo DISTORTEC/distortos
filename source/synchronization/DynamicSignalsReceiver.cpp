@@ -26,9 +26,9 @@ DynamicSignalsReceiver::DynamicSignalsReceiver(const size_t queuedSignals, const
 		SignalsReceiver{queuedSignals != 0 ? &signalInformationQueueWrapper_ : nullptr,
 				signalActions != 0 ? &signalsCatcher_ : nullptr},
 		signalInformationQueueWrapper_{{queuedSignals != 0 ? new SignalInformationQueueWrapper::Storage[queuedSignals] :
-				nullptr, memory::storageDeleter<SignalInformationQueueWrapper::Storage>}, queuedSignals},
+				nullptr, internal::storageDeleter<SignalInformationQueueWrapper::Storage>}, queuedSignals},
 		signalsCatcher_{{signalActions != 0 ? new SignalsCatcher::Storage[signalActions] : nullptr,
-				memory::storageDeleter<SignalsCatcher::Storage>}, signalActions}
+				internal::storageDeleter<SignalsCatcher::Storage>}, signalActions}
 {
 
 }

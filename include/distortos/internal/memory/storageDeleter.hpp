@@ -17,7 +17,7 @@
 namespace distortos
 {
 
-namespace memory
+namespace internal
 {
 
 /*---------------------------------------------------------------------------------------------------------------------+
@@ -39,7 +39,7 @@ void storageDeleter(U* const storage)
 	delete[] reinterpret_cast<T*>(storage);
 }
 
-}	// namespace memory
+}	// namespace internal
 
 }	// namespace distortos
 

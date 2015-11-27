@@ -104,8 +104,8 @@ template<typename Function, typename... Args>
 DynamicThread::DynamicThread(const size_t stackSize, const bool canReceiveSignals, const size_t queuedSignals,
 		const size_t signalActions, const uint8_t priority, const SchedulingPolicy schedulingPolicy,
 		Function&& function, Args&&... args) :
-		Base{{new uint8_t[stackSize], memory::storageDeleter<uint8_t>}, stackSize, priority, schedulingPolicy, nullptr,
-				canReceiveSignals == true ? &dynamicSignalsReceiver_ : nullptr},
+		Base{{new uint8_t[stackSize], internal::storageDeleter<uint8_t>}, stackSize, priority, schedulingPolicy,
+				nullptr, canReceiveSignals == true ? &dynamicSignalsReceiver_ : nullptr},
 		dynamicSignalsReceiver_{canReceiveSignals == true ? queuedSignals : 0,
 				canReceiveSignals == true ? signalActions : 0},
 		boundFunction_{std::bind(std::forward<Function>(function), std::forward<Args>(args)...)}

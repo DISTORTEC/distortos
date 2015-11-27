@@ -100,7 +100,7 @@ Stack::Stack(StorageUniquePointer&& storageUniquePointer, const size_t size, voi
 }
 
 Stack::Stack(void* const storage, const size_t size) :
-		storageUniquePointer_{storage, memory::dummyDeleter<void*>},
+		storageUniquePointer_{storage, internal::dummyDeleter<void*>},
 		adjustedStorage_{storage},
 		adjustedSize_{size},
 		stackPointer_{}

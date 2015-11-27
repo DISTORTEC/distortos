@@ -46,7 +46,7 @@ public:
 
 template<typename T>
 DynamicFifoQueue<T>::DynamicFifoQueue(const size_t queueSize) :
-		FifoQueue<T>{{new Storage[queueSize], memory::storageDeleter<Storage>}, queueSize}
+		FifoQueue<T>{{new Storage[queueSize], internal::storageDeleter<Storage>}, queueSize}
 {
 
 }

@@ -23,7 +23,7 @@ namespace distortos
 +---------------------------------------------------------------------------------------------------------------------*/
 
 DynamicRawFifoQueue::DynamicRawFifoQueue(const size_t elementSize, const size_t queueSize) :
-		RawFifoQueue{{new uint8_t[elementSize * queueSize], memory::storageDeleter<uint8_t>}, elementSize, queueSize}
+		RawFifoQueue{{new uint8_t[elementSize * queueSize], internal::storageDeleter<uint8_t>}, elementSize, queueSize}
 {
 
 }

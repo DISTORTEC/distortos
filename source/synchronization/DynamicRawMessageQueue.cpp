@@ -23,8 +23,8 @@ namespace distortos
 +---------------------------------------------------------------------------------------------------------------------*/
 
 DynamicRawMessageQueue::DynamicRawMessageQueue(const size_t elementSize, const size_t queueSize) :
-		RawMessageQueue{{new EntryStorage[queueSize], memory::storageDeleter<EntryStorage>},
-				{new uint8_t[elementSize * queueSize], memory::storageDeleter<uint8_t>}, elementSize, queueSize}
+		RawMessageQueue{{new EntryStorage[queueSize], internal::storageDeleter<EntryStorage>},
+				{new uint8_t[elementSize * queueSize], internal::storageDeleter<uint8_t>}, elementSize, queueSize}
 {
 
 }

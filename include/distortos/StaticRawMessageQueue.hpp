@@ -38,8 +38,8 @@ public:
 	 */
 
 	explicit StaticRawMessageQueue() :
-			RawMessageQueue{{entryStorage_.data(), memory::dummyDeleter<EntryStorage>},
-					{valueStorage_.data(), memory::dummyDeleter<ValueStorage<T>>}, sizeof(*valueStorage_.data()),
+			RawMessageQueue{{entryStorage_.data(), internal::dummyDeleter<EntryStorage>},
+					{valueStorage_.data(), internal::dummyDeleter<ValueStorage<T>>}, sizeof(*valueStorage_.data()),
 					valueStorage_.size()}
 	{
 

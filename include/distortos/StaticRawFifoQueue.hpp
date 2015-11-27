@@ -41,7 +41,7 @@ public:
 	 */
 
 	explicit StaticRawFifoQueue() :
-			RawFifoQueue{{storage_.data(), memory::dummyDeleter<Storage>}, sizeof(*storage_.data()), storage_.size()}
+			RawFifoQueue{{storage_.data(), internal::dummyDeleter<Storage>}, sizeof(*storage_.data()), storage_.size()}
 	{
 
 	}

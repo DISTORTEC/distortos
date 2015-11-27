@@ -44,9 +44,9 @@ public:
 	StaticSignalsReceiver() :
 			SignalsReceiver{&signalInformationQueueWrapper_, &signalsCatcher_},
 			signalInformationQueueWrapper_{{signalInformationQueueWrapperStorage_.data(),
-					memory::dummyDeleter<SignalInformationQueueWrapper::Storage>},
+					internal::dummyDeleter<SignalInformationQueueWrapper::Storage>},
 					signalInformationQueueWrapperStorage_.size()},
-			signalsCatcher_{{signalsCatcherStorage_.data(), memory::dummyDeleter<SignalsCatcher::Storage>},
+			signalsCatcher_{{signalsCatcherStorage_.data(), internal::dummyDeleter<SignalsCatcher::Storage>},
 					signalsCatcherStorage_.size()}
 	{
 
@@ -89,7 +89,7 @@ public:
 	StaticSignalsReceiver() :
 			SignalsReceiver{&signalInformationQueueWrapper_, nullptr},
 			signalInformationQueueWrapper_{{signalInformationQueueWrapperStorage_.data(),
-					memory::dummyDeleter<SignalInformationQueueWrapper::Storage>},
+					internal::dummyDeleter<SignalInformationQueueWrapper::Storage>},
 					signalInformationQueueWrapperStorage_.size()}
 	{
 
@@ -125,7 +125,7 @@ public:
 
 	StaticSignalsReceiver() :
 			SignalsReceiver{nullptr, &signalsCatcher_},
-			signalsCatcher_{{signalsCatcherStorage_.data(), memory::dummyDeleter<SignalsCatcher::Storage>},
+			signalsCatcher_{{signalsCatcherStorage_.data(), internal::dummyDeleter<SignalsCatcher::Storage>},
 					signalsCatcherStorage_.size()}
 	{
 
