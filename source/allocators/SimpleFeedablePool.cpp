@@ -18,7 +18,7 @@
 namespace distortos
 {
 
-namespace allocators
+namespace internal
 {
 
 /*---------------------------------------------------------------------------------------------------------------------+
@@ -38,6 +38,6 @@ void* SimpleFeedablePool::allocate(const size_t size)
 	return storage;
 }
 
-}	// namespace allocators
+}	// namespace internal
 
 }	// namespace distortos

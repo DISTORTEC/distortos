@@ -33,7 +33,7 @@ using SoftwareTimerControlBlockListValueType = std::reference_wrapper<SoftwareTi
 
 /// type of allocator used by SoftwareTimerControlBlockList
 using SoftwareTimerControlBlockListAllocator =
-		allocators::PoolAllocator<SoftwareTimerControlBlockListValueType, allocators::SimpleFeedablePool>;
+		internal::PoolAllocator<SoftwareTimerControlBlockListValueType, internal::SimpleFeedablePool>;
 
 /// underlying unsorted container of SoftwareTimerControlBlockList
 using SoftwareTimerControlBlockUnsortedList =

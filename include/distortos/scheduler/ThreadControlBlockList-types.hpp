@@ -33,7 +33,7 @@ using ThreadControlBlockListValueType = std::reference_wrapper<ThreadControlBloc
 
 /// type of allocator used by ThreadControlBlockList
 using ThreadControlBlockListAllocator =
-		allocators::PoolAllocator<ThreadControlBlockListValueType, allocators::SimpleFeedablePool>;
+		internal::PoolAllocator<ThreadControlBlockListValueType, internal::SimpleFeedablePool>;
 
 /// underlying unsorted container of ThreadControlBlockList
 using ThreadControlBlockUnsortedList = std::list<ThreadControlBlockListValueType, ThreadControlBlockListAllocator>;

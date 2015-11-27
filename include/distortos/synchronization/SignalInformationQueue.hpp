@@ -102,7 +102,7 @@ public:
 private:
 
 	/// type of allocator used by \a List
-	using PoolAllocator = allocators::PoolAllocator<SignalInformation, allocators::FeedablePool>;
+	using PoolAllocator = internal::PoolAllocator<SignalInformation, internal::FeedablePool>;
 
 	/// type of container with SignalInformation objects
 	using List = std::forward_list<SignalInformation, PoolAllocator>;

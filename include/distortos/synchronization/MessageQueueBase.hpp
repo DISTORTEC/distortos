@@ -102,10 +102,10 @@ public:
 	};
 
 	/// type of pool
-	using Pool = allocators::FeedablePool;
+	using Pool = internal::FeedablePool;
 
 	/// type of pool allocator
-	using PoolAllocator = allocators::PoolAllocator<Entry, Pool>;
+	using PoolAllocator = internal::PoolAllocator<Entry, Pool>;
 
 	/// type of free entry list
 	using FreeEntryList = std::forward_list<Entry, PoolAllocator>;

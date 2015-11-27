@@ -21,8 +21,7 @@
 namespace distortos
 {
 
-/// allocators namespace groups allocators
-namespace allocators
+namespace internal
 {
 
 /**
@@ -85,7 +84,7 @@ public:
 	}
 };
 
-}	// namespace allocators
+}	// namespace internal
 
 }	// namespace distortos
 

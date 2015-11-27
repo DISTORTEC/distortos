@@ -19,7 +19,7 @@
 namespace distortos
 {
 
-namespace allocators
+namespace internal
 {
 
 /// FeedablePool is a modification of SimpleFeedablePool that feeds deallocated storage back to pool.
@@ -43,7 +43,7 @@ public:
 	}
 };
 
-}	// namespace allocators
+}	// namespace internal
 
 }	// namespace distortos
 

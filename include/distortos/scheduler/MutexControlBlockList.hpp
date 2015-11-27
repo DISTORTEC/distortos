@@ -36,8 +36,8 @@ namespace scheduler
 using MutexControlBlockListValueType = std::reference_wrapper<synchronization::MutexControlBlock>;
 
 /// type of allocator used by MutexControlBlockList
-using MutexControlBlockListAllocator = allocators::PoolAllocator<MutexControlBlockListValueType,
-		allocators::SimpleFeedablePool>;
+using MutexControlBlockListAllocator =
+		internal::PoolAllocator<MutexControlBlockListValueType, internal::SimpleFeedablePool>;
 
 /// list of references to mutex control blocks
 using MutexControlBlockList = std::list<MutexControlBlockListValueType, MutexControlBlockListAllocator>;

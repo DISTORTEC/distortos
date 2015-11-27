@@ -19,7 +19,7 @@
 namespace distortos
 {
 
-namespace allocators
+namespace internal
 {
 
 /**
@@ -163,7 +163,7 @@ inline bool operator!=(const PoolAllocator<T1, OtherPoolType>& left, const PoolA
 	return (left == right) == false;
 }
 
-}	// namespace allocators
+}	// namespace internal
 
 }	// namespace distortos
 

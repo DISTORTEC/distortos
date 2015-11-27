@@ -19,7 +19,7 @@
 namespace distortos
 {
 
-namespace allocators
+namespace internal
 {
 
 /**
@@ -109,7 +109,7 @@ private:
 	size_t size_;
 };
 
-}	// namespace allocators
+}	// namespace internal
 
 }	// namespace distortos
 
