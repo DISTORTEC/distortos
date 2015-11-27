@@ -8,13 +8,13 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-10-18
+ * \date 2015-11-27
  */
 
-#ifndef INCLUDE_DISTORTOS_ALLOCATORS_POOLALLOCATOR_HPP_
-#define INCLUDE_DISTORTOS_ALLOCATORS_POOLALLOCATOR_HPP_
+#ifndef INCLUDE_DISTORTOS_INTERNAL_ALLOCATORS_POOLALLOCATOR_HPP_
+#define INCLUDE_DISTORTOS_INTERNAL_ALLOCATORS_POOLALLOCATOR_HPP_
 
-#include "distortos/allocators/AllocatorBase.hpp"
+#include "distortos/internal/allocators/AllocatorBase.hpp"
 
 namespace distortos
 {
@@ -167,4 +167,4 @@ inline bool operator!=(const PoolAllocator<T1, OtherPoolType>& left, const PoolA
 
 }	// namespace distortos
 
-#endif	// INCLUDE_DISTORTOS_ALLOCATORS_POOLALLOCATOR_HPP_
+#endif	// INCLUDE_DISTORTOS_INTERNAL_ALLOCATORS_POOLALLOCATOR_HPP_
