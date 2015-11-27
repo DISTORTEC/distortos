@@ -23,7 +23,7 @@
 namespace distortos
 {
 
-namespace scheduler
+namespace internal
 {
 
 namespace
@@ -43,8 +43,8 @@ using FunctionPointer = void(*)();
 /// array of pointers to functions executed before constructors for global and static objects from __libc_init_array()
 const FunctionPointer distortosPreinitArray[] __attribute__ ((section(".preinit_array"), used))
 {
-		scheduler::lowLevelInitialization,
-		internal::mallocLockingInitialization,
+		lowLevelInitialization,
+		mallocLockingInitialization,
 		architecture::lowLevelInitialization,
 		chip::lowLevelInitialization,
 		architecture::startScheduling,
@@ -52,6 +52,6 @@ const FunctionPointer distortosPreinitArray[] __attribute__ ((section(".preinit_
 
 }	// namespace
 
-}	// namespace scheduler
+}	// namespace internal
 
 }	// namespace distortos

@@ -1,6 +1,6 @@
 /**
  * \file
- * \brief scheduler::lowLevelInitialization() definition
+ * \brief internal::lowLevelInitialization() definition
  *
  * \author Copyright (C) 2014-2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
@@ -24,7 +24,7 @@
 namespace distortos
 {
 
-namespace scheduler
+namespace internal
 {
 
 namespace
@@ -97,6 +97,6 @@ void lowLevelInitialization()
 	idleThread.start();
 }
 
-}	// namespace scheduler
+}	// namespace internal
 
 }	// namespace distortos

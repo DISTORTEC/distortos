@@ -21,7 +21,7 @@
 namespace distortos
 {
 
-namespace scheduler
+namespace internal
 {
 
 /// functor which gives descending effective priority order of elements on the list
@@ -43,7 +43,7 @@ struct ThreadControlBlockDescendingEffectivePriority
 };
 
 /// base of ThreadControlBlockList
-using ThreadControlBlockListBase = internal::SortedContainer
+using ThreadControlBlockListBase = SortedContainer
 		<
 				ThreadControlBlockUnsortedList,
 				ThreadControlBlockDescendingEffectivePriority
@@ -131,7 +131,7 @@ ThreadControlBlockList::iterator ThreadControlBlockList::sortedEmplace(Args&&...
 	return it;
 }
 
-}	// namespace scheduler
+}	// namespace internal
 
 }	// namespace distortos
 

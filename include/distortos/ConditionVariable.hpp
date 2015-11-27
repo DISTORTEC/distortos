@@ -264,7 +264,7 @@ public:
 private:
 
 	/// ThreadControlBlock objects blocked on this condition variable
-	scheduler::ThreadControlBlockList blockedList_;
+	internal::ThreadControlBlockList blockedList_;
 };
 
 template<typename Predicate>

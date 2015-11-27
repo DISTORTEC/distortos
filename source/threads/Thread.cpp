@@ -35,7 +35,7 @@ Thread::~Thread()
 void Thread::threadRunner(Thread& thread)
 {
 	thread.run();
-	scheduler::getScheduler().remove(&Thread::terminationHook);
+	internal::getScheduler().remove(&Thread::terminationHook);
 
 	while (1);
 }

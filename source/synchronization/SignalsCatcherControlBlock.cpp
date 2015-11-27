@@ -118,7 +118,7 @@ SignalsCatcherControlBlock::Association* findAssociation(SignalsCatcherControlBl
 void deliverSignals()
 {
 	const auto signalsReceiverControlBlock =
-			scheduler::getScheduler().getCurrentThreadControlBlock().getSignalsReceiverControlBlock();
+			internal::getScheduler().getCurrentThreadControlBlock().getSignalsReceiverControlBlock();
 	if (signalsReceiverControlBlock == nullptr)
 		return;	/// \todo error handling?
 
@@ -192,7 +192,7 @@ std::pair<int, SignalAction> SignalsCatcherControlBlock::getAssociation(const ui
 }
 
 int SignalsCatcherControlBlock::postGenerate(const uint8_t signalNumber,
-		scheduler::ThreadControlBlock& threadControlBlock)
+		internal::ThreadControlBlock& threadControlBlock)
 {
 	const auto getAssociationResult = getAssociation(signalNumber);
 	if (getAssociationResult.first != 0)
@@ -266,7 +266,7 @@ void SignalsCatcherControlBlock::setSignalMask(const SignalSet signalMask,
 	if (pendingUnblockedBitset.none() == true)	// no pending & unblocked signals?
 		return;
 
-	requestDeliveryOfSignals(scheduler::getScheduler().getCurrentThreadControlBlock());
+	requestDeliveryOfSignals(internal::getScheduler().getCurrentThreadControlBlock());
 }
 
 /*---------------------------------------------------------------------------------------------------------------------+
@@ -300,7 +300,7 @@ SignalAction SignalsCatcherControlBlock::clearAssociation(const uint8_t signalNu
 	return previousSignalAction;
 }
 
-void SignalsCatcherControlBlock::requestDeliveryOfSignals(scheduler::ThreadControlBlock& threadControlBlock)
+void SignalsCatcherControlBlock::requestDeliveryOfSignals(internal::ThreadControlBlock& threadControlBlock)
 {
 	if (deliveryIsPending_ == false)
 	{
@@ -311,8 +311,8 @@ void SignalsCatcherControlBlock::requestDeliveryOfSignals(scheduler::ThreadContr
 	const auto state = threadControlBlock.getState();
 	// is thread blocked (not "runnable" and can be unblocked)?
 	if (state != decltype(state)::New && state != decltype(state)::Runnable && state != decltype(state)::Terminated)
-		scheduler::getScheduler().unblock(threadControlBlock.getIterator(),
-				scheduler::ThreadControlBlock::UnblockReason::Signal);
+		internal::getScheduler().unblock(threadControlBlock.getIterator(),
+				internal::ThreadControlBlock::UnblockReason::Signal);
 }
 
 }	// namespace synchronization

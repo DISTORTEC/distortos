@@ -19,7 +19,7 @@
 namespace distortos
 {
 
-namespace scheduler
+namespace internal
 {
 
 /// SoftwareTimerControlBlockSupervisor class is a supervisor of SoftwareTimerControlBlock objects
@@ -65,7 +65,7 @@ private:
 	SoftwareTimerControlBlockList activeList_;
 };
 
-}	// namespace scheduler
+}	// namespace internal
 
 }	// namespace distortos
 

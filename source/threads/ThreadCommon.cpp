@@ -31,7 +31,7 @@ namespace distortos
 
 ThreadCommon::ThreadCommon(StackStorageUniquePointer&& stackStorageUniquePointer, const size_t size,
 		const uint8_t priority, const SchedulingPolicy schedulingPolicy,
-		scheduler::ThreadGroupControlBlock* const threadGroupControlBlock, SignalsReceiver* const signalsReceiver) :
+		internal::ThreadGroupControlBlock* const threadGroupControlBlock, SignalsReceiver* const signalsReceiver) :
 		ThreadCommon{{std::move(stackStorageUniquePointer), size, threadRunner, *this}, priority, schedulingPolicy,
 				threadGroupControlBlock, signalsReceiver}
 {
@@ -39,7 +39,7 @@ ThreadCommon::ThreadCommon(StackStorageUniquePointer&& stackStorageUniquePointer
 }
 
 ThreadCommon::ThreadCommon(architecture::Stack&& stack, const uint8_t priority, const SchedulingPolicy schedulingPolicy,
-		scheduler::ThreadGroupControlBlock* const threadGroupControlBlock, SignalsReceiver* const signalsReceiver) :
+		internal::ThreadGroupControlBlock* const threadGroupControlBlock, SignalsReceiver* const signalsReceiver) :
 		threadControlBlock_{std::move(stack), priority, schedulingPolicy, threadGroupControlBlock, signalsReceiver,
 				*this},
 		joinSemaphore_{0}
@@ -94,7 +94,7 @@ ThreadState ThreadCommon::getState() const
 
 int ThreadCommon::join()
 {
-	if (&getThreadControlBlock() == &scheduler::getScheduler().getCurrentThreadControlBlock())
+	if (&getThreadControlBlock() == &internal::getScheduler().getCurrentThreadControlBlock())
 		return EDEADLK;
 
 	int ret;
@@ -127,7 +127,7 @@ int ThreadCommon::start()
 	if (getState() != ThreadState::New)
 		return EINVAL;
 
-	return scheduler::getScheduler().add(getThreadControlBlock());
+	return internal::getScheduler().add(getThreadControlBlock());
 }
 
 /*---------------------------------------------------------------------------------------------------------------------+

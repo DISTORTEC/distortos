@@ -30,22 +30,22 @@ namespace ThisThread
 
 Thread& get()
 {
-	return scheduler::getScheduler().getCurrentThreadControlBlock().getOwner();
+	return internal::getScheduler().getCurrentThreadControlBlock().getOwner();
 }
 
 uint8_t getEffectivePriority()
 {
-	return scheduler::getScheduler().getCurrentThreadControlBlock().getEffectivePriority();
+	return internal::getScheduler().getCurrentThreadControlBlock().getEffectivePriority();
 }
 
 uint8_t getPriority()
 {
-	return scheduler::getScheduler().getCurrentThreadControlBlock().getPriority();
+	return internal::getScheduler().getCurrentThreadControlBlock().getPriority();
 }
 
 void setPriority(const uint8_t priority, const bool alwaysBehind)
 {
-	scheduler::getScheduler().getCurrentThreadControlBlock().setPriority(priority, alwaysBehind);
+	internal::getScheduler().getCurrentThreadControlBlock().setPriority(priority, alwaysBehind);
 }
 
 int sleepFor(const TickClock::duration duration)
@@ -55,8 +55,8 @@ int sleepFor(const TickClock::duration duration)
 
 int sleepUntil(const TickClock::time_point timePoint)
 {
-	auto& scheduler = scheduler::getScheduler();
-	scheduler::ThreadControlBlockList sleepingList {scheduler.getThreadControlBlockListAllocator(),
+	auto& scheduler = internal::getScheduler();
+	internal::ThreadControlBlockList sleepingList {scheduler.getThreadControlBlockListAllocator(),
 			ThreadState::Sleeping};
 	const auto ret = scheduler.blockUntil(sleepingList, timePoint);
 	return ret == ETIMEDOUT ? 0 : ret;
@@ -64,7 +64,7 @@ int sleepUntil(const TickClock::time_point timePoint)
 
 void yield()
 {
-	scheduler::getScheduler().yield();
+	internal::getScheduler().yield();
 }
 
 }	// namespace ThisThread

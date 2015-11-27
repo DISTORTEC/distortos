@@ -18,7 +18,7 @@
 namespace distortos
 {
 
-namespace scheduler
+namespace internal
 {
 
 /*---------------------------------------------------------------------------------------------------------------------+
@@ -35,6 +35,6 @@ void idleThreadFunction()
 	}
 }
 
-}	// namespace scheduler
+}	// namespace internal
 
 }	// namespace distortos

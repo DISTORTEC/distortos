@@ -16,7 +16,7 @@
 namespace distortos
 {
 
-namespace scheduler
+namespace internal
 {
 
 /*---------------------------------------------------------------------------------------------------------------------+
@@ -36,6 +36,6 @@ void ThreadControlBlockList::sortedSplice(ThreadControlBlockList& other, const i
 	otherPosition->get().setState(state_);
 }
 
-}	// namespace scheduler
+}	// namespace internal
 
 }	// namespace distortos

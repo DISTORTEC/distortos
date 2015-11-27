@@ -21,7 +21,7 @@ namespace distortos
 
 TickClock::time_point TickClock::now()
 {
-	const auto tickCount = scheduler::getScheduler().getTickCount();
+	const auto tickCount = internal::getScheduler().getTickCount();
 	return time_point{duration{tickCount}};
 }
 

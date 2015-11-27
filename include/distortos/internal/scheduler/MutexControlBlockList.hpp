@@ -29,20 +29,19 @@ class MutexControlBlock;
 
 }	// namespace synchronization
 
-namespace scheduler
+namespace internal
 {
 
 /// type held by MutexControlBlockList
 using MutexControlBlockListValueType = std::reference_wrapper<synchronization::MutexControlBlock>;
 
 /// type of allocator used by MutexControlBlockList
-using MutexControlBlockListAllocator =
-		internal::PoolAllocator<MutexControlBlockListValueType, internal::SimpleFeedablePool>;
+using MutexControlBlockListAllocator = PoolAllocator<MutexControlBlockListValueType, SimpleFeedablePool>;
 
 /// list of references to mutex control blocks
 using MutexControlBlockList = std::list<MutexControlBlockListValueType, MutexControlBlockListAllocator>;
 
-}	// namespace scheduler
+}	// namespace internal
 
 }	// namespace distortos
 

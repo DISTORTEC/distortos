@@ -189,13 +189,13 @@ void fromInterruptToCurrentThread(void (& function)())
 /**
  * \brief Handles request to execute provided function in non-current thread.
  *
- * \param [in] threadControlBlock is a reference to scheduler::ThreadControlBlock of thread in which \a function should
+ * \param [in] threadControlBlock is a reference to internal::ThreadControlBlock of thread in which \a function should
  * be executed
  * \param [in] function is a reference to function that should be executed in thread associated with
  * \a threadControlBlock
  */
 
-void toNonCurrentThread(scheduler::ThreadControlBlock& threadControlBlock, void (& function)())
+void toNonCurrentThread(internal::ThreadControlBlock& threadControlBlock, void (& function)())
 {
 	const auto stackPointer = threadControlBlock.getStack().getStackPointer();
 	const auto stackFrame = reinterpret_cast<StackFrame*>(stackPointer) - 1;
@@ -230,9 +230,9 @@ void toNonCurrentThread(scheduler::ThreadControlBlock& threadControlBlock, void 
 | global functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-void requestFunctionExecution(scheduler::ThreadControlBlock& threadControlBlock, void (& function)())
+void requestFunctionExecution(internal::ThreadControlBlock& threadControlBlock, void (& function)())
 {
-	const auto& currentThreadControlBlock = scheduler::getScheduler().getCurrentThreadControlBlock();
+	const auto& currentThreadControlBlock = internal::getScheduler().getCurrentThreadControlBlock();
 	if (&threadControlBlock == &currentThreadControlBlock)	// request to current thread?
 	{
 		const auto inInterrupt = __get_IPSR() != 0;

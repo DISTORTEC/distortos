@@ -19,7 +19,7 @@
 namespace distortos
 {
 
-namespace scheduler
+namespace internal
 {
 
 /// RoundRobinQuantum class is a quantum of time for round-robin scheduling
@@ -118,7 +118,7 @@ private:
 	Duration quantum_;
 };
 
-}	// namespace scheduler
+}	// namespace internal
 
 }	// namespace distortos
 

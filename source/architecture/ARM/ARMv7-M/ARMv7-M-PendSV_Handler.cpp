@@ -27,7 +27,7 @@ namespace
 +---------------------------------------------------------------------------------------------------------------------*/
 
 /**
- * \brief Wrapper for void* distortos::scheduler::getScheduler().switchContext(void*)
+ * \brief Wrapper for void* distortos::internal::getScheduler().switchContext(void*)
  *
  * \param [in] stackPointer is the current value of current thread's stack pointer
  *
@@ -36,7 +36,7 @@ namespace
 
 void* schedulerSwitchContextWrapper(void* const stackPointer)
 {
-	return scheduler::getScheduler().switchContext(stackPointer);
+	return internal::getScheduler().switchContext(stackPointer);
 }
 
 }	// namespace

@@ -25,7 +25,7 @@ namespace distortos
 
 class SoftwareTimer;
 
-namespace scheduler
+namespace internal
 {
 
 class SoftwareTimerControlBlockList;
@@ -139,7 +139,7 @@ private:
 	SoftwareTimerControlBlockListIterator iterator_;
 };
 
-}	// namespace scheduler
+}	// namespace internal
 
 }	// namespace distortos
 

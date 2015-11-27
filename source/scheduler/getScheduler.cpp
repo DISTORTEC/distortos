@@ -20,7 +20,7 @@
 namespace distortos
 {
 
-namespace scheduler
+namespace internal
 {
 
 namespace
@@ -44,6 +44,6 @@ Scheduler& getScheduler()
 	return reinterpret_cast<Scheduler&>(schedulerInstanceStorage);
 }
 
-}	// namespace scheduler
+}	// namespace internal
 
 }	// namespace distortos

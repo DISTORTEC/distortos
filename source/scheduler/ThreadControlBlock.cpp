@@ -29,7 +29,7 @@
 namespace distortos
 {
 
-namespace scheduler
+namespace internal
 {
 
 /*---------------------------------------------------------------------------------------------------------------------+
@@ -180,6 +180,6 @@ void ThreadControlBlock::reposition(const bool loweringBefore)
 	getScheduler().maybeRequestContextSwitch();
 }
 
-}	// namespace scheduler
+}	// namespace internal
 
 }	// namespace distortos

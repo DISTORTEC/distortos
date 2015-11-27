@@ -43,7 +43,7 @@ namespace
 +---------------------------------------------------------------------------------------------------------------------*/
 
 /// SignalsWaitUnblockFunctor is a functor executed when unblocking a thread that is waiting for signal
-class SignalsWaitUnblockFunctor : public scheduler::ThreadControlBlock::UnblockFunctor
+class SignalsWaitUnblockFunctor : public internal::ThreadControlBlock::UnblockFunctor
 {
 public:
 
@@ -56,8 +56,8 @@ public:
 	 * \param [in] unblockReason is the reason of thread unblocking
 	 */
 
-	virtual void operator()(scheduler::ThreadControlBlock& threadControlBlock,
-			scheduler::ThreadControlBlock::UnblockReason) const override
+	virtual void operator()(internal::ThreadControlBlock& threadControlBlock,
+			internal::ThreadControlBlock::UnblockReason) const override
 	{
 		const auto signalsReceiverControlBlock = threadControlBlock.getSignalsReceiverControlBlock();
 		if (signalsReceiverControlBlock == nullptr)
@@ -90,7 +90,7 @@ public:
 std::pair<int, SignalInformation> waitImplementation(const SignalSet& signalSet, const bool nonBlocking,
 		const TickClock::time_point* const timePoint)
 {
-	auto& scheduler = scheduler::getScheduler();
+	auto& scheduler = internal::getScheduler();
 	const auto signalsReceiverControlBlock = scheduler.getCurrentThreadControlBlock().getSignalsReceiverControlBlock();
 	if (signalsReceiverControlBlock == nullptr)
 		return {ENOTSUP, SignalInformation{uint8_t{}, SignalInformation::Code{}, sigval{}}};
@@ -107,7 +107,7 @@ std::pair<int, SignalInformation> waitImplementation(const SignalSet& signalSet,
 		if (nonBlocking == true)
 			return {EAGAIN, SignalInformation{uint8_t{}, SignalInformation::Code{}, sigval{}}};
 
-		scheduler::ThreadControlBlockList waitingList {scheduler.getThreadControlBlockListAllocator(),
+		internal::ThreadControlBlockList waitingList {scheduler.getThreadControlBlockListAllocator(),
 				ThreadState::WaitingForSignal};
 
 		signalsReceiverControlBlock->setWaitingSignalSet(&signalSet);
@@ -149,7 +149,7 @@ SignalSet getPendingSignalSet()
 std::pair<int, SignalAction> getSignalAction(const uint8_t signalNumber)
 {
 	const auto signalsReceiverControlBlock =
-			scheduler::getScheduler().getCurrentThreadControlBlock().getSignalsReceiverControlBlock();
+			internal::getScheduler().getCurrentThreadControlBlock().getSignalsReceiverControlBlock();
 	if (signalsReceiverControlBlock == nullptr)
 		return {ENOTSUP, {}};
 
@@ -160,7 +160,7 @@ std::pair<int, SignalAction> getSignalAction(const uint8_t signalNumber)
 SignalSet getSignalMask()
 {
 	const auto signalsReceiverControlBlock =
-			scheduler::getScheduler().getCurrentThreadControlBlock().getSignalsReceiverControlBlock();
+			internal::getScheduler().getCurrentThreadControlBlock().getSignalsReceiverControlBlock();
 	if (signalsReceiverControlBlock == nullptr)
 		return SignalSet{SignalSet::full};
 
@@ -175,7 +175,7 @@ int queueSignal(const uint8_t signalNumber, const sigval value)
 std::pair<int, SignalAction> setSignalAction(const uint8_t signalNumber, const SignalAction& signalAction)
 {
 	const auto signalsReceiverControlBlock =
-			scheduler::getScheduler().getCurrentThreadControlBlock().getSignalsReceiverControlBlock();
+			internal::getScheduler().getCurrentThreadControlBlock().getSignalsReceiverControlBlock();
 	if (signalsReceiverControlBlock == nullptr)
 		return {ENOTSUP, {}};
 
@@ -186,7 +186,7 @@ std::pair<int, SignalAction> setSignalAction(const uint8_t signalNumber, const S
 int setSignalMask(const SignalSet signalMask)
 {
 	const auto signalsReceiverControlBlock =
-			scheduler::getScheduler().getCurrentThreadControlBlock().getSignalsReceiverControlBlock();
+			internal::getScheduler().getCurrentThreadControlBlock().getSignalsReceiverControlBlock();
 	if (signalsReceiverControlBlock == nullptr)
 		return ENOTSUP;
 

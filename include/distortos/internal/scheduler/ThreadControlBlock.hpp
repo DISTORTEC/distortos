@@ -37,7 +37,7 @@ class SignalsReceiverControlBlock;
 
 }	// namespace synchronization
 
-namespace scheduler
+namespace internal
 {
 
 class ThreadControlBlockList;
@@ -75,8 +75,8 @@ public:
 	 * \param [in] stack is an rvalue reference to architecture::Stack object which will be adopted for this thread
 	 * \param [in] priority is the thread's priority, 0 - lowest, UINT8_MAX - highest
 	 * \param [in] schedulingPolicy is the scheduling policy of the thread
-	 * \param [in] threadGroupControlBlock is a pointer to scheduler::ThreadGroupControlBlock to which this object will
-	 * be added, nullptr to inherit thread group from currently running thread
+	 * \param [in] threadGroupControlBlock is a pointer to ThreadGroupControlBlock to which this object will be added,
+	 * nullptr to inherit thread group from currently running thread
 	 * \param [in] signalsReceiver is a pointer to SignalsReceiver object for this thread, nullptr to disable reception
 	 * of signals for this thread
 	 * \param [in] owner is a reference to Thread object that owns this ThreadControlBlock
@@ -418,7 +418,7 @@ private:
 	ThreadState state_;
 };
 
-}	// namespace scheduler
+}	// namespace internal
 
 }	// namespace distortos
 

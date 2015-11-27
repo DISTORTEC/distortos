@@ -30,7 +30,7 @@ namespace distortos
 +---------------------------------------------------------------------------------------------------------------------*/
 
 ConditionVariable::ConditionVariable() :
-		blockedList_{scheduler::getScheduler().getThreadControlBlockListAllocator(),
+		blockedList_{internal::getScheduler().getThreadControlBlockListAllocator(),
 				ThreadState::BlockedOnConditionVariable}
 {
 
@@ -41,7 +41,7 @@ void ConditionVariable::notifyAll()
 	architecture::InterruptMaskingLock interruptMaskingLock;
 
 	while (blockedList_.empty() == false)
-		scheduler::getScheduler().unblock(blockedList_.begin());
+		internal::getScheduler().unblock(blockedList_.begin());
 }
 
 void ConditionVariable::notifyOne()
@@ -49,7 +49,7 @@ void ConditionVariable::notifyOne()
 	architecture::InterruptMaskingLock interruptMaskingLock;
 
 	if (blockedList_.empty() == false)
-		scheduler::getScheduler().unblock(blockedList_.begin());
+		internal::getScheduler().unblock(blockedList_.begin());
 }
 
 int ConditionVariable::wait(Mutex& mutex)
@@ -61,7 +61,7 @@ int ConditionVariable::wait(Mutex& mutex)
 		if (ret != 0)
 			return ret;
 
-		scheduler::getScheduler().block(blockedList_);
+		internal::getScheduler().block(blockedList_);
 	}
 
 	return mutex.lock();
@@ -83,7 +83,7 @@ int ConditionVariable::waitUntil(Mutex& mutex, const TickClock::time_point timeP
 		if (ret != 0)
 			return ret;
 
-		blockUntilRet = scheduler::getScheduler().blockUntil(blockedList_, timePoint);
+		blockUntilRet = internal::getScheduler().blockUntil(blockedList_, timePoint);
 	}
 
 	const auto ret = mutex.lock();

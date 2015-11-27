@@ -1,6 +1,6 @@
 /**
  * \file
- * \brief scheduler::lowLevelInitialization() declaration
+ * \brief internal::lowLevelInitialization() declaration
  *
  * \author Copyright (C) 2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
@@ -17,7 +17,7 @@
 namespace distortos
 {
 
-namespace scheduler
+namespace internal
 {
 
 /*---------------------------------------------------------------------------------------------------------------------+
@@ -33,7 +33,7 @@ namespace scheduler
 
 void lowLevelInitialization();
 
-}	// namespace scheduler
+}	// namespace internal
 
 }	// namespace distortos
 

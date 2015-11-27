@@ -18,7 +18,7 @@
 namespace distortos
 {
 
-namespace scheduler
+namespace internal
 {
 
 /*---------------------------------------------------------------------------------------------------------------------+
@@ -56,6 +56,6 @@ void SoftwareTimerControlBlockSupervisor::tickInterruptHandler(const TickClock::
 	}
 }
 
-}	// namespace scheduler
+}	// namespace internal
 
 }	// namespace distortos

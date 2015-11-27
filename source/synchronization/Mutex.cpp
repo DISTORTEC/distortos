@@ -78,7 +78,7 @@ int Mutex::unlock()
 
 	if (type_ != Type::Normal)
 	{
-		if (controlBlock_.getOwner() != &scheduler::getScheduler().getCurrentThreadControlBlock())
+		if (controlBlock_.getOwner() != &internal::getScheduler().getCurrentThreadControlBlock())
 			return EPERM;
 
 		if (type_ == Type::Recursive && recursiveLocksCount_ != 0)
@@ -100,7 +100,7 @@ int Mutex::unlock()
 int Mutex::tryLockInternal()
 {
 	if (controlBlock_.getProtocol() == Protocol::PriorityProtect &&
-			scheduler::getScheduler().getCurrentThreadControlBlock().getPriority() > controlBlock_.getPriorityCeiling())
+			internal::getScheduler().getCurrentThreadControlBlock().getPriority() > controlBlock_.getPriorityCeiling())
 		return EINVAL;
 
 	if (controlBlock_.getOwner() == nullptr)
@@ -112,7 +112,7 @@ int Mutex::tryLockInternal()
 	if (type_ == Type::Normal)
 		return EBUSY;
 
-	if (controlBlock_.getOwner() == &scheduler::getScheduler().getCurrentThreadControlBlock())
+	if (controlBlock_.getOwner() == &internal::getScheduler().getCurrentThreadControlBlock())
 	{
 		if (type_ == Type::ErrorChecking)
 			return EDEADLK;

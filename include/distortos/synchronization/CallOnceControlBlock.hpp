@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-10-18
+ * \date 2015-11-27
  */
 
 #ifndef INCLUDE_DISTORTOS_SYNCHRONIZATION_CALLONCECONTROLBLOCK_HPP_
@@ -28,12 +28,12 @@ namespace distortos
 
 #if DISTORTOS_CALLONCE_SUPPORTED == 1 || DOXYGEN == 1
 
-namespace scheduler
+namespace internal
 {
 
 class ThreadControlBlockList;
 
-}	// namespace scheduler
+}	// namespace internal
 
 namespace synchronization
 {
@@ -150,7 +150,7 @@ private:
 	void callOnceImplementation(const Functor& functor);
 
 	/// pointer to stack-allocated list of ThreadControlBlock objects blocked on associated OnceFlag
-	scheduler::ThreadControlBlockList* blockedList_;
+	internal::ThreadControlBlockList* blockedList_;
 
 	/// tells whether any function was already called for this object (true) or not (false)
 	bool done_;

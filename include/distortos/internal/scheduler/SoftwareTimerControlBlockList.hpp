@@ -21,7 +21,7 @@
 namespace distortos
 {
 
-namespace scheduler
+namespace internal
 {
 
 /// functor which gives ascending expiration time point order of elements on the list
@@ -44,7 +44,7 @@ struct SoftwareTimerControlBlockAscendingTimePoint
 };
 
 /// base of SoftwareTimerControlBlockList
-using SoftwareTimerControlBlockListBase = internal::SortedContainer
+using SoftwareTimerControlBlockListBase = SortedContainer
 		<
 				SoftwareTimerControlBlockUnsortedList,
 				SoftwareTimerControlBlockAscendingTimePoint
@@ -58,7 +58,7 @@ public:
 	using SoftwareTimerControlBlockListBase::SoftwareTimerControlBlockListBase;
 };
 
-}	// namespace scheduler
+}	// namespace internal
 
 }	// namespace distortos
 

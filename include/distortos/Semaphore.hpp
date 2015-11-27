@@ -215,7 +215,7 @@ private:
 	int tryWaitInternal();
 
 	/// ThreadControlBlock objects blocked on this semaphore
-	scheduler::ThreadControlBlockList blockedList_;
+	internal::ThreadControlBlockList blockedList_;
 
 	/// internal value of the semaphore
 	Value value_;

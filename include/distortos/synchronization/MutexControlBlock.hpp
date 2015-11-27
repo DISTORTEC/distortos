@@ -85,7 +85,7 @@ public:
 	 * \return owner of the mutex, nullptr if mutex is currently unlocked
 	 */
 
-	scheduler::ThreadControlBlock* getOwner() const
+	internal::ThreadControlBlock* getOwner() const
 	{
 		return owner_;
 	}
@@ -158,19 +158,19 @@ private:
 	void unlock();
 
 	/// ThreadControlBlock objects blocked on mutex
-	scheduler::ThreadControlBlockList blockedList_;
+	internal::ThreadControlBlockList blockedList_;
 
 	/// storage for list link
 	Link link_;
 
 	/// pointer to list that has this object
-	scheduler::MutexControlBlockList* list_;
+	internal::MutexControlBlockList* list_;
 
 	/// iterator to the element on the list, valid only when list_ != nullptr
-	scheduler::MutexControlBlockList::iterator iterator_;
+	internal::MutexControlBlockList::iterator iterator_;
 
 	/// owner of the mutex
-	scheduler::ThreadControlBlock* owner_;
+	internal::ThreadControlBlock* owner_;
 
 	/// mutex protocol
 	Protocol protocol_;

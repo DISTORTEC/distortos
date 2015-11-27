@@ -20,8 +20,7 @@
 namespace distortos
 {
 
-/// scheduler namespace has symbols related to scheduling
-namespace scheduler
+namespace internal
 {
 
 class MainThread;
@@ -369,7 +368,7 @@ private:
 	uint64_t tickCount_;
 };
 
-}	// namespace scheduler
+}	// namespace internal
 
 }	// namespace distortos
 

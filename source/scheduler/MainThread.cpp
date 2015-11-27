@@ -18,7 +18,7 @@
 namespace distortos
 {
 
-namespace scheduler
+namespace internal
 {
 
 namespace
@@ -66,6 +66,6 @@ void MainThread::run()
 	while (1);	/// \todo add some form of assertion that this never gets called
 }
 
-}	// namespace scheduler
+}	// namespace internal
 
 }	// namespace distortos

@@ -75,7 +75,7 @@ int SignalsReceiverControlBlock::deliveryOfSignalsStartedHook() const
 }
 
 int SignalsReceiverControlBlock::generateSignal(const uint8_t signalNumber,
-		scheduler::ThreadControlBlock& threadControlBlock)
+		internal::ThreadControlBlock& threadControlBlock)
 {
 	architecture::InterruptMaskingLock interruptMaskingLock;
 
@@ -117,7 +117,7 @@ SignalSet SignalsReceiverControlBlock::getSignalMask() const
 }
 
 int SignalsReceiverControlBlock::queueSignal(const uint8_t signalNumber, const sigval value,
-		scheduler::ThreadControlBlock& threadControlBlock) const
+		internal::ThreadControlBlock& threadControlBlock) const
 {
 	if (signalInformationQueue_ == nullptr)
 		return ENOTSUP;
@@ -187,7 +187,7 @@ std::pair<int, bool> SignalsReceiverControlBlock::isSignalIgnored(const uint8_t 
 }
 
 int SignalsReceiverControlBlock::postGenerate(const uint8_t signalNumber,
-		scheduler::ThreadControlBlock& threadControlBlock) const
+		internal::ThreadControlBlock& threadControlBlock) const
 {
 	/// \todo add some form of assertion for validity of \a signalNumber
 
@@ -206,7 +206,7 @@ int SignalsReceiverControlBlock::postGenerate(const uint8_t signalNumber,
 	if (testResult.second == false)	// signalNumber is not "waited for"?
 		return 0;
 
-	scheduler::getScheduler().unblock(threadControlBlock.getIterator());
+	internal::getScheduler().unblock(threadControlBlock.getIterator());
 	return 0;
 }
 

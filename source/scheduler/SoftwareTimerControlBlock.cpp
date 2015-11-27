@@ -21,7 +21,7 @@
 namespace distortos
 {
 
-namespace scheduler
+namespace internal
 {
 
 /*---------------------------------------------------------------------------------------------------------------------+
@@ -66,6 +66,6 @@ void SoftwareTimerControlBlock::stop()
 	}
 }
 
-}	// namespace scheduler
+}	// namespace internal
 
 }	// namespace distortos

@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-05-27
+ * \date 2015-11-27
  */
 
 #ifndef INCLUDE_DISTORTOS_ARCHITECTURE_REQUESTFUNCTIONEXECUTION_HPP_
@@ -17,12 +17,12 @@
 namespace distortos
 {
 
-namespace scheduler
+namespace internal
 {
 
 class ThreadControlBlock;
 
-}	// namespace scheduler
+}	// namespace internal
 
 namespace architecture
 {
@@ -40,13 +40,13 @@ namespace architecture
  * - interrupt is sending the request to current thread;
  * - interrupt is sending the request to non-current thread;
  *
- * \param [in] threadControlBlock is a reference to scheduler::ThreadControlBlock of thread in which \a function should
+ * \param [in] threadControlBlock is a reference to internal::ThreadControlBlock of thread in which \a function should
  * be executed
  * \param [in] function is a reference to function that should be executed in thread associated with
  * \a threadControlBlock
  */
 
-void requestFunctionExecution(scheduler::ThreadControlBlock& threadControlBlock, void (& function)());
+void requestFunctionExecution(internal::ThreadControlBlock& threadControlBlock, void (& function)());
 
 }	// namespace architecture
 

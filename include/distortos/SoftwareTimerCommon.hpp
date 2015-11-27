@@ -67,7 +67,7 @@ public:
 private:
 
 	/// internal SoftwareTimerControlBlock object
-	scheduler::SoftwareTimerControlBlock softwareTimerControlBlock_;
+	internal::SoftwareTimerControlBlock softwareTimerControlBlock_;
 };
 
 }	// namespace distortos

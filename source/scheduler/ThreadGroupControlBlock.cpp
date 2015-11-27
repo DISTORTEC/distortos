@@ -18,7 +18,7 @@
 namespace distortos
 {
 
-namespace scheduler
+namespace internal
 {
 
 /*---------------------------------------------------------------------------------------------------------------------+
@@ -41,6 +41,6 @@ ThreadGroupControlBlock::add(ThreadControlBlock& threadControlBlock)
 	return {threadControlBlockList_, iterator};
 }
 
-}	// namespace scheduler
+}	// namespace internal
 
 }	// namespace distortos

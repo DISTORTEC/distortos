@@ -28,7 +28,7 @@ namespace distortos
 +---------------------------------------------------------------------------------------------------------------------*/
 
 Semaphore::Semaphore(const Value value, const Value maxValue) :
-		blockedList_{scheduler::getScheduler().getThreadControlBlockListAllocator(), ThreadState::BlockedOnSemaphore},
+		blockedList_{internal::getScheduler().getThreadControlBlockListAllocator(), ThreadState::BlockedOnSemaphore},
 		value_{value <= maxValue ? value : maxValue},
 		maxValue_{maxValue}
 {
@@ -49,7 +49,7 @@ int Semaphore::post()
 
 	if (blockedList_.empty() == false)
 	{
-		scheduler::getScheduler().unblock(blockedList_.begin());
+		internal::getScheduler().unblock(blockedList_.begin());
 		return 0;
 	}
 
@@ -77,7 +77,7 @@ int Semaphore::tryWaitUntil(const TickClock::time_point timePoint)
 	if (ret != EAGAIN)	// lock successful?
 		return ret;
 
-	return scheduler::getScheduler().blockUntil(blockedList_, timePoint);
+	return internal::getScheduler().blockUntil(blockedList_, timePoint);
 }
 
 int Semaphore::wait()
@@ -88,7 +88,7 @@ int Semaphore::wait()
 	if (ret != EAGAIN)	// lock successful?
 		return ret;
 
-	return scheduler::getScheduler().block(blockedList_);
+	return internal::getScheduler().block(blockedList_);
 }
 
 /*---------------------------------------------------------------------------------------------------------------------+

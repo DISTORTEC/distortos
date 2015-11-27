@@ -26,7 +26,7 @@
 namespace distortos
 {
 
-namespace scheduler
+namespace internal
 {
 
 namespace
@@ -354,6 +354,6 @@ void Scheduler::unblockInternal(const ThreadControlBlockListIterator iterator,
 	iterator->get().unblockHook(unblockReason);
 }
 
-}	// namespace scheduler
+}	// namespace internal
 
 }	// namespace distortos

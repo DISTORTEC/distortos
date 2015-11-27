@@ -19,7 +19,7 @@
 namespace distortos
 {
 
-namespace scheduler
+namespace internal
 {
 
 /// ThreadGroupControlBlock class is a control block for ThreadGroup
@@ -56,7 +56,7 @@ private:
 	ThreadControlBlockUnsortedList threadControlBlockList_;
 };
 
-}	// namespace scheduler
+}	// namespace internal
 
 }	// namespace distortos
 

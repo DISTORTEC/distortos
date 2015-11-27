@@ -19,7 +19,7 @@
 namespace distortos
 {
 
-namespace scheduler
+namespace internal
 {
 
 /// MainThread class is a Thread for main()
@@ -51,7 +51,7 @@ private:
 	virtual void run() override;
 };
 
-}	// namespace scheduler
+}	// namespace internal
 
 }	// namespace distortos
 

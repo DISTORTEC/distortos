@@ -40,11 +40,11 @@ void CallOnceControlBlock::callOnceImplementation(const Functor& functor)
 	if (blockedList_ != nullptr)	// function is currently being executed, but not yet done?
 	{
 		while (done_ == false)
-			scheduler::getScheduler().block(*blockedList_);
+			internal::getScheduler().block(*blockedList_);
 		return;
 	}
 
-	scheduler::ThreadControlBlockList blockedList {scheduler::getScheduler().getThreadControlBlockListAllocator(),
+	internal::ThreadControlBlockList blockedList {internal::getScheduler().getThreadControlBlockListAllocator(),
 			ThreadState::BlockedOnOnceFlag};
 	blockedList_ = &blockedList;
 
@@ -54,7 +54,7 @@ void CallOnceControlBlock::callOnceImplementation(const Functor& functor)
 	blockedList_ = nullptr;
 
 	while (blockedList.empty() == false)
-		scheduler::getScheduler().unblock(blockedList.begin());
+		internal::getScheduler().unblock(blockedList.begin());
 }
 
 }	// namespace synchronization

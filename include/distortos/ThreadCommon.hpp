@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-11-13
+ * \date 2015-11-27
  */
 
 #ifndef INCLUDE_DISTORTOS_THREADCOMMON_HPP_
@@ -36,14 +36,14 @@ public:
 	 * \param [in] size is the size of stack's storage, bytes
 	 * \param [in] priority is the thread's priority, 0 - lowest, UINT8_MAX - highest
 	 * \param [in] schedulingPolicy is the scheduling policy of the thread
-	 * \param [in] threadGroupControlBlock is a pointer to scheduler::ThreadGroupControlBlock to which this object will
+	 * \param [in] threadGroupControlBlock is a pointer to internal::ThreadGroupControlBlock to which this object will
 	 * be added, nullptr to inherit thread group from currently running thread
 	 * \param [in] signalsReceiver is a pointer to SignalsReceiver object for this thread, nullptr to disable reception
 	 * of signals for this thread
 	 */
 
 	ThreadCommon(StackStorageUniquePointer&& stackStorageUniquePointer, size_t size, uint8_t priority,
-			SchedulingPolicy schedulingPolicy, scheduler::ThreadGroupControlBlock* threadGroupControlBlock,
+			SchedulingPolicy schedulingPolicy, internal::ThreadGroupControlBlock* threadGroupControlBlock,
 			SignalsReceiver* signalsReceiver);
 
 	/**
@@ -52,14 +52,14 @@ public:
 	 * \param [in] stack is an rvalue reference to architecture::Stack object which will be adopted for this thread
 	 * \param [in] priority is the thread's priority, 0 - lowest, UINT8_MAX - highest
 	 * \param [in] schedulingPolicy is the scheduling policy of the thread
-	 * \param [in] threadGroupControlBlock is a pointer to scheduler::ThreadGroupControlBlock to which this object will
+	 * \param [in] threadGroupControlBlock is a pointer to internal::ThreadGroupControlBlock to which this object will
 	 * be added, nullptr to inherit thread group from currently running thread
 	 * \param [in] signalsReceiver is a pointer to SignalsReceiver object for this thread, nullptr to disable reception
 	 * of signals for this thread
 	 */
 
 	ThreadCommon(architecture::Stack&& stack, uint8_t priority, SchedulingPolicy schedulingPolicy,
-			scheduler::ThreadGroupControlBlock* threadGroupControlBlock, SignalsReceiver* signalsReceiver);
+			internal::ThreadGroupControlBlock* threadGroupControlBlock, SignalsReceiver* signalsReceiver);
 
 	/**
 	 * \brief ThreadCommon's destructor
@@ -183,7 +183,7 @@ public:
 	 *
 	 * \return 0 on success, error code otherwise:
 	 * - EINVAL - thread is already started;
-	 * - error codes returned by scheduler::Scheduler::add();
+	 * - error codes returned by internal::Scheduler::add();
 	 */
 
 	virtual int start() override;
@@ -199,7 +199,7 @@ protected:
 	 * \return reference to internal ThreadControlBlock object
 	 */
 
-	scheduler::ThreadControlBlock& getThreadControlBlock()
+	internal::ThreadControlBlock& getThreadControlBlock()
 	{
 		return threadControlBlock_;
 	}
@@ -208,7 +208,7 @@ protected:
 	 * \return const reference to internal ThreadControlBlock object
 	 */
 
-	const scheduler::ThreadControlBlock& getThreadControlBlock() const
+	const internal::ThreadControlBlock& getThreadControlBlock() const
 	{
 		return threadControlBlock_;
 	}
@@ -224,7 +224,7 @@ private:
 	virtual void terminationHook() override;
 
 	/// internal ThreadControlBlock object
-	scheduler::ThreadControlBlock threadControlBlock_;
+	internal::ThreadControlBlock threadControlBlock_;
 
 	/// semaphore used by join()
 	Semaphore joinSemaphore_;

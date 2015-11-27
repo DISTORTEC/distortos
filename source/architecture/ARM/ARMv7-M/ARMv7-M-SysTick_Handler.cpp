@@ -28,7 +28,7 @@
 
 extern "C" void SysTick_Handler()
 {
-	const auto contextSwitchRequired = distortos::scheduler::getScheduler().tickInterruptHandler();
+	const auto contextSwitchRequired = distortos::internal::getScheduler().tickInterruptHandler();
 	if (contextSwitchRequired == true)
 		distortos::architecture::requestContextSwitch();
 }

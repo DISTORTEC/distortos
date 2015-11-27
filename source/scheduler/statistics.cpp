@@ -28,7 +28,7 @@ namespace statistics
 
 uint64_t getContextSwitchCount()
 {
-	return scheduler::getScheduler().getContextSwitchCount();
+	return internal::getScheduler().getContextSwitchCount();
 }
 
 }	// namespace statistics

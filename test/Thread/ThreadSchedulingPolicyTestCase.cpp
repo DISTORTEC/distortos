@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-01-09
+ * \date 2015-11-27
  */
 
 #include "ThreadSchedulingPolicyTestCase.hpp"
@@ -51,7 +51,7 @@ constexpr uint8_t testThreadPriority {1};
 constexpr size_t totalThreads {10};
 
 /// duration of single test thread - significantly longer than single round-robin quantum
-constexpr auto testThreadDuration = scheduler::RoundRobinQuantum::getInitial() * 2;
+constexpr auto testThreadDuration = internal::RoundRobinQuantum::getInitial() * 2;
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | local functions' declarations

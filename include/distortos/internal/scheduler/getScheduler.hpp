@@ -17,7 +17,7 @@
 namespace distortos
 {
 
-namespace scheduler
+namespace internal
 {
 
 class Scheduler;
@@ -28,7 +28,7 @@ class Scheduler;
 
 Scheduler& getScheduler();
 
-}	// namespace scheduler
+}	// namespace internal
 
 }	// namespace distortos
 

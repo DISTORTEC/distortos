@@ -23,7 +23,7 @@
 namespace distortos
 {
 
-namespace scheduler
+namespace internal
 {
 
 class ThreadControlBlock;
@@ -32,8 +32,7 @@ class ThreadControlBlock;
 using ThreadControlBlockListValueType = std::reference_wrapper<ThreadControlBlock>;
 
 /// type of allocator used by ThreadControlBlockList
-using ThreadControlBlockListAllocator =
-		internal::PoolAllocator<ThreadControlBlockListValueType, internal::SimpleFeedablePool>;
+using ThreadControlBlockListAllocator = PoolAllocator<ThreadControlBlockListValueType, SimpleFeedablePool>;
 
 /// underlying unsorted container of ThreadControlBlockList
 using ThreadControlBlockUnsortedList = std::list<ThreadControlBlockListValueType, ThreadControlBlockListAllocator>;
@@ -41,7 +40,7 @@ using ThreadControlBlockUnsortedList = std::list<ThreadControlBlockListValueType
 /// generic iterator for ThreadControlBlockList
 using ThreadControlBlockListIterator = ThreadControlBlockUnsortedList::iterator;
 
-}	// namespace scheduler
+}	// namespace internal
 
 }	// namespace distortos
 

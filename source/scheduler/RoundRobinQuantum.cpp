@@ -16,7 +16,7 @@
 namespace distortos
 {
 
-namespace scheduler
+namespace internal
 {
 
 /*---------------------------------------------------------------------------------------------------------------------+
@@ -25,6 +25,6 @@ namespace scheduler
 
 constexpr decltype(RoundRobinQuantum::quantumRawInitializer_) RoundRobinQuantum::quantumRawInitializer_;
 
-}	// namespace scheduler
+}	// namespace internal
 
 }	// namespace distortos

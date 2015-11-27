@@ -23,7 +23,7 @@
 namespace distortos
 {
 
-namespace scheduler
+namespace internal
 {
 
 class SoftwareTimerControlBlock;
@@ -33,7 +33,7 @@ using SoftwareTimerControlBlockListValueType = std::reference_wrapper<SoftwareTi
 
 /// type of allocator used by SoftwareTimerControlBlockList
 using SoftwareTimerControlBlockListAllocator =
-		internal::PoolAllocator<SoftwareTimerControlBlockListValueType, internal::SimpleFeedablePool>;
+		PoolAllocator<SoftwareTimerControlBlockListValueType, SimpleFeedablePool>;
 
 /// underlying unsorted container of SoftwareTimerControlBlockList
 using SoftwareTimerControlBlockUnsortedList =
@@ -42,7 +42,7 @@ using SoftwareTimerControlBlockUnsortedList =
 /// generic iterator for SoftwareTimerControlBlockList
 using SoftwareTimerControlBlockListIterator = SoftwareTimerControlBlockUnsortedList::iterator;
 
-}	// namespace scheduler
+}	// namespace internal
 
 }	// namespace distortos
 
