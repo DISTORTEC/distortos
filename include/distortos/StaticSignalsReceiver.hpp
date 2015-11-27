@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-10-26
+ * \date 2015-11-27
  */
 
 #ifndef INCLUDE_DISTORTOS_STATICSIGNALSRECEIVER_HPP_
@@ -18,7 +18,7 @@
 #include "distortos/SignalsCatcher.hpp"
 #include "distortos/SignalsReceiver.hpp"
 
-#include "distortos/memory/dummyDeleter.hpp"
+#include "distortos/internal/memory/dummyDeleter.hpp"
 
 namespace distortos
 {

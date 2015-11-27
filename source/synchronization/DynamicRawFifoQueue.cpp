@@ -8,12 +8,12 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-10-21
+ * \date 2015-11-27
  */
 
 #include "distortos/DynamicRawFifoQueue.hpp"
 
-#include "distortos/memory/storageDeleter.hpp"
+#include "distortos/internal/memory/storageDeleter.hpp"
 
 namespace distortos
 {

@@ -1,6 +1,6 @@
 /**
  * \file
- * \brief storageDeleter() definition
+ * \brief dummyDeleter() declaration
  *
  * \author Copyright (C) 2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
@@ -8,11 +8,13 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-10-24
+ * \date 2015-11-27
  */
 
-#ifndef INCLUDE_DISTORTOS_MEMORY_STORAGEDELETER_HPP_
-#define INCLUDE_DISTORTOS_MEMORY_STORAGEDELETER_HPP_
+#ifndef INCLUDE_DISTORTOS_INTERNAL_MEMORY_DUMMYDELETER_HPP_
+#define INCLUDE_DISTORTOS_INTERNAL_MEMORY_DUMMYDELETER_HPP_
+
+#include <type_traits>
 
 namespace distortos
 {
@@ -25,22 +27,24 @@ namespace memory
 +---------------------------------------------------------------------------------------------------------------------*/
 
 /**
- * \brief Templated deleter that can be used with std::unique_ptr and dynamic storage allocated with new T[].
+ * \brief A "no-op" dummy deleter that can be used with std::unique_ptr and automatic storage that is trivially
+ * destructible.
  *
- * \param T is the real type of allocated storage
+ * \param T is the real type of storage, must be trivially destructible
  * \param U is the type of \a storage pointer
  *
- * \param [in] storage is a pointer to storage that will be deleted
+ * \param [in] storage is a pointer to storage
  */
 
 template<typename T, typename U>
-void storageDeleter(U* const storage)
+void dummyDeleter(U*)
 {
-	delete[] reinterpret_cast<T*>(storage);
+	static_assert(std::is_trivially_destructible<T>::value == true,
+			"memory::dummyDeleter() cannot be used with types that are not trivially destructible!");
 }
 
 }	// namespace memory
 
 }	// namespace distortos
 
-#endif	// INCLUDE_DISTORTOS_MEMORY_STORAGEDELETER_HPP_
+#endif	// INCLUDE_DISTORTOS_INTERNAL_MEMORY_DUMMYDELETER_HPP_
