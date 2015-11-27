@@ -11,7 +11,7 @@
  * \date 2015-11-27
  */
 
-#include "distortos/synchronization/CallOnceControlBlock.hpp"
+#include "distortos/internal/synchronization/CallOnceControlBlock.hpp"
 
 #if DISTORTOS_CALLONCE_SUPPORTED == 1 || DOXYGEN == 1
 

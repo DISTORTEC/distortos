@@ -11,7 +11,7 @@
  * \date 2015-11-27
  */
 
-#include "distortos/synchronization/MutexControlBlock.hpp"
+#include "distortos/internal/synchronization/MutexControlBlock.hpp"
 
 #include "distortos/internal/scheduler/getScheduler.hpp"
 #include "distortos/internal/scheduler/Scheduler.hpp"

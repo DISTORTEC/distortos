@@ -8,13 +8,13 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-01-12
+ * \date 2015-11-27
  */
 
-#ifndef INCLUDE_DISTORTOS_SYNCHRONIZATION_SEMAPHORETRYWAITFUNCTOR_HPP_
-#define INCLUDE_DISTORTOS_SYNCHRONIZATION_SEMAPHORETRYWAITFUNCTOR_HPP_
+#ifndef INCLUDE_DISTORTOS_INTERNAL_SYNCHRONIZATION_SEMAPHORETRYWAITFUNCTOR_HPP_
+#define INCLUDE_DISTORTOS_INTERNAL_SYNCHRONIZATION_SEMAPHORETRYWAITFUNCTOR_HPP_
 
-#include "distortos/synchronization/SemaphoreFunctor.hpp"
+#include "distortos/internal/synchronization/SemaphoreFunctor.hpp"
 
 namespace distortos
 {
@@ -42,4 +42,4 @@ public:
 
 }	// namespace distortos
 
-#endif	// INCLUDE_DISTORTOS_SYNCHRONIZATION_SEMAPHORETRYWAITFUNCTOR_HPP_
+#endif	// INCLUDE_DISTORTOS_INTERNAL_SYNCHRONIZATION_SEMAPHORETRYWAITFUNCTOR_HPP_

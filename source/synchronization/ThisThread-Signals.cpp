@@ -20,7 +20,7 @@
 #include "distortos/internal/scheduler/getScheduler.hpp"
 #include "distortos/internal/scheduler/Scheduler.hpp"
 
-#include "distortos/synchronization/SignalsReceiverControlBlock.hpp"
+#include "distortos/internal/synchronization/SignalsReceiverControlBlock.hpp"
 
 #include "distortos/architecture/InterruptMaskingLock.hpp"
 

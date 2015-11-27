@@ -8,11 +8,11 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-10-12
+ * \date 2015-11-27
  */
 
-#ifndef INCLUDE_DISTORTOS_SYNCHRONIZATION_QUEUEFUNCTOR_HPP_
-#define INCLUDE_DISTORTOS_SYNCHRONIZATION_QUEUEFUNCTOR_HPP_
+#ifndef INCLUDE_DISTORTOS_INTERNAL_SYNCHRONIZATION_QUEUEFUNCTOR_HPP_
+#define INCLUDE_DISTORTOS_INTERNAL_SYNCHRONIZATION_QUEUEFUNCTOR_HPP_
 
 #include "estd/TypeErasedFunctor.hpp"
 

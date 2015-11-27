@@ -14,7 +14,7 @@
 #ifndef INCLUDE_DISTORTOS_SIGNALSRECEIVER_HPP_
 #define INCLUDE_DISTORTOS_SIGNALSRECEIVER_HPP_
 
-#include "distortos/synchronization/SignalsReceiverControlBlock.hpp"
+#include "distortos/internal/synchronization/SignalsReceiverControlBlock.hpp"
 
 namespace distortos
 {

@@ -17,7 +17,7 @@
 #include "distortos/internal/scheduler/Scheduler.hpp"
 #include "distortos/internal/scheduler/ThreadGroupControlBlock.hpp"
 
-#include "distortos/synchronization/MutexControlBlock.hpp"
+#include "distortos/internal/synchronization/MutexControlBlock.hpp"
 
 #include "distortos/architecture/InterruptMaskingLock.hpp"
 

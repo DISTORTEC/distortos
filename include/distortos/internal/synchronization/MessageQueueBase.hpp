@@ -11,15 +11,15 @@
  * \date 2015-11-27
  */
 
-#ifndef INCLUDE_DISTORTOS_SYNCHRONIZATION_MESSAGEQUEUEBASE_HPP_
-#define INCLUDE_DISTORTOS_SYNCHRONIZATION_MESSAGEQUEUEBASE_HPP_
+#ifndef INCLUDE_DISTORTOS_INTERNAL_SYNCHRONIZATION_MESSAGEQUEUEBASE_HPP_
+#define INCLUDE_DISTORTOS_INTERNAL_SYNCHRONIZATION_MESSAGEQUEUEBASE_HPP_
 
 #include "distortos/Semaphore.hpp"
 
-#include "distortos/synchronization/QueueFunctor.hpp"
-#include "distortos/synchronization/SemaphoreFunctor.hpp"
-
 #include "distortos/internal/allocators/FeedablePool.hpp"
+
+#include "distortos/internal/synchronization/QueueFunctor.hpp"
+#include "distortos/internal/synchronization/SemaphoreFunctor.hpp"
 
 #include <forward_list>
 #include <memory>
@@ -226,4 +226,4 @@ private:
 
 }	// namespace distortos
 
-#endif	// INCLUDE_DISTORTOS_SYNCHRONIZATION_MESSAGEQUEUEBASE_HPP_
+#endif	// INCLUDE_DISTORTOS_INTERNAL_SYNCHRONIZATION_MESSAGEQUEUEBASE_HPP_

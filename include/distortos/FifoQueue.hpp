@@ -8,20 +8,20 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-10-24
+ * \date 2015-11-27
  */
 
 #ifndef INCLUDE_DISTORTOS_FIFOQUEUE_HPP_
 #define INCLUDE_DISTORTOS_FIFOQUEUE_HPP_
 
-#include "distortos/synchronization/FifoQueueBase.hpp"
-#include "distortos/synchronization/CopyConstructQueueFunctor.hpp"
-#include "distortos/synchronization/MoveConstructQueueFunctor.hpp"
-#include "distortos/synchronization/SwapPopQueueFunctor.hpp"
-#include "distortos/synchronization/SemaphoreWaitFunctor.hpp"
-#include "distortos/synchronization/SemaphoreTryWaitFunctor.hpp"
-#include "distortos/synchronization/SemaphoreTryWaitForFunctor.hpp"
-#include "distortos/synchronization/SemaphoreTryWaitUntilFunctor.hpp"
+#include "distortos/internal/synchronization/FifoQueueBase.hpp"
+#include "distortos/internal/synchronization/CopyConstructQueueFunctor.hpp"
+#include "distortos/internal/synchronization/MoveConstructQueueFunctor.hpp"
+#include "distortos/internal/synchronization/SwapPopQueueFunctor.hpp"
+#include "distortos/internal/synchronization/SemaphoreWaitFunctor.hpp"
+#include "distortos/internal/synchronization/SemaphoreTryWaitFunctor.hpp"
+#include "distortos/internal/synchronization/SemaphoreTryWaitForFunctor.hpp"
+#include "distortos/internal/synchronization/SemaphoreTryWaitUntilFunctor.hpp"
 
 /// GCC 4.9 is needed for all FifoQueue::*emplace*() functions - earlier versions don't support parameter pack expansion
 /// in lambdas
