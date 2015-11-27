@@ -11,8 +11,8 @@
  * \date 2015-11-27
  */
 
-#ifndef INCLUDE_DISTORTOS_SCHEDULER_MUTEXCONTROLBLOCKLIST_HPP_
-#define INCLUDE_DISTORTOS_SCHEDULER_MUTEXCONTROLBLOCKLIST_HPP_
+#ifndef INCLUDE_DISTORTOS_INTERNAL_SCHEDULER_MUTEXCONTROLBLOCKLIST_HPP_
+#define INCLUDE_DISTORTOS_INTERNAL_SCHEDULER_MUTEXCONTROLBLOCKLIST_HPP_
 
 #include "distortos/internal/allocators/PoolAllocator.hpp"
 #include "distortos/internal/allocators/SimpleFeedablePool.hpp"
@@ -46,4 +46,4 @@ using MutexControlBlockList = std::list<MutexControlBlockListValueType, MutexCon
 
 }	// namespace distortos
 
-#endif	// INCLUDE_DISTORTOS_SCHEDULER_MUTEXCONTROLBLOCKLIST_HPP_
+#endif	// INCLUDE_DISTORTOS_INTERNAL_SCHEDULER_MUTEXCONTROLBLOCKLIST_HPP_

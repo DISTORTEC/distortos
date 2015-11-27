@@ -8,15 +8,15 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-11-13
+ * \date 2015-11-27
  */
 
-#ifndef INCLUDE_DISTORTOS_SCHEDULER_THREADCONTROLBLOCK_HPP_
-#define INCLUDE_DISTORTOS_SCHEDULER_THREADCONTROLBLOCK_HPP_
+#ifndef INCLUDE_DISTORTOS_INTERNAL_SCHEDULER_THREADCONTROLBLOCK_HPP_
+#define INCLUDE_DISTORTOS_INTERNAL_SCHEDULER_THREADCONTROLBLOCK_HPP_
 
-#include "distortos/scheduler/RoundRobinQuantum.hpp"
-#include "distortos/scheduler/ThreadControlBlockList-types.hpp"
-#include "distortos/scheduler/MutexControlBlockList.hpp"
+#include "distortos/internal/scheduler/RoundRobinQuantum.hpp"
+#include "distortos/internal/scheduler/ThreadControlBlockList-types.hpp"
+#include "distortos/internal/scheduler/MutexControlBlockList.hpp"
 
 #include "distortos/architecture/Stack.hpp"
 
@@ -422,4 +422,4 @@ private:
 
 }	// namespace distortos
 
-#endif	// INCLUDE_DISTORTOS_SCHEDULER_THREADCONTROLBLOCK_HPP_
+#endif	// INCLUDE_DISTORTOS_INTERNAL_SCHEDULER_THREADCONTROLBLOCK_HPP_

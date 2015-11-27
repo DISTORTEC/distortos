@@ -11,12 +11,12 @@
  * \date 2015-11-27
  */
 
-#ifndef INCLUDE_DISTORTOS_SCHEDULER_THREADCONTROLBLOCKLIST_HPP_
-#define INCLUDE_DISTORTOS_SCHEDULER_THREADCONTROLBLOCKLIST_HPP_
-
-#include "distortos/scheduler/ThreadControlBlock.hpp"
+#ifndef INCLUDE_DISTORTOS_INTERNAL_SCHEDULER_THREADCONTROLBLOCKLIST_HPP_
+#define INCLUDE_DISTORTOS_INTERNAL_SCHEDULER_THREADCONTROLBLOCKLIST_HPP_
 
 #include "distortos/internal/containers/SortedContainer.hpp"
+
+#include "distortos/internal/scheduler/ThreadControlBlock.hpp"
 
 namespace distortos
 {
@@ -135,4 +135,4 @@ ThreadControlBlockList::iterator ThreadControlBlockList::sortedEmplace(Args&&...
 
 }	// namespace distortos
 
-#endif	// INCLUDE_DISTORTOS_SCHEDULER_THREADCONTROLBLOCKLIST_HPP_
+#endif	// INCLUDE_DISTORTOS_INTERNAL_SCHEDULER_THREADCONTROLBLOCKLIST_HPP_
