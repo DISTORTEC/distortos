@@ -1,0 +1,38 @@
+/**
+ * \file
+ * \brief documentation of distortos namespaces
+ *
+ * \author Copyright (C) 2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ *
+ * \par License
+ * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
+ * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ *
+ * \date 2015-11-27
+ */
+
+/**
+ * \namespace distortos
+ * \brief Top-level namespace of distortos project
+ *
+ * \namespace distortos::architecture
+ * \brief Architecture-related code of distortos project
+ *
+ * \namespace distortos::chip
+ * \brief Chip-related code of distortos project
+ *
+ * \namespace distortos::internal
+ * \brief Internals of distortos project - should not be used directly!
+ *
+ * \namespace distortos::statistics
+ * \brief Functions used to read statistics of distortos
+ *
+ * \namespace distortos::test
+ * \brief Functional tests of distortos project
+ *
+ * \namespace distortos::ThisThread
+ * \brief Functions that can be used to control current thread
+ *
+ * \namespace distortos::ThisThread::Signals
+ * \brief Signals-related functions operating on current thread
+ */

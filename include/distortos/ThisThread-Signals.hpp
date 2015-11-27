@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-06-28
+ * \date 2015-11-27
  */
 
 #ifndef INCLUDE_DISTORTOS_THISTHREAD_SIGNALS_HPP_
@@ -30,7 +30,6 @@ class SignalSet;
 namespace ThisThread
 {
 
-/// Signals namespace groups signals-related functions operating on current thread
 namespace Signals
 {
 
