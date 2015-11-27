@@ -43,7 +43,7 @@ struct ThreadControlBlockDescendingEffectivePriority
 };
 
 /// base of ThreadControlBlockList
-using ThreadControlBlockListBase = containers::SortedContainer
+using ThreadControlBlockListBase = internal::SortedContainer
 		<
 				ThreadControlBlockUnsortedList,
 				ThreadControlBlockDescendingEffectivePriority

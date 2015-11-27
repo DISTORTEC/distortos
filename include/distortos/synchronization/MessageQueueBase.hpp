@@ -111,7 +111,7 @@ public:
 	using FreeEntryList = std::forward_list<Entry, PoolAllocator>;
 
 	/// type of entry list
-	using EntryList = containers::SortedContainer<FreeEntryList, DescendingPriority>;
+	using EntryList = internal::SortedContainer<FreeEntryList, DescendingPriority>;
 
 	/**
 	 * \brief InternalFunctor is a type-erased interface for functors which execute common code of pop() and push()

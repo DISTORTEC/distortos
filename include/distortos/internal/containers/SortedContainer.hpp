@@ -19,7 +19,7 @@
 namespace distortos
 {
 
-namespace containers
+namespace internal
 {
 
 /**
@@ -410,7 +410,7 @@ private:
 	Compare compare_;
 };
 
-}	// namespace containers
+}	// namespace internal
 
 }	// namespace distortos
 
