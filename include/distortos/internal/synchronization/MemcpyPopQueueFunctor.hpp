@@ -21,7 +21,7 @@
 namespace distortos
 {
 
-namespace synchronization
+namespace internal
 {
 
 /// MemcpyPopQueueFunctor is a functor used for popping of data from the raw queue with memecpy()
@@ -60,7 +60,7 @@ private:
 	const size_t size_;
 };
 
-}	// namespace synchronization
+}	// namespace internal
 
 }	// namespace distortos
 

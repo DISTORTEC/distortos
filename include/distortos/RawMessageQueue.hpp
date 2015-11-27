@@ -33,10 +33,10 @@ class RawMessageQueue
 public:
 
 	/// type of uninitialized storage for Entry with link
-	using EntryStorage = synchronization::MessageQueueBase::EntryStorage;
+	using EntryStorage = internal::MessageQueueBase::EntryStorage;
 
-	/// import EntryStorageUniquePointer type from synchronization::MessageQueueBase class
-	using EntryStorageUniquePointer = synchronization::MessageQueueBase::EntryStorageUniquePointer;
+	/// import EntryStorageUniquePointer type from internal::MessageQueueBase class
+	using EntryStorageUniquePointer = internal::MessageQueueBase::EntryStorageUniquePointer;
 
 	/**
 	 * type of uninitialized storage for value
@@ -45,9 +45,9 @@ public:
 	 */
 
 	template<typename T>
-	using ValueStorage = synchronization::MessageQueueBase::ValueStorage<T>;
+	using ValueStorage = internal::MessageQueueBase::ValueStorage<T>;
 
-	using ValueStorageUniquePointer = synchronization::MessageQueueBase::ValueStorageUniquePointer;
+	using ValueStorageUniquePointer = internal::MessageQueueBase::ValueStorageUniquePointer;
 
 	/**
 	 * \brief RawMessageQueue's constructor
@@ -519,7 +519,7 @@ private:
 	 * - error codes returned by Semaphore::post();
 	 */
 
-	int popInternal(const synchronization::SemaphoreFunctor& waitSemaphoreFunctor, uint8_t& priority, void* buffer,
+	int popInternal(const internal::SemaphoreFunctor& waitSemaphoreFunctor, uint8_t& priority, void* buffer,
 			size_t size);
 
 	/**
@@ -538,11 +538,11 @@ private:
 	 * - error codes returned by Semaphore::post();
 	 */
 
-	int pushInternal(const synchronization::SemaphoreFunctor& waitSemaphoreFunctor, uint8_t priority, const void* data,
+	int pushInternal(const internal::SemaphoreFunctor& waitSemaphoreFunctor, uint8_t priority, const void* data,
 			size_t size);
 
-	/// contained synchronization::MessageQueueBase object which implements base functionality
-	synchronization::MessageQueueBase messageQueueBase_;
+	/// contained internal::MessageQueueBase object which implements base functionality
+	internal::MessageQueueBase messageQueueBase_;
 
 	/// size of single queue element, bytes
 	const size_t elementSize_;

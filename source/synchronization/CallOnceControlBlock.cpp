@@ -23,7 +23,7 @@
 namespace distortos
 {
 
-namespace synchronization
+namespace internal
 {
 
 /*---------------------------------------------------------------------------------------------------------------------+
@@ -40,11 +40,11 @@ void CallOnceControlBlock::callOnceImplementation(const Functor& functor)
 	if (blockedList_ != nullptr)	// function is currently being executed, but not yet done?
 	{
 		while (done_ == false)
-			internal::getScheduler().block(*blockedList_);
+			getScheduler().block(*blockedList_);
 		return;
 	}
 
-	internal::ThreadControlBlockList blockedList {internal::getScheduler().getThreadControlBlockListAllocator(),
+	ThreadControlBlockList blockedList {getScheduler().getThreadControlBlockListAllocator(),
 			ThreadState::BlockedOnOnceFlag};
 	blockedList_ = &blockedList;
 
@@ -54,10 +54,10 @@ void CallOnceControlBlock::callOnceImplementation(const Functor& functor)
 	blockedList_ = nullptr;
 
 	while (blockedList.empty() == false)
-		internal::getScheduler().unblock(blockedList.begin());
+		getScheduler().unblock(blockedList.begin());
 }
 
-}	// namespace synchronization
+}	// namespace internal
 
 }	// namespace distortos
 

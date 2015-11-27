@@ -26,7 +26,7 @@ class ThreadControlBlock;
 
 }	// namespace internal
 
-/// SignalsReceiver class is a container for synchronization::SignalsReceiverControlBlock
+/// SignalsReceiver class is a container for internal::SignalsReceiverControlBlock
 class SignalsReceiver
 {
 	friend class internal::ThreadControlBlock;
@@ -51,8 +51,8 @@ public:
 
 private:
 
-	/// contained synchronization::SignalsReceiverControlBlock object
-	synchronization::SignalsReceiverControlBlock signalsReceiverControlBlock_;
+	/// contained internal::SignalsReceiverControlBlock object
+	internal::SignalsReceiverControlBlock signalsReceiverControlBlock_;
 };
 
 }	// namespace distortos

@@ -33,7 +33,7 @@ namespace distortos
 /**
  * \brief MessageQueue class is a message queue for thread-thread, thread-interrupt or interrupt-interrupt
  * communication. It supports multiple readers and multiple writers. It is implemented as a wrapper for
- * synchronization::MessageQueueBase.
+ * internal::MessageQueueBase.
  *
  * Similar to POSIX mqd_t - http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/mqueue.h.html
  *
@@ -46,17 +46,17 @@ class MessageQueue
 public:
 
 	/// type of uninitialized storage for Entry with link
-	using EntryStorage = synchronization::MessageQueueBase::EntryStorage;
+	using EntryStorage = internal::MessageQueueBase::EntryStorage;
 
 	/// type of uninitialized storage for value
-	using ValueStorage = synchronization::MessageQueueBase::ValueStorage<T>;
+	using ValueStorage = internal::MessageQueueBase::ValueStorage<T>;
 
-	/// import EntryStorageUniquePointer type from synchronization::MessageQueueBase class
-	using EntryStorageUniquePointer = synchronization::MessageQueueBase::EntryStorageUniquePointer;
+	/// import EntryStorageUniquePointer type from internal::MessageQueueBase class
+	using EntryStorageUniquePointer = internal::MessageQueueBase::EntryStorageUniquePointer;
 
 	/// unique_ptr (with deleter) to ValueStorage[]
 	using ValueStorageUniquePointer =
-			std::unique_ptr<ValueStorage[], synchronization::MessageQueueBase::ValueStorageUniquePointer::deleter_type>;
+			std::unique_ptr<ValueStorage[], internal::MessageQueueBase::ValueStorageUniquePointer::deleter_type>;
 
 	/**
 	 * \brief MessageQueue's constructor
@@ -107,7 +107,7 @@ public:
 	template<typename... Args>
 	int emplace(const uint8_t priority, Args&&... args)
 	{
-		const synchronization::SemaphoreWaitFunctor semaphoreWaitFunctor;
+		const internal::SemaphoreWaitFunctor semaphoreWaitFunctor;
 		return emplaceInternal(semaphoreWaitFunctor, priority, std::forward<Args>(args)...);
 	}
 
@@ -129,7 +129,7 @@ public:
 
 	int pop(uint8_t& priority, T& value)
 	{
-		const synchronization::SemaphoreWaitFunctor semaphoreWaitFunctor;
+		const internal::SemaphoreWaitFunctor semaphoreWaitFunctor;
 		return popInternal(semaphoreWaitFunctor, priority, value);
 	}
 
@@ -148,7 +148,7 @@ public:
 
 	int push(const uint8_t priority, const T& value)
 	{
-		const synchronization::SemaphoreWaitFunctor semaphoreWaitFunctor;
+		const internal::SemaphoreWaitFunctor semaphoreWaitFunctor;
 		return pushInternal(semaphoreWaitFunctor, priority, value);
 	}
 
@@ -168,7 +168,7 @@ public:
 
 	int push(const uint8_t priority, T&& value)
 	{
-		const synchronization::SemaphoreWaitFunctor semaphoreWaitFunctor;
+		const internal::SemaphoreWaitFunctor semaphoreWaitFunctor;
 		return pushInternal(semaphoreWaitFunctor, priority, std::move(value));
 	}
 
@@ -194,7 +194,7 @@ public:
 	template<typename... Args>
 	int tryEmplace(const uint8_t priority, Args&&... args)
 	{
-		const synchronization::SemaphoreTryWaitFunctor semaphoreTryWaitFunctor;
+		const internal::SemaphoreTryWaitFunctor semaphoreTryWaitFunctor;
 		return emplaceInternal(semaphoreTryWaitFunctor, priority, std::forward<Args>(args)...);
 	}
 
@@ -219,7 +219,7 @@ public:
 	template<typename... Args>
 	int tryEmplaceFor(const TickClock::duration duration, const uint8_t priority, Args&&... args)
 	{
-		const synchronization::SemaphoreTryWaitForFunctor semaphoreTryWaitForFunctor {duration};
+		const internal::SemaphoreTryWaitForFunctor semaphoreTryWaitForFunctor {duration};
 		return emplaceInternal(semaphoreTryWaitForFunctor, priority, std::forward<Args>(args)...);
 	}
 
@@ -271,7 +271,7 @@ public:
 	template<typename... Args>
 	int tryEmplaceUntil(const TickClock::time_point timePoint, const uint8_t priority, Args&&... args)
 	{
-		const synchronization::SemaphoreTryWaitUntilFunctor semaphoreTryWaitUntilFunctor {timePoint};
+		const internal::SemaphoreTryWaitUntilFunctor semaphoreTryWaitUntilFunctor {timePoint};
 		return emplaceInternal(semaphoreTryWaitUntilFunctor, priority, std::forward<Args>(args)...);
 	}
 
@@ -320,7 +320,7 @@ public:
 
 	int tryPop(uint8_t& priority, T& value)
 	{
-		const synchronization::SemaphoreTryWaitFunctor semaphoreTryWaitFunctor;
+		const internal::SemaphoreTryWaitFunctor semaphoreTryWaitFunctor;
 		return popInternal(semaphoreTryWaitFunctor, priority, value);
 	}
 
@@ -341,7 +341,7 @@ public:
 
 	int tryPopFor(const TickClock::duration duration, uint8_t& priority, T& value)
 	{
-		const synchronization::SemaphoreTryWaitForFunctor semaphoreTryWaitForFunctor {duration};
+		const internal::SemaphoreTryWaitForFunctor semaphoreTryWaitForFunctor {duration};
 		return popInternal(semaphoreTryWaitForFunctor, priority, value);
 	}
 
@@ -386,7 +386,7 @@ public:
 
 	int tryPopUntil(const TickClock::time_point timePoint, uint8_t& priority, T& value)
 	{
-		const synchronization::SemaphoreTryWaitUntilFunctor semaphoreTryWaitUntilFunctor {timePoint};
+		const internal::SemaphoreTryWaitUntilFunctor semaphoreTryWaitUntilFunctor {timePoint};
 		return popInternal(semaphoreTryWaitUntilFunctor, priority, value);
 	}
 
@@ -428,7 +428,7 @@ public:
 
 	int tryPush(const uint8_t priority, const T& value)
 	{
-		const synchronization::SemaphoreTryWaitFunctor semaphoreTryWaitFunctor;
+		const internal::SemaphoreTryWaitFunctor semaphoreTryWaitFunctor;
 		return pushInternal(semaphoreTryWaitFunctor, priority, value);
 	}
 
@@ -448,7 +448,7 @@ public:
 
 	int tryPush(const uint8_t priority, T&& value)
 	{
-		const synchronization::SemaphoreTryWaitFunctor semaphoreTryWaitFunctor;
+		const internal::SemaphoreTryWaitFunctor semaphoreTryWaitFunctor;
 		return pushInternal(semaphoreTryWaitFunctor, priority, std::move(value));
 	}
 
@@ -468,7 +468,7 @@ public:
 
 	int tryPushFor(const TickClock::duration duration, const uint8_t priority, const T& value)
 	{
-		const synchronization::SemaphoreTryWaitForFunctor semaphoreTryWaitForFunctor {duration};
+		const internal::SemaphoreTryWaitForFunctor semaphoreTryWaitForFunctor {duration};
 		return pushInternal(semaphoreTryWaitForFunctor, priority, value);
 	}
 
@@ -512,7 +512,7 @@ public:
 
 	int tryPushFor(const TickClock::duration duration, const uint8_t priority, T&& value)
 	{
-		const synchronization::SemaphoreTryWaitForFunctor semaphoreTryWaitForFunctor {duration};
+		const internal::SemaphoreTryWaitForFunctor semaphoreTryWaitForFunctor {duration};
 		return pushInternal(semaphoreTryWaitForFunctor, priority, std::move(value));
 	}
 
@@ -556,7 +556,7 @@ public:
 
 	int tryPushUntil(const TickClock::time_point timePoint, const uint8_t priority, const T& value)
 	{
-		const synchronization::SemaphoreTryWaitUntilFunctor semaphoreTryWaitUntilFunctor {timePoint};
+		const internal::SemaphoreTryWaitUntilFunctor semaphoreTryWaitUntilFunctor {timePoint};
 		return pushInternal(semaphoreTryWaitUntilFunctor, priority, value);
 	}
 
@@ -600,7 +600,7 @@ public:
 
 	int tryPushUntil(const TickClock::time_point timePoint, const uint8_t priority, T&& value)
 	{
-		const synchronization::SemaphoreTryWaitUntilFunctor semaphoreTryWaitUntilFunctor {timePoint};
+		const internal::SemaphoreTryWaitUntilFunctor semaphoreTryWaitUntilFunctor {timePoint};
 		return pushInternal(semaphoreTryWaitUntilFunctor, priority, std::move(value));
 	}
 
@@ -630,14 +630,14 @@ public:
 private:
 
 	/**
-	 * \brief BoundedFunctor is a type-erased synchronization::QueueFunctor which calls its bounded functor to execute
-	 * actions on queue's storage
+	 * \brief BoundedFunctor is a type-erased internal::QueueFunctor which calls its bounded functor to execute actions
+	 * on queue's storage
 	 *
 	 * \param F is the type of bounded functor, it will be called with <em>void*</em> as only argument
 	 */
 
 	template<typename F>
-	class BoundedFunctor : public synchronization::QueueFunctor
+	class BoundedFunctor : public internal::QueueFunctor
 	{
 	public:
 
@@ -710,8 +710,7 @@ private:
 	 */
 
 	template<typename... Args>
-	int emplaceInternal(const synchronization::SemaphoreFunctor& waitSemaphoreFunctor, uint8_t priority,
-			Args&&... args);
+	int emplaceInternal(const internal::SemaphoreFunctor& waitSemaphoreFunctor, uint8_t priority, Args&&... args);
 
 #endif	// DISTORTOS_MESSAGEQUEUE_EMPLACE_SUPPORTED == 1 || DOXYGEN == 1
 
@@ -730,7 +729,7 @@ private:
 	 * - error codes returned by Semaphore::post();
 	 */
 
-	int popInternal(const synchronization::SemaphoreFunctor& waitSemaphoreFunctor, uint8_t& priority, T& value);
+	int popInternal(const internal::SemaphoreFunctor& waitSemaphoreFunctor, uint8_t& priority, T& value);
 
 	/**
 	 * \brief Pushes the element to the queue.
@@ -746,7 +745,7 @@ private:
 	 * - error codes returned by Semaphore::post();
 	 */
 
-	int pushInternal(const synchronization::SemaphoreFunctor& waitSemaphoreFunctor, uint8_t priority, const T& value);
+	int pushInternal(const internal::SemaphoreFunctor& waitSemaphoreFunctor, uint8_t priority, const T& value);
 
 	/**
 	 * \brief Pushes the element to the queue.
@@ -763,10 +762,10 @@ private:
 	 * - error codes returned by Semaphore::post();
 	 */
 
-	int pushInternal(const synchronization::SemaphoreFunctor& waitSemaphoreFunctor, uint8_t priority, T&& value);
+	int pushInternal(const internal::SemaphoreFunctor& waitSemaphoreFunctor, uint8_t priority, T&& value);
 
-	/// contained synchronization::MessageQueueBase object which implements whole functionality
-	synchronization::MessageQueueBase messageQueueBase_;
+	/// contained internal::MessageQueueBase object which implements whole functionality
+	internal::MessageQueueBase messageQueueBase_;
 };
 
 template<typename T>
@@ -781,8 +780,8 @@ MessageQueue<T>::~MessageQueue()
 
 template<typename T>
 template<typename... Args>
-int MessageQueue<T>::emplaceInternal(const synchronization::SemaphoreFunctor& waitSemaphoreFunctor,
-		const uint8_t priority, Args&&... args)
+int MessageQueue<T>::emplaceInternal(const internal::SemaphoreFunctor& waitSemaphoreFunctor, const uint8_t priority,
+		Args&&... args)
 {
 	const auto emplaceFunctor = makeBoundedFunctor(
 			[&args...](void* const storage)
@@ -795,26 +794,25 @@ int MessageQueue<T>::emplaceInternal(const synchronization::SemaphoreFunctor& wa
 #endif	// DISTORTOS_MESSAGEQUEUE_EMPLACE_SUPPORTED == 1 || DOXYGEN == 1
 
 template<typename T>
-int MessageQueue<T>::popInternal(const synchronization::SemaphoreFunctor& waitSemaphoreFunctor, uint8_t& priority,
-		T& value)
+int MessageQueue<T>::popInternal(const internal::SemaphoreFunctor& waitSemaphoreFunctor, uint8_t& priority, T& value)
 {
-	const synchronization::SwapPopQueueFunctor<T> swapPopQueueFunctor {value};
+	const internal::SwapPopQueueFunctor<T> swapPopQueueFunctor {value};
 	return messageQueueBase_.pop(waitSemaphoreFunctor, priority, swapPopQueueFunctor);
 }
 
 template<typename T>
-int MessageQueue<T>::pushInternal(const synchronization::SemaphoreFunctor& waitSemaphoreFunctor, const uint8_t priority,
+int MessageQueue<T>::pushInternal(const internal::SemaphoreFunctor& waitSemaphoreFunctor, const uint8_t priority,
 		const T& value)
 {
-	const synchronization::CopyConstructQueueFunctor<T> copyConstructQueueFunctor {value};
+	const internal::CopyConstructQueueFunctor<T> copyConstructQueueFunctor {value};
 	return messageQueueBase_.push(waitSemaphoreFunctor, priority, copyConstructQueueFunctor);
 }
 
 template<typename T>
-int MessageQueue<T>::pushInternal(const synchronization::SemaphoreFunctor& waitSemaphoreFunctor, const uint8_t priority,
+int MessageQueue<T>::pushInternal(const internal::SemaphoreFunctor& waitSemaphoreFunctor, const uint8_t priority,
 		T&& value)
 {
-	const synchronization::MoveConstructQueueFunctor<T> moveConstructQueueFunctor {std::move(value)};
+	const internal::MoveConstructQueueFunctor<T> moveConstructQueueFunctor {std::move(value)};
 	return messageQueueBase_.push(waitSemaphoreFunctor, priority, moveConstructQueueFunctor);
 }
 

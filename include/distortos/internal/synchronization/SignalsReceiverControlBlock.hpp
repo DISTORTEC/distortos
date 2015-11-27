@@ -24,22 +24,16 @@ namespace distortos
 {
 
 class SignalAction;
-class SignalsCatcher;
 class SignalInformation;
 class SignalInformationQueueWrapper;
+class SignalsCatcher;
 
 namespace internal
 {
 
-class ThreadControlBlock;
-
-}	// namespace internal
-
-namespace synchronization
-{
-
-class SignalsCatcherControlBlock;
 class SignalInformationQueue;
+class SignalsCatcherControlBlock;
+class ThreadControlBlock;
 
 /// SignalsReceiverControlBlock class is a structure required by threads for "receiving" of signals
 class SignalsReceiverControlBlock
@@ -101,7 +95,7 @@ public:
 	 * - EINVAL - \a signalNumber value is invalid;
 	 */
 
-	int generateSignal(uint8_t signalNumber, internal::ThreadControlBlock& threadControlBlock);
+	int generateSignal(uint8_t signalNumber, ThreadControlBlock& threadControlBlock);
 
 	/**
 	 * \return set of currently pending signals
@@ -154,7 +148,7 @@ public:
 	 * - ENOTSUP - queuing of signals is disabled for this receiver;
 	 */
 
-	int queueSignal(uint8_t signalNumber, sigval value, internal::ThreadControlBlock& threadControlBlock) const;
+	int queueSignal(uint8_t signalNumber, sigval value, ThreadControlBlock& threadControlBlock) const;
 
 	/**
 	 * \brief Sets association for given signal number.
@@ -229,7 +223,7 @@ private:
 	 * - EINVAL - \a signalNumber value is invalid;
 	 */
 
-	int postGenerate(uint8_t signalNumber, internal::ThreadControlBlock& threadControlBlock) const;
+	int postGenerate(uint8_t signalNumber, ThreadControlBlock& threadControlBlock) const;
 
 	/// set of pending signals
 	SignalSet pendingSignalSet_;
@@ -244,7 +238,7 @@ private:
 	SignalInformationQueue* signalInformationQueue_;
 };
 
-}	// namespace synchronization
+}	// namespace internal
 
 }	// namespace distortos
 

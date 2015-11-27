@@ -28,7 +28,7 @@
 namespace distortos
 {
 
-namespace synchronization
+namespace internal
 {
 
 namespace
@@ -118,7 +118,7 @@ SignalsCatcherControlBlock::Association* findAssociation(SignalsCatcherControlBl
 void deliverSignals()
 {
 	const auto signalsReceiverControlBlock =
-			internal::getScheduler().getCurrentThreadControlBlock().getSignalsReceiverControlBlock();
+			getScheduler().getCurrentThreadControlBlock().getSignalsReceiverControlBlock();
 	if (signalsReceiverControlBlock == nullptr)
 		return;	/// \todo error handling?
 
@@ -191,8 +191,7 @@ std::pair<int, SignalAction> SignalsCatcherControlBlock::getAssociation(const ui
 	return {{}, association->second};
 }
 
-int SignalsCatcherControlBlock::postGenerate(const uint8_t signalNumber,
-		internal::ThreadControlBlock& threadControlBlock)
+int SignalsCatcherControlBlock::postGenerate(const uint8_t signalNumber, ThreadControlBlock& threadControlBlock)
 {
 	const auto getAssociationResult = getAssociation(signalNumber);
 	if (getAssociationResult.first != 0)
@@ -266,7 +265,7 @@ void SignalsCatcherControlBlock::setSignalMask(const SignalSet signalMask,
 	if (pendingUnblockedBitset.none() == true)	// no pending & unblocked signals?
 		return;
 
-	requestDeliveryOfSignals(internal::getScheduler().getCurrentThreadControlBlock());
+	requestDeliveryOfSignals(getScheduler().getCurrentThreadControlBlock());
 }
 
 /*---------------------------------------------------------------------------------------------------------------------+
@@ -300,7 +299,7 @@ SignalAction SignalsCatcherControlBlock::clearAssociation(const uint8_t signalNu
 	return previousSignalAction;
 }
 
-void SignalsCatcherControlBlock::requestDeliveryOfSignals(internal::ThreadControlBlock& threadControlBlock)
+void SignalsCatcherControlBlock::requestDeliveryOfSignals(ThreadControlBlock& threadControlBlock)
 {
 	if (deliveryIsPending_ == false)
 	{
@@ -311,10 +310,9 @@ void SignalsCatcherControlBlock::requestDeliveryOfSignals(internal::ThreadContro
 	const auto state = threadControlBlock.getState();
 	// is thread blocked (not "runnable" and can be unblocked)?
 	if (state != decltype(state)::New && state != decltype(state)::Runnable && state != decltype(state)::Terminated)
-		internal::getScheduler().unblock(threadControlBlock.getIterator(),
-				internal::ThreadControlBlock::UnblockReason::Signal);
+		getScheduler().unblock(threadControlBlock.getIterator(), ThreadControlBlock::UnblockReason::Signal);
 }
 
-}	// namespace synchronization
+}	// namespace internal
 
 }	// namespace distortos

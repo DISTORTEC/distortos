@@ -30,16 +30,10 @@ namespace distortos
 
 class SignalsReceiver;
 
-namespace synchronization
-{
-
-class SignalsReceiverControlBlock;
-
-}	// namespace synchronization
-
 namespace internal
 {
 
+class SignalsReceiverControlBlock;
 class ThreadControlBlockList;
 class ThreadGroupControlBlock;
 
@@ -202,11 +196,11 @@ public:
 	}
 
 	/**
-	 * \return pointer to synchronization::SignalsReceiverControlBlock object for this thread, nullptr if this thread
-	 * cannot receive signals
+	 * \return pointer to SignalsReceiverControlBlock object for this thread, nullptr if this thread cannot receive
+	 * signals
 	 */
 
-	synchronization::SignalsReceiverControlBlock* getSignalsReceiverControlBlock() const
+	SignalsReceiverControlBlock* getSignalsReceiverControlBlock() const
 	{
 		return signalsReceiverControlBlock_;
 	}
@@ -278,8 +272,7 @@ public:
 	 * protocol) that blocks this thread
 	 */
 
-	void setPriorityInheritanceMutexControlBlock(const synchronization::MutexControlBlock* const
-			priorityInheritanceMutexControlBlock)
+	void setPriorityInheritanceMutexControlBlock(const MutexControlBlock* const priorityInheritanceMutexControlBlock)
 	{
 		priorityInheritanceMutexControlBlock_ = priorityInheritanceMutexControlBlock;
 	}
@@ -375,7 +368,7 @@ private:
 	MutexControlBlockList ownedProtocolMutexControlBlocksList_;
 
 	/// pointer to MutexControlBlock (with PriorityInheritance protocol) that blocks this thread
-	const synchronization::MutexControlBlock* priorityInheritanceMutexControlBlock_;
+	const MutexControlBlock* priorityInheritanceMutexControlBlock_;
 
 	/// pointer to list that has this object
 	ThreadControlBlockList* list_;
@@ -395,9 +388,8 @@ private:
 	/// functor executed in unblockHook()
 	const UnblockFunctor* unblockFunctor_;
 
-	/// pointer to synchronization::SignalsReceiverControlBlock object for this thread, nullptr if this thread cannot
-	/// receive signals
-	synchronization::SignalsReceiverControlBlock* signalsReceiverControlBlock_;
+	/// pointer to SignalsReceiverControlBlock object for this thread, nullptr if this thread cannot receive signals
+	SignalsReceiverControlBlock* signalsReceiverControlBlock_;
 
 	/// newlib's _reent structure with thread-specific data
 	_reent reent_;

@@ -18,7 +18,7 @@
 namespace distortos
 {
 
-namespace synchronization
+namespace internal
 {
 
 /*---------------------------------------------------------------------------------------------------------------------+
@@ -30,6 +30,6 @@ int SemaphoreTryWaitForFunctor::operator()(Semaphore& semaphore) const
 	return semaphore.tryWaitFor(duration_);
 }
 
-}	// namespace synchronization
+}	// namespace internal
 
 }	// namespace distortos

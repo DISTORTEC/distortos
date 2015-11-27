@@ -19,7 +19,7 @@
 namespace distortos
 {
 
-namespace synchronization
+namespace internal
 {
 
 /**
@@ -62,7 +62,7 @@ private:
 	const T& value_;
 };
 
-}	// namespace synchronization
+}	// namespace internal
 
 }	// namespace distortos
 

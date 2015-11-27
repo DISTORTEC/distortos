@@ -21,7 +21,7 @@ namespace distortos
 
 class Semaphore;
 
-namespace synchronization
+namespace internal
 {
 
 /**
@@ -38,7 +38,7 @@ class SemaphoreFunctor : public estd::TypeErasedFunctor<int(Semaphore&)>
 
 };
 
-}	// namespace synchronization
+}	// namespace internal
 
 }	// namespace distortos
 

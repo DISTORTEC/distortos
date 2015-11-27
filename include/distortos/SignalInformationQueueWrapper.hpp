@@ -19,25 +19,25 @@
 namespace distortos
 {
 
-namespace synchronization
+namespace internal
 {
 
 class SignalsReceiverControlBlock;
 
-}	// namespace synchronization
+}	// namespace internal
 
-/// SignalInformationQueueWrapper class is a container for synchronization::SignalInformationQueue
+/// SignalInformationQueueWrapper class is a container for internal::SignalInformationQueue
 class SignalInformationQueueWrapper
 {
-	friend class synchronization::SignalsReceiverControlBlock;
+	friend class internal::SignalsReceiverControlBlock;
 
 public:
 
-	/// import Storage type alias from synchronization::SignalInformationQueue
-	using Storage = synchronization::SignalInformationQueue::Storage;
+	/// import Storage type alias from internal::SignalInformationQueue
+	using Storage = internal::SignalInformationQueue::Storage;
 
-	/// import StorageUniquePointer type alias from synchronization::SignalInformationQueue
-	using StorageUniquePointer = synchronization::SignalInformationQueue::StorageUniquePointer;
+	/// import StorageUniquePointer type alias from internal::SignalInformationQueue
+	using StorageUniquePointer = internal::SignalInformationQueue::StorageUniquePointer;
 
 	/**
 	 * \brief SignalInformationQueueWrapper's constructor
@@ -55,8 +55,8 @@ public:
 
 private:
 
-	/// contained synchronization::SignalInformationQueue object
-	synchronization::SignalInformationQueue signalInformationQueue_;
+	/// contained internal::SignalInformationQueue object
+	internal::SignalInformationQueue signalInformationQueue_;
 };
 
 }	// namespace distortos

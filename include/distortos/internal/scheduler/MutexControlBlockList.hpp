@@ -22,18 +22,13 @@
 namespace distortos
 {
 
-namespace synchronization
+namespace internal
 {
 
 class MutexControlBlock;
 
-}	// namespace synchronization
-
-namespace internal
-{
-
 /// type held by MutexControlBlockList
-using MutexControlBlockListValueType = std::reference_wrapper<synchronization::MutexControlBlock>;
+using MutexControlBlockListValueType = std::reference_wrapper<MutexControlBlock>;
 
 /// type of allocator used by MutexControlBlockList
 using MutexControlBlockListAllocator = PoolAllocator<MutexControlBlockListValueType, SimpleFeedablePool>;

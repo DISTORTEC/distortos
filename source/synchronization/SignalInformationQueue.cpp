@@ -20,7 +20,7 @@
 namespace distortos
 {
 
-namespace synchronization
+namespace internal
 {
 
 /*---------------------------------------------------------------------------------------------------------------------+
@@ -100,6 +100,6 @@ int SignalInformationQueue::queueSignal(const uint8_t signalNumber, const sigval
 	return 0;
 }
 
-}	// namespace synchronization
+}	// namespace internal
 
 }	// namespace distortos

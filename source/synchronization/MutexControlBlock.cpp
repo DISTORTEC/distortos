@@ -21,7 +21,7 @@
 namespace distortos
 {
 
-namespace synchronization
+namespace internal
 {
 
 namespace
@@ -33,7 +33,7 @@ namespace
 
 /// PriorityInheritanceMutexControlBlockUnblockFunctor is a functor executed when unblocking a thread that is blocked on
 /// a mutex with PriorityInheritance protocol
-class PriorityInheritanceMutexControlBlockUnblockFunctor : public internal::ThreadControlBlock::UnblockFunctor
+class PriorityInheritanceMutexControlBlockUnblockFunctor : public ThreadControlBlock::UnblockFunctor
 {
 public:
 
@@ -59,13 +59,13 @@ public:
 	 * \param [in] unblockReason is the reason of thread unblocking
 	 */
 
-	virtual void operator()(internal::ThreadControlBlock& threadControlBlock,
-			const internal::ThreadControlBlock::UnblockReason unblockReason) const override
+	virtual void operator()(ThreadControlBlock& threadControlBlock,
+			const ThreadControlBlock::UnblockReason unblockReason) const override
 	{
 		const auto owner = mutexControlBlock_.getOwner();
 
 		// waiting for mutex was interrupted and some thread still holds it?
-		if (unblockReason != internal::ThreadControlBlock::UnblockReason::UnblockRequest && owner != nullptr)
+		if (unblockReason != ThreadControlBlock::UnblockReason::UnblockRequest && owner != nullptr)
 			owner->updateBoostedPriority();
 
 		threadControlBlock.setPriorityInheritanceMutexControlBlock(nullptr);
@@ -84,7 +84,7 @@ private:
 +---------------------------------------------------------------------------------------------------------------------*/
 
 MutexControlBlock::MutexControlBlock(const Protocol protocol, const uint8_t priorityCeiling) :
-		blockedList_{internal::getScheduler().getThreadControlBlockListAllocator(), ThreadState::BlockedOnMutex},
+		blockedList_{getScheduler().getThreadControlBlockListAllocator(), ThreadState::BlockedOnMutex},
 		list_{},
 		iterator_{},
 		owner_{},
@@ -100,8 +100,7 @@ int MutexControlBlock::block()
 		priorityInheritanceBeforeBlock();
 
 	const PriorityInheritanceMutexControlBlockUnblockFunctor unblockFunctor {*this};
-	return internal::getScheduler().block(blockedList_, protocol_ == Protocol::PriorityInheritance ? &unblockFunctor :
-			nullptr);
+	return getScheduler().block(blockedList_, protocol_ == Protocol::PriorityInheritance ? &unblockFunctor : nullptr);
 }
 
 int MutexControlBlock::blockUntil(const TickClock::time_point timePoint)
@@ -110,8 +109,8 @@ int MutexControlBlock::blockUntil(const TickClock::time_point timePoint)
 		priorityInheritanceBeforeBlock();
 
 	const PriorityInheritanceMutexControlBlockUnblockFunctor unblockFunctor {*this};
-	return internal::getScheduler().blockUntil(blockedList_, timePoint,
-			protocol_ == Protocol::PriorityInheritance ? &unblockFunctor : nullptr);
+	return getScheduler().blockUntil(blockedList_, timePoint, protocol_ == Protocol::PriorityInheritance ?
+			&unblockFunctor : nullptr);
 }
 
 uint8_t MutexControlBlock::getBoostedPriority() const
@@ -131,7 +130,7 @@ uint8_t MutexControlBlock::getBoostedPriority() const
 
 void MutexControlBlock::lock()
 {
-	auto& scheduler = internal::getScheduler();
+	auto& scheduler = getScheduler();
 	owner_ = &scheduler.getCurrentThreadControlBlock();
 
 	if (protocol_ == Protocol::None)
@@ -172,7 +171,7 @@ void MutexControlBlock::unlockOrTransferLock()
 
 void MutexControlBlock::priorityInheritanceBeforeBlock() const
 {
-	auto& currentThreadControlBlock = internal::getScheduler().getCurrentThreadControlBlock();
+	auto& currentThreadControlBlock = getScheduler().getCurrentThreadControlBlock();
 
 	currentThreadControlBlock.setPriorityInheritanceMutexControlBlock(this);
 
@@ -183,7 +182,7 @@ void MutexControlBlock::priorityInheritanceBeforeBlock() const
 void MutexControlBlock::transferLock()
 {
 	owner_ = &blockedList_.begin()->get();	// pass ownership to the unblocked thread
-	internal::getScheduler().unblock(blockedList_.begin());
+	getScheduler().unblock(blockedList_.begin());
 
 	if (list_ == nullptr)
 		return;
@@ -207,6 +206,6 @@ void MutexControlBlock::unlock()
 	list_ = nullptr;
 }
 
-}	// namespace synchronization
+}	// namespace internal
 
 }	// namespace distortos

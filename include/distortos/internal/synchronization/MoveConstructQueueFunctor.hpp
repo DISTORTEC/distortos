@@ -21,7 +21,7 @@
 namespace distortos
 {
 
-namespace synchronization
+namespace internal
 {
 
 /**
@@ -64,7 +64,7 @@ private:
 	T&& value_;
 };
 
-}	// namespace synchronization
+}	// namespace internal
 
 }	// namespace distortos
 

@@ -18,7 +18,7 @@
 namespace distortos
 {
 
-namespace synchronization
+namespace internal
 {
 
 /*---------------------------------------------------------------------------------------------------------------------+
@@ -65,6 +65,6 @@ int FifoQueueBase::popPush(const SemaphoreFunctor& waitSemaphoreFunctor, const Q
 	return postSemaphore.post();
 }
 
-}	// namespace synchronization
+}	// namespace internal
 
 }	// namespace distortos

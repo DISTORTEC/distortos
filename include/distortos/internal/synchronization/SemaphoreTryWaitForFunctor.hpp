@@ -21,7 +21,7 @@
 namespace distortos
 {
 
-namespace synchronization
+namespace internal
 {
 
 /// SemaphoreTryWaitForFunctor class is a SemaphoreFunctor which calls Semaphore::tryWaitFor() with bounded duration
@@ -57,7 +57,7 @@ private:
 	const TickClock::duration duration_;
 };
 
-}	// namespace synchronization
+}	// namespace internal
 
 }	// namespace distortos
 

@@ -27,7 +27,7 @@ class RawFifoQueue
 public:
 
 	/// unique_ptr (with deleter) to storage
-	using StorageUniquePointer = synchronization::FifoQueueBase::StorageUniquePointer;
+	using StorageUniquePointer = internal::FifoQueueBase::StorageUniquePointer;
 
 	/**
 	 * \brief RawFifoQueue's constructor
@@ -430,7 +430,7 @@ private:
 	 * - error codes returned by Semaphore::post();
 	 */
 
-	int popInternal(const synchronization::SemaphoreFunctor& waitSemaphoreFunctor, void* buffer, size_t size);
+	int popInternal(const internal::SemaphoreFunctor& waitSemaphoreFunctor, void* buffer, size_t size);
 
 	/**
 	 * \brief Pushes the element to the queue.
@@ -447,10 +447,10 @@ private:
 	 * - error codes returned by Semaphore::post();
 	 */
 
-	int pushInternal(const synchronization::SemaphoreFunctor& waitSemaphoreFunctor, const void* data, size_t size);
+	int pushInternal(const internal::SemaphoreFunctor& waitSemaphoreFunctor, const void* data, size_t size);
 
-	/// contained synchronization::FifoQueueBase object which implements base functionality
-	synchronization::FifoQueueBase fifoQueueBase_;
+	/// contained internal::FifoQueueBase object which implements base functionality
+	internal::FifoQueueBase fifoQueueBase_;
 };
 
 }	// namespace distortos

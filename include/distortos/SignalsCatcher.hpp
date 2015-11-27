@@ -19,31 +19,31 @@
 namespace distortos
 {
 
-namespace synchronization
+namespace internal
 {
 
 class SignalsReceiverControlBlock;
 
-}	// namespace synchronization
+}	// namespace internal
 
-/// SignalsCatcher class is a container for synchronization::SignalsCatcherControlBlock
+/// SignalsCatcher class is a container for internal::SignalsCatcherControlBlock
 class SignalsCatcher
 {
-	friend class synchronization::SignalsReceiverControlBlock;
+	friend class internal::SignalsReceiverControlBlock;
 
 public:
 
-	/// import Storage type alias from synchronization::SignalsCatcherControlBlock
-	using Storage = synchronization::SignalsCatcherControlBlock::Storage;
+	/// import Storage type alias from internal::SignalsCatcherControlBlock
+	using Storage = internal::SignalsCatcherControlBlock::Storage;
 
-	/// import StorageUniquePointer type alias from synchronization::SignalsCatcherControlBlock
-	using StorageUniquePointer = synchronization::SignalsCatcherControlBlock::StorageUniquePointer;
+	/// import StorageUniquePointer type alias from internal::SignalsCatcherControlBlock
+	using StorageUniquePointer = internal::SignalsCatcherControlBlock::StorageUniquePointer;
 
 	/**
 	 * \brief SignalsCatcher's constructor
 	 *
 	 * \param [in] storageUniquePointer is a rvalue reference to StorageUniquePointer with storage for
-	 * synchronization::Association objects (sufficiently large for \a storageSize elements) and appropriate deleter
+	 * internal::Association objects (sufficiently large for \a storageSize elements) and appropriate deleter
 	 * \param [in] storageSize is the number of elements in \a storage array
 	 */
 
@@ -55,8 +55,8 @@ public:
 
 private:
 
-	/// contained synchronization::SignalsCatcherControlBlock object
-	synchronization::SignalsCatcherControlBlock signalsCatcherControlBlock_;
+	/// contained internal::SignalsCatcherControlBlock object
+	internal::SignalsCatcherControlBlock signalsCatcherControlBlock_;
 };
 
 }	// namespace distortos

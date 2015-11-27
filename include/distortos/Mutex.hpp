@@ -32,7 +32,7 @@ class Mutex
 public:
 
 	/// mutex protocols
-	using Protocol = synchronization::MutexControlBlock::Protocol;
+	using Protocol = internal::MutexControlBlock::Protocol;
 
 	/// type used for counting recursive locks
 	using RecursiveLocksCount = uint16_t;
@@ -259,7 +259,7 @@ private:
 	int tryLockInternal();
 
 	/// instance of control block
-	synchronization::MutexControlBlock controlBlock_;
+	internal::MutexControlBlock controlBlock_;
 
 	/// number of recursive locks, used when mutex type is Recursive
 	RecursiveLocksCount recursiveLocksCount_;

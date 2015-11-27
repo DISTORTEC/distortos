@@ -26,7 +26,7 @@
 namespace distortos
 {
 
-namespace synchronization
+namespace internal
 {
 
 /*---------------------------------------------------------------------------------------------------------------------+
@@ -74,8 +74,7 @@ int SignalsReceiverControlBlock::deliveryOfSignalsStartedHook() const
 	return 0;
 }
 
-int SignalsReceiverControlBlock::generateSignal(const uint8_t signalNumber,
-		internal::ThreadControlBlock& threadControlBlock)
+int SignalsReceiverControlBlock::generateSignal(const uint8_t signalNumber, ThreadControlBlock& threadControlBlock)
 {
 	architecture::InterruptMaskingLock interruptMaskingLock;
 
@@ -117,7 +116,7 @@ SignalSet SignalsReceiverControlBlock::getSignalMask() const
 }
 
 int SignalsReceiverControlBlock::queueSignal(const uint8_t signalNumber, const sigval value,
-		internal::ThreadControlBlock& threadControlBlock) const
+		ThreadControlBlock& threadControlBlock) const
 {
 	if (signalInformationQueue_ == nullptr)
 		return ENOTSUP;
@@ -186,8 +185,7 @@ std::pair<int, bool> SignalsReceiverControlBlock::isSignalIgnored(const uint8_t 
 	return {{}, signalAction.getHandler() == SignalAction{}.getHandler() ? true : false};
 }
 
-int SignalsReceiverControlBlock::postGenerate(const uint8_t signalNumber,
-		internal::ThreadControlBlock& threadControlBlock) const
+int SignalsReceiverControlBlock::postGenerate(const uint8_t signalNumber, ThreadControlBlock& threadControlBlock) const
 {
 	/// \todo add some form of assertion for validity of \a signalNumber
 
@@ -206,10 +204,10 @@ int SignalsReceiverControlBlock::postGenerate(const uint8_t signalNumber,
 	if (testResult.second == false)	// signalNumber is not "waited for"?
 		return 0;
 
-	internal::getScheduler().unblock(threadControlBlock.getIterator());
+	getScheduler().unblock(threadControlBlock.getIterator());
 	return 0;
 }
 
-}	// namespace synchronization
+}	// namespace internal
 
 }	// namespace distortos

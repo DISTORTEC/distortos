@@ -24,7 +24,7 @@
 namespace distortos
 {
 
-namespace synchronization
+namespace internal
 {
 
 /// FifoQueueBase class implements basic functionality of FifoQueue template class
@@ -140,7 +140,7 @@ private:
 	const size_t elementSize_;
 };
 
-}	// namespace synchronization
+}	// namespace internal
 
 }	// namespace distortos
 

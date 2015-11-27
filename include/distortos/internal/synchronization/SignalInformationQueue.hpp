@@ -27,7 +27,7 @@ namespace distortos
 
 class SignalSet;
 
-namespace synchronization
+namespace internal
 {
 
 /// SignalInformationQueue class can be used for queuing of SignalInformation objects
@@ -102,19 +102,19 @@ public:
 private:
 
 	/// type of allocator used by \a List
-	using PoolAllocator = internal::PoolAllocator<SignalInformation, internal::FeedablePool>;
+	using PoolAllocatorType = PoolAllocator<SignalInformation, FeedablePool>;
 
 	/// type of container with SignalInformation objects
-	using List = std::forward_list<SignalInformation, PoolAllocator>;
+	using List = std::forward_list<SignalInformation, PoolAllocatorType>;
 
 	/// storage for queue elements
 	StorageUniquePointer storageUniquePointer_;
 
 	/// PoolAllocator::Pool used by \a poolAllocator_
-	PoolAllocator::Pool pool_;
+	PoolAllocatorType::Pool pool_;
 
 	/// PoolAllocator used by \a signalInformationList_ and \a freeSignalInformationList_
-	PoolAllocator poolAllocator_;
+	PoolAllocatorType poolAllocator_;
 
 	/// list of queued SignalInformation objects
 	List signalInformationList_;
@@ -123,7 +123,7 @@ private:
 	List freeSignalInformationList_;
 };
 
-}	// namespace synchronization
+}	// namespace internal
 
 }	// namespace distortos
 

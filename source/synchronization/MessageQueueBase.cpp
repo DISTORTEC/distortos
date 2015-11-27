@@ -18,7 +18,7 @@
 namespace distortos
 {
 
-namespace synchronization
+namespace internal
 {
 
 namespace
@@ -192,6 +192,6 @@ int MessageQueueBase::popPush(const SemaphoreFunctor& waitSemaphoreFunctor, cons
 	return postSemaphore.post();
 }
 
-}	// namespace synchronization
+}	// namespace internal
 
 }	// namespace distortos

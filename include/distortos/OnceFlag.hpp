@@ -49,8 +49,8 @@ public:
 
 private:
 
-	/// internal synchronization::CallOnceControlBlock object used by callOnce()
-	synchronization::CallOnceControlBlock callOnceControlBlock_;
+	/// internal internal::CallOnceControlBlock object used by callOnce()
+	internal::CallOnceControlBlock callOnceControlBlock_;
 };
 
 }	// namespace distortos

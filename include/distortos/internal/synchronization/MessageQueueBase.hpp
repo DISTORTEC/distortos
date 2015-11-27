@@ -27,7 +27,7 @@
 namespace distortos
 {
 
-namespace synchronization
+namespace internal
 {
 
 /// MessageQueueBase class implements basic functionality of MessageQueue template class
@@ -102,16 +102,16 @@ public:
 	};
 
 	/// type of pool
-	using Pool = internal::FeedablePool;
+	using Pool = FeedablePool;
 
 	/// type of pool allocator
-	using PoolAllocator = internal::PoolAllocator<Entry, Pool>;
+	using PoolAllocatorType = PoolAllocator<Entry, Pool>;
 
 	/// type of free entry list
-	using FreeEntryList = std::forward_list<Entry, PoolAllocator>;
+	using FreeEntryList = std::forward_list<Entry, PoolAllocatorType>;
 
 	/// type of entry list
-	using EntryList = internal::SortedContainer<FreeEntryList, DescendingPriority>;
+	using EntryList = SortedContainer<FreeEntryList, DescendingPriority>;
 
 	/**
 	 * \brief InternalFunctor is a type-erased interface for functors which execute common code of pop() and push()
@@ -213,7 +213,7 @@ private:
 	Pool pool_;
 
 	/// PoolAllocator used by \a entryList_ and \a freeList_
-	PoolAllocator poolAllocator_;
+	PoolAllocatorType poolAllocator_;
 
 	/// list of available entries, sorted in descending order of priority
 	EntryList entryList_;
@@ -222,7 +222,7 @@ private:
 	FreeEntryList freeEntryList_;
 };
 
-}	// namespace synchronization
+}	// namespace internal
 
 }	// namespace distortos
 

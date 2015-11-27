@@ -21,7 +21,7 @@
 namespace distortos
 {
 
-namespace synchronization
+namespace internal
 {
 
 /// MemcpyPushQueueFunctor is a functor used for pushing of data to the raw queue with memcpy()
@@ -60,7 +60,7 @@ private:
 	const size_t size_;
 };
 
-}	// namespace synchronization
+}	// namespace internal
 
 }	// namespace distortos
 

@@ -19,7 +19,7 @@
 namespace distortos
 {
 
-namespace synchronization
+namespace internal
 {
 
 /**
@@ -35,7 +35,7 @@ class QueueFunctor : public estd::TypeErasedFunctor<void(void*)>
 
 };
 
-}	// namespace synchronization
+}	// namespace internal
 
 }	// namespace distortos
 

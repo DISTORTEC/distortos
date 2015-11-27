@@ -33,11 +33,6 @@ namespace internal
 
 class ThreadControlBlockList;
 
-}	// namespace internal
-
-namespace synchronization
-{
-
 /// CallOnceControlBlock class implements functionality of OnceFlag class and callOnce()
 /// \note This class requires GCC 4.9.
 class CallOnceControlBlock
@@ -150,7 +145,7 @@ private:
 	void callOnceImplementation(const Functor& functor);
 
 	/// pointer to stack-allocated list of ThreadControlBlock objects blocked on associated OnceFlag
-	internal::ThreadControlBlockList* blockedList_;
+	ThreadControlBlockList* blockedList_;
 
 	/// tells whether any function was already called for this object (true) or not (false)
 	bool done_;
@@ -170,7 +165,7 @@ void CallOnceControlBlock::operator()(Function&& function, Args&&... args)
 	callOnceImplementation(functor);
 }
 
-}	// namespace synchronization
+}	// namespace internal
 
 #endif	// DISTORTOS_CALLONCE_SUPPORTED == 1 || DOXYGEN == 1
 

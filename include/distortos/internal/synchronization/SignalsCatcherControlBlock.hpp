@@ -24,14 +24,8 @@ namespace distortos
 namespace internal
 {
 
-class ThreadControlBlock;
-
-}	// namespace internal
-
-namespace synchronization
-{
-
 class SignalsReceiverControlBlock;
+class ThreadControlBlock;
 
 /// SignalsCatcherControlBlock class is a structure required by threads for "catching" and "handling" of signals
 class SignalsCatcherControlBlock
@@ -110,7 +104,7 @@ public:
 	 * - EINVAL - \a signalNumber value is invalid;
 	 */
 
-	int postGenerate(uint8_t signalNumber, internal::ThreadControlBlock& threadControlBlock);
+	int postGenerate(uint8_t signalNumber, ThreadControlBlock& threadControlBlock);
 
 	/**
 	 * \brief Sets association for given signal number.
@@ -189,7 +183,7 @@ private:
 	 * \param [in] threadControlBlock is a reference to associated ThreadControlBlock
 	 */
 
-	void requestDeliveryOfSignals(internal::ThreadControlBlock& threadControlBlock);
+	void requestDeliveryOfSignals(ThreadControlBlock& threadControlBlock);
 
 	/// storage for Association objects
 	StorageUniquePointer storageUniquePointer_;
@@ -214,7 +208,7 @@ private:
 	bool deliveryIsPending_;
 };
 
-}	// namespace synchronization
+}	// namespace internal
 
 }	// namespace distortos
 

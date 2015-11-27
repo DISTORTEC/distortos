@@ -19,7 +19,7 @@
 namespace distortos
 {
 
-namespace synchronization
+namespace internal
 {
 
 /// SemaphoreTryWaitFunctor class is a SemaphoreFunctor which calls Semaphore::tryWait()
@@ -38,7 +38,7 @@ public:
 	virtual int operator()(Semaphore& semaphore) const override;
 };
 
-}	// namespace synchronization
+}	// namespace internal
 
 }	// namespace distortos
 

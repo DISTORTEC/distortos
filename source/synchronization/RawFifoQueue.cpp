@@ -39,49 +39,49 @@ RawFifoQueue::RawFifoQueue(StorageUniquePointer&& storageUniquePointer, const si
 
 int RawFifoQueue::pop(void* const buffer, const size_t size)
 {
-	const synchronization::SemaphoreWaitFunctor semaphoreWaitFunctor;
+	const internal::SemaphoreWaitFunctor semaphoreWaitFunctor;
 	return popInternal(semaphoreWaitFunctor, buffer, size);
 }
 
 int RawFifoQueue::push(const void* const data, const size_t size)
 {
-	const synchronization::SemaphoreWaitFunctor semaphoreWaitFunctor;
+	const internal::SemaphoreWaitFunctor semaphoreWaitFunctor;
 	return pushInternal(semaphoreWaitFunctor, data, size);
 }
 
 int RawFifoQueue::tryPop(void* const buffer, const size_t size)
 {
-	const synchronization::SemaphoreTryWaitFunctor semaphoreTryWaitFunctor;
+	const internal::SemaphoreTryWaitFunctor semaphoreTryWaitFunctor;
 	return popInternal(semaphoreTryWaitFunctor, buffer, size);
 }
 
 int RawFifoQueue::tryPopFor(const TickClock::duration duration, void* const buffer, const size_t size)
 {
-	const synchronization::SemaphoreTryWaitForFunctor semaphoreTryWaitForFunctor {duration};
+	const internal::SemaphoreTryWaitForFunctor semaphoreTryWaitForFunctor {duration};
 	return popInternal(semaphoreTryWaitForFunctor, buffer, size);
 }
 
 int RawFifoQueue::tryPopUntil(const TickClock::time_point timePoint, void* const buffer, const size_t size)
 {
-	const synchronization::SemaphoreTryWaitUntilFunctor semaphoreTryWaitUntilFunctor {timePoint};
+	const internal::SemaphoreTryWaitUntilFunctor semaphoreTryWaitUntilFunctor {timePoint};
 	return popInternal(semaphoreTryWaitUntilFunctor, buffer, size);
 }
 
 int RawFifoQueue::tryPush(const void* const data, const size_t size)
 {
-	const synchronization::SemaphoreTryWaitFunctor semaphoreTryWaitFunctor;
+	const internal::SemaphoreTryWaitFunctor semaphoreTryWaitFunctor;
 	return pushInternal(semaphoreTryWaitFunctor, data, size);
 }
 
 int RawFifoQueue::tryPushFor(const TickClock::duration duration, const void* const data, const size_t size)
 {
-	const synchronization::SemaphoreTryWaitForFunctor semaphoreTryWaitForFunctor {duration};
+	const internal::SemaphoreTryWaitForFunctor semaphoreTryWaitForFunctor {duration};
 	return pushInternal(semaphoreTryWaitForFunctor, data, size);
 }
 
 int RawFifoQueue::tryPushUntil(const TickClock::time_point timePoint, const void* const data, const size_t size)
 {
-	const synchronization::SemaphoreTryWaitUntilFunctor semaphoreTryWaitUntilFunctor {timePoint};
+	const internal::SemaphoreTryWaitUntilFunctor semaphoreTryWaitUntilFunctor {timePoint};
 	return pushInternal(semaphoreTryWaitUntilFunctor, data, size);
 }
 
@@ -89,23 +89,23 @@ int RawFifoQueue::tryPushUntil(const TickClock::time_point timePoint, const void
 | private functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-int RawFifoQueue::popInternal(const synchronization::SemaphoreFunctor& waitSemaphoreFunctor, void* const buffer,
+int RawFifoQueue::popInternal(const internal::SemaphoreFunctor& waitSemaphoreFunctor, void* const buffer,
 		const size_t size)
 {
 	if (size != fifoQueueBase_.getElementSize())
 		return EMSGSIZE;
 
-	const synchronization::MemcpyPopQueueFunctor memcpyPopQueueFunctor {buffer, size};
+	const internal::MemcpyPopQueueFunctor memcpyPopQueueFunctor {buffer, size};
 	return fifoQueueBase_.pop(waitSemaphoreFunctor, memcpyPopQueueFunctor);
 }
 
-int RawFifoQueue::pushInternal(const synchronization::SemaphoreFunctor& waitSemaphoreFunctor, const void* const data,
+int RawFifoQueue::pushInternal(const internal::SemaphoreFunctor& waitSemaphoreFunctor, const void* const data,
 		const size_t size)
 {
 	if (size != fifoQueueBase_.getElementSize())
 		return EMSGSIZE;
 
-	const synchronization::MemcpyPushQueueFunctor memcpyPushQueueFunctor {data, size};
+	const internal::MemcpyPushQueueFunctor memcpyPushQueueFunctor {data, size};
 	return fifoQueueBase_.push(waitSemaphoreFunctor, memcpyPushQueueFunctor);
 }
 

@@ -41,53 +41,53 @@ RawMessageQueue::RawMessageQueue(EntryStorageUniquePointer&& entryStorageUniqueP
 
 int RawMessageQueue::pop(uint8_t& priority, void* const buffer, const size_t size)
 {
-	const synchronization::SemaphoreWaitFunctor semaphoreWaitFunctor;
+	const internal::SemaphoreWaitFunctor semaphoreWaitFunctor;
 	return popInternal(semaphoreWaitFunctor, priority, buffer, size);
 }
 
 int RawMessageQueue::push(const uint8_t priority, const void* const data, const size_t size)
 {
-	const synchronization::SemaphoreWaitFunctor semaphoreWaitFunctor;
+	const internal::SemaphoreWaitFunctor semaphoreWaitFunctor;
 	return pushInternal(semaphoreWaitFunctor, priority, data, size);
 }
 
 int RawMessageQueue::tryPop(uint8_t& priority, void* const buffer, const size_t size)
 {
-	const synchronization::SemaphoreTryWaitFunctor semaphoreTryWaitFunctor;
+	const internal::SemaphoreTryWaitFunctor semaphoreTryWaitFunctor;
 	return popInternal(semaphoreTryWaitFunctor, priority, buffer, size);
 }
 
 int RawMessageQueue::tryPopFor(const TickClock::duration duration, uint8_t& priority, void* const buffer,
 		const size_t size)
 {
-	const synchronization::SemaphoreTryWaitForFunctor semaphoreTryWaitForFunctor {duration};
+	const internal::SemaphoreTryWaitForFunctor semaphoreTryWaitForFunctor {duration};
 	return popInternal(semaphoreTryWaitForFunctor, priority, buffer, size);
 }
 
 int RawMessageQueue::tryPopUntil(const TickClock::time_point timePoint, uint8_t& priority, void* const buffer,
 		const size_t size)
 {
-	const synchronization::SemaphoreTryWaitUntilFunctor semaphoreTryWaitUntilFunctor {timePoint};
+	const internal::SemaphoreTryWaitUntilFunctor semaphoreTryWaitUntilFunctor {timePoint};
 	return popInternal(semaphoreTryWaitUntilFunctor, priority, buffer, size);
 }
 
 int RawMessageQueue::tryPush(const uint8_t priority, const void* const data, const size_t size)
 {
-	const synchronization::SemaphoreTryWaitFunctor semaphoreTryWaitFunctor;
+	const internal::SemaphoreTryWaitFunctor semaphoreTryWaitFunctor;
 	return pushInternal(semaphoreTryWaitFunctor, priority, data, size);
 }
 
 int RawMessageQueue::tryPushFor(const TickClock::duration duration, const uint8_t priority, const void* const data,
 		const size_t size)
 {
-	const synchronization::SemaphoreTryWaitForFunctor semaphoreTryWaitForFunctor {duration};
+	const internal::SemaphoreTryWaitForFunctor semaphoreTryWaitForFunctor {duration};
 	return pushInternal(semaphoreTryWaitForFunctor, priority, data, size);
 }
 
 int RawMessageQueue::tryPushUntil(const TickClock::time_point timePoint, const uint8_t priority, const void* const data,
 		const size_t size)
 {
-	const synchronization::SemaphoreTryWaitUntilFunctor semaphoreTryWaitUntilFunctor {timePoint};
+	const internal::SemaphoreTryWaitUntilFunctor semaphoreTryWaitUntilFunctor {timePoint};
 	return pushInternal(semaphoreTryWaitUntilFunctor, priority, data, size);
 }
 
@@ -95,23 +95,23 @@ int RawMessageQueue::tryPushUntil(const TickClock::time_point timePoint, const u
 | private functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-int RawMessageQueue::popInternal(const synchronization::SemaphoreFunctor& waitSemaphoreFunctor, uint8_t& priority,
+int RawMessageQueue::popInternal(const internal::SemaphoreFunctor& waitSemaphoreFunctor, uint8_t& priority,
 		void* const buffer, const size_t size)
 {
 	if (size != elementSize_)
 		return EMSGSIZE;
 
-	const synchronization::MemcpyPopQueueFunctor memcpyPopQueueFunctor {buffer, size};
+	const internal::MemcpyPopQueueFunctor memcpyPopQueueFunctor {buffer, size};
 	return messageQueueBase_.pop(waitSemaphoreFunctor, priority, memcpyPopQueueFunctor);
 }
 
-int RawMessageQueue::pushInternal(const synchronization::SemaphoreFunctor& waitSemaphoreFunctor, const uint8_t priority,
+int RawMessageQueue::pushInternal(const internal::SemaphoreFunctor& waitSemaphoreFunctor, const uint8_t priority,
 		const void* const data, const size_t size)
 {
 	if (size != elementSize_)
 		return EMSGSIZE;
 
-	const synchronization::MemcpyPushQueueFunctor memcpyPushQueueFunctor {data, size};
+	const internal::MemcpyPushQueueFunctor memcpyPushQueueFunctor {data, size};
 	return messageQueueBase_.push(waitSemaphoreFunctor, priority, memcpyPushQueueFunctor);
 }
 

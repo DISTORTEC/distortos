@@ -18,7 +18,7 @@
 namespace distortos
 {
 
-namespace synchronization
+namespace internal
 {
 
 /*---------------------------------------------------------------------------------------------------------------------+
@@ -30,6 +30,6 @@ void MemcpyPopQueueFunctor::operator()(void* const storage) const
 	memcpy(buffer_, storage, size_);
 }
 
-}	// namespace synchronization
+}	// namespace internal
 
 }	// namespace distortos
