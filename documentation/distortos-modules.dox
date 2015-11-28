@@ -12,6 +12,9 @@
  */
 
 /**
+ * \defgroup clocks Clocks
+ * \brief Clocks-related API of distortos
+ *
  * \defgroup softwareTimers Software Timers
  * \brief Software Timers API of distortos
  *

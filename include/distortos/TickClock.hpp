@@ -2,13 +2,13 @@
  * \file
  * \brief TickClock class header
  *
- * \author Copyright (C) 2014 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-10-27
+ * \date 2015-11-28
  */
 
 #ifndef INCLUDE_DISTORTOS_TICKCLOCK_HPP_
@@ -21,7 +21,12 @@
 namespace distortos
 {
 
-/// TickClock is a std::chrono clock, equivalent of std::chrono::steady_clock
+/**
+ * \brief TickClock is a std::chrono clock, equivalent of std::chrono::steady_clock
+ *
+ * \ingroup clocks
+ */
+
 class TickClock
 {
 public:
