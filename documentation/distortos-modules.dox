@@ -20,6 +20,9 @@
  * \defgroup queues Queues
  * \brief Queues-related synchronization API of distortos
  *
+ * \defgroup signals Signals
+ * \brief Signals-related synchronization API of distortos
+ *
  * \}
  *
  * \defgroup threads Threads

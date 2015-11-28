@@ -85,6 +85,8 @@ public:
 	 * \return 0 on success, error code otherwise:
 	 * - EINVAL - \a signalNumber value is invalid;
 	 * - ENOTSUP - reception of signals is disabled for this thread;
+	 *
+	 * \ingroup signals
 	 */
 
 	virtual int generateSignal(uint8_t signalNumber) override;
@@ -103,6 +105,8 @@ public:
 	 * This function shall return the set of signals that are blocked from delivery and are pending on the thread.
 	 *
 	 * \return set of currently pending signals
+	 *
+	 * \ingroup signals
 	 */
 
 	virtual SignalSet getPendingSignalSet() const override;
@@ -160,6 +164,8 @@ public:
 	 * associated queue of SignalInformation objects;
 	 * - EINVAL - \a signalNumber value is invalid;
 	 * - ENOTSUP - reception or queuing of signals are disabled for this thread;
+	 *
+	 * \ingroup signals
 	 */
 
 	virtual int queueSignal(uint8_t signalNumber, sigval value) override;
