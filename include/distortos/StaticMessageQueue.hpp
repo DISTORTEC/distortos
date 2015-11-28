@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-11-27
+ * \date 2015-11-28
  */
 
 #ifndef INCLUDE_DISTORTOS_STATICMESSAGEQUEUE_HPP_
@@ -26,6 +26,8 @@ namespace distortos
  *
  * \param T is the type of data in queue
  * \param QueueSize is the maximum number of elements in queue
+ *
+ * \ingroup queues
  */
 
 template<typename T, size_t QueueSize>

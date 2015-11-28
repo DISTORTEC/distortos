@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-11-27
+ * \date 2015-11-28
  */
 
 #ifndef INCLUDE_DISTORTOS_RAWFIFOQUEUE_HPP_
@@ -19,9 +19,16 @@
 namespace distortos
 {
 
-/// RawFifoQueue class is very similar to FifoQueue, but optimized for binary serializable types (like POD types). Type
-/// T can be used with both RawFifoQueue and FifoQueue<T> only when std::is_trivially_copyable<T>::value == true,
-/// otherwise only FifoQueue<T> use is safe, while using RawFifoQueue results in undefined behavior.
+/**
+ * \brief RawFifoQueue class is very similar to FifoQueue, but optimized for binary serializable types (like POD types).
+ *
+ * Type \a T can be used with both RawFifoQueue and FifoQueue only when
+ * <em>std::is_trivially_copyable<T>::value == true</em>, otherwise only FifoQueue use is safe, while using RawFifoQueue
+ * results in undefined behavior.
+ *
+ * \ingroup queues
+ */
+
 class RawFifoQueue
 {
 public:

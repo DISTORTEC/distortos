@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-11-27
+ * \date 2015-11-28
  */
 
 #ifndef INCLUDE_DISTORTOS_RAWMESSAGEQUEUE_HPP_
@@ -21,11 +21,15 @@ namespace distortos
 
 /**
  * \brief RawMessageQueue class is very similar to MessageQueue, but optimized for binary serializable types (like POD
- * types). Type T can be used with both RawMessageQueue and MessageQueue<T> only when
- * std::is_trivially_copyable<T>::value == true, otherwise only MessageQueue<T> use is safe, while using RawMessageQueue
- * results in undefined behavior.
+ * types).
+ *
+ * Type \a T can be used with both RawMessageQueue and MessageQueue only when
+ * <em>std::is_trivially_copyable<T>::value == true</em>, otherwise only MessageQueue use is safe, while using
+ * RawMessageQueue results in undefined behavior.
  *
  * Similar to POSIX mqd_t - http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/mqueue.h.html
+ *
+ * \ingroup queues
  */
 
 class RawMessageQueue

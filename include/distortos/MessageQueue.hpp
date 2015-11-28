@@ -39,6 +39,8 @@ namespace distortos
  * Similar to POSIX mqd_t - http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/mqueue.h.html
  *
  * \param T is the type of data in queue
+ *
+ * \ingroup queues
  */
 
 template<typename T>

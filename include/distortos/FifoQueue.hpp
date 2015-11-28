@@ -37,6 +37,8 @@ namespace distortos
  * internal::FifoQueueBase.
  *
  * \param T is the type of data in queue
+ *
+ * \ingroup queues
  */
 
 template<typename T>

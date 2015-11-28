@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-10-24
+ * \date 2015-11-28
  */
 
 #ifndef INCLUDE_DISTORTOS_DYNAMICRAWMESSAGEQUEUE_HPP_
@@ -21,6 +21,8 @@ namespace distortos
 
 /**
  * \brief DynamicRawMessageQueue class is a variant of RawMessageQueue that has dynamic storage for queue's contents.
+ *
+ * \ingroup queues
  */
 
 class DynamicRawMessageQueue : public RawMessageQueue
