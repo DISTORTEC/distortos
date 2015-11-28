@@ -43,11 +43,14 @@ public:
 	/// basic time_point type of clock
 	using time_point = std::chrono::time_point<TickClock>;
 
-	/// \return time_point representing the current value of the clock
+	/**
+	 * \return time_point representing the current value of the clock
+	 */
+
 	static time_point now();
 
 	/// this is a steady clock - it cannot be adjusted
-	static constexpr bool is_steady = true;
+	static constexpr bool is_steady {true};
 };
 
 }	// namespace distortos
