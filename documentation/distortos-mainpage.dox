@@ -1,0 +1,42 @@
+/**
+ * \file
+ * \brief Main page of distortos' documentation
+ *
+ * \author Copyright (C) 2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ *
+ * \par License
+ * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
+ * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ *
+ * \date 2015-11-28
+ */
+
+/**
+ * \mainpage Main page
+ *
+ * Advanced real-time operating system for deeply embedded targets
+ *
+ * Homepage - http://distortos.org/<br/>
+ * Documentation - http://distortos.org/documentation/<br/>
+ * Source Code @ GitHub - https://github.com/DISTORTEC/distortos<br/>
+ * Mailing List - https://lists.sourceforge.net/lists/listinfo/distortos-development<br/>
+ *
+ * - fully preemptive
+ * - round-robin and FIFO scheduling
+ * - all basic primitives aim for maximum compatibility with POSIX, thread support library from C++11 and other
+ * established standards
+ * - POSIX pthread implementation
+ * - support for various mutex types (normal, error-checking, recursive) and mutex protocols (normal, priority
+ * inheritance, priority protection)
+ * - software timers
+ * - POSIX-style signals
+ * - static design where it is possible and makes sense
+ * - object-oriented design
+ * - written in C++11
+ *
+ * \author Copyright (C) 2014-2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ *
+ * \par License
+ * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
+ * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
