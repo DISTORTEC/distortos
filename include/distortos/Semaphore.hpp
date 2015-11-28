@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-11-27
+ * \date 2015-11-28
  */
 
 #ifndef INCLUDE_DISTORTOS_SEMAPHORE_HPP_
@@ -23,6 +23,8 @@ namespace distortos
  * \brief Semaphore is the basic synchronization primitive
  *
  * Similar to POSIX semaphores - http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap04.html#tag_04_16
+ *
+ * \ingroup synchronization
  */
 
 class Semaphore

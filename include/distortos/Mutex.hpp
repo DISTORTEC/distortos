@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-11-27
+ * \date 2015-11-28
  */
 
 #ifndef INCLUDE_DISTORTOS_MUTEX_HPP_
@@ -25,6 +25,8 @@ namespace distortos
  * Similar to std::mutex - http://en.cppreference.com/w/cpp/thread/mutex
  * Similar to POSIX pthread_mutex_t -
  * http://pubs.opengroup.org/onlinepubs/9699919799/functions/V2_chap02.html#tag_15_09 -> 2.9.3 Thread Mutexes
+ *
+ * \ingroup synchronization
  */
 
 class Mutex

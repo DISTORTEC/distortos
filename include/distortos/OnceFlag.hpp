@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-11-27
+ * \date 2015-11-28
  */
 
 #ifndef INCLUDE_DISTORTOS_ONCEFLAG_HPP_
@@ -28,6 +28,8 @@ namespace distortos
  * Similar to POSIX pthread_once_t - http://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_once.html#
  *
  * \note This class requires GCC 4.9.
+ *
+ * \ingroup synchronization
  */
 
 class OnceFlag

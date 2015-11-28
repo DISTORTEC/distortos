@@ -138,6 +138,8 @@ public:
 	 * - EDEADLK - deadlock condition was detected,
 	 * - EINVAL - this thread is not joinable,
 	 * - ...
+	 *
+	 * \ingroup synchronization
 	 */
 
 	virtual int join() override;

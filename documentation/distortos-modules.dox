@@ -12,6 +12,9 @@
  */
 
 /**
+ * \defgroup synchronization Synchronization
+ * \brief Synchronization-related API of distortos
+ *
  * \defgroup threads Threads
  * \brief Threads-related API of distortos
  */

@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-07-15
+ * \date 2015-11-28
  */
 
 #ifndef INCLUDE_DISTORTOS_CALLONCE_HPP_
@@ -35,6 +35,8 @@ namespace distortos
  * \param [in] onceFlag is a reference to shared OnceFlag object
  * \param [in] function is the function object that will be executed
  * \param [in] args are arguments for \a function
+ *
+ * \ingroup synchronization
  */
 
 template<typename Function, typename... Args>
