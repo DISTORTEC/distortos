@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-11-27
+ * \date 2015-11-28
  */
 
 #ifndef INCLUDE_DISTORTOS_DYNAMICTHREAD_HPP_
@@ -100,19 +100,6 @@ private:
 	std::function<void()> boundFunction_;
 };
 
-template<typename Function, typename... Args>
-DynamicThread::DynamicThread(const size_t stackSize, const bool canReceiveSignals, const size_t queuedSignals,
-		const size_t signalActions, const uint8_t priority, const SchedulingPolicy schedulingPolicy,
-		Function&& function, Args&&... args) :
-		Base{{new uint8_t[stackSize], internal::storageDeleter<uint8_t>}, stackSize, priority, schedulingPolicy,
-				nullptr, canReceiveSignals == true ? &dynamicSignalsReceiver_ : nullptr},
-		dynamicSignalsReceiver_{canReceiveSignals == true ? queuedSignals : 0,
-				canReceiveSignals == true ? signalActions : 0},
-		boundFunction_{std::bind(std::forward<Function>(function), std::forward<Args>(args)...)}
-{
-
-}
-
 /**
  * \brief Helper factory function to make DynamicThread object
  *
@@ -160,6 +147,19 @@ template<typename Function, typename... Args>
 DynamicThread makeDynamicThread(const DynamicThreadParameters parameters, Function&& function, Args&&... args)
 {
 	return {parameters, std::forward<Function>(function), std::forward<Args>(args)...};
+}
+
+template<typename Function, typename... Args>
+DynamicThread::DynamicThread(const size_t stackSize, const bool canReceiveSignals, const size_t queuedSignals,
+		const size_t signalActions, const uint8_t priority, const SchedulingPolicy schedulingPolicy,
+		Function&& function, Args&&... args) :
+		Base{{new uint8_t[stackSize], internal::storageDeleter<uint8_t>}, stackSize, priority, schedulingPolicy,
+				nullptr, canReceiveSignals == true ? &dynamicSignalsReceiver_ : nullptr},
+		dynamicSignalsReceiver_{canReceiveSignals == true ? queuedSignals : 0,
+				canReceiveSignals == true ? signalActions : 0},
+		boundFunction_{std::bind(std::forward<Function>(function), std::forward<Args>(args)...)}
+{
+
 }
 
 }	// namespace distortos
