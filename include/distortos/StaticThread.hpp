@@ -85,6 +85,9 @@ private:
 
 }	// namespace internal
 
+/// \addtogroup threads
+/// \{
+
 /**
  * \brief StaticThread class is a templated interface for thread that has automatic storage for stack.
  *
@@ -262,6 +265,8 @@ makeStaticThread(const uint8_t priority, Function&& function, Args&&... args)
 {
 	return {priority, std::forward<Function>(function), std::forward<Args>(args)...};
 }
+
+/// \}
 
 template<size_t StackSize, bool CanReceiveSignals, size_t QueuedSignals, size_t SignalActions, typename Function,
 		typename... Args>

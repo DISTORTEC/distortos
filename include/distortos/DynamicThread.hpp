@@ -23,6 +23,9 @@
 namespace distortos
 {
 
+/// \addtogroup threads
+/// \{
+
 /**
  * \brief DynamicThread class is a type-erased interface for thread that has dynamic storage for bounded function, stack
  * and internal DynamicSignalsReceiver object.
@@ -148,6 +151,8 @@ DynamicThread makeDynamicThread(const DynamicThreadParameters parameters, Functi
 {
 	return {parameters, std::forward<Function>(function), std::forward<Args>(args)...};
 }
+
+/// \}
 
 template<typename Function, typename... Args>
 DynamicThread::DynamicThread(const size_t stackSize, const bool canReceiveSignals, const size_t queuedSignals,

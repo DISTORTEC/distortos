@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-11-14
+ * \date 2015-11-28
  */
 
 #ifndef INCLUDE_DISTORTOS_DYNAMICTHREADPARAMETERS_HPP_
@@ -26,6 +26,8 @@ namespace distortos
  *
  * This struct is a replacement for overloads of DynamicThread's constructor and makeDynamicThread() which -
  * unfortunately - cannot be used, as they would lead to compilation errors due to ambiguity.
+ *
+ * \ingroup threads
  */
 
 struct DynamicThreadParameters

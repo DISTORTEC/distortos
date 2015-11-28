@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-11-15
+ * \date 2015-11-28
  */
 
 #ifndef INCLUDE_DISTORTOS_THREAD_HPP_
@@ -23,7 +23,12 @@
 namespace distortos
 {
 
-/// Thread class is a pure abstract interface for threads
+/**
+ * \brief Thread class is a pure abstract interface for threads
+ *
+ * \ingroup threads
+ */
+
 class Thread
 {
 public:
