@@ -3,6 +3,10 @@ distortos [![Build Status](https://travis-ci.org/DISTORTEC/distortos.svg)](https
 
 Advanced real-time operating system for deeply embedded targets
 
+[Homepage](http://distortos.org/)<br/>
+[Documentation](http://distortos.org/documentation/)<br/>
+[Source Code @ GitHub](https://github.com/DISTORTEC/distortos)<br/>
+
 - fully preemptive
 - round-robin and FIFO scheduling
 - all basic primitives aim for maximum compatibility with POSIX, thread support library from C++11 and other established
