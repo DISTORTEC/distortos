@@ -18,6 +18,9 @@
  * \defgroup softwareTimers Software Timers
  * \brief Software Timers API of distortos
  *
+ * \defgroup statistics Statistics
+ * \brief API of distortos' statistics
+ *
  * \defgroup synchronization Synchronization
  * \brief Synchronization-related API of distortos
  *
