@@ -6,6 +6,7 @@ Advanced real-time operating system for deeply embedded targets
 [Homepage](http://distortos.org/)<br/>
 [Documentation](http://distortos.org/documentation/)<br/>
 [Source Code @ GitHub](https://github.com/DISTORTEC/distortos)<br/>
+[Mailing List](https://lists.sourceforge.net/lists/listinfo/distortos-development)<br/>
 
 - fully preemptive
 - round-robin and FIFO scheduling
@@ -117,9 +118,3 @@ executing `pacman -S gawk make` in the shell of this software distro - the binar
 `<installation path>\usr\bin` folder. *kconfig-frontends* binaries for *Windows* can be downloaded from
 [uvc.de](http://uvc.de/posts/linux-kernel-configuration-tool-kconfig-under-windows.html) website. *tup* and
 *arm-none-eabi bleeding-edge-toolchain* binaries for *Windows* are available from their main websites.
-
-Mailing list
-------------
-
-[distortos-development](https://lists.sourceforge.net/lists/listinfo/distortos-development) is a mailing list dedicated
-to discussions about development of distortos.
