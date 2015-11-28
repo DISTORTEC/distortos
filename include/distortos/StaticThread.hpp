@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-11-27
+ * \date 2015-11-28
  */
 
 #ifndef INCLUDE_DISTORTOS_STATICTHREAD_HPP_
@@ -208,27 +208,6 @@ private:
 	StaticSignalsReceiver<QueuedSignals, SignalActions> staticSignalsReceiver_;
 };
 
-template<size_t StackSize, bool CanReceiveSignals, size_t QueuedSignals, size_t SignalActions, typename Function,
-		typename... Args>
-StaticThread<StackSize, CanReceiveSignals, QueuedSignals, SignalActions, Function, Args...>::
-StaticThread(const uint8_t priority, const SchedulingPolicy schedulingPolicy, Function&& function, Args&&... args) :
-		Base{{&stack_, internal::dummyDeleter<decltype(stack_)>}, sizeof(stack_), priority, schedulingPolicy, nullptr,
-				std::forward<Function>(function), std::forward<Args>(args)...}
-{
-
-}
-
-template<size_t StackSize, size_t QueuedSignals, size_t SignalActions, typename Function, typename... Args>
-StaticThread<StackSize, true, QueuedSignals, SignalActions, Function, Args...>::StaticThread(const uint8_t priority,
-		const SchedulingPolicy schedulingPolicy, Function&& function, Args&&... args) :
-		Base{{&stack_, internal::dummyDeleter<decltype(stack_)>}, sizeof(stack_), priority, schedulingPolicy,
-				&static_cast<SignalsReceiver&>(staticSignalsReceiver_), std::forward<Function>(function),
-				std::forward<Args>(args)...},
-		staticSignalsReceiver_{}
-{
-
-}
-
 /**
  * \brief Helper factory function to make StaticThread object with partially deduced template arguments
  *
@@ -282,6 +261,27 @@ StaticThread<StackSize, CanReceiveSignals, QueuedSignals, SignalActions, Functio
 makeStaticThread(const uint8_t priority, Function&& function, Args&&... args)
 {
 	return {priority, std::forward<Function>(function), std::forward<Args>(args)...};
+}
+
+template<size_t StackSize, bool CanReceiveSignals, size_t QueuedSignals, size_t SignalActions, typename Function,
+		typename... Args>
+StaticThread<StackSize, CanReceiveSignals, QueuedSignals, SignalActions, Function, Args...>::
+StaticThread(const uint8_t priority, const SchedulingPolicy schedulingPolicy, Function&& function, Args&&... args) :
+		Base{{&stack_, internal::dummyDeleter<decltype(stack_)>}, sizeof(stack_), priority, schedulingPolicy, nullptr,
+				std::forward<Function>(function), std::forward<Args>(args)...}
+{
+
+}
+
+template<size_t StackSize, size_t QueuedSignals, size_t SignalActions, typename Function, typename... Args>
+StaticThread<StackSize, true, QueuedSignals, SignalActions, Function, Args...>::StaticThread(const uint8_t priority,
+		const SchedulingPolicy schedulingPolicy, Function&& function, Args&&... args) :
+		Base{{&stack_, internal::dummyDeleter<decltype(stack_)>}, sizeof(stack_), priority, schedulingPolicy,
+				&static_cast<SignalsReceiver&>(staticSignalsReceiver_), std::forward<Function>(function),
+				std::forward<Args>(args)...},
+		staticSignalsReceiver_{}
+{
+
 }
 
 }	// namespace distortos
