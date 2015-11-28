@@ -14,7 +14,7 @@ Advanced real-time operating system for deeply embedded targets
   standards
 - POSIX pthread implementation
 - support for various mutex types (normal, error-checking, recursive) and mutex protocols (normal, priority inheritance,
-  priority protection) 
+  priority protection)
 - software timers
 - POSIX-style signals
 - static design where it is possible and makes sense
