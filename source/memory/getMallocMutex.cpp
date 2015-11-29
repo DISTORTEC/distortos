@@ -1,6 +1,6 @@
 /**
  * \file
- * \brief Implementation of newlib's malloc() locking functions
+ * \brief getMallocMutex() definition
  *
  * \author Copyright (C) 2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
@@ -10,8 +10,6 @@
  *
  * \date 2015-11-29
  */
-
-#include "distortos/internal/memory/mallocLockingInitialization.hpp"
 
 #include "distortos/internal/memory/getMallocMutex.hpp"
 
@@ -23,31 +21,25 @@ namespace distortos
 namespace internal
 {
 
+namespace
+{
+
+/*---------------------------------------------------------------------------------------------------------------------+
+| local objects
++---------------------------------------------------------------------------------------------------------------------*/
+
+/// storage for main instance of Mutex used for malloc() and free() locking
+std::aligned_storage<sizeof(Mutex), alignof(Mutex)>::type mallocMutexInstanceStorage;
+
+}	// namespace
+
 /*---------------------------------------------------------------------------------------------------------------------+
 | global functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-void mallocLockingInitialization()
+Mutex& getMallocMutex()
 {
-	new (&getMallocMutex()) Mutex {Mutex::Type::Recursive, Mutex::Protocol::PriorityInheritance};
-}
-
-/**
- * \brief Recursively locks malloc()'s mutex.
- */
-
-extern "C" void __malloc_lock()
-{
-	getMallocMutex().lock();
-}
-
-/**
- * \brief Recursively unlocks malloc()'s mutex.
- */
-
-extern "C" void __malloc_unlock()
-{
-	getMallocMutex().unlock();
+	return reinterpret_cast<Mutex&>(mallocMutexInstanceStorage);
 }
 
 }	// namespace internal
