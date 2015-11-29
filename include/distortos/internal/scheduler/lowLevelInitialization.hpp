@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-11-27
+ * \date 2015-11-29
  */
 
 #ifndef INCLUDE_DISTORTOS_INTERNAL_SCHEDULER_LOWLEVELINITIALIZATION_HPP_
@@ -25,7 +25,8 @@ namespace internal
 +---------------------------------------------------------------------------------------------------------------------*/
 
 /**
- * \brief Initializes main instance of system's Scheduler, main thread with its group and starts idle thread.
+ * \brief Initializes main instance of system's Scheduler, main thread with its group, starts idle thread and
+ * initializes main instance of Mutex used for malloc() and free() locking.
  *
  * This function is called before constructors for global and static objects from __libc_init_array() via address in
  * distortosPreinitArray[].

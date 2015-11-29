@@ -13,10 +13,6 @@
 
 #include "distortos/internal/memory/mallocLockingInitialization.hpp"
 
-#include "distortos/internal/memory/getMallocMutex.hpp"
-
-#include "distortos/Mutex.hpp"
-
 namespace distortos
 {
 
@@ -29,7 +25,7 @@ namespace internal
 
 void mallocLockingInitialization()
 {
-	new (&getMallocMutex()) Mutex {Mutex::Type::Recursive, Mutex::Protocol::PriorityInheritance};
+
 }
 
 }	// namespace internal
