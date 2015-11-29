@@ -1,8 +1,8 @@
 /**
  * \file
- * \brief Implementation of newlib's malloc() locking functions
+ * \brief __malloc_lock() system call implementation
  *
- * \author Copyright (C) 2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -11,36 +11,24 @@
  * \date 2015-11-29
  */
 
-#include "distortos/internal/memory/mallocLockingInitialization.hpp"
-
 #include "distortos/internal/memory/getMallocMutex.hpp"
 
 #include "distortos/Mutex.hpp"
 
-namespace distortos
-{
-
-namespace internal
+extern "C"
 {
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | global functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-void mallocLockingInitialization()
-{
-	new (&getMallocMutex()) Mutex {Mutex::Type::Recursive, Mutex::Protocol::PriorityInheritance};
-}
-
 /**
- * \brief Recursively unlocks malloc()'s mutex.
+ * \brief Recursively locks Mutex used for malloc() and free() locking.
  */
 
-extern "C" void __malloc_unlock()
+void __malloc_lock()
 {
-	getMallocMutex().unlock();
+	distortos::internal::getMallocMutex().lock();
 }
 
-}	// namespace internal
-
-}	// namespace distortos
+}	// extern "C"
