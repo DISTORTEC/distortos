@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-11-27
+ * \date 2015-12-01
  */
 
 #ifndef INCLUDE_DISTORTOS_INTERNAL_CONTAINERS_SORTEDCONTAINER_HPP_
@@ -175,18 +175,6 @@ public:
 	decltype(std::declval<Container>().pop_front()) pop_front()
 	{
 		return container_.pop_front();
-	}
-
-	/**
-	 * \brief Forwarding of Container::size() const
-	 *
-	 * \note forwarded only if Container::size() const exists
-	 */
-
-	template<typename C = Container>
-	decltype(std::declval<const C>().size()) size() const
-	{
-		return container_.size();
 	}
 
 protected:
