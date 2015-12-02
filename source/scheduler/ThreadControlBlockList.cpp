@@ -32,7 +32,6 @@ ThreadControlBlockList::~ThreadControlBlockList()
 void ThreadControlBlockList::sortedSplice(ThreadControlBlockList& other, const iterator otherPosition)
 {
 	Base::sortedSplice(other, otherPosition);
-	otherPosition->get().setList(this);
 }
 
 }	// namespace internal

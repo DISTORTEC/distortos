@@ -76,8 +76,6 @@ public:
 	/**
 	 * \brief Wrapper for sortedEmplace()
 	 *
-	 * Sets list pointer of emplaced element.
-	 *
 	 * \tparam Args are types of argument for value_type constructor
 	 *
 	 * \param [in] args are arguments for value_type constructor
@@ -91,8 +89,6 @@ public:
 	/**
 	 * \brief Wrapper for sortedSplice()
 	 *
-	 * Sets list pointer of transfered element.
-	 *
 	 * \param [in] other is the container from which the object is transfered
 	 * \param [in] otherPosition is the position of the transfered object in the other container
 	 */
@@ -103,10 +99,7 @@ public:
 template<typename... Args>
 ThreadControlBlockList::iterator ThreadControlBlockList::sortedEmplace(Args&&... args)
 {
-	const auto it = Base::sortedEmplace(std::forward<Args>(args)...);
-	auto& threadControlBlock = it->get();
-	threadControlBlock.setList(this);
-	return it;
+	return Base::sortedEmplace(std::forward<Args>(args)...);
 }
 
 }	// namespace internal

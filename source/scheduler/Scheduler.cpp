@@ -324,6 +324,7 @@ int Scheduler::addInternal(ThreadControlBlock& threadControlBlock)
 
 	threadControlBlockListAllocatorPool_.feed(threadControlBlock.getLink());
 	const auto iterator = runnableList_.sortedEmplace(threadControlBlock);
+	threadControlBlock.setList(&runnableList_);
 	threadControlBlock.setIterator(iterator);
 	threadControlBlock.setState(ThreadState::Runnable);
 
@@ -333,12 +334,15 @@ int Scheduler::addInternal(ThreadControlBlock& threadControlBlock)
 int Scheduler::blockInternal(ThreadControlBlockList& container, const ThreadControlBlockListIterator iterator,
 		const ThreadState state, const ThreadControlBlock::UnblockFunctor* const unblockFunctor)
 {
-	if (iterator->get().getList() != &runnableList_)
+	auto& threadControlBlock = iterator->get();
+
+	if (threadControlBlock.getList() != &runnableList_)
 		return EINVAL;
 
 	container.sortedSplice(runnableList_, iterator);
-	iterator->get().setState(state);
-	iterator->get().blockHook(unblockFunctor);
+	threadControlBlock.setList(&container);
+	threadControlBlock.setState(state);
+	threadControlBlock.blockHook(unblockFunctor);
 
 	return 0;
 }
@@ -357,9 +361,11 @@ bool Scheduler::isContextSwitchRequired() const
 void Scheduler::unblockInternal(const ThreadControlBlockListIterator iterator,
 		const ThreadControlBlock::UnblockReason unblockReason)
 {
-	runnableList_.sortedSplice(*iterator->get().getList(), iterator);
-	iterator->get().setState(ThreadState::Runnable);
-	iterator->get().unblockHook(unblockReason);
+	auto& threadControlBlock = iterator->get();
+	runnableList_.sortedSplice(*threadControlBlock.getList(), iterator);
+	threadControlBlock.setList(&runnableList_);
+	threadControlBlock.setState(ThreadState::Runnable);
+	threadControlBlock.unblockHook(unblockReason);
 }
 
 }	// namespace internal
