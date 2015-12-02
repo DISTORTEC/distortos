@@ -64,6 +64,7 @@ public:
 	using Base::begin;
 	using Base::empty;
 	using Base::end;
+	using Base::sortedEmplace;
 
 	/**
 	 * \brief ThreadControlBlockList's destructor
@@ -74,19 +75,6 @@ public:
 	~ThreadControlBlockList();
 
 	/**
-	 * \brief Wrapper for sortedEmplace()
-	 *
-	 * \tparam Args are types of argument for value_type constructor
-	 *
-	 * \param [in] args are arguments for value_type constructor
-	 *
-	 * \return iterator to emplaced element
-	 */
-
-	template<typename... Args>
-	iterator sortedEmplace(Args&&... args);
-
-	/**
 	 * \brief Wrapper for sortedSplice()
 	 *
 	 * \param [in] other is the container from which the object is transfered
@@ -95,12 +83,6 @@ public:
 
 	void sortedSplice(ThreadControlBlockList& other, iterator otherPosition);
 };
-
-template<typename... Args>
-ThreadControlBlockList::iterator ThreadControlBlockList::sortedEmplace(Args&&... args)
-{
-	return Base::sortedEmplace(std::forward<Args>(args)...);
-}
 
 }	// namespace internal
 
