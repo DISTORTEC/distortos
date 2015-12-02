@@ -8,13 +8,13 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-05-16
+ * \date 2015-12-02
  */
 
 #ifndef TEST_THREAD_THREADSLEEPFORTESTCASE_HPP_
 #define TEST_THREAD_THREADSLEEPFORTESTCASE_HPP_
 
-#include "TestCaseCommon.hpp"
+#include "PrioritizedTestCase.hpp"
 
 namespace distortos
 {
@@ -29,8 +29,23 @@ namespace test
  * right order and sleep for requested duration.
  */
 
-class ThreadSleepForTestCase : public TestCaseCommon
+class ThreadSleepForTestCase : public PrioritizedTestCase
 {
+	/// priority at which this test case should be executed
+	constexpr static uint8_t testCasePriority_ {1};
+
+public:
+
+	/**
+	 * \brief ThreadSleepForTestCase's constructor
+	 */
+
+	constexpr ThreadSleepForTestCase() :
+			PrioritizedTestCase{testCasePriority_}
+	{
+
+	}
+
 private:
 
 	/**
