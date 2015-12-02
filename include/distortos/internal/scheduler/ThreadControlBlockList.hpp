@@ -88,6 +88,15 @@ public:
 	~ThreadControlBlockList();
 
 	/**
+	 * \return state of ThreadControlBlock objects kept in this list
+	 */
+
+	ThreadState getState()
+	{
+		return state_;
+	}
+
+	/**
 	 * \brief Wrapper for sortedEmplace()
 	 *
 	 * Sets list pointer, iterator and state of emplaced element.
