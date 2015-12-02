@@ -50,21 +50,14 @@ using ThreadControlBlockListBase = SortedContainer
 		>;
 
 /// List of ThreadControlBlock objects in descending order of effective priority that configures state of kept objects
-class ThreadControlBlockList : private ThreadControlBlockListBase
+class ThreadControlBlockList : public ThreadControlBlockListBase
 {
 public:
 
 	/// base of ThreadControlBlockList
 	using Base = ThreadControlBlockListBase;
 
-	using typename Base::iterator;
-	using typename Base::value_type;
-
 	using Base::Base;
-	using Base::begin;
-	using Base::empty;
-	using Base::end;
-	using Base::sortedEmplace;
 
 	/**
 	 * \brief ThreadControlBlockList's destructor
