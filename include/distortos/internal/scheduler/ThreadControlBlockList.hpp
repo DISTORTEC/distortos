@@ -99,7 +99,7 @@ public:
 	/**
 	 * \brief Wrapper for sortedEmplace()
 	 *
-	 * Sets list pointer, iterator and state of emplaced element.
+	 * Sets list pointer and iterator of emplaced element.
 	 *
 	 * \tparam Args are types of argument for value_type constructor
 	 *
@@ -114,7 +114,7 @@ public:
 	/**
 	 * \brief Wrapper for sortedSplice()
 	 *
-	 * Sets list pointer and state of transfered element.
+	 * Sets list pointer of transfered element.
 	 *
 	 * \param [in] other is the container from which the object is transfered
 	 * \param [in] otherPosition is the position of the transfered object in the other container
@@ -135,7 +135,6 @@ ThreadControlBlockList::iterator ThreadControlBlockList::sortedEmplace(Args&&...
 	auto& threadControlBlock = it->get();
 	threadControlBlock.setList(this);
 	threadControlBlock.setIterator(it);
-	threadControlBlock.setState(state_);
 	return it;
 }
 

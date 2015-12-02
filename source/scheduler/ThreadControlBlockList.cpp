@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-11-27
+ * \date 2015-12-02
  */
 
 #include "distortos/internal/scheduler/ThreadControlBlockList.hpp"
@@ -33,7 +33,6 @@ void ThreadControlBlockList::sortedSplice(ThreadControlBlockList& other, const i
 {
 	Base::sortedSplice(other, otherPosition);
 	otherPosition->get().setList(this);
-	otherPosition->get().setState(state_);
 }
 
 }	// namespace internal

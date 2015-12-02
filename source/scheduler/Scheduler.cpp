@@ -323,6 +323,7 @@ int Scheduler::addInternal(ThreadControlBlock& threadControlBlock)
 
 	threadControlBlockListAllocatorPool_.feed(threadControlBlock.getLink());
 	runnableList_.sortedEmplace(threadControlBlock);
+	threadControlBlock.setState(ThreadState::Runnable);
 
 	return 0;
 }
@@ -334,6 +335,7 @@ int Scheduler::blockInternal(ThreadControlBlockList& container, const ThreadCont
 		return EINVAL;
 
 	container.sortedSplice(runnableList_, iterator);
+	iterator->get().setState(container.getState());
 	iterator->get().blockHook(unblockFunctor);
 
 	return 0;
@@ -354,6 +356,7 @@ void Scheduler::unblockInternal(const ThreadControlBlockListIterator iterator,
 		const ThreadControlBlock::UnblockReason unblockReason)
 {
 	runnableList_.sortedSplice(*iterator->get().getList(), iterator);
+	iterator->get().setState(ThreadState::Runnable);
 	iterator->get().unblockHook(unblockReason);
 }
 
