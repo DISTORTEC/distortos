@@ -76,7 +76,7 @@ public:
 	/**
 	 * \brief Wrapper for sortedEmplace()
 	 *
-	 * Sets list pointer and iterator of emplaced element.
+	 * Sets list pointer of emplaced element.
 	 *
 	 * \tparam Args are types of argument for value_type constructor
 	 *
@@ -106,7 +106,6 @@ ThreadControlBlockList::iterator ThreadControlBlockList::sortedEmplace(Args&&...
 	const auto it = Base::sortedEmplace(std::forward<Args>(args)...);
 	auto& threadControlBlock = it->get();
 	threadControlBlock.setList(this);
-	threadControlBlock.setIterator(it);
 	return it;
 }
 

@@ -323,7 +323,8 @@ int Scheduler::addInternal(ThreadControlBlock& threadControlBlock)
 		return ret;
 
 	threadControlBlockListAllocatorPool_.feed(threadControlBlock.getLink());
-	runnableList_.sortedEmplace(threadControlBlock);
+	const auto iterator = runnableList_.sortedEmplace(threadControlBlock);
+	threadControlBlock.setIterator(iterator);
 	threadControlBlock.setState(ThreadState::Runnable);
 
 	return 0;
