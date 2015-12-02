@@ -135,9 +135,10 @@ int Scheduler::add(ThreadControlBlock& threadControlBlock)
 	return 0;
 }
 
-int Scheduler::block(ThreadControlBlockList& container, const ThreadControlBlock::UnblockFunctor* const unblockFunctor)
+int Scheduler::block(ThreadControlBlockList& container, const ThreadState state,
+		const ThreadControlBlock::UnblockFunctor* const unblockFunctor)
 {
-	return block(container, currentThreadControlBlock_, container.getState(), unblockFunctor);
+	return block(container, currentThreadControlBlock_, state, unblockFunctor);
 }
 
 int Scheduler::block(ThreadControlBlockList& container, const ThreadControlBlockListIterator iterator,
@@ -190,7 +191,7 @@ int Scheduler::blockUntil(ThreadControlBlockList& container, const TickClock::ti
 			});
 	softwareTimer.start(timePoint);
 
-	return block(container, unblockFunctor);
+	return block(container, container.getState(), unblockFunctor);
 }
 
 uint64_t Scheduler::getContextSwitchCount() const

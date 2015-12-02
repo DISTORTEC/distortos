@@ -54,6 +54,7 @@ public:
 	 * \brief Blocks current thread, transferring it to provided container.
 	 *
 	 * \param [in] container is a reference to destination container to which the thread will be transferred
+	 * \param [in] state is the new state of thread that will be blocked
 	 * \param [in] unblockFunctor is a pointer to ThreadControlBlock::UnblockFunctor which will be executed in
 	 * ThreadControlBlock::unblockHook(), default - nullptr (no functor will be executed)
 	 *
@@ -62,7 +63,8 @@ public:
 	 * - ETIMEDOUT - thread was unblocked with ThreadControlBlock::UnblockReason::Timeout;
 	 */
 
-	int block(ThreadControlBlockList& container, const ThreadControlBlock::UnblockFunctor* unblockFunctor = {});
+	int block(ThreadControlBlockList& container, ThreadState state,
+			const ThreadControlBlock::UnblockFunctor* unblockFunctor = {});
 
 	/**
 	 * \brief Blocks thread, transferring it to provided container.
