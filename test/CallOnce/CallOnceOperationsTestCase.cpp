@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-07-16
+ * \date 2015-12-02
  */
 
 #include "CallOnceOperationsTestCase.hpp"
@@ -151,8 +151,16 @@ bool CallOnceOperationsTestCase::run_() const
 
 	ThisThread::setPriority(testCasePriority_ - 2);
 
+	bool invalidState {};
+	for (size_t i = 1; i < threads.size(); ++i)
+		if (threads[i].getState() != ThreadState::BlockedOnOnceFlag)
+			invalidState = true;
+
 	for (auto& thread : threads)
 		thread.join();
+
+	if (invalidState != false)
+		return false;
 
 	if (TickClock::now() - start != sleepForDuration + decltype(sleepForDuration){1})
 		return false;
