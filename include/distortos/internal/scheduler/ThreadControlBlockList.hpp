@@ -60,22 +60,10 @@ public:
 	using typename Base::iterator;
 	using typename Base::value_type;
 
+	using Base::Base;
 	using Base::begin;
 	using Base::empty;
 	using Base::end;
-
-	/**
-	 * \brief ThreadControlBlockList's constructor
-	 *
-	 * \param [in] allocator is a reference to ThreadControlBlockListAllocator object used to copy-construct allocator
-	 * of base container
-	 */
-
-	constexpr ThreadControlBlockList(const ThreadControlBlockListAllocator& allocator) :
-			Base{allocator}
-	{
-
-	}
 
 	/**
 	 * \brief ThreadControlBlockList's destructor
