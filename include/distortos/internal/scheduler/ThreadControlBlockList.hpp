@@ -72,9 +72,8 @@ public:
 	 * \param [in] state is the state of ThreadControlBlock objects kept in this list
 	 */
 
-	constexpr ThreadControlBlockList(const ThreadControlBlockListAllocator& allocator, const ThreadState state) :
-			Base{allocator},
-			state_{state}
+	constexpr ThreadControlBlockList(const ThreadControlBlockListAllocator& allocator, ThreadState) :
+			Base{allocator}
 	{
 
 	}
@@ -112,11 +111,6 @@ public:
 	 */
 
 	void sortedSplice(ThreadControlBlockList& other, iterator otherPosition);
-
-private:
-
-	/// state of ThreadControlBlock objects kept in this list
-	const ThreadState state_;
 };
 
 template<typename... Args>
