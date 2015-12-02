@@ -92,6 +92,7 @@ public:
 	 * \brief Blocks current thread with timeout, transferring it to provided container.
 	 *
 	 * \param [in] container is a reference to destination container to which the thread will be transferred
+	 * \param [in] state is the new state of thread that will be blocked
 	 * \param [in] timePoint is the time point at which the thread will be unblocked (if not already unblocked)
 	 * \param [in] unblockFunctor is a pointer to ThreadControlBlock::UnblockFunctor which will be executed in
 	 * ThreadControlBlock::unblockHook(), default - nullptr (no functor will be executed)
@@ -101,7 +102,7 @@ public:
 	 * - ETIMEDOUT - thread was unblocked because timePoint was reached;
 	 */
 
-	int blockUntil(ThreadControlBlockList& container, TickClock::time_point timePoint,
+	int blockUntil(ThreadControlBlockList& container, ThreadState state, TickClock::time_point timePoint,
 			const ThreadControlBlock::UnblockFunctor* unblockFunctor = {});
 
 	/**

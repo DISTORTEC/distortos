@@ -114,7 +114,8 @@ std::pair<int, SignalInformation> waitImplementation(const SignalSet& signalSet,
 		const SignalsWaitUnblockFunctor signalsWaitUnblockFunctor;
 		const auto ret = timePoint == nullptr ?
 				scheduler.block(waitingList, ThreadState::WaitingForSignal, &signalsWaitUnblockFunctor) :
-				scheduler.blockUntil(waitingList, *timePoint, &signalsWaitUnblockFunctor);
+				scheduler.blockUntil(waitingList, ThreadState::WaitingForSignal, *timePoint,
+						&signalsWaitUnblockFunctor);
 		if (ret != 0)
 			return {ret, SignalInformation{uint8_t{}, SignalInformation::Code{}, sigval{}}};
 

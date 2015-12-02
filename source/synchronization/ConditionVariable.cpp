@@ -83,7 +83,8 @@ int ConditionVariable::waitUntil(Mutex& mutex, const TickClock::time_point timeP
 		if (ret != 0)
 			return ret;
 
-		blockUntilRet = internal::getScheduler().blockUntil(blockedList_, timePoint);
+		blockUntilRet = internal::getScheduler().blockUntil(blockedList_, ThreadState::BlockedOnConditionVariable,
+				timePoint);
 	}
 
 	const auto ret = mutex.lock();

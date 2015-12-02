@@ -110,8 +110,8 @@ int MutexControlBlock::blockUntil(const TickClock::time_point timePoint)
 		priorityInheritanceBeforeBlock();
 
 	const PriorityInheritanceMutexControlBlockUnblockFunctor unblockFunctor {*this};
-	return getScheduler().blockUntil(blockedList_, timePoint, protocol_ == Protocol::PriorityInheritance ?
-			&unblockFunctor : nullptr);
+	return getScheduler().blockUntil(blockedList_, ThreadState::BlockedOnMutex, timePoint,
+			protocol_ == Protocol::PriorityInheritance ? &unblockFunctor : nullptr);
 }
 
 uint8_t MutexControlBlock::getBoostedPriority() const

@@ -167,8 +167,8 @@ int Scheduler::block(ThreadControlBlockList& container, const ThreadControlBlock
 			unblockReason == ThreadControlBlock::UnblockReason::Timeout ? ETIMEDOUT : EINTR;
 }
 
-int Scheduler::blockUntil(ThreadControlBlockList& container, const TickClock::time_point timePoint,
-		const ThreadControlBlock::UnblockFunctor* const unblockFunctor)
+int Scheduler::blockUntil(ThreadControlBlockList& container, const ThreadState state,
+		const TickClock::time_point timePoint, const ThreadControlBlock::UnblockFunctor* const unblockFunctor)
 {
 	architecture::InterruptMaskingLock interruptMaskingLock;
 
@@ -191,7 +191,7 @@ int Scheduler::blockUntil(ThreadControlBlockList& container, const TickClock::ti
 			});
 	softwareTimer.start(timePoint);
 
-	return block(container, container.getState(), unblockFunctor);
+	return block(container, state, unblockFunctor);
 }
 
 uint64_t Scheduler::getContextSwitchCount() const
