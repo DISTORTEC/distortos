@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-11-28
+ * \date 2015-12-02
  */
 
 #ifndef INCLUDE_DISTORTOS_RAWFIFOQUEUE_HPP_
@@ -64,7 +64,7 @@ public:
 	/**
 	 * \brief Pops the oldest (first) element from the queue.
 	 *
-	 * \param T is the type of data popped from the queue
+	 * \tparam T is the type of data popped from the queue
 	 *
 	 * \param [out] buffer is a reference to object that will be used to return popped value
 	 *
@@ -97,7 +97,7 @@ public:
 	/**
 	 * \brief Pushes the element to the queue.
 	 *
-	 * \param T is the type of data pushed to the queue
+	 * \tparam T is the type of data pushed to the queue
 	 *
 	 * \param [in] data is a reference to data that will be pushed to RawFifoQueue
 	 *
@@ -130,7 +130,7 @@ public:
 	/**
 	 * \brief Tries to pop the oldest (first) element from the queue.
 	 *
-	 * \param T is the type of data popped from the queue
+	 * \tparam T is the type of data popped from the queue
 	 *
 	 * \param [out] buffer is a reference to object that will be used to return popped value
 	 *
@@ -166,8 +166,8 @@ public:
 	 *
 	 * Template variant of tryPopFor(TickClock::duration, void*, size_t).
 	 *
-	 * \param Rep is type of tick counter
-	 * \param Period is std::ratio type representing the tick period of the clock, in seconds
+	 * \tparam Rep is type of tick counter
+	 * \tparam Period is std::ratio type representing the tick period of the clock, in seconds
 	 *
 	 * \param [in] duration is the duration after which the call will be terminated without popping the element
 	 * \param [out] buffer is a pointer to buffer for popped element
@@ -188,9 +188,9 @@ public:
 	/**
 	 * \brief Tries to pop the oldest (first) element from the queue for a given duration of time.
 	 *
-	 * \param Rep is type of tick counter
-	 * \param Period is std::ratio type representing the tick period of the clock, in seconds
-	 * \param T is the type of data popped from the queue
+	 * \tparam Rep is type of tick counter
+	 * \tparam Period is std::ratio type representing the tick period of the clock, in seconds
+	 * \tparam T is the type of data popped from the queue
 	 *
 	 * \param [in] duration is the duration after which the call will be terminated without popping the element
 	 * \param [out] buffer is a reference to object that will be used to return popped value
@@ -227,7 +227,7 @@ public:
 	 *
 	 * Template variant of tryPopUntil(TickClock::time_point, void*, size_t).
 	 *
-	 * \param Duration is a std::chrono::duration type used to measure duration
+	 * \tparam Duration is a std::chrono::duration type used to measure duration
 	 *
 	 * \param [in] timePoint is the time point at which the call will be terminated without popping the element
 	 * \param [out] buffer is a pointer to buffer for popped element
@@ -248,8 +248,8 @@ public:
 	/**
 	 * \brief Tries to pop the oldest (first) element from the queue until a given time point.
 	 *
-	 * \param Duration is a std::chrono::duration type used to measure duration
-	 * \param T is the type of data popped from the queue
+	 * \tparam Duration is a std::chrono::duration type used to measure duration
+	 * \tparam T is the type of data popped from the queue
 	 *
 	 * \param [in] timePoint is the time point at which the call will be terminated without popping the element
 	 * \param [out] buffer is a reference to object that will be used to return popped value
@@ -283,7 +283,7 @@ public:
 	/**
 	 * \brief Tries to push the element to the queue.
 	 *
-	 * \param T is the type of data pushed to the queue
+	 * \tparam T is the type of data pushed to the queue
 	 *
 	 * \param [in] data is a reference to data that will be pushed to RawFifoQueue
 	 *
@@ -319,8 +319,8 @@ public:
 	 *
 	 * Template variant of tryPushFor(TickClock::duration, const void*, size_t).
 	 *
-	 * \param Rep is type of tick counter
-	 * \param Period is std::ratio type representing the tick period of the clock, in seconds
+	 * \tparam Rep is type of tick counter
+	 * \tparam Period is std::ratio type representing the tick period of the clock, in seconds
 	 *
 	 * \param [in] duration is the duration after which the wait will be terminated without pushing the element
 	 * \param [in] data is a pointer to data that will be pushed to RawFifoQueue
@@ -341,9 +341,9 @@ public:
 	/**
 	 * \brief Tries to push the element to the queue for a given duration of time.
 	 *
-	 * \param Rep is type of tick counter
-	 * \param Period is std::ratio type representing the tick period of the clock, in seconds
-	 * \param T is the type of data pushed to the queue
+	 * \tparam Rep is type of tick counter
+	 * \tparam Period is std::ratio type representing the tick period of the clock, in seconds
+	 * \tparam T is the type of data pushed to the queue
 	 *
 	 * \param [in] duration is the duration after which the wait will be terminated without pushing the element
 	 * \param [in] data is a reference to data that will be pushed to RawFifoQueue
@@ -380,7 +380,7 @@ public:
 	 *
 	 * Template variant of tryPushUntil(TickClock::time_point, const void*, size_t).
 	 *
-	 * \param Duration is a std::chrono::duration type used to measure duration
+	 * \tparam Duration is a std::chrono::duration type used to measure duration
 	 *
 	 * \param [in] timePoint is the time point at which the call will be terminated without pushing the element
 	 * \param [in] data is a pointer to data that will be pushed to RawFifoQueue
@@ -402,8 +402,8 @@ public:
 	/**
 	 * \brief Tries to push the element to the queue until a given time point.
 	 *
-	 * \param Duration is a std::chrono::duration type used to measure duration
-	 * \param T is the type of data pushed to the queue
+	 * \tparam Duration is a std::chrono::duration type used to measure duration
+	 * \tparam T is the type of data pushed to the queue
 	 *
 	 * \param [in] timePoint is the time point at which the call will be terminated without pushing the element
 	 * \param [in] data is a reference to data that will be pushed to RawFifoQueue

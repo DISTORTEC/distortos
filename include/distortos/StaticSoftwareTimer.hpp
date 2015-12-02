@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-11-28
+ * \date 2015-12-02
  */
 
 #ifndef INCLUDE_DISTORTOS_STATICSOFTWARETIMER_HPP_
@@ -25,8 +25,8 @@ namespace distortos
 /**
  * \brief StaticSoftwareTimer class is a templated interface for software timer
  *
- * \param Function is the function that will be executed
- * \param Args are the arguments for function
+ * \tparam Function is the function that will be executed
+ * \tparam Args are the arguments for function
  */
 
 template<typename Function, typename... Args>
@@ -68,8 +68,8 @@ private:
 /**
  * \brief Helper factory function to make StaticSoftwareTimer object with deduced template arguments
  *
- * \param Function is the function that will be executed
- * \param Args are the arguments for function
+ * \tparam Function is the function that will be executed
+ * \tparam Args are the arguments for function
  *
  * \param [in] function is a function that will be executed from interrupt context at a later time
  * \param [in] args are arguments for function

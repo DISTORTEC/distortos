@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-11-27
+ * \date 2015-12-02
  */
 
 #ifndef INCLUDE_DISTORTOS_INTERNAL_SYNCHRONIZATION_MOVECONSTRUCTQUEUEFUNCTOR_HPP_
@@ -27,7 +27,7 @@ namespace internal
 /**
  * MoveConstructQueueFunctor is a functor used for pushing of data to the queue using move-construction
  *
- * \param T is the type of data pushed to the queue
+ * \tparam T is the type of data pushed to the queue
  */
 
 template<typename T>

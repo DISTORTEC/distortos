@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-11-26
+ * \date 2015-12-02
  */
 
 #ifndef ESTD_INVOKE_HPP_
@@ -25,8 +25,8 @@ namespace internal
 /**
  * \brief Implementation of invoke() for function objects
  *
- * \param Function is the function object that will be executed
- * \param Args are the arguments for \a Function
+ * \tparam Function is the function object that will be executed
+ * \tparam Args are the arguments for \a Function
  *
  * \param [in] function is the function object that will be executed
  * \param [in] args are arguments for \a function
@@ -44,10 +44,10 @@ inline auto invoke(Function&& function, Args&&... args) ->
 /**
  * \brief Implementation of invoke() for member functions
  *
- * \param T is the type returned by call to member function
- * \param Base is the type of base class
- * \param Derived is the type of derived class
- * \param Args are the arguments for member function
+ * \tparam T is the type returned by call to member function
+ * \tparam Base is the type of base class
+ * \tparam Derived is the type of derived class
+ * \tparam Args are the arguments for member function
  *
  * \param [in] memberFunction is a pointer to member function of \a object that will be executed
  * \param [in] object is an object or a reference to object on which \a memberFunction will be executed
@@ -66,9 +66,9 @@ inline auto invoke(T Base::* memberFunction, Derived&& object, Args&&... args) -
 /**
  * \brief Implementation of invoke() for member functions
  *
- * \param MemberFunction is the type or pointer to member function
- * \param Pointer is the type of pointer to object
- * \param Args are the arguments for member function
+ * \tparam MemberFunction is the type or pointer to member function
+ * \tparam Pointer is the type of pointer to object
+ * \tparam Args are the arguments for member function
  *
  * \param [in] memberFunction is a pointer to member function of object that will be executed
  * \param [in] pointer is a pointer to object on which \a memberFunction will be executed
@@ -87,9 +87,9 @@ inline auto invoke(MemberFunction memberFunction, Pointer&& pointer, Args&&... a
 /**
  * \brief Implementation of invoke() for data members
  *
- * \param T is the type of data member
- * \param Base is the type of base class
- * \param Derived is the type of derived class
+ * \tparam T is the type of data member
+ * \tparam Base is the type of base class
+ * \tparam Derived is the type of derived class
  *
  * \param [in] dataMember is a pointer to data member of \a object that will be accessed
  * \param [in] object is an object or a reference to object in which \a dataMember will be accessed
@@ -106,8 +106,8 @@ inline auto invoke(T Base::* dataMember, Derived&& object) -> decltype(std::forw
 /**
  * \brief Implementation of invoke() for data members
  *
- * \param DataMember is the type or pointer to data member
- * \param Pointer is the type of pointer to object
+ * \tparam DataMember is the type or pointer to data member
+ * \tparam Pointer is the type of pointer to object
  *
  * \param [in] dataMember is a pointer to data member of object that will be accessed
  * \param [in] pointer is a pointer to object in which \a dataMember will be accessed
@@ -128,8 +128,8 @@ inline auto invoke(DataMember dataMember, Pointer&& pointer) -> decltype((*std::
  *
  * Implementation inspired by http://en.cppreference.com/w/cpp/utility/functional/invoke
  *
- * \param Function is the function object that will be executed
- * \param Args are the arguments for \a Function
+ * \tparam Function is the function object that will be executed
+ * \tparam Args are the arguments for \a Function
  *
  * \param [in] function is the function object that will be executed
  * \param [in] args are arguments for \a function

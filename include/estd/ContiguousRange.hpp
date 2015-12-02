@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-05-05
+ * \date 2015-12-02
  */
 
 #ifndef ESTD_CONTIGUOUSRANGE_HPP_
@@ -22,7 +22,7 @@ namespace estd
 /**
  * \brief ContiguousRange template class is a pair of iterators to contiguous sequence of elements in memory
  *
- * \param T is the type of data in the range
+ * \tparam T is the type of data in the range
  */
 
 template<typename T>
@@ -90,7 +90,7 @@ public:
 	/**
 	 * \brief ContiguousRange's constructor using C-style array.
 	 *
-	 * \param N is the number of elements in the array
+	 * \tparam N is the number of elements in the array
 	 *
 	 * \param [in] array is the array used to initialize the range
 	 */

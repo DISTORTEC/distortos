@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-11-28
+ * \date 2015-12-02
  */
 
 #ifndef INCLUDE_DISTORTOS_CONDITIONVARIABLE_HPP_
@@ -98,7 +98,7 @@ public:
 	 *
 	 * Overload for wait() which also checks the predicate. This function will return only if the predicate is true.
 	 *
-	 * \param Predicate is a type of functor to check the predicate
+	 * \tparam Predicate is a type of functor to check the predicate
 	 *
 	 * \param [in] mutex is a reference to mutex which must be owned by calling thread
 	 * \param [in] predicate is the predicate that will be checked
@@ -142,8 +142,8 @@ public:
 	 *
 	 * Template variant of waitFor(Mutex& mutex, TickClock::duration duration).
 	 *
-	 * \param Rep is type of tick counter
-	 * \param Period is std::ratio type representing the tick period of the clock, in seconds
+	 * \tparam Rep is type of tick counter
+	 * \tparam Period is std::ratio type representing the tick period of the clock, in seconds
 	 *
 	 * \param [in] mutex is a reference to mutex which must be owned by calling thread
 	 * \param [in] duration is the duration after which the wait for notification will be terminated
@@ -170,9 +170,9 @@ public:
 	 * Overload for waitFor() which also checks the predicate. This function will return only if the predicate is true
 	 * or when given duration of time expires.
 	 *
-	 * \param Rep is type of tick counter
-	 * \param Period is std::ratio type representing the tick period of the clock, in seconds
-	 * \param Predicate is a type of functor to check the predicate
+	 * \tparam Rep is type of tick counter
+	 * \tparam Period is std::ratio type representing the tick period of the clock, in seconds
+	 * \tparam Predicate is a type of functor to check the predicate
 	 *
 	 * \param [in] mutex is a reference to mutex which must be owned by calling thread
 	 * \param [in] duration is the duration after which the wait for notification will be terminated
@@ -221,7 +221,7 @@ public:
 	 *
 	 * Template variant of waitUntil(Mutex& mutex, TickClock::time_point timePoint).
 	 *
-	 * \param Duration is a std::chrono::duration type used to measure duration
+	 * \tparam Duration is a std::chrono::duration type used to measure duration
 	 *
 	 * \param [in] mutex is a reference to mutex which must be owned by calling thread
 	 * \param [in] timePoint is the time point at which the wait for notification will be terminated
@@ -248,8 +248,8 @@ public:
 	 * Overload for waitUntil() which also checks the predicate. This function will return only if the predicate is true
 	 * or when given time point is reached.
 	 *
-	 * \param Duration is a std::chrono::duration type used to measure duration
-	 * \param Predicate is a type of functor to check the predicate
+	 * \tparam Duration is a std::chrono::duration type used to measure duration
+	 * \tparam Predicate is a type of functor to check the predicate
 	 *
 	 * \param [in] mutex is a reference to mutex which must be owned by calling thread
 	 * \param [in] timePoint is the time point at which the wait for notification will be terminated

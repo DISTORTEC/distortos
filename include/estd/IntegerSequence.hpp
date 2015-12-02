@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-11-26
+ * \date 2015-12-02
  */
 
 #ifndef ESTD_INTEGERSEQUENCE_HPP_
@@ -24,8 +24,8 @@ namespace estd
  *
  * Similar to std::integer_sequence from C++14 - http://en.cppreference.com/w/cpp/utility/integer_sequence
  *
- * \param T is an integer type to use for the elements of the sequence
- * \param Integers is a non-type parameter pack representing the sequence
+ * \tparam T is an integer type to use for the elements of the sequence
+ * \tparam Integers is a non-type parameter pack representing the sequence
  */
 
 template<typename T, T... Integers>
@@ -51,7 +51,7 @@ public:
  *
  * Similar to std::index_sequence from C++14 - http://en.cppreference.com/w/cpp/utility/integer_sequence
  *
- * \param Indexes is a non-type parameter pack representing the sequence
+ * \tparam Indexes is a non-type parameter pack representing the sequence
  */
 
 template<std::size_t... Indexes>
@@ -63,8 +63,8 @@ namespace internal
 /**
  * \brief IntegerSequence with two internal type aliases.
  *
- * \param T is an integer type to use for the elements of the sequence
- * \param Integers is a non-type parameter pack representing the sequence
+ * \tparam T is an integer type to use for the elements of the sequence
+ * \tparam Integers is a non-type parameter pack representing the sequence
  */
 
 template<typename T, T... Integers>
@@ -80,7 +80,7 @@ struct TypedSequence : IntegerSequence<T, Integers...>
 /**
  * \brief TypedSequence with doubled number of elements
  *
- * \param Sequence is the type of sequence that will be doubled
+ * \tparam Sequence is the type of sequence that will be doubled
  */
 
 template<typename Sequence>
@@ -91,8 +91,8 @@ struct DoubledIntegerSequence;
  *
  * Specialization for TypedSequence.
  *
- * \param T is an integer type to use for the elements of the sequence
- * \param Integers is a non-type parameter pack representing the sequence
+ * \tparam T is an integer type to use for the elements of the sequence
+ * \tparam Integers is a non-type parameter pack representing the sequence
  */
 
 template<typename T, T... Integers>
@@ -106,8 +106,8 @@ struct DoubledIntegerSequence<TypedSequence<T, Integers...>>
 /**
  * \brief TypedSequence optionally extended by one element
  *
- * \param Extend selects whether the sequence will be extended by one element (true) or not (false)
- * \param Sequence is the type of sequence that will optionally be extended
+ * \tparam Extend selects whether the sequence will be extended by one element (true) or not (false)
+ * \tparam Sequence is the type of sequence that will optionally be extended
  */
 
 template<bool Extend, typename Sequence>
@@ -122,8 +122,8 @@ struct ExtendedIntegerSequence
  *
  * Specialization for the case with extending.
  *
- * \param T is an integer type to use for the elements of the sequence
- * \param Integers is a non-type parameter pack representing the sequence
+ * \tparam T is an integer type to use for the elements of the sequence
+ * \tparam Integers is a non-type parameter pack representing the sequence
  */
 
 template<typename T, T... Integers>
@@ -139,8 +139,8 @@ struct ExtendedIntegerSequence<true, TypedSequence<T, Integers...>>
  *
  * Generates TypedSequence<T, 0, 1, ..., N - 1> type.
  *
- * \param T is an integer type to use for the elements of the sequence
- * \param N is the requested number of elements in the sequence
+ * \tparam T is an integer type to use for the elements of the sequence
+ * \tparam N is the requested number of elements in the sequence
  */
 
 template<typename T, std::size_t N>
@@ -156,7 +156,7 @@ struct MakeIntegerSequenceImplementation :
  *
  * Specialization for terminal case - 0 elements - generates TypedSequence<T> type.
  *
- * \param T is an integer type to use for the elements of the sequence
+ * \tparam T is an integer type to use for the elements of the sequence
  */
 
 template<typename T>
@@ -171,8 +171,8 @@ struct MakeIntegerSequenceImplementation<T, 0>
  *
  * Generates TypedSequence<T, 0, 1, ..., N - 1> type.
  *
- * \param T is an integer type to use for the elements of the sequence
- * \param N is the requested number of elements in the sequence, must be non-negative
+ * \tparam T is an integer type to use for the elements of the sequence
+ * \tparam N is the requested number of elements in the sequence, must be non-negative
  */
 
 template<typename T, T N>
@@ -193,8 +193,8 @@ struct MakeIntegerSequenceImplementationWrapper :
  *
  * Generates IntegerSequence<T, 0, 1, ..., N - 1> type.
  *
- * \param T is an integer type to use for the elements of the sequence
- * \param N is the requested number of elements in the sequence
+ * \tparam T is an integer type to use for the elements of the sequence
+ * \tparam N is the requested number of elements in the sequence
  */
 
 template<typename T, T N>
@@ -207,7 +207,7 @@ using MakeIntegerSequence = typename internal::MakeIntegerSequenceImplementation
  *
  * Generates IndexSequence<0, 1, ..., N - 1> type.
  *
- * \param N is the requested number of elements in the sequence
+ * \tparam N is the requested number of elements in the sequence
  */
 
 template<std::size_t N>
@@ -220,7 +220,7 @@ using MakeIndexSequence = MakeIntegerSequence<std::size_t, N>;
  *
  * Generates IndexSequence<0, 1, ..., sizeof...(T) - 1> type.
  *
- * \param T is the type parameter pack for which an index sequence of the same length will be generated
+ * \tparam T is the type parameter pack for which an index sequence of the same length will be generated
  */
 
 template<typename... T>

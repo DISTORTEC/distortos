@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-11-28
+ * \date 2015-12-02
  */
 
 #ifndef INCLUDE_DISTORTOS_CALLONCE_HPP_
@@ -29,8 +29,8 @@ namespace distortos
  *
  * \note This function requires GCC 4.9.
  *
- * \param Function is the function object that will be executed
- * \param Args are the arguments for \a Function
+ * \tparam Function is the function object that will be executed
+ * \tparam Args are the arguments for \a Function
  *
  * \param [in] onceFlag is a reference to shared OnceFlag object
  * \param [in] function is the function object that will be executed

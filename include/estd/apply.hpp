@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-11-26
+ * \date 2015-12-02
  */
 
 #ifndef ESTD_APPLY_HPP_
@@ -28,9 +28,9 @@ namespace internal
 /**
  * \brief Implementation of apply()
  *
- * \param Function is the function object that will be invoked
- * \param Tuple is the type of tuple of arguments
- * \param Indexes is a sequence of std::size_t indexes for \a Tuple
+ * \tparam Function is the function object that will be invoked
+ * \tparam Tuple is the type of tuple of arguments
+ * \tparam Indexes is a sequence of std::size_t indexes for \a Tuple
  *
  * \param [in] function is the function object that will be executed
  * \param [in] tuple is the tuple of arguments
@@ -52,8 +52,8 @@ constexpr auto apply(Function&& function, Tuple&& tuple, estd::IndexSequence<Ind
  *
  * Implementation inspired by http://en.cppreference.com/w/cpp/experimental/apply
  *
- * \param Function is the function object that will be invoked
- * \param Tuple is the type of tuple of arguments
+ * \tparam Function is the function object that will be invoked
+ * \tparam Tuple is the type of tuple of arguments
  *
  * \param [in] function is the function object that will be executed
  * \param [in] tuple is the tuple of arguments

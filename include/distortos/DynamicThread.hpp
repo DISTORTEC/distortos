@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-11-28
+ * \date 2015-12-02
  */
 
 #ifndef INCLUDE_DISTORTOS_DYNAMICTHREAD_HPP_
@@ -41,8 +41,8 @@ public:
 	/**
 	 * \brief DynamicThread's constructor
 	 *
-	 * \param Function is the function that will be executed in separate thread
-	 * \param Args are the arguments for \a Function
+	 * \tparam Function is the function that will be executed in separate thread
+	 * \tparam Args are the arguments for \a Function
 	 *
 	 * \param [in] stackSize is the size of stack, bytes
 	 * \param [in] canReceiveSignals selects whether reception of signals is enabled (true) or disabled (false) for this
@@ -64,8 +64,8 @@ public:
 	/**
 	 * \brief DynamicThread's constructor
 	 *
-	 * \param Function is the function that will be executed in separate thread
-	 * \param Args are the arguments for \a Function
+	 * \tparam Function is the function that will be executed in separate thread
+	 * \tparam Args are the arguments for \a Function
 	 *
 	 * \param [in] parameters is a DynamicThreadParameters struct with thread parameters
 	 * \param [in] function is a function that will be executed in separate thread
@@ -106,8 +106,8 @@ private:
 /**
  * \brief Helper factory function to make DynamicThread object
  *
- * \param Function is the function that will be executed
- * \param Args are the arguments for \a Function
+ * \tparam Function is the function that will be executed
+ * \tparam Args are the arguments for \a Function
  *
  * \param [in] stackSize is the size of stack, bytes
  * \param [in] canReceiveSignals selects whether reception of signals is enabled (true) or disabled (false) for this
@@ -136,8 +136,8 @@ DynamicThread makeDynamicThread(const size_t stackSize, const bool canReceiveSig
 /**
  * \brief Helper factory function to make DynamicThread object
  *
- * \param Function is the function that will be executed
- * \param Args are the arguments for \a Function
+ * \tparam Function is the function that will be executed
+ * \tparam Args are the arguments for \a Function
  *
  * \param [in] parameters is a DynamicThreadParameters struct with thread parameters
  * \param [in] function is a function that will be executed in separate thread

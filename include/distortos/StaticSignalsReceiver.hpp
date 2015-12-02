@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-11-27
+ * \date 2015-12-02
  */
 
 #ifndef INCLUDE_DISTORTOS_STATICSIGNALSRECEIVER_HPP_
@@ -27,8 +27,8 @@ namespace distortos
  * \brief StaticSignalsReceiver class is a templated interface for SignalsReceiver that has automatic storage for queued
  * signals and SignalAction associations required for catching signals.
  *
- * \param QueuedSignals is the max number of queued signals, 0 to disable queuing of signals for this receiver
- * \param SignalActions is the max number of different SignalAction objects, 0 to disable catching of signals for this
+ * \tparam QueuedSignals is the max number of queued signals, 0 to disable queuing of signals for this receiver
+ * \tparam SignalActions is the max number of different SignalAction objects, 0 to disable catching of signals for this
  * receiver
  */
 
@@ -71,7 +71,7 @@ private:
  * \brief StaticSignalsReceiver class is a templated interface for SignalsReceiver that has automatic storage for queued
  * signals and SignalAction associations required for catching signals.
  *
- * \param QueuedSignals is the max number of queued signals
+ * \tparam QueuedSignals is the max number of queued signals
  *
  * Specialization for receiver with enabled queuing (QueuedSignals != 0) and disabled catching (SignalActions == 0) of
  * signals
@@ -108,7 +108,7 @@ private:
  * \brief StaticSignalsReceiver class is a templated interface for SignalsReceiver that has automatic storage for queued
  * signals and SignalAction associations required for catching signals.
  *
- * \param SignalActions is the max number of different SignalAction objects
+ * \tparam SignalActions is the max number of different SignalAction objects
  *
  * Specialization for receiver with disabled queuing (QueuedSignals == 0) and enabled catching (SignalActions != 0) of
  * signals

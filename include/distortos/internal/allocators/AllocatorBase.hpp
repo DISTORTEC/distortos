@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-11-27
+ * \date 2015-12-02
  */
 
 #ifndef INCLUDE_DISTORTOS_INTERNAL_ALLOCATORS_ALLOCATORBASE_HPP_
@@ -27,7 +27,7 @@ namespace internal
 /**
  * \brief AllocatorBase class is a common base for allocators.
  *
- * \param T is the allocated type
+ * \tparam T is the allocated type
  */
 
 template<typename T>
@@ -56,7 +56,7 @@ public:
 	/**
 	 * \brief Destroys allocated object, without any storage dallocation.
 	 *
-	 * \param U is the destroyed type
+	 * \tparam U is the destroyed type
 	 *
 	 * \param [in] object is a pointer to destroyed object
 	 */
@@ -70,8 +70,8 @@ public:
 	/**
 	 * \brief Constructs object in previously allocated storage.
 	 *
-	 * \param U is the constructed type
-	 * \param Args are the arguments for object constructor
+	 * \tparam U is the constructed type
+	 * \tparam Args are the arguments for object constructor
 	 *
 	 * \param [in] storage is a pointer to raw allocated storage
 	 * \param [in] args are arguments for object constructor

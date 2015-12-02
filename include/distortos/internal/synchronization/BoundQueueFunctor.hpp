@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-11-28
+ * \date 2015-12-02
  */
 
 #ifndef INCLUDE_DISTORTOS_INTERNAL_SYNCHRONIZATION_BOUNDQUEUEFUNCTOR_HPP_
@@ -28,7 +28,7 @@ namespace internal
  * \brief BoundQueueFunctor is a type-erased QueueFunctor which calls its bound functor to execute actions on queue's
  * storage
  *
- * \param F is the type of bound functor, it will be called with <em>void*</em> as only argument
+ * \tparam F is the type of bound functor, it will be called with <em>void*</em> as only argument
  */
 
 template<typename F>
@@ -70,7 +70,7 @@ private:
 /**
  * \brief Helper factory function to make BoundQueueFunctor object with deduced template arguments
  *
- * \param F is the type of bound functor, it will be called with <em>void*</em> as only argument
+ * \tparam F is the type of bound functor, it will be called with <em>void*</em> as only argument
  *
  * \param [in] boundFunctor is a rvalue reference to bound functor which will be used to move-construct internal bound
  * functor

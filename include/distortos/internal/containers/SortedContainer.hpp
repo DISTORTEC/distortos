@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-12-01
+ * \date 2015-12-02
  */
 
 #ifndef INCLUDE_DISTORTOS_INTERNAL_CONTAINERS_SORTEDCONTAINER_HPP_
@@ -25,7 +25,7 @@ namespace internal
 /**
  * \brief SortedContainerBase class is a wrapper around Container which can be used as base of SortedContainer
  *
- * \param Container is the underlying container, it must provide following functions: begin(), emplace(), empty(),
+ * \tparam Container is the underlying container, it must provide following functions: begin(), emplace(), empty(),
  * end(), pop_front() and splice(). It must contain following types: allocator_type, const_iterator, iterator and
  * value_type. Optionally functions erase() and size() of Container are forwarded if they exist.
  */
@@ -50,8 +50,8 @@ public:
 	/**
 	 * \brief Primary template used to test presence of C::splice()
 	 *
-	 * \param C is the type of container that will be tested
-	 * \param Signature is the signature of C::splice() that will be tested
+	 * \tparam C is the type of container that will be tested
+	 * \tparam Signature is the signature of C::splice() that will be tested
 	 */
 
 	template<typename C, typename Signature>
@@ -60,9 +60,9 @@ public:
 	/**
 	 * \brief Template used to test presence of R C::splice(Args...)
 	 *
-	 * \param C is the type of container that will be tested
-	 * \param R is the type returned by tested C::splice()
-	 * \param Args are the types of arguments for tested C::splice()
+	 * \tparam C is the type of container that will be tested
+	 * \tparam R is the type returned by tested C::splice()
+	 * \tparam Args are the types of arguments for tested C::splice()
 	 */
 
 	template<typename C, typename R, typename... Args>
@@ -188,12 +188,12 @@ protected:
  *
  * \note The elements are sorted as long as the user does not modify the contents via iterators.
  *
- * \param Container is the underlying container, it must provide following functions: begin(), emplace(), empty(),
+ * \tparam Container is the underlying container, it must provide following functions: begin(), emplace(), empty(),
  * end(), pop_front() and splice(). It must contain following types: allocator_type, const_iterator, iterator and
  * value_type. Optionally functions erase() and size() of Container are forwarded if they exist.
- * \param Compare is a type of functor used for comparison, std::less results in descending order, std::greater - in
+ * \tparam Compare is a type of functor used for comparison, std::less results in descending order, std::greater - in
  * ascending order.
- * \param HasSplice selects implementation - std::true_type to use Container::emplace() and Container::splice();
+ * \tparam HasSplice selects implementation - std::true_type to use Container::emplace() and Container::splice();
  * std::false_type to use Container::emplace_front(), Container::splice_after() and Container::before_begin()
  */
 
@@ -238,7 +238,7 @@ public:
 	/**
 	 * \brief Sorted emplace()
 	 *
-	 * \param Args are types of argument for value_type constructor
+	 * \tparam Args are types of argument for value_type constructor
 	 *
 	 * \param [in] args are arguments for value_type constructor
 	 *
@@ -337,7 +337,7 @@ public:
 	/**
 	 * \brief Sorted emplace()
 	 *
-	 * \param Args are types of argument for value_type constructor
+	 * \tparam Args are types of argument for value_type constructor
 	 *
 	 * \param [in] args are arguments for value_type constructor
 	 *

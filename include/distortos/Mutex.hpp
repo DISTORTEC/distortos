@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-11-28
+ * \date 2015-12-02
  */
 
 #ifndef INCLUDE_DISTORTOS_MUTEX_HPP_
@@ -151,8 +151,8 @@ public:
 	 *
 	 * Template variant of tryLockFor(TickClock::duration duration).
 	 *
-	 * \param Rep is type of tick counter
-	 * \param Period is std::ratio type representing the tick period of the clock, in seconds
+	 * \tparam Rep is type of tick counter
+	 * \tparam Period is std::ratio type representing the tick period of the clock, in seconds
 	 *
 	 * \param [in] duration is the duration after which the wait will be terminated without locking the mutex
 	 *
@@ -204,7 +204,7 @@ public:
 	 *
 	 * Template variant of tryLockUntil(TickClock::time_point timePoint).
 	 *
-	 * \param Duration is a std::chrono::duration type used to measure duration
+	 * \tparam Duration is a std::chrono::duration type used to measure duration
 	 *
 	 * \param [in] timePoint is the time point at which the wait will be terminated without locking the mutex
 	 *

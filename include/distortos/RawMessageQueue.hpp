@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-11-28
+ * \date 2015-12-02
  */
 
 #ifndef INCLUDE_DISTORTOS_RAWMESSAGEQUEUE_HPP_
@@ -45,7 +45,7 @@ public:
 	/**
 	 * type of uninitialized storage for value
 	 *
-	 * \param T is the type of data in queue
+	 * \tparam T is the type of data in queue
 	 */
 
 	template<typename T>
@@ -90,7 +90,7 @@ public:
 	 *
 	 * Similar to mq_receive() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/mq_receive.html#
 	 *
-	 * \param T is the type of data popped from the queue
+	 * \tparam T is the type of data popped from the queue
 	 *
 	 * \param [out] priority is a reference to variable that will be used to return priority of popped value
 	 * \param [out] buffer is a reference to object that will be used to return popped value
@@ -129,7 +129,7 @@ public:
 	 *
 	 * Similar to mq_send() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/mq_send.html#
 	 *
-	 * \param T is the type of data pushed to the queue
+	 * \tparam T is the type of data pushed to the queue
 	 *
 	 * \param [in] priority is the priority of new element
 	 * \param [in] data is a reference to data that will be pushed to RawMessageQueue
@@ -169,7 +169,7 @@ public:
 	 *
 	 * Similar to mq_receive() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/mq_receive.html#
 	 *
-	 * \param T is the type of data popped from the queue
+	 * \tparam T is the type of data popped from the queue
 	 *
 	 * \param [out] priority is a reference to variable that will be used to return priority of popped value
 	 * \param [out] buffer is a reference to object that will be used to return popped value
@@ -210,8 +210,8 @@ public:
 	 *
 	 * Template variant of tryPopFor(TickClock::duration, uint8_t&, void*, size_t).
 	 *
-	 * \param Rep is type of tick counter
-	 * \param Period is std::ratio type representing the tick period of the clock, in seconds
+	 * \tparam Rep is type of tick counter
+	 * \tparam Period is std::ratio type representing the tick period of the clock, in seconds
 	 *
 	 * \param [in] duration is the duration after which the call will be terminated without popping the element
 	 * \param [out] priority is a reference to variable that will be used to return priority of popped value
@@ -237,9 +237,9 @@ public:
 	 *
 	 * Similar to mq_timedreceive() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/mq_receive.html#
 	 *
-	 * \param Rep is type of tick counter
-	 * \param Period is std::ratio type representing the tick period of the clock, in seconds
-	 * \param T is the type of data popped from the queue
+	 * \tparam Rep is type of tick counter
+	 * \tparam Period is std::ratio type representing the tick period of the clock, in seconds
+	 * \tparam T is the type of data popped from the queue
 	 *
 	 * \param [in] duration is the duration after which the call will be terminated without popping the element
 	 * \param [out] priority is a reference to variable that will be used to return priority of popped value
@@ -281,7 +281,7 @@ public:
 	 *
 	 * Template variant of tryPopUntil(TickClock::time_point, uint8_t&, void*, size_t).
 	 *
-	 * \param Duration is a std::chrono::duration type used to measure duration
+	 * \tparam Duration is a std::chrono::duration type used to measure duration
 	 *
 	 * \param [in] timePoint is the time point at which the call will be terminated without popping the element
 	 * \param [out] priority is a reference to variable that will be used to return priority of popped value
@@ -307,8 +307,8 @@ public:
 	 *
 	 * Similar to mq_timedreceive() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/mq_receive.html#
 	 *
-	 * \param Duration is a std::chrono::duration type used to measure duration
-	 * \param T is the type of data popped from the queue
+	 * \tparam Duration is a std::chrono::duration type used to measure duration
+	 * \tparam T is the type of data popped from the queue
 	 *
 	 * \param [in] timePoint is the time point at which the call will be terminated without popping the element
 	 * \param [out] priority is a reference to variable that will be used to return priority of popped value
@@ -349,7 +349,7 @@ public:
 	 *
 	 * Similar to mq_send() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/mq_send.html#
 	 *
-	 * \param T is the type of data pushed to the queue
+	 * \tparam T is the type of data pushed to the queue
 	 *
 	 * \param [in] priority is the priority of new element
 	 * \param [in] data is a reference to data that will be pushed to RawMessageQueue
@@ -389,8 +389,8 @@ public:
 	 *
 	 * Template variant of tryPushFor(TickClock::duration, uint8_t, const void*, size_t).
 	 *
-	 * \param Rep is type of tick counter
-	 * \param Period is std::ratio type representing the tick period of the clock, in seconds
+	 * \tparam Rep is type of tick counter
+	 * \tparam Period is std::ratio type representing the tick period of the clock, in seconds
 	 *
 	 * \param [in] duration is the duration after which the wait will be terminated without pushing the element
 	 * \param [in] priority is the priority of new element
@@ -415,9 +415,9 @@ public:
 	 *
 	 * Similar to mq_timedsend() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/mq_send.html#
 	 *
-	 * \param Rep is type of tick counter
-	 * \param Period is std::ratio type representing the tick period of the clock, in seconds
-	 * \param T is the type of data pushed to the queue
+	 * \tparam Rep is type of tick counter
+	 * \tparam Period is std::ratio type representing the tick period of the clock, in seconds
+	 * \tparam T is the type of data pushed to the queue
 	 *
 	 * \param [in] duration is the duration after which the wait will be terminated without pushing the element
 	 * \param [in] priority is the priority of new element
@@ -458,7 +458,7 @@ public:
 	 *
 	 * Template variant of tryPushUntil(TickClock::time_point, uint8_t, const void*, size_t).
 	 *
-	 * \param Duration is a std::chrono::duration type used to measure duration
+	 * \tparam Duration is a std::chrono::duration type used to measure duration
 	 *
 	 * \param [in] timePoint is the time point at which the call will be terminated without pushing the element
 	 * \param [in] priority is the priority of new element
@@ -483,8 +483,8 @@ public:
 	 *
 	 * Similar to mq_timedsend() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/mq_send.html#
 	 *
-	 * \param Duration is a std::chrono::duration type used to measure duration
-	 * \param T is the type of data pushed to the queue
+	 * \tparam Duration is a std::chrono::duration type used to measure duration
+	 * \tparam T is the type of data pushed to the queue
 	 *
 	 * \param [in] timePoint is the time point at which the call will be terminated without pushing the element
 	 * \param [in] priority is the priority of new element

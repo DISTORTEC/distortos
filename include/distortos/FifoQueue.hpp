@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-11-28
+ * \date 2015-12-02
  */
 
 #ifndef INCLUDE_DISTORTOS_FIFOQUEUE_HPP_
@@ -36,7 +36,7 @@ namespace distortos
  * communication. It supports multiple readers and multiple writers. It is implemented as a wrapper for
  * internal::FifoQueueBase.
  *
- * \param T is the type of data in queue
+ * \tparam T is the type of data in queue
  *
  * \ingroup queues
  */
@@ -82,7 +82,7 @@ public:
 	 *
 	 * \note This function requires GCC 4.9.
 	 *
-	 * \param Args are types of arguments for constructor of T
+	 * \tparam Args are types of arguments for constructor of T
 	 *
 	 * \param [in] args are arguments for constructor of T
 	 *
@@ -157,7 +157,7 @@ public:
 	 *
 	 * \note This function requires GCC 4.9.
 	 *
-	 * \param Args are types of arguments for constructor of T
+	 * \tparam Args are types of arguments for constructor of T
 	 *
 	 * \param [in] args are arguments for constructor of T
 	 *
@@ -178,7 +178,7 @@ public:
 	 *
 	 * \note This function requires GCC 4.9.
 	 *
-	 * \param Args are types of arguments for constructor of T
+	 * \tparam Args are types of arguments for constructor of T
 	 *
 	 * \param [in] duration is the duration after which the wait will be terminated without emplacing the element
 	 * \param [in] args are arguments for constructor of T
@@ -202,9 +202,9 @@ public:
 	 *
 	 * \note This function requires GCC 4.9.
 	 *
-	 * \param Rep is type of tick counter
-	 * \param Period is std::ratio type representing the tick period of the clock, in seconds
-	 * \param Args are types of arguments for constructor of T
+	 * \tparam Rep is type of tick counter
+	 * \tparam Period is std::ratio type representing the tick period of the clock, in seconds
+	 * \tparam Args are types of arguments for constructor of T
 	 *
 	 * \param [in] duration is the duration after which the wait will be terminated without emplacing the element
 	 * \param [in] args are arguments for constructor of T
@@ -225,7 +225,7 @@ public:
 	 *
 	 * \note This function requires GCC 4.9.
 	 *
-	 * \param Args are types of arguments for constructor of T
+	 * \tparam Args are types of arguments for constructor of T
 	 *
 	 * \param [in] timePoint is the time point at which the call will be terminated without emplacing the element
 	 * \param [in] args are arguments for constructor of T
@@ -249,8 +249,8 @@ public:
 	 *
 	 * \note This function requires GCC 4.9.
 	 *
-	 * \param Duration is a std::chrono::duration type used to measure duration
-	 * \param Args are types of arguments for constructor of T
+	 * \tparam Duration is a std::chrono::duration type used to measure duration
+	 * \tparam Args are types of arguments for constructor of T
 	 *
 	 * \param [in] timePoint is the time point at which the call will be terminated without emplacing the element
 	 * \param [in] args are arguments for constructor of T
@@ -309,8 +309,8 @@ public:
 	 *
 	 * Template variant of tryPopFor(TickClock::duration, T&).
 	 *
-	 * \param Rep is type of tick counter
-	 * \param Period is std::ratio type representing the tick period of the clock, in seconds
+	 * \tparam Rep is type of tick counter
+	 * \tparam Period is std::ratio type representing the tick period of the clock, in seconds
 	 *
 	 * \param [in] duration is the duration after which the call will be terminated without popping the element
 	 * \param [out] value is a reference to object that will be used to return popped value, its contents are swapped
@@ -350,7 +350,7 @@ public:
 	 *
 	 * Template variant of tryPopUntil(TickClock::time_point, T&).
 	 *
-	 * \param Duration is a std::chrono::duration type used to measure duration
+	 * \tparam Duration is a std::chrono::duration type used to measure duration
 	 *
 	 * \param [in] timePoint is the time point at which the call will be terminated without popping the element
 	 * \param [out] value is a reference to object that will be used to return popped value, its contents are swapped
@@ -422,8 +422,8 @@ public:
 	 *
 	 * Template variant of tryPushFor(TickClock::duration, const T&).
 	 *
-	 * \param Rep is type of tick counter
-	 * \param Period is std::ratio type representing the tick period of the clock, in seconds
+	 * \tparam Rep is type of tick counter
+	 * \tparam Period is std::ratio type representing the tick period of the clock, in seconds
 	 *
 	 * \param [in] duration is the duration after which the wait will be terminated without pushing the element
 	 * \param [in] value is a reference to object that will be pushed, value in queue's storage is copy-constructed
@@ -462,8 +462,8 @@ public:
 	 *
 	 * Template variant of tryPushFor(TickClock::duration, T&&).
 	 *
-	 * \param Rep is type of tick counter
-	 * \param Period is std::ratio type representing the tick period of the clock, in seconds
+	 * \tparam Rep is type of tick counter
+	 * \tparam Period is std::ratio type representing the tick period of the clock, in seconds
 	 *
 	 * \param [in] duration is the duration after which the call will be terminated without pushing the element
 	 * \param [in] value is a rvalue reference to object that will be pushed, value in queue's storage is
@@ -502,7 +502,7 @@ public:
 	 *
 	 * Template variant of tryPushUntil(TickClock::time_point, const T&).
 	 *
-	 * \param Duration is a std::chrono::duration type used to measure duration
+	 * \tparam Duration is a std::chrono::duration type used to measure duration
 	 *
 	 * \param [in] timePoint is the time point at which the call will be terminated without pushing the element
 	 * \param [in] value is a reference to object that will be pushed, value in queue's storage is copy-constructed
@@ -541,7 +541,7 @@ public:
 	 *
 	 * Template variant of tryPushUntil(TickClock::time_point, T&&).
 	 *
-	 * \param Duration is a std::chrono::duration type used to measure duration
+	 * \tparam Duration is a std::chrono::duration type used to measure duration
 	 *
 	 * \param [in] timePoint is the time point at which the call will be terminated without pushing the element
 	 * \param [in] value is a rvalue reference to object that will be pushed, value in queue's storage is
@@ -569,7 +569,7 @@ private:
 	 *
 	 * \note This function requires GCC 4.9.
 	 *
-	 * \param Args are types of arguments for constructor of T
+	 * \tparam Args are types of arguments for constructor of T
 	 *
 	 * \param [in] waitSemaphoreFunctor is a reference to SemaphoreFunctor which will be executed with \a pushSemaphore_
 	 * \param [in] args are arguments for constructor of T

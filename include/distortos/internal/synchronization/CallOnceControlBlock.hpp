@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-11-27
+ * \date 2015-12-02
  */
 
 #ifndef INCLUDE_DISTORTOS_INTERNAL_SYNCHRONIZATION_CALLONCECONTROLBLOCK_HPP_
@@ -56,8 +56,8 @@ public:
 	 * Does nothing if any function was already called for this object. In other case provided function and arguments
 	 * are wrapped in a type-erased functor and passed to callOnceImplementation().
 	 *
-	 * \param Function is the function object that will be executed
-	 * \param Args are the arguments for \a Function
+	 * \tparam Function is the function object that will be executed
+	 * \tparam Args are the arguments for \a Function
 	 *
 	 * \param [in] function is the function object that will be executed
 	 * \param [in] args are arguments for \a function
@@ -77,7 +77,7 @@ private:
 	/**
 	 * \brief BoundedFunctor is a type-erased Functor which calls its bounded functor
 	 *
-	 * \param F is the type of bounded functor
+	 * \tparam F is the type of bounded functor
 	 */
 
 	template<typename F>
@@ -118,7 +118,7 @@ private:
 	/**
 	 * \brief Helper factory function to make BoundedFunctor object with deduced template arguments
 	 *
-	 * \param F is the type of bounded functor
+	 * \tparam F is the type of bounded functor
 	 *
 	 * \param [in] boundedFunctor is a rvalue reference to bounded functor which will be used to move-construct internal
 	 * bounded functor

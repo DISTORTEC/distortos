@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-10-18
+ * \date 2015-12-02
  */
 
 #ifndef INCLUDE_DISTORTOS_ARCHITECTURE_INTERRUPTMASKINGUNMASKINGLOCK_HPP_
@@ -25,7 +25,7 @@ namespace architecture
 /**
  * \brief InterruptMaskingUnmaskingLock class is a RAII wrapper for interrupt mask manipulation.
  *
- * \param Function is a reference to function which modifies interrupt mask and returns InterruptMask;
+ * \tparam Function is a reference to function which modifies interrupt mask and returns InterruptMask;
  * enableInterruptMasking() or disableInterruptMasking() should be used
  */
 

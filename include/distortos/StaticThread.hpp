@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-11-28
+ * \date 2015-12-02
  */
 
 #ifndef INCLUDE_DISTORTOS_STATICTHREAD_HPP_
@@ -26,8 +26,8 @@ namespace internal
 /**
  * \brief StaticThreadBase class is a templated common base for StaticThread
  *
- * \param Function is the function that will be executed in separate thread
- * \param Args are the arguments for \a Function
+ * \tparam Function is the function that will be executed in separate thread
+ * \tparam Args are the arguments for \a Function
  */
 
 template<typename Function, typename... Args>
@@ -91,14 +91,14 @@ private:
 /**
  * \brief StaticThread class is a templated interface for thread that has automatic storage for stack.
  *
- * \param StackSize is the size of stack, bytes
- * \param CanReceiveSignals selects whether reception of signals is enabled (true) or disabled (false) for this thread
- * \param QueuedSignals is the max number of queued signals for this thread, relevant only if CanReceiveSignals == true,
- * 0 to disable queuing of signals for this thread
- * \param SignalActions is the max number of different SignalAction objects for this thread, relevant only if
+ * \tparam StackSize is the size of stack, bytes
+ * \tparam CanReceiveSignals selects whether reception of signals is enabled (true) or disabled (false) for this thread
+ * \tparam QueuedSignals is the max number of queued signals for this thread, relevant only if
+ * CanReceiveSignals == true, 0 to disable queuing of signals for this thread
+ * \tparam SignalActions is the max number of different SignalAction objects for this thread, relevant only if
  * CanReceiveSignals == true, 0 to disable catching of signals for this thread
- * \param Function is the function that will be executed in separate thread
- * \param Args are the arguments for \a Function
+ * \tparam Function is the function that will be executed in separate thread
+ * \tparam Args are the arguments for \a Function
  */
 
 template<size_t StackSize, bool CanReceiveSignals, size_t QueuedSignals, size_t SignalActions, typename Function,
@@ -153,13 +153,13 @@ private:
  *
  * Specialization for threads with enabled reception of signals (CanReceiveSignals == true)
  *
- * \param StackSize is the size of stack, bytes
- * \param QueuedSignals is the max number of queued signals for this thread, 0 to disable queuing of signals for this
+ * \tparam StackSize is the size of stack, bytes
+ * \tparam QueuedSignals is the max number of queued signals for this thread, 0 to disable queuing of signals for this
  * thread
- * \param SignalActions is the max number of different SignalAction objects for this thread, relevant only if
+ * \tparam SignalActions is the max number of different SignalAction objects for this thread, relevant only if
  * CanReceiveSignals == true, 0 to disable catching of signals for this thread
- * \param Function is the function that will be executed in separate thread
- * \param Args are the arguments for \a Function
+ * \tparam Function is the function that will be executed in separate thread
+ * \tparam Args are the arguments for \a Function
  */
 
 template<size_t StackSize, size_t QueuedSignals, size_t SignalActions, typename Function, typename... Args>
@@ -214,14 +214,14 @@ private:
 /**
  * \brief Helper factory function to make StaticThread object with partially deduced template arguments
  *
- * \param StackSize is the size of stack, bytes
- * \param CanReceiveSignals selects whether reception of signals is enabled (true) or disabled (false) for this thread
- * \param QueuedSignals is the max number of queued signals for this thread, relevant only if CanReceiveSignals == true,
- * 0 to disable queuing of signals for this thread
- * \param SignalActions is the max number of different SignalAction objects for this thread, relevant only if
+ * \tparam StackSize is the size of stack, bytes
+ * \tparam CanReceiveSignals selects whether reception of signals is enabled (true) or disabled (false) for this thread
+ * \tparam QueuedSignals is the max number of queued signals for this thread, relevant only if
+ * CanReceiveSignals == true, 0 to disable queuing of signals for this thread
+ * \tparam SignalActions is the max number of different SignalAction objects for this thread, relevant only if
  * CanReceiveSignals == true, 0 to disable catching of signals for this thread
- * \param Function is the function that will be executed
- * \param Args are the arguments for \a Function
+ * \tparam Function is the function that will be executed
+ * \tparam Args are the arguments for \a Function
  *
  * \param [in] priority is the thread's priority, 0 - lowest, UINT8_MAX - highest
  * \param [in] schedulingPolicy is the scheduling policy of the thread
@@ -242,14 +242,14 @@ makeStaticThread(const uint8_t priority, const SchedulingPolicy schedulingPolicy
 /**
  * \brief Helper factory function to make StaticThread object with partially deduced template arguments
  *
- * \param StackSize is the size of stack, bytes
- * \param CanReceiveSignals selects whether reception of signals is enabled (true) or disabled (false) for this thread
- * \param QueuedSignals is the max number of queued signals for this thread, relevant only if CanReceiveSignals == true,
- * 0 to disable queuing of signals for this thread
- * \param SignalActions is the max number of different SignalAction objects for this thread, relevant only if
+ * \tparam StackSize is the size of stack, bytes
+ * \tparam CanReceiveSignals selects whether reception of signals is enabled (true) or disabled (false) for this thread
+ * \tparam QueuedSignals is the max number of queued signals for this thread, relevant only if
+ * CanReceiveSignals == true, 0 to disable queuing of signals for this thread
+ * \tparam SignalActions is the max number of different SignalAction objects for this thread, relevant only if
  * CanReceiveSignals == true, 0 to disable catching of signals for this thread
- * \param Function is the function that will be executed
- * \param Args are the arguments for \a Function
+ * \tparam Function is the function that will be executed
+ * \tparam Args are the arguments for \a Function
  *
  * \param [in] priority is the thread's priority, 0 - lowest, UINT8_MAX - highest
  * \param [in] function is a function that will be executed in separate thread

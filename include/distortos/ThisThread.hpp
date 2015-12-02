@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-11-28
+ * \date 2015-12-02
  */
 
 #ifndef INCLUDE_DISTORTOS_THISTHREAD_HPP_
@@ -78,8 +78,8 @@ int sleepFor(TickClock::duration duration);
  *
  * \note To fulfill the "at least" requirement, one additional tick is always added to the sleep duration.
  *
- * \param Rep is type of tick counter
- * \param Period is std::ratio type representing the tick period of the clock, in seconds
+ * \tparam Rep is type of tick counter
+ * \tparam Period is std::ratio type representing the tick period of the clock, in seconds
  *
  * \param [in] duration is the duration after which the thread will be woken
  *
@@ -111,7 +111,7 @@ int sleepUntil(TickClock::time_point timePoint);
  *
  * Current thread's state is changed to "sleeping".
  *
- * \param Duration is a std::chrono::duration type used to measure duration
+ * \tparam Duration is a std::chrono::duration type used to measure duration
  *
  * \param [in] timePoint is the time point at which the thread will be woken
  *

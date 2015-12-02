@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-11-28
+ * \date 2015-12-02
  */
 
 #ifndef INCLUDE_DISTORTOS_MESSAGEQUEUE_HPP_
@@ -38,7 +38,7 @@ namespace distortos
  *
  * Similar to POSIX mqd_t - http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/mqueue.h.html
  *
- * \param T is the type of data in queue
+ * \tparam T is the type of data in queue
  *
  * \ingroup queues
  */
@@ -97,7 +97,7 @@ public:
 	 *
 	 * \note This function requires GCC 4.9.
 	 *
-	 * \param Args are types of arguments for constructor of T
+	 * \tparam Args are types of arguments for constructor of T
 	 *
 	 * \param [in] priority is the priority of new element
 	 * \param [in] args are arguments for constructor of T
@@ -184,7 +184,7 @@ public:
 	 *
 	 * \note This function requires GCC 4.9.
 	 *
-	 * \param Args are types of arguments for constructor of T
+	 * \tparam Args are types of arguments for constructor of T
 	 *
 	 * \param [in] priority is the priority of new element
 	 * \param [in] args are arguments for constructor of T
@@ -208,7 +208,7 @@ public:
 	 *
 	 * \note This function requires GCC 4.9.
 	 *
-	 * \param Args are types of arguments for constructor of T
+	 * \tparam Args are types of arguments for constructor of T
 	 *
 	 * \param [in] duration is the duration after which the wait will be terminated without emplacing the element
 	 * \param [in] priority is the priority of new element
@@ -233,9 +233,9 @@ public:
 	 *
 	 * \note This function requires GCC 4.9.
 	 *
-	 * \param Rep is type of tick counter
-	 * \param Period is std::ratio type representing the tick period of the clock, in seconds
-	 * \param Args are types of arguments for constructor of T
+	 * \tparam Rep is type of tick counter
+	 * \tparam Period is std::ratio type representing the tick period of the clock, in seconds
+	 * \tparam Args are types of arguments for constructor of T
 	 *
 	 * \param [in] duration is the duration after which the wait will be terminated without emplacing the element
 	 * \param [in] priority is the priority of new element
@@ -260,7 +260,7 @@ public:
 	 *
 	 * \note This function requires GCC 4.9.
 	 *
-	 * \param Args are types of arguments for constructor of T
+	 * \tparam Args are types of arguments for constructor of T
 	 *
 	 * \param [in] timePoint is the time point at which the call will be terminated without emplacing the element
 	 * \param [in] priority is the priority of new element
@@ -285,8 +285,8 @@ public:
 	 *
 	 * \note This function requires GCC 4.9.
 	 *
-	 * \param Duration is a std::chrono::duration type used to measure duration
-	 * \param Args are types of arguments for constructor of T
+	 * \tparam Duration is a std::chrono::duration type used to measure duration
+	 * \tparam Args are types of arguments for constructor of T
 	 *
 	 * \param [in] timePoint is the time point at which the call will be terminated without emplacing the element
 	 * \param [in] priority is the priority of new element
@@ -353,8 +353,8 @@ public:
 	 *
 	 * Template variant of tryPopFor(TickClock::duration, uint8_t&, T&).
 	 *
-	 * \param Rep is type of tick counter
-	 * \param Period is std::ratio type representing the tick period of the clock, in seconds
+	 * \tparam Rep is type of tick counter
+	 * \tparam Period is std::ratio type representing the tick period of the clock, in seconds
 	 *
 	 * \param [in] duration is the duration after which the call will be terminated without popping the element
 	 * \param [out] priority is a reference to variable that will be used to return priority of popped value
@@ -398,7 +398,7 @@ public:
 	 *
 	 * Template variant of tryPopUntil(TickClock::time_point, uint8_t&, T&).
 	 *
-	 * \param Duration is a std::chrono::duration type used to measure duration
+	 * \tparam Duration is a std::chrono::duration type used to measure duration
 	 *
 	 * \param [in] timePoint is the time point at which the call will be terminated without popping the element
 	 * \param [out] priority is a reference to variable that will be used to return priority of popped value
@@ -480,8 +480,8 @@ public:
 	 *
 	 * Template variant of tryPushFor(TickClock::duration, uint8_t, const T&).
 	 *
-	 * \param Rep is type of tick counter
-	 * \param Period is std::ratio type representing the tick period of the clock, in seconds
+	 * \tparam Rep is type of tick counter
+	 * \tparam Period is std::ratio type representing the tick period of the clock, in seconds
 	 *
 	 * \param [in] duration is the duration after which the wait will be terminated without pushing the element
 	 * \param [in] priority is the priority of new element
@@ -524,8 +524,8 @@ public:
 	 *
 	 * Template variant of tryPushFor(TickClock::duration, uint8_t, T&&).
 	 *
-	 * \param Rep is type of tick counter
-	 * \param Period is std::ratio type representing the tick period of the clock, in seconds
+	 * \tparam Rep is type of tick counter
+	 * \tparam Period is std::ratio type representing the tick period of the clock, in seconds
 	 *
 	 * \param [in] duration is the duration after which the call will be terminated without pushing the element
 	 * \param [in] priority is the priority of new element
@@ -568,7 +568,7 @@ public:
 	 *
 	 * Template variant of tryPushUntil(TickClock::time_point, uint8_t, const T&).
 	 *
-	 * \param Duration is a std::chrono::duration type used to measure duration
+	 * \tparam Duration is a std::chrono::duration type used to measure duration
 	 *
 	 * \param [in] timePoint is the time point at which the call will be terminated without pushing the element
 	 * \param [in] priority is the priority of new element
@@ -612,7 +612,7 @@ public:
 	 *
 	 * Template variant of tryPushUntil(TickClock::time_point, uint8_t, T&&).
 	 *
-	 * \param Duration is a std::chrono::duration type used to measure duration
+	 * \tparam Duration is a std::chrono::duration type used to measure duration
 	 *
 	 * \param [in] timePoint is the time point at which the call will be terminated without pushing the element
 	 * \param [in] priority is the priority of new element
@@ -641,7 +641,7 @@ private:
 	 *
 	 * \note This function requires GCC 4.9.
 	 *
-	 * \param Args are types of arguments for constructor of T
+	 * \tparam Args are types of arguments for constructor of T
 	 *
 	 * \param [in] waitSemaphoreFunctor is a reference to SemaphoreFunctor which will be executed with \a pushSemaphore_
 	 * \param [in] priority is the priority of new element

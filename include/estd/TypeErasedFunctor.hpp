@@ -2,13 +2,13 @@
  * \file
  * \brief TypeErasedFunctor template class header
  *
- * \author Copyright (C) 2014 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-12-10
+ * \date 2015-12-02
  */
 
 #ifndef ESTD_TYPEERASEDFUNCTOR_HPP_
@@ -25,8 +25,8 @@ class TypeErasedFunctor;
  *
  * Overload with const operator()().
  *
- * \param R is the type returned by <em>TypeErasedFunctor::operator()() const</em>
- * \param Args are the types of arguments for <em>TypeErasedFunctor::operator()() const</em>
+ * \tparam R is the type returned by <em>TypeErasedFunctor::operator()() const</em>
+ * \tparam Args are the types of arguments for <em>TypeErasedFunctor::operator()() const</em>
  */
 
 template<typename R, typename... Args>
@@ -63,8 +63,8 @@ protected:
  *
  * Overload with non-const operator()().
  *
- * \param R is the type returned by <em>TypeErasedFunctor::operator()()</em>
- * \param Args are the types of arguments for <em>TypeErasedFunctor::operator()()</em>
+ * \tparam R is the type returned by <em>TypeErasedFunctor::operator()()</em>
+ * \tparam Args are the types of arguments for <em>TypeErasedFunctor::operator()()</em>
  */
 
 template<typename R, typename... Args>

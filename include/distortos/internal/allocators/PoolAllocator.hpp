@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-11-27
+ * \date 2015-12-02
  */
 
 #ifndef INCLUDE_DISTORTOS_INTERNAL_ALLOCATORS_POOLALLOCATOR_HPP_
@@ -25,8 +25,8 @@ namespace internal
 /**
  * \brief PoolAllocator class is a generic allocator which uses pool.
  *
- * \param T is the allocated type
- * \param PoolType is the type of pool used by allocator
+ * \tparam T is the allocated type
+ * \tparam PoolType is the type of pool used by allocator
  */
 
 template<typename T, typename PoolType>
@@ -50,7 +50,7 @@ public:
 	/**
 	 * \brief Rebinds allocator to different type.
 	 *
-	 * \param U is the allocated type
+	 * \tparam U is the allocated type
 	 */
 
 	template<typename U>
@@ -75,7 +75,7 @@ public:
 	/**
 	 * \brief PoolAllocator's copy constructor
 	 *
-	 * \param U is the allocated type
+	 * \tparam U is the allocated type
 	 *
 	 * \param [in] other is a reference to PoolAllocator which will be copied
 	 */
@@ -128,9 +128,9 @@ private:
 /**
  * \brief PoolAllocator operator==
  *
- * \param T1 is the type allocated by left PoolAllocator
- * \param T2 is the type allocated by right PoolAllocator
- * \param OtherPoolType is the type of pool used by both allocators
+ * \tparam T1 is the type allocated by left PoolAllocator
+ * \tparam T2 is the type allocated by right PoolAllocator
+ * \tparam OtherPoolType is the type of pool used by both allocators
  *
  * \param [in] left is a reference to left PoolAllocator
  * \param [in] right is a reference to right PoolAllocator
@@ -147,9 +147,9 @@ inline bool operator==(const PoolAllocator<T1, OtherPoolType>& left, const PoolA
 /**
  * \brief PoolAllocator operator!=
  *
- * \param T1 is the type allocated by left PoolAllocator
- * \param T2 is the type allocated by right PoolAllocator
- * \param OtherPoolType is the type of pool used by both allocators
+ * \tparam T1 is the type allocated by left PoolAllocator
+ * \tparam T2 is the type allocated by right PoolAllocator
+ * \tparam OtherPoolType is the type of pool used by both allocators
  *
  * \param [in] left is a reference to left PoolAllocator
  * \param [in] right is a reference to right PoolAllocator

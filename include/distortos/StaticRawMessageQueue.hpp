@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-11-28
+ * \date 2015-12-02
  */
 
 #ifndef INCLUDE_DISTORTOS_STATICRAWMESSAGEQUEUE_HPP_
@@ -24,8 +24,8 @@ namespace distortos
 /**
  * \brief StaticRawMessageQueue class is a variant of RawMessageQueue that has automatic storage for queue's contents.
  *
- * \param T is the type of data in queue
- * \param QueueSize is the maximum number of elements in queue
+ * \tparam T is the type of data in queue
+ * \tparam QueueSize is the maximum number of elements in queue
  *
  * \ingroup queues
  */
@@ -60,8 +60,8 @@ private:
  * \brief StaticRawMessageQueueFromSize type alias is a variant of StaticRawMessageQueue which uses size of element
  * (instead of type) as template argument.
  *
- * \param ElementSize is the size of single queue element, bytes
- * \param QueueSize is the maximum number of elements in queue
+ * \tparam ElementSize is the size of single queue element, bytes
+ * \tparam QueueSize is the maximum number of elements in queue
  */
 
 template<size_t ElementSize, size_t QueueSize>

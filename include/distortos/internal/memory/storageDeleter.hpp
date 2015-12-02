@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-11-27
+ * \date 2015-12-02
  */
 
 #ifndef INCLUDE_DISTORTOS_INTERNAL_MEMORY_STORAGEDELETER_HPP_
@@ -27,8 +27,8 @@ namespace internal
 /**
  * \brief Templated deleter that can be used with std::unique_ptr and dynamic storage allocated with new T[].
  *
- * \param T is the real type of allocated storage
- * \param U is the type of \a storage pointer
+ * \tparam T is the real type of allocated storage
+ * \tparam U is the type of \a storage pointer
  *
  * \param [in] storage is a pointer to storage that will be deleted
  */

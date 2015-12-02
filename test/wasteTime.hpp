@@ -2,13 +2,13 @@
  * \file
  * \brief wasteTime() header
  *
- * \author Copyright (C) 2014 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-10-27
+ * \date 2015-12-02
  */
 
 #ifndef TEST_WASTETIME_HPP_
@@ -37,8 +37,8 @@ void wasteTime(TickClock::duration duration);
  *
  * \note Wasted duration must not be shorter, so one additional tick is always added to the duration.
  *
- * \param Rep is type of tick counter
- * \param Period is std::ratio type representing the tick period of the clock, in seconds
+ * \tparam Rep is type of tick counter
+ * \tparam Period is std::ratio type representing the tick period of the clock, in seconds
  *
  * \param [in] duration is the duration of time to waste
  */
@@ -60,7 +60,7 @@ void wasteTime(TickClock::time_point timePoint);
 /**
  * \brief Wastes time.
  *
- * \param Duration is a std::chrono::duration type used to measure duration
+ * \tparam Duration is a std::chrono::duration type used to measure duration
  *
  * \param [in] timePoint is the time point at which the function will return
  */

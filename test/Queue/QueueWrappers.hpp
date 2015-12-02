@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-11-05
+ * \date 2015-12-02
  */
 
 #ifndef TEST_QUEUE_QUEUEWRAPPERS_HPP_
@@ -385,7 +385,7 @@ private:
 /**
  * \brief StaticFifoQueueWrapper class is a variant of FifoQueueWrapper that has automatic storage for queue's contents.
  *
- * \param QueueSize is the maximum number of elements in queue
+ * \tparam QueueSize is the maximum number of elements in queue
  */
 
 template<size_t QueueSize>
@@ -593,7 +593,7 @@ private:
  * \brief StaticMessageQueueWrapper class is a variant of MessageQueueWrapper that has automatic storage for queue's
  * contents.
  *
- * \param QueueSize is the maximum number of elements in queue
+ * \tparam QueueSize is the maximum number of elements in queue
  */
 
 template<size_t QueueSize>
@@ -916,7 +916,7 @@ private:
  * \brief StaticRawFifoQueueWrapper class is a variant of RawFifoQueueWrapper that has automatic storage for queue's
  * contents.
  *
- * \param QueueSize is the maximum number of elements in queue
+ * \tparam QueueSize is the maximum number of elements in queue
  */
 
 template<size_t QueueSize>
@@ -1058,7 +1058,7 @@ private:
  * \brief StaticRawMessageQueueWrapper class is a variant of RawMessageQueueWrapper that has automatic storage for
  * queue's contents.
  *
- * \param QueueSize is the maximum number of elements in queue
+ * \tparam QueueSize is the maximum number of elements in queue
  */
 
 template<size_t QueueSize>
@@ -1088,7 +1088,7 @@ private:
 /**
  * \brief RawQueueWrapper's factory function
  *
- * \param QueueSize is the maximum number of elements in queue
+ * \tparam QueueSize is the maximum number of elements in queue
  *
  * \param [in] dynamic selects whether static (false) or dynamic (true) queue type will be constructed
  * \param [in] fifo selects whether message (false) or fifo (true) queue type will be constructed
@@ -1118,7 +1118,7 @@ RawQueueWrapperUniquePointer makeRawQueueWrapper(const bool dynamic, const bool 
 /**
  * \brief QueueWrapper's factory function
  *
- * \param QueueSize is the maximum number of elements in queue
+ * \tparam QueueSize is the maximum number of elements in queue
  *
  * \param [in] dynamic selects whether static (false) or dynamic (true) queue type will be constructed
  * \param [in] raw selects whether non-raw (false) or raw (true) queue type will be constructed

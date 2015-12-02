@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-10-18
+ * \date 2015-12-02
  */
 
 #ifndef ESTD_REVERSEADAPTOR_HPP_
@@ -20,7 +20,7 @@ namespace estd
 /**
  * \brief ReverseAdaptor template class is an adaptor that "reverses" access to the container
  *
- * \param T is the type of container
+ * \tparam T is the type of container
  */
 
 template<typename T>
@@ -67,7 +67,7 @@ private:
 /**
  * \brief Helper factory function to make ReverseAdaptor object with deduced template arguments
  *
- * \param T is the type of container
+ * \tparam T is the type of container
  *
  * \param [in] container is a reference to container
  *
