@@ -150,8 +150,16 @@ bool ThreadSleepUntilTestCase::run_() const
 				thread.start();
 		}
 
+		bool invalidState {};
+		for (const auto& thread : threads)
+			if (thread.getState() != ThreadState::Sleeping)
+				invalidState = true;
+
 		for (auto& thread : threads)
 			thread.join();
+
+		if (invalidState != false)
+			return false;
 
 		if (sequenceAsserter.assertSequence(totalThreads) == false)
 			return false;
