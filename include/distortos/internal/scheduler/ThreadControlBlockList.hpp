@@ -68,8 +68,6 @@ public:
 
 	/**
 	 * \brief ThreadControlBlockList's destructor
-	 *
-	 * Clears list pointers in all elements.
 	 */
 
 	~ThreadControlBlockList();

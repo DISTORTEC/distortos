@@ -25,8 +25,7 @@ namespace internal
 
 ThreadControlBlockList::~ThreadControlBlockList()
 {
-	for (auto& item : *this)
-		item.get().setList(nullptr);
+
 }
 
 void ThreadControlBlockList::sortedSplice(ThreadControlBlockList& other, const iterator otherPosition)

@@ -234,6 +234,7 @@ int Scheduler::remove(void (Thread::*terminationHook)())
 			return ret;
 
 		(terminatedList.begin()->get().getOwner().*terminationHook)();
+		terminatedList.begin()->get().setList(nullptr);
 	}
 
 	forceContextSwitch();
