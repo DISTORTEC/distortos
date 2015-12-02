@@ -151,7 +151,7 @@ int Scheduler::block(ThreadControlBlockList& container, const ThreadControlBlock
 		architecture::InterruptMaskingLock interruptMaskingLock;
 
 		// if blocking current thread, use unblockReasonUnblockFunctorWrapper, otherwise use provided unblockFunctor
-		const auto ret = blockInternal(container, iterator, blockingCurrentThread == true ?
+		const auto ret = blockInternal(container, iterator, container.getState(), blockingCurrentThread == true ?
 				&unblockReasonUnblockFunctorWrapper : unblockFunctor);
 		if (ret != 0)
 			return ret;
@@ -228,7 +228,7 @@ int Scheduler::remove(void (Thread::*terminationHook)())
 		architecture::InterruptMaskingLock interruptMaskingLock;
 		ThreadControlBlockList terminatedList {threadControlBlockListAllocator_, ThreadState::Terminated};
 
-		const auto ret = blockInternal(terminatedList, currentThreadControlBlock_, {});
+		const auto ret = blockInternal(terminatedList, currentThreadControlBlock_, ThreadState::Terminated, {});
 		if (ret != 0)
 			return ret;
 
@@ -329,13 +329,13 @@ int Scheduler::addInternal(ThreadControlBlock& threadControlBlock)
 }
 
 int Scheduler::blockInternal(ThreadControlBlockList& container, const ThreadControlBlockListIterator iterator,
-		const ThreadControlBlock::UnblockFunctor* const unblockFunctor)
+		const ThreadState state, const ThreadControlBlock::UnblockFunctor* const unblockFunctor)
 {
 	if (iterator->get().getList() != &runnableList_)
 		return EINVAL;
 
 	container.sortedSplice(runnableList_, iterator);
-	iterator->get().setState(container.getState());
+	iterator->get().setState(state);
 	iterator->get().blockHook(unblockFunctor);
 
 	return 0;
