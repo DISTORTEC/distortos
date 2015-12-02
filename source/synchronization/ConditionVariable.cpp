@@ -30,8 +30,7 @@ namespace distortos
 +---------------------------------------------------------------------------------------------------------------------*/
 
 ConditionVariable::ConditionVariable() :
-		blockedList_{internal::getScheduler().getThreadControlBlockListAllocator(),
-				ThreadState::BlockedOnConditionVariable}
+		blockedList_{internal::getScheduler().getThreadControlBlockListAllocator()}
 {
 
 }

@@ -56,8 +56,7 @@ int sleepFor(const TickClock::duration duration)
 int sleepUntil(const TickClock::time_point timePoint)
 {
 	auto& scheduler = internal::getScheduler();
-	internal::ThreadControlBlockList sleepingList {scheduler.getThreadControlBlockListAllocator(),
-			ThreadState::Sleeping};
+	internal::ThreadControlBlockList sleepingList {scheduler.getThreadControlBlockListAllocator()};
 	const auto ret = scheduler.blockUntil(sleepingList, ThreadState::Sleeping, timePoint);
 	return ret == ETIMEDOUT ? 0 : ret;
 }

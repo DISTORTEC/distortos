@@ -110,8 +110,8 @@ Scheduler::Scheduler() :
 		mutexControlBlockListAllocatorPool_{},
 		threadControlBlockListAllocatorPool_{},
 		threadControlBlockListAllocator_{threadControlBlockListAllocatorPool_},
-		runnableList_{threadControlBlockListAllocator_, ThreadState::Runnable},
-		suspendedList_{threadControlBlockListAllocator_, ThreadState::Suspended},
+		runnableList_{threadControlBlockListAllocator_},
+		suspendedList_{threadControlBlockListAllocator_},
 		softwareTimerControlBlockSupervisor_{},
 		contextSwitchCount_{},
 		tickCount_{}
@@ -227,7 +227,7 @@ int Scheduler::remove(void (Thread::*terminationHook)())
 {
 	{
 		architecture::InterruptMaskingLock interruptMaskingLock;
-		ThreadControlBlockList terminatedList {threadControlBlockListAllocator_, ThreadState::Terminated};
+		ThreadControlBlockList terminatedList {threadControlBlockListAllocator_};
 
 		const auto ret = blockInternal(terminatedList, currentThreadControlBlock_, ThreadState::Terminated, {});
 		if (ret != 0)

@@ -84,7 +84,7 @@ private:
 +---------------------------------------------------------------------------------------------------------------------*/
 
 MutexControlBlock::MutexControlBlock(const Protocol protocol, const uint8_t priorityCeiling) :
-		blockedList_{getScheduler().getThreadControlBlockListAllocator(), ThreadState::BlockedOnMutex},
+		blockedList_{getScheduler().getThreadControlBlockListAllocator()},
 		list_{},
 		iterator_{},
 		owner_{},

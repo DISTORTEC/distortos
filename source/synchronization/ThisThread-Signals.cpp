@@ -107,8 +107,7 @@ std::pair<int, SignalInformation> waitImplementation(const SignalSet& signalSet,
 		if (nonBlocking == true)
 			return {EAGAIN, SignalInformation{uint8_t{}, SignalInformation::Code{}, sigval{}}};
 
-		internal::ThreadControlBlockList waitingList {scheduler.getThreadControlBlockListAllocator(),
-				ThreadState::WaitingForSignal};
+		internal::ThreadControlBlockList waitingList {scheduler.getThreadControlBlockListAllocator()};
 
 		signalsReceiverControlBlock->setWaitingSignalSet(&signalSet);
 		const SignalsWaitUnblockFunctor signalsWaitUnblockFunctor;

@@ -44,8 +44,7 @@ void CallOnceControlBlock::callOnceImplementation(const Functor& functor)
 		return;
 	}
 
-	ThreadControlBlockList blockedList {getScheduler().getThreadControlBlockListAllocator(),
-			ThreadState::BlockedOnOnceFlag};
+	ThreadControlBlockList blockedList {getScheduler().getThreadControlBlockListAllocator()};
 	blockedList_ = &blockedList;
 
 	functor();

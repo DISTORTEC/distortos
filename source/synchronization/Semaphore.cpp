@@ -28,7 +28,7 @@ namespace distortos
 +---------------------------------------------------------------------------------------------------------------------*/
 
 Semaphore::Semaphore(const Value value, const Value maxValue) :
-		blockedList_{internal::getScheduler().getThreadControlBlockListAllocator(), ThreadState::BlockedOnSemaphore},
+		blockedList_{internal::getScheduler().getThreadControlBlockListAllocator()},
 		value_{value <= maxValue ? value : maxValue},
 		maxValue_{maxValue}
 {

@@ -69,10 +69,9 @@ public:
 	 *
 	 * \param [in] allocator is a reference to ThreadControlBlockListAllocator object used to copy-construct allocator
 	 * of base container
-	 * \param [in] state is the state of ThreadControlBlock objects kept in this list
 	 */
 
-	constexpr ThreadControlBlockList(const ThreadControlBlockListAllocator& allocator, ThreadState) :
+	constexpr ThreadControlBlockList(const ThreadControlBlockListAllocator& allocator) :
 			Base{allocator}
 	{
 
