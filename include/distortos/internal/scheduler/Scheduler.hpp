@@ -71,6 +71,7 @@ public:
 	 *
 	 * \param [in] container is a reference to destination container to which the thread will be transferred
 	 * \param [in] iterator is the iterator to the thread that will be blocked
+	 * \param [in] state is the new state of thread that will be blocked
 	 * \param [in] unblockFunctor is a pointer to ThreadControlBlock::UnblockFunctor which will be executed in
 	 * ThreadControlBlock::unblockHook(), default - nullptr (no functor will be executed)
 	 *
@@ -82,7 +83,7 @@ public:
 	 * current thread);
 	 */
 
-	int block(ThreadControlBlockList& container, ThreadControlBlockListIterator iterator,
+	int block(ThreadControlBlockList& container, ThreadControlBlockListIterator iterator, ThreadState state,
 			const ThreadControlBlock::UnblockFunctor* unblockFunctor = {});
 
 	/**

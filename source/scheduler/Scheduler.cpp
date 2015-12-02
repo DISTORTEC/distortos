@@ -137,11 +137,11 @@ int Scheduler::add(ThreadControlBlock& threadControlBlock)
 
 int Scheduler::block(ThreadControlBlockList& container, const ThreadControlBlock::UnblockFunctor* const unblockFunctor)
 {
-	return block(container, currentThreadControlBlock_, unblockFunctor);
+	return block(container, currentThreadControlBlock_, container.getState(), unblockFunctor);
 }
 
 int Scheduler::block(ThreadControlBlockList& container, const ThreadControlBlockListIterator iterator,
-		const ThreadControlBlock::UnblockFunctor* const unblockFunctor)
+		const ThreadState state, const ThreadControlBlock::UnblockFunctor* const unblockFunctor)
 {
 	ThreadControlBlock::UnblockReason unblockReason {};
 	const UnblockReasonUnblockFunctorWrapper unblockReasonUnblockFunctorWrapper {unblockFunctor, unblockReason};
@@ -151,7 +151,7 @@ int Scheduler::block(ThreadControlBlockList& container, const ThreadControlBlock
 		architecture::InterruptMaskingLock interruptMaskingLock;
 
 		// if blocking current thread, use unblockReasonUnblockFunctorWrapper, otherwise use provided unblockFunctor
-		const auto ret = blockInternal(container, iterator, container.getState(), blockingCurrentThread == true ?
+		const auto ret = blockInternal(container, iterator, state, blockingCurrentThread == true ?
 				&unblockReasonUnblockFunctorWrapper : unblockFunctor);
 		if (ret != 0)
 			return ret;
@@ -258,7 +258,7 @@ int Scheduler::suspend()
 
 int Scheduler::suspend(const ThreadControlBlockListIterator iterator)
 {
-	return block(suspendedList_, iterator);
+	return block(suspendedList_, iterator, ThreadState::Suspended);
 }
 
 void* Scheduler::switchContext(void* const stackPointer)
