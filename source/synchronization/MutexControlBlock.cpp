@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-12-02
+ * \date 2015-12-04
  */
 
 #include "distortos/internal/synchronization/MutexControlBlock.hpp"
@@ -84,9 +84,8 @@ private:
 +---------------------------------------------------------------------------------------------------------------------*/
 
 MutexControlBlock::MutexControlBlock(const Protocol protocol, const uint8_t priorityCeiling) :
+		MutexControlBlockListNode{},
 		blockedList_{getScheduler().getThreadControlBlockListAllocator()},
-		list_{},
-		iterator_{},
 		owner_{},
 		protocol_{protocol},
 		priorityCeiling_{priorityCeiling}
@@ -137,10 +136,7 @@ void MutexControlBlock::lock()
 	if (protocol_ == Protocol::None)
 		return;
 
-	scheduler.getMutexControlBlockListAllocatorPool().feed(link_);
-	list_ = &owner_->getOwnedProtocolMutexControlBlocksList();
-	list_->emplace_front(*this);
-	iterator_ = list_->begin();
+	owner_->getOwnedProtocolMutexControlBlocksList().push_front(*this);
 
 	if (protocol_ == Protocol::PriorityProtect)
 		owner_->updateBoostedPriority();
@@ -185,12 +181,11 @@ void MutexControlBlock::transferLock()
 	owner_ = &blockedList_.begin()->get();	// pass ownership to the unblocked thread
 	getScheduler().unblock(blockedList_.begin());
 
-	if (list_ == nullptr)
+	if (node.isLinked() == false)
 		return;
 
-	auto& oldList = *list_;
-	list_ = &owner_->getOwnedProtocolMutexControlBlocksList();
-	list_->splice(list_->begin(), oldList, iterator_);
+	MutexControlBlockList::splice(owner_->getOwnedProtocolMutexControlBlocksList().begin(),
+			MutexControlBlockList::iterator{*this});
 
 	if (protocol_ == Protocol::PriorityInheritance)
 		owner_->setPriorityInheritanceMutexControlBlock(nullptr);
@@ -200,11 +195,10 @@ void MutexControlBlock::unlock()
 {
 	owner_ = nullptr;
 
-	if (list_ == nullptr)
+	if (node.isLinked() == false)
 		return;
 
-	list_->erase(iterator_);
-	list_ = nullptr;
+	node.unlink();
 }
 
 }	// namespace internal

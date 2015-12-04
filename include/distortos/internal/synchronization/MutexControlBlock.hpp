@@ -8,13 +8,15 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-11-27
+ * \date 2015-12-04
  */
 
 #ifndef INCLUDE_DISTORTOS_INTERNAL_SYNCHRONIZATION_MUTEXCONTROLBLOCK_HPP_
 #define INCLUDE_DISTORTOS_INTERNAL_SYNCHRONIZATION_MUTEXCONTROLBLOCK_HPP_
 
 #include "distortos/internal/scheduler/ThreadControlBlockList.hpp"
+
+#include "distortos/internal/synchronization/MutexControlBlockListNode.hpp"
 
 namespace distortos
 {
@@ -23,7 +25,7 @@ namespace internal
 {
 
 /// MutexControlBlock class is a control block for Mutex
-class MutexControlBlock
+class MutexControlBlock : public MutexControlBlockListNode
 {
 public:
 
@@ -128,9 +130,6 @@ public:
 
 private:
 
-	/// type of object used as storage for MutexControlBlockList elements - 3 pointers
-	using Link = std::array<std::aligned_storage<sizeof(void*), alignof(void*)>::type, 3>;
-
 	/**
 	 * \brief Performs action required for priority inheritance before actually blocking on the mutex.
 	 *
@@ -159,15 +158,6 @@ private:
 
 	/// ThreadControlBlock objects blocked on mutex
 	ThreadControlBlockList blockedList_;
-
-	/// storage for list link
-	Link link_;
-
-	/// pointer to list that has this object
-	MutexControlBlockList* list_;
-
-	/// iterator to the element on the list, valid only when list_ != nullptr
-	MutexControlBlockList::iterator iterator_;
 
 	/// owner of the mutex
 	ThreadControlBlock* owner_;

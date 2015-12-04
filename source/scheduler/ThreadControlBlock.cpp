@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-11-27
+ * \date 2015-12-04
  */
 
 #include "distortos/internal/scheduler/ThreadControlBlock.hpp"
@@ -41,10 +41,7 @@ ThreadControlBlock::ThreadControlBlock(architecture::Stack&& stack, const uint8_
 		SignalsReceiver* const signalsReceiver, Thread& owner) :
 		stack_{std::move(stack)},
 		owner_{owner},
-		ownedProtocolMutexControlBlocksList_
-		{
-				MutexControlBlockListAllocator{getScheduler().getMutexControlBlockListAllocatorPool()}
-		},
+		ownedProtocolMutexControlBlocksList_{},
 		priorityInheritanceMutexControlBlock_{},
 		list_{},
 		iterator_{},
@@ -134,9 +131,9 @@ void ThreadControlBlock::updateBoostedPriority(const uint8_t boostedPriority)
 {
 	decltype(boostedPriority_) newBoostedPriority {boostedPriority};
 
-	for (const auto &mutexControlBlock : ownedProtocolMutexControlBlocksList_)
+	for (const auto& mutexControlBlock : ownedProtocolMutexControlBlocksList_)
 	{
-		const auto mutexBoostedPriority = mutexControlBlock.get().getBoostedPriority();
+		const auto mutexBoostedPriority = mutexControlBlock.getBoostedPriority();
 		newBoostedPriority = std::max(newBoostedPriority, mutexBoostedPriority);
 	}
 

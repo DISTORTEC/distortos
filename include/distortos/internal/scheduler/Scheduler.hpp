@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-12-02
+ * \date 2015-12-04
  */
 
 #ifndef INCLUDE_DISTORTOS_INTERNAL_SCHEDULER_SCHEDULER_HPP_
@@ -118,24 +118,6 @@ public:
 	ThreadControlBlock& getCurrentThreadControlBlock() const
 	{
 		return *currentThreadControlBlock_;
-	}
-
-	/**
-	 * \return reference to internal MutexControlBlockListAllocator::Pool object
-	 */
-
-	MutexControlBlockListAllocator::Pool& getMutexControlBlockListAllocatorPool()
-	{
-		return mutexControlBlockListAllocatorPool_;
-	}
-
-	/**
-	 * \return const reference to internal MutexControlBlockListAllocator:Pool object
-	 */
-
-	const MutexControlBlockListAllocator::Pool& getMutexControlBlockListAllocatorPool() const
-	{
-		return mutexControlBlockListAllocatorPool_;
 	}
 
 	/**
@@ -348,9 +330,6 @@ private:
 
 	/// iterator to the currently active ThreadControlBlock
 	ThreadControlBlockListIterator currentThreadControlBlock_;
-
-	/// pool instance used by MutexControlBlockListAllocator
-	MutexControlBlockListAllocator::Pool mutexControlBlockListAllocatorPool_;
 
 	/// pool instance used by threadControlBlockListAllocator_
 	ThreadControlBlockListAllocator::Pool threadControlBlockListAllocatorPool_;
