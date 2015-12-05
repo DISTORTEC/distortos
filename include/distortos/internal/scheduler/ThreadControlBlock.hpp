@@ -40,7 +40,7 @@ class ThreadList;
 class ThreadGroupControlBlock;
 
 /// ThreadControlBlock class is a simple description of a Thread
-class ThreadControlBlock : public ThreadControlBlockListNode
+class ThreadControlBlock : public ThreadListNode
 {
 public:
 

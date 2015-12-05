@@ -1,6 +1,6 @@
 /**
  * \file
- * \brief ThreadControlBlockListNode class header
+ * \brief ThreadListNode class header
  *
  * \author Copyright (C) 2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
@@ -23,21 +23,21 @@ namespace internal
 {
 
 /**
- * \brief ThreadControlBlockListNode class is a base for ThreadControlBlock that provides nodes for intrusive lists
+ * \brief ThreadListNode class is a base for ThreadControlBlock that provides nodes for intrusive lists
  *
  * This class is needed to break circular dependency - MutexList is contained in ThreadControlBlock and ThreadList is
  * contained in MutexControlBlock.
  */
 
-class ThreadControlBlockListNode
+class ThreadListNode
 {
 public:
 
 	/**
-	 * \brief ThreadControlBlockListNode's constructor
+	 * \brief ThreadListNode's constructor
 	 */
 
-	constexpr ThreadControlBlockListNode() :
+	constexpr ThreadListNode() :
 			threadGroupNode{}
 	{
 

@@ -39,7 +39,7 @@ namespace internal
 ThreadControlBlock::ThreadControlBlock(architecture::Stack&& stack, const uint8_t priority,
 		const SchedulingPolicy schedulingPolicy, ThreadGroupControlBlock* const threadGroupControlBlock,
 		SignalsReceiver* const signalsReceiver, Thread& owner) :
-		ThreadControlBlockListNode{},
+		ThreadListNode{},
 		stack_{std::move(stack)},
 		owner_{owner},
 		ownedProtocolMutexList_{},

@@ -50,8 +50,7 @@ public:
 private:
 
 	/// intrusive list of thread control blocks
-	using List = estd::IntrusiveList<ThreadControlBlockListNode, &ThreadControlBlockListNode::threadGroupNode,
-			ThreadControlBlock>;
+	using List = estd::IntrusiveList<ThreadListNode, &ThreadListNode::threadGroupNode, ThreadControlBlock>;
 
 	/// list of ThreadControlBlock elements in this group
 	List threadControlBlockList_;
