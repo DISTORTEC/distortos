@@ -35,10 +35,10 @@ using ThreadListValueType = std::reference_wrapper<ThreadControlBlock>;
 using ThreadListAllocator = PoolAllocator<ThreadListValueType, SimpleFeedablePool>;
 
 /// underlying unsorted container of ThreadControlBlockList
-using ThreadControlBlockUnsortedList = std::list<ThreadListValueType, ThreadListAllocator>;
+using ThreadUnsortedList = std::list<ThreadListValueType, ThreadListAllocator>;
 
 /// generic iterator for ThreadControlBlockList
-using ThreadControlBlockListIterator = ThreadControlBlockUnsortedList::iterator;
+using ThreadControlBlockListIterator = ThreadUnsortedList::iterator;
 
 }	// namespace internal
 
