@@ -14,7 +14,7 @@
 #ifndef INCLUDE_DISTORTOS_INTERNAL_SYNCHRONIZATION_MUTEXCONTROLBLOCK_HPP_
 #define INCLUDE_DISTORTOS_INTERNAL_SYNCHRONIZATION_MUTEXCONTROLBLOCK_HPP_
 
-#include "distortos/internal/scheduler/ThreadControlBlockList.hpp"
+#include "distortos/internal/scheduler/ThreadList.hpp"
 
 #include "distortos/internal/synchronization/MutexListNode.hpp"
 

@@ -11,7 +11,7 @@
  * \date 2015-12-05
  */
 
-#include "distortos/internal/scheduler/ThreadControlBlockList.hpp"
+#include "distortos/internal/scheduler/ThreadList.hpp"
 
 namespace distortos
 {

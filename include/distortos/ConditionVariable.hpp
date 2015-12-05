@@ -14,7 +14,7 @@
 #ifndef INCLUDE_DISTORTOS_CONDITIONVARIABLE_HPP_
 #define INCLUDE_DISTORTOS_CONDITIONVARIABLE_HPP_
 
-#include "distortos/internal/scheduler/ThreadControlBlockList.hpp"
+#include "distortos/internal/scheduler/ThreadList.hpp"
 
 namespace distortos
 {
