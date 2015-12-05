@@ -53,7 +53,10 @@ public:
 	 * If the timer is running it is stopped.
 	 */
 
-	~SoftwareTimerControlBlock();
+	~SoftwareTimerControlBlock()
+	{
+		stop();
+	}
 
 	/**
 	 * \return true if the timer is running, false otherwise

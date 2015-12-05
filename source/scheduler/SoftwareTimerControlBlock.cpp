@@ -28,11 +28,6 @@ namespace internal
 | public functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-SoftwareTimerControlBlock::~SoftwareTimerControlBlock()
-{
-	stop();
-}
-
 void SoftwareTimerControlBlock::run() const
 {
 	functionRunner_(owner_);
