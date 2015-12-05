@@ -37,11 +37,11 @@ void SoftwareTimerSupervisor::add(SoftwareTimerControlBlock& softwareTimerContro
 void SoftwareTimerSupervisor::tickInterruptHandler(const TickClock::time_point timePoint)
 {
 	// execute all software timers that reached their time point
-	for (auto iterator = activeList_.begin(); iterator != activeList_.end() && iterator->getTimePoint() <= timePoint;
-			iterator = activeList_.begin())
+	auto iterator = activeList_.begin();
+	while (iterator != activeList_.end() && iterator->getTimePoint() <= timePoint)
 	{
 		iterator->run();
-		SoftwareTimerList::erase(iterator);
+		iterator = SoftwareTimerList::erase(iterator);
 	}
 }
 
