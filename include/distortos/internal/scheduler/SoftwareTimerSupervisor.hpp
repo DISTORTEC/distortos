@@ -31,7 +31,11 @@ public:
 	 * \brief SoftwareTimerControlBlock's constructor
 	 */
 
-	SoftwareTimerSupervisor();
+	constexpr SoftwareTimerSupervisor() :
+			activeList_{}
+	{
+
+	}
 
 	/**
 	 * \brief Adds SoftwareTimerControlBlock to supervisor, effectively starting the software timer.

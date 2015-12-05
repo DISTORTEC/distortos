@@ -27,12 +27,6 @@ namespace internal
 | public functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-SoftwareTimerSupervisor::SoftwareTimerSupervisor() :
-		activeList_{}
-{
-
-}
-
 void SoftwareTimerSupervisor::add(SoftwareTimerControlBlock& softwareTimerControlBlock)
 {
 	architecture::InterruptMaskingLock interruptMaskingLock;
