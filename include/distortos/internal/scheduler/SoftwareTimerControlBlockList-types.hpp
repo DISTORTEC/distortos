@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-11-27
+ * \date 2015-12-05
  */
 
 #ifndef INCLUDE_DISTORTOS_INTERNAL_SCHEDULER_SOFTWARETIMERCONTROLBLOCKLIST_TYPES_HPP_
@@ -29,15 +29,14 @@ namespace internal
 class SoftwareTimerControlBlock;
 
 /// type held by SoftwareTimerControlBlockList
-using SoftwareTimerControlBlockListValueType = std::reference_wrapper<SoftwareTimerControlBlock>;
+using SoftwareTimerListValueType = std::reference_wrapper<SoftwareTimerControlBlock>;
 
 /// type of allocator used by SoftwareTimerControlBlockList
-using SoftwareTimerControlBlockListAllocator =
-		PoolAllocator<SoftwareTimerControlBlockListValueType, SimpleFeedablePool>;
+using SoftwareTimerControlBlockListAllocator = PoolAllocator<SoftwareTimerListValueType, SimpleFeedablePool>;
 
 /// underlying unsorted container of SoftwareTimerControlBlockList
 using SoftwareTimerControlBlockUnsortedList =
-		std::list<SoftwareTimerControlBlockListValueType, SoftwareTimerControlBlockListAllocator>;
+		std::list<SoftwareTimerListValueType, SoftwareTimerControlBlockListAllocator>;
 
 /// generic iterator for SoftwareTimerControlBlockList
 using SoftwareTimerControlBlockListIterator = SoftwareTimerControlBlockUnsortedList::iterator;
