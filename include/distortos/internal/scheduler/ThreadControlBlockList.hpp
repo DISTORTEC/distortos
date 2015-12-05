@@ -43,15 +43,15 @@ struct ThreadDescendingEffectivePriority
 };
 
 /// base of ThreadControlBlockList
-using ThreadControlBlockListBase = SortedContainer<ThreadUnsortedList, ThreadDescendingEffectivePriority>;
+using ThreadListBase = SortedContainer<ThreadUnsortedList, ThreadDescendingEffectivePriority>;
 
 /// List of ThreadControlBlock objects in descending order of effective priority that configures state of kept objects
-class ThreadControlBlockList : public ThreadControlBlockListBase
+class ThreadControlBlockList : public ThreadListBase
 {
 public:
 
 	/// base of ThreadControlBlockList
-	using Base = ThreadControlBlockListBase;
+	using Base = ThreadListBase;
 
 	using Base::Base;
 
