@@ -111,7 +111,7 @@ Scheduler::Scheduler() :
 		threadControlBlockListAllocator_{threadControlBlockListAllocatorPool_},
 		runnableList_{threadControlBlockListAllocator_},
 		suspendedList_{threadControlBlockListAllocator_},
-		softwareTimerControlBlockSupervisor_{},
+		softwareTimerSupervisor_{},
 		contextSwitchCount_{},
 		tickCount_{}
 {
@@ -290,7 +290,7 @@ bool Scheduler::tickInterruptHandler()
 		runnableList_.sortedSplice(runnableList_, currentThreadControlBlock_);
 	}
 
-	softwareTimerControlBlockSupervisor_.tickInterruptHandler(TickClock::time_point{TickClock::duration{tickCount_}});
+	softwareTimerSupervisor_.tickInterruptHandler(TickClock::time_point{TickClock::duration{tickCount_}});
 
 	return isContextSwitchRequired();
 }

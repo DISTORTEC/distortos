@@ -125,7 +125,7 @@ public:
 
 	SoftwareTimerSupervisor& getSoftwareTimerSupervisor()
 	{
-		return softwareTimerControlBlockSupervisor_;
+		return softwareTimerSupervisor_;
 	}
 
 	/**
@@ -134,7 +134,7 @@ public:
 
 	const SoftwareTimerSupervisor& getSoftwareTimerSupervisor() const
 	{
-		return softwareTimerControlBlockSupervisor_;
+		return softwareTimerSupervisor_;
 	}
 
 	/**
@@ -343,7 +343,7 @@ private:
 	ThreadList suspendedList_;
 
 	/// internal SoftwareTimerSupervisor object
-	SoftwareTimerSupervisor softwareTimerControlBlockSupervisor_;
+	SoftwareTimerSupervisor softwareTimerSupervisor_;
 
 	/// number of context switches
 	uint64_t contextSwitchCount_;
