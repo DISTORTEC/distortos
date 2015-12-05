@@ -38,7 +38,7 @@ using ThreadListAllocator = PoolAllocator<ThreadListValueType, SimpleFeedablePoo
 using ThreadUnsortedList = std::list<ThreadListValueType, ThreadListAllocator>;
 
 /// generic iterator for ThreadControlBlockList
-using ThreadControlBlockListIterator = ThreadUnsortedList::iterator;
+using ThreadListIterator = ThreadUnsortedList::iterator;
 
 }	// namespace internal
 

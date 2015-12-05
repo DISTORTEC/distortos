@@ -85,7 +85,7 @@ public:
 	 * current thread);
 	 */
 
-	int block(ThreadControlBlockList& container, ThreadControlBlockListIterator iterator, ThreadState state,
+	int block(ThreadControlBlockList& container, ThreadListIterator iterator, ThreadState state,
 			const ThreadControlBlock::UnblockFunctor* unblockFunctor = {});
 
 	/**
@@ -202,7 +202,7 @@ public:
 	 * - EINVAL - provided thread is not on "suspended" list;
 	 */
 
-	int resume(ThreadControlBlockListIterator iterator);
+	int resume(ThreadListIterator iterator);
 
 	/**
 	 * \brief Suspends current thread.
@@ -225,7 +225,7 @@ public:
 	 * - EINVAL - provided thread is not on "runnable" list;
 	 */
 
-	int suspend(ThreadControlBlockListIterator iterator);
+	int suspend(ThreadListIterator iterator);
 
 	/**
 	 * \brief Called by architecture-specific code to do final context switch.
@@ -259,7 +259,7 @@ public:
 	 * ThreadControlBlock::UnblockReason::UnblockRequest
 	 */
 
-	void unblock(ThreadControlBlockListIterator iterator,
+	void unblock(ThreadListIterator iterator,
 			ThreadControlBlock::UnblockReason unblockReason = ThreadControlBlock::UnblockReason::UnblockRequest);
 
 	/**
@@ -298,7 +298,7 @@ private:
 	 * - EINVAL - provided thread is not on "runnable" list;
 	 */
 
-	int blockInternal(ThreadControlBlockList& container, ThreadControlBlockListIterator iterator, ThreadState state,
+	int blockInternal(ThreadControlBlockList& container, ThreadListIterator iterator, ThreadState state,
 			const ThreadControlBlock::UnblockFunctor* unblockFunctor);
 
 	/**
@@ -326,10 +326,10 @@ private:
 	 * \param [in] unblockReason is the reason of unblocking of the thread
 	 */
 
-	void unblockInternal(ThreadControlBlockListIterator iterator, ThreadControlBlock::UnblockReason unblockReason);
+	void unblockInternal(ThreadListIterator iterator, ThreadControlBlock::UnblockReason unblockReason);
 
 	/// iterator to the currently active ThreadControlBlock
-	ThreadControlBlockListIterator currentThreadControlBlock_;
+	ThreadListIterator currentThreadControlBlock_;
 
 	/// pool instance used by threadControlBlockListAllocator_
 	ThreadListAllocator::Pool threadControlBlockListAllocatorPool_;

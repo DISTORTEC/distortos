@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-12-04
+ * \date 2015-12-05
  */
 
 #include "distortos/internal/scheduler/Scheduler.hpp"
@@ -140,8 +140,8 @@ int Scheduler::block(ThreadControlBlockList& container, const ThreadState state,
 	return block(container, currentThreadControlBlock_, state, unblockFunctor);
 }
 
-int Scheduler::block(ThreadControlBlockList& container, const ThreadControlBlockListIterator iterator,
-		const ThreadState state, const ThreadControlBlock::UnblockFunctor* const unblockFunctor)
+int Scheduler::block(ThreadControlBlockList& container, const ThreadListIterator iterator, const ThreadState state,
+		const ThreadControlBlock::UnblockFunctor* const unblockFunctor)
 {
 	ThreadControlBlock::UnblockReason unblockReason {};
 	const UnblockReasonUnblockFunctorWrapper unblockReasonUnblockFunctorWrapper {unblockFunctor, unblockReason};
@@ -241,7 +241,7 @@ int Scheduler::remove(void (Thread::*terminationHook)())
 	return 0;
 }
 
-int Scheduler::resume(const ThreadControlBlockListIterator iterator)
+int Scheduler::resume(const ThreadListIterator iterator)
 {
 	architecture::InterruptMaskingLock interruptMaskingLock;
 
@@ -257,7 +257,7 @@ int Scheduler::suspend()
 	return suspend(currentThreadControlBlock_);
 }
 
-int Scheduler::suspend(const ThreadControlBlockListIterator iterator)
+int Scheduler::suspend(const ThreadListIterator iterator)
 {
 	return block(suspendedList_, iterator, ThreadState::Suspended);
 }
@@ -295,8 +295,7 @@ bool Scheduler::tickInterruptHandler()
 	return isContextSwitchRequired();
 }
 
-void Scheduler::unblock(const ThreadControlBlockListIterator iterator,
-		const ThreadControlBlock::UnblockReason unblockReason)
+void Scheduler::unblock(const ThreadListIterator iterator, const ThreadControlBlock::UnblockReason unblockReason)
 {
 	architecture::InterruptMaskingLock interruptMaskingLock;
 
@@ -331,7 +330,7 @@ int Scheduler::addInternal(ThreadControlBlock& threadControlBlock)
 	return 0;
 }
 
-int Scheduler::blockInternal(ThreadControlBlockList& container, const ThreadControlBlockListIterator iterator,
+int Scheduler::blockInternal(ThreadControlBlockList& container, const ThreadListIterator iterator,
 		const ThreadState state, const ThreadControlBlock::UnblockFunctor* const unblockFunctor)
 {
 	auto& threadControlBlock = iterator->get();
@@ -358,7 +357,7 @@ bool Scheduler::isContextSwitchRequired() const
 	return false;
 }
 
-void Scheduler::unblockInternal(const ThreadControlBlockListIterator iterator,
+void Scheduler::unblockInternal(const ThreadListIterator iterator,
 		const ThreadControlBlock::UnblockReason unblockReason)
 {
 	auto& threadControlBlock = iterator->get();

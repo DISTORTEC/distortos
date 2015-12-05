@@ -129,7 +129,7 @@ public:
 	 * \return iterator to the element on the list, valid only when list_ != nullptr
 	 */
 
-	ThreadControlBlockListIterator getIterator() const
+	ThreadListIterator getIterator() const
 	{
 		return iterator_;
 	}
@@ -231,7 +231,7 @@ public:
 	 * \param [in] iterator is an iterator to the element on the list
 	 */
 
-	void setIterator(const ThreadControlBlockListIterator iterator)
+	void setIterator(const ThreadListIterator iterator)
 	{
 		iterator_ = iterator;
 	}
@@ -364,7 +364,7 @@ private:
 	ThreadControlBlockList* list_;
 
 	/// iterator to the element on the list, valid only when list_ != nullptr
-	ThreadControlBlockListIterator iterator_;
+	ThreadListIterator iterator_;
 
 	/// pointer to ThreadGroupControlBlock with which this object is associated
 	ThreadGroupControlBlock* threadGroupControlBlock_;
