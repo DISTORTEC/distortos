@@ -38,7 +38,7 @@ using SoftwareTimerListAllocator = PoolAllocator<SoftwareTimerListValueType, Sim
 using SoftwareTimerUnsortedList = std::list<SoftwareTimerListValueType, SoftwareTimerListAllocator>;
 
 /// generic iterator for SoftwareTimerControlBlockList
-using SoftwareTimerControlBlockListIterator = SoftwareTimerUnsortedList::iterator;
+using SoftwareTimerListIterator = SoftwareTimerUnsortedList::iterator;
 
 }	// namespace internal
 

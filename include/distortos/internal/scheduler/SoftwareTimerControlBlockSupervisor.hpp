@@ -41,7 +41,7 @@ public:
 	 * \return iterator to added SoftwareTimerControlBlock object on the list
 	 */
 
-	SoftwareTimerControlBlockListIterator add(SoftwareTimerControlBlock& softwareTimerControlBlock);
+	SoftwareTimerListIterator add(SoftwareTimerControlBlock& softwareTimerControlBlock);
 
 	/**
 	 * \brief Handler of "tick" interrupt.
