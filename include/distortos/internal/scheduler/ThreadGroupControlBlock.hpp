@@ -34,7 +34,7 @@ public:
 	 */
 
 	constexpr ThreadGroupControlBlock() :
-			threadControlBlockList_{}
+			threadList_{}
 	{
 
 	}
@@ -49,11 +49,11 @@ public:
 
 private:
 
-	/// intrusive list of thread control blocks
+	/// intrusive list of threads (thread control blocks)
 	using List = estd::IntrusiveList<ThreadListNode, &ThreadListNode::threadGroupNode, ThreadControlBlock>;
 
-	/// list of ThreadControlBlock elements in this group
-	List threadControlBlockList_;
+	/// list of threads (thread control blocks) in this group
+	List threadList_;
 };
 
 }	// namespace internal

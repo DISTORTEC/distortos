@@ -27,7 +27,7 @@ namespace internal
 
 void ThreadGroupControlBlock::add(ThreadControlBlock& threadControlBlock)
 {
-	threadControlBlockList_.push_back(threadControlBlock);
+	threadList_.push_back(threadControlBlock);
 }
 
 }	// namespace internal
