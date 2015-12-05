@@ -14,7 +14,7 @@
 #ifndef INCLUDE_DISTORTOS_INTERNAL_SYNCHRONIZATION_MUTEXLIST_HPP_
 #define INCLUDE_DISTORTOS_INTERNAL_SYNCHRONIZATION_MUTEXLIST_HPP_
 
-#include "distortos/internal/synchronization/MutexControlBlockListNode.hpp"
+#include "distortos/internal/synchronization/MutexListNode.hpp"
 
 namespace distortos
 {

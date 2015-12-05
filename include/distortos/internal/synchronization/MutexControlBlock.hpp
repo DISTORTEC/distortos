@@ -16,7 +16,7 @@
 
 #include "distortos/internal/scheduler/ThreadControlBlockList.hpp"
 
-#include "distortos/internal/synchronization/MutexControlBlockListNode.hpp"
+#include "distortos/internal/synchronization/MutexListNode.hpp"
 
 namespace distortos
 {
