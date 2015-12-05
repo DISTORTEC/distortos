@@ -18,7 +18,7 @@
 #include "distortos/internal/scheduler/ThreadControlBlockListNode.hpp"
 #include "distortos/internal/scheduler/ThreadControlBlockList-types.hpp"
 
-#include "distortos/internal/synchronization/MutexControlBlockList.hpp"
+#include "distortos/internal/synchronization/MutexList.hpp"
 
 #include "distortos/architecture/Stack.hpp"
 
