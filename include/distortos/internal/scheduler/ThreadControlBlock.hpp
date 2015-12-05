@@ -153,10 +153,10 @@ public:
 	}
 
 	/**
-	 * \return reference to list of mutex control blocks with enabled priority protocol owned by this thread
+	 * \return reference to list of mutexes (mutex control blocks) with enabled priority protocol owned by this thread
 	 */
 
-	MutexControlBlockList& getOwnedProtocolMutexControlBlocksList()
+	MutexList& getOwnedProtocolMutexControlBlocksList()
 	{
 		return ownedProtocolMutexControlBlocksList_;
 	}
@@ -354,8 +354,8 @@ private:
 	/// reference to Thread object that owns this ThreadControlBlock
 	Thread& owner_;
 
-	/// list of mutex control blocks with enabled priority protocol owned by this thread
-	MutexControlBlockList ownedProtocolMutexControlBlocksList_;
+	/// list of mutexes (mutex control blocks) with enabled priority protocol owned by this thread
+	MutexList ownedProtocolMutexControlBlocksList_;
 
 	/// pointer to MutexControlBlock (with PriorityInheritance protocol) that blocks this thread
 	const MutexControlBlock* priorityInheritanceMutexControlBlock_;

@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-12-04
+ * \date 2015-12-05
  */
 
 #include "distortos/internal/synchronization/MutexControlBlock.hpp"
@@ -184,8 +184,7 @@ void MutexControlBlock::transferLock()
 	if (node.isLinked() == false)
 		return;
 
-	MutexControlBlockList::splice(owner_->getOwnedProtocolMutexControlBlocksList().begin(),
-			MutexControlBlockList::iterator{*this});
+	MutexList::splice(owner_->getOwnedProtocolMutexControlBlocksList().begin(), MutexList::iterator{*this});
 
 	if (protocol_ == Protocol::PriorityInheritance)
 		owner_->setPriorityInheritanceMutexControlBlock(nullptr);

@@ -1,6 +1,6 @@
 /**
  * \file
- * \brief MutexControlBlockList class header
+ * \brief MutexList class header
  *
  * \author Copyright (C) 2014-2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-12-04
+ * \date 2015-12-05
  */
 
 #ifndef INCLUDE_DISTORTOS_INTERNAL_SYNCHRONIZATION_MUTEXCONTROLBLOCKLIST_HPP_
@@ -24,9 +24,8 @@ namespace internal
 
 class MutexControlBlock;
 
-/// intrusive list of mutex control blocks
-using MutexControlBlockList =
-		estd::IntrusiveList<MutexControlBlockListNode, &MutexControlBlockListNode::node, MutexControlBlock>;
+/// intrusive list of mutexes (mutex control blocks)
+using MutexList = estd::IntrusiveList<MutexControlBlockListNode, &MutexControlBlockListNode::node, MutexControlBlock>;
 
 }	// namespace internal
 

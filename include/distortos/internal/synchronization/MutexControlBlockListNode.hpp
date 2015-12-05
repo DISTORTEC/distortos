@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-12-04
+ * \date 2015-12-05
  */
 
 #ifndef INCLUDE_DISTORTOS_INTERNAL_SYNCHRONIZATION_MUTEXCONTROLBLOCKLISTNODE_HPP_
@@ -25,7 +25,7 @@ namespace internal
 /**
  * \brief MutexControlBlockListNode class is a base for MutexControlBlock that serves as a node in intrusive list
  *
- * This class is needed to break circular dependency - MutexControlBlockList is contained in ThreadControlBlock and
+ * This class is needed to break circular dependency - MutexList is contained in ThreadControlBlock and
  * ThreadControlBlockList is contained in MutexControlBlock.
  */
 
