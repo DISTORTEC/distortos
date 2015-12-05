@@ -1,6 +1,6 @@
 /**
  * \file
- * \brief SoftwareTimerControlBlockSupervisor class header
+ * \brief SoftwareTimerSupervisor class header
  *
  * \author Copyright (C) 2014-2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
@@ -22,8 +22,8 @@ namespace distortos
 namespace internal
 {
 
-/// SoftwareTimerControlBlockSupervisor class is a supervisor of SoftwareTimerControlBlock objects
-class SoftwareTimerControlBlockSupervisor
+/// SoftwareTimerSupervisor class is a supervisor of software timers
+class SoftwareTimerSupervisor
 {
 public:
 
@@ -31,7 +31,7 @@ public:
 	 * \brief SoftwareTimerControlBlock's constructor
 	 */
 
-	SoftwareTimerControlBlockSupervisor();
+	SoftwareTimerSupervisor();
 
 	/**
 	 * \brief Adds SoftwareTimerControlBlock to supervisor, effectively starting the software timer.

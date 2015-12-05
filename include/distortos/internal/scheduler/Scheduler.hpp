@@ -120,19 +120,19 @@ public:
 	}
 
 	/**
-	 * \return reference to internal SoftwareTimerControlBlockSupervisor object
+	 * \return reference to internal SoftwareTimerSupervisor object
 	 */
 
-	SoftwareTimerControlBlockSupervisor& getSoftwareTimerSupervisor()
+	SoftwareTimerSupervisor& getSoftwareTimerSupervisor()
 	{
 		return softwareTimerControlBlockSupervisor_;
 	}
 
 	/**
-	 * \return const reference to internal SoftwareTimerControlBlockSupervisor object
+	 * \return const reference to internal SoftwareTimerSupervisor object
 	 */
 
-	const SoftwareTimerControlBlockSupervisor& getSoftwareTimerSupervisor() const
+	const SoftwareTimerSupervisor& getSoftwareTimerSupervisor() const
 	{
 		return softwareTimerControlBlockSupervisor_;
 	}
@@ -342,8 +342,8 @@ private:
 	/// list of ThreadControlBlock elements in "suspended" state, sorted by priority in descending order
 	ThreadList suspendedList_;
 
-	/// internal SoftwareTimerControlBlockSupervisor object
-	SoftwareTimerControlBlockSupervisor softwareTimerControlBlockSupervisor_;
+	/// internal SoftwareTimerSupervisor object
+	SoftwareTimerSupervisor softwareTimerControlBlockSupervisor_;
 
 	/// number of context switches
 	uint64_t contextSwitchCount_;

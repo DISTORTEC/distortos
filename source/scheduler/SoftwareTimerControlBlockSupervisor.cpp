@@ -1,6 +1,6 @@
 /**
  * \file
- * \brief SoftwareTimerControlBlockSupervisor class implementation
+ * \brief SoftwareTimerSupervisor class implementation
  *
  * \author Copyright (C) 2014-2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
@@ -25,7 +25,7 @@ namespace internal
 | public functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-SoftwareTimerControlBlockSupervisor::SoftwareTimerControlBlockSupervisor() :
+SoftwareTimerSupervisor::SoftwareTimerSupervisor() :
 		allocatorPool_{},
 		allocator_{allocatorPool_},
 		activeList_{allocator_}
@@ -33,7 +33,7 @@ SoftwareTimerControlBlockSupervisor::SoftwareTimerControlBlockSupervisor() :
 
 }
 
-SoftwareTimerListIterator SoftwareTimerControlBlockSupervisor::add(SoftwareTimerControlBlock& softwareTimerControlBlock)
+SoftwareTimerListIterator SoftwareTimerSupervisor::add(SoftwareTimerControlBlock& softwareTimerControlBlock)
 {
 	architecture::InterruptMaskingLock interruptMaskingLock;
 
@@ -42,7 +42,7 @@ SoftwareTimerListIterator SoftwareTimerControlBlockSupervisor::add(SoftwareTimer
 	return activeList_.sortedEmplace(softwareTimerControlBlock);
 }
 
-void SoftwareTimerControlBlockSupervisor::tickInterruptHandler(const TickClock::time_point timePoint)
+void SoftwareTimerSupervisor::tickInterruptHandler(const TickClock::time_point timePoint)
 {
 	// execute all software timers that reached their time point
 	for (auto iterator = activeList_.begin();
