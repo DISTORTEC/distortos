@@ -120,6 +120,17 @@ public:
 
 private:
 
+	/**
+	 * \brief Sets time point of expiration
+	 *
+	 * \param [in] timePoint is the new time point of expiration
+	 */
+
+	void setTimePoint(const TickClock::time_point timePoint)
+	{
+		timePoint_ = timePoint;
+	}
+
 	///time point of expiration
 	TickClock::time_point timePoint_;
 
