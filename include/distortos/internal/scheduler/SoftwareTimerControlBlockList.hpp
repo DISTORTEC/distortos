@@ -43,14 +43,14 @@ struct SoftwareTimerAscendingTimePoint
 };
 
 /// base of SoftwareTimerControlBlockList
-using SoftwareTimerControlBlockListBase = SortedContainer<SoftwareTimerUnsortedList, SoftwareTimerAscendingTimePoint>;
+using SoftwareTimerListBase = SortedContainer<SoftwareTimerUnsortedList, SoftwareTimerAscendingTimePoint>;
 
 /// list of SoftwareTimerControlBlock objects in ascending order of expiration time point
-class SoftwareTimerControlBlockList : public SoftwareTimerControlBlockListBase
+class SoftwareTimerControlBlockList : public SoftwareTimerListBase
 {
 public:
 
-	using SoftwareTimerControlBlockListBase::SoftwareTimerControlBlockListBase;
+	using SoftwareTimerListBase::SoftwareTimerListBase;
 };
 
 }	// namespace internal
