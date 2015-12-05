@@ -14,7 +14,7 @@
 #ifndef INCLUDE_DISTORTOS_INTERNAL_SCHEDULER_SOFTWARETIMERCONTROLBLOCKSUPERVISOR_HPP_
 #define INCLUDE_DISTORTOS_INTERNAL_SCHEDULER_SOFTWARETIMERCONTROLBLOCKSUPERVISOR_HPP_
 
-#include "distortos/internal/scheduler/SoftwareTimerControlBlockList.hpp"
+#include "distortos/internal/scheduler/SoftwareTimerList.hpp"
 
 namespace distortos
 {
