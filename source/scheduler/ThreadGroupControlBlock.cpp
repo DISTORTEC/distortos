@@ -25,12 +25,6 @@ namespace internal
 | public functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-ThreadGroupControlBlock::ThreadGroupControlBlock() :
-		threadControlBlockList_{}
-{
-
-}
-
 void ThreadGroupControlBlock::add(ThreadControlBlock& threadControlBlock)
 {
 	threadControlBlockList_.push_back(threadControlBlock);

@@ -33,7 +33,11 @@ public:
 	 * \brief ThreadGroupControlBlock's constructor
 	 */
 
-	ThreadGroupControlBlock();
+	constexpr ThreadGroupControlBlock() :
+			threadControlBlockList_{}
+	{
+
+	}
 
 	/**
 	 * \brief Adds new ThreadControlBlock to internal list of this object.
