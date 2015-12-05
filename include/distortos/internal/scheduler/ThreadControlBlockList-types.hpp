@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-11-27
+ * \date 2015-12-05
  */
 
 #ifndef INCLUDE_DISTORTOS_INTERNAL_SCHEDULER_THREADCONTROLBLOCKLIST_TYPES_HPP_
@@ -29,13 +29,13 @@ namespace internal
 class ThreadControlBlock;
 
 /// type held by ThreadControlBlockList
-using ThreadControlBlockListValueType = std::reference_wrapper<ThreadControlBlock>;
+using ThreadListValueType = std::reference_wrapper<ThreadControlBlock>;
 
 /// type of allocator used by ThreadControlBlockList
-using ThreadControlBlockListAllocator = PoolAllocator<ThreadControlBlockListValueType, SimpleFeedablePool>;
+using ThreadControlBlockListAllocator = PoolAllocator<ThreadListValueType, SimpleFeedablePool>;
 
 /// underlying unsorted container of ThreadControlBlockList
-using ThreadControlBlockUnsortedList = std::list<ThreadControlBlockListValueType, ThreadControlBlockListAllocator>;
+using ThreadControlBlockUnsortedList = std::list<ThreadListValueType, ThreadControlBlockListAllocator>;
 
 /// generic iterator for ThreadControlBlockList
 using ThreadControlBlockListIterator = ThreadControlBlockUnsortedList::iterator;

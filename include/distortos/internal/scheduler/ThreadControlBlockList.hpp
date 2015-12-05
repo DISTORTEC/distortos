@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-12-02
+ * \date 2015-12-05
  */
 
 #ifndef INCLUDE_DISTORTOS_INTERNAL_SCHEDULER_THREADCONTROLBLOCKLIST_HPP_
@@ -36,7 +36,7 @@ struct ThreadControlBlockDescendingEffectivePriority
 	 * \return true if left's effective priority is less than right's effective priority
 	 */
 
-	bool operator()(const ThreadControlBlockListValueType& left, const ThreadControlBlockListValueType& right) const
+	bool operator()(const ThreadListValueType& left, const ThreadListValueType& right) const
 	{
 		return left.get().getEffectivePriority() < right.get().getEffectivePriority();
 	}
