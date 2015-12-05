@@ -32,11 +32,10 @@ class SoftwareTimerControlBlock;
 using SoftwareTimerListValueType = std::reference_wrapper<SoftwareTimerControlBlock>;
 
 /// type of allocator used by SoftwareTimerControlBlockList
-using SoftwareTimerControlBlockListAllocator = PoolAllocator<SoftwareTimerListValueType, SimpleFeedablePool>;
+using SoftwareTimerListAllocator = PoolAllocator<SoftwareTimerListValueType, SimpleFeedablePool>;
 
 /// underlying unsorted container of SoftwareTimerControlBlockList
-using SoftwareTimerControlBlockUnsortedList =
-		std::list<SoftwareTimerListValueType, SoftwareTimerControlBlockListAllocator>;
+using SoftwareTimerControlBlockUnsortedList = std::list<SoftwareTimerListValueType, SoftwareTimerListAllocator>;
 
 /// generic iterator for SoftwareTimerControlBlockList
 using SoftwareTimerControlBlockListIterator = SoftwareTimerControlBlockUnsortedList::iterator;
