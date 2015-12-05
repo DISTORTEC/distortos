@@ -39,7 +39,13 @@ public:
 	 * \param [in] owner is a reference to SoftwareTimer object that owns this SoftwareTimerControlBlock
 	 */
 
-	SoftwareTimerControlBlock(FunctionRunner& functionRunner, SoftwareTimer& owner);
+	constexpr SoftwareTimerControlBlock(FunctionRunner& functionRunner, SoftwareTimer& owner) :
+			SoftwareTimerListNode{},
+			functionRunner_{functionRunner},
+			owner_{owner}
+	{
+
+	}
 
 	/**
 	 * \brief SoftwareTimerControlBlock's destructor

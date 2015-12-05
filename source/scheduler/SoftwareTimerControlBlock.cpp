@@ -28,14 +28,6 @@ namespace internal
 | public functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-SoftwareTimerControlBlock::SoftwareTimerControlBlock(FunctionRunner& functionRunner, SoftwareTimer& owner) :
-		SoftwareTimerListNode{},
-		functionRunner_{functionRunner},
-		owner_{owner}
-{
-
-}
-
 SoftwareTimerControlBlock::~SoftwareTimerControlBlock()
 {
 	stop();
