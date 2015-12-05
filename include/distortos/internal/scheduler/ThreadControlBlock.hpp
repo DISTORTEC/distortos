@@ -16,7 +16,7 @@
 
 #include "distortos/internal/scheduler/RoundRobinQuantum.hpp"
 #include "distortos/internal/scheduler/ThreadControlBlockListNode.hpp"
-#include "distortos/internal/scheduler/ThreadControlBlockList-types.hpp"
+#include "distortos/internal/scheduler/ThreadList-types.hpp"
 
 #include "distortos/internal/synchronization/MutexList.hpp"
 
