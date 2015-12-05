@@ -15,9 +15,6 @@
 #define INCLUDE_DISTORTOS_INTERNAL_SCHEDULER_SOFTWARETIMERCONTROLBLOCK_HPP_
 
 #include "distortos/internal/scheduler/SoftwareTimerListNode.hpp"
-#include "distortos/internal/scheduler/SoftwareTimerList-types.hpp"
-
-#include <array>
 
 namespace distortos
 {
@@ -27,15 +24,10 @@ class SoftwareTimer;
 namespace internal
 {
 
-class SoftwareTimerList;
-
 /// SoftwareTimerControlBlock class is a control block of software timer
 class SoftwareTimerControlBlock : public SoftwareTimerListNode
 {
 public:
-
-	/// type of object used as storage for SoftwareTimerList elements - 3 pointers
-	using Link = std::array<std::aligned_storage<sizeof(void*), alignof(void*)>::type, 3>;
 
 	/// type of runner for software timer's function
 	using FunctionRunner = void(SoftwareTimer&);
@@ -58,21 +50,12 @@ public:
 	~SoftwareTimerControlBlock();
 
 	/**
-	 * \return reference to internal storage for list link
-	 */
-
-	Link& getLink()
-	{
-		return link_;
-	}
-
-	/**
 	 * \return true if the timer is running, false otherwise
 	 */
 
 	bool isRunning() const
 	{
-		return list_ != nullptr;
+		return node.isLinked();
 	}
 
 	/**
@@ -82,17 +65,6 @@ public:
 	 */
 
 	void run() const;
-
-	/**
-	 * \brief Sets the list that has this object.
-	 *
-	 * \param [in] list is a pointer to list that has this object
-	 */
-
-	void setList(SoftwareTimerList* const list)
-	{
-		list_ = list;
-	}
 
 	/**
 	 * \brief Starts the timer.
@@ -110,20 +82,11 @@ public:
 
 private:
 
-	/// storage for list link
-	Link link_;
-
 	/// reference to runner for software timer's function
 	FunctionRunner& functionRunner_;
 
 	/// reference to SoftwareTimer object that owns this SoftwareTimerControlBlock
 	SoftwareTimer& owner_;
-
-	/// pointer to list that has this object
-	SoftwareTimerList* volatile list_;
-
-	/// iterator of this object on the list, valid after it has been added to some list
-	SoftwareTimerListIterator iterator_;
 };
 
 }	// namespace internal

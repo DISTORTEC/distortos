@@ -13,6 +13,8 @@
 
 #include "distortos/internal/scheduler/SoftwareTimerSupervisor.hpp"
 
+#include "distortos/internal/scheduler/SoftwareTimerControlBlock.hpp"
+
 #include "distortos/architecture/InterruptMaskingLock.hpp"
 
 namespace distortos
@@ -26,32 +28,26 @@ namespace internal
 +---------------------------------------------------------------------------------------------------------------------*/
 
 SoftwareTimerSupervisor::SoftwareTimerSupervisor() :
-		allocatorPool_{},
-		allocator_{allocatorPool_},
-		activeList_{allocator_}
+		activeList_{}
 {
 
 }
 
-SoftwareTimerListIterator SoftwareTimerSupervisor::add(SoftwareTimerControlBlock& softwareTimerControlBlock)
+void SoftwareTimerSupervisor::add(SoftwareTimerControlBlock& softwareTimerControlBlock)
 {
 	architecture::InterruptMaskingLock interruptMaskingLock;
 
-	allocatorPool_.feed(softwareTimerControlBlock.getLink());
-	softwareTimerControlBlock.setList(&activeList_);
-	return activeList_.sortedEmplace(softwareTimerControlBlock);
+	activeList_.insert(softwareTimerControlBlock);
 }
 
 void SoftwareTimerSupervisor::tickInterruptHandler(const TickClock::time_point timePoint)
 {
 	// execute all software timers that reached their time point
-	for (auto iterator = activeList_.begin();
-			iterator != activeList_.end() && iterator->get().getTimePoint() <= timePoint;
+	for (auto iterator = activeList_.begin(); iterator != activeList_.end() && iterator->getTimePoint() <= timePoint;
 			iterator = activeList_.begin())
 	{
-		iterator->get().run();
-		iterator->get().setList(nullptr);
-		activeList_.erase(iterator);
+		iterator->run();
+		SoftwareTimerList::erase(iterator);
 	}
 }
 

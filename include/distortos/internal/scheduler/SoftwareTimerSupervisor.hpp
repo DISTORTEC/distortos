@@ -37,11 +37,9 @@ public:
 	 * \brief Adds SoftwareTimerControlBlock to supervisor, effectively starting the software timer.
 	 *
 	 * \param [in] softwareTimerControlBlock is the SoftwareTimerControlBlock being added/started
-	 *
-	 * \return iterator to added SoftwareTimerControlBlock object on the list
 	 */
 
-	SoftwareTimerListIterator add(SoftwareTimerControlBlock& softwareTimerControlBlock);
+	void add(SoftwareTimerControlBlock& softwareTimerControlBlock);
 
 	/**
 	 * \brief Handler of "tick" interrupt.
@@ -54,12 +52,6 @@ public:
 	void tickInterruptHandler(TickClock::time_point timePoint);
 
 private:
-
-	/// pool instance used by allocator_
-	SoftwareTimerListAllocator::Pool allocatorPool_;
-
-	/// PoolAllocator<> of SoftwareTimerList
-	SoftwareTimerListAllocator allocator_;
 
 	/// list of active software timers (waiting for execution)
 	SoftwareTimerList activeList_;

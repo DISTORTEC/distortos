@@ -31,9 +31,7 @@ namespace internal
 SoftwareTimerControlBlock::SoftwareTimerControlBlock(FunctionRunner& functionRunner, SoftwareTimer& owner) :
 		SoftwareTimerListNode{},
 		functionRunner_{functionRunner},
-		owner_{owner},
-		list_{},
-		iterator_{}
+		owner_{owner}
 {
 
 }
@@ -52,18 +50,15 @@ void SoftwareTimerControlBlock::start(const TickClock::time_point timePoint)
 {
 	setTimePoint(timePoint);
 
-	iterator_ = getScheduler().getSoftwareTimerSupervisor().add(*this);
+	getScheduler().getSoftwareTimerSupervisor().add(*this);
 }
 
 void SoftwareTimerControlBlock::stop()
 {
 	architecture::InterruptMaskingLock interruptMaskingLock;
 
-	if (list_ != nullptr)
-	{
-		list_->erase(iterator_);
-		list_ = nullptr;
-	}
+	if (isRunning() == true)
+		node.unlink();
 }
 
 }	// namespace internal

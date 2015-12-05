@@ -16,6 +16,8 @@
 
 #include "distortos/TickClock.hpp"
 
+#include "estd/IntrusiveList.hpp"
+
 namespace distortos
 {
 
@@ -23,7 +25,10 @@ namespace internal
 {
 
 /**
- * \brief SoftwareTimerListNode class is a base for SoftwareTimerControlBlock
+ * \brief SoftwareTimerListNode class is a base for SoftwareTimerControlBlock that serves as a node in intrusive list of
+ * software timers (software timer control blocks)
+ *
+ * This class is needed to break any potential circular dependencies.
  */
 
 class SoftwareTimerListNode
@@ -35,6 +40,7 @@ public:
 	 */
 
 	constexpr SoftwareTimerListNode() :
+			node{},
 			timePoint_{}
 	{
 
@@ -48,6 +54,9 @@ public:
 	{
 		return timePoint_;
 	}
+
+	/// node for intrusive list
+	estd::IntrusiveListNode node;
 
 protected:
 

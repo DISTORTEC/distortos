@@ -14,9 +14,9 @@
 #ifndef INCLUDE_DISTORTOS_INTERNAL_SCHEDULER_SOFTWARETIMERLIST_HPP_
 #define INCLUDE_DISTORTOS_INTERNAL_SCHEDULER_SOFTWARETIMERLIST_HPP_
 
-#include "distortos/internal/containers/SortedContainer.hpp"
+#include "distortos/internal/scheduler/SoftwareTimerListNode.hpp"
 
-#include "distortos/internal/scheduler/SoftwareTimerControlBlock.hpp"
+#include "estd/SortedIntrusiveList.hpp"
 
 namespace distortos
 {
@@ -24,9 +24,20 @@ namespace distortos
 namespace internal
 {
 
+class SoftwareTimerControlBlock;
+
 /// functor which gives ascending expiration time point order of elements on the list
 struct SoftwareTimerAscendingTimePoint
 {
+	/**
+	 * \brief SoftwareTimerAscendingTimePoint's constructor
+	 */
+
+	constexpr SoftwareTimerAscendingTimePoint()
+	{
+
+	}
+
 	/**
 	 * \brief SoftwareTimerAscendingTimePoint's function call operator
 	 *
@@ -36,22 +47,15 @@ struct SoftwareTimerAscendingTimePoint
 	 * \return true if left's expiration time point is greater than right's expiration time point
 	 */
 
-	bool operator()(const SoftwareTimerListValueType& left, const SoftwareTimerListValueType& right) const
+	bool operator()(const SoftwareTimerListNode& left, const SoftwareTimerListNode& right) const
 	{
-		return left.get().getTimePoint() > right.get().getTimePoint();
+		return left.getTimePoint() > right.getTimePoint();
 	}
 };
 
-/// base of SoftwareTimerList
-using SoftwareTimerListBase = SortedContainer<SoftwareTimerUnsortedList, SoftwareTimerAscendingTimePoint>;
-
-/// list of SoftwareTimerControlBlock objects in ascending order of expiration time point
-class SoftwareTimerList : public SoftwareTimerListBase
-{
-public:
-
-	using SoftwareTimerListBase::SoftwareTimerListBase;
-};
+/// sorted intrusive list of software timers (software timer control blocks)
+using SoftwareTimerList = estd::SortedIntrusiveList<SoftwareTimerAscendingTimePoint, SoftwareTimerListNode,
+		&SoftwareTimerListNode::node, SoftwareTimerControlBlock>;
 
 }	// namespace internal
 
