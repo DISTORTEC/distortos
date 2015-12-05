@@ -11,7 +11,7 @@
  * \date 2015-12-05
  */
 
-#include "distortos/internal/scheduler/SoftwareTimerControlBlockSupervisor.hpp"
+#include "distortos/internal/scheduler/SoftwareTimerSupervisor.hpp"
 
 #include "distortos/architecture/InterruptMaskingLock.hpp"
 

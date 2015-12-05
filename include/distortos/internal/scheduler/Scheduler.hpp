@@ -15,7 +15,7 @@
 #define INCLUDE_DISTORTOS_INTERNAL_SCHEDULER_SCHEDULER_HPP_
 
 #include "distortos/internal/scheduler/ThreadList.hpp"
-#include "distortos/internal/scheduler/SoftwareTimerControlBlockSupervisor.hpp"
+#include "distortos/internal/scheduler/SoftwareTimerSupervisor.hpp"
 
 namespace distortos
 {
