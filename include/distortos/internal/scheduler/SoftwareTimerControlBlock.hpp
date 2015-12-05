@@ -14,9 +14,8 @@
 #ifndef INCLUDE_DISTORTOS_INTERNAL_SCHEDULER_SOFTWARETIMERCONTROLBLOCK_HPP_
 #define INCLUDE_DISTORTOS_INTERNAL_SCHEDULER_SOFTWARETIMERCONTROLBLOCK_HPP_
 
+#include "distortos/internal/scheduler/SoftwareTimerListNode.hpp"
 #include "distortos/internal/scheduler/SoftwareTimerList-types.hpp"
-
-#include "distortos/TickClock.hpp"
 
 #include <array>
 
@@ -31,7 +30,7 @@ namespace internal
 class SoftwareTimerList;
 
 /// SoftwareTimerControlBlock class is a control block of software timer
-class SoftwareTimerControlBlock
+class SoftwareTimerControlBlock : public SoftwareTimerListNode
 {
 public:
 
@@ -65,15 +64,6 @@ public:
 	Link& getLink()
 	{
 		return link_;
-	}
-
-	/**
-	 * \return const reference to expiration time point
-	 */
-
-	const TickClock::time_point& getTimePoint() const
-	{
-		return timePoint_;
 	}
 
 	/**
@@ -119,20 +109,6 @@ public:
 	void stop();
 
 private:
-
-	/**
-	 * \brief Sets time point of expiration
-	 *
-	 * \param [in] timePoint is the new time point of expiration
-	 */
-
-	void setTimePoint(const TickClock::time_point timePoint)
-	{
-		timePoint_ = timePoint;
-	}
-
-	///time point of expiration
-	TickClock::time_point timePoint_;
 
 	/// storage for list link
 	Link link_;

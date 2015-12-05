@@ -29,7 +29,7 @@ namespace internal
 +---------------------------------------------------------------------------------------------------------------------*/
 
 SoftwareTimerControlBlock::SoftwareTimerControlBlock(FunctionRunner& functionRunner, SoftwareTimer& owner) :
-		timePoint_{},
+		SoftwareTimerListNode{},
 		functionRunner_{functionRunner},
 		owner_{owner},
 		list_{},
