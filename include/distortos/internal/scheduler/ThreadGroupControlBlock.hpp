@@ -8,19 +8,21 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-11-27
+ * \date 2015-12-05
  */
 
 #ifndef INCLUDE_DISTORTOS_INTERNAL_SCHEDULER_THREADGROUPCONTROLBLOCK_HPP_
 #define INCLUDE_DISTORTOS_INTERNAL_SCHEDULER_THREADGROUPCONTROLBLOCK_HPP_
 
-#include "distortos/internal/scheduler/ThreadControlBlockList-types.hpp"
+#include "distortos/internal/scheduler/ThreadControlBlockListNode.hpp"
 
 namespace distortos
 {
 
 namespace internal
 {
+
+class ThreadControlBlock;
 
 /// ThreadGroupControlBlock class is a control block for ThreadGroup
 class ThreadGroupControlBlock
@@ -37,23 +39,18 @@ public:
 	 * \brief Adds new ThreadControlBlock to internal list of this object.
 	 *
 	 * \param [in] threadControlBlock is a reference to added ThreadControlBlock object
-	 *
-	 * \return pair with reference to list to which \a threadControlBlock was added and iterator to added element
 	 */
 
-	std::pair<ThreadControlBlockUnsortedList&, ThreadControlBlockListIterator>
-	add(ThreadControlBlock& threadControlBlock);
+	void add(ThreadControlBlock& threadControlBlock);
 
 private:
 
-	/// pool instance used by threadControlBlockListAllocator_
-	ThreadControlBlockListAllocator::Pool threadControlBlockListAllocatorPool_;
-
-	/// PoolAllocator<> of ThreadControlBlockList
-	ThreadControlBlockListAllocator threadControlBlockListAllocator_;
+	/// intrusive list of thread control blocks
+	using List = estd::IntrusiveList<ThreadControlBlockListNode, &ThreadControlBlockListNode::threadGroupNode,
+			ThreadControlBlock>;
 
 	/// list of ThreadControlBlock elements in this group
-	ThreadControlBlockUnsortedList threadControlBlockList_;
+	List threadControlBlockList_;
 };
 
 }	// namespace internal

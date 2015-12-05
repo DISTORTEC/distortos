@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-11-27
+ * \date 2015-12-05
  */
 
 #include "distortos/internal/scheduler/ThreadGroupControlBlock.hpp"
@@ -26,19 +26,14 @@ namespace internal
 +---------------------------------------------------------------------------------------------------------------------*/
 
 ThreadGroupControlBlock::ThreadGroupControlBlock() :
-		threadControlBlockListAllocatorPool_{},
-		threadControlBlockListAllocator_{threadControlBlockListAllocatorPool_},
-		threadControlBlockList_{threadControlBlockListAllocator_}
+		threadControlBlockList_{}
 {
 
 }
 
-std::pair<ThreadControlBlockUnsortedList&, ThreadControlBlockListIterator>
-ThreadGroupControlBlock::add(ThreadControlBlock& threadControlBlock)
+void ThreadGroupControlBlock::add(ThreadControlBlock& threadControlBlock)
 {
-	threadControlBlockListAllocatorPool_.feed(threadControlBlock.getThreadGroupLink());
-	const auto iterator = threadControlBlockList_.emplace(threadControlBlockList_.end(), threadControlBlock);
-	return {threadControlBlockList_, iterator};
+	threadControlBlockList_.push_back(threadControlBlock);
 }
 
 }	// namespace internal

@@ -8,13 +8,14 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-12-04
+ * \date 2015-12-05
  */
 
 #ifndef INCLUDE_DISTORTOS_INTERNAL_SCHEDULER_THREADCONTROLBLOCK_HPP_
 #define INCLUDE_DISTORTOS_INTERNAL_SCHEDULER_THREADCONTROLBLOCK_HPP_
 
 #include "distortos/internal/scheduler/RoundRobinQuantum.hpp"
+#include "distortos/internal/scheduler/ThreadControlBlockListNode.hpp"
 #include "distortos/internal/scheduler/ThreadControlBlockList-types.hpp"
 
 #include "distortos/internal/synchronization/MutexControlBlockList.hpp"
@@ -39,7 +40,7 @@ class ThreadControlBlockList;
 class ThreadGroupControlBlock;
 
 /// ThreadControlBlock class is a simple description of a Thread
-class ThreadControlBlock
+class ThreadControlBlock : public ThreadControlBlockListNode
 {
 public:
 
@@ -225,15 +226,6 @@ public:
 	}
 
 	/**
-	 * \return reference to internal storage for thread group list link
-	 */
-
-	Link& getThreadGroupLink()
-	{
-		return threadGroupLink_;
-	}
-
-	/**
 	 * \brief Sets the iterator to the element on the list.
 	 *
 	 * \param [in] iterator is an iterator to the element on the list
@@ -359,9 +351,6 @@ private:
 	/// storage for list link
 	Link link_;
 
-	/// storage for thread group list link
-	Link threadGroupLink_;
-
 	/// reference to Thread object that owns this ThreadControlBlock
 	Thread& owner_;
 
@@ -379,12 +368,6 @@ private:
 
 	/// pointer to ThreadGroupControlBlock with which this object is associated
 	ThreadGroupControlBlock* threadGroupControlBlock_;
-
-	/// pointer to ThreadGroupControlBlock's list that has this object
-	ThreadControlBlockUnsortedList* threadGroupList_;
-
-	/// iterator to the element on the ThreadGroupControlBlock's list, valid only when threadGroupList_ != nullptr
-	ThreadControlBlockListIterator threadGroupIterator_;
 
 	/// functor executed in unblockHook()
 	const UnblockFunctor* unblockFunctor_;
