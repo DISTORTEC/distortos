@@ -14,7 +14,7 @@
 #ifndef INCLUDE_DISTORTOS_INTERNAL_SCHEDULER_SOFTWARETIMERCONTROLBLOCK_HPP_
 #define INCLUDE_DISTORTOS_INTERNAL_SCHEDULER_SOFTWARETIMERCONTROLBLOCK_HPP_
 
-#include "distortos/internal/scheduler/SoftwareTimerControlBlockList-types.hpp"
+#include "distortos/internal/scheduler/SoftwareTimerList-types.hpp"
 
 #include "distortos/TickClock.hpp"
 
