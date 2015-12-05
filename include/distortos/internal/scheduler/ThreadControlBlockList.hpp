@@ -25,10 +25,10 @@ namespace internal
 {
 
 /// functor which gives descending effective priority order of elements on the list
-struct ThreadControlBlockDescendingEffectivePriority
+struct ThreadDescendingEffectivePriority
 {
 	/**
-	 * \brief ThreadControlBlockDescendingEffectivePriority's function call operator
+	 * \brief ThreadDescendingEffectivePriority's function call operator
 	 *
 	 * \param [in] left is the object on the left side of comparison
 	 * \param [in] right is the object on the right side of comparison
@@ -43,7 +43,7 @@ struct ThreadControlBlockDescendingEffectivePriority
 };
 
 /// base of ThreadControlBlockList
-using ThreadControlBlockListBase = SortedContainer<ThreadUnsortedList, ThreadControlBlockDescendingEffectivePriority>;
+using ThreadControlBlockListBase = SortedContainer<ThreadUnsortedList, ThreadDescendingEffectivePriority>;
 
 /// List of ThreadControlBlock objects in descending order of effective priority that configures state of kept objects
 class ThreadControlBlockList : public ThreadControlBlockListBase
