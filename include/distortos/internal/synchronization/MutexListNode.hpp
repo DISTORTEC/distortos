@@ -26,8 +26,8 @@ namespace internal
  * \brief MutexListNode class is a base for MutexControlBlock that serves as a node in intrusive list of mutexes (mutex
  * control blocks)
  *
- * This class is needed to break circular dependency - MutexList is contained in ThreadControlBlock and
- * ThreadControlBlockList is contained in MutexControlBlock.
+ * This class is needed to break circular dependency - MutexList is contained in ThreadControlBlock and ThreadList is
+ * contained in MutexControlBlock.
  */
 
 class MutexListNode

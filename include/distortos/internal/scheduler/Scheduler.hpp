@@ -63,8 +63,7 @@ public:
 	 * - ETIMEDOUT - thread was unblocked with ThreadControlBlock::UnblockReason::Timeout;
 	 */
 
-	int block(ThreadControlBlockList& container, ThreadState state,
-			const ThreadControlBlock::UnblockFunctor* unblockFunctor = {});
+	int block(ThreadList& container, ThreadState state, const ThreadControlBlock::UnblockFunctor* unblockFunctor = {});
 
 	/**
 	 * \brief Blocks thread, transferring it to provided container.
@@ -85,7 +84,7 @@ public:
 	 * current thread);
 	 */
 
-	int block(ThreadControlBlockList& container, ThreadListIterator iterator, ThreadState state,
+	int block(ThreadList& container, ThreadListIterator iterator, ThreadState state,
 			const ThreadControlBlock::UnblockFunctor* unblockFunctor = {});
 
 	/**
@@ -102,7 +101,7 @@ public:
 	 * - ETIMEDOUT - thread was unblocked because timePoint was reached;
 	 */
 
-	int blockUntil(ThreadControlBlockList& container, ThreadState state, TickClock::time_point timePoint,
+	int blockUntil(ThreadList& container, ThreadState state, TickClock::time_point timePoint,
 			const ThreadControlBlock::UnblockFunctor* unblockFunctor = {});
 
 	/**
@@ -298,7 +297,7 @@ private:
 	 * - EINVAL - provided thread is not on "runnable" list;
 	 */
 
-	int blockInternal(ThreadControlBlockList& container, ThreadListIterator iterator, ThreadState state,
+	int blockInternal(ThreadList& container, ThreadListIterator iterator, ThreadState state,
 			const ThreadControlBlock::UnblockFunctor* unblockFunctor);
 
 	/**
@@ -334,14 +333,14 @@ private:
 	/// pool instance used by threadControlBlockListAllocator_
 	ThreadListAllocator::Pool threadControlBlockListAllocatorPool_;
 
-	/// PoolAllocator<> of ThreadControlBlockList
+	/// PoolAllocator<> of ThreadList
 	ThreadListAllocator threadControlBlockListAllocator_;
 
 	/// list of ThreadControlBlock elements in "runnable" state, sorted by priority in descending order
-	ThreadControlBlockList runnableList_;
+	ThreadList runnableList_;
 
 	/// list of ThreadControlBlock elements in "suspended" state, sorted by priority in descending order
-	ThreadControlBlockList suspendedList_;
+	ThreadList suspendedList_;
 
 	/// internal SoftwareTimerControlBlockSupervisor object
 	SoftwareTimerControlBlockSupervisor softwareTimerControlBlockSupervisor_;

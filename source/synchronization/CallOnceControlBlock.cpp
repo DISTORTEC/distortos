@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-12-02
+ * \date 2015-12-05
  */
 
 #include "distortos/internal/synchronization/CallOnceControlBlock.hpp"
@@ -44,7 +44,7 @@ void CallOnceControlBlock::callOnceImplementation(const Functor& functor)
 		return;
 	}
 
-	ThreadControlBlockList blockedList {getScheduler().getThreadControlBlockListAllocator()};
+	ThreadList blockedList {getScheduler().getThreadControlBlockListAllocator()};
 	blockedList_ = &blockedList;
 
 	functor();

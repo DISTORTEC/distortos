@@ -134,13 +134,13 @@ int Scheduler::add(ThreadControlBlock& threadControlBlock)
 	return 0;
 }
 
-int Scheduler::block(ThreadControlBlockList& container, const ThreadState state,
+int Scheduler::block(ThreadList& container, const ThreadState state,
 		const ThreadControlBlock::UnblockFunctor* const unblockFunctor)
 {
 	return block(container, currentThreadControlBlock_, state, unblockFunctor);
 }
 
-int Scheduler::block(ThreadControlBlockList& container, const ThreadListIterator iterator, const ThreadState state,
+int Scheduler::block(ThreadList& container, const ThreadListIterator iterator, const ThreadState state,
 		const ThreadControlBlock::UnblockFunctor* const unblockFunctor)
 {
 	ThreadControlBlock::UnblockReason unblockReason {};
@@ -166,8 +166,8 @@ int Scheduler::block(ThreadControlBlockList& container, const ThreadListIterator
 			unblockReason == ThreadControlBlock::UnblockReason::Timeout ? ETIMEDOUT : EINTR;
 }
 
-int Scheduler::blockUntil(ThreadControlBlockList& container, const ThreadState state,
-		const TickClock::time_point timePoint, const ThreadControlBlock::UnblockFunctor* const unblockFunctor)
+int Scheduler::blockUntil(ThreadList& container, const ThreadState state, const TickClock::time_point timePoint,
+		const ThreadControlBlock::UnblockFunctor* const unblockFunctor)
 {
 	architecture::InterruptMaskingLock interruptMaskingLock;
 
@@ -226,7 +226,7 @@ int Scheduler::remove(void (Thread::*terminationHook)())
 {
 	{
 		architecture::InterruptMaskingLock interruptMaskingLock;
-		ThreadControlBlockList terminatedList {threadControlBlockListAllocator_};
+		ThreadList terminatedList {threadControlBlockListAllocator_};
 
 		const auto ret = blockInternal(terminatedList, currentThreadControlBlock_, ThreadState::Terminated, {});
 		if (ret != 0)
@@ -330,8 +330,8 @@ int Scheduler::addInternal(ThreadControlBlock& threadControlBlock)
 	return 0;
 }
 
-int Scheduler::blockInternal(ThreadControlBlockList& container, const ThreadListIterator iterator,
-		const ThreadState state, const ThreadControlBlock::UnblockFunctor* const unblockFunctor)
+int Scheduler::blockInternal(ThreadList& container, const ThreadListIterator iterator, const ThreadState state,
+		const ThreadControlBlock::UnblockFunctor* const unblockFunctor)
 {
 	auto& threadControlBlock = iterator->get();
 

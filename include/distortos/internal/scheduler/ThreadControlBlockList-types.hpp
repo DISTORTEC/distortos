@@ -1,6 +1,6 @@
 /**
  * \file
- * \brief Types used by ThreadControlBlockList
+ * \brief Types used by ThreadList
  *
  * \author Copyright (C) 2014-2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
@@ -28,16 +28,16 @@ namespace internal
 
 class ThreadControlBlock;
 
-/// type held by ThreadControlBlockList
+/// type held by ThreadList
 using ThreadListValueType = std::reference_wrapper<ThreadControlBlock>;
 
-/// type of allocator used by ThreadControlBlockList
+/// type of allocator used by ThreadList
 using ThreadListAllocator = PoolAllocator<ThreadListValueType, SimpleFeedablePool>;
 
-/// underlying unsorted container of ThreadControlBlockList
+/// underlying unsorted container of ThreadList
 using ThreadUnsortedList = std::list<ThreadListValueType, ThreadListAllocator>;
 
-/// generic iterator for ThreadControlBlockList
+/// generic iterator for ThreadList
 using ThreadListIterator = ThreadUnsortedList::iterator;
 
 }	// namespace internal

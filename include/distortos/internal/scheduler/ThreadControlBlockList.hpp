@@ -1,6 +1,6 @@
 /**
  * \file
- * \brief ThreadControlBlockList class header
+ * \brief ThreadList class header
  *
  * \author Copyright (C) 2014-2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
@@ -42,24 +42,24 @@ struct ThreadDescendingEffectivePriority
 	}
 };
 
-/// base of ThreadControlBlockList
+/// base of ThreadList
 using ThreadListBase = SortedContainer<ThreadUnsortedList, ThreadDescendingEffectivePriority>;
 
 /// List of ThreadControlBlock objects in descending order of effective priority that configures state of kept objects
-class ThreadControlBlockList : public ThreadListBase
+class ThreadList : public ThreadListBase
 {
 public:
 
-	/// base of ThreadControlBlockList
+	/// base of ThreadList
 	using Base = ThreadListBase;
 
 	using Base::Base;
 
 	/**
-	 * \brief ThreadControlBlockList's destructor
+	 * \brief ThreadList's destructor
 	 */
 
-	~ThreadControlBlockList();
+	~ThreadList();
 
 	/**
 	 * \brief Wrapper for sortedSplice()
@@ -68,7 +68,7 @@ public:
 	 * \param [in] otherPosition is the position of the transfered object in the other container
 	 */
 
-	void sortedSplice(ThreadControlBlockList& other, iterator otherPosition);
+	void sortedSplice(ThreadList& other, iterator otherPosition);
 };
 
 }	// namespace internal

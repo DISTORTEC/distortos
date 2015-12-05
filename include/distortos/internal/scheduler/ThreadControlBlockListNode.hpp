@@ -25,8 +25,8 @@ namespace internal
 /**
  * \brief ThreadControlBlockListNode class is a base for ThreadControlBlock that provides nodes for intrusive lists
  *
- * This class is needed to break circular dependency - MutexList is contained in ThreadControlBlock and
- * ThreadControlBlockList is contained in MutexControlBlock.
+ * This class is needed to break circular dependency - MutexList is contained in ThreadControlBlock and ThreadList is
+ * contained in MutexControlBlock.
  */
 
 class ThreadControlBlockListNode

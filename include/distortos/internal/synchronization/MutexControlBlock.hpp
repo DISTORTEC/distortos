@@ -157,7 +157,7 @@ private:
 	void unlock();
 
 	/// ThreadControlBlock objects blocked on mutex
-	ThreadControlBlockList blockedList_;
+	ThreadList blockedList_;
 
 	/// owner of the mutex
 	ThreadControlBlock* owner_;

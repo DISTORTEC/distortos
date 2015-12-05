@@ -36,7 +36,7 @@ namespace internal
 {
 
 class SignalsReceiverControlBlock;
-class ThreadControlBlockList;
+class ThreadList;
 class ThreadGroupControlBlock;
 
 /// ThreadControlBlock class is a simple description of a Thread
@@ -55,7 +55,7 @@ public:
 		Signal,
 	};
 
-	/// type of object used as storage for ThreadControlBlockList elements - 3 pointers
+	/// type of object used as storage for ThreadList elements - 3 pointers
 	using Link = std::array<std::aligned_storage<sizeof(void*), alignof(void*)>::type, 3>;
 
 	/// UnblockFunctor is a functor executed when unblocking the thread, it receives two parameter - a reference to
@@ -147,7 +147,7 @@ public:
 	 * \return pointer to list that has this object
 	 */
 
-	ThreadControlBlockList* getList() const
+	ThreadList* getList() const
 	{
 		return list_;
 	}
@@ -242,7 +242,7 @@ public:
 	 * \param [in] list is a pointer to list that has this object
 	 */
 
-	void setList(ThreadControlBlockList* const list)
+	void setList(ThreadList* const list)
 	{
 		list_ = list;
 	}
@@ -361,7 +361,7 @@ private:
 	const MutexControlBlock* priorityInheritanceMutexControlBlock_;
 
 	/// pointer to list that has this object
-	ThreadControlBlockList* list_;
+	ThreadList* list_;
 
 	/// iterator to the element on the list, valid only when list_ != nullptr
 	ThreadListIterator iterator_;

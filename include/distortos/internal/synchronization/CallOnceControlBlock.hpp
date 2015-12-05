@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-12-02
+ * \date 2015-12-05
  */
 
 #ifndef INCLUDE_DISTORTOS_INTERNAL_SYNCHRONIZATION_CALLONCECONTROLBLOCK_HPP_
@@ -31,7 +31,7 @@ namespace distortos
 namespace internal
 {
 
-class ThreadControlBlockList;
+class ThreadList;
 
 /// CallOnceControlBlock class implements functionality of OnceFlag class and callOnce()
 /// \note This class requires GCC 4.9.
@@ -145,7 +145,7 @@ private:
 	void callOnceImplementation(const Functor& functor);
 
 	/// pointer to stack-allocated list of ThreadControlBlock objects blocked on associated OnceFlag
-	ThreadControlBlockList* blockedList_;
+	ThreadList* blockedList_;
 
 	/// tells whether any function was already called for this object (true) or not (false)
 	bool done_;
