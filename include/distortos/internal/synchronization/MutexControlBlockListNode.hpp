@@ -1,6 +1,6 @@
 /**
  * \file
- * \brief MutexControlBlockListNode class header
+ * \brief MutexListNode class header
  *
  * \author Copyright (C) 2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
@@ -23,21 +23,22 @@ namespace internal
 {
 
 /**
- * \brief MutexControlBlockListNode class is a base for MutexControlBlock that serves as a node in intrusive list
+ * \brief MutexListNode class is a base for MutexControlBlock that serves as a node in intrusive list of mutexes (mutex
+ * control blocks)
  *
  * This class is needed to break circular dependency - MutexList is contained in ThreadControlBlock and
  * ThreadControlBlockList is contained in MutexControlBlock.
  */
 
-class MutexControlBlockListNode
+class MutexListNode
 {
 public:
 
 	/**
-	 * \brief MutexControlBlockListNode's constructor
+	 * \brief MutexListNode's constructor
 	 */
 
-	constexpr MutexControlBlockListNode() :
+	constexpr MutexListNode() :
 			node{}
 	{
 

@@ -25,7 +25,7 @@ namespace internal
 class MutexControlBlock;
 
 /// intrusive list of mutexes (mutex control blocks)
-using MutexList = estd::IntrusiveList<MutexControlBlockListNode, &MutexControlBlockListNode::node, MutexControlBlock>;
+using MutexList = estd::IntrusiveList<MutexListNode, &MutexListNode::node, MutexControlBlock>;
 
 }	// namespace internal
 
