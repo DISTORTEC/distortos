@@ -28,11 +28,6 @@ namespace internal
 | public functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-void SoftwareTimerControlBlock::run() const
-{
-	functionRunner_(owner_);
-}
-
 void SoftwareTimerControlBlock::start(const TickClock::time_point timePoint)
 {
 	setTimePoint(timePoint);
