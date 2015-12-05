@@ -158,7 +158,7 @@ public:
 
 	MutexList& getOwnedProtocolMutexControlBlocksList()
 	{
-		return ownedProtocolMutexControlBlocksList_;
+		return ownedProtocolMutexList_;
 	}
 
 	/**
@@ -355,7 +355,7 @@ private:
 	Thread& owner_;
 
 	/// list of mutexes (mutex control blocks) with enabled priority protocol owned by this thread
-	MutexList ownedProtocolMutexControlBlocksList_;
+	MutexList ownedProtocolMutexList_;
 
 	/// pointer to MutexControlBlock (with PriorityInheritance protocol) that blocks this thread
 	const MutexControlBlock* priorityInheritanceMutexControlBlock_;

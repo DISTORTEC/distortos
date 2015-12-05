@@ -42,7 +42,7 @@ ThreadControlBlock::ThreadControlBlock(architecture::Stack&& stack, const uint8_
 		ThreadControlBlockListNode{},
 		stack_{std::move(stack)},
 		owner_{owner},
-		ownedProtocolMutexControlBlocksList_{},
+		ownedProtocolMutexList_{},
 		priorityInheritanceMutexControlBlock_{},
 		list_{},
 		iterator_{},
@@ -125,7 +125,7 @@ void ThreadControlBlock::updateBoostedPriority(const uint8_t boostedPriority)
 {
 	decltype(boostedPriority_) newBoostedPriority {boostedPriority};
 
-	for (const auto& mutexControlBlock : ownedProtocolMutexControlBlocksList_)
+	for (const auto& mutexControlBlock : ownedProtocolMutexList_)
 	{
 		const auto mutexBoostedPriority = mutexControlBlock.getBoostedPriority();
 		newBoostedPriority = std::max(newBoostedPriority, mutexBoostedPriority);
