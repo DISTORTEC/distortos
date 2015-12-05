@@ -136,7 +136,7 @@ void MutexControlBlock::lock()
 	if (protocol_ == Protocol::None)
 		return;
 
-	owner_->getOwnedProtocolMutexControlBlocksList().push_front(*this);
+	owner_->getOwnedProtocolMutexList().push_front(*this);
 
 	if (protocol_ == Protocol::PriorityProtect)
 		owner_->updateBoostedPriority();
@@ -184,7 +184,7 @@ void MutexControlBlock::transferLock()
 	if (node.isLinked() == false)
 		return;
 
-	MutexList::splice(owner_->getOwnedProtocolMutexControlBlocksList().begin(), MutexList::iterator{*this});
+	MutexList::splice(owner_->getOwnedProtocolMutexList().begin(), MutexList::iterator{*this});
 
 	if (protocol_ == Protocol::PriorityInheritance)
 		owner_->setPriorityInheritanceMutexControlBlock(nullptr);

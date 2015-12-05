@@ -156,7 +156,7 @@ public:
 	 * \return reference to list of mutexes (mutex control blocks) with enabled priority protocol owned by this thread
 	 */
 
-	MutexList& getOwnedProtocolMutexControlBlocksList()
+	MutexList& getOwnedProtocolMutexList()
 	{
 		return ownedProtocolMutexList_;
 	}
