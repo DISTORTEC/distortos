@@ -14,7 +14,7 @@
 #ifndef INCLUDE_DISTORTOS_INTERNAL_SCHEDULER_THREADGROUPCONTROLBLOCK_HPP_
 #define INCLUDE_DISTORTOS_INTERNAL_SCHEDULER_THREADGROUPCONTROLBLOCK_HPP_
 
-#include "distortos/internal/scheduler/ThreadControlBlockListNode.hpp"
+#include "distortos/internal/scheduler/ThreadListNode.hpp"
 
 namespace distortos
 {
