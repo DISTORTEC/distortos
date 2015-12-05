@@ -1,6 +1,6 @@
 /**
  * \file
- * \brief Types used by SoftwareTimerControlBlockList
+ * \brief Types used by SoftwareTimerList
  *
  * \author Copyright (C) 2014-2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
@@ -28,16 +28,16 @@ namespace internal
 
 class SoftwareTimerControlBlock;
 
-/// type held by SoftwareTimerControlBlockList
+/// type held by SoftwareTimerList
 using SoftwareTimerListValueType = std::reference_wrapper<SoftwareTimerControlBlock>;
 
-/// type of allocator used by SoftwareTimerControlBlockList
+/// type of allocator used by SoftwareTimerList
 using SoftwareTimerListAllocator = PoolAllocator<SoftwareTimerListValueType, SimpleFeedablePool>;
 
-/// underlying unsorted container of SoftwareTimerControlBlockList
+/// underlying unsorted container of SoftwareTimerList
 using SoftwareTimerUnsortedList = std::list<SoftwareTimerListValueType, SoftwareTimerListAllocator>;
 
-/// generic iterator for SoftwareTimerControlBlockList
+/// generic iterator for SoftwareTimerList
 using SoftwareTimerListIterator = SoftwareTimerUnsortedList::iterator;
 
 }	// namespace internal

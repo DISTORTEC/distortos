@@ -28,14 +28,14 @@ class SoftwareTimer;
 namespace internal
 {
 
-class SoftwareTimerControlBlockList;
+class SoftwareTimerList;
 
 /// SoftwareTimerControlBlock class is a control block of software timer
 class SoftwareTimerControlBlock
 {
 public:
 
-	/// type of object used as storage for SoftwareTimerControlBlockList elements - 3 pointers
+	/// type of object used as storage for SoftwareTimerList elements - 3 pointers
 	using Link = std::array<std::aligned_storage<sizeof(void*), alignof(void*)>::type, 3>;
 
 	/// type of runner for software timer's function
@@ -99,7 +99,7 @@ public:
 	 * \param [in] list is a pointer to list that has this object
 	 */
 
-	void setList(SoftwareTimerControlBlockList* const list)
+	void setList(SoftwareTimerList* const list)
 	{
 		list_ = list;
 	}
@@ -133,7 +133,7 @@ private:
 	SoftwareTimer& owner_;
 
 	/// pointer to list that has this object
-	SoftwareTimerControlBlockList* volatile list_;
+	SoftwareTimerList* volatile list_;
 
 	/// iterator of this object on the list, valid after it has been added to some list
 	SoftwareTimerListIterator iterator_;

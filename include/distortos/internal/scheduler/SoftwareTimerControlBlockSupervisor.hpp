@@ -58,11 +58,11 @@ private:
 	/// pool instance used by allocator_
 	SoftwareTimerListAllocator::Pool allocatorPool_;
 
-	/// PoolAllocator<> of SoftwareTimerControlBlockList
+	/// PoolAllocator<> of SoftwareTimerList
 	SoftwareTimerListAllocator allocator_;
 
 	/// list of active software timers (waiting for execution)
-	SoftwareTimerControlBlockList activeList_;
+	SoftwareTimerList activeList_;
 };
 
 }	// namespace internal

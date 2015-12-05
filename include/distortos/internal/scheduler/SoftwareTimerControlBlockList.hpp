@@ -1,6 +1,6 @@
 /**
  * \file
- * \brief SoftwareTimerControlBlockList class header
+ * \brief SoftwareTimerList class header
  *
  * \author Copyright (C) 2014-2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
@@ -42,11 +42,11 @@ struct SoftwareTimerAscendingTimePoint
 	}
 };
 
-/// base of SoftwareTimerControlBlockList
+/// base of SoftwareTimerList
 using SoftwareTimerListBase = SortedContainer<SoftwareTimerUnsortedList, SoftwareTimerAscendingTimePoint>;
 
 /// list of SoftwareTimerControlBlock objects in ascending order of expiration time point
-class SoftwareTimerControlBlockList : public SoftwareTimerListBase
+class SoftwareTimerList : public SoftwareTimerListBase
 {
 public:
 
