@@ -25,10 +25,10 @@ namespace internal
 {
 
 /// functor which gives ascending expiration time point order of elements on the list
-struct SoftwareTimerControlBlockAscendingTimePoint
+struct SoftwareTimerAscendingTimePoint
 {
 	/**
-	 * \brief SoftwareTimerControlBlockAscendingTimePoint's function call operator
+	 * \brief SoftwareTimerAscendingTimePoint's function call operator
 	 *
 	 * \param [in] left is the object on the left side of comparison
 	 * \param [in] right is the object on the right side of comparison
@@ -43,11 +43,7 @@ struct SoftwareTimerControlBlockAscendingTimePoint
 };
 
 /// base of SoftwareTimerControlBlockList
-using SoftwareTimerControlBlockListBase = SortedContainer
-		<
-				SoftwareTimerUnsortedList,
-				SoftwareTimerControlBlockAscendingTimePoint
-		>;
+using SoftwareTimerControlBlockListBase = SortedContainer<SoftwareTimerUnsortedList, SoftwareTimerAscendingTimePoint>;
 
 /// list of SoftwareTimerControlBlock objects in ascending order of expiration time point
 class SoftwareTimerControlBlockList : public SoftwareTimerControlBlockListBase
