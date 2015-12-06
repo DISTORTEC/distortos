@@ -46,6 +46,15 @@ public:
 
 	}
 
+	/**
+	 * \return priority of thread
+	 */
+
+	uint8_t getPriority() const
+	{
+		return priority_;
+	}
+
 	/// node for intrusive list in thread group
 	estd::IntrusiveListNode threadGroupNode;
 

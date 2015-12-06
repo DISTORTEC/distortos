@@ -171,15 +171,6 @@ public:
 	}
 
 	/**
-	 * \return priority of ThreadControlBlock
-	 */
-
-	uint8_t getPriority() const
-	{
-		return priority_;
-	}
-
-	/**
 	 * \return reference to internal RoundRobinQuantum object
 	 */
 
