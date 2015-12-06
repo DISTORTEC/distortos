@@ -52,7 +52,6 @@ ThreadControlBlock::ThreadControlBlock(architecture::Stack&& stack, const uint8_
 		{
 				signalsReceiver != nullptr ? &signalsReceiver->signalsReceiverControlBlock_ : nullptr
 		},
-		boostedPriority_{},
 		roundRobinQuantum_{},
 		schedulingPolicy_{schedulingPolicy},
 		state_{ThreadState::New}

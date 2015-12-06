@@ -41,7 +41,8 @@ public:
 
 	constexpr ThreadListNode(const uint8_t priority) :
 			threadGroupNode{},
-			priority_{priority}
+			priority_{priority},
+			boostedPriority_{}
 	{
 
 	}
@@ -62,6 +63,9 @@ protected:
 
 	/// thread's priority, 0 - lowest, UINT8_MAX - highest
 	uint8_t priority_;
+
+	/// thread's boosted priority, 0 - no boosting
+	uint8_t boostedPriority_;
 };
 
 }	// namespace internal

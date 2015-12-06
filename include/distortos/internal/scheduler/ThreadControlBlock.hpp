@@ -369,9 +369,6 @@ private:
 	/// newlib's _reent structure with thread-specific data
 	_reent reent_;
 
-	/// thread's boosted priority, 0 - no boosting
-	uint8_t boostedPriority_;
-
 	/// round-robin quantum
 	RoundRobinQuantum roundRobinQuantum_;
 
