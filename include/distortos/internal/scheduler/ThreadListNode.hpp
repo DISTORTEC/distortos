@@ -48,6 +48,15 @@ public:
 	}
 
 	/**
+	 * \return effective priority of thread
+	 */
+
+	uint8_t getEffectivePriority() const
+	{
+		return std::max(priority_, boostedPriority_);
+	}
+
+	/**
 	 * \return priority of thread
 	 */
 

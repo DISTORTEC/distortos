@@ -117,15 +117,6 @@ public:
 	}
 
 	/**
-	 * \return effective priority of ThreadControlBlock
-	 */
-
-	uint8_t getEffectivePriority() const
-	{
-		return std::max(priority_, boostedPriority_);
-	}
-
-	/**
 	 * \return iterator to the element on the list, valid only when list_ != nullptr
 	 */
 
