@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-12-05
+ * \date 2015-12-06
  */
 
 #ifndef INCLUDE_DISTORTOS_INTERNAL_SCHEDULER_THREADCONTROLBLOCK_HPP_
@@ -377,9 +377,6 @@ private:
 
 	/// newlib's _reent structure with thread-specific data
 	_reent reent_;
-
-	/// thread's priority, 0 - lowest, UINT8_MAX - highest
-	uint8_t priority_;
 
 	/// thread's boosted priority, 0 - no boosting
 	uint8_t boostedPriority_;

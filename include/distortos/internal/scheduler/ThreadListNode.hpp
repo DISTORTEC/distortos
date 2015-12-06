@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-12-05
+ * \date 2015-12-06
  */
 
 #ifndef INCLUDE_DISTORTOS_INTERNAL_SCHEDULER_THREADLISTNODE_HPP_
@@ -35,16 +35,24 @@ public:
 
 	/**
 	 * \brief ThreadListNode's constructor
+	 *
+	 * \param [in] priority is the thread's priority, 0 - lowest, UINT8_MAX - highest
 	 */
 
-	constexpr ThreadListNode() :
-			threadGroupNode{}
+	constexpr ThreadListNode(const uint8_t priority) :
+			threadGroupNode{},
+			priority_{priority}
 	{
 
 	}
 
 	/// node for intrusive list in thread group
 	estd::IntrusiveListNode threadGroupNode;
+
+protected:
+
+	/// thread's priority, 0 - lowest, UINT8_MAX - highest
+	uint8_t priority_;
 };
 
 }	// namespace internal
