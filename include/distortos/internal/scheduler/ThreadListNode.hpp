@@ -40,6 +40,7 @@ public:
 	 */
 
 	constexpr ThreadListNode(const uint8_t priority) :
+			threadListNode{},
 			threadGroupNode{},
 			priority_{priority},
 			boostedPriority_{}
@@ -64,6 +65,9 @@ public:
 	{
 		return priority_;
 	}
+
+	/// node for intrusive list in thread lists
+	estd::IntrusiveListNode threadListNode;
 
 	/// node for intrusive list in thread group
 	estd::IntrusiveListNode threadGroupNode;

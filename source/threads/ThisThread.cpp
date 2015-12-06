@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-12-05
+ * \date 2015-12-06
  */
 
 #include "distortos/ThisThread.hpp"
@@ -56,7 +56,7 @@ int sleepFor(const TickClock::duration duration)
 int sleepUntil(const TickClock::time_point timePoint)
 {
 	auto& scheduler = internal::getScheduler();
-	internal::ThreadList sleepingList {scheduler.getThreadControlBlockListAllocator()};
+	internal::ThreadList sleepingList;
 	const auto ret = scheduler.blockUntil(sleepingList, ThreadState::Sleeping, timePoint);
 	return ret == ETIMEDOUT ? 0 : ret;
 }

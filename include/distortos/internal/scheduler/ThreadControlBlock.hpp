@@ -16,7 +16,6 @@
 
 #include "distortos/internal/scheduler/RoundRobinQuantum.hpp"
 #include "distortos/internal/scheduler/ThreadListNode.hpp"
-#include "distortos/internal/scheduler/ThreadList-types.hpp"
 
 #include "distortos/internal/synchronization/MutexList.hpp"
 
@@ -54,9 +53,6 @@ public:
 		/// signal handler - unblock to deliver unmasked signal
 		Signal,
 	};
-
-	/// type of object used as storage for ThreadList elements - 3 pointers
-	using Link = std::array<std::aligned_storage<sizeof(void*), alignof(void*)>::type, 3>;
 
 	/// UnblockFunctor is a functor executed when unblocking the thread, it receives two parameter - a reference to
 	/// ThreadControlBlock that is being unblocked and the reason of thread unblocking
@@ -114,24 +110,6 @@ public:
 	void blockHook(const UnblockFunctor* const unblockFunctor)
 	{
 		unblockFunctor_ = unblockFunctor;
-	}
-
-	/**
-	 * \return iterator to the element on the list, valid only when list_ != nullptr
-	 */
-
-	ThreadListIterator getIterator() const
-	{
-		return iterator_;
-	}
-
-	/**
-	 * \return reference to internal storage for list link
-	 */
-
-	Link& getLink()
-	{
-		return link_;
 	}
 
 	/**
@@ -205,17 +183,6 @@ public:
 	ThreadState getState() const
 	{
 		return state_;
-	}
-
-	/**
-	 * \brief Sets the iterator to the element on the list.
-	 *
-	 * \param [in] iterator is an iterator to the element on the list
-	 */
-
-	void setIterator(const ThreadListIterator iterator)
-	{
-		iterator_ = iterator;
 	}
 
 	/**
@@ -330,9 +297,6 @@ private:
 	/// internal stack object
 	architecture::Stack stack_;
 
-	/// storage for list link
-	Link link_;
-
 	/// reference to Thread object that owns this ThreadControlBlock
 	Thread& owner_;
 
@@ -344,9 +308,6 @@ private:
 
 	/// pointer to list that has this object
 	ThreadList* list_;
-
-	/// iterator to the element on the list, valid only when list_ != nullptr
-	ThreadListIterator iterator_;
 
 	/// pointer to ThreadGroupControlBlock with which this object is associated
 	ThreadGroupControlBlock* threadGroupControlBlock_;

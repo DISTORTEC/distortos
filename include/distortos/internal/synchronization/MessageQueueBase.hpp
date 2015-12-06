@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-12-02
+ * \date 2015-12-06
  */
 
 #ifndef INCLUDE_DISTORTOS_INTERNAL_SYNCHRONIZATION_MESSAGEQUEUEBASE_HPP_
@@ -17,6 +17,9 @@
 #include "distortos/Semaphore.hpp"
 
 #include "distortos/internal/allocators/FeedablePool.hpp"
+#include "distortos/internal/allocators/PoolAllocator.hpp"
+
+#include "distortos/internal/containers/SortedContainer.hpp"
 
 #include "distortos/internal/synchronization/QueueFunctor.hpp"
 #include "distortos/internal/synchronization/SemaphoreFunctor.hpp"

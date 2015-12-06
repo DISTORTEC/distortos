@@ -8,15 +8,15 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-12-05
+ * \date 2015-12-06
  */
 
 #ifndef INCLUDE_DISTORTOS_INTERNAL_SCHEDULER_THREADLIST_HPP_
 #define INCLUDE_DISTORTOS_INTERNAL_SCHEDULER_THREADLIST_HPP_
 
-#include "distortos/internal/containers/SortedContainer.hpp"
+#include "distortos/internal/scheduler/ThreadListNode.hpp"
 
-#include "distortos/internal/scheduler/ThreadControlBlock.hpp"
+#include "estd/SortedIntrusiveList.hpp"
 
 namespace distortos
 {
@@ -24,51 +24,40 @@ namespace distortos
 namespace internal
 {
 
+class ThreadControlBlock;
+
 /// functor which gives descending effective priority order of elements on the list
 struct ThreadDescendingEffectivePriority
 {
 	/**
+	 * \brief ThreadDescendingEffectivePriority's constructor
+	 */
+
+	constexpr ThreadDescendingEffectivePriority()
+	{
+
+	}
+
+	/**
 	 * \brief ThreadDescendingEffectivePriority's function call operator
 	 *
-	 * \param [in] left is the object on the left side of comparison
-	 * \param [in] right is the object on the right side of comparison
+	 * \param [in] left is the object on the left-hand side of comparison
+	 * \param [in] right is the object on the right-hand side of comparison
 	 *
 	 * \return true if left's effective priority is less than right's effective priority
 	 */
 
-	bool operator()(const ThreadListValueType& left, const ThreadListValueType& right) const
+	bool operator()(const ThreadListNode& left, const ThreadListNode& right) const
 	{
-		return left.get().getEffectivePriority() < right.get().getEffectivePriority();
+		return left.getEffectivePriority() < right.getEffectivePriority();
 	}
 };
 
-/// base of ThreadList
-using ThreadListBase = SortedContainer<ThreadUnsortedList, ThreadDescendingEffectivePriority>;
-
-/// List of ThreadControlBlock objects in descending order of effective priority that configures state of kept objects
-class ThreadList : public ThreadListBase
+/// sorted intrusive list of threads (thread control blocks)
+class ThreadList : public estd::SortedIntrusiveList<ThreadDescendingEffectivePriority, ThreadListNode,
+		&ThreadListNode::threadListNode, ThreadControlBlock>
 {
-public:
 
-	/// base of ThreadList
-	using Base = ThreadListBase;
-
-	using Base::Base;
-
-	/**
-	 * \brief ThreadList's destructor
-	 */
-
-	~ThreadList();
-
-	/**
-	 * \brief Wrapper for sortedSplice()
-	 *
-	 * \param [in] other is the container from which the object is transfered
-	 * \param [in] otherPosition is the position of the transfered object in the other container
-	 */
-
-	void sortedSplice(ThreadList& other, iterator otherPosition);
 };
 
 }	// namespace internal

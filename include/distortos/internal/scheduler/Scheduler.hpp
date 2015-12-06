@@ -8,12 +8,13 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-12-05
+ * \date 2015-12-06
  */
 
 #ifndef INCLUDE_DISTORTOS_INTERNAL_SCHEDULER_SCHEDULER_HPP_
 #define INCLUDE_DISTORTOS_INTERNAL_SCHEDULER_SCHEDULER_HPP_
 
+#include "distortos/internal/scheduler/ThreadControlBlock.hpp"
 #include "distortos/internal/scheduler/ThreadList.hpp"
 #include "distortos/internal/scheduler/SoftwareTimerSupervisor.hpp"
 
@@ -84,7 +85,7 @@ public:
 	 * current thread);
 	 */
 
-	int block(ThreadList& container, ThreadListIterator iterator, ThreadState state,
+	int block(ThreadList& container, ThreadList::iterator iterator, ThreadState state,
 			const ThreadControlBlock::UnblockFunctor* unblockFunctor = {});
 
 	/**
@@ -135,15 +136,6 @@ public:
 	const SoftwareTimerSupervisor& getSoftwareTimerSupervisor() const
 	{
 		return softwareTimerSupervisor_;
-	}
-
-	/**
-	 * \return const reference to internal ThreadListAllocator object
-	 */
-
-	const ThreadListAllocator& getThreadControlBlockListAllocator() const
-	{
-		return threadControlBlockListAllocator_;
 	}
 
 	/**
@@ -201,7 +193,7 @@ public:
 	 * - EINVAL - provided thread is not on "suspended" list;
 	 */
 
-	int resume(ThreadListIterator iterator);
+	int resume(ThreadList::iterator iterator);
 
 	/**
 	 * \brief Suspends current thread.
@@ -224,7 +216,7 @@ public:
 	 * - EINVAL - provided thread is not on "runnable" list;
 	 */
 
-	int suspend(ThreadListIterator iterator);
+	int suspend(ThreadList::iterator iterator);
 
 	/**
 	 * \brief Called by architecture-specific code to do final context switch.
@@ -258,7 +250,7 @@ public:
 	 * ThreadControlBlock::UnblockReason::UnblockRequest
 	 */
 
-	void unblock(ThreadListIterator iterator,
+	void unblock(ThreadList::iterator iterator,
 			ThreadControlBlock::UnblockReason unblockReason = ThreadControlBlock::UnblockReason::UnblockRequest);
 
 	/**
@@ -297,7 +289,7 @@ private:
 	 * - EINVAL - provided thread is not on "runnable" list;
 	 */
 
-	int blockInternal(ThreadList& container, ThreadListIterator iterator, ThreadState state,
+	int blockInternal(ThreadList& container, ThreadList::iterator iterator, ThreadState state,
 			const ThreadControlBlock::UnblockFunctor* unblockFunctor);
 
 	/**
@@ -325,16 +317,10 @@ private:
 	 * \param [in] unblockReason is the reason of unblocking of the thread
 	 */
 
-	void unblockInternal(ThreadListIterator iterator, ThreadControlBlock::UnblockReason unblockReason);
+	void unblockInternal(ThreadList::iterator iterator, ThreadControlBlock::UnblockReason unblockReason);
 
 	/// iterator to the currently active ThreadControlBlock
-	ThreadListIterator currentThreadControlBlock_;
-
-	/// pool instance used by threadControlBlockListAllocator_
-	ThreadListAllocator::Pool threadControlBlockListAllocatorPool_;
-
-	/// PoolAllocator<> of ThreadList
-	ThreadListAllocator threadControlBlockListAllocator_;
+	ThreadList::iterator currentThreadControlBlock_;
 
 	/// list of ThreadControlBlock elements in "runnable" state, sorted by priority in descending order
 	ThreadList runnableList_;

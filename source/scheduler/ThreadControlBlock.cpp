@@ -45,7 +45,6 @@ ThreadControlBlock::ThreadControlBlock(architecture::Stack&& stack, const uint8_
 		ownedProtocolMutexList_{},
 		priorityInheritanceMutexControlBlock_{},
 		list_{},
-		iterator_{},
 		threadGroupControlBlock_{threadGroupControlBlock},
 		unblockFunctor_{},
 		signalsReceiverControlBlock_
@@ -93,7 +92,7 @@ void ThreadControlBlock::setPriority(const uint8_t priority, const bool alwaysBe
 	const auto previousEffectivePriority = getEffectivePriority();
 	priority_ = priority;
 
-	if (previousEffectivePriority == getEffectivePriority() || list_ == nullptr)
+	if (previousEffectivePriority == getEffectivePriority() || threadListNode.isLinked() == false)
 		return;
 
 	reposition(loweringBefore);
@@ -136,7 +135,7 @@ void ThreadControlBlock::updateBoostedPriority(const uint8_t boostedPriority)
 	boostedPriority_ = newBoostedPriority;
 	const auto newEffectivePriority = getEffectivePriority();
 
-	if (oldEffectivePriority == newEffectivePriority || list_ == nullptr)
+	if (oldEffectivePriority == newEffectivePriority || threadListNode.isLinked() == false)
 		return;
 
 	const auto loweringBefore = newEffectivePriority < oldEffectivePriority;
@@ -161,7 +160,7 @@ void ThreadControlBlock::reposition(const bool loweringBefore)
 	if (loweringBefore == true)
 		priority_ = getEffectivePriority() + 1;
 
-	list_->sortedSplice(*list_, iterator_);
+	list_->splice(ThreadList::iterator{*this});
 
 	if (loweringBefore == true)
 		priority_ = oldPriority;

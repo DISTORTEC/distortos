@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-12-05
+ * \date 2015-12-06
  */
 
 #include "distortos/internal/scheduler/Scheduler.hpp"
@@ -107,10 +107,8 @@ void forceContextSwitch()
 
 Scheduler::Scheduler() :
 		currentThreadControlBlock_{},
-		threadControlBlockListAllocatorPool_{},
-		threadControlBlockListAllocator_{threadControlBlockListAllocatorPool_},
-		runnableList_{threadControlBlockListAllocator_},
-		suspendedList_{threadControlBlockListAllocator_},
+		runnableList_{},
+		suspendedList_{},
 		softwareTimerSupervisor_{},
 		contextSwitchCount_{},
 		tickCount_{}
@@ -140,7 +138,7 @@ int Scheduler::block(ThreadList& container, const ThreadState state,
 	return block(container, currentThreadControlBlock_, state, unblockFunctor);
 }
 
-int Scheduler::block(ThreadList& container, const ThreadListIterator iterator, const ThreadState state,
+int Scheduler::block(ThreadList& container, const ThreadList::iterator iterator, const ThreadState state,
 		const ThreadControlBlock::UnblockFunctor* const unblockFunctor)
 {
 	ThreadControlBlock::UnblockReason unblockReason {};
@@ -185,7 +183,7 @@ int Scheduler::blockUntil(ThreadList& container, const ThreadState state, const 
 	// UnblockReason::Timeout.
 	auto softwareTimer = makeStaticSoftwareTimer([this, iterator]()
 			{
-				if (iterator->get().getList() != &runnableList_)
+				if (iterator->getList() != &runnableList_)
 					unblockInternal(iterator, ThreadControlBlock::UnblockReason::Timeout);
 			});
 	softwareTimer.start(timePoint);
@@ -226,14 +224,14 @@ int Scheduler::remove(void (Thread::*terminationHook)())
 {
 	{
 		architecture::InterruptMaskingLock interruptMaskingLock;
-		ThreadList terminatedList {threadControlBlockListAllocator_};
+		ThreadList terminatedList;
 
 		const auto ret = blockInternal(terminatedList, currentThreadControlBlock_, ThreadState::Terminated, {});
 		if (ret != 0)
 			return ret;
 
-		(terminatedList.begin()->get().getOwner().*terminationHook)();
-		terminatedList.begin()->get().setList(nullptr);
+		(terminatedList.front().getOwner().*terminationHook)();
+		terminatedList.front().setList(nullptr);
 	}
 
 	forceContextSwitch();
@@ -241,11 +239,11 @@ int Scheduler::remove(void (Thread::*terminationHook)())
 	return 0;
 }
 
-int Scheduler::resume(const ThreadListIterator iterator)
+int Scheduler::resume(const ThreadList::iterator iterator)
 {
 	architecture::InterruptMaskingLock interruptMaskingLock;
 
-	if (iterator->get().getList() != &suspendedList_)
+	if (iterator->getList() != &suspendedList_)
 		return EINVAL;
 
 	unblock(iterator);
@@ -257,7 +255,7 @@ int Scheduler::suspend()
 	return suspend(currentThreadControlBlock_);
 }
 
-int Scheduler::suspend(const ThreadListIterator iterator)
+int Scheduler::suspend(const ThreadList::iterator iterator)
 {
 	return block(suspendedList_, iterator, ThreadState::Suspended);
 }
@@ -287,7 +285,7 @@ bool Scheduler::tickInterruptHandler()
 			getCurrentThreadControlBlock().getRoundRobinQuantum().isZero() == true)
 	{
 		getCurrentThreadControlBlock().getRoundRobinQuantum().reset();
-		runnableList_.sortedSplice(runnableList_, currentThreadControlBlock_);
+		runnableList_.splice(currentThreadControlBlock_);
 	}
 
 	softwareTimerSupervisor_.tickInterruptHandler(TickClock::time_point{TickClock::duration{tickCount_}});
@@ -295,7 +293,7 @@ bool Scheduler::tickInterruptHandler()
 	return isContextSwitchRequired();
 }
 
-void Scheduler::unblock(const ThreadListIterator iterator, const ThreadControlBlock::UnblockReason unblockReason)
+void Scheduler::unblock(const ThreadList::iterator iterator, const ThreadControlBlock::UnblockReason unblockReason)
 {
 	architecture::InterruptMaskingLock interruptMaskingLock;
 
@@ -307,7 +305,7 @@ void Scheduler::yield()
 {
 	architecture::InterruptMaskingLock interruptMaskingLock;
 
-	runnableList_.sortedSplice(runnableList_, currentThreadControlBlock_);
+	runnableList_.splice(currentThreadControlBlock_);
 	maybeRequestContextSwitch();
 }
 
@@ -321,24 +319,22 @@ int Scheduler::addInternal(ThreadControlBlock& threadControlBlock)
 	if (ret != 0)
 		return ret;
 
-	threadControlBlockListAllocatorPool_.feed(threadControlBlock.getLink());
-	const auto iterator = runnableList_.sortedEmplace(threadControlBlock);
+	runnableList_.insert(threadControlBlock);
 	threadControlBlock.setList(&runnableList_);
-	threadControlBlock.setIterator(iterator);
 	threadControlBlock.setState(ThreadState::Runnable);
 
 	return 0;
 }
 
-int Scheduler::blockInternal(ThreadList& container, const ThreadListIterator iterator, const ThreadState state,
+int Scheduler::blockInternal(ThreadList& container, const ThreadList::iterator iterator, const ThreadState state,
 		const ThreadControlBlock::UnblockFunctor* const unblockFunctor)
 {
-	auto& threadControlBlock = iterator->get();
+	auto& threadControlBlock = *iterator;
 
 	if (threadControlBlock.getList() != &runnableList_)
 		return EINVAL;
 
-	container.sortedSplice(runnableList_, iterator);
+	container.splice(iterator);
 	threadControlBlock.setList(&container);
 	threadControlBlock.setState(state);
 	threadControlBlock.blockHook(unblockFunctor);
@@ -357,11 +353,11 @@ bool Scheduler::isContextSwitchRequired() const
 	return false;
 }
 
-void Scheduler::unblockInternal(const ThreadListIterator iterator,
+void Scheduler::unblockInternal(const ThreadList::iterator iterator,
 		const ThreadControlBlock::UnblockReason unblockReason)
 {
-	auto& threadControlBlock = iterator->get();
-	runnableList_.sortedSplice(*threadControlBlock.getList(), iterator);
+	auto& threadControlBlock = *iterator;
+	runnableList_.splice(iterator);
 	threadControlBlock.setList(&runnableList_);
 	threadControlBlock.setState(ThreadState::Runnable);
 	threadControlBlock.unblockHook(unblockReason);

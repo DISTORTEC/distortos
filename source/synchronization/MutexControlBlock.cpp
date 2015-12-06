@@ -8,15 +8,13 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-12-05
+ * \date 2015-12-06
  */
 
 #include "distortos/internal/synchronization/MutexControlBlock.hpp"
 
 #include "distortos/internal/scheduler/getScheduler.hpp"
 #include "distortos/internal/scheduler/Scheduler.hpp"
-
-#include <cerrno>
 
 namespace distortos
 {
@@ -85,7 +83,7 @@ private:
 
 MutexControlBlock::MutexControlBlock(const Protocol protocol, const uint8_t priorityCeiling) :
 		MutexListNode{},
-		blockedList_{getScheduler().getThreadControlBlockListAllocator()},
+		blockedList_{},
 		owner_{},
 		protocol_{protocol},
 		priorityCeiling_{priorityCeiling}
@@ -119,7 +117,7 @@ uint8_t MutexControlBlock::getBoostedPriority() const
 	{
 		if (blockedList_.empty() == true)
 			return 0;
-		return blockedList_.begin()->get().getEffectivePriority();
+		return blockedList_.front().getEffectivePriority();
 	}
 
 	if (protocol_ == Protocol::PriorityProtect)
@@ -178,7 +176,7 @@ void MutexControlBlock::priorityInheritanceBeforeBlock() const
 
 void MutexControlBlock::transferLock()
 {
-	owner_ = &blockedList_.begin()->get();	// pass ownership to the unblocked thread
+	owner_ = &blockedList_.front();	// pass ownership to the unblocked thread
 	getScheduler().unblock(blockedList_.begin());
 
 	if (node.isLinked() == false)
