@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-12-06
+ * \date 2015-12-08
  */
 
 #ifndef INCLUDE_DISTORTOS_INTERNAL_SYNCHRONIZATION_MUTEXCONTROLBLOCK_HPP_
@@ -49,7 +49,15 @@ public:
 	 * \param [in] priorityCeiling is the priority ceiling of mutex, ignored when protocol != Protocol::PriorityProtect
 	 */
 
-	MutexControlBlock(Protocol protocol, uint8_t priorityCeiling);
+	constexpr MutexControlBlock(const Protocol protocol, const uint8_t priorityCeiling) :
+			MutexListNode{},
+			blockedList_{},
+			owner_{},
+			protocol_{protocol},
+			priorityCeiling_{priorityCeiling}
+	{
+
+	}
 
 	/**
 	 * \brief Blocks current thread, transferring it to blockedList_.
