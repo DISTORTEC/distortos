@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-06-25
+ * \date 2015-12-08
  */
 
 #include "distortos/distortosConfiguration.h"
@@ -22,9 +22,8 @@
 #elif defined(CONFIG_CHIP_STM32F405) || defined(CONFIG_CHIP_STM32F407) || defined(CONFIG_CHIP_STM32F415) || \
 	defined(CONFIG_CHIP_STM32F417)
 #	define STM32F405_STM32F407_STM32F415_STM32F417_VECTORS
-#elif defined(CONFIG_CHIP_STM32F427) || defined(CONFIG_CHIP_STM32F429) || defined(CONFIG_CHIP_STM32F437) || \
-	defined(CONFIG_CHIP_STM32F439)
-#	define STM32F427_STM32F429_STM32F437_STM32F439_VECTORS
+#elif defined(CONFIG_CHIP_STM32F42) || defined(CONFIG_CHIP_STM32F43)
+#	define STM32F42_STM32F43_VECTORS
 #else
 #	error "Wrong configuration or unsupported STM32F4 chip!"
 #endif
@@ -729,7 +728,7 @@ __attribute__ ((weak)) void FPU_IRQHandler(void)
 	while (1);
 }
 
-#if defined(STM32F401_VECTORS) || defined(STM32F427_STM32F429_STM32F437_STM32F439_VECTORS)
+#if defined(STM32F401_VECTORS) || defined(STM32F42_STM32F43_VECTORS)
 
 #	ifdef STM32F401_VECTORS
 
@@ -767,9 +766,9 @@ __attribute__ ((weak)) void SPI4_IRQHandler(void)
 	while (1);
 }
 
-#endif	// defined(STM32F401_VECTORS) || defined(STM32F427_STM32F429_STM32F437_STM32F439_VECTORS)
+#endif	// defined(STM32F401_VECTORS) || defined(STM32F42_STM32F43_VECTORS)
 
-#ifdef STM32F427_STM32F429_STM32F437_STM32F439_VECTORS
+#ifdef STM32F42_STM32F43_VECTORS
 
 // SPI5
 __attribute__ ((weak)) void SPI5_IRQHandler(void)
@@ -807,7 +806,7 @@ __attribute__ ((weak)) void DMA2D_IRQHandler(void)
 	while (1);
 }
 
-#endif	// def STM32F427_STM32F429_STM32F437_STM32F439_VECTORS
+#endif	// def STM32F42_STM32F43_VECTORS
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | local types
@@ -996,7 +995,7 @@ const InterruptVector chipVectors[] __attribute__ ((section(".chipVectors"))) =
 
 		FPU_IRQHandler,						// FPU
 
-#if defined(STM32F401_VECTORS) || defined(STM32F427_STM32F429_STM32F437_STM32F439_VECTORS)
+#if defined(STM32F401_VECTORS) || defined(STM32F42_STM32F43_VECTORS)
 
 #	ifdef STM32F401_VECTORS
 
@@ -1012,9 +1011,9 @@ const InterruptVector chipVectors[] __attribute__ ((section(".chipVectors"))) =
 
 		SPI4_IRQHandler,					// SPI4
 
-#endif	// defined(STM32F401_VECTORS) || defined(STM32F427_STM32F429_STM32F437_STM32F439_VECTORS)
+#endif	// defined(STM32F401_VECTORS) || defined(STM32F42_STM32F43_VECTORS)
 
-#ifdef STM32F427_STM32F429_STM32F437_STM32F439_VECTORS
+#ifdef STM32F42_STM32F43_VECTORS
 
 		SPI5_IRQHandler,					// SPI5
 		SPI6_IRQHandler,					// SPI6
@@ -1023,6 +1022,6 @@ const InterruptVector chipVectors[] __attribute__ ((section(".chipVectors"))) =
 		LTDC_ER_IRQHandler,					// LTDC error
 		DMA2D_IRQHandler,					// DMA2D
 
-#endif	// def STM32F427_STM32F429_STM32F437_STM32F439_VECTORS
+#endif	// def STM32F42_STM32F43_VECTORS
 
 };
