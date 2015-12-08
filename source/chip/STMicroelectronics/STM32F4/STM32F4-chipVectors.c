@@ -146,7 +146,7 @@ __attribute__ ((weak)) void ADC_IRQHandler(void)
 	while (1);
 }
 
-#ifdef STM32F401_VECTORS
+#if defined(STM32F401_VECTORS)
 
 // Reserved 0x8C
 __attribute__ ((weak)) void __Reserved_0x8C_Handler(void)
@@ -172,7 +172,7 @@ __attribute__ ((weak)) void __Reserved_0x98_Handler(void)
 	while (1);
 }
 
-#else	// !def STM32F401_VECTORS
+#else	// !defined(STM32F401_VECTORS)
 
 // CAN1 TX
 __attribute__ ((weak)) void CAN1_TX_IRQHandler(void)
@@ -198,7 +198,7 @@ __attribute__ ((weak)) void CAN1_SCE_IRQHandler(void)
 	while (1);
 }
 
-#endif	// !def STM32F401_VECTORS
+#endif	// !defined(STM32F401_VECTORS)
 
 // External Line[9:5]
 __attribute__ ((weak)) void EXTI9_5_IRQHandler(void)
@@ -296,7 +296,7 @@ __attribute__ ((weak)) void USART2_IRQHandler(void)
 	while (1);
 }
 
-#ifdef STM32F401_VECTORS
+#if defined(STM32F401_VECTORS)
 
 // Reserved 0xDC
 __attribute__ ((weak)) void __Reserved_0xDC_Handler(void)
@@ -304,7 +304,7 @@ __attribute__ ((weak)) void __Reserved_0xDC_Handler(void)
 	while (1);
 }
 
-#else	// !def STM32F401_VECTORS
+#else	// !defined(STM32F401_VECTORS)
 
 // USART3
 __attribute__ ((weak)) void USART3_IRQHandler(void)
@@ -312,7 +312,7 @@ __attribute__ ((weak)) void USART3_IRQHandler(void)
 	while (1);
 }
 
-#endif	// !def STM32F401_VECTORS
+#endif	// !defined(STM32F401_VECTORS)
 
 // External Line[15:10]s
 __attribute__ ((weak)) void EXTI15_10_IRQHandler(void)
@@ -332,7 +332,7 @@ __attribute__ ((weak)) void OTG_FS_WKUP_IRQHandler(void)
 	while (1);
 }
 
-#ifdef STM32F401_VECTORS
+#if defined(STM32F401_VECTORS)
 
 // Reserved 0xEC
 __attribute__ ((weak)) void __Reserved_0xEC_Handler(void)
@@ -358,7 +358,7 @@ __attribute__ ((weak)) void __Reserved_0xF8_Handler(void)
 	while (1);
 }
 
-#else	// !def STM32F401_VECTORS
+#else	// !defined(STM32F401_VECTORS)
 
 // TIM8 Break and TIM12
 __attribute__ ((weak)) void TIM8_BRK_TIM12_IRQHandler(void)
@@ -384,7 +384,7 @@ __attribute__ ((weak)) void TIM8_CC_IRQHandler(void)
 	while (1);
 }
 
-#endif	// !def STM32F401_VECTORS
+#endif	// !defined(STM32F401_VECTORS)
 
 // DMA1 Stream7
 __attribute__ ((weak)) void DMA1_Stream7_IRQHandler(void)
@@ -392,7 +392,7 @@ __attribute__ ((weak)) void DMA1_Stream7_IRQHandler(void)
 	while (1);
 }
 
-#ifdef STM32F401_VECTORS
+#if defined(STM32F401_VECTORS)
 
 // Reserved 0x100
 __attribute__ ((weak)) void __Reserved_0x100_Handler(void)
@@ -400,7 +400,7 @@ __attribute__ ((weak)) void __Reserved_0x100_Handler(void)
 	while (1);
 }
 
-#else	// !def STM32F401_VECTORS
+#else	// !defined(STM32F401_VECTORS)
 
 // FSMC
 __attribute__ ((weak)) void FSMC_IRQHandler(void)
@@ -408,7 +408,7 @@ __attribute__ ((weak)) void FSMC_IRQHandler(void)
 	while (1);
 }
 
-#endif	// !def STM32F401_VECTORS
+#endif	// !defined(STM32F401_VECTORS)
 
 // SDIO
 __attribute__ ((weak)) void SDIO_IRQHandler(void)
@@ -428,7 +428,7 @@ __attribute__ ((weak)) void SPI3_IRQHandler(void)
 	while (1);
 }
 
-#ifdef STM32F401_VECTORS
+#if defined(STM32F401_VECTORS)
 
 // Reserved 0x110
 __attribute__ ((weak)) void __Reserved_0x110_Handler(void)
@@ -454,7 +454,7 @@ __attribute__ ((weak)) void __Reserved_0x11C_Handler(void)
 	while (1);
 }
 
-#else	// !def STM32F401_VECTORS
+#else	// !defined(STM32F401_VECTORS)
 
 // UART4
 __attribute__ ((weak)) void UART4_IRQHandler(void)
@@ -480,7 +480,7 @@ __attribute__ ((weak)) void TIM7_IRQHandler(void)
 	while (1);
 }
 
-#endif	// !def STM32F401_VECTORS
+#endif	// !defined(STM32F401_VECTORS)
 
 // DMA2 Stream 0
 __attribute__ ((weak)) void DMA2_Stream0_IRQHandler(void)
@@ -512,7 +512,7 @@ __attribute__ ((weak)) void DMA2_Stream4_IRQHandler(void)
 	while (1);
 }
 
-#ifdef STM32F401_VECTORS
+#if defined(STM32F401_VECTORS)
 
 // Reserved 0x134
 __attribute__ ((weak)) void __Reserved_0x134_Handler(void)
@@ -550,7 +550,7 @@ __attribute__ ((weak)) void __Reserved_0x148_Handler(void)
 	while (1);
 }
 
-#else	// !def STM32F401_VECTORS
+#else	// !defined(STM32F401_VECTORS)
 
 // Ethernet
 __attribute__ ((weak)) void ETH_IRQHandler(void)
@@ -588,7 +588,7 @@ __attribute__ ((weak)) void CAN2_SCE_IRQHandler(void)
 	while (1);
 }
 
-#endif	// !def STM32F401_VECTORS
+#endif	// !defined(STM32F401_VECTORS)
 
 // USB OTG FS
 __attribute__ ((weak)) void OTG_FS_IRQHandler(void)
@@ -632,7 +632,7 @@ __attribute__ ((weak)) void I2C3_ER_IRQHandler(void)
 	while (1);
 }
 
-#ifdef STM32F401_VECTORS
+#if defined(STM32F401_VECTORS)
 
 // Reserved 0x168
 __attribute__ ((weak)) void __Reserved_0x168_Handler(void)
@@ -676,7 +676,7 @@ __attribute__ ((weak)) void __Reserved_0x180_Handler(void)
 	while (1);
 }
 
-#else	// !def STM32F401_VECTORS
+#else	// !defined(STM32F401_VECTORS)
 
 // USB OTG HS End Point 1 Out
 __attribute__ ((weak)) void OTG_HS_EP1_OUT_IRQHandler(void)
@@ -720,7 +720,7 @@ __attribute__ ((weak)) void HASH_RNG_IRQHandler(void)
 	while (1);
 }
 
-#endif	// !def STM32F401_VECTORS
+#endif	// !defined(STM32F401_VECTORS)
 
 // FPU
 __attribute__ ((weak)) void FPU_IRQHandler(void)
@@ -730,7 +730,7 @@ __attribute__ ((weak)) void FPU_IRQHandler(void)
 
 #if defined(STM32F401_VECTORS) || defined(STM32F42_STM32F43_VECTORS)
 
-#	ifdef STM32F401_VECTORS
+#	if defined(STM32F401_VECTORS)
 
 // Reserved 0x188
 __attribute__ ((weak)) void __Reserved_0x188_Handler(void)
@@ -744,7 +744,7 @@ __attribute__ ((weak)) void __Reserved_0x18C_Handler(void)
 	while (1);
 }
 
-#	else	// !def STM32F401_VECTORS
+#	else	// !defined(STM32F401_VECTORS)
 
 // UART7
 __attribute__ ((weak)) void UART7_IRQHandler(void)
@@ -758,7 +758,7 @@ __attribute__ ((weak)) void UART8_IRQHandler(void)
 	while (1);
 }
 
-#	endif	// !def STM32F401_VECTORS
+#	endif	// !defined(STM32F401_VECTORS)
 
 // SPI4
 __attribute__ ((weak)) void SPI4_IRQHandler(void)
@@ -768,7 +768,7 @@ __attribute__ ((weak)) void SPI4_IRQHandler(void)
 
 #endif	// defined(STM32F401_VECTORS) || defined(STM32F42_STM32F43_VECTORS)
 
-#ifdef STM32F42_STM32F43_VECTORS
+#if defined(STM32F42_STM32F43_VECTORS)
 
 // SPI5
 __attribute__ ((weak)) void SPI5_IRQHandler(void)
@@ -806,7 +806,7 @@ __attribute__ ((weak)) void DMA2D_IRQHandler(void)
 	while (1);
 }
 
-#endif	// def STM32F42_STM32F43_VECTORS
+#endif	// defined(STM32F42_STM32F43_VECTORS)
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | local types
@@ -842,21 +842,21 @@ const InterruptVector chipVectors[] __attribute__ ((section(".chipVectors"))) =
 		DMA1_Stream6_IRQHandler,			// DMA1 Stream 6
 		ADC_IRQHandler,						// ADC1, ADC2 and ADC3s
 
-#ifdef STM32F401_VECTORS
+#if defined(STM32F401_VECTORS)
 
 		__Reserved_0x8C_Handler,			// Reserved 0x8C
 		__Reserved_0x90_Handler,			// Reserved 0x90
 		__Reserved_0x94_Handler,			// Reserved 0x94
 		__Reserved_0x98_Handler,			// Reserved 0x98
 
-#else	// !def STM32F401_VECTORS
+#else	// !defined(STM32F401_VECTORS)
 
 		CAN1_TX_IRQHandler,					// CAN1 TX
 		CAN1_RX0_IRQHandler,				// CAN1 RX0
 		CAN1_RX1_IRQHandler,				// CAN1 RX1
 		CAN1_SCE_IRQHandler,				// CAN1 SCE
 
-#endif	// !def STM32F401_VECTORS
+#endif	// !defined(STM32F401_VECTORS)
 
 		EXTI9_5_IRQHandler,					// External Line[9:5]s
 		TIM1_BRK_TIM9_IRQHandler,			// TIM1 Break and TIM9
@@ -875,67 +875,67 @@ const InterruptVector chipVectors[] __attribute__ ((section(".chipVectors"))) =
 		USART1_IRQHandler,					// USART1
 		USART2_IRQHandler,					// USART2
 
-#ifdef STM32F401_VECTORS
+#if defined(STM32F401_VECTORS)
 
 		__Reserved_0xDC_Handler,			// Reserved 0xDC
 
-#else	// !def STM32F401_VECTORS
+#else	// !defined(STM32F401_VECTORS)
 
 		USART3_IRQHandler,					// USART3
 
-#endif	// !def STM32F401_VECTORS
+#endif	// !defined(STM32F401_VECTORS)
 
 		EXTI15_10_IRQHandler,				// External Line[15:10]s
 		RTC_Alarm_IRQHandler,				// RTC Alarm (A and B) through EXTI Line
 		OTG_FS_WKUP_IRQHandler,				// USB OTG FS Wakeup through EXTI line
 
-#ifdef STM32F401_VECTORS
+#if defined(STM32F401_VECTORS)
 
 		__Reserved_0xEC_Handler,			// Reserved 0xEC
 		__Reserved_0xF0_Handler,			// Reserved 0xF0
 		__Reserved_0xF4_Handler,			// Reserved 0xF4
 		__Reserved_0xF8_Handler,			// Reserved 0xF8
 
-#else	// !def STM32F401_VECTORS
+#else	// !defined(STM32F401_VECTORS)
 
 		TIM8_BRK_TIM12_IRQHandler,			// TIM8 Break and TIM12
 		TIM8_UP_TIM13_IRQHandler,			// TIM8 Update and TIM13
 		TIM8_TRG_COM_TIM14_IRQHandler,		// TIM8 Trigger and Commutation and TIM14
 		TIM8_CC_IRQHandler,					// TIM8 Capture Compare
 
-#endif	// !def STM32F401_VECTORS
+#endif	// !defined(STM32F401_VECTORS)
 
 		DMA1_Stream7_IRQHandler,			// DMA1 Stream7
 
-#ifdef STM32F401_VECTORS
+#if defined(STM32F401_VECTORS)
 
 		__Reserved_0x100_Handler,			// Reserved 0x100
 
-#else	// !def STM32F401_VECTORS
+#else	// !defined(STM32F401_VECTORS)
 
 		FSMC_IRQHandler,					// FSMC
 
-#endif	// !def STM32F401_VECTORS
+#endif	// !defined(STM32F401_VECTORS)
 
 		SDIO_IRQHandler,					// SDIO
 		TIM5_IRQHandler,					// TIM5
 		SPI3_IRQHandler,					// SPI3
 
-#ifdef STM32F401_VECTORS
+#if defined(STM32F401_VECTORS)
 
 		__Reserved_0x110_Handler,			// Reserved 0x110
 		__Reserved_0x114_Handler,			// Reserved 0x114
 		__Reserved_0x118_Handler,			// Reserved 0x118
 		__Reserved_0x11C_Handler,			// Reserved 0x11C
 
-#else	// !def STM32F401_VECTORS
+#else	// !defined(STM32F401_VECTORS)
 
 		UART4_IRQHandler,					// UART4
 		UART5_IRQHandler,					// UART5
 		TIM6_DAC_IRQHandler,				// TIM6 and DAC1&2 underrun errors
 		TIM7_IRQHandler,					// TIM7
 
-#endif	// !def STM32F401_VECTORS
+#endif	// !defined(STM32F401_VECTORS)
 
 		DMA2_Stream0_IRQHandler,			// DMA2 Stream 0
 		DMA2_Stream1_IRQHandler,			// DMA2 Stream 1
@@ -943,7 +943,7 @@ const InterruptVector chipVectors[] __attribute__ ((section(".chipVectors"))) =
 		DMA2_Stream3_IRQHandler,			// DMA2 Stream 3
 		DMA2_Stream4_IRQHandler,			// DMA2 Stream 4
 
-#ifdef STM32F401_VECTORS
+#if defined(STM32F401_VECTORS)
 
 		__Reserved_0x134_Handler,			// Reserved 0x134
 		__Reserved_0x138_Handler,			// Reserved 0x138
@@ -952,7 +952,7 @@ const InterruptVector chipVectors[] __attribute__ ((section(".chipVectors"))) =
 		__Reserved_0x144_Handler,			// Reserved 0x144
 		__Reserved_0x148_Handler,			// Reserved 0x148
 
-#else	// !def STM32F401_VECTORS
+#else	// !defined(STM32F401_VECTORS)
 
 		ETH_IRQHandler,						// Ethernet
 		ETH_WKUP_IRQHandler,				// Ethernet Wakeup through EXTI line
@@ -961,7 +961,7 @@ const InterruptVector chipVectors[] __attribute__ ((section(".chipVectors"))) =
 		CAN2_RX1_IRQHandler,				// CAN2 RX1
 		CAN2_SCE_IRQHandler,				// CAN2 SCE
 
-#endif	// !def STM32F401_VECTORS
+#endif	// !defined(STM32F401_VECTORS)
 
 		OTG_FS_IRQHandler,					// USB OTG FS
 		DMA2_Stream5_IRQHandler,			// DMA2 Stream 5
@@ -971,7 +971,7 @@ const InterruptVector chipVectors[] __attribute__ ((section(".chipVectors"))) =
 		I2C3_EV_IRQHandler,					// I2C3 event
 		I2C3_ER_IRQHandler,					// I2C3 error
 
-#ifdef STM32F401_VECTORS
+#if defined(STM32F401_VECTORS)
 
 		__Reserved_0x168_Handler,			// Reserved 0x168
 		__Reserved_0x16C_Handler,			// Reserved 0x16C
@@ -981,7 +981,7 @@ const InterruptVector chipVectors[] __attribute__ ((section(".chipVectors"))) =
 		__Reserved_0x17C_Handler,			// Reserved 0x17C
 		__Reserved_0x180_Handler,			// Reserved 0x180
 
-#else	// !def STM32F401_VECTORS
+#else	// !defined(STM32F401_VECTORS)
 
 		OTG_HS_EP1_OUT_IRQHandler,			// USB OTG HS End Point 1 Out
 		OTG_HS_EP1_IN_IRQHandler,			// USB OTG HS End Point 1 In
@@ -991,29 +991,29 @@ const InterruptVector chipVectors[] __attribute__ ((section(".chipVectors"))) =
 		CRYP_IRQHandler,					// CRYP crypto
 		HASH_RNG_IRQHandler,				// Hash and Rng
 
-#endif	// !def STM32F401_VECTORS
+#endif	// !defined(STM32F401_VECTORS)
 
 		FPU_IRQHandler,						// FPU
 
 #if defined(STM32F401_VECTORS) || defined(STM32F42_STM32F43_VECTORS)
 
-#	ifdef STM32F401_VECTORS
+#	if defined(STM32F401_VECTORS)
 
 		__Reserved_0x188_Handler,			// Reserved 0x188
 		__Reserved_0x18C_Handler,			// Reserved 0x18C
 
-#	else	// !def STM32F401_VECTORS
+#	else	// !defined(STM32F401_VECTORS)
 
 		UART7_IRQHandler,					// UART7
 		UART8_IRQHandler,					// UART8
 
-#	endif	// !def STM32F401_VECTORS
+#	endif	// !defined(STM32F401_VECTORS)
 
 		SPI4_IRQHandler,					// SPI4
 
 #endif	// defined(STM32F401_VECTORS) || defined(STM32F42_STM32F43_VECTORS)
 
-#ifdef STM32F42_STM32F43_VECTORS
+#if defined(STM32F42_STM32F43_VECTORS)
 
 		SPI5_IRQHandler,					// SPI5
 		SPI6_IRQHandler,					// SPI6
@@ -1022,6 +1022,6 @@ const InterruptVector chipVectors[] __attribute__ ((section(".chipVectors"))) =
 		LTDC_ER_IRQHandler,					// LTDC error
 		DMA2D_IRQHandler,					// DMA2D
 
-#endif	// def STM32F42_STM32F43_VECTORS
+#endif	// defined(STM32F42_STM32F43_VECTORS)
 
 };
