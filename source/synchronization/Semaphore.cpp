@@ -27,14 +27,6 @@ namespace distortos
 | public functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-Semaphore::Semaphore(const Value value, const Value maxValue) :
-		blockedList_{},
-		value_{value <= maxValue ? value : maxValue},
-		maxValue_{maxValue}
-{
-
-}
-
 int Semaphore::post()
 {
 	architecture::InterruptMaskingLock interruptMaskingLock;

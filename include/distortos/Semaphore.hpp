@@ -47,7 +47,13 @@ public:
 	 * type
 	 */
 
-	explicit Semaphore(Value value, Value maxValue = std::numeric_limits<Value>::max());
+	constexpr explicit Semaphore(const Value value, const Value maxValue = std::numeric_limits<Value>::max()) :
+			blockedList_{},
+			value_{value <= maxValue ? value : maxValue},
+			maxValue_{maxValue}
+	{
+
+	}
 
 	/**
 	 * \brief Semaphore destructor
