@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-12-02
+ * \date 2015-12-08
  */
 
 #ifndef INCLUDE_DISTORTOS_MUTEX_HPP_
@@ -76,7 +76,14 @@ public:
 	 * default - 0
 	 */
 
-	explicit Mutex(Type type = Type::Normal, Protocol protocol = Protocol::None, uint8_t priorityCeiling = {});
+	constexpr explicit Mutex(const Type type = Type::Normal, const Protocol protocol = Protocol::None,
+			const uint8_t priorityCeiling = {}) :
+			controlBlock_{protocol, priorityCeiling},
+			recursiveLocksCount_{},
+			type_{type}
+	{
+
+	}
 
 	/**
 	 * \brief Locks the mutex.
