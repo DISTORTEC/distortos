@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-12-06
+ * \date 2015-12-08
  */
 
 #ifndef INCLUDE_DISTORTOS_INTERNAL_SCHEDULER_SCHEDULER_HPP_
@@ -35,7 +35,16 @@ public:
 	 * \brief Scheduler's constructor
 	 */
 
-	Scheduler();
+	constexpr Scheduler() :
+			currentThreadControlBlock_{},
+			runnableList_{},
+			suspendedList_{},
+			softwareTimerSupervisor_{},
+			contextSwitchCount_{},
+			tickCount_{}
+	{
+
+	}
 
 	/**
 	 * \brief Adds new ThreadControlBlock to scheduler.
