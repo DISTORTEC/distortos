@@ -1,6 +1,6 @@
 /**
  * \file
- * \brief STM32F4 chip vector table and default weak handlers.
+ * \brief STM32F4 chip vector table and default weak handlers
  *
  * This file covers devices as described in following places:
  * - RM0368 reference manual (STM32F401xB/C and STM32F401xD/E), Revision 4, 2015-05-04
