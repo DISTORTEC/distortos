@@ -15,85 +15,85 @@
 | provide default weak handlers
 +---------------------------------------------------------------------------------------------------------------------*/
 
-// Non maskable interrupt
+// 0x08: Non maskable interrupt
 __attribute__ ((weak)) void NMI_Handler(void)
 {
 	while (1);
 }
 
-// All class of fault
+// 0x0c: All class of fault
 __attribute__ ((weak)) void HardFault_Handler(void)
 {
 	while (1);
 }
 
-// Memory management
+// 0x10: Memory management
 __attribute__ ((weak)) void MemManage_Handler(void)
 {
 	while (1);
 }
 
-// Pre-fetch fault, memory access fault
+// 0x14: Pre-fetch fault, memory access fault
 __attribute__ ((weak)) void BusFault_Handler(void)
 {
 	while (1);
 }
 
-// Undefined instruction or illegal state
+// 0x18: Undefined instruction or illegal state
 __attribute__ ((weak)) void UsageFault_Handler(void)
 {
 	while (1);
 }
 
-// Reserved 0x1c
+// 0x1c: Reserved
 __attribute__ ((weak)) void __Reserved_0x1c_Handler(void)
 {
 	while (1);
 }
 
-// Reserved 0x20
+// 0x20: Reserved
 __attribute__ ((weak)) void __Reserved_0x20_Handler(void)
 {
 	while (1);
 }
 
-// Reserved 0x24
+// 0x24: Reserved
 __attribute__ ((weak)) void __Reserved_0x24_Handler(void)
 {
 	while (1);
 }
 
-// Reserved 0x28
+// 0x28: Reserved
 __attribute__ ((weak)) void __Reserved_0x28_Handler(void)
 {
 	while (1);
 }
 
-// System service call via SWI instruction
+// 0x2c: System service call via SVC instruction
 __attribute__ ((weak)) void SVC_Handler(void)
 {
 	while (1);
 }
 
-// Debug Monitor
+// 0x30: Debug Monitor
 __attribute__ ((weak)) void DebugMon_Handler(void)
 {
 	while (1);
 }
 
-// Reserved 0x34
+// 0x34: Reserved
 __attribute__ ((weak)) void __Reserved_0x34_Handler(void)
 {
 	while (1);
 }
 
-// Pendable request for system service
+// 0x38: Pendable request for system service
 __attribute__ ((weak)) void PendSV_Handler(void)
 {
 	while (1);
 }
 
-// System tick timer
+// 0x3c: System tick timer
 __attribute__ ((weak)) void SysTick_Handler(void)
 {
 	while (1);
@@ -121,20 +121,20 @@ void Reset_Handler(void);				// import the address of Reset_Handler()
 /// core vector table
 const InterruptVector coreVectors[] __attribute__ ((section(".coreVectors"))) =
 {
-		(InterruptVector)__main_stack_end,		// Main stack end address
-		Reset_Handler,							// Reset
-		NMI_Handler,							// Non maskable interrupt
-		HardFault_Handler,						// All class of fault
-		MemManage_Handler,						// Memory management
-		BusFault_Handler,						// Pre-fetch fault, memory access fault
-		UsageFault_Handler,						// Undefined instruction or illegal state
-		__Reserved_0x1c_Handler,				// Reserved 0x1c
-		__Reserved_0x20_Handler,				// Reserved 0x20
-		__Reserved_0x24_Handler,				// Reserved 0x24
-		__Reserved_0x28_Handler,				// Reserved 0x28
-		SVC_Handler,							// System service call via SVC instruction
-		DebugMon_Handler,						// Debug Monitor
-		__Reserved_0x34_Handler,				// Reserved 0x34
-		PendSV_Handler,							// Pendable request for system service
-		SysTick_Handler,						// System tick timer
+		(InterruptVector)__main_stack_end,		// 0x00: Main stack end address
+		Reset_Handler,							// 0x04: Reset
+		NMI_Handler,							// 0x08: Non maskable interrupt
+		HardFault_Handler,						// 0x0c: All class of fault
+		MemManage_Handler,						// 0x10: Memory management
+		BusFault_Handler,						// 0x14: Pre-fetch fault, memory access fault
+		UsageFault_Handler,						// 0x18: Undefined instruction or illegal state
+		__Reserved_0x1c_Handler,				// 0x1c: Reserved
+		__Reserved_0x20_Handler,				// 0x20: Reserved
+		__Reserved_0x24_Handler,				// 0x24: Reserved
+		__Reserved_0x28_Handler,				// 0x28: Reserved
+		SVC_Handler,							// 0x2c: System service call via SVC instruction
+		DebugMon_Handler,						// 0x30: Debug Monitor
+		__Reserved_0x34_Handler,				// 0x34: Reserved
+		PendSV_Handler,							// 0x38: Pendable request for system service
+		SysTick_Handler,						// 0x3c: System tick timer
 };
