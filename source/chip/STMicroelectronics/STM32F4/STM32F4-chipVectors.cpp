@@ -35,120 +35,123 @@
 #	error "Wrong configuration or unsupported STM32F4 chip!"
 #endif
 
+extern "C"
+{
+
 /*---------------------------------------------------------------------------------------------------------------------+
 | provide default weak handlers
 +---------------------------------------------------------------------------------------------------------------------*/
 
 // 0x040, 0: Window WatchDog
-__attribute__ ((weak)) void WWDG_IRQHandler(void)
+__attribute__ ((weak)) void WWDG_IRQHandler()
 {
 	while (1);
 }
 
 // 0x044, 1: PVD through EXTI Line detection
-__attribute__ ((weak)) void PVD_IRQHandler(void)
+__attribute__ ((weak)) void PVD_IRQHandler()
 {
 	while (1);
 }
 
 // 0x048, 2: Tamper and TimeStamp through the EXTI line
-__attribute__ ((weak)) void TAMP_STAMP_IRQHandler(void)
+__attribute__ ((weak)) void TAMP_STAMP_IRQHandler()
 {
 	while (1);
 }
 
 // 0x04c, 3: RTC Wakeup through the EXTI line
-__attribute__ ((weak)) void RTC_WKUP_IRQHandler(void)
+__attribute__ ((weak)) void RTC_WKUP_IRQHandler()
 {
 	while (1);
 }
 
 // 0x050, 4: FLASH
-__attribute__ ((weak)) void FLASH_IRQHandler(void)
+__attribute__ ((weak)) void FLASH_IRQHandler()
 {
 	while (1);
 }
 
 // 0x054, 5: RCC
-__attribute__ ((weak)) void RCC_IRQHandler(void)
+__attribute__ ((weak)) void RCC_IRQHandler()
 {
 	while (1);
 }
 
 // 0x058, 6: EXTI Line 0
-__attribute__ ((weak)) void EXTI0_IRQHandler(void)
+__attribute__ ((weak)) void EXTI0_IRQHandler()
 {
 	while (1);
 }
 
 // 0x05c, 7: EXTI Line 1
-__attribute__ ((weak)) void EXTI1_IRQHandler(void)
+__attribute__ ((weak)) void EXTI1_IRQHandler()
 {
 	while (1);
 }
 
 // 0x060, 8: EXTI Line 2
-__attribute__ ((weak)) void EXTI2_IRQHandler(void)
+__attribute__ ((weak)) void EXTI2_IRQHandler()
 {
 	while (1);
 }
 
 // 0x064, 9: EXTI Line 3
-__attribute__ ((weak)) void EXTI3_IRQHandler(void)
+__attribute__ ((weak)) void EXTI3_IRQHandler()
 {
 	while (1);
 }
 
 // 0x068, 10: EXTI Line 4
-__attribute__ ((weak)) void EXTI4_IRQHandler(void)
+__attribute__ ((weak)) void EXTI4_IRQHandler()
 {
 	while (1);
 }
 
 // 0x06c, 11: DMA1 Stream 0
-__attribute__ ((weak)) void DMA1_Stream0_IRQHandler(void)
+__attribute__ ((weak)) void DMA1_Stream0_IRQHandler()
 {
 	while (1);
 }
 
 // 0x070, 12: DMA1 Stream 1
-__attribute__ ((weak)) void DMA1_Stream1_IRQHandler(void)
+__attribute__ ((weak)) void DMA1_Stream1_IRQHandler()
 {
 	while (1);
 }
 
 // 0x074, 13: DMA1 Stream 2
-__attribute__ ((weak)) void DMA1_Stream2_IRQHandler(void)
+__attribute__ ((weak)) void DMA1_Stream2_IRQHandler()
 {
 	while (1);
 }
 
 // 0x078, 14: DMA1 Stream 3
-__attribute__ ((weak)) void DMA1_Stream3_IRQHandler(void)
+__attribute__ ((weak)) void DMA1_Stream3_IRQHandler()
 {
 	while (1);
 }
 
 // 0x07c, 15: DMA1 Stream 4
-__attribute__ ((weak)) void DMA1_Stream4_IRQHandler(void)
+__attribute__ ((weak)) void DMA1_Stream4_IRQHandler()
 {
 	while (1);
 }
 
 // 0x080, 16: DMA1 Stream 5
-__attribute__ ((weak)) void DMA1_Stream5_IRQHandler(void)
+__attribute__ ((weak)) void DMA1_Stream5_IRQHandler()
 {
 	while (1);
 }
 
 // 0x084, 17: DMA1 Stream 6
-__attribute__ ((weak)) void DMA1_Stream6_IRQHandler(void)
+__attribute__ ((weak)) void DMA1_Stream6_IRQHandler()
 {
 	while (1);
 }
 
 // 0x088, 18: ADC1, ADC2 and ADC3
-__attribute__ ((weak)) void ADC_IRQHandler(void)
+__attribute__ ((weak)) void ADC_IRQHandler()
 {
 	while (1);
 }
@@ -156,25 +159,25 @@ __attribute__ ((weak)) void ADC_IRQHandler(void)
 #if defined(STM32F401_VECTORS) || defined(STM32F410_VECTORS)
 
 // 0x08c, 19: Reserved
-__attribute__ ((weak)) void __Reserved_0x8c_Handler(void)
+__attribute__ ((weak)) void __Reserved_0x8c_Handler()
 {
 	while (1);
 }
 
 // 0x090, 20: Reserved
-__attribute__ ((weak)) void __Reserved_0x90_Handler(void)
+__attribute__ ((weak)) void __Reserved_0x90_Handler()
 {
 	while (1);
 }
 
 // 0x094, 21: Reserved
-__attribute__ ((weak)) void __Reserved_0x94_Handler(void)
+__attribute__ ((weak)) void __Reserved_0x94_Handler()
 {
 	while (1);
 }
 
 // 0x098, 22: Reserved
-__attribute__ ((weak)) void __Reserved_0x98_Handler(void)
+__attribute__ ((weak)) void __Reserved_0x98_Handler()
 {
 	while (1);
 }
@@ -182,25 +185,25 @@ __attribute__ ((weak)) void __Reserved_0x98_Handler(void)
 #else	// !defined(STM32F401_VECTORS) && !defined(STM32F410_VECTORS)
 
 // 0x08c, 19: CAN1 TX
-__attribute__ ((weak)) void CAN1_TX_IRQHandler(void)
+__attribute__ ((weak)) void CAN1_TX_IRQHandler()
 {
 	while (1);
 }
 
 // 0x090, 20: CAN1 RX0
-__attribute__ ((weak)) void CAN1_RX0_IRQHandler(void)
+__attribute__ ((weak)) void CAN1_RX0_IRQHandler()
 {
 	while (1);
 }
 
 // 0x094, 21: CAN1 RX1
-__attribute__ ((weak)) void CAN1_RX1_IRQHandler(void)
+__attribute__ ((weak)) void CAN1_RX1_IRQHandler()
 {
 	while (1);
 }
 
 // 0x098, 22: CAN1 SCE
-__attribute__ ((weak)) void CAN1_SCE_IRQHandler(void)
+__attribute__ ((weak)) void CAN1_SCE_IRQHandler()
 {
 	while (1);
 }
@@ -208,13 +211,13 @@ __attribute__ ((weak)) void CAN1_SCE_IRQHandler(void)
 #endif	// !defined(STM32F401_VECTORS) && !defined(STM32F410_VECTORS)
 
 // 0x09c, 23: EXTI Lines [9:5]
-__attribute__ ((weak)) void EXTI9_5_IRQHandler(void)
+__attribute__ ((weak)) void EXTI9_5_IRQHandler()
 {
 	while (1);
 }
 
 // 0x0a0, 24: TIM1 Break and TIM9
-__attribute__ ((weak)) void TIM1_BRK_TIM9_IRQHandler(void)
+__attribute__ ((weak)) void TIM1_BRK_TIM9_IRQHandler()
 {
 	while (1);
 }
@@ -222,7 +225,7 @@ __attribute__ ((weak)) void TIM1_BRK_TIM9_IRQHandler(void)
 #if defined(STM32F410_VECTORS)
 
 // 0x0a4, 25: TIM1 Update
-__attribute__ ((weak)) void TIM1_UP_IRQHandler(void)
+__attribute__ ((weak)) void TIM1_UP_IRQHandler()
 {
 	while (1);
 }
@@ -230,7 +233,7 @@ __attribute__ ((weak)) void TIM1_UP_IRQHandler(void)
 #else	// !defined(STM32F410_VECTORS)
 
 // 0x0a4, 25: TIM1 Update and TIM10
-__attribute__ ((weak)) void TIM1_UP_TIM10_IRQHandler(void)
+__attribute__ ((weak)) void TIM1_UP_TIM10_IRQHandler()
 {
 	while (1);
 }
@@ -238,13 +241,13 @@ __attribute__ ((weak)) void TIM1_UP_TIM10_IRQHandler(void)
 #endif	// !defined(STM32F410_VECTORS)
 
 // 0x0a8, 26: TIM1 Trigger and Commutation and TIM11
-__attribute__ ((weak)) void TIM1_TRG_COM_TIM11_IRQHandler(void)
+__attribute__ ((weak)) void TIM1_TRG_COM_TIM11_IRQHandler()
 {
 	while (1);
 }
 
 // 0x0ac, 27: TIM1 Capture Compare
-__attribute__ ((weak)) void TIM1_CC_IRQHandler(void)
+__attribute__ ((weak)) void TIM1_CC_IRQHandler()
 {
 	while (1);
 }
@@ -252,19 +255,19 @@ __attribute__ ((weak)) void TIM1_CC_IRQHandler(void)
 #if defined(STM32F410_VECTORS)
 
 // 0x0b0, 28: Reserved
-__attribute__ ((weak)) void __Reserved_0xb0_Handler(void)
+__attribute__ ((weak)) void __Reserved_0xb0_Handler()
 {
 	while (1);
 }
 
 // 0x0b4, 29: Reserved
-__attribute__ ((weak)) void __Reserved_0xb4_Handler(void)
+__attribute__ ((weak)) void __Reserved_0xb4_Handler()
 {
 	while (1);
 }
 
 // 0x0b8, 30: Reserved
-__attribute__ ((weak)) void __Reserved_0xb8_Handler(void)
+__attribute__ ((weak)) void __Reserved_0xb8_Handler()
 {
 	while (1);
 }
@@ -272,19 +275,19 @@ __attribute__ ((weak)) void __Reserved_0xb8_Handler(void)
 #else	// !defined(STM32F410_VECTORS)
 
 // 0x0b0, 28: TIM2
-__attribute__ ((weak)) void TIM2_IRQHandler(void)
+__attribute__ ((weak)) void TIM2_IRQHandler()
 {
 	while (1);
 }
 
 // 0x0b4, 29: TIM3
-__attribute__ ((weak)) void TIM3_IRQHandler(void)
+__attribute__ ((weak)) void TIM3_IRQHandler()
 {
 	while (1);
 }
 
 // 0x0b8, 30: TIM4
-__attribute__ ((weak)) void TIM4_IRQHandler(void)
+__attribute__ ((weak)) void TIM4_IRQHandler()
 {
 	while (1);
 }
@@ -292,49 +295,49 @@ __attribute__ ((weak)) void TIM4_IRQHandler(void)
 #endif	// !defined(STM32F410_VECTORS)
 
 // 0x0bc, 31: I2C1 Event
-__attribute__ ((weak)) void I2C1_EV_IRQHandler(void)
+__attribute__ ((weak)) void I2C1_EV_IRQHandler()
 {
 	while (1);
 }
 
 // 0x0c0, 32: I2C1 Error
-__attribute__ ((weak)) void I2C1_ER_IRQHandler(void)
+__attribute__ ((weak)) void I2C1_ER_IRQHandler()
 {
 	while (1);
 }
 
 // 0x0c4, 33: I2C2 Event
-__attribute__ ((weak)) void I2C2_EV_IRQHandler(void)
+__attribute__ ((weak)) void I2C2_EV_IRQHandler()
 {
 	while (1);
 }
 
 // 0x0c8, 34: I2C2 Error
-__attribute__ ((weak)) void I2C2_ER_IRQHandler(void)
+__attribute__ ((weak)) void I2C2_ER_IRQHandler()
 {
 	while (1);
 }
 
 // 0x0cc, 35: SPI1
-__attribute__ ((weak)) void SPI1_IRQHandler(void)
+__attribute__ ((weak)) void SPI1_IRQHandler()
 {
 	while (1);
 }
 
 // 0x0d0, 36: SPI2
-__attribute__ ((weak)) void SPI2_IRQHandler(void)
+__attribute__ ((weak)) void SPI2_IRQHandler()
 {
 	while (1);
 }
 
 // 0x0d4, 37: USART1
-__attribute__ ((weak)) void USART1_IRQHandler(void)
+__attribute__ ((weak)) void USART1_IRQHandler()
 {
 	while (1);
 }
 
 // 0x0d8, 38: USART2
-__attribute__ ((weak)) void USART2_IRQHandler(void)
+__attribute__ ((weak)) void USART2_IRQHandler()
 {
 	while (1);
 }
@@ -342,7 +345,7 @@ __attribute__ ((weak)) void USART2_IRQHandler(void)
 #if defined(STM32F401_VECTORS) || defined(STM32F410_VECTORS)
 
 // 0x0dc, 39: Reserved
-__attribute__ ((weak)) void __Reserved_0xdc_Handler(void)
+__attribute__ ((weak)) void __Reserved_0xdc_Handler()
 {
 	while (1);
 }
@@ -350,7 +353,7 @@ __attribute__ ((weak)) void __Reserved_0xdc_Handler(void)
 #else	// !defined(STM32F401_VECTORS) && !defined(STM32F410_VECTORS)
 
 // 0x0dc, 39: USART3
-__attribute__ ((weak)) void USART3_IRQHandler(void)
+__attribute__ ((weak)) void USART3_IRQHandler()
 {
 	while (1);
 }
@@ -358,13 +361,13 @@ __attribute__ ((weak)) void USART3_IRQHandler(void)
 #endif	// !defined(STM32F401_VECTORS) && !defined(STM32F410_VECTORS)
 
 // 0x0e0, 40: EXTI Lines [15:10]
-__attribute__ ((weak)) void EXTI15_10_IRQHandler(void)
+__attribute__ ((weak)) void EXTI15_10_IRQHandler()
 {
 	while (1);
 }
 
 // 0x0e4, 41: RTC Alarm (A and B) through the EXTI line
-__attribute__ ((weak)) void RTC_Alarm_IRQHandler(void)
+__attribute__ ((weak)) void RTC_Alarm_IRQHandler()
 {
 	while (1);
 }
@@ -372,7 +375,7 @@ __attribute__ ((weak)) void RTC_Alarm_IRQHandler(void)
 #if defined(STM32F410_VECTORS)
 
 // 0x0e8, 42: Reserved
-__attribute__ ((weak)) void __Reserved_0xe8_Handler(void)
+__attribute__ ((weak)) void __Reserved_0xe8_Handler()
 {
 	while (1);
 }
@@ -380,7 +383,7 @@ __attribute__ ((weak)) void __Reserved_0xe8_Handler(void)
 #else	// !defined(STM32F410_VECTORS)
 
 // 0x0e8, 42: USB OTG FS Wakeup through the EXTI line
-__attribute__ ((weak)) void OTG_FS_WKUP_IRQHandler(void)
+__attribute__ ((weak)) void OTG_FS_WKUP_IRQHandler()
 {
 	while (1);
 }
@@ -390,25 +393,25 @@ __attribute__ ((weak)) void OTG_FS_WKUP_IRQHandler(void)
 #if defined(STM32F401_VECTORS) || defined(STM32F410_VECTORS)
 
 // 0x0ec, 43: Reserved
-__attribute__ ((weak)) void __Reserved_0xec_Handler(void)
+__attribute__ ((weak)) void __Reserved_0xec_Handler()
 {
 	while (1);
 }
 
 // 0x0f0, 44: Reserved
-__attribute__ ((weak)) void __Reserved_0xf0_Handler(void)
+__attribute__ ((weak)) void __Reserved_0xf0_Handler()
 {
 	while (1);
 }
 
 // 0x0f4, 45: Reserved
-__attribute__ ((weak)) void __Reserved_0xf4_Handler(void)
+__attribute__ ((weak)) void __Reserved_0xf4_Handler()
 {
 	while (1);
 }
 
 // 0x0f8, 46: Reserved
-__attribute__ ((weak)) void __Reserved_0xf8_Handler(void)
+__attribute__ ((weak)) void __Reserved_0xf8_Handler()
 {
 	while (1);
 }
@@ -416,25 +419,25 @@ __attribute__ ((weak)) void __Reserved_0xf8_Handler(void)
 #else	// !defined(STM32F401_VECTORS) && !defined(STM32F410_VECTORS)
 
 // 0x0ec, 43: TIM8 Break and TIM12
-__attribute__ ((weak)) void TIM8_BRK_TIM12_IRQHandler(void)
+__attribute__ ((weak)) void TIM8_BRK_TIM12_IRQHandler()
 {
 	while (1);
 }
 
 // 0x0f0, 44: TIM8 Update and TIM13
-__attribute__ ((weak)) void TIM8_UP_TIM13_IRQHandler(void)
+__attribute__ ((weak)) void TIM8_UP_TIM13_IRQHandler()
 {
 	while (1);
 }
 
 // 0x0f4, 45: TIM8 Trigger and Commutation and TIM14
-__attribute__ ((weak)) void TIM8_TRG_COM_TIM14_IRQHandler(void)
+__attribute__ ((weak)) void TIM8_TRG_COM_TIM14_IRQHandler()
 {
 	while (1);
 }
 
 // 0x0f8, 46: TIM8 Capture Compare
-__attribute__ ((weak)) void TIM8_CC_IRQHandler(void)
+__attribute__ ((weak)) void TIM8_CC_IRQHandler()
 {
 	while (1);
 }
@@ -442,7 +445,7 @@ __attribute__ ((weak)) void TIM8_CC_IRQHandler(void)
 #endif	// !defined(STM32F401_VECTORS) && !defined(STM32F410_VECTORS)
 
 // 0x0fc, 47: DMA1 Stream7
-__attribute__ ((weak)) void DMA1_Stream7_IRQHandler(void)
+__attribute__ ((weak)) void DMA1_Stream7_IRQHandler()
 {
 	while (1);
 }
@@ -450,7 +453,7 @@ __attribute__ ((weak)) void DMA1_Stream7_IRQHandler(void)
 #if defined(STM32F401_VECTORS) || defined(STM32F410_VECTORS)
 
 // 0x100, 48: Reserved
-__attribute__ ((weak)) void __Reserved_0x100_Handler(void)
+__attribute__ ((weak)) void __Reserved_0x100_Handler()
 {
 	while (1);
 }
@@ -458,7 +461,7 @@ __attribute__ ((weak)) void __Reserved_0x100_Handler(void)
 #else	// !defined(STM32F401_VECTORS) && !defined(STM32F410_VECTORS)
 
 // 0x100, 48: FSMC
-__attribute__ ((weak)) void FSMC_IRQHandler(void)
+__attribute__ ((weak)) void FSMC_IRQHandler()
 {
 	while (1);
 }
@@ -468,7 +471,7 @@ __attribute__ ((weak)) void FSMC_IRQHandler(void)
 #if defined(STM32F410_VECTORS)
 
 // 0x104, 49: Reserved
-__attribute__ ((weak)) void __Reserved_0x104_Handler(void)
+__attribute__ ((weak)) void __Reserved_0x104_Handler()
 {
 	while (1);
 }
@@ -476,7 +479,7 @@ __attribute__ ((weak)) void __Reserved_0x104_Handler(void)
 #else	// !defined(STM32F410_VECTORS)
 
 // 0x104, 49: SDIO
-__attribute__ ((weak)) void SDIO_IRQHandler(void)
+__attribute__ ((weak)) void SDIO_IRQHandler()
 {
 	while (1);
 }
@@ -484,7 +487,7 @@ __attribute__ ((weak)) void SDIO_IRQHandler(void)
 #endif	// !defined(STM32F410_VECTORS)
 
 // 0x108, 50: TIM5
-__attribute__ ((weak)) void TIM5_IRQHandler(void)
+__attribute__ ((weak)) void TIM5_IRQHandler()
 {
 	while (1);
 }
@@ -492,7 +495,7 @@ __attribute__ ((weak)) void TIM5_IRQHandler(void)
 #if defined(STM32F410_VECTORS)
 
 // 0x10c, 51: Reserved
-__attribute__ ((weak)) void __Reserved_0x10c_Handler(void)
+__attribute__ ((weak)) void __Reserved_0x10c_Handler()
 {
 	while (1);
 }
@@ -500,7 +503,7 @@ __attribute__ ((weak)) void __Reserved_0x10c_Handler(void)
 #else	// !defined(STM32F410_VECTORS)
 
 // 0x10c, 51: SPI3
-__attribute__ ((weak)) void SPI3_IRQHandler(void)
+__attribute__ ((weak)) void SPI3_IRQHandler()
 {
 	while (1);
 }
@@ -510,13 +513,13 @@ __attribute__ ((weak)) void SPI3_IRQHandler(void)
 #if defined(STM32F401_VECTORS) || defined(STM32F410_VECTORS)
 
 // 0x110, 52: Reserved
-__attribute__ ((weak)) void __Reserved_0x110_Handler(void)
+__attribute__ ((weak)) void __Reserved_0x110_Handler()
 {
 	while (1);
 }
 
 // 0x114, 53: Reserved
-__attribute__ ((weak)) void __Reserved_0x114_Handler(void)
+__attribute__ ((weak)) void __Reserved_0x114_Handler()
 {
 	while (1);
 }
@@ -524,13 +527,13 @@ __attribute__ ((weak)) void __Reserved_0x114_Handler(void)
 #else	// !defined(STM32F401_VECTORS) && !defined(STM32F410_VECTORS)
 
 // 0x110, 52: UART4
-__attribute__ ((weak)) void UART4_IRQHandler(void)
+__attribute__ ((weak)) void UART4_IRQHandler()
 {
 	while (1);
 }
 
 // 0x114, 53: UART5
-__attribute__ ((weak)) void UART5_IRQHandler(void)
+__attribute__ ((weak)) void UART5_IRQHandler()
 {
 	while (1);
 }
@@ -540,7 +543,7 @@ __attribute__ ((weak)) void UART5_IRQHandler(void)
 #if defined(STM32F401_VECTORS)
 
 // 0x118, 54: Reserved
-__attribute__ ((weak)) void __Reserved_0x118_Handler(void)
+__attribute__ ((weak)) void __Reserved_0x118_Handler()
 {
 	while (1);
 }
@@ -548,7 +551,7 @@ __attribute__ ((weak)) void __Reserved_0x118_Handler(void)
 #else	// !defined(STM32F401_VECTORS)
 
 // 0x118, 54: TIM6 and DAC1&2 underrun error
-__attribute__ ((weak)) void TIM6_DAC_IRQHandler(void)
+__attribute__ ((weak)) void TIM6_DAC_IRQHandler()
 {
 	while (1);
 }
@@ -558,7 +561,7 @@ __attribute__ ((weak)) void TIM6_DAC_IRQHandler(void)
 #if defined(STM32F401_VECTORS) || defined(STM32F410_VECTORS)
 
 // 0x11c, 55: Reserved
-__attribute__ ((weak)) void __Reserved_0x11c_Handler(void)
+__attribute__ ((weak)) void __Reserved_0x11c_Handler()
 {
 	while (1);
 }
@@ -566,7 +569,7 @@ __attribute__ ((weak)) void __Reserved_0x11c_Handler(void)
 #else	// !defined(STM32F401_VECTORS) && !defined(STM32F410_VECTORS)
 
 // 0x11c, 55: TIM7
-__attribute__ ((weak)) void TIM7_IRQHandler(void)
+__attribute__ ((weak)) void TIM7_IRQHandler()
 {
 	while (1);
 }
@@ -574,31 +577,31 @@ __attribute__ ((weak)) void TIM7_IRQHandler(void)
 #endif	// !defined(STM32F401_VECTORS) && !defined(STM32F410_VECTORS)
 
 // 0x120, 56: DMA2 Stream 0
-__attribute__ ((weak)) void DMA2_Stream0_IRQHandler(void)
+__attribute__ ((weak)) void DMA2_Stream0_IRQHandler()
 {
 	while (1);
 }
 
 // 0x124, 57: DMA2 Stream 1
-__attribute__ ((weak)) void DMA2_Stream1_IRQHandler(void)
+__attribute__ ((weak)) void DMA2_Stream1_IRQHandler()
 {
 	while (1);
 }
 
 // 0x128, 58: DMA2 Stream 2
-__attribute__ ((weak)) void DMA2_Stream2_IRQHandler(void)
+__attribute__ ((weak)) void DMA2_Stream2_IRQHandler()
 {
 	while (1);
 }
 
 // 0x12c, 59: DMA2 Stream 3
-__attribute__ ((weak)) void DMA2_Stream3_IRQHandler(void)
+__attribute__ ((weak)) void DMA2_Stream3_IRQHandler()
 {
 	while (1);
 }
 
 // 0x130, 60: DMA2 Stream 4
-__attribute__ ((weak)) void DMA2_Stream4_IRQHandler(void)
+__attribute__ ((weak)) void DMA2_Stream4_IRQHandler()
 {
 	while (1);
 }
@@ -606,7 +609,7 @@ __attribute__ ((weak)) void DMA2_Stream4_IRQHandler(void)
 #if defined(STM32F401_VECTORS) || defined(STM32F410_VECTORS)
 
 // 0x134, 61: Reserved
-__attribute__ ((weak)) void __Reserved_0x134_Handler(void)
+__attribute__ ((weak)) void __Reserved_0x134_Handler()
 {
 	while (1);
 }
@@ -614,7 +617,7 @@ __attribute__ ((weak)) void __Reserved_0x134_Handler(void)
 #else	// !defined(STM32F401_VECTORS) && !defined(STM32F410_VECTORS)
 
 // 0x134, 61: Ethernet
-__attribute__ ((weak)) void ETH_IRQHandler(void)
+__attribute__ ((weak)) void ETH_IRQHandler()
 {
 	while (1);
 }
@@ -624,7 +627,7 @@ __attribute__ ((weak)) void ETH_IRQHandler(void)
 #if defined(STM32F401_VECTORS)
 
 // 0x138, 62: Reserved
-__attribute__ ((weak)) void __Reserved_0x138_Handler(void)
+__attribute__ ((weak)) void __Reserved_0x138_Handler()
 {
 	while (1);
 }
@@ -632,7 +635,7 @@ __attribute__ ((weak)) void __Reserved_0x138_Handler(void)
 #elif defined(STM32F410_VECTORS)
 
 // 0x138, 62: EXTI Line 19
-__attribute__ ((weak)) void EXTI19_IRQHandler(void)
+__attribute__ ((weak)) void EXTI19_IRQHandler()
 {
 	while (1);
 }
@@ -640,7 +643,7 @@ __attribute__ ((weak)) void EXTI19_IRQHandler(void)
 #else	// !defined(STM32F401_VECTORS) && !defined(STM32F410_VECTORS)
 
 // 0x138, 62: Ethernet Wakeup through the EXTI line
-__attribute__ ((weak)) void ETH_WKUP_IRQHandler(void)
+__attribute__ ((weak)) void ETH_WKUP_IRQHandler()
 {
 	while (1);
 }
@@ -650,25 +653,25 @@ __attribute__ ((weak)) void ETH_WKUP_IRQHandler(void)
 #if defined(STM32F401_VECTORS) || defined(STM32F410_VECTORS)
 
 // 0x13c, 63: Reserved
-__attribute__ ((weak)) void __Reserved_0x13c_Handler(void)
+__attribute__ ((weak)) void __Reserved_0x13c_Handler()
 {
 	while (1);
 }
 
 // 0x140, 64: Reserved
-__attribute__ ((weak)) void __Reserved_0x140_Handler(void)
+__attribute__ ((weak)) void __Reserved_0x140_Handler()
 {
 	while (1);
 }
 
 // 0x144, 65: Reserved
-__attribute__ ((weak)) void __Reserved_0x144_Handler(void)
+__attribute__ ((weak)) void __Reserved_0x144_Handler()
 {
 	while (1);
 }
 
 // 0x148, 66: Reserved
-__attribute__ ((weak)) void __Reserved_0x148_Handler(void)
+__attribute__ ((weak)) void __Reserved_0x148_Handler()
 {
 	while (1);
 }
@@ -676,25 +679,25 @@ __attribute__ ((weak)) void __Reserved_0x148_Handler(void)
 #else	// !defined(STM32F401_VECTORS) && !defined(STM32F410_VECTORS)
 
 // 0x13c, 63: CAN2 TX
-__attribute__ ((weak)) void CAN2_TX_IRQHandler(void)
+__attribute__ ((weak)) void CAN2_TX_IRQHandler()
 {
 	while (1);
 }
 
 // 0x140, 64: CAN2 RX0
-__attribute__ ((weak)) void CAN2_RX0_IRQHandler(void)
+__attribute__ ((weak)) void CAN2_RX0_IRQHandler()
 {
 	while (1);
 }
 
 // 0x144, 65: CAN2 RX1
-__attribute__ ((weak)) void CAN2_RX1_IRQHandler(void)
+__attribute__ ((weak)) void CAN2_RX1_IRQHandler()
 {
 	while (1);
 }
 
 // 0x148, 66: CAN2 SCE
-__attribute__ ((weak)) void CAN2_SCE_IRQHandler(void)
+__attribute__ ((weak)) void CAN2_SCE_IRQHandler()
 {
 	while (1);
 }
@@ -704,7 +707,7 @@ __attribute__ ((weak)) void CAN2_SCE_IRQHandler(void)
 #if defined(STM32F410_VECTORS)
 
 // 0x14c, 67: Reserved
-__attribute__ ((weak)) void __Reserved_0x14c_Handler(void)
+__attribute__ ((weak)) void __Reserved_0x14c_Handler()
 {
 	while (1);
 }
@@ -712,7 +715,7 @@ __attribute__ ((weak)) void __Reserved_0x14c_Handler(void)
 #else	// !defined(STM32F410_VECTORS)
 
 // 0x14c, 67: USB OTG FS
-__attribute__ ((weak)) void OTG_FS_IRQHandler(void)
+__attribute__ ((weak)) void OTG_FS_IRQHandler()
 {
 	while (1);
 }
@@ -720,25 +723,25 @@ __attribute__ ((weak)) void OTG_FS_IRQHandler(void)
 #endif	// !defined(STM32F410_VECTORS)
 
 // 0x150, 68: DMA2 Stream 5
-__attribute__ ((weak)) void DMA2_Stream5_IRQHandler(void)
+__attribute__ ((weak)) void DMA2_Stream5_IRQHandler()
 {
 	while (1);
 }
 
 // 0x154, 69: DMA2 Stream 6
-__attribute__ ((weak)) void DMA2_Stream6_IRQHandler(void)
+__attribute__ ((weak)) void DMA2_Stream6_IRQHandler()
 {
 	while (1);
 }
 
 // 0x158, 70: DMA2 Stream 7
-__attribute__ ((weak)) void DMA2_Stream7_IRQHandler(void)
+__attribute__ ((weak)) void DMA2_Stream7_IRQHandler()
 {
 	while (1);
 }
 
 // 0x15c, 71: USART6
-__attribute__ ((weak)) void USART6_IRQHandler(void)
+__attribute__ ((weak)) void USART6_IRQHandler()
 {
 	while (1);
 }
@@ -746,13 +749,13 @@ __attribute__ ((weak)) void USART6_IRQHandler(void)
 #if defined(STM32F410_VECTORS)
 
 // 0x160, 72: Reserved
-__attribute__ ((weak)) void __Reserved_0x160_Handler(void)
+__attribute__ ((weak)) void __Reserved_0x160_Handler()
 {
 	while (1);
 }
 
 // 0x164, 73: Reserved
-__attribute__ ((weak)) void __Reserved_0x164_Handler(void)
+__attribute__ ((weak)) void __Reserved_0x164_Handler()
 {
 	while (1);
 }
@@ -760,13 +763,13 @@ __attribute__ ((weak)) void __Reserved_0x164_Handler(void)
 #else	// !defined(STM32F410_VECTORS)
 
 // 0x160, 72: I2C3 event
-__attribute__ ((weak)) void I2C3_EV_IRQHandler(void)
+__attribute__ ((weak)) void I2C3_EV_IRQHandler()
 {
 	while (1);
 }
 
 // 0x164, 73: I2C3 error
-__attribute__ ((weak)) void I2C3_ER_IRQHandler(void)
+__attribute__ ((weak)) void I2C3_ER_IRQHandler()
 {
 	while (1);
 }
@@ -776,13 +779,13 @@ __attribute__ ((weak)) void I2C3_ER_IRQHandler(void)
 #if defined(STM32F401_VECTORS) || defined(STM32F410_VECTORS)
 
 // 0x168, 74: Reserved
-__attribute__ ((weak)) void __Reserved_0x168_Handler(void)
+__attribute__ ((weak)) void __Reserved_0x168_Handler()
 {
 	while (1);
 }
 
 // 0x16c, 75: Reserved
-__attribute__ ((weak)) void __Reserved_0x16c_Handler(void)
+__attribute__ ((weak)) void __Reserved_0x16c_Handler()
 {
 	while (1);
 }
@@ -790,13 +793,13 @@ __attribute__ ((weak)) void __Reserved_0x16c_Handler(void)
 #else	// !defined(STM32F401_VECTORS) && !defined(STM32F410_VECTORS)
 
 // 0x168, 74: USB OTG HS End Point 1 Out
-__attribute__ ((weak)) void OTG_HS_EP1_OUT_IRQHandler(void)
+__attribute__ ((weak)) void OTG_HS_EP1_OUT_IRQHandler()
 {
 	while (1);
 }
 
 // 0x16c, 75: USB OTG HS End Point 1 In
-__attribute__ ((weak)) void OTG_HS_EP1_IN_IRQHandler(void)
+__attribute__ ((weak)) void OTG_HS_EP1_IN_IRQHandler()
 {
 	while (1);
 }
@@ -806,7 +809,7 @@ __attribute__ ((weak)) void OTG_HS_EP1_IN_IRQHandler(void)
 #if defined(STM32F401_VECTORS)
 
 // 0x170, 76: Reserved
-__attribute__ ((weak)) void __Reserved_0x170_Handler(void)
+__attribute__ ((weak)) void __Reserved_0x170_Handler()
 {
 	while (1);
 }
@@ -814,7 +817,7 @@ __attribute__ ((weak)) void __Reserved_0x170_Handler(void)
 #elif defined(STM32F410_VECTORS)
 
 // 0x170, 76: EXTI Line 20
-__attribute__ ((weak)) void EXTI20_IRQHandler(void)
+__attribute__ ((weak)) void EXTI20_IRQHandler()
 {
 	while (1);
 }
@@ -822,7 +825,7 @@ __attribute__ ((weak)) void EXTI20_IRQHandler(void)
 #else	// !defined(STM32F401_VECTORS) && !defined(STM32F410_VECTORS)
 
 // 0x170, 76: USB OTG HS Wakeup through the EXTI line
-__attribute__ ((weak)) void OTG_HS_WKUP_IRQHandler(void)
+__attribute__ ((weak)) void OTG_HS_WKUP_IRQHandler()
 {
 	while (1);
 }
@@ -832,19 +835,19 @@ __attribute__ ((weak)) void OTG_HS_WKUP_IRQHandler(void)
 #if defined(STM32F401_VECTORS) || defined(STM32F410_VECTORS)
 
 // 0x174, 77: Reserved
-__attribute__ ((weak)) void __Reserved_0x174_Handler(void)
+__attribute__ ((weak)) void __Reserved_0x174_Handler()
 {
 	while (1);
 }
 
 // 0x178, 78: Reserved
-__attribute__ ((weak)) void __Reserved_0x178_Handler(void)
+__attribute__ ((weak)) void __Reserved_0x178_Handler()
 {
 	while (1);
 }
 
 // 0x17c, 79: Reserved
-__attribute__ ((weak)) void __Reserved_0x17c_Handler(void)
+__attribute__ ((weak)) void __Reserved_0x17c_Handler()
 {
 	while (1);
 }
@@ -852,19 +855,19 @@ __attribute__ ((weak)) void __Reserved_0x17c_Handler(void)
 #else	// !defined(STM32F401_VECTORS) && !defined(STM32F410_VECTORS)
 
 // 0x174, 77: USB OTG HS
-__attribute__ ((weak)) void OTG_HS_IRQHandler(void)
+__attribute__ ((weak)) void OTG_HS_IRQHandler()
 {
 	while (1);
 }
 
 // 0x178, 78: DCMI
-__attribute__ ((weak)) void DCMI_IRQHandler(void)
+__attribute__ ((weak)) void DCMI_IRQHandler()
 {
 	while (1);
 }
 
 // 0x17c, 79: CRYP crypto
-__attribute__ ((weak)) void CRYP_IRQHandler(void)
+__attribute__ ((weak)) void CRYP_IRQHandler()
 {
 	while (1);
 }
@@ -874,7 +877,7 @@ __attribute__ ((weak)) void CRYP_IRQHandler(void)
 #if defined(STM32F401_VECTORS)
 
 // 0x180, 80: Reserved
-__attribute__ ((weak)) void __Reserved_0x180_Handler(void)
+__attribute__ ((weak)) void __Reserved_0x180_Handler()
 {
 	while (1);
 }
@@ -882,7 +885,7 @@ __attribute__ ((weak)) void __Reserved_0x180_Handler(void)
 #elif defined(STM32F410_VECTORS)
 
 // 0x180, 80: RNG
-__attribute__ ((weak)) void RNG_IRQHandler(void)
+__attribute__ ((weak)) void RNG_IRQHandler()
 {
 	while (1);
 }
@@ -890,7 +893,7 @@ __attribute__ ((weak)) void RNG_IRQHandler(void)
 #else	// !defined(STM32F401_VECTORS) && !defined(STM32F410_VECTORS)
 
 // 0x180, 80: Hash and RNG
-__attribute__ ((weak)) void HASH_RNG_IRQHandler(void)
+__attribute__ ((weak)) void HASH_RNG_IRQHandler()
 {
 	while (1);
 }
@@ -898,7 +901,7 @@ __attribute__ ((weak)) void HASH_RNG_IRQHandler(void)
 #endif	// !defined(STM32F401_VECTORS) && !defined(STM32F410_VECTORS)
 
 // 0x184, 81: FPU
-__attribute__ ((weak)) void FPU_IRQHandler(void)
+__attribute__ ((weak)) void FPU_IRQHandler()
 {
 	while (1);
 }
@@ -908,13 +911,13 @@ __attribute__ ((weak)) void FPU_IRQHandler(void)
 #	if defined(STM32F401_VECTORS) || defined(STM32F410_VECTORS)
 
 // 0x188, 82: Reserved
-__attribute__ ((weak)) void __Reserved_0x188_Handler(void)
+__attribute__ ((weak)) void __Reserved_0x188_Handler()
 {
 	while (1);
 }
 
 // 0x18c, 83: Reserved
-__attribute__ ((weak)) void __Reserved_0x18c_Handler(void)
+__attribute__ ((weak)) void __Reserved_0x18c_Handler()
 {
 	while (1);
 }
@@ -922,13 +925,13 @@ __attribute__ ((weak)) void __Reserved_0x18c_Handler(void)
 #	else	// !defined(STM32F401_VECTORS) && !defined(STM32F410_VECTORS)
 
 // 0x188, 82: UART7
-__attribute__ ((weak)) void UART7_IRQHandler(void)
+__attribute__ ((weak)) void UART7_IRQHandler()
 {
 	while (1);
 }
 
 // 0x18c, 83: UART8
-__attribute__ ((weak)) void UART8_IRQHandler(void)
+__attribute__ ((weak)) void UART8_IRQHandler()
 {
 	while (1);
 }
@@ -938,7 +941,7 @@ __attribute__ ((weak)) void UART8_IRQHandler(void)
 #	if defined(STM32F410_VECTORS)
 
 // 0x190, 84: Reserved
-__attribute__ ((weak)) void __Reserved_0x190_Handler(void)
+__attribute__ ((weak)) void __Reserved_0x190_Handler()
 {
 	while (1);
 }
@@ -946,7 +949,7 @@ __attribute__ ((weak)) void __Reserved_0x190_Handler(void)
 #	else	// !defined(STM32F410_VECTORS)
 
 // 0x190, 84: SPI4
-__attribute__ ((weak)) void SPI4_IRQHandler(void)
+__attribute__ ((weak)) void SPI4_IRQHandler()
 {
 	while (1);
 }
@@ -958,7 +961,7 @@ __attribute__ ((weak)) void SPI4_IRQHandler(void)
 #if defined(STM32F410_VECTORS) || defined(STM32F42_STM32F43_VECTORS)
 
 // 0x194, 85: SPI5
-__attribute__ ((weak)) void SPI5_IRQHandler(void)
+__attribute__ ((weak)) void SPI5_IRQHandler()
 {
 	while (1);
 }
@@ -966,31 +969,31 @@ __attribute__ ((weak)) void SPI5_IRQHandler(void)
 #	if defined(STM32F410_VECTORS)
 
 // 0x198, 86: Reserved
-__attribute__ ((weak)) void __Reserved_0x198_Handler(void)
+__attribute__ ((weak)) void __Reserved_0x198_Handler()
 {
 	while (1);
 }
 
 // 0x19c, 87: Reserved
-__attribute__ ((weak)) void __Reserved_0x19c_Handler(void)
+__attribute__ ((weak)) void __Reserved_0x19c_Handler()
 {
 	while (1);
 }
 
 // 0x1a0, 88: Reserved
-__attribute__ ((weak)) void __Reserved_0x1a0_Handler(void)
+__attribute__ ((weak)) void __Reserved_0x1a0_Handler()
 {
 	while (1);
 }
 
 // 0x1a4, 89: Reserved
-__attribute__ ((weak)) void __Reserved_0x1a4_Handler(void)
+__attribute__ ((weak)) void __Reserved_0x1a4_Handler()
 {
 	while (1);
 }
 
 // 0x1a8, 90: Reserved
-__attribute__ ((weak)) void __Reserved_0x1a8_Handler(void)
+__attribute__ ((weak)) void __Reserved_0x1a8_Handler()
 {
 	while (1);
 }
@@ -998,31 +1001,31 @@ __attribute__ ((weak)) void __Reserved_0x1a8_Handler(void)
 #	else	// !defined(STM32F410_VECTORS)
 
 // 0x198, 86: SPI6
-__attribute__ ((weak)) void SPI6_IRQHandler(void)
+__attribute__ ((weak)) void SPI6_IRQHandler()
 {
 	while (1);
 }
 
 // 0x19c, 87: SAI1
-__attribute__ ((weak)) void SAI1_IRQHandler(void)
+__attribute__ ((weak)) void SAI1_IRQHandler()
 {
 	while (1);
 }
 
 // 0x1a0, 88: LTDC
-__attribute__ ((weak)) void LTDC_IRQHandler(void)
+__attribute__ ((weak)) void LTDC_IRQHandler()
 {
 	while (1);
 }
 
 // 0x1a4, 89: LTDC error
-__attribute__ ((weak)) void LTDC_ER_IRQHandler(void)
+__attribute__ ((weak)) void LTDC_ER_IRQHandler()
 {
 	while (1);
 }
 
 // 0x1a8, 90: DMA2D
-__attribute__ ((weak)) void DMA2D_IRQHandler(void)
+__attribute__ ((weak)) void DMA2D_IRQHandler()
 {
 	while (1);
 }
@@ -1034,62 +1037,65 @@ __attribute__ ((weak)) void DMA2D_IRQHandler(void)
 #if defined(STM32F410_VECTORS)
 
 // 0x1ac, 91: Reserved
-__attribute__ ((weak)) void __Reserved_0x1ac_Handler(void)
+__attribute__ ((weak)) void __Reserved_0x1ac_Handler()
 {
 	while (1);
 }
 
 // 0x1b0, 92: Reserved
-__attribute__ ((weak)) void __Reserved_0x1b0_Handler(void)
+__attribute__ ((weak)) void __Reserved_0x1b0_Handler()
 {
 	while (1);
 }
 
 // 0x1b4, 93: Reserved
-__attribute__ ((weak)) void __Reserved_0x1b4_Handler(void)
+__attribute__ ((weak)) void __Reserved_0x1b4_Handler()
 {
 	while (1);
 }
 
 // 0x1b8, 94: Reserved
-__attribute__ ((weak)) void __Reserved_0x1b8_Handler(void)
+__attribute__ ((weak)) void __Reserved_0x1b8_Handler()
 {
 	while (1);
 }
 
 // 0x1bc, 95: FMPI2C1 Event
-__attribute__ ((weak)) void FMPI2C1_EV_IRQHandler(void)
+__attribute__ ((weak)) void FMPI2C1_EV_IRQHandler()
 {
 	while (1);
 }
 
 // 0x1c0, 96: FMPI2C1 Error
-__attribute__ ((weak)) void FMPI2C1_ER_IRQHandler(void)
+__attribute__ ((weak)) void FMPI2C1_ER_IRQHandler()
 {
 	while (1);
 }
 
 // 0x1c4, 97: LPTIM1 through the EXTI line
-__attribute__ ((weak)) void LPTIM1_IRQHandler(void)
+__attribute__ ((weak)) void LPTIM1_IRQHandler()
 {
 	while (1);
 }
 
 #endif	// defined(STM32F410_VECTORS)
 
+}	// extern "C"
+
 /*---------------------------------------------------------------------------------------------------------------------+
 | local types
 +---------------------------------------------------------------------------------------------------------------------*/
 
 /// single interrupt vector - pointer to function with no arguments and no return value
-typedef void (*InterruptVector)(void);
+using InterruptVector = void(*)();
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | global variables
 +---------------------------------------------------------------------------------------------------------------------*/
 
 /// chip vector table
-const InterruptVector chipVectors[] __attribute__ ((section(".chipVectors"))) =
+/// \todo remove "=" when bug in doxygen is fixed
+extern "C" const InterruptVector chipVectors[] __attribute__ ((section(".chipVectors"))) =
 {
 		WWDG_IRQHandler,					// 0x040, 0: Window WatchDog
 		PVD_IRQHandler,						// 0x044, 1: PVD through EXTI Line detection
