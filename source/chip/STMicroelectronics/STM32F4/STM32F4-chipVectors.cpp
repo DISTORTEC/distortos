@@ -18,6 +18,8 @@
 
 #include "distortos/distortosConfiguration.h"
 
+#include <cstddef>
+
 /*---------------------------------------------------------------------------------------------------------------------+
 | vectors' configuration
 +---------------------------------------------------------------------------------------------------------------------*/
@@ -1469,3 +1471,26 @@ extern "C" const InterruptVector chipVectors[] __attribute__ ((section(".chipVec
 #endif	// defined(STM32F410_VECTORS)
 
 };
+
+namespace
+{
+
+/// expected number of chip vectors
+constexpr size_t expectedChipVectorsSize
+{
+#if defined(STM32F401_VECTORS)
+		85
+#elif defined(STM32F405_STM32F407_STM32F415_STM32F417_VECTORS)
+		82
+#elif defined(STM32F410_VECTORS)
+		98
+#elif defined(STM32F42_STM32F43_VECTORS)
+		91
+#else
+#	error "Wrong configuration or unsupported STM32F4 chip!"
+#endif
+};
+
+static_assert(sizeof(chipVectors) / sizeof(*chipVectors) == expectedChipVectorsSize, "Invalid size of chipVectors[]!");
+
+}	// namespace
