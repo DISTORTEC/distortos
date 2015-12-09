@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-06-22
+ * \date 2015-12-09
  */
 
 /*---------------------------------------------------------------------------------------------------------------------+
@@ -45,8 +45,8 @@ __attribute__ ((weak)) void UsageFault_Handler(void)
 	while (1);
 }
 
-// Reserved 0x1C
-__attribute__ ((weak)) void __Reserved_0x1C_Handler(void)
+// Reserved 0x1c
+__attribute__ ((weak)) void __Reserved_0x1c_Handler(void)
 {
 	while (1);
 }
@@ -128,7 +128,7 @@ const InterruptVector coreVectors[] __attribute__ ((section(".coreVectors"))) =
 		MemManage_Handler,						// Memory management
 		BusFault_Handler,						// Pre-fetch fault, memory access fault
 		UsageFault_Handler,						// Undefined instruction or illegal state
-		__Reserved_0x1C_Handler,				// Reserved 0x1C
+		__Reserved_0x1c_Handler,				// Reserved 0x1c
 		__Reserved_0x20_Handler,				// Reserved 0x20
 		__Reserved_0x24_Handler,				// Reserved 0x24
 		__Reserved_0x28_Handler,				// Reserved 0x28
