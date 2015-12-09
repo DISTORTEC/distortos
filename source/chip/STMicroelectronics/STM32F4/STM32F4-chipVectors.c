@@ -2,13 +2,17 @@
  * \file
  * \brief STM32F4 chip vector table and default weak handlers.
  *
+ * This file covers devices as described in following places:
+ * - RM0368 reference manual (STM32F401xB/C and STM32F401xD/E), Revision 4, 2015-05-04
+ * - RM0090 reference manual (STM32F405/415, STM32F407/417, STM32F427/437 and STM32F429/439), Revision 11, 2015-10-20
+ *
  * \author Copyright (C) 2014-2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-12-08
+ * \date 2015-12-09
  */
 
 #include "distortos/distortosConfiguration.h"
