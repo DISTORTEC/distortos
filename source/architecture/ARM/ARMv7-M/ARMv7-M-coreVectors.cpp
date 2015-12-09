@@ -144,3 +144,5 @@ extern "C" const InterruptVector coreVectors[] __attribute__ ((section(".coreVec
 		PendSV_Handler,											// 0x38: Pendable request for system service
 		SysTick_Handler,										// 0x3c: System tick timer
 };
+
+static_assert(sizeof(coreVectors) / sizeof(*coreVectors) == 16, "Invalid size of coreVectors[]!");
