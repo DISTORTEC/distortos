@@ -10,7 +10,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-09-17
+ * \date 2015-12-09
  */
 
 #ifndef SOURCE_CHIP_STMICROELECTRONICS_STM32F4_INCLUDE_DISTORTOS_CHIP_STM32F4_FLASH_BITS_H_
@@ -212,8 +212,8 @@
 #define FLASH_OPTCR1_nWRP_7_bit				23
 #define FLASH_OPTCR1_nWRP_8_bit				24
 #define FLASH_OPTCR1_nWRP_9_bit				25
-#define FLASH_OPTCR1_nWRP_10_bit				26
-#define FLASH_OPTCR1_nWRP_11_bit				27
+#define FLASH_OPTCR1_nWRP_10_bit			26
+#define FLASH_OPTCR1_nWRP_11_bit			27
 
 #define FLASH_OPTCR1_nWRP_0_bb				BITBAND(&FLASH->OPTCR1, FLASH_OPTCR1_nWRP_0_bit)
 #define FLASH_OPTCR1_nWRP_1_bb				BITBAND(&FLASH->OPTCR1, FLASH_OPTCR1_nWRP_1_bit)
