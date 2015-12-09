@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-09-17
+ * \date 2015-12-09
  */
 
 #ifndef SOURCE_CHIP_STMICROELECTRONICS_STM32F4_INCLUDE_DISTORTOS_CHIP_STM32F4_FLASH_HPP_
@@ -29,10 +29,11 @@ namespace chip
 +---------------------------------------------------------------------------------------------------------------------*/
 
 /// maximum allowed value of flash latency
-#if defined(CONFIG_CHIP_STM32F42) || defined(CONFIG_CHIP_STM32F43)
-constexpr uint8_t maxFlashLatency {15};
-#else
+#if defined(CONFIG_CHIP_STM32F405) || defined(CONFIG_CHIP_STM32F407) || defined(CONFIG_CHIP_STM32F415) || \
+		defined(CONFIG_CHIP_STM32F417)
 constexpr uint8_t maxFlashLatency {7};
+#else
+constexpr uint8_t maxFlashLatency {15};
 #endif
 
 /*---------------------------------------------------------------------------------------------------------------------+
