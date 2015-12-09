@@ -155,8 +155,8 @@ __attribute__ ((weak)) void ADC_IRQHandler(void)
 
 #if defined(STM32F401_VECTORS) || defined(STM32F410_VECTORS)
 
-// Reserved 0x8C
-__attribute__ ((weak)) void __Reserved_0x8C_Handler(void)
+// Reserved 0x8c
+__attribute__ ((weak)) void __Reserved_0x8c_Handler(void)
 {
 	while (1);
 }
@@ -251,20 +251,20 @@ __attribute__ ((weak)) void TIM1_CC_IRQHandler(void)
 
 #if defined(STM32F410_VECTORS)
 
-// Reserved 0xB0
-__attribute__ ((weak)) void __Reserved_0xB0_Handler(void)
+// Reserved 0xb0
+__attribute__ ((weak)) void __Reserved_0xb0_Handler(void)
 {
 	while (1);
 }
 
-// Reserved 0xB4
-__attribute__ ((weak)) void __Reserved_0xB4_Handler(void)
+// Reserved 0xb4
+__attribute__ ((weak)) void __Reserved_0xb4_Handler(void)
 {
 	while (1);
 }
 
-// Reserved 0xB8
-__attribute__ ((weak)) void __Reserved_0xB8_Handler(void)
+// Reserved 0xb8
+__attribute__ ((weak)) void __Reserved_0xb8_Handler(void)
 {
 	while (1);
 }
@@ -341,8 +341,8 @@ __attribute__ ((weak)) void USART2_IRQHandler(void)
 
 #if defined(STM32F401_VECTORS) || defined(STM32F410_VECTORS)
 
-// Reserved 0xDC
-__attribute__ ((weak)) void __Reserved_0xDC_Handler(void)
+// Reserved 0xdc
+__attribute__ ((weak)) void __Reserved_0xdc_Handler(void)
 {
 	while (1);
 }
@@ -371,8 +371,8 @@ __attribute__ ((weak)) void RTC_Alarm_IRQHandler(void)
 
 #if defined(STM32F410_VECTORS)
 
-// Reserved 0xE8
-__attribute__ ((weak)) void __Reserved_0xE8_Handler(void)
+// Reserved 0xe8
+__attribute__ ((weak)) void __Reserved_0xe8_Handler(void)
 {
 	while (1);
 }
@@ -389,26 +389,26 @@ __attribute__ ((weak)) void OTG_FS_WKUP_IRQHandler(void)
 
 #if defined(STM32F401_VECTORS) || defined(STM32F410_VECTORS)
 
-// Reserved 0xEC
-__attribute__ ((weak)) void __Reserved_0xEC_Handler(void)
+// Reserved 0xec
+__attribute__ ((weak)) void __Reserved_0xec_Handler(void)
 {
 	while (1);
 }
 
-// Reserved 0xF0
-__attribute__ ((weak)) void __Reserved_0xF0_Handler(void)
+// Reserved 0xf0
+__attribute__ ((weak)) void __Reserved_0xf0_Handler(void)
 {
 	while (1);
 }
 
-// Reserved 0xF4
-__attribute__ ((weak)) void __Reserved_0xF4_Handler(void)
+// Reserved 0xf4
+__attribute__ ((weak)) void __Reserved_0xf4_Handler(void)
 {
 	while (1);
 }
 
-// Reserved 0xF8
-__attribute__ ((weak)) void __Reserved_0xF8_Handler(void)
+// Reserved 0xf8
+__attribute__ ((weak)) void __Reserved_0xf8_Handler(void)
 {
 	while (1);
 }
@@ -491,8 +491,8 @@ __attribute__ ((weak)) void TIM5_IRQHandler(void)
 
 #if defined(STM32F410_VECTORS)
 
-// Reserved 0x10C
-__attribute__ ((weak)) void __Reserved_0x10C_Handler(void)
+// Reserved 0x10c
+__attribute__ ((weak)) void __Reserved_0x10c_Handler(void)
 {
 	while (1);
 }
@@ -557,8 +557,8 @@ __attribute__ ((weak)) void TIM6_DAC_IRQHandler(void)
 
 #if defined(STM32F401_VECTORS) || defined(STM32F410_VECTORS)
 
-// Reserved 0x11C
-__attribute__ ((weak)) void __Reserved_0x11C_Handler(void)
+// Reserved 0x11c
+__attribute__ ((weak)) void __Reserved_0x11c_Handler(void)
 {
 	while (1);
 }
@@ -649,8 +649,8 @@ __attribute__ ((weak)) void ETH_WKUP_IRQHandler(void)
 
 #if defined(STM32F401_VECTORS) || defined(STM32F410_VECTORS)
 
-// Reserved 0x13C
-__attribute__ ((weak)) void __Reserved_0x13C_Handler(void)
+// Reserved 0x13c
+__attribute__ ((weak)) void __Reserved_0x13c_Handler(void)
 {
 	while (1);
 }
@@ -703,8 +703,8 @@ __attribute__ ((weak)) void CAN2_SCE_IRQHandler(void)
 
 #if defined(STM32F410_VECTORS)
 
-// Reserved 0x14C
-__attribute__ ((weak)) void __Reserved_0x14C_Handler(void)
+// Reserved 0x14c
+__attribute__ ((weak)) void __Reserved_0x14c_Handler(void)
 {
 	while (1);
 }
@@ -781,8 +781,8 @@ __attribute__ ((weak)) void __Reserved_0x168_Handler(void)
 	while (1);
 }
 
-// Reserved 0x16C
-__attribute__ ((weak)) void __Reserved_0x16C_Handler(void)
+// Reserved 0x16c
+__attribute__ ((weak)) void __Reserved_0x16c_Handler(void)
 {
 	while (1);
 }
@@ -843,8 +843,8 @@ __attribute__ ((weak)) void __Reserved_0x178_Handler(void)
 	while (1);
 }
 
-// Reserved 0x17C
-__attribute__ ((weak)) void __Reserved_0x17C_Handler(void)
+// Reserved 0x17c
+__attribute__ ((weak)) void __Reserved_0x17c_Handler(void)
 {
 	while (1);
 }
@@ -913,8 +913,8 @@ __attribute__ ((weak)) void __Reserved_0x188_Handler(void)
 	while (1);
 }
 
-// Reserved 0x18C
-__attribute__ ((weak)) void __Reserved_0x18C_Handler(void)
+// Reserved 0x18c
+__attribute__ ((weak)) void __Reserved_0x18c_Handler(void)
 {
 	while (1);
 }
@@ -971,26 +971,26 @@ __attribute__ ((weak)) void __Reserved_0x198_Handler(void)
 	while (1);
 }
 
-// Reserved 0x19C
-__attribute__ ((weak)) void __Reserved_0x19C_Handler(void)
+// Reserved 0x19c
+__attribute__ ((weak)) void __Reserved_0x19c_Handler(void)
 {
 	while (1);
 }
 
-// Reserved 0x1A0
-__attribute__ ((weak)) void __Reserved_0x1A0_Handler(void)
+// Reserved 0x1a0
+__attribute__ ((weak)) void __Reserved_0x1a0_Handler(void)
 {
 	while (1);
 }
 
-// Reserved 0x1A4
-__attribute__ ((weak)) void __Reserved_0x1A4_Handler(void)
+// Reserved 0x1a4
+__attribute__ ((weak)) void __Reserved_0x1a4_Handler(void)
 {
 	while (1);
 }
 
-// Reserved 0x1A8
-__attribute__ ((weak)) void __Reserved_0x1A8_Handler(void)
+// Reserved 0x1a8
+__attribute__ ((weak)) void __Reserved_0x1a8_Handler(void)
 {
 	while (1);
 }
@@ -1033,26 +1033,26 @@ __attribute__ ((weak)) void DMA2D_IRQHandler(void)
 
 #if defined(STM32F410_VECTORS)
 
-// Reserved 0x1AC
-__attribute__ ((weak)) void __Reserved_0x1AC_Handler(void)
+// Reserved 0x1ac
+__attribute__ ((weak)) void __Reserved_0x1ac_Handler(void)
 {
 	while (1);
 }
 
-// Reserved 0x1B0
-__attribute__ ((weak)) void __Reserved_0x1B0_Handler(void)
+// Reserved 0x1b0
+__attribute__ ((weak)) void __Reserved_0x1b0_Handler(void)
 {
 	while (1);
 }
 
-// Reserved 0x1B4
-__attribute__ ((weak)) void __Reserved_0x1B4_Handler(void)
+// Reserved 0x1b4
+__attribute__ ((weak)) void __Reserved_0x1b4_Handler(void)
 {
 	while (1);
 }
 
-// Reserved 0x1B8
-__attribute__ ((weak)) void __Reserved_0x1B8_Handler(void)
+// Reserved 0x1b8
+__attribute__ ((weak)) void __Reserved_0x1b8_Handler(void)
 {
 	while (1);
 }
@@ -1113,7 +1113,7 @@ const InterruptVector chipVectors[] __attribute__ ((section(".chipVectors"))) =
 
 #if defined(STM32F401_VECTORS) || defined(STM32F410_VECTORS)
 
-		__Reserved_0x8C_Handler,			// Reserved 0x8C
+		__Reserved_0x8c_Handler,			// Reserved 0x8c
 		__Reserved_0x90_Handler,			// Reserved 0x90
 		__Reserved_0x94_Handler,			// Reserved 0x94
 		__Reserved_0x98_Handler,			// Reserved 0x98
@@ -1145,9 +1145,9 @@ const InterruptVector chipVectors[] __attribute__ ((section(".chipVectors"))) =
 
 #if defined(STM32F410_VECTORS)
 
-		__Reserved_0xB0_Handler,			// Reserved 0xB0
-		__Reserved_0xB4_Handler,			// Reserved 0xB4
-		__Reserved_0xB8_Handler,			// Reserved 0xB8
+		__Reserved_0xb0_Handler,			// Reserved 0xb0
+		__Reserved_0xb4_Handler,			// Reserved 0xb4
+		__Reserved_0xb8_Handler,			// Reserved 0xb8
 
 #else	// !defined(STM32F410_VECTORS)
 
@@ -1168,7 +1168,7 @@ const InterruptVector chipVectors[] __attribute__ ((section(".chipVectors"))) =
 
 #if defined(STM32F401_VECTORS) || defined(STM32F410_VECTORS)
 
-		__Reserved_0xDC_Handler,			// Reserved 0xDC
+		__Reserved_0xdc_Handler,			// Reserved 0xdc
 
 #else	// !defined(STM32F401_VECTORS) && !defined(STM32F410_VECTORS)
 
@@ -1181,7 +1181,7 @@ const InterruptVector chipVectors[] __attribute__ ((section(".chipVectors"))) =
 
 #if defined(STM32F410_VECTORS)
 
-		__Reserved_0xE8_Handler,			// Reserved 0xE8
+		__Reserved_0xe8_Handler,			// Reserved 0xe8
 
 #else	// !defined(STM32F410_VECTORS)
 
@@ -1191,10 +1191,10 @@ const InterruptVector chipVectors[] __attribute__ ((section(".chipVectors"))) =
 
 #if defined(STM32F401_VECTORS) || defined(STM32F410_VECTORS)
 
-		__Reserved_0xEC_Handler,			// Reserved 0xEC
-		__Reserved_0xF0_Handler,			// Reserved 0xF0
-		__Reserved_0xF4_Handler,			// Reserved 0xF4
-		__Reserved_0xF8_Handler,			// Reserved 0xF8
+		__Reserved_0xec_Handler,			// Reserved 0xec
+		__Reserved_0xf0_Handler,			// Reserved 0xf0
+		__Reserved_0xf4_Handler,			// Reserved 0xf4
+		__Reserved_0xf8_Handler,			// Reserved 0xf8
 
 #else	// !defined(STM32F401_VECTORS) && !defined(STM32F410_VECTORS)
 
@@ -1231,7 +1231,7 @@ const InterruptVector chipVectors[] __attribute__ ((section(".chipVectors"))) =
 
 #if defined(STM32F410_VECTORS)
 
-		__Reserved_0x10C_Handler,			// Reserved 0x10C
+		__Reserved_0x10c_Handler,			// Reserved 0x10c
 
 #else	// !defined(STM32F410_VECTORS)
 
@@ -1263,7 +1263,7 @@ const InterruptVector chipVectors[] __attribute__ ((section(".chipVectors"))) =
 
 #if defined(STM32F401_VECTORS) || defined(STM32F410_VECTORS)
 
-		__Reserved_0x11C_Handler,			// Reserved 0x11C
+		__Reserved_0x11c_Handler,			// Reserved 0x11c
 
 #else	// !defined(STM32F401_VECTORS) && !defined(STM32F410_VECTORS)
 
@@ -1303,7 +1303,7 @@ const InterruptVector chipVectors[] __attribute__ ((section(".chipVectors"))) =
 
 #if defined(STM32F401_VECTORS) || defined(STM32F410_VECTORS)
 
-		__Reserved_0x13C_Handler,			// Reserved 0x13C
+		__Reserved_0x13c_Handler,			// Reserved 0x13c
 		__Reserved_0x140_Handler,			// Reserved 0x140
 		__Reserved_0x144_Handler,			// Reserved 0x144
 		__Reserved_0x148_Handler,			// Reserved 0x148
@@ -1319,7 +1319,7 @@ const InterruptVector chipVectors[] __attribute__ ((section(".chipVectors"))) =
 
 #if defined(STM32F410_VECTORS)
 
-		__Reserved_0x14C_Handler,			// Reserved 0x14C
+		__Reserved_0x14c_Handler,			// Reserved 0x14c
 
 #else	// !defined(STM32F410_VECTORS)
 
@@ -1347,7 +1347,7 @@ const InterruptVector chipVectors[] __attribute__ ((section(".chipVectors"))) =
 #if defined(STM32F401_VECTORS) || defined(STM32F410_VECTORS)
 
 		__Reserved_0x168_Handler,			// Reserved 0x168
-		__Reserved_0x16C_Handler,			// Reserved 0x16C
+		__Reserved_0x16c_Handler,			// Reserved 0x16c
 
 #else	// !defined(STM32F401_VECTORS) && !defined(STM32F410_VECTORS)
 
@@ -1374,7 +1374,7 @@ const InterruptVector chipVectors[] __attribute__ ((section(".chipVectors"))) =
 
 		__Reserved_0x174_Handler,			// Reserved 0x174
 		__Reserved_0x178_Handler,			// Reserved 0x178
-		__Reserved_0x17C_Handler,			// Reserved 0x17C
+		__Reserved_0x17c_Handler,			// Reserved 0x17c
 
 #else	// !defined(STM32F401_VECTORS) && !defined(STM32F410_VECTORS)
 
@@ -1405,7 +1405,7 @@ const InterruptVector chipVectors[] __attribute__ ((section(".chipVectors"))) =
 #	if defined(STM32F401_VECTORS) || defined(STM32F410_VECTORS)
 
 		__Reserved_0x188_Handler,			// Reserved 0x188
-		__Reserved_0x18C_Handler,			// Reserved 0x18C
+		__Reserved_0x18c_Handler,			// Reserved 0x18c
 
 #	else	// !defined(STM32F401_VECTORS) && !defined(STM32F410_VECTORS)
 
@@ -1433,10 +1433,10 @@ const InterruptVector chipVectors[] __attribute__ ((section(".chipVectors"))) =
 #	if defined(STM32F410_VECTORS)
 
 		__Reserved_0x198_Handler,			// Reserved 0x198
-		__Reserved_0x19C_Handler,			// Reserved 0x19C
-		__Reserved_0x1A0_Handler,			// Reserved 0x1A0
-		__Reserved_0x1A4_Handler,			// Reserved 0x1A4
-		__Reserved_0x1A8_Handler,			// Reserved 0x1A8
+		__Reserved_0x19c_Handler,			// Reserved 0x19c
+		__Reserved_0x1a0_Handler,			// Reserved 0x1a0
+		__Reserved_0x1a4_Handler,			// Reserved 0x1a4
+		__Reserved_0x1a8_Handler,			// Reserved 0x1a8
 
 #	else	// !defined(STM32F410_VECTORS)
 
@@ -1452,10 +1452,10 @@ const InterruptVector chipVectors[] __attribute__ ((section(".chipVectors"))) =
 
 #if defined(STM32F410_VECTORS)
 
-		__Reserved_0x1AC_Handler,			// Reserved 0x1AC
-		__Reserved_0x1B0_Handler,			// Reserved 0x1B0
-		__Reserved_0x1B4_Handler,			// Reserved 0x1B4
-		__Reserved_0x1B8_Handler,			// Reserved 0x1B8
+		__Reserved_0x1ac_Handler,			// Reserved 0x1ac
+		__Reserved_0x1b0_Handler,			// Reserved 0x1b0
+		__Reserved_0x1b4_Handler,			// Reserved 0x1b4
+		__Reserved_0x1b8_Handler,			// Reserved 0x1b8
 		FMPI2C1_EV_IRQHandler,				// FMPI2C1 Event
 		FMPI2C1_ER_IRQHandler,				// FMPI2C1 Error
 		LPTIM1_IRQHandler,					// LPTIM1 through the EXTI line
