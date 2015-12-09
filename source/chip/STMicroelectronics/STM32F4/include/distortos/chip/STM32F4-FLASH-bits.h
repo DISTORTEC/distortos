@@ -2,7 +2,13 @@
  * \file
  * \brief Header with definition of bits in FLASH control registers
  *
- * chip: STM32F4
+ * This file covers devices as described in following places:
+ * - RM0368 reference manual (STM32F401xB/C and STM32F401xD/E), Revision 4, 2015-05-04
+ * - RM0090 reference manual (STM32F405/415, STM32F407/417, STM32F427/437 and STM32F429/439), Revision 11, 2015-10-20
+ * - RM0401 reference manual (STM32F410), Revision 2, 2015-10-26
+ * - RM0383 reference manual (STM32F411xC/E), Revision 1, 2014-07-24
+ * - RM0390 reference manual (STM32F446xx), Revision 1, 2015-03-17
+ * - RM0386 reference manual (STM32F469xx and STM32F479xx), Revision 2, 2015-11-19
  *
  * \author Copyright (C) 2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
