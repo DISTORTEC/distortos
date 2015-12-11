@@ -17,7 +17,6 @@
 choice
 	prompt "STM32F4 chip"
 	default CHIP_STM32F407VGT
-	depends on CHIP_STM32F4
 	help
 		Select STM32F4 chip
 
