@@ -6,7 +6,7 @@
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #
-# date: 2015-09-09
+# date: 2015-12-11
 #
 
 menu "Chip configuration"
@@ -28,5 +28,29 @@ endchoice
 if CHIP_STM32
 source source/chip/STMicroelectronics/Kconfig
 endif
+
+config CHIP_HAS_LQFP64
+	bool
+	default n
+
+config CHIP_HAS_LQFP100
+	bool
+	default n
+
+config CHIP_HAS_LQFP144
+	bool
+	default n
+
+config CHIP_HAS_LQFP176
+	bool
+	default n
+
+config CHIP_HAS_WLCSP90
+	bool
+	default n
+
+config CHIP_HAS_UFBGA176
+	bool
+	default n
 
 endmenu
