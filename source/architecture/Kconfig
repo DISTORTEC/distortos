@@ -6,12 +6,12 @@
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #
-# date: 2015-10-01
+# date: 2015-12-11
 #
 
 menu "Architecture configuration"
 
-config ARCHITECTURE_HAVE_FPU
+config ARCHITECTURE_HAS_FPU
 	bool
 	default n
 
@@ -22,7 +22,7 @@ config ARCHITECTURE_ARM
 config ARCHITECTURE_FPU
 	bool "Enable FPU"
 	default y
-	depends on ARCHITECTURE_HAVE_FPU
+	depends on ARCHITECTURE_HAS_FPU
 	help
 		Enables FPU.
 

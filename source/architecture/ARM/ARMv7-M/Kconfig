@@ -6,7 +6,7 @@
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #
-# date: 2015-10-02
+# date: 2015-12-11
 #
 
 comment "ARMv7-M architecture options"
@@ -46,7 +46,7 @@ config ARCHITECTURE_ARM_CORTEX_M7
 	bool
 	default n
 
-config ARCHITECTURE_HAVE_FPV5_D16
+config ARCHITECTURE_HAS_FPV5_D16
 	bool
 	default n
 
@@ -57,7 +57,7 @@ config ARCHITECTURE_FLAGS
 		ARCHITECTURE_FPU
 	default "-mcpu=cortex-m4 -mthumb" if ARCHITECTURE_ARM_CORTEX_M4
 	default "-mcpu=cortex-m7 -mthumb -mfloat-abi=hard -mfpu=fpv5-d16" if ARCHITECTURE_ARM_CORTEX_M7 && \
-		ARCHITECTURE_FPU && ARCHITECTURE_HAVE_FPV5_D16
+		ARCHITECTURE_FPU && ARCHITECTURE_HAS_FPV5_D16
 	default "-mcpu=cortex-m7 -mthumb -mfloat-abi=hard -mfpu=fpv5-sp-d16" if ARCHITECTURE_ARM_CORTEX_M7 && \
 		ARCHITECTURE_FPU
 	default "-mcpu=cortex-m7 -mthumb" if ARCHITECTURE_ARM_CORTEX_M7
