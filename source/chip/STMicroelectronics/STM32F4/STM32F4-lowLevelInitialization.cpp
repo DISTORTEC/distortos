@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-09-18
+ * \date 2015-12-11
  */
 
 #include "distortos/chip/lowLevelInitialization.hpp"
@@ -82,7 +82,7 @@ void lowLevelInitialization()
 	static_assert(pllOutHz <= maxPllOutHz, "Invalid PLL output frequency!");
 
 	constexpr uint32_t pllqOutHz {vcoOutHz / CONFIG_CHIP_STM32F4_RCC_PLLQ};
-	static_assert(pllqOutHz <= maxPllqOutHz, "Invalid PLL \"Q\" output frequency!");
+	static_assert(pllqOutHz <= maxPllqOutHz, "Invalid PLL \"/Q\" output frequency!");
 
 	enablePll(CONFIG_CHIP_STM32F4_RCC_PLLN, pllp, CONFIG_CHIP_STM32F4_RCC_PLLQ);
 
