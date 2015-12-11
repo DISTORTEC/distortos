@@ -161,9 +161,17 @@ void lowLevelInitialization()
 #endif	// !def CONFIG_CHIP_STM32F4_RCC_STANDARD_CLOCK_CONFIGURATION_ENABLE
 
 #if CONFIG_CHIP_STM32F4_VDD_MV < 2100
+#	if defined(CONFIG_CHIP_STM32F401) || defined(CONFIG_CHIP_STM32F410) || defined(CONFIG_CHIP_STM32F411)
+	constexpr uint32_t frequencyThresholdHz {16000000};
+#	else	// !defined(CONFIG_CHIP_STM32F401) && !defined(CONFIG_CHIP_STM32F410) && !defined(CONFIG_CHIP_STM32F411)
 	constexpr uint32_t frequencyThresholdHz {20000000};
+#	endif	// !defined(CONFIG_CHIP_STM32F401) && !defined(CONFIG_CHIP_STM32F410) && !defined(CONFIG_CHIP_STM32F411)
 #elif CONFIG_CHIP_STM32F4_VDD_MV < 2400
+#	if defined(CONFIG_CHIP_STM32F401) || defined(CONFIG_CHIP_STM32F410) || defined(CONFIG_CHIP_STM32F411)
+	constexpr uint32_t frequencyThresholdHz {18000000};
+#	else	// !defined(CONFIG_CHIP_STM32F401) && !defined(CONFIG_CHIP_STM32F410) && !defined(CONFIG_CHIP_STM32F411)
 	constexpr uint32_t frequencyThresholdHz {22000000};
+#	endif	// !defined(CONFIG_CHIP_STM32F401) && !defined(CONFIG_CHIP_STM32F410) && !defined(CONFIG_CHIP_STM32F411)
 #elif CONFIG_CHIP_STM32F4_VDD_MV < 2700
 	constexpr uint32_t frequencyThresholdHz {24000000};
 #else
