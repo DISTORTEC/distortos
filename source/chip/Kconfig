@@ -29,6 +29,51 @@ if CHIP_STM32
 source source/chip/STMicroelectronics/Kconfig
 endif
 
+comment "Generic chip options"
+
+choice
+	prompt "Chip package"
+	help
+		Select chip package
+
+config CHIP_LQFP64
+	bool "LQFP64"
+	depends on CHIP_HAS_LQFP64
+	help
+		LQFP64 chip package
+
+config CHIP_LQFP100
+	bool "LQFP100"
+	depends on CHIP_HAS_LQFP100
+	help
+		LQFP100 chip package
+
+config CHIP_LQFP144
+	bool "LQFP144"
+	depends on CHIP_HAS_LQFP144
+	help
+		LQFP144 chip package
+
+config CHIP_LQFP176
+	bool "LQFP176"
+	depends on CHIP_HAS_LQFP176
+	help
+		LQFP176 chip package
+
+config CHIP_WLCSP90
+	bool "WLCSP90"
+	depends on CHIP_HAS_WLCSP90
+	help
+		WLCSP90 chip package
+
+config CHIP_UFBGA176
+	bool "UFBGA176"
+	depends on CHIP_HAS_UFBGA176
+	help
+		UFBGA176 chip package
+
+endchoice
+
 config CHIP_HAS_LQFP64
 	bool
 	default n
@@ -52,5 +97,14 @@ config CHIP_HAS_WLCSP90
 config CHIP_HAS_UFBGA176
 	bool
 	default n
+
+config CHIP_PACKAGE
+	string
+	default "LQFP64" if CHIP_LQFP64
+	default "LQFP100" if CHIP_LQFP100
+	default "LQFP144" if CHIP_LQFP144
+	default "LQFP176" if CHIP_LQFP176
+	default "WLCSP90" if CHIP_WLCSP90
+	default "UFBGA176" if CHIP_UFBGA176
 
 endmenu
