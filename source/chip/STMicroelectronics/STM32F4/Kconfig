@@ -212,6 +212,7 @@ config CHIP_STM32F4_RCC_PLLN
 
 choice
 	prompt "PLLP value"
+	default CHIP_STM32F4_RCC_PLLP_DIV4 if CHIP_STM32F401 || CHIP_STM32F410 || CHIP_STM32F411
 	default CHIP_STM32F4_RCC_PLLP_DIV2
 	help
 		PLLP value for main PLL. It is used to divide VCO output frequency
@@ -337,6 +338,7 @@ endchoice
 
 choice
 	prompt "APB1 (low speed) divider"
+	default CHIP_STM32F4_RCC_APB1_DIV2 if CHIP_STM32F401 || CHIP_STM32F410 || CHIP_STM32F411
 	default CHIP_STM32F4_RCC_APB1_DIV4
 	help
 		APB1 (low speed) clock division factor. APB1 clock must not exceed
@@ -373,6 +375,7 @@ endchoice
 
 choice
 	prompt "APB2 (high speed) divider"
+	default CHIP_STM32F4_RCC_APB2_DIV1 if CHIP_STM32F401 || CHIP_STM32F410 || CHIP_STM32F411
 	default CHIP_STM32F4_RCC_APB2_DIV2
 	help
 		APB2 (high speed) clock division factor. APB2 clock must not exceed
