@@ -46,6 +46,14 @@ void disableOverDriveMode()
 	PWR->CR &= ~(PWR_CR_ODEN | PWR_CR_ODSWEN);
 }
 
+void enableOverDriveMode()
+{
+	PWR_CR_ODEN_bb = 1;
+	while (PWR_CSR_ODRDY_bb == 0);
+	PWR_CR_ODSWEN_bb = 1;
+	while (PWR_CSR_ODSWRDY_bb == 0);
+}
+
 #endif	// defined(CONFIG_CHIP_STM32F42) || defined(CONFIG_CHIP_STM32F43) || defined(CONFIG_CHIP_STM32F446) ||
 		// defined(CONFIG_CHIP_STM32F469) || defined(CONFIG_CHIP_STM32F479)
 

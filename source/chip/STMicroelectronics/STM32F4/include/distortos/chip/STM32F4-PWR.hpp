@@ -81,6 +81,14 @@ int configureVoltageScaling(uint8_t voltageScale);
 
 void disableOverDriveMode();
 
+/**
+ * \brief Enables over-drive mode.
+ *
+ * \warning Over-drive mode can be enabied/disabled only when HSI or HSE is selected as source of system clock
+ */
+
+void enableOverDriveMode();
+
 #endif	// defined(CONFIG_CHIP_STM32F42) || defined(CONFIG_CHIP_STM32F43) || defined(CONFIG_CHIP_STM32F446) ||
 		// defined(CONFIG_CHIP_STM32F469) || defined(CONFIG_CHIP_STM32F479)
 
