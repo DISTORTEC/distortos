@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-09-17
+ * \date 2015-12-12
  */
 
 #include "distortos/chip/STM32F4-RCC.hpp"
@@ -16,9 +16,6 @@
 #include "distortos/chip/STM32F4-RCC-bits.h"
 
 #include "distortos/chip/CMSIS-proxy.h"
-
-#include <array>
-#include <utility>
 
 #include <cerrno>
 

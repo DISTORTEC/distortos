@@ -8,12 +8,13 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-12-11
+ * \date 2015-12-12
  */
 
 #include "distortos/chip/lowLevelInitialization.hpp"
 
 #include "distortos/chip/STM32F4-FLASH.hpp"
+#include "distortos/chip/STM32F4-PWR.hpp"
 #include "distortos/chip/STM32F4-RCC.hpp"
 
 #include "distortos/architecture/configureSysTick.hpp"
@@ -81,7 +82,7 @@ void lowLevelInitialization()
 #endif
 
 	constexpr uint32_t pllOutHz {vcoOutHz / pllp};
-	static_assert(pllOutHz <= maxPllOutHz, "Invalid PLL output frequency!");
+	static_assert(pllOutHz <= maxPllOutHz[defaultVoltageScale], "Invalid PLL output frequency!");
 
 	constexpr uint32_t pllqOutHz {vcoOutHz / CONFIG_CHIP_STM32F4_RCC_PLLQ};
 	static_assert(pllqOutHz <= maxPllqOutHz, "Invalid PLL \"/Q\" output frequency!");
