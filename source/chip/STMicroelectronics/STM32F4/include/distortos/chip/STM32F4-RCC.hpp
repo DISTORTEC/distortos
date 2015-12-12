@@ -2,6 +2,14 @@
  * \file
  * \brief Header for RCC-related functions for STM32F4
  *
+ * This file covers devices as described in following places:
+ * - RM0368 reference manual (STM32F401xB/C and STM32F401xD/E), Revision 4, 2015-05-04
+ * - RM0090 reference manual (STM32F405/415, STM32F407/417, STM32F427/437 and STM32F429/439), Revision 11, 2015-10-20
+ * - RM0401 reference manual (STM32F410), Revision 2, 2015-10-26
+ * - RM0383 reference manual (STM32F411xC/E), Revision 1, 2014-07-24
+ * - RM0390 reference manual (STM32F446xx), Revision 1, 2015-03-17
+ * - RM0386 reference manual (STM32F469xx and STM32F479xx), Revision 2, 2015-11-19
+ *
  * \author Copyright (C) 2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
@@ -37,6 +45,13 @@ enum class SystemClockSource : uint8_t
 	hse,
 	/// main PLL selected as system clock
 	pll,
+
+#if defined(CONFIG_CHIP_STM32F446) || defined(CONFIG_CHIP_STM32F469) || defined(CONFIG_CHIP_STM32F479)
+
+	/// main PLL's "/R" output selected as system clock
+	pllr,
+
+#endif	// defined(CONFIG_CHIP_STM32F446) || defined(CONFIG_CHIP_STM32F469) || defined(CONFIG_CHIP_STM32F479)
 };
 
 /*---------------------------------------------------------------------------------------------------------------------+
@@ -50,7 +65,11 @@ constexpr uint8_t minPllm {2};
 constexpr uint8_t maxPllm {63};
 
 /// minimum allowed value for PLLN
+#if defined(CONFIG_CHIP_STM32F401) || defined(CONFIG_CHIP_STM32F446)
 constexpr uint16_t minPlln {192};
+#else	// !defined(CONFIG_CHIP_STM32F401) && !defined(CONFIG_CHIP_STM32F446)
+constexpr uint16_t minPlln {50};
+#endif	// !defined(CONFIG_CHIP_STM32F401) && !defined(CONFIG_CHIP_STM32F446)
 
 /// maximum allowed value for PLLN
 constexpr uint16_t maxPlln {432};
@@ -60,6 +79,16 @@ constexpr uint8_t minPllq {2};
 
 /// maximum allowed value for PLLQ
 constexpr uint8_t maxPllq {15};
+
+#if defined(CONFIG_CHIP_STM32F446) || defined(CONFIG_CHIP_STM32F469) || defined(CONFIG_CHIP_STM32F479)
+
+/// minimum allowed value for PLLR
+constexpr uint8_t minPllr {2};
+
+/// maximum allowed value for PLLR
+constexpr uint8_t maxPllr {7};
+
+#endif	// defined(CONFIG_CHIP_STM32F446) || defined(CONFIG_CHIP_STM32F469) || defined(CONFIG_CHIP_STM32F479)
 
 /// first allowed value for PLLP - 2
 constexpr uint8_t pllpDiv2 {2};
@@ -83,7 +112,11 @@ constexpr uint32_t minVcoInHz {1000000};
 constexpr uint32_t maxVcoInHz {2000000};
 
 /// minimum allowed value for VCO output frequency, Hz
+#if defined(CONFIG_CHIP_STM32F401)
 constexpr uint32_t minVcoOutHz {192000000};
+#else	// !defined(CONFIG_CHIP_STM32F401)
+constexpr uint32_t minVcoOutHz {100000000};
+#endif	// !defined(CONFIG_CHIP_STM32F401)
 
 /// maximum allowed value for VCO output frequency, Hz
 constexpr uint32_t maxVcoOutHz {432000000};
@@ -210,21 +243,21 @@ int configureAhbClockDivider(uint16_t hpre);
 int configureApbClockDivider(bool ppre2, uint8_t ppre);
 
 /**
- * \brief Configures clock source of main PLL and audio PLLI2S.
+ * \brief Configures clock source of main and audio PLLs.
  *
- * \warning Before changing configuration of main PLL and/or audio PLLI2S make sure that they are not used in any way
- * (as core clock or as source of peripheral clocks) and that they are disabled.
+ * \warning Before changing configuration of any PLL make sure that they are not used in any way (as core clock or as
+ * source of peripheral clocks) and that they are disabled.
  *
- * \param [in] hse selects whether HSI (false) or HSE (true) is used as clock source of main PLL and audio PLLI2S
+ * \param [in] hse selects whether HSI (false) or HSE (true) is used as clock source of main and audio PLLs
  */
 
 void configurePllClockSource(bool hse);
 
 /**
- * \brief Configures divider of PLL input clock (PLLM value) for main PLL and audio PLLI2S.
+ * \brief Configures divider of PLL input clock (PLLM value) for main and audio PLLs.
  *
- * \warning Before changing configuration of main PLL and/or audio PLLI2S make sure that they are not used in any way
- * (as core clock or as source of peripheral clocks) and that they are disabled.
+ * \warning Before changing configuration of any PLL make sure that they are not used in any way (as core clock or as
+ * source of peripheral clocks) and that they are disabled.
  *
  * \param [in] pllm is the PLLM value for main PLL and audio PLLI2S, [2; 63] or [minPllm; maxPllm]
  *
@@ -248,6 +281,8 @@ int configurePllInputClockDivider(uint8_t pllm);
 
 void enableHse(bool bypass);
 
+#if defined(CONFIG_CHIP_STM32F446) || defined(CONFIG_CHIP_STM32F469) || defined(CONFIG_CHIP_STM32F479)
+
 /**
  * \brief Enables main PLL.
  *
@@ -256,7 +291,28 @@ void enableHse(bool bypass);
  * \warning Before changing configuration of main PLL make sure that it is not used in any way (as core clock or as
  * source of peripheral clocks) and that it is disabled.
  *
- * \param [in] plln is the PLLN value for main PLL, [192; 432] or [minPlln; maxPlln]
+ * \param [in] plln is the PLLN value for main PLL, [minPlln; maxPlln]
+ * \param [in] pllp is the PLLP value for main PLL, {2, 4, 6, 8} or {pllpDiv2, pllpDiv4, pllpDiv6, pllpDiv8}
+ * \param [in] pllq is the PLLQ value for main PLL, [2; 15] or [minPllq; maxPllq]
+ * \param [in] pllr is the PLLR value for main PLL, [2; 7] or [minPllr; maxPllr]
+ *
+ * \return 0 on success, error code otherwise:
+ * - EINVAL - \a plln or \a pllp or \a pllq or \a pllr value is invalid;
+ */
+
+int enablePll(uint16_t plln, uint8_t pllp, uint8_t pllq, uint8_t pllr);
+
+#else	// !defined(CONFIG_CHIP_STM32F446) && !defined(CONFIG_CHIP_STM32F469) && !defined(CONFIG_CHIP_STM32F479)
+
+/**
+ * \brief Enables main PLL.
+ *
+ * Enables main PLL using selected parameters and waits until it is stable.
+ *
+ * \warning Before changing configuration of main PLL make sure that it is not used in any way (as core clock or as
+ * source of peripheral clocks) and that it is disabled.
+ *
+ * \param [in] plln is the PLLN value for main PLL, [minPlln; maxPlln]
  * \param [in] pllp is the PLLP value for main PLL, {2, 4, 6, 8} or {pllpDiv2, pllpDiv4, pllpDiv6, pllpDiv8}
  * \param [in] pllq is the PLLQ value for main PLL, [2; 15] or [minPllq; maxPllq]
  *
@@ -265,6 +321,8 @@ void enableHse(bool bypass);
  */
 
 int enablePll(uint16_t plln, uint8_t pllp, uint8_t pllq);
+
+#endif	// !defined(CONFIG_CHIP_STM32F446) && !defined(CONFIG_CHIP_STM32F469) && !defined(CONFIG_CHIP_STM32F479)
 
 /**
  * \brief Disables HSE clock.
@@ -284,11 +342,23 @@ void disableHse();
 
 void disablePll();
 
+#if defined(CONFIG_CHIP_STM32F446) || defined(CONFIG_CHIP_STM32F469) || defined(CONFIG_CHIP_STM32F479)
+
+/**
+ * \brief Switches system clock.
+ *
+ * \param [in] source is the new source of system clock, SystemClockSource::{hsi, hse, pll, pllr}
+ */
+
+#else	// !defined(CONFIG_CHIP_STM32F446) && !defined(CONFIG_CHIP_STM32F469) && !defined(CONFIG_CHIP_STM32F479)
+
 /**
  * \brief Switches system clock.
  *
  * \param [in] source is the new source of system clock, SystemClockSource::{hsi, hse, pll}
  */
+
+#endif	// !defined(CONFIG_CHIP_STM32F446) && !defined(CONFIG_CHIP_STM32F469) && !defined(CONFIG_CHIP_STM32F479)
 
 void switchSystemClock(SystemClockSource source);
 

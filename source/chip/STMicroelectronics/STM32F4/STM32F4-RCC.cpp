@@ -97,15 +97,33 @@ void enableHse(const bool bypass)
 	while (RCC_CR_HSERDY_bb == 0);	// wait until HSE oscillator is stable
 }
 
+#if defined(CONFIG_CHIP_STM32F446) || defined(CONFIG_CHIP_STM32F469) || defined(CONFIG_CHIP_STM32F479)
+int enablePll(const uint16_t plln, const uint8_t pllp, const uint8_t pllq, const uint8_t pllr)
+#else	// !defined(CONFIG_CHIP_STM32F446) && !defined(CONFIG_CHIP_STM32F469) && !defined(CONFIG_CHIP_STM32F479)
 int enablePll(const uint16_t plln, const uint8_t pllp, const uint8_t pllq)
+#endif	// !defined(CONFIG_CHIP_STM32F446) && !defined(CONFIG_CHIP_STM32F469) && !defined(CONFIG_CHIP_STM32F479)
 {
 	if (plln < minPlln || plln > maxPlln ||
 			(pllp != pllpDiv2 && pllp != pllpDiv4 && pllp != pllpDiv6 && pllp != pllpDiv8) ||
 			pllq < minPllq || pllq > maxPllq)
 		return EINVAL;
 
+#if defined(CONFIG_CHIP_STM32F446) || defined(CONFIG_CHIP_STM32F469) || defined(CONFIG_CHIP_STM32F479)
+
+	if (pllr < minPllr || pllr > maxPllr)
+		return EINVAL;
+
+	RCC->PLLCFGR = (RCC->PLLCFGR & ~(RCC_PLLCFGR_PLLN | RCC_PLLCFGR_PLLP | RCC_PLLCFGR_PLLQ | RCC_PLLCFGR_PLLR)) |
+			(plln << RCC_PLLCFGR_PLLN_bit) | ((pllp / 2 - 1) << RCC_PLLCFGR_PLLP_bit) | (pllq << RCC_PLLCFGR_PLLQ_bit) |
+			(pllr << RCC_PLLCFGR_PLLR_bit);
+
+#else	// !defined(CONFIG_CHIP_STM32F446) && !defined(CONFIG_CHIP_STM32F469) && !defined(CONFIG_CHIP_STM32F479)
+
 	RCC->PLLCFGR = (RCC->PLLCFGR & ~(RCC_PLLCFGR_PLLN | RCC_PLLCFGR_PLLP | RCC_PLLCFGR_PLLQ)) |
 			(plln << RCC_PLLCFGR_PLLN_bit) | ((pllp / 2 - 1) << RCC_PLLCFGR_PLLP_bit) | (pllq << RCC_PLLCFGR_PLLQ_bit);
+
+#endif	// !defined(CONFIG_CHIP_STM32F446) && !defined(CONFIG_CHIP_STM32F469) && !defined(CONFIG_CHIP_STM32F479)
+
 	RCC_CR_PLLON_bb = 1;
 	while (RCC_CR_PLLRDY_bb == 0);	// wait until PLL is stable
 	return 0;
