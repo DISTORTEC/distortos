@@ -170,21 +170,21 @@ config CHIP_STM32F4_RCC_PLL_ENABLE
 if CHIP_STM32F4_RCC_PLL_ENABLE
 
 choice
-	prompt "PLL and PLLI2S source"
+	prompt "Clock source of main and audio PLLs"
 	default CHIP_STM32F4_RCC_PLLSRC_HSI
 	help
-		Select PLL and PLLI2S source.
+		Select clock source of main and audio PLLs.
 
 config CHIP_STM32F4_RCC_PLLSRC_HSI
 	bool "HSI"
 	help
-		Select HSI as PLL and PLLI2S source.
+		Select HSI as clock source of main and audio PLLs.
 
 config CHIP_STM32F4_RCC_PLLSRC_HSE
 	bool "HSE"
 	depends on CHIP_STM32F4_RCC_HSE_ENABLE
 	help
-		Select HSE as PLL and PLLI2S source.
+		Select HSE as clock source of main and audio PLLs.
 
 endchoice
 
@@ -203,12 +203,14 @@ config CHIP_STM32F4_RCC_PLLM
 
 config CHIP_STM32F4_RCC_PLLN
 	int "PLLN value"
-	range 192 432
+	range 192 432 if CHIP_STM32F401 || CHIP_STM32F446
+	range 50 432
 	default 336
 	help
 		PLLN value for main PLL. It is used to multiply VCO input frequency
-		(VCOin). Resulting VCO output frequency (VCOout) must be in the range
-		[192MHz; 432MHz].
+		(VCOin). Resulting VCO output frequency (VCOout) must be in the range:
+		- [192MHz; 432MHz] for STM32F401 chips,
+		- [100MHz; 432MHz] for other chips.
 
 		VCOout = VCOin * PLLN = PLLin / PLLM * PLLN
 
@@ -218,7 +220,22 @@ choice
 	default CHIP_STM32F4_RCC_PLLP_DIV2
 	help
 		PLLP value for main PLL. It is used to divide VCO output frequency
-		(VCOout). PLL output frequency (PLLout) must not exceed 168MHz.
+		(VCOout). PLL output frequency (PLLout) must not exceed:
+		* for STM32F401 chips:
+		  - 84MHz in voltage scale 2 mode,
+		  - 60MHz in voltage scale 3 mode,
+		* for STM32F405, STM32F407, STM32F415 and STM32F417 chips:
+		  - 168MHz in voltage scale 1 mode,
+		  - 144MHz in voltage scale 2 mode,
+		* for STM32F410 and STM32F411 chips:
+		  - 100MHz in voltage scale 1 mode,
+		  - 84MHz in voltage scale 2 mode,
+		  - 64MHz in voltage scale 3 mode,
+		* for other chips:
+		  - 180MHz in voltage scale 1 mode with over-drive mode,
+		  - 168MHz in voltage scale 1 mode,
+		  - 144MHz in voltage scale 2 mode,
+		  - 120MHz in voltage scale 3 mode.
 
 		PLLout = VCOout / PLLP = PLLin / PLLM * PLLN / PLLP
 
@@ -343,8 +360,11 @@ choice
 	default CHIP_STM32F4_RCC_APB1_DIV2 if CHIP_STM32F401 || CHIP_STM32F410 || CHIP_STM32F411
 	default CHIP_STM32F4_RCC_APB1_DIV4
 	help
-		APB1 (low speed) clock division factor. APB1 clock must not exceed
-		42MHz.
+		APB1 (low speed) clock division factor. APB1 clock must not exceed:
+		- 42MHz for STM32F401, STM32F405, STM32F407, STM32F415 and STM32F417
+		chips,
+		- 50MHz for STM32F410 and STM32F411 chips,
+		- 45MHz for other chips.
 
 		APB1clk = AHBclk / APB1divider
 
@@ -380,8 +400,11 @@ choice
 	default CHIP_STM32F4_RCC_APB2_DIV1 if CHIP_STM32F401 || CHIP_STM32F410 || CHIP_STM32F411
 	default CHIP_STM32F4_RCC_APB2_DIV2
 	help
-		APB2 (high speed) clock division factor. APB2 clock must not exceed
-		84MHz.
+		APB2 (high speed) clock division factor. APB2 clock must not exceed:
+		- 84MHz for STM32F401, STM32F405, STM32F407, STM32F415 and STM32F417
+		chips,
+		- 100MHz for STM32F410 and STM32F411 chips,
+		- 90MHz for other chips.
 
 		APB2clk = AHBclk / APB2divider
 
@@ -418,10 +441,10 @@ if !CHIP_STM32F4_RCC_STANDARD_CLOCK_CONFIGURATION_ENABLE
 
 config CHIP_STM32F4_RCC_AHB_HZ
 	int "Frequency of AHB clock, Hz"
-	range 1 180000000 if CHIP_STM32F42 || CHIP_STM32F43 || CHIP_STM32F44 || CHIP_STM32F47
-	range 1 168000000 if CHIP_STM32F405 || CHIP_STM32F407 || CHIP_STM32F415 || CHIP_STM32F4
-	range 1 100000000 if CHIP_STM32F411
-	range 1 84000000
+	range 1 84000000 if CHIP_STM32F401
+	range 1 168000000 if CHIP_STM32F405 || CHIP_STM32F407 || CHIP_STM32F415 || CHIP_STM32F417
+	range 1 100000000 if CHIP_STM32F410 || CHIP_STM32F411
+	range 1 180000000
 	default 16000000
 	help
 		Frequency of AHB clock, Hz. RCC must be configured by user to achieve
