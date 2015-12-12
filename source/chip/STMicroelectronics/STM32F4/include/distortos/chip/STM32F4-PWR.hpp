@@ -70,6 +70,20 @@ constexpr uint8_t maxVoltageScale {3};
 
 int configureVoltageScaling(uint8_t voltageScale);
 
+#if defined(CONFIG_CHIP_STM32F42) || defined(CONFIG_CHIP_STM32F43) || defined(CONFIG_CHIP_STM32F446) || \
+		defined(CONFIG_CHIP_STM32F469) || defined(CONFIG_CHIP_STM32F479)
+
+/**
+ * \brief Disables over-drive mode.
+ *
+ * \warning Over-drive mode can be enabied/disabled only when HSI or HSE is selected as source of system clock
+ */
+
+void disableOverDriveMode();
+
+#endif	// defined(CONFIG_CHIP_STM32F42) || defined(CONFIG_CHIP_STM32F43) || defined(CONFIG_CHIP_STM32F446) ||
+		// defined(CONFIG_CHIP_STM32F469) || defined(CONFIG_CHIP_STM32F479)
+
 }	// namespace chip
 
 }	// namespace distortos

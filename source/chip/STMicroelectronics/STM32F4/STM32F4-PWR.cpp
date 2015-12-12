@@ -38,6 +38,17 @@ int configureVoltageScaling(const uint8_t voltageScale)
 	return 0;
 }
 
+#if defined(CONFIG_CHIP_STM32F42) || defined(CONFIG_CHIP_STM32F43) || defined(CONFIG_CHIP_STM32F446) || \
+		defined(CONFIG_CHIP_STM32F469) || defined(CONFIG_CHIP_STM32F479)
+
+void disableOverDriveMode()
+{
+	PWR->CR &= ~(PWR_CR_ODEN | PWR_CR_ODSWEN);
+}
+
+#endif	// defined(CONFIG_CHIP_STM32F42) || defined(CONFIG_CHIP_STM32F43) || defined(CONFIG_CHIP_STM32F446) ||
+		// defined(CONFIG_CHIP_STM32F469) || defined(CONFIG_CHIP_STM32F479)
+
 }	// namespace chip
 
 }	// namespace distortos
