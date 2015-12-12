@@ -6,7 +6,7 @@
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #
-# date: 2015-12-11
+# date: 2015-12-12
 #
 
 #
@@ -118,6 +118,8 @@ config CHIP_STM32F4_FLASH_PREFETCH_ENABLE
 		older STM32F4 devices don't support this feature. Enabling this feature
 		may also increase noise of ADC. Check device errata sheet of selected
 		chip to see whether it is affected by any of these issues.
+
+		Flash prefetch must not be enabled when supply voltage is below 2.1V.
 
 menu "RCC configuration"
 
