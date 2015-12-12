@@ -53,6 +53,13 @@ constexpr uint8_t maxVoltageScale {3};
 #endif	// !defined(CONFIG_CHIP_STM32F405) && !defined(CONFIG_CHIP_STM32F407) && !defined(CONFIG_CHIP_STM32F415) &&
 		// !defined(CONFIG_CHIP_STM32F417)
 
+/// default voltage scale mode after reset
+#if defined(CONFIG_CHIP_STM32F401) || defined(CONFIG_CHIP_STM32F410) || defined(CONFIG_CHIP_STM32F411)
+constexpr uint8_t defaultVoltageScale {2};
+#else	// !defined(CONFIG_CHIP_STM32F401) && !defined(CONFIG_CHIP_STM32F410) && !defined(CONFIG_CHIP_STM32F411)
+constexpr uint8_t defaultVoltageScale {1};
+#endif	// !defined(CONFIG_CHIP_STM32F401) && !defined(CONFIG_CHIP_STM32F410) && !defined(CONFIG_CHIP_STM32F411)
+
 /*---------------------------------------------------------------------------------------------------------------------+
 | global functions' declarations
 +---------------------------------------------------------------------------------------------------------------------*/
