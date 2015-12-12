@@ -87,7 +87,17 @@ void lowLevelInitialization()
 	constexpr uint32_t pllqOutHz {vcoOutHz / CONFIG_CHIP_STM32F4_RCC_PLLQ};
 	static_assert(pllqOutHz <= maxPllqOutHz, "Invalid PLL \"/Q\" output frequency!");
 
+#if defined(CONFIG_CHIP_STM32F446) || defined(CONFIG_CHIP_STM32F469) || defined(CONFIG_CHIP_STM32F479)
+
+	constexpr uint32_t pllrOutHz {vcoOutHz / CONFIG_CHIP_STM32F4_RCC_PLLR};
+
+	enablePll(CONFIG_CHIP_STM32F4_RCC_PLLN, pllp, CONFIG_CHIP_STM32F4_RCC_PLLQ, CONFIG_CHIP_STM32F4_RCC_PLLR);
+
+#else // !defined(CONFIG_CHIP_STM32F446) && !defined(CONFIG_CHIP_STM32F469) && !defined(CONFIG_CHIP_STM32F479)
+
 	enablePll(CONFIG_CHIP_STM32F4_RCC_PLLN, pllp, CONFIG_CHIP_STM32F4_RCC_PLLQ);
+
+#endif // !defined(CONFIG_CHIP_STM32F446) && !defined(CONFIG_CHIP_STM32F469) && !defined(CONFIG_CHIP_STM32F479)
 
 #endif	// def CONFIG_CHIP_STM32F4_RCC_PLL_ENABLE
 
@@ -100,7 +110,10 @@ void lowLevelInitialization()
 #elif defined(CONFIG_CHIP_STM32F4_RCC_SYSCLK_PLL)
 	constexpr uint32_t sysclkHz {pllOutHz};
 	constexpr SystemClockSource systemClockSource {SystemClockSource::pll};
-#endif	// defined(CONFIG_CHIP_STM32F4_RCC_SYSCLK_PLL)
+#elif defined(CONFIG_CHIP_STM32F4_RCC_SYSCLK_PLLR)
+	constexpr uint32_t sysclkHz {pllrOutHz};
+	constexpr SystemClockSource systemClockSource {SystemClockSource::pllr};
+#endif	// defined(CONFIG_CHIP_STM32F4_RCC_SYSCLK_PLLR)
 
 #if defined(CONFIG_CHIP_STM32F4_RCC_AHB_DIV1)
 	constexpr auto hpre = hpreDiv1;
