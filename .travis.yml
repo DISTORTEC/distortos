@@ -6,7 +6,7 @@
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #
-# date: 2015-12-08
+# date: 2015-12-13
 #
 
 # use container-based infrastructure
@@ -21,11 +21,14 @@ install:
     - tar -xvf gcc-arm-none-eabi-5_3-151208-linux-x64.tar.xz
     - export PATH=$PWD/gcc-arm-none-eabi-5_3-151208/bin:$PATH
 
-# configurations that will be tested
-env:
-    - CONFIG_PATH=STM32F4DISCOVERY/test
-
 # configure and build selected configurations
 script:
-    - make configure
+    - make configure CONFIG_PATH=32F429IDISCOVERY/test
     - make -j`nproc` VERBOSE=1
+    - make distclean
+    - make configure CONFIG_PATH=NUCLEO-F401RE/test
+    - make -j`nproc` VERBOSE=1
+    - make distclean
+    - make configure CONFIG_PATH=STM32F4DISCOVERY/test
+    - make -j`nproc` VERBOSE=1
+    - make distclean
