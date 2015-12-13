@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-12-12
+ * \date 2015-12-13
  */
 
 #include "distortos/chip/lowLevelInitialization.hpp"
@@ -16,8 +16,11 @@
 #include "distortos/chip/STM32F4-FLASH.hpp"
 #include "distortos/chip/STM32F4-PWR.hpp"
 #include "distortos/chip/STM32F4-RCC.hpp"
+#include "distortos/chip/STM32F4-RCC-bits.h"
 
 #include "distortos/architecture/configureSysTick.hpp"
+
+#include "distortos/chip/CMSIS-proxy.h"
 
 namespace distortos
 {
@@ -40,6 +43,38 @@ void lowLevelInitialization()
 #endif	// !def CONFIG_CHIP_STM32F4_FLASH_PREFETCH_ENABLE
 	enableInstructionCache();
 	enableDataCache();
+
+#ifdef CONFIG_CHIP_STM32F4_PWR_STANDARD_CONFIGURATION_ENABLE
+
+	RCC_APB1ENR_PWREN_bb = 1;
+
+	configureVoltageScaling(CONFIG_CHIP_STM32F4_PWR_VOLTAGE_SCALE_MODE);
+
+#if (defined(CONFIG_CHIP_STM32F42) || defined(CONFIG_CHIP_STM32F43) || defined(CONFIG_CHIP_STM32F446) || \
+		defined(CONFIG_CHIP_STM32F469) || defined(CONFIG_CHIP_STM32F479)) && \
+		defined(CONFIG_CHIP_STM32F4_PWR_OVER_DRIVE_ENABLE)
+
+	static_assert(CONFIG_CHIP_STM32F4_PWR_VOLTAGE_SCALE_MODE == 1, "Over-drive mode requires voltage scale 1 mode!");
+	static_assert(CONFIG_CHIP_STM32F4_VDD_MV >= 2100,
+			"Over-drive mode must not be enabled when supply voltage is below 2.1V!");
+	enableOverDriveMode();
+	constexpr uint8_t voltageScaleIndex {0};
+
+#else	// !(defined(CONFIG_CHIP_STM32F42) || defined(CONFIG_CHIP_STM32F43) || defined(CONFIG_CHIP_STM32F446) ||
+		// defined(CONFIG_CHIP_STM32F469) || defined(CONFIG_CHIP_STM32F479)) ||
+		// !defined(CONFIG_CHIP_STM32F4_PWR_OVER_DRIVE_ENABLE)
+
+	constexpr uint8_t voltageScaleIndex {CONFIG_CHIP_STM32F4_PWR_VOLTAGE_SCALE_MODE};
+
+#endif	// !(defined(CONFIG_CHIP_STM32F42) || defined(CONFIG_CHIP_STM32F43) || defined(CONFIG_CHIP_STM32F446) ||
+		// defined(CONFIG_CHIP_STM32F469) || defined(CONFIG_CHIP_STM32F479)) ||
+		// !defined(CONFIG_CHIP_STM32F4_PWR_OVER_DRIVE_ENABLE)
+
+#else	// !def CONFIG_CHIP_STM32F4_PWR_STANDARD_CONFIGURATION_ENABLE
+
+	constexpr uint8_t voltageScaleIndex {defaultVoltageScale};
+
+#endif	// !def CONFIG_CHIP_STM32F4_PWR_STANDARD_CONFIGURATION_ENABLE
 
 #ifdef CONFIG_CHIP_STM32F4_RCC_STANDARD_CLOCK_CONFIGURATION_ENABLE
 
@@ -82,7 +117,7 @@ void lowLevelInitialization()
 #endif
 
 	constexpr uint32_t pllOutHz {vcoOutHz / pllp};
-	static_assert(pllOutHz <= maxPllOutHz[defaultVoltageScale], "Invalid PLL output frequency!");
+	static_assert(pllOutHz <= maxPllOutHz[voltageScaleIndex], "Invalid PLL output frequency!");
 
 	constexpr uint32_t pllqOutHz {vcoOutHz / CONFIG_CHIP_STM32F4_RCC_PLLQ};
 	static_assert(pllqOutHz <= maxPllqOutHz, "Invalid PLL \"/Q\" output frequency!");
