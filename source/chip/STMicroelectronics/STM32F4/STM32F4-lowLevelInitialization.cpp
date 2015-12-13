@@ -93,12 +93,13 @@ void lowLevelInitialization()
 
 #if defined(CONFIG_CHIP_STM32F4_RCC_PLLSRC_HSI)
 	constexpr bool pllClockSourceHse {};
+	constexpr uint32_t pllInHz {hsiHz};
 #elif defined(CONFIG_CHIP_STM32F4_RCC_PLLSRC_HSE)
 	constexpr bool pllClockSourceHse {true};
+	constexpr uint32_t pllInHz {CONFIG_CHIP_STM32F4_RCC_HSE_HZ};
 #endif
 	configurePllClockSource(pllClockSourceHse);
 
-	constexpr uint32_t pllInHz {pllClockSourceHse == false ? hsiHz : CONFIG_CHIP_STM32F4_RCC_HSE_HZ};
 	constexpr uint32_t vcoInHz {pllInHz / CONFIG_CHIP_STM32F4_RCC_PLLM};
 	static_assert(minVcoInHz <= vcoInHz && vcoInHz <= maxVcoInHz, "Invalid VCO input frequency!");
 	configurePllInputClockDivider(CONFIG_CHIP_STM32F4_RCC_PLLM);
