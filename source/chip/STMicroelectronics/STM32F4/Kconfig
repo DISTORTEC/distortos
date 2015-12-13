@@ -308,6 +308,18 @@ config CHIP_STM32F4_RCC_PLLQ
 
 		PLLQout = VCOout / PLLQ = PLLin / PLLM * PLLN / PLLQ
 
+config CHIP_STM32F4_RCC_PLLR
+	int "PLLR value"
+	range 2 7
+	default 7
+	depends on CHIP_STM32F446 || CHIP_STM32F469 || CHIP_STM32F479
+	help
+		PLLR value for main PLL. It is used to divide VCO output frequency
+		(VCOout) to produce clock for peripherals like DSI, SAI or SPDIF
+		(PLLRout). This clock can also be used as source of system clock.
+
+		PLLRout = VCOout / PLLR = PLLin / PLLM * PLLN / PLLR
+
 endif	# CHIP_STM32F4_RCC_PLL_ENABLE
 
 choice
@@ -332,6 +344,12 @@ config CHIP_STM32F4_RCC_SYSCLK_PLL
 	depends on CHIP_STM32F4_RCC_PLL_ENABLE
 	help
 		Main PLL selected as system clock.
+
+config CHIP_STM32F4_RCC_SYSCLK_PLLR
+	bool "Main PLL's \"/R\" output"
+	depends on CHIP_STM32F446 || CHIP_STM32F469 || CHIP_STM32F479
+	help
+		Main PLL's "/R" output selected as system clock.
 
 endchoice
 
