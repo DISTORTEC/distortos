@@ -6,7 +6,7 @@
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #
-# date: 2015-12-11
+# date: 2015-12-13
 #
 
 menu "Chip configuration"
@@ -60,17 +60,83 @@ config CHIP_LQFP176
 	help
 		LQFP176 chip package
 
-config CHIP_WLCSP90
-	bool "WLCSP90"
-	depends on CHIP_HAS_WLCSP90
+config CHIP_LQFP208
+	bool "LQFP208"
+	depends on CHIP_HAS_LQFP208
 	help
-		WLCSP90 chip package
+		LQFP208 chip package
+
+config CHIP_TFBGA216
+	bool "TFBGA216"
+	depends on CHIP_HAS_TFBGA216
+	help
+		TFBGA216 chip package
+
+config CHIP_UFBGA100
+	bool "UFBGA100"
+	depends on CHIP_HAS_UFBGA100
+	help
+		UFBGA100 chip package
+
+config CHIP_UFBGA144
+	bool "UFBGA144"
+	depends on CHIP_HAS_UFBGA144
+	help
+		UFBGA144 chip package
+
+config CHIP_UFBGA169
+	bool "UFBGA169"
+	depends on CHIP_HAS_UFBGA169
+	help
+		UFBGA169 chip package
 
 config CHIP_UFBGA176
 	bool "UFBGA176"
 	depends on CHIP_HAS_UFBGA176
 	help
 		UFBGA176 chip package
+
+config CHIP_UFQFPN48
+	bool "UFQFPN48"
+	depends on CHIP_HAS_UFQFPN48
+	help
+		UFQFPN48 chip package
+
+config CHIP_WLCSP36
+	bool "WLCSP36"
+	depends on CHIP_HAS_WLCSP36
+	help
+		WLCSP36 chip package
+
+config CHIP_WLCSP49
+	bool "WLCSP49"
+	depends on CHIP_HAS_WLCSP49
+	help
+		WLCSP49 chip package
+
+config CHIP_WLCSP81
+	bool "WLCSP81"
+	depends on CHIP_HAS_WLCSP81
+	help
+		WLCSP81 chip package
+
+config CHIP_WLCSP90
+	bool "WLCSP90"
+	depends on CHIP_HAS_WLCSP90
+	help
+		WLCSP90 chip package
+
+config CHIP_WLCSP143
+	bool "WLCSP143"
+	depends on CHIP_HAS_WLCSP143
+	help
+		WLCSP143 chip package
+
+config CHIP_WLCSP168
+	bool "WLCSP168"
+	depends on CHIP_HAS_WLCSP168
+	help
+		WLCSP168 chip package
 
 endchoice
 
@@ -90,11 +156,55 @@ config CHIP_HAS_LQFP176
 	bool
 	default n
 
-config CHIP_HAS_WLCSP90
+config CHIP_HAS_LQFP208
+	bool
+	default n
+
+config CHIP_HAS_TFBGA216
+	bool
+	default n
+
+config CHIP_HAS_UFBGA100
+	bool
+	default n
+
+config CHIP_HAS_UFBGA144
+	bool
+	default n
+
+config CHIP_HAS_UFBGA169
 	bool
 	default n
 
 config CHIP_HAS_UFBGA176
+	bool
+	default n
+
+config CHIP_HAS_UFQFPN48
+	bool
+	default n
+
+config CHIP_HAS_WLCSP36
+	bool
+	default n
+
+config CHIP_HAS_WLCSP49
+	bool
+	default n
+
+config CHIP_HAS_WLCSP81
+	bool
+	default n
+
+config CHIP_HAS_WLCSP90
+	bool
+	default n
+
+config CHIP_HAS_WLCSP143
+	bool
+	default n
+
+config CHIP_HAS_WLCSP168
 	bool
 	default n
 
@@ -104,7 +214,18 @@ config CHIP_PACKAGE
 	default "LQFP100" if CHIP_LQFP100
 	default "LQFP144" if CHIP_LQFP144
 	default "LQFP176" if CHIP_LQFP176
-	default "WLCSP90" if CHIP_WLCSP90
+	default "LQFP208" if CHIP_LQFP208
+	default "TFBGA216" if CHIP_TFBGA216
+	default "UFBGA100" if CHIP_UFBGA100
+	default "UFBGA144" if CHIP_UFBGA144
+	default "UFBGA169" if CHIP_UFBGA169
 	default "UFBGA176" if CHIP_UFBGA176
+	default "UFQFPN48" if CHIP_UFQFPN48
+	default "WLCSP36" if CHIP_WLCSP36
+	default "WLCSP49" if CHIP_WLCSP49
+	default "WLCSP81" if CHIP_WLCSP81
+	default "WLCSP90" if CHIP_WLCSP90
+	default "WLCSP143" if CHIP_WLCSP143
+	default "WLCSP168" if CHIP_WLCSP168
 
 endmenu
