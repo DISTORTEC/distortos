@@ -10,8 +10,9 @@
 #
 
 #
-# This file covers devices and their memories as described in following places:
-# - DS8626 datasheet (STM32F405xx, STM32F407xx), Revision 6, 2015-10-19, devices listed on website at 2015-12-11;
+# This file covers devices as described in following places:
+# - DS9716 datasheet (STM32F401xB, STM32F401xC), Revision 5, 2015-08-06, devices listed on website at 2015-12-13;
+# - DS8626 datasheet (STM32F405xx, STM32F407xx), Revision 6, 2015-10-19, devices listed on website at 2015-12-13;
 #
 
 choice
@@ -19,6 +20,52 @@ choice
 	default CHIP_STM32F407VG
 	help
 		Select STM32F4 chip
+
+config CHIP_STM32F401CB
+	bool "STM32F401CB"
+	select CHIP_STM32F401C
+	select CHIP_HAS_UFQFPN48
+	select CHIP_HAS_WLCSP49
+	help
+		STMicroelectronics STM32F401CB chip
+
+config CHIP_STM32F401CC
+	bool "STM32F401CC"
+	select CHIP_STM32F401C
+	select CHIP_HAS_UFQFPN48
+	select CHIP_HAS_WLCSP49
+	help
+		STMicroelectronics STM32F401CC chip
+
+config CHIP_STM32F401RB
+	bool "STM32F401RB"
+	select CHIP_STM32F401R
+	select CHIP_HAS_LQFP64
+	help
+		STMicroelectronics STM32F401RB chip
+
+config CHIP_STM32F401RC
+	bool "STM32F401RC"
+	select CHIP_STM32F401R
+	select CHIP_HAS_LQFP64
+	help
+		STMicroelectronics STM32F401RC chip
+
+config CHIP_STM32F401VB
+	bool "STM32F401VB"
+	select CHIP_STM32F401V
+	select CHIP_HAS_LQFP100
+	select CHIP_HAS_UFBGA100
+	help
+		STMicroelectronics STM32F401VB chip
+
+config CHIP_STM32F401VC
+	bool "STM32F401VC"
+	select CHIP_STM32F401V
+	select CHIP_HAS_LQFP100
+	select CHIP_HAS_UFBGA100
+	help
+		STMicroelectronics STM32F401VC chip
 
 config CHIP_STM32F405OE
 	bool "STM32F405OE"
@@ -511,6 +558,26 @@ config CHIP_STM32F40
 	bool
 	default n
 
+config CHIP_STM32F401
+	bool
+	default n
+	select CHIP_STM32F40
+
+config CHIP_STM32F401C
+	bool
+	default n
+	select CHIP_STM32F401
+
+config CHIP_STM32F401R
+	bool
+	default n
+	select CHIP_STM32F401
+
+config CHIP_STM32F401V
+	bool
+	default n
+	select CHIP_STM32F401
+
 config CHIP_STM32F405
 	bool
 	default n
@@ -578,6 +645,8 @@ config CHIP_STM32F4_CCM_ADDRESS
 
 config CHIP_STM32F4_FLASH_SIZE
 	int
+	default 131072 if CHIP_STM32F401CB || CHIP_STM32F401RB || CHIP_STM32F401VB
+	default 262144 if CHIP_STM32F401CC || CHIP_STM32F401RC || CHIP_STM32F401VC
 	default 524288 if CHIP_STM32F405OE || CHIP_STM32F407IE || CHIP_STM32F407VE || CHIP_STM32F407ZE
 	default 1048576 if CHIP_STM32F405OG || CHIP_STM32F405RG || CHIP_STM32F405VG || CHIP_STM32F405ZG || \
 		CHIP_STM32F407IG || CHIP_STM32F407VG || CHIP_STM32F407ZG
@@ -590,6 +659,8 @@ config CHIP_STM32F4_FLASH_ADDRESS
 
 config CHIP_STM32F4_SRAM1_SIZE
 	int
+	default 65536 if CHIP_STM32F401CB || CHIP_STM32F401CC || CHIP_STM32F401RB || CHIP_STM32F401RC || \
+		CHIP_STM32F401VB || CHIP_STM32F401VC
 	default 114688 if CHIP_STM32F405 || CHIP_STM32F407
 	default 0
 
@@ -619,6 +690,12 @@ config CHIP_STM32F4_SRAM3_ADDRESS
 
 config CHIP
 	string
+	default "STM32F401CB" if CHIP_STM32F401CB
+	default "STM32F401CC" if CHIP_STM32F401CC
+	default "STM32F401RB" if CHIP_STM32F401RB
+	default "STM32F401RC" if CHIP_STM32F401RC
+	default "STM32F401VB" if CHIP_STM32F401VB
+	default "STM32F401VC" if CHIP_STM32F401VC
 	default "STM32F405OE" if CHIP_STM32F405OE
 	default "STM32F405OG" if CHIP_STM32F405OG
 	default "STM32F405RG" if CHIP_STM32F405RG
