@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-12-04
+ * \date 2015-12-14
  */
 
 #ifndef ESTD_INTRUSIVELIST_HPP_
@@ -33,8 +33,8 @@ class IntrusiveListBase;
  *
  * To some extent, this class can be considered to be a limited (raw) iterator.
  *
- * The object that wants to be linked in IntrusiveList must contain a variable of this type - one for each intrusie list
- * that will be used with object.
+ * The object that wants to be linked in IntrusiveList must contain a variable of this type - one for each intrusive
+ * list that will be used with object.
  */
 
 class IntrusiveListNode
@@ -358,6 +358,7 @@ public:
 
 private:
 
+	/// root node of the intrusive list
 	IntrusiveListNode rootNode_;
 };
 
@@ -896,7 +897,7 @@ public:
 	}
 
 	/**
-	 * \return reference to first element on the list
+	 * \return reference to last element on the list
 	 */
 
 	reference back()
@@ -905,7 +906,7 @@ public:
 	}
 
 	/**
-	 * \return const reference to first element on the list
+	 * \return const reference to last element on the list
 	 */
 
 	const_reference back() const
@@ -986,7 +987,7 @@ public:
 	}
 
 	/**
-	 * \return reference to last element on the list
+	 * \return reference to first element on the list
 	 */
 
 	reference front()
@@ -995,7 +996,7 @@ public:
 	}
 
 	/**
-	 * \return const reference to last element on the list
+	 * \return const reference to first element on the list
 	 */
 
 	const_reference front() const
