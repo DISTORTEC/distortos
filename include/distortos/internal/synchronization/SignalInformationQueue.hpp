@@ -8,18 +8,16 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-11-27
+ * \date 2015-12-15
  */
 
 #ifndef INCLUDE_DISTORTOS_INTERNAL_SYNCHRONIZATION_SIGNALINFORMATIONQUEUE_HPP_
 #define INCLUDE_DISTORTOS_INTERNAL_SYNCHRONIZATION_SIGNALINFORMATIONQUEUE_HPP_
 
-#include "distortos/internal/allocators/PoolAllocator.hpp"
-#include "distortos/internal/allocators/FeedablePool.hpp"
-
 #include "distortos/SignalInformation.hpp"
 
-#include <forward_list>
+#include "estd/IntrusiveForwardList.hpp"
+
 #include <memory>
 
 namespace distortos
@@ -35,12 +33,18 @@ class SignalInformationQueue
 {
 public:
 
-	/// link and SignalInformation
-	using LinkAndSignalInformation = std::pair<void*, SignalInformation>;
+	/// single node of internal forward list - estd::IntrusiveForwardListNode and SignalInformation
+	struct QueueNode
+	{
+		/// node for intrusive forward list
+		estd::IntrusiveForwardListNode node;
 
-	/// type of uninitialized storage for SignalInformation with link
-	using Storage =
-			typename std::aligned_storage<sizeof(LinkAndSignalInformation), alignof(LinkAndSignalInformation)>::type;
+		/// queued SignalInformation
+		SignalInformation signalInformation;
+	};
+
+	/// type of uninitialized storage for QueueNode
+	using Storage = typename std::aligned_storage<sizeof(QueueNode), alignof(QueueNode)>::type;
 
 	/// unique_ptr (with deleter) to Storage[]
 	using StorageUniquePointer = std::unique_ptr<Storage[], void(&)(Storage*)>;
@@ -101,20 +105,11 @@ public:
 
 private:
 
-	/// type of allocator used by \a List
-	using PoolAllocatorType = PoolAllocator<SignalInformation, FeedablePool>;
-
 	/// type of container with SignalInformation objects
-	using List = std::forward_list<SignalInformation, PoolAllocatorType>;
+	using List = estd::IntrusiveForwardList<QueueNode, &QueueNode::node>;
 
 	/// storage for queue elements
 	StorageUniquePointer storageUniquePointer_;
-
-	/// PoolAllocator::Pool used by \a poolAllocator_
-	PoolAllocatorType::Pool pool_;
-
-	/// PoolAllocator used by \a signalInformationList_ and \a freeSignalInformationList_
-	PoolAllocatorType poolAllocator_;
 
 	/// list of queued SignalInformation objects
 	List signalInformationList_;

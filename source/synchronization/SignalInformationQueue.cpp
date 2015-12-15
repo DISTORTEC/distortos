@@ -8,14 +8,12 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-11-27
+ * \date 2015-12-15
  */
 
 #include "distortos/internal/synchronization/SignalInformationQueue.hpp"
 
 #include "distortos/SignalSet.hpp"
-
-#include <cerrno>
 
 namespace distortos
 {
@@ -29,15 +27,13 @@ namespace internal
 
 SignalInformationQueue::SignalInformationQueue(StorageUniquePointer&& storageUniquePointer, const size_t maxElements) :
 		storageUniquePointer_{std::move(storageUniquePointer)},
-		pool_{},
-		poolAllocator_{pool_},
-		signalInformationList_{poolAllocator_},
-		freeSignalInformationList_{poolAllocator_}
+		signalInformationList_{},
+		freeSignalInformationList_{}
 {
 	for (size_t i {}; i < maxElements; ++i)
 	{
-		pool_.feed(storageUniquePointer_[i]);
-		freeSignalInformationList_.emplace_front(uint8_t{}, SignalInformation::Code{}, sigval{});
+		auto& element = *new (&storageUniquePointer_[i]) QueueNode{{}, {{}, {}, {}}};
+		freeSignalInformationList_.push_front(element);
 	}
 }
 
@@ -54,26 +50,25 @@ std::pair<int, SignalInformation> SignalInformationQueue::acceptQueuedSignal(con
 
 	while (next != last)
 	{
-		if (next->getSignalNumber() == signalNumber)
+		if (next->signalInformation.getSignalNumber() == signalNumber)
 		{
-			const auto signalInformation = *next;
-			signalInformationList_.erase_after(it);
-			freeSignalInformationList_.emplace_front(uint8_t{}, SignalInformation::Code{}, sigval{});
-			return {0, signalInformation};
+			const auto signalInformation = next->signalInformation;
+			List::splice_after(freeSignalInformationList_.before_begin(), it);
+			return {{}, signalInformation};
 		}
 
 		it = next;
 		++next;
 	}
 
-	return {EAGAIN, SignalInformation{uint8_t{}, SignalInformation::Code{}, sigval{}}};
+	return {EAGAIN, {{}, {}, {}}};
 }
 
 SignalSet SignalInformationQueue::getQueuedSignalSet() const
 {
 	SignalSet queuedSignalSet {SignalSet::empty};
-	for (const auto& signalInformation : signalInformationList_)
-		queuedSignalSet.add(signalInformation.getSignalNumber());
+	for (const auto& node : signalInformationList_)
+		queuedSignalSet.add(node.signalInformation.getSignalNumber());
 	return queuedSignalSet;
 }
 
@@ -95,8 +90,8 @@ int SignalInformationQueue::queueSignal(const uint8_t signalNumber, const sigval
 		++next;
 	}
 
-	freeSignalInformationList_.pop_front();
-	signalInformationList_.emplace_after(it, signalNumber, SignalInformation::Code::Queued, value);
+	freeSignalInformationList_.front().signalInformation = {signalNumber, SignalInformation::Code::Queued, value};
+	signalInformationList_.splice_after(it, freeSignalInformationList_.before_begin());
 	return 0;
 }
 
