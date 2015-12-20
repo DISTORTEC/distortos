@@ -308,6 +308,27 @@ private:
 	Implementation implementation_;
 };
 
+/**
+ * \brief Swaps contents of two lists.
+ *
+ * \tparam Compare is a type of functor used for comparison, std::less results in descending order, std::greater - in
+ * ascending order
+ * \tparam T is the type that has the IntrusiveForwardListNode variable
+ * \tparam NodePointer is a pointer-to-member to IntrusiveForwardListNode variable in \a T
+ * \tparam U is the type that will be stored on the list; it can be different from \a T, but must be implicitly
+ * convertible to \a T (so usually a type derived from \a T); default - \a T;
+ *
+ * \param [in] left is a reference to SortedIntrusiveForwardList with which contents of \a right will be swapped
+ * \param [in] right is a reference to SortedIntrusiveForwardList with which contents of \a left will be swapped
+ */
+
+template<typename Compare, typename T, IntrusiveForwardListNode T::* NodePointer, typename U = T>
+inline void swap(SortedIntrusiveForwardList<Compare, T, NodePointer, U>& left,
+		SortedIntrusiveForwardList<Compare, T, NodePointer, U>& right)
+{
+	left.swap(right);
+}
+
 }	// namespace estd
 
 #endif	// ESTD_SORTEDINTRUSIVEFORWARDLIST_HPP_
