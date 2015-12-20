@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-12-05
+ * \date 2015-12-20
  */
 
 #ifndef ESTD_SORTEDINTRUSIVELIST_HPP_
@@ -86,7 +86,7 @@ public:
 	}
 
 	/**
-	 * \return reference to first element on the list
+	 * \return reference to last element on the list
 	 */
 
 	reference back()
@@ -95,7 +95,7 @@ public:
 	}
 
 	/**
-	 * \return const reference to first element on the list
+	 * \return const reference to last element on the list
 	 */
 
 	const_reference back() const
@@ -176,7 +176,7 @@ public:
 	}
 
 	/**
-	 * \return reference to last element on the list
+	 * \return reference to first element on the list
 	 */
 
 	reference front()
@@ -185,7 +185,7 @@ public:
 	}
 
 	/**
-	 * \return const reference to last element on the list
+	 * \return const reference to first element on the list
 	 */
 
 	const_reference front() const
