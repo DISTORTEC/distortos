@@ -6,14 +6,13 @@
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #
-# date: 2015-11-29
+# date: 2015-12-20
 #
 
 #-----------------------------------------------------------------------------------------------------------------------
 # subdirectories
 #-----------------------------------------------------------------------------------------------------------------------
 
-SUBDIRECTORIES += allocators
 SUBDIRECTORIES += architecture
 SUBDIRECTORIES += chip/STMicroelectronics/STM32F4
 SUBDIRECTORIES += clocks
