@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-11-27
+ * \date 2015-12-20
  */
 
 #include "distortos/internal/synchronization/MessageQueueBase.hpp"
@@ -51,8 +51,8 @@ public:
 	/**
 	 * \brief PushInternalFunctor's function call operator
 	 *
-	 * Pops oldest entry with highest priority from \a entryList, passes the storage to \a functor_ and pushes this (now
-	 * free) entry to \a freeEntryList.
+	 * Gets oldest entry with highest priority from \a entryList, passes the storage to \a functor_ and splices this
+	 * (now free) entry to \a freeEntryList.
 	 *
 	 * \param [in] entryList is a reference to EntryList of MessageQueueBase
 	 * \param [in] freeEntryList is a reference to FreeEntryList of MessageQueueBase
@@ -61,14 +61,12 @@ public:
 	virtual void operator()(MessageQueueBase::EntryList& entryList, MessageQueueBase::FreeEntryList& freeEntryList)
 			const override
 	{
-		const auto entry = *entryList.begin();
-		entryList.pop_front();
-
+		const auto& entry = entryList.front();
 		priority_ = entry.priority;
 
 		functor_(entry.storage);
 
-		freeEntryList.emplace_front(entry);
+		MessageQueueBase::FreeEntryList::splice_after(freeEntryList.before_begin(), entryList.before_begin());
 	}
 
 private:
@@ -103,7 +101,7 @@ public:
 	/**
 	 * \brief PushInternalFunctor's function call operator
 	 *
-	 * Pops one entry from \a freeEntryList, passes the storage to \a functor_ and pushes this entry to \a entryList.
+	 * Gets one entry from \a freeEntryList, passes the storage to \a functor_ and splices this entry to \a entryList.
 	 *
 	 * \param [in] entryList is a reference to EntryList of MessageQueueBase
 	 * \param [in] freeEntryList is a reference to FreeEntryList of MessageQueueBase
@@ -112,14 +110,13 @@ public:
 	virtual void operator()(MessageQueueBase::EntryList& entryList, MessageQueueBase::FreeEntryList& freeEntryList)
 			const override
 	{
-		auto entry = *freeEntryList.begin();
-		freeEntryList.pop_front();
+		auto& entry = freeEntryList.front();
 
 		entry.priority = priority_;
 
 		functor_(entry.storage);
 
-		entryList.sortedEmplace(entry);
+		entryList.splice_after(freeEntryList.before_begin());
 	}
 
 private:
@@ -143,16 +140,14 @@ MessageQueueBase::MessageQueueBase(EntryStorageUniquePointer&& entryStorageUniqu
 		pushSemaphore_{maxElements, maxElements},
 		entryStorageUniquePointer_{std::move(entryStorageUniquePointer)},
 		valueStorageUniquePointer_{std::move(valueStorageUniquePointer)},
-		pool_{},
-		poolAllocator_{pool_},
-		entryList_{poolAllocator_},
-		freeEntryList_{poolAllocator_}
+		entryList_{},
+		freeEntryList_{}
 {
 	for (size_t i = 0; i < maxElements; ++i)
 	{
-		pool_.feed(entryStorageUniquePointer_[i]);
-		freeEntryList_.emplace_front(uint8_t{},
-				&reinterpret_cast<uint8_t*>(valueStorageUniquePointer_.get())[elementSize * i]);
+		const auto valueStorage = &reinterpret_cast<uint8_t*>(valueStorageUniquePointer_.get())[elementSize * i];
+		auto& element = *new (&entryStorageUniquePointer_[i]) Entry{{}, valueStorage};
+		freeEntryList_.push_front(element);
 	}
 }
 

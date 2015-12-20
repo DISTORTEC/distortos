@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-12-06
+ * \date 2015-12-20
  */
 
 #ifndef INCLUDE_DISTORTOS_INTERNAL_SYNCHRONIZATION_MESSAGEQUEUEBASE_HPP_
@@ -16,15 +16,11 @@
 
 #include "distortos/Semaphore.hpp"
 
-#include "distortos/internal/allocators/FeedablePool.hpp"
-#include "distortos/internal/allocators/PoolAllocator.hpp"
-
-#include "distortos/internal/containers/SortedContainer.hpp"
-
 #include "distortos/internal/synchronization/QueueFunctor.hpp"
 #include "distortos/internal/synchronization/SemaphoreFunctor.hpp"
 
-#include <forward_list>
+#include "estd/SortedIntrusiveForwardList.hpp"
+
 #include <memory>
 
 namespace distortos
@@ -49,14 +45,15 @@ public:
 		 */
 
 		constexpr Entry(const uint8_t priorityy, void* const storagee) :
+				node{},
 				priority{priorityy},
 				storage{storagee}
 		{
 
 		}
 
-		/// default copy constructor
-		constexpr Entry(const Entry&) = default;
+		/// node for intrusive forward list
+		estd::IntrusiveForwardListNode node;
 
 		/// priority of the entry
 		uint8_t priority;
@@ -65,11 +62,8 @@ public:
 		void* storage;
 	};
 
-	/// link and Entry
-	using LinkAndEntry = std::pair<void*, Entry>;
-
-	/// type of uninitialized storage for Entry with link
-	using EntryStorage = typename std::aligned_storage<sizeof(LinkAndEntry), alignof(LinkAndEntry)>::type;
+	/// type of uninitialized storage for Entry
+	using EntryStorage = typename std::aligned_storage<sizeof(Entry), alignof(Entry)>::type;
 
 	/// unique_ptr (with deleter) to EntryStorage[]
 	using EntryStorageUniquePointer = std::unique_ptr<EntryStorage[], void(&)(EntryStorage*)>;
@@ -104,17 +98,11 @@ public:
 		}
 	};
 
-	/// type of pool
-	using Pool = FeedablePool;
-
-	/// type of pool allocator
-	using PoolAllocatorType = PoolAllocator<Entry, Pool>;
+	/// type of entry list
+	using EntryList = estd::SortedIntrusiveForwardList<DescendingPriority, Entry, &Entry::node>;
 
 	/// type of free entry list
-	using FreeEntryList = std::forward_list<Entry, PoolAllocatorType>;
-
-	/// type of entry list
-	using EntryList = SortedContainer<FreeEntryList, DescendingPriority>;
+	using FreeEntryList = EntryList::UnsortedIntrusiveForwardList;
 
 	/**
 	 * \brief InternalFunctor is a type-erased interface for functors which execute common code of pop() and push()
@@ -211,12 +199,6 @@ private:
 
 	/// storage for queue elements
 	const ValueStorageUniquePointer valueStorageUniquePointer_;
-
-	/// FeedablePool used by \a poolAllocator_
-	Pool pool_;
-
-	/// PoolAllocator used by \a entryList_ and \a freeList_
-	PoolAllocatorType poolAllocator_;
 
 	/// list of available entries, sorted in descending order of priority
 	EntryList entryList_;
