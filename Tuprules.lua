@@ -47,8 +47,8 @@ function parseConfigurationFile(filename)
 	file:close()
 end
 
--- file with $(CONFIG_SELECTED_CONFIGURATION) variable
-tup.include("selectedConfiguration.mk")
+-- parse CONFIG_SELECTED_CONFIGURATION variable from selectedConfiguration.mk file
+parseConfigurationFile("./selectedConfiguration.mk")
 
 -- path to distortosConfiguration.mk file selected by $(CONFIG_SELECTED_CONFIGURATION) variable
 DISTORTOS_CONFIGURATION_MK = TOP .. "/" .. CONFIG_SELECTED_CONFIGURATION
