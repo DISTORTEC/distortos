@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-12-15
+ * \date 2015-12-21
  */
 
 #ifndef ESTD_INTRUSIVEFORWARDLIST_HPP_
@@ -106,6 +106,18 @@ public:
 	}
 
 	/**
+	 * \brief Swaps contents with another node.
+	 *
+	 * \param [in] other is a reference to IntrusiveForwardListNode with which contents of this node will be swapped
+	 */
+
+	void swap(IntrusiveForwardListNode& other)
+	{
+		using std::swap;
+		swap(nextNode_, other.nextNode_);
+	}
+
+	/**
 	 * \brief Unlinks the node following this one from the list.
 	 *
 	 * \note Access to this function is restricted only to functions from internal::IntrusiveForwardListBase class
@@ -126,6 +138,18 @@ private:
 	/// pointer to next node on the list
 	IntrusiveForwardListNode* nextNode_;
 };
+
+/**
+ * \brief Swaps contents of two nodes.
+ *
+ * \param [in] left is a reference to IntrusiveForwardListNode with which contents of \a right will be swapped
+ * \param [in] right is a reference to IntrusiveForwardListNode with which contents of \a left will be swapped
+ */
+
+inline void swap(IntrusiveForwardListNode& left, IntrusiveForwardListNode& right)
+{
+	left.swap(right);
+}
 
 namespace internal
 {
@@ -290,7 +314,7 @@ public:
 
 	void swap(IntrusiveForwardListBase& other)
 	{
-		std::swap(rootNode_, other.rootNode_);
+		rootNode_.swap(other.rootNode_);
 	}
 
 	/**
@@ -976,7 +1000,7 @@ public:
 
 	void swap(IntrusiveForwardList& other)
 	{
-		intrusiveForwardListBase_.swap(other);
+		intrusiveForwardListBase_.swap(other.intrusiveForwardListBase_);
 	}
 
 	/**
