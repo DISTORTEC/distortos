@@ -394,6 +394,11 @@ public:
 		insert(position, splicedNode);
 	}
 
+	IntrusiveListBase(const IntrusiveListBase&) = delete;
+	IntrusiveListBase(IntrusiveListBase&&) = default;
+	const IntrusiveListBase& operator=(const IntrusiveListBase&) = delete;
+	IntrusiveListBase& operator=(IntrusiveListBase&&) = delete;
+
 private:
 
 	/// root node of the intrusive list
