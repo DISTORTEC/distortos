@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-12-08
+ * \date 2015-12-23
  */
 
 #include "distortos/internal/scheduler/Scheduler.hpp"
@@ -213,14 +213,19 @@ int Scheduler::remove(void (Thread::*terminationHook)())
 {
 	{
 		architecture::InterruptMaskingLock interruptMaskingLock;
-		ThreadList terminatedList;
 
-		const auto ret = blockInternal(terminatedList, currentThreadControlBlock_, ThreadState::Terminated, {});
-		if (ret != 0)
-			return ret;
+		auto& currentThreadControlBlock = *currentThreadControlBlock_;
 
-		(terminatedList.front().getOwner().*terminationHook)();
-		terminatedList.front().setList(nullptr);
+		{
+			ThreadList terminatedList;
+			const auto ret = blockInternal(terminatedList, currentThreadControlBlock_, ThreadState::Terminated, {});
+			if (ret != 0)
+				return ret;
+
+			currentThreadControlBlock.setList(nullptr);
+		}
+
+		(currentThreadControlBlock.getOwner().*terminationHook)();
 	}
 
 	forceContextSwitch();
