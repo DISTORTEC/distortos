@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-12-21
+ * \date 2015-12-23
  */
 
 #ifndef ESTD_SORTEDINTRUSIVEFORWARDLIST_HPP_
@@ -259,6 +259,11 @@ public:
 		return UnsortedIntrusiveForwardList::erase_after(position);
 	}
 
+	SortedIntrusiveForwardList(const SortedIntrusiveForwardList&) = delete;
+	SortedIntrusiveForwardList(SortedIntrusiveForwardList&&) = default;
+	const SortedIntrusiveForwardList& operator=(const SortedIntrusiveForwardList&) = delete;
+	SortedIntrusiveForwardList& operator=(SortedIntrusiveForwardList&&) = delete;
+
 private:
 
 	/// Implementation struct is used primarily for "Empty Base Optimization" with \a Compare type
@@ -312,6 +317,11 @@ private:
 			using std::swap;
 			swap(static_cast<Compare&>(*this), static_cast<Compare&>(other));
 		}
+
+		Implementation(const Implementation&) = delete;
+		Implementation(Implementation&&) = default;
+		const Implementation& operator=(const Implementation&) = delete;
+		Implementation& operator=(Implementation&&) = delete;
 
 		/// internal unsorted IntrusiveForwardList
 		UnsortedIntrusiveForwardList intrusiveForwardList;
