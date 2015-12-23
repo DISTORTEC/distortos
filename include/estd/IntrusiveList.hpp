@@ -131,6 +131,35 @@ public:
 	}
 
 	/**
+	 * \brief Swaps contents with another node.
+	 *
+	 * \param [in] other is a reference to IntrusiveListNode with which contents of this node will be swapped
+	 */
+
+	void swap(IntrusiveListNode& other)
+	{
+		const auto thisWasLinked = isLinked();
+		const auto otherWasLinked = other.isLinked();
+
+		if (thisWasLinked == true || otherWasLinked == true)
+		{
+			using std::swap;
+			swap(nextNode_, other.nextNode_);
+			swap(previousNode_, other.previousNode_);
+
+			if (thisWasLinked == true)
+				other.nextNode_->previousNode_ = other.previousNode_->nextNode_ = &other;
+			else
+				other.reset();
+
+			if (otherWasLinked == true)
+				nextNode_->previousNode_ = previousNode_->nextNode_ = this;
+			else
+				reset();
+		}
+	}
+
+	/**
 	 * \brief Unlinks the node from the list.
 	 */
 
@@ -317,7 +346,7 @@ public:
 
 	void swap(IntrusiveListBase& other)
 	{
-		std::swap(rootNode_, other.rootNode_);
+		rootNode_.swap(other.rootNode_);
 	}
 
 	/**
@@ -1061,7 +1090,7 @@ public:
 
 	void swap(IntrusiveList& other)
 	{
-		intrusiveListBase_.swap(other);
+		intrusiveListBase_.swap(other.intrusiveListBase_);
 	}
 
 	/**
