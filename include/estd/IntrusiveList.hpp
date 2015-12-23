@@ -74,6 +74,26 @@ public:
 	}
 
 	/**
+	 * \brief IntrusiveListNode's move constructor
+	 *
+	 * \param [in] other is a rvalue reference to IntrusiveListNode used as source of move construction
+	 */
+
+	IntrusiveListNode(IntrusiveListNode&& other)
+	{
+		if (other.isLinked() == false)
+		{
+			reset();
+			return;
+		}
+
+		nextNode_ = other.nextNode_;
+		previousNode_ = other.previousNode_;
+		nextNode_->previousNode_ = previousNode_->nextNode_ = this;
+		other.reset();
+	}
+
+	/**
 	 * \brief IntrusiveListNode's destructor
 	 *
 	 * Unlinks the node from the list.
@@ -170,6 +190,10 @@ public:
 
 		reset();
 	}
+
+	IntrusiveListNode(const IntrusiveListNode&) = delete;
+	const IntrusiveListNode& operator=(const IntrusiveListNode&) = delete;
+	IntrusiveListNode& operator=(IntrusiveListNode&&) = delete;
 
 private:
 
