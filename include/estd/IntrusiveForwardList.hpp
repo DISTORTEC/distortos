@@ -1067,6 +1067,11 @@ public:
 		internal::IntrusiveForwardListBase::splice_after(&positionNode, &beforeSplicedElementNode);
 	}
 
+	IntrusiveForwardList(const IntrusiveForwardList&) = delete;
+	IntrusiveForwardList(IntrusiveForwardList&&) = default;
+	const IntrusiveForwardList& operator=(const IntrusiveForwardList&) = delete;
+	IntrusiveForwardList& operator=(IntrusiveForwardList&&) = delete;
+
 private:
 
 	/// internal IntrusiveForwardListBase object
