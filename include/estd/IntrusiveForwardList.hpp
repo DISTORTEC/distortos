@@ -130,7 +130,7 @@ public:
 		auto& nextNode = *nextNode_;
 		nextNode_ = nextNode.nextNode_;
 
-		nextNode.nextNode_ = {};
+		nextNode.reset();
 	}
 
 private:
