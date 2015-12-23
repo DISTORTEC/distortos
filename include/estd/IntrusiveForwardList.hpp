@@ -374,6 +374,11 @@ public:
 		insert_after(position, *splicedNode);
 	}
 
+	IntrusiveForwardListBase(const IntrusiveForwardListBase&) = delete;
+	IntrusiveForwardListBase(IntrusiveForwardListBase&&) = default;
+	const IntrusiveForwardListBase& operator=(const IntrusiveForwardListBase&) = delete;
+	IntrusiveForwardListBase& operator=(IntrusiveForwardListBase&&) = delete;
+
 private:
 
 	/// root node of the intrusive forward list
