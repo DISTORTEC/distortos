@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-12-08
+ * \date 2015-12-23
  */
 
 #ifndef INCLUDE_DISTORTOS_SEMAPHORE_HPP_
@@ -214,6 +214,11 @@ public:
 
 	int wait();
 
+	Semaphore(const Semaphore&) = delete;
+	Semaphore(Semaphore&&) = default;
+	const Semaphore& operator=(const Semaphore&) = delete;
+	Semaphore& operator=(Semaphore&&) = delete;
+
 private:
 
 	/**
@@ -234,7 +239,7 @@ private:
 	Value value_;
 
 	/// max value of the semaphore
-	const Value maxValue_;
+	Value maxValue_;
 };
 
 }	// namespace distortos
