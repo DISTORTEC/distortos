@@ -1147,6 +1147,11 @@ public:
 		internal::IntrusiveListBase::splice(positionNode, splicedElementNode);
 	}
 
+	IntrusiveList(const IntrusiveList&) = delete;
+	IntrusiveList(IntrusiveList&&) = default;
+	const IntrusiveList& operator=(const IntrusiveList&) = delete;
+	IntrusiveList& operator=(IntrusiveList&&) = delete;
+
 private:
 
 	/// internal IntrusiveListBase object
