@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-12-21
+ * \date 2015-12-23
  */
 
 #ifndef ESTD_INTRUSIVEFORWARDLIST_HPP_
@@ -134,6 +134,15 @@ public:
 	}
 
 private:
+
+	/**
+	 * \brief Resets the node to the same state as right after construction.
+	 */
+
+	void reset()
+	{
+		nextNode_ = {};
+	}
 
 	/// pointer to next node on the list
 	IntrusiveForwardListNode* nextNode_;
