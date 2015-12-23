@@ -139,8 +139,7 @@ public:
 		previousNode_->nextNode_ = nextNode_;
 		nextNode_->previousNode_ = previousNode_;
 
-		nextNode_ = this;
-		previousNode_ = this;
+		reset();
 	}
 
 private:
