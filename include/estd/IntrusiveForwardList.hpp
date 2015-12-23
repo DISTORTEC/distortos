@@ -73,6 +73,18 @@ public:
 	}
 
 	/**
+	 * \brief IntrusiveForwardListNode's move constructor
+	 *
+	 * \param [in] other is a rvalue reference to IntrusiveForwardListNode used as source of move construction
+	 */
+
+	IntrusiveForwardListNode(IntrusiveForwardListNode&& other) :
+			nextNode_{other.nextNode_}
+	{
+		other.reset();
+	}
+
+	/**
 	 * \return pointer to next node on the list
 	 */
 
@@ -132,6 +144,10 @@ public:
 
 		nextNode.reset();
 	}
+
+	IntrusiveForwardListNode(const IntrusiveForwardListNode&) = delete;
+	const IntrusiveForwardListNode& operator=(const IntrusiveForwardListNode&) = delete;
+	IntrusiveForwardListNode& operator=(IntrusiveForwardListNode&&) = delete;
 
 private:
 
