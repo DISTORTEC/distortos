@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-12-20
+ * \date 2015-12-23
  */
 
 #ifndef ESTD_SORTEDINTRUSIVELIST_HPP_
@@ -243,7 +243,7 @@ public:
 
 	void swap(SortedIntrusiveList& other)
 	{
-		std::swap(implementation_, other.implementation_);
+		implementation_.swap(other.implementation_);
 	}
 
 	/**
@@ -296,6 +296,19 @@ private:
 						return this->Compare::operator()(element, newElement);
 					}
 			);
+		}
+
+		/**
+		 * \brief Swaps contents with another instance.
+		 *
+		 * \param [in] other is a reference to Implementation with which contents of this instance will be swapped
+		 */
+
+		void swap(Implementation& other)
+		{
+			intrusiveList.swap(other.intrusiveList);
+			using std::swap;
+			swap(static_cast<Compare&>(*this), static_cast<Compare&>(other));
 		}
 
 		/// internal unsorted IntrusiveList
