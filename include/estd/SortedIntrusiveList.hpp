@@ -261,6 +261,11 @@ public:
 		return UnsortedIntrusiveList::erase(position);
 	}
 
+	SortedIntrusiveList(const SortedIntrusiveList&) = delete;
+	SortedIntrusiveList(SortedIntrusiveList&&) = default;
+	const SortedIntrusiveList& operator=(const SortedIntrusiveList&) = delete;
+	SortedIntrusiveList& operator=(SortedIntrusiveList&&) = delete;
+
 private:
 
 	/// Implementation struct is used primarily for "Empty Base Optimization" with \a Compare type
@@ -310,6 +315,11 @@ private:
 			using std::swap;
 			swap(static_cast<Compare&>(*this), static_cast<Compare&>(other));
 		}
+
+		Implementation(const Implementation&) = delete;
+		Implementation(Implementation&&) = default;
+		const Implementation& operator=(const Implementation&) = delete;
+		Implementation& operator=(Implementation&&) = delete;
 
 		/// internal unsorted IntrusiveList
 		UnsortedIntrusiveList intrusiveList;
