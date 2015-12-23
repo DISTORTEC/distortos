@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-12-05
+ * \date 2015-12-23
  */
 
 #ifndef INCLUDE_DISTORTOS_INTERNAL_SCHEDULER_SOFTWARETIMERCONTROLBLOCK_HPP_
@@ -91,6 +91,11 @@ public:
 	 */
 
 	void stop();
+
+	SoftwareTimerControlBlock(const SoftwareTimerControlBlock&) = delete;
+	SoftwareTimerControlBlock(SoftwareTimerControlBlock&&) = default;
+	const SoftwareTimerControlBlock& operator=(const SoftwareTimerControlBlock&) = delete;
+	SoftwareTimerControlBlock& operator=(SoftwareTimerControlBlock&&) = delete;
 
 private:
 
