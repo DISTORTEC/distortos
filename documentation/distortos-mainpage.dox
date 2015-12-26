@@ -12,9 +12,9 @@
  */
 
 /**
- * \mainpage distortos - API reference
+ * \mainpage API reference
  *
- * Advanced real-time operating system for deeply embedded targets
+ * <h3>distortos - advanced real-time operating system for deeply embedded targets</h3>
  *
  * Homepage - http://distortos.org/<br/>
  * Documentation - http://distortos.org/documentation/<br/>
