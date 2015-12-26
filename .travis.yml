@@ -6,7 +6,7 @@
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #
-# date: 2015-12-13
+# date: 2015-12-26
 #
 
 # use container-based infrastructure
@@ -17,9 +17,9 @@ language: generic
 
 # bleeding-edge-toolchain
 install:
-    - wget http://www.freddiechopin.info/en/download/category/11-bleeding-edge-toolchain?download=135%3Ableeding-edge-toolchain-151208-64-bit-linux -O gcc-arm-none-eabi-5_3-151208-linux-x64.tar.xz
-    - tar -xvf gcc-arm-none-eabi-5_3-151208-linux-x64.tar.xz
-    - export PATH=$PWD/gcc-arm-none-eabi-5_3-151208/bin:$PATH
+    - wget http://www.freddiechopin.info/en/download/category/11-bleeding-edge-toolchain?download=139%3Ableeding-edge-toolchain-151225-64-bit-linux -O gcc-arm-none-eabi-5_3-151225-linux-x64.tar.xz
+    - tar -xvf gcc-arm-none-eabi-5_3-151225-linux-x64.tar.xz
+    - export PATH=$PWD/gcc-arm-none-eabi-5_3-151225/bin:$PATH
 
 # configure and build selected configurations
 script:
