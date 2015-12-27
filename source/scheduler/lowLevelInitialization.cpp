@@ -40,7 +40,11 @@ namespace
 +---------------------------------------------------------------------------------------------------------------------*/
 
 /// size of idle thread's stack, bytes
+#ifdef CONFIG_THREAD_DETACH_ENABLE
+constexpr size_t idleThreadStackSize {512};
+#else	// !def CONFIG_THREAD_DETACH_ENABLE
 constexpr size_t idleThreadStackSize {128};
+#endif	// !def CONFIG_THREAD_DETACH_ENABLE
 
 /// type of idle thread
 using IdleThread = decltype(makeStaticThread<idleThreadStackSize>(0, idleThreadFunction));
