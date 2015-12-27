@@ -8,14 +8,16 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-11-29
+ * \date 2015-12-27
  */
 
 #include "distortos/internal/scheduler/lowLevelInitialization.hpp"
 
-#include "distortos/Mutex.hpp"
+#include "distortos/Mutex.hpp"	// needed when CONFIG_THREAD_DETACH_ENABLE option is disabled
 #include "distortos/StaticThread.hpp"
 
+#include "distortos/internal/memory/DeferredThreadDeleter.hpp"
+#include "distortos/internal/memory/getDeferredThreadDeleter.hpp"
 #include "distortos/internal/memory/getMallocMutex.hpp"
 
 #include "distortos/internal/scheduler/getScheduler.hpp"
@@ -100,6 +102,12 @@ void lowLevelInitialization()
 	idleThread.start();
 
 	new (&getMallocMutex()) Mutex {Mutex::Type::Recursive, Mutex::Protocol::PriorityInheritance};
+
+#ifdef CONFIG_THREAD_DETACH_ENABLE
+
+	new (&getDeferredThreadDeleter()) DeferredThreadDeleter;
+
+#endif	// def CONFIG_THREAD_DETACH_ENABLE
 }
 
 }	// namespace internal
