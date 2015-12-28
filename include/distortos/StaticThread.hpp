@@ -8,14 +8,14 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-12-02
+ * \date 2015-12-28
  */
 
 #ifndef INCLUDE_DISTORTOS_STATICTHREAD_HPP_
 #define INCLUDE_DISTORTOS_STATICTHREAD_HPP_
 
 #include "distortos/StaticSignalsReceiver.hpp"
-#include "distortos/ThreadCommon.hpp"
+#include "distortos/UndetachableThread.hpp"
 
 namespace distortos
 {
@@ -31,12 +31,12 @@ namespace internal
  */
 
 template<typename Function, typename... Args>
-class StaticThreadBase : public ThreadCommon
+class StaticThreadBase : public UndetachableThread
 {
 public:
 
 	/// base of StaticThreadBase
-	using Base = ThreadCommon;
+	using Base = UndetachableThread;
 
 	/**
 	 * \brief StaticThreadBase's constructor
