@@ -220,15 +220,7 @@ public:
 	const DynamicThread& operator=(const DynamicThread&) = delete;
 	DynamicThread& operator=(DynamicThread&&) = delete;
 
-private:
-
-	/**
-	 * \brief "Run" function of thread
-	 *
-	 * This is never used, as only internal thread is executed.
-	 */
-
-	virtual void run() override;
+protected:
 
 	/**
 	 * \brief Termination hook function of thread
@@ -238,6 +230,16 @@ private:
 	 */
 
 	virtual void terminationHook() override;
+
+private:
+
+	/**
+	 * \brief "Run" function of thread
+	 *
+	 * This is never used, as only internal thread is executed.
+	 */
+
+	virtual void run() override;
 
 	/// internal thread object
 	std::unique_ptr<internal::DynamicThreadBase> detachableThread_;

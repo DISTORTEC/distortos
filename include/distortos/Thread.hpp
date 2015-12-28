@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-11-28
+ * \date 2015-12-28
  */
 
 #ifndef INCLUDE_DISTORTOS_THREAD_HPP_
@@ -171,6 +171,14 @@ public:
 protected:
 
 	/**
+	 * \brief Termination hook function of thread
+	 *
+	 * This function is called after run() completes, from Scheduler::remove().
+	 */
+
+	virtual void terminationHook() = 0;
+
+	/**
 	 * \brief Thread runner function - entry point of threads.
 	 *
 	 * After return from actual thread function, thread is terminated, so this function never returns.
@@ -189,14 +197,6 @@ private:
 	 */
 
 	virtual void run() = 0;
-
-	/**
-	 * \brief Termination hook function of thread
-	 *
-	 * This function is called after run() completes, from Scheduler::remove().
-	 */
-
-	virtual void terminationHook() = 0;
 };
 
 }	// namespace distortos
