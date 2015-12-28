@@ -23,6 +23,12 @@
 namespace distortos
 {
 
+#ifdef CONFIG_THREAD_DETACH_ENABLE
+
+class DynamicThread;
+
+#endif	// def CONFIG_THREAD_DETACH_ENABLE
+
 namespace internal
 {
 
@@ -38,6 +44,8 @@ namespace internal
 class DynamicThreadBase : public ThreadCommon
 {
 public:
+
+#ifdef CONFIG_THREAD_DETACH_ENABLE
 
 	/**
 	 * \brief DynamicThreadBase's constructor
@@ -62,7 +70,30 @@ public:
 	DynamicThreadBase(size_t stackSize, bool canReceiveSignals, size_t queuedSignals, size_t signalActions,
 			uint8_t priority, SchedulingPolicy schedulingPolicy, Function&& function, Args&&... args);
 
-#ifndef CONFIG_THREAD_DETACH_ENABLE
+#else	// !def CONFIG_THREAD_DETACH_ENABLE
+
+	/**
+	 * \brief DynamicThreadBase's constructor
+	 *
+	 * \tparam Function is the function that will be executed in separate thread
+	 * \tparam Args are the arguments for \a Function
+	 *
+	 * \param [in] stackSize is the size of stack, bytes
+	 * \param [in] canReceiveSignals selects whether reception of signals is enabled (true) or disabled (false) for this
+	 * thread
+	 * \param [in] queuedSignals is the max number of queued signals for this thread, relevant only if
+	 * \a canReceiveSignals == true, 0 to disable queuing of signals for this thread
+	 * \param [in] signalActions is the max number of different SignalAction objects for this thread, relevant only if
+	 * \a canReceiveSignals == true, 0 to disable catching of signals for this thread
+	 * \param [in] priority is the thread's priority, 0 - lowest, UINT8_MAX - highest
+	 * \param [in] schedulingPolicy is the scheduling policy of the thread
+	 * \param [in] function is a function that will be executed in separate thread
+	 * \param [in] args are arguments for \a function
+	 */
+
+	template<typename Function, typename... Args>
+	DynamicThreadBase(size_t stackSize, bool canReceiveSignals, size_t queuedSignals, size_t signalActions,
+			uint8_t priority, SchedulingPolicy schedulingPolicy, Function&& function, Args&&... args);
 
 	/**
 	 * \brief DynamicThreadBase's constructor
@@ -106,7 +137,32 @@ private:
 
 	/// bound function object
 	std::function<void()> boundFunction_;
+
+#ifdef CONFIG_THREAD_DETACH_ENABLE
+
+	/// pointer to owner DynamicThread object
+	DynamicThread* owner_;
+
+#endif	// def CONFIG_THREAD_DETACH_ENABLE
 };
+
+#ifdef CONFIG_THREAD_DETACH_ENABLE
+
+template<typename Function, typename... Args>
+DynamicThreadBase::DynamicThreadBase(const size_t stackSize, const bool canReceiveSignals, const size_t queuedSignals,
+		const size_t signalActions, const uint8_t priority, const SchedulingPolicy schedulingPolicy,
+		Function&& function, Args&&... args) :
+				ThreadCommon{{new uint8_t[stackSize], storageDeleter<uint8_t>}, stackSize, priority, schedulingPolicy,
+						nullptr, canReceiveSignals == true ? &dynamicSignalsReceiver_ : nullptr},
+				dynamicSignalsReceiver_{canReceiveSignals == true ? queuedSignals : 0,
+						canReceiveSignals == true ? signalActions : 0},
+				boundFunction_{std::bind(std::forward<Function>(function), std::forward<Args>(args)...)},
+				owner_{}
+{
+
+}
+
+#else	// !def CONFIG_THREAD_DETACH_ENABLE
 
 template<typename Function, typename... Args>
 DynamicThreadBase::DynamicThreadBase(const size_t stackSize, const bool canReceiveSignals, const size_t queuedSignals,
@@ -120,6 +176,8 @@ DynamicThreadBase::DynamicThreadBase(const size_t stackSize, const bool canRecei
 {
 
 }
+
+#endif	// !def CONFIG_THREAD_DETACH_ENABLE
 
 }	// namespace internal
 
