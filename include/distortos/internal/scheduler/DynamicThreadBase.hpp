@@ -62,13 +62,15 @@ public:
 	 * \a canReceiveSignals == true, 0 to disable catching of signals for this thread
 	 * \param [in] priority is the thread's priority, 0 - lowest, UINT8_MAX - highest
 	 * \param [in] schedulingPolicy is the scheduling policy of the thread
+	 * \param [in] owner is a reference to owner DynamicThread object
 	 * \param [in] function is a function that will be executed in separate thread
 	 * \param [in] args are arguments for \a function
 	 */
 
 	template<typename Function, typename... Args>
 	DynamicThreadBase(size_t stackSize, bool canReceiveSignals, size_t queuedSignals, size_t signalActions,
-			uint8_t priority, SchedulingPolicy schedulingPolicy, Function&& function, Args&&... args);
+			uint8_t priority, SchedulingPolicy schedulingPolicy, DynamicThread& owner, Function&& function,
+			Args&&... args);
 
 #else	// !def CONFIG_THREAD_DETACH_ENABLE
 
@@ -151,13 +153,13 @@ private:
 template<typename Function, typename... Args>
 DynamicThreadBase::DynamicThreadBase(const size_t stackSize, const bool canReceiveSignals, const size_t queuedSignals,
 		const size_t signalActions, const uint8_t priority, const SchedulingPolicy schedulingPolicy,
-		Function&& function, Args&&... args) :
+		DynamicThread& owner, Function&& function, Args&&... args) :
 				ThreadCommon{{new uint8_t[stackSize], storageDeleter<uint8_t>}, stackSize, priority, schedulingPolicy,
 						nullptr, canReceiveSignals == true ? &dynamicSignalsReceiver_ : nullptr},
 				dynamicSignalsReceiver_{canReceiveSignals == true ? queuedSignals : 0,
 						canReceiveSignals == true ? signalActions : 0},
 				boundFunction_{std::bind(std::forward<Function>(function), std::forward<Args>(args)...)},
-				owner_{}
+				owner_{&owner}
 {
 
 }

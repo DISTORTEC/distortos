@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-12-27
+ * \date 2015-12-28
  */
 
 #ifndef INCLUDE_DISTORTOS_DYNAMICTHREAD_HPP_
@@ -312,7 +312,7 @@ DynamicThread::DynamicThread(const size_t stackSize, const bool canReceiveSignal
 		const size_t signalActions, const uint8_t priority, const SchedulingPolicy schedulingPolicy,
 		Function&& function, Args&&... args) :
 		detachableThread_{new internal::DynamicThreadBase{stackSize, canReceiveSignals, queuedSignals, signalActions,
-				priority, schedulingPolicy, std::forward<Function>(function), std::forward<Args>(args)...}}
+				priority, schedulingPolicy, *this, std::forward<Function>(function), std::forward<Args>(args)...}}
 {
 
 }
