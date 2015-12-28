@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-12-24
+ * \date 2015-12-28
  */
 
 #ifndef INCLUDE_DISTORTOS_INTERNAL_SCHEDULER_DYNAMICTHREADBASE_HPP_
@@ -62,6 +62,8 @@ public:
 	DynamicThreadBase(size_t stackSize, bool canReceiveSignals, size_t queuedSignals, size_t signalActions,
 			uint8_t priority, SchedulingPolicy schedulingPolicy, Function&& function, Args&&... args);
 
+#ifndef CONFIG_THREAD_DETACH_ENABLE
+
 	/**
 	 * \brief DynamicThreadBase's constructor
 	 *
@@ -81,6 +83,8 @@ public:
 	{
 
 	}
+
+#endif	// !def CONFIG_THREAD_DETACH_ENABLE
 
 	DynamicThreadBase(const DynamicThreadBase&) = delete;
 	DynamicThreadBase(DynamicThreadBase&&) = default;
