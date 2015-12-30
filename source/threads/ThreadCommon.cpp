@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-12-28
+ * \date 2015-12-30
  */
 
 #include "distortos/ThreadCommon.hpp"
@@ -19,8 +19,6 @@
 #include "distortos/internal/scheduler/Scheduler.hpp"
 
 #include "distortos/internal/synchronization/SignalsReceiverControlBlock.hpp"
-
-#include <cerrno>
 
 namespace distortos
 {
