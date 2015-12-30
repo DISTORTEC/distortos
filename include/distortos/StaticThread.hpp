@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-12-28
+ * \date 2015-12-30
  */
 
 #ifndef INCLUDE_DISTORTOS_STATICTHREAD_HPP_
@@ -55,8 +55,9 @@ public:
 	StaticThreadBase(StackStorageUniquePointer&& stackStorageUniquePointer, const size_t size, const uint8_t priority,
 			const SchedulingPolicy schedulingPolicy, SignalsReceiver* const signalsReceiver, Function&& function,
 			Args&&... args) :
-			Base{std::move(stackStorageUniquePointer), size, priority, schedulingPolicy, nullptr, signalsReceiver},
-			boundFunction_{std::bind(std::forward<Function>(function), std::forward<Args>(args)...)}
+					Base{{std::move(stackStorageUniquePointer), size, threadRunner, *this}, priority, schedulingPolicy,
+							nullptr, signalsReceiver},
+					boundFunction_{std::bind(std::forward<Function>(function), std::forward<Args>(args)...)}
 	{
 
 	}
