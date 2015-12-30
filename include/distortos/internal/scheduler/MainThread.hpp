@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-12-28
+ * \date 2015-12-30
  */
 
 #ifndef INCLUDE_DISTORTOS_INTERNAL_SCHEDULER_MAINTHREAD_HPP_
@@ -39,16 +39,6 @@ public:
 	MainThread(uint8_t priority, ThreadGroupControlBlock& threadGroupControlBlock, SignalsReceiver* signalsReceiver);
 
 	using UndetachableThread::getThreadControlBlock;
-
-private:
-
-	/**
-	 * \brief "Run" function of thread
-	 *
-	 * Just a dummy which never gets used.
-	 */
-
-	virtual void run() override;
 };
 
 }	// namespace internal

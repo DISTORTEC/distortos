@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-11-27
+ * \date 2015-12-30
  */
 
 #include "distortos/architecture/Stack.hpp"
@@ -71,16 +71,18 @@ size_t adjustSize(void* const storage, const size_t size, void* const adjustedSt
  *
  * \param [in] storage is a pointer to stack's storage
  * \param [in] size is the size of stack's storage, bytes
- * \param [in] function is a reference to thread's function, this function must not return
+ * \param [in] function is a reference to thread runner function, this function must not return
  * \param [in] thread is a reference to Thread object passed to function
+ * \param [in] run is a reference to Thread's "run" function
  *
  * \return value that can be used as thread's stack pointer, ready for context switching
  */
 
-void* initializeStackProxy(void* const storage, const size_t size, void (& function)(Thread&), Thread& thread)
+void* initializeStackProxy(void* const storage, const size_t size, void (& function)(Thread&, void(&)(Thread&)),
+		Thread& thread, void (& run)(Thread&))
 {
 	memset(storage, 0, size);
-	return initializeStack(storage, size, function, thread);
+	return initializeStack(storage, size, function, thread, run);
 }
 
 }	// namespace
@@ -89,12 +91,12 @@ void* initializeStackProxy(void* const storage, const size_t size, void (& funct
 | public functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-Stack::Stack(StorageUniquePointer&& storageUniquePointer, const size_t size, void (& function)(Thread&),
-		Thread& thread) :
+Stack::Stack(StorageUniquePointer&& storageUniquePointer, const size_t size,
+		void (& function)(Thread&, void(&)(Thread&)), Thread& thread, void (& run)(Thread&)) :
 		storageUniquePointer_{std::move(storageUniquePointer)},
 		adjustedStorage_{adjustStorage(storageUniquePointer_.get(), stackAlignment)},
 		adjustedSize_{adjustSize(storageUniquePointer_.get(), size, adjustedStorage_, stackSizeDivisibility)},
-		stackPointer_{initializeStackProxy(adjustedStorage_, adjustedSize_, function, thread)}
+		stackPointer_{initializeStackProxy(adjustedStorage_, adjustedSize_, function, thread, run)}
 {
 	/// \todo implement minimal size check
 }

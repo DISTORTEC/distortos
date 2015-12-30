@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-11-11
+ * \date 2015-12-30
  */
 
 #ifndef INCLUDE_DISTORTOS_ARCHITECTURE_STACK_HPP_
@@ -46,11 +46,13 @@ public:
 	 * \param [in] storageUniquePointer is a rvalue reference to StorageUniquePointer with storage for stack (\a size
 	 * bytes long) and appropriate deleter
 	 * \param [in] size is the size of stack's storage, bytes
-	 * \param [in] function is a reference to thread's function, this function must not return
+	 * \param [in] function is a reference to thread runner function, this function must not return
 	 * \param [in] thread is a reference to Thread object passed to function
+	 * \param [in] run is a reference to Thread's "run" function
 	 */
 
-	Stack(StorageUniquePointer&& storageUniquePointer, size_t size, void (& function)(Thread&), Thread& thread);
+	Stack(StorageUniquePointer&& storageUniquePointer, size_t size, void (& function)(Thread&, void(&)(Thread&)),
+			Thread& thread, void (& run)(Thread&));
 
 	/**
 	 * \brief Stack's constructor

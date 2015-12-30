@@ -127,12 +127,14 @@ public:
 private:
 
 	/**
-	 * \brief Thread's internal function.
+	 * \brief Thread's "run" function.
 	 *
 	 * Executes bound function object.
+	 *
+	 * \param [in] thread is a reference to Thread object, this must be DynamicThreadBase!
 	 */
 
-	virtual void run() override;
+	static void run(Thread& thread);
 
 	/// internal DynamicSignalsReceiver object
 	DynamicSignalsReceiver dynamicSignalsReceiver_;
@@ -154,7 +156,7 @@ template<typename Function, typename... Args>
 DynamicThreadBase::DynamicThreadBase(const size_t stackSize, const bool canReceiveSignals, const size_t queuedSignals,
 		const size_t signalActions, const uint8_t priority, const SchedulingPolicy schedulingPolicy,
 		DynamicThread& owner, Function&& function, Args&&... args) :
-				ThreadCommon{{{new uint8_t[stackSize], storageDeleter<uint8_t>}, stackSize, threadRunner, *this},
+				ThreadCommon{{{new uint8_t[stackSize], storageDeleter<uint8_t>}, stackSize, threadRunner, *this, run},
 						priority, schedulingPolicy, nullptr,
 						canReceiveSignals == true ? &dynamicSignalsReceiver_ : nullptr},
 				dynamicSignalsReceiver_{canReceiveSignals == true ? queuedSignals : 0,
@@ -171,7 +173,7 @@ template<typename Function, typename... Args>
 DynamicThreadBase::DynamicThreadBase(const size_t stackSize, const bool canReceiveSignals, const size_t queuedSignals,
 		const size_t signalActions, const uint8_t priority, const SchedulingPolicy schedulingPolicy,
 		Function&& function, Args&&... args) :
-				ThreadCommon{{{new uint8_t[stackSize], storageDeleter<uint8_t>}, stackSize, threadRunner, *this},
+				ThreadCommon{{{new uint8_t[stackSize], storageDeleter<uint8_t>}, stackSize, threadRunner, *this, run},
 						priority, schedulingPolicy, nullptr,
 						canReceiveSignals == true ? &dynamicSignalsReceiver_ : nullptr},
 				dynamicSignalsReceiver_{canReceiveSignals == true ? queuedSignals : 0,

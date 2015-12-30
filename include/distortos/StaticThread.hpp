@@ -55,8 +55,8 @@ public:
 	StaticThreadBase(StackStorageUniquePointer&& stackStorageUniquePointer, const size_t size, const uint8_t priority,
 			const SchedulingPolicy schedulingPolicy, SignalsReceiver* const signalsReceiver, Function&& function,
 			Args&&... args) :
-					Base{{std::move(stackStorageUniquePointer), size, threadRunner, *this}, priority, schedulingPolicy,
-							nullptr, signalsReceiver},
+					Base{{std::move(stackStorageUniquePointer), size, threadRunner, *this, run}, priority,
+							schedulingPolicy, nullptr, signalsReceiver},
 					boundFunction_{std::bind(std::forward<Function>(function), std::forward<Args>(args)...)}
 	{
 
@@ -70,14 +70,16 @@ public:
 private:
 
 	/**
-	 * \brief StaticThreadBase's internal function.
+	 * \brief Thread's "run" function.
 	 *
 	 * Executes bound function object.
+	 *
+	 * \param [in] thread is a reference to Thread object, this must be StaticThreadBase!
 	 */
 
-	virtual void run() override
+	static void run(Thread& thread)
 	{
-		boundFunction_();
+		static_cast<StaticThreadBase&>(thread).boundFunction_();
 	}
 
 	/// bound function object

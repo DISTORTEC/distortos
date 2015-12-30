@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-12-28
+ * \date 2015-12-30
  */
 
 #ifndef INCLUDE_DISTORTOS_THREAD_HPP_
@@ -184,19 +184,10 @@ protected:
 	 * After return from actual thread function, thread is terminated, so this function never returns.
 	 *
 	 * \param [in] thread is a reference to Thread object that is being run
+	 * \param [in] run is a reference to Thread's "run" function
 	 */
 
-	static void threadRunner(Thread& thread) __attribute__ ((noreturn));
-
-private:
-
-	/**
-	 * \brief "Run" function of thread
-	 *
-	 * This should be overridden by derived classes.
-	 */
-
-	virtual void run() = 0;
+	static void threadRunner(Thread& thread, void (& run)(Thread&)) __attribute__ ((noreturn));
 };
 
 }	// namespace distortos

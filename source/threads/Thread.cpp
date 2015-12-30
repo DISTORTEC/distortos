@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-11-27
+ * \date 2015-12-30
  */
 
 #include "distortos/Thread.hpp"
@@ -32,9 +32,9 @@ Thread::~Thread()
 | protected static functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-void Thread::threadRunner(Thread& thread)
+void Thread::threadRunner(Thread& thread, void (& run)(Thread&))
 {
-	thread.run();
+	run(thread);
 	internal::getScheduler().remove(&Thread::terminationHook);
 
 	while (1);
