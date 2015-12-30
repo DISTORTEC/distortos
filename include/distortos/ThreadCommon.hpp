@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-12-28
+ * \date 2015-12-30
  */
 
 #ifndef INCLUDE_DISTORTOS_THREADCOMMON_HPP_
@@ -34,24 +34,6 @@ public:
 
 	/// unique_ptr (with deleter) to storage for stack
 	using StackStorageUniquePointer = architecture::Stack::StorageUniquePointer;
-
-	/**
-	 * \brief ThreadCommon's constructor
-	 *
-	 * \param [in] stackStorageUniquePointer is a rvalue reference to StackStorageUniquePointer with storage for stack
-	 * (\a size bytes long) and appropriate deleter
-	 * \param [in] size is the size of stack's storage, bytes
-	 * \param [in] priority is the thread's priority, 0 - lowest, UINT8_MAX - highest
-	 * \param [in] schedulingPolicy is the scheduling policy of the thread
-	 * \param [in] threadGroupControlBlock is a pointer to internal::ThreadGroupControlBlock to which this object will
-	 * be added, nullptr to inherit thread group from currently running thread
-	 * \param [in] signalsReceiver is a pointer to SignalsReceiver object for this thread, nullptr to disable reception
-	 * of signals for this thread
-	 */
-
-	ThreadCommon(StackStorageUniquePointer&& stackStorageUniquePointer, size_t size, uint8_t priority,
-			SchedulingPolicy schedulingPolicy, internal::ThreadGroupControlBlock* threadGroupControlBlock,
-			SignalsReceiver* signalsReceiver);
 
 	/**
 	 * \brief ThreadCommon's constructor

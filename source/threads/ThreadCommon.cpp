@@ -27,15 +27,6 @@ namespace distortos
 | public functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-ThreadCommon::ThreadCommon(StackStorageUniquePointer&& stackStorageUniquePointer, const size_t size,
-		const uint8_t priority, const SchedulingPolicy schedulingPolicy,
-		internal::ThreadGroupControlBlock* const threadGroupControlBlock, SignalsReceiver* const signalsReceiver) :
-		ThreadCommon{{std::move(stackStorageUniquePointer), size, threadRunner, *this}, priority, schedulingPolicy,
-				threadGroupControlBlock, signalsReceiver}
-{
-
-}
-
 ThreadCommon::ThreadCommon(architecture::Stack&& stack, const uint8_t priority, const SchedulingPolicy schedulingPolicy,
 		internal::ThreadGroupControlBlock* const threadGroupControlBlock, SignalsReceiver* const signalsReceiver) :
 		threadControlBlock_{std::move(stack), priority, schedulingPolicy, threadGroupControlBlock, signalsReceiver,
