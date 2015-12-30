@@ -8,7 +8,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-12-28
+ * \date 2015-12-30
  */
 
 #ifndef INCLUDE_DISTORTOS_INTERNAL_SCHEDULER_DYNAMICTHREADBASE_HPP_
@@ -154,8 +154,9 @@ template<typename Function, typename... Args>
 DynamicThreadBase::DynamicThreadBase(const size_t stackSize, const bool canReceiveSignals, const size_t queuedSignals,
 		const size_t signalActions, const uint8_t priority, const SchedulingPolicy schedulingPolicy,
 		DynamicThread& owner, Function&& function, Args&&... args) :
-				ThreadCommon{{new uint8_t[stackSize], storageDeleter<uint8_t>}, stackSize, priority, schedulingPolicy,
-						nullptr, canReceiveSignals == true ? &dynamicSignalsReceiver_ : nullptr},
+				ThreadCommon{{{new uint8_t[stackSize], storageDeleter<uint8_t>}, stackSize, threadRunner, *this},
+						priority, schedulingPolicy, nullptr,
+						canReceiveSignals == true ? &dynamicSignalsReceiver_ : nullptr},
 				dynamicSignalsReceiver_{canReceiveSignals == true ? queuedSignals : 0,
 						canReceiveSignals == true ? signalActions : 0},
 				boundFunction_{std::bind(std::forward<Function>(function), std::forward<Args>(args)...)},
@@ -170,8 +171,9 @@ template<typename Function, typename... Args>
 DynamicThreadBase::DynamicThreadBase(const size_t stackSize, const bool canReceiveSignals, const size_t queuedSignals,
 		const size_t signalActions, const uint8_t priority, const SchedulingPolicy schedulingPolicy,
 		Function&& function, Args&&... args) :
-				ThreadCommon{{new uint8_t[stackSize], storageDeleter<uint8_t>}, stackSize, priority, schedulingPolicy,
-						nullptr, canReceiveSignals == true ? &dynamicSignalsReceiver_ : nullptr},
+				ThreadCommon{{{new uint8_t[stackSize], storageDeleter<uint8_t>}, stackSize, threadRunner, *this},
+						priority, schedulingPolicy, nullptr,
+						canReceiveSignals == true ? &dynamicSignalsReceiver_ : nullptr},
 				dynamicSignalsReceiver_{canReceiveSignals == true ? queuedSignals : 0,
 						canReceiveSignals == true ? signalActions : 0},
 				boundFunction_{std::bind(std::forward<Function>(function), std::forward<Args>(args)...)}
