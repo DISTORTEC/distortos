@@ -2,13 +2,13 @@
  * \file
  * \brief Scheduler class header
  *
- * \author Copyright (C) 2014-2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-12-08
+ * \date 2016-01-01
  */
 
 #ifndef INCLUDE_DISTORTOS_INTERNAL_SCHEDULER_SCHEDULER_HPP_
@@ -180,10 +180,12 @@ public:
 	 *
 	 * Thread's state is changed to "terminated" and it's terminationHook() is called.
 	 *
+	 * \note This function must be called with masked interrupts.
+	 *
 	 * \note This function can be used only after thread's function returns an all cleanup is done.
 	 *
-	 * \param [in] terminationHook is a pointer to member function of Thread that will be called from within lock zone
-	 * just before forced context switch
+	 * \param [in] terminationHook is a pointer to member function of Thread that will be called just before forced
+	 * context switch
 	 *
 	 * \return 0 on success, error code otherwise:
 	 * - EINVAL - provided thread is not on "runnable" list and cannot be removed/terminated;

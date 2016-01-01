@@ -2,13 +2,13 @@
  * \file
  * \brief Scheduler class implementation
  *
- * \author Copyright (C) 2014-2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-12-23
+ * \date 2016-01-01
  */
 
 #include "distortos/internal/scheduler/Scheduler.hpp"
@@ -211,22 +211,18 @@ void Scheduler::maybeRequestContextSwitch() const
 
 int Scheduler::remove(void (Thread::*terminationHook)())
 {
+	auto& currentThreadControlBlock = *currentThreadControlBlock_;
+
 	{
-		architecture::InterruptMaskingLock interruptMaskingLock;
+		ThreadList terminatedList;
+		const auto ret = blockInternal(terminatedList, currentThreadControlBlock_, ThreadState::Terminated, {});
+		if (ret != 0)
+			return ret;
 
-		auto& currentThreadControlBlock = *currentThreadControlBlock_;
-
-		{
-			ThreadList terminatedList;
-			const auto ret = blockInternal(terminatedList, currentThreadControlBlock_, ThreadState::Terminated, {});
-			if (ret != 0)
-				return ret;
-
-			currentThreadControlBlock.setList(nullptr);
-		}
-
-		(currentThreadControlBlock.getOwner().*terminationHook)();
+		currentThreadControlBlock.setList(nullptr);
 	}
+
+	(currentThreadControlBlock.getOwner().*terminationHook)();
 
 	forceContextSwitch();
 
