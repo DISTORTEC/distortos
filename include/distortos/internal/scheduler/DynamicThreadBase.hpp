@@ -124,6 +124,32 @@ public:
 	const DynamicThreadBase& operator=(const DynamicThreadBase&) = delete;
 	DynamicThreadBase& operator=(DynamicThreadBase&&) = delete;
 
+protected:
+
+#ifdef CONFIG_THREAD_DETACH_ENABLE
+
+	/**
+	 * \brief Pre-termination hook function of thread
+	 *
+	 * If thread is detached, locks object used for deferred deletion.
+	 *
+	 * \param [in] thread is a reference to Thread object, this must be DynamicThreadBase!
+	 */
+
+	static void preTerminationHook(Thread& thread);
+
+	/**
+	 * \brief Termination hook function of thread
+	 *
+	 * Calls ThreadCommon::terminationHook() and - if thread is detached - schedules itself for deferred deletion.
+	 *
+	 * \param [in] thread is a reference to Thread object, this must be DynamicThreadBase!
+	 */
+
+	static void terminationHook(Thread& thread);
+
+#endif	// def CONFIG_THREAD_DETACH_ENABLE
+
 private:
 
 	/**
@@ -144,7 +170,7 @@ private:
 
 #ifdef CONFIG_THREAD_DETACH_ENABLE
 
-	/// pointer to owner DynamicThread object
+	/// pointer to owner DynamicThread object, nullptr if thread is detached
 	DynamicThread* owner_;
 
 #endif	// def CONFIG_THREAD_DETACH_ENABLE
@@ -156,8 +182,8 @@ template<typename Function, typename... Args>
 DynamicThreadBase::DynamicThreadBase(const size_t stackSize, const bool canReceiveSignals, const size_t queuedSignals,
 		const size_t signalActions, const uint8_t priority, const SchedulingPolicy schedulingPolicy,
 		DynamicThread& owner, Function&& function, Args&&... args) :
-				ThreadCommon{{{new uint8_t[stackSize], storageDeleter<uint8_t>}, stackSize, *this, run, nullptr,
-						terminationHook}, priority, schedulingPolicy, nullptr,
+				ThreadCommon{{{new uint8_t[stackSize], storageDeleter<uint8_t>}, stackSize, *this, run,
+						preTerminationHook, terminationHook}, priority, schedulingPolicy, nullptr,
 						canReceiveSignals == true ? &dynamicSignalsReceiver_ : nullptr},
 				dynamicSignalsReceiver_{canReceiveSignals == true ? queuedSignals : 0,
 						canReceiveSignals == true ? signalActions : 0},
