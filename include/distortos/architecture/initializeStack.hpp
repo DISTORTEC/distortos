@@ -36,13 +36,14 @@ namespace architecture
  * \param [in] size is the size of stack's buffer, bytes
  * \param [in] thread is a reference to Thread object passed to function
  * \param [in] run is a reference to Thread's "run" function
+ * \param [in] preTerminationHook is a pointer to Thread's pre-termination hook, nullptr to skip
  * \param [in] terminationHook is a reference to Thread's termination hook
  *
  * \return value that can be used as thread's stack pointer, ready for context switching
  */
 
 void* initializeStack(void* buffer, size_t size, Thread& thread, void (& run)(Thread&),
-		void (& terminationHook)(Thread&));
+		void (* preTerminationHook)(Thread&), void (& terminationHook)(Thread&));
 
 }	// namespace architecture
 

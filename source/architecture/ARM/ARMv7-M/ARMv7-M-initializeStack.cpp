@@ -28,7 +28,7 @@ namespace architecture
 +---------------------------------------------------------------------------------------------------------------------*/
 
 void* initializeStack(void* const buffer, const size_t size, Thread& thread, void (& run)(Thread&),
-		void (& terminationHook)(Thread&))
+		void (* preTerminationHook)(Thread&), void (& terminationHook)(Thread&))
 {
 	const auto stackFrame = reinterpret_cast<StackFrame*>(static_cast<uint8_t*>(buffer) + size) - 1;
 
@@ -46,8 +46,8 @@ void* initializeStack(void* const buffer, const size_t size, Thread& thread, voi
 
 	stackFrame->exceptionStackFrame.r0 = &thread;
 	stackFrame->exceptionStackFrame.r1 = reinterpret_cast<void*>(&run);
-	stackFrame->exceptionStackFrame.r2 = reinterpret_cast<void*>(&terminationHook);
-	stackFrame->exceptionStackFrame.r3 = reinterpret_cast<void*>(0x33333333);
+	stackFrame->exceptionStackFrame.r2 = reinterpret_cast<void*>(preTerminationHook);
+	stackFrame->exceptionStackFrame.r3 = reinterpret_cast<void*>(&terminationHook);
 	stackFrame->exceptionStackFrame.r12 = reinterpret_cast<void*>(0xcccccccc);
 	stackFrame->exceptionStackFrame.lr = nullptr;
 	stackFrame->exceptionStackFrame.pc = reinterpret_cast<void*>(&internal::threadRunner);

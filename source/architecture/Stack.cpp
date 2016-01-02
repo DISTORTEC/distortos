@@ -73,16 +73,17 @@ size_t adjustSize(void* const storage, const size_t size, void* const adjustedSt
  * \param [in] size is the size of stack's storage, bytes
  * \param [in] thread is a reference to Thread object passed to function
  * \param [in] run is a reference to Thread's "run" function
+ * \param [in] preTerminationHook is a pointer to Thread's pre-termination hook, nullptr to skip
  * \param [in] terminationHook is a reference to Thread's termination hook
  *
  * \return value that can be used as thread's stack pointer, ready for context switching
  */
 
 void* initializeStackProxy(void* const storage, const size_t size, Thread& thread, void (& run)(Thread&),
-		void (& terminationHook)(Thread&))
+		void (* preTerminationHook)(Thread&), void (& terminationHook)(Thread&))
 {
 	memset(storage, 0, size);
-	return initializeStack(storage, size, thread, run, terminationHook);
+	return initializeStack(storage, size, thread, run, preTerminationHook, terminationHook);
 }
 
 }	// namespace
@@ -92,11 +93,12 @@ void* initializeStackProxy(void* const storage, const size_t size, Thread& threa
 +---------------------------------------------------------------------------------------------------------------------*/
 
 Stack::Stack(StorageUniquePointer&& storageUniquePointer, const size_t size, Thread& thread, void (& run)(Thread&),
-		void (& terminationHook)(Thread&)) :
+		void (* preTerminationHook)(Thread&), void (& terminationHook)(Thread&)) :
 				storageUniquePointer_{std::move(storageUniquePointer)},
 				adjustedStorage_{adjustStorage(storageUniquePointer_.get(), stackAlignment)},
 				adjustedSize_{adjustSize(storageUniquePointer_.get(), size, adjustedStorage_, stackSizeDivisibility)},
-				stackPointer_{initializeStackProxy(adjustedStorage_, adjustedSize_, thread, run, terminationHook)}
+				stackPointer_{initializeStackProxy(adjustedStorage_, adjustedSize_, thread, run, preTerminationHook,
+						terminationHook)}
 {
 	/// \todo implement minimal size check
 }

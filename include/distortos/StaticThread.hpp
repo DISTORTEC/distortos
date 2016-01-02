@@ -55,7 +55,7 @@ public:
 	StaticThreadBase(StackStorageUniquePointer&& stackStorageUniquePointer, const size_t size, const uint8_t priority,
 			const SchedulingPolicy schedulingPolicy, SignalsReceiver* const signalsReceiver, Function&& function,
 			Args&&... args) :
-					Base{{std::move(stackStorageUniquePointer), size, *this, run, terminationHook},
+					Base{{std::move(stackStorageUniquePointer), size, *this, run, nullptr, terminationHook},
 							priority, schedulingPolicy, nullptr, signalsReceiver},
 					boundFunction_{std::bind(std::forward<Function>(function), std::forward<Args>(args)...)}
 	{

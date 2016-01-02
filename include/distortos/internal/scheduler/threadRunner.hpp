@@ -25,15 +25,23 @@ namespace internal
 /**
  * \brief Thread runner function - entry point of threads.
  *
- * After return from thread's "run" function, thread is terminated, its termination hook is executed and context switch
- * is forced, so this function never returns.
+ * Performs following actions:
+ * - executes thread's "run" function;
+ * - thread's pre-termination hook is executed (if provided);
+ * - thread is terminated and removed from scheduler;
+ * - thread's termination hook is executed;
+ * - context switch is forced;
+ *
+ * This function never returns.
  *
  * \param [in] thread is a reference to Thread object that is being run
  * \param [in] run is a reference to Thread's "run" function
+ * \param [in] preTerminationHook is a pointer to Thread's pre-termination hook, nullptr to skip
  * \param [in] terminationHook is a reference to Thread's termination hook
  */
 
-void threadRunner(Thread& thread, void (& run)(Thread&), void (& terminationHook)(Thread&)) __attribute__ ((noreturn));
+void threadRunner(Thread& thread, void (& run)(Thread&), void (* preTerminationHook)(Thread&),
+		void (& terminationHook)(Thread&)) __attribute__ ((noreturn));
 
 }	// namespace internal
 

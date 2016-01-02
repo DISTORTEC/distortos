@@ -29,13 +29,16 @@ namespace internal
 | global functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-void threadRunner(Thread& thread, void (& run)(Thread&), void (& terminationHook)(Thread&))
+void threadRunner(Thread& thread, void (& run)(Thread&), void (* preTerminationHook)(Thread&),
+		void (& terminationHook)(Thread&))
 {
 	run(thread);
 
 	{
 		architecture::InterruptMaskingLock interruptMaskingLock;
 
+		if (preTerminationHook != nullptr)
+			preTerminationHook(thread);
 		internal::getScheduler().remove();
 		terminationHook(thread);
 	}
