@@ -20,6 +20,8 @@
 
 #include "distortos/internal/memory/storageDeleter.hpp"
 
+#include "distortos/internal/scheduler/threadRunner.hpp"
+
 namespace distortos
 {
 

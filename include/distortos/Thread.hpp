@@ -167,22 +167,6 @@ public:
 	 */
 
 	virtual int start() = 0;
-
-protected:
-
-	/**
-	 * \brief Thread runner function - entry point of threads.
-	 *
-	 * After return from actual thread function, thread is terminated, its termination hook is executed and context
-	 * switch is forced, so this function never returns.
-	 *
-	 * \param [in] thread is a reference to Thread object that is being run
-	 * \param [in] run is a reference to Thread's "run" function
-	 * \param [in] terminationHook is a reference to Thread's termination hook
-	 */
-
-	static void threadRunner(Thread& thread, void (& run)(Thread&), void (& terminationHook)(Thread&))
-			__attribute__ ((noreturn));
 };
 
 }	// namespace distortos

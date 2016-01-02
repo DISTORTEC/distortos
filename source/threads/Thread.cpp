@@ -13,12 +13,6 @@
 
 #include "distortos/Thread.hpp"
 
-#include "distortos/internal/scheduler/forceContextSwitch.hpp"
-#include "distortos/internal/scheduler/getScheduler.hpp"
-#include "distortos/internal/scheduler/Scheduler.hpp"
-
-#include "distortos/architecture/InterruptMaskingLock.hpp"
-
 namespace distortos
 {
 
@@ -29,26 +23,6 @@ namespace distortos
 Thread::~Thread()
 {
 
-}
-
-/*---------------------------------------------------------------------------------------------------------------------+
-| protected static functions
-+---------------------------------------------------------------------------------------------------------------------*/
-
-void Thread::threadRunner(Thread& thread, void (& run)(Thread&), void (& terminationHook)(Thread&))
-{
-	run(thread);
-
-	{
-		architecture::InterruptMaskingLock interruptMaskingLock;
-
-		internal::getScheduler().remove();
-		terminationHook(thread);
-	}
-
-	internal::forceContextSwitch();
-
-	while (1);
 }
 
 }	// namespace distortos
