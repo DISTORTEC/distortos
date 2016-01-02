@@ -14,6 +14,8 @@
 #ifndef INCLUDE_DISTORTOS_THREAD_HPP_
 #define INCLUDE_DISTORTOS_THREAD_HPP_
 
+#include "distortos/distortosConfiguration.h"
+
 #include "distortos/SchedulingPolicy.hpp"
 #include "distortos/SignalSet.hpp"
 #include "distortos/ThreadState.hpp"
@@ -38,6 +40,26 @@ public:
 	 */
 
 	virtual ~Thread() = 0;
+
+#ifdef CONFIG_THREAD_DETACH_ENABLE
+
+	/**
+	 * \brief Detaches the thread.
+	 *
+	 * Similar to std::thread::detach() - http://en.cppreference.com/w/cpp/thread/thread/detach
+	 * Similar to POSIX pthread_detach() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_detach.html
+	 *
+	 * Detaches the executing thread from the Thread object, allowing execution to continue independently. All resources
+	 * allocated for the thread will be deallocated when the thread terminates.
+	 *
+	 * \return 0 on success, error code otherwise:
+	 * - EINVAL - this thread is already detached;
+	 * - ENOTSUP - this thread cannot be detached;
+	 */
+
+	virtual int detach() = 0;
+
+#endif	// def CONFIG_THREAD_DETACH_ENABLE
 
 	/**
 	 * \brief Generates signal for thread.

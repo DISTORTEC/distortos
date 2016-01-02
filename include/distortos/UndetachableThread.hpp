@@ -2,13 +2,13 @@
  * \file
  * \brief UndetachableThread class header
  *
- * \author Copyright (C) 2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2015-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-12-28
+ * \date 2016-01-02
  */
 
 #ifndef INCLUDE_DISTORTOS_UNDETACHABLETHREAD_HPP_
@@ -32,6 +32,20 @@ class UndetachableThread : public ThreadCommon
 public:
 
 	using ThreadCommon::ThreadCommon;
+
+	/**
+	 * \brief Detaches the thread.
+	 *
+	 * Similar to std::thread::detach() - http://en.cppreference.com/w/cpp/thread/thread/detach
+	 * Similar to POSIX pthread_detach() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_detach.html
+	 *
+	 * Detaches the executing thread from the Thread object, allowing execution to continue independently. All resources
+	 * allocated for the thread will be deallocated when the thread terminates.
+	 *
+	 * \return ENOTSUP - this thread cannot be detached;
+	 */
+
+	virtual int detach() override;
 };
 
 #else	// !def CONFIG_THREAD_DETACH_ENABLE

@@ -72,6 +72,21 @@ public:
 			uint8_t priority, SchedulingPolicy schedulingPolicy, DynamicThread& owner, Function&& function,
 			Args&&... args);
 
+	/**
+	 * \brief Detaches the thread.
+	 *
+	 * Similar to std::thread::detach() - http://en.cppreference.com/w/cpp/thread/thread/detach
+	 * Similar to POSIX pthread_detach() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_detach.html
+	 *
+	 * Detaches the executing thread from the Thread object, allowing execution to continue independently. All resources
+	 * allocated for the thread will be deallocated when the thread terminates.
+	 *
+	 * \return 0 on success, error code otherwise:
+	 * - EINVAL - this thread is already detached;
+	 */
+
+	virtual int detach() override;
+
 #else	// !def CONFIG_THREAD_DETACH_ENABLE
 
 	/**

@@ -18,6 +18,10 @@
 #include "distortos/internal/memory/getDeferredThreadDeleter.hpp"
 #include "distortos/internal/memory/DeferredThreadDeleter.hpp"
 
+#include "distortos/architecture/InterruptMaskingLock.hpp"
+
+#include "distortos/DynamicThread.hpp"
+
 #endif	// def CONFIG_THREAD_DETACH_ENABLE
 
 namespace distortos
@@ -25,6 +29,28 @@ namespace distortos
 
 namespace internal
 {
+
+/*---------------------------------------------------------------------------------------------------------------------+
+| public functions
++---------------------------------------------------------------------------------------------------------------------*/
+
+#ifdef CONFIG_THREAD_DETACH_ENABLE
+
+int DynamicThreadBase::detach()
+{
+	architecture::InterruptMaskingLock interruptMaskingLock;
+
+	if (owner_ == nullptr)	// already detached?
+		return EINVAL;
+
+	const auto owner = owner_;
+	owner_ = {};
+
+	const auto ret = owner->detach();
+	return ret == EINVAL ? 0 : ret;
+}
+
+#endif	// def CONFIG_THREAD_DETACH_ENABLE
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | protected static functions

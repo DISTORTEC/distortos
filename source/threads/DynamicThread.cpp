@@ -29,6 +29,26 @@ DynamicThread::~DynamicThread()
 
 }
 
+int DynamicThread::detach()
+{
+	architecture::InterruptMaskingLock interruptMaskingLock;
+
+	if (detachableThread_ == nullptr)	// already detached?
+		return EINVAL;
+
+	const auto state = detachableThread_->getState();
+	if (state == ThreadState::New || state == ThreadState::Terminated)	// thread not yet started or already terminated?
+	{
+		detachableThread_.reset();	// just delete it...
+		return 0;
+	}
+
+	const auto detachableThread = detachableThread_.release();
+
+	const auto ret = detachableThread->detach();
+	return ret == EINVAL ? 0 : ret;
+}
+
 int DynamicThread::generateSignal(const uint8_t signalNumber)
 {
 	architecture::InterruptMaskingLock interruptMaskingLock;
