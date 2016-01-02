@@ -206,8 +206,6 @@ int Scheduler::remove(void (Thread::*terminationHook)())
 
 	(currentThreadControlBlock.getOwner().*terminationHook)();
 
-	forceContextSwitch();
-
 	return 0;
 }
 
