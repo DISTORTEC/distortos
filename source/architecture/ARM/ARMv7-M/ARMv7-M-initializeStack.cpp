@@ -15,6 +15,8 @@
 
 #include "StackFrame.hpp"
 
+#include "distortos/internal/scheduler/threadRunner.hpp"
+
 namespace distortos
 {
 
@@ -25,8 +27,7 @@ namespace architecture
 | global functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-void* initializeStack(void* const buffer, const size_t size,
-		void (& function)(Thread&, void(&)(Thread&), void(&)(Thread&)), Thread& thread, void (& run)(Thread&),
+void* initializeStack(void* const buffer, const size_t size, Thread& thread, void (& run)(Thread&),
 		void (& terminationHook)(Thread&))
 {
 	const auto stackFrame = reinterpret_cast<StackFrame*>(static_cast<uint8_t*>(buffer) + size) - 1;
@@ -49,7 +50,7 @@ void* initializeStack(void* const buffer, const size_t size,
 	stackFrame->exceptionStackFrame.r3 = reinterpret_cast<void*>(0x33333333);
 	stackFrame->exceptionStackFrame.r12 = reinterpret_cast<void*>(0xcccccccc);
 	stackFrame->exceptionStackFrame.lr = nullptr;
-	stackFrame->exceptionStackFrame.pc = reinterpret_cast<void*>(&function);
+	stackFrame->exceptionStackFrame.pc = reinterpret_cast<void*>(&internal::threadRunner);
 	stackFrame->exceptionStackFrame.xpsr = ExceptionStackFrame::defaultXpsr;
 
 	return stackFrame;

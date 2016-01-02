@@ -20,8 +20,6 @@
 
 #include "distortos/internal/memory/storageDeleter.hpp"
 
-#include "distortos/internal/scheduler/threadRunner.hpp"
-
 namespace distortos
 {
 
@@ -158,7 +156,7 @@ template<typename Function, typename... Args>
 DynamicThreadBase::DynamicThreadBase(const size_t stackSize, const bool canReceiveSignals, const size_t queuedSignals,
 		const size_t signalActions, const uint8_t priority, const SchedulingPolicy schedulingPolicy,
 		DynamicThread& owner, Function&& function, Args&&... args) :
-				ThreadCommon{{{new uint8_t[stackSize], storageDeleter<uint8_t>}, stackSize, threadRunner, *this, run,
+				ThreadCommon{{{new uint8_t[stackSize], storageDeleter<uint8_t>}, stackSize, *this, run,
 						terminationHook}, priority, schedulingPolicy, nullptr,
 						canReceiveSignals == true ? &dynamicSignalsReceiver_ : nullptr},
 				dynamicSignalsReceiver_{canReceiveSignals == true ? queuedSignals : 0,
@@ -175,7 +173,7 @@ template<typename Function, typename... Args>
 DynamicThreadBase::DynamicThreadBase(const size_t stackSize, const bool canReceiveSignals, const size_t queuedSignals,
 		const size_t signalActions, const uint8_t priority, const SchedulingPolicy schedulingPolicy,
 		Function&& function, Args&&... args) :
-				ThreadCommon{{{new uint8_t[stackSize], storageDeleter<uint8_t>}, stackSize, threadRunner, *this, run,
+				ThreadCommon{{{new uint8_t[stackSize], storageDeleter<uint8_t>}, stackSize, *this, run,
 						terminationHook}, priority, schedulingPolicy, nullptr,
 						canReceiveSignals == true ? &dynamicSignalsReceiver_ : nullptr},
 				dynamicSignalsReceiver_{canReceiveSignals == true ? queuedSignals : 0,

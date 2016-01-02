@@ -34,7 +34,6 @@ namespace architecture
  *
  * \param [in] buffer is a pointer to stack's buffer
  * \param [in] size is the size of stack's buffer, bytes
- * \param [in] function is a reference to thread runner function, this function must not return
  * \param [in] thread is a reference to Thread object passed to function
  * \param [in] run is a reference to Thread's "run" function
  * \param [in] terminationHook is a reference to Thread's termination hook
@@ -42,8 +41,8 @@ namespace architecture
  * \return value that can be used as thread's stack pointer, ready for context switching
  */
 
-void* initializeStack(void* buffer, size_t size, void (& function)(Thread&, void(&)(Thread&), void(&)(Thread&)),
-		Thread& thread, void (& run)(Thread&), void (& terminationHook)(Thread&));
+void* initializeStack(void* buffer, size_t size, Thread& thread, void (& run)(Thread&),
+		void (& terminationHook)(Thread&));
 
 }	// namespace architecture
 

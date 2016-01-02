@@ -46,14 +46,12 @@ public:
 	 * \param [in] storageUniquePointer is a rvalue reference to StorageUniquePointer with storage for stack (\a size
 	 * bytes long) and appropriate deleter
 	 * \param [in] size is the size of stack's storage, bytes
-	 * \param [in] function is a reference to thread runner function, this function must not return
 	 * \param [in] thread is a reference to Thread object passed to function
 	 * \param [in] run is a reference to Thread's "run" function
 	 * \param [in] terminationHook is a reference to Thread's termination hook
 	 */
 
-	Stack(StorageUniquePointer&& storageUniquePointer, size_t size,
-			void (& function)(Thread&, void(&)(Thread&), void(&)(Thread&)), Thread& thread, void (& run)(Thread&),
+	Stack(StorageUniquePointer&& storageUniquePointer, size_t size, Thread& thread, void (& run)(Thread&),
 			void (& terminationHook)(Thread&));
 
 	/**

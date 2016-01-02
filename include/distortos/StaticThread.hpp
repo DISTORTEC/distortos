@@ -17,8 +17,6 @@
 #include "distortos/StaticSignalsReceiver.hpp"
 #include "distortos/UndetachableThread.hpp"
 
-#include "distortos/internal/scheduler/threadRunner.hpp"
-
 namespace distortos
 {
 
@@ -57,7 +55,7 @@ public:
 	StaticThreadBase(StackStorageUniquePointer&& stackStorageUniquePointer, const size_t size, const uint8_t priority,
 			const SchedulingPolicy schedulingPolicy, SignalsReceiver* const signalsReceiver, Function&& function,
 			Args&&... args) :
-					Base{{std::move(stackStorageUniquePointer), size, threadRunner, *this, run, terminationHook},
+					Base{{std::move(stackStorageUniquePointer), size, *this, run, terminationHook},
 							priority, schedulingPolicy, nullptr, signalsReceiver},
 					boundFunction_{std::bind(std::forward<Function>(function), std::forward<Args>(args)...)}
 	{
