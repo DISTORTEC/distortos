@@ -2,13 +2,13 @@
  * \file
  * \brief DynamicThread class header
  *
- * \author Copyright (C) 2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2015-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-12-30
+ * \date 2016-01-02
  */
 
 #ifndef INCLUDE_DISTORTOS_DYNAMICTHREAD_HPP_
@@ -219,17 +219,6 @@ public:
 	DynamicThread(DynamicThread&&) = default;
 	const DynamicThread& operator=(const DynamicThread&) = delete;
 	DynamicThread& operator=(DynamicThread&&) = delete;
-
-protected:
-
-	/**
-	 * \brief Termination hook function of thread
-	 *
-	 * This function is called after run() completes, from Scheduler::remove(). This is never used, as only internal
-	 * thread is executed.
-	 */
-
-	virtual void terminationHook() override;
 
 private:
 

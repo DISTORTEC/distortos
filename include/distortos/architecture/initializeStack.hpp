@@ -2,13 +2,13 @@
  * \file
  * \brief initializeStack() declaration
  *
- * \author Copyright (C) 2014-2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-12-30
+ * \date 2016-01-02
  */
 
 #ifndef INCLUDE_DISTORTOS_ARCHITECTURE_INITIALIZESTACK_HPP_
@@ -37,12 +37,13 @@ namespace architecture
  * \param [in] function is a reference to thread runner function, this function must not return
  * \param [in] thread is a reference to Thread object passed to function
  * \param [in] run is a reference to Thread's "run" function
+ * \param [in] terminationHook is a reference to Thread's termination hook
  *
  * \return value that can be used as thread's stack pointer, ready for context switching
  */
 
-void* initializeStack(void* buffer, size_t size, void (& function)(Thread&, void(&)(Thread&)), Thread& thread,
-		void (& run)(Thread&));
+void* initializeStack(void* buffer, size_t size, void (& function)(Thread&, void(&)(Thread&), void(&)(Thread&)),
+		Thread& thread, void (& run)(Thread&), void (& terminationHook)(Thread&));
 
 }	// namespace architecture
 

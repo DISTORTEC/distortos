@@ -2,13 +2,13 @@
  * \file
  * \brief DynamicThreadBase class header
  *
- * \author Copyright (C) 2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2015-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-12-30
+ * \date 2016-01-02
  */
 
 #ifndef INCLUDE_DISTORTOS_INTERNAL_SCHEDULER_DYNAMICTHREADBASE_HPP_
@@ -156,8 +156,8 @@ template<typename Function, typename... Args>
 DynamicThreadBase::DynamicThreadBase(const size_t stackSize, const bool canReceiveSignals, const size_t queuedSignals,
 		const size_t signalActions, const uint8_t priority, const SchedulingPolicy schedulingPolicy,
 		DynamicThread& owner, Function&& function, Args&&... args) :
-				ThreadCommon{{{new uint8_t[stackSize], storageDeleter<uint8_t>}, stackSize, threadRunner, *this, run},
-						priority, schedulingPolicy, nullptr,
+				ThreadCommon{{{new uint8_t[stackSize], storageDeleter<uint8_t>}, stackSize, threadRunner, *this, run,
+						terminationHook}, priority, schedulingPolicy, nullptr,
 						canReceiveSignals == true ? &dynamicSignalsReceiver_ : nullptr},
 				dynamicSignalsReceiver_{canReceiveSignals == true ? queuedSignals : 0,
 						canReceiveSignals == true ? signalActions : 0},
@@ -173,8 +173,8 @@ template<typename Function, typename... Args>
 DynamicThreadBase::DynamicThreadBase(const size_t stackSize, const bool canReceiveSignals, const size_t queuedSignals,
 		const size_t signalActions, const uint8_t priority, const SchedulingPolicy schedulingPolicy,
 		Function&& function, Args&&... args) :
-				ThreadCommon{{{new uint8_t[stackSize], storageDeleter<uint8_t>}, stackSize, threadRunner, *this, run},
-						priority, schedulingPolicy, nullptr,
+				ThreadCommon{{{new uint8_t[stackSize], storageDeleter<uint8_t>}, stackSize, threadRunner, *this, run,
+						terminationHook}, priority, schedulingPolicy, nullptr,
 						canReceiveSignals == true ? &dynamicSignalsReceiver_ : nullptr},
 				dynamicSignalsReceiver_{canReceiveSignals == true ? queuedSignals : 0,
 						canReceiveSignals == true ? signalActions : 0},

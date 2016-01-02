@@ -2,13 +2,13 @@
  * \file
  * \brief initializeStack() implementation for ARMv7-M (Cortex-M3 / Cortex-M4)
  *
- * \author Copyright (C) 2014-2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-12-30
+ * \date 2016-01-02
  */
 
 #include "distortos/architecture/initializeStack.hpp"
@@ -25,8 +25,9 @@ namespace architecture
 | global functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-void* initializeStack(void* const buffer, const size_t size, void (& function)(Thread&, void(&)(Thread&)),
-		Thread& thread, void (& run)(Thread&))
+void* initializeStack(void* const buffer, const size_t size,
+		void (& function)(Thread&, void(&)(Thread&), void(&)(Thread&)), Thread& thread, void (& run)(Thread&),
+		void (& terminationHook)(Thread&))
 {
 	const auto stackFrame = reinterpret_cast<StackFrame*>(static_cast<uint8_t*>(buffer) + size) - 1;
 
@@ -44,7 +45,7 @@ void* initializeStack(void* const buffer, const size_t size, void (& function)(T
 
 	stackFrame->exceptionStackFrame.r0 = &thread;
 	stackFrame->exceptionStackFrame.r1 = reinterpret_cast<void*>(&run);
-	stackFrame->exceptionStackFrame.r2 = reinterpret_cast<void*>(0x22222222);
+	stackFrame->exceptionStackFrame.r2 = reinterpret_cast<void*>(&terminationHook);
 	stackFrame->exceptionStackFrame.r3 = reinterpret_cast<void*>(0x33333333);
 	stackFrame->exceptionStackFrame.r12 = reinterpret_cast<void*>(0xcccccccc);
 	stackFrame->exceptionStackFrame.lr = nullptr;

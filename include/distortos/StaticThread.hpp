@@ -2,13 +2,13 @@
  * \file
  * \brief StaticThread class header
  *
- * \author Copyright (C) 2014-2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-12-30
+ * \date 2016-01-02
  */
 
 #ifndef INCLUDE_DISTORTOS_STATICTHREAD_HPP_
@@ -55,8 +55,8 @@ public:
 	StaticThreadBase(StackStorageUniquePointer&& stackStorageUniquePointer, const size_t size, const uint8_t priority,
 			const SchedulingPolicy schedulingPolicy, SignalsReceiver* const signalsReceiver, Function&& function,
 			Args&&... args) :
-					Base{{std::move(stackStorageUniquePointer), size, threadRunner, *this, run}, priority,
-							schedulingPolicy, nullptr, signalsReceiver},
+					Base{{std::move(stackStorageUniquePointer), size, threadRunner, *this, run, terminationHook},
+							priority, schedulingPolicy, nullptr, signalsReceiver},
 					boundFunction_{std::bind(std::forward<Function>(function), std::forward<Args>(args)...)}
 	{
 

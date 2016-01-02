@@ -35,7 +35,7 @@ Thread::~Thread()
 | protected static functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-void Thread::threadRunner(Thread& thread, void (& run)(Thread&))
+void Thread::threadRunner(Thread& thread, void (& run)(Thread&), void (& terminationHook)(Thread&))
 {
 	run(thread);
 
@@ -43,7 +43,7 @@ void Thread::threadRunner(Thread& thread, void (& run)(Thread&))
 		architecture::InterruptMaskingLock interruptMaskingLock;
 
 		internal::getScheduler().remove();
-		thread.terminationHook();
+		terminationHook(thread);
 	}
 
 	internal::forceContextSwitch();
