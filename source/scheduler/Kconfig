@@ -1,12 +1,12 @@
 #
 # file: Kconfig
 #
-# author: Copyright (C) 2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+# author: Copyright (C) 2015-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
 #
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #
-# date: 2015-09-17
+# date: 2016-01-02
 #
 
 menu "Scheduler configuration"
@@ -24,6 +24,25 @@ config ROUND_ROBIN_RATE_HZ
 	default 10
 	help
 		Round-robin rate, Hz.
+
+config THREAD_DETACH_ENABLE
+	bool "Enable support for thread detachment"
+	default n
+	help
+		Enable functions that "detach" dynamic threads:
+		- ThisThread::detach();
+		- Thread::detach();
+
+		When this options is not selected, these functions are not available at
+		all.
+
+		When dynamic and detached thread terminates, it will be added to the
+		global list of threads pending for deferred deletion. The thread will
+		actually be deleted in idle thread, but only when two mutexes are
+		successfully locked:
+		- mutex that protects dynamic memory allocator;
+		- mutex that synchronizes access to the list of threads pending for
+		deferred deletion;
 
 comment "main() thread options"
 
