@@ -42,7 +42,8 @@ void Thread::threadRunner(Thread& thread, void (& run)(Thread&))
 	{
 		architecture::InterruptMaskingLock interruptMaskingLock;
 
-		internal::getScheduler().remove(&Thread::terminationHook);
+		internal::getScheduler().remove();
+		thread.terminationHook();
 	}
 
 	internal::forceContextSwitch();

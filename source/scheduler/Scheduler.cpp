@@ -191,20 +191,14 @@ void Scheduler::maybeRequestContextSwitch() const
 		architecture::requestContextSwitch();
 }
 
-int Scheduler::remove(void (Thread::*terminationHook)())
+int Scheduler::remove()
 {
-	auto& currentThreadControlBlock = *currentThreadControlBlock_;
+	ThreadList terminatedList;
+	const auto ret = blockInternal(terminatedList, currentThreadControlBlock_, ThreadState::Terminated, {});
+	if (ret != 0)
+		return ret;
 
-	{
-		ThreadList terminatedList;
-		const auto ret = blockInternal(terminatedList, currentThreadControlBlock_, ThreadState::Terminated, {});
-		if (ret != 0)
-			return ret;
-
-		currentThreadControlBlock.setList(nullptr);
-	}
-
-	(currentThreadControlBlock.getOwner().*terminationHook)();
+	currentThreadControlBlock_->setList(nullptr);
 
 	return 0;
 }

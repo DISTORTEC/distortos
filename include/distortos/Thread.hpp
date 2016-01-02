@@ -181,8 +181,8 @@ protected:
 	/**
 	 * \brief Thread runner function - entry point of threads.
 	 *
-	 * After return from actual thread function, thread is terminated and context switch is forced, so this function
-	 * never returns.
+	 * After return from actual thread function, thread is terminated, its terminationHook() is executed and context
+	 * switch is forced, so this function never returns.
 	 *
 	 * \param [in] thread is a reference to Thread object that is being run
 	 * \param [in] run is a reference to Thread's "run" function

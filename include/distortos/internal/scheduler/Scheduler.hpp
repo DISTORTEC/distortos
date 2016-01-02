@@ -178,20 +178,17 @@ public:
 	/**
 	 * \brief Removes current thread from Scheduler's control.
 	 *
-	 * Thread's state is changed to "terminated" and it's terminationHook() is called.
+	 * Thread's state is changed to "terminated".
 	 *
 	 * \note This function must be called with masked interrupts.
 	 *
 	 * \note This function can be used only after thread's function returns an all cleanup is done.
 	 *
-	 * \param [in] terminationHook is a pointer to member function of Thread that will be called just before function
-	 * return
-	 *
 	 * \return 0 on success, error code otherwise:
 	 * - EINVAL - provided thread is not on "runnable" list and cannot be removed/terminated;
 	 */
 
-	int remove(void (Thread::*terminationHook)());
+	int remove();
 
 	/**
 	 * \brief Resumes suspended thread.
