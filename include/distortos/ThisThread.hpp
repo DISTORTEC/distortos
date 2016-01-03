@@ -2,13 +2,13 @@
  * \file
  * \brief ThisThread namespace header
  *
- * \author Copyright (C) 2014-2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-12-02
+ * \date 2016-01-03
  */
 
 #ifndef INCLUDE_DISTORTOS_THISTHREAD_HPP_
@@ -26,6 +26,26 @@ namespace ThisThread
 
 /// \addtogroup threads
 /// \{
+
+#ifdef CONFIG_THREAD_DETACH_ENABLE
+
+/**
+ * \brief Detaches calling (current) thread.
+ *
+ * Similar to std::thread::detach() - http://en.cppreference.com/w/cpp/thread/thread/detach
+ * Similar to POSIX pthread_detach() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_detach.html
+ *
+ * Detaches calling (current) thread from its Thread object, allowing execution to continue independently. All resources
+ * allocated for the thread will be deallocated when the thread terminates.
+ *
+ * \return 0 on success, error code otherwise:
+ * - EINVAL - current thread is already detached;
+ * - ENOTSUP - current thread cannot be detached;
+ */
+
+int detach();
+
+#endif	// def CONFIG_THREAD_DETACH_ENABLE
 
 /**
  * \return reference to Thread object of currently active thread
