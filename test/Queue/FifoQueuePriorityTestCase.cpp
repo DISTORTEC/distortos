@@ -2,13 +2,13 @@
  * \file
  * \brief FifoQueuePriorityTestCase class implementation
  *
- * \author Copyright (C) 2014-2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-11-05
+ * \date 2016-01-04
  */
 
 #include "FifoQueuePriorityTestCase.hpp"
@@ -18,7 +18,7 @@
 #include "priorityTestPhases.hpp"
 #include "SequenceAsserter.hpp"
 
-#include "distortos/StaticThread.hpp"
+#include "distortos/DynamicThread.hpp"
 #include "distortos/statistics.hpp"
 
 #include <malloc.h>
@@ -51,11 +51,6 @@ using SequencePoints = std::pair<unsigned int, unsigned int>;
 
 /// type of test thread function
 using TestThreadFunction = void(SequenceAsserter&, SequencePoints, const QueueWrapper&);
-
-/// type of test thread
-using TestThread = decltype(makeStaticThread<testThreadStackSize>({}, std::declval<TestThreadFunction>(),
-		std::ref(std::declval<SequenceAsserter&>()), std::declval<SequencePoints>(),
-		std::cref(std::declval<const QueueWrapper&>())));
 
 /// function executed to prepare queue for test
 using Prepare = void(const QueueWrapper&);
@@ -183,23 +178,24 @@ bool pushTrigger(const QueueWrapper& queueWrapper, const size_t i)
 }
 
 /**
- * \brief Builder of TestThread objects.
+ * \brief Builder of test threads
  *
- * \param [in] testThreadFunction is a reference to test thread function that will be used in TestThread
+ * \param [in] testThreadFunction is a reference to function that will be used in test thread
  * \param [in] firstSequencePoint is the first sequence point for this instance - equal to the order in which this
  * thread will be started
  * \param [in] threadParameters is a reference to ThreadParameters object
  * \param [in] sequenceAsserter is a reference to SequenceAsserter shared object
  * \param [in] queueWrapper is a reference to shared QueueWrapper object
  *
- * \return constructed TestThread object
+ * \return constructed DynamicThread object
  */
 
-TestThread makeTestThread(const TestThreadFunction& testThreadFunction, const unsigned int firstSequencePoint,
+DynamicThread makeTestThread(const TestThreadFunction& testThreadFunction, const unsigned int firstSequencePoint,
 		const ThreadParameters& threadParameters, SequenceAsserter& sequenceAsserter, const QueueWrapper& queueWrapper)
 {
-	return makeStaticThread<testThreadStackSize>(threadParameters.first, testThreadFunction, std::ref(sequenceAsserter),
-			SequencePoints{firstSequencePoint, threadParameters.second + totalThreads}, std::cref(queueWrapper));
+	return makeDynamicThread({testThreadStackSize, threadParameters.first}, testThreadFunction,
+			std::ref(sequenceAsserter), SequencePoints{firstSequencePoint, threadParameters.second + totalThreads},
+			std::cref(queueWrapper));
 }
 
 /*---------------------------------------------------------------------------------------------------------------------+
@@ -235,7 +231,7 @@ bool FifoQueuePriorityTestCase::run_() const
 						SequenceAsserter sequenceAsserter;
 
 						const auto& threadFunction = std::get<0>(stage);
-						std::array<TestThread, totalThreads> threads
+						std::array<DynamicThread, totalThreads> threads
 						{{
 								makeTestThread(threadFunction, 0, phase.first[phase.second[0]], sequenceAsserter,
 										*queueWrapper),
