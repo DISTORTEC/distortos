@@ -2,13 +2,13 @@
  * \file
  * \brief MutexOperationsTestCase class implementation
  *
- * \author Copyright (C) 2014-2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-05-16
+ * \date 2016-01-04
  */
 
 #include "MutexOperationsTestCase.hpp"
@@ -16,11 +16,9 @@
 #include "mutexTestTryLockWhenLocked.hpp"
 #include "waitForNextTick.hpp"
 
+#include "distortos/DynamicThread.hpp"
 #include "distortos/Mutex.hpp"
-#include "distortos/StaticThread.hpp"
 #include "distortos/ThisThread.hpp"
-
-#include <cerrno>
 
 namespace distortos
 {
@@ -127,7 +125,7 @@ bool phase1(const Mutex::Type type, const Mutex::Protocol protocol, const uint8_
 	Mutex semaphoreMutex;
 	semaphoreMutex.lock();
 
-	auto lockUnlockThreadObject = makeStaticThread<testThreadStackSize>(testThreadPriority, lockUnlockThread,
+	auto lockUnlockThreadObject = makeDynamicThread({testThreadStackSize, testThreadPriority}, lockUnlockThread,
 			std::ref(mutex), std::ref(sharedRet), std::ref(semaphoreMutex));
 
 	waitForNextTick();
@@ -282,7 +280,7 @@ bool phase3(const Mutex::Type type, const Mutex::Protocol protocol, const uint8_
 
 	{
 		const auto wakeUpTimePoint = TickClock::now() + longDuration;
-		auto thread = makeStaticThread<testThreadStackSize>(testThreadPriority, sleepUntilFunctor, wakeUpTimePoint);
+		auto thread = makeDynamicThread({testThreadStackSize, testThreadPriority}, sleepUntilFunctor, wakeUpTimePoint);
 
 		waitForNextTick();
 		thread.start();
@@ -310,7 +308,7 @@ bool phase3(const Mutex::Type type, const Mutex::Protocol protocol, const uint8_
 
 	{
 		const auto wakeUpTimePoint = TickClock::now() + longDuration;
-		auto thread = makeStaticThread<testThreadStackSize>(testThreadPriority, sleepUntilFunctor, wakeUpTimePoint);
+		auto thread = makeDynamicThread({testThreadStackSize, testThreadPriority}, sleepUntilFunctor, wakeUpTimePoint);
 
 		waitForNextTick();
 		thread.start();
@@ -338,7 +336,7 @@ bool phase3(const Mutex::Type type, const Mutex::Protocol protocol, const uint8_
 
 	{
 		const auto wakeUpTimePoint = TickClock::now() + longDuration;
-		auto thread = makeStaticThread<testThreadStackSize>(testThreadPriority, sleepUntilFunctor, wakeUpTimePoint);
+		auto thread = makeDynamicThread({testThreadStackSize, testThreadPriority}, sleepUntilFunctor, wakeUpTimePoint);
 
 		waitForNextTick();
 		thread.start();
