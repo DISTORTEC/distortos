@@ -2,13 +2,13 @@
  * \file
  * \brief ConditionVariablePriorityTestCase class implementation
  *
- * \author Copyright (C) 2014-2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-12-02
+ * \date 2016-01-04
  */
 
 #include "ConditionVariablePriorityTestCase.hpp"
@@ -16,8 +16,8 @@
 #include "priorityTestPhases.hpp"
 #include "SequenceAsserter.hpp"
 
-#include "distortos/StaticThread.hpp"
 #include "distortos/ConditionVariable.hpp"
+#include "distortos/DynamicThread.hpp"
 #include "distortos/Mutex.hpp"
 #include "distortos/statistics.hpp"
 
@@ -38,27 +38,11 @@ namespace
 constexpr size_t testThreadStackSize {256};
 
 /*---------------------------------------------------------------------------------------------------------------------+
-| local functions' declarations
-+---------------------------------------------------------------------------------------------------------------------*/
-
-void thread(SequenceAsserter& sequenceAsserter, unsigned int sequencePoint, ConditionVariable& conditionVariable,
-		Mutex& mutex);
-
-/*---------------------------------------------------------------------------------------------------------------------+
-| local types
-+---------------------------------------------------------------------------------------------------------------------*/
-
-/// type of test thread
-using TestThread = decltype(makeStaticThread<testThreadStackSize>({}, thread,
-		std::ref(std::declval<SequenceAsserter&>()), std::declval<unsigned int>(),
-		std::ref(std::declval<ConditionVariable&>()), std::ref(std::declval<Mutex&>())));
-
-/*---------------------------------------------------------------------------------------------------------------------+
 | local functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
 /**
- * \brief Test thread.
+ * \brief Test thread
  *
  * Locks the mutex, waits for condition variable, marks the sequence point in SequenceAsserter and unlocks the mutex.
  *
@@ -78,21 +62,21 @@ void thread(SequenceAsserter& sequenceAsserter, const unsigned int sequencePoint
 }
 
 /**
- * \brief Builder of TestThread objects.
+ * \brief Builder of test threads
  *
  * \param [in] threadParameters is a reference to ThreadParameters object
  * \param [in] sequenceAsserter is a reference to SequenceAsserter shared object
  * \param [in] conditionVariable is a reference to shared condition variable
  * \param [in] mutex is a reference to shared mutex
  *
- * \return constructed TestThread object
+ * \return constructed DynamicThread object
  */
 
-TestThread makeTestThread(const ThreadParameters& threadParameters, SequenceAsserter& sequenceAsserter,
+DynamicThread makeTestThread(const ThreadParameters& threadParameters, SequenceAsserter& sequenceAsserter,
 		ConditionVariable& conditionVariable, Mutex& mutex)
 {
-	return makeStaticThread<testThreadStackSize>(threadParameters.first, thread, std::ref(sequenceAsserter),
-			static_cast<unsigned int>(threadParameters.second), std::ref(conditionVariable), std::ref(mutex));
+	return makeDynamicThread({testThreadStackSize, threadParameters.first}, thread, std::ref(sequenceAsserter),
+			threadParameters.second, std::ref(conditionVariable), std::ref(mutex));
 }
 
 }	// namespace
@@ -152,7 +136,7 @@ bool ConditionVariablePriorityTestCase::run_() const
 				ConditionVariable conditionVariable;
 				Mutex mutex {std::get<0>(parameters), std::get<1>(parameters), std::get<2>(parameters)};
 
-				std::array<TestThread, totalThreads> threads
+				std::array<DynamicThread, totalThreads> threads
 				{{
 						makeTestThread(phase.first[phase.second[0]], sequenceAsserter, conditionVariable, mutex),
 						makeTestThread(phase.first[phase.second[1]], sequenceAsserter, conditionVariable, mutex),
