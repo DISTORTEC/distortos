@@ -2,13 +2,13 @@
  * \file
  * \brief SignalsWaitTestCase class implementation
  *
- * \author Copyright (C) 2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2015-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-12-02
+ * \date 2016-01-04
  */
 
 #include "SignalsWaitTestCase.hpp"
@@ -16,7 +16,7 @@
 #include "priorityTestPhases.hpp"
 #include "SequenceAsserter.hpp"
 
-#include "distortos/StaticThread.hpp"
+#include "distortos/DynamicThread.hpp"
 #include "distortos/statistics.hpp"
 #include "distortos/ThisThread-Signals.hpp"
 #include "distortos/ThisThread.hpp"
@@ -50,12 +50,8 @@ constexpr decltype(sigval{}.sival_int) signalValueMask {(1 << signalNumberShift)
 /// type of test thread function
 using TestThreadFunction = void(SequenceAsserter&, unsigned int);
 
-/// type of test thread
-using TestThread = decltype(makeStaticThread<testThreadStackSize, true, totalThreads>({},
-		std::declval<TestThreadFunction>(), std::ref(std::declval<SequenceAsserter&>()), std::declval<unsigned int>()));
-
 /// function executed to trigger unblocking of test thread
-using Trigger = bool(TestThread&, size_t, const TestPhase&);
+using Trigger = bool(Thread&, size_t, const TestPhase&);
 
 /// pair with functions for one stage
 using Stage = std::pair<const TestThreadFunction&, const Trigger&>;
@@ -106,7 +102,7 @@ void generatedSignalsThread(SequenceAsserter& sequenceAsserter, const unsigned i
 /**
  * \brief Trigger function that "generates" signals.
  *
- * \param [in] thread is a reference to TestThread that will be triggered
+ * \param [in] thread is a reference to test thread that will be triggered
  * \param [in] index is the index of currently triggered thread - equal to the order in which this function is called
  * during single phase
  * \param [in] phase is a reference to current TestPhase
@@ -114,7 +110,7 @@ void generatedSignalsThread(SequenceAsserter& sequenceAsserter, const unsigned i
  * \return true if trigger check succeeded, false otherwise
  */
 
-bool generatedSignalsTrigger(TestThread& thread, const size_t index, const TestPhase& phase)
+bool generatedSignalsTrigger(Thread& thread, const size_t index, const TestPhase& phase)
 {
 	for (size_t i = 0; i < phase.second.size(); ++i)
 	{
@@ -165,7 +161,7 @@ void queuedSignalsThread(SequenceAsserter& sequenceAsserter, const unsigned int 
 /**
  * \brief Trigger function that "queues" signals.
  *
- * \param [in] thread is a reference to TestThread that will be triggered
+ * \param [in] thread is a reference to test thread that will be triggered
  * \param [in] index is the index of currently triggered thread - equal to the order in which this function is called
  * during single phase
  * \param [in] phase is a reference to current TestPhase
@@ -173,7 +169,7 @@ void queuedSignalsThread(SequenceAsserter& sequenceAsserter, const unsigned int 
  * \return true if trigger check succeeded, false otherwise
  */
 
-bool queuedSignalsTrigger(TestThread& thread, const size_t index, const TestPhase& phase)
+bool queuedSignalsTrigger(Thread& thread, const size_t index, const TestPhase& phase)
 {
 	for (size_t i = 0; i < phase.second.size(); ++i)
 	{
@@ -190,22 +186,22 @@ bool queuedSignalsTrigger(TestThread& thread, const size_t index, const TestPhas
 }
 
 /**
- * \brief Builder of TestThread objects.
+ * \brief Builder of test threads
  *
- * \param [in] testThreadFunction is a reference to test thread function that will be used in TestThread
+ * \param [in] testThreadFunction is a reference to test thread function that will be used in test thread
  * \param [in] priority is the thread's priority
  * \param [in] sequenceAsserter is a reference to SequenceAsserter shared object
  * \param [in] firstSequencePoint is the first sequence point for this instance - equal to the order in which this
  * thread will be started
  *
- * \return constructed TestThread object
+ * \return constructed DynamicThread object
  */
 
-TestThread makeTestThread(const TestThreadFunction& testThreadFunction, const uint8_t priority,
+DynamicThread makeTestThread(const TestThreadFunction& testThreadFunction, const uint8_t priority,
 		SequenceAsserter& sequenceAsserter, const unsigned int firstSequencePoint)
 {
-	return makeStaticThread<testThreadStackSize, true, totalThreads>(priority, testThreadFunction,
-			std::ref(sequenceAsserter), static_cast<unsigned int>(firstSequencePoint));
+	return makeDynamicThread({testThreadStackSize, true, totalThreads, 0, priority}, testThreadFunction,
+			std::ref(sequenceAsserter), firstSequencePoint);
 }
 
 /*---------------------------------------------------------------------------------------------------------------------+
@@ -241,7 +237,7 @@ bool SignalsWaitTestCase::run_() const
 			SequenceAsserter sequenceAsserter;
 
 			auto& threadFunction = stage.first;
-			std::array<TestThread, totalThreads> threads
+			std::array<DynamicThread, totalThreads> threads
 			{{
 					makeTestThread(threadFunction, testThreadPriority, sequenceAsserter, 0),
 					makeTestThread(threadFunction, testThreadPriority, sequenceAsserter, 1),
