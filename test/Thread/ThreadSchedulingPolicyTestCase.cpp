@@ -2,13 +2,13 @@
  * \file
  * \brief ThreadSchedulingPolicyTestCase class implementation
  *
- * \author Copyright (C) 2014-2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-11-27
+ * \date 2016-01-04
  */
 
 #include "ThreadSchedulingPolicyTestCase.hpp"
@@ -16,10 +16,12 @@
 #include "SequenceAsserter.hpp"
 #include "wasteTime.hpp"
 
-#include "distortos/StaticThread.hpp"
+#include "distortos/architecture/InterruptMaskingLock.hpp"
+
+#include "distortos/DynamicThread.hpp"
 #include "distortos/ThisThread.hpp"
 
-#include "distortos/architecture/InterruptMaskingLock.hpp"
+#include <malloc.h>
 
 namespace distortos
 {
@@ -54,25 +56,11 @@ constexpr size_t totalThreads {10};
 constexpr auto testThreadDuration = internal::RoundRobinQuantum::getInitial() * 2;
 
 /*---------------------------------------------------------------------------------------------------------------------+
-| local functions' declarations
-+---------------------------------------------------------------------------------------------------------------------*/
-
-void thread(SequenceAsserter& sequenceAsserter, SequencePoints sequencePoints);
-
-/*---------------------------------------------------------------------------------------------------------------------+
-| local types
-+---------------------------------------------------------------------------------------------------------------------*/
-
-/// type of test thread
-using TestThread = decltype(makeStaticThread<testThreadStackSize>({}, thread,
-		std::ref(std::declval<SequenceAsserter&>()), std::declval<SequencePoints>()));
-
-/*---------------------------------------------------------------------------------------------------------------------+
 | local functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
 /**
- * \brief Test thread.
+ * \brief Test thread
  *
  * Marks the first sequence point in SequenceAsserter, wastes some time and marks the second sequence point in
  * SequenceAsserter.
@@ -89,20 +77,20 @@ void thread(SequenceAsserter& sequenceAsserter, const SequencePoints sequencePoi
 }
 
 /**
- * \brief Builder of TestThread objects.
+ * \brief Builder of test threads
  *
  * \param [in] schedulingPolicy is the scheduling policy of the test thread
  * \param [in] sequenceAsserter is a reference to SequenceAsserter shared object
  * \param [in] sequencePoints is a pair of sequence points for this instance
  *
- * \return constructed TestThread object
+ * \return constructed DynamicThread object
  */
 
-TestThread makeTestThread(const SchedulingPolicy schedulingPolicy, SequenceAsserter& sequenceAsserter,
+DynamicThread makeTestThread(const SchedulingPolicy schedulingPolicy, SequenceAsserter& sequenceAsserter,
 		const SequencePoints sequencePoints)
 {
-	return makeStaticThread<testThreadStackSize>(testThreadPriority, schedulingPolicy, thread,
-			std::ref(sequenceAsserter), static_cast<SequencePoints>(sequencePoints));
+	return makeDynamicThread({testThreadStackSize, testThreadPriority, schedulingPolicy}, thread,
+			std::ref(sequenceAsserter), sequencePoints);
 }
 
 }	// namespace
@@ -123,50 +111,55 @@ bool ThreadSchedulingPolicyTestCase::run_() const
 
 	for (const auto& parameters : parametersArray)
 	{
-		const auto schedulingPolicy = std::get<0>(parameters);
-		const auto multiplier = std::get<1>(parameters);
-		const auto step = std::get<2>(parameters);
-
-		SequenceAsserter sequenceAsserter;
-
-		std::array<TestThread, totalThreads> threads
-		{{
-				makeTestThread(schedulingPolicy, sequenceAsserter, {0 * multiplier, 0 * multiplier + step}),
-				makeTestThread(schedulingPolicy, sequenceAsserter, {1 * multiplier, 1 * multiplier + step}),
-				makeTestThread(schedulingPolicy, sequenceAsserter, {2 * multiplier, 2 * multiplier + step}),
-				makeTestThread(schedulingPolicy, sequenceAsserter, {3 * multiplier, 3 * multiplier + step}),
-				makeTestThread(schedulingPolicy, sequenceAsserter, {4 * multiplier, 4 * multiplier + step}),
-				makeTestThread(schedulingPolicy, sequenceAsserter, {5 * multiplier, 5 * multiplier + step}),
-				makeTestThread(schedulingPolicy, sequenceAsserter, {6 * multiplier, 6 * multiplier + step}),
-				makeTestThread(schedulingPolicy, sequenceAsserter, {7 * multiplier, 7 * multiplier + step}),
-				makeTestThread(schedulingPolicy, sequenceAsserter, {8 * multiplier, 8 * multiplier + step}),
-				makeTestThread(schedulingPolicy, sequenceAsserter, {9 * multiplier, 9 * multiplier + step}),
-		}};
-
-		decltype(TickClock::now()) testStart;
-
 		{
-			architecture::InterruptMaskingLock interruptMaskingLock;
+			const auto schedulingPolicy = std::get<0>(parameters);
+			const auto multiplier = std::get<1>(parameters);
+			const auto step = std::get<2>(parameters);
 
-			// wait for beginning of next tick - test threads should be started in the same tick
-			ThisThread::sleepFor({});
+			SequenceAsserter sequenceAsserter;
+
+			std::array<DynamicThread, totalThreads> threads
+			{{
+					makeTestThread(schedulingPolicy, sequenceAsserter, {0 * multiplier, 0 * multiplier + step}),
+					makeTestThread(schedulingPolicy, sequenceAsserter, {1 * multiplier, 1 * multiplier + step}),
+					makeTestThread(schedulingPolicy, sequenceAsserter, {2 * multiplier, 2 * multiplier + step}),
+					makeTestThread(schedulingPolicy, sequenceAsserter, {3 * multiplier, 3 * multiplier + step}),
+					makeTestThread(schedulingPolicy, sequenceAsserter, {4 * multiplier, 4 * multiplier + step}),
+					makeTestThread(schedulingPolicy, sequenceAsserter, {5 * multiplier, 5 * multiplier + step}),
+					makeTestThread(schedulingPolicy, sequenceAsserter, {6 * multiplier, 6 * multiplier + step}),
+					makeTestThread(schedulingPolicy, sequenceAsserter, {7 * multiplier, 7 * multiplier + step}),
+					makeTestThread(schedulingPolicy, sequenceAsserter, {8 * multiplier, 8 * multiplier + step}),
+					makeTestThread(schedulingPolicy, sequenceAsserter, {9 * multiplier, 9 * multiplier + step}),
+			}};
+
+			decltype(TickClock::now()) testStart;
+
+			{
+				architecture::InterruptMaskingLock interruptMaskingLock;
+
+				// wait for beginning of next tick - test threads should be started in the same tick
+				ThisThread::sleepFor({});
+
+				for (auto& thread : threads)
+					thread.start();
+
+				testStart = TickClock::now();
+			}
 
 			for (auto& thread : threads)
-				thread.start();
+				thread.join();
 
-			testStart = TickClock::now();
+			const auto testDuration = TickClock::now() - testStart;
+
+			if (sequenceAsserter.assertSequence(totalThreads * 2) == false)
+				return false;
+
+			// exact time cannot be calculated, because wasteTime() is not precise when context switches occur during it
+			if (testDuration < testThreadDuration * totalThreads)
+				return false;
 		}
 
-		for (auto& thread : threads)
-			thread.join();
-
-		const auto testDuration = TickClock::now() - testStart;
-
-		if (sequenceAsserter.assertSequence(totalThreads * 2) == false)
-			return false;
-
-		// exact time cannot be calculated, because wasteTime() is not precise when context switches occur during it
-		if (testDuration < testThreadDuration * totalThreads)
+		if (mallinfo().uordblks != 0)	// all dynamic memory must be deallocated after each test phase
 			return false;
 	}
 
