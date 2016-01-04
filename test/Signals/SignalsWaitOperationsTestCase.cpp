@@ -2,13 +2,13 @@
  * \file
  * \brief SignalsWaitOperationsTestCase class implementation
  *
- * \author Copyright (C) 2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2015-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-11-11
+ * \date 2016-01-04
  */
 
 #include "SignalsWaitOperationsTestCase.hpp"
@@ -17,13 +17,11 @@
 
 #include "waitForNextTick.hpp"
 
+#include "distortos/DynamicThread.hpp"
 #include "distortos/StaticSoftwareTimer.hpp"
-#include "distortos/StaticThread.hpp"
 #include "distortos/statistics.hpp"
 #include "distortos/ThisThread.hpp"
 #include "distortos/ThisThread-Signals.hpp"
-
-#include <cerrno>
 
 namespace distortos
 {
@@ -518,7 +516,7 @@ bool phase3(const SendSignal& sendSignal, const TestReceivedSignalInformation&)
 	}
 
 	{
-		auto testThread = makeStaticThread<testThreadStackSize, false, 0>(0, [](){});
+		auto testThread = makeDynamicThread({testThreadStackSize, false, 0, 0, 0}, [](){});
 		const auto ret = sendSignal(testThread, {}, {});
 		if (ret != ENOTSUP)
 			return false;
@@ -528,17 +526,7 @@ bool phase3(const SendSignal& sendSignal, const TestReceivedSignalInformation&)
 
 	{
 		int sharedRet {};
-		auto testThread = makeStaticThread<testThreadStackSize, false, 0>(UINT8_MAX, waitWrapper, std::ref(signalSet),
-				std::ref(sharedRet));
-		testThread.start();
-		testThread.join();
-		if (sharedRet != ENOTSUP)
-			return false;
-	}
-
-	{
-		int sharedRet {};
-		auto testThread = makeStaticThread<testThreadStackSize, false, 0>(UINT8_MAX, tryWaitWrapper,
+		auto testThread = makeDynamicThread({testThreadStackSize, false, 0, 0, UINT8_MAX}, waitWrapper,
 				std::ref(signalSet), std::ref(sharedRet));
 		testThread.start();
 		testThread.join();
@@ -548,7 +536,7 @@ bool phase3(const SendSignal& sendSignal, const TestReceivedSignalInformation&)
 
 	{
 		int sharedRet {};
-		auto testThread = makeStaticThread<testThreadStackSize, false, 0>(UINT8_MAX, tryWaitForWrapper,
+		auto testThread = makeDynamicThread({testThreadStackSize, false, 0, 0, UINT8_MAX}, tryWaitWrapper,
 				std::ref(signalSet), std::ref(sharedRet));
 		testThread.start();
 		testThread.join();
@@ -558,7 +546,17 @@ bool phase3(const SendSignal& sendSignal, const TestReceivedSignalInformation&)
 
 	{
 		int sharedRet {};
-		auto testThread = makeStaticThread<testThreadStackSize, false, 0>(UINT8_MAX, tryWaitUntilWrapper,
+		auto testThread = makeDynamicThread({testThreadStackSize, false, 0, 0, UINT8_MAX}, tryWaitForWrapper,
+				std::ref(signalSet), std::ref(sharedRet));
+		testThread.start();
+		testThread.join();
+		if (sharedRet != ENOTSUP)
+			return false;
+	}
+
+	{
+		int sharedRet {};
+		auto testThread = makeDynamicThread({testThreadStackSize, false, 0, 0, UINT8_MAX}, tryWaitUntilWrapper,
 				std::ref(signalSet), std::ref(sharedRet));
 		testThread.start();
 		testThread.join();
