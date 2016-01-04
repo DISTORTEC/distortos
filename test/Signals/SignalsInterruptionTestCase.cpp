@@ -2,13 +2,13 @@
  * \file
  * \brief SignalsInterruptionTestCase class implementation
  *
- * \author Copyright (C) 2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2015-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-11-11
+ * \date 2016-01-04
  */
 
 #include "SignalsInterruptionTestCase.hpp"
@@ -17,13 +17,11 @@
 #include "waitForNextTick.hpp"
 
 #include "distortos/ConditionVariable.hpp"
+#include "distortos/DynamicThread.hpp"
 #include "distortos/Mutex.hpp"
-#include "distortos/StaticThread.hpp"
 #include "distortos/statistics.hpp"
 #include "distortos/ThisThread.hpp"
 #include "distortos/ThisThread-Signals.hpp"
-
-#include <cerrno>
 
 namespace distortos
 {
@@ -114,7 +112,7 @@ public:
 	bool run(SequenceAsserter& sequenceAsserter)
 	{
 		auto& currentThread = ThisThread::get();
-		auto signalingThread = makeStaticThread<testThreadStackSize>(lowPriority, &TestStep::signalingThreadFunction,
+		auto signalingThread = makeDynamicThread({testThreadStackSize, lowPriority}, &TestStep::signalingThreadFunction,
 				std::ref(*this), std::ref(sequenceAsserter), std::ref(currentThread));
 		waitForNextTick();
 		signalingThread.start();
@@ -295,7 +293,8 @@ public:
 
 	explicit JoinTestStep(SequenceAsserter& sequenceAsserter) :
 			TestStep{5, 7, 0, 1, 4, 2},
-			sequencePointThread_{veryLowPriority, &SequenceAsserter::sequencePoint, std::ref(sequenceAsserter), 3}
+			sequencePointThread_{{testThreadStackSize, veryLowPriority}, &SequenceAsserter::sequencePoint,
+					std::ref(sequenceAsserter), 3}
 	{
 
 	}
@@ -316,12 +315,8 @@ private:
 		return sequencePointThread_.join() == 0;
 	}
 
-	/// type of internal thread
-	using SequencePointThread = decltype(makeStaticThread<testThreadStackSize>({}, &SequenceAsserter::sequencePoint,
-			std::ref(std::declval<SequenceAsserter&>()), std::declval<unsigned int>()));
-
 	/// internal thread that marks sequence point and is joined in block()
-	SequencePointThread sequencePointThread_;
+	DynamicThread sequencePointThread_;
 };
 
 /// test step for mutexes
@@ -349,7 +344,8 @@ public:
 
 	MutexTestStep(const Type type, SequenceAsserter& sequenceAsserter) :
 			TestStep{8, 11, 2, 3, 6, 4},
-			mutexLockerThread_{highPriority, &MutexTestStep::mutexLockerThreadFunction, std::ref(*this)},
+			mutexLockerThread_{{testThreadStackSize, highPriority}, &MutexTestStep::mutexLockerThreadFunction,
+					std::ref(*this)},
 			mutex_{},
 			sequenceAsserter_(sequenceAsserter),
 			type_{type}
@@ -423,12 +419,8 @@ private:
 		return true;
 	}
 
-	/// type of internal "mutex locker" thread
-	using MutexLockerThread = decltype(makeStaticThread<testThreadStackSize>({},
-			&MutexTestStep::mutexLockerThreadFunction, std::ref(std::declval<MutexTestStep&>())));
-
 	/// internal "mutex locker" thread
-	MutexLockerThread mutexLockerThread_;
+	DynamicThread mutexLockerThread_;
 
 	/// tested object
 	Mutex mutex_;
