@@ -2,13 +2,13 @@
  * \file
  * \brief MutexPriorityProtocolTestCase class implementation
  *
- * \author Copyright (C) 2014-2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-10-12
+ * \date 2016-01-04
  */
 
 #include "MutexPriorityProtocolTestCase.hpp"
@@ -16,10 +16,10 @@
 #include "SequenceAsserter.hpp"
 #include "wasteTime.hpp"
 
-#include "distortos/StaticThread.hpp"
+#include "distortos/DynamicThread.hpp"
 #include "distortos/Mutex.hpp"
-#include "distortos/ThisThread.hpp"
 #include "distortos/statistics.hpp"
+#include "distortos/ThisThread.hpp"
 
 #include "estd/ContiguousRange.hpp"
 
@@ -81,25 +81,11 @@ const std::array<int, totalThreads> threadDelays
 constexpr size_t delayedStartContextSwitchesCount {4};
 
 /*---------------------------------------------------------------------------------------------------------------------+
-| local functions' declarations
-+---------------------------------------------------------------------------------------------------------------------*/
-
-void thread(TickClock::time_point sleepUntil, SequenceAsserter& sequenceAsserter, const TestStepRange& steps);
-
-/*---------------------------------------------------------------------------------------------------------------------+
-| local types
-+---------------------------------------------------------------------------------------------------------------------*/
-
-/// type of test thread
-using TestThread = decltype(makeStaticThread<testThreadStackSize>({}, {}, thread, std::declval<TickClock::time_point>(),
-		std::ref(std::declval<SequenceAsserter&>()), std::ref(std::declval<const TestStepRange&>())));
-
-/*---------------------------------------------------------------------------------------------------------------------+
 | local functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
 /**
- * \brief Test thread.
+ * \brief Test thread
  *
  * First thing done is going to sleep for requested amount of time. Then all steps from provided TestStepRange are
  * executed:
@@ -128,21 +114,21 @@ void thread(const TickClock::time_point sleepUntil, SequenceAsserter& sequenceAs
 }
 
 /**
- * \brief Builder of TestThread objects.
+ * \brief Builder of test threads
  *
  * \param [in] priority is the priority of thread
  * \param [in] sleepUntil is the time_point at which test steps will start to be executed by thread
  * \param [in] sequenceAsserter is a reference to SequenceAsserter shared object
  * \param [in] steps is a reference to TestStepRange with test steps for this instance
  *
- * \return constructed TestThread object
+ * \return constructed DynamicThread object
  */
 
-TestThread makeTestThread(const uint8_t priority, const TickClock::time_point sleepUntil,
+DynamicThread makeTestThread(const uint8_t priority, const TickClock::time_point sleepUntil,
 		SequenceAsserter& sequenceAsserter, const TestStepRange& steps)
 {
-	return makeStaticThread<testThreadStackSize>(priority, SchedulingPolicy::Fifo, thread,
-			static_cast<TickClock::time_point>(sleepUntil), std::ref(sequenceAsserter), std::ref(steps));
+	return makeDynamicThread({testThreadStackSize, priority, SchedulingPolicy::Fifo}, thread, sleepUntil,
+			std::ref(sequenceAsserter), std::ref(steps));
 }
 
 /**
@@ -163,7 +149,7 @@ bool testRunner(const std::array<int, totalThreads>& delays, const std::array<Te
 	SequenceAsserter sequenceAsserter;
 	const auto now = TickClock::now();
 
-	std::array<TestThread, totalThreads> threads
+	std::array<DynamicThread, totalThreads> threads
 	{{
 			makeTestThread(1, now + durationUnit * delays[0], sequenceAsserter, stepsRanges[0]),
 			makeTestThread(2, now + durationUnit * delays[1], sequenceAsserter, stepsRanges[1]),
