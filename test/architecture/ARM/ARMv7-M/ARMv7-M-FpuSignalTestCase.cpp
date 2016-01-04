@@ -2,13 +2,13 @@
  * \file
  * \brief FpuSignalTestCase class implementation for ARMv7-M (Cortex-M3 / Cortex-M4)
  *
- * \author Copyright (C) 2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2015-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-11-11
+ * \date 2016-01-04
  */
 
 #include "ARMv7-M-FpuSignalTestCase.hpp"
@@ -20,13 +20,11 @@
 #include "checkFpuRegisters.hpp"
 #include "setFpuRegisters.hpp"
 
+#include "distortos/DynamicThread.hpp"
 #include "distortos/StaticSoftwareTimer.hpp"
-#include "distortos/StaticThread.hpp"
 #include "distortos/statistics.hpp"
 #include "distortos/ThisThread.hpp"
 #include "distortos/ThisThread-Signals.hpp"
-
-#include <cerrno>
 
 #endif	// __FPU_PRESENT == 1 && __FPU_USED == 1
 
@@ -187,7 +185,7 @@ int queueSignalFromThread(Thread& thread, const Stage& stage)
 	};
 
 	int sharedRet {EINVAL};
-	auto testThread = makeStaticThread<testThreadStackSize>(highPriority, queueSignalWrapper, std::ref(thread),
+	auto testThread = makeDynamicThread({testThreadStackSize, highPriority}, queueSignalWrapper, std::ref(thread),
 			std::ref(stage), true, std::ref(sharedRet));
 
 	testThread.start();
