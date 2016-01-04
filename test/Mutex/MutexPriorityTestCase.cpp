@@ -2,13 +2,13 @@
  * \file
  * \brief MutexPriorityTestCase class implementation
  *
- * \author Copyright (C) 2014-2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-12-02
+ * \date 2016-01-04
  */
 
 #include "MutexPriorityTestCase.hpp"
@@ -16,11 +16,11 @@
 #include "priorityTestPhases.hpp"
 #include "SequenceAsserter.hpp"
 
-#include "distortos/StaticThread.hpp"
+#include "distortos/architecture/InterruptMaskingLock.hpp"
+
+#include "distortos/DynamicThread.hpp"
 #include "distortos/Mutex.hpp"
 #include "distortos/ThisThread.hpp"
-
-#include "distortos/architecture/InterruptMaskingLock.hpp"
 
 namespace distortos
 {
@@ -39,25 +39,11 @@ namespace
 constexpr size_t testThreadStackSize {256};
 
 /*---------------------------------------------------------------------------------------------------------------------+
-| local functions' declarations
-+---------------------------------------------------------------------------------------------------------------------*/
-
-void thread(SequenceAsserter& sequenceAsserter, unsigned int sequencePoint, Mutex& mutex);
-
-/*---------------------------------------------------------------------------------------------------------------------+
-| local types
-+---------------------------------------------------------------------------------------------------------------------*/
-
-/// type of test thread
-using TestThread = decltype(makeStaticThread<testThreadStackSize>({}, thread,
-		std::ref(std::declval<SequenceAsserter&>()), std::declval<unsigned int>(), std::ref(std::declval<Mutex&>())));
-
-/*---------------------------------------------------------------------------------------------------------------------+
 | local functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
 /**
- * \brief Test thread.
+ * \brief Test thread
  *
  * Locks the mutex, marks the sequence point in SequenceAsserter and unlocks the mutex.
  *
@@ -74,19 +60,19 @@ void thread(SequenceAsserter& sequenceAsserter, const unsigned int sequencePoint
 }
 
 /**
- * \brief Builder of TestThread objects.
+ * \brief Builder of test threads
  *
  * \param [in] threadParameters is a reference to ThreadParameters object
  * \param [in] sequenceAsserter is a reference to SequenceAsserter shared object
  * \param [in] mutex is a reference to shared mutex
  *
- * \return constructed TestThread object
+ * \return constructed DynamicThread object
  */
 
-TestThread makeTestThread(const ThreadParameters& threadParameters, SequenceAsserter& sequenceAsserter, Mutex& mutex)
+DynamicThread makeTestThread(const ThreadParameters& threadParameters, SequenceAsserter& sequenceAsserter, Mutex& mutex)
 {
-	return makeStaticThread<testThreadStackSize>(threadParameters.first, thread, std::ref(sequenceAsserter),
-			static_cast<unsigned int>(threadParameters.second), std::ref(mutex));
+	return makeDynamicThread({testThreadStackSize, threadParameters.first}, thread, std::ref(sequenceAsserter),
+			threadParameters.second, std::ref(mutex));
 }
 
 }	// namespace
@@ -117,7 +103,7 @@ bool MutexPriorityTestCase::run_() const
 			SequenceAsserter sequenceAsserter;
 			Mutex mutex {std::get<0>(parameters), std::get<1>(parameters), std::get<2>(parameters)};
 
-			std::array<TestThread, totalThreads> threads
+			std::array<DynamicThread, totalThreads> threads
 			{{
 					makeTestThread(phase.first[phase.second[0]], sequenceAsserter, mutex),
 					makeTestThread(phase.first[phase.second[1]], sequenceAsserter, mutex),
