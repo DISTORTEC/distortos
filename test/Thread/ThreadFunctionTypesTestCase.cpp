@@ -2,18 +2,20 @@
  * \file
  * \brief ThreadFunctionTypesTestCase class implementation
  *
- * \author Copyright (C) 2014 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2014-11-20
+ * \date 2016-01-04
  */
 
 #include "ThreadFunctionTypesTestCase.hpp"
 
-#include "distortos/StaticThread.hpp"
+#include "distortos/DynamicThread.hpp"
+
+#include <malloc.h>
 
 namespace distortos
 {
@@ -124,7 +126,7 @@ bool ThreadFunctionTypesTestCase::run_() const
 		uint32_t sharedVariable {};
 		constexpr uint32_t magicValue {0x394e3bae};
 
-		auto regularFunctionThread = makeStaticThread<testThreadStackSize>(UINT8_MAX, regularFunction,
+		auto regularFunctionThread = makeDynamicThread({testThreadStackSize, UINT8_MAX}, regularFunction,
 				std::ref(sharedVariable), magicValue);
 		regularFunctionThread.start();
 		regularFunctionThread.join();
@@ -133,12 +135,15 @@ bool ThreadFunctionTypesTestCase::run_() const
 			return false;
 	}
 
+	if (mallinfo().uordblks != 0)	// all dynamic memory must be deallocated after each test phase
+		return false;
+
 	// thread with state-less functor
 	{
 		uint32_t sharedVariable {};
 		constexpr uint32_t magicValue {0x2c2b7c30};
 
-		auto functorThread = makeStaticThread<testThreadStackSize>(UINT8_MAX, Functor{}, std::ref(sharedVariable),
+		auto functorThread = makeDynamicThread({testThreadStackSize, UINT8_MAX}, Functor{}, std::ref(sharedVariable),
 				magicValue);
 		functorThread.start();
 		functorThread.join();
@@ -147,12 +152,15 @@ bool ThreadFunctionTypesTestCase::run_() const
 			return false;
 	}
 
+	if (mallinfo().uordblks != 0)	// all dynamic memory must be deallocated after each test phase
+		return false;
+
 	// thread with member function of object with state
 	{
 		constexpr uint32_t magicValue {0x33698f0a};
 		Object object {magicValue};
 
-		auto objectThread = makeStaticThread<testThreadStackSize>(UINT8_MAX, &Object::function, std::ref(object));
+		auto objectThread = makeDynamicThread({testThreadStackSize, UINT8_MAX}, &Object::function, std::ref(object));
 		objectThread.start();
 		objectThread.join();
 
@@ -160,12 +168,15 @@ bool ThreadFunctionTypesTestCase::run_() const
 			return false;
 	}
 
+	if (mallinfo().uordblks != 0)	// all dynamic memory must be deallocated after each test phase
+		return false;
+
 	// thread with capturing lambda
 	{
 		uint32_t sharedVariable {};
 		constexpr uint32_t magicValue {0x24331acb};
 
-		auto capturingLambdaThread = makeStaticThread<testThreadStackSize>(UINT8_MAX,
+		auto capturingLambdaThread = makeDynamicThread({testThreadStackSize, UINT8_MAX},
 				[&sharedVariable, magicValue]()
 				{
 					sharedVariable = magicValue;
@@ -176,6 +187,9 @@ bool ThreadFunctionTypesTestCase::run_() const
 		if (sharedVariable != magicValue)
 			return false;
 	}
+
+	if (mallinfo().uordblks != 0)	// all dynamic memory must be deallocated after each test phase
+		return false;
 
 	return true;
 }
