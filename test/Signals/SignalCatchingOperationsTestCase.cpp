@@ -2,24 +2,22 @@
  * \file
  * \brief SignalCatchingOperationsTestCase class implementation
  *
- * \author Copyright (C) 2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2015-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-11-08
+ * \date 2016-01-04
  */
 
 #include "SignalCatchingOperationsTestCase.hpp"
 
 #include "abortSignalHandler.hpp"
 
-#include "distortos/StaticThread.hpp"
+#include "distortos/DynamicThread.hpp"
 #include "distortos/statistics.hpp"
 #include "distortos/ThisThread-Signals.hpp"
-
-#include <cerrno>
 
 namespace distortos
 {
@@ -156,7 +154,7 @@ bool phase2()
 		SignalSet signalMask {SignalSet::empty};
 		int setSignalActionRet {};
 		int setSignalMaskRet {};
-		auto testThread = makeStaticThread<testThreadStackSize, false, 0, 0>(UINT8_MAX, testThreadLambda,
+		auto testThread = makeDynamicThread({testThreadStackSize, false, 0, 0, UINT8_MAX}, testThreadLambda,
 				std::ref(getSignalActionRet), std::ref(signalMask), std::ref(setSignalActionRet),
 				std::ref(setSignalMaskRet));
 		testThread.start();
@@ -176,7 +174,7 @@ bool phase2()
 		SignalSet signalMask {SignalSet::empty};
 		int setSignalActionRet {};
 		int setSignalMaskRet {};
-		auto testThread = makeStaticThread<testThreadStackSize, true, 0, 0>(UINT8_MAX, testThreadLambda,
+		auto testThread = makeDynamicThread({testThreadStackSize, true, 0, 0, UINT8_MAX}, testThreadLambda,
 				std::ref(getSignalActionRet), std::ref(signalMask), std::ref(setSignalActionRet),
 				std::ref(setSignalMaskRet));
 		testThread.start();
