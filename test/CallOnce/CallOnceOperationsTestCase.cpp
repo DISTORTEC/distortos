@@ -2,13 +2,13 @@
  * \file
  * \brief CallOnceOperationsTestCase class implementation
  *
- * \author Copyright (C) 2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2015-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-12-02
+ * \date 2016-01-04
  */
 
 #include "CallOnceOperationsTestCase.hpp"
@@ -17,7 +17,7 @@
 #include "waitForNextTick.hpp"
 
 #include "distortos/callOnce.hpp"
-#include "distortos/StaticThread.hpp"
+#include "distortos/DynamicThread.hpp"
 #include "distortos/statistics.hpp"
 #include "distortos/ThisThread.hpp"
 
@@ -75,7 +75,7 @@ void function(SequenceAsserter& sequenceAsserter)
 }
 
 /**
- * \brief Test thread function.
+ * \brief Test thread function
  *
  * This function marks first sequence point, passes function() to callOnce() and marks second sequence point.
  *
@@ -92,22 +92,20 @@ void thread(SequenceAsserter& sequenceAsserter, const SequencePoints sequencePoi
 }
 
 /**
- * \brief Builder of TestThread objects.
+ * \brief Builder of test threads
  *
  * \param [in] priority is the thread's priority
  * \param [in] sequenceAsserter is a reference to SequenceAsserter shared object
  * \param [in] sequencePoints is a pair of sequence points for this instance
  * \param [in] onceFlag is a reference to OnceFlag shared object
  *
- * \return constructed TestThread object
+ * \return constructed DynamicThread object
  */
 
-auto makeTestThread(const uint8_t priority, SequenceAsserter& sequenceAsserter, const SequencePoints sequencePoints,
-		OnceFlag& onceFlag) ->
-		decltype(makeStaticThread<testThreadStackSize>(priority, thread, std::ref(sequenceAsserter), sequencePoints,
-				std::ref(onceFlag)))
+DynamicThread makeTestThread(const uint8_t priority, SequenceAsserter& sequenceAsserter,
+		const SequencePoints sequencePoints, OnceFlag& onceFlag)
 {
-	return makeStaticThread<testThreadStackSize>(priority, thread, std::ref(sequenceAsserter), sequencePoints,
+	return makeDynamicThread({testThreadStackSize, priority}, thread, std::ref(sequenceAsserter), sequencePoints,
 			std::ref(onceFlag));
 }
 
@@ -128,8 +126,7 @@ bool CallOnceOperationsTestCase::run_() const
 	SequenceAsserter sequenceAsserter;
 	OnceFlag onceFlag;
 
-	using TestThread = decltype(makeTestThread(uint8_t{}, sequenceAsserter, SequencePoints{}, onceFlag));
-	std::array<TestThread, totalThreads> threads
+	std::array<DynamicThread, totalThreads> threads
 	{{
 			makeTestThread(testCasePriority_ - 1, sequenceAsserter, SequencePoints{0, 12}, onceFlag),
 			makeTestThread(testCasePriority_ - 1, sequenceAsserter, SequencePoints{2, 13}, onceFlag),
