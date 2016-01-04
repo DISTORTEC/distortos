@@ -2,28 +2,26 @@
  * \file
  * \brief SignalsCatchingTestCase class implementation
  *
- * \author Copyright (C) 2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2015-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-11-11
+ * \date 2016-01-04
  */
 
 #include "SignalsCatchingTestCase.hpp"
 
 #include "SequenceAsserter.hpp"
 
+#include "distortos/DynamicThread.hpp"
 #include "distortos/StaticSoftwareTimer.hpp"
-#include "distortos/StaticThread.hpp"
 #include "distortos/statistics.hpp"
 #include "distortos/ThisThread.hpp"
 #include "distortos/ThisThread-Signals.hpp"
 
 #include "estd/ContiguousRange.hpp"
-
-#include <cerrno>
 
 namespace distortos
 {
@@ -1827,7 +1825,7 @@ bool SignalsCatchingTestCase::run_() const
 		auto currentThreadStepsRange = stage.mainTestThreadStepsRange;
 		auto secondTestThreadStepsRange = stage.secondTestThreadStepsRange;
 
-		auto secondThread = makeStaticThread<secondTestThreadStackSize>(secondTestThreadPriority, testStepsRunner,
+		auto secondThread = makeDynamicThread({secondTestThreadStackSize, secondTestThreadPriority}, testStepsRunner,
 				std::ref(secondTestThreadStepsRange), std::ref(currentThread), nullptr);
 
 		const auto isSecondThreadNeeded = secondTestThreadStepsRange.size() != 0;
