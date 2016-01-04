@@ -2,24 +2,22 @@
  * \file
  * \brief MutexPriorityInheritanceOperationsTestCase class implementation
  *
- * \author Copyright (C) 2014-2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-11-08
+ * \date 2016-01-04
  */
 
 #include "MutexPriorityInheritanceOperationsTestCase.hpp"
 
+#include "distortos/DynamicThread.hpp"
 #include "distortos/Mutex.hpp"
 #include "distortos/ThisThread.hpp"
-#include "distortos/StaticThread.hpp"
 
 #include "estd/ReverseAdaptor.hpp"
-
-#include <cerrno>
 
 namespace distortos
 {
@@ -304,19 +302,28 @@ bool testBasicPriorityInheritance(const Mutex::Type type)
 	auto& threadObject110 = threadObjects[8];
 	auto& threadObject111 = threadObjects[9];
 
-	using TestThread = decltype(makeStaticThread<testThreadStackSize>({}, std::ref(std::declval<LockThread&>())));
-	std::array<TestThread, totalThreads> threads
+	std::array<DynamicThread, totalThreads> threads
 	{{
-			makeStaticThread<testThreadStackSize>(testThreadPriority + priorityBoosts[0][0], std::ref(threadObject0)),
-			makeStaticThread<testThreadStackSize>(testThreadPriority + priorityBoosts[0][1], std::ref(threadObject1)),
-			makeStaticThread<testThreadStackSize>(testThreadPriority + priorityBoosts[0][2], std::ref(threadObject00)),
-			makeStaticThread<testThreadStackSize>(testThreadPriority + priorityBoosts[0][3], std::ref(threadObject01)),
-			makeStaticThread<testThreadStackSize>(testThreadPriority + priorityBoosts[0][4], std::ref(threadObject10)),
-			makeStaticThread<testThreadStackSize>(testThreadPriority + priorityBoosts[0][5], std::ref(threadObject11)),
-			makeStaticThread<testThreadStackSize>(testThreadPriority + priorityBoosts[0][6], std::ref(threadObject100)),
-			makeStaticThread<testThreadStackSize>(testThreadPriority + priorityBoosts[0][7], std::ref(threadObject101)),
-			makeStaticThread<testThreadStackSize>(testThreadPriority + priorityBoosts[0][8], std::ref(threadObject110)),
-			makeStaticThread<testThreadStackSize>(testThreadPriority + priorityBoosts[0][9], std::ref(threadObject111)),
+			makeDynamicThread({testThreadStackSize, static_cast<uint8_t>(testThreadPriority + priorityBoosts[0][0])},
+					std::ref(threadObject0)),
+			makeDynamicThread({testThreadStackSize, static_cast<uint8_t>(testThreadPriority + priorityBoosts[0][1])},
+					std::ref(threadObject1)),
+			makeDynamicThread({testThreadStackSize, static_cast<uint8_t>(testThreadPriority + priorityBoosts[0][2])},
+					std::ref(threadObject00)),
+			makeDynamicThread({testThreadStackSize, static_cast<uint8_t>(testThreadPriority + priorityBoosts[0][3])},
+					std::ref(threadObject01)),
+			makeDynamicThread({testThreadStackSize, static_cast<uint8_t>(testThreadPriority + priorityBoosts[0][4])},
+					std::ref(threadObject10)),
+			makeDynamicThread({testThreadStackSize, static_cast<uint8_t>(testThreadPriority + priorityBoosts[0][5])},
+					std::ref(threadObject11)),
+			makeDynamicThread({testThreadStackSize, static_cast<uint8_t>(testThreadPriority + priorityBoosts[0][6])},
+					std::ref(threadObject100)),
+			makeDynamicThread({testThreadStackSize, static_cast<uint8_t>(testThreadPriority + priorityBoosts[0][7])},
+					std::ref(threadObject101)),
+			makeDynamicThread({testThreadStackSize, static_cast<uint8_t>(testThreadPriority + priorityBoosts[0][8])},
+					std::ref(threadObject110)),
+			makeDynamicThread({testThreadStackSize, static_cast<uint8_t>(testThreadPriority + priorityBoosts[0][9])},
+					std::ref(threadObject111)),
 	}};
 
 	bool result {true};
@@ -451,19 +458,18 @@ bool testCanceledLock(const Mutex::Type type)
 	auto& threadObject8 = threadObjects[8];
 	auto& threadObject9 = threadObjects[9];
 
-	using TestThread = decltype(makeStaticThread<testThreadStackSize>({}, std::ref(std::declval<TryLockForThread&>())));
-	std::array<TestThread, totalThreads> threads
+	std::array<DynamicThread, totalThreads> threads
 	{{
-			makeStaticThread<testThreadStackSize>(testThreadPriority + 1, std::ref(threadObject0)),
-			makeStaticThread<testThreadStackSize>(testThreadPriority + 2, std::ref(threadObject1)),
-			makeStaticThread<testThreadStackSize>(testThreadPriority + 3, std::ref(threadObject2)),
-			makeStaticThread<testThreadStackSize>(testThreadPriority + 4, std::ref(threadObject3)),
-			makeStaticThread<testThreadStackSize>(testThreadPriority + 5, std::ref(threadObject4)),
-			makeStaticThread<testThreadStackSize>(testThreadPriority + 6, std::ref(threadObject5)),
-			makeStaticThread<testThreadStackSize>(testThreadPriority + 7, std::ref(threadObject6)),
-			makeStaticThread<testThreadStackSize>(testThreadPriority + 8, std::ref(threadObject7)),
-			makeStaticThread<testThreadStackSize>(testThreadPriority + 9, std::ref(threadObject8)),
-			makeStaticThread<testThreadStackSize>(testThreadPriority + 10, std::ref(threadObject9)),
+			makeDynamicThread({testThreadStackSize, testThreadPriority + 1}, std::ref(threadObject0)),
+			makeDynamicThread({testThreadStackSize, testThreadPriority + 2}, std::ref(threadObject1)),
+			makeDynamicThread({testThreadStackSize, testThreadPriority + 3}, std::ref(threadObject2)),
+			makeDynamicThread({testThreadStackSize, testThreadPriority + 4}, std::ref(threadObject3)),
+			makeDynamicThread({testThreadStackSize, testThreadPriority + 5}, std::ref(threadObject4)),
+			makeDynamicThread({testThreadStackSize, testThreadPriority + 6}, std::ref(threadObject5)),
+			makeDynamicThread({testThreadStackSize, testThreadPriority + 7}, std::ref(threadObject6)),
+			makeDynamicThread({testThreadStackSize, testThreadPriority + 8}, std::ref(threadObject7)),
+			makeDynamicThread({testThreadStackSize, testThreadPriority + 9}, std::ref(threadObject8)),
+			makeDynamicThread({testThreadStackSize, testThreadPriority + 10}, std::ref(threadObject9)),
 	}};
 
 	bool result {true};
@@ -597,19 +603,18 @@ bool testPriorityChange(const Mutex::Type type)
 	auto& threadObject8 = threadObjects[8];
 	auto& threadObject9 = threadObjects[9];
 
-	using TestThread = decltype(makeStaticThread<testThreadStackSize>({}, std::ref(std::declval<LockThread&>())));
-	std::array<TestThread, totalThreads> threads
+	std::array<DynamicThread, totalThreads> threads
 	{{
-			makeStaticThread<testThreadStackSize>(testThreadPriority + 1, std::ref(threadObject0)),
-			makeStaticThread<testThreadStackSize>(testThreadPriority + 2, std::ref(threadObject1)),
-			makeStaticThread<testThreadStackSize>(testThreadPriority + 3, std::ref(threadObject2)),
-			makeStaticThread<testThreadStackSize>(testThreadPriority + 4, std::ref(threadObject3)),
-			makeStaticThread<testThreadStackSize>(testThreadPriority + 5, std::ref(threadObject4)),
-			makeStaticThread<testThreadStackSize>(testThreadPriority + 6, std::ref(threadObject5)),
-			makeStaticThread<testThreadStackSize>(testThreadPriority + 7, std::ref(threadObject6)),
-			makeStaticThread<testThreadStackSize>(testThreadPriority + 8, std::ref(threadObject7)),
-			makeStaticThread<testThreadStackSize>(testThreadPriority + 9, std::ref(threadObject8)),
-			makeStaticThread<testThreadStackSize>(testThreadPriority + 10, std::ref(threadObject9)),
+			makeDynamicThread({testThreadStackSize, testThreadPriority + 1}, std::ref(threadObject0)),
+			makeDynamicThread({testThreadStackSize, testThreadPriority + 2}, std::ref(threadObject1)),
+			makeDynamicThread({testThreadStackSize, testThreadPriority + 3}, std::ref(threadObject2)),
+			makeDynamicThread({testThreadStackSize, testThreadPriority + 4}, std::ref(threadObject3)),
+			makeDynamicThread({testThreadStackSize, testThreadPriority + 5}, std::ref(threadObject4)),
+			makeDynamicThread({testThreadStackSize, testThreadPriority + 6}, std::ref(threadObject5)),
+			makeDynamicThread({testThreadStackSize, testThreadPriority + 7}, std::ref(threadObject6)),
+			makeDynamicThread({testThreadStackSize, testThreadPriority + 8}, std::ref(threadObject7)),
+			makeDynamicThread({testThreadStackSize, testThreadPriority + 9}, std::ref(threadObject8)),
+			makeDynamicThread({testThreadStackSize, testThreadPriority + 10}, std::ref(threadObject9)),
 	}};
 
 	bool result {true};
