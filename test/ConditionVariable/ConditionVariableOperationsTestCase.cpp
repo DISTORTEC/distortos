@@ -2,13 +2,13 @@
  * \file
  * \brief ConditionVariableOperationsTestCase class implementation
  *
- * \author Copyright (C) 2014-2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-11-11
+ * \date 2016-01-04
  */
 
 #include "ConditionVariableOperationsTestCase.hpp"
@@ -17,13 +17,11 @@
 #include "Mutex/mutexTestTryLockWhenLocked.hpp"
 
 #include "distortos/ConditionVariable.hpp"
+#include "distortos/DynamicThread.hpp"
 #include "distortos/Mutex.hpp"
 #include "distortos/ThisThread.hpp"
 #include "distortos/StaticSoftwareTimer.hpp"
-#include "distortos/StaticThread.hpp"
 #include "distortos/statistics.hpp"
-
-#include <cerrno>
 
 namespace distortos
 {
@@ -186,7 +184,7 @@ bool phase2(Mutex& mutex)
 
 		const auto contextSwitchCount = statistics::getContextSwitchCount();
 		const auto wakeUpTimePoint = TickClock::now() + longDuration;
-		auto thread = makeStaticThread<testThreadStackSize>(UINT8_MAX, sleepUntilFunctor, wakeUpTimePoint);
+		auto thread = makeDynamicThread({testThreadStackSize, UINT8_MAX}, sleepUntilFunctor, wakeUpTimePoint);
 
 		thread.start();
 		ThisThread::yield();
@@ -214,7 +212,7 @@ bool phase2(Mutex& mutex)
 
 		const auto contextSwitchCount = statistics::getContextSwitchCount();
 		const auto wakeUpTimePoint = TickClock::now() + longDuration;
-		auto thread = makeStaticThread<testThreadStackSize>(UINT8_MAX, sleepUntilFunctor, wakeUpTimePoint);
+		auto thread = makeDynamicThread({testThreadStackSize, UINT8_MAX}, sleepUntilFunctor, wakeUpTimePoint);
 
 		thread.start();
 		ThisThread::yield();
@@ -242,7 +240,7 @@ bool phase2(Mutex& mutex)
 
 		const auto contextSwitchCount = statistics::getContextSwitchCount();
 		const auto wakeUpTimePoint = TickClock::now() + longDuration;
-		auto thread = makeStaticThread<testThreadStackSize>(UINT8_MAX, sleepUntilFunctor, wakeUpTimePoint);
+		auto thread = makeDynamicThread({testThreadStackSize, UINT8_MAX}, sleepUntilFunctor, wakeUpTimePoint);
 
 		thread.start();
 		ThisThread::yield();
