@@ -2,13 +2,13 @@
  * \file
  * \brief ThreadSleepUntilTestCase class implementation
  *
- * \author Copyright (C) 2014-2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-12-02
+ * \date 2016-01-04
  */
 
 #include "ThreadSleepUntilTestCase.hpp"
@@ -16,10 +16,12 @@
 #include "priorityTestPhases.hpp"
 #include "SequenceAsserter.hpp"
 
-#include "distortos/StaticThread.hpp"
+#include "distortos/architecture/InterruptMaskingLock.hpp"
+
+#include "distortos/DynamicThread.hpp"
 #include "distortos/ThisThread.hpp"
 
-#include "distortos/architecture/InterruptMaskingLock.hpp"
+#include <malloc.h>
 
 namespace distortos
 {
@@ -41,27 +43,11 @@ constexpr size_t testThreadStackSize {384};
 constexpr uint8_t timePointOffset {10};
 
 /*---------------------------------------------------------------------------------------------------------------------+
-| local functions' declarations
-+---------------------------------------------------------------------------------------------------------------------*/
-
-void thread(TickClock::time_point sleepUntil, SequenceAsserter& sequenceAsserter, unsigned int sequencePoint,
-		TickClock::duration& timePointDeviation, int& sharedRet);
-
-/*---------------------------------------------------------------------------------------------------------------------+
-| local types
-+---------------------------------------------------------------------------------------------------------------------*/
-
-/// type of test thread
-using TestThread = decltype(makeStaticThread<testThreadStackSize>({}, thread, std::declval<TickClock::time_point>(),
-		std::ref(std::declval<SequenceAsserter&>()), std::declval<unsigned int>(),
-		std::ref(std::declval<TickClock::duration&>()), std::ref(std::declval<int&>())));
-
-/*---------------------------------------------------------------------------------------------------------------------+
 | local functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
 /**
- * \brief Test thread.
+ * \brief Test thread
  *
  * Sleeps until requested time point and marks the sequence point in SequenceAsserter, also storing the deviation of
  * time point of waking up.
@@ -83,7 +69,7 @@ void thread(const TickClock::time_point sleepUntil, SequenceAsserter& sequenceAs
 }
 
 /**
- * \brief Builder of TestThread objects.
+ * \brief Builder of test threads
  *
  * This test uses "priority" field of test parameters as a "reversed" amount of time to sleep.
  *
@@ -93,15 +79,15 @@ void thread(const TickClock::time_point sleepUntil, SequenceAsserter& sequenceAs
  * \param [out] timePointDeviation is a reference to variable for storing deviation of time point of waking up
  * \param [out] sharedRet is a reference to variable for storing return value of ThisThread::sleepUntil()
  *
- * \return constructed TestThread object
+ * \return constructed DynamicThread object
  */
 
-TestThread makeTestThread(const TickClock::time_point now, const ThreadParameters& threadParameters,
+DynamicThread makeTestThread(const TickClock::time_point now, const ThreadParameters& threadParameters,
 		SequenceAsserter& sequenceAsserter, TickClock::duration& timePointDeviation, int& sharedRet)
 {
-	return makeStaticThread<testThreadStackSize>(UINT8_MAX, thread,
+	return makeDynamicThread({testThreadStackSize, UINT8_MAX}, thread,
 			now + TickClock::duration{UINT8_MAX - threadParameters.first + timePointOffset}, std::ref(sequenceAsserter),
-			static_cast<unsigned int>(threadParameters.second), std::ref(timePointDeviation), std::ref(sharedRet));
+			threadParameters.second, std::ref(timePointDeviation), std::ref(sharedRet));
 }
 
 }	// namespace
@@ -114,63 +100,68 @@ bool ThreadSleepUntilTestCase::run_() const
 {
 	for (const auto& phase : priorityTestPhases)
 	{
-		SequenceAsserter sequenceAsserter;
-		std::array<TickClock::duration, totalThreads> timePointDeviations {{}};
-		std::array<int, totalThreads> sharedRets {{}};
-		const auto now = TickClock::now();
-
-		std::array<TestThread, totalThreads> threads
-		{{
-				makeTestThread(now, phase.first[phase.second[0]], sequenceAsserter, timePointDeviations[0],
-						sharedRets[0]),
-				makeTestThread(now, phase.first[phase.second[1]], sequenceAsserter, timePointDeviations[1],
-						sharedRets[1]),
-				makeTestThread(now, phase.first[phase.second[2]], sequenceAsserter, timePointDeviations[2],
-						sharedRets[2]),
-				makeTestThread(now, phase.first[phase.second[3]], sequenceAsserter, timePointDeviations[3],
-						sharedRets[3]),
-				makeTestThread(now, phase.first[phase.second[4]], sequenceAsserter, timePointDeviations[4],
-						sharedRets[4]),
-				makeTestThread(now, phase.first[phase.second[5]], sequenceAsserter, timePointDeviations[5],
-						sharedRets[5]),
-				makeTestThread(now, phase.first[phase.second[6]], sequenceAsserter, timePointDeviations[6],
-						sharedRets[6]),
-				makeTestThread(now, phase.first[phase.second[7]], sequenceAsserter, timePointDeviations[7],
-						sharedRets[7]),
-				makeTestThread(now, phase.first[phase.second[8]], sequenceAsserter, timePointDeviations[8],
-						sharedRets[8]),
-				makeTestThread(now, phase.first[phase.second[9]], sequenceAsserter, timePointDeviations[9],
-						sharedRets[9]),
-		}};
-
 		{
-			architecture::InterruptMaskingLock interruptMaskingLock;
+			SequenceAsserter sequenceAsserter;
+			std::array<TickClock::duration, totalThreads> timePointDeviations {{}};
+			std::array<int, totalThreads> sharedRets {{}};
+			const auto now = TickClock::now();
+
+			std::array<DynamicThread, totalThreads> threads
+			{{
+					makeTestThread(now, phase.first[phase.second[0]], sequenceAsserter, timePointDeviations[0],
+							sharedRets[0]),
+					makeTestThread(now, phase.first[phase.second[1]], sequenceAsserter, timePointDeviations[1],
+							sharedRets[1]),
+					makeTestThread(now, phase.first[phase.second[2]], sequenceAsserter, timePointDeviations[2],
+							sharedRets[2]),
+					makeTestThread(now, phase.first[phase.second[3]], sequenceAsserter, timePointDeviations[3],
+							sharedRets[3]),
+					makeTestThread(now, phase.first[phase.second[4]], sequenceAsserter, timePointDeviations[4],
+							sharedRets[4]),
+					makeTestThread(now, phase.first[phase.second[5]], sequenceAsserter, timePointDeviations[5],
+							sharedRets[5]),
+					makeTestThread(now, phase.first[phase.second[6]], sequenceAsserter, timePointDeviations[6],
+							sharedRets[6]),
+					makeTestThread(now, phase.first[phase.second[7]], sequenceAsserter, timePointDeviations[7],
+							sharedRets[7]),
+					makeTestThread(now, phase.first[phase.second[8]], sequenceAsserter, timePointDeviations[8],
+							sharedRets[8]),
+					makeTestThread(now, phase.first[phase.second[9]], sequenceAsserter, timePointDeviations[9],
+							sharedRets[9]),
+			}};
+
+			{
+				architecture::InterruptMaskingLock interruptMaskingLock;
+
+				for (auto& thread : threads)
+					thread.start();
+			}
+
+			bool invalidState {};
+			for (const auto& thread : threads)
+				if (thread.getState() != ThreadState::Sleeping)
+					invalidState = true;
 
 			for (auto& thread : threads)
-				thread.start();
+				thread.join();
+
+			if (invalidState != false)
+				return false;
+
+			if (sequenceAsserter.assertSequence(totalThreads) == false)
+				return false;
+
+			for (const auto& timePointDeviation : timePointDeviations)
+				if (timePointDeviation != TickClock::duration{})
+					return false;
+
+			for (const auto& sharedRet : sharedRets)
+				if (sharedRet != 0)
+					return false;
 		}
 
-		bool invalidState {};
-		for (const auto& thread : threads)
-			if (thread.getState() != ThreadState::Sleeping)
-				invalidState = true;
-
-		for (auto& thread : threads)
-			thread.join();
-
-		if (invalidState != false)
+		if (mallinfo().uordblks != 0)	// all dynamic memory must be deallocated after each test phase
 			return false;
-
-		if (sequenceAsserter.assertSequence(totalThreads) == false)
-			return false;
-
-		for (const auto& timePointDeviation : timePointDeviations)
-			if (timePointDeviation != TickClock::duration{})
-				return false;
-
-		for (const auto& sharedRet : sharedRets)
-			if (sharedRet != 0)
-				return false;
 	}
 
 	return true;
