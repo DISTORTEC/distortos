@@ -2,13 +2,13 @@
  * \file
  * \brief SemaphorePriorityTestCase class implementation
  *
- * \author Copyright (C) 2014-2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * \date 2015-12-02
+ * \date 2016-01-04
  */
 
 #include "SemaphorePriorityTestCase.hpp"
@@ -16,7 +16,7 @@
 #include "priorityTestPhases.hpp"
 #include "SequenceAsserter.hpp"
 
-#include "distortos/StaticThread.hpp"
+#include "distortos/DynamicThread.hpp"
 #include "distortos/statistics.hpp"
 
 namespace distortos
@@ -43,26 +43,11 @@ using SequencePoints = std::pair<unsigned int, unsigned int>;
 constexpr size_t testThreadStackSize {256};
 
 /*---------------------------------------------------------------------------------------------------------------------+
-| local functions' declarations
-+---------------------------------------------------------------------------------------------------------------------*/
-
-void thread(SequenceAsserter& sequenceAsserter, SequencePoints sequencePoints, Semaphore& semaphore);
-
-/*---------------------------------------------------------------------------------------------------------------------+
-| local types
-+---------------------------------------------------------------------------------------------------------------------*/
-
-/// type of test thread
-using TestThread = decltype(makeStaticThread<testThreadStackSize>({}, thread,
-		std::ref(std::declval<SequenceAsserter&>()), std::declval<SequencePoints>(),
-		std::ref(std::declval<Semaphore&>())));
-
-/*---------------------------------------------------------------------------------------------------------------------+
 | local functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
 /**
- * \brief Test thread.
+ * \brief Test thread
  *
  * Marks the first sequence point in SequenceAsserter, waits for the semaphore and marks the last sequence point in
  * SequenceAsserter.
@@ -80,7 +65,7 @@ void thread(SequenceAsserter& sequenceAsserter, const SequencePoints sequencePoi
 }
 
 /**
- * \brief Builder of TestThread objects.
+ * \brief Builder of test threads
  *
  * \param [in] firstSequencePoint is the first sequence point for this instance - equal to the order in which this
  * thread will be started
@@ -88,13 +73,13 @@ void thread(SequenceAsserter& sequenceAsserter, const SequencePoints sequencePoi
  * \param [in] sequenceAsserter is a reference to SequenceAsserter shared object
  * \param [in] semaphore is a reference to shared semaphore
  *
- * \return constructed TestThread object
+ * \return constructed DynamicThread object
  */
 
-TestThread makeTestThread(const unsigned int firstSequencePoint, const ThreadParameters& threadParameters,
+DynamicThread makeTestThread(const unsigned int firstSequencePoint, const ThreadParameters& threadParameters,
 		SequenceAsserter& sequenceAsserter, Semaphore& semaphore)
 {
-	return makeStaticThread<testThreadStackSize>(threadParameters.first, thread, std::ref(sequenceAsserter),
+	return makeDynamicThread({testThreadStackSize, threadParameters.first}, thread, std::ref(sequenceAsserter),
 			SequencePoints{firstSequencePoint, threadParameters.second + totalThreads}, std::ref(semaphore));
 }
 
@@ -114,7 +99,7 @@ bool SemaphorePriorityTestCase::run_() const
 		SequenceAsserter sequenceAsserter;
 		Semaphore semaphore {0};
 
-		std::array<TestThread, totalThreads> threads
+		std::array<DynamicThread, totalThreads> threads
 		{{
 				makeTestThread(0, phase.first[phase.second[0]], sequenceAsserter, semaphore),
 				makeTestThread(1, phase.first[phase.second[1]], sequenceAsserter, semaphore),
