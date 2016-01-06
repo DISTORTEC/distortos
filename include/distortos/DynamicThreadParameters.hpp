@@ -2,7 +2,7 @@
  * \file
  * \brief DynamicThreadParameters class header
  *
- * \author Copyright (C) 2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2015-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -47,12 +47,12 @@ struct DynamicThreadParameters
 	constexpr DynamicThreadParameters(const size_t stackSizee, const bool canReceiveSignalss,
 			const size_t queuedSignalss, const size_t signalActionss, const uint8_t priorityy,
 			const SchedulingPolicy schedulingPolicyy) :
-			queuedSignals{queuedSignalss},
-			signalActions{signalActionss},
-			stackSize{stackSizee},
-			canReceiveSignals{canReceiveSignalss},
-			priority{priorityy},
-			schedulingPolicy{schedulingPolicyy}
+					queuedSignals{queuedSignalss},
+					signalActions{signalActionss},
+					stackSize{stackSizee},
+					canReceiveSignals{canReceiveSignalss},
+					priority{priorityy},
+					schedulingPolicy{schedulingPolicyy}
 	{
 
 	}
@@ -72,12 +72,8 @@ struct DynamicThreadParameters
 
 	constexpr DynamicThreadParameters(const size_t stackSizee, const bool canReceiveSignalss,
 			const size_t queuedSignalss, const size_t signalActionss, const uint8_t priorityy) :
-			queuedSignals{queuedSignalss},
-			signalActions{signalActionss},
-			stackSize{stackSizee},
-			canReceiveSignals{canReceiveSignalss},
-			priority{priorityy},
-			schedulingPolicy{SchedulingPolicy::RoundRobin}
+					DynamicThreadParameters{stackSizee, canReceiveSignalss, queuedSignalss, signalActionss, priorityy,
+							SchedulingPolicy::RoundRobin}
 	{
 
 	}
@@ -92,12 +88,7 @@ struct DynamicThreadParameters
 
 	constexpr DynamicThreadParameters(const size_t stackSizee, const uint8_t priorityy,
 			const SchedulingPolicy schedulingPolicyy) :
-			queuedSignals{},
-			signalActions{},
-			stackSize{stackSizee},
-			canReceiveSignals{},
-			priority{priorityy},
-			schedulingPolicy{schedulingPolicyy}
+					DynamicThreadParameters{stackSizee, false, 0, 0, priorityy, schedulingPolicyy}
 	{
 
 	}
@@ -110,12 +101,7 @@ struct DynamicThreadParameters
 	 */
 
 	constexpr DynamicThreadParameters(const size_t stackSizee, const uint8_t priorityy) :
-			queuedSignals{},
-			signalActions{},
-			stackSize{stackSizee},
-			canReceiveSignals{},
-			priority{priorityy},
-			schedulingPolicy{SchedulingPolicy::RoundRobin}
+			DynamicThreadParameters{stackSizee, priorityy, SchedulingPolicy::RoundRobin}
 	{
 
 	}
