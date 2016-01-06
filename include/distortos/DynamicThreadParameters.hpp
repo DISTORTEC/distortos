@@ -41,12 +41,12 @@ struct DynamicThreadParameters
 	 * \param [in] signalActionss is the max number of different SignalAction objects for this thread, relevant only if
 	 * \a canReceiveSignals == true, 0 to disable catching of signals for this thread
 	 * \param [in] priorityy is the thread's priority, 0 - lowest, UINT8_MAX - highest
-	 * \param [in] schedulingPolicyy is the scheduling policy of the thread
+	 * \param [in] schedulingPolicyy is the scheduling policy of the thread, default - SchedulingPolicy::RoundRobin
 	 */
 
 	constexpr DynamicThreadParameters(const size_t stackSizee, const bool canReceiveSignalss,
 			const size_t queuedSignalss, const size_t signalActionss, const uint8_t priorityy,
-			const SchedulingPolicy schedulingPolicyy) :
+			const SchedulingPolicy schedulingPolicyy = SchedulingPolicy::RoundRobin) :
 					queuedSignals{queuedSignalss},
 					signalActions{signalActionss},
 					stackSize{stackSizee},
@@ -61,47 +61,13 @@ struct DynamicThreadParameters
 	 * \brief DynamicThreadParameters's constructor
 	 *
 	 * \param [in] stackSizee is the size of stack, bytes
-	 * \param [in] canReceiveSignalss selects whether reception of signals is enabled (true) or disabled (false) for
-	 * this thread
-	 * \param [in] queuedSignalss is the max number of queued signals for this thread, relevant only if
-	 * \a canReceiveSignals == true, 0 to disable queuing of signals for this thread
-	 * \param [in] signalActionss is the max number of different SignalAction objects for this thread, relevant only if
-	 * \a canReceiveSignals == true, 0 to disable catching of signals for this thread
 	 * \param [in] priorityy is the thread's priority, 0 - lowest, UINT8_MAX - highest
-	 */
-
-	constexpr DynamicThreadParameters(const size_t stackSizee, const bool canReceiveSignalss,
-			const size_t queuedSignalss, const size_t signalActionss, const uint8_t priorityy) :
-					DynamicThreadParameters{stackSizee, canReceiveSignalss, queuedSignalss, signalActionss, priorityy,
-							SchedulingPolicy::RoundRobin}
-	{
-
-	}
-
-	/**
-	 * \brief DynamicThreadParameters's constructor
-	 *
-	 * \param [in] stackSizee is the size of stack, bytes
-	 * \param [in] priorityy is the thread's priority, 0 - lowest, UINT8_MAX - highest
-	 * \param [in] schedulingPolicyy is the scheduling policy of the thread
+	 * \param [in] schedulingPolicyy is the scheduling policy of the thread, default - SchedulingPolicy::RoundRobin
 	 */
 
 	constexpr DynamicThreadParameters(const size_t stackSizee, const uint8_t priorityy,
-			const SchedulingPolicy schedulingPolicyy) :
+			const SchedulingPolicy schedulingPolicyy = SchedulingPolicy::RoundRobin) :
 					DynamicThreadParameters{stackSizee, false, 0, 0, priorityy, schedulingPolicyy}
-	{
-
-	}
-
-	/**
-	 * \brief DynamicThreadParameters's constructor
-	 *
-	 * \param [in] stackSizee is the size of stack, bytes
-	 * \param [in] priorityy is the thread's priority, 0 - lowest, UINT8_MAX - highest
-	 */
-
-	constexpr DynamicThreadParameters(const size_t stackSizee, const uint8_t priorityy) :
-			DynamicThreadParameters{stackSizee, priorityy, SchedulingPolicy::RoundRobin}
 	{
 
 	}
