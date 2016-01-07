@@ -152,10 +152,9 @@ bool phase2()
 		SignalSet signalMask {SignalSet::empty};
 		int setSignalActionRet {};
 		int setSignalMaskRet {};
-		auto testThread = makeDynamicThread({testThreadStackSize, false, 0, 0, UINT8_MAX}, testThreadLambda,
+		auto testThread = makeAndStartDynamicThread({testThreadStackSize, false, 0, 0, UINT8_MAX}, testThreadLambda,
 				std::ref(getSignalActionRet), std::ref(signalMask), std::ref(setSignalActionRet),
 				std::ref(setSignalMaskRet));
-		testThread.start();
 		testThread.join();
 		if (getSignalActionRet != ENOTSUP)
 			return false;
@@ -172,10 +171,9 @@ bool phase2()
 		SignalSet signalMask {SignalSet::empty};
 		int setSignalActionRet {};
 		int setSignalMaskRet {};
-		auto testThread = makeDynamicThread({testThreadStackSize, true, 0, 0, UINT8_MAX}, testThreadLambda,
+		auto testThread = makeAndStartDynamicThread({testThreadStackSize, true, 0, 0, UINT8_MAX}, testThreadLambda,
 				std::ref(getSignalActionRet), std::ref(signalMask), std::ref(setSignalActionRet),
 				std::ref(setSignalMaskRet));
-		testThread.start();
 		testThread.join();
 		if (getSignalActionRet != ENOTSUP)
 			return false;
