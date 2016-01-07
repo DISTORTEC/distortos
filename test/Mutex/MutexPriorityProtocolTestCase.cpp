@@ -112,20 +112,20 @@ void thread(const TickClock::time_point sleepUntil, SequenceAsserter& sequenceAs
 }
 
 /**
- * \brief Builder of test threads
+ * \brief Makes and starts test thread
  *
  * \param [in] priority is the priority of thread
  * \param [in] sleepUntil is the time_point at which test steps will start to be executed by thread
  * \param [in] sequenceAsserter is a reference to SequenceAsserter shared object
  * \param [in] steps is a reference to TestStepRange with test steps for this instance
  *
- * \return constructed DynamicThread object
+ * \return constructed and started DynamicThread object
  */
 
-DynamicThread makeTestThread(const uint8_t priority, const TickClock::time_point sleepUntil,
+DynamicThread makeAndStartTestThread(const uint8_t priority, const TickClock::time_point sleepUntil,
 		SequenceAsserter& sequenceAsserter, const TestStepRange& steps)
 {
-	return makeDynamicThread({testThreadStackSize, priority, SchedulingPolicy::Fifo}, thread, sleepUntil,
+	return makeAndStartDynamicThread({testThreadStackSize, priority, SchedulingPolicy::Fifo}, thread, sleepUntil,
 			std::ref(sequenceAsserter), std::ref(steps));
 }
 
@@ -149,15 +149,12 @@ bool testRunner(const std::array<int, totalThreads>& delays, const std::array<Te
 
 	std::array<DynamicThread, totalThreads> threads
 	{{
-			makeTestThread(1, now + durationUnit * delays[0], sequenceAsserter, stepsRanges[0]),
-			makeTestThread(2, now + durationUnit * delays[1], sequenceAsserter, stepsRanges[1]),
-			makeTestThread(3, now + durationUnit * delays[2], sequenceAsserter, stepsRanges[2]),
-			makeTestThread(4, now + durationUnit * delays[3], sequenceAsserter, stepsRanges[3]),
-			makeTestThread(5, now + durationUnit * delays[4], sequenceAsserter, stepsRanges[4]),
+			makeAndStartTestThread(1, now + durationUnit * delays[0], sequenceAsserter, stepsRanges[0]),
+			makeAndStartTestThread(2, now + durationUnit * delays[1], sequenceAsserter, stepsRanges[1]),
+			makeAndStartTestThread(3, now + durationUnit * delays[2], sequenceAsserter, stepsRanges[2]),
+			makeAndStartTestThread(4, now + durationUnit * delays[3], sequenceAsserter, stepsRanges[3]),
+			makeAndStartTestThread(5, now + durationUnit * delays[4], sequenceAsserter, stepsRanges[4]),
 	}};
-
-	for (auto& thread : threads)
-		thread.start();
 
 	for (auto& thread : threads)
 		thread.join();
