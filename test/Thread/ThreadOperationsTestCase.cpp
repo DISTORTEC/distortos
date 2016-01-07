@@ -144,10 +144,8 @@ bool phase3()
 	// attempt to detach static thread must fail with ENOTSUP
 	{
 		int sharedRet {};
-		auto staticThread = makeStaticThread<192>(1, lambda, std::ref(sharedRet));
+		auto staticThread = makeAndStartStaticThread<192>(1, lambda, std::ref(sharedRet));
 		bool result {true};
-		if (staticThread.start() != 0)
-			result = false;
 		if (staticThread.detach() != ENOTSUP)	// static thread cannot be detached
 			result = false;
 		if (staticThread.getState() != ThreadState::Runnable)
@@ -178,10 +176,8 @@ bool phase3()
 	// detaching dynamic thread that is started, but not yet terminated, must succeed
 	{
 		int sharedRet {0x0f0dad58};
-		auto dynamicThread = makeDynamicThread({192, 1}, lambda, std::ref(sharedRet));
+		auto dynamicThread = makeAndStartDynamicThread({192, 1}, lambda, std::ref(sharedRet));
 		bool result {true};
-		if (dynamicThread.start() != 0)
-			result = false;
 		if (dynamicThread.detach() != 0)
 			result = false;
 		if (dynamicThread.getState() != ThreadState::Detached)
@@ -201,10 +197,8 @@ bool phase3()
 	// self-detach of dynamic thread must succeed
 	{
 		int sharedRet {0x5d3c799b};
-		auto dynamicThread = makeDynamicThread({192, UINT8_MAX}, lambda, std::ref(sharedRet));
+		auto dynamicThread = makeAndStartDynamicThread({192, UINT8_MAX}, lambda, std::ref(sharedRet));
 		bool result {true};
-		if (dynamicThread.start() != 0)
-			result = false;
 		if (dynamicThread.getState() != ThreadState::Detached)
 			result = false;
 		if (dynamicThread.detach() != EINVAL)	// second attempt to detach a thread must fail
@@ -223,10 +217,8 @@ bool phase3()
 
 	// detaching dynamic thread that is already terminated must succeed, the thread is just deleted
 	{
-		auto dynamicThread = makeDynamicThread({192, UINT8_MAX}, emptyFunction);
+		auto dynamicThread = makeAndStartDynamicThread({192, UINT8_MAX}, emptyFunction);
 		bool result {true};
-		if (dynamicThread.start() != 0)
-			result = false;
 		if (dynamicThread.getState() != ThreadState::Terminated)
 			result = false;
 		if (dynamicThread.detach() != 0)
