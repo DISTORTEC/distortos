@@ -182,9 +182,8 @@ bool phase2(Mutex& mutex)
 
 		const auto contextSwitchCount = statistics::getContextSwitchCount();
 		const auto wakeUpTimePoint = TickClock::now() + longDuration;
-		auto thread = makeDynamicThread({testThreadStackSize, UINT8_MAX}, sleepUntilFunctor, wakeUpTimePoint);
+		auto thread = makeAndStartDynamicThread({testThreadStackSize, UINT8_MAX}, sleepUntilFunctor, wakeUpTimePoint);
 
-		thread.start();
 		ThisThread::yield();
 
 		// wait() should succeed at expected time
@@ -210,9 +209,8 @@ bool phase2(Mutex& mutex)
 
 		const auto contextSwitchCount = statistics::getContextSwitchCount();
 		const auto wakeUpTimePoint = TickClock::now() + longDuration;
-		auto thread = makeDynamicThread({testThreadStackSize, UINT8_MAX}, sleepUntilFunctor, wakeUpTimePoint);
+		auto thread = makeAndStartDynamicThread({testThreadStackSize, UINT8_MAX}, sleepUntilFunctor, wakeUpTimePoint);
 
-		thread.start();
 		ThisThread::yield();
 
 		// waitFor() should succeed at expected time
@@ -238,9 +236,8 @@ bool phase2(Mutex& mutex)
 
 		const auto contextSwitchCount = statistics::getContextSwitchCount();
 		const auto wakeUpTimePoint = TickClock::now() + longDuration;
-		auto thread = makeDynamicThread({testThreadStackSize, UINT8_MAX}, sleepUntilFunctor, wakeUpTimePoint);
+		auto thread = makeAndStartDynamicThread({testThreadStackSize, UINT8_MAX}, sleepUntilFunctor, wakeUpTimePoint);
 
-		thread.start();
 		ThisThread::yield();
 
 		// waitUntil() should succeed at expected time
