@@ -244,9 +244,8 @@ bool phase3()
 
 		const auto contextSwitchCount = statistics::getContextSwitchCount();
 		const auto wakeUpTimePoint = TickClock::now() + longDuration;
-		auto thread = makeDynamicThread({testThreadStackSize, UINT8_MAX}, sleepUntilFunctor, wakeUpTimePoint);
+		auto thread = makeAndStartDynamicThread({testThreadStackSize, UINT8_MAX}, sleepUntilFunctor, wakeUpTimePoint);
 
-		thread.start();
 		ThisThread::yield();
 
 		// semaphore is currently locked, but wait() should succeed at expected time
@@ -269,9 +268,8 @@ bool phase3()
 
 		const auto contextSwitchCount = statistics::getContextSwitchCount();
 		const auto wakeUpTimePoint = TickClock::now() + longDuration;
-		auto thread = makeDynamicThread({testThreadStackSize, UINT8_MAX}, sleepUntilFunctor, wakeUpTimePoint);
+		auto thread = makeAndStartDynamicThread({testThreadStackSize, UINT8_MAX}, sleepUntilFunctor, wakeUpTimePoint);
 
-		thread.start();
 		ThisThread::yield();
 
 		// semaphore is currently locked, but tryWaitFor() should succeed at expected time
@@ -294,9 +292,8 @@ bool phase3()
 
 		const auto contextSwitchCount = statistics::getContextSwitchCount();
 		const auto wakeUpTimePoint = TickClock::now() + longDuration;
-		auto thread = makeDynamicThread({testThreadStackSize, UINT8_MAX}, sleepUntilFunctor, wakeUpTimePoint);
+		auto thread = makeAndStartDynamicThread({testThreadStackSize, UINT8_MAX}, sleepUntilFunctor, wakeUpTimePoint);
 
-		thread.start();
 		ThisThread::yield();
 
 		// semaphore is locked, but tryWaitUntil() should succeed at expected time
