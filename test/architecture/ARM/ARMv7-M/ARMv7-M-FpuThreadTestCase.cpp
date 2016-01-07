@@ -80,17 +80,17 @@ void thread(uint32_t value, bool& sharedResult)
 }
 
 /**
- * \brief Builder of test threads
+ * \brief Makes and starts test thread
  *
  * \param [in] value is the first test value
  * \param [out] sharedResult is a reference to variable with shared result of the test
  *
- * \return constructed DynamicThread object
+ * \return constructed and started DynamicThread object
  */
 
-DynamicThread makeTestThread(const uint32_t value, bool& sharedResult)
+DynamicThread makeAndStartTestThread(const uint32_t value, bool& sharedResult)
 {
-	return makeDynamicThread({testThreadStackSize, 1}, thread, value, std::ref(sharedResult));
+	return makeAndStartDynamicThread({testThreadStackSize, 1}, thread, value, std::ref(sharedResult));
 }
 
 }	// namespace
@@ -110,20 +110,17 @@ bool FpuThreadTestCase::run_() const
 	bool sharedResult {true};
 	std::array<DynamicThread, totalThreads> threads
 	{{
-			makeTestThread(0x3c6f0686, sharedResult),
-			makeTestThread(0x42f94e89, sharedResult),
-			makeTestThread(0x77f24bc2, sharedResult),
-			makeTestThread(0x2924b4c4, sharedResult),
-			makeTestThread(0xcbd6c082, sharedResult),
-			makeTestThread(0x59c00e8a, sharedResult),
-			makeTestThread(0x20fb443b, sharedResult),
-			makeTestThread(0x7421f59b, sharedResult),
-			makeTestThread(0x509d19ca, sharedResult),
-			makeTestThread(0xc25198ec, sharedResult),
+			makeAndStartTestThread(0x3c6f0686, sharedResult),
+			makeAndStartTestThread(0x42f94e89, sharedResult),
+			makeAndStartTestThread(0x77f24bc2, sharedResult),
+			makeAndStartTestThread(0x2924b4c4, sharedResult),
+			makeAndStartTestThread(0xcbd6c082, sharedResult),
+			makeAndStartTestThread(0x59c00e8a, sharedResult),
+			makeAndStartTestThread(0x20fb443b, sharedResult),
+			makeAndStartTestThread(0x7421f59b, sharedResult),
+			makeAndStartTestThread(0x509d19ca, sharedResult),
+			makeAndStartTestThread(0xc25198ec, sharedResult),
 	}};
-
-	for (auto& thread : threads)
-		thread.start();
 
 	for (auto& thread : threads)
 		thread.join();
