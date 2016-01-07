@@ -267,6 +267,68 @@ makeStaticThread(const uint8_t priority, Function&& function, Args&&... args)
 	return {priority, std::forward<Function>(function), std::forward<Args>(args)...};
 }
 
+/**
+ * \brief Helper factory function to make and start StaticThread object with partially deduced template arguments
+ *
+ * \tparam StackSize is the size of stack, bytes
+ * \tparam CanReceiveSignals selects whether reception of signals is enabled (true) or disabled (false) for this thread
+ * \tparam QueuedSignals is the max number of queued signals for this thread, relevant only if
+ * CanReceiveSignals == true, 0 to disable queuing of signals for this thread
+ * \tparam SignalActions is the max number of different SignalAction objects for this thread, relevant only if
+ * CanReceiveSignals == true, 0 to disable catching of signals for this thread
+ * \tparam Function is the function that will be executed
+ * \tparam Args are the arguments for \a Function
+ *
+ * \param [in] priority is the thread's priority, 0 - lowest, UINT8_MAX - highest
+ * \param [in] schedulingPolicy is the scheduling policy of the thread
+ * \param [in] function is a function that will be executed in separate thread
+ * \param [in] args are arguments for function
+ *
+ * \return StaticThread object with partially deduced template arguments
+ */
+
+template<size_t StackSize, bool CanReceiveSignals = {}, size_t QueuedSignals = {}, size_t SignalActions = {},
+		typename Function, typename... Args>
+StaticThread<StackSize, CanReceiveSignals, QueuedSignals, SignalActions, Function, Args...>
+makeAndStartStaticThread(const uint8_t priority, const SchedulingPolicy schedulingPolicy, Function&& function,
+		Args&&... args)
+{
+	auto thread = makeStaticThread<StackSize, CanReceiveSignals, QueuedSignals, SignalActions>(priority,
+			schedulingPolicy, std::forward<Function>(function), std::forward<Args>(args)...);
+	thread.start();	/// \todo make sure this never fails
+	return thread;
+}
+
+/**
+ * \brief Helper factory function to make and start StaticThread object with partially deduced template arguments
+ *
+ * \tparam StackSize is the size of stack, bytes
+ * \tparam CanReceiveSignals selects whether reception of signals is enabled (true) or disabled (false) for this thread
+ * \tparam QueuedSignals is the max number of queued signals for this thread, relevant only if
+ * CanReceiveSignals == true, 0 to disable queuing of signals for this thread
+ * \tparam SignalActions is the max number of different SignalAction objects for this thread, relevant only if
+ * CanReceiveSignals == true, 0 to disable catching of signals for this thread
+ * \tparam Function is the function that will be executed
+ * \tparam Args are the arguments for \a Function
+ *
+ * \param [in] priority is the thread's priority, 0 - lowest, UINT8_MAX - highest
+ * \param [in] function is a function that will be executed in separate thread
+ * \param [in] args are arguments for function
+ *
+ * \return StaticThread object with partially deduced template arguments
+ */
+
+template<size_t StackSize, bool CanReceiveSignals = {}, size_t QueuedSignals = {}, size_t SignalActions = {},
+		typename Function, typename... Args>
+StaticThread<StackSize, CanReceiveSignals, QueuedSignals, SignalActions, Function, Args...>
+makeAndStartStaticThread(const uint8_t priority, Function&& function, Args&&... args)
+{
+	auto thread = makeStaticThread<StackSize, CanReceiveSignals, QueuedSignals, SignalActions>(priority,
+			std::forward<Function>(function), std::forward<Args>(args)...);
+	thread.start();	/// \todo make sure this never fails
+	return thread;
+}
+
 /// \}
 
 template<size_t StackSize, bool CanReceiveSignals, size_t QueuedSignals, size_t SignalActions, typename Function,
