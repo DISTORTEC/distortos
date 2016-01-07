@@ -124,9 +124,8 @@ bool ThreadFunctionTypesTestCase::run_() const
 		uint32_t sharedVariable {};
 		constexpr uint32_t magicValue {0x394e3bae};
 
-		auto regularFunctionThread = makeDynamicThread({testThreadStackSize, UINT8_MAX}, regularFunction,
+		auto regularFunctionThread = makeAndStartDynamicThread({testThreadStackSize, UINT8_MAX}, regularFunction,
 				std::ref(sharedVariable), magicValue);
-		regularFunctionThread.start();
 		regularFunctionThread.join();
 
 		if (sharedVariable != magicValue)
@@ -141,9 +140,8 @@ bool ThreadFunctionTypesTestCase::run_() const
 		uint32_t sharedVariable {};
 		constexpr uint32_t magicValue {0x2c2b7c30};
 
-		auto functorThread = makeDynamicThread({testThreadStackSize, UINT8_MAX}, Functor{}, std::ref(sharedVariable),
-				magicValue);
-		functorThread.start();
+		auto functorThread = makeAndStartDynamicThread({testThreadStackSize, UINT8_MAX}, Functor{},
+				std::ref(sharedVariable), magicValue);
 		functorThread.join();
 
 		if (sharedVariable != magicValue)
@@ -158,8 +156,8 @@ bool ThreadFunctionTypesTestCase::run_() const
 		constexpr uint32_t magicValue {0x33698f0a};
 		Object object {magicValue};
 
-		auto objectThread = makeDynamicThread({testThreadStackSize, UINT8_MAX}, &Object::function, std::ref(object));
-		objectThread.start();
+		auto objectThread = makeAndStartDynamicThread({testThreadStackSize, UINT8_MAX}, &Object::function,
+				std::ref(object));
 		objectThread.join();
 
 		if (object.getVariable() != magicValue)
@@ -174,12 +172,11 @@ bool ThreadFunctionTypesTestCase::run_() const
 		uint32_t sharedVariable {};
 		constexpr uint32_t magicValue {0x24331acb};
 
-		auto capturingLambdaThread = makeDynamicThread({testThreadStackSize, UINT8_MAX},
+		auto capturingLambdaThread = makeAndStartDynamicThread({testThreadStackSize, UINT8_MAX},
 				[&sharedVariable, magicValue]()
 				{
 					sharedVariable = magicValue;
 				});
-		capturingLambdaThread.start();
 		capturingLambdaThread.join();
 
 		if (sharedVariable != magicValue)
