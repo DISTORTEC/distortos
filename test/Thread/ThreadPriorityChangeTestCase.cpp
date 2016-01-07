@@ -56,19 +56,20 @@ void thread(SequenceAsserter& sequenceAsserter, const unsigned int sequencePoint
 }
 
 /**
- * \brief Builder of test threads
+ * \brief Makes and starts test thread
  *
  * \param [in] priority is the thread's priority
  * \param [in] sequenceAsserter is a reference to SequenceAsserter shared object
  * \param [in] sequencePoint is the sequence point of this instance
  *
- * \return constructed DynamicThread object
+ * \return constructed and started DynamicThread object
  */
 
-DynamicThread makeTestThread(const uint8_t priority, SequenceAsserter& sequenceAsserter,
+DynamicThread makeAndStartTestThread(const uint8_t priority, SequenceAsserter& sequenceAsserter,
 		const unsigned int sequencePoint)
 {
-	return makeDynamicThread({testThreadStackSize, priority}, thread, std::ref(sequenceAsserter), sequencePoint);
+	return makeAndStartDynamicThread({testThreadStackSize, priority}, thread, std::ref(sequenceAsserter),
+			sequencePoint);
 }
 
 }	// namespace
@@ -90,20 +91,17 @@ bool ThreadPriorityChangeTestCase::run_() const
 
 		std::array<DynamicThread, totalThreads> threads
 		{{
-				makeTestThread(testThreadPriority, sequenceAsserter, 4),	// change to same priority
-				makeTestThread(testThreadPriority, sequenceAsserter, 0),	// rise
-				makeTestThread(testThreadPriority, sequenceAsserter, 7),	// lower
-				makeTestThread(testThreadPriority, sequenceAsserter, 8),	// lower with "always behind" mode
-				makeTestThread(testThreadPriority, sequenceAsserter, 1),	// rise
-				makeTestThread(testThreadPriority, sequenceAsserter, 5),	// change to same priority
-				makeTestThread(testThreadPriority, sequenceAsserter, 2),	// rise
-				makeTestThread(testThreadPriority, sequenceAsserter, 6),	// lower
-				makeTestThread(testThreadPriority, sequenceAsserter, 9),	// lower with "always behind" mode
-				makeTestThread(testThreadPriority, sequenceAsserter, 3),	// rise
+				makeAndStartTestThread(testThreadPriority, sequenceAsserter, 4),	// change to same priority
+				makeAndStartTestThread(testThreadPriority, sequenceAsserter, 0),	// rise
+				makeAndStartTestThread(testThreadPriority, sequenceAsserter, 7),	// lower
+				makeAndStartTestThread(testThreadPriority, sequenceAsserter, 8),	// lower with "always behind" mode
+				makeAndStartTestThread(testThreadPriority, sequenceAsserter, 1),	// rise
+				makeAndStartTestThread(testThreadPriority, sequenceAsserter, 5),	// change to same priority
+				makeAndStartTestThread(testThreadPriority, sequenceAsserter, 2),	// rise
+				makeAndStartTestThread(testThreadPriority, sequenceAsserter, 6),	// lower
+				makeAndStartTestThread(testThreadPriority, sequenceAsserter, 9),	// lower with "always behind" mode
+				makeAndStartTestThread(testThreadPriority, sequenceAsserter, 3),	// rise
 		}};
-
-		for (auto& thread : threads)
-			thread.start();
 
 		threads[0].setPriority(threads[0].getPriority());
 		threads[1].setPriority(threads[1].getPriority() + 2);
