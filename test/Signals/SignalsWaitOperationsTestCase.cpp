@@ -524,9 +524,8 @@ bool phase3(const SendSignal& sendSignal, const TestReceivedSignalInformation&)
 
 	{
 		int sharedRet {};
-		auto testThread = makeDynamicThread({testThreadStackSize, false, 0, 0, UINT8_MAX}, waitWrapper,
+		auto testThread = makeAndStartDynamicThread({testThreadStackSize, false, 0, 0, UINT8_MAX}, waitWrapper,
 				std::ref(signalSet), std::ref(sharedRet));
-		testThread.start();
 		testThread.join();
 		if (sharedRet != ENOTSUP)
 			return false;
@@ -534,9 +533,8 @@ bool phase3(const SendSignal& sendSignal, const TestReceivedSignalInformation&)
 
 	{
 		int sharedRet {};
-		auto testThread = makeDynamicThread({testThreadStackSize, false, 0, 0, UINT8_MAX}, tryWaitWrapper,
+		auto testThread = makeAndStartDynamicThread({testThreadStackSize, false, 0, 0, UINT8_MAX}, tryWaitWrapper,
 				std::ref(signalSet), std::ref(sharedRet));
-		testThread.start();
 		testThread.join();
 		if (sharedRet != ENOTSUP)
 			return false;
@@ -544,9 +542,8 @@ bool phase3(const SendSignal& sendSignal, const TestReceivedSignalInformation&)
 
 	{
 		int sharedRet {};
-		auto testThread = makeDynamicThread({testThreadStackSize, false, 0, 0, UINT8_MAX}, tryWaitForWrapper,
+		auto testThread = makeAndStartDynamicThread({testThreadStackSize, false, 0, 0, UINT8_MAX}, tryWaitForWrapper,
 				std::ref(signalSet), std::ref(sharedRet));
-		testThread.start();
 		testThread.join();
 		if (sharedRet != ENOTSUP)
 			return false;
@@ -554,9 +551,8 @@ bool phase3(const SendSignal& sendSignal, const TestReceivedSignalInformation&)
 
 	{
 		int sharedRet {};
-		auto testThread = makeDynamicThread({testThreadStackSize, false, 0, 0, UINT8_MAX}, tryWaitUntilWrapper,
+		auto testThread = makeAndStartDynamicThread({testThreadStackSize, false, 0, 0, UINT8_MAX}, tryWaitUntilWrapper,
 				std::ref(signalSet), std::ref(sharedRet));
-		testThread.start();
 		testThread.join();
 		if (sharedRet != ENOTSUP)
 			return false;
