@@ -22,8 +22,9 @@ namespace distortos
 /**
  * \brief DynamicThreadParameters struct is a helper with parameters for DynamicThread's constructor
  *
- * This struct is a replacement for overloads of DynamicThread's constructor and makeDynamicThread() which -
- * unfortunately - cannot be used, as they would lead to compilation errors due to ambiguity.
+ * This struct is a replacement for overloads of DynamicThread's constructor, makeDynamicThread() and
+ * makeAndStartDynamicThread() which - unfortunately - cannot be used, as they would lead to compilation errors due to
+ * ambiguity.
  *
  * \ingroup threads
  */

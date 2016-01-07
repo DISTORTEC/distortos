@@ -299,6 +299,59 @@ DynamicThread makeDynamicThread(const DynamicThreadParameters parameters, Functi
 	return {parameters, std::forward<Function>(function), std::forward<Args>(args)...};
 }
 
+/**
+ * \brief Helper factory function to make and start DynamicThread object
+ *
+ * \tparam Function is the function that will be executed
+ * \tparam Args are the arguments for \a Function
+ *
+ * \param [in] stackSize is the size of stack, bytes
+ * \param [in] canReceiveSignals selects whether reception of signals is enabled (true) or disabled (false) for this
+ * thread
+ * \param [in] queuedSignals is the max number of queued signals for this thread, relevant only if
+ * \a canReceiveSignals == true, 0 to disable queuing of signals for this thread
+ * \param [in] signalActions is the max number of different SignalAction objects for this thread, relevant only if
+ * \a canReceiveSignals == true, 0 to disable catching of signals for this thread
+ * \param [in] priority is the thread's priority, 0 - lowest, UINT8_MAX - highest
+ * \param [in] schedulingPolicy is the scheduling policy of the thread
+ * \param [in] function is a function that will be executed in separate thread
+ * \param [in] args are arguments for \a function
+ *
+ * \return DynamicThread object
+ */
+
+template<typename Function, typename... Args>
+DynamicThread makeAndStartDynamicThread(const size_t stackSize, const bool canReceiveSignals,
+		const size_t queuedSignals, const size_t signalActions, const uint8_t priority,
+		const SchedulingPolicy schedulingPolicy, Function&& function, Args&&... args)
+{
+	auto thread = makeDynamicThread(stackSize, canReceiveSignals, queuedSignals, signalActions, priority,
+			schedulingPolicy, std::forward<Function>(function), std::forward<Args>(args)...);
+	thread.start();	/// \todo make sure this never fails
+	return thread;
+}
+
+/**
+ * \brief Helper factory function to make and start DynamicThread object
+ *
+ * \tparam Function is the function that will be executed
+ * \tparam Args are the arguments for \a Function
+ *
+ * \param [in] parameters is a DynamicThreadParameters struct with thread parameters
+ * \param [in] function is a function that will be executed in separate thread
+ * \param [in] args are arguments for \a function
+ *
+ * \return DynamicThread object
+ */
+
+template<typename Function, typename... Args>
+DynamicThread makeAndStartDynamicThread(const DynamicThreadParameters parameters, Function&& function, Args&&... args)
+{
+	auto thread = makeDynamicThread(parameters, std::forward<Function>(function), std::forward<Args>(args)...);
+	thread.start();	/// \todo make sure this never fails
+	return thread;
+}
+
 /// \}
 
 #ifdef CONFIG_THREAD_DETACH_ENABLE
