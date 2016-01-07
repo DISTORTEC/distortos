@@ -183,10 +183,8 @@ int queueSignalFromThread(Thread& thread, const Stage& stage)
 	};
 
 	int sharedRet {EINVAL};
-	auto testThread = makeDynamicThread({testThreadStackSize, highPriority}, queueSignalWrapper, std::ref(thread),
-			std::ref(stage), true, std::ref(sharedRet));
-
-	testThread.start();
+	auto testThread = makeAndStartDynamicThread({testThreadStackSize, highPriority}, queueSignalWrapper,
+			std::ref(thread), std::ref(stage), true, std::ref(sharedRet));
 	testThread.join();
 
 	return sharedRet;
