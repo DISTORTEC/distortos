@@ -1,7 +1,7 @@
 #
 # file: footer.mk
 #
-# author: Copyright (C) 2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+# author: Copyright (C) 2015-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
 #
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -19,10 +19,10 @@ CXXSOURCES_$(d) ?= $(wildcard $(d)/*.cpp)
 # paths and names of object and dependency files
 #-----------------------------------------------------------------------------------------------------------------------
 
-AOBJECTS_$(d) := $(ASSOURCES_$(d):%.S=$(OUTPUT)%.o)
+ASOBJECTS_$(d) := $(ASSOURCES_$(d):%.S=$(OUTPUT)%.o)
 COBJECTS_$(d) := $(CSOURCES_$(d):%.c=$(OUTPUT)%.o)
 CXXOBJECTS_$(d) := $(CXXSOURCES_$(d):%.cpp=$(OUTPUT)%.o)
-OBJECTS_$(d) := $(AOBJECTS_$(d)) $(COBJECTS_$(d)) $(CXXOBJECTS_$(d))
+OBJECTS_$(d) := $(ASOBJECTS_$(d)) $(COBJECTS_$(d)) $(CXXOBJECTS_$(d))
 DEPENDENCIES_$(d) := $(OBJECTS_$(d):%.o=%.d)
 
 #-----------------------------------------------------------------------------------------------------------------------
@@ -42,7 +42,7 @@ $(OBJECTS_$(d)): $(d)/Rules.mk footer.mk
 # set compilation flags
 #-----------------------------------------------------------------------------------------------------------------------
 
-$(AOBJECTS_$(d)): ASFLAGS := $(ASFLAGS) $(ASFLAGS_$(d))
+$(ASOBJECTS_$(d)): ASFLAGS := $(ASFLAGS) $(ASFLAGS_$(d))
 $(COBJECTS_$(d)): CFLAGS := $(CFLAGS) $(CFLAGS_$(d))
 $(CXXOBJECTS_$(d)): CXXFLAGS := $(CXXFLAGS) $(CXXFLAGS_$(d))
 
