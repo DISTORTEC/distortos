@@ -1,7 +1,7 @@
 #
 # file: Rules.mk
 #
-# author: Copyright (C) 2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+# author: Copyright (C) 2015-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
 #
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -19,7 +19,7 @@ SUBDIRECTORIES += test
 #-----------------------------------------------------------------------------------------------------------------------
 
 DISTORTOS_CONFIGURATION_H := $(OUTPUT)include/distortos/distortosConfiguration.h
-MAKE_DISTORTOS_CONFIGURATION_AWK := scripts/makeDistortosConfiguration.awk
+MAKE_DISTORTOS_CONFIGURATION_AWK := $(DISTORTOS_PATH)scripts/makeDistortosConfiguration.awk
 
 $(DISTORTOS_CONFIGURATION_H): $(DISTORTOS_CONFIGURATION_MK)
 	$(call PRETTY_PRINT," AWK    " $(MAKE_DISTORTOS_CONFIGURATION_AWK))
@@ -41,4 +41,4 @@ GENERATED := $(GENERATED) $(DISTORTOS_CONFIGURATION_H)
 # standard footer
 #-----------------------------------------------------------------------------------------------------------------------
 
-include footer.mk
+include $(DISTORTOS_PATH)footer.mk

@@ -36,7 +36,7 @@ GENERATED := $(GENERATED) $(OBJECTS_$(d)) $(DEPENDENCIES_$(d))
 # generated files depend on local Rules.mk and global footer.mk
 #-----------------------------------------------------------------------------------------------------------------------
 
-$(OBJECTS_$(d)): $(d)/Rules.mk footer.mk
+$(OBJECTS_$(d)): $(d)/Rules.mk $(DISTORTOS_PATH)footer.mk
 
 #-----------------------------------------------------------------------------------------------------------------------
 # set compilation flags

@@ -1,11 +1,20 @@
 #
 # file: Makefile
 #
-# author: Copyright (C) 2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+# author: Copyright (C) 2015-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
 #
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #
+
+#-----------------------------------------------------------------------------------------------------------------------
+# support for building distortos as a submodule
+#-----------------------------------------------------------------------------------------------------------------------
+
+ifneq ($(DISTORTOS_PATH),)
+	# strip trailing slash (if any) and add a single one
+	DISTORTOS_PATH := $(DISTORTOS_PATH:%/=%)/
+endif
 
 #-----------------------------------------------------------------------------------------------------------------------
 # make control
@@ -30,8 +39,8 @@ $(eval $(foreach target,$(SIMPLE_TARGETS),$(call CHECK_SIMPLE_TARGETS,$(target))
 ifeq ($(DO_INCLUDE),1)
 
     ifeq ($(wildcard selectedConfiguration.mk),)
-        $(error Please run first 'configure.sh [<path to distortosConfiguration.mk>]' or 'make configure \
-                [CONFIG_PATH=<path to distortosConfiguration.mk>]')
+        $(error Please run first '$(DISTORTOS_PATH)configure.sh [<path to distortosConfiguration.mk>]' or 'make \
+                configure [CONFIG_PATH=<path to distortosConfiguration.mk>]')
     endif
 
     # file with $(CONFIG_SELECTED_CONFIGURATION) variable
@@ -134,13 +143,13 @@ LDFLAGS += -g -Wl,-Map=$(@:.elf=.map),--cref,--gc-sections
 #-----------------------------------------------------------------------------------------------------------------------
 
 # "standard" includes
-STANDARD_INCLUDES += -I$(OUTPUT)include -Iinclude
+STANDARD_INCLUDES += -I$(OUTPUT)include -I$(DISTORTOS_PATH)include
 
 # architecture includes
-ARCHITECTURE_INCLUDES += $(patsubst %,-I%,$(subst ",,$(CONFIG_ARCHITECTURE_INCLUDES)))
+ARCHITECTURE_INCLUDES += $(patsubst %,-I$(DISTORTOS_PATH)%,$(subst ",,$(CONFIG_ARCHITECTURE_INCLUDES)))
 
 # chip includes
-CHIP_INCLUDES += $(patsubst %,-I%,$(subst ",,$(CONFIG_CHIP_INCLUDES)))
+CHIP_INCLUDES += $(patsubst %,-I$(DISTORTOS_PATH)%,$(subst ",,$(CONFIG_CHIP_INCLUDES)))
 
 #-----------------------------------------------------------------------------------------------------------------------
 # build macros
@@ -208,7 +217,7 @@ targets: $(GENERATED)
 
 $(OBJECTS): $(OUTPUT)include/distortos/distortosConfiguration.h
 
-$(GENERATED): Makefile
+$(GENERATED): $(DISTORTOS_PATH)Makefile
 
 $(OUTPUT)%.o: %.S
 	$(call PRETTY_PRINT," AS     " $<) 
@@ -258,11 +267,11 @@ clean:
 
 .PHONY: configure
 configure:
-	./configure.sh $(CONFIG_PATH)
+	./$(DISTORTOS_PATH)configure.sh $(CONFIG_PATH)
 
 .PHONY: distclean
 distclean:
-	./scripts/distclean.sh
+	./$(DISTORTOS_PATH)scripts/distclean.sh
 
 define NEWLINE
 
@@ -273,8 +282,8 @@ define HELP_TEXT
 
 Available special targets:
 menuconfig .. to create/edit configuration of distortos
-configure  .. to execute configure.sh; use "make configure
-                [CONFIG_PATH=<path>]"
+configure  .. to execute $(DISTORTOS_PATH)configure.sh;
+                use "make configure [CONFIG_PATH=<path>]"
                 <path> .. the path where distortosConfiguration.mk can be
                 found; default "./"
 distclean  .. remove the build output, doxygen documentation and file created
@@ -289,4 +298,4 @@ help:
 
 .PHONY: menuconfig
 menuconfig:
-	kconfig-mconf Kconfig
+	cd ./$(DISTORTOS_PATH) && kconfig-mconf Kconfig
