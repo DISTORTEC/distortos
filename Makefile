@@ -77,63 +77,43 @@ RM = rm -f
 OUTPUT = output/
 
 # global assembler flags
-ASFLAGS =
+ASFLAGS = -g -ggdb3
 
 # global C flags
-CFLAGS =
+CFLAGS = -Wall -Wstrict-prototypes -Wextra -Wshadow -std=gnu99 -g -ggdb3
 
 # global C++ flags
-CXXFLAGS =
-
-# define warning options here
-CXXWARNINGS = -Wall -Wextra -Wshadow
-CWARNINGS = -Wall -Wstrict-prototypes -Wextra -Wshadow
-
-# C++ language standard ("c++98", "gnu++98" - default, "c++11", "gnu++11")
-CXXSTD = -std=gnu++11
-
-# C language standard ("c89" / "iso9899:1990", "iso9899:199409", "c99" / "iso9899:1999", "gnu89" - default, "gnu99")
-CSTD = -std=gnu99
-
-# debug flags
-DBGFLAGS = -g -ggdb3
+CXXFLAGS = -Wall -Wextra -Wshadow -std=gnu++11 -g -ggdb3
 
 # linker flags
-LDFLAGS =
+LDFLAGS = -g
 
 # build mode (0 - non-verbose, 1 - verbose)
 VERBOSE ?= 0
 
 #-----------------------------------------------------------------------------------------------------------------------
-# compilation flags
+# add obligatory compilation flags
 #-----------------------------------------------------------------------------------------------------------------------
 
 CONFIG_ARCHITECTURE_FLAGS := $(subst ",,$(CONFIG_ARCHITECTURE_FLAGS))
 CONFIG_BUILD_OPTIMIZATION := $(subst ",,$(CONFIG_BUILD_OPTIMIZATION))
 
 ASFLAGS += $(CONFIG_ARCHITECTURE_FLAGS)
-ASFLAGS += $(DBGFLAGS)
 ASFLAGS += -MD -MP
 
 CFLAGS += $(CONFIG_ARCHITECTURE_FLAGS)
 CFLAGS += $(CONFIG_BUILD_OPTIMIZATION)
-CFLAGS += $(CWARNINGS)
-CFLAGS += $(CSTD)
-CFLAGS += $(DBGFLAGS)
 CFLAGS += -ffunction-sections -fdata-sections -MD -MP
 
 CXXFLAGS += $(CONFIG_ARCHITECTURE_FLAGS)
 CXXFLAGS += $(CONFIG_BUILD_OPTIMIZATION)
-CXXFLAGS += $(CXXWARNINGS)
-CXXFLAGS += $(CXXSTD)
-CXXFLAGS += $(DBGFLAGS)
 CXXFLAGS += -ffunction-sections -fdata-sections -fno-rtti -fno-exceptions -MD -MP
 
 # path to linker script (generated automatically)
 LDSCRIPT = $(OUTPUT)$(subst ",,$(CONFIG_CHIP)).ld
 
 LDFLAGS += $(CONFIG_ARCHITECTURE_FLAGS)
-LDFLAGS += -g -Wl,-Map=$(@:.elf=.map),--cref,--gc-sections
+LDFLAGS += -Wl,-Map=$(@:%.elf=%.map),--cref,--gc-sections
 
 #-----------------------------------------------------------------------------------------------------------------------
 # "constants" with include paths
