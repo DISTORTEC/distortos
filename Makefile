@@ -8,6 +8,31 @@
 #
 
 #-----------------------------------------------------------------------------------------------------------------------
+# project configuration
+#-----------------------------------------------------------------------------------------------------------------------
+
+# global assembler flags
+ASFLAGS = -g -ggdb3
+
+# global C flags
+CFLAGS = -Wall -Wstrict-prototypes -Wextra -Wshadow -std=gnu99 -g -ggdb3
+
+# global C++ flags
+CXXFLAGS = -Wall -Wextra -Wshadow -std=gnu++11 -g -ggdb3
+
+# linker flags
+LDFLAGS = -g
+
+# build mode (0 - non-verbose, 1 - verbose)
+VERBOSE ?= 0
+
+#-----------------------------------------------------------------------------------------------------------------------
+# output folder
+#-----------------------------------------------------------------------------------------------------------------------
+
+OUTPUT = output/
+
+#-----------------------------------------------------------------------------------------------------------------------
 # support for building distortos as a submodule
 #-----------------------------------------------------------------------------------------------------------------------
 
@@ -68,28 +93,6 @@ OBJCOPY = $(CONFIG_TOOLCHAIN_PREFIX)objcopy
 OBJDUMP = $(CONFIG_TOOLCHAIN_PREFIX)objdump
 SIZE = $(CONFIG_TOOLCHAIN_PREFIX)size
 RM = rm -f
-
-#-----------------------------------------------------------------------------------------------------------------------
-# project configuration
-#-----------------------------------------------------------------------------------------------------------------------
-
-# output folder
-OUTPUT = output/
-
-# global assembler flags
-ASFLAGS = -g -ggdb3
-
-# global C flags
-CFLAGS = -Wall -Wstrict-prototypes -Wextra -Wshadow -std=gnu99 -g -ggdb3
-
-# global C++ flags
-CXXFLAGS = -Wall -Wextra -Wshadow -std=gnu++11 -g -ggdb3
-
-# linker flags
-LDFLAGS = -g
-
-# build mode (0 - non-verbose, 1 - verbose)
-VERBOSE ?= 0
 
 #-----------------------------------------------------------------------------------------------------------------------
 # add obligatory compilation flags
