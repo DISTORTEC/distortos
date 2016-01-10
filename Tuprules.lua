@@ -1,18 +1,33 @@
 --
 -- file: Tuprules.lua
 --
--- author: Copyright (C) 2014-2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+-- author: Copyright (C) 2014-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
 --
 -- This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 -- distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 --
 
 ------------------------------------------------------------------------------------------------------------------------
--- tup build configuration
+-- support for building distortos as a submodule
 ------------------------------------------------------------------------------------------------------------------------
 
--- relative path to top-level directory of the project
-TOP = tup.getcwd()
+-- parse this file only once if it was included by parent project
+if topLevelTuprulesLuaFileParsed ~= nil then
+	return
+end
+
+-- relative path to top-level directory of distortos submodule
+DISTORTOS_TOP = tup.getcwd()
+
+-- relative path to top-level directory of parent project, may be set by parent project
+if TOP == nil then
+	TOP = DISTORTOS_TOP
+end
+
+-- node variable of top-level directory of parent project, may be set by parent project
+if TOP_NODE == nil then
+	TOP_NODE = tup.nodevariable(".")
+end
 
 ------------------------------------------------------------------------------------------------------------------------
 -- load configuration variables from distortosConfiguration.mk file selected by user
@@ -46,13 +61,13 @@ function parseConfigurationFile(filename)
 end
 
 -- parse CONFIG_SELECTED_CONFIGURATION variable from selectedConfiguration.mk file
-parseConfigurationFile("./selectedConfiguration.mk")
+parseConfigurationFile(tostring(TOP_NODE) .. "/selectedConfiguration.mk")
 
 -- path to distortosConfiguration.mk file selected by $(CONFIG_SELECTED_CONFIGURATION) variable
 DISTORTOS_CONFIGURATION_MK = TOP .. "/" .. CONFIG_SELECTED_CONFIGURATION
 
 -- parse configuration constants from selected configuration file
-parseConfigurationFile("./" .. CONFIG_SELECTED_CONFIGURATION)
+parseConfigurationFile(tostring(TOP_NODE) .. "/" .. CONFIG_SELECTED_CONFIGURATION)
 
 ------------------------------------------------------------------------------------------------------------------------
 -- toolchain configuration
@@ -134,13 +149,13 @@ LDFLAGS += "-g -Wl,--cref,--gc-sections"
 ------------------------------------------------------------------------------------------------------------------------
 
 -- "standard" includes
-STANDARD_INCLUDES += "-I" .. OUTPUT .. "include -I" .. TOP .. "/include"
+STANDARD_INCLUDES += "-I" .. OUTPUT .. "include -I" .. DISTORTOS_TOP .. "/include"
 
 -- architecture includes
-ARCHITECTURE_INCLUDES += CONFIG_ARCHITECTURE_INCLUDES:gsub("(%g+)", "-I" .. TOP .. "/%1")
+ARCHITECTURE_INCLUDES += CONFIG_ARCHITECTURE_INCLUDES:gsub("(%g+)", "-I" .. DISTORTOS_TOP .. "/%1")
 
 -- chip includes
-CHIP_INCLUDES += CONFIG_CHIP_INCLUDES:gsub("(%g+)", "-I" .. TOP .. "/%1")
+CHIP_INCLUDES += CONFIG_CHIP_INCLUDES:gsub("(%g+)", "-I" .. DISTORTOS_TOP .. "/%1")
 
 ------------------------------------------------------------------------------------------------------------------------
 -- tup/lua functions
@@ -275,3 +290,9 @@ end
 function size(input)
 	tup.rule({input}, "^ SIZE %f^ " .. SIZE .. " -B %f")
 end
+
+------------------------------------------------------------------------------------------------------------------------
+-- parse this file only once if it was included by parent project
+------------------------------------------------------------------------------------------------------------------------
+
+topLevelTuprulesLuaFileParsed = 1
