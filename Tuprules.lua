@@ -92,9 +92,6 @@ SIZE = CONFIG_TOOLCHAIN_PREFIX .. "size"
 -- output folder
 OUTPUT = TOP .. "output/"
 
--- project name
-PROJECT = "distortos"
-
 -- global C++ flags
 CXXFLAGS = ""
 
