@@ -9,11 +9,11 @@
 
 if CONFIG_TEST_APPLICATION_ENABLE == "y" then
 
-	CXXFLAGS += "-I" .. DISTORTOS_TOP .. "/test"
+	CXXFLAGS += "-I" .. DISTORTOS_TOP .. "test"
 	CXXFLAGS += STANDARD_INCLUDES
 	CXXFLAGS += ARCHITECTURE_INCLUDES
 	CXXFLAGS += CHIP_INCLUDES
 
-	tup.include(DISTORTOS_TOP .. "/compile.lua")
+	tup.include(DISTORTOS_TOP .. "compile.lua")
 
 end	-- if CONFIG_TEST_APPLICATION_ENABLE == "y" then

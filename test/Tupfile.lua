@@ -12,7 +12,7 @@ if CONFIG_TEST_APPLICATION_ENABLE == "y" then
 	CXXFLAGS += STANDARD_INCLUDES
 	CXXFLAGS += ARCHITECTURE_INCLUDES
 
-	tup.include(DISTORTOS_TOP .. "/compile.lua")
+	tup.include(DISTORTOS_TOP .. "compile.lua")
 
 	local filename = OUTPUT .. tup.getrelativedir(TOP) .. "/" .. PROJECT
 	local elfFilename = filename .. ".elf"

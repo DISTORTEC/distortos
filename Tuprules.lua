@@ -17,11 +17,14 @@ if topLevelTuprulesLuaFileParsed ~= nil then
 end
 
 -- relative path to top-level directory of distortos submodule
-DISTORTOS_TOP = tup.getcwd()
+DISTORTOS_TOP = tup.getcwd() .. "/"
 
 -- relative path to top-level directory of parent project, may be set by parent project
 if TOP == nil then
 	TOP = DISTORTOS_TOP
+else
+	-- strip trailing slashes (if any) and add a single one
+	TOP = TOP:gsub("([^/]+)/*", "%1/")
 end
 
 -- node variable of top-level directory of parent project, may be set by parent project
@@ -64,7 +67,7 @@ end
 parseConfigurationFile(tostring(TOP_NODE) .. "/selectedConfiguration.mk")
 
 -- path to distortosConfiguration.mk file selected by $(CONFIG_SELECTED_CONFIGURATION) variable
-DISTORTOS_CONFIGURATION_MK = TOP .. "/" .. CONFIG_SELECTED_CONFIGURATION
+DISTORTOS_CONFIGURATION_MK = TOP .. CONFIG_SELECTED_CONFIGURATION
 
 -- parse configuration constants from selected configuration file
 parseConfigurationFile(tostring(TOP_NODE) .. "/" .. CONFIG_SELECTED_CONFIGURATION)
@@ -87,7 +90,7 @@ SIZE = CONFIG_TOOLCHAIN_PREFIX .. "size"
 ------------------------------------------------------------------------------------------------------------------------
 
 -- output folder
-OUTPUT = TOP .. "/output/"
+OUTPUT = TOP .. "output/"
 
 -- project name
 PROJECT = "distortos"
@@ -149,13 +152,13 @@ LDFLAGS += "-g -Wl,--cref,--gc-sections"
 ------------------------------------------------------------------------------------------------------------------------
 
 -- "standard" includes
-STANDARD_INCLUDES += "-I" .. OUTPUT .. "include -I" .. DISTORTOS_TOP .. "/include"
+STANDARD_INCLUDES += "-I" .. OUTPUT .. "include -I" .. DISTORTOS_TOP .. "include"
 
 -- architecture includes
-ARCHITECTURE_INCLUDES += CONFIG_ARCHITECTURE_INCLUDES:gsub("(%g+)", "-I" .. DISTORTOS_TOP .. "/%1")
+ARCHITECTURE_INCLUDES += CONFIG_ARCHITECTURE_INCLUDES:gsub("(%g+)", "-I" .. DISTORTOS_TOP .. "%1")
 
 -- chip includes
-CHIP_INCLUDES += CONFIG_CHIP_INCLUDES:gsub("(%g+)", "-I" .. DISTORTOS_TOP .. "/%1")
+CHIP_INCLUDES += CONFIG_CHIP_INCLUDES:gsub("(%g+)", "-I" .. DISTORTOS_TOP .. "%1")
 
 ------------------------------------------------------------------------------------------------------------------------
 -- tup/lua functions
@@ -193,7 +196,7 @@ end
 -- assemble file named input
 function as(input)
 	local specificFlags = getSpecificFlags(ASFLAGS, input)
-	local inputs = {input, extra_inputs = {TOP .. "/<headers>"}}
+	local inputs = {input, extra_inputs = {TOP .. "<headers>"}}
 	local outputs = {OUTPUT .. tup.getrelativedir(TOP) .. "/%B.o", objectsGroup}
 	tup.rule(inputs, "^c AS %f^ " .. AS .. " " .. tostring(ASFLAGS) .. " " .. specificFlags .. " -c %f -o %o", outputs)
 end
@@ -201,7 +204,7 @@ end
 -- compile (C) file named input
 function cc(input)
 	local specificFlags = getSpecificFlags(CFLAGS, input)
-	local inputs = {input, extra_inputs = {TOP .. "/<headers>"}}
+	local inputs = {input, extra_inputs = {TOP .. "<headers>"}}
 	local outputs = {OUTPUT .. tup.getrelativedir(TOP) .. "/%B.o", objectsGroup}
 	tup.rule(inputs, "^c CC %f^ " .. CC .. " " .. tostring(CFLAGS) .. " " .. specificFlags .. " -c %f -o %o", outputs)
 end
@@ -209,7 +212,7 @@ end
 -- compile (C++) file named input
 function cxx(input)
 	local specificFlags = getSpecificFlags(CXXFLAGS, input)
-	local inputs = {input, extra_inputs = {TOP .. "/<headers>"}}
+	local inputs = {input, extra_inputs = {TOP .. "<headers>"}}
 	local outputs = {OUTPUT .. tup.getrelativedir(TOP) .. "/%B.o", objectsGroup}
 	tup.rule(inputs, "^c CXX %f^ " .. CXX .. " " .. tostring(CXXFLAGS) .. " " .. specificFlags .. " -c %f -o %o",
 			outputs)

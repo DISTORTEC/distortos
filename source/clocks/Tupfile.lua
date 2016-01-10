@@ -9,4 +9,4 @@
 
 CXXFLAGS += STANDARD_INCLUDES
 
-tup.include(DISTORTOS_TOP .. "/compile.lua")
+tup.include(DISTORTOS_TOP .. "compile.lua")
