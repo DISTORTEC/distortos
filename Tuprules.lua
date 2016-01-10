@@ -93,56 +93,36 @@ SIZE = CONFIG_TOOLCHAIN_PREFIX .. "size"
 OUTPUT = TOP .. "output/"
 
 -- global C++ flags
-CXXFLAGS = ""
+CXXFLAGS = "-Wall -Wextra -Wshadow -std=gnu++11 -g -ggdb3"
 
 -- global C flags
-CFLAGS = ""
+CFLAGS = "-Wall -Wstrict-prototypes -Wextra -Wshadow -std=gnu99 -g -ggdb3"
 
 -- global assembler flags
-ASFLAGS = ""
-
--- define warning options here
-CXXWARNINGS = "-Wall -Wextra -Wshadow"
-CWARNINGS = "-Wall -Wstrict-prototypes -Wextra -Wshadow"
-
--- C++ language standard ("c++98", "gnu++98" - default, "c++11", "gnu++11")
-CXXSTD = "-std=gnu++11"
-
--- C language standard ("c89" / "iso9899:1990", "iso9899:199409", "c99" / "iso9899:1999", "gnu89" - default, "gnu99")
-CSTD = "-std=gnu99"
-
--- debug flags
-DBGFLAGS = "-g -ggdb3"
+ASFLAGS = "-g -ggdb3"
 
 -- linker flags
-LDFLAGS = ""
+LDFLAGS = "-g"
 
 ------------------------------------------------------------------------------------------------------------------------
--- compilation flags
+-- add obligatory compilation flags
 ------------------------------------------------------------------------------------------------------------------------
 
 ASFLAGS += CONFIG_ARCHITECTURE_FLAGS
-ASFLAGS += DBGFLAGS
 
 CFLAGS += CONFIG_ARCHITECTURE_FLAGS
 CFLAGS += CONFIG_BUILD_OPTIMIZATION
-CFLAGS += CWARNINGS
-CFLAGS += CSTD
-CFLAGS += DBGFLAGS
 CFLAGS += "-ffunction-sections -fdata-sections"
 
 CXXFLAGS += CONFIG_ARCHITECTURE_FLAGS
 CXXFLAGS += CONFIG_BUILD_OPTIMIZATION
-CXXFLAGS += CXXWARNINGS
-CXXFLAGS += CXXSTD
-CXXFLAGS += DBGFLAGS
 CXXFLAGS += "-ffunction-sections -fdata-sections -fno-rtti -fno-exceptions"
 
 -- path to linker script (generated automatically)
 LDSCRIPT = OUTPUT .. CONFIG_CHIP .. ".ld"
 
 LDFLAGS += CONFIG_ARCHITECTURE_FLAGS
-LDFLAGS += "-g -Wl,--cref,--gc-sections"
+LDFLAGS += "-Wl,--cref,--gc-sections"
 
 ------------------------------------------------------------------------------------------------------------------------
 -- "constants" with include paths
