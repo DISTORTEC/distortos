@@ -76,9 +76,6 @@ RM = rm -f
 # output folder
 OUTPUT = output/
 
-# project name
-PROJECT = distortos
-
 # global assembler flags
 ASFLAGS =
 
