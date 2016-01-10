@@ -29,7 +29,7 @@ $(DISTORTOS_CONFIGURATION_H): $(DISTORTOS_CONFIGURATION_MK)
 # generated headers depend on this Rules.mk, the script that generates them and the selectedConfiguration.mk file
 #-----------------------------------------------------------------------------------------------------------------------
 
-$(DISTORTOS_CONFIGURATION_H): $(d)/Rules.mk $(MAKE_DISTORTOS_CONFIGURATION_AWK) selectedConfiguration.mk
+$(DISTORTOS_CONFIGURATION_H): $(d)Rules.mk $(MAKE_DISTORTOS_CONFIGURATION_AWK) selectedConfiguration.mk
 
 #-----------------------------------------------------------------------------------------------------------------------
 # add generated headers to list of generated files

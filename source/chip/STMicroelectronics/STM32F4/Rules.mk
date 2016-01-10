@@ -11,7 +11,7 @@
 # linker script
 #-----------------------------------------------------------------------------------------------------------------------
 
-STM32F4_LD_SH := $(d)/STM32F4.ld.sh
+STM32F4_LD_SH := $(d)STM32F4.ld.sh
 
 $(LDSCRIPT): $(DISTORTOS_CONFIGURATION_MK)
 	$(call PRETTY_PRINT," SH     " $(STM32F4_LD_SH))
@@ -21,7 +21,7 @@ $(LDSCRIPT): $(DISTORTOS_CONFIGURATION_MK)
 # generated linker script depends on this Rules.mk, the script that generates it and the selectedConfiguration.mk file
 #-----------------------------------------------------------------------------------------------------------------------
 
-$(LDSCRIPT): $(d)/Rules.mk $(STM32F4_LD_SH) selectedConfiguration.mk
+$(LDSCRIPT): $(d)Rules.mk $(STM32F4_LD_SH) selectedConfiguration.mk
 
 #-----------------------------------------------------------------------------------------------------------------------
 # add generated linker script to list of generated files

@@ -42,4 +42,4 @@ include $(DISTORTOS_PATH)footer.mk
 # libdistortos.a dependencies - all objects from this folder tree and this Rules.mk
 #-----------------------------------------------------------------------------------------------------------------------
 
-$(LIBDISTORTOS_A_$(d)): $(OBJECTS_$(d)) $(SUBDIRECTORIES_OBJECTS_$(d)) $(d)/Rules.mk
+$(LIBDISTORTOS_A_$(d)): $(OBJECTS_$(d)) $(SUBDIRECTORIES_OBJECTS_$(d)) $(d)Rules.mk
