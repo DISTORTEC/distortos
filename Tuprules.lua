@@ -33,6 +33,28 @@ if TOP_NODE == nil then
 end
 
 ------------------------------------------------------------------------------------------------------------------------
+-- project configuration
+------------------------------------------------------------------------------------------------------------------------
+
+-- global assembler flags
+ASFLAGS = "-g -ggdb3"
+
+-- global C flags
+CFLAGS = "-Wall -Wstrict-prototypes -Wextra -Wshadow -std=gnu99 -g -ggdb3"
+
+-- global C++ flags
+CXXFLAGS = "-Wall -Wextra -Wshadow -std=gnu++11 -g -ggdb3"
+
+-- linker flags
+LDFLAGS = "-g"
+
+------------------------------------------------------------------------------------------------------------------------
+-- output folder
+------------------------------------------------------------------------------------------------------------------------
+
+OUTPUT = TOP .. "output/"
+
+------------------------------------------------------------------------------------------------------------------------
 -- load configuration variables from distortosConfiguration.mk file selected by user
 ------------------------------------------------------------------------------------------------------------------------
 
@@ -84,25 +106,6 @@ LD = CONFIG_TOOLCHAIN_PREFIX .. "g++"
 OBJCOPY = CONFIG_TOOLCHAIN_PREFIX .. "objcopy"
 OBJDUMP = CONFIG_TOOLCHAIN_PREFIX .. "objdump"
 SIZE = CONFIG_TOOLCHAIN_PREFIX .. "size"
-
-------------------------------------------------------------------------------------------------------------------------
--- project configuration
-------------------------------------------------------------------------------------------------------------------------
-
--- output folder
-OUTPUT = TOP .. "output/"
-
--- global C++ flags
-CXXFLAGS = "-Wall -Wextra -Wshadow -std=gnu++11 -g -ggdb3"
-
--- global C flags
-CFLAGS = "-Wall -Wstrict-prototypes -Wextra -Wshadow -std=gnu99 -g -ggdb3"
-
--- global assembler flags
-ASFLAGS = "-g -ggdb3"
-
--- linker flags
-LDFLAGS = "-g"
 
 ------------------------------------------------------------------------------------------------------------------------
 -- add obligatory compilation flags
