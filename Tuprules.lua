@@ -52,7 +52,7 @@ function parseConfigurationFile(filename)
 				value = "n"
 			end
 		end
-	
+
 		if name ~= nil and value ~= nil then
 			_G[name] = value
 		end

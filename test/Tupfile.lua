@@ -11,16 +11,16 @@ if CONFIG_TEST_APPLICATION_ENABLE == "y" then
 
 	CXXFLAGS += STANDARD_INCLUDES
 	CXXFLAGS += ARCHITECTURE_INCLUDES
-	
+
 	tup.include(DISTORTOS_TOP .. "/compile.lua")
-	
+
 	local filename = OUTPUT .. tup.getrelativedir(TOP) .. "/" .. PROJECT
 	local elfFilename = filename .. ".elf"
 	local hexFilename = filename .. ".hex"
 	local binFilename = filename .. ".bin"
 	local dmpFilename = filename .. ".dmp"
 	local lssFilename = filename .. ".lss"
-	
+
 	link(elfFilename, OUTPUT .. "libdistortos.a", "<objects>", LDSCRIPT)
 	size(elfFilename)
 	hex(elfFilename, hexFilename)

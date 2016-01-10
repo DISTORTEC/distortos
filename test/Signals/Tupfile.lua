@@ -11,7 +11,7 @@ if CONFIG_TEST_APPLICATION_ENABLE == "y" then
 
 	CXXFLAGS += "-I" .. DISTORTOS_TOP .. "/test"
 	CXXFLAGS += STANDARD_INCLUDES
-	
+
 	tup.include(DISTORTOS_TOP .. "/compile.lua")
 
 end	-- if CONFIG_TEST_APPLICATION_ENABLE == "y" then
