@@ -21,6 +21,8 @@
 #include "distortos/ThisThread.hpp"
 #include "distortos/ThisThread-Signals.hpp"
 
+#include <cerrno>
+
 namespace distortos
 {
 
