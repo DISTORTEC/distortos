@@ -11,6 +11,12 @@
 
 #include "distortos/UndetachableThread.hpp"
 
+#ifdef CONFIG_THREAD_DETACH_ENABLE
+
+#include <cerrno>
+
+#endif	// def CONFIG_THREAD_DETACH_ENABLE
+
 namespace distortos
 {
 
