@@ -16,6 +16,8 @@
 #include "distortos/DynamicThread.hpp"
 #include "distortos/ThisThread-Signals.hpp"
 
+#include <cerrno>
+
 namespace distortos
 {
 
