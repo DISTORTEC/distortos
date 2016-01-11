@@ -20,6 +20,8 @@
 
 #include "distortos/DynamicThread.hpp"
 
+#include <cerrno>
+
 #endif	// def CONFIG_THREAD_DETACH_ENABLE
 
 namespace distortos
