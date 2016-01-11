@@ -24,6 +24,8 @@
 #include "distortos/ThisThread.hpp"
 #include "distortos/ThisThread-Signals.hpp"
 
+#include <cerrno>
+
 #endif	// __FPU_PRESENT == 1 && __FPU_USED == 1
 
 namespace distortos
