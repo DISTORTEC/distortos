@@ -22,6 +22,8 @@
 
 #include <malloc.h>
 
+#include <cerrno>
+
 namespace distortos
 {
 
