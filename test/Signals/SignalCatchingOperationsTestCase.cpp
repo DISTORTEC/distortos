@@ -17,6 +17,8 @@
 #include "distortos/statistics.hpp"
 #include "distortos/ThisThread-Signals.hpp"
 
+#include <cerrno>
+
 namespace distortos
 {
 
