@@ -17,6 +17,8 @@
 
 #include "estd/ReverseAdaptor.hpp"
 
+#include <cerrno>
+
 namespace distortos
 {
 
