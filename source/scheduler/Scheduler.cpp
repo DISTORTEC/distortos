@@ -19,6 +19,8 @@
 #include "distortos/internal/scheduler/forceContextSwitch.hpp"
 #include "distortos/internal/scheduler/MainThread.hpp"
 
+#include <cerrno>
+
 namespace distortos
 {
 
