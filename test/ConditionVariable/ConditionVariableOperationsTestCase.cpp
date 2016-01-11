@@ -21,6 +21,8 @@
 #include "distortos/StaticSoftwareTimer.hpp"
 #include "distortos/statistics.hpp"
 
+#include <cerrno>
+
 namespace distortos
 {
 
