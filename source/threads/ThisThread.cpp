@@ -16,6 +16,8 @@
 
 #include "distortos/Thread.hpp"
 
+#include <cerrno>
+
 namespace distortos
 {
 
