@@ -18,6 +18,8 @@
 #include "distortos/Mutex.hpp"
 #include "distortos/ThisThread.hpp"
 
+#include <cerrno>
+
 namespace distortos
 {
 
