@@ -13,6 +13,8 @@
 
 #include "distortos/SignalSet.hpp"
 
+#include <cerrno>
+
 namespace distortos
 {
 
