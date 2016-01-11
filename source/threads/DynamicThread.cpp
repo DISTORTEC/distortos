@@ -11,7 +11,13 @@
 
 #include "distortos/DynamicThread.hpp"
 
+#ifdef CONFIG_THREAD_DETACH_ENABLE
+
 #include "distortos/architecture/InterruptMaskingLock.hpp"
+
+#include <cerrno>
+
+#endif	// def CONFIG_THREAD_DETACH_ENABLE
 
 namespace distortos
 {
