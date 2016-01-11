@@ -16,6 +16,8 @@
 #include "distortos/DynamicThread.hpp"
 #include "distortos/Mutex.hpp"
 
+#include <cerrno>
+
 namespace distortos
 {
 
