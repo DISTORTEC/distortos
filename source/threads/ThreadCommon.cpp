@@ -18,6 +18,8 @@
 
 #include "distortos/internal/synchronization/SignalsReceiverControlBlock.hpp"
 
+#include <cerrno>
+
 namespace distortos
 {
 
