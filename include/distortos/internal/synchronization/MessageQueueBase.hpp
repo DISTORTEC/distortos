@@ -82,6 +82,15 @@ public:
 	struct DescendingPriority
 	{
 		/**
+		 * \brief DescendingPriority's constructor
+		 */
+
+		constexpr DescendingPriority()
+		{
+
+		}
+
+		/**
 		 * \brief DescendingPriority's function call operator
 		 *
 		 * \param [in] left is the object on the left side of comparison
