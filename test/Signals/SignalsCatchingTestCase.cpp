@@ -21,6 +21,8 @@
 
 #include "estd/ContiguousRange.hpp"
 
+#include <cerrno>
+
 namespace distortos
 {
 
