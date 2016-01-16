@@ -16,10 +16,10 @@ choice
 		Select chip family
 
 config CHIP_STM32
-	bool "STMicroelectronics STM32"
+	bool "STM32"
 	select ARCHITECTURE_ARM
 	help
-		STMicroelectronics STM32 chip family
+		STM32 chip family
 
 endchoice
 

@@ -34,7 +34,7 @@ config CHIP_STM32F401CB
 	select CHIP_HAS_UFQFPN48
 	select CHIP_HAS_WLCSP49
 	help
-		STMicroelectronics STM32F401CB chip
+		STM32F401CB chip
 
 config CHIP_STM32F401CC
 	bool "STM32F401CC"
@@ -42,7 +42,7 @@ config CHIP_STM32F401CC
 	select CHIP_HAS_UFQFPN48
 	select CHIP_HAS_WLCSP49
 	help
-		STMicroelectronics STM32F401CC chip
+		STM32F401CC chip
 
 config CHIP_STM32F401CD
 	bool "STM32F401CD"
@@ -50,7 +50,7 @@ config CHIP_STM32F401CD
 	select CHIP_HAS_UFQFPN48
 	select CHIP_HAS_WLCSP49
 	help
-		STMicroelectronics STM32F401CD chip
+		STM32F401CD chip
 
 config CHIP_STM32F401CE
 	bool "STM32F401CE"
@@ -58,35 +58,35 @@ config CHIP_STM32F401CE
 	select CHIP_HAS_UFQFPN48
 	select CHIP_HAS_WLCSP49
 	help
-		STMicroelectronics STM32F401CE chip
+		STM32F401CE chip
 
 config CHIP_STM32F401RB
 	bool "STM32F401RB"
 	select CHIP_STM32F401R
 	select CHIP_HAS_LQFP64
 	help
-		STMicroelectronics STM32F401RB chip
+		STM32F401RB chip
 
 config CHIP_STM32F401RC
 	bool "STM32F401RC"
 	select CHIP_STM32F401R
 	select CHIP_HAS_LQFP64
 	help
-		STMicroelectronics STM32F401RC chip
+		STM32F401RC chip
 
 config CHIP_STM32F401RD
 	bool "STM32F401RD"
 	select CHIP_STM32F401R
 	select CHIP_HAS_LQFP64
 	help
-		STMicroelectronics STM32F401RD chip
+		STM32F401RD chip
 
 config CHIP_STM32F401RE
 	bool "STM32F401RE"
 	select CHIP_STM32F401R
 	select CHIP_HAS_LQFP64
 	help
-		STMicroelectronics STM32F401RE chip
+		STM32F401RE chip
 
 config CHIP_STM32F401VB
 	bool "STM32F401VB"
@@ -94,7 +94,7 @@ config CHIP_STM32F401VB
 	select CHIP_HAS_LQFP100
 	select CHIP_HAS_UFBGA100
 	help
-		STMicroelectronics STM32F401VB chip
+		STM32F401VB chip
 
 config CHIP_STM32F401VC
 	bool "STM32F401VC"
@@ -102,7 +102,7 @@ config CHIP_STM32F401VC
 	select CHIP_HAS_LQFP100
 	select CHIP_HAS_UFBGA100
 	help
-		STMicroelectronics STM32F401VC chip
+		STM32F401VC chip
 
 config CHIP_STM32F401VD
 	bool "STM32F401VD"
@@ -110,7 +110,7 @@ config CHIP_STM32F401VD
 	select CHIP_HAS_LQFP100
 	select CHIP_HAS_UFBGA100
 	help
-		STMicroelectronics STM32F401VD chip
+		STM32F401VD chip
 
 config CHIP_STM32F401VE
 	bool "STM32F401VE"
@@ -118,42 +118,42 @@ config CHIP_STM32F401VE
 	select CHIP_HAS_LQFP100
 	select CHIP_HAS_UFBGA100
 	help
-		STMicroelectronics STM32F401VE chip
+		STM32F401VE chip
 
 config CHIP_STM32F405OE
 	bool "STM32F405OE"
 	select CHIP_STM32F405O
 	select CHIP_HAS_WLCSP90
 	help
-		STMicroelectronics STM32F405OE chip
+		STM32F405OE chip
 
 config CHIP_STM32F405OG
 	bool "STM32F405OG"
 	select CHIP_STM32F405O
 	select CHIP_HAS_WLCSP90
 	help
-		STMicroelectronics STM32F405OG chip
+		STM32F405OG chip
 
 config CHIP_STM32F405RG
 	bool "STM32F405RG"
 	select CHIP_STM32F405R
 	select CHIP_HAS_LQFP64
 	help
-		STMicroelectronics STM32F405RG chip
+		STM32F405RG chip
 
 config CHIP_STM32F405VG
 	bool "STM32F405VG"
 	select CHIP_STM32F405V
 	select CHIP_HAS_LQFP100
 	help
-		STMicroelectronics STM32F405VG chip
+		STM32F405VG chip
 
 config CHIP_STM32F405ZG
 	bool "STM32F405ZG"
 	select CHIP_STM32F405Z
 	select CHIP_HAS_LQFP144
 	help
-		STMicroelectronics STM32F405ZG chip
+		STM32F405ZG chip
 
 config CHIP_STM32F407IE
 	bool "STM32F407IE"
@@ -161,7 +161,7 @@ config CHIP_STM32F407IE
 	select CHIP_HAS_LQFP176
 	select CHIP_HAS_UFBGA176
 	help
-		STMicroelectronics STM32F407IE chip
+		STM32F407IE chip
 
 config CHIP_STM32F407IG
 	bool "STM32F407IG"
@@ -169,77 +169,77 @@ config CHIP_STM32F407IG
 	select CHIP_HAS_LQFP176
 	select CHIP_HAS_UFBGA176
 	help
-		STMicroelectronics STM32F407IG chip
+		STM32F407IG chip
 
 config CHIP_STM32F407VE
 	bool "STM32F407VE"
 	select CHIP_STM32F407V
 	select CHIP_HAS_LQFP100
 	help
-		STMicroelectronics STM32F407VE chip
+		STM32F407VE chip
 
 config CHIP_STM32F407VG
 	bool "STM32F407VG"
 	select CHIP_STM32F407V
 	select CHIP_HAS_LQFP100
 	help
-		STMicroelectronics STM32F407VG chip
+		STM32F407VG chip
 
 config CHIP_STM32F407ZE
 	bool "STM32F407ZE"
 	select CHIP_STM32F407Z
 	select CHIP_HAS_LQFP144
 	help
-		STMicroelectronics STM32F407ZE chip
+		STM32F407ZE chip
 
 config CHIP_STM32F407ZG
 	bool "STM32F407ZG"
 	select CHIP_STM32F407Z
 	select CHIP_HAS_LQFP144
 	help
-		STMicroelectronics STM32F407ZG chip
+		STM32F407ZG chip
 
 config CHIP_STM32F410C8
 	bool "STM32F410C8"
 	select CHIP_STM32F410C
 	select CHIP_HAS_UFQFPN48
 	help
-		STMicroelectronics STM32F410C8 chip
+		STM32F410C8 chip
 
 config CHIP_STM32F410CB
 	bool "STM32F410CB"
 	select CHIP_STM32F410C
 	select CHIP_HAS_UFQFPN48
 	help
-		STMicroelectronics STM32F410CB chip
+		STM32F410CB chip
 
 config CHIP_STM32F410R8
 	bool "STM32F410R8"
 	select CHIP_STM32F410R
 	select CHIP_HAS_LQFP64
 	help
-		STMicroelectronics STM32F410R8 chip
+		STM32F410R8 chip
 
 config CHIP_STM32F410RB
 	bool "STM32F410RB"
 	select CHIP_STM32F410R
 	select CHIP_HAS_LQFP64
 	help
-		STMicroelectronics STM32F410RB chip
+		STM32F410RB chip
 
 config CHIP_STM32F410T8
 	bool "STM32F410T8"
 	select CHIP_STM32F410T
 	select CHIP_HAS_WLCSP36
 	help
-		STMicroelectronics STM32F410T8 chip
+		STM32F410T8 chip
 
 config CHIP_STM32F410TB
 	bool "STM32F410TB"
 	select CHIP_STM32F410T
 	select CHIP_HAS_WLCSP36
 	help
-		STMicroelectronics STM32F410TB chip
+		STM32F410TB chip
 
 config CHIP_STM32F411CC
 	bool "STM32F411CC"
@@ -247,7 +247,7 @@ config CHIP_STM32F411CC
 	select CHIP_HAS_UFQFPN48
 	select CHIP_HAS_WLCSP49
 	help
-		STMicroelectronics STM32F411CC chip
+		STM32F411CC chip
 
 config CHIP_STM32F411CE
 	bool "STM32F411CE"
@@ -255,28 +255,28 @@ config CHIP_STM32F411CE
 	select CHIP_HAS_UFQFPN48
 	select CHIP_HAS_WLCSP49
 	help
-		STMicroelectronics STM32F411CE chip
+		STM32F411CE chip
 
 config CHIP_STM32F411RC
 	bool "STM32F411RC"
 	select CHIP_STM32F411R
 	select CHIP_HAS_LQFP64
 	help
-		STMicroelectronics STM32F411RC chip
+		STM32F411RC chip
 
 config CHIP_STM32F411RE
 	bool "STM32F411RE"
 	select CHIP_STM32F411R
 	select CHIP_HAS_LQFP64
 	help
-		STMicroelectronics STM32F411RE chip
+		STM32F411RE chip
 
 config CHIP_STM32F411VC
 	bool "STM32F411VC"
 	select CHIP_STM32F411V
 	select CHIP_HAS_LQFP100
 	help
-		STMicroelectronics STM32F411VC chip
+		STM32F411VC chip
 
 config CHIP_STM32F411VE
 	bool "STM32F411VE"
@@ -284,35 +284,35 @@ config CHIP_STM32F411VE
 	select CHIP_HAS_LQFP100
 	select CHIP_HAS_UFBGA100
 	help
-		STMicroelectronics STM32F411VE chip
+		STM32F411VE chip
 
 config CHIP_STM32F415OG
 	bool "STM32F415OG"
 	select CHIP_STM32F415O
 	select CHIP_HAS_WLCSP90
 	help
-		STMicroelectronics STM32F415OG chip
+		STM32F415OG chip
 
 config CHIP_STM32F415RG
 	bool "STM32F415RG"
 	select CHIP_STM32F415R
 	select CHIP_HAS_LQFP64
 	help
-		STMicroelectronics STM32F415RG chip
+		STM32F415RG chip
 
 config CHIP_STM32F415VG
 	bool "STM32F415VG"
 	select CHIP_STM32F415V
 	select CHIP_HAS_LQFP100
 	help
-		STMicroelectronics STM32F415VG chip
+		STM32F415VG chip
 
 config CHIP_STM32F415ZG
 	bool "STM32F415ZG"
 	select CHIP_STM32F415Z
 	select CHIP_HAS_LQFP144
 	help
-		STMicroelectronics STM32F415ZG chip
+		STM32F415ZG chip
 
 config CHIP_STM32F417IE
 	bool "STM32F417IE"
@@ -320,7 +320,7 @@ config CHIP_STM32F417IE
 	select CHIP_HAS_LQFP176
 	select CHIP_HAS_UFBGA176
 	help
-		STMicroelectronics STM32F417IE chip
+		STM32F417IE chip
 
 config CHIP_STM32F417IG
 	bool "STM32F417IG"
@@ -328,49 +328,49 @@ config CHIP_STM32F417IG
 	select CHIP_HAS_LQFP176
 	select CHIP_HAS_UFBGA176
 	help
-		STMicroelectronics STM32F417IG chip
+		STM32F417IG chip
 
 config CHIP_STM32F417VE
 	bool "STM32F417VE"
 	select CHIP_STM32F417V
 	select CHIP_HAS_LQFP100
 	help
-		STMicroelectronics STM32F417VE chip
+		STM32F417VE chip
 
 config CHIP_STM32F417VG
 	bool "STM32F417VG"
 	select CHIP_STM32F417V
 	select CHIP_HAS_LQFP100
 	help
-		STMicroelectronics STM32F417VG chip
+		STM32F417VG chip
 
 config CHIP_STM32F417ZE
 	bool "STM32F417ZE"
 	select CHIP_STM32F417Z
 	select CHIP_HAS_LQFP144
 	help
-		STMicroelectronics STM32F417ZE chip
+		STM32F417ZE chip
 
 config CHIP_STM32F417ZG
 	bool "STM32F417ZG"
 	select CHIP_STM32F417Z
 	select CHIP_HAS_LQFP144
 	help
-		STMicroelectronics STM32F417ZG chip
+		STM32F417ZG chip
 
 config CHIP_STM32F427AG
 	bool "STM32F427AG"
 	select CHIP_STM32F427A
 	select CHIP_HAS_UFBGA169
 	help
-		STMicroelectronics STM32F427AG chip
+		STM32F427AG chip
 
 config CHIP_STM32F427AI
 	bool "STM32F427AI"
 	select CHIP_STM32F427A
 	select CHIP_HAS_UFBGA169
 	help
-		STMicroelectronics STM32F427AI chip
+		STM32F427AI chip
 
 config CHIP_STM32F427IG
 	bool "STM32F427IG"
@@ -378,7 +378,7 @@ config CHIP_STM32F427IG
 	select CHIP_HAS_LQFP176
 	select CHIP_HAS_UFBGA176
 	help
-		STMicroelectronics STM32F427IG chip
+		STM32F427IG chip
 
 config CHIP_STM32F427II
 	bool "STM32F427II"
@@ -386,70 +386,70 @@ config CHIP_STM32F427II
 	select CHIP_HAS_LQFP176
 	select CHIP_HAS_UFBGA176
 	help
-		STMicroelectronics STM32F427II chip
+		STM32F427II chip
 
 config CHIP_STM32F427VG
 	bool "STM32F427VG"
 	select CHIP_STM32F427V
 	select CHIP_HAS_LQFP100
 	help
-		STMicroelectronics STM32F427VG chip
+		STM32F427VG chip
 
 config CHIP_STM32F427VI
 	bool "STM32F427VI"
 	select CHIP_STM32F427V
 	select CHIP_HAS_LQFP100
 	help
-		STMicroelectronics STM32F427VI chip
+		STM32F427VI chip
 
 config CHIP_STM32F427ZG
 	bool "STM32F427ZG"
 	select CHIP_STM32F427Z
 	select CHIP_HAS_LQFP144
 	help
-		STMicroelectronics STM32F427ZG chip
+		STM32F427ZG chip
 
 config CHIP_STM32F427ZI
 	bool "STM32F427ZI"
 	select CHIP_STM32F427Z
 	select CHIP_HAS_LQFP144
 	help
-		STMicroelectronics STM32F427ZI chip
+		STM32F427ZI chip
 
 config CHIP_STM32F429AG
 	bool "STM32F429AG"
 	select CHIP_STM32F429A
 	select CHIP_HAS_UFBGA169
 	help
-		STMicroelectronics STM32F429AG chip
+		STM32F429AG chip
 
 config CHIP_STM32F429AI
 	bool "STM32F429AI"
 	select CHIP_STM32F429A
 	select CHIP_HAS_UFBGA169
 	help
-		STMicroelectronics STM32F429AI chip
+		STM32F429AI chip
 
 config CHIP_STM32F429BE
 	bool "STM32F429BE"
 	select CHIP_STM32F429B
 	select CHIP_HAS_LQFP208
 	help
-		STMicroelectronics STM32F429BE chip
+		STM32F429BE chip
 
 config CHIP_STM32F429BG
 	bool "STM32F429BG"
 	select CHIP_STM32F429B
 	select CHIP_HAS_LQFP208
 	help
-		STMicroelectronics STM32F429BG chip
+		STM32F429BG chip
 
 config CHIP_STM32F429BI
 	bool "STM32F429BI"
 	select CHIP_STM32F429B
 	select CHIP_HAS_LQFP208
 	help
-		STMicroelectronics STM32F429BI chip
+		STM32F429BI chip
 
 config CHIP_STM32F429IE
 	bool "STM32F429IE"
@@ -457,7 +457,7 @@ config CHIP_STM32F429IE
 	select CHIP_HAS_LQFP176
 	select CHIP_HAS_UFBGA176
 	help
-		STMicroelectronics STM32F429IE chip
+		STM32F429IE chip
 
 config CHIP_STM32F429IG
 	bool "STM32F429IG"
@@ -465,7 +465,7 @@ config CHIP_STM32F429IG
 	select CHIP_HAS_LQFP176
 	select CHIP_HAS_UFBGA176
 	help
-		STMicroelectronics STM32F429IG chip
+		STM32F429IG chip
 
 config CHIP_STM32F429II
 	bool "STM32F429II"
@@ -473,56 +473,56 @@ config CHIP_STM32F429II
 	select CHIP_HAS_LQFP176
 	select CHIP_HAS_UFBGA176
 	help
-		STMicroelectronics STM32F429II chip
+		STM32F429II chip
 
 config CHIP_STM32F429NE
 	bool "STM32F429NE"
 	select CHIP_STM32F429N
 	select CHIP_HAS_TFBGA216
 	help
-		STMicroelectronics STM32F429NE chip
+		STM32F429NE chip
 
 config CHIP_STM32F429NI
 	bool "STM32F429NI"
 	select CHIP_STM32F429N
 	select CHIP_HAS_TFBGA216
 	help
-		STMicroelectronics STM32F429NI chip
+		STM32F429NI chip
 
 config CHIP_STM32F429VE
 	bool "STM32F429VE"
 	select CHIP_STM32F429V
 	select CHIP_HAS_LQFP100
 	help
-		STMicroelectronics STM32F429VE chip
+		STM32F429VE chip
 
 config CHIP_STM32F429VG
 	bool "STM32F429VG"
 	select CHIP_STM32F429V
 	select CHIP_HAS_LQFP100
 	help
-		STMicroelectronics STM32F429VG chip
+		STM32F429VG chip
 
 config CHIP_STM32F429VI
 	bool "STM32F429VI"
 	select CHIP_STM32F429V
 	select CHIP_HAS_LQFP100
 	help
-		STMicroelectronics STM32F429VI chip
+		STM32F429VI chip
 
 config CHIP_STM32F429ZE
 	bool "STM32F429ZE"
 	select CHIP_STM32F429Z
 	select CHIP_HAS_LQFP144
 	help
-		STMicroelectronics STM32F429ZE chip
+		STM32F429ZE chip
 
 config CHIP_STM32F429ZG
 	bool "STM32F429ZG"
 	select CHIP_STM32F429Z
 	select CHIP_HAS_LQFP144
 	help
-		STMicroelectronics STM32F429ZG chip
+		STM32F429ZG chip
 
 config CHIP_STM32F429ZI
 	bool "STM32F429ZI"
@@ -530,14 +530,14 @@ config CHIP_STM32F429ZI
 	select CHIP_HAS_LQFP144
 	select CHIP_HAS_WLCSP143
 	help
-		STMicroelectronics STM32F429ZI chip
+		STM32F429ZI chip
 
 config CHIP_STM32F437AI
 	bool "STM32F437AI"
 	select CHIP_STM32F437A
 	select CHIP_HAS_UFBGA169
 	help
-		STMicroelectronics STM32F437AI chip
+		STM32F437AI chip
 
 config CHIP_STM32F437IG
 	bool "STM32F437IG"
@@ -545,7 +545,7 @@ config CHIP_STM32F437IG
 	select CHIP_HAS_LQFP176
 	select CHIP_HAS_UFBGA176
 	help
-		STMicroelectronics STM32F437IG chip
+		STM32F437IG chip
 
 config CHIP_STM32F437II
 	bool "STM32F437II"
@@ -553,56 +553,56 @@ config CHIP_STM32F437II
 	select CHIP_HAS_LQFP176
 	select CHIP_HAS_UFBGA176
 	help
-		STMicroelectronics STM32F437II chip
+		STM32F437II chip
 
 config CHIP_STM32F437VG
 	bool "STM32F437VG"
 	select CHIP_STM32F437V
 	select CHIP_HAS_LQFP100
 	help
-		STMicroelectronics STM32F437VG chip
+		STM32F437VG chip
 
 config CHIP_STM32F437VI
 	bool "STM32F437VI"
 	select CHIP_STM32F437V
 	select CHIP_HAS_LQFP100
 	help
-		STMicroelectronics STM32F437VI chip
+		STM32F437VI chip
 
 config CHIP_STM32F437ZG
 	bool "STM32F437ZG"
 	select CHIP_STM32F437Z
 	select CHIP_HAS_LQFP144
 	help
-		STMicroelectronics STM32F437ZG chip
+		STM32F437ZG chip
 
 config CHIP_STM32F437ZI
 	bool "STM32F437ZI"
 	select CHIP_STM32F437Z
 	select CHIP_HAS_LQFP144
 	help
-		STMicroelectronics STM32F437ZI chip
+		STM32F437ZI chip
 
 config CHIP_STM32F439AI
 	bool "STM32F439AI"
 	select CHIP_STM32F439A
 	select CHIP_HAS_UFBGA169
 	help
-		STMicroelectronics STM32F439AI chip
+		STM32F439AI chip
 
 config CHIP_STM32F439BG
 	bool "STM32F439BG"
 	select CHIP_STM32F439B
 	select CHIP_HAS_LQFP208
 	help
-		STMicroelectronics STM32F439BG chip
+		STM32F439BG chip
 
 config CHIP_STM32F439BI
 	bool "STM32F439BI"
 	select CHIP_STM32F439B
 	select CHIP_HAS_LQFP208
 	help
-		STMicroelectronics STM32F439BI chip
+		STM32F439BI chip
 
 config CHIP_STM32F439IG
 	bool "STM32F439IG"
@@ -610,7 +610,7 @@ config CHIP_STM32F439IG
 	select CHIP_HAS_LQFP176
 	select CHIP_HAS_UFBGA176
 	help
-		STMicroelectronics STM32F439IG chip
+		STM32F439IG chip
 
 config CHIP_STM32F439II
 	bool "STM32F439II"
@@ -618,42 +618,42 @@ config CHIP_STM32F439II
 	select CHIP_HAS_LQFP176
 	select CHIP_HAS_UFBGA176
 	help
-		STMicroelectronics STM32F439II chip
+		STM32F439II chip
 
 config CHIP_STM32F439NG
 	bool "STM32F439NG"
 	select CHIP_STM32F439N
 	select CHIP_HAS_TFBGA216
 	help
-		STMicroelectronics STM32F439NG chip
+		STM32F439NG chip
 
 config CHIP_STM32F439NI
 	bool "STM32F439NI"
 	select CHIP_STM32F439N
 	select CHIP_HAS_TFBGA216
 	help
-		STMicroelectronics STM32F439NI chip
+		STM32F439NI chip
 
 config CHIP_STM32F439VG
 	bool "STM32F439VG"
 	select CHIP_STM32F439V
 	select CHIP_HAS_LQFP100
 	help
-		STMicroelectronics STM32F439VG chip
+		STM32F439VG chip
 
 config CHIP_STM32F439VI
 	bool "STM32F439VI"
 	select CHIP_STM32F439V
 	select CHIP_HAS_LQFP100
 	help
-		STMicroelectronics STM32F439VI chip
+		STM32F439VI chip
 
 config CHIP_STM32F439ZG
 	bool "STM32F439ZG"
 	select CHIP_STM32F439Z
 	select CHIP_HAS_LQFP144
 	help
-		STMicroelectronics STM32F439ZG chip
+		STM32F439ZG chip
 
 config CHIP_STM32F439ZI
 	bool "STM32F439ZI"
@@ -661,56 +661,56 @@ config CHIP_STM32F439ZI
 	select CHIP_HAS_LQFP144
 	select CHIP_HAS_WLCSP143
 	help
-		STMicroelectronics STM32F439ZI chip
+		STM32F439ZI chip
 
 config CHIP_STM32F446MC
 	bool "STM32F446MC"
 	select CHIP_STM32F446M
 	select CHIP_HAS_WLCSP81
 	help
-		STMicroelectronics STM32F446MC chip
+		STM32F446MC chip
 
 config CHIP_STM32F446ME
 	bool "STM32F446ME"
 	select CHIP_STM32F446M
 	select CHIP_HAS_WLCSP81
 	help
-		STMicroelectronics STM32F446ME chip
+		STM32F446ME chip
 
 config CHIP_STM32F446RC
 	bool "STM32F446RC"
 	select CHIP_STM32F446R
 	select CHIP_HAS_LQFP64
 	help
-		STMicroelectronics STM32F446RC chip
+		STM32F446RC chip
 
 config CHIP_STM32F446RE
 	bool "STM32F446RE"
 	select CHIP_STM32F446R
 	select CHIP_HAS_LQFP64
 	help
-		STMicroelectronics STM32F446RE chip
+		STM32F446RE chip
 
 config CHIP_STM32F446VC
 	bool "STM32F446VC"
 	select CHIP_STM32F446V
 	select CHIP_HAS_LQFP100
 	help
-		STMicroelectronics STM32F446VC chip
+		STM32F446VC chip
 
 config CHIP_STM32F446VE
 	bool "STM32F446VE"
 	select CHIP_STM32F446V
 	select CHIP_HAS_LQFP100
 	help
-		STMicroelectronics STM32F446VE chip
+		STM32F446VE chip
 
 config CHIP_STM32F446ZC
 	bool "STM32F446ZC"
 	select CHIP_STM32F446Z
 	select CHIP_HAS_LQFP144
 	help
-		STMicroelectronics STM32F446ZC chip
+		STM32F446ZC chip
 
 config CHIP_STM32F446ZE
 	bool "STM32F446ZE"
@@ -718,14 +718,14 @@ config CHIP_STM32F446ZE
 	select CHIP_HAS_LQFP144
 	select CHIP_HAS_UFBGA144
 	help
-		STMicroelectronics STM32F446ZE chip
+		STM32F446ZE chip
 
 config CHIP_STM32F469AE
 	bool "STM32F469AE"
 	select CHIP_STM32F469A
 	select CHIP_HAS_UFBGA169
 	help
-		STMicroelectronics STM32F469AE chip
+		STM32F469AE chip
 
 config CHIP_STM32F469AG
 	bool "STM32F469AG"
@@ -733,7 +733,7 @@ config CHIP_STM32F469AG
 	select CHIP_HAS_UFBGA169
 	select CHIP_HAS_WLCSP168
 	help
-		STMicroelectronics STM32F469AG chip
+		STM32F469AG chip
 
 config CHIP_STM32F469AI
 	bool "STM32F469AI"
@@ -741,42 +741,42 @@ config CHIP_STM32F469AI
 	select CHIP_HAS_UFBGA169
 	select CHIP_HAS_WLCSP168
 	help
-		STMicroelectronics STM32F469AI chip
+		STM32F469AI chip
 
 config CHIP_STM32F469BE
 	bool "STM32F469BE"
 	select CHIP_STM32F469B
 	select CHIP_HAS_LQFP208
 	help
-		STMicroelectronics STM32F469BE chip
+		STM32F469BE chip
 
 config CHIP_STM32F469BG
 	bool "STM32F469BG"
 	select CHIP_STM32F469B
 	select CHIP_HAS_LQFP208
 	help
-		STMicroelectronics STM32F469BG chip
+		STM32F469BG chip
 
 config CHIP_STM32F469BI
 	bool "STM32F469BI"
 	select CHIP_STM32F469B
 	select CHIP_HAS_LQFP208
 	help
-		STMicroelectronics STM32F469BI chip
+		STM32F469BI chip
 
 config CHIP_STM32F469IE
 	bool "STM32F469IE"
 	select CHIP_STM32F469I
 	select CHIP_HAS_UFBGA176
 	help
-		STMicroelectronics STM32F469IE chip
+		STM32F469IE chip
 
 config CHIP_STM32F469IG
 	bool "STM32F469IG"
 	select CHIP_STM32F469I
 	select CHIP_HAS_UFBGA176
 	help
-		STMicroelectronics STM32F469IG chip
+		STM32F469IG chip
 
 config CHIP_STM32F469II
 	bool "STM32F469II"
@@ -784,35 +784,35 @@ config CHIP_STM32F469II
 	select CHIP_HAS_LQFP176
 	select CHIP_HAS_UFBGA176
 	help
-		STMicroelectronics STM32F469II chip
+		STM32F469II chip
 
 config CHIP_STM32F469NE
 	bool "STM32F469NE"
 	select CHIP_STM32F469N
 	select CHIP_HAS_TFBGA216
 	help
-		STMicroelectronics STM32F469NE chip
+		STM32F469NE chip
 
 config CHIP_STM32F469NG
 	bool "STM32F469NG"
 	select CHIP_STM32F469N
 	select CHIP_HAS_TFBGA216
 	help
-		STMicroelectronics STM32F469NG chip
+		STM32F469NG chip
 
 config CHIP_STM32F469NI
 	bool "STM32F469NI"
 	select CHIP_STM32F469N
 	select CHIP_HAS_TFBGA216
 	help
-		STMicroelectronics STM32F469NI chip
+		STM32F469NI chip
 
 config CHIP_STM32F479AG
 	bool "STM32F479AG"
 	select CHIP_STM32F479A
 	select CHIP_HAS_UFBGA169
 	help
-		STMicroelectronics STM32F479AG chip
+		STM32F479AG chip
 
 config CHIP_STM32F479AI
 	bool "STM32F479AI"
@@ -820,49 +820,49 @@ config CHIP_STM32F479AI
 	select CHIP_HAS_UFBGA169
 	select CHIP_HAS_WLCSP168
 	help
-		STMicroelectronics STM32F479AI chip
+		STM32F479AI chip
 
 config CHIP_STM32F479BG
 	bool "STM32F479BG"
 	select CHIP_STM32F479B
 	select CHIP_HAS_LQFP208
 	help
-		STMicroelectronics STM32F479BG chip
+		STM32F479BG chip
 
 config CHIP_STM32F479BI
 	bool "STM32F479BI"
 	select CHIP_STM32F479B
 	select CHIP_HAS_LQFP208
 	help
-		STMicroelectronics STM32F479BI chip
+		STM32F479BI chip
 
 config CHIP_STM32F479IG
 	bool "STM32F479IG"
 	select CHIP_STM32F479I
 	select CHIP_HAS_UFBGA176
 	help
-		STMicroelectronics STM32F479IG chip
+		STM32F479IG chip
 
 config CHIP_STM32F479II
 	bool "STM32F479II"
 	select CHIP_STM32F479I
 	select CHIP_HAS_LQFP176
 	help
-		STMicroelectronics STM32F479II chip
+		STM32F479II chip
 
 config CHIP_STM32F479NG
 	bool "STM32F479NG"
 	select CHIP_STM32F479N
 	select CHIP_HAS_TFBGA216
 	help
-		STMicroelectronics STM32F479NG chip
+		STM32F479NG chip
 
 config CHIP_STM32F479NI
 	bool "STM32F479NI"
 	select CHIP_STM32F479N
 	select CHIP_HAS_TFBGA216
 	help
-		STMicroelectronics STM32F479NI chip
+		STM32F479NI chip
 
 endchoice
 
