@@ -12,7 +12,7 @@
 #-----------------------------------------------------------------------------------------------------------------------
 
 SUBDIRECTORIES += architecture
-SUBDIRECTORIES += chip/STMicroelectronics/STM32F4
+SUBDIRECTORIES += chip/STM32/STM32F4
 SUBDIRECTORIES += clocks
 SUBDIRECTORIES += memory
 SUBDIRECTORIES += scheduler

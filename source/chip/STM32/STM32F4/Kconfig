@@ -1868,4 +1868,4 @@ config CHIP
 
 config CHIP_INCLUDES
 	string
-	default "source/chip/STMicroelectronics/STM32F4/include external/CMSIS-STM32F4 external/CMSIS"
+	default "source/chip/STM32/STM32F4/include external/CMSIS-STM32F4 external/CMSIS"

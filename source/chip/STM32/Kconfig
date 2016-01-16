@@ -25,5 +25,5 @@ config CHIP_STM32F4
 endchoice
 
 if CHIP_STM32F4
-source source/chip/STMicroelectronics/STM32F4/Kconfig
+source source/chip/STM32/STM32F4/Kconfig
 endif
