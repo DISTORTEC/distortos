@@ -121,7 +121,7 @@ public:
 	 * \brief Gets signal mask for associated thread.
 	 *
 	 * Similar to pthread_sigmask() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_sigmask.html#
-	 * 
+	 *
 	 * \return SignalSet with signal mask for associated thread
 	 */
 
@@ -175,7 +175,7 @@ public:
 	 * \param [in] signalMask is the SignalSet with new signal mask for associated thread
 	 * \param [in] requestDelivery selects whether delivery of signals will be requested if any pending signal is
 	 * unblocked (true) or not (false)
-	 * 
+	 *
 	 * \return 0 on success, error code otherwise:
 	 * - ENOTSUP - catching/handling of signals is disabled for this receiver;
 	 */
