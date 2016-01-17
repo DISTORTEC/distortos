@@ -1,0 +1,46 @@
+#
+# file: Kconfig
+#
+# author: Copyright (C) 2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+#
+# This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
+# distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+#
+
+choice
+	prompt "STM32F4 board"
+	default BOARD_STM32F4DISCOVERY
+	help
+		Select STM32F4 board
+
+config BOARD_CUSTOM
+	bool "Custom board"
+	help
+		Custom board
+
+config BOARD_32F429IDISCOVERY
+	bool "32F429IDISCOVERY"
+	select CHIP_STM32F429ZI
+	help
+		32F429IDISCOVERY board with STM32F429ZI chip
+
+config BOARD_NUCLEO_F401RE
+	bool "NUCLEO-F401RE"
+	select CHIP_STM32F401RE
+	help
+		NUCLEO-F401RE board with STM32F401RE chip
+
+config BOARD_STM32F4DISCOVERY
+	bool "STM32F4DISCOVERY"
+	select CHIP_STM32F407VG
+	help
+		STM32F4DISCOVERY board with STM32F407VG chip
+
+endchoice
+
+config BOARD
+	string
+	default "Custom" if BOARD_CUSTOM
+	default "32F429IDISCOVERY" if BOARD_32F429IDISCOVERY
+	default "NUCLEO-F401RE" if BOARD_NUCLEO_F401RE
+	default "STM32F4DISCOVERY" if BOARD_STM32F4DISCOVERY
