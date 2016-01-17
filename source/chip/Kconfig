@@ -31,6 +31,7 @@ comment "Generic chip options"
 
 choice
 	prompt "Chip package"
+	depends on BOARD_CUSTOM
 	help
 		Select chip package
 
