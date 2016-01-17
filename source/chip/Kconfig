@@ -1,7 +1,7 @@
 #
 # file: Kconfig
 #
-# author: Copyright (C) 2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+# author: Copyright (C) 2015-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
 #
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -34,105 +34,122 @@ choice
 	help
 		Select chip package
 
-config CHIP_LQFP64
+config CHIP_LQFP64_SELECTED
 	bool "LQFP64"
 	depends on CHIP_HAS_LQFP64
+	select CHIP_LQFP64
 	help
 		LQFP64 chip package
 
-config CHIP_LQFP100
+config CHIP_LQFP100_SELECTED
 	bool "LQFP100"
 	depends on CHIP_HAS_LQFP100
+	select CHIP_LQFP100
 	help
 		LQFP100 chip package
 
-config CHIP_LQFP144
+config CHIP_LQFP144_SELECTED
 	bool "LQFP144"
 	depends on CHIP_HAS_LQFP144
+	select CHIP_LQFP144
 	help
 		LQFP144 chip package
 
-config CHIP_LQFP176
+config CHIP_LQFP176_SELECTED
 	bool "LQFP176"
 	depends on CHIP_HAS_LQFP176
+	select CHIP_LQFP176
 	help
 		LQFP176 chip package
 
-config CHIP_LQFP208
+config CHIP_LQFP208_SELECTED
 	bool "LQFP208"
 	depends on CHIP_HAS_LQFP208
+	select CHIP_LQFP208
 	help
 		LQFP208 chip package
 
-config CHIP_TFBGA216
+config CHIP_TFBGA216_SELECTED
 	bool "TFBGA216"
 	depends on CHIP_HAS_TFBGA216
+	select CHIP_TFBGA216
 	help
 		TFBGA216 chip package
 
-config CHIP_UFBGA100
+config CHIP_UFBGA100_SELECTED
 	bool "UFBGA100"
 	depends on CHIP_HAS_UFBGA100
+	select CHIP_UFBGA100
 	help
 		UFBGA100 chip package
 
-config CHIP_UFBGA144
+config CHIP_UFBGA144_SELECTED
 	bool "UFBGA144"
 	depends on CHIP_HAS_UFBGA144
+	select CHIP_UFBGA144
 	help
 		UFBGA144 chip package
 
-config CHIP_UFBGA169
+config CHIP_UFBGA169_SELECTED
 	bool "UFBGA169"
 	depends on CHIP_HAS_UFBGA169
+	select CHIP_UFBGA169
 	help
 		UFBGA169 chip package
 
-config CHIP_UFBGA176
+config CHIP_UFBGA176_SELECTED
 	bool "UFBGA176"
 	depends on CHIP_HAS_UFBGA176
+	select CHIP_UFBGA176
 	help
 		UFBGA176 chip package
 
-config CHIP_UFQFPN48
+config CHIP_UFQFPN48_SELECTED
 	bool "UFQFPN48"
 	depends on CHIP_HAS_UFQFPN48
+	select CHIP_UFQFPN48
 	help
 		UFQFPN48 chip package
 
-config CHIP_WLCSP36
+config CHIP_WLCSP36_SELECTED
 	bool "WLCSP36"
 	depends on CHIP_HAS_WLCSP36
+	select CHIP_WLCSP36
 	help
 		WLCSP36 chip package
 
-config CHIP_WLCSP49
+config CHIP_WLCSP49_SELECTED
 	bool "WLCSP49"
 	depends on CHIP_HAS_WLCSP49
+	select CHIP_WLCSP49
 	help
 		WLCSP49 chip package
 
-config CHIP_WLCSP81
+config CHIP_WLCSP81_SELECTED
 	bool "WLCSP81"
 	depends on CHIP_HAS_WLCSP81
+	select CHIP_WLCSP81
 	help
 		WLCSP81 chip package
 
-config CHIP_WLCSP90
+config CHIP_WLCSP90_SELECTED
 	bool "WLCSP90"
 	depends on CHIP_HAS_WLCSP90
+	select CHIP_WLCSP90
 	help
 		WLCSP90 chip package
 
-config CHIP_WLCSP143
+config CHIP_WLCSP143_SELECTED
 	bool "WLCSP143"
 	depends on CHIP_HAS_WLCSP143
+	select CHIP_WLCSP143
 	help
 		WLCSP143 chip package
 
-config CHIP_WLCSP168
+config CHIP_WLCSP168_SELECTED
 	bool "WLCSP168"
 	depends on CHIP_HAS_WLCSP168
+	select CHIP_WLCSP168
 	help
 		WLCSP168 chip package
 
@@ -203,6 +220,74 @@ config CHIP_HAS_WLCSP143
 	default n
 
 config CHIP_HAS_WLCSP168
+	bool
+	default n
+
+config CHIP_LQFP64
+	bool
+	default n
+
+config CHIP_LQFP100
+	bool
+	default n
+
+config CHIP_LQFP144
+	bool
+	default n
+
+config CHIP_LQFP176
+	bool
+	default n
+
+config CHIP_LQFP208
+	bool
+	default n
+
+config CHIP_TFBGA216
+	bool
+	default n
+
+config CHIP_UFBGA100
+	bool
+	default n
+
+config CHIP_UFBGA144
+	bool
+	default n
+
+config CHIP_UFBGA169
+	bool
+	default n
+
+config CHIP_UFBGA176
+	bool
+	default n
+
+config CHIP_UFQFPN48
+	bool
+	default n
+
+config CHIP_WLCSP36
+	bool
+	default n
+
+config CHIP_WLCSP49
+	bool
+	default n
+
+config CHIP_WLCSP81
+	bool
+	default n
+
+config CHIP_WLCSP90
+	bool
+	default n
+
+config CHIP_WLCSP143
+	bool
+	default n
+
+config CHIP_WLCSP168
 	bool
 	default n
 
