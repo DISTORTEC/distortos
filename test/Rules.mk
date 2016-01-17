@@ -57,7 +57,7 @@ include $(DISTORTOS_PATH)footer.mk
 # .elf file dependencies - libdistortos.a, all objects from this folder tree, linker script and this Rules.mk
 #-----------------------------------------------------------------------------------------------------------------------
 
-$(ELF_$(d)): $(OUTPUT)libdistortos.a $(OBJECTS_$(d)) $(SUBDIRECTORIES_OBJECTS_$(d)) $(LDSCRIPT) $(d)Rules.mk 
+$(ELF_$(d)): $(OUTPUT)libdistortos.a $(OBJECTS_$(d)) $(SUBDIRECTORIES_OBJECTS_$(d)) $(LDSCRIPT) $(d)Rules.mk
 
 #-----------------------------------------------------------------------------------------------------------------------
 # .hex, .bin, .dmp and .lss files depends on .elf file and this Rules.mk
