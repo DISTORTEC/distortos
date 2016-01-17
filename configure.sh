@@ -29,7 +29,7 @@ if [ ! -f $path ]; then
 		echo "Trying $path... Not found!"
 		echo "Error - no suitable configuration found!"
 		exit 1
-	fi	
+	fi
 fi
 
 echo "Trying $path... Found."
