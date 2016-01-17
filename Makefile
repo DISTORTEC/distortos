@@ -200,7 +200,7 @@ $(OBJECTS): $(OUTPUT)include/distortos/distortosConfiguration.h
 $(GENERATED): $(DISTORTOS_PATH)Makefile
 
 $(OUTPUT)%.o: %.S
-	$(call PRETTY_PRINT," AS     " $<) 
+	$(call PRETTY_PRINT," AS     " $<)
 	$(Q)$(AS) $(ASFLAGS) $(ASFLAGS_$(<)) -c $< -o $@
 
 $(OUTPUT)%.o: %.c
