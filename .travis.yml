@@ -39,7 +39,7 @@ script:
     - cd /tmp/distortosTemplateSubfolder-master
     - make configure CONFIG_PATH=distortos/configurations/STM32F4DISCOVERY/test
     - make -j`nproc` VERBOSE=1
-    - make distclean 
+    - make distclean
     - cd -
     - export PATH=/tmp/gcc-arm-none-eabi-4_9-150928/bin:$SAVED_PATH
     - mkdir /tmp/lib
@@ -57,5 +57,5 @@ script:
     - cd /tmp/distortosTemplateSubfolder-master
     - make configure CONFIG_PATH=distortos/configurations/STM32F4DISCOVERY/test
     - make -j`nproc` VERBOSE=1
-    - make distclean 
+    - make distclean
     - cd -
