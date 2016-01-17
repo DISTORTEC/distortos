@@ -65,8 +65,8 @@ extern "C" __attribute__ ((naked)) void PendSV_Handler()
 			"	tst			lr, #(1 << 4)					\n"	// was floating-point used by the thread?
 			"	it			eq								\n"
 			"	vstmdbeq	r0!, {s16-s31}					\n"	// save "floating-point" context of current thread
-			// save "regular" context of current thread (r12 is saved just to keep double-word alignment) 
-			"	stmdb		r0!, {r4-r12, lr}				\n"	
+			// save "regular" context of current thread (r12 is saved just to keep double-word alignment)
+			"	stmdb		r0!, {r4-r12, lr}				\n"
 #else
 			"	stmdb		r0!, {r4-r11}					\n"	// save context of current thread
 			"	mov			r4, lr							\n"
