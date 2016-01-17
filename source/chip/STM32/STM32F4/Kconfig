@@ -725,12 +725,29 @@ endchoice
 
 comment "STM32F4 chip options"
 
+if CHIP_STM32F4_VDD_MV_CONFIGURABLE
+
 config CHIP_STM32F4_VDD_MV
 	int "Vdd supply voltage, mV"
 	range 1800 3600
-	default 3300
+	default CHIP_STM32F4_VDD_MV_DEFAULT
 	help
 		Vdd supply voltage of the chip, mV.
+
+endif	# CHIP_STM32F4_VDD_MV_CONFIGURABLE
+
+if !CHIP_STM32F4_VDD_MV_CONFIGURABLE
+
+config CHIP_STM32F4_VDD_MV
+	int "Vdd supply voltage, mV (not configurable)"
+	range CHIP_STM32F4_VDD_MV_DEFAULT CHIP_STM32F4_VDD_MV_DEFAULT
+	default CHIP_STM32F4_VDD_MV_DEFAULT
+	help
+		Vdd supply voltage of the chip, mV.
+
+		This value is not configurable, as it is set by board.
+
+endif	# !CHIP_STM32F4_VDD_MV_CONFIGURABLE
 
 config CHIP_STM32F4_FLASH_PREFETCH_ENABLE
 	bool "Enable flash prefetch"
@@ -2208,6 +2225,14 @@ config CHIP_STM32F4_SRAM3_ADDRESS
 	default 0x20030000 if CHIP_STM32F46 || CHIP_STM32F47
 	default 0x20020000
 	depends on CHIP_STM32F4_SRAM3_SIZE != 0
+
+config CHIP_STM32F4_VDD_MV_CONFIGURABLE
+	bool
+	default y
+
+config CHIP_STM32F4_VDD_MV_DEFAULT
+	int
+	default 3300
 
 config CHIP
 	string

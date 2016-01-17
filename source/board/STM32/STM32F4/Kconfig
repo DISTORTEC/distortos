@@ -25,6 +25,8 @@ config BOARD_32F429IDISCOVERY
 	help
 		32F429IDISCOVERY board with STM32F429ZI chip in LQFP144 package
 
+		Chip's supply voltage is 3V.
+
 config BOARD_NUCLEO_F401RE
 	bool "NUCLEO-F401RE"
 	select CHIP_STM32F401RE
@@ -32,12 +34,16 @@ config BOARD_NUCLEO_F401RE
 	help
 		NUCLEO-F401RE board with STM32F401RE chip in LQFP64 package
 
+		Chip's supply voltage is 3.3V.
+
 config BOARD_STM32F4DISCOVERY
 	bool "STM32F4DISCOVERY"
 	select CHIP_STM32F407VG
 	select CHIP_LQFP100
 	help
 		STM32F4DISCOVERY board with STM32F407VG chip in LQFP100 package
+
+		Chip's supply voltage is 3V.
 
 endchoice
 
