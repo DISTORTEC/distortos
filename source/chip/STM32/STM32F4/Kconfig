@@ -814,24 +814,52 @@ config CHIP_STM32F4_RCC_HSE_ENABLE
 if CHIP_STM32F4_RCC_HSE_ENABLE
 
 config CHIP_STM32F4_RCC_HSE_CLOCK_BYPASS
-	bool "HSE Clock Bypass"
-	default n
+	bool
+	prompt "HSE Clock Bypass" if CHIP_STM32F4_RCC_HSE_CLOCK_BYPASS_CONFIGURABLE
+	default CHIP_STM32F4_RCC_HSE_CLOCK_BYPASS_DEFAULT
 	help
 		Selects whether HSE generator is bypassed. If enabled, external user
 		clock connected to OSC_IN must be used. Crystal or ceramic resonator
 		connected to OSC_IN and OSC_OUT must be used otherwise.
 
+comment "HSE Clock Bypass is disabled (not configurable)"
+	depends on !CHIP_STM32F4_RCC_HSE_CLOCK_BYPASS_CONFIGURABLE && !CHIP_STM32F4_RCC_HSE_CLOCK_BYPASS_DEFAULT
+
+comment "HSE Clock Bypass is enabled (not configurable)"
+	depends on !CHIP_STM32F4_RCC_HSE_CLOCK_BYPASS_CONFIGURABLE && CHIP_STM32F4_RCC_HSE_CLOCK_BYPASS_DEFAULT
+
+if CHIP_STM32F4_RCC_HSE_HZ_CONFIGURABLE
+
 config CHIP_STM32F4_RCC_HSE_HZ
 	int "Frequency of HSE clock, Hz"
 	range 1000000 50000000 if CHIP_STM32F4_RCC_HSE_CLOCK_BYPASS
 	range 4000000 26000000
-	default 8000000
+	default CHIP_STM32F4_RCC_HSE_HZ_DEFAULT
 	help
 		Frequency of HSE clock, Hz. This can be:
 		- "HSE Clock Bypass" disabled - crystal/ceramic resonator connected to
 		OSC_IN and OSC_OUT [4MHz; 26MHz];
 		- "HSE Clock Bypass" enabled - external user clock connected to OSC_IN
 		[1MHz; 50MHz];
+
+endif	# CHIP_STM32F4_RCC_HSE_HZ_CONFIGURABLE
+
+if !CHIP_STM32F4_RCC_HSE_HZ_CONFIGURABLE
+
+config CHIP_STM32F4_RCC_HSE_HZ
+	int "Frequency of HSE clock, Hz (not configurable)"
+	range CHIP_STM32F4_RCC_HSE_HZ_DEFAULT CHIP_STM32F4_RCC_HSE_HZ_DEFAULT
+	default CHIP_STM32F4_RCC_HSE_HZ_DEFAULT
+	help
+		Frequency of HSE clock, Hz. This can be:
+		- "HSE Clock Bypass" disabled - crystal/ceramic resonator connected to
+		OSC_IN and OSC_OUT [4MHz; 26MHz];
+		- "HSE Clock Bypass" enabled - external user clock connected to OSC_IN
+		[1MHz; 50MHz];
+
+		This value is not configurable, as it is set by board.
+
+endif	# !CHIP_STM32F4_RCC_HSE_HZ_CONFIGURABLE
 
 endif	# CHIP_STM32F4_RCC_HSE_ENABLE
 
@@ -2233,6 +2261,22 @@ config CHIP_STM32F4_VDD_MV_CONFIGURABLE
 config CHIP_STM32F4_VDD_MV_DEFAULT
 	int
 	default 3300
+
+config CHIP_STM32F4_RCC_HSE_CLOCK_BYPASS_CONFIGURABLE
+	bool
+	default y
+
+config CHIP_STM32F4_RCC_HSE_CLOCK_BYPASS_DEFAULT
+	bool
+	default n
+
+config CHIP_STM32F4_RCC_HSE_HZ_CONFIGURABLE
+	bool
+	default y
+
+config CHIP_STM32F4_RCC_HSE_HZ_DEFAULT
+	int
+	default 8000000
 
 config CHIP
 	string
