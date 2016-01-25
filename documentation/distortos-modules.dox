@@ -2,7 +2,7 @@
  * \file
  * \brief documentation of distortos modules
  *
- * \author Copyright (C) 2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2015-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -12,6 +12,9 @@
 /**
  * \defgroup clocks Clocks
  * \brief Clocks-related API of distortos
+ *
+ * \defgroup devices Device drivers
+ * \brief Device drivers provided by distortos
  *
  * \defgroup softwareTimers Software Timers
  * \brief Software Timers API of distortos
