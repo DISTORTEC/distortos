@@ -14,6 +14,7 @@
 SUBDIRECTORIES += architecture
 SUBDIRECTORIES += chip/STM32/STM32F4
 SUBDIRECTORIES += clocks
+SUBDIRECTORIES += devices/io
 SUBDIRECTORIES += memory
 SUBDIRECTORIES += scheduler
 SUBDIRECTORIES += synchronization
