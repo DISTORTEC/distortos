@@ -2,7 +2,7 @@
  * \file
  * \brief distortosPreinitArray object definition
  *
- * \author Copyright (C) 2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2015-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -14,6 +14,8 @@
 #include "distortos/architecture/lowLevelInitialization.hpp"
 #include "distortos/architecture/startScheduling.hpp"
 
+#include "distortos/board/lowLevelInitialization.hpp"
+
 #include "distortos/chip/lowLevelInitialization.hpp"
 
 namespace distortos
@@ -24,6 +26,22 @@ namespace internal
 
 namespace
 {
+
+/*---------------------------------------------------------------------------------------------------------------------+
+| local functions
++---------------------------------------------------------------------------------------------------------------------*/
+
+/**
+ * \brief Wrapper for optional board::lowLevelInitialization().
+ *
+ * Calls board::lowLevelInitialization() if it is defined, otherwise does nothing.
+ */
+
+void boardLowLevelInitializationWrapper()
+{
+	if (board::lowLevelInitialization != nullptr)
+		board::lowLevelInitialization();
+}
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | local types
@@ -42,6 +60,7 @@ const FunctionPointer distortosPreinitArray[] __attribute__ ((section(".preinit_
 		lowLevelInitialization,
 		architecture::lowLevelInitialization,
 		chip::lowLevelInitialization,
+		boardLowLevelInitializationWrapper,
 		architecture::startScheduling,
 };
 
