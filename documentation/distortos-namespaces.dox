@@ -16,6 +16,9 @@
  * \namespace distortos::architecture
  * \brief Architecture-related code of distortos project
  *
+ * \namespace distortos::board
+ * \brief Board-related code of distortos project
+ *
  * \namespace distortos::chip
  * \brief Chip-related code of distortos project
  *
