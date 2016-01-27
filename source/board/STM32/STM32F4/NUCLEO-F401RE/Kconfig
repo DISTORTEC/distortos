@@ -14,3 +14,7 @@ config CHIP_STM32F4_VDD_MV_CONFIGURABLE
 config CHIP_STM32F4_VDD_MV_DEFAULT
 	int
 	default 3300
+
+config BOARD_INCLUDES
+	string
+	default "source/board/STM32/STM32F4/NUCLEO-F401RE/include"

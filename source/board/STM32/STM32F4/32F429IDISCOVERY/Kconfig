@@ -30,3 +30,7 @@ config CHIP_STM32F4_RCC_HSE_HZ_CONFIGURABLE
 config CHIP_STM32F4_RCC_HSE_HZ_DEFAULT
 	int
 	default 8000000
+
+config BOARD_INCLUDES
+	string
+	default "source/board/STM32/STM32F4/32F429IDISCOVERY/include"
