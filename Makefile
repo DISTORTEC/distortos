@@ -131,6 +131,9 @@ ARCHITECTURE_INCLUDES += $(patsubst %,-I$(DISTORTOS_PATH)%,$(subst ",,$(CONFIG_A
 # chip includes
 CHIP_INCLUDES += $(patsubst %,-I$(DISTORTOS_PATH)%,$(subst ",,$(CONFIG_CHIP_INCLUDES)))
 
+# board includes
+BOARD_INCLUDES += $(patsubst %,-I$(DISTORTOS_PATH)%,$(subst ",,$(CONFIG_BOARD_INCLUDES)))
+
 #-----------------------------------------------------------------------------------------------------------------------
 # build macros
 #-----------------------------------------------------------------------------------------------------------------------
