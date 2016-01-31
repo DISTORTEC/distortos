@@ -156,6 +156,8 @@ config CHIP_WLCSP168_SELECTED
 
 endchoice
 
+source source/architecture/Kconfig
+
 config CHIP_HAS_LQFP64
 	bool
 	default n
