@@ -10,3 +10,16 @@
 if CHIP_STM32
 source source/board/STM32/Kconfig
 endif
+
+comment "Generic board options"
+
+config BOARD_LEDS_ENABLE
+	bool "Enable LEDs"
+	depends on BOARD_TOTAL_LEDS != 0
+	default y
+	help
+		Enables board LEDs.
+
+config BOARD_TOTAL_LEDS
+	int
+	default 0
