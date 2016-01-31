@@ -9,16 +9,18 @@
 
 menu "Architecture configuration"
 
+if ARCHITECTURE_ARM
+source source/architecture/ARM/Kconfig
+endif
+
+comment "Generic architecture options"
+
 config ARCHITECTURE_FPU
 	bool "Enable FPU"
 	default y
 	depends on ARCHITECTURE_HAS_FPU
 	help
 		Enables FPU.
-
-if ARCHITECTURE_ARM
-source source/architecture/ARM/Kconfig
-endif
 
 config ARCHITECTURE_HAS_FPU
 	bool
