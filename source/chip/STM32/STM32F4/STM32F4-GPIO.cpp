@@ -13,6 +13,8 @@
 
 #include "distortos/chip/STM32F4-GPIO-bits.h"
 
+#include "distortos/architecture/InterruptMaskingLock.hpp"
+
 namespace distortos
 {
 
@@ -116,6 +118,9 @@ void configurePin(const Pin pin, const PinMode mode, const bool openDrain, const
 	const auto pinNumber = decodedPin.second;
 
 	port.BSRR = 1 << (pinNumber + (initialState == false ? 16 : 0));
+
+	architecture::InterruptMaskingLock interruptMaskingLock;
+
 	configureMode(port, pinNumber, mode);
 	configureOutputType(port, pinNumber, openDrain);
 	configureOutputSpeed(port, pinNumber, outputSpeed);
