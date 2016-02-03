@@ -64,7 +64,8 @@ Configuration & building
 ------------------------
 
 To configure & build *distortos* you need:
-- [GNU Make](http://www.gnu.org/software/make/) or [tup](http://gittup.org/tup/) (version 0.7.3 or above) build system;
+- [GNU Make](http://www.gnu.org/software/make/) build system;
+- (optionally) [tup](http://gittup.org/tup/) (version 0.7.3 or above) build system;
 - [arm-none-eabi bleeding-edge-toolchain](https://sourceforge.net/projects/bleeding-edge/); alternatively you can try
   any other arm-none-eabi toolchain, but C++ exception handling code will increase the size of binary and incorrect
   newlib's _reent struct configuration will dramatically increase RAM requirements (bleeding-edge-toolchain has the
