@@ -22,7 +22,7 @@
 # - DS11118 datasheet (STM32F479xx), Revision 2, 2015-10-19, devices listed on website at 2015-12-13;
 #
 
-source source/board/Kconfig
+source "source/board/Kconfig"
 
 choice
 	prompt "STM32F4 chip"

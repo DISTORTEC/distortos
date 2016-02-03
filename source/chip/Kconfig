@@ -24,7 +24,7 @@ config CHIP_STM32
 endchoice
 
 if CHIP_STM32
-source source/chip/STM32/Kconfig
+source "source/chip/STM32/Kconfig"
 endif
 
 comment "Generic chip options"
@@ -156,7 +156,7 @@ config CHIP_WLCSP168_SELECTED
 
 endchoice
 
-source source/architecture/Kconfig
+source "source/architecture/Kconfig"
 
 config CHIP_HAS_LQFP64
 	bool

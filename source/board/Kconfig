@@ -8,7 +8,7 @@
 #
 
 if CHIP_STM32
-source source/board/STM32/Kconfig
+source "source/board/STM32/Kconfig"
 endif
 
 comment "Generic board options"

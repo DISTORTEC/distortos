@@ -8,7 +8,7 @@
 #
 
 if ARCHITECTURE_ARM
-source source/architecture/ARM/Kconfig
+source "source/architecture/ARM/Kconfig"
 endif
 
 comment "Generic architecture options"
