@@ -7,5 +7,5 @@
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #
 
-source "source/chip/Kconfig"
-source "source/scheduler/Kconfig"
+source "$DISTORTOS_PATH/source/chip/Kconfig"
+source "$DISTORTOS_PATH/source/scheduler/Kconfig"

@@ -16,5 +16,5 @@ config TOOLCHAIN_PREFIX
 	default "arm-none-eabi-"
 
 if ARCHITECTURE_ARMV7_M
-source "source/architecture/ARM/ARMv7-M/Kconfig"
+source "$DISTORTOS_PATH/source/architecture/ARM/ARMv7-M/Kconfig"
 endif

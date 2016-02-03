@@ -7,8 +7,13 @@
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #
 
-source "source/Kconfig"
-source "test/Kconfig"
+config DISTORTOS_PATH
+	string
+	option env="DISTORTOS_PATH"
+	default "."
+
+source "$DISTORTOS_PATH/source/Kconfig"
+source "$DISTORTOS_PATH/test/Kconfig"
 
 menu "Build configuration"
 
