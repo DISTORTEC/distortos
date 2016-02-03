@@ -101,7 +101,7 @@ project. If you need to see verbose compilation log, execute `make VERBOSE=1` (i
 `tup --verbose` (if using *tup*).
 
 To remove all generated files (*tup* database, build outputs, *doxygen* outputs and `selectedConfiguration.mk` file)
-you can run `./scripts/distclean.sh` (or `sh scripts/distclean.sh` on *Windows*).
+you can run `make distclean`.
 
 #### If you use tup and Linux
 
