@@ -281,4 +281,4 @@ help:
 
 .PHONY: menuconfig
 menuconfig:
-	cd ./$(DISTORTOS_PATH) && kconfig-mconf Kconfig
+	DISTORTOS_PATH=.$(DISTORTOS_PATH:%/=/%) kconfig-mconf $(DISTORTOS_PATH)Kconfig
