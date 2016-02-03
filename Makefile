@@ -61,18 +61,24 @@ $(eval $(foreach target,$(SIMPLE_TARGETS),$(call CHECK_SIMPLE_TARGETS,$(target))
 # load configuration variables from distortosConfiguration.mk file selected by user
 #-----------------------------------------------------------------------------------------------------------------------
 
-ifeq ($(DO_INCLUDE),1)
+DISTORTOS_CONFIGURATION_MK = distortosConfiguration.mk
 
-    ifeq ($(wildcard selectedConfiguration.mk),)
-        $(error Please run first '$(DISTORTOS_PATH)configure.sh [<path to distortosConfiguration.mk>]' or 'make \
-                configure [CONFIG_PATH=<path to distortosConfiguration.mk>]')
-    endif
+ifneq ($(wildcard selectedConfiguration.mk),)
 
     # file with $(CONFIG_SELECTED_CONFIGURATION) variable
     include selectedConfiguration.mk
 
     # path to distortosConfiguration.mk file selected by $(CONFIG_SELECTED_CONFIGURATION) variable
     DISTORTOS_CONFIGURATION_MK = ./$(subst ",,$(CONFIG_SELECTED_CONFIGURATION))
+    
+endif
+
+ifeq ($(DO_INCLUDE),1)
+
+    ifeq ($(wildcard selectedConfiguration.mk),)
+        $(error Please run first '$(DISTORTOS_PATH)configure.sh [<path to distortosConfiguration.mk>]' or 'make \
+                configure [CONFIG_PATH=<path to distortosConfiguration.mk>]')
+    endif
 
     include $(DISTORTOS_CONFIGURATION_MK)
 
