@@ -80,7 +80,7 @@ To configure & build *distortos* you need:
 
 Make sure the tools are available in your system's *PATH* environment variable.
 
-To create or edit a configuration run `kconfig-mconf Kconfig` in the root of the project. You can either start from
+To create or edit a configuration run `make menuconfig` in the root of the project. You can either start from
 scratch or edit one of existing configurations (from `configurations/<board>/<variant>` folder). When creating a
 new configuration make sure the name of created file is `distortosConfiguration.mk`.
 
