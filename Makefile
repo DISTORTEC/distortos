@@ -12,16 +12,16 @@
 #-----------------------------------------------------------------------------------------------------------------------
 
 # global assembler flags
-ASFLAGS = -g -ggdb3
+ASFLAGS =
 
 # global C flags
-CFLAGS = -Wall -Wstrict-prototypes -Wextra -Wshadow -std=gnu99 -g -ggdb3
+CFLAGS = -Wall -Wstrict-prototypes -Wextra -Wshadow -std=gnu99
 
 # global C++ flags
-CXXFLAGS = -Wall -Wextra -Wshadow -std=gnu++11 -g -ggdb3
+CXXFLAGS = -Wall -Wextra -Wshadow -std=gnu++11
 
 # linker flags
-LDFLAGS = -g
+LDFLAGS =
 
 # build mode (0 - non-verbose, 1 - verbose)
 VERBOSE ?= 0
@@ -106,14 +106,18 @@ RM = rm -f
 
 CONFIG_ARCHITECTURE_FLAGS := $(subst ",,$(CONFIG_ARCHITECTURE_FLAGS))
 CONFIG_BUILD_OPTIMIZATION := $(subst ",,$(CONFIG_BUILD_OPTIMIZATION))
+CONFIG_DEBUGGING_INFORMATION_COMPILATION := $(subst ",,$(CONFIG_DEBUGGING_INFORMATION_COMPILATION))
 
+ASFLAGS += $(CONFIG_DEBUGGING_INFORMATION_COMPILATION)
 ASFLAGS += $(CONFIG_ARCHITECTURE_FLAGS)
 ASFLAGS += -MD -MP
 
+CFLAGS += $(CONFIG_DEBUGGING_INFORMATION_COMPILATION)
 CFLAGS += $(CONFIG_ARCHITECTURE_FLAGS)
 CFLAGS += $(CONFIG_BUILD_OPTIMIZATION)
 CFLAGS += -ffunction-sections -fdata-sections -MD -MP
 
+CXXFLAGS += $(CONFIG_DEBUGGING_INFORMATION_COMPILATION)
 CXXFLAGS += $(CONFIG_ARCHITECTURE_FLAGS)
 CXXFLAGS += $(CONFIG_BUILD_OPTIMIZATION)
 CXXFLAGS += -ffunction-sections -fdata-sections -fno-rtti -fno-exceptions -MD -MP
@@ -121,6 +125,7 @@ CXXFLAGS += -ffunction-sections -fdata-sections -fno-rtti -fno-exceptions -MD -M
 # path to linker script (generated automatically)
 LDSCRIPT = $(OUTPUT)$(subst ",,$(CONFIG_CHIP)).ld
 
+LDFLAGS += $(subst ",,$(CONFIG_DEBUGGING_INFORMATION_LINKING))
 LDFLAGS += $(CONFIG_ARCHITECTURE_FLAGS)
 LDFLAGS += -Wl,-Map=$(@:%.elf=%.map),--cref,--gc-sections
 
