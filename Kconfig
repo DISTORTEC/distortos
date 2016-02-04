@@ -55,6 +55,12 @@ config BUILD_OPTIMIZATION_OG
 
 endchoice
 
+config DEBUGGING_INFORMATION_ENABLE
+	bool "Enable generation of debugging information"
+	default y
+	help
+		Enables generation of debugging information.
+
 config BUILD_OPTIMIZATION
 	string
 	default "-O0" if BUILD_OPTIMIZATION_O0
@@ -63,5 +69,15 @@ config BUILD_OPTIMIZATION
 	default "-O3" if BUILD_OPTIMIZATION_O3
 	default "-Os" if BUILD_OPTIMIZATION_OS
 	default "-Og" if BUILD_OPTIMIZATION_OG
+
+config DEBUGGING_INFORMATION_COMPILATION
+	string
+	default "-g -ggdb3" if DEBUGGING_INFORMATION_ENABLE
+	default ""
+
+config DEBUGGING_INFORMATION_LINKING
+	string
+	default "-g" if DEBUGGING_INFORMATION_ENABLE
+	default ""
 
 endmenu
