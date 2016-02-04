@@ -11,6 +11,14 @@
 
 #include "SignalCatchingOperationsTestCase.hpp"
 
+#include "distortos/distortosConfiguration.h"
+
+/// configuration required by SignalCatchingOperationsTestCase
+#define SIGNAL_CATCHING_OPERATIONS_TEST_CASE_ENABLED defined(CONFIG_MAIN_THREAD_SIGNAL_ACTIONS) && \
+		CONFIG_MAIN_THREAD_SIGNAL_ACTIONS >= 1 && CONFIG_MAIN_THREAD_SIGNAL_ACTIONS <= 31
+
+#if SIGNAL_CATCHING_OPERATIONS_TEST_CASE_ENABLED == 1
+
 #include "abortSignalHandler.hpp"
 
 #include "distortos/DynamicThread.hpp"
@@ -19,11 +27,15 @@
 
 #include <cerrno>
 
+#endif	// SIGNAL_CATCHING_OPERATIONS_TEST_CASE_ENABLED == 1
+
 namespace distortos
 {
 
 namespace test
 {
+
+#if SIGNAL_CATCHING_OPERATIONS_TEST_CASE_ENABLED == 1
 
 namespace
 {
@@ -192,12 +204,16 @@ bool phase2()
 
 }	// namespace
 
+#endif	// SIGNAL_CATCHING_OPERATIONS_TEST_CASE_ENABLED == 1
+
 /*---------------------------------------------------------------------------------------------------------------------+
 | private functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
 bool SignalCatchingOperationsTestCase::run_() const
 {
+#if SIGNAL_CATCHING_OPERATIONS_TEST_CASE_ENABLED == 1
+
 	constexpr auto phase2ExpectedContextSwitchCount = 2 * phase2ThreadContextSwitchCount;
 	constexpr auto expectedContextSwitchCount = phase2ExpectedContextSwitchCount;
 
@@ -219,6 +235,8 @@ bool SignalCatchingOperationsTestCase::run_() const
 
 	if (statistics::getContextSwitchCount() - contextSwitchCount != expectedContextSwitchCount)
 		return false;
+
+#endif	// SIGNAL_CATCHING_OPERATIONS_TEST_CASE_ENABLED == 1
 
 	return true;
 }
