@@ -11,6 +11,15 @@
 
 #include "SignalsCatchingTestCase.hpp"
 
+#include "distortos/distortosConfiguration.h"
+
+/// configuration required by SignalsCatchingTestCase
+#define SIGNALS_CATCHING_TEST_CASE_ENABLED defined(CONFIG_MAIN_THREAD_QUEUED_SIGNALS) && \
+		CONFIG_MAIN_THREAD_QUEUED_SIGNALS >= 10 && defined(CONFIG_MAIN_THREAD_SIGNAL_ACTIONS) && \
+		CONFIG_MAIN_THREAD_SIGNAL_ACTIONS >= 10
+
+#if SIGNALS_CATCHING_TEST_CASE_ENABLED == 1
+
 #include "SequenceAsserter.hpp"
 
 #include "distortos/DynamicThread.hpp"
@@ -23,11 +32,15 @@
 
 #include <cerrno>
 
+#endif	// SIGNALS_CATCHING_TEST_CASE_ENABLED == 1
+
 namespace distortos
 {
 
 namespace test
 {
+
+#if SIGNALS_CATCHING_TEST_CASE_ENABLED == 1
 
 namespace
 {
@@ -1793,12 +1806,16 @@ const Stage stages[]
 
 }	// namespace
 
+#endif	// SIGNALS_CATCHING_TEST_CASE_ENABLED == 1
+
 /*---------------------------------------------------------------------------------------------------------------------+
 | private functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
 bool SignalsCatchingTestCase::run_() const
 {
+#if SIGNALS_CATCHING_TEST_CASE_ENABLED == 1
+
 	const auto contextSwitchCount = statistics::getContextSwitchCount();
 	auto expectedContextSwitchCount = decltype(contextSwitchCount){};
 
@@ -1859,6 +1876,8 @@ bool SignalsCatchingTestCase::run_() const
 
 	if (statistics::getContextSwitchCount() - contextSwitchCount != expectedContextSwitchCount)
 		return false;
+
+#endif	// SIGNALS_CATCHING_TEST_CASE_ENABLED == 1
 
 	return true;
 }
