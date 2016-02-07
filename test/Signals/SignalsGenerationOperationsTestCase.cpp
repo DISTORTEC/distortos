@@ -2,7 +2,7 @@
  * \file
  * \brief SignalsGenerationOperationsTestCase class implementation
  *
- * \author Copyright (C) 2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2015-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -11,9 +11,15 @@
 
 #include "SignalsGenerationOperationsTestCase.hpp"
 
+#include "distortos/distortosConfiguration.h"
+
+#ifdef CONFIG_MAIN_THREAD_CAN_RECEIVE_SIGNALS
+
 #include "signalsTestSelfOneSignalPending.hpp"
 
 #include "distortos/ThisThread-Signals.hpp"
+
+#endif	// def CONFIG_MAIN_THREAD_CAN_RECEIVE_SIGNALS
 
 namespace distortos
 {
@@ -27,6 +33,8 @@ namespace test
 
 bool SignalsGenerationOperationsTestCase::run_() const
 {
+#ifdef CONFIG_MAIN_THREAD_CAN_RECEIVE_SIGNALS
+
 	constexpr uint8_t testSignalNumber {2};
 
 	if (ThisThread::Signals::getPendingSignalSet().getBitset().none() == false)	// initially no signals may be pending
@@ -54,6 +62,8 @@ bool SignalsGenerationOperationsTestCase::run_() const
 	// after the test no signals may be pending
 	if (ThisThread::Signals::getPendingSignalSet().getBitset().none() == false)
 		return false;
+
+#endif	// def CONFIG_MAIN_THREAD_CAN_RECEIVE_SIGNALS
 
 	return true;
 }
