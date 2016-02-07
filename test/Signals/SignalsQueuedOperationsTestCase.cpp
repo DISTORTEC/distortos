@@ -51,6 +51,8 @@ constexpr size_t testThreadStackSize {512};
 
 bool phase1()
 {
+#if defined(CONFIG_MAIN_THREAD_QUEUED_SIGNALS) && CONFIG_MAIN_THREAD_QUEUED_SIGNALS > 0
+
 	constexpr uint8_t testSignalNumber {30};
 	int testValue {};
 
@@ -87,6 +89,8 @@ bool phase1()
 	// after the test no signals may be pending
 	if (ThisThread::Signals::getPendingSignalSet().getBitset().none() == false)
 		return false;
+
+#endif	// defined(CONFIG_MAIN_THREAD_QUEUED_SIGNALS) && CONFIG_MAIN_THREAD_QUEUED_SIGNALS > 0
 
 	return true;
 }
