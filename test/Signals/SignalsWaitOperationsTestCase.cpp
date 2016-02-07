@@ -11,6 +11,10 @@
 
 #include "SignalsWaitOperationsTestCase.hpp"
 
+#include "distortos/distortosConfiguration.h"
+
+#ifdef CONFIG_MAIN_THREAD_CAN_RECEIVE_SIGNALS
+
 #include "signalsTestSelfOneSignalPending.hpp"
 
 #include "waitForNextTick.hpp"
@@ -23,11 +27,15 @@
 
 #include <cerrno>
 
+#endif	// def CONFIG_MAIN_THREAD_CAN_RECEIVE_SIGNALS
+
 namespace distortos
 {
 
 namespace test
 {
+
+#ifdef CONFIG_MAIN_THREAD_CAN_RECEIVE_SIGNALS
 
 namespace
 {
@@ -640,12 +648,16 @@ const std::array<Stage, stagesSize> stages
 
 }	// namespace
 
+#endif	// def CONFIG_MAIN_THREAD_CAN_RECEIVE_SIGNALS
+
 /*---------------------------------------------------------------------------------------------------------------------+
 | private functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
 bool SignalsWaitOperationsTestCase::run_() const
 {
+#ifdef CONFIG_MAIN_THREAD_CAN_RECEIVE_SIGNALS
+
 	constexpr auto phase1ExpectedContextSwitchCount = 6 * waitForNextTickContextSwitchCount +
 			2 * phase1TimedOutWaitContextSwitchCount;
 	constexpr auto phase2ExpectedContextSwitchCount = 3 * waitForNextTickContextSwitchCount +
@@ -676,6 +688,8 @@ bool SignalsWaitOperationsTestCase::run_() const
 
 	if (statistics::getContextSwitchCount() - contextSwitchCount != expectedContextSwitchCount)
 		return false;
+
+#endif	// def CONFIG_MAIN_THREAD_CAN_RECEIVE_SIGNALS
 
 	return true;
 }
