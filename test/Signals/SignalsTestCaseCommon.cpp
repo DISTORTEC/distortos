@@ -2,7 +2,7 @@
  * \file
  * \brief SignalsTestCaseCommon class implementation
  *
- * \author Copyright (C) 2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2015-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -28,6 +28,8 @@ namespace test
 
 bool SignalsTestCaseCommon::finalize() const
 {
+#if defined(CONFIG_MAIN_THREAD_SIGNAL_ACTIONS) && CONFIG_MAIN_THREAD_SIGNAL_ACTIONS > 0
+
 	if (ThisThread::Signals::setSignalMask(SignalSet{SignalSet::empty}) != 0)
 		return false;
 
@@ -39,6 +41,8 @@ bool SignalsTestCaseCommon::finalize() const
 			return false;
 	}
 
+#endif	// defined(CONFIG_MAIN_THREAD_SIGNAL_ACTIONS) && CONFIG_MAIN_THREAD_SIGNAL_ACTIONS > 0
+
 	return PrioritizedTestCase::finalize();
 }
 
@@ -46,6 +50,8 @@ bool SignalsTestCaseCommon::initialize() const
 {
 	if (PrioritizedTestCase::initialize() == false)
 		return false;
+
+#if defined(CONFIG_MAIN_THREAD_SIGNAL_ACTIONS) && CONFIG_MAIN_THREAD_SIGNAL_ACTIONS > 0
 
 	for (uint8_t signalNumber {}; signalNumber < SignalSet::Bitset{}.size(); ++signalNumber)
 	{
@@ -55,7 +61,12 @@ bool SignalsTestCaseCommon::initialize() const
 			return false;
 	}
 
-	return ThisThread::Signals::setSignalMask(signalMask_) == 0;
+	if (ThisThread::Signals::setSignalMask(signalMask_) != 0)
+		return false;
+
+#endif	// defined(CONFIG_MAIN_THREAD_SIGNAL_ACTIONS) && CONFIG_MAIN_THREAD_SIGNAL_ACTIONS > 0
+
+	return true;
 }
 
 }	// namespace test
