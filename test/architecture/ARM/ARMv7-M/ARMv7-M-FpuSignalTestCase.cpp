@@ -13,7 +13,12 @@
 
 #include "distortos/chip/CMSIS-proxy.h"
 
-#if __FPU_PRESENT == 1 && __FPU_USED == 1
+/// configuration required by FpuSignalTestCase
+#define ARMV7_M_FPU_SIGNAL_TEST_CASE_ENABLED __FPU_PRESENT == 1 && __FPU_USED == 1 && \
+		defined(CONFIG_MAIN_THREAD_SIGNAL_ACTIONS) && CONFIG_MAIN_THREAD_SIGNAL_ACTIONS > 0 && \
+		defined(CONFIG_MAIN_THREAD_QUEUED_SIGNALS) && CONFIG_MAIN_THREAD_QUEUED_SIGNALS > 0
+
+#if ARMV7_M_FPU_SIGNAL_TEST_CASE_ENABLED == 1
 
 #include "checkFpuRegisters.hpp"
 #include "setFpuRegisters.hpp"
@@ -26,7 +31,7 @@
 
 #include <cerrno>
 
-#endif	// __FPU_PRESENT == 1 && __FPU_USED == 1
+#endif	// ARMV7_M_FPU_SIGNAL_TEST_CASE_ENABLED == 1
 
 namespace distortos
 {
@@ -34,7 +39,7 @@ namespace distortos
 namespace test
 {
 
-#if __FPU_PRESENT == 1 && __FPU_USED == 1
+#if ARMV7_M_FPU_SIGNAL_TEST_CASE_ENABLED == 1
 
 namespace
 {
@@ -226,7 +231,7 @@ const Stage stages[]
 
 }	// namespace
 
-#endif	// __FPU_PRESENT == 1 && __FPU_USED == 1
+#endif	// ARMV7_M_FPU_SIGNAL_TEST_CASE_ENABLED == 1
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | protected functions
@@ -234,11 +239,11 @@ const Stage stages[]
 
 bool FpuSignalTestCase::finalize() const
 {
-#if __FPU_PRESENT == 1 && __FPU_USED == 1
+#if ARMV7_M_FPU_SIGNAL_TEST_CASE_ENABLED == 1
 
 	disableFpuContext();
 
-#endif	// __FPU_PRESENT == 1 && __FPU_USED == 1
+#endif	// ARMV7_M_FPU_SIGNAL_TEST_CASE_ENABLED == 1
 
 	return SignalsTestCaseCommon::finalize();
 }
@@ -249,7 +254,7 @@ bool FpuSignalTestCase::finalize() const
 
 bool FpuSignalTestCase::run_() const
 {
-#if __FPU_PRESENT == 1 && __FPU_USED == 1
+#if ARMV7_M_FPU_SIGNAL_TEST_CASE_ENABLED == 1
 
 	const auto contextSwitchCount = statistics::getContextSwitchCount();
 	auto expectedContextSwitchCount = decltype(contextSwitchCount){};
@@ -292,13 +297,9 @@ bool FpuSignalTestCase::run_() const
 	if (statistics::getContextSwitchCount() - contextSwitchCount != expectedContextSwitchCount)
 		return false;
 
-	return true;
-
-#else
+#endif	// ARMV7_M_FPU_SIGNAL_TEST_CASE_ENABLED == 1
 
 	return true;
-
-#endif	// __FPU_PRESENT == 1 && __FPU_USED == 1
 }
 
 }	// namespace test
