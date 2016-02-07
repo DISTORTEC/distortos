@@ -93,6 +93,8 @@ int generateSignalWrapper(Thread& thread, const uint8_t signalNumber, int)
 	return thread.generateSignal(signalNumber);
 }
 
+#if defined(CONFIG_MAIN_THREAD_QUEUED_SIGNALS) && CONFIG_MAIN_THREAD_QUEUED_SIGNALS > 0
+
 /**
  * \brief Wrapper for Thread::queueSignal().
  *
@@ -107,6 +109,8 @@ int queueSignalWrapper(Thread& thread, const uint8_t signalNumber, const int val
 {
 	return thread.queueSignal(signalNumber, sigval{value});
 }
+
+#endif	// defined(CONFIG_MAIN_THREAD_QUEUED_SIGNALS) && CONFIG_MAIN_THREAD_QUEUED_SIGNALS > 0
 
 /**
  * \brief Tests whether received SignalInformation object matches the signal that was generated.
@@ -124,6 +128,8 @@ bool testReceivedGeneratedSignal(const SignalInformation& signalInformation, con
 			signalInformation.getCode() == SignalInformation::Code::Generated;
 }
 
+#if defined(CONFIG_MAIN_THREAD_QUEUED_SIGNALS) && CONFIG_MAIN_THREAD_QUEUED_SIGNALS > 0
+
 /**
  * \brief Tests whether received SignalInformation object matches the signal that was queued.
  *
@@ -140,6 +146,8 @@ bool testReceivedQueuedSignal(const SignalInformation& signalInformation, const 
 			signalInformation.getCode() == SignalInformation::Code::Queued &&
 			signalInformation.getValue().sival_int == value;
 }
+
+#endif	// defined(CONFIG_MAIN_THREAD_QUEUED_SIGNALS) && CONFIG_MAIN_THREAD_QUEUED_SIGNALS > 0
 
 /**
  * \brief Tests whether no signals are pending for current thread.
@@ -614,11 +622,20 @@ bool phase4(const SendSignal& sendSignal, const TestReceivedSignalInformation&)
 | local constants
 +---------------------------------------------------------------------------------------------------------------------*/
 
+/// size of \a stages array
+#if defined(CONFIG_MAIN_THREAD_QUEUED_SIGNALS) && CONFIG_MAIN_THREAD_QUEUED_SIGNALS > 0
+constexpr size_t stagesSize {2};
+#else	// !defined(CONFIG_MAIN_THREAD_QUEUED_SIGNALS) || CONFIG_MAIN_THREAD_QUEUED_SIGNALS <= 0
+constexpr size_t stagesSize {1};
+#endif	// !defined(CONFIG_MAIN_THREAD_QUEUED_SIGNALS) || CONFIG_MAIN_THREAD_QUEUED_SIGNALS <= 0
+
 /// test stages
-const std::array<Stage, 2> stages
+const std::array<Stage, stagesSize> stages
 {{
 		{generateSignalWrapper, testReceivedGeneratedSignal},
+#if defined(CONFIG_MAIN_THREAD_QUEUED_SIGNALS) && CONFIG_MAIN_THREAD_QUEUED_SIGNALS > 0
 		{queueSignalWrapper, testReceivedQueuedSignal},
+#endif	// defined(CONFIG_MAIN_THREAD_QUEUED_SIGNALS) && CONFIG_MAIN_THREAD_QUEUED_SIGNALS > 0
 }};
 
 }	// namespace
