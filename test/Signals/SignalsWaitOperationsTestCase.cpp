@@ -577,6 +577,8 @@ bool phase3(const SendSignal& sendSignal, const TestReceivedSignalInformation&)
 
 bool phase4(const SendSignal& sendSignal, const TestReceivedSignalInformation&)
 {
+#if defined(CONFIG_MAIN_THREAD_SIGNAL_ACTIONS) && CONFIG_MAIN_THREAD_SIGNAL_ACTIONS > 0
+
 	constexpr uint8_t testSignalNumber {14};
 	if (testSelfSendSignal(sendSignal, testSignalNumber, {}) == false)
 		return false;
@@ -599,6 +601,13 @@ bool phase4(const SendSignal& sendSignal, const TestReceivedSignalInformation&)
 	// restore previous signal action
 	std::tie(ret, std::ignore) = ThisThread::Signals::setSignalAction(testSignalNumber, setSignalActionResult.second);
 	return ret == 0;
+
+#else	// !defined(CONFIG_MAIN_THREAD_SIGNAL_ACTIONS) || CONFIG_MAIN_THREAD_SIGNAL_ACTIONS <= 0
+
+	static_cast<void>(sendSignal);	// suppress warning
+	return true;
+
+#endif	// !defined(CONFIG_MAIN_THREAD_SIGNAL_ACTIONS) || CONFIG_MAIN_THREAD_SIGNAL_ACTIONS <= 0
 }
 
 /*---------------------------------------------------------------------------------------------------------------------+
