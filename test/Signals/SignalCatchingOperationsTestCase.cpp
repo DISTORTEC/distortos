@@ -66,31 +66,31 @@ bool phase1()
 
 	// the second to last iteration is used to set the same signal action as in the first iteration
 	// the last iteration is used to set the same signal action as the one that is currently set
-	for (size_t shift {}; shift <= mainThreadSignalActions + 1; ++shift)
+	for (size_t mask {}; mask <= mainThreadSignalActions + 1; ++mask)
 		for (uint8_t signalNumber {}; signalNumber < SignalSet::Bitset{}.size(); ++signalNumber)
 		{
 			// last iteration? clip the value so that it is identical to the one from previous iteration
-			const auto realShift = shift <= mainThreadSignalActions ? shift : mainThreadSignalActions;
-			const SignalSet signalMask {1u << ((realShift + signalNumber) % mainThreadSignalActions)};
+			const auto realMask = mask <= mainThreadSignalActions ? mask : mainThreadSignalActions;
+			const SignalSet signalMask {((realMask + signalNumber) % mainThreadSignalActions)};
 			const auto setSignalActionResult = ThisThread::Signals::setSignalAction(signalNumber,
 					{abortSignalHandler, signalMask});
 			if (setSignalActionResult.first != 0)
 				return false;
-			if (shift == 0)	// first itertion? previous signal action is equal to default SignalAction
+			if (mask == 0)	// first iteration? previous signal action is equal to default SignalAction
 			{
 				if (setSignalActionResult.second.getHandler() != SignalAction{}.getHandler())
 					return false;
 			}
 			else	// compare returned signal action with the expected one
 			{
-				const SignalSet previousSignalMask {1u << ((shift - 1 + signalNumber) % mainThreadSignalActions)};
+				const SignalSet previousSignalMask {((mask - 1 + signalNumber) % mainThreadSignalActions)};
 				if (setSignalActionResult.second.getHandler() != abortSignalHandler ||
 						setSignalActionResult.second.getSignalMask().getBitset() != previousSignalMask.getBitset())
 					return false;
 			}
 		}
 
-	constexpr uint8_t testSignalNumber {2};
+	constexpr uint8_t testSignalNumber {0};
 	int ret;
 	std::tie(ret, std::ignore) = ThisThread::Signals::setSignalAction(testSignalNumber,
 			{abortSignalHandler, SignalSet{SignalSet::full}});
