@@ -131,7 +131,7 @@ private:
 	uint8_t signalNumber_;
 };
 
-/// test step that generates of queues a signal
+/// test step that generates or queues a signal
 class GenerateQueueSignalStep
 {
 public:
@@ -143,7 +143,7 @@ public:
 	 * (SignalInformation::Code::Queued)
 	 * \param [in] signalNumber is the signal number that will be generated or queued
 	 * \param [in] value is the value that will be queued with the signal, relevant only if \a code is
-	 * SignalInformation::Code::Generated, default - default constructed int value
+	 * SignalInformation::Code::Queued, default - default constructed int value
 	 */
 
 	constexpr GenerateQueueSignalStep(const SignalInformation::Code code, const uint8_t signalNumber,
