@@ -38,7 +38,7 @@ using SequencePoints = std::pair<unsigned int, unsigned int>;
 +---------------------------------------------------------------------------------------------------------------------*/
 
 /// size of stack for test thread, bytes
-constexpr size_t testThreadStackSize {256};
+constexpr size_t testThreadStackSize {512};
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | local functions

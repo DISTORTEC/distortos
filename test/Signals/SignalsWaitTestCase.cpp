@@ -33,7 +33,7 @@ namespace
 +---------------------------------------------------------------------------------------------------------------------*/
 
 /// size of stack for test thread, bytes
-constexpr size_t testThreadStackSize {384};
+constexpr size_t testThreadStackSize {512};
 
 /// bit shift of signal number encoded in signal value
 constexpr size_t signalNumberShift {(sizeof(decltype(sigval{}.sival_int)) / 2) * 8};

@@ -231,7 +231,7 @@ bool phase2()
 
 bool phase3()
 {
-	constexpr size_t testThreadStackSize {384};
+	constexpr size_t testThreadStackSize {512};
 
 	Semaphore semaphore {0};
 

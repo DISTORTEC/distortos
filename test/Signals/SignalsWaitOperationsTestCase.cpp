@@ -50,7 +50,7 @@ using Stage = std::pair<const SendSignal&, const TestReceivedSignalInformation&>
 +---------------------------------------------------------------------------------------------------------------------*/
 
 /// size of stack for test thread, bytes
-constexpr size_t testThreadStackSize {384};
+constexpr size_t testThreadStackSize {512};
 
 /// single duration used in tests
 constexpr auto singleDuration = TickClock::duration{1};

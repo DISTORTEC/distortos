@@ -178,6 +178,9 @@ private:
 /// priority of current test thread
 constexpr uint8_t testThreadPriority {MutexPriorityInheritanceOperationsTestCase::getTestCasePriority()};
 
+/// size of stack for test thread, bytes
+constexpr size_t testThreadStackSize {512};
+
 /*---------------------------------------------------------------------------------------------------------------------+
 | local functions
 +---------------------------------------------------------------------------------------------------------------------*/
@@ -234,7 +237,6 @@ constexpr uint8_t testThreadPriority {MutexPriorityInheritanceOperationsTestCase
 
 bool testBasicPriorityInheritance(const Mutex::Type type)
 {
-	constexpr size_t testThreadStackSize {384};
 	constexpr size_t totalThreads {10};
 
 	// effective priority (relative to testThreadPriority) for each test thread in each test step
@@ -405,7 +407,6 @@ bool testBasicPriorityInheritance(const Mutex::Type type)
 bool testCanceledLock(const Mutex::Type type)
 {
 	constexpr TickClock::duration durationUnit {10};
-	constexpr size_t testThreadStackSize {512};
 	constexpr size_t totalThreads {10};
 
 	std::array<Mutex, totalThreads> mutexes
@@ -528,7 +529,6 @@ bool testCanceledLock(const Mutex::Type type)
 
 bool testPriorityChange(const Mutex::Type type)
 {
-	constexpr size_t testThreadStackSize {512};
 	constexpr size_t totalThreads {10};
 
 	// index of thread ([0;4] only!), new priority

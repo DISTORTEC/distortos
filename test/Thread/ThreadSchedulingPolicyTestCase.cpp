@@ -42,7 +42,7 @@ using SequencePoints = std::pair<unsigned int, unsigned int>;
 +---------------------------------------------------------------------------------------------------------------------*/
 
 /// size of stack for test thread, bytes
-constexpr size_t testThreadStackSize {256};
+constexpr size_t testThreadStackSize {512};
 
 /// priority of test thread
 constexpr uint8_t testThreadPriority {1};

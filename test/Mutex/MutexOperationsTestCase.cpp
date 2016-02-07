@@ -42,6 +42,9 @@ constexpr auto longDuration = singleDuration * 10;
 /// priority of current test thread and lock-unlock test thread
 constexpr uint8_t testThreadPriority {MutexOperationsTestCase::getTestCasePriority()};
 
+/// size of stack for test thread, bytes
+constexpr size_t testThreadStackSize {512};
+
 /*---------------------------------------------------------------------------------------------------------------------+
 | local functions
 +---------------------------------------------------------------------------------------------------------------------*/
@@ -118,8 +121,6 @@ bool testUnlock(Mutex& mutex)
 
 bool phase1(const Mutex::Type type, const Mutex::Protocol protocol, const uint8_t priorityCeiling)
 {
-	constexpr size_t testThreadStackSize {256};
-
 	Mutex mutex {type, protocol, priorityCeiling};
 	bool sharedRet {};
 	Mutex semaphoreMutex;
@@ -267,8 +268,6 @@ bool phase2(const Mutex::Type type, const Mutex::Protocol protocol, const uint8_
 
 bool phase3(const Mutex::Type type, const Mutex::Protocol protocol, const uint8_t priorityCeiling)
 {
-	constexpr size_t testThreadStackSize {384};
-
 	Mutex mutex {type, protocol, priorityCeiling};
 
 	const auto sleepUntilFunctor = [&mutex](const TickClock::time_point timePoint)

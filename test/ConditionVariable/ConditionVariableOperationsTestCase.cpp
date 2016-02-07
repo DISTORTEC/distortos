@@ -163,7 +163,7 @@ bool phase1(Mutex& mutex)
 
 bool phase2(Mutex& mutex)
 {
-	constexpr size_t testThreadStackSize {384};
+	constexpr size_t testThreadStackSize {512};
 
 	ConditionVariable conditionVariable;
 

@@ -35,7 +35,7 @@ namespace
 +---------------------------------------------------------------------------------------------------------------------*/
 
 /// size of stack for test thread, bytes
-constexpr size_t testThreadStackSize {384};
+constexpr size_t testThreadStackSize {512};
 
 /// offset added to sleepUntil time points - there is some time between configuring thread and actually starting it...
 constexpr uint8_t timePointOffset {10};

@@ -38,7 +38,7 @@ namespace
 constexpr bool falseTrue[] {false, true};
 
 /// size of stack for test thread, bytes
-constexpr size_t testThreadStackSize {384};
+constexpr size_t testThreadStackSize {512};
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | local types
