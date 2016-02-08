@@ -1,7 +1,7 @@
 #!/bin/sh
 
 #
-# file: distclean.sh
+# file: buildAllConfigurations.sh
 #
 # author: Copyright (C) 2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
 #
