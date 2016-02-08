@@ -76,8 +76,7 @@ endif
 ifeq ($(DO_INCLUDE),1)
 
     ifeq ($(wildcard selectedConfiguration.mk),)
-        $(error Please run first '$(DISTORTOS_PATH)configure.sh [<path to distortosConfiguration.mk>]' or 'make \
-                configure [CONFIG_PATH=<path to distortosConfiguration.mk>]')
+        $(error Please run first 'make configure [CONFIG_PATH=<path-to-distortosConfiguration.mk>]')
     endif
 
     include $(DISTORTOS_CONFIGURATION_MK)
