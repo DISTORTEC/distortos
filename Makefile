@@ -276,12 +276,12 @@ define HELP_TEXT
 
 Available special targets:
 menuconfig .. to create/edit configuration of distortos
-configure  .. to execute $(DISTORTOS_PATH)configure.sh;
+configure  .. to select the configuration of your choice;
                 use "make configure [CONFIG_PATH=<path>]"
                 <path> .. the path where distortosConfiguration.mk can be
-                found; default "./"
+                found; default "."
 distclean  .. remove the build output, doxygen documentation and file created
-                by configure.sh
+                by "make configure"
 clean      .. remove the build output
 
 endef
