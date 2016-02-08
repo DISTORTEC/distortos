@@ -260,7 +260,7 @@ clean:
 
 .PHONY: configure
 configure:
-	./$(DISTORTOS_PATH)configure.sh $(CONFIG_PATH)
+	./$(DISTORTOS_PATH)scripts/configure.sh $(CONFIG_PATH)
 
 .PHONY: distclean
 distclean:
