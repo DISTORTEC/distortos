@@ -87,14 +87,15 @@ new configuration make sure the name of created file is `distortosConfiguration.
 DO NOT edit `distortosConfiguration.mk` files manually! *kconfig-frontends* tools make sure that multiple pre- and
 post-conditions are satisfied, and these conditions can easily be violated by manual modifications of the configuration.
 
-To select the configuration of your choice execute `configure.sh` script with the relative path to selected
-`distortosConfiguration.mk` file - `./configure.sh <path-to-distortosConfiguration.mk>` (on *Windows* use
-`sh configure.sh <path-to-distortosConfiguration.mk>`). This script will create `selectedConfiguration.mk`
-file which is needed to build *distortos*. If the path to selected `distortosConfiguration.mk` file is in the form
-`configurations/<board>/<variant>`, you can omit `configurations/` prefix -
-`./configure.sh configurations/STM32F4DISCOVERY/test` and `./configure.sh STM32F4DISCOVERY/test` will both
-select the same configuration. You can execute `configure.sh` with no arguments if the selected
-`distortosConfiguration.mk` file is in the main folder of the project - in that case `.` is used as the path.
+To select the configuration of your choice execute
+`make configure CONFIG_PATH=<path-to-distortosConfiguration.mk>`, where
+`<path-to-distortosConfiguration.mk>` is the relative path to selected `distortosConfiguration.mk` file. This
+will create `selectedConfiguration.mk` file which is needed to build *distortos*. If
+`<path-to-distortosConfiguration.mk>` is in the form `configurations/<board>/<variant>`, you can omit
+`configurations/` prefix - `make configure CONFIG_PATH=configurations/STM32F4DISCOVERY/test` and
+`make configure CONFIG_PATH=STM32F4DISCOVERY/test` will both select the same configuration. You can execute
+`make configure` with no arguments if the selected `distortosConfiguration.mk` file is in the main folder of the
+project - in that case `.` is used as `CONFIG_PATH`.
 
 To build just execute `make` (if using *GNU Make*) or `tup` (if using *tup*) command in the main directory of the
 project. If you need to see verbose compilation log, execute `make VERBOSE=1` (if using *GNU Make*) or
