@@ -7,16 +7,20 @@
 -- distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 --
 
-local stm32f4_ld_sh = "STM32F4.ld.sh"
-local ldscriptOutputs = {LDSCRIPT, filenameToGroup(LDSCRIPT)}
+if CONFIG_CHIP_STM32F4 == "y" then
 
-tup.rule(DISTORTOS_CONFIGURATION_MK, "^ SH " .. stm32f4_ld_sh .. "^ ./" .. stm32f4_ld_sh .. " \"%f\" > \"%o\"",
-		ldscriptOutputs)
+	local stm32f4_ld_sh = "STM32F4.ld.sh"
+	local ldscriptOutputs = {LDSCRIPT, filenameToGroup(LDSCRIPT)}
 
-CFLAGS += STANDARD_INCLUDES
+	tup.rule(DISTORTOS_CONFIGURATION_MK, "^ SH " .. stm32f4_ld_sh .. "^ ./" .. stm32f4_ld_sh .. " \"%f\" > \"%o\"",
+			ldscriptOutputs)
 
-CXXFLAGS += STANDARD_INCLUDES
-CXXFLAGS += ARCHITECTURE_INCLUDES
-CXXFLAGS += CHIP_INCLUDES
+	CFLAGS += STANDARD_INCLUDES
 
-tup.include(DISTORTOS_TOP .. "compile.lua")
+	CXXFLAGS += STANDARD_INCLUDES
+	CXXFLAGS += ARCHITECTURE_INCLUDES
+	CXXFLAGS += CHIP_INCLUDES
+
+	tup.include(DISTORTOS_TOP .. "compile.lua")
+
+end	-- if CONFIG_CHIP_STM32F4 == "y" then
