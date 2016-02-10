@@ -117,6 +117,8 @@ Don't use 64-bit tools (even if you have 64-bit system), as *tup* cannot current
 
 You can get *GNU Make*, *AWK* (*GAWK*), *Bash* and *GNU Coreutils* by installing [MSYS2](https://msys2.github.io/) and
 executing `pacman -S gawk make` in the shell of this software distro - the binaries will be placed in
-`<installation path>\usr\bin` folder. *kconfig-frontends* binaries for *Windows* can be downloaded from
-[uvc.de](http://uvc.de/posts/linux-kernel-configuration-tool-kconfig-under-windows.html) website. *tup* and
+`<installation path>\usr\bin` folder. *kconfig-frontends* binaries for *Windows* can be found on
+[distortos.org](http://distortos.org/) in [Downloads](http://distortos.org/downloads/) >
+[Tools](http://distortos.org/downloads/tools/) >
+[kconfig-frontends for Windows](http://distortos.org/downloads/tools/kconfig-frontends-for-windows/). *tup* and
 *arm-none-eabi bleeding-edge-toolchain* binaries for *Windows* are available from their main websites.
