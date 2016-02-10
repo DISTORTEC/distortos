@@ -16,7 +16,7 @@ if CONFIG_TEST_APPLICATION_ENABLE == "y" then
 
 	tup.include(DISTORTOS_TOP .. "compile.lua")
 
-	local filename = OUTPUT .. tup.getrelativedir(TOP) .. "/distortos-test"
+	local filename = OUTPUT .. tup.getrelativedir(TOP) .. "/distortosTest"
 	local elfFilename = filename .. ".elf"
 	local hexFilename = filename .. ".hex"
 	local binFilename = filename .. ".bin"
