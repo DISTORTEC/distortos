@@ -27,7 +27,7 @@ SUBDIRECTORIES += Thread
 # final targets
 #-----------------------------------------------------------------------------------------------------------------------
 
-ELF_$(d) := $(OUTPUT)$(d)distortos-test.elf
+ELF_$(d) := $(OUTPUT)$(d)distortosTest.elf
 HEX_$(d) := $(ELF_$(d):%.elf=%.hex)
 BIN_$(d) := $(ELF_$(d):%.elf=%.bin)
 DMP_$(d) := $(ELF_$(d):%.elf=%.dmp)
