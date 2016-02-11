@@ -11,15 +11,10 @@ menu "Board, chip & architecture configuration"
 
 choice
 	prompt "Chip family"
-	default CHIP_STM32
 	help
 		Select chip family
 
-config CHIP_STM32
-	bool "STM32"
-	select ARCHITECTURE_ARM
-	help
-		STM32 chip family
+source "$DISTORTOS_PATH/source/chip/STM32/Kconfig-chipFamilyChoices1"
 
 endchoice
 
