@@ -20,6 +20,22 @@ endchoice
 
 source "$DISTORTOS_PATH/source/chip/STM32/Kconfig-chipFamilyChoices2"
 
+choice
+	prompt "Board"
+	help
+		Select board
+
+config BOARD_CUSTOM
+	bool "Custom board"
+	help
+		Custom board
+
+source "$DISTORTOS_PATH/source/board/STM32/STM32F4/32F429IDISCOVERY/Kconfig-boardChoices"
+source "$DISTORTOS_PATH/source/board/STM32/STM32F4/NUCLEO-F401RE/Kconfig-boardChoices"
+source "$DISTORTOS_PATH/source/board/STM32/STM32F4/STM32F4DISCOVERY/Kconfig-boardChoices"
+
+endchoice
+
 if CHIP_STM32
 source "$DISTORTOS_PATH/source/chip/STM32/Kconfig"
 endif
