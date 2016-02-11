@@ -38,6 +38,7 @@ endchoice
 
 if BOARD_CUSTOM
 
+source "$DISTORTOS_PATH/source/chip/STM32/STM32F1/Kconfig-chipChoices"
 source "$DISTORTOS_PATH/source/chip/STM32/STM32F4/Kconfig-chipChoices"
 
 endif	# BOARD_CUSTOM

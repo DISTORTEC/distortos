@@ -13,6 +13,7 @@ choice
 	help
 		Select STM32 chip family
 
+source "$DISTORTOS_PATH/source/chip/STM32/STM32F1/Kconfig-stm32ChipFamilyChoices"
 source "$DISTORTOS_PATH/source/chip/STM32/STM32F4/Kconfig-stm32ChipFamilyChoices"
 
 endchoice

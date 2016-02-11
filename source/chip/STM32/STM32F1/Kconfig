@@ -1,0 +1,730 @@
+#
+# file: Kconfig
+#
+# author: Copyright (C) 2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+#
+# This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
+# distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+#
+
+#
+# This file covers devices as described in following places:
+# - DS6517 datasheet (STM32F100x4, STM32F100x6, STM32F100x8, STM32F100xB), Revision 8, 2015-06-08, devices listed on
+# website on 2016-02-12;
+# - DS5944 datasheet (STM32F100xC, STM32F100xD, STM32F100xE), Revision 9, 2015-09-23, devices listed on website on
+# 2016-02-12;
+# - DS5935 datasheet (STM32F101x4, STM32F101x6), Revision 5, 2011-04-19, devices listed on website on 2016-02-12;
+# - DS5318 datasheet (STM32F101x8, STM32F101xB), Revision 17, 2015-06-19, devices listed on website on 2016-02-12;
+# - DS5791 datasheet (STM32F101xC, STM32F101xD, STM32F101xE), Revision 9, 2015-05-15, devices listed on website on
+# 2016-02-12;
+# - DS6557 datasheet (STM32F101xF, STM32F101xG), Revision 4, 2015-05-18, devices listed on website on 2016-02-12;
+# - DS5934 datasheet (STM32F102x4, STM32F102x6), Revision 5, 2015-05-14, devices listed on website on 2016-02-12;
+# - DS5933 datasheet (STM32F102x8, STM32F102xB), Revision 6, 2015-06-03, devices listed on website on 2016-02-12;
+# - DS5936 datasheet (STM32F103x4, STM32F103x6), Revision 7, 2015-06-01, devices listed on website on 2016-02-12;
+# - DS5319 datasheet (STM32F103x8, STM32F103xB), Revision 17, 2015-08-21, devices listed on website on 2016-02-12;
+# - DS5792 datasheet (STM32F103xC, STM32F103xD, STM32F103xE), Revision 11, 2015-08-31, devices listed on website on
+# 2016-02-12;
+# - DS6558 datasheet (STM32F103xF, STM32F103xG), Revision 4, 2015-05-15, devices listed on website on 2016-02-12;
+# - DS6014 datasheet (STM32F105, STM32F107), Revision 9, 2015-09-03, devices listed on website on 2016-02-12;
+#
+
+config CHIP_STM32F10
+	bool
+	default n
+
+config CHIP_STM32F100
+	bool
+	default n
+	select CHIP_STM32F10
+
+config CHIP_STM32F100C
+	bool
+	default n
+	select CHIP_STM32F100
+
+config CHIP_STM32F100C4
+	bool
+	default n
+	select CHIP_STM32F100C
+
+config CHIP_STM32F100C6
+	bool
+	default n
+	select CHIP_STM32F100C
+
+config CHIP_STM32F100C8
+	bool
+	default n
+	select CHIP_STM32F100C
+
+config CHIP_STM32F100CB
+	bool
+	default n
+	select CHIP_STM32F100C
+
+config CHIP_STM32F100R
+	bool
+	default n
+	select CHIP_STM32F100
+
+config CHIP_STM32F100R4
+	bool
+	default n
+	select CHIP_STM32F100R
+
+config CHIP_STM32F100R6
+	bool
+	default n
+	select CHIP_STM32F100R
+
+config CHIP_STM32F100R8
+	bool
+	default n
+	select CHIP_STM32F100R
+
+config CHIP_STM32F100RB
+	bool
+	default n
+	select CHIP_STM32F100R
+
+config CHIP_STM32F100RC
+	bool
+	default n
+	select CHIP_STM32F100R
+
+config CHIP_STM32F100RD
+	bool
+	default n
+	select CHIP_STM32F100R
+
+config CHIP_STM32F100RE
+	bool
+	default n
+	select CHIP_STM32F100R
+
+config CHIP_STM32F100V
+	bool
+	default n
+	select CHIP_STM32F100
+
+config CHIP_STM32F100V8
+	bool
+	default n
+	select CHIP_STM32F100V
+
+config CHIP_STM32F100VB
+	bool
+	default n
+	select CHIP_STM32F100V
+
+config CHIP_STM32F100VC
+	bool
+	default n
+	select CHIP_STM32F100V
+
+config CHIP_STM32F100VD
+	bool
+	default n
+	select CHIP_STM32F100V
+
+config CHIP_STM32F100VE
+	bool
+	default n
+	select CHIP_STM32F100V
+
+config CHIP_STM32F100Z
+	bool
+	default n
+	select CHIP_STM32F100
+
+config CHIP_STM32F100ZC
+	bool
+	default n
+	select CHIP_STM32F100Z
+
+config CHIP_STM32F100ZD
+	bool
+	default n
+	select CHIP_STM32F100Z
+
+config CHIP_STM32F100ZE
+	bool
+	default n
+	select CHIP_STM32F100Z
+
+config CHIP_STM32F101
+	bool
+	default n
+	select CHIP_STM32F10
+
+config CHIP_STM32F101C
+	bool
+	default n
+	select CHIP_STM32F101
+
+config CHIP_STM32F101C6
+	bool
+	default n
+	select CHIP_STM32F101C
+
+config CHIP_STM32F101C8
+	bool
+	default n
+	select CHIP_STM32F101C
+
+config CHIP_STM32F101CB
+	bool
+	default n
+	select CHIP_STM32F101C
+
+config CHIP_STM32F101R
+	bool
+	default n
+	select CHIP_STM32F101
+
+config CHIP_STM32F101R4
+	bool
+	default n
+	select CHIP_STM32F101R
+
+config CHIP_STM32F101R6
+	bool
+	default n
+	select CHIP_STM32F101R
+
+config CHIP_STM32F101R8
+	bool
+	default n
+	select CHIP_STM32F101R
+
+config CHIP_STM32F101RB
+	bool
+	default n
+	select CHIP_STM32F101R
+
+config CHIP_STM32F101RC
+	bool
+	default n
+	select CHIP_STM32F101R
+
+config CHIP_STM32F101RD
+	bool
+	default n
+	select CHIP_STM32F101R
+
+config CHIP_STM32F101RE
+	bool
+	default n
+	select CHIP_STM32F101R
+
+config CHIP_STM32F101RF
+	bool
+	default n
+	select CHIP_STM32F101R
+
+config CHIP_STM32F101RG
+	bool
+	default n
+	select CHIP_STM32F101R
+
+config CHIP_STM32F101T
+	bool
+	default n
+	select CHIP_STM32F101
+
+config CHIP_STM32F101T4
+	bool
+	default n
+	select CHIP_STM32F101T
+
+config CHIP_STM32F101T6
+	bool
+	default n
+	select CHIP_STM32F101T
+
+config CHIP_STM32F101T8
+	bool
+	default n
+	select CHIP_STM32F101T
+
+config CHIP_STM32F101TB
+	bool
+	default n
+	select CHIP_STM32F101T
+
+config CHIP_STM32F101V
+	bool
+	default n
+	select CHIP_STM32F101
+
+config CHIP_STM32F101V8
+	bool
+	default n
+	select CHIP_STM32F101V
+
+config CHIP_STM32F101VB
+	bool
+	default n
+	select CHIP_STM32F101V
+
+config CHIP_STM32F101VC
+	bool
+	default n
+	select CHIP_STM32F101V
+
+config CHIP_STM32F101VD
+	bool
+	default n
+	select CHIP_STM32F101V
+
+config CHIP_STM32F101VE
+	bool
+	default n
+	select CHIP_STM32F101V
+
+config CHIP_STM32F101VF
+	bool
+	default n
+	select CHIP_STM32F101V
+
+config CHIP_STM32F101VG
+	bool
+	default n
+	select CHIP_STM32F101V
+
+config CHIP_STM32F101Z
+	bool
+	default n
+	select CHIP_STM32F101
+
+config CHIP_STM32F101ZC
+	bool
+	default n
+	select CHIP_STM32F101Z
+
+config CHIP_STM32F101ZD
+	bool
+	default n
+	select CHIP_STM32F101Z
+
+config CHIP_STM32F101ZE
+	bool
+	default n
+	select CHIP_STM32F101Z
+
+config CHIP_STM32F101ZF
+	bool
+	default n
+	select CHIP_STM32F101Z
+
+config CHIP_STM32F101ZG
+	bool
+	default n
+	select CHIP_STM32F101Z
+
+config CHIP_STM32F102
+	bool
+	default n
+	select CHIP_STM32F10
+
+config CHIP_STM32F102C
+	bool
+	default n
+	select CHIP_STM32F102
+
+config CHIP_STM32F102C4
+	bool
+	default n
+	select CHIP_STM32F102C
+
+config CHIP_STM32F102C6
+	bool
+	default n
+	select CHIP_STM32F102C
+
+config CHIP_STM32F102C8
+	bool
+	default n
+	select CHIP_STM32F102C
+
+config CHIP_STM32F102CB
+	bool
+	default n
+	select CHIP_STM32F102C
+
+config CHIP_STM32F102R
+	bool
+	default n
+	select CHIP_STM32F102
+
+config CHIP_STM32F102R4
+	bool
+	default n
+	select CHIP_STM32F102R
+
+config CHIP_STM32F102R6
+	bool
+	default n
+	select CHIP_STM32F102R
+
+config CHIP_STM32F102R8
+	bool
+	default n
+	select CHIP_STM32F102R
+
+config CHIP_STM32F102RB
+	bool
+	default n
+	select CHIP_STM32F102R
+
+config CHIP_STM32F103
+	bool
+	default n
+	select CHIP_STM32F10
+
+config CHIP_STM32F103C
+	bool
+	default n
+	select CHIP_STM32F103
+
+config CHIP_STM32F103C4
+	bool
+	default n
+	select CHIP_STM32F103C
+
+config CHIP_STM32F103C6
+	bool
+	default n
+	select CHIP_STM32F103C
+
+config CHIP_STM32F103C8
+	bool
+	default n
+	select CHIP_STM32F103C
+
+config CHIP_STM32F103CB
+	bool
+	default n
+	select CHIP_STM32F103C
+
+config CHIP_STM32F103R
+	bool
+	default n
+	select CHIP_STM32F103
+
+config CHIP_STM32F103R4
+	bool
+	default n
+	select CHIP_STM32F103R
+
+config CHIP_STM32F103R6
+	bool
+	default n
+	select CHIP_STM32F103R
+
+config CHIP_STM32F103R8
+	bool
+	default n
+	select CHIP_STM32F103R
+
+config CHIP_STM32F103RB
+	bool
+	default n
+	select CHIP_STM32F103R
+
+config CHIP_STM32F103RC
+	bool
+	default n
+	select CHIP_STM32F103R
+
+config CHIP_STM32F103RD
+	bool
+	default n
+	select CHIP_STM32F103R
+
+config CHIP_STM32F103RE
+	bool
+	default n
+	select CHIP_STM32F103R
+
+config CHIP_STM32F103RF
+	bool
+	default n
+	select CHIP_STM32F103R
+
+config CHIP_STM32F103RG
+	bool
+	default n
+	select CHIP_STM32F103R
+
+config CHIP_STM32F103T
+	bool
+	default n
+	select CHIP_STM32F103
+
+config CHIP_STM32F103T4
+	bool
+	default n
+	select CHIP_STM32F103T
+
+config CHIP_STM32F103T6
+	bool
+	default n
+	select CHIP_STM32F103T
+
+config CHIP_STM32F103T8
+	bool
+	default n
+	select CHIP_STM32F103T
+
+config CHIP_STM32F103TB
+	bool
+	default n
+	select CHIP_STM32F103T
+
+config CHIP_STM32F103V
+	bool
+	default n
+	select CHIP_STM32F103
+
+config CHIP_STM32F103V8
+	bool
+	default n
+	select CHIP_STM32F103V
+
+config CHIP_STM32F103VB
+	bool
+	default n
+	select CHIP_STM32F103V
+
+config CHIP_STM32F103VC
+	bool
+	default n
+	select CHIP_STM32F103V
+
+config CHIP_STM32F103VD
+	bool
+	default n
+	select CHIP_STM32F103V
+
+config CHIP_STM32F103VE
+	bool
+	default n
+	select CHIP_STM32F103V
+
+config CHIP_STM32F103VF
+	bool
+	default n
+	select CHIP_STM32F103V
+
+config CHIP_STM32F103VG
+	bool
+	default n
+	select CHIP_STM32F103V
+
+config CHIP_STM32F103Z
+	bool
+	default n
+	select CHIP_STM32F103
+
+config CHIP_STM32F103ZC
+	bool
+	default n
+	select CHIP_STM32F103Z
+
+config CHIP_STM32F103ZD
+	bool
+	default n
+	select CHIP_STM32F103Z
+
+config CHIP_STM32F103ZE
+	bool
+	default n
+	select CHIP_STM32F103Z
+
+config CHIP_STM32F103ZF
+	bool
+	default n
+	select CHIP_STM32F103Z
+
+config CHIP_STM32F103ZG
+	bool
+	default n
+	select CHIP_STM32F103Z
+
+config CHIP_STM32F105
+	bool
+	default n
+	select CHIP_STM32F10
+
+config CHIP_STM32F105R
+	bool
+	default n
+	select CHIP_STM32F105
+
+config CHIP_STM32F105R8
+	bool
+	default n
+	select CHIP_STM32F105R
+
+config CHIP_STM32F105RB
+	bool
+	default n
+	select CHIP_STM32F105R
+
+config CHIP_STM32F105RC
+	bool
+	default n
+	select CHIP_STM32F105R
+
+config CHIP_STM32F105V
+	bool
+	default n
+	select CHIP_STM32F105
+
+config CHIP_STM32F105V8
+	bool
+	default n
+	select CHIP_STM32F105V
+
+config CHIP_STM32F105VB
+	bool
+	default n
+	select CHIP_STM32F105V
+
+config CHIP_STM32F105VC
+	bool
+	default n
+	select CHIP_STM32F105V
+
+config CHIP_STM32F107
+	bool
+	default n
+	select CHIP_STM32F10
+
+config CHIP_STM32F107R
+	bool
+	default n
+	select CHIP_STM32F107
+
+config CHIP_STM32F107RB
+	bool
+	default n
+	select CHIP_STM32F107R
+
+config CHIP_STM32F107RC
+	bool
+	default n
+	select CHIP_STM32F107R
+
+config CHIP_STM32F107V
+	bool
+	default n
+	select CHIP_STM32F107
+
+config CHIP_STM32F107VB
+	bool
+	default n
+	select CHIP_STM32F107V
+
+config CHIP_STM32F107VC
+	bool
+	default n
+	select CHIP_STM32F107V
+
+config CHIP
+	string
+	default "STM32F100C4" if CHIP_STM32F100C4
+	default "STM32F100C6" if CHIP_STM32F100C6
+	default "STM32F100C8" if CHIP_STM32F100C8
+	default "STM32F100CB" if CHIP_STM32F100CB
+	default "STM32F100R4" if CHIP_STM32F100R4
+	default "STM32F100R6" if CHIP_STM32F100R6
+	default "STM32F100R8" if CHIP_STM32F100R8
+	default "STM32F100RB" if CHIP_STM32F100RB
+	default "STM32F100RC" if CHIP_STM32F100RC
+	default "STM32F100RD" if CHIP_STM32F100RD
+	default "STM32F100RE" if CHIP_STM32F100RE
+	default "STM32F100V8" if CHIP_STM32F100V8
+	default "STM32F100VB" if CHIP_STM32F100VB
+	default "STM32F100VC" if CHIP_STM32F100VC
+	default "STM32F100VD" if CHIP_STM32F100VD
+	default "STM32F100VE" if CHIP_STM32F100VE
+	default "STM32F100ZC" if CHIP_STM32F100ZC
+	default "STM32F100ZD" if CHIP_STM32F100ZD
+	default "STM32F100ZE" if CHIP_STM32F100ZE
+	default "STM32F101C6" if CHIP_STM32F101C6
+	default "STM32F101C8" if CHIP_STM32F101C8
+	default "STM32F101CB" if CHIP_STM32F101CB
+	default "STM32F101R4" if CHIP_STM32F101R4
+	default "STM32F101R6" if CHIP_STM32F101R6
+	default "STM32F101R8" if CHIP_STM32F101R8
+	default "STM32F101RB" if CHIP_STM32F101RB
+	default "STM32F101RC" if CHIP_STM32F101RC
+	default "STM32F101RD" if CHIP_STM32F101RD
+	default "STM32F101RE" if CHIP_STM32F101RE
+	default "STM32F101RF" if CHIP_STM32F101RF
+	default "STM32F101RG" if CHIP_STM32F101RG
+	default "STM32F101T4" if CHIP_STM32F101T4
+	default "STM32F101T6" if CHIP_STM32F101T6
+	default "STM32F101T8" if CHIP_STM32F101T8
+	default "STM32F101TB" if CHIP_STM32F101TB
+	default "STM32F101V8" if CHIP_STM32F101V8
+	default "STM32F101VB" if CHIP_STM32F101VB
+	default "STM32F101VC" if CHIP_STM32F101VC
+	default "STM32F101VD" if CHIP_STM32F101VD
+	default "STM32F101VE" if CHIP_STM32F101VE
+	default "STM32F101VF" if CHIP_STM32F101VF
+	default "STM32F101VG" if CHIP_STM32F101VG
+	default "STM32F101ZC" if CHIP_STM32F101ZC
+	default "STM32F101ZD" if CHIP_STM32F101ZD
+	default "STM32F101ZE" if CHIP_STM32F101ZE
+	default "STM32F101ZF" if CHIP_STM32F101ZF
+	default "STM32F101ZG" if CHIP_STM32F101ZG
+	default "STM32F102C4" if CHIP_STM32F102C4
+	default "STM32F102C6" if CHIP_STM32F102C6
+	default "STM32F102C8" if CHIP_STM32F102C8
+	default "STM32F102CB" if CHIP_STM32F102CB
+	default "STM32F102R4" if CHIP_STM32F102R4
+	default "STM32F102R6" if CHIP_STM32F102R6
+	default "STM32F102R8" if CHIP_STM32F102R8
+	default "STM32F102RB" if CHIP_STM32F102RB
+	default "STM32F103C4" if CHIP_STM32F103C4
+	default "STM32F103C6" if CHIP_STM32F103C6
+	default "STM32F103C8" if CHIP_STM32F103C8
+	default "STM32F103CB" if CHIP_STM32F103CB
+	default "STM32F103R4" if CHIP_STM32F103R4
+	default "STM32F103R6" if CHIP_STM32F103R6
+	default "STM32F103R8" if CHIP_STM32F103R8
+	default "STM32F103RB" if CHIP_STM32F103RB
+	default "STM32F103RC" if CHIP_STM32F103RC
+	default "STM32F103RD" if CHIP_STM32F103RD
+	default "STM32F103RE" if CHIP_STM32F103RE
+	default "STM32F103RF" if CHIP_STM32F103RF
+	default "STM32F103RG" if CHIP_STM32F103RG
+	default "STM32F103T4" if CHIP_STM32F103T4
+	default "STM32F103T6" if CHIP_STM32F103T6
+	default "STM32F103T8" if CHIP_STM32F103T8
+	default "STM32F103TB" if CHIP_STM32F103TB
+	default "STM32F103V8" if CHIP_STM32F103V8
+	default "STM32F103VB" if CHIP_STM32F103VB
+	default "STM32F103VC" if CHIP_STM32F103VC
+	default "STM32F103VD" if CHIP_STM32F103VD
+	default "STM32F103VE" if CHIP_STM32F103VE
+	default "STM32F103VF" if CHIP_STM32F103VF
+	default "STM32F103VG" if CHIP_STM32F103VG
+	default "STM32F103ZC" if CHIP_STM32F103ZC
+	default "STM32F103ZD" if CHIP_STM32F103ZD
+	default "STM32F103ZE" if CHIP_STM32F103ZE
+	default "STM32F103ZF" if CHIP_STM32F103ZF
+	default "STM32F103ZG" if CHIP_STM32F103ZG
+	default "STM32F105R8" if CHIP_STM32F105R8
+	default "STM32F105RB" if CHIP_STM32F105RB
+	default "STM32F105RC" if CHIP_STM32F105RC
+	default "STM32F105V8" if CHIP_STM32F105V8
+	default "STM32F105VB" if CHIP_STM32F105VB
+	default "STM32F105VC" if CHIP_STM32F105VC
+	default "STM32F107RB" if CHIP_STM32F107RB
+	default "STM32F107RC" if CHIP_STM32F107RC
+	default "STM32F107VB" if CHIP_STM32F107VB
+	default "STM32F107VC" if CHIP_STM32F107VC
