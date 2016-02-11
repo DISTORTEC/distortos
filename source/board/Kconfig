@@ -23,3 +23,7 @@ config BOARD_LEDS_ENABLE
 config BOARD_TOTAL_LEDS
 	int
 	default 0
+
+config BOARD
+	string
+	default "Custom" if BOARD_CUSTOM
