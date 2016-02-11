@@ -22,8 +22,6 @@
 # - DS11118 datasheet (STM32F479xx), Revision 2, 2015-10-19, devices listed on website at 2015-12-13;
 #
 
-source "$DISTORTOS_PATH/source/board/Kconfig"
-
 choice
 	prompt "STM32F4 chip"
 	default CHIP_STM32F407VG_SELECTED
