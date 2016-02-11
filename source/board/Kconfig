@@ -7,8 +7,14 @@
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #
 
-if CHIP_STM32
-source "$DISTORTOS_PATH/source/board/STM32/Kconfig"
+if BOARD_32F429IDISCOVERY
+source "$DISTORTOS_PATH/source/board/STM32/STM32F4/32F429IDISCOVERY/Kconfig"
+endif
+if BOARD_NUCLEO_F401RE
+source "$DISTORTOS_PATH/source/board/STM32/STM32F4/NUCLEO-F401RE/Kconfig"
+endif
+if BOARD_STM32F4DISCOVERY
+source "$DISTORTOS_PATH/source/board/STM32/STM32F4/STM32F4DISCOVERY/Kconfig"
 endif
 
 comment "Generic board options"
