@@ -12,7 +12,8 @@ config DISTORTOS_PATH
 	option env="DISTORTOS_PATH"
 	default "."
 
-source "$DISTORTOS_PATH/source/Kconfig"
+source "$DISTORTOS_PATH/source/chip/Kconfig"
+source "$DISTORTOS_PATH/source/scheduler/Kconfig"
 source "$DISTORTOS_PATH/test/Kconfig"
 
 menu "Build configuration"
