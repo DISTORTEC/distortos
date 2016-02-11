@@ -36,6 +36,12 @@ source "$DISTORTOS_PATH/source/board/STM32/STM32F4/STM32F4DISCOVERY/Kconfig-boar
 
 endchoice
 
+if BOARD_CUSTOM
+
+source "$DISTORTOS_PATH/source/chip/STM32/STM32F4/Kconfig-chipChoices"
+
+endif	# BOARD_CUSTOM
+
 source "$DISTORTOS_PATH/source/board/Kconfig"
 
 if CHIP_STM32
