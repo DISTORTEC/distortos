@@ -145,8 +145,11 @@ ARCHITECTURE_INCLUDES += CONFIG_ARCHITECTURE_INCLUDES:gsub("(%g+)", "-I" .. DIST
 CHIP_INCLUDES += CONFIG_CHIP_INCLUDES:gsub("(%g+)", "-I" .. DISTORTOS_TOP .. "%1")
 
 -- board includes
-BOARD_INCLUDES += CONFIG_BOARD_INCLUDES:gsub("(%g+)", "-I" .. DISTORTOS_TOP .. "%1")
-
+if CONFIG_BOARD_INCLUDES ~= nil then
+	BOARD_INCLUDES += CONFIG_BOARD_INCLUDES:gsub("(%g+)", "-I" .. DISTORTOS_TOP .. "%1")
+else
+	BOARD_INCLUDES += ""
+end
 ------------------------------------------------------------------------------------------------------------------------
 -- tup/lua functions
 ------------------------------------------------------------------------------------------------------------------------
