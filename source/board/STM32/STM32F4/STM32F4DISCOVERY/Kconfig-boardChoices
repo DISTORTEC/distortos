@@ -1,0 +1,19 @@
+#
+# file: Kconfig-boardChoices
+#
+# author: Copyright (C) 2015-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+#
+# This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
+# distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+#
+
+config BOARD_STM32F4DISCOVERY
+	bool "STM32F4DISCOVERY"
+	depends on CHIP_STM32F4
+	select CHIP_STM32F407VG
+	select CHIP_LQFP100
+	help
+		STM32F4DISCOVERY board with STM32F407VG chip in LQFP100 package
+
+		Chip's supply voltage is 3V.
+		8MHz crystal resonator can be used as HSE clock.

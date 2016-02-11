@@ -1,0 +1,19 @@
+#
+# file: Kconfig-boardChoices
+#
+# author: Copyright (C) 2015-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+#
+# This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
+# distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+#
+
+config BOARD_32F429IDISCOVERY
+	bool "32F429IDISCOVERY"
+	depends on CHIP_STM32F4
+	select CHIP_STM32F429ZI
+	select CHIP_LQFP144
+	help
+		32F429IDISCOVERY board with STM32F429ZI chip in LQFP144 package
+
+		Chip's supply voltage is 3V.
+		8MHz crystal resonator can be used as HSE clock.
