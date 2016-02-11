@@ -18,6 +18,8 @@ source "$DISTORTOS_PATH/source/chip/STM32/Kconfig-chipFamilyChoices1"
 
 endchoice
 
+source "$DISTORTOS_PATH/source/chip/STM32/Kconfig-chipFamilyChoices2"
+
 if CHIP_STM32
 source "$DISTORTOS_PATH/source/chip/STM32/Kconfig"
 endif
