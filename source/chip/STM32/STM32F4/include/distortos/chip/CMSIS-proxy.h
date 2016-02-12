@@ -2,7 +2,7 @@
  * \file
  * \brief CMSIS proxy header for architecture.
  *
- * \author Copyright (C) 2014-2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -14,39 +14,59 @@
 
 #include "distortos/distortosConfiguration.h"
 
-#if defined(CONFIG_CHIP_STM32F405)
+#if defined(CONFIG_CHIP_STM32F405RG) || defined(CONFIG_CHIP_STM32F405VG) || defined(CONFIG_CHIP_STM32F405ZG)
 	#define STM32F405xx
-#elif defined (CONFIG_CHIP_STM32F415)
+#elif defined(CONFIG_CHIP_STM32F415RG) || defined(CONFIG_CHIP_STM32F415VG) || defined(CONFIG_CHIP_STM32F415ZG)
 	#define STM32F415xx
-#elif defined (CONFIG_CHIP_STM32F407)
+#elif defined(CONFIG_CHIP_STM32F407VG) || defined(CONFIG_CHIP_STM32F407VE) || defined(CONFIG_CHIP_STM32F407ZG) || \
+		defined(CONFIG_CHIP_STM32F407ZE) || defined(CONFIG_CHIP_STM32F407IG) || defined(CONFIG_CHIP_STM32F407IE)
 	#define STM32F407xx
-#elif defined (CONFIG_CHIP_STM32F417)
+#elif defined(CONFIG_CHIP_STM32F417VG) || defined(CONFIG_CHIP_STM32F417VE) || defined(CONFIG_CHIP_STM32F417ZG) || \
+		defined(CONFIG_CHIP_STM32F417ZE) || defined(CONFIG_CHIP_STM32F417IG) || defined(CONFIG_CHIP_STM32F417IE)
 	#define STM32F417xx
-#elif defined (CONFIG_CHIP_STM32F427)
+#elif defined(CONFIG_CHIP_STM32F427VG) || defined(CONFIG_CHIP_STM32F427VI) || defined(CONFIG_CHIP_STM32F427ZG) || \
+		defined(CONFIG_CHIP_STM32F427ZI) || defined(CONFIG_CHIP_STM32F427IG) || defined(CONFIG_CHIP_STM32F427II)
 	#define STM32F427xx
-#elif defined (CONFIG_CHIP_STM32F437)
+#elif defined(CONFIG_CHIP_STM32F437VG) || defined(CONFIG_CHIP_STM32F437VI) || defined(CONFIG_CHIP_STM32F437ZG) || \
+		defined(CONFIG_CHIP_STM32F437ZI) || defined(CONFIG_CHIP_STM32F437IG) || defined(CONFIG_CHIP_STM32F437II)
 	#define STM32F437xx
-#elif defined (CONFIG_CHIP_STM32F429)
+#elif defined(CONFIG_CHIP_STM32F429VG) || defined(CONFIG_CHIP_STM32F429VI) || defined(CONFIG_CHIP_STM32F429ZG) || \
+		defined(CONFIG_CHIP_STM32F429ZI) || defined(CONFIG_CHIP_STM32F429BG) || defined(CONFIG_CHIP_STM32F429BI) || \
+		defined(CONFIG_CHIP_STM32F429NG) || defined(CONFIG_CHIP_STM32F439NI) || defined(CONFIG_CHIP_STM32F429IG) || \
+		defined(CONFIG_CHIP_STM32F429II)
 	#define STM32F429xx
-#elif defined (CONFIG_CHIP_STM32F439)
+#elif defined(CONFIG_CHIP_STM32F439VG) || defined(CONFIG_CHIP_STM32F439VI) || defined(CONFIG_CHIP_STM32F439ZG) || \
+		defined(CONFIG_CHIP_STM32F439ZI) || defined(CONFIG_CHIP_STM32F439BG) || defined(CONFIG_CHIP_STM32F439BI) || \
+		defined(CONFIG_CHIP_STM32F439NG) || defined(CONFIG_CHIP_STM32F439NI) || defined(CONFIG_CHIP_STM32F439IG) || \
+		defined(CONFIG_CHIP_STM32F439II)
 	#define STM32F439xx
-#elif defined(CONFIG_CHIP_STM32F401CC) || defined(CONFIG_CHIP_STM32F401RC) || defined(CONFIG_CHIP_STM32F401VC)
+#elif defined(CONFIG_CHIP_STM32F401CB) || defined(CONFIG_CHIP_STM32F401CC) || defined(CONFIG_CHIP_STM32F401RB) || \
+		defined(CONFIG_CHIP_STM32F401RC) || defined(CONFIG_CHIP_STM32F401VB) || defined(CONFIG_CHIP_STM32F401VC)
 	#define STM32F401xC
-#elif defined(CONFIG_CHIP_STM32F401CE) || defined(CONFIG_CHIP_STM32F401RE) || defined(CONFIG_CHIP_STM32F401VE)
+#elif defined(CONFIG_CHIP_STM32F401CD) || defined(CONFIG_CHIP_STM32F401RD) || defined(CONFIG_CHIP_STM32F401VD) || \
+		defined(CONFIG_CHIP_STM32F401CE) || defined(CONFIG_CHIP_STM32F401RE) || defined(CONFIG_CHIP_STM32F401VE)
 	#define STM32F401xE
-#elif defined (CONFIG_CHIP_STM32F410T)
+#elif defined(CONFIG_CHIP_STM32F410T8) || defined(CONFIG_CHIP_STM32F410TB)
 	#define STM32F410Tx
-#elif defined (CONFIG_CHIP_STM32F410C)
+#elif defined(CONFIG_CHIP_STM32F410C8) || defined(CONFIG_CHIP_STM32F410CB)
 	#define STM32F410Cx
-#elif defined (CONFIG_CHIP_STM32F410R)
+#elif defined(CONFIG_CHIP_STM32F410R8) || defined(CONFIG_CHIP_STM32F410RB)
 	#define STM32F410Rx
-#elif defined (CONFIG_CHIP_STM32F411)
+#elif defined(CONFIG_CHIP_STM32F411CC) || defined(CONFIG_CHIP_STM32F411RC) || defined(CONFIG_CHIP_STM32F411VC) || \
+		defined(CONFIG_CHIP_STM32F411CE) || defined(CONFIG_CHIP_STM32F411RE) || defined(CONFIG_CHIP_STM32F411VE)
 	#define STM32F411xE
-#elif defined (CONFIG_CHIP_STM32F446)
+#elif defined(CONFIG_CHIP_STM32F446MC) || defined(CONFIG_CHIP_STM32F446ME) || defined(CONFIG_CHIP_STM32F446RC) || \
+		defined(CONFIG_CHIP_STM32F446RE) || defined(CONFIG_CHIP_STM32F446VC) || defined(CONFIG_CHIP_STM32F446VE) || \
+		defined(CONFIG_CHIP_STM32F446ZC) || defined(CONFIG_CHIP_STM32F446ZE)
 	#define STM32F446xx
-#elif defined (CONFIG_CHIP_STM32F469)
+#elif defined(CONFIG_CHIP_STM32F469AI) || defined(CONFIG_CHIP_STM32F469II) || defined(CONFIG_CHIP_STM32F469BI) || \
+		defined(CONFIG_CHIP_STM32F469NI) || defined(CONFIG_CHIP_STM32F469AG) || defined(CONFIG_CHIP_STM32F469IG) || \
+		defined(CONFIG_CHIP_STM32F469BG) || defined(CONFIG_CHIP_STM32F469NG) || defined(CONFIG_CHIP_STM32F469AE) || \
+		defined(CONFIG_CHIP_STM32F469IE) || defined(CONFIG_CHIP_STM32F469BE) || defined(CONFIG_CHIP_STM32F469NE)
 	#define STM32F469xx
-#elif defined (CONFIG_CHIP_STM32F479)
+#elif defined(CONFIG_CHIP_STM32F479AI) || defined(CONFIG_CHIP_STM32F479II) || defined(CONFIG_CHIP_STM32F479BI) || \
+		defined(CONFIG_CHIP_STM32F479NI) || defined(CONFIG_CHIP_STM32F479AG) || defined(CONFIG_CHIP_STM32F479IG) || \
+		defined(CONFIG_CHIP_STM32F479BG) || defined(CONFIG_CHIP_STM32F479NG)
 	#define STM32F479xx
 #else
 	#error "Unsupported STM32F4 chip!"
