@@ -1200,8 +1200,7 @@ using InterruptVector = void(*)();
 +---------------------------------------------------------------------------------------------------------------------*/
 
 /// chip vector table
-/// \todo remove "=" when bug in doxygen is fixed
-extern "C" const InterruptVector chipVectors[] __attribute__ ((section(".chipVectors"))) =
+extern "C" const InterruptVector chipVectors[] __attribute__ ((section(".chipVectors")))
 {
 		WWDG_IRQHandler,					// 0x040, 0: Window WatchDog
 		PVD_IRQHandler,						// 0x044, 1: PVD through EXTI Line detection
