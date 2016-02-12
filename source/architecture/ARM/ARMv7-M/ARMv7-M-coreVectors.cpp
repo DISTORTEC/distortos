@@ -122,8 +122,7 @@ using InterruptVector = void(*)();
 +---------------------------------------------------------------------------------------------------------------------*/
 
 /// core vector table
-/// \todo remove "=" when bug in doxygen is fixed
-extern "C" const InterruptVector coreVectors[] __attribute__ ((section(".coreVectors"))) =
+extern "C" const InterruptVector coreVectors[] __attribute__ ((section(".coreVectors")))
 {
 		reinterpret_cast<InterruptVector>(__main_stack_end),	// 0x00: Main stack end address
 		Reset_Handler,											// 0x04: Reset
