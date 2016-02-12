@@ -9,10 +9,10 @@
 
 if CONFIG_CHIP_STM32F4 == "y" then
 
-	local stm32f4_ld_sh = "STM32F4.ld.sh"
+	local stm32f4LdSh = "STM32F4.ld.sh"
 	local ldscriptOutputs = {LDSCRIPT, filenameToGroup(LDSCRIPT)}
 
-	tup.rule(DISTORTOS_CONFIGURATION_MK, "^ SH " .. stm32f4_ld_sh .. "^ ./" .. stm32f4_ld_sh .. " \"%f\" > \"%o\"",
+	tup.rule(DISTORTOS_CONFIGURATION_MK, "^ SH " .. stm32f4LdSh .. "^ ./" .. stm32f4LdSh .. " \"%f\" > \"%o\"",
 			ldscriptOutputs)
 
 	CFLAGS += STANDARD_INCLUDES
