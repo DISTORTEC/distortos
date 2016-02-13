@@ -2,7 +2,7 @@
  * \file
  * \brief Implementation of RCC-related functions for STM32F4
  *
- * \author Copyright (C) 2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2015-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -90,8 +90,8 @@ int configurePllInputClockDivider(const uint8_t pllm)
 
 void enableHse(const bool bypass)
 {
-	RCC_CR_HSEON_bb = 1;
 	RCC_CR_HSEBYP_bb = bypass;
+	RCC_CR_HSEON_bb = 1;
 	while (RCC_CR_HSERDY_bb == 0);	// wait until HSE oscillator is stable
 }
 
