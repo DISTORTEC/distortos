@@ -70,7 +70,7 @@ ifneq ($(wildcard selectedConfiguration.mk),)
 
     # path to distortosConfiguration.mk file selected by $(CONFIG_SELECTED_CONFIGURATION) variable
     DISTORTOS_CONFIGURATION_MK = ./$(subst ",,$(CONFIG_SELECTED_CONFIGURATION))
-    
+
 endif
 
 ifeq ($(DO_INCLUDE),1)
