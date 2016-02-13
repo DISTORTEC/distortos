@@ -266,6 +266,20 @@ configure:
 distclean:
 	./$(DISTORTOS_PATH)scripts/distclean.sh
 
+.PHONY: doxygen
+doxygen: all
+	$(eval HTML_FOOTER_STRING := HTML_FOOTER =)
+	$(eval HTML_FOOTER_STRING += $(HTML_FOOTER))
+	$(eval INCLUDE_PATH_STRING := INCLUDE_PATH =)
+	$(eval INCLUDE_PATH_STRING += $(patsubst -I%,%,$(STANDARD_INCLUDES)))
+	$(eval INCLUDE_PATH_STRING += $(patsubst -I%,%,$(ARCHITECTURE_INCLUDES)))
+	$(eval INCLUDE_PATH_STRING += $(patsubst -I%,%,$(CHIP_INCLUDES)))
+	$(eval INCLUDE_PATH_STRING += $(patsubst -I%,%,$(BOARD_INCLUDES)))
+	$(eval INCLUDE_PATH_STRING += $(DISTORTOS_PATH)test)
+	$(eval PROJECT_NUMBER_STRING := PROJECT_NUMBER =)
+	$(eval PROJECT_NUMBER_STRING += `date +%y%m%d%H%M%S`)
+	(cat Doxyfile; echo $(HTML_FOOTER_STRING); echo $(INCLUDE_PATH_STRING); echo $(PROJECT_NUMBER_STRING)) | doxygen -
+
 define NEWLINE
 
 
