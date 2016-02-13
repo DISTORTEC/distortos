@@ -28,6 +28,19 @@
 # - DS6014 datasheet (STM32F105, STM32F107), Revision 9, 2015-09-03, devices listed on website on 2016-02-12;
 #
 
+comment "STM32F1 chip options"
+
+config CHIP_STM32F1_RCC_AHB_HZ
+	int "Frequency of AHB clock, Hz"
+	range 1 24000000 if CHIP_STM32F100
+	range 1 36000000 if CHIP_STM32F101
+	range 1 48000000 if CHIP_STM32F102
+	range 1 72000000
+	default 8000000
+	help
+		Frequency of AHB clock, Hz. RCC must be configured by user to achieve
+		that frequency.
+
 config CHIP_STM32F10
 	bool
 	default n
