@@ -268,8 +268,12 @@ distclean:
 
 .PHONY: doxygen
 doxygen: all
+	$(eval EXCLUDE_STRING := EXCLUDE =)
+	$(eval EXCLUDE_STRING += $(DISTORTOS_PATH)external)
 	$(eval HTML_FOOTER_STRING := HTML_FOOTER =)
 	$(eval HTML_FOOTER_STRING += $(HTML_FOOTER))
+	$(eval IMAGE_PATH_STRING := IMAGE_PATH =)
+	$(eval IMAGE_PATH_STRING += $(DISTORTOS_PATH)documentation/images)
 	$(eval INCLUDE_PATH_STRING := INCLUDE_PATH =)
 	$(eval INCLUDE_PATH_STRING += $(patsubst -I%,%,$(STANDARD_INCLUDES)))
 	$(eval INCLUDE_PATH_STRING += $(patsubst -I%,%,$(ARCHITECTURE_INCLUDES)))
@@ -278,7 +282,8 @@ doxygen: all
 	$(eval INCLUDE_PATH_STRING += $(DISTORTOS_PATH)test)
 	$(eval PROJECT_NUMBER_STRING := PROJECT_NUMBER =)
 	$(eval PROJECT_NUMBER_STRING += `date +%y%m%d%H%M%S`)
-	(cat Doxyfile; echo $(HTML_FOOTER_STRING); echo $(INCLUDE_PATH_STRING); echo $(PROJECT_NUMBER_STRING)) | doxygen -
+	(cat $(DISTORTOS_PATH)Doxyfile; echo $(EXCLUDE_STRING); echo $(HTML_FOOTER_STRING); echo $(IMAGE_PATH_STRING); \
+			echo $(INCLUDE_PATH_STRING); echo $(PROJECT_NUMBER_STRING)) | doxygen -
 
 define NEWLINE
 
