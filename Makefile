@@ -306,4 +306,4 @@ help:
 .PHONY: menuconfig
 menuconfig:
 	DISTORTOS_PATH=.$(DISTORTOS_PATH:%/=/%) KCONFIG_CONFIG=$(DISTORTOS_CONFIGURATION_MK) \
-	kconfig-mconf $(DISTORTOS_PATH)Kconfig
+			kconfig-mconf $(DISTORTOS_PATH)Kconfig
