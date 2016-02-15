@@ -149,11 +149,11 @@ BOARD_INCLUDES += $(patsubst %,-I$(DISTORTOS_PATH)%,$(subst ",,$(CONFIG_BOARD_IN
 #-----------------------------------------------------------------------------------------------------------------------
 
 ifeq ($(VERBOSE),0)
-Q = @
-PRETTY_PRINT = @echo $(1)
+	Q = @
+	PRETTY_PRINT = @echo $(1)
 else
-Q =
-PRETTY_PRINT =
+	Q =
+	PRETTY_PRINT =
 endif
 
 define DIRECTORY_DEPENDENCY
@@ -167,9 +167,9 @@ endef
 
 define PARSE_SUBDIRECTORY
 ifdef d
-NEXT_DIRECTORY := $$(d)$(1)/
+	NEXT_DIRECTORY := $$(d)$(1)/
 else
-NEXT_DIRECTORY := $(1)/
+	NEXT_DIRECTORY := $(1)/
 endif
 NEXT_DIRECTORY := $$(subst ./,,$$(NEXT_DIRECTORY))
 STACK_POINTER := $$(STACK_POINTER).x
