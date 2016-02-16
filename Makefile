@@ -167,11 +167,14 @@ endef
 
 define PARSE_SUBDIRECTORY
 ifdef d
-	NEXT_DIRECTORY := $$(d)$(1)/
+	ifeq ($$(d),./)
+		NEXT_DIRECTORY := $(1)/
+	else
+		NEXT_DIRECTORY := $$(d)$(1)/
+	endif
 else
 	NEXT_DIRECTORY := $(1)/
 endif
-NEXT_DIRECTORY := $$(subst ./,,$$(NEXT_DIRECTORY))
 STACK_POINTER := $$(STACK_POINTER).x
 DIRECTORY_STACK_$$(STACK_POINTER) := $$(d)
 d := $$(NEXT_DIRECTORY)
