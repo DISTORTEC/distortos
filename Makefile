@@ -189,6 +189,9 @@ endef
 # build targets
 #-----------------------------------------------------------------------------------------------------------------------
 
+# clear all implicit suffix rules
+.SUFFIXES:
+
 .PHONY: all
 all: targets
 
