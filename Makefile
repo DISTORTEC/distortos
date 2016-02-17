@@ -149,11 +149,11 @@ BOARD_INCLUDES += $(patsubst %,-I$(DISTORTOS_PATH)%,$(subst ",,$(CONFIG_BOARD_IN
 #-----------------------------------------------------------------------------------------------------------------------
 
 ifeq ($(VERBOSE),0)
-Q = @
-PRETTY_PRINT = @echo $(1)
+	Q = @
+	PRETTY_PRINT = @echo $(1)
 else
-Q =
-PRETTY_PRINT =
+	Q =
+	PRETTY_PRINT =
 endif
 
 define DIRECTORY_DEPENDENCY
@@ -167,11 +167,14 @@ endef
 
 define PARSE_SUBDIRECTORY
 ifdef d
-NEXT_DIRECTORY := $$(d)$(1)/
+	ifeq ($$(d),./)
+		NEXT_DIRECTORY := $(1)/
+	else
+		NEXT_DIRECTORY := $$(d)$(1)/
+	endif
 else
-NEXT_DIRECTORY := $(1)/
+	NEXT_DIRECTORY := $(1)/
 endif
-NEXT_DIRECTORY := $$(subst ./,,$$(NEXT_DIRECTORY))
 STACK_POINTER := $$(STACK_POINTER).x
 DIRECTORY_STACK_$$(STACK_POINTER) := $$(d)
 d := $$(NEXT_DIRECTORY)
@@ -188,6 +191,9 @@ endef
 #-----------------------------------------------------------------------------------------------------------------------
 # build targets
 #-----------------------------------------------------------------------------------------------------------------------
+
+# clear all implicit suffix rules
+.SUFFIXES:
 
 .PHONY: all
 all: targets
@@ -266,6 +272,25 @@ configure:
 distclean:
 	./$(DISTORTOS_PATH)scripts/distclean.sh
 
+.PHONY: doxygen
+doxygen: all
+	$(eval EXCLUDE_STRING := EXCLUDE =)
+	$(eval EXCLUDE_STRING += $(DISTORTOS_PATH)external)
+	$(eval HTML_FOOTER_STRING := HTML_FOOTER =)
+	$(eval HTML_FOOTER_STRING += $(HTML_FOOTER))
+	$(eval IMAGE_PATH_STRING := IMAGE_PATH =)
+	$(eval IMAGE_PATH_STRING += $(DISTORTOS_PATH)documentation/images)
+	$(eval INCLUDE_PATH_STRING := INCLUDE_PATH =)
+	$(eval INCLUDE_PATH_STRING += $(patsubst -I%,%,$(STANDARD_INCLUDES)))
+	$(eval INCLUDE_PATH_STRING += $(patsubst -I%,%,$(ARCHITECTURE_INCLUDES)))
+	$(eval INCLUDE_PATH_STRING += $(patsubst -I%,%,$(CHIP_INCLUDES)))
+	$(eval INCLUDE_PATH_STRING += $(patsubst -I%,%,$(BOARD_INCLUDES)))
+	$(eval INCLUDE_PATH_STRING += $(DISTORTOS_PATH)test)
+	$(eval PROJECT_NUMBER_STRING := PROJECT_NUMBER =)
+	$(eval PROJECT_NUMBER_STRING += `date +%y%m%d%H%M%S`)
+	(cat $(DISTORTOS_PATH)Doxyfile; echo $(EXCLUDE_STRING); echo $(HTML_FOOTER_STRING); echo $(IMAGE_PATH_STRING); \
+			echo $(INCLUDE_PATH_STRING); echo $(PROJECT_NUMBER_STRING)) | doxygen -
+
 define NEWLINE
 
 
@@ -292,4 +317,4 @@ help:
 .PHONY: menuconfig
 menuconfig:
 	DISTORTOS_PATH=.$(DISTORTOS_PATH:%/=/%) KCONFIG_CONFIG=$(DISTORTOS_CONFIGURATION_MK) \
-	kconfig-mconf $(DISTORTOS_PATH)Kconfig
+			kconfig-mconf $(DISTORTOS_PATH)Kconfig

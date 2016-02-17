@@ -101,8 +101,13 @@ To build just execute `make` (if using *GNU Make*) or `tup` (if using *tup*) com
 project. If you need to see verbose compilation log, execute `make VERBOSE=1` (if using *GNU Make*) or
 `tup --verbose` (if using *tup*).
 
-To remove all generated files (*tup* database, build outputs, *doxygen* outputs and `selectedConfiguration.mk` file)
-you can run `make distclean`.
+You can generate API reference with [doxygen](http://www.stack.nl/~dimitri/doxygen/) by running `make doxygen`. Exact
+contents of generated HTML pages depends on your configuration - it is affected by `distortosConfiguration.mk` file
+selected with `selectedConfiguration.mk` file.
+
+You can remove build outputs with standard `make clean` command. This will only remove the files generated during
+compilation phase. To remove all generated files (*tup* database, build outputs, *doxygen* outputs and
+`selectedConfiguration.mk` file) you can run `make distclean`.
 
 #### If you use tup and Linux
 
