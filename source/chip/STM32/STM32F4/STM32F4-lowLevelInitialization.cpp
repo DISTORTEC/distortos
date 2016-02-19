@@ -2,7 +2,7 @@
  * \file
  * \brief chip::lowLevelInitialization() implementation for STM32F4
  *
- * \author Copyright (C) 2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2015-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -94,7 +94,7 @@ void lowLevelInitialization()
 	constexpr uint32_t pllInHz {hsiHz};
 #elif defined(CONFIG_CHIP_STM32F4_RCC_PLLSRC_HSE)
 	constexpr bool pllClockSourceHse {true};
-	constexpr uint32_t pllInHz {CONFIG_CHIP_STM32F4_RCC_HSE_HZ};
+	constexpr uint32_t pllInHz {CONFIG_CHIP_STM32F4_RCC_HSE_FREQUENCY};
 #endif
 	configurePllClockSource(pllClockSourceHse);
 
@@ -139,7 +139,7 @@ void lowLevelInitialization()
 	constexpr uint32_t sysclkHz {hsiHz};
 	constexpr SystemClockSource systemClockSource {SystemClockSource::hsi};
 #elif defined(CONFIG_CHIP_STM32F4_RCC_SYSCLK_HSE)
-	constexpr uint32_t sysclkHz {CONFIG_CHIP_STM32F4_RCC_HSE_HZ};
+	constexpr uint32_t sysclkHz {CONFIG_CHIP_STM32F4_RCC_HSE_FREQUENCY};
 	constexpr SystemClockSource systemClockSource {SystemClockSource::hse};
 #elif defined(CONFIG_CHIP_STM32F4_RCC_SYSCLK_PLL)
 	constexpr uint32_t sysclkHz {pllOutHz};
@@ -206,7 +206,7 @@ void lowLevelInitialization()
 
 #else	// !def CONFIG_CHIP_STM32F4_RCC_STANDARD_CLOCK_CONFIGURATION_ENABLE
 
-	constexpr uint32_t ahbHz {CONFIG_CHIP_STM32F4_RCC_AHB_HZ};
+	constexpr uint32_t ahbHz {CONFIG_CHIP_STM32F4_RCC_AHB_FREQUENCY};
 
 #endif	// !def CONFIG_CHIP_STM32F4_RCC_STANDARD_CLOCK_CONFIGURATION_ENABLE
 
@@ -238,7 +238,7 @@ void lowLevelInitialization()
 
 #endif	// def CONFIG_CHIP_STM32F4_RCC_STANDARD_CLOCK_CONFIGURATION_ENABLE
 
-	constexpr uint32_t period {ahbHz / CONFIG_TICK_RATE_HZ};
+	constexpr uint32_t period {ahbHz / CONFIG_TICK_FREQUENCY};
 	constexpr uint32_t periodDividedBy8 {period / 8};
 	constexpr bool divideBy8 {period > architecture::maxSysTickPeriod};
 	// at least one of the periods must be valid

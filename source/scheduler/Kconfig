@@ -9,19 +9,19 @@
 
 menu "Scheduler configuration"
 
-config TICK_RATE_HZ
-	int "Tick rate, Hz"
+config TICK_FREQUENCY
+	int "Tick frequency, Hz"
 	range 1 4294967295
 	default 1000
 	help
-		System's tick rate, Hz.
+		System's tick frequency, Hz.
 
-config ROUND_ROBIN_RATE_HZ
-	int "Round-robin rate, Hz"
-	range 1 TICK_RATE_HZ
+config ROUND_ROBIN_FREQUENCY
+	int "Round-robin frequency, Hz"
+	range 1 TICK_FREQUENCY
 	default 10
 	help
-		Round-robin rate, Hz.
+		Round-robin frequency, Hz.
 
 config THREAD_DETACH_ENABLE
 	bool "Enable support for thread detachment"

@@ -2,7 +2,7 @@
  * \file
  * \brief RoundRobinQuantum class header
  *
- * \author Copyright (C) 2014-2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -102,15 +102,15 @@ public:
 
 private:
 
-	static_assert(CONFIG_TICK_RATE_HZ > 0, "CONFIG_TICK_RATE_HZ must be positive and non-zero!");
-	static_assert(CONFIG_ROUND_ROBIN_RATE_HZ > 0, "CONFIG_ROUND_ROBIN_RATE_HZ must be positive and non-zero!");
+	static_assert(CONFIG_TICK_FREQUENCY > 0, "CONFIG_TICK_FREQUENCY must be positive and non-zero!");
+	static_assert(CONFIG_ROUND_ROBIN_FREQUENCY > 0, "CONFIG_ROUND_ROBIN_FREQUENCY must be positive and non-zero!");
 
 	/// raw initializer value for round-robin quantum, calculated with rounding to nearest
-	constexpr static auto quantumRawInitializer_ = (CONFIG_TICK_RATE_HZ + CONFIG_ROUND_ROBIN_RATE_HZ / 2) /
-			CONFIG_ROUND_ROBIN_RATE_HZ;
+	constexpr static auto quantumRawInitializer_ = (CONFIG_TICK_FREQUENCY + CONFIG_ROUND_ROBIN_FREQUENCY / 2) /
+			CONFIG_ROUND_ROBIN_FREQUENCY;
 
 	static_assert(quantumRawInitializer_ > 0 || quantumRawInitializer_ <= UINT8_MAX,
-			"CONFIG_TICK_RATE_HZ and CONFIG_ROUND_ROBIN_RATE_HZ values produce invalid round-robin quantum!");
+			"CONFIG_TICK_FREQUENCY and CONFIG_ROUND_ROBIN_FREQUENCY values produce invalid round-robin quantum!");
 
 	/// round-robin quantum
 	Duration quantum_;
