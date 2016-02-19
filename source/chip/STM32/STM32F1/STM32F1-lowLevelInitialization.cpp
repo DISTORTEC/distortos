@@ -27,8 +27,8 @@ namespace chip
 
 void lowLevelInitialization()
 {
-	constexpr uint32_t ahbHz {CONFIG_CHIP_STM32F1_RCC_AHB_FREQUENCY};
-	constexpr uint32_t period {ahbHz / CONFIG_TICK_FREQUENCY};
+	constexpr uint32_t ahbFrequency {CONFIG_CHIP_STM32F1_RCC_AHB_FREQUENCY};
+	constexpr uint32_t period {ahbFrequency / CONFIG_TICK_FREQUENCY};
 	constexpr uint32_t periodDividedBy8 {period / 8};
 	constexpr bool divideBy8 {period > architecture::maxSysTickPeriod};
 	// at least one of the periods must be valid
