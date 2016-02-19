@@ -2,7 +2,7 @@
  * \file
  * \brief chip::lowLevelInitialization() implementation for STM32F4
  *
- * \author Copyright (C) 2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2015-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -91,19 +91,21 @@ void lowLevelInitialization()
 
 #if defined(CONFIG_CHIP_STM32F4_RCC_PLLSRC_HSI)
 	constexpr bool pllClockSourceHse {};
-	constexpr uint32_t pllInHz {hsiHz};
+	constexpr uint32_t pllInFrequency {hsiFrequency};
 #elif defined(CONFIG_CHIP_STM32F4_RCC_PLLSRC_HSE)
 	constexpr bool pllClockSourceHse {true};
-	constexpr uint32_t pllInHz {CONFIG_CHIP_STM32F4_RCC_HSE_HZ};
+	constexpr uint32_t pllInFrequency {CONFIG_CHIP_STM32F4_RCC_HSE_FREQUENCY};
 #endif
 	configurePllClockSource(pllClockSourceHse);
 
-	constexpr uint32_t vcoInHz {pllInHz / CONFIG_CHIP_STM32F4_RCC_PLLM};
-	static_assert(minVcoInHz <= vcoInHz && vcoInHz <= maxVcoInHz, "Invalid VCO input frequency!");
+	constexpr uint32_t vcoInFrequency {pllInFrequency / CONFIG_CHIP_STM32F4_RCC_PLLM};
+	static_assert(minVcoInFrequency <= vcoInFrequency && vcoInFrequency <= maxVcoInFrequency,
+			"Invalid VCO input frequency!");
 	configurePllInputClockDivider(CONFIG_CHIP_STM32F4_RCC_PLLM);
 
-	constexpr uint32_t vcoOutHz {vcoInHz * CONFIG_CHIP_STM32F4_RCC_PLLN};
-	static_assert(minVcoOutHz <= vcoOutHz && vcoOutHz <= maxVcoOutHz, "Invalid VCO output frequency!");
+	constexpr uint32_t vcoOutFrequency {vcoInFrequency * CONFIG_CHIP_STM32F4_RCC_PLLN};
+	static_assert(minVcoOutFrequency <= vcoOutFrequency && vcoOutFrequency <= maxVcoOutFrequency,
+			"Invalid VCO output frequency!");
 
 #if defined(CONFIG_CHIP_STM32F4_RCC_PLLP_DIV2)
 	constexpr uint8_t pllp {pllpDiv2};
@@ -115,15 +117,15 @@ void lowLevelInitialization()
 	constexpr uint8_t pllp {pllpDiv8};
 #endif
 
-	constexpr uint32_t pllOutHz {vcoOutHz / pllp};
-	static_assert(pllOutHz <= maxPllOutHz[voltageScaleIndex], "Invalid PLL output frequency!");
+	constexpr uint32_t pllOutFrequency {vcoOutFrequency / pllp};
+	static_assert(pllOutFrequency <= maxPllOutFrequency[voltageScaleIndex], "Invalid PLL output frequency!");
 
-	constexpr uint32_t pllqOutHz {vcoOutHz / CONFIG_CHIP_STM32F4_RCC_PLLQ};
-	static_assert(pllqOutHz <= maxPllqOutHz, "Invalid PLL \"/Q\" output frequency!");
+	constexpr uint32_t pllqOutFrequency {vcoOutFrequency / CONFIG_CHIP_STM32F4_RCC_PLLQ};
+	static_assert(pllqOutFrequency <= maxPllqOutFrequency, "Invalid PLL \"/Q\" output frequency!");
 
 #if defined(CONFIG_CHIP_STM32F446) || defined(CONFIG_CHIP_STM32F469) || defined(CONFIG_CHIP_STM32F479)
 
-	constexpr uint32_t pllrOutHz {vcoOutHz / CONFIG_CHIP_STM32F4_RCC_PLLR};
+	constexpr uint32_t pllrOutFrequency {vcoOutFrequency / CONFIG_CHIP_STM32F4_RCC_PLLR};
 
 	enablePll(CONFIG_CHIP_STM32F4_RCC_PLLN, pllp, CONFIG_CHIP_STM32F4_RCC_PLLQ, CONFIG_CHIP_STM32F4_RCC_PLLR);
 
@@ -136,16 +138,16 @@ void lowLevelInitialization()
 #endif	// def CONFIG_CHIP_STM32F4_RCC_PLL_ENABLE
 
 #if defined(CONFIG_CHIP_STM32F4_RCC_SYSCLK_HSI)
-	constexpr uint32_t sysclkHz {hsiHz};
+	constexpr uint32_t sysclkFrequency {hsiFrequency};
 	constexpr SystemClockSource systemClockSource {SystemClockSource::hsi};
 #elif defined(CONFIG_CHIP_STM32F4_RCC_SYSCLK_HSE)
-	constexpr uint32_t sysclkHz {CONFIG_CHIP_STM32F4_RCC_HSE_HZ};
+	constexpr uint32_t sysclkFrequency {CONFIG_CHIP_STM32F4_RCC_HSE_FREQUENCY};
 	constexpr SystemClockSource systemClockSource {SystemClockSource::hse};
 #elif defined(CONFIG_CHIP_STM32F4_RCC_SYSCLK_PLL)
-	constexpr uint32_t sysclkHz {pllOutHz};
+	constexpr uint32_t sysclkFrequency {pllOutFrequency};
 	constexpr SystemClockSource systemClockSource {SystemClockSource::pll};
 #elif defined(CONFIG_CHIP_STM32F4_RCC_SYSCLK_PLLR)
-	constexpr uint32_t sysclkHz {pllrOutHz};
+	constexpr uint32_t sysclkFrequency {pllrOutFrequency};
 	constexpr SystemClockSource systemClockSource {SystemClockSource::pllr};
 #endif	// defined(CONFIG_CHIP_STM32F4_RCC_SYSCLK_PLLR)
 
@@ -169,7 +171,7 @@ void lowLevelInitialization()
 	constexpr auto hpre = hpreDiv512;
 #endif	// defined(CONFIG_CHIP_STM32F4_RCC_AHB_DIV512)
 
-	constexpr uint32_t ahbHz {sysclkHz / hpre};
+	constexpr uint32_t ahbFrequency {sysclkFrequency / hpre};
 	configureAhbClockDivider(hpre);
 
 #if defined(CONFIG_CHIP_STM32F4_RCC_APB1_DIV1)
@@ -184,8 +186,8 @@ void lowLevelInitialization()
 	constexpr auto ppre1 = ppreDiv16;
 #endif	// defined(CONFIG_CHIP_STM32F4_RCC_APB1_DIV16)
 
-	constexpr uint32_t apb1Hz {ahbHz / ppre1};
-	static_assert(apb1Hz <= maxApb1Hz, "Invalid APB1 (low speed) frequency!");
+	constexpr uint32_t apb1Frequency {ahbFrequency / ppre1};
+	static_assert(apb1Frequency <= maxApb1Frequency, "Invalid APB1 (low speed) frequency!");
 	configureApbClockDivider(false, ppre1);
 
 #if defined(CONFIG_CHIP_STM32F4_RCC_APB2_DIV1)
@@ -200,35 +202,35 @@ void lowLevelInitialization()
 	constexpr auto ppre2 = ppreDiv16;
 #endif	// defined(CONFIG_CHIP_STM32F4_RCC_APB2_DIV16)
 
-	constexpr uint32_t apb2Hz {ahbHz / ppre2};
-	static_assert(apb2Hz <= maxApb2Hz, "Invalid APB2 (high speed) frequency!");
+	constexpr uint32_t apb2Frequency {ahbFrequency / ppre2};
+	static_assert(apb2Frequency <= maxApb2Frequency, "Invalid APB2 (high speed) frequency!");
 	configureApbClockDivider(true, ppre2);
 
 #else	// !def CONFIG_CHIP_STM32F4_RCC_STANDARD_CLOCK_CONFIGURATION_ENABLE
 
-	constexpr uint32_t ahbHz {CONFIG_CHIP_STM32F4_RCC_AHB_HZ};
+	constexpr uint32_t ahbFrequency {CONFIG_CHIP_STM32F4_RCC_AHB_FREQUENCY};
 
 #endif	// !def CONFIG_CHIP_STM32F4_RCC_STANDARD_CLOCK_CONFIGURATION_ENABLE
 
 #if CONFIG_CHIP_STM32F4_VDD_MV < 2100
 #	if defined(CONFIG_CHIP_STM32F401) || defined(CONFIG_CHIP_STM32F410) || defined(CONFIG_CHIP_STM32F411)
-	constexpr uint32_t frequencyThresholdHz {16000000};
+	constexpr uint32_t frequencyThreshold {16000000};
 #	else	// !defined(CONFIG_CHIP_STM32F401) && !defined(CONFIG_CHIP_STM32F410) && !defined(CONFIG_CHIP_STM32F411)
-	constexpr uint32_t frequencyThresholdHz {20000000};
+	constexpr uint32_t frequencyThreshold {20000000};
 #	endif	// !defined(CONFIG_CHIP_STM32F401) && !defined(CONFIG_CHIP_STM32F410) && !defined(CONFIG_CHIP_STM32F411)
 #elif CONFIG_CHIP_STM32F4_VDD_MV < 2400
 #	if defined(CONFIG_CHIP_STM32F401) || defined(CONFIG_CHIP_STM32F410) || defined(CONFIG_CHIP_STM32F411)
-	constexpr uint32_t frequencyThresholdHz {18000000};
+	constexpr uint32_t frequencyThreshold {18000000};
 #	else	// !defined(CONFIG_CHIP_STM32F401) && !defined(CONFIG_CHIP_STM32F410) && !defined(CONFIG_CHIP_STM32F411)
-	constexpr uint32_t frequencyThresholdHz {22000000};
+	constexpr uint32_t frequencyThreshold {22000000};
 #	endif	// !defined(CONFIG_CHIP_STM32F401) && !defined(CONFIG_CHIP_STM32F410) && !defined(CONFIG_CHIP_STM32F411)
 #elif CONFIG_CHIP_STM32F4_VDD_MV < 2700
-	constexpr uint32_t frequencyThresholdHz {24000000};
+	constexpr uint32_t frequencyThreshold {24000000};
 #else
-	constexpr uint32_t frequencyThresholdHz {30000000};
+	constexpr uint32_t frequencyThreshold {30000000};
 #endif
 
-	constexpr uint8_t flashLatency {(ahbHz - 1) / frequencyThresholdHz};
+	constexpr uint8_t flashLatency {(ahbFrequency - 1) / frequencyThreshold};
 	static_assert(flashLatency <= maxFlashLatency, "Invalid flash latency!");
 	configureFlashLatency(flashLatency);
 
@@ -238,7 +240,7 @@ void lowLevelInitialization()
 
 #endif	// def CONFIG_CHIP_STM32F4_RCC_STANDARD_CLOCK_CONFIGURATION_ENABLE
 
-	constexpr uint32_t period {ahbHz / CONFIG_TICK_RATE_HZ};
+	constexpr uint32_t period {ahbFrequency / CONFIG_TICK_FREQUENCY};
 	constexpr uint32_t periodDividedBy8 {period / 8};
 	constexpr bool divideBy8 {period > architecture::maxSysTickPeriod};
 	// at least one of the periods must be valid
