@@ -185,7 +185,7 @@ STACK_POINTER := $$(basename $$(STACK_POINTER))
 endef
 
 define PARSE_SUBDIRECTORIES
-$(foreach subdirectory,$(1),$(eval $(call PARSE_SUBDIRECTORY,$(subdirectory))))
+$(foreach subdirectory,$(sort $(1)),$(eval $(call PARSE_SUBDIRECTORY,$(subdirectory))))
 endef
 
 #-----------------------------------------------------------------------------------------------------------------------
