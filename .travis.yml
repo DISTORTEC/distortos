@@ -19,27 +19,14 @@ install:
     - tar -xf /tmp/gcc-arm-none-eabi-5_3-151225-linux-x64.tar.xz -C /tmp/
     - wget http://www.freddiechopin.info/en/download/category/11-bleeding-edge-toolchain?download=122%3Ableeding-edge-toolchain-150928-64-bit-linux -O /tmp/gcc-arm-none-eabi-4_9-150928-linux-x64.tar.xz
     - tar -xf /tmp/gcc-arm-none-eabi-4_9-150928-linux-x64.tar.xz -C /tmp/
-    - wget https://github.com/DISTORTEC/distortosTemplateSubfolder/archive/master.zip -O /tmp/master.zip
-    - unzip -q /tmp/master.zip -d /tmp
-    - ln -s $PWD /tmp/distortosTemplateSubfolder-master/distortos
     - export SAVED_PATH=$PATH
 
 # configure and build selected configurations
 script:
     - export PATH=/tmp/gcc-arm-none-eabi-5_3-151225/bin:$SAVED_PATH
     - scripts/buildAllConfigurations.sh
-    - cd /tmp/distortosTemplateSubfolder-master
-    - make configure CONFIG_PATH=distortos/configurations/STM32F4DISCOVERY/test
-    - make -j`nproc` VERBOSE=1
-    - make distclean
-    - cd -
     - export PATH=/tmp/gcc-arm-none-eabi-4_9-150928/bin:$SAVED_PATH
     - mkdir /tmp/lib
     - gcc -shared -o /tmp/lib/libfl.so.2 -lfl
     - export LD_LIBRARY_PATH=/tmp/lib
     - scripts/buildAllConfigurations.sh
-    - cd /tmp/distortosTemplateSubfolder-master
-    - make configure CONFIG_PATH=distortos/configurations/STM32F4DISCOVERY/test
-    - make -j`nproc` VERBOSE=1
-    - make distclean
-    - cd -
