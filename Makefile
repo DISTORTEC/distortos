@@ -287,7 +287,7 @@ doxygen: all
 	$(eval INCLUDE_PATH_STRING += $(patsubst -I%,%,$(BOARD_INCLUDES)))
 	$(eval INCLUDE_PATH_STRING += $(DISTORTOS_PATH)test)
 	$(eval PROJECT_NUMBER_STRING := PROJECT_NUMBER =)
-	$(eval PROJECT_NUMBER_STRING += `date +%y%m%d%H%M%S`)
+	$(eval PROJECT_NUMBER_STRING += `git describe --dirty 2>/dev/null || date +%y%m%d%H%M%S`)
 	(cat $(DISTORTOS_PATH)Doxyfile; echo $(EXCLUDE_STRING); echo $(HTML_FOOTER_STRING); echo $(IMAGE_PATH_STRING); \
 			echo $(INCLUDE_PATH_STRING); echo $(PROJECT_NUMBER_STRING)) | doxygen -
 
