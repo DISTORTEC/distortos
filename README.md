@@ -11,10 +11,10 @@ Advanced real-time operating system for deeply embedded targets
 - fully preemptive
 - round-robin and FIFO scheduling
 - all basic primitives aim for maximum compatibility with POSIX, thread support library from C++11 and other established
-  standards
+standards
 - POSIX pthread implementation
 - support for various mutex types (normal, error-checking, recursive) and mutex protocols (normal, priority inheritance,
-  priority protection)
+priority protection)
 - software timers
 - POSIX-style signals
 - static design where it is possible and makes sense
@@ -67,16 +67,16 @@ To configure & build *distortos* you need:
 - [GNU Make](http://www.gnu.org/software/make/) build system;
 - (optionally) [tup](http://gittup.org/tup/) (version 0.7.3 or above) build system;
 - [arm-none-eabi bleeding-edge-toolchain](https://sourceforge.net/projects/bleeding-edge/); alternatively you can try
-  any other arm-none-eabi toolchain, but C++ exception handling code will increase the size of binary and incorrect
-  newlib's _reent struct configuration will dramatically increase RAM requirements (bleeding-edge-toolchain has the
-  exceptions properly disabled and uses small variant of _reent struct - see
-  [here](http://www.freddiechopin.info/en/articles/35-arm/87-bleeding-edge-toolchain-o-co-chodzi)) - such combinations
-  are not tested extensively;
+any other arm-none-eabi toolchain, but C++ exception handling code will increase the size of binary and incorrect
+newlib's _reent struct configuration will dramatically increase RAM requirements (bleeding-edge-toolchain has the
+exceptions properly disabled and uses small variant of _reent struct - see
+[here](http://www.freddiechopin.info/en/articles/35-arm/87-bleeding-edge-toolchain-o-co-chodzi)) - such combinations are
+not tested extensively;
 - [AWK](https://en.wikipedia.org/wiki/AWK);
 - POSIX-compatible shell (e.g. [Bash](https://www.gnu.org/software/bash/));
 - [GNU Coreutils](http://www.gnu.org/software/coreutils/coreutils.html) or a set of compatible utilities;
 - [kconfig-frontends](http://ymorin.is-a-geek.org/projects/kconfig-frontends) (especially *mconf* tool) to create or
-  edit the configurations;
+edit the configurations;
 
 Make sure the tools are available in your system's *PATH* environment variable.
 
@@ -109,16 +109,16 @@ You can remove build outputs with standard `make clean` command. This will only 
 compilation phase. To remove all generated files (*tup* database, build outputs, *doxygen* outputs and
 `selectedConfiguration.mk` file) you can run `make distclean`.
 
-#### If you use tup and Linux
+### If you use tup and Linux
 
 You need to set *suid* bit on your *tup* executable (`` sudo chmod +s `which tup` ``) and you need to make sure that
 `fuse.conf` (usually `/etc/fuse.conf`) has `user_allow_other` option enabled.
 
-#### If you use tup and Windows
+### If you use tup and Windows
 
 Don't use 64-bit tools (even if you have 64-bit system), as *tup* cannot currently handle 64-bit executables.
 
-#### Tools for Windows
+### Tools for Windows
 
 You can get *GNU Make*, *AWK* (*GAWK*), *Bash* and *GNU Coreutils* by installing [MSYS2](https://msys2.github.io/) and
 executing `pacman -S gawk make` in the shell of this software distro - the binaries will be placed in

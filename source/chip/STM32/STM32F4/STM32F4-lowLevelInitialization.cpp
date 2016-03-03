@@ -32,6 +32,8 @@ namespace chip
 
 void lowLevelInitialization()
 {
+#ifdef CONFIG_CHIP_STM32F4_FLASH_STANDARD_CONFIGURATION_ENABLE
+
 #ifdef CONFIG_CHIP_STM32F4_FLASH_PREFETCH_ENABLE
 	static_assert(CONFIG_CHIP_STM32F4_VDD_MV >= 2100,
 			"Instruction prefetch must not be enabled when supply voltage is below 2.1V!");
@@ -41,6 +43,8 @@ void lowLevelInitialization()
 #endif	// !def CONFIG_CHIP_STM32F4_FLASH_PREFETCH_ENABLE
 	enableInstructionCache();
 	enableDataCache();
+
+#endif	// def CONFIG_CHIP_STM32F4_FLASH_STANDARD_CONFIGURATION_ENABLE
 
 #ifdef CONFIG_CHIP_STM32F4_PWR_STANDARD_CONFIGURATION_ENABLE
 
@@ -212,6 +216,8 @@ void lowLevelInitialization()
 
 #endif	// !def CONFIG_CHIP_STM32F4_RCC_STANDARD_CLOCK_CONFIGURATION_ENABLE
 
+#ifdef CONFIG_CHIP_STM32F4_FLASH_STANDARD_CONFIGURATION_ENABLE
+
 #if CONFIG_CHIP_STM32F4_VDD_MV < 2100
 #	if defined(CONFIG_CHIP_STM32F401) || defined(CONFIG_CHIP_STM32F410) || defined(CONFIG_CHIP_STM32F411)
 	constexpr uint32_t frequencyThreshold {16000000};
@@ -233,6 +239,8 @@ void lowLevelInitialization()
 	constexpr uint8_t flashLatency {(ahbFrequency - 1) / frequencyThreshold};
 	static_assert(flashLatency <= maxFlashLatency, "Invalid flash latency!");
 	configureFlashLatency(flashLatency);
+
+#endif	// def CONFIG_CHIP_STM32F4_FLASH_STANDARD_CONFIGURATION_ENABLE
 
 #ifdef CONFIG_CHIP_STM32F4_RCC_STANDARD_CLOCK_CONFIGURATION_ENABLE
 

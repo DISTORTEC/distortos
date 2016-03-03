@@ -21,7 +21,7 @@ install:
     - tar -xf /tmp/gcc-arm-none-eabi-4_9-150928-linux-x64.tar.xz -C /tmp/
     - export SAVED_PATH=$PATH
 
-# configure and build selected configurations
+# configure and build all configurations
 script:
     - export PATH=/tmp/gcc-arm-none-eabi-5_3-151225/bin:$SAVED_PATH
     - scripts/buildAllConfigurations.sh
