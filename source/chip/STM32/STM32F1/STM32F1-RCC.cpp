@@ -15,15 +15,68 @@
 
 #include "distortos/chip/CMSIS-proxy.h"
 
+#include <cerrno>
+
 namespace distortos
 {
 
 namespace chip
 {
 
+namespace
+{
+
+/*---------------------------------------------------------------------------------------------------------------------+
+| local functions
++---------------------------------------------------------------------------------------------------------------------*/
+
+/**
+ * \brief Configures PREDIV1 or PREDIV2 division factor.
+ *
+ * \param [in] prediv2 selects whether PREDIV1 (false) or PREDIV2 (true) will be configured
+ * \param [in] prediv is the PREDIV1 or PREDIV2 division factor, [minPrediv; maxPrediv]
+ *
+ * \return 0 on success, error code otherwise:
+ * - EINVAL - \a prediv value is invalid;
+ */
+
+int configurePrediv(const bool prediv2, const uint8_t prediv)
+{
+	if (prediv < minPrediv || prediv > maxPrediv)
+		return EINVAL;
+
+#if defined(CONFIG_CHIP_STM32F100)
+	static_cast<void>(prediv2);	// suppress warning
+	RCC->CFGR2 = (RCC->CFGR2 & ~RCC_CFGR2_PREDIV1) | (prediv << RCC_CFGR2_PREDIV1_bit);
+#elif defined(CONFIG_CHIP_STM32F105) || defined(CONFIG_CHIP_STM32F107)
+	RCC->CFGR2 = (RCC->CFGR2 & ~(prediv2 == true ? RCC_CFGR2_PREDIV2 : RCC_CFGR2_PREDIV1)) |
+			(prediv << (prediv2 == true ? RCC_CFGR2_PREDIV2_bit : RCC_CFGR2_PREDIV1_bit));
+#else	// !defined(CONFIG_CHIP_STM32F100) && !defined(CONFIG_CHIP_STM32F105) && !defined(CONFIG_CHIP_STM32F107)
+	static_cast<void>(prediv2);	// suppress warning
+	RCC_CFGR_PLLXTPRE_bb = prediv == 2;
+#endif	// !defined(CONFIG_CHIP_STM32F100) && !defined(CONFIG_CHIP_STM32F105) && !defined(CONFIG_CHIP_STM32F107)
+	return 0;
+}
+
+}	// namespace
+
 /*---------------------------------------------------------------------------------------------------------------------+
 | global functions
 +---------------------------------------------------------------------------------------------------------------------*/
+
+int configurePrediv1(const uint8_t prediv1)
+{
+	return configurePrediv(false, prediv1);
+}
+
+#if defined(CONFIG_CHIP_STM32F105) || defined(CONFIG_CHIP_STM32F107)
+
+int configurePrediv2(const uint8_t prediv2)
+{
+	return configurePrediv(true, prediv2);
+}
+
+#endif	// defined(CONFIG_CHIP_STM32F105) || defined(CONFIG_CHIP_STM32F107)
 
 void enableHse(const bool bypass)
 {

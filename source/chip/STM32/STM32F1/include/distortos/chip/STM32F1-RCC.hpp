@@ -16,6 +16,10 @@
 #ifndef SOURCE_CHIP_STM32_STM32F1_INCLUDE_DISTORTOS_CHIP_STM32F1_RCC_HPP_
 #define SOURCE_CHIP_STM32_STM32F1_INCLUDE_DISTORTOS_CHIP_STM32F1_RCC_HPP_
 
+#include "distortos/distortosConfiguration.h"
+
+#include <cstdint>
+
 namespace distortos
 {
 
@@ -23,8 +27,54 @@ namespace chip
 {
 
 /*---------------------------------------------------------------------------------------------------------------------+
+| global constants
++---------------------------------------------------------------------------------------------------------------------*/
+
+/// minimum allowed value for PREDIV1 and PREDIV2
+constexpr uint8_t minPrediv {1};
+
+/// maximum allowed value for PREDIV1 and PREDIV2
+#if defined(CONFIG_CHIP_STM32F100) || defined(CONFIG_CHIP_STM32F105) || defined(CONFIG_CHIP_STM32F107)
+constexpr uint8_t maxPrediv {16};
+#else	// !defined(CONFIG_CHIP_STM32F100) && !defined(CONFIG_CHIP_STM32F105) && !defined(CONFIG_CHIP_STM32F107)
+constexpr uint8_t maxPrediv {2};
+#endif	// !defined(CONFIG_CHIP_STM32F100) && !defined(CONFIG_CHIP_STM32F105) && !defined(CONFIG_CHIP_STM32F107)
+
+/*---------------------------------------------------------------------------------------------------------------------+
 | global functions' declarations
 +---------------------------------------------------------------------------------------------------------------------*/
+
+/**
+ * \brief Configures PREDIV1 division factor.
+ *
+ * \warning Before changing configuration of PLL make sure that it is not used in any way (as core clock or as source of
+ * peripheral clocks) and that it is disabled.
+ *
+ * \param [in] prediv1 is the PREDIV1 division factor, [minPrediv1; maxPrediv1]
+ *
+ * \return 0 on success, error code otherwise:
+ * - EINVAL - \a prediv1 value is invalid;
+ */
+
+int configurePrediv1(uint8_t prediv1);
+
+#if defined(CONFIG_CHIP_STM32F105) || defined(CONFIG_CHIP_STM32F107)
+
+/**
+ * \brief Configures PREDIV2 division factor.
+ *
+ * \warning Before changing configuration of any PLL make sure that they are not used in any way (as core clock or as
+ * source of peripheral clocks) and that they are disabled.
+ *
+ * \param [in] prediv2 is the PREDIV2 division factor, [minPrediv; maxPrediv]
+ *
+ * \return 0 on success, error code otherwise:
+ * - EINVAL - \a prediv2 value is invalid;
+ */
+
+int configurePrediv2(uint8_t prediv2);
+
+#endif	// defined(CONFIG_CHIP_STM32F105) || defined(CONFIG_CHIP_STM32F107)
 
 /**
  * \brief Enables HSE clock.
