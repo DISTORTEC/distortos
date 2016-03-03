@@ -27,6 +27,20 @@ namespace chip
 +---------------------------------------------------------------------------------------------------------------------*/
 
 /**
+ * \brief Enables HSE clock.
+ *
+ * Enables HSE clock using crystal/ceramic resonator (bypass disabled) or external user clock (bypass enabled). This
+ * function waits until the HSE oscillator is stable after enabling the clock.
+ *
+ * \warning Before changing configuration of HSE clock make sure that it is not used in any way (as core clock, as
+ * source for any PLL or as source of RTC clock).
+ *
+ * \param [in] bypass selects whether crystal/ceramic resonator (false) or external user clock (true) is used
+ */
+
+void enableHse(bool bypass);
+
+/**
  * \brief Disables HSE clock.
  *
  * \warning Before changing configuration of HSE clock make sure that it is not used in any way (as core clock, as
