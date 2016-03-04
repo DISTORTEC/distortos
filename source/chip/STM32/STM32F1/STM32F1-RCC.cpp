@@ -90,6 +90,27 @@ void enableHse(const bool bypass)
 	while (RCC_CR_HSERDY_bb == 0);	// wait until HSE oscillator is stable
 }
 
+int enablePll(const bool prediv1, const uint8_t pllmul)
+{
+#if defined(CONFIG_CHIP_STM32F105) || defined(CONFIG_CHIP_STM32F107)
+
+	if ((pllmul < minPllmul || pllmul > maxPllmul) && pllmul != pllmul6_5)
+		return EINVAL;
+
+#else	// !defined(CONFIG_CHIP_STM32F105) && !defined(CONFIG_CHIP_STM32F107)
+
+	if (pllmul < minPllmul || pllmul > maxPllmul)
+		return EINVAL;
+
+#endif	// !defined(CONFIG_CHIP_STM32F105) && !defined(CONFIG_CHIP_STM32F107)
+
+	RCC->CFGR = (RCC->CFGR & ~(RCC_CFGR_PLLMULL | RCC_CFGR_PLLSRC)) | ((pllmul - 2) << RCC_CFGR_PLLMUL_bit) |
+			(prediv1 << RCC_CFGR_PLLSRC_bit);
+	RCC_CR_PLLON_bb = 1;
+	while (RCC_CR_PLLRDY_bb == 0);	// wait until PLL is stable
+	return 0;
+}
+
 void disableHse()
 {
 	RCC_CR_HSEON_bb = 0;

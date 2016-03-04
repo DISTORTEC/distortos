@@ -30,6 +30,27 @@ namespace chip
 | global constants
 +---------------------------------------------------------------------------------------------------------------------*/
 
+/// minimum allowed value for PLLMUL
+#if defined(CONFIG_CHIP_STM32F105) || defined(CONFIG_CHIP_STM32F107)
+constexpr uint8_t minPllmul {4};
+#else	// !defined(CONFIG_CHIP_STM32F105) && !defined(CONFIG_CHIP_STM32F107)
+constexpr uint8_t minPllmul {2};
+#endif	// !defined(CONFIG_CHIP_STM32F105) && !defined(CONFIG_CHIP_STM32F107)
+
+/// maximum allowed value for PLLMUL
+#if defined(CONFIG_CHIP_STM32F105) || defined(CONFIG_CHIP_STM32F107)
+constexpr uint8_t maxPllmul {9};
+#else	// !defined(CONFIG_CHIP_STM32F105) && !defined(CONFIG_CHIP_STM32F107)
+constexpr uint8_t maxPllmul {16};
+#endif	// !defined(CONFIG_CHIP_STM32F105) && !defined(CONFIG_CHIP_STM32F107)
+
+#if defined(CONFIG_CHIP_STM32F105) || defined(CONFIG_CHIP_STM32F107)
+
+/// additional allowed value for PLLMUL - 6.5 (note: numeric value is not equal to logical value!)
+constexpr uint16_t pllmul6_5 {15};
+
+#endif	// defined(CONFIG_CHIP_STM32F105) || defined(CONFIG_CHIP_STM32F107)
+
 /// minimum allowed value for PREDIV1 and PREDIV2
 constexpr uint8_t minPrediv {1};
 
@@ -100,6 +121,24 @@ int configurePrediv2(uint8_t prediv2);
  */
 
 void enableHse(bool bypass);
+
+/**
+ * \brief Enables main PLL.
+ *
+ * Enables main PLL using selected parameters and waits until it is stable.
+ *
+ * \warning Before changing configuration of main PLL make sure that it is not used in any way (as core clock or as
+ * source of peripheral clocks) and that it is disabled.
+ *
+ * \param [in] prediv1 selects whether HSI / 2 (false) or PREDIV1 (true) is used as clock source of main PLL
+ * \param [in] pllmul is the PLLMUL value for main PLL, [minPllmul; maxPllmul] or (only for STM32F105 and STM32F107)
+ * [minPllmul; maxPllmul] and pllmul6_5
+ *
+ * \return 0 on success, error code otherwise:
+ * - EINVAL - \a pllmul value is invalid;
+ */
+
+int enablePll(bool prediv1, uint8_t pllmul);
 
 /**
  * \brief Disables HSE clock.
