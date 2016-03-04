@@ -61,6 +61,17 @@ int configurePrediv1(uint8_t prediv1);
 #if defined(CONFIG_CHIP_STM32F105) || defined(CONFIG_CHIP_STM32F107)
 
 /**
+ * \brief Configures PREDIV1 clock source.
+ *
+ * \warning Before changing configuration of PLL make sure that it is not used in any way (as core clock or as source of
+ * peripheral clocks) and that it is disabled.
+ *
+ * \param [in] pll2 selects HSE (false) or PLL2 (true) as PREDIV1 clock source
+ */
+
+void configurePrediv1ClockSource(bool pll2);
+
+/**
  * \brief Configures PREDIV2 division factor.
  *
  * \warning Before changing configuration of any PLL make sure that they are not used in any way (as core clock or as

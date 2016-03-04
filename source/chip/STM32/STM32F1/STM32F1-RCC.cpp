@@ -71,6 +71,11 @@ int configurePrediv1(const uint8_t prediv1)
 
 #if defined(CONFIG_CHIP_STM32F105) || defined(CONFIG_CHIP_STM32F107)
 
+void configurePrediv1ClockSource(const bool pll2)
+{
+	RCC_CFGR2_PREDIV1SRC_bb = pll2;
+}
+
 int configurePrediv2(const uint8_t prediv2)
 {
 	return configurePrediv(true, prediv2);
