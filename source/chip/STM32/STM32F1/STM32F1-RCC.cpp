@@ -95,6 +95,11 @@ void disableHse()
 	RCC_CR_HSEON_bb = 0;
 }
 
+void disablePll()
+{
+	RCC_CR_PLLON_bb = 0;
+}
+
 }	// namespace chip
 
 }	// namespace distortos

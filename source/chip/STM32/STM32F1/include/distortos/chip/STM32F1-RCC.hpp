@@ -110,6 +110,15 @@ void enableHse(bool bypass);
 
 void disableHse();
 
+/**
+ * \brief Disables main PLL.
+ *
+ * \warning Before changing configuration of main PLL make sure that it is not used in any way (as core clock or as
+ * source of peripheral clocks).
+ */
+
+void disablePll();
+
 }	// namespace chip
 
 }	// namespace distortos
