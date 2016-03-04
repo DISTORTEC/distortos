@@ -128,6 +128,11 @@ void disablePll2()
 	RCC_CR_PLL2ON_bb = 0;
 }
 
+void disablePll3()
+{
+	RCC_CR_PLL3ON_bb = 0;
+}
+
 #endif	// defined(CONFIG_CHIP_STM32F105) || defined(CONFIG_CHIP_STM32F107)
 
 }	// namespace chip

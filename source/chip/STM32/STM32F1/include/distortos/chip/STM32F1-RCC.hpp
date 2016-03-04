@@ -168,6 +168,15 @@ void disablePll();
 
 void disablePll2();
 
+/**
+ * \brief Disables PLL3.
+ *
+ * \warning Before changing configuration of PLL3 make sure that it is not used in any way (as source of peripheral
+ * clocks).
+ */
+
+void disablePll3();
+
 #endif	// defined(CONFIG_CHIP_STM32F105) || defined(CONFIG_CHIP_STM32F107)
 
 }	// namespace chip
