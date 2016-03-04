@@ -58,6 +58,39 @@ int configurePrediv(const bool prediv2, const uint8_t prediv)
 	return 0;
 }
 
+#if defined(CONFIG_CHIP_STM32F105) || defined(CONFIG_CHIP_STM32F107)
+
+/**
+ * \brief Enables PLL2 or PLL3.
+ *
+ * Enables PLL2 or PLL3 using selected parameters and waits until it is stable.
+ *
+ * \warning Before changing configuration of PLL2 make sure that it is not used in any way (as source of main PLL).
+ * Before changing configuration of PLL3 make sure that it is not used in any way (as source of peripheral clocks).
+ *
+ * \param [in] pll3 selects whether PLL2 (false) or PLL3 (true) will be configured
+ * \param [in] pll23Mul is the PLL2MUL value for PLL2 or PLL3MUL value for PLL3, [minPll23Mul; maxPll23Mul] and
+ * {pll23Mul16, pll23Mul20}
+ *
+ * \return 0 on success, error code otherwise:
+ * - EINVAL - \a pll23Mul value is invalid;
+ */
+
+int enablePll23(const bool pll3, const uint8_t pll23Mul)
+{
+	if ((pll23Mul < minPll23Mul || pll23Mul > maxPll23Mul) && pll23Mul != pll23Mul16 && pll23Mul != pll23Mul20)
+		return EINVAL;
+
+	const auto convertedPll23Mul = pll23Mul - 2 <= 0xf ? pll23Mul - 2 : 0xf;
+	RCC->CFGR2 = (RCC->CFGR2 & ~(pll3 == true ? RCC_CFGR2_PLL3MUL : RCC_CFGR2_PLL2MUL)) |
+			(convertedPll23Mul << (pll3 == true ? RCC_CFGR2_PLL3MUL_bit : RCC_CFGR2_PLL2MUL_bit));
+	(pll3 == true ? RCC_CR_PLL3ON_bb : RCC_CR_PLL2ON_bb) = 1;
+	while ((pll3 == true ? RCC_CR_PLL3RDY_bb : RCC_CR_PLL2RDY_bb) == 0);	// wait until PLL is stable
+	return 0;
+}
+
+#endif	// defined(CONFIG_CHIP_STM32F105) || defined(CONFIG_CHIP_STM32F107)
+
 }	// namespace
 
 /*---------------------------------------------------------------------------------------------------------------------+
@@ -110,6 +143,20 @@ int enablePll(const bool prediv1, const uint8_t pllmul)
 	while (RCC_CR_PLLRDY_bb == 0);	// wait until PLL is stable
 	return 0;
 }
+
+#if defined(CONFIG_CHIP_STM32F105) || defined(CONFIG_CHIP_STM32F107)
+
+int enablePll2(const uint8_t pll2Mul)
+{
+	return enablePll23(false, pll2Mul);
+}
+
+int enablePll3(const uint8_t pll3Mul)
+{
+	return enablePll23(true, pll3Mul);
+}
+
+#endif	// defined(CONFIG_CHIP_STM32F105) || defined(CONFIG_CHIP_STM32F107)
 
 void disableHse()
 {

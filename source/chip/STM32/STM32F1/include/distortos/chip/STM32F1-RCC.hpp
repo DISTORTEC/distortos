@@ -49,6 +49,18 @@ constexpr uint8_t maxPllmul {16};
 /// additional allowed value for PLLMUL - 6.5 (note: numeric value is not equal to logical value!)
 constexpr uint16_t pllmul6_5 {15};
 
+/// minimum allowed value for PLL2MUL and PLL3MUL
+constexpr uint8_t minPll23Mul {8};
+
+/// maximum allowed value for PLL2MUL and PLL3MUL
+constexpr uint8_t maxPll23Mul {14};
+
+/// first additional allowed value for PLL2MUL and PLL3MUL - 16
+constexpr uint16_t pll23Mul16 {16};
+
+/// second additional allowed value for PLL2MUL and PLL3MUL - 20
+constexpr uint16_t pll23Mul20 {20};
+
 #endif	// defined(CONFIG_CHIP_STM32F105) || defined(CONFIG_CHIP_STM32F107)
 
 /// minimum allowed value for PREDIV1 and PREDIV2
@@ -139,6 +151,41 @@ void enableHse(bool bypass);
  */
 
 int enablePll(bool prediv1, uint8_t pllmul);
+
+#if defined(CONFIG_CHIP_STM32F105) || defined(CONFIG_CHIP_STM32F107)
+
+/**
+ * \brief Enables PLL2.
+ *
+ * Enables PLL2 using selected parameters and waits until it is stable.
+ *
+ * \warning Before changing configuration of PLL2 make sure that it is not used in any way (as source of main PLL).
+ *
+ * \param [in] pll2Mul is the PLL2MUL value for PLL2, [minPll23Mul; maxPll23Mul] and {pll23Mul16, pll23Mul20}
+ *
+ * \return 0 on success, error code otherwise:
+ * - EINVAL - \a pll2Mul value is invalid;
+ */
+
+int enablePll2(uint8_t pll2Mul);
+
+/**
+ * \brief Enables PLL3.
+ *
+ * Enables PLL3 using selected parameters and waits until it is stable.
+ *
+ * \warning Before changing configuration of PLL3 make sure that it is not used in any way (as source of peripheral
+ * clocks).
+ *
+ * \param [in] pll3Mul is the PLL3MUL value for PLL3, [minPll23Mul; maxPll23Mul] and {pll23Mul16, pll23Mul20}
+ *
+ * \return 0 on success, error code otherwise:
+ * - EINVAL - \a pll3Mul value is invalid;
+ */
+
+int enablePll3(uint8_t pll3Mul);
+
+#endif	// defined(CONFIG_CHIP_STM32F105) || defined(CONFIG_CHIP_STM32F107)
 
 /**
  * \brief Disables HSE clock.
