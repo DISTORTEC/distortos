@@ -158,6 +158,18 @@ void disableHse();
 
 void disablePll();
 
+#if defined(CONFIG_CHIP_STM32F105) || defined(CONFIG_CHIP_STM32F107)
+
+/**
+ * \brief Disables PLL2.
+ *
+ * \warning Before changing configuration of PLL2 make sure that it is not used in any way (as source of main PLL).
+ */
+
+void disablePll2();
+
+#endif	// defined(CONFIG_CHIP_STM32F105) || defined(CONFIG_CHIP_STM32F107)
+
 }	// namespace chip
 
 }	// namespace distortos

@@ -121,6 +121,15 @@ void disablePll()
 	RCC_CR_PLLON_bb = 0;
 }
 
+#if defined(CONFIG_CHIP_STM32F105) || defined(CONFIG_CHIP_STM32F107)
+
+void disablePll2()
+{
+	RCC_CR_PLL2ON_bb = 0;
+}
+
+#endif	// defined(CONFIG_CHIP_STM32F105) || defined(CONFIG_CHIP_STM32F107)
+
 }	// namespace chip
 
 }	// namespace distortos
