@@ -15,6 +15,8 @@
 
 #include "distortos/chip/CMSIS-proxy.h"
 
+#include <utility>
+
 #include <cerrno>
 
 namespace distortos
@@ -96,6 +98,31 @@ int enablePll23(const bool pll3, const uint8_t pll23Mul)
 /*---------------------------------------------------------------------------------------------------------------------+
 | global functions
 +---------------------------------------------------------------------------------------------------------------------*/
+
+int configureAhbClockDivider(const uint16_t hpre)
+{
+	static const std::pair<decltype(hpre), decltype(RCC_CFGR_HPRE_DIV1)> associations[]
+	{
+		{hpreDiv1, RCC_CFGR_HPRE_DIV1},
+		{hpreDiv2, RCC_CFGR_HPRE_DIV2},
+		{hpreDiv4, RCC_CFGR_HPRE_DIV4},
+		{hpreDiv8, RCC_CFGR_HPRE_DIV8},
+		{hpreDiv16, RCC_CFGR_HPRE_DIV16},
+		{hpreDiv64, RCC_CFGR_HPRE_DIV64},
+		{hpreDiv128, RCC_CFGR_HPRE_DIV128},
+		{hpreDiv256, RCC_CFGR_HPRE_DIV256},
+		{hpreDiv512, RCC_CFGR_HPRE_DIV512},
+	};
+
+	for (auto& association : associations)
+		if (association.first == hpre)
+		{
+			RCC->CFGR = (RCC->CFGR & ~RCC_CFGR_HPRE) | association.second;
+			return 0;
+		}
+
+	return EINVAL;
+}
 
 int configurePrediv1(const uint8_t prediv1)
 {
