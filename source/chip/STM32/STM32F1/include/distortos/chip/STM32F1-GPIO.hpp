@@ -359,6 +359,17 @@ enum class PinConfiguration : uint8_t
 		openDrain50MhzAlternateFunction = (3 << 0) | (3 << 2),
 };
 
+/// all possible output speeds of pin
+enum class PinOutputSpeed : uint8_t
+{
+		/// 2MHz
+		_2Mhz,
+		/// 10MHz
+		_10Mhz,
+		/// 50MHz
+		_50Mhz,
+};
+
 /// all possible pull-up/pull-down configurations of input pin
 enum class PinPull : uint8_t
 {
@@ -395,6 +406,27 @@ inline void configureInputPin(const Pin pin, const PinPull pull)
 {
 	configurePin(pin, pull == PinPull::none ? PinConfiguration::floatingInput : PinConfiguration::inputWithPullUpDown,
 			pull == PinPull::up);
+}
+
+/**
+ * \brief Configures pin for "output" mode.
+ *
+ * \param [in] pin is the identifier of pin
+ * \param [in] openDrain is the desired output type of pin: push-pull (false) or open-drain (true)
+ * \param [in] outputSpeed is the desired output speed of pin
+ * \param [in] initialState is the initial state of pin
+ */
+
+inline void configureOutputPin(const Pin pin, const bool openDrain, const PinOutputSpeed outputSpeed,
+		const bool initialState)
+{
+	static const PinConfiguration configurations[3][2]
+	{
+			{PinConfiguration::pushPull2MhzOutput, PinConfiguration::openDrain2MhzOutput},
+			{PinConfiguration::pushPull10MhzOutput, PinConfiguration::openDrain10MhzOutput},
+			{PinConfiguration::pushPull50MhzOutput, PinConfiguration::openDrain50MhzOutput},
+	};
+	configurePin(pin, configurations[static_cast<uint8_t>(outputSpeed)][openDrain], initialState);
 }
 
 /**
