@@ -130,6 +130,65 @@ constexpr uint8_t ppreDiv8 {8};
 /// fifth allowed value for APB1 and APB2 dividers - 16
 constexpr uint8_t ppreDiv16 {16};
 
+/// HSI clock frequency, Hz
+constexpr uint32_t hsiFrequency {8000000};
+
+#if defined(CONFIG_CHIP_STM32F105) || defined(CONFIG_CHIP_STM32F107)
+
+/// minimum allowed value for PLL2 and PLL3 input frequency, Hz
+constexpr uint32_t minPll23InFrequency {3000000};
+
+/// maximum allowed value for PLL2 and PLL3 input frequency, Hz
+constexpr uint32_t maxPll23InFrequency {5000000};
+
+/// minimum allowed value for PLL2 and PLL3 output frequency, Hz
+constexpr uint32_t minPll23OutFrequency {40000000};
+
+/// maximum allowed value for PLL2 and PLL3 output frequency, Hz
+constexpr uint32_t maxPll23OutFrequency {74000000};
+
+#endif	// defined(CONFIG_CHIP_STM32F105) || defined(CONFIG_CHIP_STM32F107)
+
+/// minimum allowed value for PLL input frequency, Hz
+#if defined(CONFIG_CHIP_STM32F105) || defined(CONFIG_CHIP_STM32F107)
+constexpr uint32_t minPllInFrequency {3000000};
+#else	// !defined(CONFIG_CHIP_STM32F105) && !defined(CONFIG_CHIP_STM32F107)
+constexpr uint32_t minPllInFrequency {1000000};
+#endif	// !defined(CONFIG_CHIP_STM32F105) && !defined(CONFIG_CHIP_STM32F107)
+
+/// maximum allowed value for PLL input frequency, Hz
+#if defined(CONFIG_CHIP_STM32F100)
+constexpr uint32_t maxPllInFrequency {24000000};
+#elif defined(CONFIG_CHIP_STM32F105) || defined(CONFIG_CHIP_STM32F107)
+constexpr uint32_t maxPllInFrequency {12000000};
+#else	// !defined(CONFIG_CHIP_STM32F100) && !defined(CONFIG_CHIP_STM32F105) && !defined(CONFIG_CHIP_STM32F107)
+constexpr uint32_t maxPllInFrequency {25000000};
+#endif	// !defined(CONFIG_CHIP_STM32F100) && !defined(CONFIG_CHIP_STM32F105) && !defined(CONFIG_CHIP_STM32F107)
+
+/// minimum allowed value for PLL output frequency, Hz
+#if defined(CONFIG_CHIP_STM32F105) || defined(CONFIG_CHIP_STM32F107)
+constexpr uint32_t minPllOutFrequency {18000000};
+#else	// !defined(CONFIG_CHIP_STM32F105) && !defined(CONFIG_CHIP_STM32F107)
+constexpr uint32_t minPllOutFrequency {16000000};
+#endif	// !defined(CONFIG_CHIP_STM32F105) && !defined(CONFIG_CHIP_STM32F107)
+
+/// maximum allowed value for PLL output frequency, Hz
+#if defined(CONFIG_CHIP_STM32F100)
+constexpr uint32_t maxPllOutFrequency {24000000};
+#elif defined(CONFIG_CHIP_STM32F101)
+constexpr uint32_t maxPllOutFrequency {36000000};
+#elif defined(CONFIG_CHIP_STM32F102)
+constexpr uint32_t maxPllOutFrequency {48000000};
+#else	// !defined(CONFIG_CHIP_STM32F100) && !defined(CONFIG_CHIP_STM32F101) && !defined(CONFIG_CHIP_STM32F102)
+constexpr uint32_t maxPllOutFrequency {72000000};
+#endif	// !defined(CONFIG_CHIP_STM32F100) && !defined(CONFIG_CHIP_STM32F101) && !defined(CONFIG_CHIP_STM32F102)
+
+/// maximum allowed APB1 (low speed) frequency, Hz
+constexpr uint32_t maxApb1Frequency {36000000};
+
+/// maximum allowed APB2 (high speed) frequency, Hz
+constexpr uint32_t maxApb2Frequency {72000000};
+
 /*---------------------------------------------------------------------------------------------------------------------+
 | global functions' declarations
 +---------------------------------------------------------------------------------------------------------------------*/
