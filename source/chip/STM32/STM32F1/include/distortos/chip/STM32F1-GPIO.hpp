@@ -321,9 +321,57 @@ enum class Pin : uint32_t
 #endif	// def GPIOG
 };
 
+/// all possible configurations of pin
+enum class PinConfiguration : uint8_t
+{
+		/// analog input
+		analogInput = (0 << 0) | (0 << 2),
+		/// floating input
+		floatingInput = (0 << 0) | (1 << 2),
+		/// input with pull-up/pull-down
+		inputWithPullUpDown = (0 << 0) | (2 << 2),
+
+		/// push-pull output, 10MHz
+		pushPull10MhzOutput = (1 << 0) | (0 << 2),
+		/// open-drain output, 10MHz
+		openDrain10MhzOutput = (1 << 0) | (1 << 2),
+		/// push-pull alternate function, 10MHz
+		pushPull10MhzAlternateFunction = (1 << 0) | (2 << 2),
+		/// open-drain alternate function, 10MHz
+		openDrain10MhzAlternateFunction = (1 << 0) | (3 << 2),
+
+		/// push-pull output, 2MHz
+		pushPull2MhzOutput = (2 << 0) | (0 << 2),
+		/// open-drain output, 2MHz
+		openDrain2MhzOutput = (2 << 0) | (1 << 2),
+		/// push-pull alternate function, 2MHz
+		pushPull2MhzAlternateFunction = (2 << 0) | (2 << 2),
+		/// open-drain alternate function, 2MHz
+		openDrain2MhzAlternateFunction = (2 << 0) | (3 << 2),
+
+		/// push-pull output, 50MHz
+		pushPull50MhzOutput = (3 << 0) | (0 << 2),
+		/// open-drain output, 50MHz
+		openDrain50MhzOutput = (3 << 0) | (1 << 2),
+		/// push-pull alternate function, 50MHz
+		pushPull50MhzAlternateFunction = (3 << 0) | (2 << 2),
+		/// open-drain alternate function, 50MHz
+		openDrain50MhzAlternateFunction = (3 << 0) | (3 << 2),
+};
+
 /*---------------------------------------------------------------------------------------------------------------------+
 | global functions
 +---------------------------------------------------------------------------------------------------------------------*/
+
+/**
+ * \brief Configures pin.
+ *
+ * \param [in] pin is the identifier of pin
+ * \param [in] configuration is the desired configuration of pin
+ * \param [in] initialState is the initial state of pin
+ */
+
+void configurePin(Pin pin, PinConfiguration configuration, bool initialState);
 
 /**
  * \brief Decodes pin identifier into address of associated GPIO port and its pin number
