@@ -27,6 +27,21 @@ namespace chip
 {
 
 /*---------------------------------------------------------------------------------------------------------------------+
+| global types
++---------------------------------------------------------------------------------------------------------------------*/
+
+/// system clock source
+enum class SystemClockSource : uint8_t
+{
+	/// HSI oscillator selected as system clock
+	hsi,
+	/// HSE oscillator selected as system clock
+	hse,
+	/// main PLL selected as system clock
+	pll,
+};
+
+/*---------------------------------------------------------------------------------------------------------------------+
 | global constants
 +---------------------------------------------------------------------------------------------------------------------*/
 
@@ -291,6 +306,14 @@ void disablePll2();
 void disablePll3();
 
 #endif	// defined(CONFIG_CHIP_STM32F105) || defined(CONFIG_CHIP_STM32F107)
+
+/**
+ * \brief Switches system clock.
+ *
+ * \param [in] source is the new source of system clock, SystemClockSource::{hsi, hse, pll}
+ */
+
+void switchSystemClock(SystemClockSource source);
 
 }	// namespace chip
 

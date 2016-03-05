@@ -231,6 +231,13 @@ void disablePll3()
 
 #endif	// defined(CONFIG_CHIP_STM32F105) || defined(CONFIG_CHIP_STM32F107)
 
+void switchSystemClock(const SystemClockSource source)
+{
+	const auto sourceValue = static_cast<uint32_t>(source);
+	RCC->CFGR = (RCC->CFGR & ~RCC_CFGR_SW) | (sourceValue << RCC_CFGR_SW_bit);
+	while ((RCC->CFGR & RCC_CFGR_SWS) != sourceValue << RCC_CFGR_SWS_bit);
+}
+
 }	// namespace chip
 
 }	// namespace distortos
