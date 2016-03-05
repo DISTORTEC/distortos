@@ -359,6 +359,17 @@ enum class PinConfiguration : uint8_t
 		openDrain50MhzAlternateFunction = (3 << 0) | (3 << 2),
 };
 
+/// all possible pull-up/pull-down configurations of input pin
+enum class PinPull : uint8_t
+{
+		/// no pull-up/pull-down
+		none,
+		/// pull-up
+		up,
+		/// pull-down
+		down,
+};
+
 /*---------------------------------------------------------------------------------------------------------------------+
 | global functions
 +---------------------------------------------------------------------------------------------------------------------*/
@@ -372,6 +383,19 @@ enum class PinConfiguration : uint8_t
  */
 
 void configurePin(Pin pin, PinConfiguration configuration, bool initialState);
+
+/**
+ * \brief Configures pin for "input" configuration.
+ *
+ * \param [in] pin is the identifier of pin
+ * \param [in] pull is the desired pull-up/pull-down configuration of pin
+ */
+
+inline void configureInputPin(const Pin pin, const PinPull pull)
+{
+	configurePin(pin, pull == PinPull::none ? PinConfiguration::floatingInput : PinConfiguration::inputWithPullUpDown,
+			pull == PinPull::up);
+}
 
 /**
  * \brief Decodes pin identifier into address of associated GPIO port and its pin number
