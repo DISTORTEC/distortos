@@ -13,6 +13,11 @@ All notable changes to this project will be documented in this file. This projec
 - Support and test configuration for
 [NUCLEO-F103RB](http://www.st.com/web/catalog/tools/FM116/SC959/SS1532/LN1847/PF259875?icmp=nucleo-ipf_pron_pr-nucleo_feb2014&sc=nucleoF103RB-pr) board with *STM32F1* chip.
 
+### Changed
+
+- Change values of all GPIO-related enums for STM32F4 (Pin, PinAlternateFunction, PinMode, PinOutputSpeed and PinPull)
+from ALL CAPS or PascalCase to camelCase for consistency with their use as constants and with other enums.
+
 0.1.0 - 2016-02-26
 ------------------
 
