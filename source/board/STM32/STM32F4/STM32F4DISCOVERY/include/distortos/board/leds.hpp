@@ -75,10 +75,10 @@ constexpr size_t blueLedIndex {ld6LedIndex};
 /// array with pin identifiers of all LEDs
 constexpr std::array<chip::Pin, totalLeds> ledPins
 {
-		chip::Pin::PD13,
-		chip::Pin::PD12,
-		chip::Pin::PD14,
-		chip::Pin::PD15,
+		chip::Pin::pd13,
+		chip::Pin::pd12,
+		chip::Pin::pd14,
+		chip::Pin::pd15,
 };
 
 #ifdef CONFIG_BOARD_LEDS_ENABLE

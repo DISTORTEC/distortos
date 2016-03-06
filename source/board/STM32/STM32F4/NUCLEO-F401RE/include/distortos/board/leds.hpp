@@ -57,7 +57,7 @@ constexpr size_t greenLedIndex {ld2LedIndex};
 /// array with pin identifiers of all LEDs
 constexpr std::array<chip::Pin, totalLeds> ledPins
 {
-		chip::Pin::PA5,
+		chip::Pin::pa5,
 };
 
 #ifdef CONFIG_BOARD_LEDS_ENABLE
