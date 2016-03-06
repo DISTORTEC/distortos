@@ -39,12 +39,12 @@ public:
 	 * \param [in] openDrain is the desired output type of pin: push-pull (false) or open-drain (true),
 	 * default - push-pull (false)
 	 * \param [in] outputSpeed is the desired output speed of pin, default - PinOutputSpeed::low
-	 * \param [in] pull is the desired pull-up/pull-down configuration of pin, default - PinPull::None
+	 * \param [in] pull is the desired pull-up/pull-down configuration of pin, default - PinPull::none
 	 * \param [in] initialState is the initial state of pin, default - false
 	 */
 
 	explicit ChipOutputPin(Pin pin, bool openDrain = false, PinOutputSpeed outputSpeed = PinOutputSpeed::low,
-			PinPull pull = PinPull::None, bool initialState = false);
+			PinPull pull = PinPull::none, bool initialState = false);
 
 	/**
 	 * \return current state of pin

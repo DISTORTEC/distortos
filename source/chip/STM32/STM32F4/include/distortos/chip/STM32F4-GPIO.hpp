@@ -555,9 +555,12 @@ enum class PinOutputSpeed : uint8_t
 /// all possible pull-up/pull-down configurations of pin
 enum class PinPull : uint8_t
 {
-		None = 0,				///< no pull-up/pull-down
-		Up = 1,					///< pull-up
-		Down = 2				///< pull-down
+		/// no pull-up/pull-down
+		none = 0,
+		/// pull-up
+		up = 1,
+		/// pull-down
+		down = 2
 };
 
 /*---------------------------------------------------------------------------------------------------------------------+
