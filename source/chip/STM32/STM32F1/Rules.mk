@@ -7,32 +7,39 @@
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #
 
-#-----------------------------------------------------------------------------------------------------------------------
-# subdirectories
-#-----------------------------------------------------------------------------------------------------------------------
-
-SUBDIRECTORIES += architecture
-SUBDIRECTORIES += board
-SUBDIRECTORIES += chip
-SUBDIRECTORIES += clocks
-SUBDIRECTORIES += devices/io
-SUBDIRECTORIES += memory
-SUBDIRECTORIES += scheduler
-SUBDIRECTORIES += synchronization
-SUBDIRECTORIES += syscalls
-SUBDIRECTORIES += threads
+ifeq ($(CONFIG_CHIP_STM32F1),y)
 
 #-----------------------------------------------------------------------------------------------------------------------
-# archives
+# linker script
 #-----------------------------------------------------------------------------------------------------------------------
 
-LIBDISTORTOS_A_$(d) := $(OUTPUT)libdistortos.a
+STM32F1_LD_SH := $(d)STM32F1.ld.sh
+
+$(LDSCRIPT): $(DISTORTOS_CONFIGURATION_MK)
+	$(call PRETTY_PRINT," SH     " $(STM32F1_LD_SH))
+	$(Q)./$(STM32F1_LD_SH) "$(dir $<)$(notdir $<)" > "$@"
 
 #-----------------------------------------------------------------------------------------------------------------------
-# add archives to list of generated files
+# generated linker script depends on this Rules.mk, the script that generates it and the selectedConfiguration.mk file
 #-----------------------------------------------------------------------------------------------------------------------
 
-GENERATED := $(GENERATED) $(LIBDISTORTOS_A_$(d))
+$(LDSCRIPT): $(d)Rules.mk $(STM32F1_LD_SH) selectedConfiguration.mk
+
+#-----------------------------------------------------------------------------------------------------------------------
+# add generated linker script to list of generated files
+#-----------------------------------------------------------------------------------------------------------------------
+
+GENERATED := $(GENERATED) $(LDSCRIPT)
+
+#-----------------------------------------------------------------------------------------------------------------------
+# compilation flags
+#-----------------------------------------------------------------------------------------------------------------------
+
+CFLAGS_$(d) := $(CFLAGS_$(d)) $(STANDARD_INCLUDES)
+
+CXXFLAGS_$(d) := $(CXXFLAGS_$(d)) $(STANDARD_INCLUDES)
+CXXFLAGS_$(d) := $(CXXFLAGS_$(d)) $(ARCHITECTURE_INCLUDES)
+CXXFLAGS_$(d) := $(CXXFLAGS_$(d)) $(CHIP_INCLUDES)
 
 #-----------------------------------------------------------------------------------------------------------------------
 # standard footer
@@ -40,8 +47,4 @@ GENERATED := $(GENERATED) $(LIBDISTORTOS_A_$(d))
 
 include $(DISTORTOS_PATH)footer.mk
 
-#-----------------------------------------------------------------------------------------------------------------------
-# libdistortos.a dependencies - all objects from this folder tree and this Rules.mk
-#-----------------------------------------------------------------------------------------------------------------------
-
-$(LIBDISTORTOS_A_$(d)): $(OBJECTS_$(d)) $(SUBDIRECTORIES_OBJECTS_$(d)) $(d)Rules.mk
+endif	# eq ($(CONFIG_CHIP_STM32F1),y)

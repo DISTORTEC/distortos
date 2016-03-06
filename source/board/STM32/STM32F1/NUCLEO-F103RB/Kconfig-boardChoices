@@ -1,0 +1,16 @@
+#
+# file: Kconfig-boardChoices
+#
+# author: Copyright (C) 2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+#
+# This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
+# distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+#
+
+config BOARD_NUCLEO_F103RB
+	bool "NUCLEO-F103RB"
+	depends on CHIP_STM32F1
+	select CHIP_STM32F103RB
+	select CHIP_LQFP64
+	help
+		NUCLEO-F103RB board with STM32F103RB chip in LQFP64 package
