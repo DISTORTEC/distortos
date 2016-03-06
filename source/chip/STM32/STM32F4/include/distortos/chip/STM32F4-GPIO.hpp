@@ -493,37 +493,37 @@ enum class Pin : uint32_t
 enum class PinAlternateFunction : uint8_t
 {
 		/// alternate function 0
-		AF0,
+		af0,
 		/// alternate function 1
-		AF1,
+		af1,
 		/// alternate function 2
-		AF2,
+		af2,
 		/// alternate function 3
-		AF3,
+		af3,
 		/// alternate function 4
-		AF4,
+		af4,
 		/// alternate function 5
-		AF5,
+		af5,
 		/// alternate function 6
-		AF6,
+		af6,
 		/// alternate function 7
-		AF7,
+		af7,
 		/// alternate function 8
-		AF8,
+		af8,
 		/// alternate function 9
-		AF9,
+		af9,
 		/// alternate function 10
-		AF10,
+		af10,
 		/// alternate function 11
-		AF11,
+		af11,
 		/// alternate function 12
-		AF12,
+		af12,
 		/// alternate function 13
-		AF13,
+		af13,
 		/// alternate function 14
-		AF14,
+		af14,
 		/// alternate function 15
-		AF15,
+		af15,
 };
 
 /// all possible modes of pin
