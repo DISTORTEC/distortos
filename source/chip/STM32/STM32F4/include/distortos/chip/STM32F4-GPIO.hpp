@@ -530,13 +530,13 @@ enum class PinAlternateFunction : uint8_t
 enum class PinMode : uint8_t
 {
 		/// input
-		Input,
+		input,
 		/// output
-		Output,
+		output,
 		/// alternate function
-		AlternateFunction,
+		alternateFunction,
 		/// analog
-		Analog,
+		analog,
 };
 
 /// all possible output speeds of pin
@@ -592,7 +592,7 @@ void configurePin(Pin pin, PinMode mode, bool openDrain, PinOutputSpeed outputSp
 inline void configureAlternateFunctionPin(const Pin pin, const bool openDrain, const PinOutputSpeed outputSpeed,
 		const PinPull pull, const PinAlternateFunction alternateFunction)
 {
-	configurePin(pin, PinMode::AlternateFunction, openDrain, outputSpeed, pull, alternateFunction, {});
+	configurePin(pin, PinMode::alternateFunction, openDrain, outputSpeed, pull, alternateFunction, {});
 }
 
 /**
@@ -603,7 +603,7 @@ inline void configureAlternateFunctionPin(const Pin pin, const bool openDrain, c
 
 inline void configureAnalogPin(const Pin pin)
 {
-	configurePin(pin, PinMode::Analog, {}, {}, {}, {}, {});
+	configurePin(pin, PinMode::analog, {}, {}, {}, {}, {});
 }
 
 /**
@@ -615,7 +615,7 @@ inline void configureAnalogPin(const Pin pin)
 
 inline void configureInputPin(const Pin pin, const PinPull pull)
 {
-	configurePin(pin, PinMode::Input, {}, {}, pull, {}, {});
+	configurePin(pin, PinMode::input, {}, {}, pull, {}, {});
 }
 
 /**
@@ -631,7 +631,7 @@ inline void configureInputPin(const Pin pin, const PinPull pull)
 inline void configureOutputPin(const Pin pin, const bool openDrain, const PinOutputSpeed outputSpeed,
 		const PinPull pull, const bool initialState)
 {
-	configurePin(pin, PinMode::Output, openDrain, outputSpeed, pull, {}, initialState);
+	configurePin(pin, PinMode::output, openDrain, outputSpeed, pull, {}, initialState);
 }
 
 /**
