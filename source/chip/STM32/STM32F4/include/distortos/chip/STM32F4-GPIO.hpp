@@ -543,13 +543,13 @@ enum class PinMode : uint8_t
 enum class PinOutputSpeed : uint8_t
 {
 		/// low speed
-		Low,
+		low,
 		/// medium speed
-		Medium,
+		medium,
 		/// high speed
-		High,
+		high,
 		/// very high speed
-		VeryHigh,
+		veryHigh,
 };
 
 /// all possible pull-up/pull-down configurations of pin
