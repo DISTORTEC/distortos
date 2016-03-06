@@ -7,6 +7,10 @@
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #
 
+config BOARD_TOTAL_LEDS
+	int
+	default 1
+
 config BOARD_INCLUDES
 	string
 	default "source/board/STM32/STM32F1/NUCLEO-F103RB/include"
