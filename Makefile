@@ -305,6 +305,8 @@ configure [CONFIG_PATH=<path>] - to select the configuration of your choice;
 distclean - remove the build output, doxygen documentation and file created by
   "make configure"
 menuconfig - to create/edit configuration of distortos
+olddefconfig - update currently selected configuration with default values of
+  new options
 
 endef
 
@@ -316,3 +318,8 @@ help:
 menuconfig:
 	DISTORTOS_PATH=.$(DISTORTOS_PATH:%/=/%) KCONFIG_CONFIG=$(DISTORTOS_CONFIGURATION_MK) \
 			kconfig-mconf $(DISTORTOS_PATH)Kconfig
+
+.PHONY: olddefconfig
+olddefconfig:
+	DISTORTOS_PATH=.$(DISTORTOS_PATH:%/=/%) KCONFIG_CONFIG=$(DISTORTOS_CONFIGURATION_MK) \
+			kconfig-conf $(DISTORTOS_PATH)Kconfig --olddefconfig
