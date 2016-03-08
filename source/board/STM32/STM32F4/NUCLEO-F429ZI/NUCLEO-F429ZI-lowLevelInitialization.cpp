@@ -11,6 +11,8 @@
 
 #include "distortos/board/lowLevelInitialization.hpp"
 
+#include "distortos/chip/CMSIS-proxy.h"
+
 namespace distortos
 {
 
@@ -23,7 +25,11 @@ namespace board
 
 void lowLevelInitialization()
 {
-
+	RCC->AHB1ENR |=
+#ifdef CONFIG_BOARD_LEDS_ENABLE
+			RCC_AHB1ENR_GPIOBEN |
+#endif	// def CONFIG_BOARD_LEDS_ENABLE
+			0;
 }
 
 }	// namespace board
