@@ -10,6 +10,7 @@
 source "$DISTORTOS_PATH/source/board/STM32/STM32F1/NUCLEO-F103RB/Kconfig"
 source "$DISTORTOS_PATH/source/board/STM32/STM32F4/32F429IDISCOVERY/Kconfig"
 source "$DISTORTOS_PATH/source/board/STM32/STM32F4/NUCLEO-F401RE/Kconfig"
+source "$DISTORTOS_PATH/source/board/STM32/STM32F4/NUCLEO-F429ZI/Kconfig"
 source "$DISTORTOS_PATH/source/board/STM32/STM32F4/STM32F4DISCOVERY/Kconfig"
 
 comment "Generic board options"
