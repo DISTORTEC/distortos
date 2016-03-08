@@ -7,6 +7,8 @@
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #
 
+if ARCHITECTURE_ARM
+
 config ARCHITECTURE_ARMV7_M
 	bool
 	default n
@@ -15,6 +17,6 @@ config TOOLCHAIN_PREFIX
 	string
 	default "arm-none-eabi-"
 
-if ARCHITECTURE_ARMV7_M
 source "$DISTORTOS_PATH/source/architecture/ARM/ARMv7-M/Kconfig"
-endif
+
+endif	# ARCHITECTURE_ARM

@@ -7,6 +7,8 @@
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #
 
+if ARCHITECTURE_ARMV7_M
+
 comment "ARMv7-M architecture options"
 
 config ARCHITECTURE_ARMV7_M_MAIN_STACK_SIZE
@@ -63,3 +65,5 @@ config ARCHITECTURE_FLAGS
 config ARCHITECTURE_INCLUDES
 	string
 	default "source/architecture/ARM/ARMv7-M/include"
+
+endif	# ARCHITECTURE_ARMV7_M

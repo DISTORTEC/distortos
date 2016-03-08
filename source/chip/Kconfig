@@ -47,9 +47,7 @@ endif	# BOARD_CUSTOM
 
 source "$DISTORTOS_PATH/source/board/Kconfig"
 
-if CHIP_STM32
 source "$DISTORTOS_PATH/source/chip/STM32/Kconfig"
-endif
 
 comment "Generic chip options"
 
