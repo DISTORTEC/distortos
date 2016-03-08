@@ -11,7 +11,8 @@ All notable changes to this project will be documented in this file. This projec
 
 - Support for all 94 [STM32F1](http://www.st.com/web/en/catalog/mmc/SC1169/SS1031) chips.
 - Support and test configuration for
-[NUCLEO-F103RB](http://www.st.com/web/catalog/tools/FM116/SC959/SS1532/LN1847/PF259875?icmp=nucleo-ipf_pron_pr-nucleo_feb2014&sc=nucleoF103RB-pr) board with *STM32F1* chip.
+[NUCLEO-F103RB](http://www.st.com/web/catalog/tools/FM116/SC959/SS1532/LN1847/PF259875?icmp=nucleo-ipf_pron_pr-nucleo_feb2014&sc=nucleoF103RB-pr) board with *STM32F1* chip and
+[NUCLEO-F429ZI](http://www.st.com/web/catalog/tools/FM116/SC959/SS1532/LN1847/PF262637) board with *STM32F4* chip.
 - `make olddefconfig` target, which can be used to update currently selected configuration with default values of new
 options.
 - `updateAllConfigurations.sh` script, which can be used to run `make olddefconfig` for all configurations found in
