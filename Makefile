@@ -299,14 +299,12 @@ endef
 define HELP_TEXT
 
 Available special targets:
-clean      .. remove the build output
-configure  .. to select the configuration of your choice;
-                use "make configure [CONFIG_PATH=<path>]"
-                <path> .. the path where distortosConfiguration.mk can be
-                found; default "."
-distclean  .. remove the build output, doxygen documentation and file created
-                by "make configure"
-menuconfig .. to create/edit configuration of distortos
+clean - remove the build output
+configure [CONFIG_PATH=<path>] - to select the configuration of your choice;
+  <path> .. the path where distortosConfiguration.mk can be found; default "."
+distclean - remove the build output, doxygen documentation and file created by
+  "make configure"
+menuconfig - to create/edit configuration of distortos
 
 endef
 
