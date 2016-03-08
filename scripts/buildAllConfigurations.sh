@@ -12,9 +12,16 @@
 set -e
 set -u
 
+searchPath=.
+
+# If any argument was given, then use it as the search path, otherwise search in current directory.
+if [ $# -ge 1 ]; then
+	searchPath=$1
+fi
+
 make distclean
 
-for configurationPath in `find -name "distortosConfiguration.mk" -printf "%h "`
+for configurationPath in `find $searchPath -name "distortosConfiguration.mk" -printf "%h "`
 do
 
 	make configure CONFIG_PATH=$configurationPath
