@@ -7,6 +7,8 @@
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #
 
+if BOARD_STM32F4DISCOVERY
+
 config BOARD_TOTAL_LEDS
 	int
 	default 4
@@ -41,4 +43,6 @@ config BOARD_INCLUDES
 
 config BOARD
 	string
-	default "STM32F4DISCOVERY" if BOARD_STM32F4DISCOVERY
+	default "STM32F4DISCOVERY"
+
+endif	# BOARD_STM32F4DISCOVERY
