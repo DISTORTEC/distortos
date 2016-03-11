@@ -14,7 +14,12 @@ config DISTORTOS_PATH
 
 source "$DISTORTOS_PATH/source/chip/Kconfig"
 source "$DISTORTOS_PATH/source/scheduler/Kconfig"
+
+# don't remove next line!
+### begin Kconfig-testApplication
 source "$DISTORTOS_PATH/test/Kconfig-testApplication"
+### end Kconfig-testApplication
+# don't remove previous line!
 
 menu "Build configuration"
 
