@@ -7,11 +7,15 @@
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #
 
+# don't remove next line!
+### begin Kconfig-boardOptions
 source "$DISTORTOS_PATH/source/board/STM32/STM32F1/NUCLEO-F103RB/Kconfig-boardOptions"
 source "$DISTORTOS_PATH/source/board/STM32/STM32F4/32F429IDISCOVERY/Kconfig-boardOptions"
 source "$DISTORTOS_PATH/source/board/STM32/STM32F4/NUCLEO-F401RE/Kconfig-boardOptions"
 source "$DISTORTOS_PATH/source/board/STM32/STM32F4/NUCLEO-F429ZI/Kconfig-boardOptions"
 source "$DISTORTOS_PATH/source/board/STM32/STM32F4/STM32F4DISCOVERY/Kconfig-boardOptions"
+### end Kconfig-boardOptions
+# don't remove previous line!
 
 comment "Generic board options"
 
