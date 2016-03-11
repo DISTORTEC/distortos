@@ -7,7 +7,11 @@
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #
 
+# don't remove next line!
+### begin Kconfig-architectureOptions
 source "$DISTORTOS_PATH/source/architecture/ARM/Kconfig-architectureOptions"
+### end Kconfig-architectureOptions
+# don't remove previous line!
 
 comment "Generic architecture options"
 
