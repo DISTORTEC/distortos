@@ -1,5 +1,5 @@
 #
-# file: Kconfig
+# file: Kconfig-chipOptions
 #
 # author: Copyright (C) 2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
 #
@@ -27,6 +27,8 @@
 # - DS6558 datasheet (STM32F103xF, STM32F103xG), Revision 4, 2015-05-15, devices listed on website on 2016-02-12;
 # - DS6014 datasheet (STM32F105, STM32F107), Revision 9, 2015-09-03, devices listed on website on 2016-02-12;
 #
+
+if CHIP_STM32F1
 
 comment "STM32F1 chip options"
 
@@ -1488,3 +1490,5 @@ config CHIP
 config CHIP_INCLUDES
 	string
 	default "source/chip/STM32/STM32F1/include external/CMSIS-STM32F1 external/CMSIS"
+
+endif	# CHIP_STM32F1

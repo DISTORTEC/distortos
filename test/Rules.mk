@@ -13,15 +13,7 @@ ifeq ($(CONFIG_TEST_APPLICATION_ENABLE),y)
 # subdirectories
 #-----------------------------------------------------------------------------------------------------------------------
 
-SUBDIRECTORIES += architecture/ARM/ARMv7-M
-SUBDIRECTORIES += CallOnce
-SUBDIRECTORIES += ConditionVariable
-SUBDIRECTORIES += Mutex
-SUBDIRECTORIES += Queue
-SUBDIRECTORIES += Semaphore
-SUBDIRECTORIES += Signals
-SUBDIRECTORIES += SoftwareTimer
-SUBDIRECTORIES += Thread
+SUBDIRECTORIES += $(patsubst $(d)%/Rules.mk,%,$(wildcard $(d)*/Rules.mk))
 
 #-----------------------------------------------------------------------------------------------------------------------
 # final targets

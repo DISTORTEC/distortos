@@ -1,5 +1,5 @@
 #
-# file: Kconfig
+# file: Kconfig-chipOptions
 #
 # author: Copyright (C) 2015-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
 #
@@ -21,6 +21,8 @@
 # - DS11189 datasheet (STM32F469xx), Revision 2, 2015-10-13, devices listed on website on 2015-12-13;
 # - DS11118 datasheet (STM32F479xx), Revision 2, 2015-10-19, devices listed on website on 2015-12-13;
 #
+
+if CHIP_STM32F4
 
 comment "STM32F4 chip options"
 
@@ -1755,3 +1757,5 @@ config CHIP
 config CHIP_INCLUDES
 	string
 	default "source/chip/STM32/STM32F4/include external/CMSIS-STM32F4 external/CMSIS"
+
+endif	# CHIP_STM32F4

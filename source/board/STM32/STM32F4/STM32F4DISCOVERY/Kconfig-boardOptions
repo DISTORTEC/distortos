@@ -1,5 +1,5 @@
 #
-# file: Kconfig
+# file: Kconfig-boardOptions
 #
 # author: Copyright (C) 2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
 #
@@ -7,11 +7,11 @@
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #
 
-if BOARD_NUCLEO_F429ZI
+if BOARD_STM32F4DISCOVERY
 
 config BOARD_TOTAL_LEDS
 	int
-	default 3
+	default 4
 
 config CHIP_STM32F4_VDD_MV_CONFIGURABLE
 	bool
@@ -19,14 +19,30 @@ config CHIP_STM32F4_VDD_MV_CONFIGURABLE
 
 config CHIP_STM32F4_VDD_MV_DEFAULT
 	int
-	default 3300
+	default 3000
+
+config CHIP_STM32F4_RCC_HSE_CLOCK_BYPASS_CONFIGURABLE
+	bool
+	default n
+
+config CHIP_STM32F4_RCC_HSE_CLOCK_BYPASS_DEFAULT
+	bool
+	default n
+
+config CHIP_STM32F4_RCC_HSE_FREQUENCY_CONFIGURABLE
+	bool
+	default n
+
+config CHIP_STM32F4_RCC_HSE_FREQUENCY_DEFAULT
+	int
+	default 8000000
 
 config BOARD_INCLUDES
 	string
-	default "source/board/STM32/STM32F4/NUCLEO-F429ZI/include"
+	default "source/board/STM32/STM32F4/STM32F4DISCOVERY/include"
 
 config BOARD
 	string
-	default "NUCLEO-F429ZI"
+	default "STM32F4DISCOVERY"
 
-endif	# BOARD_NUCLEO_F429ZI
+endif	# BOARD_STM32F4DISCOVERY

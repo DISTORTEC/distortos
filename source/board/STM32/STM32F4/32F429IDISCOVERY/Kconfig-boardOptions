@@ -1,5 +1,5 @@
 #
-# file: Kconfig
+# file: Kconfig-boardOptions
 #
 # author: Copyright (C) 2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
 #
@@ -7,11 +7,11 @@
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #
 
-if BOARD_STM32F4DISCOVERY
+if BOARD_32F429IDISCOVERY
 
 config BOARD_TOTAL_LEDS
 	int
-	default 4
+	default 2
 
 config CHIP_STM32F4_VDD_MV_CONFIGURABLE
 	bool
@@ -39,10 +39,10 @@ config CHIP_STM32F4_RCC_HSE_FREQUENCY_DEFAULT
 
 config BOARD_INCLUDES
 	string
-	default "source/board/STM32/STM32F4/STM32F4DISCOVERY/include"
+	default "source/board/STM32/STM32F4/32F429IDISCOVERY/include"
 
 config BOARD
 	string
-	default "STM32F4DISCOVERY"
+	default "32F429IDISCOVERY"
 
-endif	# BOARD_STM32F4DISCOVERY
+endif	# BOARD_32F429IDISCOVERY
