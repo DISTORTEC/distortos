@@ -11,16 +11,7 @@
 # subdirectories
 #-----------------------------------------------------------------------------------------------------------------------
 
-SUBDIRECTORIES += architecture
-SUBDIRECTORIES += board
-SUBDIRECTORIES += chip
-SUBDIRECTORIES += clocks
-SUBDIRECTORIES += devices/io
-SUBDIRECTORIES += memory
-SUBDIRECTORIES += scheduler
-SUBDIRECTORIES += synchronization
-SUBDIRECTORIES += syscalls
-SUBDIRECTORIES += threads
+SUBDIRECTORIES += $(patsubst $(d)%/Rules.mk,%,$(wildcard $(d)*/Rules.mk))
 
 #-----------------------------------------------------------------------------------------------------------------------
 # archives
