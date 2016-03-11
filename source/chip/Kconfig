@@ -45,7 +45,7 @@ source "$DISTORTOS_PATH/source/chip/STM32/STM32F4/Kconfig-chipChoices"
 
 endif	# BOARD_CUSTOM
 
-source "$DISTORTOS_PATH/source/board/Kconfig"
+source "$DISTORTOS_PATH/source/board/Kconfig-board"
 
 source "$DISTORTOS_PATH/source/chip/STM32/STM32F1/Kconfig-chipOptions"
 source "$DISTORTOS_PATH/source/chip/STM32/STM32F4/Kconfig-chipOptions"
