@@ -14,7 +14,7 @@ config DISTORTOS_PATH
 
 source "$DISTORTOS_PATH/source/chip/Kconfig"
 source "$DISTORTOS_PATH/source/scheduler/Kconfig"
-source "$DISTORTOS_PATH/test/Kconfig"
+source "$DISTORTOS_PATH/test/Kconfig-testApplication"
 
 menu "Build configuration"
 
