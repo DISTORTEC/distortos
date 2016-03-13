@@ -12,8 +12,8 @@
 set -e
 set -u
 
-if [ $# -ne 5 ]; then
-	echo "This script requires exactly 5 arguments!" >&2
+if [ $# -lt 5 ]; then
+	echo "This script requires at least 5 arguments!" >&2
 	exit 1
 fi
 
@@ -53,12 +53,111 @@ romSize=`expr "$romDescription" : '[^,]\+,\([^,]\+\)' || true`
 ramAddress=`expr "$ramDescription" : '\([^,]\+\),[^,]\+' || true`
 ramSize=`expr "$ramDescription" : '[^,]\+,\([^,]\+\)' || true`
 
+shift
+shift
+shift
+shift
+shift
+
+headerComments=
+memoryEntries=
+memorySizes=
+dataArrayEntries=
+bssArrayEntries=
+sectionEntries=
+sectionSizes=
+
+while [ $# -gt 0 ]; do
+
+	if ! expr "$1" : "\([^,]\+,$addressRegex,$sizeRegex\)$" > /dev/null; then
+		echo "Invalid description of memory - \"$1\"!" >&2
+		exit 6
+	fi
+
+	memoryName=`expr "$1" : '\([^,]\+\),[^,]\+,[^,]\+' || true`
+	memoryAddress=`expr "$1" : '[^,]\+,\([^,]\+\),[^,]\+' || true`
+	memorySize=`expr "$1" : '[^,]\+,[^,]\+,\([^,]\+\)' || true`
+
+	headerComments+=" * - $memorySize bytes of $memoryName;\n"
+
+	memoryEntries+="\t$memoryName : org = $memoryAddress, len = $memorySize\n"
+
+	memorySizes+="\
+__${memoryName}_start = ORIGIN(${memoryName});
+__${memoryName}_size = LENGTH(${memoryName});
+__${memoryName}_end = __${memoryName}_start + __${memoryName}_size;
+PROVIDE(__${memoryName}_start = __${memoryName}_start);
+PROVIDE(__${memoryName}_size = __${memoryName}_size);
+PROVIDE(__${memoryName}_end = __${memoryName}_end);\n\n"
+
+	dataArrayEntries+="\
+\t\tLONG(LOADADDR(.${memoryName}.data)); LONG(ADDR(.${memoryName}.data)); \
+LONG(ADDR(.${memoryName}.data) + SIZEOF(.${memoryName}.data));\n"
+
+	bssArrayEntries+="\
+\t\tLONG(ADDR(.${memoryName}.bss)); LONG(ADDR(.${memoryName}.bss) + SIZEOF(.${memoryName}.bss));\n"
+
+	sectionEntries+="\
+	.${memoryName}.bss :
+	{
+		. = ALIGN(4);
+		__${memoryName}_bss_start = .;
+		PROVIDE(__${memoryName}_bss_start = __${memoryName}_bss_start);
+
+		*(.${memoryName}.bss)
+
+		. = ALIGN(4);
+		__${memoryName}_bss_end = .;
+		PROVIDE(__${memoryName}_bss_end = __${memoryName}_bss_end);
+	} > ${memoryName} AT > ${memoryName}
+
+	.${memoryName}.data :
+	{
+		. = ALIGN(4);
+		__${memoryName}_data_init_start = LOADADDR(.${memoryName}.data);
+		PROVIDE(__${memoryName}_data_init_start = __${memoryName}_data_init_start);
+		__${memoryName}_data_start = .;
+		PROVIDE(__${memoryName}_data_start = __${memoryName}_data_start);
+
+		*(.${memoryName}.data)
+
+		. = ALIGN(4);
+		__${memoryName}_data_end = .;
+		PROVIDE(__${memoryName}_data_end = __${memoryName}_data_end);
+	} > ${memoryName} AT > rom
+
+	.${memoryName}.noinit :
+	{
+		. = ALIGN(4);
+		__${memoryName}_noinit_start = .;
+		PROVIDE(__${memoryName}_noinit_start = __${memoryName}_noinit_start);
+
+		*(.${memoryName}.noinit)
+
+		. = ALIGN(4);
+		__${memoryName}_noinit_end = .;
+		PROVIDE(__${memoryName}_noinit_end = __${memoryName}_noinit_end);
+	} > ${memoryName} AT > ${memoryName}\n\n"
+
+	sectionSizes+="\
+PROVIDE(__${memoryName}_bss_size = __${memoryName}_bss_end - __${memoryName}_bss_start);
+PROVIDE(__${memoryName}_data_size = __${memoryName}_data_end - __${memoryName}_data_start);
+PROVIDE(__${memoryName}_noinit_size = __${memoryName}_noinit_end - __${memoryName}_noinit_start);\n"
+
+	shift
+done
+
 cat<<EOF
 /**
  * \file
  * \brief Linker script for $chipName chip:
  * - $romSize bytes of rom;
  * - $ramSize bytes of ram;
+EOF
+
+printf "%b" "$headerComments"
+
+cat<<EOF
  *
  * \author Copyright (C) 2014-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
@@ -97,6 +196,11 @@ MEMORY
 {
 	rom (rx)		: org = $romAddress, len = $romSize
 	ram (rwx)		: org = $ramAddress, len = $ramSize
+EOF
+
+printf "%b" "$memoryEntries"
+
+cat<<EOF
 }
 
 __rom_start = ORIGIN(rom);
@@ -113,6 +217,11 @@ PROVIDE(__ram_start = __ram_start);
 PROVIDE(__ram_size = __ram_size);
 PROVIDE(__ram_end = __ram_end);
 
+EOF
+
+printf "%b" "$memorySizes"
+
+cat<<EOF
 /*---------------------------------------------------------------------------------------------------------------------+
 | entry point
 +---------------------------------------------------------------------------------------------------------------------*/
@@ -174,6 +283,11 @@ SECTIONS
 		PROVIDE(__data_array_start = __data_array_start);
 
 		LONG(LOADADDR(.data)); LONG(ADDR(.data)); LONG(ADDR(.data) + SIZEOF(.data));
+EOF
+
+printf "%b" "$dataArrayEntries"
+
+cat<<EOF
 
 		. = ALIGN(4);
 		__data_array_end = .;
@@ -189,6 +303,11 @@ SECTIONS
 
 		LONG(ADDR(.bss)); LONG(ADDR(.bss) + SIZEOF(.bss));
 		LONG(ADDR(.stack)); LONG(ADDR(.stack) + SIZEOF(.stack));
+EOF
+
+printf "%b" "$bssArrayEntries"
+
+cat<<EOF
 
 		. = ALIGN(4);
 		__bss_array_end = .;
@@ -311,6 +430,11 @@ SECTIONS
 	__heap_end = __ram_end;
 	PROVIDE(__heap_end = __heap_end);
 
+EOF
+
+printf "%b" "$sectionEntries"
+
+cat<<EOF
 	.stab 				0 (NOLOAD) : { *(.stab) }
 	.stabstr 			0 (NOLOAD) : { *(.stabstr) }
 	/* DWARF debug sections.
@@ -351,6 +475,11 @@ PROVIDE(__data_size = __data_end - __data_start);
 PROVIDE(__bss_size = __bss_end - __bss_start);
 PROVIDE(__stack_size = __stack_end - __stack_start);
 PROVIDE(__heap_size = __heap_end - __heap_start);
+EOF
+
+printf "%b" "$sectionSizes"
+
+cat<<EOF
 
 PROVIDE(__bss_start__ = __bss_start);
 PROVIDE(__bss_end__ = __bss_end);
