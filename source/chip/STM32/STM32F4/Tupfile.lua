@@ -20,7 +20,7 @@ if CONFIG_CHIP_STM32F4 == "y" then
 		unifiedRamSize = CONFIG_CHIP_STM32F4_SRAM1_SIZE
 	end
 
-	local ldScriptGenerator = TOP .. "source/architecture/ARM/ARMv7-M/ARMv7-M.ld.sh"
+	local ldScriptGenerator = DISTORTOS_TOP .. "source/architecture/ARM/ARMv7-M/ARMv7-M.ld.sh"
 	local ldScriptGeneratorArguments = " \"" .. CONFIG_CHIP .. "\" \"" ..
 			CONFIG_CHIP_STM32F4_FLASH_ADDRESS .. "," .. CONFIG_CHIP_STM32F4_FLASH_SIZE .. "\" \"" ..
 			CONFIG_CHIP_STM32F4_SRAM1_ADDRESS .. "," .. unifiedRamSize .. "\" \"" ..

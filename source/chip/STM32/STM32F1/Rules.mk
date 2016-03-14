@@ -13,7 +13,7 @@ ifeq ($(CONFIG_CHIP_STM32F1),y)
 # linker script
 #-----------------------------------------------------------------------------------------------------------------------
 
-LD_SCRIPT_GENERATOR := source/architecture/ARM/ARMv7-M/ARMv7-M.ld.sh
+LD_SCRIPT_GENERATOR := $(DISTORTOS_PATH)source/architecture/ARM/ARMv7-M/ARMv7-M.ld.sh
 LD_SCRIPT_GENERATOR_ARGUMENTS := $(CONFIG_CHIP) \
 		"$(CONFIG_CHIP_STM32F1_FLASH_ADDRESS),$(CONFIG_CHIP_STM32F1_FLASH_SIZE)" \
 		"$(CONFIG_CHIP_STM32F1_SRAM_ADDRESS),$(CONFIG_CHIP_STM32F1_SRAM_SIZE)" \
