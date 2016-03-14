@@ -78,11 +78,11 @@ while [ $# -gt 0 ]; do
 	memoryAddress=`expr "$1" : '[^,]\+,\([^,]\+\),[^,]\+' || true`
 	memorySize=`expr "$1" : '[^,]\+,[^,]\+,\([^,]\+\)' || true`
 
-	headerComments+=" * - $memorySize bytes of $memoryName;\n"
+	headerComments="$headerComments * - $memorySize bytes of $memoryName;\n"
 
-	memoryEntries+="\t$memoryName : org = $memoryAddress, len = $memorySize\n"
+	memoryEntries="$memoryEntries\t$memoryName : org = $memoryAddress, len = $memorySize\n"
 
-	memorySizes+="\
+	memorySizes="${memorySizes}\
 __${memoryName}_start = ORIGIN(${memoryName});
 __${memoryName}_size = LENGTH(${memoryName});
 __${memoryName}_end = __${memoryName}_start + __${memoryName}_size;
@@ -90,14 +90,14 @@ PROVIDE(__${memoryName}_start = __${memoryName}_start);
 PROVIDE(__${memoryName}_size = __${memoryName}_size);
 PROVIDE(__${memoryName}_end = __${memoryName}_end);\n\n"
 
-	dataArrayEntries+="\
+	dataArrayEntries="$dataArrayEntries\
 \t\tLONG(LOADADDR(.${memoryName}.data)); LONG(ADDR(.${memoryName}.data)); \
 LONG(ADDR(.${memoryName}.data) + SIZEOF(.${memoryName}.data));\n"
 
-	bssArrayEntries+="\
+	bssArrayEntries="$bssArrayEntries\
 \t\tLONG(ADDR(.${memoryName}.bss)); LONG(ADDR(.${memoryName}.bss) + SIZEOF(.${memoryName}.bss));\n"
 
-	sectionEntries+="\
+	sectionEntries="$sectionEntries\
 	.${memoryName}.bss :
 	{
 		. = ALIGN(4);
@@ -139,7 +139,7 @@ LONG(ADDR(.${memoryName}.data) + SIZEOF(.${memoryName}.data));\n"
 		PROVIDE(__${memoryName}_noinit_end = __${memoryName}_noinit_end);
 	} > ${memoryName} AT > ${memoryName}\n\n"
 
-	sectionSizes+="\
+	sectionSizes="${sectionSizes}\
 PROVIDE(__${memoryName}_bss_size = __${memoryName}_bss_end - __${memoryName}_bss_start);
 PROVIDE(__${memoryName}_data_size = __${memoryName}_data_end - __${memoryName}_data_start);
 PROVIDE(__${memoryName}_noinit_size = __${memoryName}_noinit_end - __${memoryName}_noinit_start);\n"
