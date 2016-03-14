@@ -1,9 +1,9 @@
 #!/bin/sh
 
 #
-# file: STM32F4.ld.sh
+# file: ARMv7-M.ld.sh
 #
-# author: Copyright (C) 2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+# author: Copyright (C) 2015-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
 #
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -12,50 +12,154 @@
 set -e
 set -u
 
-if [ $# -ne 1 ]; then
-	echo "This script requires exactly one argument!" >&2
+if [ $# -lt 5 ]; then
+	echo "This script requires at least 5 arguments!" >&2
 	exit 1
 fi
 
-if [ ! -f $1 ]; then
-	echo "Configuation file $1 does not exist!" >&2
+chipName=$1
+romDescription=$2
+ramDescription=$3
+mainStackSize=$4
+processStackSize=$5
+
+decimalOrHexadecimalRegex='\(\(0x[0-9a-fA-F]\{1,8\}\)\|\([0-9]\{1,9\}\)\)'
+addressRegex="\($decimalOrHexadecimalRegex\)"
+sizeRegex="\($decimalOrHexadecimalRegex[kM]\?\)"
+
+if ! expr "$romDescription" : "\($addressRegex,$sizeRegex\)$" > /dev/null; then
+	echo "Invalid description of ROM - \"$romDescription\"!" >&2
 	exit 2
 fi
 
-# source the configuration file provided as argument to read all the configuration variables
-. $1
-
-if [ $CONFIG_CHIP_STM32F4_FLASH_SIZE -eq 0 ] || [ $CONFIG_CHIP_STM32F4_SRAM1_SIZE -eq 0 ]; then
-	echo "CONFIG_CHIP_STM32F4_FLASH_SIZE and CONFIG_CHIP_STM32F4_SRAM1_SIZE cannot be 0!" >&2
+if ! expr "$ramDescription" : "\($addressRegex,$sizeRegex\)$" > /dev/null; then
+	echo "Invalid description of RAM - \"$ramDescription\"!" >&2
 	exit 3
 fi
 
-PROCESS_STACK_SIZE=$CONFIG_MAIN_THREAD_STACK_SIZE
+if ! expr "$mainStackSize" : "\($sizeRegex\)$" > /dev/null; then
+	echo "Invalid size of main stack - \"$mainStackSize\"!" >&2
+	exit 4
+fi
+
+if ! expr "$processStackSize" : "\($sizeRegex\)$" > /dev/null; then
+	echo "Invalid size of process stack - \"$processStackSize\"!" >&2
+	exit 5
+fi
+
+# the matched string may (technically) be "0" - that's why " || true" is needed
+romAddress=`expr "$romDescription" : '\([^,]\+\),[^,]\+' || true`
+romSize=`expr "$romDescription" : '[^,]\+,\([^,]\+\)' || true`
+ramAddress=`expr "$ramDescription" : '\([^,]\+\),[^,]\+' || true`
+ramSize=`expr "$ramDescription" : '[^,]\+,\([^,]\+\)' || true`
+
+shift
+shift
+shift
+shift
+shift
+
+headerComments=
+memoryEntries=
+memorySizes=
+dataArrayEntries=
+bssArrayEntries=
+sectionEntries=
+sectionSizes=
+
+while [ $# -gt 0 ]; do
+
+	if ! expr "$1" : "\([^,]\+,$addressRegex,$sizeRegex\)$" > /dev/null; then
+		echo "Invalid description of memory - \"$1\"!" >&2
+		exit 6
+	fi
+
+	memoryName=`expr "$1" : '\([^,]\+\),[^,]\+,[^,]\+' || true`
+	memoryAddress=`expr "$1" : '[^,]\+,\([^,]\+\),[^,]\+' || true`
+	memorySize=`expr "$1" : '[^,]\+,[^,]\+,\([^,]\+\)' || true`
+
+	headerComments+=" * - $memorySize bytes of $memoryName;\n"
+
+	memoryEntries+="\t$memoryName : org = $memoryAddress, len = $memorySize\n"
+
+	memorySizes+="\
+__${memoryName}_start = ORIGIN(${memoryName});
+__${memoryName}_size = LENGTH(${memoryName});
+__${memoryName}_end = __${memoryName}_start + __${memoryName}_size;
+PROVIDE(__${memoryName}_start = __${memoryName}_start);
+PROVIDE(__${memoryName}_size = __${memoryName}_size);
+PROVIDE(__${memoryName}_end = __${memoryName}_end);\n\n"
+
+	dataArrayEntries+="\
+\t\tLONG(LOADADDR(.${memoryName}.data)); LONG(ADDR(.${memoryName}.data)); \
+LONG(ADDR(.${memoryName}.data) + SIZEOF(.${memoryName}.data));\n"
+
+	bssArrayEntries+="\
+\t\tLONG(ADDR(.${memoryName}.bss)); LONG(ADDR(.${memoryName}.bss) + SIZEOF(.${memoryName}.bss));\n"
+
+	sectionEntries+="\
+	.${memoryName}.bss :
+	{
+		. = ALIGN(4);
+		__${memoryName}_bss_start = .;
+		PROVIDE(__${memoryName}_bss_start = __${memoryName}_bss_start);
+
+		*(.${memoryName}.bss)
+
+		. = ALIGN(4);
+		__${memoryName}_bss_end = .;
+		PROVIDE(__${memoryName}_bss_end = __${memoryName}_bss_end);
+	} > ${memoryName} AT > ${memoryName}
+
+	.${memoryName}.data :
+	{
+		. = ALIGN(4);
+		__${memoryName}_data_init_start = LOADADDR(.${memoryName}.data);
+		PROVIDE(__${memoryName}_data_init_start = __${memoryName}_data_init_start);
+		__${memoryName}_data_start = .;
+		PROVIDE(__${memoryName}_data_start = __${memoryName}_data_start);
+
+		*(.${memoryName}.data)
+
+		. = ALIGN(4);
+		__${memoryName}_data_end = .;
+		PROVIDE(__${memoryName}_data_end = __${memoryName}_data_end);
+	} > ${memoryName} AT > rom
+
+	.${memoryName}.noinit :
+	{
+		. = ALIGN(4);
+		__${memoryName}_noinit_start = .;
+		PROVIDE(__${memoryName}_noinit_start = __${memoryName}_noinit_start);
+
+		*(.${memoryName}.noinit)
+
+		. = ALIGN(4);
+		__${memoryName}_noinit_end = .;
+		PROVIDE(__${memoryName}_noinit_end = __${memoryName}_noinit_end);
+	} > ${memoryName} AT > ${memoryName}\n\n"
+
+	sectionSizes+="\
+PROVIDE(__${memoryName}_bss_size = __${memoryName}_bss_end - __${memoryName}_bss_start);
+PROVIDE(__${memoryName}_data_size = __${memoryName}_data_end - __${memoryName}_data_start);
+PROVIDE(__${memoryName}_noinit_size = __${memoryName}_noinit_end - __${memoryName}_noinit_start);\n"
+
+	shift
+done
 
 cat<<EOF
 /**
  * \file
- * \brief Linker script for $CONFIG_CHIP chip:
- * - $CONFIG_CHIP_STM32F4_FLASH_SIZE bytes of flash;
- * - $CONFIG_CHIP_STM32F4_SRAM1_SIZE bytes of SRAM1;
+ * \brief Linker script for $chipName chip:
+ * - $romSize bytes of rom;
+ * - $ramSize bytes of ram;
 EOF
 
-if [ $CONFIG_CHIP_STM32F4_SRAM2_SIZE -ne 0 ]; then
-	echo " * - $CONFIG_CHIP_STM32F4_SRAM2_SIZE bytes of SRAM2;"
-fi
-if [ $CONFIG_CHIP_STM32F4_SRAM3_SIZE -ne 0 ]; then
-	echo " * - $CONFIG_CHIP_STM32F4_SRAM3_SIZE bytes of SRAM3;"
-fi
-if [ $CONFIG_CHIP_STM32F4_CCM_SIZE -ne 0 ]; then
-	echo " * - $CONFIG_CHIP_STM32F4_CCM_SIZE bytes of CCM;"
-fi
-if [ $CONFIG_CHIP_STM32F4_BKPSRAM_SIZE -ne 0 ]; then
-	echo " * - $CONFIG_CHIP_STM32F4_BKPSRAM_SIZE bytes of BKPSRAM;"
-fi
+printf "%b" "$headerComments"
 
 cat<<EOF
  *
- * \author Copyright (C) 2014-2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -78,8 +182,8 @@ OUTPUT_ARCH(arm);
 /* Handler mode (core exceptions / interrupts) can use only main stack */
 /* Thread mode can use main stack (default after reset) or process stack - selected in CONTROL special register */
 
-__main_stack_size = $CONFIG_ARCHITECTURE_ARMV7_M_MAIN_STACK_SIZE;
-__process_stack_size = $PROCESS_STACK_SIZE;
+__main_stack_size = $mainStackSize;
+__process_stack_size = $processStackSize;
 
 PROVIDE(__main_stack_size = __main_stack_size);
 PROVIDE(__process_stack_size = __process_stack_size);
@@ -90,22 +194,11 @@ PROVIDE(__process_stack_size = __process_stack_size);
 
 MEMORY
 {
-	rom (rx)		: org = $CONFIG_CHIP_STM32F4_FLASH_ADDRESS, len = $CONFIG_CHIP_STM32F4_FLASH_SIZE
-	ram (rwx)		: org = $CONFIG_CHIP_STM32F4_SRAM1_ADDRESS, len = $CONFIG_CHIP_STM32F4_SRAM1_SIZE
+	rom (rx)		: org = $romAddress, len = $romSize
+	ram (rwx)		: org = $ramAddress, len = $ramSize
 EOF
 
-if [ $CONFIG_CHIP_STM32F4_SRAM2_SIZE -ne 0 ]; then
-	echo "	sram2 (rwx)		: org = $CONFIG_CHIP_STM32F4_SRAM2_ADDRESS, len = $CONFIG_CHIP_STM32F4_SRAM2_SIZE"
-fi
-if [ $CONFIG_CHIP_STM32F4_SRAM3_SIZE -ne 0 ]; then
-	echo "	sram3 (rwx)		: org = $CONFIG_CHIP_STM32F4_SRAM3_ADDRESS, len = $CONFIG_CHIP_STM32F4_SRAM3_SIZE"
-fi
-if [ $CONFIG_CHIP_STM32F4_CCM_SIZE -ne 0 ]; then
-	echo "	ccm (rw)		: org = $CONFIG_CHIP_STM32F4_CCM_ADDRESS, len = $CONFIG_CHIP_STM32F4_CCM_SIZE"
-fi
-if [ $CONFIG_CHIP_STM32F4_BKPSRAM_SIZE -ne 0 ]; then
-	echo "	bkpsram (rwx)	: org = $CONFIG_CHIP_STM32F4_BKPSRAM_ADDRESS, len = $CONFIG_CHIP_STM32F4_BKPSRAM_SIZE"
-fi
+printf "%b" "$memoryEntries"
 
 cat<<EOF
 }
@@ -126,53 +219,7 @@ PROVIDE(__ram_end = __ram_end);
 
 EOF
 
-if [ $CONFIG_CHIP_STM32F4_SRAM2_SIZE -ne 0 ]; then
-cat<<EOF
-__sram2_start = ORIGIN(sram2);
-__sram2_size = LENGTH(sram2);
-__sram2_end = __sram2_start + __sram2_size;
-PROVIDE(__sram2_start = __sram2_start);
-PROVIDE(__sram2_size = __sram2_size);
-PROVIDE(__sram2_end = __sram2_end);
-
-EOF
-fi
-
-if [ $CONFIG_CHIP_STM32F4_SRAM3_SIZE -ne 0 ]; then
-cat<<EOF
-__sram3_start = ORIGIN(sram3);
-__sram3_size = LENGTH(sram3);
-__sram3_end = __sram3_start + __sram3_size;
-PROVIDE(__sram3_start = __sram3_start);
-PROVIDE(__sram3_size = __sram3_size);
-PROVIDE(__sram3_end = __sram3_end);
-
-EOF
-fi
-
-if [ $CONFIG_CHIP_STM32F4_CCM_SIZE -ne 0 ]; then
-cat<<EOF
-__ccm_start = ORIGIN(ccm);
-__ccm_size = LENGTH(ccm);
-__ccm_end = __ccm_start + __ccm_size;
-PROVIDE(__ccm_start = __ccm_start);
-PROVIDE(__ccm_size = __ccm_size);
-PROVIDE(__ccm_end = __ccm_end);
-
-EOF
-fi
-
-if [ $CONFIG_CHIP_STM32F4_BKPSRAM_SIZE -ne 0 ]; then
-cat<<EOF
-__bkpsram_start = ORIGIN(bkpsram);
-__bkpsram_size = LENGTH(bkpsram);
-__bkpsram_end = __bkpsram_start + __bkpsram_size;
-PROVIDE(__bkpsram_start = __bkpsram_start);
-PROVIDE(__bkpsram_size = __bkpsram_size);
-PROVIDE(__bkpsram_end = __bkpsram_end);
-
-EOF
-fi
+printf "%b" "$memorySizes"
 
 cat<<EOF
 /*---------------------------------------------------------------------------------------------------------------------+
@@ -236,6 +283,11 @@ SECTIONS
 		PROVIDE(__data_array_start = __data_array_start);
 
 		LONG(LOADADDR(.data)); LONG(ADDR(.data)); LONG(ADDR(.data) + SIZEOF(.data));
+EOF
+
+printf "%b" "$dataArrayEntries"
+
+cat<<EOF
 
 		. = ALIGN(4);
 		__data_array_end = .;
@@ -251,6 +303,11 @@ SECTIONS
 
 		LONG(ADDR(.bss)); LONG(ADDR(.bss) + SIZEOF(.bss));
 		LONG(ADDR(.stack)); LONG(ADDR(.stack) + SIZEOF(.stack));
+EOF
+
+printf "%b" "$bssArrayEntries"
+
+cat<<EOF
 
 		. = ALIGN(4);
 		__bss_array_end = .;
@@ -373,6 +430,11 @@ SECTIONS
 	__heap_end = __ram_end;
 	PROVIDE(__heap_end = __heap_end);
 
+EOF
+
+printf "%b" "$sectionEntries"
+
+cat<<EOF
 	.stab 				0 (NOLOAD) : { *(.stab) }
 	.stabstr 			0 (NOLOAD) : { *(.stabstr) }
 	/* DWARF debug sections.
@@ -413,6 +475,11 @@ PROVIDE(__data_size = __data_end - __data_start);
 PROVIDE(__bss_size = __bss_end - __bss_start);
 PROVIDE(__stack_size = __stack_end - __stack_start);
 PROVIDE(__heap_size = __heap_end - __heap_start);
+EOF
+
+printf "%b" "$sectionSizes"
+
+cat<<EOF
 
 PROVIDE(__bss_start__ = __bss_start);
 PROVIDE(__bss_end__ = __bss_end);

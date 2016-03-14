@@ -27,11 +27,17 @@ components - e.g. you can delete `source/board/STM32/STM32F4/STM32F4DISCOVERY/` 
 entire `source/board/` and/or `test/` folders. After any deletion it is necessary to run `scripts/regenerateKconfig.sh`
 script once before using `make menuconfig`. When running it "outside" of *distortos* source tree (e.g. in a project
 based on "subfolder" template), provide it with the path to *distortos* in the first argument.
+- Configuration of *SRAM1*, *SRAM2* and *SRAM3* regions' unification for *STM32F4* chips.
+- Support for additional memory regions of *STM32F4* chips (*BKPSRAM*, *CCM*, *SRAM2*, *SRAM3*) in generated linker
+scripts.
 
 ### Changed
 
 - Change values of all GPIO-related enums for STM32F4 (Pin, PinAlternateFunction, PinMode, PinOutputSpeed and PinPull)
 from ALL CAPS or PascalCase to camelCase for consistency with their use as constants and with other enums.
+- Replace individual linker script generators for *STM32F1* and *STM32F4* families with generic script for
+*ARMv7-M*-based chips. The new generator also supports arbitrary number of additional memories (like BKPSRAM, CCM, ...),
+which can be defined with command line arguments. 
 
 ### Fixed
 

@@ -13,17 +13,58 @@ ifeq ($(CONFIG_CHIP_STM32F4),y)
 # linker script
 #-----------------------------------------------------------------------------------------------------------------------
 
-STM32F4_LD_SH := $(d)STM32F4.ld.sh
+ifdef CONFIG_CHIP_STM32F4_UNIFY_SRAM1_SRAM2
+	UNIFIED_RAM_SIZE := `expr '$(CONFIG_CHIP_STM32F4_SRAM1_SIZE)' '+' '$(CONFIG_CHIP_STM32F4_SRAM2_SIZE)'`
+else ifdef CONFIG_CHIP_STM32F4_UNIFY_SRAM1_SRAM2_SRAM3
+	UNIFIED_RAM_SIZE := `expr '$(CONFIG_CHIP_STM32F4_SRAM1_SIZE)' '+' '$(CONFIG_CHIP_STM32F4_SRAM2_SIZE)' '+'\
+			'$(CONFIG_CHIP_STM32F4_SRAM3_SIZE)'`
+else	# CONFIG_CHIP_STM32F4_UNIFY_NONE || CONFIG_CHIP_STM32F4_UNIFY_SRAM2_SRAM3
+	UNIFIED_RAM_SIZE := $(CONFIG_CHIP_STM32F4_SRAM1_SIZE)
+endif
+
+LD_SCRIPT_GENERATOR := source/architecture/ARM/ARMv7-M/ARMv7-M.ld.sh
+LD_SCRIPT_GENERATOR_ARGUMENTS := $(CONFIG_CHIP) \
+		"$(CONFIG_CHIP_STM32F4_FLASH_ADDRESS),$(CONFIG_CHIP_STM32F4_FLASH_SIZE)" \
+		"$(CONFIG_CHIP_STM32F4_SRAM1_ADDRESS),$(UNIFIED_RAM_SIZE)" "$(CONFIG_ARCHITECTURE_ARMV7_M_MAIN_STACK_SIZE)" \
+		"$(CONFIG_MAIN_THREAD_STACK_SIZE)"
+
+ifdef CONFIG_CHIP_STM32F4_BKPSRAM_ADDRESS
+	LD_SCRIPT_GENERATOR_ARGUMENTS +=\
+			"bkpsram,$(CONFIG_CHIP_STM32F4_BKPSRAM_ADDRESS),$(CONFIG_CHIP_STM32F4_BKPSRAM_SIZE)"
+endif	# def CONFIG_CHIP_STM32F4_BKPSRAM_ADDRESS
+
+ifdef CONFIG_CHIP_STM32F4_CCM_ADDRESS
+	LD_SCRIPT_GENERATOR_ARGUMENTS += "ccm,$(CONFIG_CHIP_STM32F4_CCM_ADDRESS),$(CONFIG_CHIP_STM32F4_CCM_SIZE)"
+endif	# def CONFIG_CHIP_STM32F4_CCM_ADDRESS
+
+ifdef CONFIG_CHIP_STM32F4_SRAM2_ADDRESS
+ifdef CONFIG_CHIP_STM32F4_UNIFY_NONE
+	LD_SCRIPT_GENERATOR_ARGUMENTS += "sram2,$(CONFIG_CHIP_STM32F4_SRAM2_ADDRESS),$(CONFIG_CHIP_STM32F4_SRAM2_SIZE)"
+endif	# def CONFIG_CHIP_STM32F4_UNIFY_NONE
+endif	# def CONFIG_CHIP_STM32F4_SRAM2_ADDRESS
+
+ifdef CONFIG_CHIP_STM32F4_SRAM3_ADDRESS
+ifndef CONFIG_CHIP_STM32F4_UNIFY_SRAM1_SRAM2_SRAM3
+ifndef CONFIG_CHIP_STM32F4_UNIFY_SRAM2_SRAM3
+	LD_SCRIPT_GENERATOR_ARGUMENTS += "sram3,$(CONFIG_CHIP_STM32F4_SRAM3_ADDRESS),$(CONFIG_CHIP_STM32F4_SRAM3_SIZE)"
+endif	# ndef CONFIG_CHIP_STM32F4_UNIFY_SRAM2_SRAM3
+endif	# ndef CONFIG_CHIP_STM32F4_UNIFY_SRAM1_SRAM2_SRAM3
+endif	# def CONFIG_CHIP_STM32F4_SRAM3_ADDRESS
+
+ifdef CONFIG_CHIP_STM32F4_UNIFY_SRAM2_SRAM3
+	SRAM23_SIZE := `expr '$(CONFIG_CHIP_STM32F4_SRAM2_SIZE)' '+' '$(CONFIG_CHIP_STM32F4_SRAM3_SIZE)'`
+	LD_SCRIPT_GENERATOR_ARGUMENTS += "sram23,$(CONFIG_CHIP_STM32F4_SRAM2_ADDRESS),$(SRAM23_SIZE)"
+endif	# def CONFIG_CHIP_STM32F4_UNIFY_SRAM2_SRAM3
 
 $(LDSCRIPT): $(DISTORTOS_CONFIGURATION_MK)
-	$(call PRETTY_PRINT," SH     " $(STM32F4_LD_SH))
-	$(Q)./$(STM32F4_LD_SH) "$(dir $<)$(notdir $<)" > "$@"
+	$(call PRETTY_PRINT," SH     " $(LD_SCRIPT_GENERATOR))
+	$(Q)./$(LD_SCRIPT_GENERATOR) $(LD_SCRIPT_GENERATOR_ARGUMENTS) > "$@"
 
 #-----------------------------------------------------------------------------------------------------------------------
 # generated linker script depends on this Rules.mk, the script that generates it and the selectedConfiguration.mk file
 #-----------------------------------------------------------------------------------------------------------------------
 
-$(LDSCRIPT): $(d)Rules.mk $(STM32F4_LD_SH) selectedConfiguration.mk
+$(LDSCRIPT): $(d)Rules.mk $(LD_SCRIPT_GENERATOR) selectedConfiguration.mk
 
 #-----------------------------------------------------------------------------------------------------------------------
 # add generated linker script to list of generated files
