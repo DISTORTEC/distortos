@@ -9,11 +9,16 @@
 
 if CONFIG_CHIP_STM32F4 == "y" then
 
+	local sram2Unified = 0
+	local sram3Unified = 0
 	local unifiedRamSize = 0
 
 	if CONFIG_CHIP_STM32F4_UNIFY_SRAM1_SRAM2 == "y" then
+		sram2Unified = 1
 		unifiedRamSize = CONFIG_CHIP_STM32F4_SRAM1_SIZE + CONFIG_CHIP_STM32F4_SRAM2_SIZE
 	elseif CONFIG_CHIP_STM32F4_UNIFY_SRAM1_SRAM2_SRAM3 == "y" then
+		sram2Unified = 1
+		sram3Unified = 1
 		unifiedRamSize = CONFIG_CHIP_STM32F4_SRAM1_SIZE + CONFIG_CHIP_STM32F4_SRAM2_SIZE +
 				CONFIG_CHIP_STM32F4_SRAM3_SIZE
 	else
@@ -36,21 +41,22 @@ if CONFIG_CHIP_STM32F4 == "y" then
 				" \"ccm," .. CONFIG_CHIP_STM32F4_CCM_ADDRESS .. "," .. CONFIG_CHIP_STM32F4_CCM_SIZE .. "\""
 	end
 
-	if CONFIG_CHIP_STM32F4_SRAM2_ADDRESS ~= nil and CONFIG_CHIP_STM32F4_UNIFY_NONE == "y" then
+	if CONFIG_CHIP_STM32F4_UNIFY_SRAM2_SRAM3 == "y" then
+		sram2Unified = 1
+		sram3Unified = 1
+		local sram23Size = CONFIG_CHIP_STM32F4_SRAM2_SIZE + CONFIG_CHIP_STM32F4_SRAM3_SIZE
+		ldScriptGeneratorArguments = ldScriptGeneratorArguments ..
+				" \"sram23," .. CONFIG_CHIP_STM32F4_SRAM2_ADDRESS .. "," .. sram23Size .. "\""
+	end
+
+	if CONFIG_CHIP_STM32F4_SRAM2_ADDRESS ~= nil and sram2Unified == 0 then
 		ldScriptGeneratorArguments = ldScriptGeneratorArguments ..
 				" \"sram2," .. CONFIG_CHIP_STM32F4_SRAM2_ADDRESS .. "," .. CONFIG_CHIP_STM32F4_SRAM2_SIZE .. "\""
 	end
 
-	if CONFIG_CHIP_STM32F4_SRAM3_ADDRESS ~= nil and CONFIG_CHIP_STM32F4_UNIFY_SRAM1_SRAM2_SRAM3 == "n" and
-			CONFIG_CHIP_STM32F4_UNIFY_SRAM2_SRAM3 == "n" then
+	if CONFIG_CHIP_STM32F4_SRAM3_ADDRESS ~= nil and sram3Unified == 0 then
 		ldScriptGeneratorArguments = ldScriptGeneratorArguments ..
 				" \"sram3," .. CONFIG_CHIP_STM32F4_SRAM3_ADDRESS .. "," .. CONFIG_CHIP_STM32F4_SRAM3_SIZE .. "\""
-	end
-
-	if CONFIG_CHIP_STM32F4_UNIFY_SRAM2_SRAM3 == "y" then
-		local sram23Size = CONFIG_CHIP_STM32F4_SRAM2_SIZE + CONFIG_CHIP_STM32F4_SRAM3_SIZE
-		ldScriptGeneratorArguments = ldScriptGeneratorArguments ..
-				" \"sram23," .. CONFIG_CHIP_STM32F4_SRAM2_ADDRESS .. "," .. sram23Size .. "\""
 	end
 
 	local ldscriptOutputs = {LDSCRIPT, filenameToGroup(LDSCRIPT)}
