@@ -118,7 +118,7 @@ LONG(ADDR(.${memoryName}.data) + SIZEOF(.${memoryName}.data));\n"
 		PROVIDE(__${memoryName}_data_end = .);
 	} > ${memoryName} AT > rom
 
-	.${memoryName}.noinit :
+	.${memoryName}.noinit (NOLOAD) :
 	{
 		. = ALIGN(4);
 		PROVIDE(__${memoryName}_noinit_start = .);
