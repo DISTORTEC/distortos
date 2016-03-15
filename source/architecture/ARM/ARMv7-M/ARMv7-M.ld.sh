@@ -83,12 +83,9 @@ while [ $# -gt 0 ]; do
 	memoryEntries="$memoryEntries\t$memoryName : org = $memoryAddress, len = $memorySize\n"
 
 	memorySizes="${memorySizes}\
-__${memoryName}_start = ORIGIN(${memoryName});
-__${memoryName}_size = LENGTH(${memoryName});
-__${memoryName}_end = __${memoryName}_start + __${memoryName}_size;
-PROVIDE(__${memoryName}_start = __${memoryName}_start);
-PROVIDE(__${memoryName}_size = __${memoryName}_size);
-PROVIDE(__${memoryName}_end = __${memoryName}_end);\n\n"
+PROVIDE(__${memoryName}_start = ORIGIN(${memoryName}));
+PROVIDE(__${memoryName}_size = LENGTH(${memoryName}));
+PROVIDE(__${memoryName}_end = __${memoryName}_start + __${memoryName}_size);\n\n"
 
 	dataArrayEntries="$dataArrayEntries\
 \t\tLONG(LOADADDR(.${memoryName}.data)); LONG(ADDR(.${memoryName}.data)); \
@@ -101,42 +98,35 @@ LONG(ADDR(.${memoryName}.data) + SIZEOF(.${memoryName}.data));\n"
 	.${memoryName}.bss :
 	{
 		. = ALIGN(4);
-		__${memoryName}_bss_start = .;
-		PROVIDE(__${memoryName}_bss_start = __${memoryName}_bss_start);
+		PROVIDE(__${memoryName}_bss_start = .);
 
 		*(.${memoryName}.bss)
 
 		. = ALIGN(4);
-		__${memoryName}_bss_end = .;
-		PROVIDE(__${memoryName}_bss_end = __${memoryName}_bss_end);
+		PROVIDE(__${memoryName}_bss_end = .);
 	} > ${memoryName} AT > ${memoryName}
 
 	.${memoryName}.data :
 	{
 		. = ALIGN(4);
-		__${memoryName}_data_init_start = LOADADDR(.${memoryName}.data);
-		PROVIDE(__${memoryName}_data_init_start = __${memoryName}_data_init_start);
-		__${memoryName}_data_start = .;
-		PROVIDE(__${memoryName}_data_start = __${memoryName}_data_start);
+		PROVIDE(__${memoryName}_data_init_start = LOADADDR(.${memoryName}.data));
+		PROVIDE(__${memoryName}_data_start = .);
 
 		*(.${memoryName}.data)
 
 		. = ALIGN(4);
-		__${memoryName}_data_end = .;
-		PROVIDE(__${memoryName}_data_end = __${memoryName}_data_end);
+		PROVIDE(__${memoryName}_data_end = .);
 	} > ${memoryName} AT > rom
 
 	.${memoryName}.noinit :
 	{
 		. = ALIGN(4);
-		__${memoryName}_noinit_start = .;
-		PROVIDE(__${memoryName}_noinit_start = __${memoryName}_noinit_start);
+		PROVIDE(__${memoryName}_noinit_start = .);
 
 		*(.${memoryName}.noinit)
 
 		. = ALIGN(4);
-		__${memoryName}_noinit_end = .;
-		PROVIDE(__${memoryName}_noinit_end = __${memoryName}_noinit_end);
+		PROVIDE(__${memoryName}_noinit_end = .);
 	} > ${memoryName} AT > ${memoryName}\n\n"
 
 	sectionSizes="${sectionSizes}\
@@ -180,13 +170,10 @@ OUTPUT_ARCH(arm);
 +---------------------------------------------------------------------------------------------------------------------*/
 
 /* Handler mode (core exceptions / interrupts) can use only main stack */
+PROVIDE(__main_stack_size = $mainStackSize);
+
 /* Thread mode can use main stack (default after reset) or process stack - selected in CONTROL special register */
-
-__main_stack_size = $mainStackSize;
-__process_stack_size = $processStackSize;
-
-PROVIDE(__main_stack_size = __main_stack_size);
-PROVIDE(__process_stack_size = __process_stack_size);
+PROVIDE(__process_stack_size = $processStackSize);
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | available memories
@@ -203,19 +190,13 @@ printf "%b" "$memoryEntries"
 cat<<EOF
 }
 
-__rom_start = ORIGIN(rom);
-__rom_size = LENGTH(rom);
-__rom_end = __rom_start + __rom_size;
-PROVIDE(__rom_start = __rom_start);
-PROVIDE(__rom_size = __rom_size);
-PROVIDE(__rom_end = __rom_end);
+PROVIDE(__rom_start = ORIGIN(rom));
+PROVIDE(__rom_size = LENGTH(rom));
+PROVIDE(__rom_end = __rom_start + __rom_size);
 
-__ram_start = ORIGIN(ram);
-__ram_size = LENGTH(ram);
-__ram_end = __ram_start + __ram_size;
-PROVIDE(__ram_start = __ram_start);
-PROVIDE(__ram_size = __ram_size);
-PROVIDE(__ram_end = __ram_end);
+PROVIDE(__ram_start = ORIGIN(ram));
+PROVIDE(__ram_size = LENGTH(ram));
+PROVIDE(__ram_end = __ram_start + __ram_size);
 
 EOF
 
@@ -237,21 +218,18 @@ SECTIONS
 	.text :
 	{
 		. = ALIGN(4);
-		__text_start = .;
-		PROVIDE(__text_start = __text_start);
+		PROVIDE(__text_start = .);
 
 		/* sub-section: .vectors */
 
 		. = ALIGN(4);
-		__vectors_start = .;
-		PROVIDE(__vectors_start = __vectors_start);
+		PROVIDE(__vectors_start = .);
 
 		KEEP(*(.coreVectors));
 		KEEP(*(.chipVectors));
 
 		. = ALIGN(4);
-		__vectors_end = .;
-		PROVIDE(__vectors_end = __vectors_end);
+		PROVIDE(__vectors_end = .);
 
 		/* end of sub-section: .vectors */
 
@@ -267,8 +245,7 @@ SECTIONS
 		/* sub-section: data_array */
 
 		. = ALIGN(4);
-		__data_array_start = .;
-		PROVIDE(__data_array_start = __data_array_start);
+		PROVIDE(__data_array_start = .);
 
 		LONG(LOADADDR(.data)); LONG(ADDR(.data)); LONG(ADDR(.data) + SIZEOF(.data));
 EOF
@@ -278,16 +255,14 @@ printf "%b" "$dataArrayEntries"
 cat<<EOF
 
 		. = ALIGN(4);
-		__data_array_end = .;
-		PROVIDE(__data_array_end = __data_array_end);
+		PROVIDE(__data_array_end = .);
 
 		/* end of sub-section: data_array */
 
 		/* sub-section: bss_array */
 
 		. = ALIGN(4);
-		__bss_array_start = .;
-		PROVIDE(__bss_array_start = __bss_array_start);
+		PROVIDE(__bss_array_start = .);
 
 		LONG(ADDR(.bss)); LONG(ADDR(.bss) + SIZEOF(.bss));
 		LONG(ADDR(.stack)); LONG(ADDR(.stack) + SIZEOF(.stack));
@@ -298,8 +273,7 @@ printf "%b" "$bssArrayEntries"
 cat<<EOF
 
 		. = ALIGN(4);
-		__bss_array_end = .;
-		PROVIDE(__bss_array_end = __bss_array_end);
+		PROVIDE(__bss_array_end = .);
 
 		/* end of sub-section: bss_array */
 
@@ -308,43 +282,41 @@ cat<<EOF
 		KEEP(*(.init));
 
 		. = ALIGN(4);
-		__preinit_array_start = .;
+		PROVIDE(__preinit_array_start = .);
 
 		KEEP(*(.preinit_array));
 
 		. = ALIGN(4);
-		__preinit_array_end = .;
+		PROVIDE(__preinit_array_end = .);
 
 		. = ALIGN(4);
-		__init_array_start = .;
+		PROVIDE(__init_array_start = .);
 
 		KEEP(*(SORT(.init_array.*)));
 		KEEP(*(.init_array));
 
 		. = ALIGN(4);
-		__init_array_end = .;
+		PROVIDE(__init_array_end = .);
 
 		KEEP(*(.fini));
 
 		. = ALIGN(4);
-		__fini_array_start = .;
+		PROVIDE(__fini_array_start = .);
 
 		KEEP(*(.fini_array));
 		KEEP(*(SORT(.fini_array.*)));
 
 		. = ALIGN(4);
-		__fini_array_end = .;
+		PROVIDE(__fini_array_end = .);
 
 		/* end of sub-sections: init, preinit_array, init_array and fini_array */
 
 		. = ALIGN(4);
-		__text_end = .;
-		PROVIDE(__text_end = __text_end);
+		PROVIDE(__text_end = .);
 	} > rom AT > rom
 
 	. = ALIGN(4);
-	__exidx_start = .;
-	PROVIDE(__exidx_start = __exidx_start);
+	PROVIDE(__exidx_start = .);
 
 	.ARM.exidx :
 	{
@@ -352,75 +324,54 @@ cat<<EOF
 	} > rom AT > rom								/* index entries for section unwinding */
 
 	. = ALIGN(4);
-	__exidx_end = .;
-	PROVIDE(__exidx_end = __exidx_end);
+	PROVIDE(__exidx_end = .);
 
 	.data :
 	{
 		. = ALIGN(4);
-		__data_init_start = LOADADDR(.data);
-		PROVIDE(__data_init_start = __data_init_start);
-		__data_start = .;
-		PROVIDE(__data_start = __data_start);
+		PROVIDE(__data_init_start = LOADADDR(.data));
+		PROVIDE(__data_start = .);
 
 		*(.data* .gnu.linkonce.d.*)
 
 		. = ALIGN(4);
-		__data_end = .;
-		PROVIDE(__data_end = __data_end);
+		PROVIDE(__data_end = .);
 	} > ram AT > rom
 
 	.bss :
 	{
 		. = ALIGN(4);
-		__bss_start = .;
-		PROVIDE(__bss_start = __bss_start);
+		PROVIDE(__bss_start = .);
 
 		*(.bss* .gnu.linkonce.b.*)
 		*(COMMON);
 
 		. = ALIGN(4);
-		__bss_end = .;
-		PROVIDE(__bss_end = __bss_end);
+		PROVIDE(__bss_end = .);
 	} > ram AT > ram
 
 	.stack :
 	{
 		. = ALIGN(8);
-		__stack_start = .;
-		PROVIDE(__stack_start = __stack_start);
-
-		. = ALIGN(8);
-		__main_stack_start = .;
-		PROVIDE(__main_stack_start = __main_stack_start);
+		PROVIDE(__stack_start = .);
+		PROVIDE(__main_stack_start = .);
 
 		. += __main_stack_size;
 
 		. = ALIGN(8);
-		__main_stack_end = .;
-		PROVIDE(__main_stack_end = __main_stack_end);
-
-		. = ALIGN(8);
-		__process_stack_start = .;
-		PROVIDE(__process_stack_start = __process_stack_start);
+		PROVIDE(__main_stack_end = .);
+		PROVIDE(__process_stack_start = .);
 
 		. += __process_stack_size;
 
 		. = ALIGN(8);
-		__process_stack_end = .;
-		PROVIDE(__process_stack_end = __process_stack_end);
-
-		. = ALIGN(8);
-		__stack_end = .;
-		PROVIDE(__stack_end = __stack_end);
+		PROVIDE(__process_stack_end = .);
+		PROVIDE(__stack_end = .);
 	} > ram AT > ram
 
 	. = ALIGN(4);
-	__heap_start = .;
-	PROVIDE(__heap_start = __heap_start);
-
-	__heap_end = __ram_end;
-	PROVIDE(__heap_end = __heap_end);
+	PROVIDE(__heap_start = .);
+	PROVIDE(__heap_end = __ram_end);
 
 EOF
 
@@ -461,7 +412,9 @@ cat<<EOF
 }
 
 PROVIDE(__text_size = __text_end - __text_start);
-	PROVIDE(__vectors_size = __vectors_end - __vectors_start);
+PROVIDE(__vectors_size = __vectors_end - __vectors_start);
+PROVIDE(__data_array_size = __data_array_end - __data_array_start);
+PROVIDE(__bss_array_size = __bss_array_end - __bss_array_start);
 PROVIDE(__exidx_size = __exidx_end - __exidx_start);
 PROVIDE(__data_size = __data_end - __data_start);
 PROVIDE(__bss_size = __bss_end - __bss_start);
