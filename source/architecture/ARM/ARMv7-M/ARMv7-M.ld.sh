@@ -246,7 +246,6 @@ SECTIONS
 		__vectors_start = .;
 		PROVIDE(__vectors_start = __vectors_start);
 
-		. = ALIGN(4);
 		KEEP(*(.coreVectors));
 		KEEP(*(.chipVectors));
 
@@ -256,24 +255,15 @@ SECTIONS
 
 		/* end of sub-section: .vectors */
 
-		. = ALIGN(4);
 		*(.text);
-		. = ALIGN(4);
 		*(.text.*);
-		. = ALIGN(4);
 		*(.gnu.linkonce.t.*);
-		. = ALIGN(4);
 		*(.glue_7t .glue_7);
-		. = ALIGN(4);
 		*(.rodata .rodata.* .gnu.linkonce.r.*);
 
-		. = ALIGN(4);
 		*(.ARM.extab* .gnu.linkonce.armextab.*);	/* exception unwinding information */
-		. = ALIGN(4);
 		*(.gcc_except_table);						/* information used for stack unwinding during exception */
-		. = ALIGN(4);
 		*(.eh_frame_hdr);							/* additional information about .ex_frame section */
-		. = ALIGN(4);
 		*(.eh_frame);								/* information used for stack unwinding during exception */
 
 		/* sub-section: data_array */
@@ -317,25 +307,33 @@ cat<<EOF
 
 		/* sub-sections: init, preinit_array, init_array and fini_array */
 
-		. = ALIGN(4);
 		KEEP(*(.init));
+
 		. = ALIGN(4);
 		__preinit_array_start = .;
+
 		KEEP(*(.preinit_array));
+
 		. = ALIGN(4);
 		__preinit_array_end = .;
-		__init_array_start = .;
-		KEEP(*(SORT(.init_array.*)));
+
 		. = ALIGN(4);
+		__init_array_start = .;
+
+		KEEP(*(SORT(.init_array.*)));
 		KEEP(*(.init_array));
+
 		. = ALIGN(4);
 		__init_array_end = .;
+
 		KEEP(*(.fini));
+
 		. = ALIGN(4);
 		__fini_array_start = .;
+
 		KEEP(*(.fini_array));
-		. = ALIGN(4);
 		KEEP(*(SORT(.fini_array.*)));
+
 		. = ALIGN(4);
 		__fini_array_end = .;
 
@@ -367,7 +365,6 @@ cat<<EOF
 		__data_start = .;
 		PROVIDE(__data_start = __data_start);
 
-		. = ALIGN(4);
 		*(.data .data.* .gnu.linkonce.d.*)
 
 		. = ALIGN(4);
@@ -381,9 +378,7 @@ cat<<EOF
 		__bss_start = .;
 		PROVIDE(__bss_start = __bss_start);
 
-		. = ALIGN(4);
 		*(.bss .bss.* .gnu.linkonce.b.*)
-		. = ALIGN(4);
 		*(COMMON);
 
 		. = ALIGN(4);
@@ -426,7 +421,6 @@ cat<<EOF
 	__heap_start = .;
 	PROVIDE(__heap_start = __heap_start);
 
-	. = ALIGN(4);
 	__heap_end = __ram_end;
 	PROVIDE(__heap_end = __heap_end);
 
