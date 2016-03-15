@@ -152,7 +152,7 @@ public:
 	template<typename Rep, typename Period>
 	int tryWaitFor(const std::chrono::duration<Rep, Period> duration)
 	{
-		return tryLockFor(std::chrono::duration_cast<TickClock::duration>(duration));
+		return tryWaitFor(std::chrono::duration_cast<TickClock::duration>(duration));
 	}
 
 	/**
@@ -193,7 +193,7 @@ public:
 	template<typename Duration>
 	int tryWaitUntil(const std::chrono::time_point<TickClock, Duration> timePoint)
 	{
-		return tryLockUntil(std::chrono::time_point_cast<TickClock::duration>(timePoint));
+		return tryWaitUntil(std::chrono::time_point_cast<TickClock::duration>(timePoint));
 	}
 
 	/**
