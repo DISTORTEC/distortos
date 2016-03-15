@@ -194,8 +194,8 @@ PROVIDE(__process_stack_size = __process_stack_size);
 
 MEMORY
 {
-	rom (rx)		: org = $romAddress, len = $romSize
-	ram (rwx)		: org = $ramAddress, len = $ramSize
+	rom : org = $romAddress, len = $romSize
+	ram : org = $ramAddress, len = $ramSize
 EOF
 
 printf "%b" "$memoryEntries"
