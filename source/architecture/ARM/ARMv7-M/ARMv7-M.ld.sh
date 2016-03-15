@@ -326,18 +326,6 @@ cat<<EOF
 	. = ALIGN(4);
 	PROVIDE(__exidx_end = .);
 
-	.data :
-	{
-		. = ALIGN(4);
-		PROVIDE(__data_init_start = LOADADDR(.data));
-		PROVIDE(__data_start = .);
-
-		*(.data* .gnu.linkonce.d.*)
-
-		. = ALIGN(4);
-		PROVIDE(__data_end = .);
-	} > ram AT > rom
-
 	.bss :
 	{
 		. = ALIGN(4);
@@ -349,6 +337,18 @@ cat<<EOF
 		. = ALIGN(4);
 		PROVIDE(__bss_end = .);
 	} > ram AT > ram
+
+	.data :
+	{
+		. = ALIGN(4);
+		PROVIDE(__data_init_start = LOADADDR(.data));
+		PROVIDE(__data_start = .);
+
+		*(.data* .gnu.linkonce.d.*)
+
+		. = ALIGN(4);
+		PROVIDE(__data_end = .);
+	} > ram AT > rom
 
 	.noinit (NOLOAD) :
 	{
@@ -427,8 +427,8 @@ PROVIDE(__vectors_size = __vectors_end - __vectors_start);
 PROVIDE(__data_array_size = __data_array_end - __data_array_start);
 PROVIDE(__bss_array_size = __bss_array_end - __bss_array_start);
 PROVIDE(__exidx_size = __exidx_end - __exidx_start);
-PROVIDE(__data_size = __data_end - __data_start);
 PROVIDE(__bss_size = __bss_end - __bss_start);
+PROVIDE(__data_size = __data_end - __data_start);
 PROVIDE(__noinit_size = __noinit_end - __noinit_start);
 PROVIDE(__stack_size = __stack_end - __stack_start);
 PROVIDE(__heap_size = __heap_end - __heap_start);
