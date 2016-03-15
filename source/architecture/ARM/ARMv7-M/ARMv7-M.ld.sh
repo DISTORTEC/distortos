@@ -255,11 +255,9 @@ SECTIONS
 
 		/* end of sub-section: .vectors */
 
-		*(.text);
-		*(.text.*);
-		*(.gnu.linkonce.t.*);
+		*(.text* .gnu.linkonce.t.*);
+		*(.rodata* .gnu.linkonce.r.*);
 		*(.glue_7t .glue_7);
-		*(.rodata .rodata.* .gnu.linkonce.r.*);
 
 		*(.ARM.extab* .gnu.linkonce.armextab.*);	/* exception unwinding information */
 		*(.gcc_except_table);						/* information used for stack unwinding during exception */
@@ -365,7 +363,7 @@ cat<<EOF
 		__data_start = .;
 		PROVIDE(__data_start = __data_start);
 
-		*(.data .data.* .gnu.linkonce.d.*)
+		*(.data* .gnu.linkonce.d.*)
 
 		. = ALIGN(4);
 		__data_end = .;
@@ -378,7 +376,7 @@ cat<<EOF
 		__bss_start = .;
 		PROVIDE(__bss_start = __bss_start);
 
-		*(.bss .bss.* .gnu.linkonce.b.*)
+		*(.bss* .gnu.linkonce.b.*)
 		*(COMMON);
 
 		. = ALIGN(4);
