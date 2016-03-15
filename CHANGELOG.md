@@ -43,6 +43,7 @@ which can be defined with command line arguments.
 
 - Fix insufficient dependencies for "PLLR" option in system clock source configuration for *STM32F4*. Main PLL's "/R"
 output cannot be used as system clock if PLL is disabled.
+- Fix invalid definition of templated variants of `Semaphore::tryWaitFor()` and `Semaphore::tryWaitUntil()`.
 
 0.1.0 - 2016-02-26
 ------------------
