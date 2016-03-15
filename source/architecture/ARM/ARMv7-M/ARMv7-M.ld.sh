@@ -350,6 +350,17 @@ cat<<EOF
 		PROVIDE(__bss_end = .);
 	} > ram AT > ram
 
+	.noinit (NOLOAD) :
+	{
+		. = ALIGN(4);
+		PROVIDE(__noinit_start = .);
+
+		*(.noinit)
+
+		. = ALIGN(4);
+		PROVIDE(__noinit_end = .);
+	} > ram AT > ram
+
 	.stack :
 	{
 		. = ALIGN(8);
@@ -418,6 +429,7 @@ PROVIDE(__bss_array_size = __bss_array_end - __bss_array_start);
 PROVIDE(__exidx_size = __exidx_end - __exidx_start);
 PROVIDE(__data_size = __data_end - __data_start);
 PROVIDE(__bss_size = __bss_end - __bss_start);
+PROVIDE(__noinit_size = __noinit_end - __noinit_start);
 PROVIDE(__stack_size = __stack_end - __stack_start);
 PROVIDE(__heap_size = __heap_end - __heap_start);
 EOF
