@@ -2,7 +2,7 @@
  * \file
  * \brief restoreInterruptMasking() implementation for ARMv7-M (Cortex-M3 / Cortex-M4)
  *
- * \author Copyright (C) 2014-2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -25,7 +25,15 @@ namespace architecture
 
 void restoreInterruptMasking(const InterruptMask interruptMask)
 {
+#if CONFIG_ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI != 0
+
 	__set_BASEPRI(interruptMask);
+
+#else	// CONFIG_ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI == 0
+
+	__set_PRIMASK(interruptMask);
+
+#endif	// CONFIG_ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI == 0
 }
 
 }	// namespace architecture
