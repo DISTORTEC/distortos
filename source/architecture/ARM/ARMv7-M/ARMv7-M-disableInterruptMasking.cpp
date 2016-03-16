@@ -2,7 +2,7 @@
  * \file
  * \brief disableInterruptMasking() implementation for ARMv7-M (Cortex-M3 / Cortex-M4)
  *
- * \author Copyright (C) 2014-2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -25,9 +25,19 @@ namespace architecture
 
 InterruptMask disableInterruptMasking()
 {
+#if CONFIG_ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI != 0
+
 	const auto interruptMask = __get_BASEPRI();
 	__set_BASEPRI(0);
 	return interruptMask;
+
+#else	// CONFIG_ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI == 0
+
+	const auto interruptMask = __get_PRIMASK();
+	__enable_irq();
+	return interruptMask;
+
+#endif	// CONFIG_ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI == 0
 }
 
 }	// namespace architecture
