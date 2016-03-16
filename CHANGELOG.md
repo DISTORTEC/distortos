@@ -30,6 +30,10 @@ based on "subfolder" template), provide it with the path to *distortos* in the f
 - Configuration of *SRAM1*, *SRAM2* and *SRAM3* regions' unification for *STM32F4* chips.
 - Support for additional memory regions of *STM32F4* chips (*BKPSRAM*, *CCM*, *SRAM2*, *SRAM3*) in generated linker
 scripts.
+- Ability to use *ARMv7-M*'s *PRIMASK* to disable all interrupts during critical sections when "Interrupt priority
+disabled in critical sections" (*ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI*) options is set to 0. This is the new default
+setting, as this is a more conservative (and thus safer for a beginner) approach, which doesn't require any special
+configuration of interrupt priorities (default value is 0).
 
 ### Changed
 
