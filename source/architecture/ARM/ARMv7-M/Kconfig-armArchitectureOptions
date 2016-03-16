@@ -21,8 +21,8 @@ config ARCHITECTURE_ARMV7_M_MAIN_STACK_SIZE
 
 config ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI
 	int "Interrupt priority disabled in critical sections"
-	range 1 15
-	default 8
+	range 0 15
+	default 0
 	help
 		Minimal numerical priority (inclusive) of interrupt handlers that can
 		use system's functions.
@@ -35,7 +35,9 @@ config ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI
 		Note - "lower" logical priority has "higher" numeric value! If this
 		option is set to "x", then interrupts with priorities between "x" and
 		255 (both inclusive) may use system's functions, while interrupts with
-		priorities between 0 and "x - 1" (both inclusive) may not.
+		priorities between 0 and "x - 1" (both inclusive) may not. If 0 is
+		chosen, then all interrupts (except HardFault and NMI) are disabled
+		during critical sections, so they may use system's functions.
 
 config ARCHITECTURE_ARM_CORTEX_M3
 	bool
