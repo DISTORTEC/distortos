@@ -7,10 +7,14 @@
 -- distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 --
 
-ASFLAGS["ARMv7-M-Reset_Handler.S"] = "-D__USES_TWO_STACKS -D__USES_CXX"
+if CONFIG_ARCHITECTURE_ARMV7_M == "y" then
 
-CXXFLAGS += STANDARD_INCLUDES
-CXXFLAGS += ARCHITECTURE_INCLUDES
-CXXFLAGS += CHIP_INCLUDES
+	ASFLAGS["ARMv7-M-Reset_Handler.S"] = "-D__USES_TWO_STACKS -D__USES_CXX"
 
-tup.include(DISTORTOS_TOP .. "compile.lua")
+	CXXFLAGS += STANDARD_INCLUDES
+	CXXFLAGS += ARCHITECTURE_INCLUDES
+	CXXFLAGS += CHIP_INCLUDES
+
+	tup.include(DISTORTOS_TOP .. "compile.lua")
+
+end	-- if CONFIG_ARCHITECTURE_ARMV7_M == "y" then
