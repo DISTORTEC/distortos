@@ -12,7 +12,7 @@
 #include "distortos/architecture/requestFunctionExecution.hpp"
 
 #include "ARMv6-M-ARMv7-M-StackFrame.hpp"
-#include "ExceptionFpuStackFrame.hpp"
+#include "ARMv7-M-ExceptionFpuStackFrame.hpp"
 #include "supervisorCall.hpp"
 
 #include "distortos/internal/scheduler/Scheduler.hpp"
