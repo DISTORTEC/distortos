@@ -12,7 +12,7 @@
 #ifndef SOURCE_ARCHITECTURE_ARM_ARMV6_M_ARMV7_M_EXCEPTIONFPUSTACKFRAME_HPP_
 #define SOURCE_ARCHITECTURE_ARM_ARMV6_M_ARMV7_M_EXCEPTIONFPUSTACKFRAME_HPP_
 
-#include "ExceptionStackFrame.hpp"
+#include "ARMv6-M-ARMv7-M-ExceptionStackFrame.hpp"
 
 #include "distortos/chip/CMSIS-proxy.h"
 

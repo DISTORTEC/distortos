@@ -9,8 +9,8 @@
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#ifndef SOURCE_ARCHITECTURE_ARM_ARMV6_M_ARMV7_M_EXCEPTIONSTACKFRAME_HPP_
-#define SOURCE_ARCHITECTURE_ARM_ARMV6_M_ARMV7_M_EXCEPTIONSTACKFRAME_HPP_
+#ifndef SOURCE_ARCHITECTURE_ARM_ARMV6_M_ARMV7_M_ARMV6_M_ARMV7_M_EXCEPTIONSTACKFRAME_HPP_
+#define SOURCE_ARCHITECTURE_ARM_ARMV6_M_ARMV7_M_ARMV6_M_ARMV7_M_EXCEPTIONSTACKFRAME_HPP_
 
 namespace distortos
 {
@@ -18,7 +18,7 @@ namespace distortos
 namespace architecture
 {
 
-/// stack frame for ARMv7-M (Cortex-M3 / Cortex-M4) created by hardware on exception entry
+/// stack frame for ARMv6-M and ARMv7-M created by hardware on exception entry
 struct ExceptionStackFrame
 {
 	/// default value of xPSR register
@@ -46,4 +46,4 @@ struct ExceptionStackFrame
 
 }	// namespace distortos
 
-#endif	// SOURCE_ARCHITECTURE_ARM_ARMV6_M_ARMV7_M_EXCEPTIONSTACKFRAME_HPP_
+#endif	// SOURCE_ARCHITECTURE_ARM_ARMV6_M_ARMV7_M_ARMV6_M_ARMV7_M_EXCEPTIONSTACKFRAME_HPP_

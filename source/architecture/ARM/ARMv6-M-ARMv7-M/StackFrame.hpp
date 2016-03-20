@@ -12,7 +12,7 @@
 #ifndef SOURCE_ARCHITECTURE_ARM_ARMV6_M_ARMV7_M_STACKFRAME_HPP_
 #define SOURCE_ARCHITECTURE_ARM_ARMV6_M_ARMV7_M_STACKFRAME_HPP_
 
-#include "ExceptionStackFrame.hpp"
+#include "ARMv6-M-ARMv7-M-ExceptionStackFrame.hpp"
 #include "SoftwareStackFrame.hpp"
 
 namespace distortos
