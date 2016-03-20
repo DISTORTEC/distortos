@@ -1,6 +1,6 @@
 /**
  * \file
- * \brief PendSV_Handler() for ARMv7-M (Cortex-M3 / Cortex-M4)
+ * \brief PendSV_Handler() for ARMv6-M and ARMv7-M
  *
  * \author Copyright (C) 2014-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
@@ -44,7 +44,7 @@ void* schedulerSwitchContextWrapper(void* const stackPointer)
 +---------------------------------------------------------------------------------------------------------------------*/
 
 /**
- * \brief PendSV_Handler() for ARMv7-M (Cortex-M3 / Cortex-M4)
+ * \brief PendSV_Handler() for ARMv6-M and ARMv7-M
  *
  * Performs the context switch.
  */
