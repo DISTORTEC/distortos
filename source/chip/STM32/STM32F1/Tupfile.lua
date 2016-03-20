@@ -9,7 +9,7 @@
 
 if CONFIG_CHIP_STM32F1 == "y" then
 
-	local ldScriptGenerator = DISTORTOS_TOP .. "source/architecture/ARM/ARMv7-M/ARMv7-M.ld.sh"
+	local ldScriptGenerator = DISTORTOS_TOP .. "source/architecture/ARM/ARMv6-M-ARMv7-M/ARMv7-M.ld.sh"
 	local ldscriptOutputs = {LDSCRIPT, filenameToGroup(LDSCRIPT)}
 
 	tup.rule("^ SH " .. ldScriptGenerator .. "^ ./" .. ldScriptGenerator .. " \"" .. CONFIG_CHIP .. "\" \"" ..

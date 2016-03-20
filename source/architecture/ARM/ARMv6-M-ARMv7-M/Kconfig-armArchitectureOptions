@@ -69,6 +69,6 @@ config ARCHITECTURE_FLAGS
 
 config ARCHITECTURE_INCLUDES
 	string
-	default "source/architecture/ARM/ARMv7-M/include"
+	default "source/architecture/ARM/ARMv6-M-ARMv7-M/include"
 
 endif	# ARCHITECTURE_ARMV7_M

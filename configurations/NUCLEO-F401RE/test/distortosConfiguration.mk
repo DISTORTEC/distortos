@@ -299,7 +299,7 @@ CONFIG_ARCHITECTURE_ARM_CORTEX_M4=y
 # CONFIG_ARCHITECTURE_ARM_CORTEX_M7 is not set
 # CONFIG_ARCHITECTURE_HAS_FPV5_D16 is not set
 CONFIG_ARCHITECTURE_FLAGS="-mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16"
-CONFIG_ARCHITECTURE_INCLUDES="source/architecture/ARM/ARMv7-M/include"
+CONFIG_ARCHITECTURE_INCLUDES="source/architecture/ARM/ARMv6-M-ARMv7-M/include"
 
 #
 # Generic architecture options
