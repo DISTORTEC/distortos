@@ -798,4 +798,8 @@ config CHIP
 	default "STM32F098RC" if CHIP_STM32F098RC
 	default "STM32F098VC" if CHIP_STM32F098VC
 
+config CHIP_INCLUDES
+	string
+	default "source/chip/STM32/STM32F0/include external/CMSIS-STM32F0 external/CMSIS"
+
 endif	# CHIP_STM32F0
