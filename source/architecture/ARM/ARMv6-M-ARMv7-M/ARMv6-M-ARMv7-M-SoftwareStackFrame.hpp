@@ -9,8 +9,8 @@
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#ifndef SOURCE_ARCHITECTURE_ARM_ARMV6_M_ARMV7_M_SOFTWARESTACKFRAME_HPP_
-#define SOURCE_ARCHITECTURE_ARM_ARMV6_M_ARMV7_M_SOFTWARESTACKFRAME_HPP_
+#ifndef SOURCE_ARCHITECTURE_ARM_ARMV6_M_ARMV7_M_ARMV6_M_ARMV7_M_SOFTWARESTACKFRAME_HPP_
+#define SOURCE_ARCHITECTURE_ARM_ARMV6_M_ARMV7_M_ARMV6_M_ARMV7_M_SOFTWARESTACKFRAME_HPP_
 
 #include "distortos/chip/CMSIS-proxy.h"
 
@@ -20,7 +20,7 @@ namespace distortos
 namespace architecture
 {
 
-/// stack frame for ARMv7-M (Cortex-M3 / Cortex-M4) created by software during context switch
+/// stack frame for ARMv6-M and ARMv7-M created by software during context switch
 struct SoftwareStackFrame
 {
 #if __FPU_PRESENT == 1 && __FPU_USED == 1
@@ -79,4 +79,4 @@ struct SoftwareStackFrame
 
 }	// namespace distortos
 
-#endif	// SOURCE_ARCHITECTURE_ARM_ARMV6_M_ARMV7_M_SOFTWARESTACKFRAME_HPP_
+#endif	// SOURCE_ARCHITECTURE_ARM_ARMV6_M_ARMV7_M_ARMV6_M_ARMV7_M_SOFTWARESTACKFRAME_HPP_

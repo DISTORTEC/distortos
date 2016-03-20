@@ -13,7 +13,7 @@
 #define SOURCE_ARCHITECTURE_ARM_ARMV6_M_ARMV7_M_ARMV6_M_ARMV7_M_STACKFRAME_HPP_
 
 #include "ARMv6-M-ARMv7-M-ExceptionStackFrame.hpp"
-#include "SoftwareStackFrame.hpp"
+#include "ARMv6-M-ARMv7-M-SoftwareStackFrame.hpp"
 
 namespace distortos
 {
