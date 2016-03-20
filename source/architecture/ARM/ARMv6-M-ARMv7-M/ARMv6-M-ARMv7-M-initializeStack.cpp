@@ -11,7 +11,7 @@
 
 #include "distortos/architecture/initializeStack.hpp"
 
-#include "StackFrame.hpp"
+#include "ARMv6-M-ARMv7-M-StackFrame.hpp"
 
 #include "distortos/internal/scheduler/threadRunner.hpp"
 

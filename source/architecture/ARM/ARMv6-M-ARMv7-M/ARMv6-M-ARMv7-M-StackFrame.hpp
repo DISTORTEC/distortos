@@ -9,8 +9,8 @@
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#ifndef SOURCE_ARCHITECTURE_ARM_ARMV6_M_ARMV7_M_STACKFRAME_HPP_
-#define SOURCE_ARCHITECTURE_ARM_ARMV6_M_ARMV7_M_STACKFRAME_HPP_
+#ifndef SOURCE_ARCHITECTURE_ARM_ARMV6_M_ARMV7_M_ARMV6_M_ARMV7_M_STACKFRAME_HPP_
+#define SOURCE_ARCHITECTURE_ARM_ARMV6_M_ARMV7_M_ARMV6_M_ARMV7_M_STACKFRAME_HPP_
 
 #include "ARMv6-M-ARMv7-M-ExceptionStackFrame.hpp"
 #include "SoftwareStackFrame.hpp"
@@ -21,7 +21,7 @@ namespace distortos
 namespace architecture
 {
 
-/// complete stack frame of thread for ARMv7-M (Cortex-M3 / Cortex-M4)
+/// complete stack frame of thread for ARMv6-M and ARMv7-M
 struct StackFrame
 {
 	/// stack frame created by software during context switch
@@ -34,4 +34,4 @@ struct StackFrame
 
 }	// namespace distortos
 
-#endif	// SOURCE_ARCHITECTURE_ARM_ARMV6_M_ARMV7_M_STACKFRAME_HPP_
+#endif	// SOURCE_ARCHITECTURE_ARM_ARMV6_M_ARMV7_M_ARMV6_M_ARMV7_M_STACKFRAME_HPP_
