@@ -1,6 +1,6 @@
 /**
  * \file
- * \brief Reset_Handler() (startup code) for ARMv7-M (Cortex-M3 / Cortex-M4)
+ * \brief Reset_Handler() (startup code) for ARMv6-M and ARMv7-M
  *
  * \author Copyright (C) 2014-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
@@ -16,7 +16,7 @@
 #endif	// __USES_TWO_STACKS
 
 /*---------------------------------------------------------------------------------------------------------------------+
-| ARMv7-M (Cortex-M3 / Cortex-M4) startup code
+| ARMv6-M and ARMv7-M startup code
 +---------------------------------------------------------------------------------------------------------------------*/
 
 .text
