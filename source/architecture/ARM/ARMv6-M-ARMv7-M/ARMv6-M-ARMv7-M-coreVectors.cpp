@@ -1,6 +1,6 @@
 /**
  * \file
- * \brief ARMv7-M (Cortex-M3 / Cortex-M4) core vector table and default weak handlers
+ * \brief ARMv6-M and ARMv7-M core vector table and default weak handlers
  *
  * \author Copyright (C) 2014-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
