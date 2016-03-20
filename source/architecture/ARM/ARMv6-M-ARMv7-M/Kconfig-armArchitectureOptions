@@ -9,6 +9,40 @@
 
 if ARCHITECTURE_ARMV6_M || ARCHITECTURE_ARMV7_M
 
+if ARCHITECTURE_ARMV6_M
+
+comment "ARMv6-M architecture options"
+
+config ARCHITECTURE_ARM_CORTEX_M0
+	bool
+	default n
+
+config ARCHITECTURE_ARM_CORTEX_M0PLUS
+	bool
+	default n
+
+config ARCHITECTURE_ARM_CORTEX_M1
+	bool
+	default n
+
+config ARCHITECTURE_HAS_ITERATIVE_MULTIPLIER
+	bool
+	default n
+
+config ARCHITECTURE_FLAGS
+	string
+	default "-mcpu=cortex-m0.small-multiply -mthumb" if ARCHITECTURE_ARM_CORTEX_M0 && \
+		ARCHITECTURE_HAS_ITERATIVE_MULTIPLIER
+	default "-mcpu=cortex-m0 -mthumb" if ARCHITECTURE_ARM_CORTEX_M0
+	default "-mcpu=cortex-m0plus.small-multiply -mthumb" if ARCHITECTURE_ARM_CORTEX_M0PLUS && \
+		ARCHITECTURE_HAS_ITERATIVE_MULTIPLIER
+	default "-mcpu=cortex-m0plus -mthumb" if ARCHITECTURE_ARM_CORTEX_M0PLUS
+	default "-mcpu=cortex-m1.small-multiply -mthumb" if ARCHITECTURE_ARM_CORTEX_M1 && \
+		ARCHITECTURE_HAS_ITERATIVE_MULTIPLIER
+	default "-mcpu=cortex-m1 -mthumb" if ARCHITECTURE_ARM_CORTEX_M1
+
+endif	# ARCHITECTURE_ARMV6_M
+
 if ARCHITECTURE_ARMV7_M
 
 comment "ARMv7-M architecture options"
@@ -61,10 +95,6 @@ config ARCHITECTURE_FLAGS
 		ARCHITECTURE_FPU
 	default "-mcpu=cortex-m7 -mthumb" if ARCHITECTURE_ARM_CORTEX_M7
 
-config ARCHITECTURE_INCLUDES
-	string
-	default "source/architecture/ARM/ARMv6-M-ARMv7-M/include"
-
 endif	# ARCHITECTURE_ARMV7_M
 
 config ARCHITECTURE_ARMV6_M_ARMV7_M_MAIN_STACK_SIZE
@@ -74,5 +104,9 @@ config ARCHITECTURE_ARMV6_M_ARMV7_M_MAIN_STACK_SIZE
 	help
 		Size (in bytes) of "main" stack used by core exceptions and interrupts
 		in Handler mode.
+
+config ARCHITECTURE_INCLUDES
+	string
+	default "source/architecture/ARM/ARMv6-M-ARMv7-M/include"
 
 endif	# ARCHITECTURE_ARMV6_M || ARCHITECTURE_ARMV7_M

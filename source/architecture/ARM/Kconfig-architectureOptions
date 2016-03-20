@@ -9,6 +9,10 @@
 
 if ARCHITECTURE_ARM
 
+config ARCHITECTURE_ARMV6_M
+	bool
+	default n
+
 config ARCHITECTURE_ARMV7_M
 	bool
 	default n
