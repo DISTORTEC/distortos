@@ -18,7 +18,7 @@
 #endif	// __FPU_PRESENT == 1 && __FPU_USED == 1
 
 #include "ARMv6-M-ARMv7-M-StackFrame.hpp"
-#include "supervisorCall.hpp"
+#include "ARMv6-M-ARMv7-M-supervisorCall.hpp"
 
 #include "distortos/internal/scheduler/Scheduler.hpp"
 #include "distortos/internal/scheduler/getScheduler.hpp"
