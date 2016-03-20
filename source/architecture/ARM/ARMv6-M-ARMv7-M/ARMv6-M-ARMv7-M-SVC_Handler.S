@@ -1,6 +1,6 @@
 /**
  * \file
- * \brief SVC_Handler() for ARMv7-M (Cortex-M3 / Cortex-M4)
+ * \brief SVC_Handler() for ARMv6-M and ARMv7-M
  *
  * \author Copyright (C) 2015-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
@@ -17,7 +17,7 @@
 .global SVC_Handler
 
 /*---------------------------------------------------------------------------------------------------------------------+
-| ARMv7-M (Cortex-M3 / Cortex-M4) SVC (supervisor call) code
+| ARMv6-M and ARMv7-M SVC (supervisor call) code
 +---------------------------------------------------------------------------------------------------------------------*/
 
 SVC_Handler:
