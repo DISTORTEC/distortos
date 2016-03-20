@@ -100,7 +100,12 @@ extern "C" __attribute__ ((naked)) void PendSV_Handler()
 			"	ldmia		r0!, {r4-r11}					\n"	// load context of new thread
 #endif	// __FPU_PRESENT == 1 && __FPU_USED == 1
 			"	msr			PSP, r0							\n"
-			"												\n"
+
+			::	[schedulerSwitchContext] "i" (schedulerSwitchContextWrapper)
+	);
+
+	asm volatile
+	(
 #if CONFIG_ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI != 0
 			"	mov			r0, #0							\n"
 			"	msr			basepri, r0						\n"	// disable interrupt masking
@@ -109,8 +114,6 @@ extern "C" __attribute__ ((naked)) void PendSV_Handler()
 #endif	// CONFIG_ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI == 0
 			"												\n"
 			"	bx			lr								\n"	// return to new thread
-
-			::	[schedulerSwitchContext] "i" (schedulerSwitchContextWrapper)
 	);
 
 	__builtin_unreachable();
