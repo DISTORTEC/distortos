@@ -43,9 +43,9 @@ namespace
 
 #if __FPU_PRESENT == 1 && __FPU_USED == 1
 void removeStackFrame(const void* const savedStackPointer, const bool fpuContextActive)
-#else
+#else	// __FPU_PRESENT != 1 || __FPU_USED != 1
 void removeStackFrame(const void* const savedStackPointer)
-#endif	// __FPU_PRESENT == 1 && __FPU_USED == 1
+#endif	// __FPU_PRESENT != 1 || __FPU_USED != 1
 {
 #if __FPU_PRESENT == 1 && __FPU_USED == 1
 
@@ -78,18 +78,18 @@ void functionTrampoline(void (& function)(), const void* const savedStackPointer
 #if __FPU_PRESENT == 1 && __FPU_USED == 1
 			"	mrs			r3, CONTROL					\n"	// save current value of CONTROL register
 			"	push		{r0-r3}						\n"	// push all arguments and value of CONTROL register to stack
-#else
+#else	// __FPU_PRESENT != 1 || __FPU_USED != 1
 			"	push		{r1-r2}						\n"	// push last two arguments to stack
-#endif	// __FPU_PRESENT == 1 && __FPU_USED == 1
+#endif	// __FPU_PRESENT != 1 || __FPU_USED != 1
 			"	blx			%[function]					\n"	// execute function
 #if __FPU_PRESENT == 1 && __FPU_USED == 1
 			// restore all arguments and value of CONTROL register, don't update SP
 			"	ldm			sp, {r0-r3}					\n"
 			// restore previous value of CONTROL register, possibly deactivating FPU context
 			"	msr			CONTROL, r3					\n"
-#else
+#else	// __FPU_PRESENT != 1 || __FPU_USED != 1
 			"	ldm			sp, {r1-r2}					\n"	// restore last two arguments, don't update SP
-#endif	// __FPU_PRESENT == 1 && __FPU_USED == 1
+#endif	// __FPU_PRESENT != 1 || __FPU_USED != 1
 			"	cmp			r2, #0						\n"
 #if __FPU_PRESENT == 1 && __FPU_USED == 1
 			"	itt			eq							\n"	// if (fullContext == false) {
@@ -103,12 +103,12 @@ void functionTrampoline(void (& function)(), const void* const savedStackPointer
 			"	it			ne							\n"
 			"	vldmiane	r1!, {s16-s31}				\n"	// load "floating-point" context of thread
 			"1:											\n"	// }
-#else
+#else	// __FPU_PRESENT != 1 || __FPU_USED != 1
 			"	itt			ne							\n"	// if (fullContext == true) {
 			"	ldmiane		r1!, {r4-r11}				\n"	// load context of thread
 			"	movne		r2, #0						\n"	// 3rd supervisorCall() argument - 0
 			"											\n"	// }
-#endif	// __FPU_PRESENT == 1 && __FPU_USED == 1
+#endif	// __FPU_PRESENT != 1 || __FPU_USED != 1
 			"	mov			r3, #0						\n"	// 4th supervisorCall() argument - 0
 			"	str			r3, [sp]					\n"	// 5th supervisorCall() argument - 0
 			"	ldr			r0, =%[removeStackFrame]	\n"	// 1st supervisorCall() argument - removeStackFrame
