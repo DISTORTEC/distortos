@@ -1,6 +1,6 @@
 /**
  * \file
- * \brief requestContextSwitch() implementation for ARMv7-M (Cortex-M3 / Cortex-M4)
+ * \brief requestContextSwitch() implementation for ARMv6-M and ARMv7-M
  *
  * \author Copyright (C) 2014-2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
