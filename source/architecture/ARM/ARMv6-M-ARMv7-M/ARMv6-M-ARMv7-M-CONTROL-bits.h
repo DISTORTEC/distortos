@@ -1,6 +1,6 @@
 /**
  * \file
- * \brief Header with definition of bits in CONTROL register in ARMv7-M core (Cortex-M3 / Cortex-M4).
+ * \brief Header with definition of bits in CONTROL register in ARMv6-M and ARMv7-M
  *
  * \author Copyright (C) 2014-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
@@ -9,8 +9,8 @@
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#ifndef SOURCE_ARCHITECTURE_ARM_ARMV6_M_ARMV7_M_ARMV7_M_CONTROL_BITS_H_
-#define SOURCE_ARCHITECTURE_ARM_ARMV6_M_ARMV7_M_ARMV7_M_CONTROL_BITS_H_
+#ifndef SOURCE_ARCHITECTURE_ARM_ARMV6_M_ARMV7_M_ARMV6_M_ARMV7_M_CONTROL_BITS_H_
+#define SOURCE_ARCHITECTURE_ARM_ARMV6_M_ARMV7_M_ARMV6_M_ARMV7_M_CONTROL_BITS_H_
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | CONTROL - The special-purpose control register
@@ -34,4 +34,4 @@
 
 #endif	/* defined(__ARM_ARCH_7M__) || defined(__ARM_ARCH_7EM__) */
 
-#endif	/* SOURCE_ARCHITECTURE_ARM_ARMV6_M_ARMV7_M_ARMV7_M_CONTROL_BITS_H_ */
+#endif	/* SOURCE_ARCHITECTURE_ARM_ARMV6_M_ARMV7_M_ARMV6_M_ARMV7_M_CONTROL_BITS_H_ */

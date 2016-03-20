@@ -11,7 +11,7 @@
 
 #ifdef __USES_TWO_STACKS
 
-#include "ARMv7-M-CONTROL-bits.h"
+#include "ARMv6-M-ARMv7-M-CONTROL-bits.h"
 
 #endif	// __USES_TWO_STACKS
 
