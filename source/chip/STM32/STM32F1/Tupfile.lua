@@ -15,8 +15,8 @@ if CONFIG_CHIP_STM32F1 == "y" then
 	tup.rule("^ SH " .. ldScriptGenerator .. "^ ./" .. ldScriptGenerator .. " \"" .. CONFIG_CHIP .. "\" \"" ..
 			CONFIG_CHIP_STM32F1_FLASH_ADDRESS .. "," .. CONFIG_CHIP_STM32F1_FLASH_SIZE .. "\" \"" ..
 			CONFIG_CHIP_STM32F1_SRAM_ADDRESS .. "," .. CONFIG_CHIP_STM32F1_SRAM_SIZE .. "\" \"" ..
-			CONFIG_ARCHITECTURE_ARMV7_M_MAIN_STACK_SIZE .. "\" \"" .. CONFIG_MAIN_THREAD_STACK_SIZE .. "\" > \"%o\"",
-			ldscriptOutputs)
+			CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_MAIN_STACK_SIZE .. "\" \"" .. CONFIG_MAIN_THREAD_STACK_SIZE ..
+			"\" > \"%o\"", ldscriptOutputs)
 
 	CFLAGS += STANDARD_INCLUDES
 
