@@ -2,7 +2,7 @@
  * \file
  * \brief Reset_Handler() (startup code) for ARMv7-M (Cortex-M3 / Cortex-M4)
  *
- * \author Copyright (C) 2014-2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -49,6 +49,24 @@ Reset_Handler:
 	ldr		r4, =__data_array_start
 	ldr		r5, =__data_array_end
 
+#ifdef __ARM_ARCH_6M__
+
+1:	cmp		r4, r5							// outer loop - addresses from data_array
+	bhs		4f
+	ldmia	r4!, {r1-r3}					// r1 - start of source, r2 - start of destination, r3 - end of destination
+
+	b		3f
+2:	ldmia	r1!, {r0}						// inner loop - section initialization
+	stmia	r2!, {r0}
+3:	cmp		r2, r3
+	bne		2b
+
+	b		1b								// go back to start
+
+4:
+
+#else	// !def __ARM_ARCH_6M__
+
 1:	cmp		r4, r5							// outer loop - addresses from data_array
 	ittte	lo
 	ldrlo	r1, [r4], #4					// start of source address
@@ -66,10 +84,29 @@ Reset_Handler:
 
 3:
 
+#endif	// !def __ARM_ARCH_6M__
+
 	// Zero-init sections from bss_array (including .bss)
 	movs	r0, #0
 	ldr		r3, =__bss_array_start
 	ldr		r4, =__bss_array_end
+
+#ifdef __ARM_ARCH_6M__
+
+1:	cmp		r3, r4							// outer loop - addresses from bss_array
+	bhs		4f
+	ldmia	r3!, {r1-r2}					// r1 - start of destination, r2 - end of destination
+
+	b		3f
+2:	stmia	r1!, {r0}						// inner loop - section initialization
+3:	cmp		r1, r2
+	bne		2b
+
+	b		1b								// go back to start
+
+4:
+
+#else	// !def __ARM_ARCH_6M__
 
 1:	cmp		r3, r4							// outer loop - addresses from data_array
 	itte	lo
@@ -85,6 +122,8 @@ Reset_Handler:
 	b		1b								// go back to start
 
 3:
+
+#endif	// !def __ARM_ARCH_6M__
 
 #ifdef __USES_CXX
 
