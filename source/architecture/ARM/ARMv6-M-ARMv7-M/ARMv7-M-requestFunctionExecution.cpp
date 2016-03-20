@@ -2,7 +2,7 @@
  * \file
  * \brief requestFunctionExecution() implementation for ARMv7-M (Cortex-M3 / Cortex-M4)
  *
- * \author Copyright (C) 2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2015-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -11,8 +11,13 @@
 
 #include "distortos/architecture/requestFunctionExecution.hpp"
 
-#include "ARMv6-M-ARMv7-M-StackFrame.hpp"
+#include "distortos/chip/CMSIS-proxy.h"
+
+#if __FPU_PRESENT == 1 && __FPU_USED == 1
 #include "ARMv7-M-ExceptionFpuStackFrame.hpp"
+#endif	// __FPU_PRESENT == 1 && __FPU_USED == 1
+
+#include "ARMv6-M-ARMv7-M-StackFrame.hpp"
 #include "supervisorCall.hpp"
 
 #include "distortos/internal/scheduler/Scheduler.hpp"
@@ -152,12 +157,12 @@ void fromCurrentThreadToCurrentThread(void (& function)())
 void fromInterruptToCurrentThread(void (& function)())
 {
 	const auto stackPointer = __get_PSP();
-	// it's not possible to know whether the thread has active FPU context, so the only option is to assume it does;
-	// ExceptionFpuStackFrame is equal to ExceptionStackFrame in case of compilation with disabled FPU, so no memory is
-	// wasted in that case
-	const auto exceptionFpuStackFrame = reinterpret_cast<ExceptionFpuStackFrame*>(stackPointer) - 1;
 
 #if __FPU_PRESENT == 1 && __FPU_USED == 1
+
+	// it's not possible to know whether the thread has active FPU context, so the only option is to assume it does
+	const auto exceptionFpuStackFrame = reinterpret_cast<ExceptionFpuStackFrame*>(stackPointer) - 1;
+	const auto exceptionStackFrame = &exceptionFpuStackFrame->exceptionStackFrame;
 
 	const auto fpccr = FPU->FPCCR;
 	// last FPU stack frame was allocated in thread mode and the stacking is still pending?
@@ -170,18 +175,22 @@ void fromInterruptToCurrentThread(void (& function)())
 	memset(exceptionFpuStackFrame, 0, sizeof(*exceptionFpuStackFrame));
 	exceptionFpuStackFrame->fpscr = reinterpret_cast<void*>(FPU->FPDSCR);
 
-#endif	// __FPU_PRESENT == 1 && __FPU_USED == 1
+#else	// __FPU_PRESENT != 1 || __FPU_USED != 1
 
-	exceptionFpuStackFrame->exceptionStackFrame.r0 = reinterpret_cast<void*>(&function);
-	exceptionFpuStackFrame->exceptionStackFrame.r1 = reinterpret_cast<void*>(stackPointer);
-	exceptionFpuStackFrame->exceptionStackFrame.r2 = reinterpret_cast<void*>(false);
-	exceptionFpuStackFrame->exceptionStackFrame.r3 = reinterpret_cast<void*>(0x33333333);
-	exceptionFpuStackFrame->exceptionStackFrame.r12 = reinterpret_cast<void*>(0xcccccccc);
-	exceptionFpuStackFrame->exceptionStackFrame.lr = nullptr;
-	exceptionFpuStackFrame->exceptionStackFrame.pc = reinterpret_cast<void*>(&functionTrampoline);
-	exceptionFpuStackFrame->exceptionStackFrame.xpsr = ExceptionStackFrame::defaultXpsr;
+	const auto exceptionStackFrame = reinterpret_cast<ExceptionStackFrame*>(stackPointer) - 1;
 
-	__set_PSP(reinterpret_cast<uint32_t>(exceptionFpuStackFrame));
+#endif	// __FPU_PRESENT != 1 || __FPU_USED != 1
+
+	exceptionStackFrame->r0 = reinterpret_cast<void*>(&function);
+	exceptionStackFrame->r1 = reinterpret_cast<void*>(stackPointer);
+	exceptionStackFrame->r2 = reinterpret_cast<void*>(false);
+	exceptionStackFrame->r3 = reinterpret_cast<void*>(0x33333333);
+	exceptionStackFrame->r12 = reinterpret_cast<void*>(0xcccccccc);
+	exceptionStackFrame->lr = nullptr;
+	exceptionStackFrame->pc = reinterpret_cast<void*>(&functionTrampoline);
+	exceptionStackFrame->xpsr = ExceptionStackFrame::defaultXpsr;
+
+	__set_PSP(reinterpret_cast<uint32_t>(exceptionStackFrame));
 }
 
 /**
