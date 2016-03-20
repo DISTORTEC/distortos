@@ -1,7 +1,7 @@
 #!/bin/sh
 
 #
-# file: ARMv7-M.ld.sh
+# file: ARMv6-M-ARMv7-M.ld.sh
 #
 # author: Copyright (C) 2015-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
 #
