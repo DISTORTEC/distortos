@@ -1,6 +1,6 @@
 /**
  * \file
- * \brief configureSysTick() implementation for ARMv7-M (Cortex-M3 / Cortex-M4)
+ * \brief configureSysTick() implementation for ARMv6-M and ARMv7-M
  *
  * \author Copyright (C) 2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
@@ -9,7 +9,7 @@
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#include "distortos/architecture/configureSysTick.hpp"
+#include "distortos/architecture/ARMv6-M-ARMv7-M-configureSysTick.hpp"
 
 #include "distortos/chip/CMSIS-proxy.h"
 

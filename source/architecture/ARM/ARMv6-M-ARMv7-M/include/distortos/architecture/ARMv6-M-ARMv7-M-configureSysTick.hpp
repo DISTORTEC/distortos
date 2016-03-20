@@ -9,8 +9,8 @@
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#ifndef SOURCE_ARCHITECTURE_ARM_ARMV6_M_ARMV7_M_INCLUDE_DISTORTOS_ARCHITECTURE_CONFIGURESYSTICK_HPP_
-#define SOURCE_ARCHITECTURE_ARM_ARMV6_M_ARMV7_M_INCLUDE_DISTORTOS_ARCHITECTURE_CONFIGURESYSTICK_HPP_
+#ifndef SOURCE_ARCHITECTURE_ARM_ARMV6_M_ARMV7_M_INCLUDE_DISTORTOS_ARCHITECTURE_ARMV6_M_ARMV7_M_CONFIGURESYSTICK_HPP_
+#define SOURCE_ARCHITECTURE_ARM_ARMV6_M_ARMV7_M_INCLUDE_DISTORTOS_ARCHITECTURE_ARMV6_M_ARMV7_M_CONFIGURESYSTICK_HPP_
 
 #include <cstdint>
 
@@ -24,7 +24,7 @@ namespace architecture
 constexpr uint32_t maxSysTickPeriod {1 << 24};
 
 /**
- * \brief Configures SysTick timer in ARMv7-M (Cortex-M3 / Cortex-M4).
+ * \brief Configures SysTick timer in ARMv6-M and ARMv7-M.
  *
  * \param [in] period is period of SysTick timer, [1; maxSysTickPeriod]
  * \param [in] divideBy8 selects whether the SysTick timer will use core clock "directly" (false) or divided by 8 (true)
@@ -36,4 +36,4 @@ void configureSysTick(uint32_t period, bool divideBy8);
 
 }	// namespace distortos
 
-#endif	// SOURCE_ARCHITECTURE_ARM_ARMV6_M_ARMV7_M_INCLUDE_DISTORTOS_ARCHITECTURE_CONFIGURESYSTICK_HPP_
+#endif	// SOURCE_ARCHITECTURE_ARM_ARMV6_M_ARMV7_M_INCLUDE_DISTORTOS_ARCHITECTURE_ARMV6_M_ARMV7_M_CONFIGURESYSTICK_HPP_

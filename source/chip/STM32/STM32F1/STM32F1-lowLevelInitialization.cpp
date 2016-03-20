@@ -14,7 +14,7 @@
 #include "distortos/chip/STM32F1-FLASH.hpp"
 #include "distortos/chip/STM32F1-RCC.hpp"
 
-#include "distortos/architecture/configureSysTick.hpp"
+#include "distortos/architecture/ARMv6-M-ARMv7-M-configureSysTick.hpp"
 
 namespace distortos
 {
