@@ -15,6 +15,7 @@ choice
 
 # don't remove next line!
 ### begin Kconfig-stm32ChipFamilyChoices
+source "$DISTORTOS_PATH/source/chip/STM32/STM32F0/Kconfig-stm32ChipFamilyChoices"
 source "$DISTORTOS_PATH/source/chip/STM32/STM32F1/Kconfig-stm32ChipFamilyChoices"
 source "$DISTORTOS_PATH/source/chip/STM32/STM32F4/Kconfig-stm32ChipFamilyChoices"
 ### end Kconfig-stm32ChipFamilyChoices

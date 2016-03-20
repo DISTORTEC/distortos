@@ -54,6 +54,7 @@ if BOARD_CUSTOM
 
 # don't remove next line!
 ### begin Kconfig-chipChoices
+source "$DISTORTOS_PATH/source/chip/STM32/STM32F0/Kconfig-chipChoices"
 source "$DISTORTOS_PATH/source/chip/STM32/STM32F1/Kconfig-chipChoices"
 source "$DISTORTOS_PATH/source/chip/STM32/STM32F4/Kconfig-chipChoices"
 ### end Kconfig-chipChoices
@@ -69,6 +70,7 @@ source "$DISTORTOS_PATH/source/board/Kconfig-board"
 
 # don't remove next line!
 ### begin Kconfig-chipOptions
+source "$DISTORTOS_PATH/source/chip/STM32/STM32F0/Kconfig-chipOptions"
 source "$DISTORTOS_PATH/source/chip/STM32/STM32F1/Kconfig-chipOptions"
 source "$DISTORTOS_PATH/source/chip/STM32/STM32F4/Kconfig-chipOptions"
 ### end Kconfig-chipOptions
