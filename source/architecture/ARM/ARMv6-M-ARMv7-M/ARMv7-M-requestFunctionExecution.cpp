@@ -78,6 +78,40 @@ void functionTrampoline(void (& function)(), const void* const savedStackPointer
 {
 	using SupervisorCall = int(int (&)(int, int, int, int), int, int, int, int);	// type of supervisorCall()
 
+#ifdef __ARM_ARCH_6M__
+
+	asm volatile
+	(
+			"	push		{r1-r2}						\n"	// push last two arguments to stack
+			"	blx			%[function]					\n"	// execute function
+			"	pop			{r1-r2}						\n"	// restore last two arguments
+			"	cmp			r2, #0						\n"
+			"	beq			1f							\n"	// if (fullContext == true) {
+			"	ldmia		r1!, {r4-r7}				\n"	// load upper half of thread's context
+			"	mov			r8, r4						\n"
+			"	mov			r9, r5						\n"
+			"	mov			r10, r6						\n"
+			"	mov			r11, r7						\n"
+			"	ldmia		r1!, {r4-r7}				\n"	// load lower half of thread's context
+			"	mov			r2, #0						\n"	// 3rd supervisorCall() argument - 0
+			"1:											\n"	// }
+			"	ldr			r0, =%[removeStackFrame]	\n"	// 1st supervisorCall() argument - removeStackFrame
+			"	ldr			r3, =%[supervisorCall]		\n"
+			"	mov			r12, r3						\n"
+			"	mov			r3, #0						\n"	// 4th supervisorCall() argument - 0
+			"	sub			sp, #8						\n"
+			"	str			r3, [sp]					\n"	// 5th supervisorCall() argument - 0
+			"	bx			r12							\n"	// jump to supervisorCall(), this does not return
+
+			::	[function] "r" (function),
+				[savedStackPointer] "r" (savedStackPointer),
+				[fullContext] "r" (fullContext),
+				[removeStackFrame] "i" (removeStackFrame),
+				[supervisorCall] "i" (static_cast<SupervisorCall&>(supervisorCall))
+	);
+
+#else	// !def __ARM_ARCH_6M__
+
 	asm volatile
 	(
 #if __FPU_PRESENT == 1 && __FPU_USED == 1
@@ -125,6 +159,8 @@ void functionTrampoline(void (& function)(), const void* const savedStackPointer
 				[removeStackFrame] "i" (removeStackFrame),
 				[supervisorCall] "i" (static_cast<SupervisorCall&>(supervisorCall))
 	);
+
+#endif	// !def __ARM_ARCH_6M__
 
 	__builtin_unreachable();
 }
