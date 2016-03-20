@@ -1,6 +1,6 @@
 /**
  * \file
- * \brief Header with definitions for bit-banding in ARMv7-M core.
+ * \brief Header with definitions for bit-banding for ARMv7-M
  *
  * \author Copyright (C) 2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
@@ -11,6 +11,8 @@
 
 #ifndef SOURCE_ARCHITECTURE_ARM_ARMV6_M_ARMV7_M_INCLUDE_DISTORTOS_ARCHITECTURE_ARMV7_M_BIT_BANDING_H_
 #define SOURCE_ARCHITECTURE_ARM_ARMV6_M_ARMV7_M_INCLUDE_DISTORTOS_ARCHITECTURE_ARMV7_M_BIT_BANDING_H_
+
+#if defined(__ARM_ARCH_7M__) || defined(__ARM_ARCH_7EM__)
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | global defines
@@ -59,5 +61,7 @@ enum { BITBAND_PERIPHERAL_BASE = 0x42000000 };
 
 /** bit-band alias in any region */
 #define BITBAND(address, bit)				(*(volatile unsigned long*)BITBAND_ADDRESS(address, bit))
+
+#endif	/* defined(__ARM_ARCH_7M__) || defined(__ARM_ARCH_7EM__) */
 
 #endif /* SOURCE_ARCHITECTURE_ARM_ARMV6_M_ARMV7_M_INCLUDE_DISTORTOS_ARCHITECTURE_ARMV7_M_BIT_BANDING_H_ */
