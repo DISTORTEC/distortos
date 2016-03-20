@@ -2,7 +2,7 @@
  * \file
  * \brief SoftwareStackFrame struct header
  *
- * \author Copyright (C) 2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2015-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -30,6 +30,8 @@ struct SoftwareStackFrame
 
 #endif	// __FPU_PRESENT == 1 && __FPU_USED == 1
 
+#if defined(__ARM_ARCH_7M__) || defined(__ARM_ARCH_7EM__)
+
 	/// R4 register
 	void* r4;
 	/// R5 register
@@ -38,6 +40,9 @@ struct SoftwareStackFrame
 	void* r6;
 	/// R7 register
 	void* r7;
+
+#endif	// defined(__ARM_ARCH_7M__) || defined(__ARM_ARCH_7EM__)
+
 	/// R8 register
 	void* r8;
 	/// R9 register
@@ -46,6 +51,19 @@ struct SoftwareStackFrame
 	void* r10;
 	/// R11 register
 	void* r11;
+
+#if !defined(__ARM_ARCH_7M__) && !defined(__ARM_ARCH_7EM__)
+
+	/// R4 register
+	void* r4;
+	/// R5 register
+	void* r5;
+	/// R6 register
+	void* r6;
+	/// R7 register
+	void* r7;
+
+#endif	// !defined(__ARM_ARCH_7M__) && !defined(__ARM_ARCH_7EM__)
 
 #if __FPU_PRESENT == 1 && __FPU_USED == 1
 
