@@ -74,6 +74,39 @@ extern "C" __attribute__ ((naked)) void PendSV_Handler()
 
 #endif	// CONFIG_ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI == 0
 
+#ifdef __ARM_ARCH_6M__
+
+	asm volatile
+	(
+			"	mrs			r0, PSP							\n"
+			"	sub			r0, #0x10						\n"
+			"	stmia		r0!, {r4-r7}					\n"	// save lower half of current thread's context
+			"	mov			r4, r8							\n"
+			"	mov			r5, r9							\n"
+			"	mov			r6, r10							\n"
+			"	mov			r7, r11							\n"
+			"	sub			r0, #0x20						\n"
+			"	stmia		r0!, {r4-r7}					\n"	// save upper half of current thread's context
+			"	sub			r0, #0x10						\n"
+			"	mov			r4, lr							\n"
+			"												\n"
+			"	ldr			r1, =%[schedulerSwitchContext]	\n"
+			"	blx			r1								\n"	// switch context
+			"												\n"
+			"	mov			lr, r4							\n"
+			"	ldmia		r0!, {r4-r7}					\n"	// load upper half of new thread's context
+			"	mov			r8, r4							\n"
+			"	mov			r9, r5							\n"
+			"	mov			r10, r6							\n"
+			"	mov			r11, r7							\n"
+			"	ldmia		r0!, {r4-r7}					\n"	// load lower half of new thread's context
+			"	msr			PSP, r0							\n"
+
+			::	[schedulerSwitchContext] "i" (schedulerSwitchContextWrapper)
+	);
+
+#else	// !def __ARM_ARCH_6M__
+
 	asm volatile
 	(
 			"	mrs			r0, PSP							\n"
@@ -103,6 +136,8 @@ extern "C" __attribute__ ((naked)) void PendSV_Handler()
 
 			::	[schedulerSwitchContext] "i" (schedulerSwitchContextWrapper)
 	);
+
+#endif	// !def __ARM_ARCH_6M__
 
 	asm volatile
 	(
