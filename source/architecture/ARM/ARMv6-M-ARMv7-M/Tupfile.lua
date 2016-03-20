@@ -7,7 +7,7 @@
 -- distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 --
 
-if CONFIG_ARCHITECTURE_ARMV7_M == "y" then
+if CONFIG_ARCHITECTURE_ARMV6_M == "y" or CONFIG_ARCHITECTURE_ARMV7_M == "y" then
 
 	ASFLAGS["ARMv6-M-ARMv7-M-Reset_Handler.S"] = "-D__USES_TWO_STACKS -D__USES_CXX"
 
@@ -17,4 +17,4 @@ if CONFIG_ARCHITECTURE_ARMV7_M == "y" then
 
 	tup.include(DISTORTOS_TOP .. "compile.lua")
 
-end	-- if CONFIG_ARCHITECTURE_ARMV7_M == "y" then
+end	-- if CONFIG_ARCHITECTURE_ARMV6_M == "y" or CONFIG_ARCHITECTURE_ARMV7_M == "y" then
