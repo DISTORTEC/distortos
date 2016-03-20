@@ -28,7 +28,14 @@ void startScheduling()
 	// SysTick and PendSV - lowest possible priority
 	NVIC_SetPriority(SysTick_IRQn, 0xff);
 	NVIC_SetPriority(PendSV_IRQn, 0xff);
-	NVIC_SetPriority(SVCall_IRQn, CONFIG_ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI);
+
+	// SVCall - high priority
+#ifdef CONFIG_ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI
+	constexpr uint32_t svcallPriority {CONFIG_ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI};
+#else	// !def CONFIG_ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI
+	constexpr uint32_t svcallPriority {};
+#endif	// !def CONFIG_ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI
+	NVIC_SetPriority(SVCall_IRQn, svcallPriority);
 
 	// enable SysTick timer as the tick timer
 	SysTick->VAL = 0;
