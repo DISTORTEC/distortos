@@ -34,6 +34,7 @@ scripts.
 disabled in critical sections" (*ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI*) options is set to 0. This is the new default
 setting, as this is a more conservative (and thus safer for a beginner) approach, which doesn't require any special
 configuration of interrupt priorities (default value is 0).
+- Support for *ARMv6-M* (*ARM Cortex-M0*, *ARM Cortex-M0+* and *ARM Cortex-M1*) architecture.
 
 ### Changed
 
