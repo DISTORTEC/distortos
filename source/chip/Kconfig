@@ -98,6 +98,13 @@ config CHIP_LFBGA144_SELECTED
 	help
 		LFBGA144 chip package
 
+config CHIP_LQFP32_SELECTED
+	bool "LQFP32"
+	depends on CHIP_HAS_LQFP32
+	select CHIP_LQFP32
+	help
+		LQFP32 chip package
+
 config CHIP_LQFP48_SELECTED
 	bool "LQFP48"
 	depends on CHIP_HAS_LQFP48
@@ -154,6 +161,20 @@ config CHIP_TFBGA216_SELECTED
 	help
 		TFBGA216 chip package
 
+config CHIP_TSSOP20_SELECTED
+	bool "TSSOP20"
+	depends on CHIP_HAS_TSSOP20
+	select CHIP_TSSOP20
+	help
+		TSSOP20 chip package
+
+config CHIP_UFBGA64_SELECTED
+	bool "UFBGA64"
+	depends on CHIP_HAS_UFBGA64
+	select CHIP_UFBGA64
+	help
+		UFBGA64 chip package
+
 config CHIP_UFBGA100_SELECTED
 	bool "UFBGA100"
 	depends on CHIP_HAS_UFBGA100
@@ -182,6 +203,20 @@ config CHIP_UFBGA176_SELECTED
 	help
 		UFBGA176 chip package
 
+config CHIP_UFQFPN28_SELECTED
+	bool "UFQFPN28"
+	depends on CHIP_HAS_UFQFPN28
+	select CHIP_UFQFPN28
+	help
+		UFQFPN28 chip package
+
+config CHIP_UFQFPN32_SELECTED
+	bool "UFQFPN32"
+	depends on CHIP_HAS_UFQFPN32
+	select CHIP_UFQFPN32
+	help
+		UFQFPN32 chip package
+
 config CHIP_UFQFPN48_SELECTED
 	bool "UFQFPN48"
 	depends on CHIP_HAS_UFQFPN48
@@ -195,6 +230,13 @@ config CHIP_VFQFPN36_SELECTED
 	select CHIP_VFQFPN36
 	help
 		VFQFPN36 chip package
+
+config CHIP_WLCSP25_SELECTED
+	bool "WLCSP25"
+	depends on CHIP_HAS_WLCSP25
+	select CHIP_WLCSP25
+	help
+		WLCSP25 chip package
 
 config CHIP_WLCSP36_SELECTED
 	bool "WLCSP36"
@@ -257,6 +299,10 @@ config CHIP_HAS_LFBGA144
 	bool
 	default n
 
+config CHIP_HAS_LQFP32
+	bool
+	default n
+
 config CHIP_HAS_LQFP48
 	bool
 	default n
@@ -289,6 +335,14 @@ config CHIP_HAS_TFBGA216
 	bool
 	default n
 
+config CHIP_HAS_TSSOP20
+	bool
+	default n
+
+config CHIP_HAS_UFBGA64
+	bool
+	default n
+
 config CHIP_HAS_UFBGA100
 	bool
 	default n
@@ -305,11 +359,23 @@ config CHIP_HAS_UFBGA176
 	bool
 	default n
 
+config CHIP_HAS_UFQFPN28
+	bool
+	default n
+
+config CHIP_HAS_UFQFPN32
+	bool
+	default n
+
 config CHIP_HAS_UFQFPN48
 	bool
 	default n
 
 config CHIP_HAS_VFQFPN36
+	bool
+	default n
+
+config CHIP_HAS_WLCSP25
 	bool
 	default n
 
@@ -349,6 +415,10 @@ config CHIP_LFBGA144
 	bool
 	default n
 
+config CHIP_LQFP32
+	bool
+	default n
+
 config CHIP_LQFP48
 	bool
 	default n
@@ -381,6 +451,14 @@ config CHIP_TFBGA216
 	bool
 	default n
 
+config CHIP_TSSOP20
+	bool
+	default n
+
+config CHIP_UFBGA64
+	bool
+	default n
+
 config CHIP_UFBGA100
 	bool
 	default n
@@ -397,11 +475,23 @@ config CHIP_UFBGA176
 	bool
 	default n
 
+config CHIP_UFQFPN28
+	bool
+	default n
+
+config CHIP_UFQFPN32
+	bool
+	default n
+
 config CHIP_UFQFPN48
 	bool
 	default n
 
 config CHIP_VFQFPN36
+	bool
+	default n
+
+config CHIP_WLCSP25
 	bool
 	default n
 
@@ -437,6 +527,7 @@ config CHIP_PACKAGE
 	string
 	default "LFBGA100" if CHIP_LFBGA100
 	default "LFBGA144" if CHIP_LFBGA144
+	default "LQFP32" if CHIP_LQFP32
 	default "LQFP48" if CHIP_LQFP48
 	default "LQFP64" if CHIP_LQFP64
 	default "LQFP100" if CHIP_LQFP100
@@ -445,12 +536,17 @@ config CHIP_PACKAGE
 	default "LQFP208" if CHIP_LQFP208
 	default "TFBGA64" if CHIP_TFBGA64
 	default "TFBGA216" if CHIP_TFBGA216
+	default "TSSOP20" if CHIP_TSSOP20
+	default "UFBGA64" if CHIP_UFBGA64
 	default "UFBGA100" if CHIP_UFBGA100
 	default "UFBGA144" if CHIP_UFBGA144
 	default "UFBGA169" if CHIP_UFBGA169
 	default "UFBGA176" if CHIP_UFBGA176
+	default "UFQFPN28" if CHIP_UFQFPN28
+	default "UFQFPN32" if CHIP_UFQFPN32
 	default "UFQFPN48" if CHIP_UFQFPN48
 	default "VFQFPN36" if CHIP_VFQFPN36
+	default "WLCSP25" if CHIP_WLCSP25
 	default "WLCSP36" if CHIP_WLCSP36
 	default "WLCSP49" if CHIP_WLCSP49
 	default "WLCSP64" if CHIP_WLCSP64
