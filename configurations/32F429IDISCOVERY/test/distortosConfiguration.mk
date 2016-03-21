@@ -303,8 +303,10 @@ CONFIG_CHIP_STM32F4_SRAM3_ADDRESS=0x20020000
 #
 # Generic chip options
 #
+# CONFIG_ARCHITECTURE_ARMV6_M is not set
 CONFIG_ARCHITECTURE_ARMV7_M=y
 CONFIG_TOOLCHAIN_PREFIX="arm-none-eabi-"
+CONFIG_ARCHITECTURE_FLAGS="-mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16"
 
 #
 # ARMv7-M architecture options
@@ -314,9 +316,8 @@ CONFIG_ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI=0
 CONFIG_ARCHITECTURE_ARM_CORTEX_M4=y
 # CONFIG_ARCHITECTURE_ARM_CORTEX_M7 is not set
 # CONFIG_ARCHITECTURE_HAS_FPV5_D16 is not set
-CONFIG_ARCHITECTURE_FLAGS="-mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16"
-CONFIG_ARCHITECTURE_INCLUDES="source/architecture/ARM/ARMv6-M-ARMv7-M/include"
 CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_MAIN_STACK_SIZE=2048
+CONFIG_ARCHITECTURE_INCLUDES="source/architecture/ARM/ARMv6-M-ARMv7-M/include"
 
 #
 # Generic architecture options
