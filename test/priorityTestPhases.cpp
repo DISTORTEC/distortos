@@ -2,7 +2,7 @@
  * \file
  * \brief priorityTestPhases object definition
  *
- * \author Copyright (C) 2014 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -27,31 +27,31 @@ namespace
 /// array with unique priorities and expected sequence points
 const std::array<ThreadParameters, totalThreads> uniquePriorities
 {{
-		{UINT8_MAX - 0, 0},
-		{UINT8_MAX - 1, 1},
-		{UINT8_MAX - 2, 2},
-		{UINT8_MAX - 3, 3},
-		{UINT8_MAX - 4, 4},
-		{UINT8_MAX - 5, 5},
-		{UINT8_MAX - 6, 6},
-		{UINT8_MAX - 7, 7},
-		{UINT8_MAX - 8, 8},
-		{UINT8_MAX - 9, 9},
+		{maxPhasePriority - 0, 0},
+		{maxPhasePriority - 1, 1},
+		{maxPhasePriority - 2, 2},
+		{maxPhasePriority - 3, 3},
+		{maxPhasePriority - 4, 4},
+		{maxPhasePriority - 5, 5},
+		{maxPhasePriority - 6, 6},
+		{maxPhasePriority - 7, 7},
+		{maxPhasePriority - 8, 8},
+		{maxPhasePriority - 9, 9},
 }};
 
 /// array with non-unique priorities and expected sequence points
 const std::array<ThreadParameters, totalThreads> nonUniquePriorities
 {{
-		{UINT8_MAX - 0, 0},
-		{UINT8_MAX - 0, 1},
-		{UINT8_MAX - 0, 2},
-		{UINT8_MAX - 0, 3},
-		{UINT8_MAX - 0, 4},
-		{UINT8_MAX - 1, 5},
-		{UINT8_MAX - 1, 6},
-		{UINT8_MAX - 1, 7},
-		{UINT8_MAX - 1, 8},
-		{UINT8_MAX - 1, 9},
+		{maxPhasePriority - 0, 0},
+		{maxPhasePriority - 0, 1},
+		{maxPhasePriority - 0, 2},
+		{maxPhasePriority - 0, 3},
+		{maxPhasePriority - 0, 4},
+		{maxPhasePriority - 1, 5},
+		{maxPhasePriority - 1, 6},
+		{maxPhasePriority - 1, 7},
+		{maxPhasePriority - 1, 8},
+		{maxPhasePriority - 1, 9},
 }};
 
 }	// namespace
