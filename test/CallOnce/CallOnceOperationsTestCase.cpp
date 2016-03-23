@@ -38,7 +38,7 @@ namespace
 constexpr auto sleepForDuration = TickClock::duration{10};
 
 /// size of stack for test thread, bytes
-constexpr size_t testThreadStackSize {512};
+constexpr size_t testThreadStackSize {768};
 
 /// number of test threads
 constexpr size_t totalThreads {10};
