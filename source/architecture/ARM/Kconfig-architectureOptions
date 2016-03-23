@@ -9,6 +9,10 @@
 
 if ARCHITECTURE_ARM
 
+config ARCHITECTURE_ARMV6_M
+	bool
+	default n
+
 config ARCHITECTURE_ARMV7_M
 	bool
 	default n
@@ -19,7 +23,7 @@ config TOOLCHAIN_PREFIX
 
 # don't remove next line!
 ### begin Kconfig-armArchitectureOptions
-source "$DISTORTOS_PATH/source/architecture/ARM/ARMv7-M/Kconfig-armArchitectureOptions"
+source "$DISTORTOS_PATH/source/architecture/ARM/ARMv6-M-ARMv7-M/Kconfig-armArchitectureOptions"
 ### end Kconfig-armArchitectureOptions
 # don't remove previous line!
 

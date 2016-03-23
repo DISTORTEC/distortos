@@ -26,6 +26,7 @@ Targets
 
 Currently supported targets for *distortos* are:
 
+- ARMv6-M architecture (ARM Cortex-M0(+), ARM Cortex-M1)
 - ARMv7-M architecture (ARM Cortex-M3, ARM Cortex-M4(F), ARM Cortex-M7(F)): STM32F1, STM32F4
 
 Motivation and goals

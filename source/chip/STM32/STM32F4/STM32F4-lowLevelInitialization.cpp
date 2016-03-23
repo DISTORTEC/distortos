@@ -16,7 +16,7 @@
 #include "distortos/chip/STM32F4-RCC.hpp"
 #include "distortos/chip/STM32F4-RCC-bits.h"
 
-#include "distortos/architecture/configureSysTick.hpp"
+#include "distortos/architecture/ARMv6-M-ARMv7-M-configureSysTick.hpp"
 
 #include "distortos/chip/CMSIS-proxy.h"
 
