@@ -84,8 +84,8 @@ DynamicThread makeTestThread(const TickClock::time_point now, const ThreadParame
 		SequenceAsserter& sequenceAsserter, TickClock::duration& timePointDeviation, int& sharedRet)
 {
 	return makeDynamicThread({testThreadStackSize, UINT8_MAX}, thread,
-			now + TickClock::duration{UINT8_MAX - threadParameters.first + timePointOffset}, std::ref(sequenceAsserter),
-			threadParameters.second, std::ref(timePointDeviation), std::ref(sharedRet));
+			now + TickClock::duration{maxPhasePriority - threadParameters.first + timePointOffset},
+			std::ref(sequenceAsserter), threadParameters.second, std::ref(timePointDeviation), std::ref(sharedRet));
 }
 
 }	// namespace

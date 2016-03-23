@@ -64,10 +64,7 @@ bool SoftwareTimerOrderingTestCase::run_() const
 		waitForNextTick();
 
 		for (size_t i = 0; i < softwareTimers.size(); ++i)
-		{
-			constexpr auto inverter = std::numeric_limits<decltype(phase.first[phase.second[i]].first)>::max() + 1;
-			softwareTimers[i].start(TickClock::duration{inverter - phase.first[phase.second[i]].first});
-		}
+			softwareTimers[i].start(TickClock::duration{maxPhasePriority + 1 - phase.first[phase.second[i]].first});
 
 		if (sequenceAsserter.assertSequence(0) == false)
 			return false;

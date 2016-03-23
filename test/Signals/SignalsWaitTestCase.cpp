@@ -171,7 +171,7 @@ bool queuedSignalsTrigger(Thread& thread, const size_t index, const TestPhase& p
 {
 	for (size_t i = 0; i < phase.second.size(); ++i)
 	{
-		const auto signalNumber = UINT8_MAX - phase.first[phase.second[i]].first;
+		const auto signalNumber = maxPhasePriority - phase.first[phase.second[i]].first;
 		const decltype(sigval{}.sival_int) signalValue =
 				(totalThreads * (index + 1) + phase.first[phase.second[i]].second) |
 				(signalNumber << signalNumberShift);

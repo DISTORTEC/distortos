@@ -86,7 +86,7 @@ void thread(const uint8_t sleepFor, SequenceAsserter& sequenceAsserter, const un
 DynamicThread makeTestThread(const ThreadParameters& threadParameters, SequenceAsserter& sequenceAsserter,
 		const TickClock::time_point& sleepStart, TickClock::duration& durationDeviation, int& sharedRet)
 {
-	return makeDynamicThread({testThreadStackSize, UINT8_MAX}, thread, UINT8_MAX - threadParameters.first,
+	return makeDynamicThread({testThreadStackSize, UINT8_MAX}, thread, maxPhasePriority - threadParameters.first,
 			std::ref(sequenceAsserter), threadParameters.second, std::cref(sleepStart), std::ref(durationDeviation),
 			std::ref(sharedRet));
 }
