@@ -31,7 +31,7 @@ constexpr size_t totalThreads {10};
 constexpr size_t totalPhases {8};
 
 /// max priority used in test phases
-constexpr uint8_t maxPhasePriority {UINT8_MAX};
+constexpr uint8_t maxPhasePriority {UINT8_MAX - 1};
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | global types
