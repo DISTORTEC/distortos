@@ -106,7 +106,7 @@ Reset_Handler:
 
 #else	// !def __ARM_ARCH_6M__
 
-1:	cmp		r3, r4							// outer loop - addresses from data_array
+1:	cmp		r3, r4							// outer loop - addresses from bss_array
 	ite		lo
 	ldmialo	r3!, {r1-r2}					// r1 - start of destination, r2 - end of destination
 	bhs		3f
