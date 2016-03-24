@@ -63,8 +63,6 @@ if CONFIG_CHIP_STM32F4 == "y" then
 	tup.rule("^ SH " .. ldScriptGenerator .. "^ ./" .. ldScriptGenerator .. ldScriptGeneratorArguments .. " > \"%o\"",
 			ldscriptOutputs)
 
-	CFLAGS += STANDARD_INCLUDES
-
 	CXXFLAGS += STANDARD_INCLUDES
 	CXXFLAGS += ARCHITECTURE_INCLUDES
 	CXXFLAGS += CHIP_INCLUDES
