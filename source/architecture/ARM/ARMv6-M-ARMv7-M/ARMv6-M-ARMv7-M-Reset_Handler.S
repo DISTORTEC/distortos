@@ -68,10 +68,8 @@ Reset_Handler:
 #else	// !def __ARM_ARCH_6M__
 
 1:	cmp		r4, r5							// outer loop - addresses from data_array
-	ittte	lo
-	ldrlo	r1, [r4], #4					// start of source address
-	ldrlo	r2, [r4], #4					// start of destination address
-	ldrlo	r3, [r4], #4					// end of destination address
+	ite		lo
+	ldmialo	r4!, {r1-r3}					// r1 - start of source, r2 - start of destination, r3 - end of destination
 	bhs		3f
 
 2:	cmp		r2, r3							// inner loop - section initialization
@@ -109,9 +107,8 @@ Reset_Handler:
 #else	// !def __ARM_ARCH_6M__
 
 1:	cmp		r3, r4							// outer loop - addresses from data_array
-	itte	lo
-	ldrlo	r1, [r3], #4					// start of destination address
-	ldrlo	r2, [r3], #4					// end of destination address
+	ite		lo
+	ldmialo	r3!, {r1-r2}					// r1 - start of destination, r2 - end of destination
 	bhs		3f
 
 2:	cmp		r1, r2							// inner loop - section initialization
