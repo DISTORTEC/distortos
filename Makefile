@@ -148,9 +148,18 @@ BOARD_INCLUDES += $(patsubst %,-I$(DISTORTOS_PATH)%,$(subst ",,$(CONFIG_BOARD_IN
 # build macros
 #-----------------------------------------------------------------------------------------------------------------------
 
+ifndef ECHO
+	I := i
+	TARGET_COUNTER = $(words $(I)) $(eval I += i)
+	TOTAL_TARGETS := $(shell $(MAKE) $(MAKECMDGOALS) --dry-run --file=$(firstword $(MAKEFILE_LIST)) \
+			--no-print-directory --no-builtin-rules --no-builtin-variables ECHO="COUNTTHIS" | grep -c "COUNTTHIS")
+	ECHO = echo "[`expr "  \`expr ${TARGET_COUNTER} '*' 100 / ${TOTAL_TARGETS}\`" : '.*\(...\)$$'`%]"
+endif
+
+
 ifeq ($(VERBOSE),0)
 	Q = @
-	PRETTY_PRINT = @echo $(1)
+	PRETTY_PRINT = @$(ECHO) $(1)
 else
 	Q =
 	PRETTY_PRINT =
