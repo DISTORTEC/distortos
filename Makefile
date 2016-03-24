@@ -156,7 +156,6 @@ ifndef ECHO
 	ECHO = echo "[`expr "  \`expr ${TARGET_COUNTER} '*' 100 / ${TOTAL_TARGETS}\`" : '.*\(...\)$$'`%]"
 endif
 
-
 ifeq ($(VERBOSE),0)
 	Q = @
 	PRETTY_PRINT = @$(ECHO) $(1)
