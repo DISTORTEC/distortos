@@ -22,10 +22,11 @@ namespace chip
 +---------------------------------------------------------------------------------------------------------------------*/
 
 ChipOutputPin::ChipOutputPin(const Pin pin, const bool openDrain, const PinOutputSpeed outputSpeed,
-		const bool initialState) :
-				pin_{pin}
+		const bool initialState, const bool inverted) :
+				pin_{pin},
+				inverted_{inverted}
 {
-	configureOutputPin(pin_, openDrain, outputSpeed, initialState);
+	configureOutputPin(pin_, openDrain, outputSpeed, initialState != inverted);
 }
 
 bool ChipOutputPin::get() const
@@ -33,7 +34,7 @@ bool ChipOutputPin::get() const
 	const auto decodedPin = decodePin(pin_);
 	auto& port = *decodedPin.first;
 	const auto pinNumber = decodedPin.second;
-	return (port.IDR & (1 << pinNumber)) != 0;
+	return static_cast<bool>(port.IDR & (1 << pinNumber)) != inverted_;
 }
 
 void ChipOutputPin::set(const bool state)
@@ -41,7 +42,7 @@ void ChipOutputPin::set(const bool state)
 	const auto decodedPin = decodePin(pin_);
 	auto& port = *decodedPin.first;
 	const auto pinNumber = decodedPin.second;
-	port.BSRR = 1 << (pinNumber + (state == false ? 16 : 0));
+	port.BSRR = 1 << (pinNumber + (state == inverted_ ? 16 : 0));
 }
 
 }	// namespace chip
