@@ -29,6 +29,9 @@ void lowLevelInitialization()
 #ifdef CONFIG_BOARD_LEDS_ENABLE
 			RCC_AHB1ENR_GPIOAEN |
 #endif	// def CONFIG_BOARD_LEDS_ENABLE
+#ifdef CONFIG_BOARD_BUTTONS_ENABLE
+			RCC_AHB1ENR_GPIOCEN |
+#endif	// def CONFIG_BOARD_LEDS_ENABLE
 			0;
 }
 

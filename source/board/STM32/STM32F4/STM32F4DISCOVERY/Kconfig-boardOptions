@@ -9,6 +9,10 @@
 
 if BOARD_STM32F4DISCOVERY
 
+config BOARD_TOTAL_BUTTONS
+	int
+	default 1
+
 config BOARD_TOTAL_LEDS
 	int
 	default 4

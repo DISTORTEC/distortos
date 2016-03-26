@@ -1,6 +1,6 @@
 /**
  * \file
- * \brief board::lowLevelInitialization() implementation for NUCLEO-F103RB
+ * \brief Definition of buttons for 32F429IDISCOVERY
  *
  * \author Copyright (C) 2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
@@ -9,9 +9,11 @@
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#include "distortos/board/lowLevelInitialization.hpp"
+#include "distortos/board/buttons.hpp"
 
-#include "distortos/chip/CMSIS-proxy.h"
+#ifdef CONFIG_BOARD_BUTTONS_ENABLE
+
+#include "distortos/chip/ChipInputPin.hpp"
 
 namespace distortos
 {
@@ -20,21 +22,16 @@ namespace board
 {
 
 /*---------------------------------------------------------------------------------------------------------------------+
-| global functions
+| global objects
 +---------------------------------------------------------------------------------------------------------------------*/
 
-void lowLevelInitialization()
+const chip::ChipInputPin buttons[totalButtons]
 {
-	RCC->APB2ENR |=
-#ifdef CONFIG_BOARD_LEDS_ENABLE
-			RCC_APB2ENR_IOPAEN |
-#endif	// def CONFIG_BOARD_LEDS_ENABLE
-#ifdef CONFIG_BOARD_BUTTONS_ENABLE
-			RCC_APB2ENR_IOPCEN |
-#endif	// def CONFIG_BOARD_LEDS_ENABLE
-			0;
-}
+		chip::ChipInputPin{buttonPins[0]},
+};
 
 }	// namespace board
 
 }	// namespace distortos
+
+#endif	// def CONFIG_BOARD_BUTTONS_ENABLE
