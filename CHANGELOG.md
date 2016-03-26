@@ -36,6 +36,7 @@ scripts.
 disabled in critical sections" (*ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI*) options is set to 0. This is the new default
 setting, as this is a more conservative (and thus safer for a beginner) approach, which doesn't require any special
 configuration of interrupt priorities (default value is 0).
+- Support for optional inversion to all implementations of `ChipInputPin` and `ChipOutputPin`.
 
 ### Changed
 
