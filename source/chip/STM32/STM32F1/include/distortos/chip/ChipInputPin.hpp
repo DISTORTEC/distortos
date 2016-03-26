@@ -37,9 +37,11 @@ public:
 	 *
 	  * \param [in] pin is the identifier of pin
 	  * \param [in] pull is the desired pull-up/pull-down configuration of pin, default - PinPull::none
+	 * \param [in] inverted selects whether the pin is inverted (true) - get() returns true when GPIO state is low and
+	 * false when GPIO state is high - or not (false), default - false, not inverted
 	 */
 
-	explicit ChipInputPin(Pin pin, PinPull pull = PinPull::none);
+	explicit ChipInputPin(Pin pin, PinPull pull = PinPull::none, bool inverted = false);
 
 	/**
 	 * \return current state of pin
@@ -51,6 +53,9 @@ private:
 
 	/// identifier of pin
 	Pin pin_;
+
+	/// selects whether the pin is inverted (true) or not (false)
+	bool inverted_;
 };
 
 }	// namespace chip
