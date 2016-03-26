@@ -35,8 +35,8 @@ public:
 	/**
 	 * \brief ChipInputPin's constructor
 	 *
-	  * \param [in] pin is the identifier of pin
-	  * \param [in] pull is the desired pull-up/pull-down configuration of pin, default - PinPull::none
+	 * \param [in] pin is the identifier of pin
+	 * \param [in] pull is the desired pull-up/pull-down configuration of pin, default - PinPull::none
 	 */
 
 	explicit ChipInputPin(Pin pin, PinPull pull = PinPull::none);
