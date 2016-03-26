@@ -21,8 +21,9 @@ namespace chip
 | public functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-ChipInputPin::ChipInputPin(const Pin pin, const PinPull pull) :
-		pin_{pin}
+ChipInputPin::ChipInputPin(const Pin pin, const PinPull pull, const bool inverted) :
+		pin_{pin},
+		inverted_{inverted}
 {
 	configureInputPin(pin_, pull);
 }
@@ -32,7 +33,7 @@ bool ChipInputPin::get() const
 	const auto decodedPin = decodePin(pin_);
 	auto& port = *decodedPin.first;
 	const auto pinNumber = decodedPin.second;
-	return (port.IDR & (1 << pinNumber)) != 0;
+	return static_cast<bool>(port.IDR & (1 << pinNumber)) != inverted_;
 }
 
 }	// namespace chip
