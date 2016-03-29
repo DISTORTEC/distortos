@@ -75,6 +75,48 @@ config CHIP_STM32F4_FLASH_INSTRUCTION_CACHE_ENABLE
 	help
 		Enable flash instruction cache option in FLASH->ACR register.
 
+choice
+	prompt "Unify RAM in linker script"
+	default CHIP_STM32F4_UNIFY_SRAM1_SRAM2_SRAM3 if CHIP_STM32F4_SRAM2_SIZE != 0 && CHIP_STM32F4_SRAM3_SIZE != 0
+	default CHIP_STM32F4_UNIFY_SRAM1_SRAM2 if CHIP_STM32F4_SRAM2_SIZE != 0
+	depends on CHIP_STM32F4_SRAM2_SIZE != 0 || CHIP_STM32F4_SRAM3_SIZE != 0
+	help
+		Configures unification of SRAM1 and/or SRAM2 and/or SRAM3 regions in
+		linker script.
+
+config CHIP_STM32F4_UNIFY_NONE
+	bool "No unification"
+	help
+		Don't unify any SRAM regions. .bss, .data, stacks and heap will be
+		located in SRAM1. Special .sram2.bss, .sram2.data, .sram2.noinit,
+		.sram3.bss, .sram3.data and .sram3.noinit sections will be located in
+		SRAM2 (.sram2 prefix) and SRAM3 (.sram3 prefix).
+
+config CHIP_STM32F4_UNIFY_SRAM1_SRAM2
+	bool "SRAM1 and SRAM2"
+	depends on CHIP_STM32F4_SRAM2_SIZE != 0
+	help
+		Unify SRAM1 and SRAM2 regions. .bss, .data, stacks and heap will be
+		located in unified SRAM1 and SRAM2, special .sram3.bss, .sram3.data
+		and .sram3.noinit sections will be located in SRAM3.
+
+config CHIP_STM32F4_UNIFY_SRAM1_SRAM2_SRAM3
+	bool "SRAM1, SRAM2 and SRAM3"
+	depends on CHIP_STM32F4_SRAM2_SIZE != 0 && CHIP_STM32F4_SRAM3_SIZE != 0
+	help
+		Unify SRAM1, SRAM2 and SRAM3 regions. .bss, .data, stacks and heap
+		will be located in unified SRAM1, SRAM2 and SRAM3.
+
+config CHIP_STM32F4_UNIFY_SRAM2_SRAM3
+	bool "SRAM2 and SRAM3"
+	depends on CHIP_STM32F4_SRAM2_SIZE != 0 && CHIP_STM32F4_SRAM3_SIZE != 0
+	help
+		Unify SRAM2 and SRAM3 regions. .bss, .data, stacks and heap will be
+		located in SRAM1, special .sram23.bss, .sram23.data and .sram23.noinit
+		section will be located in unified SRAM2 and SRAM3.
+
+endchoice
+
 endmenu
 
 menu "Clocks configuration"
@@ -476,48 +518,6 @@ config CHIP_STM32F4_RCC_AHB_FREQUENCY
 endif	# !CHIP_STM32F4_STANDARD_CLOCK_CONFIGURATION_ENABLE
 
 endmenu
-
-choice
-	prompt "Unify RAM in linker script"
-	default CHIP_STM32F4_UNIFY_SRAM1_SRAM2_SRAM3 if CHIP_STM32F4_SRAM2_SIZE != 0 && CHIP_STM32F4_SRAM3_SIZE != 0
-	default CHIP_STM32F4_UNIFY_SRAM1_SRAM2 if CHIP_STM32F4_SRAM2_SIZE != 0
-	depends on CHIP_STM32F4_SRAM2_SIZE != 0 || CHIP_STM32F4_SRAM3_SIZE != 0
-	help
-		Configures unification of SRAM1 and/or SRAM2 and/or SRAM3 regions in
-		linker script.
-
-config CHIP_STM32F4_UNIFY_NONE
-	bool "No unification"
-	help
-		Don't unify any SRAM regions. .bss, .data, stacks and heap will be
-		located in SRAM1. Special .sram2.bss, .sram2.data, .sram2.noinit,
-		.sram3.bss, .sram3.data and .sram3.noinit sections will be located in
-		SRAM2 (.sram2 prefix) and SRAM3 (.sram3 prefix).
-
-config CHIP_STM32F4_UNIFY_SRAM1_SRAM2
-	bool "SRAM1 and SRAM2"
-	depends on CHIP_STM32F4_SRAM2_SIZE != 0
-	help
-		Unify SRAM1 and SRAM2 regions. .bss, .data, stacks and heap will be
-		located in unified SRAM1 and SRAM2, special .sram3.bss, .sram3.data
-		and .sram3.noinit sections will be located in SRAM3.
-
-config CHIP_STM32F4_UNIFY_SRAM1_SRAM2_SRAM3
-	bool "SRAM1, SRAM2 and SRAM3"
-	depends on CHIP_STM32F4_SRAM2_SIZE != 0 && CHIP_STM32F4_SRAM3_SIZE != 0
-	help
-		Unify SRAM1, SRAM2 and SRAM3 regions. .bss, .data, stacks and heap
-		will be located in unified SRAM1, SRAM2 and SRAM3.
-
-config CHIP_STM32F4_UNIFY_SRAM2_SRAM3
-	bool "SRAM2 and SRAM3"
-	depends on CHIP_STM32F4_SRAM2_SIZE != 0 && CHIP_STM32F4_SRAM3_SIZE != 0
-	help
-		Unify SRAM2 and SRAM3 regions. .bss, .data, stacks and heap will be
-		located in SRAM1, special .sram23.bss, .sram23.data and .sram23.noinit
-		section will be located in unified SRAM2 and SRAM3.
-
-endchoice
 
 config CHIP_STM32F40
 	bool
