@@ -65,7 +65,7 @@ endif	# CHIP_STM32F1_FLASH_STANDARD_CONFIGURATION_ENABLE
 
 endmenu
 
-menu "RCC configuration"
+menu "Clocks configuration"
 
 config CHIP_STM32F1_RCC_STANDARD_CLOCK_CONFIGURATION_ENABLE
 	bool "Enable standard configuration of RCC clocks"
