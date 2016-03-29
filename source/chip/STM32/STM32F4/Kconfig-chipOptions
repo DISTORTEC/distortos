@@ -71,6 +71,18 @@ config CHIP_STM32F4_FLASH_PREFETCH_ENABLE
 
 		Flash prefetch must not be enabled when supply voltage is below 2.1V.
 
+config CHIP_STM32F4_FLASH_DATA_CACHE_ENABLE
+	bool "Enable flash data cache"
+	default y
+	help
+		Enable flash data cache option in FLASH->ACR register.
+
+config CHIP_STM32F4_FLASH_INSTRUCTION_CACHE_ENABLE
+	bool "Enable flash instruction cache"
+	default y
+	help
+		Enable flash instruction cache option in FLASH->ACR register.
+
 endif	# CHIP_STM32F4_FLASH_STANDARD_CONFIGURATION_ENABLE
 
 endmenu
