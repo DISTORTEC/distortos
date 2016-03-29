@@ -75,15 +75,15 @@ endif	# CHIP_STM32F4_FLASH_STANDARD_CONFIGURATION_ENABLE
 
 endmenu
 
-menu "PWR configuration"
+menu "Clocks configuration"
 
-config CHIP_STM32F4_PWR_STANDARD_CONFIGURATION_ENABLE
-	bool "Enable standard configuration of PWR module"
+config CHIP_STM32F4_STANDARD_CLOCK_CONFIGURATION_ENABLE
+	bool "Enable standard configuration of clocks"
 	default y
 	help
-		Enable standard configuration of PWR module.
+		Enable standard configuration of clocks.
 
-if CHIP_STM32F4_PWR_STANDARD_CONFIGURATION_ENABLE
+if CHIP_STM32F4_STANDARD_CLOCK_CONFIGURATION_ENABLE
 
 config CHIP_STM32F4_PWR_VOLTAGE_SCALE_MODE
 	int "Voltage scale mode"
@@ -105,20 +105,6 @@ config CHIP_STM32F4_PWR_OVER_DRIVE_ENABLE
 
 		Note - over-drive mode requires voltage scale 1 mode and supply voltage
 		above 2.1V.
-
-endif	# CHIP_STM32F4_PWR_STANDARD_CONFIGURATION_ENABLE
-
-endmenu
-
-menu "Clocks configuration"
-
-config CHIP_STM32F4_STANDARD_CLOCK_CONFIGURATION_ENABLE
-	bool "Enable standard configuration of clocks"
-	default y
-	help
-		Enable standard configuration of clocks.
-
-if CHIP_STM32F4_STANDARD_CLOCK_CONFIGURATION_ENABLE
 
 config CHIP_STM32F4_RCC_HSE_ENABLE
 	bool "Enable HSE"
