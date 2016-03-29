@@ -32,8 +32,6 @@ namespace chip
 
 void lowLevelInitialization()
 {
-#ifdef CONFIG_CHIP_STM32F4_FLASH_STANDARD_CONFIGURATION_ENABLE
-
 #ifdef CONFIG_CHIP_STM32F4_FLASH_PREFETCH_ENABLE
 	static_assert(CONFIG_CHIP_STM32F4_VDD_MV >= 2100,
 			"Instruction prefetch must not be enabled when supply voltage is below 2.1V!");
@@ -53,8 +51,6 @@ void lowLevelInitialization()
 #else	// !def CONFIG_CHIP_STM32F4_FLASH_INSTRUCTION_CACHE_ENABLE
 	disableInstructionCache();
 #endif	// !def CONFIG_CHIP_STM32F4_FLASH_INSTRUCTION_CACHE_ENABLE
-
-#endif	// def CONFIG_CHIP_STM32F4_FLASH_STANDARD_CONFIGURATION_ENABLE
 
 #ifdef CONFIG_CHIP_STM32F4_STANDARD_CLOCK_CONFIGURATION_ENABLE
 

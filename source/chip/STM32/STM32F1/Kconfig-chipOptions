@@ -34,14 +34,6 @@ comment "STM32F1 chip options"
 
 menu "FLASH configuration"
 
-config CHIP_STM32F1_FLASH_STANDARD_CONFIGURATION_ENABLE
-	bool "Enable standard configuration of FLASH module"
-	default y
-	help
-		Enable standard configuration of FLASH module.
-
-if CHIP_STM32F1_FLASH_STANDARD_CONFIGURATION_ENABLE
-
 config CHIP_STM32F1_FLASH_PREFETCH_ENABLE
 	bool "Enable flash prefetch"
 	default y
@@ -60,8 +52,6 @@ config CHIP_STM32F1_FLASH_HALF_CYCLE_ACCESS_ENABLE
 
 		Flash half cycle access must not be enabled when AHB clock prescaler
 		is different from 1.
-
-endif	# CHIP_STM32F1_FLASH_STANDARD_CONFIGURATION_ENABLE
 
 endmenu
 
