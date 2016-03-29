@@ -32,29 +32,6 @@ if CHIP_STM32F1
 
 comment "STM32F1 chip options"
 
-menu "Memory configuration"
-
-config CHIP_STM32F1_FLASH_PREFETCH_ENABLE
-	bool "Enable flash prefetch"
-	default y
-	depends on !CHIP_STM32F100
-	help
-		Enable flash prefetch option in FLASH->ACR register.
-
-		Flash prefetch must be enabled when AHB clock prescaler is different
-		from 1.
-
-config CHIP_STM32F1_FLASH_HALF_CYCLE_ACCESS_ENABLE
-	bool "Enable flash half cycle access"
-	default n
-	help
-		Enable flash half cycle access option in FLASH->ACR register.
-
-		Flash half cycle access must not be enabled when AHB clock prescaler
-		is different from 1.
-
-endmenu
-
 menu "Clocks configuration"
 
 config CHIP_STM32F1_STANDARD_CLOCK_CONFIGURATION_ENABLE
@@ -648,6 +625,29 @@ config CHIP_STM32F1_RCC_AHB_FREQUENCY
 		that frequency.
 
 endif	# !CHIP_STM32F1_STANDARD_CLOCK_CONFIGURATION_ENABLE
+
+endmenu
+
+menu "Memory configuration"
+
+config CHIP_STM32F1_FLASH_PREFETCH_ENABLE
+	bool "Enable flash prefetch"
+	default y
+	depends on !CHIP_STM32F100
+	help
+		Enable flash prefetch option in FLASH->ACR register.
+
+		Flash prefetch must be enabled when AHB clock prescaler is different
+		from 1.
+
+config CHIP_STM32F1_FLASH_HALF_CYCLE_ACCESS_ENABLE
+	bool "Enable flash half cycle access"
+	default n
+	help
+		Enable flash half cycle access option in FLASH->ACR register.
+
+		Flash half cycle access must not be enabled when AHB clock prescaler
+		is different from 1.
 
 endmenu
 
