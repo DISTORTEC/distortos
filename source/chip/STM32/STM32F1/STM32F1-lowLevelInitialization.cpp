@@ -308,25 +308,21 @@ void lowLevelInitialization()
 	static_assert(apb2Frequency <= maxApb2Frequency, "Invalid APB2 (high speed) frequency!");
 	configureApbClockDivider(true, ppre2);
 
-#else	// !def CONFIG_CHIP_STM32F1_STANDARD_CLOCK_CONFIGURATION_ENABLE
-
-	constexpr uint32_t ahbFrequency {CONFIG_CHIP_STM32F1_RCC_AHB_FREQUENCY};
-
-#endif	// !def CONFIG_CHIP_STM32F1_STANDARD_CLOCK_CONFIGURATION_ENABLE
-
-#if !defined(CONFIG_CHIP_STM32F100) && defined(CONFIG_CHIP_STM32F1_FLASH_STANDARD_CONFIGURATION_ENABLE)
+#ifndef CONFIG_CHIP_STM32F100
 
 	constexpr uint8_t flashLatency {(ahbFrequency - 1) / 24000000};
 	static_assert(flashLatency <= maxFlashLatency, "Invalid flash latency!");
 	configureFlashLatency(flashLatency);
 
-#endif	// !defined(CONFIG_CHIP_STM32F100) && defined(CONFIG_CHIP_STM32F1_FLASH_STANDARD_CONFIGURATION_ENABLE)
-
-#ifdef CONFIG_CHIP_STM32F1_STANDARD_CLOCK_CONFIGURATION_ENABLE
+#endif	// !def CONFIG_CHIP_STM32F100
 
 	switchSystemClock(systemClockSource);
 
-#endif	// def CONFIG_CHIP_STM32F1_STANDARD_CLOCK_CONFIGURATION_ENABLE
+#else	// !def CONFIG_CHIP_STM32F1_STANDARD_CLOCK_CONFIGURATION_ENABLE
+
+	constexpr uint32_t ahbFrequency {CONFIG_CHIP_STM32F1_RCC_AHB_FREQUENCY};
+
+#endif	// !def CONFIG_CHIP_STM32F1_STANDARD_CLOCK_CONFIGURATION_ENABLE
 
 	constexpr uint32_t period {ahbFrequency / CONFIG_TICK_FREQUENCY};
 	constexpr uint32_t periodDividedBy8 {period / 8};
