@@ -50,7 +50,7 @@ config CHIP_STM32F4_VDD_MV
 
 endif	# !CHIP_STM32F4_VDD_MV_CONFIGURABLE
 
-menu "FLASH configuration"
+menu "Memory configuration"
 
 config CHIP_STM32F4_FLASH_PREFETCH_ENABLE
 	bool "Enable flash prefetch"

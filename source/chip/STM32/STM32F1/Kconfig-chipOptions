@@ -32,7 +32,7 @@ if CHIP_STM32F1
 
 comment "STM32F1 chip options"
 
-menu "FLASH configuration"
+menu "Memory configuration"
 
 config CHIP_STM32F1_FLASH_PREFETCH_ENABLE
 	bool "Enable flash prefetch"
