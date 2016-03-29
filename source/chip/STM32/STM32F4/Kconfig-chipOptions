@@ -112,13 +112,13 @@ endmenu
 
 menu "Clocks configuration"
 
-config CHIP_STM32F4_RCC_STANDARD_CLOCK_CONFIGURATION_ENABLE
-	bool "Enable standard configuration of RCC clocks"
+config CHIP_STM32F4_STANDARD_CLOCK_CONFIGURATION_ENABLE
+	bool "Enable standard configuration of clocks"
 	default y
 	help
-		Enable standard configuration of RCC clocks.
+		Enable standard configuration of clocks.
 
-if CHIP_STM32F4_RCC_STANDARD_CLOCK_CONFIGURATION_ENABLE
+if CHIP_STM32F4_STANDARD_CLOCK_CONFIGURATION_ENABLE
 
 config CHIP_STM32F4_RCC_HSE_ENABLE
 	bool "Enable HSE"
@@ -470,9 +470,9 @@ config CHIP_STM32F4_RCC_APB2_DIV16
 
 endchoice
 
-endif	# CHIP_STM32F4_RCC_STANDARD_CLOCK_CONFIGURATION_ENABLE
+endif	# CHIP_STM32F4_STANDARD_CLOCK_CONFIGURATION_ENABLE
 
-if !CHIP_STM32F4_RCC_STANDARD_CLOCK_CONFIGURATION_ENABLE
+if !CHIP_STM32F4_STANDARD_CLOCK_CONFIGURATION_ENABLE
 
 config CHIP_STM32F4_RCC_AHB_FREQUENCY
 	int "Frequency of AHB clock, Hz"
@@ -485,7 +485,7 @@ config CHIP_STM32F4_RCC_AHB_FREQUENCY
 		Frequency of AHB clock, Hz. RCC must be configured by user to achieve
 		that frequency.
 
-endif	# !CHIP_STM32F4_RCC_STANDARD_CLOCK_CONFIGURATION_ENABLE
+endif	# !CHIP_STM32F4_STANDARD_CLOCK_CONFIGURATION_ENABLE
 
 endmenu
 
