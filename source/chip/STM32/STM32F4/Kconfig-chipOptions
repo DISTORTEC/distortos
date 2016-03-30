@@ -56,7 +56,9 @@ config CHIP_STM32F4_STANDARD_CLOCK_CONFIGURATION_ENABLE
 	bool "Enable standard configuration of clocks"
 	default y
 	help
-		Enable standard configuration of clocks.
+		Enable standard configuration of clocks. This will set values selected
+		below and additionally configure appropriate FLASH latency before
+		switching system clock to selected source.
 
 if CHIP_STM32F4_STANDARD_CLOCK_CONFIGURATION_ENABLE
 
