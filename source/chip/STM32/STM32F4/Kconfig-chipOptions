@@ -60,6 +60,11 @@ config CHIP_STM32F4_STANDARD_CLOCK_CONFIGURATION_ENABLE
 		below and additionally configure appropriate FLASH latency before
 		switching system clock to selected source.
 
+		If disabled, no clock configuration will be done during chip
+		initialization. The values entered below (frequencies, dividers, ...)
+		will only be used to determine chip clocks. The user must configure the
+		chip manually to match these settings.
+
 if CHIP_STM32F4_STANDARD_CLOCK_CONFIGURATION_ENABLE
 
 config CHIP_STM32F4_PWR_VOLTAGE_SCALE_MODE
@@ -298,6 +303,23 @@ config CHIP_STM32F4_RCC_SYSCLK_PLLR
 
 endchoice
 
+endif	# CHIP_STM32F4_STANDARD_CLOCK_CONFIGURATION_ENABLE
+
+if !CHIP_STM32F4_STANDARD_CLOCK_CONFIGURATION_ENABLE
+
+config CHIP_STM32F4_RCC_AHB_FREQUENCY
+	int "Frequency of AHB clock, Hz"
+	range 1 84000000 if CHIP_STM32F401
+	range 1 168000000 if CHIP_STM32F405 || CHIP_STM32F407 || CHIP_STM32F415 || CHIP_STM32F417
+	range 1 100000000 if CHIP_STM32F410 || CHIP_STM32F411
+	range 1 180000000
+	default 16000000
+	help
+		Frequency of AHB clock, Hz. RCC must be configured by user to achieve
+		that frequency.
+
+endif	# !CHIP_STM32F4_STANDARD_CLOCK_CONFIGURATION_ENABLE
+
 choice
 	prompt "AHB divider"
 	default CHIP_STM32F4_RCC_AHB_DIV1
@@ -432,23 +454,6 @@ config CHIP_STM32F4_RCC_APB2_DIV16
 		AHB clock divided by 16
 
 endchoice
-
-endif	# CHIP_STM32F4_STANDARD_CLOCK_CONFIGURATION_ENABLE
-
-if !CHIP_STM32F4_STANDARD_CLOCK_CONFIGURATION_ENABLE
-
-config CHIP_STM32F4_RCC_AHB_FREQUENCY
-	int "Frequency of AHB clock, Hz"
-	range 1 84000000 if CHIP_STM32F401
-	range 1 168000000 if CHIP_STM32F405 || CHIP_STM32F407 || CHIP_STM32F415 || CHIP_STM32F417
-	range 1 100000000 if CHIP_STM32F410 || CHIP_STM32F411
-	range 1 180000000
-	default 16000000
-	help
-		Frequency of AHB clock, Hz. RCC must be configured by user to achieve
-		that frequency.
-
-endif	# !CHIP_STM32F4_STANDARD_CLOCK_CONFIGURATION_ENABLE
 
 endmenu
 
