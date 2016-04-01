@@ -66,59 +66,19 @@ void lowLevelInitialization()
 
 #ifdef CONFIG_CHIP_STM32F1_RCC_PLL2_ENABLE
 
-#if defined(CONFIG_CHIP_STM32F1_RCC_PLL2MUL8)
-	constexpr uint8_t pll2mul {8};
-#elif defined(CONFIG_CHIP_STM32F1_RCC_PLL2MUL9)
-	constexpr uint8_t pll2mul {9};
-#elif defined(CONFIG_CHIP_STM32F1_RCC_PLL2MUL10)
-	constexpr uint8_t pll2mul {10};
-#elif defined(CONFIG_CHIP_STM32F1_RCC_PLL2MUL11)
-	constexpr uint8_t pll2mul {11};
-#elif defined(CONFIG_CHIP_STM32F1_RCC_PLL2MUL12)
-	constexpr uint8_t pll2mul {12};
-#elif defined(CONFIG_CHIP_STM32F1_RCC_PLL2MUL13)
-	constexpr uint8_t pll2mul {13};
-#elif defined(CONFIG_CHIP_STM32F1_RCC_PLL2MUL14)
-	constexpr uint8_t pll2mul {14};
-#elif defined(CONFIG_CHIP_STM32F1_RCC_PLL2MUL16)
-	constexpr uint8_t pll2mul {16};
-#elif defined(CONFIG_CHIP_STM32F1_RCC_PLL2MUL20)
-	constexpr uint8_t pll2mul {20};
-#endif	// defined(CONFIG_CHIP_STM32F1_RCC_PLL2MUL20)
-
-	constexpr uint32_t pll2OutFrequency {pll23InFrequency * pll2mul};
+	constexpr uint32_t pll2OutFrequency {pll23InFrequency * CONFIG_CHIP_STM32F1_RCC_PLL2MUL};
 	static_assert(minPll23OutFrequency <= pll2OutFrequency && pll2OutFrequency <= maxPll23OutFrequency,
 			"Invalid PLL2 output frequency!");
-	enablePll2(pll2mul);
+	enablePll2(CONFIG_CHIP_STM32F1_RCC_PLL2MUL);
 
 #endif	// def CONFIG_CHIP_STM32F1_RCC_PLL2_ENABLE
 
 #ifdef CONFIG_CHIP_STM32F1_RCC_PLL3_ENABLE
 
-#if defined(CONFIG_CHIP_STM32F1_RCC_PLL3MUL8)
-	constexpr uint8_t pll3mul {8};
-#elif defined(CONFIG_CHIP_STM32F1_RCC_PLL3MUL9)
-	constexpr uint8_t pll3mul {9};
-#elif defined(CONFIG_CHIP_STM32F1_RCC_PLL3MUL10)
-	constexpr uint8_t pll3mul {10};
-#elif defined(CONFIG_CHIP_STM32F1_RCC_PLL3MUL11)
-	constexpr uint8_t pll3mul {11};
-#elif defined(CONFIG_CHIP_STM32F1_RCC_PLL3MUL12)
-	constexpr uint8_t pll3mul {12};
-#elif defined(CONFIG_CHIP_STM32F1_RCC_PLL3MUL13)
-	constexpr uint8_t pll3mul {13};
-#elif defined(CONFIG_CHIP_STM32F1_RCC_PLL3MUL14)
-	constexpr uint8_t pll3mul {14};
-#elif defined(CONFIG_CHIP_STM32F1_RCC_PLL3MUL16)
-	constexpr uint8_t pll3mul {16};
-#elif defined(CONFIG_CHIP_STM32F1_RCC_PLL3MUL20)
-	constexpr uint8_t pll3mul {20};
-#endif	// defined(CONFIG_CHIP_STM32F1_RCC_PLL3MUL20)
-
-	constexpr uint32_t pll3OutFrequency {pll23InFrequency * pll3mul};
+	constexpr uint32_t pll3OutFrequency {pll23InFrequency * CONFIG_CHIP_STM32F1_RCC_PLL3MUL};
 	static_assert(minPll23OutFrequency <= pll3OutFrequency && pll3OutFrequency <= maxPll23OutFrequency,
 			"Invalid PLL3 output frequency!");
-	enablePll3(pll3mul);
+	enablePll3(CONFIG_CHIP_STM32F1_RCC_PLL3MUL);
 
 #endif	// def CONFIG_CHIP_STM32F1_RCC_PLL3_ENABLE
 
@@ -163,75 +123,16 @@ void lowLevelInitialization()
 
 #endif	// defined(CONFIG_CHIP_STM32F1_RCC_PLLSRC_PREDIV1)
 
-#if defined(CONFIG_CHIP_STM32F1_RCC_PLLMUL2)
-	constexpr uint8_t pllmul {2};
-	constexpr uint8_t pllmulNumerator {2};
-	constexpr uint8_t pllmulDenominator {1};
-#elif defined(CONFIG_CHIP_STM32F1_RCC_PLLMUL3)
-	constexpr uint8_t pllmul {3};
-	constexpr uint8_t pllmulNumerator {3};
-	constexpr uint8_t pllmulDenominator {1};
-#elif defined(CONFIG_CHIP_STM32F1_RCC_PLLMUL4)
-	constexpr uint8_t pllmul {4};
-	constexpr uint8_t pllmulNumerator {4};
-	constexpr uint8_t pllmulDenominator {1};
-#elif defined(CONFIG_CHIP_STM32F1_RCC_PLLMUL5)
-	constexpr uint8_t pllmul {5};
-	constexpr uint8_t pllmulNumerator {5};
-	constexpr uint8_t pllmulDenominator {1};
-#elif defined(CONFIG_CHIP_STM32F1_RCC_PLLMUL6)
-	constexpr uint8_t pllmul {6};
-	constexpr uint8_t pllmulNumerator {6};
-	constexpr uint8_t pllmulDenominator {1};
-#elif defined(CONFIG_CHIP_STM32F1_RCC_PLLMUL6_5)
+#ifdef CONFIG_CHIP_STM32F1_RCC_PLLMUL6_5
 	constexpr uint8_t pllmul {pllmul6_5};
-	constexpr uint8_t pllmulNumerator {13};
-	constexpr uint8_t pllmulDenominator {2};
-#elif defined(CONFIG_CHIP_STM32F1_RCC_PLLMUL7)
-	constexpr uint8_t pllmul {7};
-	constexpr uint8_t pllmulNumerator {7};
-	constexpr uint8_t pllmulDenominator {1};
-#elif defined(CONFIG_CHIP_STM32F1_RCC_PLLMUL8)
-	constexpr uint8_t pllmul {8};
-	constexpr uint8_t pllmulNumerator {8};
-	constexpr uint8_t pllmulDenominator {1};
-#elif defined(CONFIG_CHIP_STM32F1_RCC_PLLMUL9)
-	constexpr uint8_t pllmul {9};
-	constexpr uint8_t pllmulNumerator {9};
-	constexpr uint8_t pllmulDenominator {1};
-#elif defined(CONFIG_CHIP_STM32F1_RCC_PLLMUL10)
-	constexpr uint8_t pllmul {10};
-	constexpr uint8_t pllmulNumerator {10};
-	constexpr uint8_t pllmulDenominator {1};
-#elif defined(CONFIG_CHIP_STM32F1_RCC_PLLMUL11)
-	constexpr uint8_t pllmul {11};
-	constexpr uint8_t pllmulNumerator {11};
-	constexpr uint8_t pllmulDenominator {1};
-#elif defined(CONFIG_CHIP_STM32F1_RCC_PLLMUL12)
-	constexpr uint8_t pllmul {12};
-	constexpr uint8_t pllmulNumerator {12};
-	constexpr uint8_t pllmulDenominator {1};
-#elif defined(CONFIG_CHIP_STM32F1_RCC_PLLMUL13)
-	constexpr uint8_t pllmul {13};
-	constexpr uint8_t pllmulNumerator {13};
-	constexpr uint8_t pllmulDenominator {1};
-#elif defined(CONFIG_CHIP_STM32F1_RCC_PLLMUL14)
-	constexpr uint8_t pllmul {14};
-	constexpr uint8_t pllmulNumerator {14};
-	constexpr uint8_t pllmulDenominator {1};
-#elif defined(CONFIG_CHIP_STM32F1_RCC_PLLMUL15)
-	constexpr uint8_t pllmul {15};
-	constexpr uint8_t pllmulNumerator {15};
-	constexpr uint8_t pllmulDenominator {1};
-#elif defined(CONFIG_CHIP_STM32F1_RCC_PLLMUL16)
-	constexpr uint8_t pllmul {16};
-	constexpr uint8_t pllmulNumerator {16};
-	constexpr uint8_t pllmulDenominator {1};
-#endif	// defined(CONFIG_CHIP_STM32F1_RCC_PLLMUL16)
+#else	// !def CONFIG_CHIP_STM32F1_RCC_PLLMUL6_5
+	constexpr uint8_t pllmul {CONFIG_CHIP_STM32F1_RCC_PLLMUL_NUMERATOR / CONFIG_CHIP_STM32F1_RCC_PLLMUL_DENOMINATOR};
+#endif	// !def CONFIG_CHIP_STM32F1_RCC_PLLMUL6_5
 
 	static_assert(minPllInFrequency <= pllInFrequency && pllInFrequency <= maxPllInFrequency,
 			"Invalid PLL input frequency!");
-	constexpr uint32_t pllOutFrequency {pllInFrequency * pllmulNumerator / pllmulDenominator};
+	constexpr uint32_t pllOutFrequency {pllInFrequency *
+			CONFIG_CHIP_STM32F1_RCC_PLLMUL_NUMERATOR / CONFIG_CHIP_STM32F1_RCC_PLLMUL_DENOMINATOR};
 	static_assert(minPllOutFrequency <= pllOutFrequency && pllOutFrequency <= maxPllOutFrequency,
 				"Invalid PLL output frequency!");
 	enablePll(pllClockSourcePrediv1, pllmul);
@@ -249,60 +150,16 @@ void lowLevelInitialization()
 	constexpr SystemClockSource systemClockSource {SystemClockSource::pll};
 #endif	// defined(CONFIG_CHIP_STM32F1_RCC_SYSCLK_PLL)
 
-#if defined(CONFIG_CHIP_STM32F1_RCC_AHB_DIV1)
-	constexpr auto hpre = hpreDiv1;
-#elif defined(CONFIG_CHIP_STM32F1_RCC_AHB_DIV2)
-	constexpr auto hpre = hpreDiv2;
-#elif defined(CONFIG_CHIP_STM32F1_RCC_AHB_DIV4)
-	constexpr auto hpre = hpreDiv4;
-#elif defined(CONFIG_CHIP_STM32F1_RCC_AHB_DIV8)
-	constexpr auto hpre = hpreDiv8;
-#elif defined(CONFIG_CHIP_STM32F1_RCC_AHB_DIV16)
-	constexpr auto hpre = hpreDiv16;
-#elif defined(CONFIG_CHIP_STM32F1_RCC_AHB_DIV64)
-	constexpr auto hpre = hpreDiv64;
-#elif defined(CONFIG_CHIP_STM32F1_RCC_AHB_DIV128)
-	constexpr auto hpre = hpreDiv128;
-#elif defined(CONFIG_CHIP_STM32F1_RCC_AHB_DIV256)
-	constexpr auto hpre = hpreDiv256;
-#elif defined(CONFIG_CHIP_STM32F1_RCC_AHB_DIV512)
-	constexpr auto hpre = hpreDiv512;
-#endif	// defined(CONFIG_CHIP_STM32F1_RCC_AHB_DIV512)
+	constexpr uint32_t ahbFrequency {sysclkFrequency / CONFIG_CHIP_STM32F1_RCC_HPRE};
+	configureAhbClockDivider(CONFIG_CHIP_STM32F1_RCC_HPRE);
 
-	constexpr uint32_t ahbFrequency {sysclkFrequency / hpre};
-	configureAhbClockDivider(hpre);
-
-#if defined(CONFIG_CHIP_STM32F1_RCC_APB1_DIV1)
-	constexpr auto ppre1 = ppreDiv1;
-#elif defined(CONFIG_CHIP_STM32F1_RCC_APB1_DIV2)
-	constexpr auto ppre1 = ppreDiv2;
-#elif defined(CONFIG_CHIP_STM32F1_RCC_APB1_DIV4)
-	constexpr auto ppre1 = ppreDiv4;
-#elif defined(CONFIG_CHIP_STM32F1_RCC_APB1_DIV8)
-	constexpr auto ppre1 = ppreDiv8;
-#elif defined(CONFIG_CHIP_STM32F1_RCC_APB1_DIV16)
-	constexpr auto ppre1 = ppreDiv16;
-#endif	// defined(CONFIG_CHIP_STM32F1_RCC_APB1_DIV16)
-
-	constexpr uint32_t apb1Frequency {ahbFrequency / ppre1};
+	constexpr uint32_t apb1Frequency {ahbFrequency / CONFIG_CHIP_STM32F1_RCC_PPRE1};
 	static_assert(apb1Frequency <= maxApb1Frequency, "Invalid APB1 (low speed) frequency!");
-	configureApbClockDivider(false, ppre1);
+	configureApbClockDivider(false, CONFIG_CHIP_STM32F1_RCC_PPRE1);
 
-#if defined(CONFIG_CHIP_STM32F1_RCC_APB2_DIV1)
-	constexpr auto ppre2 = ppreDiv1;
-#elif defined(CONFIG_CHIP_STM32F1_RCC_APB2_DIV2)
-	constexpr auto ppre2 = ppreDiv2;
-#elif defined(CONFIG_CHIP_STM32F1_RCC_APB2_DIV4)
-	constexpr auto ppre2 = ppreDiv4;
-#elif defined(CONFIG_CHIP_STM32F1_RCC_APB2_DIV8)
-	constexpr auto ppre2 = ppreDiv8;
-#elif defined(CONFIG_CHIP_STM32F1_RCC_APB2_DIV16)
-	constexpr auto ppre2 = ppreDiv16;
-#endif	// defined(CONFIG_CHIP_STM32F1_RCC_APB2_DIV16)
-
-	constexpr uint32_t apb2Frequency {ahbFrequency / ppre2};
+	constexpr uint32_t apb2Frequency {ahbFrequency / CONFIG_CHIP_STM32F1_RCC_PPRE2};
 	static_assert(apb2Frequency <= maxApb2Frequency, "Invalid APB2 (high speed) frequency!");
-	configureApbClockDivider(true, ppre2);
+	configureApbClockDivider(true, CONFIG_CHIP_STM32F1_RCC_PPRE2);
 
 #ifndef CONFIG_CHIP_STM32F100
 
