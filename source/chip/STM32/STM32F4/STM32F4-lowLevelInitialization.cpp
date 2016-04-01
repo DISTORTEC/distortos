@@ -11,6 +11,7 @@
 
 #include "distortos/chip/lowLevelInitialization.hpp"
 
+#include "distortos/chip/clocks.hpp"
 #include "distortos/chip/STM32F4-FLASH.hpp"
 #include "distortos/chip/STM32F4-PWR.hpp"
 #include "distortos/chip/STM32F4-RCC.hpp"
