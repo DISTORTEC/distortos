@@ -144,15 +144,22 @@ void lowLevelInitialization()
 	constexpr SystemClockSource systemClockSource {SystemClockSource::pllr};
 #endif	// defined(CONFIG_CHIP_STM32F4_RCC_SYSCLK_PLLR)
 
-	constexpr uint32_t ahbFrequency {sysclkFrequency / CONFIG_CHIP_STM32F4_RCC_HPRE};
-	configureAhbClockDivider(CONFIG_CHIP_STM32F4_RCC_HPRE);
+#else	// !def CONFIG_CHIP_STM32F4_STANDARD_CLOCK_CONFIGURATION_ENABLE
 
+	constexpr uint32_t sysclkFrequency {CONFIG_CHIP_STM32F4_RCC_SYSCLK_FREQUENCY};
+
+#endif	// !def CONFIG_CHIP_STM32F4_STANDARD_CLOCK_CONFIGURATION_ENABLE
+
+	constexpr uint32_t ahbFrequency {sysclkFrequency / CONFIG_CHIP_STM32F4_RCC_HPRE};
 	constexpr uint32_t apb1Frequency {ahbFrequency / CONFIG_CHIP_STM32F4_RCC_PPRE1};
 	static_assert(apb1Frequency <= maxApb1Frequency, "Invalid APB1 (low speed) frequency!");
-	configureApbClockDivider(false, CONFIG_CHIP_STM32F4_RCC_PPRE1);
-
 	constexpr uint32_t apb2Frequency {ahbFrequency / CONFIG_CHIP_STM32F4_RCC_PPRE2};
 	static_assert(apb2Frequency <= maxApb2Frequency, "Invalid APB2 (high speed) frequency!");
+
+#ifdef CONFIG_CHIP_STM32F4_STANDARD_CLOCK_CONFIGURATION_ENABLE
+
+	configureAhbClockDivider(CONFIG_CHIP_STM32F4_RCC_HPRE);
+	configureApbClockDivider(false, CONFIG_CHIP_STM32F4_RCC_PPRE1);
 	configureApbClockDivider(true, CONFIG_CHIP_STM32F4_RCC_PPRE2);
 
 #if CONFIG_CHIP_STM32F4_VDD_MV < 2100
@@ -179,11 +186,7 @@ void lowLevelInitialization()
 
 	switchSystemClock(systemClockSource);
 
-#else	// !def CONFIG_CHIP_STM32F4_STANDARD_CLOCK_CONFIGURATION_ENABLE
-
-	constexpr uint32_t ahbFrequency {CONFIG_CHIP_STM32F4_RCC_AHB_FREQUENCY};
-
-#endif	// !def CONFIG_CHIP_STM32F4_STANDARD_CLOCK_CONFIGURATION_ENABLE
+#endif	// def CONFIG_CHIP_STM32F4_STANDARD_CLOCK_CONFIGURATION_ENABLE
 
 	constexpr uint32_t period {ahbFrequency / CONFIG_TICK_FREQUENCY};
 	constexpr uint32_t periodDividedBy8 {period / 8};

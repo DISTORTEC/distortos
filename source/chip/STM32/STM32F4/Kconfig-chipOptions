@@ -307,16 +307,16 @@ endif	# CHIP_STM32F4_STANDARD_CLOCK_CONFIGURATION_ENABLE
 
 if !CHIP_STM32F4_STANDARD_CLOCK_CONFIGURATION_ENABLE
 
-config CHIP_STM32F4_RCC_AHB_FREQUENCY
-	int "Frequency of AHB clock, Hz"
+config CHIP_STM32F4_RCC_SYSCLK_FREQUENCY
+	int "Frequency of SYSCLK, Hz"
 	range 1 84000000 if CHIP_STM32F401
 	range 1 168000000 if CHIP_STM32F405 || CHIP_STM32F407 || CHIP_STM32F415 || CHIP_STM32F417
 	range 1 100000000 if CHIP_STM32F410 || CHIP_STM32F411
 	range 1 180000000
 	default 16000000
 	help
-		Frequency of AHB clock, Hz. RCC must be configured by user to achieve
-		that frequency.
+		Frequency of SYSCLK, Hz. RCC must be configured by user to achieve that
+		frequency.
 
 endif	# !CHIP_STM32F4_STANDARD_CLOCK_CONFIGURATION_ENABLE
 
