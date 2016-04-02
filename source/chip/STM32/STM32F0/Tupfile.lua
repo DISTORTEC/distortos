@@ -19,8 +19,6 @@ if CONFIG_CHIP_STM32F0 == "y" then
 			"\" > \"%o\"", ldscriptOutputs)
 
 	CXXFLAGS += STANDARD_INCLUDES
-	CXXFLAGS += ARCHITECTURE_INCLUDES
-	CXXFLAGS += CHIP_INCLUDES
 
 	tup.include(DISTORTOS_TOP .. "compile.lua")
 
