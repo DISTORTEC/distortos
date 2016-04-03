@@ -4,6 +4,9 @@
 # configuration output
 selectedConfiguration.mk
 
+# configuration backups
+distortosConfiguration.mk.old
+
 # build output
 output/
 
