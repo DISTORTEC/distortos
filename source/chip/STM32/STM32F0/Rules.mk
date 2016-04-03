@@ -40,8 +40,6 @@ GENERATED := $(GENERATED) $(LDSCRIPT)
 #-----------------------------------------------------------------------------------------------------------------------
 
 CXXFLAGS_$(d) := $(CXXFLAGS_$(d)) $(STANDARD_INCLUDES)
-CXXFLAGS_$(d) := $(CXXFLAGS_$(d)) $(ARCHITECTURE_INCLUDES)
-CXXFLAGS_$(d) := $(CXXFLAGS_$(d)) $(CHIP_INCLUDES)
 
 #-----------------------------------------------------------------------------------------------------------------------
 # standard footer

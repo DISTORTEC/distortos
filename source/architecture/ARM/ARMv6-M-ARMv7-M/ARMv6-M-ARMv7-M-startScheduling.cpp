@@ -11,6 +11,7 @@
 
 #include "distortos/architecture/startScheduling.hpp"
 
+#include "distortos/chip/clocks.hpp"
 #include "distortos/chip/CMSIS-proxy.h"
 
 namespace distortos
@@ -37,9 +38,17 @@ void startScheduling()
 #endif	// !def CONFIG_ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI
 	NVIC_SetPriority(SVCall_IRQn, svcallPriority);
 
-	// enable SysTick timer as the tick timer
+	// configure SysTick timer as the tick timer
+	constexpr uint32_t period {chip::ahbFrequency / CONFIG_TICK_FREQUENCY};
+	constexpr uint32_t periodDividedBy8 {period / 8};
+	constexpr uint32_t maxSysTickPeriod {1 << 24};
+	constexpr bool divideBy8 {period > maxSysTickPeriod};
+	// at least one of the periods must be valid
+	static_assert(period <= maxSysTickPeriod || periodDividedBy8 <= maxSysTickPeriod, "Invalid SysTick configuration!");
+	SysTick->LOAD = (divideBy8 == false ? period : periodDividedBy8) - 1;
 	SysTick->VAL = 0;
-	SysTick->CTRL |= SysTick_CTRL_ENABLE_Msk | SysTick_CTRL_TICKINT_Msk;
+	SysTick->CTRL = (divideBy8 == true ? 0 : SysTick_CTRL_CLKSOURCE_Msk) | SysTick_CTRL_ENABLE_Msk |
+			SysTick_CTRL_TICKINT_Msk;
 }
 
 }	// namespace architecture

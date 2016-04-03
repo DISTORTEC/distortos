@@ -49,6 +49,8 @@ from ALL CAPS or PascalCase to camelCase for consistency with their use as const
 which can be defined with command line arguments.
 - Reorganize and simplify *Kconfig* menus for *STM32F1* and *STM32F4*.
 - Improve configuration and initialization of chip clocks for *STM32F1* and *STM32F4*.
+- Move configuration of *SysTick* timer from `chip::lowLevelInitialization()` to `architecture::startScheduling()` for
+all *ARMv6-M* and *ARMv7-M* targets.
 
 ### Fixed
 
