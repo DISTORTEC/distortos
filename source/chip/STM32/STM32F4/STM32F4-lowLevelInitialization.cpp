@@ -109,17 +109,7 @@ void lowLevelInitialization()
 	static_assert(minVcoOutFrequency <= vcoOutFrequency && vcoOutFrequency <= maxVcoOutFrequency,
 			"Invalid VCO output frequency!");
 
-#if defined(CONFIG_CHIP_STM32F4_RCC_PLLP_DIV2)
-	constexpr uint8_t pllp {pllpDiv2};
-#elif defined(CONFIG_CHIP_STM32F4_RCC_PLLP_DIV4)
-	constexpr uint8_t pllp {pllpDiv4};
-#elif defined(CONFIG_CHIP_STM32F4_RCC_PLLP_DIV6)
-	constexpr uint8_t pllp {pllpDiv6};
-#elif defined(CONFIG_CHIP_STM32F4_RCC_PLLP_DIV8)
-	constexpr uint8_t pllp {pllpDiv8};
-#endif
-
-	constexpr uint32_t pllOutFrequency {vcoOutFrequency / pllp};
+	constexpr uint32_t pllOutFrequency {vcoOutFrequency / CONFIG_CHIP_STM32F4_RCC_PLLP};
 	static_assert(pllOutFrequency <= maxPllOutFrequency[voltageScaleIndex], "Invalid PLL output frequency!");
 
 	constexpr uint32_t pllqOutFrequency {vcoOutFrequency / CONFIG_CHIP_STM32F4_RCC_PLLQ};
@@ -129,11 +119,12 @@ void lowLevelInitialization()
 
 	constexpr uint32_t pllrOutFrequency {vcoOutFrequency / CONFIG_CHIP_STM32F4_RCC_PLLR};
 
-	enablePll(CONFIG_CHIP_STM32F4_RCC_PLLN, pllp, CONFIG_CHIP_STM32F4_RCC_PLLQ, CONFIG_CHIP_STM32F4_RCC_PLLR);
+	enablePll(CONFIG_CHIP_STM32F4_RCC_PLLN, CONFIG_CHIP_STM32F4_RCC_PLLP, CONFIG_CHIP_STM32F4_RCC_PLLQ,
+			CONFIG_CHIP_STM32F4_RCC_PLLR);
 
 #else // !defined(CONFIG_CHIP_STM32F446) && !defined(CONFIG_CHIP_STM32F469) && !defined(CONFIG_CHIP_STM32F479)
 
-	enablePll(CONFIG_CHIP_STM32F4_RCC_PLLN, pllp, CONFIG_CHIP_STM32F4_RCC_PLLQ);
+	enablePll(CONFIG_CHIP_STM32F4_RCC_PLLN, CONFIG_CHIP_STM32F4_RCC_PLLP, CONFIG_CHIP_STM32F4_RCC_PLLQ);
 
 #endif // !defined(CONFIG_CHIP_STM32F446) && !defined(CONFIG_CHIP_STM32F469) && !defined(CONFIG_CHIP_STM32F479)
 
@@ -153,60 +144,23 @@ void lowLevelInitialization()
 	constexpr SystemClockSource systemClockSource {SystemClockSource::pllr};
 #endif	// defined(CONFIG_CHIP_STM32F4_RCC_SYSCLK_PLLR)
 
-#if defined(CONFIG_CHIP_STM32F4_RCC_AHB_DIV1)
-	constexpr auto hpre = hpreDiv1;
-#elif defined(CONFIG_CHIP_STM32F4_RCC_AHB_DIV2)
-	constexpr auto hpre = hpreDiv2;
-#elif defined(CONFIG_CHIP_STM32F4_RCC_AHB_DIV4)
-	constexpr auto hpre = hpreDiv4;
-#elif defined(CONFIG_CHIP_STM32F4_RCC_AHB_DIV8)
-	constexpr auto hpre = hpreDiv8;
-#elif defined(CONFIG_CHIP_STM32F4_RCC_AHB_DIV16)
-	constexpr auto hpre = hpreDiv16;
-#elif defined(CONFIG_CHIP_STM32F4_RCC_AHB_DIV64)
-	constexpr auto hpre = hpreDiv64;
-#elif defined(CONFIG_CHIP_STM32F4_RCC_AHB_DIV128)
-	constexpr auto hpre = hpreDiv128;
-#elif defined(CONFIG_CHIP_STM32F4_RCC_AHB_DIV256)
-	constexpr auto hpre = hpreDiv256;
-#elif defined(CONFIG_CHIP_STM32F4_RCC_AHB_DIV512)
-	constexpr auto hpre = hpreDiv512;
-#endif	// defined(CONFIG_CHIP_STM32F4_RCC_AHB_DIV512)
+#else	// !def CONFIG_CHIP_STM32F4_STANDARD_CLOCK_CONFIGURATION_ENABLE
 
-	constexpr uint32_t ahbFrequency {sysclkFrequency / hpre};
-	configureAhbClockDivider(hpre);
+	constexpr uint32_t sysclkFrequency {CONFIG_CHIP_STM32F4_RCC_SYSCLK_FREQUENCY};
 
-#if defined(CONFIG_CHIP_STM32F4_RCC_APB1_DIV1)
-	constexpr auto ppre1 = ppreDiv1;
-#elif defined(CONFIG_CHIP_STM32F4_RCC_APB1_DIV2)
-	constexpr auto ppre1 = ppreDiv2;
-#elif defined(CONFIG_CHIP_STM32F4_RCC_APB1_DIV4)
-	constexpr auto ppre1 = ppreDiv4;
-#elif defined(CONFIG_CHIP_STM32F4_RCC_APB1_DIV8)
-	constexpr auto ppre1 = ppreDiv8;
-#elif defined(CONFIG_CHIP_STM32F4_RCC_APB1_DIV16)
-	constexpr auto ppre1 = ppreDiv16;
-#endif	// defined(CONFIG_CHIP_STM32F4_RCC_APB1_DIV16)
+#endif	// !def CONFIG_CHIP_STM32F4_STANDARD_CLOCK_CONFIGURATION_ENABLE
 
-	constexpr uint32_t apb1Frequency {ahbFrequency / ppre1};
+	constexpr uint32_t ahbFrequency {sysclkFrequency / CONFIG_CHIP_STM32F4_RCC_HPRE};
+	constexpr uint32_t apb1Frequency {ahbFrequency / CONFIG_CHIP_STM32F4_RCC_PPRE1};
 	static_assert(apb1Frequency <= maxApb1Frequency, "Invalid APB1 (low speed) frequency!");
-	configureApbClockDivider(false, ppre1);
-
-#if defined(CONFIG_CHIP_STM32F4_RCC_APB2_DIV1)
-	constexpr auto ppre2 = ppreDiv1;
-#elif defined(CONFIG_CHIP_STM32F4_RCC_APB2_DIV2)
-	constexpr auto ppre2 = ppreDiv2;
-#elif defined(CONFIG_CHIP_STM32F4_RCC_APB2_DIV4)
-	constexpr auto ppre2 = ppreDiv4;
-#elif defined(CONFIG_CHIP_STM32F4_RCC_APB2_DIV8)
-	constexpr auto ppre2 = ppreDiv8;
-#elif defined(CONFIG_CHIP_STM32F4_RCC_APB2_DIV16)
-	constexpr auto ppre2 = ppreDiv16;
-#endif	// defined(CONFIG_CHIP_STM32F4_RCC_APB2_DIV16)
-
-	constexpr uint32_t apb2Frequency {ahbFrequency / ppre2};
+	constexpr uint32_t apb2Frequency {ahbFrequency / CONFIG_CHIP_STM32F4_RCC_PPRE2};
 	static_assert(apb2Frequency <= maxApb2Frequency, "Invalid APB2 (high speed) frequency!");
-	configureApbClockDivider(true, ppre2);
+
+#ifdef CONFIG_CHIP_STM32F4_STANDARD_CLOCK_CONFIGURATION_ENABLE
+
+	configureAhbClockDivider(CONFIG_CHIP_STM32F4_RCC_HPRE);
+	configureApbClockDivider(false, CONFIG_CHIP_STM32F4_RCC_PPRE1);
+	configureApbClockDivider(true, CONFIG_CHIP_STM32F4_RCC_PPRE2);
 
 #if CONFIG_CHIP_STM32F4_VDD_MV < 2100
 #	if defined(CONFIG_CHIP_STM32F401) || defined(CONFIG_CHIP_STM32F410) || defined(CONFIG_CHIP_STM32F411)
@@ -232,11 +186,7 @@ void lowLevelInitialization()
 
 	switchSystemClock(systemClockSource);
 
-#else	// !def CONFIG_CHIP_STM32F4_STANDARD_CLOCK_CONFIGURATION_ENABLE
-
-	constexpr uint32_t ahbFrequency {CONFIG_CHIP_STM32F4_RCC_AHB_FREQUENCY};
-
-#endif	// !def CONFIG_CHIP_STM32F4_STANDARD_CLOCK_CONFIGURATION_ENABLE
+#endif	// def CONFIG_CHIP_STM32F4_STANDARD_CLOCK_CONFIGURATION_ENABLE
 
 	constexpr uint32_t period {ahbFrequency / CONFIG_TICK_FREQUENCY};
 	constexpr uint32_t periodDividedBy8 {period / 8};

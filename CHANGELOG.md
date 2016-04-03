@@ -47,6 +47,7 @@ from ALL CAPS or PascalCase to camelCase for consistency with their use as const
 *ARMv7-M*-based chips. The new generator also supports arbitrary number of additional memories (like BKPSRAM, CCM, ...),
 which can be defined with command line arguments.
 - Reorganize and simplify *Kconfig* menus for *STM32F1* and *STM32F4*.
+- Improve configuration and initialization of chip clocks for *STM32F1* and *STM32F4*.
 
 ### Fixed
 
