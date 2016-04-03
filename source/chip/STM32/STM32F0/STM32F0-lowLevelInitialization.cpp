@@ -11,9 +11,9 @@
 
 #include "distortos/chip/lowLevelInitialization.hpp"
 
-#include "distortos/architecture/ARMv6-M-ARMv7-M-configureSysTick.hpp"
+#include "distortos/chip/clocks.hpp"
 
-#include "distortos/distortosConfiguration.h"
+#include "distortos/architecture/ARMv6-M-ARMv7-M-configureSysTick.hpp"
 
 namespace distortos
 {
@@ -27,7 +27,6 @@ namespace chip
 
 void lowLevelInitialization()
 {
-	constexpr uint32_t ahbFrequency {CONFIG_CHIP_STM32F0_RCC_AHB_FREQUENCY};
 	constexpr uint32_t period {ahbFrequency / CONFIG_TICK_FREQUENCY};
 	constexpr uint32_t periodDividedBy8 {period / 8};
 	constexpr bool divideBy8 {period > architecture::maxSysTickPeriod};

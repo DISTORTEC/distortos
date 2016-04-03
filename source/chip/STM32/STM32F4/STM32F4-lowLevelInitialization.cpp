@@ -11,6 +11,7 @@
 
 #include "distortos/chip/lowLevelInitialization.hpp"
 
+#include "distortos/chip/clocks.hpp"
 #include "distortos/chip/STM32F4-FLASH.hpp"
 #include "distortos/chip/STM32F4-PWR.hpp"
 #include "distortos/chip/STM32F4-RCC.hpp"
@@ -62,21 +63,11 @@ void lowLevelInitialization()
 		defined(CONFIG_CHIP_STM32F469) || defined(CONFIG_CHIP_STM32F479)) && \
 		defined(CONFIG_CHIP_STM32F4_PWR_OVER_DRIVE_ENABLE)
 
-	static_assert(CONFIG_CHIP_STM32F4_PWR_VOLTAGE_SCALE_MODE == 1, "Over-drive mode requires voltage scale 1 mode!");
-	static_assert(CONFIG_CHIP_STM32F4_VDD_MV >= 2100,
-			"Over-drive mode must not be enabled when supply voltage is below 2.1V!");
 	enableOverDriveMode();
-	constexpr uint8_t voltageScaleIndex {0};
 
-#else	// !(defined(CONFIG_CHIP_STM32F42) || defined(CONFIG_CHIP_STM32F43) || defined(CONFIG_CHIP_STM32F446) ||
-		// defined(CONFIG_CHIP_STM32F469) || defined(CONFIG_CHIP_STM32F479)) ||
-		// !defined(CONFIG_CHIP_STM32F4_PWR_OVER_DRIVE_ENABLE)
-
-	constexpr uint8_t voltageScaleIndex {CONFIG_CHIP_STM32F4_PWR_VOLTAGE_SCALE_MODE};
-
-#endif	// !(defined(CONFIG_CHIP_STM32F42) || defined(CONFIG_CHIP_STM32F43) || defined(CONFIG_CHIP_STM32F446) ||
-		// defined(CONFIG_CHIP_STM32F469) || defined(CONFIG_CHIP_STM32F479)) ||
-		// !defined(CONFIG_CHIP_STM32F4_PWR_OVER_DRIVE_ENABLE)
+#endif	// (defined(CONFIG_CHIP_STM32F42) || defined(CONFIG_CHIP_STM32F43) || defined(CONFIG_CHIP_STM32F446) ||
+		// defined(CONFIG_CHIP_STM32F469) || defined(CONFIG_CHIP_STM32F479)) &&
+		// defined(CONFIG_CHIP_STM32F4_PWR_OVER_DRIVE_ENABLE)
 
 #ifdef CONFIG_CHIP_STM32F4_RCC_HSE_ENABLE
 
@@ -93,31 +84,13 @@ void lowLevelInitialization()
 
 #if defined(CONFIG_CHIP_STM32F4_RCC_PLLSRC_HSI)
 	constexpr bool pllClockSourceHse {};
-	constexpr uint32_t pllInFrequency {hsiFrequency};
 #elif defined(CONFIG_CHIP_STM32F4_RCC_PLLSRC_HSE)
 	constexpr bool pllClockSourceHse {true};
-	constexpr uint32_t pllInFrequency {CONFIG_CHIP_STM32F4_RCC_HSE_FREQUENCY};
 #endif
 	configurePllClockSource(pllClockSourceHse);
-
-	constexpr uint32_t vcoInFrequency {pllInFrequency / CONFIG_CHIP_STM32F4_RCC_PLLM};
-	static_assert(minVcoInFrequency <= vcoInFrequency && vcoInFrequency <= maxVcoInFrequency,
-			"Invalid VCO input frequency!");
 	configurePllInputClockDivider(CONFIG_CHIP_STM32F4_RCC_PLLM);
 
-	constexpr uint32_t vcoOutFrequency {vcoInFrequency * CONFIG_CHIP_STM32F4_RCC_PLLN};
-	static_assert(minVcoOutFrequency <= vcoOutFrequency && vcoOutFrequency <= maxVcoOutFrequency,
-			"Invalid VCO output frequency!");
-
-	constexpr uint32_t pllOutFrequency {vcoOutFrequency / CONFIG_CHIP_STM32F4_RCC_PLLP};
-	static_assert(pllOutFrequency <= maxPllOutFrequency[voltageScaleIndex], "Invalid PLL output frequency!");
-
-	constexpr uint32_t pllqOutFrequency {vcoOutFrequency / CONFIG_CHIP_STM32F4_RCC_PLLQ};
-	static_assert(pllqOutFrequency <= maxPllqOutFrequency, "Invalid PLL \"/Q\" output frequency!");
-
 #if defined(CONFIG_CHIP_STM32F446) || defined(CONFIG_CHIP_STM32F469) || defined(CONFIG_CHIP_STM32F479)
-
-	constexpr uint32_t pllrOutFrequency {vcoOutFrequency / CONFIG_CHIP_STM32F4_RCC_PLLR};
 
 	enablePll(CONFIG_CHIP_STM32F4_RCC_PLLN, CONFIG_CHIP_STM32F4_RCC_PLLP, CONFIG_CHIP_STM32F4_RCC_PLLQ,
 			CONFIG_CHIP_STM32F4_RCC_PLLR);
@@ -129,34 +102,6 @@ void lowLevelInitialization()
 #endif // !defined(CONFIG_CHIP_STM32F446) && !defined(CONFIG_CHIP_STM32F469) && !defined(CONFIG_CHIP_STM32F479)
 
 #endif	// def CONFIG_CHIP_STM32F4_RCC_PLL_ENABLE
-
-#if defined(CONFIG_CHIP_STM32F4_RCC_SYSCLK_HSI)
-	constexpr uint32_t sysclkFrequency {hsiFrequency};
-	constexpr SystemClockSource systemClockSource {SystemClockSource::hsi};
-#elif defined(CONFIG_CHIP_STM32F4_RCC_SYSCLK_HSE)
-	constexpr uint32_t sysclkFrequency {CONFIG_CHIP_STM32F4_RCC_HSE_FREQUENCY};
-	constexpr SystemClockSource systemClockSource {SystemClockSource::hse};
-#elif defined(CONFIG_CHIP_STM32F4_RCC_SYSCLK_PLL)
-	constexpr uint32_t sysclkFrequency {pllOutFrequency};
-	constexpr SystemClockSource systemClockSource {SystemClockSource::pll};
-#elif defined(CONFIG_CHIP_STM32F4_RCC_SYSCLK_PLLR)
-	constexpr uint32_t sysclkFrequency {pllrOutFrequency};
-	constexpr SystemClockSource systemClockSource {SystemClockSource::pllr};
-#endif	// defined(CONFIG_CHIP_STM32F4_RCC_SYSCLK_PLLR)
-
-#else	// !def CONFIG_CHIP_STM32F4_STANDARD_CLOCK_CONFIGURATION_ENABLE
-
-	constexpr uint32_t sysclkFrequency {CONFIG_CHIP_STM32F4_RCC_SYSCLK_FREQUENCY};
-
-#endif	// !def CONFIG_CHIP_STM32F4_STANDARD_CLOCK_CONFIGURATION_ENABLE
-
-	constexpr uint32_t ahbFrequency {sysclkFrequency / CONFIG_CHIP_STM32F4_RCC_HPRE};
-	constexpr uint32_t apb1Frequency {ahbFrequency / CONFIG_CHIP_STM32F4_RCC_PPRE1};
-	static_assert(apb1Frequency <= maxApb1Frequency, "Invalid APB1 (low speed) frequency!");
-	constexpr uint32_t apb2Frequency {ahbFrequency / CONFIG_CHIP_STM32F4_RCC_PPRE2};
-	static_assert(apb2Frequency <= maxApb2Frequency, "Invalid APB2 (high speed) frequency!");
-
-#ifdef CONFIG_CHIP_STM32F4_STANDARD_CLOCK_CONFIGURATION_ENABLE
 
 	configureAhbClockDivider(CONFIG_CHIP_STM32F4_RCC_HPRE);
 	configureApbClockDivider(false, CONFIG_CHIP_STM32F4_RCC_PPRE1);
@@ -183,6 +128,16 @@ void lowLevelInitialization()
 	constexpr uint8_t flashLatency {(ahbFrequency - 1) / frequencyThreshold};
 	static_assert(flashLatency <= maxFlashLatency, "Invalid flash latency!");
 	configureFlashLatency(flashLatency);
+
+#if defined(CONFIG_CHIP_STM32F4_RCC_SYSCLK_HSI)
+	constexpr SystemClockSource systemClockSource {SystemClockSource::hsi};
+#elif defined(CONFIG_CHIP_STM32F4_RCC_SYSCLK_HSE)
+	constexpr SystemClockSource systemClockSource {SystemClockSource::hse};
+#elif defined(CONFIG_CHIP_STM32F4_RCC_SYSCLK_PLL)
+	constexpr SystemClockSource systemClockSource {SystemClockSource::pll};
+#elif defined(CONFIG_CHIP_STM32F4_RCC_SYSCLK_PLLR)
+	constexpr SystemClockSource systemClockSource {SystemClockSource::pllr};
+#endif	// defined(CONFIG_CHIP_STM32F4_RCC_SYSCLK_PLLR)
 
 	switchSystemClock(systemClockSource);
 

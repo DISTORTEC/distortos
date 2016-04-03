@@ -38,6 +38,7 @@ setting, as this is a more conservative (and thus safer for a beginner) approach
 configuration of interrupt priorities (default value is 0).
 - Support for optional inversion to all implementations of `ChipInputPin` and `ChipOutputPin`.
 - `buttons.hpp` header with board buttons for all supported boards.
+- `clocks.hpp` header with definition of clocks for selected chip.
 
 ### Changed
 

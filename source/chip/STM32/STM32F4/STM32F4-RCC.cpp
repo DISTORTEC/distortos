@@ -15,6 +15,8 @@
 
 #include "distortos/chip/CMSIS-proxy.h"
 
+#include <array>
+
 #include <cerrno>
 
 namespace distortos

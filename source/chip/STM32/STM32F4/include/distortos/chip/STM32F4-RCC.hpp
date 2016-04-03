@@ -22,7 +22,7 @@
 
 #include "distortos/distortosConfiguration.h"
 
-#include <array>
+#include <cstdint>
 
 namespace distortos
 {
@@ -99,76 +99,6 @@ constexpr uint8_t pllpDiv6 {6};
 
 /// fourth allowed value for PLLP - 8
 constexpr uint8_t pllpDiv8 {8};
-
-/// HSI clock frequency, Hz
-constexpr uint32_t hsiFrequency {16000000};
-
-/// minimum allowed value for VCO input frequency, Hz
-constexpr uint32_t minVcoInFrequency {1000000};
-
-/// maximum allowed value for VCO input frequency, Hz
-constexpr uint32_t maxVcoInFrequency {2000000};
-
-/// minimum allowed value for VCO output frequency, Hz
-#if defined(CONFIG_CHIP_STM32F401)
-constexpr uint32_t minVcoOutFrequency {192000000};
-#else	// !defined(CONFIG_CHIP_STM32F401)
-constexpr uint32_t minVcoOutFrequency {100000000};
-#endif	// !defined(CONFIG_CHIP_STM32F401)
-
-/// maximum allowed value for VCO output frequency, Hz
-constexpr uint32_t maxVcoOutFrequency {432000000};
-
-/// maximum allowed value for PLL output frequency, Hz
-/// [0] - in overdrive mode with voltage scale 1
-/// [1] - with voltage scale 1
-/// [2] - with voltage scale 2
-/// [3] - with voltage scale 3
-#if defined(CONFIG_CHIP_STM32F401)
-constexpr std::array<uint32_t, 4> maxPllOutFrequency {0, 0, 84000000, 60000000};
-#elif defined(CONFIG_CHIP_STM32F405) || defined(CONFIG_CHIP_STM32F407) || defined(CONFIG_CHIP_STM32F415) || \
-		defined(CONFIG_CHIP_STM32F417)
-constexpr std::array<uint32_t, 4> maxPllOutFrequency {0, 168000000, 144000000, 0};
-#elif defined(CONFIG_CHIP_STM32F410) || defined(CONFIG_CHIP_STM32F411)
-constexpr std::array<uint32_t, 4> maxPllOutFrequency {0, 100000000, 84000000, 64000000};
-#else	// !defined(CONFIG_CHIP_STM32F401) && !defined(CONFIG_CHIP_STM32F405) && !defined(CONFIG_CHIP_STM32F407) &&
-		// !defined(CONFIG_CHIP_STM32F415) && !defined(CONFIG_CHIP_STM32F417) && !defined(CONFIG_CHIP_STM32F410) &&
-		// !defined(CONFIG_CHIP_STM32F411)
-constexpr std::array<uint32_t, 4> maxPllOutFrequency {180000000, 168000000, 144000000, 120000000};
-#endif	// !defined(CONFIG_CHIP_STM32F401) && !defined(CONFIG_CHIP_STM32F405) && !defined(CONFIG_CHIP_STM32F407) &&
-		// !defined(CONFIG_CHIP_STM32F415) && !defined(CONFIG_CHIP_STM32F417) && !defined(CONFIG_CHIP_STM32F410) &&
-		// !defined(CONFIG_CHIP_STM32F411)
-
-/// maximum allowed value for PLL "Q" output frequency, Hz
-constexpr uint32_t maxPllqOutFrequency {48000000};
-
-/// maximum allowed APB1 (low speed) frequency, Hz
-#if defined(CONFIG_CHIP_STM32F401) || defined(CONFIG_CHIP_STM32F405) || defined(CONFIG_CHIP_STM32F407) || \
-		defined(CONFIG_CHIP_STM32F415) || defined(CONFIG_CHIP_STM32F417)
-constexpr uint32_t maxApb1Frequency {42000000};
-#elif defined(CONFIG_CHIP_STM32F410) || defined(CONFIG_CHIP_STM32F411)
-constexpr uint32_t maxApb1Frequency {50000000};
-#else	// !defined(CONFIG_CHIP_STM32F401) && !defined(CONFIG_CHIP_STM32F405) && !defined(CONFIG_CHIP_STM32F407) &&
-		// !defined(CONFIG_CHIP_STM32F415) && !defined(CONFIG_CHIP_STM32F417) && !defined(CONFIG_CHIP_STM32F410) &&
-		// !defined(CONFIG_CHIP_STM32F411)
-constexpr uint32_t maxApb1Frequency {45000000};
-#endif	// !defined(CONFIG_CHIP_STM32F401) && !defined(CONFIG_CHIP_STM32F405) && !defined(CONFIG_CHIP_STM32F407) &&
-		// !defined(CONFIG_CHIP_STM32F415) && !defined(CONFIG_CHIP_STM32F417) && !defined(CONFIG_CHIP_STM32F410) &&
-		// !defined(CONFIG_CHIP_STM32F411)
-
-/// maximum allowed APB2 (high speed) frequency, Hz
-#if defined(CONFIG_CHIP_STM32F401) || defined(CONFIG_CHIP_STM32F405) || defined(CONFIG_CHIP_STM32F407) || \
-		defined(CONFIG_CHIP_STM32F415) || defined(CONFIG_CHIP_STM32F417)
-constexpr uint32_t maxApb2Frequency {84000000};
-#elif defined(CONFIG_CHIP_STM32F410) || defined(CONFIG_CHIP_STM32F411)
-constexpr uint32_t maxApb2Frequency {100000000};
-#else	// !defined(CONFIG_CHIP_STM32F401) && !defined(CONFIG_CHIP_STM32F405) && !defined(CONFIG_CHIP_STM32F407) &&
-		// !defined(CONFIG_CHIP_STM32F415) && !defined(CONFIG_CHIP_STM32F417) && !defined(CONFIG_CHIP_STM32F410) &&
-		// !defined(CONFIG_CHIP_STM32F411)
-constexpr uint32_t maxApb2Frequency {90000000};
-#endif	// !defined(CONFIG_CHIP_STM32F401) && !defined(CONFIG_CHIP_STM32F405) && !defined(CONFIG_CHIP_STM32F407) &&
-		// !defined(CONFIG_CHIP_STM32F415) && !defined(CONFIG_CHIP_STM32F417) && !defined(CONFIG_CHIP_STM32F410) &&
-		// !defined(CONFIG_CHIP_STM32F411)
 
 /// first allowed value for AHB divider - 1
 constexpr uint16_t hpreDiv1 {1};
