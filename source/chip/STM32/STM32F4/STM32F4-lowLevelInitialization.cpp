@@ -32,8 +32,6 @@ namespace chip
 
 void lowLevelInitialization()
 {
-#ifdef CONFIG_CHIP_STM32F4_FLASH_STANDARD_CONFIGURATION_ENABLE
-
 #ifdef CONFIG_CHIP_STM32F4_FLASH_PREFETCH_ENABLE
 	static_assert(CONFIG_CHIP_STM32F4_VDD_MV >= 2100,
 			"Instruction prefetch must not be enabled when supply voltage is below 2.1V!");
@@ -41,12 +39,20 @@ void lowLevelInitialization()
 #else	// !def CONFIG_CHIP_STM32F4_FLASH_PREFETCH_ENABLE
 	configureInstructionPrefetch(false);
 #endif	// !def CONFIG_CHIP_STM32F4_FLASH_PREFETCH_ENABLE
-	enableInstructionCache();
+
+#ifdef CONFIG_CHIP_STM32F4_FLASH_DATA_CACHE_ENABLE
 	enableDataCache();
+#else	// !def CONFIG_CHIP_STM32F4_FLASH_DATA_CACHE_ENABLE
+	disableDataCache();
+#endif	// !def CONFIG_CHIP_STM32F4_FLASH_DATA_CACHE_ENABLE
 
-#endif	// def CONFIG_CHIP_STM32F4_FLASH_STANDARD_CONFIGURATION_ENABLE
+#ifdef CONFIG_CHIP_STM32F4_FLASH_INSTRUCTION_CACHE_ENABLE
+	enableInstructionCache();
+#else	// !def CONFIG_CHIP_STM32F4_FLASH_INSTRUCTION_CACHE_ENABLE
+	disableInstructionCache();
+#endif	// !def CONFIG_CHIP_STM32F4_FLASH_INSTRUCTION_CACHE_ENABLE
 
-#ifdef CONFIG_CHIP_STM32F4_PWR_STANDARD_CONFIGURATION_ENABLE
+#ifdef CONFIG_CHIP_STM32F4_STANDARD_CLOCK_CONFIGURATION_ENABLE
 
 	RCC_APB1ENR_PWREN_bb = 1;
 
@@ -71,14 +77,6 @@ void lowLevelInitialization()
 #endif	// !(defined(CONFIG_CHIP_STM32F42) || defined(CONFIG_CHIP_STM32F43) || defined(CONFIG_CHIP_STM32F446) ||
 		// defined(CONFIG_CHIP_STM32F469) || defined(CONFIG_CHIP_STM32F479)) ||
 		// !defined(CONFIG_CHIP_STM32F4_PWR_OVER_DRIVE_ENABLE)
-
-#else	// !def CONFIG_CHIP_STM32F4_PWR_STANDARD_CONFIGURATION_ENABLE
-
-	constexpr uint8_t voltageScaleIndex {defaultVoltageScale};
-
-#endif	// !def CONFIG_CHIP_STM32F4_PWR_STANDARD_CONFIGURATION_ENABLE
-
-#ifdef CONFIG_CHIP_STM32F4_RCC_STANDARD_CLOCK_CONFIGURATION_ENABLE
 
 #ifdef CONFIG_CHIP_STM32F4_RCC_HSE_ENABLE
 
@@ -210,14 +208,6 @@ void lowLevelInitialization()
 	static_assert(apb2Frequency <= maxApb2Frequency, "Invalid APB2 (high speed) frequency!");
 	configureApbClockDivider(true, ppre2);
 
-#else	// !def CONFIG_CHIP_STM32F4_RCC_STANDARD_CLOCK_CONFIGURATION_ENABLE
-
-	constexpr uint32_t ahbFrequency {CONFIG_CHIP_STM32F4_RCC_AHB_FREQUENCY};
-
-#endif	// !def CONFIG_CHIP_STM32F4_RCC_STANDARD_CLOCK_CONFIGURATION_ENABLE
-
-#ifdef CONFIG_CHIP_STM32F4_FLASH_STANDARD_CONFIGURATION_ENABLE
-
 #if CONFIG_CHIP_STM32F4_VDD_MV < 2100
 #	if defined(CONFIG_CHIP_STM32F401) || defined(CONFIG_CHIP_STM32F410) || defined(CONFIG_CHIP_STM32F411)
 	constexpr uint32_t frequencyThreshold {16000000};
@@ -240,13 +230,13 @@ void lowLevelInitialization()
 	static_assert(flashLatency <= maxFlashLatency, "Invalid flash latency!");
 	configureFlashLatency(flashLatency);
 
-#endif	// def CONFIG_CHIP_STM32F4_FLASH_STANDARD_CONFIGURATION_ENABLE
-
-#ifdef CONFIG_CHIP_STM32F4_RCC_STANDARD_CLOCK_CONFIGURATION_ENABLE
-
 	switchSystemClock(systemClockSource);
 
-#endif	// def CONFIG_CHIP_STM32F4_RCC_STANDARD_CLOCK_CONFIGURATION_ENABLE
+#else	// !def CONFIG_CHIP_STM32F4_STANDARD_CLOCK_CONFIGURATION_ENABLE
+
+	constexpr uint32_t ahbFrequency {CONFIG_CHIP_STM32F4_RCC_AHB_FREQUENCY};
+
+#endif	// !def CONFIG_CHIP_STM32F4_STANDARD_CLOCK_CONFIGURATION_ENABLE
 
 	constexpr uint32_t period {ahbFrequency / CONFIG_TICK_FREQUENCY};
 	constexpr uint32_t periodDividedBy8 {period / 8};

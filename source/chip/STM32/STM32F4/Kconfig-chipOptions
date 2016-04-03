@@ -50,40 +50,17 @@ config CHIP_STM32F4_VDD_MV
 
 endif	# !CHIP_STM32F4_VDD_MV_CONFIGURABLE
 
-menu "FLASH configuration"
+menu "Clocks configuration"
 
-config CHIP_STM32F4_FLASH_STANDARD_CONFIGURATION_ENABLE
-	bool "Enable standard configuration of FLASH module"
+config CHIP_STM32F4_STANDARD_CLOCK_CONFIGURATION_ENABLE
+	bool "Enable standard configuration of clocks"
 	default y
 	help
-		Enable standard configuration of FLASH module.
+		Enable standard configuration of clocks. This will set values selected
+		below and additionally configure appropriate FLASH latency before
+		switching system clock to selected source.
 
-if CHIP_STM32F4_FLASH_STANDARD_CONFIGURATION_ENABLE
-
-config CHIP_STM32F4_FLASH_PREFETCH_ENABLE
-	bool "Enable flash prefetch"
-	default y
-	help
-		Enable flash prefetch option in FLASH->ACR register. Early revisions of
-		older STM32F4 devices don't support this feature. Enabling this feature
-		may also increase noise of ADC. Check device errata sheet of selected
-		chip to see whether it is affected by any of these issues.
-
-		Flash prefetch must not be enabled when supply voltage is below 2.1V.
-
-endif	# CHIP_STM32F4_FLASH_STANDARD_CONFIGURATION_ENABLE
-
-endmenu
-
-menu "PWR configuration"
-
-config CHIP_STM32F4_PWR_STANDARD_CONFIGURATION_ENABLE
-	bool "Enable standard configuration of PWR module"
-	default y
-	help
-		Enable standard configuration of PWR module.
-
-if CHIP_STM32F4_PWR_STANDARD_CONFIGURATION_ENABLE
+if CHIP_STM32F4_STANDARD_CLOCK_CONFIGURATION_ENABLE
 
 config CHIP_STM32F4_PWR_VOLTAGE_SCALE_MODE
 	int "Voltage scale mode"
@@ -105,20 +82,6 @@ config CHIP_STM32F4_PWR_OVER_DRIVE_ENABLE
 
 		Note - over-drive mode requires voltage scale 1 mode and supply voltage
 		above 2.1V.
-
-endif	# CHIP_STM32F4_PWR_STANDARD_CONFIGURATION_ENABLE
-
-endmenu
-
-menu "RCC configuration"
-
-config CHIP_STM32F4_RCC_STANDARD_CLOCK_CONFIGURATION_ENABLE
-	bool "Enable standard configuration of RCC clocks"
-	default y
-	help
-		Enable standard configuration of RCC clocks.
-
-if CHIP_STM32F4_RCC_STANDARD_CLOCK_CONFIGURATION_ENABLE
 
 config CHIP_STM32F4_RCC_HSE_ENABLE
 	bool "Enable HSE"
@@ -470,9 +433,9 @@ config CHIP_STM32F4_RCC_APB2_DIV16
 
 endchoice
 
-endif	# CHIP_STM32F4_RCC_STANDARD_CLOCK_CONFIGURATION_ENABLE
+endif	# CHIP_STM32F4_STANDARD_CLOCK_CONFIGURATION_ENABLE
 
-if !CHIP_STM32F4_RCC_STANDARD_CLOCK_CONFIGURATION_ENABLE
+if !CHIP_STM32F4_STANDARD_CLOCK_CONFIGURATION_ENABLE
 
 config CHIP_STM32F4_RCC_AHB_FREQUENCY
 	int "Frequency of AHB clock, Hz"
@@ -485,9 +448,34 @@ config CHIP_STM32F4_RCC_AHB_FREQUENCY
 		Frequency of AHB clock, Hz. RCC must be configured by user to achieve
 		that frequency.
 
-endif	# !CHIP_STM32F4_RCC_STANDARD_CLOCK_CONFIGURATION_ENABLE
+endif	# !CHIP_STM32F4_STANDARD_CLOCK_CONFIGURATION_ENABLE
 
 endmenu
+
+menu "Memory configuration"
+
+config CHIP_STM32F4_FLASH_PREFETCH_ENABLE
+	bool "Enable flash prefetch"
+	default y
+	help
+		Enable flash prefetch option in FLASH->ACR register. Early revisions of
+		older STM32F4 devices don't support this feature. Enabling this feature
+		may also increase noise of ADC. Check device errata sheet of selected
+		chip to see whether it is affected by any of these issues.
+
+		Flash prefetch must not be enabled when supply voltage is below 2.1V.
+
+config CHIP_STM32F4_FLASH_DATA_CACHE_ENABLE
+	bool "Enable flash data cache"
+	default y
+	help
+		Enable flash data cache option in FLASH->ACR register.
+
+config CHIP_STM32F4_FLASH_INSTRUCTION_CACHE_ENABLE
+	bool "Enable flash instruction cache"
+	default y
+	help
+		Enable flash instruction cache option in FLASH->ACR register.
 
 choice
 	prompt "Unify RAM in linker script"
@@ -530,6 +518,8 @@ config CHIP_STM32F4_UNIFY_SRAM2_SRAM3
 		section will be located in unified SRAM2 and SRAM3.
 
 endchoice
+
+endmenu
 
 config CHIP_STM32F40
 	bool

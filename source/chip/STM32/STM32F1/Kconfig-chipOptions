@@ -32,48 +32,17 @@ if CHIP_STM32F1
 
 comment "STM32F1 chip options"
 
-menu "FLASH configuration"
+menu "Clocks configuration"
 
-config CHIP_STM32F1_FLASH_STANDARD_CONFIGURATION_ENABLE
-	bool "Enable standard configuration of FLASH module"
+config CHIP_STM32F1_STANDARD_CLOCK_CONFIGURATION_ENABLE
+	bool "Enable standard configuration of clocks"
 	default y
 	help
-		Enable standard configuration of FLASH module.
+		Enable standard configuration of clocks. This will set values selected
+		below and additionally configure appropriate FLASH latency before
+		switching system clock to selected source.
 
-if CHIP_STM32F1_FLASH_STANDARD_CONFIGURATION_ENABLE
-
-config CHIP_STM32F1_FLASH_PREFETCH_ENABLE
-	bool "Enable flash prefetch"
-	default y
-	depends on !CHIP_STM32F100
-	help
-		Enable flash prefetch option in FLASH->ACR register.
-
-		Flash prefetch must be enabled when AHB clock prescaler is different
-		from 1.
-
-config CHIP_STM32F1_FLASH_HALF_CYCLE_ACCESS_ENABLE
-	bool "Enable flash half cycle access"
-	default n
-	help
-		Enable flash half cycle access option in FLASH->ACR register.
-
-		Flash half cycle access must not be enabled when AHB clock prescaler
-		is different from 1.
-
-endif	# CHIP_STM32F1_FLASH_STANDARD_CONFIGURATION_ENABLE
-
-endmenu
-
-menu "RCC configuration"
-
-config CHIP_STM32F1_RCC_STANDARD_CLOCK_CONFIGURATION_ENABLE
-	bool "Enable standard configuration of RCC clocks"
-	default y
-	help
-		Enable standard configuration of RCC clocks.
-
-if CHIP_STM32F1_RCC_STANDARD_CLOCK_CONFIGURATION_ENABLE
+if CHIP_STM32F1_STANDARD_CLOCK_CONFIGURATION_ENABLE
 
 config CHIP_STM32F1_RCC_HSE_ENABLE
 	bool "Enable HSE"
@@ -642,9 +611,9 @@ config CHIP_STM32F1_RCC_APB2_DIV16
 
 endchoice
 
-endif	# CHIP_STM32F1_RCC_STANDARD_CLOCK_CONFIGURATION_ENABLE
+endif	# CHIP_STM32F1_STANDARD_CLOCK_CONFIGURATION_ENABLE
 
-if !CHIP_STM32F1_RCC_STANDARD_CLOCK_CONFIGURATION_ENABLE
+if !CHIP_STM32F1_STANDARD_CLOCK_CONFIGURATION_ENABLE
 
 config CHIP_STM32F1_RCC_AHB_FREQUENCY
 	int "Frequency of AHB clock, Hz"
@@ -657,7 +626,30 @@ config CHIP_STM32F1_RCC_AHB_FREQUENCY
 		Frequency of AHB clock, Hz. RCC must be configured by user to achieve
 		that frequency.
 
-endif	# !CHIP_STM32F1_RCC_STANDARD_CLOCK_CONFIGURATION_ENABLE
+endif	# !CHIP_STM32F1_STANDARD_CLOCK_CONFIGURATION_ENABLE
+
+endmenu
+
+menu "Memory configuration"
+
+config CHIP_STM32F1_FLASH_PREFETCH_ENABLE
+	bool "Enable flash prefetch"
+	default y
+	depends on !CHIP_STM32F100
+	help
+		Enable flash prefetch option in FLASH->ACR register.
+
+		Flash prefetch must be enabled when AHB clock prescaler is different
+		from 1.
+
+config CHIP_STM32F1_FLASH_HALF_CYCLE_ACCESS_ENABLE
+	bool "Enable flash half cycle access"
+	default n
+	help
+		Enable flash half cycle access option in FLASH->ACR register.
+
+		Flash half cycle access must not be enabled when AHB clock prescaler
+		is different from 1.
 
 endmenu
 
