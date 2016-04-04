@@ -12,12 +12,11 @@
 #include "distortos/chip/lowLevelInitialization.hpp"
 
 #include "distortos/chip/clocks.hpp"
+#include "distortos/chip/CMSIS-proxy.h"
 #include "distortos/chip/STM32F4-FLASH.hpp"
 #include "distortos/chip/STM32F4-PWR.hpp"
 #include "distortos/chip/STM32F4-RCC.hpp"
 #include "distortos/chip/STM32F4-RCC-bits.h"
-
-#include "distortos/chip/CMSIS-proxy.h"
 
 namespace distortos
 {
