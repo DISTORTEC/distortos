@@ -69,22 +69,21 @@ void lowLevelInitialization()
 #ifdef CONFIG_CHIP_STM32F4_RCC_HSE_ENABLE
 
 #ifdef CONFIG_CHIP_STM32F4_RCC_HSE_CLOCK_BYPASS
-	constexpr bool hseClockBypass {true};
+	enableHse(true);
 #else	// !def CONFIG_CHIP_STM32F4_RCC_HSE_CLOCK_BYPASS
-	constexpr bool hseClockBypass {};
+	enableHse(false);
 #endif	// !def CONFIG_CHIP_STM32F4_RCC_HSE_CLOCK_BYPASS
-	enableHse(hseClockBypass);
 
 #endif	// def CONFIG_CHIP_STM32F4_RCC_HSE_ENABLE
 
 #ifdef CONFIG_CHIP_STM32F4_RCC_PLL_ENABLE
 
 #if defined(CONFIG_CHIP_STM32F4_RCC_PLLSRC_HSI)
-	constexpr bool pllClockSourceHse {};
+	configurePllClockSource(false);
 #elif defined(CONFIG_CHIP_STM32F4_RCC_PLLSRC_HSE)
-	constexpr bool pllClockSourceHse {true};
+	configurePllClockSource(true);
 #endif
-	configurePllClockSource(pllClockSourceHse);
+
 	configurePllInputClockDivider(CONFIG_CHIP_STM32F4_RCC_PLLM);
 
 #if defined(CONFIG_CHIP_STM32F446) || defined(CONFIG_CHIP_STM32F469) || defined(CONFIG_CHIP_STM32F479)
@@ -127,16 +126,14 @@ void lowLevelInitialization()
 	configureFlashLatency(flashLatency);
 
 #if defined(CONFIG_CHIP_STM32F4_RCC_SYSCLK_HSI)
-	constexpr SystemClockSource systemClockSource {SystemClockSource::hsi};
+	switchSystemClock(SystemClockSource::hsi);
 #elif defined(CONFIG_CHIP_STM32F4_RCC_SYSCLK_HSE)
-	constexpr SystemClockSource systemClockSource {SystemClockSource::hse};
+	switchSystemClock(SystemClockSource::hse);
 #elif defined(CONFIG_CHIP_STM32F4_RCC_SYSCLK_PLL)
-	constexpr SystemClockSource systemClockSource {SystemClockSource::pll};
+	switchSystemClock(SystemClockSource::pll);
 #elif defined(CONFIG_CHIP_STM32F4_RCC_SYSCLK_PLLR)
-	constexpr SystemClockSource systemClockSource {SystemClockSource::pllr};
+	switchSystemClock(SystemClockSource::pllr);
 #endif	// defined(CONFIG_CHIP_STM32F4_RCC_SYSCLK_PLLR)
-
-	switchSystemClock(systemClockSource);
 
 #endif	// def CONFIG_CHIP_STM32F4_STANDARD_CLOCK_CONFIGURATION_ENABLE
 }
