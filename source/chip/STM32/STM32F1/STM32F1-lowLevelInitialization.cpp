@@ -48,11 +48,10 @@ void lowLevelInitialization()
 #ifdef CONFIG_CHIP_STM32F1_RCC_HSE_ENABLE
 
 #ifdef CONFIG_CHIP_STM32F1_RCC_HSE_CLOCK_BYPASS
-	constexpr bool hseClockBypass {true};
+	enableHse(true);
 #else	// !def CONFIG_CHIP_STM32F1_RCC_HSE_CLOCK_BYPASS
-	constexpr bool hseClockBypass {};
+	enableHse(false);
 #endif	// !def CONFIG_CHIP_STM32F1_RCC_HSE_CLOCK_BYPASS
-	enableHse(hseClockBypass);
 
 #if (defined(CONFIG_CHIP_STM32F105) || defined(CONFIG_CHIP_STM32F107)) && \
 		defined(CONFIG_CHIP_STM32F1_RCC_PREDIV2_PLL2_PLL3_ENABLE)
@@ -87,12 +86,10 @@ void lowLevelInitialization()
 #if defined(CONFIG_CHIP_STM32F105) || defined(CONFIG_CHIP_STM32F107)
 
 #if defined(CONFIG_CHIP_STM32F1_RCC_PREDIV1SRC_HSE)
-	constexpr bool prediv1ClockSourcePll2 {};
+	configurePrediv1ClockSource(false);
 #elif defined(CONFIG_CHIP_STM32F1_RCC_PREDIV1SRC_PLL2)
-	constexpr bool prediv1ClockSourcePll2 {true};
+	configurePrediv1ClockSource(true);
 #endif	// defined(CONFIG_CHIP_STM32F1_RCC_PREDIV1SRC_PLL2)
-
-	configurePrediv1ClockSource(prediv1ClockSourcePll2);
 
 #endif	// defined(CONFIG_CHIP_STM32F105) || defined(CONFIG_CHIP_STM32F107)
 
@@ -103,12 +100,11 @@ void lowLevelInitialization()
 #endif	// defined(CONFIG_CHIP_STM32F1_RCC_PLLSRC_PREDIV1)
 
 #ifdef CONFIG_CHIP_STM32F1_RCC_PLLMUL6_5
-	constexpr uint8_t pllmul {pllmul6_5};
+	enablePll(pllClockSourcePrediv1, pllmul6_5);
 #else	// !def CONFIG_CHIP_STM32F1_RCC_PLLMUL6_5
-	constexpr uint8_t pllmul {CONFIG_CHIP_STM32F1_RCC_PLLMUL_NUMERATOR / CONFIG_CHIP_STM32F1_RCC_PLLMUL_DENOMINATOR};
+	enablePll(pllClockSourcePrediv1,
+			CONFIG_CHIP_STM32F1_RCC_PLLMUL_NUMERATOR / CONFIG_CHIP_STM32F1_RCC_PLLMUL_DENOMINATOR);
 #endif	// !def CONFIG_CHIP_STM32F1_RCC_PLLMUL6_5
-
-	enablePll(pllClockSourcePrediv1, pllmul);
 
 #endif	// def CONFIG_CHIP_STM32F1_RCC_PLL_ENABLE
 
@@ -125,14 +121,12 @@ void lowLevelInitialization()
 #endif	// !def CONFIG_CHIP_STM32F100
 
 #if defined(CONFIG_CHIP_STM32F1_RCC_SYSCLK_HSI)
-	constexpr SystemClockSource systemClockSource {SystemClockSource::hsi};
+	switchSystemClock(SystemClockSource::hsi);
 #elif defined(CONFIG_CHIP_STM32F1_RCC_SYSCLK_HSE)
-	constexpr SystemClockSource systemClockSource {SystemClockSource::hse};
+	switchSystemClock(SystemClockSource::hse);
 #elif defined(CONFIG_CHIP_STM32F1_RCC_SYSCLK_PLL)
-	constexpr SystemClockSource systemClockSource {SystemClockSource::pll};
+	switchSystemClock(SystemClockSource::pll);
 #endif	// defined(CONFIG_CHIP_STM32F1_RCC_SYSCLK_PLL)
-
-	switchSystemClock(systemClockSource);
 
 #endif	// def CONFIG_CHIP_STM32F1_STANDARD_CLOCK_CONFIGURATION_ENABLE
 }
