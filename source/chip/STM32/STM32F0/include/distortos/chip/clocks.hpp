@@ -26,6 +26,30 @@ namespace chip
 | global constants
 +---------------------------------------------------------------------------------------------------------------------*/
 
+/// HSI clock frequency, Hz
+constexpr uint32_t hsiFrequency {8000000};
+
+#if defined(CONFIG_CHIP_STM32F04) || defined(CONFIG_CHIP_STM32F071) || defined(CONFIG_CHIP_STM32F072) || \
+	defined(CONFIG_CHIP_STM32F078) || defined(CONFIG_CHIP_STM32F09)
+
+/// HSI48 clock frequency, Hz
+constexpr uint32_t hsi48Frequency {48000000};
+
+#endif	// defined(CONFIG_CHIP_STM32F04) || defined(CONFIG_CHIP_STM32F071) || defined(CONFIG_CHIP_STM32F072) ||
+		// defined(CONFIG_CHIP_STM32F078) || defined(CONFIG_CHIP_STM32F09)
+
+/// minimum allowed value for PLL input frequency, Hz
+constexpr uint32_t minPllInFrequency {1000000};
+
+/// maximum allowed value for PLL input frequency, Hz
+constexpr uint32_t maxPllInFrequency {24000000};
+
+/// minimum allowed value for PLL output frequency, Hz
+constexpr uint32_t minPllOutFrequency {16000000};
+
+/// maximum allowed value for PLL output frequency, Hz
+constexpr uint32_t maxPllOutFrequency {48000000};
+
 /// AHB frequency, Hz
 constexpr uint32_t ahbFrequency {CONFIG_CHIP_STM32F0_RCC_AHB_FREQUENCY};
 
