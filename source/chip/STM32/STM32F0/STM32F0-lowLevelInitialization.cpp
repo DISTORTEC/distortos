@@ -11,6 +11,10 @@
 
 #include "distortos/chip/lowLevelInitialization.hpp"
 
+#include "distortos/chip/STM32F0-FLASH.hpp"
+
+#include "distortos/distortosConfiguration.h"
+
 namespace distortos
 {
 
@@ -23,7 +27,11 @@ namespace chip
 
 void lowLevelInitialization()
 {
-
+#ifdef CONFIG_CHIP_STM32F0_FLASH_PREFETCH_ENABLE
+	configurePrefetchBuffer(true);
+#else	// !def CONFIG_CHIP_STM32F0_FLASH_PREFETCH_ENABLE
+	configurePrefetchBuffer(false);
+#endif	// !def CONFIG_CHIP_STM32F0_FLASH_PREFETCH_ENABLE
 }
 
 }	// namespace chip
