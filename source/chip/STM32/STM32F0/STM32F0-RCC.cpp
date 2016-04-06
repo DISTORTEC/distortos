@@ -14,6 +14,8 @@
 #include "distortos/chip/CMSIS-proxy.h"
 #include "distortos/chip/STM32F0-RCC-bits.h"
 
+#include <cerrno>
+
 namespace distortos
 {
 
@@ -23,6 +25,15 @@ namespace chip
 /*---------------------------------------------------------------------------------------------------------------------+
 | global functions
 +---------------------------------------------------------------------------------------------------------------------*/
+
+int configurePrediv(const uint8_t prediv)
+{
+	if (prediv < minPrediv || prediv > maxPrediv)
+		return EINVAL;
+
+	RCC->CFGR2 = (RCC->CFGR2 & ~RCC_CFGR2_PREDIV) | ((prediv - 1) << RCC_CFGR2_PREDIV_bit);
+	return 0;
+}
 
 void disableHse()
 {

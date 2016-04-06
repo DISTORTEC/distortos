@@ -18,6 +18,8 @@
 
 #include "distortos/distortosConfiguration.h"
 
+#include <cstdint>
+
 #if defined(CONFIG_CHIP_STM32F04) || defined(CONFIG_CHIP_STM32F071) || defined(CONFIG_CHIP_STM32F072) || \
 	defined(CONFIG_CHIP_STM32F078) || defined(CONFIG_CHIP_STM32F09)
 
@@ -33,8 +35,32 @@ namespace chip
 {
 
 /*---------------------------------------------------------------------------------------------------------------------+
+| global constants
++---------------------------------------------------------------------------------------------------------------------*/
+
+/// minimum allowed value for PREDIV
+constexpr uint8_t minPrediv {1};
+
+/// maximum allowed value for PREDIV
+constexpr uint8_t maxPrediv {16};
+
+/*---------------------------------------------------------------------------------------------------------------------+
 | global functions' declarations
 +---------------------------------------------------------------------------------------------------------------------*/
+
+/**
+ * \brief Configures PREDIV division factor.
+ *
+ * \warning Before changing configuration of PLL make sure that it is not used in any way (as core clock or as source of
+ * peripheral clocks) and that it is disabled.
+ *
+ * \param [in] prediv is the PREDIV division factor, [1; 16] or [minPrediv; maxPrediv]
+ *
+ * \return 0 on success, error code otherwise:
+ * - EINVAL - \a prediv value is invalid;
+ */
+
+int configurePrediv(uint8_t prediv);
 
 /**
  * \brief Disables HSE clock.
