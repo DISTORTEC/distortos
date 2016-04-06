@@ -12,6 +12,7 @@
 #include "distortos/chip/STM32F0-RCC.hpp"
 
 #include "distortos/chip/CMSIS-proxy.h"
+#include "distortos/chip/STM32F0-RCC-bits.h"
 
 namespace distortos
 {
@@ -26,6 +27,13 @@ namespace chip
 void disableHse()
 {
 	RCC->CR &= ~RCC_CR_HSEON;
+}
+
+void enableHse(const bool bypass)
+{
+	RCC->CR = (RCC->CR & ~RCC_CR_HSEBYP) | (bypass << RCC_CR_HSEBYP_bit);
+	RCC->CR |= RCC_CR_HSEON;	/// \todo check whether this can be merged with previous write of RCC->CR
+	while ((RCC->CR & RCC_CR_HSERDY) == 0);	// wait until HSE oscillator is stable
 }
 
 }	// namespace chip
