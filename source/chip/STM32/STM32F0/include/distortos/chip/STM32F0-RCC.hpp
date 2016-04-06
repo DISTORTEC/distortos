@@ -72,6 +72,21 @@ void disableHsi48();
 
 void enableHse(bool bypass);
 
+#ifdef STM32F04_STM32F071_STM32F072_STM32F078_STM32F09_RCC_FEATURES
+
+/**
+ * \brief Enables HSI48 clock.
+ *
+ * This function waits until the HSI48 clock is stable after enabling it.
+ *
+ * \warning Before changing configuration of HSI48 clock make sure that it is not used in any way (as core clock, as
+ * source for any PLL or as source of USB clock).
+ */
+
+void enableHsi48();
+
+#endif	// def STM32F04_STM32F071_STM32F072_STM32F078_STM32F09_RCC_FEATURES
+
 }	// namespace chip
 
 }	// namespace distortos

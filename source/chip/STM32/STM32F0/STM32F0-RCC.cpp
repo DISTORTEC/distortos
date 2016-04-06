@@ -45,6 +45,16 @@ void enableHse(const bool bypass)
 	while ((RCC->CR & RCC_CR_HSERDY) == 0);	// wait until HSE oscillator is stable
 }
 
+#ifdef STM32F04_STM32F071_STM32F072_STM32F078_STM32F09_RCC_FEATURES
+
+void enableHsi48()
+{
+	RCC->CR2 |= RCC_CR2_HSI48ON;
+	while ((RCC->CR2 & RCC_CR2_HSI48RDY) == 0);	// wait until HSI48 clock is stable
+}
+
+#endif	// def STM32F04_STM32F071_STM32F072_STM32F078_STM32F09_RCC_FEATURES
+
 }	// namespace chip
 
 }	// namespace distortos
