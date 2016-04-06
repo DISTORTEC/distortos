@@ -71,6 +71,18 @@ void enableHsi48()
 
 #endif	// def STM32F04_STM32F071_STM32F072_STM32F078_STM32F09_RCC_FEATURES
 
+int enablePll(const PllClockSource pllClockSource, const uint8_t pllmul)
+{
+	if (pllmul < minPllmul || pllmul > maxPllmul)
+		return EINVAL;
+
+	RCC->CFGR = (RCC->CFGR & ~(RCC_CFGR_PLLMUL | RCC_CFGR_PLLSRC)) | ((pllmul - 2) << RCC_CFGR_PLLMUL_bit) |
+			(static_cast<uint8_t>(pllClockSource) << RCC_CFGR_PLLSRC_bit);
+	RCC->CR |= RCC_CR_PLLON;
+	while ((RCC->CR & RCC_CR_PLLRDY) == 0);	// wait until PLL is stable
+	return 0;
+}
+
 }	// namespace chip
 
 }	// namespace distortos

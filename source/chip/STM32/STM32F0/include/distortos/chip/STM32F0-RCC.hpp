@@ -35,8 +35,42 @@ namespace chip
 {
 
 /*---------------------------------------------------------------------------------------------------------------------+
+| global types
++---------------------------------------------------------------------------------------------------------------------*/
+
+/// PLL clock source
+enum class PllClockSource : uint8_t
+{
+	/// HSI oscillator divided by 2 selected as PLL clock source
+	hsiDiv2 = 0,
+
+#ifdef STM32F04_STM32F071_STM32F072_STM32F078_STM32F09_RCC_FEATURES
+
+	/// HSI oscillator divided by PREDIV selected as PLL clock source
+	hsiPrediv = 1,
+
+#endif	// def STM32F04_STM32F071_STM32F072_STM32F078_STM32F09_RCC_FEATURES
+
+	/// HSE oscillator divided by PREDIV selected as PLL clock source
+	hsePrediv = 2,
+
+#ifdef STM32F04_STM32F071_STM32F072_STM32F078_STM32F09_RCC_FEATURES
+
+	/// HSI48 oscillator divided by PREDIV selected as PLL clock source
+	hsi48Prediv = 3,
+
+#endif	// def STM32F04_STM32F071_STM32F072_STM32F078_STM32F09_RCC_FEATURES
+};
+
+/*---------------------------------------------------------------------------------------------------------------------+
 | global constants
 +---------------------------------------------------------------------------------------------------------------------*/
+
+/// minimum allowed value for PLLMUL
+constexpr uint8_t minPllmul {2};
+
+/// maximum allowed value for PLLMUL
+constexpr uint8_t maxPllmul {16};
 
 /// minimum allowed value for PREDIV
 constexpr uint8_t minPrediv {1};
@@ -121,6 +155,23 @@ void enableHse(bool bypass);
 void enableHsi48();
 
 #endif	// def STM32F04_STM32F071_STM32F072_STM32F078_STM32F09_RCC_FEATURES
+
+/**
+ * \brief Enables main PLL.
+ *
+ * Enables main PLL using selected parameters and waits until it is stable.
+ *
+ * \warning Before changing configuration of main PLL make sure that it is not used in any way (as core clock or as
+ * source of peripheral clocks) and that it is disabled.
+ *
+ * \param [in] pllClockSource selects PLL clock source
+ * \param [in] pllmul is the PLLMUL value for main PLL, [2; 16] or [minPllmul; maxPllmul]
+ *
+ * \return 0 on success, error code otherwise:
+ * - EINVAL - \a pllmul value is invalid;
+ */
+
+int enablePll(PllClockSource pllClockSource, uint8_t pllmul);
 
 }	// namespace chip
 
