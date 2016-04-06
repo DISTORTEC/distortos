@@ -85,6 +85,15 @@ void disableHsi48();
 #endif	// def STM32F04_STM32F071_STM32F072_STM32F078_STM32F09_RCC_FEATURES
 
 /**
+ * \brief Disables main PLL.
+ *
+ * \warning Before changing configuration of main PLL make sure that it is not used in any way (as core clock or as
+ * source of peripheral clocks).
+ */
+
+void disablePll();
+
+/**
  * \brief Enables HSE clock.
  *
  * Enables HSE clock using crystal/ceramic resonator (bypass disabled) or external user clock (bypass enabled). This

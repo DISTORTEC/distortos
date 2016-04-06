@@ -49,6 +49,11 @@ void disableHsi48()
 
 #endif	// def STM32F04_STM32F071_STM32F072_STM32F078_STM32F09_RCC_FEATURES
 
+void disablePll()
+{
+	RCC->CR &= ~RCC_CR_PLLON;
+}
+
 void enableHse(const bool bypass)
 {
 	RCC->CR = (RCC->CR & ~RCC_CR_HSEBYP) | (bypass << RCC_CR_HSEBYP_bit);
