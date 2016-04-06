@@ -78,9 +78,48 @@ constexpr uint8_t minPrediv {1};
 /// maximum allowed value for PREDIV
 constexpr uint8_t maxPrediv {16};
 
+/// first allowed value for AHB divider - 1
+constexpr uint16_t hpreDiv1 {1};
+
+/// second allowed value for AHB divider - 2
+constexpr uint16_t hpreDiv2 {2};
+
+/// third allowed value for AHB divider - 4
+constexpr uint16_t hpreDiv4 {4};
+
+/// fourth allowed value for AHB divider - 8
+constexpr uint16_t hpreDiv8 {8};
+
+/// fifth allowed value for AHB divider - 16
+constexpr uint16_t hpreDiv16 {16};
+
+/// sixth allowed value for AHB divider - 64
+constexpr uint16_t hpreDiv64 {64};
+
+/// seventh allowed value for AHB divider - 128
+constexpr uint16_t hpreDiv128 {128};
+
+/// eighth allowed value for AHB divider - 256
+constexpr uint16_t hpreDiv256 {256};
+
+/// ninth allowed value for AHB divider - 512
+constexpr uint16_t hpreDiv512 {512};
+
 /*---------------------------------------------------------------------------------------------------------------------+
 | global functions' declarations
 +---------------------------------------------------------------------------------------------------------------------*/
+
+/**
+ * \brief Configures divider of AHB clock (HPRE value).
+ *
+ * \param [in] hpre is the HPRE value, {1, 2, 4, 8, 16, 64, 128, 256, 512} or {hpreDiv1, hpreDiv2, hpreDiv4, hpreDiv8,
+ * hpreDiv16, hpreDiv64, hpreDiv128, hpreDiv256, hpreDiv512}
+ *
+ * \return 0 on success, error code otherwise:
+ * - EINVAL - \a hpre value is invalid;
+ */
+
+int configureAhbClockDivider(uint16_t hpre);
 
 /**
  * \brief Configures PREDIV division factor.
