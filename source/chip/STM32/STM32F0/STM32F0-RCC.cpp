@@ -53,6 +53,27 @@ int configureAhbClockDivider(const uint16_t hpre)
 	return EINVAL;
 }
 
+int configureApbClockDivider(const uint8_t ppre)
+{
+	static const std::pair<decltype(ppre), decltype(RCC_CFGR_PPRE_DIV1)> associations[]
+	{
+			{ppreDiv1, RCC_CFGR_PPRE_DIV1},
+			{ppreDiv2, RCC_CFGR_PPRE_DIV2},
+			{ppreDiv4, RCC_CFGR_PPRE_DIV4},
+			{ppreDiv8, RCC_CFGR_PPRE_DIV8},
+			{ppreDiv16, RCC_CFGR_PPRE_DIV16},
+	};
+
+	for (auto& association : associations)
+		if (association.first == ppre)
+		{
+			RCC->CFGR = (RCC->CFGR & ~RCC_CFGR_PPRE) | association.second;
+			return 0;
+		}
+
+	return EINVAL;
+}
+
 int configurePrediv(const uint8_t prediv)
 {
 	if (prediv < minPrediv || prediv > maxPrediv)
