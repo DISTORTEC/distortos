@@ -49,10 +49,10 @@ int configurePrediv(const bool prediv2, const uint8_t prediv)
 
 #if defined(CONFIG_CHIP_STM32F100)
 	static_cast<void>(prediv2);	// suppress warning
-	RCC->CFGR2 = (RCC->CFGR2 & ~RCC_CFGR2_PREDIV1) | (prediv << RCC_CFGR2_PREDIV1_bit);
+	RCC->CFGR2 = (RCC->CFGR2 & ~RCC_CFGR2_PREDIV1) | ((prediv - 1) << RCC_CFGR2_PREDIV1_bit);
 #elif defined(CONFIG_CHIP_STM32F105) || defined(CONFIG_CHIP_STM32F107)
 	RCC->CFGR2 = (RCC->CFGR2 & ~(prediv2 == true ? RCC_CFGR2_PREDIV2 : RCC_CFGR2_PREDIV1)) |
-			(prediv << (prediv2 == true ? RCC_CFGR2_PREDIV2_bit : RCC_CFGR2_PREDIV1_bit));
+			((prediv - 1) << (prediv2 == true ? RCC_CFGR2_PREDIV2_bit : RCC_CFGR2_PREDIV1_bit));
 #else	// !defined(CONFIG_CHIP_STM32F100) && !defined(CONFIG_CHIP_STM32F105) && !defined(CONFIG_CHIP_STM32F107)
 	static_cast<void>(prediv2);	// suppress warning
 	RCC_CFGR_PLLXTPRE_bb = prediv == 2;
