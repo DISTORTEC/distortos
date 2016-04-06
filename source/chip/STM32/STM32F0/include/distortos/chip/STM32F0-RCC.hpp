@@ -62,6 +62,24 @@ enum class PllClockSource : uint8_t
 #endif	// def STM32F04_STM32F071_STM32F072_STM32F078_STM32F09_RCC_FEATURES
 };
 
+/// system clock source
+enum class SystemClockSource : uint8_t
+{
+	/// HSI oscillator selected as system clock
+	hsi,
+	/// HSE oscillator selected as system clock
+	hse,
+	/// main PLL selected as system clock
+	pll,
+
+#ifdef STM32F04_STM32F071_STM32F072_STM32F078_STM32F09_RCC_FEATURES
+
+	/// HSI48 oscillator selected as system clock
+	hsi48,
+
+#endif	// def STM32F04_STM32F071_STM32F072_STM32F078_STM32F09_RCC_FEATURES
+};
+
 /*---------------------------------------------------------------------------------------------------------------------+
 | global constants
 +---------------------------------------------------------------------------------------------------------------------*/
@@ -237,6 +255,14 @@ void enableHsi48();
  */
 
 int enablePll(PllClockSource pllClockSource, uint8_t pllmul);
+
+/**
+ * \brief Switches system clock.
+ *
+ * \param [in] source is the new source of system clock
+ */
+
+void switchSystemClock(SystemClockSource source);
 
 }	// namespace chip
 
