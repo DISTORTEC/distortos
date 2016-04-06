@@ -29,6 +29,15 @@ void disableHse()
 	RCC->CR &= ~RCC_CR_HSEON;
 }
 
+#ifdef STM32F04_STM32F071_STM32F072_STM32F078_STM32F09_RCC_FEATURES
+
+void disableHsi48()
+{
+	RCC->CR2 &= ~RCC_CR2_HSI48ON;
+}
+
+#endif	// def STM32F04_STM32F071_STM32F072_STM32F078_STM32F09_RCC_FEATURES
+
 void enableHse(const bool bypass)
 {
 	RCC->CR = (RCC->CR & ~RCC_CR_HSEBYP) | (bypass << RCC_CR_HSEBYP_bit);

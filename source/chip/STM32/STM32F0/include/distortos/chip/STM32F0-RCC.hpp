@@ -16,6 +16,16 @@
 #ifndef SOURCE_CHIP_STM32_STM32F0_INCLUDE_DISTORTOS_CHIP_STM32F0_RCC_HPP_
 #define SOURCE_CHIP_STM32_STM32F0_INCLUDE_DISTORTOS_CHIP_STM32F0_RCC_HPP_
 
+#include "distortos/distortosConfiguration.h"
+
+#if defined(CONFIG_CHIP_STM32F04) || defined(CONFIG_CHIP_STM32F071) || defined(CONFIG_CHIP_STM32F072) || \
+	defined(CONFIG_CHIP_STM32F078) || defined(CONFIG_CHIP_STM32F09)
+
+#define STM32F04_STM32F071_STM32F072_STM32F078_STM32F09_RCC_FEATURES
+
+#endif	// defined(CONFIG_CHIP_STM32F04) || defined(CONFIG_CHIP_STM32F071) || defined(CONFIG_CHIP_STM32F072) ||
+		// defined(CONFIG_CHIP_STM32F078) || defined(CONFIG_CHIP_STM32F09)
+
 namespace distortos
 {
 
@@ -34,6 +44,19 @@ namespace chip
  */
 
 void disableHse();
+
+#ifdef STM32F04_STM32F071_STM32F072_STM32F078_STM32F09_RCC_FEATURES
+
+/**
+ * \brief Disables HSI48 clock.
+ *
+ * \warning Before changing configuration of HSI48 clock make sure that it is not used in any way (as core clock, as
+ * source for any PLL or as source of USB clock).
+ */
+
+void disableHsi48();
+
+#endif	// def STM32F04_STM32F071_STM32F072_STM32F078_STM32F09_RCC_FEATURES
 
 /**
  * \brief Enables HSE clock.
