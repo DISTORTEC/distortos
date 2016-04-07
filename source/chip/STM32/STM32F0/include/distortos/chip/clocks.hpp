@@ -50,8 +50,14 @@ constexpr uint32_t minPllOutFrequency {16000000};
 /// maximum allowed value for PLL output frequency, Hz
 constexpr uint32_t maxPllOutFrequency {48000000};
 
+/// SYSCLK frequency, Hz
+constexpr uint32_t sysclkFrequency {CONFIG_CHIP_STM32F0_RCC_SYSCLK_FREQUENCY};
+
 /// AHB frequency, Hz
-constexpr uint32_t ahbFrequency {CONFIG_CHIP_STM32F0_RCC_AHB_FREQUENCY};
+constexpr uint32_t ahbFrequency {sysclkFrequency / CONFIG_CHIP_STM32F0_RCC_HPRE};
+
+/// APB frequency, Hz
+constexpr uint32_t apbFrequency {ahbFrequency / CONFIG_CHIP_STM32F0_RCC_PPRE};
 
 }	// namespace chip
 
