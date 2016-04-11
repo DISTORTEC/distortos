@@ -35,14 +35,6 @@ if CHIP_STM32F0
 
 comment "STM32F0 chip options"
 
-config CHIP_STM32F0_RCC_AHB_FREQUENCY
-	int "Frequency of AHB clock, Hz"
-	range 1 48000000
-	default 8000000
-	help
-		Frequency of AHB clock, Hz. RCC must be configured by user to achieve
-		that frequency.
-
 menu "Clocks configuration"
 
 config CHIP_STM32F0_STANDARD_CLOCK_CONFIGURATION_ENABLE
