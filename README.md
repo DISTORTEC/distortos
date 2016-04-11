@@ -126,5 +126,5 @@ executing `pacman -S gawk make` in the shell of this software distro - the binar
 `<installation path>\usr\bin` folder. *kconfig-frontends* binaries for *Windows* can be found on
 [distortos.org](http://distortos.org/) in [Downloads](http://distortos.org/downloads/) >
 [Tools](http://distortos.org/downloads/tools/) >
-[kconfig-frontends for Windows](http://distortos.org/downloads/tools/kconfig-frontends-for-windows/). *tup* and
+[kconfig-frontends for Windows](http://distortos.org/downloads/tools/kconfig-frontends-windows/). *tup* and
 *arm-none-eabi bleeding-edge-toolchain* binaries for *Windows* are available from their main websites.
