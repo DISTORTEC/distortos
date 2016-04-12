@@ -10,7 +10,7 @@ All notable changes to this project will be documented in this file. This projec
 ### Added
 
 - Support for *ARMv6-M* (*ARM Cortex-M0*, *ARM Cortex-M0+* and *ARM Cortex-M1*) architecture.
-- Basic support for all 72 [STM32F0](http://www.st.com/web/en/catalog/mmc/FM141/SC1169/SS1574) chips.
+- Support for all 72 [STM32F0](http://www.st.com/web/en/catalog/mmc/FM141/SC1169/SS1574) chips.
 - Support for all 94 [STM32F1](http://www.st.com/web/en/catalog/mmc/SC1169/SS1031) chips.
 - Support and test configuration for
 [NUCLEO-F103RB](http://www.st.com/web/catalog/tools/FM116/SC959/SS1532/LN1847/PF259875?icmp=nucleo-ipf_pron_pr-nucleo_feb2014&sc=nucleoF103RB-pr) board with *STM32F1* chip and
