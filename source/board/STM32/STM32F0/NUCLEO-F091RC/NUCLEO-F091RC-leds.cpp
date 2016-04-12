@@ -1,6 +1,6 @@
 /**
  * \file
- * \brief board::lowLevelInitialization() implementation for NUCLEO-F091RC
+ * \brief Definition of LEDs for NUCLEO-F091RC
  *
  * \author Copyright (C) 2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
@@ -9,9 +9,11 @@
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#include "distortos/board/lowLevelInitialization.hpp"
+#include "distortos/board/leds.hpp"
 
-#include "distortos/chip/CMSIS-proxy.h"
+#ifdef CONFIG_BOARD_LEDS_ENABLE
+
+#include "distortos/chip/ChipOutputPin.hpp"
 
 namespace distortos
 {
@@ -20,18 +22,16 @@ namespace board
 {
 
 /*---------------------------------------------------------------------------------------------------------------------+
-| global functions
+| global objects
 +---------------------------------------------------------------------------------------------------------------------*/
 
-void lowLevelInitialization()
+chip::ChipOutputPin leds[totalLeds]
 {
-	RCC->AHBENR |=
-#ifdef CONFIG_BOARD_LEDS_ENABLE
-			RCC_AHBENR_GPIOAEN |
-#endif	// def CONFIG_BOARD_LEDS_ENABLE
-			0;
-}
+		chip::ChipOutputPin{ledPins[0]},
+};
 
 }	// namespace board
 
 }	// namespace distortos
+
+#endif	// def CONFIG_BOARD_LEDS_ENABLE
