@@ -9,6 +9,7 @@
 
 # don't remove next line!
 ### begin Kconfig-boardOptions
+source "$DISTORTOS_PATH/source/board/STM32/STM32F0/NUCLEO-F091RC/Kconfig-boardOptions"
 source "$DISTORTOS_PATH/source/board/STM32/STM32F1/NUCLEO-F103RB/Kconfig-boardOptions"
 source "$DISTORTOS_PATH/source/board/STM32/STM32F4/32F429IDISCOVERY/Kconfig-boardOptions"
 source "$DISTORTOS_PATH/source/board/STM32/STM32F4/NUCLEO-F401RE/Kconfig-boardOptions"

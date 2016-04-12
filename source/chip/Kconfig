@@ -40,6 +40,7 @@ config BOARD_CUSTOM
 
 # don't remove next line!
 ### begin Kconfig-boardChoices
+source "$DISTORTOS_PATH/source/board/STM32/STM32F0/NUCLEO-F091RC/Kconfig-boardChoices"
 source "$DISTORTOS_PATH/source/board/STM32/STM32F1/NUCLEO-F103RB/Kconfig-boardChoices"
 source "$DISTORTOS_PATH/source/board/STM32/STM32F4/32F429IDISCOVERY/Kconfig-boardChoices"
 source "$DISTORTOS_PATH/source/board/STM32/STM32F4/NUCLEO-F401RE/Kconfig-boardChoices"
