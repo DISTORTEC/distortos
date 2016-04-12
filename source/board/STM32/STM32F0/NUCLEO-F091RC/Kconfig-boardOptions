@@ -9,6 +9,10 @@
 
 if BOARD_NUCLEO_F091RC
 
+config BOARD_TOTAL_BUTTONS
+	int
+	default 1
+
 config BOARD_TOTAL_LEDS
 	int
 	default 1
