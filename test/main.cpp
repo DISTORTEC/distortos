@@ -44,7 +44,7 @@ int main()
 	const volatile auto result = distortos::test::testCases.run();
 
 	// next line is a good place for a breakpoint that will be hit right after test cases
-	const auto duration = result == true ? std::chrono::milliseconds{500} :  std::chrono::milliseconds{50};
+	const auto duration = result == true ? std::chrono::milliseconds{500} : std::chrono::milliseconds{50};
 	while (1)
 	{
 #ifdef CONFIG_BOARD_LEDS_ENABLE

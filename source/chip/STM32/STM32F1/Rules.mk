@@ -20,7 +20,7 @@ LD_SCRIPT_GENERATOR_ARGUMENTS := $(CONFIG_CHIP) \
 		"$(CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_MAIN_STACK_SIZE)" "$(CONFIG_MAIN_THREAD_STACK_SIZE)"
 
 $(LDSCRIPT): $(DISTORTOS_CONFIGURATION_MK)
-	$(call PRETTY_PRINT," SH     " $(LD_SCRIPT_GENERATOR))
+	$(call PRETTY_PRINT,"SH     " $(LD_SCRIPT_GENERATOR))
 	$(Q)./$(LD_SCRIPT_GENERATOR) $(LD_SCRIPT_GENERATOR_ARGUMENTS) > "$@"
 
 #-----------------------------------------------------------------------------------------------------------------------

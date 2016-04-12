@@ -60,7 +60,7 @@ endif	# ndef SRAM3_UNIFIED
 endif	# def CONFIG_CHIP_STM32F4_SRAM3_ADDRESS
 
 $(LDSCRIPT): $(DISTORTOS_CONFIGURATION_MK)
-	$(call PRETTY_PRINT," SH     " $(LD_SCRIPT_GENERATOR))
+	$(call PRETTY_PRINT,"SH     " $(LD_SCRIPT_GENERATOR))
 	$(Q)./$(LD_SCRIPT_GENERATOR) $(LD_SCRIPT_GENERATOR_ARGUMENTS) > "$@"
 
 #-----------------------------------------------------------------------------------------------------------------------

@@ -21,7 +21,7 @@ DISTORTOS_CONFIGURATION_H := $(OUTPUT)include/distortos/distortosConfiguration.h
 MAKE_DISTORTOS_CONFIGURATION_AWK := $(DISTORTOS_PATH)scripts/makeDistortosConfiguration.awk
 
 $(DISTORTOS_CONFIGURATION_H): $(DISTORTOS_CONFIGURATION_MK)
-	$(call PRETTY_PRINT," AWK    " $(MAKE_DISTORTOS_CONFIGURATION_AWK))
+	$(call PRETTY_PRINT,"AWK    " $(MAKE_DISTORTOS_CONFIGURATION_AWK))
 	$(Q)./$(MAKE_DISTORTOS_CONFIGURATION_AWK) "$(dir $<)$(notdir $<)" > "$@"
 
 #-----------------------------------------------------------------------------------------------------------------------

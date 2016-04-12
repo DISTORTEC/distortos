@@ -139,7 +139,7 @@ template<typename Function, typename... Args>
 auto invoke(Function&& function, Args&&... args) ->
 		decltype(internal::invoke(std::forward<Function>(function), std::forward<Args>(args)...))
 {
-    return internal::invoke(std::forward<Function>(function), std::forward<Args>(args)...);
+	return internal::invoke(std::forward<Function>(function), std::forward<Args>(args)...);
 }
 
 }	// namespace estd

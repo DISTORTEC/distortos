@@ -35,8 +35,8 @@ public:
 	/**
 	 * \brief ChipInputPin's constructor
 	 *
-	  * \param [in] pin is the identifier of pin
-	  * \param [in] pull is the desired pull-up/pull-down configuration of pin, default - PinPull::none
+	 * \param [in] pin is the identifier of pin
+	 * \param [in] pull is the desired pull-up/pull-down configuration of pin, default - PinPull::none
 	 * \param [in] inverted selects whether the pin is inverted (true) - get() returns true when GPIO state is low and
 	 * false when GPIO state is high - or not (false), default - false, not inverted
 	 */
