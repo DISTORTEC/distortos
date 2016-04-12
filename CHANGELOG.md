@@ -12,7 +12,8 @@ All notable changes to this project will be documented in this file. This projec
 - Support for *ARMv6-M* (*ARM Cortex-M0*, *ARM Cortex-M0+* and *ARM Cortex-M1*) architecture.
 - Support for all 72 [STM32F0](http://www.st.com/web/en/catalog/mmc/FM141/SC1169/SS1574) chips.
 - Support for all 94 [STM32F1](http://www.st.com/web/en/catalog/mmc/SC1169/SS1031) chips.
-- Support and test configuration for
+- Support and test configurations for
+[NUCLEO-F091RC](http://www2.st.com/content/st_com/en/products/evaluation-tools/product-evaluation-tools/mcu-eval-tools/stm32-mcu-eval-tools/stm32-mcu-nucleo/nucleo-f091rc.html) board with *STM32F0* chip,
 [NUCLEO-F103RB](http://www.st.com/web/catalog/tools/FM116/SC959/SS1532/LN1847/PF259875?icmp=nucleo-ipf_pron_pr-nucleo_feb2014&sc=nucleoF103RB-pr) board with *STM32F1* chip and
 [NUCLEO-F429ZI](http://www.st.com/web/catalog/tools/FM116/SC959/SS1532/LN1847/PF262637) board with *STM32F4* chip.
 - `make olddefconfig` target, which can be used to update currently selected configuration with default values of new
