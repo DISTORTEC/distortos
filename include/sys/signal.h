@@ -38,4 +38,4 @@ union sigval
 }	/* extern "C" */
 #endif	/* def __cplusplus */
 
-#endif /* INCLUDE_SYS_SIGNAL_H_ */
+#endif	/* INCLUDE_SYS_SIGNAL_H_ */
