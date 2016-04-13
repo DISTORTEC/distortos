@@ -270,23 +270,11 @@ int enablePll(uint16_t plln, uint8_t pllp, uint8_t pllq);
 
 #endif	// !defined(CONFIG_CHIP_STM32F446) && !defined(CONFIG_CHIP_STM32F469) && !defined(CONFIG_CHIP_STM32F479)
 
-#if defined(CONFIG_CHIP_STM32F446) || defined(CONFIG_CHIP_STM32F469) || defined(CONFIG_CHIP_STM32F479)
-
 /**
  * \brief Switches system clock.
  *
- * \param [in] source is the new source of system clock, SystemClockSource::{hsi, hse, pll, pllr}
+ * \param [in] source is the new source of system clock
  */
-
-#else	// !defined(CONFIG_CHIP_STM32F446) && !defined(CONFIG_CHIP_STM32F469) && !defined(CONFIG_CHIP_STM32F479)
-
-/**
- * \brief Switches system clock.
- *
- * \param [in] source is the new source of system clock, SystemClockSource::{hsi, hse, pll}
- */
-
-#endif	// !defined(CONFIG_CHIP_STM32F446) && !defined(CONFIG_CHIP_STM32F469) && !defined(CONFIG_CHIP_STM32F479)
 
 void switchSystemClock(SystemClockSource source);
 
