@@ -164,7 +164,7 @@ int configureApbClockDivider(bool ppre2, uint8_t ppre);
  * \warning Before changing configuration of PLL make sure that it is not used in any way (as core clock or as source of
  * peripheral clocks) and that it is disabled.
  *
- * \param [in] prediv1 is the PREDIV1 division factor, [minPrediv1; maxPrediv1]
+ * \param [in] prediv1 is the PREDIV1 division factor, [minPrediv; maxPrediv]
  *
  * \return 0 on success, error code otherwise:
  * - EINVAL - \a prediv1 value is invalid;
