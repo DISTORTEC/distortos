@@ -67,10 +67,10 @@ Configuration & building
 To configure & build *distortos* you need:
 - [GNU Make](http://www.gnu.org/software/make/) build system;
 - (optionally) [tup](http://gittup.org/tup/) (version 0.7.3 or above) build system;
-- [arm-none-eabi bleeding-edge-toolchain](https://sourceforge.net/projects/bleeding-edge/); alternatively you can try
-any other arm-none-eabi toolchain, but C++ exception handling code will increase the size of binary and incorrect
-newlib's _reent struct configuration will dramatically increase RAM requirements (bleeding-edge-toolchain has the
-exceptions properly disabled and uses small variant of _reent struct - see
+- [arm-none-eabi bleeding-edge-toolchain](http://www.freddiechopin.info/en/download/category/11-bleeding-edge-toolchain);
+alternatively you can try any other arm-none-eabi toolchain, but C++ exception handling code will increase the size of
+binary and incorrect newlib's _reent struct configuration will dramatically increase RAM requirements
+(bleeding-edge-toolchain has the exceptions properly disabled and uses small variant of _reent struct - see
 [here](http://www.freddiechopin.info/en/articles/35-arm/87-bleeding-edge-toolchain-o-co-chodzi)) - such combinations are
 not tested extensively;
 - [AWK](https://en.wikipedia.org/wiki/AWK);
