@@ -10,12 +10,11 @@ All notable changes to this project will be documented in this file. This projec
 ### Added
 
 - Support for *ARMv6-M* (*ARM Cortex-M0*, *ARM Cortex-M0+* and *ARM Cortex-M1*) architecture.
-- Support for all 72 [STM32F0](http://www.st.com/web/en/catalog/mmc/FM141/SC1169/SS1574) chips.
-- Support for all 94 [STM32F1](http://www.st.com/web/en/catalog/mmc/SC1169/SS1031) chips.
-- Support and test configurations for
-[NUCLEO-F091RC](http://www2.st.com/content/st_com/en/products/evaluation-tools/product-evaluation-tools/mcu-eval-tools/stm32-mcu-eval-tools/stm32-mcu-nucleo/nucleo-f091rc.html) board with *STM32F0* chip,
-[NUCLEO-F103RB](http://www.st.com/web/catalog/tools/FM116/SC959/SS1532/LN1847/PF259875?icmp=nucleo-ipf_pron_pr-nucleo_feb2014&sc=nucleoF103RB-pr) board with *STM32F1* chip and
-[NUCLEO-F429ZI](http://www.st.com/web/catalog/tools/FM116/SC959/SS1532/LN1847/PF262637) board with *STM32F4* chip.
+- Support for all 72 [STM32F0](http://www.st.com/stm32f0) chips.
+- Support for all 94 [STM32F1](http://www.st.com/stm32f1) chips.
+- Support and test configurations for [NUCLEO-F091RC](http://www.st.com/web/catalog/tools/PF260944) board with *STM32F0*
+chip, [NUCLEO-F103RB](http://www.st.com/nucleoF103RB-pr) board with *STM32F1* chip and
+[NUCLEO-F429ZI](http://www.st.com/web/catalog/tools/PF262637) board with *STM32F4* chip.
 - `make olddefconfig` target, which can be used to update currently selected configuration with default values of new
 options.
 - `updateAllConfigurations.sh` script, which can be used to run `make olddefconfig` for all configurations found in
@@ -91,11 +90,10 @@ functor, lambda) with any number of arguments of any type.
 - Basic device drivers for input and output pin.
 - Support for *ARMv7-M* (*ARM Cortex-M3* and *ARM Cortex-M4(F)*) architecture. FPU can be used in any number of threads
 and interrupt handlers at the same time.
-- Support for *STM32F4* chips.
+- Support for [STM32F4](http://www.st.com/stm32f4) chips.
 - Support and test configurations for 3 boards with *STM32F4* chips:
-[32F429IDISCOVERY](http://www.st.com/web/catalog/tools/FM116/SC959/SS1532/PF259090),
-[NUCLEO-F401RE](http://www.st.com/web/catalog/tools/FM116/SC959/SS1532/LN1847/PF260000?icmp=nucleo-ipf_pron_pr-nucleo_feb2014&sc=nucleoF401RE-pr)
-and [STM32F4DISCOVERY](http://www.st.com/web/catalog/tools/FM116/SC959/SS1532/PF252419).
+[32F429IDISCOVERY](http://www.st.com/web/catalog/tools/PF259090), [NUCLEO-F401RE](http://www.st.com/nucleoF401RE-pr) and
+[STM32F4DISCOVERY](http://www.st.com/web/catalog/tools/PF252419).
 - Extensive functional tests for all implemented functionalities.
 - Configuration with mconf tool from [kconfig-frontends](http://ymorin.is-a-geek.org/projects/kconfig-frontends).
 - `README.md` file with introduction and information about configuration & building.

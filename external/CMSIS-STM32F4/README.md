@@ -1,7 +1,7 @@
 CMSIS for STM32F4
 =================
 
-- link: [STM32CubeF4](http://www.st.com/st-web-ui/active/en/catalog/tools/PF259243)
+- link: [STM32CubeF4](http://www.st.com/stm32cubef4-pr)
 - package name: STM32Cube_FW_F4_V1.11.0
 - package version: V1.11.0
 - download date: 2016-02-12
