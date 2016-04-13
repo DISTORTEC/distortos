@@ -90,6 +90,16 @@ int configurePllInputClockDivider(const uint8_t pllm)
 	return 0;
 }
 
+void disableHse()
+{
+	RCC_CR_HSEON_bb = 0;
+}
+
+void disablePll()
+{
+	RCC_CR_PLLON_bb = 0;
+}
+
 void enableHse(const bool bypass)
 {
 	RCC_CR_HSEBYP_bb = bypass;
@@ -127,16 +137,6 @@ int enablePll(const uint16_t plln, const uint8_t pllp, const uint8_t pllq)
 	RCC_CR_PLLON_bb = 1;
 	while (RCC_CR_PLLRDY_bb == 0);	// wait until PLL is stable
 	return 0;
-}
-
-void disableHse()
-{
-	RCC_CR_HSEON_bb = 0;
-}
-
-void disablePll()
-{
-	RCC_CR_PLLON_bb = 0;
 }
 
 void switchSystemClock(const SystemClockSource source)

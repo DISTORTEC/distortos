@@ -196,6 +196,24 @@ void configurePllClockSource(bool hse);
 int configurePllInputClockDivider(uint8_t pllm);
 
 /**
+ * \brief Disables HSE clock.
+ *
+ * \warning Before changing configuration of HSE clock make sure that it is not used in any way (as core clock, as
+ * source for any PLL or as source of RTC clock).
+ */
+
+void disableHse();
+
+/**
+ * \brief Disables main PLL.
+ *
+ * \warning Before changing configuration of main PLL make sure that it is not used in any way (as core clock or as
+ * source of peripheral clocks).
+ */
+
+void disablePll();
+
+/**
  * \brief Enables HSE clock.
  *
  * Enables HSE clock using crystal/ceramic resonator (bypass disabled) or external user clock (bypass enabled). This
@@ -251,24 +269,6 @@ int enablePll(uint16_t plln, uint8_t pllp, uint8_t pllq, uint8_t pllr);
 int enablePll(uint16_t plln, uint8_t pllp, uint8_t pllq);
 
 #endif	// !defined(CONFIG_CHIP_STM32F446) && !defined(CONFIG_CHIP_STM32F469) && !defined(CONFIG_CHIP_STM32F479)
-
-/**
- * \brief Disables HSE clock.
- *
- * \warning Before changing configuration of HSE clock make sure that it is not used in any way (as core clock, as
- * source for any PLL or as source of RTC clock).
- */
-
-void disableHse();
-
-/**
- * \brief Disables main PLL.
- *
- * \warning Before changing configuration of main PLL make sure that it is not used in any way (as core clock or as
- * source of peripheral clocks).
- */
-
-void disablePll();
 
 #if defined(CONFIG_CHIP_STM32F446) || defined(CONFIG_CHIP_STM32F469) || defined(CONFIG_CHIP_STM32F479)
 
