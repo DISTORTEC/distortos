@@ -165,6 +165,30 @@ int configurePrediv2(const uint8_t prediv2)
 
 #endif	// defined(CONFIG_CHIP_STM32F105) || defined(CONFIG_CHIP_STM32F107)
 
+void disableHse()
+{
+	RCC_CR_HSEON_bb = 0;
+}
+
+void disablePll()
+{
+	RCC_CR_PLLON_bb = 0;
+}
+
+#if defined(CONFIG_CHIP_STM32F105) || defined(CONFIG_CHIP_STM32F107)
+
+void disablePll2()
+{
+	RCC_CR_PLL2ON_bb = 0;
+}
+
+void disablePll3()
+{
+	RCC_CR_PLL3ON_bb = 0;
+}
+
+#endif	// defined(CONFIG_CHIP_STM32F105) || defined(CONFIG_CHIP_STM32F107)
+
 void enableHse(const bool bypass)
 {
 	RCC_CR_HSEBYP_bb = bypass;
@@ -203,30 +227,6 @@ int enablePll2(const uint8_t pll2Mul)
 int enablePll3(const uint8_t pll3Mul)
 {
 	return enablePll23(true, pll3Mul);
-}
-
-#endif	// defined(CONFIG_CHIP_STM32F105) || defined(CONFIG_CHIP_STM32F107)
-
-void disableHse()
-{
-	RCC_CR_HSEON_bb = 0;
-}
-
-void disablePll()
-{
-	RCC_CR_PLLON_bb = 0;
-}
-
-#if defined(CONFIG_CHIP_STM32F105) || defined(CONFIG_CHIP_STM32F107)
-
-void disablePll2()
-{
-	RCC_CR_PLL2ON_bb = 0;
-}
-
-void disablePll3()
-{
-	RCC_CR_PLL3ON_bb = 0;
 }
 
 #endif	// defined(CONFIG_CHIP_STM32F105) || defined(CONFIG_CHIP_STM32F107)

@@ -202,6 +202,45 @@ int configurePrediv2(uint8_t prediv2);
 #endif	// defined(CONFIG_CHIP_STM32F105) || defined(CONFIG_CHIP_STM32F107)
 
 /**
+ * \brief Disables HSE clock.
+ *
+ * \warning Before changing configuration of HSE clock make sure that it is not used in any way (as core clock, as
+ * source for any PLL or as source of RTC clock).
+ */
+
+void disableHse();
+
+/**
+ * \brief Disables main PLL.
+ *
+ * \warning Before changing configuration of main PLL make sure that it is not used in any way (as core clock or as
+ * source of peripheral clocks).
+ */
+
+void disablePll();
+
+#if defined(CONFIG_CHIP_STM32F105) || defined(CONFIG_CHIP_STM32F107)
+
+/**
+ * \brief Disables PLL2.
+ *
+ * \warning Before changing configuration of PLL2 make sure that it is not used in any way (as source of main PLL).
+ */
+
+void disablePll2();
+
+/**
+ * \brief Disables PLL3.
+ *
+ * \warning Before changing configuration of PLL3 make sure that it is not used in any way (as source of peripheral
+ * clocks).
+ */
+
+void disablePll3();
+
+#endif	// defined(CONFIG_CHIP_STM32F105) || defined(CONFIG_CHIP_STM32F107)
+
+/**
  * \brief Enables HSE clock.
  *
  * Enables HSE clock using crystal/ceramic resonator (bypass disabled) or external user clock (bypass enabled). This
@@ -265,45 +304,6 @@ int enablePll2(uint8_t pll2Mul);
  */
 
 int enablePll3(uint8_t pll3Mul);
-
-#endif	// defined(CONFIG_CHIP_STM32F105) || defined(CONFIG_CHIP_STM32F107)
-
-/**
- * \brief Disables HSE clock.
- *
- * \warning Before changing configuration of HSE clock make sure that it is not used in any way (as core clock, as
- * source for any PLL or as source of RTC clock).
- */
-
-void disableHse();
-
-/**
- * \brief Disables main PLL.
- *
- * \warning Before changing configuration of main PLL make sure that it is not used in any way (as core clock or as
- * source of peripheral clocks).
- */
-
-void disablePll();
-
-#if defined(CONFIG_CHIP_STM32F105) || defined(CONFIG_CHIP_STM32F107)
-
-/**
- * \brief Disables PLL2.
- *
- * \warning Before changing configuration of PLL2 make sure that it is not used in any way (as source of main PLL).
- */
-
-void disablePll2();
-
-/**
- * \brief Disables PLL3.
- *
- * \warning Before changing configuration of PLL3 make sure that it is not used in any way (as source of peripheral
- * clocks).
- */
-
-void disablePll3();
 
 #endif	// defined(CONFIG_CHIP_STM32F105) || defined(CONFIG_CHIP_STM32F107)
 
