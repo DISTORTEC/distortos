@@ -33,15 +33,15 @@ int configureAhbClockDivider(const uint16_t hpre)
 {
 	static const std::pair<decltype(hpre), decltype(RCC_CFGR_HPRE_DIV1)> associations[]
 	{
-		{hpreDiv1, RCC_CFGR_HPRE_DIV1},
-		{hpreDiv2, RCC_CFGR_HPRE_DIV2},
-		{hpreDiv4, RCC_CFGR_HPRE_DIV4},
-		{hpreDiv8, RCC_CFGR_HPRE_DIV8},
-		{hpreDiv16, RCC_CFGR_HPRE_DIV16},
-		{hpreDiv64, RCC_CFGR_HPRE_DIV64},
-		{hpreDiv128, RCC_CFGR_HPRE_DIV128},
-		{hpreDiv256, RCC_CFGR_HPRE_DIV256},
-		{hpreDiv512, RCC_CFGR_HPRE_DIV512},
+			{hpreDiv1, RCC_CFGR_HPRE_DIV1},
+			{hpreDiv2, RCC_CFGR_HPRE_DIV2},
+			{hpreDiv4, RCC_CFGR_HPRE_DIV4},
+			{hpreDiv8, RCC_CFGR_HPRE_DIV8},
+			{hpreDiv16, RCC_CFGR_HPRE_DIV16},
+			{hpreDiv64, RCC_CFGR_HPRE_DIV64},
+			{hpreDiv128, RCC_CFGR_HPRE_DIV128},
+			{hpreDiv256, RCC_CFGR_HPRE_DIV256},
+			{hpreDiv512, RCC_CFGR_HPRE_DIV512},
 	};
 
 	for (auto& association : associations)
@@ -58,11 +58,11 @@ int configureApbClockDivider(const bool ppre2, const uint8_t ppre)
 {
 	static const std::pair<decltype(ppre), std::array<decltype(RCC_CFGR_PPRE1_DIV1), 2>> associations[]
 	{
-		{ppreDiv1, {RCC_CFGR_PPRE1_DIV1, RCC_CFGR_PPRE2_DIV1}},
-		{ppreDiv2, {RCC_CFGR_PPRE1_DIV2, RCC_CFGR_PPRE2_DIV2}},
-		{ppreDiv4, {RCC_CFGR_PPRE1_DIV4, RCC_CFGR_PPRE2_DIV4}},
-		{ppreDiv8, {RCC_CFGR_PPRE1_DIV8, RCC_CFGR_PPRE2_DIV8}},
-		{ppreDiv16, {RCC_CFGR_PPRE1_DIV16, RCC_CFGR_PPRE2_DIV16}},
+			{ppreDiv1, {RCC_CFGR_PPRE1_DIV1, RCC_CFGR_PPRE2_DIV1}},
+			{ppreDiv2, {RCC_CFGR_PPRE1_DIV2, RCC_CFGR_PPRE2_DIV2}},
+			{ppreDiv4, {RCC_CFGR_PPRE1_DIV4, RCC_CFGR_PPRE2_DIV4}},
+			{ppreDiv8, {RCC_CFGR_PPRE1_DIV8, RCC_CFGR_PPRE2_DIV8}},
+			{ppreDiv16, {RCC_CFGR_PPRE1_DIV16, RCC_CFGR_PPRE2_DIV16}},
 	};
 
 	for (auto& association : associations)
