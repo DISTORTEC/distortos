@@ -83,7 +83,7 @@ public:
 	 * - EINVAL - this thread is already detached;
 	 */
 
-	virtual int detach() override;
+	int detach() override;
 
 #else	// !def CONFIG_THREAD_DETACH_ENABLE
 

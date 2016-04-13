@@ -33,7 +33,7 @@ public:
 	 * \return value returned by Semaphore::tryWait()
 	 */
 
-	virtual int operator()(Semaphore& semaphore) const override;
+	int operator()(Semaphore& semaphore) const override;
 };
 
 }	// namespace internal

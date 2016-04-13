@@ -53,7 +53,7 @@ protected:
 	 * \return true if finalization succeeded, false otherwise
 	 */
 
-	virtual bool finalize() const override;
+	bool finalize() const override;
 
 	/**
 	 * \brief Initializes the test case.
@@ -63,7 +63,7 @@ protected:
 	 * \return true if initialization succeeded, false otherwise
 	 */
 
-	virtual bool initialize() const override;
+	bool initialize() const override;
 
 private:
 

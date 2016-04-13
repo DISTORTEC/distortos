@@ -56,8 +56,8 @@ public:
 	 * \param [in] freeEntryList is a reference to FreeEntryList of MessageQueueBase
 	 */
 
-	virtual void operator()(MessageQueueBase::EntryList& entryList, MessageQueueBase::FreeEntryList& freeEntryList)
-			const override
+	void operator()(MessageQueueBase::EntryList& entryList, MessageQueueBase::FreeEntryList& freeEntryList) const
+			override
 	{
 		const auto& entry = entryList.front();
 		priority_ = entry.priority;
@@ -105,8 +105,8 @@ public:
 	 * \param [in] freeEntryList is a reference to FreeEntryList of MessageQueueBase
 	 */
 
-	virtual void operator()(MessageQueueBase::EntryList& entryList, MessageQueueBase::FreeEntryList& freeEntryList)
-			const override
+	void operator()(MessageQueueBase::EntryList& entryList, MessageQueueBase::FreeEntryList& freeEntryList) const
+			override
 	{
 		auto& entry = freeEntryList.front();
 

@@ -78,7 +78,7 @@ public:
 	 * \brief DynamicThread's destructor
 	 */
 
-	virtual ~DynamicThread() override;
+	~DynamicThread() override;
 
 	/**
 	 * \brief Detaches the thread.
@@ -93,7 +93,7 @@ public:
 	 * - EINVAL - this thread is already detached;
 	 */
 
-	virtual int detach() override;
+	int detach() override;
 
 	/**
 	 * \brief Generates signal for thread.
@@ -113,13 +113,13 @@ public:
 	 * \ingroup signals
 	 */
 
-	virtual int generateSignal(uint8_t signalNumber) override;
+	int generateSignal(uint8_t signalNumber) override;
 
 	/**
 	 * \return effective priority of thread
 	 */
 
-	virtual uint8_t getEffectivePriority() const override;
+	uint8_t getEffectivePriority() const override;
 
 	/**
 	 * \brief Gets set of currently pending signals.
@@ -133,25 +133,25 @@ public:
 	 * \ingroup signals
 	 */
 
-	virtual SignalSet getPendingSignalSet() const override;
+	SignalSet getPendingSignalSet() const override;
 
 	/**
 	 * \return priority of thread
 	 */
 
-	virtual uint8_t getPriority() const override;
+	uint8_t getPriority() const override;
 
 	/**
 	 * \return scheduling policy of the thread
 	 */
 
-	virtual SchedulingPolicy getSchedulingPolicy() const override;
+	SchedulingPolicy getSchedulingPolicy() const override;
 
 	/**
 	 * \return current state of thread
 	 */
 
-	virtual ThreadState getState() const override;
+	ThreadState getState() const override;
 
 	/**
 	 * \brief Waits for thread termination.
@@ -171,7 +171,7 @@ public:
 	 * \ingroup synchronization
 	 */
 
-	virtual int join() override;
+	int join() override;
 
 	/**
 	 * \brief Queues signal for thread.
@@ -194,7 +194,7 @@ public:
 	 * \ingroup signals
 	 */
 
-	virtual int queueSignal(uint8_t signalNumber, sigval value) override;
+	int queueSignal(uint8_t signalNumber, sigval value) override;
 
 	/**
 	 * \brief Changes priority of thread.
@@ -207,13 +207,13 @@ public:
 	 * - true - the thread is moved to the tail of the group of threads with the new priority.
 	 */
 
-	virtual void setPriority(uint8_t priority, bool alwaysBehind = {}) override;
+	void setPriority(uint8_t priority, bool alwaysBehind = {}) override;
 
 	/**
 	 * param [in] schedulingPolicy is the new scheduling policy of the thread
 	 */
 
-	virtual void setSchedulingPolicy(SchedulingPolicy schedulingPolicy) override;
+	void setSchedulingPolicy(SchedulingPolicy schedulingPolicy) override;
 
 	/**
 	 * \brief Starts the thread.
@@ -226,7 +226,7 @@ public:
 	 * - error codes returned by scheduler::Scheduler::add();
 	 */
 
-	virtual int start() override;
+	int start() override;
 
 	DynamicThread(const DynamicThread&) = delete;
 	DynamicThread(DynamicThread&&) = default;

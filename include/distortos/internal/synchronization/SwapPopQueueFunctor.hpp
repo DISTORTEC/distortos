@@ -53,7 +53,7 @@ public:
 	 * \param [in,out] storage is a pointer to storage with element
 	 */
 
-	virtual void operator()(void* const storage) const override
+	void operator()(void* const storage) const override
 	{
 		auto& swappedValue = *reinterpret_cast<T*>(storage);
 		using std::swap;

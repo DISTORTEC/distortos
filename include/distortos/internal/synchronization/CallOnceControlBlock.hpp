@@ -102,7 +102,7 @@ private:
 		 * Calls the bounded functor.
 		 */
 
-		virtual void operator()() const override
+		void operator()() const override
 		{
 			boundedFunctor_();
 		}

@@ -53,7 +53,7 @@ private:
 	 * \return true if the test case succeeded, false otherwise
 	 */
 
-	virtual bool run_() const override;
+	bool run_() const override;
 
 	/// range of references to TestCase objects
 	Range range_;

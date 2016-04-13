@@ -198,7 +198,7 @@ public:
 	 * Just calls OperationCountingType::checkCounters().
 	 */
 
-	virtual bool checkCounters(size_t constructed, size_t copyConstructed, size_t moveConstructed, size_t destructed,
+	bool checkCounters(size_t constructed, size_t copyConstructed, size_t moveConstructed, size_t destructed,
 			size_t copyAssigned, size_t moveAssigned, size_t swapped) const override;
 };
 
@@ -235,7 +235,7 @@ public:
 	 * \return true if pushed and popped data matches, false otherwise
 	 */
 
-	virtual bool check(uint8_t priority1, const OperationCountingType& value1, uint8_t priority2,
+	bool check(uint8_t priority1, const OperationCountingType& value1, uint8_t priority2,
 			const OperationCountingType& value2) const override;
 
 #if DISTORTOS_QUEUE_EMPLACE_SUPPORTED == 1 || DOXYGEN == 1
@@ -244,7 +244,7 @@ public:
 	 * \brief Wrapper for FifoQueue::emplace()
 	 */
 
-	virtual int emplace(uint8_t priority, OperationCountingType::Value value = {}) const override;
+	int emplace(uint8_t priority, OperationCountingType::Value value = {}) const override;
 
 #endif	// DISTORTOS_QUEUE_EMPLACE_SUPPORTED == 1 || DOXYGEN == 1
 
@@ -252,19 +252,19 @@ public:
 	 * \brief Wrapper for FifoQueue::pop()
 	 */
 
-	virtual int pop(uint8_t& priority, OperationCountingType& value) const override;
+	int pop(uint8_t& priority, OperationCountingType& value) const override;
 
 	/**
 	 * \brief Wrapper for FifoQueue::push(..., const OperationCountingType&)
 	 */
 
-	virtual int push(uint8_t priority, const OperationCountingType& value) const override;
+	int push(uint8_t priority, const OperationCountingType& value) const override;
 
 	/**
 	 * \brief Wrapper for FifoQueue::push(..., OperationCountingType&&)
 	 */
 
-	virtual int push(uint8_t priority, OperationCountingType&& value) const override;
+	int push(uint8_t priority, OperationCountingType&& value) const override;
 
 #if DISTORTOS_QUEUE_EMPLACE_SUPPORTED == 1 || DOXYGEN == 1
 
@@ -272,21 +272,21 @@ public:
 	 * \brief Wrapper for FifoQueue::tryEmplace()
 	 */
 
-	virtual int tryEmplace(uint8_t priority, OperationCountingType::Value value = {}) const override;
+	int tryEmplace(uint8_t priority, OperationCountingType::Value value = {}) const override;
 
 	/**
 	 * \brief Wrapper for FifoQueue::tryEmplaceFor()
 	 */
 
-	virtual int tryEmplaceFor(TickClock::duration duration, uint8_t priority, OperationCountingType::Value value = {})
-			const override;
+	int tryEmplaceFor(TickClock::duration duration, uint8_t priority, OperationCountingType::Value value = {}) const
+			override;
 
 	/**
 	 * \brief Wrapper for FifoQueue::tryEmplaceUntil()
 	 */
 
-	virtual int tryEmplaceUntil(TickClock::time_point timePoint, uint8_t priority,
-			OperationCountingType::Value value = {}) const override;
+	int tryEmplaceUntil(TickClock::time_point timePoint, uint8_t priority, OperationCountingType::Value value = {})
+			const override;
 
 #endif	// DISTORTOS_QUEUE_EMPLACE_SUPPORTED == 1 || DOXYGEN == 1
 
@@ -294,60 +294,56 @@ public:
 	 * \brief Wrapper for FifoQueue::tryPop()
 	 */
 
-	virtual int tryPop(uint8_t& priority, OperationCountingType& value) const override;
+	int tryPop(uint8_t& priority, OperationCountingType& value) const override;
 
 	/**
 	 * \brief Wrapper for FifoQueue::tryPopFor()
 	 */
 
-	virtual int tryPopFor(TickClock::duration duration, uint8_t& priority, OperationCountingType& value) const override;
+	int tryPopFor(TickClock::duration duration, uint8_t& priority, OperationCountingType& value) const override;
 
 	/**
 	 * \brief Wrapper for FifoQueue::tryPopUntil()
 	 */
 
-	virtual int tryPopUntil(TickClock::time_point timePoint, uint8_t& priority, OperationCountingType& value) const
-			override;
+	int tryPopUntil(TickClock::time_point timePoint, uint8_t& priority, OperationCountingType& value) const override;
 
 	/**
 	 * \brief Wrapper for FifoQueue::tryPush(..., const OperationCountingType&)
 	 */
 
-	virtual int tryPush(uint8_t priority, const OperationCountingType& value) const override;
+	int tryPush(uint8_t priority, const OperationCountingType& value) const override;
 
 	/**
 	 * \brief Wrapper for FifoQueue::tryPush(..., OperationCountingType&&)
 	 */
 
-	virtual int tryPush(uint8_t priority, OperationCountingType&& value) const override;
+	int tryPush(uint8_t priority, OperationCountingType&& value) const override;
 
 	/**
 	 * \brief Wrapper for FifoQueue::tryPushFor(..., const OperationCountingType&)
 	 */
 
-	virtual int tryPushFor(TickClock::duration duration, uint8_t priority, const OperationCountingType& value) const
-			override;
+	int tryPushFor(TickClock::duration duration, uint8_t priority, const OperationCountingType& value) const override;
 
 	/**
 	 * \brief Wrapper for FifoQueue::tryPushFor(..., OperationCountingType&&)
 	 */
 
-	virtual int tryPushFor(TickClock::duration duration, uint8_t priority, OperationCountingType&& value) const
-			override;
+	int tryPushFor(TickClock::duration duration, uint8_t priority, OperationCountingType&& value) const override;
 
 	/**
 	 * \brief Wrapper for FifoQueue::tryPushUntil(..., const OperationCountingType&)
 	 */
 
-	virtual int tryPushUntil(TickClock::time_point timePoint, uint8_t priority, const OperationCountingType& value)
-			const override;
+	int tryPushUntil(TickClock::time_point timePoint, uint8_t priority, const OperationCountingType& value) const
+			override;
 
 	/**
 	 * \brief Wrapper for FifoQueue::tryPushUntil(..., OperationCountingType&&)
 	 */
 
-	virtual int tryPushUntil(TickClock::time_point timePoint, uint8_t priority, OperationCountingType&& value) const
-			override;
+	int tryPushUntil(TickClock::time_point timePoint, uint8_t priority, OperationCountingType&& value) const override;
 
 private:
 
@@ -441,7 +437,7 @@ public:
 	 * \return true if pushed and popped data matches, false otherwise
 	 */
 
-	virtual bool check(uint8_t priority1, const OperationCountingType& value1, uint8_t priority2,
+	bool check(uint8_t priority1, const OperationCountingType& value1, uint8_t priority2,
 			const OperationCountingType& value2) const override;
 
 #if DISTORTOS_QUEUE_EMPLACE_SUPPORTED == 1 || DOXYGEN == 1
@@ -450,7 +446,7 @@ public:
 	 * \brief Wrapper for MessageQueue::emplace()
 	 */
 
-	virtual int emplace(uint8_t priority, OperationCountingType::Value value = {}) const override;
+	int emplace(uint8_t priority, OperationCountingType::Value value = {}) const override;
 
 #endif	// DISTORTOS_QUEUE_EMPLACE_SUPPORTED == 1 || DOXYGEN == 1
 
@@ -458,19 +454,19 @@ public:
 	 * \brief Wrapper for MessageQueue::pop()
 	 */
 
-	virtual int pop(uint8_t& priority, OperationCountingType& value) const override;
+	int pop(uint8_t& priority, OperationCountingType& value) const override;
 
 	/**
 	 * \brief Wrapper for MessageQueue::push(..., const OperationCountingType&)
 	 */
 
-	virtual int push(uint8_t priority, const OperationCountingType& value) const override;
+	int push(uint8_t priority, const OperationCountingType& value) const override;
 
 	/**
 	 * \brief Wrapper for MessageQueue::push(..., OperationCountingType&&)
 	 */
 
-	virtual int push(uint8_t priority, OperationCountingType&& value) const override;
+	int push(uint8_t priority, OperationCountingType&& value) const override;
 
 #if DISTORTOS_QUEUE_EMPLACE_SUPPORTED == 1 || DOXYGEN == 1
 
@@ -478,21 +474,21 @@ public:
 	 * \brief Wrapper for MessageQueue::tryEmplace()
 	 */
 
-	virtual int tryEmplace(uint8_t priority, OperationCountingType::Value value = {}) const override;
+	int tryEmplace(uint8_t priority, OperationCountingType::Value value = {}) const override;
 
 	/**
 	 * \brief Wrapper for MessageQueue::tryEmplaceFor()
 	 */
 
-	virtual int tryEmplaceFor(TickClock::duration duration, uint8_t priority, OperationCountingType::Value value = {})
-			const override;
+	int tryEmplaceFor(TickClock::duration duration, uint8_t priority, OperationCountingType::Value value = {}) const
+			override;
 
 	/**
 	 * \brief Wrapper for MessageQueue::tryEmplaceUntil()
 	 */
 
-	virtual int tryEmplaceUntil(TickClock::time_point timePoint, uint8_t priority,
-			OperationCountingType::Value value = {}) const override;
+	int tryEmplaceUntil(TickClock::time_point timePoint, uint8_t priority, OperationCountingType::Value value = {})
+			const override;
 
 #endif	// DISTORTOS_QUEUE_EMPLACE_SUPPORTED == 1 || DOXYGEN == 1
 
@@ -500,60 +496,56 @@ public:
 	 * \brief Wrapper for MessageQueue::tryPop()
 	 */
 
-	virtual int tryPop(uint8_t& priority, OperationCountingType& value) const override;
+	int tryPop(uint8_t& priority, OperationCountingType& value) const override;
 
 	/**
 	 * \brief Wrapper for MessageQueue::tryPopFor()
 	 */
 
-	virtual int tryPopFor(TickClock::duration duration, uint8_t& priority, OperationCountingType& value) const override;
+	int tryPopFor(TickClock::duration duration, uint8_t& priority, OperationCountingType& value) const override;
 
 	/**
 	 * \brief Wrapper for MessageQueue::tryPopUntil()
 	 */
 
-	virtual int tryPopUntil(TickClock::time_point timePoint, uint8_t& priority, OperationCountingType& value) const
-			override;
+	int tryPopUntil(TickClock::time_point timePoint, uint8_t& priority, OperationCountingType& value) const override;
 
 	/**
 	 * \brief Wrapper for MessageQueue::tryPush(..., const OperationCountingType&)
 	 */
 
-	virtual int tryPush(uint8_t priority, const OperationCountingType& value) const override;
+	int tryPush(uint8_t priority, const OperationCountingType& value) const override;
 
 	/**
 	 * \brief Wrapper for MessageQueue::tryPush(..., OperationCountingType&&)
 	 */
 
-	virtual int tryPush(uint8_t priority, OperationCountingType&& value) const override;
+	int tryPush(uint8_t priority, OperationCountingType&& value) const override;
 
 	/**
 	 * \brief Wrapper for MessageQueue::tryPushFor(..., const OperationCountingType&)
 	 */
 
-	virtual int tryPushFor(TickClock::duration duration, uint8_t priority, const OperationCountingType& value) const
-			override;
+	int tryPushFor(TickClock::duration duration, uint8_t priority, const OperationCountingType& value) const override;
 
 	/**
 	 * \brief Wrapper for MessageQueue::tryPushFor(..., OperationCountingType&&)
 	 */
 
-	virtual int tryPushFor(TickClock::duration duration, uint8_t priority, OperationCountingType&& value) const
-			override;
+	int tryPushFor(TickClock::duration duration, uint8_t priority, OperationCountingType&& value) const override;
 
 	/**
 	 * \brief Wrapper for MessageQueue::tryPushUntil(..., const OperationCountingType&)
 	 */
 
-	virtual int tryPushUntil(TickClock::time_point timePoint, uint8_t priority, const OperationCountingType& value)
-			const override;
+	int tryPushUntil(TickClock::time_point timePoint, uint8_t priority, const OperationCountingType& value) const
+			override;
 
 	/**
 	 * \brief Wrapper for MessageQueue::tryPushUntil(..., OperationCountingType&&)
 	 */
 
-	virtual int tryPushUntil(TickClock::time_point timePoint, uint8_t priority, OperationCountingType&& value) const
-			override;
+	int tryPushUntil(TickClock::time_point timePoint, uint8_t priority, OperationCountingType&& value) const override;
 
 private:
 
@@ -629,7 +621,7 @@ public:
 	 * A stub which returns true.
 	 */
 
-	virtual bool checkCounters(size_t constructed, size_t copyConstructed, size_t moveConstructed, size_t destructed,
+	bool checkCounters(size_t constructed, size_t copyConstructed, size_t moveConstructed, size_t destructed,
 			size_t copyAssigned, size_t moveAssigned, size_t swapped) const override;
 
 #if DISTORTOS_QUEUE_EMPLACE_SUPPORTED == 1 || DOXYGEN == 1
@@ -638,7 +630,7 @@ public:
 	 * \brief Redirects the call to "raw" push().
 	 */
 
-	virtual int emplace(uint8_t priority, OperationCountingType::Value value = {}) const final override;
+	int emplace(uint8_t priority, OperationCountingType::Value value = {}) const final override;
 
 #endif	// DISTORTOS_QUEUE_EMPLACE_SUPPORTED == 1 || DOXYGEN == 1
 
@@ -652,7 +644,7 @@ public:
 	 * \brief Redirects the call to "raw" pop().
 	 */
 
-	virtual int pop(uint8_t& priority, OperationCountingType& value) const final override;
+	int pop(uint8_t& priority, OperationCountingType& value) const final override;
 
 	/**
 	 * \brief Wrapper for Raw{Fifo,Message}Queue::push()
@@ -664,13 +656,13 @@ public:
 	 * \brief Redirects the call to "raw" push().
 	 */
 
-	virtual int push(uint8_t priority, const OperationCountingType& value) const final override;
+	int push(uint8_t priority, const OperationCountingType& value) const final override;
 
 	/**
 	 * \brief Redirects the call to push(..., const OperationCountingType&).
 	 */
 
-	virtual int push(uint8_t priority, OperationCountingType&& value) const final override;
+	int push(uint8_t priority, OperationCountingType&& value) const final override;
 
 #if DISTORTOS_QUEUE_EMPLACE_SUPPORTED == 1 || DOXYGEN == 1
 
@@ -678,21 +670,21 @@ public:
 	 * \brief Redirects the call to "raw" tryPush().
 	 */
 
-	virtual int tryEmplace(uint8_t priority, OperationCountingType::Value value = {}) const final override;
+	int tryEmplace(uint8_t priority, OperationCountingType::Value value = {}) const final override;
 
 	/**
 	 * \brief Redirects the call to "raw" tryPushFor().
 	 */
 
-	virtual int tryEmplaceFor(TickClock::duration duration, uint8_t priority, OperationCountingType::Value value = {})
-			const final override;
+	int tryEmplaceFor(TickClock::duration duration, uint8_t priority, OperationCountingType::Value value = {}) const
+			final override;
 
 	/**
 	 * \brief Redirects the call to "raw" tryPushUntil().
 	 */
 
-	virtual int tryEmplaceUntil(TickClock::time_point timePoint, uint8_t priority,
-			OperationCountingType::Value value = {}) const final override;
+	int tryEmplaceUntil(TickClock::time_point timePoint, uint8_t priority, OperationCountingType::Value value = {})
+			const final override;
 
 #endif	// DISTORTOS_QUEUE_EMPLACE_SUPPORTED == 1 || DOXYGEN == 1
 
@@ -706,7 +698,7 @@ public:
 	 * \brief Redirects the call to "raw" tryPop().
 	 */
 
-	virtual int tryPop(uint8_t& priority, OperationCountingType& value) const final override;
+	int tryPop(uint8_t& priority, OperationCountingType& value) const final override;
 
 	/**
 	 * \brief Wrapper for Raw{Fifo,Message}Queue::tryPopFor()
@@ -718,8 +710,7 @@ public:
 	 * \brief Redirects the call to "raw" tryPopFor().
 	 */
 
-	virtual int tryPopFor(TickClock::duration duration, uint8_t& priority, OperationCountingType& value) const final
-			override;
+	int tryPopFor(TickClock::duration duration, uint8_t& priority, OperationCountingType& value) const final override;
 
 	/**
 	 * \brief Wrapper for Raw{Fifo,Message}Queue::tryPopUntil()
@@ -731,8 +722,8 @@ public:
 	 * \brief Redirects the call to "raw" tryPopUntil().
 	 */
 
-	virtual int tryPopUntil(TickClock::time_point timePoint, uint8_t& priority, OperationCountingType& value) const
-			final override;
+	int tryPopUntil(TickClock::time_point timePoint, uint8_t& priority, OperationCountingType& value) const final
+			override;
 
 	/**
 	 * \brief Wrapper for Raw{Fifo,Message}Queue::tryPush()
@@ -744,13 +735,13 @@ public:
 	 * \brief Redirects the call to "raw" tryPush().
 	 */
 
-	virtual int tryPush(uint8_t priority, const OperationCountingType& value) const final override;
+	int tryPush(uint8_t priority, const OperationCountingType& value) const final override;
 
 	/**
 	 * \brief Redirects the call to tryPush(..., const OperationCountingType&).
 	 */
 
-	virtual int tryPush(uint8_t priority, OperationCountingType&& value) const final override;
+	int tryPush(uint8_t priority, OperationCountingType&& value) const final override;
 
 	/**
 	 * \brief Wrapper for Raw{Fifo,Message}Queue::tryPushFor()
@@ -762,15 +753,14 @@ public:
 	 * \brief Redirects the call to "raw" tryPushFor().
 	 */
 
-	virtual int tryPushFor(TickClock::duration duration, uint8_t priority, const OperationCountingType& value) const
-			final override;
+	int tryPushFor(TickClock::duration duration, uint8_t priority, const OperationCountingType& value) const final
+			override;
 
 	/**
 	 * \brief Redirects the call to tryPushFor(..., const OperationCountingType&).
 	 */
 
-	virtual int tryPushFor(TickClock::duration duration, uint8_t priority, OperationCountingType&& value) const final
-			override;
+	int tryPushFor(TickClock::duration duration, uint8_t priority, OperationCountingType&& value) const final override;
 
 	/**
 	 * \brief Wrapper for Raw{Fifo,Message}Queue::tryPushUntil()
@@ -783,15 +773,15 @@ public:
 	 * \brief Redirects the call to "raw" tryPushUntil().
 	 */
 
-	virtual int tryPushUntil(TickClock::time_point timePoint, uint8_t priority, const OperationCountingType& value)
-			const final override;
+	int tryPushUntil(TickClock::time_point timePoint, uint8_t priority, const OperationCountingType& value) const final
+			override;
 
 	/**
 	 * \brief Redirects the call to tryPushUntil(..., const OperationCountingType&).
 	 */
 
-	virtual int tryPushUntil(TickClock::time_point timePoint, uint8_t priority, OperationCountingType&& value) const
-			final override;
+	int tryPushUntil(TickClock::time_point timePoint, uint8_t priority, OperationCountingType&& value) const final
+			override;
 };
 
 /// unique_ptr with RawQueueWrapper
@@ -827,59 +817,56 @@ public:
 	 * \return true if pushed and popped data matches, false otherwise
 	 */
 
-	virtual bool check(uint8_t priority1, const OperationCountingType& value1, uint8_t priority2,
+	bool check(uint8_t priority1, const OperationCountingType& value1, uint8_t priority2,
 			const OperationCountingType& value2) const override;
 
 	/**
 	 * \brief Wrapper for RawFifoQueue::pop()
 	 */
 
-	virtual int pop(uint8_t& priority, void* buffer, size_t size) const override;
+	int pop(uint8_t& priority, void* buffer, size_t size) const override;
 
 	/**
 	 * \brief Wrapper for RawFifoQueue::push()
 	 */
 
-	virtual int push(uint8_t priority, const void* data, size_t size) const override;
+	int push(uint8_t priority, const void* data, size_t size) const override;
 
 	/**
 	 * \brief Wrapper for RawFifoQueue::tryPop()
 	 */
 
-	virtual int tryPop(uint8_t& priority, void* buffer, size_t size) const override;
+	int tryPop(uint8_t& priority, void* buffer, size_t size) const override;
 
 	/**
 	 * \brief Wrapper for RawFifoQueue::tryPopFor()
 	 */
 
-	virtual int tryPopFor(TickClock::duration duration, uint8_t& priority, void* buffer, size_t size) const override;
+	int tryPopFor(TickClock::duration duration, uint8_t& priority, void* buffer, size_t size) const override;
 
 	/**
 	 * \brief Wrapper for RawFifoQueue::tryPopUntil()
 	 */
 
-	virtual int tryPopUntil(TickClock::time_point timePoint, uint8_t& priority, void* buffer, size_t size) const
-			override;
+	int tryPopUntil(TickClock::time_point timePoint, uint8_t& priority, void* buffer, size_t size) const override;
 
 	/**
 	 * \brief Wrapper for RawFifoQueue::tryPush()
 	 */
 
-	virtual int tryPush(uint8_t priority, const void* data, size_t size) const override;
+	int tryPush(uint8_t priority, const void* data, size_t size) const override;
 
 	/**
 	 * \brief Wrapper for RawFifoQueue::tryPushFor()
 	 */
 
-	virtual int tryPushFor(TickClock::duration duration, uint8_t priority, const void* data, size_t size) const
-			override;
+	int tryPushFor(TickClock::duration duration, uint8_t priority, const void* data, size_t size) const override;
 
 	/**
 	 * \brief Wrapper for RawFifoQueue::tryPushUntil()
 	 */
 
-	virtual int tryPushUntil(TickClock::time_point timePoint, uint8_t priority, const void* data, size_t size) const
-			override;
+	int tryPushUntil(TickClock::time_point timePoint, uint8_t priority, const void* data, size_t size) const override;
 
 private:
 
@@ -969,59 +956,56 @@ public:
 	 * \return true if pushed and popped data matches, false otherwise
 	 */
 
-	virtual bool check(uint8_t priority1, const OperationCountingType& value1, uint8_t priority2,
+	bool check(uint8_t priority1, const OperationCountingType& value1, uint8_t priority2,
 			const OperationCountingType& value2) const override;
 
 	/**
 	 * \brief Wrapper for RawMessageQueue::pop()
 	 */
 
-	virtual int pop(uint8_t& priority, void* buffer, size_t size) const override;
+	int pop(uint8_t& priority, void* buffer, size_t size) const override;
 
 	/**
 	 * \brief Wrapper for RawMessageQueue::push()
 	 */
 
-	virtual int push(uint8_t priority, const void* data, size_t size) const override;
+	int push(uint8_t priority, const void* data, size_t size) const override;
 
 	/**
 	 * \brief Wrapper for RawMessageQueue::tryPop()
 	 */
 
-	virtual int tryPop(uint8_t& priority, void* buffer, size_t size) const override;
+	int tryPop(uint8_t& priority, void* buffer, size_t size) const override;
 
 	/**
 	 * \brief Wrapper for RawMessageQueue::tryPopFor()
 	 */
 
-	virtual int tryPopFor(TickClock::duration duration, uint8_t& priority, void* buffer, size_t size) const override;
+	int tryPopFor(TickClock::duration duration, uint8_t& priority, void* buffer, size_t size) const override;
 
 	/**
 	 * \brief Wrapper for RawMessageQueue::tryPopUntil()
 	 */
 
-	virtual int tryPopUntil(TickClock::time_point timePoint, uint8_t& priority, void* buffer, size_t size) const
-			override;
+	int tryPopUntil(TickClock::time_point timePoint, uint8_t& priority, void* buffer, size_t size) const override;
 
 	/**
 	 * \brief Wrapper for RawMessageQueue::tryPush()
 	 */
 
-	virtual int tryPush(uint8_t priority, const void* data, size_t size) const override;
+	int tryPush(uint8_t priority, const void* data, size_t size) const override;
 
 	/**
 	 * \brief Wrapper for RawMessageQueue::tryPushFor()
 	 */
 
-	virtual int tryPushFor(TickClock::duration duration, uint8_t priority, const void* data, size_t size) const
-			override;
+	int tryPushFor(TickClock::duration duration, uint8_t priority, const void* data, size_t size) const override;
 
 	/**
 	 * \brief Wrapper for RawMessageQueue::tryPushUntil()
 	 */
 
-	virtual int tryPushUntil(TickClock::time_point timePoint, uint8_t priority, const void* data, size_t size) const
-			override;
+	int tryPushUntil(TickClock::time_point timePoint, uint8_t priority, const void* data, size_t size) const override;
 
 private:
 

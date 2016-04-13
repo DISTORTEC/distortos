@@ -43,13 +43,13 @@ public:
 	 * \brief SoftwareTimerCommon's destructor
 	 */
 
-	virtual ~SoftwareTimerCommon() override;
+	~SoftwareTimerCommon() override;
 
 	/**
 	 * \return true if the timer is running, false otherwise
 	 */
 
-	virtual bool isRunning() const override;
+	bool isRunning() const override;
 
 	/**
 	 * \brief Starts the timer.
@@ -59,7 +59,7 @@ public:
 	 * \return 0 on success, error code otherwise
 	 */
 
-	virtual int start(TickClock::time_point timePoint) override;
+	int start(TickClock::time_point timePoint) override;
 
 	using SoftwareTimer::start;
 
@@ -69,7 +69,7 @@ public:
 	 * \return 0 on success, error code otherwise
 	 */
 
-	virtual int stop() override;
+	int stop() override;
 
 	SoftwareTimerCommon(const SoftwareTimerCommon&) = delete;
 	SoftwareTimerCommon(SoftwareTimerCommon&&) = default;

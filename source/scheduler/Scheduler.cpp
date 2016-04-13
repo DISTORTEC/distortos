@@ -64,8 +64,8 @@ public:
 	 * \param [in] unblockReason is the reason of thread unblocking
 	 */
 
-	virtual void operator()(ThreadControlBlock& threadControlBlock,
-			const ThreadControlBlock::UnblockReason unblockReason) const override
+	void operator()(ThreadControlBlock& threadControlBlock, const ThreadControlBlock::UnblockReason unblockReason) const
+			override
 	{
 		unblockReason_ = unblockReason;
 		if (unblockFunctor_ != nullptr)

@@ -47,7 +47,7 @@ public:
 	 * \param [in,out] storage is a pointer to storage for element
 	 */
 
-	virtual void operator()(void* storage) const override;
+	void operator()(void* storage) const override;
 
 private:
 

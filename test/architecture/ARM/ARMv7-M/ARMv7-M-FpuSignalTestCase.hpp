@@ -63,7 +63,7 @@ protected:
 	 * \return true if finalization succeeded, false otherwise
 	 */
 
-	virtual bool finalize() const override;
+	bool finalize() const override;
 
 private:
 
@@ -73,7 +73,7 @@ private:
 	 * \return true if the test case succeeded, false otherwise
 	 */
 
-	virtual bool run_() const override;
+	bool run_() const override;
 };
 
 }	// namespace test

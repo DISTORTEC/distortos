@@ -257,7 +257,7 @@ private:
 	 * \return true if execution of blocking action succeeded, false otherwise
 	 */
 
-	virtual bool block() override
+	bool block() override
 	{
 		const auto ret = type_ == Type::Wait ? conditionVariable_.wait(mutex_) :
 				type_ == Type::WaitFor ? conditionVariable_.waitFor(mutex_, longDuration) :
@@ -273,7 +273,7 @@ private:
 	 * \return true if postcondition was satisfied, false otherwise
 	 */
 
-	virtual bool postcondition() override
+	bool postcondition() override
 	{
 		if (mutex_.tryLock() != EBUSY)		// mutex must be locked
 			return false;
@@ -322,7 +322,7 @@ private:
 	 * \return true if execution of blocking action succeeded, false otherwise
 	 */
 
-	virtual bool block() override
+	bool block() override
 	{
 		sequencePointThread_.start();
 		return sequencePointThread_.join() == 0;
@@ -372,7 +372,7 @@ public:
 	 * Joins the "mutex locker" thread.
 	 */
 
-	virtual ~MutexTestStep() override
+	~MutexTestStep() override
 	{
 		mutexLockerThread_.join();
 	}
@@ -388,7 +388,7 @@ private:
 	 * \return true if execution of blocking action succeeded, false otherwise
 	 */
 
-	virtual bool block() override
+	bool block() override
 	{
 		mutexLockerThread_.start();
 		sequenceAsserter_.sequencePoint(1);
@@ -422,7 +422,7 @@ private:
 	 * \return true if postcondition was satisfied, false otherwise
 	 */
 
-	virtual bool postcondition() override
+	bool postcondition() override
 	{
 		if (mutex_.tryLock() != EBUSY)		// mutex must be locked
 			return false;
@@ -486,7 +486,7 @@ private:
 	 * \return true if execution of blocking action succeeded, false otherwise
 	 */
 
-	virtual bool block() override
+	bool block() override
 	{
 		const auto ret = type_ == Type::Wait ? semaphore_.wait() :
 				type_ == Type::TryWaitFor ? semaphore_.tryWaitFor(longDuration) :
@@ -502,7 +502,7 @@ private:
 	 * \return true if postcondition was satisfied, false otherwise
 	 */
 
-	virtual bool postcondition() override
+	bool postcondition() override
 	{
 		if (semaphore_.getValue() != 0)			// after interruption, semaphore's value must be 0
 			return false;
@@ -567,7 +567,7 @@ private:
 	 * \return true if execution of blocking action succeeded, false otherwise
 	 */
 
-	virtual bool block() override
+	bool block() override
 	{
 		const SignalSet fullSignalSet {SignalSet::full};
 		const auto ret = type_ == Type::Wait ? ThisThread::Signals::wait(fullSignalSet) :
@@ -618,7 +618,7 @@ private:
 	 * \return true if execution of blocking action succeeded, false otherwise
 	 */
 
-	virtual bool block() override
+	bool block() override
 	{
 		const auto ret = type_ == Type::For ? ThisThread::sleepFor(longDuration) :
 				ThisThread::sleepUntil(TickClock::now() + longDuration);

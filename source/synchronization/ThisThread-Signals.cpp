@@ -54,8 +54,8 @@ public:
 	 * \param [in] unblockReason is the reason of thread unblocking
 	 */
 
-	virtual void operator()(internal::ThreadControlBlock& threadControlBlock,
-			internal::ThreadControlBlock::UnblockReason) const override
+	void operator()(internal::ThreadControlBlock& threadControlBlock, internal::ThreadControlBlock::UnblockReason) const
+			override
 	{
 		const auto signalsReceiverControlBlock = threadControlBlock.getSignalsReceiverControlBlock();
 		if (signalsReceiverControlBlock == nullptr)

@@ -48,7 +48,7 @@ public:
 	 * \return value returned by Semaphore::tryWaitUntil()
 	 */
 
-	virtual int operator()(Semaphore& semaphore) const override;
+	int operator()(Semaphore& semaphore) const override;
 
 private:
 

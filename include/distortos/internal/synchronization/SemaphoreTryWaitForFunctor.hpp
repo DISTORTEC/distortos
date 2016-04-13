@@ -47,7 +47,7 @@ public:
 	 * \return value returned by Semaphore::tryWaitFor()
 	 */
 
-	virtual int operator()(Semaphore& semaphore) const override;
+	int operator()(Semaphore& semaphore) const override;
 
 private:
 

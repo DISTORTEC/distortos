@@ -52,7 +52,7 @@ public:
 	 * \return current state of pin
 	 */
 
-	virtual bool get() const override;
+	bool get() const override;
 
 	/**
 	 * \brief Sets state of pin.
@@ -60,7 +60,7 @@ public:
 	 * \param [in] state is the new state of pin
 	 */
 
-	virtual void set(bool state) override;
+	void set(bool state) override;
 
 private:
 

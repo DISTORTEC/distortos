@@ -54,7 +54,7 @@ public:
 	 * \param [in,out] storage is a pointer to storage with/for element
 	 */
 
-	virtual void operator()(void* const storage) const override
+	void operator()(void* const storage) const override
 	{
 		boundFunctor_(storage);
 	}

@@ -56,7 +56,7 @@ private:
 	 * Executes bound function object.
 	 */
 
-	virtual void run() override
+	void run() override
 	{
 		boundFunction_();
 	}

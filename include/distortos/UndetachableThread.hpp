@@ -43,7 +43,7 @@ public:
 	 * \return ENOTSUP - this thread cannot be detached;
 	 */
 
-	virtual int detach() override;
+	int detach() override;
 };
 
 #else	// !def CONFIG_THREAD_DETACH_ENABLE

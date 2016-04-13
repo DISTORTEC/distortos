@@ -47,7 +47,7 @@ public:
 	 * \return current state of pin
 	 */
 
-	virtual bool get() const override;
+	bool get() const override;
 
 private:
 
