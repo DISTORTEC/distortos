@@ -42,12 +42,12 @@ struct DynamicThreadParameters
 	 * \param [in] signalActionss is the max number of different SignalAction objects for this thread, relevant only if
 	 * \a canReceiveSignals == true, 0 to disable catching of signals for this thread
 	 * \param [in] priorityy is the thread's priority, 0 - lowest, UINT8_MAX - highest
-	 * \param [in] schedulingPolicyy is the scheduling policy of the thread, default - SchedulingPolicy::RoundRobin
+	 * \param [in] schedulingPolicyy is the scheduling policy of the thread, default - SchedulingPolicy::roundRobin
 	 */
 
 	constexpr DynamicThreadParameters(const size_t stackSizee, const bool canReceiveSignalss,
 			const size_t queuedSignalss, const size_t signalActionss, const uint8_t priorityy,
-			const SchedulingPolicy schedulingPolicyy = SchedulingPolicy::RoundRobin) :
+			const SchedulingPolicy schedulingPolicyy = SchedulingPolicy::roundRobin) :
 					queuedSignals{queuedSignalss},
 					signalActions{signalActionss},
 					stackSize{stackSizee},
@@ -63,11 +63,11 @@ struct DynamicThreadParameters
 	 *
 	 * \param [in] stackSizee is the size of stack, bytes
 	 * \param [in] priorityy is the thread's priority, 0 - lowest, UINT8_MAX - highest
-	 * \param [in] schedulingPolicyy is the scheduling policy of the thread, default - SchedulingPolicy::RoundRobin
+	 * \param [in] schedulingPolicyy is the scheduling policy of the thread, default - SchedulingPolicy::roundRobin
 	 */
 
 	constexpr DynamicThreadParameters(const size_t stackSizee, const uint8_t priorityy,
-			const SchedulingPolicy schedulingPolicyy = SchedulingPolicy::RoundRobin) :
+			const SchedulingPolicy schedulingPolicyy = SchedulingPolicy::roundRobin) :
 					DynamicThreadParameters{stackSizee, false, 0, 0, priorityy, schedulingPolicyy}
 	{
 

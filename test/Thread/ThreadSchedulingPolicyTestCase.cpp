@@ -103,8 +103,8 @@ bool ThreadSchedulingPolicyTestCase::run_() const
 	using Parameters = std::tuple<SchedulingPolicy, unsigned int, unsigned int>;
 	static const Parameters parametersArray[]
 	{
-			Parameters{SchedulingPolicy::Fifo, 2, 1},
-			Parameters{SchedulingPolicy::RoundRobin, 1, totalThreads},
+			Parameters{SchedulingPolicy::fifo, 2, 1},
+			Parameters{SchedulingPolicy::roundRobin, 1, totalThreads},
 	};
 
 	for (const auto& parameters : parametersArray)

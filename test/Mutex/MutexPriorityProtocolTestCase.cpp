@@ -125,7 +125,7 @@ void thread(const TickClock::time_point sleepUntil, SequenceAsserter& sequenceAs
 DynamicThread makeAndStartTestThread(const uint8_t priority, const TickClock::time_point sleepUntil,
 		SequenceAsserter& sequenceAsserter, const TestStepRange& steps)
 {
-	return makeAndStartDynamicThread({testThreadStackSize, priority, SchedulingPolicy::Fifo}, thread, sleepUntil,
+	return makeAndStartDynamicThread({testThreadStackSize, priority, SchedulingPolicy::fifo}, thread, sleepUntil,
 			std::ref(sequenceAsserter), std::ref(steps));
 }
 

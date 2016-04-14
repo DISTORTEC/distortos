@@ -131,7 +131,7 @@ public:
 	 */
 
 	StaticThread(const uint8_t priority, Function&& function, Args&&... args) :
-			StaticThread{priority, SchedulingPolicy::RoundRobin, std::forward<Function>(function),
+			StaticThread{priority, SchedulingPolicy::roundRobin, std::forward<Function>(function),
 					std::forward<Args>(args)...}
 	{
 
@@ -192,7 +192,7 @@ public:
 	 */
 
 	StaticThread(const uint8_t priority, Function&& function, Args&&... args) :
-			StaticThread{priority, SchedulingPolicy::RoundRobin, std::forward<Function>(function),
+			StaticThread{priority, SchedulingPolicy::roundRobin, std::forward<Function>(function),
 					std::forward<Args>(args)...}
 	{
 

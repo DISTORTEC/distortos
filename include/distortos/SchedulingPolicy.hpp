@@ -26,9 +26,9 @@ namespace distortos
 enum class SchedulingPolicy : uint8_t
 {
 	/// FIFO scheduling policy
-	Fifo,
+	fifo,
 	/// round-robin scheduling policy
-	RoundRobin,
+	roundRobin,
 };
 
 }	// namespace distortos
