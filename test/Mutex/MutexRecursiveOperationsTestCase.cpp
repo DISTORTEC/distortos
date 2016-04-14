@@ -54,7 +54,7 @@ bool MutexRecursiveOperationsTestCase::run_() const
 
 	for (const auto& parameters : parametersArray)
 	{
-		Mutex mutex {Mutex::Type::Recursive, parameters.first, parameters.second};
+		Mutex mutex {Mutex::Type::recursive, parameters.first, parameters.second};
 
 		size_t lockCount {};
 

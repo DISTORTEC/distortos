@@ -41,11 +41,11 @@ public:
 	enum class Type : uint8_t
 	{
 		/// normal mutex, similar to PTHREAD_MUTEX_NORMAL
-		Normal,
+		normal,
 		/// mutex with additional error checking, similar to PTHREAD_MUTEX_ERRORCHECK
-		ErrorChecking,
+		errorChecking,
 		/// recursive mutex, similar to PTHREAD_MUTEX_RECURSIVE
-		Recursive
+		recursive
 	};
 
 	/**
@@ -68,13 +68,13 @@ public:
 	 * Similar to pthread_mutex_init() -
 	 * http://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_mutex_init.html
 	 *
-	 * \param [in] type is the type of mutex, default - Type::Normal
+	 * \param [in] type is the type of mutex, default - Type::normal
 	 * \param [in] protocol is the mutex protocol, default - Protocol::none
 	 * \param [in] priorityCeiling is the priority ceiling of mutex, ignored when protocol != Protocol::priorityProtect,
 	 * default - 0
 	 */
 
-	constexpr explicit Mutex(const Type type = Type::Normal, const Protocol protocol = Protocol::none,
+	constexpr explicit Mutex(const Type type = Type::normal, const Protocol protocol = Protocol::none,
 			const uint8_t priorityCeiling = {}) :
 			controlBlock_{protocol, priorityCeiling},
 			recursiveLocksCount_{},

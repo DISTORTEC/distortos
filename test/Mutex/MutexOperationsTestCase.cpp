@@ -375,18 +375,18 @@ bool MutexOperationsTestCase::run_() const
 	using Parameters = std::tuple<Mutex::Type, Mutex::Protocol, uint8_t>;
 	static const Parameters parametersArray[]
 	{
-			Parameters{Mutex::Type::Normal, Mutex::Protocol::none, {}},
-			Parameters{Mutex::Type::Normal, Mutex::Protocol::priorityProtect, UINT8_MAX},
-			Parameters{Mutex::Type::Normal, Mutex::Protocol::priorityProtect, testThreadPriority},
-			Parameters{Mutex::Type::Normal, Mutex::Protocol::priorityInheritance, {}},
-			Parameters{Mutex::Type::ErrorChecking, Mutex::Protocol::none, {}},
-			Parameters{Mutex::Type::ErrorChecking, Mutex::Protocol::priorityProtect, UINT8_MAX},
-			Parameters{Mutex::Type::ErrorChecking, Mutex::Protocol::priorityProtect, testThreadPriority},
-			Parameters{Mutex::Type::ErrorChecking, Mutex::Protocol::priorityInheritance, {}},
-			Parameters{Mutex::Type::Recursive, Mutex::Protocol::none, {}},
-			Parameters{Mutex::Type::Recursive, Mutex::Protocol::priorityProtect, UINT8_MAX},
-			Parameters{Mutex::Type::Recursive, Mutex::Protocol::priorityProtect, testThreadPriority},
-			Parameters{Mutex::Type::Recursive, Mutex::Protocol::priorityInheritance, {}},
+			Parameters{Mutex::Type::normal, Mutex::Protocol::none, {}},
+			Parameters{Mutex::Type::normal, Mutex::Protocol::priorityProtect, UINT8_MAX},
+			Parameters{Mutex::Type::normal, Mutex::Protocol::priorityProtect, testThreadPriority},
+			Parameters{Mutex::Type::normal, Mutex::Protocol::priorityInheritance, {}},
+			Parameters{Mutex::Type::errorChecking, Mutex::Protocol::none, {}},
+			Parameters{Mutex::Type::errorChecking, Mutex::Protocol::priorityProtect, UINT8_MAX},
+			Parameters{Mutex::Type::errorChecking, Mutex::Protocol::priorityProtect, testThreadPriority},
+			Parameters{Mutex::Type::errorChecking, Mutex::Protocol::priorityInheritance, {}},
+			Parameters{Mutex::Type::recursive, Mutex::Protocol::none, {}},
+			Parameters{Mutex::Type::recursive, Mutex::Protocol::priorityProtect, UINT8_MAX},
+			Parameters{Mutex::Type::recursive, Mutex::Protocol::priorityProtect, testThreadPriority},
+			Parameters{Mutex::Type::recursive, Mutex::Protocol::priorityInheritance, {}},
 	};
 
 	for (const auto& parameters : parametersArray)

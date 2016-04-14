@@ -53,7 +53,7 @@ bool MutexErrorCheckingOperationsTestCase::run_() const
 
 	for (const auto& parameters : parametersArray)
 	{
-		Mutex mutex {Mutex::Type::ErrorChecking, parameters.first, parameters.second};
+		Mutex mutex {Mutex::Type::errorChecking, parameters.first, parameters.second};
 
 		{
 			// simple lock - must succeed immediately

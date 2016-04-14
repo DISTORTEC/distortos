@@ -680,9 +680,9 @@ bool MutexPriorityInheritanceOperationsTestCase::run_() const
 {
 	static const Mutex::Type types[]
 	{
-			Mutex::Type::Normal,
-			Mutex::Type::ErrorChecking,
-			Mutex::Type::Recursive,
+			Mutex::Type::normal,
+			Mutex::Type::errorChecking,
+			Mutex::Type::recursive,
 	};
 
 	for (const auto type : types)
