@@ -589,9 +589,9 @@ public:
 	enum class Type : uint8_t
 	{
 		/// uses ThisThread::sleepFor()
-		SleepFor,
+		sleepFor,
 		/// uses ThisThread::sleepUntil()
-		SleepUntil,
+		sleepUntil,
 	};
 
 	/**
@@ -620,7 +620,7 @@ private:
 
 	bool block() override
 	{
-		const auto ret = type_ == Type::SleepFor ? ThisThread::sleepFor(longDuration) :
+		const auto ret = type_ == Type::sleepFor ? ThisThread::sleepFor(longDuration) :
 				ThisThread::sleepUntil(TickClock::now() + longDuration);
 		return ret == EINTR;
 	}
@@ -658,9 +658,9 @@ enum class TestStepType : uint8_t
 	signalsTryWaitFor,
 	/// SignalsTestStep, SignalsTestStep::Type::TryWaitUntil
 	signalsTryWaitUntil,
-	/// SleepTestStep, SleepTestStep::Type::SleepFor
+	/// SleepTestStep, SleepTestStep::Type::sleepFor
 	sleepFor,
-	/// SleepTestStep, SleepTestStep::Type::SleepUntil
+	/// SleepTestStep, SleepTestStep::Type::sleepUntil
 	sleepUntil,
 };
 
@@ -750,9 +750,9 @@ TestStep& makeTestStep(const TestStepType testStepType, TestStepStorage& testSte
 	else if (testStepType == TestStepType::signalsTryWaitUntil)
 		return *new (&testStepStorage) SignalsTestStep {SignalsTestStep::Type::TryWaitUntil};
 	else if (testStepType == TestStepType::sleepFor)
-		return *new (&testStepStorage) SleepTestStep {SleepTestStep::Type::SleepFor};
+		return *new (&testStepStorage) SleepTestStep {SleepTestStep::Type::sleepFor};
 	else // if (testStepType == TestStepType::sleepUntil)
-		return *new (&testStepStorage) SleepTestStep {SleepTestStep::Type::SleepUntil};
+		return *new (&testStepStorage) SleepTestStep {SleepTestStep::Type::sleepUntil};
 }
 
 }	// namespace
