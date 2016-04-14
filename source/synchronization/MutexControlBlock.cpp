@@ -61,7 +61,7 @@ public:
 		const auto owner = mutexControlBlock_.getOwner();
 
 		// waiting for mutex was interrupted and some thread still holds it?
-		if (unblockReason != ThreadControlBlock::UnblockReason::UnblockRequest && owner != nullptr)
+		if (unblockReason != ThreadControlBlock::UnblockReason::unblockRequest && owner != nullptr)
 			owner->updateBoostedPriority();
 
 		threadControlBlock.setPriorityInheritanceMutexControlBlock(nullptr);

@@ -131,8 +131,8 @@ int Scheduler::block(ThreadList& container, const ThreadList::iterator iterator,
 
 	forceContextSwitch();
 
-	return unblockReason == ThreadControlBlock::UnblockReason::UnblockRequest ? 0 :
-			unblockReason == ThreadControlBlock::UnblockReason::Timeout ? ETIMEDOUT : EINTR;
+	return unblockReason == ThreadControlBlock::UnblockReason::unblockRequest ? 0 :
+			unblockReason == ThreadControlBlock::UnblockReason::timeout ? ETIMEDOUT : EINTR;
 }
 
 int Scheduler::blockUntil(ThreadList& container, const ThreadState state, const TickClock::time_point timePoint,
@@ -145,17 +145,17 @@ int Scheduler::blockUntil(ThreadList& container, const ThreadState state, const 
 	if (timePoint <= TickClock::now())
 	{
 		if (unblockFunctor != nullptr)
-			(*unblockFunctor)(*iterator, ThreadControlBlock::UnblockReason::Timeout);
+			(*unblockFunctor)(*iterator, ThreadControlBlock::UnblockReason::timeout);
 		return ETIMEDOUT;
 	}
 
 	// This lambda unblocks the thread only if it wasn't already unblocked - this is necessary because double unblock
 	// should be avoided (it could mess the order of threads of the same priority). In that case it also sets
-	// UnblockReason::Timeout.
+	// UnblockReason::timeout.
 	auto softwareTimer = makeStaticSoftwareTimer([this, iterator]()
 			{
 				if (iterator->getList() != &runnableList_)
-					unblockInternal(iterator, ThreadControlBlock::UnblockReason::Timeout);
+					unblockInternal(iterator, ThreadControlBlock::UnblockReason::timeout);
 			});
 	softwareTimer.start(timePoint);
 

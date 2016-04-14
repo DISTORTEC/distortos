@@ -45,11 +45,11 @@ public:
 	enum class UnblockReason : uint8_t
 	{
 		/// explicit request to unblock the thread - normal unblock
-		UnblockRequest,
+		unblockRequest,
 		/// timeout - unblock via software timer
-		Timeout,
+		timeout,
 		/// signal handler - unblock to deliver unmasked signal
-		Signal,
+		signal,
 	};
 
 	/// UnblockFunctor is a functor executed when unblocking the thread, it receives two parameter - a reference to

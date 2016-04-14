@@ -308,7 +308,7 @@ void SignalsCatcherControlBlock::requestDeliveryOfSignals(ThreadControlBlock& th
 	const auto state = threadControlBlock.getState();
 	// is thread blocked (not "runnable" and can be unblocked)?
 	if (state != decltype(state)::New && state != decltype(state)::Runnable && state != decltype(state)::Terminated)
-		getScheduler().unblock(ThreadList::iterator{threadControlBlock}, ThreadControlBlock::UnblockReason::Signal);
+		getScheduler().unblock(ThreadList::iterator{threadControlBlock}, ThreadControlBlock::UnblockReason::signal);
 }
 
 }	// namespace internal
