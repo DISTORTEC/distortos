@@ -114,7 +114,7 @@ bool testUnlock(Mutex& mutex)
  *
  * \param [in] type is the type of mutex
  * \param [in] protocol is the mutex protocol
- * \param [in] priorityCeiling is the priority ceiling of mutex, ignored when protocol != Protocol::PriorityProtect
+ * \param [in] priorityCeiling is the priority ceiling of mutex, ignored when protocol != Protocol::priorityProtect
  *
  * \return true if test succeeded, false otherwise
  */
@@ -177,7 +177,7 @@ bool phase1(const Mutex::Type type, const Mutex::Protocol protocol, const uint8_
  *
  * \param [in] type is the type of mutex
  * \param [in] protocol is the mutex protocol
- * \param [in] priorityCeiling is the priority ceiling of mutex, ignored when protocol != Protocol::PriorityProtect
+ * \param [in] priorityCeiling is the priority ceiling of mutex, ignored when protocol != Protocol::priorityProtect
  *
  * \return true if test succeeded, false otherwise
  */
@@ -261,7 +261,7 @@ bool phase2(const Mutex::Type type, const Mutex::Protocol protocol, const uint8_
  *
  * \param [in] type is the type of mutex
  * \param [in] protocol is the mutex protocol
- * \param [in] priorityCeiling is the priority ceiling of mutex, ignored when protocol != Protocol::PriorityProtect
+ * \param [in] priorityCeiling is the priority ceiling of mutex, ignored when protocol != Protocol::priorityProtect
  *
  * \return true if test succeeded, false otherwise
  */
@@ -375,18 +375,18 @@ bool MutexOperationsTestCase::run_() const
 	using Parameters = std::tuple<Mutex::Type, Mutex::Protocol, uint8_t>;
 	static const Parameters parametersArray[]
 	{
-			Parameters{Mutex::Type::Normal, Mutex::Protocol::None, {}},
-			Parameters{Mutex::Type::Normal, Mutex::Protocol::PriorityProtect, UINT8_MAX},
-			Parameters{Mutex::Type::Normal, Mutex::Protocol::PriorityProtect, testThreadPriority},
-			Parameters{Mutex::Type::Normal, Mutex::Protocol::PriorityInheritance, {}},
-			Parameters{Mutex::Type::ErrorChecking, Mutex::Protocol::None, {}},
-			Parameters{Mutex::Type::ErrorChecking, Mutex::Protocol::PriorityProtect, UINT8_MAX},
-			Parameters{Mutex::Type::ErrorChecking, Mutex::Protocol::PriorityProtect, testThreadPriority},
-			Parameters{Mutex::Type::ErrorChecking, Mutex::Protocol::PriorityInheritance, {}},
-			Parameters{Mutex::Type::Recursive, Mutex::Protocol::None, {}},
-			Parameters{Mutex::Type::Recursive, Mutex::Protocol::PriorityProtect, UINT8_MAX},
-			Parameters{Mutex::Type::Recursive, Mutex::Protocol::PriorityProtect, testThreadPriority},
-			Parameters{Mutex::Type::Recursive, Mutex::Protocol::PriorityInheritance, {}},
+			Parameters{Mutex::Type::Normal, Mutex::Protocol::none, {}},
+			Parameters{Mutex::Type::Normal, Mutex::Protocol::priorityProtect, UINT8_MAX},
+			Parameters{Mutex::Type::Normal, Mutex::Protocol::priorityProtect, testThreadPriority},
+			Parameters{Mutex::Type::Normal, Mutex::Protocol::priorityInheritance, {}},
+			Parameters{Mutex::Type::ErrorChecking, Mutex::Protocol::none, {}},
+			Parameters{Mutex::Type::ErrorChecking, Mutex::Protocol::priorityProtect, UINT8_MAX},
+			Parameters{Mutex::Type::ErrorChecking, Mutex::Protocol::priorityProtect, testThreadPriority},
+			Parameters{Mutex::Type::ErrorChecking, Mutex::Protocol::priorityInheritance, {}},
+			Parameters{Mutex::Type::Recursive, Mutex::Protocol::none, {}},
+			Parameters{Mutex::Type::Recursive, Mutex::Protocol::priorityProtect, UINT8_MAX},
+			Parameters{Mutex::Type::Recursive, Mutex::Protocol::priorityProtect, testThreadPriority},
+			Parameters{Mutex::Type::Recursive, Mutex::Protocol::priorityInheritance, {}},
 	};
 
 	for (const auto& parameters : parametersArray)

@@ -364,15 +364,15 @@ bool ConditionVariableOperationsTestCase::run_() const
 	using Parameters = std::tuple<Mutex::Type, Mutex::Protocol, uint8_t>;
 	static const std::array<Parameters, 9> parametersArray
 	{{
-			Parameters{Mutex::Type::Normal, Mutex::Protocol::None, {}},
-			Parameters{Mutex::Type::Normal, Mutex::Protocol::PriorityProtect, UINT8_MAX},
-			Parameters{Mutex::Type::Normal, Mutex::Protocol::PriorityInheritance, {}},
-			Parameters{Mutex::Type::ErrorChecking, Mutex::Protocol::None, {}},
-			Parameters{Mutex::Type::ErrorChecking, Mutex::Protocol::PriorityProtect, UINT8_MAX},
-			Parameters{Mutex::Type::ErrorChecking, Mutex::Protocol::PriorityInheritance, {}},
-			Parameters{Mutex::Type::Recursive, Mutex::Protocol::None, {}},
-			Parameters{Mutex::Type::Recursive, Mutex::Protocol::PriorityProtect, UINT8_MAX},
-			Parameters{Mutex::Type::Recursive, Mutex::Protocol::PriorityInheritance, {}},
+			Parameters{Mutex::Type::Normal, Mutex::Protocol::none, {}},
+			Parameters{Mutex::Type::Normal, Mutex::Protocol::priorityProtect, UINT8_MAX},
+			Parameters{Mutex::Type::Normal, Mutex::Protocol::priorityInheritance, {}},
+			Parameters{Mutex::Type::ErrorChecking, Mutex::Protocol::none, {}},
+			Parameters{Mutex::Type::ErrorChecking, Mutex::Protocol::priorityProtect, UINT8_MAX},
+			Parameters{Mutex::Type::ErrorChecking, Mutex::Protocol::priorityInheritance, {}},
+			Parameters{Mutex::Type::Recursive, Mutex::Protocol::none, {}},
+			Parameters{Mutex::Type::Recursive, Mutex::Protocol::priorityProtect, UINT8_MAX},
+			Parameters{Mutex::Type::Recursive, Mutex::Protocol::priorityInheritance, {}},
 	}};
 
 	constexpr auto phase1ExpectedContextSwitchCount = 2 * (waitForNextTickContextSwitchCount +

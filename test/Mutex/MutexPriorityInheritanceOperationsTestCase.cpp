@@ -256,16 +256,16 @@ bool testBasicPriorityInheritance(const Mutex::Type type)
 
 	std::array<Mutex, totalThreads> mutexes
 	{{
-			Mutex{type, Mutex::Protocol::PriorityInheritance},
-			Mutex{type, Mutex::Protocol::PriorityInheritance},
-			Mutex{type, Mutex::Protocol::PriorityInheritance},
-			Mutex{type, Mutex::Protocol::PriorityInheritance},
-			Mutex{type, Mutex::Protocol::PriorityInheritance},
-			Mutex{type, Mutex::Protocol::PriorityInheritance},
-			Mutex{type, Mutex::Protocol::PriorityInheritance},
-			Mutex{type, Mutex::Protocol::PriorityInheritance},
-			Mutex{type, Mutex::Protocol::PriorityInheritance},
-			Mutex{type, Mutex::Protocol::PriorityInheritance},
+			Mutex{type, Mutex::Protocol::priorityInheritance},
+			Mutex{type, Mutex::Protocol::priorityInheritance},
+			Mutex{type, Mutex::Protocol::priorityInheritance},
+			Mutex{type, Mutex::Protocol::priorityInheritance},
+			Mutex{type, Mutex::Protocol::priorityInheritance},
+			Mutex{type, Mutex::Protocol::priorityInheritance},
+			Mutex{type, Mutex::Protocol::priorityInheritance},
+			Mutex{type, Mutex::Protocol::priorityInheritance},
+			Mutex{type, Mutex::Protocol::priorityInheritance},
+			Mutex{type, Mutex::Protocol::priorityInheritance},
 	}};
 
 	auto& mutex0 = mutexes[0];
@@ -411,16 +411,16 @@ bool testCanceledLock(const Mutex::Type type)
 
 	std::array<Mutex, totalThreads> mutexes
 	{{
-			Mutex{type, Mutex::Protocol::PriorityInheritance},
-			Mutex{type, Mutex::Protocol::PriorityInheritance},
-			Mutex{type, Mutex::Protocol::PriorityInheritance},
-			Mutex{type, Mutex::Protocol::PriorityInheritance},
-			Mutex{type, Mutex::Protocol::PriorityInheritance},
-			Mutex{type, Mutex::Protocol::PriorityInheritance},
-			Mutex{type, Mutex::Protocol::PriorityInheritance},
-			Mutex{type, Mutex::Protocol::PriorityInheritance},
-			Mutex{type, Mutex::Protocol::PriorityInheritance},
-			Mutex{type, Mutex::Protocol::PriorityInheritance},
+			Mutex{type, Mutex::Protocol::priorityInheritance},
+			Mutex{type, Mutex::Protocol::priorityInheritance},
+			Mutex{type, Mutex::Protocol::priorityInheritance},
+			Mutex{type, Mutex::Protocol::priorityInheritance},
+			Mutex{type, Mutex::Protocol::priorityInheritance},
+			Mutex{type, Mutex::Protocol::priorityInheritance},
+			Mutex{type, Mutex::Protocol::priorityInheritance},
+			Mutex{type, Mutex::Protocol::priorityInheritance},
+			Mutex{type, Mutex::Protocol::priorityInheritance},
+			Mutex{type, Mutex::Protocol::priorityInheritance},
 	}};
 
 	auto& mutex0 = mutexes[0];
@@ -555,16 +555,16 @@ bool testPriorityChange(const Mutex::Type type)
 
 	std::array<Mutex, totalThreads> mutexes
 	{{
-			Mutex{type, Mutex::Protocol::PriorityInheritance},
-			Mutex{type, Mutex::Protocol::PriorityInheritance},
-			Mutex{type, Mutex::Protocol::PriorityInheritance},
-			Mutex{type, Mutex::Protocol::PriorityInheritance},
-			Mutex{type, Mutex::Protocol::PriorityInheritance},
-			Mutex{type, Mutex::Protocol::PriorityInheritance},
-			Mutex{type, Mutex::Protocol::PriorityInheritance},
-			Mutex{type, Mutex::Protocol::PriorityInheritance},
-			Mutex{type, Mutex::Protocol::PriorityInheritance},
-			Mutex{type, Mutex::Protocol::PriorityInheritance},
+			Mutex{type, Mutex::Protocol::priorityInheritance},
+			Mutex{type, Mutex::Protocol::priorityInheritance},
+			Mutex{type, Mutex::Protocol::priorityInheritance},
+			Mutex{type, Mutex::Protocol::priorityInheritance},
+			Mutex{type, Mutex::Protocol::priorityInheritance},
+			Mutex{type, Mutex::Protocol::priorityInheritance},
+			Mutex{type, Mutex::Protocol::priorityInheritance},
+			Mutex{type, Mutex::Protocol::priorityInheritance},
+			Mutex{type, Mutex::Protocol::priorityInheritance},
+			Mutex{type, Mutex::Protocol::priorityInheritance},
 	}};
 
 	auto& mutex0 = mutexes[0];

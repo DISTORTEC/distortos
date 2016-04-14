@@ -69,12 +69,12 @@ public:
 	 * http://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_mutex_init.html
 	 *
 	 * \param [in] type is the type of mutex, default - Type::Normal
-	 * \param [in] protocol is the mutex protocol, default - Protocol::None
-	 * \param [in] priorityCeiling is the priority ceiling of mutex, ignored when protocol != Protocol::PriorityProtect,
+	 * \param [in] protocol is the mutex protocol, default - Protocol::none
+	 * \param [in] priorityCeiling is the priority ceiling of mutex, ignored when protocol != Protocol::priorityProtect,
 	 * default - 0
 	 */
 
-	constexpr explicit Mutex(const Type type = Type::Normal, const Protocol protocol = Protocol::None,
+	constexpr explicit Mutex(const Type type = Type::Normal, const Protocol protocol = Protocol::none,
 			const uint8_t priorityCeiling = {}) :
 			controlBlock_{protocol, priorityCeiling},
 			recursiveLocksCount_{},

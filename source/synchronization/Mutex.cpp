@@ -89,7 +89,7 @@ int Mutex::unlock()
 
 int Mutex::tryLockInternal()
 {
-	if (controlBlock_.getProtocol() == Protocol::PriorityProtect &&
+	if (controlBlock_.getProtocol() == Protocol::priorityProtect &&
 			internal::getScheduler().getCurrentThreadControlBlock().getPriority() > controlBlock_.getPriorityCeiling())
 		return EINVAL;
 
