@@ -28,13 +28,11 @@ void configurePin(const Pin pin, const PinConfiguration configuration, const boo
 	const auto decodedPin = decodePin(pin);
 	auto& port = *decodedPin.first;
 	const auto pinNumber = decodedPin.second;
-
 	auto& cr = pinNumber < 8 ? port.CRL : port.CRH;
-	const auto shift = (pinNumber * 4) & 0x1f;
-	const auto invertedMask = ~((GPIO_CRL_CNF0 | GPIO_CRL_MODE0) << shift);
-	const auto configurationValue = static_cast<uint32_t>(configuration) << shift;
+	const auto invertedMask = ~((GPIO_CRL_CNF0 | GPIO_CRL_MODE0) << ((pinNumber * 4) % 32));
+	const auto configurationValue = static_cast<uint32_t>(configuration) << ((pinNumber * 4) % 32);
 
-	port.BSRR = 1 << (pinNumber + (initialState == false ? 16 : 0));
+	(initialState == false ? port.BRR : port.BSRR) = 1 << pinNumber;
 
 	architecture::InterruptMaskingLock interruptMaskingLock;
 
