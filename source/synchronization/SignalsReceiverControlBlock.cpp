@@ -60,7 +60,7 @@ std::pair<int, SignalInformation> SignalsReceiverControlBlock::acceptPendingSign
 	if (testResult.second == false)
 		return {EAGAIN, SignalInformation{uint8_t{}, SignalInformation::Code{}, sigval{}}};
 	const auto ret = pendingSignalSet_.remove(signalNumber);
-	return {ret, SignalInformation{signalNumber, SignalInformation::Code::Generated, sigval{}}};
+	return {ret, SignalInformation{signalNumber, SignalInformation::Code::generated, sigval{}}};
 }
 
 int SignalsReceiverControlBlock::deliveryOfSignalsStartedHook() const

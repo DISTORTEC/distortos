@@ -56,7 +56,7 @@ bool SignalsGenerationOperationsTestCase::run_() const
 
 	auto& signalInformation = tryWaitResult.second;
 	if (signalInformation.getSignalNumber() != testSignalNumber ||
-			signalInformation.getCode() != SignalInformation::Code::Generated)
+			signalInformation.getCode() != SignalInformation::Code::generated)
 		return false;
 
 	// after the test no signals may be pending

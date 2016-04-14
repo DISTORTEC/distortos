@@ -133,7 +133,7 @@ int queueSignalWrapper(Thread& thread, const uint8_t signalNumber, const int val
 bool testReceivedGeneratedSignal(const SignalInformation& signalInformation, const uint8_t signalNumber, int)
 {
 	return signalInformation.getSignalNumber() == signalNumber &&
-			signalInformation.getCode() == SignalInformation::Code::Generated;
+			signalInformation.getCode() == SignalInformation::Code::generated;
 }
 
 #if defined(CONFIG_MAIN_THREAD_QUEUED_SIGNALS) && CONFIG_MAIN_THREAD_QUEUED_SIGNALS > 0
@@ -151,7 +151,7 @@ bool testReceivedGeneratedSignal(const SignalInformation& signalInformation, con
 bool testReceivedQueuedSignal(const SignalInformation& signalInformation, const uint8_t signalNumber, const int value)
 {
 	return signalInformation.getSignalNumber() == signalNumber &&
-			signalInformation.getCode() == SignalInformation::Code::Queued &&
+			signalInformation.getCode() == SignalInformation::Code::queued &&
 			signalInformation.getValue().sival_int == value;
 }
 

@@ -81,7 +81,7 @@ bool phase1()
 
 		auto& signalInformation = tryWaitResult.second;
 		if (signalInformation.getSignalNumber() != testSignalNumber ||
-				signalInformation.getCode() != SignalInformation::Code::Queued ||
+				signalInformation.getCode() != SignalInformation::Code::queued ||
 				signalInformation.getValue().sival_int != expectedValue)
 			return false;
 	}
