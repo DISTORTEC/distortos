@@ -51,7 +51,7 @@ ThreadControlBlock::ThreadControlBlock(architecture::Stack&& stack, const uint8_
 		},
 		roundRobinQuantum_{},
 		schedulingPolicy_{schedulingPolicy},
-		state_{ThreadState::New}
+		state_{ThreadState::Created}
 {
 	_REENT_INIT_PTR(&reent_);
 }

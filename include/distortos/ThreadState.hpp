@@ -26,7 +26,7 @@ namespace distortos
 enum class ThreadState : uint8_t
 {
 	/// state in which thread is created, before being added to Scheduler
-	New,
+	Created,
 	/// thread is runnable
 	Runnable,
 	/// thread is terminated

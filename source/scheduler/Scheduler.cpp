@@ -91,7 +91,7 @@ int Scheduler::add(ThreadControlBlock& threadControlBlock)
 {
 	architecture::InterruptMaskingLock interruptMaskingLock;
 
-	if (threadControlBlock.getState() != ThreadState::New)
+	if (threadControlBlock.getState() != ThreadState::Created)
 		return EINVAL;
 
 	const auto ret = addInternal(threadControlBlock);

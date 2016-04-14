@@ -41,7 +41,7 @@ int DynamicThread::detach()
 		return EINVAL;
 
 	const auto state = detachableThread_->getState();
-	if (state == ThreadState::New || state == ThreadState::Terminated)	// thread not yet started or already terminated?
+	if (state == ThreadState::Created || state == ThreadState::Terminated)	// thread not yet started or already terminated?
 	{
 		detachableThread_.reset();	// just delete it...
 		return 0;

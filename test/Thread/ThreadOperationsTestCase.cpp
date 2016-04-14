@@ -58,7 +58,8 @@ bool phase1()
 {
 	auto testThread = makeDynamicThread({192, 1}, emptyFunction);
 
-	if (testThread.getState() != ThreadState::New)	// state of created (but not yet started) thread must be "New"
+	// state of created (but not yet started) thread must be "ThreadState::Created"
+	if (testThread.getState() != ThreadState::Created)
 		return false;
 
 	bool result {true};
