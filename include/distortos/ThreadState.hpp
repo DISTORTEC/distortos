@@ -26,27 +26,27 @@ namespace distortos
 enum class ThreadState : uint8_t
 {
 	/// state in which thread is created, before being added to Scheduler
-	Created,
+	created,
 	/// thread is runnable
-	Runnable,
+	runnable,
 	/// thread is terminated
-	Terminated,
+	terminated,
 	/// thread is sleeping
-	Sleeping,
+	sleeping,
 	/// thread is blocked on Semaphore
-	BlockedOnSemaphore,
+	blockedOnSemaphore,
 	/// thread is suspended
-	Suspended,
+	suspended,
 	/// thread is blocked on Mutex
-	BlockedOnMutex,
+	blockedOnMutex,
 	/// thread is blocked on ConditionVariable
-	BlockedOnConditionVariable,
+	blockedOnConditionVariable,
 	/// thread is waiting for signal
-	WaitingForSignal,
+	waitingForSignal,
 	/// thread is blocked on OnceFlag
-	BlockedOnOnceFlag,
+	blockedOnOnceFlag,
 	/// internal thread object was detached
-	Detached,
+	detached,
 };
 
 }	// namespace distortos

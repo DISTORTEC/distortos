@@ -123,7 +123,7 @@ bool SemaphorePriorityTestCase::run_() const
 		}
 
 		for (const auto& thread : threads)
-			if (thread.getState() != ThreadState::BlockedOnSemaphore)
+			if (thread.getState() != ThreadState::blockedOnSemaphore)
 				result = false;
 
 		if (sequenceAsserter.assertSequence(totalThreads) == false || semaphore.getValue() != 0)

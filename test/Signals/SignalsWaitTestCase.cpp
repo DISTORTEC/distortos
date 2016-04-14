@@ -261,7 +261,7 @@ bool SignalsWaitTestCase::run_() const
 			}
 
 			for (const auto& thread : threads)
-				if (thread.getState() != ThreadState::WaitingForSignal)
+				if (thread.getState() != ThreadState::waitingForSignal)
 					result = false;
 
 			if (sequenceAsserter.assertSequence(totalThreads) == false)

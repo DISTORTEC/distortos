@@ -85,7 +85,7 @@ int MutexControlBlock::block()
 		priorityInheritanceBeforeBlock();
 
 	const PriorityInheritanceMutexControlBlockUnblockFunctor unblockFunctor {*this};
-	return getScheduler().block(blockedList_, ThreadState::BlockedOnMutex,
+	return getScheduler().block(blockedList_, ThreadState::blockedOnMutex,
 			protocol_ == Protocol::priorityInheritance ? &unblockFunctor : nullptr);
 }
 
@@ -95,7 +95,7 @@ int MutexControlBlock::blockUntil(const TickClock::time_point timePoint)
 		priorityInheritanceBeforeBlock();
 
 	const PriorityInheritanceMutexControlBlockUnblockFunctor unblockFunctor {*this};
-	return getScheduler().blockUntil(blockedList_, ThreadState::BlockedOnMutex, timePoint,
+	return getScheduler().blockUntil(blockedList_, ThreadState::blockedOnMutex, timePoint,
 			protocol_ == Protocol::priorityInheritance ? &unblockFunctor : nullptr);
 }
 

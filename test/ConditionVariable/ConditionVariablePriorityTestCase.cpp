@@ -161,7 +161,7 @@ bool ConditionVariablePriorityTestCase::run_() const
 				}
 
 				for (const auto& thread : threads)
-					if (thread.getState() != ThreadState::BlockedOnConditionVariable)
+					if (thread.getState() != ThreadState::blockedOnConditionVariable)
 						result = false;
 
 				notifier.first(conditionVariable);

@@ -131,7 +131,7 @@ bool MutexPriorityTestCase::run_() const
 
 			bool invalidState {};
 			for (const auto& thread : threads)
-				if (thread.getState() != ThreadState::BlockedOnMutex)
+				if (thread.getState() != ThreadState::blockedOnMutex)
 					invalidState = true;
 
 			mutex.unlock();

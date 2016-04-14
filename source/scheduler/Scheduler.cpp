@@ -91,7 +91,7 @@ int Scheduler::add(ThreadControlBlock& threadControlBlock)
 {
 	architecture::InterruptMaskingLock interruptMaskingLock;
 
-	if (threadControlBlock.getState() != ThreadState::Created)
+	if (threadControlBlock.getState() != ThreadState::created)
 		return EINVAL;
 
 	const auto ret = addInternal(threadControlBlock);
@@ -194,7 +194,7 @@ void Scheduler::maybeRequestContextSwitch() const
 int Scheduler::remove()
 {
 	ThreadList terminatedList;
-	const auto ret = blockInternal(terminatedList, currentThreadControlBlock_, ThreadState::Terminated, {});
+	const auto ret = blockInternal(terminatedList, currentThreadControlBlock_, ThreadState::terminated, {});
 	if (ret != 0)
 		return ret;
 
@@ -221,7 +221,7 @@ int Scheduler::suspend()
 
 int Scheduler::suspend(const ThreadList::iterator iterator)
 {
-	return block(suspendedList_, iterator, ThreadState::Suspended);
+	return block(suspendedList_, iterator, ThreadState::suspended);
 }
 
 void* Scheduler::switchContext(void* const stackPointer)
@@ -285,7 +285,7 @@ int Scheduler::addInternal(ThreadControlBlock& threadControlBlock)
 
 	runnableList_.insert(threadControlBlock);
 	threadControlBlock.setList(&runnableList_);
-	threadControlBlock.setState(ThreadState::Runnable);
+	threadControlBlock.setState(ThreadState::runnable);
 
 	return 0;
 }
@@ -323,7 +323,7 @@ void Scheduler::unblockInternal(const ThreadList::iterator iterator,
 	auto& threadControlBlock = *iterator;
 	runnableList_.splice(iterator);
 	threadControlBlock.setList(&runnableList_);
-	threadControlBlock.setState(ThreadState::Runnable);
+	threadControlBlock.setState(ThreadState::runnable);
 	threadControlBlock.unblockHook(unblockReason);
 }
 

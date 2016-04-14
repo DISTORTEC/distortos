@@ -137,7 +137,7 @@ bool ThreadSleepUntilTestCase::run_() const
 
 			bool invalidState {};
 			for (const auto& thread : threads)
-				if (thread.getState() != ThreadState::Sleeping)
+				if (thread.getState() != ThreadState::sleeping)
 					invalidState = true;
 
 			for (auto& thread : threads)
