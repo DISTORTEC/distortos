@@ -40,8 +40,8 @@ void configurePin(const Pin pin, const PinMode mode, const bool openDrain, const
 	const auto shiftedOutputSpeed = static_cast<uint32_t>(outputSpeed) << (pinNumber * 2);
 	const auto pupdrInvertedMask = ~(GPIO_PUPDR_mask << (pinNumber * 2));
 	const auto shiftedPull = static_cast<uint32_t>(pull) << (pinNumber * 2);
-	const auto afrInvertedMask = ~(GPIO_AFRx_mask << ((pinNumber % 8) * 4));
-	const auto shiftedAlternateFunction = static_cast<uint32_t>(alternateFunction) << ((pinNumber % 8) * 4);
+	const auto afrInvertedMask = ~(GPIO_AFRx_mask << ((pinNumber * 4) % 32));
+	const auto shiftedAlternateFunction = static_cast<uint32_t>(alternateFunction) << ((pinNumber * 4) % 32);
 
 	(initialState == false ? port.BRR : port.BSRR) = 1 << pinNumber;
 
