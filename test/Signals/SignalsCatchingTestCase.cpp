@@ -296,15 +296,15 @@ public:
 	enum class Type : uint8_t
 	{
 		/// BasicHandlerStep
-		BasicHandler,
+		basicHandler,
 		/// GenerateQueueSignalStep
-		GenerateQueueSignal,
+		generateQueueSignal,
 		/// ThreadPriorityStep
-		ThreadPriority,
+		threadPriority,
 		/// SignalMaskStep
-		SignalMask,
+		signalMask,
 		/// SoftwareTimerStep
-		SoftwareTimer,
+		softwareTimer,
 	};
 
 	/**
@@ -322,7 +322,7 @@ public:
 			basicHandlerStep_{basicHandlerStep},
 			sequencePoints_{firstSequencePoint, lastSequencePoint},
 			more_{more},
-			type_{Type::BasicHandler}
+			type_{Type::basicHandler}
 	{
 
 	}
@@ -342,7 +342,7 @@ public:
 			generateQueueSignalStep_{generateQueueSignalStep},
 			sequencePoints_{firstSequencePoint, lastSequencePoint},
 			more_{more},
-			type_{Type::GenerateQueueSignal}
+			type_{Type::generateQueueSignal}
 	{
 
 	}
@@ -362,7 +362,7 @@ public:
 			threadPriorityStep_{threadPriorityStep},
 			sequencePoints_{firstSequencePoint, lastSequencePoint},
 			more_{more},
-			type_{Type::ThreadPriority}
+			type_{Type::threadPriority}
 	{
 
 	}
@@ -382,7 +382,7 @@ public:
 			signalMaskStep_{signalMaskStep},
 			sequencePoints_{firstSequencePoint, lastSequencePoint},
 			more_{more},
-			type_{Type::SignalMask}
+			type_{Type::signalMask}
 	{
 
 	}
@@ -402,7 +402,7 @@ public:
 			softwareTimerStep_{softwareTimerStep},
 			sequencePoints_{firstSequencePoint, lastSequencePoint},
 			more_{more},
-			type_{Type::SoftwareTimer}
+			type_{Type::softwareTimer}
 	{
 
 	}
@@ -438,19 +438,19 @@ private:
 	/// internal test step that will be executed
 	union
 	{
-		/// BasicHandlerStep test step - valid only if type_ == Type::BasicHandler
+		/// BasicHandlerStep test step - valid only if type_ == Type::basicHandler
 		BasicHandlerStep basicHandlerStep_;
 
-		/// GenerateQueueSignalStep test step - valid only if type_ == Type::GenerateQueueSignal
+		/// GenerateQueueSignalStep test step - valid only if type_ == Type::generateQueueSignal
 		GenerateQueueSignalStep generateQueueSignalStep_;
 
-		/// ThreadPriorityStep test step - valid only if type_ == Type::ThreadPriority
+		/// ThreadPriorityStep test step - valid only if type_ == Type::threadPriority
 		ThreadPriorityStep threadPriorityStep_;
 
-		/// SignalMaskStep test step - valid only if type_ == Type::SignalMask
+		/// SignalMaskStep test step - valid only if type_ == Type::signalMask
 		SignalMaskStep signalMaskStep_;
 
-		/// SoftwareTimerStep test step - valid only if type_ == Type::SoftwareTimer
+		/// SoftwareTimerStep test step - valid only if type_ == Type::softwareTimer
 		SoftwareTimerStep softwareTimerStep_;
 	};
 
@@ -524,11 +524,11 @@ int TestStep::operator()(SequenceAsserter& sequenceAsserter, TestStepsRange& tes
 	sequenceAsserter.sequencePoint(sequencePoints_.first);
 
 	const auto ret =
-			type_ == Type::BasicHandler && signalInformation != nullptr ? basicHandlerStep_(*signalInformation) :
-			type_ == Type::GenerateQueueSignal ? generateQueueSignalStep_(thread) :
-			type_ == Type::ThreadPriority ? threadPriorityStep_(thread) :
-			type_ == Type::SignalMask ? signalMaskStep_() :
-			type_ == Type::SoftwareTimer ? softwareTimerStep_(testStepsRange, thread) : EINVAL;
+			type_ == Type::basicHandler && signalInformation != nullptr ? basicHandlerStep_(*signalInformation) :
+			type_ == Type::generateQueueSignal ? generateQueueSignalStep_(thread) :
+			type_ == Type::threadPriority ? threadPriorityStep_(thread) :
+			type_ == Type::signalMask ? signalMaskStep_() :
+			type_ == Type::softwareTimer ? softwareTimerStep_(testStepsRange, thread) : EINVAL;
 
 	sequenceAsserter.sequencePoint(sequencePoints_.second);
 
