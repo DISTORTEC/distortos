@@ -156,7 +156,7 @@ static_assert(pllqOutFrequency <= maxPllqOutFrequency, "Invalid PLL \"/Q\" outpu
 /// PLL "R" output frequency, Hz
 constexpr uint32_t pllrOutFrequency {vcoOutFrequency / CONFIG_CHIP_STM32F4_RCC_PLLR};
 
-#endif // defined(CONFIG_CHIP_STM32F446) || defined(CONFIG_CHIP_STM32F469) || defined(CONFIG_CHIP_STM32F479)
+#endif	// defined(CONFIG_CHIP_STM32F446) || defined(CONFIG_CHIP_STM32F469) || defined(CONFIG_CHIP_STM32F479)
 
 #endif	// def CONFIG_CHIP_STM32F4_RCC_PLL_ENABLE
 
