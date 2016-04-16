@@ -454,11 +454,11 @@ public:
 	enum class Type : uint8_t
 	{
 		/// uses Semaphore::wait()
-		Wait,
+		wait,
 		/// uses Semaphore::tryWaitFor()
-		TryWaitFor,
+		tryWaitFor,
 		/// uses Semaphore::tryWaitUntil()
-		TryWaitUntil,
+		tryWaitUntil,
 	};
 
 	/**
@@ -488,8 +488,8 @@ private:
 
 	bool block() override
 	{
-		const auto ret = type_ == Type::Wait ? semaphore_.wait() :
-				type_ == Type::TryWaitFor ? semaphore_.tryWaitFor(longDuration) :
+		const auto ret = type_ == Type::wait ? semaphore_.wait() :
+				type_ == Type::tryWaitFor ? semaphore_.tryWaitFor(longDuration) :
 				semaphore_.tryWaitUntil(TickClock::now() + longDuration);
 		return ret == EINTR;
 	}
@@ -646,11 +646,11 @@ enum class TestStepType : uint8_t
 	mutexTryLockFor,
 	/// MutexTestStep, MutexTestStep::Type::TryLockUntil
 	mutexTryLockUntil,
-	/// SemaphoreTestStep, SemaphoreTestStep::Type::Wait
+	/// SemaphoreTestStep, SemaphoreTestStep::Type::wait
 	semaphoreWait,
-	/// SemaphoreTestStep, SemaphoreTestStep::Type::TryWaitFor
+	/// SemaphoreTestStep, SemaphoreTestStep::Type::tryWaitFor
 	semaphoreTryWaitFor,
-	/// SemaphoreTestStep, SemaphoreTestStep::Type::TryWaitUntil
+	/// SemaphoreTestStep, SemaphoreTestStep::Type::tryWaitUntil
 	semaphoreTryWaitUntil,
 	/// SignalsTestStep, SignalsTestStep::Type::wait
 	signalsWait,
@@ -738,11 +738,11 @@ TestStep& makeTestStep(const TestStepType testStepType, TestStepStorage& testSte
 	else if (testStepType == TestStepType::mutexTryLockUntil)
 		return *new (&testStepStorage) MutexTestStep {MutexTestStep::Type::TryLockUntil, sequenceAsserter};
 	else if (testStepType == TestStepType::semaphoreWait)
-		return *new (&testStepStorage) SemaphoreTestStep {SemaphoreTestStep::Type::Wait};
+		return *new (&testStepStorage) SemaphoreTestStep {SemaphoreTestStep::Type::wait};
 	else if (testStepType == TestStepType::semaphoreTryWaitFor)
-		return *new (&testStepStorage) SemaphoreTestStep {SemaphoreTestStep::Type::TryWaitFor};
+		return *new (&testStepStorage) SemaphoreTestStep {SemaphoreTestStep::Type::tryWaitFor};
 	else if (testStepType == TestStepType::semaphoreTryWaitUntil)
-		return *new (&testStepStorage) SemaphoreTestStep {SemaphoreTestStep::Type::TryWaitUntil};
+		return *new (&testStepStorage) SemaphoreTestStep {SemaphoreTestStep::Type::tryWaitUntil};
 	if (testStepType == TestStepType::signalsWait)
 		return *new (&testStepStorage) SignalsTestStep {SignalsTestStep::Type::wait};
 	else if (testStepType == TestStepType::signalsTryWaitFor)
