@@ -57,6 +57,7 @@ all *ARMv6-M* and *ARMv7-M* targets.
 - Fix insufficient dependencies for "PLLR" option in system clock source configuration for *STM32F4*. Main PLL's "/R"
 output cannot be used as system clock if PLL is disabled.
 - Fix invalid definition of templated variants of `Semaphore::tryWaitFor()` and `Semaphore::tryWaitUntil()`.
+- Added missing *STM32F429NG* chip to *Kconfig* configuration menus.
 
 0.1.0 - 2016-02-26
 ------------------
