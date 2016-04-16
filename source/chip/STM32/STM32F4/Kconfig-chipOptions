@@ -9,17 +9,17 @@
 
 #
 # This file covers devices as described in following places:
-# - DS9716 datasheet (STM32F401xB, STM32F401xC), Revision 5, 2015-08-06, devices listed on website on 2015-12-13;
-# - DS10086 datasheet (STM32F401xD, STM32F401xE), Revision 3, 2015-01-22, devices listed on website on 2015-12-13;
-# - DS8626 datasheet (STM32F405xx, STM32F407xx), Revision 6, 2015-10-19, devices listed on website on 2015-12-13;
-# - DS11144 datasheet (STM32F410x8, STM32F410xB), Revision 2, 2015-12-07, devices listed on website on 2015-12-13;
+# - DS9716 datasheet (STM32F401xB, STM32F401xC), Revision 5, 2015-08-06, devices listed on website on 2016-04-16;
+# - DS10086 datasheet (STM32F401xD, STM32F401xE), Revision 3, 2015-01-22, devices listed on website on 2016-04-16;
+# - DS8626 datasheet (STM32F405xx, STM32F407xx), Revision 7, 2016-03-16, devices listed on website on 2016-04-16;
+# - DS11144 datasheet (STM32F410x8, STM32F410xB), Revision 2, 2015-12-07, devices listed on website on 2016-04-16;
 # - DS10314 datasheet (STM32F411xC, STM32F411xE), Revision 4, 2015-02-04, devices listed on website on 2016-04-16;
-# - DS8597 datasheet (STM32F415xx, STM32F417xx), Revision 6, 2015-10-22, devices listed on website on 2015-12-13;
-# - DS9405 datasheet (STM32F427xx, STM32F429xx), Revision 7, 2015-11-30, devices listed on website on 2016-04-16;
-# - DS9484 datasheet (STM32F437xx, STM32F439xx), Revision 8, 2015-11-30, devices listed on website on 2015-12-13;
-# - DS10693 datasheet (STM32F446xC/E), Revision 5, 2015-11-03, devices listed on website on 2015-12-13;
-# - DS11189 datasheet (STM32F469xx), Revision 2, 2015-10-13, devices listed on website on 2015-12-13;
-# - DS11118 datasheet (STM32F479xx), Revision 2, 2015-10-19, devices listed on website on 2015-12-13;
+# - DS8597 datasheet (STM32F415xx, STM32F417xx), Revision 7, 2016-03-16, devices listed on website on 2016-04-16;
+# - DS9405 datasheet (STM32F427xx, STM32F429xx), Revision 8, 2016-01-21, devices listed on website on 2016-04-16;
+# - DS9484 datasheet (STM32F437xx, STM32F439xx), Revision 9, 2016-01-11, devices listed on website on 2016-04-16;
+# - DS10693 datasheet (STM32F446xC/E), Revision 5, 2015-11-03, devices listed on website on 2016-04-16;
+# - DS11189 datasheet (STM32F469xx), Revision 3, 2016-03-08, devices listed on website on 2016-04-16;
+# - DS11118 datasheet (STM32F479xx), Revision 3, 2016-03-08, devices listed on website on 2016-04-16;
 #
 
 if CHIP_STM32F4
