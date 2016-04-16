@@ -39,6 +39,7 @@ configuration of interrupt priorities (default value is 0).
 - Support for optional inversion to all implementations of `ChipInputPin` and `ChipOutputPin`.
 - `buttons.hpp` header with board buttons for all supported boards.
 - `clocks.hpp` header with definition of clocks for selected chip.
+- New package type for *STM32F411C* chips - the website lists *WLCSP49* variant now.
 
 ### Changed
 

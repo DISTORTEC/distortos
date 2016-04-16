@@ -13,7 +13,7 @@
 # - DS10086 datasheet (STM32F401xD, STM32F401xE), Revision 3, 2015-01-22, devices listed on website on 2015-12-13;
 # - DS8626 datasheet (STM32F405xx, STM32F407xx), Revision 6, 2015-10-19, devices listed on website on 2015-12-13;
 # - DS11144 datasheet (STM32F410x8, STM32F410xB), Revision 2, 2015-12-07, devices listed on website on 2015-12-13;
-# - DS10314 datasheet (STM32F411xC, STM32F411xE), Revision 4, 2015-02-04, devices listed on website on 2015-12-13;
+# - DS10314 datasheet (STM32F411xC, STM32F411xE), Revision 4, 2015-02-04, devices listed on website on 2016-04-16;
 # - DS8597 datasheet (STM32F415xx, STM32F417xx), Revision 6, 2015-10-22, devices listed on website on 2015-12-13;
 # - DS9405 datasheet (STM32F427xx, STM32F429xx), Revision 7, 2015-11-30, devices listed on website on 2016-04-16;
 # - DS9484 datasheet (STM32F437xx, STM32F439xx), Revision 8, 2015-11-30, devices listed on website on 2015-12-13;
@@ -790,6 +790,7 @@ config CHIP_STM32F411C
 	default n
 	select CHIP_STM32F411
 	select CHIP_HAS_UFQFPN48
+	select CHIP_HAS_WLCSP49
 
 config CHIP_STM32F411CC
 	bool
