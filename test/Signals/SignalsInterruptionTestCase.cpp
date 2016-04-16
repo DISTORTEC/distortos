@@ -536,11 +536,11 @@ public:
 	enum class Type : uint8_t
 	{
 		/// uses ThisThread::Signals::wait()
-		Wait,
+		wait,
 		/// uses ThisThread::Signals::tryWaitFor()
-		TryWaitFor,
+		tryWaitFor,
 		/// uses ThisThread::Signals::tryWaitUntil()
-		TryWaitUntil,
+		tryWaitUntil,
 	};
 
 	/**
@@ -570,8 +570,8 @@ private:
 	bool block() override
 	{
 		const SignalSet fullSignalSet {SignalSet::full};
-		const auto ret = type_ == Type::Wait ? ThisThread::Signals::wait(fullSignalSet) :
-				type_ == Type::TryWaitFor ? ThisThread::Signals::tryWaitFor(fullSignalSet, longDuration) :
+		const auto ret = type_ == Type::wait ? ThisThread::Signals::wait(fullSignalSet) :
+				type_ == Type::tryWaitFor ? ThisThread::Signals::tryWaitFor(fullSignalSet, longDuration) :
 				ThisThread::Signals::tryWaitUntil(fullSignalSet, TickClock::now() + longDuration);
 		return ret.first == EINTR;
 	}
@@ -652,11 +652,11 @@ enum class TestStepType : uint8_t
 	semaphoreTryWaitFor,
 	/// SemaphoreTestStep, SemaphoreTestStep::Type::TryWaitUntil
 	semaphoreTryWaitUntil,
-	/// SignalsTestStep, SignalsTestStep::Type::Wait
+	/// SignalsTestStep, SignalsTestStep::Type::wait
 	signalsWait,
-	/// SignalsTestStep, SignalsTestStep::Type::TryWaitFor
+	/// SignalsTestStep, SignalsTestStep::Type::tryWaitFor
 	signalsTryWaitFor,
-	/// SignalsTestStep, SignalsTestStep::Type::TryWaitUntil
+	/// SignalsTestStep, SignalsTestStep::Type::tryWaitUntil
 	signalsTryWaitUntil,
 	/// SleepTestStep, SleepTestStep::Type::sleepFor
 	sleepFor,
@@ -744,11 +744,11 @@ TestStep& makeTestStep(const TestStepType testStepType, TestStepStorage& testSte
 	else if (testStepType == TestStepType::semaphoreTryWaitUntil)
 		return *new (&testStepStorage) SemaphoreTestStep {SemaphoreTestStep::Type::TryWaitUntil};
 	if (testStepType == TestStepType::signalsWait)
-		return *new (&testStepStorage) SignalsTestStep {SignalsTestStep::Type::Wait};
+		return *new (&testStepStorage) SignalsTestStep {SignalsTestStep::Type::wait};
 	else if (testStepType == TestStepType::signalsTryWaitFor)
-		return *new (&testStepStorage) SignalsTestStep {SignalsTestStep::Type::TryWaitFor};
+		return *new (&testStepStorage) SignalsTestStep {SignalsTestStep::Type::tryWaitFor};
 	else if (testStepType == TestStepType::signalsTryWaitUntil)
-		return *new (&testStepStorage) SignalsTestStep {SignalsTestStep::Type::TryWaitUntil};
+		return *new (&testStepStorage) SignalsTestStep {SignalsTestStep::Type::tryWaitUntil};
 	else if (testStepType == TestStepType::sleepFor)
 		return *new (&testStepStorage) SleepTestStep {SleepTestStep::Type::sleepFor};
 	else // if (testStepType == TestStepType::sleepUntil)
