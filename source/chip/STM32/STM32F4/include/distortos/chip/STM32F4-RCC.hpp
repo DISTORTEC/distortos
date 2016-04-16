@@ -7,7 +7,7 @@
  * - RM0090 reference manual (STM32F405/415, STM32F407/417, STM32F427/437 and STM32F429/439), Revision 11, 2015-10-20
  * - RM0401 reference manual (STM32F410), Revision 2, 2015-10-26
  * - RM0383 reference manual (STM32F411xC/E), Revision 1, 2014-07-24
- * - RM0390 reference manual (STM32F446xx), Revision 1, 2015-03-17
+ * - RM0390 reference manual (STM32F446xx), Revision 2, 2016-01-12
  * - RM0386 reference manual (STM32F469xx and STM32F479xx), Revision 2, 2015-11-19
  *
  * \author Copyright (C) 2015-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
@@ -63,11 +63,11 @@ constexpr uint8_t minPllm {2};
 constexpr uint8_t maxPllm {63};
 
 /// minimum allowed value for PLLN
-#if defined(CONFIG_CHIP_STM32F401) || defined(CONFIG_CHIP_STM32F446)
+#if defined(CONFIG_CHIP_STM32F401)
 constexpr uint16_t minPlln {192};
-#else	// !defined(CONFIG_CHIP_STM32F401) && !defined(CONFIG_CHIP_STM32F446)
+#else	// !defined(CONFIG_CHIP_STM32F401)
 constexpr uint16_t minPlln {50};
-#endif	// !defined(CONFIG_CHIP_STM32F401) && !defined(CONFIG_CHIP_STM32F446)
+#endif	// !defined(CONFIG_CHIP_STM32F401)
 
 /// maximum allowed value for PLLN
 constexpr uint16_t maxPlln {432};

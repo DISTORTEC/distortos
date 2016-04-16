@@ -51,6 +51,8 @@ which can be defined with command line arguments.
 - Improve configuration and initialization of chip clocks for *STM32F1* and *STM32F4*.
 - Move configuration of *SysTick* timer from `chip::lowLevelInitialization()` to `architecture::startScheduling()` for
 all *ARMv6-M* and *ARMv7-M* targets.
+- Change allowed range of *PLLN* for *STM32F446* chips from [192; 432] (first revision of the reference manual) to
+[50; 432] (second revision of the reference manual).
 
 ### Fixed
 
