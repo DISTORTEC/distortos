@@ -66,12 +66,12 @@ int Mutex::unlock()
 {
 	architecture::InterruptMaskingLock interruptMaskingLock;
 
-	if (type_ != Type::Normal)
+	if (type_ != Type::normal)
 	{
 		if (controlBlock_.getOwner() != &internal::getScheduler().getCurrentThreadControlBlock())
 			return EPERM;
 
-		if (type_ == Type::Recursive && recursiveLocksCount_ != 0)
+		if (type_ == Type::recursive && recursiveLocksCount_ != 0)
 		{
 			--recursiveLocksCount_;
 			return 0;
@@ -89,7 +89,7 @@ int Mutex::unlock()
 
 int Mutex::tryLockInternal()
 {
-	if (controlBlock_.getProtocol() == Protocol::PriorityProtect &&
+	if (controlBlock_.getProtocol() == Protocol::priorityProtect &&
 			internal::getScheduler().getCurrentThreadControlBlock().getPriority() > controlBlock_.getPriorityCeiling())
 		return EINVAL;
 
@@ -99,15 +99,15 @@ int Mutex::tryLockInternal()
 		return 0;
 	}
 
-	if (type_ == Type::Normal)
+	if (type_ == Type::normal)
 		return EBUSY;
 
 	if (controlBlock_.getOwner() == &internal::getScheduler().getCurrentThreadControlBlock())
 	{
-		if (type_ == Type::ErrorChecking)
+		if (type_ == Type::errorChecking)
 			return EDEADLK;
 
-		if (type_ == Type::Recursive)
+		if (type_ == Type::recursive)
 		{
 			if (recursiveLocksCount_ == std::numeric_limits<decltype(recursiveLocksCount_)>::max())
 				return EAGAIN;

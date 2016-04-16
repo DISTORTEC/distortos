@@ -46,15 +46,15 @@ bool MutexRecursiveOperationsTestCase::run_() const
 	using Parameters = std::pair<Mutex::Protocol, uint8_t>;
 	static const Parameters parametersArray[]
 	{
-			Parameters{Mutex::Protocol::None, {}},
-			Parameters{Mutex::Protocol::PriorityProtect, UINT8_MAX},
-			Parameters{Mutex::Protocol::PriorityProtect, testCasePriority_},
-			Parameters{Mutex::Protocol::PriorityInheritance, {}},
+			Parameters{Mutex::Protocol::none, {}},
+			Parameters{Mutex::Protocol::priorityProtect, UINT8_MAX},
+			Parameters{Mutex::Protocol::priorityProtect, testCasePriority_},
+			Parameters{Mutex::Protocol::priorityInheritance, {}},
 	};
 
 	for (const auto& parameters : parametersArray)
 	{
-		Mutex mutex {Mutex::Type::Recursive, parameters.first, parameters.second};
+		Mutex mutex {Mutex::Type::recursive, parameters.first, parameters.second};
 
 		size_t lockCount {};
 

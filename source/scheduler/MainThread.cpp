@@ -49,7 +49,7 @@ architecture::Stack stackWrapper(const std::pair<void*, size_t> stackBuffer)
 
 MainThread::MainThread(const uint8_t priority, ThreadGroupControlBlock& threadGroupControlBlock,
 		SignalsReceiver* const signalsReceiver) :
-		UndetachableThread{stackWrapper(architecture::getMainStack()), priority, SchedulingPolicy::RoundRobin,
+		UndetachableThread{stackWrapper(architecture::getMainStack()), priority, SchedulingPolicy::roundRobin,
 				&threadGroupControlBlock, signalsReceiver}
 {
 

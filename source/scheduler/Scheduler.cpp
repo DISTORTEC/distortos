@@ -91,7 +91,7 @@ int Scheduler::add(ThreadControlBlock& threadControlBlock)
 {
 	architecture::InterruptMaskingLock interruptMaskingLock;
 
-	if (threadControlBlock.getState() != ThreadState::New)
+	if (threadControlBlock.getState() != ThreadState::created)
 		return EINVAL;
 
 	const auto ret = addInternal(threadControlBlock);
@@ -131,8 +131,8 @@ int Scheduler::block(ThreadList& container, const ThreadList::iterator iterator,
 
 	forceContextSwitch();
 
-	return unblockReason == ThreadControlBlock::UnblockReason::UnblockRequest ? 0 :
-			unblockReason == ThreadControlBlock::UnblockReason::Timeout ? ETIMEDOUT : EINTR;
+	return unblockReason == ThreadControlBlock::UnblockReason::unblockRequest ? 0 :
+			unblockReason == ThreadControlBlock::UnblockReason::timeout ? ETIMEDOUT : EINTR;
 }
 
 int Scheduler::blockUntil(ThreadList& container, const ThreadState state, const TickClock::time_point timePoint,
@@ -145,17 +145,17 @@ int Scheduler::blockUntil(ThreadList& container, const ThreadState state, const 
 	if (timePoint <= TickClock::now())
 	{
 		if (unblockFunctor != nullptr)
-			(*unblockFunctor)(*iterator, ThreadControlBlock::UnblockReason::Timeout);
+			(*unblockFunctor)(*iterator, ThreadControlBlock::UnblockReason::timeout);
 		return ETIMEDOUT;
 	}
 
 	// This lambda unblocks the thread only if it wasn't already unblocked - this is necessary because double unblock
 	// should be avoided (it could mess the order of threads of the same priority). In that case it also sets
-	// UnblockReason::Timeout.
+	// UnblockReason::timeout.
 	auto softwareTimer = makeStaticSoftwareTimer([this, iterator]()
 			{
 				if (iterator->getList() != &runnableList_)
-					unblockInternal(iterator, ThreadControlBlock::UnblockReason::Timeout);
+					unblockInternal(iterator, ThreadControlBlock::UnblockReason::timeout);
 			});
 	softwareTimer.start(timePoint);
 
@@ -194,7 +194,7 @@ void Scheduler::maybeRequestContextSwitch() const
 int Scheduler::remove()
 {
 	ThreadList terminatedList;
-	const auto ret = blockInternal(terminatedList, currentThreadControlBlock_, ThreadState::Terminated, {});
+	const auto ret = blockInternal(terminatedList, currentThreadControlBlock_, ThreadState::terminated, {});
 	if (ret != 0)
 		return ret;
 
@@ -221,7 +221,7 @@ int Scheduler::suspend()
 
 int Scheduler::suspend(const ThreadList::iterator iterator)
 {
-	return block(suspendedList_, iterator, ThreadState::Suspended);
+	return block(suspendedList_, iterator, ThreadState::suspended);
 }
 
 void* Scheduler::switchContext(void* const stackPointer)
@@ -241,11 +241,11 @@ bool Scheduler::tickInterruptHandler()
 
 	getCurrentThreadControlBlock().getRoundRobinQuantum().decrement();
 
-	// if the object is on the "runnable" list, it uses SchedulingPolicy::RoundRobin and it used its round-robin
+	// if the object is on the "runnable" list, it uses SchedulingPolicy::roundRobin and it used its round-robin
 	// quantum, then do the "rotation": move current thread to the end of same-priority group to implement round-robin
 	// scheduling
 	if (getCurrentThreadControlBlock().getList() == &runnableList_ &&
-			getCurrentThreadControlBlock().getSchedulingPolicy() == SchedulingPolicy::RoundRobin &&
+			getCurrentThreadControlBlock().getSchedulingPolicy() == SchedulingPolicy::roundRobin &&
 			getCurrentThreadControlBlock().getRoundRobinQuantum().isZero() == true)
 	{
 		getCurrentThreadControlBlock().getRoundRobinQuantum().reset();
@@ -285,7 +285,7 @@ int Scheduler::addInternal(ThreadControlBlock& threadControlBlock)
 
 	runnableList_.insert(threadControlBlock);
 	threadControlBlock.setList(&runnableList_);
-	threadControlBlock.setState(ThreadState::Runnable);
+	threadControlBlock.setState(ThreadState::runnable);
 
 	return 0;
 }
@@ -323,7 +323,7 @@ void Scheduler::unblockInternal(const ThreadList::iterator iterator,
 	auto& threadControlBlock = *iterator;
 	runnableList_.splice(iterator);
 	threadControlBlock.setList(&runnableList_);
-	threadControlBlock.setState(ThreadState::Runnable);
+	threadControlBlock.setState(ThreadState::runnable);
 	threadControlBlock.unblockHook(unblockReason);
 }
 

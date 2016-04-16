@@ -58,7 +58,8 @@ bool phase1()
 {
 	auto testThread = makeDynamicThread({192, 1}, emptyFunction);
 
-	if (testThread.getState() != ThreadState::New)	// state of created (but not yet started) thread must be "New"
+	// state of created (but not yet started) thread must be "ThreadState::created"
+	if (testThread.getState() != ThreadState::created)
 		return false;
 
 	bool result {true};
@@ -72,7 +73,7 @@ bool phase1()
 				return false;
 		}
 
-		if (testThread.getState() != ThreadState::Runnable)	// started thread's state must be "Runnable"
+		if (testThread.getState() != ThreadState::runnable)	// started thread's state must be "ThreadState::runnable"
 			result = false;
 
 		{
@@ -88,7 +89,8 @@ bool phase1()
 			result = false;
 	}
 
-	if (testThread.getState() != ThreadState::Terminated)	// terminated thread's state must be "Terminated"
+	// terminated thread's state must be "ThreadState::terminated"
+	if (testThread.getState() != ThreadState::terminated)
 		result = false;
 
 	{
@@ -150,7 +152,7 @@ bool phase3()
 		bool result {true};
 		if (staticThread.detach() != ENOTSUP)	// static thread cannot be detached
 			result = false;
-		if (staticThread.getState() != ThreadState::Runnable)
+		if (staticThread.getState() != ThreadState::runnable)
 			result = false;
 		if (staticThread.join() != 0 || result == false || sharedRet != ENOTSUP)	// self-detach must fail too
 			return false;
@@ -165,7 +167,7 @@ bool phase3()
 			result = false;
 		if (dynamicThread.start() != EINVAL)	// detached thread cannot be started
 			result = false;
-		if (dynamicThread.getState() != ThreadState::Detached)
+		if (dynamicThread.getState() != ThreadState::detached)
 			result = false;
 		if (dynamicThread.join() != EINVAL || result == false || sharedRet != 0x2e981e48 ||
 				dynamicThread.detach() != EINVAL)	// detached thread cannot be joined, self-detach must fail
@@ -182,7 +184,7 @@ bool phase3()
 		bool result {true};
 		if (dynamicThread.detach() != 0)
 			result = false;
-		if (dynamicThread.getState() != ThreadState::Detached)
+		if (dynamicThread.getState() != ThreadState::detached)
 			result = false;
 		if (dynamicThread.join() != EINVAL)	// detached thread cannot be joined
 			result = false;
@@ -201,7 +203,7 @@ bool phase3()
 		int sharedRet {0x5d3c799b};
 		auto dynamicThread = makeAndStartDynamicThread({192, UINT8_MAX}, lambda, std::ref(sharedRet));
 		bool result {true};
-		if (dynamicThread.getState() != ThreadState::Detached)
+		if (dynamicThread.getState() != ThreadState::detached)
 			result = false;
 		if (dynamicThread.detach() != EINVAL)	// second attempt to detach a thread must fail
 			result = false;
@@ -221,11 +223,11 @@ bool phase3()
 	{
 		auto dynamicThread = makeAndStartDynamicThread({192, UINT8_MAX}, emptyFunction);
 		bool result {true};
-		if (dynamicThread.getState() != ThreadState::Terminated)
+		if (dynamicThread.getState() != ThreadState::terminated)
 			result = false;
 		if (dynamicThread.detach() != 0)
 			result = false;
-		if (dynamicThread.getState() != ThreadState::Detached)
+		if (dynamicThread.getState() != ThreadState::detached)
 			result = false;
 		// detached thread cannot be joined
 		if (dynamicThread.join() != EINVAL || result == false || dynamicThread.detach() != EINVAL)

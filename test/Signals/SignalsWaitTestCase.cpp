@@ -85,7 +85,7 @@ void generatedSignalsThread(SequenceAsserter& sequenceAsserter, const unsigned i
 	if (waitResult.first != 0)
 		return;
 	const auto& signalInformation = waitResult.second;
-	if (signalInformation.getCode() != SignalInformation::Code::Generated)
+	if (signalInformation.getCode() != SignalInformation::Code::generated)
 		return;
 
 	const auto signalNumber = signalInformation.getSignalNumber();
@@ -93,7 +93,7 @@ void generatedSignalsThread(SequenceAsserter& sequenceAsserter, const unsigned i
 	sequenceAsserter.sequencePoint(signalNumber + sequencePointOffset);
 
 	while (waitResult = ThisThread::Signals::tryWait(signalSet), waitResult.first == 0 &&
-			signalInformation.getCode() == SignalInformation::Code::Generated)
+			signalInformation.getCode() == SignalInformation::Code::generated)
 		sequenceAsserter.sequencePoint(signalInformation.getSignalNumber() + sequencePointOffset);
 }
 
@@ -141,7 +141,7 @@ void queuedSignalsThread(SequenceAsserter& sequenceAsserter, const unsigned int 
 	if (waitResult.first != 0)
 		return;
 	const auto& signalInformation = waitResult.second;
-	if (signalInformation.getCode() != SignalInformation::Code::Queued)
+	if (signalInformation.getCode() != SignalInformation::Code::queued)
 		return;
 
 	const auto signalNumber = signalInformation.getSignalNumber();
@@ -151,7 +151,7 @@ void queuedSignalsThread(SequenceAsserter& sequenceAsserter, const unsigned int 
 	sequenceAsserter.sequencePoint(signalValue & signalValueMask);
 
 	while (waitResult = ThisThread::Signals::tryWait(signalSet), waitResult.first == 0 &&
-			signalInformation.getCode() == SignalInformation::Code::Queued &&
+			signalInformation.getCode() == SignalInformation::Code::queued &&
 			signalInformation.getSignalNumber() == signalInformation.getValue().sival_int >> signalNumberShift)
 		sequenceAsserter.sequencePoint(signalInformation.getValue().sival_int & signalValueMask);
 }
@@ -261,7 +261,7 @@ bool SignalsWaitTestCase::run_() const
 			}
 
 			for (const auto& thread : threads)
-				if (thread.getState() != ThreadState::WaitingForSignal)
+				if (thread.getState() != ThreadState::waitingForSignal)
 					result = false;
 
 			if (sequenceAsserter.assertSequence(totalThreads) == false)

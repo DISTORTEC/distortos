@@ -125,7 +125,7 @@ void thread(const TickClock::time_point sleepUntil, SequenceAsserter& sequenceAs
 DynamicThread makeAndStartTestThread(const uint8_t priority, const TickClock::time_point sleepUntil,
 		SequenceAsserter& sequenceAsserter, const TestStepRange& steps)
 {
-	return makeAndStartDynamicThread({testThreadStackSize, priority, SchedulingPolicy::Fifo}, thread, sleepUntil,
+	return makeAndStartDynamicThread({testThreadStackSize, priority, SchedulingPolicy::fifo}, thread, sleepUntil,
 			std::ref(sequenceAsserter), std::ref(steps));
 }
 
@@ -175,11 +175,11 @@ bool testRunner(const std::array<int, totalThreads>& delays, const std::array<Te
 
 bool priorityInheritancePhase()
 {
-	Mutex mutex12 {Mutex::Type::Normal, Mutex::Protocol::PriorityInheritance};	// shared by thread 1 and 2
-	Mutex mutex123 {Mutex::Type::Normal, Mutex::Protocol::PriorityInheritance};	// shared by thread 1, 2 and 3
-	Mutex mutex13 {Mutex::Type::Normal, Mutex::Protocol::PriorityInheritance};	// shared by thread 1 and 3
-	Mutex mutex23 {Mutex::Type::Normal, Mutex::Protocol::PriorityInheritance};	// shared by thread 2 and 3
-	Mutex mutex35 {Mutex::Type::Normal, Mutex::Protocol::PriorityInheritance};	// shared by thread 3 and 5
+	Mutex mutex12 {Mutex::Type::normal, Mutex::Protocol::priorityInheritance};	// shared by thread 1 and 2
+	Mutex mutex123 {Mutex::Type::normal, Mutex::Protocol::priorityInheritance};	// shared by thread 1, 2 and 3
+	Mutex mutex13 {Mutex::Type::normal, Mutex::Protocol::priorityInheritance};	// shared by thread 1 and 3
+	Mutex mutex23 {Mutex::Type::normal, Mutex::Protocol::priorityInheritance};	// shared by thread 2 and 3
+	Mutex mutex35 {Mutex::Type::normal, Mutex::Protocol::priorityInheritance};	// shared by thread 3 and 5
 
 	const TestStep steps1[]
 	{
@@ -245,11 +245,11 @@ bool priorityInheritancePhase()
 
 bool priorityProtectPhase()
 {
-	Mutex mutex12 {Mutex::Type::Normal, Mutex::Protocol::PriorityProtect, 2};	// shared by thread 1 and 2
-	Mutex mutex123 {Mutex::Type::Normal, Mutex::Protocol::PriorityProtect, 3};	// shared by thread 1, 2 and 3
-	Mutex mutex13 {Mutex::Type::Normal, Mutex::Protocol::PriorityProtect, 3};	// shared by thread 1 and 3
-	Mutex mutex23 {Mutex::Type::Normal, Mutex::Protocol::PriorityProtect, 3};	// shared by thread 2 and 3
-	Mutex mutex35 {Mutex::Type::Normal, Mutex::Protocol::PriorityProtect, 5};	// shared by thread 3 and 5
+	Mutex mutex12 {Mutex::Type::normal, Mutex::Protocol::priorityProtect, 2};	// shared by thread 1 and 2
+	Mutex mutex123 {Mutex::Type::normal, Mutex::Protocol::priorityProtect, 3};	// shared by thread 1, 2 and 3
+	Mutex mutex13 {Mutex::Type::normal, Mutex::Protocol::priorityProtect, 3};	// shared by thread 1 and 3
+	Mutex mutex23 {Mutex::Type::normal, Mutex::Protocol::priorityProtect, 3};	// shared by thread 2 and 3
+	Mutex mutex35 {Mutex::Type::normal, Mutex::Protocol::priorityProtect, 5};	// shared by thread 3 and 5
 
 	const TestStep steps1[]
 	{

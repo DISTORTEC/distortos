@@ -45,15 +45,15 @@ bool MutexErrorCheckingOperationsTestCase::run_() const
 	using Parameters = std::pair<Mutex::Protocol, uint8_t>;
 	static const Parameters parametersArray[]
 	{
-			Parameters{Mutex::Protocol::None, {}},
-			Parameters{Mutex::Protocol::PriorityProtect, UINT8_MAX},
-			Parameters{Mutex::Protocol::PriorityProtect, testCasePriority_},
-			Parameters{Mutex::Protocol::PriorityInheritance, {}},
+			Parameters{Mutex::Protocol::none, {}},
+			Parameters{Mutex::Protocol::priorityProtect, UINT8_MAX},
+			Parameters{Mutex::Protocol::priorityProtect, testCasePriority_},
+			Parameters{Mutex::Protocol::priorityInheritance, {}},
 	};
 
 	for (const auto& parameters : parametersArray)
 	{
-		Mutex mutex {Mutex::Type::ErrorChecking, parameters.first, parameters.second};
+		Mutex mutex {Mutex::Type::errorChecking, parameters.first, parameters.second};
 
 		{
 			// simple lock - must succeed immediately

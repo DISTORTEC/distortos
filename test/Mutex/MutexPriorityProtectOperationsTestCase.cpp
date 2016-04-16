@@ -53,7 +53,7 @@ constexpr uint8_t testThreadPriority {MutexPriorityProtectOperationsTestCase::ge
 
 bool testInvalidLockAttempt(const Mutex::Type type)
 {
-	Mutex mutex {type, Mutex::Protocol::PriorityProtect, testThreadPriority - 1};
+	Mutex mutex {type, Mutex::Protocol::priorityProtect, testThreadPriority - 1};
 
 	{
 		// invalid lock attempt - must fail with EINVAL immediately
@@ -168,11 +168,11 @@ bool testPriorityChanges(const Mutex::Type type)
 
 	Mutex mutexes[]
 	{
-			Mutex{type, Mutex::Protocol::PriorityProtect, testThreadPriority + 0},
-			Mutex{type, Mutex::Protocol::PriorityProtect, testThreadPriority + 1},
-			Mutex{type, Mutex::Protocol::PriorityProtect, testThreadPriority + 2},
-			Mutex{type, Mutex::Protocol::PriorityProtect, testThreadPriority + 3},
-			Mutex{type, Mutex::Protocol::PriorityProtect, testThreadPriority + 4},
+			Mutex{type, Mutex::Protocol::priorityProtect, testThreadPriority + 0},
+			Mutex{type, Mutex::Protocol::priorityProtect, testThreadPriority + 1},
+			Mutex{type, Mutex::Protocol::priorityProtect, testThreadPriority + 2},
+			Mutex{type, Mutex::Protocol::priorityProtect, testThreadPriority + 3},
+			Mutex{type, Mutex::Protocol::priorityProtect, testThreadPriority + 4},
 	};
 
 	bool result {true};
@@ -200,9 +200,9 @@ bool MutexPriorityProtectOperationsTestCase::run_() const
 {
 	static const Mutex::Type types[]
 	{
-			Mutex::Type::Normal,
-			Mutex::Type::ErrorChecking,
-			Mutex::Type::Recursive,
+			Mutex::Type::normal,
+			Mutex::Type::errorChecking,
+			Mutex::Type::recursive,
 	};
 
 	for (const auto type : types)

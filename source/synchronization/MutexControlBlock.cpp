@@ -61,7 +61,7 @@ public:
 		const auto owner = mutexControlBlock_.getOwner();
 
 		// waiting for mutex was interrupted and some thread still holds it?
-		if (unblockReason != ThreadControlBlock::UnblockReason::UnblockRequest && owner != nullptr)
+		if (unblockReason != ThreadControlBlock::UnblockReason::unblockRequest && owner != nullptr)
 			owner->updateBoostedPriority();
 
 		threadControlBlock.setPriorityInheritanceMutexControlBlock(nullptr);
@@ -81,34 +81,34 @@ private:
 
 int MutexControlBlock::block()
 {
-	if (protocol_ == Protocol::PriorityInheritance)
+	if (protocol_ == Protocol::priorityInheritance)
 		priorityInheritanceBeforeBlock();
 
 	const PriorityInheritanceMutexControlBlockUnblockFunctor unblockFunctor {*this};
-	return getScheduler().block(blockedList_, ThreadState::BlockedOnMutex,
-			protocol_ == Protocol::PriorityInheritance ? &unblockFunctor : nullptr);
+	return getScheduler().block(blockedList_, ThreadState::blockedOnMutex,
+			protocol_ == Protocol::priorityInheritance ? &unblockFunctor : nullptr);
 }
 
 int MutexControlBlock::blockUntil(const TickClock::time_point timePoint)
 {
-	if (protocol_ == Protocol::PriorityInheritance)
+	if (protocol_ == Protocol::priorityInheritance)
 		priorityInheritanceBeforeBlock();
 
 	const PriorityInheritanceMutexControlBlockUnblockFunctor unblockFunctor {*this};
-	return getScheduler().blockUntil(blockedList_, ThreadState::BlockedOnMutex, timePoint,
-			protocol_ == Protocol::PriorityInheritance ? &unblockFunctor : nullptr);
+	return getScheduler().blockUntil(blockedList_, ThreadState::blockedOnMutex, timePoint,
+			protocol_ == Protocol::priorityInheritance ? &unblockFunctor : nullptr);
 }
 
 uint8_t MutexControlBlock::getBoostedPriority() const
 {
-	if (protocol_ == Protocol::PriorityInheritance)
+	if (protocol_ == Protocol::priorityInheritance)
 	{
 		if (blockedList_.empty() == true)
 			return 0;
 		return blockedList_.front().getEffectivePriority();
 	}
 
-	if (protocol_ == Protocol::PriorityProtect)
+	if (protocol_ == Protocol::priorityProtect)
 		return priorityCeiling_;
 
 	return 0;
@@ -119,12 +119,12 @@ void MutexControlBlock::lock()
 	auto& scheduler = getScheduler();
 	owner_ = &scheduler.getCurrentThreadControlBlock();
 
-	if (protocol_ == Protocol::None)
+	if (protocol_ == Protocol::none)
 		return;
 
 	owner_->getOwnedProtocolMutexList().push_front(*this);
 
-	if (protocol_ == Protocol::PriorityProtect)
+	if (protocol_ == Protocol::priorityProtect)
 		owner_->updateBoostedPriority();
 }
 
@@ -137,7 +137,7 @@ void MutexControlBlock::unlockOrTransferLock()
 	else
 		unlock();
 
-	if (protocol_ == Protocol::None)
+	if (protocol_ == Protocol::none)
 		return;
 
 	oldOwner.updateBoostedPriority();
@@ -172,7 +172,7 @@ void MutexControlBlock::transferLock()
 
 	MutexList::splice(owner_->getOwnedProtocolMutexList().begin(), MutexList::iterator{*this});
 
-	if (protocol_ == Protocol::PriorityInheritance)
+	if (protocol_ == Protocol::priorityInheritance)
 		owner_->setPriorityInheritanceMutexControlBlock(nullptr);
 }
 

@@ -52,7 +52,7 @@ int ConditionVariable::wait(Mutex& mutex)
 		if (ret != 0)
 			return ret;
 
-		internal::getScheduler().block(blockedList_, ThreadState::BlockedOnConditionVariable);
+		internal::getScheduler().block(blockedList_, ThreadState::blockedOnConditionVariable);
 	}
 
 	return mutex.lock();
@@ -74,7 +74,7 @@ int ConditionVariable::waitUntil(Mutex& mutex, const TickClock::time_point timeP
 		if (ret != 0)
 			return ret;
 
-		blockUntilRet = internal::getScheduler().blockUntil(blockedList_, ThreadState::BlockedOnConditionVariable,
+		blockUntilRet = internal::getScheduler().blockUntil(blockedList_, ThreadState::blockedOnConditionVariable,
 				timePoint);
 	}
 

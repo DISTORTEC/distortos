@@ -33,18 +33,18 @@ public:
 	enum class Protocol : uint8_t
 	{
 		/// no protocol, similar to PTHREAD_PRIO_NONE
-		None,
+		none,
 		/// priority inheritance protocol, similar to PTHREAD_PRIO_INHERIT
-		PriorityInheritance,
+		priorityInheritance,
 		/// priority protection protocol (Immediate Ceiling Priority Protocol), similar to PTHREAD_PRIO_PROTECT
-		PriorityProtect,
+		priorityProtect,
 	};
 
 	/**
 	 * \brief MutexControlBlock constructor
 	 *
 	 * \param [in] protocol is the mutex protocol
-	 * \param [in] priorityCeiling is the priority ceiling of mutex, ignored when protocol != Protocol::PriorityProtect
+	 * \param [in] priorityCeiling is the priority ceiling of mutex, ignored when protocol != Protocol::priorityProtect
 	 */
 
 	constexpr MutexControlBlock(const Protocol protocol, const uint8_t priorityCeiling) :
@@ -101,7 +101,7 @@ public:
 	}
 
 	/**
-	 * \return priority ceiling of mutex, valid only when protocol_ == Protocol::PriorityProtect
+	 * \return priority ceiling of mutex, valid only when protocol_ == Protocol::priorityProtect
 	 */
 
 	uint8_t getPriorityCeiling() const
@@ -173,7 +173,7 @@ private:
 	/// mutex protocol
 	Protocol protocol_;
 
-	/// priority ceiling of mutex, valid only when protocol_ == Protocol::PriorityProtect
+	/// priority ceiling of mutex, valid only when protocol_ == Protocol::priorityProtect
 	uint8_t priorityCeiling_;
 };
 

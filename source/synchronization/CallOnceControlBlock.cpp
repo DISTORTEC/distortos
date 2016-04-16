@@ -38,7 +38,7 @@ void CallOnceControlBlock::callOnceImplementation(const Functor& functor)
 	if (blockedList_ != nullptr)	// function is currently being executed, but not yet done?
 	{
 		while (done_ == false)
-			getScheduler().block(*blockedList_, ThreadState::BlockedOnOnceFlag);
+			getScheduler().block(*blockedList_, ThreadState::blockedOnOnceFlag);
 		return;
 	}
 

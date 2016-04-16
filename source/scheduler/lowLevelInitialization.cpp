@@ -103,7 +103,7 @@ void lowLevelInitialization()
 	auto& idleThread = *new (&idleThreadStorage) IdleThread {0, idleThreadFunction};
 	idleThread.start();
 
-	new (&getMallocMutex()) Mutex {Mutex::Type::Recursive, Mutex::Protocol::PriorityInheritance};
+	new (&getMallocMutex()) Mutex {Mutex::Type::recursive, Mutex::Protocol::priorityInheritance};
 
 #ifdef CONFIG_THREAD_DETACH_ENABLE
 

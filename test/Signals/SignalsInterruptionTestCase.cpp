@@ -224,11 +224,11 @@ public:
 	enum class Type : uint8_t
 	{
 		/// uses ConditionVariable::wait()
-		Wait,
+		wait,
 		/// uses ConditionVariable::waitFor()
-		WaitFor,
+		waitFor,
 		/// uses ConditionVariable::waitUntil()
-		WaitUntil,
+		waitUntil,
 	};
 
 	/**
@@ -259,8 +259,8 @@ private:
 
 	bool block() override
 	{
-		const auto ret = type_ == Type::Wait ? conditionVariable_.wait(mutex_) :
-				type_ == Type::WaitFor ? conditionVariable_.waitFor(mutex_, longDuration) :
+		const auto ret = type_ == Type::wait ? conditionVariable_.wait(mutex_) :
+				type_ == Type::waitFor ? conditionVariable_.waitFor(mutex_, longDuration) :
 				conditionVariable_.waitUntil(mutex_, TickClock::now() + longDuration);
 		return ret == 0;
 	}
@@ -341,11 +341,11 @@ public:
 	enum class Type : uint8_t
 	{
 		/// uses Mutex::lock()
-		Lock,
+		lock,
 		/// uses Mutex::tryLockFor()
-		TryLockFor,
+		tryLockFor,
 		/// uses Mutex::tryLockUntil()
-		TryLockUntil,
+		tryLockUntil,
 	};
 
 	/**
@@ -392,8 +392,8 @@ private:
 	{
 		mutexLockerThread_.start();
 		sequenceAsserter_.sequencePoint(1);
-		const auto ret = type_ == Type::Lock ? mutex_.lock() :
-				type_ == Type::TryLockFor ? mutex_.tryLockFor(longDuration) :
+		const auto ret = type_ == Type::lock ? mutex_.lock() :
+				type_ == Type::tryLockFor ? mutex_.tryLockFor(longDuration) :
 				mutex_.tryLockUntil(TickClock::now() + longDuration);
 		return ret == 0;
 	}
@@ -454,11 +454,11 @@ public:
 	enum class Type : uint8_t
 	{
 		/// uses Semaphore::wait()
-		Wait,
+		wait,
 		/// uses Semaphore::tryWaitFor()
-		TryWaitFor,
+		tryWaitFor,
 		/// uses Semaphore::tryWaitUntil()
-		TryWaitUntil,
+		tryWaitUntil,
 	};
 
 	/**
@@ -488,8 +488,8 @@ private:
 
 	bool block() override
 	{
-		const auto ret = type_ == Type::Wait ? semaphore_.wait() :
-				type_ == Type::TryWaitFor ? semaphore_.tryWaitFor(longDuration) :
+		const auto ret = type_ == Type::wait ? semaphore_.wait() :
+				type_ == Type::tryWaitFor ? semaphore_.tryWaitFor(longDuration) :
 				semaphore_.tryWaitUntil(TickClock::now() + longDuration);
 		return ret == EINTR;
 	}
@@ -536,11 +536,11 @@ public:
 	enum class Type : uint8_t
 	{
 		/// uses ThisThread::Signals::wait()
-		Wait,
+		wait,
 		/// uses ThisThread::Signals::tryWaitFor()
-		TryWaitFor,
+		tryWaitFor,
 		/// uses ThisThread::Signals::tryWaitUntil()
-		TryWaitUntil,
+		tryWaitUntil,
 	};
 
 	/**
@@ -570,8 +570,8 @@ private:
 	bool block() override
 	{
 		const SignalSet fullSignalSet {SignalSet::full};
-		const auto ret = type_ == Type::Wait ? ThisThread::Signals::wait(fullSignalSet) :
-				type_ == Type::TryWaitFor ? ThisThread::Signals::tryWaitFor(fullSignalSet, longDuration) :
+		const auto ret = type_ == Type::wait ? ThisThread::Signals::wait(fullSignalSet) :
+				type_ == Type::tryWaitFor ? ThisThread::Signals::tryWaitFor(fullSignalSet, longDuration) :
 				ThisThread::Signals::tryWaitUntil(fullSignalSet, TickClock::now() + longDuration);
 		return ret.first == EINTR;
 	}
@@ -589,9 +589,9 @@ public:
 	enum class Type : uint8_t
 	{
 		/// uses ThisThread::sleepFor()
-		For,
+		sleepFor,
 		/// uses ThisThread::sleepUntil()
-		Until,
+		sleepUntil,
 	};
 
 	/**
@@ -620,7 +620,7 @@ private:
 
 	bool block() override
 	{
-		const auto ret = type_ == Type::For ? ThisThread::sleepFor(longDuration) :
+		const auto ret = type_ == Type::sleepFor ? ThisThread::sleepFor(longDuration) :
 				ThisThread::sleepUntil(TickClock::now() + longDuration);
 		return ret == EINTR;
 	}
@@ -632,36 +632,36 @@ private:
 /// type of test step
 enum class TestStepType : uint8_t
 {
-	/// ConditionVariableTestStep, ConditionVariableTestStep::Type::Wait
-	ConditionVariableWait,
-	/// ConditionVariableTestStep, ConditionVariableTestStep::Type::WaitFor
-	ConditionVariableWaitFor,
-	/// ConditionVariableTestStep, ConditionVariableTestStep::Type::WaitUntil
-	ConditionVariableWaitUntil,
+	/// ConditionVariableTestStep, ConditionVariableTestStep::Type::wait
+	conditionVariableWait,
+	/// ConditionVariableTestStep, ConditionVariableTestStep::Type::waitFor
+	conditionVariableWaitFor,
+	/// ConditionVariableTestStep, ConditionVariableTestStep::Type::waitUntil
+	conditionVariableWaitUntil,
 	/// JoinTestStep
-	Join,
-	/// MutexTestStep, MutexTestStep::Type::Lock
-	MutexLock,
-	/// MutexTestStep, MutexTestStep::Type::TryLockFor
-	MutexTryLockFor,
-	/// MutexTestStep, MutexTestStep::Type::TryLockUntil
-	MutexTryLockUntil,
-	/// SemaphoreTestStep, SemaphoreTestStep::Type::Wait
-	SemaphoreWait,
-	/// SemaphoreTestStep, SemaphoreTestStep::Type::TryWaitFor
-	SemaphoreTryWaitFor,
-	/// SemaphoreTestStep, SemaphoreTestStep::Type::TryWaitUntil
-	SemaphoreTryWaitUntil,
-	/// SignalsTestStep, SignalsTestStep::Type::Wait
-	SignalsWait,
-	/// SignalsTestStep, SignalsTestStep::Type::TryWaitFor
-	SignalsTryWaitFor,
-	/// SignalsTestStep, SignalsTestStep::Type::TryWaitUntil
-	SignalsTryWaitUntil,
-	/// SleepTestStep, SleepTestStep::Type::For
-	SleepFor,
-	/// SleepTestStep, SleepTestStep::Type::Until
-	SleepUntil,
+	join,
+	/// MutexTestStep, MutexTestStep::Type::lock
+	mutexLock,
+	/// MutexTestStep, MutexTestStep::Type::tryLockFor
+	mutexTryLockFor,
+	/// MutexTestStep, MutexTestStep::Type::tryLockUntil
+	mutexTryLockUntil,
+	/// SemaphoreTestStep, SemaphoreTestStep::Type::wait
+	semaphoreWait,
+	/// SemaphoreTestStep, SemaphoreTestStep::Type::tryWaitFor
+	semaphoreTryWaitFor,
+	/// SemaphoreTestStep, SemaphoreTestStep::Type::tryWaitUntil
+	semaphoreTryWaitUntil,
+	/// SignalsTestStep, SignalsTestStep::Type::wait
+	signalsWait,
+	/// SignalsTestStep, SignalsTestStep::Type::tryWaitFor
+	signalsTryWaitFor,
+	/// SignalsTestStep, SignalsTestStep::Type::tryWaitUntil
+	signalsTryWaitUntil,
+	/// SleepTestStep, SleepTestStep::Type::sleepFor
+	sleepFor,
+	/// SleepTestStep, SleepTestStep::Type::sleepUntil
+	sleepUntil,
 };
 
 /// uninitialized storage for any of test steps
@@ -689,21 +689,21 @@ union TestStepStorage
 /// array with all test step types
 const TestStepType testStepTypes[]
 {
-		TestStepType::ConditionVariableWait,
-		TestStepType::ConditionVariableWaitFor,
-		TestStepType::ConditionVariableWaitUntil,
-		TestStepType::Join,
-		TestStepType::MutexLock,
-		TestStepType::MutexTryLockFor,
-		TestStepType::MutexTryLockUntil,
-		TestStepType::SemaphoreWait,
-		TestStepType::SemaphoreTryWaitFor,
-		TestStepType::SemaphoreTryWaitUntil,
-		TestStepType::SignalsWait,
-		TestStepType::SignalsTryWaitFor,
-		TestStepType::SignalsTryWaitUntil,
-		TestStepType::SleepFor,
-		TestStepType::SleepUntil,
+		TestStepType::conditionVariableWait,
+		TestStepType::conditionVariableWaitFor,
+		TestStepType::conditionVariableWaitUntil,
+		TestStepType::join,
+		TestStepType::mutexLock,
+		TestStepType::mutexTryLockFor,
+		TestStepType::mutexTryLockUntil,
+		TestStepType::semaphoreWait,
+		TestStepType::semaphoreTryWaitFor,
+		TestStepType::semaphoreTryWaitUntil,
+		TestStepType::signalsWait,
+		TestStepType::signalsTryWaitFor,
+		TestStepType::signalsTryWaitUntil,
+		TestStepType::sleepFor,
+		TestStepType::sleepUntil,
 };
 
 /*---------------------------------------------------------------------------------------------------------------------+
@@ -723,36 +723,36 @@ const TestStepType testStepTypes[]
 TestStep& makeTestStep(const TestStepType testStepType, TestStepStorage& testStepStorage,
 		SequenceAsserter& sequenceAsserter)
 {
-	if (testStepType == TestStepType::ConditionVariableWait)
-		return *new (&testStepStorage) ConditionVariableTestStep {ConditionVariableTestStep::Type::Wait};
-	else if (testStepType == TestStepType::ConditionVariableWaitFor)
-		return *new (&testStepStorage) ConditionVariableTestStep {ConditionVariableTestStep::Type::WaitFor};
-	else if (testStepType == TestStepType::ConditionVariableWaitUntil)
-		return *new (&testStepStorage) ConditionVariableTestStep {ConditionVariableTestStep::Type::WaitUntil};
-	else if (testStepType == TestStepType::Join)
+	if (testStepType == TestStepType::conditionVariableWait)
+		return *new (&testStepStorage) ConditionVariableTestStep {ConditionVariableTestStep::Type::wait};
+	else if (testStepType == TestStepType::conditionVariableWaitFor)
+		return *new (&testStepStorage) ConditionVariableTestStep {ConditionVariableTestStep::Type::waitFor};
+	else if (testStepType == TestStepType::conditionVariableWaitUntil)
+		return *new (&testStepStorage) ConditionVariableTestStep {ConditionVariableTestStep::Type::waitUntil};
+	else if (testStepType == TestStepType::join)
 		return *new (&testStepStorage) JoinTestStep {sequenceAsserter};
-	else if (testStepType == TestStepType::MutexLock)
-		return *new (&testStepStorage) MutexTestStep {MutexTestStep::Type::Lock, sequenceAsserter};
-	else if (testStepType == TestStepType::MutexTryLockFor)
-		return *new (&testStepStorage) MutexTestStep {MutexTestStep::Type::TryLockFor, sequenceAsserter};
-	else if (testStepType == TestStepType::MutexTryLockUntil)
-		return *new (&testStepStorage) MutexTestStep {MutexTestStep::Type::TryLockUntil, sequenceAsserter};
-	else if (testStepType == TestStepType::SemaphoreWait)
-		return *new (&testStepStorage) SemaphoreTestStep {SemaphoreTestStep::Type::Wait};
-	else if (testStepType == TestStepType::SemaphoreTryWaitFor)
-		return *new (&testStepStorage) SemaphoreTestStep {SemaphoreTestStep::Type::TryWaitFor};
-	else if (testStepType == TestStepType::SemaphoreTryWaitUntil)
-		return *new (&testStepStorage) SemaphoreTestStep {SemaphoreTestStep::Type::TryWaitUntil};
-	if (testStepType == TestStepType::SignalsWait)
-		return *new (&testStepStorage) SignalsTestStep {SignalsTestStep::Type::Wait};
-	else if (testStepType == TestStepType::SignalsTryWaitFor)
-		return *new (&testStepStorage) SignalsTestStep {SignalsTestStep::Type::TryWaitFor};
-	else if (testStepType == TestStepType::SignalsTryWaitUntil)
-		return *new (&testStepStorage) SignalsTestStep {SignalsTestStep::Type::TryWaitUntil};
-	else if (testStepType == TestStepType::SleepFor)
-		return *new (&testStepStorage) SleepTestStep {SleepTestStep::Type::For};
-	else // if (testStepType == TestStepType::SleepUntil)
-		return *new (&testStepStorage) SleepTestStep {SleepTestStep::Type::Until};
+	else if (testStepType == TestStepType::mutexLock)
+		return *new (&testStepStorage) MutexTestStep {MutexTestStep::Type::lock, sequenceAsserter};
+	else if (testStepType == TestStepType::mutexTryLockFor)
+		return *new (&testStepStorage) MutexTestStep {MutexTestStep::Type::tryLockFor, sequenceAsserter};
+	else if (testStepType == TestStepType::mutexTryLockUntil)
+		return *new (&testStepStorage) MutexTestStep {MutexTestStep::Type::tryLockUntil, sequenceAsserter};
+	else if (testStepType == TestStepType::semaphoreWait)
+		return *new (&testStepStorage) SemaphoreTestStep {SemaphoreTestStep::Type::wait};
+	else if (testStepType == TestStepType::semaphoreTryWaitFor)
+		return *new (&testStepStorage) SemaphoreTestStep {SemaphoreTestStep::Type::tryWaitFor};
+	else if (testStepType == TestStepType::semaphoreTryWaitUntil)
+		return *new (&testStepStorage) SemaphoreTestStep {SemaphoreTestStep::Type::tryWaitUntil};
+	if (testStepType == TestStepType::signalsWait)
+		return *new (&testStepStorage) SignalsTestStep {SignalsTestStep::Type::wait};
+	else if (testStepType == TestStepType::signalsTryWaitFor)
+		return *new (&testStepStorage) SignalsTestStep {SignalsTestStep::Type::tryWaitFor};
+	else if (testStepType == TestStepType::signalsTryWaitUntil)
+		return *new (&testStepStorage) SignalsTestStep {SignalsTestStep::Type::tryWaitUntil};
+	else if (testStepType == TestStepType::sleepFor)
+		return *new (&testStepStorage) SleepTestStep {SleepTestStep::Type::sleepFor};
+	else // if (testStepType == TestStepType::sleepUntil)
+		return *new (&testStepStorage) SleepTestStep {SleepTestStep::Type::sleepUntil};
 }
 
 }	// namespace

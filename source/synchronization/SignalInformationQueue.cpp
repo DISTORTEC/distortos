@@ -90,7 +90,7 @@ int SignalInformationQueue::queueSignal(const uint8_t signalNumber, const sigval
 		++next;
 	}
 
-	freeSignalInformationList_.front().signalInformation = {signalNumber, SignalInformation::Code::Queued, value};
+	freeSignalInformationList_.front().signalInformation = {signalNumber, SignalInformation::Code::queued, value};
 	signalInformationList_.splice_after(it, freeSignalInformationList_.before_begin());
 	return 0;
 }

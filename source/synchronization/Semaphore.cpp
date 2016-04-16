@@ -62,7 +62,7 @@ int Semaphore::tryWaitUntil(const TickClock::time_point timePoint)
 	if (ret != EAGAIN)	// lock successful?
 		return ret;
 
-	return internal::getScheduler().blockUntil(blockedList_, ThreadState::BlockedOnSemaphore, timePoint);
+	return internal::getScheduler().blockUntil(blockedList_, ThreadState::blockedOnSemaphore, timePoint);
 }
 
 int Semaphore::wait()
@@ -73,7 +73,7 @@ int Semaphore::wait()
 	if (ret != EAGAIN)	// lock successful?
 		return ret;
 
-	return internal::getScheduler().block(blockedList_, ThreadState::BlockedOnSemaphore);
+	return internal::getScheduler().block(blockedList_, ThreadState::blockedOnSemaphore);
 }
 
 /*---------------------------------------------------------------------------------------------------------------------+

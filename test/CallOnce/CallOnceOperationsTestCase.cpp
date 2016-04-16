@@ -148,7 +148,7 @@ bool CallOnceOperationsTestCase::run_() const
 
 	bool invalidState {};
 	for (size_t i = 1; i < threads.size(); ++i)
-		if (threads[i].getState() != ThreadState::BlockedOnOnceFlag)
+		if (threads[i].getState() != ThreadState::blockedOnOnceFlag)
 			invalidState = true;
 
 	for (auto& thread : threads)
