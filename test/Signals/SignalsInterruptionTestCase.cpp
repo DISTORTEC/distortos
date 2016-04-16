@@ -341,11 +341,11 @@ public:
 	enum class Type : uint8_t
 	{
 		/// uses Mutex::lock()
-		Lock,
+		lock,
 		/// uses Mutex::tryLockFor()
-		TryLockFor,
+		tryLockFor,
 		/// uses Mutex::tryLockUntil()
-		TryLockUntil,
+		tryLockUntil,
 	};
 
 	/**
@@ -392,8 +392,8 @@ private:
 	{
 		mutexLockerThread_.start();
 		sequenceAsserter_.sequencePoint(1);
-		const auto ret = type_ == Type::Lock ? mutex_.lock() :
-				type_ == Type::TryLockFor ? mutex_.tryLockFor(longDuration) :
+		const auto ret = type_ == Type::lock ? mutex_.lock() :
+				type_ == Type::tryLockFor ? mutex_.tryLockFor(longDuration) :
 				mutex_.tryLockUntil(TickClock::now() + longDuration);
 		return ret == 0;
 	}
@@ -640,11 +640,11 @@ enum class TestStepType : uint8_t
 	conditionVariableWaitUntil,
 	/// JoinTestStep
 	join,
-	/// MutexTestStep, MutexTestStep::Type::Lock
+	/// MutexTestStep, MutexTestStep::Type::lock
 	mutexLock,
-	/// MutexTestStep, MutexTestStep::Type::TryLockFor
+	/// MutexTestStep, MutexTestStep::Type::tryLockFor
 	mutexTryLockFor,
-	/// MutexTestStep, MutexTestStep::Type::TryLockUntil
+	/// MutexTestStep, MutexTestStep::Type::tryLockUntil
 	mutexTryLockUntil,
 	/// SemaphoreTestStep, SemaphoreTestStep::Type::wait
 	semaphoreWait,
@@ -732,11 +732,11 @@ TestStep& makeTestStep(const TestStepType testStepType, TestStepStorage& testSte
 	else if (testStepType == TestStepType::join)
 		return *new (&testStepStorage) JoinTestStep {sequenceAsserter};
 	else if (testStepType == TestStepType::mutexLock)
-		return *new (&testStepStorage) MutexTestStep {MutexTestStep::Type::Lock, sequenceAsserter};
+		return *new (&testStepStorage) MutexTestStep {MutexTestStep::Type::lock, sequenceAsserter};
 	else if (testStepType == TestStepType::mutexTryLockFor)
-		return *new (&testStepStorage) MutexTestStep {MutexTestStep::Type::TryLockFor, sequenceAsserter};
+		return *new (&testStepStorage) MutexTestStep {MutexTestStep::Type::tryLockFor, sequenceAsserter};
 	else if (testStepType == TestStepType::mutexTryLockUntil)
-		return *new (&testStepStorage) MutexTestStep {MutexTestStep::Type::TryLockUntil, sequenceAsserter};
+		return *new (&testStepStorage) MutexTestStep {MutexTestStep::Type::tryLockUntil, sequenceAsserter};
 	else if (testStepType == TestStepType::semaphoreWait)
 		return *new (&testStepStorage) SemaphoreTestStep {SemaphoreTestStep::Type::wait};
 	else if (testStepType == TestStepType::semaphoreTryWaitFor)
