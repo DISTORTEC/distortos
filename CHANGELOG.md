@@ -42,8 +42,8 @@ configuration of interrupt priorities (default value is 0).
 
 ### Changed
 
-- Change values of all GPIO-related enums for *STM32F4* (Pin, PinAlternateFunction, PinMode, PinOutputSpeed and PinPull)
-from ALL CAPS or PascalCase to camelCase for consistency with their use as constants and with other enums.
+- Change names of elements of all `enum class` from `ALL_CAPS` or `PascalCase` to `camelCase` for consistency with
+their use as constants and with other enums.
 - Replace individual linker script generators for *STM32F1* and *STM32F4* families with generic script for
 *ARMv7-M*-based chips. The new generator also supports arbitrary number of additional memories (like BKPSRAM, CCM, ...),
 which can be defined with command line arguments.
