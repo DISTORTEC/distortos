@@ -224,11 +224,11 @@ public:
 	enum class Type : uint8_t
 	{
 		/// uses ConditionVariable::wait()
-		Wait,
+		wait,
 		/// uses ConditionVariable::waitFor()
-		WaitFor,
+		waitFor,
 		/// uses ConditionVariable::waitUntil()
-		WaitUntil,
+		waitUntil,
 	};
 
 	/**
@@ -259,8 +259,8 @@ private:
 
 	bool block() override
 	{
-		const auto ret = type_ == Type::Wait ? conditionVariable_.wait(mutex_) :
-				type_ == Type::WaitFor ? conditionVariable_.waitFor(mutex_, longDuration) :
+		const auto ret = type_ == Type::wait ? conditionVariable_.wait(mutex_) :
+				type_ == Type::waitFor ? conditionVariable_.waitFor(mutex_, longDuration) :
 				conditionVariable_.waitUntil(mutex_, TickClock::now() + longDuration);
 		return ret == 0;
 	}
@@ -632,11 +632,11 @@ private:
 /// type of test step
 enum class TestStepType : uint8_t
 {
-	/// ConditionVariableTestStep, ConditionVariableTestStep::Type::Wait
+	/// ConditionVariableTestStep, ConditionVariableTestStep::Type::wait
 	conditionVariableWait,
-	/// ConditionVariableTestStep, ConditionVariableTestStep::Type::WaitFor
+	/// ConditionVariableTestStep, ConditionVariableTestStep::Type::waitFor
 	conditionVariableWaitFor,
-	/// ConditionVariableTestStep, ConditionVariableTestStep::Type::WaitUntil
+	/// ConditionVariableTestStep, ConditionVariableTestStep::Type::waitUntil
 	conditionVariableWaitUntil,
 	/// JoinTestStep
 	join,
@@ -724,11 +724,11 @@ TestStep& makeTestStep(const TestStepType testStepType, TestStepStorage& testSte
 		SequenceAsserter& sequenceAsserter)
 {
 	if (testStepType == TestStepType::conditionVariableWait)
-		return *new (&testStepStorage) ConditionVariableTestStep {ConditionVariableTestStep::Type::Wait};
+		return *new (&testStepStorage) ConditionVariableTestStep {ConditionVariableTestStep::Type::wait};
 	else if (testStepType == TestStepType::conditionVariableWaitFor)
-		return *new (&testStepStorage) ConditionVariableTestStep {ConditionVariableTestStep::Type::WaitFor};
+		return *new (&testStepStorage) ConditionVariableTestStep {ConditionVariableTestStep::Type::waitFor};
 	else if (testStepType == TestStepType::conditionVariableWaitUntil)
-		return *new (&testStepStorage) ConditionVariableTestStep {ConditionVariableTestStep::Type::WaitUntil};
+		return *new (&testStepStorage) ConditionVariableTestStep {ConditionVariableTestStep::Type::waitUntil};
 	else if (testStepType == TestStepType::join)
 		return *new (&testStepStorage) JoinTestStep {sequenceAsserter};
 	else if (testStepType == TestStepType::mutexLock)
