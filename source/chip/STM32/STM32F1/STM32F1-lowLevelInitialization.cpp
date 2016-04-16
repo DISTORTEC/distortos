@@ -114,7 +114,7 @@ void lowLevelInitialization()
 
 #ifndef CONFIG_CHIP_STM32F100
 
-	constexpr uint8_t flashLatency {(ahbFrequency - 1) / 24000000};
+	constexpr uint8_t flashLatency {(sysclkFrequency - 1) / 24000000};
 	static_assert(flashLatency <= maxFlashLatency, "Invalid flash latency!");
 	configureFlashLatency(flashLatency);
 
