@@ -305,6 +305,10 @@ CONFIG_MAIN_THREAD_QUEUED_SIGNALS=10
 CONFIG_MAIN_THREAD_SIGNAL_ACTIONS=10
 
 #
+# Applications configuration
+#
+
+#
 # Test application configuration
 #
 CONFIG_TEST_APPLICATION_ENABLE=y
