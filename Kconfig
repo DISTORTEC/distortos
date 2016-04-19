@@ -22,8 +22,8 @@ source "$DISTORTOS_PATH/source/scheduler/Kconfig"
 
 menu "Applications configuration"
 
-### don't remove this line! Kconfig-testApplication
-source "$OUTPUT/Kconfig-testApplication"
+### don't remove this line! Kconfig-applicationOptions
+source "$OUTPUT/Kconfig-applicationOptions"
 
 endmenu
 
