@@ -14,19 +14,13 @@ choice
 	help
 		Select chip family
 
-# don't remove next line!
-### begin Kconfig-chipFamilyChoices1
-source "$DISTORTOS_PATH/source/chip/STM32/Kconfig-chipFamilyChoices1"
-### end Kconfig-chipFamilyChoices1
-# don't remove previous line!
+### don't remove this line! Kconfig-chipFamilyChoices1
+source "$OUTPUT/Kconfig-chipFamilyChoices1"
 
 endchoice
 
-# don't remove next line!
-### begin Kconfig-chipFamilyChoices2
-source "$DISTORTOS_PATH/source/chip/STM32/Kconfig-chipFamilyChoices2"
-### end Kconfig-chipFamilyChoices2
-# don't remove previous line!
+### don't remove this line! Kconfig-chipFamilyChoices2
+source "$OUTPUT/Kconfig-chipFamilyChoices2"
 
 choice
 	prompt "Board"
@@ -38,44 +32,23 @@ config BOARD_CUSTOM
 	help
 		Custom board
 
-# don't remove next line!
-### begin Kconfig-boardChoices
-source "$DISTORTOS_PATH/source/board/STM32/STM32F0/NUCLEO-F091RC/Kconfig-boardChoices"
-source "$DISTORTOS_PATH/source/board/STM32/STM32F1/NUCLEO-F103RB/Kconfig-boardChoices"
-source "$DISTORTOS_PATH/source/board/STM32/STM32F4/32F429IDISCOVERY/Kconfig-boardChoices"
-source "$DISTORTOS_PATH/source/board/STM32/STM32F4/NUCLEO-F401RE/Kconfig-boardChoices"
-source "$DISTORTOS_PATH/source/board/STM32/STM32F4/NUCLEO-F429ZI/Kconfig-boardChoices"
-source "$DISTORTOS_PATH/source/board/STM32/STM32F4/STM32F4DISCOVERY/Kconfig-boardChoices"
-### end Kconfig-boardChoices
-# don't remove previous line!
+### don't remove this line! Kconfig-boardChoices
+source "$OUTPUT/Kconfig-boardChoices"
 
 endchoice
 
 if BOARD_CUSTOM
 
-# don't remove next line!
-### begin Kconfig-chipChoices
-source "$DISTORTOS_PATH/source/chip/STM32/STM32F0/Kconfig-chipChoices"
-source "$DISTORTOS_PATH/source/chip/STM32/STM32F1/Kconfig-chipChoices"
-source "$DISTORTOS_PATH/source/chip/STM32/STM32F4/Kconfig-chipChoices"
-### end Kconfig-chipChoices
-# don't remove previous line!
+### don't remove this line! Kconfig-chipChoices
+source "$OUTPUT/Kconfig-chipChoices"
 
 endif	# BOARD_CUSTOM
 
-# don't remove next line!
-### begin Kconfig-board
-source "$DISTORTOS_PATH/source/board/Kconfig-board"
-### end Kconfig-board
-# don't remove previous line!
+### don't remove this line! Kconfig-board
+source "$OUTPUT/Kconfig-board"
 
-# don't remove next line!
-### begin Kconfig-chipOptions
-source "$DISTORTOS_PATH/source/chip/STM32/STM32F0/Kconfig-chipOptions"
-source "$DISTORTOS_PATH/source/chip/STM32/STM32F1/Kconfig-chipOptions"
-source "$DISTORTOS_PATH/source/chip/STM32/STM32F4/Kconfig-chipOptions"
-### end Kconfig-chipOptions
-# don't remove previous line!
+### don't remove this line! Kconfig-chipOptions
+source "$OUTPUT/Kconfig-chipOptions"
 
 comment "Generic chip options"
 

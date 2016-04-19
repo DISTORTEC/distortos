@@ -20,11 +20,8 @@ config OUTPUT
 source "$DISTORTOS_PATH/source/chip/Kconfig"
 source "$DISTORTOS_PATH/source/scheduler/Kconfig"
 
-# don't remove next line!
-### begin Kconfig-testApplication
-source "$DISTORTOS_PATH/test/Kconfig-testApplication"
-### end Kconfig-testApplication
-# don't remove previous line!
+### don't remove this line! Kconfig-testApplication
+source "$OUTPUT/Kconfig-testApplication"
 
 menu "Build configuration"
 
