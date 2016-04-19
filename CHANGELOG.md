@@ -27,6 +27,10 @@ components - e.g. you can delete `source/board/STM32/STM32F4/STM32F4DISCOVERY/` 
 `source/board/STM32/STM32F4/` (group of ports for boards), but you shouldn't delete just
 `source/board/STM32/STM32F4/STM32F4DISCOVERY/include/` (part of port for single board). Additionally you can delete
 entire `source/board/` and/or `test/` folders.
+- Ability to add configurations of custom applications to *Kconfig* menus. User can add any number of files named
+`Kconfig-applicationOptions` anywhere in the project, and they will all be automatically included in the
+"Applications configuration" menu. The same is possible for custom boards, chips and architectures, but these are
+slightly more complicated, as multiple files are needed.
 - Configuration of *SRAM1*, *SRAM2* and *SRAM3* regions' unification for *STM32F4* chips.
 - Support for additional memory regions of *STM32F4* chips (*BKPSRAM*, *CCM*, *SRAM2*, *SRAM3*) in generated linker
 scripts.
