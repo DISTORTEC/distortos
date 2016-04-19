@@ -26,9 +26,7 @@ menus. You can obviously delete anything from `configurations/`, including the e
 components - e.g. you can delete `source/board/STM32/STM32F4/STM32F4DISCOVERY/` (port for single board) and/or
 `source/board/STM32/STM32F4/` (group of ports for boards), but you shouldn't delete just
 `source/board/STM32/STM32F4/STM32F4DISCOVERY/include/` (part of port for single board). Additionally you can delete
-entire `source/board/` and/or `test/` folders. After any deletion it is necessary to run `scripts/regenerateKconfig.sh`
-script once before using `make menuconfig`. When running it "outside" of *distortos* source tree (e.g. in a project
-based on "subfolder" template), provide it with the path to *distortos* in the first argument.
+entire `source/board/` and/or `test/` folders.
 - Configuration of *SRAM1*, *SRAM2* and *SRAM3* regions' unification for *STM32F4* chips.
 - Support for additional memory regions of *STM32F4* chips (*BKPSRAM*, *CCM*, *SRAM2*, *SRAM3*) in generated linker
 scripts.
