@@ -12,6 +12,11 @@ config DISTORTOS_PATH
 	option env="DISTORTOS_PATH"
 	default "."
 
+config OUTPUT
+	string
+	option env="OUTPUT"
+	default "./output"
+
 source "$DISTORTOS_PATH/source/chip/Kconfig"
 source "$DISTORTOS_PATH/source/scheduler/Kconfig"
 
