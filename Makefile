@@ -324,10 +324,12 @@ help:
 
 .PHONY: menuconfig
 menuconfig:
+	$(DISTORTOS_PATH)scripts/generateKconfig.sh "$(OUTPUT)"
 	DISTORTOS_PATH=.$(DISTORTOS_PATH:%/=/%) KCONFIG_CONFIG=$(DISTORTOS_CONFIGURATION_MK) OUTPUT=.$(OUTPUT:%/=/%) \
 			kconfig-mconf $(DISTORTOS_PATH)Kconfig
 
 .PHONY: olddefconfig
 olddefconfig:
+	$(DISTORTOS_PATH)scripts/generateKconfig.sh "$(OUTPUT)"
 	DISTORTOS_PATH=.$(DISTORTOS_PATH:%/=/%) KCONFIG_CONFIG=$(DISTORTOS_CONFIGURATION_MK) OUTPUT=.$(OUTPUT:%/=/%) \
 			kconfig-conf $(DISTORTOS_PATH)Kconfig --olddefconfig
