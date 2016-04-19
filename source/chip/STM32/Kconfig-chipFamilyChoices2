@@ -13,12 +13,7 @@ choice
 	help
 		Select STM32 chip family
 
-# don't remove next line!
-### begin Kconfig-stm32ChipFamilyChoices
-source "$DISTORTOS_PATH/source/chip/STM32/STM32F0/Kconfig-stm32ChipFamilyChoices"
-source "$DISTORTOS_PATH/source/chip/STM32/STM32F1/Kconfig-stm32ChipFamilyChoices"
-source "$DISTORTOS_PATH/source/chip/STM32/STM32F4/Kconfig-stm32ChipFamilyChoices"
-### end Kconfig-stm32ChipFamilyChoices
-# don't remove previous line!
+### don't remove this line! Kconfig-stm32ChipFamilyChoices
+source "$OUTPUT/Kconfig-stm32ChipFamilyChoices"
 
 endchoice

@@ -12,14 +12,20 @@ config DISTORTOS_PATH
 	option env="DISTORTOS_PATH"
 	default "."
 
+config OUTPUT
+	string
+	option env="OUTPUT"
+	default "./output"
+
 source "$DISTORTOS_PATH/source/chip/Kconfig"
 source "$DISTORTOS_PATH/source/scheduler/Kconfig"
 
-# don't remove next line!
-### begin Kconfig-testApplication
-source "$DISTORTOS_PATH/test/Kconfig-testApplication"
-### end Kconfig-testApplication
-# don't remove previous line!
+menu "Applications configuration"
+
+### don't remove this line! Kconfig-applicationOptions
+source "$OUTPUT/Kconfig-applicationOptions"
+
+endmenu
 
 menu "Build configuration"
 
