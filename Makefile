@@ -312,6 +312,7 @@ configure [CONFIG_PATH=<path>] - to select the configuration of your choice;
   <path> .. the path where distortosConfiguration.mk can be found; default "."
 distclean - remove the build output, doxygen documentation and file created by
   "make configure"
+doxygen - generate doxygen API reference for current configuration
 menuconfig - to create/edit configuration of distortos
 olddefconfig - update currently selected configuration with default values of
   new options
