@@ -1,6 +1,6 @@
 /**
  * \file
- * \brief FpuSignalTestCase class implementation for ARMv7-M (Cortex-M3 / Cortex-M4)
+ * \brief FpuSignalTestCase class implementation for ARMv7-M
  *
  * \author Copyright (C) 2015-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
@@ -20,8 +20,8 @@
 
 #if ARMV7_M_FPU_SIGNAL_TEST_CASE_ENABLED == 1
 
-#include "checkFpuRegisters.hpp"
-#include "setFpuRegisters.hpp"
+#include "ARMv7-M-checkFpuRegisters.hpp"
+#include "ARMv7-M-setFpuRegisters.hpp"
 
 #include "distortos/DynamicThread.hpp"
 #include "distortos/StaticSoftwareTimer.hpp"

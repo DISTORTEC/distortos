@@ -1,6 +1,6 @@
 /**
  * \file
- * \brief checkFpuRegisters() declaration for ARMv7-M (Cortex-M3 / Cortex-M4)
+ * \brief checkFpuRegisters() declaration for ARMv7-M
  *
  * \author Copyright (C) 2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
@@ -9,8 +9,8 @@
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#ifndef TEST_ARCHITECTURE_ARM_ARMV7_M_CHECKFPUREGISTERS_HPP_
-#define TEST_ARCHITECTURE_ARM_ARMV7_M_CHECKFPUREGISTERS_HPP_
+#ifndef TEST_ARCHITECTURE_ARM_ARMV7_M_ARMV7_M_CHECKFPUREGISTERS_HPP_
+#define TEST_ARCHITECTURE_ARM_ARMV7_M_ARMV7_M_CHECKFPUREGISTERS_HPP_
 
 #include <cstdint>
 
@@ -35,4 +35,4 @@ bool checkFpuRegisters(uint32_t value, uint32_t fpscr);
 
 }	// namespace distortos
 
-#endif	// TEST_ARCHITECTURE_ARM_ARMV7_M_CHECKFPUREGISTERS_HPP_
+#endif	// TEST_ARCHITECTURE_ARM_ARMV7_M_ARMV7_M_CHECKFPUREGISTERS_HPP_

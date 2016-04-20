@@ -1,6 +1,6 @@
 /**
  * \file
- * \brief FpuThreadTestCase class implementation for ARMv7-M (Cortex-M3 / Cortex-M4)
+ * \brief FpuThreadTestCase class implementation for ARMv7-M
  *
  * \author Copyright (C) 2015-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
@@ -15,8 +15,8 @@
 
 #if __FPU_PRESENT == 1 && __FPU_USED == 1
 
-#include "checkFpuRegisters.hpp"
-#include "setFpuRegisters.hpp"
+#include "ARMv7-M-checkFpuRegisters.hpp"
+#include "ARMv7-M-setFpuRegisters.hpp"
 
 #include "distortos/DynamicThread.hpp"
 #include "distortos/statistics.hpp"

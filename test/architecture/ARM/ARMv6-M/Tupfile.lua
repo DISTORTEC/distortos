@@ -7,13 +7,11 @@
 -- distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 --
 
-if CONFIG_TEST_APPLICATION_ENABLE == "y" and CONFIG_ARCHITECTURE_ARMV7_M == "y" then
+if CONFIG_TEST_APPLICATION_ENABLE == "y" and CONFIG_ARCHITECTURE_ARMV6_M == "y" then
 
 	CXXFLAGS += "-I" .. DISTORTOS_TOP .. "test"
 	CXXFLAGS += STANDARD_INCLUDES
-	CXXFLAGS += ARCHITECTURE_INCLUDES
-	CXXFLAGS += CHIP_INCLUDES
 
 	tup.include(DISTORTOS_TOP .. "compile.lua")
 
-end	-- if CONFIG_TEST_APPLICATION_ENABLE == "y" and CONFIG_ARCHITECTURE_ARMV7_M == "y" then
+end	-- if CONFIG_TEST_APPLICATION_ENABLE == "y" and CONFIG_ARCHITECTURE_ARMV6_M == "y" then

@@ -7,17 +7,14 @@
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #
 
-ifeq ($(CONFIG_ARCHITECTURE_ARMV7_M),y)
+ifeq ($(CONFIG_ARCHITECTURE_ARMV6_M),y)
 
 #-----------------------------------------------------------------------------------------------------------------------
 # compilation flags
 #-----------------------------------------------------------------------------------------------------------------------
 
-CXXFLAGS_$(d) := $(CXXFLAGS_$(d)) -I$(d)
 CXXFLAGS_$(d) := $(CXXFLAGS_$(d)) -I$(DISTORTOS_PATH)test
 CXXFLAGS_$(d) := $(CXXFLAGS_$(d)) $(STANDARD_INCLUDES)
-CXXFLAGS_$(d) := $(CXXFLAGS_$(d)) $(ARCHITECTURE_INCLUDES)
-CXXFLAGS_$(d) := $(CXXFLAGS_$(d)) $(CHIP_INCLUDES)
 
 #-----------------------------------------------------------------------------------------------------------------------
 # standard footer
@@ -25,4 +22,4 @@ CXXFLAGS_$(d) := $(CXXFLAGS_$(d)) $(CHIP_INCLUDES)
 
 include $(DISTORTOS_PATH)footer.mk
 
-endif	# eq ($(CONFIG_ARCHITECTURE_ARMV7_M),y)
+endif	# eq ($(CONFIG_ARCHITECTURE_ARMV6_M),y)
