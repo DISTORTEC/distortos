@@ -1,6 +1,6 @@
 /**
  * \file
- * \brief FpuThreadTestCase class implementation for ARMv7-M (Cortex-M3 / Cortex-M4)
+ * \brief FpuThreadTestCase class implementation for ARMv7-M
  *
  * \author Copyright (C) 2015-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *

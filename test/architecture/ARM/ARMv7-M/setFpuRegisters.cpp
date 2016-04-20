@@ -1,6 +1,6 @@
 /**
  * \file
- * \brief setFpuRegisters() definition for ARMv7-M (Cortex-M3 / Cortex-M4)
+ * \brief setFpuRegisters() definition for ARMv7-M
  *
  * \author Copyright (C) 2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
