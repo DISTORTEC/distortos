@@ -21,7 +21,7 @@
 #if ARMV7_M_FPU_SIGNAL_TEST_CASE_ENABLED == 1
 
 #include "ARMv7-M-checkFpuRegisters.hpp"
-#include "setFpuRegisters.hpp"
+#include "ARMv7-M-setFpuRegisters.hpp"
 
 #include "distortos/DynamicThread.hpp"
 #include "distortos/StaticSoftwareTimer.hpp"
