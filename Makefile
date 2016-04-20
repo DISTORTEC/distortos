@@ -307,6 +307,7 @@ endef
 define HELP_TEXT
 
 Available special targets:
+all - build current configuration
 clean - remove the build output
 configure [CONFIG_PATH=<path>] - to select the configuration of your choice;
   <path> .. the path where distortosConfiguration.mk can be found; default "."
