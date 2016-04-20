@@ -20,7 +20,7 @@
 
 #if ARMV7_M_FPU_SIGNAL_TEST_CASE_ENABLED == 1
 
-#include "checkFpuRegisters.hpp"
+#include "ARMv7-M-checkFpuRegisters.hpp"
 #include "setFpuRegisters.hpp"
 
 #include "distortos/DynamicThread.hpp"

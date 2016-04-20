@@ -9,7 +9,7 @@
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#include "checkFpuRegisters.hpp"
+#include "ARMv7-M-checkFpuRegisters.hpp"
 
 #include "distortos/chip/CMSIS-proxy.h"
 

@@ -15,7 +15,7 @@
 
 #if __FPU_PRESENT == 1 && __FPU_USED == 1
 
-#include "checkFpuRegisters.hpp"
+#include "ARMv7-M-checkFpuRegisters.hpp"
 #include "setFpuRegisters.hpp"
 
 #include "distortos/DynamicThread.hpp"
