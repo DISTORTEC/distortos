@@ -24,7 +24,7 @@ namespace test
  * \brief Tests interruption of various "blocking" functions by an unmasked, caught signal.
  *
  * Functions like ConditionVariable::wait(), Mutex::lock(), Semaphore::wait(), ThisThread::sleepFor(),
- * ThisThread::Signals::wait() and ThreadBase::join() (including the variants with timeout) are tested.
+ * ThisThread::Signals::wait() and Thread::join() (including the variants with timeout) are tested.
  */
 
 class SignalsInterruptionTestCase : public SignalsTestCaseCommon
