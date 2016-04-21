@@ -284,6 +284,7 @@ distclean:
 doxygen: all
 	$(eval EXCLUDE_STRING := EXCLUDE =)
 	$(eval EXCLUDE_STRING += $(DISTORTOS_PATH)external)
+	$(eval EXCLUDE_STRING += $(DOXYGEN_EXCLUDE))
 	$(eval HTML_FOOTER_STRING := HTML_FOOTER =)
 	$(eval HTML_FOOTER_STRING += $(HTML_FOOTER))
 	$(eval IMAGE_PATH_STRING := IMAGE_PATH =)
