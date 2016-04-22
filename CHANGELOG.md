@@ -66,6 +66,8 @@ only for enabled applications - sources that are excluded from compilation are n
 output cannot be used as system clock if PLL is disabled.
 - Fix invalid definition of templated variants of `Semaphore::tryWaitFor()` and `Semaphore::tryWaitUntil()`.
 - Added missing *STM32F429NG* chip to *Kconfig* configuration menus.
+- Fix *make* build for constructs like `CXXFLAGS_$(d)someFileName.cpp := ...` not working correctly in top-level folder
+of the project (where `$(d)` is `./`).
 
 0.1.0 - 2016-02-26
 ------------------

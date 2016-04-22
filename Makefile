@@ -228,15 +228,15 @@ $(GENERATED): $(DISTORTOS_PATH)Makefile
 
 $(OUTPUT)%.o: %.S
 	$(call PRETTY_PRINT,"AS     " $<)
-	$(Q)$(AS) $(ASFLAGS) $(ASFLAGS_$(<)) -c $< -o $@
+	$(Q)$(AS) $(ASFLAGS) $(ASFLAGS_$(dir $(<))$(notdir $(<))) -c $< -o $@
 
 $(OUTPUT)%.o: %.c
 	$(call PRETTY_PRINT,"CC     " $<)
-	$(Q)$(CC) $(CFLAGS) $(CFLAGS_$(<)) -c $< -o $@
+	$(Q)$(CC) $(CFLAGS) $(CFLAGS_$(dir $(<))$(notdir $(<))) -c $< -o $@
 
 $(OUTPUT)%.o: %.cpp
 	$(call PRETTY_PRINT,"CXX    " $<)
-	$(Q)$(CXX) $(CXXFLAGS) $(CXXFLAGS_$(<)) -c $< -o $@
+	$(Q)$(CXX) $(CXXFLAGS) $(CXXFLAGS_$(dir $(<))$(notdir $(<))) -c $< -o $@
 
 $(OUTPUT)%.a:
 	$(Q)$(RM) $@
