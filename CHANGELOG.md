@@ -15,6 +15,7 @@ All notable changes to this project will be documented in this file. This projec
 - Support and test configurations for [NUCLEO-F091RC](http://www.st.com/web/catalog/tools/PF260944) board with *STM32F0*
 chip, [NUCLEO-F103RB](http://www.st.com/nucleoF103RB-pr) board with *STM32F1* chip and
 [NUCLEO-F429ZI](http://www.st.com/web/catalog/tools/PF262637) board with *STM32F4* chip.
+- `make oldconfig` target, which can be used to update currently selected configuration asking about new options.
 - `make olddefconfig` target, which can be used to update currently selected configuration with default values of new
 options.
 - `updateAllConfigurations.sh` script, which can be used to run `make olddefconfig` for all configurations found in

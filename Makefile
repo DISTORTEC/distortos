@@ -316,6 +316,7 @@ distclean - remove the build output, doxygen documentation and file created by
   "make configure"
 doxygen - generate doxygen API reference for current configuration
 menuconfig - to create/edit configuration of distortos
+oldconfig - update currently selected configuration asking about new options
 olddefconfig - update currently selected configuration with default values of
   new options
 
@@ -330,6 +331,12 @@ menuconfig:
 	$(DISTORTOS_PATH)scripts/generateKconfig.sh "$(OUTPUT)"
 	DISTORTOS_PATH=.$(DISTORTOS_PATH:%/=/%) KCONFIG_CONFIG=$(DISTORTOS_CONFIGURATION_MK) OUTPUT=.$(OUTPUT:%/=/%) \
 			kconfig-mconf $(DISTORTOS_PATH)Kconfig
+
+.PHONY: oldconfig
+oldconfig:
+	$(DISTORTOS_PATH)scripts/generateKconfig.sh "$(OUTPUT)"
+	DISTORTOS_PATH=.$(DISTORTOS_PATH:%/=/%) KCONFIG_CONFIG=$(DISTORTOS_CONFIGURATION_MK) OUTPUT=.$(OUTPUT:%/=/%) \
+			kconfig-conf $(DISTORTOS_PATH)Kconfig --oldconfig
 
 .PHONY: olddefconfig
 olddefconfig:
