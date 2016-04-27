@@ -12,26 +12,10 @@
 set -e
 set -u
 
-searchPath=.
+basedir=`dirname $0`
 
-# If any argument was given, then use it as the search path, otherwise search in current directory.
-if [ $# -ge 1 ]; then
-	searchPath=$1
+$basedir/forAllConfigurations.sh "make -j`nproc` VERBOSE=1" "$@"
+
+if command -v tup >/dev/null 2>&1; then
+	$basedir/forAllConfigurations.sh "tup --verbose" "$@"
 fi
-
-make distclean
-
-for configurationPath in `find $searchPath -name "distortosConfiguration.mk" -printf "%h "`
-do
-
-	make configure CONFIG_PATH=$configurationPath
-	make -j`nproc` VERBOSE=1
-	make distclean
-
-	if command -v tup >/dev/null 2>&1; then
-		make configure CONFIG_PATH=$configurationPath
-		tup --verbose
-		make distclean
-	fi
-
-done
