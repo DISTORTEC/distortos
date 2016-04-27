@@ -1,7 +1,7 @@
 #!/bin/sh
 
 #
-# file: updateAllConfigurations.sh
+# file: forAllConfigurations.sh
 #
 # author: Copyright (C) 2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
 #
@@ -12,11 +12,18 @@
 set -e
 set -u
 
+if [ $# -lt 1 ]; then
+	echo "Error - invalid number of arguments!"
+	exit 1
+fi
+
+command=$1
+
 searchPath=.
 
-# If any argument was given, then use it as the search path, otherwise search in current directory.
-if [ $# -ge 1 ]; then
-	searchPath=$1
+# If any additional argument was given, then use it as the search path, otherwise search in current directory.
+if [ $# -ge 2 ]; then
+	searchPath=$2
 fi
 
 make distclean
@@ -25,7 +32,7 @@ for configurationPath in `find $searchPath -name "distortosConfiguration.mk" -pr
 do
 
 	make configure CONFIG_PATH=$configurationPath
-	make olddefconfig
+	$command
 	make distclean
 
 done

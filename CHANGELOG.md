@@ -18,8 +18,10 @@ chip, [NUCLEO-F103RB](http://www.st.com/nucleoF103RB-pr) board with *STM32F1* ch
 - `make oldconfig` target, which can be used to update currently selected configuration asking about new options.
 - `make olddefconfig` target, which can be used to update currently selected configuration with default values of new
 options.
-- `updateAllConfigurations.sh` script, which can be used to run `make olddefconfig` for all configurations found in
-provided (optional) search path.
+- `forAllConfigurations.sh` script, which can be used to run any command - passed in first argument - for all
+configurations found in provided (optional) search path - passed in second argument, default - current path ("."). One
+use case is updating all configurations - `./scripts/forAllConfigurations.sh "make oldconfig"` or
+`./scripts/forAllConfigurations.sh "make olddefconfig"`.
 - Ability to delete some folders - if you don't use their contents - without breaking *make*/*tup* build and *Kconfig*
 menus. You can obviously delete anything from `configurations/`, including the entire folder. The same is true for
 `documentation/` directory if you don't plan to generate *API* reference with *doxygen*. In case of `external/`,
