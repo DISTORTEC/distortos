@@ -4,6 +4,14 @@ Change Log
 All notable changes to this project will be documented in this file. This project adheres to
 [Semantic Versioning](http://semver.org/).
 
+[Unreleased](https://github.com/DISTORTEC/distortos/compare/v0.2.0...HEAD)
+--------------------------------------------------------------------------
+
+### Fixed
+
+- Fix generated linker scripts for older versions of *ld* (like 2.24.0.20141128), where hidden symbols cannot be used in
+expressions.
+
 [0.2.0](https://github.com/DISTORTEC/distortos/compare/v0.1.0...v0.2.0) - 2016-05-03
 ------------------------------------------------------------------------------------
 

@@ -85,7 +85,7 @@ while [ $# -gt 0 ]; do
 	memorySizes="${memorySizes}\
 PROVIDE(__${memoryName}_start = ORIGIN(${memoryName}));
 PROVIDE(__${memoryName}_size = LENGTH(${memoryName}));
-PROVIDE(__${memoryName}_end = __${memoryName}_start + __${memoryName}_size);\n\n"
+PROVIDE(__${memoryName}_end = ORIGIN(${memoryName}) + LENGTH(${memoryName}));\n\n"
 
 	dataArrayEntries="$dataArrayEntries\
 \t\tLONG(LOADADDR(.${memoryName}.data)); LONG(ADDR(.${memoryName}.data)); \
@@ -130,9 +130,9 @@ LONG(ADDR(.${memoryName}.data) + SIZEOF(.${memoryName}.data));\n"
 	} > ${memoryName} AT > ${memoryName}\n\n"
 
 	sectionSizes="${sectionSizes}\
-PROVIDE(__${memoryName}_bss_size = __${memoryName}_bss_end - __${memoryName}_bss_start);
-PROVIDE(__${memoryName}_data_size = __${memoryName}_data_end - __${memoryName}_data_start);
-PROVIDE(__${memoryName}_noinit_size = __${memoryName}_noinit_end - __${memoryName}_noinit_start);\n"
+PROVIDE(__${memoryName}_bss_size = SIZEOF(.${memoryName}.bss));
+PROVIDE(__${memoryName}_data_size = SIZEOF(.${memoryName}.data));
+PROVIDE(__${memoryName}_noinit_size = SIZEOF(.${memoryName}.noinit));\n"
 
 	shift
 done
@@ -192,11 +192,11 @@ cat<<EOF
 
 PROVIDE(__rom_start = ORIGIN(rom));
 PROVIDE(__rom_size = LENGTH(rom));
-PROVIDE(__rom_end = __rom_start + __rom_size);
+PROVIDE(__rom_end = ORIGIN(rom) + LENGTH(rom));
 
 PROVIDE(__ram_start = ORIGIN(ram));
 PROVIDE(__ram_size = LENGTH(ram));
-PROVIDE(__ram_end = __ram_start + __ram_size);
+PROVIDE(__ram_end = ORIGIN(ram) + LENGTH(ram));
 
 EOF
 
@@ -422,16 +422,12 @@ cat<<EOF
 	/DISCARD/				: { *(.note.GNU-stack) }
 }
 
-PROVIDE(__text_size = __text_end - __text_start);
-PROVIDE(__vectors_size = __vectors_end - __vectors_start);
-PROVIDE(__data_array_size = __data_array_end - __data_array_start);
-PROVIDE(__bss_array_size = __bss_array_end - __bss_array_start);
-PROVIDE(__exidx_size = __exidx_end - __exidx_start);
-PROVIDE(__bss_size = __bss_end - __bss_start);
-PROVIDE(__data_size = __data_end - __data_start);
-PROVIDE(__noinit_size = __noinit_end - __noinit_start);
-PROVIDE(__stack_size = __stack_end - __stack_start);
-PROVIDE(__heap_size = __heap_end - __heap_start);
+PROVIDE(__text_size = SIZEOF(.text));
+PROVIDE(__exidx_size = SIZEOF(.ARM.exidx));
+PROVIDE(__bss_size = SIZEOF(.bss));
+PROVIDE(__data_size = SIZEOF(.data));
+PROVIDE(__noinit_size = SIZEOF(.noinit));
+PROVIDE(__stack_size = SIZEOF(.stack));
 EOF
 
 printf "%b" "$sectionSizes"
