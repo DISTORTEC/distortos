@@ -99,6 +99,8 @@ DynamicThread makeTestThread(const SchedulingPolicy schedulingPolicy, SequenceAs
 
 bool ThreadSchedulingPolicyTestCase::run_() const
 {
+	const auto allocatedMemory = mallinfo().uordblks;
+
 	// scheduling policy, sequence point multiplier, sequence point step
 	using Parameters = std::tuple<SchedulingPolicy, unsigned int, unsigned int>;
 	static const Parameters parametersArray[]
@@ -157,7 +159,7 @@ bool ThreadSchedulingPolicyTestCase::run_() const
 				return false;
 		}
 
-		if (mallinfo().uordblks != 0)	// all dynamic memory must be deallocated after each test phase
+		if (mallinfo().uordblks != allocatedMemory)	// dynamic memory must be deallocated after each test phase
 			return false;
 	}
 

@@ -139,6 +139,7 @@ bool phase3()
 {
 #ifdef CONFIG_THREAD_DETACH_ENABLE
 
+	const auto allocatedMemory = mallinfo().uordblks;
 	const auto lambda =
 			[](int& sharedRet)
 			{
@@ -174,7 +175,7 @@ bool phase3()
 			return false;
 	}
 
-	if (mallinfo().uordblks != 0)	// all dynamic memory must be deallocated after each test phase
+	if (mallinfo().uordblks != allocatedMemory)	// dynamic memory must be deallocated after each test phase
 		return false;
 
 	// detaching dynamic thread that is started, but not yet terminated, must succeed
@@ -195,7 +196,7 @@ bool phase3()
 			return false;
 	}
 
-	if (mallinfo().uordblks != 0)	// all dynamic memory must be deallocated after each test phase
+	if (mallinfo().uordblks != allocatedMemory)	// dynamic memory must be deallocated after each test phase
 		return false;
 
 	// self-detach of dynamic thread must succeed
@@ -216,7 +217,7 @@ bool phase3()
 			return false;
 	}
 
-	if (mallinfo().uordblks != 0)	// all dynamic memory must be deallocated after each test phase
+	if (mallinfo().uordblks != allocatedMemory)	// dynamic memory must be deallocated after each test phase
 		return false;
 
 	// detaching dynamic thread that is already terminated must succeed, the thread is just deleted
@@ -234,7 +235,7 @@ bool phase3()
 			return false;
 	}
 
-	if (mallinfo().uordblks != 0)	// all dynamic memory must be deallocated after each test phase
+	if (mallinfo().uordblks != allocatedMemory)	// dynamic memory must be deallocated after each test phase
 		return false;
 
 #endif	// def CONFIG_THREAD_DETACH_ENABLE
@@ -260,6 +261,7 @@ bool ThreadOperationsTestCase::run_() const
 	constexpr auto expectedContextSwitchCount = phase1ExpectedContextSwitchCount + phase2ExpectedContextSwitchCount +
 			phase3ExpectedContextSwitchCount;
 
+	const auto allocatedMemory = mallinfo().uordblks;
 	const auto contextSwitchCount = statistics::getContextSwitchCount();
 
 	for (const auto& function : {phase1, phase2, phase3})
@@ -268,7 +270,7 @@ bool ThreadOperationsTestCase::run_() const
 		if (ret != true)
 			return ret;
 
-		if (mallinfo().uordblks != 0)	// all dynamic memory must be deallocated after each test phase
+		if (mallinfo().uordblks != allocatedMemory)	// dynamic memory must be deallocated after each test phase
 			return false;
 	}
 

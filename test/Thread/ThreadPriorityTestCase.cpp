@@ -77,6 +77,8 @@ DynamicThread makeTestThread(const ThreadParameters& threadParameters, SequenceA
 
 bool ThreadPriorityTestCase::run_() const
 {
+	const auto allocatedMemory = mallinfo().uordblks;
+
 	for (const auto& phase : priorityTestPhases)
 	{
 		{
@@ -110,7 +112,7 @@ bool ThreadPriorityTestCase::run_() const
 				return false;
 		}
 
-		if (mallinfo().uordblks != 0)	// all dynamic memory must be deallocated after each test phase
+		if (mallinfo().uordblks != allocatedMemory)	// dynamic memory must be deallocated after each test phase
 			return false;
 	}
 

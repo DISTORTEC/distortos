@@ -11,6 +11,7 @@ All notable changes to this project will be documented in this file. This projec
 
 - Fix generated linker scripts for older versions of *ld* (like 2.24.0.20141128), where hidden symbols cannot be used in
 expressions.
+- Fix failure of test application for new versions of "official" ARM toolchain (5.x).
 
 [0.2.0](https://github.com/DISTORTEC/distortos/compare/v0.1.0...v0.2.0) - 2016-05-03
 ------------------------------------------------------------------------------------

@@ -80,6 +80,8 @@ DynamicThread makeAndStartTestThread(const uint8_t priority, SequenceAsserter& s
 
 bool ThreadPriorityChangeTestCase::run_() const
 {
+	const auto allocatedMemory = mallinfo().uordblks;
+
 	{
 		// difference required for this whole test to work
 		static_assert(testCasePriority_ / 2 > 3, "Invalid test case priority");
@@ -131,7 +133,7 @@ bool ThreadPriorityChangeTestCase::run_() const
 			return false;
 	}
 
-	if (mallinfo().uordblks != 0)	// all dynamic memory must be deallocated after each test phase
+	if (mallinfo().uordblks != allocatedMemory)	// dynamic memory must be deallocated after each test phase
 		return false;
 
 	return true;

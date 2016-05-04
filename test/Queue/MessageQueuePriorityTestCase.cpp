@@ -221,6 +221,7 @@ const std::array<Stage, 2> stages
 
 bool MessageQueuePriorityTestCase::run_() const
 {
+	const auto allocatedMemory = mallinfo().uordblks;
 	const auto contextSwitchCount = statistics::getContextSwitchCount();
 	std::remove_const<decltype(contextSwitchCount)>::type expectedContextSwitchCount {};
 	constexpr size_t messageQueueTypes {4};
@@ -307,7 +308,8 @@ bool MessageQueuePriorityTestCase::run_() const
 							return false;
 					}
 
-					if (mallinfo().uordblks != 0)	// all dynamic memory must be deallocated after each test phase
+					// dynamic memory must be deallocated after each test phase
+					if (mallinfo().uordblks != allocatedMemory)
 						return false;
 				}
 

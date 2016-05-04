@@ -1205,6 +1205,7 @@ bool QueueOperationsTestCase::run_() const
 	constexpr auto expectedContextSwitchCount = phase1ExpectedContextSwitchCount + phase2ExpectedContextSwitchCount +
 			phase3ExpectedContextSwitchCount + phase4ExpectedContextSwitchCount + phase5ExpectedContextSwitchCount;
 
+	const auto allocatedMemory = mallinfo().uordblks;
 	const auto contextSwitchCount = statistics::getContextSwitchCount();
 
 	for (const auto& function : {phase1, phase2, phase3, phase4, phase5, phase6})
@@ -1213,7 +1214,7 @@ bool QueueOperationsTestCase::run_() const
 		if (ret != true)
 			return ret;
 
-		if (mallinfo().uordblks != 0)	// all dynamic memory must be deallocated after each test phase
+		if (mallinfo().uordblks != allocatedMemory)	// dynamic memory must be deallocated after each test phase
 			return false;
 	}
 

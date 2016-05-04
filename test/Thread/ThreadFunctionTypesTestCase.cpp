@@ -119,6 +119,8 @@ private:
 
 bool ThreadFunctionTypesTestCase::run_() const
 {
+	const auto allocatedMemory = mallinfo().uordblks;
+
 	// thread with regular function
 	{
 		uint32_t sharedVariable {};
@@ -132,7 +134,7 @@ bool ThreadFunctionTypesTestCase::run_() const
 			return false;
 	}
 
-	if (mallinfo().uordblks != 0)	// all dynamic memory must be deallocated after each test phase
+	if (mallinfo().uordblks != allocatedMemory)	// dynamic memory must be deallocated after each test phase
 		return false;
 
 	// thread with state-less functor
@@ -148,7 +150,7 @@ bool ThreadFunctionTypesTestCase::run_() const
 			return false;
 	}
 
-	if (mallinfo().uordblks != 0)	// all dynamic memory must be deallocated after each test phase
+	if (mallinfo().uordblks != allocatedMemory)	// dynamic memory must be deallocated after each test phase
 		return false;
 
 	// thread with member function of object with state
@@ -164,7 +166,7 @@ bool ThreadFunctionTypesTestCase::run_() const
 			return false;
 	}
 
-	if (mallinfo().uordblks != 0)	// all dynamic memory must be deallocated after each test phase
+	if (mallinfo().uordblks != allocatedMemory)	// dynamic memory must be deallocated after each test phase
 		return false;
 
 	// thread with capturing lambda
@@ -183,7 +185,7 @@ bool ThreadFunctionTypesTestCase::run_() const
 			return false;
 	}
 
-	if (mallinfo().uordblks != 0)	// all dynamic memory must be deallocated after each test phase
+	if (mallinfo().uordblks != allocatedMemory)	// dynamic memory must be deallocated after each test phase
 		return false;
 
 	return true;
