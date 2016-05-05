@@ -30,6 +30,7 @@ void SoftwareTimerControlBlock::start(const TickClock::time_point timePoint)
 {
 	architecture::InterruptMaskingLock interruptMaskingLock;
 
+	stopInternal();
 	setTimePoint(timePoint);
 	getScheduler().getSoftwareTimerSupervisor().add(*this);
 }
