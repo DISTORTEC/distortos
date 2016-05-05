@@ -27,8 +27,6 @@ namespace internal
 
 void SoftwareTimerSupervisor::add(SoftwareTimerControlBlock& softwareTimerControlBlock)
 {
-	architecture::InterruptMaskingLock interruptMaskingLock;
-
 	activeList_.insert(softwareTimerControlBlock);
 }
 
