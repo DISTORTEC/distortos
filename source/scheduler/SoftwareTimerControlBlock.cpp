@@ -28,8 +28,9 @@ namespace internal
 
 void SoftwareTimerControlBlock::start(const TickClock::time_point timePoint)
 {
-	setTimePoint(timePoint);
+	architecture::InterruptMaskingLock interruptMaskingLock;
 
+	setTimePoint(timePoint);
 	getScheduler().getSoftwareTimerSupervisor().add(*this);
 }
 
