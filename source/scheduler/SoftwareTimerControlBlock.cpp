@@ -31,13 +31,13 @@ void SoftwareTimerControlBlock::run() const
 	functionRunner_(owner_);
 }
 
-void SoftwareTimerControlBlock::start(const TickClock::time_point timePoint)
+void SoftwareTimerControlBlock::start(SoftwareTimerSupervisor& supervisor, const TickClock::time_point timePoint)
 {
 	architecture::InterruptMaskingLock interruptMaskingLock;
 
 	stopInternal();
 	setTimePoint(timePoint);
-	getScheduler().getSoftwareTimerSupervisor().add(*this);
+	supervisor.add(*this);
 }
 
 void SoftwareTimerControlBlock::stop()

@@ -22,6 +22,8 @@ class SoftwareTimer;
 namespace internal
 {
 
+class SoftwareTimerSupervisor;
+
 /// SoftwareTimerControlBlock class is a control block of software timer
 class SoftwareTimerControlBlock : public SoftwareTimerListNode
 {
@@ -77,10 +79,11 @@ public:
 	/**
 	 * \brief Starts the timer.
 	 *
+	 * \param [in] supervisor is a reference to SoftwareTimerSupervisor to which this object will be added
 	 * \param [in] timePoint is the time point at which the function will be executed
 	 */
 
-	void start(TickClock::time_point timePoint);
+	void start(SoftwareTimerSupervisor& supervisor, TickClock::time_point timePoint);
 
 	/**
 	 * \brief Stops the timer.

@@ -11,6 +11,9 @@
 
 #include "distortos/SoftwareTimerCommon.hpp"
 
+#include "distortos/internal/scheduler/getScheduler.hpp"
+#include "distortos/internal/scheduler/Scheduler.hpp"
+
 namespace distortos
 {
 
@@ -30,7 +33,7 @@ bool SoftwareTimerCommon::isRunning() const
 
 int SoftwareTimerCommon::start(const TickClock::time_point timePoint)
 {
-	softwareTimerControlBlock_.start(timePoint);
+	softwareTimerControlBlock_.start(internal::getScheduler().getSoftwareTimerSupervisor(), timePoint);
 	return 0;
 }
 
