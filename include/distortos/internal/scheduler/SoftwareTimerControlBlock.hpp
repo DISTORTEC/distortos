@@ -39,6 +39,7 @@ public:
 
 	constexpr SoftwareTimerControlBlock(FunctionRunner& functionRunner, SoftwareTimer& owner) :
 			SoftwareTimerListNode{},
+			period_{},
 			functionRunner_{functionRunner},
 			owner_{owner}
 	{
@@ -102,6 +103,9 @@ private:
 	 */
 
 	void stopInternal();
+
+	/// period used to restart repetitive software timer, 0 for one-shot software timers
+	TickClock::duration period_;
 
 	/// reference to runner for software timer's function
 	FunctionRunner& functionRunner_;
