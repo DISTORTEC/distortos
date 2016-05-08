@@ -53,8 +53,10 @@ void SoftwareTimerControlBlock::stop()
 
 void SoftwareTimerControlBlock::stopInternal()
 {
-	if (isRunning() == true)
-		node.unlink();
+	if (isRunning() == false)	// timer is already stopped?
+		return;
+
+	node.unlink();
 }
 
 }	// namespace internal
