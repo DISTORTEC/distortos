@@ -57,6 +57,7 @@ void SoftwareTimerControlBlock::stopInternal()
 		return;
 
 	node.unlink();
+	period_ = {};
 }
 
 }	// namespace internal
