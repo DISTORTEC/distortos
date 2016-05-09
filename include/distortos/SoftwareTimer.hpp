@@ -45,29 +45,37 @@ public:
 	 * \note The duration will never be shorter, so one additional tick is always added to the duration.
 	 *
 	 * \param [in] duration is the duration after which the function will be executed
+	 * \param [in] period is the period used to restart repetitive software timer, 0 for one-shot software timers,
+	 * default - 0
 	 *
 	 * \return 0 on success, error code otherwise
 	 */
 
-	int start(TickClock::duration duration);
+	int start(TickClock::duration duration, TickClock::duration period = {});
 
 	/**
 	 * \brief Starts the timer.
 	 *
 	 * \note The duration must not be shorter, so one additional tick is always added to the duration.
 	 *
-	 * \tparam Rep is type of tick counter
-	 * \tparam Period is std::ratio type representing the tick period of the clock, seconds
+	 * \tparam Rep1 is type of tick counter used in \a duration
+	 * \tparam Period1 is std::ratio type representing the tick period of the clock used in \a duration, seconds
+	 * \tparam Rep2 is type of tick counter used in \a period
+	 * \tparam Period2 is std::ratio type representing the tick period of the clock used in \a period, seconds
 	 *
 	 * \param [in] duration is the duration after which the function will be executed
+	 * \param [in] period is the period used to restart repetitive software timer, 0 for one-shot software timers,
+	 * default - 0
 	 *
 	 * \return 0 on success, error code otherwise
 	 */
 
-	template<typename Rep, typename Period>
-	int start(const std::chrono::duration<Rep, Period> duration)
+	template<typename Rep1, typename Period1, typename Rep2 = TickClock::rep, typename Period2 = TickClock::period>
+	int start(const std::chrono::duration<Rep1, Period1> duration,
+			const std::chrono::duration<Rep2, Period2> period = {})
 	{
-		return start(std::chrono::duration_cast<TickClock::duration>(duration));
+		return start(std::chrono::duration_cast<TickClock::duration>(duration),
+				std::chrono::duration_cast<TickClock::duration>(period));
 	}
 
 	/**
@@ -86,16 +94,22 @@ public:
 	 * \brief Starts the timer.
 	 *
 	 * \tparam Duration is a std::chrono::duration type used to measure duration
+	 * \tparam Rep is type of tick counter used in \a period
+	 * \tparam Period is std::ratio type representing the tick period of the clock used in \a period, seconds
 	 *
 	 * \param [in] timePoint is the time point at which the function will be executed
+	 * \param [in] period is the period used to restart repetitive software timer, 0 for one-shot software timers,
+	 * default - 0
 	 *
 	 * \return 0 on success, error code otherwise
 	 */
 
-	template<typename Duration>
-	int start(const std::chrono::time_point<TickClock, Duration> timePoint)
+	template<typename Duration, typename Rep = TickClock::rep, typename Period = TickClock::period>
+	int start(const std::chrono::time_point<TickClock, Duration> timePoint,
+			const std::chrono::duration<Rep, Period> period = {})
 	{
-		return start(std::chrono::time_point_cast<TickClock::duration>(timePoint));
+		return start(std::chrono::time_point_cast<TickClock::duration>(timePoint),
+				std::chrono::duration_cast<TickClock::duration>(period));
 	}
 
 	/**
