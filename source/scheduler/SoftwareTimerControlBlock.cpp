@@ -26,9 +26,15 @@ namespace internal
 | public functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-void SoftwareTimerControlBlock::run(SoftwareTimerSupervisor&)
+void SoftwareTimerControlBlock::run(SoftwareTimerSupervisor& supervisor)
 {
 	functionRunner_(owner_);
+
+	// was timer restarted in timer's function or is this a one-shot timer?
+	if (isRunning() == true || period_ == decltype(period_){})
+		return;
+
+	startInternal(supervisor, getTimePoint() + period_);	// this is a periodic timer, so restart it
 }
 
 void SoftwareTimerControlBlock::start(SoftwareTimerSupervisor& supervisor, const TickClock::time_point timePoint)
