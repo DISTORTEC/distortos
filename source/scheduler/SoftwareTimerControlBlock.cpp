@@ -36,8 +36,7 @@ void SoftwareTimerControlBlock::start(SoftwareTimerSupervisor& supervisor, const
 	architecture::InterruptMaskingLock interruptMaskingLock;
 
 	stopInternal();
-	setTimePoint(timePoint);
-	supervisor.add(*this);
+	startInternal(supervisor, timePoint);
 }
 
 void SoftwareTimerControlBlock::stop()
@@ -50,6 +49,13 @@ void SoftwareTimerControlBlock::stop()
 /*---------------------------------------------------------------------------------------------------------------------+
 | private functions
 +---------------------------------------------------------------------------------------------------------------------*/
+
+void SoftwareTimerControlBlock::startInternal(SoftwareTimerSupervisor& supervisor,
+		const TickClock::time_point timePoint)
+{
+	setTimePoint(timePoint);
+	supervisor.add(*this);
+}
 
 void SoftwareTimerControlBlock::stopInternal()
 {

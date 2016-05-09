@@ -99,6 +99,15 @@ public:
 private:
 
 	/**
+	 * \brief Starts the timer - internal version, with no interrupt masking and no stopping.
+	 *
+	 * \param [in] supervisor is a reference to SoftwareTimerSupervisor to which this object will be added
+	 * \param [in] timePoint is the time point at which the function will be executed
+	 */
+
+	void startInternal(SoftwareTimerSupervisor& supervisor, TickClock::time_point timePoint);
+
+	/**
 	 * \brief Stops the timer - internal version, with no interrupt masking.
 	 */
 
