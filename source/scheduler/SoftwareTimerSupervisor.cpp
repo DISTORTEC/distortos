@@ -27,8 +27,6 @@ namespace internal
 
 void SoftwareTimerSupervisor::add(SoftwareTimerControlBlock& softwareTimerControlBlock)
 {
-	architecture::InterruptMaskingLock interruptMaskingLock;
-
 	activeList_.insert(softwareTimerControlBlock);
 }
 
@@ -40,7 +38,7 @@ void SoftwareTimerSupervisor::tickInterruptHandler(const TickClock::time_point t
 	{
 		auto& softwareTimer = *iterator;
 		SoftwareTimerList::erase(iterator);
-		softwareTimer.run();
+		softwareTimer.run(*this);
 	}
 }
 

@@ -7,6 +7,12 @@ All notable changes to this project will be documented in this file. This projec
 [Unreleased](https://github.com/DISTORTEC/distortos/compare/v0.2.0...HEAD)
 --------------------------------------------------------------------------
 
+### Added
+
+- Support for periodic execution of software timers. All overloads of `SoftwareTimer::start()` were extended with
+optional second argument with period. If the period is 0 (which is the default value), software timer's function is
+executed only once. Otherwise it will be executed periodically until the software timer is stopped.
+
 ### Fixed
 
 - Fix generated linker scripts for older versions of *ld* (like 2.24.0.20141128), where hidden symbols cannot be used in

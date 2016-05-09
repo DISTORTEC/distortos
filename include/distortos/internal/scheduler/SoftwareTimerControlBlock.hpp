@@ -2,7 +2,7 @@
  * \file
  * \brief SoftwareTimerControlBlock class header
  *
- * \author Copyright (C) 2014-2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -22,6 +22,8 @@ class SoftwareTimer;
 namespace internal
 {
 
+class SoftwareTimerSupervisor;
+
 /// SoftwareTimerControlBlock class is a control block of software timer
 class SoftwareTimerControlBlock : public SoftwareTimerListNode
 {
@@ -39,6 +41,7 @@ public:
 
 	constexpr SoftwareTimerControlBlock(FunctionRunner& functionRunner, SoftwareTimer& owner) :
 			SoftwareTimerListNode{},
+			period_{},
 			functionRunner_{functionRunner},
 			owner_{owner}
 	{
@@ -69,20 +72,21 @@ public:
 	 * \brief Runs software timer's function.
 	 *
 	 * \note this should only be called by SoftwareTimerSupervisor::tickInterruptHandler()
+	 *
+	 * \param [in] supervisor is a reference to SoftwareTimerSupervisor that manages this object
 	 */
 
-	void run() const
-	{
-		functionRunner_(owner_);
-	}
+	void run(SoftwareTimerSupervisor& supervisor);
 
 	/**
 	 * \brief Starts the timer.
 	 *
+	 * \param [in] supervisor is a reference to SoftwareTimerSupervisor to which this object will be added
 	 * \param [in] timePoint is the time point at which the function will be executed
+	 * \param [in] period is the period used to restart repetitive software timer, 0 for one-shot software timers
 	 */
 
-	void start(TickClock::time_point timePoint);
+	void start(SoftwareTimerSupervisor& supervisor, TickClock::time_point timePoint, TickClock::duration period);
 
 	/**
 	 * \brief Stops the timer.
@@ -96,6 +100,25 @@ public:
 	SoftwareTimerControlBlock& operator=(SoftwareTimerControlBlock&&) = delete;
 
 private:
+
+	/**
+	 * \brief Starts the timer - internal version, with no interrupt masking, no stopping and no configuration of
+	 * period.
+	 *
+	 * \param [in] supervisor is a reference to SoftwareTimerSupervisor to which this object will be added
+	 * \param [in] timePoint is the time point at which the function will be executed
+	 */
+
+	void startInternal(SoftwareTimerSupervisor& supervisor, TickClock::time_point timePoint);
+
+	/**
+	 * \brief Stops the timer - internal version, with no interrupt masking.
+	 */
+
+	void stopInternal();
+
+	/// period used to restart repetitive software timer, 0 for one-shot software timers
+	TickClock::duration period_;
 
 	/// reference to runner for software timer's function
 	FunctionRunner& functionRunner_;

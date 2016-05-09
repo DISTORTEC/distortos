@@ -2,7 +2,7 @@
  * \file
  * \brief SoftwareTimerControlBlock class implementation
  *
- * \author Copyright (C) 2014-2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -26,19 +26,52 @@ namespace internal
 | public functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-void SoftwareTimerControlBlock::start(const TickClock::time_point timePoint)
+void SoftwareTimerControlBlock::run(SoftwareTimerSupervisor& supervisor)
 {
-	setTimePoint(timePoint);
+	functionRunner_(owner_);
 
-	getScheduler().getSoftwareTimerSupervisor().add(*this);
+	// was timer restarted in timer's function or is this a one-shot timer?
+	if (isRunning() == true || period_ == decltype(period_){})
+		return;
+
+	startInternal(supervisor, getTimePoint() + period_);	// this is a periodic timer, so restart it
+}
+
+void SoftwareTimerControlBlock::start(SoftwareTimerSupervisor& supervisor, const TickClock::time_point timePoint,
+		const TickClock::duration period)
+{
+	architecture::InterruptMaskingLock interruptMaskingLock;
+
+	stopInternal();
+	period_ = period;
+	startInternal(supervisor, timePoint);
 }
 
 void SoftwareTimerControlBlock::stop()
 {
 	architecture::InterruptMaskingLock interruptMaskingLock;
 
-	if (isRunning() == true)
-		node.unlink();
+	stopInternal();
+}
+
+/*---------------------------------------------------------------------------------------------------------------------+
+| private functions
++---------------------------------------------------------------------------------------------------------------------*/
+
+void SoftwareTimerControlBlock::startInternal(SoftwareTimerSupervisor& supervisor,
+		const TickClock::time_point timePoint)
+{
+	setTimePoint(timePoint);
+	supervisor.add(*this);
+}
+
+void SoftwareTimerControlBlock::stopInternal()
+{
+	if (isRunning() == false)	// timer is already stopped?
+		return;
+
+	node.unlink();
+	period_ = {};
 }
 
 }	// namespace internal

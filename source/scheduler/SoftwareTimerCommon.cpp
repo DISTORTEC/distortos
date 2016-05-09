@@ -2,7 +2,7 @@
  * \file
  * \brief SoftwareTimerCommon class implementation
  *
- * \author Copyright (C) 2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2015-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -10,6 +10,9 @@
  */
 
 #include "distortos/SoftwareTimerCommon.hpp"
+
+#include "distortos/internal/scheduler/getScheduler.hpp"
+#include "distortos/internal/scheduler/Scheduler.hpp"
 
 namespace distortos
 {
@@ -28,9 +31,9 @@ bool SoftwareTimerCommon::isRunning() const
 	return softwareTimerControlBlock_.isRunning();
 }
 
-int SoftwareTimerCommon::start(const TickClock::time_point timePoint)
+int SoftwareTimerCommon::start(const TickClock::time_point timePoint, const TickClock::duration period)
 {
-	softwareTimerControlBlock_.start(timePoint);
+	softwareTimerControlBlock_.start(internal::getScheduler().getSoftwareTimerSupervisor(), timePoint, period);
 	return 0;
 }
 
