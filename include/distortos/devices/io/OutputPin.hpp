@@ -41,6 +41,6 @@ public:
 
 }	// namespace devices
 
-}	// namespace devices
+}	// namespace distortos
 
 #endif	// INCLUDE_DISTORTOS_DEVICES_IO_OUTPUTPIN_HPP_
