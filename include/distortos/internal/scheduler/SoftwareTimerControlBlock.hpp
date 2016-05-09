@@ -72,9 +72,11 @@ public:
 	 * \brief Runs software timer's function.
 	 *
 	 * \note this should only be called by SoftwareTimerSupervisor::tickInterruptHandler()
+	 *
+	 * \param [in] supervisor is a reference to SoftwareTimerSupervisor that manages this object
 	 */
 
-	void run();
+	void run(SoftwareTimerSupervisor& supervisor);
 
 	/**
 	 * \brief Starts the timer.

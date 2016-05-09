@@ -26,7 +26,7 @@ namespace internal
 | public functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-void SoftwareTimerControlBlock::run()
+void SoftwareTimerControlBlock::run(SoftwareTimerSupervisor&)
 {
 	functionRunner_(owner_);
 }

@@ -38,7 +38,7 @@ void SoftwareTimerSupervisor::tickInterruptHandler(const TickClock::time_point t
 	{
 		auto& softwareTimer = *iterator;
 		SoftwareTimerList::erase(iterator);
-		softwareTimer.run();
+		softwareTimer.run(*this);
 	}
 }
 
