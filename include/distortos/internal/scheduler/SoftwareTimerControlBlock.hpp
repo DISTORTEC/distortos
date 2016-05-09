@@ -83,9 +83,10 @@ public:
 	 *
 	 * \param [in] supervisor is a reference to SoftwareTimerSupervisor to which this object will be added
 	 * \param [in] timePoint is the time point at which the function will be executed
+	 * \param [in] period is the period used to restart repetitive software timer, 0 for one-shot software timers
 	 */
 
-	void start(SoftwareTimerSupervisor& supervisor, TickClock::time_point timePoint);
+	void start(SoftwareTimerSupervisor& supervisor, TickClock::time_point timePoint, TickClock::duration period);
 
 	/**
 	 * \brief Stops the timer.
@@ -101,7 +102,8 @@ public:
 private:
 
 	/**
-	 * \brief Starts the timer - internal version, with no interrupt masking and no stopping.
+	 * \brief Starts the timer - internal version, with no interrupt masking, no stopping and no configuration of
+	 * period.
 	 *
 	 * \param [in] supervisor is a reference to SoftwareTimerSupervisor to which this object will be added
 	 * \param [in] timePoint is the time point at which the function will be executed

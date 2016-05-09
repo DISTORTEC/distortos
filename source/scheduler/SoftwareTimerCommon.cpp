@@ -2,7 +2,7 @@
  * \file
  * \brief SoftwareTimerCommon class implementation
  *
- * \author Copyright (C) 2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2015-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -33,7 +33,7 @@ bool SoftwareTimerCommon::isRunning() const
 
 int SoftwareTimerCommon::start(const TickClock::time_point timePoint)
 {
-	softwareTimerControlBlock_.start(internal::getScheduler().getSoftwareTimerSupervisor(), timePoint);
+	softwareTimerControlBlock_.start(internal::getScheduler().getSoftwareTimerSupervisor(), timePoint, {});
 	return 0;
 }
 

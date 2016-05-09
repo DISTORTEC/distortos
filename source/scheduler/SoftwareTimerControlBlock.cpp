@@ -37,11 +37,13 @@ void SoftwareTimerControlBlock::run(SoftwareTimerSupervisor& supervisor)
 	startInternal(supervisor, getTimePoint() + period_);	// this is a periodic timer, so restart it
 }
 
-void SoftwareTimerControlBlock::start(SoftwareTimerSupervisor& supervisor, const TickClock::time_point timePoint)
+void SoftwareTimerControlBlock::start(SoftwareTimerSupervisor& supervisor, const TickClock::time_point timePoint,
+		const TickClock::duration period)
 {
 	architecture::InterruptMaskingLock interruptMaskingLock;
 
 	stopInternal();
+	period_ = period;
 	startInternal(supervisor, timePoint);
 }
 
