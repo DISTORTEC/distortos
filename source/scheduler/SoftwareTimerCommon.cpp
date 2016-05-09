@@ -31,9 +31,9 @@ bool SoftwareTimerCommon::isRunning() const
 	return softwareTimerControlBlock_.isRunning();
 }
 
-int SoftwareTimerCommon::start(const TickClock::time_point timePoint)
+int SoftwareTimerCommon::start(const TickClock::time_point timePoint, const TickClock::duration period)
 {
-	softwareTimerControlBlock_.start(internal::getScheduler().getSoftwareTimerSupervisor(), timePoint, {});
+	softwareTimerControlBlock_.start(internal::getScheduler().getSoftwareTimerSupervisor(), timePoint, period);
 	return 0;
 }
 

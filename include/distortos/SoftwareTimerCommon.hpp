@@ -2,7 +2,7 @@
  * \file
  * \brief SoftwareTimerCommon class header
  *
- * \author Copyright (C) 2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2015-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -55,11 +55,13 @@ public:
 	 * \brief Starts the timer.
 	 *
 	 * \param [in] timePoint is the time point at which the function will be executed
+	 * \param [in] period is the period used to restart repetitive software timer, 0 for one-shot software timers,
+	 * default - 0
 	 *
 	 * \return 0 on success, error code otherwise
 	 */
 
-	int start(TickClock::time_point timePoint) override;
+	int start(TickClock::time_point timePoint, TickClock::duration period = {}) override;
 
 	using SoftwareTimer::start;
 
