@@ -185,7 +185,7 @@ std::pair<int, SignalInformation> tryWaitFor(const SignalSet& signalSet, TickClo
  * Template variant of tryWaitFor(const SignalSet&, TickClock::duration).
  *
  * \tparam Rep is type of tick counter
- * \tparam Period is std::ratio type representing the tick period of the clock, in seconds
+ * \tparam Period is std::ratio type representing the tick period of the clock, seconds
  *
  * \param [in] signalSet is a reference to set of signals that will be waited for
  * \param [in] duration is the duration after which the wait for signals will be terminated

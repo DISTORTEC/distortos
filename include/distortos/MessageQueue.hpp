@@ -232,7 +232,7 @@ public:
 	 * \note This function requires GCC 4.9.
 	 *
 	 * \tparam Rep is type of tick counter
-	 * \tparam Period is std::ratio type representing the tick period of the clock, in seconds
+	 * \tparam Period is std::ratio type representing the tick period of the clock, seconds
 	 * \tparam Args are types of arguments for constructor of T
 	 *
 	 * \param [in] duration is the duration after which the wait will be terminated without emplacing the element
@@ -352,7 +352,7 @@ public:
 	 * Template variant of tryPopFor(TickClock::duration, uint8_t&, T&).
 	 *
 	 * \tparam Rep is type of tick counter
-	 * \tparam Period is std::ratio type representing the tick period of the clock, in seconds
+	 * \tparam Period is std::ratio type representing the tick period of the clock, seconds
 	 *
 	 * \param [in] duration is the duration after which the call will be terminated without popping the element
 	 * \param [out] priority is a reference to variable that will be used to return priority of popped value
@@ -479,7 +479,7 @@ public:
 	 * Template variant of tryPushFor(TickClock::duration, uint8_t, const T&).
 	 *
 	 * \tparam Rep is type of tick counter
-	 * \tparam Period is std::ratio type representing the tick period of the clock, in seconds
+	 * \tparam Period is std::ratio type representing the tick period of the clock, seconds
 	 *
 	 * \param [in] duration is the duration after which the wait will be terminated without pushing the element
 	 * \param [in] priority is the priority of new element
@@ -523,7 +523,7 @@ public:
 	 * Template variant of tryPushFor(TickClock::duration, uint8_t, T&&).
 	 *
 	 * \tparam Rep is type of tick counter
-	 * \tparam Period is std::ratio type representing the tick period of the clock, in seconds
+	 * \tparam Period is std::ratio type representing the tick period of the clock, seconds
 	 *
 	 * \param [in] duration is the duration after which the call will be terminated without pushing the element
 	 * \param [in] priority is the priority of new element

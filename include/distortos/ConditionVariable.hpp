@@ -147,7 +147,7 @@ public:
 	 * Template variant of waitFor(Mutex& mutex, TickClock::duration duration).
 	 *
 	 * \tparam Rep is type of tick counter
-	 * \tparam Period is std::ratio type representing the tick period of the clock, in seconds
+	 * \tparam Period is std::ratio type representing the tick period of the clock, seconds
 	 *
 	 * \param [in] mutex is a reference to mutex which must be owned by calling thread
 	 * \param [in] duration is the duration after which the wait for notification will be terminated
@@ -175,7 +175,7 @@ public:
 	 * or when given duration of time expires.
 	 *
 	 * \tparam Rep is type of tick counter
-	 * \tparam Period is std::ratio type representing the tick period of the clock, in seconds
+	 * \tparam Period is std::ratio type representing the tick period of the clock, seconds
 	 * \tparam Predicate is a type of functor to check the predicate
 	 *
 	 * \param [in] mutex is a reference to mutex which must be owned by calling thread

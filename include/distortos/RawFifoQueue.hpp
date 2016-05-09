@@ -165,7 +165,7 @@ public:
 	 * Template variant of tryPopFor(TickClock::duration, void*, size_t).
 	 *
 	 * \tparam Rep is type of tick counter
-	 * \tparam Period is std::ratio type representing the tick period of the clock, in seconds
+	 * \tparam Period is std::ratio type representing the tick period of the clock, seconds
 	 *
 	 * \param [in] duration is the duration after which the call will be terminated without popping the element
 	 * \param [out] buffer is a pointer to buffer for popped element
@@ -187,7 +187,7 @@ public:
 	 * \brief Tries to pop the oldest (first) element from the queue for a given duration of time.
 	 *
 	 * \tparam Rep is type of tick counter
-	 * \tparam Period is std::ratio type representing the tick period of the clock, in seconds
+	 * \tparam Period is std::ratio type representing the tick period of the clock, seconds
 	 * \tparam T is the type of data popped from the queue
 	 *
 	 * \param [in] duration is the duration after which the call will be terminated without popping the element
@@ -318,7 +318,7 @@ public:
 	 * Template variant of tryPushFor(TickClock::duration, const void*, size_t).
 	 *
 	 * \tparam Rep is type of tick counter
-	 * \tparam Period is std::ratio type representing the tick period of the clock, in seconds
+	 * \tparam Period is std::ratio type representing the tick period of the clock, seconds
 	 *
 	 * \param [in] duration is the duration after which the wait will be terminated without pushing the element
 	 * \param [in] data is a pointer to data that will be pushed to RawFifoQueue
@@ -340,7 +340,7 @@ public:
 	 * \brief Tries to push the element to the queue for a given duration of time.
 	 *
 	 * \tparam Rep is type of tick counter
-	 * \tparam Period is std::ratio type representing the tick period of the clock, in seconds
+	 * \tparam Period is std::ratio type representing the tick period of the clock, seconds
 	 * \tparam T is the type of data pushed to the queue
 	 *
 	 * \param [in] duration is the duration after which the wait will be terminated without pushing the element

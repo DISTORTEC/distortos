@@ -57,7 +57,7 @@ public:
 	 * \note The duration must not be shorter, so one additional tick is always added to the duration.
 	 *
 	 * \tparam Rep is type of tick counter
-	 * \tparam Period is std::ratio type representing the tick period of the clock, in seconds
+	 * \tparam Period is std::ratio type representing the tick period of the clock, seconds
 	 *
 	 * \param [in] duration is the duration after which the function will be executed
 	 *

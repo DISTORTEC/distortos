@@ -32,7 +32,7 @@ public:
 	/// type of tick counter
 	using rep = uint64_t;
 
-	/// std::ratio type representing the tick period of the clock, in seconds
+	/// std::ratio type representing the tick period of the clock, seconds
 	using period = std::ratio<1, CONFIG_TICK_FREQUENCY>;
 
 	/// basic duration type of clock

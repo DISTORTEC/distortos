@@ -209,7 +209,7 @@ public:
 	 * Template variant of tryPopFor(TickClock::duration, uint8_t&, void*, size_t).
 	 *
 	 * \tparam Rep is type of tick counter
-	 * \tparam Period is std::ratio type representing the tick period of the clock, in seconds
+	 * \tparam Period is std::ratio type representing the tick period of the clock, seconds
 	 *
 	 * \param [in] duration is the duration after which the call will be terminated without popping the element
 	 * \param [out] priority is a reference to variable that will be used to return priority of popped value
@@ -236,7 +236,7 @@ public:
 	 * Similar to mq_timedreceive() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/mq_receive.html#
 	 *
 	 * \tparam Rep is type of tick counter
-	 * \tparam Period is std::ratio type representing the tick period of the clock, in seconds
+	 * \tparam Period is std::ratio type representing the tick period of the clock, seconds
 	 * \tparam T is the type of data popped from the queue
 	 *
 	 * \param [in] duration is the duration after which the call will be terminated without popping the element
@@ -388,7 +388,7 @@ public:
 	 * Template variant of tryPushFor(TickClock::duration, uint8_t, const void*, size_t).
 	 *
 	 * \tparam Rep is type of tick counter
-	 * \tparam Period is std::ratio type representing the tick period of the clock, in seconds
+	 * \tparam Period is std::ratio type representing the tick period of the clock, seconds
 	 *
 	 * \param [in] duration is the duration after which the wait will be terminated without pushing the element
 	 * \param [in] priority is the priority of new element
@@ -414,7 +414,7 @@ public:
 	 * Similar to mq_timedsend() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/mq_send.html#
 	 *
 	 * \tparam Rep is type of tick counter
-	 * \tparam Period is std::ratio type representing the tick period of the clock, in seconds
+	 * \tparam Period is std::ratio type representing the tick period of the clock, seconds
 	 * \tparam T is the type of data pushed to the queue
 	 *
 	 * \param [in] duration is the duration after which the wait will be terminated without pushing the element

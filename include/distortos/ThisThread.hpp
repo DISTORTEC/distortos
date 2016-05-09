@@ -97,7 +97,7 @@ int sleepFor(TickClock::duration duration);
  * \note To fulfill the "at least" requirement, one additional tick is always added to the sleep duration.
  *
  * \tparam Rep is type of tick counter
- * \tparam Period is std::ratio type representing the tick period of the clock, in seconds
+ * \tparam Period is std::ratio type representing the tick period of the clock, seconds
  *
  * \param [in] duration is the duration after which the thread will be woken
  *

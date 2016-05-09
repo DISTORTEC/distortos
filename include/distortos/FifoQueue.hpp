@@ -201,7 +201,7 @@ public:
 	 * \note This function requires GCC 4.9.
 	 *
 	 * \tparam Rep is type of tick counter
-	 * \tparam Period is std::ratio type representing the tick period of the clock, in seconds
+	 * \tparam Period is std::ratio type representing the tick period of the clock, seconds
 	 * \tparam Args are types of arguments for constructor of T
 	 *
 	 * \param [in] duration is the duration after which the wait will be terminated without emplacing the element
@@ -308,7 +308,7 @@ public:
 	 * Template variant of tryPopFor(TickClock::duration, T&).
 	 *
 	 * \tparam Rep is type of tick counter
-	 * \tparam Period is std::ratio type representing the tick period of the clock, in seconds
+	 * \tparam Period is std::ratio type representing the tick period of the clock, seconds
 	 *
 	 * \param [in] duration is the duration after which the call will be terminated without popping the element
 	 * \param [out] value is a reference to object that will be used to return popped value, its contents are swapped
@@ -421,7 +421,7 @@ public:
 	 * Template variant of tryPushFor(TickClock::duration, const T&).
 	 *
 	 * \tparam Rep is type of tick counter
-	 * \tparam Period is std::ratio type representing the tick period of the clock, in seconds
+	 * \tparam Period is std::ratio type representing the tick period of the clock, seconds
 	 *
 	 * \param [in] duration is the duration after which the wait will be terminated without pushing the element
 	 * \param [in] value is a reference to object that will be pushed, value in queue's storage is copy-constructed
@@ -461,7 +461,7 @@ public:
 	 * Template variant of tryPushFor(TickClock::duration, T&&).
 	 *
 	 * \tparam Rep is type of tick counter
-	 * \tparam Period is std::ratio type representing the tick period of the clock, in seconds
+	 * \tparam Period is std::ratio type representing the tick period of the clock, seconds
 	 *
 	 * \param [in] duration is the duration after which the call will be terminated without pushing the element
 	 * \param [in] value is a rvalue reference to object that will be pushed, value in queue's storage is
