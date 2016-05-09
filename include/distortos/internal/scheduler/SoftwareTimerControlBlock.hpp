@@ -74,7 +74,7 @@ public:
 	 * \note this should only be called by SoftwareTimerSupervisor::tickInterruptHandler()
 	 */
 
-	void run() const;
+	void run();
 
 	/**
 	 * \brief Starts the timer.

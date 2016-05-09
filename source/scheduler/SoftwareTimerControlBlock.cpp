@@ -26,7 +26,7 @@ namespace internal
 | public functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-void SoftwareTimerControlBlock::run() const
+void SoftwareTimerControlBlock::run()
 {
 	functionRunner_(owner_);
 }
