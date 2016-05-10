@@ -45,8 +45,8 @@ public:
 	 * false - or not (false), default - false, not inverted
 	 */
 
-	explicit ChipOutputPin(Pin pin, bool openDrain = false, PinOutputSpeed outputSpeed = PinOutputSpeed::_2Mhz,
-			bool initialState = false, bool inverted = false);
+	explicit ChipOutputPin(Pin pin, bool openDrain = {}, PinOutputSpeed outputSpeed = {}, bool initialState = {},
+			bool inverted = {});
 
 	/**
 	 * \return current state of pin

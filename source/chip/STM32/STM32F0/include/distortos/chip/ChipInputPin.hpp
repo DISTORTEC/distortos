@@ -41,7 +41,7 @@ public:
 	 * false when GPIO state is high - or not (false), default - false, not inverted
 	 */
 
-	explicit ChipInputPin(Pin pin, PinPull pull = PinPull::none, bool inverted = false);
+	explicit ChipInputPin(Pin pin, PinPull pull = {}, bool inverted = {});
 
 	/**
 	 * \return current state of pin
