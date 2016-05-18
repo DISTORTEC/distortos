@@ -244,7 +244,9 @@ public:
 	 * \param [in] size is the size of \a buffer, bytes, must be even if selected character length is greater than 8
 	 * bits
 	 *
-	 * \return 0 on success, error code otherwise:
+	 * \return pair with return code (0 on success, error code otherwise) and number of read bytes (valid even when
+	 * error code is returned);
+	 * error codes:
 	 * - EBADF - the device is not opened;
 	 * - EINTR - the wait was interrupted by an unmasked, caught signal;
 	 * - EINVAL - \a buffer and/or \a size are invalid;
@@ -264,7 +266,9 @@ public:
 	 * \param [in] size is the size of \a buffer, bytes, must be even if selected character length is greater than 8
 	 * bits
 	 *
-	 * \return 0 on success, error code otherwise:
+	 * \return pair with return code (0 on success, error code otherwise) and number of written bytes (valid even when
+	 * error code is returned);
+	 * error codes:
 	 * - EBADF - the device is not opened;
 	 * - EINTR - the wait was interrupted by an unmasked, caught signal;
 	 * - EINVAL - \a buffer and/or \a size are invalid;
