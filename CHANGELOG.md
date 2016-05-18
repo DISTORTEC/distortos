@@ -12,6 +12,14 @@ All notable changes to this project will be documented in this file. This projec
 - Support for periodic execution of software timers. All overloads of `SoftwareTimer::start()` were extended with
 optional second argument with period. If the period is 0 (which is the default value), software timer's function is
 executed only once. Otherwise it will be executed periodically until the software timer is stopped.
+- `internal::UartBase` interface class, which can be used as a private base for devices using UART interface.
+- `internal::UartLowLevel` interface class, which is a low-level interface to hardware-dependent UART driver.
+- `chip::UartLowLevel` class - interrupt-driven implementation of `internal::UartLowLevel` interface for *STM32F4*.
+- "Peripherals configuration" *Kconfig* menu for *STM32F4*, where low-level drivers for U[S]ART can be selected.
+- `uarts.hpp` header for *STM32F4* with declarations of all enabled low-level U[S]ART drivers. 
+- `devices::SerialPort` class - universal serial port device with an interface similar to standard files (`open()`,
+`close()`, `read()`, `write()`).
+- `estd::ScopeGuard` template class, which can be used to execute bounded function on scope exit using RAII pattern.
 
 ### Fixed
 
