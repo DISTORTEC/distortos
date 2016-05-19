@@ -134,7 +134,7 @@ public:
 
 		bool isEmpty() const
 		{
-			return writePosition_ == readPosition_;
+			return readPosition_ == writePosition_;
 		}
 
 		/**
