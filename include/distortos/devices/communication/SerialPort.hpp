@@ -182,6 +182,7 @@ public:
 					readSemaphore_{},
 					transmitSemaphore_{},
 					writeSemaphore_{},
+					readLimit_{},
 					writeLimit_{},
 					uart_{uart},
 					baudRate_{},
@@ -409,6 +410,9 @@ private:
 
 	/// pointer to semaphore used for "write complete" event notifications
 	Semaphore* volatile writeSemaphore_;
+
+	/// size limit of read operations, 0 if no limiting is needed, bytes
+	volatile size_t readLimit_;
 
 	/// size limit of write operations, 0 if no limiting is needed, bytes
 	volatile size_t writeLimit_;
