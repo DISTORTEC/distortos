@@ -321,15 +321,13 @@ private:
 	 *
 	 * Does nothing if read is already in progress or if read circular buffer is full. Otherwise sets "read in progress"
 	 * flag, starts read operation with size that is the smallest of: size of first available write block, half the size
-	 * of read circular buffer and value of \a limit.
-	 *
-	 * \param [in] limit is the size limit of started read operation, bytes
+	 * of read circular buffer and current size limit of read operations (only if it's not equal to 0).
 	 *
 	 * \return 0 on success, error code otherwise:
 	 * - error codes returned by internal::UartLowLevel::startRead();
 	 */
 
-	int startReadWrapper(size_t limit);
+	int startReadWrapper();
 
 	/**
 	 * \brief Wrapper for internal::UartLowLevel::startWrite()

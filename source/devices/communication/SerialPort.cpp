@@ -204,7 +204,7 @@ int SerialPort::open(const uint32_t baudRate, const uint8_t characterLength, con
 				return ret.first;
 		}
 		{
-			const auto ret = startReadWrapper(SIZE_MAX);
+			const auto ret = startReadWrapper();
 			if (ret != 0)
 				return ret;
 		}
@@ -266,8 +266,8 @@ std::pair<int, size_t> SerialPort::read(void* const buffer, const size_t size)
 			architecture::InterruptMaskingLock interruptMaskingLock;
 			const auto bytesReceived = stopReadWrapper();
 			// limit of new read operation is selected to have a notification when requested minimum will be received
-			const auto ret = startReadWrapper(minSize > bytesRead + bytesReceived ?
-					minSize - bytesRead - bytesReceived : SIZE_MAX);
+			readLimit_ = minSize > bytesRead + bytesReceived ? minSize - bytesRead - bytesReceived : 0;
+			const auto ret = startReadWrapper();
 			if (ret != 0)
 				return {ret, bytesRead};
 		}
@@ -381,7 +381,7 @@ void SerialPort::readCompleteEvent(const size_t bytesRead)
 		readSemaphore_ = {};
 	}
 
-	startReadWrapper(SIZE_MAX);
+	startReadWrapper();
 }
 
 void SerialPort::receiveErrorEvent(ErrorSet)
@@ -389,7 +389,7 @@ void SerialPort::receiveErrorEvent(ErrorSet)
 
 }
 
-int SerialPort::startReadWrapper(const size_t limit)
+int SerialPort::startReadWrapper()
 {
 	if (readInProgress_ == true || readBuffer_.isFull() == true)
 		return 0;
@@ -398,7 +398,9 @@ int SerialPort::startReadWrapper(const size_t limit)
 	const auto writeBlock = readBuffer_.getWriteBlock();
 	// rounding up is valid, capacity is never less than 2 and is always even
 	const auto readBufferHalf = ((readBuffer_.getCapacity() / 2 + 1) / 2) * 2;
-	return uart_.startRead(writeBlock.first, std::min({writeBlock.second, readBufferHalf, limit}));
+	const auto readLimit = readLimit_;
+	return uart_.startRead(writeBlock.first,
+			std::min({writeBlock.second, readBufferHalf, readLimit != 0 ? readLimit : SIZE_MAX}));
 }
 
 int SerialPort::startWriteWrapper()
