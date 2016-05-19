@@ -75,6 +75,15 @@ public:
 		}
 
 		/**
+		 * \return total capacity of circular buffer, bytes
+		 */
+
+		size_t getCapacity() const
+		{
+			return size_ >= 2 ? size_ - 2 : 0;
+		}
+
+		/**
 		 * \return First contiguous block (as a pair with pointer and size) available for reading
 		 */
 
