@@ -293,8 +293,8 @@ private:
 	 *
 	 * Called by low-level UART driver when whole read buffer is filled.
 	 *
-	 * Updates position of read circular buffer and notifies any thread waiting for this event. If the read circular
-	 * buffer is not full, next read operation is started.
+	 * Updates position of read circular buffer, clears "read in progress" flag and notifies any thread waiting for this
+	 * event. If the read circular buffer is not full, next read operation is started.
 	 *
 	 * \param [in] bytesRead is the number of bytes read by low-level UART driver (and written to read buffer)
 	 */
