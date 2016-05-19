@@ -348,8 +348,9 @@ private:
 	 * Called by low-level UART driver when whole write buffer was transfered - the transmission may still be in
 	 * progress.
 	 *
-	 * Updates position of write ring buffer, clears "write in progress" flag and notifies any thread waiting for this
-	 * event. Next write operation is started if there's anything in the write ring buffer.
+	 * Updates position of write ring buffer, updates size limit of write operations, clears "write in progress" flag
+	 * and notifies any thread waiting for this event. Next write operation is started if there's anything in the write
+	 * ring buffer.
 	 *
 	 * \param [in] bytesWritten is the number of bytes written by low-level UART driver (and read from write buffer)
 	 */
