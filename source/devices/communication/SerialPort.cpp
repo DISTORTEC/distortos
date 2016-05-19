@@ -379,7 +379,9 @@ int SerialPort::startWriteWrapper()
 	writeInProgress_ = true;
 	const auto readBlock = writeBuffer_.getReadBlock();
 	const auto writeBufferHalf = ((writeBuffer_.getSize() / 2) / 2) * 2;
-	return uart_.startWrite(readBlock.first, std::min(readBlock.second, writeBufferHalf));
+	const auto writeLimit = writeLimit_;
+	return uart_.startWrite(readBlock.first,
+			std::min({readBlock.second, writeBufferHalf, writeLimit != 0 ? writeLimit : SIZE_MAX}));
 }
 
 size_t SerialPort::stopWriteWrapper()
