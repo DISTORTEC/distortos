@@ -373,8 +373,8 @@ int SerialPort::startWriteWrapper()
 {
 	transmitInProgress_ = true;
 	writeInProgress_ = true;
-	const auto outBlock = writeBuffer_.getReadBlock();
-	return uart_.startWrite(outBlock.first, outBlock.second);
+	const auto readBlock = writeBuffer_.getReadBlock();
+	return uart_.startWrite(readBlock.first, readBlock.second);
 }
 
 void SerialPort::transmitCompleteEvent()
