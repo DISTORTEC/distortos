@@ -136,7 +136,7 @@ public:
 
 		bool isFull() const
 		{
-			return writePosition_ == (readPosition_ + 2) % size_;
+			return readPosition_ == (writePosition_ + 2) % size_;
 		}
 
 	private:
