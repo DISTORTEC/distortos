@@ -393,6 +393,7 @@ void SerialPort::receiveErrorEvent(ErrorSet)
 
 int SerialPort::startReadWrapper(const size_t limit)
 {
+	readInProgress_ = true;
 	const auto writeBlock = readBuffer_.getWriteBlock();
 	// rounding up is valid, capacity is never less than 2 and is always even
 	const auto readBufferHalf = ((readBuffer_.getCapacity() / 2 + 1) / 2) * 2;

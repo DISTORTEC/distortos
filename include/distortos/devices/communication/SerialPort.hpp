@@ -317,8 +317,8 @@ private:
 	/**
 	 * \brief Wrapper for internal::UartLowLevel::startRead()
 	 *
-	 * Starts read operation with size that is the smallest of: size of first available write block, half the size of
-	 * read circular buffer and value of \a limit.
+	 * Sets "read in progress" flag, starts read operation with size that is the smallest of: size of first available
+	 * write block, half the size of read circular buffer and value of \a limit.
 	 *
 	 * \param [in] limit is the size limit of started read operation, bytes
 	 *
