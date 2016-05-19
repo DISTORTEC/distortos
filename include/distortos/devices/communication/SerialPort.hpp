@@ -189,6 +189,7 @@ public:
 					parity_{},
 					_2StopBits_{},
 					openCount_{},
+					readInProgress_{},
 					transmitInProgress_{},
 					writeInProgress_{}
 	{
@@ -417,6 +418,9 @@ private:
 
 	/// number of times this device was opened but not yet closed
 	uint8_t openCount_;
+
+	/// "read in progress" flag
+	volatile bool readInProgress_;
 
 	/// "transmit in progress" flag
 	volatile bool transmitInProgress_;
