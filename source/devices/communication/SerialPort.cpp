@@ -263,7 +263,7 @@ std::pair<int, size_t> SerialPort::read(void* const buffer, const size_t size)
 				});
 
 		{
-			// stop and restart the read operation to get the characters that were already received;
+			// stop and restart the read operation to get the characters that were already received
 			architecture::InterruptMaskingLock interruptMaskingLock;
 			const auto bytesReceived = uart_.stopRead();
 			readBuffer_.increaseWritePosition(bytesReceived);

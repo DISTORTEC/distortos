@@ -308,7 +308,7 @@ private:
 	/**
 	 * \brief Wrapper for internal::UartLowLevel::startRead()
 	 *
-	 * Starts read operation with size that is the smallest of: size of first available read block, half the size of
+	 * Starts read operation with size that is the smallest of: size of first available write block, half the size of
 	 * read ring buffer and value of \a limit.
 	 *
 	 * \param [in] limit is the size limit of started read operation, bytes
@@ -322,7 +322,7 @@ private:
 	 * \brief Wrapper for internal::UartLowLevel::startWrite()
 	 *
 	 * Sets "transmit in progress" and "write in progress" flags. Starts write operation with size of first available
-	 * write block.
+	 * read block.
 	 *
 	 * \return values returned by internal::UartLowLevel::startWrite()
 	 */
