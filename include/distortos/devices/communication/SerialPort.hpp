@@ -90,6 +90,15 @@ public:
 		std::pair<const uint8_t*, size_t> getReadBlock() const;
 
 		/**
+		 * \return total amount of valid data in circular buffer, bytes
+		 */
+
+		size_t getSize() const
+		{
+			return (size_ - readPosition_ + writePosition_) % size_;
+		}
+
+		/**
 		 * \return First contiguous block (as a pair with pointer and size) available for writing
 		 */
 
