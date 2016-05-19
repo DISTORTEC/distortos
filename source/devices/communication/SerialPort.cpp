@@ -164,7 +164,7 @@ int SerialPort::close()
 			}
 		}
 
-		uart_.stopRead();
+		stopReadWrapper();
 
 		const auto ret = uart_.stop();
 		if (ret != 0)
