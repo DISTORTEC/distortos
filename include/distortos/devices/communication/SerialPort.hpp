@@ -317,12 +317,14 @@ private:
 	/**
 	 * \brief Wrapper for internal::UartLowLevel::startRead()
 	 *
-	 * Sets "read in progress" flag, starts read operation with size that is the smallest of: size of first available
-	 * write block, half the size of read circular buffer and value of \a limit.
+	 * Does nothing if read is already in progress or if read circular buffer is full. Otherwise sets "read in progress"
+	 * flag, starts read operation with size that is the smallest of: size of first available write block, half the size
+	 * of read circular buffer and value of \a limit.
 	 *
 	 * \param [in] limit is the size limit of started read operation, bytes
 	 *
-	 * \return values returned by internal::UartLowLevel::startRead()
+	 * \return 0 on success, error code otherwise:
+	 * - error codes returned by internal::UartLowLevel::startRead();
 	 */
 
 	int startReadWrapper(size_t limit);
