@@ -418,6 +418,8 @@ size_t SerialPort::stopReadWrapper()
 {
 	const auto bytesRead = uart_.stopRead();
 	readBuffer_.increaseWritePosition(bytesRead);
+	const auto readLimit = readLimit_;
+	readLimit_ = readLimit - (bytesRead < readLimit ? bytesRead : readLimit);
 	readInProgress_ = false;
 	return bytesRead;
 }

@@ -347,7 +347,8 @@ private:
 	/**
 	 * \brief Wrapper for internal::UartLowLevel::stopRead()
 	 *
-	 * Stops read operation, updates position of read circular buffer and clears "read in progress" flag.
+	 * Stops read operation, updates position of read circular buffer, updates size limit of read operations and clears
+	 * "read in progress" flag.
 	 *
 	 * \return values returned by internal::UartLowLevel::stopRead();
 	 */
