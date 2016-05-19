@@ -321,8 +321,8 @@ private:
 	/**
 	 * \brief Wrapper for internal::UartLowLevel::startWrite()
 	 *
-	 * Sets "transmit in progress" and "write in progress" flags. Starts write operation with size of first available
-	 * read block.
+	 * Sets "transmit in progress" and "write in progress" flags. Starts write operation with size that is the smallest
+	 * of: size of first available read block and half the size of write ring buffer.
 	 *
 	 * \return values returned by internal::UartLowLevel::startWrite()
 	 */

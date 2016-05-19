@@ -375,7 +375,8 @@ int SerialPort::startWriteWrapper()
 	transmitInProgress_ = true;
 	writeInProgress_ = true;
 	const auto readBlock = writeBuffer_.getReadBlock();
-	return uart_.startWrite(readBlock.first, readBlock.second);
+	const auto writeBufferHalf = ((writeBuffer_.getSize() / 2) / 2) * 2;
+	return uart_.startWrite(readBlock.first, std::min(readBlock.second, writeBufferHalf));
 }
 
 void SerialPort::transmitCompleteEvent()
