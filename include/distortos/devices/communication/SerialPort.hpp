@@ -344,6 +344,16 @@ private:
 	int startWriteWrapper();
 
 	/**
+	 * \brief Wrapper for internal::UartLowLevel::stopRead()
+	 *
+	 * Stops read operation, updates position of read circular buffer and clears "read in progress" flag.
+	 *
+	 * \return values returned by internal::UartLowLevel::stopRead();
+	 */
+
+	size_t stopReadWrapper();
+
+	/**
 	 * \brief Wrapper for internal::UartLowLevel::stopWrite()
 	 *
 	 * Stops write operation, updates position of write circular buffer, updates size limit of write operations and
