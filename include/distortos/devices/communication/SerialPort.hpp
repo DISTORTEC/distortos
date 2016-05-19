@@ -321,9 +321,9 @@ private:
 	/**
 	 * \brief Wrapper for internal::UartLowLevel::startWrite()
 	 *
-	 * Does nothing if write ring buffer is empty. Otherwise sets "transmit in progress" and "write in progress" flags,
-	 * starts write operation with size that is the smallest of: size of first available read block and half the size of
-	 * write ring buffer.
+	 * Does nothing if write is already in progress or if write ring buffer is empty. Otherwise sets "transmit in
+	 * progress" and "write in progress" flags, starts write operation with size that is the smallest of: size of first
+	 * available read block and half the size of write ring buffer.
 	 *
 	 * \return 0 on success, error code otherwise:
 	 * - error codes returned by internal::UartLowLevel::startWrite();

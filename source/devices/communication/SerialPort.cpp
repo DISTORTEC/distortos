@@ -372,7 +372,7 @@ int SerialPort::startReadWrapper(const size_t limit)
 
 int SerialPort::startWriteWrapper()
 {
-	if (writeBuffer_.isEmpty() == true)
+	if (writeInProgress_ == true || writeBuffer_.isEmpty() == true)
 		return 0;
 
 	transmitInProgress_ = true;
