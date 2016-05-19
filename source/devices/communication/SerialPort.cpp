@@ -396,17 +396,12 @@ void SerialPort::transmitCompleteEvent()
 void SerialPort::writeCompleteEvent(const size_t bytesWritten)
 {
 	writeBuffer_.increaseReadPosition(bytesWritten);
+	writeInProgress_ = false;
 
 	if (writeSemaphore_ != nullptr)
 	{
 		writeSemaphore_->post();
 		writeSemaphore_ = {};
-	}
-
-	if (writeBuffer_.isEmpty() == true)
-	{
-		writeInProgress_ = false;
-		return;
 	}
 
 	startWriteWrapper();
