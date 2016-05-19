@@ -371,6 +371,8 @@ std::pair<int, size_t> SerialPort::write(const void* const buffer, const size_t 
 void SerialPort::readCompleteEvent(const size_t bytesRead)
 {
 	readBuffer_.increaseWritePosition(bytesRead);
+	const auto readLimit = readLimit_;
+	readLimit_ = readLimit - (bytesRead < readLimit ? bytesRead : readLimit);
 	readInProgress_ = false;
 
 	if (readSemaphore_ != nullptr)
