@@ -333,6 +333,17 @@ private:
 	int startWriteWrapper();
 
 	/**
+	 * \brief Wrapper for internal::UartLowLevel::stopWrite()
+	 *
+	 * Stops write operation, updates position of write ring buffer, updates size limit of write operations and clears
+	 * "write in progress" flag.
+	 *
+	 * \return values returned by internal::UartLowLevel::stopWrite();
+	 */
+
+	size_t stopWriteWrapper();
+
+	/**
 	 * \brief "Transmit complete" event
 	 *
 	 * Called by low-level UART driver when the transmission is physically finished.
