@@ -113,8 +113,7 @@ public:
 
 		void increaseReadPosition(const size_t value)
 		{
-			readPosition_ += value;
-			readPosition_ %= size_;
+			readPosition_ = (readPosition_ + value) % size_;
 		}
 
 		/**
@@ -126,8 +125,7 @@ public:
 
 		void increaseWritePosition(const size_t value)
 		{
-			writePosition_ += value;
-			writePosition_ %= size_;
+			writePosition_ = (writePosition_ + value) % size_;
 		}
 
 		/**
