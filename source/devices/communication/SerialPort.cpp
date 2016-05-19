@@ -102,8 +102,7 @@ std::pair<uint8_t*, size_t> SerialPort::CircularBuffer::getWriteBlock() const
 {
 	const auto readPosition = readPosition_;
 	const auto writePosition = writePosition_;
-	const auto freeBytes = (readPosition > writePosition ? readPosition - writePosition :
-			size_ - writePosition + readPosition) - 2;
+	const auto freeBytes = (size_ - writePosition + readPosition - 2) % size_;
 	const auto writeBlockSize = (readPosition > writePosition ? readPosition : size_) - writePosition;
 	return {buffer_ + writePosition, std::min(freeBytes, writeBlockSize)};
 }
