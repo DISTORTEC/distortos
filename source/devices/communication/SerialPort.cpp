@@ -305,7 +305,38 @@ std::pair<int, size_t> SerialPort::write(const void* const buffer, const size_t 
 		return {EINVAL, {}};
 
 	const auto bufferUint8 = static_cast<const uint8_t*>(buffer);
-	size_t bytesWritten {};
+
+	// initially try to write as much data as possible to circular buffer with no blocking
+	auto bytesWritten = writeToCircularBuffer(bufferUint8, size, writeBuffer_);
+	{
+		const auto ret = startWriteWrapper();
+		if (ret != 0 || bytesWritten == size)
+			return {ret, bytesWritten};
+	}
+
+	const auto writeLimitScopeGuard = estd::makeScopeGuard(
+			[this]()
+			{
+				writeLimit_ = 0;
+			});
+
+	// Not whole data could be written to circular buffer? The current write transfer (if any) must be stopped for a
+	// short moment to get the amount of free space in the circular buffer (interrupts are masked to prevent preemption,
+	// which could make this "short moment" very long). By subtracting this value from the amount of data left to write
+	// we get size limit of write operation. Notification after exactly that number of bytes will mean that the buffer
+	// is "empty enough" to receive everything that is left to write.
+	{
+		architecture::InterruptMaskingLock interruptMaskingLock;
+		stopWriteWrapper();
+		const auto bytesFree = writeBuffer_.getCapacity() - writeBuffer_.getSize();
+		writeLimit_ = size > (bytesWritten + bytesFree) ? size - (bytesWritten + bytesFree) : 0;
+		{
+			const auto ret = startWriteWrapper();
+			if (ret != 0)
+				return {ret, bytesWritten};
+		}
+	}
+
 	while (bytesWritten < size)
 	{
 		Semaphore semaphore {0};
@@ -317,16 +348,13 @@ std::pair<int, size_t> SerialPort::write(const void* const buffer, const size_t 
 				});
 
 		bytesWritten += writeToCircularBuffer(bufferUint8 + bytesWritten, size - bytesWritten, writeBuffer_);
-
-		// restart write operation if it is not currently in progress and the write buffer is not already empty
-		if (writeInProgress_ == false && writeBuffer_.isEmpty() == false)
 		{
 			const auto ret = startWriteWrapper();
 			if (ret != 0)
 				return {ret, bytesWritten};
 		}
-		// wait for free space only if write operation is in progress and there is still some data left to write
-		else if (bytesWritten != size)
+
+		if (bytesWritten < size)	// wait for free space only if whole buffer is not already written
 		{
 			const auto ret = semaphore.wait();
 			if (ret != 0)
