@@ -196,7 +196,7 @@ int SerialPort::open(const uint32_t baudRate, const uint8_t characterLength, con
 
 	if (openCount_ == 0)	// first open?
 	{
-		if (readBuffer_.getSize() < 4 || writeBuffer_.getSize() < 4)
+		if (readBuffer_.getCapacity() < 2 || writeBuffer_.getCapacity() < 2)
 			return ENOBUFS;
 
 		{
