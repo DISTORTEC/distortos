@@ -159,8 +159,8 @@ public:
 	 *
 	 * \param [in] uart is a reference to low-level implementation of internal::UartLowLevel interface
 	 * \param [in] readBuffer is a buffer for read operations
-	 * \param [in] readBufferSize is the size of \a readBuffer, bytes, should be divisible by 4, must be greater than or
-	 * equal to 4
+	 * \param [in] readBufferSize is the size of \a readBuffer, bytes, should be even, must be greater than or equal to
+	 * 4
 	 * \param [in] writeBuffer is a buffer to write operations
 	 * \param [in] writeBufferSize is the size of \a writeBuffer, bytes, should be even, must be greater than or equal
 	 * to 4
@@ -170,7 +170,7 @@ public:
 			void* const writeBuffer, const size_t writeBufferSize) :
 					readMutex_{Mutex::Type::normal, Mutex::Protocol::priorityInheritance},
 					writeMutex_{Mutex::Type::normal, Mutex::Protocol::priorityInheritance},
-					readBuffer_{readBuffer, (readBufferSize / 4) * 4},
+					readBuffer_{readBuffer, (readBufferSize / 2) * 2},
 					writeBuffer_{writeBuffer, (writeBufferSize / 2) * 2},
 					readSemaphore_{},
 					transmitSemaphore_{},
