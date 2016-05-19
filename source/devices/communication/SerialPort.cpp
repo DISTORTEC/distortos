@@ -36,24 +36,24 @@ namespace
 +---------------------------------------------------------------------------------------------------------------------*/
 
 /**
- * \brief Reads data from ring buffer.
+ * \brief Reads data from circular buffer.
  *
- * \param [in] ringBuffer is a reference to ring buffer from which the data will be read
+ * \param [in] circularBuffer is a reference to circular buffer from which the data will be read
  * \param [out] buffer is a buffer to which the data will be written
  * \param [in] size is the size of \a buffer, bytes
  *
- * \return number of bytes read from \a ringBuffer and written to \a buffer
+ * \return number of bytes read from \a circularBuffer and written to \a buffer
  */
 
-size_t readFromRingBuffer(SerialPort::RingBuffer& ringBuffer, uint8_t* const buffer, const size_t size)
+size_t readFromCircularBuffer(SerialPort::CircularBuffer& circularBuffer, uint8_t* const buffer, const size_t size)
 {
-	decltype(ringBuffer.getReadBlock()) readBlock;
+	decltype(circularBuffer.getReadBlock()) readBlock;
 	size_t bytesRead {};
-	while (readBlock = ringBuffer.getReadBlock(), readBlock.second != 0 && bytesRead != size)
+	while (readBlock = circularBuffer.getReadBlock(), readBlock.second != 0 && bytesRead != size)
 	{
 		const auto copySize = std::min(readBlock.second, size - bytesRead);
 		memcpy(buffer + bytesRead, readBlock.first, copySize);
-		ringBuffer.increaseReadPosition(copySize);
+		circularBuffer.increaseReadPosition(copySize);
 		bytesRead += copySize;
 	}
 
@@ -61,24 +61,24 @@ size_t readFromRingBuffer(SerialPort::RingBuffer& ringBuffer, uint8_t* const buf
 }
 
 /**
- * \brief Writes data to ring buffer.
+ * \brief Writes data to circular buffer.
  *
  * \param [in] buffer is a buffer from which the data will be read
  * \param [in] size is the size of \a buffer, bytes
- * \param [in] ringBuffer is a reference to ring buffer to which the data will be written
+ * \param [in] circularBuffer is a reference to circular buffer to which the data will be written
  *
- * \return number of bytes read from \a buffer and written to \a ringBuffer
+ * \return number of bytes read from \a buffer and written to \a circularBuffer
  */
 
-size_t writeToRingBuffer(const uint8_t* const buffer, const size_t size, SerialPort::RingBuffer& ringBuffer)
+size_t writeToCircularBuffer(const uint8_t* const buffer, const size_t size, SerialPort::CircularBuffer& circularBuffer)
 {
-	decltype(ringBuffer.getWriteBlock()) writeBlock;
+	decltype(circularBuffer.getWriteBlock()) writeBlock;
 	size_t bytesWritten {};
-	while (writeBlock = ringBuffer.getWriteBlock(), writeBlock.second != 0 && bytesWritten != size)
+	while (writeBlock = circularBuffer.getWriteBlock(), writeBlock.second != 0 && bytesWritten != size)
 	{
 		const auto copySize = std::min(writeBlock.second, size - bytesWritten);
 		memcpy(writeBlock.first, buffer + bytesWritten, copySize);
-		ringBuffer.increaseWritePosition(copySize);
+		circularBuffer.increaseWritePosition(copySize);
 		bytesWritten += copySize;
 	}
 
@@ -88,17 +88,17 @@ size_t writeToRingBuffer(const uint8_t* const buffer, const size_t size, SerialP
 }	// namespace
 
 /*---------------------------------------------------------------------------------------------------------------------+
-| SerialPort::RingBuffer public functions
+| SerialPort::CircularBuffer public functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-std::pair<const uint8_t*, size_t> SerialPort::RingBuffer::getReadBlock() const
+std::pair<const uint8_t*, size_t> SerialPort::CircularBuffer::getReadBlock() const
 {
 	const auto readPosition = readPosition_;
 	const auto writePosition = writePosition_;
 	return {buffer_ + readPosition, (writePosition >= readPosition ? writePosition : size_) - readPosition};
 }
 
-std::pair<uint8_t*, size_t> SerialPort::RingBuffer::getWriteBlock() const
+std::pair<uint8_t*, size_t> SerialPort::CircularBuffer::getWriteBlock() const
 {
 	const auto readPosition = readPosition_;
 	const auto writePosition = writePosition_;
@@ -250,7 +250,7 @@ std::pair<int, size_t> SerialPort::read(void* const buffer, const size_t size)
 	size_t bytesRead {};
 	while (bytesRead < minSize)
 	{
-		bytesRead += readFromRingBuffer(readBuffer_, bufferUint8 + bytesRead, size - bytesRead);
+		bytesRead += readFromCircularBuffer(readBuffer_, bufferUint8 + bytesRead, size - bytesRead);
 		if (bytesRead == size)	// buffer already full?
 			return {{}, bytesRead};
 
@@ -274,7 +274,7 @@ std::pair<int, size_t> SerialPort::read(void* const buffer, const size_t size)
 				return {ret, bytesRead};
 		}
 
-		bytesRead += readFromRingBuffer(readBuffer_, bufferUint8 + bytesRead, size - bytesRead);
+		bytesRead += readFromCircularBuffer(readBuffer_, bufferUint8 + bytesRead, size - bytesRead);
 
 		if (bytesRead < minSize)	// wait for data only if requested minimum is not already read
 		{
@@ -317,7 +317,7 @@ std::pair<int, size_t> SerialPort::write(const void* const buffer, const size_t 
 					writeSemaphore_ = {};
 				});
 
-		bytesWritten += writeToRingBuffer(bufferUint8 + bytesWritten, size - bytesWritten, writeBuffer_);
+		bytesWritten += writeToCircularBuffer(bufferUint8 + bytesWritten, size - bytesWritten, writeBuffer_);
 
 		// restart write operation if it is not currently in progress and the write buffer is not already empty
 		if (writeInProgress_ == false && writeBuffer_.isEmpty() == false)
