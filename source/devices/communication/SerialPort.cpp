@@ -380,9 +380,6 @@ void SerialPort::readCompleteEvent(const size_t bytesRead)
 		readSemaphore_ = {};
 	}
 
-	if (readBuffer_.isFull() == true)
-		return;
-
 	startReadWrapper(SIZE_MAX);
 }
 
