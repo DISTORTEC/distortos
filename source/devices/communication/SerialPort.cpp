@@ -366,7 +366,8 @@ void SerialPort::receiveErrorEvent(ErrorSet)
 int SerialPort::startReadWrapper(const size_t limit)
 {
 	const auto writeBlock = readBuffer_.getWriteBlock();
-	return uart_.startRead(writeBlock.first, std::min({writeBlock.second, readBuffer_.getSize() / 2, limit}));
+	const auto readBufferHalf = ((readBuffer_.getSize() / 2) / 2) * 2;
+	return uart_.startRead(writeBlock.first, std::min({writeBlock.second, readBufferHalf, limit}));
 }
 
 int SerialPort::startWriteWrapper()
