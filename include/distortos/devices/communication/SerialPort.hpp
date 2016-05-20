@@ -248,44 +248,56 @@ public:
 	 *
 	 * Similar to POSIX read() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/read.html#
 	 *
-	 * This function will block until at least one character can be read.
+	 * This function will block until at least \a minSize bytes can be read (but no more than \a size). When \a minSize
+	 * is equal to 1 (or 2 when character length is greater than 8 bits) - which is the default value - the behavior of
+	 * this function is similar to POSIX read() with O_NONBLOCK flag cleared. If \a minSize is 0, then the function will
+	 * not block at all and only read what is available in the buffer - in this case it is similar to POSIX read() with
+	 * O_NONBLOCK flag set.
 	 *
 	 * \param [out] buffer is the buffer to which the data will be written
 	 * \param [in] size is the size of \a buffer, bytes, must be even if selected character length is greater than 8
 	 * bits
+	 * \param [in] minSize is the minimum size of read, bytes, default - 1
 	 *
 	 * \return pair with return code (0 on success, error code otherwise) and number of read bytes (valid even when
 	 * error code is returned);
 	 * error codes:
+	 * - EAGAIN - no data can be read without blocking and non-blocking operation was requested (\a minSize is 0);
 	 * - EBADF - the device is not opened;
 	 * - EINTR - the wait was interrupted by an unmasked, caught signal;
 	 * - EINVAL - \a buffer and/or \a size are invalid;
 	 * - error codes returned by internal::UartLowLevel::startRead();
 	 */
 
-	std::pair<int, size_t> read(void* buffer, size_t size);
+	std::pair<int, size_t> read(void* buffer, size_t size, size_t minSize = 1);
 
 	/**
 	 * \brief Writes data to SerialPort
 	 *
 	 * Similar to POSIX write() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/write.html#
 	 *
-	 * This function will block until all character are written.
+	 * This function will block until at least \a minSize bytes can be written (but no more than \a size). When
+	 * \a minSize is greater than or equal to \a size - for example \a SIZE_MAX, which is the default value - the
+	 * behavior of this function is similar to POSIX write() with O_NONBLOCK flag cleared. If \a minSize is 0, then the
+	 * function will not block at all and only writes up to buffer's available free space - in this case it is similar
+	 * to POSIX write() with O_NONBLOCK flag set.
 	 *
 	 * \param [in] buffer is the buffer with data that will be transmitted
 	 * \param [in] size is the size of \a buffer, bytes, must be even if selected character length is greater than 8
 	 * bits
+	 * \param [in] minSize is the minimum size of write, bytes, default - SIZE_MAX
 	 *
 	 * \return pair with return code (0 on success, error code otherwise) and number of written bytes (valid even when
 	 * error code is returned);
 	 * error codes:
+	 * - EAGAIN - no data can be written without blocking and non-blocking operation was requested (\a minSize is 0);
 	 * - EBADF - the device is not opened;
 	 * - EINTR - the wait was interrupted by an unmasked, caught signal;
 	 * - EINVAL - \a buffer and/or \a size are invalid;
 	 * - error codes returned by internal::UartLowLevel::startWrite();
 	 */
 
-	std::pair<int, size_t> write(const void* buffer, size_t size);
+	std::pair<int, size_t> write(const void* buffer, size_t size, size_t minSize = SIZE_MAX);
 
 private:
 
