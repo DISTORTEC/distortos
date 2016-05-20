@@ -477,9 +477,10 @@ void SerialPort::writeCompleteEvent(const size_t bytesWritten)
 	writeLimit_ = writeLimit - (bytesWritten < writeLimit ? bytesWritten : writeLimit);
 	writeInProgress_ = false;
 
-	if (writeSemaphore_ != nullptr)
+	const auto writeSemaphore = writeSemaphore_;
+	if (writeSemaphore != nullptr)
 	{
-		writeSemaphore_->post();
+		writeSemaphore->post();
 		writeSemaphore_ = {};
 	}
 
