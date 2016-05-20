@@ -388,6 +388,16 @@ private:
 	void transmitCompleteEvent() override;
 
 	/**
+	 * \brief "Transmit start" event
+	 *
+	 * Called by low-level UART driver when new transmission starts.
+	 *
+	 * Does nothing.
+	 */
+
+	void transmitStartEvent() override;
+
+	/**
 	 * \brief "Write complete" event
 	 *
 	 * Called by low-level UART driver when whole write buffer was transfered - the transmission may still be in

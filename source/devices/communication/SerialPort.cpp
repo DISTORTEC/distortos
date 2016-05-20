@@ -484,6 +484,11 @@ void SerialPort::transmitCompleteEvent()
 	transmitInProgress_ = false;
 }
 
+void SerialPort::transmitStartEvent()
+{
+
+}
+
 void SerialPort::writeCompleteEvent(const size_t bytesWritten)
 {
 	writeBuffer_.increaseReadPosition(bytesWritten);
