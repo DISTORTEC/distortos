@@ -81,6 +81,14 @@ public:
 	virtual void transmitCompleteEvent() = 0;
 
 	/**
+	 * \brief "Transmit start" event
+	 *
+	 * Called by low-level UART driver when new transmission starts.
+	 */
+
+	virtual void transmitStartEvent() = 0;
+
+	/**
 	 * \brief "Write complete" event
 	 *
 	 * Called by low-level UART driver when whole write buffer was transfered - the transmission may still be in

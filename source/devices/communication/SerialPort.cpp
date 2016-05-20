@@ -398,7 +398,7 @@ std::pair<int, size_t> SerialPort::write(const void* const buffer, const size_t 
 }
 
 /*---------------------------------------------------------------------------------------------------------------------+
-| private functions
+| protected functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
 void SerialPort::readCompleteEvent(const size_t bytesRead)
@@ -422,6 +422,44 @@ void SerialPort::receiveErrorEvent(ErrorSet)
 {
 
 }
+
+void SerialPort::transmitCompleteEvent()
+{
+	const auto transmitSemaphore = transmitSemaphore_;
+	if (transmitSemaphore != nullptr)
+	{
+		transmitSemaphore->post();
+		transmitSemaphore_ = {};
+	}
+
+	transmitInProgress_ = false;
+}
+
+void SerialPort::transmitStartEvent()
+{
+
+}
+
+void SerialPort::writeCompleteEvent(const size_t bytesWritten)
+{
+	writeBuffer_.increaseReadPosition(bytesWritten);
+	const auto writeLimit = writeLimit_;
+	writeLimit_ = writeLimit - (bytesWritten < writeLimit ? bytesWritten : writeLimit);
+	writeInProgress_ = false;
+
+	const auto writeSemaphore = writeSemaphore_;
+	if (writeSemaphore != nullptr)
+	{
+		writeSemaphore->post();
+		writeSemaphore_ = {};
+	}
+
+	startWriteWrapper();
+}
+
+/*---------------------------------------------------------------------------------------------------------------------+
+| private functions
++---------------------------------------------------------------------------------------------------------------------*/
 
 int SerialPort::startReadWrapper()
 {
@@ -470,35 +508,6 @@ size_t SerialPort::stopWriteWrapper()
 	writeLimit_ = writeLimit - (bytesWritten < writeLimit ? bytesWritten : writeLimit);
 	writeInProgress_ = false;
 	return bytesWritten;
-}
-
-void SerialPort::transmitCompleteEvent()
-{
-	const auto transmitSemaphore = transmitSemaphore_;
-	if (transmitSemaphore != nullptr)
-	{
-		transmitSemaphore->post();
-		transmitSemaphore_ = {};
-	}
-
-	transmitInProgress_ = false;
-}
-
-void SerialPort::writeCompleteEvent(const size_t bytesWritten)
-{
-	writeBuffer_.increaseReadPosition(bytesWritten);
-	const auto writeLimit = writeLimit_;
-	writeLimit_ = writeLimit - (bytesWritten < writeLimit ? bytesWritten : writeLimit);
-	writeInProgress_ = false;
-
-	const auto writeSemaphore = writeSemaphore_;
-	if (writeSemaphore != nullptr)
-	{
-		writeSemaphore->post();
-		writeSemaphore_ = {};
-	}
-
-	startWriteWrapper();
 }
 
 }	// namespace devices

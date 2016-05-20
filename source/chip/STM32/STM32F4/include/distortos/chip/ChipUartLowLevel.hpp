@@ -172,9 +172,9 @@ public:
 	/**
 	 * \brief Starts asynchronous write operation.
 	 *
-	 * This function returns immediately. When the operation is finished (expected number of bytes were written),
-	 * UartBase::writeCompleteEvent() will be executed. When the transmission physically ends,
-	 * UartBase::transmitCompleteEvent() will be executed.
+	 * This function returns immediately. If no transmission is active, UartBase::transmitStartEvent() will be executed.
+	 * When the operation is finished (expected number of bytes were written), UartBase::writeCompleteEvent() will be
+	 * executed. When the transmission physically ends, UartBase::transmitCompleteEvent() will be executed.
 	 *
 	 * \param [in] buffer is the buffer with data that will be transmitted
 	 * \param [in] size is the size of \a buffer, bytes, must be even if selected character length is greater than 8

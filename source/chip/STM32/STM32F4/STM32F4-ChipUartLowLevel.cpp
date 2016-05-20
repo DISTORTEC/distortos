@@ -412,6 +412,10 @@ int ChipUartLowLevel::startWrite(const void* const buffer, const size_t size)
 	writeSize_ = size;
 	writePosition_ = 0;
 	parameters_.enableTcInterrupt(false);
+
+	if ((parameters_.getUart().SR & USART_SR_TC) != 0)
+		uartBase_->transmitStartEvent();
+
 	parameters_.enableTxeInterrupt(true);
 	return 0;
 }

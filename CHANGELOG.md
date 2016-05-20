@@ -21,6 +21,8 @@ executed only once. Otherwise it will be executed periodically until the softwar
 `close()`, `read()`, `write()`). `read()` and `write()` member functions of this class support both blocking and
 non-blocking behaviour.
 - `estd::ScopeGuard` template class, which can be used to execute bounded function on scope exit using RAII pattern.
+- `devices::Rs485` class - *RS-485* device with all features of `devices::SerialPort` and with automatic management
+of "driver enable" output pin.
 
 ### Fixed
 
