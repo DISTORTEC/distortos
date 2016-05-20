@@ -396,9 +396,10 @@ void SerialPort::readCompleteEvent(const size_t bytesRead)
 	readLimit_ = readLimit - (bytesRead < readLimit ? bytesRead : readLimit);
 	readInProgress_ = false;
 
-	if (readSemaphore_ != nullptr)
+	const auto readSemaphore = readSemaphore_;
+	if (readSemaphore != nullptr)
 	{
-		readSemaphore_->post();
+		readSemaphore->post();
 		readSemaphore_ = {};
 	}
 
