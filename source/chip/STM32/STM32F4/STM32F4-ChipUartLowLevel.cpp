@@ -314,20 +314,26 @@ void ChipUartLowLevel::interruptHandler()
 		if ((maskedSr & USART_SR_RXNE) != 0)		// read & receive errors
 		{
 			const uint16_t character = uart.DR;
-			readBuffer_[readPosition_++] = character;
+			const auto readBuffer = readBuffer_;
+			auto readPosition = readPosition_;
+			readBuffer[readPosition++] = character;
 			if (_9BitFormat == true)
-				readBuffer_[readPosition_++] = character >> 8;
+				readBuffer[readPosition++] = character >> 8;
+			readPosition_ = readPosition;
 			if ((sr & (USART_SR_FE | USART_SR_NE | USART_SR_ORE | USART_SR_PE)) != 0)
 				uartBase_->receiveErrorEvent(decodeErrors(sr));
-			if (readPosition_ == readSize_)
+			if (readPosition == readSize_)
 				uartBase_->readCompleteEvent(stopRead());
 		}
 		else if ((maskedSr & USART_SR_TXE) != 0)	// write
 		{
-			const uint16_t characterLow = writeBuffer_[writePosition_++];
-			const uint16_t characterHigh = _9BitFormat == true ? writeBuffer_[writePosition_++] : 0;
+			const auto writeBuffer = writeBuffer_;
+			auto writePosition = writePosition_;
+			const uint16_t characterLow = writeBuffer[writePosition++];
+			const uint16_t characterHigh = _9BitFormat == true ? writeBuffer[writePosition++] : 0;
+			writePosition_ = writePosition;
 			uart.DR = characterLow | (characterHigh << 8);
-			if (writePosition_ == writeSize_)
+			if (writePosition == writeSize_)
 				uartBase_->writeCompleteEvent(stopWrite());
 		}
 		else if ((maskedSr & USART_SR_TC) != 0)		// transmit complete
