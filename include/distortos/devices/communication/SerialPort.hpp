@@ -43,19 +43,19 @@ class SerialPort : private internal::UartBase
 {
 public:
 
-	/// thread-safe, lock-free ring buffer for one-producer and one-consumer
-	class RingBuffer
+	/// thread-safe, lock-free circular buffer for one-producer and one-consumer
+	class CircularBuffer
 	{
 	public:
 
 		/**
-		 * \brief RingBuffer's constructor
+		 * \brief CircularBuffer's constructor
 		 *
 		 * \param [in] buffer is a buffer for data
 		 * \param [in] size is the size of \a buffer, bytes, should be even, must be greater than or equal to 4
 		 */
 
-		constexpr RingBuffer(void* const buffer, const size_t size) :
+		constexpr CircularBuffer(void* const buffer, const size_t size) :
 				buffer_{static_cast<uint8_t*>(buffer)},
 				size_{size},
 				readPosition_{},
@@ -65,7 +65,7 @@ public:
 		}
 
 		/**
-		 * \brief Clears ring buffer
+		 * \brief Clears circular buffer
 		 */
 
 		void clear()
@@ -75,18 +75,27 @@ public:
 		}
 
 		/**
+		 * \return total capacity of circular buffer, bytes
+		 */
+
+		size_t getCapacity() const
+		{
+			return size_ >= 2 ? size_ - 2 : 0;
+		}
+
+		/**
 		 * \return First contiguous block (as a pair with pointer and size) available for reading
 		 */
 
 		std::pair<const uint8_t*, size_t> getReadBlock() const;
 
 		/**
-		 * \return total size of ring buffer, bytes
+		 * \return total amount of valid data in circular buffer, bytes
 		 */
 
 		size_t getSize() const
 		{
-			return size_;
+			return (size_ - readPosition_ + writePosition_) % size_;
 		}
 
 		/**
@@ -104,8 +113,7 @@ public:
 
 		void increaseReadPosition(const size_t value)
 		{
-			readPosition_ += value;
-			readPosition_ %= size_;
+			readPosition_ = (readPosition_ + value) % size_;
 		}
 
 		/**
@@ -117,26 +125,25 @@ public:
 
 		void increaseWritePosition(const size_t value)
 		{
-			writePosition_ += value;
-			writePosition_ %= size_;
+			writePosition_ = (writePosition_ + value) % size_;
 		}
 
 		/**
-		 * \return true if ring buffer is empty, false otherwise
+		 * \return true if circular buffer is empty, false otherwise
 		 */
 
 		bool isEmpty() const
 		{
-			return writePosition_ == readPosition_;
+			return readPosition_ == writePosition_;
 		}
 
 		/**
-		 * \return true if ring buffer is full, false otherwise
+		 * \return true if circular buffer is full, false otherwise
 		 */
 
 		bool isFull() const
 		{
-			return writePosition_ == (readPosition_ + 2) % size_;
+			return readPosition_ == (writePosition_ + 2) % size_;
 		}
 
 	private:
@@ -159,8 +166,8 @@ public:
 	 *
 	 * \param [in] uart is a reference to low-level implementation of internal::UartLowLevel interface
 	 * \param [in] readBuffer is a buffer for read operations
-	 * \param [in] readBufferSize is the size of \a readBuffer, bytes, should be divisible by 4, must be greater than or
-	 * equal to 4
+	 * \param [in] readBufferSize is the size of \a readBuffer, bytes, should be even, must be greater than or equal to
+	 * 4
 	 * \param [in] writeBuffer is a buffer to write operations
 	 * \param [in] writeBufferSize is the size of \a writeBuffer, bytes, should be even, must be greater than or equal
 	 * to 4
@@ -170,17 +177,20 @@ public:
 			void* const writeBuffer, const size_t writeBufferSize) :
 					readMutex_{Mutex::Type::normal, Mutex::Protocol::priorityInheritance},
 					writeMutex_{Mutex::Type::normal, Mutex::Protocol::priorityInheritance},
-					readBuffer_{readBuffer, (readBufferSize / 4) * 4},
+					readBuffer_{readBuffer, (readBufferSize / 2) * 2},
 					writeBuffer_{writeBuffer, (writeBufferSize / 2) * 2},
 					readSemaphore_{},
 					transmitSemaphore_{},
 					writeSemaphore_{},
+					readLimit_{},
+					writeLimit_{},
 					uart_{uart},
 					baudRate_{},
 					characterLength_{},
 					parity_{},
 					_2StopBits_{},
 					openCount_{},
+					readInProgress_{},
 					transmitInProgress_{},
 					writeInProgress_{}
 	{
@@ -284,8 +294,9 @@ private:
 	 *
 	 * Called by low-level UART driver when whole read buffer is filled.
 	 *
-	 * Updates position of read ring buffer and notifies any thread waiting for this event. If the read ring buffer is
-	 * not full, next read operation is started.
+	 * Updates position of read circular buffer, updates size limit of read operations, clears "read in progress" flag
+	 * and notifies any thread waiting for this event. If the read circular buffer is not full, next read operation is
+	 * started.
 	 *
 	 * \param [in] bytesRead is the number of bytes read by low-level UART driver (and written to read buffer)
 	 */
@@ -308,26 +319,51 @@ private:
 	/**
 	 * \brief Wrapper for internal::UartLowLevel::startRead()
 	 *
-	 * Starts read operation with size that is the smallest of: size of first available read block, half the size of
-	 * read ring buffer and value of \a limit.
+	 * Does nothing if read is already in progress or if read circular buffer is full. Otherwise sets "read in progress"
+	 * flag, starts read operation with size that is the smallest of: size of first available write block, half the size
+	 * of read circular buffer and current size limit of read operations (only if it's not equal to 0).
 	 *
-	 * \param [in] limit is the size limit of started read operation, bytes
-	 *
-	 * \return values returned by internal::UartLowLevel::startRead()
+	 * \return 0 on success, error code otherwise:
+	 * - error codes returned by internal::UartLowLevel::startRead();
 	 */
 
-	int startReadWrapper(size_t limit);
+	int startReadWrapper();
 
 	/**
 	 * \brief Wrapper for internal::UartLowLevel::startWrite()
 	 *
-	 * Sets "transmit in progress" and "write in progress" flags. Starts write operation with size of first available
-	 * write block.
+	 * Does nothing if write is already in progress or if write circular buffer is empty. Otherwise sets "transmit in
+	 * progress" and "write in progress" flags, starts write operation with size that is the smallest of: size of first
+	 * available read block, half the size of write circular buffer and current size limit of write operations (only if
+	 * it's not equal to 0).
 	 *
-	 * \return values returned by internal::UartLowLevel::startWrite()
+	 * \return 0 on success, error code otherwise:
+	 * - error codes returned by internal::UartLowLevel::startWrite();
 	 */
 
 	int startWriteWrapper();
+
+	/**
+	 * \brief Wrapper for internal::UartLowLevel::stopRead()
+	 *
+	 * Stops read operation, updates position of read circular buffer, updates size limit of read operations and clears
+	 * "read in progress" flag.
+	 *
+	 * \return values returned by internal::UartLowLevel::stopRead();
+	 */
+
+	size_t stopReadWrapper();
+
+	/**
+	 * \brief Wrapper for internal::UartLowLevel::stopWrite()
+	 *
+	 * Stops write operation, updates position of write circular buffer, updates size limit of write operations and
+	 * clears "write in progress" flag.
+	 *
+	 * \return values returned by internal::UartLowLevel::stopWrite();
+	 */
+
+	size_t stopWriteWrapper();
 
 	/**
 	 * \brief "Transmit complete" event
@@ -345,8 +381,9 @@ private:
 	 * Called by low-level UART driver when whole write buffer was transfered - the transmission may still be in
 	 * progress.
 	 *
-	 * Updates position of write ring buffer and notifies any thread waiting for this event. If the write ring buffer is
-	 * not empty, next write operation is started. Otherwise "write in progress" flag is cleared.
+	 * Updates position of write circular buffer, updates size limit of write operations, clears "write in progress"
+	 * flag and notifies any thread waiting for this event. Next write operation is started if there's anything in the
+	 * write circular buffer.
 	 *
 	 * \param [in] bytesWritten is the number of bytes written by low-level UART driver (and read from write buffer)
 	 */
@@ -359,11 +396,11 @@ private:
 	/// mutex used to serialize access to write(), close() and open()
 	Mutex writeMutex_;
 
-	/// ring buffer for read operations
-	RingBuffer readBuffer_;
+	/// circular buffer for read operations
+	CircularBuffer readBuffer_;
 
-	/// ring buffer for write operations
-	RingBuffer writeBuffer_;
+	/// circular buffer for write operations
+	CircularBuffer writeBuffer_;
 
 	/// pointer to semaphore used for "read complete" event notifications
 	Semaphore* volatile readSemaphore_;
@@ -373,6 +410,12 @@ private:
 
 	/// pointer to semaphore used for "write complete" event notifications
 	Semaphore* volatile writeSemaphore_;
+
+	/// size limit of read operations, 0 if no limiting is needed, bytes
+	volatile size_t readLimit_;
+
+	/// size limit of write operations, 0 if no limiting is needed, bytes
+	volatile size_t writeLimit_;
 
 	/// reference to low-level implementation of internal::UartLowLevel interface
 	internal::UartLowLevel& uart_;
@@ -391,6 +434,9 @@ private:
 
 	/// number of times this device was opened but not yet closed
 	uint8_t openCount_;
+
+	/// "read in progress" flag
+	volatile bool readInProgress_;
 
 	/// "transmit in progress" flag
 	volatile bool transmitInProgress_;

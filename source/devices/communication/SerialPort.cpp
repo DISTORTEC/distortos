@@ -36,24 +36,24 @@ namespace
 +---------------------------------------------------------------------------------------------------------------------*/
 
 /**
- * \brief Reads data from ring buffer.
+ * \brief Reads data from circular buffer.
  *
- * \param [in] ringBuffer is a reference to ring buffer from which the data will be read
+ * \param [in] circularBuffer is a reference to circular buffer from which the data will be read
  * \param [out] buffer is a buffer to which the data will be written
  * \param [in] size is the size of \a buffer, bytes
  *
- * \return number of bytes read from \a ringBuffer and written to \a buffer
+ * \return number of bytes read from \a circularBuffer and written to \a buffer
  */
 
-size_t readFromRingBuffer(SerialPort::RingBuffer& ringBuffer, uint8_t* const buffer, const size_t size)
+size_t readFromCircularBuffer(SerialPort::CircularBuffer& circularBuffer, uint8_t* const buffer, const size_t size)
 {
-	decltype(ringBuffer.getReadBlock()) readBlock;
+	decltype(circularBuffer.getReadBlock()) readBlock;
 	size_t bytesRead {};
-	while (readBlock = ringBuffer.getReadBlock(), readBlock.second != 0 && bytesRead != size)
+	while (readBlock = circularBuffer.getReadBlock(), readBlock.second != 0 && bytesRead != size)
 	{
 		const auto copySize = std::min(readBlock.second, size - bytesRead);
 		memcpy(buffer + bytesRead, readBlock.first, copySize);
-		ringBuffer.increaseReadPosition(copySize);
+		circularBuffer.increaseReadPosition(copySize);
 		bytesRead += copySize;
 	}
 
@@ -61,24 +61,24 @@ size_t readFromRingBuffer(SerialPort::RingBuffer& ringBuffer, uint8_t* const buf
 }
 
 /**
- * \brief Writes data to ring buffer.
+ * \brief Writes data to circular buffer.
  *
  * \param [in] buffer is a buffer from which the data will be read
  * \param [in] size is the size of \a buffer, bytes
- * \param [in] ringBuffer is a reference to ring buffer to which the data will be written
+ * \param [in] circularBuffer is a reference to circular buffer to which the data will be written
  *
- * \return number of bytes read from \a buffer and written to \a ringBuffer
+ * \return number of bytes read from \a buffer and written to \a circularBuffer
  */
 
-size_t writeToRingBuffer(const uint8_t* const buffer, const size_t size, SerialPort::RingBuffer& ringBuffer)
+size_t writeToCircularBuffer(const uint8_t* const buffer, const size_t size, SerialPort::CircularBuffer& circularBuffer)
 {
-	decltype(ringBuffer.getWriteBlock()) writeBlock;
+	decltype(circularBuffer.getWriteBlock()) writeBlock;
 	size_t bytesWritten {};
-	while (writeBlock = ringBuffer.getWriteBlock(), writeBlock.second != 0 && bytesWritten != size)
+	while (writeBlock = circularBuffer.getWriteBlock(), writeBlock.second != 0 && bytesWritten != size)
 	{
 		const auto copySize = std::min(writeBlock.second, size - bytesWritten);
 		memcpy(writeBlock.first, buffer + bytesWritten, copySize);
-		ringBuffer.increaseWritePosition(copySize);
+		circularBuffer.increaseWritePosition(copySize);
 		bytesWritten += copySize;
 	}
 
@@ -88,22 +88,21 @@ size_t writeToRingBuffer(const uint8_t* const buffer, const size_t size, SerialP
 }	// namespace
 
 /*---------------------------------------------------------------------------------------------------------------------+
-| SerialPort::RingBuffer public functions
+| SerialPort::CircularBuffer public functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-std::pair<const uint8_t*, size_t> SerialPort::RingBuffer::getReadBlock() const
+std::pair<const uint8_t*, size_t> SerialPort::CircularBuffer::getReadBlock() const
 {
 	const auto readPosition = readPosition_;
 	const auto writePosition = writePosition_;
 	return {buffer_ + readPosition, (writePosition >= readPosition ? writePosition : size_) - readPosition};
 }
 
-std::pair<uint8_t*, size_t> SerialPort::RingBuffer::getWriteBlock() const
+std::pair<uint8_t*, size_t> SerialPort::CircularBuffer::getWriteBlock() const
 {
 	const auto readPosition = readPosition_;
 	const auto writePosition = writePosition_;
-	const auto freeBytes = (readPosition > writePosition ? readPosition - writePosition :
-			size_ - writePosition + readPosition) - 2;
+	const auto freeBytes = (size_ - writePosition + readPosition - 2) % size_;
 	const auto writeBlockSize = (readPosition > writePosition ? readPosition : size_) - writePosition;
 	return {buffer_ + writePosition, std::min(freeBytes, writeBlockSize)};
 }
@@ -165,7 +164,7 @@ int SerialPort::close()
 			}
 		}
 
-		uart_.stopRead();
+		stopReadWrapper();
 
 		const auto ret = uart_.stop();
 		if (ret != 0)
@@ -196,7 +195,7 @@ int SerialPort::open(const uint32_t baudRate, const uint8_t characterLength, con
 
 	if (openCount_ == 0)	// first open?
 	{
-		if (readBuffer_.getSize() < 4 || writeBuffer_.getSize() < 4)
+		if (readBuffer_.getCapacity() < 2 || writeBuffer_.getCapacity() < 2)
 			return ENOBUFS;
 
 		{
@@ -205,7 +204,7 @@ int SerialPort::open(const uint32_t baudRate, const uint8_t characterLength, con
 				return ret.first;
 		}
 		{
-			const auto ret = startReadWrapper(SIZE_MAX);
+			const auto ret = startReadWrapper();
 			if (ret != 0)
 				return ret;
 		}
@@ -247,13 +246,40 @@ std::pair<int, size_t> SerialPort::read(void* const buffer, const size_t size)
 
 	const size_t minSize = characterLength_ <= 8 ? 1 : 2;
 	const auto bufferUint8 = static_cast<uint8_t*>(buffer);
-	size_t bytesRead {};
-	while (bytesRead < minSize)
-	{
-		bytesRead += readFromRingBuffer(readBuffer_, bufferUint8 + bytesRead, size - bytesRead);
-		if (bytesRead == size)	// buffer already full?
-			return {{}, bytesRead};
 
+	// initially try to read as much data as possible from circular buffer with no blocking
+	auto bytesRead = readFromCircularBuffer(readBuffer_, bufferUint8, size);
+	{
+		const auto ret = startReadWrapper();
+		if (ret != 0 || bytesRead == size)
+			return {ret, bytesRead};
+	}
+
+	const auto readLimitScopeGuard = estd::makeScopeGuard(
+			[this]()
+			{
+				readLimit_ = 0;
+			});
+
+	// Full buffer could not be read from circular buffer? The current read transfer (if any) must be stopped for a
+	// short moment to get the amount of data available in the circular buffer (interrupts are masked to prevent
+	// preemption, which could make this "short moment" very long). By subtracting this value from the minimum amount of
+	// data required for reading we get size limit of read operation. Notification after exactly that number of bytes
+	// will mean that the buffer has enough data to satisfy requested minimum size.
+	{
+		architecture::InterruptMaskingLock interruptMaskingLock;
+		stopReadWrapper();
+		const auto bytesAvailable = readBuffer_.getSize();
+		readLimit_ = minSize > (bytesRead + bytesAvailable) ? minSize - (bytesRead + bytesAvailable) : 0;
+		{
+			const auto ret = startReadWrapper();
+			if (ret != 0)
+				return {ret, bytesRead};
+		}
+	}
+
+	do
+	{
 		Semaphore semaphore {0};
 		readSemaphore_ = &semaphore;
 		const auto readSemaphoreScopeGuard = estd::makeScopeGuard(
@@ -262,19 +288,12 @@ std::pair<int, size_t> SerialPort::read(void* const buffer, const size_t size)
 					readSemaphore_ = {};
 				});
 
+		bytesRead += readFromCircularBuffer(readBuffer_, bufferUint8 + bytesRead, size - bytesRead);
 		{
-			// stop and restart the read operation to get the characters that were already received;
-			architecture::InterruptMaskingLock interruptMaskingLock;
-			const auto bytesReceived = uart_.stopRead();
-			readBuffer_.increaseWritePosition(bytesReceived);
-			// limit of new read operation is selected to have a notification when requested minimum will be received
-			const auto ret = startReadWrapper(minSize > bytesRead + bytesReceived ?
-					minSize - bytesRead - bytesReceived : SIZE_MAX);
+			const auto ret = startReadWrapper();
 			if (ret != 0)
 				return {ret, bytesRead};
 		}
-
-		bytesRead += readFromRingBuffer(readBuffer_, bufferUint8 + bytesRead, size - bytesRead);
 
 		if (bytesRead < minSize)	// wait for data only if requested minimum is not already read
 		{
@@ -282,7 +301,7 @@ std::pair<int, size_t> SerialPort::read(void* const buffer, const size_t size)
 			if (ret != 0)
 				return {ret, bytesRead};
 		}
-	}
+	} while (bytesRead < minSize);
 
 	return {{}, bytesRead};
 }
@@ -306,7 +325,38 @@ std::pair<int, size_t> SerialPort::write(const void* const buffer, const size_t 
 		return {EINVAL, {}};
 
 	const auto bufferUint8 = static_cast<const uint8_t*>(buffer);
-	size_t bytesWritten {};
+
+	// initially try to write as much data as possible to circular buffer with no blocking
+	auto bytesWritten = writeToCircularBuffer(bufferUint8, size, writeBuffer_);
+	{
+		const auto ret = startWriteWrapper();
+		if (ret != 0 || bytesWritten == size)
+			return {ret, bytesWritten};
+	}
+
+	const auto writeLimitScopeGuard = estd::makeScopeGuard(
+			[this]()
+			{
+				writeLimit_ = 0;
+			});
+
+	// Not whole data could be written to circular buffer? The current write transfer (if any) must be stopped for a
+	// short moment to get the amount of free space in the circular buffer (interrupts are masked to prevent preemption,
+	// which could make this "short moment" very long). By subtracting this value from the amount of data left to write
+	// we get size limit of write operation. Notification after exactly that number of bytes will mean that the buffer
+	// is "empty enough" to receive everything that is left to write.
+	{
+		architecture::InterruptMaskingLock interruptMaskingLock;
+		stopWriteWrapper();
+		const auto bytesFree = writeBuffer_.getCapacity() - writeBuffer_.getSize();
+		writeLimit_ = size > (bytesWritten + bytesFree) ? size - (bytesWritten + bytesFree) : 0;
+		{
+			const auto ret = startWriteWrapper();
+			if (ret != 0)
+				return {ret, bytesWritten};
+		}
+	}
+
 	while (bytesWritten < size)
 	{
 		Semaphore semaphore {0};
@@ -317,17 +367,14 @@ std::pair<int, size_t> SerialPort::write(const void* const buffer, const size_t 
 					writeSemaphore_ = {};
 				});
 
-		bytesWritten += writeToRingBuffer(bufferUint8 + bytesWritten, size - bytesWritten, writeBuffer_);
-
-		// restart write operation if it is not currently in progress and the write buffer is not already empty
-		if (writeInProgress_ == false && writeBuffer_.isEmpty() == false)
+		bytesWritten += writeToCircularBuffer(bufferUint8 + bytesWritten, size - bytesWritten, writeBuffer_);
 		{
 			const auto ret = startWriteWrapper();
 			if (ret != 0)
 				return {ret, bytesWritten};
 		}
-		// wait for free space only if write operation is in progress and there is still some data left to write
-		else if (bytesWritten != size)
+
+		if (bytesWritten < size)	// wait for free space only if whole buffer is not already written
 		{
 			const auto ret = semaphore.wait();
 			if (ret != 0)
@@ -345,17 +392,18 @@ std::pair<int, size_t> SerialPort::write(const void* const buffer, const size_t 
 void SerialPort::readCompleteEvent(const size_t bytesRead)
 {
 	readBuffer_.increaseWritePosition(bytesRead);
+	const auto readLimit = readLimit_;
+	readLimit_ = readLimit - (bytesRead < readLimit ? bytesRead : readLimit);
+	readInProgress_ = false;
 
-	if (readSemaphore_ != nullptr)
+	const auto readSemaphore = readSemaphore_;
+	if (readSemaphore != nullptr)
 	{
-		readSemaphore_->post();
+		readSemaphore->post();
 		readSemaphore_ = {};
 	}
 
-	if (readBuffer_.isFull() == true)
-		return;
-
-	startReadWrapper(SIZE_MAX);
+	startReadWrapper();
 }
 
 void SerialPort::receiveErrorEvent(ErrorSet)
@@ -363,25 +411,61 @@ void SerialPort::receiveErrorEvent(ErrorSet)
 
 }
 
-int SerialPort::startReadWrapper(const size_t limit)
+int SerialPort::startReadWrapper()
 {
+	if (readInProgress_ == true || readBuffer_.isFull() == true)
+		return 0;
+
+	readInProgress_ = true;
 	const auto writeBlock = readBuffer_.getWriteBlock();
-	return uart_.startRead(writeBlock.first, std::min({writeBlock.second, readBuffer_.getSize() / 2, limit}));
+	// rounding up is valid, capacity is never less than 2 and is always even
+	const auto readBufferHalf = ((readBuffer_.getCapacity() / 2 + 1) / 2) * 2;
+	const auto readLimit = readLimit_;
+	return uart_.startRead(writeBlock.first,
+			std::min({writeBlock.second, readBufferHalf, readLimit != 0 ? readLimit : SIZE_MAX}));
 }
 
 int SerialPort::startWriteWrapper()
 {
+	if (writeInProgress_ == true || writeBuffer_.isEmpty() == true)
+		return 0;
+
 	transmitInProgress_ = true;
 	writeInProgress_ = true;
-	const auto outBlock = writeBuffer_.getReadBlock();
-	return uart_.startWrite(outBlock.first, outBlock.second);
+	const auto readBlock = writeBuffer_.getReadBlock();
+	// rounding up is valid, capacity is never less than 2 and is always even
+	const auto writeBufferHalf = ((writeBuffer_.getCapacity() / 2 + 1) / 2) * 2;
+	const auto writeLimit = writeLimit_;
+	return uart_.startWrite(readBlock.first,
+			std::min({readBlock.second, writeBufferHalf, writeLimit != 0 ? writeLimit : SIZE_MAX}));
+}
+
+size_t SerialPort::stopReadWrapper()
+{
+	const auto bytesRead = uart_.stopRead();
+	readBuffer_.increaseWritePosition(bytesRead);
+	const auto readLimit = readLimit_;
+	readLimit_ = readLimit - (bytesRead < readLimit ? bytesRead : readLimit);
+	readInProgress_ = false;
+	return bytesRead;
+}
+
+size_t SerialPort::stopWriteWrapper()
+{
+	const auto bytesWritten = uart_.stopWrite();
+	writeBuffer_.increaseReadPosition(bytesWritten);
+	const auto writeLimit = writeLimit_;
+	writeLimit_ = writeLimit - (bytesWritten < writeLimit ? bytesWritten : writeLimit);
+	writeInProgress_ = false;
+	return bytesWritten;
 }
 
 void SerialPort::transmitCompleteEvent()
 {
-	if (transmitSemaphore_ != nullptr)
+	const auto transmitSemaphore = transmitSemaphore_;
+	if (transmitSemaphore != nullptr)
 	{
-		transmitSemaphore_->post();
+		transmitSemaphore->post();
 		transmitSemaphore_ = {};
 	}
 
@@ -391,17 +475,15 @@ void SerialPort::transmitCompleteEvent()
 void SerialPort::writeCompleteEvent(const size_t bytesWritten)
 {
 	writeBuffer_.increaseReadPosition(bytesWritten);
+	const auto writeLimit = writeLimit_;
+	writeLimit_ = writeLimit - (bytesWritten < writeLimit ? bytesWritten : writeLimit);
+	writeInProgress_ = false;
 
-	if (writeSemaphore_ != nullptr)
+	const auto writeSemaphore = writeSemaphore_;
+	if (writeSemaphore != nullptr)
 	{
-		writeSemaphore_->post();
+		writeSemaphore->post();
 		writeSemaphore_ = {};
-	}
-
-	if (writeBuffer_.isEmpty() == true)
-	{
-		writeInProgress_ = false;
-		return;
 	}
 
 	startWriteWrapper();
