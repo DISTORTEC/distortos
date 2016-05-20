@@ -299,7 +299,7 @@ public:
 
 	std::pair<int, size_t> write(const void* buffer, size_t size, size_t minSize = SIZE_MAX);
 
-private:
+protected:
 
 	/**
 	 * \brief "Read complete" event
@@ -327,6 +327,43 @@ private:
 	 */
 
 	void receiveErrorEvent(ErrorSet errorSet) override;
+
+	/**
+	 * \brief "Transmit complete" event
+	 *
+	 * Called by low-level UART driver when the transmission is physically finished.
+	 *
+	 * Notifies any thread waiting for this event and clears "transmit in progress" flag.
+	 */
+
+	void transmitCompleteEvent() override;
+
+	/**
+	 * \brief "Transmit start" event
+	 *
+	 * Called by low-level UART driver when new transmission starts.
+	 *
+	 * Does nothing.
+	 */
+
+	void transmitStartEvent() override;
+
+	/**
+	 * \brief "Write complete" event
+	 *
+	 * Called by low-level UART driver when whole write buffer was transfered - the transmission may still be in
+	 * progress.
+	 *
+	 * Updates position of write circular buffer, updates size limit of write operations, clears "write in progress"
+	 * flag and notifies any thread waiting for this event. Next write operation is started if there's anything in the
+	 * write circular buffer.
+	 *
+	 * \param [in] bytesWritten is the number of bytes written by low-level UART driver (and read from write buffer)
+	 */
+
+	void writeCompleteEvent(size_t bytesWritten) override;
+
+private:
 
 	/**
 	 * \brief Wrapper for internal::UartLowLevel::startRead()
@@ -376,41 +413,6 @@ private:
 	 */
 
 	size_t stopWriteWrapper();
-
-	/**
-	 * \brief "Transmit complete" event
-	 *
-	 * Called by low-level UART driver when the transmission is physically finished.
-	 *
-	 * Notifies any thread waiting for this event and clears "transmit in progress" flag.
-	 */
-
-	void transmitCompleteEvent() override;
-
-	/**
-	 * \brief "Transmit start" event
-	 *
-	 * Called by low-level UART driver when new transmission starts.
-	 *
-	 * Does nothing.
-	 */
-
-	void transmitStartEvent() override;
-
-	/**
-	 * \brief "Write complete" event
-	 *
-	 * Called by low-level UART driver when whole write buffer was transfered - the transmission may still be in
-	 * progress.
-	 *
-	 * Updates position of write circular buffer, updates size limit of write operations, clears "write in progress"
-	 * flag and notifies any thread waiting for this event. Next write operation is started if there's anything in the
-	 * write circular buffer.
-	 *
-	 * \param [in] bytesWritten is the number of bytes written by low-level UART driver (and read from write buffer)
-	 */
-
-	void writeCompleteEvent(size_t bytesWritten) override;
 
 	/// mutex used to serialize access to read(), close() and open()
 	Mutex readMutex_;
