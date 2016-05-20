@@ -461,9 +461,10 @@ size_t SerialPort::stopWriteWrapper()
 
 void SerialPort::transmitCompleteEvent()
 {
-	if (transmitSemaphore_ != nullptr)
+	const auto transmitSemaphore = transmitSemaphore_;
+	if (transmitSemaphore != nullptr)
 	{
-		transmitSemaphore_->post();
+		transmitSemaphore->post();
 		transmitSemaphore_ = {};
 	}
 
