@@ -226,12 +226,16 @@ int SerialPort::open(const uint32_t baudRate, const uint8_t characterLength, con
 	return 0;
 }
 
-std::pair<int, size_t> SerialPort::read(void* const buffer, const size_t size)
+std::pair<int, size_t> SerialPort::read(void* const buffer, const size_t size, const size_t minSize)
 {
 	if (buffer == nullptr || size == 0)
 		return {EINVAL, {}};
 
-	readMutex_.lock();
+	{
+		const auto ret = minSize != 0 ? readMutex_.lock() : readMutex_.tryLock();
+		if (ret != 0)
+			return {ret != EBUSY ? ret : EAGAIN, {}};
+	}
 	const auto readMutexScopeGuard = estd::makeScopeGuard(
 			[this]()
 			{
@@ -244,7 +248,8 @@ std::pair<int, size_t> SerialPort::read(void* const buffer, const size_t size)
 	if (characterLength_ > 8 && size % 2 != 0)
 		return {EINVAL, {}};
 
-	const size_t minSize = characterLength_ <= 8 ? 1 : 2;
+	// when character length is greater than 8 bits, round up "minSize" value
+	const auto adjustedMinSize = std::min(size, characterLength_ <= 8 ? minSize : ((minSize + 1) / 2) * 2);
 	const auto bufferUint8 = static_cast<uint8_t*>(buffer);
 
 	// initially try to read as much data as possible from circular buffer with no blocking
@@ -270,7 +275,8 @@ std::pair<int, size_t> SerialPort::read(void* const buffer, const size_t size)
 		architecture::InterruptMaskingLock interruptMaskingLock;
 		stopReadWrapper();
 		const auto bytesAvailable = readBuffer_.getSize();
-		readLimit_ = minSize > (bytesRead + bytesAvailable) ? minSize - (bytesRead + bytesAvailable) : 0;
+		readLimit_ = adjustedMinSize > (bytesRead + bytesAvailable) ?
+				adjustedMinSize - (bytesRead + bytesAvailable) : 0;
 		{
 			const auto ret = startReadWrapper();
 			if (ret != 0)
@@ -295,15 +301,15 @@ std::pair<int, size_t> SerialPort::read(void* const buffer, const size_t size)
 				return {ret, bytesRead};
 		}
 
-		if (bytesRead < minSize)	// wait for data only if requested minimum is not already read
+		if (bytesRead < adjustedMinSize)	// wait for data only if requested minimum is not already read
 		{
 			const auto ret = semaphore.wait();
 			if (ret != 0)
 				return {ret, bytesRead};
 		}
-	} while (bytesRead < minSize);
+	} while (bytesRead < adjustedMinSize);
 
-	return {{}, bytesRead};
+	return {bytesRead != 0 ? 0 : EAGAIN, bytesRead};
 }
 
 std::pair<int, size_t> SerialPort::write(const void* const buffer, const size_t size)
