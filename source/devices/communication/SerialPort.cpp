@@ -437,7 +437,7 @@ void SerialPort::transmitCompleteEvent()
 
 void SerialPort::transmitStartEvent()
 {
-
+	transmitInProgress_ = true;
 }
 
 void SerialPort::writeCompleteEvent(const size_t bytesWritten)
@@ -480,7 +480,6 @@ int SerialPort::startWriteWrapper()
 	if (writeInProgress_ == true || writeBuffer_.isEmpty() == true)
 		return 0;
 
-	transmitInProgress_ = true;
 	writeInProgress_ = true;
 	const auto readBlock = writeBuffer_.getReadBlock();
 	// rounding up is valid, capacity is never less than 2 and is always even

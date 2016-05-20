@@ -343,7 +343,7 @@ protected:
 	 *
 	 * Called by low-level UART driver when new transmission starts.
 	 *
-	 * Does nothing.
+	 * Sets "transmit in progress" flag.
 	 */
 
 	void transmitStartEvent() override;
@@ -381,10 +381,9 @@ private:
 	/**
 	 * \brief Wrapper for internal::UartLowLevel::startWrite()
 	 *
-	 * Does nothing if write is already in progress or if write circular buffer is empty. Otherwise sets "transmit in
-	 * progress" and "write in progress" flags, starts write operation with size that is the smallest of: size of first
-	 * available read block, half the size of write circular buffer and current size limit of write operations (only if
-	 * it's not equal to 0).
+	 * Does nothing if write is already in progress or if write circular buffer is empty. Otherwise sets "write in
+	 * progress" flag, starts write operation with size that is the smallest of: size of first available read block,
+	 * half the size of write circular buffer and current size limit of write operations (only if it's not equal to 0).
 	 *
 	 * \return 0 on success, error code otherwise:
 	 * - error codes returned by internal::UartLowLevel::startWrite();
