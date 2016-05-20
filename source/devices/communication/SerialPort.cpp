@@ -312,12 +312,16 @@ std::pair<int, size_t> SerialPort::read(void* const buffer, const size_t size, c
 	return {bytesRead != 0 ? 0 : EAGAIN, bytesRead};
 }
 
-std::pair<int, size_t> SerialPort::write(const void* const buffer, const size_t size)
+std::pair<int, size_t> SerialPort::write(const void* const buffer, const size_t size, const size_t minSize)
 {
 	if (buffer == nullptr || size == 0)
 		return {EINVAL, {}};
 
-	writeMutex_.lock();
+	{
+		const auto ret = minSize != 0 ? writeMutex_.lock() : writeMutex_.tryLock();
+		if (ret != 0)
+			return {ret != EBUSY ? ret : EAGAIN, {}};
+	}
 	const auto writeMutexScopeGuard = estd::makeScopeGuard(
 			[this]()
 			{
@@ -330,6 +334,8 @@ std::pair<int, size_t> SerialPort::write(const void* const buffer, const size_t 
 	if (characterLength_ > 8 && size % 2 != 0)
 		return {EINVAL, {}};
 
+	// when character length is greater than 8 bits, round up "minSize" value
+	const auto adjustedMinSize = std::min(size, characterLength_ <= 8 ? minSize : ((minSize + 1) / 2) * 2);
 	const auto bufferUint8 = static_cast<const uint8_t*>(buffer);
 
 	// initially try to write as much data as possible to circular buffer with no blocking
@@ -355,7 +361,7 @@ std::pair<int, size_t> SerialPort::write(const void* const buffer, const size_t 
 		architecture::InterruptMaskingLock interruptMaskingLock;
 		stopWriteWrapper();
 		const auto bytesFree = writeBuffer_.getCapacity() - writeBuffer_.getSize();
-		writeLimit_ = size > (bytesWritten + bytesFree) ? size - (bytesWritten + bytesFree) : 0;
+		writeLimit_ = adjustedMinSize > (bytesWritten + bytesFree) ? adjustedMinSize - (bytesWritten + bytesFree) : 0;
 		{
 			const auto ret = startWriteWrapper();
 			if (ret != 0)
@@ -363,7 +369,7 @@ std::pair<int, size_t> SerialPort::write(const void* const buffer, const size_t 
 		}
 	}
 
-	while (bytesWritten < size)
+	do
 	{
 		Semaphore semaphore {0};
 		writeSemaphore_ = &semaphore;
@@ -380,15 +386,15 @@ std::pair<int, size_t> SerialPort::write(const void* const buffer, const size_t 
 				return {ret, bytesWritten};
 		}
 
-		if (bytesWritten < size)	// wait for free space only if whole buffer is not already written
+		if (bytesWritten < adjustedMinSize)	// wait for free space only if requested minimum is not already written
 		{
 			const auto ret = semaphore.wait();
 			if (ret != 0)
 				return {ret, bytesWritten};
 		}
-	}
+	} while (bytesWritten < adjustedMinSize);
 
-	return {{}, bytesWritten};
+	return {bytesWritten != 0 ? 0 : EAGAIN, bytesWritten};
 }
 
 /*---------------------------------------------------------------------------------------------------------------------+
