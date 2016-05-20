@@ -246,13 +246,40 @@ std::pair<int, size_t> SerialPort::read(void* const buffer, const size_t size)
 
 	const size_t minSize = characterLength_ <= 8 ? 1 : 2;
 	const auto bufferUint8 = static_cast<uint8_t*>(buffer);
-	size_t bytesRead {};
-	while (bytesRead < minSize)
-	{
-		bytesRead += readFromCircularBuffer(readBuffer_, bufferUint8 + bytesRead, size - bytesRead);
-		if (bytesRead == size)	// buffer already full?
-			return {{}, bytesRead};
 
+	// initially try to read as much data as possible from circular buffer with no blocking
+	auto bytesRead = readFromCircularBuffer(readBuffer_, bufferUint8, size);
+	{
+		const auto ret = startReadWrapper();
+		if (ret != 0 || bytesRead == size)
+			return {ret, bytesRead};
+	}
+
+	const auto readLimitScopeGuard = estd::makeScopeGuard(
+			[this]()
+			{
+				readLimit_ = 0;
+			});
+
+	// Full buffer could not be read from circular buffer? The current read transfer (if any) must be stopped for a
+	// short moment to get the amount of data available in the circular buffer (interrupts are masked to prevent
+	// preemption, which could make this "short moment" very long). By subtracting this value from the minimum amount of
+	// data required for reading we get size limit of read operation. Notification after exactly that number of bytes
+	// will mean that the buffer has enough data to satisfy requested minimum size.
+	{
+		architecture::InterruptMaskingLock interruptMaskingLock;
+		stopReadWrapper();
+		const auto bytesAvailable = readBuffer_.getSize();
+		readLimit_ = minSize > (bytesRead + bytesAvailable) ? minSize - (bytesRead + bytesAvailable) : 0;
+		{
+			const auto ret = startReadWrapper();
+			if (ret != 0)
+				return {ret, bytesRead};
+		}
+	}
+
+	do
+	{
 		Semaphore semaphore {0};
 		readSemaphore_ = &semaphore;
 		const auto readSemaphoreScopeGuard = estd::makeScopeGuard(
@@ -261,18 +288,12 @@ std::pair<int, size_t> SerialPort::read(void* const buffer, const size_t size)
 					readSemaphore_ = {};
 				});
 
+		bytesRead += readFromCircularBuffer(readBuffer_, bufferUint8 + bytesRead, size - bytesRead);
 		{
-			// stop and restart the read operation to get the characters that were already received
-			architecture::InterruptMaskingLock interruptMaskingLock;
-			const auto bytesReceived = stopReadWrapper();
-			// limit of new read operation is selected to have a notification when requested minimum will be received
-			readLimit_ = minSize > bytesRead + bytesReceived ? minSize - bytesRead - bytesReceived : 0;
 			const auto ret = startReadWrapper();
 			if (ret != 0)
 				return {ret, bytesRead};
 		}
-
-		bytesRead += readFromCircularBuffer(readBuffer_, bufferUint8 + bytesRead, size - bytesRead);
 
 		if (bytesRead < minSize)	// wait for data only if requested minimum is not already read
 		{
@@ -280,7 +301,7 @@ std::pair<int, size_t> SerialPort::read(void* const buffer, const size_t size)
 			if (ret != 0)
 				return {ret, bytesRead};
 		}
-	}
+	} while (bytesRead < minSize);
 
 	return {{}, bytesRead};
 }
