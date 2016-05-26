@@ -310,9 +310,12 @@ protected:
 	 *
 	 * Called by low-level UART driver when whole read buffer is filled.
 	 *
-	 * Updates position of read circular buffer, updates size limit of read operations, clears "read in progress" flag
-	 * and notifies any thread waiting for this event. If the read circular buffer is not full, next read operation is
-	 * started.
+	 * - updates position of read circular buffer;
+	 * - changes current buffer to next one (if there is any next buffer and if current one is full);
+	 * - updates size limit of read operations;
+	 * - clears "read in progress" flag;
+	 * - notifies any thread waiting for this event;
+	 * - starts next read operation if current read buffer is not full;
 	 *
 	 * \param [in] bytesRead is the number of bytes read by low-level UART driver (and written to read buffer)
 	 */

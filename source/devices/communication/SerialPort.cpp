@@ -403,7 +403,16 @@ std::pair<int, size_t> SerialPort::write(const void* const buffer, const size_t 
 
 void SerialPort::readCompleteEvent(const size_t bytesRead)
 {
-	currentReadBuffer_->increaseWritePosition(bytesRead);
+	const auto currentReadBuffer = currentReadBuffer_;
+	currentReadBuffer->increaseWritePosition(bytesRead);
+
+	const auto nextReadBuffer = nextReadBuffer_;
+	if (nextReadBuffer != nullptr && currentReadBuffer->isFull() == true)
+	{
+		nextReadBuffer_ = {};
+		currentReadBuffer_ = nextReadBuffer;
+	}
+
 	const auto readLimit = readLimit_;
 	readLimit_ = readLimit - (bytesRead < readLimit ? bytesRead : readLimit);
 	readInProgress_ = false;
