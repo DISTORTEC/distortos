@@ -253,7 +253,7 @@ std::pair<int, size_t> SerialPort::read(void* const buffer, const size_t size, c
 	const auto bufferUint8 = static_cast<uint8_t*>(buffer);
 
 	// initially try to read as much data as possible from circular buffer with no blocking
-	auto bytesRead = readFromCircularBuffer(readBuffer_, bufferUint8, size);
+	auto bytesRead = readFromCircularBuffer(*currentReadBuffer_, bufferUint8, size);
 	{
 		const auto ret = startReadWrapper();
 		if (ret != 0 || bytesRead == size)
@@ -274,7 +274,7 @@ std::pair<int, size_t> SerialPort::read(void* const buffer, const size_t size, c
 	{
 		architecture::InterruptMaskingLock interruptMaskingLock;
 		stopReadWrapper();
-		const auto bytesAvailable = readBuffer_.getSize();
+		const auto bytesAvailable = currentReadBuffer_->getSize();
 		readLimit_ = adjustedMinSize > (bytesRead + bytesAvailable) ?
 				adjustedMinSize - (bytesRead + bytesAvailable) : 0;
 		{
@@ -294,7 +294,7 @@ std::pair<int, size_t> SerialPort::read(void* const buffer, const size_t size, c
 					readSemaphore_ = {};
 				});
 
-		bytesRead += readFromCircularBuffer(readBuffer_, bufferUint8 + bytesRead, size - bytesRead);
+		bytesRead += readFromCircularBuffer(*currentReadBuffer_, bufferUint8 + bytesRead, size - bytesRead);
 		{
 			const auto ret = startReadWrapper();
 			if (ret != 0)
@@ -339,7 +339,7 @@ std::pair<int, size_t> SerialPort::write(const void* const buffer, const size_t 
 	const auto bufferUint8 = static_cast<const uint8_t*>(buffer);
 
 	// initially try to write as much data as possible to circular buffer with no blocking
-	auto bytesWritten = writeToCircularBuffer(bufferUint8, size, writeBuffer_);
+	auto bytesWritten = writeToCircularBuffer(bufferUint8, size, *currentWriteBuffer_);
 	{
 		const auto ret = startWriteWrapper();
 		if (ret != 0 || bytesWritten == size)
@@ -360,7 +360,7 @@ std::pair<int, size_t> SerialPort::write(const void* const buffer, const size_t 
 	{
 		architecture::InterruptMaskingLock interruptMaskingLock;
 		stopWriteWrapper();
-		const auto bytesFree = writeBuffer_.getCapacity() - writeBuffer_.getSize();
+		const auto bytesFree = currentWriteBuffer_->getCapacity() - currentWriteBuffer_->getSize();
 		writeLimit_ = adjustedMinSize > (bytesWritten + bytesFree) ? adjustedMinSize - (bytesWritten + bytesFree) : 0;
 		{
 			const auto ret = startWriteWrapper();
@@ -379,7 +379,7 @@ std::pair<int, size_t> SerialPort::write(const void* const buffer, const size_t 
 					writeSemaphore_ = {};
 				});
 
-		bytesWritten += writeToCircularBuffer(bufferUint8 + bytesWritten, size - bytesWritten, writeBuffer_);
+		bytesWritten += writeToCircularBuffer(bufferUint8 + bytesWritten, size - bytesWritten, *currentWriteBuffer_);
 		{
 			const auto ret = startWriteWrapper();
 			if (ret != 0)
@@ -403,7 +403,7 @@ std::pair<int, size_t> SerialPort::write(const void* const buffer, const size_t 
 
 void SerialPort::readCompleteEvent(const size_t bytesRead)
 {
-	readBuffer_.increaseWritePosition(bytesRead);
+	currentReadBuffer_->increaseWritePosition(bytesRead);
 	const auto readLimit = readLimit_;
 	readLimit_ = readLimit - (bytesRead < readLimit ? bytesRead : readLimit);
 	readInProgress_ = false;
@@ -442,7 +442,7 @@ void SerialPort::transmitStartEvent()
 
 void SerialPort::writeCompleteEvent(const size_t bytesWritten)
 {
-	writeBuffer_.increaseReadPosition(bytesWritten);
+	currentWriteBuffer_->increaseReadPosition(bytesWritten);
 	const auto writeLimit = writeLimit_;
 	writeLimit_ = writeLimit - (bytesWritten < writeLimit ? bytesWritten : writeLimit);
 	writeInProgress_ = false;
@@ -463,13 +463,13 @@ void SerialPort::writeCompleteEvent(const size_t bytesWritten)
 
 int SerialPort::startReadWrapper()
 {
-	if (readInProgress_ == true || readBuffer_.isFull() == true)
+	if (readInProgress_ == true || currentReadBuffer_->isFull() == true)
 		return 0;
 
 	readInProgress_ = true;
-	const auto writeBlock = readBuffer_.getWriteBlock();
+	const auto writeBlock = currentReadBuffer_->getWriteBlock();
 	// rounding up is valid, capacity is never less than 2 and is always even
-	const auto readBufferHalf = ((readBuffer_.getCapacity() / 2 + 1) / 2) * 2;
+	const auto readBufferHalf = ((currentReadBuffer_->getCapacity() / 2 + 1) / 2) * 2;
 	const auto readLimit = readLimit_;
 	return uart_.startRead(writeBlock.first,
 			std::min({writeBlock.second, readBufferHalf, readLimit != 0 ? readLimit : SIZE_MAX}));
@@ -477,13 +477,13 @@ int SerialPort::startReadWrapper()
 
 int SerialPort::startWriteWrapper()
 {
-	if (writeInProgress_ == true || writeBuffer_.isEmpty() == true)
+	if (writeInProgress_ == true || currentWriteBuffer_->isEmpty() == true)
 		return 0;
 
 	writeInProgress_ = true;
-	const auto readBlock = writeBuffer_.getReadBlock();
+	const auto readBlock = currentWriteBuffer_->getReadBlock();
 	// rounding up is valid, capacity is never less than 2 and is always even
-	const auto writeBufferHalf = ((writeBuffer_.getCapacity() / 2 + 1) / 2) * 2;
+	const auto writeBufferHalf = ((currentWriteBuffer_->getCapacity() / 2 + 1) / 2) * 2;
 	const auto writeLimit = writeLimit_;
 	return uart_.startWrite(readBlock.first,
 			std::min({readBlock.second, writeBufferHalf, writeLimit != 0 ? writeLimit : SIZE_MAX}));
@@ -492,7 +492,7 @@ int SerialPort::startWriteWrapper()
 size_t SerialPort::stopReadWrapper()
 {
 	const auto bytesRead = uart_.stopRead();
-	readBuffer_.increaseWritePosition(bytesRead);
+	currentReadBuffer_->increaseWritePosition(bytesRead);
 	const auto readLimit = readLimit_;
 	readLimit_ = readLimit - (bytesRead < readLimit ? bytesRead : readLimit);
 	readInProgress_ = false;
@@ -502,7 +502,7 @@ size_t SerialPort::stopReadWrapper()
 size_t SerialPort::stopWriteWrapper()
 {
 	const auto bytesWritten = uart_.stopWrite();
-	writeBuffer_.increaseReadPosition(bytesWritten);
+	currentWriteBuffer_->increaseReadPosition(bytesWritten);
 	const auto writeLimit = writeLimit_;
 	writeLimit_ = writeLimit - (bytesWritten < writeLimit ? bytesWritten : writeLimit);
 	writeInProgress_ = false;

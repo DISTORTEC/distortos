@@ -179,6 +179,8 @@ public:
 					writeMutex_{Mutex::Type::normal, Mutex::Protocol::priorityInheritance},
 					readBuffer_{readBuffer, (readBufferSize / 2) * 2},
 					writeBuffer_{writeBuffer, (writeBufferSize / 2) * 2},
+					currentReadBuffer_{&readBuffer_},
+					currentWriteBuffer_{&writeBuffer_},
 					readSemaphore_{},
 					transmitSemaphore_{},
 					writeSemaphore_{},
@@ -419,11 +421,17 @@ private:
 	/// mutex used to serialize access to write(), close() and open()
 	Mutex writeMutex_;
 
-	/// circular buffer for read operations
+	/// internal instance of circular buffer for read operations
 	CircularBuffer readBuffer_;
 
-	/// circular buffer for write operations
+	/// internal instance of circular buffer for write operations
 	CircularBuffer writeBuffer_;
+
+	/// pointer to current circular buffer for read operations, always valid
+	CircularBuffer* volatile currentReadBuffer_;
+
+	/// pointer to current circular buffer for write operations, always valid
+	CircularBuffer* volatile currentWriteBuffer_;
 
 	/// pointer to semaphore used for "read complete" event notifications
 	Semaphore* volatile readSemaphore_;
