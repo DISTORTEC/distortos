@@ -181,6 +181,8 @@ public:
 					writeBuffer_{writeBuffer, (writeBufferSize / 2) * 2},
 					currentReadBuffer_{&readBuffer_},
 					currentWriteBuffer_{&writeBuffer_},
+					nextReadBuffer_{},
+					nextWriteBuffer_{},
 					readSemaphore_{},
 					transmitSemaphore_{},
 					writeSemaphore_{},
@@ -432,6 +434,12 @@ private:
 
 	/// pointer to current circular buffer for write operations, always valid
 	CircularBuffer* volatile currentWriteBuffer_;
+
+	/// pointer to next circular buffer for read operations, used when \a currentReadBuffer_ becomes full
+	CircularBuffer* volatile nextReadBuffer_;
+
+	/// pointer to nest circular buffer for write operations, used when \a currentWriteBuffer_ becomes empty
+	CircularBuffer* volatile nextWriteBuffer_;
 
 	/// pointer to semaphore used for "read complete" event notifications
 	Semaphore* volatile readSemaphore_;
