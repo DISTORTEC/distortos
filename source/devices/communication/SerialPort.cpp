@@ -520,13 +520,17 @@ int SerialPort::startReadWrapper()
 
 int SerialPort::startWriteWrapper()
 {
-	if (writeInProgress_ == true || currentWriteBuffer_->isEmpty() == true)
+	if (writeInProgress_ == true)
+			return 0;
+
+	const auto currentWriteBuffer = currentWriteBuffer_;
+	if (currentWriteBuffer->isEmpty() == true)
 		return 0;
 
 	writeInProgress_ = true;
-	const auto readBlock = currentWriteBuffer_->getReadBlock();
+	const auto readBlock = currentWriteBuffer->getReadBlock();
 	// rounding up is valid, capacity is never less than 2 and is always even
-	const auto writeBufferHalf = ((currentWriteBuffer_->getCapacity() / 2 + 1) / 2) * 2;
+	const auto writeBufferHalf = ((currentWriteBuffer->getCapacity() / 2 + 1) / 2) * 2;
 	const auto writeLimit = writeLimit_;
 	return uart_.startWrite(readBlock.first,
 			std::min({readBlock.second, writeBufferHalf, writeLimit != 0 ? writeLimit : SIZE_MAX}));
