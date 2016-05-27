@@ -415,7 +415,8 @@ private:
 	 *
 	 * Does nothing if write is already in progress or if write circular buffer is empty. Otherwise sets "write in
 	 * progress" flag, starts write operation with size that is the smallest of: size of first available read block,
-	 * half the size of write circular buffer and current size limit of write operations (only if it's not equal to 0).
+	 * half the size of write circular buffer (only for internal buffer) and current size limit of write operations
+	 * (only if it's not equal to 0).
 	 *
 	 * \return 0 on success, error code otherwise:
 	 * - error codes returned by internal::UartLowLevel::startWrite();
