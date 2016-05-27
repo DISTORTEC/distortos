@@ -515,8 +515,9 @@ int SerialPort::startReadWrapper()
 
 	readInProgress_ = true;
 	const auto writeBlock = currentReadBuffer->getWriteBlock();
-	// rounding up is valid, capacity is never less than 2 and is always even
-	const auto readBufferHalf = ((currentReadBuffer->getCapacity() / 2 + 1) / 2) * 2;
+	// rounding up is valid for internal buffer, capacity is never less than 2 and is always even
+	const auto readBufferHalf = currentReadBuffer == &readBuffer_ ?
+			((currentReadBuffer->getCapacity() / 2 + 1) / 2) * 2 : SIZE_MAX;
 	const auto readLimit = readLimit_;
 	return uart_.startRead(writeBlock.first,
 			std::min({writeBlock.second, readBufferHalf, readLimit != 0 ? readLimit : SIZE_MAX}));
