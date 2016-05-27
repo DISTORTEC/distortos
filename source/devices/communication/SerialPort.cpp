@@ -36,6 +36,31 @@ namespace
 +---------------------------------------------------------------------------------------------------------------------*/
 
 /**
+ * \brief Copies single block from one circular buffer to another.
+ *
+ * \param [in] source is a reference to circular buffer from which the data will be read
+ * \param [out] destination is a reference to circular buffer to which the data will be written
+ *
+ * \return number of bytes read from \a source and written to \a destination
+ */
+
+size_t copySingleBlock(SerialPort::CircularBuffer& source, SerialPort::CircularBuffer& destination)
+{
+	const auto readBlock = source.getReadBlock();
+	if (readBlock.second == 0)
+		return 0;
+	const auto writeBlock = destination.getWriteBlock();
+	if (writeBlock.second == 0)
+		return 0;
+
+	const auto size = std::min(readBlock.second, writeBlock.second);
+	memcpy(writeBlock.first, readBlock.first, size);
+	source.increaseReadPosition(size);
+	destination.increaseWritePosition(size);
+	return size;
+}
+
+/**
  * \brief Reads data from circular buffer.
  *
  * \param [in] circularBuffer is a reference to circular buffer from which the data will be read
@@ -469,6 +494,18 @@ void SerialPort::writeCompleteEvent(const size_t bytesWritten)
 /*---------------------------------------------------------------------------------------------------------------------+
 | private functions
 +---------------------------------------------------------------------------------------------------------------------*/
+
+int SerialPort::readFromCircularBufferAndStartRead(CircularBuffer& buffer)
+{
+	while (copySingleBlock(readBuffer_, buffer) != 0)
+	{
+		const auto ret = startReadWrapper();
+		if (ret != 0)
+			return ret;
+	}
+
+	return 0;
+}
 
 int SerialPort::startReadWrapper()
 {

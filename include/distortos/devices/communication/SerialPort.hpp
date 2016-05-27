@@ -373,6 +373,17 @@ protected:
 private:
 
 	/**
+	 * \brief Reads data from circular buffer and calls startReadWrapper().
+	 *
+	 * \param [out] buffer is a reference to circular buffer to which the data will be written
+	 *
+	 * \return 0 on success, error code otherwise:
+	 * - error codes returned by startReadWrapper();
+	 */
+
+	int readFromCircularBufferAndStartRead(CircularBuffer& buffer);
+
+	/**
 	 * \brief Wrapper for internal::UartLowLevel::startRead()
 	 *
 	 * Does nothing if read is already in progress or if read circular buffer is full. Otherwise sets "read in progress"
