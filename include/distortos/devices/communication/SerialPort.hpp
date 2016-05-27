@@ -313,8 +313,8 @@ protected:
 	 * - updates position of read circular buffer;
 	 * - changes current buffer to next one (if there is any next buffer and if current one is full);
 	 * - updates size limit of read operations;
+	 * - notifies any thread waiting for this event (if size limit of read operations reached 0);
 	 * - clears "read in progress" flag;
-	 * - notifies any thread waiting for this event;
 	 * - starts next read operation if current read buffer is not full;
 	 *
 	 * \param [in] bytesRead is the number of bytes read by low-level UART driver (and written to read buffer)
@@ -382,6 +382,19 @@ private:
 	 */
 
 	int readFromCircularBufferAndStartRead(CircularBuffer& buffer);
+
+	/**
+	 * \brief Implementation of basic read() functionality
+	 *
+	 * \param [out] buffer is a reference to circular buffer to which the data will be written
+	 * \param [in] minSize is the minimum size of read, bytes
+	 *
+	 * \return 0 on success, error code otherwise:
+	 * - EINTR - the wait was interrupted by an unmasked, caught signal;
+	 * - error codes returned by internal::UartLowLevel::startRead();
+	 */
+
+	int readImplementation(CircularBuffer& buffer, size_t minSize);
 
 	/**
 	 * \brief Wrapper for internal::UartLowLevel::startRead()
