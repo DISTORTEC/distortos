@@ -449,6 +449,17 @@ private:
 
 	size_t stopWriteWrapper();
 
+	/**
+	 * \brief Writes data to circular buffer and calls startWriteWrapper().
+	 *
+	 * \param [in] buffer is a reference to circular buffer from which the data will be read
+	 *
+	 * \return 0 on success, error code otherwise:
+	 * - error codes returned by startWriteWrapper();
+	 */
+
+	int writeToCircularBufferAndStartWrite(CircularBuffer& buffer);
+
 	/// mutex used to serialize access to read(), close() and open()
 	Mutex readMutex_;
 

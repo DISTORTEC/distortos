@@ -571,6 +571,18 @@ size_t SerialPort::stopWriteWrapper()
 	return bytesWritten;
 }
 
+int SerialPort::writeToCircularBufferAndStartWrite(CircularBuffer& buffer)
+{
+	while (copySingleBlock(buffer, writeBuffer_) != 0)
+	{
+		const auto ret = startWriteWrapper();
+		if (ret != 0)
+			return ret;
+	}
+
+	return 0;
+}
+
 }	// namespace devices
 
 }	// namespace distortos
