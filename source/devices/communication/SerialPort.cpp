@@ -506,13 +506,17 @@ int SerialPort::readImplementation(CircularBuffer& buffer, const size_t minSize)
 
 int SerialPort::startReadWrapper()
 {
-	if (readInProgress_ == true || currentReadBuffer_->isFull() == true)
+	if (readInProgress_ == true)
+		return 0;
+
+	const auto currentReadBuffer = currentReadBuffer_;
+	if (currentReadBuffer->isFull() == true)
 		return 0;
 
 	readInProgress_ = true;
-	const auto writeBlock = currentReadBuffer_->getWriteBlock();
+	const auto writeBlock = currentReadBuffer->getWriteBlock();
 	// rounding up is valid, capacity is never less than 2 and is always even
-	const auto readBufferHalf = ((currentReadBuffer_->getCapacity() / 2 + 1) / 2) * 2;
+	const auto readBufferHalf = ((currentReadBuffer->getCapacity() / 2 + 1) / 2) * 2;
 	const auto readLimit = readLimit_;
 	return uart_.startRead(writeBlock.first,
 			std::min({writeBlock.second, readBufferHalf, readLimit != 0 ? readLimit : SIZE_MAX}));
