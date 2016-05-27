@@ -365,7 +365,7 @@ protected:
 	 * - changes current buffer to next one (if there is any next buffer and if current one is empty);
 	 * - updates size limit of write operations;
 	 * - clears "write in progress" flag;
-	 * - notifies any thread waiting for this event;
+	 * - notifies any thread waiting for this event (if size limit of write operations reached 0);
 	 * - starts next write operation if current write buffer is not empty;
 	 *
 	 * \param [in] bytesWritten is the number of bytes written by low-level UART driver (and read from write buffer)
@@ -448,6 +448,19 @@ private:
 	 */
 
 	size_t stopWriteWrapper();
+
+	/**
+	 * \brief Implementation of basic write() functionality
+	 *
+	 * \param [in] buffer is a reference to circular buffer from which the data will be read
+	 * \param [in] minSize is the minimum size of write, bytes
+	 *
+	 * \return 0 on success, error code otherwise:
+	 * - EINTR - the wait was interrupted by an unmasked, caught signal;
+	 * - error codes returned by internal::UartLowLevel::startWrite();
+	 */
+
+	int writeImplementation(CircularBuffer& buffer, size_t minSize);
 
 	/**
 	 * \brief Writes data to circular buffer and calls startWriteWrapper().
