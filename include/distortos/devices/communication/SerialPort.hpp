@@ -361,9 +361,12 @@ protected:
 	 * Called by low-level UART driver when whole write buffer was transfered - the transmission may still be in
 	 * progress.
 	 *
-	 * Updates position of write circular buffer, updates size limit of write operations, clears "write in progress"
-	 * flag and notifies any thread waiting for this event. Next write operation is started if there's anything in the
-	 * write circular buffer.
+	 * - updates position of write circular buffer;
+	 * - changes current buffer to next one (if there is any next buffer and if current one is empty);
+	 * - updates size limit of write operations;
+	 * - clears "write in progress" flag;
+	 * - notifies any thread waiting for this event;
+	 * - starts next write operation if current write buffer is not empty;
 	 *
 	 * \param [in] bytesWritten is the number of bytes written by low-level UART driver (and read from write buffer)
 	 */

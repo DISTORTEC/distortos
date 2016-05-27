@@ -397,7 +397,16 @@ void SerialPort::transmitStartEvent()
 
 void SerialPort::writeCompleteEvent(const size_t bytesWritten)
 {
-	currentWriteBuffer_->increaseReadPosition(bytesWritten);
+	const auto currentWriteBuffer = currentWriteBuffer_;
+	currentWriteBuffer->increaseReadPosition(bytesWritten);
+
+	const auto nextWriteBuffer = nextWriteBuffer_;
+	if (nextWriteBuffer != nullptr && currentWriteBuffer->isEmpty() == true)
+	{
+		nextWriteBuffer_ = {};
+		currentWriteBuffer_ = nextWriteBuffer;
+	}
+
 	const auto writeLimit = writeLimit_;
 	writeLimit_ = writeLimit - (bytesWritten < writeLimit ? bytesWritten : writeLimit);
 	writeInProgress_ = false;
