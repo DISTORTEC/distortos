@@ -201,13 +201,15 @@ int SerialPort::open(const uint32_t baudRate, const uint8_t characterLength, con
 	return 0;
 }
 
-std::pair<int, size_t> SerialPort::read(void* const buffer, const size_t size, const size_t minSize)
+std::pair<int, size_t> SerialPort::read(void* const buffer, const size_t size, const size_t minSize,
+		const TickClock::time_point* const timePoint)
 {
 	if (buffer == nullptr || size == 0)
 		return {EINVAL, {}};
 
 	{
-		const auto ret = minSize == 0 ? readMutex_.tryLock() : readMutex_.lock();
+		const auto ret = minSize == 0 ? readMutex_.tryLock() :
+				timePoint != nullptr ? readMutex_.tryLockUntil(*timePoint) : readMutex_.lock();
 		if (ret != 0)
 			return {ret != EBUSY ? ret : EAGAIN, {}};
 	}
@@ -224,7 +226,7 @@ std::pair<int, size_t> SerialPort::read(void* const buffer, const size_t size, c
 		return {EINVAL, {}};
 
 	CircularBuffer localReadBuffer {buffer, size + 2};	// "+2" to allow buffer to be completely full
-	const auto ret = readImplementation(localReadBuffer, minSize, nullptr);
+	const auto ret = readImplementation(localReadBuffer, minSize, timePoint);
 	const auto bytesRead = localReadBuffer.getSize();
 	return {ret != 0 || bytesRead != 0 ? ret : EAGAIN, bytesRead};
 }
