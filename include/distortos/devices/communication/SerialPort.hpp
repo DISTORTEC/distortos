@@ -294,6 +294,8 @@ public:
 	 * \param [in] size is the size of \a buffer, bytes, must be even if selected character length is greater than 8
 	 * bits
 	 * \param [in] minSize is the minimum size of write, bytes, default - SIZE_MAX
+	 * \param [in] timePoint is a pointer to the time point at which the wait will be terminated without writing
+	 * \a minSize, nullptr to wait indefinitely, default - nullptr
 	 *
 	 * \return pair with return code (0 on success, error code otherwise) and number of written bytes (valid even when
 	 * error code is returned);
@@ -302,10 +304,12 @@ public:
 	 * - EBADF - the device is not opened;
 	 * - EINTR - the wait was interrupted by an unmasked, caught signal;
 	 * - EINVAL - \a buffer and/or \a size are invalid;
+	 * - ETIMEDOUT - required amount of data could not be written before the specified timeout expired;
 	 * - error codes returned by internal::UartLowLevel::startWrite();
 	 */
 
-	std::pair<int, size_t> write(const void* buffer, size_t size, size_t minSize = SIZE_MAX);
+	std::pair<int, size_t> write(const void* buffer, size_t size, size_t minSize = SIZE_MAX,
+			const TickClock::time_point* timePoint = nullptr);
 
 protected:
 

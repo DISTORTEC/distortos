@@ -231,13 +231,15 @@ std::pair<int, size_t> SerialPort::read(void* const buffer, const size_t size, c
 	return {ret != 0 || bytesRead != 0 ? ret : EAGAIN, bytesRead};
 }
 
-std::pair<int, size_t> SerialPort::write(const void* const buffer, const size_t size, const size_t minSize)
+std::pair<int, size_t> SerialPort::write(const void* const buffer, const size_t size, const size_t minSize,
+		const TickClock::time_point* const timePoint)
 {
 	if (buffer == nullptr || size == 0)
 		return {EINVAL, {}};
 
 	{
-		const auto ret = minSize == 0 ? writeMutex_.tryLock() : writeMutex_.lock();
+		const auto ret = minSize == 0 ? writeMutex_.tryLock() :
+				timePoint != nullptr ? writeMutex_.tryLockUntil(*timePoint) : writeMutex_.lock();
 		if (ret != 0)
 			return {ret != EBUSY ? ret : EAGAIN, {}};
 	}
@@ -257,7 +259,7 @@ std::pair<int, size_t> SerialPort::write(const void* const buffer, const size_t 
 	// local buffer is never written, so the cast is actually safe, but this has to be fixed anyway...
 	CircularBuffer localWriteBuffer {const_cast<void*>(buffer), size + 2};
 	localWriteBuffer.increaseWritePosition(size);	// make the buffer "full"
-	const auto ret = writeImplementation(localWriteBuffer, minSize, nullptr);
+	const auto ret = writeImplementation(localWriteBuffer, minSize, timePoint);
 	const auto bytesWritten = localWriteBuffer.getCapacity() - localWriteBuffer.getSize();
 	return {ret != 0 || bytesWritten != 0 ? ret : EAGAIN, bytesWritten};
 }
