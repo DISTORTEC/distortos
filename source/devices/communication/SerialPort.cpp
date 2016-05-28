@@ -257,7 +257,7 @@ std::pair<int, size_t> SerialPort::write(const void* const buffer, const size_t 
 	// local buffer is never written, so the cast is actually safe, but this has to be fixed anyway...
 	CircularBuffer localWriteBuffer {const_cast<void*>(buffer), size + 2};
 	localWriteBuffer.increaseWritePosition(size);	// make the buffer "full"
-	const auto ret = writeImplementation(localWriteBuffer, minSize);
+	const auto ret = writeImplementation(localWriteBuffer, minSize, nullptr);
 	const auto bytesWritten = localWriteBuffer.getCapacity() - localWriteBuffer.getSize();
 	return {ret != 0 || bytesWritten != 0 ? ret : EAGAIN, bytesWritten};
 }
@@ -499,7 +499,8 @@ size_t SerialPort::stopWriteWrapper()
 	return bytesWritten;
 }
 
-int SerialPort::writeImplementation(CircularBuffer& buffer, const size_t minSize)
+int SerialPort::writeImplementation(CircularBuffer& buffer, const size_t minSize,
+		const TickClock::time_point* const timePoint)
 {
 	// when character length is greater than 8 bits, round up "minSize" value
 	const auto adjustedMinSize =
@@ -551,7 +552,7 @@ int SerialPort::writeImplementation(CircularBuffer& buffer, const size_t minSize
 		}
 
 		if (block == true)
-			semaphoreRet = semaphore.wait();
+			semaphoreRet = timePoint != nullptr ? semaphore.tryWaitUntil(*timePoint) : semaphore.wait();
 	}
 
 	const auto ret = writeToCircularBufferAndStartWrite(buffer);
