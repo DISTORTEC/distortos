@@ -391,13 +391,16 @@ private:
 	 *
 	 * \param [out] buffer is a reference to circular buffer to which the data will be written
 	 * \param [in] minSize is the minimum size of read, bytes
+	 * \param [in] timePoint is a pointer to the time point at which the wait will be terminated without reading
+	 * \a minSize, nullptr to wait indefinitely
 	 *
 	 * \return 0 on success, error code otherwise:
 	 * - EINTR - the wait was interrupted by an unmasked, caught signal;
+	 * - ETIMEDOUT - required amount of data could not be read before the specified timeout expired;
 	 * - error codes returned by internal::UartLowLevel::startRead();
 	 */
 
-	int readImplementation(CircularBuffer& buffer, size_t minSize);
+	int readImplementation(CircularBuffer& buffer, size_t minSize, const TickClock::time_point* timePoint);
 
 	/**
 	 * \brief Wrapper for internal::UartLowLevel::startRead()

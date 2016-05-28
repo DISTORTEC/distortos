@@ -224,7 +224,7 @@ std::pair<int, size_t> SerialPort::read(void* const buffer, const size_t size, c
 		return {EINVAL, {}};
 
 	CircularBuffer localReadBuffer {buffer, size + 2};	// "+2" to allow buffer to be completely full
-	const auto ret = readImplementation(localReadBuffer, minSize);
+	const auto ret = readImplementation(localReadBuffer, minSize, nullptr);
 	const auto bytesRead = localReadBuffer.getSize();
 	return {ret != 0 || bytesRead != 0 ? ret : EAGAIN, bytesRead};
 }
@@ -362,7 +362,8 @@ int SerialPort::readFromCircularBufferAndStartRead(CircularBuffer& buffer)
 	return 0;
 }
 
-int SerialPort::readImplementation(CircularBuffer& buffer, const size_t minSize)
+int SerialPort::readImplementation(CircularBuffer& buffer, const size_t minSize,
+		const TickClock::time_point* const timePoint)
 {
 	// when character length is greater than 8 bits, round up "minSize" value
 	const auto adjustedMinSize =
@@ -432,7 +433,7 @@ int SerialPort::readImplementation(CircularBuffer& buffer, const size_t minSize)
 				return startReadRet != 0 ? startReadRet : ret;
 		}
 
-		semaphoreRet = semaphore.wait();
+		semaphoreRet = timePoint != nullptr ? semaphore.tryWaitUntil(*timePoint) : semaphore.wait();
 	}
 
 	return scopeGuardRet != 0 ? scopeGuardRet : semaphoreRet;
