@@ -179,6 +179,10 @@ public:
 					writeMutex_{Mutex::Type::normal, Mutex::Protocol::priorityInheritance},
 					readBuffer_{readBuffer, (readBufferSize / 2) * 2},
 					writeBuffer_{writeBuffer, (writeBufferSize / 2) * 2},
+					currentReadBuffer_{&readBuffer_},
+					currentWriteBuffer_{&writeBuffer_},
+					nextReadBuffer_{},
+					nextWriteBuffer_{},
 					readSemaphore_{},
 					transmitSemaphore_{},
 					writeSemaphore_{},
@@ -306,9 +310,12 @@ protected:
 	 *
 	 * Called by low-level UART driver when whole read buffer is filled.
 	 *
-	 * Updates position of read circular buffer, updates size limit of read operations, clears "read in progress" flag
-	 * and notifies any thread waiting for this event. If the read circular buffer is not full, next read operation is
-	 * started.
+	 * - updates position of read circular buffer;
+	 * - changes current buffer to next one (if there is any next buffer and if current one is full);
+	 * - updates size limit of read operations;
+	 * - notifies any thread waiting for this event (if size limit of read operations reached 0);
+	 * - clears "read in progress" flag;
+	 * - starts next read operation if current read buffer is not full;
 	 *
 	 * \param [in] bytesRead is the number of bytes read by low-level UART driver (and written to read buffer)
 	 */
@@ -354,9 +361,12 @@ protected:
 	 * Called by low-level UART driver when whole write buffer was transfered - the transmission may still be in
 	 * progress.
 	 *
-	 * Updates position of write circular buffer, updates size limit of write operations, clears "write in progress"
-	 * flag and notifies any thread waiting for this event. Next write operation is started if there's anything in the
-	 * write circular buffer.
+	 * - updates position of write circular buffer;
+	 * - changes current buffer to next one (if there is any next buffer and if current one is empty);
+	 * - updates size limit of write operations;
+	 * - clears "write in progress" flag;
+	 * - notifies any thread waiting for this event (if size limit of write operations reached 0);
+	 * - starts next write operation if current write buffer is not empty;
 	 *
 	 * \param [in] bytesWritten is the number of bytes written by low-level UART driver (and read from write buffer)
 	 */
@@ -366,11 +376,36 @@ protected:
 private:
 
 	/**
+	 * \brief Reads data from circular buffer and calls startReadWrapper().
+	 *
+	 * \param [out] buffer is a reference to circular buffer to which the data will be written
+	 *
+	 * \return 0 on success, error code otherwise:
+	 * - error codes returned by startReadWrapper();
+	 */
+
+	int readFromCircularBufferAndStartRead(CircularBuffer& buffer);
+
+	/**
+	 * \brief Implementation of basic read() functionality
+	 *
+	 * \param [out] buffer is a reference to circular buffer to which the data will be written
+	 * \param [in] minSize is the minimum size of read, bytes
+	 *
+	 * \return 0 on success, error code otherwise:
+	 * - EINTR - the wait was interrupted by an unmasked, caught signal;
+	 * - error codes returned by internal::UartLowLevel::startRead();
+	 */
+
+	int readImplementation(CircularBuffer& buffer, size_t minSize);
+
+	/**
 	 * \brief Wrapper for internal::UartLowLevel::startRead()
 	 *
 	 * Does nothing if read is already in progress or if read circular buffer is full. Otherwise sets "read in progress"
 	 * flag, starts read operation with size that is the smallest of: size of first available write block, half the size
-	 * of read circular buffer and current size limit of read operations (only if it's not equal to 0).
+	 * of read circular buffer (only for internal buffer) and current size limit of read operations (only if it's not
+	 * equal to 0).
 	 *
 	 * \return 0 on success, error code otherwise:
 	 * - error codes returned by internal::UartLowLevel::startRead();
@@ -383,7 +418,8 @@ private:
 	 *
 	 * Does nothing if write is already in progress or if write circular buffer is empty. Otherwise sets "write in
 	 * progress" flag, starts write operation with size that is the smallest of: size of first available read block,
-	 * half the size of write circular buffer and current size limit of write operations (only if it's not equal to 0).
+	 * half the size of write circular buffer (only for internal buffer) and current size limit of write operations
+	 * (only if it's not equal to 0).
 	 *
 	 * \return 0 on success, error code otherwise:
 	 * - error codes returned by internal::UartLowLevel::startWrite();
@@ -413,17 +449,53 @@ private:
 
 	size_t stopWriteWrapper();
 
+	/**
+	 * \brief Implementation of basic write() functionality
+	 *
+	 * \param [in] buffer is a reference to circular buffer from which the data will be read
+	 * \param [in] minSize is the minimum size of write, bytes
+	 *
+	 * \return 0 on success, error code otherwise:
+	 * - EINTR - the wait was interrupted by an unmasked, caught signal;
+	 * - error codes returned by internal::UartLowLevel::startWrite();
+	 */
+
+	int writeImplementation(CircularBuffer& buffer, size_t minSize);
+
+	/**
+	 * \brief Writes data to circular buffer and calls startWriteWrapper().
+	 *
+	 * \param [in] buffer is a reference to circular buffer from which the data will be read
+	 *
+	 * \return 0 on success, error code otherwise:
+	 * - error codes returned by startWriteWrapper();
+	 */
+
+	int writeToCircularBufferAndStartWrite(CircularBuffer& buffer);
+
 	/// mutex used to serialize access to read(), close() and open()
 	Mutex readMutex_;
 
 	/// mutex used to serialize access to write(), close() and open()
 	Mutex writeMutex_;
 
-	/// circular buffer for read operations
+	/// internal instance of circular buffer for read operations
 	CircularBuffer readBuffer_;
 
-	/// circular buffer for write operations
+	/// internal instance of circular buffer for write operations
 	CircularBuffer writeBuffer_;
+
+	/// pointer to current circular buffer for read operations, always valid
+	CircularBuffer* volatile currentReadBuffer_;
+
+	/// pointer to current circular buffer for write operations, always valid
+	CircularBuffer* volatile currentWriteBuffer_;
+
+	/// pointer to next circular buffer for read operations, used when \a currentReadBuffer_ becomes full
+	CircularBuffer* volatile nextReadBuffer_;
+
+	/// pointer to nest circular buffer for write operations, used when \a currentWriteBuffer_ becomes empty
+	CircularBuffer* volatile nextWriteBuffer_;
 
 	/// pointer to semaphore used for "read complete" event notifications
 	Semaphore* volatile readSemaphore_;
