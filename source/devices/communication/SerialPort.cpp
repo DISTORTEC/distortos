@@ -207,7 +207,7 @@ std::pair<int, size_t> SerialPort::read(void* const buffer, const size_t size, c
 		return {EINVAL, {}};
 
 	{
-		const auto ret = minSize != 0 ? readMutex_.lock() : readMutex_.tryLock();
+		const auto ret = minSize == 0 ? readMutex_.tryLock() : readMutex_.lock();
 		if (ret != 0)
 			return {ret != EBUSY ? ret : EAGAIN, {}};
 	}
@@ -235,7 +235,7 @@ std::pair<int, size_t> SerialPort::write(const void* const buffer, const size_t 
 		return {EINVAL, {}};
 
 	{
-		const auto ret = minSize != 0 ? writeMutex_.lock() : writeMutex_.tryLock();
+		const auto ret = minSize == 0 ? writeMutex_.tryLock() : writeMutex_.lock();
 		if (ret != 0)
 			return {ret != EBUSY ? ret : EAGAIN, {}};
 	}
