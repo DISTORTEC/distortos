@@ -364,6 +364,37 @@ public:
 	}
 
 	/**
+	 * \brief Wrapper for read() with absolute timeout
+	 *
+	 * Template variant of tryReadUntil(TickClock::time_point, void*, size_t, size_t)
+	 *
+	 * \tparam Duration is a std::chrono::duration type used to measure duration
+	 *
+	 * \param [in] timePoint is the time point at which the wait will be terminated without reading \a minSize
+	 * \param [out] buffer is the buffer to which the data will be written
+	 * \param [in] size is the size of \a buffer, bytes, must be even if selected character length is greater than 8
+	 * bits
+	 * \param [in] minSize is the minimum size of read, bytes, default - 1
+	 *
+	 * \return pair with return code (0 on success, error code otherwise) and number of read bytes (valid even when
+	 * error code is returned);
+	 * error codes:
+	 * - EAGAIN - no data can be read without blocking and non-blocking operation was requested (\a minSize is 0);
+	 * - EBADF - the device is not opened;
+	 * - EINTR - the wait was interrupted by an unmasked, caught signal;
+	 * - EINVAL - \a buffer and/or \a size are invalid;
+	 * - ETIMEDOUT - required amount of data could not be read before the specified timeout expired;
+	 * - error codes returned by internal::UartLowLevel::startRead();
+	 */
+
+	template<typename Duration>
+	std::pair<int, size_t> tryReadUntil(const std::chrono::time_point<TickClock, Duration> timePoint,
+			void* const buffer, const size_t size, const size_t minSize = 1)
+	{
+		return tryReadUntil(std::chrono::time_point_cast<TickClock::duration>(timePoint), buffer, size, minSize);
+	}
+
+	/**
 	 * \brief Wrapper for write() with relative timeout
 	 *
 	 * \param [in] duration is the duration after which the wait will be terminated without writing \a minSize
