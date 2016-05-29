@@ -18,8 +18,9 @@ executed only once. Otherwise it will be executed periodically until the softwar
 - "Peripherals configuration" *Kconfig* menu for *STM32F4*, where low-level drivers for U[S]ART can be selected.
 - `uarts.hpp` header for *STM32F4* with declarations of all enabled low-level U[S]ART drivers.
 - `devices::SerialPort` class - universal serial port device with an interface similar to standard files (`open()`,
-`close()`, `read()`, `write()`). `read()` and `write()` member functions of this class support both blocking and
-non-blocking behaviour.
+`close()`, `read()`, `write()`). `read()` and `write()` member functions of this class support both blocking (with
+or without timeout) and non-blocking behaviour. Convenient wrappers for reading/writing with timeout are also provided:
+`tryReadFor()`, `tryReadUntil()`, `tryWriteFor()` and `tryWriteUntil()`.
 - `estd::ScopeGuard` template class, which can be used to execute bounded function on scope exit using RAII pattern.
 - `devices::Rs485` class - *RS-485* device with all features of `devices::SerialPort` and with automatic management
 of "driver enable" output pin.

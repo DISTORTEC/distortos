@@ -262,6 +262,8 @@ public:
 	 * \param [in] size is the size of \a buffer, bytes, must be even if selected character length is greater than 8
 	 * bits
 	 * \param [in] minSize is the minimum size of read, bytes, default - 1
+	 * \param [in] timePoint is a pointer to the time point at which the wait will be terminated without reading
+	 * \a minSize, nullptr to wait indefinitely, default - nullptr
 	 *
 	 * \return pair with return code (0 on success, error code otherwise) and number of read bytes (valid even when
 	 * error code is returned);
@@ -270,10 +272,240 @@ public:
 	 * - EBADF - the device is not opened;
 	 * - EINTR - the wait was interrupted by an unmasked, caught signal;
 	 * - EINVAL - \a buffer and/or \a size are invalid;
+	 * - ETIMEDOUT - required amount of data could not be read before the specified timeout expired;
 	 * - error codes returned by internal::UartLowLevel::startRead();
 	 */
 
-	std::pair<int, size_t> read(void* buffer, size_t size, size_t minSize = 1);
+	std::pair<int, size_t> read(void* buffer, size_t size, size_t minSize = 1,
+			const TickClock::time_point* timePoint = nullptr);
+
+	/**
+	 * \brief Wrapper for read() with relative timeout
+	 *
+	 * \param [in] duration is the duration after which the wait will be terminated without reading \a minSize
+	 * \param [out] buffer is the buffer to which the data will be written
+	 * \param [in] size is the size of \a buffer, bytes, must be even if selected character length is greater than 8
+	 * bits
+	 * \param [in] minSize is the minimum size of read, bytes, default - 1
+	 *
+	 * \return pair with return code (0 on success, error code otherwise) and number of read bytes (valid even when
+	 * error code is returned);
+	 * error codes:
+	 * - EAGAIN - no data can be read without blocking and non-blocking operation was requested (\a minSize is 0);
+	 * - EBADF - the device is not opened;
+	 * - EINTR - the wait was interrupted by an unmasked, caught signal;
+	 * - EINVAL - \a buffer and/or \a size are invalid;
+	 * - ETIMEDOUT - required amount of data could not be read before the specified timeout expired;
+	 * - error codes returned by internal::UartLowLevel::startRead();
+	 */
+
+	std::pair<int, size_t> tryReadFor(const TickClock::duration duration, void* const buffer, const size_t size,
+			const size_t minSize = 1)
+	{
+		return tryReadUntil(TickClock::now() + duration, buffer, size, minSize);
+	}
+
+	/**
+	 * \brief Wrapper for read() with relative timeout
+	 *
+	 * Templated variant of tryReadFor(TickClock::duration, void*, size_t, size_t)
+	 *
+	 * \tparam Rep is type of tick counter
+	 * \tparam Period is std::ratio type representing the tick period of the clock, seconds
+	 *
+	 * \param [in] duration is the duration after which the wait will be terminated without reading \a minSize
+	 * \param [out] buffer is the buffer to which the data will be written
+	 * \param [in] size is the size of \a buffer, bytes, must be even if selected character length is greater than 8
+	 * bits
+	 * \param [in] minSize is the minimum size of read, bytes, default - 1
+	 *
+	 * \return pair with return code (0 on success, error code otherwise) and number of read bytes (valid even when
+	 * error code is returned);
+	 * error codes:
+	 * - EAGAIN - no data can be read without blocking and non-blocking operation was requested (\a minSize is 0);
+	 * - EBADF - the device is not opened;
+	 * - EINTR - the wait was interrupted by an unmasked, caught signal;
+	 * - EINVAL - \a buffer and/or \a size are invalid;
+	 * - ETIMEDOUT - required amount of data could not be read before the specified timeout expired;
+	 * - error codes returned by internal::UartLowLevel::startRead();
+	 */
+
+	template<typename Rep, typename Period>
+	std::pair<int, size_t> tryReadFor(const std::chrono::duration<Rep, Period> duration, void* const buffer,
+			const size_t size, const size_t minSize = 1)
+	{
+		return tryReadFor(std::chrono::duration_cast<TickClock::duration>(duration), buffer, size, minSize);
+	}
+
+	/**
+	 * \brief Wrapper for read() with absolute timeout
+	 *
+	 * \param [in] timePoint is the time point at which the wait will be terminated without reading \a minSize
+	 * \param [out] buffer is the buffer to which the data will be written
+	 * \param [in] size is the size of \a buffer, bytes, must be even if selected character length is greater than 8
+	 * bits
+	 * \param [in] minSize is the minimum size of read, bytes, default - 1
+	 *
+	 * \return pair with return code (0 on success, error code otherwise) and number of read bytes (valid even when
+	 * error code is returned);
+	 * error codes:
+	 * - EAGAIN - no data can be read without blocking and non-blocking operation was requested (\a minSize is 0);
+	 * - EBADF - the device is not opened;
+	 * - EINTR - the wait was interrupted by an unmasked, caught signal;
+	 * - EINVAL - \a buffer and/or \a size are invalid;
+	 * - ETIMEDOUT - required amount of data could not be read before the specified timeout expired;
+	 * - error codes returned by internal::UartLowLevel::startRead();
+	 */
+
+	std::pair<int, size_t> tryReadUntil(const TickClock::time_point timePoint, void* const buffer, const size_t size,
+			const size_t minSize = 1)
+	{
+		return read(buffer, size, minSize, &timePoint);
+	}
+
+	/**
+	 * \brief Wrapper for read() with absolute timeout
+	 *
+	 * Template variant of tryReadUntil(TickClock::time_point, void*, size_t, size_t)
+	 *
+	 * \tparam Duration is a std::chrono::duration type used to measure duration
+	 *
+	 * \param [in] timePoint is the time point at which the wait will be terminated without reading \a minSize
+	 * \param [out] buffer is the buffer to which the data will be written
+	 * \param [in] size is the size of \a buffer, bytes, must be even if selected character length is greater than 8
+	 * bits
+	 * \param [in] minSize is the minimum size of read, bytes, default - 1
+	 *
+	 * \return pair with return code (0 on success, error code otherwise) and number of read bytes (valid even when
+	 * error code is returned);
+	 * error codes:
+	 * - EAGAIN - no data can be read without blocking and non-blocking operation was requested (\a minSize is 0);
+	 * - EBADF - the device is not opened;
+	 * - EINTR - the wait was interrupted by an unmasked, caught signal;
+	 * - EINVAL - \a buffer and/or \a size are invalid;
+	 * - ETIMEDOUT - required amount of data could not be read before the specified timeout expired;
+	 * - error codes returned by internal::UartLowLevel::startRead();
+	 */
+
+	template<typename Duration>
+	std::pair<int, size_t> tryReadUntil(const std::chrono::time_point<TickClock, Duration> timePoint,
+			void* const buffer, const size_t size, const size_t minSize = 1)
+	{
+		return tryReadUntil(std::chrono::time_point_cast<TickClock::duration>(timePoint), buffer, size, minSize);
+	}
+
+	/**
+	 * \brief Wrapper for write() with relative timeout
+	 *
+	 * \param [in] duration is the duration after which the wait will be terminated without writing \a minSize
+	 * \param [in] buffer is the buffer with data that will be transmitted
+	 * \param [in] size is the size of \a buffer, bytes, must be even if selected character length is greater than 8
+	 * bits
+	 * \param [in] minSize is the minimum size of write, bytes, default - SIZE_MAX
+	 *
+	 * \return pair with return code (0 on success, error code otherwise) and number of written bytes (valid even when
+	 * error code is returned);
+	 * error codes:
+	 * - EAGAIN - no data can be written without blocking and non-blocking operation was requested (\a minSize is 0);
+	 * - EBADF - the device is not opened;
+	 * - EINTR - the wait was interrupted by an unmasked, caught signal;
+	 * - EINVAL - \a buffer and/or \a size are invalid;
+	 * - ETIMEDOUT - required amount of data could not be written before the specified timeout expired;
+	 * - error codes returned by internal::UartLowLevel::startWrite();
+	 */
+
+	std::pair<int, size_t> tryWriteFor(const TickClock::duration duration, const void* const buffer, const size_t size,
+			const size_t minSize = SIZE_MAX)
+	{
+		return tryWriteUntil(TickClock::now() + duration, buffer, size, minSize);
+	}
+
+	/**
+	 * \brief Wrapper for write() with relative timeout
+	 *
+	 * Template variant of tryWriteFor(TickClock::duration, const void*, size_t, size_t)
+	 *
+	 * \tparam Rep is type of tick counter
+	 * \tparam Period is std::ratio type representing the tick period of the clock, seconds
+	 *
+	 * \param [in] duration is the duration after which the wait will be terminated without writing \a minSize
+	 * \param [in] buffer is the buffer with data that will be transmitted
+	 * \param [in] size is the size of \a buffer, bytes, must be even if selected character length is greater than 8
+	 * bits
+	 * \param [in] minSize is the minimum size of write, bytes, default - SIZE_MAX
+	 *
+	 * \return pair with return code (0 on success, error code otherwise) and number of written bytes (valid even when
+	 * error code is returned);
+	 * error codes:
+	 * - EAGAIN - no data can be written without blocking and non-blocking operation was requested (\a minSize is 0);
+	 * - EBADF - the device is not opened;
+	 * - EINTR - the wait was interrupted by an unmasked, caught signal;
+	 * - EINVAL - \a buffer and/or \a size are invalid;
+	 * - ETIMEDOUT - required amount of data could not be written before the specified timeout expired;
+	 * - error codes returned by internal::UartLowLevel::startWrite();
+	 */
+
+	template<typename Rep, typename Period>
+	std::pair<int, size_t> tryWriteFor(const std::chrono::duration<Rep, Period> duration, const void* const buffer,
+			const size_t size, const size_t minSize = SIZE_MAX)
+	{
+		return tryWriteFor(std::chrono::duration_cast<TickClock::duration>(duration), buffer, size, minSize);
+	}
+
+	/**
+	 * \brief Wrapper for write() with absolute timeout
+	 *
+	 * \param [in] timePoint is the time point at which the wait will be terminated without writing \a minSize
+	 * \param [in] buffer is the buffer with data that will be transmitted
+	 * \param [in] size is the size of \a buffer, bytes, must be even if selected character length is greater than 8
+	 * bits
+	 * \param [in] minSize is the minimum size of write, bytes, default - SIZE_MAX
+	 *
+	 * \return pair with return code (0 on success, error code otherwise) and number of written bytes (valid even when
+	 * error code is returned);
+	 * error codes:
+	 * - EAGAIN - no data can be written without blocking and non-blocking operation was requested (\a minSize is 0);
+	 * - EBADF - the device is not opened;
+	 * - EINTR - the wait was interrupted by an unmasked, caught signal;
+	 * - EINVAL - \a buffer and/or \a size are invalid;
+	 * - ETIMEDOUT - required amount of data could not be written before the specified timeout expired;
+	 * - error codes returned by internal::UartLowLevel::startWrite();
+	 */
+
+	std::pair<int, size_t> tryWriteUntil(const TickClock::time_point timePoint, const void* const buffer,
+			const size_t size, const size_t minSize = SIZE_MAX)
+	{
+		return write(buffer, size, minSize, &timePoint);
+	}
+
+	/**
+	 * \brief Wrapper for write() with absolute timeout
+	 *
+	 * Templated variant of tryWriteUntil(TickClock::time_point, const void*, size_t, size_t)
+	 *
+	 * \param [in] timePoint is the time point at which the wait will be terminated without writing \a minSize
+	 * \param [in] buffer is the buffer with data that will be transmitted
+	 * \param [in] size is the size of \a buffer, bytes, must be even if selected character length is greater than 8
+	 * bits
+	 * \param [in] minSize is the minimum size of write, bytes, default - SIZE_MAX
+	 *
+	 * \return pair with return code (0 on success, error code otherwise) and number of written bytes (valid even when
+	 * error code is returned);
+	 * error codes:
+	 * - EAGAIN - no data can be written without blocking and non-blocking operation was requested (\a minSize is 0);
+	 * - EBADF - the device is not opened;
+	 * - EINTR - the wait was interrupted by an unmasked, caught signal;
+	 * - EINVAL - \a buffer and/or \a size are invalid;
+	 * - ETIMEDOUT - required amount of data could not be written before the specified timeout expired;
+	 * - error codes returned by internal::UartLowLevel::startWrite();
+	 */
+
+	template<typename Duration>
+	std::pair<int, size_t> tryWriteUntil(const std::chrono::time_point<TickClock, Duration> timePoint,
+			const void* const buffer, const size_t size, const size_t minSize = SIZE_MAX)
+	{
+		return tryWriteUntil(std::chrono::time_point_cast<TickClock::duration>(timePoint), buffer, size, minSize);
+	}
 
 	/**
 	 * \brief Writes data to SerialPort
@@ -290,6 +522,8 @@ public:
 	 * \param [in] size is the size of \a buffer, bytes, must be even if selected character length is greater than 8
 	 * bits
 	 * \param [in] minSize is the minimum size of write, bytes, default - SIZE_MAX
+	 * \param [in] timePoint is a pointer to the time point at which the wait will be terminated without writing
+	 * \a minSize, nullptr to wait indefinitely, default - nullptr
 	 *
 	 * \return pair with return code (0 on success, error code otherwise) and number of written bytes (valid even when
 	 * error code is returned);
@@ -298,10 +532,12 @@ public:
 	 * - EBADF - the device is not opened;
 	 * - EINTR - the wait was interrupted by an unmasked, caught signal;
 	 * - EINVAL - \a buffer and/or \a size are invalid;
+	 * - ETIMEDOUT - required amount of data could not be written before the specified timeout expired;
 	 * - error codes returned by internal::UartLowLevel::startWrite();
 	 */
 
-	std::pair<int, size_t> write(const void* buffer, size_t size, size_t minSize = SIZE_MAX);
+	std::pair<int, size_t> write(const void* buffer, size_t size, size_t minSize = SIZE_MAX,
+			const TickClock::time_point* timePoint = nullptr);
 
 protected:
 
@@ -391,13 +627,16 @@ private:
 	 *
 	 * \param [out] buffer is a reference to circular buffer to which the data will be written
 	 * \param [in] minSize is the minimum size of read, bytes
+	 * \param [in] timePoint is a pointer to the time point at which the wait will be terminated without reading
+	 * \a minSize, nullptr to wait indefinitely
 	 *
 	 * \return 0 on success, error code otherwise:
 	 * - EINTR - the wait was interrupted by an unmasked, caught signal;
+	 * - ETIMEDOUT - required amount of data could not be read before the specified timeout expired;
 	 * - error codes returned by internal::UartLowLevel::startRead();
 	 */
 
-	int readImplementation(CircularBuffer& buffer, size_t minSize);
+	int readImplementation(CircularBuffer& buffer, size_t minSize, const TickClock::time_point* timePoint);
 
 	/**
 	 * \brief Wrapper for internal::UartLowLevel::startRead()
@@ -454,13 +693,16 @@ private:
 	 *
 	 * \param [in] buffer is a reference to circular buffer from which the data will be read
 	 * \param [in] minSize is the minimum size of write, bytes
+	 * \param [in] timePoint is a pointer to the time point at which the wait will be terminated without writing
+	 * \a minSize, nullptr to wait indefinitely
 	 *
 	 * \return 0 on success, error code otherwise:
 	 * - EINTR - the wait was interrupted by an unmasked, caught signal;
+	 * - ETIMEDOUT - required amount of data could not be written before the specified timeout expired;
 	 * - error codes returned by internal::UartLowLevel::startWrite();
 	 */
 
-	int writeImplementation(CircularBuffer& buffer, size_t minSize);
+	int writeImplementation(CircularBuffer& buffer, size_t minSize, const TickClock::time_point* timePoint);
 
 	/**
 	 * \brief Writes data to circular buffer and calls startWriteWrapper().

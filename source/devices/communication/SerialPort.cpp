@@ -201,13 +201,15 @@ int SerialPort::open(const uint32_t baudRate, const uint8_t characterLength, con
 	return 0;
 }
 
-std::pair<int, size_t> SerialPort::read(void* const buffer, const size_t size, const size_t minSize)
+std::pair<int, size_t> SerialPort::read(void* const buffer, const size_t size, const size_t minSize,
+		const TickClock::time_point* const timePoint)
 {
 	if (buffer == nullptr || size == 0)
 		return {EINVAL, {}};
 
 	{
-		const auto ret = minSize != 0 ? readMutex_.lock() : readMutex_.tryLock();
+		const auto ret = minSize == 0 ? readMutex_.tryLock() :
+				timePoint != nullptr ? readMutex_.tryLockUntil(*timePoint) : readMutex_.lock();
 		if (ret != 0)
 			return {ret != EBUSY ? ret : EAGAIN, {}};
 	}
@@ -224,18 +226,20 @@ std::pair<int, size_t> SerialPort::read(void* const buffer, const size_t size, c
 		return {EINVAL, {}};
 
 	CircularBuffer localReadBuffer {buffer, size + 2};	// "+2" to allow buffer to be completely full
-	const auto ret = readImplementation(localReadBuffer, minSize);
+	const auto ret = readImplementation(localReadBuffer, minSize, timePoint);
 	const auto bytesRead = localReadBuffer.getSize();
 	return {ret != 0 || bytesRead != 0 ? ret : EAGAIN, bytesRead};
 }
 
-std::pair<int, size_t> SerialPort::write(const void* const buffer, const size_t size, const size_t minSize)
+std::pair<int, size_t> SerialPort::write(const void* const buffer, const size_t size, const size_t minSize,
+		const TickClock::time_point* const timePoint)
 {
 	if (buffer == nullptr || size == 0)
 		return {EINVAL, {}};
 
 	{
-		const auto ret = minSize != 0 ? writeMutex_.lock() : writeMutex_.tryLock();
+		const auto ret = minSize == 0 ? writeMutex_.tryLock() :
+				timePoint != nullptr ? writeMutex_.tryLockUntil(*timePoint) : writeMutex_.lock();
 		if (ret != 0)
 			return {ret != EBUSY ? ret : EAGAIN, {}};
 	}
@@ -255,7 +259,7 @@ std::pair<int, size_t> SerialPort::write(const void* const buffer, const size_t 
 	// local buffer is never written, so the cast is actually safe, but this has to be fixed anyway...
 	CircularBuffer localWriteBuffer {const_cast<void*>(buffer), size + 2};
 	localWriteBuffer.increaseWritePosition(size);	// make the buffer "full"
-	const auto ret = writeImplementation(localWriteBuffer, minSize);
+	const auto ret = writeImplementation(localWriteBuffer, minSize, timePoint);
 	const auto bytesWritten = localWriteBuffer.getCapacity() - localWriteBuffer.getSize();
 	return {ret != 0 || bytesWritten != 0 ? ret : EAGAIN, bytesWritten};
 }
@@ -362,7 +366,8 @@ int SerialPort::readFromCircularBufferAndStartRead(CircularBuffer& buffer)
 	return 0;
 }
 
-int SerialPort::readImplementation(CircularBuffer& buffer, const size_t minSize)
+int SerialPort::readImplementation(CircularBuffer& buffer, const size_t minSize,
+		const TickClock::time_point* const timePoint)
 {
 	// when character length is greater than 8 bits, round up "minSize" value
 	const auto adjustedMinSize =
@@ -432,7 +437,7 @@ int SerialPort::readImplementation(CircularBuffer& buffer, const size_t minSize)
 				return startReadRet != 0 ? startReadRet : ret;
 		}
 
-		semaphoreRet = semaphore.wait();
+		semaphoreRet = timePoint != nullptr ? semaphore.tryWaitUntil(*timePoint) : semaphore.wait();
 	}
 
 	return scopeGuardRet != 0 ? scopeGuardRet : semaphoreRet;
@@ -496,7 +501,8 @@ size_t SerialPort::stopWriteWrapper()
 	return bytesWritten;
 }
 
-int SerialPort::writeImplementation(CircularBuffer& buffer, const size_t minSize)
+int SerialPort::writeImplementation(CircularBuffer& buffer, const size_t minSize,
+		const TickClock::time_point* const timePoint)
 {
 	// when character length is greater than 8 bits, round up "minSize" value
 	const auto adjustedMinSize =
@@ -548,7 +554,7 @@ int SerialPort::writeImplementation(CircularBuffer& buffer, const size_t minSize
 		}
 
 		if (block == true)
-			semaphoreRet = semaphore.wait();
+			semaphoreRet = timePoint != nullptr ? semaphore.tryWaitUntil(*timePoint) : semaphore.wait();
 	}
 
 	const auto ret = writeToCircularBufferAndStartWrite(buffer);
