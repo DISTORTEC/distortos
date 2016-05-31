@@ -298,7 +298,7 @@ public:
 	~SerialPort() override;
 
 	/**
-	 * \brief Closes SerialPort
+	 * \brief Closes SerialPort.
 	 *
 	 * Does nothing if any user still has this device opened. Otherwise all transfers and low-level driver are stopped.
 	 * If any write transfer is still in progress, this function will wait for physical end of transmission before
@@ -315,7 +315,7 @@ public:
 	int close();
 
 	/**
-	 * \brief Opens SerialPort
+	 * \brief Opens SerialPort.
 	 *
 	 * Does nothing if any user already has this device opened. Otherwise low-level driver and buffered reads are
 	 * started.
@@ -336,7 +336,7 @@ public:
 	int open(uint32_t baudRate, uint8_t characterLength, devices::UartParity parity, bool _2StopBits);
 
 	/**
-	 * \brief Reads data from SerialPort
+	 * \brief Reads data from SerialPort.
 	 *
 	 * Similar to POSIX read() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/read.html#
 	 *
@@ -596,7 +596,7 @@ public:
 	}
 
 	/**
-	 * \brief Writes data to SerialPort
+	 * \brief Writes data to SerialPort.
 	 *
 	 * Similar to POSIX write() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/write.html#
 	 *
