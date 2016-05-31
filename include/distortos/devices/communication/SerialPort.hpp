@@ -43,7 +43,14 @@ class SerialPort : private internal::UartBase
 {
 public:
 
-	/// thread-safe, lock-free circular buffer for one-producer and one-consumer
+	/**
+	 * \brief Thread-safe, lock-free circular buffer for one-producer and one-consumer
+	 *
+	 * Distinction between empty and full buffer is possible because most significant bits of read and write positions
+	 * are used as single-bit counters or wrap-arounds. This limits the size of buffer to SIZE_MAX / 2, but allows full
+	 * utilization of storage (no free slot is needed).
+	 */
+
 	class CircularBuffer
 	{
 	public:
@@ -52,7 +59,7 @@ public:
 		 * \brief CircularBuffer's constructor
 		 *
 		 * \param [in] buffer is a buffer for data
-		 * \param [in] size is the size of \a buffer, bytes, should be even, must be greater than or equal to 4
+		 * \param [in] size is the size of \a buffer, bytes, must be less than or equal to SIZE_MAX / 2
 		 */
 
 		constexpr CircularBuffer(void* const buffer, const size_t size) :
@@ -70,8 +77,8 @@ public:
 
 		void clear()
 		{
-			readPosition_ = 0;
-			writePosition_ = 0;
+			readPosition_ = {};
+			writePosition_ = {};
 		}
 
 		/**
@@ -80,11 +87,11 @@ public:
 
 		size_t getCapacity() const
 		{
-			return size_ >= 2 ? size_ - 2 : 0;
+			return size_;
 		}
 
 		/**
-		 * \return First contiguous block (as a pair with pointer and size) available for reading
+		 * \return first contiguous block (as a pair with pointer and size) available for reading
 		 */
 
 		std::pair<const uint8_t*, size_t> getReadBlock() const;
@@ -95,17 +102,23 @@ public:
 
 		size_t getSize() const
 		{
-			return (size_ - readPosition_ + writePosition_) % size_;
+			const auto readPosition = readPosition_ ;
+			const auto writePosition = writePosition_;
+			if (isEmpty(readPosition, writePosition) == true)
+				return 0;
+			if (isFull(readPosition, writePosition) == true)
+				return size_;
+			return (size_ - (readPosition & positionMask_) + (writePosition & positionMask_)) % size_;
 		}
 
 		/**
-		 * \return First contiguous block (as a pair with pointer and size) available for writing
+		 * \return first contiguous block (as a pair with pointer and size) available for writing
 		 */
 
 		std::pair<uint8_t*, size_t> getWriteBlock() const;
 
 		/**
-		 * \brief Increases read position by given value
+		 * \brief Increases read position by given value.
 		 *
 		 * \param [in] value is the value which will be added to read position, must come from previous call to
 		 * getReadBlock()
@@ -113,11 +126,11 @@ public:
 
 		void increaseReadPosition(const size_t value)
 		{
-			readPosition_ = (readPosition_ + value) % size_;
+			readPosition_ = increasePosition(readPosition_, value);
 		}
 
 		/**
-		 * \brief Increases write position by given value
+		 * \brief Increases write position by given value.
 		 *
 		 * \param [in] value is the value which will be added to write position, must come from previous call to
 		 * getWriteBlock()
@@ -125,7 +138,7 @@ public:
 
 		void increaseWritePosition(const size_t value)
 		{
-			writePosition_ = (writePosition_ + value) % size_;
+			writePosition_ = increasePosition(writePosition_, value);
 		}
 
 		/**
@@ -134,7 +147,7 @@ public:
 
 		bool isEmpty() const
 		{
-			return readPosition_ == writePosition_;
+			return isEmpty(readPosition_, writePosition_);
 		}
 
 		/**
@@ -143,10 +156,85 @@ public:
 
 		bool isFull() const
 		{
-			return readPosition_ == (writePosition_ + 2) % size_;
+			return isFull(readPosition_, writePosition_);
 		}
 
 	private:
+
+		/**
+		 * \brief Gets first contiguous block between \a position1 and \a position2.
+		 *
+		 * This function does not treat empty or full buffer in any special way.
+		 *
+		 * \param [in] begin is the beginning position
+		 * \param [in] end is the ending position
+		 *
+		 * \return first contiguous block (as a pair with pointer and size) starting at \a begin and not crossing \a end
+		 * or end of buffer
+		 */
+
+		std::pair<uint8_t*, size_t> getBlock(const size_t begin, const size_t end) const
+		{
+			const auto maskedBegin = begin & positionMask_;
+			const auto maskedEnd = end & positionMask_;
+			return {buffer_ + maskedBegin, (maskedEnd > maskedBegin ? maskedEnd : size_) - maskedBegin};
+		}
+
+		/**
+		 * \brief Increases given position by given value.
+		 *
+		 * \param [in] position is the position that will be incremented
+		 * \param [in] value is the value which will be added to \a position, must come from previous call to
+		 * getReadBlock() / getWriteBlock()
+		 *
+		 * \return \a position incremented by \a value
+		 */
+
+		size_t increasePosition(const size_t position, const size_t value)
+		{
+			const auto maskedPosition = position & positionMask_;
+			const auto msb = position & msbMask_;
+			// in case of wrap-around MSB is inverted and position is 0
+			return maskedPosition + value != size_ ? msb | (maskedPosition + value) : msb ^ msbMask_;
+		}
+
+		/**
+		 * \brief Tests for empty circular buffer.
+		 *
+		 * The buffer is empty is read and write positions are equal, including their MSBs.
+		 *
+		 * \param [in] readPosition is the value of \a readPosition_
+		 * \param [in] writePosition is the value of \a writePosition_
+		 *
+		 * \return true if circular buffer is empty, false otherwise
+		 */
+
+		constexpr static bool isEmpty(const size_t readPosition, const size_t writePosition)
+		{
+			return readPosition == writePosition;
+		}
+
+		/**
+		 * \brief Tests for full circular buffer.
+		 *
+		 * The buffer is full is masked read and write positions are equal, but their MSBs are different.
+		 *
+		 * \param [in] readPosition is the value of \a readPosition_
+		 * \param [in] writePosition is the value of \a writePosition_
+		 *
+		 * \return true if circular buffer is full, false otherwise
+		 */
+
+		constexpr static bool isFull(const size_t readPosition, const size_t writePosition)
+		{
+			return (readPosition ^ writePosition) == msbMask_;
+		}
+
+		/// bitmask used to extract position from \a readPosition_ or \a writePosition_
+		constexpr static size_t positionMask_ {SIZE_MAX >> 1};
+
+		/// bitmask used to extract MSB from \a readPosition_ or \a writePosition_
+		constexpr static size_t msbMask_ {~positionMask_};
 
 		/// pointer to beginning of buffer
 		uint8_t* buffer_;
@@ -167,10 +255,10 @@ public:
 	 * \param [in] uart is a reference to low-level implementation of internal::UartLowLevel interface
 	 * \param [in] readBuffer is a buffer for read operations
 	 * \param [in] readBufferSize is the size of \a readBuffer, bytes, should be even, must be greater than or equal to
-	 * 4
+	 * 2
 	 * \param [in] writeBuffer is a buffer to write operations
 	 * \param [in] writeBufferSize is the size of \a writeBuffer, bytes, should be even, must be greater than or equal
-	 * to 4
+	 * to 2
 	 */
 
 	constexpr SerialPort(internal::UartLowLevel& uart, void* const readBuffer, const size_t readBufferSize,

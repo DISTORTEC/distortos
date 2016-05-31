@@ -38,10 +38,10 @@ public:
 	 * \param [in] uart is a reference to low-level implementation of internal::UartLowLevel interface
 	 * \param [in] readBuffer is a buffer for read operations
 	 * \param [in] readBufferSize is the size of \a readBuffer, bytes, should be even, must be greater than or equal to
-	 * 4
+	 * 2
 	 * \param [in] writeBuffer is a buffer to write operations
 	 * \param [in] writeBufferSize is the size of \a writeBuffer, bytes, should be even, must be greater than or equal
-	 * to 4
+	 * to 2
 	 * \param [in] driverEnablePin is a reference to output pin used to control the state of RS-485 driver
 	 * \param [in] driverEnabledState is the state of \a driverEnablePin in which RS-485 driver is enabled
 	 */

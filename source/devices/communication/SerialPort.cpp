@@ -68,18 +68,20 @@ size_t copySingleBlock(SerialPort::CircularBuffer& source, SerialPort::CircularB
 
 std::pair<const uint8_t*, size_t> SerialPort::CircularBuffer::getReadBlock() const
 {
-	const auto readPosition = readPosition_;
+	const auto readPosition = readPosition_ ;
 	const auto writePosition = writePosition_;
-	return {buffer_ + readPosition, (writePosition >= readPosition ? writePosition : size_) - readPosition};
+	if (isEmpty(readPosition, writePosition) == true)
+		return {{}, {}};
+	return getBlock(readPosition, writePosition);
 }
 
 std::pair<uint8_t*, size_t> SerialPort::CircularBuffer::getWriteBlock() const
 {
-	const auto readPosition = readPosition_;
+	const auto readPosition = readPosition_ ;
 	const auto writePosition = writePosition_;
-	const auto freeBytes = (size_ - writePosition + readPosition - 2) % size_;
-	const auto writeBlockSize = (readPosition > writePosition ? readPosition : size_) - writePosition;
-	return {buffer_ + writePosition, std::min(freeBytes, writeBlockSize)};
+	if (isFull(readPosition, writePosition) == true)
+		return {{}, {}};
+	return getBlock(writePosition, readPosition);
 }
 
 /*---------------------------------------------------------------------------------------------------------------------+
@@ -225,7 +227,7 @@ std::pair<int, size_t> SerialPort::read(void* const buffer, const size_t size, c
 	if (characterLength_ > 8 && size % 2 != 0)
 		return {EINVAL, {}};
 
-	CircularBuffer localReadBuffer {buffer, size + 2};	// "+2" to allow buffer to be completely full
+	CircularBuffer localReadBuffer {buffer, size};
 	const auto ret = readImplementation(localReadBuffer, minSize, timePoint);
 	const auto bytesRead = localReadBuffer.getSize();
 	return {ret != 0 || bytesRead != 0 ? ret : EAGAIN, bytesRead};
@@ -255,9 +257,8 @@ std::pair<int, size_t> SerialPort::write(const void* const buffer, const size_t 
 	if (characterLength_ > 8 && size % 2 != 0)
 		return {EINVAL, {}};
 
-	// "+2" to allow buffer to be completely full
 	// local buffer is never written, so the cast is actually safe, but this has to be fixed anyway...
-	CircularBuffer localWriteBuffer {const_cast<void*>(buffer), size + 2};
+	CircularBuffer localWriteBuffer {const_cast<void*>(buffer), size};
 	localWriteBuffer.increaseWritePosition(size);	// make the buffer "full"
 	const auto ret = writeImplementation(localWriteBuffer, minSize, timePoint);
 	const auto bytesWritten = localWriteBuffer.getCapacity() - localWriteBuffer.getSize();
@@ -428,8 +429,7 @@ int SerialPort::readImplementation(CircularBuffer& buffer, const size_t minSize,
 			startReadRet = startReadWrapper();
 		}
 
-		// "+2" to allow buffer to be completely full
-		CircularBuffer subBuffer {writeBlock.first, writeBlock.second + 2};
+		CircularBuffer subBuffer {writeBlock.first, writeBlock.second};
 		{
 			// read the data that was "released" by stopping and staring read operation
 			const auto ret = readFromCircularBufferAndStartRead(subBuffer);
