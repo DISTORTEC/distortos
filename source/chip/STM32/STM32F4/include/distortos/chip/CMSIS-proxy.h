@@ -14,36 +14,36 @@
 
 #include "distortos/distortosConfiguration.h"
 
-#if defined(CONFIG_CHIP_STM32F405)
-	#define STM32F405xx
-#elif defined(CONFIG_CHIP_STM32F415)
-	#define STM32F415xx
-#elif defined(CONFIG_CHIP_STM32F407)
-	#define STM32F407xx
-#elif defined(CONFIG_CHIP_STM32F417)
-	#define STM32F417xx
-#elif defined(CONFIG_CHIP_STM32F427)
-	#define STM32F427xx
-#elif defined(CONFIG_CHIP_STM32F437)
-	#define STM32F437xx
-#elif defined(CONFIG_CHIP_STM32F429)
-	#define STM32F429xx
-#elif defined(CONFIG_CHIP_STM32F439)
-	#define STM32F439xx
-#elif defined(CONFIG_CHIP_STM32F401CB) || defined(CONFIG_CHIP_STM32F401CC) || defined(CONFIG_CHIP_STM32F401RB) || \
+#if defined(CONFIG_CHIP_STM32F401CB) || defined(CONFIG_CHIP_STM32F401CC) || defined(CONFIG_CHIP_STM32F401RB) || \
 		defined(CONFIG_CHIP_STM32F401RC) || defined(CONFIG_CHIP_STM32F401VB) || defined(CONFIG_CHIP_STM32F401VC)
 	#define STM32F401xC
 #elif defined(CONFIG_CHIP_STM32F401CD) || defined(CONFIG_CHIP_STM32F401CE) || defined(CONFIG_CHIP_STM32F401RD) || \
 		 defined(CONFIG_CHIP_STM32F401RE) || defined(CONFIG_CHIP_STM32F401VD) || defined(CONFIG_CHIP_STM32F401VE)
 	#define STM32F401xE
-#elif defined(CONFIG_CHIP_STM32F410T8) || defined(CONFIG_CHIP_STM32F410TB)
-	#define STM32F410Tx
+#elif defined(CONFIG_CHIP_STM32F405)
+	#define STM32F405xx
+#elif defined(CONFIG_CHIP_STM32F407)
+	#define STM32F407xx
 #elif defined(CONFIG_CHIP_STM32F410C8) || defined(CONFIG_CHIP_STM32F410CB)
 	#define STM32F410Cx
 #elif defined(CONFIG_CHIP_STM32F410R8) || defined(CONFIG_CHIP_STM32F410RB)
 	#define STM32F410Rx
+#elif defined(CONFIG_CHIP_STM32F410T8) || defined(CONFIG_CHIP_STM32F410TB)
+	#define STM32F410Tx
 #elif defined(CONFIG_CHIP_STM32F411)
 	#define STM32F411xE
+#elif defined(CONFIG_CHIP_STM32F415)
+	#define STM32F415xx
+#elif defined(CONFIG_CHIP_STM32F417)
+	#define STM32F417xx
+#elif defined(CONFIG_CHIP_STM32F427)
+	#define STM32F427xx
+#elif defined(CONFIG_CHIP_STM32F429)
+	#define STM32F429xx
+#elif defined(CONFIG_CHIP_STM32F437)
+	#define STM32F437xx
+#elif defined(CONFIG_CHIP_STM32F439)
+	#define STM32F439xx
 #elif defined(CONFIG_CHIP_STM32F446)
 	#define STM32F446xx
 #elif defined(CONFIG_CHIP_STM32F469)
