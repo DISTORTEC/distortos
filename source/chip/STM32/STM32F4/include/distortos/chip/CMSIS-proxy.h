@@ -32,6 +32,14 @@
 	#define STM32F410Tx
 #elif defined(CONFIG_CHIP_STM32F411)
 	#define STM32F411xE
+#elif defined(CONFIG_CHIP_STM32F412C)
+	#define STM32F412Cx
+#elif defined(CONFIG_CHIP_STM32F412R)
+	#define STM32F412Rx
+#elif defined(CONFIG_CHIP_STM32F412V)
+	#define STM32F412Vx
+#elif defined(CONFIG_CHIP_STM32F412Z)
+	#define STM32F412Zx
 #elif defined(CONFIG_CHIP_STM32F415)
 	#define STM32F415xx
 #elif defined(CONFIG_CHIP_STM32F417)
