@@ -10,7 +10,7 @@
  * - RM0390 reference manual (STM32F446xx), Revision 2, 2016-01-12
  * - RM0386 reference manual (STM32F469xx and STM32F479xx), Revision 2, 2015-11-19
  *
- * \author Copyright (C) 2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2015-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -52,11 +52,14 @@ constexpr uint8_t maxVoltageScale {3};
 		// !defined(CONFIG_CHIP_STM32F417)
 
 /// default voltage scale mode after reset
-#if defined(CONFIG_CHIP_STM32F401) || defined(CONFIG_CHIP_STM32F410) || defined(CONFIG_CHIP_STM32F411)
+#if defined(CONFIG_CHIP_STM32F401) || defined(CONFIG_CHIP_STM32F410) || defined(CONFIG_CHIP_STM32F411) || \
+		defined(CONFIG_CHIP_STM32F412)
 constexpr uint8_t defaultVoltageScale {2};
-#else	// !defined(CONFIG_CHIP_STM32F401) && !defined(CONFIG_CHIP_STM32F410) && !defined(CONFIG_CHIP_STM32F411)
+#else	// !defined(CONFIG_CHIP_STM32F401) && !defined(CONFIG_CHIP_STM32F410) && !defined(CONFIG_CHIP_STM32F411) &&
+		// !defined(CONFIG_CHIP_STM32F412)
 constexpr uint8_t defaultVoltageScale {1};
-#endif	// !defined(CONFIG_CHIP_STM32F401) && !defined(CONFIG_CHIP_STM32F410) && !defined(CONFIG_CHIP_STM32F411)
+#endif	// !defined(CONFIG_CHIP_STM32F401) && !defined(CONFIG_CHIP_STM32F410) && !defined(CONFIG_CHIP_STM32F411) &&
+		// !defined(CONFIG_CHIP_STM32F412)
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | global functions' declarations

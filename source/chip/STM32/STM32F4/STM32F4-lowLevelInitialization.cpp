@@ -86,16 +86,19 @@ void lowLevelInitialization()
 
 	configurePllInputClockDivider(CONFIG_CHIP_STM32F4_RCC_PLLM);
 
-#if defined(CONFIG_CHIP_STM32F446) || defined(CONFIG_CHIP_STM32F469) || defined(CONFIG_CHIP_STM32F479)
+#if defined(CONFIG_CHIP_STM32F412) || defined(CONFIG_CHIP_STM32F446) || defined(CONFIG_CHIP_STM32F469) || \
+		defined(CONFIG_CHIP_STM32F479)
 
 	enablePll(CONFIG_CHIP_STM32F4_RCC_PLLN, CONFIG_CHIP_STM32F4_RCC_PLLP, CONFIG_CHIP_STM32F4_RCC_PLLQ,
 			CONFIG_CHIP_STM32F4_RCC_PLLR);
 
-#else // !defined(CONFIG_CHIP_STM32F446) && !defined(CONFIG_CHIP_STM32F469) && !defined(CONFIG_CHIP_STM32F479)
+#else	// !defined(CONFIG_CHIP_STM32F412) && !defined(CONFIG_CHIP_STM32F446) && !defined(CONFIG_CHIP_STM32F469) &&
+		// !defined(CONFIG_CHIP_STM32F479)
 
 	enablePll(CONFIG_CHIP_STM32F4_RCC_PLLN, CONFIG_CHIP_STM32F4_RCC_PLLP, CONFIG_CHIP_STM32F4_RCC_PLLQ);
 
-#endif	// !defined(CONFIG_CHIP_STM32F446) && !defined(CONFIG_CHIP_STM32F469) && !defined(CONFIG_CHIP_STM32F479)
+#endif	// !defined(CONFIG_CHIP_STM32F412) && !defined(CONFIG_CHIP_STM32F446) && !defined(CONFIG_CHIP_STM32F469) &&
+		// !defined(CONFIG_CHIP_STM32F479)
 
 #endif	// def CONFIG_CHIP_STM32F4_RCC_PLL_ENABLE
 
@@ -104,17 +107,23 @@ void lowLevelInitialization()
 	configureApbClockDivider(true, CONFIG_CHIP_STM32F4_RCC_PPRE2);
 
 #if CONFIG_CHIP_STM32F4_VDD_MV < 2100
-#	if defined(CONFIG_CHIP_STM32F401) || defined(CONFIG_CHIP_STM32F410) || defined(CONFIG_CHIP_STM32F411)
+#	if defined(CONFIG_CHIP_STM32F401) || defined(CONFIG_CHIP_STM32F410) || defined(CONFIG_CHIP_STM32F411) || \
+		defined(CONFIG_CHIP_STM32F412)
 	constexpr uint32_t frequencyThreshold {16000000};
-#	else	// !defined(CONFIG_CHIP_STM32F401) && !defined(CONFIG_CHIP_STM32F410) && !defined(CONFIG_CHIP_STM32F411)
+#	else	// !defined(CONFIG_CHIP_STM32F401) && !defined(CONFIG_CHIP_STM32F410) && !defined(CONFIG_CHIP_STM32F411) &&
+		// !defined(CONFIG_CHIP_STM32F412)
 	constexpr uint32_t frequencyThreshold {20000000};
-#	endif	// !defined(CONFIG_CHIP_STM32F401) && !defined(CONFIG_CHIP_STM32F410) && !defined(CONFIG_CHIP_STM32F411)
+#	endif	// !defined(CONFIG_CHIP_STM32F401) && !defined(CONFIG_CHIP_STM32F410) && !defined(CONFIG_CHIP_STM32F411) &&
+		// !defined(CONFIG_CHIP_STM32F412)
 #elif CONFIG_CHIP_STM32F4_VDD_MV < 2400
-#	if defined(CONFIG_CHIP_STM32F401) || defined(CONFIG_CHIP_STM32F410) || defined(CONFIG_CHIP_STM32F411)
+#	if defined(CONFIG_CHIP_STM32F401) || defined(CONFIG_CHIP_STM32F410) || defined(CONFIG_CHIP_STM32F411) || \
+		defined(CONFIG_CHIP_STM32F412)
 	constexpr uint32_t frequencyThreshold {18000000};
-#	else	// !defined(CONFIG_CHIP_STM32F401) && !defined(CONFIG_CHIP_STM32F410) && !defined(CONFIG_CHIP_STM32F411)
+#	else	// !defined(CONFIG_CHIP_STM32F401) && !defined(CONFIG_CHIP_STM32F410) && !defined(CONFIG_CHIP_STM32F411) &&
+		// !defined(CONFIG_CHIP_STM32F412)
 	constexpr uint32_t frequencyThreshold {22000000};
-#	endif	// !defined(CONFIG_CHIP_STM32F401) && !defined(CONFIG_CHIP_STM32F410) && !defined(CONFIG_CHIP_STM32F411)
+#	endif	// !defined(CONFIG_CHIP_STM32F401) && !defined(CONFIG_CHIP_STM32F410) && !defined(CONFIG_CHIP_STM32F411) &&
+		// !defined(CONFIG_CHIP_STM32F412)
 #elif CONFIG_CHIP_STM32F4_VDD_MV < 2700
 	constexpr uint32_t frequencyThreshold {24000000};
 #else
