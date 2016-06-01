@@ -107,17 +107,23 @@ void lowLevelInitialization()
 	configureApbClockDivider(true, CONFIG_CHIP_STM32F4_RCC_PPRE2);
 
 #if CONFIG_CHIP_STM32F4_VDD_MV < 2100
-#	if defined(CONFIG_CHIP_STM32F401) || defined(CONFIG_CHIP_STM32F410) || defined(CONFIG_CHIP_STM32F411)
+#	if defined(CONFIG_CHIP_STM32F401) || defined(CONFIG_CHIP_STM32F410) || defined(CONFIG_CHIP_STM32F411) || \
+		defined(CONFIG_CHIP_STM32F412)
 	constexpr uint32_t frequencyThreshold {16000000};
-#	else	// !defined(CONFIG_CHIP_STM32F401) && !defined(CONFIG_CHIP_STM32F410) && !defined(CONFIG_CHIP_STM32F411)
+#	else	// !defined(CONFIG_CHIP_STM32F401) && !defined(CONFIG_CHIP_STM32F410) && !defined(CONFIG_CHIP_STM32F411) &&
+		// !defined(CONFIG_CHIP_STM32F412)
 	constexpr uint32_t frequencyThreshold {20000000};
-#	endif	// !defined(CONFIG_CHIP_STM32F401) && !defined(CONFIG_CHIP_STM32F410) && !defined(CONFIG_CHIP_STM32F411)
+#	endif	// !defined(CONFIG_CHIP_STM32F401) && !defined(CONFIG_CHIP_STM32F410) && !defined(CONFIG_CHIP_STM32F411) &&
+		// !defined(CONFIG_CHIP_STM32F412)
 #elif CONFIG_CHIP_STM32F4_VDD_MV < 2400
-#	if defined(CONFIG_CHIP_STM32F401) || defined(CONFIG_CHIP_STM32F410) || defined(CONFIG_CHIP_STM32F411)
+#	if defined(CONFIG_CHIP_STM32F401) || defined(CONFIG_CHIP_STM32F410) || defined(CONFIG_CHIP_STM32F411) || \
+		defined(CONFIG_CHIP_STM32F412)
 	constexpr uint32_t frequencyThreshold {18000000};
-#	else	// !defined(CONFIG_CHIP_STM32F401) && !defined(CONFIG_CHIP_STM32F410) && !defined(CONFIG_CHIP_STM32F411)
+#	else	// !defined(CONFIG_CHIP_STM32F401) && !defined(CONFIG_CHIP_STM32F410) && !defined(CONFIG_CHIP_STM32F411) &&
+		// !defined(CONFIG_CHIP_STM32F412)
 	constexpr uint32_t frequencyThreshold {22000000};
-#	endif	// !defined(CONFIG_CHIP_STM32F401) && !defined(CONFIG_CHIP_STM32F410) && !defined(CONFIG_CHIP_STM32F411)
+#	endif	// !defined(CONFIG_CHIP_STM32F401) && !defined(CONFIG_CHIP_STM32F410) && !defined(CONFIG_CHIP_STM32F411) &&
+		// !defined(CONFIG_CHIP_STM32F412)
 #elif CONFIG_CHIP_STM32F4_VDD_MV < 2700
 	constexpr uint32_t frequencyThreshold {24000000};
 #else
