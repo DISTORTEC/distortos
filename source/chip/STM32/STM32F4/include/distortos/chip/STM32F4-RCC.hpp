@@ -78,7 +78,8 @@ constexpr uint8_t minPllq {2};
 /// maximum allowed value for PLLQ
 constexpr uint8_t maxPllq {15};
 
-#if defined(CONFIG_CHIP_STM32F446) || defined(CONFIG_CHIP_STM32F469) || defined(CONFIG_CHIP_STM32F479)
+#if defined(CONFIG_CHIP_STM32F412) || defined(CONFIG_CHIP_STM32F446) || defined(CONFIG_CHIP_STM32F469) || \
+		defined(CONFIG_CHIP_STM32F479)
 
 /// minimum allowed value for PLLR
 constexpr uint8_t minPllr {2};
@@ -86,7 +87,8 @@ constexpr uint8_t minPllr {2};
 /// maximum allowed value for PLLR
 constexpr uint8_t maxPllr {7};
 
-#endif	// defined(CONFIG_CHIP_STM32F446) || defined(CONFIG_CHIP_STM32F469) || defined(CONFIG_CHIP_STM32F479)
+#endif	// defined(CONFIG_CHIP_STM32F412) || defined(CONFIG_CHIP_STM32F446) || defined(CONFIG_CHIP_STM32F469) ||
+		// defined(CONFIG_CHIP_STM32F479)
 
 /// first allowed value for PLLP - 2
 constexpr uint8_t pllpDiv2 {2};
@@ -227,7 +229,8 @@ void disablePll();
 
 void enableHse(bool bypass);
 
-#if defined(CONFIG_CHIP_STM32F446) || defined(CONFIG_CHIP_STM32F469) || defined(CONFIG_CHIP_STM32F479)
+#if defined(CONFIG_CHIP_STM32F412) || defined(CONFIG_CHIP_STM32F446) || defined(CONFIG_CHIP_STM32F469) || \
+		defined(CONFIG_CHIP_STM32F479)
 
 /**
  * \brief Enables main PLL.
@@ -248,7 +251,8 @@ void enableHse(bool bypass);
 
 int enablePll(uint16_t plln, uint8_t pllp, uint8_t pllq, uint8_t pllr);
 
-#else	// !defined(CONFIG_CHIP_STM32F446) && !defined(CONFIG_CHIP_STM32F469) && !defined(CONFIG_CHIP_STM32F479)
+#else	// !defined(CONFIG_CHIP_STM32F412) && !defined(CONFIG_CHIP_STM32F446) && !defined(CONFIG_CHIP_STM32F469) &&
+		// !defined(CONFIG_CHIP_STM32F479)
 
 /**
  * \brief Enables main PLL.
@@ -268,7 +272,8 @@ int enablePll(uint16_t plln, uint8_t pllp, uint8_t pllq, uint8_t pllr);
 
 int enablePll(uint16_t plln, uint8_t pllp, uint8_t pllq);
 
-#endif	// !defined(CONFIG_CHIP_STM32F446) && !defined(CONFIG_CHIP_STM32F469) && !defined(CONFIG_CHIP_STM32F479)
+#endif	// !defined(CONFIG_CHIP_STM32F412) && !defined(CONFIG_CHIP_STM32F446) && !defined(CONFIG_CHIP_STM32F469) &&
+		// !defined(CONFIG_CHIP_STM32F479)
 
 /**
  * \brief Switches system clock.
