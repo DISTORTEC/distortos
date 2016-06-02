@@ -2,11 +2,6 @@
  * \file
  * \brief Header for FLASH-related functions for STM32F1
  *
- * This file covers devices as described in following places:
- * - PM0063 programming manual (STM32F100 value line), Revision 2, 2010-10-12
- * - PM0068 programming manual (STM32F1 XL-density), Revision 2, 2012-08-27
- * - PM0075 programming manual (STM32F1), Revision 2, 2012-01-13
- *
  * \author Copyright (C) 2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License

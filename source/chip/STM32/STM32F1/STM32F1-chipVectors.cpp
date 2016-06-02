@@ -2,10 +2,6 @@
  * \file
  * \brief STM32F1 chip vector table and default weak handlers
  *
- * This file covers devices as described in following places:
- * - RM0008 reference manual (STM32F101, STM32F102, STM32F103, STM32F105 and STM32F107), Revision 16, 2015-11-26
- * - RM0041 reference manual (STM32F100), Revision 4, 2011-07-21
- *
  * \author Copyright (C) 2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License

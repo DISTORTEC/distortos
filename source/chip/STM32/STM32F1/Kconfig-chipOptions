@@ -7,27 +7,6 @@
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #
 
-#
-# This file covers devices as described in following places:
-# - DS6517 datasheet (STM32F100x4, STM32F100x6, STM32F100x8, STM32F100xB), Revision 8, 2015-06-08, devices listed on
-# website on 2016-02-12;
-# - DS5944 datasheet (STM32F100xC, STM32F100xD, STM32F100xE), Revision 9, 2015-09-23, devices listed on website on
-# 2016-02-12;
-# - DS5935 datasheet (STM32F101x4, STM32F101x6), Revision 5, 2011-04-19, devices listed on website on 2016-02-12;
-# - DS5318 datasheet (STM32F101x8, STM32F101xB), Revision 17, 2015-06-19, devices listed on website on 2016-02-12;
-# - DS5791 datasheet (STM32F101xC, STM32F101xD, STM32F101xE), Revision 9, 2015-05-15, devices listed on website on
-# 2016-02-12;
-# - DS6557 datasheet (STM32F101xF, STM32F101xG), Revision 4, 2015-05-18, devices listed on website on 2016-02-12;
-# - DS5934 datasheet (STM32F102x4, STM32F102x6), Revision 5, 2015-05-14, devices listed on website on 2016-02-12;
-# - DS5933 datasheet (STM32F102x8, STM32F102xB), Revision 6, 2015-06-03, devices listed on website on 2016-02-12;
-# - DS5936 datasheet (STM32F103x4, STM32F103x6), Revision 7, 2015-06-01, devices listed on website on 2016-02-12;
-# - DS5319 datasheet (STM32F103x8, STM32F103xB), Revision 17, 2015-08-21, devices listed on website on 2016-02-12;
-# - DS5792 datasheet (STM32F103xC, STM32F103xD, STM32F103xE), Revision 11, 2015-08-31, devices listed on website on
-# 2016-02-12;
-# - DS6558 datasheet (STM32F103xF, STM32F103xG), Revision 4, 2015-05-15, devices listed on website on 2016-02-12;
-# - DS6014 datasheet (STM32F105, STM32F107), Revision 9, 2015-09-03, devices listed on website on 2016-02-12;
-#
-
 if CHIP_STM32F1
 
 comment "STM32F1 chip options"
