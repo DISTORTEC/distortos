@@ -2,10 +2,6 @@
  * \file
  * \brief Header for FLASH-related functions for STM32F0
  *
- * This file covers devices as described in following places:
- * - RM0091 reference manual (STM32F0x1, STM32F0x2, STM32F0x8), Revision 8, 2015-07-29
- * - RM0360 reference manual (STM32F030x4/6/8/C, STM32F070x6/B), Revision 3, 2015-05-19
- *
  * \author Copyright (C) 2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
