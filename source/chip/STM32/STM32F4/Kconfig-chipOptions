@@ -858,6 +858,7 @@ config CHIP_STM32F410CB
 	bool
 	default n
 	select CHIP_STM32F410C
+	select CHIP_HAS_LQFP48
 
 config CHIP_STM32F410R
 	bool
@@ -874,6 +875,7 @@ config CHIP_STM32F410RB
 	bool
 	default n
 	select CHIP_STM32F410R
+	select CHIP_HAS_UFBGA64
 
 config CHIP_STM32F410T
 	bool

@@ -25,6 +25,7 @@ or without timeout) and non-blocking behaviour. Convenient wrappers for reading/
 - `devices::Rs485` class - *RS-485* device with all features of `devices::SerialPort` and with automatic management
 of "driver enable" output pin.
 - Support for 4 new [STM32F4](http://www.st.com/stm32f4)12 chips.
+- New package types for *STM32F410CB* and *STM32F410RB* chips.
 
 ### Fixed
 
