@@ -166,25 +166,25 @@ __attribute__ ((weak)) void ADC1_2_IRQHandler()
 #if defined(STM32F100_VECTORS)
 
 // 0x08c, 19: Reserved
-__attribute__ ((weak)) void __Reserved_0x8c_Handler()
+__attribute__ ((weak)) void Reserved_0x8c_Handler()
 {
 	while (1);
 }
 
 // 0x090, 20: Reserved
-__attribute__ ((weak)) void __Reserved_0x90_Handler()
+__attribute__ ((weak)) void Reserved_0x90_Handler()
 {
 	while (1);
 }
 
 // 0x094, 21: Reserved
-__attribute__ ((weak)) void __Reserved_0x94_Handler()
+__attribute__ ((weak)) void Reserved_0x94_Handler()
 {
 	while (1);
 }
 
 // 0x098, 22: Reserved
-__attribute__ ((weak)) void __Reserved_0x98_Handler()
+__attribute__ ((weak)) void Reserved_0x98_Handler()
 {
 	while (1);
 }
@@ -450,19 +450,19 @@ __attribute__ ((weak)) void TIM14_IRQHandler()
 #elif defined(STM32F1_CONNECTIVITY_LINE_VECTORS)
 
 // 0x0ec, 43: Reserved
-__attribute__ ((weak)) void __Reserved_0xec_Handler()
+__attribute__ ((weak)) void Reserved_0xec_Handler()
 {
 	while (1);
 }
 
 // 0x0f0, 44: Reserved
-__attribute__ ((weak)) void __Reserved_0xf0_Handler()
+__attribute__ ((weak)) void Reserved_0xf0_Handler()
 {
 	while (1);
 }
 
 // 0x0f4, 45: Reserved
-__attribute__ ((weak)) void __Reserved_0xf4_Handler()
+__attribute__ ((weak)) void Reserved_0xf4_Handler()
 {
 	while (1);
 }
@@ -514,13 +514,13 @@ __attribute__ ((weak)) void TIM8_TRG_COM_IRQHandler()
 #if defined(STM32F100_VECTORS) || defined(STM32F1_CONNECTIVITY_LINE_VECTORS)
 
 // 0x0f8, 46: Reserved
-__attribute__ ((weak)) void __Reserved_0xf8_Handler()
+__attribute__ ((weak)) void Reserved_0xf8_Handler()
 {
 	while (1);
 }
 
 // 0x0fc, 47: Reserved
-__attribute__ ((weak)) void __Reserved_0xfc_Handler()
+__attribute__ ((weak)) void Reserved_0xfc_Handler()
 {
 	while (1);
 }
@@ -544,7 +544,7 @@ __attribute__ ((weak)) void ADC3_IRQHandler()
 #if defined(STM32F1_CONNECTIVITY_LINE_VECTORS)
 
 // 0x100, 48: Reserved
-__attribute__ ((weak)) void __Reserved_0x100_Handler()
+__attribute__ ((weak)) void Reserved_0x100_Handler()
 {
 	while (1);
 }
@@ -562,7 +562,7 @@ __attribute__ ((weak)) void FSMC_IRQHandler()
 #if defined(STM32F100_VECTORS) || defined(STM32F1_CONNECTIVITY_LINE_VECTORS)
 
 // 0x104, 49: Reserved
-__attribute__ ((weak)) void __Reserved_0x104_Handler()
+__attribute__ ((weak)) void Reserved_0x104_Handler()
 {
 	while (1);
 }
@@ -764,10 +764,10 @@ extern "C" const InterruptVector chipVectors[] __attribute__ ((section(".chipVec
 
 #if defined(STM32F100_VECTORS)
 
-		__Reserved_0x8c_Handler,			// 0x08c, 19: Reserved
-		__Reserved_0x90_Handler,			// 0x090, 20: Reserved
-		__Reserved_0x94_Handler,			// 0x094, 21: Reserved
-		__Reserved_0x98_Handler,			// 0x098, 22: Reserved
+		Reserved_0x8c_Handler,				// 0x08c, 19: Reserved
+		Reserved_0x90_Handler,				// 0x090, 20: Reserved
+		Reserved_0x94_Handler,				// 0x094, 21: Reserved
+		Reserved_0x98_Handler,				// 0x098, 22: Reserved
 
 #elif defined(STM32F1_CONNECTIVITY_LINE_VECTORS)
 
@@ -845,9 +845,9 @@ extern "C" const InterruptVector chipVectors[] __attribute__ ((section(".chipVec
 
 #elif defined(STM32F1_CONNECTIVITY_LINE_VECTORS)
 
-		__Reserved_0xec_Handler,			// 0x0ec, 43: Reserved
-		__Reserved_0xf0_Handler,			// 0x0f0, 44: Reserved
-		__Reserved_0xf4_Handler,			// 0x0f4, 45: Reserved
+		Reserved_0xec_Handler,				// 0x0ec, 43: Reserved
+		Reserved_0xf0_Handler,				// 0x0f0, 44: Reserved
+		Reserved_0xf4_Handler,				// 0x0f4, 45: Reserved
 
 #elif defined(STM32F1_XL_DENSITY_VECTORS)
 
@@ -867,8 +867,8 @@ extern "C" const InterruptVector chipVectors[] __attribute__ ((section(".chipVec
 
 #if defined(STM32F100_VECTORS) || defined(STM32F1_CONNECTIVITY_LINE_VECTORS)
 
-		__Reserved_0xf8_Handler,			// 0x0f8, 46: Reserved
-		__Reserved_0xfc_Handler,			// 0x0fc, 47: Reserved
+		Reserved_0xf8_Handler,				// 0x0f8, 46: Reserved
+		Reserved_0xfc_Handler,				// 0x0fc, 47: Reserved
 
 #else	// !defined(STM32F100_VECTORS) && !defined(STM32F1_CONNECTIVITY_LINE_VECTORS)
 
@@ -879,7 +879,7 @@ extern "C" const InterruptVector chipVectors[] __attribute__ ((section(".chipVec
 
 #if defined(STM32F1_CONNECTIVITY_LINE_VECTORS)
 
-		__Reserved_0x100_Handler,			// 0x100, 48: Reserved
+		Reserved_0x100_Handler,				// 0x100, 48: Reserved
 
 #else	// !defined(STM32F1_CONNECTIVITY_LINE_VECTORS)
 
@@ -889,7 +889,7 @@ extern "C" const InterruptVector chipVectors[] __attribute__ ((section(".chipVec
 
 #if defined(STM32F100_VECTORS) || defined(STM32F1_CONNECTIVITY_LINE_VECTORS)
 
-		__Reserved_0x104_Handler,			// 0x104, 49: Reserved
+		Reserved_0x104_Handler,				// 0x104, 49: Reserved
 
 #else	// !defined(STM32F100_VECTORS) && !defined(STM32F1_CONNECTIVITY_LINE_VECTORS)
 

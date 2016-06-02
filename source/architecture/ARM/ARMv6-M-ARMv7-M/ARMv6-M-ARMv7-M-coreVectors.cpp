@@ -51,19 +51,19 @@ __attribute__ ((weak)) void UsageFault_Handler()
 #else	// !defined(__ARM_ARCH_7M__) && !defined(__ARM_ARCH_7EM__)
 
 // 0x10: Reserved
-__attribute__ ((weak)) void __Reserved_0x10_Handler()
+__attribute__ ((weak)) void Reserved_0x10_Handler()
 {
 	while (1);
 }
 
 // 0x14: Reserved
-__attribute__ ((weak)) void __Reserved_0x14_Handler()
+__attribute__ ((weak)) void Reserved_0x14_Handler()
 {
 	while (1);
 }
 
 // 0x18: Reserved
-__attribute__ ((weak)) void __Reserved_0x18_Handler()
+__attribute__ ((weak)) void Reserved_0x18_Handler()
 {
 	while (1);
 }
@@ -71,25 +71,25 @@ __attribute__ ((weak)) void __Reserved_0x18_Handler()
 #endif	// !defined(__ARM_ARCH_7M__) && !defined(__ARM_ARCH_7EM__)
 
 // 0x1c: Reserved
-__attribute__ ((weak)) void __Reserved_0x1c_Handler()
+__attribute__ ((weak)) void Reserved_0x1c_Handler()
 {
 	while (1);
 }
 
 // 0x20: Reserved
-__attribute__ ((weak)) void __Reserved_0x20_Handler()
+__attribute__ ((weak)) void Reserved_0x20_Handler()
 {
 	while (1);
 }
 
 // 0x24: Reserved
-__attribute__ ((weak)) void __Reserved_0x24_Handler()
+__attribute__ ((weak)) void Reserved_0x24_Handler()
 {
 	while (1);
 }
 
 // 0x28: Reserved
-__attribute__ ((weak)) void __Reserved_0x28_Handler()
+__attribute__ ((weak)) void Reserved_0x28_Handler()
 {
 	while (1);
 }
@@ -111,7 +111,7 @@ __attribute__ ((weak)) void DebugMon_Handler()
 #else	// !defined(__ARM_ARCH_7M__) && !defined(__ARM_ARCH_7EM__)
 
 // 0x30: Reserved
-__attribute__ ((weak)) void __Reserved_0x30_Handler()
+__attribute__ ((weak)) void Reserved_0x30_Handler()
 {
 	while (1);
 }
@@ -119,7 +119,7 @@ __attribute__ ((weak)) void __Reserved_0x30_Handler()
 #endif	// !defined(__ARM_ARCH_7M__) && !defined(__ARM_ARCH_7EM__)
 
 // 0x34: Reserved
-__attribute__ ((weak)) void __Reserved_0x34_Handler()
+__attribute__ ((weak)) void Reserved_0x34_Handler()
 {
 	while (1);
 }
@@ -173,16 +173,16 @@ extern "C" const InterruptVector coreVectors[] __attribute__ ((section(".coreVec
 
 #else	// !defined(__ARM_ARCH_7M__) && !defined(__ARM_ARCH_7EM__)
 
-		__Reserved_0x10_Handler,								// 0x10: Reserved
-		__Reserved_0x14_Handler,								// 0x14: Reserved
-		__Reserved_0x18_Handler,								// 0x18: Reserved
+		Reserved_0x10_Handler,									// 0x10: Reserved
+		Reserved_0x14_Handler,									// 0x14: Reserved
+		Reserved_0x18_Handler,									// 0x18: Reserved
 
 #endif	// !defined(__ARM_ARCH_7M__) && !defined(__ARM_ARCH_7EM__)
 
-		__Reserved_0x1c_Handler,								// 0x1c: Reserved
-		__Reserved_0x20_Handler,								// 0x20: Reserved
-		__Reserved_0x24_Handler,								// 0x24: Reserved
-		__Reserved_0x28_Handler,								// 0x28: Reserved
+		Reserved_0x1c_Handler,									// 0x1c: Reserved
+		Reserved_0x20_Handler,									// 0x20: Reserved
+		Reserved_0x24_Handler,									// 0x24: Reserved
+		Reserved_0x28_Handler,									// 0x28: Reserved
 		SVC_Handler,											// 0x2c: System service call via SVC instruction
 
 #if defined(__ARM_ARCH_7M__) || defined(__ARM_ARCH_7EM__)
@@ -191,11 +191,11 @@ extern "C" const InterruptVector coreVectors[] __attribute__ ((section(".coreVec
 
 #else	// !defined(__ARM_ARCH_7M__) && !defined(__ARM_ARCH_7EM__)
 
-		__Reserved_0x30_Handler,								// 0x30: Reserved
+		Reserved_0x30_Handler,									// 0x30: Reserved
 
 #endif	// !defined(__ARM_ARCH_7M__) && !defined(__ARM_ARCH_7EM__)
 
-		__Reserved_0x34_Handler,								// 0x34: Reserved
+		Reserved_0x34_Handler,									// 0x34: Reserved
 		PendSV_Handler,											// 0x38: Pendable request for system service
 		SysTick_Handler,										// 0x3c: System tick timer
 };

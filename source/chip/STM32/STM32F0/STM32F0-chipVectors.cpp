@@ -39,7 +39,7 @@ __attribute__ ((weak)) void WWDG_IRQHandler()
 #if defined(STM32F030_STM32F070_VECTORS)
 
 // 0x44, 1: Reserved
-__attribute__ ((weak)) void __Reserved_0x44_Handler()
+__attribute__ ((weak)) void Reserved_0x44_Handler()
 {
 	while (1);
 }
@@ -105,7 +105,7 @@ __attribute__ ((weak)) void EXTI4_15_IRQHandler()
 #if defined(STM32F030_STM32F070_VECTORS)
 
 // 0x60, 8: Reserved
-__attribute__ ((weak)) void __Reserved_0x60_Handler()
+__attribute__ ((weak)) void Reserved_0x60_Handler()
 {
 	while (1);
 }
@@ -183,7 +183,7 @@ __attribute__ ((weak)) void TIM1_CC_IRQHandler()
 #if defined(STM32F030_STM32F070_VECTORS)
 
 // 0x7c, 15: Reserved
-__attribute__ ((weak)) void __Reserved_0x7c_Handler()
+__attribute__ ((weak)) void Reserved_0x7c_Handler()
 {
 	while (1);
 }
@@ -213,7 +213,7 @@ __attribute__ ((weak)) void TIM6_IRQHandler()
 }
 
 // 0x88, 18: Reserved
-__attribute__ ((weak)) void __Reserved_0x88_Handler()
+__attribute__ ((weak)) void Reserved_0x88_Handler()
 {
 	while (1);
 }
@@ -303,7 +303,7 @@ __attribute__ ((weak)) void USART3_6_IRQHandler()
 }
 
 // 0xb8, 30: Reserved
-__attribute__ ((weak)) void __Reserved_0xb8_Handler()
+__attribute__ ((weak)) void Reserved_0xb8_Handler()
 {
 	while (1);
 }
@@ -350,7 +350,7 @@ extern "C" const InterruptVector chipVectors[] __attribute__ ((section(".chipVec
 
 #if defined(STM32F030_STM32F070_VECTORS)
 
-		__Reserved_0x44_Handler,			// 0x44, 1: Reserved
+		Reserved_0x44_Handler,				// 0x44, 1: Reserved
 
 #else	// !defined(STM32F030_STM32F070_VECTORS)
 
@@ -377,7 +377,7 @@ extern "C" const InterruptVector chipVectors[] __attribute__ ((section(".chipVec
 
 #if defined(STM32F030_STM32F070_VECTORS)
 
-		__Reserved_0x60_Handler,			// 0x60, 8: Reserved
+		Reserved_0x60_Handler,				// 0x60, 8: Reserved
 
 #else	// !defined(STM32F030_STM32F070_VECTORS)
 
@@ -406,7 +406,7 @@ extern "C" const InterruptVector chipVectors[] __attribute__ ((section(".chipVec
 
 #if defined(STM32F030_STM32F070_VECTORS)
 
-		__Reserved_0x7c_Handler,			// 0x7c, 15: Reserved
+		Reserved_0x7c_Handler,				// 0x7c, 15: Reserved
 
 #else	// !defined(STM32F030_STM32F070_VECTORS)
 
@@ -419,7 +419,7 @@ extern "C" const InterruptVector chipVectors[] __attribute__ ((section(".chipVec
 #if defined(STM32F030_STM32F070_VECTORS)
 
 		TIM6_IRQHandler,					// 0x84, 17: TIM6
-		__Reserved_0x88_Handler,			// 0x88, 18: Reserved
+		Reserved_0x88_Handler,				// 0x88, 18: Reserved
 
 #else	// !defined(STM32F030_STM32F070_VECTORS)
 
@@ -442,7 +442,7 @@ extern "C" const InterruptVector chipVectors[] __attribute__ ((section(".chipVec
 #if defined(STM32F030_STM32F070_VECTORS)
 
 		USART3_6_IRQHandler,				// 0xb4, 29: USART3-USART6 (combined with EXTI line 28)
-		__Reserved_0xb8_Handler,			// 0xb8, 30: Reserved
+		Reserved_0xb8_Handler,				// 0xb8, 30: Reserved
 
 #else	// !defined(STM32F030_STM32F070_VECTORS)
 
