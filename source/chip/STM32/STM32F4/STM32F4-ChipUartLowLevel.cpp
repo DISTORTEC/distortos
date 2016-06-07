@@ -246,8 +246,6 @@ const ChipUartLowLevel::Parameters ChipUartLowLevel::usart2parameters {USART2, &
 
 #ifdef CONFIG_CHIP_HAS_USART3
 
-//USART_TypeDef xxx;
-
 const ChipUartLowLevel::Parameters ChipUartLowLevel::usart3parameters {USART3, &USART3_CR1_RXNEIE_bb,
 		&USART3_CR1_TCIE_bb, &USART3_CR1_TXEIE_bb, &RCC_APB1ENR_USART3EN_bb, &RCC_APB1RSTR_USART3RST_bb, USART3_IRQn};
 
