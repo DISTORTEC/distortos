@@ -634,7 +634,8 @@ bool testPriorityChange(const Mutex::Type type)
 
 	for (const auto& priorityChange : priorityChanges)
 	{
-		threads[priorityChange.first].setPriority(priorityChange.second);	/// \todo check index of thread
+		assert(priorityChange.first < threads.size() && "Invalid index of thread!");
+		threads[priorityChange.first].setPriority(priorityChange.second);
 
 		uint8_t inheritedPriority {};
 
