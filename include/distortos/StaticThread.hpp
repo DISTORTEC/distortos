@@ -12,6 +12,7 @@
 #ifndef INCLUDE_DISTORTOS_STATICTHREAD_HPP_
 #define INCLUDE_DISTORTOS_STATICTHREAD_HPP_
 
+#include "distortos/assert.h"
 #include "distortos/StaticSignalsReceiver.hpp"
 #include "distortos/UndetachableThread.hpp"
 
@@ -295,7 +296,10 @@ makeAndStartStaticThread(const uint8_t priority, const SchedulingPolicy scheduli
 {
 	auto thread = makeStaticThread<StackSize, CanReceiveSignals, QueuedSignals, SignalActions>(priority,
 			schedulingPolicy, std::forward<Function>(function), std::forward<Args>(args)...);
-	thread.start();	/// \todo make sure this never fails
+	{
+		const auto ret = thread.start();
+		assert(ret == 0 && "Could not start thread!");
+	}
 	return thread;
 }
 
@@ -325,7 +329,10 @@ makeAndStartStaticThread(const uint8_t priority, Function&& function, Args&&... 
 {
 	auto thread = makeStaticThread<StackSize, CanReceiveSignals, QueuedSignals, SignalActions>(priority,
 			std::forward<Function>(function), std::forward<Args>(args)...);
-	thread.start();	/// \todo make sure this never fails
+	{
+		const auto ret = thread.start();
+		assert(ret == 0 && "Could not start thread!");
+	}
 	return thread;
 }
 
