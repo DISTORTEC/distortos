@@ -16,6 +16,7 @@
 
 #include "distortos/architecture/InterruptMaskingLock.hpp"
 
+#include "distortos/assert.h"
 #include "distortos/SignalsCatcher.hpp"
 #include "distortos/SignalInformationQueueWrapper.hpp"
 
@@ -185,7 +186,7 @@ std::pair<int, bool> SignalsReceiverControlBlock::isSignalIgnored(const uint8_t 
 
 int SignalsReceiverControlBlock::postGenerate(const uint8_t signalNumber, ThreadControlBlock& threadControlBlock) const
 {
-	/// \todo add some form of assertion for validity of \a signalNumber
+	assert(signalNumber < SignalSet::Bitset{}.size() && "Invalid signal number!");
 
 	if (signalsCatcherControlBlock_ != nullptr)
 	{
