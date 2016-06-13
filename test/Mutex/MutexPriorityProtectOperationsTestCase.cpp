@@ -13,6 +13,7 @@
 
 #include "waitForNextTick.hpp"
 
+#include "distortos/assert.h"
 #include "distortos/Mutex.hpp"
 #include "distortos/ThisThread.hpp"
 
@@ -180,7 +181,8 @@ bool testPriorityChanges(const Mutex::Type type)
 	for (const auto& operation : operations)
 	{
 		const auto function = std::get<0>(operation);
-		const auto index = std::get<1>(operation);	/// \todo check index of mutex
+		const auto index = std::get<1>(operation);
+		assert(index < sizeof(mutexes) / sizeof(*mutexes) && "Invalid index of mutex!");
 		const auto expectedEffectivePriority = std::get<2>(operation);
 		const auto ret = (mutexes[index].*function)();
 		if (ret != 0 || ThisThread::getEffectivePriority() != expectedEffectivePriority)

@@ -73,6 +73,12 @@ config DEBUGGING_INFORMATION_ENABLE
 	help
 		Enables generation of debugging information.
 
+config ASSERT_ENABLE
+	bool "Enable asserts"
+	default n
+	help
+		Enables asserts.
+
 config BUILD_OPTIMIZATION
 	string
 	default "-O0" if BUILD_OPTIMIZATION_O0
@@ -90,6 +96,11 @@ config DEBUGGING_INFORMATION_COMPILATION
 config DEBUGGING_INFORMATION_LINKING
 	string
 	default "-g" if DEBUGGING_INFORMATION_ENABLE
+	default ""
+
+config ASSERT
+	string
+	default "-DNDEBUG" if !ASSERT_ENABLE
 	default ""
 
 endmenu

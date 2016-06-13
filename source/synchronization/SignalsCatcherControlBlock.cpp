@@ -19,6 +19,7 @@
 
 #include "distortos/internal/synchronization/SignalsReceiverControlBlock.hpp"
 
+#include "distortos/assert.h"
 #include "distortos/SignalInformation.hpp"
 
 #include <cerrno>
@@ -140,14 +141,23 @@ void deliverSignals()
 			if (handler != nullptr)
 			{
 				SignalSet newSignalMask {signalMask.getBitset() | signalAction.getSignalMask().getBitset()};
-				newSignalMask.add(signalNumber);	// signalNumber is valid (checked above)
-				// this call may not fail, because SignalsReceiverControlBlock that is used here must support
-				// catching/handling of signals - otherwise the call to SignalsReceiverControlBlock::getSignalAction()
-				// above would fail
-				/// \todo add assertion just to be sure
-				signalsReceiverControlBlock->setSignalMask(newSignalMask, false);
+				{
+					const auto addRet = newSignalMask.add(signalNumber);	// signalNumber is valid (checked above)
+					assert(addRet == 0 && "Invalid signal number!");
+				}
+				{
+					// this call may not fail, because SignalsReceiverControlBlock that is used here must support
+					// catching/handling of signals - otherwise the call to
+					// SignalsReceiverControlBlock::getSignalAction() above would fail
+					const auto setSignalMaskRet = signalsReceiverControlBlock->setSignalMask(newSignalMask, false);
+					assert(setSignalMaskRet == 0 && "Receiver does not support catching of signals!");
+				}
 				(*handler)(signalInformation);
-				signalsReceiverControlBlock->setSignalMask(signalMask, false);	// restore previous signal mask
+				{
+					// restore previous signal mask
+					const auto setSignalMaskRet = signalsReceiverControlBlock->setSignalMask(signalMask, false);
+					assert(setSignalMaskRet == 0 && "Receiver does not support catching of signals!");
+				}
 			}
 		}
 	}

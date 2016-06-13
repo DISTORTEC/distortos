@@ -14,6 +14,8 @@
 
 #include "distortos/internal/scheduler/DynamicThreadBase.hpp"
 
+#include "distortos/assert.h"
+
 namespace distortos
 {
 
@@ -327,7 +329,10 @@ DynamicThread makeAndStartDynamicThread(const size_t stackSize, const bool canRe
 {
 	auto thread = makeDynamicThread(stackSize, canReceiveSignals, queuedSignals, signalActions, priority,
 			schedulingPolicy, std::forward<Function>(function), std::forward<Args>(args)...);
-	thread.start();	/// \todo make sure this never fails
+	{
+		const auto ret = thread.start();
+		assert(ret == 0 && "Could not start thread!");
+	}
 	return thread;
 }
 
@@ -348,7 +353,10 @@ template<typename Function, typename... Args>
 DynamicThread makeAndStartDynamicThread(const DynamicThreadParameters parameters, Function&& function, Args&&... args)
 {
 	auto thread = makeDynamicThread(parameters, std::forward<Function>(function), std::forward<Args>(args)...);
-	thread.start();	/// \todo make sure this never fails
+	{
+		const auto ret = thread.start();
+		assert(ret == 0 && "Could not start thread!");
+	}
 	return thread;
 }
 
