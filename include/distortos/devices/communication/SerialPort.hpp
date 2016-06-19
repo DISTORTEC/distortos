@@ -64,7 +64,7 @@ public:
 
 		constexpr CircularBuffer(void* const buffer, const size_t size) :
 				buffer_{static_cast<uint8_t*>(buffer)},
-				size_{size},
+				size_{size & sizeMask_},
 				readPosition_{},
 				writePosition_{}
 		{
@@ -236,6 +236,9 @@ public:
 
 		/// bitmask used to extract MSB from \a readPosition_ or \a writePosition_
 		constexpr static size_t msbMask_ {~positionMask_};
+
+		/// bitmask used to extract size from \a size_
+		constexpr static size_t sizeMask_ {SIZE_MAX >> 1};
 
 		/// pointer to beginning of buffer
 		uint8_t* buffer_;
