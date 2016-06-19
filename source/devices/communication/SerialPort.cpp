@@ -77,6 +77,9 @@ std::pair<const uint8_t*, size_t> SerialPort::CircularBuffer::getReadBlock() con
 
 std::pair<uint8_t*, size_t> SerialPort::CircularBuffer::getWriteBlock() const
 {
+	if (isReadOnly() == true)
+		return {{}, {}};
+
 	const auto readPosition = readPosition_ ;
 	const auto writePosition = writePosition_;
 	if (isFull(readPosition, writePosition) == true)
