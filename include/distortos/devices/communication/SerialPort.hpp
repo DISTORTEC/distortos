@@ -178,7 +178,7 @@ public:
 		{
 			const auto maskedBegin = begin & positionMask_;
 			const auto maskedEnd = end & positionMask_;
-			return {buffer_ + maskedBegin, (maskedEnd > maskedBegin ? maskedEnd : size_) - maskedBegin};
+			return {buffer_ + maskedBegin, (maskedEnd > maskedBegin ? maskedEnd : getCapacity()) - maskedBegin};
 		}
 
 		/**
