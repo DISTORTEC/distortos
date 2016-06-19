@@ -160,6 +160,15 @@ public:
 			return isFull(readPosition_, writePosition_);
 		}
 
+		/**
+		 * \return true if circular buffer is read-only, false otherwise
+		 */
+
+		bool isReadOnly() const
+		{
+			return (size_ & readOnlyMask_) != 0;
+		}
+
 	private:
 
 		/**
@@ -239,6 +248,9 @@ public:
 
 		/// bitmask used to extract size from \a size_
 		constexpr static size_t sizeMask_ {SIZE_MAX >> 1};
+
+		/// bitmask used to extract "read-only" flag from \a size_
+		constexpr static size_t readOnlyMask_ {~sizeMask_};
 
 		/// pointer to beginning of buffer
 		uint8_t* buffer_;
