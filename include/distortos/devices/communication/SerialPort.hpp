@@ -106,9 +106,10 @@ public:
 			const auto writePosition = writePosition_;
 			if (isEmpty(readPosition, writePosition) == true)
 				return 0;
+			const auto capacity = getCapacity();
 			if (isFull(readPosition, writePosition) == true)
-				return size_;
-			return (size_ - (readPosition & positionMask_) + (writePosition & positionMask_)) % size_;
+				return capacity;
+			return (capacity - (readPosition & positionMask_) + (writePosition & positionMask_)) % capacity;
 		}
 
 		/**
