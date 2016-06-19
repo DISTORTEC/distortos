@@ -260,8 +260,7 @@ std::pair<int, size_t> SerialPort::write(const void* const buffer, const size_t 
 	if (characterLength_ > 8 && size % 2 != 0)
 		return {EINVAL, {}};
 
-	// local buffer is never written, so the cast is actually safe, but this has to be fixed anyway...
-	CircularBuffer localWriteBuffer {const_cast<void*>(buffer), size};
+	CircularBuffer localWriteBuffer {buffer, size};	// local buffer is read-only
 	localWriteBuffer.increaseWritePosition(size);	// make the buffer "full"
 	const auto ret = writeImplementation(localWriteBuffer, minSize, timePoint);
 	const auto bytesWritten = localWriteBuffer.getCapacity() - localWriteBuffer.getSize();
