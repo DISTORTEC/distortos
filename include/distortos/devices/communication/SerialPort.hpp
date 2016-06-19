@@ -72,6 +72,22 @@ public:
 		}
 
 		/**
+		 * \brief CircularBuffer's constructor, read-only variant
+		 *
+		 * \param [in] buffer is a read-only buffer with data
+		 * \param [in] size is the size of \a buffer, bytes, must be less than or equal to SIZE_MAX / 2
+		 */
+
+		constexpr CircularBuffer(const void* const buffer, const size_t size) :
+				buffer_{static_cast<uint8_t*>(const_cast<void*>(buffer))},
+				size_{(size & sizeMask_) | readOnlyMask_},
+				readPosition_{},
+				writePosition_{}
+		{
+
+		}
+
+		/**
 		 * \brief Clears circular buffer
 		 */
 
