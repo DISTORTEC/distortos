@@ -196,7 +196,7 @@ public:
 			const auto maskedPosition = position & positionMask_;
 			const auto msb = position & msbMask_;
 			// in case of wrap-around MSB is inverted and position is 0
-			return maskedPosition + value != size_ ? msb | (maskedPosition + value) : msb ^ msbMask_;
+			return maskedPosition + value != getCapacity() ? msb | (maskedPosition + value) : msb ^ msbMask_;
 		}
 
 		/**
