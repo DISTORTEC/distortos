@@ -87,7 +87,7 @@ public:
 
 		size_t getCapacity() const
 		{
-			return size_;
+			return size_ & sizeMask_;
 		}
 
 		/**
