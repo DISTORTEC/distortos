@@ -64,7 +64,23 @@ public:
 
 		constexpr CircularBuffer(void* const buffer, const size_t size) :
 				buffer_{static_cast<uint8_t*>(buffer)},
-				size_{size},
+				size_{size & sizeMask_},
+				readPosition_{},
+				writePosition_{}
+		{
+
+		}
+
+		/**
+		 * \brief CircularBuffer's constructor, read-only variant
+		 *
+		 * \param [in] buffer is a read-only buffer with data
+		 * \param [in] size is the size of \a buffer, bytes, must be less than or equal to SIZE_MAX / 2
+		 */
+
+		constexpr CircularBuffer(const void* const buffer, const size_t size) :
+				buffer_{static_cast<uint8_t*>(const_cast<void*>(buffer))},
+				size_{(size & sizeMask_) | readOnlyMask_},
 				readPosition_{},
 				writePosition_{}
 		{
@@ -87,7 +103,7 @@ public:
 
 		size_t getCapacity() const
 		{
-			return size_;
+			return size_ & sizeMask_;
 		}
 
 		/**
@@ -106,9 +122,10 @@ public:
 			const auto writePosition = writePosition_;
 			if (isEmpty(readPosition, writePosition) == true)
 				return 0;
+			const auto capacity = getCapacity();
 			if (isFull(readPosition, writePosition) == true)
-				return size_;
-			return (size_ - (readPosition & positionMask_) + (writePosition & positionMask_)) % size_;
+				return capacity;
+			return (capacity - (readPosition & positionMask_) + (writePosition & positionMask_)) % capacity;
 		}
 
 		/**
@@ -159,6 +176,15 @@ public:
 			return isFull(readPosition_, writePosition_);
 		}
 
+		/**
+		 * \return true if circular buffer is read-only, false otherwise
+		 */
+
+		bool isReadOnly() const
+		{
+			return (size_ & readOnlyMask_) != 0;
+		}
+
 	private:
 
 		/**
@@ -177,7 +203,7 @@ public:
 		{
 			const auto maskedBegin = begin & positionMask_;
 			const auto maskedEnd = end & positionMask_;
-			return {buffer_ + maskedBegin, (maskedEnd > maskedBegin ? maskedEnd : size_) - maskedBegin};
+			return {buffer_ + maskedBegin, (maskedEnd > maskedBegin ? maskedEnd : getCapacity()) - maskedBegin};
 		}
 
 		/**
@@ -195,7 +221,7 @@ public:
 			const auto maskedPosition = position & positionMask_;
 			const auto msb = position & msbMask_;
 			// in case of wrap-around MSB is inverted and position is 0
-			return maskedPosition + value != size_ ? msb | (maskedPosition + value) : msb ^ msbMask_;
+			return maskedPosition + value != getCapacity() ? msb | (maskedPosition + value) : msb ^ msbMask_;
 		}
 
 		/**
@@ -235,6 +261,12 @@ public:
 
 		/// bitmask used to extract MSB from \a readPosition_ or \a writePosition_
 		constexpr static size_t msbMask_ {~positionMask_};
+
+		/// bitmask used to extract size from \a size_
+		constexpr static size_t sizeMask_ {SIZE_MAX >> 1};
+
+		/// bitmask used to extract "read-only" flag from \a size_
+		constexpr static size_t readOnlyMask_ {~sizeMask_};
 
 		/// pointer to beginning of buffer
 		uint8_t* buffer_;
