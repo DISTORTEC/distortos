@@ -192,6 +192,15 @@ public:
 	}
 
 	/**
+	 * \return reverse_iterator to first element in the reversed range (last element of the non-reversed range)
+	 */
+
+	constexpr reverse_iterator rbegin() const noexcept
+	{
+		return reverse_iterator{end()};
+	}
+
+	/**
 	 * \return number of elements in the range
 	 */
 
