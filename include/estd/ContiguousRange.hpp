@@ -174,6 +174,15 @@ public:
 	}
 
 	/**
+	 * \return const_iterator to "one past the last" element in the range
+	 */
+
+	constexpr const_iterator cend() const noexcept
+	{
+		return end();
+	}
+
+	/**
 	 * \return iterator to "one past the last" element in the range
 	 */
 
