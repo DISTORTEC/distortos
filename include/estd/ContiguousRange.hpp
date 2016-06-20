@@ -143,6 +143,19 @@ public:
 	}
 
 	/**
+	 * \brief ContiguousRange's copy constructor
+	 *
+	 * \param [in] other is a reference to source of copy
+	 */
+
+	constexpr explicit ContiguousRange(const ContiguousRange<typename std::remove_const<T>::type>& other) noexcept :
+			begin_{other.begin()},
+			end_{other.end()}
+	{
+
+	}
+
+	/**
 	 * \return iterator to first element in the range
 	 */
 
