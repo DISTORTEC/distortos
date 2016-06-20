@@ -165,6 +165,15 @@ public:
 	}
 
 	/**
+	 * \return const_iterator to first element in the range
+	 */
+
+	constexpr const_iterator cbegin() const noexcept
+	{
+		return begin();
+	}
+
+	/**
 	 * \return iterator to "one past the last" element in the range
 	 */
 
