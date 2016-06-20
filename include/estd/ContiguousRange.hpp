@@ -183,6 +183,15 @@ public:
 	}
 
 	/**
+	 * \return const_reverse_iterator to first element in the reversed range (last element of the non-reversed range)
+	 */
+
+	constexpr const_reverse_iterator crbegin() const noexcept
+	{
+		return rbegin();
+	}
+
+	/**
 	 * \return iterator to "one past the last" element in the range
 	 */
 
