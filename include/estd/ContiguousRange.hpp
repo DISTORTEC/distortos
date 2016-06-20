@@ -2,7 +2,7 @@
  * \file
  * \brief ContiguousRange template class header.
  *
- * \author Copyright (C) 2014-2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -12,7 +12,7 @@
 #ifndef ESTD_CONTIGUOUSRANGE_HPP_
 #define ESTD_CONTIGUOUSRANGE_HPP_
 
-#include <iterator>
+#include <array>
 
 namespace estd
 {
@@ -96,6 +96,36 @@ public:
 	template<size_t N>
 	constexpr explicit ContiguousRange(T (& array)[N]) noexcept :
 			ContiguousRange{array, array + N}
+	{
+
+	}
+
+	/**
+	 * \brief ContiguousRange's constructor using std::array.
+	 *
+	 * \tparam N is the number of elements in the array
+	 *
+	 * \param [in] array is the array used to initialize the range
+	 */
+
+	template<size_t N>
+	constexpr explicit ContiguousRange(std::array<T, N>& array) noexcept :
+			ContiguousRange{array.begin(), array.end()}
+	{
+
+	}
+
+	/**
+	 * \brief ContiguousRange's constructor using const std::array.
+	 *
+	 * \tparam N is the number of elements in the array
+	 *
+	 * \param [in] array is the const array used to initialize the range
+	 */
+
+	template<size_t N>
+	constexpr explicit ContiguousRange(const std::array<typename std::remove_const<T>::type, N>& array) noexcept :
+			ContiguousRange{array.begin(), array.end()}
 	{
 
 	}
