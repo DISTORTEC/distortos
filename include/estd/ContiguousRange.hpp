@@ -143,14 +143,16 @@ public:
 	}
 
 	/**
-	 * \brief ContiguousRange's copy constructor
+	 * \brief ContiguousRange's converting constructor
 	 *
-	 * \param [in] other is a reference to source of copy
+	 * This constructor is enabled only if \a T is \a const. It can be used to convert non-const range to const range.
+	 *
+	 * \param [in] other is a reference to source of conversion
 	 */
 
-	constexpr explicit ContiguousRange(const ContiguousRange<typename std::remove_const<T>::type>& other) noexcept :
-			begin_{other.begin()},
-			end_{other.end()}
+	template<typename TT = T, typename = typename std::enable_if<std::is_const<TT>::value == true>::type>
+	constexpr explicit ContiguousRange(const ContiguousRange<typename std::remove_const<TT>::type>& other) noexcept :
+			ContiguousRange{other.begin(), other.end()}
 	{
 
 	}
