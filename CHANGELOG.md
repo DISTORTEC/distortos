@@ -28,6 +28,8 @@ of "driver enable" output pin.
 - New package types for *STM32F410CB* and *STM32F410RB* chips.
 - Support for `assert()` - override of newlib's `__assert_func()`, weak `assertHook()` for application and option to
 enable/disable assertions in *Kconfig* menus.
+- Extend `estd::ContiguousRange` with support for `std::array`, copy constructor (possibly from non-const version)
+and various useful functions: `cbegin()`, `cend()`, `rbegin()`, `rend()`, `crbegin()`, `crend()`.
 
 ### Fixed
 

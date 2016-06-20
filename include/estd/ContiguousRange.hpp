@@ -2,7 +2,7 @@
  * \file
  * \brief ContiguousRange template class header.
  *
- * \author Copyright (C) 2014-2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -12,7 +12,7 @@
 #ifndef ESTD_CONTIGUOUSRANGE_HPP_
 #define ESTD_CONTIGUOUSRANGE_HPP_
 
-#include <iterator>
+#include <array>
 
 namespace estd
 {
@@ -101,6 +101,36 @@ public:
 	}
 
 	/**
+	 * \brief ContiguousRange's constructor using std::array.
+	 *
+	 * \tparam N is the number of elements in the array
+	 *
+	 * \param [in] array is the array used to initialize the range
+	 */
+
+	template<size_t N>
+	constexpr explicit ContiguousRange(std::array<T, N>& array) noexcept :
+			ContiguousRange{array.begin(), array.end()}
+	{
+
+	}
+
+	/**
+	 * \brief ContiguousRange's constructor using const std::array.
+	 *
+	 * \tparam N is the number of elements in the array
+	 *
+	 * \param [in] array is the const array used to initialize the range
+	 */
+
+	template<size_t N>
+	constexpr explicit ContiguousRange(const std::array<typename std::remove_const<T>::type, N>& array) noexcept :
+			ContiguousRange{array.begin(), array.end()}
+	{
+
+	}
+
+	/**
 	 * \brief ContiguousRange's constructor using single value
 	 *
 	 * \param [in] value is a reference to variable used to initialize the range
@@ -113,12 +143,75 @@ public:
 	}
 
 	/**
+	 * \brief ContiguousRange's copy constructor
+	 *
+	 * \param [in] other is a reference to source of copy
+	 */
+
+	constexpr explicit ContiguousRange(const ContiguousRange<typename std::remove_const<T>::type>& other) noexcept :
+			begin_{other.begin()},
+			end_{other.end()}
+	{
+
+	}
+
+	/**
+	 * \brief ContiguousRange's subscript operator
+	 *
+	 * \param [in] i is the index of element that will be accessed
+	 *
+	 * \return reference to element at given index
+	 */
+
+	reference operator[](const size_type i) const noexcept
+	{
+		return begin_[i];
+	}
+
+	/**
 	 * \return iterator to first element in the range
 	 */
 
 	constexpr iterator begin() const noexcept
 	{
 		return begin_;
+	}
+
+	/**
+	 * \return const_iterator to first element in the range
+	 */
+
+	constexpr const_iterator cbegin() const noexcept
+	{
+		return begin();
+	}
+
+	/**
+	 * \return const_iterator to "one past the last" element in the range
+	 */
+
+	constexpr const_iterator cend() const noexcept
+	{
+		return end();
+	}
+
+	/**
+	 * \return const_reverse_iterator to first element in the reversed range (last element of the non-reversed range)
+	 */
+
+	constexpr const_reverse_iterator crbegin() const noexcept
+	{
+		return rbegin();
+	}
+
+	/**
+	 * \return const_reverse_iterator to "one past the last" element in the reversed range ("one before the first"
+	 * element of the non-reversed range)
+	 */
+
+	constexpr const_reverse_iterator crend() const noexcept
+	{
+		return rend();
 	}
 
 	/**
@@ -131,23 +224,31 @@ public:
 	}
 
 	/**
+	 * \return reverse_iterator to first element in the reversed range (last element of the non-reversed range)
+	 */
+
+	constexpr reverse_iterator rbegin() const noexcept
+	{
+		return reverse_iterator{end()};
+	}
+
+	/**
+	 * \return reverse_iterator to "one past the last" element in the reversed range ("one before the first" element of
+	 * the non-reversed range)
+	 */
+
+	constexpr reverse_iterator rend() const noexcept
+	{
+		return reverse_iterator{begin()};
+	}
+
+	/**
 	 * \return number of elements in the range
 	 */
 
 	constexpr size_type size() const noexcept
 	{
 		return end_ - begin_;
-	}
-
-	/**
-	 * \param [in] i is the index of element that will be accessed
-	 *
-	 * \return reference to element at given index
-	 */
-
-	reference operator[](const size_type i) const noexcept
-	{
-		return begin_[i];
 	}
 
 private:
