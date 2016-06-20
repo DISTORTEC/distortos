@@ -201,6 +201,16 @@ public:
 	}
 
 	/**
+	 * \return reverse_iterator to "one past the last" element in the reversed range ("one before the first" element of
+	 * the non-reversed range)
+	 */
+
+	constexpr reverse_iterator rend() const noexcept
+	{
+		return reverse_iterator{begin()};
+	}
+
+	/**
 	 * \return number of elements in the range
 	 */
 
