@@ -156,6 +156,19 @@ public:
 	}
 
 	/**
+	 * \brief ContiguousRange's subscript operator
+	 *
+	 * \param [in] i is the index of element that will be accessed
+	 *
+	 * \return reference to element at given index
+	 */
+
+	reference operator[](const size_type i) const noexcept
+	{
+		return begin_[i];
+	}
+
+	/**
 	 * \return iterator to first element in the range
 	 */
 
@@ -236,17 +249,6 @@ public:
 	constexpr size_type size() const noexcept
 	{
 		return end_ - begin_;
-	}
-
-	/**
-	 * \param [in] i is the index of element that will be accessed
-	 *
-	 * \return reference to element at given index
-	 */
-
-	reference operator[](const size_type i) const noexcept
-	{
-		return begin_[i];
 	}
 
 private:
