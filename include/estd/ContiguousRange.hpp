@@ -192,6 +192,16 @@ public:
 	}
 
 	/**
+	 * \return const_reverse_iterator to "one past the last" element in the reversed range ("one before the first"
+	 * element of the non-reversed range)
+	 */
+
+	constexpr const_reverse_iterator crend() const noexcept
+	{
+		return rend();
+	}
+
+	/**
 	 * \return iterator to "one past the last" element in the range
 	 */
 
