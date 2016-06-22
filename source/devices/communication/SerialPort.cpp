@@ -11,7 +11,7 @@
 
 #include "distortos/devices/communication/SerialPort.hpp"
 
-#include "distortos/internal/devices/UartLowLevel.hpp"
+#include "distortos/devices/communication/UartLowLevel.hpp"
 
 #include "distortos/architecture/InterruptMaskingLock.hpp"
 

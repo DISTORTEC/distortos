@@ -9,7 +9,7 @@
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#include "distortos/internal/devices/UartLowLevel.hpp"
+#include "distortos/devices/communication/UartLowLevel.hpp"
 
 namespace distortos
 {

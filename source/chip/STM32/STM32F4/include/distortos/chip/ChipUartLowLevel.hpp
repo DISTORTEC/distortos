@@ -12,7 +12,7 @@
 #ifndef SOURCE_CHIP_STM32_STM32F4_INCLUDE_DISTORTOS_CHIP_CHIPUARTLOWLEVEL_HPP_
 #define SOURCE_CHIP_STM32_STM32F4_INCLUDE_DISTORTOS_CHIP_CHIPUARTLOWLEVEL_HPP_
 
-#include "distortos/internal/devices/UartLowLevel.hpp"
+#include "distortos/devices/communication/UartLowLevel.hpp"
 
 #include "distortos/distortosConfiguration.h"
 
