@@ -26,12 +26,12 @@ namespace devices
 
 class UartBase;
 
-}	// namespace devices
+/**
+ * UartLowLevel class is an interface for low-level UART driver
+ *
+ * \ingroup devices
+ */
 
-namespace internal
-{
-
-/// UartLowLevel class is an interface for low-level UART driver
 class UartLowLevel
 {
 public:
@@ -57,8 +57,8 @@ public:
 	 * - EINVAL - selected baud rate and/or format are invalid;
 	 */
 
-	virtual std::pair<int, uint32_t> start(devices::UartBase& uartBase, uint32_t baudRate, uint8_t characterLength,
-			devices::UartParity parity, bool _2StopBits) = 0;
+	virtual std::pair<int, uint32_t> start(UartBase& uartBase, uint32_t baudRate, uint8_t characterLength,
+			UartParity parity, bool _2StopBits) = 0;
 
 	/**
 	 * \brief Starts asynchronous read operation.
@@ -131,7 +131,7 @@ public:
 	virtual size_t stopWrite() = 0;
 };
 
-}	// namespace internal
+}	// namespace devices
 
 }	// namespace distortos
 

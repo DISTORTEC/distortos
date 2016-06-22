@@ -22,15 +22,10 @@ namespace distortos
 
 class Semaphore;
 
-namespace internal
+namespace devices
 {
 
 class UartLowLevel;
-
-}
-
-namespace devices
-{
 
 /**
  * SerialPort class is a serial port with an interface similar to standard files
@@ -283,7 +278,7 @@ public:
 	/**
 	 * \brief SerialPort's constructor
 	 *
-	 * \param [in] uart is a reference to low-level implementation of internal::UartLowLevel interface
+	 * \param [in] uart is a reference to low-level implementation of UartLowLevel interface
 	 * \param [in] readBuffer is a buffer for read operations
 	 * \param [in] readBufferSize is the size of \a readBuffer, bytes, should be even, must be greater than or equal to
 	 * 2
@@ -292,7 +287,7 @@ public:
 	 * to 2
 	 */
 
-	constexpr SerialPort(internal::UartLowLevel& uart, void* const readBuffer, const size_t readBufferSize,
+	constexpr SerialPort(UartLowLevel& uart, void* const readBuffer, const size_t readBufferSize,
 			void* const writeBuffer, const size_t writeBufferSize) :
 					readMutex_{Mutex::Type::normal, Mutex::Protocol::priorityInheritance},
 					writeMutex_{Mutex::Type::normal, Mutex::Protocol::priorityInheritance},
@@ -340,7 +335,7 @@ public:
 	 * \return 0 on success, error code otherwise:
 	 * - EBADF - the device is already completely closed;
 	 * - EINTR - the wait was interrupted by an unmasked, caught signal;
-	 * - error codes returned by internal::UartLowLevel::stop();
+	 * - error codes returned by UartLowLevel::stop();
 	 */
 
 	int close();
@@ -360,8 +355,8 @@ public:
 	 * - EINVAL - provided arguments don't match current configuration of already opened device;
 	 * - EMFILE - this device is already opened too many times;
 	 * - ENOBUFS - read and/or write buffers are too small;
-	 * - error codes returned by internal::UartLowLevel::start();
-	 * - error codes returned by internal::UartLowLevel::startRead();
+	 * - error codes returned by UartLowLevel::start();
+	 * - error codes returned by UartLowLevel::startRead();
 	 */
 
 	int open(uint32_t baudRate, uint8_t characterLength, devices::UartParity parity, bool _2StopBits);
@@ -392,7 +387,7 @@ public:
 	 * - EINTR - the wait was interrupted by an unmasked, caught signal;
 	 * - EINVAL - \a buffer and/or \a size are invalid;
 	 * - ETIMEDOUT - required amount of data could not be read before the specified timeout expired;
-	 * - error codes returned by internal::UartLowLevel::startRead();
+	 * - error codes returned by UartLowLevel::startRead();
 	 */
 
 	std::pair<int, size_t> read(void* buffer, size_t size, size_t minSize = 1,
@@ -415,7 +410,7 @@ public:
 	 * - EINTR - the wait was interrupted by an unmasked, caught signal;
 	 * - EINVAL - \a buffer and/or \a size are invalid;
 	 * - ETIMEDOUT - required amount of data could not be read before the specified timeout expired;
-	 * - error codes returned by internal::UartLowLevel::startRead();
+	 * - error codes returned by UartLowLevel::startRead();
 	 */
 
 	std::pair<int, size_t> tryReadFor(const TickClock::duration duration, void* const buffer, const size_t size,
@@ -446,7 +441,7 @@ public:
 	 * - EINTR - the wait was interrupted by an unmasked, caught signal;
 	 * - EINVAL - \a buffer and/or \a size are invalid;
 	 * - ETIMEDOUT - required amount of data could not be read before the specified timeout expired;
-	 * - error codes returned by internal::UartLowLevel::startRead();
+	 * - error codes returned by UartLowLevel::startRead();
 	 */
 
 	template<typename Rep, typename Period>
@@ -473,7 +468,7 @@ public:
 	 * - EINTR - the wait was interrupted by an unmasked, caught signal;
 	 * - EINVAL - \a buffer and/or \a size are invalid;
 	 * - ETIMEDOUT - required amount of data could not be read before the specified timeout expired;
-	 * - error codes returned by internal::UartLowLevel::startRead();
+	 * - error codes returned by UartLowLevel::startRead();
 	 */
 
 	std::pair<int, size_t> tryReadUntil(const TickClock::time_point timePoint, void* const buffer, const size_t size,
@@ -503,7 +498,7 @@ public:
 	 * - EINTR - the wait was interrupted by an unmasked, caught signal;
 	 * - EINVAL - \a buffer and/or \a size are invalid;
 	 * - ETIMEDOUT - required amount of data could not be read before the specified timeout expired;
-	 * - error codes returned by internal::UartLowLevel::startRead();
+	 * - error codes returned by UartLowLevel::startRead();
 	 */
 
 	template<typename Duration>
@@ -530,7 +525,7 @@ public:
 	 * - EINTR - the wait was interrupted by an unmasked, caught signal;
 	 * - EINVAL - \a buffer and/or \a size are invalid;
 	 * - ETIMEDOUT - required amount of data could not be written before the specified timeout expired;
-	 * - error codes returned by internal::UartLowLevel::startWrite();
+	 * - error codes returned by UartLowLevel::startWrite();
 	 */
 
 	std::pair<int, size_t> tryWriteFor(const TickClock::duration duration, const void* const buffer, const size_t size,
@@ -561,7 +556,7 @@ public:
 	 * - EINTR - the wait was interrupted by an unmasked, caught signal;
 	 * - EINVAL - \a buffer and/or \a size are invalid;
 	 * - ETIMEDOUT - required amount of data could not be written before the specified timeout expired;
-	 * - error codes returned by internal::UartLowLevel::startWrite();
+	 * - error codes returned by UartLowLevel::startWrite();
 	 */
 
 	template<typename Rep, typename Period>
@@ -588,7 +583,7 @@ public:
 	 * - EINTR - the wait was interrupted by an unmasked, caught signal;
 	 * - EINVAL - \a buffer and/or \a size are invalid;
 	 * - ETIMEDOUT - required amount of data could not be written before the specified timeout expired;
-	 * - error codes returned by internal::UartLowLevel::startWrite();
+	 * - error codes returned by UartLowLevel::startWrite();
 	 */
 
 	std::pair<int, size_t> tryWriteUntil(const TickClock::time_point timePoint, const void* const buffer,
@@ -616,7 +611,7 @@ public:
 	 * - EINTR - the wait was interrupted by an unmasked, caught signal;
 	 * - EINVAL - \a buffer and/or \a size are invalid;
 	 * - ETIMEDOUT - required amount of data could not be written before the specified timeout expired;
-	 * - error codes returned by internal::UartLowLevel::startWrite();
+	 * - error codes returned by UartLowLevel::startWrite();
 	 */
 
 	template<typename Duration>
@@ -652,7 +647,7 @@ public:
 	 * - EINTR - the wait was interrupted by an unmasked, caught signal;
 	 * - EINVAL - \a buffer and/or \a size are invalid;
 	 * - ETIMEDOUT - required amount of data could not be written before the specified timeout expired;
-	 * - error codes returned by internal::UartLowLevel::startWrite();
+	 * - error codes returned by UartLowLevel::startWrite();
 	 */
 
 	std::pair<int, size_t> write(const void* buffer, size_t size, size_t minSize = SIZE_MAX,
@@ -752,13 +747,13 @@ private:
 	 * \return 0 on success, error code otherwise:
 	 * - EINTR - the wait was interrupted by an unmasked, caught signal;
 	 * - ETIMEDOUT - required amount of data could not be read before the specified timeout expired;
-	 * - error codes returned by internal::UartLowLevel::startRead();
+	 * - error codes returned by UartLowLevel::startRead();
 	 */
 
 	int readImplementation(CircularBuffer& buffer, size_t minSize, const TickClock::time_point* timePoint);
 
 	/**
-	 * \brief Wrapper for internal::UartLowLevel::startRead()
+	 * \brief Wrapper for UartLowLevel::startRead()
 	 *
 	 * Does nothing if read is already in progress or if read circular buffer is full. Otherwise sets "read in progress"
 	 * flag, starts read operation with size that is the smallest of: size of first available write block, half the size
@@ -766,13 +761,13 @@ private:
 	 * equal to 0).
 	 *
 	 * \return 0 on success, error code otherwise:
-	 * - error codes returned by internal::UartLowLevel::startRead();
+	 * - error codes returned by UartLowLevel::startRead();
 	 */
 
 	int startReadWrapper();
 
 	/**
-	 * \brief Wrapper for internal::UartLowLevel::startWrite()
+	 * \brief Wrapper for UartLowLevel::startWrite()
 	 *
 	 * Does nothing if write is already in progress or if write circular buffer is empty. Otherwise sets "write in
 	 * progress" flag, starts write operation with size that is the smallest of: size of first available read block,
@@ -780,29 +775,29 @@ private:
 	 * (only if it's not equal to 0).
 	 *
 	 * \return 0 on success, error code otherwise:
-	 * - error codes returned by internal::UartLowLevel::startWrite();
+	 * - error codes returned by UartLowLevel::startWrite();
 	 */
 
 	int startWriteWrapper();
 
 	/**
-	 * \brief Wrapper for internal::UartLowLevel::stopRead()
+	 * \brief Wrapper for UartLowLevel::stopRead()
 	 *
 	 * Stops read operation, updates position of read circular buffer, updates size limit of read operations and clears
 	 * "read in progress" flag.
 	 *
-	 * \return values returned by internal::UartLowLevel::stopRead();
+	 * \return values returned by UartLowLevel::stopRead();
 	 */
 
 	size_t stopReadWrapper();
 
 	/**
-	 * \brief Wrapper for internal::UartLowLevel::stopWrite()
+	 * \brief Wrapper for UartLowLevel::stopWrite()
 	 *
 	 * Stops write operation, updates position of write circular buffer, updates size limit of write operations and
 	 * clears "write in progress" flag.
 	 *
-	 * \return values returned by internal::UartLowLevel::stopWrite();
+	 * \return values returned by UartLowLevel::stopWrite();
 	 */
 
 	size_t stopWriteWrapper();
@@ -818,7 +813,7 @@ private:
 	 * \return 0 on success, error code otherwise:
 	 * - EINTR - the wait was interrupted by an unmasked, caught signal;
 	 * - ETIMEDOUT - required amount of data could not be written before the specified timeout expired;
-	 * - error codes returned by internal::UartLowLevel::startWrite();
+	 * - error codes returned by UartLowLevel::startWrite();
 	 */
 
 	int writeImplementation(CircularBuffer& buffer, size_t minSize, const TickClock::time_point* timePoint);
@@ -873,8 +868,8 @@ private:
 	/// size limit of write operations, 0 if no limiting is needed, bytes
 	volatile size_t writeLimit_;
 
-	/// reference to low-level implementation of internal::UartLowLevel interface
-	internal::UartLowLevel& uart_;
+	/// reference to low-level implementation of UartLowLevel interface
+	UartLowLevel& uart_;
 
 	/// current baud rate, bps
 	uint32_t baudRate_;

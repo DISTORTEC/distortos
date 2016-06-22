@@ -23,7 +23,7 @@ namespace chip
 {
 
 /// ChipUartLowLevel class is a low-level UART driver for STM32F4
-class ChipUartLowLevel : public internal::UartLowLevel
+class ChipUartLowLevel : public devices::UartLowLevel
 {
 public:
 
