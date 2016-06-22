@@ -16,7 +16,7 @@
 #include "distortos/chip/STM32F4-RCC-bits.h"
 #include "distortos/chip/STM32F4-USART-bits.h"
 
-#include "distortos/internal/devices/UartBase.hpp"
+#include "distortos/devices/communication/UartBase.hpp"
 
 #include <cerrno>
 

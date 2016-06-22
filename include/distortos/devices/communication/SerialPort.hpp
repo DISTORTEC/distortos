@@ -12,9 +12,8 @@
 #ifndef INCLUDE_DISTORTOS_DEVICES_COMMUNICATION_SERIALPORT_HPP_
 #define INCLUDE_DISTORTOS_DEVICES_COMMUNICATION_SERIALPORT_HPP_
 
+#include "distortos/devices/communication/UartBase.hpp"
 #include "distortos/devices/communication/UartParity.hpp"
-
-#include "distortos/internal/devices/UartBase.hpp"
 
 #include "distortos/Mutex.hpp"
 
