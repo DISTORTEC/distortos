@@ -146,7 +146,7 @@ public:
 	 * - EINVAL - selected baud rate and/or format are invalid;
 	 */
 
-	std::pair<int, uint32_t> start(internal::UartBase& uartBase, uint32_t baudRate, uint8_t characterLength,
+	std::pair<int, uint32_t> start(devices::UartBase& uartBase, uint32_t baudRate, uint8_t characterLength,
 			devices::UartParity parity, bool _2StopBits) override;
 
 	/**
@@ -252,7 +252,7 @@ private:
 	const Parameters& parameters_;
 
 	/// reference to UartBase object associated with this one
-	internal::UartBase* uartBase_;
+	devices::UartBase* uartBase_;
 
 	/// buffer to which the data is being written
 	uint8_t* volatile readBuffer_;

@@ -34,20 +34,20 @@ namespace
 +---------------------------------------------------------------------------------------------------------------------*/
 
 /**
- * \brief Decode value of USART_SR register to internal::UartBase::ErrorSet
+ * \brief Decode value of USART_SR register to devices::UartBase::ErrorSet
  *
  * \param [in] sr is the value of USART_SR register that will be decoded
  *
- * \return internal::UartBase::ErrorSet with errors decoded from \a sr
+ * \return devices::UartBase::ErrorSet with errors decoded from \a sr
  */
 
-internal::UartBase::ErrorSet decodeErrors(const uint32_t sr)
+devices::UartBase::ErrorSet decodeErrors(const uint32_t sr)
 {
-	internal::UartBase::ErrorSet errorSet {};
-	errorSet[internal::UartBase::framingError] = (sr & USART_SR_FE) != 0;
-	errorSet[internal::UartBase::noiseError] = (sr & USART_SR_NE) != 0;
-	errorSet[internal::UartBase::overrunError] = (sr & USART_SR_ORE) != 0;
-	errorSet[internal::UartBase::parityError] = (sr & USART_SR_PE) != 0;
+	devices::UartBase::ErrorSet errorSet {};
+	errorSet[devices::UartBase::framingError] = (sr & USART_SR_FE) != 0;
+	errorSet[devices::UartBase::noiseError] = (sr & USART_SR_NE) != 0;
+	errorSet[devices::UartBase::overrunError] = (sr & USART_SR_ORE) != 0;
+	errorSet[devices::UartBase::parityError] = (sr & USART_SR_PE) != 0;
 	return errorSet;
 }
 
@@ -342,7 +342,7 @@ void ChipUartLowLevel::interruptHandler()
 	}
 }
 
-std::pair<int, uint32_t> ChipUartLowLevel::start(internal::UartBase& uartBase, const uint32_t baudRate,
+std::pair<int, uint32_t> ChipUartLowLevel::start(devices::UartBase& uartBase, const uint32_t baudRate,
 		const uint8_t characterLength, const devices::UartParity parity, const bool _2StopBits)
 {
 	if (isStarted() == true)

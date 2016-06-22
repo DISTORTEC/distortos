@@ -14,7 +14,7 @@
 namespace distortos
 {
 
-namespace internal
+namespace devices
 {
 
 /*---------------------------------------------------------------------------------------------------------------------+
@@ -26,6 +26,6 @@ UartBase::~UartBase()
 
 }
 
-}	// namespace internal
+}	// namespace devices
 
 }	// namespace distortos

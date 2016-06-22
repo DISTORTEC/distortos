@@ -17,11 +17,16 @@
 namespace distortos
 {
 
-namespace internal
+namespace devices
 {
 
-/// UartBase class is an interface with callbacks for low-level UART driver, which can serve as a base for high-level
-/// UART drivers
+/**
+ * UartBase class is an interface with callbacks for low-level UART driver, which can serve as a base for high-level
+ * UART drivers
+ *
+ * \ingroup devices
+ */
+
 class UartBase
 {
 public:
@@ -100,7 +105,7 @@ public:
 	virtual void writeCompleteEvent(size_t bytesWritten) = 0;
 };
 
-}	// namespace internal
+}	// namespace devices
 
 }	// namespace distortos
 

@@ -21,10 +21,15 @@
 namespace distortos
 {
 
-namespace internal
+namespace devices
 {
 
 class UartBase;
+
+}	// namespace devices
+
+namespace internal
+{
 
 /// UartLowLevel class is an interface for low-level UART driver
 class UartLowLevel
@@ -52,7 +57,7 @@ public:
 	 * - EINVAL - selected baud rate and/or format are invalid;
 	 */
 
-	virtual std::pair<int, uint32_t> start(UartBase& uartBase, uint32_t baudRate, uint8_t characterLength,
+	virtual std::pair<int, uint32_t> start(devices::UartBase& uartBase, uint32_t baudRate, uint8_t characterLength,
 			devices::UartParity parity, bool _2StopBits) = 0;
 
 	/**

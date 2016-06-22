@@ -38,7 +38,7 @@ namespace devices
  * \ingroup devices
  */
 
-class SerialPort : private internal::UartBase
+class SerialPort : private UartBase
 {
 public:
 
