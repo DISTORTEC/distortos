@@ -28,7 +28,7 @@ if CONFIG_CHIP_STM32F4 == "y" then
 	local ldScriptGenerator = DISTORTOS_TOP .. "source/architecture/ARM/ARMv6-M-ARMv7-M/ARMv6-M-ARMv7-M.ld.sh"
 	local ldScriptGeneratorArguments = " \"" .. CONFIG_CHIP .. "\" \"" ..
 			CONFIG_CHIP_STM32F4_FLASH_ADDRESS .. "," .. CONFIG_CHIP_STM32F4_FLASH_SIZE .. "\" \"" ..
-			CONFIG_CHIP_STM32F4_SRAM1_ADDRESS .. "," .. unifiedRamSize .. "\" \"" ..
+			CONFIG_CHIP_STM32F4_SRAM1_ADDRESS .. "," .. math.floor(unifiedRamSize) .. "\" \"" ..
 			CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_MAIN_STACK_SIZE .. "\" \"" .. CONFIG_MAIN_THREAD_STACK_SIZE .. "\""
 
 	if CONFIG_CHIP_STM32F4_BKPSRAM_ADDRESS ~= nil then
@@ -46,7 +46,7 @@ if CONFIG_CHIP_STM32F4 == "y" then
 		sram3Unified = 1
 		local sram23Size = CONFIG_CHIP_STM32F4_SRAM2_SIZE + CONFIG_CHIP_STM32F4_SRAM3_SIZE
 		ldScriptGeneratorArguments = ldScriptGeneratorArguments ..
-				" \"sram23," .. CONFIG_CHIP_STM32F4_SRAM2_ADDRESS .. "," .. sram23Size .. "\""
+				" \"sram23," .. CONFIG_CHIP_STM32F4_SRAM2_ADDRESS .. "," .. math.floor(sram23Size) .. "\""
 	end
 
 	if CONFIG_CHIP_STM32F4_SRAM2_ADDRESS ~= nil and sram2Unified == 0 then
