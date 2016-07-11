@@ -251,7 +251,7 @@ private:
 	/// reference to configuration parameters
 	const Parameters& parameters_;
 
-	/// reference to UartBase object associated with this one
+	/// pointer to UartBase object associated with this one
 	devices::UartBase* uartBase_;
 
 	/// buffer to which the data is being written

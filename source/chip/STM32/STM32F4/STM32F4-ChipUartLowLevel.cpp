@@ -72,8 +72,8 @@ public:
 	 * \param [in] rxneieBb is a pointer to bitband alias of RXNEIE bit in USART_CR1 register
 	 * \param [in] tcieBb is a pointer to bitband alias of TCIE bit in USART_CR1 register
 	 * \param [in] txeieBb is a pointer to bitband alias of TXEIE bit in USART_CR1 register
-	 * \param [in] rccEnBb is a pointer to bitband alias of apropriate U[S]ARTxEN bit in RCC register
-	 * \param [in] rccRstBb is a pointer to bitband alias of apropriate U[S]ARTxRST bit in RCC register
+	 * \param [in] rccEnBb is a pointer to bitband alias of appropriate U[S]ARTxEN bit in RCC register
+	 * \param [in] rccRstBb is a pointer to bitband alias of appropriate U[S]ARTxRST bit in RCC register
 	 * \param [in] irqNumber is the NVIC's IRQ number of associated U[S]ART
 	 *
 	 * \note Don't add "const" to values of pointers, don't use references - see
@@ -216,10 +216,10 @@ private:
 	/// pointer to bitband alias of TXEIE bit in USART_CR1 register
 	volatile unsigned long* txeieBb_;
 
-	/// pointer to bitband alias of apropriate U[S]ARTxEN bit in RCC register
+	/// pointer to bitband alias of appropriate U[S]ARTxEN bit in RCC register
 	volatile unsigned long* rccEnBb_;
 
-	/// pointer to bitband alias of apropriate U[S]ARTxRST bit in RCC register
+	/// pointer to bitband alias of appropriate U[S]ARTxRST bit in RCC register
 	volatile unsigned long* rccRstBb_;
 
 	/// NVIC's IRQ number of associated U[S]ART
