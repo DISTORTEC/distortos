@@ -65,7 +65,7 @@ public:
 
 	bool isRunning() const
 	{
-		return node.isLinked();
+		return node.isLinked() != false || period_ != decltype(period_){};
 	}
 
 	/**
