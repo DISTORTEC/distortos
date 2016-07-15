@@ -79,7 +79,7 @@ public:
 	 * \brief Empty ContiguousRange's constructor.
 	 */
 
-	constexpr explicit ContiguousRange() noexcept :
+	constexpr ContiguousRange() noexcept :
 			ContiguousRange{nullptr, nullptr}
 	{
 
