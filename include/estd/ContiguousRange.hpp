@@ -64,13 +64,13 @@ public:
 	/**
 	 * \brief ContiguousRange's constructor
 	 *
-	 * \param [in] beginn is an iterator to first element in the range
-	 * \param [in] endd is an iterator to "one past the last" element in the range
+	 * \param [in] begin is an iterator to first element in the range
+	 * \param [in] end is an iterator to "one past the last" element in the range
 	 */
 
-	constexpr ContiguousRange(const iterator beginn, const iterator endd) noexcept :
-			begin_{beginn},
-			end_{endd}
+	constexpr ContiguousRange(const iterator begin, const iterator end) noexcept :
+			begin_{begin},
+			end_{end}
 	{
 
 	}
