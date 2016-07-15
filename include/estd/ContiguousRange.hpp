@@ -1,6 +1,6 @@
 /**
  * \file
- * \brief ContiguousRange template class header.
+ * \brief ContiguousRange template class header
  *
  * \author Copyright (C) 2014-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
@@ -18,7 +18,7 @@ namespace estd
 {
 
 /**
- * \brief ContiguousRange template class is a pair of iterators to contiguous sequence of elements in memory
+ * \brief ContiguousRange template class is a pair of iterators to contiguous sequence of elements in memory.
  *
  * \tparam T is the type of data in the range
  */
@@ -62,7 +62,7 @@ public:
 	using const_reverse_iterator = std::reverse_iterator<const_iterator>;
 
 	/**
-	 * \brief ContiguousRange's constructor.
+	 * \brief ContiguousRange's constructor
 	 *
 	 * \param [in] beginn is an iterator to first element in the range
 	 * \param [in] endd is an iterator to "one past the last" element in the range
@@ -76,7 +76,7 @@ public:
 	}
 
 	/**
-	 * \brief Empty ContiguousRange's constructor.
+	 * \brief Empty ContiguousRange's constructor
 	 */
 
 	constexpr ContiguousRange() noexcept :
@@ -86,7 +86,7 @@ public:
 	}
 
 	/**
-	 * \brief ContiguousRange's constructor using C-style array.
+	 * \brief ContiguousRange's constructor using C-style array
 	 *
 	 * \tparam N is the number of elements in the array
 	 *
@@ -101,7 +101,7 @@ public:
 	}
 
 	/**
-	 * \brief ContiguousRange's constructor using std::array.
+	 * \brief ContiguousRange's constructor using std::array
 	 *
 	 * \tparam N is the number of elements in the array
 	 *
@@ -116,7 +116,7 @@ public:
 	}
 
 	/**
-	 * \brief ContiguousRange's constructor using const std::array.
+	 * \brief ContiguousRange's constructor using const std::array
 	 *
 	 * \tparam N is the number of elements in the array
 	 *
