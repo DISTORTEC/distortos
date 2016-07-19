@@ -99,7 +99,7 @@ std::pair<int, size_t> SpiMaster::executeTransaction(SpiDevice& device, const Sp
 	operationRange_ = operationRange;
 	ret_ = {};
 	const auto cleanupScopeGuard = estd::makeScopeGuard(
-			[this, device]()
+			[this, &device]()
 			{
 				operationRange_ = {};
 				semaphore_ = {};

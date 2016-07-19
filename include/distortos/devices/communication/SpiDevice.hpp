@@ -21,6 +21,7 @@ namespace devices
 {
 
 class OutputPin;
+class SpiMaster;
 
 /**
  * SpiDevice class represents a single SPI slave device connected to SPI master
@@ -115,11 +116,13 @@ public:
 	 *
 	 * \param [in] parameters is a reference to parameters required for correct communication with this SPI slave device
 	 * \param [in] slaveSelectPin is a reference to slave select pin of this SPI slave device
+	 * \param [in] spiMaster is a reference to SPI master to which this SPI slave device is connected
 	 */
 
-	constexpr SpiDevice(const Parameters& parameters, OutputPin& slaveSelectPin) :
+	constexpr SpiDevice(const Parameters& parameters, OutputPin& slaveSelectPin, SpiMaster& spiMaster) :
 			parameters_{parameters},
-			slaveSelectPin_{slaveSelectPin}
+			slaveSelectPin_{slaveSelectPin},
+			spiMaster_{spiMaster}
 	{
 
 	}
@@ -149,6 +152,9 @@ private:
 
 	/// reference to slave select pin of this SPI slave device
 	OutputPin& slaveSelectPin_;
+
+	/// reference to SPI master to which this SPI slave device is connected
+	SpiMaster& spiMaster_;
 };
 
 }	// namespace devices
