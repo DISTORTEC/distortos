@@ -15,8 +15,15 @@ executed only once. Otherwise it will be executed periodically until the softwar
 - `devices::UartBase` interface class, which can be used as a private base for devices using UART interface.
 - `devices::UartLowLevel` interface class, which is a low-level interface to hardware-dependent UART driver.
 - `chip::ChipUartLowLevel` class - interrupt-driven implementation of `devices::UartLowLevel` interface for *STM32F4*.
-- "Peripherals configuration" *Kconfig* menu for *STM32F4*, where low-level drivers for U[S]ART can be selected.
+- `devices::SpiMasterBase` interface class, which can be used as a private base for devices using SPI as bus master.
+- `devices::SpiMasterLowLevel` interface class, which is a low-level interface to hardware-dependent SPI bus master
+driver.
+- `chip::ChipSpiMasterLowLevel` class - interrupt-driven implementation of `devices::SpiMasterLowLevel` interface for
+*STM32F4*.
+- "Peripherals configuration" *Kconfig* menu for *STM32F4*, where low-level drivers for SPI bus master and U[S]ART can
+be selected.
 - `uarts.hpp` header for *STM32F4* with declarations of all enabled low-level U[S]ART drivers.
+- `spis.hpp` header for *STM32F4* with declarations of all enabled low-level SPI master drivers.
 - `devices::SerialPort` class - universal serial port device with an interface similar to standard files (`open()`,
 `close()`, `read()`, `write()`). `read()` and `write()` member functions of this class support both blocking (with
 or without timeout) and non-blocking behaviour. Convenient wrappers for reading/writing with timeout are also provided:
@@ -24,6 +31,8 @@ or without timeout) and non-blocking behaviour. Convenient wrappers for reading/
 - `estd::ScopeGuard` template class, which can be used to execute bounded function on scope exit using RAII pattern.
 - `devices::Rs485` class - *RS-485* device with all features of `devices::SerialPort` and with automatic management
 of "driver enable" output pin.
+- `devices::SpiMaster` and `devices::SpiDevice` classes, which enable easy communication with multiple SPI slave devices
+connected to the same SPI bus master.
 - Support for 4 new [STM32F4](http://www.st.com/stm32f4)12 chips.
 - New package types for *STM32F410CB* and *STM32F410RB* chips.
 - Support for `assert()` - override of newlib's `__assert_func()`, weak `assertHook()` for application and option to
