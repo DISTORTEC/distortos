@@ -22,6 +22,8 @@
 
 #include "estd/ScopeGuard.hpp"
 
+#include <cerrno>
+
 namespace distortos
 {
 
