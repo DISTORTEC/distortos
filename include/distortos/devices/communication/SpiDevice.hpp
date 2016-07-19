@@ -36,98 +36,28 @@ class SpiDevice
 {
 public:
 
-	/// parameters required for correct communication with SPI slave device
-	class Parameters
-	{
-	public:
-
-		/**
-		 * \brief Parameters's constructor
-		 *
-		 * \param [in] mode is the SPI mode used by SPI slave device
-		 * \param [in] maxClockFrequency is the max clock frequency supported by SPI slave device, Hz
-		 * \param [in] wordLength is the word length used by SPI slave device, bits
-		 * \param [in] lsbFirst selects whether data should be transmitted/received to/from the SPI slave device with
-		 * MSB (false) or LSB (true) first
-		 */
-
-		constexpr Parameters(const SpiMode mode, const uint32_t maxClockFrequency, const uint8_t wordLength,
-				const bool lsbFirst) :
-						maxClockFrequency_{maxClockFrequency},
-						lsbFirst_{lsbFirst},
-						mode_{mode},
-						wordLength_{wordLength}
-		{
-
-		}
-
-		/**
-		 * \return false if data should be transmitted/received to/from the SPI slave device with
-		 * MSB first, true if data should be transmitted/received to/from the SPI slave device with LSB first
-		 */
-
-		bool getLsbFirst() const
-		{
-			return lsbFirst_;
-		}
-
-		/**
-		 * \return max clock frequency supported by SPI slave device, Hz
-		 */
-
-		uint32_t getMaxClockFrequency() const
-		{
-			return maxClockFrequency_;
-		}
-
-		/**
-		 * \return SPI mode used by SPI slave device
-		 */
-
-		SpiMode getMode() const
-		{
-			return mode_;
-		}
-
-		/**
-		 * \return word length used by SPI slave device, bits
-		 */
-
-		uint8_t getWordLength() const
-		{
-			return wordLength_;
-		}
-
-	private:
-
-		/// max clock frequency supported by SPI slave device, Hz
-		uint32_t maxClockFrequency_;
-
-		/// selects whether data should be transmitted/received to/from the SPI slave device with MSB (false) or LSB
-		/// (true) first
-		bool lsbFirst_;
-
-		/// SPI mode used by SPI slave device
-		SpiMode mode_;
-
-		/// word length used by SPI slave device, bits
-		uint8_t wordLength_;
-	};
-
 	/**
 	 * \brief SpiDevice's constructor
 	 *
-	 * \param [in] parameters is a reference to parameters required for correct communication with this SPI slave device
 	 * \param [in] slaveSelectPin is a reference to slave select pin of this SPI slave device
 	 * \param [in] spiMaster is a reference to SPI master to which this SPI slave device is connected
+	 * \param [in] mode is the SPI mode used by SPI slave device
+	 * \param [in] maxClockFrequency is the max clock frequency supported by SPI slave device, Hz
+	 * \param [in] wordLength is the word length used by SPI slave device, bits
+	 * \param [in] lsbFirst selects whether data should be transmitted/received to/from the SPI slave device with
+	 * MSB (false) or LSB (true) first
 	 */
 
-	constexpr SpiDevice(const Parameters& parameters, OutputPin& slaveSelectPin, SpiMaster& spiMaster) :
-			mutex_{Mutex::Type::normal, Mutex::Protocol::priorityInheritance},
-			parameters_{parameters},
-			slaveSelectPin_{slaveSelectPin},
-			spiMaster_{spiMaster},
-			openCount_{}
+	constexpr SpiDevice(OutputPin& slaveSelectPin, SpiMaster& spiMaster, const SpiMode mode,
+			const uint32_t maxClockFrequency, const uint8_t wordLength, const bool lsbFirst) :
+					mutex_{Mutex::Type::normal, Mutex::Protocol::priorityInheritance},
+					maxClockFrequency_{maxClockFrequency},
+					slaveSelectPin_{slaveSelectPin},
+					spiMaster_{spiMaster},
+					lsbFirst_{lsbFirst},
+					mode_{mode},
+					openCount_{},
+					wordLength_{wordLength}
 	{
 
 	}
@@ -170,12 +100,31 @@ public:
 	std::pair<int, size_t> executeTransaction(SpiMasterOperationRange operationRange);
 
 	/**
-	 * \return reference to parameters required for correct communication with this SPI slave device
+	 * \return false if data should be transmitted/received to/from the SPI slave device with
+	 * MSB first, true if data should be transmitted/received to/from the SPI slave device with LSB first
 	 */
 
-	const Parameters& getParameters() const
+	bool getLsbFirst() const
 	{
-		return parameters_;
+		return lsbFirst_;
+	}
+
+	/**
+	 * \return max clock frequency supported by SPI slave device, Hz
+	 */
+
+	uint32_t getMaxClockFrequency() const
+	{
+		return maxClockFrequency_;
+	}
+
+	/**
+	 * \return SPI mode used by SPI slave device
+	 */
+
+	SpiMode getMode() const
+	{
+		return mode_;
 	}
 
 	/**
@@ -185,6 +134,15 @@ public:
 	OutputPin& getSlaveSelectPin() const
 	{
 		return slaveSelectPin_;
+	}
+
+	/**
+	 * \return word length used by SPI slave device, bits
+	 */
+
+	uint8_t getWordLength() const
+	{
+		return wordLength_;
 	}
 
 	/**
@@ -204,8 +162,8 @@ private:
 	/// mutex used to serialize access to this object
 	Mutex mutex_;
 
-	/// reference to parameters required for correct communication with this SPI slave device
-	const Parameters& parameters_;
+	/// max clock frequency supported by SPI slave device, Hz
+	uint32_t maxClockFrequency_;
 
 	/// reference to slave select pin of this SPI slave device
 	OutputPin& slaveSelectPin_;
@@ -213,8 +171,18 @@ private:
 	/// reference to SPI master to which this SPI slave device is connected
 	SpiMaster& spiMaster_;
 
+	/// selects whether data should be transmitted/received to/from the SPI slave device with MSB (false) or LSB
+	/// (true) first
+	bool lsbFirst_;
+
+	/// SPI mode used by SPI slave device
+	SpiMode mode_;
+
 	/// number of times this device was opened but not yet closed
 	uint8_t openCount_;
+
+	/// word length used by SPI slave device, bits
+	uint8_t wordLength_;
 };
 
 }	// namespace devices
