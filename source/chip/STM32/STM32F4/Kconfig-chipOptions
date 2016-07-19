@@ -514,6 +514,48 @@ endmenu
 
 menu "Peripherals configuration"
 
+config CHIP_SPI1_ENABLE
+	bool "SPI1 low-level driver"
+	default n
+	depends on CHIP_HAS_SPI1
+	help
+		Enable SPI1 low-level driver
+
+config CHIP_SPI2_ENABLE
+	bool "SPI2 low-level driver"
+	default n
+	depends on CHIP_HAS_SPI2
+	help
+		Enable SPI2 low-level driver
+
+config CHIP_SPI3_ENABLE
+	bool "SPI3 low-level driver"
+	default n
+	depends on CHIP_HAS_SPI3
+	help
+		Enable SPI3 low-level driver
+
+config CHIP_SPI4_ENABLE
+	bool "SPI4 low-level driver"
+	default n
+	depends on CHIP_HAS_SPI4
+	help
+		Enable SPI4 low-level driver
+
+config CHIP_SPI5_ENABLE
+	bool "SPI5 low-level driver"
+	default n
+	depends on CHIP_HAS_SPI5
+	help
+		Enable SPI5 low-level driver
+
+config CHIP_SPI6_ENABLE
+	bool "SPI6 low-level driver"
+	default n
+	depends on CHIP_HAS_SPI6
+	help
+		Enable SPI6 low-level driver
+
 config CHIP_USART1_ENABLE
 	bool "USART1 low-level driver"
 	default n
@@ -572,6 +614,30 @@ config CHIP_UART8_ENABLE
 
 endmenu
 
+config CHIP_HAS_SPI1
+	bool
+	default y
+
+config CHIP_HAS_SPI2
+	bool
+	default n
+
+config CHIP_HAS_SPI3
+	bool
+	default n
+
+config CHIP_HAS_SPI4
+	bool
+	default n
+
+config CHIP_HAS_SPI5
+	bool
+	default n
+
+config CHIP_HAS_SPI6
+	bool
+	default n
+
 config CHIP_HAS_USART1
 	bool
 	default y
@@ -607,11 +673,14 @@ config CHIP_HAS_UART8
 config CHIP_STM32F40
 	bool
 	default n
+	select CHIP_HAS_SPI2
+	select CHIP_HAS_SPI3
 
 config CHIP_STM32F401
 	bool
 	default n
 	select CHIP_STM32F40
+	select CHIP_HAS_SPI4
 
 config CHIP_STM32F401C
 	bool
@@ -821,6 +890,8 @@ config CHIP_STM32F410C
 	default n
 	select CHIP_STM32F410
 	select CHIP_HAS_UFQFPN48
+	select CHIP_HAS_SPI2
+	select CHIP_HAS_SPI5
 
 config CHIP_STM32F410C8
 	bool
@@ -838,6 +909,8 @@ config CHIP_STM32F410R
 	default n
 	select CHIP_STM32F410
 	select CHIP_HAS_LQFP64
+	select CHIP_HAS_SPI2
+	select CHIP_HAS_SPI5
 
 config CHIP_STM32F410R8
 	bool
@@ -870,6 +943,10 @@ config CHIP_STM32F411
 	bool
 	default n
 	select CHIP_STM32F41
+	select CHIP_HAS_SPI2
+	select CHIP_HAS_SPI3
+	select CHIP_HAS_SPI4
+	select CHIP_HAS_SPI5
 
 config CHIP_STM32F411C
 	bool
@@ -925,6 +1002,10 @@ config CHIP_STM32F412
 	bool
 	default n
 	select CHIP_STM32F41
+	select CHIP_HAS_SPI2
+	select CHIP_HAS_SPI3
+	select CHIP_HAS_SPI4
+	select CHIP_HAS_SPI5
 
 config CHIP_STM32F412C
 	bool
@@ -980,6 +1061,8 @@ config CHIP_STM32F415
 	bool
 	default n
 	select CHIP_STM32F41
+	select CHIP_HAS_SPI2
+	select CHIP_HAS_SPI3
 	select CHIP_HAS_USART3
 	select CHIP_HAS_UART4
 	select CHIP_HAS_UART5
@@ -1032,6 +1115,8 @@ config CHIP_STM32F417
 	bool
 	default n
 	select CHIP_STM32F41
+	select CHIP_HAS_SPI2
+	select CHIP_HAS_SPI3
 	select CHIP_HAS_USART3
 	select CHIP_HAS_UART4
 	select CHIP_HAS_UART5
@@ -1088,6 +1173,11 @@ config CHIP_STM32F417ZG
 config CHIP_STM32F42
 	bool
 	default n
+	select CHIP_HAS_SPI2
+	select CHIP_HAS_SPI3
+	select CHIP_HAS_SPI4
+	select CHIP_HAS_SPI5
+	select CHIP_HAS_SPI6
 	select CHIP_HAS_USART3
 	select CHIP_HAS_UART4
 	select CHIP_HAS_UART5
@@ -1295,6 +1385,11 @@ config CHIP_STM32F429ZI
 config CHIP_STM32F43
 	bool
 	default n
+	select CHIP_HAS_SPI2
+	select CHIP_HAS_SPI3
+	select CHIP_HAS_SPI4
+	select CHIP_HAS_SPI5
+	select CHIP_HAS_SPI6
 	select CHIP_HAS_USART3
 	select CHIP_HAS_UART4
 	select CHIP_HAS_UART5
@@ -1472,6 +1567,9 @@ config CHIP_STM32F446
 	bool
 	default n
 	select CHIP_STM32F44
+	select CHIP_HAS_SPI2
+	select CHIP_HAS_SPI3
+	select CHIP_HAS_SPI4
 	select CHIP_HAS_USART3
 	select CHIP_HAS_UART4
 	select CHIP_HAS_UART5
@@ -1544,6 +1642,11 @@ config CHIP_STM32F446ZE
 config CHIP_STM32F46
 	bool
 	default n
+	select CHIP_HAS_SPI2
+	select CHIP_HAS_SPI3
+	select CHIP_HAS_SPI4
+	select CHIP_HAS_SPI5
+	select CHIP_HAS_SPI6
 	select CHIP_HAS_USART3
 	select CHIP_HAS_UART4
 	select CHIP_HAS_UART5
@@ -1645,6 +1748,11 @@ config CHIP_STM32F469NI
 config CHIP_STM32F47
 	bool
 	default n
+	select CHIP_HAS_SPI2
+	select CHIP_HAS_SPI3
+	select CHIP_HAS_SPI4
+	select CHIP_HAS_SPI5
+	select CHIP_HAS_SPI6
 	select CHIP_HAS_USART3
 	select CHIP_HAS_UART4
 	select CHIP_HAS_UART5
