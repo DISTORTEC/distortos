@@ -132,6 +132,14 @@ public:
 	}
 
 	/**
+	 * \brief SpiDevice's destructor
+	 *
+	 * Does nothing if all users already closed this device. If they did not, performs forced close of device.
+	 */
+
+	~SpiDevice();
+
+	/**
 	 * \brief Closes SPI master.
 	 *
 	 * Does nothing if any user still has this device opened. Otherwise low-level driver is stopped.

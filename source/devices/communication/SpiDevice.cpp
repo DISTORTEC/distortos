@@ -25,6 +25,21 @@ namespace devices
 | public functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
+SpiDevice::~SpiDevice()
+{
+	if (openCount_ == 0)
+		return;
+
+	mutex_.lock();
+	const auto mutexScopeGuard = estd::makeScopeGuard(
+			[this]()
+			{
+				mutex_.unlock();
+			});
+
+	spiMaster_.close();
+}
+
 int SpiDevice::close()
 {
 	mutex_.lock();
