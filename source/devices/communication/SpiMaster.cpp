@@ -72,7 +72,8 @@ int SpiMaster::close()
 	return 0;
 }
 
-std::pair<int, size_t> SpiMaster::executeTransaction(SpiDevice& device, const SpiMasterOperationRange operationRange)
+std::pair<int, size_t> SpiMaster::executeTransaction(const SpiDevice& device,
+		const SpiMasterOperationRange operationRange)
 {
 	if (operationRange.size() == 0)
 		return {EINVAL, {}};
