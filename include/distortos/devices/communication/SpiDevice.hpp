@@ -39,8 +39,8 @@ public:
 	/**
 	 * \brief SpiDevice's constructor
 	 *
-	 * \param [in] slaveSelectPin is a reference to slave select pin of this SPI slave device
 	 * \param [in] spiMaster is a reference to SPI master to which this SPI slave device is connected
+	 * \param [in] slaveSelectPin is a reference to slave select pin of this SPI slave device
 	 * \param [in] mode is the SPI mode used by SPI slave device
 	 * \param [in] maxClockFrequency is the max clock frequency supported by SPI slave device, Hz
 	 * \param [in] wordLength is the word length used by SPI slave device, bits
@@ -48,7 +48,7 @@ public:
 	 * MSB (false) or LSB (true) first
 	 */
 
-	constexpr SpiDevice(OutputPin& slaveSelectPin, SpiMaster& spiMaster, const SpiMode mode,
+	constexpr SpiDevice(SpiMaster& spiMaster, OutputPin& slaveSelectPin, const SpiMode mode,
 			const uint32_t maxClockFrequency, const uint8_t wordLength, const bool lsbFirst) :
 					mutex_{Mutex::Type::normal, Mutex::Protocol::priorityInheritance},
 					maxClockFrequency_{maxClockFrequency},
