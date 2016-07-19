@@ -78,6 +78,9 @@ std::pair<int, size_t> SpiDevice::executeTransaction(const SpiMasterOperationRan
 				mutex_.unlock();
 			});
 
+	if (openCount_ == 0)
+		return {EBADF, {}};
+
 	return spiMaster_.executeTransaction(*this, operationRange);
 }
 
