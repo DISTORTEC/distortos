@@ -14,6 +14,8 @@
 
 #include "distortos/devices/communication/SpiMode.hpp"
 
+#include "distortos/Mutex.hpp"
+
 namespace distortos
 {
 
@@ -120,12 +122,26 @@ public:
 	 */
 
 	constexpr SpiDevice(const Parameters& parameters, OutputPin& slaveSelectPin, SpiMaster& spiMaster) :
+			mutex_{Mutex::Type::normal, Mutex::Protocol::priorityInheritance},
 			parameters_{parameters},
 			slaveSelectPin_{slaveSelectPin},
-			spiMaster_{spiMaster}
+			spiMaster_{spiMaster},
+			openCount_{}
 	{
 
 	}
+
+	/**
+	 * \brief Closes SPI master.
+	 *
+	 * Does nothing if any user still has this device opened. Otherwise low-level driver is stopped.
+	 *
+	 * \return 0 on success, error code otherwise:
+	 * - EBADF - the device is already completely closed;
+	 * - error codes returned by SpiMasterLowLevel::stop();
+	 */
+
+	int close();
 
 	/**
 	 * \return reference to parameters required for correct communication with this SPI slave device
@@ -145,7 +161,22 @@ public:
 		return slaveSelectPin_;
 	}
 
+	/**
+	 * \brief Opens SPI device.
+	 *
+	 * Does nothing if any user already has this device opened. Otherwise associated SPI master is opened.
+	 *
+	 * \return 0 on success, error code otherwise:
+	 * - EMFILE - this device is already opened too many times;
+	 * - error codes returned by SpiMaster::open();
+	 */
+
+	int open();
+
 private:
+
+	/// mutex used to serialize access to this object
+	Mutex mutex_;
 
 	/// reference to parameters required for correct communication with this SPI slave device
 	const Parameters& parameters_;
@@ -155,6 +186,9 @@ private:
 
 	/// reference to SPI master to which this SPI slave device is connected
 	SpiMaster& spiMaster_;
+
+	/// number of times this device was opened but not yet closed
+	uint8_t openCount_;
 };
 
 }	// namespace devices
