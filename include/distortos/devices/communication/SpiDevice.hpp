@@ -13,6 +13,7 @@
 #define INCLUDE_DISTORTOS_DEVICES_COMMUNICATION_SPIDEVICE_HPP_
 
 #include "distortos/devices/communication/SpiMode.hpp"
+#include "distortos/devices/communication/SpiMasterOperationRange.hpp"
 
 #include "distortos/Mutex.hpp"
 
@@ -150,6 +151,23 @@ public:
 	 */
 
 	int close();
+
+	/**
+	 * \brief Executes series of operations as a single atomic transaction.
+	 *
+	 * Wrapper for SpiMaster::executeTransaction().
+	 *
+	 * \param [in] operationRange is the range of operations that will be executed
+	 *
+	 * \return pair with return code (0 on success, error code otherwise) and number of successfully completed
+	 * operations from \a operationRange;
+	 * error codes:
+	 * - EBADF - the device is not opened;
+	 * - EINVAL - \a operationRange has no operations;
+	 * - error codes returned by SpiMaster::executeTransaction();
+	 */
+
+	std::pair<int, size_t> executeTransaction(SpiMasterOperationRange operationRange);
 
 	/**
 	 * \return reference to parameters required for correct communication with this SPI slave device

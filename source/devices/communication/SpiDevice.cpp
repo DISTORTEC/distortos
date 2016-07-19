@@ -12,6 +12,7 @@
 #include "distortos/devices/communication/SpiDevice.hpp"
 
 #include "distortos/devices/communication/SpiMaster.hpp"
+#include "distortos/devices/communication/SpiMasterOperation.hpp"
 
 #include "estd/ScopeGuard.hpp"
 
@@ -61,6 +62,21 @@ int SpiDevice::close()
 
 	--openCount_;
 	return 0;
+}
+
+std::pair<int, size_t> SpiDevice::executeTransaction(const SpiMasterOperationRange operationRange)
+{
+	if (operationRange.size() == 0)
+		return {EINVAL, {}};
+
+	mutex_.lock();
+	const auto mutexScopeGuard = estd::makeScopeGuard(
+			[this]()
+			{
+				mutex_.unlock();
+			});
+
+	return spiMaster_.executeTransaction(*this, operationRange);
 }
 
 int SpiDevice::open()
