@@ -14,6 +14,9 @@
 #include "distortos/devices/communication/SpiMaster.hpp"
 #include "distortos/devices/communication/SpiMasterOperation.hpp"
 
+#include "distortos/assert.h"
+#include "distortos/ThisThread.hpp"
+
 #include "estd/ScopeGuard.hpp"
 
 #include <cerrno>
@@ -34,9 +37,12 @@ SpiDevice::~SpiDevice()
 		return;
 
 	mutex_.lock();
+	const auto lockRet = lockInternal();
 	const auto mutexScopeGuard = estd::makeScopeGuard(
-			[this]()
+			[this, lockRet]()
 			{
+				if (lockRet == 0)
+					unlockInternal();
 				mutex_.unlock();
 			});
 
@@ -46,9 +52,12 @@ SpiDevice::~SpiDevice()
 int SpiDevice::close()
 {
 	mutex_.lock();
+	const auto lockRet = lockInternal();
 	const auto mutexScopeGuard = estd::makeScopeGuard(
-			[this]()
+			[this, lockRet]()
 			{
+				if (lockRet == 0)
+					unlockInternal();
 				mutex_.unlock();
 			});
 
@@ -72,9 +81,12 @@ std::pair<int, size_t> SpiDevice::executeTransaction(const SpiMasterOperationRan
 		return {EINVAL, {}};
 
 	mutex_.lock();
+	const auto lockRet = lockInternal();
 	const auto mutexScopeGuard = estd::makeScopeGuard(
-			[this]()
+			[this, lockRet]()
 			{
+				if (lockRet == 0)
+					unlockInternal();
 				mutex_.unlock();
 			});
 
@@ -84,12 +96,27 @@ std::pair<int, size_t> SpiDevice::executeTransaction(const SpiMasterOperationRan
 	return spiMaster_.executeTransaction(*this, operationRange);
 }
 
-int SpiDevice::open()
+int SpiDevice::lock()
 {
 	mutex_.lock();
 	const auto mutexScopeGuard = estd::makeScopeGuard(
 			[this]()
 			{
+				mutex_.unlock();
+			});
+
+	return lockInternal();
+}
+
+int SpiDevice::open()
+{
+	mutex_.lock();
+	const auto lockRet = lockInternal();
+	const auto mutexScopeGuard = estd::makeScopeGuard(
+			[this, lockRet]()
+			{
+				if (lockRet == 0)
+					unlockInternal();
 				mutex_.unlock();
 			});
 
@@ -104,6 +131,50 @@ int SpiDevice::open()
 	}
 
 	++openCount_;
+	return 0;
+}
+
+int SpiDevice::unlock()
+{
+	mutex_.lock();
+	const auto mutexScopeGuard = estd::makeScopeGuard(
+			[this]()
+			{
+				mutex_.unlock();
+			});
+
+	return unlockInternal();
+}
+
+/*---------------------------------------------------------------------------------------------------------------------+
+| private functions
++---------------------------------------------------------------------------------------------------------------------*/
+
+int SpiDevice::lockInternal()
+{
+	const auto& thisThread = ThisThread::get();
+	if (owner_ == &thisThread)
+		return EDEADLK;
+
+	const auto ret = conditionVariable_.wait(mutex_,
+			[this]()
+			{
+				return owner_ == nullptr;
+			});
+	assert(ret == 0 && "Unexpected value returned by ConditionVariable::wait()!");
+
+	owner_ = &thisThread;
+	return 0;
+}
+
+int SpiDevice::unlockInternal()
+{
+	const auto& thisThread = ThisThread::get();
+	if (owner_ != &thisThread)
+		return EPERM;
+
+	owner_ = nullptr;
+	conditionVariable_.notifyOne();
 	return 0;
 }
 

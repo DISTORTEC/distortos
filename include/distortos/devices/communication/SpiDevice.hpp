@@ -15,10 +15,13 @@
 #include "distortos/devices/communication/SpiMode.hpp"
 #include "distortos/devices/communication/SpiMasterOperationRange.hpp"
 
+#include "distortos/ConditionVariable.hpp"
 #include "distortos/Mutex.hpp"
 
 namespace distortos
 {
+
+class Thread;
 
 namespace devices
 {
@@ -50,8 +53,10 @@ public:
 
 	constexpr SpiDevice(SpiMaster& spiMaster, OutputPin& slaveSelectPin, const SpiMode mode,
 			const uint32_t maxClockFrequency, const uint8_t wordLength, const bool lsbFirst) :
+					conditionVariable_{},
 					mutex_{Mutex::Type::normal, Mutex::Protocol::priorityInheritance},
 					maxClockFrequency_{maxClockFrequency},
+					owner_{},
 					slaveSelectPin_{slaveSelectPin},
 					spiMaster_{spiMaster},
 					lsbFirst_{lsbFirst},
@@ -146,6 +151,20 @@ public:
 	}
 
 	/**
+	 * \brief Locks the object for exclusive use by current thread using condition variable and mutex.
+	 *
+	 * When the object is locked, any call to any member function from other thread will be blocked until the object is
+	 * unlocked. Locking is optional, but may be useful when more than one transaction must be done atomically.
+	 *
+	 * \warning Locks may not be nested!
+	 *
+	 * \return 0 on success, error code otherwise:
+	 * - EDEADLK - current thread already locked this object;
+	 */
+
+	int lock();
+
+	/**
 	 * \brief Opens SPI device.
 	 *
 	 * Does nothing if any user already has this device opened. Otherwise associated SPI master is opened.
@@ -157,13 +176,48 @@ public:
 
 	int open();
 
+	/**
+	 * \brief Unlocks the object that was previously locked by current thread.
+	 *
+	 * \warning Locks may not be nested!
+	 *
+	 * \return 0 on success, error code otherwise:
+	 * - EPERM - this object is not locked by current thread;
+	 */
+
+	int unlock();
+
 private:
+
+	/**
+	 * \brief Internal version of lock() - without locking the mutex.
+	 *
+	 * \return 0 on success, error code otherwise:
+	 * - EDEADLK - current thread already locked this object;
+	 */
+
+	int lockInternal();
+
+	/**
+	 * \brief Internal version of unlock() - without locking the mutex.
+	 *
+	 * \return 0 on success, error code otherwise:
+	 * - EPERM - this object is not locked by current thread;
+	 */
+
+	int unlockInternal();
+
+	/// condition variable used for locking access to this object
+	ConditionVariable conditionVariable_;
 
 	/// mutex used to serialize access to this object
 	Mutex mutex_;
 
 	/// max clock frequency supported by SPI slave device, Hz
 	uint32_t maxClockFrequency_;
+
+	/// pointer to thread that locked this object
+	const Thread* owner_;
 
 	/// reference to slave select pin of this SPI slave device
 	OutputPin& slaveSelectPin_;
