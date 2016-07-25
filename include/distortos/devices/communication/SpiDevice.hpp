@@ -76,7 +76,7 @@ public:
 	~SpiDevice();
 
 	/**
-	 * \brief Closes SPI master.
+	 * \brief Closes SPI device.
 	 *
 	 * Does nothing if any user still has this device opened. Otherwise low-level driver is stopped.
 	 *
