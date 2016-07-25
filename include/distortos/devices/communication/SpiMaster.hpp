@@ -90,6 +90,7 @@ public:
 	 * error codes:
 	 * - EBADF - the device is not opened;
 	 * - EINVAL - \a operationRange has no operations;
+	 * - EIO - failure detected by low-level SPI master driver;
 	 * - error codes returned by SpiMasterLowLevel::configure();
 	 * - error codes returned by SpiMasterLowLevel::startTransfer();
 	 */

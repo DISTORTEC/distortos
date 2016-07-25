@@ -174,7 +174,7 @@ void SpiMaster::transferCompleteEvent(SpiMasterErrorSet errorSet, size_t bytesTr
 
 	if (operationRange_.size() == 0 || error == true)	// all operations are done or handling of last one failed?
 	{
-		notifyWaiter();
+		notifyWaiter(error == false ? 0 : EIO);
 		return;
 	}
 
