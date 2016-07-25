@@ -309,10 +309,19 @@ std::pair<int, uint32_t> ChipSpiMasterLowLevel::configure(const devices::SpiMode
 
 	const uint32_t br = divider <= 2 ? 0 : 31 - __CLZ(divider - 1);
 	auto& spi = parameters_.getSpi();
+
+	// value of DFF bit (which determines word length) must be changed only when SPI peripheral is disabled
+	const auto disablePeripheral = wordLength != getWordLength(spi.CR1);
+	if (disablePeripheral == true)
+		parameters_.enablePeripheral(false);
+
 	spi.CR1 = (spi.CR1 & ~(SPI_CR1_DFF | SPI_CR1_LSBFIRST | SPI_CR1_BR | SPI_CR1_CPOL | SPI_CR1_CPHA)) |
 			((wordLength == 16) << SPI_CR1_DFF_bit) | (lsbFirst << SPI_CR1_LSBFIRST_bit) | (br << SPI_CR1_BR_bit) |
 			((mode == devices::SpiMode::cpol1cpha0 || mode == devices::SpiMode::cpol1cpha1) << SPI_CR1_CPOL_bit) |
 			((mode == devices::SpiMode::cpol0cpha1 || mode == devices::SpiMode::cpol1cpha1) << SPI_CR1_CPHA_bit);
+
+	if (disablePeripheral == true)
+		parameters_.enablePeripheral(true);
 
 	return {{}, peripheralFrequency / (1 << (br + 1))};
 }
@@ -394,7 +403,6 @@ void ChipSpiMasterLowLevel::interruptHandler()
 
 	if (done == true)	// transfer finished of failed?
 	{
-		parameters_.enablePeripheral(false);
 		parameters_.enableTxeInterrupt(false);
 		parameters_.enableRxneInterrupt(false);
 		parameters_.enableErrInterrupt(false);
@@ -421,7 +429,7 @@ int ChipSpiMasterLowLevel::start(devices::SpiMasterBase& spiMasterBase)
 	parameters_.resetPeripheral();
 	parameters_.configureInterruptPriority();
 	spiMasterBase_ = &spiMasterBase;
-	parameters_.getSpi().CR1 = SPI_CR1_SSM | SPI_CR1_SSI | SPI_CR1_BR | SPI_CR1_MSTR;
+	parameters_.getSpi().CR1 = SPI_CR1_SSM | SPI_CR1_SSI | SPI_CR1_SPE | SPI_CR1_BR | SPI_CR1_MSTR;
 	parameters_.enableInterrupt(true);
 
 	return 0;
@@ -450,7 +458,6 @@ int ChipSpiMasterLowLevel::startTransfer(const void* const writeBuffer, void* co
 	parameters_.enableErrInterrupt(true);
 	parameters_.enableRxneInterrupt(true);
 	parameters_.enableTxeInterrupt(true);
-	parameters_.enablePeripheral(true);
 	return 0;
 }
 
