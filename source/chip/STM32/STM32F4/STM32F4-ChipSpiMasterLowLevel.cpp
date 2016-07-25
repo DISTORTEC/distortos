@@ -319,95 +319,96 @@ std::pair<int, uint32_t> ChipSpiMasterLowLevel::configure(const devices::SpiMode
 
 void ChipSpiMasterLowLevel::interruptHandler()
 {
+	bool done {};
 	auto& spi = parameters_.getSpi();
 	auto wordLength = getWordLength(spi.CR1);
+	const auto sr = spi.SR;
+	const auto cr2 = spi.CR2;
 
-	while (true)
+	if ((sr & (SPI_SR_MODF | SPI_SR_OVR | SPI_SR_CRCERR)) != 0 && (cr2 & SPI_CR2_ERRIE) != 0)	// error?
 	{
-		const auto sr = spi.SR;
-		const auto cr2 = spi.CR2;
+		if ((sr & SPI_SR_MODF) != 0)	// master mode fault?
+		{
+			parameters_.enablePeripheral(false);	// clears MODF flag
+			errorSet_[devices::SpiMasterErrorSet::masterModeFault] = true;
+			done = true;
+		}
+		if ((sr & SPI_SR_OVR) != 0)	// overrun error?
+		{
+			spi.DR;
+			spi.SR;	// clears OVR flag
+			errorSet_[devices::SpiMasterErrorSet::overrunError] = true;
+		}
+		if ((sr & SPI_SR_CRCERR) != 0)	// CRC error?
+		{
+			spi.SR = 0;	// clears CRCERR flag
+			errorSet_[devices::SpiMasterErrorSet::crcError] = true;
+		}
 
-		if ((sr & (SPI_SR_MODF | SPI_SR_OVR | SPI_SR_CRCERR)) != 0 && (cr2 & SPI_CR2_ERRIE) != 0)	// error?
-		{
-			if ((sr & SPI_SR_MODF) != 0)	// master mode fault?
-			{
-				parameters_.enablePeripheral(false);	// clears MODF flag
-				errorSet_[devices::SpiMasterErrorSet::masterModeFault] = true;
-			}
-			if ((sr & SPI_SR_OVR) != 0)	// overrun error?
-			{
-				spi.DR;
-				spi.SR;	// clears OVR flag
-				errorSet_[devices::SpiMasterErrorSet::overrunError] = true;
-			}
-			if ((sr & SPI_SR_CRCERR) != 0)	// CRC error?
-			{
-				spi.SR = 0;	// clears CRCERR flag
-				errorSet_[devices::SpiMasterErrorSet::crcError] = true;
-			}
+		parameters_.enableTxeInterrupt(false);
 
-			parameters_.enableTxeInterrupt(false);
-		}
-		else if ((sr & SPI_SR_RXNE) != 0 && (cr2 & SPI_CR2_RXNEIE) != 0)	// read?
+		if ((sr & SPI_SR_BSY) == 0)
+			done = true;
+	}
+	else if ((sr & SPI_SR_RXNE) != 0 && (cr2 & SPI_CR2_RXNEIE) != 0)	// read?
+	{
+		const uint16_t word = spi.DR;
+		const auto readBuffer = readBuffer_;
+		auto readPosition = readPosition_;
+		if (readBuffer != nullptr)
 		{
-			const uint16_t word = spi.DR;
-			const auto readBuffer = readBuffer_;
-			auto readPosition = readPosition_;
-			if (readBuffer != nullptr)
-			{
-				readBuffer[readPosition++] = word;
-				if (wordLength == 16)
-					readBuffer[readPosition++] = word >> 8;
-			}
-			else
-				readPosition += wordLength / 8;
-			readPosition_ = readPosition;
-			if (readPosition == size_)
-				parameters_.enableRxneInterrupt(false);
+			readBuffer[readPosition++] = word;
+			if (wordLength == 16)
+				readBuffer[readPosition++] = word >> 8;
 		}
-		else if ((sr & SPI_SR_TXE) != 0 && (cr2 & SPI_CR2_TXEIE) != 0)	// write?
+		else
+			readPosition += wordLength / 8;
+		readPosition_ = readPosition;
+		if (readPosition == size_)
 		{
-			const auto writeBuffer = writeBuffer_;
-			auto writePosition = writePosition_;
-			uint16_t word;
-			if (writeBuffer != nullptr)
-			{
-				const uint16_t characterLow = writeBuffer[writePosition++];
-				const uint16_t characterHigh = wordLength == 16 ? writeBuffer[writePosition++] : 0;
-				word = characterLow | (characterHigh << 8);
-			}
-			else
-			{
-				writePosition += wordLength / 8;
-				word = 0xffff;
-			}
-			writePosition_ = writePosition;
-			spi.DR = word;
-			if (writePosition == size_)
-				parameters_.enableTxeInterrupt(false);
-		}
-		else if (isTransferInProgress() == true &&
-				(readPosition_ == size_ || errorSet_[devices::SpiMasterErrorSet::masterModeFault] == true ||
-				(errorSet_.any() == true && (sr & SPI_SR_BSY) == 0)))	// transfer finished of failed?
-		{
-			parameters_.enablePeripheral(false);
-			parameters_.enableTxeInterrupt(false);
 			parameters_.enableRxneInterrupt(false);
-			parameters_.enableErrInterrupt(false);
-			const auto errorSet = errorSet_;
-			errorSet_.reset();
-			writePosition_ = {};
-			const auto bytesTransfered = readPosition_;
-			readPosition_ = {};
-			size_ = {};
-			writeBuffer_ = {};
-			readBuffer_ = {};
-
-			spiMasterBase_->transferCompleteEvent(errorSet, bytesTransfered);
-			wordLength = getWordLength(spi.CR1);
+			done = true;
 		}
-		else	// nothing more to do?
-			return;
+	}
+	else if ((sr & SPI_SR_TXE) != 0 && (cr2 & SPI_CR2_TXEIE) != 0)	// write?
+	{
+		const auto writeBuffer = writeBuffer_;
+		auto writePosition = writePosition_;
+		uint16_t word;
+		if (writeBuffer != nullptr)
+		{
+			const uint16_t characterLow = writeBuffer[writePosition++];
+			const uint16_t characterHigh = wordLength == 16 ? writeBuffer[writePosition++] : 0;
+			word = characterLow | (characterHigh << 8);
+		}
+		else
+		{
+			writePosition += wordLength / 8;
+			word = 0xffff;
+		}
+		writePosition_ = writePosition;
+		spi.DR = word;
+		if (writePosition == size_)
+			parameters_.enableTxeInterrupt(false);
+	}
+
+	if (done == true)	// transfer finished of failed?
+	{
+		parameters_.enablePeripheral(false);
+		parameters_.enableTxeInterrupt(false);
+		parameters_.enableRxneInterrupt(false);
+		parameters_.enableErrInterrupt(false);
+		const auto errorSet = errorSet_;
+		errorSet_.reset();
+		writePosition_ = {};
+		const auto bytesTransfered = readPosition_;
+		readPosition_ = {};
+		size_ = {};
+		writeBuffer_ = {};
+		readBuffer_ = {};
+
+		spiMasterBase_->transferCompleteEvent(errorSet, bytesTransfered);
+		wordLength = getWordLength(spi.CR1);
 	}
 }
 
