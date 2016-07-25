@@ -33,6 +33,8 @@ or without timeout) and non-blocking behaviour. Convenient wrappers for reading/
 of "driver enable" output pin.
 - `devices::SpiMaster` and `devices::SpiDevice` classes, which enable easy communication with multiple SPI slave devices
 connected to the same SPI bus master.
+- `devices::SpiEeprom` class which is a driver for common SPI EEPROM chips: *Atmel AT25xxx*,
+*ON Semiconductor CAT25xxx*, *ST M95xxx*, *Microchip 25xxxxx* or similar.
 - Support for 4 new [STM32F4](http://www.st.com/stm32f4)12 chips.
 - New package types for *STM32F410CB* and *STM32F410RB* chips.
 - Support for `assert()` - override of newlib's `__assert_func()`, weak `assertHook()` for application and option to
