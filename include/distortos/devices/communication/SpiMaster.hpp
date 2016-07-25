@@ -90,11 +90,12 @@ public:
 	 * error codes:
 	 * - EBADF - the device is not opened;
 	 * - EINVAL - \a operationRange has no operations;
+	 * - EIO - failure detected by low-level SPI master driver;
 	 * - error codes returned by SpiMasterLowLevel::configure();
 	 * - error codes returned by SpiMasterLowLevel::startTransfer();
 	 */
 
-	std::pair<int, size_t> executeTransaction(SpiDevice& device, SpiMasterOperationRange operationRange);
+	std::pair<int, size_t> executeTransaction(const SpiDevice& device, SpiMasterOperationRange operationRange);
 
 	/**
 	 * \brief Opens SPI master.

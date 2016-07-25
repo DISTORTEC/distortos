@@ -121,6 +121,16 @@ public:
 	/**
 	 * \brief Interrupt handler
 	 *
+	 * This code handles only one SPI event. If there are more events to handle, NVIC controller will keep the interrupt
+	 * pending, so it will be executed again immediately. Thanks to ARM's tail-chaining the time between exiting
+	 * previous instance and entering next instance is very short - just 6 core cycles, which is less than any manual
+	 * loop in the code. Speed gain is not significant (around 1-2%, depending on SPI clock frequency) and not linear
+	 * (for very high frequencies of SPI's clock the code with loop is significantly faster), but this version has two
+	 * major advantages:
+	 * - the code is simpler (and shorter),
+	 * - the code with loop doesn't work for some SPI clock frequencies (with divider == 8 almost all transfers fail due
+	 * to overflow).
+	 *
 	 * \note this must not be called by user code
 	 */
 

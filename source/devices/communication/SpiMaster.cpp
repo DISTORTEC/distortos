@@ -72,7 +72,8 @@ int SpiMaster::close()
 	return 0;
 }
 
-std::pair<int, size_t> SpiMaster::executeTransaction(SpiDevice& device, const SpiMasterOperationRange operationRange)
+std::pair<int, size_t> SpiMaster::executeTransaction(const SpiDevice& device,
+		const SpiMasterOperationRange operationRange)
 {
 	if (operationRange.size() == 0)
 		return {EINVAL, {}};
@@ -88,9 +89,8 @@ std::pair<int, size_t> SpiMaster::executeTransaction(SpiDevice& device, const Sp
 		return {EBADF, {}};
 
 	{
-		auto& deviceParameters = device.getParameters();
-		const auto ret = spiMaster_.configure(deviceParameters.getMode(), deviceParameters.getMaxClockFrequency(),
-				deviceParameters.getWordLength(), deviceParameters.getLsbFirst());
+		const auto ret = spiMaster_.configure(device.getMode(), device.getMaxClockFrequency(), device.getWordLength(),
+				device.getLsbFirst());
 		if (ret.first != 0)
 			return {ret.first, {}};
 	}
@@ -174,7 +174,7 @@ void SpiMaster::transferCompleteEvent(SpiMasterErrorSet errorSet, size_t bytesTr
 
 	if (operationRange_.size() == 0 || error == true)	// all operations are done or handling of last one failed?
 	{
-		notifyWaiter();
+		notifyWaiter(error == false ? 0 : EIO);
 		return;
 	}
 

@@ -15,10 +15,13 @@
 #include "distortos/devices/communication/SpiMode.hpp"
 #include "distortos/devices/communication/SpiMasterOperationRange.hpp"
 
+#include "distortos/ConditionVariable.hpp"
 #include "distortos/Mutex.hpp"
 
 namespace distortos
 {
+
+class Thread;
 
 namespace devices
 {
@@ -36,98 +39,30 @@ class SpiDevice
 {
 public:
 
-	/// parameters required for correct communication with SPI slave device
-	class Parameters
-	{
-	public:
-
-		/**
-		 * \brief Parameters's constructor
-		 *
-		 * \param [in] mode is the SPI mode used by SPI slave device
-		 * \param [in] maxClockFrequency is the max clock frequency supported by SPI slave device, Hz
-		 * \param [in] wordLength is the word length used by SPI slave device, bits
-		 * \param [in] lsbFirst selects whether data should be transmitted/received to/from the SPI slave device with
-		 * MSB (false) or LSB (true) first
-		 */
-
-		constexpr Parameters(const SpiMode mode, const uint32_t maxClockFrequency, const uint8_t wordLength,
-				const bool lsbFirst) :
-						maxClockFrequency_{maxClockFrequency},
-						lsbFirst_{lsbFirst},
-						mode_{mode},
-						wordLength_{wordLength}
-		{
-
-		}
-
-		/**
-		 * \return false if data should be transmitted/received to/from the SPI slave device with
-		 * MSB first, true if data should be transmitted/received to/from the SPI slave device with LSB first
-		 */
-
-		bool getLsbFirst() const
-		{
-			return lsbFirst_;
-		}
-
-		/**
-		 * \return max clock frequency supported by SPI slave device, Hz
-		 */
-
-		uint32_t getMaxClockFrequency() const
-		{
-			return maxClockFrequency_;
-		}
-
-		/**
-		 * \return SPI mode used by SPI slave device
-		 */
-
-		SpiMode getMode() const
-		{
-			return mode_;
-		}
-
-		/**
-		 * \return word length used by SPI slave device, bits
-		 */
-
-		uint8_t getWordLength() const
-		{
-			return wordLength_;
-		}
-
-	private:
-
-		/// max clock frequency supported by SPI slave device, Hz
-		uint32_t maxClockFrequency_;
-
-		/// selects whether data should be transmitted/received to/from the SPI slave device with MSB (false) or LSB
-		/// (true) first
-		bool lsbFirst_;
-
-		/// SPI mode used by SPI slave device
-		SpiMode mode_;
-
-		/// word length used by SPI slave device, bits
-		uint8_t wordLength_;
-	};
-
 	/**
 	 * \brief SpiDevice's constructor
 	 *
-	 * \param [in] parameters is a reference to parameters required for correct communication with this SPI slave device
-	 * \param [in] slaveSelectPin is a reference to slave select pin of this SPI slave device
 	 * \param [in] spiMaster is a reference to SPI master to which this SPI slave device is connected
+	 * \param [in] slaveSelectPin is a reference to slave select pin of this SPI slave device
+	 * \param [in] mode is the SPI mode used by SPI slave device
+	 * \param [in] maxClockFrequency is the max clock frequency supported by SPI slave device, Hz
+	 * \param [in] wordLength is the word length used by SPI slave device, bits
+	 * \param [in] lsbFirst selects whether data should be transmitted/received to/from the SPI slave device with
+	 * MSB (false) or LSB (true) first
 	 */
 
-	constexpr SpiDevice(const Parameters& parameters, OutputPin& slaveSelectPin, SpiMaster& spiMaster) :
-			mutex_{Mutex::Type::normal, Mutex::Protocol::priorityInheritance},
-			parameters_{parameters},
-			slaveSelectPin_{slaveSelectPin},
-			spiMaster_{spiMaster},
-			openCount_{}
+	constexpr SpiDevice(SpiMaster& spiMaster, OutputPin& slaveSelectPin, const SpiMode mode,
+			const uint32_t maxClockFrequency, const uint8_t wordLength, const bool lsbFirst) :
+					conditionVariable_{},
+					mutex_{Mutex::Type::normal, Mutex::Protocol::priorityInheritance},
+					maxClockFrequency_{maxClockFrequency},
+					owner_{},
+					slaveSelectPin_{slaveSelectPin},
+					spiMaster_{spiMaster},
+					lsbFirst_{lsbFirst},
+					mode_{mode},
+					openCount_{},
+					wordLength_{wordLength}
 	{
 
 	}
@@ -141,7 +76,7 @@ public:
 	~SpiDevice();
 
 	/**
-	 * \brief Closes SPI master.
+	 * \brief Closes SPI device.
 	 *
 	 * Does nothing if any user still has this device opened. Otherwise low-level driver is stopped.
 	 *
@@ -170,12 +105,31 @@ public:
 	std::pair<int, size_t> executeTransaction(SpiMasterOperationRange operationRange);
 
 	/**
-	 * \return reference to parameters required for correct communication with this SPI slave device
+	 * \return false if data should be transmitted/received to/from the SPI slave device with
+	 * MSB first, true if data should be transmitted/received to/from the SPI slave device with LSB first
 	 */
 
-	const Parameters& getParameters() const
+	bool getLsbFirst() const
 	{
-		return parameters_;
+		return lsbFirst_;
+	}
+
+	/**
+	 * \return max clock frequency supported by SPI slave device, Hz
+	 */
+
+	uint32_t getMaxClockFrequency() const
+	{
+		return maxClockFrequency_;
+	}
+
+	/**
+	 * \return SPI mode used by SPI slave device
+	 */
+
+	SpiMode getMode() const
+	{
+		return mode_;
 	}
 
 	/**
@@ -186,6 +140,29 @@ public:
 	{
 		return slaveSelectPin_;
 	}
+
+	/**
+	 * \return word length used by SPI slave device, bits
+	 */
+
+	uint8_t getWordLength() const
+	{
+		return wordLength_;
+	}
+
+	/**
+	 * \brief Locks the object for exclusive use by current thread using condition variable and mutex.
+	 *
+	 * When the object is locked, any call to any member function from other thread will be blocked until the object is
+	 * unlocked. Locking is optional, but may be useful when more than one transaction must be done atomically.
+	 *
+	 * \warning Locks may not be nested!
+	 *
+	 * \return 0 on success, error code otherwise:
+	 * - EDEADLK - current thread already locked this object;
+	 */
+
+	int lock();
 
 	/**
 	 * \brief Opens SPI device.
@@ -199,13 +176,48 @@ public:
 
 	int open();
 
+	/**
+	 * \brief Unlocks the object that was previously locked by current thread.
+	 *
+	 * \warning Locks may not be nested!
+	 *
+	 * \return 0 on success, error code otherwise:
+	 * - EPERM - this object is not locked by current thread;
+	 */
+
+	int unlock();
+
 private:
+
+	/**
+	 * \brief Internal version of lock() - without locking the mutex.
+	 *
+	 * \return 0 on success, error code otherwise:
+	 * - EDEADLK - current thread already locked this object;
+	 */
+
+	int lockInternal();
+
+	/**
+	 * \brief Internal version of unlock() - without locking the mutex.
+	 *
+	 * \return 0 on success, error code otherwise:
+	 * - EPERM - this object is not locked by current thread;
+	 */
+
+	int unlockInternal();
+
+	/// condition variable used for locking access to this object
+	ConditionVariable conditionVariable_;
 
 	/// mutex used to serialize access to this object
 	Mutex mutex_;
 
-	/// reference to parameters required for correct communication with this SPI slave device
-	const Parameters& parameters_;
+	/// max clock frequency supported by SPI slave device, Hz
+	uint32_t maxClockFrequency_;
+
+	/// pointer to thread that locked this object
+	const Thread* owner_;
 
 	/// reference to slave select pin of this SPI slave device
 	OutputPin& slaveSelectPin_;
@@ -213,8 +225,18 @@ private:
 	/// reference to SPI master to which this SPI slave device is connected
 	SpiMaster& spiMaster_;
 
+	/// selects whether data should be transmitted/received to/from the SPI slave device with MSB (false) or LSB
+	/// (true) first
+	bool lsbFirst_;
+
+	/// SPI mode used by SPI slave device
+	SpiMode mode_;
+
 	/// number of times this device was opened but not yet closed
 	uint8_t openCount_;
+
+	/// word length used by SPI slave device, bits
+	uint8_t wordLength_;
 };
 
 }	// namespace devices
