@@ -130,7 +130,7 @@ int SpiDevice::open()
 	return 0;
 }
 
-void SpiDevice::unlock()
+void SpiDevice::unlock(const bool previousLockState)
 {
 	mutex_.lock();
 	const auto mutexScopeGuard = estd::makeScopeGuard(
@@ -139,7 +139,7 @@ void SpiDevice::unlock()
 				mutex_.unlock();
 			});
 
-	unlockInternal(false);
+	unlockInternal(previousLockState);
 }
 
 /*---------------------------------------------------------------------------------------------------------------------+

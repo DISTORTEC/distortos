@@ -293,7 +293,6 @@ public:
 	 *
 	 * \return pair with return code (0 on success, error code otherwise) and number of read bytes (valid even when
 	 * error code is returned); error codes:
-	 * - EDEADLK - current thread already locked this object;
 	 * - EINVAL - \a address and/or \a buffer and/or \a size are not valid;
 	 * - error codes returned by waitWhileWriteInProgress();
 	 * - error codes returned by SpiDevice::executeTransaction;
@@ -326,7 +325,6 @@ public:
 	 *
 	 * \return pair with return code (0 on success, error code otherwise) and number of written bytes (valid even when
 	 * error code is returned); error codes:
-	 * - EDEADLK - current thread already locked this object;
 	 * - EINVAL - \a address and/or \a buffer and/or \a size are not valid;
 	 * - error codes returned by writePage();
 	 */
