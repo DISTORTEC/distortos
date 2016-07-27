@@ -267,6 +267,8 @@ public:
 	/**
 	 * \brief Wrapper for SpiDevice::lock()
 	 *
+	 * \note Locks may be nested.
+	 *
 	 * \return previous state of lock: false if this SPI EEPROM was unlocked before this call, true if it was already
 	 * locked by current thread
 	 */
@@ -302,9 +304,15 @@ public:
 
 	/**
 	 * \brief Wrapper for SpiDevice::unlock()
+	 *
+	 * Does nothing if SPI EEPROM is not locked by current thread.
+	 *
+	 * \note Locks may be nested.
+	 *
+	 * \param previousLockState is the value returned by matching call to lock()
 	 */
 
-	void unlock();
+	void unlock(bool previousLockState);
 
 	/**
 	 * \brief Waits while any write operation is currently in progress.

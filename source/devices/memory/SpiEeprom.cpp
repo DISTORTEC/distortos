@@ -148,9 +148,9 @@ std::pair<int, size_t> SpiEeprom::read(const uint32_t address, void* const buffe
 	return {ret.first, operations[1].getTransfer()->getBytesTransfered()};
 }
 
-void SpiEeprom::unlock()
+void SpiEeprom::unlock(const bool previousLockState)
 {
-	spiDevice_.unlock(false);
+	spiDevice_.unlock(previousLockState);
 }
 
 int SpiEeprom::waitWhileWriteInProgress()
