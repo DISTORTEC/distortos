@@ -109,9 +109,9 @@ std::pair<int, bool> SpiEeprom::isWriteInProgress()
 	return {ret.first, (ret.second & statusRegisterWip) != 0};
 }
 
-int SpiEeprom::lock()
+bool SpiEeprom::lock()
 {
-	return spiDevice_.lock() == false ? 0 : EDEADLK;
+	return spiDevice_.lock();
 }
 
 int SpiEeprom::open()
