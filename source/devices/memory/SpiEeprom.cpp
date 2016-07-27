@@ -109,6 +109,11 @@ std::pair<int, bool> SpiEeprom::isWriteInProgress()
 	return {ret.first, (ret.second & statusRegisterWip) != 0};
 }
 
+int SpiEeprom::lock()
+{
+	return spiDevice_.lock();
+}
+
 int SpiEeprom::open()
 {
 	return spiDevice_.open();
@@ -147,6 +152,11 @@ std::pair<int, size_t> SpiEeprom::read(const uint32_t address, void* const buffe
 	};
 	const auto ret = spiDevice_.executeTransaction(SpiMasterOperationRange{operations});
 	return {ret.first, operations[1].getTransfer()->getBytesTransfered()};
+}
+
+int SpiEeprom::unlock()
+{
+	return spiDevice_.unlock();
 }
 
 int SpiEeprom::waitWhileWriteInProgress()

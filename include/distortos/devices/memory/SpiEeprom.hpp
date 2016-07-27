@@ -265,6 +265,15 @@ public:
 	std::pair<int, bool> isWriteInProgress();
 
 	/**
+	 * \brief Wrapper for SpiDevice::lock()
+	 *
+	 * \return 0 on success, error code otherwise:
+	 * - error codes returned by SpiDevice::lock();
+	 */
+
+	int lock();
+
+	/**
 	 * \brief Opens SPI EEPROM.
 	 *
 	 * Wrapper for SpiDevice::open().
@@ -291,6 +300,15 @@ public:
 	 */
 
 	std::pair<int, size_t> read(uint32_t address, void* buffer, size_t size);
+
+	/**
+	 * \brief Wrapper for SpiDevice::unlock()
+	 *
+	 * \return 0 on success, error code otherwise:
+	 * - error codes returned by SpiDevice::unlock();
+	 */
+
+	int unlock();
 
 	/**
 	 * \brief Waits while any write operation is currently in progress.
