@@ -122,7 +122,7 @@ int SpiEeprom::open()
 std::pair<int, size_t> SpiEeprom::read(const uint32_t address, void* const buffer, const size_t size)
 {
 	const auto capacity = getCapacity();
-	if (address >= capacity || buffer == nullptr)
+	if (address >= capacity || buffer == nullptr || size == 0)
 		return {EINVAL, {}};
 
 	{

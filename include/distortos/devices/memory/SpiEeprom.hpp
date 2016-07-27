@@ -293,7 +293,7 @@ public:
 	 *
 	 * \return pair with return code (0 on success, error code otherwise) and number of read bytes (valid even when
 	 * error code is returned); error codes:
-	 * - EINVAL - \a address and/or \a buffer are not valid;
+	 * - EINVAL - \a address and/or \a buffer and/or \a size are not valid;
 	 * - error codes returned by waitWhileWriteInProgress();
 	 * - error codes returned by SpiDevice::executeTransaction;
 	 * - error codes returned by SpiDevice::lock();
