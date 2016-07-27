@@ -158,11 +158,11 @@ public:
 	 *
 	 * \warning Locks may not be nested!
 	 *
-	 * \return 0 on success, error code otherwise:
-	 * - EDEADLK - current thread already locked this object;
+	 * \return previous state of lock: false if this SPI device was unlocked before this call, true if it was already
+	 * locked by current thread
 	 */
 
-	int lock();
+	bool lock();
 
 	/**
 	 * \brief Opens SPI device.

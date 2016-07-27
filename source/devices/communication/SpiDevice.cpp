@@ -93,7 +93,7 @@ std::pair<int, size_t> SpiDevice::executeTransaction(const SpiMasterOperationRan
 	return spiMaster_.executeTransaction(*this, operationRange);
 }
 
-int SpiDevice::lock()
+bool SpiDevice::lock()
 {
 	mutex_.lock();
 	const auto mutexScopeGuard = estd::makeScopeGuard(
@@ -102,7 +102,7 @@ int SpiDevice::lock()
 				mutex_.unlock();
 			});
 
-	return lockInternal() == false ? 0 : EDEADLK;
+	return lockInternal();
 }
 
 int SpiDevice::open()

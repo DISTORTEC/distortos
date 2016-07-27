@@ -268,7 +268,7 @@ public:
 	 * \brief Wrapper for SpiDevice::lock()
 	 *
 	 * \return 0 on success, error code otherwise:
-	 * - error codes returned by SpiDevice::lock();
+	 * - EDEADLK - current thread already locked this object;
 	 */
 
 	int lock();
@@ -293,10 +293,10 @@ public:
 	 *
 	 * \return pair with return code (0 on success, error code otherwise) and number of read bytes (valid even when
 	 * error code is returned); error codes:
+	 * - EDEADLK - current thread already locked this object;
 	 * - EINVAL - \a address and/or \a buffer and/or \a size are not valid;
 	 * - error codes returned by waitWhileWriteInProgress();
 	 * - error codes returned by SpiDevice::executeTransaction;
-	 * - error codes returned by SpiDevice::lock();
 	 */
 
 	std::pair<int, size_t> read(uint32_t address, void* buffer, size_t size);
@@ -326,9 +326,9 @@ public:
 	 *
 	 * \return pair with return code (0 on success, error code otherwise) and number of written bytes (valid even when
 	 * error code is returned); error codes:
+	 * - EDEADLK - current thread already locked this object;
 	 * - EINVAL - \a address and/or \a buffer and/or \a size are not valid;
 	 * - error codes returned by writePage();
-	 * - error codes returned by SpiDevice::lock();
 	 */
 
 	std::pair<int, size_t> write(uint32_t address, const void* buffer, size_t size);

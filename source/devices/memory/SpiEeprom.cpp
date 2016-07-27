@@ -111,7 +111,7 @@ std::pair<int, bool> SpiEeprom::isWriteInProgress()
 
 int SpiEeprom::lock()
 {
-	return spiDevice_.lock();
+	return spiDevice_.lock() == false ? 0 : EDEADLK;
 }
 
 int SpiEeprom::open()
@@ -125,11 +125,9 @@ std::pair<int, size_t> SpiEeprom::read(const uint32_t address, void* const buffe
 	if (address >= capacity || buffer == nullptr || size == 0)
 		return {EINVAL, {}};
 
-	{
-		const auto ret = spiDevice_.lock();
-		if (ret != 0)
-			return {ret, {}};
-	}
+	const auto previousLockState = spiDevice_.lock();
+	if (previousLockState == true)
+		return {EDEADLK, {}};
 
 	const auto unlockScopeGuard = estd::makeScopeGuard(
 			[this]()
@@ -178,11 +176,9 @@ std::pair<int, size_t> SpiEeprom::write(const uint32_t address, const void* cons
 	if (address >= capacity || buffer == nullptr || size == 0)
 		return {EINVAL, {}};
 
-	{
-		const auto ret = spiDevice_.lock();
-		if (ret != 0)
-			return {ret, {}};
-	}
+	const auto previousLockState = spiDevice_.lock();
+	if (previousLockState == true)
+		return {EDEADLK, {}};
 
 	const auto unlockScopeGuard = estd::makeScopeGuard(
 			[this]()
