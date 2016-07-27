@@ -329,7 +329,7 @@ public:
 	 *
 	 * \return pair with return code (0 on success, error code otherwise) and number of written bytes (valid even when
 	 * error code is returned); error codes:
-	 * - EINVAL - \a address and/or \a buffer are not valid;
+	 * - EINVAL - \a address and/or \a buffer and/or \a size are not valid;
 	 * - error codes returned by writePage();
 	 * - error codes returned by SpiDevice::lock();
 	 */
