@@ -109,7 +109,7 @@ std::pair<int, bool> SpiEeprom::isWriteInProgress()
 	return {ret.first, (ret.second & statusRegisterWip) != 0};
 }
 
-int SpiEeprom::lock()
+bool SpiEeprom::lock()
 {
 	return spiDevice_.lock();
 }
@@ -125,17 +125,11 @@ std::pair<int, size_t> SpiEeprom::read(const uint32_t address, void* const buffe
 	if (address >= capacity || buffer == nullptr || size == 0)
 		return {EINVAL, {}};
 
-	{
-		const auto ret = spiDevice_.lock();
-		if (ret != 0)
-			return {ret, {}};
-	}
-
+	const auto previousLockState = spiDevice_.lock();
 	const auto unlockScopeGuard = estd::makeScopeGuard(
-			[this]()
+			[this, previousLockState]()
 			{
-				const auto ret = spiDevice_.unlock();
-				assert(ret == 0 && "SPI device is not locked!");
+				spiDevice_.unlock(previousLockState);
 			});
 
 	{
@@ -154,9 +148,9 @@ std::pair<int, size_t> SpiEeprom::read(const uint32_t address, void* const buffe
 	return {ret.first, operations[1].getTransfer()->getBytesTransfered()};
 }
 
-int SpiEeprom::unlock()
+void SpiEeprom::unlock(const bool previousLockState)
 {
-	return spiDevice_.unlock();
+	spiDevice_.unlock(previousLockState);
 }
 
 int SpiEeprom::waitWhileWriteInProgress()
@@ -179,17 +173,11 @@ std::pair<int, size_t> SpiEeprom::write(const uint32_t address, const void* cons
 	if (address >= capacity || buffer == nullptr || size == 0)
 		return {EINVAL, {}};
 
-	{
-		const auto ret = spiDevice_.lock();
-		if (ret != 0)
-			return {ret, {}};
-	}
-
+	const auto previousLockState = spiDevice_.lock();
 	const auto unlockScopeGuard = estd::makeScopeGuard(
-			[this]()
+			[this, previousLockState]()
 			{
-				const auto ret = spiDevice_.unlock();
-				assert(ret == 0 && "SPI device is not locked!");
+				spiDevice_.unlock(previousLockState);
 			});
 
 	size_t written {};

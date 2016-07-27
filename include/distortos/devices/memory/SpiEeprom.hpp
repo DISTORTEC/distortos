@@ -267,11 +267,13 @@ public:
 	/**
 	 * \brief Wrapper for SpiDevice::lock()
 	 *
-	 * \return 0 on success, error code otherwise:
-	 * - error codes returned by SpiDevice::lock();
+	 * \note Locks may be nested.
+	 *
+	 * \return previous state of lock: false if this SPI EEPROM was unlocked before this call, true if it was already
+	 * locked by current thread
 	 */
 
-	int lock();
+	bool lock();
 
 	/**
 	 * \brief Opens SPI EEPROM.
@@ -296,7 +298,6 @@ public:
 	 * - EINVAL - \a address and/or \a buffer and/or \a size are not valid;
 	 * - error codes returned by waitWhileWriteInProgress();
 	 * - error codes returned by SpiDevice::executeTransaction;
-	 * - error codes returned by SpiDevice::lock();
 	 */
 
 	std::pair<int, size_t> read(uint32_t address, void* buffer, size_t size);
@@ -304,11 +305,14 @@ public:
 	/**
 	 * \brief Wrapper for SpiDevice::unlock()
 	 *
-	 * \return 0 on success, error code otherwise:
-	 * - error codes returned by SpiDevice::unlock();
+	 * Does nothing if SPI EEPROM is not locked by current thread.
+	 *
+	 * \note Locks may be nested.
+	 *
+	 * \param previousLockState is the value returned by matching call to lock()
 	 */
 
-	int unlock();
+	void unlock(bool previousLockState);
 
 	/**
 	 * \brief Waits while any write operation is currently in progress.
@@ -331,7 +335,6 @@ public:
 	 * error code is returned); error codes:
 	 * - EINVAL - \a address and/or \a buffer and/or \a size are not valid;
 	 * - error codes returned by writePage();
-	 * - error codes returned by SpiDevice::lock();
 	 */
 
 	std::pair<int, size_t> write(uint32_t address, const void* buffer, size_t size);

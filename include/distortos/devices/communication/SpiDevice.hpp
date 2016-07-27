@@ -156,13 +156,13 @@ public:
 	 * When the object is locked, any call to any member function from other thread will be blocked until the object is
 	 * unlocked. Locking is optional, but may be useful when more than one transaction must be done atomically.
 	 *
-	 * \warning Locks may not be nested!
+	 * \note Locks may be nested.
 	 *
-	 * \return 0 on success, error code otherwise:
-	 * - EDEADLK - current thread already locked this object;
+	 * \return previous state of lock: false if this SPI device was unlocked before this call, true if it was already
+	 * locked by current thread
 	 */
 
-	int lock();
+	bool lock();
 
 	/**
 	 * \brief Opens SPI device.
@@ -179,33 +179,35 @@ public:
 	/**
 	 * \brief Unlocks the object that was previously locked by current thread.
 	 *
-	 * \warning Locks may not be nested!
+	 * Does nothing if SPI device is not locked by current thread.
 	 *
-	 * \return 0 on success, error code otherwise:
-	 * - EPERM - this object is not locked by current thread;
+	 * \note Locks may be nested.
+	 *
+	 * \param previousLockState is the value returned by matching call to lock()
 	 */
 
-	int unlock();
+	void unlock(bool previousLockState);
 
 private:
 
 	/**
 	 * \brief Internal version of lock() - without locking the mutex.
 	 *
-	 * \return 0 on success, error code otherwise:
-	 * - EDEADLK - current thread already locked this object;
+	 * \return previous state of lock: false if this SPI device was unlocked before this call, true if it was already
+	 * locked by current thread
 	 */
 
-	int lockInternal();
+	bool lockInternal();
 
 	/**
 	 * \brief Internal version of unlock() - without locking the mutex.
 	 *
-	 * \return 0 on success, error code otherwise:
-	 * - EPERM - this object is not locked by current thread;
+	 * Does nothing if SPI device is not locked by current thread.
+	 *
+	 * \param previousLockState is the value returned by matching call to lockInternal()
 	 */
 
-	int unlockInternal();
+	void unlockInternal(bool previousLockState);
 
 	/// condition variable used for locking access to this object
 	ConditionVariable conditionVariable_;

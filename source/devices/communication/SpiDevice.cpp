@@ -37,12 +37,11 @@ SpiDevice::~SpiDevice()
 		return;
 
 	mutex_.lock();
-	const auto lockRet = lockInternal();
+	const auto previousLockState = lockInternal();
 	const auto mutexScopeGuard = estd::makeScopeGuard(
-			[this, lockRet]()
+			[this, previousLockState]()
 			{
-				if (lockRet == 0)
-					unlockInternal();
+				unlockInternal(previousLockState);
 				mutex_.unlock();
 			});
 
@@ -52,12 +51,11 @@ SpiDevice::~SpiDevice()
 int SpiDevice::close()
 {
 	mutex_.lock();
-	const auto lockRet = lockInternal();
+	const auto previousLockState = lockInternal();
 	const auto mutexScopeGuard = estd::makeScopeGuard(
-			[this, lockRet]()
+			[this, previousLockState]()
 			{
-				if (lockRet == 0)
-					unlockInternal();
+				unlockInternal(previousLockState);
 				mutex_.unlock();
 			});
 
@@ -81,12 +79,11 @@ std::pair<int, size_t> SpiDevice::executeTransaction(const SpiMasterOperationRan
 		return {EINVAL, {}};
 
 	mutex_.lock();
-	const auto lockRet = lockInternal();
+	const auto previousLockState = lockInternal();
 	const auto mutexScopeGuard = estd::makeScopeGuard(
-			[this, lockRet]()
+			[this, previousLockState]()
 			{
-				if (lockRet == 0)
-					unlockInternal();
+				unlockInternal(previousLockState);
 				mutex_.unlock();
 			});
 
@@ -96,7 +93,7 @@ std::pair<int, size_t> SpiDevice::executeTransaction(const SpiMasterOperationRan
 	return spiMaster_.executeTransaction(*this, operationRange);
 }
 
-int SpiDevice::lock()
+bool SpiDevice::lock()
 {
 	mutex_.lock();
 	const auto mutexScopeGuard = estd::makeScopeGuard(
@@ -111,12 +108,11 @@ int SpiDevice::lock()
 int SpiDevice::open()
 {
 	mutex_.lock();
-	const auto lockRet = lockInternal();
+	const auto previousLockState = lockInternal();
 	const auto mutexScopeGuard = estd::makeScopeGuard(
-			[this, lockRet]()
+			[this, previousLockState]()
 			{
-				if (lockRet == 0)
-					unlockInternal();
+				unlockInternal(previousLockState);
 				mutex_.unlock();
 			});
 
@@ -134,7 +130,7 @@ int SpiDevice::open()
 	return 0;
 }
 
-int SpiDevice::unlock()
+void SpiDevice::unlock(const bool previousLockState)
 {
 	mutex_.lock();
 	const auto mutexScopeGuard = estd::makeScopeGuard(
@@ -143,18 +139,18 @@ int SpiDevice::unlock()
 				mutex_.unlock();
 			});
 
-	return unlockInternal();
+	unlockInternal(previousLockState);
 }
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | private functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-int SpiDevice::lockInternal()
+bool SpiDevice::lockInternal()
 {
 	const auto& thisThread = ThisThread::get();
 	if (owner_ == &thisThread)
-		return EDEADLK;
+		return true;
 
 	const auto ret = conditionVariable_.wait(mutex_,
 			[this]()
@@ -164,18 +160,16 @@ int SpiDevice::lockInternal()
 	assert(ret == 0 && "Unexpected value returned by ConditionVariable::wait()!");
 
 	owner_ = &thisThread;
-	return 0;
+	return false;
 }
 
-int SpiDevice::unlockInternal()
+void SpiDevice::unlockInternal(const bool previousLockState)
 {
-	const auto& thisThread = ThisThread::get();
-	if (owner_ != &thisThread)
-		return EPERM;
+	if (previousLockState == true || owner_ != &ThisThread::get())
+		return;
 
 	owner_ = nullptr;
 	conditionVariable_.notifyOne();
-	return 0;
 }
 
 }	// namespace devices
