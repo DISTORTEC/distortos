@@ -179,13 +179,12 @@ public:
 	/**
 	 * \brief Unlocks the object that was previously locked by current thread.
 	 *
-	 * \warning Locks may not be nested!
+	 * Does nothing if SPI device is not locked by current thread.
 	 *
-	 * \return 0 on success, error code otherwise:
-	 * - EPERM - this object is not locked by current thread;
+	 * \warning Locks may not be nested!
 	 */
 
-	int unlock();
+	void unlock();
 
 private:
 
@@ -201,11 +200,10 @@ private:
 	/**
 	 * \brief Internal version of unlock() - without locking the mutex.
 	 *
-	 * \return 0 on success, error code otherwise:
-	 * - EPERM - this object is not locked by current thread;
+	 * Does nothing if SPI device is not locked by current thread.
 	 */
 
-	int unlockInternal();
+	void unlockInternal();
 
 	/// condition variable used for locking access to this object
 	ConditionVariable conditionVariable_;

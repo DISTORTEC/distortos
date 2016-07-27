@@ -134,7 +134,7 @@ int SpiDevice::open()
 	return 0;
 }
 
-int SpiDevice::unlock()
+void SpiDevice::unlock()
 {
 	mutex_.lock();
 	const auto mutexScopeGuard = estd::makeScopeGuard(
@@ -143,7 +143,7 @@ int SpiDevice::unlock()
 				mutex_.unlock();
 			});
 
-	return unlockInternal();
+	unlockInternal();
 }
 
 /*---------------------------------------------------------------------------------------------------------------------+
@@ -167,15 +167,13 @@ int SpiDevice::lockInternal()
 	return 0;
 }
 
-int SpiDevice::unlockInternal()
+void SpiDevice::unlockInternal()
 {
-	const auto& thisThread = ThisThread::get();
-	if (owner_ != &thisThread)
-		return EPERM;
+	if (owner_ != &ThisThread::get())
+		return;
 
 	owner_ = nullptr;
 	conditionVariable_.notifyOne();
-	return 0;
 }
 
 }	// namespace devices

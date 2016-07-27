@@ -303,12 +303,9 @@ public:
 
 	/**
 	 * \brief Wrapper for SpiDevice::unlock()
-	 *
-	 * \return 0 on success, error code otherwise:
-	 * - error codes returned by SpiDevice::unlock();
 	 */
 
-	int unlock();
+	void unlock();
 
 	/**
 	 * \brief Waits while any write operation is currently in progress.

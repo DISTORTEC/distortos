@@ -134,8 +134,7 @@ std::pair<int, size_t> SpiEeprom::read(const uint32_t address, void* const buffe
 	const auto unlockScopeGuard = estd::makeScopeGuard(
 			[this]()
 			{
-				const auto ret = spiDevice_.unlock();
-				assert(ret == 0 && "SPI device is not locked!");
+				spiDevice_.unlock();
 			});
 
 	{
@@ -154,9 +153,9 @@ std::pair<int, size_t> SpiEeprom::read(const uint32_t address, void* const buffe
 	return {ret.first, operations[1].getTransfer()->getBytesTransfered()};
 }
 
-int SpiEeprom::unlock()
+void SpiEeprom::unlock()
 {
-	return spiDevice_.unlock();
+	spiDevice_.unlock();
 }
 
 int SpiEeprom::waitWhileWriteInProgress()
@@ -188,8 +187,7 @@ std::pair<int, size_t> SpiEeprom::write(const uint32_t address, const void* cons
 	const auto unlockScopeGuard = estd::makeScopeGuard(
 			[this]()
 			{
-				const auto ret = spiDevice_.unlock();
-				assert(ret == 0 && "SPI device is not locked!");
+				spiDevice_.unlock();
 			});
 
 	size_t written {};
