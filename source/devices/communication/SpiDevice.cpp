@@ -41,8 +41,7 @@ SpiDevice::~SpiDevice()
 	const auto mutexScopeGuard = estd::makeScopeGuard(
 			[this, previousLockState]()
 			{
-				if (previousLockState == false)
-					unlockInternal();
+				unlockInternal(previousLockState);
 				mutex_.unlock();
 			});
 
@@ -56,8 +55,7 @@ int SpiDevice::close()
 	const auto mutexScopeGuard = estd::makeScopeGuard(
 			[this, previousLockState]()
 			{
-				if (previousLockState == false)
-					unlockInternal();
+				unlockInternal(previousLockState);
 				mutex_.unlock();
 			});
 
@@ -85,8 +83,7 @@ std::pair<int, size_t> SpiDevice::executeTransaction(const SpiMasterOperationRan
 	const auto mutexScopeGuard = estd::makeScopeGuard(
 			[this, previousLockState]()
 			{
-				if (previousLockState == false)
-					unlockInternal();
+				unlockInternal(previousLockState);
 				mutex_.unlock();
 			});
 
@@ -115,8 +112,7 @@ int SpiDevice::open()
 	const auto mutexScopeGuard = estd::makeScopeGuard(
 			[this, previousLockState]()
 			{
-				if (previousLockState == false)
-					unlockInternal();
+				unlockInternal(previousLockState);
 				mutex_.unlock();
 			});
 
@@ -143,7 +139,7 @@ void SpiDevice::unlock()
 				mutex_.unlock();
 			});
 
-	unlockInternal();
+	unlockInternal(false);
 }
 
 /*---------------------------------------------------------------------------------------------------------------------+
@@ -167,9 +163,9 @@ bool SpiDevice::lockInternal()
 	return false;
 }
 
-void SpiDevice::unlockInternal()
+void SpiDevice::unlockInternal(const bool previousLockState)
 {
-	if (owner_ != &ThisThread::get())
+	if (previousLockState == true || owner_ != &ThisThread::get())
 		return;
 
 	owner_ = nullptr;

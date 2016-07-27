@@ -201,9 +201,11 @@ private:
 	 * \brief Internal version of unlock() - without locking the mutex.
 	 *
 	 * Does nothing if SPI device is not locked by current thread.
+	 *
+	 * \param previousLockState is the value returned by matching call to lockInternal()
 	 */
 
-	void unlockInternal();
+	void unlockInternal(bool previousLockState);
 
 	/// condition variable used for locking access to this object
 	ConditionVariable conditionVariable_;
