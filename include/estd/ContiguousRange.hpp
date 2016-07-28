@@ -86,6 +86,20 @@ public:
 	}
 
 	/**
+	 * \brief ContiguousRange's constructor using iterator and size
+	 *
+	 * \param [in] beginn is an iterator to first element in the range
+	 * \param [in] sizee is the number of elements in the range
+	 */
+
+	constexpr ContiguousRange(const iterator beginn, size_t sizee) noexcept :
+			begin_{beginn},
+			end_{beginn + sizee}
+	{
+
+	}
+
+	/**
 	 * \brief ContiguousRange's constructor using C-style array
 	 *
 	 * \tparam N is the number of elements in the array
