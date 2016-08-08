@@ -79,6 +79,83 @@ config ASSERT_ENABLE
 	help
 		Enables asserts.
 
+config LDSCRIPT_ROM_SIZE_MANUAL_CONFIGURATION
+	bool "Configure ROM's address & size in linker script"
+	default n
+	help
+		Enables manual configuration of ROM's offset and size in generated
+		linker script. Example uses of this option are:
+		- the device has a bootloader at the beginning of flash, so the
+		application must not use the memory reserved for bootloader;
+		- the application is a bootloader, so rest of flash must be left for
+		loaded aplication;
+		- the application uses a few last ROM pages for its own purposes (e.g.
+		emulated EEPROM, storing configuration, logging, ...);
+		- ...
+
+		Note - configured offsets should take ROM page sizes into account.
+
+		Examples (CHIP_ROM_SIZE == 10):
+
+		1. whole ROM (10 bytes) used for application - begin == 0, end == 10
+
+		begin                end
+		  |                   |
+		  v                   v
+		 ╔═╦═╦═╦═╦═╦═╦═╦═╦═╦═╗
+		 ║0║1║2║3║4║5║6║7║8║9║
+		 ╚═╩═╩═╩═╩═╩═╩═╩═╩═╩═╝
+
+		2. beggining of ROM (3 bytes) left unused, rest (7 bytes) used by
+		application - begin == 3, end == 10
+
+		      begin          end
+		        |             |
+		        v             v
+		 ┌─┬─┬─╦═╦═╦═╦═╦═╦═╦═╗
+		 │0│1│2║3║4║5║6║7║8║9║
+		 └─┴─┴─╩═╩═╩═╩═╩═╩═╩═╝
+
+		3. end of ROM (2 bytes) left unused, rest (8 bytes) used by
+		application - begin == 0, end == 8
+
+		begin            end
+		  |               |
+		  v               v
+		 ╔═╦═╦═╦═╦═╦═╦═╦═╦─┬─┐
+		 ║0║1║2║3║4║5║6║7║8│9│
+		 ╚═╩═╩═╩═╩═╩═╩═╩═╩─┴─┘
+
+		4. beginning (3 bytes) and end of ROM (2 bytes) left unused, rest
+		(5 bytes) used by application - begin == 3, end == 8
+
+		      begin      end
+		        |         |
+		        v         v
+		 ┌─┬─┬─╦═╦═╦═╦═╦═╦─┬─┐
+		 │0│1│2║3║4║5║6║7║8│9│
+		 └─┴─┴─╩═╩═╩═╩═╩═╩─┴─┘
+
+config LDSCRIPT_ROM_BEGIN
+	int "Beginning of ROM" if LDSCRIPT_ROM_SIZE_MANUAL_CONFIGURATION
+	range 0 CHIP_ROM_SIZE
+	default 0
+	help
+		Offset of beginning of ROM (counting from ROM's physical address),
+		bytes. Setting any value greater than zero will leave given amount of
+		ROM unused by the application. See help for "Configure ROM's
+		address & size in linker script" option for examples.
+
+config LDSCRIPT_ROM_END
+	int "End of ROM" if LDSCRIPT_ROM_SIZE_MANUAL_CONFIGURATION
+	range LDSCRIPT_ROM_BEGIN CHIP_ROM_SIZE
+	default CHIP_ROM_SIZE
+	help
+		Offset of end of ROM (counting from ROM's physical address), bytes.
+		Setting any value lower than ROM size (CHIP_ROM_SIZE) will leave the
+		last part of ROM unused by the application. See help for "Configure
+		ROM's address & size in linker script" option for examples.
+
 config BUILD_OPTIMIZATION
 	string
 	default "-O0" if BUILD_OPTIMIZATION_O0
