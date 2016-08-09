@@ -529,4 +529,13 @@ config CHIP_PACKAGE
 	default "WLCSP143" if CHIP_WLCSP143
 	default "WLCSP168" if CHIP_WLCSP168
 
+config CHIP_ROM_SIZE
+	int
+	default 0
+
+config CHIP_ROM_ADDRESS
+	hex
+	default 0
+	depends on CHIP_ROM_SIZE != 0
+
 endmenu

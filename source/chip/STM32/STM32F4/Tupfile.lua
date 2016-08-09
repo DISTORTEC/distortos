@@ -27,7 +27,8 @@ if CONFIG_CHIP_STM32F4 == "y" then
 
 	local ldScriptGenerator = DISTORTOS_TOP .. "source/architecture/ARM/ARMv6-M-ARMv7-M/ARMv6-M-ARMv7-M.ld.sh"
 	local ldScriptGeneratorArguments = " \"" .. CONFIG_CHIP .. "\" \"" ..
-			CONFIG_CHIP_STM32F4_FLASH_ADDRESS .. "," .. CONFIG_CHIP_STM32F4_FLASH_SIZE .. "\" \"" ..
+			string.format("0x%x", CONFIG_CHIP_ROM_ADDRESS + CONFIG_LDSCRIPT_ROM_BEGIN) .. "," ..
+			string.format("%u", CONFIG_LDSCRIPT_ROM_END - CONFIG_LDSCRIPT_ROM_BEGIN) .. "\" \"" ..
 			CONFIG_CHIP_STM32F4_SRAM1_ADDRESS .. "," .. math.floor(unifiedRamSize) .. "\" \"" ..
 			CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_MAIN_STACK_SIZE .. "\" \"" .. CONFIG_MAIN_THREAD_STACK_SIZE .. "\""
 

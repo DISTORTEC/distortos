@@ -13,9 +13,12 @@ ifeq ($(CONFIG_CHIP_STM32F1),y)
 # linker script
 #-----------------------------------------------------------------------------------------------------------------------
 
+ROM_ADDRESS := $(shell printf '0x%x' '$(shell echo $$(($(CONFIG_CHIP_ROM_ADDRESS) + $(CONFIG_LDSCRIPT_ROM_BEGIN))))')
+ROM_SIZE := $(shell echo $$(($(CONFIG_LDSCRIPT_ROM_END) - $(CONFIG_LDSCRIPT_ROM_BEGIN))))
+
 LD_SCRIPT_GENERATOR := $(DISTORTOS_PATH)source/architecture/ARM/ARMv6-M-ARMv7-M/ARMv6-M-ARMv7-M.ld.sh
 LD_SCRIPT_GENERATOR_ARGUMENTS := $(CONFIG_CHIP) \
-		"$(CONFIG_CHIP_STM32F1_FLASH_ADDRESS),$(CONFIG_CHIP_STM32F1_FLASH_SIZE)" \
+		"$(ROM_ADDRESS),$(ROM_SIZE)" \
 		"$(CONFIG_CHIP_STM32F1_SRAM_ADDRESS),$(CONFIG_CHIP_STM32F1_SRAM_SIZE)" \
 		"$(CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_MAIN_STACK_SIZE)" "$(CONFIG_MAIN_THREAD_STACK_SIZE)"
 

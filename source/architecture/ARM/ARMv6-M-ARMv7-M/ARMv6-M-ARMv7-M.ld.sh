@@ -78,7 +78,7 @@ while [ $# -gt 0 ]; do
 	memoryAddress=`expr "$1" : '[^,]\+,\([^,]\+\),[^,]\+' || true`
 	memorySize=`expr "$1" : '[^,]\+,[^,]\+,\([^,]\+\)' || true`
 
-	headerComments="$headerComments * - $memorySize bytes of $memoryName;\n"
+	headerComments="$headerComments * - $memorySize bytes of $memoryName at $memoryAddress;\n"
 
 	memoryEntries="$memoryEntries\t$memoryName : org = $memoryAddress, len = $memorySize\n"
 
@@ -141,8 +141,8 @@ cat<<EOF
 /**
  * \file
  * \brief Linker script for $chipName chip:
- * - $romSize bytes of rom;
- * - $ramSize bytes of ram;
+ * - $romSize bytes of rom at $romAddress;
+ * - $ramSize bytes of ram at $ramAddress;
 EOF
 
 printf "%b" "$headerComments"
