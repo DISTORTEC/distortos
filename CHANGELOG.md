@@ -41,6 +41,9 @@ connected to the same SPI bus master.
 enable/disable assertions in *Kconfig* menus.
 - Extend `estd::ContiguousRange` with support for `std::array`, constructor for non-const -> const conversions and
 various useful functions: `cbegin()`, `cend()`, `rbegin()`, `rend()`, `crbegin()`, `crend()`.
+- Option in *Kconfig* menus for manual configuration of ROM's offset and size in generated linker script. This can be
+useful when the device has a bootloader at the beginning of flash, when the application is a bootloader and/or when the
+application uses a few last ROM pages for its own purposes (e.g. emulated EEPROM, storing configuration, logging, ...).
 
 ### Fixed
 
