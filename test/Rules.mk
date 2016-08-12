@@ -54,7 +54,7 @@ include $(DISTORTOS_PATH)footer.mk
 $(ELF_$(d)): $(OUTPUT)libdistortos.a $(OBJECTS_$(d)) $(SUBDIRECTORIES_OBJECTS_$(d)) $(LDSCRIPT) $(d)Rules.mk
 
 #-----------------------------------------------------------------------------------------------------------------------
-# .hex, .bin, .dmp and .lss files depends on .elf file and this Rules.mk
+# .hex, .bin, .dmp and .lss files depend on .elf file and this Rules.mk
 #-----------------------------------------------------------------------------------------------------------------------
 
 $(HEX_$(d)): $(ELF_$(d)) $(d)Rules.mk
