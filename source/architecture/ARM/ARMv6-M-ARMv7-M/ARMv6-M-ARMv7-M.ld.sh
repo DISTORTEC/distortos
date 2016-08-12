@@ -48,10 +48,10 @@ if ! expr "$processStackSize" : "\($sizeRegex\)$" > /dev/null; then
 fi
 
 # the matched string may (technically) be "0" - that's why " || true" is needed
-romAddress=`expr "$romDescription" : '\([^,]\+\),[^,]\+' || true`
-romSize=`expr "$romDescription" : '[^,]\+,\([^,]\+\)' || true`
-ramAddress=`expr "$ramDescription" : '\([^,]\+\),[^,]\+' || true`
-ramSize=`expr "$ramDescription" : '[^,]\+,\([^,]\+\)' || true`
+romAddress=$(expr "$romDescription" : '\([^,]\+\),[^,]\+' || true)
+romSize=$(expr "$romDescription" : '[^,]\+,\([^,]\+\)' || true)
+ramAddress=$(expr "$ramDescription" : '\([^,]\+\),[^,]\+' || true)
+ramSize=$(expr "$ramDescription" : '[^,]\+,\([^,]\+\)' || true)
 
 shift
 shift
@@ -74,9 +74,9 @@ while [ $# -gt 0 ]; do
 		exit 6
 	fi
 
-	memoryName=`expr "$1" : '\([^,]\+\),[^,]\+,[^,]\+' || true`
-	memoryAddress=`expr "$1" : '[^,]\+,\([^,]\+\),[^,]\+' || true`
-	memorySize=`expr "$1" : '[^,]\+,[^,]\+,\([^,]\+\)' || true`
+	memoryName=$(expr "$1" : '\([^,]\+\),[^,]\+,[^,]\+' || true)
+	memoryAddress=$(expr "$1" : '[^,]\+,\([^,]\+\),[^,]\+' || true)
+	memorySize=$(expr "$1" : '[^,]\+,[^,]\+,\([^,]\+\)' || true)
 
 	headerComments="$headerComments * - $memorySize bytes of $memoryName at $memoryAddress;\n"
 
@@ -158,7 +158,7 @@ cat<<EOF
  * \warning
  * Automatically generated file - do not edit!
  *
- * \date `date +"%Y-%m-%d %H:%M:%S"`
+ * \date $(date +"%Y-%m-%d %H:%M:%S")
  */
 
 SEARCH_DIR(.);

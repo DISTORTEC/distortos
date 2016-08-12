@@ -28,7 +28,7 @@ fi
 
 make distclean
 
-for configurationPath in `find $searchPath -name "distortosConfiguration.mk" -printf "%h "`
+for configurationPath in $(find $searchPath -name "distortosConfiguration.mk" -printf "%h ")
 do
 
 	make configure CONFIG_PATH=$configurationPath
