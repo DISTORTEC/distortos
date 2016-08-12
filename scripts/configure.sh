@@ -34,4 +34,4 @@ fi
 
 echo "Trying $path... Found."
 echo "CONFIG_SELECTED_CONFIGURATION=\"$path\"" > selectedConfiguration.mk
-echo "\"selectedConfiguration.mk\" file generated successfully."
+echo '"selectedConfiguration.mk" file generated successfully.'
