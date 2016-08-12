@@ -156,7 +156,7 @@ ifndef ECHO
 	TARGET_COUNTER = $(words $(I)) $(eval I += i)
 	TOTAL_TARGETS := $(shell $(MAKE) $(MAKECMDGOALS) --dry-run --file=$(firstword $(MAKEFILE_LIST)) \
 			--no-print-directory --no-builtin-rules --no-builtin-variables ECHO="COUNTTHIS" | grep -c "COUNTTHIS")
-	ECHO = echo "[`expr "  \`expr ${TARGET_COUNTER} '*' 100 / ${TOTAL_TARGETS}\`" : '.*\(...\)$$'`%]"
+	ECHO = echo "[$(shell expr "  $(shell expr ${TARGET_COUNTER} '*' 100 / ${TOTAL_TARGETS})" : '.*\(...\)$$')%]"
 endif
 
 ifeq ($(VERBOSE),0)
@@ -299,7 +299,7 @@ doxygen: all
 	$(eval INCLUDE_PATH_STRING += $(patsubst -I%,%,$(BOARD_INCLUDES)))
 	$(eval INCLUDE_PATH_STRING += $(DISTORTOS_PATH)test)
 	$(eval PROJECT_NUMBER_STRING := PROJECT_NUMBER =)
-	$(eval PROJECT_NUMBER_STRING += `git describe --dirty 2>/dev/null || date +%Y%m%d%H%M%S`)
+	$(eval PROJECT_NUMBER_STRING += $(shell git describe --dirty 2>/dev/null || date +%Y%m%d%H%M%S))
 	(cat $(DISTORTOS_PATH)Doxyfile; echo $(EXCLUDE_STRING); echo $(HTML_FOOTER_STRING); echo $(IMAGE_PATH_STRING); \
 			echo $(INCLUDE_PATH_STRING); echo $(PROJECT_NUMBER_STRING)) | doxygen -
 
