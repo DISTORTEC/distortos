@@ -66,7 +66,7 @@ function parseConfigurationFile(filename)
 		local standardConfigPattern = "^(" .. configPattern .. ")=(.*)$"
 		local name, value = line:match(standardConfigPattern)
 		if name ~= nil and value ~= nil then
-			local unquotedValue = value:match("^\"(.*)\"$")
+			local unquotedValue = value:match('^"(.*)"$')
 			if unquotedValue ~= nil then
 				value = unquotedValue
 			end

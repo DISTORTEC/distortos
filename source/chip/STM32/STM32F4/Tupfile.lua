@@ -26,20 +26,20 @@ if CONFIG_CHIP_STM32F4 == "y" then
 	end
 
 	local ldScriptGenerator = DISTORTOS_TOP .. "source/architecture/ARM/ARMv6-M-ARMv7-M/ARMv6-M-ARMv7-M.ld.sh"
-	local ldScriptGeneratorArguments = " \"" .. CONFIG_CHIP .. "\" \"" ..
+	local ldScriptGeneratorArguments = ' "' .. CONFIG_CHIP .. '" "' ..
 			string.format("0x%x", CONFIG_CHIP_ROM_ADDRESS + CONFIG_LDSCRIPT_ROM_BEGIN) .. "," ..
-			string.format("%u", CONFIG_LDSCRIPT_ROM_END - CONFIG_LDSCRIPT_ROM_BEGIN) .. "\" \"" ..
-			CONFIG_CHIP_STM32F4_SRAM1_ADDRESS .. "," .. math.floor(unifiedRamSize) .. "\" \"" ..
-			CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_MAIN_STACK_SIZE .. "\" \"" .. CONFIG_MAIN_THREAD_STACK_SIZE .. "\""
+			string.format("%u", CONFIG_LDSCRIPT_ROM_END - CONFIG_LDSCRIPT_ROM_BEGIN) .. '" "' ..
+			CONFIG_CHIP_STM32F4_SRAM1_ADDRESS .. "," .. math.floor(unifiedRamSize) .. '" "' ..
+			CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_MAIN_STACK_SIZE .. '" "' .. CONFIG_MAIN_THREAD_STACK_SIZE .. '"'
 
 	if CONFIG_CHIP_STM32F4_BKPSRAM_ADDRESS ~= nil then
 		ldScriptGeneratorArguments = ldScriptGeneratorArguments ..
-				" \"bkpsram," .. CONFIG_CHIP_STM32F4_BKPSRAM_ADDRESS .. "," .. CONFIG_CHIP_STM32F4_BKPSRAM_SIZE .. "\""
+				' "bkpsram,' .. CONFIG_CHIP_STM32F4_BKPSRAM_ADDRESS .. "," .. CONFIG_CHIP_STM32F4_BKPSRAM_SIZE .. '"'
 	end
 
 	if CONFIG_CHIP_STM32F4_CCM_ADDRESS ~= nil then
 		ldScriptGeneratorArguments = ldScriptGeneratorArguments ..
-				" \"ccm," .. CONFIG_CHIP_STM32F4_CCM_ADDRESS .. "," .. CONFIG_CHIP_STM32F4_CCM_SIZE .. "\""
+				' "ccm,' .. CONFIG_CHIP_STM32F4_CCM_ADDRESS .. "," .. CONFIG_CHIP_STM32F4_CCM_SIZE .. '"'
 	end
 
 	if CONFIG_CHIP_STM32F4_UNIFY_SRAM2_SRAM3 == "y" then
@@ -47,21 +47,21 @@ if CONFIG_CHIP_STM32F4 == "y" then
 		sram3Unified = 1
 		local sram23Size = CONFIG_CHIP_STM32F4_SRAM2_SIZE + CONFIG_CHIP_STM32F4_SRAM3_SIZE
 		ldScriptGeneratorArguments = ldScriptGeneratorArguments ..
-				" \"sram23," .. CONFIG_CHIP_STM32F4_SRAM2_ADDRESS .. "," .. math.floor(sram23Size) .. "\""
+				' "sram23,' .. CONFIG_CHIP_STM32F4_SRAM2_ADDRESS .. "," .. math.floor(sram23Size) .. '"'
 	end
 
 	if CONFIG_CHIP_STM32F4_SRAM2_ADDRESS ~= nil and sram2Unified == 0 then
 		ldScriptGeneratorArguments = ldScriptGeneratorArguments ..
-				" \"sram2," .. CONFIG_CHIP_STM32F4_SRAM2_ADDRESS .. "," .. CONFIG_CHIP_STM32F4_SRAM2_SIZE .. "\""
+				' "sram2,' .. CONFIG_CHIP_STM32F4_SRAM2_ADDRESS .. "," .. CONFIG_CHIP_STM32F4_SRAM2_SIZE .. '"'
 	end
 
 	if CONFIG_CHIP_STM32F4_SRAM3_ADDRESS ~= nil and sram3Unified == 0 then
 		ldScriptGeneratorArguments = ldScriptGeneratorArguments ..
-				" \"sram3," .. CONFIG_CHIP_STM32F4_SRAM3_ADDRESS .. "," .. CONFIG_CHIP_STM32F4_SRAM3_SIZE .. "\""
+				' "sram3,' .. CONFIG_CHIP_STM32F4_SRAM3_ADDRESS .. "," .. CONFIG_CHIP_STM32F4_SRAM3_SIZE .. '"'
 	end
 
 	local ldscriptOutputs = {LDSCRIPT, filenameToGroup(LDSCRIPT)}
-	tup.rule("^ SH " .. ldScriptGenerator .. "^ ./" .. ldScriptGenerator .. ldScriptGeneratorArguments .. " > \"%o\"",
+	tup.rule("^ SH " .. ldScriptGenerator .. "^ ./" .. ldScriptGenerator .. ldScriptGeneratorArguments .. ' > "%o"',
 			ldscriptOutputs)
 
 	CXXFLAGS += STANDARD_INCLUDES
