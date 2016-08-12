@@ -29,7 +29,7 @@ if CONFIG_CHIP_STM32F4 == "y" then
 	local ldScriptGeneratorArguments = ' "' .. CONFIG_CHIP .. '" "' ..
 			string.format("0x%x", CONFIG_CHIP_ROM_ADDRESS + CONFIG_LDSCRIPT_ROM_BEGIN) .. "," ..
 			string.format("%u", CONFIG_LDSCRIPT_ROM_END - CONFIG_LDSCRIPT_ROM_BEGIN) .. '" "' ..
-			CONFIG_CHIP_STM32F4_SRAM1_ADDRESS .. "," .. math.floor(unifiedRamSize) .. '" "' ..
+			CONFIG_CHIP_STM32F4_SRAM1_ADDRESS .. "," .. string.format("%u", unifiedRamSize) .. '" "' ..
 			CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_MAIN_STACK_SIZE .. '" "' .. CONFIG_MAIN_THREAD_STACK_SIZE .. '"'
 
 	if CONFIG_CHIP_STM32F4_BKPSRAM_ADDRESS ~= nil then
@@ -47,7 +47,7 @@ if CONFIG_CHIP_STM32F4 == "y" then
 		sram3Unified = 1
 		local sram23Size = CONFIG_CHIP_STM32F4_SRAM2_SIZE + CONFIG_CHIP_STM32F4_SRAM3_SIZE
 		ldScriptGeneratorArguments = ldScriptGeneratorArguments ..
-				' "sram23,' .. CONFIG_CHIP_STM32F4_SRAM2_ADDRESS .. "," .. math.floor(sram23Size) .. '"'
+				' "sram23,' .. CONFIG_CHIP_STM32F4_SRAM2_ADDRESS .. "," .. string.format("%u", sram23Size) .. '"'
 	end
 
 	if CONFIG_CHIP_STM32F4_SRAM2_ADDRESS ~= nil and sram2Unified == 0 then
