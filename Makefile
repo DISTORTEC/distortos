@@ -156,7 +156,7 @@ ifndef ECHO
 	TARGET_COUNTER = $(words $(I)) $(eval I += i)
 	TOTAL_TARGETS := $(shell $(MAKE) $(MAKECMDGOALS) --dry-run --file=$(firstword $(MAKEFILE_LIST)) \
 			--no-print-directory --no-builtin-rules --no-builtin-variables ECHO="COUNTTHIS" | grep -c "COUNTTHIS")
-	ECHO = echo "[$(shell expr "  $(shell expr ${TARGET_COUNTER} '*' 100 / ${TOTAL_TARGETS})" : '.*\(...\)$$')%]"
+	ECHO = echo "[$(shell expr "  $(shell echo $$((${TARGET_COUNTER} * 100 / ${TOTAL_TARGETS})))" : '.*\(...\)$$')%]"
 endif
 
 ifeq ($(VERBOSE),0)
