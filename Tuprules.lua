@@ -187,27 +187,23 @@ end
 
 -- assemble file named input
 function as(input)
-	local specificFlags = getSpecificFlags(ASFLAGS, input)
-	local inputs = {input, extra_inputs = {TOP .. "<headers>"}}
-	local outputs = {OUTPUT .. tup.getrelativedir(TOP) .. "/%B.o", objectsGroup}
-	tup.rule(inputs, string.format("^c AS %%f^ %s %s %s -c %%f -o %%o", AS, tostring(ASFLAGS), specificFlags), outputs)
+	tup.rule({input, extra_inputs = {TOP .. "<headers>"}},
+			string.format("^c AS %%f^ %s %s %s -c %%f -o %%o", AS, tostring(ASFLAGS), getSpecificFlags(ASFLAGS, input)),
+			{OUTPUT .. tup.getrelativedir(TOP) .. "/%B.o", objectsGroup})
 end
 
 -- compile (C) file named input
 function cc(input)
-	local specificFlags = getSpecificFlags(CFLAGS, input)
-	local inputs = {input, extra_inputs = {TOP .. "<headers>"}}
-	local outputs = {OUTPUT .. tup.getrelativedir(TOP) .. "/%B.o", objectsGroup}
-	tup.rule(inputs, string.format("^c CC %%f^ %s %s %s -c %%f -o %%o", CC, tostring(CFLAGS), specificFlags), outputs)
+	tup.rule({input, extra_inputs = {TOP .. "<headers>"}},
+			string.format("^c CC %%f^ %s %s %s -c %%f -o %%o", CC, tostring(CFLAGS), getSpecificFlags(CFLAGS, input)),
+			{OUTPUT .. tup.getrelativedir(TOP) .. "/%B.o", objectsGroup})
 end
 
 -- compile (C++) file named input
 function cxx(input)
-	local specificFlags = getSpecificFlags(CXXFLAGS, input)
-	local inputs = {input, extra_inputs = {TOP .. "<headers>"}}
-	local outputs = {OUTPUT .. tup.getrelativedir(TOP) .. "/%B.o", objectsGroup}
-	tup.rule(inputs, string.format("^c CXX %%f^ %s %s %s -c %%f -o %%o", CXX, tostring(CXXFLAGS), specificFlags),
-			outputs)
+	tup.rule({input, extra_inputs = {TOP .. "<headers>"}}, string.format("^c CXX %%f^ %s %s %s -c %%f -o %%o", CXX,
+			tostring(CXXFLAGS), getSpecificFlags(CXXFLAGS, input)),
+			{OUTPUT .. tup.getrelativedir(TOP) .. "/%B.o", objectsGroup})
 end
 
 -- archive all objects from groups given in the vararg into file named output; all elements of vararg are parsed by
@@ -224,8 +220,7 @@ function ar(output, ...)
 		end
 	end
 
-	local outputs = {output, filenameToGroup(output)}
-	tup.rule(inputs , "^ AR %o^ " .. AR .. " rcs %o " .. objects, outputs)
+	tup.rule(inputs , "^ AR %o^ " .. AR .. " rcs %o " .. objects, {output, filenameToGroup(output)})
 end
 
 -- link all objects from groups given in the vararg into file named output; all elements of vararg are parsed by
@@ -254,10 +249,9 @@ function link(output, ...)
 	end
 
 	local map = output:match("^(.*)" .. tup.ext(output) .. "$") .. "map"
-	local outputs = {output, extra_outputs = {map}}
 	tup.rule(inputs,
 			string.format("^ LD %%o^ %s %s -Wl,-Map=%s %s%s -Wl,--whole-archive %s -Wl,--no-whole-archive -o %%o", LD,
-			tostring(LDFLAGS), map, ldScripts, objects, archives), outputs)
+			tostring(LDFLAGS), map, ldScripts, objects, archives), {output, extra_outputs = {map}})
 end
 
 -- convert file named input (elf) to intel hex file named output

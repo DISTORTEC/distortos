@@ -58,9 +58,8 @@ if CONFIG_CHIP_STM32F4 == "y" then
 				CONFIG_CHIP_STM32F4_SRAM3_ADDRESS, CONFIG_CHIP_STM32F4_SRAM3_SIZE)
 	end
 
-	local ldscriptOutputs = {LDSCRIPT, filenameToGroup(LDSCRIPT)}
 	tup.rule(string.format('^ SH %s^ ./%s %s > "%%o"', ldScriptGenerator, ldScriptGenerator,
-			ldScriptGeneratorArguments), ldscriptOutputs)
+			ldScriptGeneratorArguments), {LDSCRIPT, filenameToGroup(LDSCRIPT)})
 
 	CXXFLAGS += STANDARD_INCLUDES
 	CXXFLAGS += ARCHITECTURE_INCLUDES
