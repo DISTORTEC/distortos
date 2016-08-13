@@ -264,7 +264,7 @@ __attribute__ ((weak)) void I2C1_IRQHandler()
 	while (1);
 }
 
-// 0xA0, 24: I2C2
+// 0xa0, 24: I2C2
 __attribute__ ((weak)) void I2C2_IRQHandler()
 {
 	while (1);
@@ -433,7 +433,7 @@ extern "C" const InterruptVector chipVectors[] __attribute__ ((section(".chipVec
 		TIM16_IRQHandler,					// 0x94, 21: TIM16
 		TIM17_IRQHandler,					// 0x98, 22: TIM17
 		I2C1_IRQHandler,					// 0x9c, 23: I2C1 (combined with EXTI line 23)
-		I2C2_IRQHandler,					// 0xA0, 24: I2C2
+		I2C2_IRQHandler,					// 0xa0, 24: I2C2
 		SPI1_IRQHandler,					// 0xa4, 25: SPI1
 		SPI2_IRQHandler,					// 0xa8, 26: SPI2
 		USART1_IRQHandler,					// 0xac, 27: USART1 (combined with EXTI line 25)
