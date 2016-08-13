@@ -190,7 +190,7 @@ function as(input)
 	local specificFlags = getSpecificFlags(ASFLAGS, input)
 	local inputs = {input, extra_inputs = {TOP .. "<headers>"}}
 	local outputs = {OUTPUT .. tup.getrelativedir(TOP) .. "/%B.o", objectsGroup}
-	tup.rule(inputs, "^c AS %f^ " .. AS .. " " .. tostring(ASFLAGS) .. " " .. specificFlags .. " -c %f -o %o", outputs)
+	tup.rule(inputs, string.format("^c AS %%f^ %s %s %s -c %%f -o %%o", AS, tostring(ASFLAGS), specificFlags), outputs)
 end
 
 -- compile (C) file named input
@@ -198,7 +198,7 @@ function cc(input)
 	local specificFlags = getSpecificFlags(CFLAGS, input)
 	local inputs = {input, extra_inputs = {TOP .. "<headers>"}}
 	local outputs = {OUTPUT .. tup.getrelativedir(TOP) .. "/%B.o", objectsGroup}
-	tup.rule(inputs, "^c CC %f^ " .. CC .. " " .. tostring(CFLAGS) .. " " .. specificFlags .. " -c %f -o %o", outputs)
+	tup.rule(inputs, string.format("^c CC %%f^ %s %s %s -c %%f -o %%o", CC, tostring(CFLAGS), specificFlags), outputs)
 end
 
 -- compile (C++) file named input
@@ -206,7 +206,7 @@ function cxx(input)
 	local specificFlags = getSpecificFlags(CXXFLAGS, input)
 	local inputs = {input, extra_inputs = {TOP .. "<headers>"}}
 	local outputs = {OUTPUT .. tup.getrelativedir(TOP) .. "/%B.o", objectsGroup}
-	tup.rule(inputs, "^c CXX %f^ " .. CXX .. " " .. tostring(CXXFLAGS) .. " " .. specificFlags .. " -c %f -o %o",
+	tup.rule(inputs, string.format("^c CXX %%f^ %s %s %s -c %%f -o %%o", CXX, tostring(CXXFLAGS), specificFlags),
 			outputs)
 end
 
@@ -253,12 +253,11 @@ function link(output, ...)
 		end
 	end
 
-	local inputsString = ldScripts .. objects .. " -Wl,--whole-archive " .. archives .. " -Wl,--no-whole-archive"
 	local map = output:match("^(.*)" .. tup.ext(output) .. "$") .. "map"
-	local mapString = "-Wl,-Map=" .. map
 	local outputs = {output, extra_outputs = {map}}
-	tup.rule(inputs, "^ LD %o^ " .. LD .. " " .. tostring(LDFLAGS) .. " " .. mapString .. " " .. inputsString ..
-			" -o %o", outputs)
+	tup.rule(inputs,
+			string.format("^ LD %%o^ %s %s -Wl,-Map=%s %s%s -Wl,--whole-archive %s -Wl,--no-whole-archive -o %%o", LD,
+			tostring(LDFLAGS), map, ldScripts, objects, archives), outputs)
 end
 
 -- convert file named input (elf) to intel hex file named output

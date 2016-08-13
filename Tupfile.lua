@@ -10,5 +10,5 @@
 local makeDistortosConfiguration_awk = DISTORTOS_TOP .. "scripts/makeDistortosConfiguration.awk"
 local distortosConfigurationOutputs = {OUTPUT .. "include/distortos/distortosConfiguration.h", TOP .. "<headers>"}
 
-tup.rule(DISTORTOS_CONFIGURATION_MK, "^ AWK " .. makeDistortosConfiguration_awk .. "^ " ..
-		makeDistortosConfiguration_awk .. ' "%f" > "%o"', distortosConfigurationOutputs)
+tup.rule(DISTORTOS_CONFIGURATION_MK, string.format('^ AWK %s^ %s "%%f" > "%%o"', makeDistortosConfiguration_awk,
+		makeDistortosConfiguration_awk), distortosConfigurationOutputs)
