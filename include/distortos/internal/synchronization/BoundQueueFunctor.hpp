@@ -70,8 +70,7 @@ private:
  *
  * \tparam F is the type of bound functor, it will be called with <em>void*</em> as only argument
  *
- * \param [in] boundFunctor is a rvalue reference to bound functor which will be used to move-construct internal bound
- * functor
+ * \param [in] boundFunctor is a rvalue reference to bound functor which will be used to move-construct returned object
  *
  * \return BoundQueueFunctor object with deduced template arguments
  */
