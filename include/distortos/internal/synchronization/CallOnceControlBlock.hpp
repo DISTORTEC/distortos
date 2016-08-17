@@ -66,68 +66,68 @@ public:
 
 private:
 
-	/// Functor is a type-erased interface for functors which execute bounded function with bounded arguments
+	/// Functor is a type-erased interface for functors which execute bound function with bound arguments
 	class Functor : public estd::TypeErasedFunctor<void()>
 	{
 
 	};
 
 	/**
-	 * \brief BoundedFunctor is a type-erased Functor which calls its bounded functor
+	 * \brief BoundFunctor is a type-erased Functor which calls its bound functor
 	 *
-	 * \tparam F is the type of bounded functor
+	 * \tparam F is the type of bound functor
 	 */
 
 	template<typename F>
-	class BoundedFunctor : public Functor
+	class BoundFunctor : public Functor
 	{
 	public:
 
 		/**
-		 * \brief BoundedFunctor's constructor
+		 * \brief BoundFunctor's constructor
 		 *
-		 * \param [in] boundedFunctor is a rvalue reference to bounded functor which will be used to move-construct
-		 * internal bounded functor
+		 * \param [in] boundFunctor is a rvalue reference to bound functor which will be used to move-construct internal
+		 * bound functor
 		 */
 
-		constexpr explicit BoundedFunctor(F&& boundedFunctor) :
-				boundedFunctor_{std::move(boundedFunctor)}
+		constexpr explicit BoundFunctor(F&& boundFunctor) :
+				boundFunctor_{std::move(boundFunctor)}
 		{
 
 		}
 
 		/**
-		 * \brief BoundedFunctor's function call operator
+		 * \brief BoundFunctor's function call operator
 		 *
-		 * Calls the bounded functor.
+		 * Calls the bound functor.
 		 */
 
 		void operator()() const override
 		{
-			boundedFunctor_();
+			boundFunctor_();
 		}
 
 	private:
 
-		/// bounded functor
-		F boundedFunctor_;
+		/// bound functor
+		F boundFunctor_;
 	};
 
 	/**
-	 * \brief Helper factory function to make BoundedFunctor object with deduced template arguments
+	 * \brief Helper factory function to make BoundFunctor object with deduced template arguments
 	 *
-	 * \tparam F is the type of bounded functor
+	 * \tparam F is the type of bound functor
 	 *
-	 * \param [in] boundedFunctor is a rvalue reference to bounded functor which will be used to move-construct internal
-	 * bounded functor
+	 * \param [in] boundFunctor is a rvalue reference to bound functor which will be used to move-construct internal
+	 * bound functor
 	 *
-	 * \return BoundedFunctor object with deduced template arguments
+	 * \return BoundFunctor object with deduced template arguments
 	 */
 
 	template<typename F>
-	constexpr static BoundedFunctor<F> makeBoundedFunctor(F&& boundedFunctor)
+	constexpr static BoundFunctor<F> makeBoundFunctor(F&& boundFunctor)
 	{
-		return BoundedFunctor<F>{std::move(boundedFunctor)};
+		return BoundFunctor<F>{std::move(boundFunctor)};
 	}
 
 	/**
@@ -137,7 +137,7 @@ private:
 	 * not yet done, then the calling thread is blocked. In other case the function is executed and - after it is done -
 	 * all blocked threads are unblocked.
 	 *
-	 * \param [in] functor is a reference to functor which will execute bounded function with bounded arguments
+	 * \param [in] functor is a reference to functor which will execute bound function with bound arguments
 	 */
 
 	void callOnceImplementation(const Functor& functor);
@@ -155,7 +155,7 @@ void CallOnceControlBlock::operator()(Function&& function, Args&&... args)
 	if (done_ == true)	// function already executed?
 		return;
 
-	const auto functor = makeBoundedFunctor(
+	const auto functor = makeBoundFunctor(
 			[&function, &args...]()
 			{
 				estd::invoke(std::forward<Function>(function), std::forward<Args>(args)...);

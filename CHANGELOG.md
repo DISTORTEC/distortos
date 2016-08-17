@@ -28,7 +28,7 @@ be selected.
 `close()`, `read()`, `write()`). `read()` and `write()` member functions of this class support both blocking (with
 or without timeout) and non-blocking behaviour. Convenient wrappers for reading/writing with timeout are also provided:
 `tryReadFor()`, `tryReadUntil()`, `tryWriteFor()` and `tryWriteUntil()`.
-- `estd::ScopeGuard` template class, which can be used to execute bounded function on scope exit using RAII pattern.
+- `estd::ScopeGuard` template class, which can be used to execute bound function on scope exit using RAII pattern.
 - `devices::Rs485` class - *RS-485* device with all features of `devices::SerialPort` and with automatic management
 of "driver enable" output pin.
 - `devices::SpiMaster` and `devices::SpiDevice` classes, which enable easy communication with multiple SPI slave devices

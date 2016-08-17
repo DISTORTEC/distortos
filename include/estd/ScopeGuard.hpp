@@ -60,7 +60,7 @@ public:
 	/**
 	 * \brief ScopeGuard's destructor
 	 *
-	 * If not already "released", executes bounded function.
+	 * If not already "released", executes bound function.
 	 */
 
 	~ScopeGuard() noexcept
@@ -72,7 +72,7 @@ public:
 	/**
 	 * \brief Releases ScopeGuard.
 	 *
-	 * After this call, the bounded function will not be executed when this object goes out of scope.
+	 * After this call, the bound function will not be executed when this object goes out of scope.
 	 */
 
 	void release() noexcept
@@ -89,7 +89,7 @@ private:
 	/// function executed on scope exit
 	Function function_;
 
-	/// true if object is released (bounded function will not be executed), false otherwise
+	/// true if object is released (bound function will not be executed), false otherwise
 	bool released_;
 };
 

@@ -23,7 +23,7 @@ namespace distortos
 /// \{
 
 /**
- * \brief DynamicThread class is a type-erased interface for thread that has dynamic storage for bounded function, stack
+ * \brief DynamicThread class is a type-erased interface for thread that has dynamic storage for bound function, stack
  * and internal DynamicSignalsReceiver object.
  */
 

@@ -31,7 +31,7 @@ namespace internal
 {
 
 /**
- * \brief DynamicThreadBase class is a type-erased interface for thread that has dynamic storage for bounded function,
+ * \brief DynamicThreadBase class is a type-erased interface for thread that has dynamic storage for bound function,
  * stack and internal DynamicSignalsReceiver object.
  *
  * If thread detachment is enabled (CONFIG_THREAD_DETACH_ENABLE is defined) then this class is dynamically allocated by

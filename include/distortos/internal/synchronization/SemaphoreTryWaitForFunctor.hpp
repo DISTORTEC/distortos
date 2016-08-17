@@ -22,7 +22,7 @@ namespace distortos
 namespace internal
 {
 
-/// SemaphoreTryWaitForFunctor class is a SemaphoreFunctor which calls Semaphore::tryWaitFor() with bounded duration
+/// SemaphoreTryWaitForFunctor class is a SemaphoreFunctor which calls Semaphore::tryWaitFor() with bound duration
 class SemaphoreTryWaitForFunctor : public SemaphoreFunctor
 {
 public:
@@ -30,7 +30,7 @@ public:
 	/**
 	 * \brief SemaphoreTryWaitForFunctor's constructor
 	 *
-	 * \param [in] duration is the bounded duration for Semaphore::tryWaitFor() call
+	 * \param [in] duration is the bound duration for Semaphore::tryWaitFor() call
 	 */
 
 	constexpr explicit SemaphoreTryWaitForFunctor(const TickClock::duration duration) :
@@ -40,7 +40,7 @@ public:
 	}
 
 	/**
-	 * \brief Calls Semaphore::tryWaitFor() with bounded duration
+	 * \brief Calls Semaphore::tryWaitFor() with bound duration
 	 *
 	 * \param [in] semaphore is a reference to Semaphore object for which Semaphore::tryWaitFor() will be called
 	 *
@@ -51,7 +51,7 @@ public:
 
 private:
 
-	/// bounded duration for Semaphore::tryWaitFor() call
+	/// bound duration for Semaphore::tryWaitFor() call
 	const TickClock::duration duration_;
 };
 
