@@ -7,7 +7,7 @@
 -- distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 --
 
-local makeDistortosConfiguration_awk = DISTORTOS_TOP .. "scripts/makeDistortosConfiguration.awk"
+local makeDistortosConfigurationSh = DISTORTOS_TOP .. "scripts/makeDistortosConfiguration.sh"
 
-tup.rule(DISTORTOS_CONFIGURATION_MK, string.format('^ AWK %s^ %s "%%f" > "%%o"', makeDistortosConfiguration_awk,
-		makeDistortosConfiguration_awk), {OUTPUT .. "include/distortos/distortosConfiguration.h", TOP .. "<headers>"})
+tup.rule(DISTORTOS_CONFIGURATION_MK, string.format('^ SH %s^ %s "%%f" > "%%o"', makeDistortosConfigurationSh,
+		makeDistortosConfigurationSh), {OUTPUT .. "include/distortos/distortosConfiguration.h", TOP .. "<headers>"})
