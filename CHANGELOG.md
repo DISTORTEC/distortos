@@ -45,6 +45,12 @@ various useful functions: `cbegin()`, `cend()`, `rbegin()`, `rend()`, `crbegin()
 useful when the device has a bootloader at the beginning of flash, when the application is a bootloader and/or when the
 application uses a few last ROM pages for its own purposes (e.g. emulated EEPROM, storing configuration, logging, ...).
 
+### Changed
+
+- Replace generator of `distortosConfiguration.h` that uses *AWK* (`makeDistortosConfiguration.awk`) with the one using
+shell, *sed* and *echo* (`makeDistortosConfiguration.sh`). With this change *AWK* is no longer needed to configure &
+build this project.
+
 ### Fixed
 
 - Fix generated linker scripts for older versions of *ld* (like 2.24.0.20141128), where hidden symbols cannot be used in
