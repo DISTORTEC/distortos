@@ -13,7 +13,7 @@ set -e
 set -u
 
 if [ $# -lt 5 ]; then
-	echo "This script requires at least 5 arguments!" >&2
+	echo 'This script requires at least 5 arguments!' >&2
 	exit 1
 fi
 
@@ -145,7 +145,7 @@ cat<<EOF
  * - $ramSize bytes of ram at $ramAddress;
 EOF
 
-printf "%b" "$headerComments"
+printf '%b' "$headerComments"
 
 cat<<EOF
  *
@@ -158,7 +158,7 @@ cat<<EOF
  * \warning
  * Automatically generated file - do not edit!
  *
- * \date $(date +"%Y-%m-%d %H:%M:%S")
+ * \date $(date +'%Y-%m-%d %H:%M:%S')
  */
 
 SEARCH_DIR(.);
@@ -185,7 +185,7 @@ MEMORY
 	ram : org = $ramAddress, len = $ramSize
 EOF
 
-printf "%b" "$memoryEntries"
+printf '%b' "$memoryEntries"
 
 cat<<EOF
 }
@@ -200,7 +200,7 @@ PROVIDE(__ram_end = ORIGIN(ram) + LENGTH(ram));
 
 EOF
 
-printf "%b" "$memorySizes"
+printf '%b' "$memorySizes"
 
 cat<<EOF
 /*---------------------------------------------------------------------------------------------------------------------+
@@ -250,7 +250,7 @@ SECTIONS
 		LONG(LOADADDR(.data)); LONG(ADDR(.data)); LONG(ADDR(.data) + SIZEOF(.data));
 EOF
 
-printf "%b" "$dataArrayEntries"
+printf '%b' "$dataArrayEntries"
 
 cat<<EOF
 
@@ -268,7 +268,7 @@ cat<<EOF
 		LONG(ADDR(.stack)); LONG(ADDR(.stack) + SIZEOF(.stack));
 EOF
 
-printf "%b" "$bssArrayEntries"
+printf '%b' "$bssArrayEntries"
 
 cat<<EOF
 
@@ -386,7 +386,7 @@ cat<<EOF
 
 EOF
 
-printf "%b" "$sectionEntries"
+printf '%b' "$sectionEntries"
 
 cat<<EOF
 	.stab 				0 (NOLOAD) : { *(.stab); }
@@ -430,7 +430,7 @@ PROVIDE(__noinit_size = SIZEOF(.noinit));
 PROVIDE(__stack_size = SIZEOF(.stack));
 EOF
 
-printf "%b" "$sectionSizes"
+printf '%b' "$sectionSizes"
 
 cat<<EOF
 

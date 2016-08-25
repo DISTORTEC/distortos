@@ -13,23 +13,23 @@ set -e
 set -u
 
 if [ -d .tup ]; then
-	echo "Removing tup database..."
+	echo 'Removing tup database...'
 	rm -rf .tup/
 fi
 
 if [ -d output ]; then
-	echo "Removing build outputs..."
+	echo 'Removing build outputs...'
 	rm -rf output/
 fi
 
 if [ -d documentation/html ]; then
-	echo "Removing doxygen outputs..."
+	echo 'Removing doxygen outputs...'
 	rm -rf documentation/html/
 fi
 
 if [ -f selectedConfiguration.mk ]; then
-	echo "Removing selectedConfiguration.mk file..."
+	echo 'Removing selectedConfiguration.mk file...'
 	rm -f selectedConfiguration.mk
 fi
 
-echo "Project cleaned successfully."
+echo 'Project cleaned successfully.'

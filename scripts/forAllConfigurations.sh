@@ -13,7 +13,7 @@ set -e
 set -u
 
 if [ $# -lt 1 ]; then
-	echo "Error - invalid number of arguments!"
+	echo 'Error - invalid number of arguments!'
 	exit 1
 fi
 
@@ -28,7 +28,7 @@ fi
 
 make distclean
 
-for configurationPath in $(find $searchPath -name "distortosConfiguration.mk" -printf "%h ")
+for configurationPath in $(find $searchPath -name 'distortosConfiguration.mk' -printf '%h ')
 do
 
 	make configure CONFIG_PATH=$configurationPath
