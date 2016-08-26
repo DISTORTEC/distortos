@@ -25,7 +25,7 @@ cat << EOF
  * \warning
  * Automatically generated file - do not edit!
  *
- * \\date $(date +'%Y-%m-%d %H:%M:%S')
+ * \date $(date +'%Y-%m-%d %H:%M:%S')
  */
 
 #ifndef INCLUDE_DISTORTOS_DISTORTOSCONFIGURATION_H_
