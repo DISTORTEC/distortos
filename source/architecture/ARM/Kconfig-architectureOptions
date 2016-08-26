@@ -21,7 +21,6 @@ config TOOLCHAIN_PREFIX
 	string
 	default "arm-none-eabi-"
 
-### don't remove this line! Kconfig-armArchitectureOptions
 source "$OUTPUT/Kconfig-armArchitectureOptions"
 
 endif	# ARCHITECTURE_ARM

@@ -7,7 +7,6 @@
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #
 
-### don't remove this line! Kconfig-boardOptions
 source "$OUTPUT/Kconfig-boardOptions"
 
 comment "Generic board options"

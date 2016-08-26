@@ -14,12 +14,10 @@ choice
 	help
 		Select chip family
 
-### don't remove this line! Kconfig-chipFamilyChoices1
 source "$OUTPUT/Kconfig-chipFamilyChoices1"
 
 endchoice
 
-### don't remove this line! Kconfig-chipFamilyChoices2
 source "$OUTPUT/Kconfig-chipFamilyChoices2"
 
 choice
@@ -32,22 +30,18 @@ config BOARD_CUSTOM
 	help
 		Custom board
 
-### don't remove this line! Kconfig-boardChoices
 source "$OUTPUT/Kconfig-boardChoices"
 
 endchoice
 
 if BOARD_CUSTOM
 
-### don't remove this line! Kconfig-chipChoices
 source "$OUTPUT/Kconfig-chipChoices"
 
 endif	# BOARD_CUSTOM
 
-### don't remove this line! Kconfig-board
 source "$OUTPUT/Kconfig-board"
 
-### don't remove this line! Kconfig-chipOptions
 source "$OUTPUT/Kconfig-chipOptions"
 
 comment "Generic chip options"
