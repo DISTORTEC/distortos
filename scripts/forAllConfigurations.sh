@@ -13,7 +13,7 @@ set -e
 set -u
 
 if [ $# -lt 1 ]; then
-	echo 'Error - invalid number of arguments!' >&2
+	echo 'This script requires at least 1 argument!' >&2
 	exit 1
 fi
 
