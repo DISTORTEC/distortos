@@ -20,9 +20,8 @@ if [ $# -ge 1 ]; then
 fi
 
 mkdir -p $output
-pattern="### don't remove this line! "
-for file in $(/usr/bin/find -path "./$output" -prune -o -name 'Kconfig*' -exec grep "$pattern" {} + | cut -d ' ' -f 6 |
-		uniq)
+for file in $(/usr/bin/find -path "./$output" -prune -o -name 'Kconfig*' -exec \
+		sed -n 's/^source "$OUTPUT\/\(.*\)"$/\1/p' {} +)
 do
 
 cat << EOF > $output/$file
