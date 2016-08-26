@@ -48,7 +48,7 @@ application uses a few last ROM pages for its own purposes (e.g. emulated EEPROM
 ### Changed
 
 - Replace generator of `distortosConfiguration.h` that uses *AWK* (`makeDistortosConfiguration.awk`) with the one using
-shell, *sed* and *echo* (`makeDistortosConfiguration.sh`). With this change *AWK* is no longer needed to configure &
+shell, *cat* and *sed* (`makeDistortosConfiguration.sh`). With this change *AWK* is no longer needed to configure &
 build this project.
 
 ### Fixed

@@ -17,19 +17,21 @@ if [ $# -ne 1 ]; then
 	exit 1
 fi
 
-echo '/**'
-echo ' * \file'
-echo ' * \brief distortos configuration'
-echo ' *'
-echo ' * \warning'
-echo ' * Automatically generated file - do not edit!'
-echo ' *'
-echo " * \\date $(date +'%Y-%m-%d %H:%M:%S')"
-echo ' */'
-echo ''
-echo '#ifndef INCLUDE_DISTORTOS_DISTORTOSCONFIGURATION_H_'
-echo '#define INCLUDE_DISTORTOS_DISTORTOSCONFIGURATION_H_'
-echo ''
+cat << EOF
+/**
+ * \file
+ * \brief distortos configuration
+ *
+ * \warning
+ * Automatically generated file - do not edit!
+ *
+ * \\date $(date +'%Y-%m-%d %H:%M:%S')
+ */
+
+#ifndef INCLUDE_DISTORTOS_DISTORTOSCONFIGURATION_H_
+#define INCLUDE_DISTORTOS_DISTORTOSCONFIGURATION_H_
+
+EOF
 
 sed -n \
 	-e 's/^\(CONFIG_[A-Za-z0-9_]\{1,\}\)=y$/#define \1/p' \
@@ -37,5 +39,7 @@ sed -n \
 	-e 's/^# \(CONFIG_[A-Za-z0-9_]\{1,\}\) is not set$/#undef \1/p' \
 	$1
 
-echo ''
-echo '#endif	/* INCLUDE_DISTORTOS_DISTORTOSCONFIGURATION_H_ */'
+cat << EOF
+
+#endif	/* INCLUDE_DISTORTOS_DISTORTOSCONFIGURATION_H_ */
+EOF
