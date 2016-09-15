@@ -11,7 +11,7 @@
 
 #include "distortos/chip/STM32F0-GPIO.hpp"
 
-#include "distortos/chip/STM32F0-GPIO-bits.h"
+#include "distortos/chip/STM32-GPIOv2-bits.h"
 
 #include "distortos/architecture/InterruptMaskingLock.hpp"
 

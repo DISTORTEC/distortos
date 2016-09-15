@@ -1,6 +1,6 @@
 /**
  * \file
- * \brief Header with definition of bits in GPIO control registers
+ * \brief Header with definition of bits in STM32 GPIOv2 control registers
  *
  * \author Copyright (C) 2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
@@ -9,8 +9,8 @@
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#ifndef SOURCE_CHIP_STM32_STM32F4_INCLUDE_DISTORTOS_CHIP_STM32F4_GPIO_BITS_H_
-#define SOURCE_CHIP_STM32_STM32F4_INCLUDE_DISTORTOS_CHIP_STM32F4_GPIO_BITS_H_
+#ifndef SOURCE_CHIP_STM32_PERIPHERALS_GPIOV2_INCLUDE_DISTORTOS_CHIP_STM32_GPIOV2_BITS_H_
+#define SOURCE_CHIP_STM32_PERIPHERALS_GPIOV2_INCLUDE_DISTORTOS_CHIP_STM32_GPIOV2_BITS_H_
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | GPIOx_MODER - GPIO port mode register
@@ -55,4 +55,4 @@
 
 #define GPIO_AFRx_mask						15
 
-#endif	/* SOURCE_CHIP_STM32_STM32F4_INCLUDE_DISTORTOS_CHIP_STM32F4_GPIO_BITS_H_ */
+#endif	/* SOURCE_CHIP_STM32_PERIPHERALS_GPIOV2_INCLUDE_DISTORTOS_CHIP_STM32_GPIOV2_BITS_H_ */
