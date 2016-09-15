@@ -32,7 +32,7 @@ void configurePin(const Pin pin, const PinConfiguration configuration, const boo
 	const auto invertedMask = ~((GPIO_CRL_CNF0 | GPIO_CRL_MODE0) << ((pinNumber * 4) % 32));
 	const auto configurationValue = static_cast<uint32_t>(configuration) << ((pinNumber * 4) % 32);
 
-	(initialState == false ? port.BRR : port.BSRR) = 1 << pinNumber;
+	port.BSRR = 1 << (pinNumber + (initialState == false ? 16 : 0));
 
 	architecture::InterruptMaskingLock interruptMaskingLock;
 
