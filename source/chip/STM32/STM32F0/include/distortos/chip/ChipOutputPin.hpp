@@ -12,7 +12,7 @@
 #ifndef SOURCE_CHIP_STM32_STM32F0_INCLUDE_DISTORTOS_CHIP_CHIPOUTPUTPIN_HPP_
 #define SOURCE_CHIP_STM32_STM32F0_INCLUDE_DISTORTOS_CHIP_CHIPOUTPUTPIN_HPP_
 
-#include "distortos/chip/STM32F0-GPIO.hpp"
+#include "distortos/chip/STM32-GPIOv2.hpp"
 
 #include "distortos/devices/io/OutputPin.hpp"
 

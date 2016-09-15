@@ -1,6 +1,6 @@
 /**
  * \file
- * \brief Header for GPIO-related functions for STM32F4
+ * \brief Header for GPIOv2 functions for STM32
  *
  * \author Copyright (C) 2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
@@ -9,8 +9,8 @@
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#ifndef SOURCE_CHIP_STM32_STM32F4_INCLUDE_DISTORTOS_CHIP_STM32F4_GPIO_HPP_
-#define SOURCE_CHIP_STM32_STM32F4_INCLUDE_DISTORTOS_CHIP_STM32F4_GPIO_HPP_
+#ifndef SOURCE_CHIP_STM32_PERIPHERALS_GPIOV2_INCLUDE_DISTORTOS_CHIP_STM32_GPIOV2_HPP_
+#define SOURCE_CHIP_STM32_PERIPHERALS_GPIOV2_INCLUDE_DISTORTOS_CHIP_STM32_GPIOV2_HPP_
 
 #include "distortos/chip/CMSIS-proxy.h"
 
@@ -500,6 +500,7 @@ enum class PinAlternateFunction : uint8_t
 		af6,
 		/// alternate function 7
 		af7,
+#ifdef CONFIG_CHIP_STM32_GPIOV2_HAS_4_AF_BITS
 		/// alternate function 8
 		af8,
 		/// alternate function 9
@@ -516,6 +517,7 @@ enum class PinAlternateFunction : uint8_t
 		af14,
 		/// alternate function 15
 		af15,
+#endif	// def CONFIG_CHIP_STM32_GPIOV2_HAS_4_AF_BITS
 };
 
 /// all possible modes of pin
@@ -538,10 +540,12 @@ enum class PinOutputSpeed : uint8_t
 		low,
 		/// medium speed
 		medium,
+#ifdef CONFIG_CHIP_STM32_GPIOV2_HAS_HIGH_SPEED
 		/// high speed
 		high,
+#endif	// def CONFIG_CHIP_STM32_GPIOV2_HAS_HIGH_SPEED
 		/// very high speed
-		veryHigh,
+		veryHigh = 3,
 };
 
 /// all possible pull-up/pull-down configurations of pin
@@ -647,4 +651,4 @@ constexpr std::pair<GPIO_TypeDef*, uint8_t> decodePin(const Pin pin)
 
 }	// namespace distortos
 
-#endif	// SOURCE_CHIP_STM32_STM32F4_INCLUDE_DISTORTOS_CHIP_STM32F4_GPIO_HPP_
+#endif	// SOURCE_CHIP_STM32_PERIPHERALS_GPIOV2_INCLUDE_DISTORTOS_CHIP_STM32_GPIOV2_HPP_

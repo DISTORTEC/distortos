@@ -1,6 +1,6 @@
 /**
  * \file
- * \brief Header for GPIO-related functions for STM32F1
+ * \brief Header for GPIOv1 functions for STM32
  *
  * \author Copyright (C) 2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
@@ -9,8 +9,8 @@
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#ifndef SOURCE_CHIP_STM32_STM32F1_INCLUDE_DISTORTOS_CHIP_STM32F1_GPIO_HPP_
-#define SOURCE_CHIP_STM32_STM32F1_INCLUDE_DISTORTOS_CHIP_STM32F1_GPIO_HPP_
+#ifndef SOURCE_CHIP_STM32_PERIPHERALS_GPIOV1_INCLUDE_DISTORTOS_CHIP_STM32_GPIOV1_HPP_
+#define SOURCE_CHIP_STM32_PERIPHERALS_GPIOV1_INCLUDE_DISTORTOS_CHIP_STM32_GPIOV1_HPP_
 
 #include "distortos/chip/CMSIS-proxy.h"
 
@@ -443,4 +443,4 @@ constexpr std::pair<GPIO_TypeDef*, uint8_t> decodePin(const Pin pin)
 
 }	// namespace distortos
 
-#endif	// SOURCE_CHIP_STM32_STM32F1_INCLUDE_DISTORTOS_CHIP_STM32F1_GPIO_HPP_
+#endif	// SOURCE_CHIP_STM32_PERIPHERALS_GPIOV1_INCLUDE_DISTORTOS_CHIP_STM32_GPIOV1_HPP_
