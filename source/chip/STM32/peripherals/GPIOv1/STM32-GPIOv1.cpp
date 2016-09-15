@@ -1,6 +1,6 @@
 /**
  * \file
- * \brief Implementation of GPIO-related functions for STM32F1
+ * \brief Implementation of GPIOv1 functions for STM32F1
  *
  * \author Copyright (C) 2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
