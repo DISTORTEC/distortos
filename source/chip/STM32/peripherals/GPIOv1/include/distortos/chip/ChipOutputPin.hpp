@@ -1,6 +1,6 @@
 /**
  * \file
- * \brief ChipOutputPin class header for STM32F1
+ * \brief ChipOutputPin class header for GPIOv1 in STM32
  *
  * \author Copyright (C) 2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
@@ -9,8 +9,8 @@
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#ifndef SOURCE_CHIP_STM32_STM32F1_INCLUDE_DISTORTOS_CHIP_CHIPOUTPUTPIN_HPP_
-#define SOURCE_CHIP_STM32_STM32F1_INCLUDE_DISTORTOS_CHIP_CHIPOUTPUTPIN_HPP_
+#ifndef SOURCE_CHIP_STM32_PERIPHERALS_GPIOV1_INCLUDE_DISTORTOS_CHIP_CHIPOUTPUTPIN_HPP_
+#define SOURCE_CHIP_STM32_PERIPHERALS_GPIOV1_INCLUDE_DISTORTOS_CHIP_CHIPOUTPUTPIN_HPP_
 
 #include "distortos/chip/STM32-GPIOv1.hpp"
 
@@ -23,7 +23,7 @@ namespace chip
 {
 
 /**
- * ChipOutputPin class is a single output pin of STM32F1
+ * ChipOutputPin class is a single output pin of GPIOv1 in STM32
  *
  * \ingroup devices
  */
@@ -75,4 +75,4 @@ private:
 
 }	// namespace distortos
 
-#endif	// SOURCE_CHIP_STM32_STM32F1_INCLUDE_DISTORTOS_CHIP_CHIPOUTPUTPIN_HPP_
+#endif	// SOURCE_CHIP_STM32_PERIPHERALS_GPIOV1_INCLUDE_DISTORTOS_CHIP_CHIPOUTPUTPIN_HPP_
