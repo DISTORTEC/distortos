@@ -42,7 +42,7 @@ void ChipOutputPin::set(const bool state)
 	const auto decodedPin = decodePin(pin_);
 	auto& port = *decodedPin.first;
 	const auto pinNumber = decodedPin.second;
-	(state == inverted_ ? port.BRR : port.BSRR) = 1 << pinNumber;
+	port.BSRR = 1 << (pinNumber + (state == inverted_ ? 16 : 0));
 }
 
 }	// namespace chip
