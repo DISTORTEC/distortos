@@ -44,6 +44,8 @@ source "$OUTPUT/Kconfig-board"
 
 source "$OUTPUT/Kconfig-chipOptions"
 
+source "$OUTPUT/Kconfig-peripheralsOptions"
+
 comment "Generic chip options"
 
 choice
