@@ -1,6 +1,6 @@
 /**
  * \file
- * \brief ChipOutputPin class implementation for STM32F1
+ * \brief ChipOutputPin class implementation for GPIOv2 in STM32
  *
  * \author Copyright (C) 2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
@@ -21,12 +21,12 @@ namespace chip
 | public functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-ChipOutputPin::ChipOutputPin(const Pin pin, const bool openDrain, const PinOutputSpeed outputSpeed,
+ChipOutputPin::ChipOutputPin(const Pin pin, const bool openDrain, const PinOutputSpeed outputSpeed, const PinPull pull,
 		const bool initialState, const bool inverted) :
 				pin_{pin},
 				inverted_{inverted}
 {
-	configureOutputPin(pin_, openDrain, outputSpeed, initialState != inverted);
+	configureOutputPin(pin_, openDrain, outputSpeed, pull, initialState != inverted);
 }
 
 bool ChipOutputPin::get() const
@@ -42,7 +42,7 @@ void ChipOutputPin::set(const bool state)
 	const auto decodedPin = decodePin(pin_);
 	auto& port = *decodedPin.first;
 	const auto pinNumber = decodedPin.second;
-	(state == inverted_ ? port.BRR : port.BSRR) = 1 << pinNumber;
+	port.BSRR = 1 << (pinNumber + (state == inverted_ ? 16 : 0));
 }
 
 }	// namespace chip
