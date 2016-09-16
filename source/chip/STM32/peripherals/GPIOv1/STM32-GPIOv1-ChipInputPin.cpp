@@ -1,6 +1,6 @@
 /**
  * \file
- * \brief ChipInputPin class implementation for STM32F4
+ * \brief ChipInputPin class implementation for GPIOv1 in STM32
  *
  * \author Copyright (C) 2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
