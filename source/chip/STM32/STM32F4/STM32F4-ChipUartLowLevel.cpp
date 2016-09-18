@@ -14,7 +14,7 @@
 #include "distortos/chip/clocks.hpp"
 #include "distortos/chip/CMSIS-proxy.h"
 #include "distortos/chip/STM32F4-RCC-bits.h"
-#include "distortos/chip/STM32F4-USART-bits.h"
+#include "distortos/chip/STM32-USARTv1-bits.h"
 
 #include "distortos/devices/communication/UartBase.hpp"
 

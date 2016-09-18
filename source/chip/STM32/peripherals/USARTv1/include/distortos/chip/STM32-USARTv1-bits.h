@@ -1,6 +1,6 @@
 /**
  * \file
- * \brief Header with definition of bits in USART control registers
+ * \brief Header with definition of bits in STM32 USARTv1 control registers
  *
  * \author Copyright (C) 2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
@@ -9,8 +9,8 @@
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#ifndef SOURCE_CHIP_STM32_STM32F4_INCLUDE_DISTORTOS_CHIP_STM32F4_USART_BITS_H_
-#define SOURCE_CHIP_STM32_STM32F4_INCLUDE_DISTORTOS_CHIP_STM32F4_USART_BITS_H_
+#ifndef SOURCE_CHIP_STM32_PERIPHERALS_USARTV1_INCLUDE_DISTORTOS_CHIP_STM32_USARTV1_BITS_H_
+#define SOURCE_CHIP_STM32_PERIPHERALS_USARTV1_INCLUDE_DISTORTOS_CHIP_STM32_USARTV1_BITS_H_
 
 #include "distortos/architecture/ARMv7-M-bit-banding.h"
 
@@ -542,4 +542,4 @@
 #define UART8_CR3_IREN_bb					USARTx_CR3_IREN_bb(UART8)
 #define UART8_CR3_EIE_bb					USARTx_CR3_EIE_bb(UART8)
 
-#endif /* SOURCE_CHIP_STM32_STM32F4_INCLUDE_DISTORTOS_CHIP_STM32F4_USART_BITS_H_ */
+#endif /* SOURCE_CHIP_STM32_PERIPHERALS_USARTV1_INCLUDE_DISTORTOS_CHIP_STM32_USARTV1_BITS_H_ */
