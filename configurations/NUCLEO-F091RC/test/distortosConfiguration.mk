@@ -208,6 +208,7 @@ CONFIG_CHIP_INCLUDES="source/chip/STM32/STM32F0/include source/chip/STM32/periph
 # CONFIG_CHIP_STM32_GPIOV2_HAS_HIGH_SPEED is not set
 # CONFIG_CHIP_STM32_GPIOV1 is not set
 CONFIG_CHIP_STM32_GPIOV2=y
+# CONFIG_CHIP_STM32_USARTV1 is not set
 
 #
 # Generic chip options
