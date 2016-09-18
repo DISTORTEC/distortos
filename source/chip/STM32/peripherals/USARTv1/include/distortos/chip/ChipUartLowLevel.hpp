@@ -1,6 +1,6 @@
 /**
  * \file
- * \brief ChipUartLowLevel class header for STM32F4
+ * \brief ChipUartLowLevel class header for USARTv1 in STM32
  *
  * \author Copyright (C) 2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
@@ -9,8 +9,8 @@
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#ifndef SOURCE_CHIP_STM32_STM32F4_INCLUDE_DISTORTOS_CHIP_CHIPUARTLOWLEVEL_HPP_
-#define SOURCE_CHIP_STM32_STM32F4_INCLUDE_DISTORTOS_CHIP_CHIPUARTLOWLEVEL_HPP_
+#ifndef SOURCE_CHIP_STM32_PERIPHERALS_USARTV1_INCLUDE_DISTORTOS_CHIP_CHIPUARTLOWLEVEL_HPP_
+#define SOURCE_CHIP_STM32_PERIPHERALS_USARTV1_INCLUDE_DISTORTOS_CHIP_CHIPUARTLOWLEVEL_HPP_
 
 #include "distortos/devices/communication/UartLowLevel.hpp"
 
@@ -22,7 +22,7 @@ namespace distortos
 namespace chip
 {
 
-/// ChipUartLowLevel class is a low-level UART driver for STM32F4
+/// ChipUartLowLevel class is a low-level UART driver for USARTv1 in STM32
 class ChipUartLowLevel : public devices::UartLowLevel
 {
 public:
@@ -277,4 +277,4 @@ private:
 
 }	// namespace distortos
 
-#endif	// SOURCE_CHIP_STM32_STM32F4_INCLUDE_DISTORTOS_CHIP_CHIPUARTLOWLEVEL_HPP_
+#endif	// SOURCE_CHIP_STM32_PERIPHERALS_USARTV1_INCLUDE_DISTORTOS_CHIP_CHIPUARTLOWLEVEL_HPP_
