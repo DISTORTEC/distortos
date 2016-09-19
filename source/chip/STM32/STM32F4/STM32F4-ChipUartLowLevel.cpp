@@ -13,7 +13,6 @@
 
 #include "distortos/chip/clocks.hpp"
 #include "distortos/chip/CMSIS-proxy.h"
-#include "distortos/chip/STM32F4-RCC-bits.h"
 #include "distortos/chip/STM32-USARTv1-bits.h"
 
 #include "distortos/devices/communication/UartBase.hpp"
@@ -28,6 +27,82 @@ namespace chip
 
 namespace
 {
+
+/*---------------------------------------------------------------------------------------------------------------------+
+| local objects
++---------------------------------------------------------------------------------------------------------------------*/
+
+#ifdef CONFIG_CHIP_HAS_USART1
+
+/// "enable" bit in RCC registers for USART1
+#define RCC_APB2ENR_USART1EN_bb				BITBAND(&RCC->APB2ENR, __builtin_ctzl(RCC_APB2ENR_USART1EN))
+/// "reset" bit in RCC registers for USART1
+#define RCC_APB2RSTR_USART1RST_bb			BITBAND(&RCC->APB2RSTR, __builtin_ctzl(RCC_APB2RSTR_USART1RST))
+
+#endif	// def CONFIG_CHIP_HAS_USART1
+
+#ifdef CONFIG_CHIP_HAS_USART2
+
+/// "enable" bit in RCC registers for USART2
+#define RCC_APB1ENR_USART2EN_bb				BITBAND(&RCC->APB1ENR, __builtin_ctzl(RCC_APB1ENR_USART2EN))
+/// "reset" bit in RCC registers for USART2
+#define RCC_APB1RSTR_USART2RST_bb			BITBAND(&RCC->APB1RSTR, __builtin_ctzl(RCC_APB1RSTR_USART2RST))
+
+#endif	// def CONFIG_CHIP_HAS_USART2
+
+#ifdef CONFIG_CHIP_HAS_USART3
+
+/// "enable" bit in RCC registers for USART3
+#define RCC_APB1ENR_USART3EN_bb				BITBAND(&RCC->APB1ENR, __builtin_ctzl(RCC_APB1ENR_USART3EN))
+/// "reset" bit in RCC registers for USART3
+#define RCC_APB1RSTR_USART3RST_bb			BITBAND(&RCC->APB1RSTR, __builtin_ctzl(RCC_APB1RSTR_USART3RST))
+
+#endif	// def CONFIG_CHIP_HAS_USART3
+
+#ifdef CONFIG_CHIP_HAS_UART4
+
+/// "enable" bit in RCC registers for UART4
+#define RCC_APB1ENR_UART4EN_bb				BITBAND(&RCC->APB1ENR, __builtin_ctzl(RCC_APB1ENR_UART4EN))
+/// "reset" bit in RCC registers for UART4
+#define RCC_APB1RSTR_UART4RST_bb			BITBAND(&RCC->APB1RSTR, __builtin_ctzl(RCC_APB1RSTR_UART4RST))
+
+#endif	// def CONFIG_CHIP_HAS_UART4
+
+#ifdef CONFIG_CHIP_HAS_UART5
+
+/// "enable" bit in RCC registers for UART5
+#define RCC_APB1ENR_UART5EN_bb				BITBAND(&RCC->APB1ENR, __builtin_ctzl(RCC_APB1ENR_UART5EN))
+/// "reset" bit in RCC registers for UART5
+#define RCC_APB1RSTR_UART5RST_bb			BITBAND(&RCC->APB1RSTR, __builtin_ctzl(RCC_APB1RSTR_UART5RST))
+
+#endif	// def CONFIG_CHIP_HAS_UART5
+
+#ifdef CONFIG_CHIP_HAS_USART6
+
+/// "enable" bit in RCC registers for USART6
+#define RCC_APB2ENR_USART6EN_bb				BITBAND(&RCC->APB2ENR, __builtin_ctzl(RCC_APB2ENR_USART6EN))
+/// "reset" bit in RCC registers for USART6
+#define RCC_APB2RSTR_USART6RST_bb			BITBAND(&RCC->APB2RSTR, __builtin_ctzl(RCC_APB2RSTR_USART6RST))
+
+#endif	// def CONFIG_CHIP_HAS_USART6
+
+#ifdef CONFIG_CHIP_HAS_UART7
+
+/// "enable" bit in RCC registers for UART7
+#define RCC_APB1ENR_UART7EN_bb				BITBAND(&RCC->APB1ENR, __builtin_ctzl(RCC_APB1ENR_UART7EN))
+/// "reset" bit in RCC registers for UART7
+#define RCC_APB1RSTR_UART7RST_bb			BITBAND(&RCC->APB1RSTR, __builtin_ctzl(RCC_APB1RSTR_UART7RST))
+
+#endif	// def CONFIG_CHIP_HAS_UART7
+
+#ifdef CONFIG_CHIP_HAS_UART8
+
+/// "enable" bit in RCC registers for UART8
+#define RCC_APB1ENR_UART8EN_bb				BITBAND(&RCC->APB1ENR, __builtin_ctzl(RCC_APB1ENR_UART8EN))
+/// "reset" bit in RCC registers for UART8
+#define RCC_APB1RSTR_UART8RST_bb			BITBAND(&RCC->APB1RSTR, __builtin_ctzl(RCC_APB1RSTR_UART8RST))
+
+#endif	// def CONFIG_CHIP_HAS_UART8
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | local functions
