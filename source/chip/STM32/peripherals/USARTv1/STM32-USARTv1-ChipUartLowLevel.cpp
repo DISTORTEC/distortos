@@ -1,6 +1,6 @@
 /**
  * \file
- * \brief ChipUartLowLevel class implementation for STM32F4
+ * \brief ChipUartLowLevel class implementation for USARTv1 in STM32
  *
  * \author Copyright (C) 2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
