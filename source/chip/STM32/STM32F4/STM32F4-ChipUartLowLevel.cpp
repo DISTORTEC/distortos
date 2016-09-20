@@ -135,10 +135,23 @@ devices::UartBase::ErrorSet decodeErrors(const uint32_t sr)
 /// parameters for construction of UART low-level drivers
 class ChipUartLowLevel::Parameters
 {
-public:
+	/// base address of APB1 peripherals
+	constexpr static const void* apb1PeripheralsBaseAddress {reinterpret_cast<const void*>(APB1PERIPH_BASE)};
+	/// base address of APB2 peripherals
+	constexpr static const void* apb2PeripheralsBaseAddress {reinterpret_cast<const void*>(APB2PERIPH_BASE)};
+	/// base address of AHB peripherals
+#if defined(AHBPERIPH_BASE)
+	constexpr static const void* ahbPeripheralsBaseAddress {reinterpret_cast<const void*>(AHBPERIPH_BASE)};
+#elif defined(AHB1PERIPH_BASE)
+	constexpr static const void* ahbPeripheralsBaseAddress {reinterpret_cast<const void*>(AHB1PERIPH_BASE)};
+#else
+	#error "Unknown base address of AHB peripherals!"
+#endif
 
-	static_assert(APB1PERIPH_BASE < APB2PERIPH_BASE && APB2PERIPH_BASE < AHB1PERIPH_BASE,
-				"Invalid order of APB1, APB2 and AHB!");
+	static_assert(apb1PeripheralsBaseAddress < apb2PeripheralsBaseAddress &&
+			apb2PeripheralsBaseAddress < ahbPeripheralsBaseAddress, "Invalid order of APB1, APB2 and AHB!");
+
+public:
 
 	/**
 	 * \brief Parameters's constructor
@@ -159,8 +172,8 @@ public:
 			volatile unsigned long* txeieBb, volatile unsigned long* rccEnBb, volatile unsigned long* rccRstBb,
 			const IRQn_Type irqNumber) :
 					uart_{uart},
-					peripheralFrequency_{reinterpret_cast<uint32_t>(uart) < APB2PERIPH_BASE ? apb1Frequency :
-							reinterpret_cast<uint32_t>(uart) < AHB1PERIPH_BASE ? apb2Frequency : ahbFrequency},
+					peripheralFrequency_{uart < apb2PeripheralsBaseAddress ? apb1Frequency :
+							uart < ahbPeripheralsBaseAddress ? apb2Frequency : ahbFrequency},
 					rxneieBb_{rxneieBb},
 					tcieBb_{tcieBb},
 					txeieBb_{txeieBb},
