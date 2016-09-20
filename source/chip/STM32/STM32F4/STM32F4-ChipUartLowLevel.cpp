@@ -425,7 +425,11 @@ std::pair<int, uint32_t> ChipUartLowLevel::start(devices::UartBase& uartBase, co
 
 	const auto peripheralFrequency = parameters_.getPeripheralFrequency();
 	const auto divider = (peripheralFrequency + baudRate / 2) / baudRate;
+#ifdef CONFIG_CHIP_STM32_USARTV1_HAS_CR1_OVER8_BIT
 	const auto over8 = divider < 16;
+#else	// !def CONFIG_CHIP_STM32_USARTV1_HAS_CR1_OVER8_BIT
+	constexpr bool over8 {false};
+#endif	// !def CONFIG_CHIP_STM32_USARTV1_HAS_CR1_OVER8_BIT
 	const auto mantissa = divider / (over8 == false ? 16 : 8);
 	const auto fraction = divider % (over8 == false ? 16 : 8);
 
