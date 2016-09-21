@@ -616,7 +616,7 @@ endmenu
 
 config CHIP_HAS_SPI1
 	bool
-	default y
+	default n
 
 config CHIP_HAS_SPI2
 	bool
@@ -640,11 +640,11 @@ config CHIP_HAS_SPI6
 
 config CHIP_HAS_USART1
 	bool
-	default y
+	default n
 
 config CHIP_HAS_USART2
 	bool
-	default y
+	default n
 
 config CHIP_HAS_USART3
 	bool
@@ -660,7 +660,7 @@ config CHIP_HAS_UART5
 
 config CHIP_HAS_USART6
 	bool
-	default y
+	default n
 
 config CHIP_HAS_UART7
 	bool
