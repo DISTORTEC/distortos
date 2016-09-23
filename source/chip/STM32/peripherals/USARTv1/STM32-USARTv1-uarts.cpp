@@ -1,6 +1,6 @@
 /**
  * \file
- * \brief Definitions of low-level UART drivers for STM32F4
+ * \brief Definitions of low-level UART drivers for USARTv1 in STM32
  *
  * \author Copyright (C) 2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
