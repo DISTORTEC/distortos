@@ -35,61 +35,61 @@ public:
 
 	class Parameters;
 
-#ifdef CONFIG_CHIP_HAS_USART1
+#ifdef CONFIG_CHIP_STM32_USARTV1_HAS_USART1
 
 	/// parameters for construction of UART low-level driver for USART1
 	static const Parameters usart1parameters;
 
-#endif	// def CONFIG_CHIP_HAS_USART1
+#endif	// def CONFIG_CHIP_STM32_USARTV1_HAS_USART1
 
-#ifdef CONFIG_CHIP_HAS_USART2
+#ifdef CONFIG_CHIP_STM32_USARTV1_HAS_USART2
 
 	/// parameters for construction of UART low-level driver for USART2
 	static const Parameters usart2parameters;
 
-#endif	// def CONFIG_CHIP_HAS_USART2
+#endif	// def CONFIG_CHIP_STM32_USARTV1_HAS_USART2
 
-#ifdef CONFIG_CHIP_HAS_USART3
+#ifdef CONFIG_CHIP_STM32_USARTV1_HAS_USART3
 
 	/// parameters for construction of UART low-level driver for USART3
 	static const Parameters usart3parameters;
 
-#endif	// def CONFIG_CHIP_HAS_USART3
+#endif	// def CONFIG_CHIP_STM32_USARTV1_HAS_USART3
 
-#ifdef CONFIG_CHIP_HAS_UART4
+#ifdef CONFIG_CHIP_STM32_USARTV1_HAS_UART4
 
 	/// parameters for construction of UART low-level driver for UART4
 	static const Parameters uart4parameters;
 
-#endif	// def CONFIG_CHIP_HAS_UART4
+#endif	// def CONFIG_CHIP_STM32_USARTV1_HAS_UART4
 
-#ifdef CONFIG_CHIP_HAS_UART5
+#ifdef CONFIG_CHIP_STM32_USARTV1_HAS_UART5
 
 	/// parameters for construction of UART low-level driver for UART5
 	static const Parameters uart5parameters;
 
-#endif	// def CONFIG_CHIP_HAS_UART5
+#endif	// def CONFIG_CHIP_STM32_USARTV1_HAS_UART5
 
-#ifdef CONFIG_CHIP_HAS_USART6
+#ifdef CONFIG_CHIP_STM32_USARTV1_HAS_USART6
 
 	/// parameters for construction of UART low-level driver for USART6
 	static const Parameters usart6parameters;
 
-#endif	// def CONFIG_CHIP_HAS_USART6
+#endif	// def CONFIG_CHIP_STM32_USARTV1_HAS_USART6
 
-#ifdef CONFIG_CHIP_HAS_UART7
+#ifdef CONFIG_CHIP_STM32_USARTV1_HAS_UART7
 
 	/// parameters for construction of UART low-level driver for UART7
 	static const Parameters uart7parameters;
 
-#endif	// def CONFIG_CHIP_HAS_UART7
+#endif	// def CONFIG_CHIP_STM32_USARTV1_HAS_UART7
 
-#ifdef CONFIG_CHIP_HAS_UART8
+#ifdef CONFIG_CHIP_STM32_USARTV1_HAS_UART8
 
 	/// parameters for construction of UART low-level driver for UART8
 	static const Parameters uart8parameters;
 
-#endif	// def CONFIG_CHIP_HAS_UART8
+#endif	// def CONFIG_CHIP_STM32_USARTV1_HAS_UART8
 
 	/**
 	 * \brief ChipUartLowLevel's constructor

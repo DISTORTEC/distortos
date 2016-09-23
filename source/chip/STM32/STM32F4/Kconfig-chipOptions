@@ -559,56 +559,56 @@ config CHIP_SPI6_ENABLE
 config CHIP_USART1_ENABLE
 	bool "USART1 low-level driver"
 	default n
-	depends on CHIP_HAS_USART1
+	depends on CHIP_STM32_USARTV1_HAS_USART1
 	help
 		Enable USART1 low-level driver
 
 config CHIP_USART2_ENABLE
 	bool "USART2 low-level driver"
 	default n
-	depends on CHIP_HAS_USART2
+	depends on CHIP_STM32_USARTV1_HAS_USART2
 	help
 		Enable USART2 low-level driver
 
 config CHIP_USART3_ENABLE
 	bool "USART3 low-level driver"
 	default n
-	depends on CHIP_HAS_USART3
+	depends on CHIP_STM32_USARTV1_HAS_USART3
 	help
 		Enable USART3 low-level driver
 
 config CHIP_UART4_ENABLE
 	bool "UART4 low-level driver"
 	default n
-	depends on CHIP_HAS_UART4
+	depends on CHIP_STM32_USARTV1_HAS_UART4
 	help
 		Enable UART4 low-level driver
 
 config CHIP_UART5_ENABLE
 	bool "UART5 low-level driver"
 	default n
-	depends on CHIP_HAS_UART5
+	depends on CHIP_STM32_USARTV1_HAS_UART5
 	help
 		Enable UART5 low-level driver
 
 config CHIP_USART6_ENABLE
 	bool "USART6 low-level driver"
 	default n
-	depends on CHIP_HAS_USART6
+	depends on CHIP_STM32_USARTV1_HAS_USART6
 	help
 		Enable USART6 low-level driver
 
 config CHIP_UART7_ENABLE
 	bool "UART7 low-level driver"
 	default n
-	depends on CHIP_HAS_UART7
+	depends on CHIP_STM32_USARTV1_HAS_UART7
 	help
 		Enable UART7 low-level driver
 
 config CHIP_UART8_ENABLE
 	bool "UART8 low-level driver"
 	default n
-	depends on CHIP_HAS_UART8
+	depends on CHIP_STM32_USARTV1_HAS_UART8
 	help
 		Enable UART8 low-level driver
 
@@ -638,35 +638,35 @@ config CHIP_HAS_SPI6
 	bool
 	default n
 
-config CHIP_HAS_USART1
+config CHIP_STM32_USARTV1_HAS_USART1
 	bool
 	default n
 
-config CHIP_HAS_USART2
+config CHIP_STM32_USARTV1_HAS_USART2
 	bool
 	default n
 
-config CHIP_HAS_USART3
+config CHIP_STM32_USARTV1_HAS_USART3
 	bool
 	default n
 
-config CHIP_HAS_UART4
+config CHIP_STM32_USARTV1_HAS_UART4
 	bool
 	default n
 
-config CHIP_HAS_UART5
+config CHIP_STM32_USARTV1_HAS_UART5
 	bool
 	default n
 
-config CHIP_HAS_USART6
+config CHIP_STM32_USARTV1_HAS_USART6
 	bool
 	default n
 
-config CHIP_HAS_UART7
+config CHIP_STM32_USARTV1_HAS_UART7
 	bool
 	default n
 
-config CHIP_HAS_UART8
+config CHIP_STM32_USARTV1_HAS_UART8
 	bool
 	default n
 
@@ -766,9 +766,9 @@ config CHIP_STM32F405
 	bool
 	default n
 	select CHIP_STM32F40
-	select CHIP_HAS_USART3
-	select CHIP_HAS_UART4
-	select CHIP_HAS_UART5
+	select CHIP_STM32_USARTV1_HAS_USART3
+	select CHIP_STM32_USARTV1_HAS_UART4
+	select CHIP_STM32_USARTV1_HAS_UART5
 
 config CHIP_STM32F405O
 	bool
@@ -823,9 +823,9 @@ config CHIP_STM32F407
 	bool
 	default n
 	select CHIP_STM32F40
-	select CHIP_HAS_USART3
-	select CHIP_HAS_UART4
-	select CHIP_HAS_UART5
+	select CHIP_STM32_USARTV1_HAS_USART3
+	select CHIP_STM32_USARTV1_HAS_UART4
+	select CHIP_STM32_USARTV1_HAS_UART5
 
 config CHIP_STM32F407I
 	bool
@@ -1024,7 +1024,7 @@ config CHIP_STM32F412R
 	select CHIP_STM32F412
 	select CHIP_HAS_LQFP64
 	select CHIP_HAS_WLCSP64
-	select CHIP_HAS_USART3
+	select CHIP_STM32_USARTV1_HAS_USART3
 
 config CHIP_STM32F412RG
 	bool
@@ -1037,7 +1037,7 @@ config CHIP_STM32F412V
 	select CHIP_STM32F412
 	select CHIP_HAS_LQFP100
 	select CHIP_HAS_UFBGA100
-	select CHIP_HAS_USART3
+	select CHIP_STM32_USARTV1_HAS_USART3
 
 config CHIP_STM32F412VG
 	bool
@@ -1050,7 +1050,7 @@ config CHIP_STM32F412Z
 	select CHIP_STM32F412
 	select CHIP_HAS_LQFP144
 	select CHIP_HAS_UFBGA144
-	select CHIP_HAS_USART3
+	select CHIP_STM32_USARTV1_HAS_USART3
 
 config CHIP_STM32F412ZG
 	bool
@@ -1063,9 +1063,9 @@ config CHIP_STM32F415
 	select CHIP_STM32F41
 	select CHIP_HAS_SPI2
 	select CHIP_HAS_SPI3
-	select CHIP_HAS_USART3
-	select CHIP_HAS_UART4
-	select CHIP_HAS_UART5
+	select CHIP_STM32_USARTV1_HAS_USART3
+	select CHIP_STM32_USARTV1_HAS_UART4
+	select CHIP_STM32_USARTV1_HAS_UART5
 
 config CHIP_STM32F415O
 	bool
@@ -1117,9 +1117,9 @@ config CHIP_STM32F417
 	select CHIP_STM32F41
 	select CHIP_HAS_SPI2
 	select CHIP_HAS_SPI3
-	select CHIP_HAS_USART3
-	select CHIP_HAS_UART4
-	select CHIP_HAS_UART5
+	select CHIP_STM32_USARTV1_HAS_USART3
+	select CHIP_STM32_USARTV1_HAS_UART4
+	select CHIP_STM32_USARTV1_HAS_UART5
 
 config CHIP_STM32F417I
 	bool
@@ -1178,11 +1178,11 @@ config CHIP_STM32F42
 	select CHIP_HAS_SPI4
 	select CHIP_HAS_SPI5
 	select CHIP_HAS_SPI6
-	select CHIP_HAS_USART3
-	select CHIP_HAS_UART4
-	select CHIP_HAS_UART5
-	select CHIP_HAS_UART7
-	select CHIP_HAS_UART8
+	select CHIP_STM32_USARTV1_HAS_USART3
+	select CHIP_STM32_USARTV1_HAS_UART4
+	select CHIP_STM32_USARTV1_HAS_UART5
+	select CHIP_STM32_USARTV1_HAS_UART7
+	select CHIP_STM32_USARTV1_HAS_UART8
 
 config CHIP_STM32F427
 	bool
@@ -1390,11 +1390,11 @@ config CHIP_STM32F43
 	select CHIP_HAS_SPI4
 	select CHIP_HAS_SPI5
 	select CHIP_HAS_SPI6
-	select CHIP_HAS_USART3
-	select CHIP_HAS_UART4
-	select CHIP_HAS_UART5
-	select CHIP_HAS_UART7
-	select CHIP_HAS_UART8
+	select CHIP_STM32_USARTV1_HAS_USART3
+	select CHIP_STM32_USARTV1_HAS_UART4
+	select CHIP_STM32_USARTV1_HAS_UART5
+	select CHIP_STM32_USARTV1_HAS_UART7
+	select CHIP_STM32_USARTV1_HAS_UART8
 
 config CHIP_STM32F437
 	bool
@@ -1570,9 +1570,9 @@ config CHIP_STM32F446
 	select CHIP_HAS_SPI2
 	select CHIP_HAS_SPI3
 	select CHIP_HAS_SPI4
-	select CHIP_HAS_USART3
-	select CHIP_HAS_UART4
-	select CHIP_HAS_UART5
+	select CHIP_STM32_USARTV1_HAS_USART3
+	select CHIP_STM32_USARTV1_HAS_UART4
+	select CHIP_STM32_USARTV1_HAS_UART5
 
 config CHIP_STM32F446M
 	bool
@@ -1647,11 +1647,11 @@ config CHIP_STM32F46
 	select CHIP_HAS_SPI4
 	select CHIP_HAS_SPI5
 	select CHIP_HAS_SPI6
-	select CHIP_HAS_USART3
-	select CHIP_HAS_UART4
-	select CHIP_HAS_UART5
-	select CHIP_HAS_UART7
-	select CHIP_HAS_UART8
+	select CHIP_STM32_USARTV1_HAS_USART3
+	select CHIP_STM32_USARTV1_HAS_UART4
+	select CHIP_STM32_USARTV1_HAS_UART5
+	select CHIP_STM32_USARTV1_HAS_UART7
+	select CHIP_STM32_USARTV1_HAS_UART8
 
 config CHIP_STM32F469
 	bool
@@ -1753,11 +1753,11 @@ config CHIP_STM32F47
 	select CHIP_HAS_SPI4
 	select CHIP_HAS_SPI5
 	select CHIP_HAS_SPI6
-	select CHIP_HAS_USART3
-	select CHIP_HAS_UART4
-	select CHIP_HAS_UART5
-	select CHIP_HAS_UART7
-	select CHIP_HAS_UART8
+	select CHIP_STM32_USARTV1_HAS_USART3
+	select CHIP_STM32_USARTV1_HAS_UART4
+	select CHIP_STM32_USARTV1_HAS_UART5
+	select CHIP_STM32_USARTV1_HAS_UART7
+	select CHIP_STM32_USARTV1_HAS_UART8
 
 config CHIP_STM32F479
 	bool

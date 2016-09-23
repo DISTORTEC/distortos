@@ -32,77 +32,77 @@ namespace
 | local objects
 +---------------------------------------------------------------------------------------------------------------------*/
 
-#ifdef CONFIG_CHIP_HAS_USART1
+#ifdef CONFIG_CHIP_STM32_USARTV1_HAS_USART1
 
 /// "enable" bit in RCC registers for USART1
 #define RCC_APB2ENR_USART1EN_bb				BITBAND(&RCC->APB2ENR, __builtin_ctzl(RCC_APB2ENR_USART1EN))
 /// "reset" bit in RCC registers for USART1
 #define RCC_APB2RSTR_USART1RST_bb			BITBAND(&RCC->APB2RSTR, __builtin_ctzl(RCC_APB2RSTR_USART1RST))
 
-#endif	// def CONFIG_CHIP_HAS_USART1
+#endif	// def CONFIG_CHIP_STM32_USARTV1_HAS_USART1
 
-#ifdef CONFIG_CHIP_HAS_USART2
+#ifdef CONFIG_CHIP_STM32_USARTV1_HAS_USART2
 
 /// "enable" bit in RCC registers for USART2
 #define RCC_APB1ENR_USART2EN_bb				BITBAND(&RCC->APB1ENR, __builtin_ctzl(RCC_APB1ENR_USART2EN))
 /// "reset" bit in RCC registers for USART2
 #define RCC_APB1RSTR_USART2RST_bb			BITBAND(&RCC->APB1RSTR, __builtin_ctzl(RCC_APB1RSTR_USART2RST))
 
-#endif	// def CONFIG_CHIP_HAS_USART2
+#endif	// def CONFIG_CHIP_STM32_USARTV1_HAS_USART2
 
-#ifdef CONFIG_CHIP_HAS_USART3
+#ifdef CONFIG_CHIP_STM32_USARTV1_HAS_USART3
 
 /// "enable" bit in RCC registers for USART3
 #define RCC_APB1ENR_USART3EN_bb				BITBAND(&RCC->APB1ENR, __builtin_ctzl(RCC_APB1ENR_USART3EN))
 /// "reset" bit in RCC registers for USART3
 #define RCC_APB1RSTR_USART3RST_bb			BITBAND(&RCC->APB1RSTR, __builtin_ctzl(RCC_APB1RSTR_USART3RST))
 
-#endif	// def CONFIG_CHIP_HAS_USART3
+#endif	// def CONFIG_CHIP_STM32_USARTV1_HAS_USART3
 
-#ifdef CONFIG_CHIP_HAS_UART4
+#ifdef CONFIG_CHIP_STM32_USARTV1_HAS_UART4
 
 /// "enable" bit in RCC registers for UART4
 #define RCC_APB1ENR_UART4EN_bb				BITBAND(&RCC->APB1ENR, __builtin_ctzl(RCC_APB1ENR_UART4EN))
 /// "reset" bit in RCC registers for UART4
 #define RCC_APB1RSTR_UART4RST_bb			BITBAND(&RCC->APB1RSTR, __builtin_ctzl(RCC_APB1RSTR_UART4RST))
 
-#endif	// def CONFIG_CHIP_HAS_UART4
+#endif	// def CONFIG_CHIP_STM32_USARTV1_HAS_UART4
 
-#ifdef CONFIG_CHIP_HAS_UART5
+#ifdef CONFIG_CHIP_STM32_USARTV1_HAS_UART5
 
 /// "enable" bit in RCC registers for UART5
 #define RCC_APB1ENR_UART5EN_bb				BITBAND(&RCC->APB1ENR, __builtin_ctzl(RCC_APB1ENR_UART5EN))
 /// "reset" bit in RCC registers for UART5
 #define RCC_APB1RSTR_UART5RST_bb			BITBAND(&RCC->APB1RSTR, __builtin_ctzl(RCC_APB1RSTR_UART5RST))
 
-#endif	// def CONFIG_CHIP_HAS_UART5
+#endif	// def CONFIG_CHIP_STM32_USARTV1_HAS_UART5
 
-#ifdef CONFIG_CHIP_HAS_USART6
+#ifdef CONFIG_CHIP_STM32_USARTV1_HAS_USART6
 
 /// "enable" bit in RCC registers for USART6
 #define RCC_APB2ENR_USART6EN_bb				BITBAND(&RCC->APB2ENR, __builtin_ctzl(RCC_APB2ENR_USART6EN))
 /// "reset" bit in RCC registers for USART6
 #define RCC_APB2RSTR_USART6RST_bb			BITBAND(&RCC->APB2RSTR, __builtin_ctzl(RCC_APB2RSTR_USART6RST))
 
-#endif	// def CONFIG_CHIP_HAS_USART6
+#endif	// def CONFIG_CHIP_STM32_USARTV1_HAS_USART6
 
-#ifdef CONFIG_CHIP_HAS_UART7
+#ifdef CONFIG_CHIP_STM32_USARTV1_HAS_UART7
 
 /// "enable" bit in RCC registers for UART7
 #define RCC_APB1ENR_UART7EN_bb				BITBAND(&RCC->APB1ENR, __builtin_ctzl(RCC_APB1ENR_UART7EN))
 /// "reset" bit in RCC registers for UART7
 #define RCC_APB1RSTR_UART7RST_bb			BITBAND(&RCC->APB1RSTR, __builtin_ctzl(RCC_APB1RSTR_UART7RST))
 
-#endif	// def CONFIG_CHIP_HAS_UART7
+#endif	// def CONFIG_CHIP_STM32_USARTV1_HAS_UART7
 
-#ifdef CONFIG_CHIP_HAS_UART8
+#ifdef CONFIG_CHIP_STM32_USARTV1_HAS_UART8
 
 /// "enable" bit in RCC registers for UART8
 #define RCC_APB1ENR_UART8EN_bb				BITBAND(&RCC->APB1ENR, __builtin_ctzl(RCC_APB1ENR_UART8EN))
 /// "reset" bit in RCC registers for UART8
 #define RCC_APB1RSTR_UART8RST_bb			BITBAND(&RCC->APB1RSTR, __builtin_ctzl(RCC_APB1RSTR_UART8RST))
 
-#endif	// def CONFIG_CHIP_HAS_UART8
+#endif	// def CONFIG_CHIP_STM32_USARTV1_HAS_UART8
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | local functions
@@ -318,61 +318,61 @@ private:
 | public static objects
 +---------------------------------------------------------------------------------------------------------------------*/
 
-#ifdef CONFIG_CHIP_HAS_USART1
+#ifdef CONFIG_CHIP_STM32_USARTV1_HAS_USART1
 
 const ChipUartLowLevel::Parameters ChipUartLowLevel::usart1parameters {USART1, &USART1_CR1_RXNEIE_bb,
 		&USART1_CR1_TCIE_bb, &USART1_CR1_TXEIE_bb, &RCC_APB2ENR_USART1EN_bb, &RCC_APB2RSTR_USART1RST_bb, USART1_IRQn};
 
-#endif	// def CONFIG_CHIP_HAS_USART1
+#endif	// def CONFIG_CHIP_STM32_USARTV1_HAS_USART1
 
-#ifdef CONFIG_CHIP_HAS_USART2
+#ifdef CONFIG_CHIP_STM32_USARTV1_HAS_USART2
 
 const ChipUartLowLevel::Parameters ChipUartLowLevel::usart2parameters {USART2, &USART2_CR1_RXNEIE_bb,
 		&USART2_CR1_TCIE_bb, &USART2_CR1_TXEIE_bb, &RCC_APB1ENR_USART2EN_bb, &RCC_APB1RSTR_USART2RST_bb, USART2_IRQn};
 
-#endif	// def CONFIG_CHIP_HAS_USART2
+#endif	// def CONFIG_CHIP_STM32_USARTV1_HAS_USART2
 
-#ifdef CONFIG_CHIP_HAS_USART3
+#ifdef CONFIG_CHIP_STM32_USARTV1_HAS_USART3
 
 const ChipUartLowLevel::Parameters ChipUartLowLevel::usart3parameters {USART3, &USART3_CR1_RXNEIE_bb,
 		&USART3_CR1_TCIE_bb, &USART3_CR1_TXEIE_bb, &RCC_APB1ENR_USART3EN_bb, &RCC_APB1RSTR_USART3RST_bb, USART3_IRQn};
 
-#endif	// def CONFIG_CHIP_HAS_USART3
+#endif	// def CONFIG_CHIP_STM32_USARTV1_HAS_USART3
 
-#ifdef CONFIG_CHIP_HAS_UART4
+#ifdef CONFIG_CHIP_STM32_USARTV1_HAS_UART4
 
 const ChipUartLowLevel::Parameters ChipUartLowLevel::uart4parameters {UART4, &UART4_CR1_RXNEIE_bb,
 		&UART4_CR1_TCIE_bb, &UART4_CR1_TXEIE_bb, &RCC_APB1ENR_UART4EN_bb, &RCC_APB1RSTR_UART4RST_bb, UART4_IRQn};
 
-#endif	// def CONFIG_CHIP_HAS_UART4
+#endif	// def CONFIG_CHIP_STM32_USARTV1_HAS_UART4
 
-#ifdef CONFIG_CHIP_HAS_UART5
+#ifdef CONFIG_CHIP_STM32_USARTV1_HAS_UART5
 
 const ChipUartLowLevel::Parameters ChipUartLowLevel::uart5parameters {UART5, &UART5_CR1_RXNEIE_bb,
 		&UART5_CR1_TCIE_bb, &UART5_CR1_TXEIE_bb, &RCC_APB1ENR_UART5EN_bb, &RCC_APB1RSTR_UART5RST_bb, UART5_IRQn};
 
-#endif	// def CONFIG_CHIP_HAS_UART5
+#endif	// def CONFIG_CHIP_STM32_USARTV1_HAS_UART5
 
-#ifdef CONFIG_CHIP_HAS_USART6
+#ifdef CONFIG_CHIP_STM32_USARTV1_HAS_USART6
 
 const ChipUartLowLevel::Parameters ChipUartLowLevel::usart6parameters {USART6, &USART6_CR1_RXNEIE_bb,
 		&USART6_CR1_TCIE_bb, &USART6_CR1_TXEIE_bb, &RCC_APB2ENR_USART6EN_bb, &RCC_APB2RSTR_USART6RST_bb, USART6_IRQn};
 
-#endif	// def CONFIG_CHIP_HAS_USART6
+#endif	// def CONFIG_CHIP_STM32_USARTV1_HAS_USART6
 
-#ifdef CONFIG_CHIP_HAS_UART7
+#ifdef CONFIG_CHIP_STM32_USARTV1_HAS_UART7
 
 const ChipUartLowLevel::Parameters ChipUartLowLevel::uart7parameters {UART7, &UART7_CR1_RXNEIE_bb,
 		&UART7_CR1_TCIE_bb, &UART7_CR1_TXEIE_bb, &RCC_APB1ENR_UART7EN_bb, &RCC_APB1RSTR_UART7RST_bb, UART7_IRQn};
 
-#endif	// def CONFIG_CHIP_HAS_UART7
+#endif	// def CONFIG_CHIP_STM32_USARTV1_HAS_UART7
 
-#ifdef CONFIG_CHIP_HAS_UART8
+#ifdef CONFIG_CHIP_STM32_USARTV1_HAS_UART8
 
 const ChipUartLowLevel::Parameters ChipUartLowLevel::uart8parameters {UART8, &UART8_CR1_RXNEIE_bb,
 		&UART8_CR1_TCIE_bb, &UART8_CR1_TXEIE_bb, &RCC_APB1ENR_UART8EN_bb, &RCC_APB1RSTR_UART8RST_bb, UART8_IRQn};
 
-#endif	// def CONFIG_CHIP_HAS_UART8
+#endif	// def CONFIG_CHIP_STM32_USARTV1_HAS_UART8
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | public functions
