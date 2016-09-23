@@ -1,6 +1,6 @@
 /**
  * \file
- * \brief Header with definition of bits in SPI control registers
+ * \brief Header with definition of bits in STM32 SPIv1 control registers
  *
  * \author Copyright (C) 2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
@@ -9,8 +9,8 @@
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#ifndef SOURCE_CHIP_STM32_STM32F4_INCLUDE_DISTORTOS_CHIP_STM32F4_SPI_BITS_H_
-#define SOURCE_CHIP_STM32_STM32F4_INCLUDE_DISTORTOS_CHIP_STM32F4_SPI_BITS_H_
+#ifndef SOURCE_CHIP_STM32_PERIPHERALS_SPIV1_INCLUDE_DISTORTOS_CHIP_STM32_SPIV1_BITS_H_
+#define SOURCE_CHIP_STM32_PERIPHERALS_SPIV1_INCLUDE_DISTORTOS_CHIP_STM32_SPIV1_BITS_H_
 
 #include "distortos/architecture/ARMv7-M-bit-banding.h"
 
@@ -570,4 +570,4 @@
 #define SPI6_I2SPR_I2SDIV_6_bb				SPIx_I2SPR_I2SDIV_6_bb(SPI6)
 #define SPI6_I2SPR_I2SDIV_7_bb				SPIx_I2SPR_I2SDIV_7_bb(SPI6)
 
-#endif /* SOURCE_CHIP_STM32_STM32F4_INCLUDE_DISTORTOS_CHIP_STM32F4_SPI_BITS_H_ */
+#endif /* SOURCE_CHIP_STM32_PERIPHERALS_SPIV1_INCLUDE_DISTORTOS_CHIP_STM32_SPIV1_BITS_H_ */

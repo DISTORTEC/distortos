@@ -14,7 +14,7 @@
 #include "distortos/chip/clocks.hpp"
 #include "distortos/chip/CMSIS-proxy.h"
 #include "distortos/chip/STM32F4-RCC-bits.h"
-#include "distortos/chip/STM32F4-SPI-bits.h"
+#include "distortos/chip/STM32-SPIv1-bits.h"
 
 #include <cerrno>
 
