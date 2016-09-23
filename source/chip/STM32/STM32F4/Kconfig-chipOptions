@@ -536,38 +536,6 @@ config CHIP_HAS_SPI6
 	bool
 	default n
 
-config CHIP_STM32_USARTV1_HAS_USART1
-	bool
-	default n
-
-config CHIP_STM32_USARTV1_HAS_USART2
-	bool
-	default n
-
-config CHIP_STM32_USARTV1_HAS_USART3
-	bool
-	default n
-
-config CHIP_STM32_USARTV1_HAS_UART4
-	bool
-	default n
-
-config CHIP_STM32_USARTV1_HAS_UART5
-	bool
-	default n
-
-config CHIP_STM32_USARTV1_HAS_USART6
-	bool
-	default n
-
-config CHIP_STM32_USARTV1_HAS_UART7
-	bool
-	default n
-
-config CHIP_STM32_USARTV1_HAS_UART8
-	bool
-	default n
-
 config CHIP_STM32F40
 	bool
 	default n
