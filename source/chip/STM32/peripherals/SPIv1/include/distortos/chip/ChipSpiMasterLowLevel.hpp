@@ -1,6 +1,6 @@
 /**
  * \file
- * \brief ChipSpiMasterLowLevel class header for STM32F4
+ * \brief ChipSpiMasterLowLevel class header for SPIv1 in STM32
  *
  * \author Copyright (C) 2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
@@ -9,8 +9,8 @@
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#ifndef SOURCE_CHIP_STM32_STM32F4_INCLUDE_DISTORTOS_CHIP_CHIPSPIMASTERLOWLEVEL_HPP_
-#define SOURCE_CHIP_STM32_STM32F4_INCLUDE_DISTORTOS_CHIP_CHIPSPIMASTERLOWLEVEL_HPP_
+#ifndef SOURCE_CHIP_STM32_PERIPHERALS_SPIV1_INCLUDE_DISTORTOS_CHIP_CHIPSPIMASTERLOWLEVEL_HPP_
+#define SOURCE_CHIP_STM32_PERIPHERALS_SPIV1_INCLUDE_DISTORTOS_CHIP_CHIPSPIMASTERLOWLEVEL_HPP_
 
 #include "distortos/devices/communication/SpiMasterBase.hpp"
 #include "distortos/devices/communication/SpiMasterErrorSet.hpp"
@@ -24,7 +24,7 @@ namespace distortos
 namespace chip
 {
 
-/// ChipSpiMasterLowLevel class is a low-level SPI master driver for STM32F4
+/// ChipSpiMasterLowLevel class is a low-level SPI master driver for SPIv1 in STM32
 class ChipSpiMasterLowLevel : public devices::SpiMasterLowLevel
 {
 public:
@@ -226,4 +226,4 @@ private:
 
 }	// namespace distortos
 
-#endif	// SOURCE_CHIP_STM32_STM32F4_INCLUDE_DISTORTOS_CHIP_CHIPSPIMASTERLOWLEVEL_HPP_
+#endif	// SOURCE_CHIP_STM32_PERIPHERALS_SPIV1_INCLUDE_DISTORTOS_CHIP_CHIPSPIMASTERLOWLEVEL_HPP_
