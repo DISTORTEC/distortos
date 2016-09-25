@@ -241,53 +241,53 @@ private:
 | public static objects
 +---------------------------------------------------------------------------------------------------------------------*/
 
-#ifdef CONFIG_CHIP_HAS_SPI1
+#ifdef CONFIG_CHIP_STM32_SPIV1_HAS_SPI1
 
 const ChipSpiMasterLowLevel::Parameters ChipSpiMasterLowLevel::spi1parameters {SPI1, &SPI1_CR1_SPE_bb,
 		&SPI1_CR2_ERRIE_bb, &SPI1_CR2_RXNEIE_bb, &SPI1_CR2_TXEIE_bb, &RCC_APB2ENR_SPI1EN_bb, &RCC_APB2RSTR_SPI1RST_bb,
 		SPI1_IRQn};
 
-#endif	// def CONFIG_CHIP_HAS_SPI1
+#endif	// def CONFIG_CHIP_STM32_SPIV1_HAS_SPI1
 
-#ifdef CONFIG_CHIP_HAS_SPI2
+#ifdef CONFIG_CHIP_STM32_SPIV1_HAS_SPI2
 
 const ChipSpiMasterLowLevel::Parameters ChipSpiMasterLowLevel::spi2parameters {SPI2, &SPI2_CR1_SPE_bb,
 		&SPI2_CR2_ERRIE_bb, &SPI2_CR2_RXNEIE_bb, &SPI2_CR2_TXEIE_bb, &RCC_APB1ENR_SPI2EN_bb, &RCC_APB1RSTR_SPI2RST_bb,
 		SPI2_IRQn};
 
-#endif	// def CONFIG_CHIP_HAS_SPI2
+#endif	// def CONFIG_CHIP_STM32_SPIV1_HAS_SPI2
 
-#ifdef CONFIG_CHIP_HAS_SPI3
+#ifdef CONFIG_CHIP_STM32_SPIV1_HAS_SPI3
 
 const ChipSpiMasterLowLevel::Parameters ChipSpiMasterLowLevel::spi3parameters {SPI3, &SPI3_CR1_SPE_bb,
 		&SPI3_CR2_ERRIE_bb, &SPI3_CR2_RXNEIE_bb, &SPI3_CR2_TXEIE_bb, &RCC_APB1ENR_SPI3EN_bb, &RCC_APB1RSTR_SPI3RST_bb,
 		SPI3_IRQn};
 
-#endif	// def CONFIG_CHIP_HAS_SPI3
+#endif	// def CONFIG_CHIP_STM32_SPIV1_HAS_SPI3
 
-#ifdef CONFIG_CHIP_HAS_SPI4
+#ifdef CONFIG_CHIP_STM32_SPIV1_HAS_SPI4
 
 const ChipSpiMasterLowLevel::Parameters ChipSpiMasterLowLevel::spi4parameters {SPI4, &SPI4_CR1_SPE_bb,
 		&SPI4_CR2_ERRIE_bb, &SPI4_CR2_RXNEIE_bb, &SPI4_CR2_TXEIE_bb, &RCC_APB2ENR_SPI4EN_bb, &RCC_APB2RSTR_SPI4RST_bb,
 		SPI4_IRQn};
 
-#endif	// def CONFIG_CHIP_HAS_SPI4
+#endif	// def CONFIG_CHIP_STM32_SPIV1_HAS_SPI4
 
-#ifdef CONFIG_CHIP_HAS_SPI5
+#ifdef CONFIG_CHIP_STM32_SPIV1_HAS_SPI5
 
 const ChipSpiMasterLowLevel::Parameters ChipSpiMasterLowLevel::spi5parameters {SPI5, &SPI5_CR1_SPE_bb,
 		&SPI5_CR2_ERRIE_bb, &SPI5_CR2_RXNEIE_bb, &SPI5_CR2_TXEIE_bb, &RCC_APB2ENR_SPI5EN_bb, &RCC_APB2RSTR_SPI5RST_bb,
 		SPI5_IRQn};
 
-#endif	// def CONFIG_CHIP_HAS_SPI5
+#endif	// def CONFIG_CHIP_STM32_SPIV1_HAS_SPI5
 
-#ifdef CONFIG_CHIP_HAS_SPI6
+#ifdef CONFIG_CHIP_STM32_SPIV1_HAS_SPI6
 
 const ChipSpiMasterLowLevel::Parameters ChipSpiMasterLowLevel::spi6parameters {SPI6, &SPI6_CR1_SPE_bb,
 		&SPI6_CR2_ERRIE_bb, &SPI6_CR2_RXNEIE_bb, &SPI6_CR2_TXEIE_bb, &RCC_APB2ENR_SPI6EN_bb, &RCC_APB2RSTR_SPI6RST_bb,
 		SPI6_IRQn};
 
-#endif	// def CONFIG_CHIP_HAS_SPI6
+#endif	// def CONFIG_CHIP_STM32_SPIV1_HAS_SPI6
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | public functions
