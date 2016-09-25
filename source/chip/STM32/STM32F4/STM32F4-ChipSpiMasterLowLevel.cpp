@@ -13,7 +13,6 @@
 
 #include "distortos/chip/clocks.hpp"
 #include "distortos/chip/CMSIS-proxy.h"
-#include "distortos/chip/STM32F4-RCC-bits.h"
 #include "distortos/chip/STM32-SPIv1-bits.h"
 
 #include <cerrno>
@@ -26,6 +25,64 @@ namespace chip
 
 namespace
 {
+
+/*---------------------------------------------------------------------------------------------------------------------+
+| local objects
++---------------------------------------------------------------------------------------------------------------------*/
+
+#ifdef CONFIG_CHIP_STM32_SPIV1_HAS_SPI1
+
+/// "enable" bit in RCC registers for SPI1
+#define RCC_APB2ENR_SPI1EN_bb				BITBAND(&RCC->APB2ENR, __builtin_ctzl(RCC_APB2ENR_SPI1EN))
+/// "reset" bit in RCC registers for SPI1
+#define RCC_APB2RSTR_SPI1RST_bb				BITBAND(&RCC->APB2RSTR, __builtin_ctzl(RCC_APB2RSTR_SPI1RST))
+
+#endif	// def CONFIG_CHIP_STM32_SPIV1_HAS_SPI1
+
+#ifdef CONFIG_CHIP_STM32_SPIV1_HAS_SPI2
+
+/// "enable" bit in RCC registers for SPI2
+#define RCC_APB1ENR_SPI2EN_bb				BITBAND(&RCC->APB1ENR, __builtin_ctzl(RCC_APB1ENR_SPI2EN))
+/// "reset" bit in RCC registers for SPI2
+#define RCC_APB1RSTR_SPI2RST_bb				BITBAND(&RCC->APB1RSTR, __builtin_ctzl(RCC_APB1RSTR_SPI2RST))
+
+#endif	// def CONFIG_CHIP_STM32_SPIV1_HAS_SPI2
+
+#ifdef CONFIG_CHIP_STM32_SPIV1_HAS_SPI3
+
+/// "enable" bit in RCC registers for SPI3
+#define RCC_APB1ENR_SPI3EN_bb				BITBAND(&RCC->APB1ENR, __builtin_ctzl(RCC_APB1ENR_SPI3EN))
+/// "reset" bit in RCC registers for SPI3
+#define RCC_APB1RSTR_SPI3RST_bb				BITBAND(&RCC->APB1RSTR, __builtin_ctzl(RCC_APB1RSTR_SPI3RST))
+
+#endif	// def CONFIG_CHIP_STM32_SPIV1_HAS_SPI3
+
+#ifdef CONFIG_CHIP_STM32_SPIV1_HAS_SPI4
+
+/// "enable" bit in RCC registers for SPI4
+#define RCC_APB2ENR_SPI4EN_bb				BITBAND(&RCC->APB2ENR, __builtin_ctzl(RCC_APB2ENR_SPI4EN))
+/// "reset" bit in RCC registers for SPI4
+#define RCC_APB2RSTR_SPI4RST_bb				BITBAND(&RCC->APB2RSTR, __builtin_ctzl(RCC_APB2RSTR_SPI4RST))
+
+#endif	// def CONFIG_CHIP_STM32_SPIV1_HAS_SPI4
+
+#ifdef CONFIG_CHIP_STM32_SPIV1_HAS_SPI5
+
+/// "enable" bit in RCC registers for SPI5
+#define RCC_APB2ENR_SPI5EN_bb				BITBAND(&RCC->APB2ENR, __builtin_ctzl(RCC_APB2ENR_SPI5EN))
+/// "reset" bit in RCC registers for SPI5
+#define RCC_APB2RSTR_SPI5RST_bb				BITBAND(&RCC->APB2RSTR, __builtin_ctzl(RCC_APB2RSTR_SPI5RST))
+
+#endif	// def CONFIG_CHIP_STM32_SPIV1_HAS_SPI5
+
+#ifdef CONFIG_CHIP_STM32_SPIV1_HAS_SPI6
+
+/// "enable" bit in RCC registers for SPI6
+#define RCC_APB2ENR_SPI6EN_bb				BITBAND(&RCC->APB2ENR, __builtin_ctzl(RCC_APB2ENR_SPI6EN))
+/// "reset" bit in RCC registers for SPI6
+#define RCC_APB2RSTR_SPI6RST_bb				BITBAND(&RCC->APB2RSTR, __builtin_ctzl(RCC_APB2RSTR_SPI6RST))
+
+#endif	// def CONFIG_CHIP_STM32_SPIV1_HAS_SPI6
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | local functions
