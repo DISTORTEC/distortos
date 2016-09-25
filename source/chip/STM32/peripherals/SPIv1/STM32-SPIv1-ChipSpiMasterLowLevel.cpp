@@ -1,6 +1,6 @@
 /**
  * \file
- * \brief ChipSpiMasterLowLevel class implementation for STM32F4
+ * \brief ChipSpiMasterLowLevel class implementation for SPIv1 in STM32
  *
  * \author Copyright (C) 2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
