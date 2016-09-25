@@ -14,16 +14,17 @@ optional second argument with period. If the period is 0 (which is the default v
 executed only once. Otherwise it will be executed periodically until the software timer is stopped.
 - `devices::UartBase` interface class, which can be used as a private base for devices using UART interface.
 - `devices::UartLowLevel` interface class, which is a low-level interface to hardware-dependent UART driver.
-- `chip::ChipUartLowLevel` class - interrupt-driven implementation of `devices::UartLowLevel` interface for *STM32F4*.
+- `chip::ChipUartLowLevel` class - interrupt-driven implementation of `devices::UartLowLevel` interface for *STM32F1*
+and *STM32F4*.
 - `devices::SpiMasterBase` interface class, which can be used as a private base for devices using SPI as bus master.
 - `devices::SpiMasterLowLevel` interface class, which is a low-level interface to hardware-dependent SPI bus master
 driver.
 - `chip::ChipSpiMasterLowLevel` class - interrupt-driven implementation of `devices::SpiMasterLowLevel` interface for
-*STM32F4*.
-- "Peripherals configuration" *Kconfig* menu for *STM32F4*, where low-level drivers for SPI bus master and U[S]ART can
+*STM32F1* and *STM32F4*.
+- "Peripherals configuration" *Kconfig* menu, where low-level drivers for SPI bus master and U[S]ART can
 be selected.
-- `uarts.hpp` header for *STM32F4* with declarations of all enabled low-level U[S]ART drivers.
-- `spis.hpp` header for *STM32F4* with declarations of all enabled low-level SPI master drivers.
+- `uarts.hpp` header for *STM32F1* and *STM32F4* with declarations of all enabled low-level U[S]ART drivers.
+- `spis.hpp` header for *STM32F1* and *STM32F4* with declarations of all enabled low-level SPI master drivers.
 - `devices::SerialPort` class - universal serial port device with an interface similar to standard files (`open()`,
 `close()`, `read()`, `write()`). `read()` and `write()` member functions of this class support both blocking (with
 or without timeout) and non-blocking behaviour. Convenient wrappers for reading/writing with timeout are also provided:
@@ -50,6 +51,7 @@ application uses a few last ROM pages for its own purposes (e.g. emulated EEPROM
 - Replace generator of `distortosConfiguration.h` that uses *AWK* (`makeDistortosConfiguration.awk`) with the one using
 shell, *cat* and *sed* (`makeDistortosConfiguration.sh`). With this change *AWK* is no longer needed to configure &
 build this project.
+- Merge GPIO drivers for *STM32*.
 
 ### Fixed
 
