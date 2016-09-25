@@ -1,6 +1,6 @@
 /**
  * \file
- * \brief Declarations of low-level SPI master drivers for STM32F4
+ * \brief Declarations of low-level SPI master drivers for SPIv1 in STM32
  *
  * \author Copyright (C) 2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
@@ -9,8 +9,8 @@
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#ifndef SOURCE_CHIP_STM32_STM32F4_INCLUDE_DISTORTOS_CHIP_SPIS_HPP_
-#define SOURCE_CHIP_STM32_STM32F4_INCLUDE_DISTORTOS_CHIP_SPIS_HPP_
+#ifndef SOURCE_CHIP_STM32_PERIPHERALS_SPIV1_INCLUDE_DISTORTOS_CHIP_SPIS_HPP_
+#define SOURCE_CHIP_STM32_PERIPHERALS_SPIV1_INCLUDE_DISTORTOS_CHIP_SPIS_HPP_
 
 #include "distortos/distortosConfiguration.h"
 
@@ -72,4 +72,4 @@ extern ChipSpiMasterLowLevel spi6;
 
 }	// namespace distortos
 
-#endif	// SOURCE_CHIP_STM32_STM32F4_INCLUDE_DISTORTOS_CHIP_SPIS_HPP_
+#endif	// SOURCE_CHIP_STM32_PERIPHERALS_SPIV1_INCLUDE_DISTORTOS_CHIP_SPIS_HPP_
