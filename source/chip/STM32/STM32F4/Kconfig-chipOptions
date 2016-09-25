@@ -512,30 +512,6 @@ endchoice
 
 endmenu
 
-config CHIP_STM32_SPIV1_HAS_SPI1
-	bool
-	default n
-
-config CHIP_STM32_SPIV1_HAS_SPI2
-	bool
-	default n
-
-config CHIP_STM32_SPIV1_HAS_SPI3
-	bool
-	default n
-
-config CHIP_STM32_SPIV1_HAS_SPI4
-	bool
-	default n
-
-config CHIP_STM32_SPIV1_HAS_SPI5
-	bool
-	default n
-
-config CHIP_STM32_SPIV1_HAS_SPI6
-	bool
-	default n
-
 config CHIP_STM32F40
 	bool
 	default n
