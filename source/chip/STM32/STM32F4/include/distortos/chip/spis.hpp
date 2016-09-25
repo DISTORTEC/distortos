@@ -26,47 +26,47 @@ class ChipSpiMasterLowLevel;
 | global objects
 +---------------------------------------------------------------------------------------------------------------------*/
 
-#ifdef CONFIG_CHIP_SPI1_ENABLE
+#ifdef CONFIG_CHIP_STM32_SPIV1_SPI1_ENABLE
 
 /// SPI master low-level driver for SPI1
 extern ChipSpiMasterLowLevel spi1;
 
-#endif	// def CONFIG_CHIP_SPI1_ENABLE
+#endif	// def CONFIG_CHIP_STM32_SPIV1_SPI1_ENABLE
 
-#ifdef CONFIG_CHIP_SPI2_ENABLE
+#ifdef CONFIG_CHIP_STM32_SPIV1_SPI2_ENABLE
 
 /// SPI master low-level driver for SPI2
 extern ChipSpiMasterLowLevel spi2;
 
-#endif	// def CONFIG_CHIP_SPI2_ENABLE
+#endif	// def CONFIG_CHIP_STM32_SPIV1_SPI2_ENABLE
 
-#ifdef CONFIG_CHIP_SPI3_ENABLE
+#ifdef CONFIG_CHIP_STM32_SPIV1_SPI3_ENABLE
 
 /// SPI master low-level driver for SPI3
 extern ChipSpiMasterLowLevel spi3;
 
-#endif	// def CONFIG_CHIP_SPI3_ENABLE
+#endif	// def CONFIG_CHIP_STM32_SPIV1_SPI3_ENABLE
 
-#ifdef CONFIG_CHIP_SPI4_ENABLE
+#ifdef CONFIG_CHIP_STM32_SPIV1_SPI4_ENABLE
 
 /// SPI master low-level driver for SPI4
 extern ChipSpiMasterLowLevel spi4;
 
-#endif	// def CONFIG_CHIP_SPI4_ENABLE
+#endif	// def CONFIG_CHIP_STM32_SPIV1_SPI4_ENABLE
 
-#ifdef CONFIG_CHIP_SPI5_ENABLE
+#ifdef CONFIG_CHIP_STM32_SPIV1_SPI5_ENABLE
 
 /// SPI master low-level driver for SPI5
 extern ChipSpiMasterLowLevel spi5;
 
-#endif	// def CONFIG_CHIP_SPI5_ENABLE
+#endif	// def CONFIG_CHIP_STM32_SPIV1_SPI5_ENABLE
 
-#ifdef CONFIG_CHIP_SPI6_ENABLE
+#ifdef CONFIG_CHIP_STM32_SPIV1_SPI6_ENABLE
 
 /// SPI master low-level driver for SPI6
 extern ChipSpiMasterLowLevel spi6;
 
-#endif	// def CONFIG_CHIP_SPI6_ENABLE
+#endif	// def CONFIG_CHIP_STM32_SPIV1_SPI6_ENABLE
 
 }	// namespace chip
 
