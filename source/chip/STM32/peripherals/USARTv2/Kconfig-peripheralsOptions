@@ -1,0 +1,56 @@
+#
+# file: Kconfig-peripheralsOptions
+#
+# author: Copyright (C) 2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+#
+# This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
+# distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+#
+
+if CHIP_STM32_USARTV2
+
+config CHIP_STM32_USARTV2_HAS_CR1_M1_BIT
+	bool
+	default n
+
+config CHIP_STM32_USARTV2_USART3_USART6_COMBINED_INTERRUPT
+	bool
+	default n
+
+config CHIP_STM32_USARTV2_USART3_USART8_COMBINED_INTERRUPT
+	bool
+	default n
+
+config CHIP_STM32_USARTV2_HAS_USART1
+	bool
+	default n
+
+config CHIP_STM32_USARTV2_HAS_USART2
+	bool
+	default n
+
+config CHIP_STM32_USARTV2_HAS_USART3
+	bool
+	default n
+
+config CHIP_STM32_USARTV2_HAS_USART4
+	bool
+	default n
+
+config CHIP_STM32_USARTV2_HAS_USART5
+	bool
+	default n
+
+config CHIP_STM32_USARTV2_HAS_USART6
+	bool
+	default n
+
+config CHIP_STM32_USARTV2_HAS_USART7
+	bool
+	default n
+
+config CHIP_STM32_USARTV2_HAS_USART8
+	bool
+	default n
+
+endif	# CHIP_STM32_USARTV2
