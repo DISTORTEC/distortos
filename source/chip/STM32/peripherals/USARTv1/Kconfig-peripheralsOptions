@@ -69,10 +69,6 @@ config CHIP_STM32_USARTV1_HAS_CR1_OVER8_BIT
 	bool
 	default n
 
-config CHIP_STM32_USARTV1_HAS_CR3_ONEBIT_BIT
-	bool
-	default n
-
 config CHIP_STM32_USARTV1_HAS_USART1
 	bool
 	default n
