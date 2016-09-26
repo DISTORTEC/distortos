@@ -25,4 +25,8 @@ config CHIP_STM32_USARTV1
 	bool
 	default n
 
+config CHIP_STM32_USARTV2
+	bool
+	default n
+
 endif	# CHIP_STM32
