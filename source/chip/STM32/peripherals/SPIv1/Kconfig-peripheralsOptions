@@ -51,22 +51,6 @@ config CHIP_STM32_SPIV1_SPI6_ENABLE
 	help
 		Enable SPI6 low-level driver
 
-config CHIP_STM32_SPIV1_HAS_CR2_FRF_BIT
-	bool
-	default n
-
-config CHIP_STM32_SPIV1_HAS_I2S
-	bool
-	default n
-
-config CHIP_STM32_SPIV1_HAS_I2SCFGR_ASTREN_BIT
-	bool
-	default n
-
-config CHIP_STM32_SPIV1_HAS_SR_FRE_BIT
-	bool
-	default n
-
 config CHIP_STM32_SPIV1_HAS_SPI1
 	bool
 	default n
