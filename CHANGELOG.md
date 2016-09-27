@@ -45,6 +45,9 @@ various useful functions: `cbegin()`, `cend()`, `rbegin()`, `rend()`, `crbegin()
 - Option in *Kconfig* menus for manual configuration of ROM's offset and size in generated linker script. This can be
 useful when the device has a bootloader at the beginning of flash, when the application is a bootloader and/or when the
 application uses a few last ROM pages for its own purposes (e.g. emulated EEPROM, storing configuration, logging, ...).
+- `architecture::isInInterruptContext()` which checks whether thread or interrupt context is currently active. An
+example use is when the application needs to decide between blocking or non-blocking behaviour, as blocking is not
+possible in interrupt context.
 
 ### Changed
 
