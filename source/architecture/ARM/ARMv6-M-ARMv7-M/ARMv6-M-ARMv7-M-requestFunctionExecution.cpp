@@ -11,6 +11,8 @@
 
 #include "distortos/architecture/requestFunctionExecution.hpp"
 
+#include "distortos/architecture/isInInterruptContext.hpp"
+
 #include "distortos/chip/CMSIS-proxy.h"
 
 #if __FPU_PRESENT == 1 && __FPU_USED == 1
@@ -278,8 +280,7 @@ void requestFunctionExecution(internal::ThreadControlBlock& threadControlBlock, 
 	const auto& currentThreadControlBlock = internal::getScheduler().getCurrentThreadControlBlock();
 	if (&threadControlBlock == &currentThreadControlBlock)	// request to current thread?
 	{
-		const auto inInterrupt = __get_IPSR() != 0;
-		if (inInterrupt == false)	// current thread is sending the request to itself?
+		if (isInInterruptContext() == false)	// current thread is sending the request to itself?
 			fromCurrentThreadToCurrentThread(function);
 		else						// interrupt is sending the request to current thread?
 			fromInterruptToCurrentThread(function);
