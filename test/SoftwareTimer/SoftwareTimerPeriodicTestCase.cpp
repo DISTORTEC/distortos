@@ -48,7 +48,7 @@ constexpr size_t totalSoftwareTimers {10};
  * own counter are used to calculate global iteration count. This value can be used to calculate how many times this
  * function was already executed:
  * - for timers with longer period - global iteration count divided by period of analyzed timer
- * - for timers with shorter  or equal period - global iteration count minus one, divided by period of analyzed timer
+ * - for timers with shorter or equal period - global iteration count minus one, divided by period of analyzed timer
  *
  * Next sequence point is the sum of times this function was executed for all analyzed timers.
  *

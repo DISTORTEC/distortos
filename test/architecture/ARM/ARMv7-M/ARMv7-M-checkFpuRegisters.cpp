@@ -172,7 +172,7 @@ bool checkFpuRegisters(const uint32_t value, const uint32_t fpscr)
 			:	[result] "+r" (result)
 			:	[value] "r" (value),
 				[fpscr] "r" (fpscr)
-			: 	"r2"
+			:	"r2"
 	);
 
 	return result;

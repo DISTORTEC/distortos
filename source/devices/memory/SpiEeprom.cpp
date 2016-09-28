@@ -67,7 +67,7 @@ constexpr uint8_t statusRegisterWip {1 << 0};
  * The address for READ and WRITE commands is encoded into variable number of bytes, depending on capacity of EEPROM
  * chip:
  * - capacity <= 256 bytes - 1 byte for address,
- * - capacity  == 512 bytes - 1 byte for address, MSB of address (9th bit) is placed at 4th bit of command,
+ * - capacity == 512 bytes - 1 byte for address, MSB of address (9th bit) is placed at 4th bit of command,
  * - 512 bytes < capacity <= 64k bytes - 2 bytes for address,
  * - 64k bytes < capacity - 3 bytes for address.
  *

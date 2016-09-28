@@ -65,21 +65,21 @@ DISTORTOS_CONFIGURATION_MK = distortosConfiguration.mk
 
 ifneq ($(wildcard selectedConfiguration.mk),)
 
-    # file with $(CONFIG_SELECTED_CONFIGURATION) variable
-    include selectedConfiguration.mk
+	# file with $(CONFIG_SELECTED_CONFIGURATION) variable
+	include selectedConfiguration.mk
 
-    # path to distortosConfiguration.mk file selected by $(CONFIG_SELECTED_CONFIGURATION) variable
-    DISTORTOS_CONFIGURATION_MK = ./$(subst ",,$(CONFIG_SELECTED_CONFIGURATION))
+	# path to distortosConfiguration.mk file selected by $(CONFIG_SELECTED_CONFIGURATION) variable
+	DISTORTOS_CONFIGURATION_MK = ./$(subst ",,$(CONFIG_SELECTED_CONFIGURATION))
 
 endif
 
 ifeq ($(DO_INCLUDE),1)
 
-    ifeq ($(wildcard selectedConfiguration.mk),)
-        $(error Please run first 'make configure [CONFIG_PATH=<path-to-distortosConfiguration.mk>]')
-    endif
+	ifeq ($(wildcard selectedConfiguration.mk),)
+		$(error Please run first 'make configure [CONFIG_PATH=<path-to-distortosConfiguration.mk>]')
+	endif
 
-    include $(DISTORTOS_CONFIGURATION_MK)
+	include $(DISTORTOS_CONFIGURATION_MK)
 
 endif
 
@@ -210,8 +210,8 @@ endef
 all: targets
 
 ifeq ($(DO_INCLUDE),1)
-    # trigger parsing of all Rules.mk files
-    $(call PARSE_SUBDIRECTORIES,.)
+# trigger parsing of all Rules.mk files
+$(call PARSE_SUBDIRECTORIES,.)
 endif
 
 # generated files depend (order-only) on their directories

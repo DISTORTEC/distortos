@@ -389,8 +389,8 @@ EOF
 printf '%b' "$sectionEntries"
 
 cat<<EOF
-	.stab 				0 (NOLOAD) : { *(.stab); }
-	.stabstr 			0 (NOLOAD) : { *(.stabstr); }
+	.stab				0 (NOLOAD) : { *(.stab); }
+	.stabstr			0 (NOLOAD) : { *(.stabstr); }
 	/* DWARF debug sections.
 	* Symbols in the DWARF debugging sections are relative to the beginning
 	* of the section so we begin them at 0. */
