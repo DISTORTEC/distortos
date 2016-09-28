@@ -48,7 +48,7 @@ public:
 	static time_point now();
 
 	/// this is a steady clock - it cannot be adjusted
-	static constexpr bool is_steady {true};
+	constexpr static bool is_steady {true};
 };
 
 }	// namespace distortos
