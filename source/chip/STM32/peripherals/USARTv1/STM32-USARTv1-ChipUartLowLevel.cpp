@@ -29,82 +29,6 @@ namespace
 {
 
 /*---------------------------------------------------------------------------------------------------------------------+
-| local objects
-+---------------------------------------------------------------------------------------------------------------------*/
-
-#ifdef CONFIG_CHIP_STM32_USARTV1_HAS_USART1
-
-/// "enable" bit in RCC registers for USART1
-#define RCC_APB2ENR_USART1EN_bb				BITBAND(&RCC->APB2ENR, __builtin_ctzl(RCC_APB2ENR_USART1EN))
-/// "reset" bit in RCC registers for USART1
-#define RCC_APB2RSTR_USART1RST_bb			BITBAND(&RCC->APB2RSTR, __builtin_ctzl(RCC_APB2RSTR_USART1RST))
-
-#endif	// def CONFIG_CHIP_STM32_USARTV1_HAS_USART1
-
-#ifdef CONFIG_CHIP_STM32_USARTV1_HAS_USART2
-
-/// "enable" bit in RCC registers for USART2
-#define RCC_APB1ENR_USART2EN_bb				BITBAND(&RCC->APB1ENR, __builtin_ctzl(RCC_APB1ENR_USART2EN))
-/// "reset" bit in RCC registers for USART2
-#define RCC_APB1RSTR_USART2RST_bb			BITBAND(&RCC->APB1RSTR, __builtin_ctzl(RCC_APB1RSTR_USART2RST))
-
-#endif	// def CONFIG_CHIP_STM32_USARTV1_HAS_USART2
-
-#ifdef CONFIG_CHIP_STM32_USARTV1_HAS_USART3
-
-/// "enable" bit in RCC registers for USART3
-#define RCC_APB1ENR_USART3EN_bb				BITBAND(&RCC->APB1ENR, __builtin_ctzl(RCC_APB1ENR_USART3EN))
-/// "reset" bit in RCC registers for USART3
-#define RCC_APB1RSTR_USART3RST_bb			BITBAND(&RCC->APB1RSTR, __builtin_ctzl(RCC_APB1RSTR_USART3RST))
-
-#endif	// def CONFIG_CHIP_STM32_USARTV1_HAS_USART3
-
-#ifdef CONFIG_CHIP_STM32_USARTV1_HAS_UART4
-
-/// "enable" bit in RCC registers for UART4
-#define RCC_APB1ENR_UART4EN_bb				BITBAND(&RCC->APB1ENR, __builtin_ctzl(RCC_APB1ENR_UART4EN))
-/// "reset" bit in RCC registers for UART4
-#define RCC_APB1RSTR_UART4RST_bb			BITBAND(&RCC->APB1RSTR, __builtin_ctzl(RCC_APB1RSTR_UART4RST))
-
-#endif	// def CONFIG_CHIP_STM32_USARTV1_HAS_UART4
-
-#ifdef CONFIG_CHIP_STM32_USARTV1_HAS_UART5
-
-/// "enable" bit in RCC registers for UART5
-#define RCC_APB1ENR_UART5EN_bb				BITBAND(&RCC->APB1ENR, __builtin_ctzl(RCC_APB1ENR_UART5EN))
-/// "reset" bit in RCC registers for UART5
-#define RCC_APB1RSTR_UART5RST_bb			BITBAND(&RCC->APB1RSTR, __builtin_ctzl(RCC_APB1RSTR_UART5RST))
-
-#endif	// def CONFIG_CHIP_STM32_USARTV1_HAS_UART5
-
-#ifdef CONFIG_CHIP_STM32_USARTV1_HAS_USART6
-
-/// "enable" bit in RCC registers for USART6
-#define RCC_APB2ENR_USART6EN_bb				BITBAND(&RCC->APB2ENR, __builtin_ctzl(RCC_APB2ENR_USART6EN))
-/// "reset" bit in RCC registers for USART6
-#define RCC_APB2RSTR_USART6RST_bb			BITBAND(&RCC->APB2RSTR, __builtin_ctzl(RCC_APB2RSTR_USART6RST))
-
-#endif	// def CONFIG_CHIP_STM32_USARTV1_HAS_USART6
-
-#ifdef CONFIG_CHIP_STM32_USARTV1_HAS_UART7
-
-/// "enable" bit in RCC registers for UART7
-#define RCC_APB1ENR_UART7EN_bb				BITBAND(&RCC->APB1ENR, __builtin_ctzl(RCC_APB1ENR_UART7EN))
-/// "reset" bit in RCC registers for UART7
-#define RCC_APB1RSTR_UART7RST_bb			BITBAND(&RCC->APB1RSTR, __builtin_ctzl(RCC_APB1RSTR_UART7RST))
-
-#endif	// def CONFIG_CHIP_STM32_USARTV1_HAS_UART7
-
-#ifdef CONFIG_CHIP_STM32_USARTV1_HAS_UART8
-
-/// "enable" bit in RCC registers for UART8
-#define RCC_APB1ENR_UART8EN_bb				BITBAND(&RCC->APB1ENR, __builtin_ctzl(RCC_APB1ENR_UART8EN))
-/// "reset" bit in RCC registers for UART8
-#define RCC_APB1RSTR_UART8RST_bb			BITBAND(&RCC->APB1RSTR, __builtin_ctzl(RCC_APB1RSTR_UART8RST))
-
-#endif	// def CONFIG_CHIP_STM32_USARTV1_HAS_UART8
-
-/*---------------------------------------------------------------------------------------------------------------------+
 | local functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
@@ -136,14 +60,14 @@ devices::UartBase::ErrorSet decodeErrors(const uint32_t sr)
 class ChipUartLowLevel::Parameters
 {
 	/// base address of APB1 peripherals
-	constexpr static const void* apb1PeripheralsBaseAddress {reinterpret_cast<const void*>(APB1PERIPH_BASE)};
+	constexpr static uintptr_t apb1PeripheralsBaseAddress {APB1PERIPH_BASE};
 	/// base address of APB2 peripherals
-	constexpr static const void* apb2PeripheralsBaseAddress {reinterpret_cast<const void*>(APB2PERIPH_BASE)};
+	constexpr static uintptr_t apb2PeripheralsBaseAddress {APB2PERIPH_BASE};
 	/// base address of AHB peripherals
 #if defined(AHBPERIPH_BASE)
-	constexpr static const void* ahbPeripheralsBaseAddress {reinterpret_cast<const void*>(AHBPERIPH_BASE)};
+	constexpr static uintptr_t ahbPeripheralsBaseAddress {AHBPERIPH_BASE};
 #elif defined(AHB1PERIPH_BASE)
-	constexpr static const void* ahbPeripheralsBaseAddress {reinterpret_cast<const void*>(AHB1PERIPH_BASE)};
+	constexpr static uintptr_t ahbPeripheralsBaseAddress {AHB1PERIPH_BASE};
 #else
 	#error "Unknown base address of AHB peripherals!"
 #endif
@@ -156,29 +80,22 @@ public:
 	/**
 	 * \brief Parameters's constructor
 	 *
-	 * \param [in] uart is a pointer to USART_TypeDef with registers
-	 * \param [in] rxneieBb is a pointer to bitband alias of RXNEIE bit in USART_CR1 register
-	 * \param [in] tcieBb is a pointer to bitband alias of TCIE bit in USART_CR1 register
-	 * \param [in] txeieBb is a pointer to bitband alias of TXEIE bit in USART_CR1 register
-	 * \param [in] rccEnBb is a pointer to bitband alias of appropriate U[S]ARTxEN bit in RCC register
-	 * \param [in] rccRstBb is a pointer to bitband alias of appropriate U[S]ARTxRST bit in RCC register
+	 * \param [in] uartBase is a base address of UART peripheral
+	 * \param [in] rccEnBb is an address of bitband alias of appropriate U[S]ARTxEN bit in RCC register
+	 * \param [in] rccRstBb is an address of bitband alias of appropriate U[S]ARTxRST bit in RCC register
 	 * \param [in] irqNumber is the NVIC's IRQ number of associated U[S]ART
-	 *
-	 * \note Don't add "const" to values of pointers, don't use references - see
-	 * https://gcc.gnu.org/bugzilla/show_bug.cgi?id=71113
 	 */
 
-	constexpr Parameters(USART_TypeDef* uart, volatile unsigned long* rxneieBb, volatile unsigned long* tcieBb,
-			volatile unsigned long* txeieBb, volatile unsigned long* rccEnBb, volatile unsigned long* rccRstBb,
+	constexpr Parameters(const uintptr_t uartBase, const uintptr_t rccEnBbAddress, const uintptr_t rccRstBbAddress,
 			const IRQn_Type irqNumber) :
-					uart_{uart},
-					peripheralFrequency_{uart < apb2PeripheralsBaseAddress ? apb1Frequency :
-							uart < ahbPeripheralsBaseAddress ? apb2Frequency : ahbFrequency},
-					rxneieBb_{rxneieBb},
-					tcieBb_{tcieBb},
-					txeieBb_{txeieBb},
-					rccEnBb_{rccEnBb},
-					rccRstBb_{rccRstBb},
+					uartBase_{uartBase},
+					peripheralFrequency_{uartBase < apb2PeripheralsBaseAddress ? apb1Frequency :
+							uartBase < ahbPeripheralsBaseAddress ? apb2Frequency : ahbFrequency},
+					rxneieBbAddress_{BITBAND_ADDRESS(uartBase + offsetof(USART_TypeDef, CR1), USART_CR1_RXNEIE_bit)},
+					tcieBbAddress_{BITBAND_ADDRESS(uartBase + offsetof(USART_TypeDef, CR1), USART_CR1_TCIE_bit)},
+					txeieBbAddress_{BITBAND_ADDRESS(uartBase + offsetof(USART_TypeDef, CR1), USART_CR1_TXEIE_bit)},
+					rccEnBbAddress_{rccEnBbAddress},
+					rccRstBbAddress_{rccRstBbAddress},
 					irqNumber_{irqNumber}
 	{
 
@@ -212,7 +129,7 @@ public:
 
 	void enablePeripheralClock(const bool enable) const
 	{
-		*rccEnBb_ = enable;
+		*reinterpret_cast<volatile unsigned long*>(rccEnBbAddress_) = enable;
 	}
 
 	/**
@@ -223,7 +140,7 @@ public:
 
 	void enableRxneInterrupt(const bool enable) const
 	{
-		*rxneieBb_ = enable;
+		*reinterpret_cast<volatile unsigned long*>(rxneieBbAddress_) = enable;
 	}
 
 	/**
@@ -234,7 +151,7 @@ public:
 
 	void enableTcInterrupt(const bool enable) const
 	{
-		*tcieBb_ = enable;
+		*reinterpret_cast<volatile unsigned long*>(tcieBbAddress_) = enable;
 	}
 
 	/**
@@ -245,7 +162,7 @@ public:
 
 	void enableTxeInterrupt(const bool enable) const
 	{
-		*txeieBb_ = enable;
+		*reinterpret_cast<volatile unsigned long*>(txeieBbAddress_) = enable;
 	}
 
 	/**
@@ -263,7 +180,7 @@ public:
 
 	USART_TypeDef& getUart() const
 	{
-		return *uart_;
+		return *reinterpret_cast<USART_TypeDef*>(uartBase_);
 	}
 
 	/**
@@ -283,32 +200,32 @@ public:
 
 	void resetPeripheral() const
 	{
-		*rccRstBb_ = 1;
-		*rccRstBb_ = 0;
+		*reinterpret_cast<volatile unsigned long*>(rccRstBbAddress_) = 1;
+		*reinterpret_cast<volatile unsigned long*>(rccRstBbAddress_) = 0;
 	}
 
 private:
 
-	/// pointer to USART_TypeDef with registers
-	USART_TypeDef* uart_;
+	/// base address of UART peripheral
+	uintptr_t uartBase_;
 
 	/// peripheral clock frequency, Hz
 	uint32_t peripheralFrequency_;
 
-	/// pointer to bitband alias of RXNEIE bit in USART_CR1 register
-	volatile unsigned long* rxneieBb_;
+	/// address of bitband alias of RXNEIE bit in USART_CR1 register
+	uintptr_t rxneieBbAddress_;
 
-	/// pointer to bitband alias of TCIE bit in USART_CR1 register
-	volatile unsigned long* tcieBb_;
+	/// address of bitband alias of TCIE bit in USART_CR1 register
+	uintptr_t tcieBbAddress_;
 
-	/// pointer to bitband alias of TXEIE bit in USART_CR1 register
-	volatile unsigned long* txeieBb_;
+	/// address of bitband alias of TXEIE bit in USART_CR1 register
+	uintptr_t txeieBbAddress_;
 
-	/// pointer to bitband alias of appropriate U[S]ARTxEN bit in RCC register
-	volatile unsigned long* rccEnBb_;
+	/// address of bitband alias of appropriate U[S]ARTxEN bit in RCC register
+	uintptr_t rccEnBbAddress_;
 
-	/// pointer to bitband alias of appropriate U[S]ARTxRST bit in RCC register
-	volatile unsigned long* rccRstBb_;
+	/// address of bitband alias of appropriate U[S]ARTxRST bit in RCC register
+	uintptr_t rccRstBbAddress_;
 
 	/// NVIC's IRQ number of associated U[S]ART
 	IRQn_Type irqNumber_;
@@ -320,57 +237,73 @@ private:
 
 #ifdef CONFIG_CHIP_STM32_USARTV1_HAS_USART1
 
-const ChipUartLowLevel::Parameters ChipUartLowLevel::usart1parameters {USART1, &USART1_CR1_RXNEIE_bb,
-		&USART1_CR1_TCIE_bb, &USART1_CR1_TXEIE_bb, &RCC_APB2ENR_USART1EN_bb, &RCC_APB2RSTR_USART1RST_bb, USART1_IRQn};
+const ChipUartLowLevel::Parameters ChipUartLowLevel::usart1parameters {USART1_BASE,
+		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB2ENR), __builtin_ctzl(RCC_APB2ENR_USART1EN)),
+		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB2RSTR), __builtin_ctzl(RCC_APB2RSTR_USART1RST)),
+		USART1_IRQn};
 
 #endif	// def CONFIG_CHIP_STM32_USARTV1_HAS_USART1
 
 #ifdef CONFIG_CHIP_STM32_USARTV1_HAS_USART2
 
-const ChipUartLowLevel::Parameters ChipUartLowLevel::usart2parameters {USART2, &USART2_CR1_RXNEIE_bb,
-		&USART2_CR1_TCIE_bb, &USART2_CR1_TXEIE_bb, &RCC_APB1ENR_USART2EN_bb, &RCC_APB1RSTR_USART2RST_bb, USART2_IRQn};
+const ChipUartLowLevel::Parameters ChipUartLowLevel::usart2parameters {USART2_BASE,
+		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB1ENR), __builtin_ctzl(RCC_APB1ENR_USART2EN)),
+		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB1RSTR), __builtin_ctzl(RCC_APB1RSTR_USART2RST)),
+		USART2_IRQn};
 
 #endif	// def CONFIG_CHIP_STM32_USARTV1_HAS_USART2
 
 #ifdef CONFIG_CHIP_STM32_USARTV1_HAS_USART3
 
-const ChipUartLowLevel::Parameters ChipUartLowLevel::usart3parameters {USART3, &USART3_CR1_RXNEIE_bb,
-		&USART3_CR1_TCIE_bb, &USART3_CR1_TXEIE_bb, &RCC_APB1ENR_USART3EN_bb, &RCC_APB1RSTR_USART3RST_bb, USART3_IRQn};
+const ChipUartLowLevel::Parameters ChipUartLowLevel::usart3parameters {USART3_BASE,
+		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB1ENR), __builtin_ctzl(RCC_APB1ENR_USART3EN)),
+		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB1RSTR), __builtin_ctzl(RCC_APB1RSTR_USART3RST)),
+		USART3_IRQn};
 
 #endif	// def CONFIG_CHIP_STM32_USARTV1_HAS_USART3
 
 #ifdef CONFIG_CHIP_STM32_USARTV1_HAS_UART4
 
-const ChipUartLowLevel::Parameters ChipUartLowLevel::uart4parameters {UART4, &UART4_CR1_RXNEIE_bb,
-		&UART4_CR1_TCIE_bb, &UART4_CR1_TXEIE_bb, &RCC_APB1ENR_UART4EN_bb, &RCC_APB1RSTR_UART4RST_bb, UART4_IRQn};
+const ChipUartLowLevel::Parameters ChipUartLowLevel::uart4parameters {UART4_BASE,
+		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB1ENR), __builtin_ctzl(RCC_APB1ENR_UART4EN)),
+		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB1RSTR), __builtin_ctzl(RCC_APB1RSTR_UART4RST)),
+		UART4_IRQn};
 
 #endif	// def CONFIG_CHIP_STM32_USARTV1_HAS_UART4
 
 #ifdef CONFIG_CHIP_STM32_USARTV1_HAS_UART5
 
-const ChipUartLowLevel::Parameters ChipUartLowLevel::uart5parameters {UART5, &UART5_CR1_RXNEIE_bb,
-		&UART5_CR1_TCIE_bb, &UART5_CR1_TXEIE_bb, &RCC_APB1ENR_UART5EN_bb, &RCC_APB1RSTR_UART5RST_bb, UART5_IRQn};
+const ChipUartLowLevel::Parameters ChipUartLowLevel::uart5parameters {UART5_BASE,
+		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB1ENR), __builtin_ctzl(RCC_APB1ENR_UART5EN)),
+		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB1RSTR), __builtin_ctzl(RCC_APB1RSTR_UART5RST)),
+		UART5_IRQn};
 
 #endif	// def CONFIG_CHIP_STM32_USARTV1_HAS_UART5
 
 #ifdef CONFIG_CHIP_STM32_USARTV1_HAS_USART6
 
-const ChipUartLowLevel::Parameters ChipUartLowLevel::usart6parameters {USART6, &USART6_CR1_RXNEIE_bb,
-		&USART6_CR1_TCIE_bb, &USART6_CR1_TXEIE_bb, &RCC_APB2ENR_USART6EN_bb, &RCC_APB2RSTR_USART6RST_bb, USART6_IRQn};
+const ChipUartLowLevel::Parameters ChipUartLowLevel::usart6parameters {USART6_BASE,
+		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB2ENR), __builtin_ctzl(RCC_APB2ENR_USART6EN)),
+		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB2RSTR), __builtin_ctzl(RCC_APB2RSTR_USART6RST)),
+		USART6_IRQn};
 
 #endif	// def CONFIG_CHIP_STM32_USARTV1_HAS_USART6
 
 #ifdef CONFIG_CHIP_STM32_USARTV1_HAS_UART7
 
-const ChipUartLowLevel::Parameters ChipUartLowLevel::uart7parameters {UART7, &UART7_CR1_RXNEIE_bb,
-		&UART7_CR1_TCIE_bb, &UART7_CR1_TXEIE_bb, &RCC_APB1ENR_UART7EN_bb, &RCC_APB1RSTR_UART7RST_bb, UART7_IRQn};
+const ChipUartLowLevel::Parameters ChipUartLowLevel::uart7parameters {UART7_BASE,
+		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB1ENR), __builtin_ctzl(RCC_APB1ENR_UART7EN)),
+		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB1RSTR), __builtin_ctzl(RCC_APB1RSTR_UART7RST)),
+		UART7_IRQn};
 
 #endif	// def CONFIG_CHIP_STM32_USARTV1_HAS_UART7
 
 #ifdef CONFIG_CHIP_STM32_USARTV1_HAS_UART8
 
-const ChipUartLowLevel::Parameters ChipUartLowLevel::uart8parameters {UART8, &UART8_CR1_RXNEIE_bb,
-		&UART8_CR1_TCIE_bb, &UART8_CR1_TXEIE_bb, &RCC_APB1ENR_UART8EN_bb, &RCC_APB1RSTR_UART8RST_bb, UART8_IRQn};
+const ChipUartLowLevel::Parameters ChipUartLowLevel::uart8parameters {UART8_BASE,
+		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB1ENR), __builtin_ctzl(RCC_APB1ENR_UART8EN)),
+		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB1RSTR), __builtin_ctzl(RCC_APB1RSTR_UART8RST)),
+		UART8_IRQn};
 
 #endif	// def CONFIG_CHIP_STM32_USARTV1_HAS_UART8
 
