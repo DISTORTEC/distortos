@@ -39,7 +39,8 @@ void* initializeStack(void* const buffer, const size_t size, Thread& thread, voi
 	stackFrame->softwareStackFrame.r10 = reinterpret_cast<void*>(0xaaaaaaaa);
 	stackFrame->softwareStackFrame.r11 = reinterpret_cast<void*>(0xbbbbbbbb);
 #if __FPU_PRESENT == 1 && __FPU_USED == 1
-	stackFrame->softwareStackFrame.exceptionReturn = SoftwareStackFrame::defaultExceptionReturn;
+	stackFrame->softwareStackFrame.exceptionReturn =
+			reinterpret_cast<void*>(SoftwareStackFrame::defaultExceptionReturn);
 #endif	// __FPU_PRESENT == 1 && __FPU_USED == 1
 
 	stackFrame->exceptionStackFrame.r0 = &thread;
@@ -49,7 +50,7 @@ void* initializeStack(void* const buffer, const size_t size, Thread& thread, voi
 	stackFrame->exceptionStackFrame.r12 = reinterpret_cast<void*>(0xcccccccc);
 	stackFrame->exceptionStackFrame.lr = nullptr;
 	stackFrame->exceptionStackFrame.pc = reinterpret_cast<void*>(&internal::threadRunner);
-	stackFrame->exceptionStackFrame.xpsr = ExceptionStackFrame::defaultXpsr;
+	stackFrame->exceptionStackFrame.xpsr = reinterpret_cast<void*>(ExceptionStackFrame::defaultXpsr);
 
 	return stackFrame;
 }

@@ -27,64 +27,6 @@ namespace
 {
 
 /*---------------------------------------------------------------------------------------------------------------------+
-| local objects
-+---------------------------------------------------------------------------------------------------------------------*/
-
-#ifdef CONFIG_CHIP_STM32_SPIV1_HAS_SPI1
-
-/// "enable" bit in RCC registers for SPI1
-#define RCC_APB2ENR_SPI1EN_bb				BITBAND(&RCC->APB2ENR, __builtin_ctzl(RCC_APB2ENR_SPI1EN))
-/// "reset" bit in RCC registers for SPI1
-#define RCC_APB2RSTR_SPI1RST_bb				BITBAND(&RCC->APB2RSTR, __builtin_ctzl(RCC_APB2RSTR_SPI1RST))
-
-#endif	// def CONFIG_CHIP_STM32_SPIV1_HAS_SPI1
-
-#ifdef CONFIG_CHIP_STM32_SPIV1_HAS_SPI2
-
-/// "enable" bit in RCC registers for SPI2
-#define RCC_APB1ENR_SPI2EN_bb				BITBAND(&RCC->APB1ENR, __builtin_ctzl(RCC_APB1ENR_SPI2EN))
-/// "reset" bit in RCC registers for SPI2
-#define RCC_APB1RSTR_SPI2RST_bb				BITBAND(&RCC->APB1RSTR, __builtin_ctzl(RCC_APB1RSTR_SPI2RST))
-
-#endif	// def CONFIG_CHIP_STM32_SPIV1_HAS_SPI2
-
-#ifdef CONFIG_CHIP_STM32_SPIV1_HAS_SPI3
-
-/// "enable" bit in RCC registers for SPI3
-#define RCC_APB1ENR_SPI3EN_bb				BITBAND(&RCC->APB1ENR, __builtin_ctzl(RCC_APB1ENR_SPI3EN))
-/// "reset" bit in RCC registers for SPI3
-#define RCC_APB1RSTR_SPI3RST_bb				BITBAND(&RCC->APB1RSTR, __builtin_ctzl(RCC_APB1RSTR_SPI3RST))
-
-#endif	// def CONFIG_CHIP_STM32_SPIV1_HAS_SPI3
-
-#ifdef CONFIG_CHIP_STM32_SPIV1_HAS_SPI4
-
-/// "enable" bit in RCC registers for SPI4
-#define RCC_APB2ENR_SPI4EN_bb				BITBAND(&RCC->APB2ENR, __builtin_ctzl(RCC_APB2ENR_SPI4EN))
-/// "reset" bit in RCC registers for SPI4
-#define RCC_APB2RSTR_SPI4RST_bb				BITBAND(&RCC->APB2RSTR, __builtin_ctzl(RCC_APB2RSTR_SPI4RST))
-
-#endif	// def CONFIG_CHIP_STM32_SPIV1_HAS_SPI4
-
-#ifdef CONFIG_CHIP_STM32_SPIV1_HAS_SPI5
-
-/// "enable" bit in RCC registers for SPI5
-#define RCC_APB2ENR_SPI5EN_bb				BITBAND(&RCC->APB2ENR, __builtin_ctzl(RCC_APB2ENR_SPI5EN))
-/// "reset" bit in RCC registers for SPI5
-#define RCC_APB2RSTR_SPI5RST_bb				BITBAND(&RCC->APB2RSTR, __builtin_ctzl(RCC_APB2RSTR_SPI5RST))
-
-#endif	// def CONFIG_CHIP_STM32_SPIV1_HAS_SPI5
-
-#ifdef CONFIG_CHIP_STM32_SPIV1_HAS_SPI6
-
-/// "enable" bit in RCC registers for SPI6
-#define RCC_APB2ENR_SPI6EN_bb				BITBAND(&RCC->APB2ENR, __builtin_ctzl(RCC_APB2ENR_SPI6EN))
-/// "reset" bit in RCC registers for SPI6
-#define RCC_APB2RSTR_SPI6RST_bb				BITBAND(&RCC->APB2RSTR, __builtin_ctzl(RCC_APB2RSTR_SPI6RST))
-
-#endif	// def CONFIG_CHIP_STM32_SPIV1_HAS_SPI6
-
-/*---------------------------------------------------------------------------------------------------------------------+
 | local functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
@@ -109,14 +51,14 @@ uint8_t getWordLength(const uint32_t cr1)
 class ChipSpiMasterLowLevel::Parameters
 {
 	/// base address of APB1 peripherals
-	constexpr static const void* apb1PeripheralsBaseAddress {reinterpret_cast<const void*>(APB1PERIPH_BASE)};
+	constexpr static uintptr_t apb1PeripheralsBaseAddress {APB1PERIPH_BASE};
 	/// base address of APB2 peripherals
-	constexpr static const void* apb2PeripheralsBaseAddress {reinterpret_cast<const void*>(APB2PERIPH_BASE)};
+	constexpr static uintptr_t apb2PeripheralsBaseAddress {APB2PERIPH_BASE};
 	/// base address of AHB peripherals
 #if defined(AHBPERIPH_BASE)
-	constexpr static const void* ahbPeripheralsBaseAddress {reinterpret_cast<const void*>(AHBPERIPH_BASE)};
+	constexpr static uintptr_t ahbPeripheralsBaseAddress {AHBPERIPH_BASE};
 #elif defined(AHB1PERIPH_BASE)
-	constexpr static const void* ahbPeripheralsBaseAddress {reinterpret_cast<const void*>(AHB1PERIPH_BASE)};
+	constexpr static uintptr_t ahbPeripheralsBaseAddress {AHB1PERIPH_BASE};
 #else
 	#error "Unknown base address of AHB peripherals!"
 #endif
@@ -129,31 +71,23 @@ public:
 	/**
 	 * \brief Parameters's constructor
 	 *
-	 * \param [in] spi is a pointer to SPI_TypeDef with registers
-	 * \param [in] speBb is a pointer to bitband alias of SPE bit in SPI_CR1 register
-	 * \param [in] errieBb is a pointer to bitband alias of ERRIE bit in SPI_CR2 register
-	 * \param [in] rxneieBb is a pointer to bitband alias of RXNEIE bit in SPI_CR2 register
-	 * \param [in] txeieBb is a pointer to bitband alias of TXEIE bit in SPI_CR2 register
-	 * \param [in] rccEnBb is a pointer to bitband alias of appropriate SPIxEN bit in RCC register
-	 * \param [in] rccRstBb is a pointer to bitband alias of appropriate SPIxRST bit in RCC register
+	 * \param [in] spi is a base address of SPI peripheral
+	 * \param [in] rccEnBbAddress is an address of bitband alias of appropriate SPIxEN bit in RCC register
+	 * \param [in] rccRstBbAddress is an address of bitband alias of appropriate SPIxRST bit in RCC register
 	 * \param [in] irqNumber is the NVIC's IRQ number of associated SPI
-	 *
-	 * \note Don't add "const" to values of pointers, don't use references - see
-	 * https://gcc.gnu.org/bugzilla/show_bug.cgi?id=71113
 	 */
 
-	constexpr Parameters(SPI_TypeDef* spi, volatile unsigned long* speBb, volatile unsigned long* errieBb,
-			volatile unsigned long* rxneieBb, volatile unsigned long* txeieBb, volatile unsigned long* rccEnBb,
-			volatile unsigned long* rccRstBb, const IRQn_Type irqNumber) :
-					spi_{spi},
-					peripheralFrequency_{spi < apb2PeripheralsBaseAddress ? apb1Frequency :
-							spi < ahbPeripheralsBaseAddress ? apb2Frequency : ahbFrequency},
-					speBb_{speBb},
-					errieBb_{errieBb},
-					rxneieBb_{rxneieBb},
-					txeieBb_{txeieBb},
-					rccEnBb_{rccEnBb},
-					rccRstBb_{rccRstBb},
+	constexpr Parameters(const uintptr_t spiBase, const uintptr_t rccEnBbAddress, const uintptr_t rccRstBbAddress,
+			const IRQn_Type irqNumber) :
+					spiBase_{spiBase},
+					peripheralFrequency_{spiBase < apb2PeripheralsBaseAddress ? apb1Frequency :
+							spiBase < ahbPeripheralsBaseAddress ? apb2Frequency : ahbFrequency},
+					speBbAddress_{BITBAND_ADDRESS(spiBase + offsetof(SPI_TypeDef, CR1), SPI_CR1_SPE_bit)},
+					errieBbAddress_{BITBAND_ADDRESS(spiBase + offsetof(SPI_TypeDef, CR2), SPI_CR2_ERRIE_bit)},
+					rxneieBbAddress_{BITBAND_ADDRESS(spiBase + offsetof(SPI_TypeDef, CR2), SPI_CR2_RXNEIE_bit)},
+					txeieBbAddress_{BITBAND_ADDRESS(spiBase + offsetof(SPI_TypeDef, CR2), SPI_CR2_TXEIE_bit)},
+					rccEnBbAddress_{rccEnBbAddress},
+					rccRstBbAddress_{rccRstBbAddress},
 					irqNumber_{irqNumber}
 	{
 
@@ -176,7 +110,7 @@ public:
 
 	void enableErrInterrupt(const bool enable) const
 	{
-		*errieBb_ = enable;
+		*reinterpret_cast<volatile unsigned long*>(errieBbAddress_) = enable;
 	}
 
 	/**
@@ -198,7 +132,7 @@ public:
 
 	void enablePeripheral(const bool enable) const
 	{
-		*speBb_ = enable;
+		*reinterpret_cast<volatile unsigned long*>(speBbAddress_) = enable;
 	}
 
 	/**
@@ -209,7 +143,7 @@ public:
 
 	void enablePeripheralClock(const bool enable) const
 	{
-		*rccEnBb_ = enable;
+		*reinterpret_cast<volatile unsigned long*>(rccEnBbAddress_) = enable;
 	}
 
 	/**
@@ -220,7 +154,7 @@ public:
 
 	void enableRxneInterrupt(const bool enable) const
 	{
-		*rxneieBb_ = enable;
+		*reinterpret_cast<volatile unsigned long*>(rxneieBbAddress_) = enable;
 	}
 
 	/**
@@ -231,7 +165,7 @@ public:
 
 	void enableTxeInterrupt(const bool enable) const
 	{
-		*txeieBb_ = enable;
+		*reinterpret_cast<volatile unsigned long*>(txeieBbAddress_) = enable;
 	}
 
 	/**
@@ -249,7 +183,7 @@ public:
 
 	SPI_TypeDef& getSpi() const
 	{
-		return *spi_;
+		return *reinterpret_cast<SPI_TypeDef*>(spiBase_);
 	}
 
 	/**
@@ -260,35 +194,35 @@ public:
 
 	void resetPeripheral() const
 	{
-		*rccRstBb_ = 1;
-		*rccRstBb_ = 0;
+		*reinterpret_cast<volatile unsigned long*>(rccRstBbAddress_) = 1;
+		*reinterpret_cast<volatile unsigned long*>(rccRstBbAddress_) = 0;
 	}
 
 private:
 
-	/// pointer to SPI_TypeDef with registers
-	SPI_TypeDef* spi_;
+	/// base address of SPI peripheral
+	uintptr_t spiBase_;
 
 	/// peripheral clock frequency, Hz
 	uint32_t peripheralFrequency_;
 
-	/// pointer to bitband alias of SPE bit in SPI_CR1 register
-	volatile unsigned long* speBb_;
+	/// address of bitband alias of SPE bit in SPI_CR1 register
+	uintptr_t speBbAddress_;
 
-	/// pointer to bitband alias of ERRIE bit in SPI_CR2 register
-	volatile unsigned long* errieBb_;
+	/// address of bitband alias of ERRIE bit in SPI_CR2 register
+	uintptr_t errieBbAddress_;
 
-	/// pointer to bitband alias of RXNEIE bit in SPI_CR2 register
-	volatile unsigned long* rxneieBb_;
+	/// address of bitband alias of RXNEIE bit in SPI_CR2 register
+	uintptr_t rxneieBbAddress_;
 
-	/// pointer to bitband alias of TXEIE bit in SPI_CR2 register
-	volatile unsigned long* txeieBb_;
+	/// address of bitband alias of TXEIE bit in SPI_CR2 register
+	uintptr_t txeieBbAddress_;
 
-	/// pointer to bitband alias of appropriate SPIxEN bit in RCC register
-	volatile unsigned long* rccEnBb_;
+	/// address of bitband alias of appropriate SPIxEN bit in RCC register
+	uintptr_t rccEnBbAddress_;
 
-	/// pointer to bitband alias of appropriate SPIxRST bit in RCC register
-	volatile unsigned long* rccRstBb_;
+	/// address of bitband alias of appropriate SPIxRST bit in RCC register
+	uintptr_t rccRstBbAddress_;
 
 	/// NVIC's IRQ number of associated SPI
 	IRQn_Type irqNumber_;
@@ -300,48 +234,54 @@ private:
 
 #ifdef CONFIG_CHIP_STM32_SPIV1_HAS_SPI1
 
-const ChipSpiMasterLowLevel::Parameters ChipSpiMasterLowLevel::spi1parameters {SPI1, &SPI1_CR1_SPE_bb,
-		&SPI1_CR2_ERRIE_bb, &SPI1_CR2_RXNEIE_bb, &SPI1_CR2_TXEIE_bb, &RCC_APB2ENR_SPI1EN_bb, &RCC_APB2RSTR_SPI1RST_bb,
+const ChipSpiMasterLowLevel::Parameters ChipSpiMasterLowLevel::spi1parameters {SPI1_BASE,
+		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB2ENR), __builtin_ctzl(RCC_APB2ENR_SPI1EN)),
+		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB2RSTR), __builtin_ctzl(RCC_APB2RSTR_SPI1RST)),
 		SPI1_IRQn};
 
 #endif	// def CONFIG_CHIP_STM32_SPIV1_HAS_SPI1
 
 #ifdef CONFIG_CHIP_STM32_SPIV1_HAS_SPI2
 
-const ChipSpiMasterLowLevel::Parameters ChipSpiMasterLowLevel::spi2parameters {SPI2, &SPI2_CR1_SPE_bb,
-		&SPI2_CR2_ERRIE_bb, &SPI2_CR2_RXNEIE_bb, &SPI2_CR2_TXEIE_bb, &RCC_APB1ENR_SPI2EN_bb, &RCC_APB1RSTR_SPI2RST_bb,
+const ChipSpiMasterLowLevel::Parameters ChipSpiMasterLowLevel::spi2parameters {SPI2_BASE,
+		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB1ENR), __builtin_ctzl(RCC_APB1ENR_SPI2EN)),
+		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB1RSTR), __builtin_ctzl(RCC_APB1RSTR_SPI2RST)),
 		SPI2_IRQn};
 
 #endif	// def CONFIG_CHIP_STM32_SPIV1_HAS_SPI2
 
 #ifdef CONFIG_CHIP_STM32_SPIV1_HAS_SPI3
 
-const ChipSpiMasterLowLevel::Parameters ChipSpiMasterLowLevel::spi3parameters {SPI3, &SPI3_CR1_SPE_bb,
-		&SPI3_CR2_ERRIE_bb, &SPI3_CR2_RXNEIE_bb, &SPI3_CR2_TXEIE_bb, &RCC_APB1ENR_SPI3EN_bb, &RCC_APB1RSTR_SPI3RST_bb,
+const ChipSpiMasterLowLevel::Parameters ChipSpiMasterLowLevel::spi3parameters {SPI3_BASE,
+		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB1ENR), __builtin_ctzl(RCC_APB1ENR_SPI3EN)),
+		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB1RSTR), __builtin_ctzl(RCC_APB1RSTR_SPI3RST)),
 		SPI3_IRQn};
 
 #endif	// def CONFIG_CHIP_STM32_SPIV1_HAS_SPI3
 
 #ifdef CONFIG_CHIP_STM32_SPIV1_HAS_SPI4
 
-const ChipSpiMasterLowLevel::Parameters ChipSpiMasterLowLevel::spi4parameters {SPI4, &SPI4_CR1_SPE_bb,
-		&SPI4_CR2_ERRIE_bb, &SPI4_CR2_RXNEIE_bb, &SPI4_CR2_TXEIE_bb, &RCC_APB2ENR_SPI4EN_bb, &RCC_APB2RSTR_SPI4RST_bb,
+const ChipSpiMasterLowLevel::Parameters ChipSpiMasterLowLevel::spi4parameters {SPI4_BASE,
+		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB2ENR), __builtin_ctzl(RCC_APB2ENR_SPI4EN)),
+		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB2RSTR), __builtin_ctzl(RCC_APB2RSTR_SPI4RST)),
 		SPI4_IRQn};
 
 #endif	// def CONFIG_CHIP_STM32_SPIV1_HAS_SPI4
 
 #ifdef CONFIG_CHIP_STM32_SPIV1_HAS_SPI5
 
-const ChipSpiMasterLowLevel::Parameters ChipSpiMasterLowLevel::spi5parameters {SPI5, &SPI5_CR1_SPE_bb,
-		&SPI5_CR2_ERRIE_bb, &SPI5_CR2_RXNEIE_bb, &SPI5_CR2_TXEIE_bb, &RCC_APB2ENR_SPI5EN_bb, &RCC_APB2RSTR_SPI5RST_bb,
+const ChipSpiMasterLowLevel::Parameters ChipSpiMasterLowLevel::spi5parameters {SPI5_BASE,
+		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB2ENR), __builtin_ctzl(RCC_APB2ENR_SPI5EN)),
+		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB2RSTR), __builtin_ctzl(RCC_APB2RSTR_SPI5RST)),
 		SPI5_IRQn};
 
 #endif	// def CONFIG_CHIP_STM32_SPIV1_HAS_SPI5
 
 #ifdef CONFIG_CHIP_STM32_SPIV1_HAS_SPI6
 
-const ChipSpiMasterLowLevel::Parameters ChipSpiMasterLowLevel::spi6parameters {SPI6, &SPI6_CR1_SPE_bb,
-		&SPI6_CR2_ERRIE_bb, &SPI6_CR2_RXNEIE_bb, &SPI6_CR2_TXEIE_bb, &RCC_APB2ENR_SPI6EN_bb, &RCC_APB2RSTR_SPI6RST_bb,
+const ChipSpiMasterLowLevel::Parameters ChipSpiMasterLowLevel::spi6parameters {SPI6_BASE,
+		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB2ENR), __builtin_ctzl(RCC_APB2ENR_SPI6EN)),
+		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB2RSTR), __builtin_ctzl(RCC_APB2RSTR_SPI6RST)),
 		SPI6_IRQn};
 
 #endif	// def CONFIG_CHIP_STM32_SPIV1_HAS_SPI6
