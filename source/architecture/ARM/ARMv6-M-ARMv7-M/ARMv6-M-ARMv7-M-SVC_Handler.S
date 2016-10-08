@@ -22,7 +22,7 @@
 
 SVC_Handler:
 
-	mrs		r0, PSP				// get thread stack pointer
+	mrs		r0, psp				// get thread stack pointer
 	push	{r0, lr}
 
 #ifdef __ARM_ARCH_6M__

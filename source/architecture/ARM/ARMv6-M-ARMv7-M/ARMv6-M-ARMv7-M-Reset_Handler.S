@@ -32,9 +32,9 @@ Reset_Handler:
 
 	// Initialize the process stack pointer
 	ldr		r0, =__process_stack_end
-	msr		PSP, r0
+	msr		psp, r0
 
-	// Thread mode uses process stack (PSP) and is privileged
+	// Thread mode uses process stack (psp) and is privileged
 	movs	r0, #CONTROL_SPSEL
 	msr		CONTROL, r0
 	isb

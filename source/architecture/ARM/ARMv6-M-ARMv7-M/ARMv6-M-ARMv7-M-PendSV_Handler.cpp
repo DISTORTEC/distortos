@@ -78,7 +78,7 @@ extern "C" __attribute__ ((naked)) void PendSV_Handler()
 
 	asm volatile
 	(
-			"	mrs			r0, PSP							\n"
+			"	mrs			r0, psp							\n"
 			"	sub			r0, #0x10						\n"
 			"	stmia		r0!, {r4-r7}					\n"	// save lower half of current thread's context
 			"	mov			r4, r8							\n"
@@ -100,7 +100,7 @@ extern "C" __attribute__ ((naked)) void PendSV_Handler()
 			"	mov			r10, r6							\n"
 			"	mov			r11, r7							\n"
 			"	ldmia		r0!, {r4-r7}					\n"	// load lower half of new thread's context
-			"	msr			PSP, r0							\n"
+			"	msr			psp, r0							\n"
 
 			::	[schedulerSwitchContext] "i" (schedulerSwitchContextWrapper)
 	);
@@ -109,7 +109,7 @@ extern "C" __attribute__ ((naked)) void PendSV_Handler()
 
 	asm volatile
 	(
-			"	mrs			r0, PSP							\n"
+			"	mrs			r0, psp							\n"
 #if __FPU_PRESENT == 1 && __FPU_USED == 1
 			"	tst			lr, #(1 << 4)					\n"	// was floating-point used by the thread?
 			"	it			eq								\n"
@@ -132,7 +132,7 @@ extern "C" __attribute__ ((naked)) void PendSV_Handler()
 			"	mov			lr, r4							\n"
 			"	ldmia		r0!, {r4-r11}					\n"	// load context of new thread
 #endif	// __FPU_PRESENT == 1 && __FPU_USED == 1
-			"	msr			PSP, r0							\n"
+			"	msr			psp, r0							\n"
 
 			::	[schedulerSwitchContext] "i" (schedulerSwitchContextWrapper)
 	);
