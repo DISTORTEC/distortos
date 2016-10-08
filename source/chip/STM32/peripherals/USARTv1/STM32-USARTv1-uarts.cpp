@@ -25,7 +25,7 @@ namespace chip
 
 #ifdef CONFIG_CHIP_STM32_USARTV1_USART1_ENABLE
 
-ChipUartLowLevel usart1 {ChipUartLowLevel::usart1parameters};
+ChipUartLowLevel usart1 {ChipUartLowLevel::usart1Parameters};
 
 /**
  * \brief USART1 interrupt handler
@@ -44,7 +44,7 @@ extern "C" void USART1_IRQHandler()
 
 #ifdef CONFIG_CHIP_STM32_USARTV1_USART2_ENABLE
 
-ChipUartLowLevel usart2 {ChipUartLowLevel::usart2parameters};
+ChipUartLowLevel usart2 {ChipUartLowLevel::usart2Parameters};
 
 /**
  * \brief USART2 interrupt handler
@@ -63,7 +63,7 @@ extern "C" void USART2_IRQHandler()
 
 #ifdef CONFIG_CHIP_STM32_USARTV1_USART3_ENABLE
 
-ChipUartLowLevel usart3 {ChipUartLowLevel::usart3parameters};
+ChipUartLowLevel usart3 {ChipUartLowLevel::usart3Parameters};
 
 /**
  * \brief USART3 interrupt handler
@@ -82,7 +82,7 @@ extern "C" void USART3_IRQHandler()
 
 #ifdef CONFIG_CHIP_STM32_USARTV1_UART4_ENABLE
 
-ChipUartLowLevel uart4 {ChipUartLowLevel::uart4parameters};
+ChipUartLowLevel uart4 {ChipUartLowLevel::uart4Parameters};
 
 /**
  * \brief UART4 interrupt handler
@@ -101,7 +101,7 @@ extern "C" void UART4_IRQHandler()
 
 #ifdef CONFIG_CHIP_STM32_USARTV1_UART5_ENABLE
 
-ChipUartLowLevel uart5 {ChipUartLowLevel::uart5parameters};
+ChipUartLowLevel uart5 {ChipUartLowLevel::uart5Parameters};
 
 /**
  * \brief UART5 interrupt handler
@@ -120,7 +120,7 @@ extern "C" void UART5_IRQHandler()
 
 #ifdef CONFIG_CHIP_STM32_USARTV1_USART6_ENABLE
 
-ChipUartLowLevel usart6 {ChipUartLowLevel::usart6parameters};
+ChipUartLowLevel usart6 {ChipUartLowLevel::usart6Parameters};
 
 /**
  * \brief USART6 interrupt handler
@@ -139,7 +139,7 @@ extern "C" void USART6_IRQHandler()
 
 #ifdef CONFIG_CHIP_STM32_USARTV1_UART7_ENABLE
 
-ChipUartLowLevel uart7 {ChipUartLowLevel::uart7parameters};
+ChipUartLowLevel uart7 {ChipUartLowLevel::uart7Parameters};
 
 /**
  * \brief UART7 interrupt handler
@@ -158,7 +158,7 @@ extern "C" void UART7_IRQHandler()
 
 #ifdef CONFIG_CHIP_STM32_USARTV1_UART8_ENABLE
 
-ChipUartLowLevel uart8 {ChipUartLowLevel::uart8parameters};
+ChipUartLowLevel uart8 {ChipUartLowLevel::uart8Parameters};
 
 /**
  * \brief UART8 interrupt handler

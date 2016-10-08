@@ -237,7 +237,7 @@ private:
 
 #ifdef CONFIG_CHIP_STM32_USARTV1_HAS_USART1
 
-const ChipUartLowLevel::Parameters ChipUartLowLevel::usart1parameters {USART1_BASE,
+const ChipUartLowLevel::Parameters ChipUartLowLevel::usart1Parameters {USART1_BASE,
 		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB2ENR), __builtin_ctzl(RCC_APB2ENR_USART1EN)),
 		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB2RSTR), __builtin_ctzl(RCC_APB2RSTR_USART1RST)),
 		USART1_IRQn};
@@ -246,7 +246,7 @@ const ChipUartLowLevel::Parameters ChipUartLowLevel::usart1parameters {USART1_BA
 
 #ifdef CONFIG_CHIP_STM32_USARTV1_HAS_USART2
 
-const ChipUartLowLevel::Parameters ChipUartLowLevel::usart2parameters {USART2_BASE,
+const ChipUartLowLevel::Parameters ChipUartLowLevel::usart2Parameters {USART2_BASE,
 		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB1ENR), __builtin_ctzl(RCC_APB1ENR_USART2EN)),
 		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB1RSTR), __builtin_ctzl(RCC_APB1RSTR_USART2RST)),
 		USART2_IRQn};
@@ -255,7 +255,7 @@ const ChipUartLowLevel::Parameters ChipUartLowLevel::usart2parameters {USART2_BA
 
 #ifdef CONFIG_CHIP_STM32_USARTV1_HAS_USART3
 
-const ChipUartLowLevel::Parameters ChipUartLowLevel::usart3parameters {USART3_BASE,
+const ChipUartLowLevel::Parameters ChipUartLowLevel::usart3Parameters {USART3_BASE,
 		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB1ENR), __builtin_ctzl(RCC_APB1ENR_USART3EN)),
 		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB1RSTR), __builtin_ctzl(RCC_APB1RSTR_USART3RST)),
 		USART3_IRQn};
@@ -264,7 +264,7 @@ const ChipUartLowLevel::Parameters ChipUartLowLevel::usart3parameters {USART3_BA
 
 #ifdef CONFIG_CHIP_STM32_USARTV1_HAS_UART4
 
-const ChipUartLowLevel::Parameters ChipUartLowLevel::uart4parameters {UART4_BASE,
+const ChipUartLowLevel::Parameters ChipUartLowLevel::uart4Parameters {UART4_BASE,
 		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB1ENR), __builtin_ctzl(RCC_APB1ENR_UART4EN)),
 		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB1RSTR), __builtin_ctzl(RCC_APB1RSTR_UART4RST)),
 		UART4_IRQn};
@@ -273,7 +273,7 @@ const ChipUartLowLevel::Parameters ChipUartLowLevel::uart4parameters {UART4_BASE
 
 #ifdef CONFIG_CHIP_STM32_USARTV1_HAS_UART5
 
-const ChipUartLowLevel::Parameters ChipUartLowLevel::uart5parameters {UART5_BASE,
+const ChipUartLowLevel::Parameters ChipUartLowLevel::uart5Parameters {UART5_BASE,
 		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB1ENR), __builtin_ctzl(RCC_APB1ENR_UART5EN)),
 		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB1RSTR), __builtin_ctzl(RCC_APB1RSTR_UART5RST)),
 		UART5_IRQn};
@@ -282,7 +282,7 @@ const ChipUartLowLevel::Parameters ChipUartLowLevel::uart5parameters {UART5_BASE
 
 #ifdef CONFIG_CHIP_STM32_USARTV1_HAS_USART6
 
-const ChipUartLowLevel::Parameters ChipUartLowLevel::usart6parameters {USART6_BASE,
+const ChipUartLowLevel::Parameters ChipUartLowLevel::usart6Parameters {USART6_BASE,
 		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB2ENR), __builtin_ctzl(RCC_APB2ENR_USART6EN)),
 		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB2RSTR), __builtin_ctzl(RCC_APB2RSTR_USART6RST)),
 		USART6_IRQn};
@@ -291,7 +291,7 @@ const ChipUartLowLevel::Parameters ChipUartLowLevel::usart6parameters {USART6_BA
 
 #ifdef CONFIG_CHIP_STM32_USARTV1_HAS_UART7
 
-const ChipUartLowLevel::Parameters ChipUartLowLevel::uart7parameters {UART7_BASE,
+const ChipUartLowLevel::Parameters ChipUartLowLevel::uart7Parameters {UART7_BASE,
 		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB1ENR), __builtin_ctzl(RCC_APB1ENR_UART7EN)),
 		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB1RSTR), __builtin_ctzl(RCC_APB1RSTR_UART7RST)),
 		UART7_IRQn};
@@ -300,7 +300,7 @@ const ChipUartLowLevel::Parameters ChipUartLowLevel::uart7parameters {UART7_BASE
 
 #ifdef CONFIG_CHIP_STM32_USARTV1_HAS_UART8
 
-const ChipUartLowLevel::Parameters ChipUartLowLevel::uart8parameters {UART8_BASE,
+const ChipUartLowLevel::Parameters ChipUartLowLevel::uart8Parameters {UART8_BASE,
 		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB1ENR), __builtin_ctzl(RCC_APB1ENR_UART8EN)),
 		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB1RSTR), __builtin_ctzl(RCC_APB1RSTR_UART8RST)),
 		UART8_IRQn};

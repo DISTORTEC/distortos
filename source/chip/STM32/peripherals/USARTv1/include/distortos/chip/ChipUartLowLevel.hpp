@@ -38,56 +38,56 @@ public:
 #ifdef CONFIG_CHIP_STM32_USARTV1_HAS_USART1
 
 	/// parameters for construction of UART low-level driver for USART1
-	static const Parameters usart1parameters;
+	static const Parameters usart1Parameters;
 
 #endif	// def CONFIG_CHIP_STM32_USARTV1_HAS_USART1
 
 #ifdef CONFIG_CHIP_STM32_USARTV1_HAS_USART2
 
 	/// parameters for construction of UART low-level driver for USART2
-	static const Parameters usart2parameters;
+	static const Parameters usart2Parameters;
 
 #endif	// def CONFIG_CHIP_STM32_USARTV1_HAS_USART2
 
 #ifdef CONFIG_CHIP_STM32_USARTV1_HAS_USART3
 
 	/// parameters for construction of UART low-level driver for USART3
-	static const Parameters usart3parameters;
+	static const Parameters usart3Parameters;
 
 #endif	// def CONFIG_CHIP_STM32_USARTV1_HAS_USART3
 
 #ifdef CONFIG_CHIP_STM32_USARTV1_HAS_UART4
 
 	/// parameters for construction of UART low-level driver for UART4
-	static const Parameters uart4parameters;
+	static const Parameters uart4Parameters;
 
 #endif	// def CONFIG_CHIP_STM32_USARTV1_HAS_UART4
 
 #ifdef CONFIG_CHIP_STM32_USARTV1_HAS_UART5
 
 	/// parameters for construction of UART low-level driver for UART5
-	static const Parameters uart5parameters;
+	static const Parameters uart5Parameters;
 
 #endif	// def CONFIG_CHIP_STM32_USARTV1_HAS_UART5
 
 #ifdef CONFIG_CHIP_STM32_USARTV1_HAS_USART6
 
 	/// parameters for construction of UART low-level driver for USART6
-	static const Parameters usart6parameters;
+	static const Parameters usart6Parameters;
 
 #endif	// def CONFIG_CHIP_STM32_USARTV1_HAS_USART6
 
 #ifdef CONFIG_CHIP_STM32_USARTV1_HAS_UART7
 
 	/// parameters for construction of UART low-level driver for UART7
-	static const Parameters uart7parameters;
+	static const Parameters uart7Parameters;
 
 #endif	// def CONFIG_CHIP_STM32_USARTV1_HAS_UART7
 
 #ifdef CONFIG_CHIP_STM32_USARTV1_HAS_UART8
 
 	/// parameters for construction of UART low-level driver for UART8
-	static const Parameters uart8parameters;
+	static const Parameters uart8Parameters;
 
 #endif	// def CONFIG_CHIP_STM32_USARTV1_HAS_UART8
 
