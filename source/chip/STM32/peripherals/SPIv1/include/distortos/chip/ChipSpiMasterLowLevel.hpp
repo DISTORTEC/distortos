@@ -34,42 +34,42 @@ public:
 #ifdef CONFIG_CHIP_STM32_SPIV1_HAS_SPI1
 
 	/// parameters for construction of SPI master low-level driver for SPI1
-	static const Parameters spi1parameters;
+	static const Parameters spi1Parameters;
 
 #endif	// def CONFIG_CHIP_STM32_SPIV1_HAS_SPI1
 
 #ifdef CONFIG_CHIP_STM32_SPIV1_HAS_SPI2
 
 	/// parameters for construction of SPI master low-level driver for SPI2
-	static const Parameters spi2parameters;
+	static const Parameters spi2Parameters;
 
 #endif	// def CONFIG_CHIP_STM32_SPIV1_HAS_SPI2
 
 #ifdef CONFIG_CHIP_STM32_SPIV1_HAS_SPI3
 
 	/// parameters for construction of SPI master low-level driver for SPI3
-	static const Parameters spi3parameters;
+	static const Parameters spi3Parameters;
 
 #endif	// def CONFIG_CHIP_STM32_SPIV1_HAS_SPI3
 
 #ifdef CONFIG_CHIP_STM32_SPIV1_HAS_SPI4
 
 	/// parameters for construction of SPI master low-level driver for SPI4
-	static const Parameters spi4parameters;
+	static const Parameters spi4Parameters;
 
 #endif	// def CONFIG_CHIP_STM32_SPIV1_HAS_SPI4
 
 #ifdef CONFIG_CHIP_STM32_SPIV1_HAS_SPI5
 
 	/// parameters for construction of SPI master low-level driver for SPI5
-	static const Parameters spi5parameters;
+	static const Parameters spi5Parameters;
 
 #endif	// def CONFIG_CHIP_STM32_SPIV1_HAS_SPI5
 
 #ifdef CONFIG_CHIP_STM32_SPIV1_HAS_SPI6
 
 	/// parameters for construction of SPI master low-level driver for SPI6
-	static const Parameters spi6parameters;
+	static const Parameters spi6Parameters;
 
 #endif	// def CONFIG_CHIP_STM32_SPIV1_HAS_SPI6
 

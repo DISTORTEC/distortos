@@ -25,7 +25,7 @@ namespace chip
 
 #ifdef CONFIG_CHIP_STM32_SPIV1_SPI1_ENABLE
 
-ChipSpiMasterLowLevel spi1 {ChipSpiMasterLowLevel::spi1parameters};
+ChipSpiMasterLowLevel spi1 {ChipSpiMasterLowLevel::spi1Parameters};
 
 /**
  * \brief SPI1 interrupt handler
@@ -44,7 +44,7 @@ extern "C" void SPI1_IRQHandler()
 
 #ifdef CONFIG_CHIP_STM32_SPIV1_SPI2_ENABLE
 
-ChipSpiMasterLowLevel spi2 {ChipSpiMasterLowLevel::spi2parameters};
+ChipSpiMasterLowLevel spi2 {ChipSpiMasterLowLevel::spi2Parameters};
 
 /**
  * \brief SPI2 interrupt handler
@@ -63,7 +63,7 @@ extern "C" void SPI2_IRQHandler()
 
 #ifdef CONFIG_CHIP_STM32_SPIV1_SPI3_ENABLE
 
-ChipSpiMasterLowLevel spi3 {ChipSpiMasterLowLevel::spi3parameters};
+ChipSpiMasterLowLevel spi3 {ChipSpiMasterLowLevel::spi3Parameters};
 
 /**
  * \brief SPI3 interrupt handler
@@ -82,7 +82,7 @@ extern "C" void SPI3_IRQHandler()
 
 #ifdef CONFIG_CHIP_STM32_SPIV1_SPI4_ENABLE
 
-ChipSpiMasterLowLevel spi4 {ChipSpiMasterLowLevel::spi4parameters};
+ChipSpiMasterLowLevel spi4 {ChipSpiMasterLowLevel::spi4Parameters};
 
 /**
  * \brief SPI4 interrupt handler
@@ -101,7 +101,7 @@ extern "C" void SPI4_IRQHandler()
 
 #ifdef CONFIG_CHIP_STM32_SPIV1_SPI5_ENABLE
 
-ChipSpiMasterLowLevel spi5 {ChipSpiMasterLowLevel::spi5parameters};
+ChipSpiMasterLowLevel spi5 {ChipSpiMasterLowLevel::spi5Parameters};
 
 /**
  * \brief SPI5 interrupt handler
@@ -120,7 +120,7 @@ extern "C" void SPI5_IRQHandler()
 
 #ifdef CONFIG_CHIP_STM32_SPIV1_SPI6_ENABLE
 
-ChipSpiMasterLowLevel spi6 {ChipSpiMasterLowLevel::spi6parameters};
+ChipSpiMasterLowLevel spi6 {ChipSpiMasterLowLevel::spi6Parameters};
 
 /**
  * \brief SPI6 interrupt handler

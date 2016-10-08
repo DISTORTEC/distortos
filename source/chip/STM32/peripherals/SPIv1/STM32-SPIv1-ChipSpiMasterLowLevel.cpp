@@ -234,7 +234,7 @@ private:
 
 #ifdef CONFIG_CHIP_STM32_SPIV1_HAS_SPI1
 
-const ChipSpiMasterLowLevel::Parameters ChipSpiMasterLowLevel::spi1parameters {SPI1_BASE,
+const ChipSpiMasterLowLevel::Parameters ChipSpiMasterLowLevel::spi1Parameters {SPI1_BASE,
 		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB2ENR), __builtin_ctzl(RCC_APB2ENR_SPI1EN)),
 		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB2RSTR), __builtin_ctzl(RCC_APB2RSTR_SPI1RST)),
 		SPI1_IRQn};
@@ -243,7 +243,7 @@ const ChipSpiMasterLowLevel::Parameters ChipSpiMasterLowLevel::spi1parameters {S
 
 #ifdef CONFIG_CHIP_STM32_SPIV1_HAS_SPI2
 
-const ChipSpiMasterLowLevel::Parameters ChipSpiMasterLowLevel::spi2parameters {SPI2_BASE,
+const ChipSpiMasterLowLevel::Parameters ChipSpiMasterLowLevel::spi2Parameters {SPI2_BASE,
 		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB1ENR), __builtin_ctzl(RCC_APB1ENR_SPI2EN)),
 		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB1RSTR), __builtin_ctzl(RCC_APB1RSTR_SPI2RST)),
 		SPI2_IRQn};
@@ -252,7 +252,7 @@ const ChipSpiMasterLowLevel::Parameters ChipSpiMasterLowLevel::spi2parameters {S
 
 #ifdef CONFIG_CHIP_STM32_SPIV1_HAS_SPI3
 
-const ChipSpiMasterLowLevel::Parameters ChipSpiMasterLowLevel::spi3parameters {SPI3_BASE,
+const ChipSpiMasterLowLevel::Parameters ChipSpiMasterLowLevel::spi3Parameters {SPI3_BASE,
 		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB1ENR), __builtin_ctzl(RCC_APB1ENR_SPI3EN)),
 		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB1RSTR), __builtin_ctzl(RCC_APB1RSTR_SPI3RST)),
 		SPI3_IRQn};
@@ -261,7 +261,7 @@ const ChipSpiMasterLowLevel::Parameters ChipSpiMasterLowLevel::spi3parameters {S
 
 #ifdef CONFIG_CHIP_STM32_SPIV1_HAS_SPI4
 
-const ChipSpiMasterLowLevel::Parameters ChipSpiMasterLowLevel::spi4parameters {SPI4_BASE,
+const ChipSpiMasterLowLevel::Parameters ChipSpiMasterLowLevel::spi4Parameters {SPI4_BASE,
 		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB2ENR), __builtin_ctzl(RCC_APB2ENR_SPI4EN)),
 		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB2RSTR), __builtin_ctzl(RCC_APB2RSTR_SPI4RST)),
 		SPI4_IRQn};
@@ -270,7 +270,7 @@ const ChipSpiMasterLowLevel::Parameters ChipSpiMasterLowLevel::spi4parameters {S
 
 #ifdef CONFIG_CHIP_STM32_SPIV1_HAS_SPI5
 
-const ChipSpiMasterLowLevel::Parameters ChipSpiMasterLowLevel::spi5parameters {SPI5_BASE,
+const ChipSpiMasterLowLevel::Parameters ChipSpiMasterLowLevel::spi5Parameters {SPI5_BASE,
 		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB2ENR), __builtin_ctzl(RCC_APB2ENR_SPI5EN)),
 		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB2RSTR), __builtin_ctzl(RCC_APB2RSTR_SPI5RST)),
 		SPI5_IRQn};
@@ -279,7 +279,7 @@ const ChipSpiMasterLowLevel::Parameters ChipSpiMasterLowLevel::spi5parameters {S
 
 #ifdef CONFIG_CHIP_STM32_SPIV1_HAS_SPI6
 
-const ChipSpiMasterLowLevel::Parameters ChipSpiMasterLowLevel::spi6parameters {SPI6_BASE,
+const ChipSpiMasterLowLevel::Parameters ChipSpiMasterLowLevel::spi6Parameters {SPI6_BASE,
 		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB2ENR), __builtin_ctzl(RCC_APB2ENR_SPI6EN)),
 		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB2RSTR), __builtin_ctzl(RCC_APB2RSTR_SPI6RST)),
 		SPI6_IRQn};
