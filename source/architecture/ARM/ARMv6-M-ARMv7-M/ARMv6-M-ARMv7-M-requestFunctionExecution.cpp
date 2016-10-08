@@ -226,7 +226,7 @@ void fromInterruptToCurrentThread(void (& function)())
 	exceptionStackFrame->r12 = reinterpret_cast<void*>(0xcccccccc);
 	exceptionStackFrame->lr = nullptr;
 	exceptionStackFrame->pc = reinterpret_cast<void*>(&functionTrampoline);
-	exceptionStackFrame->xpsr = ExceptionStackFrame::defaultXpsr;
+	exceptionStackFrame->xpsr = reinterpret_cast<void*>(ExceptionStackFrame::defaultXpsr);
 
 	__set_PSP(reinterpret_cast<uint32_t>(exceptionStackFrame));
 }
@@ -264,7 +264,7 @@ void toNonCurrentThread(internal::ThreadControlBlock& threadControlBlock, void (
 	stackFrame->exceptionStackFrame.r12 = reinterpret_cast<void*>(0xcccccccc);
 	stackFrame->exceptionStackFrame.lr = nullptr;
 	stackFrame->exceptionStackFrame.pc = reinterpret_cast<void*>(&functionTrampoline);
-	stackFrame->exceptionStackFrame.xpsr = ExceptionStackFrame::defaultXpsr;
+	stackFrame->exceptionStackFrame.xpsr = reinterpret_cast<void*>(ExceptionStackFrame::defaultXpsr);
 
 	threadControlBlock.getStack().setStackPointer(stackFrame);
 }

@@ -49,7 +49,7 @@ void* initializeStack(void* const buffer, const size_t size, Thread& thread, voi
 	stackFrame->exceptionStackFrame.r12 = reinterpret_cast<void*>(0xcccccccc);
 	stackFrame->exceptionStackFrame.lr = nullptr;
 	stackFrame->exceptionStackFrame.pc = reinterpret_cast<void*>(&internal::threadRunner);
-	stackFrame->exceptionStackFrame.xpsr = ExceptionStackFrame::defaultXpsr;
+	stackFrame->exceptionStackFrame.xpsr = reinterpret_cast<void*>(ExceptionStackFrame::defaultXpsr);
 
 	return stackFrame;
 }
