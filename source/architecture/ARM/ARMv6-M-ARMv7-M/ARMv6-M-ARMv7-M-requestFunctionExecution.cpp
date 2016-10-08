@@ -48,6 +48,7 @@ namespace
  * (false)
  */
 
+__attribute__ ((naked))
 #if __FPU_PRESENT == 1 && __FPU_USED == 1
 void removeStackFrame(const void* const savedStackPointer, const bool fpuContextActive)
 #else	// __FPU_PRESENT != 1 || __FPU_USED != 1
@@ -56,12 +57,24 @@ void removeStackFrame(const void* const savedStackPointer)
 {
 #if __FPU_PRESENT == 1 && __FPU_USED == 1
 
-	if (fpuContextActive == true)
-		asm volatile ("vmov s0, s0");	// force stacking of FPU context
+	asm volatile
+	(
+			"	cbz		%[fpuContextActive], 1f		\n"	// if (fpuContextActive == true) {
+			"	vmov	s0, s0						\n"	// force stacking of FPU context
+			"1:										\n"	// }
+
+			::	[fpuContextActive] "r" (fpuContextActive)
+	);
 
 #endif	// __FPU_PRESENT == 1 && __FPU_USED == 1
 
-	__set_PSP(reinterpret_cast<uint32_t>(savedStackPointer));
+	asm volatile
+	(
+			"	msr		psp, %[savedStackPointer]	\n"	// restore stack pointer for current thread
+			"	bx		lr							\n"	// return
+
+			::	[savedStackPointer] "r" (savedStackPointer)
+	);
 }
 
 /**
