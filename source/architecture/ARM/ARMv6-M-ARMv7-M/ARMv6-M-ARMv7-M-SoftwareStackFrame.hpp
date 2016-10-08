@@ -26,7 +26,7 @@ struct SoftwareStackFrame
 #if __FPU_PRESENT == 1 && __FPU_USED == 1
 
 	/// default exception return value
-	constexpr static void* defaultExceptionReturn {reinterpret_cast<void*>(0xfffffffd)};
+	constexpr static uintptr_t defaultExceptionReturn {0xfffffffd};
 
 #endif	// __FPU_PRESENT == 1 && __FPU_USED == 1
 

@@ -254,7 +254,8 @@ void toNonCurrentThread(internal::ThreadControlBlock& threadControlBlock, void (
 	stackFrame->softwareStackFrame.r10 = reinterpret_cast<void*>(0xaaaaaaaa);
 	stackFrame->softwareStackFrame.r11 = reinterpret_cast<void*>(0xbbbbbbbb);
 #if __FPU_PRESENT == 1 && __FPU_USED == 1
-	stackFrame->softwareStackFrame.exceptionReturn = SoftwareStackFrame::defaultExceptionReturn;
+	stackFrame->softwareStackFrame.exceptionReturn =
+			reinterpret_cast<void*>(SoftwareStackFrame::defaultExceptionReturn);
 #endif	// __FPU_PRESENT == 1 && __FPU_USED == 1
 
 	stackFrame->exceptionStackFrame.r0 = reinterpret_cast<void*>(&function);
