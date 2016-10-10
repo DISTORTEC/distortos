@@ -12,14 +12,16 @@
 set -e
 set -u
 
-output=output
-
-# If any argument was given, then use it as the output path, otherwise assume the output path to be "./output"
-if [ $# -ge 1 ]; then
-	output=$(realpath --relative-base=. $1)
+if [ $# -lt 1 ]; then
+	echo 'This script requires 1 argument!' >&2
+	exit 1
 fi
 
+output=$1
 mkdir -p $output
+output=$(cd $output && pwd)
+output=${output#$(pwd)/}
+
 for file in $(/usr/bin/find -path "./$output" -prune -o -name 'Kconfig*' -exec \
 		sed -n 's/^source "$OUTPUT\/\(.*\)"$/\1/p' {} +)
 do
