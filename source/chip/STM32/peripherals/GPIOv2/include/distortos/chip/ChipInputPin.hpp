@@ -49,6 +49,19 @@ public:
 
 	bool get() const override;
 
+protected:
+
+	/**
+	 * \brief Sets new state of inversion.
+	 *
+	 * \param [in] inverted selects whether the pin is inverted (true) or not (false)
+	 */
+
+	void setInverted(const bool inverted)
+	{
+		inverted_ = inverted;
+	}
+
 private:
 
 	/// identifier of pin
