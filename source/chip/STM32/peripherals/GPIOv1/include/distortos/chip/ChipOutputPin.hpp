@@ -65,12 +65,21 @@ public:
 protected:
 
 	/**
-	 * \brief Sets new state of inversion.
+	 * \return true if inverted mode is enabled, false otherwise
+	 */
+
+	bool getInvertedMode() const
+	{
+		return inverted_;
+	}
+
+	/**
+	 * \brief Enables or disables inverted mode.
 	 *
 	 * \param [in] inverted selects whether the pin is inverted (true) or not (false)
 	 */
 
-	void setInverted(const bool inverted)
+	void setInvertedMode(const bool inverted)
 	{
 		inverted_ = inverted;
 	}

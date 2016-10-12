@@ -48,8 +48,9 @@ application uses a few last ROM pages for its own purposes (e.g. emulated EEPROM
 - `architecture::isInInterruptContext()` which checks whether thread or interrupt context is currently active. An
 example use is when the application needs to decide between blocking or non-blocking behaviour, as blocking is not
 possible in interrupt context.
-- `protected` `ChipInputPin::setInverted()` and `ChipOutputPin::setInverted()` functions, which - if needed - can be
-made `public` by deriving from these classes.
+- `protected` `ChipInputPin::getInvertedMode()`, `ChipInputPin::setInvertedMode()`, `ChipOutputPin::getInvertedMode()`
+and `ChipOutputPin::setInvertedMode()` functions, which - if needed - can be made `public` by deriving from these
+classes.
 
 ### Changed
 
