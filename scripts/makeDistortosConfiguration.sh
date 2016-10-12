@@ -12,7 +12,7 @@
 set -e
 set -u
 
-if [ $# -ne 1 ]; then
+if [ ${#} -ne 1 ]; then
 	echo 'This script requires 1 argument!' >&2
 	exit 1
 fi
@@ -37,7 +37,7 @@ sed -n \
 	-e 's/^\(CONFIG_[A-Za-z0-9_]\{1,\}\)=y$/#define \1/p' \
 	-e 's/^\(CONFIG_[A-Za-z0-9_]\{1,\}\)=\(.*\)$/#define \1 \2/p' \
 	-e 's/^# \(CONFIG_[A-Za-z0-9_]\{1,\}\) is not set$/#undef \1/p' \
-	$1
+	${1}
 
 cat << EOF
 

@@ -12,27 +12,27 @@
 set -e
 set -u
 
-if [ $# -lt 1 ]; then
+if [ ${#} -lt 1 ]; then
 	echo 'This script requires at least 1 argument!' >&2
 	exit 1
 fi
 
-command=$1
+command=${1}
 
 searchPath=.
 
 # If any additional argument was given, then use it as the search path, otherwise search in current directory.
-if [ $# -ge 2 ]; then
-	searchPath=$2
+if [ ${#} -ge 2 ]; then
+	searchPath=${2}
 fi
 
 make distclean
 
-for configurationPath in $(find $searchPath -name 'distortosConfiguration.mk' -printf '%h ')
+for configurationPath in $(find ${searchPath} -name 'distortosConfiguration.mk' -printf '%h ')
 do
 
-	make configure CONFIG_PATH=$configurationPath
-	$command
+	make configure CONFIG_PATH=${configurationPath}
+	${command}
 	make distclean
 
 done

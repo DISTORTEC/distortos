@@ -12,46 +12,46 @@
 set -e
 set -u
 
-if [ $# -lt 5 ]; then
+if [ ${#} -lt 5 ]; then
 	echo 'This script requires at least 5 arguments!' >&2
 	exit 1
 fi
 
-chipName=$1
-romDescription=$2
-ramDescription=$3
-mainStackSize=$4
-processStackSize=$5
+chipName=${1}
+romDescription=${2}
+ramDescription=${3}
+mainStackSize=${4}
+processStackSize=${5}
 
 decimalOrHexadecimalRegex='\(\(0x[0-9a-fA-F]\{1,8\}\)\|\([0-9]\{1,9\}\)\)'
-addressRegex="\($decimalOrHexadecimalRegex\)"
-sizeRegex="\($decimalOrHexadecimalRegex[kM]\?\)"
+addressRegex="\(${decimalOrHexadecimalRegex}\)"
+sizeRegex="\(${decimalOrHexadecimalRegex}[kM]\?\)"
 
-if ! expr "$romDescription" : "\($addressRegex,$sizeRegex\)$" > /dev/null; then
-	echo "Invalid description of ROM - \"$romDescription\"!" >&2
+if ! expr "${romDescription}" : "\(${addressRegex},${sizeRegex}\)$" > /dev/null; then
+	echo "Invalid description of ROM - \"${romDescription}\"!" >&2
 	exit 2
 fi
 
-if ! expr "$ramDescription" : "\($addressRegex,$sizeRegex\)$" > /dev/null; then
-	echo "Invalid description of RAM - \"$ramDescription\"!" >&2
+if ! expr "${ramDescription}" : "\(${addressRegex},${sizeRegex}\)$" > /dev/null; then
+	echo "Invalid description of RAM - \"${ramDescription}\"!" >&2
 	exit 3
 fi
 
-if ! expr "$mainStackSize" : "\($sizeRegex\)$" > /dev/null; then
-	echo "Invalid size of main stack - \"$mainStackSize\"!" >&2
+if ! expr "${mainStackSize}" : "\(${sizeRegex}\)$" > /dev/null; then
+	echo "Invalid size of main stack - \"${mainStackSize}\"!" >&2
 	exit 4
 fi
 
-if ! expr "$processStackSize" : "\($sizeRegex\)$" > /dev/null; then
-	echo "Invalid size of process stack - \"$processStackSize\"!" >&2
+if ! expr "${processStackSize}" : "\(${sizeRegex}\)$" > /dev/null; then
+	echo "Invalid size of process stack - \"${processStackSize}\"!" >&2
 	exit 5
 fi
 
 # the matched string may (technically) be "0" - that's why " || true" is needed
-romAddress=$(expr "$romDescription" : '\([^,]\+\),[^,]\+' || true)
-romSize=$(expr "$romDescription" : '[^,]\+,\([^,]\+\)' || true)
-ramAddress=$(expr "$ramDescription" : '\([^,]\+\),[^,]\+' || true)
-ramSize=$(expr "$ramDescription" : '[^,]\+,\([^,]\+\)' || true)
+romAddress=$(expr "${romDescription}" : '\([^,]\+\),[^,]\+' || true)
+romSize=$(expr "${romDescription}" : '[^,]\+,\([^,]\+\)' || true)
+ramAddress=$(expr "${ramDescription}" : '\([^,]\+\),[^,]\+' || true)
+ramSize=$(expr "${ramDescription}" : '[^,]\+,\([^,]\+\)' || true)
 
 shift
 shift
@@ -67,34 +67,34 @@ bssArrayEntries=
 sectionEntries=
 sectionSizes=
 
-while [ $# -gt 0 ]; do
+while [ ${#} -gt 0 ]; do
 
-	if ! expr "$1" : "\([^,]\+,$addressRegex,$sizeRegex\)$" > /dev/null; then
-		echo "Invalid description of memory - \"$1\"!" >&2
+	if ! expr "${1}" : "\([^,]\+,${addressRegex},${sizeRegex}\)$" > /dev/null; then
+		echo "Invalid description of memory - \"${1}\"!" >&2
 		exit 6
 	fi
 
-	memoryName=$(expr "$1" : '\([^,]\+\),[^,]\+,[^,]\+' || true)
-	memoryAddress=$(expr "$1" : '[^,]\+,\([^,]\+\),[^,]\+' || true)
-	memorySize=$(expr "$1" : '[^,]\+,[^,]\+,\([^,]\+\)' || true)
+	memoryName=$(expr "${1}" : '\([^,]\+\),[^,]\+,[^,]\+' || true)
+	memoryAddress=$(expr "${1}" : '[^,]\+,\([^,]\+\),[^,]\+' || true)
+	memorySize=$(expr "${1}" : '[^,]\+,[^,]\+,\([^,]\+\)' || true)
 
-	headerComments="$headerComments * - $memorySize bytes of $memoryName at $memoryAddress;\n"
+	headerComments="${headerComments} * - ${memorySize} bytes of ${memoryName} at ${memoryAddress};\n"
 
-	memoryEntries="$memoryEntries\t$memoryName : org = $memoryAddress, len = $memorySize\n"
+	memoryEntries="${memoryEntries}\t${memoryName} : org = ${memoryAddress}, len = ${memorySize}\n"
 
 	memorySizes="${memorySizes}\
 PROVIDE(__${memoryName}_start = ORIGIN(${memoryName}));
 PROVIDE(__${memoryName}_size = LENGTH(${memoryName}));
 PROVIDE(__${memoryName}_end = ORIGIN(${memoryName}) + LENGTH(${memoryName}));\n\n"
 
-	dataArrayEntries="$dataArrayEntries\
+	dataArrayEntries="${dataArrayEntries}\
 \t\tLONG(LOADADDR(.${memoryName}.data)); LONG(ADDR(.${memoryName}.data)); \
 LONG(ADDR(.${memoryName}.data) + SIZEOF(.${memoryName}.data));\n"
 
-	bssArrayEntries="$bssArrayEntries\
+	bssArrayEntries="${bssArrayEntries}\
 \t\tLONG(ADDR(.${memoryName}.bss)); LONG(ADDR(.${memoryName}.bss) + SIZEOF(.${memoryName}.bss));\n"
 
-	sectionEntries="$sectionEntries\
+	sectionEntries="${sectionEntries}\
 	.${memoryName}.bss :
 	{
 		. = ALIGN(4);
@@ -140,12 +140,12 @@ done
 cat<<EOF
 /**
  * \file
- * \brief Linker script for $chipName chip:
- * - $romSize bytes of rom at $romAddress;
- * - $ramSize bytes of ram at $ramAddress;
+ * \brief Linker script for ${chipName} chip:
+ * - ${romSize} bytes of rom at ${romAddress};
+ * - ${ramSize} bytes of ram at ${ramAddress};
 EOF
 
-printf '%b' "$headerComments"
+printf '%b' "${headerComments}"
 
 cat<<EOF
  *
@@ -170,10 +170,10 @@ OUTPUT_ARCH(arm);
 +---------------------------------------------------------------------------------------------------------------------*/
 
 /* Handler mode (core exceptions / interrupts) can use only main stack */
-PROVIDE(__main_stack_size = $mainStackSize);
+PROVIDE(__main_stack_size = ${mainStackSize});
 
 /* Thread mode can use main stack (default after reset) or process stack - selected in CONTROL special register */
-PROVIDE(__process_stack_size = $processStackSize);
+PROVIDE(__process_stack_size = ${processStackSize});
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | available memories
@@ -181,11 +181,11 @@ PROVIDE(__process_stack_size = $processStackSize);
 
 MEMORY
 {
-	rom : org = $romAddress, len = $romSize
-	ram : org = $ramAddress, len = $ramSize
+	rom : org = ${romAddress}, len = ${romSize}
+	ram : org = ${ramAddress}, len = ${ramSize}
 EOF
 
-printf '%b' "$memoryEntries"
+printf '%b' "${memoryEntries}"
 
 cat<<EOF
 }
@@ -200,7 +200,7 @@ PROVIDE(__ram_end = ORIGIN(ram) + LENGTH(ram));
 
 EOF
 
-printf '%b' "$memorySizes"
+printf '%b' "${memorySizes}"
 
 cat<<EOF
 /*---------------------------------------------------------------------------------------------------------------------+
@@ -250,7 +250,7 @@ SECTIONS
 		LONG(LOADADDR(.data)); LONG(ADDR(.data)); LONG(ADDR(.data) + SIZEOF(.data));
 EOF
 
-printf '%b' "$dataArrayEntries"
+printf '%b' "${dataArrayEntries}"
 
 cat<<EOF
 
@@ -268,7 +268,7 @@ cat<<EOF
 		LONG(ADDR(.stack)); LONG(ADDR(.stack) + SIZEOF(.stack));
 EOF
 
-printf '%b' "$bssArrayEntries"
+printf '%b' "${bssArrayEntries}"
 
 cat<<EOF
 
@@ -386,7 +386,7 @@ cat<<EOF
 
 EOF
 
-printf '%b' "$sectionEntries"
+printf '%b' "${sectionEntries}"
 
 cat<<EOF
 	.stab				0 (NOLOAD) : { *(.stab); }
@@ -430,7 +430,7 @@ PROVIDE(__noinit_size = SIZEOF(.noinit));
 PROVIDE(__stack_size = SIZEOF(.stack));
 EOF
 
-printf '%b' "$sectionSizes"
+printf '%b' "${sectionSizes}"
 
 cat<<EOF
 
