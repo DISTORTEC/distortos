@@ -15,18 +15,18 @@ language: generic
 
 # bleeding-edge-toolchain
 install:
-    - wget http://www.freddiechopin.info/en/download/category/11-bleeding-edge-toolchain?download=143%3Ableeding-edge-toolchain-160412-64-bit-linux -O /tmp/gcc-arm-none-eabi-5_3-160412-linux-x64.tar.xz
-    - tar -xf /tmp/gcc-arm-none-eabi-5_3-160412-linux-x64.tar.xz -C /tmp/
-    - wget http://www.freddiechopin.info/en/download/category/11-bleeding-edge-toolchain?download=122%3Ableeding-edge-toolchain-150928-64-bit-linux -O /tmp/gcc-arm-none-eabi-4_9-150928-linux-x64.tar.xz
-    - tar -xf /tmp/gcc-arm-none-eabi-4_9-150928-linux-x64.tar.xz -C /tmp/
-    - export SAVED_PATH=$PATH
+    - "wget http://www.freddiechopin.info/en/download/category/11-bleeding-edge-toolchain?download=143%3Ableeding-edge-toolchain-160412-64-bit-linux -O /tmp/gcc-arm-none-eabi-5_3-160412-linux-x64.tar.xz"
+    - "tar -xf /tmp/gcc-arm-none-eabi-5_3-160412-linux-x64.tar.xz -C /tmp/"
+    - "wget http://www.freddiechopin.info/en/download/category/11-bleeding-edge-toolchain?download=122%3Ableeding-edge-toolchain-150928-64-bit-linux -O /tmp/gcc-arm-none-eabi-4_9-150928-linux-x64.tar.xz"
+    - "tar -xf /tmp/gcc-arm-none-eabi-4_9-150928-linux-x64.tar.xz -C /tmp/"
+    - "export SAVED_PATH=$PATH"
 
 # configure and build all configurations
 script:
-    - export PATH=/tmp/gcc-arm-none-eabi-5_3-160412/bin:$SAVED_PATH
-    - ./scripts/buildAllConfigurations.sh
-    - export PATH=/tmp/gcc-arm-none-eabi-4_9-150928/bin:$SAVED_PATH
-    - mkdir /tmp/lib
-    - gcc -shared -o /tmp/lib/libfl.so.2 -lfl
-    - export LD_LIBRARY_PATH=/tmp/lib
-    - ./scripts/buildAllConfigurations.sh
+    - "export PATH=/tmp/gcc-arm-none-eabi-5_3-160412/bin:$SAVED_PATH"
+    - "./scripts/buildAllConfigurations.sh"
+    - "export PATH=/tmp/gcc-arm-none-eabi-4_9-150928/bin:$SAVED_PATH"
+    - "mkdir /tmp/lib"
+    - "gcc -shared -o /tmp/lib/libfl.so.2 -lfl"
+    - "export LD_LIBRARY_PATH=/tmp/lib"
+    - "./scripts/buildAllConfigurations.sh"
