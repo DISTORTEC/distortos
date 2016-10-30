@@ -10,6 +10,12 @@
 # use container-based infrastructure
 sudo: false
 
+# texinfo is needed to build bleeding-edge-toolchain
+addons:
+    apt:
+        packages:
+            - texinfo
+
 # use minimal environment
 language: generic
 
