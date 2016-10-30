@@ -44,17 +44,14 @@ install() {
 
 # "script" phase
 script() {
-	(
-	echo "Testing with gcc-arm-none-eabi-5_3-160412..."
-	. "${HOME}/toolchains/gcc-arm-none-eabi-5_3-160412.sh"
-	./scripts/buildAllConfigurations.sh
-	)
-
-	(
-	echo "Testing with gcc-arm-none-eabi-4_9-150928..."
-	. "${HOME}/toolchains/gcc-arm-none-eabi-4_9-150928.sh"
-	./scripts/buildAllConfigurations.sh
-	)
+	toolchains="$(find "${HOME}/toolchains/" -mindepth 1 -maxdepth 1 -name '*.sh' | sort)"
+	for toolchain in ${toolchains}; do
+		(
+		echo "Using ${toolchain}..."
+		. "${toolchain}"
+		./scripts/buildAllConfigurations.sh
+		)
+	done
 }
 
 case "${1}" in
