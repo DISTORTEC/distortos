@@ -12,8 +12,8 @@
 set -e
 set -u
 
-if [ ${#} -ne 1 ]; then
-	echo 'This script requires 1 argument!' >&2
+if [ ${#} -lt 1 ]; then
+	echo 'This script requires at least 1 argument!' >&2
 	exit 1
 fi
 
@@ -68,7 +68,7 @@ script() {
 		(
 		echo "Using ${toolchain}..."
 		. "${toolchain}"
-		./scripts/buildAllConfigurations.sh
+		./scripts/buildAllConfigurations.sh "${@}"
 		)
 	done
 }
@@ -78,7 +78,8 @@ case "${1}" in
 		install
 		;;
 	script)
-		script
+		shift
+		script "${@}"
 		;;
 	*)
 		echo "\"${1}\" is not a valid argument!" >&2
