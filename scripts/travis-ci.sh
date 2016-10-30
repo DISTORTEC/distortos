@@ -12,40 +12,65 @@
 set -e
 set -u
 
-if [ ${#} -ne 1 ]; then
-	echo 'This script requires 1 argument!' >&2
+if [ ${#} -lt 1 ]; then
+	echo 'This script requires at least 1 argument!' >&2
 	exit 1
 fi
 
 # "install" phase
 install() {
-	echo "Downloading gcc-arm-none-eabi-5_3-160412-linux-x64.tar.xz..."
-	wget http://www.freddiechopin.info/en/download/category/11-bleeding-edge-toolchain?download=143%3Ableeding-edge-toolchain-160412-64-bit-linux -O /tmp/gcc-arm-none-eabi-5_3-160412-linux-x64.tar.xz
-	echo "Extracting gcc-arm-none-eabi-5_3-160412-linux-x64.tar.xz..."
-	tar -xf /tmp/gcc-arm-none-eabi-5_3-160412-linux-x64.tar.xz -C /tmp/
+	mkdir -p "${HOME}/cache"
+	mkdir -p "${HOME}/toolchains"
+	cd "${HOME}/toolchains"
 
 	echo "Downloading gcc-arm-none-eabi-4_9-150928-linux-x64.tar.xz..."
-	wget http://www.freddiechopin.info/en/download/category/11-bleeding-edge-toolchain?download=122%3Ableeding-edge-toolchain-150928-64-bit-linux -O /tmp/gcc-arm-none-eabi-4_9-150928-linux-x64.tar.xz
+	wget http://www.freddiechopin.info/en/download/category/11-bleeding-edge-toolchain?download=122%3Ableeding-edge-toolchain-150928-64-bit-linux -O gcc-arm-none-eabi-4_9-150928-linux-x64.tar.xz
 	echo "Extracting gcc-arm-none-eabi-4_9-150928-linux-x64.tar.xz..."
-	tar -xf /tmp/gcc-arm-none-eabi-4_9-150928-linux-x64.tar.xz -C /tmp/
-	mkdir /tmp/lib
-	gcc -shared -o /tmp/lib/libfl.so.2 -lfl
+	tar -xf gcc-arm-none-eabi-4_9-150928-linux-x64.tar.xz
+	mkdir gcc-arm-none-eabi-4_9-150928/bin/lib
+	gcc -shared -o gcc-arm-none-eabi-4_9-150928/bin/lib/libfl.so.2 -lfl
+	cat > arm-none-eabi-gcc-4.9.3.sh <<- EOF
+	export LD_LIBRARY_PATH="$(pwd)/gcc-arm-none-eabi-4_9-150928/bin/lib"
+	export PATH="$(pwd)/gcc-arm-none-eabi-4_9-150928/bin:\${PATH-}"
+	EOF
+
+	echo "Downloading gcc-arm-none-eabi-5_3-160412-linux-x64.tar.xz..."
+	wget http://www.freddiechopin.info/en/download/category/11-bleeding-edge-toolchain?download=143%3Ableeding-edge-toolchain-160412-64-bit-linux -O gcc-arm-none-eabi-5_3-160412-linux-x64.tar.xz
+	echo "Extracting gcc-arm-none-eabi-5_3-160412-linux-x64.tar.xz..."
+	tar -xf gcc-arm-none-eabi-5_3-160412-linux-x64.tar.xz
+	cat > arm-none-eabi-gcc-5.3.1.sh <<- EOF
+	export PATH="$(pwd)/gcc-arm-none-eabi-5_3-160412/bin:\${PATH-}"
+	EOF
+
+	if [ ! -e "${HOME}"/cache/arm-none-eabi-gcc-6.2.0-*.tar.xz ]; then
+		(
+		echo "Downloading bleeding-edge-toolchain-161029.tar.xz..."
+		wget http://www.freddiechopin.info/en/download/category/11-bleeding-edge-toolchain?download=145%3Ableeding-edge-toolchain-161029-linux-script -O bleeding-edge-toolchain-161029.tar.xz
+		echo "Extracting bleeding-edge-toolchain-161029.tar.xz..."
+		tar -xf bleeding-edge-toolchain-161029.tar.xz
+		echo "Building bleeding-edge-toolchain-161029..."
+		cd bleeding-edge-toolchain-161029
+		./build-bleeding-edge-toolchain.sh | grep '[*-]\{10,10\} '
+		cp arm-none-eabi-gcc-6.2.0-*.tar.xz "${HOME}/cache"
+		)
+	fi
+	echo "Extracting arm-none-eabi-gcc-6.2.0-*.tar.xz..."
+	tar -xf ${HOME}/cache/arm-none-eabi-gcc-6.2.0-*.tar.xz
+	cat > arm-none-eabi-gcc-6.2.0.sh <<- EOF
+	export PATH="$(cd arm-none-eabi-gcc-6.2.0-*/bin && pwd):\${PATH-}"
+	EOF
 }
 
 # "script" phase
 script() {
-	(
-	echo "Testing with gcc-arm-none-eabi-5_3-160412"
-	export PATH="/tmp/gcc-arm-none-eabi-5_3-160412/bin:${PATH-}"
-	./scripts/buildAllConfigurations.sh
-	)
-
-	(
-	echo "Testing with gcc-arm-none-eabi-4_9-150928"
-	export PATH="/tmp/gcc-arm-none-eabi-4_9-150928/bin:${PATH-}"
-	export LD_LIBRARY_PATH="/tmp/lib"
-	./scripts/buildAllConfigurations.sh
-	)
+	toolchains="$(find "${HOME}/toolchains/" -mindepth 1 -maxdepth 1 -name '*.sh' | sort)"
+	for toolchain in ${toolchains}; do
+		(
+		echo "Using ${toolchain}..."
+		. "${toolchain}"
+		./scripts/buildAllConfigurations.sh "${@}"
+		)
+	done
 }
 
 case "${1}" in
@@ -53,7 +78,8 @@ case "${1}" in
 		install
 		;;
 	script)
-		script
+		shift
+		script "${@}"
 		;;
 	*)
 		echo "\"${1}\" is not a valid argument!" >&2
