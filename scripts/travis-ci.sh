@@ -19,31 +19,34 @@ fi
 
 # "install" phase
 install() {
+	mkdir -p "${HOME}/toolchains"
+	cd "${HOME}/toolchains"
+
 	echo "Downloading gcc-arm-none-eabi-5_3-160412-linux-x64.tar.xz..."
-	wget http://www.freddiechopin.info/en/download/category/11-bleeding-edge-toolchain?download=143%3Ableeding-edge-toolchain-160412-64-bit-linux -O /tmp/gcc-arm-none-eabi-5_3-160412-linux-x64.tar.xz
+	wget http://www.freddiechopin.info/en/download/category/11-bleeding-edge-toolchain?download=143%3Ableeding-edge-toolchain-160412-64-bit-linux -O gcc-arm-none-eabi-5_3-160412-linux-x64.tar.xz
 	echo "Extracting gcc-arm-none-eabi-5_3-160412-linux-x64.tar.xz..."
-	tar -xf /tmp/gcc-arm-none-eabi-5_3-160412-linux-x64.tar.xz -C /tmp/
+	tar -xf gcc-arm-none-eabi-5_3-160412-linux-x64.tar.xz
 
 	echo "Downloading gcc-arm-none-eabi-4_9-150928-linux-x64.tar.xz..."
-	wget http://www.freddiechopin.info/en/download/category/11-bleeding-edge-toolchain?download=122%3Ableeding-edge-toolchain-150928-64-bit-linux -O /tmp/gcc-arm-none-eabi-4_9-150928-linux-x64.tar.xz
+	wget http://www.freddiechopin.info/en/download/category/11-bleeding-edge-toolchain?download=122%3Ableeding-edge-toolchain-150928-64-bit-linux -O gcc-arm-none-eabi-4_9-150928-linux-x64.tar.xz
 	echo "Extracting gcc-arm-none-eabi-4_9-150928-linux-x64.tar.xz..."
-	tar -xf /tmp/gcc-arm-none-eabi-4_9-150928-linux-x64.tar.xz -C /tmp/
-	mkdir /tmp/gcc-arm-none-eabi-4_9-150928/bin/lib
-	gcc -shared -o /tmp/gcc-arm-none-eabi-4_9-150928/bin/lib/libfl.so.2 -lfl
+	tar -xf gcc-arm-none-eabi-4_9-150928-linux-x64.tar.xz
+	mkdir gcc-arm-none-eabi-4_9-150928/bin/lib
+	gcc -shared -o gcc-arm-none-eabi-4_9-150928/bin/lib/libfl.so.2 -lfl
 }
 
 # "script" phase
 script() {
 	(
 	echo "Testing with gcc-arm-none-eabi-5_3-160412..."
-	export PATH="/tmp/gcc-arm-none-eabi-5_3-160412/bin:${PATH-}"
+	export PATH="${HOME}/toolchains/gcc-arm-none-eabi-5_3-160412/bin:${PATH-}"
 	./scripts/buildAllConfigurations.sh
 	)
 
 	(
 	echo "Testing with gcc-arm-none-eabi-4_9-150928..."
-	export PATH="/tmp/gcc-arm-none-eabi-4_9-150928/bin:${PATH-}"
-	export LD_LIBRARY_PATH="/tmp/gcc-arm-none-eabi-4_9-150928/bin/lib"
+	export PATH="${HOME}/toolchains/gcc-arm-none-eabi-4_9-150928/bin:${PATH-}"
+	export LD_LIBRARY_PATH="${HOME}/toolchains/gcc-arm-none-eabi-4_9-150928/bin/lib"
 	./scripts/buildAllConfigurations.sh
 	)
 }
