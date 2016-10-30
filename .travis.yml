@@ -16,6 +16,10 @@ addons:
         packages:
             - texinfo
 
+cache:
+    directories:
+        - "${HOME}/cache"
+
 # use minimal environment
 language: generic
 
