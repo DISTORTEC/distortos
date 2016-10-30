@@ -35,13 +35,13 @@ install() {
 # "script" phase
 script() {
 	(
-	echo "Testing with gcc-arm-none-eabi-5_3-160412"
+	echo "Testing with gcc-arm-none-eabi-5_3-160412..."
 	export PATH="/tmp/gcc-arm-none-eabi-5_3-160412/bin:${PATH-}"
 	./scripts/buildAllConfigurations.sh
 	)
 
 	(
-	echo "Testing with gcc-arm-none-eabi-4_9-150928"
+	echo "Testing with gcc-arm-none-eabi-4_9-150928..."
 	export PATH="/tmp/gcc-arm-none-eabi-4_9-150928/bin:${PATH-}"
 	export LD_LIBRARY_PATH="/tmp/lib"
 	./scripts/buildAllConfigurations.sh
