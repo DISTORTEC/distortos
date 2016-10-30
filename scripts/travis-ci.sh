@@ -28,8 +28,8 @@ install() {
 	wget http://www.freddiechopin.info/en/download/category/11-bleeding-edge-toolchain?download=122%3Ableeding-edge-toolchain-150928-64-bit-linux -O /tmp/gcc-arm-none-eabi-4_9-150928-linux-x64.tar.xz
 	echo "Extracting gcc-arm-none-eabi-4_9-150928-linux-x64.tar.xz..."
 	tar -xf /tmp/gcc-arm-none-eabi-4_9-150928-linux-x64.tar.xz -C /tmp/
-	mkdir /tmp/lib
-	gcc -shared -o /tmp/lib/libfl.so.2 -lfl
+	mkdir /tmp/gcc-arm-none-eabi-4_9-150928/bin/lib
+	gcc -shared -o /tmp/gcc-arm-none-eabi-4_9-150928/bin/lib/libfl.so.2 -lfl
 }
 
 # "script" phase
@@ -43,7 +43,7 @@ script() {
 	(
 	echo "Testing with gcc-arm-none-eabi-4_9-150928..."
 	export PATH="/tmp/gcc-arm-none-eabi-4_9-150928/bin:${PATH-}"
-	export LD_LIBRARY_PATH="/tmp/lib"
+	export LD_LIBRARY_PATH="/tmp/gcc-arm-none-eabi-4_9-150928/bin/lib"
 	./scripts/buildAllConfigurations.sh
 	)
 }
