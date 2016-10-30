@@ -68,7 +68,7 @@ script() {
 		(
 		echo "Using ${toolchain}..."
 		. "${toolchain}"
-		./scripts/buildAllConfigurations.sh "${@}"
+		$(dirname "${0}")/buildAllConfigurations.sh "${@}"
 		)
 	done
 }
