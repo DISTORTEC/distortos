@@ -12,20 +12,20 @@
 set -e
 set -u
 
-path=.
+path='.'
 
 # If any argument was given, then use it as the path to distortosConfiguration.mk file, otherwise search in current
 # directory.
 if [ ${#} -ge 1 ]; then
-	path=${1}
+	path="${1}"
 fi
 
-path=${path}/distortosConfiguration.mk
+path="${path}/distortosConfiguration.mk"
 
-if [ ! -f ${path} ]; then
+if [ ! -f "${path}" ]; then
 	echo "Trying ${path}... Not found!"
-	path=configurations/${path}
-	if [ ! -f ${path} ]; then
+	path="configurations/${path}"
+	if [ ! -f "${path}" ]; then
 		echo "Trying ${path}... Not found!"
 		echo 'No suitable configuration found!' >&2
 		exit 1

@@ -23,9 +23,9 @@ install() {
 	mkdir -p "${HOME}/toolchains"
 	cd "${HOME}/toolchains"
 
-	echo "Downloading gcc-arm-none-eabi-4_9-150928-linux-x64.tar.xz..."
+	echo 'Downloading gcc-arm-none-eabi-4_9-150928-linux-x64.tar.xz...'
 	wget http://www.freddiechopin.info/en/download/category/11-bleeding-edge-toolchain?download=122%3Ableeding-edge-toolchain-150928-64-bit-linux -O gcc-arm-none-eabi-4_9-150928-linux-x64.tar.xz
-	echo "Extracting gcc-arm-none-eabi-4_9-150928-linux-x64.tar.xz..."
+	echo 'Extracting gcc-arm-none-eabi-4_9-150928-linux-x64.tar.xz...'
 	tar -xf gcc-arm-none-eabi-4_9-150928-linux-x64.tar.xz
 	mkdir gcc-arm-none-eabi-4_9-150928/bin/lib
 	gcc -shared -o gcc-arm-none-eabi-4_9-150928/bin/lib/libfl.so.2 -lfl
@@ -34,9 +34,9 @@ install() {
 	export PATH="$(pwd)/gcc-arm-none-eabi-4_9-150928/bin:\${PATH-}"
 	EOF
 
-	echo "Downloading gcc-arm-none-eabi-5_3-160412-linux-x64.tar.xz..."
+	echo 'Downloading gcc-arm-none-eabi-5_3-160412-linux-x64.tar.xz...'
 	wget http://www.freddiechopin.info/en/download/category/11-bleeding-edge-toolchain?download=143%3Ableeding-edge-toolchain-160412-64-bit-linux -O gcc-arm-none-eabi-5_3-160412-linux-x64.tar.xz
-	echo "Extracting gcc-arm-none-eabi-5_3-160412-linux-x64.tar.xz..."
+	echo 'Extracting gcc-arm-none-eabi-5_3-160412-linux-x64.tar.xz...'
 	tar -xf gcc-arm-none-eabi-5_3-160412-linux-x64.tar.xz
 	cat > arm-none-eabi-gcc-5.3.1.sh <<- EOF
 	export PATH="$(pwd)/gcc-arm-none-eabi-5_3-160412/bin:\${PATH-}"
@@ -44,17 +44,17 @@ install() {
 
 	if [ ! -e "${HOME}"/cache/arm-none-eabi-gcc-6.2.0-*.tar.xz ]; then
 		(
-		echo "Downloading bleeding-edge-toolchain-161029.tar.xz..."
+		echo 'Downloading bleeding-edge-toolchain-161029.tar.xz...'
 		wget http://www.freddiechopin.info/en/download/category/11-bleeding-edge-toolchain?download=145%3Ableeding-edge-toolchain-161029-linux-script -O bleeding-edge-toolchain-161029.tar.xz
-		echo "Extracting bleeding-edge-toolchain-161029.tar.xz..."
+		echo 'Extracting bleeding-edge-toolchain-161029.tar.xz...'
 		tar -xf bleeding-edge-toolchain-161029.tar.xz
-		echo "Building bleeding-edge-toolchain-161029..."
+		echo 'Building bleeding-edge-toolchain-161029...'
 		cd bleeding-edge-toolchain-161029
 		./build-bleeding-edge-toolchain.sh | grep '[*-]\{10,10\} '
 		cp arm-none-eabi-gcc-6.2.0-*.tar.xz "${HOME}/cache"
 		)
 	fi
-	echo "Extracting arm-none-eabi-gcc-6.2.0-*.tar.xz..."
+	echo 'Extracting arm-none-eabi-gcc-6.2.0-*.tar.xz...'
 	tar -xf ${HOME}/cache/arm-none-eabi-gcc-6.2.0-*.tar.xz
 	cat > arm-none-eabi-gcc-6.2.0.sh <<- EOF
 	export PATH="$(cd arm-none-eabi-gcc-6.2.0-*/bin && pwd):\${PATH-}"
@@ -68,7 +68,7 @@ script() {
 		(
 		echo "Using ${toolchain}..."
 		. "${toolchain}"
-		$(dirname "${0}")/buildAllConfigurations.sh "${@}"
+		"$(dirname "${0}")/buildAllConfigurations.sh" "${@}"
 		)
 	done
 }

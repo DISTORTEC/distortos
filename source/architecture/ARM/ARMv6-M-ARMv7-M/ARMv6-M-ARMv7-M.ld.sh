@@ -17,11 +17,11 @@ if [ ${#} -lt 5 ]; then
 	exit 1
 fi
 
-chipName=${1}
-romDescription=${2}
-ramDescription=${3}
-mainStackSize=${4}
-processStackSize=${5}
+chipName="${1}"
+romDescription="${2}"
+ramDescription="${3}"
+mainStackSize="${4}"
+processStackSize="${5}"
 
 decimalOrHexadecimalRegex='\(\(0x[0-9a-fA-F]\{1,8\}\)\|\([0-9]\{1,9\}\)\)'
 addressRegex="\(${decimalOrHexadecimalRegex}\)"
@@ -48,10 +48,10 @@ if ! expr "${processStackSize}" : "\(${sizeRegex}\)$" > /dev/null; then
 fi
 
 # the matched string may (technically) be "0" - that's why " || true" is needed
-romAddress=$(expr "${romDescription}" : '\([^,]\+\),[^,]\+' || true)
-romSize=$(expr "${romDescription}" : '[^,]\+,\([^,]\+\)' || true)
-ramAddress=$(expr "${ramDescription}" : '\([^,]\+\),[^,]\+' || true)
-ramSize=$(expr "${ramDescription}" : '[^,]\+,\([^,]\+\)' || true)
+romAddress="$(expr "${romDescription}" : '\([^,]\+\),[^,]\+' || true)"
+romSize="$(expr "${romDescription}" : '[^,]\+,\([^,]\+\)' || true)"
+ramAddress="$(expr "${ramDescription}" : '\([^,]\+\),[^,]\+' || true)"
+ramSize="$(expr "${ramDescription}" : '[^,]\+,\([^,]\+\)' || true)"
 
 shift
 shift
@@ -59,13 +59,13 @@ shift
 shift
 shift
 
-headerComments=
-memoryEntries=
-memorySizes=
-dataArrayEntries=
-bssArrayEntries=
-sectionEntries=
-sectionSizes=
+headerComments=''
+memoryEntries=''
+memorySizes=''
+dataArrayEntries=''
+bssArrayEntries=''
+sectionEntries=''
+sectionSizes=''
 
 while [ ${#} -gt 0 ]; do
 
@@ -74,9 +74,9 @@ while [ ${#} -gt 0 ]; do
 		exit 6
 	fi
 
-	memoryName=$(expr "${1}" : '\([^,]\+\),[^,]\+,[^,]\+' || true)
-	memoryAddress=$(expr "${1}" : '[^,]\+,\([^,]\+\),[^,]\+' || true)
-	memorySize=$(expr "${1}" : '[^,]\+,[^,]\+,\([^,]\+\)' || true)
+	memoryName="$(expr "${1}" : '\([^,]\+\),[^,]\+,[^,]\+' || true)"
+	memoryAddress="$(expr "${1}" : '[^,]\+,\([^,]\+\),[^,]\+' || true)"
+	memorySize="$(expr "${1}" : '[^,]\+,[^,]\+,\([^,]\+\)' || true)"
 
 	headerComments="${headerComments} * - ${memorySize} bytes of ${memoryName} at ${memoryAddress};\n"
 

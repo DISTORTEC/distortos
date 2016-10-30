@@ -17,21 +17,21 @@ if [ ${#} -lt 1 ]; then
 	exit 1
 fi
 
-command=${1}
+command="${1}"
 
-searchPath=.
+searchPath='.'
 
 # If any additional argument was given, then use it as the search path, otherwise search in current directory.
 if [ ${#} -ge 2 ]; then
-	searchPath=${2}
+	searchPath="${2}"
 fi
 
 make distclean
 
-for configurationPath in $(find ${searchPath} -name 'distortosConfiguration.mk' -printf '%h ')
+for configurationPath in $(find "${searchPath}" -name 'distortosConfiguration.mk' -printf '%h ')
 do
 
-	make configure CONFIG_PATH=${configurationPath}
+	make configure "CONFIG_PATH=${configurationPath}"
 	${command}
 	make distclean
 
