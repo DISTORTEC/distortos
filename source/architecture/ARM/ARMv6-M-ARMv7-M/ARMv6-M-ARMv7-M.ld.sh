@@ -143,11 +143,7 @@ cat << EOF
  * \brief Linker script for ${chipName} chip:
  * - ${romSize} bytes of rom at ${romAddress};
  * - ${ramSize} bytes of ram at ${ramAddress};
-EOF
-
-printf '%b' "${headerComments}"
-
-cat << EOF
+$(printf '%b' "${headerComments}")
  *
  * \author Copyright (C) 2014-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
@@ -183,11 +179,7 @@ MEMORY
 {
 	rom : org = ${romAddress}, len = ${romSize}
 	ram : org = ${ramAddress}, len = ${ramSize}
-EOF
-
-printf '%b' "${memoryEntries}"
-
-cat << EOF
+$(printf '%b' "${memoryEntries}")
 }
 
 PROVIDE(__rom_start = ORIGIN(rom));
@@ -198,11 +190,8 @@ PROVIDE(__ram_start = ORIGIN(ram));
 PROVIDE(__ram_size = LENGTH(ram));
 PROVIDE(__ram_end = ORIGIN(ram) + LENGTH(ram));
 
-EOF
+$(printf '%b' "${memorySizes}")
 
-printf '%b' "${memorySizes}"
-
-cat << EOF
 /*---------------------------------------------------------------------------------------------------------------------+
 | entry point
 +---------------------------------------------------------------------------------------------------------------------*/
@@ -248,11 +237,7 @@ SECTIONS
 		PROVIDE(__data_array_start = .);
 
 		LONG(LOADADDR(.data)); LONG(ADDR(.data)); LONG(ADDR(.data) + SIZEOF(.data));
-EOF
-
-printf '%b' "${dataArrayEntries}"
-
-cat << EOF
+$(printf '%b' "${dataArrayEntries}")
 
 		. = ALIGN(4);
 		PROVIDE(__data_array_end = .);
@@ -266,11 +251,7 @@ cat << EOF
 
 		LONG(ADDR(.bss)); LONG(ADDR(.bss) + SIZEOF(.bss));
 		LONG(ADDR(.stack)); LONG(ADDR(.stack) + SIZEOF(.stack));
-EOF
-
-printf '%b' "${bssArrayEntries}"
-
-cat << EOF
+$(printf '%b' "${bssArrayEntries}")
 
 		. = ALIGN(4);
 		PROVIDE(__bss_array_end = .);
@@ -384,11 +365,8 @@ cat << EOF
 	PROVIDE(__heap_start = .);
 	PROVIDE(__heap_end = __ram_end);
 
-EOF
+$(printf '%b' "${sectionEntries}")
 
-printf '%b' "${sectionEntries}"
-
-cat << EOF
 	.stab				0 (NOLOAD) : { *(.stab); }
 	.stabstr			0 (NOLOAD) : { *(.stabstr); }
 	/* DWARF debug sections.
@@ -428,11 +406,7 @@ PROVIDE(__bss_size = SIZEOF(.bss));
 PROVIDE(__data_size = SIZEOF(.data));
 PROVIDE(__noinit_size = SIZEOF(.noinit));
 PROVIDE(__stack_size = SIZEOF(.stack));
-EOF
-
-printf '%b' "${sectionSizes}"
-
-cat << EOF
+$(printf '%b' "${sectionSizes}")
 
 PROVIDE(__bss_start__ = __bss_start);
 PROVIDE(__bss_end__ = __bss_end);
