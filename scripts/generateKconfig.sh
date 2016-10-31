@@ -26,7 +26,7 @@ for file in $(/usr/bin/find -path "./${output}" -prune -o -name 'Kconfig*' -exec
 		sed -n 's/^source "$OUTPUT\/\(.*\)"$/\1/p' {} +)
 do
 
-cat << EOF > "${output}/${file}"
+cat > "${output}/${file}" << EOF
 #
 # file: ${file}
 #

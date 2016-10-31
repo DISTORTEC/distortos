@@ -137,7 +137,7 @@ PROVIDE(__${memoryName}_noinit_size = SIZEOF(.${memoryName}.noinit));\n"
 	shift
 done
 
-cat<<EOF
+cat << EOF
 /**
  * \file
  * \brief Linker script for ${chipName} chip:
@@ -147,7 +147,7 @@ EOF
 
 printf '%b' "${headerComments}"
 
-cat<<EOF
+cat << EOF
  *
  * \author Copyright (C) 2014-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
@@ -187,7 +187,7 @@ EOF
 
 printf '%b' "${memoryEntries}"
 
-cat<<EOF
+cat << EOF
 }
 
 PROVIDE(__rom_start = ORIGIN(rom));
@@ -202,7 +202,7 @@ EOF
 
 printf '%b' "${memorySizes}"
 
-cat<<EOF
+cat << EOF
 /*---------------------------------------------------------------------------------------------------------------------+
 | entry point
 +---------------------------------------------------------------------------------------------------------------------*/
@@ -252,7 +252,7 @@ EOF
 
 printf '%b' "${dataArrayEntries}"
 
-cat<<EOF
+cat << EOF
 
 		. = ALIGN(4);
 		PROVIDE(__data_array_end = .);
@@ -270,7 +270,7 @@ EOF
 
 printf '%b' "${bssArrayEntries}"
 
-cat<<EOF
+cat << EOF
 
 		. = ALIGN(4);
 		PROVIDE(__bss_array_end = .);
@@ -388,7 +388,7 @@ EOF
 
 printf '%b' "${sectionEntries}"
 
-cat<<EOF
+cat << EOF
 	.stab				0 (NOLOAD) : { *(.stab); }
 	.stabstr			0 (NOLOAD) : { *(.stabstr); }
 	/* DWARF debug sections.
@@ -432,7 +432,7 @@ EOF
 
 printf '%b' "${sectionSizes}"
 
-cat<<EOF
+cat << EOF
 
 PROVIDE(__bss_start__ = __bss_start);
 PROVIDE(__bss_end__ = __bss_end);
