@@ -94,15 +94,6 @@ public:
 	}
 
 	/**
-	 * \brief Sets priority of interrupt to CONFIG_ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI.
-	 */
-
-	void configureInterruptPriority() const
-	{
-		NVIC_SetPriority(irqNumber_, CONFIG_ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI);
-	}
-
-	/**
 	 * \brief Enables or disables ERR interrupt of SPI.
 	 *
 	 * \param [in] enable selects whether the interrupt will be enabled (true) or disabled (false)
@@ -437,7 +428,6 @@ int ChipSpiMasterLowLevel::start(devices::SpiMasterBase& spiMasterBase)
 
 	parameters_.enablePeripheralClock(true);
 	parameters_.resetPeripheral();
-	parameters_.configureInterruptPriority();
 	spiMasterBase_ = &spiMasterBase;
 	parameters_.getSpi().CR1 = SPI_CR1_SSM | SPI_CR1_SSI | SPI_CR1_SPE | SPI_CR1_BR | SPI_CR1_MSTR;
 	parameters_.enableInterrupt(true);
