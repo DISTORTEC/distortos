@@ -232,59 +232,59 @@ private:
 | public static objects
 +---------------------------------------------------------------------------------------------------------------------*/
 
-#ifdef CONFIG_CHIP_STM32_SPIV1_HAS_SPI1
+#ifdef CONFIG_CHIP_STM32_SPIV1_SPI1_ENABLE
 
 const ChipSpiMasterLowLevel::Parameters ChipSpiMasterLowLevel::spi1Parameters {SPI1_BASE,
 		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB2ENR), __builtin_ctzl(RCC_APB2ENR_SPI1EN)),
 		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB2RSTR), __builtin_ctzl(RCC_APB2RSTR_SPI1RST)),
 		SPI1_IRQn};
 
-#endif	// def CONFIG_CHIP_STM32_SPIV1_HAS_SPI1
+#endif	// def CONFIG_CHIP_STM32_SPIV1_SPI1_ENABLE
 
-#ifdef CONFIG_CHIP_STM32_SPIV1_HAS_SPI2
+#ifdef CONFIG_CHIP_STM32_SPIV1_SPI2_ENABLE
 
 const ChipSpiMasterLowLevel::Parameters ChipSpiMasterLowLevel::spi2Parameters {SPI2_BASE,
 		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB1ENR), __builtin_ctzl(RCC_APB1ENR_SPI2EN)),
 		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB1RSTR), __builtin_ctzl(RCC_APB1RSTR_SPI2RST)),
 		SPI2_IRQn};
 
-#endif	// def CONFIG_CHIP_STM32_SPIV1_HAS_SPI2
+#endif	// def CONFIG_CHIP_STM32_SPIV1_SPI2_ENABLE
 
-#ifdef CONFIG_CHIP_STM32_SPIV1_HAS_SPI3
+#ifdef CONFIG_CHIP_STM32_SPIV1_SPI3_ENABLE
 
 const ChipSpiMasterLowLevel::Parameters ChipSpiMasterLowLevel::spi3Parameters {SPI3_BASE,
 		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB1ENR), __builtin_ctzl(RCC_APB1ENR_SPI3EN)),
 		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB1RSTR), __builtin_ctzl(RCC_APB1RSTR_SPI3RST)),
 		SPI3_IRQn};
 
-#endif	// def CONFIG_CHIP_STM32_SPIV1_HAS_SPI3
+#endif	// def CONFIG_CHIP_STM32_SPIV1_SPI3_ENABLE
 
-#ifdef CONFIG_CHIP_STM32_SPIV1_HAS_SPI4
+#ifdef CONFIG_CHIP_STM32_SPIV1_SPI4_ENABLE
 
 const ChipSpiMasterLowLevel::Parameters ChipSpiMasterLowLevel::spi4Parameters {SPI4_BASE,
 		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB2ENR), __builtin_ctzl(RCC_APB2ENR_SPI4EN)),
 		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB2RSTR), __builtin_ctzl(RCC_APB2RSTR_SPI4RST)),
 		SPI4_IRQn};
 
-#endif	// def CONFIG_CHIP_STM32_SPIV1_HAS_SPI4
+#endif	// def CONFIG_CHIP_STM32_SPIV1_SPI4_ENABLE
 
-#ifdef CONFIG_CHIP_STM32_SPIV1_HAS_SPI5
+#ifdef CONFIG_CHIP_STM32_SPIV1_SPI5_ENABLE
 
 const ChipSpiMasterLowLevel::Parameters ChipSpiMasterLowLevel::spi5Parameters {SPI5_BASE,
 		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB2ENR), __builtin_ctzl(RCC_APB2ENR_SPI5EN)),
 		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB2RSTR), __builtin_ctzl(RCC_APB2RSTR_SPI5RST)),
 		SPI5_IRQn};
 
-#endif	// def CONFIG_CHIP_STM32_SPIV1_HAS_SPI5
+#endif	// def CONFIG_CHIP_STM32_SPIV1_SPI5_ENABLE
 
-#ifdef CONFIG_CHIP_STM32_SPIV1_HAS_SPI6
+#ifdef CONFIG_CHIP_STM32_SPIV1_SPI6_ENABLE
 
 const ChipSpiMasterLowLevel::Parameters ChipSpiMasterLowLevel::spi6Parameters {SPI6_BASE,
 		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB2ENR), __builtin_ctzl(RCC_APB2ENR_SPI6EN)),
 		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB2RSTR), __builtin_ctzl(RCC_APB2RSTR_SPI6RST)),
 		SPI6_IRQn};
 
-#endif	// def CONFIG_CHIP_STM32_SPIV1_HAS_SPI6
+#endif	// def CONFIG_CHIP_STM32_SPIV1_SPI6_ENABLE
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | public functions
