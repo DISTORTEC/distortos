@@ -102,15 +102,6 @@ public:
 	}
 
 	/**
-	 * \brief Sets priority of interrupt to CONFIG_ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI.
-	 */
-
-	void configureInterruptPriority() const
-	{
-		NVIC_SetPriority(irqNumber_, CONFIG_ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI);
-	}
-
-	/**
 	 * \brief Enables or disables interrupt in NVIC.
 	 *
 	 * \param [in] enable selects whether the interrupt will be enabled (true) or disabled (false)
@@ -389,7 +380,6 @@ std::pair<int, uint32_t> ChipUartLowLevel::start(devices::UartBase& uartBase, co
 	parameters_.enablePeripheralClock(true);
 	parameters_.resetPeripheral();
 
-	parameters_.configureInterruptPriority();
 	uartBase_ = &uartBase;
 	auto& uart = parameters_.getUart();
 	uart.BRR = (mantissa << USART_BRR_DIV_Mantissa_bit) | (fraction << USART_BRR_DIV_Fraction_bit);
