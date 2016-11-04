@@ -11,6 +11,12 @@
 
 #include "distortos/chip/peripheralsLowLevelInitialization.hpp"
 
+#include "distortos/distortosConfiguration.h"
+
+#ifdef CONFIG_CHIP_STM32_SPIV1
+#include "SPIv1/STM32-SPIv1-spiLowLevelInitialization.hpp"
+#endif	// def CONFIG_CHIP_STM32_SPIV1
+
 namespace distortos
 {
 
@@ -23,7 +29,9 @@ namespace chip
 
 void peripheralsLowLevelInitialization()
 {
-
+#ifdef CONFIG_CHIP_STM32_SPIV1
+	spiLowLevelInitialization();
+#endif	// CONFIG_CHIP_STM32_SPIV1
 }
 
 }	// namespace chip
