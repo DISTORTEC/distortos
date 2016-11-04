@@ -17,6 +17,7 @@
 #include "distortos/board/lowLevelInitialization.hpp"
 
 #include "distortos/chip/lowLevelInitialization.hpp"
+#include "distortos/chip/peripheralsLowLevelInitialization.hpp"
 
 namespace distortos
 {
@@ -60,6 +61,7 @@ const FunctionPointer distortosPreinitArray[] __attribute__ ((section(".preinit_
 		lowLevelInitialization,
 		architecture::lowLevelInitialization,
 		chip::lowLevelInitialization,
+		chip::peripheralsLowLevelInitialization,
 		boardLowLevelInitializationWrapper,
 		architecture::startScheduling,
 };
