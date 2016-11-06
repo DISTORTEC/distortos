@@ -74,32 +74,20 @@ public:
 	 * \param [in] spi is a base address of SPI peripheral
 	 * \param [in] rccEnBbAddress is an address of bitband alias of appropriate SPIxEN bit in RCC register
 	 * \param [in] rccRstBbAddress is an address of bitband alias of appropriate SPIxRST bit in RCC register
-	 * \param [in] irqNumber is the NVIC's IRQ number of associated SPI
 	 */
 
-	constexpr Parameters(const uintptr_t spiBase, const uintptr_t rccEnBbAddress, const uintptr_t rccRstBbAddress,
-			const IRQn_Type irqNumber) :
-					spiBase_{spiBase},
-					peripheralFrequency_{spiBase < apb2PeripheralsBaseAddress ? apb1Frequency :
-							spiBase < ahbPeripheralsBaseAddress ? apb2Frequency : ahbFrequency},
-					speBbAddress_{BITBAND_ADDRESS(spiBase + offsetof(SPI_TypeDef, CR1), SPI_CR1_SPE_bit)},
-					errieBbAddress_{BITBAND_ADDRESS(spiBase + offsetof(SPI_TypeDef, CR2), SPI_CR2_ERRIE_bit)},
-					rxneieBbAddress_{BITBAND_ADDRESS(spiBase + offsetof(SPI_TypeDef, CR2), SPI_CR2_RXNEIE_bit)},
-					txeieBbAddress_{BITBAND_ADDRESS(spiBase + offsetof(SPI_TypeDef, CR2), SPI_CR2_TXEIE_bit)},
-					rccEnBbAddress_{rccEnBbAddress},
-					rccRstBbAddress_{rccRstBbAddress},
-					irqNumber_{irqNumber}
+	constexpr Parameters(const uintptr_t spiBase, const uintptr_t rccEnBbAddress, const uintptr_t rccRstBbAddress) :
+			spiBase_{spiBase},
+			peripheralFrequency_{spiBase < apb2PeripheralsBaseAddress ? apb1Frequency :
+					spiBase < ahbPeripheralsBaseAddress ? apb2Frequency : ahbFrequency},
+			speBbAddress_{BITBAND_ADDRESS(spiBase + offsetof(SPI_TypeDef, CR1), SPI_CR1_SPE_bit)},
+			errieBbAddress_{BITBAND_ADDRESS(spiBase + offsetof(SPI_TypeDef, CR2), SPI_CR2_ERRIE_bit)},
+			rxneieBbAddress_{BITBAND_ADDRESS(spiBase + offsetof(SPI_TypeDef, CR2), SPI_CR2_RXNEIE_bit)},
+			txeieBbAddress_{BITBAND_ADDRESS(spiBase + offsetof(SPI_TypeDef, CR2), SPI_CR2_TXEIE_bit)},
+			rccEnBbAddress_{rccEnBbAddress},
+			rccRstBbAddress_{rccRstBbAddress}
 	{
 
-	}
-
-	/**
-	 * \brief Sets priority of interrupt to CONFIG_ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI.
-	 */
-
-	void configureInterruptPriority() const
-	{
-		NVIC_SetPriority(irqNumber_, CONFIG_ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI);
 	}
 
 	/**
@@ -111,17 +99,6 @@ public:
 	void enableErrInterrupt(const bool enable) const
 	{
 		*reinterpret_cast<volatile unsigned long*>(errieBbAddress_) = enable;
-	}
-
-	/**
-	 * \brief Enables or disables interrupt in NVIC.
-	 *
-	 * \param [in] enable selects whether the interrupt will be enabled (true) or disabled (false)
-	 */
-
-	void enableInterrupt(const bool enable) const
-	{
-		enable == true ? NVIC_EnableIRQ(irqNumber_) : NVIC_DisableIRQ(irqNumber_);
 	}
 
 	/**
@@ -223,68 +200,59 @@ private:
 
 	/// address of bitband alias of appropriate SPIxRST bit in RCC register
 	uintptr_t rccRstBbAddress_;
-
-	/// NVIC's IRQ number of associated SPI
-	IRQn_Type irqNumber_;
 };
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | public static objects
 +---------------------------------------------------------------------------------------------------------------------*/
 
-#ifdef CONFIG_CHIP_STM32_SPIV1_HAS_SPI1
+#ifdef CONFIG_CHIP_STM32_SPIV1_SPI1_ENABLE
 
 const ChipSpiMasterLowLevel::Parameters ChipSpiMasterLowLevel::spi1Parameters {SPI1_BASE,
 		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB2ENR), __builtin_ctzl(RCC_APB2ENR_SPI1EN)),
-		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB2RSTR), __builtin_ctzl(RCC_APB2RSTR_SPI1RST)),
-		SPI1_IRQn};
+		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB2RSTR), __builtin_ctzl(RCC_APB2RSTR_SPI1RST))};
 
-#endif	// def CONFIG_CHIP_STM32_SPIV1_HAS_SPI1
+#endif	// def CONFIG_CHIP_STM32_SPIV1_SPI1_ENABLE
 
-#ifdef CONFIG_CHIP_STM32_SPIV1_HAS_SPI2
+#ifdef CONFIG_CHIP_STM32_SPIV1_SPI2_ENABLE
 
 const ChipSpiMasterLowLevel::Parameters ChipSpiMasterLowLevel::spi2Parameters {SPI2_BASE,
 		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB1ENR), __builtin_ctzl(RCC_APB1ENR_SPI2EN)),
-		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB1RSTR), __builtin_ctzl(RCC_APB1RSTR_SPI2RST)),
-		SPI2_IRQn};
+		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB1RSTR), __builtin_ctzl(RCC_APB1RSTR_SPI2RST))};
 
-#endif	// def CONFIG_CHIP_STM32_SPIV1_HAS_SPI2
+#endif	// def CONFIG_CHIP_STM32_SPIV1_SPI2_ENABLE
 
-#ifdef CONFIG_CHIP_STM32_SPIV1_HAS_SPI3
+#ifdef CONFIG_CHIP_STM32_SPIV1_SPI3_ENABLE
 
 const ChipSpiMasterLowLevel::Parameters ChipSpiMasterLowLevel::spi3Parameters {SPI3_BASE,
 		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB1ENR), __builtin_ctzl(RCC_APB1ENR_SPI3EN)),
-		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB1RSTR), __builtin_ctzl(RCC_APB1RSTR_SPI3RST)),
-		SPI3_IRQn};
+		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB1RSTR), __builtin_ctzl(RCC_APB1RSTR_SPI3RST))};
 
-#endif	// def CONFIG_CHIP_STM32_SPIV1_HAS_SPI3
+#endif	// def CONFIG_CHIP_STM32_SPIV1_SPI3_ENABLE
 
-#ifdef CONFIG_CHIP_STM32_SPIV1_HAS_SPI4
+#ifdef CONFIG_CHIP_STM32_SPIV1_SPI4_ENABLE
 
 const ChipSpiMasterLowLevel::Parameters ChipSpiMasterLowLevel::spi4Parameters {SPI4_BASE,
 		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB2ENR), __builtin_ctzl(RCC_APB2ENR_SPI4EN)),
-		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB2RSTR), __builtin_ctzl(RCC_APB2RSTR_SPI4RST)),
-		SPI4_IRQn};
+		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB2RSTR), __builtin_ctzl(RCC_APB2RSTR_SPI4RST))};
 
-#endif	// def CONFIG_CHIP_STM32_SPIV1_HAS_SPI4
+#endif	// def CONFIG_CHIP_STM32_SPIV1_SPI4_ENABLE
 
-#ifdef CONFIG_CHIP_STM32_SPIV1_HAS_SPI5
+#ifdef CONFIG_CHIP_STM32_SPIV1_SPI5_ENABLE
 
 const ChipSpiMasterLowLevel::Parameters ChipSpiMasterLowLevel::spi5Parameters {SPI5_BASE,
 		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB2ENR), __builtin_ctzl(RCC_APB2ENR_SPI5EN)),
-		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB2RSTR), __builtin_ctzl(RCC_APB2RSTR_SPI5RST)),
-		SPI5_IRQn};
+		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB2RSTR), __builtin_ctzl(RCC_APB2RSTR_SPI5RST))};
 
-#endif	// def CONFIG_CHIP_STM32_SPIV1_HAS_SPI5
+#endif	// def CONFIG_CHIP_STM32_SPIV1_SPI5_ENABLE
 
-#ifdef CONFIG_CHIP_STM32_SPIV1_HAS_SPI6
+#ifdef CONFIG_CHIP_STM32_SPIV1_SPI6_ENABLE
 
 const ChipSpiMasterLowLevel::Parameters ChipSpiMasterLowLevel::spi6Parameters {SPI6_BASE,
 		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB2ENR), __builtin_ctzl(RCC_APB2ENR_SPI6EN)),
-		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB2RSTR), __builtin_ctzl(RCC_APB2RSTR_SPI6RST)),
-		SPI6_IRQn};
+		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB2RSTR), __builtin_ctzl(RCC_APB2RSTR_SPI6RST))};
 
-#endif	// def CONFIG_CHIP_STM32_SPIV1_HAS_SPI6
+#endif	// def CONFIG_CHIP_STM32_SPIV1_SPI6_ENABLE
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | public functions
@@ -295,7 +263,6 @@ ChipSpiMasterLowLevel::~ChipSpiMasterLowLevel()
 	if (isStarted() == false)
 		return;
 
-	parameters_.enableInterrupt(false);
 	parameters_.resetPeripheral();
 	parameters_.enablePeripheralClock(false);
 }
@@ -437,10 +404,8 @@ int ChipSpiMasterLowLevel::start(devices::SpiMasterBase& spiMasterBase)
 
 	parameters_.enablePeripheralClock(true);
 	parameters_.resetPeripheral();
-	parameters_.configureInterruptPriority();
 	spiMasterBase_ = &spiMasterBase;
 	parameters_.getSpi().CR1 = SPI_CR1_SSM | SPI_CR1_SSI | SPI_CR1_SPE | SPI_CR1_BR | SPI_CR1_MSTR;
-	parameters_.enableInterrupt(true);
 
 	return 0;
 }
@@ -479,7 +444,6 @@ int ChipSpiMasterLowLevel::stop()
 	if (isTransferInProgress() == true)
 		return EBUSY;
 
-	parameters_.enableInterrupt(false);
 	parameters_.resetPeripheral();
 	parameters_.enablePeripheralClock(false);
 	spiMasterBase_ = nullptr;

@@ -83,42 +83,19 @@ public:
 	 * \param [in] uartBase is a base address of UART peripheral
 	 * \param [in] rccEnBb is an address of bitband alias of appropriate U[S]ARTxEN bit in RCC register
 	 * \param [in] rccRstBb is an address of bitband alias of appropriate U[S]ARTxRST bit in RCC register
-	 * \param [in] irqNumber is the NVIC's IRQ number of associated U[S]ART
 	 */
 
-	constexpr Parameters(const uintptr_t uartBase, const uintptr_t rccEnBbAddress, const uintptr_t rccRstBbAddress,
-			const IRQn_Type irqNumber) :
-					uartBase_{uartBase},
-					peripheralFrequency_{uartBase < apb2PeripheralsBaseAddress ? apb1Frequency :
-							uartBase < ahbPeripheralsBaseAddress ? apb2Frequency : ahbFrequency},
-					rxneieBbAddress_{BITBAND_ADDRESS(uartBase + offsetof(USART_TypeDef, CR1), USART_CR1_RXNEIE_bit)},
-					tcieBbAddress_{BITBAND_ADDRESS(uartBase + offsetof(USART_TypeDef, CR1), USART_CR1_TCIE_bit)},
-					txeieBbAddress_{BITBAND_ADDRESS(uartBase + offsetof(USART_TypeDef, CR1), USART_CR1_TXEIE_bit)},
-					rccEnBbAddress_{rccEnBbAddress},
-					rccRstBbAddress_{rccRstBbAddress},
-					irqNumber_{irqNumber}
+	constexpr Parameters(const uintptr_t uartBase, const uintptr_t rccEnBbAddress, const uintptr_t rccRstBbAddress) :
+			uartBase_{uartBase},
+			peripheralFrequency_{uartBase < apb2PeripheralsBaseAddress ? apb1Frequency :
+					uartBase < ahbPeripheralsBaseAddress ? apb2Frequency : ahbFrequency},
+			rxneieBbAddress_{BITBAND_ADDRESS(uartBase + offsetof(USART_TypeDef, CR1), USART_CR1_RXNEIE_bit)},
+			tcieBbAddress_{BITBAND_ADDRESS(uartBase + offsetof(USART_TypeDef, CR1), USART_CR1_TCIE_bit)},
+			txeieBbAddress_{BITBAND_ADDRESS(uartBase + offsetof(USART_TypeDef, CR1), USART_CR1_TXEIE_bit)},
+			rccEnBbAddress_{rccEnBbAddress},
+			rccRstBbAddress_{rccRstBbAddress}
 	{
 
-	}
-
-	/**
-	 * \brief Sets priority of interrupt to CONFIG_ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI.
-	 */
-
-	void configureInterruptPriority() const
-	{
-		NVIC_SetPriority(irqNumber_, CONFIG_ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI);
-	}
-
-	/**
-	 * \brief Enables or disables interrupt in NVIC.
-	 *
-	 * \param [in] enable selects whether the interrupt will be enabled (true) or disabled (false)
-	 */
-
-	void enableInterrupt(const bool enable) const
-	{
-		enable == true ? NVIC_EnableIRQ(irqNumber_) : NVIC_DisableIRQ(irqNumber_);
 	}
 
 	/**
@@ -226,86 +203,75 @@ private:
 
 	/// address of bitband alias of appropriate U[S]ARTxRST bit in RCC register
 	uintptr_t rccRstBbAddress_;
-
-	/// NVIC's IRQ number of associated U[S]ART
-	IRQn_Type irqNumber_;
 };
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | public static objects
 +---------------------------------------------------------------------------------------------------------------------*/
 
-#ifdef CONFIG_CHIP_STM32_USARTV1_HAS_USART1
+#ifdef CONFIG_CHIP_STM32_USARTV1_USART1_ENABLE
 
 const ChipUartLowLevel::Parameters ChipUartLowLevel::usart1Parameters {USART1_BASE,
 		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB2ENR), __builtin_ctzl(RCC_APB2ENR_USART1EN)),
-		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB2RSTR), __builtin_ctzl(RCC_APB2RSTR_USART1RST)),
-		USART1_IRQn};
+		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB2RSTR), __builtin_ctzl(RCC_APB2RSTR_USART1RST))};
 
-#endif	// def CONFIG_CHIP_STM32_USARTV1_HAS_USART1
+#endif	// def CONFIG_CHIP_STM32_USARTV1_USART1_ENABLE
 
-#ifdef CONFIG_CHIP_STM32_USARTV1_HAS_USART2
+#ifdef CONFIG_CHIP_STM32_USARTV1_USART2_ENABLE
 
 const ChipUartLowLevel::Parameters ChipUartLowLevel::usart2Parameters {USART2_BASE,
 		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB1ENR), __builtin_ctzl(RCC_APB1ENR_USART2EN)),
-		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB1RSTR), __builtin_ctzl(RCC_APB1RSTR_USART2RST)),
-		USART2_IRQn};
+		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB1RSTR), __builtin_ctzl(RCC_APB1RSTR_USART2RST))};
 
-#endif	// def CONFIG_CHIP_STM32_USARTV1_HAS_USART2
+#endif	// def CONFIG_CHIP_STM32_USARTV1_USART2_ENABLE
 
-#ifdef CONFIG_CHIP_STM32_USARTV1_HAS_USART3
+#ifdef CONFIG_CHIP_STM32_USARTV1_USART3_ENABLE
 
 const ChipUartLowLevel::Parameters ChipUartLowLevel::usart3Parameters {USART3_BASE,
 		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB1ENR), __builtin_ctzl(RCC_APB1ENR_USART3EN)),
-		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB1RSTR), __builtin_ctzl(RCC_APB1RSTR_USART3RST)),
-		USART3_IRQn};
+		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB1RSTR), __builtin_ctzl(RCC_APB1RSTR_USART3RST))};
 
-#endif	// def CONFIG_CHIP_STM32_USARTV1_HAS_USART3
+#endif	// def CONFIG_CHIP_STM32_USARTV1_USART3_ENABLE
 
-#ifdef CONFIG_CHIP_STM32_USARTV1_HAS_UART4
+#ifdef CONFIG_CHIP_STM32_USARTV1_UART4_ENABLE
 
 const ChipUartLowLevel::Parameters ChipUartLowLevel::uart4Parameters {UART4_BASE,
 		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB1ENR), __builtin_ctzl(RCC_APB1ENR_UART4EN)),
-		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB1RSTR), __builtin_ctzl(RCC_APB1RSTR_UART4RST)),
-		UART4_IRQn};
+		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB1RSTR), __builtin_ctzl(RCC_APB1RSTR_UART4RST))};
 
-#endif	// def CONFIG_CHIP_STM32_USARTV1_HAS_UART4
+#endif	// def CONFIG_CHIP_STM32_USARTV1_UART4_ENABLE
 
-#ifdef CONFIG_CHIP_STM32_USARTV1_HAS_UART5
+#ifdef CONFIG_CHIP_STM32_USARTV1_UART5_ENABLE
 
 const ChipUartLowLevel::Parameters ChipUartLowLevel::uart5Parameters {UART5_BASE,
 		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB1ENR), __builtin_ctzl(RCC_APB1ENR_UART5EN)),
-		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB1RSTR), __builtin_ctzl(RCC_APB1RSTR_UART5RST)),
-		UART5_IRQn};
+		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB1RSTR), __builtin_ctzl(RCC_APB1RSTR_UART5RST))};
 
-#endif	// def CONFIG_CHIP_STM32_USARTV1_HAS_UART5
+#endif	// def CONFIG_CHIP_STM32_USARTV1_UART5_ENABLE
 
-#ifdef CONFIG_CHIP_STM32_USARTV1_HAS_USART6
+#ifdef CONFIG_CHIP_STM32_USARTV1_USART6_ENABLE
 
 const ChipUartLowLevel::Parameters ChipUartLowLevel::usart6Parameters {USART6_BASE,
 		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB2ENR), __builtin_ctzl(RCC_APB2ENR_USART6EN)),
-		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB2RSTR), __builtin_ctzl(RCC_APB2RSTR_USART6RST)),
-		USART6_IRQn};
+		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB2RSTR), __builtin_ctzl(RCC_APB2RSTR_USART6RST))};
 
-#endif	// def CONFIG_CHIP_STM32_USARTV1_HAS_USART6
+#endif	// def CONFIG_CHIP_STM32_USARTV1_USART6_ENABLE
 
-#ifdef CONFIG_CHIP_STM32_USARTV1_HAS_UART7
+#ifdef CONFIG_CHIP_STM32_USARTV1_UART7_ENABLE
 
 const ChipUartLowLevel::Parameters ChipUartLowLevel::uart7Parameters {UART7_BASE,
 		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB1ENR), __builtin_ctzl(RCC_APB1ENR_UART7EN)),
-		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB1RSTR), __builtin_ctzl(RCC_APB1RSTR_UART7RST)),
-		UART7_IRQn};
+		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB1RSTR), __builtin_ctzl(RCC_APB1RSTR_UART7RST))};
 
-#endif	// def CONFIG_CHIP_STM32_USARTV1_HAS_UART7
+#endif	// def CONFIG_CHIP_STM32_USARTV1_UART7_ENABLE
 
-#ifdef CONFIG_CHIP_STM32_USARTV1_HAS_UART8
+#ifdef CONFIG_CHIP_STM32_USARTV1_UART8_ENABLE
 
 const ChipUartLowLevel::Parameters ChipUartLowLevel::uart8Parameters {UART8_BASE,
 		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB1ENR), __builtin_ctzl(RCC_APB1ENR_UART8EN)),
-		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB1RSTR), __builtin_ctzl(RCC_APB1RSTR_UART8RST)),
-		UART8_IRQn};
+		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB1RSTR), __builtin_ctzl(RCC_APB1RSTR_UART8RST))};
 
-#endif	// def CONFIG_CHIP_STM32_USARTV1_HAS_UART8
+#endif	// def CONFIG_CHIP_STM32_USARTV1_UART8_ENABLE
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | public functions
@@ -316,7 +282,6 @@ ChipUartLowLevel::~ChipUartLowLevel()
 	if (isStarted() == false)
 		return;
 
-	parameters_.enableInterrupt(false);
 	parameters_.resetPeripheral();
 	parameters_.enablePeripheralClock(false);
 }
@@ -389,7 +354,6 @@ std::pair<int, uint32_t> ChipUartLowLevel::start(devices::UartBase& uartBase, co
 	parameters_.enablePeripheralClock(true);
 	parameters_.resetPeripheral();
 
-	parameters_.configureInterruptPriority();
 	uartBase_ = &uartBase;
 	auto& uart = parameters_.getUart();
 	uart.BRR = (mantissa << USART_BRR_DIV_Mantissa_bit) | (fraction << USART_BRR_DIV_Fraction_bit);
@@ -398,7 +362,6 @@ std::pair<int, uint32_t> ChipUartLowLevel::start(devices::UartBase& uartBase, co
 			((realCharacterLength == maxUartCharacterLength) << USART_CR1_M_bit) |
 			((parity != devices::UartParity::none) << USART_CR1_PCE_bit) |
 			((parity == devices::UartParity::odd) << USART_CR1_PS_bit);
-	parameters_.enableInterrupt(true);
 	return {{}, peripheralFrequency / divider};
 }
 
@@ -457,7 +420,6 @@ int ChipUartLowLevel::stop()
 	if (isReadInProgress() == true || isWriteInProgress() == true)
 		return EBUSY;
 
-	parameters_.enableInterrupt(false);
 	parameters_.resetPeripheral();
 	parameters_.enablePeripheralClock(false);
 	uartBase_ = nullptr;
