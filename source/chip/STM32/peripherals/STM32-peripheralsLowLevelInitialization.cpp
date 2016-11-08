@@ -19,6 +19,9 @@
 #ifdef CONFIG_CHIP_STM32_USARTV1
 #include "USARTv1/STM32-USARTv1-usartLowLevelInitialization.hpp"
 #endif	// def CONFIG_CHIP_STM32_USARTV1
+#ifdef CONFIG_CHIP_STM32_USARTV2
+#include "USARTv2/STM32-USARTv2-usartLowLevelInitialization.hpp"
+#endif	// def CONFIG_CHIP_STM32_USARTV2
 
 namespace distortos
 {
@@ -35,9 +38,9 @@ void peripheralsLowLevelInitialization()
 #ifdef CONFIG_CHIP_STM32_SPIV1
 	spiLowLevelInitialization();
 #endif	// CONFIG_CHIP_STM32_SPIV1
-#ifdef CONFIG_CHIP_STM32_USARTV1
+#if defined(CONFIG_CHIP_STM32_USARTV1) || defined(CONFIG_CHIP_STM32_USARTV2)
 	usartLowLevelInitialization();
-#endif	// def CONFIG_CHIP_STM32_USARTV1
+#endif	// defined(CONFIG_CHIP_STM32_USARTV1) || defined(CONFIG_CHIP_STM32_USARTV2)
 }
 
 }	// namespace chip
