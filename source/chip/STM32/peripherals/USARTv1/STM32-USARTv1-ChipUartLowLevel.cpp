@@ -143,6 +143,18 @@ public:
 	}
 
 	/**
+	 * \return character length, bits
+	 */
+
+	uint8_t getCharacterLength() const
+	{
+		const auto cr1 = getUart().CR1;
+		const uint8_t realCharacterLength = 8 + ((cr1 & USART_CR1_M) != 0);
+		const auto parityControlEnabled = (cr1 & USART_CR1_PCE) != 0;
+		return realCharacterLength - parityControlEnabled;
+	}
+
+	/**
 	 * \return peripheral clock frequency, Hz
 	 */
 
@@ -161,7 +173,7 @@ public:
 	}
 
 	/**
-	 * \return true if real character length (including optional parity) is 9 bits, false otherwise
+	 * \return true if character length (excluding optional parity) is 9 bits, false otherwise
 	 */
 
 	bool is9BitFormatEnabled() const
@@ -289,7 +301,7 @@ ChipUartLowLevel::~ChipUartLowLevel()
 void ChipUartLowLevel::interruptHandler()
 {
 	auto& uart = parameters_.getUart();
-	const auto _9BitFormat = parameters_.is9BitFormatEnabled();
+	const auto characterLength = parameters_.getCharacterLength();
 	uint32_t sr;
 	uint32_t maskedSr;
 	// loop while there are enabled interrupt sources waiting to be served
@@ -297,11 +309,12 @@ void ChipUartLowLevel::interruptHandler()
 	{
 		if ((maskedSr & USART_SR_RXNE) != 0)		// read & receive errors
 		{
-			const uint16_t character = uart.DR;
+			const uint16_t characterMask = (1 << characterLength) - 1;
+			const uint16_t character = uart.DR & characterMask;
 			const auto readBuffer = readBuffer_;
 			auto readPosition = readPosition_;
 			readBuffer[readPosition++] = character;
-			if (_9BitFormat == true)
+			if (characterLength > 8)
 				readBuffer[readPosition++] = character >> 8;
 			readPosition_ = readPosition;
 			if ((sr & (USART_SR_FE | USART_SR_NE | USART_SR_ORE | USART_SR_PE)) != 0)
@@ -314,7 +327,7 @@ void ChipUartLowLevel::interruptHandler()
 			const auto writeBuffer = writeBuffer_;
 			auto writePosition = writePosition_;
 			const uint16_t characterLow = writeBuffer[writePosition++];
-			const uint16_t characterHigh = _9BitFormat == true ? writeBuffer[writePosition++] : 0;
+			const uint16_t characterHigh = characterLength > 8 ? writeBuffer[writePosition++] : 0;
 			writePosition_ = writePosition;
 			uart.DR = characterLow | (characterHigh << 8);
 			if (writePosition == writeSize_)
@@ -376,7 +389,7 @@ int ChipUartLowLevel::startRead(void* const buffer, const size_t size)
 	if (isReadInProgress() == true)
 		return EBUSY;
 
-	if (parameters_.is9BitFormatEnabled() == true && size % 2 != 0)
+	if (parameters_.getCharacterLength() > 8 && size % 2 != 0)
 		return EINVAL;
 
 	readBuffer_ = static_cast<uint8_t*>(buffer);
@@ -397,7 +410,7 @@ int ChipUartLowLevel::startWrite(const void* const buffer, const size_t size)
 	if (isWriteInProgress() == true)
 		return EBUSY;
 
-	if (parameters_.is9BitFormatEnabled() == true && size % 2 != 0)
+	if (parameters_.getCharacterLength() > 8 && size % 2 != 0)
 		return EINVAL;
 
 	writeBuffer_ = static_cast<const uint8_t*>(buffer);
