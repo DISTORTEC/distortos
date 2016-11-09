@@ -179,15 +179,6 @@ public:
 	}
 
 	/**
-	 * \return true if character length (excluding optional parity) is 9 bits, false otherwise
-	 */
-
-	bool is9BitFormatEnabled() const
-	{
-		return (getUart().CR1 & (USART_CR1_M | USART_CR1_PCE)) == USART_CR1_M0;
-	}
-
-	/**
 	 * \brief Resets all peripheral's registers via RCC
 	 *
 	 * \note Peripheral clock must be enabled in RCC for this operation to work.
