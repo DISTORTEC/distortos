@@ -143,6 +143,18 @@ public:
 	}
 
 	/**
+	 * \return character length, bits
+	 */
+
+	uint8_t getCharacterLength() const
+	{
+		const auto cr1 = getUart().CR1;
+		const uint8_t realCharacterLength = 8 + ((cr1 & USART_CR1_M) != 0);
+		const auto parityControlEnabled = (cr1 & USART_CR1_PCE) != 0;
+		return realCharacterLength - parityControlEnabled;
+	}
+
+	/**
 	 * \return peripheral clock frequency, Hz
 	 */
 
