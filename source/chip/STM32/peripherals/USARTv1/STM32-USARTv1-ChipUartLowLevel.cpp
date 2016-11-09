@@ -301,7 +301,7 @@ ChipUartLowLevel::~ChipUartLowLevel()
 void ChipUartLowLevel::interruptHandler()
 {
 	auto& uart = parameters_.getUart();
-	const auto _9BitFormat = parameters_.is9BitFormatEnabled();
+	const auto characterLength = parameters_.getCharacterLength();
 	uint32_t sr;
 	uint32_t maskedSr;
 	// loop while there are enabled interrupt sources waiting to be served
@@ -313,7 +313,7 @@ void ChipUartLowLevel::interruptHandler()
 			const auto readBuffer = readBuffer_;
 			auto readPosition = readPosition_;
 			readBuffer[readPosition++] = character;
-			if (_9BitFormat == true)
+			if (characterLength > 8)
 				readBuffer[readPosition++] = character >> 8;
 			readPosition_ = readPosition;
 			if ((sr & (USART_SR_FE | USART_SR_NE | USART_SR_ORE | USART_SR_PE)) != 0)
@@ -326,7 +326,7 @@ void ChipUartLowLevel::interruptHandler()
 			const auto writeBuffer = writeBuffer_;
 			auto writePosition = writePosition_;
 			const uint16_t characterLow = writeBuffer[writePosition++];
-			const uint16_t characterHigh = _9BitFormat == true ? writeBuffer[writePosition++] : 0;
+			const uint16_t characterHigh = characterLength > 8 ? writeBuffer[writePosition++] : 0;
 			writePosition_ = writePosition;
 			uart.DR = characterLow | (characterHigh << 8);
 			if (writePosition == writeSize_)
