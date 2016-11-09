@@ -163,7 +163,7 @@ public:
 	}
 
 	/**
-	 * \return true if real character length (including optional parity) is 9 bits, false otherwise
+	 * \return true if character length (excluding optional parity) is 9 bits, false otherwise
 	 */
 
 	bool is9BitFormatEnabled() const
