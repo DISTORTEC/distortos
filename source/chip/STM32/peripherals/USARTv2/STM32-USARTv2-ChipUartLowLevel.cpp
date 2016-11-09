@@ -306,7 +306,8 @@ void ChipUartLowLevel::interruptHandler()
 	{
 		if ((maskedIsr & USART_ISR_RXNE) != 0)		// read & receive errors
 		{
-			const uint16_t character = uart.RDR;
+			const uint16_t characterMask = (1 << characterLength) - 1;
+			const uint16_t character = uart.RDR & characterMask;
 			const auto readBuffer = readBuffer_;
 			auto readPosition = readPosition_;
 			readBuffer[readPosition++] = character;
