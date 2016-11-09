@@ -409,7 +409,7 @@ int ChipUartLowLevel::startWrite(const void* const buffer, const size_t size)
 	if (isWriteInProgress() == true)
 		return EBUSY;
 
-	if (parameters_.is9BitFormatEnabled() == true && size % 2 != 0)
+	if (parameters_.getCharacterLength() > 8 && size % 2 != 0)
 		return EINVAL;
 
 	writeBuffer_ = static_cast<const uint8_t*>(buffer);
