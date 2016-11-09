@@ -388,7 +388,7 @@ int ChipUartLowLevel::startRead(void* const buffer, const size_t size)
 	if (isReadInProgress() == true)
 		return EBUSY;
 
-	if (parameters_.is9BitFormatEnabled() == true && size % 2 != 0)
+	if (parameters_.getCharacterLength() > 8 && size % 2 != 0)
 		return EINVAL;
 
 	readBuffer_ = static_cast<uint8_t*>(buffer);
