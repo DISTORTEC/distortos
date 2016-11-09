@@ -145,6 +145,22 @@ public:
 	}
 
 	/**
+	 * \return character length, bits
+	 */
+
+	uint8_t getCharacterLength() const
+	{
+		const auto cr1 = getUart().CR1;
+		const auto realCharacterLength =
+#ifdef CONFIG_CHIP_STM32_USARTV2_HAS_CR1_M1_BIT
+				(cr1 & USART_CR1_M1) != 0 ? 7 :
+#endif	// def CONFIG_CHIP_STM32_USARTV2_HAS_CR1_M1_BIT
+				(cr1 & USART_CR1_M0) != 0 ? 9 : 8;
+		const auto parityControlEnabled = (cr1 & USART_CR1_PCE) != 0;
+		return realCharacterLength - parityControlEnabled;
+	}
+
+	/**
 	 * \return peripheral clock frequency, Hz
 	 */
 
