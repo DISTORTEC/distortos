@@ -1,0 +1,20 @@
+#
+# file: Kconfig-peripheralsOptions
+#
+# author: Copyright (C) 2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+#
+# This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
+# distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+#
+
+if CHIP_STM32_SPIV2
+
+config CHIP_STM32_SPIV2_HAS_SPI1
+	bool
+	default n
+
+config CHIP_STM32_SPIV2_HAS_SPI2
+	bool
+	default n
+
+endif	# CHIP_STM32_SPIV2
