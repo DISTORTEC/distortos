@@ -21,6 +21,10 @@ config CHIP_STM32_SPIV1
 	bool
 	default n
 
+config CHIP_STM32_SPIV2
+	bool
+	default n
+
 config CHIP_STM32_USARTV1
 	bool
 	default n
