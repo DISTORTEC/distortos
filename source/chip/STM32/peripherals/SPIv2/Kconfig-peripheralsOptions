@@ -9,6 +9,20 @@
 
 if CHIP_STM32_SPIV2
 
+config CHIP_STM32_SPIV2_SPI1_ENABLE
+	bool "SPI1 low-level driver"
+	default n
+	depends on CHIP_STM32_SPIV2_HAS_SPI1
+	help
+		Enable SPI1 low-level driver
+
+config CHIP_STM32_SPIV2_SPI2_ENABLE
+	bool "SPI2 low-level driver"
+	default n
+	depends on CHIP_STM32_SPIV2_HAS_SPI2
+	help
+		Enable SPI2 low-level driver
+
 config CHIP_STM32_SPIV2_HAS_SPI1
 	bool
 	default n
