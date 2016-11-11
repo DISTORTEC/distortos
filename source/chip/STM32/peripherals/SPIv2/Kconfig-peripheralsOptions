@@ -7,30 +7,28 @@
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #
 
-if CHIP_STM32
+if CHIP_STM32_SPIV2
 
-config CHIP_STM32_GPIOV1
+config CHIP_STM32_SPIV2_SPI1_ENABLE
+	bool "SPI1 low-level driver"
+	default n
+	depends on CHIP_STM32_SPIV2_HAS_SPI1
+	help
+		Enable SPI1 low-level driver
+
+config CHIP_STM32_SPIV2_SPI2_ENABLE
+	bool "SPI2 low-level driver"
+	default n
+	depends on CHIP_STM32_SPIV2_HAS_SPI2
+	help
+		Enable SPI2 low-level driver
+
+config CHIP_STM32_SPIV2_HAS_SPI1
 	bool
 	default n
 
-config CHIP_STM32_GPIOV2
+config CHIP_STM32_SPIV2_HAS_SPI2
 	bool
 	default n
 
-config CHIP_STM32_SPIV1
-	bool
-	default n
-
-config CHIP_STM32_SPIV2
-	bool
-	default n
-
-config CHIP_STM32_USARTV1
-	bool
-	default n
-
-config CHIP_STM32_USARTV2
-	bool
-	default n
-
-endif	# CHIP_STM32
+endif	# CHIP_STM32_SPIV2
