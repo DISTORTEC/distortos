@@ -307,9 +307,9 @@ void ChipSpiMasterLowLevel::interruptHandler()
 {
 	bool done {};
 	auto& spi = parameters_.getSpi();
-	auto wordLength = getWordLength(spi.CR1);
 	const auto sr = spi.SR;
 	const auto cr2 = spi.CR2;
+	const auto wordLength = getWordLength(spi.CR1);
 
 	if ((sr & (SPI_SR_MODF | SPI_SR_OVR | SPI_SR_CRCERR)) != 0 && (cr2 & SPI_CR2_ERRIE) != 0)	// error?
 	{
@@ -393,7 +393,6 @@ void ChipSpiMasterLowLevel::interruptHandler()
 		readBuffer_ = {};
 
 		spiMasterBase_->transferCompleteEvent(errorSet, bytesTransfered);
-		wordLength = getWordLength(spi.CR1);
 	}
 }
 
