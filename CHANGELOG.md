@@ -20,11 +20,12 @@ executed only once. Otherwise it will be executed periodically until the softwar
 - `devices::SpiMasterLowLevel` interface class, which is a low-level interface to hardware-dependent SPI bus master
 driver.
 - `chip::ChipSpiMasterLowLevel` class - interrupt-driven implementation of `devices::SpiMasterLowLevel` interface for
-*STM32F1* and *STM32F4*.
+*STM32F0*, *STM32F1* and *STM32F4*.
 - "Peripherals configuration" *Kconfig* menu, where low-level drivers for SPI bus master and U[S]ART can
 be selected.
 - `uarts.hpp` header for *STM32F0*, *STM32F1* and *STM32F4* with declarations of all enabled low-level U[S]ART drivers.
-- `spis.hpp` header for *STM32F1* and *STM32F4* with declarations of all enabled low-level SPI master drivers.
+- `spis.hpp` header for *STM32F0*, *STM32F1* and *STM32F4* with declarations of all enabled low-level SPI master
+drivers.
 - `devices::SerialPort` class - universal serial port device with an interface similar to standard files (`open()`,
 `close()`, `read()`, `write()`). `read()` and `write()` member functions of this class support both blocking (with
 or without timeout) and non-blocking behaviour. Convenient wrappers for reading/writing with timeout are also provided:
