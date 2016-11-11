@@ -71,7 +71,7 @@ public:
 	/**
 	 * \brief Parameters's constructor
 	 *
-	 * \param [in] spi is a base address of SPI peripheral
+	 * \param [in] spiBase is a base address of SPI peripheral
 	 * \param [in] rccEnBbAddress is an address of bitband alias of appropriate SPIxEN bit in RCC register
 	 * \param [in] rccRstBbAddress is an address of bitband alias of appropriate SPIxRST bit in RCC register
 	 */
