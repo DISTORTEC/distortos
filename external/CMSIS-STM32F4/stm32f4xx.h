@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    stm32f4xx.h
   * @author  MCD Application Team
-  * @version V2.5.0
-  * @date    22-April-2016
+  * @version V2.5.1
+  * @date    28-June-2016
   * @brief   CMSIS STM32F4xx Device Peripheral Access Layer Header File.
   *            
   *          The file is the unique include file that the application programmer
@@ -121,11 +121,11 @@
 #endif /* USE_HAL_DRIVER */
 
 /**
-  * @brief CMSIS version number V2.5.0
+  * @brief CMSIS version number V2.5.1
   */
 #define __STM32F4xx_CMSIS_VERSION_MAIN   (0x02U) /*!< [31:24] main version */
 #define __STM32F4xx_CMSIS_VERSION_SUB1   (0x05U) /*!< [23:16] sub1 version */
-#define __STM32F4xx_CMSIS_VERSION_SUB2   (0x00U) /*!< [15:8]  sub2 version */
+#define __STM32F4xx_CMSIS_VERSION_SUB2   (0x01U) /*!< [15:8]  sub2 version */
 #define __STM32F4xx_CMSIS_VERSION_RC     (0x00U) /*!< [7:0]  release candidate */
 #define __STM32F4xx_CMSIS_VERSION        ((__STM32F4xx_CMSIS_VERSION_MAIN << 24)\
                                          |(__STM32F4xx_CMSIS_VERSION_SUB1 << 16)\

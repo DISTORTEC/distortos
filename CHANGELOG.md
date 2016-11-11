@@ -59,6 +59,9 @@ classes.
 shell, *cat* and *sed* (`makeDistortosConfiguration.sh`). With this change *AWK* is no longer needed to configure &
 build this project.
 - Merge GPIO drivers for *STM32*.
+- Update *CMSIS-STM32F0* to version 1.6.0.
+- Update *CMSIS-STM32F1* to version 1.4.0.
+- Update *CMSIS-STM32F4* to version 1.13.0.
 
 ### Fixed
 

@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    stm32f412zx.h
   * @author  MCD Application Team
-  * @version V2.5.0
-  * @date    22-April-2016
+  * @version V2.5.1
+  * @date    28-June-2016
   * @brief   CMSIS STM32F412Zx Device Peripheral Access Layer Header File. 
   *
   *          This file contains:
@@ -4351,6 +4351,11 @@ typedef struct
 /*                                    QUADSPI                                 */
 /*                                                                            */
 /******************************************************************************/
+/*
+ * @brief Specific device feature definitions (not present on all devices in the STM32F4 serie)
+ */
+#define  QSPI1_V2_1L                                                      /*!< QSPI Virtual Version             */
+
 /*****************  Bit definition for QUADSPI_CR register  *******************/
 #define  QUADSPI_CR_EN                           0x00000001U            /*!< Enable                             */
 #define  QUADSPI_CR_ABORT                        0x00000002U            /*!< Abort request                      */
