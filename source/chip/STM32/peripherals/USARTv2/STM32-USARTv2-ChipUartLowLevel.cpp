@@ -349,7 +349,7 @@ std::pair<int, uint32_t> ChipUartLowLevel::start(devices::UartBase& uartBase, co
 		return {EINVAL, {}};
 
 	const auto realCharacterLength = characterLength + (parity != devices::UartParity::none);
-	if (realCharacterLength < minUartCharacterLength + 1 || realCharacterLength > maxUartCharacterLength)
+	if (realCharacterLength < minCharacterLength + 1 || realCharacterLength > maxCharacterLength)
 		return {EINVAL, {}};
 
 	parameters_.enablePeripheralClock(true);
@@ -360,9 +360,9 @@ std::pair<int, uint32_t> ChipUartLowLevel::start(devices::UartBase& uartBase, co
 	uart.BRR = (mantissa << USART_BRR_DIV_MANTISSA_bit) | (fraction << USART_BRR_DIV_FRACTION_bit);
 	uart.CR2 = _2StopBits << USART_CR2_STOP_1_bit;
 	uart.CR1 = USART_CR1_RE | USART_CR1_TE | USART_CR1_UE | (over8 << USART_CR1_OVER8_bit) |
-			((realCharacterLength == maxUartCharacterLength) << USART_CR1_M0_bit) |
+			((realCharacterLength == maxCharacterLength) << USART_CR1_M0_bit) |
 #ifdef CONFIG_CHIP_STM32_USARTV2_HAS_CR1_M1_BIT
-			((realCharacterLength == minUartCharacterLength + 1) << USART_CR1_M1_bit) |
+			((realCharacterLength == minCharacterLength + 1) << USART_CR1_M1_bit) |
 #endif	// def CONFIG_CHIP_STM32_USARTV2_HAS_CR1_M1_BIT
 			((parity != devices::UartParity::none) << USART_CR1_PCE_bit) |
 			((parity == devices::UartParity::odd) << USART_CR1_PS_bit);

@@ -352,7 +352,7 @@ std::pair<int, uint32_t> ChipUartLowLevel::start(devices::UartBase& uartBase, co
 		return {EINVAL, {}};
 
 	const auto realCharacterLength = characterLength + (parity != devices::UartParity::none);
-	if (realCharacterLength < minUartCharacterLength + 1 || realCharacterLength > maxUartCharacterLength)
+	if (realCharacterLength < minCharacterLength + 1 || realCharacterLength > maxCharacterLength)
 		return {EINVAL, {}};
 
 	parameters_.enablePeripheralClock(true);
@@ -363,7 +363,7 @@ std::pair<int, uint32_t> ChipUartLowLevel::start(devices::UartBase& uartBase, co
 	uart.BRR = (mantissa << USART_BRR_DIV_Mantissa_bit) | (fraction << USART_BRR_DIV_Fraction_bit);
 	uart.CR2 = _2StopBits << USART_CR2_STOP_1_bit;
 	uart.CR1 = USART_CR1_RE | USART_CR1_TE | USART_CR1_UE | (over8 << USART_CR1_OVER8_bit) |
-			((realCharacterLength == maxUartCharacterLength) << USART_CR1_M_bit) |
+			((realCharacterLength == maxCharacterLength) << USART_CR1_M_bit) |
 			((parity != devices::UartParity::none) << USART_CR1_PCE_bit) |
 			((parity == devices::UartParity::odd) << USART_CR1_PS_bit);
 	return {{}, peripheralFrequency / divider};

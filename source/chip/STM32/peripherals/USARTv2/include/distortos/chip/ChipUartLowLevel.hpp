@@ -29,13 +29,13 @@ public:
 
 	/// minimum allowed value for UART character length
 #ifdef CONFIG_CHIP_STM32_USARTV2_HAS_CR1_M1_BIT
-	constexpr static uint8_t minUartCharacterLength {6};
+	constexpr static uint8_t minCharacterLength {6};
 #else	// !def CONFIG_CHIP_STM32_USARTV2_HAS_CR1_M1_BIT
-	constexpr static uint8_t minUartCharacterLength {7};
+	constexpr static uint8_t minCharacterLength {7};
 #endif	// !def CONFIG_CHIP_STM32_USARTV2_HAS_CR1_M1_BIT
 
 	/// maximum allowed value for UART character length
-	constexpr static uint8_t maxUartCharacterLength {9};
+	constexpr static uint8_t maxCharacterLength {9};
 
 	class Parameters;
 
@@ -134,12 +134,12 @@ public:
 	 * \brief Starts low-level UART driver.
 	 *
 	 * Not all combinations of data format are supported. The general rules are:
-	 * - if parity control is disabled, character length must not be \a minUartCharacterLength,
+	 * - if parity control is disabled, character length must not be \a minCharacterLength,
 	 * - if parity control is enabled, character length must not be 9.
 	 *
 	 * \param [in] uartBase is a reference to UartBase object that will be associated with this one
 	 * \param [in] baudRate is the desired baud rate, bps
-	 * \param [in] characterLength selects character length, bits, [minUartCharacterLength; maxUartCharacterLength]
+	 * \param [in] characterLength selects character length, bits, [minCharacterLength; maxCharacterLength]
 	 * \param [in] parity selects parity
 	 * \param [in] _2StopBits selects whether 1 (false) or 2 (true) stop bits are used
 	 *

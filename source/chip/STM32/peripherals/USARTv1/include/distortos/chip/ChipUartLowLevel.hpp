@@ -28,10 +28,10 @@ class ChipUartLowLevel : public devices::UartLowLevel
 public:
 
 	/// minimum allowed value for UART character length
-	constexpr static uint8_t minUartCharacterLength {7};
+	constexpr static uint8_t minCharacterLength {7};
 
 	/// maximum allowed value for UART character length
-	constexpr static uint8_t maxUartCharacterLength {9};
+	constexpr static uint8_t maxCharacterLength {9};
 
 	class Parameters;
 
@@ -135,8 +135,7 @@ public:
 	 *
 	 * \param [in] uartBase is a reference to UartBase object that will be associated with this one
 	 * \param [in] baudRate is the desired baud rate, bps
-	 * \param [in] characterLength selects character length, bits, [7; 9] or
-	 * [minUartCharacterLength; maxUartCharacterLength]
+	 * \param [in] characterLength selects character length, bits, [7; 9] or [minCharacterLength; maxCharacterLength]
 	 * \param [in] parity selects parity
 	 * \param [in] _2StopBits selects whether 1 (false) or 2 (true) stop bits are used
 	 *
