@@ -31,7 +31,7 @@ public:
 #ifdef CONFIG_CHIP_STM32_USARTV2_HAS_CR1_M1_BIT
 	constexpr static uint8_t minUartCharacterLength {6};
 #else	// !def CONFIG_CHIP_STM32_USARTV2_HAS_CR1_M1_BIT
-	onstexpr static uint8_t minUartCharacterLength {7};
+	constexpr static uint8_t minUartCharacterLength {7};
 #endif	// !def CONFIG_CHIP_STM32_USARTV2_HAS_CR1_M1_BIT
 
 	/// maximum allowed value for UART character length
