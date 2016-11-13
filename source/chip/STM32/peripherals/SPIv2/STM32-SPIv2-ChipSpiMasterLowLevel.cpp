@@ -147,6 +147,16 @@ public:
 	}
 
 	/**
+	 * \return current word length, bits, [4; 16] or
+	 * [ChipSpiMasterLowLevel::minWordLength; ChipSpiMasterLowLevel::maxWordLength]
+	 */
+
+	uint8_t getWordLength() const
+	{
+		return getWordLength(getSpi().CR2);
+	}
+
+	/**
 	 * \brief Resets all peripheral's registers via RCC
 	 *
 	 * \note Peripheral clock must be enabled in RCC for this operation to work.
@@ -375,7 +385,7 @@ int ChipSpiMasterLowLevel::startTransfer(const void* const writeBuffer, void* co
 	if (isTransferInProgress() == true)
 		return EBUSY;
 
-	if (size % ((Parameters::getWordLength(parameters_.getSpi().CR2) + 8 - 1) / 8) != 0)
+	if (size % ((parameters_.getWordLength() + 8 - 1) / 8) != 0)
 		return EINVAL;
 
 	readBuffer_ = static_cast<uint8_t*>(readBuffer);
