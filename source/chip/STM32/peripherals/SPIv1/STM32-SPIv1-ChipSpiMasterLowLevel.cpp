@@ -23,26 +23,6 @@ namespace distortos
 namespace chip
 {
 
-namespace
-{
-
-/*---------------------------------------------------------------------------------------------------------------------+
-| local functions
-+---------------------------------------------------------------------------------------------------------------------*/
-
-/**
- * \param [in] cr1 is the current value of CR1 register in SPI module
- *
- * \return current word length, bits, {8, 16}
- */
-
-uint8_t getWordLength(const uint32_t cr1)
-{
-	return (cr1 & SPI_CR1_DFF) == 0 ? 8 : 16;
-}
-
-}	// namespace
-
 /*---------------------------------------------------------------------------------------------------------------------+
 | public types
 +---------------------------------------------------------------------------------------------------------------------*/
@@ -161,6 +141,15 @@ public:
 	SPI_TypeDef& getSpi() const
 	{
 		return *reinterpret_cast<SPI_TypeDef*>(spiBase_);
+	}
+
+	/**
+	 * \return current word length, bits, {8, 16}
+	 */
+
+	uint8_t getWordLength() const
+	{
+		return (getSpi().CR1 & SPI_CR1_DFF) == 0 ? 8 : 16;
 	}
 
 	/**
@@ -288,7 +277,7 @@ std::pair<int, uint32_t> ChipSpiMasterLowLevel::configure(const devices::SpiMode
 	auto& spi = parameters_.getSpi();
 
 	// value of DFF bit (which determines word length) must be changed only when SPI peripheral is disabled
-	const auto disablePeripheral = wordLength != getWordLength(spi.CR1);
+	const auto disablePeripheral = wordLength != parameters_.getWordLength();
 	if (disablePeripheral == true)
 		parameters_.enablePeripheral(false);
 
@@ -309,7 +298,7 @@ void ChipSpiMasterLowLevel::interruptHandler()
 	auto& spi = parameters_.getSpi();
 	const auto sr = spi.SR;
 	const auto cr2 = spi.CR2;
-	const auto wordLength = getWordLength(spi.CR1);
+	const auto wordLength = parameters_.getWordLength();
 
 	if ((sr & (SPI_SR_MODF | SPI_SR_OVR | SPI_SR_CRCERR)) != 0 && (cr2 & SPI_CR2_ERRIE) != 0)	// error?
 	{
@@ -420,7 +409,7 @@ int ChipSpiMasterLowLevel::startTransfer(const void* const writeBuffer, void* co
 	if (isTransferInProgress() == true)
 		return EBUSY;
 
-	if (size % (getWordLength(parameters_.getSpi().CR1) / 8) != 0)
+	if (size % (parameters_.getWordLength() / 8) != 0)
 		return EINVAL;
 
 	readBuffer_ = static_cast<uint8_t*>(readBuffer);

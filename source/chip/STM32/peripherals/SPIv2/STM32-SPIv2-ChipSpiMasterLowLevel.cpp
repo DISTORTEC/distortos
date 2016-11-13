@@ -25,27 +25,6 @@ namespace distortos
 namespace chip
 {
 
-namespace
-{
-
-/*---------------------------------------------------------------------------------------------------------------------+
-| local functions
-+---------------------------------------------------------------------------------------------------------------------*/
-
-/**
- * \param [in] cr2 is the current value of CR2 register in SPI module
- *
- * \return current word length, bits, [4; 16] or
- * [ChipSpiMasterLowLevel::minWordLength; ChipSpiMasterLowLevel::maxWordLength]
- */
-
-uint8_t getWordLength(const uint32_t cr2)
-{
-	return ((cr2 & SPI_CR2_DS) >> SPI_CR2_DS_bit) + 1;
-}
-
-}	// namespace
-
 /*---------------------------------------------------------------------------------------------------------------------+
 | public types
 +---------------------------------------------------------------------------------------------------------------------*/
@@ -168,6 +147,16 @@ public:
 	}
 
 	/**
+	 * \return current word length, bits, [4; 16] or
+	 * [ChipSpiMasterLowLevel::minWordLength; ChipSpiMasterLowLevel::maxWordLength]
+	 */
+
+	uint8_t getWordLength() const
+	{
+		return getWordLength(getSpi().CR2);
+	}
+
+	/**
 	 * \brief Resets all peripheral's registers via RCC
 	 *
 	 * \note Peripheral clock must be enabled in RCC for this operation to work.
@@ -179,6 +168,18 @@ public:
 		const architecture::InterruptMaskingLock interruptMaskingLock;
 		rccRst |= rccRstBitmask_;
 		rccRst &= ~rccRstBitmask_;
+	}
+
+	/**
+	 * \param [in] cr2 is the current value of CR2 register in SPI module
+	 *
+	 * \return current word length, bits, [4; 16] or
+	 * [ChipSpiMasterLowLevel::minWordLength; ChipSpiMasterLowLevel::maxWordLength]
+	 */
+
+	static uint8_t getWordLength(const uint32_t cr2)
+	{
+		return ((cr2 & SPI_CR2_DS) >> SPI_CR2_DS_bit) + 1;
 	}
 
 private:
@@ -268,7 +269,7 @@ void ChipSpiMasterLowLevel::interruptHandler()
 	auto& spi = parameters_.getSpi();
 	const auto sr = spi.SR;
 	const auto cr2 = spi.CR2;
-	const auto wordLength = getWordLength(cr2);
+	const auto wordLength = Parameters::getWordLength(cr2);
 
 	if ((sr & (SPI_SR_MODF | SPI_SR_OVR | SPI_SR_CRCERR)) != 0 && (cr2 & SPI_CR2_ERRIE) != 0)	// error?
 	{
@@ -384,7 +385,7 @@ int ChipSpiMasterLowLevel::startTransfer(const void* const writeBuffer, void* co
 	if (isTransferInProgress() == true)
 		return EBUSY;
 
-	if (size % ((getWordLength(parameters_.getSpi().CR2) + 8 - 1) / 8) != 0)
+	if (size % ((parameters_.getWordLength() + 8 - 1) / 8) != 0)
 		return EINVAL;
 
 	readBuffer_ = static_cast<uint8_t*>(readBuffer);
