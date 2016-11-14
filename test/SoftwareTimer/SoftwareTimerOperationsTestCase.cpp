@@ -2,7 +2,7 @@
  * \file
  * \brief SoftwareTimerOperationsTestCase class implementation
  *
- * \author Copyright (C) 2014-2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -41,11 +41,13 @@ bool SoftwareTimerOperationsTestCase::run_() const
 		return false;
 
 	waitForNextTick();
-	softwareTimer.start(singleDuration);
+	if (softwareTimer.start(singleDuration) != 0)
+		return false;
 	if (softwareTimer.isRunning() != true || value != 0)	// must be started, but may not execute yet
 		return false;
 
-	softwareTimer.stop();
+	if (softwareTimer.stop() != 0)
+		return false;
 	if (softwareTimer.isRunning() != false || value != 0)	// must be stopped, must not execute
 		return false;
 
@@ -54,7 +56,8 @@ bool SoftwareTimerOperationsTestCase::run_() const
 		return false;
 
 	waitForNextTick();
-	softwareTimer.start(singleDuration);
+	if (softwareTimer.start(singleDuration) != 0)
+		return false;
 	if (softwareTimer.isRunning() != true || value != 0)	// must be started, but may not execute yet
 		return false;
 
@@ -71,7 +74,8 @@ bool SoftwareTimerOperationsTestCase::run_() const
 
 	waitForNextTick();
 	const auto wakeUpTimePoint = TickClock::now() + singleDuration;
-	softwareTimer.start(wakeUpTimePoint);
+	if (softwareTimer.start(wakeUpTimePoint) != 0)
+		return false;
 	if (softwareTimer.isRunning() != true || value != 1)	// must be started, but may not execute yet
 		return false;
 
