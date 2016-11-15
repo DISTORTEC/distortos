@@ -87,6 +87,35 @@ bool SoftwareTimerOperationsTestCase::run_() const
 		if (softwareTimer.isRunning() != false || value != 2 || TickClock::now() != wakeUpTimePoint)
 			return false;
 	}
+	{
+		constexpr auto period = TickClock::duration{6};
+
+		waitForNextTick();
+		const auto wakeUpTimePoint = TickClock::now() + TickClock::duration{17};
+		if (softwareTimer.start(wakeUpTimePoint, period) != 0)
+			return false;
+		if (softwareTimer.isRunning() != true || value != 2)	// must be started, but may not execute yet
+			return false;
+
+		for (size_t iteration {}; iteration < 4; ++iteration)
+		{
+			while (softwareTimer.isRunning() == true && value == 2 + iteration);
+
+			// must be still running, function must be executed, wake up time point must equal what is expected
+			if (softwareTimer.isRunning() != true || value != 3 + iteration ||
+					TickClock::now() != wakeUpTimePoint + period * iteration)
+				return false;
+		}
+
+		if (softwareTimer.stop() != 0)
+			return false;
+		if (softwareTimer.isRunning() != false || value != 6)	// must be stopped
+			return false;
+
+		ThisThread::sleepFor(period * 2);
+		if (softwareTimer.isRunning() != false || value != 6)	// make sure it did not execute again
+			return false;
+	}
 
 	return true;
 }
