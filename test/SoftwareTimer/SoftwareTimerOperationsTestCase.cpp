@@ -37,56 +37,54 @@ bool SoftwareTimerOperationsTestCase::run_() const
 				++value;
 			});
 
-	if (softwareTimer.isRunning() != false || value != 0)	// initially must be stopped and must not execute
-		return false;
-
-	waitForNextTick();
-	if (softwareTimer.start(singleDuration) != 0)
-		return false;
-	if (softwareTimer.isRunning() != true || value != 0)	// must be started, but may not execute yet
-		return false;
-
-	if (softwareTimer.stop() != 0)
-		return false;
-	if (softwareTimer.isRunning() != false || value != 0)	// must be stopped, must not execute
-		return false;
-
-	ThisThread::sleepFor(singleDuration * 2);
-	if (softwareTimer.isRunning() != false || value != 0)	// make sure it did not execute
-		return false;
-
-	waitForNextTick();
-	if (softwareTimer.start(singleDuration) != 0)
-		return false;
-	if (softwareTimer.isRunning() != true || value != 0)	// must be started, but may not execute yet
-		return false;
-
-	const auto start = TickClock::now();
-	while (softwareTimer.isRunning() == true)
 	{
+		if (softwareTimer.isRunning() != false || value != 0)	// initially must be stopped and must not execute
+			return false;
 
+		waitForNextTick();
+		if (softwareTimer.start(singleDuration) != 0)
+			return false;
+		if (softwareTimer.isRunning() != true || value != 0)	// must be started, but may not execute yet
+			return false;
+
+		if (softwareTimer.stop() != 0)
+			return false;
+		if (softwareTimer.isRunning() != false || value != 0)	// must be stopped, must not execute
+			return false;
+
+		ThisThread::sleepFor(singleDuration * 2);
+		if (softwareTimer.isRunning() != false || value != 0)	// make sure it did not execute
+			return false;
 	}
-
-	// must be stopped, function must be executed, real duration must equal what is expected
-	if (softwareTimer.isRunning() != false || value != 1 ||
-			TickClock::now() - start != singleDuration + decltype(singleDuration){1})
-		return false;
-
-	waitForNextTick();
-	const auto wakeUpTimePoint = TickClock::now() + singleDuration;
-	if (softwareTimer.start(wakeUpTimePoint) != 0)
-		return false;
-	if (softwareTimer.isRunning() != true || value != 1)	// must be started, but may not execute yet
-		return false;
-
-	while (softwareTimer.isRunning() == true)
 	{
+		waitForNextTick();
+		if (softwareTimer.start(singleDuration) != 0)
+			return false;
+		if (softwareTimer.isRunning() != true || value != 0)	// must be started, but may not execute yet
+			return false;
 
+		const auto start = TickClock::now();
+		while (softwareTimer.isRunning() == true);
+
+		// must be stopped, function must be executed, real duration must equal what is expected
+		if (softwareTimer.isRunning() != false || value != 1 ||
+				TickClock::now() - start != singleDuration + decltype(singleDuration){1})
+			return false;
 	}
+	{
+		waitForNextTick();
+		const auto wakeUpTimePoint = TickClock::now() + singleDuration;
+		if (softwareTimer.start(wakeUpTimePoint) != 0)
+			return false;
+		if (softwareTimer.isRunning() != true || value != 1)	// must be started, but may not execute yet
+			return false;
 
-	// must be stopped, function must be executed, wake up time point must equal what is expected
-	if (softwareTimer.isRunning() != false || value != 2 || TickClock::now() != wakeUpTimePoint)
-		return false;
+		while (softwareTimer.isRunning() == true);
+
+		// must be stopped, function must be executed, wake up time point must equal what is expected
+		if (softwareTimer.isRunning() != false || value != 2 || TickClock::now() != wakeUpTimePoint)
+			return false;
+	}
 
 	return true;
 }
