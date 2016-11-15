@@ -116,6 +116,98 @@ bool SoftwareTimerOperationsTestCase::run_() const
 		if (softwareTimer.isRunning() != false || value != 6)	// make sure it did not execute again
 			return false;
 	}
+	{
+		// restart one-shot into one-shot
+		for (size_t iteration {}; iteration < 4; ++iteration)
+		{
+			constexpr auto duration = TickClock::duration{15};
+			const auto wakeUpTimePoint = TickClock::now() + duration;
+			if (softwareTimer.start(wakeUpTimePoint) != 0)
+				return false;
+			if (softwareTimer.isRunning() != true || value != 6)	// must be started, but may not execute yet
+				return false;
+
+			ThisThread::sleepUntil(wakeUpTimePoint - duration / 2);
+
+			if (softwareTimer.isRunning() != true || value != 6)	// must be started, but may not execute yet
+				return false;
+		}
+
+		// restart one-shot into periodic, then periodic into periodic
+		for (size_t iteration {}; iteration < 4; ++iteration)
+		{
+			constexpr auto delay = TickClock::duration{12};
+
+			const auto wakeUpTimePoint = TickClock::now() + delay;
+			if (softwareTimer.start(wakeUpTimePoint, TickClock::duration{10}) != 0)
+				return false;
+			if (softwareTimer.isRunning() != true || value != 6)	// must be started, but may not execute yet
+				return false;
+
+			ThisThread::sleepUntil(wakeUpTimePoint - delay / 2);
+
+			if (softwareTimer.isRunning() != true || value != 6)	// must be started, but may not execute yet
+				return false;
+		}
+
+		// restart periodic into periodic
+		{
+			constexpr auto period = TickClock::duration{19};
+
+			waitForNextTick();
+			const auto wakeUpTimePoint = TickClock::now() + TickClock::duration{14};
+			if (softwareTimer.start(wakeUpTimePoint, period) != 0)
+				return false;
+			if (softwareTimer.isRunning() != true || value != 6)	// must be started, but may not execute yet
+				return false;
+
+			for (size_t iteration {}; iteration < 4; ++iteration)
+			{
+				while (softwareTimer.isRunning() == true && value == 6 + iteration);
+
+				// must be still running, function must be executed, wake up time point must equal what is expected
+				if (softwareTimer.isRunning() != true || value != 7 + iteration ||
+						TickClock::now() != wakeUpTimePoint + period * iteration)
+					return false;
+			}
+		}
+
+		// restart periodic into periodic with different settings
+		{
+			constexpr auto period = TickClock::duration{7};
+
+			waitForNextTick();
+			const auto wakeUpTimePoint = TickClock::now() + TickClock::duration{5};
+			if (softwareTimer.start(wakeUpTimePoint, period) != 0)
+				return false;
+			if (softwareTimer.isRunning() != true || value != 10)	// must be started, but may not execute yet
+				return false;
+
+			for (size_t iteration {}; iteration < 4; ++iteration)
+			{
+				while (softwareTimer.isRunning() == true && value == 10 + iteration);
+
+				// must be still running, function must be executed, wake up time point must equal what is expected
+				if (softwareTimer.isRunning() != true || value != 11 + iteration ||
+						TickClock::now() != wakeUpTimePoint + period * iteration)
+					return false;
+			}
+		}
+
+		// restart periodic into one-shot
+		waitForNextTick();
+		const auto wakeUpTimePoint = TickClock::now() + TickClock::duration{16};
+		if (softwareTimer.start(wakeUpTimePoint) != 0)
+			return false;
+		if (softwareTimer.isRunning() != true || value != 14)	// must be started, but may not execute yet
+			return false;
+
+		while (softwareTimer.isRunning() == true);
+
+		// must be stopped, function must be executed, wake up time point must equal what is expected
+		if (softwareTimer.isRunning() != false || value != 15 || TickClock::now() != wakeUpTimePoint)
+			return false;
+	}
 
 	return true;
 }
