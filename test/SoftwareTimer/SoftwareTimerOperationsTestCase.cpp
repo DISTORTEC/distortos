@@ -28,8 +28,6 @@ namespace test
 
 bool SoftwareTimerOperationsTestCase::run_() const
 {
-	constexpr auto singleDuration = TickClock::duration{10};
-
 	volatile uint32_t value {};
 	auto softwareTimer = makeStaticSoftwareTimer(
 			[&value]()
@@ -38,11 +36,13 @@ bool SoftwareTimerOperationsTestCase::run_() const
 			});
 
 	{
+		constexpr auto duration = TickClock::duration{11};
+
 		if (softwareTimer.isRunning() != false || value != 0)	// initially must be stopped and must not execute
 			return false;
 
 		waitForNextTick();
-		if (softwareTimer.start(singleDuration) != 0)
+		if (softwareTimer.start(duration) != 0)
 			return false;
 		if (softwareTimer.isRunning() != true || value != 0)	// must be started, but may not execute yet
 			return false;
@@ -52,13 +52,15 @@ bool SoftwareTimerOperationsTestCase::run_() const
 		if (softwareTimer.isRunning() != false || value != 0)	// must be stopped, must not execute
 			return false;
 
-		ThisThread::sleepFor(singleDuration * 2);
+		ThisThread::sleepFor(duration * 2);
 		if (softwareTimer.isRunning() != false || value != 0)	// make sure it did not execute
 			return false;
 	}
 	{
+		constexpr auto duration = TickClock::duration{9};
+
 		waitForNextTick();
-		if (softwareTimer.start(singleDuration) != 0)
+		if (softwareTimer.start(duration) != 0)
 			return false;
 		if (softwareTimer.isRunning() != true || value != 0)	// must be started, but may not execute yet
 			return false;
@@ -68,12 +70,12 @@ bool SoftwareTimerOperationsTestCase::run_() const
 
 		// must be stopped, function must be executed, real duration must equal what is expected
 		if (softwareTimer.isRunning() != false || value != 1 ||
-				TickClock::now() - start != singleDuration + decltype(singleDuration){1})
+				TickClock::now() - start != duration + decltype(duration){1})
 			return false;
 	}
 	{
 		waitForNextTick();
-		const auto wakeUpTimePoint = TickClock::now() + singleDuration;
+		const auto wakeUpTimePoint = TickClock::now() + TickClock::duration{13};
 		if (softwareTimer.start(wakeUpTimePoint) != 0)
 			return false;
 		if (softwareTimer.isRunning() != true || value != 1)	// must be started, but may not execute yet
