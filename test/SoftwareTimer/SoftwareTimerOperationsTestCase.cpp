@@ -46,6 +46,7 @@ public:
 			timePoint_{},
 			period_{},
 			value_{value},
+			stateInFunction_{},
 			stopRequested_{}
 	{
 
@@ -58,6 +59,15 @@ public:
 	SoftwareTimer& get()
 	{
 		return softwareTimer_;
+	}
+
+	/**
+	 * \return result of SoftwareTimer::isRunning() executed at the end of timer's function
+	 */
+
+	bool getStateInFunction() const
+	{
+		return stateInFunction_;
 	}
 
 	/**
@@ -104,6 +114,8 @@ private:
 			softwareTimer_.stop();
 			stopRequested_ = {};
 		}
+
+		stateInFunction_ = softwareTimer_.isRunning();
 	}
 
 	/// type of internal software timer
@@ -121,6 +133,9 @@ private:
 
 	/// reference to volatile uint32_t variable which will be incremented when timer's function is executed
 	volatile uint32_t& value_;
+
+	/// result of SoftwareTimer::isRunning() executed at the end of timer's function
+	bool stateInFunction_;
 
 	/// true if timer's function was requested to stop the timer, false otherwise
 	bool stopRequested_;
@@ -172,7 +187,7 @@ bool SoftwareTimerOperationsTestCase::run_() const
 		while (softwareTimer.isRunning() == true);
 
 		// must be stopped, function must be executed, real duration must equal what is expected
-		if (softwareTimer.isRunning() != false || value != 1 ||
+		if (softwareTimer.isRunning() != false || softwareTimerWrapper.getStateInFunction() != false || value != 1 ||
 				TickClock::now() - start != duration + decltype(duration){1})
 			return false;
 	}
@@ -187,7 +202,8 @@ bool SoftwareTimerOperationsTestCase::run_() const
 		while (softwareTimer.isRunning() == true);
 
 		// must be stopped, function must be executed, wake up time point must equal what is expected
-		if (softwareTimer.isRunning() != false || value != 2 || TickClock::now() != wakeUpTimePoint)
+		if (softwareTimer.isRunning() != false || softwareTimerWrapper.getStateInFunction() != false || value != 2 ||
+				TickClock::now() != wakeUpTimePoint)
 			return false;
 	}
 	{
@@ -205,8 +221,8 @@ bool SoftwareTimerOperationsTestCase::run_() const
 			while (softwareTimer.isRunning() == true && value == 2 + iteration);
 
 			// must be still running, function must be executed, wake up time point must equal what is expected
-			if (softwareTimer.isRunning() != true || value != 3 + iteration ||
-					TickClock::now() != wakeUpTimePoint + period * iteration)
+			if (softwareTimer.isRunning() != true || softwareTimerWrapper.getStateInFunction() != true ||
+					value != 3 + iteration || TickClock::now() != wakeUpTimePoint + period * iteration)
 				return false;
 		}
 
@@ -269,8 +285,8 @@ bool SoftwareTimerOperationsTestCase::run_() const
 				while (softwareTimer.isRunning() == true && value == 6 + iteration);
 
 				// must be still running, function must be executed, wake up time point must equal what is expected
-				if (softwareTimer.isRunning() != true || value != 7 + iteration ||
-						TickClock::now() != wakeUpTimePoint + period * iteration)
+				if (softwareTimer.isRunning() != true || softwareTimerWrapper.getStateInFunction() != true ||
+						value != 7 + iteration || TickClock::now() != wakeUpTimePoint + period * iteration)
 					return false;
 			}
 		}
@@ -291,8 +307,8 @@ bool SoftwareTimerOperationsTestCase::run_() const
 				while (softwareTimer.isRunning() == true && value == 10 + iteration);
 
 				// must be still running, function must be executed, wake up time point must equal what is expected
-				if (softwareTimer.isRunning() != true || value != 11 + iteration ||
-						TickClock::now() != wakeUpTimePoint + period * iteration)
+				if (softwareTimer.isRunning() != true || softwareTimerWrapper.getStateInFunction() != true ||
+						value != 11 + iteration || TickClock::now() != wakeUpTimePoint + period * iteration)
 					return false;
 			}
 		}
@@ -308,7 +324,8 @@ bool SoftwareTimerOperationsTestCase::run_() const
 		while (softwareTimer.isRunning() == true);
 
 		// must be stopped, function must be executed, wake up time point must equal what is expected
-		if (softwareTimer.isRunning() != false || value != 15 || TickClock::now() != wakeUpTimePoint)
+		if (softwareTimer.isRunning() != false || softwareTimerWrapper.getStateInFunction() != false || value != 15 ||
+				TickClock::now() != wakeUpTimePoint)
 			return false;
 	}
 	{
@@ -325,7 +342,8 @@ bool SoftwareTimerOperationsTestCase::run_() const
 		while (softwareTimer.isRunning() == true);
 
 		// must be stopped, function must be executed, wake up time point must equal what is expected
-		if (softwareTimer.isRunning() != false || value != 16 || TickClock::now() != wakeUpTimePoint)
+		if (softwareTimer.isRunning() != false || softwareTimerWrapper.getStateInFunction() != false || value != 16 ||
+				TickClock::now() != wakeUpTimePoint)
 			return false;
 	}
 	{
@@ -343,8 +361,8 @@ bool SoftwareTimerOperationsTestCase::run_() const
 			while (softwareTimer.isRunning() == true && value == 16 + iteration);
 
 			// must be still running, function must be executed, wake up time point must equal what is expected
-			if (softwareTimer.isRunning() != true || value != 17 + iteration ||
-					TickClock::now() != wakeUpTimePoint + period * iteration)
+			if (softwareTimer.isRunning() != true || softwareTimerWrapper.getStateInFunction() != true ||
+					value != 17 + iteration || TickClock::now() != wakeUpTimePoint + period * iteration)
 				return false;
 		}
 
@@ -354,7 +372,8 @@ bool SoftwareTimerOperationsTestCase::run_() const
 		while (softwareTimer.isRunning() == true && value == 20);
 
 		// must be stopped, function must be executed, wake up time point must equal what is expected
-		if (softwareTimer.isRunning() != false || value != 21 || TickClock::now() != wakeUpTimePoint + period * 4)
+		if (softwareTimer.isRunning() != false || softwareTimerWrapper.getStateInFunction() != false || value != 21 ||
+				TickClock::now() != wakeUpTimePoint + period * 4)
 			return false;
 
 		ThisThread::sleepFor(period * 2);
@@ -375,7 +394,8 @@ bool SoftwareTimerOperationsTestCase::run_() const
 		while (softwareTimer.isRunning() == true && value == 21);
 
 		// must be still running, function must be executed, wake up time point must equal what is expected
-		if (softwareTimer.isRunning() != true || value != 22 || TickClock::now() != wakeUpTimePoint1)
+		if (softwareTimer.isRunning() != true || softwareTimerWrapper.getStateInFunction() != true || value != 22 ||
+				TickClock::now() != wakeUpTimePoint1)
 			return false;
 
 		const auto wakeUpTimePoint3 = wakeUpTimePoint2 + TickClock::duration{13};
@@ -386,7 +406,8 @@ bool SoftwareTimerOperationsTestCase::run_() const
 		while (softwareTimer.isRunning() == true && value == 22);
 
 		// must be still running, function must be executed, wake up time point must equal what is expected
-		if (softwareTimer.isRunning() != true || value != 23 || TickClock::now() != wakeUpTimePoint2)
+		if (softwareTimer.isRunning() != true || softwareTimerWrapper.getStateInFunction() != true || value != 23 ||
+				TickClock::now() != wakeUpTimePoint2)
 			return false;
 
 		for (size_t iteration {}; iteration < 4; ++iteration)
@@ -394,8 +415,8 @@ bool SoftwareTimerOperationsTestCase::run_() const
 			while (softwareTimer.isRunning() == true && value == 23 + iteration);
 
 			// must be still running, function must be executed, wake up time point must equal what is expected
-			if (softwareTimer.isRunning() != true || value != 24 + iteration ||
-					TickClock::now() != wakeUpTimePoint3 + period3 * iteration)
+			if (softwareTimer.isRunning() != true || softwareTimerWrapper.getStateInFunction() != true ||
+					value != 24 + iteration || TickClock::now() != wakeUpTimePoint3 + period3 * iteration)
 				return false;
 		}
 
@@ -407,7 +428,8 @@ bool SoftwareTimerOperationsTestCase::run_() const
 		while (softwareTimer.isRunning() == true && value == 27);
 
 		// must be still running, function must be executed, wake up time point must equal what is expected
-		if (softwareTimer.isRunning() != true || value != 28 || TickClock::now() != wakeUpTimePoint3 + period3 * 4)
+		if (softwareTimer.isRunning() != true || softwareTimerWrapper.getStateInFunction() != true || value != 28 ||
+				TickClock::now() != wakeUpTimePoint3 + period3 * 4)
 			return false;
 
 		for (size_t iteration {}; iteration < 4; ++iteration)
@@ -415,8 +437,8 @@ bool SoftwareTimerOperationsTestCase::run_() const
 			while (softwareTimer.isRunning() == true && value == 28 + iteration);
 
 			// must be still running, function must be executed, wake up time point must equal what is expected
-			if (softwareTimer.isRunning() != true || value != 29 + iteration ||
-					TickClock::now() != wakeUpTimePoint4 + period4 * iteration)
+			if (softwareTimer.isRunning() != true || softwareTimerWrapper.getStateInFunction() != true ||
+					value != 29 + iteration || TickClock::now() != wakeUpTimePoint4 + period4 * iteration)
 				return false;
 		}
 
@@ -427,13 +449,15 @@ bool SoftwareTimerOperationsTestCase::run_() const
 		while (softwareTimer.isRunning() == true && value == 32);
 
 		// must be still running, function must be executed, wake up time point must equal what is expected
-		if (softwareTimer.isRunning() != true || value != 33 || TickClock::now() != wakeUpTimePoint4 + period4 * 4)
+		if (softwareTimer.isRunning() != true || softwareTimerWrapper.getStateInFunction() != true || value != 33 ||
+				TickClock::now() != wakeUpTimePoint4 + period4 * 4)
 			return false;
 
 		while (softwareTimer.isRunning() == true && value == 33);
 
 		// must be stopped, function must be executed, wake up time point must equal what is expected
-		if (softwareTimer.isRunning() != false || value != 34 || TickClock::now() != wakeUpTimePoint5)
+		if (softwareTimer.isRunning() != false || softwareTimerWrapper.getStateInFunction() != false || value != 34 ||
+				TickClock::now() != wakeUpTimePoint5)
 			return false;
 	}
 
