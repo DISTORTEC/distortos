@@ -43,6 +43,8 @@ public:
 
 	explicit SoftwareTimerWrapper(volatile uint32_t& value) :
 			softwareTimer_{&SoftwareTimerWrapper::function, *this},
+			timePoint_{},
+			period_{},
 			value_{value},
 			stopRequested_{}
 	{
@@ -56,6 +58,19 @@ public:
 	SoftwareTimer& get()
 	{
 		return softwareTimer_;
+	}
+
+	/**
+	 * \brief Requests timer's function to restart the timer.
+	 *
+	 * \param [in] timePoint is the time point used to restart timer
+	 * \param [in] period is the period used to restart timer, 0 for one-shot software timers, default - 0
+	 */
+
+	void requestRestart(const TickClock::time_point timePoint, const TickClock::duration period = {})
+	{
+		timePoint_ = timePoint;
+		period_ = period;
 	}
 
 	/**
@@ -77,6 +92,13 @@ private:
 	{
 		++value_;
 
+		if (timePoint_ != decltype(timePoint_){} || period_ != decltype(period_){})
+		{
+			softwareTimer_.start(timePoint_, period_);
+			timePoint_ = {};
+			period_ = {};
+		}
+
 		if (stopRequested_ == true)
 		{
 			softwareTimer_.stop();
@@ -90,6 +112,12 @@ private:
 
 	/// internal software timer
 	SoftwareTimerType softwareTimer_;
+
+	/// time point used to restart timer
+	TickClock::time_point timePoint_;
+
+	/// period used to restart timer
+	TickClock::duration period_;
 
 	/// reference to volatile uint32_t variable which will be incremented when timer's function is executed
 	volatile uint32_t& value_;
@@ -331,6 +359,81 @@ bool SoftwareTimerOperationsTestCase::run_() const
 
 		ThisThread::sleepFor(period * 2);
 		if (softwareTimer.isRunning() != false || value != 21)	// make sure it did not execute again
+			return false;
+	}
+	{
+		waitForNextTick();
+		const auto wakeUpTimePoint1 = TickClock::now() + TickClock::duration{11};
+		const auto wakeUpTimePoint2 = wakeUpTimePoint1 + TickClock::duration{9};
+		// request to restart one-shot into one-shot from timer's function
+		softwareTimerWrapper.requestRestart(wakeUpTimePoint2);
+		if (softwareTimer.start(wakeUpTimePoint1) != 0)
+			return false;
+		if (softwareTimer.isRunning() != true || value != 21)	// must be started, but may not execute yet
+			return false;
+
+		while (softwareTimer.isRunning() == true && value == 21);
+
+		// must be still running, function must be executed, wake up time point must equal what is expected
+		if (softwareTimer.isRunning() != true || value != 22 || TickClock::now() != wakeUpTimePoint1)
+			return false;
+
+		const auto wakeUpTimePoint3 = wakeUpTimePoint2 + TickClock::duration{13};
+		constexpr auto period3 = TickClock::duration{6};
+		// request to restart one-shot into periodic from timer's function
+		softwareTimerWrapper.requestRestart(wakeUpTimePoint3, period3);
+
+		while (softwareTimer.isRunning() == true && value == 22);
+
+		// must be still running, function must be executed, wake up time point must equal what is expected
+		if (softwareTimer.isRunning() != true || value != 23 || TickClock::now() != wakeUpTimePoint2)
+			return false;
+
+		for (size_t iteration {}; iteration < 4; ++iteration)
+		{
+			while (softwareTimer.isRunning() == true && value == 23 + iteration);
+
+			// must be still running, function must be executed, wake up time point must equal what is expected
+			if (softwareTimer.isRunning() != true || value != 24 + iteration ||
+					TickClock::now() != wakeUpTimePoint3 + period3 * iteration)
+				return false;
+		}
+
+		const auto wakeUpTimePoint4 = wakeUpTimePoint3 + period3 * 4 + TickClock::duration{17};
+		constexpr auto period4 = TickClock::duration{15};
+		// request to restart periodic into periodic with different settings from timer's function
+		softwareTimerWrapper.requestRestart(wakeUpTimePoint4, period4);
+
+		while (softwareTimer.isRunning() == true && value == 27);
+
+		// must be still running, function must be executed, wake up time point must equal what is expected
+		if (softwareTimer.isRunning() != true || value != 28 || TickClock::now() != wakeUpTimePoint3 + period3 * 4)
+			return false;
+
+		for (size_t iteration {}; iteration < 4; ++iteration)
+		{
+			while (softwareTimer.isRunning() == true && value == 28 + iteration);
+
+			// must be still running, function must be executed, wake up time point must equal what is expected
+			if (softwareTimer.isRunning() != true || value != 29 + iteration ||
+					TickClock::now() != wakeUpTimePoint4 + period4 * iteration)
+				return false;
+		}
+
+		const auto wakeUpTimePoint5 = wakeUpTimePoint4 + period4 * 4 + TickClock::duration{12};
+		// request to restart periodic into one-shot from timer's function
+		softwareTimerWrapper.requestRestart(wakeUpTimePoint5);
+
+		while (softwareTimer.isRunning() == true && value == 32);
+
+		// must be still running, function must be executed, wake up time point must equal what is expected
+		if (softwareTimer.isRunning() != true || value != 33 || TickClock::now() != wakeUpTimePoint4 + period4 * 4)
+			return false;
+
+		while (softwareTimer.isRunning() == true && value == 33);
+
+		// must be stopped, function must be executed, wake up time point must equal what is expected
+		if (softwareTimer.isRunning() != false || value != 34 || TickClock::now() != wakeUpTimePoint5)
 			return false;
 	}
 
