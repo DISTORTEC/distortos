@@ -53,7 +53,10 @@ possible in interrupt context.
 and `ChipOutputPin::setInvertedMode()` functions, which - if needed - can be made `public` by deriving from these
 classes.
 - Missing tests of timers: basic operations of periodic timers, synchronous and asynchronous stops and restarts, reading
-of state in timer's function. 
+of state in timer's function.
+- New chips: *STM32F071C8*, *STM32F101C4*, 4 *STM32F412xE* chips, 3 *STM32F469Vx* chips, 3 *STM32F469Zx* chips, 2
+*STM32F479Vx* chips and 2 *STM32F479Zx* chips.
+- New package types: *UFQFPN48* for *STM32F101C8*, *LQFP176* for *STM32F469IG*.
 
 ### Changed
 
@@ -72,6 +75,7 @@ expressions.
 - Fix failure of test application for new versions of "official" ARM toolchain (5.x).
 - Fixes necessary for compilation and proper behaviour in *GCC 6.2.0* - mainly related to `reinterpret_cast<>()` in
 constant expressions.
+- *ST's* website no longer lists *WLCSP49* as package type for *STM32F401CB*.
 
 [0.2.0](https://github.com/DISTORTEC/distortos/compare/v0.1.0...v0.2.0) - 2016-05-03
 ------------------------------------------------------------------------------------

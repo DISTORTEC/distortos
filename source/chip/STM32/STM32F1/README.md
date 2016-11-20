@@ -20,4 +20,4 @@ This folder covers [STM32F1](http://www.st.com/stm32f1) devices as described in 
 - DS5792 datasheet (STM32F103xC, STM32F103xD, STM32F103xE), Revision 11;
 - DS6558 datasheet (STM32F103xF, STM32F103xG), Revision 4, 2015-05-15;
 - DS6014 datasheet (STM32F105, STM32F107), Revision 9, 2015-09-03;
-- devices listed on website on 2016-02-12;
+- devices listed on website on 2016-11-20;
