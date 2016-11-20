@@ -17,4 +17,4 @@ This folder covers [STM32F0](http://www.st.com/stm32f0) devices as described in 
 - DS10212 datasheet (STM32F078CB, STM32F078RB, STM32F078VB), Revision 3, 2015-12-17;
 - DS10312 datasheet (STM32F091xB, STM32F091xC), Revision 3, 2015-12-17;
 - DS10624 datasheet (STM32F098CC, STM32F098RC, STM32F098VC), Revision 3, 2015-12-17;
-- devices listed on website on 2016-03-20;
+- devices listed on website on 2016-11-20;
