@@ -52,6 +52,8 @@ possible in interrupt context.
 - `protected` `ChipInputPin::getInvertedMode()`, `ChipInputPin::setInvertedMode()`, `ChipOutputPin::getInvertedMode()`
 and `ChipOutputPin::setInvertedMode()` functions, which - if needed - can be made `public` by deriving from these
 classes.
+- Missing tests of timers: basic operations of periodic timers, synchronous and asynchronous stops and restarts, reading
+of state in timer's function. 
 
 ### Changed
 
