@@ -1579,6 +1579,7 @@ config CHIP_STM32F469IG
 	bool
 	default n
 	select CHIP_STM32F469I
+	select CHIP_HAS_LQFP176
 
 config CHIP_STM32F469II
 	bool
