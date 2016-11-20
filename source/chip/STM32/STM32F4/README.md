@@ -21,4 +21,4 @@ This folder covers [STM32F4](http://www.st.com/stm32f4) devices as described in 
 - DS10693 datasheet (STM32F446xC/E), Revision 5, 2015-11-03;
 - DS11189 datasheet (STM32F469xx), Revision 3, 2016-03-08;
 - DS11118 datasheet (STM32F479xx), Revision 3, 2016-03-08;
-- devices listed on website on 2016-06-02;
+- devices listed on website on 2016-11-20;
