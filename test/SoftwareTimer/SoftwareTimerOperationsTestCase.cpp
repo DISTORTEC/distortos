@@ -43,7 +43,8 @@ public:
 
 	explicit SoftwareTimerWrapper(volatile uint32_t& value) :
 			softwareTimer_{&SoftwareTimerWrapper::function, *this},
-			value_{value}
+			value_{value},
+			stopRequested_{}
 	{
 
 	}
@@ -57,6 +58,15 @@ public:
 		return softwareTimer_;
 	}
 
+	/**
+	 * \brief Requests timer's function to stop the timer.
+	 */
+
+	void requestStop()
+	{
+		stopRequested_ = true;
+	}
+
 private:
 
 	/**
@@ -66,6 +76,12 @@ private:
 	void function()
 	{
 		++value_;
+
+		if (stopRequested_ == true)
+		{
+			softwareTimer_.stop();
+			stopRequested_ = {};
+		}
 	}
 
 	/// type of internal software timer
@@ -77,6 +93,9 @@ private:
 
 	/// reference to volatile uint32_t variable which will be incremented when timer's function is executed
 	volatile uint32_t& value_;
+
+	/// true if timer's function was requested to stop the timer, false otherwise
+	bool stopRequested_;
 };
 
 }	// namespace
@@ -262,6 +281,56 @@ bool SoftwareTimerOperationsTestCase::run_() const
 
 		// must be stopped, function must be executed, wake up time point must equal what is expected
 		if (softwareTimer.isRunning() != false || value != 15 || TickClock::now() != wakeUpTimePoint)
+			return false;
+	}
+	{
+		// request to stop one-shot timer from timer's function should be a no-op
+		softwareTimerWrapper.requestStop();
+
+		waitForNextTick();
+		const auto wakeUpTimePoint = TickClock::now() + TickClock::duration{20};
+		if (softwareTimer.start(wakeUpTimePoint) != 0)
+			return false;
+		if (softwareTimer.isRunning() != true || value != 15)	// must be started, but may not execute yet
+			return false;
+
+		while (softwareTimer.isRunning() == true);
+
+		// must be stopped, function must be executed, wake up time point must equal what is expected
+		if (softwareTimer.isRunning() != false || value != 16 || TickClock::now() != wakeUpTimePoint)
+			return false;
+	}
+	{
+		constexpr auto period = TickClock::duration{8};
+
+		waitForNextTick();
+		const auto wakeUpTimePoint = TickClock::now() + TickClock::duration{18};
+		if (softwareTimer.start(wakeUpTimePoint, period) != 0)
+			return false;
+		if (softwareTimer.isRunning() != true || value != 16)	// must be started, but may not execute yet
+			return false;
+
+		for (size_t iteration {}; iteration < 4; ++iteration)
+		{
+			while (softwareTimer.isRunning() == true && value == 16 + iteration);
+
+			// must be still running, function must be executed, wake up time point must equal what is expected
+			if (softwareTimer.isRunning() != true || value != 17 + iteration ||
+					TickClock::now() != wakeUpTimePoint + period * iteration)
+				return false;
+		}
+
+		// request to stop periodic timer from timer's function should be executed in next cycle of timer
+		softwareTimerWrapper.requestStop();
+
+		while (softwareTimer.isRunning() == true && value == 20);
+
+		// must be stopped, function must be executed, wake up time point must equal what is expected
+		if (softwareTimer.isRunning() != false || value != 21 || TickClock::now() != wakeUpTimePoint + period * 4)
+			return false;
+
+		ThisThread::sleepFor(period * 2);
+		if (softwareTimer.isRunning() != false || value != 21)	// make sure it did not execute again
 			return false;
 	}
 
