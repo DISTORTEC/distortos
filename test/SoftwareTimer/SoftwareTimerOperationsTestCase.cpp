@@ -22,6 +22,65 @@ namespace distortos
 namespace test
 {
 
+namespace
+{
+
+/*---------------------------------------------------------------------------------------------------------------------+
+| local types
++---------------------------------------------------------------------------------------------------------------------*/
+
+/// wrapper for software timer
+struct SoftwareTimerWrapper
+{
+public:
+
+	/**
+	 * \brief SoftwareTimerWrapper's constructor
+	 *
+	 * \param [in,out] value is a reference to volatile uint32_t variable which will be incremented when timer's
+	 * function is executed
+	 */
+
+	explicit SoftwareTimerWrapper(volatile uint32_t& value) :
+			softwareTimer_{&SoftwareTimerWrapper::function, *this},
+			value_{value}
+	{
+
+	}
+
+	/**
+	 * \return reference to internal software timer
+	 */
+
+	SoftwareTimer& get()
+	{
+		return softwareTimer_;
+	}
+
+private:
+
+	/**
+	 * \brief Function used by software timer
+	 */
+
+	void function()
+	{
+		++value_;
+	}
+
+	/// type of internal software timer
+	using SoftwareTimerType = decltype(makeStaticSoftwareTimer(&SoftwareTimerWrapper::function,
+			std::ref(std::declval<SoftwareTimerWrapper&>())));
+
+	/// internal software timer
+	SoftwareTimerType softwareTimer_;
+
+	/// reference to volatile uint32_t variable which will be incremented when timer's function is executed
+	volatile uint32_t& value_;
+};
+
+}	// namespace
+
 /*---------------------------------------------------------------------------------------------------------------------+
 | private functions
 +---------------------------------------------------------------------------------------------------------------------*/
@@ -29,11 +88,8 @@ namespace test
 bool SoftwareTimerOperationsTestCase::run_() const
 {
 	volatile uint32_t value {};
-	auto softwareTimer = makeStaticSoftwareTimer(
-			[&value]()
-			{
-				++value;
-			});
+	SoftwareTimerWrapper softwareTimerWrapper {value};
+	auto& softwareTimer = softwareTimerWrapper.get();
 
 	{
 		constexpr auto duration = TickClock::duration{11};
