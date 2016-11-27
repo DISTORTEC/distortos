@@ -37,8 +37,6 @@ of "driver enable" output pin.
 connected to the same SPI bus master.
 - `devices::SpiEeprom` class which is a driver for common SPI EEPROM chips: *Atmel AT25xxx*,
 *ON Semiconductor CAT25xxx*, *ST M95xxx*, *Microchip 25xxxxx* or similar.
-- Support for 4 new [STM32F4](http://www.st.com/stm32f4)12 chips.
-- New package types for *STM32F410CB* and *STM32F410RB* chips.
 - Support for `assert()` - override of newlib's `__assert_func()`, weak `assertHook()` for application and option to
 enable/disable assertions in *Kconfig* menus.
 - Extend `estd::ContiguousRange` with support for `std::array`, constructor for non-const -> const conversions and
@@ -54,9 +52,10 @@ and `ChipOutputPin::setInvertedMode()` functions, which - if needed - can be mad
 classes.
 - Missing tests of timers: basic operations of periodic timers, synchronous and asynchronous stops and restarts, reading
 of state in timer's function.
-- New chips: *STM32F071C8*, *STM32F101C4*, 4 *STM32F412xE* chips, 3 *STM32F469Vx* chips, 3 *STM32F469Zx* chips, 2
+- New chips: *STM32F071C8*, *STM32F101C4*, 8 *STM32F412* chips, 3 *STM32F469Vx* chips, 3 *STM32F469Zx* chips, 2
 *STM32F479Vx* chips and 2 *STM32F479Zx* chips.
-- New package types: *UFQFPN48* for *STM32F101C8*, *LQFP176* for *STM32F469IG*.
+- New package types: *UFQFPN48* for *STM32F101C8*, *LQFP48* for *STM32F410CB*, *UFBGA64* for *STM32F410RB*, *LQFP176*
+for *STM32F469IG*.
 
 ### Changed
 
