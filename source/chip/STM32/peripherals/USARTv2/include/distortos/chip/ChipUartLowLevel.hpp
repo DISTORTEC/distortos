@@ -22,7 +22,12 @@ namespace distortos
 namespace chip
 {
 
-/// ChipUartLowLevel class is a low-level UART driver for USARTv2 in STM32
+/**
+ * ChipUartLowLevel class is a low-level UART driver for USARTv2 in STM32
+ *
+ * \ingroup devices
+ */
+
 class ChipUartLowLevel : public devices::UartLowLevel
 {
 public:
