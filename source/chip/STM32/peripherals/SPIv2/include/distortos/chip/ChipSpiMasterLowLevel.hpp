@@ -24,7 +24,12 @@ namespace distortos
 namespace chip
 {
 
-/// ChipSpiMasterLowLevel class is a low-level SPI master driver for SPIv2 in STM32
+/**
+ * ChipSpiMasterLowLevel class is a low-level SPI master driver for SPIv2 in STM32
+ *
+ * \ingroup devices
+ */
+
 class ChipSpiMasterLowLevel : public devices::SpiMasterLowLevel
 {
 public:
