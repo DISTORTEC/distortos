@@ -25,6 +25,9 @@ namespace architecture
 
 void lowLevelInitialization()
 {
+#ifdef CONFIG_ARCHITECTURE_ARM_CORTEX_M3_R1P1
+	SCB->CCR |= SCB_CCR_STKALIGN_Msk;
+#endif	// def CONFIG_ARCHITECTURE_ARM_CORTEX_M3_R1P1
 #if __FPU_PRESENT == 1 && __FPU_USED == 1
 	SCB->CPACR |= (3 << 10 * 2) | (3 << 11 * 2);	// full access to CP10 and CP11
 #endif	// __FPU_PRESENT == 1 && __FPU_USED == 1
