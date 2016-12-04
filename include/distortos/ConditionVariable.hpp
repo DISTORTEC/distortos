@@ -2,7 +2,7 @@
  * \file
  * \brief ConditionVariable class header
  *
- * \author Copyright (C) 2014-2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -13,6 +13,8 @@
 #define INCLUDE_DISTORTOS_CONDITIONVARIABLE_HPP_
 
 #include "distortos/internal/scheduler/ThreadList.hpp"
+
+#include "distortos/internal/CHECK_FUNCTION_CONTEXT.hpp"
 
 #include "distortos/TickClock.hpp"
 
@@ -86,6 +88,8 @@ public:
 	 * will be unblocked when notifyAll() or notifyOne() is executed. It may also be unblocked spuriously. When
 	 * unblocked, regardless of the reason, lock is reacquired and wait exits.
 	 *
+	 * \warning This function must not be called from interrupt context!
+	 *
 	 * \param [in] mutex is a reference to mutex which must be owned by calling thread
 	 *
 	 * \return zero if the wait was completed successfully, error code otherwise:
@@ -101,6 +105,8 @@ public:
 	 * Similar to pthread_cond_wait() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_cond_wait.html
 	 *
 	 * Overload for wait() which also checks the predicate. This function will return only if the predicate is true.
+	 *
+	 * \warning This function must not be called from interrupt context!
 	 *
 	 * \tparam Predicate is a type of functor to check the predicate
 	 *
@@ -126,6 +132,8 @@ public:
 	 * will be unblocked when notifyAll() or notifyOne() is executed or when given duration of time expires. It may also
 	 * be unblocked spuriously. When unblocked, regardless of the reason, lock is reacquired and wait exits.
 	 *
+	 * \warning This function must not be called from interrupt context!
+	 *
 	 * \param [in] mutex is a reference to mutex which must be owned by calling thread
 	 * \param [in] duration is the duration after which the wait for notification will be terminated
 	 *
@@ -145,6 +153,8 @@ public:
 	 * http://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_cond_timedwait.html#
 	 *
 	 * Template variant of waitFor(Mutex& mutex, TickClock::duration duration).
+	 *
+	 * \warning This function must not be called from interrupt context!
 	 *
 	 * \tparam Rep is type of tick counter
 	 * \tparam Period is std::ratio type representing the tick period of the clock, seconds
@@ -173,6 +183,8 @@ public:
 	 *
 	 * Overload for waitFor() which also checks the predicate. This function will return only if the predicate is true
 	 * or when given duration of time expires.
+	 *
+	 * \warning This function must not be called from interrupt context!
 	 *
 	 * \tparam Rep is type of tick counter
 	 * \tparam Period is std::ratio type representing the tick period of the clock, seconds
@@ -205,6 +217,8 @@ public:
 	 * will be unblocked when notifyAll() or notifyOne() is executed or when given time point is reached. It may also be
 	 * unblocked spuriously. When unblocked, regardless of the reason, lock is reacquired and wait exits.
 	 *
+	 * \warning This function must not be called from interrupt context!
+	 *
 	 * \param [in] mutex is a reference to mutex which must be owned by calling thread
 	 * \param [in] timePoint is the time point at which the wait for notification will be terminated
 	 *
@@ -224,6 +238,8 @@ public:
 	 * http://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_cond_timedwait.html#
 	 *
 	 * Template variant of waitUntil(Mutex& mutex, TickClock::time_point timePoint).
+	 *
+	 * \warning This function must not be called from interrupt context!
 	 *
 	 * \tparam Duration is a std::chrono::duration type used to measure duration
 	 *
@@ -252,6 +268,8 @@ public:
 	 * Overload for waitUntil() which also checks the predicate. This function will return only if the predicate is true
 	 * or when given time point is reached.
 	 *
+	 * \warning This function must not be called from interrupt context!
+	 *
 	 * \tparam Duration is a std::chrono::duration type used to measure duration
 	 * \tparam Predicate is a type of functor to check the predicate
 	 *
@@ -276,6 +294,8 @@ private:
 template<typename Predicate>
 int ConditionVariable::wait(Mutex& mutex, Predicate predicate)
 {
+	CHECK_FUNCTION_CONTEXT();
+
 	while (predicate() == false)
 	{
 		const auto ret = wait(mutex);
@@ -289,6 +309,8 @@ int ConditionVariable::wait(Mutex& mutex, Predicate predicate)
 template<typename Duration, typename Predicate>
 int ConditionVariable::waitUntil(Mutex& mutex, const std::chrono::time_point<TickClock, Duration> timePoint, Predicate predicate)
 {
+	CHECK_FUNCTION_CONTEXT();
+
 	while (predicate() == false)
 	{
 		const auto ret = waitUntil(mutex, timePoint);
