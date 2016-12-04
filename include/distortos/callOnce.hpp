@@ -2,7 +2,7 @@
  * \file
  * \brief callOnce() header
  *
- * \author Copyright (C) 2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2015-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -11,6 +11,8 @@
 
 #ifndef INCLUDE_DISTORTOS_CALLONCE_HPP_
 #define INCLUDE_DISTORTOS_CALLONCE_HPP_
+
+#include "distortos/internal/CHECK_FUNCTION_CONTEXT.hpp"
 
 #include "distortos/OnceFlag.hpp"
 
@@ -27,6 +29,8 @@ namespace distortos
  *
  * \note This function requires GCC 4.9.
  *
+ * \warning This function must not be called from interrupt context!
+ *
  * \tparam Function is the function object that will be executed
  * \tparam Args are the arguments for \a Function
  *
@@ -40,6 +44,8 @@ namespace distortos
 template<typename Function, typename... Args>
 void callOnce(OnceFlag& onceFlag, Function&& function, Args&&... args)
 {
+	CHECK_FUNCTION_CONTEXT();
+
 	onceFlag.callOnceControlBlock_(std::forward<Function>(function), std::forward<Args>(args)...);
 }
 
