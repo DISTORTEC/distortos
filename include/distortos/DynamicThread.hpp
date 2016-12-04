@@ -91,6 +91,8 @@ public:
 	 * Detaches the executing thread from the Thread object, allowing execution to continue independently. All resources
 	 * allocated for the thread will be deallocated when the thread terminates.
 	 *
+	 * \warning This function must not be called from interrupt context!
+	 *
 	 * \return 0 on success, error code otherwise:
 	 * - EINVAL - this thread is already detached;
 	 */
@@ -163,6 +165,8 @@ public:
 	 *
 	 * Blocks current thread until this thread finishes its execution. The results of multiple simultaneous calls to
 	 * join() on the same target thread are undefined.
+	 *
+	 * \warning This function must not be called from interrupt context!
 	 *
 	 * \return 0 on success, error code otherwise:
 	 * - EDEADLK - deadlock condition was detected,
