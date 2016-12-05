@@ -2,7 +2,7 @@
  * \file
  * \brief Semaphore class header
  *
- * \author Copyright (C) 2014-2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -125,6 +125,8 @@ public:
 	 * Under no circumstance shall the function fail with a timeout if the semaphore can be locked immediately. The
 	 * validity of the duration parameter need not be checked if the semaphore can be locked immediately.
 	 *
+	 * \warning This function must not be called from interrupt context!
+	 *
 	 * \param [in] duration is the duration after which the wait will be terminated without locking the semaphore
 	 *
 	 * \return zero if the calling process successfully performed the semaphore lock operation, error code otherwise:
@@ -138,6 +140,8 @@ public:
 	 * \brief Tries to lock the semaphore for given duration of time.
 	 *
 	 * Template variant of tryWaitFor(TickClock::duration duration).
+	 *
+	 * \warning This function must not be called from interrupt context!
 	 *
 	 * \tparam Rep is type of tick counter
 	 * \tparam Period is std::ratio type representing the tick period of the clock, seconds
@@ -167,6 +171,8 @@ public:
 	 * Under no circumstance shall the function fail with a timeout if the semaphore can be locked immediately. The
 	 * validity of the timePoint parameter need not be checked if the semaphore can be locked immediately.
 	 *
+	 * \warning This function must not be called from interrupt context!
+	 *
 	 * \param [in] timePoint is the time point at which the wait will be terminated without locking the semaphore
 	 *
 	 * \return zero if the calling process successfully performed the semaphore lock operation, error code otherwise:
@@ -180,6 +186,8 @@ public:
 	 * \brief Tries to lock the semaphore until given time point.
 	 *
 	 * Template variant of tryWaitUntil(TickClock::time_point timePoint).
+	 *
+	 * \warning This function must not be called from interrupt context!
 	 *
 	 * \tparam Duration is a std::chrono::duration type used to measure duration
 	 *
@@ -205,6 +213,8 @@ public:
 	 * semaphore value is currently zero, then the calling thread shall not return from the call to lock() until it
 	 * either locks the semaphore or the call is interrupted by a signal. Upon successful return, the state of the
 	 * semaphore shall be locked and shall remain locked until unlock() function is executed.
+	 *
+	 * \warning This function must not be called from interrupt context!
 	 *
 	 * \return zero if the calling process successfully performed the semaphore lock operation, error code otherwise:
 	 * - EINTR - the wait was interrupted by an unmasked, caught signal;
