@@ -2,7 +2,7 @@
  * \file
  * \brief RawMessageQueue class header
  *
- * \author Copyright (C) 2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2015-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -70,6 +70,8 @@ public:
 	 *
 	 * Similar to mq_receive() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/mq_receive.html#
 	 *
+	 * \warning This function must not be called from interrupt context!
+	 *
 	 * \param [out] priority is a reference to variable that will be used to return priority of popped value
 	 * \param [out] buffer is a pointer to buffer for popped element
 	 * \param [in] size is the size of \a buffer, bytes - must be equal to the \a elementSize attribute of
@@ -87,6 +89,8 @@ public:
 	 * \brief Pops oldest element with highest priority from the queue.
 	 *
 	 * Similar to mq_receive() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/mq_receive.html#
+	 *
+	 * \warning This function must not be called from interrupt context!
 	 *
 	 * \tparam T is the type of data popped from the queue
 	 *
@@ -110,6 +114,8 @@ public:
 	 *
 	 * Similar to mq_send() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/mq_send.html#
 	 *
+	 * \warning This function must not be called from interrupt context!
+	 *
 	 * \param [in] priority is the priority of new element
 	 * \param [in] data is a pointer to data that will be pushed to RawMessageQueue
 	 * \param [in] size is the size of \a data, bytes - must be equal to the \a elementSize attribute of RawMessageQueue
@@ -126,6 +132,8 @@ public:
 	 * \brief Pushes the element to the queue.
 	 *
 	 * Similar to mq_send() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/mq_send.html#
+	 *
+	 * \warning This function must not be called from interrupt context!
 	 *
 	 * \tparam T is the type of data pushed to the queue
 	 *
@@ -189,6 +197,8 @@ public:
 	 *
 	 * Similar to mq_timedreceive() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/mq_receive.html#
 	 *
+	 * \warning This function must not be called from interrupt context!
+	 *
 	 * \param [in] duration is the duration after which the call will be terminated without popping the element
 	 * \param [out] priority is a reference to variable that will be used to return priority of popped value
 	 * \param [out] buffer is a pointer to buffer for popped element
@@ -207,6 +217,8 @@ public:
 	 * \brief Tries to pop the oldest element with highest priority from the queue for a given duration of time.
 	 *
 	 * Template variant of tryPopFor(TickClock::duration, uint8_t&, void*, size_t).
+	 *
+	 * \warning This function must not be called from interrupt context!
 	 *
 	 * \tparam Rep is type of tick counter
 	 * \tparam Period is std::ratio type representing the tick period of the clock, seconds
@@ -235,6 +247,8 @@ public:
 	 *
 	 * Similar to mq_timedreceive() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/mq_receive.html#
 	 *
+	 * \warning This function must not be called from interrupt context!
+	 *
 	 * \tparam Rep is type of tick counter
 	 * \tparam Period is std::ratio type representing the tick period of the clock, seconds
 	 * \tparam T is the type of data popped from the queue
@@ -260,6 +274,8 @@ public:
 	 *
 	 * Similar to mq_timedreceive() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/mq_receive.html#
 	 *
+	 * \warning This function must not be called from interrupt context!
+	 *
 	 * \param [in] timePoint is the time point at which the call will be terminated without popping the element
 	 * \param [out] priority is a reference to variable that will be used to return priority of popped value
 	 * \param [out] buffer is a pointer to buffer for popped element
@@ -278,6 +294,8 @@ public:
 	 * \brief Tries to pop the oldest element with highest priority from the queue until a given time point.
 	 *
 	 * Template variant of tryPopUntil(TickClock::time_point, uint8_t&, void*, size_t).
+	 *
+	 * \warning This function must not be called from interrupt context!
 	 *
 	 * \tparam Duration is a std::chrono::duration type used to measure duration
 	 *
@@ -304,6 +322,8 @@ public:
 	 * \brief Tries to pop the oldest element with highest priority from the queue until a given time point.
 	 *
 	 * Similar to mq_timedreceive() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/mq_receive.html#
+	 *
+	 * \warning This function must not be called from interrupt context!
 	 *
 	 * \tparam Duration is a std::chrono::duration type used to measure duration
 	 * \tparam T is the type of data popped from the queue
@@ -369,6 +389,8 @@ public:
 	 *
 	 * Similar to mq_timedsend() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/mq_send.html#
 	 *
+	 * \warning This function must not be called from interrupt context!
+	 *
 	 * \param [in] duration is the duration after which the wait will be terminated without pushing the element
 	 * \param [in] priority is the priority of new element
 	 * \param [in] data is a pointer to data that will be pushed to RawMessageQueue
@@ -386,6 +408,8 @@ public:
 	 * \brief Tries to push the element to the queue for a given duration of time.
 	 *
 	 * Template variant of tryPushFor(TickClock::duration, uint8_t, const void*, size_t).
+	 *
+	 * \warning This function must not be called from interrupt context!
 	 *
 	 * \tparam Rep is type of tick counter
 	 * \tparam Period is std::ratio type representing the tick period of the clock, seconds
@@ -413,6 +437,8 @@ public:
 	 *
 	 * Similar to mq_timedsend() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/mq_send.html#
 	 *
+	 * \warning This function must not be called from interrupt context!
+	 *
 	 * \tparam Rep is type of tick counter
 	 * \tparam Period is std::ratio type representing the tick period of the clock, seconds
 	 * \tparam T is the type of data pushed to the queue
@@ -438,6 +464,8 @@ public:
 	 *
 	 * Similar to mq_timedsend() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/mq_send.html#
 	 *
+	 * \warning This function must not be called from interrupt context!
+	 *
 	 * \param [in] timePoint is the time point at which the call will be terminated without pushing the element
 	 * \param [in] priority is the priority of new element
 	 * \param [in] data is a pointer to data that will be pushed to RawMessageQueue
@@ -455,6 +483,8 @@ public:
 	 * \brief Tries to push the element to the queue until a given time point.
 	 *
 	 * Template variant of tryPushUntil(TickClock::time_point, uint8_t, const void*, size_t).
+	 *
+	 * \warning This function must not be called from interrupt context!
 	 *
 	 * \tparam Duration is a std::chrono::duration type used to measure duration
 	 *
@@ -480,6 +510,8 @@ public:
 	 * \brief Tries to push the element to the queue until a given time point.
 	 *
 	 * Similar to mq_timedsend() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/mq_send.html#
+	 *
+	 * \warning This function must not be called from interrupt context!
 	 *
 	 * \tparam Duration is a std::chrono::duration type used to measure duration
 	 * \tparam T is the type of data pushed to the queue

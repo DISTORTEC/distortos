@@ -2,7 +2,7 @@
  * \file
  * \brief RawMessageQueue class implementation
  *
- * \author Copyright (C) 2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2015-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -17,6 +17,8 @@
 #include "distortos/internal/synchronization/SemaphoreTryWaitFunctor.hpp"
 #include "distortos/internal/synchronization/SemaphoreTryWaitForFunctor.hpp"
 #include "distortos/internal/synchronization/SemaphoreTryWaitUntilFunctor.hpp"
+
+#include "distortos/internal/CHECK_FUNCTION_CONTEXT.hpp"
 
 #include <cstring>
 #include <cerrno>
@@ -39,12 +41,16 @@ RawMessageQueue::RawMessageQueue(EntryStorageUniquePointer&& entryStorageUniqueP
 
 int RawMessageQueue::pop(uint8_t& priority, void* const buffer, const size_t size)
 {
+	CHECK_FUNCTION_CONTEXT();
+
 	const internal::SemaphoreWaitFunctor semaphoreWaitFunctor;
 	return popInternal(semaphoreWaitFunctor, priority, buffer, size);
 }
 
 int RawMessageQueue::push(const uint8_t priority, const void* const data, const size_t size)
 {
+	CHECK_FUNCTION_CONTEXT();
+
 	const internal::SemaphoreWaitFunctor semaphoreWaitFunctor;
 	return pushInternal(semaphoreWaitFunctor, priority, data, size);
 }
@@ -58,6 +64,8 @@ int RawMessageQueue::tryPop(uint8_t& priority, void* const buffer, const size_t 
 int RawMessageQueue::tryPopFor(const TickClock::duration duration, uint8_t& priority, void* const buffer,
 		const size_t size)
 {
+	CHECK_FUNCTION_CONTEXT();
+
 	const internal::SemaphoreTryWaitForFunctor semaphoreTryWaitForFunctor {duration};
 	return popInternal(semaphoreTryWaitForFunctor, priority, buffer, size);
 }
@@ -65,6 +73,8 @@ int RawMessageQueue::tryPopFor(const TickClock::duration duration, uint8_t& prio
 int RawMessageQueue::tryPopUntil(const TickClock::time_point timePoint, uint8_t& priority, void* const buffer,
 		const size_t size)
 {
+	CHECK_FUNCTION_CONTEXT();
+
 	const internal::SemaphoreTryWaitUntilFunctor semaphoreTryWaitUntilFunctor {timePoint};
 	return popInternal(semaphoreTryWaitUntilFunctor, priority, buffer, size);
 }
@@ -78,6 +88,8 @@ int RawMessageQueue::tryPush(const uint8_t priority, const void* const data, con
 int RawMessageQueue::tryPushFor(const TickClock::duration duration, const uint8_t priority, const void* const data,
 		const size_t size)
 {
+	CHECK_FUNCTION_CONTEXT();
+
 	const internal::SemaphoreTryWaitForFunctor semaphoreTryWaitForFunctor {duration};
 	return pushInternal(semaphoreTryWaitForFunctor, priority, data, size);
 }
@@ -85,6 +97,8 @@ int RawMessageQueue::tryPushFor(const TickClock::duration duration, const uint8_
 int RawMessageQueue::tryPushUntil(const TickClock::time_point timePoint, const uint8_t priority, const void* const data,
 		const size_t size)
 {
+	CHECK_FUNCTION_CONTEXT();
+
 	const internal::SemaphoreTryWaitUntilFunctor semaphoreTryWaitUntilFunctor {timePoint};
 	return pushInternal(semaphoreTryWaitUntilFunctor, priority, data, size);
 }
