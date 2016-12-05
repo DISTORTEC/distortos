@@ -2,7 +2,7 @@
  * \file
  * \brief RawFifoQueue class implementation
  *
- * \author Copyright (C) 2014-2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -17,6 +17,8 @@
 #include "distortos/internal/synchronization/SemaphoreTryWaitFunctor.hpp"
 #include "distortos/internal/synchronization/SemaphoreTryWaitForFunctor.hpp"
 #include "distortos/internal/synchronization/SemaphoreTryWaitUntilFunctor.hpp"
+
+#include "distortos/internal/CHECK_FUNCTION_CONTEXT.hpp"
 
 #include <cstring>
 #include <cerrno>
@@ -37,12 +39,16 @@ RawFifoQueue::RawFifoQueue(StorageUniquePointer&& storageUniquePointer, const si
 
 int RawFifoQueue::pop(void* const buffer, const size_t size)
 {
+	CHECK_FUNCTION_CONTEXT();
+
 	const internal::SemaphoreWaitFunctor semaphoreWaitFunctor;
 	return popInternal(semaphoreWaitFunctor, buffer, size);
 }
 
 int RawFifoQueue::push(const void* const data, const size_t size)
 {
+	CHECK_FUNCTION_CONTEXT();
+
 	const internal::SemaphoreWaitFunctor semaphoreWaitFunctor;
 	return pushInternal(semaphoreWaitFunctor, data, size);
 }
@@ -55,12 +61,16 @@ int RawFifoQueue::tryPop(void* const buffer, const size_t size)
 
 int RawFifoQueue::tryPopFor(const TickClock::duration duration, void* const buffer, const size_t size)
 {
+	CHECK_FUNCTION_CONTEXT();
+
 	const internal::SemaphoreTryWaitForFunctor semaphoreTryWaitForFunctor {duration};
 	return popInternal(semaphoreTryWaitForFunctor, buffer, size);
 }
 
 int RawFifoQueue::tryPopUntil(const TickClock::time_point timePoint, void* const buffer, const size_t size)
 {
+	CHECK_FUNCTION_CONTEXT();
+
 	const internal::SemaphoreTryWaitUntilFunctor semaphoreTryWaitUntilFunctor {timePoint};
 	return popInternal(semaphoreTryWaitUntilFunctor, buffer, size);
 }
@@ -73,12 +83,16 @@ int RawFifoQueue::tryPush(const void* const data, const size_t size)
 
 int RawFifoQueue::tryPushFor(const TickClock::duration duration, const void* const data, const size_t size)
 {
+	CHECK_FUNCTION_CONTEXT();
+
 	const internal::SemaphoreTryWaitForFunctor semaphoreTryWaitForFunctor {duration};
 	return pushInternal(semaphoreTryWaitForFunctor, data, size);
 }
 
 int RawFifoQueue::tryPushUntil(const TickClock::time_point timePoint, const void* const data, const size_t size)
 {
+	CHECK_FUNCTION_CONTEXT();
+
 	const internal::SemaphoreTryWaitUntilFunctor semaphoreTryWaitUntilFunctor {timePoint};
 	return pushInternal(semaphoreTryWaitUntilFunctor, data, size);
 }
