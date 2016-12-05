@@ -2,7 +2,7 @@
  * \file
  * \brief FifoQueue class header
  *
- * \author Copyright (C) 2014-2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -80,6 +80,8 @@ public:
 	 *
 	 * \note This function requires GCC 4.9.
 	 *
+	 * \warning This function must not be called from interrupt context!
+	 *
 	 * \tparam Args are types of arguments for constructor of T
 	 *
 	 * \param [in] args are arguments for constructor of T
@@ -101,6 +103,8 @@ public:
 	/**
 	 * \brief Pops the oldest (first) element from the queue.
 	 *
+	 * \warning This function must not be called from interrupt context!
+	 *
 	 * \param [out] value is a reference to object that will be used to return popped value, its contents are swapped
 	 * with the value in the queue's storage and destructed when no longer needed
 	 *
@@ -118,6 +122,8 @@ public:
 	/**
 	 * \brief Pushes the element to the queue.
 	 *
+	 * \warning This function must not be called from interrupt context!
+	 *
 	 * \param [in] value is a reference to object that will be pushed, value in queue's storage is copy-constructed
 	 *
 	 * \return zero if element was pushed successfully, error code otherwise:
@@ -133,6 +139,8 @@ public:
 
 	/**
 	 * \brief Pushes the element to the queue.
+	 *
+	 * \warning This function must not be called from interrupt context!
 	 *
 	 * \param [in] value is a rvalue reference to object that will be pushed, value in queue's storage is
 	 * move-constructed
@@ -176,6 +184,8 @@ public:
 	 *
 	 * \note This function requires GCC 4.9.
 	 *
+	 * \warning This function must not be called from interrupt context!
+	 *
 	 * \tparam Args are types of arguments for constructor of T
 	 *
 	 * \param [in] duration is the duration after which the wait will be terminated without emplacing the element
@@ -200,6 +210,8 @@ public:
 	 *
 	 * \note This function requires GCC 4.9.
 	 *
+	 * \warning This function must not be called from interrupt context!
+	 *
 	 * \tparam Rep is type of tick counter
 	 * \tparam Period is std::ratio type representing the tick period of the clock, seconds
 	 * \tparam Args are types of arguments for constructor of T
@@ -222,6 +234,8 @@ public:
 	 * \brief Tries to emplace the element in the queue until a given time point.
 	 *
 	 * \note This function requires GCC 4.9.
+	 *
+	 * \warning This function must not be called from interrupt context!
 	 *
 	 * \tparam Args are types of arguments for constructor of T
 	 *
@@ -246,6 +260,8 @@ public:
 	 * Template variant of FifoQueue::tryEmplaceUntil(TickClock::time_point, Args&&...).
 	 *
 	 * \note This function requires GCC 4.9.
+	 *
+	 * \warning This function must not be called from interrupt context!
 	 *
 	 * \tparam Duration is a std::chrono::duration type used to measure duration
 	 * \tparam Args are types of arguments for constructor of T
@@ -287,6 +303,8 @@ public:
 	/**
 	 * \brief Tries to pop the oldest (first) element from the queue for a given duration of time.
 	 *
+	 * \warning This function must not be called from interrupt context!
+	 *
 	 * \param [in] duration is the duration after which the call will be terminated without popping the element
 	 * \param [out] value is a reference to object that will be used to return popped value, its contents are swapped
 	 * with the value in the queue's storage and destructed when no longer needed
@@ -306,6 +324,8 @@ public:
 	 * \brief Tries to pop the oldest (first) element from the queue for a given duration of time.
 	 *
 	 * Template variant of tryPopFor(TickClock::duration, T&).
+	 *
+	 * \warning This function must not be called from interrupt context!
 	 *
 	 * \tparam Rep is type of tick counter
 	 * \tparam Period is std::ratio type representing the tick period of the clock, seconds
@@ -328,6 +348,8 @@ public:
 	/**
 	 * \brief Tries to pop the oldest (first) element from the queue until a given time point.
 	 *
+	 * \warning This function must not be called from interrupt context!
+	 *
 	 * \param [in] timePoint is the time point at which the call will be terminated without popping the element
 	 * \param [out] value is a reference to object that will be used to return popped value, its contents are swapped
 	 * with the value in the queue's storage and destructed when no longer needed
@@ -347,6 +369,8 @@ public:
 	 * \brief Tries to pop the oldest (first) element from the queue until a given time point.
 	 *
 	 * Template variant of tryPopUntil(TickClock::time_point, T&).
+	 *
+	 * \warning This function must not be called from interrupt context!
 	 *
 	 * \tparam Duration is a std::chrono::duration type used to measure duration
 	 *
@@ -401,6 +425,8 @@ public:
 	/**
 	 * \brief Tries to push the element to the queue for a given duration of time.
 	 *
+	 * \warning This function must not be called from interrupt context!
+	 *
 	 * \param [in] duration is the duration after which the wait will be terminated without pushing the element
 	 * \param [in] value is a reference to object that will be pushed, value in queue's storage is copy-constructed
 	 *
@@ -419,6 +445,8 @@ public:
 	 * \brief Tries to push the element to the queue for a given duration of time.
 	 *
 	 * Template variant of tryPushFor(TickClock::duration, const T&).
+	 *
+	 * \warning This function must not be called from interrupt context!
 	 *
 	 * \tparam Rep is type of tick counter
 	 * \tparam Period is std::ratio type representing the tick period of the clock, seconds
@@ -440,6 +468,8 @@ public:
 	/**
 	 * \brief Tries to push the element to the queue for a given duration of time.
 	 *
+	 * \warning This function must not be called from interrupt context!
+	 *
 	 * \param [in] duration is the duration after which the call will be terminated without pushing the element
 	 * \param [in] value is a rvalue reference to object that will be pushed, value in queue's storage is
 	 * move-constructed
@@ -459,6 +489,8 @@ public:
 	 * \brief Tries to push the element to the queue for a given duration of time.
 	 *
 	 * Template variant of tryPushFor(TickClock::duration, T&&).
+	 *
+	 * \warning This function must not be called from interrupt context!
 	 *
 	 * \tparam Rep is type of tick counter
 	 * \tparam Period is std::ratio type representing the tick period of the clock, seconds
@@ -481,6 +513,8 @@ public:
 	/**
 	 * \brief Tries to push the element to the queue until a given time point.
 	 *
+	 * \warning This function must not be called from interrupt context!
+	 *
 	 * \param [in] timePoint is the time point at which the call will be terminated without pushing the element
 	 * \param [in] value is a reference to object that will be pushed, value in queue's storage is copy-constructed
 	 *
@@ -499,6 +533,8 @@ public:
 	 * \brief Tries to push the element to the queue until a given time point.
 	 *
 	 * Template variant of tryPushUntil(TickClock::time_point, const T&).
+	 *
+	 * \warning This function must not be called from interrupt context!
 	 *
 	 * \tparam Duration is a std::chrono::duration type used to measure duration
 	 *
@@ -519,6 +555,8 @@ public:
 	/**
 	 * \brief Tries to push the element to the queue until a given time point.
 	 *
+	 * \warning This function must not be called from interrupt context!
+	 *
 	 * \param [in] timePoint is the time point at which the call will be terminated without pushing the element
 	 * \param [in] value is a rvalue reference to object that will be pushed, value in queue's storage is
 	 * move-constructed
@@ -538,6 +576,8 @@ public:
 	 * \brief Tries to push the element to the queue until a given time point.
 	 *
 	 * Template variant of tryPushUntil(TickClock::time_point, T&&).
+	 *
+	 * \warning This function must not be called from interrupt context!
 	 *
 	 * \tparam Duration is a std::chrono::duration type used to measure duration
 	 *
