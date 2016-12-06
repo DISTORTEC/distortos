@@ -15,6 +15,8 @@
 
 #include "distortos/architecture/InterruptMaskingLock.hpp"
 
+#include "distortos/internal/CHECK_FUNCTION_CONTEXT.hpp"
+
 #include "distortos/Semaphore.hpp"
 
 #include "estd/ScopeGuard.hpp"
@@ -93,6 +95,8 @@ std::pair<uint8_t*, size_t> SerialPort::CircularBuffer::getWriteBlock() const
 
 SerialPort::~SerialPort()
 {
+	CHECK_FUNCTION_CONTEXT();
+
 	if (openCount_ == 0)
 		return;
 
@@ -209,6 +213,8 @@ int SerialPort::open(const uint32_t baudRate, const uint8_t characterLength, con
 std::pair<int, size_t> SerialPort::read(void* const buffer, const size_t size, const size_t minSize,
 		const TickClock::time_point* const timePoint)
 {
+	CHECK_FUNCTION_CONTEXT();
+
 	if (buffer == nullptr || size == 0)
 		return {EINVAL, {}};
 
@@ -239,6 +245,8 @@ std::pair<int, size_t> SerialPort::read(void* const buffer, const size_t size, c
 std::pair<int, size_t> SerialPort::write(const void* const buffer, const size_t size, const size_t minSize,
 		const TickClock::time_point* const timePoint)
 {
+	CHECK_FUNCTION_CONTEXT();
+
 	if (buffer == nullptr || size == 0)
 		return {EINVAL, {}};
 
