@@ -2,7 +2,7 @@
  * \file
  * \brief ThisThread::Signals namespace header
  *
- * \author Copyright (C) 2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2015-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -41,6 +41,8 @@ namespace Signals
  *
  * Adds the signalNumber to set of pending signals of current thread.
  *
+ * \warning This function must not be called from interrupt context!
+ *
  * \param [in] signalNumber is the signal that will be generated, [0; 31]
  *
  * \return 0 on success, error code otherwise:
@@ -57,6 +59,8 @@ int generateSignal(uint8_t signalNumber);
  *
  * This function shall return the set of signals that are blocked from delivery and are pending on the current thread.
  *
+ * \warning This function must not be called from interrupt context!
+ *
  * \return set of currently pending signals for current thread
  */
 
@@ -66,6 +70,8 @@ SignalSet getPendingSignalSet();
  * \brief Gets SignalAction associated with given signal number.
  *
  * Similar to sigaction() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/sigaction.html
+ *
+ * \warning This function must not be called from interrupt context!
  *
  * \param [in] signalNumber is the signal for which the association is requested, [0; 31]
  *
@@ -83,6 +89,8 @@ std::pair<int, SignalAction> getSignalAction(uint8_t signalNumber);
  *
  * Similar to pthread_sigmask() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_sigmask.html#
  *
+ * \warning This function must not be called from interrupt context!
+ *
  * \return SignalSet with signal mask for current thread
  */
 
@@ -94,6 +102,8 @@ SignalSet getSignalMask();
  * Similar to sigqueue() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/sigqueue.html
  *
  * Adds the signalNumber and signal value (sigval union) to queue of SignalInformation objects.
+ *
+ * \warning This function must not be called from interrupt context!
  *
  * \param [in] signalNumber is the signal that will be queued, [0; 31]
  * \param [in] value is the signal value
@@ -111,6 +121,8 @@ int queueSignal(uint8_t signalNumber, sigval value);
  * \brief Sets association for given signal number.
  *
  * Similar to sigaction() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/sigaction.html
+ *
+ * \warning This function must not be called from interrupt context!
  *
  * \param [in] signalNumber is the signal for which the association will be set, [0; 31]
  * \param [in] signalAction is a reference to SignalAction that will be associated with given signal number, object in
@@ -131,6 +143,8 @@ std::pair<int, SignalAction> setSignalAction(uint8_t signalNumber, const SignalA
  *
  * Similar to pthread_sigmask() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_sigmask.html#
  *
+ * \warning This function must not be called from interrupt context!
+ *
  * \param [in] signalMask is the SignalSet with new signal mask for current thread
  *
  * \return 0 on success, error code otherwise:
@@ -147,6 +161,8 @@ int setSignalMask(SignalSet signalMask);
  * This function shall select the lowest pending signal from provided set, atomically clear it from current thread's set
  * of pending signals and return that signal number. If no signal in provided set is pending at the time of the call,
  * then this function shall return immediately with an error.
+ *
+ * \warning This function must not be called from interrupt context!
  *
  * \param [in] signalSet is a reference to set of signals that may be accepted
  *
@@ -167,6 +183,8 @@ std::pair<int, SignalInformation> tryWait(const SignalSet& signalSet);
  * of pending signals and return that signal number. If no signal in provided set is pending at the time of the call,
  * the thread shall be suspended until one or more becomes pending or until given duration of time expires.
  *
+ * \warning This function must not be called from interrupt context!
+ *
  * \param [in] signalSet is a reference to set of signals that will be waited for
  * \param [in] duration is the duration after which the wait for signals will be terminated
  *
@@ -183,6 +201,8 @@ std::pair<int, SignalInformation> tryWaitFor(const SignalSet& signalSet, TickClo
  * \brief Tries to wait for signals for given duration of time.
  *
  * Template variant of tryWaitFor(const SignalSet&, TickClock::duration).
+ *
+ * \warning This function must not be called from interrupt context!
  *
  * \tparam Rep is type of tick counter
  * \tparam Period is std::ratio type representing the tick period of the clock, seconds
@@ -213,6 +233,8 @@ std::pair<int, SignalInformation> tryWaitFor(const SignalSet& signalSet,
  * of pending signals and return that signal number. If no signal in provided set is pending at the time of the call,
  * the thread shall be suspended until one or more becomes pending or until given time point is reached
  *
+ * \warning This function must not be called from interrupt context!
+ *
  * \param [in] signalSet is a reference to set of signals that will be waited for
  * \param [in] timePoint is the time point at which the wait for signals will be terminated
  *
@@ -229,6 +251,8 @@ std::pair<int, SignalInformation> tryWaitUntil(const SignalSet& signalSet, TickC
  * \brief Tries to wait for signals until given time point.
  *
  * Template variant of tryWaitUntil(const SignalSet&, TickClock::time_point).
+ *
+ * \warning This function must not be called from interrupt context!
  *
  * \tparam Duration is a std::chrono::duration type used to measure duration
  *
@@ -257,6 +281,8 @@ std::pair<int, SignalInformation> tryWaitUntil(const SignalSet& signalSet,
  * This function shall select the lowest pending signal from provided set, atomically clear it from current thread's set
  * of pending signals and return that signal number. If no signal in provided set is pending at the time of the call,
  * the thread shall be suspended until one or more becomes pending.
+ *
+ * \warning This function must not be called from interrupt context!
  *
  * \param [in] signalSet is a reference to set of signals that will be waited for
  *
