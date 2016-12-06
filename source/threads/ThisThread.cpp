@@ -14,6 +14,8 @@
 #include "distortos/internal/scheduler/getScheduler.hpp"
 #include "distortos/internal/scheduler/Scheduler.hpp"
 
+#include "distortos/internal/CHECK_FUNCTION_CONTEXT.hpp"
+
 #include "distortos/Thread.hpp"
 
 #include <cerrno>
@@ -39,21 +41,29 @@ int detach()
 
 Thread& get()
 {
+	CHECK_FUNCTION_CONTEXT();
+
 	return internal::getScheduler().getCurrentThreadControlBlock().getOwner();
 }
 
 uint8_t getEffectivePriority()
 {
+	CHECK_FUNCTION_CONTEXT();
+
 	return internal::getScheduler().getCurrentThreadControlBlock().getEffectivePriority();
 }
 
 uint8_t getPriority()
 {
+	CHECK_FUNCTION_CONTEXT();
+
 	return internal::getScheduler().getCurrentThreadControlBlock().getPriority();
 }
 
 void setPriority(const uint8_t priority, const bool alwaysBehind)
 {
+	CHECK_FUNCTION_CONTEXT();
+
 	internal::getScheduler().getCurrentThreadControlBlock().setPriority(priority, alwaysBehind);
 }
 
@@ -72,6 +82,8 @@ int sleepUntil(const TickClock::time_point timePoint)
 
 void yield()
 {
+	CHECK_FUNCTION_CONTEXT();
+
 	internal::getScheduler().yield();
 }
 

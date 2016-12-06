@@ -36,6 +36,8 @@ namespace ThisThread
  * Detaches calling (current) thread from its Thread object, allowing execution to continue independently. All resources
  * allocated for the thread will be deallocated when the thread terminates.
  *
+ * \warning This function must not be called from interrupt context!
+ *
  * \return 0 on success, error code otherwise:
  * - EINVAL - current thread is already detached;
  * - ENOTSUP - current thread cannot be detached;
@@ -46,18 +48,24 @@ int detach();
 #endif	// def CONFIG_THREAD_DETACH_ENABLE
 
 /**
+ * \warning This function must not be called from interrupt context!
+ *
  * \return reference to Thread object of currently active thread
  */
 
 Thread& get();
 
 /**
+ * \warning This function must not be called from interrupt context!
+ *
  * \return effective priority of calling (current) thread
  */
 
 uint8_t getEffectivePriority();
 
 /**
+ * \warning This function must not be called from interrupt context!
+ *
  * \return priority of calling (current) thread
  */
 
@@ -65,6 +73,8 @@ uint8_t getPriority();
 
 /**
  * Changes priority of calling (current) thread.
+ *
+ * \warning This function must not be called from interrupt context!
  *
  * \param [in] priority is the new priority for thread
  * \param [in] alwaysBehind selects the method of ordering when lowering the priority
@@ -81,6 +91,8 @@ void setPriority(uint8_t priority, bool alwaysBehind = {});
  *
  * \note To fulfill the "at least" requirement, one additional tick is always added to the sleep duration.
  *
+ * \warning This function must not be called from interrupt context!
+ *
  * \param [in] duration is the duration after which the thread will be woken
  *
  * \return 0 on success, error code otherwise:
@@ -95,6 +107,8 @@ int sleepFor(TickClock::duration duration);
  * Current thread's state is changed to "sleeping".
  *
  * \note To fulfill the "at least" requirement, one additional tick is always added to the sleep duration.
+ *
+ * \warning This function must not be called from interrupt context!
  *
  * \tparam Rep is type of tick counter
  * \tparam Period is std::ratio type representing the tick period of the clock, seconds
@@ -116,6 +130,8 @@ int sleepFor(const std::chrono::duration<Rep, Period> duration)
  *
  * Current thread's state is changed to "sleeping".
  *
+ * \warning This function must not be called from interrupt context!
+ *
  * \param [in] timePoint is the time point at which the thread will be woken
  *
  * \return 0 on success, error code otherwise:
@@ -128,6 +144,8 @@ int sleepUntil(TickClock::time_point timePoint);
  * \brief Makes the calling (current) thread sleep until some time point is reached.
  *
  * Current thread's state is changed to "sleeping".
+ *
+ * \warning This function must not be called from interrupt context!
  *
  * \tparam Duration is a std::chrono::duration type used to measure duration
  *
@@ -145,6 +163,8 @@ int sleepUntil(const std::chrono::time_point<TickClock, Duration> timePoint)
 
 /**
  * \brief Yields time slot of the scheduler to next thread.
+ *
+ * \warning This function must not be called from interrupt context!
  */
 
 void yield();
