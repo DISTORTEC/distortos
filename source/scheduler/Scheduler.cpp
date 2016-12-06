@@ -19,6 +19,8 @@
 #include "distortos/internal/scheduler/forceContextSwitch.hpp"
 #include "distortos/internal/scheduler/MainThread.hpp"
 
+#include "distortos/internal/CHECK_FUNCTION_CONTEXT.hpp"
+
 #include <cerrno>
 
 namespace distortos
@@ -106,6 +108,8 @@ int Scheduler::add(ThreadControlBlock& threadControlBlock)
 int Scheduler::block(ThreadList& container, const ThreadState state,
 		const ThreadControlBlock::UnblockFunctor* const unblockFunctor)
 {
+	CHECK_FUNCTION_CONTEXT();
+
 	return block(container, currentThreadControlBlock_, state, unblockFunctor);
 }
 
@@ -138,6 +142,8 @@ int Scheduler::block(ThreadList& container, const ThreadList::iterator iterator,
 int Scheduler::blockUntil(ThreadList& container, const ThreadState state, const TickClock::time_point timePoint,
 		const ThreadControlBlock::UnblockFunctor* const unblockFunctor)
 {
+	CHECK_FUNCTION_CONTEXT();
+
 	architecture::InterruptMaskingLock interruptMaskingLock;
 
 	const auto iterator = currentThreadControlBlock_;
@@ -193,6 +199,8 @@ void Scheduler::maybeRequestContextSwitch() const
 
 int Scheduler::remove()
 {
+	CHECK_FUNCTION_CONTEXT();
+
 	ThreadList terminatedList;
 	const auto ret = blockInternal(terminatedList, currentThreadControlBlock_, ThreadState::terminated, {});
 	if (ret != 0)
@@ -216,6 +224,8 @@ int Scheduler::resume(const ThreadList::iterator iterator)
 
 int Scheduler::suspend()
 {
+	CHECK_FUNCTION_CONTEXT();
+
 	return suspend(currentThreadControlBlock_);
 }
 

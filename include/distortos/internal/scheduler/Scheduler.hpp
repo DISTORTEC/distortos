@@ -61,6 +61,8 @@ public:
 	/**
 	 * \brief Blocks current thread, transferring it to provided container.
 	 *
+	 * \warning This function must not be called from interrupt context!
+	 *
 	 * \param [in] container is a reference to destination container to which the thread will be transferred
 	 * \param [in] state is the new state of thread that will be blocked
 	 * \param [in] unblockFunctor is a pointer to ThreadControlBlock::UnblockFunctor which will be executed in
@@ -97,6 +99,8 @@ public:
 
 	/**
 	 * \brief Blocks current thread with timeout, transferring it to provided container.
+	 *
+	 * \warning This function must not be called from interrupt context!
 	 *
 	 * \param [in] container is a reference to destination container to which the thread will be transferred
 	 * \param [in] state is the new state of thread that will be blocked
@@ -182,6 +186,8 @@ public:
 	 *
 	 * \note This function can be used only after thread's function returns an all cleanup is done.
 	 *
+	 * \warning This function must not be called from interrupt context!
+	 *
 	 * \return 0 on success, error code otherwise:
 	 * - EINVAL - provided thread is not on "runnable" list and cannot be removed/terminated;
 	 */
@@ -203,6 +209,8 @@ public:
 
 	/**
 	 * \brief Suspends current thread.
+	 *
+	 * \warning This function must not be called from interrupt context!
 	 *
 	 * \return 0 on success, error code otherwise:
 	 * - EINTR - thread was unblocked with ThreadControlBlock::UnblockReason::signal;
