@@ -14,6 +14,8 @@
 #include "distortos/devices/communication/SpiMaster.hpp"
 #include "distortos/devices/communication/SpiMasterOperation.hpp"
 
+#include "distortos/internal/CHECK_FUNCTION_CONTEXT.hpp"
+
 #include "distortos/assert.h"
 #include "distortos/ThisThread.hpp"
 
@@ -33,6 +35,8 @@ namespace devices
 
 SpiDevice::~SpiDevice()
 {
+	CHECK_FUNCTION_CONTEXT();
+
 	if (openCount_ == 0)
 		return;
 
@@ -75,6 +79,8 @@ int SpiDevice::close()
 
 std::pair<int, size_t> SpiDevice::executeTransaction(const SpiMasterOperationRange operationRange)
 {
+	CHECK_FUNCTION_CONTEXT();
+
 	if (operationRange.size() == 0)
 		return {EINVAL, {}};
 
