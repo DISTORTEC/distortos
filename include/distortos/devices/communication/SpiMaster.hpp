@@ -59,6 +59,8 @@ public:
 	 * \brief SpiMaster's destructor
 	 *
 	 * Does nothing if all users already closed this device. If they did not, performs forced close of device.
+	 *
+	 * \warning This function must not be called from interrupt context!
 	 */
 
 	~SpiMaster() override;
@@ -67,6 +69,8 @@ public:
 	 * \brief Closes SPI master.
 	 *
 	 * Does nothing if any user still has this device opened. Otherwise low-level driver is stopped.
+	 *
+	 * \warning This function must not be called from interrupt context!
 	 *
 	 * \return 0 on success, error code otherwise:
 	 * - EBADF - the device is already completely closed;
@@ -81,6 +85,8 @@ public:
 	 * First SPI is configured to match parameters of SPI device (clock frequency, mode, format, ...). Then the device
 	 * is selected and the operations are executed. The transaction is finished when all operations are complete or when
 	 * any error is detected - in either case the device is unselected and this function returns.
+	 *
+	 * \warning This function must not be called from interrupt context!
 	 *
 	 * \param [in] device is a reference to SPI device which is the target of the transaction
 	 * \param [in] operationRange is the range of operations that will be executed
@@ -101,6 +107,8 @@ public:
 	 * \brief Opens SPI master.
 	 *
 	 * Does nothing if any user already has this device opened. Otherwise low-level driver is started.
+	 *
+	 * \warning This function must not be called from interrupt context!
 	 *
 	 * \return 0 on success, error code otherwise:
 	 * - EMFILE - this device is already opened too many times;

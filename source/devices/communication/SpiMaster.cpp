@@ -17,6 +17,8 @@
 
 #include "distortos/devices/io/OutputPin.hpp"
 
+#include "distortos/internal/CHECK_FUNCTION_CONTEXT.hpp"
+
 #include "distortos/assert.h"
 #include "distortos/Semaphore.hpp"
 
@@ -36,6 +38,8 @@ namespace devices
 
 SpiMaster::~SpiMaster()
 {
+	CHECK_FUNCTION_CONTEXT();
+
 	if (openCount_ == 0)
 		return;
 
@@ -75,6 +79,8 @@ int SpiMaster::close()
 std::pair<int, size_t> SpiMaster::executeTransaction(const SpiDevice& device,
 		const SpiMasterOperationRange operationRange)
 {
+	CHECK_FUNCTION_CONTEXT();
+
 	if (operationRange.size() == 0)
 		return {EINVAL, {}};
 
