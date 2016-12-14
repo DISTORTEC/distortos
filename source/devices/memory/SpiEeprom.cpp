@@ -13,6 +13,8 @@
 
 #include "distortos/devices/communication/SpiMasterOperation.hpp"
 
+#include "distortos/internal/CHECK_FUNCTION_CONTEXT.hpp"
+
 #include "distortos/assert.h"
 #include "distortos/ThisThread.hpp"
 
@@ -121,6 +123,8 @@ int SpiEeprom::open()
 
 std::pair<int, size_t> SpiEeprom::read(const uint32_t address, void* const buffer, const size_t size)
 {
+	CHECK_FUNCTION_CONTEXT();
+
 	const auto capacity = getCapacity();
 	if (address >= capacity || buffer == nullptr || size == 0)
 		return {EINVAL, {}};
@@ -169,6 +173,8 @@ int SpiEeprom::waitWhileWriteInProgress()
 
 std::pair<int, size_t> SpiEeprom::write(const uint32_t address, const void* const buffer, const size_t size)
 {
+	CHECK_FUNCTION_CONTEXT();
+
 	const auto capacity = getCapacity();
 	if (address >= capacity || buffer == nullptr || size == 0)
 		return {EINVAL, {}};
