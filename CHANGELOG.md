@@ -12,6 +12,11 @@ All notable changes to this project will be documented in this file. This projec
 - Set `STKALIGN` bit in `SCB->CCR` for *ARM Cortex-M3 r1p1* (like *STM32F1*). Thanks to that, stack will be
 automatically aligned to 8-bytes on exception entry, which is required by *AAPCS*. This bit is set by default on all
 other *ARM Cortex-M* cores.
+- `FATAL_ERROR()` macro with weak `fatalErrorHook()`.
+- "Check context of functions" option in *Kconfig* menus. When this option is selected, the context of functions which
+must not be used from interrupt context (all blocking functions, all `Mutex` functions and all functions from
+`ThisThread` namespace) is checked during run-time. If a violation is detected, `FATAL_ERROR()` is called with
+appropriate message. See help of the new option for more info.
 
 ### Fixed
 

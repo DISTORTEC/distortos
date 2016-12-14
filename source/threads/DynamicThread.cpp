@@ -11,6 +11,8 @@
 
 #include "distortos/DynamicThread.hpp"
 
+#include "distortos/internal/CHECK_FUNCTION_CONTEXT.hpp"
+
 #ifdef CONFIG_THREAD_DETACH_ENABLE
 
 #include "distortos/architecture/InterruptMaskingLock.hpp"
@@ -35,6 +37,8 @@ DynamicThread::~DynamicThread()
 
 int DynamicThread::detach()
 {
+	CHECK_FUNCTION_CONTEXT();
+
 	architecture::InterruptMaskingLock interruptMaskingLock;
 
 	if (detachableThread_ == nullptr)	// already detached?
@@ -115,6 +119,8 @@ ThreadState DynamicThread::getState() const
 
 int DynamicThread::join()
 {
+	CHECK_FUNCTION_CONTEXT();
+
 	architecture::InterruptMaskingLock interruptMaskingLock;
 
 	if (detachableThread_ == nullptr)

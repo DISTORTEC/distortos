@@ -229,6 +229,8 @@ public:
 	 *
 	 * Wrapper for SpiDevice::close().
 	 *
+	 * \warning This function must not be called from interrupt context!
+	 *
 	 * \return 0 on success, error code otherwise:
 	 * - error codes returned by SpiDevice::close();
 	 */
@@ -256,6 +258,8 @@ public:
 	/**
 	 * \brief Checks whether any write operation is currently in progress.
 	 *
+	 * \warning This function must not be called from interrupt context!
+	 *
 	 * \return pair with return code (0 on success, error code otherwise) and current status of device: false - device
 	 * is idle, true - write operation is in progress;
 	 * error codes:
@@ -269,6 +273,8 @@ public:
 	 *
 	 * \note Locks may be nested.
 	 *
+	 * \warning This function must not be called from interrupt context!
+	 *
 	 * \return previous state of lock: false if this SPI EEPROM was unlocked before this call, true if it was already
 	 * locked by current thread
 	 */
@@ -280,6 +286,8 @@ public:
 	 *
 	 * Wrapper for SpiDevice::open().
 	 *
+	 * \warning This function must not be called from interrupt context!
+	 *
 	 * \return 0 on success, error code otherwise:
 	 * - error codes returned by SpiDevice::open();
 	 */
@@ -288,6 +296,8 @@ public:
 
 	/**
 	 * \brief Reads data from SPI EEPROM.
+	 *
+	 * \warning This function must not be called from interrupt context!
 	 *
 	 * \param [in] address is the address of data that will be read
 	 * \param [out] buffer is the buffer to which the data will be written
@@ -309,6 +319,8 @@ public:
 	 *
 	 * \note Locks may be nested.
 	 *
+	 * \warning This function must not be called from interrupt context!
+	 *
 	 * \param previousLockState is the value returned by matching call to lock()
 	 */
 
@@ -316,6 +328,8 @@ public:
 
 	/**
 	 * \brief Waits while any write operation is currently in progress.
+	 *
+	 * \warning This function must not be called from interrupt context!
 	 *
 	 * \return 0 on success, error code otherwise:
 	 * - error codes returned by isWriteInProgress();
@@ -326,6 +340,8 @@ public:
 
 	/**
 	 * \brief Writes data to SPI EEPROM.
+	 *
+	 * \warning This function must not be called from interrupt context!
 	 *
 	 * \param [in] address is the address of data that will be written
 	 * \param [in] buffer is the buffer with data that will be written

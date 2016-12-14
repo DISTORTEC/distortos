@@ -2,7 +2,7 @@
  * \file
  * \brief RawFifoQueue class header
  *
- * \author Copyright (C) 2014-2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -48,6 +48,8 @@ public:
 	/**
 	 * \brief Pops the oldest (first) element from the queue.
 	 *
+	 * \warning This function must not be called from interrupt context!
+	 *
 	 * \param [out] buffer is a pointer to buffer for popped element
 	 * \param [in] size is the size of \a buffer, bytes - must be equal to the \a elementSize attribute of RawFifoQueue
 	 *
@@ -61,6 +63,8 @@ public:
 
 	/**
 	 * \brief Pops the oldest (first) element from the queue.
+	 *
+	 * \warning This function must not be called from interrupt context!
 	 *
 	 * \tparam T is the type of data popped from the queue
 	 *
@@ -81,6 +85,8 @@ public:
 	/**
 	 * \brief Pushes the element to the queue.
 	 *
+	 * \warning This function must not be called from interrupt context!
+	 *
 	 * \param [in] data is a pointer to data that will be pushed to RawFifoQueue
 	 * \param [in] size is the size of \a data, bytes - must be equal to the \a elementSize attribute of RawFifoQueue
 	 *
@@ -94,6 +100,8 @@ public:
 
 	/**
 	 * \brief Pushes the element to the queue.
+	 *
+	 * \warning This function must not be called from interrupt context!
 	 *
 	 * \tparam T is the type of data pushed to the queue
 	 *
@@ -147,6 +155,8 @@ public:
 	/**
 	 * \brief Tries to pop the oldest (first) element from the queue for a given duration of time.
 	 *
+	 * \warning This function must not be called from interrupt context!
+	 *
 	 * \param [in] duration is the duration after which the call will be terminated without popping the element
 	 * \param [out] buffer is a pointer to buffer for popped element
 	 * \param [in] size is the size of \a buffer, bytes - must be equal to the \a elementSize attribute of RawFifoQueue
@@ -163,6 +173,8 @@ public:
 	 * \brief Tries to pop the oldest (first) element from the queue for a given duration of time.
 	 *
 	 * Template variant of tryPopFor(TickClock::duration, void*, size_t).
+	 *
+	 * \warning This function must not be called from interrupt context!
 	 *
 	 * \tparam Rep is type of tick counter
 	 * \tparam Period is std::ratio type representing the tick period of the clock, seconds
@@ -186,6 +198,8 @@ public:
 	/**
 	 * \brief Tries to pop the oldest (first) element from the queue for a given duration of time.
 	 *
+	 * \warning This function must not be called from interrupt context!
+	 *
 	 * \tparam Rep is type of tick counter
 	 * \tparam Period is std::ratio type representing the tick period of the clock, seconds
 	 * \tparam T is the type of data popped from the queue
@@ -208,6 +222,8 @@ public:
 	/**
 	 * \brief Tries to pop the oldest (first) element from the queue until a given time point.
 	 *
+	 * \warning This function must not be called from interrupt context!
+	 *
 	 * \param [in] timePoint is the time point at which the call will be terminated without popping the element
 	 * \param [out] buffer is a pointer to buffer for popped element
 	 * \param [in] size is the size of \a buffer, bytes - must be equal to the \a elementSize attribute of RawFifoQueue
@@ -224,6 +240,8 @@ public:
 	 * \brief Tries to pop the oldest (first) element from the queue until a given time point.
 	 *
 	 * Template variant of tryPopUntil(TickClock::time_point, void*, size_t).
+	 *
+	 * \warning This function must not be called from interrupt context!
 	 *
 	 * \tparam Duration is a std::chrono::duration type used to measure duration
 	 *
@@ -245,6 +263,8 @@ public:
 
 	/**
 	 * \brief Tries to pop the oldest (first) element from the queue until a given time point.
+	 *
+	 * \warning This function must not be called from interrupt context!
 	 *
 	 * \tparam Duration is a std::chrono::duration type used to measure duration
 	 * \tparam T is the type of data popped from the queue
@@ -300,6 +320,8 @@ public:
 	/**
 	 * \brief Tries to push the element to the queue for a given duration of time.
 	 *
+	 * \warning This function must not be called from interrupt context!
+	 *
 	 * \param [in] duration is the duration after which the wait will be terminated without pushing the element
 	 * \param [in] data is a pointer to data that will be pushed to RawFifoQueue
 	 * \param [in] size is the size of \a data, bytes - must be equal to the \a elementSize attribute of RawFifoQueue
@@ -316,6 +338,8 @@ public:
 	 * \brief Tries to push the element to the queue for a given duration of time.
 	 *
 	 * Template variant of tryPushFor(TickClock::duration, const void*, size_t).
+	 *
+	 * \warning This function must not be called from interrupt context!
 	 *
 	 * \tparam Rep is type of tick counter
 	 * \tparam Period is std::ratio type representing the tick period of the clock, seconds
@@ -339,6 +363,8 @@ public:
 	/**
 	 * \brief Tries to push the element to the queue for a given duration of time.
 	 *
+	 * \warning This function must not be called from interrupt context!
+	 *
 	 * \tparam Rep is type of tick counter
 	 * \tparam Period is std::ratio type representing the tick period of the clock, seconds
 	 * \tparam T is the type of data pushed to the queue
@@ -361,6 +387,8 @@ public:
 	/**
 	 * \brief Tries to push the element to the queue until a given time point.
 	 *
+	 * \warning This function must not be called from interrupt context!
+	 *
 	 * \param [in] timePoint is the time point at which the call will be terminated without pushing the element
 	 * \param [in] data is a pointer to data that will be pushed to RawFifoQueue
 	 * \param [in] size is the size of \a data, bytes - must be equal to the \a elementSize attribute of RawFifoQueue
@@ -377,6 +405,8 @@ public:
 	 * \brief Tries to push the element to the queue until a given time point.
 	 *
 	 * Template variant of tryPushUntil(TickClock::time_point, const void*, size_t).
+	 *
+	 * \warning This function must not be called from interrupt context!
 	 *
 	 * \tparam Duration is a std::chrono::duration type used to measure duration
 	 *
@@ -399,6 +429,8 @@ public:
 
 	/**
 	 * \brief Tries to push the element to the queue until a given time point.
+	 *
+	 * \warning This function must not be called from interrupt context!
 	 *
 	 * \tparam Duration is a std::chrono::duration type used to measure duration
 	 * \tparam T is the type of data pushed to the queue

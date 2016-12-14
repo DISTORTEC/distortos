@@ -18,6 +18,8 @@
 
 #include "distortos/internal/synchronization/SignalsReceiverControlBlock.hpp"
 
+#include "distortos/internal/CHECK_FUNCTION_CONTEXT.hpp"
+
 #include <cerrno>
 
 namespace distortos
@@ -83,6 +85,8 @@ ThreadState ThreadCommon::getState() const
 
 int ThreadCommon::join()
 {
+	CHECK_FUNCTION_CONTEXT();
+
 	if (&getThreadControlBlock() == &internal::getScheduler().getCurrentThreadControlBlock())
 		return EDEADLK;
 

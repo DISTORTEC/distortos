@@ -59,6 +59,8 @@ public:
 	 * \brief Rs485's destructor
 	 *
 	 * Disables RS-485 driver.
+	 *
+	 * \warning This function must not be called from interrupt context!
 	 */
 
 	~Rs485();

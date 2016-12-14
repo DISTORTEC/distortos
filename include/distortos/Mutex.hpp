@@ -2,7 +2,7 @@
  * \file
  * \brief Mutex class header
  *
- * \author Copyright (C) 2014-2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -94,6 +94,8 @@ public:
 	 * available. This function shall return with the mutex in the locked state with the calling thread as its owner. If
 	 * a thread attempts to relock a mutex that it has already locked, deadlock occurs.
 	 *
+	 * \warning This function must not be called from interrupt context!
+	 *
 	 * \return zero if the caller successfully locked the mutex, error code otherwise:
 	 * - EAGAIN - the mutex could not be acquired because the maximum number of recursive locks for mutex has been
 	 * exceeded;
@@ -113,6 +115,8 @@ public:
 	 *
 	 * This function shall be equivalent to lock(), except that if the mutex is currently locked (by any thread,
 	 * including the current thread), the call shall return immediately.
+	 *
+	 * \warning This function must not be called from interrupt context!
 	 *
 	 * \return zero if the caller successfully locked the mutex, error code otherwise:
 	 * - EAGAIN - the mutex could not be acquired because the maximum number of recursive locks for mutex has been
@@ -138,6 +142,8 @@ public:
 	 * Under no circumstance shall the function fail with a timeout if the mutex can be locked immediately. The validity
 	 * of the duration parameter need not be checked if the mutex can be locked immediately.
 	 *
+	 * \warning This function must not be called from interrupt context!
+	 *
 	 * \param [in] duration is the duration after which the wait will be terminated without locking the mutex
 	 *
 	 * \return zero if the caller successfully locked the mutex, error code otherwise:
@@ -155,6 +161,8 @@ public:
 	 * Tries to lock the mutex for given duration of time.
 	 *
 	 * Template variant of tryLockFor(TickClock::duration duration).
+	 *
+	 * \warning This function must not be called from interrupt context!
 	 *
 	 * \tparam Rep is type of tick counter
 	 * \tparam Period is std::ratio type representing the tick period of the clock, seconds
@@ -191,6 +199,8 @@ public:
 	 * Under no circumstance shall the function fail with a timeout if the mutex can be locked immediately. The validity
 	 * of the timePoint parameter need not be checked if the mutex can be locked immediately.
 	 *
+	 * \warning This function must not be called from interrupt context!
+	 *
 	 * \param [in] timePoint is the time point at which the wait will be terminated without locking the mutex
 	 *
 	 * \return zero if the caller successfully locked the mutex, error code otherwise:
@@ -208,6 +218,8 @@ public:
 	 * \brief Tries to lock the mutex until given time point.
 	 *
 	 * Template variant of tryLockUntil(TickClock::time_point timePoint).
+	 *
+	 * \warning This function must not be called from interrupt context!
 	 *
 	 * \tparam Duration is a std::chrono::duration type used to measure duration
 	 *
@@ -239,6 +251,8 @@ public:
 	 * blocked on this mutex, the highest priority waiting thread shall be unblocked, and if there is more than one
 	 * highest priority thread blocked waiting, then the highest priority thread that has been waiting the longest shall
 	 * be unblocked.
+	 *
+	 * \warning This function must not be called from interrupt context!
 	 *
 	 * \return zero if the caller successfully unlocked the mutex, error code otherwise:
 	 * - EPERM - the mutex type is ErrorChecking or Recursive, and the current thread does not own the mutex;

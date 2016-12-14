@@ -71,6 +71,8 @@ public:
 	 * \brief SpiDevice's destructor
 	 *
 	 * Does nothing if all users already closed this device. If they did not, performs forced close of device.
+	 *
+	 * \warning This function must not be called from interrupt context!
 	 */
 
 	~SpiDevice();
@@ -79,6 +81,8 @@ public:
 	 * \brief Closes SPI device.
 	 *
 	 * Does nothing if any user still has this device opened. Otherwise low-level driver is stopped.
+	 *
+	 * \warning This function must not be called from interrupt context!
 	 *
 	 * \return 0 on success, error code otherwise:
 	 * - EBADF - the device is already completely closed;
@@ -91,6 +95,8 @@ public:
 	 * \brief Executes series of operations as a single atomic transaction.
 	 *
 	 * Wrapper for SpiMaster::executeTransaction().
+	 *
+	 * \warning This function must not be called from interrupt context!
 	 *
 	 * \param [in] operationRange is the range of operations that will be executed
 	 *
@@ -158,6 +164,8 @@ public:
 	 *
 	 * \note Locks may be nested.
 	 *
+	 * \warning This function must not be called from interrupt context!
+	 *
 	 * \return previous state of lock: false if this SPI device was unlocked before this call, true if it was already
 	 * locked by current thread
 	 */
@@ -168,6 +176,8 @@ public:
 	 * \brief Opens SPI device.
 	 *
 	 * Does nothing if any user already has this device opened. Otherwise associated SPI master is opened.
+	 *
+	 * \warning This function must not be called from interrupt context!
 	 *
 	 * \return 0 on success, error code otherwise:
 	 * - EMFILE - this device is already opened too many times;
@@ -182,6 +192,8 @@ public:
 	 * Does nothing if SPI device is not locked by current thread.
 	 *
 	 * \note Locks may be nested.
+	 *
+	 * \warning This function must not be called from interrupt context!
 	 *
 	 * \param previousLockState is the value returned by matching call to lock()
 	 */

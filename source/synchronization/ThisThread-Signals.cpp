@@ -2,7 +2,7 @@
  * \file
  * \brief ThisThread::Signals namespace implementation
  *
- * \author Copyright (C) 2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2015-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -21,6 +21,8 @@
 #include "distortos/internal/synchronization/SignalsReceiverControlBlock.hpp"
 
 #include "distortos/architecture/InterruptMaskingLock.hpp"
+
+#include "distortos/internal/CHECK_FUNCTION_CONTEXT.hpp"
 
 #include <cerrno>
 
@@ -73,6 +75,8 @@ public:
  * \brief Implementation of distortos::ThisThread::Signals::wait(), distortos::ThisThread::Signals::tryWait() and
  * distortos::ThisThread::Signals::tryWaitUntil().
  *
+ * \warning This function must not be called from interrupt context!
+ *
  * \param [in] signalSet is a reference to set of signals that will be waited for
  * \param [in] nonBlocking selects whether this function operates in blocking mode (false) or non-blocking mode (true)
  * \param [in] timePoint is a pointer to time point at which the wait for signals will be terminated, used only if
@@ -88,6 +92,8 @@ public:
 std::pair<int, SignalInformation> waitImplementation(const SignalSet& signalSet, const bool nonBlocking,
 		const TickClock::time_point* const timePoint)
 {
+	CHECK_FUNCTION_CONTEXT();
+
 	auto& scheduler = internal::getScheduler();
 	const auto signalsReceiverControlBlock = scheduler.getCurrentThreadControlBlock().getSignalsReceiverControlBlock();
 	if (signalsReceiverControlBlock == nullptr)
@@ -147,6 +153,8 @@ SignalSet getPendingSignalSet()
 
 std::pair<int, SignalAction> getSignalAction(const uint8_t signalNumber)
 {
+	CHECK_FUNCTION_CONTEXT();
+
 	const auto signalsReceiverControlBlock =
 			internal::getScheduler().getCurrentThreadControlBlock().getSignalsReceiverControlBlock();
 	if (signalsReceiverControlBlock == nullptr)
@@ -158,6 +166,8 @@ std::pair<int, SignalAction> getSignalAction(const uint8_t signalNumber)
 
 SignalSet getSignalMask()
 {
+	CHECK_FUNCTION_CONTEXT();
+
 	const auto signalsReceiverControlBlock =
 			internal::getScheduler().getCurrentThreadControlBlock().getSignalsReceiverControlBlock();
 	if (signalsReceiverControlBlock == nullptr)
@@ -173,6 +183,8 @@ int queueSignal(const uint8_t signalNumber, const sigval value)
 
 std::pair<int, SignalAction> setSignalAction(const uint8_t signalNumber, const SignalAction& signalAction)
 {
+	CHECK_FUNCTION_CONTEXT();
+
 	const auto signalsReceiverControlBlock =
 			internal::getScheduler().getCurrentThreadControlBlock().getSignalsReceiverControlBlock();
 	if (signalsReceiverControlBlock == nullptr)
@@ -184,6 +196,8 @@ std::pair<int, SignalAction> setSignalAction(const uint8_t signalNumber, const S
 
 int setSignalMask(const SignalSet signalMask)
 {
+	CHECK_FUNCTION_CONTEXT();
+
 	const auto signalsReceiverControlBlock =
 			internal::getScheduler().getCurrentThreadControlBlock().getSignalsReceiverControlBlock();
 	if (signalsReceiverControlBlock == nullptr)

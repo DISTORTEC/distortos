@@ -2,7 +2,7 @@
  * \file
  * \brief Semaphore class implementation
  *
- * \author Copyright (C) 2014-2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -15,6 +15,8 @@
 #include "distortos/internal/scheduler/Scheduler.hpp"
 
 #include "distortos/architecture/InterruptMaskingLock.hpp"
+
+#include "distortos/internal/CHECK_FUNCTION_CONTEXT.hpp"
 
 #include <cerrno>
 
@@ -56,6 +58,8 @@ int Semaphore::tryWaitFor(const TickClock::duration duration)
 
 int Semaphore::tryWaitUntil(const TickClock::time_point timePoint)
 {
+	CHECK_FUNCTION_CONTEXT();
+
 	architecture::InterruptMaskingLock interruptMaskingLock;
 
 	const auto ret = tryWaitInternal();
@@ -67,6 +71,8 @@ int Semaphore::tryWaitUntil(const TickClock::time_point timePoint)
 
 int Semaphore::wait()
 {
+	CHECK_FUNCTION_CONTEXT();
+
 	architecture::InterruptMaskingLock interruptMaskingLock;
 
 	const auto ret = tryWaitInternal();

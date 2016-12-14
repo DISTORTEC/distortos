@@ -319,6 +319,8 @@ public:
 	 * \brief SerialPort's destructor
 	 *
 	 * Does nothing if all users already closed this device. If they did not, performs forced close of device.
+	 *
+	 * \warning This function must not be called from interrupt context!
 	 */
 
 	~SerialPort() override;
@@ -331,6 +333,8 @@ public:
 	 * shutting the device down.
 	 *
 	 * If the function is interrupted by a signal, the device is not closed - the user should try to close it again.
+	 *
+	 * \warning This function must not be called from interrupt context!
 	 *
 	 * \return 0 on success, error code otherwise:
 	 * - EBADF - the device is already completely closed;
@@ -345,6 +349,8 @@ public:
 	 *
 	 * Does nothing if any user already has this device opened. Otherwise low-level driver and buffered reads are
 	 * started.
+	 *
+	 * \warning This function must not be called from interrupt context!
 	 *
 	 * \param [in] baudRate is the desired baud rate, bps
 	 * \param [in] characterLength selects character length, bits
@@ -372,6 +378,8 @@ public:
 	 * not block at all and only read what is available in the buffer - in this case it is similar to POSIX read() with
 	 * O_NONBLOCK flag set.
 	 *
+	 * \warning This function must not be called from interrupt context!
+	 *
 	 * \param [out] buffer is the buffer to which the data will be written
 	 * \param [in] size is the size of \a buffer, bytes, must be even if selected character length is greater than 8
 	 * bits
@@ -395,6 +403,8 @@ public:
 
 	/**
 	 * \brief Wrapper for read() with relative timeout
+	 *
+	 * \warning This function must not be called from interrupt context!
 	 *
 	 * \param [in] duration is the duration after which the wait will be terminated without reading \a minSize
 	 * \param [out] buffer is the buffer to which the data will be written
@@ -423,6 +433,8 @@ public:
 	 * \brief Wrapper for read() with relative timeout
 	 *
 	 * Templated variant of tryReadFor(TickClock::duration, void*, size_t, size_t)
+	 *
+	 * \warning This function must not be called from interrupt context!
 	 *
 	 * \tparam Rep is type of tick counter
 	 * \tparam Period is std::ratio type representing the tick period of the clock, seconds
@@ -454,6 +466,8 @@ public:
 	/**
 	 * \brief Wrapper for read() with absolute timeout
 	 *
+	 * \warning This function must not be called from interrupt context!
+	 *
 	 * \param [in] timePoint is the time point at which the wait will be terminated without reading \a minSize
 	 * \param [out] buffer is the buffer to which the data will be written
 	 * \param [in] size is the size of \a buffer, bytes, must be even if selected character length is greater than 8
@@ -481,6 +495,8 @@ public:
 	 * \brief Wrapper for read() with absolute timeout
 	 *
 	 * Template variant of tryReadUntil(TickClock::time_point, void*, size_t, size_t)
+	 *
+	 * \warning This function must not be called from interrupt context!
 	 *
 	 * \tparam Duration is a std::chrono::duration type used to measure duration
 	 *
@@ -511,6 +527,8 @@ public:
 	/**
 	 * \brief Wrapper for write() with relative timeout
 	 *
+	 * \warning This function must not be called from interrupt context!
+	 *
 	 * \param [in] duration is the duration after which the wait will be terminated without writing \a minSize
 	 * \param [in] buffer is the buffer with data that will be transmitted
 	 * \param [in] size is the size of \a buffer, bytes, must be even if selected character length is greater than 8
@@ -538,6 +556,8 @@ public:
 	 * \brief Wrapper for write() with relative timeout
 	 *
 	 * Template variant of tryWriteFor(TickClock::duration, const void*, size_t, size_t)
+	 *
+	 * \warning This function must not be called from interrupt context!
 	 *
 	 * \tparam Rep is type of tick counter
 	 * \tparam Period is std::ratio type representing the tick period of the clock, seconds
@@ -569,6 +589,8 @@ public:
 	/**
 	 * \brief Wrapper for write() with absolute timeout
 	 *
+	 * \warning This function must not be called from interrupt context!
+	 *
 	 * \param [in] timePoint is the time point at which the wait will be terminated without writing \a minSize
 	 * \param [in] buffer is the buffer with data that will be transmitted
 	 * \param [in] size is the size of \a buffer, bytes, must be even if selected character length is greater than 8
@@ -596,6 +618,8 @@ public:
 	 * \brief Wrapper for write() with absolute timeout
 	 *
 	 * Templated variant of tryWriteUntil(TickClock::time_point, const void*, size_t, size_t)
+	 *
+	 * \warning This function must not be called from interrupt context!
 	 *
 	 * \param [in] timePoint is the time point at which the wait will be terminated without writing \a minSize
 	 * \param [in] buffer is the buffer with data that will be transmitted
@@ -631,6 +655,8 @@ public:
 	 * behavior of this function is similar to POSIX write() with O_NONBLOCK flag cleared. If \a minSize is 0, then the
 	 * function will not block at all and only writes up to buffer's available free space - in this case it is similar
 	 * to POSIX write() with O_NONBLOCK flag set.
+	 *
+	 * \warning This function must not be called from interrupt context!
 	 *
 	 * \param [in] buffer is the buffer with data that will be transmitted
 	 * \param [in] size is the size of \a buffer, bytes, must be even if selected character length is greater than 8
