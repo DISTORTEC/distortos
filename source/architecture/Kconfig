@@ -18,6 +18,14 @@ config ARCHITECTURE_FPU
 	help
 		Enables FPU.
 
+config ARCHITECTURE_ASCENDING_STACK
+	bool
+	default n
+
+config ARCHITECTURE_EMPTY_STACK
+	bool
+	default n
+
 config ARCHITECTURE_HAS_FPU
 	bool
 	default n
