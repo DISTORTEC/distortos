@@ -217,7 +217,7 @@ void fromInterruptToCurrentThread(void (& function)())
 	// - thread doesn't use FPU - there was no FPU stack frame allocated in thread mode,
 	// - thread uses FPU, but the registers are already stacked.
 	if ((fpccr & FPU_FPCCR_THREAD_Msk) != 0 && (fpccr & FPU_FPCCR_LSPACT_Msk) != 0)
-		asm volatile ("vmov s0, s0");	// force stacking of FPU context
+		asm volatile ("vmov s0, s0" ::: "memory");	// force stacking of FPU context
 
 	memset(exceptionFpuStackFrame, 0, sizeof(*exceptionFpuStackFrame));
 	exceptionFpuStackFrame->fpscr = reinterpret_cast<void*>(FPU->FPDSCR);
