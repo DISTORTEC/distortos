@@ -17,6 +17,10 @@ other *ARM Cortex-M* cores.
 must not be used from interrupt context (all blocking functions, all `Mutex` functions and all functions from
 `ThisThread` namespace) is checked during run-time. If a violation is detected, `FATAL_ERROR()` is called with
 appropriate message. See help of the new option for more info.
+- "Check stack pointer range" option in *Kconfig* menus. Selecting this option enables simple range checking of
+preempted thread's stack pointer during context switches. Such check is relatively fast, but cannot detect all stack
+overflows. `FATAL_ERROR()` is called with appropriate message when an overflow is detected. Check new option's help
+for more info.
 
 ### Fixed
 
