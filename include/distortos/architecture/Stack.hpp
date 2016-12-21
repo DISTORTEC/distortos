@@ -12,7 +12,13 @@
 #ifndef INCLUDE_DISTORTOS_ARCHITECTURE_STACK_HPP_
 #define INCLUDE_DISTORTOS_ARCHITECTURE_STACK_HPP_
 
+#include "distortos/distortosConfiguration.h"
+
 #include <memory>
+
+#if defined(CONFIG_ARCHITECTURE_ASCENDING_STACK) || defined(CONFIG_ARCHITECTURE_EMPTY_STACK)
+#error "Support for \"empty ascending\", \"empty descending\" or \"full ascending\" stack not implemented!"
+#endif	// defined(CONFIG_ARCHITECTURE_ASCENDING_STACK) || defined(CONFIG_ARCHITECTURE_EMPTY_STACK)
 
 namespace distortos
 {
@@ -72,6 +78,20 @@ public:
 	 */
 
 	~Stack();
+
+	/**
+	 * \brief Checks whether stack pointer value is within range of this stack.
+	 *
+	 * \param [in] stackPointer is the value of stack pointer that will be checked
+	 *
+	 * \return true if \a stackPointer is within range of this stack, false otherwise
+	 */
+
+	bool checkStackPointer(void* const stackPointer) const
+	{
+		return stackPointer >= adjustedStorage_ &&
+				stackPointer <= static_cast<uint8_t*>(adjustedStorage_) + adjustedSize_;
+	}
 
 	/**
 	 * \brief Gets current value of stack pointer.

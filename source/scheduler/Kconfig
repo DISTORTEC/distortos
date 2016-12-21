@@ -111,4 +111,15 @@ config CHECK_FUNCTION_CONTEXT_ENABLE
 		requirements. If any of them is used from interrupt context,
 		FATAL_ERROR() will be called.
 
+config CHECK_STACK_POINTER_RANGE_ENABLE
+	bool "Check stack pointer range"
+	default n
+	help
+		Simple range checking of preempted thread's stack pointer can be
+		performed during context switches. It is relatively fast, but cannot
+		detect all stack overflows. The check is done before the software stack
+		frame is pushed on thread's stack, but the size of this pending stack
+		frame is accounted for - the intent is to detect a stack overflow which
+		is about to happen, before it can cause (further) data corrution.
+
 endmenu
