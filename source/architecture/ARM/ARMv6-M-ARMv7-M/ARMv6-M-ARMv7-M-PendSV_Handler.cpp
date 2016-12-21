@@ -14,6 +14,12 @@
 
 #include "distortos/chip/CMSIS-proxy.h"
 
+#ifdef CONFIG_CHECK_STACK_POINTER_RANGE_ENABLE
+
+#include "distortos/FATAL_ERROR.h"
+
+#endif	// def CONFIG_CHECK_STACK_POINTER_RANGE_ENABLE
+
 namespace distortos
 {
 
@@ -23,6 +29,24 @@ namespace
 /*---------------------------------------------------------------------------------------------------------------------+
 | local functions
 +---------------------------------------------------------------------------------------------------------------------*/
+
+#ifdef CONFIG_CHECK_STACK_POINTER_RANGE_ENABLE
+
+/**
+ * \brief Wrapper for check of stack pointer range
+ *
+ * If the check fails, FATAL_ERROR() is called.
+ *
+ * \param [in] stackPointer is the current thread's stack pointer value, including the frame which will be stacked
+ */
+
+void checkStackPointerWrapper(void* const stackPointer)
+{
+	if (internal::getScheduler().getCurrentThreadControlBlock().getStack().checkStackPointer(stackPointer) == false)
+		FATAL_ERROR("Stack overflow detected!");
+}
+
+#endif	// def CONFIG_CHECK_STACK_POINTER_RANGE_ENABLE
 
 /**
  * \brief Wrapper for void* distortos::internal::getScheduler().switchContext(void*)
@@ -59,8 +83,8 @@ extern "C" __attribute__ ((naked)) void PendSV_Handler()
 
 	asm volatile
 	(
-			"	mov			r0, %[basepriValue]				\n"
-			"	msr			basepri, r0						\n"	// enable interrupt masking
+			"	mov			r0, %[basepriValue]					\n"
+			"	msr			basepri, r0							\n"	// enable interrupt masking
 
 			::	[basepriValue] "i" (basepriValue)
 	);
@@ -69,7 +93,7 @@ extern "C" __attribute__ ((naked)) void PendSV_Handler()
 
 	asm volatile
 	(
-			"	cpsid		i								\n"	// disable interrupts
+			"	cpsid		i									\n"	// disable interrupts
 	);
 
 #endif	// CONFIG_ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI == 0
@@ -78,29 +102,49 @@ extern "C" __attribute__ ((naked)) void PendSV_Handler()
 
 	asm volatile
 	(
-			"	mrs			r0, psp							\n"
-			"	sub			r0, #0x10						\n"
-			"	stmia		r0!, {r4-r7}					\n"	// save lower half of current thread's context
-			"	mov			r4, r8							\n"
-			"	mov			r5, r9							\n"
-			"	mov			r6, r10							\n"
-			"	mov			r7, r11							\n"
-			"	sub			r0, #0x20						\n"
-			"	stmia		r0!, {r4-r7}					\n"	// save upper half of current thread's context
-			"	sub			r0, #0x10						\n"
-			"	mov			r4, lr							\n"
-			"												\n"
-			"	ldr			r1, =%[schedulerSwitchContext]	\n"
-			"	blx			r1								\n"	// switch context
-			"												\n"
-			"	mov			lr, r4							\n"
-			"	ldmia		r0!, {r4-r7}					\n"	// load upper half of new thread's context
-			"	mov			r8, r4							\n"
-			"	mov			r9, r5							\n"
-			"	mov			r10, r6							\n"
-			"	mov			r11, r7							\n"
-			"	ldmia		r0!, {r4-r7}					\n"	// load lower half of new thread's context
-			"	msr			psp, r0							\n"
+			"	mrs			r0, psp								\n"
+	);
+
+#ifdef CONFIG_CHECK_STACK_POINTER_RANGE_ENABLE
+
+	asm volatile
+	(
+			"	push		{r0, lr}							\n"
+			"	sub			r0, r0, #0x20						\n"
+			"	ldr			r1, =%[checkStackPointerWrapper]	\n"
+			"	blx			r1									\n"
+			"	pop			{r0, r1}							\n"
+			"	mov			lr, r1								\n"
+
+			::	[checkStackPointerWrapper] "i" (checkStackPointerWrapper)
+	);
+
+#endif	// def CONFIG_CHECK_STACK_POINTER_RANGE_ENABLE
+
+	asm volatile
+	(
+			"	sub			r0, #0x10							\n"
+			"	stmia		r0!, {r4-r7}						\n"	// save lower half of current thread's context
+			"	mov			r4, r8								\n"
+			"	mov			r5, r9								\n"
+			"	mov			r6, r10								\n"
+			"	mov			r7, r11								\n"
+			"	sub			r0, #0x20							\n"
+			"	stmia		r0!, {r4-r7}						\n"	// save upper half of current thread's context
+			"	sub			r0, #0x10							\n"
+			"	mov			r4, lr								\n"
+			"													\n"
+			"	ldr			r1, =%[schedulerSwitchContext]		\n"
+			"	blx			r1									\n"	// switch context
+			"													\n"
+			"	mov			lr, r4								\n"
+			"	ldmia		r0!, {r4-r7}						\n"	// load upper half of new thread's context
+			"	mov			r8, r4								\n"
+			"	mov			r9, r5								\n"
+			"	mov			r10, r6								\n"
+			"	mov			r11, r7								\n"
+			"	ldmia		r0!, {r4-r7}						\n"	// load lower half of new thread's context
+			"	msr			psp, r0								\n"
 
 			::	[schedulerSwitchContext] "i" (schedulerSwitchContextWrapper)
 	);
@@ -109,30 +153,55 @@ extern "C" __attribute__ ((naked)) void PendSV_Handler()
 
 	asm volatile
 	(
-			"	mrs			r0, psp							\n"
+			"	mrs			r0, psp								\n"
+	);
+
+#ifdef CONFIG_CHECK_STACK_POINTER_RANGE_ENABLE
+
+	asm volatile
+	(
+			"	push		{r0, lr}							\n"
 #if __FPU_PRESENT == 1 && __FPU_USED == 1
-			"	tst			lr, #(1 << 4)					\n"	// was floating-point used by the thread?
-			"	it			eq								\n"
-			"	vstmdbeq	r0!, {s16-s31}					\n"	// save "floating-point" context of current thread
+			"	tst			lr, #(1 << 4)						\n"	// was floating-point used by the thread?
+			"	it			eq									\n"
+			"	subeq		r0, r0, #0x40						\n"	// account for size of "floating-pont" context
+			"	sub			r0, r0, #0x28						\n"
+#else
+			"	sub			r0, r0, #0x20						\n"
+#endif	// __FPU_PRESENT == 1 && __FPU_USED == 1
+			"	bl			%[checkStackPointerWrapper]			\n"	// switch context
+			"	pop			{r0, lr}							\n"
+
+			::	[checkStackPointerWrapper] "i" (checkStackPointerWrapper)
+	);
+
+#endif	// def CONFIG_CHECK_STACK_POINTER_RANGE_ENABLE
+
+	asm volatile
+	(
+#if __FPU_PRESENT == 1 && __FPU_USED == 1
+			"	tst			lr, #(1 << 4)						\n"	// was floating-point used by the thread?
+			"	it			eq									\n"
+			"	vstmdbeq	r0!, {s16-s31}						\n"	// save "floating-point" context of current thread
 			// save "regular" context of current thread (r12 is saved just to keep double-word alignment)
-			"	stmdb		r0!, {r4-r12, lr}				\n"
+			"	stmdb		r0!, {r4-r12, lr}					\n"
 #else
-			"	stmdb		r0!, {r4-r11}					\n"	// save context of current thread
-			"	mov			r4, lr							\n"
+			"	stmdb		r0!, {r4-r11}						\n"	// save context of current thread
+			"	mov			r4, lr								\n"
 #endif	// __FPU_PRESENT == 1 && __FPU_USED == 1
-			"												\n"
-			"	bl			%[schedulerSwitchContext]		\n"	// switch context
-			"												\n"
+			"													\n"
+			"	bl			%[schedulerSwitchContext]			\n"	// switch context
+			"													\n"
 #if __FPU_PRESENT == 1 && __FPU_USED == 1
-			"	ldmia		r0!, {r4-r12, lr}				\n"	// load "regular" context of new thread
-			"	tst			lr, #(1 << 4)					\n"	// was floating-point used by the thread?
-			"	it			eq								\n"
-			"	vldmiaeq	r0!, {s16-s31}					\n"	// load "floating-point" context of new thread
+			"	ldmia		r0!, {r4-r12, lr}					\n"	// load "regular" context of new thread
+			"	tst			lr, #(1 << 4)						\n"	// was floating-point used by the thread?
+			"	it			eq									\n"
+			"	vldmiaeq	r0!, {s16-s31}						\n"	// load "floating-point" context of new thread
 #else
-			"	mov			lr, r4							\n"
-			"	ldmia		r0!, {r4-r11}					\n"	// load context of new thread
+			"	mov			lr, r4								\n"
+			"	ldmia		r0!, {r4-r11}						\n"	// load context of new thread
 #endif	// __FPU_PRESENT == 1 && __FPU_USED == 1
-			"	msr			psp, r0							\n"
+			"	msr			psp, r0								\n"
 
 			::	[schedulerSwitchContext] "i" (schedulerSwitchContextWrapper)
 	);
@@ -142,13 +211,13 @@ extern "C" __attribute__ ((naked)) void PendSV_Handler()
 	asm volatile
 	(
 #if CONFIG_ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI != 0
-			"	mov			r0, #0							\n"
-			"	msr			basepri, r0						\n"	// disable interrupt masking
+			"	mov			r0, #0								\n"
+			"	msr			basepri, r0							\n"	// disable interrupt masking
 #else	// CONFIG_ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI == 0
-			"	cpsie		i								\n"	// enable interrupts
+			"	cpsie		i									\n"	// enable interrupts
 #endif	// CONFIG_ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI == 0
-			"												\n"
-			"	bx			lr								\n"	// return to new thread
+			"													\n"
+			"	bx			lr									\n"	// return to new thread
 	);
 
 	__builtin_unreachable();
