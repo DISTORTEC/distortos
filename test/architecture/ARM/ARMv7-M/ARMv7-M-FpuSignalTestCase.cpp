@@ -104,7 +104,7 @@ void disableFpuContext()
 /**
  * \brief Signal handler
  *
- * Sets "lower" FPU registers (s0-s15 and FPSCR) using the value queued with signal, unless this value is 0.
+ * Sets "lower" FPU registers (s0-s15 and fpscr) using the value queued with signal, unless this value is 0.
  *
  * \param [in] signalInformation is a reference to received SignalInformation object
  */

@@ -55,7 +55,7 @@ constexpr size_t totalThreads {10};
 /**
  * \brief Test thread
  *
- * Saves test value to all FPU registers (including FPSCR), causes context switch to next test thread and - after
+ * Saves test value to all FPU registers (including fpscr), causes context switch to next test thread and - after
  * return - checks whether all modified registers still have the same value. This sequence is repeated
  * \a sequenceIterations times with increasing test value (or until first failure).
  *

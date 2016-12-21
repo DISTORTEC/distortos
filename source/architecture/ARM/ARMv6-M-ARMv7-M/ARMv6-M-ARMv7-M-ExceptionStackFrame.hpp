@@ -26,21 +26,21 @@ struct ExceptionStackFrame
 	/// default value of xPSR register
 	constexpr static uintptr_t defaultXpsr {0x01000000};
 
-	/// R0 register
+	/// r0 register
 	void* r0;
-	/// R1 register
+	/// r1 register
 	void* r1;
-	/// R2 register
+	/// r2 register
 	void* r2;
-	/// R3 register
+	/// r3 register
 	void* r3;
-	/// R12 register
+	/// r12 register
 	void* r12;
-	/// LR register
+	/// lr register
 	void* lr;
-	/// PC register
+	/// pc register
 	void* pc;
-	/// xPSR register
+	/// xpsr register
 	void* xpsr;
 };
 

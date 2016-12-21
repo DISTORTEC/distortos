@@ -77,8 +77,8 @@ uint32_t setFpuRegisters(const uint32_t value, const bool full)
 	uint32_t fpscr;
 	asm volatile
 	(
-			"	vmsr	FPSCR, %[value]	\n"	// move test value to FPSCR
-			"	vmrs	%[fpscr], FPSCR	\n"	// read FPSCR to variable (not all fields of FPSCR are writable)
+			"	vmsr	fpscr, %[value]	\n"	// move test value to fpscr
+			"	vmrs	%[fpscr], fpscr	\n"	// read fpscr to variable (not all fields of fpscr are writable)
 
 			:	[fpscr] "=r" (fpscr)
 			:	[value] "r" (value)

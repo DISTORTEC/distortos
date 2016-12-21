@@ -21,12 +21,12 @@ namespace test
 {
 
 /**
- * \brief Sets FPU registers (including FPSCR) to given value.
+ * \brief Sets FPU registers (including fpscr) to given value.
  *
  * \param [in] value is the value that will be written to FPU registers
- * \param [in] full selects whether all FPU registers will be modified (true) or only s0-s15 and FPSCR (false)
+ * \param [in] full selects whether all FPU registers will be modified (true) or only s0-s15 and fpscr (false)
  *
- * \return value read from FPSCR register (not all fields of this register are writable)
+ * \return value read from fpscr register (not all fields of this register are writable)
  */
 
 uint32_t setFpuRegisters(uint32_t value, bool full);

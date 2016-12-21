@@ -24,7 +24,7 @@ namespace test
  * \brief Checks whether all FPU registers contain given value.
  *
  * \param [in] value is the expected value for s0-s31 registers
- * \param [in] fpscr is the expected value for FPSCR register
+ * \param [in] fpscr is the expected value for fpscr register
  *
  * \return true if values of all FPU registers are equal to expected values, false otherwise
  */

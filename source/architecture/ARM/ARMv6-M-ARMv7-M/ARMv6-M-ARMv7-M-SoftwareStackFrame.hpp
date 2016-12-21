@@ -32,35 +32,35 @@ struct SoftwareStackFrame
 
 #if defined(__ARM_ARCH_7M__) || defined(__ARM_ARCH_7EM__)
 
-	/// R4 register
+	/// r4 register
 	void* r4;
-	/// R5 register
+	/// r5 register
 	void* r5;
-	/// R6 register
+	/// r6 register
 	void* r6;
-	/// R7 register
+	/// r7 register
 	void* r7;
 
 #endif	// defined(__ARM_ARCH_7M__) || defined(__ARM_ARCH_7EM__)
 
-	/// R8 register
+	/// r8 register
 	void* r8;
-	/// R9 register
+	/// r9 register
 	void* r9;
-	/// R10 register
+	/// r10 register
 	void* r10;
-	/// R11 register
+	/// r11 register
 	void* r11;
 
 #if !defined(__ARM_ARCH_7M__) && !defined(__ARM_ARCH_7EM__)
 
-	/// R4 register
+	/// r4 register
 	void* r4;
-	/// R5 register
+	/// r5 register
 	void* r5;
-	/// R6 register
+	/// r6 register
 	void* r6;
-	/// R7 register
+	/// r7 register
 	void* r7;
 
 #endif	// !defined(__ARM_ARCH_7M__) && !defined(__ARM_ARCH_7EM__)
@@ -69,7 +69,7 @@ struct SoftwareStackFrame
 
 	/// reserved space (double-word alignment)
 	void* reserved;
-	/// LR register with exception return value
+	/// lr register with exception return value
 	void* exceptionReturn;
 
 #endif	// __FPU_PRESENT == 1 && __FPU_USED == 1

@@ -30,39 +30,39 @@ struct ExceptionFpuStackFrame
 
 #if __FPU_PRESENT == 1 && __FPU_USED == 1
 
-	/// S0 register
+	/// s0 register
 	void* s0;
-	/// S1 register
+	/// s1 register
 	void* s1;
-	/// S2 register
+	/// s2 register
 	void* s2;
-	/// S3 register
+	/// s3 register
 	void* s3;
-	/// S4 register
+	/// s4 register
 	void* s4;
-	/// S5 register
+	/// s5 register
 	void* s5;
-	/// S6 register
+	/// s6 register
 	void* s6;
-	/// S7 register
+	/// s7 register
 	void* s7;
-	/// S8 register
+	/// s8 register
 	void* s8;
-	/// S9 register
+	/// s9 register
 	void* s9;
-	/// S10 register
+	/// s10 register
 	void* s10;
-	/// S11 register
+	/// s11 register
 	void* s11;
-	/// S12 register
+	/// s12 register
 	void* s12;
-	/// S13 register
+	/// s13 register
 	void* s13;
-	/// S14 register
+	/// s14 register
 	void* s14;
-	/// S15 register
+	/// s15 register
 	void* s15;
-	/// FPSCR register
+	/// fpscr register
 	void* fpscr;
 	/// reserved space (double-word alignment)
 	void* reserved;

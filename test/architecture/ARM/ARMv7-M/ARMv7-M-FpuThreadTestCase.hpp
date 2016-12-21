@@ -23,7 +23,7 @@ namespace test
 /**
  * \brief Tests saving of FPU context between threads.
  *
- * Starts 10 small threads which modify all FPU registers (including FPSCR), cause context switch to next test thread
+ * Starts 10 small threads which modify all FPU registers (including fpscr), cause context switch to next test thread
  * and - after return - check whether all modified registers still have the same value. This sequence is repeated
  * predefined number of times (or until first failure).
  */

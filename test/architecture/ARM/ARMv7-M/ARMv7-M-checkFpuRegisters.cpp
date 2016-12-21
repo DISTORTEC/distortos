@@ -158,8 +158,8 @@ bool checkFpuRegisters(const uint32_t value, const uint32_t fpscr)
 			"	cmp		r2, %[value]			\n"
 			"	it		ne						\n"
 			"	bne		1f						\n"
-			"	vmrs	r2, FPSCR				\n"	// move test value from FPSCR
-			"	cmp		r2, %[fpscr]			\n"	// compare with expected FPSCR value
+			"	vmrs	r2, fpscr				\n"	// move test value from fpscr
+			"	cmp		r2, %[fpscr]			\n"	// compare with expected fpscr value
 
 			"	it		eq						\n"
 			"	beq		2f						\n"	// branch "out" if all compared values were equal
