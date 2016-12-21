@@ -81,48 +81,27 @@ extern "C" __attribute__ ((naked)) void PendSV_Handler()
 	static_assert(basepriValue > 0 && basepriValue <= UINT8_MAX,
 			"Invalid CONFIG_ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI value!");
 
+#endif	// CONFIG_ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI != 0
+
 	asm volatile
 	(
+#if CONFIG_ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI != 0
 			"	mov			r0, %[basepriValue]					\n"
 			"	msr			basepri, r0							\n"	// enable interrupt masking
-
-			::	[basepriValue] "i" (basepriValue)
-	);
-
 #else	// CONFIG_ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI == 0
-
-	asm volatile
-	(
 			"	cpsid		i									\n"	// disable interrupts
-	);
-
 #endif	// CONFIG_ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI == 0
-
+			"													\n"
 #ifdef __ARM_ARCH_6M__
-
-	asm volatile
-	(
 			"	mrs			r0, psp								\n"
-	);
-
 #ifdef CONFIG_CHECK_STACK_POINTER_RANGE_ENABLE
-
-	asm volatile
-	(
 			"	push		{r0, lr}							\n"
 			"	sub			r0, r0, #0x20						\n"
 			"	ldr			r1, =%[checkStackPointerWrapper]	\n"
 			"	blx			r1									\n"
 			"	pop			{r0, r1}							\n"
 			"	mov			lr, r1								\n"
-
-			::	[checkStackPointerWrapper] "i" (checkStackPointerWrapper)
-	);
-
 #endif	// def CONFIG_CHECK_STACK_POINTER_RANGE_ENABLE
-
-	asm volatile
-	(
 			"	sub			r0, #0x10							\n"
 			"	stmia		r0!, {r4-r7}						\n"	// save lower half of current thread's context
 			"	mov			r4, r8								\n"
@@ -145,50 +124,31 @@ extern "C" __attribute__ ((naked)) void PendSV_Handler()
 			"	mov			r11, r7								\n"
 			"	ldmia		r0!, {r4-r7}						\n"	// load lower half of new thread's context
 			"	msr			psp, r0								\n"
-
-			::	[schedulerSwitchContext] "i" (schedulerSwitchContextWrapper)
-	);
-
 #else	// !def __ARM_ARCH_6M__
-
-	asm volatile
-	(
 			"	mrs			r0, psp								\n"
-	);
-
 #ifdef CONFIG_CHECK_STACK_POINTER_RANGE_ENABLE
-
-	asm volatile
-	(
 			"	push		{r0, lr}							\n"
 #if __FPU_PRESENT == 1 && __FPU_USED == 1
 			"	tst			lr, #(1 << 4)						\n"	// was floating-point used by the thread?
 			"	it			eq									\n"
 			"	subeq		r0, r0, #0x40						\n"	// account for size of "floating-pont" context
 			"	sub			r0, r0, #0x28						\n"
-#else
+#else	// __FPU_PRESENT != 1 || __FPU_USED != 1
 			"	sub			r0, r0, #0x20						\n"
-#endif	// __FPU_PRESENT == 1 && __FPU_USED == 1
+#endif	// __FPU_PRESENT != 1 || __FPU_USED != 1
 			"	bl			%[checkStackPointerWrapper]			\n"	// switch context
 			"	pop			{r0, lr}							\n"
-
-			::	[checkStackPointerWrapper] "i" (checkStackPointerWrapper)
-	);
-
 #endif	// def CONFIG_CHECK_STACK_POINTER_RANGE_ENABLE
-
-	asm volatile
-	(
 #if __FPU_PRESENT == 1 && __FPU_USED == 1
 			"	tst			lr, #(1 << 4)						\n"	// was floating-point used by the thread?
 			"	it			eq									\n"
 			"	vstmdbeq	r0!, {s16-s31}						\n"	// save "floating-point" context of current thread
 			// save "regular" context of current thread (r12 is saved just to keep double-word alignment)
 			"	stmdb		r0!, {r4-r12, lr}					\n"
-#else
+#else	// __FPU_PRESENT != 1 || __FPU_USED != 1
 			"	stmdb		r0!, {r4-r11}						\n"	// save context of current thread
 			"	mov			r4, lr								\n"
-#endif	// __FPU_PRESENT == 1 && __FPU_USED == 1
+#endif	// __FPU_PRESENT != 1 || __FPU_USED != 1
 			"													\n"
 			"	bl			%[schedulerSwitchContext]			\n"	// switch context
 			"													\n"
@@ -197,19 +157,13 @@ extern "C" __attribute__ ((naked)) void PendSV_Handler()
 			"	tst			lr, #(1 << 4)						\n"	// was floating-point used by the thread?
 			"	it			eq									\n"
 			"	vldmiaeq	r0!, {s16-s31}						\n"	// load "floating-point" context of new thread
-#else
+#else	// __FPU_PRESENT != 1 || __FPU_USED != 1
 			"	mov			lr, r4								\n"
 			"	ldmia		r0!, {r4-r11}						\n"	// load context of new thread
-#endif	// __FPU_PRESENT == 1 && __FPU_USED == 1
+#endif	// __FPU_PRESENT != 1 || __FPU_USED != 1
 			"	msr			psp, r0								\n"
-
-			::	[schedulerSwitchContext] "i" (schedulerSwitchContextWrapper)
-	);
-
 #endif	// !def __ARM_ARCH_6M__
-
-	asm volatile
-	(
+			"													\n"
 #if CONFIG_ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI != 0
 			"	mov			r0, #0								\n"
 			"	msr			basepri, r0							\n"	// disable interrupt masking
@@ -218,6 +172,15 @@ extern "C" __attribute__ ((naked)) void PendSV_Handler()
 #endif	// CONFIG_ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI == 0
 			"													\n"
 			"	bx			lr									\n"	// return to new thread
+
+			::
+#if CONFIG_ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI != 0
+				[basepriValue] "i" (basepriValue),
+#endif	// CONFIG_ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI != 0
+#ifdef CONFIG_CHECK_STACK_POINTER_RANGE_ENABLE
+				[checkStackPointerWrapper] "i" (checkStackPointerWrapper),
+#endif	// def CONFIG_CHECK_STACK_POINTER_RANGE_ENABLE
+				[schedulerSwitchContext] "i" (schedulerSwitchContextWrapper)
 	);
 
 	__builtin_unreachable();
