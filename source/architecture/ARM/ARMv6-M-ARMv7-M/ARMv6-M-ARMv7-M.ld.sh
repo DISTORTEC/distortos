@@ -308,6 +308,17 @@ $(printf '%b' "${bssArrayEntries}")
 	. = ALIGN(4);
 	PROVIDE(__exidx_end = .);
 
+	.main_stack :
+	{
+		. = ALIGN(8);
+		PROVIDE(__main_stack_start = .);
+
+		. += __main_stack_size;
+
+		. = ALIGN(8);
+		PROVIDE(__main_stack_end = .);
+	} > ram AT > ram
+
 	.bss :
 	{
 		. = ALIGN(4);
@@ -341,17 +352,6 @@ $(printf '%b' "${bssArrayEntries}")
 
 		. = ALIGN(4);
 		PROVIDE(__noinit_end = .);
-	} > ram AT > ram
-
-	.main_stack :
-	{
-		. = ALIGN(8);
-		PROVIDE(__main_stack_start = .);
-
-		. += __main_stack_size;
-
-		. = ALIGN(8);
-		PROVIDE(__main_stack_end = .);
 	} > ram AT > ram
 
 	.process_stack :
