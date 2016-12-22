@@ -250,7 +250,8 @@ $(printf '%b' "${dataArrayEntries}")
 		PROVIDE(__bss_array_start = .);
 
 		LONG(ADDR(.bss)); LONG(ADDR(.bss) + SIZEOF(.bss));
-		LONG(ADDR(.stack)); LONG(ADDR(.stack) + SIZEOF(.stack));
+		LONG(ADDR(.main_stack)); LONG(ADDR(.main_stack) + SIZEOF(.main_stack));
+		LONG(ADDR(.process_stack)); LONG(ADDR(.process_stack) + SIZEOF(.process_stack));
 $(printf '%b' "${bssArrayEntries}")
 
 		. = ALIGN(4);
@@ -342,23 +343,26 @@ $(printf '%b' "${bssArrayEntries}")
 		PROVIDE(__noinit_end = .);
 	} > ram AT > ram
 
-	.stack :
+	.main_stack :
 	{
 		. = ALIGN(8);
-		PROVIDE(__stack_start = .);
 		PROVIDE(__main_stack_start = .);
 
 		. += __main_stack_size;
 
 		. = ALIGN(8);
 		PROVIDE(__main_stack_end = .);
+	} > ram AT > ram
+
+	.process_stack :
+	{
+		. = ALIGN(8);
 		PROVIDE(__process_stack_start = .);
 
 		. += __process_stack_size;
 
 		. = ALIGN(8);
 		PROVIDE(__process_stack_end = .);
-		PROVIDE(__stack_end = .);
 	} > ram AT > ram
 
 	. = ALIGN(4);
@@ -405,7 +409,6 @@ PROVIDE(__exidx_size = SIZEOF(.ARM.exidx));
 PROVIDE(__bss_size = SIZEOF(.bss));
 PROVIDE(__data_size = SIZEOF(.data));
 PROVIDE(__noinit_size = SIZEOF(.noinit));
-PROVIDE(__stack_size = SIZEOF(.stack));
 $(printf '%b' "${sectionSizes}")
 
 PROVIDE(__bss_start__ = __bss_start);
