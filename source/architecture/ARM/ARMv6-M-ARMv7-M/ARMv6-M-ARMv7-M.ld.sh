@@ -365,7 +365,7 @@ $(printf '%b' "${bssArrayEntries}")
 		PROVIDE(__process_stack_end = .);
 	} > ram AT > ram
 
-	. = ALIGN(4);
+	. = ALIGN(8);
 	PROVIDE(__heap_start = .);
 	PROVIDE(__heap_end = __ram_end);
 
