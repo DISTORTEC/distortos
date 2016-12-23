@@ -12,7 +12,6 @@
 #ifndef SOURCE_ARCHITECTURE_ARM_ARMV6_M_ARMV7_M_INCLUDE_DISTORTOS_ARCHITECTURE_PARAMETERS_HPP_
 #define SOURCE_ARCHITECTURE_ARM_ARMV6_M_ARMV7_M_INCLUDE_DISTORTOS_ARCHITECTURE_PARAMETERS_HPP_
 
-#include <cstddef>
 #include <cstdint>
 
 namespace distortos
@@ -23,9 +22,6 @@ namespace architecture
 
 /// interrupt mask
 using InterruptMask = uint32_t;
-
-/// alignment of stack, bytes
-constexpr size_t stackAlignment {8};
 
 }	// namespace architecture
 
