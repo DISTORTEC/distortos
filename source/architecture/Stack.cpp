@@ -35,16 +35,14 @@ namespace
  * \brief Adjusts storage's address to suit architecture's alignment requirements.
  *
  * \param [in] storage is a pointer to stack's storage
- * \param [in] stackAlignment is required stack alignment
+ * \param [in] alignment is the required stack alignment, bytes
  *
  * \return adjusted storage's address
  */
 
-void* adjustStorage(void* const storage, const size_t stackAlignment)
+void* adjustStorage(void* const storage, const size_t alignment)
 {
-	const auto storageSizeT = reinterpret_cast<size_t>(storage);
-	const auto offset = (-storageSizeT) & (stackAlignment - 1);
-	return reinterpret_cast<void*>(storageSizeT + offset);
+	return reinterpret_cast<void*>((reinterpret_cast<uintptr_t>(storage) + alignment - 1) / alignment * alignment);
 }
 
 /**
