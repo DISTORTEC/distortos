@@ -354,7 +354,12 @@ $(printf '%b' "${bssArrayEntries}")
 		PROVIDE(__noinit_end = .);
 	} > ram AT > ram
 
-	.process_stack :
+	. = ALIGN(8);
+	PROVIDE(__heap_start = .);
+	. = __ram_end - __process_stack_size;
+	PROVIDE(__heap_end = .);
+	
+	.process_stack . :
 	{
 		. = ALIGN(8);
 		PROVIDE(__process_stack_start = .);
@@ -364,10 +369,6 @@ $(printf '%b' "${bssArrayEntries}")
 		. = ALIGN(8);
 		PROVIDE(__process_stack_end = .);
 	} > ram AT > ram
-
-	. = ALIGN(8);
-	PROVIDE(__heap_start = .);
-	PROVIDE(__heap_end = __ram_end);
 
 $(printf '%b' "${sectionEntries}")
 
