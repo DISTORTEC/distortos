@@ -12,7 +12,7 @@
 #ifndef INCLUDE_DISTORTOS_ARCHITECTURE_RESTOREINTERRUPTMASKING_HPP_
 #define INCLUDE_DISTORTOS_ARCHITECTURE_RESTOREINTERRUPTMASKING_HPP_
 
-#include "distortos/architecture/parameters.hpp"
+#include "distortos/architecture/InterruptMask.hpp"
 
 namespace distortos
 {
