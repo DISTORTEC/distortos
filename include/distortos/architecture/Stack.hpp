@@ -40,8 +40,7 @@ public:
 	 * \brief Stack's constructor
 	 *
 	 * This function initializes valid architecture-specific stack in provided storage. This requires following steps:
-	 * - adjustment of storage's address to suit architecture's alignment requirements,
-	 * - adjustment of storage's size to suit architecture's divisibility requirements,
+	 * - adjustment of storage's address and size to suit architecture's alignment requirements,
 	 * - creating hardware and software stack frame in suitable place in the stack,
 	 * - calculation of stack pointer register value.
 	 *

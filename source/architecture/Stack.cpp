@@ -35,33 +35,32 @@ namespace
  * \brief Adjusts storage's address to suit architecture's alignment requirements.
  *
  * \param [in] storage is a pointer to stack's storage
- * \param [in] stackAlignment is required stack alignment
+ * \param [in] alignment is the required stack alignment, bytes
  *
  * \return adjusted storage's address
  */
 
-void* adjustStorage(void* const storage, const size_t stackAlignment)
+void* adjustStorage(void* const storage, const size_t alignment)
 {
-	const auto storageSizeT = reinterpret_cast<size_t>(storage);
-	const auto offset = (-storageSizeT) & (stackAlignment - 1);
-	return reinterpret_cast<void*>(storageSizeT + offset);
+	return reinterpret_cast<void*>((reinterpret_cast<uintptr_t>(storage) + alignment - 1) / alignment * alignment);
 }
 
 /**
- * \brief Adjusts storage's size to suit architecture's divisibility requirements,
+ * \brief Adjusts storage's size to suit architecture's alignment requirements.
  *
  * \param [in] storage is a pointer to stack's storage
  * \param [in] size is the size of stack's storage, bytes
  * \param [in] adjustedStorage is an adjusted storage's address
- * \param [in] divisibility is required stack's size divisibility
+ * \param [in] alignment is the required stack alignment, bytes
  *
  * \return adjusted storage's size
  */
 
-size_t adjustSize(void* const storage, const size_t size, void* const adjustedStorage, const size_t divisibility)
+size_t adjustSize(void* const storage, const size_t size, void* const adjustedStorage, const size_t alignment)
 {
-	const auto offset = static_cast<uint8_t*>(adjustedStorage) - static_cast<uint8_t*>(storage);
-	return ((size - offset) / divisibility) * divisibility;
+	const auto storageEnd = reinterpret_cast<uintptr_t>(storage) + size;
+	const auto adjustedStorageEnd = storageEnd / alignment * alignment;
+	return adjustedStorageEnd - reinterpret_cast<decltype(adjustedStorageEnd)>(adjustedStorage);
 }
 
 /**
@@ -94,7 +93,7 @@ Stack::Stack(StorageUniquePointer&& storageUniquePointer, const size_t size, Thr
 		void (* preTerminationHook)(Thread&), void (& terminationHook)(Thread&)) :
 				storageUniquePointer_{std::move(storageUniquePointer)},
 				adjustedStorage_{adjustStorage(storageUniquePointer_.get(), stackAlignment)},
-				adjustedSize_{adjustSize(storageUniquePointer_.get(), size, adjustedStorage_, stackSizeDivisibility)},
+				adjustedSize_{adjustSize(storageUniquePointer_.get(), size, adjustedStorage_, stackAlignment)},
 				stackPointer_{initializeStackProxy(adjustedStorage_, adjustedSize_, thread, run, preTerminationHook,
 						terminationHook)}
 {
