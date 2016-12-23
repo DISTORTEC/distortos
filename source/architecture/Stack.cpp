@@ -46,20 +46,21 @@ void* adjustStorage(void* const storage, const size_t alignment)
 }
 
 /**
- * \brief Adjusts storage's size to suit architecture's alignment requirements,
+ * \brief Adjusts storage's size to suit architecture's alignment requirements.
  *
  * \param [in] storage is a pointer to stack's storage
  * \param [in] size is the size of stack's storage, bytes
  * \param [in] adjustedStorage is an adjusted storage's address
- * \param [in] stackAlignment is required stack alignment
+ * \param [in] alignment is the required stack alignment, bytes
  *
  * \return adjusted storage's size
  */
 
-size_t adjustSize(void* const storage, const size_t size, void* const adjustedStorage, const size_t stackAlignment)
+size_t adjustSize(void* const storage, const size_t size, void* const adjustedStorage, const size_t alignment)
 {
-	const auto offset = static_cast<uint8_t*>(adjustedStorage) - static_cast<uint8_t*>(storage);
-	return ((size - offset) / stackAlignment) * stackAlignment;
+	const auto storageEnd = reinterpret_cast<uintptr_t>(storage) + size;
+	const auto adjustedStorageEnd = storageEnd / alignment * alignment;
+	return adjustedStorageEnd - reinterpret_cast<decltype(adjustedStorageEnd)>(adjustedStorage);
 }
 
 /**
