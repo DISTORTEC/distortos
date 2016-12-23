@@ -12,7 +12,6 @@
 #include "distortos/architecture/Stack.hpp"
 
 #include "distortos/architecture/initializeStack.hpp"
-#include "distortos/architecture/parameters.hpp"
 
 #include "distortos/internal/memory/dummyDeleter.hpp"
 
@@ -30,6 +29,13 @@ namespace architecture
 
 namespace
 {
+
+/*---------------------------------------------------------------------------------------------------------------------+
+| local objects
++---------------------------------------------------------------------------------------------------------------------*/
+
+/// alignment of stack, bytes
+constexpr size_t stackAlignment {CONFIG_ARCHITECTURE_STACK_ALIGNMENT};
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | local functions' declarations
