@@ -27,9 +27,6 @@ using InterruptMask = uint32_t;
 /// alignment of stack, bytes
 constexpr size_t stackAlignment {8};
 
-/// divisibility of stack's size
-constexpr size_t stackSizeDivisibility {8};
-
 }	// namespace architecture
 
 }	// namespace distortos
