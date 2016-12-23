@@ -18,6 +18,10 @@
 
 #include <cstring>
 
+#if CONFIG_ARCHITECTURE_STACK_ALIGNMENT <= 0
+#error "Stack alignment must be greater than 0!"
+#endif	// CONFIG_ARCHITECTURE_STACK_ALIGNMENT <= 0
+
 namespace distortos
 {
 
