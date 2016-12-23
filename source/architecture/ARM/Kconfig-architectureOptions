@@ -17,6 +17,10 @@ config ARCHITECTURE_ARMV7_M
 	bool
 	default n
 
+config ARCHITECTURE_STACK_ALIGNMENT
+	int
+	default 8
+
 config TOOLCHAIN_PREFIX
 	string
 	default "arm-none-eabi-"

@@ -12,11 +12,14 @@
 #include "distortos/architecture/Stack.hpp"
 
 #include "distortos/architecture/initializeStack.hpp"
-#include "distortos/architecture/parameters.hpp"
 
 #include "distortos/internal/memory/dummyDeleter.hpp"
 
 #include <cstring>
+
+#if CONFIG_ARCHITECTURE_STACK_ALIGNMENT <= 0
+#error "Stack alignment must be greater than 0!"
+#endif	// CONFIG_ARCHITECTURE_STACK_ALIGNMENT <= 0
 
 namespace distortos
 {
@@ -26,6 +29,13 @@ namespace architecture
 
 namespace
 {
+
+/*---------------------------------------------------------------------------------------------------------------------+
+| local objects
++---------------------------------------------------------------------------------------------------------------------*/
+
+/// alignment of stack, bytes
+constexpr size_t stackAlignment {CONFIG_ARCHITECTURE_STACK_ALIGNMENT};
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | local functions' declarations

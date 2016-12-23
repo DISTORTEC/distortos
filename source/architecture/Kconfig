@@ -30,6 +30,10 @@ config ARCHITECTURE_HAS_FPU
 	bool
 	default n
 
+config ARCHITECTURE_STACK_ALIGNMENT
+	int
+	default 1
+
 config ARCHITECTURE_ARM
 	bool
 	default n
