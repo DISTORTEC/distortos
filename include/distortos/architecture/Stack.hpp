@@ -79,6 +79,12 @@ public:
 	~Stack();
 
 	/**
+	 * \return true if "stack guard" contains unmodified sentinel values, false if stack overflowed into "stack guard"
+	 */
+
+	bool checkStackGuard() const;
+
+	/**
 	 * \brief Checks whether stack pointer value is within range of this stack.
 	 *
 	 * \note The "stack guard" area is not a valid range for stack pointer.

@@ -15,7 +15,7 @@
 
 #include "distortos/internal/memory/dummyDeleter.hpp"
 
-#include <cstring>
+#include <algorithm>
 
 #if CONFIG_ARCHITECTURE_STACK_ALIGNMENT <= 0
 #error "Stack alignment must be greater than 0!"
@@ -128,6 +128,16 @@ Stack::Stack(void* const storage, const size_t size) :
 Stack::~Stack()
 {
 
+}
+
+bool Stack::checkStackGuard() const
+{
+	return std::all_of(static_cast<decltype(&stackSentinel)>(adjustedStorage_),
+			static_cast<decltype(&stackSentinel)>(adjustedStorage_) + stackGuardSize_ / sizeof(stackSentinel),
+			[](decltype(stackSentinel)& element)
+			{
+				return element == stackSentinel;
+			});
 }
 
 }	// namespace architecture
