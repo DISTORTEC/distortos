@@ -92,7 +92,7 @@ PROVIDE(__${memoryName}_end = ORIGIN(${memoryName}) + LENGTH(${memoryName}));\n\
 LONG(ADDR(.${memoryName}.data) + SIZEOF(.${memoryName}.data));\n"
 
 	bssArrayEntries="${bssArrayEntries}\
-\t\tLONG(ADDR(.${memoryName}.bss)); LONG(ADDR(.${memoryName}.bss) + SIZEOF(.${memoryName}.bss));\n"
+\t\tLONG(0); LONG(ADDR(.${memoryName}.bss)); LONG(ADDR(.${memoryName}.bss) + SIZEOF(.${memoryName}.bss));\n"
 
 	sectionEntries="${sectionEntries}\
 	.${memoryName}.bss :
@@ -249,9 +249,9 @@ $(printf '%b' "${dataArrayEntries}")
 		. = ALIGN(4);
 		PROVIDE(__bss_array_start = .);
 
-		LONG(ADDR(.bss)); LONG(ADDR(.bss) + SIZEOF(.bss));
-		LONG(ADDR(.main_stack)); LONG(ADDR(.main_stack) + SIZEOF(.main_stack));
-		LONG(ADDR(.process_stack)); LONG(ADDR(.process_stack) + SIZEOF(.process_stack));
+		LONG(0); LONG(ADDR(.bss)); LONG(ADDR(.bss) + SIZEOF(.bss));
+		LONG(0xed419f25); LONG(ADDR(.main_stack)); LONG(ADDR(.main_stack) + SIZEOF(.main_stack));
+		LONG(0xed419f25); LONG(ADDR(.process_stack)); LONG(ADDR(.process_stack) + SIZEOF(.process_stack));
 $(printf '%b' "${bssArrayEntries}")
 
 		. = ALIGN(4);
