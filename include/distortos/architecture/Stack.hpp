@@ -79,7 +79,15 @@ public:
 	~Stack();
 
 	/**
+	 * \return true if "stack guard" contains unmodified sentinel values, false if stack overflowed into "stack guard"
+	 */
+
+	bool checkStackGuard() const;
+
+	/**
 	 * \brief Checks whether stack pointer value is within range of this stack.
+	 *
+	 * \note The "stack guard" area is not a valid range for stack pointer.
 	 *
 	 * \param [in] stackPointer is the value of stack pointer that will be checked
 	 *
@@ -88,7 +96,7 @@ public:
 
 	bool checkStackPointer(void* const stackPointer) const
 	{
-		return stackPointer >= adjustedStorage_ &&
+		return stackPointer >= static_cast<uint8_t*>(adjustedStorage_) + stackGuardSize_ &&
 				stackPointer <= static_cast<uint8_t*>(adjustedStorage_) + adjustedSize_;
 	}
 
@@ -120,6 +128,10 @@ public:
 	Stack& operator=(Stack&&) = delete;
 
 private:
+
+	/// size of "stack guard", bytes
+	constexpr static size_t stackGuardSize_ {(CONFIG_STACK_GUARD_SIZE + CONFIG_ARCHITECTURE_STACK_ALIGNMENT - 1) /
+			CONFIG_ARCHITECTURE_STACK_ALIGNMENT * CONFIG_ARCHITECTURE_STACK_ALIGNMENT};
 
 	/// storage for stack
 	StorageUniquePointer storageUniquePointer_;

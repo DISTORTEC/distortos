@@ -15,7 +15,7 @@
 
 #include "distortos/internal/memory/dummyDeleter.hpp"
 
-#include <cstring>
+#include <algorithm>
 
 #if CONFIG_ARCHITECTURE_STACK_ALIGNMENT <= 0
 #error "Stack alignment must be greater than 0!"
@@ -81,6 +81,7 @@ size_t adjustSize(void* const storage, const size_t size, void* const adjustedSt
  *
  * \param [in] storage is a pointer to stack's storage
  * \param [in] size is the size of stack's storage, bytes
+ * \param [in] stackGuardSize is the size of "stack guard", bytes
  * \param [in] thread is a reference to Thread object passed to function
  * \param [in] run is a reference to Thread's "run" function
  * \param [in] preTerminationHook is a pointer to Thread's pre-termination hook, nullptr to skip
@@ -89,12 +90,13 @@ size_t adjustSize(void* const storage, const size_t size, void* const adjustedSt
  * \return value that can be used as thread's stack pointer, ready for context switching
  */
 
-void* initializeStackProxy(void* const storage, const size_t size, Thread& thread, void (& run)(Thread&),
-		void (* preTerminationHook)(Thread&), void (& terminationHook)(Thread&))
+void* initializeStackProxy(void* const storage, const size_t size, const size_t stackGuardSize, Thread& thread,
+		void (& run)(Thread&), void (* preTerminationHook)(Thread&), void (& terminationHook)(Thread&))
 {
 	std::fill_n(static_cast<std::decay<decltype(stackSentinel)>::type*>(storage), size / sizeof(stackSentinel),
 			stackSentinel);
-	return initializeStack(storage, size, thread, run, preTerminationHook, terminationHook);
+	return initializeStack(static_cast<uint8_t*>(storage) + stackGuardSize,
+			size > stackGuardSize ? size - stackGuardSize : 0, thread, run, preTerminationHook, terminationHook);
 }
 
 }	// namespace
@@ -108,8 +110,8 @@ Stack::Stack(StorageUniquePointer&& storageUniquePointer, const size_t size, Thr
 				storageUniquePointer_{std::move(storageUniquePointer)},
 				adjustedStorage_{adjustStorage(storageUniquePointer_.get(), stackAlignment)},
 				adjustedSize_{adjustSize(storageUniquePointer_.get(), size, adjustedStorage_, stackAlignment)},
-				stackPointer_{initializeStackProxy(adjustedStorage_, adjustedSize_, thread, run, preTerminationHook,
-						terminationHook)}
+				stackPointer_{initializeStackProxy(adjustedStorage_, adjustedSize_, stackGuardSize_, thread, run,
+						preTerminationHook, terminationHook)}
 {
 	/// \todo implement minimal size check
 }
@@ -126,6 +128,16 @@ Stack::Stack(void* const storage, const size_t size) :
 Stack::~Stack()
 {
 
+}
+
+bool Stack::checkStackGuard() const
+{
+	return std::all_of(static_cast<decltype(&stackSentinel)>(adjustedStorage_),
+			static_cast<decltype(&stackSentinel)>(adjustedStorage_) + stackGuardSize_ / sizeof(stackSentinel),
+			[](decltype(stackSentinel)& element)
+			{
+				return element == stackSentinel;
+			});
 }
 
 }	// namespace architecture

@@ -237,7 +237,17 @@ int Scheduler::suspend(const ThreadList::iterator iterator)
 void* Scheduler::switchContext(void* const stackPointer)
 {
 	++contextSwitchCount_;
-	getCurrentThreadControlBlock().getStack().setStackPointer(stackPointer);
+
+	auto& stack = getCurrentThreadControlBlock().getStack();
+
+#ifdef CONFIG_CHECK_STACK_GUARD_ENABLE
+
+	if (stack.checkStackGuard() == false)
+		FATAL_ERROR("Stack overflow detected!");
+
+#endif	// def CONFIG_CHECK_STACK_GUARD_ENABLE
+
+	stack.setStackPointer(stackPointer);
 	currentThreadControlBlock_ = runnableList_.begin();
 	getCurrentThreadControlBlock().switchedToHook();
 	return getCurrentThreadControlBlock().getStack().getStackPointer();
