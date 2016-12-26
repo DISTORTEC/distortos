@@ -37,6 +37,9 @@ namespace
 /// alignment of stack, bytes
 constexpr size_t stackAlignment {CONFIG_ARCHITECTURE_STACK_ALIGNMENT};
 
+/// sentinel used for stack usage/overflow detection
+constexpr uint32_t stackSentinel {0xed419f25};
+
 /*---------------------------------------------------------------------------------------------------------------------+
 | local functions' declarations
 +---------------------------------------------------------------------------------------------------------------------*/
@@ -74,7 +77,7 @@ size_t adjustSize(void* const storage, const size_t size, void* const adjustedSt
 }
 
 /**
- * \brief Proxy for initializeStack() which fills stack with 0 before actually initializing it.
+ * \brief Proxy for initializeStack() which fills stack with stack sentinel before actually initializing it.
  *
  * \param [in] storage is a pointer to stack's storage
  * \param [in] size is the size of stack's storage, bytes
@@ -89,7 +92,8 @@ size_t adjustSize(void* const storage, const size_t size, void* const adjustedSt
 void* initializeStackProxy(void* const storage, const size_t size, Thread& thread, void (& run)(Thread&),
 		void (* preTerminationHook)(Thread&), void (& terminationHook)(Thread&))
 {
-	memset(storage, 0, size);
+	std::fill_n(static_cast<std::decay<decltype(stackSentinel)>::type*>(storage), size / sizeof(stackSentinel),
+			stackSentinel);
 	return initializeStack(storage, size, thread, run, preTerminationHook, terminationHook);
 }
 
