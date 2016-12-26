@@ -166,10 +166,10 @@ OUTPUT_ARCH(arm);
 +---------------------------------------------------------------------------------------------------------------------*/
 
 /* Handler mode (core exceptions / interrupts) can use only main stack */
-PROVIDE(__main_stack_size = ${mainStackSize});
+PROVIDE(__main_stack_size = ALIGN(${mainStackSize}, 8));
 
 /* Thread mode can use main stack (default after reset) or process stack - selected in CONTROL special register */
-PROVIDE(__process_stack_size = ${processStackSize});
+PROVIDE(__process_stack_size = ALIGN(${processStackSize}, 8));
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | available memories
