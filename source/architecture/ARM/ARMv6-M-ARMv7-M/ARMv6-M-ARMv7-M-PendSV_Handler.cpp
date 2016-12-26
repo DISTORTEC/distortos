@@ -40,7 +40,7 @@ namespace
  * \param [in] stackPointer is the current thread's stack pointer value, including the frame which will be stacked
  */
 
-void checkStackPointerWrapper(void* const stackPointer)
+void checkStackPointerWrapper(const void* const stackPointer)
 {
 	if (internal::getScheduler().getCurrentThreadControlBlock().getStack().checkStackPointer(stackPointer) == false)
 		FATAL_ERROR("Stack overflow detected!");
