@@ -136,7 +136,7 @@ extern "C" __attribute__ ((naked)) void PendSV_Handler()
 #else	// __FPU_PRESENT != 1 || __FPU_USED != 1
 			"	sub			r0, r0, #0x20						\n"
 #endif	// __FPU_PRESENT != 1 || __FPU_USED != 1
-			"	bl			%[checkStackPointerWrapper]			\n"	// switch context
+			"	bl			%[checkStackPointerWrapper]			\n"
 			"	pop			{r0, lr}							\n"
 #endif	// def CONFIG_CHECK_STACK_POINTER_RANGE_ENABLE
 #if __FPU_PRESENT == 1 && __FPU_USED == 1
