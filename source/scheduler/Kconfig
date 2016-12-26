@@ -121,5 +121,7 @@ config CHECK_STACK_POINTER_RANGE_ENABLE
 		frame is pushed on thread's stack, but the size of this pending stack
 		frame is accounted for - the intent is to detect a stack overflow which
 		is about to happen, before it can cause (further) data corrution.
+		FATAL_ERROR() will be called if the stack pointer is outside valid
+		range.
 
 endmenu
