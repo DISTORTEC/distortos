@@ -235,7 +235,8 @@ public:
 	/**
 	 * \brief Called by architecture-specific code to do final context switch.
 	 *
-	 * Current task is suspended and the next available task is started.
+	 * Current task is suspended and the next available task is started. This function also checks "stack guard" when
+	 * this functionality is enabled - if the check fails, FATAL_ERROR() is called.
 	 *
 	 * \param [in] stackPointer is the current value of current thread's stack pointer
 	 *
