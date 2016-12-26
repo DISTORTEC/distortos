@@ -84,8 +84,7 @@ Reset_Handler:
 
 #endif	// !def __ARM_ARCH_6M__
 
-	// Zero-init sections from bss_array (including .bss)
-	movs	r0, #0
+	// Initialize sections from bss_array (including .bss)
 	ldr		r3, =__bss_array_start
 	ldr		r4, =__bss_array_end
 
@@ -93,7 +92,7 @@ Reset_Handler:
 
 1:	cmp		r3, r4							// outer loop - addresses from bss_array
 	bhs		4f
-	ldmia	r3!, {r1-r2}					// r1 - start of destination, r2 - end of destination
+	ldmia	r3!, {r0-r2}					// r0 - value, r1 - start of destination, r2 - end of destination
 
 	b		3f
 2:	stmia	r1!, {r0}						// inner loop - section initialization
@@ -108,7 +107,7 @@ Reset_Handler:
 
 1:	cmp		r3, r4							// outer loop - addresses from bss_array
 	ite		lo
-	ldmialo	r3!, {r1-r2}					// r1 - start of destination, r2 - end of destination
+	ldmialo	r3!, {r0-r2}					// r0 - value, r1 - start of destination, r2 - end of destination
 	bhs		3f
 
 2:	cmp		r1, r2							// inner loop - section initialization
