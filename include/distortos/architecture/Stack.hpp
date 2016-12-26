@@ -94,7 +94,7 @@ public:
 	 * \return true if \a stackPointer is within range of this stack, false otherwise
 	 */
 
-	bool checkStackPointer(void* const stackPointer) const
+	bool checkStackPointer(const void* const stackPointer) const
 	{
 		return stackPointer >= static_cast<uint8_t*>(adjustedStorage_) + stackGuardSize_ &&
 				stackPointer <= static_cast<uint8_t*>(adjustedStorage_) + adjustedSize_;
