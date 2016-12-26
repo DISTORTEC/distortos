@@ -66,6 +66,12 @@ public:
 	const StaticThreadBase& operator=(const StaticThreadBase&) = delete;
 	StaticThreadBase& operator=(StaticThreadBase&&) = delete;
 
+protected:
+
+	/// size of "stack guard", bytes
+	constexpr static size_t stackGuardSize_ {(CONFIG_STACK_GUARD_SIZE + CONFIG_ARCHITECTURE_STACK_ALIGNMENT - 1) /
+			CONFIG_ARCHITECTURE_STACK_ALIGNMENT * CONFIG_ARCHITECTURE_STACK_ALIGNMENT};
+
 private:
 
 	/**
@@ -146,7 +152,7 @@ public:
 private:
 
 	/// stack buffer
-	typename std::aligned_storage<StackSize>::type stack_;
+	typename std::aligned_storage<StackSize + Base::stackGuardSize_>::type stack_;
 };
 
 /**
@@ -207,7 +213,7 @@ public:
 private:
 
 	/// stack buffer
-	typename std::aligned_storage<StackSize>::type stack_;
+	typename std::aligned_storage<StackSize + Base::stackGuardSize_>::type stack_;
 
 	/// internal StaticSignalsReceiver object
 	StaticSignalsReceiver<QueuedSignals, SignalActions> staticSignalsReceiver_;
