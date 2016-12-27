@@ -10,8 +10,8 @@
 if CONFIG_CHIP_STM32F0 == "y" then
 
 	local ldScriptGenerator = DISTORTOS_TOP .. "source/architecture/ARM/ARMv6-M-ARMv7-M/ARMv6-M-ARMv7-M.ld.sh"
-	local mainThreadStackSize = CONFIG_MAIN_THREAD_STACK_SIZE +
-			math.ceil(CONFIG_STACK_GUARD_SIZE / CONFIG_ARCHITECTURE_STACK_ALIGNMENT) *
+	local mainThreadStackSize = (math.ceil(CONFIG_MAIN_THREAD_STACK_SIZE / CONFIG_ARCHITECTURE_STACK_ALIGNMENT) +
+			math.ceil(CONFIG_STACK_GUARD_SIZE / CONFIG_ARCHITECTURE_STACK_ALIGNMENT)) *
 			CONFIG_ARCHITECTURE_STACK_ALIGNMENT
 
 	tup.rule(string.format('^ SH %s^ ./%s "%s" "0x%x,%u" "0x%x,%u" "%u" "%u" > "%%o"', ldScriptGenerator,
