@@ -111,7 +111,7 @@ config CHECK_FUNCTION_CONTEXT_ENABLE
 		requirements. If any of them is used from interrupt context,
 		FATAL_ERROR() will be called.
 
-config CHECK_STACK_POINTER_RANGE_ENABLE
+config CHECK_STACK_POINTER_RANGE_CONTEXT_SWITCH_ENABLE
 	bool "Check stack pointer range during context switch"
 	default n
 	help
