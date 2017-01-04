@@ -1,7 +1,7 @@
 #
 # file: Kconfig
 #
-# author: Copyright (C) 2015-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+# author: Copyright (C) 2015-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
 #
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -112,7 +112,7 @@ config CHECK_FUNCTION_CONTEXT_ENABLE
 		FATAL_ERROR() will be called.
 
 config CHECK_STACK_POINTER_RANGE_ENABLE
-	bool "Check stack pointer range"
+	bool "Check stack pointer range during context switch"
 	default n
 	help
 		Simple range checking of preempted thread's stack pointer can be
@@ -125,7 +125,7 @@ config CHECK_STACK_POINTER_RANGE_ENABLE
 		range.
 
 config CHECK_STACK_GUARD_ENABLE
-	bool "Check stack guard contents"
+	bool "Check stack guard contents during context switch"
 	default n
 	help
 		Selecting this option extends stacks for all threads (including main()
