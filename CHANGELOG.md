@@ -17,16 +17,20 @@ other *ARM Cortex-M* cores.
 must not be used from interrupt context (all blocking functions, all `Mutex` functions and all functions from
 `ThisThread` namespace) is checked during run-time. If a violation is detected, `FATAL_ERROR()` is called with
 appropriate message. See help of the new option for more info.
-- "Check stack pointer range" option in *Kconfig* menus. Selecting this option enables simple range checking of
-preempted thread's stack pointer during context switches. Such check is relatively fast, but cannot detect all stack
-overflows. `FATAL_ERROR()` is called with appropriate message when an overflow is detected. Check new option's help
-for more info.
-- "Check stack guard contents" option in *Kconfig* menus. When enabled, this option extends stacks for all threads
-(including `main()` thread) with a "stack guard" at the overflow end. This "stack guard" - just as the whole stack - is
-filled with a sentinel value during thread initialization. During each context switch contents of preempted thread's
-"stack guard" are checked - if any byte has changed, FATAL_ERROR() will be called with appropriate message. This method
-is able to detect stack overflows much more reliably than simple stack pointer range checking and is still sufficiently
-fast, assuming that the size of "stack guard" is reasonable. For more info, check new option's help.
+- "Check stack pointer range during context switch" option in *Kconfig* menus. Selecting this option enables simple
+range checking of preempted thread's stack pointer during context switches. Such check is relatively fast, but cannot
+detect all stack overflows. `FATAL_ERROR()` is called with appropriate message when an overflow is detected. Check new
+option's help for more info.
+- "Check stack guard contents during context switch" option in *Kconfig* menus. When enabled, this option extends stacks
+for all threads (including `main()` thread) with a "stack guard" at the overflow end. This "stack guard" - just as the
+whole stack - is filled with a sentinel value during thread initialization. During each context switch contents of
+preempted thread's "stack guard" are checked - if any byte has changed, FATAL_ERROR() will be called with appropriate
+message. This method is able to detect stack overflows much more reliably than simple stack pointer range checking and
+is still sufficiently fast, assuming that the size of "stack guard" is reasonable. For more info, check new option's
+help.
+- "Check stack pointer range during system tick" and "Check stack guard contents during system tick" options in
+*Kconfig* menus, which are similar to "Check stack pointer range during context switch" and "Check stack guard contents
+during context switch" respectively, but executed during every system tick.
 
 ### Changed
 

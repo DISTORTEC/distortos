@@ -1,7 +1,7 @@
 #
 # file: Kconfig
 #
-# author: Copyright (C) 2015-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+# author: Copyright (C) 2015-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
 #
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -111,8 +111,8 @@ config CHECK_FUNCTION_CONTEXT_ENABLE
 		requirements. If any of them is used from interrupt context,
 		FATAL_ERROR() will be called.
 
-config CHECK_STACK_POINTER_RANGE_ENABLE
-	bool "Check stack pointer range"
+config CHECK_STACK_POINTER_RANGE_CONTEXT_SWITCH_ENABLE
+	bool "Check stack pointer range during context switch"
 	default n
 	help
 		Simple range checking of preempted thread's stack pointer can be
@@ -124,8 +124,15 @@ config CHECK_STACK_POINTER_RANGE_ENABLE
 		FATAL_ERROR() will be called if the stack pointer is outside valid
 		range.
 
-config CHECK_STACK_GUARD_ENABLE
-	bool "Check stack guard contents"
+config CHECK_STACK_POINTER_RANGE_SYSTEM_TICK_ENABLE
+	bool "Check stack pointer range during system tick"
+	default n
+	help
+		Similar to "Check stack pointer range during context switch", but
+		executed during every system tick.
+
+config CHECK_STACK_GUARD_CONTEXT_SWITCH_ENABLE
+	bool "Check stack guard contents during context switch"
 	default n
 	help
 		Selecting this option extends stacks for all threads (including main()
@@ -145,10 +152,18 @@ config CHECK_STACK_GUARD_ENABLE
 		circumventing this detection mechanism. This especially applies to
 		arrays used as buffers.
 
+config CHECK_STACK_GUARD_SYSTEM_TICK_ENABLE
+	bool "Check stack guard contents during system tick"
+	default n
+	help
+		Similar to "Check stack guard contents during context switch", but
+		executed during every system tick.
+
 config STACK_GUARD_SIZE
-	int "Stack guard size, bytes" if CHECK_STACK_GUARD_ENABLE
-	range ARCHITECTURE_STACK_ALIGNMENT 4294967295 if CHECK_STACK_GUARD_ENABLE
-	default 32 if CHECK_STACK_GUARD_ENABLE
+	int "Stack guard size, bytes" if CHECK_STACK_GUARD_CONTEXT_SWITCH_ENABLE || CHECK_STACK_GUARD_SYSTEM_TICK_ENABLE
+	range ARCHITECTURE_STACK_ALIGNMENT 4294967295 if CHECK_STACK_GUARD_CONTEXT_SWITCH_ENABLE || \
+		CHECK_STACK_GUARD_SYSTEM_TICK_ENABLE
+	default 32 if CHECK_STACK_GUARD_CONTEXT_SWITCH_ENABLE || CHECK_STACK_GUARD_SYSTEM_TICK_ENABLE
 	default 0
 	help
 		Size (in bytes) of "stack guard". Any value which is not a multiple of
