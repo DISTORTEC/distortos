@@ -257,6 +257,13 @@ bool Scheduler::tickInterruptHandler()
 {
 	architecture::InterruptMaskingLock interruptMaskingLock;
 
+#ifdef CONFIG_CHECK_STACK_GUARD_SYSTEM_TICK_ENABLE
+
+	if (getCurrentThreadControlBlock().getStack().checkStackGuard() == false)
+		FATAL_ERROR("Stack overflow detected!");
+
+#endif	// def CONFIG_CHECK_STACK_GUARD_SYSTEM_TICK_ENABLE
+
 	++tickCount_;
 
 	getCurrentThreadControlBlock().getRoundRobinQuantum().decrement();
