@@ -41,6 +41,7 @@ potential safety margin for any stack overflows in this thread - as long as heap
 memory below this stack is not used.
 - Stacks are filled with 0xed419f25 instead of 0. Using 0 is not a reliable method to detect stack usage/overflow, as 0
 is very likely to be used in the application (for example to zero-initialize variables).
+- Reduced size of stack for interrupts to 1kB in all test configurations.
 
 ### Fixed
 
