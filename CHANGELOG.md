@@ -28,6 +28,9 @@ preempted thread's "stack guard" are checked - if any byte has changed, FATAL_ER
 message. This method is able to detect stack overflows much more reliably than simple stack pointer range checking and
 is still sufficiently fast, assuming that the size of "stack guard" is reasonable. For more info, check new option's
 help.
+- "Check stack pointer range during system tick" and "Check stack guard contents during system tick" options in
+*Kconfig* menus, which are similar to "Check stack pointer range during context switch" and "Check stack guard contents
+during context switch" respectively, but executed during every system tick.
 
 ### Changed
 
