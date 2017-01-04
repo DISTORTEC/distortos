@@ -124,6 +124,13 @@ config CHECK_STACK_POINTER_RANGE_CONTEXT_SWITCH_ENABLE
 		FATAL_ERROR() will be called if the stack pointer is outside valid
 		range.
 
+config CHECK_STACK_POINTER_RANGE_SYSTEM_TICK_ENABLE
+	bool "Check stack pointer range during system tick"
+	default n
+	help
+		Similar to "Check stack pointer range during context switch", but
+		executed during every system tick.
+
 config CHECK_STACK_GUARD_CONTEXT_SWITCH_ENABLE
 	bool "Check stack guard contents during context switch"
 	default n
@@ -145,10 +152,18 @@ config CHECK_STACK_GUARD_CONTEXT_SWITCH_ENABLE
 		circumventing this detection mechanism. This especially applies to
 		arrays used as buffers.
 
+config CHECK_STACK_GUARD_SYSTEM_TICK_ENABLE
+	bool "Check stack guard contents during system tick"
+	default n
+	help
+		Similar to "Check stack guard contents during context switch", but
+		executed during every system tick.
+
 config STACK_GUARD_SIZE
-	int "Stack guard size, bytes" if CHECK_STACK_GUARD_CONTEXT_SWITCH_ENABLE
-	range ARCHITECTURE_STACK_ALIGNMENT 4294967295 if CHECK_STACK_GUARD_CONTEXT_SWITCH_ENABLE
-	default 32 if CHECK_STACK_GUARD_CONTEXT_SWITCH_ENABLE
+	int "Stack guard size, bytes" if CHECK_STACK_GUARD_CONTEXT_SWITCH_ENABLE || CHECK_STACK_GUARD_SYSTEM_TICK_ENABLE
+	range ARCHITECTURE_STACK_ALIGNMENT 4294967295 if CHECK_STACK_GUARD_CONTEXT_SWITCH_ENABLE || \
+		CHECK_STACK_GUARD_SYSTEM_TICK_ENABLE
+	default 32 if CHECK_STACK_GUARD_CONTEXT_SWITCH_ENABLE || CHECK_STACK_GUARD_SYSTEM_TICK_ENABLE
 	default 0
 	help
 		Size (in bytes) of "stack guard". Any value which is not a multiple of
