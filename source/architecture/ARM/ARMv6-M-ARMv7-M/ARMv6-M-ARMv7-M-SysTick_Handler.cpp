@@ -14,13 +14,13 @@
 
 #include "distortos/architecture/requestContextSwitch.hpp"
 
-#ifdef CONFIG_CHECK_STACK_GUARD_SYSTEM_TICK_ENABLE
+#ifdef CONFIG_CHECK_STACK_POINTER_RANGE_SYSTEM_TICK_ENABLE
 
 #include "distortos/chip/CMSIS-proxy.h"
 
 #include "distortos/FATAL_ERROR.h"
 
-#endif	// def CONFIG_CHECK_STACK_GUARD_SYSTEM_TICK_ENABLE
+#endif	// def CONFIG_CHECK_STACK_POINTER_RANGE_SYSTEM_TICK_ENABLE
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | global functions
@@ -37,13 +37,13 @@ extern "C" void SysTick_Handler()
 {
 	auto& scheduler = distortos::internal::getScheduler();
 
-#ifdef CONFIG_CHECK_STACK_GUARD_SYSTEM_TICK_ENABLE
+#ifdef CONFIG_CHECK_STACK_POINTER_RANGE_SYSTEM_TICK_ENABLE
 
 	const auto stackPointer = reinterpret_cast<const void*>(__get_PSP());
 	if (scheduler.getCurrentThreadControlBlock().getStack().checkStackPointer(stackPointer) == false)
 		FATAL_ERROR("Stack overflow detected!");
 
-#endif	// def CONFIG_CHECK_STACK_GUARD_SYSTEM_TICK_ENABLE
+#endif	// def CONFIG_CHECK_STACK_POINTER_RANGE_SYSTEM_TICK_ENABLE
 
 	const auto contextSwitchRequired = scheduler.tickInterruptHandler();
 	if (contextSwitchRequired == true)
