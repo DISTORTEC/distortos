@@ -2,7 +2,7 @@
  * \file
  * \brief SignalsCatcherControlBlock class implementation
  *
- * \author Copyright (C) 2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2015-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -146,17 +146,18 @@ void deliverSignals()
 					assert(addRet == 0 && "Invalid signal number!");
 				}
 				{
-					// this call may not fail, because SignalsReceiverControlBlock that is used here must support
+					// this call should not fail, because SignalsReceiverControlBlock that is used here must support
 					// catching/handling of signals - otherwise the call to
-					// SignalsReceiverControlBlock::getSignalAction() above would fail
+					// SignalsReceiverControlBlock::getSignalAction() above would fail; no other error is expected, as
+					// signal delivery is not requested
 					const auto setSignalMaskRet = signalsReceiverControlBlock->setSignalMask(newSignalMask, false);
-					assert(setSignalMaskRet == 0 && "Receiver does not support catching of signals!");
+					assert(setSignalMaskRet == 0 && "Setting signal mask failed!");
 				}
 				(*handler)(signalInformation);
 				{
 					// restore previous signal mask
 					const auto setSignalMaskRet = signalsReceiverControlBlock->setSignalMask(signalMask, false);
-					assert(setSignalMaskRet == 0 && "Receiver does not support catching of signals!");
+					assert(setSignalMaskRet == 0 && "Setting signal mask failed!");
 				}
 			}
 		}
@@ -207,9 +208,7 @@ int SignalsCatcherControlBlock::postGenerate(const uint8_t signalNumber, ThreadC
 	if (getAssociationResult.second.getHandler() == SignalAction{}.getHandler())	// default handler?
 		return 0;	// ignore signal
 
-	requestDeliveryOfSignals(threadControlBlock);
-
-	return 0;
+	return requestDeliveryOfSignals(threadControlBlock);
 }
 
 std::pair<int, SignalAction> SignalsCatcherControlBlock::setAssociation(const uint8_t signalNumber,
@@ -259,21 +258,21 @@ std::pair<int, SignalAction> SignalsCatcherControlBlock::setAssociation(const ui
 	return {{}, previousSignalAction};
 }
 
-void SignalsCatcherControlBlock::setSignalMask(const SignalSet signalMask,
+int SignalsCatcherControlBlock::setSignalMask(const SignalSet signalMask,
 		const SignalsReceiverControlBlock* const owner)
 {
 	signalMask_ = signalMask;
 
 	if (owner == nullptr)	// delivery of signals should not be requested if any pending signal is unblocked?
-		return;
+		return 0;
 
 	architecture::InterruptMaskingLock interruptMaskingLock;
 
 	const auto pendingUnblockedBitset = owner->getPendingSignalSet().getBitset() & ~signalMask.getBitset();
 	if (pendingUnblockedBitset.none() == true)	// no pending & unblocked signals?
-		return;
+		return 0;
 
-	requestDeliveryOfSignals(getScheduler().getCurrentThreadControlBlock());
+	return requestDeliveryOfSignals(getScheduler().getCurrentThreadControlBlock());
 }
 
 /*---------------------------------------------------------------------------------------------------------------------+
@@ -307,18 +306,25 @@ SignalAction SignalsCatcherControlBlock::clearAssociation(const uint8_t signalNu
 	return previousSignalAction;
 }
 
-void SignalsCatcherControlBlock::requestDeliveryOfSignals(ThreadControlBlock& threadControlBlock)
+int SignalsCatcherControlBlock::requestDeliveryOfSignals(ThreadControlBlock& threadControlBlock)
 {
 	if (deliveryIsPending_ == false)
 	{
 		deliveryIsPending_ = true;
-		architecture::requestFunctionExecution(threadControlBlock, deliverSignals);
+		const auto ret = architecture::requestFunctionExecution(threadControlBlock, deliverSignals);
+		if (ret != 0)
+		{
+			deliveryIsPending_ = false;
+			return ret;
+		}
 	}
 
 	const auto state = threadControlBlock.getState();
 	// is thread blocked (not "runnable" and can be unblocked)?
 	if (state != decltype(state)::created && state != decltype(state)::runnable && state != decltype(state)::terminated)
 		getScheduler().unblock(ThreadList::iterator{threadControlBlock}, ThreadControlBlock::UnblockReason::signal);
+
+	return 0;
 }
 
 }	// namespace internal

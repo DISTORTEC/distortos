@@ -2,7 +2,7 @@
  * \file
  * \brief requestFunctionExecution() implementation for ARMv6-M and ARMv7-M
  *
- * \author Copyright (C) 2015-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2015-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -25,6 +25,7 @@
 #include "distortos/internal/scheduler/Scheduler.hpp"
 #include "distortos/internal/scheduler/getScheduler.hpp"
 
+#include <cerrno>
 #include <cstring>
 
 namespace distortos
@@ -198,10 +199,14 @@ void fromCurrentThreadToCurrentThread(void (& function)())
 /**
  * \brief Handles request coming from interrupt context to execute provided function in current thread.
  *
+ * \param [in] threadControlBlock is a reference to ThreadControlBlock of current thread
  * \param [in] function is a reference to function that should be executed in current thread
+ *
+ * \return 0 on success, error code otherwise:
+ * - ENOMEM - amount of free stack is too small to request function execution;
  */
 
-void fromInterruptToCurrentThread(void (& function)())
+int fromInterruptToCurrentThread(internal::ThreadControlBlock& threadControlBlock, void (& function)())
 {
 	const auto stackPointer = __get_PSP();
 
@@ -210,6 +215,17 @@ void fromInterruptToCurrentThread(void (& function)())
 	// it's not possible to know whether the thread has active FPU context, so the only option is to assume it does
 	const auto exceptionFpuStackFrame = reinterpret_cast<ExceptionFpuStackFrame*>(stackPointer) - 1;
 	const auto exceptionStackFrame = &exceptionFpuStackFrame->exceptionStackFrame;
+
+#else	// __FPU_PRESENT != 1 || __FPU_USED != 1
+
+	const auto exceptionStackFrame = reinterpret_cast<ExceptionStackFrame*>(stackPointer) - 1;
+
+#endif	// __FPU_PRESENT != 1 || __FPU_USED != 1
+
+	if (threadControlBlock.getStack().checkStackPointer(exceptionStackFrame) == false)
+		return ENOMEM;
+
+#if __FPU_PRESENT == 1 && __FPU_USED == 1
 
 	const auto fpccr = FPU->FPCCR;
 	// last FPU stack frame was allocated in thread mode and the stacking is still pending?
@@ -221,10 +237,6 @@ void fromInterruptToCurrentThread(void (& function)())
 
 	memset(exceptionFpuStackFrame, 0, sizeof(*exceptionFpuStackFrame));
 	exceptionFpuStackFrame->fpscr = reinterpret_cast<void*>(FPU->FPDSCR);
-
-#else	// __FPU_PRESENT != 1 || __FPU_USED != 1
-
-	const auto exceptionStackFrame = reinterpret_cast<ExceptionStackFrame*>(stackPointer) - 1;
 
 #endif	// __FPU_PRESENT != 1 || __FPU_USED != 1
 
@@ -238,6 +250,7 @@ void fromInterruptToCurrentThread(void (& function)())
 	exceptionStackFrame->xpsr = reinterpret_cast<void*>(ExceptionStackFrame::defaultXpsr);
 
 	__set_PSP(reinterpret_cast<uint32_t>(exceptionStackFrame));
+	return 0;
 }
 
 /**
@@ -247,12 +260,18 @@ void fromInterruptToCurrentThread(void (& function)())
  * be executed
  * \param [in] function is a reference to function that should be executed in thread associated with
  * \a threadControlBlock
+ *
+ * \return 0 on success, error code otherwise:
+ * - ENOMEM - amount of free stack is too small to request function execution;
  */
 
-void toNonCurrentThread(internal::ThreadControlBlock& threadControlBlock, void (& function)())
+int toNonCurrentThread(internal::ThreadControlBlock& threadControlBlock, void (& function)())
 {
-	const auto stackPointer = threadControlBlock.getStack().getStackPointer();
+	auto& stack = threadControlBlock.getStack();
+	const auto stackPointer = stack.getStackPointer();
 	const auto stackFrame = reinterpret_cast<StackFrame*>(stackPointer) - 1;
+	if (stack.checkStackPointer(stackFrame) == false)
+		return ENOMEM;
 
 	stackFrame->softwareStackFrame.r4 = reinterpret_cast<void*>(0x44444444);
 	stackFrame->softwareStackFrame.r5 = reinterpret_cast<void*>(0x55555555);
@@ -276,7 +295,8 @@ void toNonCurrentThread(internal::ThreadControlBlock& threadControlBlock, void (
 	stackFrame->exceptionStackFrame.pc = reinterpret_cast<void*>(&functionTrampoline);
 	stackFrame->exceptionStackFrame.xpsr = reinterpret_cast<void*>(ExceptionStackFrame::defaultXpsr);
 
-	threadControlBlock.getStack().setStackPointer(stackFrame);
+	stack.setStackPointer(stackFrame);
+	return 0;
 }
 
 }	// namespace
@@ -285,18 +305,17 @@ void toNonCurrentThread(internal::ThreadControlBlock& threadControlBlock, void (
 | global functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-void requestFunctionExecution(internal::ThreadControlBlock& threadControlBlock, void (& function)())
+int requestFunctionExecution(internal::ThreadControlBlock& threadControlBlock, void (& function)())
 {
 	const auto& currentThreadControlBlock = internal::getScheduler().getCurrentThreadControlBlock();
-	if (&threadControlBlock == &currentThreadControlBlock)	// request to current thread?
-	{
-		if (isInInterruptContext() == false)	// current thread is sending the request to itself?
-			fromCurrentThreadToCurrentThread(function);
-		else						// interrupt is sending the request to current thread?
-			fromInterruptToCurrentThread(function);
-	}
-	else	// request to non-current thread
-		toNonCurrentThread(threadControlBlock, function);
+	if (&threadControlBlock != &currentThreadControlBlock)	// request to non-current thread?
+		return toNonCurrentThread(threadControlBlock, function);
+
+	if (isInInterruptContext() == true)	// interrupt is sending the request to current thread?
+		return fromInterruptToCurrentThread(threadControlBlock, function);
+
+	fromCurrentThreadToCurrentThread(function);	// current thread is sending the request to itself
+	return 0;
 }
 
 }	// namespace architecture

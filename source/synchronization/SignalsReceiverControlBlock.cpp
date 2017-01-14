@@ -2,7 +2,7 @@
  * \file
  * \brief SignalsReceiverControlBlock class implementation
  *
- * \author Copyright (C) 2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2015-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -160,8 +160,7 @@ int SignalsReceiverControlBlock::setSignalMask(const SignalSet signalMask, const
 	if (signalsCatcherControlBlock_ == nullptr)
 		return ENOTSUP;
 
-	signalsCatcherControlBlock_->setSignalMask(signalMask, requestDelivery == true ? this : nullptr);
-	return 0;
+	return signalsCatcherControlBlock_->setSignalMask(signalMask, requestDelivery == true ? this : nullptr);
 }
 
 /*---------------------------------------------------------------------------------------------------------------------+

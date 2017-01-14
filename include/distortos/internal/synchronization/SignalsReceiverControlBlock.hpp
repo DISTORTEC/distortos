@@ -2,7 +2,7 @@
  * \file
  * \brief SignalsReceiverControlBlock class header
  *
- * \author Copyright (C) 2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2015-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -91,6 +91,7 @@ public:
 	 *
 	 * \return 0 on success, error code otherwise:
 	 * - EINVAL - \a signalNumber value is invalid;
+	 * - ENOMEM - amount of free stack is too small to request delivery of signals;
 	 */
 
 	int generateSignal(uint8_t signalNumber, ThreadControlBlock& threadControlBlock);
@@ -143,6 +144,7 @@ public:
 	 * - EAGAIN - no resources are available to queue the signal, maximal number of signals is already queued in
 	 * associated SignalInformationQueue object;
 	 * - EINVAL - \a signalNumber value is invalid;
+	 * - ENOMEM - amount of free stack is too small to request delivery of signals;
 	 * - ENOTSUP - queuing of signals is disabled for this receiver;
 	 */
 
@@ -177,6 +179,7 @@ public:
 	 * unblocked (true) or not (false)
 	 *
 	 * \return 0 on success, error code otherwise:
+	 * - ENOMEM - amount of free stack is too small to request delivery of signals;
 	 * - ENOTSUP - catching/handling of signals is disabled for this receiver;
 	 */
 
@@ -219,6 +222,7 @@ private:
 	 *
 	 * \return 0 on success, error code otherwise:
 	 * - EINVAL - \a signalNumber value is invalid;
+	 * - ENOMEM - amount of free stack is too small to request delivery of signals;
 	 */
 
 	int postGenerate(uint8_t signalNumber, ThreadControlBlock& threadControlBlock) const;
