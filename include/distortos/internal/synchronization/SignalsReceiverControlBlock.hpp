@@ -179,6 +179,7 @@ public:
 	 * unblocked (true) or not (false)
 	 *
 	 * \return 0 on success, error code otherwise:
+	 * - ENOMEM - amount of free stack is too small to request delivery of signals;
 	 * - ENOTSUP - catching/handling of signals is disabled for this receiver;
 	 */
 
