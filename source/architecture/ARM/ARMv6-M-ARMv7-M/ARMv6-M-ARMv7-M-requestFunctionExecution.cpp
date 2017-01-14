@@ -199,10 +199,11 @@ void fromCurrentThreadToCurrentThread(void (& function)())
 /**
  * \brief Handles request coming from interrupt context to execute provided function in current thread.
  *
+ * \param [in] threadControlBlock is a reference to ThreadControlBlock of current thread
  * \param [in] function is a reference to function that should be executed in current thread
  */
 
-void fromInterruptToCurrentThread(void (& function)())
+void fromInterruptToCurrentThread(internal::ThreadControlBlock&, void (& function)())
 {
 	const auto stackPointer = __get_PSP();
 
@@ -301,7 +302,7 @@ void requestFunctionExecution(internal::ThreadControlBlock& threadControlBlock, 
 		if (isInInterruptContext() == false)	// current thread is sending the request to itself?
 			fromCurrentThreadToCurrentThread(function);
 		else						// interrupt is sending the request to current thread?
-			fromInterruptToCurrentThread(function);
+			fromInterruptToCurrentThread(threadControlBlock, function);
 	}
 	else	// request to non-current thread
 		toNonCurrentThread(threadControlBlock, function);
