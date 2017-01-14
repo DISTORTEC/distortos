@@ -110,10 +110,10 @@ public:
 	 * \param [in] signalNumber is the signal that will be generated, [0; 31]
 	 *
 	 * \return 0 on success, error code otherwise:
+	 * - EINVAL - internal thread object was detached;
 	 * - EINVAL - \a signalNumber value is invalid;
 	 * - ENOMEM - amount of free stack is too small to request delivery of signals;
 	 * - ENOTSUP - reception of signals is disabled for this thread;
-	 * - EINVAL - internal thread object was detached;
 	 *
 	 * \ingroup signals
 	 */
