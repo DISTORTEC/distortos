@@ -144,6 +144,7 @@ public:
 	 * - EAGAIN - no resources are available to queue the signal, maximal number of signals is already queued in
 	 * associated SignalInformationQueue object;
 	 * - EINVAL - \a signalNumber value is invalid;
+	 * - ENOMEM - amount of free stack is too small to request delivery of signals;
 	 * - ENOTSUP - queuing of signals is disabled for this receiver;
 	 */
 
