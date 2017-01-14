@@ -195,6 +195,7 @@ public:
 	 * - EAGAIN - no resources are available to queue the signal, maximal number of signals is already queued in
 	 * associated queue of SignalInformation objects;
 	 * - EINVAL - \a signalNumber value is invalid;
+	 * - ENOMEM - amount of free stack is too small to request delivery of signals;
 	 * - ENOTSUP - reception or queuing of signals are disabled for this thread;
 	 * - EINVAL - internal thread object was detached;
 	 *
