@@ -146,17 +146,18 @@ void deliverSignals()
 					assert(addRet == 0 && "Invalid signal number!");
 				}
 				{
-					// this call may not fail, because SignalsReceiverControlBlock that is used here must support
+					// this call should not fail, because SignalsReceiverControlBlock that is used here must support
 					// catching/handling of signals - otherwise the call to
-					// SignalsReceiverControlBlock::getSignalAction() above would fail
+					// SignalsReceiverControlBlock::getSignalAction() above would fail; no other error is expected, as
+					// signal delivery is not requested
 					const auto setSignalMaskRet = signalsReceiverControlBlock->setSignalMask(newSignalMask, false);
-					assert(setSignalMaskRet == 0 && "Receiver does not support catching of signals!");
+					assert(setSignalMaskRet == 0 && "Setting signal mask failed!");
 				}
 				(*handler)(signalInformation);
 				{
 					// restore previous signal mask
 					const auto setSignalMaskRet = signalsReceiverControlBlock->setSignalMask(signalMask, false);
-					assert(setSignalMaskRet == 0 && "Receiver does not support catching of signals!");
+					assert(setSignalMaskRet == 0 && "Setting signal mask failed!");
 				}
 			}
 		}
