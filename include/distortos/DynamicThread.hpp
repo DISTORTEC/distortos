@@ -2,7 +2,7 @@
  * \file
  * \brief DynamicThread class header
  *
- * \author Copyright (C) 2015-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2015-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -111,6 +111,7 @@ public:
 	 *
 	 * \return 0 on success, error code otherwise:
 	 * - EINVAL - \a signalNumber value is invalid;
+	 * - ENOMEM - amount of free stack is too small to request delivery of signals;
 	 * - ENOTSUP - reception of signals is disabled for this thread;
 	 * - EINVAL - internal thread object was detached;
 	 *
