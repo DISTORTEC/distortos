@@ -2,7 +2,7 @@
  * \file
  * \brief SignalsCatcherControlBlock class implementation
  *
- * \author Copyright (C) 2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2015-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -307,18 +307,25 @@ SignalAction SignalsCatcherControlBlock::clearAssociation(const uint8_t signalNu
 	return previousSignalAction;
 }
 
-void SignalsCatcherControlBlock::requestDeliveryOfSignals(ThreadControlBlock& threadControlBlock)
+int SignalsCatcherControlBlock::requestDeliveryOfSignals(ThreadControlBlock& threadControlBlock)
 {
 	if (deliveryIsPending_ == false)
 	{
 		deliveryIsPending_ = true;
-		architecture::requestFunctionExecution(threadControlBlock, deliverSignals);
+		const auto ret = architecture::requestFunctionExecution(threadControlBlock, deliverSignals);
+		if (ret != 0)
+		{
+			deliveryIsPending_ = false;
+			return ret;
+		}
 	}
 
 	const auto state = threadControlBlock.getState();
 	// is thread blocked (not "runnable" and can be unblocked)?
 	if (state != decltype(state)::created && state != decltype(state)::runnable && state != decltype(state)::terminated)
 		getScheduler().unblock(ThreadList::iterator{threadControlBlock}, ThreadControlBlock::UnblockReason::signal);
+
+	return 0;
 }
 
 }	// namespace internal

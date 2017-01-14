@@ -2,7 +2,7 @@
  * \file
  * \brief SignalsCatcherControlBlock class header
  *
- * \author Copyright (C) 2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2015-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -179,9 +179,12 @@ private:
 	 * already pending. The thread is unblocked if it was blocked.
 	 *
 	 * \param [in] threadControlBlock is a reference to associated ThreadControlBlock
+	 *
+	 * \return 0 on success, error code otherwise:
+	 * - ENOMEM - amount of free stack is too small to request delivery of signals;
 	 */
 
-	void requestDeliveryOfSignals(ThreadControlBlock& threadControlBlock);
+	int requestDeliveryOfSignals(ThreadControlBlock& threadControlBlock);
 
 	/// storage for Association objects
 	StorageUniquePointer storageUniquePointer_;
