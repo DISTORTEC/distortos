@@ -150,6 +150,7 @@ std::pair<int, SignalAction> setSignalAction(uint8_t signalNumber, const SignalA
  * \param [in] signalMask is the SignalSet with new signal mask for current thread
  *
  * \return 0 on success, error code otherwise:
+ * - ENOMEM - amount of free stack is too small to request delivery of signals;
  * - ENOTSUP - reception or catching/handling of signals are disabled for current thread;
  */
 
