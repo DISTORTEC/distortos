@@ -201,9 +201,12 @@ void fromCurrentThreadToCurrentThread(void (& function)())
  *
  * \param [in] threadControlBlock is a reference to ThreadControlBlock of current thread
  * \param [in] function is a reference to function that should be executed in current thread
+ *
+ * \return 0 on success, error code otherwise:
+ * - ENOMEM - amount of free stack is too small to request function execution;
  */
 
-void fromInterruptToCurrentThread(internal::ThreadControlBlock&, void (& function)())
+int fromInterruptToCurrentThread(internal::ThreadControlBlock& threadControlBlock, void (& function)())
 {
 	const auto stackPointer = __get_PSP();
 
@@ -218,6 +221,9 @@ void fromInterruptToCurrentThread(internal::ThreadControlBlock&, void (& functio
 	const auto exceptionStackFrame = reinterpret_cast<ExceptionStackFrame*>(stackPointer) - 1;
 
 #endif	// __FPU_PRESENT != 1 || __FPU_USED != 1
+
+	if (threadControlBlock.getStack().checkStackPointer(exceptionStackFrame) == false)
+		return ENOMEM;
 
 #if __FPU_PRESENT == 1 && __FPU_USED == 1
 
@@ -244,6 +250,7 @@ void fromInterruptToCurrentThread(internal::ThreadControlBlock&, void (& functio
 	exceptionStackFrame->xpsr = reinterpret_cast<void*>(ExceptionStackFrame::defaultXpsr);
 
 	__set_PSP(reinterpret_cast<uint32_t>(exceptionStackFrame));
+	return 0;
 }
 
 /**
