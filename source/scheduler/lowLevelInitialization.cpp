@@ -2,7 +2,7 @@
  * \file
  * \brief internal::lowLevelInitialization() definition
  *
- * \author Copyright (C) 2014-2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -39,7 +39,7 @@ namespace
 
 /// size of idle thread's stack, bytes
 #ifdef CONFIG_THREAD_DETACH_ENABLE
-constexpr size_t idleThreadStackSize {512};
+constexpr size_t idleThreadStackSize {256};
 #else	// !def CONFIG_THREAD_DETACH_ENABLE
 constexpr size_t idleThreadStackSize {128};
 #endif	// !def CONFIG_THREAD_DETACH_ENABLE

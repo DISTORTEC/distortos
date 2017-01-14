@@ -43,6 +43,7 @@ memory below this stack is not used.
 is very likely to be used in the application (for example to zero-initialize variables).
 - Reduced default size of stack for interrupts to 1kB.
 - Reduced size of stack for interrupts to 1kB in all test configurations.
+- Reduced size of stack for idle thread to 256 bytes when support for thread detachment is enabled.
 
 ### Fixed
 
