@@ -207,9 +207,7 @@ int SignalsCatcherControlBlock::postGenerate(const uint8_t signalNumber, ThreadC
 	if (getAssociationResult.second.getHandler() == SignalAction{}.getHandler())	// default handler?
 		return 0;	// ignore signal
 
-	requestDeliveryOfSignals(threadControlBlock);
-
-	return 0;
+	return requestDeliveryOfSignals(threadControlBlock);
 }
 
 std::pair<int, SignalAction> SignalsCatcherControlBlock::setAssociation(const uint8_t signalNumber,
