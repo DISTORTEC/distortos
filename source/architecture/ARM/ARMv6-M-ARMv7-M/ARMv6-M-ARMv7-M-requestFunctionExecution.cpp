@@ -2,7 +2,7 @@
  * \file
  * \brief requestFunctionExecution() implementation for ARMv6-M and ARMv7-M
  *
- * \author Copyright (C) 2015-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2015-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -25,6 +25,7 @@
 #include "distortos/internal/scheduler/Scheduler.hpp"
 #include "distortos/internal/scheduler/getScheduler.hpp"
 
+#include <cerrno>
 #include <cstring>
 
 namespace distortos
@@ -247,12 +248,18 @@ void fromInterruptToCurrentThread(void (& function)())
  * be executed
  * \param [in] function is a reference to function that should be executed in thread associated with
  * \a threadControlBlock
+ *
+ * \return 0 on success, error code otherwise:
+ * - ENOMEM - amount of free stack is too small to request function execution;
  */
 
-void toNonCurrentThread(internal::ThreadControlBlock& threadControlBlock, void (& function)())
+int toNonCurrentThread(internal::ThreadControlBlock& threadControlBlock, void (& function)())
 {
-	const auto stackPointer = threadControlBlock.getStack().getStackPointer();
+	auto& stack = threadControlBlock.getStack();
+	const auto stackPointer = stack.getStackPointer();
 	const auto stackFrame = reinterpret_cast<StackFrame*>(stackPointer) - 1;
+	if (stack.checkStackPointer(stackFrame) == false)
+		return ENOMEM;
 
 	stackFrame->softwareStackFrame.r4 = reinterpret_cast<void*>(0x44444444);
 	stackFrame->softwareStackFrame.r5 = reinterpret_cast<void*>(0x55555555);
@@ -276,7 +283,8 @@ void toNonCurrentThread(internal::ThreadControlBlock& threadControlBlock, void (
 	stackFrame->exceptionStackFrame.pc = reinterpret_cast<void*>(&functionTrampoline);
 	stackFrame->exceptionStackFrame.xpsr = reinterpret_cast<void*>(ExceptionStackFrame::defaultXpsr);
 
-	threadControlBlock.getStack().setStackPointer(stackFrame);
+	stack.setStackPointer(stackFrame);
+	return 0;
 }
 
 }	// namespace
