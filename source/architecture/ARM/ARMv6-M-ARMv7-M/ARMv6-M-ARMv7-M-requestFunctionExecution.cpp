@@ -305,23 +305,17 @@ int toNonCurrentThread(internal::ThreadControlBlock& threadControlBlock, void (&
 | global functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-void requestFunctionExecution(internal::ThreadControlBlock& threadControlBlock, void (& function)())
+int requestFunctionExecution(internal::ThreadControlBlock& threadControlBlock, void (& function)())
 {
 	const auto& currentThreadControlBlock = internal::getScheduler().getCurrentThreadControlBlock();
 	if (&threadControlBlock != &currentThreadControlBlock)	// request to non-current thread?
-	{
-		toNonCurrentThread(threadControlBlock, function);
-		return;
-	}
+		return toNonCurrentThread(threadControlBlock, function);
 
 	if (isInInterruptContext() == true)	// interrupt is sending the request to current thread?
-	{
-		fromInterruptToCurrentThread(threadControlBlock, function);
-		return;
-	}
+		return fromInterruptToCurrentThread(threadControlBlock, function);
 
 	fromCurrentThreadToCurrentThread(function);	// current thread is sending the request to itself
-	return;
+	return 0;
 }
 
 }	// namespace architecture

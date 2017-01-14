@@ -2,7 +2,7 @@
  * \file
  * \brief requestFunctionExecution() declaration
  *
- * \author Copyright (C) 2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2015-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -42,9 +42,12 @@ namespace architecture
  * be executed
  * \param [in] function is a reference to function that should be executed in thread associated with
  * \a threadControlBlock
+ *
+ * \return 0 on success, error code otherwise:
+ * - ENOMEM - amount of free stack is too small to request function execution;
  */
 
-void requestFunctionExecution(internal::ThreadControlBlock& threadControlBlock, void (& function)());
+int requestFunctionExecution(internal::ThreadControlBlock& threadControlBlock, void (& function)());
 
 }	// namespace architecture
 
