@@ -213,6 +213,14 @@ void fromInterruptToCurrentThread(internal::ThreadControlBlock&, void (& functio
 	const auto exceptionFpuStackFrame = reinterpret_cast<ExceptionFpuStackFrame*>(stackPointer) - 1;
 	const auto exceptionStackFrame = &exceptionFpuStackFrame->exceptionStackFrame;
 
+#else	// __FPU_PRESENT != 1 || __FPU_USED != 1
+
+	const auto exceptionStackFrame = reinterpret_cast<ExceptionStackFrame*>(stackPointer) - 1;
+
+#endif	// __FPU_PRESENT != 1 || __FPU_USED != 1
+
+#if __FPU_PRESENT == 1 && __FPU_USED == 1
+
 	const auto fpccr = FPU->FPCCR;
 	// last FPU stack frame was allocated in thread mode and the stacking is still pending?
 	// this condition will be false in following situations:
@@ -223,10 +231,6 @@ void fromInterruptToCurrentThread(internal::ThreadControlBlock&, void (& functio
 
 	memset(exceptionFpuStackFrame, 0, sizeof(*exceptionFpuStackFrame));
 	exceptionFpuStackFrame->fpscr = reinterpret_cast<void*>(FPU->FPDSCR);
-
-#else	// __FPU_PRESENT != 1 || __FPU_USED != 1
-
-	const auto exceptionStackFrame = reinterpret_cast<ExceptionStackFrame*>(stackPointer) - 1;
 
 #endif	// __FPU_PRESENT != 1 || __FPU_USED != 1
 
