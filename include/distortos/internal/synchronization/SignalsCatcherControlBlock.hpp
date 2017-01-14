@@ -130,9 +130,12 @@ public:
 	 * \param [in] signalMask is the SignalSet with new signal mask for associated thread
 	 * \param [in] owner selects whether delivery of signals will be requested if any pending signal is unblocked
 	 * (pointer to owner SignalsReceiverControlBlock object) or not (nullptr)
+	 *
+	 * \return 0 on success, error code otherwise:
+	 * - ENOMEM - amount of free stack is too small to request delivery of signals;
 	 */
 
-	void setSignalMask(SignalSet signalMask, const SignalsReceiverControlBlock* owner);
+	int setSignalMask(SignalSet signalMask, const SignalsReceiverControlBlock* owner);
 
 	SignalsCatcherControlBlock(const SignalsCatcherControlBlock&) = delete;
 	SignalsCatcherControlBlock(SignalsCatcherControlBlock&&) = default;
