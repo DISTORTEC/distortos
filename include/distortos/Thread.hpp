@@ -2,7 +2,7 @@
  * \file
  * \brief Thread class header
  *
- * \author Copyright (C) 2014-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -109,6 +109,12 @@ public:
 	 */
 
 	virtual SchedulingPolicy getSchedulingPolicy() const = 0;
+
+	/**
+	 * \return size of thread's stack, bytes
+	 */
+
+	virtual size_t getStackSize() const = 0;
 
 	/**
 	 * \return current state of thread

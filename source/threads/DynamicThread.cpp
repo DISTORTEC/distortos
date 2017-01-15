@@ -2,7 +2,7 @@
  * \file
  * \brief DynamicThread class implementation
  *
- * \author Copyright (C) 2015-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2015-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -105,6 +105,16 @@ SchedulingPolicy DynamicThread::getSchedulingPolicy() const
 		return {};
 
 	return detachableThread_->getSchedulingPolicy();
+}
+
+size_t DynamicThread::getStackSize() const
+{
+	architecture::InterruptMaskingLock interruptMaskingLock;
+
+	if (detachableThread_ == nullptr)
+		return {};
+
+	return detachableThread_->getStackSize();
 }
 
 ThreadState DynamicThread::getState() const
