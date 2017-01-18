@@ -2,7 +2,7 @@
  * \file
  * \brief Stack class header
  *
- * \author Copyright (C) 2014-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -98,6 +98,21 @@ public:
 	{
 		return stackPointer >= static_cast<uint8_t*>(adjustedStorage_) + stackGuardSize_ &&
 				stackPointer <= static_cast<uint8_t*>(adjustedStorage_) + adjustedSize_;
+	}
+
+	/**
+	 * \return stack's "high water mark" (max usage), excluding "stack guard", bytes
+	 */
+
+	size_t getHighWaterMark() const;
+
+	/**
+	 * \return adjusted size of stack's storage, excluding "stack guard", bytes
+	 */
+
+	size_t getSize() const
+	{
+		return adjustedSize_ - stackGuardSize_;
 	}
 
 	/**
