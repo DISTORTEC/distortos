@@ -74,6 +74,14 @@ uint8_t getPriority();
 /**
  * \warning This function must not be called from interrupt context!
  *
+ * \return "high water mark" (max usage) of thread's stack, bytes
+ */
+
+size_t getStackHighWaterMark();
+
+/**
+ * \warning This function must not be called from interrupt context!
+ *
  * \return size of calling (current) thread's stack, bytes
  */
 

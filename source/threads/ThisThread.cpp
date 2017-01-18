@@ -60,6 +60,11 @@ uint8_t getPriority()
 	return internal::getScheduler().getCurrentThreadControlBlock().getPriority();
 }
 
+size_t getStackHighWaterMark()
+{
+	return get().getStackHighWaterMark();
+}
+
 size_t getStackSize()
 {
 	return get().getStackSize();
