@@ -2,7 +2,7 @@
  * \file
  * \brief Stack class implementation
  *
- * \author Copyright (C) 2014-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -138,6 +138,19 @@ bool Stack::checkStackGuard() const
 			{
 				return element == stackSentinel;
 			});
+}
+
+size_t Stack::getHighWaterMark() const
+{
+	const auto begin =
+			static_cast<decltype(&stackSentinel)>(adjustedStorage_) + stackGuardSize_ / sizeof(stackSentinel);
+	const auto end = static_cast<decltype(&stackSentinel)>(adjustedStorage_) + adjustedSize_ / sizeof(stackSentinel);
+	const auto usedElement = std::find_if_not(begin, end,
+			[](decltype(stackSentinel)& element) -> bool
+			{
+				return element == stackSentinel;
+			});
+	return (end - usedElement) * sizeof(*begin);
 }
 
 }	// namespace architecture

@@ -101,6 +101,12 @@ public:
 	}
 
 	/**
+	 * \return stack's "high water mark" (max usage), excluding "stack guard", bytes
+	 */
+
+	size_t getHighWaterMark() const;
+
+	/**
 	 * \return adjusted size of stack's storage, excluding "stack guard", bytes
 	 */
 
