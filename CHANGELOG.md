@@ -31,6 +31,9 @@ help.
 - "Check stack pointer range during system tick" and "Check stack guard contents during system tick" options in
 *Kconfig* menus, which are similar to "Check stack pointer range during context switch" and "Check stack guard contents
 during context switch" respectively, but executed during every system tick.
+- `Thread::getStackSize()` and `ThisThread::getStackSize()` which can be used to get thread's stack size.
+- `Thread::getStackHighWaterMark()` and `ThisThread::getStackHighWaterMark()` which can be used to get "high water mark"
+(max usage) of thread's stack.
 
 ### Changed
 
