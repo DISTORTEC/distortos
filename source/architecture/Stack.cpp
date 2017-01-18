@@ -134,7 +134,7 @@ bool Stack::checkStackGuard() const
 {
 	return std::all_of(static_cast<decltype(&stackSentinel)>(adjustedStorage_),
 			static_cast<decltype(&stackSentinel)>(adjustedStorage_) + stackGuardSize_ / sizeof(stackSentinel),
-			[](decltype(stackSentinel)& element)
+			[](decltype(stackSentinel)& element) -> bool
 			{
 				return element == stackSentinel;
 			});
