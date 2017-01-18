@@ -78,6 +78,11 @@ SchedulingPolicy ThreadCommon::getSchedulingPolicy() const
 	return getThreadControlBlock().getSchedulingPolicy();
 }
 
+size_t ThreadCommon::getStackHighWaterMark() const
+{
+	return getThreadControlBlock().getStack().getHighWaterMark();
+}
+
 size_t ThreadCommon::getStackSize() const
 {
 	return getThreadControlBlock().getStack().getSize();

@@ -111,6 +111,12 @@ public:
 	virtual SchedulingPolicy getSchedulingPolicy() const = 0;
 
 	/**
+	 * \return "high water mark" (max usage) of thread's stack, bytes
+	 */
+
+	virtual size_t getStackHighWaterMark() const = 0;
+
+	/**
 	 * \return size of thread's stack, bytes
 	 */
 

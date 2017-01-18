@@ -153,6 +153,12 @@ public:
 	SchedulingPolicy getSchedulingPolicy() const override;
 
 	/**
+	 * \return "high water mark" (max usage) of thread's stack, bytes
+	 */
+
+	size_t getStackHighWaterMark() const override;
+
+	/**
 	 * \return size of thread's stack, bytes
 	 */
 

@@ -107,6 +107,16 @@ SchedulingPolicy DynamicThread::getSchedulingPolicy() const
 	return detachableThread_->getSchedulingPolicy();
 }
 
+size_t DynamicThread::getStackHighWaterMark() const
+{
+	architecture::InterruptMaskingLock interruptMaskingLock;
+
+	if (detachableThread_ == nullptr)
+		return {};
+
+	return detachableThread_->getStackHighWaterMark();
+}
+
 size_t DynamicThread::getStackSize() const
 {
 	architecture::InterruptMaskingLock interruptMaskingLock;
