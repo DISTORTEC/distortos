@@ -2,7 +2,7 @@
  * \file
  * \brief ThreadPriorityChangeTestCase class implementation
  *
- * \author Copyright (C) 2014-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -35,7 +35,7 @@ namespace
 constexpr size_t testThreadStackSize {512};
 
 /// number of test threads
-constexpr size_t totalThreads {10};
+constexpr size_t totalThreads {8};
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | local functions
@@ -93,34 +93,30 @@ bool ThreadPriorityChangeTestCase::run_() const
 
 		std::array<DynamicThread, totalThreads> threads
 		{{
-				makeAndStartTestThread(testThreadPriority, sequenceAsserter, 4),	// change to same priority
+				makeAndStartTestThread(testThreadPriority, sequenceAsserter, 3),	// change to same priority
 				makeAndStartTestThread(testThreadPriority, sequenceAsserter, 0),	// rise
-				makeAndStartTestThread(testThreadPriority, sequenceAsserter, 7),	// lower
-				makeAndStartTestThread(testThreadPriority, sequenceAsserter, 8),	// lower with "always behind" mode
-				makeAndStartTestThread(testThreadPriority, sequenceAsserter, 1),	// rise
-				makeAndStartTestThread(testThreadPriority, sequenceAsserter, 5),	// change to same priority
-				makeAndStartTestThread(testThreadPriority, sequenceAsserter, 2),	// rise
 				makeAndStartTestThread(testThreadPriority, sequenceAsserter, 6),	// lower
-				makeAndStartTestThread(testThreadPriority, sequenceAsserter, 9),	// lower with "always behind" mode
-				makeAndStartTestThread(testThreadPriority, sequenceAsserter, 3),	// rise
+				makeAndStartTestThread(testThreadPriority, sequenceAsserter, 7),	// lower with "always behind" mode
+				makeAndStartTestThread(testThreadPriority, sequenceAsserter, 4),	// change to same priority
+				makeAndStartTestThread(testThreadPriority, sequenceAsserter, 1),	// rise
+				makeAndStartTestThread(testThreadPriority, sequenceAsserter, 5),	// lower
+				makeAndStartTestThread(testThreadPriority, sequenceAsserter, 2),	// rise
 		}};
 
 		threads[0].setPriority(threads[0].getPriority());
 		threads[1].setPriority(threads[1].getPriority() + 2);
 		threads[2].setPriority(threads[2].getPriority() - 2);
 		threads[3].setPriority(threads[3].getPriority() - 2, true);
-		threads[4].setPriority(threads[4].getPriority() + 2);
-		threads[5].setPriority(threads[5].getPriority(), true);			// useless "always behind" mode
-		threads[6].setPriority(threads[6].getPriority() + 2, true);		// useless "always behind" mode
-		threads[7].setPriority(threads[7].getPriority() - 2, false);	// explicit "always before" mode
-		threads[8].setPriority(threads[8].getPriority() - 2, true);
-		threads[9].setPriority(threads[9].getPriority() + 2, true);		// useless "always behind" mode
+		threads[4].setPriority(threads[4].getPriority(), true);			// useless "always behind" mode
+		threads[5].setPriority(threads[5].getPriority() + 2, true);		// useless "always behind" mode
+		threads[6].setPriority(threads[6].getPriority() - 2, false);	// explicit "always before" mode
+		threads[7].setPriority(threads[7].getPriority() + 2, true);		// useless "always behind" mode
 
 		const auto result1 = sequenceAsserter.assertSequence(0);	// no thread finished
 		ThisThread::setPriority(threads[1].getPriority() - 1);
-		const auto result2 = sequenceAsserter.assertSequence(4);	// high priority threads finished
+		const auto result2 = sequenceAsserter.assertSequence(3);	// high priority threads finished
 		ThisThread::setPriority(threads[0].getPriority() - 1);
-		const auto result3 = sequenceAsserter.assertSequence(6);	// middle priority threads finished
+		const auto result3 = sequenceAsserter.assertSequence(5);	// middle priority threads finished
 		ThisThread::setPriority(threads[2].getPriority() - 1);
 
 		for (auto& thread : threads)
