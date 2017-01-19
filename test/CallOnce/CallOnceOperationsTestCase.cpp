@@ -41,7 +41,7 @@ constexpr auto sleepForDuration = TickClock::duration{10};
 constexpr size_t testThreadStackSize {512};
 
 /// number of test threads
-constexpr size_t totalThreads {10};
+constexpr size_t totalThreads {8};
 
 /// expected number of context switches in waitForNextTick(): main -> idle -> main
 constexpr decltype(statistics::getContextSwitchCount()) waitForNextTickContextSwitchCount {2};
@@ -126,16 +126,14 @@ bool CallOnceOperationsTestCase::run_() const
 
 	std::array<DynamicThread, totalThreads> threads
 	{{
-			makeTestThread(testCasePriority_ - 1, sequenceAsserter, SequencePoints{0, 12}, onceFlag),
-			makeTestThread(testCasePriority_ - 1, sequenceAsserter, SequencePoints{2, 13}, onceFlag),
-			makeTestThread(testCasePriority_ - 1, sequenceAsserter, SequencePoints{3, 14}, onceFlag),
-			makeTestThread(testCasePriority_ - 1, sequenceAsserter, SequencePoints{4, 15}, onceFlag),
-			makeTestThread(testCasePriority_ - 1, sequenceAsserter, SequencePoints{5, 16}, onceFlag),
-			makeTestThread(testCasePriority_ - 1, sequenceAsserter, SequencePoints{6, 17}, onceFlag),
-			makeTestThread(testCasePriority_ - 1, sequenceAsserter, SequencePoints{7, 18}, onceFlag),
-			makeTestThread(testCasePriority_ - 1, sequenceAsserter, SequencePoints{8, 19}, onceFlag),
-			makeTestThread(testCasePriority_ - 1, sequenceAsserter, SequencePoints{9, 20}, onceFlag),
-			makeTestThread(testCasePriority_ - 1, sequenceAsserter, SequencePoints{10, 21}, onceFlag),
+			makeTestThread(testCasePriority_ - 1, sequenceAsserter, SequencePoints{0, 10}, onceFlag),
+			makeTestThread(testCasePriority_ - 1, sequenceAsserter, SequencePoints{2, 11}, onceFlag),
+			makeTestThread(testCasePriority_ - 1, sequenceAsserter, SequencePoints{3, 12}, onceFlag),
+			makeTestThread(testCasePriority_ - 1, sequenceAsserter, SequencePoints{4, 13}, onceFlag),
+			makeTestThread(testCasePriority_ - 1, sequenceAsserter, SequencePoints{5, 14}, onceFlag),
+			makeTestThread(testCasePriority_ - 1, sequenceAsserter, SequencePoints{6, 15}, onceFlag),
+			makeTestThread(testCasePriority_ - 1, sequenceAsserter, SequencePoints{7, 16}, onceFlag),
+			makeTestThread(testCasePriority_ - 1, sequenceAsserter, SequencePoints{8, 17}, onceFlag),
 	}};
 
 	waitForNextTick();
