@@ -2,7 +2,7 @@
  * \file
  * \brief FpuThreadTestCase class implementation for ARMv7-M
  *
- * \author Copyright (C) 2015-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2015-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -40,13 +40,13 @@ namespace
 +---------------------------------------------------------------------------------------------------------------------*/
 
 /// number of iterations of sequence in test thread
-constexpr uint32_t sequenceIterations {10};
+constexpr uint32_t sequenceIterations {8};
 
 /// size of stack for test thread, bytes
 constexpr size_t testThreadStackSize {512};
 
 /// number of test threads
-constexpr size_t totalThreads {10};
+constexpr size_t totalThreads {8};
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | local functions
@@ -118,8 +118,6 @@ bool FpuThreadTestCase::run_() const
 			makeAndStartTestThread(0x59c00e8a, sharedResult),
 			makeAndStartTestThread(0x20fb443b, sharedResult),
 			makeAndStartTestThread(0x7421f59b, sharedResult),
-			makeAndStartTestThread(0x509d19ca, sharedResult),
-			makeAndStartTestThread(0xc25198ec, sharedResult),
 	}};
 
 	for (auto& thread : threads)
