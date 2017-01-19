@@ -2,7 +2,7 @@
  * \file
  * \brief FifoQueuePriorityTestCase class implementation
  *
- * \author Copyright (C) 2014-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -247,10 +247,6 @@ bool FifoQueuePriorityTestCase::run_() const
 								makeTestThread(threadFunction, 6, phase.first[phase.second[6]], sequenceAsserter,
 										*queueWrapper),
 								makeTestThread(threadFunction, 7, phase.first[phase.second[7]], sequenceAsserter,
-										*queueWrapper),
-								makeTestThread(threadFunction, 8, phase.first[phase.second[8]], sequenceAsserter,
-										*queueWrapper),
-								makeTestThread(threadFunction, 9, phase.first[phase.second[9]], sequenceAsserter,
 										*queueWrapper),
 						}};
 

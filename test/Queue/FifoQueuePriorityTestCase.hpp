@@ -2,7 +2,7 @@
  * \file
  * \brief FifoQueuePriorityTestCase class header
  *
- * \author Copyright (C) 2014-2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -23,10 +23,10 @@ namespace test
 /**
  * \brief Tests priority scheduling of FIFO queue (raw and non-raw).
  *
- * Starts 10 small threads (in various order) with varying priorities which wait either for a message from the FIFO
- * queue or for free space in the FIFO queue, asserting that they start and finish in the expected order, using exact
- * number of context switches, that the data received from the FIFO queue matches what was transferred and that no
- * memory was leaked (in case of "dynamic" queue).
+ * Starts 8 small threads (in various order) with varying priorities which wait either for a message from the FIFO queue
+ * or for free space in the FIFO queue, asserting that they start and finish in the expected order, using exact number
+ * of context switches, that the data received from the FIFO queue matches what was transferred and that no memory was
+ * leaked (in case of "dynamic" queue).
  */
 
 class FifoQueuePriorityTestCase : public PrioritizedTestCase

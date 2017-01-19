@@ -2,7 +2,7 @@
  * \file
  * \brief SoftwareTimerOrderingTestCase class header
  *
- * \author Copyright (C) 2014-2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -23,7 +23,7 @@ namespace test
 /**
  * \brief Tests ordering of software timers.
  *
- * Creates 10 software timers and starts them with varying duration, asserting that they execute in the expected order.
+ * Creates 8 software timers and starts them with varying duration, asserting that they execute in the expected order.
  */
 
 class SoftwareTimerOrderingTestCase : public TestCaseCommon
