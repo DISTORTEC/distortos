@@ -2,7 +2,7 @@
  * \file
  * \brief CallOnceOperationsTestCase class implementation
  *
- * \author Copyright (C) 2015-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2015-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -38,7 +38,7 @@ namespace
 constexpr auto sleepForDuration = TickClock::duration{10};
 
 /// size of stack for test thread, bytes
-constexpr size_t testThreadStackSize {768};
+constexpr size_t testThreadStackSize {512};
 
 /// number of test threads
 constexpr size_t totalThreads {10};
