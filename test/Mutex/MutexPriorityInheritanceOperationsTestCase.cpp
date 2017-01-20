@@ -2,7 +2,7 @@
  * \file
  * \brief MutexPriorityInheritanceOperationsTestCase class implementation
  *
- * \author Copyright (C) 2014-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -188,7 +188,7 @@ constexpr size_t testThreadStackSize {512};
 /**
  * \brief Tests basic priority inheritance mechanism of mutexes with PriorityInheritance protocol.
  *
- * 10 threads are created and "connected" into a tree-like hierarchy using mutexes. This structure is presented on the
+ * 8 threads are created and "connected" into a tree-like hierarchy using mutexes. This structure is presented on the
  * diagram below. Mutexes are marked with "Mx" boxes and threads with "Tx" ellipses. The higher the thread is drawn, the
  * higher its priority is (drawn on the side).
  *
@@ -197,37 +197,34 @@ constexpr size_t testThreadStackSize {512};
  * {
  *		{
  *			node [shape=plaintext];
- *			"+10" -> "+9" -> "+8" -> "+7" -> "+6" -> "+5" -> "+4" -> "+3" -> "+2" -> "+1" -> "+0";
+ *			"+8" -> "+7" -> "+6" -> "+5" -> "+4" -> "+3" -> "+2" -> "+1" -> "+0";
  *		}
  *
- *		{rank = same; "+10"; "T111";}
- *		{rank = same; "+9"; "T110";}
- *		{rank = same; "+8"; "T101";}
- *		{rank = same; "+7"; "T100";}
- *		{rank = same; "+6"; "T11";}
- *		{rank = same; "+5"; "T10";}
- *		{rank = same; "+4"; "T01";}
- *		{rank = same; "+3"; "T00";}
+ *		{rank = same; "+8"; "T7";}
+ *		{rank = same; "+7"; "T6";}
+ *		{rank = same; "+6"; "T5";}
+ *		{rank = same; "+5"; "T4";}
+ *		{rank = same; "+4"; "T3";}
+ *		{rank = same; "+3"; "T2";}
  *		{rank = same; "+2"; "T1";}
  *		{rank = same; "+1"; "T0";}
  *		{rank = same; "+0"; "main";}
  *
  *		{
  *			node [shape=box];
- *			"M0"; "M1"; "M00"; "M01"; "M10"; "M11"; "M100"; "M101"; "M110"; "M111";
+ *			"M0"; "M1"; "M2"; "M3"; "M4"; "M5"; "M6"; "M7";
  *		}
  *
- *		"T111" -> "M111" -> "T11" -> "M11" -> "T1" -> "M1" -> "main";
- *		"T110" -> "M110" -> "T11";
- *		"T101" -> "M101" -> "T10" -> "M10" -> "T1";
- *		"T100" -> "M100" -> "T10";
- *		"T01" -> "M01" -> "T0" -> "M0" -> "main";
- *		"T00" -> "M00" -> "T0";
+ *		"T6" -> "M6" -> "T0" -> "M0" -> "main";
+ *		"T2" -> "M2" -> "T0";
+ *		"T7" -> "M7" -> "T3" -> "M3" -> "T1" -> "M1" -> "main";
+ *		"T4" -> "M4" -> "T2";
+ *		"T5" -> "M5" -> "T1";
  * }
  * \enddot
  *
  * Main thread is expected to inherit priority of each started test thread when this thread blocks on the mutex. After
- * the last step main thread will inherit priority of thread T111 through a chain of 3 mutexes blocking 3 threads. After
+ * the last step main thread will inherit priority of thread T7 through a chain of 3 mutexes blocking 3 threads. After
  * the test (when all links are broken) all priorities are expected to return to their previous values.
  *
  * \param [in] type is the Mutex::Type that will be tested
@@ -237,21 +234,19 @@ constexpr size_t testThreadStackSize {512};
 
 bool testBasicPriorityInheritance(const Mutex::Type type)
 {
-	constexpr size_t totalThreads {10};
+	constexpr size_t totalThreads {8};
 
 	// effective priority (relative to testThreadPriority) for each test thread in each test step
 	static const std::array<std::array<uint8_t, totalThreads>, totalThreads> priorityBoosts
 	{{
-			{1, 2, 3, 4, 5, 6, 7, 8, 9, 10},
-			{1, 2, 3, 4, 5, 6, 7, 8, 9, 10},
-			{3, 2, 3, 4, 5, 6, 7, 8, 9, 10},
-			{4, 2, 3, 4, 5, 6, 7, 8, 9, 10},
-			{4, 5, 3, 4, 5, 6, 7, 8, 9, 10},
-			{4, 6, 3, 4, 5, 6, 7, 8, 9, 10},
-			{4, 7, 3, 4, 7, 6, 7, 8, 9, 10},
-			{4, 8, 3, 4, 8, 6, 7, 8, 9, 10},
-			{4, 9, 3, 4, 8, 9, 7, 8, 9, 10},
-			{4, 10, 3, 4, 8, 10, 7, 8, 9, 10},
+			{1, 2, 3, 4, 5, 6, 7, 8},
+			{1, 2, 3, 4, 5, 6, 7, 8},
+			{3, 2, 3, 4, 5, 6, 7, 8},
+			{3, 4, 3, 4, 5, 6, 7, 8},
+			{5, 4, 5, 4, 5, 6, 7, 8},
+			{5, 6, 5, 4, 5, 6, 7, 8},
+			{7, 6, 5, 4, 5, 6, 7, 8},
+			{7, 8, 5, 8, 5, 6, 7, 8},
 	}};
 
 	std::array<Mutex, totalThreads> mutexes
@@ -264,45 +259,37 @@ bool testBasicPriorityInheritance(const Mutex::Type type)
 			Mutex{type, Mutex::Protocol::priorityInheritance},
 			Mutex{type, Mutex::Protocol::priorityInheritance},
 			Mutex{type, Mutex::Protocol::priorityInheritance},
-			Mutex{type, Mutex::Protocol::priorityInheritance},
-			Mutex{type, Mutex::Protocol::priorityInheritance},
 	}};
 
 	auto& mutex0 = mutexes[0];
 	auto& mutex1 = mutexes[1];
-	auto& mutex00 = mutexes[2];
-	auto& mutex01 = mutexes[3];
-	auto& mutex10 = mutexes[4];
-	auto& mutex11 = mutexes[5];
-	auto& mutex100 = mutexes[6];
-	auto& mutex101 = mutexes[7];
-	auto& mutex110 = mutexes[8];
-	auto& mutex111 = mutexes[9];
+	auto& mutex2 = mutexes[2];
+	auto& mutex3 = mutexes[3];
+	auto& mutex4 = mutexes[4];
+	auto& mutex5 = mutexes[5];
+	auto& mutex6 = mutexes[6];
+	auto& mutex7 = mutexes[7];
 
 	std::array<LockThread, totalThreads> threadObjects
 	{{
-			{&mutex00, &mutex01, &mutex0},
-			{&mutex10, &mutex11, &mutex1},
-			{&mutex00, nullptr, nullptr},
-			{&mutex01, nullptr, nullptr},
-			{&mutex100, &mutex101, &mutex10},
-			{&mutex110, &mutex111, &mutex11},
-			{&mutex100, nullptr, nullptr},
-			{&mutex101, nullptr, nullptr},
-			{&mutex110, nullptr, nullptr},
-			{&mutex111, nullptr, nullptr},
+			{&mutex6, &mutex2, &mutex0},
+			{&mutex5, &mutex3, &mutex1},
+			{&mutex4, &mutex2, nullptr},
+			{&mutex7, &mutex3, nullptr},
+			{&mutex4, nullptr, nullptr},
+			{&mutex5, nullptr, nullptr},
+			{&mutex6, nullptr, nullptr},
+			{&mutex7, nullptr, nullptr},
 	}};
 
 	auto& threadObject0 = threadObjects[0];
 	auto& threadObject1 = threadObjects[1];
-	auto& threadObject00 = threadObjects[2];
-	auto& threadObject01 = threadObjects[3];
-	auto& threadObject10 = threadObjects[4];
-	auto& threadObject11 = threadObjects[5];
-	auto& threadObject100 = threadObjects[6];
-	auto& threadObject101 = threadObjects[7];
-	auto& threadObject110 = threadObjects[8];
-	auto& threadObject111 = threadObjects[9];
+	auto& threadObject2 = threadObjects[2];
+	auto& threadObject3 = threadObjects[3];
+	auto& threadObject4 = threadObjects[4];
+	auto& threadObject5 = threadObjects[5];
+	auto& threadObject6 = threadObjects[6];
+	auto& threadObject7 = threadObjects[7];
 
 	std::array<DynamicThread, totalThreads> threads
 	{{
@@ -311,21 +298,17 @@ bool testBasicPriorityInheritance(const Mutex::Type type)
 			makeDynamicThread({testThreadStackSize, static_cast<uint8_t>(testThreadPriority + priorityBoosts[0][1])},
 					std::ref(threadObject1)),
 			makeDynamicThread({testThreadStackSize, static_cast<uint8_t>(testThreadPriority + priorityBoosts[0][2])},
-					std::ref(threadObject00)),
+					std::ref(threadObject2)),
 			makeDynamicThread({testThreadStackSize, static_cast<uint8_t>(testThreadPriority + priorityBoosts[0][3])},
-					std::ref(threadObject01)),
+					std::ref(threadObject3)),
 			makeDynamicThread({testThreadStackSize, static_cast<uint8_t>(testThreadPriority + priorityBoosts[0][4])},
-					std::ref(threadObject10)),
+					std::ref(threadObject4)),
 			makeDynamicThread({testThreadStackSize, static_cast<uint8_t>(testThreadPriority + priorityBoosts[0][5])},
-					std::ref(threadObject11)),
+					std::ref(threadObject5)),
 			makeDynamicThread({testThreadStackSize, static_cast<uint8_t>(testThreadPriority + priorityBoosts[0][6])},
-					std::ref(threadObject100)),
+					std::ref(threadObject6)),
 			makeDynamicThread({testThreadStackSize, static_cast<uint8_t>(testThreadPriority + priorityBoosts[0][7])},
-					std::ref(threadObject101)),
-			makeDynamicThread({testThreadStackSize, static_cast<uint8_t>(testThreadPriority + priorityBoosts[0][8])},
-					std::ref(threadObject110)),
-			makeDynamicThread({testThreadStackSize, static_cast<uint8_t>(testThreadPriority + priorityBoosts[0][9])},
-					std::ref(threadObject111)),
+					std::ref(threadObject7)),
 	}};
 
 	bool result {true};
@@ -388,14 +371,14 @@ bool testBasicPriorityInheritance(const Mutex::Type type)
 /**
  * \brief Tests behavior of priority inheritance mechanism of mutexes in the event of canceled (timed-out) lock attempt.
  *
- * 10 threads are created and "connected" into a "vertical" hierarchy with current thread using mutexes (2 for each
+ * 8 threads are created and "connected" into a "vertical" hierarchy with current thread using mutexes (2 for each
  * thread, except the last one). Each mutex "connects" two adjacent threads. Each thread locks the first mutex
  * "normally" (with no timeout) and the second one with timeout, with exception of main thread - which locks its only
  * mutex with no timeout - and last thread - which locks its only mutex with timeout. Timeouts of each thread are
  * selected so that the highest priority thread time-outs first, and the lowest priority thread - last.
  *
  * Main thread is expected to inherit priority of each started test thread when this thread blocks on the mutex. After
- * last thread is started main thread will inherit priority of thread T9 through a chain of 10 mutexes blocking 10
+ * last thread is started main thread will inherit priority of thread T7 through a chain of 8 mutexes blocking 8
  * threads. After each thread cancels block on its mutex (due to timeout) main thread's priority is expected to
  * decrease by one - to the value inherited from the new last thread in the chain.
  *
@@ -407,12 +390,10 @@ bool testBasicPriorityInheritance(const Mutex::Type type)
 bool testCanceledLock(const Mutex::Type type)
 {
 	constexpr TickClock::duration durationUnit {10};
-	constexpr size_t totalThreads {10};
+	constexpr size_t totalThreads {8};
 
 	std::array<Mutex, totalThreads> mutexes
 	{{
-			Mutex{type, Mutex::Protocol::priorityInheritance},
-			Mutex{type, Mutex::Protocol::priorityInheritance},
 			Mutex{type, Mutex::Protocol::priorityInheritance},
 			Mutex{type, Mutex::Protocol::priorityInheritance},
 			Mutex{type, Mutex::Protocol::priorityInheritance},
@@ -431,21 +412,17 @@ bool testCanceledLock(const Mutex::Type type)
 	auto& mutex5 = mutexes[5];
 	auto& mutex6 = mutexes[6];
 	auto& mutex7 = mutexes[7];
-	auto& mutex8 = mutexes[8];
-	auto& mutex9 = mutexes[9];
 
 	std::array<TryLockForThread, totalThreads> threadObjects
 	{{
-			{&mutex1, mutex0, durationUnit * 10},
-			{&mutex2, mutex1, durationUnit * 9},
-			{&mutex3, mutex2, durationUnit * 8},
-			{&mutex4, mutex3, durationUnit * 7},
-			{&mutex5, mutex4, durationUnit * 6},
-			{&mutex6, mutex5, durationUnit * 5},
-			{&mutex7, mutex6, durationUnit * 4},
-			{&mutex8, mutex7, durationUnit * 3},
-			{&mutex9, mutex8, durationUnit * 2},
-			{nullptr, mutex9, durationUnit * 1},
+			{&mutex1, mutex0, durationUnit * 8},
+			{&mutex2, mutex1, durationUnit * 7},
+			{&mutex3, mutex2, durationUnit * 6},
+			{&mutex4, mutex3, durationUnit * 5},
+			{&mutex5, mutex4, durationUnit * 4},
+			{&mutex6, mutex5, durationUnit * 3},
+			{&mutex7, mutex6, durationUnit * 2},
+			{nullptr, mutex7, durationUnit * 1},
 	}};
 
 	auto& threadObject0 = threadObjects[0];
@@ -456,8 +433,6 @@ bool testCanceledLock(const Mutex::Type type)
 	auto& threadObject5 = threadObjects[5];
 	auto& threadObject6 = threadObjects[6];
 	auto& threadObject7 = threadObjects[7];
-	auto& threadObject8 = threadObjects[8];
-	auto& threadObject9 = threadObjects[9];
 
 	std::array<DynamicThread, totalThreads> threads
 	{{
@@ -469,8 +444,6 @@ bool testCanceledLock(const Mutex::Type type)
 			makeDynamicThread({testThreadStackSize, testThreadPriority + 6}, std::ref(threadObject5)),
 			makeDynamicThread({testThreadStackSize, testThreadPriority + 7}, std::ref(threadObject6)),
 			makeDynamicThread({testThreadStackSize, testThreadPriority + 8}, std::ref(threadObject7)),
-			makeDynamicThread({testThreadStackSize, testThreadPriority + 9}, std::ref(threadObject8)),
-			makeDynamicThread({testThreadStackSize, testThreadPriority + 10}, std::ref(threadObject9)),
 	}};
 
 	bool result {true};
@@ -502,7 +475,7 @@ bool testCanceledLock(const Mutex::Type type)
 	}
 
 	for (const auto& threadObject : {threadObject0, threadObject1, threadObject2, threadObject3, threadObject4,
-			threadObject5, threadObject6, threadObject7, threadObject8, threadObject9})
+			threadObject5, threadObject6, threadObject7})
 		if (threadObject.getRet() != ETIMEDOUT)
 			result = false;
 
@@ -512,11 +485,11 @@ bool testCanceledLock(const Mutex::Type type)
 /**
  * \brief Tests behavior of priority inheritance mechanism of mutexes in the event of priority change.
  *
- * 10 threads are created and "connected" into a "vertical" hierarchy with current thread using mutexes (2 for each
+ * 8 threads are created and "connected" into a "vertical" hierarchy with current thread using mutexes (2 for each
  * thread, except the last one). Each mutex "connects" two adjacent threads.
  *
  * Main thread is expected to inherit priority of each started test thread when this thread blocks on the mutex. After
- * last thread is started main thread will inherit priority of thread T9 through a chain of 10 mutexes blocking 10
+ * last thread is started main thread will inherit priority of thread T7 through a chain of 8 mutexes blocking 8
  * threads.
  *
  * Change of priority applied to any of the threads in the chain is expected to propagate "up" this chain, up to main
@@ -529,34 +502,29 @@ bool testCanceledLock(const Mutex::Type type)
 
 bool testPriorityChange(const Mutex::Type type)
 {
-	constexpr size_t totalThreads {10};
+	constexpr size_t totalThreads {8};
 
-	// index of thread ([0;4] only!), new priority
+	// index of thread, new priority
 	static const std::pair<uint8_t, uint8_t> priorityChanges[]
 	{
 			// set all to testThreadPriority (minimal value that is not idle priority)
-			{9, testThreadPriority}, {8, testThreadPriority}, {7, testThreadPriority}, {6, testThreadPriority},
-			{5, testThreadPriority}, {4, testThreadPriority}, {3, testThreadPriority}, {2, testThreadPriority},
-			{1, testThreadPriority}, {0, testThreadPriority},
+			{7, testThreadPriority}, {6, testThreadPriority}, {5, testThreadPriority}, {4, testThreadPriority},
+			{3, testThreadPriority}, {2, testThreadPriority}, {1, testThreadPriority}, {0, testThreadPriority},
 
 			// restore what was set previously, in reverse order
 			{0, testThreadPriority + 1}, {1, testThreadPriority + 2}, {2, testThreadPriority + 3},
 			{3, testThreadPriority + 4}, {4, testThreadPriority + 5}, {5, testThreadPriority + 6},
-			{6, testThreadPriority + 7}, {7, testThreadPriority + 8}, {8, testThreadPriority + 9},
-			{9, testThreadPriority + 10},
+			{6, testThreadPriority + 7}, {7, testThreadPriority + 8},
 
 			// max priority for each thread, restore previous value after each change
 			{0, UINT8_MAX}, {0, testThreadPriority + 1}, {1, UINT8_MAX}, {1, testThreadPriority + 2},
 			{2, UINT8_MAX}, {2, testThreadPriority + 3}, {3, UINT8_MAX}, {3, testThreadPriority + 4},
 			{4, UINT8_MAX}, {4, testThreadPriority + 5}, {5, UINT8_MAX}, {5, testThreadPriority + 6},
 			{6, UINT8_MAX}, {6, testThreadPriority + 7}, {7, UINT8_MAX}, {7, testThreadPriority + 8},
-			{8, UINT8_MAX}, {8, testThreadPriority + 9}, {9, UINT8_MAX}, {9, testThreadPriority + 10},
 	};
 
 	std::array<Mutex, totalThreads> mutexes
 	{{
-			Mutex{type, Mutex::Protocol::priorityInheritance},
-			Mutex{type, Mutex::Protocol::priorityInheritance},
 			Mutex{type, Mutex::Protocol::priorityInheritance},
 			Mutex{type, Mutex::Protocol::priorityInheritance},
 			Mutex{type, Mutex::Protocol::priorityInheritance},
@@ -575,8 +543,6 @@ bool testPriorityChange(const Mutex::Type type)
 	auto& mutex5 = mutexes[5];
 	auto& mutex6 = mutexes[6];
 	auto& mutex7 = mutexes[7];
-	auto& mutex8 = mutexes[8];
-	auto& mutex9 = mutexes[9];
 
 	std::array<LockThread, totalThreads> threadObjects
 	{{
@@ -587,9 +553,7 @@ bool testPriorityChange(const Mutex::Type type)
 			{&mutex5, &mutex4, nullptr},
 			{&mutex6, &mutex5, nullptr},
 			{&mutex7, &mutex6, nullptr},
-			{&mutex8, &mutex7, nullptr},
-			{&mutex9, &mutex8, nullptr},
-			{&mutex9, nullptr, nullptr},
+			{&mutex7, nullptr, nullptr},
 	}};
 
 	auto& threadObject0 = threadObjects[0];
@@ -600,8 +564,6 @@ bool testPriorityChange(const Mutex::Type type)
 	auto& threadObject5 = threadObjects[5];
 	auto& threadObject6 = threadObjects[6];
 	auto& threadObject7 = threadObjects[7];
-	auto& threadObject8 = threadObjects[8];
-	auto& threadObject9 = threadObjects[9];
 
 	std::array<DynamicThread, totalThreads> threads
 	{{
@@ -613,8 +575,6 @@ bool testPriorityChange(const Mutex::Type type)
 			makeDynamicThread({testThreadStackSize, testThreadPriority + 6}, std::ref(threadObject5)),
 			makeDynamicThread({testThreadStackSize, testThreadPriority + 7}, std::ref(threadObject6)),
 			makeDynamicThread({testThreadStackSize, testThreadPriority + 8}, std::ref(threadObject7)),
-			makeDynamicThread({testThreadStackSize, testThreadPriority + 9}, std::ref(threadObject8)),
-			makeDynamicThread({testThreadStackSize, testThreadPriority + 10}, std::ref(threadObject9)),
 	}};
 
 	bool result {true};
@@ -664,7 +624,7 @@ bool testPriorityChange(const Mutex::Type type)
 		thread.join();
 
 	for (const auto& threadObject : {threadObject0, threadObject1, threadObject2, threadObject3, threadObject4,
-			threadObject5, threadObject6, threadObject7, threadObject8, threadObject9})
+			threadObject5, threadObject6, threadObject7})
 		if (threadObject.getRet() != 0)
 			result = false;
 
