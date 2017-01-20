@@ -261,65 +261,47 @@ bool testBasicPriorityInheritance(const Mutex::Type type)
 			Mutex{type, Mutex::Protocol::priorityInheritance},
 	}};
 
-	auto& mutex0 = mutexes[0];
-	auto& mutex1 = mutexes[1];
-	auto& mutex2 = mutexes[2];
-	auto& mutex3 = mutexes[3];
-	auto& mutex4 = mutexes[4];
-	auto& mutex5 = mutexes[5];
-	auto& mutex6 = mutexes[6];
-	auto& mutex7 = mutexes[7];
-
 	std::array<LockThread, totalThreads> threadObjects
 	{{
-			{&mutex6, &mutex2, &mutex0},
-			{&mutex5, &mutex3, &mutex1},
-			{&mutex4, &mutex2, nullptr},
-			{&mutex7, &mutex3, nullptr},
-			{&mutex4, nullptr, nullptr},
-			{&mutex5, nullptr, nullptr},
-			{&mutex6, nullptr, nullptr},
-			{&mutex7, nullptr, nullptr},
+			{&mutexes[6], &mutexes[2], &mutexes[0]},
+			{&mutexes[5], &mutexes[3], &mutexes[1]},
+			{&mutexes[4], &mutexes[2], nullptr},
+			{&mutexes[7], &mutexes[3], nullptr},
+			{&mutexes[4], nullptr, nullptr},
+			{&mutexes[5], nullptr, nullptr},
+			{&mutexes[6], nullptr, nullptr},
+			{&mutexes[7], nullptr, nullptr},
 	}};
-
-	auto& threadObject0 = threadObjects[0];
-	auto& threadObject1 = threadObjects[1];
-	auto& threadObject2 = threadObjects[2];
-	auto& threadObject3 = threadObjects[3];
-	auto& threadObject4 = threadObjects[4];
-	auto& threadObject5 = threadObjects[5];
-	auto& threadObject6 = threadObjects[6];
-	auto& threadObject7 = threadObjects[7];
 
 	std::array<DynamicThread, totalThreads> threads
 	{{
 			makeDynamicThread({testThreadStackSize, static_cast<uint8_t>(testThreadPriority + priorityBoosts[0][0])},
-					std::ref(threadObject0)),
+					std::ref(threadObjects[0])),
 			makeDynamicThread({testThreadStackSize, static_cast<uint8_t>(testThreadPriority + priorityBoosts[0][1])},
-					std::ref(threadObject1)),
+					std::ref(threadObjects[1])),
 			makeDynamicThread({testThreadStackSize, static_cast<uint8_t>(testThreadPriority + priorityBoosts[0][2])},
-					std::ref(threadObject2)),
+					std::ref(threadObjects[2])),
 			makeDynamicThread({testThreadStackSize, static_cast<uint8_t>(testThreadPriority + priorityBoosts[0][3])},
-					std::ref(threadObject3)),
+					std::ref(threadObjects[3])),
 			makeDynamicThread({testThreadStackSize, static_cast<uint8_t>(testThreadPriority + priorityBoosts[0][4])},
-					std::ref(threadObject4)),
+					std::ref(threadObjects[4])),
 			makeDynamicThread({testThreadStackSize, static_cast<uint8_t>(testThreadPriority + priorityBoosts[0][5])},
-					std::ref(threadObject5)),
+					std::ref(threadObjects[5])),
 			makeDynamicThread({testThreadStackSize, static_cast<uint8_t>(testThreadPriority + priorityBoosts[0][6])},
-					std::ref(threadObject6)),
+					std::ref(threadObjects[6])),
 			makeDynamicThread({testThreadStackSize, static_cast<uint8_t>(testThreadPriority + priorityBoosts[0][7])},
-					std::ref(threadObject7)),
+					std::ref(threadObjects[7])),
 	}};
 
 	bool result {true};
 
 	{
-		const auto ret = mutex0.lock();
+		const auto ret = mutexes[0].lock();
 		if (ret != 0)
 			result = false;
 	}
 	{
-		const auto ret = mutex1.lock();
+		const auto ret = mutexes[1].lock();
 		if (ret != 0)
 			result = false;
 	}
@@ -337,7 +319,7 @@ bool testBasicPriorityInheritance(const Mutex::Type type)
 	}
 
 	{
-		const auto ret = mutex1.unlock();
+		const auto ret = mutexes[1].unlock();
 		if (ret != 0)
 			result = false;
 	}
@@ -346,7 +328,7 @@ bool testBasicPriorityInheritance(const Mutex::Type type)
 		result = false;
 
 	{
-		const auto ret = mutex0.unlock();
+		const auto ret = mutexes[0].unlock();
 		if (ret != 0)
 			result = false;
 	}
@@ -404,52 +386,34 @@ bool testCanceledLock(const Mutex::Type type)
 			Mutex{type, Mutex::Protocol::priorityInheritance},
 	}};
 
-	auto& mutex0 = mutexes[0];
-	auto& mutex1 = mutexes[1];
-	auto& mutex2 = mutexes[2];
-	auto& mutex3 = mutexes[3];
-	auto& mutex4 = mutexes[4];
-	auto& mutex5 = mutexes[5];
-	auto& mutex6 = mutexes[6];
-	auto& mutex7 = mutexes[7];
-
 	std::array<TryLockForThread, totalThreads> threadObjects
 	{{
-			{&mutex1, mutex0, durationUnit * 8},
-			{&mutex2, mutex1, durationUnit * 7},
-			{&mutex3, mutex2, durationUnit * 6},
-			{&mutex4, mutex3, durationUnit * 5},
-			{&mutex5, mutex4, durationUnit * 4},
-			{&mutex6, mutex5, durationUnit * 3},
-			{&mutex7, mutex6, durationUnit * 2},
-			{nullptr, mutex7, durationUnit * 1},
+			{&mutexes[1], mutexes[0], durationUnit * 8},
+			{&mutexes[2], mutexes[1], durationUnit * 7},
+			{&mutexes[3], mutexes[2], durationUnit * 6},
+			{&mutexes[4], mutexes[3], durationUnit * 5},
+			{&mutexes[5], mutexes[4], durationUnit * 4},
+			{&mutexes[6], mutexes[5], durationUnit * 3},
+			{&mutexes[7], mutexes[6], durationUnit * 2},
+			{nullptr, mutexes[7], durationUnit * 1},
 	}};
-
-	auto& threadObject0 = threadObjects[0];
-	auto& threadObject1 = threadObjects[1];
-	auto& threadObject2 = threadObjects[2];
-	auto& threadObject3 = threadObjects[3];
-	auto& threadObject4 = threadObjects[4];
-	auto& threadObject5 = threadObjects[5];
-	auto& threadObject6 = threadObjects[6];
-	auto& threadObject7 = threadObjects[7];
 
 	std::array<DynamicThread, totalThreads> threads
 	{{
-			makeDynamicThread({testThreadStackSize, testThreadPriority + 1}, std::ref(threadObject0)),
-			makeDynamicThread({testThreadStackSize, testThreadPriority + 2}, std::ref(threadObject1)),
-			makeDynamicThread({testThreadStackSize, testThreadPriority + 3}, std::ref(threadObject2)),
-			makeDynamicThread({testThreadStackSize, testThreadPriority + 4}, std::ref(threadObject3)),
-			makeDynamicThread({testThreadStackSize, testThreadPriority + 5}, std::ref(threadObject4)),
-			makeDynamicThread({testThreadStackSize, testThreadPriority + 6}, std::ref(threadObject5)),
-			makeDynamicThread({testThreadStackSize, testThreadPriority + 7}, std::ref(threadObject6)),
-			makeDynamicThread({testThreadStackSize, testThreadPriority + 8}, std::ref(threadObject7)),
+			makeDynamicThread({testThreadStackSize, testThreadPriority + 1}, std::ref(threadObjects[0])),
+			makeDynamicThread({testThreadStackSize, testThreadPriority + 2}, std::ref(threadObjects[1])),
+			makeDynamicThread({testThreadStackSize, testThreadPriority + 3}, std::ref(threadObjects[2])),
+			makeDynamicThread({testThreadStackSize, testThreadPriority + 4}, std::ref(threadObjects[3])),
+			makeDynamicThread({testThreadStackSize, testThreadPriority + 5}, std::ref(threadObjects[4])),
+			makeDynamicThread({testThreadStackSize, testThreadPriority + 6}, std::ref(threadObjects[5])),
+			makeDynamicThread({testThreadStackSize, testThreadPriority + 7}, std::ref(threadObjects[6])),
+			makeDynamicThread({testThreadStackSize, testThreadPriority + 8}, std::ref(threadObjects[7])),
 	}};
 
 	bool result {true};
 
 	{
-		const auto ret = mutex0.lock();
+		const auto ret = mutexes[0].lock();
 		if (ret != 0)
 			result = false;
 	}
@@ -469,13 +433,12 @@ bool testCanceledLock(const Mutex::Type type)
 	}
 
 	{
-		const auto ret = mutex0.unlock();
+		const auto ret = mutexes[0].unlock();
 		if (ret != 0)
 			result = false;
 	}
 
-	for (const auto& threadObject : {threadObject0, threadObject1, threadObject2, threadObject3, threadObject4,
-			threadObject5, threadObject6, threadObject7})
+	for (const auto& threadObject : threadObjects)
 		if (threadObject.getRet() != ETIMEDOUT)
 			result = false;
 
@@ -535,52 +498,34 @@ bool testPriorityChange(const Mutex::Type type)
 			Mutex{type, Mutex::Protocol::priorityInheritance},
 	}};
 
-	auto& mutex0 = mutexes[0];
-	auto& mutex1 = mutexes[1];
-	auto& mutex2 = mutexes[2];
-	auto& mutex3 = mutexes[3];
-	auto& mutex4 = mutexes[4];
-	auto& mutex5 = mutexes[5];
-	auto& mutex6 = mutexes[6];
-	auto& mutex7 = mutexes[7];
-
 	std::array<LockThread, totalThreads> threadObjects
 	{{
-			{&mutex1, &mutex0, nullptr},
-			{&mutex2, &mutex1, nullptr},
-			{&mutex3, &mutex2, nullptr},
-			{&mutex4, &mutex3, nullptr},
-			{&mutex5, &mutex4, nullptr},
-			{&mutex6, &mutex5, nullptr},
-			{&mutex7, &mutex6, nullptr},
-			{&mutex7, nullptr, nullptr},
+			{&mutexes[1], &mutexes[0], nullptr},
+			{&mutexes[2], &mutexes[1], nullptr},
+			{&mutexes[3], &mutexes[2], nullptr},
+			{&mutexes[4], &mutexes[3], nullptr},
+			{&mutexes[5], &mutexes[4], nullptr},
+			{&mutexes[6], &mutexes[5], nullptr},
+			{&mutexes[7], &mutexes[6], nullptr},
+			{&mutexes[7], nullptr, nullptr},
 	}};
-
-	auto& threadObject0 = threadObjects[0];
-	auto& threadObject1 = threadObjects[1];
-	auto& threadObject2 = threadObjects[2];
-	auto& threadObject3 = threadObjects[3];
-	auto& threadObject4 = threadObjects[4];
-	auto& threadObject5 = threadObjects[5];
-	auto& threadObject6 = threadObjects[6];
-	auto& threadObject7 = threadObjects[7];
 
 	std::array<DynamicThread, totalThreads> threads
 	{{
-			makeDynamicThread({testThreadStackSize, testThreadPriority + 1}, std::ref(threadObject0)),
-			makeDynamicThread({testThreadStackSize, testThreadPriority + 2}, std::ref(threadObject1)),
-			makeDynamicThread({testThreadStackSize, testThreadPriority + 3}, std::ref(threadObject2)),
-			makeDynamicThread({testThreadStackSize, testThreadPriority + 4}, std::ref(threadObject3)),
-			makeDynamicThread({testThreadStackSize, testThreadPriority + 5}, std::ref(threadObject4)),
-			makeDynamicThread({testThreadStackSize, testThreadPriority + 6}, std::ref(threadObject5)),
-			makeDynamicThread({testThreadStackSize, testThreadPriority + 7}, std::ref(threadObject6)),
-			makeDynamicThread({testThreadStackSize, testThreadPriority + 8}, std::ref(threadObject7)),
+			makeDynamicThread({testThreadStackSize, testThreadPriority + 1}, std::ref(threadObjects[0])),
+			makeDynamicThread({testThreadStackSize, testThreadPriority + 2}, std::ref(threadObjects[1])),
+			makeDynamicThread({testThreadStackSize, testThreadPriority + 3}, std::ref(threadObjects[2])),
+			makeDynamicThread({testThreadStackSize, testThreadPriority + 4}, std::ref(threadObjects[3])),
+			makeDynamicThread({testThreadStackSize, testThreadPriority + 5}, std::ref(threadObjects[4])),
+			makeDynamicThread({testThreadStackSize, testThreadPriority + 6}, std::ref(threadObjects[5])),
+			makeDynamicThread({testThreadStackSize, testThreadPriority + 7}, std::ref(threadObjects[6])),
+			makeDynamicThread({testThreadStackSize, testThreadPriority + 8}, std::ref(threadObjects[7])),
 	}};
 
 	bool result {true};
 
 	{
-		const auto ret = mutex0.lock();
+		const auto ret = mutexes[0].lock();
 		if (ret != 0)
 			result = false;
 	}
@@ -615,7 +560,7 @@ bool testPriorityChange(const Mutex::Type type)
 	}
 
 	{
-		const auto ret = mutex0.unlock();
+		const auto ret = mutexes[0].unlock();
 		if (ret != 0)
 			result = false;
 	}
@@ -623,8 +568,7 @@ bool testPriorityChange(const Mutex::Type type)
 	for (auto& thread : threads)
 		thread.join();
 
-	for (const auto& threadObject : {threadObject0, threadObject1, threadObject2, threadObject3, threadObject4,
-			threadObject5, threadObject6, threadObject7})
+	for (const auto& threadObject : threadObjects)
 		if (threadObject.getRet() != 0)
 			result = false;
 
