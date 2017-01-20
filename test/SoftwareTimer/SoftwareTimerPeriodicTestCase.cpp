@@ -2,7 +2,7 @@
  * \file
  * \brief SoftwareTimerPeriodicTestCase class implementation
  *
- * \author Copyright (C) 2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2016-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -34,7 +34,7 @@ namespace
 constexpr TickClock::duration testCaseDuration {100};
 
 /// total number of software timers used in test case
-constexpr size_t totalSoftwareTimers {10};
+constexpr size_t totalSoftwareTimers {8};
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | local functions
@@ -110,10 +110,6 @@ bool SoftwareTimerPeriodicTestCase::run_() const
 					uint8_t{7}),
 			makeStaticSoftwareTimer(softwareTimerFunction, std::ref(sequenceAsserter), std::ref(counters[7]),
 					uint8_t{8}),
-			makeStaticSoftwareTimer(softwareTimerFunction, std::ref(sequenceAsserter), std::ref(counters[8]),
-					uint8_t{9}),
-			makeStaticSoftwareTimer(softwareTimerFunction, std::ref(sequenceAsserter), std::ref(counters[9]),
-					uint8_t{10}),
 	}};
 
 	waitForNextTick();

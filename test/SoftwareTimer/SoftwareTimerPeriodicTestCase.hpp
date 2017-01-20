@@ -2,7 +2,7 @@
  * \file
  * \brief SoftwareTimerPeriodicTestCase class header
  *
- * \author Copyright (C) 2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2016-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -23,7 +23,7 @@ namespace test
 /**
  * \brief Tests behavior of periodic software timers.
  *
- * Creates 10 periodic software timers and starts them with varying duration and period, asserting that they execute in
+ * Creates 8 periodic software timers and starts them with varying duration and period, asserting that they execute in
  * expected sequence.
  */
 
