@@ -2,7 +2,7 @@
  * \file
  * \brief ThreadSleepUntilTestCase class implementation
  *
- * \author Copyright (C) 2014-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -124,10 +124,6 @@ bool ThreadSleepUntilTestCase::run_() const
 							sharedRets[6]),
 					makeTestThread(now, phase.first[phase.second[7]], sequenceAsserter, timePointDeviations[7],
 							sharedRets[7]),
-					makeTestThread(now, phase.first[phase.second[8]], sequenceAsserter, timePointDeviations[8],
-							sharedRets[8]),
-					makeTestThread(now, phase.first[phase.second[9]], sequenceAsserter, timePointDeviations[9],
-							sharedRets[9]),
 			}};
 
 			{

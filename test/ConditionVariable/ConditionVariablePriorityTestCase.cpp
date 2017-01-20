@@ -2,7 +2,7 @@
  * \file
  * \brief ConditionVariablePriorityTestCase class implementation
  *
- * \author Copyright (C) 2014-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -144,8 +144,6 @@ bool ConditionVariablePriorityTestCase::run_() const
 						makeTestThread(phase.first[phase.second[5]], sequenceAsserter, conditionVariable, mutex),
 						makeTestThread(phase.first[phase.second[6]], sequenceAsserter, conditionVariable, mutex),
 						makeTestThread(phase.first[phase.second[7]], sequenceAsserter, conditionVariable, mutex),
-						makeTestThread(phase.first[phase.second[8]], sequenceAsserter, conditionVariable, mutex),
-						makeTestThread(phase.first[phase.second[9]], sequenceAsserter, conditionVariable, mutex),
 				}};
 
 				bool result {true};

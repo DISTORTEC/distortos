@@ -2,7 +2,7 @@
  * \file
  * \brief ThreadSchedulingPolicyTestCase class implementation
  *
- * \author Copyright (C) 2014-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -48,7 +48,7 @@ constexpr size_t testThreadStackSize {512};
 constexpr uint8_t testThreadPriority {1};
 
 /// number of test threads
-constexpr size_t totalThreads {10};
+constexpr size_t totalThreads {8};
 
 /// duration of single test thread - significantly longer than single round-robin quantum
 constexpr auto testThreadDuration = internal::RoundRobinQuantum::getInitial() * 2;
@@ -128,8 +128,6 @@ bool ThreadSchedulingPolicyTestCase::run_() const
 					makeTestThread(schedulingPolicy, sequenceAsserter, {5 * multiplier, 5 * multiplier + step}),
 					makeTestThread(schedulingPolicy, sequenceAsserter, {6 * multiplier, 6 * multiplier + step}),
 					makeTestThread(schedulingPolicy, sequenceAsserter, {7 * multiplier, 7 * multiplier + step}),
-					makeTestThread(schedulingPolicy, sequenceAsserter, {8 * multiplier, 8 * multiplier + step}),
-					makeTestThread(schedulingPolicy, sequenceAsserter, {9 * multiplier, 9 * multiplier + step}),
 			}};
 
 			decltype(TickClock::now()) testStart;

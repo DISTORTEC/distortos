@@ -2,7 +2,7 @@
  * \file
  * \brief SignalsWaitTestCase class header
  *
- * \author Copyright (C) 2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2015-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -23,7 +23,7 @@ namespace test
 /**
  * \brief Tests waiting for signals
  *
- * Starts 10 small threads which wait for any signals, asserting that they receive the same signals that were generated
+ * Starts 8 small threads which wait for any signals, asserting that they receive the same signals that were generated
  * or queued (ordered numerically), start and finish in the expected order, using exact number of context switches.
  */
 

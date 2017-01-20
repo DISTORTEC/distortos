@@ -2,7 +2,7 @@
  * \file
  * \brief FpuThreadTestCase class header for ARMv7-M
  *
- * \author Copyright (C) 2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2015-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -23,7 +23,7 @@ namespace test
 /**
  * \brief Tests saving of FPU context between threads.
  *
- * Starts 10 small threads which modify all FPU registers (including fpscr), cause context switch to next test thread
+ * Starts 8 small threads which modify all FPU registers (including fpscr), cause context switch to next test thread
  * and - after return - check whether all modified registers still have the same value. This sequence is repeated
  * predefined number of times (or until first failure).
  */

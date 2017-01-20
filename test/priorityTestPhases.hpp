@@ -2,7 +2,7 @@
  * \file
  * \brief priorityTestPhases object declaration
  *
- * \author Copyright (C) 2014-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -25,7 +25,7 @@ namespace test
 +---------------------------------------------------------------------------------------------------------------------*/
 
 /// number of test threads
-constexpr size_t totalThreads {10};
+constexpr size_t totalThreads {8};
 
 /// number of test phases
 constexpr size_t totalPhases {8};
