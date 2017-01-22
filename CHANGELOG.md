@@ -50,9 +50,10 @@ is very likely to be used in the application (for example to zero-initialize var
 - `architecture::requestFunctionExecution()` checks for amount of free stack before doing any stack modifications. If
 there's not enough free stack available, it returns an `ENOMEM` error code. Modify all callers of this function (which
 includes functions to generate/queue signals and set signal mask) to handle this error code.
-- Changed number of threads and software timers used by test application to 8 (was 10) to reduce its RAM requirements.
-This fixes a crash of test application for *NUCLEO-F103RB* board caused by insufficient memory available for
-`_sbrk_r()`.
+- Changed number of threads, software timers, queued signals and signal actions used by test application to 8 (was 10)
+to reduce its RAM requirements. This fixes a crash of test application for *NUCLEO-F103RB* board caused by insufficient
+memory available for `_sbrk_r()` and crashes of other configurations at lower optimization levels due to stack
+overflow.
 
 ### Fixed
 
