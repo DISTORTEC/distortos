@@ -54,6 +54,9 @@ includes functions to generate/queue signals and set signal mask) to handle this
 to reduce its RAM requirements. This fixes a crash of test application for *NUCLEO-F103RB* board caused by insufficient
 memory available for `_sbrk_r()` and crashes of other configurations at lower optimization levels due to stack
 overflow.
+- Reimplemented `callOnce()` with a mutex. This increases the size of `OnceFlag` object (32 bytes vs 8 bytes), but at
+the same time reduces stack requirements of any thread using `callOnce()` function. Removed
+`ThreadState::blockedOnOnceFlag` enum value.
 
 ### Fixed
 

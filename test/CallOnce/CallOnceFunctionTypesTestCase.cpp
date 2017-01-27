@@ -2,7 +2,7 @@
  * \file
  * \brief CallOnceFunctionTypesTestCase class implementation
  *
- * \author Copyright (C) 2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2015-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -20,8 +20,6 @@ namespace distortos
 
 namespace test
 {
-
-#if DISTORTOS_CALLONCE_SUPPORTED == 1 || DOXYGEN == 1
 
 namespace
 {
@@ -111,16 +109,12 @@ private:
 
 }	// namespace
 
-#endif	// DISTORTOS_CALLONCE_SUPPORTED == 1 || DOXYGEN == 1
-
 /*---------------------------------------------------------------------------------------------------------------------+
 | private functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
 bool CallOnceFunctionTypesTestCase::run_() const
 {
-#if DISTORTOS_CALLONCE_SUPPORTED == 1 || DOXYGEN == 1
-
 	// callOnce() with regular function
 	{
 		uint32_t sharedVariable {};
@@ -172,8 +166,6 @@ bool CallOnceFunctionTypesTestCase::run_() const
 		if (sharedVariable != magicValue)
 			return false;
 	}
-
-#endif	// DISTORTOS_CALLONCE_SUPPORTED == 1 || DOXYGEN == 1
 
 	return true;
 }
