@@ -2,7 +2,7 @@
  * \file
  * \brief invoke() header
  *
- * \author Copyright (C) 2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2015-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -136,7 +136,7 @@ inline auto invoke(DataMember dataMember, Pointer&& pointer) -> decltype((*std::
  */
 
 template<typename Function, typename... Args>
-auto invoke(Function&& function, Args&&... args) ->
+inline auto invoke(Function&& function, Args&&... args) ->
 		decltype(internal::invoke(std::forward<Function>(function), std::forward<Args>(args)...))
 {
 	return internal::invoke(std::forward<Function>(function), std::forward<Args>(args)...);
