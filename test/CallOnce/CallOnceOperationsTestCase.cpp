@@ -25,8 +25,6 @@ namespace distortos
 namespace test
 {
 
-#if DISTORTOS_CALLONCE_SUPPORTED == 1 || DOXYGEN == 1
-
 namespace
 {
 
@@ -109,16 +107,12 @@ DynamicThread makeTestThread(const uint8_t priority, SequenceAsserter& sequenceA
 
 }	// namespace
 
-#endif	// DISTORTOS_CALLONCE_SUPPORTED == 1 || DOXYGEN == 1
-
 /*---------------------------------------------------------------------------------------------------------------------+
 | private functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
 bool CallOnceOperationsTestCase::run_() const
 {
-#if DISTORTOS_CALLONCE_SUPPORTED == 1 || DOXYGEN == 1
-
 	const auto contextSwitchCount = statistics::getContextSwitchCount();
 
 	SequenceAsserter sequenceAsserter;
@@ -146,7 +140,7 @@ bool CallOnceOperationsTestCase::run_() const
 
 	bool invalidState {};
 	for (size_t i = 1; i < threads.size(); ++i)
-		if (threads[i].getState() != ThreadState::blockedOnOnceFlag)
+		if (threads[i].getState() != ThreadState::blockedOnMutex)
 			invalidState = true;
 
 	for (auto& thread : threads)
@@ -164,8 +158,6 @@ bool CallOnceOperationsTestCase::run_() const
 	constexpr auto totalContextSwitches = 2 * totalThreads + 3 + waitForNextTickContextSwitchCount;
 	if (statistics::getContextSwitchCount() - contextSwitchCount != totalContextSwitches)
 		return false;
-
-#endif	// DISTORTOS_CALLONCE_SUPPORTED == 1 || DOXYGEN == 1
 
 	return true;
 }

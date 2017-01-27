@@ -2,7 +2,7 @@
  * \file
  * \brief callOnce() header
  *
- * \author Copyright (C) 2015-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2015-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -16,7 +16,8 @@
 
 #include "distortos/OnceFlag.hpp"
 
-#if DISTORTOS_CALLONCE_SUPPORTED == 1 || DOXYGEN == 1
+#include "estd/invoke.hpp"
+#include "estd/ScopeGuard.hpp"
 
 namespace distortos
 {
@@ -26,8 +27,6 @@ namespace distortos
  *
  * Similar to std::call_once() - http://en.cppreference.com/w/cpp/thread/call_once
  * Similar to POSIX pthread_once() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_once.html#
- *
- * \note This function requires GCC 4.9.
  *
  * \warning This function must not be called from interrupt context!
  *
@@ -46,11 +45,23 @@ void callOnce(OnceFlag& onceFlag, Function&& function, Args&&... args)
 {
 	CHECK_FUNCTION_CONTEXT();
 
-	onceFlag.callOnceControlBlock_(std::forward<Function>(function), std::forward<Args>(args)...);
+	if (onceFlag.done_ == true)
+		return;
+
+	onceFlag.mutex_.lock();
+	const auto mutexUnlockScopeGuard = estd::makeScopeGuard(
+			[&onceFlag]()
+			{
+				onceFlag.mutex_.unlock();
+			});
+
+	if (onceFlag.done_ == true)
+		return;
+
+	estd::invoke(std::forward<Function>(function), std::forward<Args>(args)...);
+	onceFlag.done_ = true;
 }
 
 }	// namespace distortos
-
-#endif	// DISTORTOS_CALLONCE_SUPPORTED == 1 || DOXYGEN == 1
 
 #endif	// INCLUDE_DISTORTOS_CALLONCE_HPP_
