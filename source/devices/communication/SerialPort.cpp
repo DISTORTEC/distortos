@@ -2,7 +2,7 @@
  * \file
  * \brief SerialPort class implementation
  *
- * \author Copyright (C) 2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2016-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -13,10 +13,9 @@
 
 #include "distortos/devices/communication/UartLowLevel.hpp"
 
-#include "distortos/architecture/InterruptMaskingLock.hpp"
-
 #include "distortos/internal/CHECK_FUNCTION_CONTEXT.hpp"
 
+#include "distortos/InterruptMaskingLock.hpp"
 #include "distortos/Semaphore.hpp"
 
 #include "estd/ScopeGuard.hpp"

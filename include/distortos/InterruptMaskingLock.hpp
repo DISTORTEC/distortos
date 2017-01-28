@@ -9,8 +9,8 @@
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#ifndef INCLUDE_DISTORTOS_ARCHITECTURE_INTERRUPTMASKINGLOCK_HPP_
-#define INCLUDE_DISTORTOS_ARCHITECTURE_INTERRUPTMASKINGLOCK_HPP_
+#ifndef INCLUDE_DISTORTOS_INTERRUPTMASKINGLOCK_HPP_
+#define INCLUDE_DISTORTOS_INTERRUPTMASKINGLOCK_HPP_
 
 #include "distortos/architecture/enableInterruptMasking.hpp"
 
@@ -32,4 +32,4 @@ class InterruptMaskingLock : private internal::InterruptMaskingUnmaskingLock<ena
 
 }	// namespace distortos
 
-#endif	// INCLUDE_DISTORTOS_ARCHITECTURE_INTERRUPTMASKINGLOCK_HPP_
+#endif	// INCLUDE_DISTORTOS_INTERRUPTMASKINGLOCK_HPP_

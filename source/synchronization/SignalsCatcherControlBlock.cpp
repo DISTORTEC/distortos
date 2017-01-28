@@ -11,7 +11,6 @@
 
 #include "distortos/internal/synchronization/SignalsCatcherControlBlock.hpp"
 
-#include "distortos/architecture/InterruptMaskingLock.hpp"
 #include "distortos/architecture/requestFunctionExecution.hpp"
 
 #include "distortos/internal/scheduler/getScheduler.hpp"
@@ -20,6 +19,7 @@
 #include "distortos/internal/synchronization/SignalsReceiverControlBlock.hpp"
 
 #include "distortos/assert.h"
+#include "distortos/InterruptMaskingLock.hpp"
 #include "distortos/SignalInformation.hpp"
 
 #include <cerrno>

@@ -17,8 +17,7 @@
 
 #include "distortos/internal/synchronization/MutexControlBlock.hpp"
 
-#include "distortos/architecture/InterruptMaskingLock.hpp"
-
+#include "distortos/InterruptMaskingLock.hpp"
 #include "distortos/SignalsReceiver.hpp"
 
 #include <cerrno>

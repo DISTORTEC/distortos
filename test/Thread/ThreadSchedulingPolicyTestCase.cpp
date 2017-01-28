@@ -14,9 +14,8 @@
 #include "SequenceAsserter.hpp"
 #include "wasteTime.hpp"
 
-#include "distortos/architecture/InterruptMaskingLock.hpp"
-
 #include "distortos/DynamicThread.hpp"
+#include "distortos/InterruptMaskingLock.hpp"
 #include "distortos/ThisThread.hpp"
 
 #include <malloc.h>

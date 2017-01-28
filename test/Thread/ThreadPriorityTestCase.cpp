@@ -14,9 +14,8 @@
 #include "priorityTestPhases.hpp"
 #include "SequenceAsserter.hpp"
 
-#include "distortos/architecture/InterruptMaskingLock.hpp"
-
 #include "distortos/DynamicThread.hpp"
+#include "distortos/InterruptMaskingLock.hpp"
 
 #include <malloc.h>
 

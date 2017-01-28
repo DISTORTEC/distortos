@@ -15,7 +15,7 @@
 
 #ifdef CONFIG_THREAD_DETACH_ENABLE
 
-#include "distortos/architecture/InterruptMaskingLock.hpp"
+#include "distortos/InterruptMaskingLock.hpp"
 
 #include <cerrno>
 

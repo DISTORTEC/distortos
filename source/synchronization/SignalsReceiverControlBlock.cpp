@@ -14,9 +14,8 @@
 #include "distortos/internal/scheduler/getScheduler.hpp"
 #include "distortos/internal/scheduler/Scheduler.hpp"
 
-#include "distortos/architecture/InterruptMaskingLock.hpp"
-
 #include "distortos/assert.h"
+#include "distortos/InterruptMaskingLock.hpp"
 #include "distortos/SignalsCatcher.hpp"
 #include "distortos/SignalInformationQueueWrapper.hpp"
 

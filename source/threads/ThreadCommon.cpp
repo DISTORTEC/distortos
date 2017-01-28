@@ -11,14 +11,14 @@
 
 #include "distortos/ThreadCommon.hpp"
 
-#include "distortos/architecture/InterruptMaskingLock.hpp"
-
 #include "distortos/internal/scheduler/getScheduler.hpp"
 #include "distortos/internal/scheduler/Scheduler.hpp"
 
 #include "distortos/internal/synchronization/SignalsReceiverControlBlock.hpp"
 
 #include "distortos/internal/CHECK_FUNCTION_CONTEXT.hpp"
+
+#include "distortos/InterruptMaskingLock.hpp"
 
 #include <cerrno>
 

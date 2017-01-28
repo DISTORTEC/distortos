@@ -11,9 +11,9 @@
 
 #include "distortos/internal/scheduler/Scheduler.hpp"
 
+#include "distortos/InterruptMaskingLock.hpp"
 #include "distortos/StaticSoftwareTimer.hpp"
 
-#include "distortos/architecture/InterruptMaskingLock.hpp"
 #include "distortos/architecture/requestContextSwitch.hpp"
 
 #include "distortos/internal/scheduler/forceContextSwitch.hpp"
