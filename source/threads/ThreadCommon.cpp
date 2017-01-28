@@ -64,7 +64,7 @@ SignalSet ThreadCommon::getPendingSignalSet() const
 	if (signalsReceiverControlBlock == nullptr)
 		return SignalSet{SignalSet::empty};
 
-	InterruptMaskingLock interruptMaskingLock;
+	const InterruptMaskingLock interruptMaskingLock;
 	return signalsReceiverControlBlock->getPendingSignalSet();
 }
 

@@ -30,7 +30,7 @@ bool SequenceAsserter::assertSequence(const unsigned int sequencePoints)
 
 void SequenceAsserter::sequencePoint(const unsigned int sequencePointt)
 {
-	InterruptMaskingLock interruptMaskingLock;
+	const InterruptMaskingLock interruptMaskingLock;
 
 	++sequencePointsCount_;
 

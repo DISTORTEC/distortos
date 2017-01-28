@@ -39,7 +39,7 @@ int DynamicThread::detach()
 {
 	CHECK_FUNCTION_CONTEXT();
 
-	InterruptMaskingLock interruptMaskingLock;
+	const InterruptMaskingLock interruptMaskingLock;
 
 	if (detachableThread_ == nullptr)	// already detached?
 		return EINVAL;
@@ -59,7 +59,7 @@ int DynamicThread::detach()
 
 int DynamicThread::generateSignal(const uint8_t signalNumber)
 {
-	InterruptMaskingLock interruptMaskingLock;
+	const InterruptMaskingLock interruptMaskingLock;
 
 	if (detachableThread_ == nullptr)
 		return EINVAL;
@@ -69,7 +69,7 @@ int DynamicThread::generateSignal(const uint8_t signalNumber)
 
 uint8_t DynamicThread::getEffectivePriority() const
 {
-	InterruptMaskingLock interruptMaskingLock;
+	const InterruptMaskingLock interruptMaskingLock;
 
 	if (detachableThread_ == nullptr)
 		return {};
@@ -79,7 +79,7 @@ uint8_t DynamicThread::getEffectivePriority() const
 
 SignalSet DynamicThread::getPendingSignalSet() const
 {
-	InterruptMaskingLock interruptMaskingLock;
+	const InterruptMaskingLock interruptMaskingLock;
 
 	if (detachableThread_ == nullptr)
 		return SignalSet{SignalSet::empty};
@@ -89,7 +89,7 @@ SignalSet DynamicThread::getPendingSignalSet() const
 
 uint8_t DynamicThread::getPriority() const
 {
-	InterruptMaskingLock interruptMaskingLock;
+	const InterruptMaskingLock interruptMaskingLock;
 
 	if (detachableThread_ == nullptr)
 		return {};
@@ -99,7 +99,7 @@ uint8_t DynamicThread::getPriority() const
 
 SchedulingPolicy DynamicThread::getSchedulingPolicy() const
 {
-	InterruptMaskingLock interruptMaskingLock;
+	const InterruptMaskingLock interruptMaskingLock;
 
 	if (detachableThread_ == nullptr)
 		return {};
@@ -109,7 +109,7 @@ SchedulingPolicy DynamicThread::getSchedulingPolicy() const
 
 size_t DynamicThread::getStackHighWaterMark() const
 {
-	InterruptMaskingLock interruptMaskingLock;
+	const InterruptMaskingLock interruptMaskingLock;
 
 	if (detachableThread_ == nullptr)
 		return {};
@@ -119,7 +119,7 @@ size_t DynamicThread::getStackHighWaterMark() const
 
 size_t DynamicThread::getStackSize() const
 {
-	InterruptMaskingLock interruptMaskingLock;
+	const InterruptMaskingLock interruptMaskingLock;
 
 	if (detachableThread_ == nullptr)
 		return {};
@@ -129,7 +129,7 @@ size_t DynamicThread::getStackSize() const
 
 ThreadState DynamicThread::getState() const
 {
-	InterruptMaskingLock interruptMaskingLock;
+	const InterruptMaskingLock interruptMaskingLock;
 
 	if (detachableThread_ == nullptr)
 		return ThreadState::detached;
@@ -141,7 +141,7 @@ int DynamicThread::join()
 {
 	CHECK_FUNCTION_CONTEXT();
 
-	InterruptMaskingLock interruptMaskingLock;
+	const InterruptMaskingLock interruptMaskingLock;
 
 	if (detachableThread_ == nullptr)
 		return EINVAL;
@@ -151,7 +151,7 @@ int DynamicThread::join()
 
 int DynamicThread::queueSignal(const uint8_t signalNumber, const sigval value)
 {
-	InterruptMaskingLock interruptMaskingLock;
+	const InterruptMaskingLock interruptMaskingLock;
 
 	if (detachableThread_ == nullptr)
 		return EINVAL;
@@ -161,7 +161,7 @@ int DynamicThread::queueSignal(const uint8_t signalNumber, const sigval value)
 
 void DynamicThread::setPriority(const uint8_t priority, const bool alwaysBehind)
 {
-	InterruptMaskingLock interruptMaskingLock;
+	const InterruptMaskingLock interruptMaskingLock;
 
 	if (detachableThread_ == nullptr)
 		return;
@@ -171,7 +171,7 @@ void DynamicThread::setPriority(const uint8_t priority, const bool alwaysBehind)
 
 void DynamicThread::setSchedulingPolicy(const SchedulingPolicy schedulingPolicy)
 {
-	InterruptMaskingLock interruptMaskingLock;
+	const InterruptMaskingLock interruptMaskingLock;
 
 	if (detachableThread_ == nullptr)
 		return;
@@ -181,7 +181,7 @@ void DynamicThread::setSchedulingPolicy(const SchedulingPolicy schedulingPolicy)
 
 int DynamicThread::start()
 {
-	InterruptMaskingLock interruptMaskingLock;
+	const InterruptMaskingLock interruptMaskingLock;
 
 	if (detachableThread_ == nullptr)
 		return EINVAL;

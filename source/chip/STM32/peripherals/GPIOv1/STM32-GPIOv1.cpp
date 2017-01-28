@@ -34,7 +34,7 @@ void configurePin(const Pin pin, const PinConfiguration configuration, const boo
 
 	port.BSRR = 1 << (pinNumber + (initialState == false ? 16 : 0));
 
-	InterruptMaskingLock interruptMaskingLock;
+	const InterruptMaskingLock interruptMaskingLock;
 
 	cr = (cr & invertedMask) | configurationValue;
 }

@@ -57,7 +57,7 @@ ThreadControlBlock::ThreadControlBlock(internal::Stack&& stack, const uint8_t pr
 
 ThreadControlBlock::~ThreadControlBlock()
 {
-	InterruptMaskingLock interruptMaskingLock;
+	const InterruptMaskingLock interruptMaskingLock;
 
 	_reclaim_reent(&reent_);
 }
@@ -78,7 +78,7 @@ int ThreadControlBlock::addHook()
 
 void ThreadControlBlock::setPriority(const uint8_t priority, const bool alwaysBehind)
 {
-	InterruptMaskingLock interruptMaskingLock;
+	const InterruptMaskingLock interruptMaskingLock;
 
 	if (priority_ == priority)
 		return;
@@ -100,7 +100,7 @@ void ThreadControlBlock::setPriority(const uint8_t priority, const bool alwaysBe
 
 void ThreadControlBlock::setSchedulingPolicy(const SchedulingPolicy schedulingPolicy)
 {
-	InterruptMaskingLock interruptMaskingLock;
+	const InterruptMaskingLock interruptMaskingLock;
 
 	schedulingPolicy_ = schedulingPolicy;
 	roundRobinQuantum_.reset();

@@ -174,7 +174,7 @@ int MessageQueueBase::push(const SemaphoreFunctor& waitSemaphoreFunctor, const u
 int MessageQueueBase::popPush(const SemaphoreFunctor& waitSemaphoreFunctor, const InternalFunctor& internalFunctor,
 		Semaphore& waitSemaphore, Semaphore& postSemaphore)
 {
-	InterruptMaskingLock interruptMaskingLock;
+	const InterruptMaskingLock interruptMaskingLock;
 
 	const auto ret = waitSemaphoreFunctor(waitSemaphore);
 	if (ret != 0)

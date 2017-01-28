@@ -33,7 +33,7 @@ void threadRunner(Thread& thread, void (& run)(Thread&), void (* preTerminationH
 	run(thread);
 
 	{
-		InterruptMaskingLock interruptMaskingLock;
+		const InterruptMaskingLock interruptMaskingLock;
 
 		if (preTerminationHook != nullptr)
 			preTerminationHook(thread);

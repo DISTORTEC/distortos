@@ -48,7 +48,7 @@ FifoQueueBase::~FifoQueueBase()
 int FifoQueueBase::popPush(const SemaphoreFunctor& waitSemaphoreFunctor, const QueueFunctor& functor,
 		Semaphore& waitSemaphore, Semaphore& postSemaphore, void*& storage)
 {
-	InterruptMaskingLock interruptMaskingLock;
+	const InterruptMaskingLock interruptMaskingLock;
 
 	const auto ret = waitSemaphoreFunctor(waitSemaphore);
 	if (ret != 0)

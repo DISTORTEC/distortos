@@ -64,7 +64,7 @@ bool phase1()
 	bool result {true};
 
 	{
-		InterruptMaskingLock interruptMaskingLock;	// make sure the thread doesn't get to run yet
+		const InterruptMaskingLock interruptMaskingLock;	// make sure the thread doesn't get to run yet
 
 		{
 			const auto ret = testThread.start();

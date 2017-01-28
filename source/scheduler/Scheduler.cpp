@@ -91,7 +91,7 @@ private:
 
 int Scheduler::add(ThreadControlBlock& threadControlBlock)
 {
-	InterruptMaskingLock interruptMaskingLock;
+	const InterruptMaskingLock interruptMaskingLock;
 
 	if (threadControlBlock.getState() != ThreadState::created)
 		return EINVAL;
@@ -121,7 +121,7 @@ int Scheduler::block(ThreadList& container, const ThreadList::iterator iterator,
 	const auto blockingCurrentThread = iterator == currentThreadControlBlock_;
 
 	{
-		InterruptMaskingLock interruptMaskingLock;
+		const InterruptMaskingLock interruptMaskingLock;
 
 		// if blocking current thread, use unblockReasonUnblockFunctorWrapper, otherwise use provided unblockFunctor
 		const auto ret = blockInternal(container, iterator, state, blockingCurrentThread == true ?
@@ -144,7 +144,7 @@ int Scheduler::blockUntil(ThreadList& container, const ThreadState state, const 
 {
 	CHECK_FUNCTION_CONTEXT();
 
-	InterruptMaskingLock interruptMaskingLock;
+	const InterruptMaskingLock interruptMaskingLock;
 
 	const auto iterator = currentThreadControlBlock_;
 
@@ -170,13 +170,13 @@ int Scheduler::blockUntil(ThreadList& container, const ThreadState state, const 
 
 uint64_t Scheduler::getContextSwitchCount() const
 {
-	InterruptMaskingLock interruptMaskingLock;
+	const InterruptMaskingLock interruptMaskingLock;
 	return contextSwitchCount_;
 }
 
 uint64_t Scheduler::getTickCount() const
 {
-	InterruptMaskingLock interruptMaskingLock;
+	const InterruptMaskingLock interruptMaskingLock;
 	return tickCount_;
 }
 
@@ -213,7 +213,7 @@ int Scheduler::remove()
 
 int Scheduler::resume(const ThreadList::iterator iterator)
 {
-	InterruptMaskingLock interruptMaskingLock;
+	const InterruptMaskingLock interruptMaskingLock;
 
 	if (iterator->getList() != &suspendedList_)
 		return EINVAL;
@@ -255,7 +255,7 @@ void* Scheduler::switchContext(void* const stackPointer)
 
 bool Scheduler::tickInterruptHandler()
 {
-	InterruptMaskingLock interruptMaskingLock;
+	const InterruptMaskingLock interruptMaskingLock;
 
 #ifdef CONFIG_CHECK_STACK_GUARD_SYSTEM_TICK_ENABLE
 
@@ -286,7 +286,7 @@ bool Scheduler::tickInterruptHandler()
 
 void Scheduler::unblock(const ThreadList::iterator iterator, const ThreadControlBlock::UnblockReason unblockReason)
 {
-	InterruptMaskingLock interruptMaskingLock;
+	const InterruptMaskingLock interruptMaskingLock;
 
 	unblockInternal(iterator, unblockReason);
 	maybeRequestContextSwitch();
@@ -294,7 +294,7 @@ void Scheduler::unblock(const ThreadList::iterator iterator, const ThreadControl
 
 void Scheduler::yield()
 {
-	InterruptMaskingLock interruptMaskingLock;
+	const InterruptMaskingLock interruptMaskingLock;
 
 	runnableList_.splice(currentThreadControlBlock_);
 	maybeRequestContextSwitch();

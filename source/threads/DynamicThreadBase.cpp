@@ -37,7 +37,7 @@ namespace internal
 
 int DynamicThreadBase::detach()
 {
-	InterruptMaskingLock interruptMaskingLock;
+	const InterruptMaskingLock interruptMaskingLock;
 
 	if (owner_ == nullptr)	// already detached?
 		return EINVAL;

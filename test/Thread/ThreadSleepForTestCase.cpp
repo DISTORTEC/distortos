@@ -129,7 +129,7 @@ bool ThreadSleepForTestCase::run_() const
 			}};
 
 			{
-				InterruptMaskingLock interruptMaskingLock;
+				const InterruptMaskingLock interruptMaskingLock;
 
 				// wait for beginning of next tick - test threads should be started in the same tick
 				ThisThread::sleepFor({});

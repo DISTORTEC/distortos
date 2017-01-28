@@ -28,7 +28,7 @@ void __assert_func(const char* const file, const int line, const char* const fun
 	if (assertHook != nullptr)
 		assertHook(file, line, function, failedExpression);
 
-	distortos::InterruptMaskingLock interruptMaskingLock;
+	const distortos::InterruptMaskingLock interruptMaskingLock;
 	abort();
 }
 

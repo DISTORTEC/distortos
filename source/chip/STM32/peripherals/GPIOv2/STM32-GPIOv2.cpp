@@ -45,7 +45,7 @@ void configurePin(const Pin pin, const PinMode mode, const bool openDrain, const
 
 	port.BSRR = 1 << (pinNumber + (initialState == false ? 16 : 0));
 
-	InterruptMaskingLock interruptMaskingLock;
+	const InterruptMaskingLock interruptMaskingLock;
 
 	port.MODER = (port.MODER & moderInvertedMask) | shiftedMode;
 	port.OTYPER = (port.OTYPER & otyperInvertedMask) | shiftedOpenDrain;

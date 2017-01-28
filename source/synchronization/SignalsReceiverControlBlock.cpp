@@ -74,7 +74,7 @@ int SignalsReceiverControlBlock::deliveryOfSignalsStartedHook() const
 
 int SignalsReceiverControlBlock::generateSignal(const uint8_t signalNumber, ThreadControlBlock& threadControlBlock)
 {
-	InterruptMaskingLock interruptMaskingLock;
+	const InterruptMaskingLock interruptMaskingLock;
 
 	const auto isSignalIgnoredResult = isSignalIgnored(signalNumber);
 	if (isSignalIgnoredResult.first != 0)
@@ -119,7 +119,7 @@ int SignalsReceiverControlBlock::queueSignal(const uint8_t signalNumber, const s
 	if (signalInformationQueue_ == nullptr)
 		return ENOTSUP;
 
-	InterruptMaskingLock interruptMaskingLock;
+	const InterruptMaskingLock interruptMaskingLock;
 
 	const auto isSignalIgnoredResult = isSignalIgnored(signalNumber);
 	if (isSignalIgnoredResult.first != 0)

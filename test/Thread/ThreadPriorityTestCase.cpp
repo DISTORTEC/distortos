@@ -96,7 +96,7 @@ bool ThreadPriorityTestCase::run_() const
 			}};
 
 			{
-				InterruptMaskingLock interruptMaskingLock;
+				const InterruptMaskingLock interruptMaskingLock;
 
 				for (auto& thread : threads)
 					thread.start();
