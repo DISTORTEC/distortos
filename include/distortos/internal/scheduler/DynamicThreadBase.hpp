@@ -142,12 +142,12 @@ public:
 	 * This operation can be performed on threads in "New" state only.
 	 *
 	 * \return 0 on success, error code otherwise:
-	 * - error codes returned by ThreadCommon::start();
+	 * - error codes returned by ThreadCommon::startInternal();
 	 */
 
 	int start()
 	{
-		return ThreadCommon::start();
+		return ThreadCommon::startInternal();
 	}
 
 	DynamicThreadBase(const DynamicThreadBase&) = delete;

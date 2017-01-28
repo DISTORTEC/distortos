@@ -72,12 +72,12 @@ public:
 	 * This operation can be performed on threads in "New" state only.
 	 *
 	 * \return 0 on success, error code otherwise:
-	 * - error codes returned by UndetachableThread::start();
+	 * - error codes returned by UndetachableThread::startInternal();
 	 */
 
 	int start()
 	{
-		return UndetachableThread::start();
+		return UndetachableThread::startInternal();
 	}
 
 protected:
