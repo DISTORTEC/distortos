@@ -136,6 +136,20 @@ public:
 
 #endif	// def CONFIG_THREAD_DETACH_ENABLE
 
+	/**
+	 * \brief Starts the thread.
+	 *
+	 * This operation can be performed on threads in "New" state only.
+	 *
+	 * \return 0 on success, error code otherwise:
+	 * - error codes returned by ThreadCommon::start();
+	 */
+
+	int start()
+	{
+		return ThreadCommon::start();
+	}
+
 	DynamicThreadBase(const DynamicThreadBase&) = delete;
 	DynamicThreadBase(DynamicThreadBase&&) = default;
 	const DynamicThreadBase& operator=(const DynamicThreadBase&) = delete;
