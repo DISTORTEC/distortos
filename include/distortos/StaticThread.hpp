@@ -2,7 +2,7 @@
  * \file
  * \brief StaticThread class header
  *
- * \author Copyright (C) 2014-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -65,6 +65,20 @@ public:
 	StaticThreadBase(StaticThreadBase&&) = default;
 	const StaticThreadBase& operator=(const StaticThreadBase&) = delete;
 	StaticThreadBase& operator=(StaticThreadBase&&) = delete;
+
+	/**
+	 * \brief Starts the thread.
+	 *
+	 * This operation can be performed on threads in "New" state only.
+	 *
+	 * \return 0 on success, error code otherwise:
+	 * - error codes returned by UndetachableThread::start();
+	 */
+
+	int start()
+	{
+		return UndetachableThread::start();
+	}
 
 protected:
 
