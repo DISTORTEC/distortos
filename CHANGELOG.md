@@ -60,6 +60,8 @@ the same time reduces stack requirements of any thread using `callOnce()` functi
 - Cleaned up `architecture` namespace, leaving only architecture-specific elements. Moved `Stack`,
 `InterruptMaskingUnmaskingLock` and `InterruptUnmaskingLock` to `internal` namespace. Moved `InterruptMaskingLock` to
 `distortos` namespace.
+- Removed virtual `Thread::start()` and convert overrides available via `DynamicThread` and `StaticThread` to
+non-virtual functions.
 
 ### Fixed
 
