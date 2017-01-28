@@ -28,7 +28,7 @@ namespace internal
 void forceContextSwitch()
 {
 	architecture::requestContextSwitch();
-	InterruptUnmaskingLock interruptUnmaskingLock;
+	const InterruptUnmaskingLock interruptUnmaskingLock;
 }
 
 }	// namespace internal
