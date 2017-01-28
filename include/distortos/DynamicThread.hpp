@@ -243,7 +243,7 @@ public:
 	 * \return 0 on success, error code otherwise:
 	 * - EINVAL - thread is already started;
 	 * - EINVAL - internal thread object was detached;
-	 * - error codes returned by scheduler::Scheduler::add();
+	 * - error codes returned by internal::Scheduler::add();
 	 */
 
 	int start();
