@@ -189,18 +189,6 @@ public:
 	 */
 
 	virtual void setSchedulingPolicy(SchedulingPolicy schedulingPolicy) = 0;
-
-	/**
-	 * \brief Starts the thread.
-	 *
-	 * This operation can be performed on threads in "New" state only.
-	 *
-	 * \return 0 on success, error code otherwise:
-	 * - EINVAL - thread is already started;
-	 * - error codes returned by scheduler::Scheduler::add();
-	 */
-
-	virtual int start() = 0;
 };
 
 }	// namespace distortos

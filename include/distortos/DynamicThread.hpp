@@ -246,7 +246,7 @@ public:
 	 * - error codes returned by scheduler::Scheduler::add();
 	 */
 
-	int start() override;
+	int start();
 
 	DynamicThread(const DynamicThread&) = delete;
 	DynamicThread(DynamicThread&&) = default;
