@@ -104,19 +104,13 @@ bool phase1()
 /**
  * \brief Phase 2 of test case
  *
- * Tests behavior Thread::start() and Thread::join() when used with current thread.
+ * Tests behavior of joining current thread.
  *
  * \return true if test succeeded, false otherwise
  */
 
 bool phase2()
 {
-	{
-		const auto ret = ThisThread::get().start();	// attempting to start current thread must fail
-		if (ret != EINVAL)
-			return false;
-	}
-
 	{
 		const auto ret = ThisThread::get().join();	// attempting to join current thread must fail
 		if (ret != EDEADLK)
