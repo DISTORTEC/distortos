@@ -11,14 +11,14 @@
 
 #include "distortos/ThreadCommon.hpp"
 
-#include "distortos/architecture/InterruptMaskingLock.hpp"
-
 #include "distortos/internal/scheduler/getScheduler.hpp"
 #include "distortos/internal/scheduler/Scheduler.hpp"
 
 #include "distortos/internal/synchronization/SignalsReceiverControlBlock.hpp"
 
 #include "distortos/internal/CHECK_FUNCTION_CONTEXT.hpp"
+
+#include "distortos/InterruptMaskingLock.hpp"
 
 #include <cerrno>
 
@@ -29,7 +29,7 @@ namespace distortos
 | public functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-ThreadCommon::ThreadCommon(architecture::Stack&& stack, const uint8_t priority, const SchedulingPolicy schedulingPolicy,
+ThreadCommon::ThreadCommon(internal::Stack&& stack, const uint8_t priority, const SchedulingPolicy schedulingPolicy,
 		internal::ThreadGroupControlBlock* const threadGroupControlBlock, SignalsReceiver* const signalsReceiver) :
 		threadControlBlock_{std::move(stack), priority, schedulingPolicy, threadGroupControlBlock, signalsReceiver,
 				*this},
@@ -64,7 +64,7 @@ SignalSet ThreadCommon::getPendingSignalSet() const
 	if (signalsReceiverControlBlock == nullptr)
 		return SignalSet{SignalSet::empty};
 
-	architecture::InterruptMaskingLock interruptMaskingLock;
+	const InterruptMaskingLock interruptMaskingLock;
 	return signalsReceiverControlBlock->getPendingSignalSet();
 }
 

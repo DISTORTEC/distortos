@@ -2,7 +2,7 @@
  * \file
  * \brief threadRunner() definition
  *
- * \author Copyright (C) 2014-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -11,11 +11,11 @@
 
 #include "distortos/internal/scheduler/threadRunner.hpp"
 
-#include "distortos/architecture/InterruptMaskingLock.hpp"
-
 #include "distortos/internal/scheduler/forceContextSwitch.hpp"
 #include "distortos/internal/scheduler/getScheduler.hpp"
 #include "distortos/internal/scheduler/Scheduler.hpp"
+
+#include "distortos/InterruptMaskingLock.hpp"
 
 namespace distortos
 {
@@ -33,7 +33,7 @@ void threadRunner(Thread& thread, void (& run)(Thread&), void (* preTerminationH
 	run(thread);
 
 	{
-		architecture::InterruptMaskingLock interruptMaskingLock;
+		const InterruptMaskingLock interruptMaskingLock;
 
 		if (preTerminationHook != nullptr)
 			preTerminationHook(thread);

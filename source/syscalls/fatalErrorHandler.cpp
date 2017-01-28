@@ -2,7 +2,7 @@
  * \file
  * \brief fatalErrorHandler() implementation
  *
- * \author Copyright (C) 2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2016-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -11,9 +11,8 @@
 
 #include "distortos/internal/fatalErrorHandler.h"
 
-#include "distortos/architecture/InterruptMaskingLock.hpp"
-
 #include "distortos/fatalErrorHook.h"
+#include "distortos/InterruptMaskingLock.hpp"
 
 #include <cstdlib>
 
@@ -29,7 +28,7 @@ void fatalErrorHandler(const char* const file, const int line, const char* const
 	if (fatalErrorHook != nullptr)
 		fatalErrorHook(file, line, function, message);
 
-	distortos::architecture::InterruptMaskingLock interruptMaskingLock;
+	const distortos::InterruptMaskingLock interruptMaskingLock;
 	abort();
 }
 

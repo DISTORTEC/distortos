@@ -57,6 +57,9 @@ overflow.
 - Reimplemented `callOnce()` with a mutex. This increases the size of `OnceFlag` object (32 bytes vs 8 bytes), but at
 the same time reduces stack requirements of any thread using `callOnce()` function. Removed
 `ThreadState::blockedOnOnceFlag` enum value.
+- Cleaned up `architecture` namespace, leaving only architecture-specific elements. Moved `Stack`,
+`InterruptMaskingUnmaskingLock` and `InterruptUnmaskingLock` to `internal` namespace. Moved `InterruptMaskingLock` to
+`distortos` namespace.
 
 ### Fixed
 

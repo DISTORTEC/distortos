@@ -2,32 +2,32 @@
  * \file
  * \brief InterruptMaskingUnmaskingLock class header
  *
- * \author Copyright (C) 2014-2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#ifndef INCLUDE_DISTORTOS_ARCHITECTURE_INTERRUPTMASKINGUNMASKINGLOCK_HPP_
-#define INCLUDE_DISTORTOS_ARCHITECTURE_INTERRUPTMASKINGUNMASKINGLOCK_HPP_
+#ifndef INCLUDE_DISTORTOS_INTERNAL_SYNCHRONIZATION_INTERRUPTMASKINGUNMASKINGLOCK_HPP_
+#define INCLUDE_DISTORTOS_INTERNAL_SYNCHRONIZATION_INTERRUPTMASKINGUNMASKINGLOCK_HPP_
 
 #include "distortos/architecture/restoreInterruptMasking.hpp"
 
 namespace distortos
 {
 
-namespace architecture
+namespace internal
 {
 
 /**
  * \brief InterruptMaskingUnmaskingLock class is a RAII wrapper for interrupt mask manipulation.
  *
- * \tparam Function is a reference to function which modifies interrupt mask and returns InterruptMask;
- * enableInterruptMasking() or disableInterruptMasking() should be used
+ * \tparam Function is a reference to function which modifies interrupt mask and returns architecture::InterruptMask;
+ * architecture::enableInterruptMasking() or architecture::disableInterruptMasking() should be used
  */
 
-template<InterruptMask (& Function)()>
+template<architecture::InterruptMask (& Function)()>
 class InterruptMaskingUnmaskingLock
 {
 public:
@@ -52,7 +52,7 @@ public:
 
 	~InterruptMaskingUnmaskingLock()
 	{
-		restoreInterruptMasking(interruptMask_);
+		architecture::restoreInterruptMasking(interruptMask_);
 	}
 
 	InterruptMaskingUnmaskingLock(const InterruptMaskingUnmaskingLock&) = delete;
@@ -63,11 +63,11 @@ public:
 private:
 
 	/// interrupt mask
-	const InterruptMask interruptMask_;
+	const architecture::InterruptMask interruptMask_;
 };
 
-}	// namespace architecture
+}	// namespace internal
 
 }	// namespace distortos
 
-#endif	// INCLUDE_DISTORTOS_ARCHITECTURE_INTERRUPTMASKINGUNMASKINGLOCK_HPP_
+#endif	// INCLUDE_DISTORTOS_INTERNAL_SYNCHRONIZATION_INTERRUPTMASKINGUNMASKINGLOCK_HPP_

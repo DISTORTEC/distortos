@@ -2,7 +2,7 @@
  * \file
  * \brief FifoQueueBase class implementation
  *
- * \author Copyright (C) 2014-2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -11,7 +11,7 @@
 
 #include "distortos/internal/synchronization/FifoQueueBase.hpp"
 
-#include "distortos/architecture/InterruptMaskingLock.hpp"
+#include "distortos/InterruptMaskingLock.hpp"
 
 namespace distortos
 {
@@ -48,7 +48,7 @@ FifoQueueBase::~FifoQueueBase()
 int FifoQueueBase::popPush(const SemaphoreFunctor& waitSemaphoreFunctor, const QueueFunctor& functor,
 		Semaphore& waitSemaphore, Semaphore& postSemaphore, void*& storage)
 {
-	architecture::InterruptMaskingLock interruptMaskingLock;
+	const InterruptMaskingLock interruptMaskingLock;
 
 	const auto ret = waitSemaphoreFunctor(waitSemaphore);
 	if (ret != 0)

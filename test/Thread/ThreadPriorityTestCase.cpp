@@ -14,9 +14,8 @@
 #include "priorityTestPhases.hpp"
 #include "SequenceAsserter.hpp"
 
-#include "distortos/architecture/InterruptMaskingLock.hpp"
-
 #include "distortos/DynamicThread.hpp"
+#include "distortos/InterruptMaskingLock.hpp"
 
 #include <malloc.h>
 
@@ -97,7 +96,7 @@ bool ThreadPriorityTestCase::run_() const
 			}};
 
 			{
-				architecture::InterruptMaskingLock interruptMaskingLock;
+				const InterruptMaskingLock interruptMaskingLock;
 
 				for (auto& thread : threads)
 					thread.start();

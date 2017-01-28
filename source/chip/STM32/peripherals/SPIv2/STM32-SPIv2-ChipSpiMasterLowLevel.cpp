@@ -2,7 +2,7 @@
  * \file
  * \brief ChipSpiMasterLowLevel class implementation for SPIv2 in STM32
  *
- * \author Copyright (C) 2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2016-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -15,7 +15,7 @@
 #include "distortos/chip/CMSIS-proxy.h"
 #include "distortos/chip/STM32-SPIv2-bits.h"
 
-#include "distortos/architecture/InterruptMaskingLock.hpp"
+#include "distortos/InterruptMaskingLock.hpp"
 
 #include <cerrno>
 
@@ -72,7 +72,7 @@ public:
 	void enableErrInterrupt(const bool enable) const
 	{
 		auto& spi = getSpi();
-		const architecture::InterruptMaskingLock interruptMaskingLock;
+		const InterruptMaskingLock interruptMaskingLock;
 		spi.CR2 = (spi.CR2 & ~SPI_CR2_ERRIE) | (enable == true ? SPI_CR2_ERRIE : 0);
 	}
 
@@ -85,7 +85,7 @@ public:
 	void enablePeripheral(const bool enable) const
 	{
 		auto& spi = getSpi();
-		const architecture::InterruptMaskingLock interruptMaskingLock;
+		const InterruptMaskingLock interruptMaskingLock;
 		spi.CR1 = (spi.CR1 & ~SPI_CR1_SPE) | (enable == true ? SPI_CR1_SPE : 0);
 	}
 
@@ -98,7 +98,7 @@ public:
 	void enablePeripheralClock(const bool enable) const
 	{
 		auto& rccEn = *reinterpret_cast<volatile uint32_t*>(RCC_BASE + rccEnOffset_);
-		const architecture::InterruptMaskingLock interruptMaskingLock;
+		const InterruptMaskingLock interruptMaskingLock;
 		rccEn = (rccEn & ~rccEnBitmask_) | (enable == true ? rccEnBitmask_ : 0);
 	}
 
@@ -111,7 +111,7 @@ public:
 	void enableRxneInterrupt(const bool enable) const
 	{
 		auto& spi = getSpi();
-		const architecture::InterruptMaskingLock interruptMaskingLock;
+		const InterruptMaskingLock interruptMaskingLock;
 		spi.CR2 = (spi.CR2 & ~SPI_CR2_RXNEIE) | (enable == true ? SPI_CR2_RXNEIE : 0);
 	}
 
@@ -124,7 +124,7 @@ public:
 	void enableTxeInterrupt(const bool enable) const
 	{
 		auto& spi = getSpi();
-		const architecture::InterruptMaskingLock interruptMaskingLock;
+		const InterruptMaskingLock interruptMaskingLock;
 		spi.CR2 = (spi.CR2 & ~SPI_CR2_TXEIE) | (enable == true ? SPI_CR2_TXEIE : 0);
 	}
 
@@ -165,7 +165,7 @@ public:
 	void resetPeripheral() const
 	{
 		auto& rccRst = *reinterpret_cast<volatile uint32_t*>(RCC_BASE + rccRstOffset_);
-		const architecture::InterruptMaskingLock interruptMaskingLock;
+		const InterruptMaskingLock interruptMaskingLock;
 		rccRst |= rccRstBitmask_;
 		rccRst &= ~rccRstBitmask_;
 	}

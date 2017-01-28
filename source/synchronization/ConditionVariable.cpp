@@ -2,7 +2,7 @@
  * \file
  * \brief ConditionVariable class implementation
  *
- * \author Copyright (C) 2014-2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -11,12 +11,11 @@
 
 #include "distortos/ConditionVariable.hpp"
 
-#include "distortos/Mutex.hpp"
-
 #include "distortos/internal/scheduler/getScheduler.hpp"
 #include "distortos/internal/scheduler/Scheduler.hpp"
 
-#include "distortos/architecture/InterruptMaskingLock.hpp"
+#include "distortos/InterruptMaskingLock.hpp"
+#include "distortos/Mutex.hpp"
 
 #include <cerrno>
 
@@ -29,7 +28,7 @@ namespace distortos
 
 void ConditionVariable::notifyAll()
 {
-	architecture::InterruptMaskingLock interruptMaskingLock;
+	const InterruptMaskingLock interruptMaskingLock;
 
 	while (blockedList_.empty() == false)
 		internal::getScheduler().unblock(blockedList_.begin());
@@ -37,7 +36,7 @@ void ConditionVariable::notifyAll()
 
 void ConditionVariable::notifyOne()
 {
-	architecture::InterruptMaskingLock interruptMaskingLock;
+	const InterruptMaskingLock interruptMaskingLock;
 
 	if (blockedList_.empty() == false)
 		internal::getScheduler().unblock(blockedList_.begin());
@@ -46,7 +45,7 @@ void ConditionVariable::notifyOne()
 int ConditionVariable::wait(Mutex& mutex)
 {
 	{
-		architecture::InterruptMaskingLock interruptMaskingLock;
+		const InterruptMaskingLock interruptMaskingLock;
 
 		const auto ret = mutex.unlock();
 		if (ret != 0)
@@ -68,7 +67,7 @@ int ConditionVariable::waitUntil(Mutex& mutex, const TickClock::time_point timeP
 	int blockUntilRet {};
 
 	{
-		architecture::InterruptMaskingLock interruptMaskingLock;
+		const InterruptMaskingLock interruptMaskingLock;
 
 		const auto ret = mutex.unlock();
 		if (ret != 0)

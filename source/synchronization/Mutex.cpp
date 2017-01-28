@@ -2,7 +2,7 @@
  * \file
  * \brief Mutex class implementation
  *
- * \author Copyright (C) 2014-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -14,9 +14,9 @@
 #include "distortos/internal/scheduler/getScheduler.hpp"
 #include "distortos/internal/scheduler/Scheduler.hpp"
 
-#include "distortos/architecture/InterruptMaskingLock.hpp"
-
 #include "distortos/internal/CHECK_FUNCTION_CONTEXT.hpp"
+
+#include "distortos/InterruptMaskingLock.hpp"
 
 #include <cerrno>
 
@@ -29,7 +29,7 @@ namespace distortos
 
 int Mutex::lock()
 {
-	architecture::InterruptMaskingLock interruptMaskingLock;
+	const InterruptMaskingLock interruptMaskingLock;
 
 	int ret;
 	// break the loop when one of following conditions is true:
@@ -41,7 +41,7 @@ int Mutex::lock()
 
 int Mutex::tryLock()
 {
-	architecture::InterruptMaskingLock interruptMaskingLock;
+	const InterruptMaskingLock interruptMaskingLock;
 	const auto ret = tryLockInternal();
 	return ret != EDEADLK ? ret : EBUSY;
 }
@@ -53,7 +53,7 @@ int Mutex::tryLockFor(const TickClock::duration duration)
 
 int Mutex::tryLockUntil(const TickClock::time_point timePoint)
 {
-	architecture::InterruptMaskingLock interruptMaskingLock;
+	const InterruptMaskingLock interruptMaskingLock;
 
 	int ret;
 	// break the loop when one of following conditions is true:
@@ -68,7 +68,7 @@ int Mutex::unlock()
 {
 	CHECK_FUNCTION_CONTEXT();
 
-	architecture::InterruptMaskingLock interruptMaskingLock;
+	const InterruptMaskingLock interruptMaskingLock;
 
 	if (type_ != Type::normal)
 	{

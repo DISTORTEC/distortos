@@ -2,7 +2,7 @@
  * \file
  * \brief SoftwareTimerControlBlock class implementation
  *
- * \author Copyright (C) 2014-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -14,7 +14,7 @@
 #include "distortos/internal/scheduler/getScheduler.hpp"
 #include "distortos/internal/scheduler/Scheduler.hpp"
 
-#include "distortos/architecture/InterruptMaskingLock.hpp"
+#include "distortos/InterruptMaskingLock.hpp"
 
 namespace distortos
 {
@@ -40,7 +40,7 @@ void SoftwareTimerControlBlock::run(SoftwareTimerSupervisor& supervisor)
 void SoftwareTimerControlBlock::start(SoftwareTimerSupervisor& supervisor, const TickClock::time_point timePoint,
 		const TickClock::duration period)
 {
-	architecture::InterruptMaskingLock interruptMaskingLock;
+	const InterruptMaskingLock interruptMaskingLock;
 
 	stopInternal();
 	period_ = period;
@@ -49,7 +49,7 @@ void SoftwareTimerControlBlock::start(SoftwareTimerSupervisor& supervisor, const
 
 void SoftwareTimerControlBlock::stop()
 {
-	architecture::InterruptMaskingLock interruptMaskingLock;
+	const InterruptMaskingLock interruptMaskingLock;
 
 	stopInternal();
 }

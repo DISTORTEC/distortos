@@ -2,7 +2,7 @@
  * \file
  * \brief SerialPort class implementation
  *
- * \author Copyright (C) 2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2016-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -13,10 +13,9 @@
 
 #include "distortos/devices/communication/UartLowLevel.hpp"
 
-#include "distortos/architecture/InterruptMaskingLock.hpp"
-
 #include "distortos/internal/CHECK_FUNCTION_CONTEXT.hpp"
 
+#include "distortos/InterruptMaskingLock.hpp"
 #include "distortos/Semaphore.hpp"
 
 #include "estd/ScopeGuard.hpp"
@@ -405,7 +404,7 @@ int SerialPort::readImplementation(CircularBuffer& buffer, const size_t minSize,
 						return;
 
 					// restore internal circular read buffer
-					architecture::InterruptMaskingLock interruptMaskingLock;
+					const InterruptMaskingLock interruptMaskingLock;
 					stopReadWrapper();
 					nextReadBuffer_ = {};
 					currentReadBuffer_ = &readBuffer_;
@@ -420,7 +419,7 @@ int SerialPort::readImplementation(CircularBuffer& buffer, const size_t minSize,
 			// prevent preemption, which could make this "short moment" very long). By subtracting this value from the
 			// minimum amount of data required for reading we get size limit of read operation. Notification after
 			// exactly that number of bytes will mean that the buffer has enough data to satisfy requested minimum size.
-			architecture::InterruptMaskingLock interruptMaskingLock;
+			const InterruptMaskingLock interruptMaskingLock;
 			stopReadWrapper();
 			writeBlock = buffer.getWriteBlock();
 			writeBlock.second = std::min(writeBlock.second, readBuffer_.getSize());
@@ -529,7 +528,7 @@ int SerialPort::writeImplementation(CircularBuffer& buffer, const size_t minSize
 					writeSemaphore_ = {};
 
 					// restore internal circular write buffer
-					architecture::InterruptMaskingLock interruptMaskingLock;
+					const InterruptMaskingLock interruptMaskingLock;
 					stopWriteWrapper();
 					nextWriteBuffer_ = {};
 					currentWriteBuffer_ = &writeBuffer_;
@@ -543,7 +542,7 @@ int SerialPort::writeImplementation(CircularBuffer& buffer, const size_t minSize
 			// long). By subtracting this value from the minimum amount of data to write we get size limit of write
 			// operation. Notification after exactly that number of bytes will mean that the buffer is "empty enough" to
 			// receive everything that is left to write.
-			architecture::InterruptMaskingLock interruptMaskingLock;
+			const InterruptMaskingLock interruptMaskingLock;
 			stopWriteWrapper();
 			const auto capacity = writeBuffer_.getCapacity();
 			const auto size = writeBuffer_.getSize();

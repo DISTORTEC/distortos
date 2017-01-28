@@ -2,7 +2,7 @@
  * \file
  * \brief MessageQueueBase class implementation
  *
- * \author Copyright (C) 2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2015-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -11,7 +11,7 @@
 
 #include "distortos/internal/synchronization/MessageQueueBase.hpp"
 
-#include "distortos/architecture/InterruptMaskingLock.hpp"
+#include "distortos/InterruptMaskingLock.hpp"
 
 namespace distortos
 {
@@ -174,7 +174,7 @@ int MessageQueueBase::push(const SemaphoreFunctor& waitSemaphoreFunctor, const u
 int MessageQueueBase::popPush(const SemaphoreFunctor& waitSemaphoreFunctor, const InternalFunctor& internalFunctor,
 		Semaphore& waitSemaphore, Semaphore& postSemaphore)
 {
-	architecture::InterruptMaskingLock interruptMaskingLock;
+	const InterruptMaskingLock interruptMaskingLock;
 
 	const auto ret = waitSemaphoreFunctor(waitSemaphore);
 	if (ret != 0)

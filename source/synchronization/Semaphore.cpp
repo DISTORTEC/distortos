@@ -2,7 +2,7 @@
  * \file
  * \brief Semaphore class implementation
  *
- * \author Copyright (C) 2014-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -14,9 +14,9 @@
 #include "distortos/internal/scheduler/getScheduler.hpp"
 #include "distortos/internal/scheduler/Scheduler.hpp"
 
-#include "distortos/architecture/InterruptMaskingLock.hpp"
-
 #include "distortos/internal/CHECK_FUNCTION_CONTEXT.hpp"
+
+#include "distortos/InterruptMaskingLock.hpp"
 
 #include <cerrno>
 
@@ -29,7 +29,7 @@ namespace distortos
 
 int Semaphore::post()
 {
-	architecture::InterruptMaskingLock interruptMaskingLock;
+	const InterruptMaskingLock interruptMaskingLock;
 
 	if (value_ == maxValue_)
 		return EOVERFLOW;
@@ -47,7 +47,7 @@ int Semaphore::post()
 
 int Semaphore::tryWait()
 {
-	architecture::InterruptMaskingLock interruptMaskingLock;
+	const InterruptMaskingLock interruptMaskingLock;
 	return tryWaitInternal();
 }
 
@@ -60,7 +60,7 @@ int Semaphore::tryWaitUntil(const TickClock::time_point timePoint)
 {
 	CHECK_FUNCTION_CONTEXT();
 
-	architecture::InterruptMaskingLock interruptMaskingLock;
+	const InterruptMaskingLock interruptMaskingLock;
 
 	const auto ret = tryWaitInternal();
 	if (ret != EAGAIN)	// lock successful?
@@ -73,7 +73,7 @@ int Semaphore::wait()
 {
 	CHECK_FUNCTION_CONTEXT();
 
-	architecture::InterruptMaskingLock interruptMaskingLock;
+	const InterruptMaskingLock interruptMaskingLock;
 
 	const auto ret = tryWaitInternal();
 	if (ret != EAGAIN)	// lock successful?

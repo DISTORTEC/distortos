@@ -31,12 +31,12 @@ class ThreadCommon : public Thread
 public:
 
 	/// unique_ptr (with deleter) to storage for stack
-	using StackStorageUniquePointer = architecture::Stack::StorageUniquePointer;
+	using StackStorageUniquePointer = internal::Stack::StorageUniquePointer;
 
 	/**
 	 * \brief ThreadCommon's constructor
 	 *
-	 * \param [in] stack is an rvalue reference to architecture::Stack object which will be adopted for this thread
+	 * \param [in] stack is an rvalue reference to internal::Stack object which will be adopted for this thread
 	 * \param [in] priority is the thread's priority, 0 - lowest, UINT8_MAX - highest
 	 * \param [in] schedulingPolicy is the scheduling policy of the thread
 	 * \param [in] threadGroupControlBlock is a pointer to internal::ThreadGroupControlBlock to which this object will
@@ -45,7 +45,7 @@ public:
 	 * of signals for this thread
 	 */
 
-	ThreadCommon(architecture::Stack&& stack, uint8_t priority, SchedulingPolicy schedulingPolicy,
+	ThreadCommon(internal::Stack&& stack, uint8_t priority, SchedulingPolicy schedulingPolicy,
 			internal::ThreadGroupControlBlock* threadGroupControlBlock, SignalsReceiver* signalsReceiver);
 
 	/**

@@ -14,9 +14,8 @@
 #include "priorityTestPhases.hpp"
 #include "SequenceAsserter.hpp"
 
-#include "distortos/architecture/InterruptMaskingLock.hpp"
-
 #include "distortos/DynamicThread.hpp"
+#include "distortos/InterruptMaskingLock.hpp"
 #include "distortos/Mutex.hpp"
 #include "distortos/ThisThread.hpp"
 
@@ -116,7 +115,7 @@ bool MutexPriorityTestCase::run_() const
 			mutex.lock();
 
 			{
-				architecture::InterruptMaskingLock interruptMaskingLock;
+				const InterruptMaskingLock interruptMaskingLock;
 
 				for (auto& thread : threads)
 				{

@@ -2,7 +2,7 @@
  * \file
  * \brief ChipUartLowLevel class implementation for USARTv2 in STM32
  *
- * \author Copyright (C) 2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2016-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -17,7 +17,7 @@
 
 #include "distortos/devices/communication/UartBase.hpp"
 
-#include "distortos/architecture/InterruptMaskingLock.hpp"
+#include "distortos/InterruptMaskingLock.hpp"
 
 #include <cerrno>
 
@@ -101,7 +101,7 @@ public:
 	void enablePeripheralClock(const bool enable) const
 	{
 		auto& rccEn = *reinterpret_cast<volatile uint32_t*>(RCC_BASE + rccEnOffset_);
-		const architecture::InterruptMaskingLock interruptMaskingLock;
+		const InterruptMaskingLock interruptMaskingLock;
 		rccEn = (rccEn & ~rccEnBitmask_) | (enable == true ? rccEnBitmask_ : 0);
 	}
 
@@ -114,7 +114,7 @@ public:
 	void enableRxneInterrupt(const bool enable) const
 	{
 		auto& uart = getUart();
-		const architecture::InterruptMaskingLock interruptMaskingLock;
+		const InterruptMaskingLock interruptMaskingLock;
 		uart.CR1 = (uart.CR1 & ~USART_CR1_RXNEIE) | (enable == true ? USART_CR1_RXNEIE : 0);
 	}
 
@@ -127,7 +127,7 @@ public:
 	void enableTcInterrupt(const bool enable) const
 	{
 		auto& uart = getUart();
-		const architecture::InterruptMaskingLock interruptMaskingLock;
+		const InterruptMaskingLock interruptMaskingLock;
 		uart.CR1 = (uart.CR1 & ~USART_CR1_TCIE) | (enable == true ? USART_CR1_TCIE : 0);
 	}
 
@@ -140,7 +140,7 @@ public:
 	void enableTxeInterrupt(const bool enable) const
 	{
 		auto& uart = getUart();
-		const architecture::InterruptMaskingLock interruptMaskingLock;
+		const InterruptMaskingLock interruptMaskingLock;
 		uart.CR1 = (uart.CR1 & ~USART_CR1_TXEIE) | (enable == true ? USART_CR1_TXEIE : 0);
 	}
 
@@ -187,7 +187,7 @@ public:
 	void resetPeripheral() const
 	{
 		auto& rccRst = *reinterpret_cast<volatile uint32_t*>(RCC_BASE + rccRstOffset_);
-		const architecture::InterruptMaskingLock interruptMaskingLock;
+		const InterruptMaskingLock interruptMaskingLock;
 		rccRst |= rccRstBitmask_;
 		rccRst &= ~rccRstBitmask_;
 	}

@@ -2,7 +2,7 @@
  * \file
  * \brief SequenceAsserter class implementation
  *
- * \author Copyright (C) 2014 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -11,7 +11,7 @@
 
 #include "SequenceAsserter.hpp"
 
-#include "distortos/architecture/InterruptMaskingLock.hpp"
+#include "distortos/InterruptMaskingLock.hpp"
 
 namespace distortos
 {
@@ -30,7 +30,7 @@ bool SequenceAsserter::assertSequence(const unsigned int sequencePoints)
 
 void SequenceAsserter::sequencePoint(const unsigned int sequencePointt)
 {
-	architecture::InterruptMaskingLock interruptMaskingLock;
+	const InterruptMaskingLock interruptMaskingLock;
 
 	++sequencePointsCount_;
 

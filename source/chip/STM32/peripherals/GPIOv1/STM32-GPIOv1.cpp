@@ -2,7 +2,7 @@
  * \file
  * \brief Implementation of GPIOv1 functions for STM32F1
  *
- * \author Copyright (C) 2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2016-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -11,7 +11,7 @@
 
 #include "distortos/chip/STM32-GPIOv1.hpp"
 
-#include "distortos/architecture/InterruptMaskingLock.hpp"
+#include "distortos/InterruptMaskingLock.hpp"
 
 namespace distortos
 {
@@ -34,7 +34,7 @@ void configurePin(const Pin pin, const PinConfiguration configuration, const boo
 
 	port.BSRR = 1 << (pinNumber + (initialState == false ? 16 : 0));
 
-	architecture::InterruptMaskingLock interruptMaskingLock;
+	const InterruptMaskingLock interruptMaskingLock;
 
 	cr = (cr & invertedMask) | configurationValue;
 }

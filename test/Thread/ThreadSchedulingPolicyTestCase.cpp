@@ -14,9 +14,8 @@
 #include "SequenceAsserter.hpp"
 #include "wasteTime.hpp"
 
-#include "distortos/architecture/InterruptMaskingLock.hpp"
-
 #include "distortos/DynamicThread.hpp"
+#include "distortos/InterruptMaskingLock.hpp"
 #include "distortos/ThisThread.hpp"
 
 #include <malloc.h>
@@ -133,7 +132,7 @@ bool ThreadSchedulingPolicyTestCase::run_() const
 			decltype(TickClock::now()) testStart;
 
 			{
-				architecture::InterruptMaskingLock interruptMaskingLock;
+				const InterruptMaskingLock interruptMaskingLock;
 
 				// wait for beginning of next tick - test threads should be started in the same tick
 				ThisThread::sleepFor({});
