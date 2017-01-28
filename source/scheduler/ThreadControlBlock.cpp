@@ -2,7 +2,7 @@
  * \file
  * \brief ThreadControlBlock class implementation
  *
- * \author Copyright (C) 2014-2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -34,7 +34,7 @@ namespace internal
 | public functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-ThreadControlBlock::ThreadControlBlock(architecture::Stack&& stack, const uint8_t priority,
+ThreadControlBlock::ThreadControlBlock(internal::Stack&& stack, const uint8_t priority,
 		const SchedulingPolicy schedulingPolicy, ThreadGroupControlBlock* const threadGroupControlBlock,
 		SignalsReceiver* const signalsReceiver, Thread& owner) :
 		ThreadListNode{priority},

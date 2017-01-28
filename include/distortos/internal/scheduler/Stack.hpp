@@ -25,7 +25,7 @@ namespace distortos
 
 class Thread;
 
-namespace architecture
+namespace internal
 {
 
 /// Stack class is an abstraction of architecture's stack
@@ -161,7 +161,7 @@ private:
 	void* stackPointer_;
 };
 
-}	// namespace architecture
+}	// namespace internal
 
 }	// namespace distortos
 

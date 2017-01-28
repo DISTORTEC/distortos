@@ -24,7 +24,7 @@
 namespace distortos
 {
 
-namespace architecture
+namespace internal
 {
 
 namespace
@@ -95,7 +95,7 @@ void* initializeStackProxy(void* const storage, const size_t size, const size_t 
 {
 	std::fill_n(static_cast<std::decay<decltype(stackSentinel)>::type*>(storage), size / sizeof(stackSentinel),
 			stackSentinel);
-	return initializeStack(static_cast<uint8_t*>(storage) + stackGuardSize,
+	return architecture::initializeStack(static_cast<uint8_t*>(storage) + stackGuardSize,
 			size > stackGuardSize ? size - stackGuardSize : 0, thread, run, preTerminationHook, terminationHook);
 }
 
@@ -117,7 +117,7 @@ Stack::Stack(StorageUniquePointer&& storageUniquePointer, const size_t size, Thr
 }
 
 Stack::Stack(void* const storage, const size_t size) :
-		storageUniquePointer_{storage, internal::dummyDeleter<void*>},
+		storageUniquePointer_{storage, dummyDeleter<void*>},
 		adjustedStorage_{storage},
 		adjustedSize_{size},
 		stackPointer_{}
@@ -153,6 +153,6 @@ size_t Stack::getHighWaterMark() const
 	return (end - usedElement) * sizeof(*begin);
 }
 
-}	// namespace architecture
+}	// namespace internal
 
 }	// namespace distortos

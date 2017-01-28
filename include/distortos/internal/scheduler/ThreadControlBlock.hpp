@@ -62,7 +62,7 @@ public:
 	/**
 	 * \brief ThreadControlBlock constructor.
 	 *
-	 * \param [in] stack is an rvalue reference to architecture::Stack object which will be adopted for this thread
+	 * \param [in] stack is an rvalue reference to Stack object which will be adopted for this thread
 	 * \param [in] priority is the thread's priority, 0 - lowest, UINT8_MAX - highest
 	 * \param [in] schedulingPolicy is the scheduling policy of the thread
 	 * \param [in] threadGroupControlBlock is a pointer to ThreadGroupControlBlock to which this object will be added,
@@ -72,7 +72,7 @@ public:
 	 * \param [in] owner is a reference to Thread object that owns this ThreadControlBlock
 	 */
 
-	ThreadControlBlock(architecture::Stack&& stack, uint8_t priority, SchedulingPolicy schedulingPolicy,
+	ThreadControlBlock(Stack&& stack, uint8_t priority, SchedulingPolicy schedulingPolicy,
 			ThreadGroupControlBlock* threadGroupControlBlock, SignalsReceiver* signalsReceiver, Thread& owner);
 
 	/**
@@ -169,7 +169,7 @@ public:
 	 * \return reference to internal Stack object
 	 */
 
-	architecture::Stack& getStack()
+	Stack& getStack()
 	{
 		return stack_;
 	}
@@ -178,7 +178,7 @@ public:
 	 * \return const reference to internal Stack object
 	 */
 
-	const architecture::Stack& getStack() const
+	const Stack& getStack() const
 	{
 		return stack_;
 	}
@@ -302,7 +302,7 @@ private:
 	void reposition(bool loweringBefore);
 
 	/// internal stack object
-	architecture::Stack stack_;
+	Stack stack_;
 
 	/// reference to Thread object that owns this ThreadControlBlock
 	Thread& owner_;

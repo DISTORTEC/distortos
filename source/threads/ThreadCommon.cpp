@@ -29,7 +29,7 @@ namespace distortos
 | public functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-ThreadCommon::ThreadCommon(architecture::Stack&& stack, const uint8_t priority, const SchedulingPolicy schedulingPolicy,
+ThreadCommon::ThreadCommon(internal::Stack&& stack, const uint8_t priority, const SchedulingPolicy schedulingPolicy,
 		internal::ThreadGroupControlBlock* const threadGroupControlBlock, SignalsReceiver* const signalsReceiver) :
 		threadControlBlock_{std::move(stack), priority, schedulingPolicy, threadGroupControlBlock, signalsReceiver,
 				*this},
