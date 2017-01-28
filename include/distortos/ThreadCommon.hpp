@@ -197,7 +197,7 @@ public:
 	 * - error codes returned by internal::Scheduler::add();
 	 */
 
-	int start() override;
+	int start();
 
 	ThreadCommon(const ThreadCommon&) = delete;
 	ThreadCommon(ThreadCommon&&) = default;
