@@ -28,7 +28,7 @@ namespace distortos
 
 void ConditionVariable::notifyAll()
 {
-	architecture::InterruptMaskingLock interruptMaskingLock;
+	InterruptMaskingLock interruptMaskingLock;
 
 	while (blockedList_.empty() == false)
 		internal::getScheduler().unblock(blockedList_.begin());
@@ -36,7 +36,7 @@ void ConditionVariable::notifyAll()
 
 void ConditionVariable::notifyOne()
 {
-	architecture::InterruptMaskingLock interruptMaskingLock;
+	InterruptMaskingLock interruptMaskingLock;
 
 	if (blockedList_.empty() == false)
 		internal::getScheduler().unblock(blockedList_.begin());
@@ -45,7 +45,7 @@ void ConditionVariable::notifyOne()
 int ConditionVariable::wait(Mutex& mutex)
 {
 	{
-		architecture::InterruptMaskingLock interruptMaskingLock;
+		InterruptMaskingLock interruptMaskingLock;
 
 		const auto ret = mutex.unlock();
 		if (ret != 0)
@@ -67,7 +67,7 @@ int ConditionVariable::waitUntil(Mutex& mutex, const TickClock::time_point timeP
 	int blockUntilRet {};
 
 	{
-		architecture::InterruptMaskingLock interruptMaskingLock;
+		InterruptMaskingLock interruptMaskingLock;
 
 		const auto ret = mutex.unlock();
 		if (ret != 0)

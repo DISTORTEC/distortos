@@ -115,7 +115,7 @@ bool MutexPriorityTestCase::run_() const
 			mutex.lock();
 
 			{
-				architecture::InterruptMaskingLock interruptMaskingLock;
+				InterruptMaskingLock interruptMaskingLock;
 
 				for (auto& thread : threads)
 				{

@@ -29,7 +29,7 @@ namespace distortos
 
 int Mutex::lock()
 {
-	architecture::InterruptMaskingLock interruptMaskingLock;
+	InterruptMaskingLock interruptMaskingLock;
 
 	int ret;
 	// break the loop when one of following conditions is true:
@@ -41,7 +41,7 @@ int Mutex::lock()
 
 int Mutex::tryLock()
 {
-	architecture::InterruptMaskingLock interruptMaskingLock;
+	InterruptMaskingLock interruptMaskingLock;
 	const auto ret = tryLockInternal();
 	return ret != EDEADLK ? ret : EBUSY;
 }
@@ -53,7 +53,7 @@ int Mutex::tryLockFor(const TickClock::duration duration)
 
 int Mutex::tryLockUntil(const TickClock::time_point timePoint)
 {
-	architecture::InterruptMaskingLock interruptMaskingLock;
+	InterruptMaskingLock interruptMaskingLock;
 
 	int ret;
 	// break the loop when one of following conditions is true:
@@ -68,7 +68,7 @@ int Mutex::unlock()
 {
 	CHECK_FUNCTION_CONTEXT();
 
-	architecture::InterruptMaskingLock interruptMaskingLock;
+	InterruptMaskingLock interruptMaskingLock;
 
 	if (type_ != Type::normal)
 	{

@@ -132,7 +132,7 @@ bool ThreadSchedulingPolicyTestCase::run_() const
 			decltype(TickClock::now()) testStart;
 
 			{
-				architecture::InterruptMaskingLock interruptMaskingLock;
+				InterruptMaskingLock interruptMaskingLock;
 
 				// wait for beginning of next tick - test threads should be started in the same tick
 				ThisThread::sleepFor({});

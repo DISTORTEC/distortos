@@ -40,7 +40,7 @@ void SoftwareTimerControlBlock::run(SoftwareTimerSupervisor& supervisor)
 void SoftwareTimerControlBlock::start(SoftwareTimerSupervisor& supervisor, const TickClock::time_point timePoint,
 		const TickClock::duration period)
 {
-	architecture::InterruptMaskingLock interruptMaskingLock;
+	InterruptMaskingLock interruptMaskingLock;
 
 	stopInternal();
 	period_ = period;
@@ -49,7 +49,7 @@ void SoftwareTimerControlBlock::start(SoftwareTimerSupervisor& supervisor, const
 
 void SoftwareTimerControlBlock::stop()
 {
-	architecture::InterruptMaskingLock interruptMaskingLock;
+	InterruptMaskingLock interruptMaskingLock;
 
 	stopInternal();
 }

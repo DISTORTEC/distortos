@@ -19,16 +19,12 @@
 namespace distortos
 {
 
-namespace architecture
-{
-
-/// InterruptMaskingLock class is a RAII wrapper for enableInterruptMasking() / restoreInterruptMasking()
-class InterruptMaskingLock : private internal::InterruptMaskingUnmaskingLock<enableInterruptMasking>
+/// InterruptMaskingLock class is a RAII wrapper for
+/// architecture::enableInterruptMasking() / architecture::restoreInterruptMasking()
+class InterruptMaskingLock : private internal::InterruptMaskingUnmaskingLock<architecture::enableInterruptMasking>
 {
 
 };
-
-}	// namespace architecture
 
 }	// namespace distortos
 

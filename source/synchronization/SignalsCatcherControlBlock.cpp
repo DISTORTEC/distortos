@@ -63,7 +63,7 @@ std::pair<int, SignalInformation> acceptPendingUnblockedSignal(SignalsReceiverCo
 	// GCC builtin - "find first set" - https://gcc.gnu.org/onlinedocs/gcc/Other-Builtins.html
 	const auto signalNumber = __builtin_ffsl(pendingUnblockedValue) - 1;
 
-	architecture::InterruptMaskingLock interruptMaskingLock;
+	InterruptMaskingLock interruptMaskingLock;
 	return signalsReceiverControlBlock.acceptPendingSignal(signalNumber);
 }
 
@@ -266,7 +266,7 @@ int SignalsCatcherControlBlock::setSignalMask(const SignalSet signalMask,
 	if (owner == nullptr)	// delivery of signals should not be requested if any pending signal is unblocked?
 		return 0;
 
-	architecture::InterruptMaskingLock interruptMaskingLock;
+	InterruptMaskingLock interruptMaskingLock;
 
 	const auto pendingUnblockedBitset = owner->getPendingSignalSet().getBitset() & ~signalMask.getBitset();
 	if (pendingUnblockedBitset.none() == true)	// no pending & unblocked signals?

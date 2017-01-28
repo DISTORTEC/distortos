@@ -29,7 +29,7 @@ namespace distortos
 
 int Semaphore::post()
 {
-	architecture::InterruptMaskingLock interruptMaskingLock;
+	InterruptMaskingLock interruptMaskingLock;
 
 	if (value_ == maxValue_)
 		return EOVERFLOW;
@@ -47,7 +47,7 @@ int Semaphore::post()
 
 int Semaphore::tryWait()
 {
-	architecture::InterruptMaskingLock interruptMaskingLock;
+	InterruptMaskingLock interruptMaskingLock;
 	return tryWaitInternal();
 }
 
@@ -60,7 +60,7 @@ int Semaphore::tryWaitUntil(const TickClock::time_point timePoint)
 {
 	CHECK_FUNCTION_CONTEXT();
 
-	architecture::InterruptMaskingLock interruptMaskingLock;
+	InterruptMaskingLock interruptMaskingLock;
 
 	const auto ret = tryWaitInternal();
 	if (ret != EAGAIN)	// lock successful?
@@ -73,7 +73,7 @@ int Semaphore::wait()
 {
 	CHECK_FUNCTION_CONTEXT();
 
-	architecture::InterruptMaskingLock interruptMaskingLock;
+	InterruptMaskingLock interruptMaskingLock;
 
 	const auto ret = tryWaitInternal();
 	if (ret != EAGAIN)	// lock successful?

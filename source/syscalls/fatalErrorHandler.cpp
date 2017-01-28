@@ -28,7 +28,7 @@ void fatalErrorHandler(const char* const file, const int line, const char* const
 	if (fatalErrorHook != nullptr)
 		fatalErrorHook(file, line, function, message);
 
-	distortos::architecture::InterruptMaskingLock interruptMaskingLock;
+	distortos::InterruptMaskingLock interruptMaskingLock;
 	abort();
 }
 

@@ -98,7 +98,7 @@ std::pair<int, SignalInformation> waitImplementation(const SignalSet& signalSet,
 	if (signalsReceiverControlBlock == nullptr)
 		return {ENOTSUP, SignalInformation{uint8_t{}, SignalInformation::Code{}, sigval{}}};
 
-	architecture::InterruptMaskingLock interruptMaskingLock;
+	InterruptMaskingLock interruptMaskingLock;
 
 	const auto bitset = signalSet.getBitset();
 	auto pendingSignalSet = signalsReceiverControlBlock->getPendingSignalSet();
@@ -159,7 +159,7 @@ std::pair<int, SignalAction> getSignalAction(const uint8_t signalNumber)
 	if (signalsReceiverControlBlock == nullptr)
 		return {ENOTSUP, {}};
 
-	architecture::InterruptMaskingLock interruptMaskingLock;
+	InterruptMaskingLock interruptMaskingLock;
 	return signalsReceiverControlBlock->getSignalAction(signalNumber);
 }
 
@@ -189,7 +189,7 @@ std::pair<int, SignalAction> setSignalAction(const uint8_t signalNumber, const S
 	if (signalsReceiverControlBlock == nullptr)
 		return {ENOTSUP, {}};
 
-	architecture::InterruptMaskingLock interruptMaskingLock;
+	InterruptMaskingLock interruptMaskingLock;
 	return signalsReceiverControlBlock->setSignalAction(signalNumber, signalAction);
 }
 
