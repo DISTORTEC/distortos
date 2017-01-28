@@ -23,7 +23,7 @@ namespace architecture
 {
 
 /// InterruptMaskingLock class is a RAII wrapper for enableInterruptMasking() / restoreInterruptMasking()
-class InterruptMaskingLock : private InterruptMaskingUnmaskingLock<enableInterruptMasking>
+class InterruptMaskingLock : private internal::InterruptMaskingUnmaskingLock<enableInterruptMasking>
 {
 
 };

@@ -17,17 +17,17 @@
 namespace distortos
 {
 
-namespace architecture
+namespace internal
 {
 
 /**
  * \brief InterruptMaskingUnmaskingLock class is a RAII wrapper for interrupt mask manipulation.
  *
- * \tparam Function is a reference to function which modifies interrupt mask and returns InterruptMask;
- * enableInterruptMasking() or disableInterruptMasking() should be used
+ * \tparam Function is a reference to function which modifies interrupt mask and returns architecture::InterruptMask;
+ * architecture::enableInterruptMasking() or architecture::disableInterruptMasking() should be used
  */
 
-template<InterruptMask (& Function)()>
+template<architecture::InterruptMask (& Function)()>
 class InterruptMaskingUnmaskingLock
 {
 public:
@@ -52,7 +52,7 @@ public:
 
 	~InterruptMaskingUnmaskingLock()
 	{
-		restoreInterruptMasking(interruptMask_);
+		architecture::restoreInterruptMasking(interruptMask_);
 	}
 
 	InterruptMaskingUnmaskingLock(const InterruptMaskingUnmaskingLock&) = delete;
@@ -63,10 +63,10 @@ public:
 private:
 
 	/// interrupt mask
-	const InterruptMask interruptMask_;
+	const architecture::InterruptMask interruptMask_;
 };
 
-}	// namespace architecture
+}	// namespace internal
 
 }	// namespace distortos
 
