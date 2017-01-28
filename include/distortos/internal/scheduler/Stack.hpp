@@ -9,8 +9,8 @@
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#ifndef INCLUDE_DISTORTOS_ARCHITECTURE_STACK_HPP_
-#define INCLUDE_DISTORTOS_ARCHITECTURE_STACK_HPP_
+#ifndef INCLUDE_DISTORTOS_INTERNAL_SCHEDULER_STACK_HPP_
+#define INCLUDE_DISTORTOS_INTERNAL_SCHEDULER_STACK_HPP_
 
 #include "distortos/distortosConfiguration.h"
 
@@ -165,4 +165,4 @@ private:
 
 }	// namespace distortos
 
-#endif	// INCLUDE_DISTORTOS_ARCHITECTURE_STACK_HPP_
+#endif	// INCLUDE_DISTORTOS_INTERNAL_SCHEDULER_STACK_HPP_

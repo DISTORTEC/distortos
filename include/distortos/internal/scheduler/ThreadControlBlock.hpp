@@ -17,7 +17,7 @@
 
 #include "distortos/internal/synchronization/MutexList.hpp"
 
-#include "distortos/architecture/Stack.hpp"
+#include "distortos/internal/scheduler/Stack.hpp"
 
 #include "distortos/SchedulingPolicy.hpp"
 #include "distortos/ThreadState.hpp"
