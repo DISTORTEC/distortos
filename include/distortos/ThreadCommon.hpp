@@ -187,18 +187,6 @@ public:
 
 	void setSchedulingPolicy(SchedulingPolicy schedulingPolicy) override;
 
-	/**
-	 * \brief Starts the thread.
-	 *
-	 * This operation can be performed on threads in "New" state only.
-	 *
-	 * \return 0 on success, error code otherwise:
-	 * - EINVAL - thread is already started;
-	 * - error codes returned by internal::Scheduler::add();
-	 */
-
-	int startInternal();
-
 	ThreadCommon(const ThreadCommon&) = delete;
 	ThreadCommon(ThreadCommon&&) = default;
 	const ThreadCommon& operator=(const ThreadCommon&) = delete;
@@ -223,6 +211,18 @@ protected:
 	{
 		return threadControlBlock_;
 	}
+
+	/**
+	 * \brief Starts the thread.
+	 *
+	 * This operation can be performed on threads in "New" state only.
+	 *
+	 * \return 0 on success, error code otherwise:
+	 * - EINVAL - thread is already started;
+	 * - error codes returned by internal::Scheduler::add();
+	 */
+
+	int startInternal();
 
 	/**
 	 * \brief Termination hook function of thread

@@ -125,6 +125,10 @@ void ThreadCommon::setSchedulingPolicy(const SchedulingPolicy schedulingPolicy)
 	getThreadControlBlock().setSchedulingPolicy(schedulingPolicy);
 }
 
+/*---------------------------------------------------------------------------------------------------------------------+
+| protected functions
++---------------------------------------------------------------------------------------------------------------------*/
+
 int ThreadCommon::startInternal()
 {
 	return internal::getScheduler().add(getThreadControlBlock());
