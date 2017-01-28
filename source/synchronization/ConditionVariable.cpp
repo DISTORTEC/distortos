@@ -11,11 +11,11 @@
 
 #include "distortos/ConditionVariable.hpp"
 
-#include "distortos/InterruptMaskingLock.hpp"
-#include "distortos/Mutex.hpp"
-
 #include "distortos/internal/scheduler/getScheduler.hpp"
 #include "distortos/internal/scheduler/Scheduler.hpp"
+
+#include "distortos/InterruptMaskingLock.hpp"
+#include "distortos/Mutex.hpp"
 
 #include <cerrno>
 

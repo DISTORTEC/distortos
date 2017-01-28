@@ -11,9 +11,9 @@
 
 #include "distortos/DynamicThread.hpp"
 
-#include "distortos/internal/CHECK_FUNCTION_CONTEXT.hpp"
-
 #ifdef CONFIG_THREAD_DETACH_ENABLE
+
+#include "distortos/internal/CHECK_FUNCTION_CONTEXT.hpp"
 
 #include "distortos/InterruptMaskingLock.hpp"
 
