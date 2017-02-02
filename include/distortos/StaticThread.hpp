@@ -58,7 +58,7 @@ public:
 							signalsReceiver},
 					boundFunction_{std::bind(std::forward<Function>(function), std::forward<Args>(args)...)}
 	{
-		getThreadControlBlock().getStack().initialize(*this, run, nullptr, terminationHook);
+
 	}
 
 	StaticThreadBase(const StaticThreadBase&) = delete;
@@ -77,7 +77,7 @@ public:
 
 	int start()
 	{
-		return UndetachableThread::startInternal();
+		return UndetachableThread::startInternal(run, nullptr, terminationHook);
 	}
 
 protected:

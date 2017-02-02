@@ -147,7 +147,11 @@ public:
 
 	int start()
 	{
-		return ThreadCommon::startInternal();
+#ifdef CONFIG_THREAD_DETACH_ENABLE
+		return ThreadCommon::startInternal(run, preTerminationHook, terminationHook);
+#else	// !def CONFIG_THREAD_DETACH_ENABLE
+		return ThreadCommon::startInternal(run, nullptr, terminationHook);
+#endif	// !def CONFIG_THREAD_DETACH_ENABLE
 	}
 
 	DynamicThreadBase(const DynamicThreadBase&) = delete;
@@ -225,7 +229,7 @@ DynamicThreadBase::DynamicThreadBase(const size_t stackSize, const bool canRecei
 				boundFunction_{std::bind(std::forward<Function>(function), std::forward<Args>(args)...)},
 				owner_{&owner}
 {
-	getThreadControlBlock().getStack().initialize(*this, run, preTerminationHook, terminationHook);
+
 }
 
 #else	// !def CONFIG_THREAD_DETACH_ENABLE
@@ -241,7 +245,7 @@ DynamicThreadBase::DynamicThreadBase(const size_t stackSize, const bool canRecei
 						canReceiveSignals == true ? signalActions : 0},
 				boundFunction_{std::bind(std::forward<Function>(function), std::forward<Args>(args)...)}
 {
-	getThreadControlBlock().getStack().initialize(*this, run, nullptr, terminationHook);
+
 }
 
 #endif	// !def CONFIG_THREAD_DETACH_ENABLE
