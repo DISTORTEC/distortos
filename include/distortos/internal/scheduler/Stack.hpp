@@ -123,9 +123,12 @@ public:
 	 * \param [in] run is a reference to Thread's "run" function
 	 * \param [in] preTerminationHook is a pointer to Thread's pre-termination hook, nullptr to skip
 	 * \param [in] terminationHook is a reference to Thread's termination hook
+	 *
+	 * \return 0 on success, error code otherwise:
+	 * - error codes returned by architecture::initializeStack();
 	 */
 
-	void initialize(Thread& thread, void (& run)(Thread&), void (* preTerminationHook)(Thread&),
+	int initialize(Thread& thread, void (& run)(Thread&), void (* preTerminationHook)(Thread&),
 			void (& terminationHook)(Thread&));
 
 	/**
