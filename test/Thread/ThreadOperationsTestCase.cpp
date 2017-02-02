@@ -55,6 +55,17 @@ void emptyFunction()
 
 bool phase1()
 {
+	{
+		auto testThread = makeDynamicThread({0, 1}, emptyFunction);
+		const auto ret = testThread.start();	// attempting to start thread with too small stack must fail with ENOSPC
+		if (ret != ENOSPC)
+		{
+			if (ret == 0)
+				testThread.join();
+			return false;
+		}
+	}
+
 	auto testThread = makeDynamicThread({192, 1}, emptyFunction);
 
 	// state of created (but not yet started) thread must be "ThreadState::created"
