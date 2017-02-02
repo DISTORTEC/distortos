@@ -82,14 +82,12 @@ size_t adjustSize(void* const storage, const size_t size, void* const adjustedSt
 | public functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-Stack::Stack(StorageUniquePointer&& storageUniquePointer, const size_t size, Thread& thread, void (& run)(Thread&),
-		void (* preTerminationHook)(Thread&), void (& terminationHook)(Thread&)) :
-				storageUniquePointer_{std::move(storageUniquePointer)},
-				adjustedStorage_{adjustStorage(storageUniquePointer_.get(), stackAlignment)},
-				adjustedSize_{adjustSize(storageUniquePointer_.get(), size, adjustedStorage_, stackAlignment)}
+Stack::Stack(StorageUniquePointer&& storageUniquePointer, const size_t size) :
+		storageUniquePointer_{std::move(storageUniquePointer)},
+		adjustedStorage_{adjustStorage(storageUniquePointer_.get(), stackAlignment)},
+		adjustedSize_{adjustSize(storageUniquePointer_.get(), size, adjustedStorage_, stackAlignment)},
+		stackPointer_{}
 {
-	initialize(thread, run, preTerminationHook, terminationHook);
-
 	/// \todo implement minimal size check
 }
 

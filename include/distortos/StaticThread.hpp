@@ -54,11 +54,11 @@ public:
 	StaticThreadBase(StackStorageUniquePointer&& stackStorageUniquePointer, const size_t size, const uint8_t priority,
 			const SchedulingPolicy schedulingPolicy, SignalsReceiver* const signalsReceiver, Function&& function,
 			Args&&... args) :
-					Base{{std::move(stackStorageUniquePointer), size, *this, run, nullptr, terminationHook},
-							priority, schedulingPolicy, nullptr, signalsReceiver},
+					Base{{std::move(stackStorageUniquePointer), size}, priority, schedulingPolicy, nullptr,
+							signalsReceiver},
 					boundFunction_{std::bind(std::forward<Function>(function), std::forward<Args>(args)...)}
 	{
-
+		getThreadControlBlock().getStack().initialize(*this, run, nullptr, terminationHook);
 	}
 
 	StaticThreadBase(const StaticThreadBase&) = delete;

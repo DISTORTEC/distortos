@@ -218,14 +218,14 @@ DynamicThreadBase::DynamicThreadBase(const size_t stackSize, const bool canRecei
 		const size_t signalActions, const uint8_t priority, const SchedulingPolicy schedulingPolicy,
 		DynamicThread& owner, Function&& function, Args&&... args) :
 				ThreadCommon{{{new uint8_t[stackSize + stackGuardSize_], storageDeleter<uint8_t>},
-						stackSize + stackGuardSize_, *this, run, preTerminationHook, terminationHook}, priority,
-						schedulingPolicy, nullptr, canReceiveSignals == true ? &dynamicSignalsReceiver_ : nullptr},
+						stackSize + stackGuardSize_}, priority, schedulingPolicy, nullptr,
+						canReceiveSignals == true ? &dynamicSignalsReceiver_ : nullptr},
 				dynamicSignalsReceiver_{canReceiveSignals == true ? queuedSignals : 0,
 						canReceiveSignals == true ? signalActions : 0},
 				boundFunction_{std::bind(std::forward<Function>(function), std::forward<Args>(args)...)},
 				owner_{&owner}
 {
-
+	getThreadControlBlock().getStack().initialize(*this, run, preTerminationHook, terminationHook);
 }
 
 #else	// !def CONFIG_THREAD_DETACH_ENABLE
@@ -235,13 +235,13 @@ DynamicThreadBase::DynamicThreadBase(const size_t stackSize, const bool canRecei
 		const size_t signalActions, const uint8_t priority, const SchedulingPolicy schedulingPolicy,
 		Function&& function, Args&&... args) :
 				ThreadCommon{{{new uint8_t[stackSize + stackGuardSize_], storageDeleter<uint8_t>},
-						stackSize + stackGuardSize_, *this, run, nullptr, terminationHook}, priority, schedulingPolicy,
-						nullptr, canReceiveSignals == true ? &dynamicSignalsReceiver_ : nullptr},
+						stackSize + stackGuardSize_,}, priority, schedulingPolicy, nullptr,
+						canReceiveSignals == true ? &dynamicSignalsReceiver_ : nullptr},
 				dynamicSignalsReceiver_{canReceiveSignals == true ? queuedSignals : 0,
 						canReceiveSignals == true ? signalActions : 0},
 				boundFunction_{std::bind(std::forward<Function>(function), std::forward<Args>(args)...)}
 {
-
+	getThreadControlBlock().getStack().initialize(*this, run, nullptr, terminationHook);
 }
 
 #endif	// !def CONFIG_THREAD_DETACH_ENABLE

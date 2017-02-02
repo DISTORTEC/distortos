@@ -39,24 +39,14 @@ public:
 	/**
 	 * \brief Stack's constructor
 	 *
-	 * This function initializes valid architecture-specific stack in provided storage. This requires following steps:
-	 * - adjustment of storage's address and size to suit architecture's alignment requirements,
-	 * - creating hardware and software stack frame in suitable place in the stack,
-	 * - calculation of stack pointer register value.
-	 *
-	 * After this constructor completes, stack is ready for context switching.
+	 * Storage's address and size are adjusted to suit architecture's alignment requirements.
 	 *
 	 * \param [in] storageUniquePointer is a rvalue reference to StorageUniquePointer with storage for stack (\a size
 	 * bytes long) and appropriate deleter
 	 * \param [in] size is the size of stack's storage, bytes
-	 * \param [in] thread is a reference to Thread object passed to function
-	 * \param [in] run is a reference to Thread's "run" function
-	 * \param [in] preTerminationHook is a pointer to Thread's pre-termination hook, nullptr to skip
-	 * \param [in] terminationHook is a reference to Thread's termination hook
 	 */
 
-	Stack(StorageUniquePointer&& storageUniquePointer, size_t size, Thread& thread, void (& run)(Thread&),
-			void (* preTerminationHook)(Thread&), void (& terminationHook)(Thread&));
+	Stack(StorageUniquePointer&& storageUniquePointer, size_t size);
 
 	/**
 	 * \brief Stack's constructor
