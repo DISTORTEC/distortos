@@ -88,7 +88,7 @@ Stack::Stack(StorageUniquePointer&& storageUniquePointer, const size_t size) :
 		adjustedSize_{adjustSize(storageUniquePointer_.get(), size, adjustedStorage_, stackAlignment)},
 		stackPointer_{}
 {
-	/// \todo implement minimal size check
+
 }
 
 Stack::Stack(void* const storage, const size_t size) :
