@@ -133,7 +133,8 @@ void Stack::initialize(Thread& thread, void (& run)(Thread&), void (* const preT
 {
 	std::fill_n(static_cast<std::decay<decltype(stackSentinel)>::type*>(adjustedStorage_),
 			adjustedSize_ / sizeof(stackSentinel), stackSentinel);
-	stackPointer_ = architecture::initializeStack(static_cast<uint8_t*>(adjustedStorage_) + stackGuardSize_,
+	std::tie(std::ignore, stackPointer_) =
+			architecture::initializeStack(static_cast<uint8_t*>(adjustedStorage_) + stackGuardSize_,
 			adjustedSize_ > stackGuardSize_ ? adjustedSize_ - stackGuardSize_ : 0, thread, run, preTerminationHook,
 			terminationHook);
 }
