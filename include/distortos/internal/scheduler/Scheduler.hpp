@@ -57,6 +57,7 @@ public:
 	 * \return 0 on success, error code otherwise:
 	 * - EINVAL - thread is already started;
 	 * - error codes returned by Scheduler::addInternal();
+	 * - error codes returned by Stack::initialize();
 	 */
 
 	int add(void (& run)(Thread&), void (* preTerminationHook)(Thread&), void (& terminationHook)(Thread&),

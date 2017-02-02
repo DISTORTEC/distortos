@@ -97,10 +97,18 @@ int Scheduler::add(void (& run)(Thread&), void (* const preTerminationHook)(Thre
 	if (threadControlBlock.getState() != ThreadState::created)
 		return EINVAL;
 
-	threadControlBlock.getStack().initialize(threadControlBlock.getOwner(), run, preTerminationHook, terminationHook);
-	const auto ret = addInternal(threadControlBlock);
-	if (ret != 0)
-		return ret;
+	{
+		const auto ret = threadControlBlock.getStack().initialize(threadControlBlock.getOwner(), run,
+				preTerminationHook, terminationHook);
+		if (ret != 0)
+			return ret;
+	}
+
+	{
+		const auto ret = addInternal(threadControlBlock);
+		if (ret != 0)
+			return ret;
+	}
 
 	maybeRequestContextSwitch();
 
