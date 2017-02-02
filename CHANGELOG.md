@@ -34,6 +34,7 @@ during context switch" respectively, but executed during every system tick.
 - `Thread::getStackSize()` and `ThisThread::getStackSize()` which can be used to get thread's stack size.
 - `Thread::getStackHighWaterMark()` and `ThisThread::getStackHighWaterMark()` which can be used to get "high water mark"
 (max usage) of thread's stack.
+- Test of thread's `start()` returning `ENOSPC` when stack is too small.
 
 ### Changed
 
@@ -62,6 +63,9 @@ the same time reduces stack requirements of any thread using `callOnce()` functi
 `distortos` namespace.
 - Removed virtual `Thread::start()` and convert overrides available via `DynamicThread` and `StaticThread` to
 non-virtual functions.
+- `architecture::initializeStack()` checks for buffer overflow before actually doing any memory operations. If stack
+is too small for stack frame, `ENOSPC` error code is returned. Modify all call paths - starting at
+`DynamicThread::start()` and `StaticThread::start()` - to handle this error.
 
 ### Fixed
 
