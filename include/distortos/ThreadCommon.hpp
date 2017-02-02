@@ -222,7 +222,6 @@ protected:
 	 * \param [in] terminationHook is a reference to Thread's termination hook
 	 *
 	 * \return 0 on success, error code otherwise:
-	 * - EINVAL - thread is already started;
 	 * - error codes returned by internal::Scheduler::add();
 	 */
 
