@@ -76,29 +76,6 @@ size_t adjustSize(void* const storage, const size_t size, void* const adjustedSt
 	return adjustedStorageEnd - reinterpret_cast<decltype(adjustedStorageEnd)>(adjustedStorage);
 }
 
-/**
- * \brief Proxy for initializeStack() which fills stack with stack sentinel before actually initializing it.
- *
- * \param [in] storage is a pointer to stack's storage
- * \param [in] size is the size of stack's storage, bytes
- * \param [in] stackGuardSize is the size of "stack guard", bytes
- * \param [in] thread is a reference to Thread object passed to function
- * \param [in] run is a reference to Thread's "run" function
- * \param [in] preTerminationHook is a pointer to Thread's pre-termination hook, nullptr to skip
- * \param [in] terminationHook is a reference to Thread's termination hook
- *
- * \return value that can be used as thread's stack pointer, ready for context switching
- */
-
-void* initializeStackProxy(void* const storage, const size_t size, const size_t stackGuardSize, Thread& thread,
-		void (& run)(Thread&), void (* preTerminationHook)(Thread&), void (& terminationHook)(Thread&))
-{
-	std::fill_n(static_cast<std::decay<decltype(stackSentinel)>::type*>(storage), size / sizeof(stackSentinel),
-			stackSentinel);
-	return architecture::initializeStack(static_cast<uint8_t*>(storage) + stackGuardSize,
-			size > stackGuardSize ? size - stackGuardSize : 0, thread, run, preTerminationHook, terminationHook);
-}
-
 }	// namespace
 
 /*---------------------------------------------------------------------------------------------------------------------+
@@ -109,10 +86,10 @@ Stack::Stack(StorageUniquePointer&& storageUniquePointer, const size_t size, Thr
 		void (* preTerminationHook)(Thread&), void (& terminationHook)(Thread&)) :
 				storageUniquePointer_{std::move(storageUniquePointer)},
 				adjustedStorage_{adjustStorage(storageUniquePointer_.get(), stackAlignment)},
-				adjustedSize_{adjustSize(storageUniquePointer_.get(), size, adjustedStorage_, stackAlignment)},
-				stackPointer_{initializeStackProxy(adjustedStorage_, adjustedSize_, stackGuardSize_, thread, run,
-						preTerminationHook, terminationHook)}
+				adjustedSize_{adjustSize(storageUniquePointer_.get(), size, adjustedStorage_, stackAlignment)}
 {
+	initialize(thread, run, preTerminationHook, terminationHook);
+
 	/// \todo implement minimal size check
 }
 
@@ -151,6 +128,16 @@ size_t Stack::getHighWaterMark() const
 				return element == stackSentinel;
 			});
 	return (end - usedElement) * sizeof(*begin);
+}
+
+void Stack::initialize(Thread& thread, void (& run)(Thread&), void (* const preTerminationHook)(Thread&),
+			void (& terminationHook)(Thread&))
+{
+	std::fill_n(static_cast<std::decay<decltype(stackSentinel)>::type*>(adjustedStorage_),
+			adjustedSize_ / sizeof(stackSentinel), stackSentinel);
+	stackPointer_ = architecture::initializeStack(static_cast<uint8_t*>(adjustedStorage_) + stackGuardSize_,
+			adjustedSize_ > stackGuardSize_ ? adjustedSize_ - stackGuardSize_ : 0, thread, run, preTerminationHook,
+			terminationHook);
 }
 
 }	// namespace internal

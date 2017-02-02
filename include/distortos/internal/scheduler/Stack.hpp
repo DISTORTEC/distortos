@@ -127,6 +127,18 @@ public:
 	}
 
 	/**
+	 * \brief Fills the stack with stack sentinel, initializes its contents and stack pointer value.
+	 *
+	 * \param [in] thread is a reference to Thread object passed to function
+	 * \param [in] run is a reference to Thread's "run" function
+	 * \param [in] preTerminationHook is a pointer to Thread's pre-termination hook, nullptr to skip
+	 * \param [in] terminationHook is a reference to Thread's termination hook
+	 */
+
+	void initialize(Thread& thread, void (& run)(Thread&), void (* preTerminationHook)(Thread&),
+			void (& terminationHook)(Thread&));
+
+	/**
 	 * \brief Sets value of stack pointer.
 	 *
 	 * \param [in] stackPointer is the new value of stack pointer
