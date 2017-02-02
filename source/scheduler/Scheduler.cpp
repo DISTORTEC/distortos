@@ -89,16 +89,26 @@ private:
 | public functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-int Scheduler::add(ThreadControlBlock& threadControlBlock)
+int Scheduler::add(void (& run)(Thread&), void (* const preTerminationHook)(Thread&), void (& terminationHook)(Thread&),
+		ThreadControlBlock& threadControlBlock)
 {
 	const InterruptMaskingLock interruptMaskingLock;
 
 	if (threadControlBlock.getState() != ThreadState::created)
 		return EINVAL;
 
-	const auto ret = addInternal(threadControlBlock);
-	if (ret != 0)
-		return ret;
+	{
+		const auto ret = threadControlBlock.getStack().initialize(threadControlBlock.getOwner(), run,
+				preTerminationHook, terminationHook);
+		if (ret != 0)
+			return ret;
+	}
+
+	{
+		const auto ret = addInternal(threadControlBlock);
+		if (ret != 0)
+			return ret;
+	}
 
 	maybeRequestContextSwitch();
 

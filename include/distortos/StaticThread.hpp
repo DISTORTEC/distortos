@@ -2,7 +2,7 @@
  * \file
  * \brief StaticThread class header
  *
- * \author Copyright (C) 2014-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -54,8 +54,8 @@ public:
 	StaticThreadBase(StackStorageUniquePointer&& stackStorageUniquePointer, const size_t size, const uint8_t priority,
 			const SchedulingPolicy schedulingPolicy, SignalsReceiver* const signalsReceiver, Function&& function,
 			Args&&... args) :
-					Base{{std::move(stackStorageUniquePointer), size, *this, run, nullptr, terminationHook},
-							priority, schedulingPolicy, nullptr, signalsReceiver},
+					Base{{std::move(stackStorageUniquePointer), size}, priority, schedulingPolicy, nullptr,
+							signalsReceiver},
 					boundFunction_{std::bind(std::forward<Function>(function), std::forward<Args>(args)...)}
 	{
 
@@ -65,6 +65,20 @@ public:
 	StaticThreadBase(StaticThreadBase&&) = default;
 	const StaticThreadBase& operator=(const StaticThreadBase&) = delete;
 	StaticThreadBase& operator=(StaticThreadBase&&) = delete;
+
+	/**
+	 * \brief Starts the thread.
+	 *
+	 * This operation can be performed on threads in "New" state only.
+	 *
+	 * \return 0 on success, error code otherwise:
+	 * - error codes returned by UndetachableThread::startInternal();
+	 */
+
+	int start()
+	{
+		return UndetachableThread::startInternal(run, nullptr, terminationHook);
+	}
 
 protected:
 

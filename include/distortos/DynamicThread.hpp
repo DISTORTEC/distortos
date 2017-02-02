@@ -241,9 +241,8 @@ public:
 	 * This operation can be performed on threads in "New" state only.
 	 *
 	 * \return 0 on success, error code otherwise:
-	 * - EINVAL - thread is already started;
 	 * - EINVAL - internal thread object was detached;
-	 * - error codes returned by internal::Scheduler::add();
+	 * - error codes returned by internal::DynamicThreadBase::start();
 	 */
 
 	int start();

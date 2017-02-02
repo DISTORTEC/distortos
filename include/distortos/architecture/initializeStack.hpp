@@ -2,7 +2,7 @@
  * \file
  * \brief initializeStack() declaration
  *
- * \author Copyright (C) 2014-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -11,6 +11,8 @@
 
 #ifndef INCLUDE_DISTORTOS_ARCHITECTURE_INITIALIZESTACK_HPP_
 #define INCLUDE_DISTORTOS_ARCHITECTURE_INITIALIZESTACK_HPP_
+
+#include <utility>
 
 #include <cstddef>
 
@@ -37,10 +39,12 @@ namespace architecture
  * \param [in] preTerminationHook is a pointer to Thread's pre-termination hook, nullptr to skip
  * \param [in] terminationHook is a reference to Thread's termination hook
  *
- * \return value that can be used as thread's stack pointer, ready for context switching
+ * \return pair with return code (0 on success, error code otherwise) and value that can be used as thread's stack
+ * pointer, ready for context switching; error codes:
+ * - ENOSPC - size of provided buffer is too small for stack frame;
  */
 
-void* initializeStack(void* buffer, size_t size, Thread& thread, void (& run)(Thread&),
+std::pair<int, void*> initializeStack(void* buffer, size_t size, Thread& thread, void (& run)(Thread&),
 		void (* preTerminationHook)(Thread&), void (& terminationHook)(Thread&));
 
 }	// namespace architecture

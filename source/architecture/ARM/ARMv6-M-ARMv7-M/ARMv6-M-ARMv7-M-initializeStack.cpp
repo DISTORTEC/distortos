@@ -2,7 +2,7 @@
  * \file
  * \brief initializeStack() implementation for ARMv6-M and ARMv7-M
  *
- * \author Copyright (C) 2014-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -15,6 +15,8 @@
 
 #include "distortos/internal/scheduler/threadRunner.hpp"
 
+#include <cerrno>
+
 namespace distortos
 {
 
@@ -25,10 +27,12 @@ namespace architecture
 | global functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-void* initializeStack(void* const buffer, const size_t size, Thread& thread, void (& run)(Thread&),
+std::pair<int, void*> initializeStack(void* const buffer, const size_t size, Thread& thread, void (& run)(Thread&),
 		void (* preTerminationHook)(Thread&), void (& terminationHook)(Thread&))
 {
 	const auto stackFrame = reinterpret_cast<StackFrame*>(static_cast<uint8_t*>(buffer) + size) - 1;
+	if (stackFrame < buffer)
+		return {ENOSPC, {}};
 
 	stackFrame->softwareStackFrame.r4 = reinterpret_cast<void*>(0x44444444);
 	stackFrame->softwareStackFrame.r5 = reinterpret_cast<void*>(0x55555555);
@@ -52,7 +56,7 @@ void* initializeStack(void* const buffer, const size_t size, Thread& thread, voi
 	stackFrame->exceptionStackFrame.pc = reinterpret_cast<void*>(&internal::threadRunner);
 	stackFrame->exceptionStackFrame.xpsr = reinterpret_cast<void*>(ExceptionStackFrame::defaultXpsr);
 
-	return stackFrame;
+	return {{}, stackFrame};
 }
 
 }	// namespace architecture

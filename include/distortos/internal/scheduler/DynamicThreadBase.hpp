@@ -2,7 +2,7 @@
  * \file
  * \brief DynamicThreadBase class header
  *
- * \author Copyright (C) 2015-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2015-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -70,21 +70,6 @@ public:
 			uint8_t priority, SchedulingPolicy schedulingPolicy, DynamicThread& owner, Function&& function,
 			Args&&... args);
 
-	/**
-	 * \brief Detaches the thread.
-	 *
-	 * Similar to std::thread::detach() - http://en.cppreference.com/w/cpp/thread/thread/detach
-	 * Similar to POSIX pthread_detach() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_detach.html
-	 *
-	 * Detaches the executing thread from the Thread object, allowing execution to continue independently. All resources
-	 * allocated for the thread will be deallocated when the thread terminates.
-	 *
-	 * \return 0 on success, error code otherwise:
-	 * - EINVAL - this thread is already detached;
-	 */
-
-	int detach() override;
-
 #else	// !def CONFIG_THREAD_DETACH_ENABLE
 
 	/**
@@ -131,6 +116,43 @@ public:
 	}
 
 #endif	// !def CONFIG_THREAD_DETACH_ENABLE
+
+#ifdef CONFIG_THREAD_DETACH_ENABLE
+
+	/**
+	 * \brief Detaches the thread.
+	 *
+	 * Similar to std::thread::detach() - http://en.cppreference.com/w/cpp/thread/thread/detach
+	 * Similar to POSIX pthread_detach() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_detach.html
+	 *
+	 * Detaches the executing thread from the Thread object, allowing execution to continue independently. All resources
+	 * allocated for the thread will be deallocated when the thread terminates.
+	 *
+	 * \return 0 on success, error code otherwise:
+	 * - EINVAL - this thread is already detached;
+	 */
+
+	int detach() override;
+
+#endif	// def CONFIG_THREAD_DETACH_ENABLE
+
+	/**
+	 * \brief Starts the thread.
+	 *
+	 * This operation can be performed on threads in "New" state only.
+	 *
+	 * \return 0 on success, error code otherwise:
+	 * - error codes returned by ThreadCommon::startInternal();
+	 */
+
+	int start()
+	{
+#ifdef CONFIG_THREAD_DETACH_ENABLE
+		return ThreadCommon::startInternal(run, preTerminationHook, terminationHook);
+#else	// !def CONFIG_THREAD_DETACH_ENABLE
+		return ThreadCommon::startInternal(run, nullptr, terminationHook);
+#endif	// !def CONFIG_THREAD_DETACH_ENABLE
+	}
 
 	DynamicThreadBase(const DynamicThreadBase&) = delete;
 	DynamicThreadBase(DynamicThreadBase&&) = default;
@@ -200,8 +222,8 @@ DynamicThreadBase::DynamicThreadBase(const size_t stackSize, const bool canRecei
 		const size_t signalActions, const uint8_t priority, const SchedulingPolicy schedulingPolicy,
 		DynamicThread& owner, Function&& function, Args&&... args) :
 				ThreadCommon{{{new uint8_t[stackSize + stackGuardSize_], storageDeleter<uint8_t>},
-						stackSize + stackGuardSize_, *this, run, preTerminationHook, terminationHook}, priority,
-						schedulingPolicy, nullptr, canReceiveSignals == true ? &dynamicSignalsReceiver_ : nullptr},
+						stackSize + stackGuardSize_}, priority, schedulingPolicy, nullptr,
+						canReceiveSignals == true ? &dynamicSignalsReceiver_ : nullptr},
 				dynamicSignalsReceiver_{canReceiveSignals == true ? queuedSignals : 0,
 						canReceiveSignals == true ? signalActions : 0},
 				boundFunction_{std::bind(std::forward<Function>(function), std::forward<Args>(args)...)},
@@ -217,8 +239,8 @@ DynamicThreadBase::DynamicThreadBase(const size_t stackSize, const bool canRecei
 		const size_t signalActions, const uint8_t priority, const SchedulingPolicy schedulingPolicy,
 		Function&& function, Args&&... args) :
 				ThreadCommon{{{new uint8_t[stackSize + stackGuardSize_], storageDeleter<uint8_t>},
-						stackSize + stackGuardSize_, *this, run, nullptr, terminationHook}, priority, schedulingPolicy,
-						nullptr, canReceiveSignals == true ? &dynamicSignalsReceiver_ : nullptr},
+						stackSize + stackGuardSize_,}, priority, schedulingPolicy, nullptr,
+						canReceiveSignals == true ? &dynamicSignalsReceiver_ : nullptr},
 				dynamicSignalsReceiver_{canReceiveSignals == true ? queuedSignals : 0,
 						canReceiveSignals == true ? signalActions : 0},
 				boundFunction_{std::bind(std::forward<Function>(function), std::forward<Args>(args)...)}
