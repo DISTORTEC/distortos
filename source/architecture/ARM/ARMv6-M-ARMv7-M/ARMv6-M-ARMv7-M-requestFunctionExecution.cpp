@@ -203,7 +203,7 @@ void fromCurrentThreadToCurrentThread(void (& function)())
  * \param [in] function is a reference to function that should be executed in current thread
  *
  * \return 0 on success, error code otherwise:
- * - ENOMEM - amount of free stack is too small to request function execution;
+ * - ENOSPC - amount of free stack is too small to request function execution;
  */
 
 int fromInterruptToCurrentThread(internal::ThreadControlBlock& threadControlBlock, void (& function)())
@@ -223,7 +223,7 @@ int fromInterruptToCurrentThread(internal::ThreadControlBlock& threadControlBloc
 #endif	// __FPU_PRESENT != 1 || __FPU_USED != 1
 
 	if (threadControlBlock.getStack().checkStackPointer(exceptionStackFrame) == false)
-		return ENOMEM;
+		return ENOSPC;
 
 #if __FPU_PRESENT == 1 && __FPU_USED == 1
 
@@ -262,7 +262,7 @@ int fromInterruptToCurrentThread(internal::ThreadControlBlock& threadControlBloc
  * \a threadControlBlock
  *
  * \return 0 on success, error code otherwise:
- * - ENOMEM - amount of free stack is too small to request function execution;
+ * - ENOSPC - amount of free stack is too small to request function execution;
  */
 
 int toNonCurrentThread(internal::ThreadControlBlock& threadControlBlock, void (& function)())
@@ -271,7 +271,7 @@ int toNonCurrentThread(internal::ThreadControlBlock& threadControlBlock, void (&
 	const auto stackPointer = stack.getStackPointer();
 	const auto stackFrame = reinterpret_cast<StackFrame*>(stackPointer) - 1;
 	if (stack.checkStackPointer(stackFrame) == false)
-		return ENOMEM;
+		return ENOSPC;
 
 	stackFrame->softwareStackFrame.r4 = reinterpret_cast<void*>(0x44444444);
 	stackFrame->softwareStackFrame.r5 = reinterpret_cast<void*>(0x55555555);

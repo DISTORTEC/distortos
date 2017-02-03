@@ -84,8 +84,10 @@ public:
  * \return pair with return code (0 on success, error code otherwise) and SignalInformation object for accepted signal;
  * error codes:
  * - EAGAIN - no signal specified by \a signalSet was pending and non-blocking mode was selected;
- * - EINTR - the wait was interrupted by an unmasked, caught signal;
- * - ETIMEDOUT - no signal specified by \a signalSet was generated before specified \a timePoint;
+ * - ENOTSUP - reception of signals is disabled for current thread;
+ * - error codes returned by internal::Scheduler::block() (for blocking mode without timeout) /
+ * internal::Scheduler::blockUntil() (for blocking mode with timeout);
+ * - error codes returned by internal::SignalsReceiverControlBlock::acceptPendingSignal();
  */
 
 std::pair<int, SignalInformation> waitImplementation(const SignalSet& signalSet, const bool nonBlocking,

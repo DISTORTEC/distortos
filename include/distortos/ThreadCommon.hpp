@@ -65,9 +65,8 @@ public:
 	 * \param [in] signalNumber is the signal that will be generated, [0; 31]
 	 *
 	 * \return 0 on success, error code otherwise:
-	 * - EINVAL - \a signalNumber value is invalid;
-	 * - ENOMEM - amount of free stack is too small to request delivery of signals;
 	 * - ENOTSUP - reception of signals is disabled for this thread;
+	 * - error codes returned by internal::SignalsReceiverControlBlock::generateSignal();
 	 *
 	 * \ingroup signals
 	 */
@@ -136,9 +135,8 @@ public:
 	 * \warning This function must not be called from interrupt context!
 	 *
 	 * \return 0 on success, error code otherwise:
-	 * - EDEADLK - deadlock condition was detected,
-	 * - EINVAL - this thread is not joinable,
-	 * - ...
+	 * - EDEADLK - deadlock condition was detected;
+	 * - error codes returned by Semaphore::wait() (except EINTR);
 	 *
 	 * \ingroup synchronization
 	 */
@@ -157,11 +155,8 @@ public:
 	 * \param [in] value is the signal value
 	 *
 	 * \return 0 on success, error code otherwise:
-	 * - EAGAIN - no resources are available to queue the signal, maximal number of signals is already queued in
-	 * associated queue of SignalInformation objects;
-	 * - EINVAL - \a signalNumber value is invalid;
-	 * - ENOMEM - amount of free stack is too small to request delivery of signals;
 	 * - ENOTSUP - reception or queuing of signals are disabled for this thread;
+	 * - error codes returned by internal::SignalsReceiverControlBlock::queueSignal();
 	 *
 	 * \ingroup signals
 	 */
