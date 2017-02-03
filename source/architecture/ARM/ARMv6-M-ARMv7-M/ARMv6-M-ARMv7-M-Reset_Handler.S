@@ -41,7 +41,7 @@ Reset_Handler:
 
 	// Thread mode uses process stack (psp) and is privileged
 	movs	r0, #CONTROL_SPSEL
-	msr		CONTROL, r0
+	msr		control, r0
 	isb
 
 #endif	// __USES_TWO_STACKS

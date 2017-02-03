@@ -127,7 +127,7 @@ void functionTrampoline(void (& function)(), const void* const savedStackPointer
 	asm volatile
 	(
 #if __FPU_PRESENT == 1 && __FPU_USED == 1
-			"	mrs			r3, CONTROL					\n"	// save current value of CONTROL register
+			"	mrs			r3, control					\n"	// save current value of CONTROL register
 			"	push		{r0-r3}						\n"	// push all arguments and value of CONTROL register to stack
 #else	// __FPU_PRESENT != 1 || __FPU_USED != 1
 			"	push		{r1-r2}						\n"	// push last two arguments to stack
@@ -137,7 +137,7 @@ void functionTrampoline(void (& function)(), const void* const savedStackPointer
 			// restore all arguments and value of CONTROL register, don't update SP
 			"	ldm			sp, {r0-r3}					\n"
 			// restore previous value of CONTROL register, possibly deactivating FPU context
-			"	msr			CONTROL, r3					\n"
+			"	msr			control, r3					\n"
 #else	// __FPU_PRESENT != 1 || __FPU_USED != 1
 			"	ldm			sp, {r1-r2}					\n"	// restore last two arguments, don't update SP
 #endif	// __FPU_PRESENT != 1 || __FPU_USED != 1
