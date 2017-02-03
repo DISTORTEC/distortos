@@ -28,6 +28,11 @@
 
 Reset_Handler:
 
+	// Branch to lowLevelInitialization0() function (process stack pointer is not set, CONTROL is not modified, .data
+	// and .bss are not initialized!)
+	ldr		r0, =lowLevelInitialization0
+	blx		r0
+
 #ifdef __USES_TWO_STACKS
 
 	// Initialize the process stack pointer
@@ -40,10 +45,6 @@ Reset_Handler:
 	isb
 
 #endif	// __USES_TWO_STACKS
-
-	// Branch to lowLevelInitialization0() function (.data and .bss are not initialized!)
-	ldr		r0, =lowLevelInitialization0
-	blx		r0
 
 	// Initialize sections from data_array (including .data)
 	ldr		r4, =__data_array_start
