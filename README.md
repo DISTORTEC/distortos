@@ -1,7 +1,7 @@
 distortos [![Build Status](https://travis-ci.org/DISTORTEC/distortos.svg)](https://travis-ci.org/DISTORTEC/distortos)
 =========
 
-Advanced real-time operating system for deeply embedded targets
+object-oriented C++ RTOS for microcontrollers
 
 [Homepage](http://distortos.org/)<br/>
 [Documentation](http://distortos.org/documentation/)<br/>
