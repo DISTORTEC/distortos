@@ -49,7 +49,7 @@ is very likely to be used in the application (for example to zero-initialize var
 - Reduced size of stack for interrupts to 1kB in all test configurations.
 - Reduced size of stack for idle thread to 256 bytes when support for thread detachment is enabled.
 - `architecture::requestFunctionExecution()` checks for amount of free stack before doing any stack modifications. If
-there's not enough free stack available, it returns an `ENOMEM` error code. Modify all callers of this function (which
+there's not enough free stack available, it returns an `ENOSPC` error code. Modify all callers of this function (which
 includes functions to generate/queue signals and set signal mask) to handle this error code.
 - Changed number of threads, software timers, queued signals and signal actions used by test application to 8 (was 10)
 to reduce its RAM requirements. This fixes a crash of test application for *NUCLEO-F103RB* board caused by insufficient

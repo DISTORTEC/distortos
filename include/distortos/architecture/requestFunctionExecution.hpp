@@ -44,7 +44,7 @@ namespace architecture
  * \a threadControlBlock
  *
  * \return 0 on success, error code otherwise:
- * - ENOMEM - amount of free stack is too small to request function execution;
+ * - ENOSPC - amount of free stack is too small to request function execution;
  */
 
 int requestFunctionExecution(internal::ThreadControlBlock& threadControlBlock, void (& function)());
