@@ -74,8 +74,7 @@ public:
 	 * \param [in] signalNumber is the signal for which the association is requested, [0; 31]
 	 *
 	 * \return pair with return code (0 on success, error code otherwise) and SignalAction that is associated with
-	 * \a signalNumber, default-constructed object if no association was found;
-	 * error codes:
+	 * \a signalNumber, default-constructed object if no association was found; error codes:
 	 * - EINVAL - \a signalNumber value is invalid;
 	 */
 
@@ -99,8 +98,8 @@ public:
 	 * \param [in] threadControlBlock is a reference to associated ThreadControlBlock
 	 *
 	 * \return 0 on success, error code otherwise:
-	 * - EINVAL - \a signalNumber value is invalid;
-	 * - ENOMEM - amount of free stack is too small to request delivery of signals;
+	 * - error codes returned by getAssociation();
+	 * - error codes returned by requestDeliveryOfSignals();
 	 */
 
 	int postGenerate(uint8_t signalNumber, ThreadControlBlock& threadControlBlock);
@@ -113,8 +112,7 @@ public:
 	 * in internal storage is copy-constructed
 	 *
 	 * \return pair with return code (0 on success, error code otherwise) and SignalAction that was associated with
-	 * \a signalNumber, default-constructed object if no association was found;
-	 * error codes:
+	 * \a signalNumber, default-constructed object if no association was found; error codes:
 	 * - EAGAIN - no resources are available to associate \a signalNumber with \a signalAction;
 	 * - EINVAL - \a signalNumber value is invalid;
 	 */
@@ -132,7 +130,7 @@ public:
 	 * (pointer to owner SignalsReceiverControlBlock object) or not (nullptr)
 	 *
 	 * \return 0 on success, error code otherwise:
-	 * - ENOMEM - amount of free stack is too small to request delivery of signals;
+	 * - error codes returned by requestDeliveryOfSignals();
 	 */
 
 	int setSignalMask(SignalSet signalMask, const SignalsReceiverControlBlock* owner);
@@ -185,7 +183,7 @@ private:
 	 * \param [in] threadControlBlock is a reference to associated ThreadControlBlock
 	 *
 	 * \return 0 on success, error code otherwise:
-	 * - ENOMEM - amount of free stack is too small to request delivery of signals;
+	 * - error codes returned by architecture::requestFunctionExecution();
 	 */
 
 	int requestDeliveryOfSignals(ThreadControlBlock& threadControlBlock);
