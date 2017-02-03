@@ -2,7 +2,7 @@
  * \file
  * \brief SerialPort class header
  *
- * \author Copyright (C) 2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2016-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -388,8 +388,7 @@ public:
 	 * \a minSize, nullptr to wait indefinitely, default - nullptr
 	 *
 	 * \return pair with return code (0 on success, error code otherwise) and number of read bytes (valid even when
-	 * error code is returned);
-	 * error codes:
+	 * error code is returned); error codes:
 	 * - EAGAIN - no data can be read without blocking and non-blocking operation was requested (\a minSize is 0);
 	 * - EBADF - the device is not opened;
 	 * - EINTR - the wait was interrupted by an unmasked, caught signal;
@@ -413,8 +412,7 @@ public:
 	 * \param [in] minSize is the minimum size of read, bytes, default - 1
 	 *
 	 * \return pair with return code (0 on success, error code otherwise) and number of read bytes (valid even when
-	 * error code is returned);
-	 * error codes:
+	 * error code is returned); error codes:
 	 * - EAGAIN - no data can be read without blocking and non-blocking operation was requested (\a minSize is 0);
 	 * - EBADF - the device is not opened;
 	 * - EINTR - the wait was interrupted by an unmasked, caught signal;
@@ -446,8 +444,7 @@ public:
 	 * \param [in] minSize is the minimum size of read, bytes, default - 1
 	 *
 	 * \return pair with return code (0 on success, error code otherwise) and number of read bytes (valid even when
-	 * error code is returned);
-	 * error codes:
+	 * error code is returned); error codes:
 	 * - EAGAIN - no data can be read without blocking and non-blocking operation was requested (\a minSize is 0);
 	 * - EBADF - the device is not opened;
 	 * - EINTR - the wait was interrupted by an unmasked, caught signal;
@@ -475,8 +472,7 @@ public:
 	 * \param [in] minSize is the minimum size of read, bytes, default - 1
 	 *
 	 * \return pair with return code (0 on success, error code otherwise) and number of read bytes (valid even when
-	 * error code is returned);
-	 * error codes:
+	 * error code is returned); error codes:
 	 * - EAGAIN - no data can be read without blocking and non-blocking operation was requested (\a minSize is 0);
 	 * - EBADF - the device is not opened;
 	 * - EINTR - the wait was interrupted by an unmasked, caught signal;
@@ -507,8 +503,7 @@ public:
 	 * \param [in] minSize is the minimum size of read, bytes, default - 1
 	 *
 	 * \return pair with return code (0 on success, error code otherwise) and number of read bytes (valid even when
-	 * error code is returned);
-	 * error codes:
+	 * error code is returned); error codes:
 	 * - EAGAIN - no data can be read without blocking and non-blocking operation was requested (\a minSize is 0);
 	 * - EBADF - the device is not opened;
 	 * - EINTR - the wait was interrupted by an unmasked, caught signal;
@@ -536,8 +531,7 @@ public:
 	 * \param [in] minSize is the minimum size of write, bytes, default - SIZE_MAX
 	 *
 	 * \return pair with return code (0 on success, error code otherwise) and number of written bytes (valid even when
-	 * error code is returned);
-	 * error codes:
+	 * error code is returned); error codes:
 	 * - EAGAIN - no data can be written without blocking and non-blocking operation was requested (\a minSize is 0);
 	 * - EBADF - the device is not opened;
 	 * - EINTR - the wait was interrupted by an unmasked, caught signal;
@@ -569,8 +563,7 @@ public:
 	 * \param [in] minSize is the minimum size of write, bytes, default - SIZE_MAX
 	 *
 	 * \return pair with return code (0 on success, error code otherwise) and number of written bytes (valid even when
-	 * error code is returned);
-	 * error codes:
+	 * error code is returned); error codes:
 	 * - EAGAIN - no data can be written without blocking and non-blocking operation was requested (\a minSize is 0);
 	 * - EBADF - the device is not opened;
 	 * - EINTR - the wait was interrupted by an unmasked, caught signal;
@@ -598,8 +591,7 @@ public:
 	 * \param [in] minSize is the minimum size of write, bytes, default - SIZE_MAX
 	 *
 	 * \return pair with return code (0 on success, error code otherwise) and number of written bytes (valid even when
-	 * error code is returned);
-	 * error codes:
+	 * error code is returned); error codes:
 	 * - EAGAIN - no data can be written without blocking and non-blocking operation was requested (\a minSize is 0);
 	 * - EBADF - the device is not opened;
 	 * - EINTR - the wait was interrupted by an unmasked, caught signal;
@@ -628,8 +620,7 @@ public:
 	 * \param [in] minSize is the minimum size of write, bytes, default - SIZE_MAX
 	 *
 	 * \return pair with return code (0 on success, error code otherwise) and number of written bytes (valid even when
-	 * error code is returned);
-	 * error codes:
+	 * error code is returned); error codes:
 	 * - EAGAIN - no data can be written without blocking and non-blocking operation was requested (\a minSize is 0);
 	 * - EBADF - the device is not opened;
 	 * - EINTR - the wait was interrupted by an unmasked, caught signal;
@@ -666,8 +657,7 @@ public:
 	 * \a minSize, nullptr to wait indefinitely, default - nullptr
 	 *
 	 * \return pair with return code (0 on success, error code otherwise) and number of written bytes (valid even when
-	 * error code is returned);
-	 * error codes:
+	 * error code is returned); error codes:
 	 * - EAGAIN - no data can be written without blocking and non-blocking operation was requested (\a minSize is 0);
 	 * - EBADF - the device is not opened;
 	 * - EINTR - the wait was interrupted by an unmasked, caught signal;

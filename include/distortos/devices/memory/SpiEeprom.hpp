@@ -2,7 +2,7 @@
  * \file
  * \brief SpiEeprom class header
  *
- * \author Copyright (C) 2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2016-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -261,8 +261,7 @@ public:
 	 * \warning This function must not be called from interrupt context!
 	 *
 	 * \return pair with return code (0 on success, error code otherwise) and current status of device: false - device
-	 * is idle, true - write operation is in progress;
-	 * error codes:
+	 * is idle, true - write operation is in progress; error codes:
 	 * - error codes returned by readStatusRegister();
 	 */
 

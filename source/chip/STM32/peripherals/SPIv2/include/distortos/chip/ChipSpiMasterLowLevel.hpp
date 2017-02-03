@@ -2,7 +2,7 @@
  * \file
  * \brief ChipSpiMasterLowLevel class header for SPIv2 in STM32
  *
- * \author Copyright (C) 2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2016-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -91,8 +91,7 @@ public:
 	 * \param [in] wordLength selects word length, bits, [4; 16] or [minWordLength; maxWordLength]
 	 * \param [in] lsbFirst selects whether MSB (false) or LSB (true) is transmitted first
 	 *
-	 * \return pair with return code (0 on success, error code otherwise) and real clock frequency;
-	 * error codes:
+	 * \return pair with return code (0 on success, error code otherwise) and real clock frequency; error codes:
 	 * - EBADF - the driver is not started;
 	 * - EBUSY - transfer is in progress;
 	 * - EINVAL - selected SPI mode and/or clock frequency and/or format are invalid;

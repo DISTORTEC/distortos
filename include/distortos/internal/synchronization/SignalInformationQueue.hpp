@@ -2,7 +2,7 @@
  * \file
  * \brief SignalInformationQueue class header
  *
- * \author Copyright (C) 2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2015-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -70,8 +70,8 @@ public:
 	 *
 	 * \param [in] signalNumber is the signal that will be accepted, [0; 31]
 	 *
-	 * \return pair with return code (0 on success, error code otherwise) and dequeued SignalInformation object;
-	 * error codes:
+	 * \return pair with return code (0 on success, error code otherwise) and dequeued SignalInformation object; error
+	 * codes:
 	 * - EAGAIN - no SignalInformation object with signal number equal to \a signalNumber was queued;
 	 */
 
