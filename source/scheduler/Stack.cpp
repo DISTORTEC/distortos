@@ -135,9 +135,8 @@ int Stack::initialize(Thread& thread, void (& run)(Thread&), void (* const preTe
 			adjustedSize_ / sizeof(stackSentinel), stackSentinel);
 	int ret;
 	std::tie(ret, stackPointer_) =
-			architecture::initializeStack(static_cast<uint8_t*>(adjustedStorage_) + stackGuardSize_,
-			adjustedSize_ > stackGuardSize_ ? adjustedSize_ - stackGuardSize_ : 0, thread, run, preTerminationHook,
-			terminationHook);
+			architecture::initializeStack(static_cast<uint8_t*>(adjustedStorage_) + stackGuardSize_, getSize(), thread,
+			run, preTerminationHook, terminationHook);
 	return ret;
 }
 
