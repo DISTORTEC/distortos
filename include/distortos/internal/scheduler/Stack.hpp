@@ -102,7 +102,7 @@ public:
 
 	size_t getSize() const
 	{
-		return adjustedSize_ - stackGuardSize_;
+		return adjustedSize_ > stackGuardSize_ ? adjustedSize_ - stackGuardSize_ : 0;
 	}
 
 	/**
