@@ -2,7 +2,7 @@
  * \file
  * \brief Reset_Handler() (startup code) for ARMv6-M and ARMv7-M
  *
- * \author Copyright (C) 2014-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -28,6 +28,11 @@
 
 Reset_Handler:
 
+	// Branch to lowLevelInitialization0() function (process stack pointer is not set, CONTROL is not modified, .data
+	// and .bss are not initialized!)
+	ldr		r0, =lowLevelInitialization0
+	blx		r0
+
 #ifdef __USES_TWO_STACKS
 
 	// Initialize the process stack pointer
@@ -40,10 +45,6 @@ Reset_Handler:
 	isb
 
 #endif	// __USES_TWO_STACKS
-
-	// Branch to lowLevelInitialization0() function (.data and .bss are not initialized!)
-	ldr		r0, =lowLevelInitialization0
-	blx		r0
 
 	// Initialize sections from data_array (including .data)
 	ldr		r4, =__data_array_start
@@ -129,10 +130,6 @@ Reset_Handler:
 
 #endif	// __USES_CXX
 
-	// Branch to lowLevelInitialization1() function
-	ldr		r0, =lowLevelInitialization1
-	blx		r0
-
 	// Branch to main() with link
 	ldr		r0, =main
 	blx		r0
@@ -149,7 +146,7 @@ Reset_Handler:
 	b		.
 
 /*---------------------------------------------------------------------------------------------------------------------+
-| defaultLowLevelInitialization() - replacement for undefined lowLevelInitialization{0,1}(). This function just returns.
+| defaultLowLevelInitialization() - replacement for undefined lowLevelInitialization0(). This function just returns.
 +---------------------------------------------------------------------------------------------------------------------*/
 
 .text
@@ -163,13 +160,9 @@ defaultLowLevelInitialization:
 	bx		lr
 
 /*---------------------------------------------------------------------------------------------------------------------+
-| assign undefined lowLevelInitialization0() and/or lowLevelInitialization1() to defaultLowLevelInitialization()
+| assign undefined lowLevelInitialization0() to defaultLowLevelInitialization()
 +---------------------------------------------------------------------------------------------------------------------*/
 
 .weak lowLevelInitialization0
 .global lowLevelInitialization0
 .set lowLevelInitialization0, defaultLowLevelInitialization
-
-.weak lowLevelInitialization1
-.global lowLevelInitialization1
-.set lowLevelInitialization1, defaultLowLevelInitialization
