@@ -60,7 +60,9 @@ public:
 	 * \return pair with return code (0 on success, error code otherwise) and SignalInformation object for accepted
 	 * signal; error codes:
 	 * - EAGAIN - no signal specified by \a signalNumber was pending;
-	 * - EINVAL - \a signalNumber value is invalid;
+	 * - error codes returned by SignalInformationQueue::acceptQueuedSignal() (except EAGAIN);
+	 * - error codes returned by SignalSet::remove();
+	 * - error codes returned by SignalSet::test();
 	 */
 
 	std::pair<int, SignalInformation> acceptPendingSignal(uint8_t signalNumber);
@@ -90,8 +92,8 @@ public:
 	 * \param [in] threadControlBlock is a reference to associated ThreadControlBlock
 	 *
 	 * \return 0 on success, error code otherwise:
-	 * - EINVAL - \a signalNumber value is invalid;
-	 * - ENOMEM - amount of free stack is too small to request delivery of signals;
+	 * - error codes returned by isSignalIgnored();
+	 * - error codes returned by postGenerate();
 	 */
 
 	int generateSignal(uint8_t signalNumber, ThreadControlBlock& threadControlBlock);
@@ -110,10 +112,9 @@ public:
 	 * \param [in] signalNumber is the signal for which the association is requested, [0; 31]
 	 *
 	 * \return pair with return code (0 on success, error code otherwise) and SignalAction that is associated with
-	 * \a signalNumber, default-constructed object if no association was found;
-	 * error codes:
-	 * - EINVAL - \a signalNumber value is invalid;
+	 * \a signalNumber, default-constructed object if no association was found; error codes:
 	 * - ENOTSUP - catching/handling of signals is disabled for this receiver;
+	 * - error codes returned by SignalsCatcherControlBlock::getAssociation();
 	 */
 
 	std::pair<int, SignalAction> getSignalAction(uint8_t signalNumber) const;
@@ -141,11 +142,10 @@ public:
 	 * \param [in] threadControlBlock is a reference to associated ThreadControlBlock
 	 *
 	 * \return 0 on success, error code otherwise:
-	 * - EAGAIN - no resources are available to queue the signal, maximal number of signals is already queued in
-	 * associated SignalInformationQueue object;
-	 * - EINVAL - \a signalNumber value is invalid;
-	 * - ENOMEM - amount of free stack is too small to request delivery of signals;
 	 * - ENOTSUP - queuing of signals is disabled for this receiver;
+	 * - error codes returned by isSignalIgnored();
+	 * - error codes returned by postGenerate();
+	 * - error codes returned by SignalInformationQueue::queueSignal();
 	 */
 
 	int queueSignal(uint8_t signalNumber, sigval value, ThreadControlBlock& threadControlBlock) const;
@@ -160,11 +160,10 @@ public:
 	 * in internal storage is copy-constructed
 	 *
 	 * \return pair with return code (0 on success, error code otherwise) and SignalAction that was associated with
-	 * \a signalNumber, default-constructed object if no association was found;
-	 * error codes:
-	 * - EAGAIN - no resources are available to associate \a signalNumber with \a signalAction;
-	 * - EINVAL - \a signalNumber value is invalid;
+	 * \a signalNumber, default-constructed object if no association was found; error codes:
 	 * - ENOTSUP - catching/handling of signals is disabled for this receiver;
+	 * - error codes returned by acceptPendingSignal() (except EAGAIN);
+	 * - error codes returned by SignalsCatcherControlBlock::setAssociation();
 	 */
 
 	std::pair<int, SignalAction> setSignalAction(uint8_t signalNumber, const SignalAction& signalAction);
@@ -179,8 +178,8 @@ public:
 	 * unblocked (true) or not (false)
 	 *
 	 * \return 0 on success, error code otherwise:
-	 * - ENOMEM - amount of free stack is too small to request delivery of signals;
 	 * - ENOTSUP - catching/handling of signals is disabled for this receiver;
+	 * - error codes returned by SignalsCatcherControlBlock::setSignalMask();
 	 */
 
 	int setSignalMask(SignalSet signalMask, bool requestDelivery);
@@ -205,8 +204,7 @@ private:
 	 * \param [in] signalNumber is the signal for which the check will be performed, [0; 31]
 	 *
 	 * \return pair with return code (0 on success, error code otherwise) and boolean telling whether the signal is
-	 * ignored (true) or not (false);
-	 * error codes:
+	 * ignored (true) or not (false); error codes:
 	 * - EINVAL - \a signalNumber value is invalid;
 	 */
 
@@ -221,8 +219,7 @@ private:
 	 * \param [in] threadControlBlock is a reference to associated ThreadControlBlock
 	 *
 	 * \return 0 on success, error code otherwise:
-	 * - EINVAL - \a signalNumber value is invalid;
-	 * - ENOMEM - amount of free stack is too small to request delivery of signals;
+	 * - error codes returned by SignalsCatcherControlBlock::postGenerate();
 	 */
 
 	int postGenerate(uint8_t signalNumber, ThreadControlBlock& threadControlBlock) const;
