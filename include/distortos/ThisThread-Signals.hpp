@@ -46,9 +46,7 @@ namespace Signals
  * \param [in] signalNumber is the signal that will be generated, [0; 31]
  *
  * \return 0 on success, error code otherwise:
- * - EINVAL - \a signalNumber value is invalid;
- * - ENOMEM - amount of free stack is too small to request delivery of signals;
- * - ENOTSUP - reception of signals is disabled for current thread;
+ * - error codes returned by Thread::generateSignal();
  */
 
 int generateSignal(uint8_t signalNumber);
@@ -77,10 +75,9 @@ SignalSet getPendingSignalSet();
  * \param [in] signalNumber is the signal for which the association is requested, [0; 31]
  *
  * \return pair with return code (0 on success, error code otherwise) and SignalAction that is associated with
- * \a signalNumber, default-constructed object if no association was found;
- * error codes:
- * - EINVAL - \a signalNumber value is invalid;
+ * \a signalNumber, default-constructed object if no association was found; error codes:
  * - ENOTSUP - reception or catching/handling of signals are disabled for current thread;
+ * - error codes returned by internal::SignalsReceiverControlBlock::getSignalAction();
  */
 
 std::pair<int, SignalAction> getSignalAction(uint8_t signalNumber);
@@ -110,11 +107,7 @@ SignalSet getSignalMask();
  * \param [in] value is the signal value
  *
  * \return 0 on success, error code otherwise:
- * - EAGAIN - no resources are available to queue the signal, maximal number of signals is already queued in
- * associated queue of SignalInformation objects;
- * - EINVAL - \a signalNumber value is invalid;
- * - ENOMEM - amount of free stack is too small to request delivery of signals;
- * - ENOTSUP - reception or queuing of signals are disabled for current thread;
+ * - error codes returned by Thread::queueSignal();
  */
 
 int queueSignal(uint8_t signalNumber, sigval value);
@@ -131,11 +124,9 @@ int queueSignal(uint8_t signalNumber, sigval value);
  * internal storage is copy-constructed
  *
  * \return pair with return code (0 on success, error code otherwise) and SignalAction that was associated with
- * \a signalNumber, default-constructed object if no association was found;
- * error codes:
- * - EAGAIN - no resources are available to associate \a signalNumber with \a signalAction;
- * - EINVAL - \a signalNumber value is invalid;
+ * \a signalNumber, default-constructed object if no association was found; error codes:
  * - ENOTSUP - reception or catching/handling of signals are disabled for current thread;
+ * - error codes returned by internal::SignalsReceiverControlBlock::setSignalAction();
  */
 
 std::pair<int, SignalAction> setSignalAction(uint8_t signalNumber, const SignalAction& signalAction);
@@ -150,8 +141,8 @@ std::pair<int, SignalAction> setSignalAction(uint8_t signalNumber, const SignalA
  * \param [in] signalMask is the SignalSet with new signal mask for current thread
  *
  * \return 0 on success, error code otherwise:
- * - ENOMEM - amount of free stack is too small to request delivery of signals;
  * - ENOTSUP - reception or catching/handling of signals are disabled for current thread;
+ * - error codes returned by internal::SignalsReceiverControlBlock::setSignalMask();
  */
 
 int setSignalMask(SignalSet signalMask);
@@ -171,8 +162,7 @@ int setSignalMask(SignalSet signalMask);
  *
  * \return pair with return code (0 on success, error code otherwise) and SignalInformation object for accepted signal;
  * error codes:
- * - EAGAIN - no signal specified by \a signalSet was pending;
- * - ENOTSUP - reception of signals is disabled for current thread;
+ * - error codes returned by waitImplementation();
  */
 
 std::pair<int, SignalInformation> tryWait(const SignalSet& signalSet);
@@ -193,9 +183,7 @@ std::pair<int, SignalInformation> tryWait(const SignalSet& signalSet);
  *
  * \return pair with return code (0 on success, error code otherwise) and SignalInformation object for accepted signal;
  * error codes:
- * - EINTR - the wait was interrupted by an unmasked, caught signal;
- * - ENOTSUP - reception of signals is disabled for current thread;
- * - ETIMEDOUT - no signal specified by \a signalSet was generated before the specified \a duration passed;
+ * - error codes returned by tryWaitUntil();
  */
 
 std::pair<int, SignalInformation> tryWaitFor(const SignalSet& signalSet, TickClock::duration duration);
@@ -215,9 +203,7 @@ std::pair<int, SignalInformation> tryWaitFor(const SignalSet& signalSet, TickClo
  *
  * \return pair with return code (0 on success, error code otherwise) and SignalInformation object for accepted signal;
  * error codes:
- * - EINTR - the wait was interrupted by an unmasked, caught signal;
- * - ENOTSUP - reception of signals is disabled for current thread;
- * - ETIMEDOUT - no signal specified by \a signalSet was generated before the specified \a duration passed;
+ * - error codes returned by tryWaitUntil();
  */
 
 template<typename Rep, typename Period>
@@ -243,9 +229,7 @@ std::pair<int, SignalInformation> tryWaitFor(const SignalSet& signalSet,
  *
  * \return pair with return code (0 on success, error code otherwise) and SignalInformation object for accepted signal;
  * error codes:
- * - EINTR - the wait was interrupted by an unmasked, caught signal;
- * - ENOTSUP - reception of signals is disabled for current thread;
- * - ETIMEDOUT - no signal specified by \a signalSet was generated before specified \a timePoint;
+ * - error codes returned by waitImplementation();
  */
 
 std::pair<int, SignalInformation> tryWaitUntil(const SignalSet& signalSet, TickClock::time_point timePoint);
@@ -264,9 +248,7 @@ std::pair<int, SignalInformation> tryWaitUntil(const SignalSet& signalSet, TickC
  *
  * \return pair with return code (0 on success, error code otherwise) and SignalInformation object for accepted signal;
  * error codes:
- * - EINTR - the wait was interrupted by an unmasked, caught signal;
- * - ENOTSUP - reception of signals is disabled for current thread;
- * - ETIMEDOUT - no signal specified by \a signalSet was generated before specified \a timePoint;
+ * - error codes returned by waitImplementation();
  */
 
 template<typename Duration>
@@ -291,8 +273,7 @@ std::pair<int, SignalInformation> tryWaitUntil(const SignalSet& signalSet,
  *
  * \return pair with return code (0 on success, error code otherwise) and SignalInformation object for accepted signal;
  * error codes:
- * - EINTR - the wait was interrupted by an unmasked, caught signal;
- * - ENOTSUP - reception of signals is disabled for current thread;
+ * - error codes returned by waitImplementation();
  */
 
 std::pair<int, SignalInformation> wait(const SignalSet& signalSet);
