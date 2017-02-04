@@ -2,7 +2,7 @@
  * \file
  * \brief Header with definition of bits in STM32 USARTv1 control registers
  *
- * \author Copyright (C) 2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2016-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -123,6 +123,26 @@
 #define UART8_SR_NF_bb						USARTx_SR_NF_bb(UART8)
 #define UART8_SR_FE_bb						USARTx_SR_FE_bb(UART8)
 #define UART8_SR_PE_bb						USARTx_SR_PE_bb(UART8)
+
+#define UART9_SR_LBD_bb						USARTx_SR_LBD_bb(UART9)
+#define UART9_SR_TXE_bb						USARTx_SR_TXE_bb(UART9)
+#define UART9_SR_TC_bb						USARTx_SR_TC_bb(UART9)
+#define UART9_SR_RXNE_bb					USARTx_SR_RXNE_bb(UART9)
+#define UART9_SR_IDLE_bb					USARTx_SR_IDLE_bb(UART9)
+#define UART9_SR_ORE_bb						USARTx_SR_ORE_bb(UART9)
+#define UART9_SR_NF_bb						USARTx_SR_NF_bb(UART9)
+#define UART9_SR_FE_bb						USARTx_SR_FE_bb(UART9)
+#define UART9_SR_PE_bb						USARTx_SR_PE_bb(UART9)
+
+#define UART10_SR_LBD_bb					USARTx_SR_LBD_bb(UART10)
+#define UART10_SR_TXE_bb					USARTx_SR_TXE_bb(UART10)
+#define UART10_SR_TC_bb						USARTx_SR_TC_bb(UART10)
+#define UART10_SR_RXNE_bb					USARTx_SR_RXNE_bb(UART10)
+#define UART10_SR_IDLE_bb					USARTx_SR_IDLE_bb(UART10)
+#define UART10_SR_ORE_bb					USARTx_SR_ORE_bb(UART10)
+#define UART10_SR_NF_bb						USARTx_SR_NF_bb(UART10)
+#define UART10_SR_FE_bb						USARTx_SR_FE_bb(UART10)
+#define UART10_SR_PE_bb						USARTx_SR_PE_bb(UART10)
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | USART_BRR - Baud rate register
@@ -295,6 +315,38 @@
 #define UART8_CR1_RWU_bb					USARTx_CR1_RWU_bb(UART8)
 #define UART8_CR1_SBK_bb					USARTx_CR1_SBK_bb(UART8)
 
+#define UART9_CR1_OVER8_bb					USARTx_CR1_OVER8_bb(UART9)
+#define UART9_CR1_UE_bb						USARTx_CR1_UE_bb(UART9)
+#define UART9_CR1_M_bb						USARTx_CR1_M_bb(UART9)
+#define UART9_CR1_WAKE_bb					USARTx_CR1_WAKE_bb(UART9)
+#define UART9_CR1_PCE_bb					USARTx_CR1_PCE_bb(UART9)
+#define UART9_CR1_PS_bb						USARTx_CR1_PS_bb(UART9)
+#define UART9_CR1_PEIE_bb					USARTx_CR1_PEIE_bb(UART9)
+#define UART9_CR1_TXEIE_bb					USARTx_CR1_TXEIE_bb(UART9)
+#define UART9_CR1_TCIE_bb					USARTx_CR1_TCIE_bb(UART9)
+#define UART9_CR1_RXNEIE_bb					USARTx_CR1_RXNEIE_bb(UART9)
+#define UART9_CR1_IDLEIE_bb					USARTx_CR1_IDLEIE_bb(UART9)
+#define UART9_CR1_TE_bb						USARTx_CR1_TE_bb(UART9)
+#define UART9_CR1_RE_bb						USARTx_CR1_RE_bb(UART9)
+#define UART9_CR1_RWU_bb					USARTx_CR1_RWU_bb(UART9)
+#define UART9_CR1_SBK_bb					USARTx_CR1_SBK_bb(UART9)
+
+#define UART10_CR1_OVER8_bb					USARTx_CR1_OVER8_bb(UART10)
+#define UART10_CR1_UE_bb					USARTx_CR1_UE_bb(UART10)
+#define UART10_CR1_M_bb						USARTx_CR1_M_bb(UART10)
+#define UART10_CR1_WAKE_bb					USARTx_CR1_WAKE_bb(UART10)
+#define UART10_CR1_PCE_bb					USARTx_CR1_PCE_bb(UART10)
+#define UART10_CR1_PS_bb					USARTx_CR1_PS_bb(UART10)
+#define UART10_CR1_PEIE_bb					USARTx_CR1_PEIE_bb(UART10)
+#define UART10_CR1_TXEIE_bb					USARTx_CR1_TXEIE_bb(UART10)
+#define UART10_CR1_TCIE_bb					USARTx_CR1_TCIE_bb(UART10)
+#define UART10_CR1_RXNEIE_bb				USARTx_CR1_RXNEIE_bb(UART10)
+#define UART10_CR1_IDLEIE_bb				USARTx_CR1_IDLEIE_bb(UART10)
+#define UART10_CR1_TE_bb					USARTx_CR1_TE_bb(UART10)
+#define UART10_CR1_RE_bb					USARTx_CR1_RE_bb(UART10)
+#define UART10_CR1_RWU_bb					USARTx_CR1_RWU_bb(UART10)
+#define UART10_CR1_SBK_bb					USARTx_CR1_SBK_bb(UART10)
+
 /*---------------------------------------------------------------------------------------------------------------------+
 | USART_CR2 - Control register 2
 +---------------------------------------------------------------------------------------------------------------------*/
@@ -428,6 +480,22 @@
 #define UART8_CR2_ADD_2_bb					USARTx_CR2_ADD_2_bb(UART8)
 #define UART8_CR2_ADD_3_bb					USARTx_CR2_ADD_3_bb(UART8)
 
+#define UART9_CR2_LINEN_bb					USARTx_CR2_LINEN_bb(UART9)
+#define UART9_CR2_LBDIE_bb					USARTx_CR2_LBDIE_bb(UART9)
+#define UART9_CR2_LBDL_bb					USARTx_CR2_LBDL_bb(UART9)
+#define UART9_CR2_ADD_0_bb					USARTx_CR2_ADD_0_bb(UART9)
+#define UART9_CR2_ADD_1_bb					USARTx_CR2_ADD_1_bb(UART9)
+#define UART9_CR2_ADD_2_bb					USARTx_CR2_ADD_2_bb(UART9)
+#define UART9_CR2_ADD_3_bb					USARTx_CR2_ADD_3_bb(UART9)
+
+#define UART10_CR2_LINEN_bb					USARTx_CR2_LINEN_bb(UART10)
+#define UART10_CR2_LBDIE_bb					USARTx_CR2_LBDIE_bb(UART10)
+#define UART10_CR2_LBDL_bb					USARTx_CR2_LBDL_bb(UART10)
+#define UART10_CR2_ADD_0_bb					USARTx_CR2_ADD_0_bb(UART10)
+#define UART10_CR2_ADD_1_bb					USARTx_CR2_ADD_1_bb(UART10)
+#define UART10_CR2_ADD_2_bb					USARTx_CR2_ADD_2_bb(UART10)
+#define UART10_CR2_ADD_3_bb					USARTx_CR2_ADD_3_bb(UART10)
+
 /*---------------------------------------------------------------------------------------------------------------------+
 | USART_CR3 - Control register 3
 +---------------------------------------------------------------------------------------------------------------------*/
@@ -541,5 +609,21 @@
 #define UART8_CR3_IRLP_bb					USARTx_CR3_IRLP_bb(UART8)
 #define UART8_CR3_IREN_bb					USARTx_CR3_IREN_bb(UART8)
 #define UART8_CR3_EIE_bb					USARTx_CR3_EIE_bb(UART8)
+
+#define UART9_CR3_ONEBIT_bb					USARTx_CR3_ONEBIT_bb(UART9)
+#define UART9_CR3_DMAT_bb					USARTx_CR3_DMAT_bb(UART9)
+#define UART9_CR3_DMAR_bb					USARTx_CR3_DMAR_bb(UART9)
+#define UART9_CR3_HDSEL_bb					USARTx_CR3_HDSEL_bb(UART9)
+#define UART9_CR3_IRLP_bb					USARTx_CR3_IRLP_bb(UART9)
+#define UART9_CR3_IREN_bb					USARTx_CR3_IREN_bb(UART9)
+#define UART9_CR3_EIE_bb					USARTx_CR3_EIE_bb(UART9)
+
+#define UART10_CR3_ONEBIT_bb				USARTx_CR3_ONEBIT_bb(UART10)
+#define UART10_CR3_DMAT_bb					USARTx_CR3_DMAT_bb(UART10)
+#define UART10_CR3_DMAR_bb					USARTx_CR3_DMAR_bb(UART10)
+#define UART10_CR3_HDSEL_bb					USARTx_CR3_HDSEL_bb(UART10)
+#define UART10_CR3_IRLP_bb					USARTx_CR3_IRLP_bb(UART10)
+#define UART10_CR3_IREN_bb					USARTx_CR3_IREN_bb(UART10)
+#define UART10_CR3_EIE_bb					USARTx_CR3_EIE_bb(UART10)
 
 #endif /* SOURCE_CHIP_STM32_PERIPHERALS_USARTV1_INCLUDE_DISTORTOS_CHIP_STM32_USARTV1_BITS_H_ */
