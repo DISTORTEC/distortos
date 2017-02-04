@@ -2,7 +2,7 @@
  * \file
  * \brief Definitions of low-level UART drivers for USARTv1 in STM32
  *
- * \author Copyright (C) 2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2016-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -170,6 +170,44 @@ extern "C" void UART8_IRQHandler()
 }
 
 #endif	// def CONFIG_CHIP_STM32_USARTV1_UART8_ENABLE
+
+/*---------------------------------------------------------------------------------------------------------------------+
+| UART9 global objects and functions
++---------------------------------------------------------------------------------------------------------------------*/
+
+#ifdef CONFIG_CHIP_STM32_USARTV1_UART9_ENABLE
+
+ChipUartLowLevel uart9 {ChipUartLowLevel::uart9Parameters};
+
+/**
+ * \brief UART9 interrupt handler
+ */
+
+extern "C" void UART9_IRQHandler()
+{
+	uart9.interruptHandler();
+}
+
+#endif	// def CONFIG_CHIP_STM32_USARTV1_UART9_ENABLE
+
+/*---------------------------------------------------------------------------------------------------------------------+
+| UART10 global objects and functions
++---------------------------------------------------------------------------------------------------------------------*/
+
+#ifdef CONFIG_CHIP_STM32_USARTV1_UART10_ENABLE
+
+ChipUartLowLevel uart10 {ChipUartLowLevel::uart10Parameters};
+
+/**
+ * \brief UART10 interrupt handler
+ */
+
+extern "C" void UART10_IRQHandler()
+{
+	uart10.interruptHandler();
+}
+
+#endif	// def CONFIG_CHIP_STM32_USARTV1_UART10_ENABLE
 
 }	// namespace chip
 

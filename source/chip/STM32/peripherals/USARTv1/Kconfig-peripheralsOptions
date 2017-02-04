@@ -1,7 +1,7 @@
 #
 # file: Kconfig-peripheralsOptions
 #
-# author: Copyright (C) 2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+# author: Copyright (C) 2016-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
 #
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -65,6 +65,20 @@ config CHIP_STM32_USARTV1_UART8_ENABLE
 	help
 		Enable UART8 low-level driver
 
+config CHIP_STM32_USARTV1_UART9_ENABLE
+	bool "UART9 low-level driver"
+	default n
+	depends on CHIP_STM32_USARTV1_HAS_UART9
+	help
+		Enable UART9 low-level driver
+
+config CHIP_STM32_USARTV1_UART10_ENABLE
+	bool "UART10 low-level driver"
+	default n
+	depends on CHIP_STM32_USARTV1_HAS_UART10
+	help
+		Enable UART10 low-level driver
+
 config CHIP_STM32_USARTV1_HAS_CR1_OVER8_BIT
 	bool
 	default n
@@ -98,6 +112,14 @@ config CHIP_STM32_USARTV1_HAS_UART7
 	default n
 
 config CHIP_STM32_USARTV1_HAS_UART8
+	bool
+	default n
+
+config CHIP_STM32_USARTV1_HAS_UART9
+	bool
+	default n
+
+config CHIP_STM32_USARTV1_HAS_UART10
 	bool
 	default n
 
