@@ -2,7 +2,7 @@
  * \file
  * \brief CMSIS proxy header for architecture.
  *
- * \author Copyright (C) 2014-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -40,10 +40,14 @@
 	#define STM32F412Vx
 #elif defined(CONFIG_CHIP_STM32F412Z)
 	#define STM32F412Zx
+#elif defined(CONFIG_CHIP_STM32F413)
+	#define STM32F413xx
 #elif defined(CONFIG_CHIP_STM32F415)
 	#define STM32F415xx
 #elif defined(CONFIG_CHIP_STM32F417)
 	#define STM32F417xx
+#elif defined(CONFIG_CHIP_STM32F423)
+	#define STM32F423xx
 #elif defined(CONFIG_CHIP_STM32F427)
 	#define STM32F427xx
 #elif defined(CONFIG_CHIP_STM32F429)
