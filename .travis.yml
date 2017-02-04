@@ -1,7 +1,7 @@
 #
 # file: .travis.yml
 #
-# author: Copyright (C) 2015-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+# author: Copyright (C) 2015-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
 #
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -15,6 +15,7 @@ addons:
     apt:
         packages:
             - texinfo
+            - texlive
 
 cache:
     directories:
@@ -24,7 +25,13 @@ cache:
 language: generic
 
 install:
-    - "./scripts/travis-ci.sh install"
+    - "XZ_OPT=\"-0 -T 0 -v\" ./scripts/travis-ci.sh install"
 
 script:
     - "./scripts/travis-ci.sh script"
+
+after_failure:
+    - "echo \"********** /tmp/stdout.log\""
+    - "tail -n 1000 /tmp/stdout.log"
+    - "echo \"********** /tmp/stderr.log\""
+    - "tail -n 1000 /tmp/stderr.log"

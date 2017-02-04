@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 #
 # file: travis-ci.sh
@@ -40,6 +40,29 @@ install() {
 	tar -xf gcc-arm-none-eabi-5_3-160412-linux-x64.tar.xz
 	cat > arm-none-eabi-gcc-5.3.1.sh <<- EOF
 	export PATH="$(pwd)/gcc-arm-none-eabi-5_3-160412/bin:\${PATH-}"
+	EOF
+
+	if [ ! -e "${HOME}"/cache/arm-none-eabi-gcc-6.3.0-*.tar.xz ]; then
+		(
+		echo 'Downloading bleeding-edge-toolchain-master.tar.gz...'
+		wget https://github.com/FreddieChopin/bleeding-edge-toolchain/archive/master.tar.gz -O bleeding-edge-toolchain-master.tar.gz
+		echo 'Extracting bleeding-edge-toolchain-master.tar.gz...'
+		tar -xf bleeding-edge-toolchain-master.tar.gz
+		echo 'Building bleeding-edge-toolchain-master...'
+		cd bleeding-edge-toolchain-master
+
+		{ time='0'; while true; do sleep 60; time="$((${time} + 1))"; echo "${time} minute(s)..."; done } &
+		keepAlivePid="${!}"
+		timeout -k 1m 45m ./build-bleeding-edge-toolchain.sh --skip-nano-libraries > >(tee /tmp/stdout.log) 2> /tmp/stderr.log | grep '[*-]\{10,10\} '
+		kill "${keepAlivePid}"
+		wait "${keepAlivePid}" || true
+		cp arm-none-eabi-gcc-6.3.0-*.tar.xz "${HOME}/cache"
+		)
+	fi
+	echo 'Extracting arm-none-eabi-gcc-6.3.0-*.tar.xz...'
+	tar -xf ${HOME}/cache/arm-none-eabi-gcc-6.3.0-*.tar.xz
+	cat > arm-none-eabi-gcc-6.3.0.sh <<- EOF
+	export PATH="$(cd arm-none-eabi-gcc-6.3.0-*/bin && pwd):\${PATH-}"
 	EOF
 }
 
