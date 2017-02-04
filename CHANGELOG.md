@@ -67,6 +67,8 @@ non-virtual functions.
 is too small for stack frame, `ENOSPC` error code is returned. Modify all call paths - starting at
 `DynamicThread::start()` and `StaticThread::start()` - to handle this error.
 - Moved `lowLevelInitialization0()` to the very beginning of reset handler.
+- Update *CMSIS-STM32F0* to version 1.7.0.
+- Update *CMSIS-STM32F4* to version 1.14.0.
 
 ### Fixed
 
