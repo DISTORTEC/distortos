@@ -2,7 +2,7 @@
  * \file
  * \brief Header with definition of bits in FLASH control registers
  *
- * \author Copyright (C) 2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2015-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -130,6 +130,7 @@
 
 #define FLASH_OPTCR_SPRMOD_bit				31
 #define FLASH_OPTCR_DB1M_bit				30
+#define FLASH_OPTCR_nWRP14_15_bit			30
 #define FLASH_OPTCR_nWRP_bit				16
 #define FLASH_OPTCR_nWRP_0_bit				16
 #define FLASH_OPTCR_nWRP_1_bit				17
@@ -143,6 +144,8 @@
 #define FLASH_OPTCR_nWRP_9_bit				25
 #define FLASH_OPTCR_nWRP_10_bit				26
 #define FLASH_OPTCR_nWRP_11_bit				27
+#define FLASH_OPTCR_nWRP_12_bit				28
+#define FLASH_OPTCR_nWRP_13_bit				29
 #define FLASH_OPTCR_RDP_bit					8
 #define FLASH_OPTCR_RDP_0_bit				8
 #define FLASH_OPTCR_RDP_1_bit				9
@@ -164,6 +167,7 @@
 
 #define FLASH_OPTCR_SPRMOD_bb				BITBAND(&FLASH->OPTCR, FLASH_OPTCR_SPRMOD_bit)
 #define FLASH_OPTCR_DB1M_bb					BITBAND(&FLASH->OPTCR, FLASH_OPTCR_DB1M_bit)
+#define FLASH_OPTCR_nWRP14_15_bb			BITBAND(&FLASH->OPTCR, FLASH_OPTCR_nWRP14_15_bit)
 #define FLASH_OPTCR_nWRP_0_bb				BITBAND(&FLASH->OPTCR, FLASH_OPTCR_nWRP_0_bit)
 #define FLASH_OPTCR_nWRP_1_bb				BITBAND(&FLASH->OPTCR, FLASH_OPTCR_nWRP_1_bit)
 #define FLASH_OPTCR_nWRP_2_bb				BITBAND(&FLASH->OPTCR, FLASH_OPTCR_nWRP_2_bit)
@@ -176,6 +180,8 @@
 #define FLASH_OPTCR_nWRP_9_bb				BITBAND(&FLASH->OPTCR, FLASH_OPTCR_nWRP_9_bit)
 #define FLASH_OPTCR_nWRP_10_bb				BITBAND(&FLASH->OPTCR, FLASH_OPTCR_nWRP_10_bit)
 #define FLASH_OPTCR_nWRP_11_bb				BITBAND(&FLASH->OPTCR, FLASH_OPTCR_nWRP_11_bit)
+#define FLASH_OPTCR_nWRP_12_bb				BITBAND(&FLASH->OPTCR, FLASH_OPTCR_nWRP_12_bit)
+#define FLASH_OPTCR_nWRP_13_bb				BITBAND(&FLASH->OPTCR, FLASH_OPTCR_nWRP_13_bit)
 #define FLASH_OPTCR_RDP_0_bb				BITBAND(&FLASH->OPTCR, FLASH_OPTCR_RDP_0_bit)
 #define FLASH_OPTCR_RDP_1_bb				BITBAND(&FLASH->OPTCR, FLASH_OPTCR_RDP_1_bit)
 #define FLASH_OPTCR_RDP_2_bb				BITBAND(&FLASH->OPTCR, FLASH_OPTCR_RDP_2_bit)
