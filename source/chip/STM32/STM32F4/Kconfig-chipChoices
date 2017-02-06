@@ -1,7 +1,7 @@
 #
 # file: Kconfig-chipChoices
 #
-# author: Copyright (C) 2015-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+# author: Copyright (C) 2015-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
 #
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -272,6 +272,66 @@ config CHIP_STM32F412ZG_SELECTED
 	help
 		STM32F412ZG chip
 
+config CHIP_STM32F413CG_SELECTED
+	bool "STM32F413CG"
+	select CHIP_STM32F413CG
+	help
+		STM32F413CG chip
+
+config CHIP_STM32F413CH_SELECTED
+	bool "STM32F413CH"
+	select CHIP_STM32F413CH
+	help
+		STM32F413CH chip
+
+config CHIP_STM32F413MG_SELECTED
+	bool "STM32F413MG"
+	select CHIP_STM32F413MG
+	help
+		STM32F413MG chip
+
+config CHIP_STM32F413MH_SELECTED
+	bool "STM32F413MH"
+	select CHIP_STM32F413MH
+	help
+		STM32F413MH chip
+
+config CHIP_STM32F413RG_SELECTED
+	bool "STM32F413RG"
+	select CHIP_STM32F413RG
+	help
+		STM32F413RG chip
+
+config CHIP_STM32F413RH_SELECTED
+	bool "STM32F413RH"
+	select CHIP_STM32F413RH
+	help
+		STM32F413RH chip
+
+config CHIP_STM32F413VG_SELECTED
+	bool "STM32F413VG"
+	select CHIP_STM32F413VG
+	help
+		STM32F413VG chip
+
+config CHIP_STM32F413VH_SELECTED
+	bool "STM32F413VH"
+	select CHIP_STM32F413VH
+	help
+		STM32F413VH chip
+
+config CHIP_STM32F413ZG_SELECTED
+	bool "STM32F413ZG"
+	select CHIP_STM32F413ZG
+	help
+		STM32F413ZG chip
+
+config CHIP_STM32F413ZH_SELECTED
+	bool "STM32F413ZH"
+	select CHIP_STM32F413ZH
+	help
+		STM32F413ZH chip
+
 config CHIP_STM32F415OG_SELECTED
 	bool "STM32F415OG"
 	select CHIP_STM32F415OG
@@ -331,6 +391,36 @@ config CHIP_STM32F417ZG_SELECTED
 	select CHIP_STM32F417ZG
 	help
 		STM32F417ZG chip
+
+config CHIP_STM32F423CH_SELECTED
+	bool "STM32F423CH"
+	select CHIP_STM32F423CH
+	help
+		STM32F423CH chip
+
+config CHIP_STM32F423MH_SELECTED
+	bool "STM32F423MH"
+	select CHIP_STM32F423MH
+	help
+		STM32F423MH chip
+
+config CHIP_STM32F423RH_SELECTED
+	bool "STM32F423RH"
+	select CHIP_STM32F423RH
+	help
+		STM32F423RH chip
+
+config CHIP_STM32F423VH_SELECTED
+	bool "STM32F423VH"
+	select CHIP_STM32F423VH
+	help
+		STM32F423VH chip
+
+config CHIP_STM32F423ZH_SELECTED
+	bool "STM32F423ZH"
+	select CHIP_STM32F423ZH
+	help
+		STM32F423ZH chip
 
 config CHIP_STM32F427AG_SELECTED
 	bool "STM32F427AG"
