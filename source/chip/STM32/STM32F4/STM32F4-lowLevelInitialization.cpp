@@ -2,7 +2,7 @@
  * \file
  * \brief chip::lowLevelInitialization() implementation for STM32F4
  *
- * \author Copyright (C) 2015-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2015-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -86,19 +86,19 @@ void lowLevelInitialization()
 
 	configurePllInputClockDivider(CONFIG_CHIP_STM32F4_RCC_PLLM);
 
-#if defined(CONFIG_CHIP_STM32F412) || defined(CONFIG_CHIP_STM32F446) || defined(CONFIG_CHIP_STM32F469) || \
-		defined(CONFIG_CHIP_STM32F479)
+#if defined(CONFIG_CHIP_STM32F412) || defined(CONFIG_CHIP_STM32F413) || defined(CONFIG_CHIP_STM32F423) || \
+		defined(CONFIG_CHIP_STM32F446) || defined(CONFIG_CHIP_STM32F469) || defined(CONFIG_CHIP_STM32F479)
 
 	enablePll(CONFIG_CHIP_STM32F4_RCC_PLLN, CONFIG_CHIP_STM32F4_RCC_PLLP, CONFIG_CHIP_STM32F4_RCC_PLLQ,
 			CONFIG_CHIP_STM32F4_RCC_PLLR);
 
-#else	// !defined(CONFIG_CHIP_STM32F412) && !defined(CONFIG_CHIP_STM32F446) && !defined(CONFIG_CHIP_STM32F469) &&
-		// !defined(CONFIG_CHIP_STM32F479)
+#else	// !defined(CONFIG_CHIP_STM32F412) && !defined(CONFIG_CHIP_STM32F413) && !defined(CONFIG_CHIP_STM32F423) &&
+		// !defined(CONFIG_CHIP_STM32F446) && !defined(CONFIG_CHIP_STM32F469) && !defined(CONFIG_CHIP_STM32F479)
 
 	enablePll(CONFIG_CHIP_STM32F4_RCC_PLLN, CONFIG_CHIP_STM32F4_RCC_PLLP, CONFIG_CHIP_STM32F4_RCC_PLLQ);
 
-#endif	// !defined(CONFIG_CHIP_STM32F412) && !defined(CONFIG_CHIP_STM32F446) && !defined(CONFIG_CHIP_STM32F469) &&
-		// !defined(CONFIG_CHIP_STM32F479)
+#endif	// !defined(CONFIG_CHIP_STM32F412) && !defined(CONFIG_CHIP_STM32F413) && !defined(CONFIG_CHIP_STM32F423) &&
+		// !defined(CONFIG_CHIP_STM32F446) && !defined(CONFIG_CHIP_STM32F469) && !defined(CONFIG_CHIP_STM32F479)
 
 #endif	// def CONFIG_CHIP_STM32F4_RCC_PLL_ENABLE
 
