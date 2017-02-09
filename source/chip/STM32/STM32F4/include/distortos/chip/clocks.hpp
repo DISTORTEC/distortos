@@ -2,7 +2,7 @@
  * \file
  * \brief Definitions of clocks for STM32F4
  *
- * \author Copyright (C) 2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2016-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -55,15 +55,18 @@ constexpr std::array<uint32_t, 4> maxPllOutFrequency {0, 0, 84000000, 60000000};
 #elif defined(CONFIG_CHIP_STM32F405) || defined(CONFIG_CHIP_STM32F407) || defined(CONFIG_CHIP_STM32F415) || \
 		defined(CONFIG_CHIP_STM32F417)
 constexpr std::array<uint32_t, 4> maxPllOutFrequency {0, 168000000, 144000000, 0};
-#elif defined(CONFIG_CHIP_STM32F410) || defined(CONFIG_CHIP_STM32F411) || defined(CONFIG_CHIP_STM32F412)
+#elif defined(CONFIG_CHIP_STM32F410) || defined(CONFIG_CHIP_STM32F411) || defined(CONFIG_CHIP_STM32F412) || \
+		defined(CONFIG_CHIP_STM32F413) || defined(CONFIG_CHIP_STM32F423)
 constexpr std::array<uint32_t, 4> maxPllOutFrequency {0, 100000000, 84000000, 64000000};
 #else	// !defined(CONFIG_CHIP_STM32F401) && !defined(CONFIG_CHIP_STM32F405) && !defined(CONFIG_CHIP_STM32F407) &&
-		// !defined(CONFIG_CHIP_STM32F415) && !defined(CONFIG_CHIP_STM32F417) && !defined(CONFIG_CHIP_STM32F410) &&
-		// !defined(CONFIG_CHIP_STM32F411)
+		// !defined(CONFIG_CHIP_STM32F410) && !defined(CONFIG_CHIP_STM32F411) && !defined(CONFIG_CHIP_STM32F412) &&
+		// !defined(CONFIG_CHIP_STM32F413) && !defined(CONFIG_CHIP_STM32F415) && !defined(CONFIG_CHIP_STM32F417) &&
+		// !defined(CONFIG_CHIP_STM32F423) &&
 constexpr std::array<uint32_t, 4> maxPllOutFrequency {180000000, 168000000, 144000000, 120000000};
 #endif	// !defined(CONFIG_CHIP_STM32F401) && !defined(CONFIG_CHIP_STM32F405) && !defined(CONFIG_CHIP_STM32F407) &&
-		// !defined(CONFIG_CHIP_STM32F415) && !defined(CONFIG_CHIP_STM32F417) && !defined(CONFIG_CHIP_STM32F410) &&
-		// !defined(CONFIG_CHIP_STM32F411)
+		// !defined(CONFIG_CHIP_STM32F410) && !defined(CONFIG_CHIP_STM32F411) && !defined(CONFIG_CHIP_STM32F412) &&
+		// !defined(CONFIG_CHIP_STM32F413) && !defined(CONFIG_CHIP_STM32F415) && !defined(CONFIG_CHIP_STM32F417) &&
+		// !defined(CONFIG_CHIP_STM32F423) &&
 
 /// maximum allowed value for PLL "Q" output frequency, Hz
 constexpr uint32_t maxPllqOutFrequency {48000000};
@@ -72,34 +75,40 @@ constexpr uint32_t maxPllqOutFrequency {48000000};
 #if defined(CONFIG_CHIP_STM32F401) || defined(CONFIG_CHIP_STM32F405) || defined(CONFIG_CHIP_STM32F407) || \
 		defined(CONFIG_CHIP_STM32F415) || defined(CONFIG_CHIP_STM32F417)
 constexpr uint32_t maxApb1Frequency {42000000};
-#elif defined(CONFIG_CHIP_STM32F410) || defined(CONFIG_CHIP_STM32F411) || defined(CONFIG_CHIP_STM32F412)
+#elif defined(CONFIG_CHIP_STM32F410) || defined(CONFIG_CHIP_STM32F411) || defined(CONFIG_CHIP_STM32F412) || \
+		defined(CONFIG_CHIP_STM32F413) || defined(CONFIG_CHIP_STM32F423)
 constexpr uint32_t maxApb1Frequency {50000000};
 #else	// !defined(CONFIG_CHIP_STM32F401) && !defined(CONFIG_CHIP_STM32F405) && !defined(CONFIG_CHIP_STM32F407) &&
-		// !defined(CONFIG_CHIP_STM32F415) && !defined(CONFIG_CHIP_STM32F417) && !defined(CONFIG_CHIP_STM32F410) &&
-		// !defined(CONFIG_CHIP_STM32F411)
+		// !defined(CONFIG_CHIP_STM32F410) && !defined(CONFIG_CHIP_STM32F411) && !defined(CONFIG_CHIP_STM32F412) &&
+		// !defined(CONFIG_CHIP_STM32F413) && !defined(CONFIG_CHIP_STM32F415) && !defined(CONFIG_CHIP_STM32F417) &&
+		// !defined(CONFIG_CHIP_STM32F423)
 constexpr uint32_t maxApb1Frequency {45000000};
 #endif	// !defined(CONFIG_CHIP_STM32F401) && !defined(CONFIG_CHIP_STM32F405) && !defined(CONFIG_CHIP_STM32F407) &&
-		// !defined(CONFIG_CHIP_STM32F415) && !defined(CONFIG_CHIP_STM32F417) && !defined(CONFIG_CHIP_STM32F410) &&
-		// !defined(CONFIG_CHIP_STM32F411)
+		// !defined(CONFIG_CHIP_STM32F410) && !defined(CONFIG_CHIP_STM32F411) && !defined(CONFIG_CHIP_STM32F412) &&
+		// !defined(CONFIG_CHIP_STM32F413) && !defined(CONFIG_CHIP_STM32F415) && !defined(CONFIG_CHIP_STM32F417) &&
+		// !defined(CONFIG_CHIP_STM32F423)
 
 /// maximum allowed APB2 (high speed) frequency, Hz
 #if defined(CONFIG_CHIP_STM32F401) || defined(CONFIG_CHIP_STM32F405) || defined(CONFIG_CHIP_STM32F407) || \
 		defined(CONFIG_CHIP_STM32F415) || defined(CONFIG_CHIP_STM32F417)
 constexpr uint32_t maxApb2Frequency {84000000};
-#elif defined(CONFIG_CHIP_STM32F410) || defined(CONFIG_CHIP_STM32F411) || defined(CONFIG_CHIP_STM32F412)
+#elif defined(CONFIG_CHIP_STM32F410) || defined(CONFIG_CHIP_STM32F411) || defined(CONFIG_CHIP_STM32F412) || \
+	defined(CONFIG_CHIP_STM32F413) || defined(CONFIG_CHIP_STM32F423)
 constexpr uint32_t maxApb2Frequency {100000000};
 #else	// !defined(CONFIG_CHIP_STM32F401) && !defined(CONFIG_CHIP_STM32F405) && !defined(CONFIG_CHIP_STM32F407) &&
-		// !defined(CONFIG_CHIP_STM32F415) && !defined(CONFIG_CHIP_STM32F417) && !defined(CONFIG_CHIP_STM32F410) &&
-		// !defined(CONFIG_CHIP_STM32F411)
+		// !defined(CONFIG_CHIP_STM32F410) && !defined(CONFIG_CHIP_STM32F411) && !defined(CONFIG_CHIP_STM32F412) &&
+		// !defined(CONFIG_CHIP_STM32F413) && !defined(CONFIG_CHIP_STM32F415) && !defined(CONFIG_CHIP_STM32F417) &&
+		// !defined(CONFIG_CHIP_STM32F423)
 constexpr uint32_t maxApb2Frequency {90000000};
 #endif	// !defined(CONFIG_CHIP_STM32F401) && !defined(CONFIG_CHIP_STM32F405) && !defined(CONFIG_CHIP_STM32F407) &&
-		// !defined(CONFIG_CHIP_STM32F415) && !defined(CONFIG_CHIP_STM32F417) && !defined(CONFIG_CHIP_STM32F410) &&
-		// !defined(CONFIG_CHIP_STM32F411)
+		// !defined(CONFIG_CHIP_STM32F410) && !defined(CONFIG_CHIP_STM32F411) && !defined(CONFIG_CHIP_STM32F412) &&
+		// !defined(CONFIG_CHIP_STM32F413) && !defined(CONFIG_CHIP_STM32F415) && !defined(CONFIG_CHIP_STM32F417) &&
+		// !defined(CONFIG_CHIP_STM32F423)
 
 #ifdef CONFIG_CHIP_STM32F4_STANDARD_CLOCK_CONFIGURATION_ENABLE
 
-#if (defined(CONFIG_CHIP_STM32F42) || defined(CONFIG_CHIP_STM32F43) || defined(CONFIG_CHIP_STM32F446) || \
-		defined(CONFIG_CHIP_STM32F469) || defined(CONFIG_CHIP_STM32F479)) && \
+#if (defined(CONFIG_CHIP_STM32F427) || defined(CONFIG_CHIP_STM32F429) || defined(CONFIG_CHIP_STM32F43) || \
+		defined(CONFIG_CHIP_STM32F446) || defined(CONFIG_CHIP_STM32F469) || defined(CONFIG_CHIP_STM32F479)) && \
 		defined(CONFIG_CHIP_STM32F4_PWR_OVER_DRIVE_ENABLE)
 
 static_assert(CONFIG_CHIP_STM32F4_PWR_VOLTAGE_SCALE_MODE == 1, "Over-drive mode requires voltage scale 1 mode!");
@@ -109,15 +118,15 @@ static_assert(CONFIG_CHIP_STM32F4_VDD_MV >= 2100,
 /// voltage scale index for \a maxPllOutFrequency array
 constexpr uint8_t voltageScaleIndex {0};
 
-#else	// !(defined(CONFIG_CHIP_STM32F42) || defined(CONFIG_CHIP_STM32F43) || defined(CONFIG_CHIP_STM32F446) ||
-		// defined(CONFIG_CHIP_STM32F469) || defined(CONFIG_CHIP_STM32F479)) ||
+#else	// !(defined(CONFIG_CHIP_STM32F427) || defined(CONFIG_CHIP_STM32F429) || defined(CONFIG_CHIP_STM32F43) ||
+		// defined(CONFIG_CHIP_STM32F446) || defined(CONFIG_CHIP_STM32F469) || defined(CONFIG_CHIP_STM32F479)) ||
 		// !defined(CONFIG_CHIP_STM32F4_PWR_OVER_DRIVE_ENABLE)
 
 /// voltage scale index for \a maxPllOutFrequency array
 constexpr uint8_t voltageScaleIndex {CONFIG_CHIP_STM32F4_PWR_VOLTAGE_SCALE_MODE};
 
-#endif	// !(defined(CONFIG_CHIP_STM32F42) || defined(CONFIG_CHIP_STM32F43) || defined(CONFIG_CHIP_STM32F446) ||
-		// defined(CONFIG_CHIP_STM32F469) || defined(CONFIG_CHIP_STM32F479)) ||
+#endif	// !(defined(CONFIG_CHIP_STM32F427) || defined(CONFIG_CHIP_STM32F429) || defined(CONFIG_CHIP_STM32F43) ||
+		// defined(CONFIG_CHIP_STM32F446) || defined(CONFIG_CHIP_STM32F469) || defined(CONFIG_CHIP_STM32F479)) ||
 		// !defined(CONFIG_CHIP_STM32F4_PWR_OVER_DRIVE_ENABLE)
 
 #ifdef CONFIG_CHIP_STM32F4_RCC_PLL_ENABLE
@@ -151,14 +160,14 @@ constexpr uint32_t pllqOutFrequency {vcoOutFrequency / CONFIG_CHIP_STM32F4_RCC_P
 
 static_assert(pllqOutFrequency <= maxPllqOutFrequency, "Invalid PLL \"/Q\" output frequency!");
 
-#if defined(CONFIG_CHIP_STM32F412) || defined(CONFIG_CHIP_STM32F446) || defined(CONFIG_CHIP_STM32F469) || \
-		defined(CONFIG_CHIP_STM32F479)
+#if defined(CONFIG_CHIP_STM32F412) || defined(CONFIG_CHIP_STM32F413) || defined(CONFIG_CHIP_STM32F423) || \
+		defined(CONFIG_CHIP_STM32F446) || defined(CONFIG_CHIP_STM32F469) || defined(CONFIG_CHIP_STM32F479)
 
 /// PLL "R" output frequency, Hz
 constexpr uint32_t pllrOutFrequency {vcoOutFrequency / CONFIG_CHIP_STM32F4_RCC_PLLR};
 
-#endif	// defined(CONFIG_CHIP_STM32F412) || defined(CONFIG_CHIP_STM32F446) || defined(CONFIG_CHIP_STM32F469) ||
-		// defined(CONFIG_CHIP_STM32F479)
+#endif	// defined(CONFIG_CHIP_STM32F412) || defined(CONFIG_CHIP_STM32F413) || defined(CONFIG_CHIP_STM32F423) ||
+		// defined(CONFIG_CHIP_STM32F446) || defined(CONFIG_CHIP_STM32F469) || defined(CONFIG_CHIP_STM32F479)
 
 #endif	// def CONFIG_CHIP_STM32F4_RCC_PLL_ENABLE
 

@@ -2,7 +2,7 @@
  * \file
  * \brief ChipUartLowLevel class implementation for USARTv1 in STM32
  *
- * \author Copyright (C) 2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2016-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -275,6 +275,22 @@ const ChipUartLowLevel::Parameters ChipUartLowLevel::uart8Parameters {UART8_BASE
 		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB1RSTR), __builtin_ctzl(RCC_APB1RSTR_UART8RST))};
 
 #endif	// def CONFIG_CHIP_STM32_USARTV1_UART8_ENABLE
+
+#ifdef CONFIG_CHIP_STM32_USARTV1_UART9_ENABLE
+
+const ChipUartLowLevel::Parameters ChipUartLowLevel::uart9Parameters {UART9_BASE,
+		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB2ENR), __builtin_ctzl(RCC_APB2ENR_UART9EN)),
+		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB2RSTR), __builtin_ctzl(RCC_APB2RSTR_UART9RST))};
+
+#endif	// def CONFIG_CHIP_STM32_USARTV1_UART9_ENABLE
+
+#ifdef CONFIG_CHIP_STM32_USARTV1_UART10_ENABLE
+
+const ChipUartLowLevel::Parameters ChipUartLowLevel::uart10Parameters {UART10_BASE,
+		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB2ENR), __builtin_ctzl(RCC_APB2ENR_UART10EN)),
+		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB2RSTR), __builtin_ctzl(RCC_APB2RSTR_UART10RST))};
+
+#endif	// def CONFIG_CHIP_STM32_USARTV1_UART10_ENABLE
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | public functions

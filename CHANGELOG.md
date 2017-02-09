@@ -35,6 +35,7 @@ during context switch" respectively, but executed during every system tick.
 - `Thread::getStackHighWaterMark()` and `ThisThread::getStackHighWaterMark()` which can be used to get "high water mark"
 (max usage) of thread's stack.
 - Test of thread's `start()` returning `ENOSPC` when stack is too small.
+- New chips: 10 *STM32F413* chips and 5 *STM32F423* chips.
 
 ### Changed
 

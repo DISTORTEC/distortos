@@ -96,6 +96,20 @@ public:
 
 #endif	// def CONFIG_CHIP_STM32_USARTV1_UART8_ENABLE
 
+#ifdef CONFIG_CHIP_STM32_USARTV1_UART9_ENABLE
+
+	/// parameters for construction of UART low-level driver for UART9
+	static const Parameters uart9Parameters;
+
+#endif	// def CONFIG_CHIP_STM32_USARTV1_UART9_ENABLE
+
+#ifdef CONFIG_CHIP_STM32_USARTV1_UART10_ENABLE
+
+	/// parameters for construction of UART low-level driver for UART10
+	static const Parameters uart10Parameters;
+
+#endif	// def CONFIG_CHIP_STM32_USARTV1_UART10_ENABLE
+
 	/**
 	 * \brief ChipUartLowLevel's constructor
 	 *

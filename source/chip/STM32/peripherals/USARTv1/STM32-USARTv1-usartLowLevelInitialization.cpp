@@ -2,7 +2,7 @@
  * \file
  * \brief chip::usartLowLevelInitialization() definition for USARTv1 in STM32
  *
- * \author Copyright (C) 2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2016-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -57,6 +57,14 @@ void usartLowLevelInitialization()
 	NVIC_SetPriority(UART8_IRQn, CONFIG_ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI);
 	NVIC_EnableIRQ(UART8_IRQn);
 #endif	// def CONFIG_CHIP_STM32_USARTV1_UART8_ENABLE
+#ifdef CONFIG_CHIP_STM32_USARTV1_UART9_ENABLE
+	NVIC_SetPriority(UART9_IRQn, CONFIG_ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI);
+	NVIC_EnableIRQ(UART9_IRQn);
+#endif	// def CONFIG_CHIP_STM32_USARTV1_UART9_ENABLE
+#ifdef CONFIG_CHIP_STM32_USARTV1_UART10_ENABLE
+	NVIC_SetPriority(UART10_IRQn, CONFIG_ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI);
+	NVIC_EnableIRQ(UART10_IRQn);
+#endif	// def CONFIG_CHIP_STM32_USARTV1_UART10_ENABLE
 }
 
 }	// namespace chip

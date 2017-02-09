@@ -2,7 +2,7 @@
  * \file
  * \brief Header for PWR-related functions for STM32F4
  *
- * \author Copyright (C) 2015-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2015-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -45,13 +45,13 @@ constexpr uint8_t maxVoltageScale {3};
 
 /// default voltage scale mode after reset
 #if defined(CONFIG_CHIP_STM32F401) || defined(CONFIG_CHIP_STM32F410) || defined(CONFIG_CHIP_STM32F411) || \
-		defined(CONFIG_CHIP_STM32F412)
+		defined(CONFIG_CHIP_STM32F412) || defined(CONFIG_CHIP_STM32F413) || defined(CONFIG_CHIP_STM32F423)
 constexpr uint8_t defaultVoltageScale {2};
 #else	// !defined(CONFIG_CHIP_STM32F401) && !defined(CONFIG_CHIP_STM32F410) && !defined(CONFIG_CHIP_STM32F411) &&
-		// !defined(CONFIG_CHIP_STM32F412)
+		// !defined(CONFIG_CHIP_STM32F412) && !defined(CONFIG_CHIP_STM32F413) && !defined(CONFIG_CHIP_STM32F423)
 constexpr uint8_t defaultVoltageScale {1};
 #endif	// !defined(CONFIG_CHIP_STM32F401) && !defined(CONFIG_CHIP_STM32F410) && !defined(CONFIG_CHIP_STM32F411) &&
-		// !defined(CONFIG_CHIP_STM32F412)
+		// !defined(CONFIG_CHIP_STM32F412) && !defined(CONFIG_CHIP_STM32F413) && !defined(CONFIG_CHIP_STM32F423)
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | global functions' declarations
@@ -70,8 +70,8 @@ constexpr uint8_t defaultVoltageScale {1};
 
 int configureVoltageScaling(uint8_t voltageScale);
 
-#if defined(CONFIG_CHIP_STM32F42) || defined(CONFIG_CHIP_STM32F43) || defined(CONFIG_CHIP_STM32F446) || \
-		defined(CONFIG_CHIP_STM32F469) || defined(CONFIG_CHIP_STM32F479)
+#if defined(CONFIG_CHIP_STM32F427) || defined(CONFIG_CHIP_STM32F429) || defined(CONFIG_CHIP_STM32F43) || \
+		defined(CONFIG_CHIP_STM32F446) || defined(CONFIG_CHIP_STM32F469) || defined(CONFIG_CHIP_STM32F479)
 
 /**
  * \brief Disables over-drive mode.
@@ -89,8 +89,8 @@ void disableOverDriveMode();
 
 void enableOverDriveMode();
 
-#endif	// defined(CONFIG_CHIP_STM32F42) || defined(CONFIG_CHIP_STM32F43) || defined(CONFIG_CHIP_STM32F446) ||
-		// defined(CONFIG_CHIP_STM32F469) || defined(CONFIG_CHIP_STM32F479)
+#endif	// defined(CONFIG_CHIP_STM32F427) || defined(CONFIG_CHIP_STM32F429) || defined(CONFIG_CHIP_STM32F43) ||
+		// defined(CONFIG_CHIP_STM32F446) || defined(CONFIG_CHIP_STM32F469) || defined(CONFIG_CHIP_STM32F479)
 
 }	// namespace chip
 

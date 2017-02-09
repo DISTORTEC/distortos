@@ -2,7 +2,7 @@
  * \file
  * \brief Declarations of low-level UART drivers for USARTv1 in STM32
  *
- * \author Copyright (C) 2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2016-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -81,6 +81,20 @@ extern ChipUartLowLevel uart7;
 extern ChipUartLowLevel uart8;
 
 #endif	// def CONFIG_CHIP_STM32_USARTV1_UART8_ENABLE
+
+#ifdef CONFIG_CHIP_STM32_USARTV1_UART9_ENABLE
+
+/// UART low-level driver for UART9
+extern ChipUartLowLevel uart9;
+
+#endif	// def CONFIG_CHIP_STM32_USARTV1_UART9_ENABLE
+
+#ifdef CONFIG_CHIP_STM32_USARTV1_UART10_ENABLE
+
+/// UART low-level driver for UART10
+extern ChipUartLowLevel uart10;
+
+#endif	// def CONFIG_CHIP_STM32_USARTV1_UART10_ENABLE
 
 }	// namespace chip
 
