@@ -25,14 +25,6 @@ namespace board
 
 void lowLevelInitialization()
 {
-	RCC->AHBENR |=
-#ifdef CONFIG_BOARD_LEDS_ENABLE
-			RCC_AHBENR_GPIOAEN |
-#endif	// def CONFIG_BOARD_LEDS_ENABLE
-#ifdef CONFIG_BOARD_BUTTONS_ENABLE
-			RCC_AHBENR_GPIOCEN |
-#endif	// def CONFIG_BOARD_LEDS_ENABLE
-			0;
 }
 
 }	// namespace board

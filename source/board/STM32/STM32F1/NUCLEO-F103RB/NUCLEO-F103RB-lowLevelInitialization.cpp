@@ -25,14 +25,6 @@ namespace board
 
 void lowLevelInitialization()
 {
-	RCC->APB2ENR |=
-#ifdef CONFIG_BOARD_LEDS_ENABLE
-			RCC_APB2ENR_IOPAEN |
-#endif	// def CONFIG_BOARD_LEDS_ENABLE
-#ifdef CONFIG_BOARD_BUTTONS_ENABLE
-			RCC_APB2ENR_IOPCEN |
-#endif	// def CONFIG_BOARD_LEDS_ENABLE
-			0;
 }
 
 }	// namespace board

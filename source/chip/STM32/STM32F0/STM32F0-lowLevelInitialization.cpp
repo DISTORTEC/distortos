@@ -87,6 +87,8 @@ void lowLevelInitialization()
 #endif	// defined(CONFIG_CHIP_STM32F0_RCC_SYSCLK_HSI48)
 
 #endif	// def CONFIG_CHIP_STM32F0_STANDARD_CLOCK_CONFIGURATION_ENABLE
+
+	enablePortClock();
 }
 
 }	// namespace chip
