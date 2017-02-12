@@ -129,6 +129,8 @@ void lowLevelInitialization()
 #endif	// defined(CONFIG_CHIP_STM32F1_RCC_SYSCLK_PLL)
 
 #endif	// def CONFIG_CHIP_STM32F1_STANDARD_CLOCK_CONFIGURATION_ENABLE
+
+	enablePortClock();
 }
 
 }	// namespace chip
