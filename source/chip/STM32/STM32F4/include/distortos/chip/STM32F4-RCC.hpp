@@ -275,6 +275,13 @@ int enablePll(uint16_t plln, uint8_t pllp, uint8_t pllq);
 
 void switchSystemClock(SystemClockSource source);
 
+/**
+ * \brief Enables clock for GPIO Ports.
+ *
+ */
+
+void enablePortClock(void);
+
 }	// namespace chip
 
 }	// namespace distortos

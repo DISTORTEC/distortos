@@ -57,7 +57,42 @@ config CHIP_STM32_GPIOV2_GPIOF_ENABLE
 	default n
 	depends on CHIP_STM32_GPIOV2_HAS_GPIOF 
 	help
-		Select port F clock.		
+		Select port F clock.
+				
+config CHIP_STM32_GPIOV2_GPIOG_ENABLE
+	bool "I/O port G clock enable"
+	default n
+	depends on CHIP_STM32_GPIOV2_HAS_GPIOG 
+	help
+		Select port G clock.
+		
+config CHIP_STM32_GPIOV2_GPIOH_ENABLE
+	bool "I/O port H clock enable"
+	default n
+	depends on CHIP_STM32_GPIOV2_HAS_GPIOH
+	help
+		Select port H clock.
+		
+config CHIP_STM32_GPIOV2_GPIOI_ENABLE
+	bool "I/O port I clock enable"
+	default n
+	depends on CHIP_STM32_GPIOV2_HAS_GPIOI
+	help
+		Select port I clock.
+		
+config CHIP_STM32_GPIOV2_GPIOJ_ENABLE
+	bool "I/O port J clock enable"
+	default n
+	depends on CHIP_STM32_GPIOV2_HAS_GPIOJ
+	help
+		Select port J clock.
+		
+config CHIP_STM32_GPIOV2_GPIOK_ENABLE
+	bool "I/O port K clock enable"
+	default n
+	depends on CHIP_STM32_GPIOV2_HAS_GPIOK
+	help
+		Select port K clock.
 		
 config CHIP_STM32_GPIOV2_HAS_GPIOA
 	bool
@@ -80,6 +115,26 @@ config CHIP_STM32_GPIOV2_HAS_GPIOE
 	default n
 	
 config CHIP_STM32_GPIOV2_HAS_GPIOF
+	bool
+	default n
+	
+config CHIP_STM32_GPIOV2_HAS_GPIOG
+	bool
+	default n
+	
+config CHIP_STM32_GPIOV2_HAS_GPIOH
+	bool
+	default n
+	
+config CHIP_STM32_GPIOV2_HAS_GPIOI
+	bool
+	default n
+	
+config CHIP_STM32_GPIOV2_HAS_GPIOJ
+	bool
+	default n
+	
+config CHIP_STM32_GPIOV2_HAS_GPIOK
 	bool
 	default n
 
