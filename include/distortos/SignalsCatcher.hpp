@@ -2,7 +2,7 @@
  * \file
  * \brief SignalsCatcher class header
  *
- * \author Copyright (C) 2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2015-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -27,7 +27,7 @@ class SignalsReceiverControlBlock;
 /// SignalsCatcher class is a container for internal::SignalsCatcherControlBlock
 class SignalsCatcher
 {
-	friend class internal::SignalsReceiverControlBlock;
+	friend internal::SignalsReceiverControlBlock;
 
 public:
 
