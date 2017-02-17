@@ -13,7 +13,7 @@
 
 #include "distortos/chip/clocks.hpp"
 #include "distortos/chip/CMSIS-proxy.h"
-#include "distortos/chip/STM32-USARTv1-bits.h"
+#include "distortos/chip/STM32-bit-banding.h"
 
 #include "distortos/devices/communication/UartBase.hpp"
 
@@ -89,9 +89,9 @@ public:
 			uartBase_{uartBase},
 			peripheralFrequency_{uartBase < apb2PeripheralsBaseAddress ? apb1Frequency :
 					uartBase < ahbPeripheralsBaseAddress ? apb2Frequency : ahbFrequency},
-			rxneieBbAddress_{BITBAND_ADDRESS(uartBase + offsetof(USART_TypeDef, CR1), USART_CR1_RXNEIE_bit)},
-			tcieBbAddress_{BITBAND_ADDRESS(uartBase + offsetof(USART_TypeDef, CR1), USART_CR1_TCIE_bit)},
-			txeieBbAddress_{BITBAND_ADDRESS(uartBase + offsetof(USART_TypeDef, CR1), USART_CR1_TXEIE_bit)},
+			rxneieBbAddress_{STM32_BITBAND_IMPLEMENTATION(uartBase, USART_TypeDef, CR1, USART_CR1_RXNEIE)},
+			tcieBbAddress_{STM32_BITBAND_IMPLEMENTATION(uartBase, USART_TypeDef, CR1, USART_CR1_TCIE)},
+			txeieBbAddress_{STM32_BITBAND_IMPLEMENTATION(uartBase, USART_TypeDef, CR1, USART_CR1_TXEIE)},
 			rccEnBbAddress_{rccEnBbAddress},
 			rccRstBbAddress_{rccRstBbAddress}
 	{
@@ -215,80 +215,70 @@ private:
 #ifdef CONFIG_CHIP_STM32_USARTV1_USART1_ENABLE
 
 const ChipUartLowLevel::Parameters ChipUartLowLevel::usart1Parameters {USART1_BASE,
-		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB2ENR), __builtin_ctzl(RCC_APB2ENR_USART1EN)),
-		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB2RSTR), __builtin_ctzl(RCC_APB2RSTR_USART1RST))};
+		STM32_BITBAND_ADDRESS(RCC, APB2ENR, USART1EN), STM32_BITBAND_ADDRESS(RCC, APB2RSTR, USART1RST)};
 
 #endif	// def CONFIG_CHIP_STM32_USARTV1_USART1_ENABLE
 
 #ifdef CONFIG_CHIP_STM32_USARTV1_USART2_ENABLE
 
 const ChipUartLowLevel::Parameters ChipUartLowLevel::usart2Parameters {USART2_BASE,
-		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB1ENR), __builtin_ctzl(RCC_APB1ENR_USART2EN)),
-		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB1RSTR), __builtin_ctzl(RCC_APB1RSTR_USART2RST))};
+		STM32_BITBAND_ADDRESS(RCC, APB1ENR, USART2EN), STM32_BITBAND_ADDRESS(RCC, APB1RSTR, USART2RST)};
 
 #endif	// def CONFIG_CHIP_STM32_USARTV1_USART2_ENABLE
 
 #ifdef CONFIG_CHIP_STM32_USARTV1_USART3_ENABLE
 
 const ChipUartLowLevel::Parameters ChipUartLowLevel::usart3Parameters {USART3_BASE,
-		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB1ENR), __builtin_ctzl(RCC_APB1ENR_USART3EN)),
-		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB1RSTR), __builtin_ctzl(RCC_APB1RSTR_USART3RST))};
+		STM32_BITBAND_ADDRESS(RCC, APB1ENR, USART3EN), STM32_BITBAND_ADDRESS(RCC, APB1RSTR, USART3RST)};
 
 #endif	// def CONFIG_CHIP_STM32_USARTV1_USART3_ENABLE
 
 #ifdef CONFIG_CHIP_STM32_USARTV1_UART4_ENABLE
 
 const ChipUartLowLevel::Parameters ChipUartLowLevel::uart4Parameters {UART4_BASE,
-		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB1ENR), __builtin_ctzl(RCC_APB1ENR_UART4EN)),
-		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB1RSTR), __builtin_ctzl(RCC_APB1RSTR_UART4RST))};
+		STM32_BITBAND_ADDRESS(RCC, APB1ENR, UART4EN), STM32_BITBAND_ADDRESS(RCC, APB1RSTR, UART4RST)};
 
 #endif	// def CONFIG_CHIP_STM32_USARTV1_UART4_ENABLE
 
 #ifdef CONFIG_CHIP_STM32_USARTV1_UART5_ENABLE
 
 const ChipUartLowLevel::Parameters ChipUartLowLevel::uart5Parameters {UART5_BASE,
-		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB1ENR), __builtin_ctzl(RCC_APB1ENR_UART5EN)),
-		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB1RSTR), __builtin_ctzl(RCC_APB1RSTR_UART5RST))};
+		STM32_BITBAND_ADDRESS(RCC, APB1ENR, UART5EN), STM32_BITBAND_ADDRESS(RCC, APB1RSTR, UART5RST)};
 
 #endif	// def CONFIG_CHIP_STM32_USARTV1_UART5_ENABLE
 
 #ifdef CONFIG_CHIP_STM32_USARTV1_USART6_ENABLE
 
 const ChipUartLowLevel::Parameters ChipUartLowLevel::usart6Parameters {USART6_BASE,
-		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB2ENR), __builtin_ctzl(RCC_APB2ENR_USART6EN)),
-		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB2RSTR), __builtin_ctzl(RCC_APB2RSTR_USART6RST))};
+		STM32_BITBAND_ADDRESS(RCC, APB2ENR, USART6EN), STM32_BITBAND_ADDRESS(RCC, APB2RSTR, USART6RST)};
 
 #endif	// def CONFIG_CHIP_STM32_USARTV1_USART6_ENABLE
 
 #ifdef CONFIG_CHIP_STM32_USARTV1_UART7_ENABLE
 
 const ChipUartLowLevel::Parameters ChipUartLowLevel::uart7Parameters {UART7_BASE,
-		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB1ENR), __builtin_ctzl(RCC_APB1ENR_UART7EN)),
-		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB1RSTR), __builtin_ctzl(RCC_APB1RSTR_UART7RST))};
+		STM32_BITBAND_ADDRESS(RCC, APB1ENR, UART7EN), STM32_BITBAND_ADDRESS(RCC, APB1RSTR, UART7RST)};
 
 #endif	// def CONFIG_CHIP_STM32_USARTV1_UART7_ENABLE
 
 #ifdef CONFIG_CHIP_STM32_USARTV1_UART8_ENABLE
 
 const ChipUartLowLevel::Parameters ChipUartLowLevel::uart8Parameters {UART8_BASE,
-		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB1ENR), __builtin_ctzl(RCC_APB1ENR_UART8EN)),
-		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB1RSTR), __builtin_ctzl(RCC_APB1RSTR_UART8RST))};
+		STM32_BITBAND_ADDRESS(RCC, APB1ENR, UART8EN), STM32_BITBAND_ADDRESS(RCC, APB1RSTR, UART8RST)};
 
 #endif	// def CONFIG_CHIP_STM32_USARTV1_UART8_ENABLE
 
 #ifdef CONFIG_CHIP_STM32_USARTV1_UART9_ENABLE
 
 const ChipUartLowLevel::Parameters ChipUartLowLevel::uart9Parameters {UART9_BASE,
-		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB2ENR), __builtin_ctzl(RCC_APB2ENR_UART9EN)),
-		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB2RSTR), __builtin_ctzl(RCC_APB2RSTR_UART9RST))};
+		STM32_BITBAND_ADDRESS(RCC, APB2ENR, UART9EN), STM32_BITBAND_ADDRESS(RCC, APB2RSTR, UART9RST)};
 
 #endif	// def CONFIG_CHIP_STM32_USARTV1_UART9_ENABLE
 
 #ifdef CONFIG_CHIP_STM32_USARTV1_UART10_ENABLE
 
 const ChipUartLowLevel::Parameters ChipUartLowLevel::uart10Parameters {UART10_BASE,
-		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB2ENR), __builtin_ctzl(RCC_APB2ENR_UART10EN)),
-		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB2RSTR), __builtin_ctzl(RCC_APB2RSTR_UART10RST))};
+		STM32_BITBAND_ADDRESS(RCC, APB2ENR, UART10EN), STM32_BITBAND_ADDRESS(RCC, APB2RSTR, UART10RST)};
 
 #endif	// def CONFIG_CHIP_STM32_USARTV1_UART10_ENABLE
 
@@ -364,7 +354,7 @@ std::pair<int, uint32_t> ChipUartLowLevel::start(devices::UartBase& uartBase, co
 	const auto mantissa = divider / (over8 == false ? 16 : 8);
 	const auto fraction = divider % (over8 == false ? 16 : 8);
 
-	if (mantissa == 0 || mantissa > (USART_BRR_DIV_Mantissa >> USART_BRR_DIV_Mantissa_bit))
+	if (mantissa == 0 || mantissa > (USART_BRR_DIV_Mantissa >> USART_BRR_DIV_Mantissa_Pos))
 		return {EINVAL, {}};
 
 	const auto realCharacterLength = characterLength + (parity != devices::UartParity::none);
@@ -376,12 +366,15 @@ std::pair<int, uint32_t> ChipUartLowLevel::start(devices::UartBase& uartBase, co
 
 	uartBase_ = &uartBase;
 	auto& uart = parameters_.getUart();
-	uart.BRR = (mantissa << USART_BRR_DIV_Mantissa_bit) | (fraction << USART_BRR_DIV_Fraction_bit);
-	uart.CR2 = _2StopBits << USART_CR2_STOP_1_bit;
-	uart.CR1 = USART_CR1_RE | USART_CR1_TE | USART_CR1_UE | (over8 << USART_CR1_OVER8_bit) |
-			((realCharacterLength == maxCharacterLength) << USART_CR1_M_bit) |
-			((parity != devices::UartParity::none) << USART_CR1_PCE_bit) |
-			((parity == devices::UartParity::odd) << USART_CR1_PS_bit);
+	uart.BRR = (mantissa << USART_BRR_DIV_Mantissa_Pos) | (fraction << USART_BRR_DIV_Fraction_Pos);
+	uart.CR2 = _2StopBits << (USART_CR2_STOP_Pos + 1);
+	uart.CR1 = USART_CR1_RE | USART_CR1_TE | USART_CR1_UE |
+#ifdef CONFIG_CHIP_STM32_USARTV1_HAS_CR1_OVER8_BIT
+			(over8 << USART_CR1_OVER8_Pos) |
+#endif	// def CONFIG_CHIP_STM32_USARTV1_HAS_CR1_OVER8_BIT
+			((realCharacterLength == maxCharacterLength) << USART_CR1_M_Pos) |
+			((parity != devices::UartParity::none) << USART_CR1_PCE_Pos) |
+			((parity == devices::UartParity::odd) << USART_CR1_PS_Pos);
 	return {{}, peripheralFrequency / divider};
 }
 
