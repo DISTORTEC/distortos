@@ -13,7 +13,6 @@
 
 #include "distortos/chip/clocks.hpp"
 #include "distortos/chip/CMSIS-proxy.h"
-#include "distortos/chip/STM32-USARTv2-bits.h"
 
 #include "distortos/devices/communication/UartBase.hpp"
 
@@ -345,7 +344,7 @@ std::pair<int, uint32_t> ChipUartLowLevel::start(devices::UartBase& uartBase, co
 	const auto mantissa = divider / (over8 == false ? 16 : 8);
 	const auto fraction = divider % (over8 == false ? 16 : 8);
 
-	if (mantissa == 0 || mantissa > (USART_BRR_DIV_MANTISSA >> USART_BRR_DIV_MANTISSA_bit))
+	if (mantissa == 0 || mantissa > (USART_BRR_DIV_MANTISSA >> USART_BRR_DIV_MANTISSA_Pos))
 		return {EINVAL, {}};
 
 	const auto realCharacterLength = characterLength + (parity != devices::UartParity::none);
@@ -357,15 +356,15 @@ std::pair<int, uint32_t> ChipUartLowLevel::start(devices::UartBase& uartBase, co
 
 	uartBase_ = &uartBase;
 	auto& uart = parameters_.getUart();
-	uart.BRR = (mantissa << USART_BRR_DIV_MANTISSA_bit) | (fraction << USART_BRR_DIV_FRACTION_bit);
-	uart.CR2 = _2StopBits << USART_CR2_STOP_1_bit;
-	uart.CR1 = USART_CR1_RE | USART_CR1_TE | USART_CR1_UE | (over8 << USART_CR1_OVER8_bit) |
-			((realCharacterLength == maxCharacterLength) << USART_CR1_M0_bit) |
+	uart.BRR = (mantissa << USART_BRR_DIV_MANTISSA_Pos) | (fraction << USART_BRR_DIV_FRACTION_Pos);
+	uart.CR2 = _2StopBits << (USART_CR2_STOP_Pos + 1);
+	uart.CR1 = USART_CR1_RE | USART_CR1_TE | USART_CR1_UE | (over8 << USART_CR1_OVER8_Pos) |
+			((realCharacterLength == maxCharacterLength) << USART_CR1_M0_Pos) |
 #ifdef CONFIG_CHIP_STM32_USARTV2_HAS_CR1_M1_BIT
-			((realCharacterLength == minCharacterLength + 1) << USART_CR1_M1_bit) |
+			((realCharacterLength == minCharacterLength + 1) << USART_CR1_M1_Pos) |
 #endif	// def CONFIG_CHIP_STM32_USARTV2_HAS_CR1_M1_BIT
-			((parity != devices::UartParity::none) << USART_CR1_PCE_bit) |
-			((parity == devices::UartParity::odd) << USART_CR1_PS_bit);
+			((parity != devices::UartParity::none) << USART_CR1_PCE_Pos) |
+			((parity == devices::UartParity::odd) << USART_CR1_PS_Pos);
 	return {{}, peripheralFrequency / divider};
 }
 
