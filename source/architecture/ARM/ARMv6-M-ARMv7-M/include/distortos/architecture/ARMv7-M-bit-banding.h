@@ -38,20 +38,19 @@ enum { bitbandPeripheralBase = 0x42000000 };
 
 /** address of bit-band alias for SRAM region */
 #define BITBAND_SRAM_ADDRESS(address, bit) \
-	(bitbandSramBase + (((unsigned long)address) - bitbandSramBegin) * 32 + (bit) * 4)
+		(bitbandSramBase + (((unsigned long)address) - bitbandSramBegin) * 32 + (bit) * 4)
 
 /** address of bit-band alias for peripheral region */
 #define BITBAND_PERIPHERAL_ADDRESS(address, bit) \
-	(bitbandPeripheralBase + (((unsigned long)address) - bitbandPeripheralBegin) * 32 + (bit) * 4)
+		(bitbandPeripheralBase + (((unsigned long)address) - bitbandPeripheralBegin) * 32 + (bit) * 4)
 
 /** address of bit-band alias for any region */
-#define BITBAND_ADDRESS(address, bit)		( \
-	(((unsigned long)address) >= bitbandSramBegin) && (((unsigned long)address) <= bitbandSramEnd) ? \
+#define BITBAND_ADDRESS(address, bit) \
+		((((unsigned long)address) >= bitbandSramBegin) && (((unsigned long)address) <= bitbandSramEnd) ? \
 		BITBAND_SRAM_ADDRESS(address, bit) : \
-	(((unsigned long)address) >= bitbandPeripheralBegin) && (((unsigned long)address) <= bitbandPeripheralEnd) ? \
+		(((unsigned long)address) >= bitbandPeripheralBegin) && (((unsigned long)address) <= bitbandPeripheralEnd) ? \
 		BITBAND_PERIPHERAL_ADDRESS(address, bit) : \
-	0 /* fail */ \
-	)
+		0 /* fail */ )
 
 /** bit-band alias in SRAM region */
 #define BITBAND_SRAM(address, bit)			(*(volatile unsigned long*)BITBAND_SRAM_ADDRESS(address, bit))
