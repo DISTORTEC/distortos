@@ -48,10 +48,10 @@ int configurePrediv(const bool prediv2, const uint8_t prediv)
 
 #if defined(CONFIG_CHIP_STM32F100)
 	static_cast<void>(prediv2);	// suppress warning
-	RCC->CFGR2 = (RCC->CFGR2 & ~RCC_CFGR2_PREDIV1) | ((prediv - 1) << RCC_CFGR2_PREDIV1_Pos);
+	RCC->CFGR2 = (RCC->CFGR2 & ~RCC_CFGR2_PREDIV1) | (prediv - 1) << RCC_CFGR2_PREDIV1_Pos;
 #elif defined(CONFIG_CHIP_STM32F105) || defined(CONFIG_CHIP_STM32F107)
 	RCC->CFGR2 = (RCC->CFGR2 & ~(prediv2 == true ? RCC_CFGR2_PREDIV2 : RCC_CFGR2_PREDIV1)) |
-			((prediv - 1) << (prediv2 == true ? RCC_CFGR2_PREDIV2_Pos : RCC_CFGR2_PREDIV1_Pos));
+			(prediv - 1) << (prediv2 == true ? RCC_CFGR2_PREDIV2_Pos : RCC_CFGR2_PREDIV1_Pos);
 #else	// !defined(CONFIG_CHIP_STM32F100) && !defined(CONFIG_CHIP_STM32F105) && !defined(CONFIG_CHIP_STM32F107)
 	static_cast<void>(prediv2);	// suppress warning
 	STM32_BITBAND(RCC, CFGR, PLLXTPRE) = prediv == 2;
@@ -84,7 +84,7 @@ int enablePll23(const bool pll3, const uint8_t pll23Mul)
 
 	const auto convertedPll23Mul = pll23Mul - 2 <= 0xf ? pll23Mul - 2 : 0xf;
 	RCC->CFGR2 = (RCC->CFGR2 & ~(pll3 == true ? RCC_CFGR2_PLL3MUL : RCC_CFGR2_PLL2MUL)) |
-			(convertedPll23Mul << (pll3 == true ? RCC_CFGR2_PLL3MUL_Pos : RCC_CFGR2_PLL2MUL_Pos));
+			convertedPll23Mul << (pll3 == true ? RCC_CFGR2_PLL3MUL_Pos : RCC_CFGR2_PLL2MUL_Pos);
 	(pll3 == true ? STM32_BITBAND(RCC, CR, PLL3ON) : STM32_BITBAND(RCC, CR, PLL2ON)) = 1;
 	while ((pll3 == true ? STM32_BITBAND(RCC, CR, PLL3RDY) : STM32_BITBAND(RCC, CR, PLL2RDY)) == 0);	// wait until PLL is stable
 	return 0;
@@ -209,8 +209,8 @@ int enablePll(const bool prediv1, const uint8_t pllmul)
 
 #endif	// !defined(CONFIG_CHIP_STM32F105) && !defined(CONFIG_CHIP_STM32F107)
 
-	RCC->CFGR = (RCC->CFGR & ~(RCC_CFGR_PLLMULL | RCC_CFGR_PLLSRC)) | ((pllmul - 2) << RCC_CFGR_PLLMULL_Pos) |
-			(prediv1 << RCC_CFGR_PLLSRC_Pos);
+	RCC->CFGR = (RCC->CFGR & ~(RCC_CFGR_PLLMULL | RCC_CFGR_PLLSRC)) | (pllmul - 2) << RCC_CFGR_PLLMULL_Pos |
+			prediv1 << RCC_CFGR_PLLSRC_Pos;
 	STM32_BITBAND(RCC, CR, PLLON) = 1;
 	while (STM32_BITBAND(RCC, CR, PLLRDY) == 0);	// wait until PLL is stable
 	return 0;
@@ -233,7 +233,7 @@ int enablePll3(const uint8_t pll3Mul)
 void switchSystemClock(const SystemClockSource source)
 {
 	const auto sourceValue = static_cast<uint32_t>(source);
-	RCC->CFGR = (RCC->CFGR & ~RCC_CFGR_SW) | (sourceValue << RCC_CFGR_SW_Pos);
+	RCC->CFGR = (RCC->CFGR & ~RCC_CFGR_SW) | sourceValue << RCC_CFGR_SW_Pos;
 	while ((RCC->CFGR & RCC_CFGR_SWS) != sourceValue << RCC_CFGR_SWS_Pos);
 }
 

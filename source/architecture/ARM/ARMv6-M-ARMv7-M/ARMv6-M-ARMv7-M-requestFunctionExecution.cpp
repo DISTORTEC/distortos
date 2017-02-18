@@ -150,7 +150,7 @@ void functionTrampoline(void (& function)(), const void* const savedStackPointer
 			"	ldmia		r1!, {r4-r12, lr}			\n"	// load "regular" context of thread
 			"	ubfx		r2, lr, #4, #1				\n"	// was floating-point used by the thread?
 			// 3rd supervisorCall() argument - 1 if FPU context is active, 0 otherwise
-			"	eors		r2, #(1 << 0)				\n"
+			"	eors		r2, #1 << 0					\n"
 			"	it			ne							\n"
 			"	vldmiane	r1!, {s16-s31}				\n"	// load "floating-point" context of thread
 			"1:											\n"	// }

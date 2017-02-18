@@ -2,7 +2,7 @@
  * \file
  * \brief Header for GPIOv1 functions for STM32
  *
- * \author Copyright (C) 2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2016-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -321,38 +321,38 @@ enum class Pin : uint32_t
 enum class PinConfiguration : uint8_t
 {
 		/// analog input
-		analogInput = (0 << 0) | (0 << 2),
+		analogInput = 0 << 0 | 0 << 2,
 		/// floating input
-		floatingInput = (0 << 0) | (1 << 2),
+		floatingInput = 0 << 0 | 1 << 2,
 		/// input with pull-up/pull-down
-		inputWithPullUpDown = (0 << 0) | (2 << 2),
+		inputWithPullUpDown = 0 << 0 | 2 << 2,
 
 		/// push-pull output, 10MHz
-		pushPull10MhzOutput = (1 << 0) | (0 << 2),
+		pushPull10MhzOutput = 1 << 0 | 0 << 2,
 		/// open-drain output, 10MHz
-		openDrain10MhzOutput = (1 << 0) | (1 << 2),
+		openDrain10MhzOutput = 1 << 0 | 1 << 2,
 		/// push-pull alternate function, 10MHz
-		pushPull10MhzAlternateFunction = (1 << 0) | (2 << 2),
+		pushPull10MhzAlternateFunction = 1 << 0 | 2 << 2,
 		/// open-drain alternate function, 10MHz
-		openDrain10MhzAlternateFunction = (1 << 0) | (3 << 2),
+		openDrain10MhzAlternateFunction = 1 << 0 | 3 << 2,
 
 		/// push-pull output, 2MHz
-		pushPull2MhzOutput = (2 << 0) | (0 << 2),
+		pushPull2MhzOutput = 2 << 0 | 0 << 2,
 		/// open-drain output, 2MHz
-		openDrain2MhzOutput = (2 << 0) | (1 << 2),
+		openDrain2MhzOutput = 2 << 0 | 1 << 2,
 		/// push-pull alternate function, 2MHz
-		pushPull2MhzAlternateFunction = (2 << 0) | (2 << 2),
+		pushPull2MhzAlternateFunction = 2 << 0 | 2 << 2,
 		/// open-drain alternate function, 2MHz
-		openDrain2MhzAlternateFunction = (2 << 0) | (3 << 2),
+		openDrain2MhzAlternateFunction = 2 << 0 | 3 << 2,
 
 		/// push-pull output, 50MHz
-		pushPull50MhzOutput = (3 << 0) | (0 << 2),
+		pushPull50MhzOutput = 3 << 0 | 0 << 2,
 		/// open-drain output, 50MHz
-		openDrain50MhzOutput = (3 << 0) | (1 << 2),
+		openDrain50MhzOutput = 3 << 0 | 1 << 2,
 		/// push-pull alternate function, 50MHz
-		pushPull50MhzAlternateFunction = (3 << 0) | (2 << 2),
+		pushPull50MhzAlternateFunction = 3 << 0 | 2 << 2,
 		/// open-drain alternate function, 50MHz
-		openDrain50MhzAlternateFunction = (3 << 0) | (3 << 2),
+		openDrain50MhzAlternateFunction = 3 << 0 | 3 << 2,
 };
 
 /// all possible output speeds of pin

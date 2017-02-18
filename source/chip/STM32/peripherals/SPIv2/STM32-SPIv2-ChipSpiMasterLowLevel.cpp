@@ -255,11 +255,11 @@ std::pair<int, uint32_t> ChipSpiMasterLowLevel::configure(const devices::SpiMode
 	const uint32_t br = divider <= 2 ? 0 : 31 - __CLZ(divider - 1);
 	auto& spi = parameters_.getSpi();
 	spi.CR1 = (spi.CR1 & ~(SPI_CR1_LSBFIRST | SPI_CR1_BR | SPI_CR1_CPOL | SPI_CR1_CPHA)) |
-			(lsbFirst << SPI_CR1_LSBFIRST_Pos) | (br << SPI_CR1_BR_Pos) |
-			((mode == devices::SpiMode::cpol1cpha0 || mode == devices::SpiMode::cpol1cpha1) << SPI_CR1_CPOL_Pos) |
-			((mode == devices::SpiMode::cpol0cpha1 || mode == devices::SpiMode::cpol1cpha1) << SPI_CR1_CPHA_Pos);
-	spi.CR2 = (spi.CR2 & ~(SPI_CR2_FRXTH | SPI_CR2_DS)) | ((wordLength <= 8) << SPI_CR2_FRXTH_Pos) |
-			((wordLength - 1) << SPI_CR2_DS_Pos);
+			lsbFirst << SPI_CR1_LSBFIRST_Pos | br << SPI_CR1_BR_Pos |
+			(mode == devices::SpiMode::cpol1cpha0 || mode == devices::SpiMode::cpol1cpha1) << SPI_CR1_CPOL_Pos |
+			(mode == devices::SpiMode::cpol0cpha1 || mode == devices::SpiMode::cpol1cpha1) << SPI_CR1_CPHA_Pos;
+	spi.CR2 = (spi.CR2 & ~(SPI_CR2_FRXTH | SPI_CR2_DS)) | (wordLength <= 8) << SPI_CR2_FRXTH_Pos |
+			(wordLength - 1) << SPI_CR2_DS_Pos;
 
 	return {{}, peripheralFrequency / (1 << (br + 1))};
 }
@@ -326,7 +326,7 @@ void ChipSpiMasterLowLevel::interruptHandler()
 		{
 			const uint16_t characterLow = writeBuffer[writePosition++];
 			const uint16_t characterHigh = wordLength > 8 ? writeBuffer[writePosition++] : 0;
-			word = characterLow | (characterHigh << 8);
+			word = characterLow | characterHigh << 8;
 		}
 		else
 		{
@@ -370,7 +370,7 @@ int ChipSpiMasterLowLevel::start(devices::SpiMasterBase& spiMasterBase)
 	spiMasterBase_ = &spiMasterBase;
 	auto& spi = parameters_.getSpi();
 	spi.CR1 = SPI_CR1_SSM | SPI_CR1_SSI | SPI_CR1_SPE | SPI_CR1_BR | SPI_CR1_MSTR;
-	spi.CR2 = SPI_CR2_FRXTH | ((8 - 1) << SPI_CR2_DS_Pos);
+	spi.CR2 = SPI_CR2_FRXTH | (8 - 1) << SPI_CR2_DS_Pos;
 
 	return 0;
 }

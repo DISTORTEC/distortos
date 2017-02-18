@@ -31,7 +31,7 @@ int configureFlashLatency(const uint8_t latency)
 	if (latency > maxFlashLatency)
 		return EINVAL;
 
-	FLASH->ACR = (FLASH->ACR & ~FLASH_ACR_LATENCY) | (latency << FLASH_ACR_LATENCY_Pos);
+	FLASH->ACR = (FLASH->ACR & ~FLASH_ACR_LATENCY) | latency << FLASH_ACR_LATENCY_Pos;
 	return 0;
 }
 

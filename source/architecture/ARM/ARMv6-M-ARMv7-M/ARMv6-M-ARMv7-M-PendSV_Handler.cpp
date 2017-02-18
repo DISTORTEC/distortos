@@ -129,7 +129,7 @@ extern "C" __attribute__ ((naked)) void PendSV_Handler()
 #ifdef CONFIG_CHECK_STACK_POINTER_RANGE_CONTEXT_SWITCH_ENABLE
 			"	push		{r0, lr}							\n"
 #if __FPU_PRESENT == 1 && __FPU_USED == 1
-			"	tst			lr, #(1 << 4)						\n"	// was floating-point used by the thread?
+			"	tst			lr, #1 << 4							\n"	// was floating-point used by the thread?
 			"	it			eq									\n"
 			"	subeq		r0, r0, #0x40						\n"	// account for size of "floating-pont" context
 			"	sub			r0, r0, #0x28						\n"
@@ -140,7 +140,7 @@ extern "C" __attribute__ ((naked)) void PendSV_Handler()
 			"	pop			{r0, lr}							\n"
 #endif	// def CONFIG_CHECK_STACK_POINTER_RANGE_CONTEXT_SWITCH_ENABLE
 #if __FPU_PRESENT == 1 && __FPU_USED == 1
-			"	tst			lr, #(1 << 4)						\n"	// was floating-point used by the thread?
+			"	tst			lr, #1 << 4							\n"	// was floating-point used by the thread?
 			"	it			eq									\n"
 			"	vstmdbeq	r0!, {s16-s31}						\n"	// save "floating-point" context of current thread
 			// save "regular" context of current thread (r12 is saved just to keep double-word alignment)
@@ -154,7 +154,7 @@ extern "C" __attribute__ ((naked)) void PendSV_Handler()
 			"													\n"
 #if __FPU_PRESENT == 1 && __FPU_USED == 1
 			"	ldmia		r0!, {r4-r12, lr}					\n"	// load "regular" context of new thread
-			"	tst			lr, #(1 << 4)						\n"	// was floating-point used by the thread?
+			"	tst			lr, #1 << 4							\n"	// was floating-point used by the thread?
 			"	it			eq									\n"
 			"	vldmiaeq	r0!, {s16-s31}						\n"	// load "floating-point" context of new thread
 #else	// __FPU_PRESENT != 1 || __FPU_USED != 1

@@ -2,7 +2,7 @@
  * \file
  * \brief distortos version
  *
- * \author Copyright (C) 2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2016-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -22,7 +22,7 @@
 #define DISTORTOS_VERSION_PATCH		0
 
 /// distortos version as a 32-bit variable
-#define DISTORTOS_VERSION	((DISTORTOS_VERSION_MAJOR << 16) | (DISTORTOS_VERSION_MINOR << 8) | DISTORTOS_VERSION_PATCH)
+#define DISTORTOS_VERSION	(DISTORTOS_VERSION_MAJOR << 16 | DISTORTOS_VERSION_MINOR << 8 | DISTORTOS_VERSION_PATCH)
 
 /// internals of STRINGIZE() macro
 #define STRINGIZE_INTERNAL(x)		#x

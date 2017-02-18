@@ -85,7 +85,7 @@ int configurePllInputClockDivider(const uint8_t pllm)
 	if (pllm < minPllm || pllm > maxPllm)
 		return EINVAL;
 
-	RCC->PLLCFGR = (RCC->PLLCFGR & ~RCC_PLLCFGR_PLLM) | (pllm << RCC_PLLCFGR_PLLM_Pos);
+	RCC->PLLCFGR = (RCC->PLLCFGR & ~RCC_PLLCFGR_PLLM) | pllm << RCC_PLLCFGR_PLLM_Pos;
 	return 0;
 }
 
@@ -127,14 +127,14 @@ int enablePll(const uint16_t plln, const uint8_t pllp, const uint8_t pllq)
 		return EINVAL;
 
 	RCC->PLLCFGR = (RCC->PLLCFGR & ~(RCC_PLLCFGR_PLLN | RCC_PLLCFGR_PLLP | RCC_PLLCFGR_PLLQ | RCC_PLLCFGR_PLLR)) |
-			(plln << RCC_PLLCFGR_PLLN_Pos) | ((pllp / 2 - 1) << RCC_PLLCFGR_PLLP_Pos) | (pllq << RCC_PLLCFGR_PLLQ_Pos) |
-			(pllr << RCC_PLLCFGR_PLLR_Pos);
+			plln << RCC_PLLCFGR_PLLN_Pos | (pllp / 2 - 1) << RCC_PLLCFGR_PLLP_Pos | pllq << RCC_PLLCFGR_PLLQ_Pos |
+			pllr << RCC_PLLCFGR_PLLR_Pos;
 
 #else	// !defined(CONFIG_CHIP_STM32F412) && !defined(CONFIG_CHIP_STM32F413) && !defined(CONFIG_CHIP_STM32F423) &&
 		// !defined(CONFIG_CHIP_STM32F446) && !defined(CONFIG_CHIP_STM32F469) && !defined(CONFIG_CHIP_STM32F479)
 
 	RCC->PLLCFGR = (RCC->PLLCFGR & ~(RCC_PLLCFGR_PLLN | RCC_PLLCFGR_PLLP | RCC_PLLCFGR_PLLQ)) |
-			(plln << RCC_PLLCFGR_PLLN_Pos) | ((pllp / 2 - 1) << RCC_PLLCFGR_PLLP_Pos) | (pllq << RCC_PLLCFGR_PLLQ_Pos);
+			plln << RCC_PLLCFGR_PLLN_Pos | (pllp / 2 - 1) << RCC_PLLCFGR_PLLP_Pos | pllq << RCC_PLLCFGR_PLLQ_Pos;
 
 #endif	// !defined(CONFIG_CHIP_STM32F412) && !defined(CONFIG_CHIP_STM32F413) && !defined(CONFIG_CHIP_STM32F423) &&
 		// !defined(CONFIG_CHIP_STM32F446) && !defined(CONFIG_CHIP_STM32F469) && !defined(CONFIG_CHIP_STM32F479)
@@ -147,7 +147,7 @@ int enablePll(const uint16_t plln, const uint8_t pllp, const uint8_t pllq)
 void switchSystemClock(const SystemClockSource source)
 {
 	const auto sourceValue = static_cast<uint32_t>(source);
-	RCC->CFGR = (RCC->CFGR & ~RCC_CFGR_SW) | (sourceValue << RCC_CFGR_SW_Pos);
+	RCC->CFGR = (RCC->CFGR & ~RCC_CFGR_SW) | sourceValue << RCC_CFGR_SW_Pos;
 	while ((RCC->CFGR & RCC_CFGR_SWS) != sourceValue << RCC_CFGR_SWS_Pos);
 }
 

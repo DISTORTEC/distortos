@@ -320,7 +320,7 @@ void ChipUartLowLevel::interruptHandler()
 			const uint16_t characterLow = writeBuffer[writePosition++];
 			const uint16_t characterHigh = characterLength > 8 ? writeBuffer[writePosition++] : 0;
 			writePosition_ = writePosition;
-			uart.TDR = characterLow | (characterHigh << 8);
+			uart.TDR = characterLow | characterHigh << 8;
 			if (writePosition == writeSize_)
 				uartBase_->writeCompleteEvent(stopWrite());
 		}
@@ -356,15 +356,15 @@ std::pair<int, uint32_t> ChipUartLowLevel::start(devices::UartBase& uartBase, co
 
 	uartBase_ = &uartBase;
 	auto& uart = parameters_.getUart();
-	uart.BRR = (mantissa << USART_BRR_DIV_MANTISSA_Pos) | (fraction << USART_BRR_DIV_FRACTION_Pos);
+	uart.BRR = mantissa << USART_BRR_DIV_MANTISSA_Pos | fraction << USART_BRR_DIV_FRACTION_Pos;
 	uart.CR2 = _2StopBits << (USART_CR2_STOP_Pos + 1);
-	uart.CR1 = USART_CR1_RE | USART_CR1_TE | USART_CR1_UE | (over8 << USART_CR1_OVER8_Pos) |
-			((realCharacterLength == maxCharacterLength) << USART_CR1_M0_Pos) |
+	uart.CR1 = USART_CR1_RE | USART_CR1_TE | USART_CR1_UE | over8 << USART_CR1_OVER8_Pos |
+			(realCharacterLength == maxCharacterLength) << USART_CR1_M0_Pos |
 #ifdef CONFIG_CHIP_STM32_USARTV2_HAS_CR1_M1_BIT
-			((realCharacterLength == minCharacterLength + 1) << USART_CR1_M1_Pos) |
+			(realCharacterLength == minCharacterLength + 1) << USART_CR1_M1_Pos |
 #endif	// def CONFIG_CHIP_STM32_USARTV2_HAS_CR1_M1_BIT
-			((parity != devices::UartParity::none) << USART_CR1_PCE_Pos) |
-			((parity == devices::UartParity::odd) << USART_CR1_PS_Pos);
+			(parity != devices::UartParity::none) << USART_CR1_PCE_Pos |
+			(parity == devices::UartParity::odd) << USART_CR1_PS_Pos;
 	return {{}, peripheralFrequency / divider};
 }
 

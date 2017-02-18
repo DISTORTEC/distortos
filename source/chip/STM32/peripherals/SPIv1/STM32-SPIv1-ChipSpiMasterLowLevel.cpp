@@ -278,9 +278,9 @@ std::pair<int, uint32_t> ChipSpiMasterLowLevel::configure(const devices::SpiMode
 		parameters_.enablePeripheral(false);
 
 	spi.CR1 = (spi.CR1 & ~(SPI_CR1_DFF | SPI_CR1_LSBFIRST | SPI_CR1_BR | SPI_CR1_CPOL | SPI_CR1_CPHA)) |
-			((wordLength == 16) << SPI_CR1_DFF_Pos) | (lsbFirst << SPI_CR1_LSBFIRST_Pos) | (br << SPI_CR1_BR_Pos) |
-			((mode == devices::SpiMode::cpol1cpha0 || mode == devices::SpiMode::cpol1cpha1) << SPI_CR1_CPOL_Pos) |
-			((mode == devices::SpiMode::cpol0cpha1 || mode == devices::SpiMode::cpol1cpha1) << SPI_CR1_CPHA_Pos);
+			(wordLength == 16) << SPI_CR1_DFF_Pos | lsbFirst << SPI_CR1_LSBFIRST_Pos | br << SPI_CR1_BR_Pos |
+			(mode == devices::SpiMode::cpol1cpha0 || mode == devices::SpiMode::cpol1cpha1) << SPI_CR1_CPOL_Pos |
+			(mode == devices::SpiMode::cpol0cpha1 || mode == devices::SpiMode::cpol1cpha1) << SPI_CR1_CPHA_Pos;
 
 	if (disablePeripheral == true)
 		parameters_.enablePeripheral(true);
@@ -350,7 +350,7 @@ void ChipSpiMasterLowLevel::interruptHandler()
 		{
 			const uint16_t characterLow = writeBuffer[writePosition++];
 			const uint16_t characterHigh = wordLength == 16 ? writeBuffer[writePosition++] : 0;
-			word = characterLow | (characterHigh << 8);
+			word = characterLow | characterHigh << 8;
 		}
 		else
 		{

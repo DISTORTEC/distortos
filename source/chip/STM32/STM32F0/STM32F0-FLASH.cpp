@@ -30,13 +30,13 @@ int configureFlashLatency(const uint8_t latency)
 	if (latency > maxFlashLatency)
 		return EINVAL;
 
-	FLASH->ACR = (FLASH->ACR & ~FLASH_ACR_LATENCY) | (latency << FLASH_ACR_LATENCY_Pos);
+	FLASH->ACR = (FLASH->ACR & ~FLASH_ACR_LATENCY) | latency << FLASH_ACR_LATENCY_Pos;
 	return 0;
 }
 
 void configurePrefetchBuffer(const bool enable)
 {
-	FLASH->ACR = (FLASH->ACR & ~FLASH_ACR_PRFTBE) | (enable << FLASH_ACR_PRFTBE_Pos);
+	FLASH->ACR = (FLASH->ACR & ~FLASH_ACR_PRFTBE) | enable << FLASH_ACR_PRFTBE_Pos;
 }
 
 }	// namespace chip
