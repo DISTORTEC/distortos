@@ -72,6 +72,7 @@ is too small for stack frame, `ENOSPC` error code is returned. Modify all call p
 `DynamicThread::start()` and `StaticThread::start()` - to handle this error.
 - Moved `lowLevelInitialization0()` to the very beginning of reset handler.
 - Renamed `BITBAND_PERIPH()` macro to `BITBAND_PERIPHERAL()`.
+- Moved remaining *ARMv6-M* and *ARMv7-M* assembly functions (`Reset_Handler()` and `SVC_Handler`) to C++ source files.
 - Update *CMSIS-STM32F0* to version 1.7.0.
 - Update *CMSIS-STM32F4* to version 1.14.0.
 
