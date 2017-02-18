@@ -12,6 +12,7 @@
 #include "distortos/chip/lowLevelInitialization.hpp"
 
 #include "distortos/chip/clocks.hpp"
+#include "distortos/chip/CMSIS-proxy.h"
 #include "distortos/chip/STM32F0-FLASH.hpp"
 #include "distortos/chip/STM32F0-RCC.hpp"
 
@@ -88,7 +89,27 @@ void lowLevelInitialization()
 
 #endif	// def CONFIG_CHIP_STM32F0_STANDARD_CLOCK_CONFIGURATION_ENABLE
 
-	enablePortClock();
+	// Enable clock for GPIO Ports
+	RCC->AHBENR |=
+	#if defined(CONFIG_CHIP_STM32_GPIOV2_GPIOA_ENABLE)
+		RCC_AHBENR_GPIOAEN |
+	#endif // def CONFIG_CHIP_STM32_GPIOV2_GPIOA_ENABLE
+	#if defined(CONFIG_CHIP_STM32_GPIOV2_GPIOB_ENABLE)
+		RCC_AHBENR_GPIOBEN |
+	#endif // def CONFIG_CHIP_STM32_GPIOV2_GPIOB_ENABLE
+	#if defined(CONFIG_CHIP_STM32_GPIOV2_GPIOC_ENABLE)
+		RCC_AHBENR_GPIOCEN |
+	#endif  // def CONFIG_CHIP_STM32_GPIOV2_GPIOC_ENABLE
+	#if defined(CONFIG_CHIP_STM32_GPIOV2_GPIOD_ENABLE)
+		RCC_AHBENR_GPIODEN |
+	#endif // def CONFIG_CHIP_STM32_GPIOV2_GPIOD_ENABLE
+	#if defined(CONFIG_CHIP_STM32_GPIOV2_GPIOE_ENABLE)
+		RCC_AHBENR_GPIOEEN |
+	#endif  // def CONFIG_CHIP_STM32_GPIOV2_GPIOE_ENABLE
+	#if defined(CONFIG_CHIP_STM32_GPIOV2_GPIOF_ENABLE)
+		RCC_AHBENR_GPIOFEN |
+	#endif  // def CONFIG_CHIP_STM32_GPIOV2_GPIOF_ENABLE
+	0;
 }
 
 }	// namespace chip
