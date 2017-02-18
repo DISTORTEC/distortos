@@ -116,19 +116,15 @@ __attribute__ ((naked)) void Reset_Handler()
 			"3:												\n"
 			"												\n"
 #endif	// !def __ARM_ARCH_6M__
-#ifdef __USES_CXX
 			"	ldr		r0, =__libc_init_array				\n"		// call constructors for global and static objects
 			"	blx		r0									\n"
 			"												\n"
-#endif	// __USES_CXX
 			"	ldr		r0, =main							\n"		// call main()
 			"	blx		r0									\n"
 			"												\n"
-#ifdef __USES_CXX
 			"	ldr		r0, =__libc_fini_array				\n"		// call destructors for global and static objects
 			"	blx		r0									\n"
 			"												\n"
-#endif	// __USES_CXX
 			"	b		.									\n"		// on return - loop till the end of the world
 
 #ifdef __USES_TWO_STACKS
