@@ -73,6 +73,8 @@ is too small for stack frame, `ENOSPC` error code is returned. Modify all call p
 - Moved `lowLevelInitialization0()` to the very beginning of reset handler.
 - Renamed `BITBAND_PERIPH()` macro to `BITBAND_PERIPHERAL()`.
 - Moved remaining *ARMv6-M* and *ARMv7-M* assembly functions (`Reset_Handler()` and `SVC_Handler`) to C++ source files.
+- `ARMv6-M-ARMv7-M-Reset_Handler.cpp` no longer requires `__USES_CXX` and `__USES_TWO_STACKS` to be defined in
+compilation flags.
 - Update *CMSIS-STM32F0* to version 1.7.0.
 - Update *CMSIS-STM32F4* to version 1.14.0.
 
