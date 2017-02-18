@@ -2,7 +2,7 @@
  * \file
  * \brief FifoQueue class header
  *
- * \author Copyright (C) 2014-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -73,7 +73,7 @@ public:
 
 	~FifoQueue();
 
-#if DISTORTOS_FIFOQUEUE_EMPLACE_SUPPORTED == 1 || DOXYGEN == 1
+#if DISTORTOS_FIFOQUEUE_EMPLACE_SUPPORTED == 1
 
 	/**
 	 * \brief Emplaces the element in the queue.
@@ -98,7 +98,7 @@ public:
 		return emplaceInternal(semaphoreWaitFunctor, std::forward<Args>(args)...);
 	}
 
-#endif	// DISTORTOS_FIFOQUEUE_EMPLACE_SUPPORTED == 1 || DOXYGEN == 1
+#endif	// DISTORTOS_FIFOQUEUE_EMPLACE_SUPPORTED == 1
 
 	/**
 	 * \brief Pops the oldest (first) element from the queue.
@@ -156,7 +156,7 @@ public:
 		return pushInternal(semaphoreWaitFunctor, std::move(value));
 	}
 
-#if DISTORTOS_FIFOQUEUE_EMPLACE_SUPPORTED == 1 || DOXYGEN == 1
+#if DISTORTOS_FIFOQUEUE_EMPLACE_SUPPORTED == 1
 
 	/**
 	 * \brief Tries to emplace the element in the queue.
@@ -281,7 +281,7 @@ public:
 				std::forward<Args>(args)...);
 	}
 
-#endif	// DISTORTOS_FIFOQUEUE_EMPLACE_SUPPORTED == 1 || DOXYGEN == 1
+#endif	// DISTORTOS_FIFOQUEUE_EMPLACE_SUPPORTED == 1
 
 	/**
 	 * \brief Tries to pop the oldest (first) element from the queue.
@@ -598,7 +598,7 @@ public:
 
 private:
 
-#if DISTORTOS_FIFOQUEUE_EMPLACE_SUPPORTED == 1 || DOXYGEN == 1
+#if DISTORTOS_FIFOQUEUE_EMPLACE_SUPPORTED == 1
 
 	/**
 	 * \brief Emplaces the element in the queue.
@@ -620,7 +620,7 @@ private:
 	template<typename... Args>
 	int emplaceInternal(const internal::SemaphoreFunctor& waitSemaphoreFunctor, Args&&... args);
 
-#endif	// DISTORTOS_FIFOQUEUE_EMPLACE_SUPPORTED == 1 || DOXYGEN == 1
+#endif	// DISTORTOS_FIFOQUEUE_EMPLACE_SUPPORTED == 1
 
 	/**
 	 * \brief Pops the oldest (first) element from the queue.
@@ -680,7 +680,7 @@ FifoQueue<T>::~FifoQueue()
 	while (tryPop(value) == 0);
 }
 
-#if DISTORTOS_FIFOQUEUE_EMPLACE_SUPPORTED == 1 || DOXYGEN == 1
+#if DISTORTOS_FIFOQUEUE_EMPLACE_SUPPORTED == 1
 
 template<typename T>
 template<typename... Args>
@@ -694,7 +694,7 @@ int FifoQueue<T>::emplaceInternal(const internal::SemaphoreFunctor& waitSemaphor
 	return fifoQueueBase_.push(waitSemaphoreFunctor, emplaceFunctor);
 }
 
-#endif	// DISTORTOS_FIFOQUEUE_EMPLACE_SUPPORTED == 1 || DOXYGEN == 1
+#endif	// DISTORTOS_FIFOQUEUE_EMPLACE_SUPPORTED == 1
 
 template<typename T>
 int FifoQueue<T>::popInternal(const internal::SemaphoreFunctor& waitSemaphoreFunctor, T& value)

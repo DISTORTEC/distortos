@@ -1,7 +1,7 @@
 #
 # file: Makefile
 #
-# author: Copyright (C) 2015-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+# author: Copyright (C) 2015-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
 #
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -110,18 +110,17 @@ CONFIG_ASSERT := $(subst ",,$(CONFIG_ASSERT))
 
 ASFLAGS += $(CONFIG_DEBUGGING_INFORMATION_COMPILATION)
 ASFLAGS += $(CONFIG_ARCHITECTURE_FLAGS)
-ASFLAGS += -MD -MP
 
 CFLAGS += $(CONFIG_DEBUGGING_INFORMATION_COMPILATION)
 CFLAGS += $(CONFIG_ARCHITECTURE_FLAGS)
 CFLAGS += $(CONFIG_BUILD_OPTIMIZATION)
-CFLAGS += -ffunction-sections -fdata-sections -MD -MP
+CFLAGS += -ffunction-sections -fdata-sections
 CFLAGS += $(CONFIG_ASSERT)
 
 CXXFLAGS += $(CONFIG_DEBUGGING_INFORMATION_COMPILATION)
 CXXFLAGS += $(CONFIG_ARCHITECTURE_FLAGS)
 CXXFLAGS += $(CONFIG_BUILD_OPTIMIZATION)
-CXXFLAGS += -ffunction-sections -fdata-sections -fno-rtti -fno-exceptions -MD -MP
+CXXFLAGS += -ffunction-sections -fdata-sections -fno-rtti -fno-exceptions
 CXXFLAGS += $(CONFIG_ASSERT)
 
 # path to linker script (generated automatically)
@@ -231,15 +230,15 @@ $(GENERATED): $(DISTORTOS_PATH)Makefile
 
 $(OUTPUT)%.o: %.S
 	$(call PRETTY_PRINT,"AS     " $<)
-	$(Q)$(AS) $(ASFLAGS) $(ASFLAGS_$(dir $(<))$(notdir $(<))) -c $< -o $@
+	$(Q)$(AS) $(ASFLAGS) $(ASFLAGS_$(dir $(<))$(notdir $(<))) -MD -MP -c $< -o $@
 
 $(OUTPUT)%.o: %.c
 	$(call PRETTY_PRINT,"CC     " $<)
-	$(Q)$(CC) $(CFLAGS) $(CFLAGS_$(dir $(<))$(notdir $(<))) -c $< -o $@
+	$(Q)$(CC) $(CFLAGS) $(CFLAGS_$(dir $(<))$(notdir $(<))) -MD -MP -c $< -o $@
 
 $(OUTPUT)%.o: %.cpp
 	$(call PRETTY_PRINT,"CXX    " $<)
-	$(Q)$(CXX) $(CXXFLAGS) $(CXXFLAGS_$(dir $(<))$(notdir $(<))) -c $< -o $@
+	$(Q)$(CXX) $(CXXFLAGS) $(CXXFLAGS_$(dir $(<))$(notdir $(<))) -MD -MP -c $< -o $@
 
 $(OUTPUT)%.a:
 	$(Q)$(RM) $@
@@ -298,10 +297,18 @@ doxygen: all
 	$(eval INCLUDE_PATH_STRING += $(patsubst -I%,%,$(CHIP_INCLUDES)))
 	$(eval INCLUDE_PATH_STRING += $(patsubst -I%,%,$(BOARD_INCLUDES)))
 	$(eval INCLUDE_PATH_STRING += $(DISTORTOS_PATH)test)
+	$(eval PREDEFINED_STRING := PREDEFINED =)
+	$(eval PREDEFINED_STRING += DOXYGEN)
+	$(eval PREDEFINED_STRING += \"__attribute__\(x\)=\")
+	$(eval PREDEFINED_STRING += \"__GNUC_PREREQ\(x, y\)=1\")
+	$(eval PREDEFINED_STRING += $(shell echo | $(CXX) $(CXXFLAGS) -E -P -dD -x c++ - | sed \
+			-e 's/\(["#]\)/\\\\\\\1/g' \
+			-e 's/\([()]\)/\\\1/g' \
+			-e 's/^\\\\\\#define \([^ ]*\) \(.*\)$$/\\"\1=\2\\"/'))
 	$(eval PROJECT_NUMBER_STRING := PROJECT_NUMBER =)
 	$(eval PROJECT_NUMBER_STRING += $(shell git describe --dirty 2>/dev/null || date +%Y%m%d%H%M%S))
 	(cat $(DISTORTOS_PATH)Doxyfile; echo $(EXCLUDE_STRING); echo $(HTML_FOOTER_STRING); echo $(IMAGE_PATH_STRING); \
-			echo $(INCLUDE_PATH_STRING); echo $(PROJECT_NUMBER_STRING)) | doxygen -
+			echo $(INCLUDE_PATH_STRING); echo $(PREDEFINED_STRING); echo $(PROJECT_NUMBER_STRING)) | doxygen -
 
 define NEWLINE
 
