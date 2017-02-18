@@ -119,6 +119,14 @@ config ARCHITECTURE_ARM_CORTEX_M7
 	bool
 	default n
 
+config ARCHITECTURE_ARM_CORTEX_M7_R0P1
+	bool
+	default n
+
+config ARCHITECTURE_ARM_CORTEX_M7_R0P2
+	bool
+	default n
+
 config ARCHITECTURE_ARM_CORTEX_M7_R1P0
 	bool
 	default n
