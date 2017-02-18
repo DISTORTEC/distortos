@@ -9,11 +9,7 @@
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#ifdef __USES_TWO_STACKS
-
 #include "ARMv6-M-ARMv7-M-CONTROL-bits.h"
-
-#endif	// __USES_TWO_STACKS
 
 extern "C"
 {
@@ -39,7 +35,6 @@ __attribute__ ((naked)) void Reset_Handler()
 			"	ldr		r0, =lowLevelInitialization0		\n"		// call lowLevelInitialization0() (PSP not set,
 			"	blx		r0									\n"		// CONTROL not modified, memory not initialized)
 			"												\n"
-#ifdef __USES_TWO_STACKS
 			"	ldr		r0, =__process_stack_end			\n"		// initialize PSP
 			"	msr		psp, r0								\n"
 			"												\n"
@@ -47,7 +42,6 @@ __attribute__ ((naked)) void Reset_Handler()
 			"	msr		control, r0							\n"
 			"	isb											\n"
 			"												\n"
-#endif	// __USES_TWO_STACKS
 			"	ldr		r4, =__data_array_start				\n"		// initialize data_array (including .data)
 			"	ldr		r5, =__data_array_end				\n"
 			"												\n"
@@ -127,9 +121,7 @@ __attribute__ ((naked)) void Reset_Handler()
 			"												\n"
 			"	b		.									\n"		// on return - loop till the end of the world
 
-#ifdef __USES_TWO_STACKS
 			::	[controlSpsel] "i" (CONTROL_SPSEL)
-#endif	// __USES_TWO_STACKS
 	);
 
 	__builtin_unreachable();
