@@ -56,7 +56,7 @@ enum { bitbandPeripheralBase = 0x42000000 };
 #define BITBAND_SRAM(address, bit)			(*(volatile unsigned long*)BITBAND_SRAM_ADDRESS(address, bit))
 
 /** bit-band alias in peripheral region */
-#define BITBAND_PERIPH(address, bit)		(*(volatile unsigned long*)BITBAND_PERIPHERAL_ADDRESS(address, bit))
+#define BITBAND_PERIPHERAL(address, bit)	(*(volatile unsigned long*)BITBAND_PERIPHERAL_ADDRESS(address, bit))
 
 /** bit-band alias in any region */
 #define BITBAND(address, bit)				(*(volatile unsigned long*)BITBAND_ADDRESS(address, bit))
