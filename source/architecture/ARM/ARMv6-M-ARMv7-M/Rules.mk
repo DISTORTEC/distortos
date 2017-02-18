@@ -13,8 +13,6 @@ ifeq ($(or $(CONFIG_ARCHITECTURE_ARMV6_M),$(CONFIG_ARCHITECTURE_ARMV7_M)),y)
 # compilation flags
 #-----------------------------------------------------------------------------------------------------------------------
 
-CXXFLAGS_$(d)ARMv6-M-ARMv7-M-Reset_Handler.cpp := -D__USES_TWO_STACKS -D__USES_CXX
-
 CXXFLAGS_$(d) := $(CXXFLAGS_$(d)) $(STANDARD_INCLUDES)
 CXXFLAGS_$(d) := $(CXXFLAGS_$(d)) $(ARCHITECTURE_INCLUDES)
 CXXFLAGS_$(d) := $(CXXFLAGS_$(d)) $(CHIP_INCLUDES)
