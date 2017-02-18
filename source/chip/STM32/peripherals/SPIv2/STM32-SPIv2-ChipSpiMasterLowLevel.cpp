@@ -14,6 +14,8 @@
 #include "distortos/chip/clocks.hpp"
 #include "distortos/chip/CMSIS-proxy.h"
 
+#include "distortos/devices/communication/SpiMasterBase.hpp"
+
 #include "distortos/InterruptMaskingLock.hpp"
 
 #include <cerrno>

@@ -12,7 +12,6 @@
 #ifndef SOURCE_CHIP_STM32_PERIPHERALS_SPIV1_INCLUDE_DISTORTOS_CHIP_CHIPSPIMASTERLOWLEVEL_HPP_
 #define SOURCE_CHIP_STM32_PERIPHERALS_SPIV1_INCLUDE_DISTORTOS_CHIP_CHIPSPIMASTERLOWLEVEL_HPP_
 
-#include "distortos/devices/communication/SpiMasterBase.hpp"
 #include "distortos/devices/communication/SpiMasterErrorSet.hpp"
 #include "distortos/devices/communication/SpiMasterLowLevel.hpp"
 

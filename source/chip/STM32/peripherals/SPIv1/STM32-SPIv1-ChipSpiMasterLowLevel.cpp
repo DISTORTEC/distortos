@@ -15,6 +15,8 @@
 #include "distortos/chip/CMSIS-proxy.h"
 #include "distortos/chip/STM32-bit-banding.h"
 
+#include "distortos/devices/communication/SpiMasterBase.hpp"
+
 #include <cerrno>
 
 namespace distortos
