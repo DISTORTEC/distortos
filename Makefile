@@ -300,6 +300,10 @@ doxygen: all
 	$(eval PREDEFINED_STRING := PREDEFINED =)
 	$(eval PREDEFINED_STRING += DOXYGEN)
 	$(eval PREDEFINED_STRING += \"__attribute__\(x\)=\")
+	$(eval PREDEFINED_STRING += $(shell echo | $(CXX) $(CXXFLAGS) -E -P -dD -x c++ - | sed \
+			-e 's/\(["#]\)/\\\\\\\1/g' \
+			-e 's/\([()]\)/\\\1/g' \
+			-e 's/^\\\\\\#define \([^ ]*\) \(.*\)$$/\\"\1=\2\\"/'))
 	$(eval PROJECT_NUMBER_STRING := PROJECT_NUMBER =)
 	$(eval PROJECT_NUMBER_STRING += $(shell git describe --dirty 2>/dev/null || date +%Y%m%d%H%M%S))
 	(cat $(DISTORTOS_PATH)Doxyfile; echo $(EXCLUDE_STRING); echo $(HTML_FOOTER_STRING); echo $(IMAGE_PATH_STRING); \
