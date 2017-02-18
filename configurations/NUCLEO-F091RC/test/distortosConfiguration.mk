@@ -204,7 +204,7 @@ CONFIG_CHIP_STM32F0_RCC_HSE_FREQUENCY_DEFAULT=8000000
 CONFIG_CHIP_STM32F0_RCC_HPRE=1
 CONFIG_CHIP_STM32F0_RCC_PPRE=1
 CONFIG_CHIP="STM32F091RC"
-CONFIG_CHIP_INCLUDES="source/chip/STM32/STM32F0/include source/chip/STM32/peripherals/GPIOv2/include source/chip/STM32/peripherals/SPIv2/include source/chip/STM32/peripherals/USARTv2/include external/CMSIS-STM32F0 external/CMSIS"
+CONFIG_CHIP_INCLUDES="source/chip/STM32/include source/chip/STM32/STM32F0/include source/chip/STM32/peripherals/GPIOv2/include source/chip/STM32/peripherals/SPIv2/include source/chip/STM32/peripherals/USARTv2/include external/CMSIS-STM32F0 external/CMSIS"
 
 #
 # Peripherals configuration
