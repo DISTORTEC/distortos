@@ -110,18 +110,17 @@ CONFIG_ASSERT := $(subst ",,$(CONFIG_ASSERT))
 
 ASFLAGS += $(CONFIG_DEBUGGING_INFORMATION_COMPILATION)
 ASFLAGS += $(CONFIG_ARCHITECTURE_FLAGS)
-ASFLAGS += -MD -MP
 
 CFLAGS += $(CONFIG_DEBUGGING_INFORMATION_COMPILATION)
 CFLAGS += $(CONFIG_ARCHITECTURE_FLAGS)
 CFLAGS += $(CONFIG_BUILD_OPTIMIZATION)
-CFLAGS += -ffunction-sections -fdata-sections -MD -MP
+CFLAGS += -ffunction-sections -fdata-sections
 CFLAGS += $(CONFIG_ASSERT)
 
 CXXFLAGS += $(CONFIG_DEBUGGING_INFORMATION_COMPILATION)
 CXXFLAGS += $(CONFIG_ARCHITECTURE_FLAGS)
 CXXFLAGS += $(CONFIG_BUILD_OPTIMIZATION)
-CXXFLAGS += -ffunction-sections -fdata-sections -fno-rtti -fno-exceptions -MD -MP
+CXXFLAGS += -ffunction-sections -fdata-sections -fno-rtti -fno-exceptions
 CXXFLAGS += $(CONFIG_ASSERT)
 
 # path to linker script (generated automatically)
@@ -231,15 +230,15 @@ $(GENERATED): $(DISTORTOS_PATH)Makefile
 
 $(OUTPUT)%.o: %.S
 	$(call PRETTY_PRINT,"AS     " $<)
-	$(Q)$(AS) $(ASFLAGS) $(ASFLAGS_$(dir $(<))$(notdir $(<))) -c $< -o $@
+	$(Q)$(AS) $(ASFLAGS) $(ASFLAGS_$(dir $(<))$(notdir $(<))) -MD -MP -c $< -o $@
 
 $(OUTPUT)%.o: %.c
 	$(call PRETTY_PRINT,"CC     " $<)
-	$(Q)$(CC) $(CFLAGS) $(CFLAGS_$(dir $(<))$(notdir $(<))) -c $< -o $@
+	$(Q)$(CC) $(CFLAGS) $(CFLAGS_$(dir $(<))$(notdir $(<))) -MD -MP -c $< -o $@
 
 $(OUTPUT)%.o: %.cpp
 	$(call PRETTY_PRINT,"CXX    " $<)
-	$(Q)$(CXX) $(CXXFLAGS) $(CXXFLAGS_$(dir $(<))$(notdir $(<))) -c $< -o $@
+	$(Q)$(CXX) $(CXXFLAGS) $(CXXFLAGS_$(dir $(<))$(notdir $(<))) -MD -MP -c $< -o $@
 
 $(OUTPUT)%.a:
 	$(Q)$(RM) $@
