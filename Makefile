@@ -1,7 +1,7 @@
 #
 # file: Makefile
 #
-# author: Copyright (C) 2015-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+# author: Copyright (C) 2015-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
 #
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -298,10 +298,13 @@ doxygen: all
 	$(eval INCLUDE_PATH_STRING += $(patsubst -I%,%,$(CHIP_INCLUDES)))
 	$(eval INCLUDE_PATH_STRING += $(patsubst -I%,%,$(BOARD_INCLUDES)))
 	$(eval INCLUDE_PATH_STRING += $(DISTORTOS_PATH)test)
+	$(eval PREDEFINED_STRING := PREDEFINED =)
+	$(eval PREDEFINED_STRING += DOXYGEN)
+	$(eval PREDEFINED_STRING += \"__attribute__\(x\)=\")
 	$(eval PROJECT_NUMBER_STRING := PROJECT_NUMBER =)
 	$(eval PROJECT_NUMBER_STRING += $(shell git describe --dirty 2>/dev/null || date +%Y%m%d%H%M%S))
 	(cat $(DISTORTOS_PATH)Doxyfile; echo $(EXCLUDE_STRING); echo $(HTML_FOOTER_STRING); echo $(IMAGE_PATH_STRING); \
-			echo $(INCLUDE_PATH_STRING); echo $(PROJECT_NUMBER_STRING)) | doxygen -
+			echo $(INCLUDE_PATH_STRING); echo $(PREDEFINED_STRING); echo $(PROJECT_NUMBER_STRING)) | doxygen -
 
 define NEWLINE
 
