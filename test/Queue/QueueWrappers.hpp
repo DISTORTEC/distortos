@@ -2,7 +2,7 @@
  * \file
  * \brief QueueWrapper, [Non]RawQueueWrapper and [Dynamic|Static][Raw]{Fifo,Message}QueueWrapper classes header
  *
- * \author Copyright (C) 2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2015-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -68,7 +68,7 @@ public:
 	virtual bool checkCounters(size_t constructed, size_t copyConstructed, size_t moveConstructed, size_t destructed,
 			size_t copyAssigned, size_t moveAssigned, size_t swapped) const = 0;
 
-#if DISTORTOS_QUEUE_EMPLACE_SUPPORTED == 1 || DOXYGEN == 1
+#if DISTORTOS_QUEUE_EMPLACE_SUPPORTED == 1
 
 	/**
 	 * \brief Wrapper for {Fifo,Message}Queue::emplace() or Raw{Fifo,Message}Queue::push()
@@ -76,7 +76,7 @@ public:
 
 	virtual int emplace(uint8_t priority, OperationCountingType::Value value = {}) const = 0;
 
-#endif	// DISTORTOS_QUEUE_EMPLACE_SUPPORTED == 1 || DOXYGEN == 1
+#endif	// DISTORTOS_QUEUE_EMPLACE_SUPPORTED == 1
 
 	/**
 	 * \brief Wrapper for [Raw]{Fifo,Message}Queue::pop()
@@ -96,7 +96,7 @@ public:
 
 	virtual int push(uint8_t priority, OperationCountingType&& value) const = 0;
 
-#if DISTORTOS_QUEUE_EMPLACE_SUPPORTED == 1 || DOXYGEN == 1
+#if DISTORTOS_QUEUE_EMPLACE_SUPPORTED == 1
 
 	/**
 	 * \brief Wrapper for {Fifo,Message}Queue::tryEmplace() or Raw{Fifo,Message}Queue::tryPush()
@@ -118,7 +118,7 @@ public:
 	virtual int tryEmplaceUntil(TickClock::time_point timePoint, uint8_t priority,
 			OperationCountingType::Value value = {}) const = 0;
 
-#endif	// DISTORTOS_QUEUE_EMPLACE_SUPPORTED == 1 || DOXYGEN == 1
+#endif	// DISTORTOS_QUEUE_EMPLACE_SUPPORTED == 1
 
 	/**
 	 * \brief Wrapper for [Raw]{Fifo,Message}Queue::tryPop()
@@ -238,7 +238,7 @@ public:
 	bool check(uint8_t priority1, const OperationCountingType& value1, uint8_t priority2,
 			const OperationCountingType& value2) const override;
 
-#if DISTORTOS_QUEUE_EMPLACE_SUPPORTED == 1 || DOXYGEN == 1
+#if DISTORTOS_QUEUE_EMPLACE_SUPPORTED == 1
 
 	/**
 	 * \brief Wrapper for FifoQueue::emplace()
@@ -246,7 +246,7 @@ public:
 
 	int emplace(uint8_t priority, OperationCountingType::Value value = {}) const override;
 
-#endif	// DISTORTOS_QUEUE_EMPLACE_SUPPORTED == 1 || DOXYGEN == 1
+#endif	// DISTORTOS_QUEUE_EMPLACE_SUPPORTED == 1
 
 	/**
 	 * \brief Wrapper for FifoQueue::pop()
@@ -266,7 +266,7 @@ public:
 
 	int push(uint8_t priority, OperationCountingType&& value) const override;
 
-#if DISTORTOS_QUEUE_EMPLACE_SUPPORTED == 1 || DOXYGEN == 1
+#if DISTORTOS_QUEUE_EMPLACE_SUPPORTED == 1
 
 	/**
 	 * \brief Wrapper for FifoQueue::tryEmplace()
@@ -288,7 +288,7 @@ public:
 	int tryEmplaceUntil(TickClock::time_point timePoint, uint8_t priority, OperationCountingType::Value value = {})
 			const override;
 
-#endif	// DISTORTOS_QUEUE_EMPLACE_SUPPORTED == 1 || DOXYGEN == 1
+#endif	// DISTORTOS_QUEUE_EMPLACE_SUPPORTED == 1
 
 	/**
 	 * \brief Wrapper for FifoQueue::tryPop()
@@ -440,7 +440,7 @@ public:
 	bool check(uint8_t priority1, const OperationCountingType& value1, uint8_t priority2,
 			const OperationCountingType& value2) const override;
 
-#if DISTORTOS_QUEUE_EMPLACE_SUPPORTED == 1 || DOXYGEN == 1
+#if DISTORTOS_QUEUE_EMPLACE_SUPPORTED == 1
 
 	/**
 	 * \brief Wrapper for MessageQueue::emplace()
@@ -448,7 +448,7 @@ public:
 
 	int emplace(uint8_t priority, OperationCountingType::Value value = {}) const override;
 
-#endif	// DISTORTOS_QUEUE_EMPLACE_SUPPORTED == 1 || DOXYGEN == 1
+#endif	// DISTORTOS_QUEUE_EMPLACE_SUPPORTED == 1
 
 	/**
 	 * \brief Wrapper for MessageQueue::pop()
@@ -468,7 +468,7 @@ public:
 
 	int push(uint8_t priority, OperationCountingType&& value) const override;
 
-#if DISTORTOS_QUEUE_EMPLACE_SUPPORTED == 1 || DOXYGEN == 1
+#if DISTORTOS_QUEUE_EMPLACE_SUPPORTED == 1
 
 	/**
 	 * \brief Wrapper for MessageQueue::tryEmplace()
@@ -490,7 +490,7 @@ public:
 	int tryEmplaceUntil(TickClock::time_point timePoint, uint8_t priority, OperationCountingType::Value value = {})
 			const override;
 
-#endif	// DISTORTOS_QUEUE_EMPLACE_SUPPORTED == 1 || DOXYGEN == 1
+#endif	// DISTORTOS_QUEUE_EMPLACE_SUPPORTED == 1
 
 	/**
 	 * \brief Wrapper for MessageQueue::tryPop()
@@ -624,7 +624,7 @@ public:
 	bool checkCounters(size_t constructed, size_t copyConstructed, size_t moveConstructed, size_t destructed,
 			size_t copyAssigned, size_t moveAssigned, size_t swapped) const override;
 
-#if DISTORTOS_QUEUE_EMPLACE_SUPPORTED == 1 || DOXYGEN == 1
+#if DISTORTOS_QUEUE_EMPLACE_SUPPORTED == 1
 
 	/**
 	 * \brief Redirects the call to "raw" push().
@@ -632,7 +632,7 @@ public:
 
 	int emplace(uint8_t priority, OperationCountingType::Value value = {}) const final override;
 
-#endif	// DISTORTOS_QUEUE_EMPLACE_SUPPORTED == 1 || DOXYGEN == 1
+#endif	// DISTORTOS_QUEUE_EMPLACE_SUPPORTED == 1
 
 	/**
 	 * \brief Wrapper for Raw{Fifo,Message}Queue::pop()
@@ -664,7 +664,7 @@ public:
 
 	int push(uint8_t priority, OperationCountingType&& value) const final override;
 
-#if DISTORTOS_QUEUE_EMPLACE_SUPPORTED == 1 || DOXYGEN == 1
+#if DISTORTOS_QUEUE_EMPLACE_SUPPORTED == 1
 
 	/**
 	 * \brief Redirects the call to "raw" tryPush().
@@ -686,7 +686,7 @@ public:
 	int tryEmplaceUntil(TickClock::time_point timePoint, uint8_t priority, OperationCountingType::Value value = {})
 			const final override;
 
-#endif	// DISTORTOS_QUEUE_EMPLACE_SUPPORTED == 1 || DOXYGEN == 1
+#endif	// DISTORTOS_QUEUE_EMPLACE_SUPPORTED == 1
 
 	/**
 	 * \brief Wrapper for Raw{Fifo,Message}Queue::tryPop()

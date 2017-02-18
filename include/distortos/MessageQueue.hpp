@@ -2,7 +2,7 @@
  * \file
  * \brief MessageQueue class header
  *
- * \author Copyright (C) 2015-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2015-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -86,7 +86,7 @@ public:
 
 	~MessageQueue();
 
-#if DISTORTOS_MESSAGEQUEUE_EMPLACE_SUPPORTED == 1 || DOXYGEN == 1
+#if DISTORTOS_MESSAGEQUEUE_EMPLACE_SUPPORTED == 1
 
 	/**
 	 * \brief Emplaces the element in the queue.
@@ -114,7 +114,7 @@ public:
 		return emplaceInternal(semaphoreWaitFunctor, priority, std::forward<Args>(args)...);
 	}
 
-#endif	// DISTORTOS_MESSAGEQUEUE_EMPLACE_SUPPORTED == 1 || DOXYGEN == 1
+#endif	// DISTORTOS_MESSAGEQUEUE_EMPLACE_SUPPORTED == 1
 
 	/**
 	 * \brief Pops oldest element with highest priority from the queue.
@@ -181,7 +181,7 @@ public:
 		return pushInternal(semaphoreWaitFunctor, priority, std::move(value));
 	}
 
-#if DISTORTOS_MESSAGEQUEUE_EMPLACE_SUPPORTED == 1 || DOXYGEN == 1
+#if DISTORTOS_MESSAGEQUEUE_EMPLACE_SUPPORTED == 1
 
 	/**
 	 * \brief Tries to emplace the element in the queue.
@@ -319,7 +319,7 @@ public:
 				std::forward<Args>(args)...);
 	}
 
-#endif	// DISTORTOS_MESSAGEQUEUE_EMPLACE_SUPPORTED == 1 || DOXYGEN == 1
+#endif	// DISTORTOS_MESSAGEQUEUE_EMPLACE_SUPPORTED == 1
 
 	/**
 	 * \brief Tries to pop oldest element with highest priority from the queue.
@@ -670,7 +670,7 @@ public:
 
 private:
 
-#if DISTORTOS_MESSAGEQUEUE_EMPLACE_SUPPORTED == 1 || DOXYGEN == 1
+#if DISTORTOS_MESSAGEQUEUE_EMPLACE_SUPPORTED == 1
 
 	/**
 	 * \brief Emplaces the element in the queue.
@@ -693,7 +693,7 @@ private:
 	template<typename... Args>
 	int emplaceInternal(const internal::SemaphoreFunctor& waitSemaphoreFunctor, uint8_t priority, Args&&... args);
 
-#endif	// DISTORTOS_MESSAGEQUEUE_EMPLACE_SUPPORTED == 1 || DOXYGEN == 1
+#endif	// DISTORTOS_MESSAGEQUEUE_EMPLACE_SUPPORTED == 1
 
 	/**
 	 * \brief Pops oldest element with highest priority from the queue.
@@ -757,7 +757,7 @@ MessageQueue<T>::~MessageQueue()
 	while (tryPop(priority, value) == 0);
 }
 
-#if DISTORTOS_MESSAGEQUEUE_EMPLACE_SUPPORTED == 1 || DOXYGEN == 1
+#if DISTORTOS_MESSAGEQUEUE_EMPLACE_SUPPORTED == 1
 
 template<typename T>
 template<typename... Args>
@@ -772,7 +772,7 @@ int MessageQueue<T>::emplaceInternal(const internal::SemaphoreFunctor& waitSemap
 	return messageQueueBase_.push(waitSemaphoreFunctor, priority, emplaceFunctor);
 }
 
-#endif	// DISTORTOS_MESSAGEQUEUE_EMPLACE_SUPPORTED == 1 || DOXYGEN == 1
+#endif	// DISTORTOS_MESSAGEQUEUE_EMPLACE_SUPPORTED == 1
 
 template<typename T>
 int MessageQueue<T>::popInternal(const internal::SemaphoreFunctor& waitSemaphoreFunctor, uint8_t& priority, T& value)

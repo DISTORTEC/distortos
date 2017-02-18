@@ -298,6 +298,7 @@ doxygen: all
 	$(eval INCLUDE_PATH_STRING += $(patsubst -I%,%,$(BOARD_INCLUDES)))
 	$(eval INCLUDE_PATH_STRING += $(DISTORTOS_PATH)test)
 	$(eval PREDEFINED_STRING := PREDEFINED =)
+	$(eval PREDEFINED_STRING += DOXYGEN)
 	$(eval PREDEFINED_STRING += \"__attribute__\(x\)=\")
 	$(eval PREDEFINED_STRING += \"__GNUC_PREREQ\(x, y\)=1\")
 	$(eval PREDEFINED_STRING += $(shell echo | $(CXX) $(CXXFLAGS) -E -P -dD -x c++ - | sed \

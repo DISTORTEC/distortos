@@ -2,7 +2,7 @@
  * \file
  * \brief QueueOperationsTestCase class implementation
  *
- * \author Copyright (C) 2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2015-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -269,7 +269,7 @@ bool phase1()
 						return false;
 				}
 
-		#if DISTORTOS_QUEUE_EMPLACE_SUPPORTED == 1 || DOXYGEN == 1
+		#if DISTORTOS_QUEUE_EMPLACE_SUPPORTED == 1
 
 				{
 					// queue is both full and empty, so tryEmplace(..., Args&&...) should fail immediately
@@ -316,7 +316,7 @@ bool phase1()
 						return false;
 				}
 
-		#endif	// DISTORTOS_QUEUE_EMPLACE_SUPPORTED == 1 || DOXYGEN == 1
+		#endif	// DISTORTOS_QUEUE_EMPLACE_SUPPORTED == 1
 
 			}
 
@@ -537,7 +537,7 @@ bool phase2()
 						return ret;
 				}
 
-#if DISTORTOS_QUEUE_EMPLACE_SUPPORTED == 1 || DOXYGEN == 1
+#if DISTORTOS_QUEUE_EMPLACE_SUPPORTED == 1
 
 				{
 					// queue is not full, so tryEmplace(..., Args&&...) must succeed immediately
@@ -627,7 +627,7 @@ bool phase2()
 						return ret;
 				}
 
-#endif	// DISTORTOS_QUEUE_EMPLACE_SUPPORTED == 1 || DOXYGEN == 1
+#endif	// DISTORTOS_QUEUE_EMPLACE_SUPPORTED == 1
 
 			}
 
@@ -956,7 +956,7 @@ bool phase4()
 						return false;
 				}
 
-#if DISTORTOS_QUEUE_EMPLACE_SUPPORTED == 1 || DOXYGEN == 1
+#if DISTORTOS_QUEUE_EMPLACE_SUPPORTED == 1
 
 				{
 					OperationCountingType::resetCounters();
@@ -1039,7 +1039,7 @@ bool phase4()
 						return false;
 				}
 
-#endif	// DISTORTOS_QUEUE_EMPLACE_SUPPORTED == 1 || DOXYGEN == 1
+#endif	// DISTORTOS_QUEUE_EMPLACE_SUPPORTED == 1
 
 			}
 
