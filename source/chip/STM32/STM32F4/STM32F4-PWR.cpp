@@ -11,9 +11,8 @@
 
 #include "distortos/chip/STM32F4-PWR.hpp"
 
-#include "distortos/chip/STM32F4-PWR-bits.h"
-
 #include "distortos/chip/CMSIS-proxy.h"
+#include "distortos/chip/STM32-bit-banding.h"
 
 #include <cerrno>
 
@@ -32,7 +31,7 @@ int configureVoltageScaling(const uint8_t voltageScale)
 	if (voltageScale < minVoltageScale || voltageScale > maxVoltageScale)
 		return EINVAL;
 
-	PWR->CR = (PWR->CR & ~PWR_CR_VOS) | (((4 - voltageScale) << PWR_CR_VOS_bit) & PWR_CR_VOS);
+	PWR->CR = (PWR->CR & ~PWR_CR_VOS) | (((4 - voltageScale) << PWR_CR_VOS_Pos) & PWR_CR_VOS);
 	return 0;
 }
 
@@ -46,10 +45,10 @@ void disableOverDriveMode()
 
 void enableOverDriveMode()
 {
-	PWR_CR_ODEN_bb = 1;
-	while (PWR_CSR_ODRDY_bb == 0);
-	PWR_CR_ODSWEN_bb = 1;
-	while (PWR_CSR_ODSWRDY_bb == 0);
+	STM32_BITBAND(PWR, CR, ODEN) = 1;
+	while (STM32_BITBAND(PWR, CSR, ODRDY) == 0);
+	STM32_BITBAND(PWR, CR, ODSWEN) = 1;
+	while (STM32_BITBAND(PWR, CSR, ODSWRDY) == 0);
 }
 
 #endif	// defined(CONFIG_CHIP_STM32F427) || defined(CONFIG_CHIP_STM32F429) || defined(CONFIG_CHIP_STM32F43) ||

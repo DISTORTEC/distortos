@@ -2,7 +2,7 @@
  * \file
  * \brief ChipSpiMasterLowLevel class implementation for SPIv1 in STM32
  *
- * \author Copyright (C) 2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2016-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -13,7 +13,7 @@
 
 #include "distortos/chip/clocks.hpp"
 #include "distortos/chip/CMSIS-proxy.h"
-#include "distortos/chip/STM32-SPIv1-bits.h"
+#include "distortos/chip/STM32-bit-banding.h"
 
 #include <cerrno>
 
@@ -60,10 +60,10 @@ public:
 			spiBase_{spiBase},
 			peripheralFrequency_{spiBase < apb2PeripheralsBaseAddress ? apb1Frequency :
 					spiBase < ahbPeripheralsBaseAddress ? apb2Frequency : ahbFrequency},
-			speBbAddress_{BITBAND_ADDRESS(spiBase + offsetof(SPI_TypeDef, CR1), SPI_CR1_SPE_bit)},
-			errieBbAddress_{BITBAND_ADDRESS(spiBase + offsetof(SPI_TypeDef, CR2), SPI_CR2_ERRIE_bit)},
-			rxneieBbAddress_{BITBAND_ADDRESS(spiBase + offsetof(SPI_TypeDef, CR2), SPI_CR2_RXNEIE_bit)},
-			txeieBbAddress_{BITBAND_ADDRESS(spiBase + offsetof(SPI_TypeDef, CR2), SPI_CR2_TXEIE_bit)},
+			speBbAddress_{STM32_BITBAND_IMPLEMENTATION(spiBase, SPI_TypeDef, CR1, SPI_CR1_SPE)},
+			errieBbAddress_{STM32_BITBAND_IMPLEMENTATION(spiBase, SPI_TypeDef, CR2, SPI_CR2_ERRIE)},
+			rxneieBbAddress_{STM32_BITBAND_IMPLEMENTATION(spiBase, SPI_TypeDef, CR2, SPI_CR2_RXNEIE)},
+			txeieBbAddress_{STM32_BITBAND_IMPLEMENTATION(spiBase, SPI_TypeDef, CR2, SPI_CR2_TXEIE)},
 			rccEnBbAddress_{rccEnBbAddress},
 			rccRstBbAddress_{rccRstBbAddress}
 	{
@@ -198,48 +198,42 @@ private:
 #ifdef CONFIG_CHIP_STM32_SPIV1_SPI1_ENABLE
 
 const ChipSpiMasterLowLevel::Parameters ChipSpiMasterLowLevel::spi1Parameters {SPI1_BASE,
-		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB2ENR), __builtin_ctzl(RCC_APB2ENR_SPI1EN)),
-		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB2RSTR), __builtin_ctzl(RCC_APB2RSTR_SPI1RST))};
+		STM32_BITBAND_ADDRESS(RCC, APB2ENR, SPI1EN), STM32_BITBAND_ADDRESS(RCC, APB2RSTR, SPI1RST)};
 
 #endif	// def CONFIG_CHIP_STM32_SPIV1_SPI1_ENABLE
 
 #ifdef CONFIG_CHIP_STM32_SPIV1_SPI2_ENABLE
 
 const ChipSpiMasterLowLevel::Parameters ChipSpiMasterLowLevel::spi2Parameters {SPI2_BASE,
-		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB1ENR), __builtin_ctzl(RCC_APB1ENR_SPI2EN)),
-		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB1RSTR), __builtin_ctzl(RCC_APB1RSTR_SPI2RST))};
+		STM32_BITBAND_ADDRESS(RCC, APB1ENR, SPI2EN), STM32_BITBAND_ADDRESS(RCC, APB1RSTR, SPI2RST)};
 
 #endif	// def CONFIG_CHIP_STM32_SPIV1_SPI2_ENABLE
 
 #ifdef CONFIG_CHIP_STM32_SPIV1_SPI3_ENABLE
 
 const ChipSpiMasterLowLevel::Parameters ChipSpiMasterLowLevel::spi3Parameters {SPI3_BASE,
-		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB1ENR), __builtin_ctzl(RCC_APB1ENR_SPI3EN)),
-		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB1RSTR), __builtin_ctzl(RCC_APB1RSTR_SPI3RST))};
+		STM32_BITBAND_ADDRESS(RCC, APB1ENR, SPI3EN), STM32_BITBAND_ADDRESS(RCC, APB1RSTR, SPI3RST)};
 
 #endif	// def CONFIG_CHIP_STM32_SPIV1_SPI3_ENABLE
 
 #ifdef CONFIG_CHIP_STM32_SPIV1_SPI4_ENABLE
 
 const ChipSpiMasterLowLevel::Parameters ChipSpiMasterLowLevel::spi4Parameters {SPI4_BASE,
-		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB2ENR), __builtin_ctzl(RCC_APB2ENR_SPI4EN)),
-		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB2RSTR), __builtin_ctzl(RCC_APB2RSTR_SPI4RST))};
+		STM32_BITBAND_ADDRESS(RCC, APB2ENR, SPI4EN), STM32_BITBAND_ADDRESS(RCC, APB2RSTR, SPI4RST)};
 
 #endif	// def CONFIG_CHIP_STM32_SPIV1_SPI4_ENABLE
 
 #ifdef CONFIG_CHIP_STM32_SPIV1_SPI5_ENABLE
 
 const ChipSpiMasterLowLevel::Parameters ChipSpiMasterLowLevel::spi5Parameters {SPI5_BASE,
-		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB2ENR), __builtin_ctzl(RCC_APB2ENR_SPI5EN)),
-		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB2RSTR), __builtin_ctzl(RCC_APB2RSTR_SPI5RST))};
+		STM32_BITBAND_ADDRESS(RCC, APB2ENR, SPI5EN), STM32_BITBAND_ADDRESS(RCC, APB2RSTR, SPI5RST)};
 
 #endif	// def CONFIG_CHIP_STM32_SPIV1_SPI5_ENABLE
 
 #ifdef CONFIG_CHIP_STM32_SPIV1_SPI6_ENABLE
 
 const ChipSpiMasterLowLevel::Parameters ChipSpiMasterLowLevel::spi6Parameters {SPI6_BASE,
-		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB2ENR), __builtin_ctzl(RCC_APB2ENR_SPI6EN)),
-		BITBAND_ADDRESS(RCC_BASE + offsetof(RCC_TypeDef, APB2RSTR), __builtin_ctzl(RCC_APB2RSTR_SPI6RST))};
+		STM32_BITBAND_ADDRESS(RCC, APB2ENR, SPI6EN), STM32_BITBAND_ADDRESS(RCC, APB2RSTR, SPI6RST)};
 
 #endif	// def CONFIG_CHIP_STM32_SPIV1_SPI6_ENABLE
 
@@ -282,9 +276,9 @@ std::pair<int, uint32_t> ChipSpiMasterLowLevel::configure(const devices::SpiMode
 		parameters_.enablePeripheral(false);
 
 	spi.CR1 = (spi.CR1 & ~(SPI_CR1_DFF | SPI_CR1_LSBFIRST | SPI_CR1_BR | SPI_CR1_CPOL | SPI_CR1_CPHA)) |
-			((wordLength == 16) << SPI_CR1_DFF_bit) | (lsbFirst << SPI_CR1_LSBFIRST_bit) | (br << SPI_CR1_BR_bit) |
-			((mode == devices::SpiMode::cpol1cpha0 || mode == devices::SpiMode::cpol1cpha1) << SPI_CR1_CPOL_bit) |
-			((mode == devices::SpiMode::cpol0cpha1 || mode == devices::SpiMode::cpol1cpha1) << SPI_CR1_CPHA_bit);
+			((wordLength == 16) << SPI_CR1_DFF_Pos) | (lsbFirst << SPI_CR1_LSBFIRST_Pos) | (br << SPI_CR1_BR_Pos) |
+			((mode == devices::SpiMode::cpol1cpha0 || mode == devices::SpiMode::cpol1cpha1) << SPI_CR1_CPOL_Pos) |
+			((mode == devices::SpiMode::cpol0cpha1 || mode == devices::SpiMode::cpol1cpha1) << SPI_CR1_CPHA_Pos);
 
 	if (disablePeripheral == true)
 		parameters_.enablePeripheral(true);

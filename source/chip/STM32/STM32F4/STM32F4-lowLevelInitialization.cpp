@@ -13,10 +13,10 @@
 
 #include "distortos/chip/clocks.hpp"
 #include "distortos/chip/CMSIS-proxy.h"
+#include "distortos/chip/STM32-bit-banding.h"
 #include "distortos/chip/STM32F4-FLASH.hpp"
 #include "distortos/chip/STM32F4-PWR.hpp"
 #include "distortos/chip/STM32F4-RCC.hpp"
-#include "distortos/chip/STM32F4-RCC-bits.h"
 
 namespace distortos
 {
@@ -52,7 +52,7 @@ void lowLevelInitialization()
 
 #ifdef CONFIG_CHIP_STM32F4_STANDARD_CLOCK_CONFIGURATION_ENABLE
 
-	RCC_APB1ENR_PWREN_bb = 1;
+	STM32_BITBAND(RCC, APB1ENR, PWREN) = 1;
 
 	configureVoltageScaling(CONFIG_CHIP_STM32F4_PWR_VOLTAGE_SCALE_MODE);
 

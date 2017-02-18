@@ -11,8 +11,6 @@
 
 #include "distortos/chip/STM32-GPIOv2.hpp"
 
-#include "distortos/chip/STM32-GPIOv2-bits.h"
-
 #include "distortos/InterruptMaskingLock.hpp"
 
 namespace distortos
@@ -32,15 +30,15 @@ void configurePin(const Pin pin, const PinMode mode, const bool openDrain, const
 	auto& port = *decodedPin.first;
 	const auto pinNumber = decodedPin.second;
 	auto& afr = port.AFR[pinNumber / 8];
-	const auto moderInvertedMask = ~(GPIO_MODER_mask << (pinNumber * 2));
+	const auto moderInvertedMask = ~(GPIO_MODER_MODER0 << (pinNumber * 2));
 	const auto shiftedMode = static_cast<uint32_t>(mode) << (pinNumber * 2);
-	const auto otyperInvertedMask = ~(GPIO_OTYPER_mask << pinNumber);
+	const auto otyperInvertedMask = ~(GPIO_OTYPER_OT_0 << pinNumber);
 	const auto shiftedOpenDrain = static_cast<uint32_t>(openDrain) << pinNumber;
-	const auto ospeedrInvertedMask = ~(GPIO_OSPEEDR_mask << (pinNumber * 2));
+	const auto ospeedrInvertedMask = ~(GPIO_OSPEEDER_OSPEEDR0 << (pinNumber * 2));
 	const auto shiftedOutputSpeed = static_cast<uint32_t>(outputSpeed) << (pinNumber * 2);
-	const auto pupdrInvertedMask = ~(GPIO_PUPDR_mask << (pinNumber * 2));
+	const auto pupdrInvertedMask = ~(GPIO_PUPDR_PUPDR0 << (pinNumber * 2));
 	const auto shiftedPull = static_cast<uint32_t>(pull) << (pinNumber * 2);
-	const auto afrInvertedMask = ~(GPIO_AFRx_mask << ((pinNumber * 4) % 32));
+	const auto afrInvertedMask = ~(GPIO_AFRL_AFRL0 << ((pinNumber * 4) % 32));
 	const auto shiftedAlternateFunction = static_cast<uint32_t>(alternateFunction) << ((pinNumber * 4) % 32);
 
 	port.BSRR = 1 << (pinNumber + (initialState == false ? 16 : 0));

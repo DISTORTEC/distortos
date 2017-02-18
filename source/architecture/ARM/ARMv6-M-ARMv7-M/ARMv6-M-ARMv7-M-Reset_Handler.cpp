@@ -9,7 +9,7 @@
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#include "ARMv6-M-ARMv7-M-CONTROL-bits.h"
+#include "distortos/chip/CMSIS-proxy.h"
 
 extern "C"
 {
@@ -38,7 +38,7 @@ __attribute__ ((naked)) void Reset_Handler()
 			"	ldr		r0, =__process_stack_end			\n"		// initialize PSP
 			"	msr		psp, r0								\n"
 			"												\n"
-			"	movs	r0, %[controlSpsel]					\n"		// thread mode uses PSP and is privileged
+			"	movs	r0, %[controlSpselMsk]				\n"		// thread mode uses PSP and is privileged
 			"	msr		control, r0							\n"
 			"	isb											\n"
 			"												\n"
@@ -121,7 +121,7 @@ __attribute__ ((naked)) void Reset_Handler()
 			"												\n"
 			"	b		.									\n"		// on return - loop till the end of the world
 
-			::	[controlSpsel] "i" (CONTROL_SPSEL)
+			::	[controlSpselMsk] "i" (CONTROL_SPSEL_Msk)
 	);
 
 	__builtin_unreachable();
