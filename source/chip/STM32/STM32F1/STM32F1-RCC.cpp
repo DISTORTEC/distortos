@@ -2,7 +2,7 @@
  * \file
  * \brief Implementation of RCC-related functions for STM32F1
  *
- * \author Copyright (C) 2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2016-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -11,9 +11,8 @@
 
 #include "distortos/chip/STM32F1-RCC.hpp"
 
-#include "distortos/chip/STM32F1-RCC-bits.h"
-
 #include "distortos/chip/CMSIS-proxy.h"
+#include "distortos/chip/STM32-bit-banding.h"
 
 #include <array>
 
@@ -49,13 +48,13 @@ int configurePrediv(const bool prediv2, const uint8_t prediv)
 
 #if defined(CONFIG_CHIP_STM32F100)
 	static_cast<void>(prediv2);	// suppress warning
-	RCC->CFGR2 = (RCC->CFGR2 & ~RCC_CFGR2_PREDIV1) | ((prediv - 1) << RCC_CFGR2_PREDIV1_bit);
+	RCC->CFGR2 = (RCC->CFGR2 & ~RCC_CFGR2_PREDIV1) | ((prediv - 1) << RCC_CFGR2_PREDIV1_Pos);
 #elif defined(CONFIG_CHIP_STM32F105) || defined(CONFIG_CHIP_STM32F107)
 	RCC->CFGR2 = (RCC->CFGR2 & ~(prediv2 == true ? RCC_CFGR2_PREDIV2 : RCC_CFGR2_PREDIV1)) |
-			((prediv - 1) << (prediv2 == true ? RCC_CFGR2_PREDIV2_bit : RCC_CFGR2_PREDIV1_bit));
+			((prediv - 1) << (prediv2 == true ? RCC_CFGR2_PREDIV2_Pos : RCC_CFGR2_PREDIV1_Pos));
 #else	// !defined(CONFIG_CHIP_STM32F100) && !defined(CONFIG_CHIP_STM32F105) && !defined(CONFIG_CHIP_STM32F107)
 	static_cast<void>(prediv2);	// suppress warning
-	RCC_CFGR_PLLXTPRE_bb = prediv == 2;
+	STM32_BITBAND(RCC, CFGR, PLLXTPRE) = prediv == 2;
 #endif	// !defined(CONFIG_CHIP_STM32F100) && !defined(CONFIG_CHIP_STM32F105) && !defined(CONFIG_CHIP_STM32F107)
 	return 0;
 }
@@ -85,9 +84,9 @@ int enablePll23(const bool pll3, const uint8_t pll23Mul)
 
 	const auto convertedPll23Mul = pll23Mul - 2 <= 0xf ? pll23Mul - 2 : 0xf;
 	RCC->CFGR2 = (RCC->CFGR2 & ~(pll3 == true ? RCC_CFGR2_PLL3MUL : RCC_CFGR2_PLL2MUL)) |
-			(convertedPll23Mul << (pll3 == true ? RCC_CFGR2_PLL3MUL_bit : RCC_CFGR2_PLL2MUL_bit));
-	(pll3 == true ? RCC_CR_PLL3ON_bb : RCC_CR_PLL2ON_bb) = 1;
-	while ((pll3 == true ? RCC_CR_PLL3RDY_bb : RCC_CR_PLL2RDY_bb) == 0);	// wait until PLL is stable
+			(convertedPll23Mul << (pll3 == true ? RCC_CFGR2_PLL3MUL_Pos : RCC_CFGR2_PLL2MUL_Pos));
+	(pll3 == true ? STM32_BITBAND(RCC, CR, PLL3ON) : STM32_BITBAND(RCC, CR, PLL2ON)) = 1;
+	while ((pll3 == true ? STM32_BITBAND(RCC, CR, PLL3RDY) : STM32_BITBAND(RCC, CR, PLL2RDY)) == 0);	// wait until PLL is stable
 	return 0;
 }
 
@@ -155,7 +154,7 @@ int configurePrediv1(const uint8_t prediv1)
 
 void configurePrediv1ClockSource(const bool pll2)
 {
-	RCC_CFGR2_PREDIV1SRC_bb = pll2;
+	STM32_BITBAND(RCC, CFGR2, PREDIV1SRC) = pll2;
 }
 
 int configurePrediv2(const uint8_t prediv2)
@@ -167,33 +166,33 @@ int configurePrediv2(const uint8_t prediv2)
 
 void disableHse()
 {
-	RCC_CR_HSEON_bb = 0;
+	STM32_BITBAND(RCC, CR, HSEON) = 0;
 }
 
 void disablePll()
 {
-	RCC_CR_PLLON_bb = 0;
+	STM32_BITBAND(RCC, CR, PLLON) = 0;
 }
 
 #if defined(CONFIG_CHIP_STM32F105) || defined(CONFIG_CHIP_STM32F107)
 
 void disablePll2()
 {
-	RCC_CR_PLL2ON_bb = 0;
+	STM32_BITBAND(RCC, CR, PLL2ON) = 0;
 }
 
 void disablePll3()
 {
-	RCC_CR_PLL3ON_bb = 0;
+	STM32_BITBAND(RCC, CR, PLL3ON) = 0;
 }
 
 #endif	// defined(CONFIG_CHIP_STM32F105) || defined(CONFIG_CHIP_STM32F107)
 
 void enableHse(const bool bypass)
 {
-	RCC_CR_HSEBYP_bb = bypass;
-	RCC_CR_HSEON_bb = 1;
-	while (RCC_CR_HSERDY_bb == 0);	// wait until HSE oscillator is stable
+	STM32_BITBAND(RCC, CR, HSEBYP) = bypass;
+	STM32_BITBAND(RCC, CR, HSEON) = 1;
+	while (STM32_BITBAND(RCC, CR, HSERDY) == 0);	// wait until HSE oscillator is stable
 }
 
 int enablePll(const bool prediv1, const uint8_t pllmul)
@@ -210,10 +209,10 @@ int enablePll(const bool prediv1, const uint8_t pllmul)
 
 #endif	// !defined(CONFIG_CHIP_STM32F105) && !defined(CONFIG_CHIP_STM32F107)
 
-	RCC->CFGR = (RCC->CFGR & ~(RCC_CFGR_PLLMULL | RCC_CFGR_PLLSRC)) | ((pllmul - 2) << RCC_CFGR_PLLMUL_bit) |
-			(prediv1 << RCC_CFGR_PLLSRC_bit);
-	RCC_CR_PLLON_bb = 1;
-	while (RCC_CR_PLLRDY_bb == 0);	// wait until PLL is stable
+	RCC->CFGR = (RCC->CFGR & ~(RCC_CFGR_PLLMULL | RCC_CFGR_PLLSRC)) | ((pllmul - 2) << RCC_CFGR_PLLMULL_Pos) |
+			(prediv1 << RCC_CFGR_PLLSRC_Pos);
+	STM32_BITBAND(RCC, CR, PLLON) = 1;
+	while (STM32_BITBAND(RCC, CR, PLLRDY) == 0);	// wait until PLL is stable
 	return 0;
 }
 
@@ -234,8 +233,8 @@ int enablePll3(const uint8_t pll3Mul)
 void switchSystemClock(const SystemClockSource source)
 {
 	const auto sourceValue = static_cast<uint32_t>(source);
-	RCC->CFGR = (RCC->CFGR & ~RCC_CFGR_SW) | (sourceValue << RCC_CFGR_SW_bit);
-	while ((RCC->CFGR & RCC_CFGR_SWS) != sourceValue << RCC_CFGR_SWS_bit);
+	RCC->CFGR = (RCC->CFGR & ~RCC_CFGR_SW) | (sourceValue << RCC_CFGR_SW_Pos);
+	while ((RCC->CFGR & RCC_CFGR_SWS) != sourceValue << RCC_CFGR_SWS_Pos);
 }
 
 }	// namespace chip
