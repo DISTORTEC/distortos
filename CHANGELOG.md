@@ -89,6 +89,7 @@ example bit-banding macros).
 
 - `lowLevelInitialization1()` - which was executed right before calling `main()` - from reset handler.
 - All `...-bits.h` headers files, which are superseded by recent versions of CMSIS headers.
+- Configuration of chip package from *Kconfig* menu.
 
 [0.3.0](https://github.com/DISTORTEC/distortos/compare/v0.2.0...v0.3.0) - 2016-11-24
 ------------------------------------------------------------------------------------
