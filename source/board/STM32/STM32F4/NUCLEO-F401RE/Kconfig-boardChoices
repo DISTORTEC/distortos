@@ -1,7 +1,7 @@
 #
 # file: Kconfig-boardChoices
 #
-# author: Copyright (C) 2015-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+# author: Copyright (C) 2015-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
 #
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -11,7 +11,6 @@ config BOARD_NUCLEO_F401RE
 	bool "NUCLEO-F401RE"
 	depends on CHIP_STM32F4
 	select CHIP_STM32F401RE
-	select CHIP_LQFP64
 	help
 		NUCLEO-F401RE board with STM32F401RE chip in LQFP64 package
 

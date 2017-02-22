@@ -531,8 +531,6 @@ config CHIP_STM32F401C
 	bool
 	default n
 	select CHIP_STM32F401
-	select CHIP_HAS_UFQFPN48
-	select CHIP_HAS_WLCSP49 if !CHIP_STM32F401CB
 
 config CHIP_STM32F401CB
 	bool
@@ -558,7 +556,6 @@ config CHIP_STM32F401R
 	bool
 	default n
 	select CHIP_STM32F401
-	select CHIP_HAS_LQFP64
 
 config CHIP_STM32F401RB
 	bool
@@ -584,8 +581,6 @@ config CHIP_STM32F401V
 	bool
 	default n
 	select CHIP_STM32F401
-	select CHIP_HAS_LQFP100
-	select CHIP_HAS_UFBGA100
 
 config CHIP_STM32F401VB
 	bool
@@ -619,7 +614,6 @@ config CHIP_STM32F405O
 	bool
 	default n
 	select CHIP_STM32F405
-	select CHIP_HAS_WLCSP90
 
 config CHIP_STM32F405OE
 	bool
@@ -635,7 +629,6 @@ config CHIP_STM32F405R
 	bool
 	default n
 	select CHIP_STM32F405
-	select CHIP_HAS_LQFP64
 
 config CHIP_STM32F405RG
 	bool
@@ -646,7 +639,6 @@ config CHIP_STM32F405V
 	bool
 	default n
 	select CHIP_STM32F405
-	select CHIP_HAS_LQFP100
 
 config CHIP_STM32F405VG
 	bool
@@ -657,7 +649,6 @@ config CHIP_STM32F405Z
 	bool
 	default n
 	select CHIP_STM32F405
-	select CHIP_HAS_LQFP144
 
 config CHIP_STM32F405ZG
 	bool
@@ -676,8 +667,6 @@ config CHIP_STM32F407I
 	bool
 	default n
 	select CHIP_STM32F407
-	select CHIP_HAS_LQFP176
-	select CHIP_HAS_UFBGA176
 
 config CHIP_STM32F407IE
 	bool
@@ -693,7 +682,6 @@ config CHIP_STM32F407V
 	bool
 	default n
 	select CHIP_STM32F407
-	select CHIP_HAS_LQFP100
 
 config CHIP_STM32F407VE
 	bool
@@ -709,7 +697,6 @@ config CHIP_STM32F407Z
 	bool
 	default n
 	select CHIP_STM32F407
-	select CHIP_HAS_LQFP144
 
 config CHIP_STM32F407ZE
 	bool
@@ -734,7 +721,6 @@ config CHIP_STM32F410C
 	bool
 	default n
 	select CHIP_STM32F410
-	select CHIP_HAS_UFQFPN48
 	select CHIP_STM32_SPIV1_HAS_SPI2
 	select CHIP_STM32_SPIV1_HAS_SPI5
 
@@ -747,13 +733,11 @@ config CHIP_STM32F410CB
 	bool
 	default n
 	select CHIP_STM32F410C
-	select CHIP_HAS_LQFP48
 
 config CHIP_STM32F410R
 	bool
 	default n
 	select CHIP_STM32F410
-	select CHIP_HAS_LQFP64
 	select CHIP_STM32_SPIV1_HAS_SPI2
 	select CHIP_STM32_SPIV1_HAS_SPI5
 
@@ -766,13 +750,11 @@ config CHIP_STM32F410RB
 	bool
 	default n
 	select CHIP_STM32F410R
-	select CHIP_HAS_UFBGA64
 
 config CHIP_STM32F410T
 	bool
 	default n
 	select CHIP_STM32F410
-	select CHIP_HAS_WLCSP36
 
 config CHIP_STM32F410T8
 	bool
@@ -797,8 +779,6 @@ config CHIP_STM32F411C
 	bool
 	default n
 	select CHIP_STM32F411
-	select CHIP_HAS_UFQFPN48
-	select CHIP_HAS_WLCSP49
 
 config CHIP_STM32F411CC
 	bool
@@ -814,7 +794,6 @@ config CHIP_STM32F411R
 	bool
 	default n
 	select CHIP_STM32F411
-	select CHIP_HAS_LQFP64
 
 config CHIP_STM32F411RC
 	bool
@@ -830,7 +809,6 @@ config CHIP_STM32F411V
 	bool
 	default n
 	select CHIP_STM32F411
-	select CHIP_HAS_LQFP100
 
 config CHIP_STM32F411VC
 	bool
@@ -841,7 +819,6 @@ config CHIP_STM32F411VE
 	bool
 	default n
 	select CHIP_STM32F411V
-	select CHIP_HAS_UFBGA100
 
 config CHIP_STM32F412
 	bool
@@ -856,7 +833,6 @@ config CHIP_STM32F412C
 	bool
 	default n
 	select CHIP_STM32F412
-	select CHIP_HAS_UFQFPN48
 
 config CHIP_STM32F412CE
 	bool
@@ -872,8 +848,6 @@ config CHIP_STM32F412R
 	bool
 	default n
 	select CHIP_STM32F412
-	select CHIP_HAS_LQFP64
-	select CHIP_HAS_WLCSP64
 	select CHIP_STM32_USARTV1_HAS_USART3
 
 config CHIP_STM32F412RE
@@ -890,8 +864,6 @@ config CHIP_STM32F412V
 	bool
 	default n
 	select CHIP_STM32F412
-	select CHIP_HAS_LQFP100
-	select CHIP_HAS_UFBGA100
 	select CHIP_STM32_USARTV1_HAS_USART3
 
 config CHIP_STM32F412VE
@@ -908,8 +880,6 @@ config CHIP_STM32F412Z
 	bool
 	default n
 	select CHIP_STM32F412
-	select CHIP_HAS_LQFP144
-	select CHIP_HAS_UFBGA144
 	select CHIP_STM32_USARTV1_HAS_USART3
 
 config CHIP_STM32F412ZE
@@ -938,7 +908,6 @@ config CHIP_STM32F413C
 	bool
 	default n
 	select CHIP_STM32F413
-	select CHIP_HAS_UFQFPN48
 
 config CHIP_STM32F413CG
 	bool
@@ -954,7 +923,6 @@ config CHIP_STM32F413M
 	bool
 	default n
 	select CHIP_STM32F413
-	select CHIP_HAS_WLCSP81
 	select CHIP_STM32_USARTV1_HAS_USART3
 
 config CHIP_STM32F413MG
@@ -971,7 +939,6 @@ config CHIP_STM32F413R
 	bool
 	default n
 	select CHIP_STM32F413
-	select CHIP_HAS_LQFP64
 	select CHIP_STM32_USARTV1_HAS_USART3
 
 config CHIP_STM32F413RG
@@ -988,8 +955,6 @@ config CHIP_STM32F413V
 	bool
 	default n
 	select CHIP_STM32F413
-	select CHIP_HAS_LQFP100
-	select CHIP_HAS_UFBGA100
 	select CHIP_STM32_USARTV1_HAS_USART3
 	select CHIP_STM32_USARTV1_HAS_UART8
 	select CHIP_STM32_USARTV1_HAS_UART9
@@ -1009,8 +974,6 @@ config CHIP_STM32F413Z
 	bool
 	default n
 	select CHIP_STM32F413
-	select CHIP_HAS_LQFP144
-	select CHIP_HAS_UFBGA144
 	select CHIP_STM32_USARTV1_HAS_USART3
 	select CHIP_STM32_USARTV1_HAS_UART8
 	select CHIP_STM32_USARTV1_HAS_UART9
@@ -1040,7 +1003,6 @@ config CHIP_STM32F415O
 	bool
 	default n
 	select CHIP_STM32F415
-	select CHIP_HAS_WLCSP90
 
 config CHIP_STM32F415OG
 	bool
@@ -1051,7 +1013,6 @@ config CHIP_STM32F415R
 	bool
 	default n
 	select CHIP_STM32F415
-	select CHIP_HAS_LQFP64
 
 config CHIP_STM32F415RG
 	bool
@@ -1062,7 +1023,6 @@ config CHIP_STM32F415V
 	bool
 	default n
 	select CHIP_STM32F415
-	select CHIP_HAS_LQFP100
 
 config CHIP_STM32F415VG
 	bool
@@ -1073,7 +1033,6 @@ config CHIP_STM32F415Z
 	bool
 	default n
 	select CHIP_STM32F415
-	select CHIP_HAS_LQFP144
 
 config CHIP_STM32F415ZG
 	bool
@@ -1094,8 +1053,6 @@ config CHIP_STM32F417I
 	bool
 	default n
 	select CHIP_STM32F417
-	select CHIP_HAS_LQFP176
-	select CHIP_HAS_UFBGA176
 
 config CHIP_STM32F417IE
 	bool
@@ -1111,7 +1068,6 @@ config CHIP_STM32F417V
 	bool
 	default n
 	select CHIP_STM32F417
-	select CHIP_HAS_LQFP100
 
 config CHIP_STM32F417VE
 	bool
@@ -1127,7 +1083,6 @@ config CHIP_STM32F417Z
 	bool
 	default n
 	select CHIP_STM32F417
-	select CHIP_HAS_LQFP144
 
 config CHIP_STM32F417ZE
 	bool
@@ -1159,7 +1114,6 @@ config CHIP_STM32F423C
 	bool
 	default n
 	select CHIP_STM32F423
-	select CHIP_HAS_UFQFPN48
 
 config CHIP_STM32F423CH
 	bool
@@ -1170,7 +1124,6 @@ config CHIP_STM32F423M
 	bool
 	default n
 	select CHIP_STM32F423
-	select CHIP_HAS_WLCSP81
 	select CHIP_STM32_USARTV1_HAS_USART3
 
 config CHIP_STM32F423MH
@@ -1182,7 +1135,6 @@ config CHIP_STM32F423R
 	bool
 	default n
 	select CHIP_STM32F423
-	select CHIP_HAS_LQFP64
 	select CHIP_STM32_USARTV1_HAS_USART3
 
 config CHIP_STM32F423RH
@@ -1194,8 +1146,6 @@ config CHIP_STM32F423V
 	bool
 	default n
 	select CHIP_STM32F423
-	select CHIP_HAS_LQFP100
-	select CHIP_HAS_UFBGA100
 	select CHIP_STM32_USARTV1_HAS_USART3
 	select CHIP_STM32_USARTV1_HAS_UART8
 	select CHIP_STM32_USARTV1_HAS_UART9
@@ -1210,8 +1160,6 @@ config CHIP_STM32F423Z
 	bool
 	default n
 	select CHIP_STM32F423
-	select CHIP_HAS_LQFP144
-	select CHIP_HAS_UFBGA144
 	select CHIP_STM32_USARTV1_HAS_USART3
 	select CHIP_STM32_USARTV1_HAS_UART8
 	select CHIP_STM32_USARTV1_HAS_UART9
@@ -1234,7 +1182,6 @@ config CHIP_STM32F427A
 	bool
 	default n
 	select CHIP_STM32F427
-	select CHIP_HAS_UFBGA169
 
 config CHIP_STM32F427AG
 	bool
@@ -1250,8 +1197,6 @@ config CHIP_STM32F427I
 	bool
 	default n
 	select CHIP_STM32F427
-	select CHIP_HAS_LQFP176
-	select CHIP_HAS_UFBGA176
 
 config CHIP_STM32F427IG
 	bool
@@ -1267,7 +1212,6 @@ config CHIP_STM32F427V
 	bool
 	default n
 	select CHIP_STM32F427
-	select CHIP_HAS_LQFP100
 
 config CHIP_STM32F427VG
 	bool
@@ -1283,7 +1227,6 @@ config CHIP_STM32F427Z
 	bool
 	default n
 	select CHIP_STM32F427
-	select CHIP_HAS_LQFP144
 
 config CHIP_STM32F427ZG
 	bool
@@ -1307,7 +1250,6 @@ config CHIP_STM32F429A
 	bool
 	default n
 	select CHIP_STM32F429
-	select CHIP_HAS_UFBGA169
 
 config CHIP_STM32F429AG
 	bool
@@ -1323,7 +1265,6 @@ config CHIP_STM32F429B
 	bool
 	default n
 	select CHIP_STM32F429
-	select CHIP_HAS_LQFP208
 
 config CHIP_STM32F429BE
 	bool
@@ -1344,8 +1285,6 @@ config CHIP_STM32F429I
 	bool
 	default n
 	select CHIP_STM32F429
-	select CHIP_HAS_LQFP176
-	select CHIP_HAS_UFBGA176
 
 config CHIP_STM32F429IE
 	bool
@@ -1366,7 +1305,6 @@ config CHIP_STM32F429N
 	bool
 	default n
 	select CHIP_STM32F429
-	select CHIP_HAS_TFBGA216
 
 config CHIP_STM32F429NE
 	bool
@@ -1387,7 +1325,6 @@ config CHIP_STM32F429V
 	bool
 	default n
 	select CHIP_STM32F429
-	select CHIP_HAS_LQFP100
 
 config CHIP_STM32F429VE
 	bool
@@ -1408,7 +1345,6 @@ config CHIP_STM32F429Z
 	bool
 	default n
 	select CHIP_STM32F429
-	select CHIP_HAS_LQFP144
 
 config CHIP_STM32F429ZE
 	bool
@@ -1424,7 +1360,6 @@ config CHIP_STM32F429ZI
 	bool
 	default n
 	select CHIP_STM32F429Z
-	select CHIP_HAS_WLCSP143
 
 config CHIP_STM32F43
 	bool
@@ -1449,7 +1384,6 @@ config CHIP_STM32F437A
 	bool
 	default n
 	select CHIP_STM32F437
-	select CHIP_HAS_UFBGA169
 
 config CHIP_STM32F437AI
 	bool
@@ -1460,8 +1394,6 @@ config CHIP_STM32F437I
 	bool
 	default n
 	select CHIP_STM32F437
-	select CHIP_HAS_LQFP176
-	select CHIP_HAS_UFBGA176
 
 config CHIP_STM32F437IG
 	bool
@@ -1477,7 +1409,6 @@ config CHIP_STM32F437V
 	bool
 	default n
 	select CHIP_STM32F437
-	select CHIP_HAS_LQFP100
 
 config CHIP_STM32F437VG
 	bool
@@ -1493,7 +1424,6 @@ config CHIP_STM32F437Z
 	bool
 	default n
 	select CHIP_STM32F437
-	select CHIP_HAS_LQFP144
 
 config CHIP_STM32F437ZG
 	bool
@@ -1514,7 +1444,6 @@ config CHIP_STM32F439A
 	bool
 	default n
 	select CHIP_STM32F439
-	select CHIP_HAS_UFBGA169
 
 config CHIP_STM32F439AI
 	bool
@@ -1525,7 +1454,6 @@ config CHIP_STM32F439B
 	bool
 	default n
 	select CHIP_STM32F439
-	select CHIP_HAS_LQFP208
 
 config CHIP_STM32F439BG
 	bool
@@ -1541,8 +1469,6 @@ config CHIP_STM32F439I
 	bool
 	default n
 	select CHIP_STM32F439
-	select CHIP_HAS_LQFP176
-	select CHIP_HAS_UFBGA176
 
 config CHIP_STM32F439IG
 	bool
@@ -1558,7 +1484,6 @@ config CHIP_STM32F439N
 	bool
 	default n
 	select CHIP_STM32F439
-	select CHIP_HAS_TFBGA216
 
 config CHIP_STM32F439NG
 	bool
@@ -1574,7 +1499,6 @@ config CHIP_STM32F439V
 	bool
 	default n
 	select CHIP_STM32F439
-	select CHIP_HAS_LQFP100
 
 config CHIP_STM32F439VG
 	bool
@@ -1590,7 +1514,6 @@ config CHIP_STM32F439Z
 	bool
 	default n
 	select CHIP_STM32F439
-	select CHIP_HAS_LQFP144
 
 config CHIP_STM32F439ZG
 	bool
@@ -1601,7 +1524,6 @@ config CHIP_STM32F439ZI
 	bool
 	default n
 	select CHIP_STM32F439Z
-	select CHIP_HAS_WLCSP143
 
 config CHIP_STM32F44
 	bool
@@ -1622,7 +1544,6 @@ config CHIP_STM32F446M
 	bool
 	default n
 	select CHIP_STM32F446
-	select CHIP_HAS_WLCSP81
 
 config CHIP_STM32F446MC
 	bool
@@ -1638,7 +1559,6 @@ config CHIP_STM32F446R
 	bool
 	default n
 	select CHIP_STM32F446
-	select CHIP_HAS_LQFP64
 
 config CHIP_STM32F446RC
 	bool
@@ -1654,7 +1574,6 @@ config CHIP_STM32F446V
 	bool
 	default n
 	select CHIP_STM32F446
-	select CHIP_HAS_LQFP100
 
 config CHIP_STM32F446VC
 	bool
@@ -1670,8 +1589,6 @@ config CHIP_STM32F446Z
 	bool
 	default n
 	select CHIP_STM32F446
-	select CHIP_HAS_LQFP144
-	select CHIP_HAS_UFBGA144
 
 config CHIP_STM32F446ZC
 	bool
@@ -1706,7 +1623,6 @@ config CHIP_STM32F469A
 	bool
 	default n
 	select CHIP_STM32F469
-	select CHIP_HAS_UFBGA169
 
 config CHIP_STM32F469AE
 	bool
@@ -1717,19 +1633,16 @@ config CHIP_STM32F469AG
 	bool
 	default n
 	select CHIP_STM32F469A
-	select CHIP_HAS_WLCSP168
 
 config CHIP_STM32F469AI
 	bool
 	default n
 	select CHIP_STM32F469A
-	select CHIP_HAS_WLCSP168
 
 config CHIP_STM32F469B
 	bool
 	default n
 	select CHIP_STM32F469
-	select CHIP_HAS_LQFP208
 
 config CHIP_STM32F469BE
 	bool
@@ -1750,7 +1663,6 @@ config CHIP_STM32F469I
 	bool
 	default n
 	select CHIP_STM32F469
-	select CHIP_HAS_UFBGA176
 
 config CHIP_STM32F469IE
 	bool
@@ -1761,19 +1673,16 @@ config CHIP_STM32F469IG
 	bool
 	default n
 	select CHIP_STM32F469I
-	select CHIP_HAS_LQFP176
 
 config CHIP_STM32F469II
 	bool
 	default n
 	select CHIP_STM32F469I
-	select CHIP_HAS_LQFP176
 
 config CHIP_STM32F469N
 	bool
 	default n
 	select CHIP_STM32F469
-	select CHIP_HAS_TFBGA216
 
 config CHIP_STM32F469NE
 	bool
@@ -1794,7 +1703,6 @@ config CHIP_STM32F469V
 	bool
 	default n
 	select CHIP_STM32F469
-	select CHIP_HAS_LQFP100
 
 config CHIP_STM32F469VE
 	bool
@@ -1815,7 +1723,6 @@ config CHIP_STM32F469Z
 	bool
 	default n
 	select CHIP_STM32F469
-	select CHIP_HAS_LQFP144
 
 config CHIP_STM32F469ZE
 	bool
@@ -1855,7 +1762,6 @@ config CHIP_STM32F479A
 	bool
 	default n
 	select CHIP_STM32F479
-	select CHIP_HAS_UFBGA169
 
 config CHIP_STM32F479AG
 	bool
@@ -1866,13 +1772,11 @@ config CHIP_STM32F479AI
 	bool
 	default n
 	select CHIP_STM32F479A
-	select CHIP_HAS_WLCSP168
 
 config CHIP_STM32F479B
 	bool
 	default n
 	select CHIP_STM32F479
-	select CHIP_HAS_LQFP208
 
 config CHIP_STM32F479BG
 	bool
@@ -1893,19 +1797,16 @@ config CHIP_STM32F479IG
 	bool
 	default n
 	select CHIP_STM32F479I
-	select CHIP_HAS_UFBGA176
 
 config CHIP_STM32F479II
 	bool
 	default n
 	select CHIP_STM32F479I
-	select CHIP_HAS_LQFP176
 
 config CHIP_STM32F479N
 	bool
 	default n
 	select CHIP_STM32F479
-	select CHIP_HAS_TFBGA216
 
 config CHIP_STM32F479NG
 	bool
@@ -1921,7 +1822,6 @@ config CHIP_STM32F479V
 	bool
 	default n
 	select CHIP_STM32F479
-	select CHIP_HAS_LQFP100
 
 config CHIP_STM32F479VG
 	bool
@@ -1937,7 +1837,6 @@ config CHIP_STM32F479Z
 	bool
 	default n
 	select CHIP_STM32F479
-	select CHIP_HAS_LQFP144
 
 config CHIP_STM32F479ZG
 	bool
