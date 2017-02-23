@@ -1,6 +1,6 @@
 /**
  * \file
- * \brief CMSIS proxy header for architecture.
+ * \brief CMSIS proxy header for STM32F4
  *
  * \author Copyright (C) 2014-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
