@@ -50,9 +50,9 @@
 	#error "Unsupported STM32F0 chip!"
 #endif
 
-#include "stm32f0xx.h"
-
 /** STM32F0 headers define "SVC_IRQn", distortos expects "SVCall_IRQn" */
-#define SVCall_IRQn							SVC_IRQn
+#define SVC_IRQn							SVCall_IRQn
+
+#include "stm32f0xx.h"
 
 #endif	/* SOURCE_CHIP_STM32_STM32F0_INCLUDE_DISTORTOS_CHIP_CMSIS_PROXY_H_ */
