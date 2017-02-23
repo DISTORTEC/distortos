@@ -1,7 +1,7 @@
 #
 # file: Kconfig-chipChoices
 #
-# author: Copyright (C) 2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+# author: Copyright (C) 2016-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
 #
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -9,7 +9,6 @@
 
 choice
 	prompt "STM32F0 chip"
-	default CHIP_STM32F091RC_SELECTED
 	depends on CHIP_STM32F0
 	help
 		Select STM32F0 chip
