@@ -1,7 +1,7 @@
 #
 # file: Kconfig-peripheralsOptions
 #
-# author: Copyright (C) 2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+# author: Copyright (C) 2016-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
 #
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -14,6 +14,50 @@ config CHIP_STM32_GPIOV2_HAS_4_AF_BITS
 	default n
 
 config CHIP_STM32_GPIOV2_HAS_HIGH_SPEED
+	bool
+	default n
+
+config CHIP_STM32_GPIOV2_HAS_GPIOA
+	bool
+	default n
+
+config CHIP_STM32_GPIOV2_HAS_GPIOB
+	bool
+	default n
+
+config CHIP_STM32_GPIOV2_HAS_GPIOC
+	bool
+	default n
+
+config CHIP_STM32_GPIOV2_HAS_GPIOD
+	bool
+	default n
+
+config CHIP_STM32_GPIOV2_HAS_GPIOE
+	bool
+	default n
+
+config CHIP_STM32_GPIOV2_HAS_GPIOF
+	bool
+	default n
+
+config CHIP_STM32_GPIOV2_HAS_GPIOG
+	bool
+	default n
+
+config CHIP_STM32_GPIOV2_HAS_GPIOH
+	bool
+	default n
+
+config CHIP_STM32_GPIOV2_HAS_GPIOI
+	bool
+	default n
+
+config CHIP_STM32_GPIOV2_HAS_GPIOJ
+	bool
+	default n
+
+config CHIP_STM32_GPIOV2_HAS_GPIOK
 	bool
 	default n
 
