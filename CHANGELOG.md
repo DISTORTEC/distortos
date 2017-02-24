@@ -37,7 +37,8 @@ during context switch" respectively, but executed during every system tick.
 - Test of thread's `start()` returning `ENOSPC` when stack is too small.
 - `STM32-bit-banding.h` header with `STM32_BITBAND_ADDRESS()` and `STM32_BITBAND()` macros, which are more suited for
 STM32's CMSIS headers - it's enough to write `STM32_BITBAND(RCC, CR, PLLON)` instead of
-`BITBAND(&RCC->CR, RCC_CR_PLLON_bit)`. 
+`BITBAND(&RCC->CR, RCC_CR_PLLON_bit)`.
+- Options to enable STM32's GPIO to *Kconfig* menu.
 - New chips: 10 *STM32F413* chips and 5 *STM32F423* chips.
 
 ### Changed
@@ -75,6 +76,8 @@ is too small for stack frame, `ENOSPC` error code is returned. Modify all call p
 - Moved remaining *ARMv6-M* and *ARMv7-M* assembly functions (`Reset_Handler()` and `SVC_Handler`) to C++ source files.
 - `ARMv6-M-ARMv7-M-Reset_Handler.cpp` no longer requires `__USES_CXX` and `__USES_TWO_STACKS` to be defined in
 compilation flags.
+- Moved enabling of RCC clocks for STM32's GPIO from `board::lowLevelInitialization()` to
+`chip::lowLevelInitialization()`.
 - Update *CMSIS-STM32F0* to version 1.7.0.
 - Update *CMSIS-STM32F4* to version 1.14.0.
 
