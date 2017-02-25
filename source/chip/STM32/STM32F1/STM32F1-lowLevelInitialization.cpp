@@ -2,7 +2,7 @@
  * \file
  * \brief chip::lowLevelInitialization() implementation for STM32F1
  *
- * \author Copyright (C) 2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2016-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -12,6 +12,7 @@
 #include "distortos/chip/lowLevelInitialization.hpp"
 
 #include "distortos/chip/clocks.hpp"
+#include "distortos/chip/CMSIS-proxy.h"
 #include "distortos/chip/STM32F1-FLASH.hpp"
 #include "distortos/chip/STM32F1-RCC.hpp"
 
@@ -129,6 +130,30 @@ void lowLevelInitialization()
 #endif	// defined(CONFIG_CHIP_STM32F1_RCC_SYSCLK_PLL)
 
 #endif	// def CONFIG_CHIP_STM32F1_STANDARD_CLOCK_CONFIGURATION_ENABLE
+
+	RCC->APB2ENR |=
+#if defined(CONFIG_CHIP_STM32_GPIOV1_GPIOA_ENABLE)
+			RCC_APB2ENR_IOPAEN |
+#endif	// def CONFIG_CHIP_STM32_GPIOV1_GPIOA_ENABLE
+#if defined(CONFIG_CHIP_STM32_GPIOV1_GPIOB_ENABLE)
+			RCC_APB2ENR_IOPBEN |
+#endif	// def CONFIG_CHIP_STM32_GPIOV1_GPIOB_ENABLE
+#if defined(CONFIG_CHIP_STM32_GPIOV1_GPIOC_ENABLE)
+			RCC_APB2ENR_IOPCEN |
+#endif	// def CONFIG_CHIP_STM32_GPIOV1_GPIOC_ENABLE
+#if defined(CONFIG_CHIP_STM32_GPIOV1_GPIOD_ENABLE)
+			RCC_APB2ENR_IOPDEN |
+#endif	// def CONFIG_CHIP_STM32_GPIOV1_GPIOD_ENABLE
+#if defined(CONFIG_CHIP_STM32_GPIOV1_GPIOE_ENABLE)
+			RCC_APB2ENR_IOPEEN |
+#endif	// def CONFIG_CHIP_STM32_GPIOV1_GPIOE_ENABLE
+#if defined(CONFIG_CHIP_STM32_GPIOV1_GPIOF_ENABLE)
+			RCC_APB2ENR_IOPFEN |
+#endif	// def CONFIG_CHIP_STM32_GPIOV1_GPIOF_ENABLE
+#if defined(CONFIG_CHIP_STM32_GPIOV1_GPIOG_ENABLE)
+			RCC_APB2ENR_IOPGEN |
+#endif	// def CONFIG_CHIP_STM32_GPIOV1_GPIOG_ENABLE
+			0;
 }
 
 }	// namespace chip
