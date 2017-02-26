@@ -27,7 +27,9 @@ namespace board
 
 const chip::ChipInputPin buttons[totalButtons]
 {
+#ifdef CONFIG_CHIP_STM32_GPIOV1_GPIOC_ENABLE
 		chip::ChipInputPin{chip::Pin::pc13, chip::PinPull::none, true},
+#endif	// def CONFIG_CHIP_STM32_GPIOV1_GPIOC_ENABLE
 };
 
 }	// namespace board
