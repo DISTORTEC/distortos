@@ -9,10 +9,6 @@
 
 if BOARD_NUCLEO_F429ZI
 
-config BOARD_TOTAL_BUTTONS
-	int
-	default 1
-
 config BOARD_TOTAL_LEDS
 	int
 	default 3
