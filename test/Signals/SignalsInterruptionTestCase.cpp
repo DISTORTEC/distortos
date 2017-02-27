@@ -2,7 +2,7 @@
  * \file
  * \brief SignalsInterruptionTestCase class implementation
  *
- * \author Copyright (C) 2015-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2015-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -21,7 +21,7 @@
 #if SIGNALS_INTERRUPTION_TEST_CASE_ENABLED == 1
 
 #include "SequenceAsserter.hpp"
-#include "waitForNextTick.hpp"
+#include "wasteTime.hpp"
 
 #include "distortos/ConditionVariable.hpp"
 #include "distortos/DynamicThread.hpp"
@@ -127,8 +127,8 @@ public:
 		auto& currentThread = ThisThread::get();
 		auto signalingThread = makeDynamicThread({testThreadStackSize, lowPriority}, &TestStep::signalingThreadFunction,
 				std::ref(*this), std::ref(sequenceAsserter), std::ref(currentThread));
-		waitForNextTick();
 		signalingThread.start();
+		wasteTime(TickClock::duration{});
 		const auto start = TickClock::now();
 
 		const auto blockResult = block();
@@ -238,7 +238,7 @@ public:
 	 */
 
 	explicit ConditionVariableTestStep(const Type type) :
-			TestStep{4, 6, 0, 1, 2, 3},
+			TestStep{4, 4, 0, 1, 2, 3},
 			conditionVariable_{},
 			mutex_{},
 			type_{type}
@@ -305,7 +305,7 @@ public:
 	 */
 
 	explicit JoinTestStep(SequenceAsserter& sequenceAsserter) :
-			TestStep{5, 7, 0, 1, 4, 2},
+			TestStep{5, 5, 0, 1, 4, 2},
 			sequencePointThread_{{testThreadStackSize, veryLowPriority}, &SequenceAsserter::sequencePoint,
 					std::ref(sequenceAsserter), 3}
 	{
@@ -356,7 +356,7 @@ public:
 	 */
 
 	MutexTestStep(const Type type, SequenceAsserter& sequenceAsserter) :
-			TestStep{8, 11, 2, 3, 6, 4},
+			TestStep{8, 9, 2, 3, 6, 4},
 			mutexLockerThread_{{testThreadStackSize, highPriority}, &MutexTestStep::mutexLockerThreadFunction,
 					std::ref(*this)},
 			mutex_{},
@@ -468,7 +468,7 @@ public:
 	 */
 
 	explicit SemaphoreTestStep(const Type type) :
-			TestStep{4, 6, 0, 1, 2, 3},
+			TestStep{4, 4, 0, 1, 2, 3},
 			semaphore_{0},
 			type_{type}
 	{
@@ -550,7 +550,7 @@ public:
 	 */
 
 	constexpr explicit SignalsTestStep(const Type type) :
-			TestStep{4, 6, 0, 1, 2, 3},
+			TestStep{4, 4, 0, 1, 2, 3},
 			type_{type}
 	{
 
@@ -601,7 +601,7 @@ public:
 	 */
 
 	constexpr explicit SleepTestStep(const Type type) :
-			TestStep{4, 6, 0, 1, 2, 3},
+			TestStep{4, 4, 0, 1, 2, 3},
 			type_{type}
 	{
 
