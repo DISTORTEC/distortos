@@ -30,7 +30,7 @@ namespace test
 class ThreadSleepForTestCase : public PrioritizedTestCase
 {
 	/// priority at which this test case should be executed
-	constexpr static uint8_t testCasePriority_ {1};
+	constexpr static uint8_t testCasePriority_ {UINT8_MAX};
 
 public:
 

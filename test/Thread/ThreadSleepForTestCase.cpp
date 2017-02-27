@@ -13,6 +13,7 @@
 
 #include "priorityTestPhases.hpp"
 #include "SequenceAsserter.hpp"
+#include "wasteTime.hpp"
 
 #include "distortos/DynamicThread.hpp"
 #include "distortos/InterruptMaskingLock.hpp"
@@ -72,6 +73,7 @@ void thread(const uint8_t sleepFor, SequenceAsserter& sequenceAsserter, const un
  *
  * This test uses "priority" field of test parameters as a "reversed" amount of time to sleep.
  *
+ * \param [in] priority is the thread's priority
  * \param [in] threadParameters is a reference to ThreadParameters object
  * \param [in] sequenceAsserter is a reference to SequenceAsserter shared object
  * \param [in] sleepStart is a reference to variable with time point of sleep's start - it is used for deviation of
@@ -82,10 +84,11 @@ void thread(const uint8_t sleepFor, SequenceAsserter& sequenceAsserter, const un
  * \return constructed DynamicThread object
  */
 
-DynamicThread makeTestThread(const ThreadParameters& threadParameters, SequenceAsserter& sequenceAsserter,
-		const TickClock::time_point& sleepStart, TickClock::duration& durationDeviation, int& sharedRet)
+DynamicThread makeTestThread(const uint8_t priority, const ThreadParameters& threadParameters,
+		SequenceAsserter& sequenceAsserter, const TickClock::time_point& sleepStart,
+		TickClock::duration& durationDeviation, int& sharedRet)
 {
-	return makeDynamicThread({testThreadStackSize, UINT8_MAX}, thread, maxPhasePriority - threadParameters.first,
+	return makeDynamicThread({testThreadStackSize, priority}, thread, maxPhasePriority - threadParameters.first,
 			std::ref(sequenceAsserter), threadParameters.second, std::cref(sleepStart), std::ref(durationDeviation),
 			std::ref(sharedRet));
 }
@@ -110,34 +113,34 @@ bool ThreadSleepForTestCase::run_() const
 
 			std::array<DynamicThread, totalThreads> threads
 			{{
-					makeTestThread(phase.first[phase.second[0]], sequenceAsserter, sleepStart, durationDeviations[0],
-							sharedRets[0]),
-					makeTestThread(phase.first[phase.second[1]], sequenceAsserter, sleepStart, durationDeviations[1],
-							sharedRets[1]),
-					makeTestThread(phase.first[phase.second[2]], sequenceAsserter, sleepStart, durationDeviations[2],
-							sharedRets[2]),
-					makeTestThread(phase.first[phase.second[3]], sequenceAsserter, sleepStart, durationDeviations[3],
-							sharedRets[3]),
-					makeTestThread(phase.first[phase.second[4]], sequenceAsserter, sleepStart, durationDeviations[4],
-							sharedRets[4]),
-					makeTestThread(phase.first[phase.second[5]], sequenceAsserter, sleepStart, durationDeviations[5],
-							sharedRets[5]),
-					makeTestThread(phase.first[phase.second[6]], sequenceAsserter, sleepStart, durationDeviations[6],
-							sharedRets[6]),
-					makeTestThread(phase.first[phase.second[7]], sequenceAsserter, sleepStart, durationDeviations[7],
-							sharedRets[7]),
+					makeTestThread(testCasePriority_ - 1, phase.first[phase.second[0]], sequenceAsserter, sleepStart,
+							durationDeviations[0], sharedRets[0]),
+					makeTestThread(testCasePriority_ - 1, phase.first[phase.second[1]], sequenceAsserter, sleepStart,
+							durationDeviations[1], sharedRets[1]),
+					makeTestThread(testCasePriority_ - 1, phase.first[phase.second[2]], sequenceAsserter, sleepStart,
+							durationDeviations[2], sharedRets[2]),
+					makeTestThread(testCasePriority_ - 1, phase.first[phase.second[3]], sequenceAsserter, sleepStart,
+							durationDeviations[3], sharedRets[3]),
+					makeTestThread(testCasePriority_ - 1, phase.first[phase.second[4]], sequenceAsserter, sleepStart,
+							durationDeviations[4], sharedRets[4]),
+					makeTestThread(testCasePriority_ - 1, phase.first[phase.second[5]], sequenceAsserter, sleepStart,
+							durationDeviations[5], sharedRets[5]),
+					makeTestThread(testCasePriority_ - 1, phase.first[phase.second[6]], sequenceAsserter, sleepStart,
+							durationDeviations[6], sharedRets[6]),
+					makeTestThread(testCasePriority_ - 1, phase.first[phase.second[7]], sequenceAsserter, sleepStart,
+							durationDeviations[7], sharedRets[7]),
 			}};
 
-			{
-				const InterruptMaskingLock interruptMaskingLock;
+			ThisThread::setPriority(testCasePriority_);
 
-				// wait for beginning of next tick - test threads should be started in the same tick
-				ThisThread::sleepFor({});
-				sleepStart = TickClock::now();
+			for (auto& thread : threads)
+				thread.start();
 
-				for (auto& thread : threads)
-					thread.start();
-			}
+			// wait for beginning of next tick - test threads should be started in the same tick
+			wasteTime(TickClock::duration{});
+			sleepStart = TickClock::now();
+
+			ThisThread::setPriority(testCasePriority_ - 2);
 
 			bool invalidState {};
 			for (const auto& thread : threads)
