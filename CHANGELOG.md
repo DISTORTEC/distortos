@@ -9,6 +9,7 @@ All notable changes to this project will be documented in this file. This projec
 
 ### Added
 
+- Basic support for all 78 [STM32F7](http://www.st.com/stm32f7) chips.
 - Set `STKALIGN` bit in `SCB->CCR` for *ARM Cortex-M3 r1p1* (like *STM32F1*). Thanks to that, stack will be
 automatically aligned to 8-bytes on exception entry, which is required by *AAPCS*. This bit is set by default on all
 other *ARM Cortex-M* cores.
