@@ -51,13 +51,13 @@ constexpr uint32_t maxVcoOutFrequency {432000000};
 /// [2] - with voltage scale 2
 /// [3] - with voltage scale 3
 #if defined(CONFIG_CHIP_STM32F401)
-constexpr std::array<uint32_t, 4> maxPllOutFrequency {0, 0, 84000000, 60000000};
+constexpr std::array<uint32_t, 4> maxPllOutFrequency {84000000, 84000000, 84000000, 60000000};
 #elif defined(CONFIG_CHIP_STM32F405) || defined(CONFIG_CHIP_STM32F407) || defined(CONFIG_CHIP_STM32F415) || \
 		defined(CONFIG_CHIP_STM32F417)
-constexpr std::array<uint32_t, 4> maxPllOutFrequency {0, 168000000, 144000000, 0};
+constexpr std::array<uint32_t, 4> maxPllOutFrequency {168000000, 168000000, 144000000, 144000000};
 #elif defined(CONFIG_CHIP_STM32F410) || defined(CONFIG_CHIP_STM32F411) || defined(CONFIG_CHIP_STM32F412) || \
 		defined(CONFIG_CHIP_STM32F413) || defined(CONFIG_CHIP_STM32F423)
-constexpr std::array<uint32_t, 4> maxPllOutFrequency {0, 100000000, 84000000, 64000000};
+constexpr std::array<uint32_t, 4> maxPllOutFrequency {100000000, 100000000, 84000000, 64000000};
 #else	// !defined(CONFIG_CHIP_STM32F401) && !defined(CONFIG_CHIP_STM32F405) && !defined(CONFIG_CHIP_STM32F407) &&
 		// !defined(CONFIG_CHIP_STM32F410) && !defined(CONFIG_CHIP_STM32F411) && !defined(CONFIG_CHIP_STM32F412) &&
 		// !defined(CONFIG_CHIP_STM32F413) && !defined(CONFIG_CHIP_STM32F415) && !defined(CONFIG_CHIP_STM32F417) &&
