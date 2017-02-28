@@ -87,6 +87,8 @@ compilation flags.
 *doxygen*.
 - Compiler's built-in defines are passed automatically to *doxygen*, which fixes some missing documentation entries (for
 example bit-banding macros).
+- Fixed failures in several test cases (`ThreadSleepForTestCase`, `SignalsInterruptionTestCase` and
+`CallOnceOperationsTestCase`) that occured only with low core frequency due to very strict timing requirements.
 
 ### Removed
 
