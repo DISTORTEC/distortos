@@ -70,17 +70,21 @@ void function(SequenceAsserter& sequenceAsserter)
 /**
  * \brief Test thread function
  *
- * This function marks first sequence point, passes function() to callOnce() and marks second sequence point.
+ * This function marks first sequence point, passes function() to callOnce(), saves wake time point and marks second
+ * sequence point.
  *
  * \param [in] sequenceAsserter is a reference to SequenceAsserter shared object
  * \param [in] sequencePoints is a pair of sequence points for this instance
  * \param [in] onceFlag is a reference to OnceFlag shared object
+ * \param [out] timePoint is a reference to variable into which wake time point will be saved
  */
 
-void thread(SequenceAsserter& sequenceAsserter, const SequencePoints sequencePoints, OnceFlag& onceFlag)
+void thread(SequenceAsserter& sequenceAsserter, const SequencePoints sequencePoints, OnceFlag& onceFlag,
+		TickClock::time_point& timePoint)
 {
 	sequenceAsserter.sequencePoint(sequencePoints.first);
 	callOnce(onceFlag, function, sequenceAsserter);
+	timePoint = TickClock::now();
 	sequenceAsserter.sequencePoint(sequencePoints.second);
 }
 
@@ -91,15 +95,16 @@ void thread(SequenceAsserter& sequenceAsserter, const SequencePoints sequencePoi
  * \param [in] sequenceAsserter is a reference to SequenceAsserter shared object
  * \param [in] sequencePoints is a pair of sequence points for this instance
  * \param [in] onceFlag is a reference to OnceFlag shared object
+ * \param [in] timePoint is a reference to variable into which wake time point of thread will be saved
  *
  * \return constructed DynamicThread object
  */
 
 DynamicThread makeTestThread(const uint8_t priority, SequenceAsserter& sequenceAsserter,
-		const SequencePoints sequencePoints, OnceFlag& onceFlag)
+		const SequencePoints sequencePoints, OnceFlag& onceFlag, TickClock::time_point& timePoint)
 {
 	return makeDynamicThread({testThreadStackSize, priority}, thread, std::ref(sequenceAsserter), sequencePoints,
-			std::ref(onceFlag));
+			std::ref(onceFlag), std::ref(timePoint));
 }
 
 }	// namespace
@@ -114,17 +119,18 @@ bool CallOnceOperationsTestCase::run_() const
 
 	SequenceAsserter sequenceAsserter;
 	OnceFlag onceFlag;
+	std::array<TickClock::time_point, totalThreads> timePoints;
 
 	std::array<DynamicThread, totalThreads> threads
 	{{
-			makeTestThread(testCasePriority_ - 1, sequenceAsserter, SequencePoints{0, 10}, onceFlag),
-			makeTestThread(testCasePriority_ - 1, sequenceAsserter, SequencePoints{2, 11}, onceFlag),
-			makeTestThread(testCasePriority_ - 1, sequenceAsserter, SequencePoints{3, 12}, onceFlag),
-			makeTestThread(testCasePriority_ - 1, sequenceAsserter, SequencePoints{4, 13}, onceFlag),
-			makeTestThread(testCasePriority_ - 1, sequenceAsserter, SequencePoints{5, 14}, onceFlag),
-			makeTestThread(testCasePriority_ - 1, sequenceAsserter, SequencePoints{6, 15}, onceFlag),
-			makeTestThread(testCasePriority_ - 1, sequenceAsserter, SequencePoints{7, 16}, onceFlag),
-			makeTestThread(testCasePriority_ - 1, sequenceAsserter, SequencePoints{8, 17}, onceFlag),
+			makeTestThread(testCasePriority_ - 1, sequenceAsserter, SequencePoints{0, 10}, onceFlag, timePoints[0]),
+			makeTestThread(testCasePriority_ - 1, sequenceAsserter, SequencePoints{2, 11}, onceFlag, timePoints[1]),
+			makeTestThread(testCasePriority_ - 1, sequenceAsserter, SequencePoints{3, 12}, onceFlag, timePoints[2]),
+			makeTestThread(testCasePriority_ - 1, sequenceAsserter, SequencePoints{4, 13}, onceFlag, timePoints[3]),
+			makeTestThread(testCasePriority_ - 1, sequenceAsserter, SequencePoints{5, 14}, onceFlag, timePoints[4]),
+			makeTestThread(testCasePriority_ - 1, sequenceAsserter, SequencePoints{6, 15}, onceFlag, timePoints[5]),
+			makeTestThread(testCasePriority_ - 1, sequenceAsserter, SequencePoints{7, 16}, onceFlag, timePoints[6]),
+			makeTestThread(testCasePriority_ - 1, sequenceAsserter, SequencePoints{8, 17}, onceFlag, timePoints[7]),
 	}};
 
 	for (auto& thread : threads)
@@ -146,8 +152,9 @@ bool CallOnceOperationsTestCase::run_() const
 	if (invalidState != false)
 		return false;
 
-	if (TickClock::now() - start != sleepForDuration + decltype(sleepForDuration){1})
-		return false;
+	for (const auto& timePoint : timePoints)
+		if (timePoint - start != sleepForDuration + decltype(sleepForDuration){1})
+			return false;
 
 	if (sequenceAsserter.assertSequence(totalThreads * 2 + 2) == false)
 		return false;
