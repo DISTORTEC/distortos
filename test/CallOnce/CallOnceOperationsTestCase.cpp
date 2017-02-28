@@ -12,7 +12,7 @@
 #include "CallOnceOperationsTestCase.hpp"
 
 #include "SequenceAsserter.hpp"
-#include "waitForNextTick.hpp"
+#include "wasteTime.hpp"
 
 #include "distortos/callOnce.hpp"
 #include "distortos/DynamicThread.hpp"
@@ -40,9 +40,6 @@ constexpr size_t testThreadStackSize {512};
 
 /// number of test threads
 constexpr size_t totalThreads {8};
-
-/// expected number of context switches in waitForNextTick(): main -> idle -> main
-constexpr decltype(statistics::getContextSwitchCount()) waitForNextTickContextSwitchCount {2};
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | local types
@@ -130,11 +127,11 @@ bool CallOnceOperationsTestCase::run_() const
 			makeTestThread(testCasePriority_ - 1, sequenceAsserter, SequencePoints{8, 17}, onceFlag),
 	}};
 
-	waitForNextTick();
-	const auto start = TickClock::now();
-
 	for (auto& thread : threads)
 		thread.start();
+
+	wasteTime(TickClock::duration{});
+	const auto start = TickClock::now();
 
 	ThisThread::setPriority(testCasePriority_ - 2);
 
@@ -155,7 +152,7 @@ bool CallOnceOperationsTestCase::run_() const
 	if (sequenceAsserter.assertSequence(totalThreads * 2 + 2) == false)
 		return false;
 
-	constexpr auto totalContextSwitches = 2 * totalThreads + 3 + waitForNextTickContextSwitchCount;
+	constexpr auto totalContextSwitches = 2 * totalThreads + 3;
 	if (statistics::getContextSwitchCount() - contextSwitchCount != totalContextSwitches)
 		return false;
 
