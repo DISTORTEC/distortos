@@ -214,6 +214,34 @@ const ChipSpiMasterLowLevel::Parameters ChipSpiMasterLowLevel::spi2Parameters {S
 
 #endif	// def CONFIG_CHIP_STM32_SPIV2_SPI2_ENABLE
 
+#ifdef CONFIG_CHIP_STM32_SPIV2_SPI3_ENABLE
+
+const ChipSpiMasterLowLevel::Parameters ChipSpiMasterLowLevel::spi3Parameters {SPI3_BASE,
+		offsetof(RCC_TypeDef, APB1ENR), RCC_APB1ENR_SPI3EN, offsetof(RCC_TypeDef, APB1RSTR), RCC_APB1RSTR_SPI3RST};
+
+#endif	// def CONFIG_CHIP_STM32_SPIV2_SPI3_ENABLE
+
+#ifdef CONFIG_CHIP_STM32_SPIV2_SPI4_ENABLE
+
+const ChipSpiMasterLowLevel::Parameters ChipSpiMasterLowLevel::spi4Parameters {SPI4_BASE,
+		offsetof(RCC_TypeDef, APB2ENR), RCC_APB2ENR_SPI4EN, offsetof(RCC_TypeDef, APB2RSTR), RCC_APB2RSTR_SPI4RST};
+
+#endif	// def CONFIG_CHIP_STM32_SPIV2_SPI4_ENABLE
+
+#ifdef CONFIG_CHIP_STM32_SPIV2_SPI5_ENABLE
+
+const ChipSpiMasterLowLevel::Parameters ChipSpiMasterLowLevel::spi5Parameters {SPI5_BASE,
+		offsetof(RCC_TypeDef, APB2ENR), RCC_APB2ENR_SPI5EN, offsetof(RCC_TypeDef, APB2RSTR), RCC_APB2RSTR_SPI5RST};
+
+#endif	// def CONFIG_CHIP_STM32_SPIV2_SPI5_ENABLE
+
+#ifdef CONFIG_CHIP_STM32_SPIV2_SPI6_ENABLE
+
+const ChipSpiMasterLowLevel::Parameters ChipSpiMasterLowLevel::spi6Parameters {SPI6_BASE,
+		offsetof(RCC_TypeDef, APB2ENR), RCC_APB2ENR_SPI6EN, offsetof(RCC_TypeDef, APB2RSTR), RCC_APB2RSTR_SPI6RST};
+
+#endif	// def CONFIG_CHIP_STM32_SPIV2_SPI6_ENABLE
+
 /*---------------------------------------------------------------------------------------------------------------------+
 | public functions
 +---------------------------------------------------------------------------------------------------------------------*/
