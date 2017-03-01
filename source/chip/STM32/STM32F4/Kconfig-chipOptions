@@ -303,7 +303,22 @@ config CHIP_STM32F4_RCC_SYSCLK_FREQUENCY
 	default 16000000
 	help
 		Frequency of SYSCLK, Hz. RCC must be configured by user to achieve that
-		frequency.
+		frequency. SYSCLK frequency must not exceed:
+		* for STM32F401 chips:
+		  - 84MHz in voltage scale 2 mode,
+		  - 60MHz in voltage scale 3 mode,
+		* for STM32F405, STM32F407, STM32F415 and STM32F417 chips:
+		  - 168MHz in voltage scale 1 mode,
+		  - 144MHz in voltage scale 2 mode,
+		* for STM32F410, STM32F411, STM32F412, STM32F413 and STM32F423 chips:
+		  - 100MHz in voltage scale 1 mode,
+		  - 84MHz in voltage scale 2 mode,
+		  - 64MHz in voltage scale 3 mode,
+		* for other chips:
+		  - 180MHz in voltage scale 1 mode with over-drive mode,
+		  - 168MHz in voltage scale 1 mode,
+		  - 144MHz in voltage scale 2 mode,
+		  - 120MHz in voltage scale 3 mode.
 
 endif	# !CHIP_STM32F4_STANDARD_CLOCK_CONFIGURATION_ENABLE
 
@@ -372,7 +387,7 @@ choice
 		chips,
 		- 50MHz for STM32F410, STM32F411, STM32F412, STM32F413 and STM32F423
 		chips,
-		- 45MHz for other chips.
+		- 45MHz (with over-drive mode) or 42MHz (otherwise) for other chips.
 
 		APB1clk = AHBclk / APB1divider
 
@@ -413,7 +428,7 @@ choice
 		chips,
 		- 100MHz for STM32F410, STM32F411, STM32F412, STM32F413 and STM32F423
 		chips,
-		- 90MHz for other chips.
+		- 90MHz (with over-drive mode) or 84MHz (otherwise) for other chips.
 
 		APB2clk = AHBclk / APB2divider
 

@@ -19,7 +19,12 @@ config CHIP_STM32F7_RCC_SYSCLK_FREQUENCY
 	default 16000000
 	help
 		Frequency of SYSCLK, Hz. RCC must be configured by user to achieve that
-		frequency.
+		frequency. SYSCLK frequency must not exceed:
+		- 216MHz (with over-drive mode) or 180MHz (otherwise) in voltage scale
+		1 mode,
+		- 180MHz (with over-drive mode) or 168MHz (otherwise) in voltage scale
+		2 mode,
+		- 144MHz in voltage scale 3 mode.
 
 choice
 	prompt "AHB divider"
@@ -81,7 +86,7 @@ choice
 	default CHIP_STM32F7_RCC_APB1_DIV4
 	help
 		APB1 (low speed) clock division factor. APB1 clock must not exceed
-		54MHz.
+		54MHz (with over-drive mode) or 45MHz (otherwise).
 
 		APB1clk = AHBclk / APB1divider
 
@@ -117,7 +122,7 @@ choice
 	default CHIP_STM32F7_RCC_APB2_DIV2
 	help
 		APB2 (high speed) clock division factor. APB2 clock must not exceed
-		108MHz.
+		108MHz (with over-drive mode) or 90MHz (otherwise).
 
 		APB2clk = AHBclk / APB2divider
 

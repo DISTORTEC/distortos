@@ -90,6 +90,7 @@ compilation flags.
 example bit-banding macros).
 - Fixed failures in several test cases (`ThreadSleepForTestCase`, `SignalsInterruptionTestCase` and
 `CallOnceOperationsTestCase`) that occured only with low core frequency due to very strict timing requirements.
+- Maximum values of APB1 and APB2 frequencies for *STM32F4* take into account whether over-drive is enabled or not.
 
 ### Removed
 
