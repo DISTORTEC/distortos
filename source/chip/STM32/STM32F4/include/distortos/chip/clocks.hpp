@@ -14,7 +14,7 @@
 
 #include "distortos/distortosConfiguration.h"
 
-#include <array>
+#include <cstdint>
 
 namespace distortos
 {
@@ -46,23 +46,44 @@ constexpr uint32_t minVcoOutFrequency {100000000};
 constexpr uint32_t maxVcoOutFrequency {432000000};
 
 /// maximum allowed value for PLL output frequency, Hz
-/// [0] - in overdrive mode with voltage scale 1
-/// [1] - with voltage scale 1
-/// [2] - with voltage scale 2
-/// [3] - with voltage scale 3
+/// [...][0] - over-drive disabled
+/// [...][1] - over-drive enabled
+/// [0][...] - voltage scale 1
+/// [1][...] - voltage scale 2
+/// [2][...] - voltage scale 3
 #if defined(CONFIG_CHIP_STM32F401)
-constexpr std::array<uint32_t, 4> maxPllOutFrequency {84000000, 84000000, 84000000, 60000000};
+constexpr uint32_t maxPllOutFrequency[3][2]
+{
+		{84000000, 84000000},
+		{84000000, 84000000},
+		{60000000, 60000000},
+};
 #elif defined(CONFIG_CHIP_STM32F405) || defined(CONFIG_CHIP_STM32F407) || defined(CONFIG_CHIP_STM32F415) || \
 		defined(CONFIG_CHIP_STM32F417)
-constexpr std::array<uint32_t, 4> maxPllOutFrequency {168000000, 168000000, 144000000, 144000000};
+constexpr uint32_t maxPllOutFrequency[3][2]
+{
+		{168000000, 168000000},
+		{144000000, 144000000},
+		{144000000, 144000000},
+};
 #elif defined(CONFIG_CHIP_STM32F410) || defined(CONFIG_CHIP_STM32F411) || defined(CONFIG_CHIP_STM32F412) || \
 		defined(CONFIG_CHIP_STM32F413) || defined(CONFIG_CHIP_STM32F423)
-constexpr std::array<uint32_t, 4> maxPllOutFrequency {100000000, 100000000, 84000000, 64000000};
+constexpr uint32_t maxPllOutFrequency[3][2]
+{
+		{100000000, 100000000},
+		{84000000, 84000000},
+		{64000000, 64000000},
+};
 #else	// !defined(CONFIG_CHIP_STM32F401) && !defined(CONFIG_CHIP_STM32F405) && !defined(CONFIG_CHIP_STM32F407) &&
 		// !defined(CONFIG_CHIP_STM32F410) && !defined(CONFIG_CHIP_STM32F411) && !defined(CONFIG_CHIP_STM32F412) &&
 		// !defined(CONFIG_CHIP_STM32F413) && !defined(CONFIG_CHIP_STM32F415) && !defined(CONFIG_CHIP_STM32F417) &&
 		// !defined(CONFIG_CHIP_STM32F423) &&
-constexpr std::array<uint32_t, 4> maxPllOutFrequency {180000000, 168000000, 144000000, 120000000};
+constexpr uint32_t maxPllOutFrequency[3][2]
+{
+		{168000000, 180000000},
+		{144000000, 144000000},
+		{120000000, 120000000},
+};
 #endif	// !defined(CONFIG_CHIP_STM32F401) && !defined(CONFIG_CHIP_STM32F405) && !defined(CONFIG_CHIP_STM32F407) &&
 		// !defined(CONFIG_CHIP_STM32F410) && !defined(CONFIG_CHIP_STM32F411) && !defined(CONFIG_CHIP_STM32F412) &&
 		// !defined(CONFIG_CHIP_STM32F413) && !defined(CONFIG_CHIP_STM32F415) && !defined(CONFIG_CHIP_STM32F417) &&
@@ -115,19 +136,22 @@ static_assert(CONFIG_CHIP_STM32F4_PWR_VOLTAGE_SCALE_MODE == 1, "Over-drive mode 
 static_assert(CONFIG_CHIP_STM32F4_VDD_MV >= 2100,
 		"Over-drive mode must not be enabled when supply voltage is below 2.1V!");
 
-/// voltage scale index for \a maxPllOutFrequency array
-constexpr uint8_t voltageScaleIndex {0};
+/// over-drive index for \a maxPllOutFrequency array (maxPllOutFrequency[voltageScaleIndex][overDriveIndex])
+constexpr uint8_t overDriveIndex {1};
 
 #else	// !(defined(CONFIG_CHIP_STM32F427) || defined(CONFIG_CHIP_STM32F429) || defined(CONFIG_CHIP_STM32F43) ||
 		// defined(CONFIG_CHIP_STM32F446) || defined(CONFIG_CHIP_STM32F469) || defined(CONFIG_CHIP_STM32F479)) ||
 		// !defined(CONFIG_CHIP_STM32F4_PWR_OVER_DRIVE_ENABLE)
 
-/// voltage scale index for \a maxPllOutFrequency array
-constexpr uint8_t voltageScaleIndex {CONFIG_CHIP_STM32F4_PWR_VOLTAGE_SCALE_MODE};
+/// over-drive index for \a maxPllOutFrequency array (maxPllOutFrequency[voltageScaleIndex][overDriveIndex])
+constexpr uint8_t overDriveIndex {0};
 
 #endif	// !(defined(CONFIG_CHIP_STM32F427) || defined(CONFIG_CHIP_STM32F429) || defined(CONFIG_CHIP_STM32F43) ||
 		// defined(CONFIG_CHIP_STM32F446) || defined(CONFIG_CHIP_STM32F469) || defined(CONFIG_CHIP_STM32F479)) ||
 		// !defined(CONFIG_CHIP_STM32F4_PWR_OVER_DRIVE_ENABLE)
+
+/// voltage scale index for \a maxPllOutFrequency array (maxPllOutFrequency[voltageScaleIndex][overDriveIndex])
+constexpr uint8_t voltageScaleIndex {CONFIG_CHIP_STM32F4_PWR_VOLTAGE_SCALE_MODE - 1};
 
 #ifdef CONFIG_CHIP_STM32F4_RCC_PLL_ENABLE
 
@@ -153,7 +177,8 @@ static_assert(minVcoOutFrequency <= vcoOutFrequency && vcoOutFrequency <= maxVco
 /// PLL output frequency, Hz
 constexpr uint32_t pllOutFrequency {vcoOutFrequency / CONFIG_CHIP_STM32F4_RCC_PLLP};
 
-static_assert(pllOutFrequency <= maxPllOutFrequency[voltageScaleIndex], "Invalid PLL output frequency!");
+static_assert(pllOutFrequency <= maxPllOutFrequency[voltageScaleIndex][overDriveIndex],
+		"Invalid PLL output frequency!");
 
 /// PLL "Q" output frequency, Hz
 constexpr uint32_t pllqOutFrequency {vcoOutFrequency / CONFIG_CHIP_STM32F4_RCC_PLLQ};
