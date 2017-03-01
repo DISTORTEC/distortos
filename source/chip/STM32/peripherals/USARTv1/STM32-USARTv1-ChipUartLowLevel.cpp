@@ -11,8 +11,7 @@
 
 #include "distortos/chip/ChipUartLowLevel.hpp"
 
-#include "distortos/chip/clocks.hpp"
-#include "distortos/chip/CMSIS-proxy.h"
+#include "distortos/chip/getBusFrequency.hpp"
 #include "distortos/chip/STM32-bit-banding.h"
 
 #include "distortos/devices/communication/UartBase.hpp"
@@ -59,22 +58,6 @@ devices::UartBase::ErrorSet decodeErrors(const uint32_t sr)
 /// parameters for construction of UART low-level drivers
 class ChipUartLowLevel::Parameters
 {
-	/// base address of APB1 peripherals
-	constexpr static uintptr_t apb1PeripheralsBaseAddress {APB1PERIPH_BASE};
-	/// base address of APB2 peripherals
-	constexpr static uintptr_t apb2PeripheralsBaseAddress {APB2PERIPH_BASE};
-	/// base address of AHB peripherals
-#if defined(AHBPERIPH_BASE)
-	constexpr static uintptr_t ahbPeripheralsBaseAddress {AHBPERIPH_BASE};
-#elif defined(AHB1PERIPH_BASE)
-	constexpr static uintptr_t ahbPeripheralsBaseAddress {AHB1PERIPH_BASE};
-#else
-	#error "Unknown base address of AHB peripherals!"
-#endif
-
-	static_assert(apb1PeripheralsBaseAddress < apb2PeripheralsBaseAddress &&
-			apb2PeripheralsBaseAddress < ahbPeripheralsBaseAddress, "Invalid order of APB1, APB2 and AHB!");
-
 public:
 
 	/**
@@ -87,8 +70,7 @@ public:
 
 	constexpr Parameters(const uintptr_t uartBase, const uintptr_t rccEnBbAddress, const uintptr_t rccRstBbAddress) :
 			uartBase_{uartBase},
-			peripheralFrequency_{uartBase < apb2PeripheralsBaseAddress ? apb1Frequency :
-					uartBase < ahbPeripheralsBaseAddress ? apb2Frequency : ahbFrequency},
+			peripheralFrequency_{getBusFrequency(uartBase)},
 			rxneieBbAddress_{STM32_BITBAND_IMPLEMENTATION(uartBase, USART_TypeDef, CR1, USART_CR1_RXNEIE)},
 			tcieBbAddress_{STM32_BITBAND_IMPLEMENTATION(uartBase, USART_TypeDef, CR1, USART_CR1_TCIE)},
 			txeieBbAddress_{STM32_BITBAND_IMPLEMENTATION(uartBase, USART_TypeDef, CR1, USART_CR1_TXEIE)},
