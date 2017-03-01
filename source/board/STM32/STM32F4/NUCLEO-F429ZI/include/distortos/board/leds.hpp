@@ -33,21 +33,27 @@ class ChipOutputPin;
 namespace board
 {
 
-/// total number of LEDs on the board
-constexpr size_t totalLeds {CONFIG_BOARD_TOTAL_LEDS};
-
 /*---------------------------------------------------------------------------------------------------------------------+
 | LED indexes
 +---------------------------------------------------------------------------------------------------------------------*/
 
-/// index of LD1 LED (green)
-constexpr size_t ld1LedIndex {0};
-
-/// index of LD2 LED (blue)
-constexpr size_t ld2LedIndex {1};
-
-/// index of LD3 LED (red)
-constexpr size_t ld3LedIndex {2};
+enum LedIndexes
+{
+#ifdef CONFIG_CHIP_STM32_GPIOV2_GPIOB_ENABLE
+		/// index of LD1 LED (green)
+		ld1LedIndex,
+#endif	// def CONFIG_CHIP_STM32_GPIOV2_GPIOB_ENABLE
+#ifdef CONFIG_CHIP_STM32_GPIOV2_GPIOB_ENABLE
+		/// index of LD2 LED (blue)
+		ld2LedIndex,
+#endif	// def CONFIG_CHIP_STM32_GPIOV2_GPIOB_ENABLE
+#ifdef CONFIG_CHIP_STM32_GPIOV2_GPIOB_ENABLE
+		/// index of LD3 LED (red)
+		ld3LedIndex,
+#endif	// def CONFIG_CHIP_STM32_GPIOV2_GPIOB_ENABLE
+		/// total number of LEDs on the board
+		totalLeds
+};
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | alternative (color-based) LED indexes

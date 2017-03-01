@@ -9,10 +9,6 @@
 
 if BOARD_STM32F4DISCOVERY
 
-config BOARD_TOTAL_LEDS
-	int
-	default 4
-
 config CHIP_STM32F4_VDD_MV_CONFIGURABLE
 	bool
 	default n
