@@ -33,42 +33,57 @@ class ChipOutputPin;
 namespace board
 {
 
-/// total number of LEDs on the board
-constexpr size_t totalLeds {CONFIG_BOARD_TOTAL_LEDS};
-
 /*---------------------------------------------------------------------------------------------------------------------+
 | LED indexes
 +---------------------------------------------------------------------------------------------------------------------*/
 
-/// index of LD3 LED (orange)
-constexpr size_t ld3LedIndex {0};
+enum LedIndexes
+{
+#ifdef CONFIG_CHIP_STM32_GPIOV2_GPIOD_ENABLE
+		/// index of LD3 LED (orange)
+		ld3LedIndex,
+#endif	// def CONFIG_CHIP_STM32_GPIOV2_GPIOD_ENABLE
+#ifdef CONFIG_CHIP_STM32_GPIOV2_GPIOD_ENABLE
+		/// index of LD4 LED (green)
+		ld4LedIndex,
+#endif	// def CONFIG_CHIP_STM32_GPIOV2_GPIOD_ENABLE
+#ifdef CONFIG_CHIP_STM32_GPIOV2_GPIOD_ENABLE
+		/// index of LD5 LED (red)
+		ld5LedIndex,
+#endif	// def CONFIG_CHIP_STM32_GPIOV2_GPIOD_ENABLE
+#ifdef CONFIG_CHIP_STM32_GPIOV2_GPIOD_ENABLE
+		/// index of LD6 LED (blue)
+		ld6LedIndex,
+#endif	// def CONFIG_CHIP_STM32_GPIOV2_GPIOD_ENABLE
+		/// total number of LEDs on the board
+		totalLeds
+};
 
-/// index of LD4 LED (green)
-constexpr size_t ld4LedIndex {1};
-
-/// index of LD5 LED (red)
-constexpr size_t ld5LedIndex {2};
-
-/// index of LD6 LED (blue)
-constexpr size_t ld6LedIndex {3};
+#ifdef CONFIG_BOARD_LEDS_ENABLE
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | alternative (color-based) LED indexes
 +---------------------------------------------------------------------------------------------------------------------*/
 
+#ifdef CONFIG_CHIP_STM32_GPIOV2_GPIOD_ENABLE
 /// alternative index of LD3 LED (orange)
 constexpr size_t orangeLedIndex {ld3LedIndex};
+#endif	// def CONFIG_CHIP_STM32_GPIOV2_GPIOD_ENABLE
 
+#ifdef CONFIG_CHIP_STM32_GPIOV2_GPIOD_ENABLE
 /// alternative index of LD4 LED (green)
 constexpr size_t greenLedIndex {ld4LedIndex};
+#endif	// def CONFIG_CHIP_STM32_GPIOV2_GPIOD_ENABLE
 
+#ifdef CONFIG_CHIP_STM32_GPIOV2_GPIOD_ENABLE
 /// alternative index of LD5 LED (red)
 constexpr size_t redLedIndex {ld5LedIndex};
+#endif	// def CONFIG_CHIP_STM32_GPIOV2_GPIOD_ENABLE
 
+#ifdef CONFIG_CHIP_STM32_GPIOV2_GPIOD_ENABLE
 /// alternative index of LD6 LED (blue)
 constexpr size_t blueLedIndex {ld6LedIndex};
-
-#ifdef CONFIG_BOARD_LEDS_ENABLE
+#endif	// def CONFIG_CHIP_STM32_GPIOV2_GPIOD_ENABLE
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | indexed access to LED objects

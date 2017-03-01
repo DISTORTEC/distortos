@@ -9,10 +9,6 @@
 
 if BOARD_NUCLEO_F091RC
 
-config BOARD_TOTAL_LEDS
-	int
-	default 1
-
 config BOARD_INCLUDES
 	string
 	default "source/board/STM32/STM32F0/NUCLEO-F091RC/include"
