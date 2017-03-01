@@ -153,6 +153,9 @@ constexpr uint8_t overDriveIndex {0};
 /// voltage scale index for \a maxPllOutFrequencies array (maxPllOutFrequencies[voltageScaleIndex][overDriveIndex])
 constexpr uint8_t voltageScaleIndex {CONFIG_CHIP_STM32F4_PWR_VOLTAGE_SCALE_MODE - 1};
 
+/// maximum allowed value for PLL output frequency, Hz
+constexpr uint32_t maxPllOutFrequency {maxPllOutFrequencies[voltageScaleIndex][overDriveIndex]};
+
 #ifdef CONFIG_CHIP_STM32F4_RCC_PLL_ENABLE
 
 /// PLL input frequency, Hz
@@ -177,8 +180,7 @@ static_assert(minVcoOutFrequency <= vcoOutFrequency && vcoOutFrequency <= maxVco
 /// PLL output frequency, Hz
 constexpr uint32_t pllOutFrequency {vcoOutFrequency / CONFIG_CHIP_STM32F4_RCC_PLLP};
 
-static_assert(pllOutFrequency <= maxPllOutFrequencies[voltageScaleIndex][overDriveIndex],
-		"Invalid PLL output frequency!");
+static_assert(pllOutFrequency <= maxPllOutFrequency, "Invalid PLL output frequency!");
 
 /// PLL "Q" output frequency, Hz
 constexpr uint32_t pllqOutFrequency {vcoOutFrequency / CONFIG_CHIP_STM32F4_RCC_PLLQ};
