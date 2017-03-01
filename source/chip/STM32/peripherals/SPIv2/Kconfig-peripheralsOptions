@@ -23,6 +23,34 @@ config CHIP_STM32_SPIV2_SPI2_ENABLE
 	help
 		Enable SPI2 low-level driver
 
+config CHIP_STM32_SPIV2_SPI3_ENABLE
+	bool "SPI3 low-level driver"
+	default n
+	depends on CHIP_STM32_SPIV2_HAS_SPI3
+	help
+		Enable SPI3 low-level driver
+
+config CHIP_STM32_SPIV2_SPI4_ENABLE
+	bool "SPI4 low-level driver"
+	default n
+	depends on CHIP_STM32_SPIV2_HAS_SPI4
+	help
+		Enable SPI4 low-level driver
+
+config CHIP_STM32_SPIV2_SPI5_ENABLE
+	bool "SPI5 low-level driver"
+	default n
+	depends on CHIP_STM32_SPIV2_HAS_SPI5
+	help
+		Enable SPI5 low-level driver
+
+config CHIP_STM32_SPIV2_SPI6_ENABLE
+	bool "SPI6 low-level driver"
+	default n
+	depends on CHIP_STM32_SPIV2_HAS_SPI6
+	help
+		Enable SPI6 low-level driver
+
 config CHIP_STM32_SPIV2_HAS_SPI1
 	bool
 	default n
