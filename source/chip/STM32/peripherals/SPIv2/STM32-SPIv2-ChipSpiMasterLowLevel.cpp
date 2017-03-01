@@ -11,8 +11,7 @@
 
 #include "distortos/chip/ChipSpiMasterLowLevel.hpp"
 
-#include "distortos/chip/clocks.hpp"
-#include "distortos/chip/CMSIS-proxy.h"
+#include "distortos/chip/getBusFrequency.hpp"
 
 #include "distortos/devices/communication/SpiMasterBase.hpp"
 
@@ -33,13 +32,6 @@ namespace chip
 /// parameters for construction of SPI master low-level drivers
 class ChipSpiMasterLowLevel::Parameters
 {
-	/// base address of APB peripherals
-	constexpr static uintptr_t apbPeripheralsBaseAddress {APBPERIPH_BASE};
-	/// base address of AHB peripherals
-	constexpr static uintptr_t ahbPeripheralsBaseAddress {AHBPERIPH_BASE};
-
-	static_assert(apbPeripheralsBaseAddress < ahbPeripheralsBaseAddress, "Invalid order of APB and AHB!");
-
 public:
 
 	/**
@@ -55,7 +47,7 @@ public:
 	constexpr Parameters(const uintptr_t spiBase, const size_t rccEnOffset, const uint32_t rccEnBitmask,
 			const size_t rccRstOffset, const uint32_t rccRstBitmask) :
 					spiBase_{spiBase},
-					peripheralFrequency_{spiBase < ahbPeripheralsBaseAddress ? apbFrequency : ahbFrequency},
+					peripheralFrequency_{getBusFrequency(spiBase)},
 					rccEnBitmask_{rccEnBitmask},
 					rccEnOffset_{rccEnOffset},
 					rccRstBitmask_{rccRstBitmask},
