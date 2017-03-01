@@ -11,8 +11,7 @@
 
 #include "distortos/chip/ChipUartLowLevel.hpp"
 
-#include "distortos/chip/clocks.hpp"
-#include "distortos/chip/CMSIS-proxy.h"
+#include "distortos/chip/getBusFrequency.hpp"
 
 #include "distortos/devices/communication/UartBase.hpp"
 
@@ -60,13 +59,6 @@ devices::UartBase::ErrorSet decodeErrors(const uint32_t isr)
 /// parameters for construction of UART low-level drivers
 class ChipUartLowLevel::Parameters
 {
-	/// base address of APB peripherals
-	constexpr static uintptr_t apbPeripheralsBaseAddress {APBPERIPH_BASE};
-	/// base address of AHB peripherals
-	constexpr static uintptr_t ahbPeripheralsBaseAddress {AHBPERIPH_BASE};
-
-	static_assert(apbPeripheralsBaseAddress < ahbPeripheralsBaseAddress, "Invalid order of APB and AHB!");
-
 public:
 
 	/**
@@ -82,7 +74,7 @@ public:
 	constexpr Parameters(const uintptr_t uartBase, const size_t rccEnOffset, const uint32_t rccEnBitmask,
 			const size_t rccRstOffset, const uint32_t rccRstBitmask) :
 					uartBase_{uartBase},
-					peripheralFrequency_{uartBase < ahbPeripheralsBaseAddress ? apbFrequency : ahbFrequency},
+					peripheralFrequency_{getBusFrequency(uartBase)},
 					rccEnBitmask_{rccEnBitmask},
 					rccEnOffset_{rccEnOffset},
 					rccRstBitmask_{rccRstBitmask},
