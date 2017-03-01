@@ -92,18 +92,20 @@ constexpr uint32_t maxPllOutFrequencies[3][2]
 /// maximum allowed value for PLL "Q" output frequency, Hz
 constexpr uint32_t maxPllqOutFrequency {48000000};
 
-/// maximum allowed APB1 (low speed) frequency, Hz
+/// maximum allowed APB1 (low speed) frequencies, Hz
+/// [0] - over-drive disabled
+/// [1] - over-drive enabled
 #if defined(CONFIG_CHIP_STM32F401) || defined(CONFIG_CHIP_STM32F405) || defined(CONFIG_CHIP_STM32F407) || \
 		defined(CONFIG_CHIP_STM32F415) || defined(CONFIG_CHIP_STM32F417)
-constexpr uint32_t maxApb1Frequency {42000000};
+constexpr uint32_t maxApb1Frequencies[2] {42000000, 42000000};
 #elif defined(CONFIG_CHIP_STM32F410) || defined(CONFIG_CHIP_STM32F411) || defined(CONFIG_CHIP_STM32F412) || \
 		defined(CONFIG_CHIP_STM32F413) || defined(CONFIG_CHIP_STM32F423)
-constexpr uint32_t maxApb1Frequency {50000000};
+constexpr uint32_t maxApb1Frequencies[2] {50000000, 50000000};
 #else	// !defined(CONFIG_CHIP_STM32F401) && !defined(CONFIG_CHIP_STM32F405) && !defined(CONFIG_CHIP_STM32F407) &&
 		// !defined(CONFIG_CHIP_STM32F410) && !defined(CONFIG_CHIP_STM32F411) && !defined(CONFIG_CHIP_STM32F412) &&
 		// !defined(CONFIG_CHIP_STM32F413) && !defined(CONFIG_CHIP_STM32F415) && !defined(CONFIG_CHIP_STM32F417) &&
 		// !defined(CONFIG_CHIP_STM32F423)
-constexpr uint32_t maxApb1Frequency {45000000};
+constexpr uint32_t maxApb1Frequencies[2] {42000000, 45000000};
 #endif	// !defined(CONFIG_CHIP_STM32F401) && !defined(CONFIG_CHIP_STM32F405) && !defined(CONFIG_CHIP_STM32F407) &&
 		// !defined(CONFIG_CHIP_STM32F410) && !defined(CONFIG_CHIP_STM32F411) && !defined(CONFIG_CHIP_STM32F412) &&
 		// !defined(CONFIG_CHIP_STM32F413) && !defined(CONFIG_CHIP_STM32F415) && !defined(CONFIG_CHIP_STM32F417) &&
@@ -155,6 +157,9 @@ constexpr uint8_t voltageScaleIndex {CONFIG_CHIP_STM32F4_PWR_VOLTAGE_SCALE_MODE 
 
 /// maximum allowed value for PLL output frequency, Hz
 constexpr uint32_t maxPllOutFrequency {maxPllOutFrequencies[voltageScaleIndex][overDriveIndex]};
+
+/// maximum allowed APB1 (low speed) frequency, Hz
+constexpr uint32_t maxApb1Frequency {maxApb1Frequencies[overDriveIndex]};
 
 #ifdef CONFIG_CHIP_STM32F4_RCC_PLL_ENABLE
 
@@ -213,6 +218,9 @@ constexpr uint32_t sysclkFrequency {pllrOutFrequency};
 
 /// SYSCLK frequency, Hz
 constexpr uint32_t sysclkFrequency {CONFIG_CHIP_STM32F4_RCC_SYSCLK_FREQUENCY};
+
+/// maximum allowed APB1 (low speed) frequency, Hz
+constexpr uint32_t maxApb1Frequency {maxApb1Frequencies[1]};
 
 #endif	// !def CONFIG_CHIP_STM32F4_STANDARD_CLOCK_CONFIGURATION_ENABLE
 
