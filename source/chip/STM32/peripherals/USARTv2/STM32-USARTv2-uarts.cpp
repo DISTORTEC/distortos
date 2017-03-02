@@ -165,7 +165,89 @@ extern "C" void USART3_6_IRQHandler()
 #endif	// defined(CONFIG_CHIP_STM32_USARTV2_USART3_ENABLE) || defined(CONFIG_CHIP_STM32_USARTV2_USART4_ENABLE) ||
 		// defined(CONFIG_CHIP_STM32_USARTV2_USART5_ENABLE) || defined(CONFIG_CHIP_STM32_USARTV2_USART6_ENABLE)
 
-#endif	// defined(CONFIG_CHIP_STM32_USARTV2_USART3_USART6_COMBINED_INTERRUPT)
+#else	// !defined(CONFIG_CHIP_STM32_USARTV2_USART3_USART8_COMBINED_INTERRUPT) &&
+		// !defined(CONFIG_CHIP_STM32_USARTV2_USART3_USART6_COMBINED_INTERRUPT)
+
+#ifdef CONFIG_CHIP_STM32_USARTV2_USART3_ENABLE
+
+/**
+ * \brief USART3 interrupt handler
+ */
+
+extern "C" void USART3_IRQHandler()
+{
+	usart3.interruptHandler();
+}
+
+#endif	// def CONFIG_CHIP_STM32_USARTV2_USART3_ENABLE
+
+#ifdef CONFIG_CHIP_STM32_USARTV2_USART4_ENABLE
+
+/**
+ * \brief USART4 interrupt handler
+ */
+
+extern "C" void USART4_IRQHandler()
+{
+	usart4.interruptHandler();
+}
+
+#endif	// def CONFIG_CHIP_STM32_USARTV2_USART4_ENABLE
+
+#ifdef CONFIG_CHIP_STM32_USARTV2_USART5_ENABLE
+
+/**
+ * \brief USART5 interrupt handler
+ */
+
+extern "C" void USART5_IRQHandler()
+{
+	usart5.interruptHandler();
+}
+
+#endif	// def CONFIG_CHIP_STM32_USARTV2_USART5_ENABLE
+
+#ifdef CONFIG_CHIP_STM32_USARTV2_USART6_ENABLE
+
+/**
+ * \brief USART6 interrupt handler
+ */
+
+extern "C" void USART6_IRQHandler()
+{
+	usart6.interruptHandler();
+}
+
+#endif	// def CONFIG_CHIP_STM32_USARTV2_USART6_ENABLE
+
+#ifdef CONFIG_CHIP_STM32_USARTV2_USART7_ENABLE
+
+/**
+ * \brief USART7 interrupt handler
+ */
+
+extern "C" void USART7_IRQHandler()
+{
+	usart7.interruptHandler();
+}
+
+#endif	// def CONFIG_CHIP_STM32_USARTV2_USART7_ENABLE
+
+#ifdef CONFIG_CHIP_STM32_USARTV2_USART8_ENABLE
+
+/**
+ * \brief USART8 interrupt handler
+ */
+
+extern "C" void USART8_IRQHandler()
+{
+	usart8.interruptHandler();
+}
+
+#endif	// def CONFIG_CHIP_STM32_USARTV2_USART8_ENABLE
+
+#endif	// !defined(CONFIG_CHIP_STM32_USARTV2_USART3_USART8_COMBINED_INTERRUPT) &&
+		// !defined(CONFIG_CHIP_STM32_USARTV2_USART3_USART6_COMBINED_INTERRUPT)
 
 }	// namespace chip
 
