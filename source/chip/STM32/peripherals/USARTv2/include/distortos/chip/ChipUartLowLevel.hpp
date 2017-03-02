@@ -65,12 +65,26 @@ public:
 
 #endif	// def CONFIG_CHIP_STM32_USARTV2_HAS_USART3
 
+#ifdef CONFIG_CHIP_STM32_USARTV2_HAS_UART4
+
+	/// parameters for construction of UART low-level driver for UART4
+	static const Parameters uart4Parameters;
+
+#endif	// def CONFIG_CHIP_STM32_USARTV2_HAS_UART4
+
 #ifdef CONFIG_CHIP_STM32_USARTV2_HAS_USART4
 
 	/// parameters for construction of UART low-level driver for USART4
 	static const Parameters usart4Parameters;
 
 #endif	// def CONFIG_CHIP_STM32_USARTV2_HAS_USART4
+
+#ifdef CONFIG_CHIP_STM32_USARTV2_HAS_UART5
+
+	/// parameters for construction of UART low-level driver for UART5
+	static const Parameters uart5Parameters;
+
+#endif	// def CONFIG_CHIP_STM32_USARTV2_HAS_UART5
 
 #ifdef CONFIG_CHIP_STM32_USARTV2_HAS_USART5
 
@@ -86,12 +100,26 @@ public:
 
 #endif	// def CONFIG_CHIP_STM32_USARTV2_HAS_USART6
 
+#ifdef CONFIG_CHIP_STM32_USARTV2_HAS_UART7
+
+	/// parameters for construction of UART low-level driver for UART7
+	static const Parameters uart7Parameters;
+
+#endif	// def CONFIG_CHIP_STM32_USARTV2_HAS_UART7
+
 #ifdef CONFIG_CHIP_STM32_USARTV2_HAS_USART7
 
 	/// parameters for construction of UART low-level driver for USART7
 	static const Parameters usart7Parameters;
 
 #endif	// def CONFIG_CHIP_STM32_USARTV2_HAS_USART7
+
+#ifdef CONFIG_CHIP_STM32_USARTV2_HAS_UART8
+
+	/// parameters for construction of UART low-level driver for UART8
+	static const Parameters uart8Parameters;
+
+#endif	// def CONFIG_CHIP_STM32_USARTV2_HAS_UART8
 
 #ifdef CONFIG_CHIP_STM32_USARTV2_HAS_USART8
 
