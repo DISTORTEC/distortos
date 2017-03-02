@@ -2,7 +2,7 @@
  * \file
  * \brief Definitions of low-level UART drivers for USARTv2 in STM32
  *
- * \author Copyright (C) 2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2016-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -20,46 +20,20 @@ namespace chip
 {
 
 /*---------------------------------------------------------------------------------------------------------------------+
-| USART1 global objects and functions
+| global objects
 +---------------------------------------------------------------------------------------------------------------------*/
 
 #ifdef CONFIG_CHIP_STM32_USARTV2_USART1_ENABLE
 
 ChipUartLowLevel usart1 {ChipUartLowLevel::usart1Parameters};
 
-/**
- * \brief USART1 interrupt handler
- */
-
-extern "C" void USART1_IRQHandler()
-{
-	usart1.interruptHandler();
-}
-
 #endif	// def CONFIG_CHIP_STM32_USARTV2_USART1_ENABLE
-
-/*---------------------------------------------------------------------------------------------------------------------+
-| USART2 global objects and functions
-+---------------------------------------------------------------------------------------------------------------------*/
 
 #ifdef CONFIG_CHIP_STM32_USARTV2_USART2_ENABLE
 
 ChipUartLowLevel usart2 {ChipUartLowLevel::usart2Parameters};
 
-/**
- * \brief USART2 interrupt handler
- */
-
-extern "C" void USART2_IRQHandler()
-{
-	usart2.interruptHandler();
-}
-
 #endif	// def CONFIG_CHIP_STM32_USARTV2_USART2_ENABLE
-
-/*---------------------------------------------------------------------------------------------------------------------+
-| USART3-USART8 global objects and functions
-+---------------------------------------------------------------------------------------------------------------------*/
 
 #ifdef CONFIG_CHIP_STM32_USARTV2_USART3_ENABLE
 
@@ -96,6 +70,36 @@ ChipUartLowLevel usart7 {ChipUartLowLevel::usart7Parameters};
 ChipUartLowLevel usart8 {ChipUartLowLevel::usart8Parameters};
 
 #endif	// def CONFIG_CHIP_STM32_USARTV2_USART8_ENABLE
+
+/*---------------------------------------------------------------------------------------------------------------------+
+| global functions
++---------------------------------------------------------------------------------------------------------------------*/
+
+#ifdef CONFIG_CHIP_STM32_USARTV2_USART1_ENABLE
+
+/**
+ * \brief USART1 interrupt handler
+ */
+
+extern "C" void USART1_IRQHandler()
+{
+	usart1.interruptHandler();
+}
+
+#endif	// def CONFIG_CHIP_STM32_USARTV2_USART1_ENABLE
+
+#ifdef CONFIG_CHIP_STM32_USARTV2_USART2_ENABLE
+
+/**
+ * \brief USART2 interrupt handler
+ */
+
+extern "C" void USART2_IRQHandler()
+{
+	usart2.interruptHandler();
+}
+
+#endif	// def CONFIG_CHIP_STM32_USARTV2_USART2_ENABLE
 
 #if defined(CONFIG_CHIP_STM32_USARTV2_USART3_USART8_COMBINED_INTERRUPT)
 
