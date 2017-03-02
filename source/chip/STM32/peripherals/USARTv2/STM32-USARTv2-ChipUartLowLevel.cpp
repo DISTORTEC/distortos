@@ -229,12 +229,26 @@ const ChipUartLowLevel::Parameters ChipUartLowLevel::usart3Parameters {USART3_BA
 
 #endif	// def CONFIG_CHIP_STM32_USARTV2_HAS_USART3
 
+#ifdef CONFIG_CHIP_STM32_USARTV2_HAS_UART4
+
+const ChipUartLowLevel::Parameters ChipUartLowLevel::uart4Parameters {UART4_BASE, offsetof(RCC_TypeDef, APB1ENR),
+		RCC_APB1ENR_UART4EN, offsetof(RCC_TypeDef, APB1RSTR), RCC_APB1RSTR_UART4RST};
+
+#endif	// def CONFIG_CHIP_STM32_USARTV2_HAS_UART4
+
 #ifdef CONFIG_CHIP_STM32_USARTV2_HAS_USART4
 
 const ChipUartLowLevel::Parameters ChipUartLowLevel::usart4Parameters {USART4_BASE, offsetof(RCC_TypeDef, APB1ENR),
 		RCC_APB1ENR_USART4EN, offsetof(RCC_TypeDef, APB1RSTR), RCC_APB1RSTR_USART4RST};
 
 #endif	// def CONFIG_CHIP_STM32_USARTV2_HAS_USART4
+
+#ifdef CONFIG_CHIP_STM32_USARTV2_HAS_UART5
+
+const ChipUartLowLevel::Parameters ChipUartLowLevel::uart5Parameters {UART5_BASE, offsetof(RCC_TypeDef, APB1ENR),
+		RCC_APB1ENR_UART5EN, offsetof(RCC_TypeDef, APB1RSTR), RCC_APB1RSTR_UART5RST};
+
+#endif	// def CONFIG_CHIP_STM32_USARTV2_HAS_UART5
 
 #ifdef CONFIG_CHIP_STM32_USARTV2_HAS_USART5
 
@@ -250,12 +264,26 @@ const ChipUartLowLevel::Parameters ChipUartLowLevel::usart6Parameters {USART6_BA
 
 #endif	// def CONFIG_CHIP_STM32_USARTV2_HAS_USART6
 
+#ifdef CONFIG_CHIP_STM32_USARTV2_HAS_UART7
+
+const ChipUartLowLevel::Parameters ChipUartLowLevel::uart7Parameters {UART7_BASE, offsetof(RCC_TypeDef, APB1ENR),
+		RCC_APB1ENR_UART7EN, offsetof(RCC_TypeDef, APB1RSTR), RCC_APB1RSTR_UART7RST};
+
+#endif	// def CONFIG_CHIP_STM32_USARTV2_HAS_UART7
+
 #ifdef CONFIG_CHIP_STM32_USARTV2_HAS_USART7
 
 const ChipUartLowLevel::Parameters ChipUartLowLevel::usart7Parameters {USART7_BASE, offsetof(RCC_TypeDef, APB2ENR),
 		RCC_APB2ENR_USART7EN, offsetof(RCC_TypeDef, APB2RSTR), RCC_APB2RSTR_USART7RST};
 
 #endif	// def CONFIG_CHIP_STM32_USARTV2_HAS_USART7
+
+#ifdef CONFIG_CHIP_STM32_USARTV2_HAS_UART8
+
+const ChipUartLowLevel::Parameters ChipUartLowLevel::uart8Parameters {UART8_BASE, offsetof(RCC_TypeDef, APB1ENR),
+		RCC_APB1ENR_UART8EN, offsetof(RCC_TypeDef, APB1RSTR), RCC_APB1RSTR_UART8RST};
+
+#endif	// def CONFIG_CHIP_STM32_USARTV2_HAS_UART8
 
 #ifdef CONFIG_CHIP_STM32_USARTV2_HAS_USART8
 

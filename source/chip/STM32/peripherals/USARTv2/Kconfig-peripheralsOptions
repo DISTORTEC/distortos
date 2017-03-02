@@ -1,7 +1,7 @@
 #
 # file: Kconfig-peripheralsOptions
 #
-# author: Copyright (C) 2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+# author: Copyright (C) 2016-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
 #
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -30,12 +30,26 @@ config CHIP_STM32_USARTV2_USART3_ENABLE
 	help
 		Enable USART3 low-level driver
 
+config CHIP_STM32_USARTV2_UART4_ENABLE
+	bool "UART4 low-level driver"
+	default n
+	depends on CHIP_STM32_USARTV2_HAS_UART4
+	help
+		Enable UART4 low-level driver
+
 config CHIP_STM32_USARTV2_USART4_ENABLE
 	bool "USART4 low-level driver"
 	default n
 	depends on CHIP_STM32_USARTV2_HAS_USART4
 	help
 		Enable USART4 low-level driver
+
+config CHIP_STM32_USARTV2_UART5_ENABLE
+	bool "UART5 low-level driver"
+	default n
+	depends on CHIP_STM32_USARTV2_HAS_UART5
+	help
+		Enable UART5 low-level driver
 
 config CHIP_STM32_USARTV2_USART5_ENABLE
 	bool "USART5 low-level driver"
@@ -51,12 +65,26 @@ config CHIP_STM32_USARTV2_USART6_ENABLE
 	help
 		Enable USART6 low-level driver
 
+config CHIP_STM32_USARTV2_UART7_ENABLE
+	bool "UART7 low-level driver"
+	default n
+	depends on CHIP_STM32_USARTV2_HAS_UART7
+	help
+		Enable UART7 low-level driver
+
 config CHIP_STM32_USARTV2_USART7_ENABLE
 	bool "USART7 low-level driver"
 	default n
 	depends on CHIP_STM32_USARTV2_HAS_USART7
 	help
 		Enable USART7 low-level driver
+
+config CHIP_STM32_USARTV2_UART8_ENABLE
+	bool "UART8 low-level driver"
+	default n
+	depends on CHIP_STM32_USARTV2_HAS_UART8
+	help
+		Enable UART8 low-level driver
 
 config CHIP_STM32_USARTV2_USART8_ENABLE
 	bool "USART8 low-level driver"
@@ -89,7 +117,15 @@ config CHIP_STM32_USARTV2_HAS_USART3
 	bool
 	default n
 
+config CHIP_STM32_USARTV2_HAS_UART4
+	bool
+	default n
+
 config CHIP_STM32_USARTV2_HAS_USART4
+	bool
+	default n
+
+config CHIP_STM32_USARTV2_HAS_UART5
 	bool
 	default n
 
@@ -101,7 +137,15 @@ config CHIP_STM32_USARTV2_HAS_USART6
 	bool
 	default n
 
+config CHIP_STM32_USARTV2_HAS_UART7
+	bool
+	default n
+
 config CHIP_STM32_USARTV2_HAS_USART7
+	bool
+	default n
+
+config CHIP_STM32_USARTV2_HAS_UART8
 	bool
 	default n
 
