@@ -41,11 +41,23 @@ ChipUartLowLevel usart3 {ChipUartLowLevel::usart3Parameters};
 
 #endif	// def CONFIG_CHIP_STM32_USARTV2_USART3_ENABLE
 
+#ifdef CONFIG_CHIP_STM32_USARTV2_UART4_ENABLE
+
+ChipUartLowLevel uart4 {ChipUartLowLevel::uart4Parameters};
+
+#endif	// def CONFIG_CHIP_STM32_USARTV2_UART4_ENABLE
+
 #ifdef CONFIG_CHIP_STM32_USARTV2_USART4_ENABLE
 
 ChipUartLowLevel usart4 {ChipUartLowLevel::usart4Parameters};
 
 #endif	// def CONFIG_CHIP_STM32_USARTV2_USART4_ENABLE
+
+#ifdef CONFIG_CHIP_STM32_USARTV2_UART5_ENABLE
+
+ChipUartLowLevel uart5 {ChipUartLowLevel::uart5Parameters};
+
+#endif	// def CONFIG_CHIP_STM32_USARTV2_UART5_ENABLE
 
 #ifdef CONFIG_CHIP_STM32_USARTV2_USART5_ENABLE
 
@@ -59,11 +71,23 @@ ChipUartLowLevel usart6 {ChipUartLowLevel::usart6Parameters};
 
 #endif	// def CONFIG_CHIP_STM32_USARTV2_USART6_ENABLE
 
+#ifdef CONFIG_CHIP_STM32_USARTV2_UART7_ENABLE
+
+ChipUartLowLevel uart7 {ChipUartLowLevel::uart7Parameters};
+
+#endif	// def CONFIG_CHIP_STM32_USARTV2_UART7_ENABLE
+
 #ifdef CONFIG_CHIP_STM32_USARTV2_USART7_ENABLE
 
 ChipUartLowLevel usart7 {ChipUartLowLevel::usart7Parameters};
 
 #endif	// def CONFIG_CHIP_STM32_USARTV2_USART7_ENABLE
+
+#ifdef CONFIG_CHIP_STM32_USARTV2_UART8_ENABLE
+
+ChipUartLowLevel uart8 {ChipUartLowLevel::uart8Parameters};
+
+#endif	// def CONFIG_CHIP_STM32_USARTV2_UART8_ENABLE
 
 #ifdef CONFIG_CHIP_STM32_USARTV2_USART8_ENABLE
 
@@ -181,6 +205,19 @@ extern "C" void USART3_IRQHandler()
 
 #endif	// def CONFIG_CHIP_STM32_USARTV2_USART3_ENABLE
 
+#ifdef CONFIG_CHIP_STM32_USARTV2_UART4_ENABLE
+
+/**
+ * \brief UART4 interrupt handler
+ */
+
+extern "C" void UART4_IRQHandler()
+{
+	uart4.interruptHandler();
+}
+
+#endif	// def CONFIG_CHIP_STM32_USARTV2_UART4_ENABLE
+
 #ifdef CONFIG_CHIP_STM32_USARTV2_USART4_ENABLE
 
 /**
@@ -193,6 +230,19 @@ extern "C" void USART4_IRQHandler()
 }
 
 #endif	// def CONFIG_CHIP_STM32_USARTV2_USART4_ENABLE
+
+#ifdef CONFIG_CHIP_STM32_USARTV2_UART5_ENABLE
+
+/**
+ * \brief UART5 interrupt handler
+ */
+
+extern "C" void UART5_IRQHandler()
+{
+	uart5.interruptHandler();
+}
+
+#endif	// def CONFIG_CHIP_STM32_USARTV2_UART5_ENABLE
 
 #ifdef CONFIG_CHIP_STM32_USARTV2_USART5_ENABLE
 
@@ -220,6 +270,19 @@ extern "C" void USART6_IRQHandler()
 
 #endif	// def CONFIG_CHIP_STM32_USARTV2_USART6_ENABLE
 
+#ifdef CONFIG_CHIP_STM32_USARTV2_UART7_ENABLE
+
+/**
+ * \brief UART7 interrupt handler
+ */
+
+extern "C" void UART7_IRQHandler()
+{
+	uart7.interruptHandler();
+}
+
+#endif	// def CONFIG_CHIP_STM32_USARTV2_UART7_ENABLE
+
 #ifdef CONFIG_CHIP_STM32_USARTV2_USART7_ENABLE
 
 /**
@@ -232,6 +295,19 @@ extern "C" void USART7_IRQHandler()
 }
 
 #endif	// def CONFIG_CHIP_STM32_USARTV2_USART7_ENABLE
+
+#ifdef CONFIG_CHIP_STM32_USARTV2_UART8_ENABLE
+
+/**
+ * \brief UART8 interrupt handler
+ */
+
+extern "C" void UART8_IRQHandler()
+{
+	uart8.interruptHandler();
+}
+
+#endif	// def CONFIG_CHIP_STM32_USARTV2_UART8_ENABLE
 
 #ifdef CONFIG_CHIP_STM32_USARTV2_USART8_ENABLE
 
