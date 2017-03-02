@@ -20,12 +20,74 @@ namespace chip
 {
 
 /*---------------------------------------------------------------------------------------------------------------------+
-| USART1 global objects and functions
+| global objects
 +---------------------------------------------------------------------------------------------------------------------*/
 
 #ifdef CONFIG_CHIP_STM32_USARTV1_USART1_ENABLE
 
 ChipUartLowLevel usart1 {ChipUartLowLevel::usart1Parameters};
+
+#endif	// def CONFIG_CHIP_STM32_USARTV1_USART1_ENABLE
+
+#ifdef CONFIG_CHIP_STM32_USARTV1_USART2_ENABLE
+
+ChipUartLowLevel usart2 {ChipUartLowLevel::usart2Parameters};
+
+#endif	// def CONFIG_CHIP_STM32_USARTV1_USART2_ENABLE
+
+#ifdef CONFIG_CHIP_STM32_USARTV1_USART3_ENABLE
+
+ChipUartLowLevel usart3 {ChipUartLowLevel::usart3Parameters};
+
+#endif	// def CONFIG_CHIP_STM32_USARTV1_USART3_ENABLE
+
+#ifdef CONFIG_CHIP_STM32_USARTV1_UART4_ENABLE
+
+ChipUartLowLevel uart4 {ChipUartLowLevel::uart4Parameters};
+
+#endif	// def CONFIG_CHIP_STM32_USARTV1_UART4_ENABLE
+
+#ifdef CONFIG_CHIP_STM32_USARTV1_UART5_ENABLE
+
+ChipUartLowLevel uart5 {ChipUartLowLevel::uart5Parameters};
+
+#endif	// def CONFIG_CHIP_STM32_USARTV1_UART5_ENABLE
+
+#ifdef CONFIG_CHIP_STM32_USARTV1_USART6_ENABLE
+
+ChipUartLowLevel usart6 {ChipUartLowLevel::usart6Parameters};
+
+#endif	// def CONFIG_CHIP_STM32_USARTV1_USART6_ENABLE
+
+#ifdef CONFIG_CHIP_STM32_USARTV1_UART7_ENABLE
+
+ChipUartLowLevel uart7 {ChipUartLowLevel::uart7Parameters};
+
+#endif	// def CONFIG_CHIP_STM32_USARTV1_UART7_ENABLE
+
+#ifdef CONFIG_CHIP_STM32_USARTV1_UART8_ENABLE
+
+ChipUartLowLevel uart8 {ChipUartLowLevel::uart8Parameters};
+
+#endif	// def CONFIG_CHIP_STM32_USARTV1_UART8_ENABLE
+
+#ifdef CONFIG_CHIP_STM32_USARTV1_UART9_ENABLE
+
+ChipUartLowLevel uart9 {ChipUartLowLevel::uart9Parameters};
+
+#endif	// def CONFIG_CHIP_STM32_USARTV1_UART9_ENABLE
+
+#ifdef CONFIG_CHIP_STM32_USARTV1_UART10_ENABLE
+
+ChipUartLowLevel uart10 {ChipUartLowLevel::uart10Parameters};
+
+#endif	// def CONFIG_CHIP_STM32_USARTV1_UART10_ENABLE
+
+/*---------------------------------------------------------------------------------------------------------------------+
+| global functions
++---------------------------------------------------------------------------------------------------------------------*/
+
+#ifdef CONFIG_CHIP_STM32_USARTV1_USART1_ENABLE
 
 /**
  * \brief USART1 interrupt handler
@@ -38,13 +100,7 @@ extern "C" void USART1_IRQHandler()
 
 #endif	// def CONFIG_CHIP_STM32_USARTV1_USART1_ENABLE
 
-/*---------------------------------------------------------------------------------------------------------------------+
-| USART2 global objects and functions
-+---------------------------------------------------------------------------------------------------------------------*/
-
 #ifdef CONFIG_CHIP_STM32_USARTV1_USART2_ENABLE
-
-ChipUartLowLevel usart2 {ChipUartLowLevel::usart2Parameters};
 
 /**
  * \brief USART2 interrupt handler
@@ -57,13 +113,7 @@ extern "C" void USART2_IRQHandler()
 
 #endif	// def CONFIG_CHIP_STM32_USARTV1_USART2_ENABLE
 
-/*---------------------------------------------------------------------------------------------------------------------+
-| USART3 global objects and functions
-+---------------------------------------------------------------------------------------------------------------------*/
-
 #ifdef CONFIG_CHIP_STM32_USARTV1_USART3_ENABLE
-
-ChipUartLowLevel usart3 {ChipUartLowLevel::usart3Parameters};
 
 /**
  * \brief USART3 interrupt handler
@@ -76,13 +126,7 @@ extern "C" void USART3_IRQHandler()
 
 #endif	// def CONFIG_CHIP_STM32_USARTV1_USART3_ENABLE
 
-/*---------------------------------------------------------------------------------------------------------------------+
-| UART4 global objects and functions
-+---------------------------------------------------------------------------------------------------------------------*/
-
 #ifdef CONFIG_CHIP_STM32_USARTV1_UART4_ENABLE
-
-ChipUartLowLevel uart4 {ChipUartLowLevel::uart4Parameters};
 
 /**
  * \brief UART4 interrupt handler
@@ -95,13 +139,7 @@ extern "C" void UART4_IRQHandler()
 
 #endif	// def CONFIG_CHIP_STM32_USARTV1_UART4_ENABLE
 
-/*---------------------------------------------------------------------------------------------------------------------+
-| UART5 global objects and functions
-+---------------------------------------------------------------------------------------------------------------------*/
-
 #ifdef CONFIG_CHIP_STM32_USARTV1_UART5_ENABLE
-
-ChipUartLowLevel uart5 {ChipUartLowLevel::uart5Parameters};
 
 /**
  * \brief UART5 interrupt handler
@@ -114,13 +152,7 @@ extern "C" void UART5_IRQHandler()
 
 #endif	// def CONFIG_CHIP_STM32_USARTV1_UART5_ENABLE
 
-/*---------------------------------------------------------------------------------------------------------------------+
-| USART6 global objects and functions
-+---------------------------------------------------------------------------------------------------------------------*/
-
 #ifdef CONFIG_CHIP_STM32_USARTV1_USART6_ENABLE
-
-ChipUartLowLevel usart6 {ChipUartLowLevel::usart6Parameters};
 
 /**
  * \brief USART6 interrupt handler
@@ -133,13 +165,7 @@ extern "C" void USART6_IRQHandler()
 
 #endif	// def CONFIG_CHIP_STM32_USARTV1_USART6_ENABLE
 
-/*---------------------------------------------------------------------------------------------------------------------+
-| UART7 global objects and functions
-+---------------------------------------------------------------------------------------------------------------------*/
-
 #ifdef CONFIG_CHIP_STM32_USARTV1_UART7_ENABLE
-
-ChipUartLowLevel uart7 {ChipUartLowLevel::uart7Parameters};
 
 /**
  * \brief UART7 interrupt handler
@@ -152,13 +178,7 @@ extern "C" void UART7_IRQHandler()
 
 #endif	// def CONFIG_CHIP_STM32_USARTV1_UART7_ENABLE
 
-/*---------------------------------------------------------------------------------------------------------------------+
-| UART8 global objects and functions
-+---------------------------------------------------------------------------------------------------------------------*/
-
 #ifdef CONFIG_CHIP_STM32_USARTV1_UART8_ENABLE
-
-ChipUartLowLevel uart8 {ChipUartLowLevel::uart8Parameters};
 
 /**
  * \brief UART8 interrupt handler
@@ -171,13 +191,7 @@ extern "C" void UART8_IRQHandler()
 
 #endif	// def CONFIG_CHIP_STM32_USARTV1_UART8_ENABLE
 
-/*---------------------------------------------------------------------------------------------------------------------+
-| UART9 global objects and functions
-+---------------------------------------------------------------------------------------------------------------------*/
-
 #ifdef CONFIG_CHIP_STM32_USARTV1_UART9_ENABLE
-
-ChipUartLowLevel uart9 {ChipUartLowLevel::uart9Parameters};
 
 /**
  * \brief UART9 interrupt handler
@@ -190,13 +204,7 @@ extern "C" void UART9_IRQHandler()
 
 #endif	// def CONFIG_CHIP_STM32_USARTV1_UART9_ENABLE
 
-/*---------------------------------------------------------------------------------------------------------------------+
-| UART10 global objects and functions
-+---------------------------------------------------------------------------------------------------------------------*/
-
 #ifdef CONFIG_CHIP_STM32_USARTV1_UART10_ENABLE
-
-ChipUartLowLevel uart10 {ChipUartLowLevel::uart10Parameters};
 
 /**
  * \brief UART10 interrupt handler
