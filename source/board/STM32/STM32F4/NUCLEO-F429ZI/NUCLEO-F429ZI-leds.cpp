@@ -2,7 +2,7 @@
  * \file
  * \brief Definition of LEDs for NUCLEO-F429ZI
  *
- * \author Copyright (C) 2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2016-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -27,9 +27,15 @@ namespace board
 
 chip::ChipOutputPin leds[totalLeds]
 {
-		chip::ChipOutputPin{ledPins[0]},
-		chip::ChipOutputPin{ledPins[1]},
-		chip::ChipOutputPin{ledPins[2]},
+#ifdef CONFIG_CHIP_STM32_GPIOV2_GPIOB_ENABLE
+		chip::ChipOutputPin{chip::Pin::pb0, false, chip::PinOutputSpeed::low, chip::PinPull::none, false, false},
+#endif	// def CONFIG_CHIP_STM32_GPIOV2_GPIOB_ENABLE
+#ifdef CONFIG_CHIP_STM32_GPIOV2_GPIOB_ENABLE
+		chip::ChipOutputPin{chip::Pin::pb7, false, chip::PinOutputSpeed::low, chip::PinPull::none, false, false},
+#endif	// def CONFIG_CHIP_STM32_GPIOV2_GPIOB_ENABLE
+#ifdef CONFIG_CHIP_STM32_GPIOV2_GPIOB_ENABLE
+		chip::ChipOutputPin{chip::Pin::pb14, false, chip::PinOutputSpeed::low, chip::PinPull::none, false, false},
+#endif	// def CONFIG_CHIP_STM32_GPIOV2_GPIOB_ENABLE
 };
 
 }	// namespace board

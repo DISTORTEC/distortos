@@ -2,7 +2,7 @@
  * \file
  * \brief Declaration of buttons for NUCLEO-F103RB
  *
- * \author Copyright (C) 2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2016-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -12,9 +12,7 @@
 #ifndef SOURCE_BOARD_STM32_STM32F1_NUCLEO_F103RB_INCLUDE_DISTORTOS_BOARD_BUTTONS_HPP_
 #define SOURCE_BOARD_STM32_STM32F1_NUCLEO_F103RB_INCLUDE_DISTORTOS_BOARD_BUTTONS_HPP_
 
-#include "distortos/chip/STM32-GPIOv1.hpp"
-
-#include <array>
+#include "distortos/distortosConfiguration.h"
 
 namespace distortos
 {
@@ -33,24 +31,18 @@ class ChipInputPin;
 namespace board
 {
 
-/// total number of buttons on the board
-constexpr size_t totalButtons {CONFIG_BOARD_TOTAL_BUTTONS};
-
 /*---------------------------------------------------------------------------------------------------------------------+
 | button indexes
 +---------------------------------------------------------------------------------------------------------------------*/
 
-/// index of B1 button
-constexpr size_t b1ButtonIndex {0};
-
-/*---------------------------------------------------------------------------------------------------------------------+
-| indexed access to pin identifiers
-+---------------------------------------------------------------------------------------------------------------------*/
-
-/// array with pin identifiers of all buttons
-constexpr std::array<chip::Pin, totalButtons> buttonPins
+enum ButtonIndexes
 {
-		chip::Pin::pc13,
+#ifdef CONFIG_CHIP_STM32_GPIOV1_GPIOC_ENABLE
+		/// index of B1 button
+		b1ButtonIndex,
+#endif	// def CONFIG_CHIP_STM32_GPIOV1_GPIOC_ENABLE
+		/// total number of buttons on the board
+		totalButtons
 };
 
 #ifdef CONFIG_BOARD_BUTTONS_ENABLE

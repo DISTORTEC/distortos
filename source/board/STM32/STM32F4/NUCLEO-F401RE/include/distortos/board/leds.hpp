@@ -2,7 +2,7 @@
  * \file
  * \brief Declaration of LEDs for NUCLEO-F401RE
  *
- * \author Copyright (C) 2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2016-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -12,9 +12,9 @@
 #ifndef SOURCE_BOARD_STM32_STM32F4_NUCLEO_F401RE_INCLUDE_DISTORTOS_BOARD_LEDS_HPP_
 #define SOURCE_BOARD_STM32_STM32F4_NUCLEO_F401RE_INCLUDE_DISTORTOS_BOARD_LEDS_HPP_
 
-#include "distortos/chip/STM32-GPIOv2.hpp"
+#include "distortos/distortosConfiguration.h"
 
-#include <array>
+#include <cstddef>
 
 namespace distortos
 {
@@ -33,34 +33,30 @@ class ChipOutputPin;
 namespace board
 {
 
-/// total number of LEDs on the board
-constexpr size_t totalLeds {CONFIG_BOARD_TOTAL_LEDS};
-
 /*---------------------------------------------------------------------------------------------------------------------+
 | LED indexes
 +---------------------------------------------------------------------------------------------------------------------*/
 
-/// index of LD2 LED (green)
-constexpr size_t ld2LedIndex {0};
+enum LedIndexes
+{
+#ifdef CONFIG_CHIP_STM32_GPIOV2_GPIOA_ENABLE
+		/// index of LD2 LED (green)
+		ld2LedIndex,
+#endif	// def CONFIG_CHIP_STM32_GPIOV2_GPIOA_ENABLE
+		/// total number of LEDs on the board
+		totalLeds
+};
+
+#ifdef CONFIG_BOARD_LEDS_ENABLE
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | alternative (color-based) LED indexes
 +---------------------------------------------------------------------------------------------------------------------*/
 
+#ifdef CONFIG_CHIP_STM32_GPIOV2_GPIOA_ENABLE
 /// alternative index of LD2 LED (green)
 constexpr size_t greenLedIndex {ld2LedIndex};
-
-/*---------------------------------------------------------------------------------------------------------------------+
-| indexed access to pin identifiers
-+---------------------------------------------------------------------------------------------------------------------*/
-
-/// array with pin identifiers of all LEDs
-constexpr std::array<chip::Pin, totalLeds> ledPins
-{
-		chip::Pin::pa5,
-};
-
-#ifdef CONFIG_BOARD_LEDS_ENABLE
+#endif	// def CONFIG_CHIP_STM32_GPIOV2_GPIOA_ENABLE
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | indexed access to LED objects

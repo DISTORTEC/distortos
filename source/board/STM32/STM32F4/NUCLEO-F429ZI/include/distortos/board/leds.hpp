@@ -2,7 +2,7 @@
  * \file
  * \brief Declaration of LEDs for NUCLEO-F429ZI
  *
- * \author Copyright (C) 2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2016-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -12,9 +12,9 @@
 #ifndef SOURCE_BOARD_STM32_STM32F4_NUCLEO_F429ZI_INCLUDE_DISTORTOS_BOARD_LEDS_HPP_
 #define SOURCE_BOARD_STM32_STM32F4_NUCLEO_F429ZI_INCLUDE_DISTORTOS_BOARD_LEDS_HPP_
 
-#include "distortos/chip/STM32-GPIOv2.hpp"
+#include "distortos/distortosConfiguration.h"
 
-#include <array>
+#include <cstddef>
 
 namespace distortos
 {
@@ -33,48 +33,48 @@ class ChipOutputPin;
 namespace board
 {
 
-/// total number of LEDs on the board
-constexpr size_t totalLeds {CONFIG_BOARD_TOTAL_LEDS};
-
 /*---------------------------------------------------------------------------------------------------------------------+
 | LED indexes
 +---------------------------------------------------------------------------------------------------------------------*/
 
-/// index of LD1 LED (green)
-constexpr size_t ld1LedIndex {0};
+enum LedIndexes
+{
+#ifdef CONFIG_CHIP_STM32_GPIOV2_GPIOB_ENABLE
+		/// index of LD1 LED (green)
+		ld1LedIndex,
+#endif	// def CONFIG_CHIP_STM32_GPIOV2_GPIOB_ENABLE
+#ifdef CONFIG_CHIP_STM32_GPIOV2_GPIOB_ENABLE
+		/// index of LD2 LED (blue)
+		ld2LedIndex,
+#endif	// def CONFIG_CHIP_STM32_GPIOV2_GPIOB_ENABLE
+#ifdef CONFIG_CHIP_STM32_GPIOV2_GPIOB_ENABLE
+		/// index of LD3 LED (red)
+		ld3LedIndex,
+#endif	// def CONFIG_CHIP_STM32_GPIOV2_GPIOB_ENABLE
+		/// total number of LEDs on the board
+		totalLeds
+};
 
-/// index of LD2 LED (blue)
-constexpr size_t ld2LedIndex {1};
-
-/// index of LD3 LED (red)
-constexpr size_t ld3LedIndex {2};
+#ifdef CONFIG_BOARD_LEDS_ENABLE
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | alternative (color-based) LED indexes
 +---------------------------------------------------------------------------------------------------------------------*/
 
+#ifdef CONFIG_CHIP_STM32_GPIOV2_GPIOB_ENABLE
 /// alternative index of LD1 LED (green)
 constexpr size_t greenLedIndex {ld1LedIndex};
+#endif	// def CONFIG_CHIP_STM32_GPIOV2_GPIOB_ENABLE
 
+#ifdef CONFIG_CHIP_STM32_GPIOV2_GPIOB_ENABLE
 /// alternative index of LD2 LED (blue)
 constexpr size_t blueLedIndex {ld2LedIndex};
+#endif	// def CONFIG_CHIP_STM32_GPIOV2_GPIOB_ENABLE
 
+#ifdef CONFIG_CHIP_STM32_GPIOV2_GPIOB_ENABLE
 /// alternative index of LD3 LED (red)
 constexpr size_t redLedIndex {ld3LedIndex};
-
-/*---------------------------------------------------------------------------------------------------------------------+
-| indexed access to pin identifiers
-+---------------------------------------------------------------------------------------------------------------------*/
-
-/// array with pin identifiers of all LEDs
-constexpr std::array<chip::Pin, totalLeds> ledPins
-{
-		chip::Pin::pb0,
-		chip::Pin::pb7,
-		chip::Pin::pb14,
-};
-
-#ifdef CONFIG_BOARD_LEDS_ENABLE
+#endif	// def CONFIG_CHIP_STM32_GPIOV2_GPIOB_ENABLE
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | indexed access to LED objects

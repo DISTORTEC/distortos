@@ -2,7 +2,7 @@
  * \file
  * \brief Declaration of LEDs for STM32F4DISCOVERY
  *
- * \author Copyright (C) 2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2016-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -12,9 +12,9 @@
 #ifndef SOURCE_BOARD_STM32_STM32F4_STM32F4DISCOVERY_INCLUDE_DISTORTOS_BOARD_LEDS_HPP_
 #define SOURCE_BOARD_STM32_STM32F4_STM32F4DISCOVERY_INCLUDE_DISTORTOS_BOARD_LEDS_HPP_
 
-#include "distortos/chip/STM32-GPIOv2.hpp"
+#include "distortos/distortosConfiguration.h"
 
-#include <array>
+#include <cstddef>
 
 namespace distortos
 {
@@ -33,55 +33,57 @@ class ChipOutputPin;
 namespace board
 {
 
-/// total number of LEDs on the board
-constexpr size_t totalLeds {CONFIG_BOARD_TOTAL_LEDS};
-
 /*---------------------------------------------------------------------------------------------------------------------+
 | LED indexes
 +---------------------------------------------------------------------------------------------------------------------*/
 
-/// index of LD3 LED (orange)
-constexpr size_t ld3LedIndex {0};
+enum LedIndexes
+{
+#ifdef CONFIG_CHIP_STM32_GPIOV2_GPIOD_ENABLE
+		/// index of LD3 LED (orange)
+		ld3LedIndex,
+#endif	// def CONFIG_CHIP_STM32_GPIOV2_GPIOD_ENABLE
+#ifdef CONFIG_CHIP_STM32_GPIOV2_GPIOD_ENABLE
+		/// index of LD4 LED (green)
+		ld4LedIndex,
+#endif	// def CONFIG_CHIP_STM32_GPIOV2_GPIOD_ENABLE
+#ifdef CONFIG_CHIP_STM32_GPIOV2_GPIOD_ENABLE
+		/// index of LD5 LED (red)
+		ld5LedIndex,
+#endif	// def CONFIG_CHIP_STM32_GPIOV2_GPIOD_ENABLE
+#ifdef CONFIG_CHIP_STM32_GPIOV2_GPIOD_ENABLE
+		/// index of LD6 LED (blue)
+		ld6LedIndex,
+#endif	// def CONFIG_CHIP_STM32_GPIOV2_GPIOD_ENABLE
+		/// total number of LEDs on the board
+		totalLeds
+};
 
-/// index of LD4 LED (green)
-constexpr size_t ld4LedIndex {1};
-
-/// index of LD5 LED (red)
-constexpr size_t ld5LedIndex {2};
-
-/// index of LD6 LED (blue)
-constexpr size_t ld6LedIndex {3};
+#ifdef CONFIG_BOARD_LEDS_ENABLE
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | alternative (color-based) LED indexes
 +---------------------------------------------------------------------------------------------------------------------*/
 
+#ifdef CONFIG_CHIP_STM32_GPIOV2_GPIOD_ENABLE
 /// alternative index of LD3 LED (orange)
 constexpr size_t orangeLedIndex {ld3LedIndex};
+#endif	// def CONFIG_CHIP_STM32_GPIOV2_GPIOD_ENABLE
 
+#ifdef CONFIG_CHIP_STM32_GPIOV2_GPIOD_ENABLE
 /// alternative index of LD4 LED (green)
 constexpr size_t greenLedIndex {ld4LedIndex};
+#endif	// def CONFIG_CHIP_STM32_GPIOV2_GPIOD_ENABLE
 
+#ifdef CONFIG_CHIP_STM32_GPIOV2_GPIOD_ENABLE
 /// alternative index of LD5 LED (red)
 constexpr size_t redLedIndex {ld5LedIndex};
+#endif	// def CONFIG_CHIP_STM32_GPIOV2_GPIOD_ENABLE
 
+#ifdef CONFIG_CHIP_STM32_GPIOV2_GPIOD_ENABLE
 /// alternative index of LD6 LED (blue)
 constexpr size_t blueLedIndex {ld6LedIndex};
-
-/*---------------------------------------------------------------------------------------------------------------------+
-| indexed access to pin identifiers
-+---------------------------------------------------------------------------------------------------------------------*/
-
-/// array with pin identifiers of all LEDs
-constexpr std::array<chip::Pin, totalLeds> ledPins
-{
-		chip::Pin::pd13,
-		chip::Pin::pd12,
-		chip::Pin::pd14,
-		chip::Pin::pd15,
-};
-
-#ifdef CONFIG_BOARD_LEDS_ENABLE
+#endif	// def CONFIG_CHIP_STM32_GPIOV2_GPIOD_ENABLE
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | indexed access to LED objects
