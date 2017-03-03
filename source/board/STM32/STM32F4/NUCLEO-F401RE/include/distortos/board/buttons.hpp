@@ -2,7 +2,7 @@
  * \file
  * \brief Declaration of buttons for NUCLEO-F401RE
  *
- * \author Copyright (C) 2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2016-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -12,9 +12,9 @@
 #ifndef SOURCE_BOARD_STM32_STM32F4_NUCLEO_F401RE_INCLUDE_DISTORTOS_BOARD_BUTTONS_HPP_
 #define SOURCE_BOARD_STM32_STM32F4_NUCLEO_F401RE_INCLUDE_DISTORTOS_BOARD_BUTTONS_HPP_
 
-#include "distortos/chip/STM32-GPIOv2.hpp"
+#include "distortos/distortosConfiguration.h"
 
-#include <array>
+#include <cstddef>
 
 namespace distortos
 {
@@ -42,16 +42,6 @@ constexpr size_t totalButtons {CONFIG_BOARD_TOTAL_BUTTONS};
 
 /// index of B1 button
 constexpr size_t b1ButtonIndex {0};
-
-/*---------------------------------------------------------------------------------------------------------------------+
-| indexed access to pin identifiers
-+---------------------------------------------------------------------------------------------------------------------*/
-
-/// array with pin identifiers of all buttons
-constexpr std::array<chip::Pin, totalButtons> buttonPins
-{
-		chip::Pin::pc13,
-};
 
 #ifdef CONFIG_BOARD_BUTTONS_ENABLE
 

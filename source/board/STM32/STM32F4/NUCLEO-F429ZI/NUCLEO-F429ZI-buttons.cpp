@@ -2,7 +2,7 @@
  * \file
  * \brief Definition of buttons for NUCLEO-F429ZI
  *
- * \author Copyright (C) 2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2016-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -27,7 +27,7 @@ namespace board
 
 const chip::ChipInputPin buttons[totalButtons]
 {
-		chip::ChipInputPin{buttonPins[0]},
+		chip::ChipInputPin{chip::Pin::pc13, chip::PinPull::none, false},
 };
 
 }	// namespace board
