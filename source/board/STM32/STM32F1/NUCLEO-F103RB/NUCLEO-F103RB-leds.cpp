@@ -27,7 +27,9 @@ namespace board
 
 chip::ChipOutputPin leds[totalLeds]
 {
-		chip::ChipOutputPin{ledPins[0]},
+#ifdef CONFIG_CHIP_STM32_GPIOV1_GPIOA_ENABLE
+		chip::ChipOutputPin{chip::Pin::pa5, false, chip::PinOutputSpeed::_2Mhz, false, false},
+#endif	// def CONFIG_CHIP_STM32_GPIOV1_GPIOA_ENABLE
 };
 
 }	// namespace board
