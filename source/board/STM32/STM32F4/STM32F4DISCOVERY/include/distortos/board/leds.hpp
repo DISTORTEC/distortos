@@ -2,7 +2,7 @@
  * \file
  * \brief Declaration of LEDs for STM32F4DISCOVERY
  *
- * \author Copyright (C) 2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2016-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -12,9 +12,9 @@
 #ifndef SOURCE_BOARD_STM32_STM32F4_STM32F4DISCOVERY_INCLUDE_DISTORTOS_BOARD_LEDS_HPP_
 #define SOURCE_BOARD_STM32_STM32F4_STM32F4DISCOVERY_INCLUDE_DISTORTOS_BOARD_LEDS_HPP_
 
-#include "distortos/chip/STM32-GPIOv2.hpp"
+#include "distortos/distortosConfiguration.h"
 
-#include <array>
+#include <cstddef>
 
 namespace distortos
 {
@@ -67,19 +67,6 @@ constexpr size_t redLedIndex {ld5LedIndex};
 
 /// alternative index of LD6 LED (blue)
 constexpr size_t blueLedIndex {ld6LedIndex};
-
-/*---------------------------------------------------------------------------------------------------------------------+
-| indexed access to pin identifiers
-+---------------------------------------------------------------------------------------------------------------------*/
-
-/// array with pin identifiers of all LEDs
-constexpr std::array<chip::Pin, totalLeds> ledPins
-{
-		chip::Pin::pd13,
-		chip::Pin::pd12,
-		chip::Pin::pd14,
-		chip::Pin::pd15,
-};
 
 #ifdef CONFIG_BOARD_LEDS_ENABLE
 
