@@ -33,15 +33,19 @@ class ChipInputPin;
 namespace board
 {
 
-/// total number of buttons on the board
-constexpr size_t totalButtons {CONFIG_BOARD_TOTAL_BUTTONS};
-
 /*---------------------------------------------------------------------------------------------------------------------+
 | button indexes
 +---------------------------------------------------------------------------------------------------------------------*/
 
-/// index of B1 button
-constexpr size_t b1ButtonIndex {0};
+enum ButtonIndexes
+{
+#if defined(CONFIG_CHIP_STM32_GPIOV1_GPIOC_ENABLE)
+		/// index of B1 button
+		b1ButtonIndex,
+#endif // def CONFIG_CHIP_STM32_GPIOV1_GPIOC_ENABLE
+		/// total number of buttons on the board
+		totalButtons
+};
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | indexed access to pin identifiers
