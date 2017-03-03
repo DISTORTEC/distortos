@@ -43,16 +43,6 @@ constexpr size_t totalButtons {CONFIG_BOARD_TOTAL_BUTTONS};
 /// index of B1 button
 constexpr size_t b1ButtonIndex {0};
 
-/*---------------------------------------------------------------------------------------------------------------------+
-| indexed access to pin identifiers
-+---------------------------------------------------------------------------------------------------------------------*/
-
-/// array with pin identifiers of all buttons
-constexpr std::array<chip::Pin, totalButtons> buttonPins
-{
-		chip::Pin::pa0,
-};
-
 #ifdef CONFIG_BOARD_BUTTONS_ENABLE
 
 /*---------------------------------------------------------------------------------------------------------------------+

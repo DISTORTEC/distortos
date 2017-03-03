@@ -27,7 +27,7 @@ namespace board
 
 const chip::ChipInputPin buttons[totalButtons]
 {
-		chip::ChipInputPin{buttonPins[0], chip::PinPull::none, true},
+		chip::ChipInputPin{chip::Pin::pc13, chip::PinPull::none, true},
 };
 
 }	// namespace board
