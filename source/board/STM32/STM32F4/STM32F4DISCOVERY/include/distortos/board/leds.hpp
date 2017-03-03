@@ -68,19 +68,6 @@ constexpr size_t redLedIndex {ld5LedIndex};
 /// alternative index of LD6 LED (blue)
 constexpr size_t blueLedIndex {ld6LedIndex};
 
-/*---------------------------------------------------------------------------------------------------------------------+
-| indexed access to pin identifiers
-+---------------------------------------------------------------------------------------------------------------------*/
-
-/// array with pin identifiers of all LEDs
-constexpr std::array<chip::Pin, totalLeds> ledPins
-{
-		chip::Pin::pd13,
-		chip::Pin::pd12,
-		chip::Pin::pd14,
-		chip::Pin::pd15,
-};
-
 #ifdef CONFIG_BOARD_LEDS_ENABLE
 
 /*---------------------------------------------------------------------------------------------------------------------+

@@ -27,7 +27,7 @@ namespace board
 
 chip::ChipOutputPin leds[totalLeds]
 {
-		chip::ChipOutputPin{ledPins[0]},
+		chip::ChipOutputPin{chip::Pin::pa5, false, chip::PinOutputSpeed::low, chip::PinPull::none, false, false},
 };
 
 }	// namespace board

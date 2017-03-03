@@ -50,16 +50,6 @@ constexpr size_t ld2LedIndex {0};
 /// alternative index of LD2 LED (green)
 constexpr size_t greenLedIndex {ld2LedIndex};
 
-/*---------------------------------------------------------------------------------------------------------------------+
-| indexed access to pin identifiers
-+---------------------------------------------------------------------------------------------------------------------*/
-
-/// array with pin identifiers of all LEDs
-constexpr std::array<chip::Pin, totalLeds> ledPins
-{
-		chip::Pin::pa5,
-};
-
 #ifdef CONFIG_BOARD_LEDS_ENABLE
 
 /*---------------------------------------------------------------------------------------------------------------------+
