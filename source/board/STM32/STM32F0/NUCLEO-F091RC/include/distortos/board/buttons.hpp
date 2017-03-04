@@ -52,10 +52,10 @@ constexpr size_t totalButtons {DISTORTOS_BOARD_TOTAL_BUTTONS};
 
 enum ButtonIndexes
 {
-#ifdef CONFIG_CHIP_STM32_GPIOV2_GPIOC_ENABLE
+#if DISTORTOS_BOARD_B1_BUTTON_ENABLE == 1
 		/// index of B1 button
 		b1ButtonIndex,
-#endif	// def CONFIG_CHIP_STM32_GPIOV2_GPIOC_ENABLE
+#endif	// DISTORTOS_BOARD_B1_BUTTON_ENABLE == 1
 };
 
 #ifdef CONFIG_BOARD_BUTTONS_ENABLE
