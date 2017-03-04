@@ -16,6 +16,31 @@
 
 #include <cstddef>
 
+/// indicates whether LD1 LED (green) is enabled (1) or not (0)
+#ifdef CONFIG_CHIP_STM32_GPIOV2_GPIOB_ENABLE
+#define DISTORTOS_BOARD_LD1_LED_ENABLE		1
+#else	// !def CONFIG_CHIP_STM32_GPIOV2_GPIOB_ENABLE
+#define DISTORTOS_BOARD_LD1_LED_ENABLE		0
+#endif	// !def CONFIG_CHIP_STM32_GPIOV2_GPIOB_ENABLE
+
+/// indicates whether LD2 LED (blue) is enabled (1) or not (0)
+#ifdef CONFIG_CHIP_STM32_GPIOV2_GPIOB_ENABLE
+#define DISTORTOS_BOARD_LD2_LED_ENABLE		1
+#else	// !def CONFIG_CHIP_STM32_GPIOV2_GPIOB_ENABLE
+#define DISTORTOS_BOARD_LD2_LED_ENABLE		0
+#endif	// !def CONFIG_CHIP_STM32_GPIOV2_GPIOB_ENABLE
+
+/// indicates whether LD3 LED (red) is enabled (1) or not (0)
+#ifdef CONFIG_CHIP_STM32_GPIOV2_GPIOB_ENABLE
+#define DISTORTOS_BOARD_LD3_LED_ENABLE		1
+#else	// !def CONFIG_CHIP_STM32_GPIOV2_GPIOB_ENABLE
+#define DISTORTOS_BOARD_LD3_LED_ENABLE		0
+#endif	// !def CONFIG_CHIP_STM32_GPIOV2_GPIOB_ENABLE
+
+/// total number of LEDs on the board
+#define DISTORTOS_BOARD_TOTAL_LEDS		(DISTORTOS_BOARD_LD1_LED_ENABLE + DISTORTOS_BOARD_LD2_LED_ENABLE + \
+		DISTORTOS_BOARD_LD3_LED_ENABLE)
+
 namespace distortos
 {
 
@@ -32,6 +57,9 @@ class ChipOutputPin;
 
 namespace board
 {
+
+/// total number of LEDs on the board
+constexpr size_t totalLeds {DISTORTOS_BOARD_TOTAL_LEDS};
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | LED indexes
@@ -51,8 +79,6 @@ enum LedIndexes
 		/// index of LD3 LED (red)
 		ld3LedIndex,
 #endif	// def CONFIG_CHIP_STM32_GPIOV2_GPIOB_ENABLE
-		/// total number of LEDs on the board
-		totalLeds
 };
 
 #ifdef CONFIG_BOARD_LEDS_ENABLE
