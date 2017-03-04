@@ -59,14 +59,14 @@ constexpr size_t totalLeds {DISTORTOS_BOARD_TOTAL_LEDS};
 
 enum LedIndexes
 {
-#ifdef CONFIG_CHIP_STM32_GPIOV2_GPIOG_ENABLE
+#if DISTORTOS_BOARD_LD3_LED_ENABLE == 1
 		/// index of LD3 LED (green)
 		ld3LedIndex,
-#endif	// def CONFIG_CHIP_STM32_GPIOV2_GPIOG_ENABLE
-#ifdef CONFIG_CHIP_STM32_GPIOV2_GPIOG_ENABLE
+#endif	// DISTORTOS_BOARD_LD3_LED_ENABLE == 1
+#if DISTORTOS_BOARD_LD4_LED_ENABLE == 1
 		/// index of LD4 LED (red)
 		ld4LedIndex,
-#endif	// def CONFIG_CHIP_STM32_GPIOV2_GPIOG_ENABLE
+#endif	// DISTORTOS_BOARD_LD4_LED_ENABLE == 1
 };
 
 #ifdef CONFIG_BOARD_LEDS_ENABLE
@@ -75,15 +75,15 @@ enum LedIndexes
 | alternative (color-based) LED indexes
 +---------------------------------------------------------------------------------------------------------------------*/
 
-#ifdef CONFIG_CHIP_STM32_GPIOV2_GPIOG_ENABLE
+#if DISTORTOS_BOARD_LD3_LED_ENABLE == 1
 /// alternative index of LD3 LED (green)
 constexpr size_t greenLedIndex {ld3LedIndex};
-#endif	// def CONFIG_CHIP_STM32_GPIOV2_GPIOG_ENABLE
+#endif	// DISTORTOS_BOARD_LD3_LED_ENABLE == 1
 
-#ifdef CONFIG_CHIP_STM32_GPIOV2_GPIOG_ENABLE
+#if DISTORTOS_BOARD_LD4_LED_ENABLE == 1
 /// alternative index of LD4 LED (red)
 constexpr size_t redLedIndex {ld4LedIndex};
-#endif	// def CONFIG_CHIP_STM32_GPIOV2_GPIOG_ENABLE
+#endif	// DISTORTOS_BOARD_LD4_LED_ENABLE == 1
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | indexed access to LED objects

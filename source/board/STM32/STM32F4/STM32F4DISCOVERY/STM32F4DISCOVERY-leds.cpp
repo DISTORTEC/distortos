@@ -27,18 +27,18 @@ namespace board
 
 chip::ChipOutputPin leds[totalLeds]
 {
-#ifdef CONFIG_CHIP_STM32_GPIOV2_GPIOD_ENABLE
+#if DISTORTOS_BOARD_LD3_LED_ENABLE == 1
 		chip::ChipOutputPin{chip::Pin::pd13, false, chip::PinOutputSpeed::low, chip::PinPull::none, false, false},
-#endif	// def CONFIG_CHIP_STM32_GPIOV2_GPIOD_ENABLE
-#ifdef CONFIG_CHIP_STM32_GPIOV2_GPIOD_ENABLE
+#endif	// DISTORTOS_BOARD_LD3_LED_ENABLE == 1
+#if DISTORTOS_BOARD_LD4_LED_ENABLE == 1
 		chip::ChipOutputPin{chip::Pin::pd12, false, chip::PinOutputSpeed::low, chip::PinPull::none, false, false},
-#endif	// def CONFIG_CHIP_STM32_GPIOV2_GPIOD_ENABLE
-#ifdef CONFIG_CHIP_STM32_GPIOV2_GPIOD_ENABLE
+#endif	// DISTORTOS_BOARD_LD4_LED_ENABLE == 1
+#if DISTORTOS_BOARD_LD5_LED_ENABLE == 1
 		chip::ChipOutputPin{chip::Pin::pd14, false, chip::PinOutputSpeed::low, chip::PinPull::none, false, false},
-#endif	// def CONFIG_CHIP_STM32_GPIOV2_GPIOD_ENABLE
-#ifdef CONFIG_CHIP_STM32_GPIOV2_GPIOD_ENABLE
+#endif	// DISTORTOS_BOARD_LD5_LED_ENABLE == 1
+#if DISTORTOS_BOARD_LD6_LED_ENABLE == 1
 		chip::ChipOutputPin{chip::Pin::pd15, false, chip::PinOutputSpeed::low, chip::PinPull::none, false, false},
-#endif	// def CONFIG_CHIP_STM32_GPIOV2_GPIOD_ENABLE
+#endif	// DISTORTOS_BOARD_LD6_LED_ENABLE == 1
 };
 
 }	// namespace board

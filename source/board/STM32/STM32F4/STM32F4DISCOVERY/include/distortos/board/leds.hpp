@@ -74,22 +74,22 @@ constexpr size_t totalLeds {DISTORTOS_BOARD_TOTAL_LEDS};
 
 enum LedIndexes
 {
-#ifdef CONFIG_CHIP_STM32_GPIOV2_GPIOD_ENABLE
+#if DISTORTOS_BOARD_LD3_LED_ENABLE == 1
 		/// index of LD3 LED (orange)
 		ld3LedIndex,
-#endif	// def CONFIG_CHIP_STM32_GPIOV2_GPIOD_ENABLE
-#ifdef CONFIG_CHIP_STM32_GPIOV2_GPIOD_ENABLE
+#endif	// DISTORTOS_BOARD_LD3_LED_ENABLE == 1
+#if DISTORTOS_BOARD_LD4_LED_ENABLE == 1
 		/// index of LD4 LED (green)
 		ld4LedIndex,
-#endif	// def CONFIG_CHIP_STM32_GPIOV2_GPIOD_ENABLE
-#ifdef CONFIG_CHIP_STM32_GPIOV2_GPIOD_ENABLE
+#endif	// DISTORTOS_BOARD_LD4_LED_ENABLE == 1
+#if DISTORTOS_BOARD_LD5_LED_ENABLE == 1
 		/// index of LD5 LED (red)
 		ld5LedIndex,
-#endif	// def CONFIG_CHIP_STM32_GPIOV2_GPIOD_ENABLE
-#ifdef CONFIG_CHIP_STM32_GPIOV2_GPIOD_ENABLE
+#endif	// DISTORTOS_BOARD_LD5_LED_ENABLE == 1
+#if DISTORTOS_BOARD_LD6_LED_ENABLE == 1
 		/// index of LD6 LED (blue)
 		ld6LedIndex,
-#endif	// def CONFIG_CHIP_STM32_GPIOV2_GPIOD_ENABLE
+#endif	// DISTORTOS_BOARD_LD6_LED_ENABLE == 1
 };
 
 #ifdef CONFIG_BOARD_LEDS_ENABLE
@@ -98,25 +98,25 @@ enum LedIndexes
 | alternative (color-based) LED indexes
 +---------------------------------------------------------------------------------------------------------------------*/
 
-#ifdef CONFIG_CHIP_STM32_GPIOV2_GPIOD_ENABLE
+#if DISTORTOS_BOARD_LD3_LED_ENABLE == 1
 /// alternative index of LD3 LED (orange)
 constexpr size_t orangeLedIndex {ld3LedIndex};
-#endif	// def CONFIG_CHIP_STM32_GPIOV2_GPIOD_ENABLE
+#endif	// DISTORTOS_BOARD_LD3_LED_ENABLE == 1
 
-#ifdef CONFIG_CHIP_STM32_GPIOV2_GPIOD_ENABLE
+#if DISTORTOS_BOARD_LD4_LED_ENABLE == 1
 /// alternative index of LD4 LED (green)
 constexpr size_t greenLedIndex {ld4LedIndex};
-#endif	// def CONFIG_CHIP_STM32_GPIOV2_GPIOD_ENABLE
+#endif	// DISTORTOS_BOARD_LD4_LED_ENABLE == 1
 
-#ifdef CONFIG_CHIP_STM32_GPIOV2_GPIOD_ENABLE
+#if DISTORTOS_BOARD_LD5_LED_ENABLE == 1
 /// alternative index of LD5 LED (red)
 constexpr size_t redLedIndex {ld5LedIndex};
-#endif	// def CONFIG_CHIP_STM32_GPIOV2_GPIOD_ENABLE
+#endif	// DISTORTOS_BOARD_LD5_LED_ENABLE == 1
 
-#ifdef CONFIG_CHIP_STM32_GPIOV2_GPIOD_ENABLE
+#if DISTORTOS_BOARD_LD6_LED_ENABLE == 1
 /// alternative index of LD6 LED (blue)
 constexpr size_t blueLedIndex {ld6LedIndex};
-#endif	// def CONFIG_CHIP_STM32_GPIOV2_GPIOD_ENABLE
+#endif	// DISTORTOS_BOARD_LD6_LED_ENABLE == 1
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | indexed access to LED objects
