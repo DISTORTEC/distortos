@@ -50,7 +50,7 @@ constexpr size_t totalButtons {DISTORTOS_BOARD_TOTAL_BUTTONS};
 | button indexes
 +---------------------------------------------------------------------------------------------------------------------*/
 
-enum ButtonIndexes
+enum
 {
 #if DISTORTOS_BOARD_B1_BUTTON_ENABLE == 1
 		/// index of B1 button
