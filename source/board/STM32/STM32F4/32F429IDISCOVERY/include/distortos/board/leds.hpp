@@ -57,7 +57,7 @@ constexpr size_t totalLeds {DISTORTOS_BOARD_TOTAL_LEDS};
 | LED indexes
 +---------------------------------------------------------------------------------------------------------------------*/
 
-enum LedIndexes
+enum
 {
 #if DISTORTOS_BOARD_LD3_LED_ENABLE == 1
 		/// index of LD3 LED (green)
