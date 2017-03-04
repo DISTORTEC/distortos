@@ -27,9 +27,9 @@ namespace board
 
 const chip::ChipInputPin buttons[totalButtons]
 {
-#ifdef CONFIG_CHIP_STM32_GPIOV2_GPIOA_ENABLE
+#if DISTORTOS_BOARD_B1_BUTTON_ENABLE == 1
 		chip::ChipInputPin{chip::Pin::pa0, chip::PinPull::none, false},
-#endif	// def CONFIG_CHIP_STM32_GPIOV2_GPIOA_ENABLE
+#endif	// DISTORTOS_BOARD_B1_BUTTON_ENABLE == 1
 };
 
 }	// namespace board

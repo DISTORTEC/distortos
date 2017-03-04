@@ -79,6 +79,11 @@ is too small for stack frame, `ENOSPC` error code is returned. Modify all call p
 compilation flags.
 - Moved enabling of RCC clocks for STM32's GPIO from `board::lowLevelInitialization()` to
 `chip::lowLevelInitialization()`.
+- Buttons and LEDs for boards depend on enabling the GPIO port to which they are connected. "Enable buttons" and "Enable
+LEDs" options in *Kconfig* menu are available only if at least one GPIO port of buttons / LEDs is enabled. Preprocessor
+macros with total number of buttons and LEDs which were previously provided by *Kconfig* - `CONFIG_BOARD_TOTAL_BUTTONS`
+and `CONFIG_BOARD_TOTAL_LEDS` - were renamed to `DISTORTOS_BOARD_TOTAL_BUTTONS` and `DISTORTOS_BOARD_TOTAL_LEDS`. These
+macros are now generated automatically by `buttons.hpp` and `leds.hpp` respectively.
 - Update *CMSIS-STM32F0* to version 1.7.0.
 - Update *CMSIS-STM32F4* to version 1.14.0.
 

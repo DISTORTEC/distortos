@@ -14,6 +14,18 @@
 
 #include "distortos/distortosConfiguration.h"
 
+#include <cstddef>
+
+/// indicates whether B1 button is enabled (1) or not (0)
+#ifdef CONFIG_CHIP_STM32_GPIOV2_GPIOC_ENABLE
+#define DISTORTOS_BOARD_B1_BUTTON_ENABLE	1
+#else	// !def CONFIG_CHIP_STM32_GPIOV2_GPIOC_ENABLE
+#define DISTORTOS_BOARD_B1_BUTTON_ENABLE	0
+#endif	// !def CONFIG_CHIP_STM32_GPIOV2_GPIOC_ENABLE
+
+/// total number of buttons on the board
+#define DISTORTOS_BOARD_TOTAL_BUTTONS		DISTORTOS_BOARD_B1_BUTTON_ENABLE
+
 namespace distortos
 {
 
@@ -31,18 +43,19 @@ class ChipInputPin;
 namespace board
 {
 
+/// total number of buttons on the board
+constexpr size_t totalButtons {DISTORTOS_BOARD_TOTAL_BUTTONS};
+
 /*---------------------------------------------------------------------------------------------------------------------+
 | button indexes
 +---------------------------------------------------------------------------------------------------------------------*/
 
-enum ButtonIndexes
+enum
 {
-#ifdef CONFIG_CHIP_STM32_GPIOV2_GPIOC_ENABLE
+#if DISTORTOS_BOARD_B1_BUTTON_ENABLE == 1
 		/// index of B1 button
 		b1ButtonIndex,
-#endif	// def CONFIG_CHIP_STM32_GPIOV2_GPIOC_ENABLE
-		/// total number of buttons on the board
-		totalButtons
+#endif	// DISTORTOS_BOARD_B1_BUTTON_ENABLE == 1
 };
 
 #ifdef CONFIG_BOARD_BUTTONS_ENABLE
