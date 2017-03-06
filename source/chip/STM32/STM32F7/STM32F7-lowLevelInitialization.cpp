@@ -12,6 +12,7 @@
 #include "distortos/chip/lowLevelInitialization.hpp"
 
 #include "distortos/chip/CMSIS-proxy.h"
+#include "distortos/chip/STM32F7-FLASH.hpp"
 
 namespace distortos
 {
@@ -25,6 +26,18 @@ namespace chip
 
 void lowLevelInitialization()
 {
+#ifdef CONFIG_CHIP_STM32F7_FLASH_PREFETCH_ENABLE
+	configureInstructionPrefetch(true);
+#else	// !def CONFIG_CHIP_STM32F7_FLASH_PREFETCH_ENABLE
+	configureInstructionPrefetch(false);
+#endif	// !def CONFIG_CHIP_STM32F7_FLASH_PREFETCH_ENABLE
+
+#ifdef CONFIG_CHIP_STM32F7_FLASH_ART_ACCELERATOR_ENABLE
+	enableArtAccelerator();
+#else	// !def CONFIG_CHIP_STM32F7_FLASH_ART_ACCELERATOR_ENABLE
+	disableArtAccelerator();
+#endif	// !def CONFIG_CHIP_STM32F7_FLASH_ART_ACCELERATOR_ENABLE
+
 	RCC->AHB1ENR |=
 #ifdef CONFIG_CHIP_STM32_GPIOV2_GPIOA_ENABLE
 			RCC_AHB1ENR_GPIOAEN |
