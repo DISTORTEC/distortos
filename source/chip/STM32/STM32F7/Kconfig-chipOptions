@@ -11,6 +11,30 @@ if CHIP_STM32F7
 
 comment "STM32F7 chip options"
 
+if CHIP_STM32F7_VDD_MV_CONFIGURABLE
+
+config CHIP_STM32F7_VDD_MV
+	int "Vdd supply voltage, mV"
+	range 1800 3600
+	default CHIP_STM32F7_VDD_MV_DEFAULT
+	help
+		Vdd supply voltage of the chip, mV.
+
+endif	# CHIP_STM32F7_VDD_MV_CONFIGURABLE
+
+if !CHIP_STM32F7_VDD_MV_CONFIGURABLE
+
+config CHIP_STM32F7_VDD_MV
+	int "Vdd supply voltage, mV (not configurable)"
+	range CHIP_STM32F7_VDD_MV_DEFAULT CHIP_STM32F7_VDD_MV_DEFAULT
+	default CHIP_STM32F7_VDD_MV_DEFAULT
+	help
+		Vdd supply voltage of the chip, mV.
+
+		This value is not configurable, as it is set by board.
+
+endif	# !CHIP_STM32F7_VDD_MV_CONFIGURABLE
+
 menu "Clocks configuration"
 
 config CHIP_STM32F7_RCC_SYSCLK_FREQUENCY
@@ -1205,6 +1229,14 @@ config CHIP_STM32F7_SRAM2_ADDRESS
 	default 0x2003c000 if CHIP_STM32F72 || CHIP_STM32F73
 	default 0x2004c000 if CHIP_STM32F74 || CHIP_STM32F75
 	default 0x2007c000
+
+config CHIP_STM32F7_VDD_MV_CONFIGURABLE
+	bool
+	default y
+
+config CHIP_STM32F7_VDD_MV_DEFAULT
+	int
+	default 3300
 
 config CHIP_STM32F7_RCC_HPRE
 	int
