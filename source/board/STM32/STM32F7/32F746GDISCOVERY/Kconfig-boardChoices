@@ -1,0 +1,19 @@
+#
+# file: Kconfig-boardChoices
+#
+# author: Copyright (C) 2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+#
+# This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
+# distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+#
+
+config BOARD_32F746GDISCOVERY
+	bool "32F746GDISCOVERY"
+	depends on CHIP_STM32F7
+	select CHIP_STM32F746NG
+	help
+		32F746GDISCOVERY board with STM32F746NG chip in BGA216 package
+
+		Chip's supply voltage is 3.3V.
+		External 25MHz clock can be used as HSE clock in "HSE Clock Bypass"
+		mode.
