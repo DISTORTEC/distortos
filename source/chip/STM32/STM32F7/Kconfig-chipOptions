@@ -11,7 +11,263 @@ if CHIP_STM32F7
 
 comment "STM32F7 chip options"
 
+if CHIP_STM32F7_VDD_MV_CONFIGURABLE
+
+config CHIP_STM32F7_VDD_MV
+	int "Vdd supply voltage, mV"
+	range 1800 3600
+	default CHIP_STM32F7_VDD_MV_DEFAULT
+	help
+		Vdd supply voltage of the chip, mV.
+
+endif	# CHIP_STM32F7_VDD_MV_CONFIGURABLE
+
+if !CHIP_STM32F7_VDD_MV_CONFIGURABLE
+
+config CHIP_STM32F7_VDD_MV
+	int "Vdd supply voltage, mV (not configurable)"
+	range CHIP_STM32F7_VDD_MV_DEFAULT CHIP_STM32F7_VDD_MV_DEFAULT
+	default CHIP_STM32F7_VDD_MV_DEFAULT
+	help
+		Vdd supply voltage of the chip, mV.
+
+		This value is not configurable, as it is set by board.
+
+endif	# !CHIP_STM32F7_VDD_MV_CONFIGURABLE
+
 menu "Clocks configuration"
+
+config CHIP_STM32F7_STANDARD_CLOCK_CONFIGURATION_ENABLE
+	bool "Enable standard configuration of clocks"
+	default y
+	help
+		Enable standard configuration of clocks. This will set values selected
+		below and additionally configure appropriate FLASH latency before
+		switching system clock to selected source.
+
+		If disabled, no clock configuration will be done during chip
+		initialization. The values entered below (frequencies, dividers, ...)
+		will only be used to determine chip clocks. The user must configure the
+		chip manually to match these settings.
+
+if CHIP_STM32F7_STANDARD_CLOCK_CONFIGURATION_ENABLE
+
+config CHIP_STM32F7_PWR_VOLTAGE_SCALE_MODE
+	int "Voltage scale mode"
+	default 1
+	range 1 3
+	help
+		Select voltage scale mode.
+
+config CHIP_STM32F7_PWR_OVER_DRIVE_ENABLE
+	bool "Enable over-drive mode"
+	default n
+	depends on CHIP_STM32F7_PWR_VOLTAGE_SCALE_MODE = 1 || CHIP_STM32F7_PWR_VOLTAGE_SCALE_MODE = 2
+	help
+		Enable over-drive mode.
+
+		Note - over-drive mode requires:
+		- voltage scale 1 mode or voltage scale 2 mode;
+		- supply voltage above 2.1V;
+
+config CHIP_STM32F7_RCC_HSE_ENABLE
+	bool "Enable HSE"
+	default n
+	help
+		Enable HSE (crystal/ceramic resonator or external user clock).
+
+if CHIP_STM32F7_RCC_HSE_ENABLE
+
+config CHIP_STM32F7_RCC_HSE_CLOCK_BYPASS
+	bool
+	prompt "HSE Clock Bypass" if CHIP_STM32F7_RCC_HSE_CLOCK_BYPASS_CONFIGURABLE
+	default CHIP_STM32F7_RCC_HSE_CLOCK_BYPASS_DEFAULT
+	help
+		Selects whether HSE generator is bypassed. If enabled, external user
+		clock connected to OSC_IN must be used. Crystal or ceramic resonator
+		connected to OSC_IN and OSC_OUT must be used otherwise.
+
+comment "HSE Clock Bypass is disabled (not configurable)"
+	depends on !CHIP_STM32F7_RCC_HSE_CLOCK_BYPASS_CONFIGURABLE && !CHIP_STM32F7_RCC_HSE_CLOCK_BYPASS_DEFAULT
+
+comment "HSE Clock Bypass is enabled (not configurable)"
+	depends on !CHIP_STM32F7_RCC_HSE_CLOCK_BYPASS_CONFIGURABLE && CHIP_STM32F7_RCC_HSE_CLOCK_BYPASS_DEFAULT
+
+if CHIP_STM32F7_RCC_HSE_FREQUENCY_CONFIGURABLE
+
+config CHIP_STM32F7_RCC_HSE_FREQUENCY
+	int "Frequency of HSE clock, Hz"
+	range 1000000 50000000 if CHIP_STM32F7_RCC_HSE_CLOCK_BYPASS
+	range 4000000 26000000
+	default CHIP_STM32F7_RCC_HSE_FREQUENCY_DEFAULT
+	help
+		Frequency of HSE clock, Hz. This can be:
+		- "HSE Clock Bypass" disabled - crystal/ceramic resonator connected to
+		OSC_IN and OSC_OUT [4MHz; 26MHz];
+		- "HSE Clock Bypass" enabled - external user clock connected to OSC_IN
+		[1MHz; 50MHz];
+
+endif	# CHIP_STM32F7_RCC_HSE_FREQUENCY_CONFIGURABLE
+
+if !CHIP_STM32F7_RCC_HSE_FREQUENCY_CONFIGURABLE
+
+config CHIP_STM32F7_RCC_HSE_FREQUENCY
+	int "Frequency of HSE clock, Hz (not configurable)"
+	range CHIP_STM32F7_RCC_HSE_FREQUENCY_DEFAULT CHIP_STM32F7_RCC_HSE_FREQUENCY_DEFAULT
+	default CHIP_STM32F7_RCC_HSE_FREQUENCY_DEFAULT
+	help
+		Frequency of HSE clock, Hz. This can be:
+		- "HSE Clock Bypass" disabled - crystal/ceramic resonator connected to
+		OSC_IN and OSC_OUT [4MHz; 26MHz];
+		- "HSE Clock Bypass" enabled - external user clock connected to OSC_IN
+		[1MHz; 50MHz];
+
+		This value is not configurable, as it is set by board.
+
+endif	# !CHIP_STM32F7_RCC_HSE_FREQUENCY_CONFIGURABLE
+
+endif	# CHIP_STM32F7_RCC_HSE_ENABLE
+
+config CHIP_STM32F7_RCC_PLL_ENABLE
+	bool "Enable PLL"
+	default y
+	help
+		Enable PLL.
+
+if CHIP_STM32F7_RCC_PLL_ENABLE
+
+choice
+	prompt "Clock source of main and audio PLLs"
+	default CHIP_STM32F7_RCC_PLLSRC_HSI
+	help
+		Select clock source of main and audio PLLs.
+
+config CHIP_STM32F7_RCC_PLLSRC_HSI
+	bool "HSI"
+	help
+		Select HSI as clock source of main and audio PLLs.
+
+config CHIP_STM32F7_RCC_PLLSRC_HSE
+	bool "HSE"
+	depends on CHIP_STM32F7_RCC_HSE_ENABLE
+	help
+		Select HSE as clock source of main and audio PLLs.
+
+endchoice
+
+config CHIP_STM32F7_RCC_PLLM
+	int "PLLM value"
+	range 2 63
+	default 8 if CHIP_STM32F7_RCC_PLLSRC_HSE
+	default 16
+	help
+		PLLM value for main PLL and audio PLLI2S. It is used to divide PLL
+		input clock (PLLin) before it is fed to VCO. VCO input frequency
+		(VCOin) must be in the range [1MHz; 2MHz], 2MHz is recommended to limit
+		PLL jitter.
+
+		VCOin = PLLin / PLLM
+
+config CHIP_STM32F7_RCC_PLLN
+	int "PLLN value"
+	range 50 432
+	default 336
+	help
+		PLLN value for main PLL. It is used to multiply VCO input frequency
+		(VCOin). Resulting VCO output frequency (VCOout) must be in the range
+		[100MHz; 432MHz].
+
+		VCOout = VCOin * PLLN = PLLin / PLLM * PLLN
+
+choice
+	prompt "PLLP value"
+	default CHIP_STM32F7_RCC_PLLP_DIV2
+	help
+		PLLP value for main PLL. It is used to divide VCO output frequency
+		(VCOout). PLL output frequency (PLLout) must not exceed:
+		- 216MHz (with over-drive mode) or 180MHz (otherwise) in voltage scale
+		1 mode,
+		- 180MHz (with over-drive mode) or 168MHz (otherwise) in voltage scale
+		2 mode,
+		- 144MHz in voltage scale 3 mode.
+
+		PLLout = VCOout / PLLP = PLLin / PLLM * PLLN / PLLP
+
+config CHIP_STM32F7_RCC_PLLP_DIV2
+	bool "2"
+	help
+		PLLP == 2
+
+config CHIP_STM32F7_RCC_PLLP_DIV4
+	bool "4"
+	help
+		PLLP == 4
+
+config CHIP_STM32F7_RCC_PLLP_DIV6
+	bool "6"
+	help
+		PLLP == 6
+
+config CHIP_STM32F7_RCC_PLLP_DIV8
+	bool "8"
+	help
+		PLLP == 8
+
+endchoice
+
+config CHIP_STM32F7_RCC_PLLQ
+	int "PLLQ value"
+	range 2 15
+	default 7
+	help
+		PLLQ value for main PLL. It is used to divide VCO output frequency
+		(VCOout) to produce clock for USB OTG FS, SDMMC and RNG (PLLQout). USB
+		OTG FS requires a 48MHz clock for correct operation, while SDMMC and
+		RNG need a frequency lower than or equal to 48MHz to work correctly.
+
+		PLLQout = VCOout / PLLQ = PLLin / PLLM * PLLN / PLLQ
+
+config CHIP_STM32F7_RCC_PLLR
+	int "PLLR value"
+	range 2 7
+	default 7
+	depends on CHIP_STM32F76 || CHIP_STM32F77
+	help
+		PLLR value for main PLL. It is used to divide VCO output frequency
+		(VCOout) to produce clock for DSI (PLLRout).
+
+		PLLRout = VCOout / PLLR = PLLin / PLLM * PLLN / PLLR
+
+endif	# CHIP_STM32F7_RCC_PLL_ENABLE
+
+choice
+	prompt "System clock source"
+	default CHIP_STM32F7_RCC_SYSCLK_PLL
+	help
+		Select system clock source.
+
+config CHIP_STM32F7_RCC_SYSCLK_HSI
+	bool "HSI"
+	help
+		HSI oscillator selected as system clock.
+
+config CHIP_STM32F7_RCC_SYSCLK_HSE
+	bool "HSE"
+	depends on CHIP_STM32F7_RCC_HSE_ENABLE
+	help
+		HSE oscillator selected as system clock.
+
+config CHIP_STM32F7_RCC_SYSCLK_PLL
+	bool "PLL"
+	depends on CHIP_STM32F7_RCC_PLL_ENABLE
+	help
+		Main PLL selected as system clock.
+
+endchoice
+
+endif	# CHIP_STM32F7_STANDARD_CLOCK_CONFIGURATION_ENABLE
+
+if !CHIP_STM32F7_STANDARD_CLOCK_CONFIGURATION_ENABLE
 
 config CHIP_STM32F7_RCC_SYSCLK_FREQUENCY
 	int "Frequency of SYSCLK, Hz"
@@ -25,6 +281,8 @@ config CHIP_STM32F7_RCC_SYSCLK_FREQUENCY
 		- 180MHz (with over-drive mode) or 168MHz (otherwise) in voltage scale
 		2 mode,
 		- 144MHz in voltage scale 3 mode.
+
+endif	# !CHIP_STM32F7_STANDARD_CLOCK_CONFIGURATION_ENABLE
 
 choice
 	prompt "AHB divider"
@@ -157,6 +415,18 @@ endmenu
 
 menu "Memory configuration"
 
+config CHIP_STM32F7_FLASH_PREFETCH_ENABLE
+	bool "Enable flash prefetch"
+	default y
+	help
+		Enable flash prefetch option in FLASH->ACR register.
+
+config CHIP_STM32F7_FLASH_ART_ACCELERATOR_ENABLE
+	bool "Enable flash ART accelerator"
+	default y
+	help
+		Enable flash ART accelerator in FLASH->ACR register.
+
 choice
 	prompt "Unify RAM in linker script"
 	default CHIP_STM32F7_UNIFY_DTCM_SRAM1_SRAM2
@@ -209,6 +479,14 @@ config CHIP_STM32F722I
 	bool
 	default n
 	select CHIP_STM32F722
+	select CHIP_STM32_GPIOV2_HAS_GPIOE
+	select CHIP_STM32_GPIOV2_HAS_GPIOF
+	select CHIP_STM32_GPIOV2_HAS_GPIOG
+	select CHIP_STM32_GPIOV2_HAS_GPIOI
+	select CHIP_STM32_SPIV2_HAS_SPI4
+	select CHIP_STM32_SPIV2_HAS_SPI5
+	select CHIP_STM32_USARTV2_HAS_UART7
+	select CHIP_STM32_USARTV2_HAS_UART8
 
 config CHIP_STM32F722IC
 	bool
@@ -239,6 +517,10 @@ config CHIP_STM32F722V
 	bool
 	default n
 	select CHIP_STM32F722
+	select CHIP_STM32_GPIOV2_HAS_GPIOE
+	select CHIP_STM32_SPIV2_HAS_SPI4
+	select CHIP_STM32_USARTV2_HAS_UART7
+	select CHIP_STM32_USARTV2_HAS_UART8
 
 config CHIP_STM32F722VC
 	bool
@@ -254,6 +536,13 @@ config CHIP_STM32F722Z
 	bool
 	default n
 	select CHIP_STM32F722
+	select CHIP_STM32_GPIOV2_HAS_GPIOE
+	select CHIP_STM32_GPIOV2_HAS_GPIOF
+	select CHIP_STM32_GPIOV2_HAS_GPIOG
+	select CHIP_STM32_SPIV2_HAS_SPI4
+	select CHIP_STM32_SPIV2_HAS_SPI5
+	select CHIP_STM32_USARTV2_HAS_UART7
+	select CHIP_STM32_USARTV2_HAS_UART8
 
 config CHIP_STM32F722ZC
 	bool
@@ -269,11 +558,19 @@ config CHIP_STM32F723
 	bool
 	default n
 	select CHIP_STM32F72
+	select CHIP_STM32_GPIOV2_HAS_GPIOE
+	select CHIP_STM32_SPIV2_HAS_SPI4
+	select CHIP_STM32_USARTV2_HAS_UART7
+	select CHIP_STM32_USARTV2_HAS_UART8
 
 config CHIP_STM32F723I
 	bool
 	default n
 	select CHIP_STM32F723
+	select CHIP_STM32_GPIOV2_HAS_GPIOF
+	select CHIP_STM32_GPIOV2_HAS_GPIOG
+	select CHIP_STM32_GPIOV2_HAS_GPIOI
+	select CHIP_STM32_SPIV2_HAS_SPI5
 
 config CHIP_STM32F723IC
 	bool
@@ -299,6 +596,9 @@ config CHIP_STM32F723Z
 	bool
 	default n
 	select CHIP_STM32F723
+	select CHIP_STM32_GPIOV2_HAS_GPIOF
+	select CHIP_STM32_GPIOV2_HAS_GPIOG
+	select CHIP_STM32_SPIV2_HAS_SPI5
 
 config CHIP_STM32F723ZC
 	bool
@@ -323,6 +623,14 @@ config CHIP_STM32F732I
 	bool
 	default n
 	select CHIP_STM32F732
+	select CHIP_STM32_GPIOV2_HAS_GPIOE
+	select CHIP_STM32_GPIOV2_HAS_GPIOF
+	select CHIP_STM32_GPIOV2_HAS_GPIOG
+	select CHIP_STM32_GPIOV2_HAS_GPIOI
+	select CHIP_STM32_SPIV2_HAS_SPI4
+	select CHIP_STM32_SPIV2_HAS_SPI5
+	select CHIP_STM32_USARTV2_HAS_UART7
+	select CHIP_STM32_USARTV2_HAS_UART8
 
 config CHIP_STM32F732IE
 	bool
@@ -343,6 +651,10 @@ config CHIP_STM32F732V
 	bool
 	default n
 	select CHIP_STM32F732
+	select CHIP_STM32_GPIOV2_HAS_GPIOE
+	select CHIP_STM32_SPIV2_HAS_SPI4
+	select CHIP_STM32_USARTV2_HAS_UART7
+	select CHIP_STM32_USARTV2_HAS_UART8
 
 config CHIP_STM32F732VE
 	bool
@@ -353,6 +665,13 @@ config CHIP_STM32F732Z
 	bool
 	default n
 	select CHIP_STM32F732
+	select CHIP_STM32_GPIOV2_HAS_GPIOE
+	select CHIP_STM32_GPIOV2_HAS_GPIOF
+	select CHIP_STM32_GPIOV2_HAS_GPIOG
+	select CHIP_STM32_SPIV2_HAS_SPI4
+	select CHIP_STM32_SPIV2_HAS_SPI5
+	select CHIP_STM32_USARTV2_HAS_UART7
+	select CHIP_STM32_USARTV2_HAS_UART8
 
 config CHIP_STM32F732ZE
 	bool
@@ -363,11 +682,19 @@ config CHIP_STM32F733
 	bool
 	default n
 	select CHIP_STM32F73
+	select CHIP_STM32_GPIOV2_HAS_GPIOE
+	select CHIP_STM32_SPIV2_HAS_SPI4
+	select CHIP_STM32_USARTV2_HAS_UART7
+	select CHIP_STM32_USARTV2_HAS_UART8
 
 config CHIP_STM32F733I
 	bool
 	default n
 	select CHIP_STM32F733
+	select CHIP_STM32_GPIOV2_HAS_GPIOF
+	select CHIP_STM32_GPIOV2_HAS_GPIOG
+	select CHIP_STM32_GPIOV2_HAS_GPIOI
+	select CHIP_STM32_SPIV2_HAS_SPI5
 
 config CHIP_STM32F733IE
 	bool
@@ -388,6 +715,9 @@ config CHIP_STM32F733Z
 	bool
 	default n
 	select CHIP_STM32F733
+	select CHIP_STM32_GPIOV2_HAS_GPIOF
+	select CHIP_STM32_GPIOV2_HAS_GPIOG
+	select CHIP_STM32_SPIV2_HAS_SPI5
 
 config CHIP_STM32F733ZE
 	bool
@@ -397,6 +727,10 @@ config CHIP_STM32F733ZE
 config CHIP_STM32F74
 	bool
 	default n
+	select CHIP_STM32_GPIOV2_HAS_GPIOE
+	select CHIP_STM32_SPIV2_HAS_SPI4
+	select CHIP_STM32_USARTV2_HAS_UART7
+	select CHIP_STM32_USARTV2_HAS_UART8
 
 config CHIP_STM32F745
 	bool
@@ -407,6 +741,11 @@ config CHIP_STM32F745I
 	bool
 	default n
 	select CHIP_STM32F745
+	select CHIP_STM32_GPIOV2_HAS_GPIOF
+	select CHIP_STM32_GPIOV2_HAS_GPIOG
+	select CHIP_STM32_GPIOV2_HAS_GPIOI
+	select CHIP_STM32_SPIV2_HAS_SPI5
+	select CHIP_STM32_SPIV2_HAS_SPI6
 
 config CHIP_STM32F745IE
 	bool
@@ -437,6 +776,10 @@ config CHIP_STM32F745Z
 	bool
 	default n
 	select CHIP_STM32F745
+	select CHIP_STM32_GPIOV2_HAS_GPIOF
+	select CHIP_STM32_GPIOV2_HAS_GPIOG
+	select CHIP_STM32_SPIV2_HAS_SPI5
+	select CHIP_STM32_SPIV2_HAS_SPI6
 
 config CHIP_STM32F745ZE
 	bool
@@ -457,6 +800,13 @@ config CHIP_STM32F746B
 	bool
 	default n
 	select CHIP_STM32F746
+	select CHIP_STM32_GPIOV2_HAS_GPIOF
+	select CHIP_STM32_GPIOV2_HAS_GPIOG
+	select CHIP_STM32_GPIOV2_HAS_GPIOI
+	select CHIP_STM32_GPIOV2_HAS_GPIOJ
+	select CHIP_STM32_GPIOV2_HAS_GPIOK
+	select CHIP_STM32_SPIV2_HAS_SPI5
+	select CHIP_STM32_SPIV2_HAS_SPI6
 
 config CHIP_STM32F746BE
 	bool
@@ -472,6 +822,11 @@ config CHIP_STM32F746I
 	bool
 	default n
 	select CHIP_STM32F746
+	select CHIP_STM32_GPIOV2_HAS_GPIOF
+	select CHIP_STM32_GPIOV2_HAS_GPIOG
+	select CHIP_STM32_GPIOV2_HAS_GPIOI
+	select CHIP_STM32_SPIV2_HAS_SPI5
+	select CHIP_STM32_SPIV2_HAS_SPI6
 
 config CHIP_STM32F746IE
 	bool
@@ -487,6 +842,13 @@ config CHIP_STM32F746N
 	bool
 	default n
 	select CHIP_STM32F746
+	select CHIP_STM32_GPIOV2_HAS_GPIOF
+	select CHIP_STM32_GPIOV2_HAS_GPIOG
+	select CHIP_STM32_GPIOV2_HAS_GPIOI
+	select CHIP_STM32_GPIOV2_HAS_GPIOJ
+	select CHIP_STM32_GPIOV2_HAS_GPIOK
+	select CHIP_STM32_SPIV2_HAS_SPI5
+	select CHIP_STM32_SPIV2_HAS_SPI6
 
 config CHIP_STM32F746NE
 	bool
@@ -517,6 +879,10 @@ config CHIP_STM32F746Z
 	bool
 	default n
 	select CHIP_STM32F746
+	select CHIP_STM32_GPIOV2_HAS_GPIOF
+	select CHIP_STM32_GPIOV2_HAS_GPIOG
+	select CHIP_STM32_SPIV2_HAS_SPI5
+	select CHIP_STM32_SPIV2_HAS_SPI6
 
 config CHIP_STM32F746ZE
 	bool
@@ -531,6 +897,10 @@ config CHIP_STM32F746ZG
 config CHIP_STM32F75
 	bool
 	default n
+	select CHIP_STM32_GPIOV2_HAS_GPIOE
+	select CHIP_STM32_SPIV2_HAS_SPI4
+	select CHIP_STM32_USARTV2_HAS_UART7
+	select CHIP_STM32_USARTV2_HAS_UART8
 
 config CHIP_STM32F756
 	bool
@@ -541,6 +911,13 @@ config CHIP_STM32F756B
 	bool
 	default n
 	select CHIP_STM32F756
+	select CHIP_STM32_GPIOV2_HAS_GPIOF
+	select CHIP_STM32_GPIOV2_HAS_GPIOG
+	select CHIP_STM32_GPIOV2_HAS_GPIOI
+	select CHIP_STM32_GPIOV2_HAS_GPIOJ
+	select CHIP_STM32_GPIOV2_HAS_GPIOK
+	select CHIP_STM32_SPIV2_HAS_SPI5
+	select CHIP_STM32_SPIV2_HAS_SPI6
 
 config CHIP_STM32F756BG
 	bool
@@ -551,6 +928,11 @@ config CHIP_STM32F756I
 	bool
 	default n
 	select CHIP_STM32F756
+	select CHIP_STM32_GPIOV2_HAS_GPIOF
+	select CHIP_STM32_GPIOV2_HAS_GPIOG
+	select CHIP_STM32_GPIOV2_HAS_GPIOI
+	select CHIP_STM32_SPIV2_HAS_SPI5
+	select CHIP_STM32_SPIV2_HAS_SPI6
 
 config CHIP_STM32F756IG
 	bool
@@ -561,6 +943,13 @@ config CHIP_STM32F756N
 	bool
 	default n
 	select CHIP_STM32F756
+	select CHIP_STM32_GPIOV2_HAS_GPIOF
+	select CHIP_STM32_GPIOV2_HAS_GPIOG
+	select CHIP_STM32_GPIOV2_HAS_GPIOI
+	select CHIP_STM32_GPIOV2_HAS_GPIOJ
+	select CHIP_STM32_GPIOV2_HAS_GPIOK
+	select CHIP_STM32_SPIV2_HAS_SPI5
+	select CHIP_STM32_SPIV2_HAS_SPI6
 
 config CHIP_STM32F756NG
 	bool
@@ -581,6 +970,10 @@ config CHIP_STM32F756Z
 	bool
 	default n
 	select CHIP_STM32F756
+	select CHIP_STM32_GPIOV2_HAS_GPIOF
+	select CHIP_STM32_GPIOV2_HAS_GPIOG
+	select CHIP_STM32_SPIV2_HAS_SPI5
+	select CHIP_STM32_SPIV2_HAS_SPI6
 
 config CHIP_STM32F756ZG
 	bool
@@ -590,6 +983,11 @@ config CHIP_STM32F756ZG
 config CHIP_STM32F76
 	bool
 	default n
+	select CHIP_STM32_GPIOV2_HAS_GPIOE
+	select CHIP_STM32_SPIV2_HAS_SPI4
+	select CHIP_STM32_SPIV2_HAS_SPI6
+	select CHIP_STM32_USARTV2_HAS_UART7
+	select CHIP_STM32_USARTV2_HAS_UART8
 
 config CHIP_STM32F765
 	bool
@@ -600,6 +998,12 @@ config CHIP_STM32F765B
 	bool
 	default n
 	select CHIP_STM32F765
+	select CHIP_STM32_GPIOV2_HAS_GPIOF
+	select CHIP_STM32_GPIOV2_HAS_GPIOG
+	select CHIP_STM32_GPIOV2_HAS_GPIOI
+	select CHIP_STM32_GPIOV2_HAS_GPIOJ
+	select CHIP_STM32_GPIOV2_HAS_GPIOK
+	select CHIP_STM32_SPIV2_HAS_SPI5
 
 config CHIP_STM32F765BG
 	bool
@@ -615,6 +1019,10 @@ config CHIP_STM32F765I
 	bool
 	default n
 	select CHIP_STM32F765
+	select CHIP_STM32_GPIOV2_HAS_GPIOF
+	select CHIP_STM32_GPIOV2_HAS_GPIOG
+	select CHIP_STM32_GPIOV2_HAS_GPIOI
+	select CHIP_STM32_SPIV2_HAS_SPI5
 
 config CHIP_STM32F765IG
 	bool
@@ -630,6 +1038,12 @@ config CHIP_STM32F765N
 	bool
 	default n
 	select CHIP_STM32F765
+	select CHIP_STM32_GPIOV2_HAS_GPIOF
+	select CHIP_STM32_GPIOV2_HAS_GPIOG
+	select CHIP_STM32_GPIOV2_HAS_GPIOI
+	select CHIP_STM32_GPIOV2_HAS_GPIOJ
+	select CHIP_STM32_GPIOV2_HAS_GPIOK
+	select CHIP_STM32_SPIV2_HAS_SPI5
 
 config CHIP_STM32F765NG
 	bool
@@ -660,6 +1074,9 @@ config CHIP_STM32F765Z
 	bool
 	default n
 	select CHIP_STM32F765
+	select CHIP_STM32_GPIOV2_HAS_GPIOF
+	select CHIP_STM32_GPIOV2_HAS_GPIOG
+	select CHIP_STM32_SPIV2_HAS_SPI5
 
 config CHIP_STM32F765ZG
 	bool
@@ -680,6 +1097,12 @@ config CHIP_STM32F767B
 	bool
 	default n
 	select CHIP_STM32F767
+	select CHIP_STM32_GPIOV2_HAS_GPIOF
+	select CHIP_STM32_GPIOV2_HAS_GPIOG
+	select CHIP_STM32_GPIOV2_HAS_GPIOI
+	select CHIP_STM32_GPIOV2_HAS_GPIOJ
+	select CHIP_STM32_GPIOV2_HAS_GPIOK
+	select CHIP_STM32_SPIV2_HAS_SPI5
 
 config CHIP_STM32F767BG
 	bool
@@ -695,6 +1118,10 @@ config CHIP_STM32F767I
 	bool
 	default n
 	select CHIP_STM32F767
+	select CHIP_STM32_GPIOV2_HAS_GPIOF
+	select CHIP_STM32_GPIOV2_HAS_GPIOG
+	select CHIP_STM32_GPIOV2_HAS_GPIOI
+	select CHIP_STM32_SPIV2_HAS_SPI5
 
 config CHIP_STM32F767IG
 	bool
@@ -710,6 +1137,12 @@ config CHIP_STM32F767N
 	bool
 	default n
 	select CHIP_STM32F767
+	select CHIP_STM32_GPIOV2_HAS_GPIOF
+	select CHIP_STM32_GPIOV2_HAS_GPIOG
+	select CHIP_STM32_GPIOV2_HAS_GPIOI
+	select CHIP_STM32_GPIOV2_HAS_GPIOJ
+	select CHIP_STM32_GPIOV2_HAS_GPIOK
+	select CHIP_STM32_SPIV2_HAS_SPI5
 
 config CHIP_STM32F767NG
 	bool
@@ -740,6 +1173,9 @@ config CHIP_STM32F767Z
 	bool
 	default n
 	select CHIP_STM32F767
+	select CHIP_STM32_GPIOV2_HAS_GPIOF
+	select CHIP_STM32_GPIOV2_HAS_GPIOG
+	select CHIP_STM32_SPIV2_HAS_SPI5
 
 config CHIP_STM32F767ZG
 	bool
@@ -755,6 +1191,9 @@ config CHIP_STM32F769
 	bool
 	default n
 	select CHIP_STM32F76
+	select CHIP_STM32_GPIOV2_HAS_GPIOF
+	select CHIP_STM32_GPIOV2_HAS_GPIOG
+	select CHIP_STM32_GPIOV2_HAS_GPIOI
 
 config CHIP_STM32F769A
 	bool
@@ -770,6 +1209,9 @@ config CHIP_STM32F769B
 	bool
 	default n
 	select CHIP_STM32F769
+	select CHIP_STM32_GPIOV2_HAS_GPIOJ
+	select CHIP_STM32_GPIOV2_HAS_GPIOK
+	select CHIP_STM32_SPIV2_HAS_SPI5
 
 config CHIP_STM32F769BG
 	bool
@@ -785,6 +1227,7 @@ config CHIP_STM32F769I
 	bool
 	default n
 	select CHIP_STM32F769
+	select CHIP_STM32_SPIV2_HAS_SPI5
 
 config CHIP_STM32F769IG
 	bool
@@ -800,6 +1243,9 @@ config CHIP_STM32F769N
 	bool
 	default n
 	select CHIP_STM32F769
+	select CHIP_STM32_GPIOV2_HAS_GPIOJ
+	select CHIP_STM32_GPIOV2_HAS_GPIOK
+	select CHIP_STM32_SPIV2_HAS_SPI5
 
 config CHIP_STM32F769NG
 	bool
@@ -814,6 +1260,11 @@ config CHIP_STM32F769NI
 config CHIP_STM32F77
 	bool
 	default n
+	select CHIP_STM32_GPIOV2_HAS_GPIOE
+	select CHIP_STM32_SPIV2_HAS_SPI4
+	select CHIP_STM32_SPIV2_HAS_SPI6
+	select CHIP_STM32_USARTV2_HAS_UART7
+	select CHIP_STM32_USARTV2_HAS_UART8
 
 config CHIP_STM32F777
 	bool
@@ -824,6 +1275,12 @@ config CHIP_STM32F777B
 	bool
 	default n
 	select CHIP_STM32F777
+	select CHIP_STM32_GPIOV2_HAS_GPIOF
+	select CHIP_STM32_GPIOV2_HAS_GPIOG
+	select CHIP_STM32_GPIOV2_HAS_GPIOI
+	select CHIP_STM32_GPIOV2_HAS_GPIOJ
+	select CHIP_STM32_GPIOV2_HAS_GPIOK
+	select CHIP_STM32_SPIV2_HAS_SPI5
 
 config CHIP_STM32F777BI
 	bool
@@ -834,6 +1291,10 @@ config CHIP_STM32F777I
 	bool
 	default n
 	select CHIP_STM32F777
+	select CHIP_STM32_GPIOV2_HAS_GPIOF
+	select CHIP_STM32_GPIOV2_HAS_GPIOG
+	select CHIP_STM32_GPIOV2_HAS_GPIOI
+	select CHIP_STM32_SPIV2_HAS_SPI5
 
 config CHIP_STM32F777II
 	bool
@@ -844,6 +1305,12 @@ config CHIP_STM32F777N
 	bool
 	default n
 	select CHIP_STM32F777
+	select CHIP_STM32_GPIOV2_HAS_GPIOF
+	select CHIP_STM32_GPIOV2_HAS_GPIOG
+	select CHIP_STM32_GPIOV2_HAS_GPIOI
+	select CHIP_STM32_GPIOV2_HAS_GPIOJ
+	select CHIP_STM32_GPIOV2_HAS_GPIOK
+	select CHIP_STM32_SPIV2_HAS_SPI5
 
 config CHIP_STM32F777NI
 	bool
@@ -864,6 +1331,9 @@ config CHIP_STM32F777Z
 	bool
 	default n
 	select CHIP_STM32F777
+	select CHIP_STM32_GPIOV2_HAS_GPIOF
+	select CHIP_STM32_GPIOV2_HAS_GPIOG
+	select CHIP_STM32_SPIV2_HAS_SPI5
 
 config CHIP_STM32F777ZI
 	bool
@@ -874,6 +1344,9 @@ config CHIP_STM32F778
 	bool
 	default n
 	select CHIP_STM32F77
+	select CHIP_STM32_GPIOV2_HAS_GPIOF
+	select CHIP_STM32_GPIOV2_HAS_GPIOG
+	select CHIP_STM32_GPIOV2_HAS_GPIOI
 
 config CHIP_STM32F778A
 	bool
@@ -889,6 +1362,9 @@ config CHIP_STM32F779
 	bool
 	default n
 	select CHIP_STM32F77
+	select CHIP_STM32_GPIOV2_HAS_GPIOF
+	select CHIP_STM32_GPIOV2_HAS_GPIOG
+	select CHIP_STM32_GPIOV2_HAS_GPIOI
 
 config CHIP_STM32F779A
 	bool
@@ -904,6 +1380,9 @@ config CHIP_STM32F779B
 	bool
 	default n
 	select CHIP_STM32F779
+	select CHIP_STM32_GPIOV2_HAS_GPIOJ
+	select CHIP_STM32_GPIOV2_HAS_GPIOK
+	select CHIP_STM32_SPIV2_HAS_SPI5
 
 config CHIP_STM32F779BI
 	bool
@@ -914,6 +1393,7 @@ config CHIP_STM32F779I
 	bool
 	default n
 	select CHIP_STM32F779
+	select CHIP_STM32_SPIV2_HAS_SPI5
 
 config CHIP_STM32F779II
 	bool
@@ -924,6 +1404,9 @@ config CHIP_STM32F779N
 	bool
 	default n
 	select CHIP_STM32F779
+	select CHIP_STM32_GPIOV2_HAS_GPIOJ
+	select CHIP_STM32_GPIOV2_HAS_GPIOK
+	select CHIP_STM32_SPIV2_HAS_SPI5
 
 config CHIP_STM32F779NI
 	bool
@@ -993,6 +1476,30 @@ config CHIP_STM32F7_SRAM2_ADDRESS
 	default 0x2004c000 if CHIP_STM32F74 || CHIP_STM32F75
 	default 0x2007c000
 
+config CHIP_STM32F7_VDD_MV_CONFIGURABLE
+	bool
+	default y
+
+config CHIP_STM32F7_VDD_MV_DEFAULT
+	int
+	default 3300
+
+config CHIP_STM32F7_RCC_HSE_CLOCK_BYPASS_CONFIGURABLE
+	bool
+	default y
+
+config CHIP_STM32F7_RCC_HSE_CLOCK_BYPASS_DEFAULT
+	bool
+	default n
+
+config CHIP_STM32F7_RCC_HSE_FREQUENCY_CONFIGURABLE
+	bool
+	default y
+
+config CHIP_STM32F7_RCC_HSE_FREQUENCY_DEFAULT
+	int
+	default 8000000
+
 config CHIP_STM32F7_RCC_HPRE
 	int
 	default 1 if CHIP_STM32F7_RCC_AHB_DIV1
@@ -1004,6 +1511,13 @@ config CHIP_STM32F7_RCC_HPRE
 	default 128 if CHIP_STM32F7_RCC_AHB_DIV128
 	default 256 if CHIP_STM32F7_RCC_AHB_DIV256
 	default 512 if CHIP_STM32F7_RCC_AHB_DIV512
+
+config CHIP_STM32F7_RCC_PLLP
+	int
+	default 2 if CHIP_STM32F7_RCC_PLLP_DIV2
+	default 4 if CHIP_STM32F7_RCC_PLLP_DIV4
+	default 6 if CHIP_STM32F7_RCC_PLLP_DIV6
+	default 8 if CHIP_STM32F7_RCC_PLLP_DIV8
 
 config CHIP_STM32F7_RCC_PPRE1
 	int
@@ -1104,6 +1618,6 @@ config CHIP
 
 config CHIP_INCLUDES
 	string
-	default "source/chip/STM32/include source/chip/STM32/STM32F7/include external/CMSIS-STM32F7 external/CMSIS"
+	default "source/chip/STM32/include source/chip/STM32/STM32F7/include source/chip/STM32/peripherals/GPIOv2/include source/chip/STM32/peripherals/SPIv2/include source/chip/STM32/peripherals/USARTv2/include external/CMSIS-STM32F7 external/CMSIS"
 
 endif	# CHIP_STM32F7

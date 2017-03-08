@@ -19,6 +19,13 @@
 
 #include <cerrno>
 
+#if !defined(USART_CR1_M0_Pos)
+#define USART_CR1_M0_Pos					__builtin_ctzl(USART_CR1_M0)
+#endif	// !defined(USART_CR1_M0_Pos)
+#if defined(CONFIG_CHIP_STM32_USARTV2_HAS_CR1_M1_BIT) && !defined(USART_CR1_M1_Pos)
+#define USART_CR1_M1_Pos					__builtin_ctzl(USART_CR1_M1)
+#endif	// defined(CONFIG_CHIP_STM32_USARTV2_HAS_CR1_M1_BIT) && !defined(USART_CR1_M1_Pos)
+
 namespace distortos
 {
 
