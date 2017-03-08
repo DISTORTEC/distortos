@@ -38,7 +38,8 @@ during context switch" respectively, but executed during every system tick.
 - Test of thread's `start()` returning `ENOSPC` when stack is too small.
 - `STM32-bit-banding.h` header with `STM32_BITBAND_ADDRESS()` and `STM32_BITBAND()` macros, which are more suited for
 STM32's CMSIS headers - it's enough to write `STM32_BITBAND(RCC, CR, PLLON)` instead of
-`BITBAND(&RCC->CR, RCC_CR_PLLON_bit)`.
+`BITBAND(&RCC->CR, RCC_CR_PLLON_bit)`. Note that these new macros must not be used with `FLASH` registers - use
+`STM32_BITBAND_FLASH()` and `STM32_BITBAND_FLASH_ADDRESS()` for that peripheral.
 - Options to enable STM32's GPIO to *Kconfig* menu.
 - New chips: 10 *STM32F413* chips and 5 *STM32F423* chips.
 
