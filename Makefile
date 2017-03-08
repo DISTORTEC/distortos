@@ -278,6 +278,10 @@ clean:
 configure:
 	./$(DISTORTOS_PATH)scripts/configure.sh $(CONFIG_PATH)
 
+.PHONY: board
+board:
+	python $(DISTORTOS_PATH)scripts/generateBoard.py -c $(CONFIG_BOARD) -o $(OUTPUT_BOARD)
+
 .PHONY: distclean
 distclean:
 	./$(DISTORTOS_PATH)scripts/distclean.sh
@@ -329,6 +333,10 @@ menuconfig - to create/edit configuration of distortos
 oldconfig - update currently selected configuration asking about new options
 olddefconfig - update currently selected configuration with default values of
   new options
+board [CONFIG_BOARD=<config_path> OUTPUT_BOARD=<output_path>] - generate
+  board files
+  <config_path> .. path to json config file with board configuration
+  <output_path> .. path to output directory where files will be generated
 
 endef
 
