@@ -164,10 +164,9 @@ config CHIP_STM32F4_RCC_PLLM
 	default 8 if CHIP_STM32F4_RCC_PLLSRC_HSE
 	default 16
 	help
-		PLLM value for main PLL and audio PLLI2S. It is used to divide PLL
-		input clock (PLLin) before it is fed to VCO. VCO input frequency
-		(VCOin) must be in the range [1MHz; 2MHz], 2MHz is recommended to limit
-		PLL jitter.
+		PLLM value for main and audio PLLs. It is used to divide PLL input
+		clock (PLLin) before it is fed to VCO. VCO input frequency (VCOin) must
+		be in the range [1MHz; 2MHz], 2MHz is recommended to limit PLL jitter.
 
 		VCOin = PLLin / PLLM
 

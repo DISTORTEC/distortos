@@ -181,7 +181,7 @@ void configurePllClockSource(bool hse);
  * \warning Before changing configuration of any PLL make sure that they are not used in any way (as core clock or as
  * source of peripheral clocks) and that they are disabled.
  *
- * \param [in] pllm is the PLLM value for main PLL and audio PLLI2S, [2; 63] or [minPllm; maxPllm]
+ * \param [in] pllm is the PLLM value for main and audio PLLs, [2; 63] or [minPllm; maxPllm]
  *
  * \return 0 on success, error code otherwise:
  * - EINVAL - \a pllm value is invalid;
