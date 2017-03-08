@@ -12,9 +12,9 @@
 #ifndef SOURCE_CHIP_STM32_INCLUDE_DISTORTOS_CHIP_STM32_BIT_BANDING_H_
 #define SOURCE_CHIP_STM32_INCLUDE_DISTORTOS_CHIP_STM32_BIT_BANDING_H_
 
-#if defined(__ARM_ARCH_7M__) || defined(__ARM_ARCH_7EM__)
-
 #include "distortos/architecture/ARMv7-M-bit-banding.h"
+
+#if defined(CONFIG_ARCHITECTURE_ARM_CORTEX_M3) || defined(CONFIG_ARCHITECTURE_ARM_CORTEX_M4)
 
 #include <stddef.h>
 
@@ -97,6 +97,6 @@
 		(*(volatile unsigned long*)STM32_BITBAND_IMPLEMENTATION(FLASH_R_BASE, FLASH_TypeDef, member, \
 		FLASH_ ## member ## _ ## bit))
 
-#endif	/* defined(__ARM_ARCH_7M__) || defined(__ARM_ARCH_7EM__) */
+#endif	/* defined(CONFIG_ARCHITECTURE_ARM_CORTEX_M3) || defined(CONFIG_ARCHITECTURE_ARM_CORTEX_M4) */
 
 #endif	/* SOURCE_CHIP_STM32_INCLUDE_DISTORTOS_CHIP_STM32_BIT_BANDING_H_ */
