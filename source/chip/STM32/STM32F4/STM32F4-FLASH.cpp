@@ -37,33 +37,33 @@ int configureFlashLatency(const uint8_t latency)
 
 void configureInstructionPrefetch(const bool enable)
 {
-	STM32_BITBAND(FLASH, ACR, PRFTEN) = enable;
+	STM32_BITBAND_FLASH(ACR, PRFTEN) = enable;
 }
 
 void disableDataCache()
 {
-	STM32_BITBAND(FLASH, ACR, DCEN) = 0;
+	STM32_BITBAND_FLASH(ACR, DCEN) = 0;
 }
 
 void disableInstructionCache()
 {
-	STM32_BITBAND(FLASH, ACR, ICEN) = 0;
+	STM32_BITBAND_FLASH(ACR, ICEN) = 0;
 }
 
 void enableDataCache()
 {
 	disableDataCache();
-	STM32_BITBAND(FLASH, ACR, DCRST) = 1;	// reset data cache
-	STM32_BITBAND(FLASH, ACR, DCRST) = 0;
-	STM32_BITBAND(FLASH, ACR, DCEN) = 1;
+	STM32_BITBAND_FLASH(ACR, DCRST) = 1;	// reset data cache
+	STM32_BITBAND_FLASH(ACR, DCRST) = 0;
+	STM32_BITBAND_FLASH(ACR, DCEN) = 1;
 }
 
 void enableInstructionCache()
 {
 	disableInstructionCache();
-	STM32_BITBAND(FLASH, ACR, ICRST) = 1;	// reset instruction cache
-	STM32_BITBAND(FLASH, ACR, ICRST) = 0;
-	STM32_BITBAND(FLASH, ACR, ICEN) = 1;
+	STM32_BITBAND_FLASH(ACR, ICRST) = 1;	// reset instruction cache
+	STM32_BITBAND_FLASH(ACR, ICRST) = 0;
+	STM32_BITBAND_FLASH(ACR, ICEN) = 1;
 }
 
 }	// namespace chip

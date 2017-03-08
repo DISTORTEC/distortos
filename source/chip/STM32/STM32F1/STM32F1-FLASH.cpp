@@ -28,7 +28,7 @@ namespace chip
 
 void configureFlashHalfCycleAccess(const bool enable)
 {
-	STM32_BITBAND(FLASH, ACR, HLFCYA) = enable;
+	STM32_BITBAND_FLASH(ACR, HLFCYA) = enable;
 }
 
 #ifndef CONFIG_CHIP_STM32F100
@@ -44,7 +44,7 @@ int configureFlashLatency(const uint8_t latency)
 
 void configurePrefetchBuffer(const bool enable)
 {
-	STM32_BITBAND(FLASH, ACR, PRFTBE) = enable;
+	STM32_BITBAND_FLASH(ACR, PRFTBE) = enable;
 }
 
 #endif	// !def CONFIG_CHIP_STM32F100
