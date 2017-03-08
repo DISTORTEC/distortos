@@ -12,7 +12,9 @@
 #ifndef SOURCE_ARCHITECTURE_ARM_ARMV6_M_ARMV7_M_INCLUDE_DISTORTOS_ARCHITECTURE_ARMV7_M_BIT_BANDING_H_
 #define SOURCE_ARCHITECTURE_ARM_ARMV6_M_ARMV7_M_INCLUDE_DISTORTOS_ARCHITECTURE_ARMV7_M_BIT_BANDING_H_
 
-#if defined(__ARM_ARCH_7M__) || defined(__ARM_ARCH_7EM__)
+#include "distortos/distortosConfiguration.h"
+
+#if defined(CONFIG_ARCHITECTURE_ARM_CORTEX_M3) || defined(CONFIG_ARCHITECTURE_ARM_CORTEX_M4)
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | global defines
@@ -111,6 +113,6 @@ enum { bitbandPeripheralBase = 0x42000000 };
 
 #define BITBAND(address, bit)				(*(volatile unsigned long*)BITBAND_ADDRESS(address, bit))
 
-#endif	/* defined(__ARM_ARCH_7M__) || defined(__ARM_ARCH_7EM__) */
+#endif	/* defined(CONFIG_ARCHITECTURE_ARM_CORTEX_M3) || defined(CONFIG_ARCHITECTURE_ARM_CORTEX_M4) */
 
 #endif	/* SOURCE_ARCHITECTURE_ARM_ARMV6_M_ARMV7_M_INCLUDE_DISTORTOS_ARCHITECTURE_ARMV7_M_BIT_BANDING_H_ */
