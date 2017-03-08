@@ -36,15 +36,40 @@ enum { bitbandPeripheralEnd = 0x400fffff };
 /** start of bit-band alias region of peripherals */
 enum { bitbandPeripheralBase = 0x42000000 };
 
-/** address of bit-band alias for SRAM region */
+/**
+ * \brief address of bit-band alias for SRAM region
+ *
+ * \param [in] address is the address in SRAM region, [bitbandSramBegin; bitbandSramEnd]
+ * \param [in] bit is the bit number, [0; 31]
+ *
+ * \return address of bit-band alias of provided \a address and \a bit
+ */
+
 #define BITBAND_SRAM_ADDRESS(address, bit) \
 		(bitbandSramBase + (((unsigned long)address) - bitbandSramBegin) * 32 + (bit) * 4)
 
-/** address of bit-band alias for peripheral region */
+/**
+ * \brief address of bit-band alias for peripheral region
+ *
+ * \param [in] address is the address in peripheral region, [bitbandPeripheralBegin; bitbandPeripheralEnd]
+ * \param [in] bit is the bit number, [0; 31]
+ *
+ * \return address of bit-band alias of provided \a address and \a bit
+ */
+
 #define BITBAND_PERIPHERAL_ADDRESS(address, bit) \
 		(bitbandPeripheralBase + (((unsigned long)address) - bitbandPeripheralBegin) * 32 + (bit) * 4)
 
-/** address of bit-band alias for any region */
+/**
+ * \brief address of bit-band alias for any region
+ *
+ * \param [in] address is the address in SRAM or peripheral region, [bitbandSramBegin; bitbandSramEnd] or
+ * [bitbandPeripheralBegin; bitbandPeripheralEnd]
+ * \param [in] bit is the bit number, [0; 31]
+ *
+ * \return address of bit-band alias of provided \a address and \a bit
+ */
+
 #define BITBAND_ADDRESS(address, bit) \
 		((((unsigned long)address) >= bitbandSramBegin) && (((unsigned long)address) <= bitbandSramEnd) ? \
 		BITBAND_SRAM_ADDRESS(address, bit) : \
@@ -52,13 +77,38 @@ enum { bitbandPeripheralBase = 0x42000000 };
 		BITBAND_PERIPHERAL_ADDRESS(address, bit) : \
 		0 /* fail */ )
 
-/** bit-band alias in SRAM region */
+/**
+ * \brief bit-band alias in SRAM region
+ *
+ * \param [in] address is the address in SRAM region, [bitbandSramBegin; bitbandSramEnd]
+ * \param [in] bit is the bit number, [0; 31]
+ *
+ * \return reference to bit-band alias of provided \a address and \a bit
+ */
+
 #define BITBAND_SRAM(address, bit)			(*(volatile unsigned long*)BITBAND_SRAM_ADDRESS(address, bit))
 
-/** bit-band alias in peripheral region */
+/**
+ * \brief bit-band alias in peripheral region
+ *
+ * \param [in] address is the address in peripheral region, [bitbandPeripheralBegin; bitbandPeripheralEnd]
+ * \param [in] bit is the bit number, [0; 31]
+ *
+ * \return reference to bit-band alias of provided \a address and \a bit
+ */
+
 #define BITBAND_PERIPHERAL(address, bit)	(*(volatile unsigned long*)BITBAND_PERIPHERAL_ADDRESS(address, bit))
 
-/** bit-band alias in any region */
+/**
+ * \brief bit-band alias in any region
+ *
+ * \param [in] address is the address in SRAM or peripheral region, [bitbandSramBegin; bitbandSramEnd] or
+ * [bitbandPeripheralBegin; bitbandPeripheralEnd]
+ * \param [in] bit is the bit number, [0; 31]
+ *
+ * \return reference to bit-band alias of provided \a address and \a bit
+ */
+
 #define BITBAND(address, bit)				(*(volatile unsigned long*)BITBAND_ADDRESS(address, bit))
 
 #endif	/* defined(__ARM_ARCH_7M__) || defined(__ARM_ARCH_7EM__) */
