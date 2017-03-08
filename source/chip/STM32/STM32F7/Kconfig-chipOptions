@@ -37,6 +37,238 @@ endif	# !CHIP_STM32F7_VDD_MV_CONFIGURABLE
 
 menu "Clocks configuration"
 
+config CHIP_STM32F7_STANDARD_CLOCK_CONFIGURATION_ENABLE
+	bool "Enable standard configuration of clocks"
+	default y
+	help
+		Enable standard configuration of clocks. This will set values selected
+		below and additionally configure appropriate FLASH latency before
+		switching system clock to selected source.
+
+		If disabled, no clock configuration will be done during chip
+		initialization. The values entered below (frequencies, dividers, ...)
+		will only be used to determine chip clocks. The user must configure the
+		chip manually to match these settings.
+
+if CHIP_STM32F7_STANDARD_CLOCK_CONFIGURATION_ENABLE
+
+config CHIP_STM32F7_PWR_VOLTAGE_SCALE_MODE
+	int "Voltage scale mode"
+	default 1
+	range 1 3
+	help
+		Select voltage scale mode.
+
+config CHIP_STM32F7_PWR_OVER_DRIVE_ENABLE
+	bool "Enable over-drive mode"
+	default n
+	depends on CHIP_STM32F7_PWR_VOLTAGE_SCALE_MODE = 1 || CHIP_STM32F7_PWR_VOLTAGE_SCALE_MODE = 2
+	help
+		Enable over-drive mode.
+
+		Note - over-drive mode requires:
+		- voltage scale 1 mode or voltage scale 2 mode;
+		- supply voltage above 2.1V;
+
+config CHIP_STM32F7_RCC_HSE_ENABLE
+	bool "Enable HSE"
+	default n
+	help
+		Enable HSE (crystal/ceramic resonator or external user clock).
+
+if CHIP_STM32F7_RCC_HSE_ENABLE
+
+config CHIP_STM32F7_RCC_HSE_CLOCK_BYPASS
+	bool
+	prompt "HSE Clock Bypass" if CHIP_STM32F7_RCC_HSE_CLOCK_BYPASS_CONFIGURABLE
+	default CHIP_STM32F7_RCC_HSE_CLOCK_BYPASS_DEFAULT
+	help
+		Selects whether HSE generator is bypassed. If enabled, external user
+		clock connected to OSC_IN must be used. Crystal or ceramic resonator
+		connected to OSC_IN and OSC_OUT must be used otherwise.
+
+comment "HSE Clock Bypass is disabled (not configurable)"
+	depends on !CHIP_STM32F7_RCC_HSE_CLOCK_BYPASS_CONFIGURABLE && !CHIP_STM32F7_RCC_HSE_CLOCK_BYPASS_DEFAULT
+
+comment "HSE Clock Bypass is enabled (not configurable)"
+	depends on !CHIP_STM32F7_RCC_HSE_CLOCK_BYPASS_CONFIGURABLE && CHIP_STM32F7_RCC_HSE_CLOCK_BYPASS_DEFAULT
+
+if CHIP_STM32F7_RCC_HSE_FREQUENCY_CONFIGURABLE
+
+config CHIP_STM32F7_RCC_HSE_FREQUENCY
+	int "Frequency of HSE clock, Hz"
+	range 1000000 50000000 if CHIP_STM32F7_RCC_HSE_CLOCK_BYPASS
+	range 4000000 26000000
+	default CHIP_STM32F7_RCC_HSE_FREQUENCY_DEFAULT
+	help
+		Frequency of HSE clock, Hz. This can be:
+		- "HSE Clock Bypass" disabled - crystal/ceramic resonator connected to
+		OSC_IN and OSC_OUT [4MHz; 26MHz];
+		- "HSE Clock Bypass" enabled - external user clock connected to OSC_IN
+		[1MHz; 50MHz];
+
+endif	# CHIP_STM32F7_RCC_HSE_FREQUENCY_CONFIGURABLE
+
+if !CHIP_STM32F7_RCC_HSE_FREQUENCY_CONFIGURABLE
+
+config CHIP_STM32F7_RCC_HSE_FREQUENCY
+	int "Frequency of HSE clock, Hz (not configurable)"
+	range CHIP_STM32F7_RCC_HSE_FREQUENCY_DEFAULT CHIP_STM32F7_RCC_HSE_FREQUENCY_DEFAULT
+	default CHIP_STM32F7_RCC_HSE_FREQUENCY_DEFAULT
+	help
+		Frequency of HSE clock, Hz. This can be:
+		- "HSE Clock Bypass" disabled - crystal/ceramic resonator connected to
+		OSC_IN and OSC_OUT [4MHz; 26MHz];
+		- "HSE Clock Bypass" enabled - external user clock connected to OSC_IN
+		[1MHz; 50MHz];
+
+		This value is not configurable, as it is set by board.
+
+endif	# !CHIP_STM32F7_RCC_HSE_FREQUENCY_CONFIGURABLE
+
+endif	# CHIP_STM32F7_RCC_HSE_ENABLE
+
+config CHIP_STM32F7_RCC_PLL_ENABLE
+	bool "Enable PLL"
+	default y
+	help
+		Enable PLL.
+
+if CHIP_STM32F7_RCC_PLL_ENABLE
+
+choice
+	prompt "Clock source of main and audio PLLs"
+	default CHIP_STM32F7_RCC_PLLSRC_HSI
+	help
+		Select clock source of main and audio PLLs.
+
+config CHIP_STM32F7_RCC_PLLSRC_HSI
+	bool "HSI"
+	help
+		Select HSI as clock source of main and audio PLLs.
+
+config CHIP_STM32F7_RCC_PLLSRC_HSE
+	bool "HSE"
+	depends on CHIP_STM32F7_RCC_HSE_ENABLE
+	help
+		Select HSE as clock source of main and audio PLLs.
+
+endchoice
+
+config CHIP_STM32F7_RCC_PLLM
+	int "PLLM value"
+	range 2 63
+	default 8 if CHIP_STM32F7_RCC_PLLSRC_HSE
+	default 16
+	help
+		PLLM value for main PLL and audio PLLI2S. It is used to divide PLL
+		input clock (PLLin) before it is fed to VCO. VCO input frequency
+		(VCOin) must be in the range [1MHz; 2MHz], 2MHz is recommended to limit
+		PLL jitter.
+
+		VCOin = PLLin / PLLM
+
+config CHIP_STM32F7_RCC_PLLN
+	int "PLLN value"
+	range 50 432
+	default 336
+	help
+		PLLN value for main PLL. It is used to multiply VCO input frequency
+		(VCOin). Resulting VCO output frequency (VCOout) must be in the range
+		[100MHz; 432MHz].
+
+		VCOout = VCOin * PLLN = PLLin / PLLM * PLLN
+
+choice
+	prompt "PLLP value"
+	default CHIP_STM32F7_RCC_PLLP_DIV2
+	help
+		PLLP value for main PLL. It is used to divide VCO output frequency
+		(VCOout). PLL output frequency (PLLout) must not exceed:
+		- 216MHz (with over-drive mode) or 180MHz (otherwise) in voltage scale
+		1 mode,
+		- 180MHz (with over-drive mode) or 168MHz (otherwise) in voltage scale
+		2 mode,
+		- 144MHz in voltage scale 3 mode.
+
+		PLLout = VCOout / PLLP = PLLin / PLLM * PLLN / PLLP
+
+config CHIP_STM32F7_RCC_PLLP_DIV2
+	bool "2"
+	help
+		PLLP == 2
+
+config CHIP_STM32F7_RCC_PLLP_DIV4
+	bool "4"
+	help
+		PLLP == 4
+
+config CHIP_STM32F7_RCC_PLLP_DIV6
+	bool "6"
+	help
+		PLLP == 6
+
+config CHIP_STM32F7_RCC_PLLP_DIV8
+	bool "8"
+	help
+		PLLP == 8
+
+endchoice
+
+config CHIP_STM32F7_RCC_PLLQ
+	int "PLLQ value"
+	range 2 15
+	default 7
+	help
+		PLLQ value for main PLL. It is used to divide VCO output frequency
+		(VCOout) to produce clock for USB OTG FS, SDMMC and RNG (PLLQout). USB
+		OTG FS requires a 48MHz clock for correct operation, while SDMMC and
+		RNG need a frequency lower than or equal to 48MHz to work correctly.
+
+		PLLQout = VCOout / PLLQ = PLLin / PLLM * PLLN / PLLQ
+
+config CHIP_STM32F7_RCC_PLLR
+	int "PLLR value"
+	range 2 7
+	default 7
+	depends on CHIP_STM32F76 || CHIP_STM32F77
+	help
+		PLLR value for main PLL. It is used to divide VCO output frequency
+		(VCOout) to produce clock for DSI (PLLRout).
+
+		PLLRout = VCOout / PLLR = PLLin / PLLM * PLLN / PLLR
+
+endif	# CHIP_STM32F7_RCC_PLL_ENABLE
+
+choice
+	prompt "System clock source"
+	default CHIP_STM32F7_RCC_SYSCLK_PLL
+	help
+		Select system clock source.
+
+config CHIP_STM32F7_RCC_SYSCLK_HSI
+	bool "HSI"
+	help
+		HSI oscillator selected as system clock.
+
+config CHIP_STM32F7_RCC_SYSCLK_HSE
+	bool "HSE"
+	depends on CHIP_STM32F7_RCC_HSE_ENABLE
+	help
+		HSE oscillator selected as system clock.
+
+config CHIP_STM32F7_RCC_SYSCLK_PLL
+	bool "PLL"
+	depends on CHIP_STM32F7_RCC_PLL_ENABLE
+	help
+		Main PLL selected as system clock.
+
+endchoice
+
+endif	# CHIP_STM32F7_STANDARD_CLOCK_CONFIGURATION_ENABLE
+
+if !CHIP_STM32F7_STANDARD_CLOCK_CONFIGURATION_ENABLE
+
 config CHIP_STM32F7_RCC_SYSCLK_FREQUENCY
 	int "Frequency of SYSCLK, Hz"
 	range 1 216000000
@@ -49,6 +281,8 @@ config CHIP_STM32F7_RCC_SYSCLK_FREQUENCY
 		- 180MHz (with over-drive mode) or 168MHz (otherwise) in voltage scale
 		2 mode,
 		- 144MHz in voltage scale 3 mode.
+
+endif	# !CHIP_STM32F7_STANDARD_CLOCK_CONFIGURATION_ENABLE
 
 choice
 	prompt "AHB divider"
@@ -1250,6 +1484,22 @@ config CHIP_STM32F7_VDD_MV_DEFAULT
 	int
 	default 3300
 
+config CHIP_STM32F7_RCC_HSE_CLOCK_BYPASS_CONFIGURABLE
+	bool
+	default y
+
+config CHIP_STM32F7_RCC_HSE_CLOCK_BYPASS_DEFAULT
+	bool
+	default n
+
+config CHIP_STM32F7_RCC_HSE_FREQUENCY_CONFIGURABLE
+	bool
+	default y
+
+config CHIP_STM32F7_RCC_HSE_FREQUENCY_DEFAULT
+	int
+	default 8000000
+
 config CHIP_STM32F7_RCC_HPRE
 	int
 	default 1 if CHIP_STM32F7_RCC_AHB_DIV1
@@ -1261,6 +1511,13 @@ config CHIP_STM32F7_RCC_HPRE
 	default 128 if CHIP_STM32F7_RCC_AHB_DIV128
 	default 256 if CHIP_STM32F7_RCC_AHB_DIV256
 	default 512 if CHIP_STM32F7_RCC_AHB_DIV512
+
+config CHIP_STM32F7_RCC_PLLP
+	int
+	default 2 if CHIP_STM32F7_RCC_PLLP_DIV2
+	default 4 if CHIP_STM32F7_RCC_PLLP_DIV4
+	default 6 if CHIP_STM32F7_RCC_PLLP_DIV6
+	default 8 if CHIP_STM32F7_RCC_PLLP_DIV8
 
 config CHIP_STM32F7_RCC_PPRE1
 	int
