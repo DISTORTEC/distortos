@@ -41,6 +41,7 @@ int configureVoltageScaling(const uint8_t voltageScale)
 void disableOverDriveMode()
 {
 	PWR->CR &= ~(PWR_CR_ODEN | PWR_CR_ODSWEN);
+	while (STM32_BITBAND(PWR, CSR, ODSWRDY) != 0);
 }
 
 void enableOverDriveMode()
