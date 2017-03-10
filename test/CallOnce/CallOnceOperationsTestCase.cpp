@@ -35,8 +35,11 @@ namespace
 /// sleepFor() duration used in function() passed to callOnce()
 constexpr auto sleepForDuration = TickClock::duration{10};
 
-/// size of stack for test thread, bytes
-constexpr size_t testThreadStackSize {512};
+/// size of stack for first test thread, bytes
+constexpr size_t testThreadHighStackSize {768};
+
+/// size of stack for remaining test threads, bytes
+constexpr size_t testThreadLowStackSize {512};
 
 /// number of test threads
 constexpr size_t totalThreads {8};
@@ -91,6 +94,7 @@ void thread(SequenceAsserter& sequenceAsserter, const SequencePoints sequencePoi
 /**
  * \brief Builder of test threads
  *
+ * \param [in] stackSize is the size of stack for test thread, bytes
  * \param [in] priority is the thread's priority
  * \param [in] sequenceAsserter is a reference to SequenceAsserter shared object
  * \param [in] sequencePoints is a pair of sequence points for this instance
@@ -100,10 +104,10 @@ void thread(SequenceAsserter& sequenceAsserter, const SequencePoints sequencePoi
  * \return constructed DynamicThread object
  */
 
-DynamicThread makeTestThread(const uint8_t priority, SequenceAsserter& sequenceAsserter,
+DynamicThread makeTestThread(const size_t stackSize, const uint8_t priority, SequenceAsserter& sequenceAsserter,
 		const SequencePoints sequencePoints, OnceFlag& onceFlag, TickClock::time_point& timePoint)
 {
-	return makeDynamicThread({testThreadStackSize, priority}, thread, std::ref(sequenceAsserter), sequencePoints,
+	return makeDynamicThread({stackSize, priority}, thread, std::ref(sequenceAsserter), sequencePoints,
 			std::ref(onceFlag), std::ref(timePoint));
 }
 
@@ -123,14 +127,22 @@ bool CallOnceOperationsTestCase::run_() const
 
 	std::array<DynamicThread, totalThreads> threads
 	{{
-			makeTestThread(testCasePriority_ - 1, sequenceAsserter, SequencePoints{0, 10}, onceFlag, timePoints[0]),
-			makeTestThread(testCasePriority_ - 1, sequenceAsserter, SequencePoints{2, 11}, onceFlag, timePoints[1]),
-			makeTestThread(testCasePriority_ - 1, sequenceAsserter, SequencePoints{3, 12}, onceFlag, timePoints[2]),
-			makeTestThread(testCasePriority_ - 1, sequenceAsserter, SequencePoints{4, 13}, onceFlag, timePoints[3]),
-			makeTestThread(testCasePriority_ - 1, sequenceAsserter, SequencePoints{5, 14}, onceFlag, timePoints[4]),
-			makeTestThread(testCasePriority_ - 1, sequenceAsserter, SequencePoints{6, 15}, onceFlag, timePoints[5]),
-			makeTestThread(testCasePriority_ - 1, sequenceAsserter, SequencePoints{7, 16}, onceFlag, timePoints[6]),
-			makeTestThread(testCasePriority_ - 1, sequenceAsserter, SequencePoints{8, 17}, onceFlag, timePoints[7]),
+			makeTestThread(testThreadHighStackSize, testCasePriority_ - 1, sequenceAsserter, SequencePoints{0, 10},
+					onceFlag, timePoints[0]),
+			makeTestThread(testThreadLowStackSize, testCasePriority_ - 1, sequenceAsserter, SequencePoints{2, 11},
+					onceFlag, timePoints[1]),
+			makeTestThread(testThreadLowStackSize, testCasePriority_ - 1, sequenceAsserter, SequencePoints{3, 12},
+					onceFlag, timePoints[2]),
+			makeTestThread(testThreadLowStackSize, testCasePriority_ - 1, sequenceAsserter, SequencePoints{4, 13},
+					onceFlag, timePoints[3]),
+			makeTestThread(testThreadLowStackSize, testCasePriority_ - 1, sequenceAsserter, SequencePoints{5, 14},
+					onceFlag, timePoints[4]),
+			makeTestThread(testThreadLowStackSize, testCasePriority_ - 1, sequenceAsserter, SequencePoints{6, 15},
+					onceFlag, timePoints[5]),
+			makeTestThread(testThreadLowStackSize, testCasePriority_ - 1, sequenceAsserter, SequencePoints{7, 16},
+					onceFlag, timePoints[6]),
+			makeTestThread(testThreadLowStackSize, testCasePriority_ - 1, sequenceAsserter, SequencePoints{8, 17},
+					onceFlag, timePoints[7]),
 	}};
 
 	for (auto& thread : threads)

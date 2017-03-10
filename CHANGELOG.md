@@ -98,6 +98,8 @@ macros are now generated automatically by `buttons.hpp` and `leds.hpp` respectiv
 example bit-banding macros).
 - Fixed failures in several test cases (`ThreadSleepForTestCase`, `SignalsInterruptionTestCase` and
 `CallOnceOperationsTestCase`) that occured only with low core frequency due to very strict timing requirements.
+- Fixed stack overflow in `CallOnceOperationsTestCase` which occured only on *ARM Cortex-M0* cores with `-Og`
+optimization level.
 - Maximum values of APB1 and APB2 frequencies for *STM32F4* take into account whether over-drive is enabled or not.
 
 ### Removed
