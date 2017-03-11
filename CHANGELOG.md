@@ -10,7 +10,7 @@ All notable changes to this project will be documented in this file. This projec
 ### Added
 
 - Support for all 78 [STM32F7](http://www.st.com/stm32f7) chips.
-- Support and test configurations for [32F746GDISCOVERY](http://www.st.com/en/evaluation-tools/32f746gdiscovery.html)
+- Support and test configuration for [32F746GDISCOVERY](http://www.st.com/en/evaluation-tools/32f746gdiscovery.html)
 board with *STM32F7* chip.
 - Set `STKALIGN` bit in `SCB->CCR` for *ARM Cortex-M3 r1p1* (like *STM32F1*). Thanks to that, stack will be
 automatically aligned to 8-bytes on exception entry, which is required by *AAPCS*. This bit is set by default on all
