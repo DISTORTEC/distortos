@@ -44,6 +44,7 @@ STM32's CMSIS headers - it's enough to write `STM32_BITBAND(RCC, CR, PLLON)` ins
 `STM32_BITBAND_FLASH()` and `STM32_BITBAND_FLASH_ADDRESS()` for that peripheral.
 - Options to enable STM32's GPIO to *Kconfig* menu.
 - New chips: 10 *STM32F413* chips and 5 *STM32F423* chips.
+- `README.md` files for all supported boards.
 
 ### Changed
 
