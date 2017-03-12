@@ -175,6 +175,8 @@ def main():
 		data = json.load(configDataFile)
 
 	outputBoardPath = inputParameters.outputDir
+	if not outputBoardPath.endswith('/'):
+		outputBoardPath += '/'
 	outputBoardPath += data["board"]
 	#Remove existing directory
 	shutil.rmtree(outputBoardPath, ignore_errors=True)
