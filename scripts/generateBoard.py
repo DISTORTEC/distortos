@@ -178,8 +178,6 @@ def main():
 	if not outputBoardPath.endswith('/'):
 		outputBoardPath += '/'
 	outputBoardPath += data["board"]
-	#Remove existing directory
-	shutil.rmtree(outputBoardPath, ignore_errors=True)
 
 	outputBoardPath += "/"
 	includeBoard = outputBoardPath + "include"
