@@ -1,6 +1,7 @@
 {{- outputTemplate__buttons__ -}}
 {%- set fileTypeInHeader = 'button' -%}
-{% include "headerHpp.jinja" %}
+{%- set briefName = 'Declaration' -%}
+{% include "headerSourceFile.jinja" %}
 
 #ifndef SOURCE_BOARD_STM32_{{ chipFamily }}_{{ board|replace('-', '_') }}_INCLUDE_DISTORTOS_BOARD_BUTTONS_HPP_
 #define SOURCE_BOARD_STM32_{{ chipFamily }}_{{ board|replace('-', '_') }}_INCLUDE_DISTORTOS_BOARD_BUTTONS_HPP_

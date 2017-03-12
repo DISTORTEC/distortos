@@ -1,8 +1,7 @@
 #
-# file: DistPinCfgGen.py
-# Python script used to generating board configuration files for Distortos embedded operating system
+# file: generateBoard.py
+#
 # author: Copyright (C) 2017 Cezary Gapinski cezary.gapinski@gmail.com
-# https://github.com/CezaryGapinski/DistortosPinConfigGenerator
 #
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -192,8 +191,8 @@ def main():
 
 	templateVars = {}
 	templateVars["boardIncludes"] = includeBoard
-	templateVars["beginYear"] = 2017
 	templateVars["actualYear"] = datetime.datetime.now().year
+	templateVars["actualDate"] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
 	for key in data:
 		if (key == "leds"):

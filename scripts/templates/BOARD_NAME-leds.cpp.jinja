@@ -1,6 +1,7 @@
 {{- outputTemplate__leds__ -}}
 {%- set fileTypeInHeader = 'LED' -%}
-{% include "headerCpp.jinja" %}
+{%- set briefName = 'Definition' -%}
+{% include "headerSourceFile.jinja" %}
 
 #include "distortos/board/leds.hpp"
 

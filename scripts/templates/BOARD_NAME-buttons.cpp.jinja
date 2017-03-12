@@ -1,6 +1,7 @@
 {{- outputTemplate__buttons__ -}}
 {%- set fileTypeInHeader = 'button' -%}
-{% include "headerCpp.jinja" %}
+{%- set briefName = 'Definition' -%}
+{% include "headerSourceFile.jinja" %}
 
 #include "distortos/board/buttons.hpp"
 
