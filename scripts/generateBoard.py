@@ -25,8 +25,9 @@ def inputParams():
 	parser = argparse.ArgumentParser()
 	parser.add_argument('-c', '--config', required=True, action='store', dest='configFile',
 			help='path to json config file')
-	parser.add_argument('-o', '--output', required=True, action='store', dest='outputDir',
-			help='path to directory where files will be generated')
+	parser.add_argument('-o', '--output', required=False, action='store', dest='outputDir',
+			help='path to directory where files will be generated,'
+				'if empty the files will be generated in the same folder as the one with config file')
 	parser.add_argument('-s', '--search_path', required=False, action='store', nargs='*',
 			default='.', dest='searchPath',
 			help='string separated with spaces containt paths where templates are located')
@@ -174,10 +175,13 @@ def main():
 	with open(inputParameters.configFile) as configDataFile:
 		data = json.load(configDataFile)
 
-	outputBoardPath = inputParameters.outputDir
-	if not outputBoardPath.endswith('/'):
-		outputBoardPath += '/'
-	outputBoardPath += data["board"]
+	if inputParameters.outputDir:
+		outputBoardPath = inputParameters.outputDir
+		if not outputBoardPath.endswith('/'):
+			outputBoardPath += '/'
+		outputBoardPath += data["board"]
+	else:
+		outputBoardPath = os.path.dirname(inputParameters.configFile)
 
 	outputBoardPath += "/"
 	includeBoard = outputBoardPath + "include"
