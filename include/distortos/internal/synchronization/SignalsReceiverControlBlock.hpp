@@ -174,15 +174,14 @@ public:
 	 * Similar to pthread_sigmask() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_sigmask.html#
 	 *
 	 * \param [in] signalMask is the SignalSet with new signal mask for associated thread
-	 * \param [in] requestDelivery selects whether delivery of signals will be requested if any pending signal is
-	 * unblocked (true) or not (false)
+	 * \param [in] deliver selects whether pending and unblocked signals will be delivered (true) or not (false)
 	 *
 	 * \return 0 on success, error code otherwise:
 	 * - ENOTSUP - catching/handling of signals is disabled for this receiver;
 	 * - error codes returned by SignalsCatcherControlBlock::setSignalMask();
 	 */
 
-	int setSignalMask(SignalSet signalMask, bool requestDelivery);
+	int setSignalMask(SignalSet signalMask, bool deliver);
 
 	/**
 	 * \param [in] signalSet is a pointer to set of signals that will be "waited for", nullptr when wait was terminated

@@ -266,13 +266,13 @@ int SignalsCatcherControlBlock::setSignalMask(const SignalSet signalMask,
 	if (owner == nullptr)	// delivery of signals should not be requested if any pending signal is unblocked?
 		return 0;
 
-	const InterruptMaskingLock interruptMaskingLock;
-
 	const auto pendingUnblockedBitset = owner->getPendingSignalSet().getBitset() & ~signalMask.getBitset();
 	if (pendingUnblockedBitset.none() == true)	// no pending & unblocked signals?
 		return 0;
 
-	return requestDeliveryOfSignals(getScheduler().getCurrentThreadControlBlock());
+	deliveryIsPending_ = true;
+	deliverSignals();
+	return 0;
 }
 
 /*---------------------------------------------------------------------------------------------------------------------+
