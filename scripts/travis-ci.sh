@@ -44,12 +44,12 @@ install() {
 
 	if [ ! -e "${HOME}"/cache/arm-none-eabi-gcc-6.3.0-*.tar.xz ]; then
 		(
-		echo 'Downloading bleeding-edge-toolchain-master.tar.gz...'
-		wget https://github.com/FreddieChopin/bleeding-edge-toolchain/archive/master.tar.gz -O bleeding-edge-toolchain-master.tar.gz
-		echo 'Extracting bleeding-edge-toolchain-master.tar.gz...'
-		tar -xf bleeding-edge-toolchain-master.tar.gz
-		echo 'Building bleeding-edge-toolchain-master...'
-		cd bleeding-edge-toolchain-master
+		echo 'Downloading bleeding-edge-toolchain-170314.tar.xz...'
+		wget http://www.freddiechopin.info/en/download/category/11-bleeding-edge-toolchain?download=155%3Ableeding-edge-toolchain-170314-linux-script -O bleeding-edge-toolchain-170314.tar.xz
+		echo 'Extracting bleeding-edge-toolchain-170314.tar.xz...'
+		tar -xf bleeding-edge-toolchain-170314.tar.xz
+		echo 'Building bleeding-edge-toolchain-170314...'
+		cd bleeding-edge-toolchain-170314
 
 		{ time='0'; while true; do sleep 60; time="$((${time} + 1))"; echo "${time} minute(s)..."; done } &
 		keepAlivePid="${!}"
