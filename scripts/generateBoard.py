@@ -157,7 +157,7 @@ def collectPinGroupsTemplateParams(data):
 		pinWithoutNumber = pinWithoutNumber.translate(None, digits)
 		pinsType.add(pinWithoutNumber[1:])
 
-	return pinsType
+	return sorted(pinsType)
 
 def removeFromOutputTemplatesIfNotConfiguredParam(input_data):
 	for template_path, parameters in outputTemplates.copy().iteritems():
