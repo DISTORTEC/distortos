@@ -200,6 +200,11 @@ int SignalsCatcherControlBlock::afterGenerateQueueLocked(const uint8_t signalNum
 	return requestDeliveryOfSignals(threadControlBlock);
 }
 
+void SignalsCatcherControlBlock::afterGenerateQueueUnlocked(ThreadControlBlock&)
+{
+
+}
+
 std::pair<int, SignalAction> SignalsCatcherControlBlock::getAssociation(const uint8_t signalNumber) const
 {
 	if (signalNumber >= SignalSet::Bitset{}.size())

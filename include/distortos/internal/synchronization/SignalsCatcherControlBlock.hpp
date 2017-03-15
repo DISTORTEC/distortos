@@ -71,6 +71,14 @@ public:
 	int afterGenerateQueueLocked(uint8_t signalNumber, ThreadControlBlock& threadControlBlock);
 
 	/**
+	 * \brief Part of SignalsReceiverControlBlock::afterGenerateQueueUnlocked() specific to catching unmasked signals.
+	 *
+	 * \param [in] threadControlBlock is a reference to associated ThreadControlBlock
+	 */
+
+	void afterGenerateQueueUnlocked(ThreadControlBlock& threadControlBlock);
+
+	/**
 	 * \brief Hook function executed when delivery of signals is started.
 	 *
 	 * Clears "delivery pending" flag.
