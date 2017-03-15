@@ -26,6 +26,9 @@ LDFLAGS =
 # build mode (0 - non-verbose, 1 - verbose)
 VERBOSE ?= 0
 
+# python execute shell command
+PYTHON ?= python
+
 #-----------------------------------------------------------------------------------------------------------------------
 # output folder
 #-----------------------------------------------------------------------------------------------------------------------
@@ -46,7 +49,7 @@ endif
 #-----------------------------------------------------------------------------------------------------------------------
 
 DO_INCLUDE := 1
-SIMPLE_TARGETS := clean configure distclean help menuconfig
+SIMPLE_TARGETS := clean configure distclean help menuconfig board
 
 # This macro checks, if the make target list MAKECMDGOALS contains the given simple target $1. If so, it executes
 # SET_SIMPLE_TARGETS to set/clear some variables.
@@ -278,6 +281,19 @@ clean:
 configure:
 	./$(DISTORTOS_PATH)scripts/configure.sh $(CONFIG_PATH)
 
+.PHONY: board
+board:
+ifeq "3.0.0" "$(word 1, $(sort 3.0.0 $(word 2,$(shell $(PYTHON) --version 2>&1))))"
+	@echo 'This script currently requires Python 2, try:'
+	@echo 'make board PYTHON=python2 CONFIG_FILE=<file_path> [OUTPUT_PATH=<directory_path>]'
+else
+	
+ifdef OUTPUT_PATH
+	$(eval OPTIONAL_BOARD_ARGUMENTS := -o $(OUTPUT_PATH))
+endif
+	$(PYTHON) $(DISTORTOS_PATH)scripts/generateBoard.py -c $(CONFIG_FILE) $(OPTIONAL_BOARD_ARGUMENTS)
+endif
+
 .PHONY: distclean
 distclean:
 	./$(DISTORTOS_PATH)scripts/distclean.sh
@@ -329,6 +345,10 @@ menuconfig - to create/edit configuration of distortos
 oldconfig - update currently selected configuration asking about new options
 olddefconfig - update currently selected configuration with default values of
   new options
+board CONFIG_FILE=<file_path> [OUTPUT_PATH=<directory_path>] - generate board files;
+  <file_path> .. path to json config file with board configuration
+  <directory_path> .. optional path to output directory where files will be generated
+  if not specified files will be generated in the same folder as the one with config file
 
 endef
 

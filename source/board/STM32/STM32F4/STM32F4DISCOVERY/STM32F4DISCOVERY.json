@@ -1,0 +1,32 @@
+{
+	"board":"STM32F4DISCOVERY",
+	"board_description": "STM32F4DISCOVERY board with STM32F407VG chip in LQFP100 package\n\n\t\tChip's supply voltage is 3V.\n\t\t8MHz crystal resonator can be used as HSE clock.",
+	"chipFamily":"STM32F4",
+	"vddmvConfigurable":false,
+	"vddmv":3000,
+	"rccHseClockBybassConfigurable":false,
+	"rccHseClockBypassDefault":false,
+	"rccHseFrequencyConfigurable":false,
+	"rccHseFrequency":8000000,
+	"device":"STM32F407VG",
+	"gpioDriverVersion":"v2",
+	"outputPins":[
+		{"id":"pinLd3","pin":"pd13","openDrain":false,"pinOutputSpeed":"low","pinPull":"none","initialState":false,"inverted":false},
+		{"id":"pinLd4","pin":"pd12","openDrain":false,"pinOutputSpeed":"low","pinPull":"none","initialState":false,"inverted":false},
+		{"id":"pinLd5","pin":"pd14","openDrain":false,"pinOutputSpeed":"low","pinPull":"none","initialState":false,"inverted":false},
+		{"id":"pinLd6","pin":"pd15","openDrain":false,"pinOutputSpeed":"low","pinPull":"none","initialState":false,"inverted":false}
+	],
+	"inputPins":[
+		{"id":"pinB1","pin":"pa0","pinPull":"none","inverted":false}
+	],
+	"leds":[
+		{"id":"ld3","alternativeId":"orange","outputPins":"pinLd3"},
+		{"id":"ld4","alternativeId":"green","outputPins":"pinLd4"},
+		{"id":"ld5","alternativeId":"red","outputPins":"pinLd5"},
+		{"id":"ld6","alternativeId":"blue","outputPins":"pinLd6"}
+	],
+	"buttons":[
+		{"id":"b1","inputPins":"pinB1"}
+	]
+}
+

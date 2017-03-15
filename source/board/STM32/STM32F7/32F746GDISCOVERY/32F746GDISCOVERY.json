@@ -1,0 +1,26 @@
+{
+	"board":"32F746GDISCOVERY",
+	"board_description": "32F746GDISCOVERY board with STM32F746NG chip in BGA216 package\n\n\t\tChip's supply voltage is 3.3V.\n\t\tExternal 25MHz clock can be used as HSE clock in \"HSE Clock Bypass\"\n\t\tmode.",
+	"chipFamily":"STM32F7",
+	"vddmvConfigurable":false,
+	"vddmv":3300,
+	"rccHseClockBybassConfigurable":false,
+	"rccHseClockBypassDefault":true,
+	"rccHseFrequencyConfigurable":false,
+	"rccHseFrequency":25000000,
+	"device":"STM32F746NG",
+	"gpioDriverVersion":"v2",
+	"outputPins":[
+		{"id":"pinLd1","pin":"pi1","openDrain":false,"pinOutputSpeed":"low","pinPull":"none","initialState":false,"inverted":false}
+	],
+	"inputPins":[
+		{"id":"pinB1","pin":"pi11","pinPull":"none","inverted":false}
+	],
+	"leds":[
+		{"id":"ld1","alternativeId":"green","outputPins":"pinLd1"}
+	],
+	"buttons":[
+	{"id":"b1","inputPins":"pinB1"}
+	]
+}
+
