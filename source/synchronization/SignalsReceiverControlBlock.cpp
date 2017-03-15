@@ -74,23 +74,32 @@ int SignalsReceiverControlBlock::deliveryOfSignalsStartedHook() const
 
 int SignalsReceiverControlBlock::generateSignal(const uint8_t signalNumber, ThreadControlBlock& threadControlBlock)
 {
-	const InterruptMaskingLock interruptMaskingLock;
-
-	const auto isSignalIgnoredResult = isSignalIgnored(signalNumber);
-	if (isSignalIgnoredResult.first != 0)
-		return isSignalIgnoredResult.first;
-	if (isSignalIgnoredResult.second == true)	// is signal ignored?
-		return 0;
-
 	{
-		const auto ret = beforeGenerateQueue(signalNumber, threadControlBlock);
-		if (ret != 0)
-			return ret;
+		const InterruptMaskingLock interruptMaskingLock;
+
+		const auto isSignalIgnoredResult = isSignalIgnored(signalNumber);
+		if (isSignalIgnoredResult.first != 0)
+			return isSignalIgnoredResult.first;
+		if (isSignalIgnoredResult.second == true)	// is signal ignored?
+			return 0;
+
+		{
+			const auto ret = beforeGenerateQueue(signalNumber, threadControlBlock);
+			if (ret != 0)
+				return ret;
+		}
+
+		pendingSignalSet_.add(signalNumber);	// signal number is valid (checked above)
+
+		{
+			const auto ret = afterGenerateQueueLocked(signalNumber, threadControlBlock);
+			if (ret != 0)
+				return ret;
+		}
 	}
 
-	pendingSignalSet_.add(signalNumber);	// signal number is valid (checked above)
-
-	return afterGenerateQueueLocked(signalNumber, threadControlBlock);
+	afterGenerateQueueUnlocked(signalNumber, threadControlBlock);
+	return 0;
 }
 
 SignalSet SignalsReceiverControlBlock::getPendingSignalSet() const
@@ -125,25 +134,34 @@ int SignalsReceiverControlBlock::queueSignal(const uint8_t signalNumber, const s
 	if (signalInformationQueue_ == nullptr)
 		return ENOTSUP;
 
-	const InterruptMaskingLock interruptMaskingLock;
-
-	const auto isSignalIgnoredResult = isSignalIgnored(signalNumber);
-	if (isSignalIgnoredResult.first != 0)
-		return isSignalIgnoredResult.first;
-	if (isSignalIgnoredResult.second == true)	// is signal ignored?
-		return 0;
-
 	{
-		const auto ret = beforeGenerateQueue(signalNumber, threadControlBlock);
-		if (ret != 0)
-			return ret;
+		const InterruptMaskingLock interruptMaskingLock;
+
+		const auto isSignalIgnoredResult = isSignalIgnored(signalNumber);
+		if (isSignalIgnoredResult.first != 0)
+			return isSignalIgnoredResult.first;
+		if (isSignalIgnoredResult.second == true)	// is signal ignored?
+			return 0;
+
+		{
+			const auto ret = beforeGenerateQueue(signalNumber, threadControlBlock);
+			if (ret != 0)
+				return ret;
+		}
+		{
+			const auto ret = signalInformationQueue_->queueSignal(signalNumber, value);
+			if (ret != 0)
+				return ret;
+		}
+		{
+			const auto ret = afterGenerateQueueLocked(signalNumber, threadControlBlock);
+			if (ret != 0)
+				return ret;
+		}
 	}
 
-	const auto ret = signalInformationQueue_->queueSignal(signalNumber, value);
-	if (ret != 0)
-		return ret;
-
-	return afterGenerateQueueLocked(signalNumber, threadControlBlock);
+	afterGenerateQueueUnlocked(signalNumber, threadControlBlock);
+	return 0;
 }
 
 std::pair<int, SignalAction> SignalsReceiverControlBlock::setSignalAction(const uint8_t signalNumber,
