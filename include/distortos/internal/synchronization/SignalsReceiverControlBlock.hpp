@@ -209,6 +209,17 @@ private:
 	int afterGenerateQueueLocked(uint8_t signalNumber, ThreadControlBlock& threadControlBlock) const;
 
 	/**
+	 * \brief Actions executed before signal is generated with generateSignal() or queued with queueSignal().
+	 *
+	 * \param [in] signalNumber is the signal that will be generated/queued, [0; 31]
+	 * \param [in] threadControlBlock is a reference to associated ThreadControlBlock
+	 *
+	 * \return 0 on success, error code otherwise
+	 */
+
+	int beforeGenerateQueue(uint8_t signalNumber, ThreadControlBlock& threadControlBlock) const;
+
+	/**
 	 * \brief Checks whether signal is ignored.
 	 *
 	 * Signal is ignored if it has no SignalAction object associated. Signal is never ignored if catching/handling of

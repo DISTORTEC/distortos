@@ -191,6 +191,11 @@ int SignalsReceiverControlBlock::afterGenerateQueueLocked(const uint8_t signalNu
 	return 0;
 }
 
+int SignalsReceiverControlBlock::beforeGenerateQueue(uint8_t, ThreadControlBlock&) const
+{
+	return 0;
+}
+
 std::pair<int, bool> SignalsReceiverControlBlock::isSignalIgnored(const uint8_t signalNumber) const
 {
 	if (signalNumber >= SignalSet::Bitset{}.size())
