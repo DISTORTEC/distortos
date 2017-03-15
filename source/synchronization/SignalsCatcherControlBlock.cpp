@@ -188,6 +188,18 @@ SignalsCatcherControlBlock::~SignalsCatcherControlBlock()
 
 }
 
+int SignalsCatcherControlBlock::afterGenerateQueueLocked(const uint8_t signalNumber,
+		ThreadControlBlock& threadControlBlock)
+{
+	const auto getAssociationResult = getAssociation(signalNumber);
+	if (getAssociationResult.first != 0)
+		return getAssociationResult.first;
+	if (getAssociationResult.second.getHandler() == SignalAction{}.getHandler())	// default handler?
+		return 0;	// ignore signal
+
+	return requestDeliveryOfSignals(threadControlBlock);
+}
+
 std::pair<int, SignalAction> SignalsCatcherControlBlock::getAssociation(const uint8_t signalNumber) const
 {
 	if (signalNumber >= SignalSet::Bitset{}.size())
@@ -198,17 +210,6 @@ std::pair<int, SignalAction> SignalsCatcherControlBlock::getAssociation(const ui
 		return {{}, {}};
 
 	return {{}, association->second};
-}
-
-int SignalsCatcherControlBlock::postGenerate(const uint8_t signalNumber, ThreadControlBlock& threadControlBlock)
-{
-	const auto getAssociationResult = getAssociation(signalNumber);
-	if (getAssociationResult.first != 0)
-		return getAssociationResult.first;
-	if (getAssociationResult.second.getHandler() == SignalAction{}.getHandler())	// default handler?
-		return 0;	// ignore signal
-
-	return requestDeliveryOfSignals(threadControlBlock);
 }
 
 std::pair<int, SignalAction> SignalsCatcherControlBlock::setAssociation(const uint8_t signalNumber,

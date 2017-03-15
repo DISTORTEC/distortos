@@ -205,7 +205,7 @@ private:
 	 * \param [in] threadControlBlock is a reference to associated ThreadControlBlock
 	 *
 	 * \return 0 on success, error code otherwise:
-	 * - error codes returned by SignalsCatcherControlBlock::postGenerate();
+	 * - error codes returned by SignalsCatcherControlBlock::afterGenerateQueueLocked();
 	 */
 
 	int afterGenerateQueueLocked(uint8_t signalNumber, ThreadControlBlock& threadControlBlock) const;

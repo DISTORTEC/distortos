@@ -207,7 +207,7 @@ int SignalsReceiverControlBlock::afterGenerateQueueLocked(const uint8_t signalNu
 		const auto signalMask = signalsCatcherControlBlock_->getSignalMask();
 		const auto testResult = signalMask.test(signalNumber);
 		if (testResult.second == false)	// signal is not masked?
-			return signalsCatcherControlBlock_->postGenerate(signalNumber, threadControlBlock);
+			return signalsCatcherControlBlock_->afterGenerateQueueLocked(signalNumber, threadControlBlock);
 	}
 
 	if (waitingSignalSet_ == nullptr)
