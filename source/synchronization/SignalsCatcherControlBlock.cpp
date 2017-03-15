@@ -258,21 +258,20 @@ std::pair<int, SignalAction> SignalsCatcherControlBlock::setAssociation(const ui
 	return {{}, previousSignalAction};
 }
 
-int SignalsCatcherControlBlock::setSignalMask(const SignalSet signalMask,
+void SignalsCatcherControlBlock::setSignalMask(const SignalSet signalMask,
 		const SignalsReceiverControlBlock* const owner)
 {
 	signalMask_ = signalMask;
 
 	if (owner == nullptr)	// delivery of signals should not be requested if any pending signal is unblocked?
-		return 0;
+		return;
 
 	const auto pendingUnblockedBitset = owner->getPendingSignalSet().getBitset() & ~signalMask.getBitset();
 	if (pendingUnblockedBitset.none() == true)	// no pending & unblocked signals?
-		return 0;
+		return;
 
 	deliveryIsPending_ = true;
 	deliverSignals();
-	return 0;
 }
 
 /*---------------------------------------------------------------------------------------------------------------------+

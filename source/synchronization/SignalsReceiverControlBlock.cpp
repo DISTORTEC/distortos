@@ -159,7 +159,8 @@ int SignalsReceiverControlBlock::setSignalMask(const SignalSet signalMask, const
 	if (signalsCatcherControlBlock_ == nullptr)
 		return ENOTSUP;
 
-	return signalsCatcherControlBlock_->setSignalMask(signalMask, deliver == true ? this : nullptr);
+	signalsCatcherControlBlock_->setSignalMask(signalMask, deliver == true ? this : nullptr);
+	return 0;
 }
 
 /*---------------------------------------------------------------------------------------------------------------------+

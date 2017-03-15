@@ -178,7 +178,6 @@ public:
 	 *
 	 * \return 0 on success, error code otherwise:
 	 * - ENOTSUP - catching/handling of signals is disabled for this receiver;
-	 * - error codes returned by SignalsCatcherControlBlock::setSignalMask();
 	 */
 
 	int setSignalMask(SignalSet signalMask, bool deliver);

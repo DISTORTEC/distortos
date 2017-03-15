@@ -128,11 +128,9 @@ public:
 	 * \param [in] signalMask is the SignalSet with new signal mask for associated thread
 	 * \param [in] owner selects whether pending and unblocked signals will be delivered (pointer to owner
 	 * SignalsReceiverControlBlock object) or not (nullptr)
-	 *
-	 * \return 0 on success, error code otherwise
 	 */
 
-	int setSignalMask(SignalSet signalMask, const SignalsReceiverControlBlock* owner);
+	void setSignalMask(SignalSet signalMask, const SignalsReceiverControlBlock* owner);
 
 	SignalsCatcherControlBlock(const SignalsCatcherControlBlock&) = delete;
 	SignalsCatcherControlBlock(SignalsCatcherControlBlock&&) = default;
