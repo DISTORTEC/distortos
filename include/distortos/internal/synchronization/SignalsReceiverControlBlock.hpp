@@ -211,6 +211,16 @@ private:
 	int afterGenerateQueueLocked(uint8_t signalNumber, ThreadControlBlock& threadControlBlock) const;
 
 	/**
+	 * \brief Actions executed out of critical section after signal is generated with generateSignal() or queued with
+	 * queueSignal().
+	 *
+	 * \param [in] signalNumber is the signal that was generated/queued, [0; 31]
+	 * \param [in] threadControlBlock is a reference to associated ThreadControlBlock
+	 */
+
+	void afterGenerateQueueUnlocked(uint8_t signalNumber, ThreadControlBlock& threadControlBlock) const;
+
+	/**
 	 * \brief Actions executed before signal is generated with generateSignal() or queued with queueSignal().
 	 *
 	 * \param [in] signalNumber is the signal that will be generated/queued, [0; 31]

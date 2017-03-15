@@ -203,6 +203,11 @@ int SignalsReceiverControlBlock::afterGenerateQueueLocked(const uint8_t signalNu
 	return 0;
 }
 
+void SignalsReceiverControlBlock::afterGenerateQueueUnlocked(uint8_t, ThreadControlBlock&) const
+{
+
+}
+
 int SignalsReceiverControlBlock::beforeGenerateQueue(uint8_t, ThreadControlBlock&) const
 {
 	return 0;
