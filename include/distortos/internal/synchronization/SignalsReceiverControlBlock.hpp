@@ -93,6 +93,7 @@ public:
 	 *
 	 * \return 0 on success, error code otherwise:
 	 * - error codes returned by afterGenerateQueueLocked();
+	 * - error codes returned by beforeGenerateQueue();
 	 * - error codes returned by isSignalIgnored();
 	 */
 
@@ -144,6 +145,7 @@ public:
 	 * \return 0 on success, error code otherwise:
 	 * - ENOTSUP - queuing of signals is disabled for this receiver;
 	 * - error codes returned by afterGenerateQueueLocked();
+	 * - error codes returned by beforeGenerateQueue();
 	 * - error codes returned by isSignalIgnored();
 	 * - error codes returned by SignalInformationQueue::queueSignal();
 	 */
