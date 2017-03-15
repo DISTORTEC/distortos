@@ -92,8 +92,8 @@ public:
 	 * \param [in] threadControlBlock is a reference to associated ThreadControlBlock
 	 *
 	 * \return 0 on success, error code otherwise:
+	 * - error codes returned by afterGenerateQueueLocked();
 	 * - error codes returned by isSignalIgnored();
-	 * - error codes returned by postGenerate();
 	 */
 
 	int generateSignal(uint8_t signalNumber, ThreadControlBlock& threadControlBlock);
@@ -143,8 +143,8 @@ public:
 	 *
 	 * \return 0 on success, error code otherwise:
 	 * - ENOTSUP - queuing of signals is disabled for this receiver;
+	 * - error codes returned by afterGenerateQueueLocked();
 	 * - error codes returned by isSignalIgnored();
-	 * - error codes returned by postGenerate();
 	 * - error codes returned by SignalInformationQueue::queueSignal();
 	 */
 
@@ -194,6 +194,21 @@ public:
 private:
 
 	/**
+	 * \brief Actions executed from within critical section after signal is generated with generateSignal() or queued
+	 * with queueSignal().
+	 *
+	 * If associated thread is currently waiting for the signal that was generated/queued, it will be unblocked.
+	 *
+	 * \param [in] signalNumber is the signal that was generated/queued, [0; 31]
+	 * \param [in] threadControlBlock is a reference to associated ThreadControlBlock
+	 *
+	 * \return 0 on success, error code otherwise:
+	 * - error codes returned by SignalsCatcherControlBlock::postGenerate();
+	 */
+
+	int afterGenerateQueueLocked(uint8_t signalNumber, ThreadControlBlock& threadControlBlock) const;
+
+	/**
 	 * \brief Checks whether signal is ignored.
 	 *
 	 * Signal is ignored if it has no SignalAction object associated. Signal is never ignored if catching/handling of
@@ -207,20 +222,6 @@ private:
 	 */
 
 	std::pair<int, bool> isSignalIgnored(uint8_t signalNumber) const;
-
-	/**
-	 * \brief Actions executed after signal is "generated" with generateSignal() or queueSignal().
-	 *
-	 * If associated thread is currently waiting for the signal that was generated, it will be unblocked.
-	 *
-	 * \param [in] signalNumber is the signal that was generated, [0; 31]
-	 * \param [in] threadControlBlock is a reference to associated ThreadControlBlock
-	 *
-	 * \return 0 on success, error code otherwise:
-	 * - error codes returned by SignalsCatcherControlBlock::postGenerate();
-	 */
-
-	int postGenerate(uint8_t signalNumber, ThreadControlBlock& threadControlBlock) const;
 
 	/// set of pending signals
 	SignalSet pendingSignalSet_;

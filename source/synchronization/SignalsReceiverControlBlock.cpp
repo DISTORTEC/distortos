@@ -84,7 +84,7 @@ int SignalsReceiverControlBlock::generateSignal(const uint8_t signalNumber, Thre
 
 	pendingSignalSet_.add(signalNumber);	// signal number is valid (checked above)
 
-	return postGenerate(signalNumber, threadControlBlock);
+	return afterGenerateQueueLocked(signalNumber, threadControlBlock);
 }
 
 SignalSet SignalsReceiverControlBlock::getPendingSignalSet() const
@@ -131,7 +131,7 @@ int SignalsReceiverControlBlock::queueSignal(const uint8_t signalNumber, const s
 	if (ret != 0)
 		return ret;
 
-	return postGenerate(signalNumber, threadControlBlock);
+	return afterGenerateQueueLocked(signalNumber, threadControlBlock);
 }
 
 std::pair<int, SignalAction> SignalsReceiverControlBlock::setSignalAction(const uint8_t signalNumber,
@@ -167,23 +167,8 @@ int SignalsReceiverControlBlock::setSignalMask(const SignalSet signalMask, const
 | private functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-std::pair<int, bool> SignalsReceiverControlBlock::isSignalIgnored(const uint8_t signalNumber) const
-{
-	if (signalNumber >= SignalSet::Bitset{}.size())
-		return {EINVAL, {}};
-
-	if (signalsCatcherControlBlock_ == nullptr)
-		return {{}, false};
-
-	SignalAction signalAction;
-	// this will never fail, because signal number is valid (checked above)
-	std::tie(std::ignore, signalAction) = signalsCatcherControlBlock_->getAssociation(signalNumber);
-
-	// default handler == signal is ignored
-	return {{}, signalAction.getHandler() == SignalAction{}.getHandler() ? true : false};
-}
-
-int SignalsReceiverControlBlock::postGenerate(const uint8_t signalNumber, ThreadControlBlock& threadControlBlock) const
+int SignalsReceiverControlBlock::afterGenerateQueueLocked(const uint8_t signalNumber,
+		ThreadControlBlock& threadControlBlock) const
 {
 	assert(signalNumber < SignalSet::Bitset{}.size() && "Invalid signal number!");
 
@@ -204,6 +189,22 @@ int SignalsReceiverControlBlock::postGenerate(const uint8_t signalNumber, Thread
 
 	getScheduler().unblock(ThreadList::iterator{threadControlBlock});
 	return 0;
+}
+
+std::pair<int, bool> SignalsReceiverControlBlock::isSignalIgnored(const uint8_t signalNumber) const
+{
+	if (signalNumber >= SignalSet::Bitset{}.size())
+		return {EINVAL, {}};
+
+	if (signalsCatcherControlBlock_ == nullptr)
+		return {{}, false};
+
+	SignalAction signalAction;
+	// this will never fail, because signal number is valid (checked above)
+	std::tie(std::ignore, signalAction) = signalsCatcherControlBlock_->getAssociation(signalNumber);
+
+	// default handler == signal is ignored
+	return {{}, signalAction.getHandler() == SignalAction{}.getHandler() ? true : false};
 }
 
 }	// namespace internal

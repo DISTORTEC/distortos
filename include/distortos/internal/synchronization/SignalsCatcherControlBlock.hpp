@@ -90,7 +90,7 @@ public:
 	}
 
 	/**
-	 * \brief Part of SignalsReceiverControlBlock::postGenerate() specific to catching unmasked signals.
+	 * \brief Part of SignalsReceiverControlBlock::afterGenerateQueueLocked() specific to catching unmasked signals.
 	 *
 	 * Requests delivery of signals to associated thread if there is some non-default signal handler for the signal.
 	 *
