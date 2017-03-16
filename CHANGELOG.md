@@ -4,6 +4,15 @@ Change Log
 All notable changes to this project will be documented in this file. This project adheres to
 [Semantic Versioning](http://semver.org/).
 
+[Unreleased](https://github.com/DISTORTEC/distortos/compare/v0.4.0...HEAD)
+--------------------------------------------------------------------------
+
+### Added
+
+- Board generator script written in *Python* with *Jinja2* template engine, which uses configuration files in `.json`
+format. This new feature can be used with `make board CONFIG_FILE=path/to/config.json` command. `.json` configuration
+files were added for all supported boards and all of their source files were regenerated with the script.
+
 [0.4.0](https://github.com/DISTORTEC/distortos/compare/v0.3.0...v0.4.0) - 2017-03-11
 ------------------------------------------------------------------------------------
 
