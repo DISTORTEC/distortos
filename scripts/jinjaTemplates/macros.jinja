@@ -1,0 +1,8 @@
+{{- util_file__create_date -}}
+{% macro createDate(beginYear, actualYear) -%}
+{% if beginYear < actualYear -%}
+{{ beginYear -}}-{{ actualYear -}}
+{% else -%}
+{{ actualYear -}}
+{% endif -%}
+{% endmacro -%}

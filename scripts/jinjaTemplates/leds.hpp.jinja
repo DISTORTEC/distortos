@@ -1,0 +1,87 @@
+{{- outputTemplate__leds__ -}}
+{%- set fileTypeInHeader = 'LED' -%}
+{%- set briefName = 'Declaration' -%}
+{% include "headerSourceFile.jinja" %}
+
+#ifndef SOURCE_BOARD_STM32_{{ chipFamily }}_{{ board|replace('-', '_') }}_INCLUDE_DISTORTOS_BOARD_LEDS_HPP_
+#define SOURCE_BOARD_STM32_{{ chipFamily }}_{{ board|replace('-', '_') }}_INCLUDE_DISTORTOS_BOARD_LEDS_HPP_
+
+#include "distortos/distortosConfiguration.h"
+
+#include <cstddef>
+{% for id, alternativeId, group in ledsIds %}
+/// indicates whether {% filter upper %}{{ledsIds[loop.index - 1][0]}}{% endfilter %} LED ({{ alternativeId }})
+{{-end}} is enabled (1) or not (0)
+#ifdef {% filter upper %}CONFIG_CHIP_STM32_GPIO{{ gpioDriverVersion }}_GPIO{{ group }}_ENABLE{% endfilter %}
+#define DISTORTOS_BOARD_{% filter upper %}{{ledsIds[loop.index - 1][0]}}{% endfilter %}_LED_ENABLE		1
+#else	// !def {% filter upper %}CONFIG_CHIP_STM32_GPIO{{ gpioDriverVersion }}_GPIO{{ group }}_ENABLE{% endfilter %}
+#define DISTORTOS_BOARD_{% filter upper %}{{ledsIds[loop.index - 1][0]}}{% endfilter %}_LED_ENABLE		0
+#endif	// !def {% filter upper %}CONFIG_CHIP_STM32_GPIO{{ gpioDriverVersion }}_GPIO{{ group }}_ENABLE{% endfilter %}
+{% endfor %}
+/// total number of leds on the board
+#define DISTORTOS_BOARD_TOTAL_LEDS		( \
+{%- for id, alternativeId, group in ledsIds %}
+		DISTORTOS_BOARD_{% filter upper %}{{ledsIds[loop.index - 1][0]}}{% endfilter %}_LED_ENABLE + \
+{%- endfor %}
+		0)
+
+namespace distortos
+{
+
+#ifdef CONFIG_BOARD_LEDS_ENABLE
+
+namespace chip
+{
+
+class ChipOutputPin;
+
+}	// namespace chip
+
+#endif	// def CONFIG_BOARD_LEDS_ENABLE
+
+namespace board
+{
+
+/// total number of LEDs on the board
+constexpr size_t totalLeds {DISTORTOS_BOARD_TOTAL_LEDS};
+
+/*---------------------------------------------------------------------------------------------------------------------+
+| LED indexes
++---------------------------------------------------------------------------------------------------------------------*/
+
+enum
+{
+{%- for id, alternativeId, group in ledsIds %}
+#if DISTORTOS_BOARD_{% filter upper %}{{ledsIds[loop.index - 1][0]}}{% endfilter %}_LED_ENABLE == 1
+		/// index of {% filter upper %}{{id}}{% endfilter %} LED ({{ alternativeId }})
+		{{ id }}LedIndex,
+#endif	// DISTORTOS_BOARD_{% filter upper %}{{ledsIds[loop.index - 1][0]}}{% endfilter %}_LED_ENABLE == 1
+{%- endfor %}
+};
+
+#ifdef CONFIG_BOARD_LEDS_ENABLE
+
+/*---------------------------------------------------------------------------------------------------------------------+
+| alternative (color-based) LED indexes
++---------------------------------------------------------------------------------------------------------------------*/
+{% for id, alternativeId, group in ledsIds %}
+#if DISTORTOS_BOARD_{% filter upper %}{{ledsIds[loop.index - 1][0]}}{% endfilter %}_LED_ENABLE == 1
+/// alternative index of {% filter upper %}{{id}}{% endfilter %} LED ({{ alternativeId }})
+constexpr size_t {{ alternativeId }}LedIndex {{ '{' }}{{ id }}LedIndex{{ '}' }};
+#endif	// DISTORTOS_BOARD_{% filter upper %}{{ledsIds[loop.index - 1][0]}}{% endfilter %}_LED_ENABLE == 1
+{% endfor %}
+/*---------------------------------------------------------------------------------------------------------------------+
+| indexed access to LED objects
++---------------------------------------------------------------------------------------------------------------------*/
+
+/// array with all LED objects
+extern chip::ChipOutputPin leds[totalLeds];
+
+#endif	// def CONFIG_BOARD_LEDS_ENABLE
+
+}	// namespace board
+
+}	// namespace distortos
+
+#endif	// SOURCE_BOARD_STM32_{{ chipFamily }}_{{ board|replace('-', '_') }}_INCLUDE_DISTORTOS_BOARD_LEDS_HPP_
+{{''}}
