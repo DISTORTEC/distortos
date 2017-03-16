@@ -23,6 +23,9 @@ CXXFLAGS = -Wall -Wextra -Wshadow -std=gnu++11
 # linker flags
 LDFLAGS =
 
+# overridable name of Python executable
+PYTHON ?= python
+
 # build mode (0 - non-verbose, 1 - verbose)
 VERBOSE ?= 0
 
@@ -46,7 +49,7 @@ endif
 #-----------------------------------------------------------------------------------------------------------------------
 
 DO_INCLUDE := 1
-SIMPLE_TARGETS := clean configure distclean help menuconfig
+SIMPLE_TARGETS := board clean configure distclean help menuconfig
 
 # This macro checks, if the make target list MAKECMDGOALS contains the given simple target $1. If so, it executes
 # SET_SIMPLE_TARGETS to set/clear some variables.
@@ -274,6 +277,18 @@ size:
 clean:
 	$(RM) -r $(OUTPUT)
 
+.PHONY: board
+board:
+ifeq "3.0.0" "$(word 1, $(sort 3.0.0 $(word 2,$(shell $(PYTHON) --version 2>&1))))"
+	@echo 'This script currently requires Python 2, try:'
+	@echo 'make board PYTHON=python2 CONFIG_FILE=<config_file> [OUTPUT_PATH=<output_path>]'
+else
+ifdef OUTPUT_PATH
+	$(eval OPTIONAL_BOARD_ARGUMENTS := -o $(OUTPUT_PATH))
+endif
+	$(PYTHON) $(DISTORTOS_PATH)scripts/generateBoard.py -c $(CONFIG_FILE) $(OPTIONAL_BOARD_ARGUMENTS)
+endif
+
 .PHONY: configure
 configure:
 	./$(DISTORTOS_PATH)scripts/configure.sh $(CONFIG_PATH)
@@ -320,6 +335,12 @@ define HELP_TEXT
 Available special targets:
 all - build current configuration
 clean - remove the build output
+board CONFIG_FILE=<config_file> [OUTPUT_PATH=<output_path>] - generate board
+  files;
+  <config_file> .. path to .json config file with board configuration
+  <output_path> .. optional path to output directory where board will be
+    generated; if not specified, files will be generated in the same folder as
+    the one with config file
 configure [CONFIG_PATH=<path>] - to select the configuration of your choice;
   <path> .. the path where distortosConfiguration.mk can be found; default "."
 distclean - remove the build output, doxygen documentation and file created by

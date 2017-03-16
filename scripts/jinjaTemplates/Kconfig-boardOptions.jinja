@@ -1,0 +1,45 @@
+{{- outputTemplate__Kconfig_boardOptions -}}
+{%- set fileTypeInHeader = 'Kconfig-boardOptions' -%}
+{% include "headerConfig.jinja" %}
+
+if BOARD_{{ board|replace('-', '_') }}
+{% if vddmvConfigurable is defined %}
+config CHIP_{{ chipFamily }}_VDD_MV_CONFIGURABLE
+	bool
+	default {% if rccHseClockBybassConfigurable %}y{% else %}n{% endif %}
+{% endif -%}
+{% if vddmv is defined %}
+config CHIP_{{ chipFamily }}_VDD_MV_DEFAULT
+	int
+	default {{ vddmv }}
+{% endif -%}
+{% if rccHseClockBybassConfigurable is defined %}
+config CHIP_{{ chipFamily }}_RCC_HSE_CLOCK_BYPASS_CONFIGURABLE
+	bool
+	default {% if rccHseClockBybassConfigurable %}y{% else %}n{% endif %}
+{% endif -%}
+{% if rccHseClockBypassDefault is defined %}
+config CHIP_{{ chipFamily }}_RCC_HSE_CLOCK_BYPASS_DEFAULT
+	bool
+	default {% if rccHseClockBypassDefault %}y{% else %}n{% endif %}
+{% endif -%}
+{% if rccHseFrequencyConfigurable is defined %}
+config CHIP_{{ chipFamily }}_RCC_HSE_FREQUENCY_CONFIGURABLE
+	bool
+	default {% if rccHseFrequencyConfigurable %}y{% else %}n{% endif %}
+{% endif -%}
+{% if rccHseFrequency is defined %}
+config CHIP_{{ chipFamily }}_RCC_HSE_FREQUENCY_DEFAULT
+	int
+	default {{ rccHseFrequency }}
+{% endif %}
+config BOARD_INCLUDES
+	string
+	default "{{ boardIncludes }}"
+
+config BOARD
+	string
+	default "{{ board }}"
+
+endif	# BOARD_{{ board|replace('-', '_') }}
+{{''}}
