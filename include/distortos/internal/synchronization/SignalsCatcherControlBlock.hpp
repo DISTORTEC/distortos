@@ -58,17 +58,17 @@ public:
 	/**
 	 * \brief Part of SignalsReceiverControlBlock::afterGenerateQueueLocked() specific to catching unmasked signals.
 	 *
-	 * Requests delivery of signals to associated thread if there is some non-default signal handler for the signal.
+	 * Requests delivery of signals to associated thread.
 	 *
-	 * \param [in] signalNumber is the unmasked signal that was generated, [0; 31]
+	 * \note It is assumed that some unmasked signal with non-default signal handler is pending.
+	 *
 	 * \param [in] threadControlBlock is a reference to associated ThreadControlBlock
 	 *
 	 * \return 0 on success, error code otherwise:
-	 * - error codes returned by getAssociation();
 	 * - error codes returned by requestDeliveryOfSignals();
 	 */
 
-	int afterGenerateQueueLocked(uint8_t signalNumber, ThreadControlBlock& threadControlBlock);
+	int afterGenerateQueueLocked(ThreadControlBlock& threadControlBlock);
 
 	/**
 	 * \brief Part of SignalsReceiverControlBlock::afterGenerateQueueUnlocked() specific to catching unmasked signals.
