@@ -58,7 +58,8 @@ public:
 	/**
 	 * \brief Part of SignalsReceiverControlBlock::afterGenerateQueueLocked() specific to catching unmasked signals.
 	 *
-	 * Requests delivery of signals to associated thread.
+	 * This function does nothing if the request is for current thread of execution. Otherwise it requests delivery of
+	 * signals to associated thread.
 	 *
 	 * \note It is assumed that some unmasked signal with non-default signal handler is pending.
 	 *
@@ -72,6 +73,11 @@ public:
 
 	/**
 	 * \brief Part of SignalsReceiverControlBlock::afterGenerateQueueUnlocked() specific to catching unmasked signals.
+	 *
+	 * This function does nothing if the request is for non-current thread of execution. Otherwise it delivers signals
+	 * to current thread.
+	 *
+	 * \note It is assumed that some unmasked signal with non-default signal handler is pending.
 	 *
 	 * \param [in] threadControlBlock is a reference to associated ThreadControlBlock
 	 */

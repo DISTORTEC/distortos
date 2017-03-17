@@ -11,6 +11,7 @@
 
 #include "distortos/internal/synchronization/SignalsCatcherControlBlock.hpp"
 
+#include "distortos/architecture/isInInterruptContext.hpp"
 #include "distortos/architecture/requestFunctionExecution.hpp"
 
 #include "distortos/internal/scheduler/getScheduler.hpp"
@@ -190,12 +191,23 @@ SignalsCatcherControlBlock::~SignalsCatcherControlBlock()
 
 int SignalsCatcherControlBlock::afterGenerateQueueLocked(ThreadControlBlock& threadControlBlock)
 {
+	// do nothing if the request is for current thread of execution
+	if (&getScheduler().getCurrentThreadControlBlock() == &threadControlBlock &&
+			architecture::isInInterruptContext() == false)
+		return 0;
+
 	return requestDeliveryOfSignals(threadControlBlock);
 }
 
-void SignalsCatcherControlBlock::afterGenerateQueueUnlocked(ThreadControlBlock&)
+void SignalsCatcherControlBlock::afterGenerateQueueUnlocked(ThreadControlBlock& threadControlBlock)
 {
+	// do nothing if the request is for non-current thread of execution
+	if (&getScheduler().getCurrentThreadControlBlock() != &threadControlBlock ||
+			architecture::isInInterruptContext() == true)
+		return;
 
+	deliveryIsPending_ = true;
+	deliverSignals();
 }
 
 std::pair<int, SignalAction> SignalsCatcherControlBlock::getAssociation(const uint8_t signalNumber) const
