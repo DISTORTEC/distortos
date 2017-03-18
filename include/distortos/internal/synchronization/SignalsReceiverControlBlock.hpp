@@ -205,11 +205,9 @@ private:
 	 *
 	 * \param [in] signalNumber is the signal that was generated/queued, [0; 31]
 	 * \param [in] threadControlBlock is a reference to associated ThreadControlBlock
-	 *
-	 * \return 0 on success, error code otherwise
 	 */
 
-	int afterGenerateQueueLocked(uint8_t signalNumber, ThreadControlBlock& threadControlBlock) const;
+	void afterGenerateQueueLocked(uint8_t signalNumber, ThreadControlBlock& threadControlBlock) const;
 
 	/**
 	 * \brief Actions executed out of critical section after signal is generated with generateSignal() or queued with

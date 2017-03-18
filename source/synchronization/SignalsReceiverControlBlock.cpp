@@ -91,11 +91,7 @@ int SignalsReceiverControlBlock::generateSignal(const uint8_t signalNumber, Thre
 
 		pendingSignalSet_.add(signalNumber);	// signal number is valid (checked above)
 
-		{
-			const auto ret = afterGenerateQueueLocked(signalNumber, threadControlBlock);
-			if (ret != 0)
-				return ret;
-		}
+		afterGenerateQueueLocked(signalNumber, threadControlBlock);
 	}
 
 	afterGenerateQueueUnlocked(signalNumber, threadControlBlock);
@@ -155,11 +151,8 @@ int SignalsReceiverControlBlock::queueSignal(const uint8_t signalNumber, const s
 			const auto ret = signalInformationQueue_->queueSignal(signalNumber, value);
 			assert(ret == 0 && "Queuing failed!");
 		}
-		{
-			const auto ret = afterGenerateQueueLocked(signalNumber, threadControlBlock);
-			if (ret != 0)
-				return ret;
-		}
+
+		afterGenerateQueueLocked(signalNumber, threadControlBlock);
 	}
 
 	afterGenerateQueueUnlocked(signalNumber, threadControlBlock);
@@ -199,7 +192,7 @@ int SignalsReceiverControlBlock::setSignalMask(const SignalSet signalMask, const
 | private functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-int SignalsReceiverControlBlock::afterGenerateQueueLocked(const uint8_t signalNumber,
+void SignalsReceiverControlBlock::afterGenerateQueueLocked(const uint8_t signalNumber,
 		ThreadControlBlock& threadControlBlock) const
 {
 	assert(signalNumber < SignalSet::Bitset{}.size() && "Invalid signal number!");
@@ -209,18 +202,17 @@ int SignalsReceiverControlBlock::afterGenerateQueueLocked(const uint8_t signalNu
 		const auto signalMask = signalsCatcherControlBlock_->getSignalMask();
 		const auto testResult = signalMask.test(signalNumber);
 		if (testResult.second == false)	// signal is not masked?
-			return 0;
+			return;
 	}
 
 	if (waitingSignalSet_ == nullptr)
-		return 0;
+		return;
 
 	const auto testResult = waitingSignalSet_->test(signalNumber);
 	if (testResult.second == false)	// signalNumber is not "waited for"?
-		return 0;
+		return;
 
 	getScheduler().unblock(ThreadList::iterator{threadControlBlock});
-	return 0;
 }
 
 void SignalsReceiverControlBlock::afterGenerateQueueUnlocked(const uint8_t signalNumber,
