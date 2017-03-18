@@ -92,8 +92,9 @@ public:
 	 * \param [in] threadControlBlock is a reference to associated ThreadControlBlock
 	 *
 	 * \return 0 on success, error code otherwise:
+	 * - error codes returned by afterGenerateQueueLocked();
+	 * - error codes returned by beforeGenerateQueue();
 	 * - error codes returned by isSignalIgnored();
-	 * - error codes returned by postGenerate();
 	 */
 
 	int generateSignal(uint8_t signalNumber, ThreadControlBlock& threadControlBlock);
@@ -142,10 +143,12 @@ public:
 	 * \param [in] threadControlBlock is a reference to associated ThreadControlBlock
 	 *
 	 * \return 0 on success, error code otherwise:
+	 * - EAGAIN - no resources are available to queue the signal, the limit of signals which may be queued has been
+	 * reached;
 	 * - ENOTSUP - queuing of signals is disabled for this receiver;
+	 * - error codes returned by afterGenerateQueueLocked();
+	 * - error codes returned by beforeGenerateQueue();
 	 * - error codes returned by isSignalIgnored();
-	 * - error codes returned by postGenerate();
-	 * - error codes returned by SignalInformationQueue::queueSignal();
 	 */
 
 	int queueSignal(uint8_t signalNumber, sigval value, ThreadControlBlock& threadControlBlock) const;
@@ -174,15 +177,13 @@ public:
 	 * Similar to pthread_sigmask() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_sigmask.html#
 	 *
 	 * \param [in] signalMask is the SignalSet with new signal mask for associated thread
-	 * \param [in] requestDelivery selects whether delivery of signals will be requested if any pending signal is
-	 * unblocked (true) or not (false)
+	 * \param [in] deliver selects whether pending and unblocked signals will be delivered (true) or not (false)
 	 *
 	 * \return 0 on success, error code otherwise:
 	 * - ENOTSUP - catching/handling of signals is disabled for this receiver;
-	 * - error codes returned by SignalsCatcherControlBlock::setSignalMask();
 	 */
 
-	int setSignalMask(SignalSet signalMask, bool requestDelivery);
+	int setSignalMask(SignalSet signalMask, bool deliver);
 
 	/**
 	 * \param [in] signalSet is a pointer to set of signals that will be "waited for", nullptr when wait was terminated
@@ -194,6 +195,43 @@ public:
 	}
 
 private:
+
+	/**
+	 * \brief Actions executed from within critical section after signal is generated with generateSignal() or queued
+	 * with queueSignal().
+	 *
+	 * Does nothing if the signal is not masked. Otherwise unblocks associated thread if it is currently waiting for the
+	 * signal that was generated/queued.
+	 *
+	 * \param [in] signalNumber is the signal that was generated/queued, [0; 31]
+	 * \param [in] threadControlBlock is a reference to associated ThreadControlBlock
+	 */
+
+	void afterGenerateQueueLocked(uint8_t signalNumber, ThreadControlBlock& threadControlBlock) const;
+
+	/**
+	 * \brief Actions executed out of critical section after signal is generated with generateSignal() or queued with
+	 * queueSignal().
+	 *
+	 * \param [in] signalNumber is the signal that was generated/queued, [0; 31]
+	 * \param [in] threadControlBlock is a reference to associated ThreadControlBlock
+	 */
+
+	void afterGenerateQueueUnlocked(uint8_t signalNumber, ThreadControlBlock& threadControlBlock) const;
+
+	/**
+	 * \brief Actions executed before signal is generated with generateSignal() or queued with queueSignal().
+	 *
+	 * Requests delivery it the generated/queued signal is not masked.
+	 *
+	 * \param [in] signalNumber is the signal that will be generated/queued, [0; 31]
+	 * \param [in] threadControlBlock is a reference to associated ThreadControlBlock
+	 *
+	 * \return 0 on success, error code otherwise:
+	 * - error codes returned by SignalsCatcherControlBlock::beforeGenerateQueue();
+	 */
+
+	int beforeGenerateQueue(uint8_t signalNumber, ThreadControlBlock& threadControlBlock) const;
 
 	/**
 	 * \brief Checks whether signal is ignored.
@@ -209,20 +247,6 @@ private:
 	 */
 
 	std::pair<int, bool> isSignalIgnored(uint8_t signalNumber) const;
-
-	/**
-	 * \brief Actions executed after signal is "generated" with generateSignal() or queueSignal().
-	 *
-	 * If associated thread is currently waiting for the signal that was generated, it will be unblocked.
-	 *
-	 * \param [in] signalNumber is the signal that was generated, [0; 31]
-	 * \param [in] threadControlBlock is a reference to associated ThreadControlBlock
-	 *
-	 * \return 0 on success, error code otherwise:
-	 * - error codes returned by SignalsCatcherControlBlock::postGenerate();
-	 */
-
-	int postGenerate(uint8_t signalNumber, ThreadControlBlock& threadControlBlock) const;
 
 	/// set of pending signals
 	SignalSet pendingSignalSet_;

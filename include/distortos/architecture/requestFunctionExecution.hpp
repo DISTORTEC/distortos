@@ -33,10 +33,11 @@ namespace architecture
  *
  * It must arrange for given function to be executed in specified thread as soon as possible. This generally requires
  * dealing with following scenarios:
- * - current thread is sending the request to itself - in that case just execute function right away;
  * - current thread is sending the request to non-current thread;
  * - interrupt is sending the request to current thread;
  * - interrupt is sending the request to non-current thread;
+ *
+ * \warning Current thread must not send the request to itself!
  *
  * \param [in] threadControlBlock is a reference to internal::ThreadControlBlock of thread in which \a function should
  * be executed

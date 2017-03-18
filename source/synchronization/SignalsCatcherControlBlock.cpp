@@ -11,6 +11,7 @@
 
 #include "distortos/internal/synchronization/SignalsCatcherControlBlock.hpp"
 
+#include "distortos/architecture/isInInterruptContext.hpp"
 #include "distortos/architecture/requestFunctionExecution.hpp"
 
 #include "distortos/internal/scheduler/getScheduler.hpp"
@@ -188,6 +189,27 @@ SignalsCatcherControlBlock::~SignalsCatcherControlBlock()
 
 }
 
+void SignalsCatcherControlBlock::afterGenerateQueueUnlocked(ThreadControlBlock& threadControlBlock)
+{
+	// do nothing if the request is for non-current thread of execution
+	if (&getScheduler().getCurrentThreadControlBlock() != &threadControlBlock ||
+			architecture::isInInterruptContext() == true)
+		return;
+
+	deliveryIsPending_ = true;
+	deliverSignals();
+}
+
+int SignalsCatcherControlBlock::beforeGenerateQueue(ThreadControlBlock& threadControlBlock)
+{
+	// do nothing if the request is for current thread of execution
+	if (&getScheduler().getCurrentThreadControlBlock() == &threadControlBlock &&
+			architecture::isInInterruptContext() == false)
+		return 0;
+
+	return requestDeliveryOfSignals(threadControlBlock);
+}
+
 std::pair<int, SignalAction> SignalsCatcherControlBlock::getAssociation(const uint8_t signalNumber) const
 {
 	if (signalNumber >= SignalSet::Bitset{}.size())
@@ -198,17 +220,6 @@ std::pair<int, SignalAction> SignalsCatcherControlBlock::getAssociation(const ui
 		return {{}, {}};
 
 	return {{}, association->second};
-}
-
-int SignalsCatcherControlBlock::postGenerate(const uint8_t signalNumber, ThreadControlBlock& threadControlBlock)
-{
-	const auto getAssociationResult = getAssociation(signalNumber);
-	if (getAssociationResult.first != 0)
-		return getAssociationResult.first;
-	if (getAssociationResult.second.getHandler() == SignalAction{}.getHandler())	// default handler?
-		return 0;	// ignore signal
-
-	return requestDeliveryOfSignals(threadControlBlock);
 }
 
 std::pair<int, SignalAction> SignalsCatcherControlBlock::setAssociation(const uint8_t signalNumber,
@@ -258,21 +269,20 @@ std::pair<int, SignalAction> SignalsCatcherControlBlock::setAssociation(const ui
 	return {{}, previousSignalAction};
 }
 
-int SignalsCatcherControlBlock::setSignalMask(const SignalSet signalMask,
+void SignalsCatcherControlBlock::setSignalMask(const SignalSet signalMask,
 		const SignalsReceiverControlBlock* const owner)
 {
 	signalMask_ = signalMask;
 
 	if (owner == nullptr)	// delivery of signals should not be requested if any pending signal is unblocked?
-		return 0;
-
-	const InterruptMaskingLock interruptMaskingLock;
+		return;
 
 	const auto pendingUnblockedBitset = owner->getPendingSignalSet().getBitset() & ~signalMask.getBitset();
 	if (pendingUnblockedBitset.none() == true)	// no pending & unblocked signals?
-		return 0;
+		return;
 
-	return requestDeliveryOfSignals(getScheduler().getCurrentThreadControlBlock());
+	deliveryIsPending_ = true;
+	deliverSignals();
 }
 
 /*---------------------------------------------------------------------------------------------------------------------+

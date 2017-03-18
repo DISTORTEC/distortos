@@ -74,17 +74,28 @@ int SignalsReceiverControlBlock::deliveryOfSignalsStartedHook() const
 
 int SignalsReceiverControlBlock::generateSignal(const uint8_t signalNumber, ThreadControlBlock& threadControlBlock)
 {
-	const InterruptMaskingLock interruptMaskingLock;
+	{
+		const InterruptMaskingLock interruptMaskingLock;
 
-	const auto isSignalIgnoredResult = isSignalIgnored(signalNumber);
-	if (isSignalIgnoredResult.first != 0)
-		return isSignalIgnoredResult.first;
-	if (isSignalIgnoredResult.second == true)	// is signal ignored?
-		return 0;
+		const auto isSignalIgnoredResult = isSignalIgnored(signalNumber);
+		if (isSignalIgnoredResult.first != 0)
+			return isSignalIgnoredResult.first;
+		if (isSignalIgnoredResult.second == true)	// is signal ignored?
+			return 0;
 
-	pendingSignalSet_.add(signalNumber);	// signal number is valid (checked above)
+		{
+			const auto ret = beforeGenerateQueue(signalNumber, threadControlBlock);
+			if (ret != 0)
+				return ret;
+		}
 
-	return postGenerate(signalNumber, threadControlBlock);
+		pendingSignalSet_.add(signalNumber);	// signal number is valid (checked above)
+
+		afterGenerateQueueLocked(signalNumber, threadControlBlock);
+	}
+
+	afterGenerateQueueUnlocked(signalNumber, threadControlBlock);
+	return 0;
 }
 
 SignalSet SignalsReceiverControlBlock::getPendingSignalSet() const
@@ -119,19 +130,33 @@ int SignalsReceiverControlBlock::queueSignal(const uint8_t signalNumber, const s
 	if (signalInformationQueue_ == nullptr)
 		return ENOTSUP;
 
-	const InterruptMaskingLock interruptMaskingLock;
+	{
+		const InterruptMaskingLock interruptMaskingLock;
 
-	const auto isSignalIgnoredResult = isSignalIgnored(signalNumber);
-	if (isSignalIgnoredResult.first != 0)
-		return isSignalIgnoredResult.first;
-	if (isSignalIgnoredResult.second == true)	// is signal ignored?
-		return 0;
+		const auto isSignalIgnoredResult = isSignalIgnored(signalNumber);
+		if (isSignalIgnoredResult.first != 0)
+			return isSignalIgnoredResult.first;
+		if (isSignalIgnoredResult.second == true)	// is signal ignored?
+			return 0;
 
-	const auto ret = signalInformationQueue_->queueSignal(signalNumber, value);
-	if (ret != 0)
-		return ret;
+		if (signalInformationQueue_->canQueueSignal() == false)
+			return EAGAIN;
 
-	return postGenerate(signalNumber, threadControlBlock);
+		{
+			const auto ret = beforeGenerateQueue(signalNumber, threadControlBlock);
+			if (ret != 0)
+				return ret;
+		}
+		{
+			const auto ret = signalInformationQueue_->queueSignal(signalNumber, value);
+			assert(ret == 0 && "Queuing failed!");
+		}
+
+		afterGenerateQueueLocked(signalNumber, threadControlBlock);
+	}
+
+	afterGenerateQueueUnlocked(signalNumber, threadControlBlock);
+	return 0;
 }
 
 std::pair<int, SignalAction> SignalsReceiverControlBlock::setSignalAction(const uint8_t signalNumber,
@@ -154,17 +179,71 @@ std::pair<int, SignalAction> SignalsReceiverControlBlock::setSignalAction(const 
 	return signalsCatcherControlBlock_->setAssociation(signalNumber, signalAction);
 }
 
-int SignalsReceiverControlBlock::setSignalMask(const SignalSet signalMask, const bool requestDelivery)
+int SignalsReceiverControlBlock::setSignalMask(const SignalSet signalMask, const bool deliver)
 {
 	if (signalsCatcherControlBlock_ == nullptr)
 		return ENOTSUP;
 
-	return signalsCatcherControlBlock_->setSignalMask(signalMask, requestDelivery == true ? this : nullptr);
+	signalsCatcherControlBlock_->setSignalMask(signalMask, deliver == true ? this : nullptr);
+	return 0;
 }
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | private functions
 +---------------------------------------------------------------------------------------------------------------------*/
+
+void SignalsReceiverControlBlock::afterGenerateQueueLocked(const uint8_t signalNumber,
+		ThreadControlBlock& threadControlBlock) const
+{
+	assert(signalNumber < SignalSet::Bitset{}.size() && "Invalid signal number!");
+
+	if (signalsCatcherControlBlock_ != nullptr)
+	{
+		const auto signalMask = signalsCatcherControlBlock_->getSignalMask();
+		const auto testResult = signalMask.test(signalNumber);
+		if (testResult.second == false)	// signal is not masked?
+			return;
+	}
+
+	if (waitingSignalSet_ == nullptr)
+		return;
+
+	const auto testResult = waitingSignalSet_->test(signalNumber);
+	if (testResult.second == false)	// signalNumber is not "waited for"?
+		return;
+
+	getScheduler().unblock(ThreadList::iterator{threadControlBlock});
+}
+
+void SignalsReceiverControlBlock::afterGenerateQueueUnlocked(const uint8_t signalNumber,
+		ThreadControlBlock& threadControlBlock) const
+{
+	assert(signalNumber < SignalSet::Bitset{}.size() && "Invalid signal number!");
+
+	if (signalsCatcherControlBlock_ == nullptr)
+		return;
+
+	const auto testResult = signalsCatcherControlBlock_->getSignalMask().test(signalNumber);
+	if (testResult.second == true)	// signal is masked?
+		return;
+
+	signalsCatcherControlBlock_->afterGenerateQueueUnlocked(threadControlBlock);
+}
+
+int SignalsReceiverControlBlock::beforeGenerateQueue(const uint8_t signalNumber,
+		ThreadControlBlock& threadControlBlock) const
+{
+	assert(signalNumber < SignalSet::Bitset{}.size() && "Invalid signal number!");
+
+	if (signalsCatcherControlBlock_ == nullptr)
+		return 0;
+
+	const auto testResult = signalsCatcherControlBlock_->getSignalMask().test(signalNumber);
+	if (testResult.second == true)	// signal is masked?
+		return 0;
+
+	return signalsCatcherControlBlock_->beforeGenerateQueue(threadControlBlock);
+}
 
 std::pair<int, bool> SignalsReceiverControlBlock::isSignalIgnored(const uint8_t signalNumber) const
 {
@@ -180,29 +259,6 @@ std::pair<int, bool> SignalsReceiverControlBlock::isSignalIgnored(const uint8_t 
 
 	// default handler == signal is ignored
 	return {{}, signalAction.getHandler() == SignalAction{}.getHandler() ? true : false};
-}
-
-int SignalsReceiverControlBlock::postGenerate(const uint8_t signalNumber, ThreadControlBlock& threadControlBlock) const
-{
-	assert(signalNumber < SignalSet::Bitset{}.size() && "Invalid signal number!");
-
-	if (signalsCatcherControlBlock_ != nullptr)
-	{
-		const auto signalMask = signalsCatcherControlBlock_->getSignalMask();
-		const auto testResult = signalMask.test(signalNumber);
-		if (testResult.second == false)	// signal is not masked?
-			return signalsCatcherControlBlock_->postGenerate(signalNumber, threadControlBlock);
-	}
-
-	if (waitingSignalSet_ == nullptr)
-		return 0;
-
-	const auto testResult = waitingSignalSet_->test(signalNumber);
-	if (testResult.second == false)	// signalNumber is not "waited for"?
-		return 0;
-
-	getScheduler().unblock(ThreadList::iterator{threadControlBlock});
-	return 0;
 }
 
 }	// namespace internal

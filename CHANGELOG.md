@@ -13,6 +13,19 @@ All notable changes to this project will be documented in this file. This projec
 format. This new feature can be used with `make board CONFIG_FILE=path/to/config.json` command. `.json` configuration
 files were added for all supported boards and all of their source files were regenerated with the script.
 
+### Changed
+
+- `architecture::requestFunctionExecution()` no longer handles the case of current thread sending the request to
+itself.
+
+### Fixed
+
+- `ThisThread::Signals::setSignalMask()` may never return `ENOSPC`, as it delivers signals directly, not via
+`architecture::requestFunctionExecution()`.
+- Failure during generation or queuing of signal - for example due to free stack size being insufficient, which is
+reported with `ENOSPC` error code - won't leave the generated/queued signal pending.
+- Signals are never delived from within critical section.
+
 [0.4.0](https://github.com/DISTORTEC/distortos/compare/v0.3.0...v0.4.0) - 2017-03-11
 ------------------------------------------------------------------------------------
 

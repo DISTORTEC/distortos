@@ -25,6 +25,8 @@
 #include "distortos/internal/scheduler/Scheduler.hpp"
 #include "distortos/internal/scheduler/getScheduler.hpp"
 
+#include "distortos/FATAL_ERROR.h"
+
 #include <cerrno>
 #include <cstring>
 
@@ -178,25 +180,6 @@ void functionTrampoline(void (& function)(), const void* const savedStackPointer
 }
 
 /**
- * \brief Handles request from current thread to itself.
- *
- * \param [in] function is a reference to function that should be executed in current thread
- */
-
-void fromCurrentThreadToCurrentThread(void (& function)())
-{
-#if __FPU_PRESENT == 1 && __FPU_USED == 1
-	const auto control = __get_CONTROL();
-#endif	// __FPU_PRESENT == 1 && __FPU_USED == 1
-
-	function();	// execute function right away
-
-#if __FPU_PRESENT == 1 && __FPU_USED == 1
-	__set_CONTROL(control);	// restore previous value of CONTROL register, possibly deactivating FPU context
-#endif	// __FPU_PRESENT == 1 && __FPU_USED == 1
-}
-
-/**
  * \brief Handles request coming from interrupt context to execute provided function in current thread.
  *
  * \param [in] threadControlBlock is a reference to ThreadControlBlock of current thread
@@ -314,8 +297,7 @@ int requestFunctionExecution(internal::ThreadControlBlock& threadControlBlock, v
 	if (isInInterruptContext() == true)	// interrupt is sending the request to current thread?
 		return fromInterruptToCurrentThread(threadControlBlock, function);
 
-	fromCurrentThreadToCurrentThread(function);	// current thread is sending the request to itself
-	return 0;
+	FATAL_ERROR("Current thread of execution is sending the request to itself!");
 }
 
 }	// namespace architecture

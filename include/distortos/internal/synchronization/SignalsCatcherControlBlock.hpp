@@ -56,6 +56,36 @@ public:
 	~SignalsCatcherControlBlock();
 
 	/**
+	 * \brief Part of SignalsReceiverControlBlock::afterGenerateQueueUnlocked() specific to catching unmasked signals.
+	 *
+	 * This function does nothing if the request is for non-current thread of execution. Otherwise it delivers signals
+	 * to current thread.
+	 *
+	 * \note It is assumed that some unmasked signal with non-default signal handler is pending.
+	 *
+	 * \param [in] threadControlBlock is a reference to associated ThreadControlBlock
+	 */
+
+	void afterGenerateQueueUnlocked(ThreadControlBlock& threadControlBlock);
+
+	/**
+	 * \brief Part of SignalsReceiverControlBlock::beforeGenerateQueue() specific to catching unmasked signals.
+	 *
+	 * This function does nothing if the request is for current thread of execution. Otherwise it requests delivery of
+	 * signals to associated thread.
+	 *
+	 * \note It is assumed that some unmasked signal with non-default signal handler will be pending before leaving
+	 * critical section.
+	 *
+	 * \param [in] threadControlBlock is a reference to associated ThreadControlBlock
+	 *
+	 * \return 0 on success, error code otherwise:
+	 * - error codes returned by requestDeliveryOfSignals();
+	 */
+
+	int beforeGenerateQueue(ThreadControlBlock& threadControlBlock);
+
+	/**
 	 * \brief Hook function executed when delivery of signals is started.
 	 *
 	 * Clears "delivery pending" flag.
@@ -90,21 +120,6 @@ public:
 	}
 
 	/**
-	 * \brief Part of SignalsReceiverControlBlock::postGenerate() specific to catching unmasked signals.
-	 *
-	 * Requests delivery of signals to associated thread if there is some non-default signal handler for the signal.
-	 *
-	 * \param [in] signalNumber is the unmasked signal that was generated, [0; 31]
-	 * \param [in] threadControlBlock is a reference to associated ThreadControlBlock
-	 *
-	 * \return 0 on success, error code otherwise:
-	 * - error codes returned by getAssociation();
-	 * - error codes returned by requestDeliveryOfSignals();
-	 */
-
-	int postGenerate(uint8_t signalNumber, ThreadControlBlock& threadControlBlock);
-
-	/**
 	 * \brief Sets association for given signal number.
 	 *
 	 * \param [in] signalNumber is the signal for which the association will be set, [0; 31]
@@ -122,18 +137,15 @@ public:
 	/**
 	 * \brief Sets signal mask for associated thread.
 	 *
-	 * If any pending signal is unblocked and \a owner doesn't equal nullptr, then delivery of signals to associated
-	 * thread will be requested.
+	 * If any pending signal is unblocked and \a owner doesn't equal nullptr, then pending and unblocked signals will be
+	 * delivered.
 	 *
 	 * \param [in] signalMask is the SignalSet with new signal mask for associated thread
-	 * \param [in] owner selects whether delivery of signals will be requested if any pending signal is unblocked
-	 * (pointer to owner SignalsReceiverControlBlock object) or not (nullptr)
-	 *
-	 * \return 0 on success, error code otherwise:
-	 * - error codes returned by requestDeliveryOfSignals();
+	 * \param [in] owner selects whether pending and unblocked signals will be delivered (pointer to owner
+	 * SignalsReceiverControlBlock object) or not (nullptr)
 	 */
 
-	int setSignalMask(SignalSet signalMask, const SignalsReceiverControlBlock* owner);
+	void setSignalMask(SignalSet signalMask, const SignalsReceiverControlBlock* owner);
 
 	SignalsCatcherControlBlock(const SignalsCatcherControlBlock&) = delete;
 	SignalsCatcherControlBlock(SignalsCatcherControlBlock&&) = default;

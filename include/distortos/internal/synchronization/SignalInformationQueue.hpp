@@ -78,6 +78,15 @@ public:
 	std::pair<int, SignalInformation> acceptQueuedSignal(uint8_t signalNumber);
 
 	/**
+	 * \return true if at least one object can be queued, false otherwise
+	 */
+
+	bool canQueueSignal() const
+	{
+		return freeSignalInformationList_.empty() == false;
+	}
+
+	/**
 	 * \return set of currently queued signals
 	 */
 
