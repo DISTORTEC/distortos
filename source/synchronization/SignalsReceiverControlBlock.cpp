@@ -143,6 +143,9 @@ int SignalsReceiverControlBlock::queueSignal(const uint8_t signalNumber, const s
 		if (isSignalIgnoredResult.second == true)	// is signal ignored?
 			return 0;
 
+		if (signalInformationQueue_->canQueueSignal() == false)
+			return EAGAIN;
+
 		{
 			const auto ret = beforeGenerateQueue(signalNumber, threadControlBlock);
 			if (ret != 0)
@@ -150,8 +153,7 @@ int SignalsReceiverControlBlock::queueSignal(const uint8_t signalNumber, const s
 		}
 		{
 			const auto ret = signalInformationQueue_->queueSignal(signalNumber, value);
-			if (ret != 0)
-				return ret;
+			assert(ret == 0 && "Queuing failed!");
 		}
 		{
 			const auto ret = afterGenerateQueueLocked(signalNumber, threadControlBlock);

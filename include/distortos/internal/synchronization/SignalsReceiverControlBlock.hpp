@@ -143,11 +143,12 @@ public:
 	 * \param [in] threadControlBlock is a reference to associated ThreadControlBlock
 	 *
 	 * \return 0 on success, error code otherwise:
+	 * - EAGAIN - no resources are available to queue the signal, the limit of signals which may be queued has been
+	 * reached;
 	 * - ENOTSUP - queuing of signals is disabled for this receiver;
 	 * - error codes returned by afterGenerateQueueLocked();
 	 * - error codes returned by beforeGenerateQueue();
 	 * - error codes returned by isSignalIgnored();
-	 * - error codes returned by SignalInformationQueue::queueSignal();
 	 */
 
 	int queueSignal(uint8_t signalNumber, sigval value, ThreadControlBlock& threadControlBlock) const;
