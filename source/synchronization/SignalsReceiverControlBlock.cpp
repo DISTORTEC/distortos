@@ -209,7 +209,7 @@ int SignalsReceiverControlBlock::afterGenerateQueueLocked(const uint8_t signalNu
 		const auto signalMask = signalsCatcherControlBlock_->getSignalMask();
 		const auto testResult = signalMask.test(signalNumber);
 		if (testResult.second == false)	// signal is not masked?
-			return signalsCatcherControlBlock_->afterGenerateQueueLocked(threadControlBlock);
+			return 0;
 	}
 
 	if (waitingSignalSet_ == nullptr)
@@ -238,9 +238,19 @@ void SignalsReceiverControlBlock::afterGenerateQueueUnlocked(const uint8_t signa
 	signalsCatcherControlBlock_->afterGenerateQueueUnlocked(threadControlBlock);
 }
 
-int SignalsReceiverControlBlock::beforeGenerateQueue(uint8_t, ThreadControlBlock&) const
+int SignalsReceiverControlBlock::beforeGenerateQueue(const uint8_t signalNumber,
+		ThreadControlBlock& threadControlBlock) const
 {
-	return 0;
+	assert(signalNumber < SignalSet::Bitset{}.size() && "Invalid signal number!");
+
+	if (signalsCatcherControlBlock_ == nullptr)
+		return 0;
+
+	const auto testResult = signalsCatcherControlBlock_->getSignalMask().test(signalNumber);
+	if (testResult.second == true)	// signal is masked?
+		return 0;
+
+	return signalsCatcherControlBlock_->beforeGenerateQueue(threadControlBlock);
 }
 
 std::pair<int, bool> SignalsReceiverControlBlock::isSignalIgnored(const uint8_t signalNumber) const

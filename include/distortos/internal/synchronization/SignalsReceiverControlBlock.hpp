@@ -200,13 +200,13 @@ private:
 	 * \brief Actions executed from within critical section after signal is generated with generateSignal() or queued
 	 * with queueSignal().
 	 *
-	 * If associated thread is currently waiting for the signal that was generated/queued, it will be unblocked.
+	 * Does nothing if the signal is not masked. Otherwise unblocks associated thread if it is currently waiting for the
+	 * signal that was generated/queued.
 	 *
 	 * \param [in] signalNumber is the signal that was generated/queued, [0; 31]
 	 * \param [in] threadControlBlock is a reference to associated ThreadControlBlock
 	 *
-	 * \return 0 on success, error code otherwise:
-	 * - error codes returned by SignalsCatcherControlBlock::afterGenerateQueueLocked();
+	 * \return 0 on success, error code otherwise
 	 */
 
 	int afterGenerateQueueLocked(uint8_t signalNumber, ThreadControlBlock& threadControlBlock) const;
@@ -224,10 +224,13 @@ private:
 	/**
 	 * \brief Actions executed before signal is generated with generateSignal() or queued with queueSignal().
 	 *
+	 * Requests delivery it the generated/queued signal is not masked.
+	 *
 	 * \param [in] signalNumber is the signal that will be generated/queued, [0; 31]
 	 * \param [in] threadControlBlock is a reference to associated ThreadControlBlock
 	 *
-	 * \return 0 on success, error code otherwise
+	 * \return 0 on success, error code otherwise:
+	 * - error codes returned by SignalsCatcherControlBlock::beforeGenerateQueue();
 	 */
 
 	int beforeGenerateQueue(uint8_t signalNumber, ThreadControlBlock& threadControlBlock) const;

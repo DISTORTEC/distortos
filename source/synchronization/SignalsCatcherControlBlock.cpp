@@ -189,16 +189,6 @@ SignalsCatcherControlBlock::~SignalsCatcherControlBlock()
 
 }
 
-int SignalsCatcherControlBlock::afterGenerateQueueLocked(ThreadControlBlock& threadControlBlock)
-{
-	// do nothing if the request is for current thread of execution
-	if (&getScheduler().getCurrentThreadControlBlock() == &threadControlBlock &&
-			architecture::isInInterruptContext() == false)
-		return 0;
-
-	return requestDeliveryOfSignals(threadControlBlock);
-}
-
 void SignalsCatcherControlBlock::afterGenerateQueueUnlocked(ThreadControlBlock& threadControlBlock)
 {
 	// do nothing if the request is for non-current thread of execution
@@ -208,6 +198,16 @@ void SignalsCatcherControlBlock::afterGenerateQueueUnlocked(ThreadControlBlock& 
 
 	deliveryIsPending_ = true;
 	deliverSignals();
+}
+
+int SignalsCatcherControlBlock::beforeGenerateQueue(ThreadControlBlock& threadControlBlock)
+{
+	// do nothing if the request is for current thread of execution
+	if (&getScheduler().getCurrentThreadControlBlock() == &threadControlBlock &&
+			architecture::isInInterruptContext() == false)
+		return 0;
+
+	return requestDeliveryOfSignals(threadControlBlock);
 }
 
 std::pair<int, SignalAction> SignalsCatcherControlBlock::getAssociation(const uint8_t signalNumber) const

@@ -56,22 +56,6 @@ public:
 	~SignalsCatcherControlBlock();
 
 	/**
-	 * \brief Part of SignalsReceiverControlBlock::afterGenerateQueueLocked() specific to catching unmasked signals.
-	 *
-	 * This function does nothing if the request is for current thread of execution. Otherwise it requests delivery of
-	 * signals to associated thread.
-	 *
-	 * \note It is assumed that some unmasked signal with non-default signal handler is pending.
-	 *
-	 * \param [in] threadControlBlock is a reference to associated ThreadControlBlock
-	 *
-	 * \return 0 on success, error code otherwise:
-	 * - error codes returned by requestDeliveryOfSignals();
-	 */
-
-	int afterGenerateQueueLocked(ThreadControlBlock& threadControlBlock);
-
-	/**
 	 * \brief Part of SignalsReceiverControlBlock::afterGenerateQueueUnlocked() specific to catching unmasked signals.
 	 *
 	 * This function does nothing if the request is for non-current thread of execution. Otherwise it delivers signals
@@ -83,6 +67,23 @@ public:
 	 */
 
 	void afterGenerateQueueUnlocked(ThreadControlBlock& threadControlBlock);
+
+	/**
+	 * \brief Part of SignalsReceiverControlBlock::beforeGenerateQueue() specific to catching unmasked signals.
+	 *
+	 * This function does nothing if the request is for current thread of execution. Otherwise it requests delivery of
+	 * signals to associated thread.
+	 *
+	 * \note It is assumed that some unmasked signal with non-default signal handler will be pending before leaving
+	 * critical section.
+	 *
+	 * \param [in] threadControlBlock is a reference to associated ThreadControlBlock
+	 *
+	 * \return 0 on success, error code otherwise:
+	 * - error codes returned by requestDeliveryOfSignals();
+	 */
+
+	int beforeGenerateQueue(ThreadControlBlock& threadControlBlock);
 
 	/**
 	 * \brief Hook function executed when delivery of signals is started.
