@@ -108,7 +108,7 @@ Stack::~Stack()
 bool Stack::checkStackGuard() const
 {
 	return std::all_of(static_cast<decltype(&stackSentinel)>(adjustedStorage_),
-			static_cast<decltype(&stackSentinel)>(adjustedStorage_) + stackGuardSize_ / sizeof(stackSentinel),
+			static_cast<decltype(&stackSentinel)>(adjustedStorage_) + stackGuardSize / sizeof(stackSentinel),
 			[](decltype(stackSentinel)& element) -> bool
 			{
 				return element == stackSentinel;
@@ -118,7 +118,7 @@ bool Stack::checkStackGuard() const
 size_t Stack::getHighWaterMark() const
 {
 	const auto begin =
-			static_cast<decltype(&stackSentinel)>(adjustedStorage_) + stackGuardSize_ / sizeof(stackSentinel);
+			static_cast<decltype(&stackSentinel)>(adjustedStorage_) + stackGuardSize / sizeof(stackSentinel);
 	const auto end = static_cast<decltype(&stackSentinel)>(adjustedStorage_) + adjustedSize_ / sizeof(stackSentinel);
 	const auto usedElement = std::find_if_not(begin, end,
 			[](decltype(stackSentinel)& element) -> bool
@@ -135,7 +135,7 @@ int Stack::initialize(Thread& thread, void (& run)(Thread&), void (* const preTe
 			adjustedSize_ / sizeof(stackSentinel), stackSentinel);
 	int ret;
 	std::tie(ret, stackPointer_) =
-			architecture::initializeStack(static_cast<uint8_t*>(adjustedStorage_) + stackGuardSize_, getSize(), thread,
+			architecture::initializeStack(static_cast<uint8_t*>(adjustedStorage_) + stackGuardSize, getSize(), thread,
 			run, preTerminationHook, terminationHook);
 	return ret;
 }
