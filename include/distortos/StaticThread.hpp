@@ -25,11 +25,12 @@ namespace internal
 /**
  * \brief StaticThreadBase class is a templated common base for StaticThread
  *
+ * \tparam StackSize is the size of stack, bytes
  * \tparam Function is the function that will be executed in separate thread
  * \tparam Args are the arguments for \a Function
  */
 
-template<typename Function, typename... Args>
+template<size_t StackSize, typename Function, typename... Args>
 class StaticThreadBase : public UndetachableThread
 {
 public:
@@ -40,9 +41,6 @@ public:
 	/**
 	 * \brief StaticThreadBase's constructor
 	 *
-	 * \param [in] stackStorageUniquePointer is a rvalue reference to StackStorageUniquePointer with storage for stack
-	 * (\a size bytes long) and appropriate deleter
-	 * \param [in] size is the size of stack's storage, bytes
 	 * \param [in] priority is the thread's priority, 0 - lowest, UINT8_MAX - highest
 	 * \param [in] schedulingPolicy is the scheduling policy of the thread
 	 * \param [in] signalsReceiver is a pointer to SignalsReceiver object for this thread, nullptr to disable reception
@@ -51,11 +49,10 @@ public:
 	 * \param [in] args are arguments for function
 	 */
 
-	StaticThreadBase(StackStorageUniquePointer&& stackStorageUniquePointer, const size_t size, const uint8_t priority,
-			const SchedulingPolicy schedulingPolicy, SignalsReceiver* const signalsReceiver, Function&& function,
-			Args&&... args) :
-					Base{{std::move(stackStorageUniquePointer), size}, priority, schedulingPolicy, nullptr,
-							signalsReceiver},
+	StaticThreadBase(const uint8_t priority, const SchedulingPolicy schedulingPolicy,
+			SignalsReceiver* const signalsReceiver, Function&& function, Args&&... args) :
+					Base{{{&stack_, internal::dummyDeleter<decltype(stack_)>}, sizeof(stack_)}, priority,
+							schedulingPolicy, nullptr, signalsReceiver},
 					boundFunction_{std::bind(std::forward<Function>(function), std::forward<Args>(args)...)}
 	{
 
@@ -80,12 +77,6 @@ public:
 		return UndetachableThread::startInternal(run, nullptr, terminationHook);
 	}
 
-protected:
-
-	/// size of "stack guard", bytes
-	constexpr static size_t stackGuardSize_ {(CONFIG_STACK_GUARD_SIZE + CONFIG_ARCHITECTURE_STACK_ALIGNMENT - 1) /
-			CONFIG_ARCHITECTURE_STACK_ALIGNMENT * CONFIG_ARCHITECTURE_STACK_ALIGNMENT};
-
 private:
 
 	/**
@@ -100,6 +91,16 @@ private:
 	{
 		static_cast<StaticThreadBase&>(thread).boundFunction_();
 	}
+
+	/// size of stack adjusted to alignment requirements, bytes
+	constexpr static size_t adjustedStackSize {(StackSize + CONFIG_ARCHITECTURE_STACK_ALIGNMENT - 1) /
+			CONFIG_ARCHITECTURE_STACK_ALIGNMENT * CONFIG_ARCHITECTURE_STACK_ALIGNMENT};
+
+	/// stack buffer
+	alignas(CONFIG_ARCHITECTURE_STACK_ALIGNMENT)
+	typename std::aligned_storage<adjustedStackSize + internal::stackGuardSize>::type stack_;
+
+	static_assert(sizeof(stack_) % CONFIG_ARCHITECTURE_STACK_ALIGNMENT == 0, "Stack size is not aligned!");
 
 	/// bound function object
 	decltype(std::bind(std::declval<Function>(), std::declval<Args>()...)) boundFunction_;
@@ -125,12 +126,12 @@ private:
 
 template<size_t StackSize, bool CanReceiveSignals, size_t QueuedSignals, size_t SignalActions, typename Function,
 		typename... Args>
-class StaticThread : public internal::StaticThreadBase<Function, Args...>
+class StaticThread : public internal::StaticThreadBase<StackSize, Function, Args...>
 {
 public:
 
 	/// base of StaticThread
-	using Base = internal::StaticThreadBase<Function, Args...>;
+	using Base = internal::StaticThreadBase<StackSize, Function, Args...>;
 
 	/**
 	 * \brief StaticThread's constructor
@@ -162,11 +163,6 @@ public:
 	StaticThread(StaticThread&&) = default;
 	const StaticThread& operator=(const StaticThread&) = delete;
 	StaticThread& operator=(StaticThread&&) = delete;
-
-private:
-
-	/// stack buffer
-	typename std::aligned_storage<StackSize + Base::stackGuardSize_>::type stack_;
 };
 
 /**
@@ -186,12 +182,12 @@ private:
 
 template<size_t StackSize, size_t QueuedSignals, size_t SignalActions, typename Function, typename... Args>
 class StaticThread<StackSize, true, QueuedSignals, SignalActions, Function, Args...> :
-		public internal::StaticThreadBase<Function, Args...>
+		public internal::StaticThreadBase<StackSize, Function, Args...>
 {
 public:
 
 	/// base of StaticThread
-	using Base = internal::StaticThreadBase<Function, Args...>;
+	using Base = internal::StaticThreadBase<StackSize, Function, Args...>;
 
 	/**
 	 * \brief StaticThread's constructor
@@ -225,9 +221,6 @@ public:
 	StaticThread& operator=(StaticThread&&) = delete;
 
 private:
-
-	/// stack buffer
-	typename std::aligned_storage<StackSize + Base::stackGuardSize_>::type stack_;
 
 	/// internal StaticSignalsReceiver object
 	StaticSignalsReceiver<QueuedSignals, SignalActions> staticSignalsReceiver_;
@@ -362,8 +355,7 @@ template<size_t StackSize, bool CanReceiveSignals, size_t QueuedSignals, size_t 
 		typename... Args>
 StaticThread<StackSize, CanReceiveSignals, QueuedSignals, SignalActions, Function, Args...>::
 StaticThread(const uint8_t priority, const SchedulingPolicy schedulingPolicy, Function&& function, Args&&... args) :
-		Base{{&stack_, internal::dummyDeleter<decltype(stack_)>}, sizeof(stack_), priority, schedulingPolicy, nullptr,
-				std::forward<Function>(function), std::forward<Args>(args)...}
+		Base{priority, schedulingPolicy, nullptr, std::forward<Function>(function), std::forward<Args>(args)...}
 {
 
 }
@@ -371,9 +363,8 @@ StaticThread(const uint8_t priority, const SchedulingPolicy schedulingPolicy, Fu
 template<size_t StackSize, size_t QueuedSignals, size_t SignalActions, typename Function, typename... Args>
 StaticThread<StackSize, true, QueuedSignals, SignalActions, Function, Args...>::StaticThread(const uint8_t priority,
 		const SchedulingPolicy schedulingPolicy, Function&& function, Args&&... args) :
-		Base{{&stack_, internal::dummyDeleter<decltype(stack_)>}, sizeof(stack_), priority, schedulingPolicy,
-				&static_cast<SignalsReceiver&>(staticSignalsReceiver_), std::forward<Function>(function),
-				std::forward<Args>(args)...},
+		Base{priority, schedulingPolicy, &static_cast<SignalsReceiver&>(staticSignalsReceiver_),
+				std::forward<Function>(function), std::forward<Args>(args)...},
 		staticSignalsReceiver_{}
 {
 

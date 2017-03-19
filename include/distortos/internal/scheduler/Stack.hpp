@@ -12,7 +12,7 @@
 #ifndef INCLUDE_DISTORTOS_INTERNAL_SCHEDULER_STACK_HPP_
 #define INCLUDE_DISTORTOS_INTERNAL_SCHEDULER_STACK_HPP_
 
-#include "distortos/distortosConfiguration.h"
+#include "distortos/internal/scheduler/stackGuardSize.hpp"
 
 #include <memory>
 
@@ -86,7 +86,7 @@ public:
 
 	bool checkStackPointer(const void* const stackPointer) const
 	{
-		return stackPointer >= static_cast<uint8_t*>(adjustedStorage_) + stackGuardSize_ &&
+		return stackPointer >= static_cast<uint8_t*>(adjustedStorage_) + stackGuardSize &&
 				stackPointer <= static_cast<uint8_t*>(adjustedStorage_) + adjustedSize_;
 	}
 
@@ -102,7 +102,7 @@ public:
 
 	size_t getSize() const
 	{
-		return adjustedSize_ > stackGuardSize_ ? adjustedSize_ - stackGuardSize_ : 0;
+		return adjustedSize_ > stackGuardSize ? adjustedSize_ - stackGuardSize : 0;
 	}
 
 	/**
@@ -148,10 +148,6 @@ public:
 	Stack& operator=(Stack&&) = delete;
 
 private:
-
-	/// size of "stack guard", bytes
-	constexpr static size_t stackGuardSize_ {(CONFIG_STACK_GUARD_SIZE + CONFIG_ARCHITECTURE_STACK_ALIGNMENT - 1) /
-			CONFIG_ARCHITECTURE_STACK_ALIGNMENT * CONFIG_ARCHITECTURE_STACK_ALIGNMENT};
 
 	/// storage for stack
 	StorageUniquePointer storageUniquePointer_;

@@ -188,6 +188,27 @@ protected:
 private:
 
 	/**
+	 * \brief Helper function to make stack with size adjusted to alignment requirements
+	 *
+	 * Size of "stack guard" is added to function argument.
+	 *
+	 * \param [in] stackSize is the size of stack, bytes
+	 *
+	 * \return Stack object with size adjusted to alignment requirements
+	 */
+
+	static Stack makeStack(const size_t stackSize)
+	{
+		static_assert(alignof(max_align_t) >= CONFIG_ARCHITECTURE_STACK_ALIGNMENT,
+				"Alignment of dynamically allocated memory is too low!");
+
+		const auto adjustedStackSize = (stackSize + CONFIG_ARCHITECTURE_STACK_ALIGNMENT - 1) /
+				CONFIG_ARCHITECTURE_STACK_ALIGNMENT * CONFIG_ARCHITECTURE_STACK_ALIGNMENT;
+		return {{new uint8_t[adjustedStackSize + stackGuardSize], storageDeleter<uint8_t>},
+				adjustedStackSize + stackGuardSize};
+	}
+
+	/**
 	 * \brief Thread's "run" function.
 	 *
 	 * Executes bound function object.
@@ -196,10 +217,6 @@ private:
 	 */
 
 	static void run(Thread& thread);
-
-	/// size of "stack guard", bytes
-	constexpr static size_t stackGuardSize_ {(CONFIG_STACK_GUARD_SIZE + CONFIG_ARCHITECTURE_STACK_ALIGNMENT - 1) /
-			CONFIG_ARCHITECTURE_STACK_ALIGNMENT * CONFIG_ARCHITECTURE_STACK_ALIGNMENT};
 
 	/// internal DynamicSignalsReceiver object
 	DynamicSignalsReceiver dynamicSignalsReceiver_;
@@ -221,8 +238,7 @@ template<typename Function, typename... Args>
 DynamicThreadBase::DynamicThreadBase(const size_t stackSize, const bool canReceiveSignals, const size_t queuedSignals,
 		const size_t signalActions, const uint8_t priority, const SchedulingPolicy schedulingPolicy,
 		DynamicThread& owner, Function&& function, Args&&... args) :
-				ThreadCommon{{{new uint8_t[stackSize + stackGuardSize_], storageDeleter<uint8_t>},
-						stackSize + stackGuardSize_}, priority, schedulingPolicy, nullptr,
+				ThreadCommon{makeStack(stackSize), priority, schedulingPolicy, nullptr,
 						canReceiveSignals == true ? &dynamicSignalsReceiver_ : nullptr},
 				dynamicSignalsReceiver_{canReceiveSignals == true ? queuedSignals : 0,
 						canReceiveSignals == true ? signalActions : 0},
@@ -238,8 +254,7 @@ template<typename Function, typename... Args>
 DynamicThreadBase::DynamicThreadBase(const size_t stackSize, const bool canReceiveSignals, const size_t queuedSignals,
 		const size_t signalActions, const uint8_t priority, const SchedulingPolicy schedulingPolicy,
 		Function&& function, Args&&... args) :
-				ThreadCommon{{{new uint8_t[stackSize + stackGuardSize_], storageDeleter<uint8_t>},
-						stackSize + stackGuardSize_}, priority, schedulingPolicy, nullptr,
+				ThreadCommon{makeStack(stackSize), priority, schedulingPolicy, nullptr,
 						canReceiveSignals == true ? &dynamicSignalsReceiver_ : nullptr},
 				dynamicSignalsReceiver_{canReceiveSignals == true ? queuedSignals : 0,
 						canReceiveSignals == true ? signalActions : 0},

@@ -17,6 +17,8 @@ files were added for all supported boards and all of their source files were reg
 
 - `architecture::requestFunctionExecution()` no longer handles the case of current thread sending the request to
 itself.
+- Size of stack passed as argument to `DynamicThread` or as template argument to `StaticThread` is adjusted to alignment
+requirements of architecture. This way "usable" size of stack will never be less than the requested value.
 
 ### Fixed
 
