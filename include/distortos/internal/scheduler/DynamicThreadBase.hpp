@@ -211,6 +211,9 @@ private:
 #endif	// def CONFIG_THREAD_DETACH_ENABLE
 };
 
+static_assert(alignof(max_align_t) >= CONFIG_ARCHITECTURE_STACK_ALIGNMENT,
+		"Alignment of dynamically allocated memory is too low!");
+
 #ifdef CONFIG_THREAD_DETACH_ENABLE
 
 template<typename Function, typename... Args>
