@@ -197,10 +197,6 @@ private:
 
 	static void run(Thread& thread);
 
-	/// size of "stack guard", bytes
-	constexpr static size_t stackGuardSize_ {(CONFIG_STACK_GUARD_SIZE + CONFIG_ARCHITECTURE_STACK_ALIGNMENT - 1) /
-			CONFIG_ARCHITECTURE_STACK_ALIGNMENT * CONFIG_ARCHITECTURE_STACK_ALIGNMENT};
-
 	/// internal DynamicSignalsReceiver object
 	DynamicSignalsReceiver dynamicSignalsReceiver_;
 
@@ -221,8 +217,8 @@ template<typename Function, typename... Args>
 DynamicThreadBase::DynamicThreadBase(const size_t stackSize, const bool canReceiveSignals, const size_t queuedSignals,
 		const size_t signalActions, const uint8_t priority, const SchedulingPolicy schedulingPolicy,
 		DynamicThread& owner, Function&& function, Args&&... args) :
-				ThreadCommon{{{new uint8_t[stackSize + stackGuardSize_], storageDeleter<uint8_t>},
-						stackSize + stackGuardSize_}, priority, schedulingPolicy, nullptr,
+				ThreadCommon{{{new uint8_t[stackSize + stackGuardSize], storageDeleter<uint8_t>},
+						stackSize + stackGuardSize}, priority, schedulingPolicy, nullptr,
 						canReceiveSignals == true ? &dynamicSignalsReceiver_ : nullptr},
 				dynamicSignalsReceiver_{canReceiveSignals == true ? queuedSignals : 0,
 						canReceiveSignals == true ? signalActions : 0},
@@ -238,8 +234,8 @@ template<typename Function, typename... Args>
 DynamicThreadBase::DynamicThreadBase(const size_t stackSize, const bool canReceiveSignals, const size_t queuedSignals,
 		const size_t signalActions, const uint8_t priority, const SchedulingPolicy schedulingPolicy,
 		Function&& function, Args&&... args) :
-				ThreadCommon{{{new uint8_t[stackSize + stackGuardSize_], storageDeleter<uint8_t>},
-						stackSize + stackGuardSize_}, priority, schedulingPolicy, nullptr,
+				ThreadCommon{{{new uint8_t[stackSize + stackGuardSize], storageDeleter<uint8_t>},
+						stackSize + stackGuardSize}, priority, schedulingPolicy, nullptr,
 						canReceiveSignals == true ? &dynamicSignalsReceiver_ : nullptr},
 				dynamicSignalsReceiver_{canReceiveSignals == true ? queuedSignals : 0,
 						canReceiveSignals == true ? signalActions : 0},
