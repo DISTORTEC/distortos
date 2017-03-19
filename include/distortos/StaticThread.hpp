@@ -92,9 +92,15 @@ private:
 		static_cast<StaticThreadBase&>(thread).boundFunction_();
 	}
 
+	/// size of stack adjusted to alignment requirements, bytes
+	constexpr static size_t adjustedStackSize {(StackSize + CONFIG_ARCHITECTURE_STACK_ALIGNMENT - 1) /
+			CONFIG_ARCHITECTURE_STACK_ALIGNMENT * CONFIG_ARCHITECTURE_STACK_ALIGNMENT};
+
 	/// stack buffer
 	alignas(CONFIG_ARCHITECTURE_STACK_ALIGNMENT)
-	typename std::aligned_storage<StackSize + internal::stackGuardSize>::type stack_;
+	typename std::aligned_storage<adjustedStackSize + internal::stackGuardSize>::type stack_;
+
+	static_assert(sizeof(stack_) % CONFIG_ARCHITECTURE_STACK_ALIGNMENT == 0, "Stack size is not aligned!");
 
 	/// bound function object
 	decltype(std::bind(std::declval<Function>(), std::declval<Args>()...)) boundFunction_;
