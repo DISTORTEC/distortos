@@ -93,6 +93,7 @@ private:
 	}
 
 	/// stack buffer
+	alignas(CONFIG_ARCHITECTURE_STACK_ALIGNMENT)
 	typename std::aligned_storage<StackSize + internal::stackGuardSize>::type stack_;
 
 	/// bound function object
