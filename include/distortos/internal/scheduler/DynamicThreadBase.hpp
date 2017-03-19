@@ -239,7 +239,7 @@ DynamicThreadBase::DynamicThreadBase(const size_t stackSize, const bool canRecei
 		const size_t signalActions, const uint8_t priority, const SchedulingPolicy schedulingPolicy,
 		Function&& function, Args&&... args) :
 				ThreadCommon{{{new uint8_t[stackSize + stackGuardSize_], storageDeleter<uint8_t>},
-						stackSize + stackGuardSize_,}, priority, schedulingPolicy, nullptr,
+						stackSize + stackGuardSize_}, priority, schedulingPolicy, nullptr,
 						canReceiveSignals == true ? &dynamicSignalsReceiver_ : nullptr},
 				dynamicSignalsReceiver_{canReceiveSignals == true ? queuedSignals : 0,
 						canReceiveSignals == true ? signalActions : 0},
