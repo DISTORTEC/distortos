@@ -78,7 +78,7 @@ def collectMetaDataFromJinja2File(templateFile):
 			outputTemplates[templateFile]['version'] = str(matchObj.group())
 
 def getTemplateFileFromTypeAndVersion(id, version):
-	for fileName, parameters in outputTemplates.iteritems():
+	for fileName, parameters in outputTemplates.items():
 		if parameters['id'] == id:
 			if (version):
 				if (parameters['version'] == version):
@@ -159,7 +159,7 @@ def collectPinGroupsTemplateParams(data):
 	return sorted(pinsType)
 
 def removeFromOutputTemplatesIfNotConfiguredParam(input_data):
-	for template_path, parameters in outputTemplates.copy().iteritems():
+	for template_path, parameters in outputTemplates.copy().items():
 		if 'type' in parameters:
 			if not parameters['type'] in input_data:
 				del outputTemplates[template_path]
@@ -212,7 +212,7 @@ def main():
 
 	removeFromOutputTemplatesIfNotConfiguredParam(data)
 
-	for pathToTemplate, parameters in outputTemplates.iteritems():
+	for pathToTemplate, parameters in outputTemplates.items():
 		if parameters['id'] == 'outputTemplate':
 			filename = replaceBoardStringInFileName(getOutputFileName(pathToTemplate), templateVars["board"])
 			if(isFileTypeHpp(filename)):
