@@ -153,7 +153,7 @@ def collectPinGroupsTemplateParams(data):
 	pinsType = set()
 	for x in data:
 		pinWithoutNumber = str(x["pin"])
-		pinWithoutNumber = pinWithoutNumber.translate(None, digits)
+		pinWithoutNumber = pinWithoutNumber.strip(digits)
 		pinsType.add(pinWithoutNumber[1:])
 
 	return sorted(pinsType)
