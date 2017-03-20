@@ -23,9 +23,6 @@ CXXFLAGS = -Wall -Wextra -Wshadow -std=gnu++11
 # linker flags
 LDFLAGS =
 
-# overridable name of Python executable
-PYTHON ?= python
-
 # build mode (0 - non-verbose, 1 - verbose)
 VERBOSE ?= 0
 
@@ -279,15 +276,10 @@ clean:
 
 .PHONY: board
 board:
-ifeq "3.0.0" "$(word 1, $(sort 3.0.0 $(word 2,$(shell $(PYTHON) --version 2>&1))))"
-	@echo 'This script currently requires Python 2, try:'
-	@echo 'make board PYTHON=python2 CONFIG_FILE=<config_file> [OUTPUT_PATH=<output_path>]'
-else
 ifdef OUTPUT_PATH
 	$(eval OPTIONAL_BOARD_ARGUMENTS := -o $(OUTPUT_PATH))
 endif
-	$(PYTHON) $(DISTORTOS_PATH)scripts/generateBoard.py -c $(CONFIG_FILE) $(OPTIONAL_BOARD_ARGUMENTS)
-endif
+	./$(DISTORTOS_PATH)scripts/generateBoard.py -c $(CONFIG_FILE) $(OPTIONAL_BOARD_ARGUMENTS)
 
 .PHONY: configure
 configure:
