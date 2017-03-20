@@ -123,7 +123,7 @@ def collectLedsTemplateParams(template_vars, data):
 				if matchObj:
 					ledsPinsGroups.append(matchObj.group())
 
-	template_vars["ledsIds"] = zip(ledsIds, ledsAlternativeIds, ledsPinsGroups)
+	template_vars["ledsIds"] = list(zip(ledsIds, ledsAlternativeIds, ledsPinsGroups))
 	template_vars["ledsPins"] = ledsPins
 
 def collectButtonsTemplateParams(variablesForTemplates, data):
@@ -146,7 +146,7 @@ def collectButtonsTemplateParams(variablesForTemplates, data):
 				if matchObj:
 					buttonsPinsGroup.append(matchObj.group())
 
-	variablesForTemplates["buttonsIds"] = zip(buttonsIds, buttonsPinsGroup)
+	variablesForTemplates["buttonsIds"] = list(zip(buttonsIds, buttonsPinsGroup))
 	variablesForTemplates["buttonsPins"] = buttonsPins
 
 def collectPinGroupsTemplateParams(data):
