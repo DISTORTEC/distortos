@@ -12,6 +12,8 @@ All notable changes to this project will be documented in this file. This projec
 - Board generator script written in *Python* with *Jinja2* template engine, which uses configuration files in `.json`
 format. This new feature can be used with `make board CONFIG_FILE=path/to/config.json` command. `.json` configuration
 files were added for all supported boards and all of their source files were regenerated with the script.
+- Test of `Thread::generateSignal()` and `Thread::queueSignal()` returning `ENOSPC` when the amount of target thread's
+free stack is too small to request signal delivery.
 
 ### Changed
 

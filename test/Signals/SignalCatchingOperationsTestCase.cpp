@@ -2,7 +2,7 @@
  * \file
  * \brief SignalCatchingOperationsTestCase class implementation
  *
- * \author Copyright (C) 2015-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2015-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -13,29 +13,24 @@
 
 #include "distortos/distortosConfiguration.h"
 
-/// configuration required by SignalCatchingOperationsTestCase
-#define SIGNAL_CATCHING_OPERATIONS_TEST_CASE_ENABLED defined(CONFIG_MAIN_THREAD_SIGNAL_ACTIONS) && \
-		CONFIG_MAIN_THREAD_SIGNAL_ACTIONS >= 1 && CONFIG_MAIN_THREAD_SIGNAL_ACTIONS <= 31
-
-#if SIGNAL_CATCHING_OPERATIONS_TEST_CASE_ENABLED == 1
-
 #include "abortSignalHandler.hpp"
 
 #include "distortos/DynamicThread.hpp"
 #include "distortos/statistics.hpp"
+#include "distortos/ThisThread.hpp"
 #include "distortos/ThisThread-Signals.hpp"
 
 #include <cerrno>
 
-#endif	// SIGNAL_CATCHING_OPERATIONS_TEST_CASE_ENABLED == 1
+/// configuration required by first and second phase of SignalCatchingOperationsTestCase
+#define SIGNAL_CATCHING_OPERATIONS_TEST_CASE_PHASE_1_2_ENABLED defined(CONFIG_MAIN_THREAD_SIGNAL_ACTIONS) && \
+		CONFIG_MAIN_THREAD_SIGNAL_ACTIONS >= 1 && CONFIG_MAIN_THREAD_SIGNAL_ACTIONS <= 31
 
 namespace distortos
 {
 
 namespace test
 {
-
-#if SIGNAL_CATCHING_OPERATIONS_TEST_CASE_ENABLED == 1
 
 namespace
 {
@@ -47,13 +42,24 @@ namespace
 /// size of stack for test threads, bytes
 constexpr size_t testThreadStackSize {512};
 
+#if SIGNAL_CATCHING_OPERATIONS_TEST_CASE_PHASE_1_2_ENABLED == 1
+
 /// expected number of context switches in phase2() block involving thread: 1 - main thread is preempted by test thread
 /// (main -> test), 2 - test thread terminates (test -> main)
 constexpr decltype(statistics::getContextSwitchCount()) phase2ThreadContextSwitchCount {2};
 
+#endif	// SIGNAL_CATCHING_OPERATIONS_TEST_CASE_PHASE_1_2_ENABLED == 1
+
+/// expected number of context switches in phase3() block involving thread: 1 - main thread is preempted by test thread
+/// (main -> test), 2 - test thread is preempted after lowering its own priority (test -> main), 3 - main thread blocks
+/// by attempting to join() test thread (main -> test), 4 - test thread terminates (test -> main)
+constexpr decltype(statistics::getContextSwitchCount()) phase3ThreadContextSwitchCount {4};
+
 /*---------------------------------------------------------------------------------------------------------------------+
 | local functions
 +---------------------------------------------------------------------------------------------------------------------*/
+
+#if SIGNAL_CATCHING_OPERATIONS_TEST_CASE_PHASE_1_2_ENABLED == 1
 
 /**
  * \brief Phase 1 of test case.
@@ -202,9 +208,57 @@ bool phase2()
 	return true;
 }
 
-}	// namespace
+#endif	// SIGNAL_CATCHING_OPERATIONS_TEST_CASE_PHASE_1_2_ENABLED == 1
 
-#endif	// SIGNAL_CATCHING_OPERATIONS_TEST_CASE_ENABLED == 1
+/**
+ * \brief Phase 3 of test case.
+ *
+ * Tests whether generation/queuing of signal fails with ENOSPC if the amount of target thread's free stack is too small
+ * to request signal delivery.
+ *
+ * \return true if test succeeded, false otherwise
+ */
+
+bool phase3()
+{
+	static_assert(SignalCatchingOperationsTestCase::getTestCasePriority() < UINT8_MAX &&
+			SignalCatchingOperationsTestCase::getTestCasePriority() > 1, "Invalid test case priority");
+
+	constexpr uint8_t testSignalNumber {16};
+	const auto testThreadLambda = []()
+	{
+		ThisThread::Signals::setSignalAction(testSignalNumber, {abortSignalHandler, SignalSet{SignalSet::empty}});
+		// This non-inline "inner" lambda with big array is meant to ensure that the biggest stack usage is when the
+		// context is switched, leaving no room to request signal delivery.
+		[]() __attribute__ ((noinline))
+		{
+			volatile uint8_t array[testThreadStackSize / 2] {};
+			(void)array;
+			ThisThread::setPriority(1);
+		}();
+	};
+
+	size_t stackSize;
+	{
+		auto testThread = makeAndStartDynamicThread({testThreadStackSize, true, 1, 1, UINT8_MAX}, testThreadLambda);
+		testThread.join();
+		stackSize = testThread.getStackHighWaterMark();
+	}
+	{
+		auto testThread = makeAndStartDynamicThread({stackSize, true, 1, 1, UINT8_MAX}, testThreadLambda);
+		const auto ret1 = testThread.generateSignal(testSignalNumber);
+		const auto ret2 = testThread.queueSignal(testSignalNumber, sigval{});
+		testThread.join();
+		if (ret1 != ENOSPC || ret2 != ENOSPC)	// signal generation/queuing must fail with ENOSPC
+			return false;
+		if (testThread.getPendingSignalSet().getBitset().none() == false)	// no signals may be pending
+			return false;
+	}
+
+	return true;
+}
+
+}	// namespace
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | private functions
@@ -212,14 +266,18 @@ bool phase2()
 
 bool SignalCatchingOperationsTestCase::run_() const
 {
-#if SIGNAL_CATCHING_OPERATIONS_TEST_CASE_ENABLED == 1
-
-	constexpr auto phase2ExpectedContextSwitchCount = 2 * phase2ThreadContextSwitchCount;
-	constexpr auto expectedContextSwitchCount = phase2ExpectedContextSwitchCount;
-
 	const auto contextSwitchCount = statistics::getContextSwitchCount();
 
-	for (const auto& function : {phase1, phase2})
+	constexpr auto phase3ExpectedContextSwitchCount = 2 * phase3ThreadContextSwitchCount;
+
+#if SIGNAL_CATCHING_OPERATIONS_TEST_CASE_PHASE_1_2_ENABLED == 1
+	constexpr auto phase2ExpectedContextSwitchCount = 2 * phase2ThreadContextSwitchCount;
+	constexpr auto expectedContextSwitchCount = phase2ExpectedContextSwitchCount + phase3ExpectedContextSwitchCount;
+	for (const auto& function : {phase1, phase2, phase3})
+#else	// SIGNAL_CATCHING_OPERATIONS_TEST_CASE_PHASE_1_2_ENABLED != 1
+	constexpr auto expectedContextSwitchCount = phase3ExpectedContextSwitchCount;
+	for (const auto& function : {phase3})
+#endif	// SIGNAL_CATCHING_OPERATIONS_TEST_CASE_PHASE_1_2_ENABLED != 1
 	{
 		// initially no signals may be pending
 		if (ThisThread::Signals::getPendingSignalSet().getBitset().none() == false)
@@ -235,8 +293,6 @@ bool SignalCatchingOperationsTestCase::run_() const
 
 	if (statistics::getContextSwitchCount() - contextSwitchCount != expectedContextSwitchCount)
 		return false;
-
-#endif	// SIGNAL_CATCHING_OPERATIONS_TEST_CASE_ENABLED == 1
 
 	return true;
 }
