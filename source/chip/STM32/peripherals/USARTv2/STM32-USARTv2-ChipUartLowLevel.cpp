@@ -19,6 +19,9 @@
 
 #include <cerrno>
 
+#if !defined(USART_CR1_M0)
+#define USART_CR1_M0						USART_CR1_M
+#endif	// !defined(USART_CR1_M0)
 #if !defined(USART_CR1_M0_Pos)
 #define USART_CR1_M0_Pos					__builtin_ctzl(USART_CR1_M0)
 #endif	// !defined(USART_CR1_M0_Pos)

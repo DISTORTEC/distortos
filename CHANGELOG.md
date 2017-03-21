@@ -29,6 +29,7 @@ requirements of architecture. This way "usable" size of stack will never be less
 - Failure during generation or queuing of signal - for example due to free stack size being insufficient, which is
 reported with `ENOSPC` error code - won't leave the generated/queued signal pending.
 - Signals are never delived from within critical section.
+- Fixed compilation of *USARTv2* low-level driver for some *STM32F0* chips, for which `USART_CR1_M0` is not defined.
 
 [0.4.0](https://github.com/DISTORTEC/distortos/compare/v0.3.0...v0.4.0) - 2017-03-11
 ------------------------------------------------------------------------------------
