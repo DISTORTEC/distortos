@@ -8,9 +8,11 @@
 #
 
 from gdb.printing import (RegexpCollectionPrettyPrinter, register_pretty_printer)
+from PrettyPrinters.estd.EstdContiguousRangePrettyPrinter import EstdContiguousRangePrettyPrinter
 
 def registerEstdPrettyPrinters(obj):
 	'Register pretty-printers for estd'
 
 	prettyPrinters = RegexpCollectionPrettyPrinter('estd')
+	prettyPrinters.add_printer('estd::ContiguousRange', '^estd::ContiguousRange<.*>$', EstdContiguousRangePrettyPrinter)
 	register_pretty_printer(obj, prettyPrinters)
