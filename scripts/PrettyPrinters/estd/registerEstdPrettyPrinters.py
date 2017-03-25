@@ -12,6 +12,7 @@ from PrettyPrinters.estd.EstdContiguousRangePrettyPrinter import EstdContiguousR
 from PrettyPrinters.estd.EstdIntrusiveForwardListPrettyPrinter import EstdIntrusiveForwardListPrettyPrinter
 from PrettyPrinters.estd.EstdIntrusiveListIteratorPrettyPrinter import EstdIntrusiveListIteratorPrettyPrinter
 from PrettyPrinters.estd.EstdIntrusiveListPrettyPrinter import EstdIntrusiveListPrettyPrinter
+from PrettyPrinters.estd.EstdSortedIntrusiveForwardListPrettyPrinter import EstdSortedIntrusiveForwardListPrettyPrinter
 from PrettyPrinters.estd.EstdSortedIntrusiveListPrettyPrinter import EstdSortedIntrusiveListPrettyPrinter
 
 def registerEstdPrettyPrinters(obj):
@@ -24,6 +25,8 @@ def registerEstdPrettyPrinters(obj):
 	prettyPrinters.add_printer('estd::IntrusiveListIterator', '^estd::IntrusiveListIterator<.*>$',
 			EstdIntrusiveListIteratorPrettyPrinter)
 	prettyPrinters.add_printer('estd::IntrusiveList', '^estd::IntrusiveList<.*>$', EstdIntrusiveListPrettyPrinter)
+	prettyPrinters.add_printer('estd::SortedIntrusiveForwardList', '^estd::SortedIntrusiveForwardList<.*>$',
+			EstdSortedIntrusiveForwardListPrettyPrinter)
 	prettyPrinters.add_printer('estd::SortedIntrusiveList', '^estd::SortedIntrusiveList<.*>$',
 			EstdSortedIntrusiveListPrettyPrinter)
 	register_pretty_printer(obj, prettyPrinters)
