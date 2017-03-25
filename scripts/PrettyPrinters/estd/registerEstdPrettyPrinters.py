@@ -9,6 +9,7 @@
 
 from gdb.printing import (RegexpCollectionPrettyPrinter, register_pretty_printer)
 from PrettyPrinters.estd.EstdContiguousRangePrettyPrinter import EstdContiguousRangePrettyPrinter
+from PrettyPrinters.estd.EstdIntrusiveForwardListIteratorPrettyPrinter import EstdIntrusiveForwardListIteratorPrettyPrinter
 from PrettyPrinters.estd.EstdIntrusiveForwardListPrettyPrinter import EstdIntrusiveForwardListPrettyPrinter
 from PrettyPrinters.estd.EstdIntrusiveListIteratorPrettyPrinter import EstdIntrusiveListIteratorPrettyPrinter
 from PrettyPrinters.estd.EstdIntrusiveListPrettyPrinter import EstdIntrusiveListPrettyPrinter
@@ -20,6 +21,8 @@ def registerEstdPrettyPrinters(obj):
 
 	prettyPrinters = RegexpCollectionPrettyPrinter('estd')
 	prettyPrinters.add_printer('estd::ContiguousRange', '^estd::ContiguousRange<.*>$', EstdContiguousRangePrettyPrinter)
+	prettyPrinters.add_printer('estd::IntrusiveForwardListIterator', '^estd::IntrusiveForwardListIterator<.*>$',
+			EstdIntrusiveForwardListIteratorPrettyPrinter)
 	prettyPrinters.add_printer('estd::IntrusiveForwardList', '^estd::IntrusiveForwardList<.*>$',
 			EstdIntrusiveForwardListPrettyPrinter)
 	prettyPrinters.add_printer('estd::IntrusiveListIterator', '^estd::IntrusiveListIterator<.*>$',
