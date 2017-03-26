@@ -21,3 +21,4 @@ documentation/html/
 
 # other
 .gdbinit
+__pycache__
