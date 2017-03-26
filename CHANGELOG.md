@@ -15,6 +15,9 @@ files were added for all supported boards and all of their source files were reg
 usable with both *Python 2* and *Python 3*.
 - Test of `Thread::generateSignal()` and `Thread::queueSignal()` returning `ENOSPC` when the amount of target thread's
 free stack is too small to request signal delivery.
+- *GDB* pretty-printers for `estd` containers: `estd::ContiguousRange`, `estd::IntrusiveForwardList`,
+`estd::IntrusiveList`, `estd::SortedIntrusiveForwardList` and `estd::SortedIntrusiveList`. This greatly simplifies
+system debugging by allowing easy debugger access to thread lists inside scheduler and synchronization objects.
 
 ### Changed
 
