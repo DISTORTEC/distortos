@@ -7,7 +7,7 @@
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #
 
-from gdb import (lookup_type, parse_and_eval)
+import gdb
 
 class GenericIntrusiveListIterator:
 	'Generic iterator for intrusive list'
@@ -29,8 +29,8 @@ class GenericIntrusiveListIterator:
 		if self.nodeValidator(self.iterator.dereference()) == False:
 			raise StopIteration
 		index = self.index
-		sizeType = lookup_type('size_t')
-		offset = parse_and_eval('static_cast<%s>(0)->*%s' % (self.u.pointer(), self.nodePointer)).address.cast(sizeType)
+		sizeType = gdb.lookup_type('size_t')
+		offset = gdb.parse_and_eval('static_cast<%s>(0)->*%s' % (self.u.pointer(), self.nodePointer)).address.cast(sizeType)
 		pointer = (self.iterator.cast(sizeType) - offset).cast(self.u.pointer())
 		element = pointer.dereference()
 		self.index += 1

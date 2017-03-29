@@ -7,7 +7,7 @@
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #
 
-from gdb.printing import (RegexpCollectionPrettyPrinter, register_pretty_printer)
+import gdb.printing
 from PrettyPrinters.estd.EstdContiguousRangePrettyPrinter import EstdContiguousRangePrettyPrinter
 from PrettyPrinters.estd.EstdIntrusiveForwardListIteratorPrettyPrinter import EstdIntrusiveForwardListIteratorPrettyPrinter
 from PrettyPrinters.estd.EstdIntrusiveForwardListPrettyPrinter import EstdIntrusiveForwardListPrettyPrinter
@@ -19,7 +19,7 @@ from PrettyPrinters.estd.EstdSortedIntrusiveListPrettyPrinter import EstdSortedI
 def registerEstdPrettyPrinters(obj):
 	'Register pretty-printers for estd'
 
-	prettyPrinters = RegexpCollectionPrettyPrinter('estd')
+	prettyPrinters = gdb.printing.RegexpCollectionPrettyPrinter('estd')
 	prettyPrinters.add_printer('estd::ContiguousRange', '^estd::ContiguousRange<.*>$', EstdContiguousRangePrettyPrinter)
 	prettyPrinters.add_printer('estd::IntrusiveForwardListIterator', '^estd::IntrusiveForwardListIterator<.*>$',
 			EstdIntrusiveForwardListIteratorPrettyPrinter)
@@ -32,4 +32,4 @@ def registerEstdPrettyPrinters(obj):
 			EstdSortedIntrusiveForwardListPrettyPrinter)
 	prettyPrinters.add_printer('estd::SortedIntrusiveList', '^estd::SortedIntrusiveList<.*>$',
 			EstdSortedIntrusiveListPrettyPrinter)
-	register_pretty_printer(obj, prettyPrinters)
+	gdb.printing.register_pretty_printer(obj, prettyPrinters)

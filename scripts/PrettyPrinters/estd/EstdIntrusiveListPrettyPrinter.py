@@ -7,7 +7,7 @@
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #
 
-from gdb import lookup_type
+import gdb
 from PrettyPrinters.estd.GenericIntrusiveListIterator import GenericIntrusiveListIterator
 
 class EstdIntrusiveListPrettyPrinter:
@@ -37,7 +37,7 @@ class EstdIntrusiveListPrettyPrinter:
 	@staticmethod
 	def isNodeValid(node):
 		nextNode = node['nextNode_']
-		sizeType = lookup_type('size_t')
+		sizeType = gdb.lookup_type('size_t')
 		# value of "next" pointer must be  properly aligned
 		if nextNode.cast(sizeType) % nextNode.type.sizeof != 0:
 			return False
