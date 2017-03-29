@@ -20,8 +20,9 @@ class GenericIntrusiveListIterator:
 	def __init__(self, begin, end, nodeValidator, nodePointer, u):
 		self.end = end
 		self.nodeValidator = nodeValidator
-		self.nodePointer = nodePointer
 		self.u = u
+		sizeType = gdb.lookup_type('size_t')
+		self.offset = gdb.parse_and_eval('static_cast<%s>(0)->*%s' % (u.pointer(), nodePointer)).address.cast(sizeType)
 		self.index = 0
 		self.iterator = begin
 
@@ -35,8 +36,7 @@ class GenericIntrusiveListIterator:
 			raise StopIteration
 		index = self.index
 		sizeType = gdb.lookup_type('size_t')
-		offset = gdb.parse_and_eval('static_cast<%s>(0)->*%s' % (self.u.pointer(), self.nodePointer)).address.cast(sizeType)
-		pointer = (self.iterator.cast(sizeType) - offset).cast(self.u.pointer())
+		pointer = (self.iterator.cast(sizeType) - self.offset).cast(self.u.pointer())
 		element = pointer.dereference()
 		self.index += 1
 		self.iterator = self.iterator['nextNode_']
