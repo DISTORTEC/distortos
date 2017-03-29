@@ -143,6 +143,9 @@ class IntrusiveList:
 			return False
 		return True
 
+	def isValid(self):
+		return IntrusiveList.isNodeValid(self.value['intrusiveListBase_']['rootNode_'])
+
 	def to_string(self):
 		return self.name
 
