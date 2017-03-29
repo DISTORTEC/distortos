@@ -43,10 +43,10 @@ class GenericIntrusiveListIterator:
 		return ('[%d]' % index, element)
 
 ########################################################################################################################
-# EstdContiguousRangePrettyPrinter class
+# ContiguousRange class
 ########################################################################################################################
 
-class EstdContiguousRangePrettyPrinter:
+class ContiguousRange:
 	'Print estd::ContiguousRange'
 
 	class Iterator:
@@ -97,17 +97,17 @@ class EstdContiguousRangePrettyPrinter:
 		return ('estd::ContiguousRange of length %d' % self.getLength())
 
 ########################################################################################################################
-# EstdIntrusiveListPrettyPrinter class
+# IntrusiveList class
 ########################################################################################################################
 
-class EstdIntrusiveListPrettyPrinter:
+class IntrusiveList:
 	'Print estd::IntrusiveList'
 
 	class Iterator(GenericIntrusiveListIterator):
 		'Iterate over estd::IntrusiveList'
 
 		def __init__(self, begin, end, nodePointer, u):
-			super().__init__(begin, end, EstdIntrusiveListPrettyPrinter.isNodeValid, nodePointer, u)
+			super().__init__(begin, end, IntrusiveList.isNodeValid, nodePointer, u)
 
 	def __init__(self, value, name = 'estd::IntrusiveList'):
 		self.value = value
@@ -115,7 +115,7 @@ class EstdIntrusiveListPrettyPrinter:
 
 	def children(self):
 		rootNode = self.value['intrusiveListBase_']['rootNode_']
-		if EstdIntrusiveListPrettyPrinter.isNodeValid(rootNode) == False:
+		if IntrusiveList.isNodeValid(rootNode) == False:
 			return iter([])
 		return self.Iterator(rootNode['nextNode_'], rootNode.address, self.value.type.template_argument(1),
 				self.value.type.template_argument(2).strip_typedefs())
@@ -147,10 +147,10 @@ class EstdIntrusiveListPrettyPrinter:
 		return self.name
 
 ########################################################################################################################
-# EstdIntrusiveListIteratorPrettyPrinter class
+# IntrusiveListIterator class
 ########################################################################################################################
 
-class EstdIntrusiveListIteratorPrettyPrinter(EstdIntrusiveListPrettyPrinter):
+class IntrusiveListIterator(IntrusiveList):
 	'Print estd::IntrusiveListIterator'
 
 	def __init__(self, value):
@@ -164,27 +164,27 @@ class EstdIntrusiveListIteratorPrettyPrinter(EstdIntrusiveListPrettyPrinter):
 				self.value.type.template_argument(2).strip_typedefs())
 
 ########################################################################################################################
-# EstdSortedIntrusiveListPrettyPrinter class
+# SortedIntrusiveList class
 ########################################################################################################################
 
-class EstdSortedIntrusiveListPrettyPrinter(EstdIntrusiveListPrettyPrinter):
+class SortedIntrusiveList(IntrusiveList):
 	'Print estd::SortedIntrusiveList'
 
 	def __init__(self, value):
 		super().__init__(value['implementation_']['intrusiveList'], 'estd::SortedIntrusiveList')
 
 ########################################################################################################################
-# EstdIntrusiveForwardListPrettyPrinter class
+# IntrusiveForwardList class
 ########################################################################################################################
 
-class EstdIntrusiveForwardListPrettyPrinter:
+class IntrusiveForwardList:
 	'Print estd::IntrusiveForwardList'
 
 	class Iterator(GenericIntrusiveListIterator):
 		'Iterate over estd::IntrusiveForwardList'
 
 		def __init__(self, begin, end, nodePointer, u):
-			super().__init__(begin, end, EstdIntrusiveForwardListPrettyPrinter.isNodeValid, nodePointer, u)
+			super().__init__(begin, end, IntrusiveForwardList.isNodeValid, nodePointer, u)
 
 	def __init__(self, value, name = 'estd::IntrusiveForwardList'):
 		self.value = value
@@ -192,7 +192,7 @@ class EstdIntrusiveForwardListPrettyPrinter:
 
 	def children(self):
 		rootNode = self.value['intrusiveForwardListBase_']['rootNode_']
-		if EstdIntrusiveForwardListPrettyPrinter.isNodeValid(rootNode) == False:
+		if IntrusiveForwardList.isNodeValid(rootNode) == False:
 			return iter([])
 		return self.Iterator(rootNode['nextNode_'], 0, self.value.type.template_argument(1),
 				self.value.type.template_argument(2).strip_typedefs())
@@ -214,10 +214,10 @@ class EstdIntrusiveForwardListPrettyPrinter:
 		return self.name
 
 ########################################################################################################################
-# EstdIntrusiveForwardListIteratorPrettyPrinter class
+# IntrusiveForwardListIterator class
 ########################################################################################################################
 
-class EstdIntrusiveForwardListIteratorPrettyPrinter(EstdIntrusiveForwardListPrettyPrinter):
+class IntrusiveForwardListIterator(IntrusiveForwardList):
 	'Print estd::IntrusiveForwardListIterator'
 
 	def __init__(self, value):
@@ -231,33 +231,31 @@ class EstdIntrusiveForwardListIteratorPrettyPrinter(EstdIntrusiveForwardListPret
 				self.value.type.template_argument(2).strip_typedefs())
 
 ########################################################################################################################
-# EstdSortedIntrusiveForwardListPrettyPrinter class
+# SortedIntrusiveForwardList class
 ########################################################################################################################
 
-class EstdSortedIntrusiveForwardListPrettyPrinter(EstdIntrusiveForwardListPrettyPrinter):
+class SortedIntrusiveForwardList(IntrusiveForwardList):
 	'Print estd::SortedIntrusiveForwardList'
 
 	def __init__(self, value):
 		super().__init__(value['implementation_']['intrusiveForwardList'], 'estd::SortedIntrusiveForwardList')
 
 ########################################################################################################################
-# registerEstdPrettyPrinters()
+# registerPrettyPrinters()
 ########################################################################################################################
 
-def registerEstdPrettyPrinters(obj):
+def registerPrettyPrinters(obj):
 	'Register pretty-printers for estd'
 
 	prettyPrinters = gdb.printing.RegexpCollectionPrettyPrinter('estd')
-	prettyPrinters.add_printer('estd::ContiguousRange', '^estd::ContiguousRange<.*>$', EstdContiguousRangePrettyPrinter)
+	prettyPrinters.add_printer('estd::ContiguousRange', '^estd::ContiguousRange<.*>$', ContiguousRange)
 	prettyPrinters.add_printer('estd::IntrusiveForwardListIterator', '^estd::IntrusiveForwardListIterator<.*>$',
-			EstdIntrusiveForwardListIteratorPrettyPrinter)
-	prettyPrinters.add_printer('estd::IntrusiveForwardList', '^estd::IntrusiveForwardList<.*>$',
-			EstdIntrusiveForwardListPrettyPrinter)
+			IntrusiveForwardListIterator)
+	prettyPrinters.add_printer('estd::IntrusiveForwardList', '^estd::IntrusiveForwardList<.*>$', IntrusiveForwardList)
 	prettyPrinters.add_printer('estd::IntrusiveListIterator', '^estd::IntrusiveListIterator<.*>$',
-			EstdIntrusiveListIteratorPrettyPrinter)
-	prettyPrinters.add_printer('estd::IntrusiveList', '^estd::IntrusiveList<.*>$', EstdIntrusiveListPrettyPrinter)
+			IntrusiveListIterator)
+	prettyPrinters.add_printer('estd::IntrusiveList', '^estd::IntrusiveList<.*>$', IntrusiveList)
 	prettyPrinters.add_printer('estd::SortedIntrusiveForwardList', '^estd::SortedIntrusiveForwardList<.*>$',
-			EstdSortedIntrusiveForwardListPrettyPrinter)
-	prettyPrinters.add_printer('estd::SortedIntrusiveList', '^estd::SortedIntrusiveList<.*>$',
-			EstdSortedIntrusiveListPrettyPrinter)
+			SortedIntrusiveForwardList)
+	prettyPrinters.add_printer('estd::SortedIntrusiveList', '^estd::SortedIntrusiveList<.*>$', SortedIntrusiveList)
 	gdb.printing.register_pretty_printer(obj, prettyPrinters)
