@@ -135,6 +135,16 @@ class FifoQueue(InternalFifoQueueBase):
 		return storage.cast(self.type).dereference()
 
 ########################################################################################################################
+# StaticFifoQueue class
+########################################################################################################################
+
+class StaticFifoQueue(FifoQueue):
+	'Print distortos::StaticFifoQueue'
+
+	def __init__(self, value, name = 'distortos::StaticFifoQueue'):
+		super().__init__(value, name)
+
+########################################################################################################################
 # registerPrettyPrinters()
 ########################################################################################################################
 
@@ -150,4 +160,5 @@ def registerPrettyPrinters(obj):
 
 	prettyPrinters = gdb.printing.RegexpCollectionPrettyPrinter('distortos')
 	prettyPrinters.add_printer('distortos::FifoQueue', '^distortos::FifoQueue<.*>$', FifoQueue)
+	prettyPrinters.add_printer('distortos::StaticFifoQueue', '^distortos::StaticFifoQueue<.*>$', StaticFifoQueue)
 	gdb.printing.register_pretty_printer(obj, prettyPrinters)
