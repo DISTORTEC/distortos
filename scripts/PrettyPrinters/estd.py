@@ -84,7 +84,7 @@ class ContiguousRange:
 		begin = self.value['begin_']
 		end = self.value['end_']
 		# value of "begin" must be less than or equal to "end"
-		if begin > end :
+		if begin > end:
 			return 0
 		sizeType = gdb.lookup_type('size_t')
 		rawLength = end.cast(sizeType) - begin.cast(sizeType)
