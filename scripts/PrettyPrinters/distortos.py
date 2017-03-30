@@ -121,6 +121,20 @@ class InternalFifoQueueBase:
 		return ('%s of length %d, capacity %d' % (self.name, length, capacity))
 
 ########################################################################################################################
+# FifoQueue class
+########################################################################################################################
+
+class FifoQueue(InternalFifoQueueBase):
+	'Print distortos::FifoQueue'
+
+	def __init__(self, value, name = 'distortos::FifoQueue'):
+		super().__init__(value['fifoQueueBase_'], name)
+		self.type = value.type.template_argument(0).pointer()
+
+	def storageToElement(self, storage):
+		return storage.cast(self.type).dereference()
+
+########################################################################################################################
 # registerPrettyPrinters()
 ########################################################################################################################
 
@@ -132,4 +146,8 @@ def registerPrettyPrinters(obj):
 			InternalFifoQueueBase)
 	prettyPrinters.add_printer('distortos::internal::ThreadList', '^distortos::internal::ThreadList$',
 			InternalThreadList)
+	gdb.printing.register_pretty_printer(obj, prettyPrinters)
+
+	prettyPrinters = gdb.printing.RegexpCollectionPrettyPrinter('distortos')
+	prettyPrinters.add_printer('distortos::FifoQueue', '^distortos::FifoQueue<.*>$', FifoQueue)
 	gdb.printing.register_pretty_printer(obj, prettyPrinters)
