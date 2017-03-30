@@ -173,8 +173,8 @@ class IntrusiveListIterator(IntrusiveList):
 class SortedIntrusiveList(IntrusiveList):
 	'Print estd::SortedIntrusiveList'
 
-	def __init__(self, value):
-		super().__init__(value['implementation_']['intrusiveList'], 'estd::SortedIntrusiveList')
+	def __init__(self, value, name = 'estd::SortedIntrusiveList'):
+		super().__init__(value['implementation_']['intrusiveList'], name)
 
 ########################################################################################################################
 # IntrusiveForwardList class
