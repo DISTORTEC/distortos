@@ -213,6 +213,9 @@ class IntrusiveForwardList:
 			return False
 		return True
 
+	def isValid(self):
+		return IntrusiveForwardList.isNodeValid(self.value['intrusiveForwardListBase_']['rootNode_'])
+
 	def to_string(self):
 		return self.name
 
