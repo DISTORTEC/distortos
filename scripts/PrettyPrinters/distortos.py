@@ -301,6 +301,16 @@ class RawMessageQueue(InternalMessageQueueBase):
 		return storage.cast(uint8Type.pointer()).dereference().cast(uint8Type.array(self.elementSize - 1))
 
 ########################################################################################################################
+# StaticRawMessageQueue class
+########################################################################################################################
+
+class StaticRawMessageQueue(RawMessageQueue):
+	'Print distortos::StaticRawMessageQueue'
+
+	def __init__(self, value, name = 'distortos::StaticRawMessageQueue'):
+		super().__init__(value, name)
+
+########################################################################################################################
 # registerPrettyPrinters()
 ########################################################################################################################
 
@@ -331,4 +341,6 @@ def registerPrettyPrinters(obj):
 			StaticMessageQueue)
 	prettyPrinters.add_printer('distortos::StaticRawFifoQueue', '^distortos::StaticRawFifoQueue<.*>$',
 			StaticRawFifoQueue)
+	prettyPrinters.add_printer('distortos::StaticRawMessageQueue', '^distortos::StaticRawMessageQueue<.*>$',
+			StaticRawMessageQueue)
 	gdb.printing.register_pretty_printer(obj, prettyPrinters)
