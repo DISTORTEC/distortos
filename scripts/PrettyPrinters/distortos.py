@@ -188,6 +188,70 @@ class StaticRawFifoQueue(RawFifoQueue):
 		super().__init__(value, name)
 
 ########################################################################################################################
+# InternalMessageQueueBase class
+########################################################################################################################
+
+class InternalMessageQueueBase:
+	'Print distortos::internal::MessageQueueBase'
+
+	class Iterator:
+		'Iterate over distortos::internal::MessageQueueBase'
+
+		def __init__(self, entryList, storageToElement):
+			self.storageToElement = storageToElement
+			self.index = 0
+			self.iterator = PrettyPrinters.estd.SortedIntrusiveForwardList(entryList).children()
+
+		def __iter__(self):
+			return self
+
+		def __next__(self):
+			index = self.index
+			self.index += 1
+			if index % 2 == 0:
+				self.pair = next(self.iterator)
+				element = int(self.pair[1]['priority'])
+			else:
+				element = self.storageToElement(self.pair[1]['storage'])
+			return ('[%d]' % index, element)
+
+	def __init__(self, value, name = 'distortos::internal::MessageQueueBase'):
+		self.value = value
+		self.name = name
+
+	def children(self):
+		if self.isValid() == False:
+			return iter([])
+		return self.Iterator(self.value['entryList_'], self.storageToElement)
+
+	def display_hint(self):
+		# https://bugs.eclipse.org/bugs/show_bug.cgi?id=512795
+		return 'map'
+
+	def isValid(self):
+		# both semaphores must be valid
+		if Semaphore(self.value['popSemaphore_']).isValid() == False:
+			return False
+		if Semaphore(self.value['pushSemaphore_']).isValid() == False:
+			return False
+		# both lists must be valid
+		if PrettyPrinters.estd.SortedIntrusiveForwardList(self.value['entryList_']).isValid() == False:
+			return False
+		if PrettyPrinters.estd.IntrusiveForwardList(self.value['freeEntryList_']).isValid() == False:
+			return False
+		return True
+
+	def storageToElement(self, storage):
+		return storage
+
+	def to_string(self):
+		valid = self.isValid()
+		popSemaphore = self.value['popSemaphore_']
+		length = popSemaphore['value_'] if valid else 0
+		capacity = popSemaphore['maxValue_'] if valid else 0
+		return ('%s of length %d, capacity %d' % (self.name, length, capacity))
+
+########################################################################################################################
 # registerPrettyPrinters()
 ########################################################################################################################
 
@@ -197,6 +261,8 @@ def registerPrettyPrinters(obj):
 	prettyPrinters = gdb.printing.RegexpCollectionPrettyPrinter('distortos::internal')
 	prettyPrinters.add_printer('distortos::internal::FifoQueueBase', '^distortos::internal::FifoQueueBase$',
 			InternalFifoQueueBase)
+	prettyPrinters.add_printer('distortos::internal::MessageQueueBase', '^distortos::internal::MessageQueueBase$',
+			InternalMessageQueueBase)
 	prettyPrinters.add_printer('distortos::internal::ThreadList', '^distortos::internal::ThreadList$',
 			InternalThreadList)
 	gdb.printing.register_pretty_printer(obj, prettyPrinters)
