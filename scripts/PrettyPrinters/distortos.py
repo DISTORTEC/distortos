@@ -252,6 +252,20 @@ class InternalMessageQueueBase:
 		return ('%s of length %d, capacity %d' % (self.name, length, capacity))
 
 ########################################################################################################################
+# MessageQueue class
+########################################################################################################################
+
+class MessageQueue(InternalMessageQueueBase):
+	'Print distortos::MessageQueue'
+
+	def __init__(self, value, name = 'distortos::MessageQueue'):
+		super().__init__(value['messageQueueBase_'], name)
+		self.type = value.type.template_argument(0).pointer()
+
+	def storageToElement(self, storage):
+		return storage.cast(self.type).dereference()
+
+########################################################################################################################
 # registerPrettyPrinters()
 ########################################################################################################################
 
@@ -272,6 +286,7 @@ def registerPrettyPrinters(obj):
 	prettyPrinters.add_printer('distortos::DynamicRawFifoQueue', '^distortos::DynamicRawFifoQueue$',
 			DynamicRawFifoQueue)
 	prettyPrinters.add_printer('distortos::FifoQueue', '^distortos::FifoQueue<.*>$', FifoQueue)
+	prettyPrinters.add_printer('distortos::MessageQueue', '^distortos::MessageQueue<.*>$', MessageQueue)
 	prettyPrinters.add_printer('distortos::RawFifoQueue', '^distortos::RawFifoQueue$', RawFifoQueue)
 	prettyPrinters.add_printer('distortos::StaticFifoQueue', '^distortos::StaticFifoQueue<.*>$', StaticFifoQueue)
 	prettyPrinters.add_printer('distortos::StaticRawFifoQueue', '^distortos::StaticRawFifoQueue<.*>$',
