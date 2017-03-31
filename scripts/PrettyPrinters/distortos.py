@@ -266,6 +266,16 @@ class MessageQueue(InternalMessageQueueBase):
 		return storage.cast(self.type).dereference()
 
 ########################################################################################################################
+# DynamicMessageQueue class
+########################################################################################################################
+
+class DynamicMessageQueue(MessageQueue):
+	'Print distortos::DynamicMessageQueue'
+
+	def __init__(self, value, name = 'distortos::DynamicMessageQueue'):
+		super().__init__(value, name)
+
+########################################################################################################################
 # StaticMessageQueue class
 ########################################################################################################################
 
@@ -293,6 +303,8 @@ def registerPrettyPrinters(obj):
 
 	prettyPrinters = gdb.printing.RegexpCollectionPrettyPrinter('distortos')
 	prettyPrinters.add_printer('distortos::DynamicFifoQueue', '^distortos::DynamicFifoQueue<.*>$', DynamicFifoQueue)
+	prettyPrinters.add_printer('distortos::DynamicMessageQueue', '^distortos::DynamicMessageQueue<.*>$',
+			DynamicMessageQueue)
 	prettyPrinters.add_printer('distortos::DynamicRawFifoQueue', '^distortos::DynamicRawFifoQueue$',
 			DynamicRawFifoQueue)
 	prettyPrinters.add_printer('distortos::FifoQueue', '^distortos::FifoQueue<.*>$', FifoQueue)
