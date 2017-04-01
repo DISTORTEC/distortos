@@ -84,7 +84,7 @@ class ContiguousRange:
 		begin = self.value['begin_']
 		end = self.value['end_']
 		# value of "begin" must be less than or equal to "end"
-		if begin > end :
+		if begin > end:
 			return 0
 		sizeType = gdb.lookup_type('size_t')
 		rawLength = end.cast(sizeType) - begin.cast(sizeType)
@@ -143,6 +143,9 @@ class IntrusiveList:
 			return False
 		return True
 
+	def isValid(self):
+		return IntrusiveList.isNodeValid(self.value['intrusiveListBase_']['rootNode_'])
+
 	def to_string(self):
 		return self.name
 
@@ -170,8 +173,8 @@ class IntrusiveListIterator(IntrusiveList):
 class SortedIntrusiveList(IntrusiveList):
 	'Print estd::SortedIntrusiveList'
 
-	def __init__(self, value):
-		super().__init__(value['implementation_']['intrusiveList'], 'estd::SortedIntrusiveList')
+	def __init__(self, value, name = 'estd::SortedIntrusiveList'):
+		super().__init__(value['implementation_']['intrusiveList'], name)
 
 ########################################################################################################################
 # IntrusiveForwardList class
@@ -209,6 +212,9 @@ class IntrusiveForwardList:
 		if nextNode.cast(sizeType) % nextNode.type.sizeof != 0:
 			return False
 		return True
+
+	def isValid(self):
+		return IntrusiveForwardList.isNodeValid(self.value['intrusiveForwardListBase_']['rootNode_'])
 
 	def to_string(self):
 		return self.name
