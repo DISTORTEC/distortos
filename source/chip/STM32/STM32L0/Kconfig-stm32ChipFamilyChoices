@@ -1,0 +1,16 @@
+#
+# file: Kconfig-stm32ChipFamilyChoices
+#
+# author: Copyright (C) 2017 Cezary Gapinski cezary.gapinski@gmail.com
+#
+# This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
+# distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+#
+
+config CHIP_STM32L0
+	bool "STM32L0"
+	select ARCHITECTURE_ARMV6_M
+	select ARCHITECTURE_ARM_CORTEX_M0PLUS
+	select ARCHITECTURE_ARM_CORTEX_M0PLUS_R0P1
+	help
+		STM32L0 chip family
