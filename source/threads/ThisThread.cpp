@@ -84,6 +84,13 @@ void setPriority(const uint8_t priority, const bool alwaysBehind)
 	internal::getScheduler().getCurrentThreadControlBlock().setPriority(priority, alwaysBehind);
 }
 
+void setSchedulingPolicy(const SchedulingPolicy schedulingPolicy)
+{
+	CHECK_FUNCTION_CONTEXT();
+
+	internal::getScheduler().getCurrentThreadControlBlock().setSchedulingPolicy(schedulingPolicy);
+}
+
 int sleepFor(const TickClock::duration duration)
 {
 	return sleepUntil(TickClock::now() + duration + TickClock::duration{1});

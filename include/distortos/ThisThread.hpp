@@ -108,6 +108,12 @@ size_t getStackSize();
 void setPriority(uint8_t priority, bool alwaysBehind = {});
 
 /**
+ * param [in] schedulingPolicy is the new scheduling policy of calling (current) thread
+ */
+
+void setSchedulingPolicy(SchedulingPolicy schedulingPolicy);
+
+/**
  * \brief Makes the calling (current) thread sleep for at least given duration.
  *
  * Current thread's state is changed to "sleeping".
