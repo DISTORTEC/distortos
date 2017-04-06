@@ -910,7 +910,7 @@ class StaticRawFifoQueueWrapper : public RawFifoQueueWrapper
 public:
 
 	/// StaticRawFifoQueue with \a OperationCountingType::Value and storage for \a QueueSize elements
-	using TestStaticRawFifoQueue = StaticRawFifoQueue<OperationCountingType::Value, QueueSize>;
+	using TestStaticRawFifoQueue = StaticRawFifoQueue<sizeof(OperationCountingType::Value), QueueSize>;
 
 	/**
 	 * \brief StaticFifoQueueWrapper's constructor
@@ -1049,7 +1049,7 @@ class StaticRawMessageQueueWrapper : public RawMessageQueueWrapper
 public:
 
 	/// StaticRawMessageQueue with \a OperationCountingType::Value and storage for \a QueueSize elements
-	using TestStaticRawMessageQueue = StaticRawMessageQueue<OperationCountingType::Value, QueueSize>;
+	using TestStaticRawMessageQueue = StaticRawMessageQueue<sizeof(OperationCountingType::Value), QueueSize>;
 
 	/**
 	 * \brief StaticMessageQueueWrapper's constructor
