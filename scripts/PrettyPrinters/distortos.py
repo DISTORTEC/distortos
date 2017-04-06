@@ -327,6 +327,11 @@ class StaticRawMessageQueue(RawMessageQueue):
 def registerPrettyPrinters(obj):
 	'Register pretty-printers for distortos'
 
+	prettyPrinters = gdb.printing.RegexpCollectionPrettyPrinter('distortos::deprecated')
+	prettyPrinters.add_printer('distortos::deprecated::StaticRawFifoQueue',
+			'^distortos::deprecated::StaticRawFifoQueue<.*>$', StaticRawFifoQueue)
+	gdb.printing.register_pretty_printer(obj, prettyPrinters)
+
 	prettyPrinters = gdb.printing.RegexpCollectionPrettyPrinter('distortos::internal')
 	prettyPrinters.add_printer('distortos::internal::FifoQueueBase', '^distortos::internal::FifoQueueBase$',
 			InternalFifoQueueBase)
