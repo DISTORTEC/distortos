@@ -330,6 +330,8 @@ def registerPrettyPrinters(obj):
 	prettyPrinters = gdb.printing.RegexpCollectionPrettyPrinter('distortos::deprecated')
 	prettyPrinters.add_printer('distortos::deprecated::StaticRawFifoQueue',
 			'^distortos::deprecated::StaticRawFifoQueue<.*>$', StaticRawFifoQueue)
+	prettyPrinters.add_printer('distortos::deprecated::StaticRawMessageQueue',
+			'^distortos::deprecated::StaticRawMessageQueue<.*>$', StaticRawMessageQueue)
 	gdb.printing.register_pretty_printer(obj, prettyPrinters)
 
 	prettyPrinters = gdb.printing.RegexpCollectionPrettyPrinter('distortos::internal')
