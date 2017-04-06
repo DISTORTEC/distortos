@@ -2,7 +2,7 @@
  * \file
  * \brief documentation of distortos namespaces
  *
- * \author Copyright (C) 2015-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2015-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -21,6 +21,9 @@
  *
  * \namespace distortos::chip
  * \brief Chip-related code of distortos project
+ *
+ * \namespace distortos::deprecated
+ * \brief Deprecated functionalities, replaced with contents of inline distortos::current
  *
  * \namespace distortos::devices
  * \brief Device drivers
