@@ -60,6 +60,13 @@ uint8_t getPriority()
 	return internal::getScheduler().getCurrentThreadControlBlock().getPriority();
 }
 
+SchedulingPolicy getSchedulingPolicy()
+{
+	CHECK_FUNCTION_CONTEXT();
+
+	return internal::getScheduler().getCurrentThreadControlBlock().getSchedulingPolicy();
+}
+
 size_t getStackHighWaterMark()
 {
 	return get().getStackHighWaterMark();
