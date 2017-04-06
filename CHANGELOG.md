@@ -22,6 +22,8 @@ all variants of FIFO and message queues (`internal::FifoQueueBase`, `FifoQueue`,
 `DynamicMessageQueue`, `StaticMessageQueue`, `RawMessageQueue`, `DynamicRawMessageQueue` and `StaticRawMessageQueue`).
 This greatly simplifies system debugging by allowing easy debugger access to thread lists (inside scheduler or
 synchronization objects), software timer lists (inside scheduler) and by allowing live examination of queue contents.
+- `ThisThread::getSchedulingPolicy()` and `ThisThread::setSchedulingPolicy()` - counterparts of
+`Thread::getSchedulingPolicy()` and `Thread::setSchedulingPolicy()`.
 
 ### Changed
 

@@ -12,6 +12,7 @@
 #ifndef INCLUDE_DISTORTOS_THISTHREAD_HPP_
 #define INCLUDE_DISTORTOS_THISTHREAD_HPP_
 
+#include "distortos/SchedulingPolicy.hpp"
 #include "distortos/TickClock.hpp"
 
 namespace distortos
@@ -72,6 +73,12 @@ uint8_t getEffectivePriority();
 uint8_t getPriority();
 
 /**
+ * \return scheduling policy of calling (current) thread
+ */
+
+SchedulingPolicy getSchedulingPolicy();
+
+/**
  * \warning This function must not be called from interrupt context!
  *
  * \return "high water mark" (max usage) of thread's stack, bytes
@@ -99,6 +106,12 @@ size_t getStackSize();
  */
 
 void setPriority(uint8_t priority, bool alwaysBehind = {});
+
+/**
+ * param [in] schedulingPolicy is the new scheduling policy of calling (current) thread
+ */
+
+void setSchedulingPolicy(SchedulingPolicy schedulingPolicy);
 
 /**
  * \brief Makes the calling (current) thread sleep for at least given duration.

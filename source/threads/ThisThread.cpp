@@ -60,6 +60,13 @@ uint8_t getPriority()
 	return internal::getScheduler().getCurrentThreadControlBlock().getPriority();
 }
 
+SchedulingPolicy getSchedulingPolicy()
+{
+	CHECK_FUNCTION_CONTEXT();
+
+	return internal::getScheduler().getCurrentThreadControlBlock().getSchedulingPolicy();
+}
+
 size_t getStackHighWaterMark()
 {
 	return get().getStackHighWaterMark();
@@ -75,6 +82,13 @@ void setPriority(const uint8_t priority, const bool alwaysBehind)
 	CHECK_FUNCTION_CONTEXT();
 
 	internal::getScheduler().getCurrentThreadControlBlock().setPriority(priority, alwaysBehind);
+}
+
+void setSchedulingPolicy(const SchedulingPolicy schedulingPolicy)
+{
+	CHECK_FUNCTION_CONTEXT();
+
+	internal::getScheduler().getCurrentThreadControlBlock().setSchedulingPolicy(schedulingPolicy);
 }
 
 int sleepFor(const TickClock::duration duration)
