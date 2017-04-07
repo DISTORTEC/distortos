@@ -32,18 +32,6 @@ itself.
 - Size of stack passed as argument to `DynamicThread` or as template argument to `StaticThread` is adjusted to alignment
 requirements of architecture. This way "usable" size of stack will never be less than the requested value.
 
-### Deprecated
-
-- `StaticRawFifoQueue<T, QueueSize>`, `StaticRawFifoQueueFromSize<ElementSize, QueueSize>`,
-`StaticRawMessageQueue<T, QueueSize>` and `StaticRawMessageQueueFromSize<ElementSize, QueueSize>` were moved to
-`deprecated` namespace and are scheduled to be removed after v0.5.0. The classes are deprecated because they don't match
-their "dynamic" counterparts (which use size in bytes, not type) and because
-`StaticRaw...QueueFromSize<ElementSize, QueueSize>` aliases work only for `ElementSize` which is a positive power of 2.
-New versions of these classes which were added - `StaticRawFifoQueue<ElementSize, QueueSize>` and
-`StaticRawMessageQueue<ElementSize, QueueSize>` - don't have these flaws. To upgrade your code replace
-`StaticRaw...Queue<T, QueueSize>` with `StaticRaw...Queue<sizeof(T), QueueSize>` and
-`StaticRaw...QueueFromSize<ElementSize, QueueSize>` with `StaticRaw...Queue<ElementSize, QueueSize>`.
-
 ### Fixed
 
 - `ThisThread::Signals::setSignalMask()` may never return `ENOSPC`, as it delivers signals directly, not via
