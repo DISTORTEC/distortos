@@ -86,12 +86,15 @@ using StaticRawMessageQueue __attribute__ ((deprecated("Use StaticRawMessageQueu
  * \brief StaticRawMessageQueueFromSize type alias is a variant of StaticRawMessageQueue which uses size of element
  * (instead of type) as template argument.
  *
+ * \deprecated scheduled to be removed after v0.5.0, use StaticRawMessageQueue2<ElementSize, QueueSize>`
+ *
  * \tparam ElementSize is the size of single queue element, bytes
  * \tparam QueueSize is the maximum number of elements in queue
  */
 
 template<size_t ElementSize, size_t QueueSize>
-using StaticRawMessageQueueFromSize = StaticRawMessageQueue2<ElementSize, QueueSize>;
+using StaticRawMessageQueueFromSize __attribute__ ((deprecated("Use StaticRawMessageQueue2<ElementSize, QueueSize>"))) =
+		StaticRawMessageQueue2<ElementSize, QueueSize>;
 
 }	// namespace distortos
 
