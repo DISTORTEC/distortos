@@ -88,8 +88,7 @@ using StaticRawMessageQueue = StaticRawMessageQueue2<sizeof(T), QueueSize>;
  */
 
 template<size_t ElementSize, size_t QueueSize>
-using StaticRawMessageQueueFromSize =
-		StaticRawMessageQueue<typename std::aligned_storage<ElementSize, ElementSize>::type, QueueSize>;
+using StaticRawMessageQueueFromSize = StaticRawMessageQueue2<ElementSize, QueueSize>;
 
 }	// namespace distortos
 
