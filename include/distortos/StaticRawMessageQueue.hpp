@@ -77,30 +77,7 @@ private:
  */
 
 template<typename T, size_t QueueSize>
-class StaticRawMessageQueue : public RawMessageQueue
-{
-public:
-
-	/**
-	 * \brief StaticRawMessageQueue's constructor
-	 */
-
-	explicit StaticRawMessageQueue() :
-			RawMessageQueue{{entryStorage_.data(), internal::dummyDeleter<EntryStorage>},
-					{valueStorage_.data(), internal::dummyDeleter<ValueStorage<T>>}, sizeof(*valueStorage_.data()),
-					valueStorage_.size()}
-	{
-
-	}
-
-private:
-
-	/// storage for queue's entries
-	std::array<EntryStorage, QueueSize> entryStorage_;
-
-	/// storage for queue's contents
-	std::array<ValueStorage<T>, QueueSize> valueStorage_;
-};
+using StaticRawMessageQueue = StaticRawMessageQueue2<sizeof(T), QueueSize>;
 
 /**
  * \brief StaticRawMessageQueueFromSize type alias is a variant of StaticRawMessageQueue which uses size of element
