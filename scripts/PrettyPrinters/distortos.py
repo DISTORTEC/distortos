@@ -353,6 +353,8 @@ def registerPrettyPrinters(obj):
 			StaticMessageQueue)
 	prettyPrinters.add_printer('distortos::StaticRawFifoQueue', '^distortos::StaticRawFifoQueue<.*>$',
 			StaticRawFifoQueue)
+	prettyPrinters.add_printer('distortos::StaticRawFifoQueue2', '^distortos::StaticRawFifoQueue2<.*>$',
+			StaticRawFifoQueue)
 	prettyPrinters.add_printer('distortos::StaticRawMessageQueue', '^distortos::StaticRawMessageQueue<.*>$',
 			StaticRawMessageQueue)
 	gdb.printing.register_pretty_printer(obj, prettyPrinters)
