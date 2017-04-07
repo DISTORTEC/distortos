@@ -84,8 +84,7 @@ using StaticRawFifoQueue = StaticRawFifoQueue2<sizeof(T), QueueSize>;
  */
 
 template<size_t ElementSize, size_t QueueSize>
-using StaticRawFifoQueueFromSize =
-		StaticRawFifoQueue<typename std::aligned_storage<ElementSize, ElementSize>::type, QueueSize>;
+using StaticRawFifoQueueFromSize = StaticRawFifoQueue2<ElementSize, QueueSize>;
 
 }	// namespace distortos
 
