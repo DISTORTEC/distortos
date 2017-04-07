@@ -1048,8 +1048,8 @@ class StaticRawMessageQueueWrapper : public RawMessageQueueWrapper
 {
 public:
 
-	/// StaticRawMessageQueue with \a OperationCountingType::Value and storage for \a QueueSize elements
-	using TestStaticRawMessageQueue = StaticRawMessageQueue<OperationCountingType::Value, QueueSize>;
+	/// StaticRawMessageQueue2 with \a OperationCountingType::Value and storage for \a QueueSize elements
+	using TestStaticRawMessageQueue = StaticRawMessageQueue2<sizeof(OperationCountingType::Value), QueueSize>;
 
 	/**
 	 * \brief StaticMessageQueueWrapper's constructor
