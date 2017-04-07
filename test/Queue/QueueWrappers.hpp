@@ -909,8 +909,8 @@ class StaticRawFifoQueueWrapper : public RawFifoQueueWrapper
 {
 public:
 
-	/// StaticRawFifoQueue with \a OperationCountingType::Value and storage for \a QueueSize elements
-	using TestStaticRawFifoQueue = StaticRawFifoQueue<OperationCountingType::Value, QueueSize>;
+	/// StaticRawFifoQueue2 with \a OperationCountingType::Value and storage for \a QueueSize elements
+	using TestStaticRawFifoQueue = StaticRawFifoQueue2<sizeof(OperationCountingType::Value), QueueSize>;
 
 	/**
 	 * \brief StaticFifoQueueWrapper's constructor
