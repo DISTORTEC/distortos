@@ -82,12 +82,15 @@ using StaticRawFifoQueue __attribute__ ((deprecated("Use StaticRawFifoQueue2<siz
  * \brief StaticRawFifoQueueFromSize type alias is a variant of StaticRawFifoQueue which uses size of element (instead
  * of type) as template argument.
  *
+ * \deprecated scheduled to be removed after v0.5.0, use StaticRawFifoQueue2<ElementSize, QueueSize>`
+ *
  * \tparam ElementSize is the size of single queue element, bytes
  * \tparam QueueSize is the maximum number of elements in queue
  */
 
 template<size_t ElementSize, size_t QueueSize>
-using StaticRawFifoQueueFromSize = StaticRawFifoQueue2<ElementSize, QueueSize>;
+using StaticRawFifoQueueFromSize __attribute__ ((deprecated("Use StaticRawFifoQueue2<ElementSize, QueueSize>"))) =
+		StaticRawFifoQueue2<ElementSize, QueueSize>;
 
 }	// namespace distortos
 
