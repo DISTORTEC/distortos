@@ -351,8 +351,6 @@ def registerPrettyPrinters(obj):
 	prettyPrinters.add_printer('distortos::StaticFifoQueue', '^distortos::StaticFifoQueue<.*>$', StaticFifoQueue)
 	prettyPrinters.add_printer('distortos::StaticMessageQueue', '^distortos::StaticMessageQueue<.*>$',
 			StaticMessageQueue)
-	prettyPrinters.add_printer('distortos::StaticRawFifoQueue', '^distortos::StaticRawFifoQueue<.*>$',
-			StaticRawFifoQueue)
 	prettyPrinters.add_printer('distortos::StaticRawFifoQueue2', '^distortos::StaticRawFifoQueue2<.*>$',
 			StaticRawFifoQueue)
 	prettyPrinters.add_printer('distortos::StaticRawMessageQueue', '^distortos::StaticRawMessageQueue<.*>$',

@@ -73,28 +73,7 @@ private:
  */
 
 template<typename T, size_t QueueSize>
-class StaticRawFifoQueue : public RawFifoQueue
-{
-public:
-
-	/// type of uninitialized storage for data
-	using Storage = typename std::aligned_storage<sizeof(T), alignof(T)>::type;
-
-	/**
-	 * \brief StaticRawFifoQueue's constructor
-	 */
-
-	explicit StaticRawFifoQueue() :
-			RawFifoQueue{{storage_.data(), internal::dummyDeleter<Storage>}, sizeof(*storage_.data()), storage_.size()}
-	{
-
-	}
-
-private:
-
-	/// storage for queue's contents
-	std::array<Storage, QueueSize> storage_;
-};
+using StaticRawFifoQueue = StaticRawFifoQueue2<sizeof(T), QueueSize>;
 
 /**
  * \brief StaticRawFifoQueueFromSize type alias is a variant of StaticRawFifoQueue which uses size of element (instead
