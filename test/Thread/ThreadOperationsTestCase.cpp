@@ -33,6 +33,13 @@ namespace
 {
 
 /*---------------------------------------------------------------------------------------------------------------------+
+| local constants
++---------------------------------------------------------------------------------------------------------------------*/
+
+/// size of stack for test thread, bytes
+constexpr size_t testThreadStackSize {256};
+
+/*---------------------------------------------------------------------------------------------------------------------+
 | local functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
@@ -66,7 +73,7 @@ bool phase1()
 		}
 	}
 
-	auto testThread = makeDynamicThread({192, 1}, emptyFunction);
+	auto testThread = makeDynamicThread({testThreadStackSize, 1}, emptyFunction);
 
 	// state of created (but not yet started) thread must be "ThreadState::created"
 	if (testThread.getState() != ThreadState::created)
@@ -153,7 +160,7 @@ bool phase3()
 	// attempt to detach static thread must fail with ENOTSUP
 	{
 		int sharedRet {};
-		auto staticThread = makeAndStartStaticThread<192>(1, lambda, std::ref(sharedRet));
+		auto staticThread = makeAndStartStaticThread<testThreadStackSize>(1, lambda, std::ref(sharedRet));
 		bool result {true};
 		if (staticThread.detach() != ENOTSUP)	// static thread cannot be detached
 			result = false;
@@ -166,7 +173,7 @@ bool phase3()
 	// detaching dynamic thread that is not yet started must succeed, but the thread is just deleted and does not run
 	{
 		int sharedRet {0x2e981e48};
-		auto dynamicThread = makeDynamicThread({192, 1}, lambda, std::ref(sharedRet));
+		auto dynamicThread = makeDynamicThread({testThreadStackSize, 1}, lambda, std::ref(sharedRet));
 		bool result {true};
 		if (dynamicThread.detach() != 0)
 			result = false;
@@ -185,7 +192,7 @@ bool phase3()
 	// detaching dynamic thread that is started, but not yet terminated, must succeed
 	{
 		int sharedRet {0x0f0dad58};
-		auto dynamicThread = makeAndStartDynamicThread({192, 1}, lambda, std::ref(sharedRet));
+		auto dynamicThread = makeAndStartDynamicThread({testThreadStackSize, 1}, lambda, std::ref(sharedRet));
 		bool result {true};
 		if (dynamicThread.detach() != 0)
 			result = false;
@@ -206,7 +213,7 @@ bool phase3()
 	// self-detach of dynamic thread must succeed
 	{
 		int sharedRet {0x5d3c799b};
-		auto dynamicThread = makeAndStartDynamicThread({192, UINT8_MAX}, lambda, std::ref(sharedRet));
+		auto dynamicThread = makeAndStartDynamicThread({testThreadStackSize, UINT8_MAX}, lambda, std::ref(sharedRet));
 		bool result {true};
 		if (dynamicThread.getState() != ThreadState::detached)
 			result = false;
@@ -226,7 +233,7 @@ bool phase3()
 
 	// detaching dynamic thread that is already terminated must succeed, the thread is just deleted
 	{
-		auto dynamicThread = makeAndStartDynamicThread({192, UINT8_MAX}, emptyFunction);
+		auto dynamicThread = makeAndStartDynamicThread({testThreadStackSize, UINT8_MAX}, emptyFunction);
 		bool result {true};
 		if (dynamicThread.getState() != ThreadState::terminated)
 			result = false;

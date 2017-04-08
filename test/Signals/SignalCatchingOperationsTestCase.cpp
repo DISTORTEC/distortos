@@ -23,8 +23,8 @@
 #include <cerrno>
 
 /// configuration required by first and second phase of SignalCatchingOperationsTestCase
-#define SIGNAL_CATCHING_OPERATIONS_TEST_CASE_PHASE_1_2_ENABLED defined(CONFIG_MAIN_THREAD_SIGNAL_ACTIONS) && \
-		CONFIG_MAIN_THREAD_SIGNAL_ACTIONS >= 1 && CONFIG_MAIN_THREAD_SIGNAL_ACTIONS <= 31
+#define SIGNAL_CATCHING_OPERATIONS_TEST_CASE_PHASE_1_2_ENABLED CONFIG_MAIN_THREAD_SIGNAL_ACTIONS >= 1 && \
+		CONFIG_MAIN_THREAD_SIGNAL_ACTIONS <= 31
 
 namespace distortos
 {
@@ -233,8 +233,8 @@ bool phase3()
 		[]() __attribute__ ((noinline))
 		{
 			volatile uint8_t array[testThreadStackSize / 2] {};
-			(void)array;
 			ThisThread::setPriority(1);
+			(void)array[0];	// make sure the array is not removed and prevent tail-call optimization
 		}();
 	};
 
