@@ -233,8 +233,8 @@ bool phase3()
 		[]() __attribute__ ((noinline))
 		{
 			volatile uint8_t array[testThreadStackSize / 2] {};
-			(void)array;
 			ThisThread::setPriority(1);
+			(void)array[0];	// make sure the array is not removed and prevent tail-call optimization
 		}();
 	};
 
