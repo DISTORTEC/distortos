@@ -18,6 +18,8 @@
 
 #include "distortos/internal/memory/storageDeleter.hpp"
 
+#include <functional>
+
 namespace distortos
 {
 
