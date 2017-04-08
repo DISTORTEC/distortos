@@ -16,6 +16,8 @@
 #include "distortos/StaticSignalsReceiver.hpp"
 #include "distortos/UndetachableThread.hpp"
 
+#include <functional>
+
 namespace distortos
 {
 
