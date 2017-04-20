@@ -22,3 +22,4 @@ documentation/html/
 # other
 .gdbinit
 __pycache__
+parsetab.py
