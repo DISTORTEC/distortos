@@ -25,10 +25,10 @@ cache:
 language: generic
 
 install:
-    - "XZ_OPT=\"-0 -T 0 -v\" ./scripts/travis-ci.sh install"
+    - "XZ_OPT=\"-0 -T 0 -v\" ./scripts/travis-ci.sh install build"
 
 script:
-    - "./scripts/travis-ci.sh script"
+    - "./scripts/travis-ci.sh script build"
 
 after_failure:
     - "echo \"********** /tmp/stdout.log\""

@@ -12,13 +12,13 @@
 set -e
 set -u
 
-if [ ${#} -lt 1 ]; then
-	echo 'This script requires at least 1 argument!' >&2
+if [ ${#} -lt 2 ]; then
+	echo 'This script requires at least 2 arguments!' >&2
 	exit 1
 fi
 
-# "install" phase
-install() {
+# "install build" phase
+installBuild() {
 	mkdir -p "${HOME}/cache"
 	mkdir -p "${HOME}/toolchains"
 	cd "${HOME}/toolchains"
@@ -66,8 +66,21 @@ install() {
 	EOF
 }
 
-# "script" phase
-script() {
+# "install" phase
+install() {
+	case "${1}" in
+		build)
+			shift
+			installBuild "${@}"
+			;;
+		*)
+			echo "\"${1}\" is not a valid argument!" >&2
+			exit 2
+	esac
+}
+
+# "script build" phase
+scriptBuild() {
 	toolchains="$(find "${HOME}/toolchains/" -mindepth 1 -maxdepth 1 -name '*.sh' | sort)"
 	for toolchain in ${toolchains}; do
 		(
@@ -78,9 +91,23 @@ script() {
 	done
 }
 
+# "script" phase
+script() {
+	case "${1}" in
+		build)
+			shift
+			scriptBuild "${@}"
+			;;
+		*)
+			echo "\"${1}\" is not a valid argument!" >&2
+			exit 2
+	esac
+}
+
 case "${1}" in
 	install)
-		install
+		shift
+		install "${@}"
 		;;
 	script)
 		shift
