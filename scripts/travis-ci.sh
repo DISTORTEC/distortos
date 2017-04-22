@@ -66,12 +66,33 @@ installBuild() {
 	EOF
 }
 
+# "install pydts" phase
+installPydts() {
+	(
+	cd /tmp
+	echo 'Installing dtc-1.4.4.tar.gz...'
+	wget https://github.com/dgibson/dtc/archive/v1.4.4.tar.gz -O dtc-1.4.4.tar.gz
+	echo 'Extracting dtc-1.4.4.tar.gz...'
+	tar -xf dtc-1.4.4.tar.gz
+	echo 'Building dtc-1.4.4...'
+	cd dtc-1.4.4
+	make -j$(nproc)
+	make  PREFIX="${HOME}/.local" install
+	)
+	echo 'Installing ply...'
+	pip install --user ply
+}
+
 # "install" phase
 install() {
 	case "${1}" in
 		build)
 			shift
 			installBuild "${@}"
+			;;
+		pydts)
+			shift
+			installPydts "${@}"
 			;;
 		*)
 			echo "\"${1}\" is not a valid argument!" >&2
@@ -91,12 +112,21 @@ scriptBuild() {
 	done
 }
 
+# "script pydts" phase
+scriptPydts() {
+	"$(dirname "${0}")/test-pydts.sh" "${@}"
+}
+
 # "script" phase
 script() {
 	case "${1}" in
 		build)
 			shift
 			scriptBuild "${@}"
+			;;
+		pydts)
+			shift
+			scriptPydts "${@}"
 			;;
 		*)
 			echo "\"${1}\" is not a valid argument!" >&2

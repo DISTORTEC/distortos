@@ -24,11 +24,22 @@ cache:
 # use minimal environment
 language: generic
 
+matrix:
+    include:
+        - env: SUBSTAGE=build
+        - python: '2.7'
+          env: SUBSTAGE="pydts --quiet"
+        - python: '3.6'
+          env: SUBSTAGE="pydts --quiet"
+
+before_install:
+    - "export PATH=${HOME}/.local/bin:${PATH}"
+
 install:
-    - "XZ_OPT=\"-0 -T 0 -v\" ./scripts/travis-ci.sh install build"
+    - "XZ_OPT=\"-0 -T 0 -v\" ./scripts/travis-ci.sh install ${SUBSTAGE}"
 
 script:
-    - "./scripts/travis-ci.sh script build"
+    - "./scripts/travis-ci.sh script ${SUBSTAGE}"
 
 after_failure:
     - "echo \"********** /tmp/stdout.log\""
