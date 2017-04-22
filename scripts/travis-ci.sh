@@ -100,7 +100,7 @@ script() {
 			;;
 		*)
 			echo "\"${1}\" is not a valid argument!" >&2
-			exit 2
+			exit 3
 	esac
 }
 
@@ -115,5 +115,5 @@ case "${1}" in
 		;;
 	*)
 		echo "\"${1}\" is not a valid argument!" >&2
-		exit 2
+		exit 4
 esac
