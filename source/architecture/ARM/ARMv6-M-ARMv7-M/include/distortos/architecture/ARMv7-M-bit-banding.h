@@ -20,6 +20,9 @@
 | global defines
 +---------------------------------------------------------------------------------------------------------------------*/
 
+/** bit-banding is supported by selected architecture */
+#define DISTORTOS_BITBANDING_SUPPORTED
+
 /** beginning of SRAM region which is aliased in bit-band region */
 enum { bitbandSramBegin = 0x20000000 };
 
