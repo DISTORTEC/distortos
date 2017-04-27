@@ -618,6 +618,7 @@ config CHIP_STM32L031C
 	bool
 	default n
 	select CHIP_STM32L031
+	select CHIP_STM32_GPIOV2_HAS_GPIOH
 
 config CHIP_STM32L031C4
 	bool
@@ -702,6 +703,7 @@ config CHIP_STM32L041C
 	bool
 	default n
 	select CHIP_STM32L041
+	select CHIP_STM32_GPIOV2_HAS_GPIOH
 
 config CHIP_STM32L041C4
 	bool
@@ -766,6 +768,7 @@ config CHIP_STM32L051C
 	bool
 	default n
 	select CHIP_STM32L051
+	select CHIP_STM32_GPIOV2_HAS_GPIOH
 
 config CHIP_STM32L051C6
 	bool
@@ -796,6 +799,8 @@ config CHIP_STM32L051R
 	bool
 	default n
 	select CHIP_STM32L051
+	select CHIP_STM32_GPIOV2_HAS_GPIOD
+	select CHIP_STM32_GPIOV2_HAS_GPIOH
 
 config CHIP_STM32L051R6
 	bool
@@ -831,6 +836,7 @@ config CHIP_STM32L052C
 	bool
 	default n
 	select CHIP_STM32L052
+	select CHIP_STM32_GPIOV2_HAS_GPIOH
 
 config CHIP_STM32L052C6
 	bool
@@ -861,6 +867,8 @@ config CHIP_STM32L052R
 	bool
 	default n
 	select CHIP_STM32L052
+	select CHIP_STM32_GPIOV2_HAS_GPIOD
+	select CHIP_STM32_GPIOV2_HAS_GPIOH
 
 config CHIP_STM32L052R6
 	bool
@@ -896,6 +904,7 @@ config CHIP_STM32L053C
 	bool
 	default n
 	select CHIP_STM32L053
+	select CHIP_STM32_GPIOV2_HAS_GPIOH
 
 config CHIP_STM32L053C6
 	bool
@@ -911,6 +920,8 @@ config CHIP_STM32L053R
 	bool
 	default n
 	select CHIP_STM32L053
+	select CHIP_STM32_GPIOV2_HAS_GPIOD
+	select CHIP_STM32_GPIOV2_HAS_GPIOH
 
 config CHIP_STM32L053R6
 	bool
@@ -950,6 +961,7 @@ config CHIP_STM32L063C
 	bool
 	default n
 	select CHIP_STM32L063
+	select CHIP_STM32_GPIOV2_HAS_GPIOH
 
 config CHIP_STM32L063C8
 	bool
@@ -960,6 +972,8 @@ config CHIP_STM32L063R
 	bool
 	default n
 	select CHIP_STM32L063
+	select CHIP_STM32_GPIOV2_HAS_GPIOD
+	select CHIP_STM32_GPIOV2_HAS_GPIOH
 
 config CHIP_STM32L063R8
 	bool
@@ -979,6 +993,7 @@ config CHIP_STM32L071C
 	bool
 	default n
 	select CHIP_STM32L071
+	select CHIP_STM32_GPIOV2_HAS_GPIOH
 
 config CHIP_STM32L071C8
 	bool
@@ -1019,6 +1034,8 @@ config CHIP_STM32L071R
 	bool
 	default n
 	select CHIP_STM32L071
+	select CHIP_STM32_GPIOV2_HAS_GPIOD
+	select CHIP_STM32_GPIOV2_HAS_GPIOH
 
 config CHIP_STM32L071RB
 	bool
@@ -1034,6 +1051,9 @@ config CHIP_STM32L071V
 	bool
 	default n
 	select CHIP_STM32L071
+	select CHIP_STM32_GPIOV2_HAS_GPIOD
+	select CHIP_STM32_GPIOV2_HAS_GPIOE
+	select CHIP_STM32_GPIOV2_HAS_GPIOH
 
 config CHIP_STM32L071V8
 	bool
@@ -1059,6 +1079,7 @@ config CHIP_STM32L072C
 	bool
 	default n
 	select CHIP_STM32L072
+	select CHIP_STM32_GPIOV2_HAS_GPIOH
 
 config CHIP_STM32L072CB
 	bool
@@ -1089,6 +1110,8 @@ config CHIP_STM32L072R
 	bool
 	default n
 	select CHIP_STM32L072
+	select CHIP_STM32_GPIOV2_HAS_GPIOD
+	select CHIP_STM32_GPIOV2_HAS_GPIOH
 
 config CHIP_STM32L072RB
 	bool
@@ -1104,6 +1127,9 @@ config CHIP_STM32L072V
 	bool
 	default n
 	select CHIP_STM32L072
+	select CHIP_STM32_GPIOV2_HAS_GPIOD
+	select CHIP_STM32_GPIOV2_HAS_GPIOE
+	select CHIP_STM32_GPIOV2_HAS_GPIOH
 
 config CHIP_STM32L072V8
 	bool
@@ -1129,6 +1155,7 @@ config CHIP_STM32L073C
 	bool
 	default n
 	select CHIP_STM32L073
+	select CHIP_STM32_GPIOV2_HAS_GPIOH
 
 config CHIP_STM32L073CB
 	bool
@@ -1144,6 +1171,8 @@ config CHIP_STM32L073R
 	bool
 	default n
 	select CHIP_STM32L073
+	select CHIP_STM32_GPIOV2_HAS_GPIOD
+	select CHIP_STM32_GPIOV2_HAS_GPIOH
 
 config CHIP_STM32L073RB
 	bool
@@ -1159,6 +1188,9 @@ config CHIP_STM32L073V
 	bool
 	default n
 	select CHIP_STM32L073
+	select CHIP_STM32_GPIOV2_HAS_GPIOD
+	select CHIP_STM32_GPIOV2_HAS_GPIOE
+	select CHIP_STM32_GPIOV2_HAS_GPIOH
 
 config CHIP_STM32L073V8
 	bool
@@ -1188,6 +1220,7 @@ config CHIP_STM32L081C
 	bool
 	default n
 	select CHIP_STM32L081
+	select CHIP_STM32_GPIOV2_HAS_GPIOH
 
 config CHIP_STM32L081CZ
 	bool
@@ -1213,6 +1246,7 @@ config CHIP_STM32L082C
 	bool
 	default n
 	select CHIP_STM32L082
+	select CHIP_STM32_GPIOV2_HAS_GPIOH
 
 config CHIP_STM32L082CZ
 	bool
@@ -1243,6 +1277,7 @@ config CHIP_STM32L083C
 	bool
 	default n
 	select CHIP_STM32L083
+	select CHIP_STM32_GPIOV2_HAS_GPIOH
 
 config CHIP_STM32L083CB
 	bool
@@ -1258,6 +1293,8 @@ config CHIP_STM32L083R
 	bool
 	default n
 	select CHIP_STM32L083
+	select CHIP_STM32_GPIOV2_HAS_GPIOD
+	select CHIP_STM32_GPIOV2_HAS_GPIOH
 
 config CHIP_STM32L083RB
 	bool
@@ -1273,6 +1310,9 @@ config CHIP_STM32L083V
 	bool
 	default n
 	select CHIP_STM32L083
+	select CHIP_STM32_GPIOV2_HAS_GPIOD
+	select CHIP_STM32_GPIOV2_HAS_GPIOE
+	select CHIP_STM32_GPIOV2_HAS_GPIOH
 
 config CHIP_STM32L083V8
 	bool
@@ -1517,6 +1557,6 @@ config CHIP
 
 config CHIP_INCLUDES
 	string
-	default "source/chip/STM32/include source/chip/STM32/STM32L0/include external/CMSIS-STM32L0 external/CMSIS"
+	default "source/chip/STM32/include source/chip/STM32/STM32L0/include source/chip/STM32/peripherals/GPIOv2/include external/CMSIS-STM32L0 external/CMSIS"
 
 endif	# CHIP_STM32L0
