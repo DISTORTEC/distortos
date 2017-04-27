@@ -12,6 +12,7 @@
 #include "distortos/chip/lowLevelInitialization.hpp"
 
 #include "distortos/chip/clocks.hpp"
+#include "distortos/chip/CMSIS-proxy.h"
 #include "distortos/chip/STM32L0-FLASH.hpp"
 #include "distortos/chip/STM32L0-PWR.hpp"
 #include "distortos/chip/STM32L0-RCC.hpp"
@@ -99,6 +100,27 @@ void lowLevelInitialization()
 #endif	// defined(CONFIG_CHIP_STM32L0_RCC_SYSCLK_PLL)
 
 #endif	// def CONFIG_CHIP_STM32L0_STANDARD_CLOCK_CONFIGURATION_ENABLE
+
+	RCC->IOPENR |=
+#ifdef CONFIG_CHIP_STM32_GPIOV2_GPIOA_ENABLE
+			RCC_IOPENR_GPIOAEN |
+#endif	// def CONFIG_CHIP_STM32_GPIOV2_GPIOA_ENABLE
+#ifdef CONFIG_CHIP_STM32_GPIOV2_GPIOB_ENABLE
+			RCC_IOPENR_GPIOBEN |
+#endif	// def CONFIG_CHIP_STM32_GPIOV2_GPIOB_ENABLE
+#ifdef CONFIG_CHIP_STM32_GPIOV2_GPIOC_ENABLE
+			RCC_IOPENR_GPIOCEN |
+#endif	// def CONFIG_CHIP_STM32_GPIOV2_GPIOC_ENABLE
+#ifdef CONFIG_CHIP_STM32_GPIOV2_GPIOD_ENABLE
+			RCC_IOPENR_GPIODEN |
+#endif	// def CONFIG_CHIP_STM32_GPIOV2_GPIOD_ENABLE
+#ifdef CONFIG_CHIP_STM32_GPIOV2_GPIOE_ENABLE
+			RCC_IOPENR_GPIOEEN |
+#endif	// def CONFIG_CHIP_STM32_GPIOV2_GPIOE_ENABLE
+#ifdef CONFIG_CHIP_STM32_GPIOV2_GPIOH_ENABLE
+			RCC_IOPENR_GPIOHEN |
+#endif	// def CONFIG_CHIP_STM32_GPIOV2_GPIOH_ENABLE
+			0;
 }
 
 }	// namespace chip
