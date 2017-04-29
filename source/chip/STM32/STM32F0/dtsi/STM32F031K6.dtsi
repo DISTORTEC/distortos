@@ -1,0 +1,29 @@
+/**
+ * \file
+ * \brief Devicetree fragment for STM32F031K6
+ *
+ * \author Copyright (C) 2014-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ *
+ * \par License
+ * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
+ * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ *
+ * \warning
+ * Automatically generated file - do not edit!
+ */
+
+#include "ARMv6-M.dtsi"
+
+/ {
+	flash: flash@8000000 {
+		compatible = "on-chip-flash";
+		reg = <0x8000000 32768>;
+		label = "flash";
+	};
+
+	sram: memory@20000000 {
+		device_type = "memory";
+		reg = <0x20000000 4096>;
+		label = "sram";
+	};
+};

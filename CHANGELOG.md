@@ -36,6 +36,11 @@ something like `cpp -nostdinc -undef -E -x assembler-with-cpp in.dts -o out.dts`
 versions are supported.
 - Support for cores which don't support bit-banding (*ARM Cortex-M0(+)*, *ARM Cortex-M1*, *ARM Cortex-M7*) to *STM32's*
 *SPIv1* low-level driver.
+- Devicetree fragments (`*.dtsi` files) for architectures.
+- `*.csv` files with memory description of all supported chips.
+- `generateChipDtsi.py` *Python* script which can generate chip's devicetree fragments (`*.dtsi` files) from `*.csv`
+input file.
+- Basic devicetree `*.dts` files for all supported boards.
 
 ### Changed
 
