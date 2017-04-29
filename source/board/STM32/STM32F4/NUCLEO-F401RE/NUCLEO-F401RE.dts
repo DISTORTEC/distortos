@@ -1,0 +1,20 @@
+/**
+ * \file
+ * \brief Devicetree for NUCLEO-F401RE
+ *
+ * \author Copyright (C) 2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ *
+ * \par License
+ * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
+ * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+ 
+ /dts-v1/;
+ 
+ #include "STM32F401RE.dtsi"
+ 
+ / {
+ 	compatible = "ST,NUCLEO-F401RE", "ST,STM32F401RE";
+ 	model = "STMicroelectronics NUCLEO-F401RE";
+ };
+ 
