@@ -25,7 +25,8 @@ if [ ${#} -gt 0 ]; then
 	esac
 fi
 
-pydts="$(pwd)/$(dirname "${0}")/pydts.py"
+distortosPath="$(cd $(dirname ${0})/.. && pwd)"
+pydts="${distortosPath}/scripts/pydts.py"
 
 testPydts() {
 	local dtsPath="${1}"
@@ -133,6 +134,13 @@ wget https://github.com/RobertCNelson/device-tree-rebasing/archive/master.tar.gz
 tar -xf master.tar.gz 2>&3
 cd device-tree-rebasing-master
 testPydts '.' '-I include'
+cd ..
+
+echo 'Testing with distortos...'
+echo
+mkdir distortos
+cd distortos
+testPydts "${distortosPath}" "$(find ${distortosPath} -type d -name 'dtsi' -exec echo -I {} \;)"
 cd ..
 
 cd ..
