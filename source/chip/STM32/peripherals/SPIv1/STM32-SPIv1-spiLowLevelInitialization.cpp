@@ -19,6 +19,22 @@ namespace distortos
 namespace chip
 {
 
+namespace
+{
+
+/*---------------------------------------------------------------------------------------------------------------------+
+| local objects
++---------------------------------------------------------------------------------------------------------------------*/
+
+/// priority of SPI interrupts
+#if defined(CONFIG_ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI)
+constexpr uint8_t interruptPriority {CONFIG_ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI};
+#else	// !defined(CONFIG_ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI)
+constexpr uint8_t interruptPriority {};
+#endif	// !defined(CONFIG_ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI)
+
+}	// namespace
+
 /*---------------------------------------------------------------------------------------------------------------------+
 | global functions
 +---------------------------------------------------------------------------------------------------------------------*/
@@ -26,27 +42,27 @@ namespace chip
 void spiLowLevelInitialization()
 {
 #ifdef CONFIG_CHIP_STM32_SPIV1_SPI1_ENABLE
-	NVIC_SetPriority(SPI1_IRQn, CONFIG_ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI);
+	NVIC_SetPriority(SPI1_IRQn, interruptPriority);
 	NVIC_EnableIRQ(SPI1_IRQn);
 #endif	// def CONFIG_CHIP_STM32_SPIV1_SPI1_ENABLE
 #ifdef CONFIG_CHIP_STM32_SPIV1_SPI2_ENABLE
-	NVIC_SetPriority(SPI2_IRQn, CONFIG_ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI);
+	NVIC_SetPriority(SPI2_IRQn, interruptPriority);
 	NVIC_EnableIRQ(SPI2_IRQn);
 #endif	// def CONFIG_CHIP_STM32_SPIV1_SPI2_ENABLE
 #ifdef CONFIG_CHIP_STM32_SPIV1_SPI3_ENABLE
-	NVIC_SetPriority(SPI3_IRQn, CONFIG_ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI);
+	NVIC_SetPriority(SPI3_IRQn, interruptPriority);
 	NVIC_EnableIRQ(SPI3_IRQn);
 #endif	// def CONFIG_CHIP_STM32_SPIV1_SPI3_ENABLE
 #ifdef CONFIG_CHIP_STM32_SPIV1_SPI4_ENABLE
-	NVIC_SetPriority(SPI4_IRQn, CONFIG_ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI);
+	NVIC_SetPriority(SPI4_IRQn, interruptPriority);
 	NVIC_EnableIRQ(SPI4_IRQn);
 #endif	// def CONFIG_CHIP_STM32_SPIV1_SPI4_ENABLE
 #ifdef CONFIG_CHIP_STM32_SPIV1_SPI5_ENABLE
-	NVIC_SetPriority(SPI5_IRQn, CONFIG_ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI);
+	NVIC_SetPriority(SPI5_IRQn, interruptPriority);
 	NVIC_EnableIRQ(SPI5_IRQn);
 #endif	// def CONFIG_CHIP_STM32_SPIV1_SPI5_ENABLE
 #ifdef CONFIG_CHIP_STM32_SPIV1_SPI6_ENABLE
-	NVIC_SetPriority(SPI6_IRQn, CONFIG_ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI);
+	NVIC_SetPriority(SPI6_IRQn, interruptPriority);
 	NVIC_EnableIRQ(SPI6_IRQn);
 #endif	// def CONFIG_CHIP_STM32_SPIV1_SPI6_ENABLE
 }
