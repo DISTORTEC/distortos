@@ -17,12 +17,8 @@ if [ ${#} -lt 2 ]; then
 	exit 1
 fi
 
-# "install build" phase
-installBuild() {
-	mkdir -p "${HOME}/cache"
-	mkdir -p "${HOME}/toolchains"
-	cd "${HOME}/toolchains"
-
+# "install build 5" phase
+installBuild5() {
 	echo 'Downloading gcc-arm-none-eabi-5_3-160412-linux-x64.tar.xz...'
 	wget http://www.freddiechopin.info/en/download/category/11-bleeding-edge-toolchain?download=143%3Ableeding-edge-toolchain-160412-64-bit-linux -O gcc-arm-none-eabi-5_3-160412-linux-x64.tar.xz
 	echo 'Extracting gcc-arm-none-eabi-5_3-160412-linux-x64.tar.xz...'
@@ -30,7 +26,10 @@ installBuild() {
 	cat > arm-none-eabi-gcc-5.3.1.sh <<- EOF
 	export PATH="$(pwd)/gcc-arm-none-eabi-5_3-160412/bin:\${PATH-}"
 	EOF
+}
 
+# "install build 6" phase
+installBuild6() {
 	if [ ! -e "${HOME}"/cache/arm-none-eabi-gcc-6.3.0-*.tar.xz ]; then
 		(
 		echo 'Downloading bleeding-edge-toolchain-170314.tar.xz...'
@@ -53,6 +52,16 @@ installBuild() {
 	cat > arm-none-eabi-gcc-6.3.0.sh <<- EOF
 	export PATH="$(cd arm-none-eabi-gcc-6.3.0-*/bin && pwd):\${PATH-}"
 	EOF
+}
+
+# "install build" phase
+installBuild() {
+	mkdir -p "${HOME}/cache"
+	mkdir -p "${HOME}/toolchains"
+	cd "${HOME}/toolchains"
+
+	installBuild5
+	installBuild6
 }
 
 # "install pydts" phase
