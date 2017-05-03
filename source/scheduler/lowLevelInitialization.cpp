@@ -11,12 +11,10 @@
 
 #include "distortos/internal/scheduler/lowLevelInitialization.hpp"
 
-#include "distortos/Mutex.hpp"	// needed when CONFIG_THREAD_DETACH_ENABLE option is disabled
 #include "distortos/StaticThread.hpp"
 
 #include "distortos/internal/memory/DeferredThreadDeleter.hpp"
 #include "distortos/internal/memory/getDeferredThreadDeleter.hpp"
-#include "distortos/internal/memory/getMallocMutex.hpp"
 
 #include "distortos/internal/scheduler/getScheduler.hpp"
 #include "distortos/internal/scheduler/Scheduler.hpp"
@@ -104,8 +102,6 @@ void lowLevelInitialization()
 
 	auto& idleThread = *new (&idleThreadStorage) IdleThread {0, idleThreadFunction};
 	idleThread.start();
-
-	new (&getMallocMutex()) Mutex {Mutex::Type::recursive, Mutex::Protocol::priorityInheritance};
 
 #ifdef CONFIG_THREAD_DETACH_ENABLE
 
