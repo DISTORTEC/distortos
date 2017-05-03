@@ -11,18 +11,18 @@
 
 #include "distortos/internal/scheduler/lowLevelInitialization.hpp"
 
-#include "distortos/Mutex.hpp"	// needed when CONFIG_THREAD_DETACH_ENABLE option is disabled
 #include "distortos/StaticThread.hpp"
-
-#include "distortos/internal/memory/DeferredThreadDeleter.hpp"
-#include "distortos/internal/memory/getDeferredThreadDeleter.hpp"
-#include "distortos/internal/memory/getMallocMutex.hpp"
 
 #include "distortos/internal/scheduler/getScheduler.hpp"
 #include "distortos/internal/scheduler/Scheduler.hpp"
 #include "distortos/internal/scheduler/idleThreadFunction.hpp"
 #include "distortos/internal/scheduler/MainThread.hpp"
 #include "distortos/internal/scheduler/ThreadGroupControlBlock.hpp"
+
+#if __GNUC_PREREQ(5, 1) != 1
+// GCC 4.x doesn't fully support constexpr constructors
+#error "GCC 5.1 is the minimum version supported by distortos"
+#endif
 
 namespace distortos
 {
@@ -53,9 +53,8 @@ std::aligned_storage<sizeof(IdleThread), alignof(IdleThread)>::type idleThreadSt
 /// storage for main thread instance
 std::aligned_storage<sizeof(MainThread), alignof(MainThread)>::type mainThreadStorage;
 
-/// storage for main thread group instance
-std::aligned_storage<sizeof(ThreadGroupControlBlock), alignof(ThreadGroupControlBlock)>::type
-		mainThreadGroupControlBlockStorage;
+/// main thread group
+ThreadGroupControlBlock mainThreadGroupControlBlock;
 
 #ifdef CONFIG_MAIN_THREAD_CAN_RECEIVE_SIGNALS
 
@@ -77,11 +76,6 @@ std::aligned_storage<sizeof(MainThreadStaticSignalsReceiver), alignof(MainThread
 
 void lowLevelInitialization()
 {
-	auto& schedulerInstance = getScheduler();
-	new (&schedulerInstance) Scheduler;
-
-	auto& mainThreadGroupControlBlock = *new (&mainThreadGroupControlBlockStorage) ThreadGroupControlBlock;
-
 #ifdef CONFIG_MAIN_THREAD_CAN_RECEIVE_SIGNALS
 
 	auto& mainThreadStaticSignalsReceiver =
@@ -97,19 +91,11 @@ void lowLevelInitialization()
 
 	auto& mainThread = *new (&mainThreadStorage) MainThread {CONFIG_MAIN_THREAD_PRIORITY, mainThreadGroupControlBlock,
 			mainThreadStaticSignalsReceiverPointer};
-	schedulerInstance.initialize(mainThread);	/// \todo error handling?
+	getScheduler().initialize(mainThread);	/// \todo error handling?
 	mainThread.getThreadControlBlock().switchedToHook();
 
 	auto& idleThread = *new (&idleThreadStorage) IdleThread {0, idleThreadFunction};
 	idleThread.start();
-
-	new (&getMallocMutex()) Mutex {Mutex::Type::recursive, Mutex::Protocol::priorityInheritance};
-
-#ifdef CONFIG_THREAD_DETACH_ENABLE
-
-	new (&getDeferredThreadDeleter()) DeferredThreadDeleter;
-
-#endif	// def CONFIG_THREAD_DETACH_ENABLE
 }
 
 }	// namespace internal

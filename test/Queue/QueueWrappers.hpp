@@ -23,10 +23,6 @@
 #include "distortos/StaticRawFifoQueue.hpp"
 #include "distortos/StaticRawMessageQueue.hpp"
 
-/// GCC 4.9 is needed for all {Fifo,Message}Queue::*emplace*() functions
-#define DISTORTOS_QUEUE_EMPLACE_SUPPORTED	(DISTORTOS_FIFOQUEUE_EMPLACE_SUPPORTED && \
-		DISTORTOS_MESSAGEQUEUE_EMPLACE_SUPPORTED)
-
 namespace distortos
 {
 
@@ -68,15 +64,11 @@ public:
 	virtual bool checkCounters(size_t constructed, size_t copyConstructed, size_t moveConstructed, size_t destructed,
 			size_t copyAssigned, size_t moveAssigned, size_t swapped) const = 0;
 
-#if DISTORTOS_QUEUE_EMPLACE_SUPPORTED == 1
-
 	/**
 	 * \brief Wrapper for {Fifo,Message}Queue::emplace() or Raw{Fifo,Message}Queue::push()
 	 */
 
 	virtual int emplace(uint8_t priority, OperationCountingType::Value value = {}) const = 0;
-
-#endif	// DISTORTOS_QUEUE_EMPLACE_SUPPORTED == 1
 
 	/**
 	 * \brief Wrapper for [Raw]{Fifo,Message}Queue::pop()
@@ -95,8 +87,6 @@ public:
 	 */
 
 	virtual int push(uint8_t priority, OperationCountingType&& value) const = 0;
-
-#if DISTORTOS_QUEUE_EMPLACE_SUPPORTED == 1
 
 	/**
 	 * \brief Wrapper for {Fifo,Message}Queue::tryEmplace() or Raw{Fifo,Message}Queue::tryPush()
@@ -117,8 +107,6 @@ public:
 
 	virtual int tryEmplaceUntil(TickClock::time_point timePoint, uint8_t priority,
 			OperationCountingType::Value value = {}) const = 0;
-
-#endif	// DISTORTOS_QUEUE_EMPLACE_SUPPORTED == 1
 
 	/**
 	 * \brief Wrapper for [Raw]{Fifo,Message}Queue::tryPop()
@@ -238,15 +226,11 @@ public:
 	bool check(uint8_t priority1, const OperationCountingType& value1, uint8_t priority2,
 			const OperationCountingType& value2) const override;
 
-#if DISTORTOS_QUEUE_EMPLACE_SUPPORTED == 1
-
 	/**
 	 * \brief Wrapper for FifoQueue::emplace()
 	 */
 
 	int emplace(uint8_t priority, OperationCountingType::Value value = {}) const override;
-
-#endif	// DISTORTOS_QUEUE_EMPLACE_SUPPORTED == 1
 
 	/**
 	 * \brief Wrapper for FifoQueue::pop()
@@ -265,8 +249,6 @@ public:
 	 */
 
 	int push(uint8_t priority, OperationCountingType&& value) const override;
-
-#if DISTORTOS_QUEUE_EMPLACE_SUPPORTED == 1
 
 	/**
 	 * \brief Wrapper for FifoQueue::tryEmplace()
@@ -287,8 +269,6 @@ public:
 
 	int tryEmplaceUntil(TickClock::time_point timePoint, uint8_t priority, OperationCountingType::Value value = {})
 			const override;
-
-#endif	// DISTORTOS_QUEUE_EMPLACE_SUPPORTED == 1
 
 	/**
 	 * \brief Wrapper for FifoQueue::tryPop()
@@ -440,15 +420,11 @@ public:
 	bool check(uint8_t priority1, const OperationCountingType& value1, uint8_t priority2,
 			const OperationCountingType& value2) const override;
 
-#if DISTORTOS_QUEUE_EMPLACE_SUPPORTED == 1
-
 	/**
 	 * \brief Wrapper for MessageQueue::emplace()
 	 */
 
 	int emplace(uint8_t priority, OperationCountingType::Value value = {}) const override;
-
-#endif	// DISTORTOS_QUEUE_EMPLACE_SUPPORTED == 1
 
 	/**
 	 * \brief Wrapper for MessageQueue::pop()
@@ -467,8 +443,6 @@ public:
 	 */
 
 	int push(uint8_t priority, OperationCountingType&& value) const override;
-
-#if DISTORTOS_QUEUE_EMPLACE_SUPPORTED == 1
 
 	/**
 	 * \brief Wrapper for MessageQueue::tryEmplace()
@@ -489,8 +463,6 @@ public:
 
 	int tryEmplaceUntil(TickClock::time_point timePoint, uint8_t priority, OperationCountingType::Value value = {})
 			const override;
-
-#endif	// DISTORTOS_QUEUE_EMPLACE_SUPPORTED == 1
 
 	/**
 	 * \brief Wrapper for MessageQueue::tryPop()
@@ -624,15 +596,11 @@ public:
 	bool checkCounters(size_t constructed, size_t copyConstructed, size_t moveConstructed, size_t destructed,
 			size_t copyAssigned, size_t moveAssigned, size_t swapped) const override;
 
-#if DISTORTOS_QUEUE_EMPLACE_SUPPORTED == 1
-
 	/**
 	 * \brief Redirects the call to "raw" push().
 	 */
 
 	int emplace(uint8_t priority, OperationCountingType::Value value = {}) const final override;
-
-#endif	// DISTORTOS_QUEUE_EMPLACE_SUPPORTED == 1
 
 	/**
 	 * \brief Wrapper for Raw{Fifo,Message}Queue::pop()
@@ -664,8 +632,6 @@ public:
 
 	int push(uint8_t priority, OperationCountingType&& value) const final override;
 
-#if DISTORTOS_QUEUE_EMPLACE_SUPPORTED == 1
-
 	/**
 	 * \brief Redirects the call to "raw" tryPush().
 	 */
@@ -685,8 +651,6 @@ public:
 
 	int tryEmplaceUntil(TickClock::time_point timePoint, uint8_t priority, OperationCountingType::Value value = {})
 			const final override;
-
-#endif	// DISTORTOS_QUEUE_EMPLACE_SUPPORTED == 1
 
 	/**
 	 * \brief Wrapper for Raw{Fifo,Message}Queue::tryPop()

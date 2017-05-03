@@ -2,7 +2,7 @@
  * \file
  * \brief getMallocMutex() definition
  *
- * \author Copyright (C) 2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2015-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -13,32 +13,23 @@
 
 #include "distortos/Mutex.hpp"
 
+#if __GNUC_PREREQ(5, 1) != 1
+// GCC 4.x doesn't fully support constexpr constructors
+#error "GCC 5.1 is the minimum version supported by distortos"
+#endif
+
 namespace distortos
 {
 
 namespace internal
 {
 
-namespace
-{
-
 /*---------------------------------------------------------------------------------------------------------------------+
-| local objects
+| global objects
 +---------------------------------------------------------------------------------------------------------------------*/
 
-/// storage for main instance of Mutex used for malloc() and free() locking
-std::aligned_storage<sizeof(Mutex), alignof(Mutex)>::type mallocMutexInstanceStorage;
-
-}	// namespace
-
-/*---------------------------------------------------------------------------------------------------------------------+
-| global functions
-+---------------------------------------------------------------------------------------------------------------------*/
-
-Mutex& getMallocMutex()
-{
-	return reinterpret_cast<Mutex&>(mallocMutexInstanceStorage);
-}
+/// main instance of Mutex used for malloc() and free() locking
+Mutex mallocMutexInstance {Mutex::Type::recursive, Mutex::Protocol::priorityInheritance};
 
 }	// namespace internal
 

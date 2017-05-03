@@ -2,7 +2,7 @@
  * \file
  * \brief getDeferredThreadDeleter() definition
  *
- * \author Copyright (C) 2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2015-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -15,32 +15,23 @@
 
 #include "distortos/internal/memory/DeferredThreadDeleter.hpp"
 
+#if __GNUC_PREREQ(5, 1) != 1
+// GCC 4.x doesn't fully support constexpr constructors
+#error "GCC 5.1 is the minimum version supported by distortos"
+#endif
+
 namespace distortos
 {
 
 namespace internal
 {
 
-namespace
-{
-
 /*---------------------------------------------------------------------------------------------------------------------+
-| local objects
+| global objects
 +---------------------------------------------------------------------------------------------------------------------*/
 
-/// storage for main instance of DeferredThreadDeleter
-std::aligned_storage<sizeof(DeferredThreadDeleter), alignof(DeferredThreadDeleter)>::type deferredThreadDeleterStorage;
-
-}	// namespace
-
-/*---------------------------------------------------------------------------------------------------------------------+
-| global functions
-+---------------------------------------------------------------------------------------------------------------------*/
-
-DeferredThreadDeleter& getDeferredThreadDeleter()
-{
-	return reinterpret_cast<DeferredThreadDeleter&>(deferredThreadDeleterStorage);
-}
+/// main instance of DeferredThreadDeleter
+DeferredThreadDeleter deferredThreadDeleterInstance;
 
 }	// namespace internal
 

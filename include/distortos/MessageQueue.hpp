@@ -22,12 +22,13 @@
 #include "distortos/internal/synchronization/SemaphoreTryWaitForFunctor.hpp"
 #include "distortos/internal/synchronization/SemaphoreTryWaitUntilFunctor.hpp"
 
+#if __GNUC_PREREQ(5, 1) != 1
+// GCC 4.8 doesn't support parameter pack expansion in lambdas
+#error "GCC 5.1 is the minimum version supported by distortos"
+#endif
+
 namespace distortos
 {
-
-/// GCC 4.9 is needed for all MessageQueue::*emplace*() functions - earlier versions don't support parameter pack
-/// expansion in lambdas
-#define DISTORTOS_MESSAGEQUEUE_EMPLACE_SUPPORTED	__GNUC_PREREQ(4, 9)
 
 /**
  * \brief MessageQueue class is a message queue for thread-thread, thread-interrupt or interrupt-interrupt
@@ -86,8 +87,6 @@ public:
 
 	~MessageQueue();
 
-#if DISTORTOS_MESSAGEQUEUE_EMPLACE_SUPPORTED == 1
-
 	/**
 	 * \brief Emplaces the element in the queue.
 	 *
@@ -113,8 +112,6 @@ public:
 		const internal::SemaphoreWaitFunctor semaphoreWaitFunctor;
 		return emplaceInternal(semaphoreWaitFunctor, priority, std::forward<Args>(args)...);
 	}
-
-#endif	// DISTORTOS_MESSAGEQUEUE_EMPLACE_SUPPORTED == 1
 
 	/**
 	 * \brief Pops oldest element with highest priority from the queue.
@@ -180,8 +177,6 @@ public:
 		const internal::SemaphoreWaitFunctor semaphoreWaitFunctor;
 		return pushInternal(semaphoreWaitFunctor, priority, std::move(value));
 	}
-
-#if DISTORTOS_MESSAGEQUEUE_EMPLACE_SUPPORTED == 1
 
 	/**
 	 * \brief Tries to emplace the element in the queue.
@@ -318,8 +313,6 @@ public:
 		return tryEmplaceUntil(std::chrono::time_point_cast<TickClock::duration>(timePoint), priority,
 				std::forward<Args>(args)...);
 	}
-
-#endif	// DISTORTOS_MESSAGEQUEUE_EMPLACE_SUPPORTED == 1
 
 	/**
 	 * \brief Tries to pop oldest element with highest priority from the queue.
@@ -670,8 +663,6 @@ public:
 
 private:
 
-#if DISTORTOS_MESSAGEQUEUE_EMPLACE_SUPPORTED == 1
-
 	/**
 	 * \brief Emplaces the element in the queue.
 	 *
@@ -692,8 +683,6 @@ private:
 
 	template<typename... Args>
 	int emplaceInternal(const internal::SemaphoreFunctor& waitSemaphoreFunctor, uint8_t priority, Args&&... args);
-
-#endif	// DISTORTOS_MESSAGEQUEUE_EMPLACE_SUPPORTED == 1
 
 	/**
 	 * \brief Pops oldest element with highest priority from the queue.
@@ -757,8 +746,6 @@ MessageQueue<T>::~MessageQueue()
 	while (tryPop(priority, value) == 0);
 }
 
-#if DISTORTOS_MESSAGEQUEUE_EMPLACE_SUPPORTED == 1
-
 template<typename T>
 template<typename... Args>
 int MessageQueue<T>::emplaceInternal(const internal::SemaphoreFunctor& waitSemaphoreFunctor, const uint8_t priority,
@@ -771,8 +758,6 @@ int MessageQueue<T>::emplaceInternal(const internal::SemaphoreFunctor& waitSemap
 			});
 	return messageQueueBase_.push(waitSemaphoreFunctor, priority, emplaceFunctor);
 }
-
-#endif	// DISTORTOS_MESSAGEQUEUE_EMPLACE_SUPPORTED == 1
 
 template<typename T>
 int MessageQueue<T>::popInternal(const internal::SemaphoreFunctor& waitSemaphoreFunctor, uint8_t& priority, T& value)
