@@ -269,8 +269,6 @@ bool phase1()
 						return false;
 				}
 
-		#if DISTORTOS_QUEUE_EMPLACE_SUPPORTED == 1
-
 				{
 					// queue is both full and empty, so tryEmplace(..., Args&&...) should fail immediately
 					OperationCountingType::resetCounters();
@@ -315,9 +313,6 @@ bool phase1()
 									phase1TryForUntilContextSwitchCount)
 						return false;
 				}
-
-		#endif	// DISTORTOS_QUEUE_EMPLACE_SUPPORTED == 1
-
 			}
 
 	return true;
@@ -537,8 +532,6 @@ bool phase2()
 						return ret;
 				}
 
-#if DISTORTOS_QUEUE_EMPLACE_SUPPORTED == 1
-
 				{
 					// queue is not full, so tryEmplace(..., Args&&...) must succeed immediately
 					OperationCountingType::resetCounters();
@@ -626,9 +619,6 @@ bool phase2()
 					if (ret != true)
 						return ret;
 				}
-
-#endif	// DISTORTOS_QUEUE_EMPLACE_SUPPORTED == 1
-
 			}
 
 	return true;
@@ -956,8 +946,6 @@ bool phase4()
 						return false;
 				}
 
-#if DISTORTOS_QUEUE_EMPLACE_SUPPORTED == 1
-
 				{
 					OperationCountingType::resetCounters();
 					waitForNextTick();
@@ -1038,9 +1026,6 @@ bool phase4()
 									phase34SoftwareTimerContextSwitchCount)
 						return false;
 				}
-
-#endif	// DISTORTOS_QUEUE_EMPLACE_SUPPORTED == 1
-
 			}
 
 	return true;
@@ -1186,21 +1171,16 @@ bool phase6()
 
 bool QueueOperationsTestCase::run_() const
 {
-	constexpr auto emplace = DISTORTOS_QUEUE_EMPLACE_SUPPORTED == 1;
-
 	constexpr size_t nonRawQueueTypes {4};
 	constexpr size_t rawQueueTypes {4};
 	constexpr size_t queueTypes {nonRawQueueTypes + rawQueueTypes};
-	constexpr auto phase1ExpectedContextSwitchCount = queueTypes * (emplace == true ?
-			12 * waitForNextTickContextSwitchCount + 8 * phase1TryForUntilContextSwitchCount :
-			9 * waitForNextTickContextSwitchCount + 6 * phase1TryForUntilContextSwitchCount);
-	constexpr auto phase2ExpectedContextSwitchCount = queueTypes * (emplace == true ?
-			36 * waitForNextTickContextSwitchCount : 24 * waitForNextTickContextSwitchCount);
+	constexpr auto phase1ExpectedContextSwitchCount = queueTypes *
+			(12 * waitForNextTickContextSwitchCount + 8 * phase1TryForUntilContextSwitchCount);
+	constexpr auto phase2ExpectedContextSwitchCount = queueTypes * 36 * waitForNextTickContextSwitchCount;
 	constexpr auto phase3ExpectedContextSwitchCount = queueTypes * (6 * waitForNextTickContextSwitchCount +
 			3 * phase34SoftwareTimerContextSwitchCount);
-	constexpr auto phase4ExpectedContextSwitchCount = queueTypes * (emplace == true ?
-			10 * waitForNextTickContextSwitchCount + 9 * phase34SoftwareTimerContextSwitchCount :
-			7 * waitForNextTickContextSwitchCount + 6 * phase34SoftwareTimerContextSwitchCount);
+	constexpr auto phase4ExpectedContextSwitchCount = queueTypes *
+			(10 * waitForNextTickContextSwitchCount + 9 * phase34SoftwareTimerContextSwitchCount);
 	constexpr auto phase5ExpectedContextSwitchCount = rawQueueTypes * 8 * waitForNextTickContextSwitchCount;
 	constexpr auto expectedContextSwitchCount = phase1ExpectedContextSwitchCount + phase2ExpectedContextSwitchCount +
 			phase3ExpectedContextSwitchCount + phase4ExpectedContextSwitchCount + phase5ExpectedContextSwitchCount;
