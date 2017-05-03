@@ -26,7 +26,8 @@ language: generic
 
 matrix:
     include:
-        - env: SUBSTAGE=build
+        - env: SUBSTAGE="build 5"
+        - env: SUBSTAGE="build 6"
         - python: '2.7'
           env: SUBSTAGE="pydts --quiet"
         - python: '3.6'

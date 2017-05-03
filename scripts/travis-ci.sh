@@ -17,6 +17,11 @@ if [ ${#} -lt 2 ]; then
 	exit 1
 fi
 
+if [ "${2}" = 'build' ] && [ ${#} -lt 3 ]; then
+	echo '"build" subphase requires at least 3 arguments!' >&2
+	exit 2
+fi
+
 # "install build 5" phase
 installBuild5() {
 	echo 'Downloading gcc-arm-none-eabi-5_3-160412-linux-x64.tar.xz...'
@@ -60,8 +65,17 @@ installBuild() {
 	mkdir -p "${HOME}/toolchains"
 	cd "${HOME}/toolchains"
 
-	installBuild5
-	installBuild6
+	case "${1}" in
+		5)
+			installBuild5
+			;;
+		6)
+			installBuild6
+			;;
+		*)
+			echo "\"${1}\" is not a valid argument!" >&2
+			exit 3
+	esac
 }
 
 # "install pydts" phase
@@ -94,12 +108,14 @@ install() {
 			;;
 		*)
 			echo "\"${1}\" is not a valid argument!" >&2
-			exit 2
+			exit 4
 	esac
 }
 
 # "script build" phase
 scriptBuild() {
+	shift
+
 	toolchains="$(find "${HOME}/toolchains/" -mindepth 1 -maxdepth 1 -name '*.sh' | sort)"
 	for toolchain in ${toolchains}; do
 		(
@@ -128,7 +144,7 @@ script() {
 			;;
 		*)
 			echo "\"${1}\" is not a valid argument!" >&2
-			exit 3
+			exit 5
 	esac
 }
 
@@ -143,5 +159,5 @@ case "${1}" in
 		;;
 	*)
 		echo "\"${1}\" is not a valid argument!" >&2
-		exit 4
+		exit 6
 esac
