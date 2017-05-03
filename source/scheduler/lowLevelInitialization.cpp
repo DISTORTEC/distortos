@@ -24,6 +24,11 @@
 #include "distortos/internal/scheduler/MainThread.hpp"
 #include "distortos/internal/scheduler/ThreadGroupControlBlock.hpp"
 
+#if __GNUC_PREREQ(5, 1) != 1
+// GCC 4.x doesn't fully support constexpr constructors
+#error "GCC 5.1 is the minimum version supported by distortos"
+#endif
+
 namespace distortos
 {
 
@@ -53,9 +58,8 @@ std::aligned_storage<sizeof(IdleThread), alignof(IdleThread)>::type idleThreadSt
 /// storage for main thread instance
 std::aligned_storage<sizeof(MainThread), alignof(MainThread)>::type mainThreadStorage;
 
-/// storage for main thread group instance
-std::aligned_storage<sizeof(ThreadGroupControlBlock), alignof(ThreadGroupControlBlock)>::type
-		mainThreadGroupControlBlockStorage;
+/// main thread group
+ThreadGroupControlBlock mainThreadGroupControlBlock;
 
 #ifdef CONFIG_MAIN_THREAD_CAN_RECEIVE_SIGNALS
 
@@ -79,8 +83,6 @@ void lowLevelInitialization()
 {
 	auto& schedulerInstance = getScheduler();
 	new (&schedulerInstance) Scheduler;
-
-	auto& mainThreadGroupControlBlock = *new (&mainThreadGroupControlBlockStorage) ThreadGroupControlBlock;
 
 #ifdef CONFIG_MAIN_THREAD_CAN_RECEIVE_SIGNALS
 
