@@ -22,9 +22,10 @@
 #include "distortos/internal/synchronization/SemaphoreTryWaitForFunctor.hpp"
 #include "distortos/internal/synchronization/SemaphoreTryWaitUntilFunctor.hpp"
 
-/// GCC 4.9 is needed for all FifoQueue::*emplace*() functions - earlier versions don't support parameter pack expansion
-/// in lambdas
-#define DISTORTOS_FIFOQUEUE_EMPLACE_SUPPORTED	__GNUC_PREREQ(4, 9)
+#if __GNUC_PREREQ(5, 1) != 1
+// GCC 4.8 doesn't support parameter pack expansion in lambdas
+#error "GCC 5.1 is the minimum version supported by distortos"
+#endif
 
 namespace distortos
 {
@@ -73,8 +74,6 @@ public:
 
 	~FifoQueue();
 
-#if DISTORTOS_FIFOQUEUE_EMPLACE_SUPPORTED == 1
-
 	/**
 	 * \brief Emplaces the element in the queue.
 	 *
@@ -97,8 +96,6 @@ public:
 		const internal::SemaphoreWaitFunctor semaphoreWaitFunctor;
 		return emplaceInternal(semaphoreWaitFunctor, std::forward<Args>(args)...);
 	}
-
-#endif	// DISTORTOS_FIFOQUEUE_EMPLACE_SUPPORTED == 1
 
 	/**
 	 * \brief Pops the oldest (first) element from the queue.
@@ -155,8 +152,6 @@ public:
 		const internal::SemaphoreWaitFunctor semaphoreWaitFunctor;
 		return pushInternal(semaphoreWaitFunctor, std::move(value));
 	}
-
-#if DISTORTOS_FIFOQUEUE_EMPLACE_SUPPORTED == 1
 
 	/**
 	 * \brief Tries to emplace the element in the queue.
@@ -280,8 +275,6 @@ public:
 		return tryEmplaceUntil(std::chrono::time_point_cast<TickClock::duration>(timePoint),
 				std::forward<Args>(args)...);
 	}
-
-#endif	// DISTORTOS_FIFOQUEUE_EMPLACE_SUPPORTED == 1
 
 	/**
 	 * \brief Tries to pop the oldest (first) element from the queue.
@@ -598,8 +591,6 @@ public:
 
 private:
 
-#if DISTORTOS_FIFOQUEUE_EMPLACE_SUPPORTED == 1
-
 	/**
 	 * \brief Emplaces the element in the queue.
 	 *
@@ -619,8 +610,6 @@ private:
 
 	template<typename... Args>
 	int emplaceInternal(const internal::SemaphoreFunctor& waitSemaphoreFunctor, Args&&... args);
-
-#endif	// DISTORTOS_FIFOQUEUE_EMPLACE_SUPPORTED == 1
 
 	/**
 	 * \brief Pops the oldest (first) element from the queue.
@@ -680,8 +669,6 @@ FifoQueue<T>::~FifoQueue()
 	while (tryPop(value) == 0);
 }
 
-#if DISTORTOS_FIFOQUEUE_EMPLACE_SUPPORTED == 1
-
 template<typename T>
 template<typename... Args>
 int FifoQueue<T>::emplaceInternal(const internal::SemaphoreFunctor& waitSemaphoreFunctor, Args&&... args)
@@ -693,8 +680,6 @@ int FifoQueue<T>::emplaceInternal(const internal::SemaphoreFunctor& waitSemaphor
 			});
 	return fifoQueueBase_.push(waitSemaphoreFunctor, emplaceFunctor);
 }
-
-#endif	// DISTORTOS_FIFOQUEUE_EMPLACE_SUPPORTED == 1
 
 template<typename T>
 int FifoQueue<T>::popInternal(const internal::SemaphoreFunctor& waitSemaphoreFunctor, T& value)
