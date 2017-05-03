@@ -23,17 +23,6 @@ installBuild() {
 	mkdir -p "${HOME}/toolchains"
 	cd "${HOME}/toolchains"
 
-	echo 'Downloading gcc-arm-none-eabi-4_9-150928-linux-x64.tar.xz...'
-	wget http://www.freddiechopin.info/en/download/category/11-bleeding-edge-toolchain?download=122%3Ableeding-edge-toolchain-150928-64-bit-linux -O gcc-arm-none-eabi-4_9-150928-linux-x64.tar.xz
-	echo 'Extracting gcc-arm-none-eabi-4_9-150928-linux-x64.tar.xz...'
-	tar -xf gcc-arm-none-eabi-4_9-150928-linux-x64.tar.xz
-	mkdir gcc-arm-none-eabi-4_9-150928/bin/lib
-	gcc -shared -o gcc-arm-none-eabi-4_9-150928/bin/lib/libfl.so.2 -lfl
-	cat > arm-none-eabi-gcc-4.9.3.sh <<- EOF
-	export LD_LIBRARY_PATH="$(pwd)/gcc-arm-none-eabi-4_9-150928/bin/lib"
-	export PATH="$(pwd)/gcc-arm-none-eabi-4_9-150928/bin:\${PATH-}"
-	EOF
-
 	echo 'Downloading gcc-arm-none-eabi-5_3-160412-linux-x64.tar.xz...'
 	wget http://www.freddiechopin.info/en/download/category/11-bleeding-edge-toolchain?download=143%3Ableeding-edge-toolchain-160412-64-bit-linux -O gcc-arm-none-eabi-5_3-160412-linux-x64.tar.xz
 	echo 'Extracting gcc-arm-none-eabi-5_3-160412-linux-x64.tar.xz...'
