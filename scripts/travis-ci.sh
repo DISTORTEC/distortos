@@ -76,6 +76,9 @@ installBuild() {
 		6)
 			installBuild67 "6.3.0" "170314" "http://www.freddiechopin.info/en/download/category/11-bleeding-edge-toolchain?download=155%3Ableeding-edge-toolchain-170314-linux-script"
 			;;
+		7)
+			installBuild67 "7.1.0" "170503" "http://www.freddiechopin.info/en/download/category/11-bleeding-edge-toolchain?download=158%3Ableeding-edge-toolchain-170503-linux-script"
+			;;
 		*)
 			echo "\"${1}\" is not a valid argument!" >&2
 			exit 3
