@@ -13,9 +13,6 @@
 
 #include "distortos/StaticThread.hpp"
 
-#include "distortos/internal/memory/DeferredThreadDeleter.hpp"
-#include "distortos/internal/memory/getDeferredThreadDeleter.hpp"
-
 #include "distortos/internal/scheduler/getScheduler.hpp"
 #include "distortos/internal/scheduler/Scheduler.hpp"
 #include "distortos/internal/scheduler/idleThreadFunction.hpp"
@@ -102,12 +99,6 @@ void lowLevelInitialization()
 
 	auto& idleThread = *new (&idleThreadStorage) IdleThread {0, idleThreadFunction};
 	idleThread.start();
-
-#ifdef CONFIG_THREAD_DETACH_ENABLE
-
-	new (&getDeferredThreadDeleter()) DeferredThreadDeleter;
-
-#endif	// def CONFIG_THREAD_DETACH_ENABLE
 }
 
 }	// namespace internal
