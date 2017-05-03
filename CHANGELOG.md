@@ -69,8 +69,7 @@ New versions of these classes which were added - `StaticRawFifoQueue2<ElementSiz
 reported with `ENOSPC` error code - won't leave the generated/queued signal pending.
 - Signals are never delived from within critical section.
 - Fixed compilation of *USARTv2* low-level driver for some *STM32F0* chips, for which `USART_CR1_M0` is not defined.
-- Minor fixes necessary for compilation and proper behaviour in *GCC 7* (tested with version "*7.0.1 20170402*
-*(experimental)*").
+- Minor fixes necessary for compilation and proper behaviour in *GCC 7*.
 
 ### Removed
 
