@@ -48,14 +48,10 @@ bool FifoQueueWrapper::check(uint8_t, const OperationCountingType& value1, uint8
 	return value1 == value2;
 }
 
-#if DISTORTOS_QUEUE_EMPLACE_SUPPORTED == 1
-
 int FifoQueueWrapper::emplace(uint8_t, const OperationCountingType::Value value) const
 {
 	return fifoQueue_.emplace(value);
 }
-
-#endif	// DISTORTOS_QUEUE_EMPLACE_SUPPORTED == 1
 
 int FifoQueueWrapper::pop(uint8_t& priority, OperationCountingType& value) const
 {
@@ -73,8 +69,6 @@ int FifoQueueWrapper::push(uint8_t, OperationCountingType&& value) const
 	return fifoQueue_.push(std::move(value));
 }
 
-#if DISTORTOS_QUEUE_EMPLACE_SUPPORTED == 1
-
 int FifoQueueWrapper::tryEmplace(uint8_t, const OperationCountingType::Value value) const
 {
 	return fifoQueue_.tryEmplace(value);
@@ -91,8 +85,6 @@ int FifoQueueWrapper::tryEmplaceUntil(const TickClock::time_point timePoint, uin
 {
 	return fifoQueue_.tryEmplaceUntil(timePoint, value);
 }
-
-#endif	// DISTORTOS_QUEUE_EMPLACE_SUPPORTED == 1
 
 int FifoQueueWrapper::tryPop(uint8_t& priority, OperationCountingType& value) const
 {
@@ -166,14 +158,10 @@ bool MessageQueueWrapper::check(const uint8_t priority1, const OperationCounting
 	return priority1 == priority2 && value1 == value2;
 }
 
-#if DISTORTOS_QUEUE_EMPLACE_SUPPORTED == 1
-
 int MessageQueueWrapper::emplace(const uint8_t priority, const OperationCountingType::Value value) const
 {
 	return messageQueue_.emplace(priority, value);
 }
-
-#endif	// DISTORTOS_QUEUE_EMPLACE_SUPPORTED == 1
 
 int MessageQueueWrapper::pop(uint8_t& priority, OperationCountingType& value) const
 {
@@ -189,8 +177,6 @@ int MessageQueueWrapper::push(const uint8_t priority, OperationCountingType&& va
 {
 	return messageQueue_.push(priority, std::move(value));
 }
-
-#if DISTORTOS_QUEUE_EMPLACE_SUPPORTED == 1
 
 int MessageQueueWrapper::tryEmplace(const uint8_t priority, const OperationCountingType::Value value) const
 {
@@ -208,8 +194,6 @@ int MessageQueueWrapper::tryEmplaceUntil(const TickClock::time_point timePoint, 
 {
 	return messageQueue_.tryEmplaceUntil(timePoint, priority, value);
 }
-
-#endif	// DISTORTOS_QUEUE_EMPLACE_SUPPORTED == 1
 
 int MessageQueueWrapper::tryPop(uint8_t& priority, OperationCountingType& value) const
 {
@@ -282,14 +266,10 @@ bool RawQueueWrapper::checkCounters(size_t, size_t, size_t, size_t, size_t, size
 	return true;
 }
 
-#if DISTORTOS_QUEUE_EMPLACE_SUPPORTED == 1
-
 int RawQueueWrapper::emplace(const uint8_t priority, const OperationCountingType::Value value) const
 {
 	return push(priority, &value, sizeof(value));
 }
-
-#endif	// DISTORTOS_QUEUE_EMPLACE_SUPPORTED == 1
 
 int RawQueueWrapper::pop(uint8_t& priority, OperationCountingType& value) const
 {
@@ -310,8 +290,6 @@ int RawQueueWrapper::push(const uint8_t priority, OperationCountingType&& value)
 	return push(priority, value);
 }
 
-#if DISTORTOS_QUEUE_EMPLACE_SUPPORTED == 1
-
 int RawQueueWrapper::tryEmplace(const uint8_t priority, const OperationCountingType::Value value) const
 {
 	return tryPush(priority, &value, sizeof(value));
@@ -328,8 +306,6 @@ int RawQueueWrapper::tryEmplaceUntil(const TickClock::time_point timePoint, cons
 {
 	return tryPushUntil(timePoint, priority, &value, sizeof(value));
 }
-
-#endif	// DISTORTOS_QUEUE_EMPLACE_SUPPORTED == 1
 
 int RawQueueWrapper::tryPop(uint8_t& priority, OperationCountingType& value) const
 {
