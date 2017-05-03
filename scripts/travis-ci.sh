@@ -33,8 +33,8 @@ installBuild5() {
 	EOF
 }
 
-# "install build 6" phase
-installBuild6() {
+# "install build 6" and "install build 7" phase
+installBuild67() {
 	local gccVersion="${1}"
 	local betVersion="${2}"
 	local betUrl="${3}"
@@ -74,7 +74,7 @@ installBuild() {
 			installBuild5
 			;;
 		6)
-			installBuild6 "6.3.0" "170314" "http://www.freddiechopin.info/en/download/category/11-bleeding-edge-toolchain?download=155%3Ableeding-edge-toolchain-170314-linux-script"
+			installBuild67 "6.3.0" "170314" "http://www.freddiechopin.info/en/download/category/11-bleeding-edge-toolchain?download=155%3Ableeding-edge-toolchain-170314-linux-script"
 			;;
 		*)
 			echo "\"${1}\" is not a valid argument!" >&2
