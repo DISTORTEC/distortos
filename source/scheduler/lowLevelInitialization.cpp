@@ -76,9 +76,6 @@ std::aligned_storage<sizeof(MainThreadStaticSignalsReceiver), alignof(MainThread
 
 void lowLevelInitialization()
 {
-	auto& schedulerInstance = getScheduler();
-	new (&schedulerInstance) Scheduler;
-
 #ifdef CONFIG_MAIN_THREAD_CAN_RECEIVE_SIGNALS
 
 	auto& mainThreadStaticSignalsReceiver =
@@ -94,7 +91,7 @@ void lowLevelInitialization()
 
 	auto& mainThread = *new (&mainThreadStorage) MainThread {CONFIG_MAIN_THREAD_PRIORITY, mainThreadGroupControlBlock,
 			mainThreadStaticSignalsReceiverPointer};
-	schedulerInstance.initialize(mainThread);	/// \todo error handling?
+	getScheduler().initialize(mainThread);	/// \todo error handling?
 	mainThread.getThreadControlBlock().switchedToHook();
 
 	auto& idleThread = *new (&idleThreadStorage) IdleThread {0, idleThreadFunction};
