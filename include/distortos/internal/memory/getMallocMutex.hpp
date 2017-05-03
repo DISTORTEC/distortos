@@ -1,8 +1,8 @@
 /**
  * \file
- * \brief getMallocMutex() declaration
+ * \brief getMallocMutex() definition
  *
- * \author Copyright (C) 2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2015-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -24,7 +24,11 @@ namespace internal
  * \return reference to main instance of Mutex used for malloc() and free() locking
  */
 
-Mutex& getMallocMutex();
+constexpr Mutex& getMallocMutex()
+{
+	extern Mutex mallocMutexInstance;
+	return mallocMutexInstance;
+}
 
 }	// namespace internal
 

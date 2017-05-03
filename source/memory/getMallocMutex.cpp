@@ -24,26 +24,12 @@ namespace distortos
 namespace internal
 {
 
-namespace
-{
-
 /*---------------------------------------------------------------------------------------------------------------------+
-| local objects
+| global objects
 +---------------------------------------------------------------------------------------------------------------------*/
 
 /// main instance of Mutex used for malloc() and free() locking
 Mutex mallocMutexInstance {Mutex::Type::recursive, Mutex::Protocol::priorityInheritance};
-
-}	// namespace
-
-/*---------------------------------------------------------------------------------------------------------------------+
-| global functions
-+---------------------------------------------------------------------------------------------------------------------*/
-
-Mutex& getMallocMutex()
-{
-	return mallocMutexInstance;
-}
 
 }	// namespace internal
 
