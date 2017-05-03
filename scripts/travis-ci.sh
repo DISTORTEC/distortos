@@ -35,27 +35,31 @@ installBuild5() {
 
 # "install build 6" phase
 installBuild6() {
-	if [ ! -e "${HOME}"/cache/arm-none-eabi-gcc-6.3.0-*.tar.xz ]; then
+	local gccVersion="${1}"
+	local betVersion="${2}"
+	local betUrl="${3}"
+
+	if [ ! -e "${HOME}/cache/arm-none-eabi-gcc-${gccVersion}"-*.tar.xz ]; then
 		(
-		echo 'Downloading bleeding-edge-toolchain-170314.tar.xz...'
-		wget http://www.freddiechopin.info/en/download/category/11-bleeding-edge-toolchain?download=155%3Ableeding-edge-toolchain-170314-linux-script -O bleeding-edge-toolchain-170314.tar.xz
-		echo 'Extracting bleeding-edge-toolchain-170314.tar.xz...'
-		tar -xf bleeding-edge-toolchain-170314.tar.xz
-		echo 'Building bleeding-edge-toolchain-170314...'
-		cd bleeding-edge-toolchain-170314
+		echo "Downloading bleeding-edge-toolchain-${betVersion}.tar.xz..."
+		wget "${betUrl}" -O "bleeding-edge-toolchain-${betVersion}.tar.xz"
+		echo "Extracting bleeding-edge-toolchain-${betVersion}.tar.xz..."
+		tar -xf "bleeding-edge-toolchain-${betVersion}.tar.xz"
+		echo "Building bleeding-edge-toolchain-${betVersion}..."
+		cd "bleeding-edge-toolchain-${betVersion}"
 
 		{ time='0'; while true; do sleep 60; time="$((${time} + 1))"; echo "${time} minute(s)..."; done } &
 		keepAlivePid="${!}"
 		timeout -k 1m 45m ./build-bleeding-edge-toolchain.sh --skip-nano-libraries > >(tee /tmp/stdout.log) 2> /tmp/stderr.log | grep '[*-]\{10,10\} '
 		kill "${keepAlivePid}"
 		wait "${keepAlivePid}" || true
-		cp arm-none-eabi-gcc-6.3.0-*.tar.xz "${HOME}/cache"
+		cp "arm-none-eabi-gcc-${gccVersion}"-*.tar.xz "${HOME}/cache"
 		)
 	fi
-	echo 'Extracting arm-none-eabi-gcc-6.3.0-*.tar.xz...'
-	tar -xf ${HOME}/cache/arm-none-eabi-gcc-6.3.0-*.tar.xz
-	cat > arm-none-eabi-gcc-6.3.0.sh <<- EOF
-	export PATH="$(cd arm-none-eabi-gcc-6.3.0-*/bin && pwd):\${PATH-}"
+	echo "Extracting arm-none-eabi-gcc-${gccVersion}-*.tar.xz..."
+	tar -xf "${HOME}/cache/arm-none-eabi-gcc-${gccVersion}"-*.tar.xz
+	cat > "arm-none-eabi-gcc-${gccVersion}.sh" <<- EOF
+	export PATH="$(cd "arm-none-eabi-gcc-${gccVersion}"-*/bin && pwd):\${PATH-}"
 	EOF
 }
 
@@ -70,7 +74,7 @@ installBuild() {
 			installBuild5
 			;;
 		6)
-			installBuild6
+			installBuild6 "6.3.0" "170314" "http://www.freddiechopin.info/en/download/category/11-bleeding-edge-toolchain?download=155%3Ableeding-edge-toolchain-170314-linux-script"
 			;;
 		*)
 			echo "\"${1}\" is not a valid argument!" >&2
