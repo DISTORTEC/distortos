@@ -26,26 +26,12 @@ namespace distortos
 namespace internal
 {
 
-namespace
-{
-
 /*---------------------------------------------------------------------------------------------------------------------+
-| local objects
+| global objects
 +---------------------------------------------------------------------------------------------------------------------*/
 
 /// main instance of DeferredThreadDeleter
 DeferredThreadDeleter deferredThreadDeleterInstance;
-
-}	// namespace
-
-/*---------------------------------------------------------------------------------------------------------------------+
-| global functions
-+---------------------------------------------------------------------------------------------------------------------*/
-
-DeferredThreadDeleter& getDeferredThreadDeleter()
-{
-	return deferredThreadDeleterInstance;
-}
 
 }	// namespace internal
 
