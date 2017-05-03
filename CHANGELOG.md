@@ -72,6 +72,13 @@ reported with `ENOSPC` error code - won't leave the generated/queued signal pend
 - Minor fixes necessary for compilation and proper behaviour in *GCC 7* (tested with version "*7.0.1 20170402*
 *(experimental)*").
 
+### Removed
+
+- All support for *GCC 4.x* was removed, *GCC 5.1* is the minimum supported version. *GCC 5.1* - released more than 2
+years ago - is the first version to fully support `constexpr` constructors. Dropping support for earlier versions
+finally allows global objects' initialization to be greatly simplified. This project aims to support 3 most recent
+"major" versions of *GCC*, which - currently - means *GCC 5*, *GCC 6* and *GCC 7*.
+
 [0.4.0](https://github.com/DISTORTEC/distortos/compare/v0.3.0...v0.4.0) - 2017-03-11
 ------------------------------------------------------------------------------------
 
