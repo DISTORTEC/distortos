@@ -758,6 +758,7 @@ config CHIP_STM32L041K6
 config CHIP_STM32L05
 	bool
 	default n
+	select CHIP_STM32_USARTV2_HAS_USART1
 
 config CHIP_STM32L051
 	bool
@@ -942,6 +943,7 @@ config CHIP_STM32L053R8
 config CHIP_STM32L06
 	bool
 	default n
+	select CHIP_STM32_USARTV2_HAS_USART1
 
 config CHIP_STM32L062
 	bool
@@ -991,6 +993,9 @@ config CHIP_STM32L063R8
 config CHIP_STM32L07
 	bool
 	default n
+	select CHIP_STM32_USARTV2_HAS_USART1
+	select CHIP_STM32_USARTV2_HAS_USART4
+	select CHIP_STM32_USARTV2_HAS_USART5
 
 config CHIP_STM32L071
 	bool
@@ -1227,6 +1232,9 @@ config CHIP_STM32L073VZ
 config CHIP_STM32L08
 	bool
 	default n
+	select CHIP_STM32_USARTV2_HAS_USART1
+	select CHIP_STM32_USARTV2_HAS_USART4
+	select CHIP_STM32_USARTV2_HAS_USART5
 
 config CHIP_STM32L081
 	bool
@@ -1579,6 +1587,6 @@ config CHIP
 
 config CHIP_INCLUDES
 	string
-	default "source/chip/STM32/include source/chip/STM32/STM32L0/include source/chip/STM32/peripherals/GPIOv2/include source/chip/STM32/peripherals/SPIv1/include external/CMSIS-STM32L0 external/CMSIS"
+	default "source/chip/STM32/include source/chip/STM32/STM32L0/include source/chip/STM32/peripherals/GPIOv2/include source/chip/STM32/peripherals/SPIv1/include source/chip/STM32/peripherals/USARTv2/include external/CMSIS-STM32L0 external/CMSIS"
 
 endif	# CHIP_STM32L0
