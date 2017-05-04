@@ -205,18 +205,27 @@ extern "C" void USART3_IRQHandler()
 
 #endif	// def CONFIG_CHIP_STM32_USARTV2_USART3_ENABLE
 
-#ifdef CONFIG_CHIP_STM32_USARTV2_UART4_ENABLE
+#if defined(CONFIG_CHIP_STM32_USARTV2_USART4_USART5_COMBINED_INTERRUPT)
+
+#if defined(CONFIG_CHIP_STM32_USARTV2_USART4_ENABLE) || defined(CONFIG_CHIP_STM32_USARTV2_USART5_ENABLE)
 
 /**
- * \brief UART4 interrupt handler
+ * \brief USART4 - USART5 interrupt handler
  */
 
-extern "C" void UART4_IRQHandler()
+extern "C" void USART4_5_IRQHandler()
 {
-	uart4.interruptHandler();
+#ifdef CONFIG_CHIP_STM32_USARTV2_USART4_ENABLE
+	usart4.interruptHandler();
+#endif	// def CONFIG_CHIP_STM32_USARTV2_USART4_ENABLE
+#ifdef CONFIG_CHIP_STM32_USARTV2_USART5_ENABLE
+	usart5.interruptHandler();
+#endif	// def CONFIG_CHIP_STM32_USARTV2_USART5_ENABLE
 }
 
-#endif	// def CONFIG_CHIP_STM32_USARTV2_UART4_ENABLE
+#endif	// defined(CONFIG_CHIP_STM32_USARTV2_USART4_ENABLE) || defined(CONFIG_CHIP_STM32_USARTV2_USART5_ENABLE)
+
+#else	// !defined(CONFIG_CHIP_STM32_USARTV2_USART4_USART5_COMBINED_INTERRUPT)
 
 #ifdef CONFIG_CHIP_STM32_USARTV2_USART4_ENABLE
 
@@ -231,19 +240,6 @@ extern "C" void USART4_IRQHandler()
 
 #endif	// def CONFIG_CHIP_STM32_USARTV2_USART4_ENABLE
 
-#ifdef CONFIG_CHIP_STM32_USARTV2_UART5_ENABLE
-
-/**
- * \brief UART5 interrupt handler
- */
-
-extern "C" void UART5_IRQHandler()
-{
-	uart5.interruptHandler();
-}
-
-#endif	// def CONFIG_CHIP_STM32_USARTV2_UART5_ENABLE
-
 #ifdef CONFIG_CHIP_STM32_USARTV2_USART5_ENABLE
 
 /**
@@ -256,6 +252,34 @@ extern "C" void USART5_IRQHandler()
 }
 
 #endif	// def CONFIG_CHIP_STM32_USARTV2_USART5_ENABLE
+
+#endif	// !defined(CONFIG_CHIP_STM32_USARTV2_USART4_USART5_COMBINED_INTERRUPT)
+
+#ifdef CONFIG_CHIP_STM32_USARTV2_UART4_ENABLE
+
+/**
+ * \brief UART4 interrupt handler
+ */
+
+extern "C" void UART4_IRQHandler()
+{
+	uart4.interruptHandler();
+}
+
+#endif	// def CONFIG_CHIP_STM32_USARTV2_UART4_ENABLE
+
+#ifdef CONFIG_CHIP_STM32_USARTV2_UART5_ENABLE
+
+/**
+ * \brief UART5 interrupt handler
+ */
+
+extern "C" void UART5_IRQHandler()
+{
+	uart5.interruptHandler();
+}
+
+#endif	// def CONFIG_CHIP_STM32_USARTV2_UART5_ENABLE
 
 #ifdef CONFIG_CHIP_STM32_USARTV2_USART6_ENABLE
 
