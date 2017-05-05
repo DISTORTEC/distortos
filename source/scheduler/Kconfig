@@ -23,6 +23,24 @@ config ROUND_ROBIN_FREQUENCY
 	help
 		Round-robin frequency, Hz.
 
+config SIGNALS_ENABLE
+	bool "Enable support for signals"
+	default n
+	help
+		Enable namespaces, functions and classes related to signals:
+		- ThisThread::Signals namespace;
+		- Thread::generateSignal();
+		- Thread::getPendingSignalSet();
+		- Thread::queueSignal();
+		- DynamicSignalsReceiver class;
+		- SignalInformationQueueWrapper class;
+		- SignalsCatcher class;
+		- SignalsReceiver class;
+		- StaticSignalsReceiver class;
+
+		When this options is not selected, these namespaces, functions and
+		classes are not available at all.
+
 config THREAD_DETACH_ENABLE
 	bool "Enable support for thread detachment"
 	default n
@@ -61,6 +79,7 @@ config MAIN_THREAD_PRIORITY
 config MAIN_THREAD_CAN_RECEIVE_SIGNALS
 	bool "Enable reception of signals for main thread"
 	default n
+	depends on SIGNALS_ENABLE
 	help
 		Enable reception of signals for main thread.
 
