@@ -48,6 +48,10 @@ input file.
 itself.
 - Size of stack passed as argument to `DynamicThread` or as template argument to `StaticThread` is adjusted to alignment
 requirements of architecture. This way "usable" size of stack will never be less than the requested value.
+- Generated `distortosConfiguration.h` file no longer "undefines" *Kconfig* symbols which are not set.
+- All boolean *Kconfig* symbols are now converted to `#define CONFIG_... 1` in generated `distortosConfiguration.h`
+file. Previously they were converted to a macro without value (`#define CONFIG_...`), which made building complex
+conditions harder than necessary.
 
 ### Deprecated
 
