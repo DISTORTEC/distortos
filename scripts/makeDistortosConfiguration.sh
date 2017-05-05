@@ -32,7 +32,7 @@ cat << EOF
 #define INCLUDE_DISTORTOS_DISTORTOSCONFIGURATION_H_
 
 $(sed -n \
-	-e 's/^\(CONFIG_[A-Za-z0-9_]\{1,\}\)=y$/#define \1/p' \
+	-e 's/^\(CONFIG_[A-Za-z0-9_]\{1,\}\)=y$/#define \1 1/p' \
 	-e 's/^\(CONFIG_[A-Za-z0-9_]\{1,\}\)=\(.*\)$/#define \1 \2/p' \
 	"${1}")
 
