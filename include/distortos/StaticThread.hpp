@@ -12,6 +12,8 @@
 #ifndef INCLUDE_DISTORTOS_STATICTHREAD_HPP_
 #define INCLUDE_DISTORTOS_STATICTHREAD_HPP_
 
+#include "distortos/internal/memory/dummyDeleter.hpp"
+
 #include "distortos/assert.h"
 #include "distortos/StaticSignalsReceiver.hpp"
 #include "distortos/UndetachableThread.hpp"
