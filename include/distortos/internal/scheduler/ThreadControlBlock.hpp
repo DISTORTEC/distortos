@@ -48,8 +48,13 @@ public:
 		unblockRequest,
 		/// timeout - unblock via software timer
 		timeout,
+
+#if CONFIG_SIGNALS_ENABLE == 1
+
 		/// signal handler - unblock to deliver unmasked signal
 		signal,
+
+#endif	// CONFIG_SIGNALS_ENABLE == 1
 	};
 
 	/// UnblockFunctor is a functor executed when unblocking the thread, it receives two parameter - a reference to
