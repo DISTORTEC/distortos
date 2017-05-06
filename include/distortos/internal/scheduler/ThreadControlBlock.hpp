@@ -162,7 +162,11 @@ public:
 
 	SignalsReceiverControlBlock* getSignalsReceiverControlBlock() const
 	{
+#if CONFIG_SIGNALS_ENABLE == 1
 		return signalsReceiverControlBlock_;
+#else	// CONFIG_SIGNALS_ENABLE != 1
+		return nullptr;
+#endif	// CONFIG_SIGNALS_ENABLE != 1
 	}
 
 	/**
@@ -322,8 +326,12 @@ private:
 	/// functor executed in unblockHook()
 	const UnblockFunctor* unblockFunctor_;
 
+#if CONFIG_SIGNALS_ENABLE == 1
+
 	/// pointer to SignalsReceiverControlBlock object for this thread, nullptr if this thread cannot receive signals
 	SignalsReceiverControlBlock* signalsReceiverControlBlock_;
+
+#endif	// CONFIG_SIGNALS_ENABLE == 1
 
 	/// newlib's _reent structure with thread-specific data
 	_reent reent_;

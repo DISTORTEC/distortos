@@ -33,6 +33,8 @@ namespace internal
 | public functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
+#if CONFIG_SIGNALS_ENABLE == 1
+
 ThreadControlBlock::ThreadControlBlock(internal::Stack&& stack, const uint8_t priority,
 		const SchedulingPolicy schedulingPolicy, ThreadGroupControlBlock* const threadGroupControlBlock,
 		SignalsReceiver* const signalsReceiver, Thread& owner) :
@@ -54,6 +56,28 @@ ThreadControlBlock::ThreadControlBlock(internal::Stack&& stack, const uint8_t pr
 {
 	_REENT_INIT_PTR(&reent_);
 }
+
+#else	// CONFIG_SIGNALS_ENABLE != 1
+
+ThreadControlBlock::ThreadControlBlock(internal::Stack&& stack, const uint8_t priority,
+		const SchedulingPolicy schedulingPolicy, ThreadGroupControlBlock* const threadGroupControlBlock,
+		SignalsReceiver*, Thread& owner) :
+		ThreadListNode{priority},
+		stack_{std::move(stack)},
+		owner_{owner},
+		ownedProtocolMutexList_{},
+		priorityInheritanceMutexControlBlock_{},
+		list_{},
+		threadGroupControlBlock_{threadGroupControlBlock},
+		unblockFunctor_{},
+		roundRobinQuantum_{},
+		schedulingPolicy_{schedulingPolicy},
+		state_{ThreadState::created}
+{
+	_REENT_INIT_PTR(&reent_);
+}
+
+#endif	// CONFIG_SIGNALS_ENABLE != 1
 
 ThreadControlBlock::~ThreadControlBlock()
 {
