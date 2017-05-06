@@ -23,11 +23,11 @@
 namespace distortos
 {
 
-#ifdef CONFIG_THREAD_DETACH_ENABLE
+#if CONFIG_THREAD_DETACH_ENABLE == 1
 
 class DynamicThread;
 
-#endif	// def CONFIG_THREAD_DETACH_ENABLE
+#endif	// CONFIG_THREAD_DETACH_ENABLE == 1
 
 namespace internal
 {
@@ -45,7 +45,7 @@ class DynamicThreadBase : public ThreadCommon
 {
 public:
 
-#ifdef CONFIG_THREAD_DETACH_ENABLE
+#if CONFIG_THREAD_DETACH_ENABLE == 1
 
 	/**
 	 * \brief DynamicThreadBase's constructor
@@ -72,7 +72,7 @@ public:
 			uint8_t priority, SchedulingPolicy schedulingPolicy, DynamicThread& owner, Function&& function,
 			Args&&... args);
 
-#else	// !def CONFIG_THREAD_DETACH_ENABLE
+#else	// CONFIG_THREAD_DETACH_ENABLE != 1
 
 	/**
 	 * \brief DynamicThreadBase's constructor
@@ -117,9 +117,9 @@ public:
 
 	}
 
-#endif	// !def CONFIG_THREAD_DETACH_ENABLE
+#endif	// CONFIG_THREAD_DETACH_ENABLE != 1
 
-#ifdef CONFIG_THREAD_DETACH_ENABLE
+#if CONFIG_THREAD_DETACH_ENABLE == 1
 
 	/**
 	 * \brief Detaches the thread.
@@ -136,7 +136,7 @@ public:
 
 	int detach() override;
 
-#endif	// def CONFIG_THREAD_DETACH_ENABLE
+#endif	// CONFIG_THREAD_DETACH_ENABLE == 1
 
 	/**
 	 * \brief Starts the thread.
@@ -149,11 +149,11 @@ public:
 
 	int start()
 	{
-#ifdef CONFIG_THREAD_DETACH_ENABLE
+#if CONFIG_THREAD_DETACH_ENABLE == 1
 		return ThreadCommon::startInternal(run, preTerminationHook, terminationHook);
-#else	// !def CONFIG_THREAD_DETACH_ENABLE
+#else	// CONFIG_THREAD_DETACH_ENABLE != 1
 		return ThreadCommon::startInternal(run, nullptr, terminationHook);
-#endif	// !def CONFIG_THREAD_DETACH_ENABLE
+#endif	// CONFIG_THREAD_DETACH_ENABLE != 1
 	}
 
 	DynamicThreadBase(const DynamicThreadBase&) = delete;
@@ -163,7 +163,7 @@ public:
 
 protected:
 
-#ifdef CONFIG_THREAD_DETACH_ENABLE
+#if CONFIG_THREAD_DETACH_ENABLE == 1
 
 	/**
 	 * \brief Pre-termination hook function of thread
@@ -185,7 +185,7 @@ protected:
 
 	static void terminationHook(Thread& thread);
 
-#endif	// def CONFIG_THREAD_DETACH_ENABLE
+#endif	// CONFIG_THREAD_DETACH_ENABLE == 1
 
 private:
 
@@ -226,15 +226,15 @@ private:
 	/// bound function object
 	std::function<void()> boundFunction_;
 
-#ifdef CONFIG_THREAD_DETACH_ENABLE
+#if CONFIG_THREAD_DETACH_ENABLE == 1
 
 	/// pointer to owner DynamicThread object, nullptr if thread is detached
 	DynamicThread* owner_;
 
-#endif	// def CONFIG_THREAD_DETACH_ENABLE
+#endif	// CONFIG_THREAD_DETACH_ENABLE == 1
 };
 
-#ifdef CONFIG_THREAD_DETACH_ENABLE
+#if CONFIG_THREAD_DETACH_ENABLE == 1
 
 template<typename Function, typename... Args>
 DynamicThreadBase::DynamicThreadBase(const size_t stackSize, const bool canReceiveSignals, const size_t queuedSignals,
@@ -250,7 +250,7 @@ DynamicThreadBase::DynamicThreadBase(const size_t stackSize, const bool canRecei
 
 }
 
-#else	// !def CONFIG_THREAD_DETACH_ENABLE
+#else	// CONFIG_THREAD_DETACH_ENABLE != 1
 
 template<typename Function, typename... Args>
 DynamicThreadBase::DynamicThreadBase(const size_t stackSize, const bool canReceiveSignals, const size_t queuedSignals,
@@ -265,7 +265,7 @@ DynamicThreadBase::DynamicThreadBase(const size_t stackSize, const bool canRecei
 
 }
 
-#endif	// !def CONFIG_THREAD_DETACH_ENABLE
+#endif	// CONFIG_THREAD_DETACH_ENABLE != 1
 
 }	// namespace internal
 
