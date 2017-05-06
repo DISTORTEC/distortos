@@ -11,6 +11,8 @@
 
 #include "distortos/internal/synchronization/SignalsCatcherControlBlock.hpp"
 
+#if CONFIG_SIGNALS_ENABLE == 1
+
 #include "distortos/architecture/isInInterruptContext.hpp"
 #include "distortos/architecture/requestFunctionExecution.hpp"
 
@@ -340,3 +342,5 @@ int SignalsCatcherControlBlock::requestDeliveryOfSignals(ThreadControlBlock& thr
 }	// namespace internal
 
 }	// namespace distortos
+
+#endif	// CONFIG_SIGNALS_ENABLE == 1
