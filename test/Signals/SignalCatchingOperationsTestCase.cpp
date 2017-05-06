@@ -13,6 +13,8 @@
 
 #include "distortos/distortosConfiguration.h"
 
+#if CONFIG_SIGNALS_ENABLE == 1
+
 #include "abortSignalHandler.hpp"
 
 #include "distortos/DynamicThread.hpp"
@@ -26,11 +28,15 @@
 #define SIGNAL_CATCHING_OPERATIONS_TEST_CASE_PHASE_1_2_ENABLED CONFIG_MAIN_THREAD_SIGNAL_ACTIONS >= 1 && \
 		CONFIG_MAIN_THREAD_SIGNAL_ACTIONS <= 31
 
+#endif	// CONFIG_SIGNALS_ENABLE == 1
+
 namespace distortos
 {
 
 namespace test
 {
+
+#if CONFIG_SIGNALS_ENABLE == 1
 
 namespace
 {
@@ -260,12 +266,16 @@ bool phase3()
 
 }	// namespace
 
+#endif	// CONFIG_SIGNALS_ENABLE == 1
+
 /*---------------------------------------------------------------------------------------------------------------------+
 | private functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
 bool SignalCatchingOperationsTestCase::run_() const
 {
+#if CONFIG_SIGNALS_ENABLE == 1
+
 	const auto contextSwitchCount = statistics::getContextSwitchCount();
 
 	constexpr auto phase3ExpectedContextSwitchCount = 2 * phase3ThreadContextSwitchCount;
@@ -293,6 +303,8 @@ bool SignalCatchingOperationsTestCase::run_() const
 
 	if (statistics::getContextSwitchCount() - contextSwitchCount != expectedContextSwitchCount)
 		return false;
+
+#endif	// CONFIG_SIGNALS_ENABLE == 1
 
 	return true;
 }

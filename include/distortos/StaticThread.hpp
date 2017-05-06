@@ -12,6 +12,8 @@
 #ifndef INCLUDE_DISTORTOS_STATICTHREAD_HPP_
 #define INCLUDE_DISTORTOS_STATICTHREAD_HPP_
 
+#include "distortos/internal/memory/dummyDeleter.hpp"
+
 #include "distortos/assert.h"
 #include "distortos/StaticSignalsReceiver.hpp"
 #include "distortos/UndetachableThread.hpp"
@@ -167,6 +169,8 @@ public:
 	StaticThread& operator=(StaticThread&&) = delete;
 };
 
+#if CONFIG_SIGNALS_ENABLE == 1
+
 /**
  * \brief StaticThread class is a templated interface for thread that has automatic storage for stack and internal
  * StaticSignalsReceiver object.
@@ -227,6 +231,8 @@ private:
 	/// internal StaticSignalsReceiver object
 	StaticSignalsReceiver<QueuedSignals, SignalActions> staticSignalsReceiver_;
 };
+
+#endif	// CONFIG_SIGNALS_ENABLE == 1
 
 /**
  * \brief Helper factory function to make StaticThread object with partially deduced template arguments
@@ -362,6 +368,8 @@ StaticThread(const uint8_t priority, const SchedulingPolicy schedulingPolicy, Fu
 
 }
 
+#if CONFIG_SIGNALS_ENABLE == 1
+
 template<size_t StackSize, size_t QueuedSignals, size_t SignalActions, typename Function, typename... Args>
 StaticThread<StackSize, true, QueuedSignals, SignalActions, Function, Args...>::StaticThread(const uint8_t priority,
 		const SchedulingPolicy schedulingPolicy, Function&& function, Args&&... args) :
@@ -371,6 +379,8 @@ StaticThread<StackSize, true, QueuedSignals, SignalActions, Function, Args...>::
 {
 
 }
+
+#endif	// CONFIG_SIGNALS_ENABLE == 1
 
 }	// namespace distortos
 

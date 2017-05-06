@@ -41,6 +41,11 @@ versions are supported.
 - `generateChipDtsi.py` *Python* script which can generate chip's devicetree fragments (`*.dtsi` files) from `*.csv`
 input file.
 - Basic devicetree `*.dts` files for all supported boards.
+- "Enable support for signals" option in *Kconfig* menus. When this option is enabled, all namespaces, functions and
+classes required for signals are available. Otherwise they are completely disabled, which reduces the size of compiled
+application. This affects `ThisThread::Signals` namespace, `Thread::generateSignal()`, `Thread::getPendingSignalSet()`,
+`Thread::queueSignal()` and `DynamicSignalsReceiver`, `SignalInformationQueueWrapper`, `SignalsCatcher`,
+`SignalsReceiver`, `StaticSignalsReceiver` classes.
 
 ### Changed
 

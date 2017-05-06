@@ -48,8 +48,13 @@ public:
 		unblockRequest,
 		/// timeout - unblock via software timer
 		timeout,
+
+#if CONFIG_SIGNALS_ENABLE == 1
+
 		/// signal handler - unblock to deliver unmasked signal
 		signal,
+
+#endif	// CONFIG_SIGNALS_ENABLE == 1
 	};
 
 	/// UnblockFunctor is a functor executed when unblocking the thread, it receives two parameter - a reference to
@@ -155,6 +160,8 @@ public:
 		return schedulingPolicy_;
 	}
 
+#if CONFIG_SIGNALS_ENABLE == 1
+
 	/**
 	 * \return pointer to SignalsReceiverControlBlock object for this thread, nullptr if this thread cannot receive
 	 * signals
@@ -164,6 +171,8 @@ public:
 	{
 		return signalsReceiverControlBlock_;
 	}
+
+#endif	// CONFIG_SIGNALS_ENABLE == 1
 
 	/**
 	 * \return reference to internal Stack object
@@ -322,8 +331,12 @@ private:
 	/// functor executed in unblockHook()
 	const UnblockFunctor* unblockFunctor_;
 
+#if CONFIG_SIGNALS_ENABLE == 1
+
 	/// pointer to SignalsReceiverControlBlock object for this thread, nullptr if this thread cannot receive signals
 	SignalsReceiverControlBlock* signalsReceiverControlBlock_;
+
+#endif	// CONFIG_SIGNALS_ENABLE == 1
 
 	/// newlib's _reent structure with thread-specific data
 	_reent reent_;

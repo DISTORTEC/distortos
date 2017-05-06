@@ -12,6 +12,8 @@
 #ifndef INCLUDE_DISTORTOS_THREADSTATE_HPP_
 #define INCLUDE_DISTORTOS_THREADSTATE_HPP_
 
+#include "distortos/distortosConfiguration.h"
+
 #include <cstdint>
 
 namespace distortos
@@ -41,8 +43,14 @@ enum class ThreadState : uint8_t
 	blockedOnMutex,
 	/// thread is blocked on ConditionVariable
 	blockedOnConditionVariable,
+
+#if CONFIG_SIGNALS_ENABLE == 1
+
 	/// thread is waiting for signal
 	waitingForSignal,
+
+#endif	// CONFIG_SIGNALS_ENABLE == 1
+
 	/// internal thread object was detached
 	detached,
 };

@@ -43,6 +43,8 @@ ThreadCommon::~ThreadCommon()
 
 }
 
+#if CONFIG_SIGNALS_ENABLE == 1
+
 int ThreadCommon::generateSignal(const uint8_t signalNumber)
 {
 	auto& threadControlBlock = getThreadControlBlock();
@@ -53,10 +55,14 @@ int ThreadCommon::generateSignal(const uint8_t signalNumber)
 	return signalsReceiverControlBlock->generateSignal(signalNumber, threadControlBlock);
 }
 
+#endif	// CONFIG_SIGNALS_ENABLE == 1
+
 uint8_t ThreadCommon::getEffectivePriority() const
 {
 	return getThreadControlBlock().getEffectivePriority();
 }
+
+#if CONFIG_SIGNALS_ENABLE == 1
 
 SignalSet ThreadCommon::getPendingSignalSet() const
 {
@@ -67,6 +73,8 @@ SignalSet ThreadCommon::getPendingSignalSet() const
 	const InterruptMaskingLock interruptMaskingLock;
 	return signalsReceiverControlBlock->getPendingSignalSet();
 }
+
+#endif	// CONFIG_SIGNALS_ENABLE == 1
 
 uint8_t ThreadCommon::getPriority() const
 {
@@ -105,6 +113,8 @@ int ThreadCommon::join()
 	return ret;
 }
 
+#if CONFIG_SIGNALS_ENABLE == 1
+
 int ThreadCommon::queueSignal(const uint8_t signalNumber, const sigval value)
 {
 	auto& threadControlBlock = getThreadControlBlock();
@@ -114,6 +124,8 @@ int ThreadCommon::queueSignal(const uint8_t signalNumber, const sigval value)
 
 	return signalsReceiverControlBlock->queueSignal(signalNumber, value, threadControlBlock);
 }
+
+#endif	// CONFIG_SIGNALS_ENABLE == 1
 
 void ThreadCommon::setPriority(const uint8_t priority, const bool alwaysBehind)
 {

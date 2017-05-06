@@ -11,6 +11,8 @@
 
 #include "distortos/internal/synchronization/SignalsReceiverControlBlock.hpp"
 
+#if CONFIG_SIGNALS_ENABLE == 1
+
 #include "distortos/internal/scheduler/getScheduler.hpp"
 #include "distortos/internal/scheduler/Scheduler.hpp"
 
@@ -264,3 +266,5 @@ std::pair<int, bool> SignalsReceiverControlBlock::isSignalIgnored(const uint8_t 
 }	// namespace internal
 
 }	// namespace distortos
+
+#endif	// CONFIG_SIGNALS_ENABLE == 1

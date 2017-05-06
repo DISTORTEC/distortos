@@ -11,7 +11,7 @@
 
 #include "distortos/internal/scheduler/DynamicThreadBase.hpp"
 
-#ifdef CONFIG_THREAD_DETACH_ENABLE
+#if CONFIG_THREAD_DETACH_ENABLE == 1
 
 #include "distortos/internal/memory/getDeferredThreadDeleter.hpp"
 #include "distortos/internal/memory/DeferredThreadDeleter.hpp"
@@ -21,7 +21,7 @@
 
 #include <cerrno>
 
-#endif	// def CONFIG_THREAD_DETACH_ENABLE
+#endif	// CONFIG_THREAD_DETACH_ENABLE == 1
 
 namespace distortos
 {
@@ -33,7 +33,7 @@ namespace internal
 | public functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-#ifdef CONFIG_THREAD_DETACH_ENABLE
+#if CONFIG_THREAD_DETACH_ENABLE == 1
 
 int DynamicThreadBase::detach()
 {
@@ -49,13 +49,13 @@ int DynamicThreadBase::detach()
 	return ret == EINVAL ? 0 : ret;
 }
 
-#endif	// def CONFIG_THREAD_DETACH_ENABLE
+#endif	// CONFIG_THREAD_DETACH_ENABLE == 1
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | protected static functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-#ifdef CONFIG_THREAD_DETACH_ENABLE
+#if CONFIG_THREAD_DETACH_ENABLE == 1
 
 void DynamicThreadBase::preTerminationHook(Thread& thread)
 {
@@ -75,7 +75,7 @@ void DynamicThreadBase::terminationHook(Thread& thread)
 		getDeferredThreadDeleter()(that.getThreadControlBlock());	/// \todo error handling?
 }
 
-#endif	// def CONFIG_THREAD_DETACH_ENABLE
+#endif	// CONFIG_THREAD_DETACH_ENABLE == 1
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | private static functions

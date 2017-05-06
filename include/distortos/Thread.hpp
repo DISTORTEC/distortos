@@ -59,6 +59,8 @@ public:
 
 #endif	// def CONFIG_THREAD_DETACH_ENABLE
 
+#if CONFIG_SIGNALS_ENABLE == 1
+
 	/**
 	 * \brief Generates signal for thread.
 	 *
@@ -78,11 +80,15 @@ public:
 
 	virtual int generateSignal(uint8_t signalNumber) = 0;
 
+#endif	// CONFIG_SIGNALS_ENABLE == 1
+
 	/**
 	 * \return effective priority of thread
 	 */
 
 	virtual uint8_t getEffectivePriority() const = 0;
+
+#if CONFIG_SIGNALS_ENABLE == 1
 
 	/**
 	 * \brief Gets set of currently pending signals.
@@ -97,6 +103,8 @@ public:
 	 */
 
 	virtual SignalSet getPendingSignalSet() const = 0;
+
+#endif	// CONFIG_SIGNALS_ENABLE == 1
 
 	/**
 	 * \return priority of thread
@@ -149,6 +157,8 @@ public:
 
 	virtual int join() = 0;
 
+#if CONFIG_SIGNALS_ENABLE == 1
+
 	/**
 	 * \brief Queues signal for thread.
 	 *
@@ -170,6 +180,8 @@ public:
 	 */
 
 	virtual int queueSignal(uint8_t signalNumber, sigval value) = 0;
+
+#endif	// CONFIG_SIGNALS_ENABLE == 1
 
 	/**
 	 * \brief Changes priority of thread.

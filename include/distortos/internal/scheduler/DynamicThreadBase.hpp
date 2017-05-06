@@ -23,18 +23,18 @@
 namespace distortos
 {
 
-#ifdef CONFIG_THREAD_DETACH_ENABLE
+#if CONFIG_THREAD_DETACH_ENABLE == 1
 
 class DynamicThread;
 
-#endif	// def CONFIG_THREAD_DETACH_ENABLE
+#endif	// CONFIG_THREAD_DETACH_ENABLE == 1
 
 namespace internal
 {
 
 /**
  * \brief DynamicThreadBase class is a type-erased interface for thread that has dynamic storage for bound function,
- * stack and internal DynamicSignalsReceiver object.
+ * stack and - if signals are enabled - internal DynamicSignalsReceiver object.
  *
  * If thread detachment is enabled (CONFIG_THREAD_DETACH_ENABLE is defined) then this class is dynamically allocated by
  * DynamicThread - which allows it to be "detached". Otherwise - if thread detachment is disabled
@@ -45,7 +45,7 @@ class DynamicThreadBase : public ThreadCommon
 {
 public:
 
-#ifdef CONFIG_THREAD_DETACH_ENABLE
+#if CONFIG_THREAD_DETACH_ENABLE == 1
 
 	/**
 	 * \brief DynamicThreadBase's constructor
@@ -72,7 +72,7 @@ public:
 			uint8_t priority, SchedulingPolicy schedulingPolicy, DynamicThread& owner, Function&& function,
 			Args&&... args);
 
-#else	// !def CONFIG_THREAD_DETACH_ENABLE
+#else	// CONFIG_THREAD_DETACH_ENABLE != 1
 
 	/**
 	 * \brief DynamicThreadBase's constructor
@@ -117,9 +117,9 @@ public:
 
 	}
 
-#endif	// !def CONFIG_THREAD_DETACH_ENABLE
+#endif	// CONFIG_THREAD_DETACH_ENABLE != 1
 
-#ifdef CONFIG_THREAD_DETACH_ENABLE
+#if CONFIG_THREAD_DETACH_ENABLE == 1
 
 	/**
 	 * \brief Detaches the thread.
@@ -136,7 +136,7 @@ public:
 
 	int detach() override;
 
-#endif	// def CONFIG_THREAD_DETACH_ENABLE
+#endif	// CONFIG_THREAD_DETACH_ENABLE == 1
 
 	/**
 	 * \brief Starts the thread.
@@ -149,11 +149,11 @@ public:
 
 	int start()
 	{
-#ifdef CONFIG_THREAD_DETACH_ENABLE
+#if CONFIG_THREAD_DETACH_ENABLE == 1
 		return ThreadCommon::startInternal(run, preTerminationHook, terminationHook);
-#else	// !def CONFIG_THREAD_DETACH_ENABLE
+#else	// CONFIG_THREAD_DETACH_ENABLE != 1
 		return ThreadCommon::startInternal(run, nullptr, terminationHook);
-#endif	// !def CONFIG_THREAD_DETACH_ENABLE
+#endif	// CONFIG_THREAD_DETACH_ENABLE != 1
 	}
 
 	DynamicThreadBase(const DynamicThreadBase&) = delete;
@@ -163,7 +163,7 @@ public:
 
 protected:
 
-#ifdef CONFIG_THREAD_DETACH_ENABLE
+#if CONFIG_THREAD_DETACH_ENABLE == 1
 
 	/**
 	 * \brief Pre-termination hook function of thread
@@ -185,7 +185,7 @@ protected:
 
 	static void terminationHook(Thread& thread);
 
-#endif	// def CONFIG_THREAD_DETACH_ENABLE
+#endif	// CONFIG_THREAD_DETACH_ENABLE == 1
 
 private:
 
@@ -220,21 +220,25 @@ private:
 
 	static void run(Thread& thread);
 
+#if CONFIG_SIGNALS_ENABLE == 1
+
 	/// internal DynamicSignalsReceiver object
 	DynamicSignalsReceiver dynamicSignalsReceiver_;
+
+#endif	// CONFIG_SIGNALS_ENABLE == 1
 
 	/// bound function object
 	std::function<void()> boundFunction_;
 
-#ifdef CONFIG_THREAD_DETACH_ENABLE
+#if CONFIG_THREAD_DETACH_ENABLE == 1
 
 	/// pointer to owner DynamicThread object, nullptr if thread is detached
 	DynamicThread* owner_;
 
-#endif	// def CONFIG_THREAD_DETACH_ENABLE
+#endif	// CONFIG_THREAD_DETACH_ENABLE == 1
 };
 
-#ifdef CONFIG_THREAD_DETACH_ENABLE
+#if CONFIG_SIGNALS_ENABLE == 1 && CONFIG_THREAD_DETACH_ENABLE == 1
 
 template<typename Function, typename... Args>
 DynamicThreadBase::DynamicThreadBase(const size_t stackSize, const bool canReceiveSignals, const size_t queuedSignals,
@@ -250,7 +254,7 @@ DynamicThreadBase::DynamicThreadBase(const size_t stackSize, const bool canRecei
 
 }
 
-#else	// !def CONFIG_THREAD_DETACH_ENABLE
+#elif CONFIG_SIGNALS_ENABLE == 1 && CONFIG_THREAD_DETACH_ENABLE != 1
 
 template<typename Function, typename... Args>
 DynamicThreadBase::DynamicThreadBase(const size_t stackSize, const bool canReceiveSignals, const size_t queuedSignals,
@@ -265,7 +269,30 @@ DynamicThreadBase::DynamicThreadBase(const size_t stackSize, const bool canRecei
 
 }
 
-#endif	// !def CONFIG_THREAD_DETACH_ENABLE
+#elif CONFIG_SIGNALS_ENABLE != 1 && CONFIG_THREAD_DETACH_ENABLE == 1
+
+template<typename Function, typename... Args>
+DynamicThreadBase::DynamicThreadBase(const size_t stackSize, bool, size_t, size_t, const uint8_t priority,
+		const SchedulingPolicy schedulingPolicy, DynamicThread& owner, Function&& function, Args&&... args) :
+				ThreadCommon{makeStack(stackSize), priority, schedulingPolicy, nullptr, nullptr},
+				boundFunction_{std::bind(std::forward<Function>(function), std::forward<Args>(args)...)},
+				owner_{&owner}
+{
+
+}
+
+#else	// CONFIG_SIGNALS_ENABLE != 1 && CONFIG_THREAD_DETACH_ENABLE != 1
+
+template<typename Function, typename... Args>
+DynamicThreadBase::DynamicThreadBase(const size_t stackSize, bool, size_t, size_t, const uint8_t priority,
+		const SchedulingPolicy schedulingPolicy, Function&& function, Args&&... args) :
+				ThreadCommon{makeStack(stackSize), priority, schedulingPolicy, nullptr, nullptr},
+				boundFunction_{std::bind(std::forward<Function>(function), std::forward<Args>(args)...)}
+{
+
+}
+
+#endif	// CONFIG_SIGNALS_ENABLE != 1 && CONFIG_THREAD_DETACH_ENABLE != 1
 
 }	// namespace internal
 

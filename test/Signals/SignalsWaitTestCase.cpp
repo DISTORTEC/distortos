@@ -11,6 +11,10 @@
 
 #include "SignalsWaitTestCase.hpp"
 
+#include "distortos/distortosConfiguration.h"
+
+#if CONFIG_SIGNALS_ENABLE == 1
+
 #include "priorityTestPhases.hpp"
 #include "SequenceAsserter.hpp"
 
@@ -19,11 +23,15 @@
 #include "distortos/ThisThread-Signals.hpp"
 #include "distortos/ThisThread.hpp"
 
+#endif	// CONFIG_SIGNALS_ENABLE == 1
+
 namespace distortos
 {
 
 namespace test
 {
+
+#if CONFIG_SIGNALS_ENABLE == 1
 
 namespace
 {
@@ -215,12 +223,16 @@ const std::array<Stage, 2> stages
 
 }	// namespace
 
+#endif	// CONFIG_SIGNALS_ENABLE == 1
+
 /*---------------------------------------------------------------------------------------------------------------------+
 | private functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
 bool SignalsWaitTestCase::run_() const
 {
+#if CONFIG_SIGNALS_ENABLE == 1
+
 	// priority required for this whole test to work
 	static_assert(testCasePriority_ + 2 <= UINT8_MAX, "Invalid test case priority");
 	constexpr decltype(testCasePriority_) testThreadPriority {testCasePriority_ + 1};
@@ -291,6 +303,8 @@ bool SignalsWaitTestCase::run_() const
 	constexpr auto totalContextSwitches = 4 * totalThreads * priorityTestPhases.size() * stages.size();
 	if (statistics::getContextSwitchCount() - contextSwitchCount != totalContextSwitches)
 		return false;
+
+#endif	// CONFIG_SIGNALS_ENABLE == 1
 
 	return true;
 }

@@ -57,6 +57,8 @@ int DynamicThread::detach()
 	return ret == EINVAL ? 0 : ret;
 }
 
+#if CONFIG_SIGNALS_ENABLE == 1
+
 int DynamicThread::generateSignal(const uint8_t signalNumber)
 {
 	const InterruptMaskingLock interruptMaskingLock;
@@ -66,6 +68,8 @@ int DynamicThread::generateSignal(const uint8_t signalNumber)
 
 	return detachableThread_->generateSignal(signalNumber);
 }
+
+#endif	// CONFIG_SIGNALS_ENABLE == 1
 
 uint8_t DynamicThread::getEffectivePriority() const
 {
@@ -77,6 +81,8 @@ uint8_t DynamicThread::getEffectivePriority() const
 	return detachableThread_->getEffectivePriority();
 }
 
+#if CONFIG_SIGNALS_ENABLE == 1
+
 SignalSet DynamicThread::getPendingSignalSet() const
 {
 	const InterruptMaskingLock interruptMaskingLock;
@@ -86,6 +92,8 @@ SignalSet DynamicThread::getPendingSignalSet() const
 
 	return detachableThread_->getPendingSignalSet();
 }
+
+#endif	// CONFIG_SIGNALS_ENABLE == 1
 
 uint8_t DynamicThread::getPriority() const
 {
@@ -149,6 +157,8 @@ int DynamicThread::join()
 	return detachableThread_->join();
 }
 
+#if CONFIG_SIGNALS_ENABLE == 1
+
 int DynamicThread::queueSignal(const uint8_t signalNumber, const sigval value)
 {
 	const InterruptMaskingLock interruptMaskingLock;
@@ -158,6 +168,8 @@ int DynamicThread::queueSignal(const uint8_t signalNumber, const sigval value)
 
 	return detachableThread_->queueSignal(signalNumber, value);
 }
+
+#endif	// CONFIG_SIGNALS_ENABLE == 1
 
 void DynamicThread::setPriority(const uint8_t priority, const bool alwaysBehind)
 {

@@ -2,7 +2,7 @@
  * \file
  * \brief SignalsQueuedOperationsTestCase class implementation
  *
- * \author Copyright (C) 2015-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2015-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -11,6 +11,10 @@
 
 #include "SignalsQueuedOperationsTestCase.hpp"
 
+#include "distortos/distortosConfiguration.h"
+
+#if CONFIG_SIGNALS_ENABLE == 1
+
 #include "signalsTestSelfOneSignalPending.hpp"
 
 #include "distortos/DynamicThread.hpp"
@@ -18,11 +22,15 @@
 
 #include <cerrno>
 
+#endif	// CONFIG_SIGNALS_ENABLE == 1
+
 namespace distortos
 {
 
 namespace test
 {
+
+#if CONFIG_SIGNALS_ENABLE == 1
 
 namespace
 {
@@ -118,12 +126,16 @@ bool phase2()
 
 }	// namespace
 
+#endif	// CONFIG_SIGNALS_ENABLE == 1
+
 /*---------------------------------------------------------------------------------------------------------------------+
 | private functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
 bool SignalsQueuedOperationsTestCase::run_() const
 {
+#if CONFIG_SIGNALS_ENABLE == 1
+
 	for (const auto& function : {phase1, phase2})
 	{
 		// initially no signals may be pending
@@ -137,6 +149,8 @@ bool SignalsQueuedOperationsTestCase::run_() const
 	// after the test no signals may be pending
 	if (ThisThread::Signals::getPendingSignalSet().getBitset().none() == false)
 		return false;
+
+#endif	// CONFIG_SIGNALS_ENABLE == 1
 
 	return true;
 }

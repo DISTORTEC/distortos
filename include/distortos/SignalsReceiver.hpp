@@ -12,6 +12,10 @@
 #ifndef INCLUDE_DISTORTOS_SIGNALSRECEIVER_HPP_
 #define INCLUDE_DISTORTOS_SIGNALSRECEIVER_HPP_
 
+#include "distortos/distortosConfiguration.h"
+
+#if CONFIG_SIGNALS_ENABLE == 1
+
 #include "distortos/internal/synchronization/SignalsReceiverControlBlock.hpp"
 
 namespace distortos
@@ -54,5 +58,7 @@ private:
 };
 
 }	// namespace distortos
+
+#endif	// CONFIG_SIGNALS_ENABLE == 1
 
 #endif	// INCLUDE_DISTORTOS_SIGNALSRECEIVER_HPP_

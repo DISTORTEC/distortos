@@ -12,6 +12,10 @@
 #ifndef INCLUDE_DISTORTOS_SIGNALSCATCHER_HPP_
 #define INCLUDE_DISTORTOS_SIGNALSCATCHER_HPP_
 
+#include "distortos/distortosConfiguration.h"
+
+#if CONFIG_SIGNALS_ENABLE == 1
+
 #include "distortos/internal/synchronization/SignalsCatcherControlBlock.hpp"
 
 namespace distortos
@@ -58,5 +62,7 @@ private:
 };
 
 }	// namespace distortos
+
+#endif	// CONFIG_SIGNALS_ENABLE == 1
 
 #endif	// INCLUDE_DISTORTOS_SIGNALSCATCHER_HPP_
