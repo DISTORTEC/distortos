@@ -155,6 +155,8 @@ public:
 		return schedulingPolicy_;
 	}
 
+#if CONFIG_SIGNALS_ENABLE == 1
+
 	/**
 	 * \return pointer to SignalsReceiverControlBlock object for this thread, nullptr if this thread cannot receive
 	 * signals
@@ -162,12 +164,10 @@ public:
 
 	SignalsReceiverControlBlock* getSignalsReceiverControlBlock() const
 	{
-#if CONFIG_SIGNALS_ENABLE == 1
 		return signalsReceiverControlBlock_;
-#else	// CONFIG_SIGNALS_ENABLE != 1
-		return nullptr;
-#endif	// CONFIG_SIGNALS_ENABLE != 1
 	}
+
+#endif	// CONFIG_SIGNALS_ENABLE == 1
 
 	/**
 	 * \return reference to internal Stack object
