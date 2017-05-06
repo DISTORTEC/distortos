@@ -34,7 +34,7 @@ namespace internal
 
 /**
  * \brief DynamicThreadBase class is a type-erased interface for thread that has dynamic storage for bound function,
- * stack and internal DynamicSignalsReceiver object.
+ * stack and - if signals are enabled - internal DynamicSignalsReceiver object.
  *
  * If thread detachment is enabled (CONFIG_THREAD_DETACH_ENABLE is defined) then this class is dynamically allocated by
  * DynamicThread - which allows it to be "detached". Otherwise - if thread detachment is disabled
@@ -220,8 +220,12 @@ private:
 
 	static void run(Thread& thread);
 
+#if CONFIG_SIGNALS_ENABLE == 1
+
 	/// internal DynamicSignalsReceiver object
 	DynamicSignalsReceiver dynamicSignalsReceiver_;
+
+#endif	// CONFIG_SIGNALS_ENABLE == 1
 
 	/// bound function object
 	std::function<void()> boundFunction_;
@@ -234,7 +238,7 @@ private:
 #endif	// CONFIG_THREAD_DETACH_ENABLE == 1
 };
 
-#if CONFIG_THREAD_DETACH_ENABLE == 1
+#if CONFIG_SIGNALS_ENABLE == 1 && CONFIG_THREAD_DETACH_ENABLE == 1
 
 template<typename Function, typename... Args>
 DynamicThreadBase::DynamicThreadBase(const size_t stackSize, const bool canReceiveSignals, const size_t queuedSignals,
@@ -250,7 +254,7 @@ DynamicThreadBase::DynamicThreadBase(const size_t stackSize, const bool canRecei
 
 }
 
-#else	// CONFIG_THREAD_DETACH_ENABLE != 1
+#elif CONFIG_SIGNALS_ENABLE == 1 && CONFIG_THREAD_DETACH_ENABLE != 1
 
 template<typename Function, typename... Args>
 DynamicThreadBase::DynamicThreadBase(const size_t stackSize, const bool canReceiveSignals, const size_t queuedSignals,
@@ -265,7 +269,30 @@ DynamicThreadBase::DynamicThreadBase(const size_t stackSize, const bool canRecei
 
 }
 
-#endif	// CONFIG_THREAD_DETACH_ENABLE != 1
+#elif CONFIG_SIGNALS_ENABLE != 1 && CONFIG_THREAD_DETACH_ENABLE == 1
+
+template<typename Function, typename... Args>
+DynamicThreadBase::DynamicThreadBase(const size_t stackSize, bool, size_t, size_t, const uint8_t priority,
+		const SchedulingPolicy schedulingPolicy, DynamicThread& owner, Function&& function, Args&&... args) :
+				ThreadCommon{makeStack(stackSize), priority, schedulingPolicy, nullptr, nullptr},
+				boundFunction_{std::bind(std::forward<Function>(function), std::forward<Args>(args)...)},
+				owner_{&owner}
+{
+
+}
+
+#else	// CONFIG_SIGNALS_ENABLE != 1 && CONFIG_THREAD_DETACH_ENABLE != 1
+
+template<typename Function, typename... Args>
+DynamicThreadBase::DynamicThreadBase(const size_t stackSize, bool, size_t, size_t, const uint8_t priority,
+		const SchedulingPolicy schedulingPolicy, Function&& function, Args&&... args) :
+				ThreadCommon{makeStack(stackSize), priority, schedulingPolicy, nullptr, nullptr},
+				boundFunction_{std::bind(std::forward<Function>(function), std::forward<Args>(args)...)}
+{
+
+}
+
+#endif	// CONFIG_SIGNALS_ENABLE != 1 && CONFIG_THREAD_DETACH_ENABLE != 1
 
 }	// namespace internal
 
