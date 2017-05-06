@@ -12,6 +12,10 @@
 #ifndef INCLUDE_DISTORTOS_THISTHREAD_SIGNALS_HPP_
 #define INCLUDE_DISTORTOS_THISTHREAD_SIGNALS_HPP_
 
+#include "distortos/distortosConfiguration.h"
+
+#if CONFIG_SIGNALS_ENABLE == 1
+
 #include "distortos/SignalInformation.hpp"
 #include "distortos/TickClock.hpp"
 
@@ -285,5 +289,7 @@ std::pair<int, SignalInformation> wait(const SignalSet& signalSet);
 }	// namespace ThisThread
 
 }	// namespace distortos
+
+#endif	// CONFIG_SIGNALS_ENABLE == 1
 
 #endif	// INCLUDE_DISTORTOS_THISTHREAD_SIGNALS_HPP_

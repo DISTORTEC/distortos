@@ -11,6 +11,8 @@
 
 #include "distortos/ThisThread-Signals.hpp"
 
+#if CONFIG_SIGNALS_ENABLE == 1
+
 #include "distortos/internal/scheduler/getScheduler.hpp"
 #include "distortos/internal/scheduler/Scheduler.hpp"
 
@@ -232,3 +234,5 @@ std::pair<int, SignalInformation> wait(const SignalSet& signalSet)
 }	// namespace ThisThread
 
 }	// namespace distortos
+
+#endif	// CONFIG_SIGNALS_ENABLE == 1
