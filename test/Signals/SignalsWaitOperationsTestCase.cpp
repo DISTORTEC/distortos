@@ -2,7 +2,7 @@
  * \file
  * \brief SignalsWaitOperationsTestCase class implementation
  *
- * \author Copyright (C) 2015-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2015-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -13,7 +13,11 @@
 
 #include "distortos/distortosConfiguration.h"
 
-#ifdef CONFIG_MAIN_THREAD_CAN_RECEIVE_SIGNALS
+/// configuration required by SignalsWaitOperationsTestCase
+#define SIGNALS_WAIT_OPERATIONS_TEST_CASE_ENABLED \
+		CONFIG_SIGNALS_ENABLE == 1 && CONFIG_MAIN_THREAD_CAN_RECEIVE_SIGNALS == 1
+
+#if SIGNALS_WAIT_OPERATIONS_TEST_CASE_ENABLED == 1
 
 #include "signalsTestSelfOneSignalPending.hpp"
 
@@ -27,7 +31,7 @@
 
 #include <cerrno>
 
-#endif	// def CONFIG_MAIN_THREAD_CAN_RECEIVE_SIGNALS
+#endif	// #if SIGNALS_WAIT_OPERATIONS_TEST_CASE_ENABLED == 1
 
 namespace distortos
 {
@@ -35,7 +39,7 @@ namespace distortos
 namespace test
 {
 
-#ifdef CONFIG_MAIN_THREAD_CAN_RECEIVE_SIGNALS
+#if SIGNALS_WAIT_OPERATIONS_TEST_CASE_ENABLED == 1
 
 namespace
 {
@@ -648,7 +652,7 @@ const std::array<Stage, stagesSize> stages
 
 }	// namespace
 
-#endif	// def CONFIG_MAIN_THREAD_CAN_RECEIVE_SIGNALS
+#endif	// #if SIGNALS_WAIT_OPERATIONS_TEST_CASE_ENABLED == 1
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | private functions
@@ -656,7 +660,7 @@ const std::array<Stage, stagesSize> stages
 
 bool SignalsWaitOperationsTestCase::run_() const
 {
-#ifdef CONFIG_MAIN_THREAD_CAN_RECEIVE_SIGNALS
+#if SIGNALS_WAIT_OPERATIONS_TEST_CASE_ENABLED == 1
 
 	constexpr auto phase1ExpectedContextSwitchCount = 6 * waitForNextTickContextSwitchCount +
 			2 * phase1TimedOutWaitContextSwitchCount;
@@ -689,7 +693,7 @@ bool SignalsWaitOperationsTestCase::run_() const
 	if (statistics::getContextSwitchCount() - contextSwitchCount != expectedContextSwitchCount)
 		return false;
 
-#endif	// def CONFIG_MAIN_THREAD_CAN_RECEIVE_SIGNALS
+#endif	// #if SIGNALS_WAIT_OPERATIONS_TEST_CASE_ENABLED == 1
 
 	return true;
 }
