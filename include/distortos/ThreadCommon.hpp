@@ -54,6 +54,8 @@ public:
 
 	~ThreadCommon() override;
 
+#if CONFIG_SIGNALS_ENABLE == 1
+
 	/**
 	 * \brief Generates signal for thread.
 	 *
@@ -73,11 +75,15 @@ public:
 
 	int generateSignal(uint8_t signalNumber) override;
 
+#endif	// CONFIG_SIGNALS_ENABLE == 1
+
 	/**
 	 * \return effective priority of thread
 	 */
 
 	uint8_t getEffectivePriority() const override;
+
+#if CONFIG_SIGNALS_ENABLE == 1
 
 	/**
 	 * \brief Gets set of currently pending signals.
@@ -92,6 +98,8 @@ public:
 	 */
 
 	SignalSet getPendingSignalSet() const override;
+
+#endif	// CONFIG_SIGNALS_ENABLE == 1
 
 	/**
 	 * \return priority of thread
@@ -143,6 +151,8 @@ public:
 
 	int join() override;
 
+#if CONFIG_SIGNALS_ENABLE == 1
+
 	/**
 	 * \brief Queues signal for thread.
 	 *
@@ -162,6 +172,8 @@ public:
 	 */
 
 	int queueSignal(uint8_t signalNumber, sigval value) override;
+
+#endif	// CONFIG_SIGNALS_ENABLE == 1
 
 	/**
 	 * \brief Changes priority of thread.
