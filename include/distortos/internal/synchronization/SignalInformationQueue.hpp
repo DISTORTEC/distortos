@@ -12,6 +12,10 @@
 #ifndef INCLUDE_DISTORTOS_INTERNAL_SYNCHRONIZATION_SIGNALINFORMATIONQUEUE_HPP_
 #define INCLUDE_DISTORTOS_INTERNAL_SYNCHRONIZATION_SIGNALINFORMATIONQUEUE_HPP_
 
+#include "distortos/distortosConfiguration.h"
+
+#if CONFIG_SIGNALS_ENABLE == 1
+
 #include "distortos/SignalInformation.hpp"
 
 #include "estd/IntrusiveForwardList.hpp"
@@ -128,5 +132,7 @@ private:
 }	// namespace internal
 
 }	// namespace distortos
+
+#endif	// CONFIG_SIGNALS_ENABLE == 1
 
 #endif	// INCLUDE_DISTORTOS_INTERNAL_SYNCHRONIZATION_SIGNALINFORMATIONQUEUE_HPP_
