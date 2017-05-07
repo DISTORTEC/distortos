@@ -172,6 +172,8 @@ extern "C" __attribute__ ((naked)) void PendSV_Handler()
 #endif	// CONFIG_ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI == 0
 			"													\n"
 			"	bx			lr									\n"	// return to new thread
+			"													\n"
+			".ltorg												\n"	// force dumping of literal pool
 
 			::
 #if CONFIG_ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI != 0
