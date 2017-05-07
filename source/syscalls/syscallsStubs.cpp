@@ -2,7 +2,7 @@
  * \file
  * \brief Stub system calls for newlib's libc
  *
- * \author Copyright (C) 2014 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -181,7 +181,7 @@ ssize_t _read_r(_reent*, int, void*, size_t)
 */
 
 __attribute__ ((weak))
-caddr_t _sbrk_r(_reent*, intptr_t)
+void* _sbrk_r(_reent*, intptr_t)
 {
 	errno = ENOMEM;
 	return reinterpret_cast<caddr_t>(-1);
