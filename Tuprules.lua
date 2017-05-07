@@ -131,6 +131,7 @@ LDSCRIPT = OUTPUT .. CONFIG_CHIP .. ".ld"
 
 LDFLAGS += CONFIG_DEBUGGING_INFORMATION_LINKING
 LDFLAGS += CONFIG_ARCHITECTURE_FLAGS
+LDFLAGS += CONFIG_BUILD_OPTIMIZATION
 LDFLAGS += "-Wl,--cref,--gc-sections"
 
 ------------------------------------------------------------------------------------------------------------------------
