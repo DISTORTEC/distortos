@@ -120,6 +120,8 @@ __attribute__ ((naked)) void Reset_Handler()
 			"	blx		r0									\n"
 			"												\n"
 			"	b		.									\n"		// on return - loop till the end of the world
+			"												\n"
+			".ltorg											\n"		// force dumping of literal pool
 
 			::	[controlSpselMsk] "i" (CONTROL_SPSEL_Msk)
 	);
