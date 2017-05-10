@@ -29,6 +29,7 @@ installBuild5() {
 	echo 'Extracting gcc-arm-none-eabi-5_3-160412-linux-x64.tar.xz...'
 	tar -xf gcc-arm-none-eabi-5_3-160412-linux-x64.tar.xz
 	cat > arm-none-eabi-gcc-5.3.1.sh <<- EOF
+	export LD_LIBRARY_PATH="$(pwd)/gcc-arm-none-eabi-5_3-160412/bin/lib"
 	export PATH="$(pwd)/gcc-arm-none-eabi-5_3-160412/bin:\${PATH-}"
 	EOF
 }
