@@ -32,7 +32,7 @@ __attribute__ ((naked)) void Reset_Handler()
 {
 	asm volatile
 	(
-			"	ldr		r0, =lowLevelInitialization0		\n"		// call lowLevelInitialization0() (PSP not set,
+			"	ldr		r0, =%[lowLevelInitialization0]		\n"		// call lowLevelInitialization0() (PSP not set,
 			"	blx		r0									\n"		// CONTROL not modified, memory not initialized)
 			"												\n"
 			"	ldr		r0, =__process_stack_end			\n"		// initialize PSP
@@ -120,8 +120,11 @@ __attribute__ ((naked)) void Reset_Handler()
 			"	blx		r0									\n"
 			"												\n"
 			"	b		.									\n"		// on return - loop till the end of the world
+			"												\n"
+			".ltorg											\n"		// force dumping of literal pool
 
-			::	[controlSpselMsk] "i" (CONTROL_SPSEL_Msk)
+			::	[controlSpselMsk] "i" (CONTROL_SPSEL_Msk),
+				[lowLevelInitialization0] "i" (lowLevelInitialization0)
 	);
 
 	__builtin_unreachable();

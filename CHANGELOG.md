@@ -46,6 +46,7 @@ classes required for signals are available. Otherwise they are completely disabl
 application. This affects `ThisThread::Signals` namespace, `Thread::generateSignal()`, `Thread::getPendingSignalSet()`,
 `Thread::queueSignal()` and `DynamicSignalsReceiver`, `SignalInformationQueueWrapper`, `SignalsCatcher`,
 `SignalsReceiver`, `StaticSignalsReceiver` classes.
+- Experimental "Enable link-time optimization" option in *Kconfig* menus.
 
 ### Changed
 
@@ -79,6 +80,7 @@ reported with `ENOSPC` error code - won't leave the generated/queued signal pend
 - Signals are never delived from within critical section.
 - Fixed compilation of *USARTv2* low-level driver for some *STM32F0* chips, for which `USART_CR1_M0` is not defined.
 - Minor fixes necessary for compilation and proper behaviour in *GCC 7*.
+- Fixes required for compilation and proper execution when link-time optimization is enabled.
 
 ### Removed
 

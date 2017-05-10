@@ -1,7 +1,7 @@
 --
 -- file: Tuprules.lua
 --
--- author: Copyright (C) 2014-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+-- author: Copyright (C) 2014-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
 --
 -- This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 -- distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -101,7 +101,7 @@ parseConfigurationFile(tostring(TOP_NODE) .. "/" .. CONFIG_SELECTED_CONFIGURATIO
 AS = CONFIG_TOOLCHAIN_PREFIX .. "gcc"
 CC = CONFIG_TOOLCHAIN_PREFIX .. "gcc"
 CXX = CONFIG_TOOLCHAIN_PREFIX .. "g++"
-AR = CONFIG_TOOLCHAIN_PREFIX .. "ar"
+AR = CONFIG_TOOLCHAIN_PREFIX .. "gcc-ar"
 LD = CONFIG_TOOLCHAIN_PREFIX .. "g++"
 OBJCOPY = CONFIG_TOOLCHAIN_PREFIX .. "objcopy"
 OBJDUMP = CONFIG_TOOLCHAIN_PREFIX .. "objdump"
@@ -117,12 +117,14 @@ ASFLAGS += CONFIG_ARCHITECTURE_FLAGS
 CFLAGS += CONFIG_DEBUGGING_INFORMATION_COMPILATION
 CFLAGS += CONFIG_ARCHITECTURE_FLAGS
 CFLAGS += CONFIG_BUILD_OPTIMIZATION
+CFLAGS += CONFIG_LINK_TIME_OPTIMIZATION_COMPILATION
 CFLAGS += "-ffunction-sections -fdata-sections"
 CFLAGS += CONFIG_ASSERT
 
 CXXFLAGS += CONFIG_DEBUGGING_INFORMATION_COMPILATION
 CXXFLAGS += CONFIG_ARCHITECTURE_FLAGS
 CXXFLAGS += CONFIG_BUILD_OPTIMIZATION
+CXXFLAGS += CONFIG_LINK_TIME_OPTIMIZATION_COMPILATION
 CXXFLAGS += "-ffunction-sections -fdata-sections -fno-rtti -fno-exceptions"
 CXXFLAGS += CONFIG_ASSERT
 
@@ -131,6 +133,8 @@ LDSCRIPT = OUTPUT .. CONFIG_CHIP .. ".ld"
 
 LDFLAGS += CONFIG_DEBUGGING_INFORMATION_LINKING
 LDFLAGS += CONFIG_ARCHITECTURE_FLAGS
+LDFLAGS += CONFIG_BUILD_OPTIMIZATION
+LDFLAGS += CONFIG_LINK_TIME_OPTIMIZATION_LINKING
 LDFLAGS += "-Wl,--cref,--gc-sections"
 
 ------------------------------------------------------------------------------------------------------------------------

@@ -344,7 +344,7 @@ using InterruptVector = void(*)();
 +---------------------------------------------------------------------------------------------------------------------*/
 
 /// chip vector table
-extern "C" const InterruptVector chipVectors[] __attribute__ ((section(".chipVectors")))
+extern "C" const InterruptVector chipVectors[] __attribute__ ((section(".chipVectors"), used))
 {
 		WWDG_IRQHandler,					// 0x40, 0: Window watchdog
 

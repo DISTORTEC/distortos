@@ -116,6 +116,8 @@ void functionTrampoline(void (& function)(), const void* const savedStackPointer
 			"	sub			sp, #8						\n"
 			"	str			r3, [sp]					\n"	// 5th supervisorCall() argument - 0
 			"	bx			r12							\n"	// jump to supervisorCall(), this does not return
+			"											\n"
+			".ltorg										\n"	// force dumping of literal pool
 
 			::	[function] "r" (function),
 				[savedStackPointer] "r" (savedStackPointer),
@@ -166,6 +168,8 @@ void functionTrampoline(void (& function)(), const void* const savedStackPointer
 			"	str			r3, [sp]					\n"	// 5th supervisorCall() argument - 0
 			"	ldr			r0, =%[removeStackFrame]	\n"	// 1st supervisorCall() argument - removeStackFrame
 			"	b			%[supervisorCall]			\n"	// jump to supervisorCall(), this does not return
+			"											\n"
+			".ltorg										\n"	// force dumping of literal pool
 
 			::	[function] "r" (function),
 				[savedStackPointer] "r" (savedStackPointer),

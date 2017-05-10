@@ -731,7 +731,7 @@ using InterruptVector = void(*)();
 +---------------------------------------------------------------------------------------------------------------------*/
 
 /// chip vector table
-extern "C" const InterruptVector chipVectors[] __attribute__ ((section(".chipVectors")))
+extern "C" const InterruptVector chipVectors[] __attribute__ ((section(".chipVectors"), used))
 {
 		WWDG_IRQHandler,					// 0x040, 0: Window watchdog
 		PVD_IRQHandler,						// 0x044, 1: PVD through EXTI Line detection
