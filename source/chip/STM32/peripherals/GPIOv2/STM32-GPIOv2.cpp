@@ -13,6 +13,16 @@
 
 #include "distortos/InterruptMaskingLock.hpp"
 
+#if !defined(GPIO_MODER_MODER0)
+#define GPIO_MODER_MODER0						GPIO_MODER_MODE0
+#endif	// !defined(GPIO_MODER_MODER0)
+#if !defined(GPIO_OSPEEDER_OSPEEDR0)
+#define GPIO_OSPEEDER_OSPEEDR0						GPIO_OSPEEDER_OSPEED0
+#endif	// !defined(GPIO_OSPEEDER_OSPEEDR0)
+#if !defined(GPIO_PUPDR_PUPDR0)
+#define GPIO_PUPDR_PUPDR0						GPIO_PUPDR_PUPD0
+#endif	// !defined(GPIO_PUPDR_PUPDR0)
+
 namespace distortos
 {
 
