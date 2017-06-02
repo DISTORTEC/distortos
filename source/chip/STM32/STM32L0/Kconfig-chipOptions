@@ -99,6 +99,7 @@ endif	# CHIP_STM32L0_RCC_MSI_ENABLE
 config CHIP_STM32L0_RCC_HSE_ENABLE
 	bool "Enable HSE"
 	default n
+	depends on CHIP_STM32L0_RCC_HAS_HSE
 	help
 		Enable HSE (crystal/ceramic resonator or external user clock).
 
@@ -476,6 +477,8 @@ endmenu
 config CHIP_STM32L01
 	bool
 	default n
+	select CHIP_STM32L0_RCC_HAS_HSE
+	select CHIP_STM32L0_RCC_HSE_CLOCK_BYPASS_DEFAULT
 
 config CHIP_STM32L011
 	bool
@@ -560,6 +563,8 @@ config CHIP_STM32L011K4
 config CHIP_STM32L02
 	bool
 	default n
+	select CHIP_STM32L0_RCC_HAS_HSE
+	select CHIP_STM32L0_RCC_HSE_CLOCK_BYPASS_DEFAULT
 
 config CHIP_STM32L021
 	bool
@@ -609,6 +614,7 @@ config CHIP_STM32L021K4
 config CHIP_STM32L03
 	bool
 	default n
+	select CHIP_STM32L0_RCC_HAS_HSE
 
 config CHIP_STM32L031
 	bool
@@ -635,6 +641,7 @@ config CHIP_STM32L031E
 	bool
 	default n
 	select CHIP_STM32L031
+	select CHIP_STM32L0_RCC_HSE_CLOCK_BYPASS_DEFAULT
 
 config CHIP_STM32L031E4
 	bool
@@ -650,6 +657,7 @@ config CHIP_STM32L031F
 	bool
 	default n
 	select CHIP_STM32L031
+	select CHIP_STM32L0_RCC_HSE_CLOCK_BYPASS_DEFAULT
 
 config CHIP_STM32L031F4
 	bool
@@ -665,6 +673,7 @@ config CHIP_STM32L031G
 	bool
 	default n
 	select CHIP_STM32L031
+	select CHIP_STM32L0_RCC_HSE_CLOCK_BYPASS_DEFAULT
 
 config CHIP_STM32L031G4
 	bool
@@ -680,6 +689,7 @@ config CHIP_STM32L031K
 	bool
 	default n
 	select CHIP_STM32L031
+	select CHIP_STM32L0_RCC_HSE_CLOCK_BYPASS_DEFAULT
 
 config CHIP_STM32L031K4
 	bool
@@ -694,6 +704,7 @@ config CHIP_STM32L031K6
 config CHIP_STM32L04
 	bool
 	default n
+	select CHIP_STM32L0_RCC_HAS_HSE
 
 config CHIP_STM32L041
 	bool
@@ -720,6 +731,7 @@ config CHIP_STM32L041E
 	bool
 	default n
 	select CHIP_STM32L041
+	select CHIP_STM32L0_RCC_HSE_CLOCK_BYPASS_DEFAULT
 
 config CHIP_STM32L041E6
 	bool
@@ -730,6 +742,7 @@ config CHIP_STM32L041F
 	bool
 	default n
 	select CHIP_STM32L041
+	select CHIP_STM32L0_RCC_HSE_CLOCK_BYPASS_DEFAULT
 
 config CHIP_STM32L041F6
 	bool
@@ -740,6 +753,7 @@ config CHIP_STM32L041G
 	bool
 	default n
 	select CHIP_STM32L041
+	select CHIP_STM32L0_RCC_HSE_CLOCK_BYPASS_DEFAULT
 
 config CHIP_STM32L041G6
 	bool
@@ -750,6 +764,7 @@ config CHIP_STM32L041K
 	bool
 	default n
 	select CHIP_STM32L041
+	select CHIP_STM32L0_RCC_HSE_CLOCK_BYPASS_DEFAULT
 
 config CHIP_STM32L041K6
 	bool
@@ -770,6 +785,7 @@ config CHIP_STM32L051C
 	bool
 	default n
 	select CHIP_STM32L051
+	select CHIP_STM32L0_RCC_HAS_HSE
 	select CHIP_STM32_GPIOV2_HAS_GPIOH
 	select CHIP_STM32_SPIV1_HAS_SPI2
 
@@ -802,6 +818,7 @@ config CHIP_STM32L051R
 	bool
 	default n
 	select CHIP_STM32L051
+	select CHIP_STM32L0_RCC_HAS_HSE
 	select CHIP_STM32_GPIOV2_HAS_GPIOD
 	select CHIP_STM32_GPIOV2_HAS_GPIOH
 	select CHIP_STM32_SPIV1_HAS_SPI2
@@ -840,6 +857,7 @@ config CHIP_STM32L052C
 	bool
 	default n
 	select CHIP_STM32L052
+	select CHIP_STM32L0_RCC_HAS_HSE
 	select CHIP_STM32_GPIOV2_HAS_GPIOH
 	select CHIP_STM32_SPIV1_HAS_SPI2
 
@@ -872,6 +890,7 @@ config CHIP_STM32L052R
 	bool
 	default n
 	select CHIP_STM32L052
+	select CHIP_STM32L0_RCC_HAS_HSE
 	select CHIP_STM32_GPIOV2_HAS_GPIOD
 	select CHIP_STM32_GPIOV2_HAS_GPIOH
 	select CHIP_STM32_SPIV1_HAS_SPI2
@@ -905,6 +924,7 @@ config CHIP_STM32L053
 	bool
 	default n
 	select CHIP_STM32L05
+	select CHIP_STM32L0_RCC_HAS_HSE
 
 config CHIP_STM32L053C
 	bool
@@ -965,6 +985,7 @@ config CHIP_STM32L063
 	bool
 	default n
 	select CHIP_STM32L06
+	select CHIP_STM32L0_RCC_HAS_HSE
 
 config CHIP_STM32L063C
 	bool
@@ -994,6 +1015,7 @@ config CHIP_STM32L063R8
 config CHIP_STM32L07
 	bool
 	default n
+	select CHIP_STM32L0_RCC_HAS_HSE
 	select CHIP_STM32_USARTV2_HAS_USART1
 	select CHIP_STM32_USARTV2_HAS_USART4
 	select CHIP_STM32_USARTV2_HAS_USART5
@@ -1241,6 +1263,7 @@ config CHIP_STM32L081
 	bool
 	default n
 	select CHIP_STM32L08
+	select CHIP_STM32L0_RCC_HAS_HSE
 
 config CHIP_STM32L081C
 	bool
@@ -1273,6 +1296,7 @@ config CHIP_STM32L082C
 	bool
 	default n
 	select CHIP_STM32L082
+	select CHIP_STM32L0_RCC_HAS_HSE
 	select CHIP_STM32_GPIOV2_HAS_GPIOH
 	select CHIP_STM32_SPIV1_HAS_SPI2
 
@@ -1300,6 +1324,7 @@ config CHIP_STM32L083
 	bool
 	default n
 	select CHIP_STM32L08
+	select CHIP_STM32L0_RCC_HAS_HSE
 
 config CHIP_STM32L083C
 	bool
@@ -1418,6 +1443,10 @@ config CHIP_STM32L0_SRAM_ADDRESS
 	hex
 	default 0x20000000
 	depends on CHIP_STM32L0_SRAM_SIZE != 0
+
+config CHIP_STM32L0_RCC_HAS_HSE
+	bool
+	default n
 
 config CHIP_STM32L0_RCC_HSE_CLOCK_BYPASS_CONFIGURABLE
 	bool
