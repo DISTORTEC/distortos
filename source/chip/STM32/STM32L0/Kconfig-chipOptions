@@ -204,9 +204,9 @@ choice
 		PLLM value for main PLL. It is used to multiply PLL input
 		clock (PLLin) to generate PLL VCO. PLL VCO frequency must
 		not exceed:
-		- 96 MHz when the product is in Range 1, 
-		- 48 MHz when the product is in Range 2, 
-		- 24 MHz when the product is in Range 3
+		- 96 MHz in voltage scale 1 mode, 
+		- 48 MHz in voltage scale 2 mode, 
+		- 24 MHz in voltage scale 3 mode.
 		The PLL minimum input clock frequency must be 2 MHz.
 
 		PLLVco = PLLin * PLLM
