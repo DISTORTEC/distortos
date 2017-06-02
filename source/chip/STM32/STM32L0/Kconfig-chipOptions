@@ -124,13 +124,12 @@ if CHIP_STM32L0_RCC_HSE_FREQUENCY_CONFIGURABLE
 config CHIP_STM32L0_RCC_HSE_FREQUENCY
 	int "Frequency of HSE clock, Hz"
 	range 1 32000000 if CHIP_STM32L0_RCC_HSE_CLOCK_BYPASS
-	range 1000000 25000000 if CHIP_STM32L07 || CHIP_STM32L08
-	range 1000000 24000000
+	range 1000000 25000000
 	default CHIP_STM32L0_RCC_HSE_FREQUENCY_DEFAULT
 	help
 		Frequency of HSE clock, Hz. This can be:
 		- "HSE Clock Bypass" enabled - external user clock connected to OSC_IN,
-		[1MHz; 24MHz];
+		[1MHz; 25MHz];
 		- "HSE Clock Bypass" disabled - crystal/ceramic resonator connected to
 		OSC_IN and OSC_OUT, [0MHz; 32MHz];
 
@@ -145,7 +144,7 @@ config CHIP_STM32L0_RCC_HSE_FREQUENCY
 	help
 		Frequency of HSE clock, Hz. This can be:
 		- "HSE Clock Bypass" disabled - crystal/ceramic resonator connected to
-		OSC_IN and OSC_OUT, [1MHz; 24MHz];
+		OSC_IN and OSC_OUT, [1MHz; 25MHz];
 		- "HSE Clock Bypass" enabled - external user clock connected to OSC_IN,
 		[0MHz; 32MHz];
 
