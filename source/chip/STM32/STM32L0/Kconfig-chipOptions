@@ -291,12 +291,14 @@ choice
 	prompt "System clock source"
 	default CHIP_STM32L0_RCC_SYSCLK_PLL if CHIP_STM32L0_RCC_PLL_ENABLE
 	default CHIP_STM32L0_RCC_SYSCLK_HSE if CHIP_STM32L0_RCC_HSE_ENABLE
-	default CHIP_STM32L0_RCC_SYSCLK_HSI16
+	default CHIP_STM32L0_RCC_SYSCLK_HSI16 if CHIP_STM32L0_RCC_HSI16_ENABLE
+	default CHIP_STM32L0_RCC_SYSCLK_MSI
 	help
 		Select system clock source.
 
 config CHIP_STM32L0_RCC_SYSCLK_HSI16
 	bool "HSI16"
+	depends on CHIP_STM32L0_RCC_HSI16_ENABLE
 	help
 		HSI16 oscillator selected as system clock.
 
