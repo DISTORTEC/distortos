@@ -156,7 +156,7 @@ endif	# CHIP_STM32L0_RCC_HSE_ENABLE
 
 config CHIP_STM32L0_RCC_HSI16_ENABLE
 	bool "Enable HSI16"
-	default n
+	default y
 	help
 		Enable HSI16.
 
