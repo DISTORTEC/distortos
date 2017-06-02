@@ -301,7 +301,7 @@ extern "C" const InterruptVector chipVectors[] __attribute__ ((section(".chipVec
 		RCC_CRS_IRQHandler,					// 0x50, 4: RCC
 		EXTI0_1_IRQHandler,					// 0x54, 5: EXTI Line[1:0]
 		EXTI2_3_IRQHandler,					// 0x58, 6: EXTI Line[3:2]
-		EXTI4_15_IRQHandler,					// 0x5c, 7: EXTI Line[15:4]
+		EXTI4_15_IRQHandler,				// 0x5c, 7: EXTI Line[15:4]
 
 #if defined(STM32L0X2_VECTORS) || defined(STM32L0X3_VECTORS)
 
@@ -309,22 +309,22 @@ extern "C" const InterruptVector chipVectors[] __attribute__ ((section(".chipVec
 
 #else	// !defined(STM32L0X2_VECTORS) && !defined(STM32L0X3_VECTORS)
 
-		Reserved_0x60_Handler,					// 0x60, 8: Reserved
+		Reserved_0x60_Handler,				// 0x60, 8: Reserved
 
 #endif	// !defined(STM32L0X2_VECTORS) && !defined(STM32L0X3_VECTORS)
 
 		DMA_Ch1_IRQHandler,					// 0x64, 9: DMA channel 1
-		DMA_Ch2_3_IRQHandler,					// 0x68, 10: DMA channel 2 and 3
-		DMA_Ch4_5_6_7_IRQHandler,				// 0x6c, 11: DMA channel 4, 5, 6 and 7
-		ADC1_COMP_IRQHandler,					// 0x70, 12: ADC1, COMP1 and COMP2
+		DMA_Ch2_3_IRQHandler,				// 0x68, 10: DMA channel 2 and 3
+		DMA_Ch4_5_6_7_IRQHandler,			// 0x6c, 11: DMA channel 4, 5, 6 and 7
+		ADC1_COMP_IRQHandler,				// 0x70, 12: ADC1, COMP1 and COMP2
 		LPTIM1_IRQHandler,					// 0x74, 13: LPTIM1
-		USART4_5_IRQHandler,					// 0x78, 14: USART4 and USART5
+		USART4_5_IRQHandler,				// 0x78, 14: USART4 and USART5
 		TIM2_IRQHandler,					// 0x7c, 15: TIM2
 		TIM3_IRQHandler,					// 0x80, 16: TIM3
 
 #if defined(STM32L0X2_VECTORS) || defined(STM32L0X3_VECTORS)
 
-		TIM6_DAC_IRQHandler,					// 0x84, 17: TIM6 and DAC
+		TIM6_DAC_IRQHandler,				// 0x84, 17: TIM6 and DAC
 
 #else	// !defined(STM32L0X2_VECTORS) && !defined(STM32L0X3_VECTORS)
 
@@ -333,7 +333,7 @@ extern "C" const InterruptVector chipVectors[] __attribute__ ((section(".chipVec
 #endif	// !defined(STM32L0X2_VECTORS) && !defined(STM32L0X3_VECTORS)
 
 		TIM7_IRQHandler,					// 0x88, 18: TIM7
-		Reserved_0x8c_Handler,					// 0x8c, 19: Reserved
+		Reserved_0x8c_Handler,				// 0x8c, 19: Reserved
 		TIM21_IRQHandler,					// 0x90, 20: TIM21
 		I2C3_IRQHandler,					// 0x94, 21: Reserved
 		TIM22_IRQHandler,					// 0x98, 22: TIM22
@@ -346,11 +346,11 @@ extern "C" const InterruptVector chipVectors[] __attribute__ ((section(".chipVec
 
 #if defined(STM32L0X2_VECTORS) || defined(STM32L0X3_VECTORS)
 
-		AES_RNG_LPUART1_IRQHandler,				// 0xb4, 29: AES and RNG and LPUART1
+		AES_RNG_LPUART1_IRQHandler,			// 0xb4, 29: AES and RNG and LPUART1
 
 #else	// !defined(STM32L0X2_VECTORS) && !defined(STM32L0X3_VECTORS)
 
-		AES_LPUART1_IRQHandler,					// 0xb4, 29: AES and LPUART1
+		AES_LPUART1_IRQHandler,				// 0xb4, 29: AES and LPUART1
 
 #endif	// !defined(STM32L0X2_VECTORS) && !defined(STM32L0X3_VECTORS)
 
@@ -360,7 +360,7 @@ extern "C" const InterruptVector chipVectors[] __attribute__ ((section(".chipVec
 
 #elif defined(STM32L0X2_VECTORS)
 
-		Reserved_0xb8_Handler,					// 0xb8, 30: Reserved
+		Reserved_0xb8_Handler,				// 0xb8, 30: Reserved
 
 #endif	// !defined(STM32L0X2_VECTORS)
 
