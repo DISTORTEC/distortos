@@ -181,7 +181,8 @@ choice
 	default CHIP_STM32L0_RCC_PLLSRC_HSI16 if CHIP_STM32L0_RCC_HSI16_ENABLE
 	default CHIP_STM32L0_RCC_PLLSRC_HSE if CHIP_STM32L0_RCC_HSE_ENABLE
 	help
-		Select clock source of main PLL.
+		Select clock source of main PLL. PLL input frequency (PLLin) must be in
+		[2MHz; 24MHz] range.
 
 config CHIP_STM32L0_RCC_PLLSRC_HSI16
 	bool "HSI16"
@@ -198,90 +199,87 @@ config CHIP_STM32L0_RCC_PLLSRC_HSE
 endchoice
 
 choice
-	prompt "PLL MUL value"
+	prompt "PLLMUL value"
 	default CHIP_STM32L0_RCC_PLLMUL3
 	help
-		PLLM value for main PLL. It is used to multiply PLL input
-		clock (PLLin) to generate PLL VCO. PLL VCO frequency must
-		not exceed:
+		PLLMUL value for main PLL. It is used to multiply PLL input frequency
+		(PLLin). Resulting VCO output frequency (VCOout) must not exceed:
 		- 96 MHz in voltage scale 1 mode, 
 		- 48 MHz in voltage scale 2 mode, 
 		- 24 MHz in voltage scale 3 mode.
-		The PLL minimum input clock frequency must be 2 MHz.
 
-		PLLVco = PLLin * PLLM
+		VCOout = PLLin * PLLMUL
 
 config CHIP_STM32L0_RCC_PLLMUL3
 	bool "3"
 	help
-		PLLM == 3
+		PLLMUL == 3
 
 config CHIP_STM32L0_RCC_PLLMUL4
 	bool "4"
 	help
-		PLLM == 4
+		PLLMUL == 4
 
 config CHIP_STM32L0_RCC_PLLMUL6
 	bool "6"
 	help
-		PLLM == 6
+		PLLMUL == 6
 
 config CHIP_STM32L0_RCC_PLLMUL8
 	bool "8"
 	help
-		PLLM == 8
+		PLLMUL == 8
 
 config CHIP_STM32L0_RCC_PLLMUL12
 	bool "12"
 	help
-		PLLM == 12
+		PLLMUL == 12
 
 config CHIP_STM32L0_RCC_PLLMUL16
 	bool "16"
 	help
-		PLLM == 16
+		PLLMUL == 16
 
 config CHIP_STM32L0_RCC_PLLMUL24
 	bool "24"
 	help
-		PLLM == 24
+		PLLMUL == 24
 
 config CHIP_STM32L0_RCC_PLLMUL32
 	bool "32"
 	help
-		PLLM == 32
+		PLLMUL == 32
 
 config CHIP_STM32L0_RCC_PLLMUL48
 	bool "48"
 	help
-		PLLM == 48
+		PLLMUL == 48
 
 endchoice
 
 choice
-	prompt "PLL DIV value"
+	prompt "PLLDIV value"
 	default CHIP_STM32L0_RCC_PLLDIV2
 	help
-		PLLDIV value for main PLL. It is used to divide PLL VCO
-		Resulting PLL clock frequency must be in the range:
-		[2MHz; 32MHz].
+		PLLDIV value for main PLL. It is used to divide VCO output frequency
+		(VCOout). PLL output frequency (PLLout) must be in [2MHz; 32MHz] range.
 
-		PLL clock = PLLVco / PLLDIV = (PLLin * PLLMUL) / PLLDIV
+		PLLout = VCOout / PLLDIV = PLLin * PLLMUL / PLLDIV
 
 config CHIP_STM32L0_RCC_PLLDIV2
 	bool "2"
 	help
-		PLLN == 2
+		PLLDIV == 2
 
 config CHIP_STM32L0_RCC_PLLDIV3
 	bool "3"
 	help
-		PLLN == 3
+		PLLDIV == 3
 
 config CHIP_STM32L0_RCC_PLLDIV4
 	bool "4"
 	help
-		PLLN == 4
+		PLLDIV == 4
 
 endchoice
 
