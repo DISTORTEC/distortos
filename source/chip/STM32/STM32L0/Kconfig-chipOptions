@@ -296,6 +296,12 @@ choice
 	help
 		Select system clock source.
 
+config CHIP_STM32L0_RCC_SYSCLK_MSI
+	bool "MSI"
+	depends on CHIP_STM32L0_RCC_MSI_ENABLE
+	help
+		MSI oscillator selected as system clock.
+
 config CHIP_STM32L0_RCC_SYSCLK_HSI16
 	bool "HSI16"
 	depends on CHIP_STM32L0_RCC_HSI16_ENABLE
@@ -313,12 +319,6 @@ config CHIP_STM32L0_RCC_SYSCLK_PLL
 	depends on CHIP_STM32L0_RCC_PLL_ENABLE
 	help
 		Main PLL selected as system clock.
-
-config CHIP_STM32L0_RCC_SYSCLK_MSI
-	bool "MSI"
-	depends on CHIP_STM32L0_RCC_MSI_ENABLE
-	help
-		MSI oscillator selected as system clock.
 
 endchoice
 
