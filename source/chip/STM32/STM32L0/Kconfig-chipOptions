@@ -200,7 +200,8 @@ endchoice
 
 choice
 	prompt "PLLMUL value"
-	default CHIP_STM32L0_RCC_PLLMUL3
+	default CHIP_STM32L0_RCC_PLLMUL6 if CHIP_STM32L0_RCC_PLLSRC_HSI16
+	default CHIP_STM32L0_RCC_PLLMUL12
 	help
 		PLLMUL value for main PLL. It is used to multiply PLL input frequency
 		(PLLin). Resulting VCO output frequency (VCOout) must not exceed:
@@ -259,7 +260,7 @@ endchoice
 
 choice
 	prompt "PLLDIV value"
-	default CHIP_STM32L0_RCC_PLLDIV2
+	default CHIP_STM32L0_RCC_PLLDIV3
 	help
 		PLLDIV value for main PLL. It is used to divide VCO output frequency
 		(VCOout). PLL output frequency (PLLout) must be in [2MHz; 32MHz] range.
