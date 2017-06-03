@@ -4,9 +4,9 @@ NUCLEO-F103RB
 This folder provides support for [NUCLEO-F103RB](http://www.st.com/en/evaluation-tools/nucleo-f103rb.html) board. This
 board features a *STM32F103RB* chip in *LQFP64* package:
 - *ARM Cortex-M3* (*ARMv7-M*) core;
-- 128kB of flash;
-- 20kB of RAM;
-- 72MHz max clock;
+- 128 kB of flash;
+- 20 kB of RAM;
+- 72 MHz max clock;
 
 Buttons
 -------

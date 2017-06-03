@@ -1,6 +1,6 @@
 {
 	"board":"32F429IDISCOVERY",
-	"board_description": "32F429IDISCOVERY board with STM32F429ZI chip in LQFP144 package\n\n\t\tChip's supply voltage is 3V.\n\t\t8MHz crystal resonator can be used as HSE clock.",
+	"board_description": "32F429IDISCOVERY board with STM32F429ZI chip in LQFP144 package\n\n\t\tChip's supply voltage is 3 V.\n\t\t8 MHz crystal resonator can be used as HSE clock.",
 	"chipFamily":"STM32F4",
 	"vddmvConfigurable":false,
 	"vddmv":3000,

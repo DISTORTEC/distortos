@@ -52,41 +52,41 @@ public:
 	/// type of device - determines capacity and page size
 	enum class Type : uint8_t
 	{
-		/// 128B (1kb) capacity, 8 bytes per page
+		/// 128 B (1 kb) capacity, 8 bytes per page
 		_128Bytes8BytesPerPage = 0 << capacityShift_ | 0 << pageSizeShift_,
-		/// 128B (1kb) capacity, 16 bytes per page
+		/// 128 B (1 kb) capacity, 16 bytes per page
 		_128Bytes16BytesPerPage = 0 << capacityShift_ | 1 << pageSizeShift_,
-		/// 256B (2kb) capacity, 8 bytes per page
+		/// 256 B (2 kb) capacity, 8 bytes per page
 		_256Bytes8BytesPerPage = 1 << capacityShift_ | 0 << pageSizeShift_,
-		/// 256B (2kb) capacity, 16 bytes per page
+		/// 256 B (2 kb) capacity, 16 bytes per page
 		_256Bytes16BytesPerPage = 1 << capacityShift_ | 1 << pageSizeShift_,
-		/// 512B (4kb) capacity, 8 bytes per page
+		/// 512 B (4 kb) capacity, 8 bytes per page
 		_512Bytes8BytesPerPage = 2 << capacityShift_ | 0 << pageSizeShift_,
-		/// 512B (4kb) capacity, 16 bytes per page
+		/// 512 B (4 kb) capacity, 16 bytes per page
 		_512Bytes16BytesPerPage = 2 << capacityShift_ | 1 << pageSizeShift_,
-		/// 1kB (8kb) capacity, 16 bytes per page
+		/// 1 kB (8 kb) capacity, 16 bytes per page
 		_1KBytes16BytesPerPage = 3 << capacityShift_ | 1 << pageSizeShift_,
-		/// 1kB (8kb) capacity, 32 bytes per page
+		/// 1 kB (8 kb) capacity, 32 bytes per page
 		_1KBytes32BytesPerPage = 3 << capacityShift_ | 2 << pageSizeShift_,
-		/// 2kB (16kb) capacity, 16 bytes per page
+		/// 2 kB (16 kb) capacity, 16 bytes per page
 		_2KBytes16BytesPerPage = 4 << capacityShift_ | 1 << pageSizeShift_,
-		/// 2kB (16kb) capacity, 32 bytes per page
+		/// 2 kB (16 kb) capacity, 32 bytes per page
 		_2KBytes32BytesPerPage = 4 << capacityShift_ | 2 << pageSizeShift_,
-		/// 4kB (32kb) capacity, 32 bytes per page
+		/// 4 kB (32 kb) capacity, 32 bytes per page
 		_4KBytes32BytesPerPage = 5 << capacityShift_ | 2 << pageSizeShift_,
-		/// 8kB (64kb) capacity, 32 bytes per page
+		/// 8 kB (64 kb) capacity, 32 bytes per page
 		_8KBytes32BytesPerPage = 6 << capacityShift_ | 2 << pageSizeShift_,
-		/// 8kB (64kb) capacity, 64 bytes per page
+		/// 8 kB (64 kb) capacity, 64 bytes per page
 		_8KBytes64BytesPerPage = 6 << capacityShift_ | 3 << pageSizeShift_,
-		/// 16kB (128kb) capacity, 64 bytes per page
+		/// 16 kB (128 kb) capacity, 64 bytes per page
 		_16KBytes64BytesPerPage = 7 << capacityShift_ | 3 << pageSizeShift_,
-		/// 32kB (256kb) capacity, 64 bytes per page
+		/// 32 kB (256 kb) capacity, 64 bytes per page
 		_32KBytes64BytesPerPage = 8 << capacityShift_ | 3 << pageSizeShift_,
-		/// 64kB (512kb) capacity, 128 bytes per page
+		/// 64 kB (512 kb) capacity, 128 bytes per page
 		_64KBytes128BytesPerPage = 9 << capacityShift_ | 4 << pageSizeShift_,
-		/// 128kB (1Mb) capacity, 256 bytes per page
+		/// 128 kB (1 Mb) capacity, 256 bytes per page
 		_128KBytes256BytesPerPage = 10 << capacityShift_ | 5 << pageSizeShift_,
-		/// 256kB (2Mb) capacity, 256 bytes per page
+		/// 256 kB (2 Mb) capacity, 256 bytes per page
 		_256KBytes256BytesPerPage = 11 << capacityShift_ | 5 << pageSizeShift_,
 
 		/// Atmel AT25010
@@ -212,7 +212,7 @@ public:
 	 * \param [in] type is the type of SPI EEPROM
 	 * \param [in] mode3 selects whether SPI mode 0 - CPOL == 0, CPHA == 0 - (false) or SPI mode 3 - CPOL == 1,
 	 * CPHA == 1 - (true) will be used, default - SPI mode 0 (false)
-	 * \param [in] maxClockFrequency is the max clock frequency supported by SPI EEPROM, Hz, default - 1MHz
+	 * \param [in] maxClockFrequency is the max clock frequency supported by SPI EEPROM, Hz, default - 1 MHz
 	 */
 
 	constexpr SpiEeprom(SpiMaster& spiMaster, OutputPin& slaveSelectPin, const Type type, const bool mode3 = {},

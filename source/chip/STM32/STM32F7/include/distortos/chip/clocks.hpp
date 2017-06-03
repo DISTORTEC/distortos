@@ -74,7 +74,7 @@ constexpr uint32_t maxApb2Frequencies[2] {90000000, 108000000};
 static_assert(CONFIG_CHIP_STM32F7_PWR_VOLTAGE_SCALE_MODE == 1 || CONFIG_CHIP_STM32F7_PWR_VOLTAGE_SCALE_MODE == 2,
 		"Over-drive mode requires voltage scale 1 mode or voltage scale 2 mode!");
 static_assert(CONFIG_CHIP_STM32F7_VDD_MV >= 2100,
-		"Over-drive mode must not be enabled when supply voltage is below 2.1V!");
+		"Over-drive mode must not be enabled when supply voltage is below 2.1 V!");
 
 /// over-drive index for \a maxPllOutFrequencies array (maxPllOutFrequencies[voltageScaleIndex][overDriveIndex])
 constexpr uint8_t overDriveIndex {1};

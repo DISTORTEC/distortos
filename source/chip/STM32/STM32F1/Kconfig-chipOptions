@@ -65,11 +65,11 @@ config CHIP_STM32F1_RCC_HSE_FREQUENCY
 	help
 		Frequency of HSE clock, Hz. This can be:
 		- "HSE Clock Bypass" disabled - crystal/ceramic resonator connected to
-		OSC_IN and OSC_OUT, [4MHz; 24MHz] for STM32F100, [3MHz; 25MHz] for
-		STM32F105 and STM32F107 chips, [4MHz; 16MHz] for other chips;
+		OSC_IN and OSC_OUT, [4 MHz; 24 MHz] for STM32F100, [3 MHz; 25 MHz] for
+		STM32F105 and STM32F107 chips, [4 MHz; 16 MHz] for other chips;
 		- "HSE Clock Bypass" enabled - external user clock connected to
-		OSC_IN, [1MHz; 24MHz] for STM32F100, [1MHz; 50MHz] for STM32F105 and
-		STM32F107 chips, [1MHz; 25MHz] for other chips;
+		OSC_IN, [1 MHz; 24 MHz] for STM32F100, [1 MHz; 50 MHz] for STM32F105
+		and STM32F107 chips, [1 MHz; 25 MHz] for other chips;
 
 endif	# CHIP_STM32F1_RCC_HSE_FREQUENCY_CONFIGURABLE
 
@@ -82,11 +82,11 @@ config CHIP_STM32F1_RCC_HSE_FREQUENCY
 	help
 		Frequency of HSE clock, Hz. This can be:
 		- "HSE Clock Bypass" disabled - crystal/ceramic resonator connected to
-		OSC_IN and OSC_OUT, [4MHz; 24MHz] for STM32F100, [3MHz; 25MHz] for
-		STM32F105 and STM32F107 chips, [4MHz; 16MHz] for other chips;
+		OSC_IN and OSC_OUT, [4 MHz; 24 MHz] for STM32F100, [3 MHz; 25 MHz] for
+		STM32F105 and STM32F107 chips, [4 MHz; 16 MHz] for other chips;
 		- "HSE Clock Bypass" enabled - external user clock connected to
-		OSC_IN, [1MHz; 24MHz] for STM32F100, [1MHz; 50MHz] for STM32F105 and
-		STM32F107 chips, [1MHz; 25MHz] for other chips;
+		OSC_IN, [1 MHz; 24 MHz] for STM32F100, [1 MHz; 50 MHz] for STM32F105
+		and STM32F107 chips, [1 MHz; 25 MHz] for other chips;
 
 		This value is not configurable, as it is set by board.
 
@@ -109,7 +109,7 @@ config CHIP_STM32F1_RCC_PREDIV2
 	help
 		PREDIV2 value for PLL2 and PLL3. It is used to divide HSE clock before
 		it is fed to PLL2 and PLL3. PLL2 and PLL3 input frequency (PLL23in)
-		must be in the range [3MHz; 5MHz].
+		must be in the range [3 MHz; 5 MHz].
 
 		PLL23in = HSE / PREDIV2
 
@@ -127,7 +127,7 @@ choice
 	help
 		PLL2MUL value for PLL2. It is used to multiply PLL2 and PLL3 input
 		frequency (PLL23in). Resulting PLL2 output frequency (PLL2out) must be
-		in the range [40MHz; 74MHz].
+		in the range [40 MHz; 74 MHz].
 
 		PLL2out = PLL23in * PLL2MUL
 
@@ -194,8 +194,8 @@ choice
 	help
 		PLL3MUL value for PLL3. It is used to multiply PLL2 and PLL3 input
 		frequency (PLL23in). Resulting PLL3 output frequency (PLL3out) must be
-		in the range [40MHz; 74MHz] and PLL3 VCO output frequency (PLL3VCOout)
-		must be in the range [80MHz; 148MHz].
+		in the range [40 MHz; 74 MHz] and PLL3 VCO output frequency
+		(PLL3VCOout) must be in the range [80 MHz; 148 MHz].
 
 		PLL3out = PLL23in * PLL3MUL
 		PLL3VCOout = 2 * PLL3out
@@ -269,9 +269,9 @@ choice
 	help
 		Select clock source of main PLL. PLL input frequency (PLLin) must be
 		in the range:
-		- [1MHz; 24MHz] for STM32F100 chips,
-		- [3MHz; 12MHz] for STM32F105 and STM32F107 chips,
-		- [1MHz; 25MHz] for other chips.
+		- [1 MHz; 24 MHz] for STM32F100 chips,
+		- [3 MHz; 12 MHz] for STM32F105 and STM32F107 chips,
+		- [1 MHz; 25 MHz] for other chips.
 
 config CHIP_STM32F1_RCC_PLLSRC_HSIDIV2
 	bool "HSI / 2"
@@ -338,11 +338,11 @@ choice
 		PLLMUL value for main PLL. It is used to multiply main PLL input
 		frequency (PLLin). Resulting PLL output frequency (PLLout) must be in
 		the range:
-		- [16MHz; 24MHz] for STM32F100 chips,
-		- [16MHz; 36MHz] for STM32F101 chips,
-		- [16MHz; 48MHz] for STM32F102 chips,
-		- [18MHz; 72MHz] for STM32F105 and STM32F107 chips,
-		- [16MHz; 72MHz] for other chips.
+		- [16 MHz; 24 MHz] for STM32F100 chips,
+		- [16 MHz; 36 MHz] for STM32F101 chips,
+		- [16 MHz; 48 MHz] for STM32F102 chips,
+		- [18 MHz; 72 MHz] for STM32F105 and STM32F107 chips,
+		- [16 MHz; 72 MHz] for other chips.
 
 		PLLout = PLLin * PLLMUL
 
@@ -545,7 +545,7 @@ choice
 	default CHIP_STM32F1_RCC_APB1_DIV2
 	help
 		APB1 (low speed) clock division factor. APB1 clock must not exceed
-		36MHz.
+		36 MHz.
 
 		APB1clk = AHBclk / APB1divider
 
@@ -581,7 +581,7 @@ choice
 	default CHIP_STM32F1_RCC_APB2_DIV1
 	help
 		APB2 (high speed) clock division factor. APB2 clock must not exceed
-		72MHz.
+		72 MHz.
 
 		APB2clk = AHBclk / APB2divider
 

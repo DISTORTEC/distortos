@@ -23,4 +23,4 @@ config BOARD_NUCLEO_F401RE
 	help
 		NUCLEO-F401RE board with STM32F401RE chip in LQFP64 package
 
-		Chip's supply voltage is 3.3V.
+		Chip's supply voltage is 3.3 V.

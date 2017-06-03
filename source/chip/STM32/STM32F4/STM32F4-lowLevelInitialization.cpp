@@ -32,7 +32,7 @@ void lowLevelInitialization()
 {
 #ifdef CONFIG_CHIP_STM32F4_FLASH_PREFETCH_ENABLE
 	static_assert(CONFIG_CHIP_STM32F4_VDD_MV >= 2100,
-			"Instruction prefetch must not be enabled when supply voltage is below 2.1V!");
+			"Instruction prefetch must not be enabled when supply voltage is below 2.1 V!");
 	configureInstructionPrefetch(true);
 #else	// !def CONFIG_CHIP_STM32F4_FLASH_PREFETCH_ENABLE
 	configureInstructionPrefetch(false);

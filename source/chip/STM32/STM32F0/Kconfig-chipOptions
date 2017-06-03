@@ -61,9 +61,9 @@ config CHIP_STM32F0_RCC_HSE_FREQUENCY
 	help
 		Frequency of HSE clock, Hz. This can be:
 		- "HSE Clock Bypass" disabled - crystal/ceramic resonator connected to
-		OSC_IN and OSC_OUT, [4MHz; 32MHz];
+		OSC_IN and OSC_OUT, [4 MHz; 32 MHz];
 		- "HSE Clock Bypass" enabled - external user clock connected to OSC_IN,
-		[1MHz; 32MHz];
+		[1 MHz; 32 MHz];
 
 endif	# CHIP_STM32F0_RCC_HSE_FREQUENCY_CONFIGURABLE
 
@@ -76,9 +76,9 @@ config CHIP_STM32F0_RCC_HSE_FREQUENCY
 	help
 		Frequency of HSE clock, Hz. This can be:
 		- "HSE Clock Bypass" disabled - crystal/ceramic resonator connected to
-		OSC_IN and OSC_OUT, [4MHz; 32MHz];
+		OSC_IN and OSC_OUT, [4 MHz; 32 MHz];
 		- "HSE Clock Bypass" enabled - external user clock connected to OSC_IN,
-		[1MHz; 32MHz];
+		[1 MHz; 32 MHz];
 
 		This value is not configurable, as it is set by board.
 
@@ -106,7 +106,7 @@ choice
 	default CHIP_STM32F0_RCC_PLLSRC_HSIDIV2
 	help
 		Select clock source of main PLL. PLL input frequency (PLLin) must be in
-		[1MHz; 24MHz] range.
+		[1 MHz; 24 MHz] range.
 
 config CHIP_STM32F0_RCC_PLLSRC_HSIDIV2
 	bool "HSI / 2"
@@ -155,7 +155,7 @@ config CHIP_STM32F0_RCC_PLLMUL
 	help
 		PLLMUL value for main PLL. It is used to multiply main PLL input
 		frequency (PLLin). Resulting PLL output frequency (PLLout) must be in
-		[16MHz; 48MHz] range.
+		[16 MHz; 48 MHz] range.
 
 		PLLout = PLLin * PLLMUL
 

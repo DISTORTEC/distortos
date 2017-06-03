@@ -32,8 +32,8 @@
  * \brief Main code block of test application
  *
  * Runs all test cases. The result is signaled with blinking of all board's LEDs:
- * - success - slow blinking, 1Hz frequency,
- * - failure - fast blinking, 10Hz frequency.
+ * - success - slow blinking, 1 Hz frequency,
+ * - failure - fast blinking, 10 Hz frequency.
  * If the board doesn't provide LEDs, the result can be examined with the debugger by checking the value of "result"
  * variable.
  */

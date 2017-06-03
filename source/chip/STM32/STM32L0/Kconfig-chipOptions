@@ -130,9 +130,9 @@ config CHIP_STM32L0_RCC_HSE_FREQUENCY
 	help
 		Frequency of HSE clock, Hz. This can be:
 		- "HSE Clock Bypass" enabled - external user clock connected to OSC_IN,
-		[1MHz; 25MHz];
+		[1 MHz; 25 MHz];
 		- "HSE Clock Bypass" disabled - crystal/ceramic resonator connected to
-		OSC_IN and OSC_OUT, [0MHz; 32MHz];
+		OSC_IN and OSC_OUT, [0 MHz; 32 MHz];
 
 endif	# CHIP_STM32L0_RCC_HSE_FREQUENCY_CONFIGURABLE
 
@@ -145,9 +145,9 @@ config CHIP_STM32L0_RCC_HSE_FREQUENCY
 	help
 		Frequency of HSE clock, Hz. This can be:
 		- "HSE Clock Bypass" disabled - crystal/ceramic resonator connected to
-		OSC_IN and OSC_OUT, [1MHz; 25MHz];
+		OSC_IN and OSC_OUT, [1 MHz; 25 MHz];
 		- "HSE Clock Bypass" enabled - external user clock connected to OSC_IN,
-		[0MHz; 32MHz];
+		[0 MHz; 32 MHz];
 
 		This value is not configurable, as it is set by board.
 
@@ -184,7 +184,7 @@ choice
 	default CHIP_STM32L0_RCC_PLLSRC_HSE if CHIP_STM32L0_RCC_HSE_ENABLE
 	help
 		Select clock source of main PLL. PLL input frequency (PLLin) must be in
-		[2MHz; 24MHz] range.
+		[2 MHz; 24 MHz] range.
 
 config CHIP_STM32L0_RCC_PLLSRC_HSI16
 	bool "HSI16"
@@ -266,7 +266,8 @@ config CHIP_STM32L0_RCC_PLLDIV
 	range 2 4
 	help
 		PLLDIV value for main PLL. It is used to divide VCO output frequency
-		(VCOout). PLL output frequency (PLLout) must be in [2MHz; 32MHz] range.
+		(VCOout). PLL output frequency (PLLout) must be in [2 MHz; 32 MHz]
+		range.
 
 		PLLout = VCOout / PLLDIV = PLLin * PLLMUL / PLLDIV
 

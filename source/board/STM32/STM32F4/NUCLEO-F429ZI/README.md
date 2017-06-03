@@ -5,11 +5,11 @@ This folder provides support for [NUCLEO-F429ZI](http://www.st.com/en/evaluation
 board features a *STM32F429ZI* chip in *LQFP144* package:
 - *ARM Cortex-M4* (*ARMv7-M*) core;
 - single precision FPU;
-- 2MB of flash;
-- 192kB of RAM;
-- 4kB of BKPSRAM;
-- 64kB of CCM;
-- 180MHz max clock;
+- 2 MB of flash;
+- 192 kB of RAM;
+- 4 kB of BKPSRAM;
+- 64 kB of CCM;
+- 180 MHz max clock;
 
 Buttons
 -------

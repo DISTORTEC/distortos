@@ -1,6 +1,6 @@
 {
 	"board":"32F746GDISCOVERY",
-	"board_description": "32F746GDISCOVERY board with STM32F746NG chip in BGA216 package\n\n\t\tChip's supply voltage is 3.3V.\n\t\tExternal 25MHz clock can be used as HSE clock in \"HSE Clock Bypass\"\n\t\tmode.",
+	"board_description": "32F746GDISCOVERY board with STM32F746NG chip in BGA216 package\n\n\t\tChip's supply voltage is 3.3 V.\n\t\tExternal 25 MHz clock can be used as HSE clock in \"HSE Clock Bypass\"\n\t\tmode.",
 	"chipFamily":"STM32F7",
 	"vddmvConfigurable":false,
 	"vddmv":3300,

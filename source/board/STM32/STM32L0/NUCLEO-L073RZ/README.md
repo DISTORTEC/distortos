@@ -4,9 +4,9 @@ NUCLEO-L073RZ
 This folder provides support for [NUCLEO-L073RZ](http://www.st.com/en/evaluation-tools/nucleo-l073rz.html) board. This
 board features a *STM32L073RZ* chip in *LQFP64* package:
 - *ARM Cortex-M0+* (*ARMv6-M*) core;
-- 192kB of flash;
-- 20kB of RAM;
-- 32MHz max clock;
+- 192 kB of flash;
+- 20 kB of RAM;
+- 32 MHz max clock;
 
 Buttons
 -------

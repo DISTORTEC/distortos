@@ -71,7 +71,7 @@ config CHIP_STM32F4_PWR_OVER_DRIVE_ENABLE
 		Enable over-drive mode.
 
 		Note - over-drive mode requires voltage scale 1 mode and supply voltage
-		above 2.1V.
+		above 2.1 V.
 
 config CHIP_STM32F4_RCC_HSE_ENABLE
 	bool "Enable HSE"
@@ -106,9 +106,9 @@ config CHIP_STM32F4_RCC_HSE_FREQUENCY
 	help
 		Frequency of HSE clock, Hz. This can be:
 		- "HSE Clock Bypass" disabled - crystal/ceramic resonator connected to
-		OSC_IN and OSC_OUT [4MHz; 26MHz];
+		OSC_IN and OSC_OUT [4 MHz; 26 MHz];
 		- "HSE Clock Bypass" enabled - external user clock connected to OSC_IN
-		[1MHz; 50MHz];
+		[1 MHz; 50 MHz];
 
 endif	# CHIP_STM32F4_RCC_HSE_FREQUENCY_CONFIGURABLE
 
@@ -121,9 +121,9 @@ config CHIP_STM32F4_RCC_HSE_FREQUENCY
 	help
 		Frequency of HSE clock, Hz. This can be:
 		- "HSE Clock Bypass" disabled - crystal/ceramic resonator connected to
-		OSC_IN and OSC_OUT [4MHz; 26MHz];
+		OSC_IN and OSC_OUT [4 MHz; 26 MHz];
 		- "HSE Clock Bypass" enabled - external user clock connected to OSC_IN
-		[1MHz; 50MHz];
+		[1 MHz; 50 MHz];
 
 		This value is not configurable, as it is set by board.
 
@@ -166,7 +166,8 @@ config CHIP_STM32F4_RCC_PLLM
 	help
 		PLLM value for main and audio PLLs. It is used to divide PLL input
 		clock (PLLin) before it is fed to VCO. VCO input frequency (VCOin) must
-		be in the range [1MHz; 2MHz], 2MHz is recommended to limit PLL jitter.
+		be in the range [1 MHz; 2 MHz], 2 MHz is recommended to limit PLL
+		jitter.
 
 		VCOin = PLLin / PLLM
 
@@ -178,8 +179,8 @@ config CHIP_STM32F4_RCC_PLLN
 	help
 		PLLN value for main PLL. It is used to multiply VCO input frequency
 		(VCOin). Resulting VCO output frequency (VCOout) must be in the range:
-		- [192MHz; 432MHz] for STM32F401 chips,
-		- [100MHz; 432MHz] for other chips.
+		- [192 MHz; 432 MHz] for STM32F401 chips,
+		- [100 MHz; 432 MHz] for other chips.
 
 		VCOout = VCOin * PLLN = PLLin / PLLM * PLLN
 
@@ -192,20 +193,20 @@ choice
 		PLLP value for main PLL. It is used to divide VCO output frequency
 		(VCOout). PLL output frequency (PLLout) must not exceed:
 		* for STM32F401 chips:
-		  - 84MHz in voltage scale 2 mode,
-		  - 60MHz in voltage scale 3 mode,
+		  - 84 MHz in voltage scale 2 mode,
+		  - 60 MHz in voltage scale 3 mode,
 		* for STM32F405, STM32F407, STM32F415 and STM32F417 chips:
-		  - 168MHz in voltage scale 1 mode,
-		  - 144MHz in voltage scale 2 mode,
+		  - 168 MHz in voltage scale 1 mode,
+		  - 144 MHz in voltage scale 2 mode,
 		* for STM32F410, STM32F411, STM32F412, STM32F413 and STM32F423 chips:
-		  - 100MHz in voltage scale 1 mode,
-		  - 84MHz in voltage scale 2 mode,
-		  - 64MHz in voltage scale 3 mode,
+		  - 100 MHz in voltage scale 1 mode,
+		  - 84 MHz in voltage scale 2 mode,
+		  - 64 MHz in voltage scale 3 mode,
 		* for other chips:
-		  - 180MHz in voltage scale 1 mode with over-drive mode,
-		  - 168MHz in voltage scale 1 mode,
-		  - 144MHz in voltage scale 2 mode,
-		  - 120MHz in voltage scale 3 mode.
+		  - 180 MHz in voltage scale 1 mode with over-drive mode,
+		  - 168 MHz in voltage scale 1 mode,
+		  - 144 MHz in voltage scale 2 mode,
+		  - 120 MHz in voltage scale 3 mode.
 
 		PLLout = VCOout / PLLP = PLLin / PLLM * PLLN / PLLP
 
@@ -238,8 +239,8 @@ config CHIP_STM32F4_RCC_PLLQ
 	help
 		PLLQ value for main PLL. It is used to divide VCO output frequency
 		(VCOout) to produce clock for USB OTG FS, SDIO and RNG (PLLQout). USB
-		OTG FS requires a 48MHz clock for correct operation, while SDIO and RNG
-		need a frequency lower than or equal to 48MHz to work correctly.
+		OTG FS requires a 48 MHz clock for correct operation, while SDIO and
+		RNG need a frequency lower than or equal to 48 MHz to work correctly.
 
 		PLLQout = VCOout / PLLQ = PLLin / PLLM * PLLN / PLLQ
 
@@ -304,20 +305,20 @@ config CHIP_STM32F4_RCC_SYSCLK_FREQUENCY
 		Frequency of SYSCLK, Hz. RCC must be configured by user to achieve that
 		frequency. SYSCLK frequency must not exceed:
 		* for STM32F401 chips:
-		  - 84MHz in voltage scale 2 mode,
-		  - 60MHz in voltage scale 3 mode,
+		  - 84 MHz in voltage scale 2 mode,
+		  - 60 MHz in voltage scale 3 mode,
 		* for STM32F405, STM32F407, STM32F415 and STM32F417 chips:
-		  - 168MHz in voltage scale 1 mode,
-		  - 144MHz in voltage scale 2 mode,
+		  - 168 MHz in voltage scale 1 mode,
+		  - 144 MHz in voltage scale 2 mode,
 		* for STM32F410, STM32F411, STM32F412, STM32F413 and STM32F423 chips:
-		  - 100MHz in voltage scale 1 mode,
-		  - 84MHz in voltage scale 2 mode,
-		  - 64MHz in voltage scale 3 mode,
+		  - 100 MHz in voltage scale 1 mode,
+		  - 84 MHz in voltage scale 2 mode,
+		  - 64 MHz in voltage scale 3 mode,
 		* for other chips:
-		  - 180MHz in voltage scale 1 mode with over-drive mode,
-		  - 168MHz in voltage scale 1 mode,
-		  - 144MHz in voltage scale 2 mode,
-		  - 120MHz in voltage scale 3 mode.
+		  - 180 MHz in voltage scale 1 mode with over-drive mode,
+		  - 168 MHz in voltage scale 1 mode,
+		  - 144 MHz in voltage scale 2 mode,
+		  - 120 MHz in voltage scale 3 mode.
 
 endif	# !CHIP_STM32F4_STANDARD_CLOCK_CONFIGURATION_ENABLE
 
@@ -382,11 +383,11 @@ choice
 	default CHIP_STM32F4_RCC_APB1_DIV4
 	help
 		APB1 (low speed) clock division factor. APB1 clock must not exceed:
-		- 42MHz for STM32F401, STM32F405, STM32F407, STM32F415 and STM32F417
+		- 42 MHz for STM32F401, STM32F405, STM32F407, STM32F415 and STM32F417
 		chips,
-		- 50MHz for STM32F410, STM32F411, STM32F412, STM32F413 and STM32F423
+		- 50 MHz for STM32F410, STM32F411, STM32F412, STM32F413 and STM32F423
 		chips,
-		- 45MHz (with over-drive mode) or 42MHz (otherwise) for other chips.
+		- 45 MHz (with over-drive mode) or 42 MHz (otherwise) for other chips.
 
 		APB1clk = AHBclk / APB1divider
 
@@ -423,11 +424,11 @@ choice
 	default CHIP_STM32F4_RCC_APB2_DIV2
 	help
 		APB2 (high speed) clock division factor. APB2 clock must not exceed:
-		- 84MHz for STM32F401, STM32F405, STM32F407, STM32F415 and STM32F417
+		- 84 MHz for STM32F401, STM32F405, STM32F407, STM32F415 and STM32F417
 		chips,
-		- 100MHz for STM32F410, STM32F411, STM32F412, STM32F413 and STM32F423
+		- 100 MHz for STM32F410, STM32F411, STM32F412, STM32F413 and STM32F423
 		chips,
-		- 90MHz (with over-drive mode) or 84MHz (otherwise) for other chips.
+		- 90 MHz (with over-drive mode) or 84 MHz (otherwise) for other chips.
 
 		APB2clk = AHBclk / APB2divider
 
@@ -471,7 +472,7 @@ config CHIP_STM32F4_FLASH_PREFETCH_ENABLE
 		may also increase noise of ADC. Check device errata sheet of selected
 		chip to see whether it is affected by any of these issues.
 
-		Flash prefetch must not be enabled when supply voltage is below 2.1V.
+		Flash prefetch must not be enabled when supply voltage is below 2.1 V.
 
 config CHIP_STM32F4_FLASH_DATA_CACHE_ENABLE
 	bool "Enable flash data cache"

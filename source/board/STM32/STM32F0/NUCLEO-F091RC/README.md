@@ -4,9 +4,9 @@ NUCLEO-F091RC
 This folder provides support for [NUCLEO-F091RC](http://www.st.com/en/evaluation-tools/nucleo-f091rc.html) board. This
 board features a *STM32F091RC* chip in *LQFP64* package:
 - *ARM Cortex-M0* (*ARMv6-M*) core;
-- 256kB of flash;
-- 32kB of RAM;
-- 48MHz max clock;
+- 256 kB of flash;
+- 32 kB of RAM;
+- 48 MHz max clock;
 
 Buttons
 -------

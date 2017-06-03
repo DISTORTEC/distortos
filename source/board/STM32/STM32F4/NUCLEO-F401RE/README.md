@@ -5,9 +5,9 @@ This folder provides support for [NUCLEO-F401RE](http://www.st.com/en/evaluation
 board features a *STM32F401RE* chip in *LQFP64* package:
 - *ARM Cortex-M4* (*ARMv7-M*) core;
 - single precision FPU;
-- 512kB of flash;
-- 96kB of RAM;
-- 84MHz max clock;
+- 512 kB of flash;
+- 96 kB of RAM;
+- 84 MHz max clock;
 
 Buttons
 -------

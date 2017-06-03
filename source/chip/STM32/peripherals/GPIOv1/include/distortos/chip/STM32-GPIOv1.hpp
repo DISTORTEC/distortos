@@ -327,42 +327,42 @@ enum class PinConfiguration : uint8_t
 		/// input with pull-up/pull-down
 		inputWithPullUpDown = 0 << 0 | 2 << 2,
 
-		/// push-pull output, 10MHz
+		/// push-pull output, 10 MHz
 		pushPull10MhzOutput = 1 << 0 | 0 << 2,
-		/// open-drain output, 10MHz
+		/// open-drain output, 10 MHz
 		openDrain10MhzOutput = 1 << 0 | 1 << 2,
-		/// push-pull alternate function, 10MHz
+		/// push-pull alternate function, 10 MHz
 		pushPull10MhzAlternateFunction = 1 << 0 | 2 << 2,
-		/// open-drain alternate function, 10MHz
+		/// open-drain alternate function, 10 MHz
 		openDrain10MhzAlternateFunction = 1 << 0 | 3 << 2,
 
-		/// push-pull output, 2MHz
+		/// push-pull output, 2 MHz
 		pushPull2MhzOutput = 2 << 0 | 0 << 2,
-		/// open-drain output, 2MHz
+		/// open-drain output, 2 MHz
 		openDrain2MhzOutput = 2 << 0 | 1 << 2,
-		/// push-pull alternate function, 2MHz
+		/// push-pull alternate function, 2 MHz
 		pushPull2MhzAlternateFunction = 2 << 0 | 2 << 2,
-		/// open-drain alternate function, 2MHz
+		/// open-drain alternate function, 2 MHz
 		openDrain2MhzAlternateFunction = 2 << 0 | 3 << 2,
 
-		/// push-pull output, 50MHz
+		/// push-pull output, 50 MHz
 		pushPull50MhzOutput = 3 << 0 | 0 << 2,
-		/// open-drain output, 50MHz
+		/// open-drain output, 50 MHz
 		openDrain50MhzOutput = 3 << 0 | 1 << 2,
-		/// push-pull alternate function, 50MHz
+		/// push-pull alternate function, 50 MHz
 		pushPull50MhzAlternateFunction = 3 << 0 | 2 << 2,
-		/// open-drain alternate function, 50MHz
+		/// open-drain alternate function, 50 MHz
 		openDrain50MhzAlternateFunction = 3 << 0 | 3 << 2,
 };
 
 /// all possible output speeds of pin
 enum class PinOutputSpeed : uint8_t
 {
-		/// 2MHz
+		/// 2 MHz
 		_2Mhz,
-		/// 10MHz
+		/// 10 MHz
 		_10Mhz,
-		/// 50MHz
+		/// 50 MHz
 		_50Mhz,
 };
 

@@ -23,4 +23,4 @@ config BOARD_NUCLEO_F429ZI
 	help
 		NUCLEO-F429ZI board with STM32F429ZI chip in LQFP144 package
 
-		Chip's supply voltage is 3.3V.
+		Chip's supply voltage is 3.3 V.

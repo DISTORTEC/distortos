@@ -23,6 +23,6 @@ config BOARD_32F746GDISCOVERY
 	help
 		32F746GDISCOVERY board with STM32F746NG chip in BGA216 package
 
-		Chip's supply voltage is 3.3V.
-		External 25MHz clock can be used as HSE clock in "HSE Clock Bypass"
+		Chip's supply voltage is 3.3 V.
+		External 25 MHz clock can be used as HSE clock in "HSE Clock Bypass"
 		mode.

@@ -1,6 +1,6 @@
 {
 	"board":"NUCLEO-F429ZI",
-	"board_description": "NUCLEO-F429ZI board with STM32F429ZI chip in LQFP144 package\n\n\t\tChip's supply voltage is 3.3V.",
+	"board_description": "NUCLEO-F429ZI board with STM32F429ZI chip in LQFP144 package\n\n\t\tChip's supply voltage is 3.3 V.",
 	"chipFamily":"STM32F4",
 	"vddmvConfigurable":false,
 	"vddmv":3300,

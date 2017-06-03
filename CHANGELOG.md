@@ -143,8 +143,8 @@ potential safety margin for any stack overflows in this thread - as long as heap
 memory below this stack is not used.
 - Stacks are filled with 0xed419f25 instead of 0. Using 0 is not a reliable method to detect stack usage/overflow, as 0
 is very likely to be used in the application (for example to zero-initialize variables).
-- Reduced default size of stack for interrupts to 1kB.
-- Reduced size of stack for interrupts to 1kB in all test configurations.
+- Reduced default size of stack for interrupts to 1 kB.
+- Reduced size of stack for interrupts to 1 kB in all test configurations.
 - Reduced size of stack for idle thread to 256 bytes when support for thread detachment is enabled.
 - `architecture::requestFunctionExecution()` checks for amount of free stack before doing any stack modifications. If
 there's not enough free stack available, it returns an `ENOSPC` error code. Modify all callers of this function (which

@@ -5,10 +5,10 @@ This folder provides support for [32F746GDISCOVERY](http://www.st.com/en/evaluat
 also known as *STM32F746G-DISCO*. This board features a *STM32F746NG* chip in *BGA216* package:
 - *ARM Cortex-M7* (*ARMv7-M*) core;
 - single precision FPU;
-- 1MB of flash;
-- 320kB of RAM;
-- 4kB of BKPSRAM;
-- 216MHz max clock;
+- 1 MB of flash;
+- 320 kB of RAM;
+- 4 kB of BKPSRAM;
+- 216 MHz max clock;
 
 Buttons
 -------

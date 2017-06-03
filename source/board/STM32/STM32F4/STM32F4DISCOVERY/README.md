@@ -5,11 +5,11 @@ This folder provides support for [STM32F4DISCOVERY](http://www.st.com/en/evaluat
 also known as *STM32F407G-DISC1*. This board features a *STM32F407VG* chip in *LQFP100* package:
 - *ARM Cortex-M4* (*ARMv7-M*) core;
 - single precision FPU;
-- 1MB of flash;
-- 128kB of RAM;
-- 4kB of BKPSRAM;
-- 64kB of CCM;
-- 168MHz max clock;
+- 1 MB of flash;
+- 128 kB of RAM;
+- 4 kB of BKPSRAM;
+- 64 kB of CCM;
+- 168 MHz max clock;
 
 Buttons
 -------

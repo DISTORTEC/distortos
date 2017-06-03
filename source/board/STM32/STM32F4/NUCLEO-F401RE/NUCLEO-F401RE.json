@@ -1,6 +1,6 @@
 {
 	"board":"NUCLEO-F401RE",
-	"board_description": "NUCLEO-F401RE board with STM32F401RE chip in LQFP64 package\n\n\t\tChip's supply voltage is 3.3V.",
+	"board_description": "NUCLEO-F401RE board with STM32F401RE chip in LQFP64 package\n\n\t\tChip's supply voltage is 3.3 V.",
 	"chipFamily":"STM32F4",
 	"vddmvConfigurable":false,
 	"vddmv":3300,

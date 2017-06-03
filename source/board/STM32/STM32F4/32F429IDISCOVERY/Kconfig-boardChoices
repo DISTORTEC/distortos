@@ -23,5 +23,5 @@ config BOARD_32F429IDISCOVERY
 	help
 		32F429IDISCOVERY board with STM32F429ZI chip in LQFP144 package
 
-		Chip's supply voltage is 3V.
-		8MHz crystal resonator can be used as HSE clock.
+		Chip's supply voltage is 3 V.
+		8 MHz crystal resonator can be used as HSE clock.
