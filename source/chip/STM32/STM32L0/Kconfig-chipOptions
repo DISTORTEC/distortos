@@ -99,6 +99,7 @@ endif	# CHIP_STM32L0_RCC_MSI_ENABLE
 config CHIP_STM32L0_RCC_HSE_ENABLE
 	bool "Enable HSE"
 	default n
+	depends on CHIP_STM32L0_RCC_HAS_HSE
 	help
 		Enable HSE (crystal/ceramic resonator or external user clock).
 
@@ -124,13 +125,12 @@ if CHIP_STM32L0_RCC_HSE_FREQUENCY_CONFIGURABLE
 config CHIP_STM32L0_RCC_HSE_FREQUENCY
 	int "Frequency of HSE clock, Hz"
 	range 1 32000000 if CHIP_STM32L0_RCC_HSE_CLOCK_BYPASS
-	range 1000000 25000000 if CHIP_STM32L07 || CHIP_STM32L08
-	range 1000000 24000000
+	range 1000000 25000000
 	default CHIP_STM32L0_RCC_HSE_FREQUENCY_DEFAULT
 	help
 		Frequency of HSE clock, Hz. This can be:
 		- "HSE Clock Bypass" enabled - external user clock connected to OSC_IN,
-		[1MHz; 24MHz];
+		[1MHz; 25MHz];
 		- "HSE Clock Bypass" disabled - crystal/ceramic resonator connected to
 		OSC_IN and OSC_OUT, [0MHz; 32MHz];
 
@@ -145,7 +145,7 @@ config CHIP_STM32L0_RCC_HSE_FREQUENCY
 	help
 		Frequency of HSE clock, Hz. This can be:
 		- "HSE Clock Bypass" disabled - crystal/ceramic resonator connected to
-		OSC_IN and OSC_OUT, [1MHz; 24MHz];
+		OSC_IN and OSC_OUT, [1MHz; 25MHz];
 		- "HSE Clock Bypass" enabled - external user clock connected to OSC_IN,
 		[0MHz; 32MHz];
 
@@ -157,7 +157,7 @@ endif	# CHIP_STM32L0_RCC_HSE_ENABLE
 
 config CHIP_STM32L0_RCC_HSI16_ENABLE
 	bool "Enable HSI16"
-	default n
+	default y
 	help
 		Enable HSI16.
 
@@ -171,6 +171,7 @@ config CHIP_STM32L0_RCC_HSI48_ENABLE
 
 config CHIP_STM32L0_RCC_PLL_ENABLE
 	bool "Enable PLL"
+	default y
 	depends on CHIP_STM32L0_RCC_HSI16_ENABLE || CHIP_STM32L0_RCC_HSE_ENABLE
 	help
 		Enable PLL.
@@ -182,7 +183,8 @@ choice
 	default CHIP_STM32L0_RCC_PLLSRC_HSI16 if CHIP_STM32L0_RCC_HSI16_ENABLE
 	default CHIP_STM32L0_RCC_PLLSRC_HSE if CHIP_STM32L0_RCC_HSE_ENABLE
 	help
-		Select clock source of main PLL.
+		Select clock source of main PLL. PLL input frequency (PLLin) must be in
+		[2MHz; 24MHz] range.
 
 config CHIP_STM32L0_RCC_PLLSRC_HSI16
 	bool "HSI16"
@@ -199,92 +201,74 @@ config CHIP_STM32L0_RCC_PLLSRC_HSE
 endchoice
 
 choice
-	prompt "PLL MUL value"
-	default CHIP_STM32L0_RCC_PLLMUL3
+	prompt "PLLMUL value"
+	default CHIP_STM32L0_RCC_PLLMUL6 if CHIP_STM32L0_RCC_PLLSRC_HSI16
+	default CHIP_STM32L0_RCC_PLLMUL12
 	help
-		PLLM value for main PLL. It is used to multiply PLL input
-		clock (PLLin) to generate PLL VCO. PLL VCO frequency must
-		not exceed:
-		- 96 MHz when the product is in Range 1, 
-		- 48 MHz when the product is in Range 2, 
-		- 24 MHz when the product is in Range 3
-		The PLL minimum input clock frequency must be 2 MHz.
+		PLLMUL value for main PLL. It is used to multiply PLL input frequency
+		(PLLin). Resulting VCO output frequency (VCOout) must not exceed:
+		- 96 MHz in voltage scale 1 mode, 
+		- 48 MHz in voltage scale 2 mode, 
+		- 24 MHz in voltage scale 3 mode.
 
-		PLLVco = PLLin * PLLM
+		VCOout = PLLin * PLLMUL
 
 config CHIP_STM32L0_RCC_PLLMUL3
 	bool "3"
 	help
-		PLLM == 3
+		PLLMUL == 3
 
 config CHIP_STM32L0_RCC_PLLMUL4
 	bool "4"
 	help
-		PLLM == 4
+		PLLMUL == 4
 
 config CHIP_STM32L0_RCC_PLLMUL6
 	bool "6"
 	help
-		PLLM == 6
+		PLLMUL == 6
 
 config CHIP_STM32L0_RCC_PLLMUL8
 	bool "8"
 	help
-		PLLM == 8
+		PLLMUL == 8
 
 config CHIP_STM32L0_RCC_PLLMUL12
 	bool "12"
 	help
-		PLLM == 12
+		PLLMUL == 12
 
 config CHIP_STM32L0_RCC_PLLMUL16
 	bool "16"
 	help
-		PLLM == 16
+		PLLMUL == 16
 
 config CHIP_STM32L0_RCC_PLLMUL24
 	bool "24"
 	help
-		PLLM == 24
+		PLLMUL == 24
 
 config CHIP_STM32L0_RCC_PLLMUL32
 	bool "32"
 	help
-		PLLM == 32
+		PLLMUL == 32
 
 config CHIP_STM32L0_RCC_PLLMUL48
 	bool "48"
 	help
-		PLLM == 48
+		PLLMUL == 48
 
 endchoice
 
-choice
-	prompt "PLL DIV value"
-	default CHIP_STM32L0_RCC_PLLDIV2
+config CHIP_STM32L0_RCC_PLLDIV
+	int "PLLDIV value"
+	default 3
+	range 2 4
 	help
-		PLLDIV value for main PLL. It is used to divide PLL VCO
-		Resulting PLL clock frequency must be in the range:
-		[2MHz; 32MHz].
+		PLLDIV value for main PLL. It is used to divide VCO output frequency
+		(VCOout). PLL output frequency (PLLout) must be in [2MHz; 32MHz] range.
 
-		PLL clock = PLLVco / PLLDIV = (PLLin * PLLMUL) / PLLDIV
-
-config CHIP_STM32L0_RCC_PLLDIV2
-	bool "2"
-	help
-		PLLN == 2
-
-config CHIP_STM32L0_RCC_PLLDIV3
-	bool "3"
-	help
-		PLLN == 3
-
-config CHIP_STM32L0_RCC_PLLDIV4
-	bool "4"
-	help
-		PLLN == 4
-
-endchoice
+		PLLout = VCOout / PLLDIV = PLLin * PLLMUL / PLLDIV
 
 endif	# CHIP_STM32L0_RCC_PLL_ENABLE
 
@@ -292,12 +276,20 @@ choice
 	prompt "System clock source"
 	default CHIP_STM32L0_RCC_SYSCLK_PLL if CHIP_STM32L0_RCC_PLL_ENABLE
 	default CHIP_STM32L0_RCC_SYSCLK_HSE if CHIP_STM32L0_RCC_HSE_ENABLE
-	default CHIP_STM32L0_RCC_SYSCLK_HSI16
+	default CHIP_STM32L0_RCC_SYSCLK_HSI16 if CHIP_STM32L0_RCC_HSI16_ENABLE
+	default CHIP_STM32L0_RCC_SYSCLK_MSI
 	help
 		Select system clock source.
 
+config CHIP_STM32L0_RCC_SYSCLK_MSI
+	bool "MSI"
+	depends on CHIP_STM32L0_RCC_MSI_ENABLE
+	help
+		MSI oscillator selected as system clock.
+
 config CHIP_STM32L0_RCC_SYSCLK_HSI16
 	bool "HSI16"
+	depends on CHIP_STM32L0_RCC_HSI16_ENABLE
 	help
 		HSI16 oscillator selected as system clock.
 
@@ -312,12 +304,6 @@ config CHIP_STM32L0_RCC_SYSCLK_PLL
 	depends on CHIP_STM32L0_RCC_PLL_ENABLE
 	help
 		Main PLL selected as system clock.
-
-config CHIP_STM32L0_RCC_SYSCLK_MSI
-	bool "MSI"
-	depends on CHIP_STM32L0_RCC_MSI_ENABLE
-	help
-		MSI oscillator selected as system clock.
 
 endchoice
 
@@ -475,6 +461,8 @@ endmenu
 config CHIP_STM32L01
 	bool
 	default n
+	select CHIP_STM32L0_RCC_HAS_HSE
+	select CHIP_STM32L0_RCC_HSE_CLOCK_BYPASS_DEFAULT
 
 config CHIP_STM32L011
 	bool
@@ -559,6 +547,8 @@ config CHIP_STM32L011K4
 config CHIP_STM32L02
 	bool
 	default n
+	select CHIP_STM32L0_RCC_HAS_HSE
+	select CHIP_STM32L0_RCC_HSE_CLOCK_BYPASS_DEFAULT
 
 config CHIP_STM32L021
 	bool
@@ -608,6 +598,7 @@ config CHIP_STM32L021K4
 config CHIP_STM32L03
 	bool
 	default n
+	select CHIP_STM32L0_RCC_HAS_HSE
 
 config CHIP_STM32L031
 	bool
@@ -634,6 +625,7 @@ config CHIP_STM32L031E
 	bool
 	default n
 	select CHIP_STM32L031
+	select CHIP_STM32L0_RCC_HSE_CLOCK_BYPASS_DEFAULT
 
 config CHIP_STM32L031E4
 	bool
@@ -649,6 +641,7 @@ config CHIP_STM32L031F
 	bool
 	default n
 	select CHIP_STM32L031
+	select CHIP_STM32L0_RCC_HSE_CLOCK_BYPASS_DEFAULT
 
 config CHIP_STM32L031F4
 	bool
@@ -664,6 +657,7 @@ config CHIP_STM32L031G
 	bool
 	default n
 	select CHIP_STM32L031
+	select CHIP_STM32L0_RCC_HSE_CLOCK_BYPASS_DEFAULT
 
 config CHIP_STM32L031G4
 	bool
@@ -679,6 +673,7 @@ config CHIP_STM32L031K
 	bool
 	default n
 	select CHIP_STM32L031
+	select CHIP_STM32L0_RCC_HSE_CLOCK_BYPASS_DEFAULT
 
 config CHIP_STM32L031K4
 	bool
@@ -693,6 +688,7 @@ config CHIP_STM32L031K6
 config CHIP_STM32L04
 	bool
 	default n
+	select CHIP_STM32L0_RCC_HAS_HSE
 
 config CHIP_STM32L041
 	bool
@@ -719,6 +715,7 @@ config CHIP_STM32L041E
 	bool
 	default n
 	select CHIP_STM32L041
+	select CHIP_STM32L0_RCC_HSE_CLOCK_BYPASS_DEFAULT
 
 config CHIP_STM32L041E6
 	bool
@@ -729,6 +726,7 @@ config CHIP_STM32L041F
 	bool
 	default n
 	select CHIP_STM32L041
+	select CHIP_STM32L0_RCC_HSE_CLOCK_BYPASS_DEFAULT
 
 config CHIP_STM32L041F6
 	bool
@@ -739,6 +737,7 @@ config CHIP_STM32L041G
 	bool
 	default n
 	select CHIP_STM32L041
+	select CHIP_STM32L0_RCC_HSE_CLOCK_BYPASS_DEFAULT
 
 config CHIP_STM32L041G6
 	bool
@@ -749,6 +748,7 @@ config CHIP_STM32L041K
 	bool
 	default n
 	select CHIP_STM32L041
+	select CHIP_STM32L0_RCC_HSE_CLOCK_BYPASS_DEFAULT
 
 config CHIP_STM32L041K6
 	bool
@@ -769,6 +769,7 @@ config CHIP_STM32L051C
 	bool
 	default n
 	select CHIP_STM32L051
+	select CHIP_STM32L0_RCC_HAS_HSE
 	select CHIP_STM32_GPIOV2_HAS_GPIOH
 	select CHIP_STM32_SPIV1_HAS_SPI2
 
@@ -801,6 +802,7 @@ config CHIP_STM32L051R
 	bool
 	default n
 	select CHIP_STM32L051
+	select CHIP_STM32L0_RCC_HAS_HSE
 	select CHIP_STM32_GPIOV2_HAS_GPIOD
 	select CHIP_STM32_GPIOV2_HAS_GPIOH
 	select CHIP_STM32_SPIV1_HAS_SPI2
@@ -839,6 +841,7 @@ config CHIP_STM32L052C
 	bool
 	default n
 	select CHIP_STM32L052
+	select CHIP_STM32L0_RCC_HAS_HSE
 	select CHIP_STM32_GPIOV2_HAS_GPIOH
 	select CHIP_STM32_SPIV1_HAS_SPI2
 
@@ -871,6 +874,7 @@ config CHIP_STM32L052R
 	bool
 	default n
 	select CHIP_STM32L052
+	select CHIP_STM32L0_RCC_HAS_HSE
 	select CHIP_STM32_GPIOV2_HAS_GPIOD
 	select CHIP_STM32_GPIOV2_HAS_GPIOH
 	select CHIP_STM32_SPIV1_HAS_SPI2
@@ -904,6 +908,7 @@ config CHIP_STM32L053
 	bool
 	default n
 	select CHIP_STM32L05
+	select CHIP_STM32L0_RCC_HAS_HSE
 
 config CHIP_STM32L053C
 	bool
@@ -964,6 +969,7 @@ config CHIP_STM32L063
 	bool
 	default n
 	select CHIP_STM32L06
+	select CHIP_STM32L0_RCC_HAS_HSE
 
 config CHIP_STM32L063C
 	bool
@@ -993,6 +999,7 @@ config CHIP_STM32L063R8
 config CHIP_STM32L07
 	bool
 	default n
+	select CHIP_STM32L0_RCC_HAS_HSE
 	select CHIP_STM32_USARTV2_HAS_USART1
 	select CHIP_STM32_USARTV2_HAS_USART4
 	select CHIP_STM32_USARTV2_HAS_USART5
@@ -1240,6 +1247,7 @@ config CHIP_STM32L081
 	bool
 	default n
 	select CHIP_STM32L08
+	select CHIP_STM32L0_RCC_HAS_HSE
 
 config CHIP_STM32L081C
 	bool
@@ -1272,6 +1280,7 @@ config CHIP_STM32L082C
 	bool
 	default n
 	select CHIP_STM32L082
+	select CHIP_STM32L0_RCC_HAS_HSE
 	select CHIP_STM32_GPIOV2_HAS_GPIOH
 	select CHIP_STM32_SPIV1_HAS_SPI2
 
@@ -1299,6 +1308,7 @@ config CHIP_STM32L083
 	bool
 	default n
 	select CHIP_STM32L08
+	select CHIP_STM32L0_RCC_HAS_HSE
 
 config CHIP_STM32L083C
 	bool
@@ -1418,6 +1428,10 @@ config CHIP_STM32L0_SRAM_ADDRESS
 	default 0x20000000
 	depends on CHIP_STM32L0_SRAM_SIZE != 0
 
+config CHIP_STM32L0_RCC_HAS_HSE
+	bool
+	default n
+
 config CHIP_STM32L0_RCC_HSE_CLOCK_BYPASS_CONFIGURABLE
 	bool
 	default y
@@ -1455,12 +1469,6 @@ config CHIP_STM32L0_RCC_PLLMUL
 	default 24 if CHIP_STM32L0_RCC_PLLMUL24
 	default 32 if CHIP_STM32L0_RCC_PLLMUL32
 	default 48 if CHIP_STM32L0_RCC_PLLMUL48
-	
-config CHIP_STM32L0_RCC_PLLDIV
-	int
-	default 2 if CHIP_STM32L0_RCC_PLLDIV2
-	default 3 if CHIP_STM32L0_RCC_PLLDIV3
-	default 4 if CHIP_STM32L0_RCC_PLLDIV4
 
 config CHIP_STM32L0_RCC_HPRE
 	int

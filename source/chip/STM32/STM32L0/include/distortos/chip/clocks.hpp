@@ -120,6 +120,8 @@ constexpr uint32_t sysclkFrequency {hsi16Frequency};
 constexpr uint32_t sysclkFrequency {CONFIG_CHIP_STM32L0_RCC_HSE_FREQUENCY};
 #elif defined(CONFIG_CHIP_STM32L0_RCC_SYSCLK_PLL)
 constexpr uint32_t sysclkFrequency {pllOutFrequency};
+#else
+#error "All SYSCLK sources disabled!"
 #endif	// defined(CONFIG_CHIP_STM32L0_RCC_SYSCLK_PLL)
 
 #else	// !def CONFIG_CHIP_STM32L0_STANDARD_CLOCK_CONFIGURATION_ENABLE
