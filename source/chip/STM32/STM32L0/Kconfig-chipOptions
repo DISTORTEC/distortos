@@ -260,31 +260,15 @@ config CHIP_STM32L0_RCC_PLLMUL48
 
 endchoice
 
-choice
-	prompt "PLLDIV value"
-	default CHIP_STM32L0_RCC_PLLDIV3
+config CHIP_STM32L0_RCC_PLLDIV
+	int "PLLDIV value"
+	default 3
+	range 2 4
 	help
 		PLLDIV value for main PLL. It is used to divide VCO output frequency
 		(VCOout). PLL output frequency (PLLout) must be in [2MHz; 32MHz] range.
 
 		PLLout = VCOout / PLLDIV = PLLin * PLLMUL / PLLDIV
-
-config CHIP_STM32L0_RCC_PLLDIV2
-	bool "2"
-	help
-		PLLDIV == 2
-
-config CHIP_STM32L0_RCC_PLLDIV3
-	bool "3"
-	help
-		PLLDIV == 3
-
-config CHIP_STM32L0_RCC_PLLDIV4
-	bool "4"
-	help
-		PLLDIV == 4
-
-endchoice
 
 endif	# CHIP_STM32L0_RCC_PLL_ENABLE
 
@@ -1485,12 +1469,6 @@ config CHIP_STM32L0_RCC_PLLMUL
 	default 24 if CHIP_STM32L0_RCC_PLLMUL24
 	default 32 if CHIP_STM32L0_RCC_PLLMUL32
 	default 48 if CHIP_STM32L0_RCC_PLLMUL48
-	
-config CHIP_STM32L0_RCC_PLLDIV
-	int
-	default 2 if CHIP_STM32L0_RCC_PLLDIV2
-	default 3 if CHIP_STM32L0_RCC_PLLDIV3
-	default 4 if CHIP_STM32L0_RCC_PLLDIV4
 
 config CHIP_STM32L0_RCC_HPRE
 	int
