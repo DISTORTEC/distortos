@@ -15,6 +15,22 @@ import datetime
 import os
 
 #
+# Handles "eeprom" element
+#
+# param [in] label is the label of element
+# param [in] data is a dictionary with element's data
+#
+# return string constructed from label and data
+#
+
+def handleEeprom(label, data):
+	return ('\t{label}: eeprom@{address:x} {{\n'
+	'\t\tcompatible = "on-chip-eeprom";\n'
+	'\t\treg = <{address:#x} {size:d}>;\n'
+	'\t\tlabel = "{label}";\n'
+	'\t}};\n'.format(label = label, address = int(data['address'], 0), size = int(data['size'], 0)))
+
+#
 # Handles "flash" element
 #
 # param [in] label is the label of element
@@ -54,6 +70,7 @@ def handleMemory(label, data):
 
 # dictionary with handlers of groups
 handlers = {
+	'eeprom': handleEeprom,
 	'flash': handleFlash,
 	'memory': handleMemory,
 }
