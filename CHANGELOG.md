@@ -62,6 +62,7 @@ requirements of architecture. This way "usable" size of stack will never be less
 file. Previously they were converted to a macro without value (`#define CONFIG_...`), which made building complex
 conditions harder than necessary.
 - Update *CMSIS-STM32F0* to version 1.8.0.
+- Update *CMSIS-STM32F4* to version 1.16.0.
 
 ### Deprecated
 
