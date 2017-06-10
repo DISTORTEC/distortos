@@ -41,8 +41,8 @@ versions are supported.
 `BASEPRI` register (*ARMv6-M*) to *STM32's* *SPIv1* low-level driver.
 - Devicetree fragments (`*.dtsi` files) for architectures.
 - `*.csv` files with memory description of all supported chips.
-- `generateChipDtsi.py` *Python* script which can generate chip's devicetree fragments (`*.dtsi` files) from `*.csv`
-input file.
+- `generateChipDtsi.py` *Python* script (using *Jinja2* template engine) which can generate chip's devicetree fragments
+(`*.dtsi` files) from `*.csv` input file.
 - Basic devicetree `*.dts` files for all supported boards.
 - "Enable support for signals" option in *Kconfig* menus. When this option is enabled, all namespaces, functions and
 classes required for signals are available. Otherwise they are completely disabled, which reduces the size of compiled
