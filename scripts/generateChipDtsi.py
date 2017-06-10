@@ -12,78 +12,19 @@
 import argparse
 import csv
 import datetime
+import jinja2
 import os
-
-#
-# Handles "eeprom" element
-#
-# param [in] label is the label of element
-# param [in] data is a dictionary with element's data
-#
-# return string constructed from label and data
-#
-
-def handleEeprom(label, data):
-	return ('\t{label}: eeprom@{address:x} {{\n'
-	'\t\tcompatible = "on-chip-eeprom";\n'
-	'\t\treg = <{address:#x} {size:d}>;\n'
-	'\t\tlabel = "{label}";\n'
-	'\t}};\n'.format(label = label, address = int(data['address'], 0), size = int(data['size'], 0)))
-
-#
-# Handles "flash" element
-#
-# param [in] label is the label of element
-# param [in] data is a dictionary with element's data
-#
-# return string constructed from label and data
-#
-
-def handleFlash(label, data):
-	if 'virtualAddress' in data:
-		virtualReg = '\t\tvirtual-reg = <{:#x}>;\n'.format(int(data['virtualAddress'], 0))
-	else:
-		virtualReg = ''
-	return ('\t{label}: flash@{address:x} {{\n'
-	'\t\tcompatible = "on-chip-flash";\n'
-	'\t\treg = <{address:#x} {size:d}>;\n'
-	'{virtualReg}'
-	'\t\tlabel = "{label}";\n'
-	'\t}};\n'.format(label = label, address = int(data['address'], 0), size = int(data['size'], 0),
-			virtualReg = virtualReg))
-
-#
-# Handles "memory" element
-#
-# param [in] label is the label of element
-# param [in] data is a dictionary with element's data
-#
-# return string constructed from label and data
-#
-
-def handleMemory(label, data):
-	return ('\t{label}: memory@{address:x} {{\n'
-	'\t\tdevice_type = "memory";\n'
-	'\t\treg = <{address:#x} {size:d}>;\n'
-	'\t\tlabel = "{label}";\n'
-	'\t}};\n'.format(label = label, address = int(data['address'], 0), size = int(data['size'], 0)))
-
-# dictionary with handlers of groups
-handlers = {
-	'eeprom': handleEeprom,
-	'flash': handleFlash,
-	'memory': handleMemory,
-}
 
 #
 # Handles single row read from CSV file
 #
+# param [in] jinjaEnvironment is the jinja environment
 # param [in] outputPath is the output path for generated file
 # param [in] header is the header of CSV row
 # param [in] row is the row read from CSV file
 #
 
-def handleRow(outputPath, header, row):
+def handleRow(jinjaEnvironment, outputPath, header, row):
 	singles = {}
 	groups = {}
 	for index, element in enumerate(header):
@@ -99,37 +40,8 @@ def handleRow(outputPath, header, row):
 			groups[element[0]][element[1]][element[2]] = row[index]
 
 	with open(os.path.join(outputPath, singles['name'] + '.dtsi'), 'w') as dtsiFile:
-
-		dtsiFile.write('/**\n'
-		 ' * \\file\n'
-		 ' * \\brief Devicetree fragment for {name}\n'
-		 ' *\n'
-		 ' * \\author Copyright (C) 2014-{year:04d} Kamil Szczygiel'
-		 ' http://www.distortec.com http://www.freddiechopin.info\n'
-		 ' *\n'
-		 ' * \par License\n'
-		 ' * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.'
-		 ' If a copy of the MPL was not\n'
-		 ' * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.\n'
-		 ' *\n'
-		 ' * \warning\n'
-		 ' * Automatically generated file - do not edit!\n'
-		 ' */\n'
-		 '\n'
-		 '#include "{architecture}.dtsi"\n'
-		 '\n'
-		 '/ {{\n'
-		 ''.format(name = singles['name'], year = datetime.date.today().year, architecture = singles['architecture']))
-
-		first = True
-		for groupType, group in groups.items():
-			for label, data in group.items():
-				if first == False:
-					dtsiFile.write('\n')
-				dtsiFile.write(handlers[groupType](label, data))
-				first = False
-
-		dtsiFile.write('};\n')
+		jinjaTemplate = jinjaEnvironment.get_template(singles['dtsiTemplate'])
+		dtsiFile.write(jinjaTemplate.render(**singles, **groups))
 
 ########################################################################################################################
 # main
@@ -141,7 +53,12 @@ parser.add_argument('outputPath', help = 'output path')
 arguments = parser.parse_args()
 
 with open(arguments.csvFile, newline = '') as csvFile:
+
+	jinjaEnvironment = jinja2.Environment(trim_blocks = True, lstrip_blocks = True, keep_trailing_newline = True,
+			loader = jinja2.FileSystemLoader('.'))
+	jinjaEnvironment.globals['year'] = datetime.date.today().year
+
 	csvReader = csv.reader(csvFile)
 	header = list(zip(next(csvReader), next(csvReader), next(csvReader)))
 	for row in csvReader:
-		handleRow(arguments.outputPath, header, row)
+		handleRow(jinjaEnvironment, arguments.outputPath, header, row)
