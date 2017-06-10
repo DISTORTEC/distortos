@@ -1,0 +1,54 @@
+/**
+ * \file
+ * \brief Devicetree fragment for {{ name }}
+ *
+ * \author Copyright (C) 2014-{{ year }} Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ *
+ * \par License
+ * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
+ * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ *
+ * \warning
+ * Automatically generated file - do not edit!
+ */
+
+{% block includes %}
+{% endblock %}
+
+/ {{ '{' -}}
+{%- block devicetree %}
+{% if flash is defined %}
+{% for label, item in flash.items() %}
+
+	{{ label }}: flash@{{ '%x' % item.address | int(base = 0) }} {
+		compatible = "on-chip-flash";
+		reg = <{{ '0x%x' % item.address | int(base = 0) }} {{ item.size }}>;
+{% if item.virtualAddress is defined %}
+		virtual-reg = <{{ '0x%x' % item.virtualAddress | int(base = 0) }}>;
+{% endif %}
+		label = "{{ label }}";
+	};
+{% endfor %}
+{% endif %}
+{% if eeprom is defined %}
+{% for label, item in eeprom.items() %}
+
+	{{ label }}: eeprom@{{ '%x' % item.address | int(base = 0) }} {
+		compatible = "on-chip-eeprom";
+		reg = <{{ '0x%x' % item.address | int(base = 0) }} {{ item.size }}>;
+		label = "{{ label }}";
+	};
+{% endfor %}
+{% endif %}
+{% if memory is defined %}
+{% for label, item in memory.items() %}
+
+	{{ label }}: memory@{{ '%x' % item.address | int(base = 0) }} {
+		device_type = "memory";
+		reg = <{{ '0x%x' % item.address | int(base = 0) }} {{ item.size }}>;
+		label = "{{ label }}";
+	};
+{% endfor %}
+{% endif %}
+{% endblock %}
+};
