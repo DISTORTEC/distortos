@@ -22,9 +22,12 @@ mkdir -p "${output}"
 output="$(cd "${output}" && pwd)"
 output="${output#"$(pwd)/"}"
 
-for file in $(/usr/bin/find -path "./${output}" -prune -o -name 'Kconfig*' -exec \
-		sed -n 's/^source "$OUTPUT\/\(.\+\)"$/\1/p' {} +)
+for filePattern in $(/usr/bin/find -path "./${output}" -prune -o -name 'Kconfig*' -exec \
+		sed -n 's/^source "$OUTPUT\/\(.\+\)"$/\1;\1/p' {} +)
 do
+
+file=${filePattern%;*}
+pattern=${filePattern#*;}
 
 cat > "${output}/${file}" << EOF
 #
@@ -35,7 +38,7 @@ cat > "${output}/${file}" << EOF
 # date: $(date +'%Y-%m-%d %H:%M:%S')
 #
 
-$(/usr/bin/find -path "./${output}" -prune -o -name "${file}" -printf 'source "%p"\n' | sort)
+$(/usr/bin/find -path "./${output}" -prune -o -name "${pattern}" -printf 'source "%p"\n' | sort)
 EOF
 
 done
