@@ -3,7 +3,7 @@
 #
 # file: generateKconfig.sh
 #
-# author: Copyright (C) 2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+# author: Copyright (C) 2016-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
 #
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -22,9 +22,13 @@ mkdir -p "${output}"
 output="$(cd "${output}" && pwd)"
 output="${output#"$(pwd)/"}"
 
-for file in $(/usr/bin/find -path "./${output}" -prune -o -name 'Kconfig*' -exec \
-		sed -n 's/^source "$OUTPUT\/\(.*\)"$/\1/p' {} +)
+for filePattern in $(/usr/bin/find -path "./${output}" -prune -o -name 'Kconfig*' -exec \
+		sed -n -e 's/^source "$OUTPUT\/\(.\+\)"$/\1;\1/p' \
+		-e 's/^source "$OUTPUT\/\(.\+\)"\s*# pattern: \(.\+\)$/\1;\2/p' {} +)
 do
+
+file=${filePattern%;*}
+pattern=${filePattern#*;}
 
 cat > "${output}/${file}" << EOF
 #
@@ -35,7 +39,7 @@ cat > "${output}/${file}" << EOF
 # date: $(date +'%Y-%m-%d %H:%M:%S')
 #
 
-$(/usr/bin/find -path "./${output}" -prune -o -name "${file}" -printf 'source "%p"\n' | sort)
+$(/usr/bin/find -path "./${output}" -prune -o -name "${pattern}" -printf 'source "%p"\n' | sort)
 EOF
 
 done
