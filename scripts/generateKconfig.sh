@@ -23,7 +23,8 @@ output="$(cd "${output}" && pwd)"
 output="${output#"$(pwd)/"}"
 
 for filePattern in $(/usr/bin/find -path "./${output}" -prune -o -name 'Kconfig*' -exec \
-		sed -n 's/^source "$OUTPUT\/\(.\+\)"$/\1;\1/p' {} +)
+		sed -n -e 's/^source "$OUTPUT\/\(.\+\)"$/\1;\1/p' \
+		-e 's/^source "$OUTPUT\/\(.\+\)"\s*# pattern: \(.\+\)$/\1;\2/p' {} +)
 do
 
 file=${filePattern%;*}
