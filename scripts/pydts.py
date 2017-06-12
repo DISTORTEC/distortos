@@ -882,7 +882,7 @@ def dtsToDictionary(dts, inputFilename = '<string>'):
 
 if __name__ == '__main__':
 	parser = argparse.ArgumentParser()
-	parser.add_argument('-I', '--in-format', choices = ['dictionary', 'dts'], default = 'dts',
+	parser.add_argument('-I', '--in-format', choices = ['dictionary', 'dts', 'pickle'], default = 'dts',
 			help = 'input format, default - dts')
 	parser.add_argument('-O', '--out-format', choices = ['dictionary', 'dts', 'pickle'], default = 'pickle',
 			help = 'output format, default - pickle')
@@ -890,13 +890,13 @@ if __name__ == '__main__':
 	parser.add_argument('inputFile', type = argparse.FileType('r'), help = 'input file')
 	arguments = parser.parse_args()
 
-	input = arguments.inputFile.read()
-
 	try:
 		if arguments.in_format == 'dictionary':
-			dictionary = ast.literal_eval(input)
+			dictionary = ast.literal_eval(arguments.inputFile.read())
+		elif arguments.in_format == 'dts':
+			dictionary = dtsToDictionary(arguments.inputFile.read(), arguments.inputFile.name)
 		else:
-			dictionary = dtsToDictionary(input, arguments.inputFile.name)
+			dictionary = pickle.load(getattr(arguments.inputFile, 'buffer', arguments.inputFile))
 	except (ply.lex.LexError, SyntaxError):
 		sys.exit(1)
 	except Exception as e:
