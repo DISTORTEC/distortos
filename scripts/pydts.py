@@ -11,8 +11,8 @@
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #
 
-import ast
 import argparse
+import pickle
 import ply.lex
 import ply.yacc
 import pprint
@@ -801,6 +801,17 @@ def dictionaryToDts(dictionary):
 	return '/dts-v1/;\n\n%s' % nodeToDts('/', dictionary['/'])
 
 #
+# Converts dictionary to pickled representation.
+#
+# param [in] dictionary is the converted dictionary
+#
+# return dictionary converted to bytes with pickled representation
+#
+
+def dictionaryToPickle(dictionary):
+	return pickle.dumps(dictionary, protocol = pickle.HIGHEST_PROTOCOL)
+
+#
 # Updates labels' dictionary with paths of the referenced nodes.
 #
 # param [in] node is currently processed node
@@ -870,33 +881,36 @@ def dtsToDictionary(dts, inputFilename = '<string>'):
 
 if __name__ == '__main__':
 	parser = argparse.ArgumentParser()
-	parser.add_argument('-I', '--in-format', choices = ['dictionary', 'dts'], default = 'dts',
+	parser.add_argument('-I', '--in-format', choices = ['dts', 'pickle'], default = 'dts',
 			help = 'input format, default - dts')
-	parser.add_argument('-O', '--out-format', choices = ['dictionary', 'dts'], default = 'dictionary',
-			help = 'output format, default - dictionary')
+	parser.add_argument('-O', '--out-format', choices = ['dictionary', 'dts', 'pickle'], default = 'pickle',
+			help = 'output format, default - pickle')
 	parser.add_argument('-o', '--out', default = '-', help = 'output file, default - stdout')
 	parser.add_argument('inputFile', type = argparse.FileType('r'), help = 'input file')
 	arguments = parser.parse_args()
 
-	input = arguments.inputFile.read()
-
 	try:
-		if arguments.in_format == 'dictionary':
-			dictionary = ast.literal_eval(input)
+		if arguments.in_format == 'dts':
+			dictionary = dtsToDictionary(arguments.inputFile.read(), arguments.inputFile.name)
 		else:
-			dictionary = dtsToDictionary(input, arguments.inputFile.name)
+			dictionary = pickle.load(getattr(arguments.inputFile, 'buffer', arguments.inputFile))
 	except (ply.lex.LexError, SyntaxError):
 		sys.exit(1)
 	except Exception as e:
 		sys.exit(sys.exc_info())
 
 	if arguments.out_format == 'dictionary':
-		output = pprint.pformat(dictionary)
-	else:
+		output = pprint.pformat(dictionary) + '\n'
+	elif arguments.out_format == 'dts':
 		output = dictionaryToDts(dictionary)
-
-	if arguments.out == '-':
-		print(output)
 	else:
-		with open(arguments.out, 'w') as out:
-			out.write(output)
+		output = dictionaryToPickle(dictionary)
+
+	outputFile = sys.stdout if arguments.out == '-' else open(arguments.out, 'w')
+	if isinstance(output, str) == True:
+		outputFile.write(output)
+	else:
+		outputFile.buffer.write(output)
+
+	if outputFile != sys.stdout:
+		outputFile.close()

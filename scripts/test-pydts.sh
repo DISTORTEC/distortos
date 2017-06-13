@@ -75,20 +75,19 @@ testPydts() {
 				cmp -s "${name}.dts-pydts0" "${name}.dts-pydts1"; } ||
 				{ failedPydts1=$((++failedPydts1)); echo 'Failed - pydts dts->dts'; continue; }
 
-		# try to convert *.dts to dictionary
-		"${pydts}" -I dts -O dictionary "${name}.dts-pydts0" -o "${name}.dictionary-pydts2" ||
-				{ failedPydts2=$((++failedPydts2)); echo 'Failed - pydts dts->dictionary'; continue; }
+		# try to convert *.dts to *.pickle
+		"${pydts}" -I dts -O pickle "${name}.dts-pydts1" -o "${name}.pickle-pydts2" ||
+				{ failedPydts2=$((++failedPydts2)); echo 'Failed - pydts dts->pickle'; continue; }
 
-		# try to convert dictionary to dictionary - both files should be identical
-		{ "${pydts}" -I dictionary -O dictionary "${name}.dictionary-pydts2" -o "${name}.dictionary-pydts3" &&
-				cmp -s "${name}.dictionary-pydts2" "${name}.dictionary-pydts3"; } ||
-				{ failedPydts3=$((++failedPydts3)); echo 'Failed - pydts dictionary->dictionary'; continue; }
+		# try to convert *.pickle to *.pickle
+		"${pydts}" -I pickle -O pickle "${name}.pickle-pydts2" -o "${name}.pickle-pydts3" ||
+				{ failedPydts3=$((++failedPydts3)); echo 'Failed - pydts pickle->pickle'; continue; }
 
-		# try to convert dictionary back to *.dts - the result should be identical to the source *.dts file used to
-		# generate the dictionary
-		{ "${pydts}" -I dictionary -O dts "${name}.dictionary-pydts2" -o "${name}.dts-pydts4" &&
-				cmp -s "${name}.dts-pydts0" "${name}.dts-pydts4"; } ||
-				{ failedPydts4=$((++failedPydts4)); echo 'Failed - pydts dictionary->dts'; continue; }
+		# try to convert *.pickle back to *.dts - the result should be identical to the source *.dts file used to
+		# generate *.pickle
+		{ "${pydts}" -I pickle -O dts "${name}.pickle-pydts3" -o "${name}.dts-pydts4" &&
+				cmp -s "${name}.dts-pydts1" "${name}.dts-pydts4"; } ||
+				{ failedPydts4=$((++failedPydts4)); echo 'Failed - pydts pickle->dts'; continue; }
 
 		# compile *.dts file merged with pydts to *.dtb
 		dtc ${DTCFLAGS} -O dtb "${name}.dts-pydts4" -o "${name}.dtb0-dtc" ||
@@ -114,9 +113,9 @@ testPydts() {
 	echo "- failed ${failed}:"
 	echo "  - pydts merge ${failedPydts0}"
 	echo "  - pydts dts->dts ${failedPydts1}"
-	echo "  - pydts dts->dictionary ${failedPydts2}"
-	echo "  - pydts dictionary->dictionary ${failedPydts3}"
-	echo "  - pydts dictionary->dts ${failedPydts4}"
+	echo "  - pydts dts->pickle ${failedPydts2}"
+	echo "  - pydts pickle->pickle ${failedPydts3}"
+	echo "  - pydts pickle->dts ${failedPydts4}"
 	echo "  - dtc dts(pydts)->dtb ${failedDtc1}"
 	echo "  - dtc dts(dtc)->dtb ${failedDtc2}"
 	echo "  - cmp dtb(pydts) & dtb(dtc) ${failedDtb}"
