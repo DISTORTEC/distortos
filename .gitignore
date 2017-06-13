@@ -22,5 +22,6 @@ documentation/html/
 # other
 .gdbinit
 __pycache__
+*.pyc
 parsetab.py
 .~lock.*
