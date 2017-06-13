@@ -11,7 +11,6 @@
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #
 
-import ast
 import argparse
 import pickle
 import ply.lex
@@ -882,7 +881,7 @@ def dtsToDictionary(dts, inputFilename = '<string>'):
 
 if __name__ == '__main__':
 	parser = argparse.ArgumentParser()
-	parser.add_argument('-I', '--in-format', choices = ['dictionary', 'dts', 'pickle'], default = 'dts',
+	parser.add_argument('-I', '--in-format', choices = ['dts', 'pickle'], default = 'dts',
 			help = 'input format, default - dts')
 	parser.add_argument('-O', '--out-format', choices = ['dictionary', 'dts', 'pickle'], default = 'pickle',
 			help = 'output format, default - pickle')
@@ -891,9 +890,7 @@ if __name__ == '__main__':
 	arguments = parser.parse_args()
 
 	try:
-		if arguments.in_format == 'dictionary':
-			dictionary = ast.literal_eval(arguments.inputFile.read())
-		elif arguments.in_format == 'dts':
+		if arguments.in_format == 'dts':
 			dictionary = dtsToDictionary(arguments.inputFile.read(), arguments.inputFile.name)
 		else:
 			dictionary = pickle.load(getattr(arguments.inputFile, 'buffer', arguments.inputFile))
