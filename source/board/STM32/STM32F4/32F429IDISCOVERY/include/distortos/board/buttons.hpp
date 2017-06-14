@@ -11,8 +11,6 @@
  *
  * \warning
  * Automatically generated file - do not edit!
- *
- * \date 2017-03-15 17:37:29
  */
 
 #ifndef SOURCE_BOARD_STM32_STM32F4_32F429IDISCOVERY_INCLUDE_DISTORTOS_BOARD_BUTTONS_HPP_

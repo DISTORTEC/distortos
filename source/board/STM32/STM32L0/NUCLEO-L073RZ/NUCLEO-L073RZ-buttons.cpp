@@ -11,8 +11,6 @@
  *
  * \warning
  * Automatically generated file - do not edit!
- *
- * \date 2017-05-02 08:52:55
  */
 
 #include "distortos/board/buttons.hpp"
