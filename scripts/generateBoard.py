@@ -66,18 +66,21 @@ def collectMetaDataFromJinja2File(templateFile):
 	variables = meta.find_undeclared_variables(templateEnv.parse(source))
 	stringFromVarNames = str(variables).split('\'')
 
-	outputTemplates[templateFile] = {}
+	metaData = {}
 
 	for value in stringFromVarNames:
 		matchObj = re.match(r'.+?(?=__)', value, re.M|re.I)
 		if matchObj:
-			outputTemplates[templateFile]['id'] = str(matchObj.group())
+			metaData['id'] = str(matchObj.group())
 		matchObj = re.search(r'(?<=__)[^}]*(?=__)', value, re.M|re.I)
 		if matchObj:
-			outputTemplates[templateFile]['type'] = str(matchObj.group())
+			metaData['type'] = str(matchObj.group())
 		matchObj = re.search(r'(?<=__)v[0-9]', value, re.M|re.I)
 		if matchObj:
-			outputTemplates[templateFile]['version'] = str(matchObj.group())
+			metaData['version'] = str(matchObj.group())
+
+	if metaData:
+		outputTemplates[templateFile] = metaData
 
 def getTemplateFileFromTypeAndVersion(id, version):
 	for fileName, parameters in outputTemplates.items():
