@@ -10,14 +10,12 @@
 #
 
 import json
-import string
 import jinja2
 from jinja2 import meta
 import argparse
 from string import digits
 import os
 import re
-import shutil
 import datetime
 
 outputTemplates = {}
