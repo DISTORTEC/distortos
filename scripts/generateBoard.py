@@ -34,7 +34,8 @@ def inputParams():
 
 def generateJinja2File(filename, templateFile, templateVars):
 	templateLoader = jinja2.FileSystemLoader([".", os.path.dirname(templateFile)])
-	templateEnv = jinja2.Environment(keep_trailing_newline = True, loader = templateLoader)
+	templateEnv = jinja2.Environment(trim_blocks = True, lstrip_blocks = True, keep_trailing_newline = True,
+			loader = templateLoader)
 	template = templateEnv.get_template(templateFile)
 
 	outputText = template.render(templateVars)
@@ -58,7 +59,8 @@ def collectMetaDataFromJinja2File(templateFile):
 	global outputTemplates
 
 	templateLoader = jinja2.FileSystemLoader([".", os.path.dirname(templateFile)])
-	templateEnv = jinja2.Environment(keep_trailing_newline = True, loader = templateLoader)
+	templateEnv = jinja2.Environment(trim_blocks = True, lstrip_blocks = True, keep_trailing_newline = True,
+			loader = templateLoader)
 
 	source = templateEnv.loader.get_source(templateEnv, templateFile)[0]
 	variables = meta.find_undeclared_variables(templateEnv.parse(source))

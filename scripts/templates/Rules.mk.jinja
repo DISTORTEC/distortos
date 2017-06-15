@@ -1,5 +1,5 @@
-{{- outputTemplate__Rules_mk -}}
-{%- set fileTypeInHeader = 'Rules.mk' -%}
+{{ outputTemplate__Rules_mk -}}
+{% set fileTypeInHeader = 'Rules.mk' %}
 {% include "headerConfig.jinja" %}
 
 ifeq ($(CONFIG_BOARD_{{ board|replace('-', '_') }}),y)

@@ -1,5 +1,3 @@
-{{- inputPinTemplate__v1 -}}
-chip::ChipInputPin{chip::Pin::{{ item["pin"] }},
-{{- end }} chip::PinPull::{{ item["pinPull"] }},
-{{- end }} {{ item["inverted"] | lower }}},
-{#- remove whitespace -#}
+{{ inputPinTemplate__v1 -}}
+{{ '\t\t' }}chip::ChipInputPin{chip::Pin::{{ item["pin"] }}, {# remove whitespace -#}
+chip::PinPull::{{ item["pinPull"] }}, {{ item["inverted"] | lower }}},

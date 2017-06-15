@@ -1,6 +1,6 @@
-{{- outputTemplate__buttons__ -}}
-{%- set fileTypeInHeader = 'button' -%}
-{%- set briefName = 'Declaration' -%}
+{{ outputTemplate__buttons__ -}}
+{% set fileTypeInHeader = 'button' %}
+{% set briefName = 'Declaration' %}
 {% include "headerSourceFile.jinja" %}
 
 #ifndef SOURCE_BOARD_STM32_{{ chipFamily }}_{{ board|replace('-', '_') }}_INCLUDE_DISTORTOS_BOARD_BUTTONS_HPP_
@@ -9,6 +9,7 @@
 #include "distortos/distortosConfiguration.h"
 
 #include <cstddef>
+
 {% for id, group in buttonsIds %}
 /// indicates whether {{ buttonsIds[loop.index - 1][0] | upper }} button is enabled (1) or not (0)
 #ifdef CONFIG_CHIP_STM32_GPIO{{ gpioDriverVersion | upper }}_GPIO{{ group | upper }}_ENABLE
@@ -16,12 +17,13 @@
 #else	// !def CONFIG_CHIP_STM32_GPIO{{ gpioDriverVersion | upper }}_GPIO{{ group | upper }}_ENABLE
 #define DISTORTOS_BOARD_{{ buttonsIds[loop.index - 1][0] | upper }}_BUTTON_ENABLE	0
 #endif	// !def CONFIG_CHIP_STM32_GPIO{{ gpioDriverVersion | upper }}_GPIO{{ group | upper }}_ENABLE
+
 {% endfor %}
 /// total number of buttons on the board
 #define DISTORTOS_BOARD_TOTAL_BUTTONS		( \
-{%- for id, group in buttonsIds %}
+{% for id, group in buttonsIds %}
 		DISTORTOS_BOARD_{{ buttonsIds[loop.index - 1][0] | upper }}_BUTTON_ENABLE + \
-{%- endfor %}
+{% endfor %}
 		0)
 
 namespace distortos
@@ -50,12 +52,12 @@ constexpr size_t totalButtons {DISTORTOS_BOARD_TOTAL_BUTTONS};
 
 enum
 {
-{%- for id, group in buttonsIds %}
+{% for id, group in buttonsIds %}
 #if DISTORTOS_BOARD_{{ buttonsIds[loop.index - 1][0] | upper }}_BUTTON_ENABLE == 1
 		/// index of {{ buttonsIds[loop.index - 1][0] | upper }} button
 		{{ id }}ButtonIndex,
 #endif	// DISTORTOS_BOARD_{{ buttonsIds[loop.index - 1][0] | upper }}_BUTTON_ENABLE == 1
-{%- endfor %}
+{% endfor %}
 };
 
 #ifdef CONFIG_BOARD_BUTTONS_ENABLE
