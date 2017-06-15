@@ -10,18 +10,18 @@
 
 #include <cstddef>
 {% for id, alternativeId, group in ledsIds %}
-/// indicates whether {% filter upper %}{{ ledsIds[loop.index - 1][0] }}{% endfilter %} LED ({{ alternativeId }})
+/// indicates whether {{ ledsIds[loop.index - 1][0] | upper }} LED ({{ alternativeId }})
 {{- end }} is enabled (1) or not (0)
-#ifdef {% filter upper %}CONFIG_CHIP_STM32_GPIO{{ gpioDriverVersion }}_GPIO{{ group }}_ENABLE{% endfilter %}
-#define DISTORTOS_BOARD_{% filter upper %}{{ ledsIds[loop.index - 1][0] }}{% endfilter %}_LED_ENABLE		1
-#else	// !def {% filter upper %}CONFIG_CHIP_STM32_GPIO{{ gpioDriverVersion }}_GPIO{{ group }}_ENABLE{% endfilter %}
-#define DISTORTOS_BOARD_{% filter upper %}{{ ledsIds[loop.index - 1][0] }}{% endfilter %}_LED_ENABLE		0
-#endif	// !def {% filter upper %}CONFIG_CHIP_STM32_GPIO{{ gpioDriverVersion }}_GPIO{{ group }}_ENABLE{% endfilter %}
+#ifdef CONFIG_CHIP_STM32_GPIO{{ gpioDriverVersion | upper }}_GPIO{{ group | upper }}_ENABLE
+#define DISTORTOS_BOARD_{{ ledsIds[loop.index - 1][0] | upper }}_LED_ENABLE		1
+#else	// !def CONFIG_CHIP_STM32_GPIO{{ gpioDriverVersion | upper }}_GPIO{{ group | upper }}_ENABLE
+#define DISTORTOS_BOARD_{{ ledsIds[loop.index - 1][0] | upper }}_LED_ENABLE		0
+#endif	// !def CONFIG_CHIP_STM32_GPIO{{ gpioDriverVersion | upper }}_GPIO{{ group | upper }}_ENABLE
 {% endfor %}
 /// total number of leds on the board
 #define DISTORTOS_BOARD_TOTAL_LEDS		( \
 {%- for id, alternativeId, group in ledsIds %}
-		DISTORTOS_BOARD_{% filter upper %}{{ ledsIds[loop.index - 1][0] }}{% endfilter %}_LED_ENABLE + \
+		DISTORTOS_BOARD_{{ ledsIds[loop.index - 1][0] | upper }}_LED_ENABLE + \
 {%- endfor %}
 		0)
 
@@ -52,10 +52,10 @@ constexpr size_t totalLeds {DISTORTOS_BOARD_TOTAL_LEDS};
 enum
 {
 {%- for id, alternativeId, group in ledsIds %}
-#if DISTORTOS_BOARD_{% filter upper %}{{ ledsIds[loop.index - 1][0] }}{% endfilter %}_LED_ENABLE == 1
-		/// index of {% filter upper %}{{ id }}{% endfilter %} LED ({{ alternativeId }})
+#if DISTORTOS_BOARD_{{ ledsIds[loop.index - 1][0] | upper }}_LED_ENABLE == 1
+		/// index of {{ id | upper }} LED ({{ alternativeId }})
 		{{ id }}LedIndex,
-#endif	// DISTORTOS_BOARD_{% filter upper %}{{ ledsIds[loop.index - 1][0] }}{% endfilter %}_LED_ENABLE == 1
+#endif	// DISTORTOS_BOARD_{{ ledsIds[loop.index - 1][0] | upper }}_LED_ENABLE == 1
 {%- endfor %}
 };
 
@@ -65,10 +65,10 @@ enum
 | alternative (color-based) LED indexes
 +---------------------------------------------------------------------------------------------------------------------*/
 {% for id, alternativeId, group in ledsIds %}
-#if DISTORTOS_BOARD_{% filter upper %}{{ ledsIds[loop.index - 1][0] }}{% endfilter %}_LED_ENABLE == 1
-/// alternative index of {% filter upper %}{{ id }}{% endfilter %} LED ({{ alternativeId }})
+#if DISTORTOS_BOARD_{{ ledsIds[loop.index - 1][0] | upper }}_LED_ENABLE == 1
+/// alternative index of {{ id | upper }} LED ({{ alternativeId }})
 constexpr size_t {{ alternativeId }}LedIndex {{ '{' }}{{ id }}LedIndex{{ '}' }};
-#endif	// DISTORTOS_BOARD_{% filter upper %}{{ ledsIds[loop.index - 1][0] }}{% endfilter %}_LED_ENABLE == 1
+#endif	// DISTORTOS_BOARD_{{ ledsIds[loop.index - 1][0] | upper }}_LED_ENABLE == 1
 {% endfor %}
 /*---------------------------------------------------------------------------------------------------------------------+
 | indexed access to LED objects

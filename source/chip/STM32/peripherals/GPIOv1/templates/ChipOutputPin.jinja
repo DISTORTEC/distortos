@@ -1,6 +1,6 @@
 {{- outputPinTemplate__v1 -}}
 chip::ChipOutputPin{chip::Pin::{{ item["pin"] }},
-{{- end }} {% filter lower %}{{ item["openDrain"] }}{% endfilter %},
+{{- end }} {{ item["openDrain"] | lower }},
 {{- end }} chip::PinOutputSpeed::{{ item["pinOutputSpeed"] }},
-{{- end }} {% filter lower %}{{ item["initialState"] }}{% endfilter %},
-{{- end }} {% filter lower %}{{ item["inverted"] }}{% endfilter %}},
+{{- end }} {{ item["initialState"] | lower }},
+{{- end }} {{ item["inverted"] | lower }}},

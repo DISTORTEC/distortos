@@ -10,17 +10,17 @@
 
 #include <cstddef>
 {% for id, group in buttonsIds %}
-/// indicates whether {% filter upper %}{{ buttonsIds[loop.index - 1][0] }}{% endfilter %} button is enabled (1) or not (0)
-#ifdef {% filter upper %}CONFIG_CHIP_STM32_GPIO{{ gpioDriverVersion }}_GPIO{{ group }}_ENABLE{% endfilter %}
-#define DISTORTOS_BOARD_{% filter upper %}{{ buttonsIds[loop.index - 1][0] }}{% endfilter %}_BUTTON_ENABLE	1
-#else	// !def {% filter upper %}CONFIG_CHIP_STM32_GPIO{{ gpioDriverVersion }}_GPIO{{ group }}_ENABLE{% endfilter %}
-#define DISTORTOS_BOARD_{% filter upper %}{{ buttonsIds[loop.index - 1][0] }}{% endfilter %}_BUTTON_ENABLE	0
-#endif	// !def {% filter upper %}CONFIG_CHIP_STM32_GPIO{{ gpioDriverVersion }}_GPIO{{ group }}_ENABLE{% endfilter %}
+/// indicates whether {{ buttonsIds[loop.index - 1][0] | upper }} button is enabled (1) or not (0)
+#ifdef CONFIG_CHIP_STM32_GPIO{{ gpioDriverVersion | upper }}_GPIO{{ group | upper }}_ENABLE
+#define DISTORTOS_BOARD_{{ buttonsIds[loop.index - 1][0] | upper }}_BUTTON_ENABLE	1
+#else	// !def CONFIG_CHIP_STM32_GPIO{{ gpioDriverVersion | upper }}_GPIO{{ group | upper }}_ENABLE
+#define DISTORTOS_BOARD_{{ buttonsIds[loop.index - 1][0] | upper }}_BUTTON_ENABLE	0
+#endif	// !def CONFIG_CHIP_STM32_GPIO{{ gpioDriverVersion | upper }}_GPIO{{ group | upper }}_ENABLE
 {% endfor %}
 /// total number of buttons on the board
 #define DISTORTOS_BOARD_TOTAL_BUTTONS		( \
 {%- for id, group in buttonsIds %}
-		DISTORTOS_BOARD_{% filter upper %}{{ buttonsIds[loop.index - 1][0] }}{% endfilter %}_BUTTON_ENABLE + \
+		DISTORTOS_BOARD_{{ buttonsIds[loop.index - 1][0] | upper }}_BUTTON_ENABLE + \
 {%- endfor %}
 		0)
 
@@ -51,10 +51,10 @@ constexpr size_t totalButtons {DISTORTOS_BOARD_TOTAL_BUTTONS};
 enum
 {
 {%- for id, group in buttonsIds %}
-#if DISTORTOS_BOARD_{% filter upper %}{{ buttonsIds[loop.index - 1][0] }}{% endfilter %}_BUTTON_ENABLE == 1
-		/// index of {% filter upper %}{{ buttonsIds[loop.index - 1][0] }}{% endfilter %} button
+#if DISTORTOS_BOARD_{{ buttonsIds[loop.index - 1][0] | upper }}_BUTTON_ENABLE == 1
+		/// index of {{ buttonsIds[loop.index - 1][0] | upper }} button
 		{{ id }}ButtonIndex,
-#endif	// DISTORTOS_BOARD_{% filter upper %}{{ buttonsIds[loop.index - 1][0] }}{% endfilter %}_BUTTON_ENABLE == 1
+#endif	// DISTORTOS_BOARD_{{ buttonsIds[loop.index - 1][0] | upper }}_BUTTON_ENABLE == 1
 {%- endfor %}
 };
 
