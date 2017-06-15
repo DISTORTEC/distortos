@@ -11,8 +11,6 @@
  *
  * \warning
  * Automatically generated file - do not edit!
- *
- * \date 2017-03-15 17:37:30
  */
 
 #include "distortos/board/leds.hpp"

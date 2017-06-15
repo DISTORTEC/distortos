@@ -11,8 +11,6 @@
  *
  * \warning
  * Automatically generated file - do not edit!
- *
- * \date 2017-05-02 08:52:55
  */
 
 #ifndef SOURCE_BOARD_STM32_STM32L0_NUCLEO_L073RZ_INCLUDE_DISTORTOS_BOARD_BUTTONS_HPP_

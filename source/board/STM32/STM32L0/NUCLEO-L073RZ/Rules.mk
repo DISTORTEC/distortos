@@ -1,5 +1,3 @@
-# File generated with scripts/generateBoard.py:
-# Copyright (C) 2017 Cezary Gapinski cezary.gapinski@gmail.com
 #
 # file: Rules.mk
 #
@@ -10,8 +8,6 @@
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #
 # Automatically generated file - do not edit!
-#
-# date: 2017-05-02 08:52:55
 #
 
 ifeq ($(CONFIG_BOARD_NUCLEO_L073RZ),y)

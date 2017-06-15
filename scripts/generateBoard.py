@@ -195,7 +195,6 @@ def main():
 	templateVars = {}
 	templateVars["boardIncludes"] = includeBoard
 	templateVars["actualYear"] = datetime.datetime.now().year
-	templateVars["actualDate"] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
 	for key in data:
 		if (key == "leds"):
