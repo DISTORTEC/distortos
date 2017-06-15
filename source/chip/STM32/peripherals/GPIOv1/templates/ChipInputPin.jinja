@@ -1,4 +1,4 @@
 {{- inputPinTemplate__v1 -}}
-chip::ChipInputPin{chip::Pin::{{item["pin"]}},
-{{-end}} chip::PinPull::{{item["pinPull"]}},
-{{-end}} {% filter lower %}{{item["inverted"]}}{% endfilter %}},
+chip::ChipInputPin{chip::Pin::{{ item["pin"] }},
+{{- end }} chip::PinPull::{{ item["pinPull"] }},
+{{- end }} {% filter lower %}{{ item["inverted"] }}{% endfilter %}},

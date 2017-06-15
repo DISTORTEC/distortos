@@ -26,6 +26,6 @@ config BOARD_{{ board|replace('-', '_') }}
 	select CHIP_{{ device }}
 {{ createHasCondition('LEDS ', usedPinsGroupsLeds) -}}
 {{ createHasCondition('BUTTONS ', usedPinsGroupsButtons) -}}
-{{''}}	help
+{{ '' }}	help
 		{{ board_description }}
-{{''}}
+{{ '' }}

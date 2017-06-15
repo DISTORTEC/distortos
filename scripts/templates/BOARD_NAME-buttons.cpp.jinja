@@ -22,9 +22,9 @@ namespace board
 const chip::ChipInputPin buttons[totalButtons]
 {
 {% for item in buttonsPins -%}
-#if DISTORTOS_BOARD_{% filter upper %}{{buttonsIds[loop.index - 1][0]}}{% endfilter %}_BUTTON_ENABLE == 1
+#if DISTORTOS_BOARD_{% filter upper %}{{ buttonsIds[loop.index - 1][0] }}{% endfilter %}_BUTTON_ENABLE == 1
 		{% include gpioInputTemplate %}
-#endif	// DISTORTOS_BOARD_{% filter upper %}{{buttonsIds[loop.index - 1][0]}}{% endfilter %}_BUTTON_ENABLE == 1
+#endif	// DISTORTOS_BOARD_{% filter upper %}{{ buttonsIds[loop.index - 1][0] }}{% endfilter %}_BUTTON_ENABLE == 1
 {% endfor -%}
 };
 
@@ -33,4 +33,4 @@ const chip::ChipInputPin buttons[totalButtons]
 }	// namespace distortos
 
 #endif	// def CONFIG_BOARD_BUTTONS_ENABLE
-{{''}}
+{{ '' }}
