@@ -1,5 +1,5 @@
-{{- outputTemplate__Rules_mk -}}
-{%- set fileTypeInHeader = 'Rules.mk' -%}
+{{ outputTemplate__Rules_mk -}}
+{% set fileTypeInHeader = 'Rules.mk' %}
 {% include "headerConfig.jinja" %}
 
 ifeq ($(CONFIG_BOARD_{{ board|replace('-', '_') }}),y)
@@ -19,4 +19,3 @@ CXXFLAGS_$(d) := $(CXXFLAGS_$(d)) $(BOARD_INCLUDES)
 include $(DISTORTOS_PATH)footer.mk
 
 endif	# eq ($(CONFIG_BOARD_{{ board|replace('-', '_') }}),y)
-{{''}}

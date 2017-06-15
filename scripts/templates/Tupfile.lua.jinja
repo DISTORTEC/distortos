@@ -1,10 +1,10 @@
-{{- outputTemplate__Tupfile_lua -}}
-{%- from 'macros.jinja' import createDate -%}
+{{ outputTemplate__Tupfile_lua -}}
+{% from 'macros.jinja' import createDate %}
 --
 -- file: Tupfile.lua
 --
--- author: Copyright (C) {{ createDate(2014, actualYear) }}
-{{-end}} Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+-- author: Copyright (C) {{ createDate(2014, actualYear) }} {# remove whitespace -#}
+Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
 -- author: Copyright (C) {{ createDate(2017, actualYear) }} Cezary Gapinski cezary.gapinski@gmail.com
 --
 -- This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -22,4 +22,3 @@ if CONFIG_BOARD_{{ board|replace('-', '_') }} == "y" then
 	tup.include(DISTORTOS_TOP .. "compile.lua")
 
 end	-- if CONFIG_BOARD_{{ board|replace('-', '_') }} == "y" then
-{{''}}

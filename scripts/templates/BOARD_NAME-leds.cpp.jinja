@@ -1,6 +1,6 @@
-{{- outputTemplate__leds__ -}}
-{%- set fileTypeInHeader = 'LED' -%}
-{%- set briefName = 'Definition' -%}
+{{ outputTemplate__leds__ -}}
+{% set fileTypeInHeader = 'LED' %}
+{% set briefName = 'Definition' %}
 {% include "headerSourceFile.jinja" %}
 
 #include "distortos/board/leds.hpp"
@@ -21,11 +21,11 @@ namespace board
 
 chip::ChipOutputPin leds[totalLeds]
 {
-{% for item in ledsPins -%}
-#if DISTORTOS_BOARD_{% filter upper %}{{ledsIds[loop.index - 1][0]}}{% endfilter %}_LED_ENABLE == 1
+{% for item in ledsPins %}
+#if DISTORTOS_BOARD_{{ ledsIds[loop.index - 1][0] | upper }}_LED_ENABLE == 1
 		{% include gpioOutputTemplate %}
-#endif	// DISTORTOS_BOARD_{% filter upper %}{{ledsIds[loop.index - 1][0]}}{% endfilter %}_LED_ENABLE == 1
-{% endfor -%}
+#endif	// DISTORTOS_BOARD_{{ ledsIds[loop.index - 1][0] | upper }}_LED_ENABLE == 1
+{% endfor %}
 };
 
 }	// namespace board
@@ -33,4 +33,3 @@ chip::ChipOutputPin leds[totalLeds]
 }	// namespace distortos
 
 #endif	// def CONFIG_BOARD_LEDS_ENABLE
-{{''}}
