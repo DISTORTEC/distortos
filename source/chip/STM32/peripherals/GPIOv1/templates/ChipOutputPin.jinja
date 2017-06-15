@@ -4,3 +4,4 @@ chip::ChipOutputPin{chip::Pin::{{ item["pin"] }},
 {{- end }} chip::PinOutputSpeed::{{ item["pinOutputSpeed"] }},
 {{- end }} {{ item["initialState"] | lower }},
 {{- end }} {{ item["inverted"] | lower }}},
+{#- remove whitespace -#}

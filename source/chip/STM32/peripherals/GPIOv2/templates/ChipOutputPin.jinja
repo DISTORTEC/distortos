@@ -5,3 +5,4 @@ chip::ChipOutputPin{chip::Pin::{{ item["pin"] }},
 {{- end }} chip::PinPull::{{ item["pinPull"] }},
 {{- end }} {{ item["initialState"] | lower }},
 {{- end }} {{ item["inverted"] | lower }}},
+{#- remove whitespace -#}
