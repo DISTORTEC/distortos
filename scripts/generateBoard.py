@@ -22,14 +22,10 @@ outputTemplates = {}
 
 def inputParams():
 	parser = argparse.ArgumentParser()
-	parser.add_argument('-c', '--config', required=True, action='store', dest='configFile',
-			help='path to json config file')
-	parser.add_argument('-o', '--output', required=False, action='store', dest='outputDir',
-			help='path to directory where files will be generated,'
-				'if empty the files will be generated in the same folder as the one with config file')
-	parser.add_argument('-s', '--search_path', required=False, action='store', nargs='*',
-			default='.', dest='searchPath',
-			help='string separated with spaces containt paths where templates are located')
+	parser.add_argument('config', help = 'path to json config file')
+	parser.add_argument('-o', '--output', help = 'path to directory where files will be generated,'
+			'if empty the files will be generated in the same folder as the one with config file')
+	parser.add_argument('-s', '--search', nargs = '*', default = '.', help = 'search paths for templates')
 	return parser.parse_args()
 
 def generateJinja2File(filename, templateFile, templateVars):
@@ -171,21 +167,21 @@ def removeFromOutputTemplatesIfNotConfiguredParam(input_data):
 
 def main():
 	inputParameters = inputParams()
-	jinjaFiles = searchForJinja2FilesInPath(inputParameters.searchPath)
+	jinjaFiles = searchForJinja2FilesInPath(inputParameters.search)
 
 	for file in jinjaFiles:
 		collectMetaDataFromJinja2File(file)
 
-	with open(inputParameters.configFile) as configDataFile:
+	with open(inputParameters.config) as configDataFile:
 		data = json.load(configDataFile)
 
-	if inputParameters.outputDir:
-		outputBoardPath = inputParameters.outputDir
+	if inputParameters.output:
+		outputBoardPath = inputParameters.output
 		if not outputBoardPath.endswith('/'):
 			outputBoardPath += '/'
 		outputBoardPath += data["board"]
 	else:
-		outputBoardPath = os.path.dirname(inputParameters.configFile)
+		outputBoardPath = os.path.dirname(inputParameters.config)
 
 	outputBoardPath += "/"
 	includeBoard = outputBoardPath + "include"

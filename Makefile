@@ -284,7 +284,7 @@ board:
 ifdef OUTPUT_PATH
 	$(eval OPTIONAL_BOARD_ARGUMENTS := -o $(OUTPUT_PATH))
 endif
-	./$(DISTORTOS_PATH)scripts/generateBoard.py -c $(CONFIG_FILE) $(OPTIONAL_BOARD_ARGUMENTS)
+	./$(DISTORTOS_PATH)scripts/generateBoard.py $(CONFIG_FILE) $(OPTIONAL_BOARD_ARGUMENTS)
 
 .PHONY: configure
 configure:
