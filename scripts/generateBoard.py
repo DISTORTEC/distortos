@@ -20,14 +20,6 @@ import datetime
 
 outputTemplates = {}
 
-def inputParams():
-	parser = argparse.ArgumentParser()
-	parser.add_argument('config', help = 'path to json config file')
-	parser.add_argument('-o', '--output', help = 'path to directory where files will be generated,'
-			'if empty the files will be generated in the same folder as the one with config file')
-	parser.add_argument('-s', '--search', nargs = '*', default = '.', help = 'search paths for templates')
-	return parser.parse_args()
-
 def generateJinja2File(filename, templateFile, templateVars):
 	templateLoader = jinja2.FileSystemLoader([".", os.path.dirname(templateFile)])
 	templateEnv = jinja2.Environment(trim_blocks = True, lstrip_blocks = True, keep_trailing_newline = True,
@@ -166,7 +158,13 @@ def removeFromOutputTemplatesIfNotConfiguredParam(input_data):
 				del outputTemplates[template_path]
 
 def main():
-	inputParameters = inputParams()
+	parser = argparse.ArgumentParser()
+	parser.add_argument('config', help = 'path to json config file')
+	parser.add_argument('-o', '--output', help = 'path to directory where files will be generated,'
+			'if empty the files will be generated in the same folder as the one with config file')
+	parser.add_argument('-s', '--search', nargs = '*', default = '.', help = 'search paths for templates')
+	inputParameters = parser.parse_args()
+
 	jinjaFiles = searchForJinja2FilesInPath(inputParameters.search)
 
 	for file in jinjaFiles:
