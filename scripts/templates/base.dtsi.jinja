@@ -21,19 +21,19 @@
 {% if flash is defined %}
 {% for label, item in flash.items() %}
 {{ emptyLine() -}}
-{% include "scripts/templates/flash.dtsi.jinja" %}
+{% include item.dtsiTemplate %}
 {% endfor %}
 {% endif %}
 {% if eeprom is defined %}
 {% for label, item in eeprom.items() %}
 {{ emptyLine() -}}
-{% include "scripts/templates/eeprom.dtsi.jinja" %}
+{% include item.dtsiTemplate %}
 {% endfor %}
 {% endif %}
 {% if memory is defined %}
 {% for label, item in memory.items() %}
 {{ emptyLine() -}}
-{% include "scripts/templates/memory.dtsi.jinja" %}
+{% include item.dtsiTemplate %}
 {% endfor %}
 {% endif %}
 {% endblock %}
