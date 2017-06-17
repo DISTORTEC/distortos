@@ -27,32 +27,21 @@ import os
 
 def handleRow(jinjaEnvironment, outputPath, header, row):
 	singles = {}
-	groups = {}
 	nodes = collections.defaultdict(dict)
 	for index, element in enumerate(header):
 		if element[0] == '' or row[index] == '':
 			continue
 		if element[1] == '' and element[2] == '':	# single element
 			singles[element[0]] = row[index]
-		elif element[1] != '' and element[2] != '':	# group
-			if not element[0] in groups:	# start new group
-				groups[element[0]] = {}
-			if not element[1] in groups[element[0]]:	# start new group element
-				groups[element[0]][element[1]] = {}
-
+		elif element[1] != '' and element[2] != '':	# node
 			if element[2] != 'dtsiTemplate':
 				nodes[element[1]][element[2]] = row[index]
 			else:
 				nodes[element[1]][element[2]] = jinjaEnvironment.get_template(row[index])
 
-			if element[2] != 'dtsiTemplate':
-				groups[element[0]][element[1]][element[2]] = row[index]
-			else:
-				groups[element[0]][element[1]][element[2]] = jinjaEnvironment.get_template(row[index])
-
 	with open(os.path.join(outputPath, singles['name'] + '.dtsi'), 'w') as dtsiFile:
 		jinjaTemplate = jinjaEnvironment.get_template(singles['dtsiTemplate'])
-		dtsiFile.write(jinjaTemplate.render(**singles, nodes = nodes, **groups))
+		dtsiFile.write(jinjaTemplate.render(**singles, nodes = nodes))
 
 ########################################################################################################################
 # main
