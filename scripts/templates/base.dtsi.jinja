@@ -32,12 +32,8 @@
 {% endif %}
 {% if memory is defined %}
 {% for label, item in memory.items() %}
-
-	{{ label }}: memory@{{ '%x' % item.address | int(base = 0) }} {
-		device_type = "memory";
-		reg = <{{ '0x%x' % item.address | int(base = 0) }} {{ item.size }}>;
-		label = "{{ label }}";
-	};
+{{ emptyLine() -}}
+{% include "scripts/templates/memory.dtsi.jinja" %}
 {% endfor %}
 {% endif %}
 {% endblock %}
