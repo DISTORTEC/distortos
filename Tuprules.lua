@@ -128,6 +128,9 @@ CXXFLAGS += CONFIG_LINK_TIME_OPTIMIZATION_COMPILATION
 CXXFLAGS += "-ffunction-sections -fdata-sections -fno-rtti -fno-exceptions"
 CXXFLAGS += CONFIG_ASSERT
 
+-- path to linker script fragment with symbols (generated automatically)
+SYMBOLS_LD = OUTPUT .. "symbols.ld"
+
 -- path to linker script (generated automatically)
 LDSCRIPT = OUTPUT .. CONFIG_CHIP .. ".ld"
 
