@@ -1,7 +1,7 @@
 #
 # file: Rules.mk
 #
-# author: Copyright (C) 2015-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+# author: Copyright (C) 2015-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
 #
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -29,14 +29,9 @@ else	# CONFIG_CHIP_STM32F4_UNIFY_NONE || CONFIG_CHIP_STM32F4_UNIFY_SRAM2_SRAM3
 endif
 
 LD_SCRIPT_GENERATOR := $(DISTORTOS_PATH)source/architecture/ARM/ARMv6-M-ARMv7-M/ARMv6-M-ARMv7-M.ld.sh
-MAIN_THREAD_STACK_SIZE := $(shell echo $$(((($(CONFIG_MAIN_THREAD_STACK_SIZE) + \
-		$(CONFIG_ARCHITECTURE_STACK_ALIGNMENT) - 1) / $(CONFIG_ARCHITECTURE_STACK_ALIGNMENT) + \
-		($(CONFIG_STACK_GUARD_SIZE) + $(CONFIG_ARCHITECTURE_STACK_ALIGNMENT) - 1) / \
-		$(CONFIG_ARCHITECTURE_STACK_ALIGNMENT)) * $(CONFIG_ARCHITECTURE_STACK_ALIGNMENT))))
 LD_SCRIPT_GENERATOR_ARGUMENTS := $(CONFIG_CHIP) \
 		"$(ROM_ADDRESS),$(ROM_SIZE)" \
-		"$(CONFIG_CHIP_STM32F4_SRAM1_ADDRESS),$(UNIFIED_RAM_SIZE)" \
-		"$(CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_MAIN_STACK_SIZE)" "$(MAIN_THREAD_STACK_SIZE)"
+		"$(CONFIG_CHIP_STM32F4_SRAM1_ADDRESS),$(UNIFIED_RAM_SIZE)"
 
 ifdef CONFIG_CHIP_STM32F4_BKPSRAM_ADDRESS
 	LD_SCRIPT_GENERATOR_ARGUMENTS +=\

@@ -61,6 +61,8 @@ requirements of architecture. This way "usable" size of stack will never be less
 - All boolean *Kconfig* symbols are now converted to `#define CONFIG_... 1` in generated `distortosConfiguration.h`
 file. Previously they were converted to a macro without value (`#define CONFIG_...`), which made building complex
 conditions harder than necessary.
+- Sizes of stacks are no longer part of the "regular" linker script. These two symbols are located in another generated
+file - `symbols.ld` - which is used during linking along the "regular" linker script.
 - Update *CMSIS-STM32F0* to version 1.8.0.
 - Update *CMSIS-STM32F4* to version 1.16.0.
 

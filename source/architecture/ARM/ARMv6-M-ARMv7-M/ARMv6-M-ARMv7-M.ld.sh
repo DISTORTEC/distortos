@@ -12,16 +12,14 @@
 set -e
 set -u
 
-if [ ${#} -lt 5 ]; then
-	echo 'This script requires at least 5 arguments!' >&2
+if [ ${#} -lt 3 ]; then
+	echo 'This script requires at least 3 arguments!' >&2
 	exit 1
 fi
 
 chipName="${1}"
 romDescription="${2}"
 ramDescription="${3}"
-mainStackSize="${4}"
-processStackSize="${5}"
 
 decimalOrHexadecimalRegex='\(\(0x[0-9a-fA-F]\{1,8\}\)\|\([0-9]\{1,9\}\)\)'
 addressRegex="\(${decimalOrHexadecimalRegex}\)"
@@ -37,24 +35,12 @@ if ! expr "${ramDescription}" : "\(${addressRegex},${sizeRegex}\)$" > /dev/null;
 	exit 3
 fi
 
-if ! expr "${mainStackSize}" : "\(${sizeRegex}\)$" > /dev/null; then
-	echo "Invalid size of main stack - \"${mainStackSize}\"!" >&2
-	exit 4
-fi
-
-if ! expr "${processStackSize}" : "\(${sizeRegex}\)$" > /dev/null; then
-	echo "Invalid size of process stack - \"${processStackSize}\"!" >&2
-	exit 5
-fi
-
 # the matched string may (technically) be "0" - that's why " || true" is needed
 romAddress="$(expr "${romDescription}" : '\([^,]\+\),[^,]\+' || true)"
 romSize="$(expr "${romDescription}" : '[^,]\+,\([^,]\+\)' || true)"
 ramAddress="$(expr "${ramDescription}" : '\([^,]\+\),[^,]\+' || true)"
 ramSize="$(expr "${ramDescription}" : '[^,]\+,\([^,]\+\)' || true)"
 
-shift
-shift
 shift
 shift
 shift
@@ -71,7 +57,7 @@ while [ ${#} -gt 0 ]; do
 
 	if ! expr "${1}" : "\([^,]\+,${addressRegex},${sizeRegex}\)$" > /dev/null; then
 		echo "Invalid description of memory - \"${1}\"!" >&2
-		exit 6
+		exit 4
 	fi
 
 	memoryName="$(expr "${1}" : '\([^,]\+\),[^,]\+,[^,]\+' || true)"
@@ -145,7 +131,7 @@ cat << EOF
  * - ${ramSize} bytes of ram at ${ramAddress};
 $(printf '%b' "${headerComments}")
  *
- * \author Copyright (C) 2014-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -160,16 +146,6 @@ $(printf '%b' "${headerComments}")
 SEARCH_DIR(.);
 OUTPUT_FORMAT("elf32-littlearm", "elf32-bigarm", "elf32-littlearm");
 OUTPUT_ARCH(arm);
-
-/*---------------------------------------------------------------------------------------------------------------------+
-| stacks sizes
-+---------------------------------------------------------------------------------------------------------------------*/
-
-/* Handler mode (core exceptions / interrupts) can use only main stack */
-PROVIDE(__main_stack_size = ALIGN(${mainStackSize}, 8));
-
-/* Thread mode can use main stack (default after reset) or process stack - selected in CONTROL special register */
-PROVIDE(__process_stack_size = ALIGN(${processStackSize}, 8));
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | available memories

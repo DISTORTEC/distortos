@@ -126,8 +126,13 @@ CXXFLAGS += $(CONFIG_LINK_TIME_OPTIMIZATION_COMPILATION)
 CXXFLAGS += -ffunction-sections -fdata-sections -fno-rtti -fno-exceptions
 CXXFLAGS += $(CONFIG_ASSERT)
 
+# path to linker script fragment with symbols (generated automatically)
+SYMBOLS_LD := $(OUTPUT)symbols.ld
+
 # path to linker script (generated automatically)
-LDSCRIPT = $(OUTPUT)$(subst ",,$(CONFIG_CHIP)).ld
+LDSCRIPT := $(OUTPUT)$(subst ",,$(CONFIG_CHIP)).ld
+
+LDSCRIPTS := $(SYMBOLS_LD) $(LDSCRIPT)
 
 LDFLAGS += $(subst ",,$(CONFIG_DEBUGGING_INFORMATION_LINKING))
 LDFLAGS += $(CONFIG_ARCHITECTURE_FLAGS)
@@ -253,7 +258,7 @@ $(OUTPUT)%.a:
 $(OUTPUT)%.elf:
 	$(call PRETTY_PRINT,"LD     " $@)
 	$(eval ARCHIVES_$@ := -Wl,--whole-archive $(addprefix -l:,$(filter %.a,$(^))) -Wl,--no-whole-archive)
-	$(Q)$(LD) $(LDFLAGS) -T$(filter %.ld,$(^)) $(filter %.o,$(^)) $(ARCHIVES_$(@)) -o $@
+	$(Q)$(LD) $(LDFLAGS) $(addprefix -T,$(filter %.ld,$(^))) $(filter %.o,$(^)) $(ARCHIVES_$(@)) -o $@
 
 $(OUTPUT)%.hex:
 	$(call PRETTY_PRINT,"HEX    " $@)

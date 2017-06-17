@@ -1,7 +1,7 @@
 #
 # file: Rules.mk
 #
-# author: Copyright (C) 2015-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+# author: Copyright (C) 2015-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
 #
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -49,10 +49,10 @@ CXXFLAGS_$(d) := $(CXXFLAGS_$(d)) $(BOARD_INCLUDES)
 include $(DISTORTOS_PATH)footer.mk
 
 #-----------------------------------------------------------------------------------------------------------------------
-# .elf file dependencies - libdistortos.a, all objects from this folder tree, linker script and this Rules.mk
+# .elf file dependencies - libdistortos.a, all objects from this folder tree, linker scripts and this Rules.mk
 #-----------------------------------------------------------------------------------------------------------------------
 
-$(ELF_$(d)): $(OUTPUT)libdistortos.a $(OBJECTS_$(d)) $(SUBDIRECTORIES_OBJECTS_$(d)) $(LDSCRIPT) $(d)Rules.mk
+$(ELF_$(d)): $(OUTPUT)libdistortos.a $(OBJECTS_$(d)) $(SUBDIRECTORIES_OBJECTS_$(d)) $(LDSCRIPTS) $(d)Rules.mk
 
 #-----------------------------------------------------------------------------------------------------------------------
 # .hex, .bin, .dmp and .lss files depend on .elf file and this Rules.mk
