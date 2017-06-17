@@ -26,12 +26,8 @@
 {% endif %}
 {% if eeprom is defined %}
 {% for label, item in eeprom.items() %}
-
-	{{ label }}: eeprom@{{ '%x' % item.address | int(base = 0) }} {
-		compatible = "on-chip-eeprom";
-		reg = <{{ '0x%x' % item.address | int(base = 0) }} {{ item.size }}>;
-		label = "{{ label }}";
-	};
+{{ emptyLine() -}}
+{% include "scripts/templates/eeprom.dtsi.jinja" %}
 {% endfor %}
 {% endif %}
 {% if memory is defined %}
