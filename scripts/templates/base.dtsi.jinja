@@ -15,19 +15,13 @@
 {% block includes %}
 {% endblock %}
 
-/ {{ '{' -}}
+/ {{ '{' }}
 {% block devicetree %}
+{% set emptyLine = joiner("\n") %}
 {% if flash is defined %}
 {% for label, item in flash.items() %}
-
-	{{ label }}: flash@{{ '%x' % item.address | int(base = 0) }} {
-		compatible = "on-chip-flash";
-		reg = <{{ '0x%x' % item.address | int(base = 0) }} {{ item.size }}>;
-{% if item.virtualAddress is defined %}
-		virtual-reg = <{{ '0x%x' % item.virtualAddress | int(base = 0) }}>;
-{% endif %}
-		label = "{{ label }}";
-	};
+{{ emptyLine() -}}
+{% include "scripts/templates/flash.dtsi.jinja" %}
 {% endfor %}
 {% endif %}
 {% if eeprom is defined %}
