@@ -26,13 +26,9 @@ if CONFIG_CHIP_STM32F7 == "y" then
 	end
 
 	local ldScriptGenerator = DISTORTOS_TOP .. "source/architecture/ARM/ARMv6-M-ARMv7-M/ARMv6-M-ARMv7-M.ld.sh"
-	local mainThreadStackSize = (math.ceil(CONFIG_MAIN_THREAD_STACK_SIZE / CONFIG_ARCHITECTURE_STACK_ALIGNMENT) +
-			math.ceil(CONFIG_STACK_GUARD_SIZE / CONFIG_ARCHITECTURE_STACK_ALIGNMENT)) *
-			CONFIG_ARCHITECTURE_STACK_ALIGNMENT
-	local ldScriptGeneratorArguments = string.format('"%s" "0x%x,%u" "0x%x,%u" "%u" "%u"', CONFIG_CHIP,
+	local ldScriptGeneratorArguments = string.format('"%s" "0x%x,%u" "0x%x,%u"', CONFIG_CHIP,
 			CONFIG_CHIP_ROM_ADDRESS + CONFIG_LDSCRIPT_ROM_BEGIN, CONFIG_LDSCRIPT_ROM_END - CONFIG_LDSCRIPT_ROM_BEGIN,
-			CONFIG_CHIP_STM32F7_DTCM_ADDRESS, unifiedRamSize, CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_MAIN_STACK_SIZE,
-			mainThreadStackSize)
+			CONFIG_CHIP_STM32F7_DTCM_ADDRESS, unifiedRamSize)
 
 	if CONFIG_CHIP_STM32F7_BKPSRAM_ADDRESS ~= nil then
 		ldScriptGeneratorArguments = string.format('%s "bkpsram,0x%x,%u"', ldScriptGeneratorArguments,
