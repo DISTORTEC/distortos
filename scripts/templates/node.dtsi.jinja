@@ -1,0 +1,9 @@
+	{{ label }}: {% block name %}{% endblock %}@{{ '%x' % item.address | int(base = 0) }} {
+{% block properties %}
+{% endblock %}
+		reg = <{{ '0x%x' % item.address | int(base = 0) }} {{ item.size }}>;
+{% if item.virtualAddress is defined %}
+		virtual-reg = <{{ '0x%x' % item.virtualAddress | int(base = 0) }}>;
+{% endif %}
+		label = "{{ label }}";
+	};
