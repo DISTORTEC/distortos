@@ -10,6 +10,7 @@
 #
 
 import argparse
+import collections
 import csv
 import datetime
 import jinja2
@@ -27,6 +28,7 @@ import os
 def handleRow(jinjaEnvironment, outputPath, header, row):
 	singles = {}
 	groups = {}
+	nodes = collections.defaultdict(dict)
 	for index, element in enumerate(header):
 		if element[0] == '' or row[index] == '':
 			continue
@@ -39,13 +41,18 @@ def handleRow(jinjaEnvironment, outputPath, header, row):
 				groups[element[0]][element[1]] = {}
 
 			if element[2] != 'dtsiTemplate':
+				nodes[element[1]][element[2]] = row[index]
+			else:
+				nodes[element[1]][element[2]] = jinjaEnvironment.get_template(row[index])
+
+			if element[2] != 'dtsiTemplate':
 				groups[element[0]][element[1]][element[2]] = row[index]
 			else:
 				groups[element[0]][element[1]][element[2]] = jinjaEnvironment.get_template(row[index])
 
 	with open(os.path.join(outputPath, singles['name'] + '.dtsi'), 'w') as dtsiFile:
 		jinjaTemplate = jinjaEnvironment.get_template(singles['dtsiTemplate'])
-		dtsiFile.write(jinjaTemplate.render(**singles, **groups))
+		dtsiFile.write(jinjaTemplate.render(**singles, nodes = nodes, **groups))
 
 ########################################################################################################################
 # main
