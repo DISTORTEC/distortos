@@ -130,7 +130,9 @@ CXXFLAGS += $(CONFIG_ASSERT)
 SYMBOLS_LD := $(OUTPUT)symbols.ld
 
 # path to linker script (generated automatically)
-LDSCRIPT = $(OUTPUT)$(subst ",,$(CONFIG_CHIP)).ld
+LDSCRIPT := $(OUTPUT)$(subst ",,$(CONFIG_CHIP)).ld
+
+LDSCRIPTS := $(SYMBOLS_LD) $(LDSCRIPT)
 
 LDFLAGS += $(subst ",,$(CONFIG_DEBUGGING_INFORMATION_LINKING))
 LDFLAGS += $(CONFIG_ARCHITECTURE_FLAGS)
