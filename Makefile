@@ -253,7 +253,7 @@ $(OUTPUT)%.a:
 $(OUTPUT)%.elf:
 	$(call PRETTY_PRINT,"LD     " $@)
 	$(eval ARCHIVES_$@ := -Wl,--whole-archive $(addprefix -l:,$(filter %.a,$(^))) -Wl,--no-whole-archive)
-	$(Q)$(LD) $(LDFLAGS) -T$(filter %.ld,$(^)) $(filter %.o,$(^)) $(ARCHIVES_$(@)) -o $@
+	$(Q)$(LD) $(LDFLAGS) $(addprefix -T,$(filter %.ld,$(^))) $(filter %.o,$(^)) $(ARCHIVES_$(@)) -o $@
 
 $(OUTPUT)%.hex:
 	$(call PRETTY_PRINT,"HEX    " $@)
