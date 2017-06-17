@@ -1,5 +1,4 @@
-name,dtsiTemplate,flash,flash,flash,memory,memory,memory,memory,memory,memory,memory,memory,memory
-,,flash,flash,flash,ccm,ccm,ccm,sram,sram,sram,bkpsram,bkpsram,bkpsram
+name,dtsiTemplate,flash,flash,flash,ccm,ccm,ccm,sram,sram,sram,bkpsram,bkpsram,bkpsram
 ,,dtsiTemplate,address,size,dtsiTemplate,address,size,dtsiTemplate,address,size,dtsiTemplate,address,size
 STM32F401CB,source/chip/STM32/STM32F4/templates/STM32F4.dtsi.jinja,scripts/templates/flash.dtsi.jinja,0x8000000,131072,,,,scripts/templates/memory.dtsi.jinja,0x20000000,65536,,,
 STM32F401CC,source/chip/STM32/STM32F4/templates/STM32F4.dtsi.jinja,scripts/templates/flash.dtsi.jinja,0x8000000,262144,,,,scripts/templates/memory.dtsi.jinja,0x20000000,65536,,,

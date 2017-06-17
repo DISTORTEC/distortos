@@ -31,13 +31,13 @@ def handleRow(jinjaEnvironment, outputPath, header, row):
 	for index, element in enumerate(header):
 		if element[0] == '' or row[index] == '':
 			continue
-		if element[1] == '' and element[2] == '':	# single element
+		if element[1] == '':	# single element
 			singles[element[0]] = row[index]
-		elif element[1] != '' and element[2] != '':	# node
-			if element[2] != 'dtsiTemplate':
-				nodes[element[1]][element[2]] = row[index]
+		else:	# node
+			if element[1] != 'dtsiTemplate':
+				nodes[element[0]][element[1]] = row[index]
 			else:
-				nodes[element[1]][element[2]] = jinjaEnvironment.get_template(row[index])
+				nodes[element[0]][element[1]] = jinjaEnvironment.get_template(row[index])
 
 	with open(os.path.join(outputPath, singles['name'] + '.dtsi'), 'w') as dtsiFile:
 		jinjaTemplate = jinjaEnvironment.get_template(singles['dtsiTemplate'])
@@ -59,6 +59,6 @@ with open(arguments.csvFile, newline = '') as csvFile:
 	jinjaEnvironment.globals['year'] = datetime.date.today().year
 
 	csvReader = csv.reader(csvFile)
-	header = list(zip(next(csvReader), next(csvReader), next(csvReader)))
+	header = list(zip(next(csvReader), next(csvReader)))
 	for row in csvReader:
 		handleRow(jinjaEnvironment, arguments.outputPath, header, row)

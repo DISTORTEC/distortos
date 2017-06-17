@@ -1,5 +1,4 @@
-name,dtsiTemplate,flash,flash,flash,memory,memory,memory
-,,flash,flash,flash,sram,sram,sram
+name,dtsiTemplate,flash,flash,flash,sram,sram,sram
 ,,dtsiTemplate,address,size,dtsiTemplate,address,size
 STM32F100C4,source/chip/STM32/STM32F1/templates/STM32F1.dtsi.jinja,scripts/templates/flash.dtsi.jinja,0x8000000,16384,scripts/templates/memory.dtsi.jinja,0x20000000,4096
 STM32F100C6,source/chip/STM32/STM32F1/templates/STM32F1.dtsi.jinja,scripts/templates/flash.dtsi.jinja,0x8000000,32768,scripts/templates/memory.dtsi.jinja,0x20000000,4096
