@@ -15,40 +15,12 @@
 {% block includes %}
 {% endblock %}
 
-/ {{ '{' -}}
+/ {
 {% block devicetree %}
-{% if flash is defined %}
-{% for label, item in flash.items() %}
-
-	{{ label }}: flash@{{ '%x' % item.address | int(base = 0) }} {
-		compatible = "on-chip-flash";
-		reg = <{{ '0x%x' % item.address | int(base = 0) }} {{ item.size }}>;
-{% if item.virtualAddress is defined %}
-		virtual-reg = <{{ '0x%x' % item.virtualAddress | int(base = 0) }}>;
-{% endif %}
-		label = "{{ label }}";
-	};
+{% set emptyLine = joiner("\n") %}
+{% for label, node in nodes.items() %}
+{{ emptyLine() -}}
+{% include node.dtsiTemplate %}
 {% endfor %}
-{% endif %}
-{% if eeprom is defined %}
-{% for label, item in eeprom.items() %}
-
-	{{ label }}: eeprom@{{ '%x' % item.address | int(base = 0) }} {
-		compatible = "on-chip-eeprom";
-		reg = <{{ '0x%x' % item.address | int(base = 0) }} {{ item.size }}>;
-		label = "{{ label }}";
-	};
-{% endfor %}
-{% endif %}
-{% if memory is defined %}
-{% for label, item in memory.items() %}
-
-	{{ label }}: memory@{{ '%x' % item.address | int(base = 0) }} {
-		device_type = "memory";
-		reg = <{{ '0x%x' % item.address | int(base = 0) }} {{ item.size }}>;
-		label = "{{ label }}";
-	};
-{% endfor %}
-{% endif %}
 {% endblock %}
 };
