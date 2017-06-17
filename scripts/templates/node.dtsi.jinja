@@ -1,9 +1,9 @@
-	{{ label }}: {% block name %}{% endblock %}@{{ '%x' % item.address | int(base = 0) }} {
+	{{ label }}: {% block name %}{% endblock %}@{{ '%x' % node.address | int(base = 0) }} {
 {% block properties %}
 {% endblock %}
-		reg = <{{ '0x%x' % item.address | int(base = 0) }} {{ item.size }}>;
-{% if item.virtualAddress is defined %}
-		virtual-reg = <{{ '0x%x' % item.virtualAddress | int(base = 0) }}>;
+		reg = <{{ '0x%x' % node.address | int(base = 0) }} {{ node.size }}>;
+{% if node.virtualAddress is defined %}
+		virtual-reg = <{{ '0x%x' % node.virtualAddress | int(base = 0) }}>;
 {% endif %}
 		label = "{{ label }}";
 	};

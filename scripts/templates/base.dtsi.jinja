@@ -18,9 +18,9 @@
 / {
 {% block devicetree %}
 {% set emptyLine = joiner("\n") %}
-{% for label, item in nodes.items() %}
+{% for label, node in nodes.items() %}
 {{ emptyLine() -}}
-{% include item.dtsiTemplate %}
+{% include node.dtsiTemplate %}
 {% endfor %}
 {% endblock %}
 };
