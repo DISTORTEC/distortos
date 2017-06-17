@@ -37,7 +37,11 @@ def handleRow(jinjaEnvironment, outputPath, header, row):
 				groups[element[0]] = {}
 			if not element[1] in groups[element[0]]:	# start new group element
 				groups[element[0]][element[1]] = {}
-			groups[element[0]][element[1]][element[2]] = row[index]
+
+			if element[2] != 'dtsiTemplate':
+				groups[element[0]][element[1]][element[2]] = row[index]
+			else:
+				groups[element[0]][element[1]][element[2]] = jinjaEnvironment.get_template(row[index])
 
 	with open(os.path.join(outputPath, singles['name'] + '.dtsi'), 'w') as dtsiFile:
 		jinjaTemplate = jinjaEnvironment.get_template(singles['dtsiTemplate'])
