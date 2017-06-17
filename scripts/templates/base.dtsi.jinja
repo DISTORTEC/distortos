@@ -18,23 +18,9 @@
 / {{ '{' }}
 {% block devicetree %}
 {% set emptyLine = joiner("\n") %}
-{% if flash is defined %}
-{% for label, item in flash.items() %}
+{% for label, item in nodes.items() %}
 {{ emptyLine() -}}
 {% include item.dtsiTemplate %}
 {% endfor %}
-{% endif %}
-{% if eeprom is defined %}
-{% for label, item in eeprom.items() %}
-{{ emptyLine() -}}
-{% include item.dtsiTemplate %}
-{% endfor %}
-{% endif %}
-{% if memory is defined %}
-{% for label, item in memory.items() %}
-{{ emptyLine() -}}
-{% include item.dtsiTemplate %}
-{% endfor %}
-{% endif %}
 {% endblock %}
 };
