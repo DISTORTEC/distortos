@@ -12,13 +12,44 @@
 #ifndef INCLUDE_DISTORTOS_INTERNAL_NEWLIB_LOCKING_HPP_
 #define INCLUDE_DISTORTOS_INTERNAL_NEWLIB_LOCKING_HPP_
 
+#include "distortos/Mutex.hpp"
+
+#include <sys/lock.h>
+
+#if defined(_RETARGETABLE_LOCKING)
+
+/*---------------------------------------------------------------------------------------------------------------------+
+| global types
++---------------------------------------------------------------------------------------------------------------------*/
+
+/// newlib's lock
+struct __lock : public distortos::Mutex
+{
+	using Mutex::Mutex;
+};
+
+extern "C"
+{
+
+/*---------------------------------------------------------------------------------------------------------------------+
+| global objects
++---------------------------------------------------------------------------------------------------------------------*/
+
+extern __lock __lock___malloc_recursive_mutex;
+
+};	// extern "C"
+
+#endif	// defined(_RETARGETABLE_LOCKING)
+
 namespace distortos
 {
 
-class Mutex;
-
 namespace internal
 {
+
+/*---------------------------------------------------------------------------------------------------------------------+
+| global functions
++---------------------------------------------------------------------------------------------------------------------*/
 
 /**
  * \return reference to main instance of Mutex used for malloc() and free() locking
@@ -26,8 +57,16 @@ namespace internal
 
 constexpr Mutex& getMallocMutex()
 {
+#if defined(_RETARGETABLE_LOCKING)
+
+	return __lock___malloc_recursive_mutex;
+
+#else	// !defined(_RETARGETABLE_LOCKING)
+
 	extern Mutex mallocMutexInstance;
 	return mallocMutexInstance;
+
+#endif	// !defined(_RETARGETABLE_LOCKING)
 }
 
 }	// namespace internal
