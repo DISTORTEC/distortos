@@ -49,7 +49,7 @@ installBuild67() {
 		echo "Building bleeding-edge-toolchain-${betVersion}..."
 		cd "bleeding-edge-toolchain-${betVersion}"
 
-		{ time='0'; while true; do sleep 60; time="$((${time} + 1))"; echo "${time} minute(s)..."; done } &
+		{ time='0'; while true; do sleep 60; time="$((time + 1))"; echo "${time} minute(s)..."; done } &
 		keepAlivePid="${!}"
 		timeout -k 1m 45m ./build-bleeding-edge-toolchain.sh --skip-nano-libraries > >(tee /tmp/stdout.log) 2> /tmp/stderr.log | grep '[*-]\{10,10\} '
 		kill "${keepAlivePid}"
