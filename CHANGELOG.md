@@ -50,6 +50,10 @@ application. This affects `ThisThread::Signals` namespace, `Thread::generateSign
 `Thread::queueSignal()` and `DynamicSignalsReceiver`, `SignalInformationQueueWrapper`, `SignalsCatcher`,
 `SignalsReceiver`, `StaticSignalsReceiver` classes.
 - Experimental "Enable link-time optimization" option in *Kconfig* menus.
+- Support for newlib's ratargetable locking, which makes all newlib functions with shared state - like the ones from
+`<stdio.h>`, functions which manipulate time zone, modify environment variables and so on - thread-safe. "Retargetable
+locking" has to be enabled during toolchain compilation - toolchains compiled in March 2017 or later should support that
+feature.
 
 ### Changed
 
