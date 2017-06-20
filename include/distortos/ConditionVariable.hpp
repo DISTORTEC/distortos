@@ -2,7 +2,7 @@
  * \file
  * \brief ConditionVariable class header
  *
- * \author Copyright (C) 2014-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -92,7 +92,7 @@ public:
 	 *
 	 * \param [in] mutex is a reference to mutex which must be owned by calling thread
 	 *
-	 * \return zero if the wait was completed successfully, error code otherwise:
+	 * \return 0 if the wait was completed successfully, error code otherwise:
 	 * - EPERM - the mutex type is ErrorChecking or Recursive, and the current thread does not own the mutex;
 	 */
 
@@ -113,7 +113,7 @@ public:
 	 * \param [in] mutex is a reference to mutex which must be owned by calling thread
 	 * \param [in] predicate is the predicate that will be checked
 	 *
-	 * \return zero if the wait was completed successfully, error code otherwise:
+	 * \return 0 if the wait was completed successfully, error code otherwise:
 	 * - EPERM - the mutex type is ErrorChecking or Recursive, and the current thread does not own the mutex;
 	 */
 
@@ -137,7 +137,7 @@ public:
 	 * \param [in] mutex is a reference to mutex which must be owned by calling thread
 	 * \param [in] duration is the duration after which the wait for notification will be terminated
 	 *
-	 * \return zero if the wait was completed successfully, error code otherwise:
+	 * \return 0 if the wait was completed successfully, error code otherwise:
 	 * - EPERM - the mutex type is ErrorChecking or Recursive, and the current thread does not own the mutex;
 	 * - ETIMEDOUT - no notification was received before the specified timeout expired;
 	 */
@@ -162,7 +162,7 @@ public:
 	 * \param [in] mutex is a reference to mutex which must be owned by calling thread
 	 * \param [in] duration is the duration after which the wait for notification will be terminated
 	 *
-	 * \return zero if the wait was completed successfully, error code otherwise:
+	 * \return 0 if the wait was completed successfully, error code otherwise:
 	 * - EPERM - the mutex type is ErrorChecking or Recursive, and the current thread does not own the mutex;
 	 * - ETIMEDOUT - no notification was received before the specified timeout expired;
 	 */
@@ -194,7 +194,7 @@ public:
 	 * \param [in] duration is the duration after which the wait for notification will be terminated
 	 * \param [in] predicate is the predicate that will be checked
 	 *
-	 * \return zero if the wait was completed successfully, error code otherwise:
+	 * \return 0 if the wait was completed successfully, error code otherwise:
 	 * - EPERM - the mutex type is ErrorChecking or Recursive, and the current thread does not own the mutex;
 	 * - ETIMEDOUT - no notification was received before the specified timeout expired;
 	 */
@@ -222,7 +222,7 @@ public:
 	 * \param [in] mutex is a reference to mutex which must be owned by calling thread
 	 * \param [in] timePoint is the time point at which the wait for notification will be terminated
 	 *
-	 * \return zero if the wait was completed successfully, error code otherwise:
+	 * \return 0 if the wait was completed successfully, error code otherwise:
 	 * - EPERM - the mutex type is ErrorChecking or Recursive, and the current thread does not own the mutex;
 	 * - ETIMEDOUT - no notification was received before the specified timeout expired;
 	 */
@@ -246,7 +246,7 @@ public:
 	 * \param [in] mutex is a reference to mutex which must be owned by calling thread
 	 * \param [in] timePoint is the time point at which the wait for notification will be terminated
 	 *
-	 * \return zero if the wait was completed successfully, error code otherwise:
+	 * \return 0 if the wait was completed successfully, error code otherwise:
 	 * - EPERM - the mutex type is ErrorChecking or Recursive, and the current thread does not own the mutex;
 	 * - ETIMEDOUT - no notification was received before the specified timeout expired;
 	 */
@@ -277,7 +277,7 @@ public:
 	 * \param [in] timePoint is the time point at which the wait for notification will be terminated
 	 * \param [in] predicate is the predicate that will be checked
 	 *
-	 * \return zero if the wait was completed successfully, error code otherwise:
+	 * \return 0 if the wait was completed successfully, error code otherwise:
 	 * - EPERM - the mutex type is ErrorChecking or Recursive, and the current thread does not own the mutex;
 	 * - ETIMEDOUT - no notification was received before the specified timeout expired;
 	 */

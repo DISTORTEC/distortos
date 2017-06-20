@@ -2,7 +2,7 @@
  * \file
  * \brief FifoQueueBase class header
  *
- * \author Copyright (C) 2014-2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -66,7 +66,7 @@ public:
 	 * \param [in] functor is a reference to QueueFunctor which will execute actions related to popping - it will get
 	 * readPosition_ as argument
 	 *
-	 * \return zero if element was popped successfully, error code otherwise:
+	 * \return 0 if element was popped successfully, error code otherwise:
 	 * - error codes returned by \a waitSemaphoreFunctor's operator() call;
 	 * - error codes returned by Semaphore::post();
 	 */
@@ -83,7 +83,7 @@ public:
 	 * \param [in] functor is a reference to QueueFunctor which will execute actions related to pushing - it will get
 	 * writePosition_ as argument
 	 *
-	 * \return zero if element was pushed successfully, error code otherwise:
+	 * \return 0 if element was pushed successfully, error code otherwise:
 	 * - error codes returned by \a waitSemaphoreFunctor's operator() call;
 	 * - error codes returned by Semaphore::post();
 	 */
@@ -108,7 +108,7 @@ private:
 	 * \param [in] storage is a reference to appropriate pointer to storage, which will be passed to \a functor, \a
 	 * readPosition_ for pop(), \a writePosition_ for push()
 	 *
-	 * \return zero if operation was successful, error code otherwise:
+	 * \return 0 if operation was successful, error code otherwise:
 	 * - error codes returned by \a waitSemaphoreFunctor's operator() call;
 	 * - error codes returned by Semaphore::post();
 	 */

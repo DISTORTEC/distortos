@@ -2,7 +2,7 @@
  * \file
  * \brief MessageQueueBase class header
  *
- * \author Copyright (C) 2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2015-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -152,7 +152,7 @@ public:
 	 * \param [in] functor is a reference to QueueFunctor which will execute actions related to popping - it will get a
 	 * pointer to storage with element
 	 *
-	 * \return zero if element was popped successfully, error code otherwise:
+	 * \return 0 if element was popped successfully, error code otherwise:
 	 * - error codes returned by \a waitSemaphoreFunctor's operator() call;
 	 * - error codes returned by Semaphore::post();
 	 */
@@ -167,7 +167,7 @@ public:
 	 * \param [in] functor is a reference to QueueFunctor which will execute actions related to pushing - it will get a
 	 * pointer to storage for element
 	 *
-	 * \return zero if element was pushed successfully, error code otherwise:
+	 * \return 0 if element was pushed successfully, error code otherwise:
 	 * - error codes returned by \a waitSemaphoreFunctor's operator() call;
 	 * - error codes returned by Semaphore::post();
 	 */
@@ -187,7 +187,7 @@ private:
 	 * \param [in] postSemaphore is a reference to semaphore that will be posted after the operation, \a pushSemaphore_
 	 * for pop(), \a popSemaphore_ for push()
 	 *
-	 * \return zero if operation was successful, error code otherwise:
+	 * \return 0 if operation was successful, error code otherwise:
 	 * - error codes returned by \a waitSemaphoreFunctor's operator() call;
 	 * - error codes returned by Semaphore::post();
 	 */

@@ -2,7 +2,7 @@
  * \file
  * \brief Semaphore class header
  *
- * \author Copyright (C) 2014-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -72,7 +72,7 @@ public:
 	 *
 	 * Similar to sem_getvalue() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/sem_getvalue.html#
 	 *
-	 * \return current value of semaphore, positive value if semaphore is not locked, zero otherwise
+	 * \return current value of semaphore, positive value if semaphore is not locked, 0 otherwise
 	 */
 
 	Value getValue() const
@@ -92,7 +92,7 @@ public:
 	 * shall be unblocked, and if there is more than one highest priority thread blocked waiting for the semaphore, then
 	 * the highest priority thread that has been waiting the longest shall be unblocked.
 	 *
-	 * \return zero if the calling process successfully "posted" the semaphore, error code otherwise:
+	 * \return 0 if the calling process successfully "posted" the semaphore, error code otherwise:
 	 * - EOVERFLOW - the maximum allowable value for a semaphore would be exceeded;
 	 */
 
@@ -107,7 +107,7 @@ public:
 	 * value is currently positive. Otherwise, it shall not lock the semaphore. Upon successful return, the state of the
 	 * semaphore shall be locked and shall remain locked until unlock() function is executed.
 	 *
-	 * \return zero if the calling process successfully performed the semaphore lock operation, error code otherwise:
+	 * \return 0 if the calling process successfully performed the semaphore lock operation, error code otherwise:
 	 * - EAGAIN - semaphore was already locked, so it cannot be immediately locked by the tryWait() operation;
 	 */
 
@@ -129,7 +129,7 @@ public:
 	 *
 	 * \param [in] duration is the duration after which the wait will be terminated without locking the semaphore
 	 *
-	 * \return zero if the calling process successfully performed the semaphore lock operation, error code otherwise:
+	 * \return 0 if the calling process successfully performed the semaphore lock operation, error code otherwise:
 	 * - EINTR - the wait was interrupted by an unmasked, caught signal;
 	 * - ETIMEDOUT - the semaphore could not be locked before the specified timeout expired;
 	 */
@@ -148,7 +148,7 @@ public:
 	 *
 	 * \param [in] duration is the duration after which the wait will be terminated without locking the semaphore
 	 *
-	 * \return zero if the calling process successfully performed the semaphore lock operation, error code otherwise:
+	 * \return 0 if the calling process successfully performed the semaphore lock operation, error code otherwise:
 	 * - EINTR - the wait was interrupted by an unmasked, caught signal;
 	 * - ETIMEDOUT - the semaphore could not be locked before the specified timeout expired;
 	 */
@@ -175,7 +175,7 @@ public:
 	 *
 	 * \param [in] timePoint is the time point at which the wait will be terminated without locking the semaphore
 	 *
-	 * \return zero if the calling process successfully performed the semaphore lock operation, error code otherwise:
+	 * \return 0 if the calling process successfully performed the semaphore lock operation, error code otherwise:
 	 * - EINTR - the wait was interrupted by an unmasked, caught signal;
 	 * - ETIMEDOUT - the semaphore could not be locked before the specified timeout expired;
 	 */
@@ -193,7 +193,7 @@ public:
 	 *
 	 * \param [in] timePoint is the time point at which the wait will be terminated without locking the semaphore
 	 *
-	 * \return zero if the calling process successfully performed the semaphore lock operation, error code otherwise:
+	 * \return 0 if the calling process successfully performed the semaphore lock operation, error code otherwise:
 	 * - EINTR - the wait was interrupted by an unmasked, caught signal;
 	 * - ETIMEDOUT - the semaphore could not be locked before the specified timeout expired;
 	 */
@@ -216,7 +216,7 @@ public:
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
-	 * \return zero if the calling process successfully performed the semaphore lock operation, error code otherwise:
+	 * \return 0 if the calling process successfully performed the semaphore lock operation, error code otherwise:
 	 * - EINTR - the wait was interrupted by an unmasked, caught signal;
 	 */
 
@@ -234,7 +234,7 @@ private:
 	 *
 	 * Internal version with no interrupt masking.
 	 *
-	 * \return zero if the calling process successfully performed the semaphore lock operation, error code otherwise:
+	 * \return 0 if the calling process successfully performed the semaphore lock operation, error code otherwise:
 	 * - EAGAIN - semaphore was already locked, so it cannot be immediately locked by the tryWait() operation;
 	 */
 

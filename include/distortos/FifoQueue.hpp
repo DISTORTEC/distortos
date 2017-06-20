@@ -85,7 +85,7 @@ public:
 	 *
 	 * \param [in] args are arguments for constructor of T
 	 *
-	 * \return zero if element was emplaced successfully, error code otherwise:
+	 * \return 0 if element was emplaced successfully, error code otherwise:
 	 * - error codes returned by Semaphore::wait();
 	 * - error codes returned by Semaphore::post();
 	 */
@@ -105,7 +105,7 @@ public:
 	 * \param [out] value is a reference to object that will be used to return popped value, its contents are swapped
 	 * with the value in the queue's storage and destructed when no longer needed
 	 *
-	 * \return zero if element was popped successfully, error code otherwise:
+	 * \return 0 if element was popped successfully, error code otherwise:
 	 * - error codes returned by Semaphore::wait();
 	 * - error codes returned by Semaphore::post();
 	 */
@@ -123,7 +123,7 @@ public:
 	 *
 	 * \param [in] value is a reference to object that will be pushed, value in queue's storage is copy-constructed
 	 *
-	 * \return zero if element was pushed successfully, error code otherwise:
+	 * \return 0 if element was pushed successfully, error code otherwise:
 	 * - error codes returned by Semaphore::wait();
 	 * - error codes returned by Semaphore::post();
 	 */
@@ -142,7 +142,7 @@ public:
 	 * \param [in] value is a rvalue reference to object that will be pushed, value in queue's storage is
 	 * move-constructed
 	 *
-	 * \return zero if element was pushed successfully, error code otherwise:
+	 * \return 0 if element was pushed successfully, error code otherwise:
 	 * - error codes returned by Semaphore::wait();
 	 * - error codes returned by Semaphore::post();
 	 */
@@ -162,7 +162,7 @@ public:
 	 *
 	 * \param [in] args are arguments for constructor of T
 	 *
-	 * \return zero if element was emplaced successfully, error code otherwise:
+	 * \return 0 if element was emplaced successfully, error code otherwise:
 	 * - error codes returned by Semaphore::tryWait();
 	 * - error codes returned by Semaphore::post();
 	 */
@@ -186,7 +186,7 @@ public:
 	 * \param [in] duration is the duration after which the wait will be terminated without emplacing the element
 	 * \param [in] args are arguments for constructor of T
 	 *
-	 * \return zero if element was emplaced successfully, error code otherwise:
+	 * \return 0 if element was emplaced successfully, error code otherwise:
 	 * - error codes returned by Semaphore::tryWaitFor();
 	 * - error codes returned by Semaphore::post();
 	 */
@@ -214,7 +214,7 @@ public:
 	 * \param [in] duration is the duration after which the wait will be terminated without emplacing the element
 	 * \param [in] args are arguments for constructor of T
 	 *
-	 * \return zero if element was emplaced successfully, error code otherwise:
+	 * \return 0 if element was emplaced successfully, error code otherwise:
 	 * - error codes returned by Semaphore::tryWaitFor();
 	 * - error codes returned by Semaphore::post();
 	 */
@@ -237,7 +237,7 @@ public:
 	 * \param [in] timePoint is the time point at which the call will be terminated without emplacing the element
 	 * \param [in] args are arguments for constructor of T
 	 *
-	 * \return zero if element was emplaced successfully, error code otherwise:
+	 * \return 0 if element was emplaced successfully, error code otherwise:
 	 * - error codes returned by Semaphore::tryWaitUntil();
 	 * - error codes returned by Semaphore::post();
 	 */
@@ -264,7 +264,7 @@ public:
 	 * \param [in] timePoint is the time point at which the call will be terminated without emplacing the element
 	 * \param [in] args are arguments for constructor of T
 	 *
-	 * \return zero if element was emplaced successfully, error code otherwise:
+	 * \return 0 if element was emplaced successfully, error code otherwise:
 	 * - error codes returned by Semaphore::tryWaitUntil();
 	 * - error codes returned by Semaphore::post();
 	 */
@@ -282,7 +282,7 @@ public:
 	 * \param [out] value is a reference to object that will be used to return popped value, its contents are swapped
 	 * with the value in the queue's storage and destructed when no longer needed
 	 *
-	 * \return zero if element was popped successfully, error code otherwise:
+	 * \return 0 if element was popped successfully, error code otherwise:
 	 * - error codes returned by Semaphore::tryWait();
 	 * - error codes returned by Semaphore::post();
 	 */
@@ -302,7 +302,7 @@ public:
 	 * \param [out] value is a reference to object that will be used to return popped value, its contents are swapped
 	 * with the value in the queue's storage and destructed when no longer needed
 	 *
-	 * \return zero if element was popped successfully, error code otherwise:
+	 * \return 0 if element was popped successfully, error code otherwise:
 	 * - error codes returned by Semaphore::tryWaitFor();
 	 * - error codes returned by Semaphore::post();
 	 */
@@ -327,7 +327,7 @@ public:
 	 * \param [out] value is a reference to object that will be used to return popped value, its contents are swapped
 	 * with the value in the queue's storage and destructed when no longer needed
 	 *
-	 * \return zero if element was popped successfully, error code otherwise:
+	 * \return 0 if element was popped successfully, error code otherwise:
 	 * - error codes returned by Semaphore::tryWaitFor();
 	 * - error codes returned by Semaphore::post();
 	 */
@@ -347,7 +347,7 @@ public:
 	 * \param [out] value is a reference to object that will be used to return popped value, its contents are swapped
 	 * with the value in the queue's storage and destructed when no longer needed
 	 *
-	 * \return zero if element was popped successfully, error code otherwise:
+	 * \return 0 if element was popped successfully, error code otherwise:
 	 * - error codes returned by Semaphore::tryWaitUntil();
 	 * - error codes returned by Semaphore::post();
 	 */
@@ -371,7 +371,7 @@ public:
 	 * \param [out] value is a reference to object that will be used to return popped value, its contents are swapped
 	 * with the value in the queue's storage and destructed when no longer needed
 	 *
-	 * \return zero if element was popped successfully, error code otherwise:
+	 * \return 0 if element was popped successfully, error code otherwise:
 	 * - error codes returned by Semaphore::tryWaitUntil();
 	 * - error codes returned by Semaphore::post();
 	 */
@@ -387,7 +387,7 @@ public:
 	 *
 	 * \param [in] value is a reference to object that will be pushed, value in queue's storage is copy-constructed
 	 *
-	 * \return zero if element was pushed successfully, error code otherwise:
+	 * \return 0 if element was pushed successfully, error code otherwise:
 	 * - error codes returned by Semaphore::tryWait();
 	 * - error codes returned by Semaphore::post();
 	 */
@@ -404,7 +404,7 @@ public:
 	 * \param [in] value is a rvalue reference to object that will be pushed, value in queue's storage is
 	 * move-constructed
 	 *
-	 * \return zero if element was pushed successfully, error code otherwise:
+	 * \return 0 if element was pushed successfully, error code otherwise:
 	 * - error codes returned by Semaphore::tryWait();
 	 * - error codes returned by Semaphore::post();
 	 */
@@ -423,7 +423,7 @@ public:
 	 * \param [in] duration is the duration after which the wait will be terminated without pushing the element
 	 * \param [in] value is a reference to object that will be pushed, value in queue's storage is copy-constructed
 	 *
-	 * \return zero if element was pushed successfully, error code otherwise:
+	 * \return 0 if element was pushed successfully, error code otherwise:
 	 * - error codes returned by Semaphore::tryWaitFor();
 	 * - error codes returned by Semaphore::post();
 	 */
@@ -447,7 +447,7 @@ public:
 	 * \param [in] duration is the duration after which the wait will be terminated without pushing the element
 	 * \param [in] value is a reference to object that will be pushed, value in queue's storage is copy-constructed
 	 *
-	 * \return zero if element was pushed successfully, error code otherwise:
+	 * \return 0 if element was pushed successfully, error code otherwise:
 	 * - error codes returned by Semaphore::tryWaitFor();
 	 * - error codes returned by Semaphore::post();
 	 */
@@ -467,7 +467,7 @@ public:
 	 * \param [in] value is a rvalue reference to object that will be pushed, value in queue's storage is
 	 * move-constructed
 	 *
-	 * \return zero if element was pushed successfully, error code otherwise:
+	 * \return 0 if element was pushed successfully, error code otherwise:
 	 * - error codes returned by Semaphore::tryWaitFor();
 	 * - error codes returned by Semaphore::post();
 	 */
@@ -492,7 +492,7 @@ public:
 	 * \param [in] value is a rvalue reference to object that will be pushed, value in queue's storage is
 	 * move-constructed
 	 *
-	 * \return zero if element was pushed successfully, error code otherwise:
+	 * \return 0 if element was pushed successfully, error code otherwise:
 	 * - error codes returned by Semaphore::tryWaitFor();
 	 * - error codes returned by Semaphore::post();
 	 */
@@ -511,7 +511,7 @@ public:
 	 * \param [in] timePoint is the time point at which the call will be terminated without pushing the element
 	 * \param [in] value is a reference to object that will be pushed, value in queue's storage is copy-constructed
 	 *
-	 * \return zero if element was pushed successfully, error code otherwise:
+	 * \return 0 if element was pushed successfully, error code otherwise:
 	 * - error codes returned by Semaphore::tryWaitUntil();
 	 * - error codes returned by Semaphore::post();
 	 */
@@ -534,7 +534,7 @@ public:
 	 * \param [in] timePoint is the time point at which the call will be terminated without pushing the element
 	 * \param [in] value is a reference to object that will be pushed, value in queue's storage is copy-constructed
 	 *
-	 * \return zero if element was pushed successfully, error code otherwise:
+	 * \return 0 if element was pushed successfully, error code otherwise:
 	 * - error codes returned by Semaphore::tryWaitUntil();
 	 * - error codes returned by Semaphore::post();
 	 */
@@ -554,7 +554,7 @@ public:
 	 * \param [in] value is a rvalue reference to object that will be pushed, value in queue's storage is
 	 * move-constructed
 	 *
-	 * \return zero if element was pushed successfully, error code otherwise:
+	 * \return 0 if element was pushed successfully, error code otherwise:
 	 * - error codes returned by Semaphore::tryWaitUntil();
 	 * - error codes returned by Semaphore::post();
 	 */
@@ -578,7 +578,7 @@ public:
 	 * \param [in] value is a rvalue reference to object that will be pushed, value in queue's storage is
 	 * move-constructed
 	 *
-	 * \return zero if element was pushed successfully, error code otherwise:
+	 * \return 0 if element was pushed successfully, error code otherwise:
 	 * - error codes returned by Semaphore::tryWaitUntil();
 	 * - error codes returned by Semaphore::post();
 	 */
@@ -603,7 +603,7 @@ private:
 	 * \param [in] waitSemaphoreFunctor is a reference to SemaphoreFunctor which will be executed with \a pushSemaphore_
 	 * \param [in] args are arguments for constructor of T
 	 *
-	 * \return zero if element was emplaced successfully, error code otherwise:
+	 * \return 0 if element was emplaced successfully, error code otherwise:
 	 * - error codes returned by \a waitSemaphoreFunctor's operator() call;
 	 * - error codes returned by Semaphore::post();
 	 */
@@ -620,7 +620,7 @@ private:
 	 * \param [out] value is a reference to object that will be used to return popped value, its contents are swapped
 	 * with the value in the queue's storage and destructed when no longer needed
 	 *
-	 * \return zero if element was popped successfully, error code otherwise:
+	 * \return 0 if element was popped successfully, error code otherwise:
 	 * - error codes returned by \a waitSemaphoreFunctor's operator() call;
 	 * - error codes returned by Semaphore::post();
 	 */
@@ -635,7 +635,7 @@ private:
 	 * \param [in] waitSemaphoreFunctor is a reference to SemaphoreFunctor which will be executed with \a pushSemaphore_
 	 * \param [in] value is a reference to object that will be pushed, value in queue's storage is copy-constructed
 	 *
-	 * \return zero if element was pushed successfully, error code otherwise:
+	 * \return 0 if element was pushed successfully, error code otherwise:
 	 * - error codes returned by \a waitSemaphoreFunctor's operator() call;
 	 * - error codes returned by Semaphore::post();
 	 */
@@ -651,7 +651,7 @@ private:
 	 * \param [in] value is a rvalue reference to object that will be pushed, value in queue's storage is
 	 * move-constructed
 	 *
-	 * \return zero if element was pushed successfully, error code otherwise:
+	 * \return 0 if element was pushed successfully, error code otherwise:
 	 * - error codes returned by \a waitSemaphoreFunctor's operator() call;
 	 * - error codes returned by Semaphore::post();
 	 */

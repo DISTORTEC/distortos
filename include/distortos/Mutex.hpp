@@ -2,7 +2,7 @@
  * \file
  * \brief Mutex class header
  *
- * \author Copyright (C) 2014-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -96,7 +96,7 @@ public:
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
-	 * \return zero if the caller successfully locked the mutex, error code otherwise:
+	 * \return 0 if the caller successfully locked the mutex, error code otherwise:
 	 * - EAGAIN - the mutex could not be acquired because the maximum number of recursive locks for mutex has been
 	 * exceeded;
 	 * - EDEADLK - the mutex type is ErrorChecking and the current thread already owns the mutex;
@@ -118,7 +118,7 @@ public:
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
-	 * \return zero if the caller successfully locked the mutex, error code otherwise:
+	 * \return 0 if the caller successfully locked the mutex, error code otherwise:
 	 * - EAGAIN - the mutex could not be acquired because the maximum number of recursive locks for mutex has been
 	 * exceeded;
 	 * - EBUSY - the mutex could not be acquired because it was already locked;
@@ -146,7 +146,7 @@ public:
 	 *
 	 * \param [in] duration is the duration after which the wait will be terminated without locking the mutex
 	 *
-	 * \return zero if the caller successfully locked the mutex, error code otherwise:
+	 * \return 0 if the caller successfully locked the mutex, error code otherwise:
 	 * - EAGAIN - the mutex could not be acquired because the maximum number of recursive locks for mutex has been
 	 * exceeded;
 	 * - EDEADLK - the mutex type is ErrorChecking and the current thread already owns the mutex;
@@ -169,7 +169,7 @@ public:
 	 *
 	 * \param [in] duration is the duration after which the wait will be terminated without locking the mutex
 	 *
-	 * \return zero if the caller successfully locked the mutex, error code otherwise:
+	 * \return 0 if the caller successfully locked the mutex, error code otherwise:
 	 * - EAGAIN - the mutex could not be acquired because the maximum number of recursive locks for mutex has been
 	 * exceeded;
 	 * - EDEADLK - the mutex type is ErrorChecking and the current thread already owns the mutex;
@@ -203,7 +203,7 @@ public:
 	 *
 	 * \param [in] timePoint is the time point at which the wait will be terminated without locking the mutex
 	 *
-	 * \return zero if the caller successfully locked the mutex, error code otherwise:
+	 * \return 0 if the caller successfully locked the mutex, error code otherwise:
 	 * - EAGAIN - the mutex could not be acquired because the maximum number of recursive locks for mutex has been
 	 * exceeded;
 	 * - EDEADLK - the mutex type is ErrorChecking and the current thread already owns the mutex;
@@ -225,7 +225,7 @@ public:
 	 *
 	 * \param [in] timePoint is the time point at which the wait will be terminated without locking the mutex
 	 *
-	 * \return zero if the caller successfully locked the mutex, error code otherwise:
+	 * \return 0 if the caller successfully locked the mutex, error code otherwise:
 	 * - EAGAIN - the mutex could not be acquired because the maximum number of recursive locks for mutex has been
 	 * exceeded;
 	 * - EDEADLK - the mutex type is ErrorChecking and the current thread already owns the mutex;
@@ -254,7 +254,7 @@ public:
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
-	 * \return zero if the caller successfully unlocked the mutex, error code otherwise:
+	 * \return 0 if the caller successfully unlocked the mutex, error code otherwise:
 	 * - EPERM - the mutex type is ErrorChecking or Recursive, and the current thread does not own the mutex;
 	 */
 
@@ -268,7 +268,7 @@ private:
 	 * Internal version with no interrupt masking and additional code for ErrorChecking type (which is not required for
 	 * tryLock()).
 	 *
-	 * \return zero if the caller successfully locked the mutex, error code otherwise:
+	 * \return 0 if the caller successfully locked the mutex, error code otherwise:
 	 * - EAGAIN - the mutex could not be acquired because the maximum number of recursive locks for mutex has been
 	 * exceeded;
 	 * - EBUSY - the mutex could not be acquired because it was already locked;
