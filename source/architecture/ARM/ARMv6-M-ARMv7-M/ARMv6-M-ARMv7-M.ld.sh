@@ -273,16 +273,16 @@ $(printf '%b' "${bssArrayEntries}")
 		PROVIDE(__text_end = .);
 	} > rom AT > rom
 
-	. = ALIGN(4);
-	PROVIDE(__exidx_start = .);
-
 	.ARM.exidx :
 	{
+		. = ALIGN(4);
+		PROVIDE(__exidx_start = .);
+	
 		*(.ARM.exidx* .gnu.linkonce.armexidx.*);
+		
+		. = ALIGN(4);
+		PROVIDE(__exidx_end = .);
 	} > rom AT > rom								/* index entries for section unwinding */
-
-	. = ALIGN(4);
-	PROVIDE(__exidx_end = .);
 
 	.main_stack :
 	{
