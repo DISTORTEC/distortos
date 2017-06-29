@@ -12,6 +12,7 @@
 #
 
 import argparse
+import collections
 import pickle
 import ply.lex
 import ply.yacc
@@ -400,7 +401,7 @@ def p_nodeDefinition0(p):
 #
 # "properties" 0
 #
-# There may be zero "properties". "properties" are represented as a dictionary of name-value pairs.
+# There may be zero "properties". "properties" are represented as an ordered dictionary of name-value pairs.
 #
 # param [in] p is the matched production
 #
@@ -409,7 +410,7 @@ def p_properties0(p):
 	'''
 	properties : empty
 	'''
-	p[0] = {}
+	p[0] = collections.OrderedDict()
 
 #
 # "properties" 1
@@ -438,7 +439,7 @@ def p_property0(p):
 	'''
 	property : NODE_PROPERTY_NAME ';'
 	'''
-	p[0] = {p[1]: []}
+	p[0] = collections.OrderedDict({p[1]: []})
 
 #
 # "property" 1
@@ -452,7 +453,7 @@ def p_property1(p):
 	'''
 	property : NODE_PROPERTY_NAME '=' propertyValue ';'
 	'''
-	p[0] = {p[1]: p[3]}
+	p[0] = collections.OrderedDict({p[1]: p[3]})
 
 #
 # "propertyValue" 0
@@ -630,7 +631,7 @@ def p_integerLiteral3(p):
 #
 # "nodes" 0
 #
-# There may be zero "nodes". "nodes" are represented as a dictionary of name-value pairs.
+# There may be zero "nodes". "nodes" are represented as an ordered dictionary of name-value pairs.
 #
 # param [in] p is the matched production
 #
@@ -639,7 +640,7 @@ def p_nodes0(p):
 	'''
 	nodes : empty
 	'''
-	p[0] = {}
+	p[0] = collections.OrderedDict()
 
 #
 # "nodes" 1
@@ -653,7 +654,7 @@ def p_nodes1(p):
 	'''
 	nodes : node nodes
 	'''
-	p[2].update({p[1][0]: p[1][1]})
+	p[2].update(collections.OrderedDict({p[1][0]: p[1][1]}))
 	p[0] = p[2]
 
 #
