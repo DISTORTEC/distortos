@@ -70,8 +70,9 @@ file - `symbols.ld` - which is used during linking along the "regular" linker sc
 linked executable's (`*.elf` file's) dependencies from `LDSCRIPT` to `LDSCRIPTS` if using *make*
 ([example](https://github.com/DISTORTEC/distortos/commit/cad7f536b4fdd6a5289b1c30b72a45b9822195ce#diff-af6537b9e7ddc2ad1008f5689086cd09))
 or to `table.unpack(LDSCRIPTS)` if using *tup*
-([example](https://github.com/DISTORTEC/distortos/commit/1a948e2e15a2e773e21cd3d825ad5d4b6d19b45a#diff-add3c7e60430febce7bf14029ecb5637)),
-or just arrange for both linker scripts to be used by linker, otherwise the linking will fail with
+([example](https://github.com/DISTORTEC/distortos/commit/1a948e2e15a2e773e21cd3d825ad5d4b6d19b45a#diff-add3c7e60430febce7bf14029ecb5637)).
+Another option is to simply add `$(SYMBOLS_LD)` for *make* or `SYMBOLS_LD` for *tup* as dependency of `*.elf`
+executable. Without such changes the linking will fail with
 ``undefined symbol `__main_stack_size' referenced in expression`` error message.
 - Update *CMSIS-STM32F0* to version 1.8.0.
 - Update *CMSIS-STM32F4* to version 1.16.0.
