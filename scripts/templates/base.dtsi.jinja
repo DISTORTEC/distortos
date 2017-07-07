@@ -16,9 +16,12 @@
 {% endblock %}
 
 / {
-{% set emptyLine = joiner("\n") %}
+	chosen {
+{% block chosen %}
+{% endblock %}
+	};
 {% for label, node in nodes.items() %}
-{{ emptyLine() -}}
+
 {% include node.dtsiTemplate %}
 {% endfor %}
 };
