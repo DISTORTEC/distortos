@@ -503,7 +503,8 @@ public:
 	constexpr explicit IntrusiveListIterator(reference element) :
 			node_{&(element.*NodePointer)}
 	{
-		static_assert(std::is_convertible<U, T>::value == true, "U must be implicitly convertible to T!");
+		static_assert(std::is_same<U, T>::value == true || std::is_convertible<U, T>::value == true,
+				"U must be implicitly convertible to T!");
 	}
 
 	/**
@@ -601,7 +602,8 @@ private:
 
 	pointer getPointer() const
 	{
-		static_assert(std::is_convertible<U, T>::value == true, "U must be implicitly convertible to T!");
+		static_assert(std::is_same<U, T>::value == true || std::is_convertible<U, T>::value == true,
+				"U must be implicitly convertible to T!");
 
 		const auto offset = reinterpret_cast<size_t>(&(static_cast<pointer>(nullptr)->*NodePointer));
 		return reinterpret_cast<pointer>(reinterpret_cast<size_t>(node_) - offset);
@@ -694,7 +696,8 @@ public:
 	constexpr explicit IntrusiveListConstIterator(reference element) :
 			node_{&(element.*NodePointer)}
 	{
-		static_assert(std::is_convertible<U, T>::value == true, "U must be implicitly convertible to T!");
+		static_assert(std::is_same<U, T>::value == true || std::is_convertible<U, T>::value == true,
+				"U must be implicitly convertible to T!");
 	}
 
 	/**
@@ -809,7 +812,8 @@ private:
 
 	pointer getPointer() const
 	{
-		static_assert(std::is_convertible<U, T>::value == true, "U must be implicitly convertible to T!");
+		static_assert(std::is_same<U, T>::value == true || std::is_convertible<U, T>::value == true,
+				"U must be implicitly convertible to T!");
 
 		const auto offset = reinterpret_cast<size_t>(&(static_cast<pointer>(nullptr)->*NodePointer));
 		return reinterpret_cast<pointer>(reinterpret_cast<size_t>(node_) - offset);
@@ -1150,7 +1154,8 @@ public:
 
 	static iterator insert(const iterator position, reference newElement)
 	{
-		static_assert(std::is_convertible<U, T>::value == true, "U must be implicitly convertible to T!");
+		static_assert(std::is_same<U, T>::value == true || std::is_convertible<U, T>::value == true,
+				"U must be implicitly convertible to T!");
 
 		auto& positionNode = (*position).*NodePointer;
 		auto& newElementNode = newElement.*NodePointer;
