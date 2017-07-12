@@ -874,6 +874,7 @@ def dtsToDictionary(dts, inputFilename = '<string>'):
 	dictionary = parser.parse(dts)
 	updateLabels(dictionary['/'], labels)
 	updateReferences(dictionary['/'], labels)
+	dictionary['labels'] = labels
 	return dictionary
 
 ########################################################################################################################
