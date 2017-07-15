@@ -877,6 +877,26 @@ def dtsToDictionary(dts, inputFilename = '<string>'):
 	dictionary['labels'] = labels
 	return dictionary
 
+#
+# Loads dictionary from dts or pickle
+#
+# param [in] inputFile is the input file from which data will be read, should be dts or pickle
+# param [in] dtsFormat selects whether inputFile is in dts format (True) or in pickle format (False)
+#
+# return dictionary loaded from file
+#
+
+def loadDictionary(inputFile, dtsFormat):
+	try:
+		if dtsFormat == True:
+			return dtsToDictionary(inputFile.read(), inputFile.name)
+		else:
+			return pickle.load(getattr(inputFile, 'buffer', inputFile))
+	except (ply.lex.LexError, SyntaxError):
+		sys.exit(1)
+	except Exception as e:
+		sys.exit(sys.exc_info())
+
 ########################################################################################################################
 # main
 ########################################################################################################################
@@ -891,15 +911,7 @@ if __name__ == '__main__':
 	parser.add_argument('inputFile', type = argparse.FileType('r'), help = 'input file')
 	arguments = parser.parse_args()
 
-	try:
-		if arguments.in_format == 'dts':
-			dictionary = dtsToDictionary(arguments.inputFile.read(), arguments.inputFile.name)
-		else:
-			dictionary = pickle.load(getattr(arguments.inputFile, 'buffer', arguments.inputFile))
-	except (ply.lex.LexError, SyntaxError):
-		sys.exit(1)
-	except Exception as e:
-		sys.exit(sys.exc_info())
+	dictionary = loadDictionary(arguments.inputFile, arguments.in_format == 'dts')
 
 	if arguments.out_format == 'dictionary':
 		output = pprint.pformat(dictionary) + '\n'
