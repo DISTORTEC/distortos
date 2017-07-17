@@ -13,3 +13,13 @@
 		distortos,ld,process_stack = &sram;
 		distortos,ld,heap = &sram;
 {% endblock %}
+{% block cpus %}
+		#address-cells = <1>;
+		#size-cells = <0>;
+
+		cpu@0 {
+			compatible = "ARM,Cortex-M7", "ARM,ARMv7-M";
+			device_type = "cpu";
+			reg = <0>;
+		};
+{% endblock %}
