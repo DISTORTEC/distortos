@@ -20,6 +20,11 @@
 {% block chosen %}
 {% endblock %}
 	};
+
+	cpus {
+{% block cpus %}
+{% endblock %}
+	};
 {% for label, node in nodes.items() %}
 
 {% include node.dtsiTemplate %}
