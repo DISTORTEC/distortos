@@ -16,11 +16,17 @@
 {% endblock %}
 
 / {
-{% block devicetree %}
-{% set emptyLine = joiner("\n") %}
+	chosen {
+{% block chosen %}
+{% endblock %}
+	};
+
+	cpus {
+{% block cpus %}
+{% endblock %}
+	};
 {% for label, node in nodes.items() %}
-{{ emptyLine() -}}
+
 {% include node.dtsiTemplate %}
 {% endfor %}
-{% endblock %}
 };

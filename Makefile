@@ -93,6 +93,7 @@ AS = $(CONFIG_TOOLCHAIN_PREFIX)gcc
 CC = $(CONFIG_TOOLCHAIN_PREFIX)gcc
 CXX = $(CONFIG_TOOLCHAIN_PREFIX)g++
 AR = $(CONFIG_TOOLCHAIN_PREFIX)gcc-ar
+CPP = $(CONFIG_TOOLCHAIN_PREFIX)cpp
 LD = $(CONFIG_TOOLCHAIN_PREFIX)g++
 OBJCOPY = $(CONFIG_TOOLCHAIN_PREFIX)objcopy
 OBJDUMP = $(CONFIG_TOOLCHAIN_PREFIX)objdump
@@ -286,10 +287,22 @@ clean:
 
 .PHONY: board
 board:
+ifeq ($(suffix $(CONFIG_FILE)),.json)
 ifdef OUTPUT_PATH
 	$(eval OPTIONAL_BOARD_ARGUMENTS := -o $(OUTPUT_PATH))
 endif
-	./$(DISTORTOS_PATH)scripts/generateBoard.py $(CONFIG_FILE) $(OPTIONAL_BOARD_ARGUMENTS)
+	./$(DISTORTOS_PATH)scripts/generateBoard-json.py $(CONFIG_FILE) $(OPTIONAL_BOARD_ARGUMENTS)
+endif
+ifeq ($(suffix $(CONFIG_FILE)),.dts)
+ifdef OUTPUT_PATH
+	$(eval BOARD_ARGUMENTS := $(OUTPUT_PATH))
+else
+	$(eval BOARD_ARGUMENTS := $(dir $(CONFIG_FILE)))
+endif
+	$(eval DTS_CPPFLAGS := -nostdinc -undef -E -x assembler-with-cpp \
+			$(shell find . -type d -name 'dtsi' -exec echo -I {} \;))
+	$(CPP) $(DTS_CPPFLAGS) $(CONFIG_FILE) | ./scripts/generateBoard-dts.py - $(BOARD_ARGUMENTS)
+endif
 
 .PHONY: configure
 configure:
