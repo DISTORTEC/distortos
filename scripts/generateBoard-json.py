@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 #
-# file: generateBoard.py
+# file: generateBoard-json.py
 #
 # author: Copyright (C) 2017 Cezary Gapinski cezary.gapinski@gmail.com
 #
