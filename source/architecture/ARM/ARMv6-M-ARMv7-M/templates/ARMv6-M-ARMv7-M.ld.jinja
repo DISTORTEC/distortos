@@ -1,0 +1,332 @@
+{# ['compatible'], 'ARM,ARMv[67]-M', '''{{ dictionary['/']['properties']['compatible'][0] | sanitizePath }}.ld''' #}
+{% macro chosenToLabel(value) %}
+{% set labels = dictionary['labels'] %}
+{% set chosen = dictionary['/']['nodes']['chosen']['properties'] %}
+{{- labels[chosen[value][0]['label']]['node']['properties']['label'][0] -}}
+{% endmacro %}
+{% set memoryProperties = [('device_type', 'memory')] %}
+{% set allProperties = memoryProperties + [('compatible', 'on-chip-flash'), ('compatible', 'on-chip-eeprom')] %}
+/**
+ * \file
+{% set board = dictionary['/']['properties']['compatible'][0] %}
+{% set chip = dictionary['/']['properties']['compatible'][1] %}
+ * \brief Linker script for {{ board }} board with {{ chip }} chip:
+{% for key, memory in iterateNodes(dictionary, allProperties) %}
+{% set size = memory['properties']['reg'][0][1] %}
+{% set label = memory['properties']['label'][0] %}
+{% set address = memory['properties']['reg'][0][0] %}
+ * - {{ size | filesizeformat(binary = True) }} of {{ label }} at {{ '0x%x' % address }};
+{% endfor %}
+ *
+ * \author Copyright (C) 2014-{{ year }} Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ *
+ * \par License
+ * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
+ * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ *
+ * \warning
+ * Automatically generated file - do not edit!
+ */
+
+SEARCH_DIR(.);
+OUTPUT_FORMAT("elf32-littlearm", "elf32-bigarm", "elf32-littlearm");
+OUTPUT_ARCH(arm);
+
+/*---------------------------------------------------------------------------------------------------------------------+
+| available memories
++---------------------------------------------------------------------------------------------------------------------*/
+
+MEMORY
+{
+{% for key, memory in iterateNodes(dictionary, allProperties) %}
+{% set size = memory['properties']['reg'][0][1] %}
+{% set label = memory['properties']['label'][0] %}
+{% set address = memory['properties']['reg'][0][0] %}
+	{{ label }} : org = {{ '0x%x' % address }}, len = {{ size }}
+{% endfor %}
+}
+{% for key, memory in iterateNodes(dictionary, allProperties) %}
+{% set label = memory['properties']['label'][0] %}
+
+PROVIDE(__{{ label }}_start = ORIGIN({{ label }}));
+PROVIDE(__{{ label }}_size = LENGTH({{ label }}));
+PROVIDE(__{{ label }}_end = ORIGIN({{ label }}) + LENGTH({{ label }}));
+{% if memory['properties']['device_type'] is defined and memory['properties']['device_type'][0] == 'memory' %}
+HIDDEN(__{{ label }}_limit_low = ORIGIN({{ label }}));
+HIDDEN(__{{ label }}_limit_high = ORIGIN({{ label }}) + LENGTH({{ label }}));
+{% endif %}
+{% endfor %}
+
+/*---------------------------------------------------------------------------------------------------------------------+
+| entry point
++---------------------------------------------------------------------------------------------------------------------*/
+
+ENTRY(Reset_Handler);
+
+/*---------------------------------------------------------------------------------------------------------------------+
+| put data in sections
++---------------------------------------------------------------------------------------------------------------------*/
+
+SECTIONS
+{
+	.text :
+	{
+		. = ALIGN(4);
+		PROVIDE(__text_start = .);
+
+		/* sub-section: .vectors */
+
+		. = ALIGN(4);
+		PROVIDE(__vectors_start = .);
+
+		KEEP(*(.coreVectors));
+		KEEP(*(.chipVectors));
+
+		. = ALIGN(4);
+		PROVIDE(__vectors_end = .);
+
+		/* end of sub-section: .vectors */
+
+		*(.text* .gnu.linkonce.t.*);
+		*(.rodata* .gnu.linkonce.r.*);
+		*(.glue_7t .glue_7);
+
+		*(.ARM.extab* .gnu.linkonce.armextab.*);	/* exception unwinding information */
+		*(.gcc_except_table);						/* information used for stack unwinding during exception */
+		*(.eh_frame_hdr);							/* additional information about .ex_frame section */
+		*(.eh_frame);								/* information used for stack unwinding during exception */
+
+		/* sub-section: data_array */
+
+		. = ALIGN(4);
+		PROVIDE(__data_array_start = .);
+
+		LONG(LOADADDR(.data)); LONG(ADDR(.data)); LONG(ADDR(.data) + SIZEOF(.data));
+{% for key, memory in iterateNodes(dictionary, memoryProperties) %}
+{% set label = memory['properties']['label'][0] %}
+		LONG(LOADADDR(.{{ label }}.data)); LONG(ADDR(.{{ label }}.data)); {# remove whitespace -#}
+LONG(ADDR(.{{ label }}.data) + SIZEOF(.{{ label }}.data));
+{% endfor %}
+
+		. = ALIGN(4);
+		PROVIDE(__data_array_end = .);
+
+		/* end of sub-section: data_array */
+
+		/* sub-section: bss_array */
+
+		. = ALIGN(4);
+		PROVIDE(__bss_array_start = .);
+
+		LONG(0); LONG(ADDR(.bss)); LONG(ADDR(.bss) + SIZEOF(.bss));
+		LONG(0xed419f25); LONG(ADDR(.main_stack)); LONG(ADDR(.main_stack) + SIZEOF(.main_stack));
+		LONG(0xed419f25); LONG(ADDR(.process_stack)); LONG(ADDR(.process_stack) + SIZEOF(.process_stack));
+{% for key, memory in iterateNodes(dictionary, memoryProperties) %}
+{% set label = memory['properties']['label'][0] %}
+		LONG(0); LONG(ADDR(.{{ label }}.bss)); LONG(ADDR(.{{ label }}.bss) + SIZEOF(.{{ label }}.bss));
+{% endfor %}
+
+		. = ALIGN(4);
+		PROVIDE(__bss_array_end = .);
+
+		/* end of sub-section: bss_array */
+
+		/* sub-sections: init, preinit_array, init_array and fini_array */
+
+		KEEP(*(.init));
+
+		. = ALIGN(4);
+		PROVIDE(__preinit_array_start = .);
+
+		KEEP(*(.preinit_array));
+
+		. = ALIGN(4);
+		PROVIDE(__preinit_array_end = .);
+
+		. = ALIGN(4);
+		PROVIDE(__init_array_start = .);
+
+		KEEP(*(SORT(.init_array.*)));
+		KEEP(*(.init_array));
+
+		. = ALIGN(4);
+		PROVIDE(__init_array_end = .);
+
+		KEEP(*(.fini));
+
+		. = ALIGN(4);
+		PROVIDE(__fini_array_start = .);
+
+		KEEP(*(.fini_array));
+		KEEP(*(SORT(.fini_array.*)));
+
+		. = ALIGN(4);
+		PROVIDE(__fini_array_end = .);
+
+		/* end of sub-sections: init, preinit_array, init_array and fini_array */
+
+		. = ALIGN(4);
+		PROVIDE(__text_end = .);
+	} > {{ chosenToLabel('distortos,ld,text') }} AT > {{ chosenToLabel('distortos,ld,text') }}
+
+	.ARM.exidx :
+	{
+		. = ALIGN(4);
+		PROVIDE(__exidx_start = .);
+
+		*(.ARM.exidx* .gnu.linkonce.armexidx.*);	/* index entries for section unwinding */
+
+		. = ALIGN(4);
+		PROVIDE(__exidx_end = .);
+	} > {{ chosenToLabel('distortos,ld,exidx') }} AT > {{ chosenToLabel('distortos,ld,exidx') }}
+
+	.main_stack :
+	{
+		. = ALIGN(8);
+		PROVIDE(__main_stack_start = .);
+
+		. += __main_stack_size;
+
+		. = ALIGN(8);
+		PROVIDE(__main_stack_end = .);
+		HIDDEN(__{{ chosenToLabel('distortos,ld,main_stack') }}_limit_low = .);
+	} > {{ chosenToLabel('distortos,ld,main_stack') }} AT > {{ chosenToLabel('distortos,ld,main_stack') }}
+
+	.bss :
+	{
+		. = ALIGN(4);
+		PROVIDE(__bss_start = .);
+
+		*(.bss* .gnu.linkonce.b.*);
+		*(COMMON);
+
+		. = ALIGN(4);
+		PROVIDE(__bss_end = .);
+		HIDDEN(__{{ chosenToLabel('distortos,ld,bss') }}_limit_low = .);
+	} > {{ chosenToLabel('distortos,ld,bss') }} AT > {{ chosenToLabel('distortos,ld,bss') }}
+
+	.data :
+	{
+		. = ALIGN(4);
+		PROVIDE(__data_init_start = LOADADDR(.data));
+		PROVIDE(__data_start = .);
+
+		*(.data* .gnu.linkonce.d.*);
+
+		. = ALIGN(4);
+		PROVIDE(__data_end = .);
+		HIDDEN(__{{ chosenToLabel('distortos,ld,data') }}_limit_low = .);
+	} > {{ chosenToLabel('distortos,ld,data') }} AT > {{ chosenToLabel('distortos,ld,data,load') }}
+
+	.noinit (NOLOAD) :
+	{
+		. = ALIGN(4);
+		PROVIDE(__noinit_start = .);
+
+		*(.noinit);
+
+		. = ALIGN(4);
+		PROVIDE(__noinit_end = .);
+		HIDDEN(__{{ chosenToLabel('distortos,ld,noinit') }}_limit_low = .);
+	} > {{ chosenToLabel('distortos,ld,noinit') }} AT > {{ chosenToLabel('distortos,ld,noinit') }}
+{% for key, memory in iterateNodes(dictionary, memoryProperties) %}
+{% set label = memory['properties']['label'][0] %}
+
+	.{{ label }}.bss :
+	{
+		. = ALIGN(4);
+		PROVIDE(__{{ label }}_bss_start = .);
+
+		*(.{{ label }}.bss);
+
+		. = ALIGN(4);
+		PROVIDE(__{{ label }}_bss_end = .);
+		HIDDEN(__{{ label }}_limit_low = .);
+	} > {{ label }} AT > {{ label }}
+
+	.{{ label }}.data :
+	{
+		. = ALIGN(4);
+		PROVIDE(__{{ label }}_data_init_start = LOADADDR(.{{ label }}.data));
+		PROVIDE(__{{ label }}_data_start = .);
+
+		*(.{{ label }}.data);
+
+		. = ALIGN(4);
+		PROVIDE(__{{ label }}_data_end = .);
+		HIDDEN(__{{ label }}_limit_low = .);
+	} > {{ label }} AT > {{ chosenToLabel('distortos,ld,' + label + ',load') }}
+
+	.{{ label }}.noinit (NOLOAD) :
+	{
+		. = ALIGN(4);
+		PROVIDE(__{{ label }}_noinit_start = .);
+
+		*(.{{ label }}.noinit);
+
+		. = ALIGN(4);
+		PROVIDE(__{{ label }}_noinit_end = .);
+		HIDDEN(__{{ label }}_limit_low = .);
+	} > {{ label }} AT > {{ label }}
+{% endfor %}
+
+	PROVIDE(__process_stack_end = __{{ chosenToLabel('distortos,ld,process_stack') }}_end / 8 * 8);
+	PROVIDE(__process_stack_start = (__process_stack_end - __process_stack_size) / 8 * 8);
+
+	.process_stack __process_stack_start : AT(__process_stack_start)
+	{
+		HIDDEN(__{{ chosenToLabel('distortos,ld,process_stack') }}_limit_high = .);
+
+		. += __process_stack_size;
+	}
+
+	PROVIDE(__heap_start = ALIGN(__{{ chosenToLabel('distortos,ld,heap') }}_limit_low, 8));
+	PROVIDE(__heap_end = __{{ chosenToLabel('distortos,ld,heap') }}_limit_high / 8 * 8);
+
+	.stab				0 (NOLOAD) : { *(.stab); }
+	.stabstr			0 (NOLOAD) : { *(.stabstr); }
+	/* DWARF debug sections.
+	* Symbols in the DWARF debugging sections are relative to the beginning
+	* of the section so we begin them at 0. */
+	/* DWARF 1 */
+	.debug				0 : { *(.debug); }
+	.line				0 : { *(.line); }
+	/* GNU DWARF 1 extensions */
+	.debug_srcinfo		0 : { *(.debug_srcinfo); }
+	.debug_sfnames		0 : { *(.debug_sfnames); }
+	/* DWARF 1.1 and DWARF 2 */
+	.debug_aranges		0 : { *(.debug_aranges); }
+	.debug_pubnames		0 : { *(.debug_pubnames); }
+	/* DWARF 2 */
+	.debug_info			0 : { *(.debug_info .gnu.linkonce.wi.*); }
+	.debug_abbrev		0 : { *(.debug_abbrev); }
+	.debug_line			0 : { *(.debug_line); }
+	.debug_frame		0 : { *(.debug_frame); }
+	.debug_str			0 : { *(.debug_str); }
+	.debug_loc			0 : { *(.debug_loc); }
+	.debug_macinfo		0 : { *(.debug_macinfo); }
+	/* SGI/MIPS DWARF 2 extensions */
+	.debug_weaknames	0 : { *(.debug_weaknames); }
+	.debug_funcnames	0 : { *(.debug_funcnames); }
+	.debug_typenames	0 : { *(.debug_typenames); }
+	.debug_varnames		0 : { *(.debug_varnames); }
+
+	.note.gnu.arm.ident	0 : { KEEP(*(.note.gnu.arm.ident)); }
+	.ARM.attributes		0 : { KEEP(*(.ARM.attributes)); }
+	/DISCARD/				: { *(.note.GNU-stack); }
+}
+
+PROVIDE(__text_size = SIZEOF(.text));
+PROVIDE(__exidx_size = SIZEOF(.ARM.exidx));
+PROVIDE(__bss_size = SIZEOF(.bss));
+PROVIDE(__data_size = SIZEOF(.data));
+PROVIDE(__noinit_size = SIZEOF(.noinit));
+{% for key, memory in iterateNodes(dictionary, memoryProperties) %}
+{% set label = memory['properties']['label'][0] %}
+PROVIDE(__{{ label }}_bss_size = SIZEOF(.{{ label }}.bss));
+PROVIDE(__{{ label }}_data_size = SIZEOF(.{{ label }}.data));
+PROVIDE(__{{ label }}_noinit_size = SIZEOF(.{{ label }}.noinit));
+{% endfor %}
+
+PROVIDE(__bss_start__ = __bss_start);
+PROVIDE(__bss_end__ = __bss_end);
