@@ -8,13 +8,12 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
- 
- /dts-v1/;
- 
- #include "STM32L073RZ.dtsi"
- 
- / {
- 	compatible = "ST,NUCLEO-L073RZ", "ST,STM32L073RZ";
- 	model = "STMicroelectronics NUCLEO-L073RZ";
- };
- 
+
+/dts-v1/;
+
+#include "STM32L073RZ.dtsi"
+
+/ {
+	compatible = "ST,NUCLEO-L073RZ", "ST,STM32L073RZ";
+	model = "STMicroelectronics NUCLEO-L073RZ";
+};

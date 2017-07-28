@@ -8,13 +8,12 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
- 
- /dts-v1/;
- 
- #include "STM32F429ZI.dtsi"
- 
- / {
- 	compatible = "ST,32F429IDISCOVERY", "ST,STM32F429ZI";
- 	model = "STMicroelectronics 32F429IDISCOVERY";
- };
- 
+
+/dts-v1/;
+
+#include "STM32F429ZI.dtsi"
+
+/ {
+	compatible = "ST,32F429IDISCOVERY", "ST,STM32F429ZI";
+	model = "STMicroelectronics 32F429IDISCOVERY";
+};
