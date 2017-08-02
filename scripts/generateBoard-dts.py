@@ -141,7 +141,7 @@ if __name__ == '__main__':
 				continue
 			valueRegex = re.compile(valuePattern)
 			for key, value in iteratePropertiesUnpacked(dictionary, propertyNames):
-				if valueRegex.match(value) != None:
+				if valueRegex.match(str(value)) != None:
 					print('matches "{}" in "{}"'.format(value, key))
 					jinjaTemplates.append((templateFilename, outputFilenameTemplate))
 					break
