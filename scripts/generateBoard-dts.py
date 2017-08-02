@@ -100,7 +100,7 @@ def iteratePropertiesUnpacked(dictionary, propertyNames = []):
 # return sanitized path
 #
 
-def sanitizePath(path, pattern = '[^0-9A-Za-z-]', replacement = '_'):
+def sanitize(path, pattern = '[^0-9A-Za-z-]', replacement = '_'):
 	regex = re.compile(pattern)
 	return regex.sub(replacement, path)
 
@@ -155,7 +155,7 @@ if __name__ == '__main__':
 			loader = jinja2.FileSystemLoader('.'))
 	jinjaEnvironment.globals['year'] = datetime.date.today().year
 	jinjaEnvironment.globals['iterateNodes'] = iterateNodes
-	jinjaEnvironment.filters['sanitizePath'] = sanitizePath
+	jinjaEnvironment.filters['sanitize'] = sanitize
 
 	filenameRegex = re.compile('[^a-zA-Z0-9_.-]')
 	for templateFilename, outputFilenameTemplate in jinjaTemplates:
