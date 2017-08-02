@@ -94,15 +94,15 @@ def iteratePropertiesUnpacked(dictionary, propertyNames = []):
 # Filter which sanitizes provided path
 #
 # param [in] path is the path that will be sanitized
+# param [in] pattern is the pattern which will be replaced, default - '[^0-9A-Za-z-]'
+# param [in] replacement is the replacement string, default - '_'
 #
 # return sanitized path
 #
 
-def sanitizePath(path):
-	return sanitizePath.regex.sub('_', path)
-
-# internal regex of sanitizePath() - whitelisted path characters
-sanitizePath.regex = re.compile('[^0-9A-Za-z-]')
+def sanitizePath(path, pattern = '[^0-9A-Za-z-]', replacement = '_'):
+	regex = re.compile(pattern)
+	return regex.sub(replacement, path)
 
 ########################################################################################################################
 # main
