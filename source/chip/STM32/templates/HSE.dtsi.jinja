@@ -1,0 +1,11 @@
+	clocks {
+		clock_hse: clock-hse {
+			#clock-cells = <0>;
+			compatible = "ST,STM32-HSE", "fixed-clock";
+{% if node.bypass is defined and node.bypass | int == 1 %}
+			ST,STM32-HSE-bypass;
+{% endif %}
+			clock-frequency = <0>;
+			clock-output-names = "HSE";
+		};
+	};
