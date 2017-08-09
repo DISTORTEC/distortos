@@ -16,4 +16,18 @@
 / {
 	compatible = "ST,NUCLEO-F401RE", "ST,STM32F401RE";
 	model = "STMicroelectronics NUCLEO-F401RE";
+
+	regulators {
+		#address-cells = <1>;
+		#size-cells = <0>;
+
+		vdd_regulator: regulator@0 {
+			compatible = "regulator-fixed";
+			reg = <0>;
+			regulator-name = "VDD";
+			regulator-min-microvolt = <3300000>;
+			regulator-max-microvolt = <3300000>;
+			regulator-always-on;
+		};
+	};
 };
