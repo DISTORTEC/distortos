@@ -16,4 +16,23 @@
 / {
 	compatible = "ST,NUCLEO-F429ZI", "ST,STM32F429ZI";
 	model = "STMicroelectronics NUCLEO-F429ZI";
+
+	regulators {
+		#address-cells = <1>;
+		#size-cells = <0>;
+
+		vdd_regulator: regulator@0 {
+			compatible = "regulator-fixed";
+			reg = <0>;
+			regulator-name = "VDD";
+			regulator-min-microvolt = <3300000>;
+			regulator-max-microvolt = <3300000>;
+			regulator-always-on;
+		};
+	};
+};
+
+&clock_hse {
+	ST,STM32-HSE-bypass;
+	clock-frequency = <8000000>;
 };
