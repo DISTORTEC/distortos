@@ -16,4 +16,22 @@
 / {
 	compatible = "ST,32F429IDISCOVERY", "ST,STM32F429ZI";
 	model = "STMicroelectronics 32F429IDISCOVERY";
+
+	regulators {
+		#address-cells = <1>;
+		#size-cells = <0>;
+
+		vdd_regulator: regulator@0 {
+			compatible = "regulator-fixed";
+			reg = <0>;
+			regulator-name = "VDD";
+			regulator-min-microvolt = <3000000>;
+			regulator-max-microvolt = <3000000>;
+			regulator-always-on;
+		};
+	};
+};
+
+&clock_hse {
+	clock-frequency = <8000000>;
 };
