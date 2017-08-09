@@ -16,4 +16,23 @@
 / {
 	compatible = "ST,32F746GDISCOVERY", "ST,STM32F746NG";
 	model = "STMicroelectronics 32F746GDISCOVERY";
+
+	regulators {
+		#address-cells = <1>;
+		#size-cells = <0>;
+
+		vdd_regulator: regulator@0 {
+			compatible = "regulator-fixed";
+			reg = <0>;
+			regulator-name = "VDD";
+			regulator-min-microvolt = <3300000>;
+			regulator-max-microvolt = <3300000>;
+			regulator-always-on;
+		};
+	};
+};
+
+&clock_hse {
+	ST,STM32-HSE-bypass;
+	clock-frequency = <25000000>;
 };

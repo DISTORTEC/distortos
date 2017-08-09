@@ -39,6 +39,15 @@
 		};
 	};
 
+	clocks {
+		clock_hse: clock-hse {
+			#clock-cells = <0>;
+			compatible = "ST,STM32-HSE", "fixed-clock";
+			clock-frequency = <0>;
+			clock-output-names = "HSE";
+		};
+	};
+
 	flash: flash@8000000 {
 		compatible = "on-chip-flash";
 		reg = <0x8000000 32768>;
