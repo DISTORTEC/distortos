@@ -10,11 +10,26 @@
 #
 
 import argparse
+import ast
 import collections
 import csv
 import datetime
 import jinja2
 import os
+
+#
+# Tries to parse string into proper type
+#
+# param [in] string is the string which will be parsed
+#
+# return string parsed into proper type
+#
+
+def parseString(string):
+	try:
+		return ast.literal_eval(string)
+	except ValueError:
+		return string
 
 #
 # Handles single row read from CSV file
@@ -32,10 +47,10 @@ def handleRow(jinjaEnvironment, outputPath, header, row):
 		if element[0] == '' or row[index] == '':
 			continue
 		if element[1] == '':	# single element
-			singles[element[0]] = row[index]
+			singles[element[0]] = parseString(row[index])
 		else:	# node
 			if element[1] != 'dtsiTemplate':
-				nodes[element[0]][element[1]] = row[index]
+				nodes[element[0]][element[1]] = parseString(row[index])
 			else:
 				nodes[element[0]][element[1]] = jinjaEnvironment.get_template(row[index])
 
