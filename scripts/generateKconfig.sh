@@ -22,7 +22,7 @@ mkdir -p "${output}"
 output="$(cd "${output}" && pwd)"
 output="${output#"$(pwd)/"}"
 
-for filePattern in $(/usr/bin/find -path "./${output}" -prune -o -name 'Kconfig*' -exec \
+for filePattern in $(/usr/bin/find -path "./${output}" -prune -o -name 'Kconfig*' ! -name '*.jinja' -exec \
 		sed -n -e 's/^source "$OUTPUT\/\(.\+\)"$/\1;\1/p' \
 		-e 's/^source "$OUTPUT\/\(.\+\)"\s*# pattern: \(.\+\)$/\1;\2/p' {} +)
 do
