@@ -66,4 +66,36 @@
 		reg = <0x20000000 2048>;
 		label = "sram";
 	};
+
+	pin-controller {
+		compatible = "ST,STM32-GPIOv2-pin-controller";
+		ranges;
+	};
+
+	pin-controller {
+		gpioa: gpio@50000000 {
+			ST,GPIO-bank-name = "GPIOA";
+			#gpio-cells = <2>;
+			reg = <0x50000000 1024>;
+			status = "disabled";
+		};
+	};
+
+	pin-controller {
+		gpiob: gpio@50000400 {
+			ST,GPIO-bank-name = "GPIOB";
+			#gpio-cells = <2>;
+			reg = <0x50000400 1024>;
+			status = "disabled";
+		};
+	};
+
+	pin-controller {
+		gpioc: gpio@50000800 {
+			ST,GPIO-bank-name = "GPIOC";
+			#gpio-cells = <2>;
+			reg = <0x50000800 1024>;
+			status = "disabled";
+		};
+	};
 };

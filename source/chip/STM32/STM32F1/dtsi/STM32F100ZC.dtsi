@@ -59,4 +59,72 @@
 		reg = <0x20000000 24576>;
 		label = "sram";
 	};
+
+	pin-controller {
+		compatible = "ST,STM32-GPIOv1-pin-controller";
+		ranges;
+	};
+
+	pin-controller {
+		gpioa: gpio@40010800 {
+			ST,GPIO-bank-name = "GPIOA";
+			#gpio-cells = <2>;
+			reg = <0x40010800 1024>;
+			status = "disabled";
+		};
+	};
+
+	pin-controller {
+		gpiob: gpio@40010c00 {
+			ST,GPIO-bank-name = "GPIOB";
+			#gpio-cells = <2>;
+			reg = <0x40010c00 1024>;
+			status = "disabled";
+		};
+	};
+
+	pin-controller {
+		gpioc: gpio@40011000 {
+			ST,GPIO-bank-name = "GPIOC";
+			#gpio-cells = <2>;
+			reg = <0x40011000 1024>;
+			status = "disabled";
+		};
+	};
+
+	pin-controller {
+		gpiod: gpio@40011400 {
+			ST,GPIO-bank-name = "GPIOD";
+			#gpio-cells = <2>;
+			reg = <0x40011400 1024>;
+			status = "disabled";
+		};
+	};
+
+	pin-controller {
+		gpioe: gpio@40011800 {
+			ST,GPIO-bank-name = "GPIOE";
+			#gpio-cells = <2>;
+			reg = <0x40011800 1024>;
+			status = "disabled";
+		};
+	};
+
+	pin-controller {
+		gpiof: gpio@40011c00 {
+			ST,GPIO-bank-name = "GPIOF";
+			#gpio-cells = <2>;
+			reg = <0x40011c00 1024>;
+			status = "disabled";
+		};
+	};
+
+	pin-controller {
+		gpiog: gpio@40012000 {
+			ST,GPIO-bank-name = "GPIOG";
+			#gpio-cells = <2>;
+			reg = <0x40012000 1024>;
+			status = "disabled";
+		};
+	};
 };
