@@ -130,8 +130,13 @@ CXXFLAGS += $(CONFIG_ASSERT)
 # path to linker script fragment with symbols (generated automatically)
 SYMBOLS_LD := $(OUTPUT)symbols.ld
 
-# path to linker script (generated automatically)
-LDSCRIPT := $(OUTPUT)$(subst ",,$(CONFIG_CHIP)).ld
+ifdef CONFIG_LDSCRIPT
+	# path to board's linker script (possibly generated from devicetree)
+	LDSCRIPT := $(subst ",,$(CONFIG_LDSCRIPT))
+else
+	# path to linker script (generated automatically)
+	LDSCRIPT := $(OUTPUT)$(subst ",,$(CONFIG_CHIP)).ld
+endif
 
 LDSCRIPTS := $(SYMBOLS_LD) $(LDSCRIPT)
 
