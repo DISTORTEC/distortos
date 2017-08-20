@@ -39,9 +39,3 @@ install:
 
 script:
     - "./scripts/travis-ci.sh script ${SUBSTAGE}"
-
-after_failure:
-    - "echo \"********** /tmp/stdout.log\""
-    - "tail -n 1000 /tmp/stdout.log"
-    - "echo \"********** /tmp/stderr.log\""
-    - "tail -n 1000 /tmp/stderr.log"
