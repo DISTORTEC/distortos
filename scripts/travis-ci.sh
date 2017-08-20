@@ -37,48 +37,30 @@ installBuild5() {
 # "install build 6" and "install build 7" phase
 installBuild67() {
 	local gccVersion="${1}"
-	local betVersion="${2}"
-	local betUrl="${3}"
-
-	if [ ! -e "${HOME}/cache/arm-none-eabi-gcc-${gccVersion}"-*.tar.xz ]; then
-		(
-		echo "Downloading bleeding-edge-toolchain-${betVersion}.tar.xz..."
-		wget "${betUrl}" -O "bleeding-edge-toolchain-${betVersion}.tar.xz"
-		echo "Extracting bleeding-edge-toolchain-${betVersion}.tar.xz..."
-		tar -xf "bleeding-edge-toolchain-${betVersion}.tar.xz"
-		echo "Building bleeding-edge-toolchain-${betVersion}..."
-		cd "bleeding-edge-toolchain-${betVersion}"
-
-		{ time='0'; while true; do sleep 60; time="$((time + 1))"; echo "${time} minute(s)..."; done } &
-		keepAlivePid="${!}"
-		timeout -k 1m 45m ./build-bleeding-edge-toolchain.sh --skip-nano-libraries > >(tee /tmp/stdout.log) 2> /tmp/stderr.log | grep '[*-]\{10,10\} '
-		kill "${keepAlivePid}"
-		wait "${keepAlivePid}" || true
-		cp "arm-none-eabi-gcc-${gccVersion}"-*.tar.xz "${HOME}/cache"
-		)
-	fi
-	echo "Extracting arm-none-eabi-gcc-${gccVersion}-*.tar.xz..."
-	tar -xf "${HOME}/cache/arm-none-eabi-gcc-${gccVersion}"-*.tar.xz
+	local buildDate="${2}"
+	echo "Downloading arm-none-eabi-gcc-${gccVersion}-${buildDate}.tar.xz..."
+	wget http://distortos.org/files/travis-ci/arm-none-eabi-gcc-${gccVersion}-${buildDate}.tar.xz
+	echo "Extracting arm-none-eabi-gcc-${gccVersion}-${buildDate}.tar.xz..."
+	tar -xf arm-none-eabi-gcc-${gccVersion}-${buildDate}.tar.xz
 	cat > "arm-none-eabi-gcc-${gccVersion}.sh" <<- EOF
-	export PATH="$(cd "arm-none-eabi-gcc-${gccVersion}"-*/bin && pwd):\${PATH-}"
+	export PATH="$(cd arm-none-eabi-gcc-${gccVersion}-${buildDate}/bin && pwd):\${PATH-}"
 	EOF
 }
 
 # "install build" phase
 installBuild() {
-	mkdir -p "${HOME}/cache"
-	mkdir -p "${HOME}/toolchains"
-	cd "${HOME}/toolchains"
+	mkdir -p "${HOME}/toolchain"
+	cd "${HOME}/toolchain"
 
 	case "${1}" in
 		5)
 			installBuild5
 			;;
 		6)
-			installBuild67 "6.3.0" "170314" "http://www.freddiechopin.info/en/download/category/11-bleeding-edge-toolchain?download=155%3Ableeding-edge-toolchain-170314-linux-script"
+			installBuild67 '6.3.0' '170820'
 			;;
 		7)
-			installBuild67 "7.1.0" "170503" "http://www.freddiechopin.info/en/download/category/11-bleeding-edge-toolchain?download=158%3Ableeding-edge-toolchain-170503-linux-script"
+			installBuild67 '7.1.0' '170820'
 			;;
 		*)
 			echo "\"${1}\" is not a valid argument!" >&2
@@ -124,14 +106,10 @@ install() {
 scriptBuild() {
 	shift
 
-	toolchains="$(find "${HOME}/toolchains/" -mindepth 1 -maxdepth 1 -name '*.sh' | sort)"
-	for toolchain in ${toolchains}; do
-		(
-		echo "Using ${toolchain}..."
-		. "${toolchain}"
-		"$(dirname "${0}")/buildAllConfigurations.sh" "${@}"
-		)
-	done
+	toolchain="$(find "${HOME}/toolchain/" -mindepth 1 -maxdepth 1 -name '*.sh')"
+	echo "Using ${toolchain}..."
+	. "${toolchain}"
+	"$(dirname "${0}")/buildAllConfigurations.sh" "${@}"
 }
 
 # "script pydts" phase
