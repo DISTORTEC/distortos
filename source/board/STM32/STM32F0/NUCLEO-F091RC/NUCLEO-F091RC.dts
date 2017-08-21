@@ -17,3 +17,11 @@
 	compatible = "ST,NUCLEO-F091RC", "ST,STM32F091RC";
 	model = "STMicroelectronics NUCLEO-F091RC";
 };
+
+&gpioa {
+	status = "okay";
+};
+
+&gpioc {
+	status = "okay";
+};
