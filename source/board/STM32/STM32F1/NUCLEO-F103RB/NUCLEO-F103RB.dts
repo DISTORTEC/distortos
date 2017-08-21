@@ -17,3 +17,11 @@
 	compatible = "ST,NUCLEO-F103RB", "ST,STM32F103RB";
 	model = "STMicroelectronics NUCLEO-F103RB";
 };
+
+&gpioa {
+	status = "okay";
+};
+
+&gpioc {
+	status = "okay";
+};
