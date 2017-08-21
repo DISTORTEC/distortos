@@ -655,7 +655,7 @@ def p_nodes1(p):
 	nodes : node nodes
 	'''
 	p[0] = collections.OrderedDict({p[1][0]: p[1][1]})
-	p[0].update(p[2])
+	mergeDictionaries(p[0], p[2])
 
 #
 # "node" 0
