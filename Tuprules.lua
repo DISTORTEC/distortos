@@ -131,8 +131,13 @@ CXXFLAGS += CONFIG_ASSERT
 -- path to linker script fragment with symbols (generated automatically)
 SYMBOLS_LD = OUTPUT .. "symbols.ld"
 
--- path to linker script (generated automatically)
-LDSCRIPT = OUTPUT .. CONFIG_CHIP .. ".ld"
+if CONFIG_LDSCRIPT ~= nil then
+	-- path to board's linker script (possibly generated from devicetree)
+	LDSCRIPT = DISTORTOS_TOP .. CONFIG_LDSCRIPT
+else
+	-- path to linker script (generated automatically)
+	LDSCRIPT = OUTPUT .. CONFIG_CHIP .. ".ld"
+end
 
 LDSCRIPTS = {SYMBOLS_LD, LDSCRIPT}
 
@@ -232,8 +237,9 @@ function ar(output, ...)
 	tup.rule(inputs , "^ AR %o^ " .. AR .. " rcs %o " .. objects, {output, filenameToGroup(output)})
 end
 
--- link all objects from groups given in the vararg into file named output; all elements of vararg are parsed by
--- filenameToGroup() before use; vararg may also contain:
+-- link all objects given in the vararg into file named output; all elements of vararg which begin with OUTPUT are
+-- parsed by filenameToGroup() and used as groups, the same is happens if the element is a group; vararg may also
+-- contain:
 -- - paths to linker scripts (.ld extension);
 -- - paths to archives (.a extension);
 function link(output, ...)
@@ -241,19 +247,23 @@ function link(output, ...)
 	local objects = ""
 	local ldScripts = ""
 	local archives = ""
+	local outputLength = string.len(OUTPUT)
 	for i, element in ipairs({...}) do
-		element = filenameToGroup(element)
-		local path, group = element:match("^([^<]*)(<[^>]+>)$")
-		if path ~= nil and group ~= nil then
-			table.insert(inputs, path .. group)
-			local extension = group:match("%.([a-zA-Z0-9]+)>$")
-			if extension == "ld" then
-				ldScripts = ldScripts .. " -T%" .. group
-			elseif extension == "a" then
-				archives = archives .. " -l:%" .. group
-			else
-				objects = objects .. " %" .. group
-			end
+		local extension = tup.ext(element)
+		local value
+		if element:sub(1, outputLength):find(OUTPUT) ~= nil or element:match("<[^>]+>$") ~= nil then
+			element = filenameToGroup(element)
+			value = "%" .. element:match("^[^<]*(<[^>]+>)$")
+		else
+			value = element
+		end
+		table.insert(inputs, element)
+		if extension == "ld" then
+			ldScripts = ldScripts .. " -T" .. value
+		elseif extension == "a" then
+			archives = archives .. " -l:" .. value
+		else
+			objects = objects .. " " .. value
 		end
 	end
 

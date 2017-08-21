@@ -1,4 +1,5 @@
 {% set board = dictionary['/']['properties']['compatible'][0] %}
+{% set sanitizedBoard = board | sanitize %}
 #
 # file: Kconfig-boardOptions
 #
@@ -11,6 +12,8 @@
 #
 
 if BOARD_{{ board | sanitize('[^0-9A-Za-z]') | upper }}
+
+source "$OUTPUT/Kconfig-boardOptions-{{ sanitizedBoard }}" # pattern: Kconfig-boardOptions-{{ sanitizedBoard }}-*
 {% block options %}
 {% endblock %}
 
