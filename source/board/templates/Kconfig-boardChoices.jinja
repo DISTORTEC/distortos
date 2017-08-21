@@ -13,7 +13,8 @@
 
 config BOARD_{{ board | sanitize('[^0-9A-Za-z]') | upper }}
 	bool "{{ board }}"
-	depends on {% block depends %}{% endblock %}{{ '' }}
+{% block depends %}
+{% endblock %}
 	select {% block select %}{% endblock %}{{ '' }}
 	help
 		{{ board }} board with {{ chip }} chip
