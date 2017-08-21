@@ -17,3 +17,11 @@
 	compatible = "ST,NUCLEO-L073RZ", "ST,STM32L073RZ";
 	model = "STMicroelectronics NUCLEO-L073RZ";
 };
+
+&gpioa {
+	status = "okay";
+};
+
+&gpioc {
+	status = "okay";
+};
