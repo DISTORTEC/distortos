@@ -36,3 +36,11 @@
 	ST,STM32-HSE-bypass;
 	clock-frequency = <8000000>;
 };
+
+&gpiob {
+	status = "okay";
+};
+
+&gpioc {
+	status = "okay";
+};
