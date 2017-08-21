@@ -131,8 +131,13 @@ CXXFLAGS += CONFIG_ASSERT
 -- path to linker script fragment with symbols (generated automatically)
 SYMBOLS_LD = OUTPUT .. "symbols.ld"
 
--- path to linker script (generated automatically)
-LDSCRIPT = OUTPUT .. CONFIG_CHIP .. ".ld"
+if CONFIG_LDSCRIPT ~= nil then
+	-- path to board's linker script (possibly generated from devicetree)
+	LDSCRIPT = DISTORTOS_TOP .. CONFIG_LDSCRIPT
+else
+	-- path to linker script (generated automatically)
+	LDSCRIPT = OUTPUT .. CONFIG_CHIP .. ".ld"
+end
 
 LDSCRIPTS = {SYMBOLS_LD, LDSCRIPT}
 

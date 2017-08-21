@@ -9,12 +9,16 @@
 
 if CONFIG_CHIP_STM32F1 == "y" then
 
-	local ldScriptGenerator = DISTORTOS_TOP .. "source/architecture/ARM/ARMv6-M-ARMv7-M/ARMv6-M-ARMv7-M.ld.sh"
+	if CONFIG_LDSCRIPT == nil then
 
-	tup.rule(string.format('^ SH %s^ ./%s "%s" "0x%x,%u" "0x%x,%u" > "%%o"', ldScriptGenerator, ldScriptGenerator,
-			CONFIG_CHIP, CONFIG_CHIP_ROM_ADDRESS + CONFIG_LDSCRIPT_ROM_BEGIN,
-			CONFIG_LDSCRIPT_ROM_END - CONFIG_LDSCRIPT_ROM_BEGIN, CONFIG_CHIP_STM32F1_SRAM_ADDRESS,
-			CONFIG_CHIP_STM32F1_SRAM_SIZE), {LDSCRIPT, filenameToGroup(LDSCRIPT)})
+		local ldScriptGenerator = DISTORTOS_TOP .. "source/architecture/ARM/ARMv6-M-ARMv7-M/ARMv6-M-ARMv7-M.ld.sh"
+
+		tup.rule(string.format('^ SH %s^ ./%s "%s" "0x%x,%u" "0x%x,%u" > "%%o"', ldScriptGenerator, ldScriptGenerator,
+				CONFIG_CHIP, CONFIG_CHIP_ROM_ADDRESS + CONFIG_LDSCRIPT_ROM_BEGIN,
+				CONFIG_LDSCRIPT_ROM_END - CONFIG_LDSCRIPT_ROM_BEGIN, CONFIG_CHIP_STM32F1_SRAM_ADDRESS,
+				CONFIG_CHIP_STM32F1_SRAM_SIZE), {LDSCRIPT, filenameToGroup(LDSCRIPT)})
+
+	end	-- if CONFIG_LDSCRIPT == nil then
 
 	CXXFLAGS += STANDARD_INCLUDES
 	CXXFLAGS += ARCHITECTURE_INCLUDES
