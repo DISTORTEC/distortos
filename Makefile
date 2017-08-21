@@ -57,6 +57,10 @@ SET_SIMPLE_TARGETS = $(eval DO_INCLUDE := 0)
 # check all simple targets if present
 $(eval $(foreach target,$(SIMPLE_TARGETS),$(call CHECK_SIMPLE_TARGETS,$(target))))
 
+# removes all double quotes
+UNQUOTE_DOUBLE = $(subst ",,$(1))
+# syntax highlighting help, compliments double quote in the macro -> "
+
 #-----------------------------------------------------------------------------------------------------------------------
 # load configuration variables from distortosConfiguration.mk file selected by user
 #-----------------------------------------------------------------------------------------------------------------------
@@ -69,7 +73,7 @@ ifneq ($(wildcard selectedConfiguration.mk),)
 	include selectedConfiguration.mk
 
 	# path to distortosConfiguration.mk file selected by $(CONFIG_SELECTED_CONFIGURATION) variable
-	DISTORTOS_CONFIGURATION_MK = ./$(subst ",,$(CONFIG_SELECTED_CONFIGURATION))
+	DISTORTOS_CONFIGURATION_MK = ./$(call UNQUOTE_DOUBLE,$(CONFIG_SELECTED_CONFIGURATION))
 
 endif
 
@@ -87,7 +91,7 @@ endif
 # toolchain configuration
 #-----------------------------------------------------------------------------------------------------------------------
 
-CONFIG_TOOLCHAIN_PREFIX := $(subst ",,$(CONFIG_TOOLCHAIN_PREFIX))
+CONFIG_TOOLCHAIN_PREFIX := $(call UNQUOTE_DOUBLE,$(CONFIG_TOOLCHAIN_PREFIX))
 
 AS = $(CONFIG_TOOLCHAIN_PREFIX)gcc
 CC = $(CONFIG_TOOLCHAIN_PREFIX)gcc
@@ -104,11 +108,11 @@ RM = rm -f
 # add obligatory compilation flags
 #-----------------------------------------------------------------------------------------------------------------------
 
-CONFIG_ARCHITECTURE_FLAGS := $(subst ",,$(CONFIG_ARCHITECTURE_FLAGS))
-CONFIG_BUILD_OPTIMIZATION := $(subst ",,$(CONFIG_BUILD_OPTIMIZATION))
-CONFIG_LINK_TIME_OPTIMIZATION_COMPILATION := $(subst ",,$(CONFIG_LINK_TIME_OPTIMIZATION_COMPILATION))
-CONFIG_DEBUGGING_INFORMATION_COMPILATION := $(subst ",,$(CONFIG_DEBUGGING_INFORMATION_COMPILATION))
-CONFIG_ASSERT := $(subst ",,$(CONFIG_ASSERT))
+CONFIG_ARCHITECTURE_FLAGS := $(call UNQUOTE_DOUBLE,$(CONFIG_ARCHITECTURE_FLAGS))
+CONFIG_BUILD_OPTIMIZATION := $(call UNQUOTE_DOUBLE,$(CONFIG_BUILD_OPTIMIZATION))
+CONFIG_LINK_TIME_OPTIMIZATION_COMPILATION := $(call UNQUOTE_DOUBLE,$(CONFIG_LINK_TIME_OPTIMIZATION_COMPILATION))
+CONFIG_DEBUGGING_INFORMATION_COMPILATION := $(call UNQUOTE_DOUBLE,$(CONFIG_DEBUGGING_INFORMATION_COMPILATION))
+CONFIG_ASSERT := $(call UNQUOTE_DOUBLE,$(CONFIG_ASSERT))
 
 ASFLAGS += $(CONFIG_DEBUGGING_INFORMATION_COMPILATION)
 ASFLAGS += $(CONFIG_ARCHITECTURE_FLAGS)
@@ -132,18 +136,18 @@ SYMBOLS_LD := $(OUTPUT)symbols.ld
 
 ifdef CONFIG_LDSCRIPT
 	# path to board's linker script (possibly generated from devicetree)
-	LDSCRIPT := $(subst ",,$(CONFIG_LDSCRIPT))
+	LDSCRIPT := $(call UNQUOTE_DOUBLE,$(CONFIG_LDSCRIPT))
 else
 	# path to linker script (generated automatically)
-	LDSCRIPT := $(OUTPUT)$(subst ",,$(CONFIG_CHIP)).ld
+	LDSCRIPT := $(OUTPUT)$(call UNQUOTE_DOUBLE,$(CONFIG_CHIP)).ld
 endif
 
 LDSCRIPTS := $(SYMBOLS_LD) $(LDSCRIPT)
 
-LDFLAGS += $(subst ",,$(CONFIG_DEBUGGING_INFORMATION_LINKING))
+LDFLAGS += $(call UNQUOTE_DOUBLE,$(CONFIG_DEBUGGING_INFORMATION_LINKING))
 LDFLAGS += $(CONFIG_ARCHITECTURE_FLAGS)
 LDFLAGS += $(CONFIG_BUILD_OPTIMIZATION)
-LDFLAGS += $(subst ",,$(CONFIG_LINK_TIME_OPTIMIZATION_LINKING))
+LDFLAGS += $(call UNQUOTE_DOUBLE,$(CONFIG_LINK_TIME_OPTIMIZATION_LINKING))
 LDFLAGS += -Wl,-Map=$(@:%.elf=%.map),--cref,--gc-sections
 
 #-----------------------------------------------------------------------------------------------------------------------
@@ -154,13 +158,13 @@ LDFLAGS += -Wl,-Map=$(@:%.elf=%.map),--cref,--gc-sections
 STANDARD_INCLUDES += -I$(OUTPUT)include -I$(DISTORTOS_PATH)include
 
 # architecture includes
-ARCHITECTURE_INCLUDES += $(patsubst %,-I$(DISTORTOS_PATH)%,$(subst ",,$(CONFIG_ARCHITECTURE_INCLUDES)))
+ARCHITECTURE_INCLUDES += $(patsubst %,-I$(DISTORTOS_PATH)%,$(call UNQUOTE_DOUBLE,$(CONFIG_ARCHITECTURE_INCLUDES)))
 
 # chip includes
-CHIP_INCLUDES += $(patsubst %,-I$(DISTORTOS_PATH)%,$(subst ",,$(CONFIG_CHIP_INCLUDES)))
+CHIP_INCLUDES += $(patsubst %,-I$(DISTORTOS_PATH)%,$(call UNQUOTE_DOUBLE,$(CONFIG_CHIP_INCLUDES)))
 
 # board includes
-BOARD_INCLUDES += $(patsubst %,-I$(DISTORTOS_PATH)%,$(subst ",,$(CONFIG_BOARD_INCLUDES)))
+BOARD_INCLUDES += $(patsubst %,-I$(DISTORTOS_PATH)%,$(call UNQUOTE_DOUBLE,$(CONFIG_BOARD_INCLUDES)))
 
 #-----------------------------------------------------------------------------------------------------------------------
 # build macros
