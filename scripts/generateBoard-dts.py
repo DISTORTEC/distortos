@@ -160,8 +160,8 @@ if __name__ == '__main__':
 
 	filenameRegex = re.compile('[^a-zA-Z0-9_.-]')
 	for templateFilename, outputFilenameTemplate in jinjaTemplates:
-		outputFilename = os.path.join(arguments.outputPath,
-				jinjaEnvironment.from_string(outputFilenameTemplate).render(dictionary = dictionary))
+		outputFilename = os.path.normpath(os.path.join(arguments.outputPath,
+				jinjaEnvironment.from_string(outputFilenameTemplate).render(dictionary = dictionary)))
 		output = jinjaEnvironment.get_template(templateFilename).render(dictionary = dictionary)
 		with open(outputFilename, 'w') as outputFile:
 			print('Rendering {} from {}'.format(outputFilename, templateFilename))
