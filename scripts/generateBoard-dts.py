@@ -162,6 +162,11 @@ if __name__ == '__main__':
 	for templateFilename, outputFilenameTemplate in jinjaTemplates:
 		outputFilename = os.path.normpath(os.path.join(arguments.outputPath,
 				jinjaEnvironment.from_string(outputFilenameTemplate).render(dictionary = dictionary)))
+
+		outputFilenamePath = os.path.dirname(outputFilename)
+		if os.path.exists(outputFilenamePath) == False:
+			os.makedirs(outputFilenamePath)
+
 		output = jinjaEnvironment.get_template(templateFilename).render(dictionary = dictionary)
 		with open(outputFilename, 'w') as outputFile:
 			print('Rendering {} from {}'.format(outputFilename, templateFilename))
