@@ -31,3 +31,11 @@
 		};
 	};
 };
+
+&gpioa {
+	status = "okay";
+};
+
+&gpioc {
+	status = "okay";
+};
