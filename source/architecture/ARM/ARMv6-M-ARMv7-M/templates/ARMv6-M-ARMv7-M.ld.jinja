@@ -171,12 +171,10 @@ LONG(ADDR(.{{ label }}.data) + SIZEOF(.{{ label }}.data));
 
 	.ARM.exidx :
 	{
-		. = ALIGN(4);
 		PROVIDE(__exidx_start = .);
 
 		*(.ARM.exidx* .gnu.linkonce.armexidx.*);	/* index entries for section unwinding */
 
-		. = ALIGN(4);
 		PROVIDE(__exidx_end = .);
 	} > {{ chosenToLabel('distortos,ld,exidx') }} AT > {{ chosenToLabel('distortos,ld,exidx') }}
 
