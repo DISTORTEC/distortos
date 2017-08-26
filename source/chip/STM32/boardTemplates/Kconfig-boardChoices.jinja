@@ -1,5 +1,5 @@
 {# ['compatible'], 'ST,STM32[A-Z][0-9]{3}[A-Z][0-9A-Z]', 'Kconfig-boardChoices' #}
-{% extends "source/board/templates/Kconfig-boardChoices.jinja" %}
+{% extends "source/board/boardTemplates/Kconfig-boardChoices.jinja" %}
 {% block depends %}
 	depends on CHIP_{{ dictionary['/']['properties']['compatible'][1][3:10] }}
 {% endblock %}

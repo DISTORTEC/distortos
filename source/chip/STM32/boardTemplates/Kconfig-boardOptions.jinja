@@ -1,5 +1,5 @@
 {# ['compatible'], 'ST,STM32[A-Z][0-9]{3}[A-Z][0-9A-Z]', 'Kconfig-boardOptions' #}
-{% extends "source/board/templates/Kconfig-boardOptions.jinja" %}
+{% extends "source/board/boardTemplates/Kconfig-boardOptions.jinja" %}
 {% block options %}
 {% set chipFamily = dictionary['/']['properties']['compatible'][1][3:10] %}
 {% if 'vdd_regulator' in dictionary['labels'] %}
