@@ -126,8 +126,8 @@ if __name__ == '__main__':
 	jinjaTemplates = []
 	metadataRegex = re.compile('{#\s*(.*)\s*#}')
 	for path, directories, filenames in os.walk('.'):
-		for filename in fnmatch.filter(filenames, '*.jinja'):
-			templatePath = os.path.join(path, filename)
+		paths = [os.path.join(path, filename) for filename in filenames]
+		for templatePath in fnmatch.filter(paths, '*/boardTemplates/*.jinja'):
 			with open(templatePath) as jinjaTemplate:
 				print('Trying {}... '.format(templatePath), end = '')
 				metadataMatch = metadataRegex.match(jinjaTemplate.readline())
