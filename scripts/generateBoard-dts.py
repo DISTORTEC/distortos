@@ -127,15 +127,15 @@ if __name__ == '__main__':
 	metadataRegex = re.compile('{#\s*(.*)\s*#}')
 	for path, directories, filenames in os.walk('.'):
 		for filename in fnmatch.filter(filenames, '*.jinja'):
-			templateFilename = os.path.join(path, filename)
-			with open(templateFilename) as jinjaTemplate:
-				print('Trying {}... '.format(templateFilename), end = '')
+			templatePath = os.path.join(path, filename)
+			with open(templatePath) as jinjaTemplate:
+				print('Trying {}... '.format(templatePath), end = '')
 				metadataMatch = metadataRegex.match(jinjaTemplate.readline())
 			if metadataMatch == None:
 				print('no metadata found')
 				continue
 			try:
-				propertyNames, valuePattern, outputFilenameTemplate = ast.literal_eval(metadataMatch.group(1))
+				propertyNames, valuePattern, outputPathTemplate = ast.literal_eval(metadataMatch.group(1))
 			except:
 				print('invalid metadata format')
 				continue
@@ -143,7 +143,7 @@ if __name__ == '__main__':
 			for key, value in iteratePropertiesUnpacked(dictionary, propertyNames):
 				if valueRegex.match(str(value)) != None:
 					print('matches "{}" in "{}"'.format(value, key))
-					jinjaTemplates.append((templateFilename, outputFilenameTemplate))
+					jinjaTemplates.append((templatePath, outputPathTemplate))
 					break
 			else:
 				print('no match')
@@ -159,17 +159,17 @@ if __name__ == '__main__':
 	jinjaEnvironment.filters['sanitize'] = sanitize
 
 	filenameRegex = re.compile('[^a-zA-Z0-9_.-]')
-	for templateFilename, outputFilenameTemplate in jinjaTemplates:
+	for templatePath, outputPathTemplate in jinjaTemplates:
 		outputFilename = os.path.normpath(os.path.join(arguments.outputPath,
-				jinjaEnvironment.from_string(outputFilenameTemplate).render(dictionary = dictionary)))
+				jinjaEnvironment.from_string(outputPathTemplate).render(dictionary = dictionary)))
 
 		outputFilenamePath = os.path.dirname(outputFilename)
 		if os.path.exists(outputFilenamePath) == False:
 			os.makedirs(outputFilenamePath)
 
-		output = jinjaEnvironment.get_template(templateFilename).render(dictionary = dictionary)
+		output = jinjaEnvironment.get_template(templatePath).render(dictionary = dictionary)
 		with open(outputFilename, 'w') as outputFile:
-			print('Rendering {} from {}'.format(outputFilename, templateFilename))
+			print('Rendering {} from {}'.format(outputFilename, templatePath))
 			outputFile.write(output)
 
 	print()
