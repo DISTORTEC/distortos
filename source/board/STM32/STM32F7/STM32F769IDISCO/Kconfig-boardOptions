@@ -1,0 +1,47 @@
+#
+# file: Kconfig-boardOptions
+#
+# author: Copyright (C) 2014-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+# author: Copyright (C) 2017 Cezary Gapinski cezary.gapinski@gmail.com
+#
+# This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
+# distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+#
+# Automatically generated file - do not edit!
+#
+
+if BOARD_STM32F769IDISCO
+
+config CHIP_STM32F7_VDD_MV_CONFIGURABLE
+	bool
+	default n
+
+config CHIP_STM32F7_VDD_MV_DEFAULT
+	int
+	default 3300
+
+config CHIP_STM32F7_RCC_HSE_CLOCK_BYPASS_CONFIGURABLE
+	bool
+	default n
+
+config CHIP_STM32F7_RCC_HSE_CLOCK_BYPASS_DEFAULT
+	bool
+	default y
+
+config CHIP_STM32F7_RCC_HSE_FREQUENCY_CONFIGURABLE
+	bool
+	default n
+
+config CHIP_STM32F7_RCC_HSE_FREQUENCY_DEFAULT
+	int
+	default 25000000
+
+config BOARD_INCLUDES
+	string
+	default "source/board/STM32/STM32F7/STM32F769IDISCO/include"
+
+config BOARD
+	string
+	default "STM32F769IDISCO"
+
+endif	# BOARD_STM32F769IDISCO
