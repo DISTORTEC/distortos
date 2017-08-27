@@ -50,25 +50,28 @@ def collectMetaDataFromJinja2File(templateFile):
 	templateEnv = jinja2.Environment(trim_blocks = True, lstrip_blocks = True, keep_trailing_newline = True,
 			loader = templateLoader)
 
-	source = templateEnv.loader.get_source(templateEnv, templateFile)[0]
-	variables = meta.find_undeclared_variables(templateEnv.parse(source))
-	stringFromVarNames = str(variables).split('\'')
+	try:
+		source = templateEnv.loader.get_source(templateEnv, templateFile)[0]
+		variables = meta.find_undeclared_variables(templateEnv.parse(source))
+		stringFromVarNames = str(variables).split('\'')
 
-	metaData = {}
+		metaData = {}
 
-	for value in stringFromVarNames:
-		matchObj = re.match(r'.+?(?=__)', value, re.M|re.I)
-		if matchObj:
-			metaData['id'] = str(matchObj.group())
-		matchObj = re.search(r'(?<=__)[^}]*(?=__)', value, re.M|re.I)
-		if matchObj:
-			metaData['type'] = str(matchObj.group())
-		matchObj = re.search(r'(?<=__)v[0-9]', value, re.M|re.I)
-		if matchObj:
-			metaData['version'] = str(matchObj.group())
+		for value in stringFromVarNames:
+			matchObj = re.match(r'.+?(?=__)', value, re.M|re.I)
+			if matchObj:
+				metaData['id'] = str(matchObj.group())
+			matchObj = re.search(r'(?<=__)[^}]*(?=__)', value, re.M|re.I)
+			if matchObj:
+				metaData['type'] = str(matchObj.group())
+			matchObj = re.search(r'(?<=__)v[0-9]', value, re.M|re.I)
+			if matchObj:
+				metaData['version'] = str(matchObj.group())
 
-	if metaData:
-		outputTemplates[templateFile] = metaData
+		if metaData:
+			outputTemplates[templateFile] = metaData
+	except jinja2.TemplateAssertionError:
+		pass
 
 def getTemplateFileFromTypeAndVersion(id, version):
 	for fileName, parameters in outputTemplates.items():
