@@ -40,6 +40,14 @@ config BOARD_INCLUDES
 	string
 	default "source/board/STM32/STM32F7/STM32F769IDISCO/include"
 
+config BOARD_HAS_BUTTONS
+        bool
+        default y
+
+config BOARD_HAS_LEDS
+        bool
+        default y
+
 config BOARD
 	string
 	default "STM32F769IDISCO"
