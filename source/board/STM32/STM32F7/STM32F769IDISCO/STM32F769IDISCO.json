@@ -11,14 +11,14 @@
 	"device":"STM32F769NI",
 	"gpioDriverVersion":"v2",
 	"outputPins":[
-		{"id":"pinLd1","pin":"pj13","openDrain":false,"pinOutputSpeed":"low","pinPull":"none","initialState":false,"inverted":false}
+		{"id":"pinLd1","pin":"pj13","openDrain":false,"pinOutputSpeed":"low","pinPull":"none","initialState":false,"inverted":false},
 		{"id":"pinLd2","pin":"pj5","openDrain":false,"pinOutputSpeed":"low","pinPull":"none","initialState":false,"inverted":false}
 	],
 	"inputPins":[
 		{"id":"pinB1","pin":"pa0","pinPull":"none","inverted":false}
 	],
 	"leds":[
-		{"id":"ld1","alternativeId":"red","outputPins":"pinLd1"}
+		{"id":"ld1","alternativeId":"red","outputPins":"pinLd1"},
 		{"id":"ld2","alternativeId":"green","outputPins":"pinLd2"}
 	],
 	"buttons":[

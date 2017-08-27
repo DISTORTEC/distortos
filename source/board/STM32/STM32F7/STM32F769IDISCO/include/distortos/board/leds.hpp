@@ -68,7 +68,7 @@ enum
 #endif	// DISTORTOS_BOARD_LD1_LED_ENABLE == 1
 #if DISTORTOS_BOARD_LD2_LED_ENABLE == 1
 		/// index of LD2 LED (green)
-		ld1LedIndex,
+		ld2LedIndex,
 #endif	// DISTORTOS_BOARD_LD2_LED_ENABLE == 1
 };
 
