@@ -45,23 +45,39 @@ def testProperties(node, propertyPatterns):
 	return False
 
 #
-# Generator which can be used to iterate devicetree nodes, with optional filtering by presence of matching property
-# names with matching values
+# Generator which can be used to iterate devicetree nodes.
 #
 # param [in] dictionary is the dictionary which will be iterated over
+# param [in] path is the list with current path components
+#
+# return node path and node dictionary
+#
+
+def iterateNodesImplementation(dictionary, path = []):
+	for name, node in dictionary.items():
+		if 'nodes' in node and 'properties' in node:
+			yield '/'.join(path + [name]).replace('//', '/'), node
+			for subpath, subnode in iterateNodesImplementation(node['nodes'], path + [name]):
+				yield subpath, subnode
+
+#
+# Generator which can be used to iterate devicetree nodes, with optional filtering by node path and/or by presence of
+# matching property names with matching values
+#
+# param [in] dictionary is the dictionary which will be iterated over
+# param [in] pathPattern is the path pattern, empty string accepts all paths, default - empty string
 # param [in] propertyPatterns is a list of tuples, each with property name pattern and property value pattern, empty
 # list accepts all nodes, default - empty list
 #
-# return node name and node dictionary
+# return node path and node dictionary
 #
 
-def iterateNodes(dictionary, propertyPatterns = []):
-	for name, node in dictionary.items():
-		if 'nodes' in node and 'properties' in node:
+def iterateNodes(dictionary, pathPattern = '', propertyPatterns = []):
+	regex = re.compile(pathPattern)
+	for path, node in iterateNodesImplementation(dictionary):
+		if regex.match(path) != None:
 			if testProperties(node, propertyPatterns) == True:
-				yield name, node
-			for subname, subnode in iterateNodes(node['nodes'], propertyPatterns):
-				yield subname, subnode
+				yield path, node
 
 #
 # Generator which can be used to iterate devicetree properties, with optional filtering by property names

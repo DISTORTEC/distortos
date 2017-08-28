@@ -11,7 +11,7 @@
 {% set board = dictionary['/']['properties']['compatible'][0] %}
 {% set chip = dictionary['/']['properties']['compatible'][1] %}
  * \brief Linker script for {{ board }} board with {{ chip }} chip:
-{% for key, memory in iterateNodes(dictionary, allProperties) %}
+{% for key, memory in iterateNodes(dictionary, '', allProperties) %}
 {% set size = memory['properties']['reg'][0][1] %}
 {% set label = memory['properties']['label'][0] %}
 {% set address = memory['properties']['reg'][0][0] %}
@@ -38,14 +38,14 @@ OUTPUT_ARCH(arm);
 
 MEMORY
 {
-{% for key, memory in iterateNodes(dictionary, allProperties) %}
+{% for key, memory in iterateNodes(dictionary, '', allProperties) %}
 {% set size = memory['properties']['reg'][0][1] %}
 {% set label = memory['properties']['label'][0] %}
 {% set address = memory['properties']['reg'][0][0] %}
 	{{ label }} : org = {{ '0x%x' % address }}, len = {{ size }}
 {% endfor %}
 }
-{% for key, memory in iterateNodes(dictionary, allProperties) %}
+{% for key, memory in iterateNodes(dictionary, '', allProperties) %}
 {% set label = memory['properties']['label'][0] %}
 
 PROVIDE(__{{ label }}_start = ORIGIN({{ label }}));
@@ -102,7 +102,7 @@ SECTIONS
 		PROVIDE(__data_array_start = .);
 
 		LONG(LOADADDR(.data)); LONG(ADDR(.data)); LONG(ADDR(.data) + SIZEOF(.data));
-{% for key, memory in iterateNodes(dictionary, memoryProperties) %}
+{% for key, memory in iterateNodes(dictionary, '', memoryProperties) %}
 {% set label = memory['properties']['label'][0] %}
 		LONG(LOADADDR(.{{ label }}.data)); LONG(ADDR(.{{ label }}.data)); {# remove whitespace -#}
 LONG(ADDR(.{{ label }}.data) + SIZEOF(.{{ label }}.data));
@@ -121,7 +121,7 @@ LONG(ADDR(.{{ label }}.data) + SIZEOF(.{{ label }}.data));
 		LONG(0); LONG(ADDR(.bss)); LONG(ADDR(.bss) + SIZEOF(.bss));
 		LONG(0xed419f25); LONG(ADDR(.main_stack)); LONG(ADDR(.main_stack) + SIZEOF(.main_stack));
 		LONG(0xed419f25); LONG(ADDR(.process_stack)); LONG(ADDR(.process_stack) + SIZEOF(.process_stack));
-{% for key, memory in iterateNodes(dictionary, memoryProperties) %}
+{% for key, memory in iterateNodes(dictionary, '', memoryProperties) %}
 {% set label = memory['properties']['label'][0] %}
 		LONG(0); LONG(ADDR(.{{ label }}.bss)); LONG(ADDR(.{{ label }}.bss) + SIZEOF(.{{ label }}.bss));
 {% endfor %}
@@ -227,7 +227,7 @@ LONG(ADDR(.{{ label }}.data) + SIZEOF(.{{ label }}.data));
 		PROVIDE(__noinit_end = .);
 		HIDDEN(__{{ chosenToLabel('distortos,ld,noinit') }}_limit_low = .);
 	} > {{ chosenToLabel('distortos,ld,noinit') }} AT > {{ chosenToLabel('distortos,ld,noinit') }}
-{% for key, memory in iterateNodes(dictionary, memoryProperties) %}
+{% for key, memory in iterateNodes(dictionary, '', memoryProperties) %}
 {% set label = memory['properties']['label'][0] %}
 
 	.{{ label }}.bss :
@@ -319,7 +319,7 @@ PROVIDE(__exidx_size = SIZEOF(.ARM.exidx));
 PROVIDE(__bss_size = SIZEOF(.bss));
 PROVIDE(__data_size = SIZEOF(.data));
 PROVIDE(__noinit_size = SIZEOF(.noinit));
-{% for key, memory in iterateNodes(dictionary, memoryProperties) %}
+{% for key, memory in iterateNodes(dictionary, '', memoryProperties) %}
 {% set label = memory['properties']['label'][0] %}
 PROVIDE(__{{ label }}_bss_size = SIZEOF(.{{ label }}.bss));
 PROVIDE(__{{ label }}_data_size = SIZEOF(.{{ label }}.data));
