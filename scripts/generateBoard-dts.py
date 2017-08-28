@@ -21,40 +21,46 @@ import pydts
 import re
 
 #
-# Tests whether a devicetree node contains any of given properties with given values.
+# Tests whether a devicetree node contains matching property names with matching values.
 #
 # param [in] node is the node which will be tested
-# param [in] properties is a list of tuples, each with property name and property value, empty list accepts all nodes
+# param [in] propertyPatterns is a list of tuples, each with property name pattern and property value pattern, empty
+# list accepts all nodes
 #
-# return True if node contains any of given properties with given values (or if properties is an empty list), False
-# otherwise
+# return True if node contains matching property names with matching values (or if propertyPatterns is an empty list),
+# False otherwise
 #
 
-def testProperties(node, properties):
-	if len(properties) == 0:
+def testProperties(node, propertyPatterns):
+	if len(propertyPatterns) == 0:
 		return True
-	for propertyName, propertyValue in properties:
-		if propertyName in node['properties'] and propertyValue in node['properties'][propertyName]:
-			return True
+	for namePattern, valuePattern in propertyPatterns:
+		nameRegex = re.compile(namePattern)
+		valueRegex = re.compile(valuePattern)
+		for name, values in node['properties'].items():
+			if nameRegex.match(name) != None:
+				for value in values:
+					if valueRegex.match(value) != None:
+						return True
 	return False
 
 #
-# Generator which can be used to iterate devicetree nodes, with optional filtering by presence of properties with given
-# values
+# Generator which can be used to iterate devicetree nodes, with optional filtering by presence of matching property
+# names with matching values
 #
 # param [in] dictionary is the dictionary which will be iterated over
-# param [in] properties is a list of tuples, each with property name and property value, empty list accepts all nodes,
-# default - empty list
+# param [in] propertyPatterns is a list of tuples, each with property name pattern and property value pattern, empty
+# list accepts all nodes, default - empty list
 #
 # return node name and node dictionary
 #
 
-def iterateNodes(dictionary, properties = []):
+def iterateNodes(dictionary, propertyPatterns = []):
 	for name, node in dictionary.items():
 		if 'nodes' in node and 'properties' in node:
-			if testProperties(node, properties) == True:
+			if testProperties(node, propertyPatterns) == True:
 				yield name, node
-			for subname, subnode in iterateNodes(node['nodes'], properties):
+			for subname, subnode in iterateNodes(node['nodes'], propertyPatterns):
 				yield subname, subnode
 
 #
