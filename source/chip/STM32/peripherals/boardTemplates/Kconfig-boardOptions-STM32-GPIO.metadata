@@ -1,4 +1,4 @@
 {% if iterateNodes(dictionary, '', [('compatible$', 'ST,STM32-GPIOv[12]-pin-controller$')]) | first %}
 {% set sanitizedBoard = dictionary['/']['properties']['compatible'][0] | sanitize %}
-'source/chip/STM32/peripherals/boardTemplates/Kconfig-boardOptions-STM32-GPIO.jinja', 'Kconfig-boardOptions-{{ sanitizedBoard }}-STM32-GPIO'
+'source/chip/STM32/peripherals/boardTemplates/Kconfig-boardOptions-STM32-GPIO.jinja', {}, 'Kconfig-boardOptions-{{ sanitizedBoard }}-STM32-GPIO'
 {% endif %}

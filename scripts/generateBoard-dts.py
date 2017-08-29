@@ -159,14 +159,14 @@ if __name__ == '__main__':
 			print('Trying {}... '.format(metadataFile))
 			metadata = jinjaEnvironment.get_template(metadataFile).render(dictionary = dictionary)
 			for line in metadata.splitlines():
-				templateFile, outputFile = ast.literal_eval(line)
+				templateFile, templateArguments, outputFile = ast.literal_eval(line)
 				outputFile = os.path.normpath(os.path.join(arguments.outputPath, outputFile))
 
 				outputDirectory = os.path.dirname(outputFile)
 				if os.path.exists(outputDirectory) == False:
 					os.makedirs(outputDirectory)
 
-				output = jinjaEnvironment.get_template(templateFile).render(dictionary = dictionary)
+				output = jinjaEnvironment.get_template(templateFile).render(dictionary = dictionary, **templateArguments)
 				with open(outputFile, 'w') as file:
 					print(' - {} -> {}'.format(templateFile, outputFile))
 					file.write(output)
