@@ -138,40 +138,13 @@ if __name__ == '__main__':
 	parser.add_argument('outputPath', help = 'output path')
 	arguments = parser.parse_args()
 
+	print()
 	print('Reading dts...')
 
 	dictionary = pydts.loadDictionary(arguments.inputFile, arguments.in_format == 'dts')
 
 	print()
-	print('Searching for templates...')
-
-	jinjaTemplates = []
-	metadataRegex = re.compile('{#\s*(.*)\s*#}')
-	for path, directories, filenames in os.walk('.'):
-		paths = [os.path.join(path, filename) for filename in filenames]
-		for templatePath in fnmatch.filter(paths, '*/boardTemplates/*.jinja'):
-			with open(templatePath) as jinjaTemplate:
-				print('Trying {}... '.format(templatePath), end = '')
-				metadataMatch = metadataRegex.match(jinjaTemplate.readline())
-			if metadataMatch == None:
-				print('no metadata found')
-				continue
-			try:
-				propertyNames, valuePattern, outputPathTemplate = ast.literal_eval(metadataMatch.group(1))
-			except:
-				print('invalid metadata format')
-				continue
-			valueRegex = re.compile(valuePattern)
-			for key, value in iteratePropertiesUnpacked(dictionary, propertyNames):
-				if valueRegex.match(str(value)) != None:
-					print('matches "{}" in "{}"'.format(value, key))
-					jinjaTemplates.append((templatePath, outputPathTemplate))
-					break
-			else:
-				print('no match')
-
-	print()
-	print('Rendering files...')
+	print('Searching for metadata and rendering files...')
 
 	jinjaEnvironment = jinja2.Environment(trim_blocks = True, lstrip_blocks = True, keep_trailing_newline = True,
 			loader = jinja2.FileSystemLoader('.'))
@@ -180,19 +153,23 @@ if __name__ == '__main__':
 	jinjaEnvironment.globals['iterateNodes'] = iterateNodes
 	jinjaEnvironment.filters['sanitize'] = sanitize
 
-	filenameRegex = re.compile('[^a-zA-Z0-9_.-]')
-	for templatePath, outputPathTemplate in jinjaTemplates:
-		outputFilename = os.path.normpath(os.path.join(arguments.outputPath,
-				jinjaEnvironment.from_string(outputPathTemplate).render(dictionary = dictionary)))
+	for currentDirectory, directories, filenames in os.walk('.'):
+		files = [os.path.join(currentDirectory, filename) for filename in filenames]
+		for metadataFile in fnmatch.filter(files, '*/boardTemplates/*.metadata'):
+			print('Trying {}... '.format(metadataFile))
+			metadata = jinjaEnvironment.get_template(metadataFile).render(dictionary = dictionary)
+			for line in metadata.splitlines():
+				templateFile, outputFile = ast.literal_eval(line)
+				outputFile = os.path.normpath(os.path.join(arguments.outputPath, outputFile))
 
-		outputFilenamePath = os.path.dirname(outputFilename)
-		if os.path.exists(outputFilenamePath) == False:
-			os.makedirs(outputFilenamePath)
+				outputDirectory = os.path.dirname(outputFile)
+				if os.path.exists(outputDirectory) == False:
+					os.makedirs(outputDirectory)
 
-		output = jinjaEnvironment.get_template(templatePath).render(dictionary = dictionary)
-		with open(outputFilename, 'w') as outputFile:
-			print('Rendering {} from {}'.format(outputFilename, templatePath))
-			outputFile.write(output)
+				output = jinjaEnvironment.get_template(templateFile).render(dictionary = dictionary)
+				with open(outputFile, 'w') as file:
+					print(' - {} -> {}'.format(templateFile, outputFile))
+					file.write(output)
 
 	print()
 	print('Done')

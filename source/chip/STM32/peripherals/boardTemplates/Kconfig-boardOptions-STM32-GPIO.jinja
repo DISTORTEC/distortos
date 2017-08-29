@@ -1,4 +1,3 @@
-{# ['compatible'], 'ST,STM32-GPIOv[12]-pin-controller', '''Kconfig-boardOptions-{{ dictionary['/']['properties']['compatible'][0] | sanitize }}-STM32-GPIO''' #}
 {% set board = dictionary['/']['properties']['compatible'][0] %}
 {% set pinController = dictionary['/']['nodes']['pin-controller'] %}
 {% set stm32GpioVersion = pinController['properties']['compatible'][0][14] %}
