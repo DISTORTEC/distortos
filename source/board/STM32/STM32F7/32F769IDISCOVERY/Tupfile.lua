@@ -10,7 +10,7 @@
 -- Automatically generated file - do not edit!
 --
 
-if CONFIG_BOARD_STM32F769IDISCO == "y" then
+if CONFIG_BOARD_32F769IDISCOVERY == "y" then
 
 	CXXFLAGS += STANDARD_INCLUDES
 	CXXFLAGS += CHIP_INCLUDES
@@ -18,4 +18,4 @@ if CONFIG_BOARD_STM32F769IDISCO == "y" then
 
 	tup.include(DISTORTOS_TOP .. "compile.lua")
 
-end	-- if CONFIG_BOARD_STM32F769IDISCO == "y" then
+end	-- if CONFIG_BOARD_32F769IDISCOVERY == "y" then

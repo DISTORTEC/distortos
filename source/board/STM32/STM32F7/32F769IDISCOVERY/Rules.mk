@@ -10,7 +10,7 @@
 # Automatically generated file - do not edit!
 #
 
-ifeq ($(CONFIG_BOARD_STM32F769IDISCO),y)
+ifeq ($(CONFIG_BOARD_32F769IDISCOVERY),y)
 
 #-----------------------------------------------------------------------------------------------------------------------
 # compilation flags
@@ -26,4 +26,4 @@ CXXFLAGS_$(d) := $(CXXFLAGS_$(d)) $(BOARD_INCLUDES)
 
 include $(DISTORTOS_PATH)footer.mk
 
-endif	# eq ($(CONFIG_BOARD_STM32F769IDISCO),y)
+endif	# eq ($(CONFIG_BOARD_32F769IDISCOVERY),y)

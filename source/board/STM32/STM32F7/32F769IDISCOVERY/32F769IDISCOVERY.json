@@ -1,6 +1,6 @@
 {
-	"board":"STM32F769IDISCO",
-	"board_description": "STM32F769IDISCO board with STM32F769NI chip in BGA216 package\n\n\t\tChip's supply voltage is 3.3 V.\n\t\tExternal 25 MHz clock can be used as HSE clock in \"HSE Clock Bypass\"\n\t\tmode.",
+	"board":"32F769IDISCOVERY",
+	"board_description": "32F769IDISCOVERY board with STM32F769NI chip in BGA216 package\n\n\t\tChip's supply voltage is 3.3 V.\n\t\tExternal 25 MHz clock can be used as HSE clock in \"HSE Clock Bypass\"\n\t\tmode.",
 	"chipFamily":"STM32F7",
 	"vddmvConfigurable":false,
 	"vddmv":3300,

@@ -1,6 +1,6 @@
 /**
  * \file
- * \brief Declaration of buttons for STM32F769IDISCO
+ * \brief Declaration of buttons for 32F769IDISCOVERY
  *
  * \author Copyright (C) 2014-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  * \author Copyright (C) 2017 Cezary Gapinski cezary.gapinski@gmail.com
@@ -14,8 +14,8 @@
  * Automatically generated file - do not edit!
  */
 
-#ifndef SOURCE_BOARD_STM32_STM32F7_STM32F769IDISCO_INCLUDE_DISTORTOS_BOARD_BUTTONS_HPP_
-#define SOURCE_BOARD_STM32_STM32F7_STM32F769IDISCO_INCLUDE_DISTORTOS_BOARD_BUTTONS_HPP_
+#ifndef SOURCE_BOARD_STM32_STM32F7_32F769IDISCOVERY_INCLUDE_DISTORTOS_BOARD_BUTTONS_HPP_
+#define SOURCE_BOARD_STM32_STM32F7_32F769IDISCOVERY_INCLUDE_DISTORTOS_BOARD_BUTTONS_HPP_
 
 #include "distortos/distortosConfiguration.h"
 
@@ -80,4 +80,4 @@ extern const chip::ChipInputPin buttons[totalButtons];
 
 }	// namespace distortos
 
-#endif	// SOURCE_BOARD_STM32_STM32F7_STM32F769IDISCO_INCLUDE_DISTORTOS_BOARD_BUTTONS_HPP_
+#endif	// SOURCE_BOARD_STM32_STM32F7_32F769IDISCOVERY_INCLUDE_DISTORTOS_BOARD_BUTTONS_HPP_

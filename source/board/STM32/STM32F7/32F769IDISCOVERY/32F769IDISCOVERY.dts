@@ -1,6 +1,6 @@
 /**
  * \file
- * \brief Devicetree for STM32F769IDISCO
+ * \brief Devicetree for 32F769IDISCOVERY
  *
  * \author Copyright (C) 2017 elbe informatik GmbH
  *
@@ -14,8 +14,8 @@
 #include "STM32F769NI.dtsi"
 
 / {
-	compatible = "ST,STM32F769IDISCO", "ST,STM32F769NI";
-	model = "STMicroelectronics STM32F769IDISCO";
+	compatible = "ST,32F769IDISCOVERY", "ST,STM32F769NI";
+	model = "STMicroelectronics 32F769IDISCOVERY";
 
 	regulators {
 		#address-cells = <1>;
