@@ -158,8 +158,7 @@ if __name__ == '__main__':
 		for metadataFile in fnmatch.filter(files, '*/boardTemplates/*.metadata'):
 			print('Trying {}... '.format(metadataFile))
 			metadata = jinjaEnvironment.get_template(metadataFile).render(dictionary = dictionary)
-			for line in metadata.splitlines():
-				templateFile, templateArguments, outputFile = ast.literal_eval(line)
+			for templateFile, templateArguments, outputFile in ast.literal_eval('[' + metadata + ']'):
 				outputFile = os.path.normpath(os.path.join(arguments.outputPath, outputFile))
 
 				outputDirectory = os.path.dirname(outputFile)
