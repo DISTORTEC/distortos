@@ -28,6 +28,12 @@ endmenu
 
 menu "Build configuration"
 
+config TOOLCHAIN_PREFIX
+	string "Cross toolchain prefix"
+	default ""
+	help
+		Cross toolchain prefix used during compilation.
+
 choice
 	prompt "Optimization level"
 	default BUILD_OPTIMIZATION_O2
