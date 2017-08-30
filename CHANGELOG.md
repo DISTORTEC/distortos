@@ -12,6 +12,8 @@ All notable changes to this project will be documented in this file. This projec
 - Support for whole [STM32L0](http://www.st.com/stm32l0) chip family.
 - Support and test configuration for [NUCLEO-L073RZ](http://www.st.com/en/evaluation-tools/nucleo-l073rz.html) board
 with *STM32L0* chip.
+- Support and test configuration for [32F769IDISCOVERY](http://www.st.com/en/evaluation-tools/32f769idiscovery.html)
+board with *STM32F7* chip.
 - Board generator script written in *Python* with *Jinja2* template engine, which uses configuration files in `.json`
 format. This new feature can be used with `make board CONFIG_FILE=path/to/config.json` command. `.json` configuration
 files were added for all supported boards and all of their source files were regenerated with the script. The script is
