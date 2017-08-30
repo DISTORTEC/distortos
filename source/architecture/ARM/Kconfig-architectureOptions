@@ -22,7 +22,7 @@ config ARCHITECTURE_STACK_ALIGNMENT
 	default 8
 
 config TOOLCHAIN_PREFIX
-	string
+	string "Cross Toolchain Prefix"
 	default "arm-none-eabi-"
 
 source "$OUTPUT/Kconfig-armArchitectureOptions"
