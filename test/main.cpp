@@ -40,6 +40,16 @@
 
 int main()
 {
+#if defined(CONFIG_BOARD_LEDS_ENABLE)
+
+	for (size_t ledIndex {}; ledIndex < distortos::board::totalLeds; ++ledIndex)
+	{
+		auto& led = distortos::board::leds[ledIndex];
+		led.set(true);
+	}
+
+#endif	// def CONFIG_BOARD_LEDS_ENABLE
+
 	// "volatile" to allow examination of the value with debugger - the variable will not be optimized out
 	const volatile auto result = distortos::test::testCases.run();
 
