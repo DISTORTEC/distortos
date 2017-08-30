@@ -4,7 +4,6 @@
  *
  * \author Copyright (C) 2014-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  * \author Copyright (C) 2017 Cezary Gapinski cezary.gapinski@gmail.com
- * \author Copyright (C) 2017 elbe informatik GmbH
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -24,9 +23,9 @@
 /// indicates whether B1 button is enabled (1) or not (0)
 #ifdef CONFIG_CHIP_STM32_GPIOV2_GPIOA_ENABLE
 #define DISTORTOS_BOARD_B1_BUTTON_ENABLE	1
-#else	// !def CONFIG_CHIP_STM32_GPIOV2_GPIOI_ENABLE
+#else	// !def CONFIG_CHIP_STM32_GPIOV2_GPIOA_ENABLE
 #define DISTORTOS_BOARD_B1_BUTTON_ENABLE	0
-#endif	// !def CONFIG_CHIP_STM32_GPIOV2_GPIOI_ENABLE
+#endif	// !def CONFIG_CHIP_STM32_GPIOV2_GPIOA_ENABLE
 
 /// total number of buttons on the board
 #define DISTORTOS_BOARD_TOTAL_BUTTONS		( \

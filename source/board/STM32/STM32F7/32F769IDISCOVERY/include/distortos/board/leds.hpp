@@ -4,7 +4,6 @@
  *
  * \author Copyright (C) 2014-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  * \author Copyright (C) 2017 Cezary Gapinski cezary.gapinski@gmail.com
- * \author Copyright (C) 2017 elbe informatik GmbH
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -21,12 +20,17 @@
 
 #include <cstddef>
 
-/// indicates whether LD1 LED (green) is enabled (1) or not (0)
+/// indicates whether LD1 LED (red) is enabled (1) or not (0)
 #ifdef CONFIG_CHIP_STM32_GPIOV2_GPIOJ_ENABLE
 #define DISTORTOS_BOARD_LD1_LED_ENABLE		1
-#define DISTORTOS_BOARD_LD2_LED_ENABLE		1
 #else	// !def CONFIG_CHIP_STM32_GPIOV2_GPIOJ_ENABLE
 #define DISTORTOS_BOARD_LD1_LED_ENABLE		0
+#endif	// !def CONFIG_CHIP_STM32_GPIOV2_GPIOJ_ENABLE
+
+/// indicates whether LD2 LED (green) is enabled (1) or not (0)
+#ifdef CONFIG_CHIP_STM32_GPIOV2_GPIOJ_ENABLE
+#define DISTORTOS_BOARD_LD2_LED_ENABLE		1
+#else	// !def CONFIG_CHIP_STM32_GPIOV2_GPIOJ_ENABLE
 #define DISTORTOS_BOARD_LD2_LED_ENABLE		0
 #endif	// !def CONFIG_CHIP_STM32_GPIOV2_GPIOJ_ENABLE
 
@@ -78,11 +82,12 @@ enum
 | alternative (color-based) LED indexes
 +---------------------------------------------------------------------------------------------------------------------*/
 
-#if DISTORTOS_BOARD_LD1_LED_ENABLE == 1 
+#if DISTORTOS_BOARD_LD1_LED_ENABLE == 1
 /// alternative index of LD1 LED (red)
 constexpr size_t redLedIndex {ld1LedIndex};
 #endif	// DISTORTOS_BOARD_LD1_LED_ENABLE == 1
-#if DISTORTOS_BOARD_LD2_LED_ENABLE == 1 
+
+#if DISTORTOS_BOARD_LD2_LED_ENABLE == 1
 /// alternative index of LD2 LED (green)
 constexpr size_t greenLedIndex {ld2LedIndex};
 #endif	// DISTORTOS_BOARD_LD2_LED_ENABLE == 1

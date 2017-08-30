@@ -40,14 +40,6 @@ config BOARD_INCLUDES
 	string
 	default "source/board/STM32/STM32F7/32F769IDISCOVERY/include"
 
-config BOARD_HAS_BUTTONS
-        bool
-        default y
-
-config BOARD_HAS_LEDS
-        bool
-        default y
-
 config BOARD
 	string
 	default "32F769IDISCOVERY"
