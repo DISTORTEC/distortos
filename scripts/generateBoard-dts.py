@@ -21,6 +21,24 @@ import pydts
 import re
 
 #
+# Returns devicetree node from specified path.
+#
+# param [in] dictionary is the dictionary with devicetree
+# param [in] path is the path of selected node in devicetree
+#
+# return devicetree node from specified path
+#
+
+def getNode(dictionary, path):
+	pathComponents = path.split('/')
+	if pathComponents[0] == '':
+		pathComponents[0] = '/'
+	node = dictionary
+	for pathComponent in pathComponents:
+		node = node.get('nodes', node)[pathComponent]
+	return node
+
+#
 # Tests whether a devicetree node contains matching property names with matching values.
 #
 # param [in] node is the node which will be tested
@@ -150,6 +168,7 @@ if __name__ == '__main__':
 			loader = jinja2.FileSystemLoader('.'))
 	jinjaEnvironment.globals['outputPath'] = arguments.outputPath.rstrip('/')
 	jinjaEnvironment.globals['year'] = datetime.date.today().year
+	jinjaEnvironment.globals['getNode'] = getNode
 	jinjaEnvironment.globals['iterateNodes'] = iterateNodes
 	jinjaEnvironment.filters['sanitize'] = sanitize
 
@@ -165,7 +184,8 @@ if __name__ == '__main__':
 				if os.path.exists(outputDirectory) == False:
 					os.makedirs(outputDirectory)
 
-				output = jinjaEnvironment.get_template(templateFile).render(dictionary = dictionary, **templateArguments)
+				output = jinjaEnvironment.get_template(templateFile).render(dictionary = dictionary,
+						outputFile = outputFile, **templateArguments)
 				with open(outputFile, 'w') as file:
 					print(' - {} -> {}'.format(templateFile, outputFile))
 					file.write(output)

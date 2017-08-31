@@ -16,6 +16,17 @@
 / {
 	compatible = "ST,NUCLEO-L073RZ", "ST,STM32L073RZ";
 	model = "STMicroelectronics NUCLEO-L073RZ";
+
+	leds {
+		compatible = "gpio-leds";
+		status = "okay";
+
+		ld2 {
+			gpios = <&gpioa 5 0>;
+			label = "green";
+			status = "okay";
+		};
+	};
 };
 
 &gpioa {

@@ -17,6 +17,23 @@
 	compatible = "ST,32F429IDISCOVERY", "ST,STM32F429ZI";
 	model = "STMicroelectronics 32F429IDISCOVERY";
 
+	leds {
+		compatible = "gpio-leds";
+		status = "okay";
+
+		ld3 {
+			gpios = <&gpiog 13 0>;
+			label = "green";
+			status = "okay";
+		};
+
+		ld4 {
+			gpios = <&gpiog 14 0>;
+			label = "red";
+			status = "okay";
+		};
+	};
+
 	regulators {
 		#address-cells = <1>;
 		#size-cells = <0>;

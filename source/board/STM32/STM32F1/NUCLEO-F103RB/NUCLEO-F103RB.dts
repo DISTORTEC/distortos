@@ -16,6 +16,17 @@
 / {
 	compatible = "ST,NUCLEO-F103RB", "ST,STM32F103RB";
 	model = "STMicroelectronics NUCLEO-F103RB";
+
+	leds {
+		compatible = "gpio-leds";
+		status = "okay";
+
+		ld2 {
+			gpios = <&gpioa 5 0>;
+			label = "green";
+			status = "okay";
+		};
+	};
 };
 
 &gpioa {
