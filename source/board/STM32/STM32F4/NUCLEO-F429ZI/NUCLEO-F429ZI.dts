@@ -17,6 +17,29 @@
 	compatible = "ST,NUCLEO-F429ZI", "ST,STM32F429ZI";
 	model = "STMicroelectronics NUCLEO-F429ZI";
 
+	leds {
+		compatible = "gpio-leds";
+		status = "okay";
+
+		ld1 {
+			gpios = <&gpiob 0 0>;
+			label = "green";
+			status = "okay";
+		};
+
+		ld2 {
+			gpios = <&gpiob 7 0>;
+			label = "blue";
+			status = "okay";
+		};
+
+		ld3 {
+			gpios = <&gpiob 14 0>;
+			label = "red";
+			status = "okay";
+		};
+	};
+
 	regulators {
 		#address-cells = <1>;
 		#size-cells = <0>;

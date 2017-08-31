@@ -17,6 +17,17 @@
 	compatible = "ST,32F746GDISCOVERY", "ST,STM32F746NG";
 	model = "STMicroelectronics 32F746GDISCOVERY";
 
+	leds {
+		compatible = "gpio-leds";
+		status = "okay";
+
+		ld1 {
+			gpios = <&gpioi 1 0>;
+			label = "green";
+			status = "okay";
+		};
+	};
+
 	regulators {
 		#address-cells = <1>;
 		#size-cells = <0>;

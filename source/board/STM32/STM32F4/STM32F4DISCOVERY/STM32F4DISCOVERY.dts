@@ -17,6 +17,35 @@
 	compatible = "ST,STM32F4DISCOVERY", "ST,STM32F407VG";
 	model = "STMicroelectronics STM32F4DISCOVERY";
 
+	leds {
+		compatible = "gpio-leds";
+		status = "okay";
+
+		ld3 {
+			gpios = <&gpiod 13 0>;
+			label = "orange";
+			status = "okay";
+		};
+
+		ld4 {
+			gpios = <&gpiod 12 0>;
+			label = "green";
+			status = "okay";
+		};
+
+		ld5 {
+			gpios = <&gpiod 14 0>;
+			label = "red";
+			status = "okay";
+		};
+
+		ld6 {
+			gpios = <&gpiod 15 0>;
+			label = "blue";
+			status = "okay";
+		};
+	};
+
 	regulators {
 		#address-cells = <1>;
 		#size-cells = <0>;

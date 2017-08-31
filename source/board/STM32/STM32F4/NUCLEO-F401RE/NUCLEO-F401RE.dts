@@ -17,6 +17,17 @@
 	compatible = "ST,NUCLEO-F401RE", "ST,STM32F401RE";
 	model = "STMicroelectronics NUCLEO-F401RE";
 
+	leds {
+		compatible = "gpio-leds";
+		status = "okay";
+
+		ld2 {
+			gpios = <&gpioa 5 0>;
+			label = "green";
+			status = "okay";
+		};
+	};
+
 	regulators {
 		#address-cells = <1>;
 		#size-cells = <0>;

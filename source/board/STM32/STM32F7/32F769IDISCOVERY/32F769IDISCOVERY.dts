@@ -3,6 +3,7 @@
  * \brief Devicetree for 32F769IDISCOVERY
  *
  * \author Copyright (C) 2017 elbe informatik GmbH
+ * \author Copyright (C) 2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -16,6 +17,23 @@
 / {
 	compatible = "ST,32F769IDISCOVERY", "ST,STM32F769NI";
 	model = "STMicroelectronics 32F769IDISCOVERY";
+
+	leds {
+		compatible = "gpio-leds";
+		status = "okay";
+
+		ld1 {
+			gpios = <&gpioj 13 0>;
+			label = "red";
+			status = "okay";
+		};
+
+		ld2 {
+			gpios = <&gpioj 5 0>;
+			label = "green";
+			status = "okay";
+		};
+	};
 
 	regulators {
 		#address-cells = <1>;

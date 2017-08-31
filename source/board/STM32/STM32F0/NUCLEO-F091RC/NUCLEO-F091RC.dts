@@ -16,6 +16,17 @@
 / {
 	compatible = "ST,NUCLEO-F091RC", "ST,STM32F091RC";
 	model = "STMicroelectronics NUCLEO-F091RC";
+
+	leds {
+		compatible = "gpio-leds";
+		status = "okay";
+
+		ld2 {
+			gpios = <&gpioa 5 0>;
+			label = "green";
+			status = "okay";
+		};
+	};
 };
 
 &gpioa {
