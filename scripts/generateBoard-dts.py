@@ -184,7 +184,8 @@ if __name__ == '__main__':
 				if os.path.exists(outputDirectory) == False:
 					os.makedirs(outputDirectory)
 
-				output = jinjaEnvironment.get_template(templateFile).render(dictionary = dictionary, **templateArguments)
+				output = jinjaEnvironment.get_template(templateFile).render(dictionary = dictionary,
+						outputFile = outputFile, **templateArguments)
 				with open(outputFile, 'w') as file:
 					print(' - {} -> {}'.format(templateFile, outputFile))
 					file.write(output)
