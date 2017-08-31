@@ -1,0 +1,10 @@
+{% set sanitizedBoard = dictionary['/']['properties']['compatible'][0] | sanitize %}
+{% for path, gpioLeds in iterateNodes(dictionary, '', [('compatible', 'gpio-leds')])
+		if gpioLeds['properties']['status'][0] == 'okay' and
+		iterateNodes(dictionary, path + '/', [('status$', 'okay$')]) | first != None %}
+{% set sanitizedLeds = path.rpartition('/')[2] | sanitize('[^0-9A-Za-z]') %}
+('source/board/boardTemplates/gpio-leds.hpp.jinja',
+		{'path': '{{ path }}',
+				'sanitizedLeds': '{{ sanitizedLeds }}'},
+		'include/distortos/board/{{ sanitizedLeds }}.hpp'),
+{% endfor %}
