@@ -17,6 +17,17 @@
 	compatible = "ST,NUCLEO-F429ZI", "ST,STM32F429ZI";
 	model = "STMicroelectronics NUCLEO-F429ZI";
 
+	buttons {
+		compatible = "gpio-keys";
+		status = "okay";
+
+		b1 {
+			gpios = <&gpioc 13 0>;
+			label = "user";
+			status = "okay";
+		};
+	};
+
 	leds {
 		compatible = "gpio-leds";
 		status = "okay";

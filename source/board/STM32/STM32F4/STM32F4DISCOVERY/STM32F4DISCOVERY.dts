@@ -17,6 +17,17 @@
 	compatible = "ST,STM32F4DISCOVERY", "ST,STM32F407VG";
 	model = "STMicroelectronics STM32F4DISCOVERY";
 
+	buttons {
+		compatible = "gpio-keys";
+		status = "okay";
+
+		b1 {
+			gpios = <&gpioa 0 0>;
+			label = "user";
+			status = "okay";
+		};
+	};
+
 	leds {
 		compatible = "gpio-leds";
 		status = "okay";

@@ -17,6 +17,17 @@
 	compatible = "ST,NUCLEO-L073RZ", "ST,STM32L073RZ";
 	model = "STMicroelectronics NUCLEO-L073RZ";
 
+	buttons {
+		compatible = "gpio-keys";
+		status = "okay";
+
+		b1 {
+			gpios = <&gpioc 13 1>;
+			label = "user";
+			status = "okay";
+		};
+	};
+
 	leds {
 		compatible = "gpio-leds";
 		status = "okay";

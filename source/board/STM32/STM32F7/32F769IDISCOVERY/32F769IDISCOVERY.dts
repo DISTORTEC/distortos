@@ -18,6 +18,17 @@
 	compatible = "ST,32F769IDISCOVERY", "ST,STM32F769NI";
 	model = "STMicroelectronics 32F769IDISCOVERY";
 
+	buttons {
+		compatible = "gpio-keys";
+		status = "okay";
+
+		b1 {
+			gpios = <&gpioa 0 0>;
+			label = "user";
+			status = "okay";
+		};
+	};
+
 	leds {
 		compatible = "gpio-leds";
 		status = "okay";

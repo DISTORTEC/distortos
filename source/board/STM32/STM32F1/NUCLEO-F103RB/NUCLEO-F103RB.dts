@@ -17,6 +17,17 @@
 	compatible = "ST,NUCLEO-F103RB", "ST,STM32F103RB";
 	model = "STMicroelectronics NUCLEO-F103RB";
 
+	buttons {
+		compatible = "gpio-keys";
+		status = "okay";
+
+		b1 {
+			gpios = <&gpioc 13 1>;
+			label = "user";
+			status = "okay";
+		};
+	};
+
 	leds {
 		compatible = "gpio-leds";
 		status = "okay";
