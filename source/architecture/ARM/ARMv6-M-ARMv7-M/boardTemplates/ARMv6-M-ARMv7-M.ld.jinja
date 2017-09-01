@@ -1,7 +1,8 @@
-{% macro chosenToLabel(value) %}
+{% macro chosenToLabel(value, vma) %}
 {% set labels = dictionary['labels'] %}
 {% set chosen = dictionary['/']['nodes']['chosen']['properties'] %}
-{{- labels[chosen[value][0]['label']]['node']['properties']['label'][0] -}}
+{% set node = labels[chosen[value][0]['label']]['node'] %}
+{{ node['properties']['label'][0] }}{% if vma == True and 'virtual-reg' in node['properties'] %}Vma{% endif %}
 {% endmacro %}
 {% set memoryProperties = [('device_type', 'memory')] %}
 {% set allProperties = memoryProperties + [('compatible', 'on-chip-flash'), ('compatible', 'on-chip-eeprom')] %}
@@ -14,7 +15,12 @@
 {% set size = memory['properties']['reg'][0][1] %}
 {% set label = memory['properties']['label'][0] %}
 {% set address = memory['properties']['reg'][0][0] %}
- * - {{ size | filesizeformat(binary = True) }} of {{ label }} at {{ '0x%x' % address }};
+ * - {{ size | filesizeformat(binary = True) }} of {{ label }} at {{ '0x%x' % address -}}
+{% if 'virtual-reg' in memory['properties'] %}
+{% set virtualAddress = memory['properties']['virtual-reg'][0][0] %}
+ (VMA {{ '0x%x' % virtualAddress }})
+{%- endif %}
+;
 {% endfor %}
  *
  * \author Copyright (C) 2014-{{ year }} Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
@@ -42,6 +48,10 @@ MEMORY
 {% set label = memory['properties']['label'][0] %}
 {% set address = memory['properties']['reg'][0][0] %}
 	{{ label }} : org = {{ '0x%x' % address }}, len = {{ size }}
+{% if 'virtual-reg' in memory['properties'] %}
+{% set virtualAddress = memory['properties']['virtual-reg'][0][0] %}
+	{{ label }}Vma : org = {{ '0x%x' % virtualAddress }}, len = {{ size }}
+{% endif %}
 {% endfor %}
 }
 {% for key, memory in iterateNodes(dictionary, '', allProperties) %}
@@ -166,7 +176,7 @@ LONG(ADDR(.{{ label }}.data) + SIZEOF(.{{ label }}.data));
 
 		. = ALIGN(4);
 		PROVIDE(__text_end = .);
-	} > {{ chosenToLabel('distortos,ld,text') }} AT > {{ chosenToLabel('distortos,ld,text') }}
+	} > {{ chosenToLabel('distortos,ld,text', True) }} AT > {{ chosenToLabel('distortos,ld,text', False) }}
 
 	.ARM.exidx :
 	{
@@ -175,7 +185,7 @@ LONG(ADDR(.{{ label }}.data) + SIZEOF(.{{ label }}.data));
 		*(.ARM.exidx* .gnu.linkonce.armexidx.*);	/* index entries for section unwinding */
 
 		PROVIDE(__exidx_end = .);
-	} > {{ chosenToLabel('distortos,ld,exidx') }} AT > {{ chosenToLabel('distortos,ld,exidx') }}
+	} > {{ chosenToLabel('distortos,ld,exidx', True) }} AT > {{ chosenToLabel('distortos,ld,exidx', False) }}
 
 	.main_stack :
 	{
@@ -186,8 +196,8 @@ LONG(ADDR(.{{ label }}.data) + SIZEOF(.{{ label }}.data));
 
 		. = ALIGN(8);
 		PROVIDE(__main_stack_end = .);
-		HIDDEN(__{{ chosenToLabel('distortos,ld,main_stack') }}_limit_low = .);
-	} > {{ chosenToLabel('distortos,ld,main_stack') }} AT > {{ chosenToLabel('distortos,ld,main_stack') }}
+		HIDDEN(__{{ chosenToLabel('distortos,ld,main_stack', True) }}_limit_low = .);
+	} > {{ chosenToLabel('distortos,ld,main_stack', True) }} AT > {{ chosenToLabel('distortos,ld,main_stack', False) }}
 
 	.bss :
 	{
@@ -199,8 +209,8 @@ LONG(ADDR(.{{ label }}.data) + SIZEOF(.{{ label }}.data));
 
 		. = ALIGN(4);
 		PROVIDE(__bss_end = .);
-		HIDDEN(__{{ chosenToLabel('distortos,ld,bss') }}_limit_low = .);
-	} > {{ chosenToLabel('distortos,ld,bss') }} AT > {{ chosenToLabel('distortos,ld,bss') }}
+		HIDDEN(__{{ chosenToLabel('distortos,ld,bss', True) }}_limit_low = .);
+	} > {{ chosenToLabel('distortos,ld,bss', True) }} AT > {{ chosenToLabel('distortos,ld,bss', False) }}
 
 	.data :
 	{
@@ -212,8 +222,8 @@ LONG(ADDR(.{{ label }}.data) + SIZEOF(.{{ label }}.data));
 
 		. = ALIGN(4);
 		PROVIDE(__data_end = .);
-		HIDDEN(__{{ chosenToLabel('distortos,ld,data') }}_limit_low = .);
-	} > {{ chosenToLabel('distortos,ld,data') }} AT > {{ chosenToLabel('distortos,ld,data,load') }}
+		HIDDEN(__{{ chosenToLabel('distortos,ld,data', True) }}_limit_low = .);
+	} > {{ chosenToLabel('distortos,ld,data', True) }} AT > {{ chosenToLabel('distortos,ld,data,load', False) }}
 
 	.noinit (NOLOAD) :
 	{
@@ -224,8 +234,8 @@ LONG(ADDR(.{{ label }}.data) + SIZEOF(.{{ label }}.data));
 
 		. = ALIGN(4);
 		PROVIDE(__noinit_end = .);
-		HIDDEN(__{{ chosenToLabel('distortos,ld,noinit') }}_limit_low = .);
-	} > {{ chosenToLabel('distortos,ld,noinit') }} AT > {{ chosenToLabel('distortos,ld,noinit') }}
+		HIDDEN(__{{ chosenToLabel('distortos,ld,noinit', True) }}_limit_low = .);
+	} > {{ chosenToLabel('distortos,ld,noinit', True) }} AT > {{ chosenToLabel('distortos,ld,noinit', False) }}
 {% for key, memory in iterateNodes(dictionary, '', memoryProperties) %}
 {% set label = memory['properties']['label'][0] %}
 
@@ -252,7 +262,7 @@ LONG(ADDR(.{{ label }}.data) + SIZEOF(.{{ label }}.data));
 		. = ALIGN(4);
 		PROVIDE(__{{ label }}_data_end = .);
 		HIDDEN(__{{ label }}_limit_low = .);
-	} > {{ label }} AT > {{ chosenToLabel('distortos,ld,' + label + ',load') }}
+	} > {{ label }} AT > {{ chosenToLabel('distortos,ld,' + label + ',load', False) }}
 
 	.{{ label }}.noinit (NOLOAD) :
 	{
@@ -267,18 +277,18 @@ LONG(ADDR(.{{ label }}.data) + SIZEOF(.{{ label }}.data));
 	} > {{ label }} AT > {{ label }}
 {% endfor %}
 
-	PROVIDE(__process_stack_end = __{{ chosenToLabel('distortos,ld,process_stack') }}_end / 8 * 8);
+	PROVIDE(__process_stack_end = __{{ chosenToLabel('distortos,ld,process_stack', True) }}_end / 8 * 8);
 	PROVIDE(__process_stack_start = (__process_stack_end - __process_stack_size) / 8 * 8);
 
 	.process_stack __process_stack_start : AT(__process_stack_start)
 	{
-		HIDDEN(__{{ chosenToLabel('distortos,ld,process_stack') }}_limit_high = .);
+		HIDDEN(__{{ chosenToLabel('distortos,ld,process_stack', True) }}_limit_high = .);
 
 		. += __process_stack_size;
 	}
 
-	PROVIDE(__heap_start = ALIGN(__{{ chosenToLabel('distortos,ld,heap') }}_limit_low, 8));
-	PROVIDE(__heap_end = __{{ chosenToLabel('distortos,ld,heap') }}_limit_high / 8 * 8);
+	PROVIDE(__heap_start = ALIGN(__{{ chosenToLabel('distortos,ld,heap', True) }}_limit_low, 8));
+	PROVIDE(__heap_end = __{{ chosenToLabel('distortos,ld,heap', True) }}_limit_high / 8 * 8);
 
 	.stab				0 (NOLOAD) : { *(.stab); }
 	.stabstr			0 (NOLOAD) : { *(.stabstr); }
