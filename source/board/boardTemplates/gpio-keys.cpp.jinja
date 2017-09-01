@@ -1,0 +1,41 @@
+{% import chipInputPinImport as ChipInputPin %}
+{% set board = dictionary['/']['properties']['compatible'][0] %}
+{% set gpioKeys = getNode(dictionary, path) %}
+/**
+ * \file
+ * \brief Definition of {{ sanitizedKeys }} for {{ board }}
+ *
+ * \author Copyright (C) 2014-{{ year }} Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ *
+ * \par License
+ * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
+ * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ *
+ * \warning
+ * Automatically generated file - do not edit!
+ */
+
+#include "distortos/board/{{ sanitizedKeys }}.hpp"
+
+#include "distortos/chip/ChipInputPin.hpp"
+
+namespace distortos
+{
+
+namespace board
+{
+
+/*---------------------------------------------------------------------------------------------------------------------+
+| global objects
++---------------------------------------------------------------------------------------------------------------------*/
+
+const chip::ChipInputPin {{ sanitizedKeys }}[total{{ sanitizedKeys | capitalize }}]
+{
+{% for node in gpioKeys['nodes'].values() if node['properties']['status'][0] == 'okay' %}
+		{{ ChipInputPin.initializer(dictionary, node['properties']['gpios'][0]) }},
+{% endfor %}
+};
+
+}	// namespace board
+
+}	// namespace distortos

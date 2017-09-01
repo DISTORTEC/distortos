@@ -17,6 +17,17 @@
 	compatible = "ST,NUCLEO-F091RC", "ST,STM32F091RC";
 	model = "STMicroelectronics NUCLEO-F091RC";
 
+	buttons {
+		compatible = "gpio-keys";
+		status = "okay";
+
+		b1 {
+			gpios = <&gpioc 13 1>;
+			label = "user";
+			status = "okay";
+		};
+	};
+
 	leds {
 		compatible = "gpio-leds";
 		status = "okay";
