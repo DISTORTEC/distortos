@@ -7,4 +7,7 @@
 		{'path': '{{ path }}',
 				'sanitizedKeys': '{{ sanitizedKeys }}'},
 		'include/distortos/board/{{ sanitizedKeys }}.hpp'),
+('source/board/boardTemplates/Kconfig-boardOptions-gpio-keys.jinja',
+		{'sanitizedKeys': '{{ sanitizedKeys }}'},
+		'Kconfig-boardOptions-{{ sanitizedBoard }}-{{ sanitizedKeys }}'),
 {% endfor %}
