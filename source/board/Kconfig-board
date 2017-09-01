@@ -33,6 +33,10 @@ config BOARD_HAS_LEDS
 	bool
 	default n
 
+config BOARD_HAS_DTS
+	bool
+	default n
+
 config BOARD
 	string
 	default "Custom" if BOARD_CUSTOM
