@@ -60,7 +60,7 @@ installBuild() {
 			installBuild67 '6.3.0' '170821'
 			;;
 		7)
-			installBuild67 '7.1.0' '170821'
+			installBuild67 '7.2.0' '170901'
 			;;
 		*)
 			echo "\"${1}\" is not a valid argument!" >&2
