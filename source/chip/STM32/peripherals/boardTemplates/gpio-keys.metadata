@@ -1,0 +1,16 @@
+{% set pinController = iterateNodes(dictionary, '', [('compatible$', 'ST,STM32-GPIOv[12]-pin-controller$')]) | first %}
+{% if pinController != None %}
+{% set sanitizedBoard = dictionary['/']['properties']['compatible'][0] | sanitize %}
+{% set stm32GpioVersion = pinController[1]['properties']['compatible'][0][14] %}
+{% for path, gpioKeys in iterateNodes(dictionary, '', [('compatible', 'gpio-keys')])
+		if gpioKeys['properties']['status'][0] == 'okay' and
+		iterateNodes(dictionary, path + '/', [('status$', 'okay$')]) | first != None %}
+{% set sanitizedKeys = path.rpartition('/')[2] | sanitize('[^0-9A-Za-z]') %}
+('source/board/boardTemplates/gpio-keys.cpp.jinja',
+		{'path': '{{ path }}',
+				'sanitizedKeys': '{{ sanitizedKeys }}',
+				'chipInputPinImport':
+						'source/chip/STM32/peripherals/GPIOv{{ stm32GpioVersion }}/boardTemplates/ChipInputPin.jinja'},
+		'{{ sanitizedBoard }}-{{ sanitizedKeys }}.cpp'),
+{% endfor %}
+{% endif %}
