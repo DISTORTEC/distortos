@@ -55,7 +55,7 @@ if CONFIG_CHIP_STM32F7 == "y" then
 		end
 
 		tup.rule(string.format('^ SH %s^ ./%s %s > "%%o"', ldScriptGenerator, ldScriptGenerator,
-				ldScriptGeneratorArguments), {LDSCRIPT, filenameToGroup(LDSCRIPT)})
+				ldScriptGeneratorArguments), {RAW_LDSCRIPT, filenameToGroup(RAW_LDSCRIPT)})
 
 	end	-- if CONFIG_LDSCRIPT == nil then
 

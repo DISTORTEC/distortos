@@ -102,6 +102,7 @@ AS = CONFIG_TOOLCHAIN_PREFIX .. "gcc"
 CC = CONFIG_TOOLCHAIN_PREFIX .. "gcc"
 CXX = CONFIG_TOOLCHAIN_PREFIX .. "g++"
 AR = CONFIG_TOOLCHAIN_PREFIX .. "gcc-ar"
+CPP = CONFIG_TOOLCHAIN_PREFIX .. "cpp"
 LD = CONFIG_TOOLCHAIN_PREFIX .. "g++"
 OBJCOPY = CONFIG_TOOLCHAIN_PREFIX .. "objcopy"
 OBJDUMP = CONFIG_TOOLCHAIN_PREFIX .. "objdump"
@@ -136,11 +137,13 @@ SYMBOLS_LD = OUTPUT .. "symbols.ld"
 
 if CONFIG_LDSCRIPT ~= nil then
 	-- path to board's linker script (possibly generated from devicetree)
-	LDSCRIPT = DISTORTOS_TOP .. CONFIG_LDSCRIPT
+	RAW_LDSCRIPT = DISTORTOS_TOP .. CONFIG_LDSCRIPT
 else
 	-- path to linker script (generated automatically)
-	LDSCRIPT = OUTPUT .. CONFIG_CHIP .. ".ld"
+	RAW_LDSCRIPT = OUTPUT .. CONFIG_CHIP .. ".ld"
 end
+
+LDSCRIPT = OUTPUT .. tup.base(RAW_LDSCRIPT) .. ".preprocessed.ld"
 
 LDSCRIPTS = {SYMBOLS_LD, LDSCRIPT}
 
