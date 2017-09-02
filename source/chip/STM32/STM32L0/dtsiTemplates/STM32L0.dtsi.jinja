@@ -1,4 +1,4 @@
-{% extends "source/architecture/ARM/ARMv6-M-ARMv7-M/templates/ARMv7-M.dtsi.jinja" %}
+{% extends "source/architecture/ARM/ARMv6-M-ARMv7-M/dtsiTemplates/ARMv6-M.dtsi.jinja" %}
 {% block chosen %}
 		distortos,ld,text = &flash;
 		distortos,ld,exidx = &flash;
@@ -7,9 +7,7 @@
 		distortos,ld,data = &sram;
 		distortos,ld,data,load = &flash;
 		distortos,ld,noinit = &sram;
-		distortos,ld,itcm,load = &flash;
 		distortos,ld,sram,load = &flash;
-		distortos,ld,bkpsram,load = &flash;
 		distortos,ld,process_stack = &sram;
 		distortos,ld,heap = &sram;
 {% endblock %}
@@ -18,7 +16,7 @@
 		#size-cells = <0>;
 
 		cpu@0 {
-			compatible = "ARM,Cortex-M7", "ARM,ARMv7-M";
+			compatible = "ARM,Cortex-M0+", "ARM,ARMv6-M";
 			device_type = "cpu";
 			reg = <0>;
 		};
