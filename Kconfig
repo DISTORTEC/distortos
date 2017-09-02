@@ -82,6 +82,20 @@ config LINK_TIME_OPTIMIZATION_ENABLE
 		violation" warnings in toolchains based on GCC 5, probably related to
 		GCC's bug 66180.
 
+config STATIC_DESTRUCTORS_RUN_TIME_REGISTRATION_ENABLE
+	bool "Register static destructors in run time"
+	default n
+	help
+		Register destructors for objects with static storage duration in run
+		time (with __cxa_atexit()). Such behaviour is required for fully
+		standards-compliant handling of static destructors, especially when
+		C++ exceptions are used, but it uses more ROM and RAM (possibly
+		allocated from the heap).
+
+		If this option is disabled, all of these destructors are placed in an
+		array and executed at program exit in appropriate order (reversed in
+		respect to constructors).
+
 config DEBUGGING_INFORMATION_ENABLE
 	bool "Enable generation of debugging information"
 	default y
@@ -189,6 +203,11 @@ config LINK_TIME_OPTIMIZATION_COMPILATION
 config LINK_TIME_OPTIMIZATION_LINKING
 	string
 	default "-flto -fuse-linker-plugin" if LINK_TIME_OPTIMIZATION_ENABLE
+	default ""
+
+config STATIC_DESTRUCTORS_RUN_TIME_REGISTRATION
+	string
+	default "-fno-use-cxa-atexit" if !STATIC_DESTRUCTORS_RUN_TIME_REGISTRATION_ENABLE
 	default ""
 
 config DEBUGGING_INFORMATION_COMPILATION
