@@ -166,7 +166,7 @@ if __name__ == '__main__':
 	print('Searching for metadata and rendering files...')
 
 	jinjaEnvironment = jinja2.Environment(trim_blocks = True, lstrip_blocks = True, keep_trailing_newline = True,
-			loader = jinja2.FileSystemLoader('.'))
+			loader = jinja2.FileSystemLoader(['.', arguments.distortosPath]))
 	jinjaEnvironment.globals['outputPath'] = arguments.outputPath.rstrip('/')
 	jinjaEnvironment.globals['year'] = datetime.date.today().year
 	jinjaEnvironment.globals['getNode'] = getNode
