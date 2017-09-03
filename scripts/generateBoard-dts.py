@@ -154,6 +154,7 @@ if __name__ == '__main__':
 			help = 'input format, default - dts')
 	parser.add_argument('inputFile', type = argparse.FileType('r'), help = 'input file')
 	parser.add_argument('outputPath', help = 'output path')
+	parser.add_argument('distortosPath', help = 'distortos path')
 	arguments = parser.parse_args()
 
 	print()

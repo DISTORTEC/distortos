@@ -310,7 +310,8 @@ else
 endif
 	$(eval DTS_CPPFLAGS := -nostdinc -undef -E -x assembler-with-cpp \
 			$(shell find -L . -type d -name 'dtsi' -exec echo -I {} \;))
-	$(CPP) $(DTS_CPPFLAGS) $(CONFIG_FILE) | ./$(DISTORTOS_PATH)scripts/generateBoard-dts.py - $(BOARD_ARGUMENTS)
+	$(CPP) $(DTS_CPPFLAGS) $(CONFIG_FILE) | \
+	./$(DISTORTOS_PATH)scripts/generateBoard-dts.py - $(BOARD_ARGUMENTS) ./$(DISTORTOS_PATH)
 endif
 
 .PHONY: configure
