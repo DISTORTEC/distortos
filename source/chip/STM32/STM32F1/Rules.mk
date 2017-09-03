@@ -25,7 +25,7 @@ LD_SCRIPT_GENERATOR_ARGUMENTS := $(CONFIG_CHIP) \
 
 $(RAW_LDSCRIPT): $(DISTORTOS_CONFIGURATION_MK)
 	$(call PRETTY_PRINT,"SH     " $(LD_SCRIPT_GENERATOR))
-	$(Q)./$(LD_SCRIPT_GENERATOR) $(LD_SCRIPT_GENERATOR_ARGUMENTS) > "$@"
+	$(Q)./$(LD_SCRIPT_GENERATOR) $(LD_SCRIPT_GENERATOR_ARGUMENTS) > "$(@)"
 
 #-----------------------------------------------------------------------------------------------------------------------
 # generated linker script depends on this Rules.mk, the script that generates it and the selectedConfiguration.mk file

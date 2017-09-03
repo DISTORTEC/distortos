@@ -22,7 +22,7 @@ MAKE_DISTORTOS_CONFIGURATION_SH := $(DISTORTOS_PATH)scripts/makeDistortosConfigu
 
 $(DISTORTOS_CONFIGURATION_H): $(DISTORTOS_CONFIGURATION_MK)
 	$(call PRETTY_PRINT,"SH     " $(MAKE_DISTORTOS_CONFIGURATION_SH))
-	$(Q)./$(MAKE_DISTORTOS_CONFIGURATION_SH) "$(dir $<)$(notdir $<)" > "$@"
+	$(Q)./$(MAKE_DISTORTOS_CONFIGURATION_SH) "$(dir $(<))$(notdir $(<))" > "$(@)"
 
 #-----------------------------------------------------------------------------------------------------------------------
 # generated headers depend on this Rules.mk, the script that generates them and the selectedConfiguration.mk file

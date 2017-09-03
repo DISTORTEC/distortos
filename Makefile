@@ -249,42 +249,42 @@ $(OBJECTS): $(OUTPUT)include/distortos/distortosConfiguration.h
 $(GENERATED): $(DISTORTOS_PATH)Makefile
 
 $(OUTPUT)%.o: %.S
-	$(call PRETTY_PRINT,"AS     " $<)
-	$(Q)$(AS) $(ASFLAGS) $(ASFLAGS_$(dir $(<))$(notdir $(<))) -MD -MP -c $< -o $@
+	$(call PRETTY_PRINT,"AS     " $(<))
+	$(Q)$(AS) $(ASFLAGS) $(ASFLAGS_$(dir $(<))$(notdir $(<))) -MD -MP -c $(<) -o $(@)
 
 $(OUTPUT)%.o: %.c
-	$(call PRETTY_PRINT,"CC     " $<)
-	$(Q)$(CC) $(CFLAGS) $(CFLAGS_$(dir $(<))$(notdir $(<))) -MD -MP -c $< -o $@
+	$(call PRETTY_PRINT,"CC     " $(<))
+	$(Q)$(CC) $(CFLAGS) $(CFLAGS_$(dir $(<))$(notdir $(<))) -MD -MP -c $(<) -o $(@)
 
 $(OUTPUT)%.o: %.cpp
-	$(call PRETTY_PRINT,"CXX    " $<)
-	$(Q)$(CXX) $(CXXFLAGS) $(CXXFLAGS_$(dir $(<))$(notdir $(<))) -MD -MP -c $< -o $@
+	$(call PRETTY_PRINT,"CXX    " $(<))
+	$(Q)$(CXX) $(CXXFLAGS) $(CXXFLAGS_$(dir $(<))$(notdir $(<))) -MD -MP -c $(<) -o $(@)
 
 $(OUTPUT)%.a:
-	$(Q)$(RM) $@
-	$(call PRETTY_PRINT,"AR     " $@)
-	$(Q)$(AR) rcs $@ $(filter %.o,$(^))
+	$(Q)$(RM) $(@)
+	$(call PRETTY_PRINT,"AR     " $(@))
+	$(Q)$(AR) rcs $(@) $(filter %.o,$(^))
 
 $(OUTPUT)%.elf:
-	$(call PRETTY_PRINT,"LD     " $@)
-	$(eval ARCHIVES_$@ := -Wl,--whole-archive $(addprefix -l:,$(filter %.a,$(^))) -Wl,--no-whole-archive)
-	$(Q)$(LD) $(LDFLAGS) $(addprefix -T,$(filter %.ld,$(^))) $(filter %.o,$(^)) $(ARCHIVES_$(@)) -o $@
+	$(call PRETTY_PRINT,"LD     " $(@))
+	$(eval ARCHIVES_$(@) := -Wl,--whole-archive $(addprefix -l:,$(filter %.a,$(^))) -Wl,--no-whole-archive)
+	$(Q)$(LD) $(LDFLAGS) $(addprefix -T,$(filter %.ld,$(^))) $(filter %.o,$(^)) $(ARCHIVES_$(@)) -o $(@)
 
 $(OUTPUT)%.hex:
-	$(call PRETTY_PRINT,"HEX    " $@)
-	$(Q)$(OBJCOPY) -O ihex $(filter %.elf,$(^)) $@
+	$(call PRETTY_PRINT,"HEX    " $(@))
+	$(Q)$(OBJCOPY) -O ihex $(filter %.elf,$(^)) $(@)
 
 $(OUTPUT)%.bin:
-	$(call PRETTY_PRINT,"BIN    " $@)
-	$(Q)$(OBJCOPY) -O binary $(filter %.elf,$(^)) $@
+	$(call PRETTY_PRINT,"BIN    " $(@))
+	$(Q)$(OBJCOPY) -O binary $(filter %.elf,$(^)) $(@)
 
 $(OUTPUT)%.dmp:
-	$(call PRETTY_PRINT,"DMP    " $@)
-	$(Q)$(OBJDUMP) -x --syms --demangle $(filter %.elf,$(^)) > $@
+	$(call PRETTY_PRINT,"DMP    " $(@))
+	$(Q)$(OBJDUMP) -x --syms --demangle $(filter %.elf,$(^)) > $(@)
 
 $(OUTPUT)%.lss:
-	$(call PRETTY_PRINT,"LSS    " $@)
-	$(Q)$(OBJDUMP) --demangle -S $(filter %.elf,$(^)) > $@
+	$(call PRETTY_PRINT,"LSS    " $(@))
+	$(Q)$(OBJDUMP) --demangle -S $(filter %.elf,$(^)) > $(@)
 
 .PHONY: size
 size:
