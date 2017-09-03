@@ -167,7 +167,8 @@ if __name__ == '__main__':
 
 	jinjaEnvironment = jinja2.Environment(trim_blocks = True, lstrip_blocks = True, keep_trailing_newline = True,
 			loader = jinja2.FileSystemLoader(['.', arguments.distortosPath]))
-	jinjaEnvironment.globals['outputPath'] = arguments.outputPath.rstrip('/')
+	jinjaEnvironment.globals['outputPath'] = os.path.relpath(os.path.realpath(arguments.outputPath),
+			os.path.realpath(arguments.distortosPath))
 	jinjaEnvironment.globals['year'] = datetime.date.today().year
 	jinjaEnvironment.globals['getNode'] = getNode
 	jinjaEnvironment.globals['iterateNodes'] = iterateNodes
