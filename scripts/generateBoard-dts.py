@@ -172,7 +172,7 @@ if __name__ == '__main__':
 	jinjaEnvironment.globals['iterateNodes'] = iterateNodes
 	jinjaEnvironment.filters['sanitize'] = sanitize
 
-	for currentDirectory, directories, filenames in os.walk('.'):
+	for currentDirectory, directories, filenames in os.walk('.', followlinks = True):
 		files = [os.path.join(currentDirectory, filename) for filename in filenames]
 		for metadataFile in fnmatch.filter(files, '*/boardTemplates/*.metadata'):
 			print('Trying {}... '.format(metadataFile))
