@@ -309,8 +309,9 @@ else
 	$(eval BOARD_ARGUMENTS := $(dir $(CONFIG_FILE)))
 endif
 	$(eval DTS_CPPFLAGS := -nostdinc -undef -E -x assembler-with-cpp \
-			$(shell find . -type d -name 'dtsi' -exec echo -I {} \;))
-	$(CPP) $(DTS_CPPFLAGS) $(CONFIG_FILE) | ./scripts/generateBoard-dts.py - $(BOARD_ARGUMENTS)
+			$(shell find -L . -type d -name 'dtsi' -exec echo -I {} \;))
+	$(CPP) $(DTS_CPPFLAGS) $(CONFIG_FILE) | \
+	./$(DISTORTOS_PATH)scripts/generateBoard-dts.py - $(BOARD_ARGUMENTS) ./$(DISTORTOS_PATH)
 endif
 
 .PHONY: configure

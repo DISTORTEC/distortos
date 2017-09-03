@@ -154,6 +154,7 @@ if __name__ == '__main__':
 			help = 'input format, default - dts')
 	parser.add_argument('inputFile', type = argparse.FileType('r'), help = 'input file')
 	parser.add_argument('outputPath', help = 'output path')
+	parser.add_argument('distortosPath', help = 'distortos path')
 	arguments = parser.parse_args()
 
 	print()
@@ -165,14 +166,15 @@ if __name__ == '__main__':
 	print('Searching for metadata and rendering files...')
 
 	jinjaEnvironment = jinja2.Environment(trim_blocks = True, lstrip_blocks = True, keep_trailing_newline = True,
-			loader = jinja2.FileSystemLoader('.'))
-	jinjaEnvironment.globals['outputPath'] = arguments.outputPath.rstrip('/')
+			loader = jinja2.FileSystemLoader(['.', arguments.distortosPath]))
+	jinjaEnvironment.globals['outputPath'] = os.path.relpath(os.path.realpath(arguments.outputPath),
+			os.path.realpath(arguments.distortosPath))
 	jinjaEnvironment.globals['year'] = datetime.date.today().year
 	jinjaEnvironment.globals['getNode'] = getNode
 	jinjaEnvironment.globals['iterateNodes'] = iterateNodes
 	jinjaEnvironment.filters['sanitize'] = sanitize
 
-	for currentDirectory, directories, filenames in os.walk('.'):
+	for currentDirectory, directories, filenames in os.walk('.', followlinks = True):
 		files = [os.path.join(currentDirectory, filename) for filename in filenames]
 		for metadataFile in fnmatch.filter(files, '*/boardTemplates/*.metadata'):
 			print('Trying {}... '.format(metadataFile))
