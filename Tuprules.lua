@@ -132,9 +132,6 @@ CXXFLAGS += CONFIG_STATIC_DESTRUCTORS_RUN_TIME_REGISTRATION
 CXXFLAGS += "-ffunction-sections -fdata-sections -fno-rtti -fno-exceptions"
 CXXFLAGS += CONFIG_ASSERT
 
--- path to linker script fragment with symbols (generated automatically)
-SYMBOLS_LD = OUTPUT .. "symbols.ld"
-
 if CONFIG_LDSCRIPT ~= nil then
 	-- path to board's linker script (possibly generated from devicetree)
 	RAW_LDSCRIPT = DISTORTOS_TOP .. CONFIG_LDSCRIPT
