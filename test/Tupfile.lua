@@ -23,7 +23,7 @@ if CONFIG_TEST_APPLICATION_ENABLE == "y" then
 	local dmpFilename = filename .. ".dmp"
 	local lssFilename = filename .. ".lss"
 
-	link(elfFilename, OUTPUT .. "libdistortos.a", "<objects>", table.unpack(LDSCRIPTS))
+	link(elfFilename, OUTPUT .. "libdistortos.a", "<objects>", LDSCRIPT)
 	size(elfFilename)
 	hex(elfFilename, hexFilename)
 	bin(elfFilename, binFilename)

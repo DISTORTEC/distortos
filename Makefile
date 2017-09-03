@@ -134,9 +134,6 @@ CXXFLAGS += $(call UNQUOTE_DOUBLE,$(CONFIG_STATIC_DESTRUCTORS_RUN_TIME_REGISTRAT
 CXXFLAGS += -ffunction-sections -fdata-sections -fno-rtti -fno-exceptions
 CXXFLAGS += $(CONFIG_ASSERT)
 
-# path to linker script fragment with symbols (generated automatically)
-SYMBOLS_LD := $(OUTPUT)symbols.ld
-
 ifdef CONFIG_LDSCRIPT
 	# path to board's linker script (possibly generated from devicetree)
 	RAW_LDSCRIPT := $(call UNQUOTE_DOUBLE,$(CONFIG_LDSCRIPT))
@@ -146,8 +143,6 @@ else
 endif
 
 LDSCRIPT := $(OUTPUT)$(basename $(notdir $(RAW_LDSCRIPT))).preprocessed.ld
-
-LDSCRIPTS := $(SYMBOLS_LD) $(LDSCRIPT)
 
 LDFLAGS += $(CONFIG_ARCHITECTURE_FLAGS)
 LDFLAGS += $(call UNQUOTE_DOUBLE,$(CONFIG_DEBUGGING_INFORMATION_LINKING))
