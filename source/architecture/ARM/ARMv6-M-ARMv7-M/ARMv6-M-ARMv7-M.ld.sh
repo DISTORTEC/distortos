@@ -143,6 +143,8 @@ $(printf '%b' "${headerComments}")
  * \date $(date +'%Y-%m-%d %H:%M:%S')
  */
 
+#include "distortos/distortosConfiguration.h"
+
 SEARCH_DIR(.);
 OUTPUT_FORMAT("elf32-littlearm", "elf32-bigarm", "elf32-littlearm");
 OUTPUT_ARCH(arm);
@@ -256,6 +258,8 @@ $(printf '%b' "${bssArrayEntries}")
 		. = ALIGN(4);
 		PROVIDE(__init_array_end = .);
 
+#if CONFIG_STATIC_DESTRUCTORS_ENABLE == 1
+
 		KEEP(*(.fini));
 
 		. = ALIGN(4);
@@ -266,6 +270,8 @@ $(printf '%b' "${bssArrayEntries}")
 
 		. = ALIGN(4);
 		PROVIDE(__fini_array_end = .);
+
+#endif	/* CONFIG_STATIC_DESTRUCTORS_ENABLE == 1 */
 
 		/* end of sub-sections: init, preinit_array, init_array and fini_array */
 
