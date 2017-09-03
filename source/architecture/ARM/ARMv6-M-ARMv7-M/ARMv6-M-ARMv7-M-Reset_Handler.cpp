@@ -116,8 +116,10 @@ __attribute__ ((naked)) void Reset_Handler()
 			"	ldr		r0, =main							\n"		// call main()
 			"	blx		r0									\n"
 			"												\n"
+#if CONFIG_STATIC_DESTRUCTORS_ENABLE == 1
 			"	ldr		r0, =__libc_fini_array				\n"		// call destructors for global and static objects
 			"	blx		r0									\n"
+#endif	// CONFIG_STATIC_DESTRUCTORS_ENABLE == 1
 			"												\n"
 			"	b		.									\n"		// on return - loop till the end of the world
 			"												\n"

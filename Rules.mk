@@ -1,7 +1,7 @@
 #
 # file: Rules.mk
 #
-# author: Copyright (C) 2015-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+# author: Copyright (C) 2015-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
 #
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -31,10 +31,25 @@ $(DISTORTOS_CONFIGURATION_H): $(DISTORTOS_CONFIGURATION_MK)
 $(DISTORTOS_CONFIGURATION_H): $(d)Rules.mk $(MAKE_DISTORTOS_CONFIGURATION_SH) selectedConfiguration.mk
 
 #-----------------------------------------------------------------------------------------------------------------------
-# add generated headers to list of generated files
+# preprocessed linker script
 #-----------------------------------------------------------------------------------------------------------------------
 
-GENERATED := $(GENERATED) $(DISTORTOS_CONFIGURATION_H)
+$(LDSCRIPT): $(RAW_LDSCRIPT)
+	$(call PRETTY_PRINT,"CPP    " $(<))
+	$(Q)$(CPP) -nostdinc -undef -C -E -P -MD -MP -x assembler-with-cpp $(STANDARD_INCLUDES) $(<) -o $(@)
+
+#-----------------------------------------------------------------------------------------------------------------------
+# preprocessed linker script depends at least on generated headers, but it may also have more dependencies
+#-----------------------------------------------------------------------------------------------------------------------
+
+$(LDSCRIPT): $(DISTORTOS_CONFIGURATION_H)
+-include $(basename $(LDSCRIPT)).d
+
+#-----------------------------------------------------------------------------------------------------------------------
+# add generated headers and preprocessed linker script to list of generated files
+#-----------------------------------------------------------------------------------------------------------------------
+
+GENERATED := $(GENERATED) $(DISTORTOS_CONFIGURATION_H) $(LDSCRIPT)
 
 #-----------------------------------------------------------------------------------------------------------------------
 # standard footer

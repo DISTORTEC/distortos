@@ -52,6 +52,9 @@ application. This affects `ThisThread::Signals` namespace, `Thread::generateSign
 `Thread::queueSignal()` and `DynamicSignalsReceiver`, `SignalInformationQueueWrapper`, `SignalsCatcher`,
 `SignalsReceiver`, `StaticSignalsReceiver` classes.
 - Experimental "Enable link-time optimization" option in *Kconfig* menus.
+- "Enable static destructors" and "Register static destructors in run time" options in *Kconfig* menus. These can be
+used to completely disable destructors for objects with static storage duration, which reduces ROM usage of application.
+By default both options are disabled, as this is the most common choice for an embedded application which never exits.
 - Support for newlib's ratargetable locking, which makes all newlib functions with shared state - like the ones from
 `<stdio.h>`, functions which manipulate time zone, modify environment variables and so on - thread-safe. "Retargetable
 locking" has to be enabled during toolchain compilation - toolchains compiled in March 2017 or later should support that

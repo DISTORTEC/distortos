@@ -63,7 +63,7 @@ ifndef SRAM3_UNIFIED
 endif	# ndef SRAM3_UNIFIED
 endif	# def CONFIG_CHIP_STM32F4_SRAM3_ADDRESS
 
-$(LDSCRIPT): $(DISTORTOS_CONFIGURATION_MK)
+$(RAW_LDSCRIPT): $(DISTORTOS_CONFIGURATION_MK)
 	$(call PRETTY_PRINT,"SH     " $(LD_SCRIPT_GENERATOR))
 	$(Q)./$(LD_SCRIPT_GENERATOR) $(LD_SCRIPT_GENERATOR_ARGUMENTS) > "$@"
 
@@ -71,13 +71,13 @@ $(LDSCRIPT): $(DISTORTOS_CONFIGURATION_MK)
 # generated linker script depends on this Rules.mk, the script that generates it and the selectedConfiguration.mk file
 #-----------------------------------------------------------------------------------------------------------------------
 
-$(LDSCRIPT): $(d)Rules.mk $(LD_SCRIPT_GENERATOR) selectedConfiguration.mk
+$(RAW_LDSCRIPT): $(d)Rules.mk $(LD_SCRIPT_GENERATOR) selectedConfiguration.mk
 
 #-----------------------------------------------------------------------------------------------------------------------
 # add generated linker script to list of generated files
 #-----------------------------------------------------------------------------------------------------------------------
 
-GENERATED := $(GENERATED) $(LDSCRIPT)
+GENERATED := $(GENERATED) $(RAW_LDSCRIPT)
 
 endif	# ndef CONFIG_LDSCRIPT
 

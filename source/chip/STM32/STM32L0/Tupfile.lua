@@ -16,7 +16,7 @@ if CONFIG_CHIP_STM32L0 == "y" then
 		tup.rule(string.format('^ SH %s^ ./%s "%s" "0x%x,%u" "0x%x,%u" > "%%o"', ldScriptGenerator, ldScriptGenerator,
 				CONFIG_CHIP, CONFIG_CHIP_ROM_ADDRESS + CONFIG_LDSCRIPT_ROM_BEGIN,
 				CONFIG_LDSCRIPT_ROM_END - CONFIG_LDSCRIPT_ROM_BEGIN, CONFIG_CHIP_STM32L0_SRAM_ADDRESS,
-				CONFIG_CHIP_STM32L0_SRAM_SIZE), {LDSCRIPT, filenameToGroup(LDSCRIPT)})
+				CONFIG_CHIP_STM32L0_SRAM_SIZE), {RAW_LDSCRIPT, filenameToGroup(RAW_LDSCRIPT)})
 
 	end	-- if CONFIG_LDSCRIPT == nil then
 
