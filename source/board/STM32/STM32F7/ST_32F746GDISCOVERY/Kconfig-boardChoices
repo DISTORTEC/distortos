@@ -2,7 +2,6 @@
 # file: Kconfig-boardChoices
 #
 # author: Copyright (C) 2014-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
-# author: Copyright (C) 2017 Cezary Gapinski cezary.gapinski@gmail.com
 #
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -10,15 +9,10 @@
 # Automatically generated file - do not edit!
 #
 
-config BOARD_32F746GDISCOVERY
-	bool "32F746GDISCOVERY"
+config BOARD_ST_32F746GDISCOVERY
+	bool "ST,32F746GDISCOVERY"
+	select BOARD_HAS_DTS
 	depends on CHIP_STM32F7
 	select CHIP_STM32F746NG
-	select BOARD_HAS_LEDS if CHIP_STM32_GPIOV2_GPIOI_ENABLE
-	select BOARD_HAS_BUTTONS if CHIP_STM32_GPIOV2_GPIOI_ENABLE
 	help
-		32F746GDISCOVERY board with STM32F746NG chip in BGA216 package
-
-		Chip's supply voltage is 3.3 V.
-		External 25 MHz clock can be used as HSE clock in "HSE Clock Bypass"
-		mode.
+		ST,32F746GDISCOVERY board with ST,STM32F746NG chip
