@@ -7,7 +7,9 @@
 		{'path': '{{ path }}',
 				'sanitizedLeds': '{{ sanitizedLeds }}'},
 		'include/distortos/board/{{ sanitizedLeds }}.hpp'),
-('source/board/boardTemplates/Kconfig-boardOptions-gpio-leds.jinja',
-		{'sanitizedLeds': '{{ sanitizedLeds }}'},
+{% if sanitizedLeds == 'leds' %}
+('source/board/boardTemplates/Kconfig-boardOptions-feature-has-enable.jinja',
+		{'sanitizedFeature': '{{ sanitizedLeds }}'},
 		'Kconfig-boardOptions-{{ sanitizedBoard }}-{{ sanitizedLeds }}'),
+{% endif %}
 {% endfor %}

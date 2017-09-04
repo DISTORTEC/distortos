@@ -1,6 +1,5 @@
-{% set board = dictionary['/']['properties']['compatible'][0] %}
 #
-# file: Kconfig-boardOptions-{{ board | sanitize }}-{{ sanitizedKeys }}
+# file: {{ outputFile }}
 #
 # author: Copyright (C) 2014-{{ year }} Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
 #
@@ -10,8 +9,7 @@
 # Automatically generated file - do not edit!
 #
 
-config KCONFIG_BOARDOPTIONS_{{ board | sanitize('[^0-9A-Za-z]') }}_{{ sanitizedKeys | upper }}
+config BOARD_HAS_{{ sanitizedFeature | upper }}
 	bool
 	default y
-	select BOARD_HAS_BUTTONS
-	select BOARD_BUTTONS_ENABLE
+	select BOARD_{{ sanitizedFeature | upper }}_ENABLE
