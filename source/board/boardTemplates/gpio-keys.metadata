@@ -8,8 +8,8 @@
 				'sanitizedKeys': '{{ sanitizedKeys }}'},
 		'include/distortos/board/{{ sanitizedKeys }}.hpp'),
 {% if sanitizedKeys == 'buttons' %}
-('source/board/boardTemplates/Kconfig-boardOptions-gpio-keys.jinja',
-		{'sanitizedKeys': '{{ sanitizedKeys }}'},
+('source/board/boardTemplates/Kconfig-boardOptions-feature-has-enable.jinja',
+		{'sanitizedFeature': '{{ sanitizedKeys }}'},
 		'Kconfig-boardOptions-{{ sanitizedBoard }}-{{ sanitizedKeys }}'),
 {% endif %}
 {% endfor %}
