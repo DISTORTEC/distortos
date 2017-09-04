@@ -136,7 +136,7 @@ CXXFLAGS += $(CONFIG_ASSERT)
 
 ifdef CONFIG_LDSCRIPT
 	# path to board's linker script (possibly generated from devicetree)
-	RAW_LDSCRIPT := $(call UNQUOTE_DOUBLE,$(CONFIG_LDSCRIPT))
+	RAW_LDSCRIPT := $(DISTORTOS_PATH)$(call UNQUOTE_DOUBLE,$(CONFIG_LDSCRIPT))
 else
 	# path to linker script (generated automatically)
 	RAW_LDSCRIPT := $(OUTPUT)$(call UNQUOTE_DOUBLE,$(CONFIG_CHIP)).ld
