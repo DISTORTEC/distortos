@@ -1,0 +1,16 @@
+#
+# file: Kconfig-boardOptions-ST_NUCLEO-F401RE-STM32-GPIO
+#
+# author: Copyright (C) 2014-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+#
+# This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
+# distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+#
+# Automatically generated file - do not edit!
+#
+
+config KCONFIG_BOARDOPTIONS_ST_NUCLEO_F401RE_STM32_GPIOV2
+	bool
+	default y
+	select CHIP_STM32_GPIOV2_GPIOA_ENABLE
+	select CHIP_STM32_GPIOV2_GPIOC_ENABLE

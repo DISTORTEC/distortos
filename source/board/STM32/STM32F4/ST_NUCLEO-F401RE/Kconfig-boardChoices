@@ -2,7 +2,6 @@
 # file: Kconfig-boardChoices
 #
 # author: Copyright (C) 2014-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
-# author: Copyright (C) 2017 Cezary Gapinski cezary.gapinski@gmail.com
 #
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -10,13 +9,10 @@
 # Automatically generated file - do not edit!
 #
 
-config BOARD_NUCLEO_F401RE
-	bool "NUCLEO-F401RE"
+config BOARD_ST_NUCLEO_F401RE
+	bool "ST,NUCLEO-F401RE"
+	select BOARD_HAS_DTS
 	depends on CHIP_STM32F4
 	select CHIP_STM32F401RE
-	select BOARD_HAS_LEDS if CHIP_STM32_GPIOV2_GPIOA_ENABLE
-	select BOARD_HAS_BUTTONS if CHIP_STM32_GPIOV2_GPIOC_ENABLE
 	help
-		NUCLEO-F401RE board with STM32F401RE chip in LQFP64 package
-
-		Chip's supply voltage is 3.3 V.
+		ST,NUCLEO-F401RE board with ST,STM32F401RE chip
