@@ -7,7 +7,9 @@
 		{'path': '{{ path }}',
 				'sanitizedLeds': '{{ sanitizedLeds }}'},
 		'include/distortos/board/{{ sanitizedLeds }}.hpp'),
+{% if sanitizedLeds == 'leds' %}
 ('source/board/boardTemplates/Kconfig-boardOptions-gpio-leds.jinja',
 		{'sanitizedLeds': '{{ sanitizedLeds }}'},
 		'Kconfig-boardOptions-{{ sanitizedBoard }}-{{ sanitizedLeds }}'),
+{% endif %}
 {% endfor %}
