@@ -1,9 +1,8 @@
 /**
  * \file
- * \brief Definition of LEDs for NUCLEO-F103RB
+ * \brief Definition of buttons for ST,NUCLEO-F103RB
  *
  * \author Copyright (C) 2014-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
- * \author Copyright (C) 2017 Cezary Gapinski cezary.gapinski@gmail.com
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -13,11 +12,9 @@
  * Automatically generated file - do not edit!
  */
 
-#include "distortos/board/leds.hpp"
+#include "distortos/board/buttons.hpp"
 
-#ifdef CONFIG_BOARD_LEDS_ENABLE
-
-#include "distortos/chip/ChipOutputPin.hpp"
+#include "distortos/chip/ChipInputPin.hpp"
 
 namespace distortos
 {
@@ -29,15 +26,11 @@ namespace board
 | global objects
 +---------------------------------------------------------------------------------------------------------------------*/
 
-chip::ChipOutputPin leds[totalLeds]
+const chip::ChipInputPin buttons[totalButtons]
 {
-#if DISTORTOS_BOARD_LD2_LED_ENABLE == 1
-		chip::ChipOutputPin{chip::Pin::pa5, false, chip::PinOutputSpeed::_2Mhz, false, false},
-#endif	// DISTORTOS_BOARD_LD2_LED_ENABLE == 1
+		chip::ChipInputPin{chip::Pin::pc13, chip::PinPull::none, true},
 };
 
 }	// namespace board
 
 }	// namespace distortos
-
-#endif	// def CONFIG_BOARD_LEDS_ENABLE
