@@ -2,7 +2,6 @@
 # file: Kconfig-boardOptions
 #
 # author: Copyright (C) 2014-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
-# author: Copyright (C) 2017 Cezary Gapinski cezary.gapinski@gmail.com
 #
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -10,7 +9,9 @@
 # Automatically generated file - do not edit!
 #
 
-if BOARD_STM32F4DISCOVERY
+if BOARD_ST_STM32F4DISCOVERY
+
+source "$OUTPUT/Kconfig-boardOptions-ST_STM32F4DISCOVERY" # pattern: Kconfig-boardOptions-ST_STM32F4DISCOVERY-*
 
 config CHIP_STM32F4_VDD_MV_CONFIGURABLE
 	bool
@@ -38,10 +39,10 @@ config CHIP_STM32F4_RCC_HSE_FREQUENCY_DEFAULT
 
 config BOARD_INCLUDES
 	string
-	default "source/board/STM32/STM32F4/STM32F4DISCOVERY/include"
+	default "source/board/STM32/STM32F4/ST_STM32F4DISCOVERY/include"
 
 config BOARD
 	string
-	default "STM32F4DISCOVERY"
+	default "ST,STM32F4DISCOVERY"
 
-endif	# BOARD_STM32F4DISCOVERY
+endif	# BOARD_ST_STM32F4DISCOVERY
