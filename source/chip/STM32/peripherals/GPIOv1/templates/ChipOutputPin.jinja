@@ -1,3 +1,0 @@
-{{ outputPinTemplate__v1 -}}
-{{ '\t\t' }}chip::ChipOutputPin{chip::Pin::{{ item["pin"] }}, {{ item["openDrain"] | lower }}, {# remove whitespace -#}
-chip::PinOutputSpeed::{{ item["pinOutputSpeed"] }}, {{ item["initialState"] | lower }}, {{ item["inverted"] | lower }}},

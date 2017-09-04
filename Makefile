@@ -296,13 +296,6 @@ clean:
 
 .PHONY: board
 board:
-ifeq ($(suffix $(CONFIG_FILE)),.json)
-ifdef OUTPUT_PATH
-	$(eval OPTIONAL_BOARD_ARGUMENTS := -o $(OUTPUT_PATH))
-endif
-	./$(DISTORTOS_PATH)scripts/generateBoard-json.py $(CONFIG_FILE) $(OPTIONAL_BOARD_ARGUMENTS)
-endif
-ifeq ($(suffix $(CONFIG_FILE)),.dts)
 ifdef OUTPUT_PATH
 	$(eval BOARD_ARGUMENTS := $(OUTPUT_PATH))
 else
@@ -311,8 +304,7 @@ endif
 	$(eval DTS_CPPFLAGS := -nostdinc -undef -E -x assembler-with-cpp \
 			$(shell find -L . -type d -name 'dtsi' -exec echo -I {} \;))
 	$(CPP) $(DTS_CPPFLAGS) $(CONFIG_FILE) | \
-	./$(DISTORTOS_PATH)scripts/generateBoard-dts.py - $(BOARD_ARGUMENTS) ./$(DISTORTOS_PATH)
-endif
+	./$(DISTORTOS_PATH)scripts/generateBoard.py - $(BOARD_ARGUMENTS) ./$(DISTORTOS_PATH)
 
 .PHONY: configure
 configure:
@@ -362,7 +354,7 @@ all - build current configuration
 clean - remove the build output
 board CONFIG_FILE=<config_file> [OUTPUT_PATH=<output_path>] - generate board
   files;
-  <config_file> .. path to .json config file with board configuration
+  <config_file> .. path to .dts config file with board configuration
   <output_path> .. optional path to output directory where board will be
     generated; if not specified, files will be generated in the same folder as
     the one with config file

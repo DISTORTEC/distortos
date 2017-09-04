@@ -14,10 +14,6 @@ All notable changes to this project will be documented in this file. This projec
 with *STM32L0* chip.
 - Support and test configuration for [32F769IDISCOVERY](http://www.st.com/en/evaluation-tools/32f769idiscovery.html)
 board with *STM32F7* chip.
-- Board generator script written in *Python* with *Jinja2* template engine, which uses configuration files in `.json`
-format. This new feature can be used with `make board CONFIG_FILE=path/to/config.json` command. `.json` configuration
-files were added for all supported boards and all of their source files were regenerated with the script. The script is
-usable with both *Python 2* and *Python 3*.
 - Test of `Thread::generateSignal()` and `Thread::queueSignal()` returning `ENOSPC` when the amount of target thread's
 free stack is too small to request signal delivery.
 - *GDB* pretty-printers for `estd` containers (`estd::ContiguousRange`, `estd::IntrusiveForwardList`,
@@ -46,6 +42,8 @@ versions are supported.
 - `generateChipDtsi.py` *Python* script (using *Jinja2* template engine) which can generate chip's devicetree fragments
 (`*.dtsi` files) from `*.csv` input file.
 - Basic devicetree `*.dts` files for all supported boards.
+- Board generator *Python* script using `.dts` files as input (parsed with `pydts.py` module) and *Jinja2* template
+engine for rendering output. This new feature can be used with `make board CONFIG_FILE=path/to/config.dts` command.
 - "Enable support for signals" option in *Kconfig* menus. When this option is enabled, all namespaces, functions and
 classes required for signals are available. Otherwise they are completely disabled, which reduces the size of compiled
 application. This affects `ThisThread::Signals` namespace, `Thread::generateSignal()`, `Thread::getPendingSignalSet()`,
@@ -70,6 +68,9 @@ requirements of architecture. This way "usable" size of stack will never be less
 - All boolean *Kconfig* symbols are now converted to `#define CONFIG_... 1` in generated `distortosConfiguration.h`
 file. Previously they were converted to a macro without value (`#define CONFIG_...`), which made building complex
 conditions harder than necessary.
+- All supported boards were regenerated from `.dts` files.
+- All folders in `source/board/STM32/STM32*/` and in `configurations/` were renamed to be in sync with filenames of
+their generated contents.
 - Update *CMSIS-STM32F0* to version 1.8.0.
 - Update *CMSIS-STM32F4* to version 1.16.0.
 
