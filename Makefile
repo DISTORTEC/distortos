@@ -362,7 +362,7 @@ all - build current configuration
 clean - remove the build output
 board CONFIG_FILE=<config_file> [OUTPUT_PATH=<output_path>] - generate board
   files;
-  <config_file> .. path to .json config file with board configuration
+  <config_file> .. path to .dts config file with board configuration
   <output_path> .. optional path to output directory where board will be
     generated; if not specified, files will be generated in the same folder as
     the one with config file
