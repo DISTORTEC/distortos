@@ -296,13 +296,6 @@ clean:
 
 .PHONY: board
 board:
-ifeq ($(suffix $(CONFIG_FILE)),.json)
-ifdef OUTPUT_PATH
-	$(eval OPTIONAL_BOARD_ARGUMENTS := -o $(OUTPUT_PATH))
-endif
-	./$(DISTORTOS_PATH)scripts/generateBoard-json.py $(CONFIG_FILE) $(OPTIONAL_BOARD_ARGUMENTS)
-endif
-ifeq ($(suffix $(CONFIG_FILE)),.dts)
 ifdef OUTPUT_PATH
 	$(eval BOARD_ARGUMENTS := $(OUTPUT_PATH))
 else
@@ -312,7 +305,6 @@ endif
 			$(shell find -L . -type d -name 'dtsi' -exec echo -I {} \;))
 	$(CPP) $(DTS_CPPFLAGS) $(CONFIG_FILE) | \
 	./$(DISTORTOS_PATH)scripts/generateBoard-dts.py - $(BOARD_ARGUMENTS) ./$(DISTORTOS_PATH)
-endif
 
 .PHONY: configure
 configure:
