@@ -71,6 +71,7 @@ conditions harder than necessary.
 - All supported boards were regenerated from `.dts` files.
 - All folders in `source/board/STM32/STM32*/` and in `configurations/` were renamed to be in sync with filenames of
 their generated contents.
+- Update *CMSIS* to version 5.1.0.
 - Update *CMSIS-STM32F0* to version 1.8.0.
 - Update *CMSIS-STM32F1* to version 1.6.0.
 - Update *CMSIS-STM32F4* to version 1.16.0.
