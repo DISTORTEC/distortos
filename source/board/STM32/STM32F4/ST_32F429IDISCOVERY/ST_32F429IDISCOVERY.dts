@@ -50,7 +50,7 @@
 		#size-cells = <0>;
 
 		vdd_regulator: regulator@0 {
-			compatible = "regulator-fixed";
+			compatible = "fixed-regulator";
 			reg = <0>;
 			regulator-name = "VDD";
 			regulator-min-microvolt = <3000000>;
