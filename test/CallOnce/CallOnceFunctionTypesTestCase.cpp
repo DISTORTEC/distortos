@@ -73,7 +73,7 @@ public:
 	 * \param [in] magicValue is the value which will be assigned to contained variable variable
 	 */
 
-	constexpr Object(const uint32_t magicValue) :
+	constexpr explicit Object(const uint32_t magicValue) :
 			variable_{},
 			magicValue_{magicValue}
 	{
