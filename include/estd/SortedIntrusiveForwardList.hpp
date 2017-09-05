@@ -273,7 +273,7 @@ private:
 		 * \param [in] comparee is a reference to Compare object used to copy-construct internal comparison functor
 		 */
 
-		constexpr Implementation(const Compare& comparee) :
+		constexpr explicit Implementation(const Compare& comparee) :
 				Compare{comparee},
 				intrusiveForwardList{}
 		{
