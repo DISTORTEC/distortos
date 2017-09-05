@@ -894,7 +894,7 @@ def loadDictionary(inputFile, dtsFormat):
 			return pickle.load(getattr(inputFile, 'buffer', inputFile))
 	except (ply.lex.LexError, SyntaxError):
 		sys.exit(1)
-	except Exception as e:
+	except Exception:
 		sys.exit(sys.exc_info())
 
 ########################################################################################################################
