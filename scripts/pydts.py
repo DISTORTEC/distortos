@@ -753,15 +753,15 @@ def valueToDts(value):
 #
 # Converts property to dts.
 #
-# param [in] property is the name of converted property
+# param [in] propertyName is the name of converted property
 # param [in] values is the list with property values
 # param [in] indention is the current indention
 #
 # return property converted to dts
 #
 
-def propertyToDts(property, values, indention):
-	dts = '%s%s' % (indention, property)
+def propertyToDts(propertyName, values, indention):
+	dts = '%s%s' % (indention, propertyName)
 	if len(values) != 0:
 		dts += ' = %s' % ', '.join(map(valueToDts, values))
 	dts += ';\n'
@@ -783,8 +783,8 @@ def nodeToDts(name, node, indention = ''):
 	else:
 		label = ''
 	dts = '%s%s%s {\n' % (indention, label, name)
-	for property, values in sorted(node['properties'].items()):
-		dts += propertyToDts(property, values, indention + '\t')
+	for propertyName, values in sorted(node['properties'].items()):
+		dts += propertyToDts(propertyName, values, indention + '\t')
 	for subName, subNode in sorted(node['nodes'].items()):
 		dts += '\n%s' % nodeToDts(subName, subNode, indention + '\t')
 	dts += '%s};\n' % indention
