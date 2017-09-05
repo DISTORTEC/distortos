@@ -107,7 +107,7 @@ def iterateNodes(dictionary, pathPattern = '', propertyPatterns = []):
 #
 
 def iterateProperties(dictionary, propertyNames = []):
-	for name, node in dictionary.items():
+	for node in dictionary.values():
 		if 'nodes' in node and 'properties' in node:
 			for propertyName, propertyValues in node['properties'].items():
 				if len(propertyNames) == 0 or propertyName in propertyNames:
