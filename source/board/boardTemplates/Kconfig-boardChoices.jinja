@@ -1,7 +1,7 @@
 {% set board = dictionary['/']['properties']['compatible'][0] %}
 {% set chip = dictionary['/']['properties']['compatible'][1] %}
 #
-# file: Kconfig-boardChoices
+# file: {{ outputFile.rpartition('/')[2] }}
 #
 # author: Copyright (C) 2014-{{ year }} Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
 #
@@ -11,8 +11,8 @@
 # Automatically generated file - do not edit!
 #
 
-config BOARD_{{ board | sanitize('[^0-9A-Za-z]') | upper }}
-	bool "{{ board }}"
+config BOARD_{{ (outputPath + '_' + board) | sanitize('[^0-9A-Za-z]') | upper }}
+	bool "{{ board }} @ {{ outputPath }}"
 	select BOARD_HAS_DTS
 {% block depends %}
 {% endblock %}
@@ -20,3 +20,5 @@ config BOARD_{{ board | sanitize('[^0-9A-Za-z]') | upper }}
 {% endblock %}
 	help
 		{{ board }} board with {{ chip }} chip
+
+		Location: {{ outputPath }}

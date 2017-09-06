@@ -1,7 +1,7 @@
 {% set board = dictionary['/']['properties']['compatible'][0] %}
 {% set sanitizedBoard = board | sanitize %}
 #
-# file: Kconfig-boardOptions
+# file: {{ outputFile.rpartition('/')[2] }}
 #
 # author: Copyright (C) 2014-{{ year }} Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
 #
@@ -11,9 +11,7 @@
 # Automatically generated file - do not edit!
 #
 
-if BOARD_{{ board | sanitize('[^0-9A-Za-z]') | upper }}
-
-source "$OUTPUT/Kconfig-boardOptions-{{ sanitizedBoard }}" # pattern: Kconfig-boardOptions-{{ sanitizedBoard }}-*
+if BOARD_{{ (outputPath + '_' + board) | sanitize('[^0-9A-Za-z]') | upper }}
 {% block options %}
 {% endblock %}
 
@@ -25,4 +23,4 @@ config BOARD
 	string
 	default "{{ board }}"
 
-endif	# BOARD_{{ board | sanitize('[^0-9A-Za-z]') | upper }}
+endif	# BOARD_{{ (outputPath + '_' + board) | sanitize('[^0-9A-Za-z]') | upper }}

@@ -2,7 +2,7 @@
 {% set pinController = dictionary['/']['nodes']['pin-controller'] %}
 {% set stm32GpioVersion = pinController['properties']['compatible'][0][14] %}
 #
-# file: Kconfig-boardOptions-{{ board | sanitize }}-STM32-GPIO
+# file: {{ outputFile.rpartition('/')[2] }}
 #
 # author: Copyright (C) 2014-{{ year }} Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
 #
@@ -12,7 +12,9 @@
 # Automatically generated file - do not edit!
 #
 
-config KCONFIG_BOARDOPTIONS_{{ board | sanitize('[^0-9A-Za-z]') }}_STM32_GPIOV{{ stm32GpioVersion }}
+if BOARD_{{ (outputPath + '_' + board) | sanitize('[^0-9A-Za-z]') | upper }}
+
+config KCONFIG_BOARDOPTIONS_STM32_GPIO
 	bool
 	default y
 {% for key, gpio in pinController['nodes'].items() %}
@@ -20,3 +22,5 @@ config KCONFIG_BOARDOPTIONS_{{ board | sanitize('[^0-9A-Za-z]') }}_STM32_GPIOV{{
 	select CHIP_STM32_GPIOV{{ stm32GpioVersion }}_{{ gpio['properties']['ST,GPIO-bank-name'][0] }}_ENABLE
 {% endif %}
 {% endfor %}
+
+endif	# BOARD_{{ (outputPath + '_' + board) | sanitize('[^0-9A-Za-z]') | upper }}

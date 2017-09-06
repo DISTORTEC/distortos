@@ -1,6 +1,6 @@
 {% set board = dictionary['/']['properties']['compatible'][0] %}
 --
--- file: Tupfile.lua
+-- file: {{ outputFile.rpartition('/')[2] }}
 --
 -- author: Copyright (C) 2014-{{ year }} Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
 --
@@ -10,7 +10,7 @@
 -- Automatically generated file - do not edit!
 --
 
-if CONFIG_BOARD_{{ board | sanitize('[^0-9A-Za-z]') | upper }} == "y" then
+if CONFIG_BOARD_{{ (outputPath + '_' + board) | sanitize('[^0-9A-Za-z]') | upper }} == "y" then
 
 	CXXFLAGS += STANDARD_INCLUDES
 	CXXFLAGS += CHIP_INCLUDES
@@ -18,4 +18,4 @@ if CONFIG_BOARD_{{ board | sanitize('[^0-9A-Za-z]') | upper }} == "y" then
 
 	tup.include(DISTORTOS_TOP .. "compile.lua")
 
-end	-- if CONFIG_BOARD_{{ board | sanitize('[^0-9A-Za-z]') | upper }} == "y" then
+end	-- if CONFIG_BOARD_{{ (outputPath + '_' + board) | sanitize('[^0-9A-Za-z]') | upper }} == "y" then

@@ -1,6 +1,7 @@
-{% set sanitizedBoard = dictionary['/']['properties']['compatible'][0] | sanitize %}
+{% set board = dictionary['/']['properties']['compatible'][0] %}
+{% set sanitizedBoard = board | sanitize %}
 #
-# file: Kconfig-boardOptions-{{ sanitizedBoard }}-ARMv6-M-ARMv7-M
+# file: {{ outputFile.rpartition('/')[2] }}
 #
 # author: Copyright (C) 2014-{{ year }} Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
 #
@@ -10,6 +11,10 @@
 # Automatically generated file - do not edit!
 #
 
+if BOARD_{{ (outputPath + '_' + board) | sanitize('[^0-9A-Za-z]') | upper }}
+
 config LDSCRIPT
 	string
 	default "{{ outputPath }}/{{ sanitizedBoard }}.ld"
+
+endif	# BOARD_{{ (outputPath + '_' + board) | sanitize('[^0-9A-Za-z]') | upper }}

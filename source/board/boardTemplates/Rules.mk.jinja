@@ -1,6 +1,6 @@
 {% set board = dictionary['/']['properties']['compatible'][0] %}
 #
-# file: Rules.mk
+# file: {{ outputFile.rpartition('/')[2] }}
 #
 # author: Copyright (C) 2014-{{ year }} Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
 #
@@ -10,7 +10,7 @@
 # Automatically generated file - do not edit!
 #
 
-ifeq ($(CONFIG_BOARD_{{ board | sanitize('[^0-9A-Za-z]') | upper }}),y)
+ifeq ($(CONFIG_BOARD_{{ (outputPath + '_' + board) | sanitize('[^0-9A-Za-z]') | upper }}),y)
 
 #-----------------------------------------------------------------------------------------------------------------------
 # compilation flags
@@ -26,4 +26,4 @@ CXXFLAGS_$(d) := $(CXXFLAGS_$(d)) $(BOARD_INCLUDES)
 
 include $(DISTORTOS_PATH)footer.mk
 
-endif	# eq ($(CONFIG_BOARD_{{ board | sanitize('[^0-9A-Za-z]') | upper }}),y)
+endif	# eq ($(CONFIG_BOARD_{{ (outputPath + '_' + board) | sanitize('[^0-9A-Za-z]') | upper }}),y)

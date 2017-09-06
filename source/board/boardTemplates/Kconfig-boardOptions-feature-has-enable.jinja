@@ -1,5 +1,6 @@
+{% set board = dictionary['/']['properties']['compatible'][0] %}
 #
-# file: {{ outputFile }}
+# file: {{ outputFile.rpartition('/')[2] }}
 #
 # author: Copyright (C) 2014-{{ year }} Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
 #
@@ -9,7 +10,11 @@
 # Automatically generated file - do not edit!
 #
 
+if BOARD_{{ (outputPath + '_' + board) | sanitize('[^0-9A-Za-z]') | upper }}
+
 config BOARD_HAS_{{ sanitizedFeature | upper }}
 	bool
 	default y
 	select BOARD_{{ sanitizedFeature | upper }}_ENABLE
+
+endif	# BOARD_{{ (outputPath + '_' + board) | sanitize('[^0-9A-Za-z]') | upper }}

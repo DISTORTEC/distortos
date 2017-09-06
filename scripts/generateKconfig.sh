@@ -21,8 +21,9 @@ output="${1}"
 mkdir -p "${output}"
 output="$(cd "${output}" && pwd)"
 output="${output#"$(pwd)/"}"
+exclusions='! -name *.jinja ! -name *.metadata'
 
-for filePattern in $(/usr/bin/find -L . -path "./${output}" -prune -o -name 'Kconfig*' ! -name '*.jinja' -exec \
+for filePattern in $(/usr/bin/find -L . -path "./${output}" -prune -o -name 'Kconfig*' ${exclusions} -exec \
 		sed -n -e 's/^source "$OUTPUT\/\(.\+\)"$/\1;\1/p' \
 		-e 's/^source "$OUTPUT\/\(.\+\)"\s*# pattern: \(.\+\)$/\1;\2/p' {} +)
 do
@@ -39,7 +40,7 @@ cat > "${output}/${file}" << EOF
 # date: $(date +'%Y-%m-%d %H:%M:%S')
 #
 
-$(/usr/bin/find -L . -path "./${output}" -prune -o -name "${pattern}" -printf 'source "%p"\n' | sort)
+$(/usr/bin/find -L . -path "./${output}" -prune -o -name "${pattern}" ${exclusions} -printf 'source "%p"\n' | sort)
 EOF
 
 done
