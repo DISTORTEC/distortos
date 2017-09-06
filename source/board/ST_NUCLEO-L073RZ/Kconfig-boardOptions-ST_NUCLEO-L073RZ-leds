@@ -1,0 +1,19 @@
+#
+# file: source/board/ST_NUCLEO-L073RZ/Kconfig-boardOptions-ST_NUCLEO-L073RZ-leds
+#
+# author: Copyright (C) 2014-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+#
+# This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
+# distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+#
+# Automatically generated file - do not edit!
+#
+
+if BOARD_SOURCE_BOARD_ST_NUCLEO_L073RZ_ST_NUCLEO_L073RZ
+
+config BOARD_HAS_LEDS
+	bool
+	default y
+	select BOARD_LEDS_ENABLE
+
+endif	# BOARD_SOURCE_BOARD_ST_NUCLEO_L073RZ_ST_NUCLEO_L073RZ
