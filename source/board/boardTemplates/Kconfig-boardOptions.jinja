@@ -1,7 +1,7 @@
 {% set board = dictionary['/']['properties']['compatible'][0] %}
 {% set sanitizedBoard = board | sanitize %}
 #
-# file: Kconfig-boardOptions
+# file: {{ outputFile.rpartition('/')[2] }}
 #
 # author: Copyright (C) 2014-{{ year }} Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
 #

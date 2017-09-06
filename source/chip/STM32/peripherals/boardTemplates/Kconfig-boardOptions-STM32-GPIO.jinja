@@ -2,7 +2,7 @@
 {% set pinController = dictionary['/']['nodes']['pin-controller'] %}
 {% set stm32GpioVersion = pinController['properties']['compatible'][0][14] %}
 #
-# file: Kconfig-boardOptions-{{ board | sanitize }}-STM32-GPIO
+# file: {{ outputFile.rpartition('/')[2] }}
 #
 # author: Copyright (C) 2014-{{ year }} Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
 #
