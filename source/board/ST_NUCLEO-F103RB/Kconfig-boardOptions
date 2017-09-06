@@ -11,8 +11,6 @@
 
 if BOARD_SOURCE_BOARD_ST_NUCLEO_F103RB_ST_NUCLEO_F103RB
 
-source "$OUTPUT/Kconfig-boardOptions-ST_NUCLEO-F103RB" # pattern: Kconfig-boardOptions-ST_NUCLEO-F103RB-*
-
 config BOARD_INCLUDES
 	string
 	default "source/board/ST_NUCLEO-F103RB/include"

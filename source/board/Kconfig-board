@@ -7,7 +7,7 @@
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #
 
-source "$OUTPUT/Kconfig-boardOptions"
+source "$OUTPUT/Kconfig-boardOptions" # pattern: Kconfig-boardOptions*
 
 comment "Generic board options"
 

@@ -12,8 +12,6 @@
 #
 
 if BOARD_{{ (outputPath + '_' + board) | sanitize('[^0-9A-Za-z]') | upper }}
-
-source "$OUTPUT/Kconfig-boardOptions-{{ sanitizedBoard }}" # pattern: Kconfig-boardOptions-{{ sanitizedBoard }}-*
 {% block options %}
 {% endblock %}
 
