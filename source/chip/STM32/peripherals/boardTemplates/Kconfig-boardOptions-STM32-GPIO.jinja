@@ -14,7 +14,7 @@
 
 if BOARD_{{ (outputPath + '_' + board) | sanitize('[^0-9A-Za-z]') | upper }}
 
-config KCONFIG_BOARDOPTIONS_{{ board | sanitize('[^0-9A-Za-z]') }}_STM32_GPIOV{{ stm32GpioVersion }}
+config KCONFIG_BOARDOPTIONS_STM32_GPIO
 	bool
 	default y
 {% for key, gpio in pinController['nodes'].items() %}
