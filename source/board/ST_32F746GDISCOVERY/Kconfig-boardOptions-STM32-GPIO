@@ -1,0 +1,19 @@
+#
+# file: Kconfig-boardOptions-STM32-GPIO
+#
+# author: Copyright (C) 2014-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+#
+# This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
+# distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+#
+# Automatically generated file - do not edit!
+#
+
+if BOARD_SOURCE_BOARD_ST_32F746GDISCOVERY_ST_32F746GDISCOVERY
+
+config KCONFIG_BOARDOPTIONS_STM32_GPIO
+	bool
+	default y
+	select CHIP_STM32_GPIOV2_GPIOI_ENABLE
+
+endif	# BOARD_SOURCE_BOARD_ST_32F746GDISCOVERY_ST_32F746GDISCOVERY
