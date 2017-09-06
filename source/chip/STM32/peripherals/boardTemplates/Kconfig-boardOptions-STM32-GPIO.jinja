@@ -12,6 +12,8 @@
 # Automatically generated file - do not edit!
 #
 
+if BOARD_{{ (outputPath + '_' + board) | sanitize('[^0-9A-Za-z]') | upper }}
+
 config KCONFIG_BOARDOPTIONS_{{ board | sanitize('[^0-9A-Za-z]') }}_STM32_GPIOV{{ stm32GpioVersion }}
 	bool
 	default y
@@ -20,3 +22,5 @@ config KCONFIG_BOARDOPTIONS_{{ board | sanitize('[^0-9A-Za-z]') }}_STM32_GPIOV{{
 	select CHIP_STM32_GPIOV{{ stm32GpioVersion }}_{{ gpio['properties']['ST,GPIO-bank-name'][0] }}_ENABLE
 {% endif %}
 {% endfor %}
+
+endif	# BOARD_{{ (outputPath + '_' + board) | sanitize('[^0-9A-Za-z]') | upper }}
