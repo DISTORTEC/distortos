@@ -12,7 +12,7 @@
 #
 
 config BOARD_{{ board | sanitize('[^0-9A-Za-z]') | upper }}
-	bool "{{ board }}"
+	bool "{{ board }} @ {{ outputPath }}"
 	select BOARD_HAS_DTS
 {% block depends %}
 {% endblock %}
@@ -20,3 +20,5 @@ config BOARD_{{ board | sanitize('[^0-9A-Za-z]') | upper }}
 {% endblock %}
 	help
 		{{ board }} board with {{ chip }} chip
+
+		Location: {{ outputPath }}
