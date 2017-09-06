@@ -11,7 +11,7 @@
 # Automatically generated file - do not edit!
 #
 
-config BOARD_{{ board | sanitize('[^0-9A-Za-z]') | upper }}
+config BOARD_{{ (outputPath + '_' + board) | sanitize('[^0-9A-Za-z]') | upper }}
 	bool "{{ board }} @ {{ outputPath }}"
 	select BOARD_HAS_DTS
 {% block depends %}

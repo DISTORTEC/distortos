@@ -11,7 +11,7 @@
 # Automatically generated file - do not edit!
 #
 
-if BOARD_{{ board | sanitize('[^0-9A-Za-z]') | upper }}
+if BOARD_{{ (outputPath + '_' + board) | sanitize('[^0-9A-Za-z]') | upper }}
 
 source "$OUTPUT/Kconfig-boardOptions-{{ sanitizedBoard }}" # pattern: Kconfig-boardOptions-{{ sanitizedBoard }}-*
 {% block options %}
@@ -25,4 +25,4 @@ config BOARD
 	string
 	default "{{ board }}"
 
-endif	# BOARD_{{ board | sanitize('[^0-9A-Za-z]') | upper }}
+endif	# BOARD_{{ (outputPath + '_' + board) | sanitize('[^0-9A-Za-z]') | upper }}
