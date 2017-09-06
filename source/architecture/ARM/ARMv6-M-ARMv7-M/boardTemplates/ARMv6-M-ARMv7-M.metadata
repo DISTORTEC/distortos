@@ -5,5 +5,5 @@
 		'{{ sanitizedBoard }}.ld'),
 ('source/architecture/ARM/ARMv6-M-ARMv7-M/boardTemplates/Kconfig-boardOptions-ARMv6-M-ARMv7-M.jinja',
 		{},
-		'Kconfig-boardOptions-{{ sanitizedBoard }}-ARMv6-M-ARMv7-M'),
+		'Kconfig-boardOptions-ARMv6-M-ARMv7-M'),
 {% endif %}

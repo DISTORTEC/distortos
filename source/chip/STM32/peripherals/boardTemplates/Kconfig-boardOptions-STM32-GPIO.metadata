@@ -2,5 +2,5 @@
 {% set sanitizedBoard = dictionary['/']['properties']['compatible'][0] | sanitize %}
 ('source/chip/STM32/peripherals/boardTemplates/Kconfig-boardOptions-STM32-GPIO.jinja',
 		{},
-		'Kconfig-boardOptions-{{ sanitizedBoard }}-STM32-GPIO'),
+		'Kconfig-boardOptions-STM32-GPIO'),
 {% endif %}

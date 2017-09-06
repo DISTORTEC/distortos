@@ -10,6 +10,6 @@
 {% if sanitizedKeys == 'buttons' %}
 ('source/board/boardTemplates/Kconfig-boardOptions-feature-has-enable.jinja',
 		{'sanitizedFeature': '{{ sanitizedKeys }}'},
-		'Kconfig-boardOptions-{{ sanitizedBoard }}-{{ sanitizedKeys }}'),
+		'Kconfig-boardOptions-{{ sanitizedKeys }}'),
 {% endif %}
 {% endfor %}

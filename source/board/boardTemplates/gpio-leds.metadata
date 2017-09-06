@@ -10,6 +10,6 @@
 {% if sanitizedLeds == 'leds' %}
 ('source/board/boardTemplates/Kconfig-boardOptions-feature-has-enable.jinja',
 		{'sanitizedFeature': '{{ sanitizedLeds }}'},
-		'Kconfig-boardOptions-{{ sanitizedBoard }}-{{ sanitizedLeds }}'),
+		'Kconfig-boardOptions-{{ sanitizedLeds }}'),
 {% endif %}
 {% endfor %}
