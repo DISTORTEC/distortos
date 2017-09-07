@@ -69,7 +69,7 @@ parser.add_argument('csvFile', help = 'input CSV file')
 parser.add_argument('outputPath', help = 'output path')
 arguments = parser.parse_args()
 
-with open(arguments.csvFile, newline = '') as csvFile:
+with open(arguments.csvFile) as csvFile:
 
 	jinjaEnvironment = jinja2.Environment(trim_blocks = True, lstrip_blocks = True, keep_trailing_newline = True,
 			loader = jinja2.FileSystemLoader('.'))
