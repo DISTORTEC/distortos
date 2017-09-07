@@ -162,6 +162,9 @@ if __name__ == '__main__':
 	parser.add_argument('distortosPath', help = 'distortos path')
 	arguments = parser.parse_args()
 
+	relativeOutputPath = posixpath.relpath(posixpath.realpath(arguments.outputPath),
+			posixpath.realpath(arguments.distortosPath))
+
 	print()
 	print('Reading dts...')
 
@@ -172,8 +175,7 @@ if __name__ == '__main__':
 
 	jinjaEnvironment = jinja2.Environment(trim_blocks = True, lstrip_blocks = True, keep_trailing_newline = True,
 			loader = jinja2.FileSystemLoader(['.', arguments.distortosPath]))
-	jinjaEnvironment.globals['outputPath'] = posixpath.relpath(posixpath.realpath(arguments.outputPath),
-			posixpath.realpath(arguments.distortosPath))
+	jinjaEnvironment.globals['outputPath'] = relativeOutputPath
 	jinjaEnvironment.globals['year'] = datetime.date.today().year
 	jinjaEnvironment.globals['getNode'] = getNode
 	jinjaEnvironment.globals['iterateNodes'] = iterateNodes
@@ -187,6 +189,7 @@ if __name__ == '__main__':
 			print('Trying {}... '.format(metadataFile))
 			metadata = jinjaEnvironment.get_template(metadataFile).render(dictionary = dictionary)
 			for templateFile, templateArguments, outputFile in ast.literal_eval('[' + metadata + ']'):
+				relativeOutputFile = posixpath.normpath(posixpath.join(relativeOutputPath, outputFile))
 				outputFile = posixpath.normpath(posixpath.join(arguments.outputPath, outputFile))
 
 				outputDirectory = posixpath.dirname(outputFile)
@@ -194,7 +197,7 @@ if __name__ == '__main__':
 					os.makedirs(outputDirectory)
 
 				output = jinjaEnvironment.get_template(templateFile).render(dictionary = dictionary,
-						outputFile = outputFile, **templateArguments)
+						outputFile = relativeOutputFile, **templateArguments)
 				with open(outputFile, 'w') as file:
 					print(' - {} -> {}'.format(templateFile, outputFile))
 					file.write(output)
