@@ -17,6 +17,7 @@ import datetime
 import fnmatch
 import jinja2
 import os
+import posixpath
 import pydts
 import re
 
@@ -171,23 +172,25 @@ if __name__ == '__main__':
 
 	jinjaEnvironment = jinja2.Environment(trim_blocks = True, lstrip_blocks = True, keep_trailing_newline = True,
 			loader = jinja2.FileSystemLoader(['.', arguments.distortosPath]))
-	jinjaEnvironment.globals['outputPath'] = os.path.relpath(os.path.realpath(arguments.outputPath),
-			os.path.realpath(arguments.distortosPath))
+	jinjaEnvironment.globals['outputPath'] = posixpath.relpath(posixpath.realpath(arguments.outputPath),
+			posixpath.realpath(arguments.distortosPath))
 	jinjaEnvironment.globals['year'] = datetime.date.today().year
 	jinjaEnvironment.globals['getNode'] = getNode
 	jinjaEnvironment.globals['iterateNodes'] = iterateNodes
 	jinjaEnvironment.filters['sanitize'] = sanitize
 
 	for currentDirectory, directories, filenames in os.walk('.', followlinks = True):
-		files = [os.path.join(currentDirectory, filename) for filename in filenames]
+		# jinja expects forward slashes on all systems - https://github.com/pallets/jinja/issues/767
+		currentDirectory = currentDirectory.replace('\\', '/')
+		files = [posixpath.join(currentDirectory, filename) for filename in filenames]
 		for metadataFile in fnmatch.filter(files, '*/boardTemplates/*.metadata'):
 			print('Trying {}... '.format(metadataFile))
 			metadata = jinjaEnvironment.get_template(metadataFile).render(dictionary = dictionary)
 			for templateFile, templateArguments, outputFile in ast.literal_eval('[' + metadata + ']'):
-				outputFile = os.path.normpath(os.path.join(arguments.outputPath, outputFile))
+				outputFile = posixpath.normpath(posixpath.join(arguments.outputPath, outputFile))
 
-				outputDirectory = os.path.dirname(outputFile)
-				if os.path.exists(outputDirectory) == False:
+				outputDirectory = posixpath.dirname(outputFile)
+				if posixpath.exists(outputDirectory) == False:
 					os.makedirs(outputDirectory)
 
 				output = jinjaEnvironment.get_template(templateFile).render(dictionary = dictionary,
