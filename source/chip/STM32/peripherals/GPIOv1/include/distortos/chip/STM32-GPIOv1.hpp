@@ -386,19 +386,19 @@ enum class PinPull : uint8_t
  *
  * \param [in] pin is the identifier of pin
  * \param [in] configuration is the desired configuration of pin
- * \param [in] initialState is the initial state of pin
+ * \param [in] initialState is the initial state of pin, default - false
  */
 
-void configurePin(Pin pin, PinConfiguration configuration, bool initialState);
+void configurePin(Pin pin, PinConfiguration configuration, bool initialState = {});
 
 /**
  * \brief Configures pin for "input" configuration.
  *
  * \param [in] pin is the identifier of pin
- * \param [in] pull is the desired pull-up/pull-down configuration of pin
+ * \param [in] pull is the desired pull-up/pull-down configuration of pin, default - PinPull::none
  */
 
-inline void configureInputPin(const Pin pin, const PinPull pull)
+inline void configureInputPin(const Pin pin, const PinPull pull = {})
 {
 	configurePin(pin, pull == PinPull::none ? PinConfiguration::floatingInput : PinConfiguration::inputWithPullUpDown,
 			pull == PinPull::up);
@@ -408,13 +408,13 @@ inline void configureInputPin(const Pin pin, const PinPull pull)
  * \brief Configures pin for "output" mode.
  *
  * \param [in] pin is the identifier of pin
- * \param [in] openDrain is the desired output type of pin: push-pull (false) or open-drain (true)
- * \param [in] outputSpeed is the desired output speed of pin
- * \param [in] initialState is the initial state of pin
+ * \param [in] openDrain is the desired output type of pin: push-pull (false) or open-drain (true), default - false
+ * \param [in] outputSpeed is the desired output speed of pin, default - PinOutputSpeed::_2Mhz
+ * \param [in] initialState is the initial state of pin, default - false
  */
 
-inline void configureOutputPin(const Pin pin, const bool openDrain, const PinOutputSpeed outputSpeed,
-		const bool initialState)
+inline void configureOutputPin(const Pin pin, const bool openDrain = {}, const PinOutputSpeed outputSpeed = {},
+		const bool initialState = {})
 {
 	static const PinConfiguration configurations[3][2]
 	{
