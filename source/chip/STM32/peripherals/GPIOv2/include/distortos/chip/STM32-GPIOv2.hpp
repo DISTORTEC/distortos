@@ -582,6 +582,22 @@ void configurePin(Pin pin, PinMode mode, bool openDrain, PinOutputSpeed outputSp
  * \brief Configures pin for "alternate function" mode.
  *
  * \param [in] pin is the identifier of pin
+ * \param [in] alternateFunction is the desired alternate function of pin
+ * \param [in] openDrain is the desired output type of pin: push-pull (false) or open-drain (true)
+ * \param [in] outputSpeed is the desired output speed of pin
+ * \param [in] pull is the desired pull-up/pull-down configuration of pin
+ */
+
+inline void configureAlternateFunctionPin(const Pin pin, const PinAlternateFunction alternateFunction,
+		const bool openDrain, const PinOutputSpeed outputSpeed, const PinPull pull)
+{
+	configurePin(pin, PinMode::alternateFunction, openDrain, outputSpeed, pull, alternateFunction, {});
+}
+
+/**
+ * \brief Configures pin for "alternate function" mode.
+ *
+ * \param [in] pin is the identifier of pin
  * \param [in] openDrain is the desired output type of pin: push-pull (false) or open-drain (true)
  * \param [in] outputSpeed is the desired output speed of pin
  * \param [in] pull is the desired pull-up/pull-down configuration of pin
