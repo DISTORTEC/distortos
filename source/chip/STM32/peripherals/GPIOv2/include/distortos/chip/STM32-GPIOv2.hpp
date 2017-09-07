@@ -572,24 +572,24 @@ enum class PinPull : uint8_t
  * \param [in] outputSpeed is the desired output speed of pin
  * \param [in] pull is the desired pull-up/pull-down configuration of pin
  * \param [in] alternateFunction is the desired alternate function of pin
- * \param [in] initialState is the initial state of pin
+ * \param [in] initialState is the initial state of pin, default - false
  */
 
 void configurePin(Pin pin, PinMode mode, bool openDrain, PinOutputSpeed outputSpeed, PinPull pull,
-		PinAlternateFunction alternateFunction, bool initialState);
+		PinAlternateFunction alternateFunction, bool initialState = {});
 
 /**
  * \brief Configures pin for "alternate function" mode.
  *
  * \param [in] pin is the identifier of pin
  * \param [in] alternateFunction is the desired alternate function of pin
- * \param [in] openDrain is the desired output type of pin: push-pull (false) or open-drain (true)
- * \param [in] outputSpeed is the desired output speed of pin
- * \param [in] pull is the desired pull-up/pull-down configuration of pin
+ * \param [in] openDrain is the desired output type of pin: push-pull (false) or open-drain (true), default - false
+ * \param [in] outputSpeed is the desired output speed of pin, default - PinOutputSpeed::low
+ * \param [in] pull is the desired pull-up/pull-down configuration of pin, default - PinPull::none
  */
 
 inline void configureAlternateFunctionPin(const Pin pin, const PinAlternateFunction alternateFunction,
-		const bool openDrain, const PinOutputSpeed outputSpeed, const PinPull pull)
+		const bool openDrain = {}, const PinOutputSpeed outputSpeed = {}, const PinPull pull = {})
 {
 	configurePin(pin, PinMode::alternateFunction, openDrain, outputSpeed, pull, alternateFunction, {});
 }
@@ -630,10 +630,10 @@ inline void configureAnalogPin(const Pin pin)
  * \brief Configures pin for "input" mode.
  *
  * \param [in] pin is the identifier of pin
- * \param [in] pull is the desired pull-up/pull-down configuration of pin
+ * \param [in] pull is the desired pull-up/pull-down configuration of pin, default - PinPull::none
  */
 
-inline void configureInputPin(const Pin pin, const PinPull pull)
+inline void configureInputPin(const Pin pin, const PinPull pull = {})
 {
 	configurePin(pin, PinMode::input, {}, {}, pull, {}, {});
 }
@@ -642,14 +642,14 @@ inline void configureInputPin(const Pin pin, const PinPull pull)
  * \brief Configures pin for "output" mode.
  *
  * \param [in] pin is the identifier of pin
- * \param [in] openDrain is the desired output type of pin: push-pull (false) or open-drain (true)
- * \param [in] outputSpeed is the desired output speed of pin
- * \param [in] pull is the desired pull-up/pull-down configuration of pin
- * \param [in] initialState is the initial state of pin
+ * \param [in] openDrain is the desired output type of pin: push-pull (false) or open-drain (true), default - false
+ * \param [in] outputSpeed is the desired output speed of pin, default - PinOutputSpeed::low
+ * \param [in] pull is the desired pull-up/pull-down configuration of pin, default - PinPull::none
+ * \param [in] initialState is the initial state of pin, default - false
  */
 
-inline void configureOutputPin(const Pin pin, const bool openDrain, const PinOutputSpeed outputSpeed,
-		const PinPull pull, const bool initialState)
+inline void configureOutputPin(const Pin pin, const bool openDrain = {}, const PinOutputSpeed outputSpeed = {},
+		const PinPull pull = {}, const bool initialState = {})
 {
 	configurePin(pin, PinMode::output, openDrain, outputSpeed, pull, {}, initialState);
 }
