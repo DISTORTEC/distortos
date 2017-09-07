@@ -70,7 +70,7 @@ private:
 /**
  * \brief StaticRawMessageQueue class is a variant of RawMessageQueue that has automatic storage for queue's contents.
  *
- * \deprecated scheduled to be removed after v0.5.0, use StaticRawMessageQueue2<sizeof(T), QueueSize>`
+ * \deprecated scheduled to be removed after v0.5.0, use `StaticRawMessageQueue2<sizeof(T), QueueSize>`
  *
  * \tparam T is the type of data in queue
  * \tparam QueueSize is the maximum number of elements in queue
@@ -86,7 +86,7 @@ using StaticRawMessageQueue __attribute__ ((deprecated("Use StaticRawMessageQueu
  * \brief StaticRawMessageQueueFromSize type alias is a variant of StaticRawMessageQueue which uses size of element
  * (instead of type) as template argument.
  *
- * \deprecated scheduled to be removed after v0.5.0, use StaticRawMessageQueue2<ElementSize, QueueSize>`
+ * \deprecated scheduled to be removed after v0.5.0, use `StaticRawMessageQueue2<ElementSize, QueueSize>`
  *
  * \tparam ElementSize is the size of single queue element, bytes
  * \tparam QueueSize is the maximum number of elements in queue
