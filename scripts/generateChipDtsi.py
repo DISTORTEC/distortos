@@ -56,7 +56,7 @@ def handleRow(jinjaEnvironment, outputPath, header, row):
 
 	with open(os.path.join(outputPath, singles['name'] + '.dtsi'), 'w') as dtsiFile:
 		jinjaTemplate = jinjaEnvironment.get_template(singles['dtsiTemplate'])
-		dtsiFile.write(jinjaTemplate.render(**singles, nodes = nodes))
+		dtsiFile.write(jinjaTemplate.render(nodes = nodes, **singles))
 
 ########################################################################################################################
 # main
