@@ -2,7 +2,7 @@
  * \file
  * \brief Main code block.
  *
- * \author Copyright (C) 2014-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -42,11 +42,8 @@ int main()
 {
 #if defined(CONFIG_BOARD_LEDS_ENABLE)
 
-	for (size_t ledIndex {}; ledIndex < distortos::board::totalLeds; ++ledIndex)
-	{
-		auto& led = distortos::board::leds[ledIndex];
+	for (auto& led : distortos::board::leds)
 		led.set(true);
-	}
 
 #endif	// def CONFIG_BOARD_LEDS_ENABLE
 
@@ -59,11 +56,8 @@ int main()
 	{
 #ifdef CONFIG_BOARD_LEDS_ENABLE
 
-		for (size_t ledIndex {}; ledIndex < distortos::board::totalLeds; ++ledIndex)
-		{
-			auto& led = distortos::board::leds[ledIndex];
+		for (auto& led : distortos::board::leds)
 			led.set(!led.get());
-		}
 
 #endif	// def CONFIG_BOARD_LEDS_ENABLE
 
