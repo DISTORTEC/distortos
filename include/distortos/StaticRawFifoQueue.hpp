@@ -66,7 +66,7 @@ private:
 /**
  * \brief StaticRawFifoQueue class is a variant of RawFifoQueue that has automatic storage for queue's contents.
  *
- * \deprecated scheduled to be removed after v0.5.0, use StaticRawFifoQueue2<sizeof(T), QueueSize>`
+ * \deprecated scheduled to be removed after v0.5.0, use `StaticRawFifoQueue2<sizeof(T), QueueSize>`
  *
  * \tparam T is the type of data in queue
  * \tparam QueueSize is the maximum number of elements in queue
@@ -82,7 +82,7 @@ using StaticRawFifoQueue __attribute__ ((deprecated("Use StaticRawFifoQueue2<siz
  * \brief StaticRawFifoQueueFromSize type alias is a variant of StaticRawFifoQueue which uses size of element (instead
  * of type) as template argument.
  *
- * \deprecated scheduled to be removed after v0.5.0, use StaticRawFifoQueue2<ElementSize, QueueSize>`
+ * \deprecated scheduled to be removed after v0.5.0, use `StaticRawFifoQueue2<ElementSize, QueueSize>`
  *
  * \tparam ElementSize is the size of single queue element, bytes
  * \tparam QueueSize is the maximum number of elements in queue
