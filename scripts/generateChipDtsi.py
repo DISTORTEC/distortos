@@ -41,14 +41,16 @@ def parseString(string):
 #
 
 def handleRow(jinjaEnvironment, outputPath, header, row):
-	singles = {}
-	nodes = collections.defaultdict(dict)
+	singles = collections.OrderedDict()
+	nodes = collections.OrderedDict()
 	for index, element in enumerate(header):
 		if element[0] == '' or row[index] == '':
 			continue
 		if element[1] == '':	# single element
 			singles[element[0]] = parseString(row[index])
 		else:	# node
+			if element[0] not in nodes:
+				nodes[element[0]] = collections.OrderedDict()
 			if element[1] != 'dtsiTemplate':
 				nodes[element[0]][element[1]] = parseString(row[index])
 			else:
