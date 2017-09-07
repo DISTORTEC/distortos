@@ -71,6 +71,10 @@ conditions harder than necessary.
 - All supported boards were regenerated from `.dts` files.
 - All folders in `source/board/STM32/STM32*/` and in `configurations/` were renamed to be in sync with filenames of
 their generated contents.
+- `chip::configurePin()`, `chip::configureInputPin()` and `chip::configureOutputPin()` for STM32's GPIOv1 now have
+default values for all the arguments which are less important.
+- `chip::configurePin()`, `chip::configureAlternateFunctionPin()`, `chip::configureInputPin()` and
+`chip::configureOutputPin()` for STM32's GPIOv2 now have default values for all the arguments which are less important.
 - Update *CMSIS* to version 5.1.0.
 - Update *CMSIS-STM32F0* to version 1.8.0.
 - Update *CMSIS-STM32F1* to version 1.6.0.
@@ -87,6 +91,13 @@ New versions of these classes which were added - `StaticRawFifoQueue2<ElementSiz
 `StaticRawMessageQueue2<ElementSize, QueueSize>` - don't have these flaws. To upgrade your code replace
 `StaticRaw...Queue<T, QueueSize>` with `StaticRaw...Queue2<sizeof(T), QueueSize>` and
 `StaticRaw...QueueFromSize<ElementSize, QueueSize>` with `StaticRaw...Queue2<ElementSize, QueueSize>`.
+- `chip::configureAlternateFunctionPin(chip::Pin, bool, chip::PinOutputSpeed, chip::PinPull, chip::PinAlternateFunction)`
+for STM32's GPIOv2 was marked as deprecated and is scheduled to be removed after v0.5.0. This function is deprecated
+because one of the most important arguments - `chip::PinAlternateFunction` - is the last one, which makes it impossible
+to have default values for the less important arguments. New overload
+`chip::configureAlternateFunctionPin(chip::Pin, chip::PinAlternateFunction, bool, chip::PinOutputSpeed, chip::PinPull)`
+has `chip::PinAlternateFunction` passed on the second position, not the last one, thus allowing to have a default value
+for all the arguments that follow.
 
 ### Fixed
 
