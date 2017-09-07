@@ -597,6 +597,9 @@ inline void configureAlternateFunctionPin(const Pin pin, const PinAlternateFunct
 /**
  * \brief Configures pin for "alternate function" mode.
  *
+ * \deprecated scheduled to be removed after v0.5.0, use
+ * configureAlternateFunctionPin(Pin, PinAlternateFunction, bool, PinOutputSpeed, PinPull)
+ *
  * \param [in] pin is the identifier of pin
  * \param [in] openDrain is the desired output type of pin: push-pull (false) or open-drain (true)
  * \param [in] outputSpeed is the desired output speed of pin
@@ -604,6 +607,8 @@ inline void configureAlternateFunctionPin(const Pin pin, const PinAlternateFunct
  * \param [in] alternateFunction is the desired alternate function of pin
  */
 
+__attribute__ ((deprecated("Use configureAlternateFunctionPin(Pin, PinAlternateFunction, bool, PinOutputSpeed, "
+		"PinPull)")))
 inline void configureAlternateFunctionPin(const Pin pin, const bool openDrain, const PinOutputSpeed outputSpeed,
 		const PinPull pull, const PinAlternateFunction alternateFunction)
 {
