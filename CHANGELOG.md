@@ -109,6 +109,8 @@ reported with `ENOSPC` error code - won't leave the generated/queued signal pend
 - Fixed compilation of *USARTv2* low-level driver for some *STM32F0* chips, for which `USART_CR1_M0` is not defined.
 - Minor fixes necessary for compilation and proper behaviour in *GCC 7*.
 - Fixes required for compilation and proper execution when link-time optimization is enabled.
+- Fix *tup*-based build when `Tupfile.lua` from folder *A* is used to compile files from folder *B*. Previously proper
+folder hierarchy would not be created in the output directory.
 
 ### Removed
 

@@ -182,6 +182,12 @@ end
 -- start default group of <objects> - all generated objects
 startObjectsGroup()
 
+-- returns filename with its last non-slash component and trailing slashes removed; if filename contains no slashes,
+-- returns "."
+function dirname(filename)
+	return filename:match("^(.*)[/\\]") or "."
+end
+
 -- converts filename "some/path/to/file.ext" to group "some/path/to/<file.ext>"; if filename is already a group, then no
 -- change is performed
 function filenameToGroup(filename)
@@ -200,25 +206,41 @@ function getSpecificFlags(table, filename)
 	return ""
 end
 
+-- returns normalized path, with collapsed redundant separators and up-level references
+function normalizePath(path)
+	local separator = path:match("([/\\])") or ""
+	local newPath = {}
+	for component in path:gmatch("([^/\\]+)") do
+		if component ~= "." then
+			if component ~= ".." or #newPath == 0 or newPath[#newPath] == ".." then
+				table.insert(newPath, component)
+			else
+				table.remove(newPath)
+			end
+		end
+	end
+	return table.concat(newPath, separator)
+end
+
 -- assemble file named input
 function as(input)
 	tup.rule({input, extra_inputs = {TOP .. "<headers>"}},
 			string.format("^c AS %%f^ %s %s %s -c %%f -o %%o", AS, tostring(ASFLAGS), getSpecificFlags(ASFLAGS, input)),
-			{OUTPUT .. tup.getrelativedir(TOP) .. "/%B.o", objectsGroup})
+			{normalizePath(OUTPUT .. tup.getrelativedir(TOP) .. "/" .. dirname(input) .. "/%B.o"), objectsGroup})
 end
 
 -- compile (C) file named input
 function cc(input)
 	tup.rule({input, extra_inputs = {TOP .. "<headers>"}},
 			string.format("^c CC %%f^ %s %s %s -c %%f -o %%o", CC, tostring(CFLAGS), getSpecificFlags(CFLAGS, input)),
-			{OUTPUT .. tup.getrelativedir(TOP) .. "/%B.o", objectsGroup})
+			{normalizePath(OUTPUT .. tup.getrelativedir(TOP) .. "/" .. dirname(input) .. "/%B.o"), objectsGroup})
 end
 
 -- compile (C++) file named input
 function cxx(input)
 	tup.rule({input, extra_inputs = {TOP .. "<headers>"}}, string.format("^c CXX %%f^ %s %s %s -c %%f -o %%o", CXX,
 			tostring(CXXFLAGS), getSpecificFlags(CXXFLAGS, input)),
-			{OUTPUT .. tup.getrelativedir(TOP) .. "/%B.o", objectsGroup})
+			{normalizePath(OUTPUT .. tup.getrelativedir(TOP) .. "/" .. dirname(input) .. "/%B.o"), objectsGroup})
 end
 
 -- archive all objects from groups given in the vararg into file named output; all elements of vararg are parsed by
