@@ -83,35 +83,29 @@ LONG(ADDR(.${memoryName}.data) + SIZEOF(.${memoryName}.data));\n"
 	sectionEntries="${sectionEntries}\
 	.${memoryName}.bss :
 	{
-		. = ALIGN(4);
 		PROVIDE(__${memoryName}_bss_start = .);
 
 		*(.${memoryName}.bss);
 
-		. = ALIGN(4);
 		PROVIDE(__${memoryName}_bss_end = .);
 	} > ${memoryName} AT > ${memoryName}
 
 	.${memoryName}.data :
 	{
-		. = ALIGN(4);
 		PROVIDE(__${memoryName}_data_init_start = LOADADDR(.${memoryName}.data));
 		PROVIDE(__${memoryName}_data_start = .);
 
 		*(.${memoryName}.data);
 
-		. = ALIGN(4);
 		PROVIDE(__${memoryName}_data_end = .);
 	} > ${memoryName} AT > rom
 
 	.${memoryName}.noinit (NOLOAD) :
 	{
-		. = ALIGN(4);
 		PROVIDE(__${memoryName}_noinit_start = .);
 
 		*(.${memoryName}.noinit);
 
-		. = ALIGN(4);
 		PROVIDE(__${memoryName}_noinit_end = .);
 	} > ${memoryName} AT > ${memoryName}\n\n"
 
@@ -194,30 +188,37 @@ SECTIONS
 {
 	.text :
 	{
-		. = ALIGN(4);
 		PROVIDE(__text_start = .);
 
 		/* sub-section: .vectors */
 
-		. = ALIGN(4);
 		PROVIDE(__vectors_start = .);
 
 		KEEP(*(.coreVectors));
 		KEEP(*(.chipVectors));
 
-		. = ALIGN(4);
 		PROVIDE(__vectors_end = .);
 
 		/* end of sub-section: .vectors */
 
-		*(.text* .gnu.linkonce.t.*);
-		*(.rodata* .gnu.linkonce.r.*);
-		*(.glue_7t .glue_7);
-
-		*(.ARM.extab* .gnu.linkonce.armextab.*);	/* exception unwinding information */
-		*(.gcc_except_table);						/* information used for stack unwinding during exception */
-		*(.eh_frame_hdr);							/* additional information about .ex_frame section */
-		*(.eh_frame);								/* information used for stack unwinding during exception */
+		*(.text.unlikely .text.*_unlikely .text.unlikely.*);
+		*(.text.exit .text.exit.*);
+		*(.text.startup .text.startup.*);
+		*(.text.hot .text.hot.*);
+		*(.text .stub .text.* .gnu.linkonce.t.*);
+		*(.gnu.warning);
+		*(.glue_7t);
+		*(.glue_7);
+		*(.vfp11_veneer);
+		*(.v4_bx);
+		*(.rodata .rodata.* .gnu.linkonce.r.*);
+		*(.ARM.extab* .gnu.linkonce.armextab.*);
+		*(.eh_frame_hdr);
+		*(.eh_frame_entry .eh_frame_entry.*);
+		KEEP(*(.eh_frame));
+		*(.eh_frame.*);
+		*(.gcc_except_table .gcc_except_table.*);
+		*(.gnu_extab*);
 
 		/* sub-section: data_array */
 
@@ -249,43 +250,36 @@ $(printf '%b' "${bssArrayEntries}")
 
 		/* sub-sections: init, preinit_array, init_array and fini_array */
 
-		KEEP(*(.init));
+		KEEP(*(SORT_NONE(.init)));
 
-		. = ALIGN(4);
 		PROVIDE(__preinit_array_start = .);
 
 		KEEP(*(.preinit_array));
 
-		. = ALIGN(4);
 		PROVIDE(__preinit_array_end = .);
 
-		. = ALIGN(4);
 		PROVIDE(__init_array_start = .);
 
-		KEEP(*(SORT(.init_array.*)));
+		KEEP(*(SORT_BY_INIT_PRIORITY(.init_array.*)));
 		KEEP(*(.init_array));
 
-		. = ALIGN(4);
 		PROVIDE(__init_array_end = .);
+
+		KEEP(*(SORT_NONE(.fini)));
 
 #if CONFIG_STATIC_DESTRUCTORS_ENABLE == 1
 
-		KEEP(*(.fini));
-
-		. = ALIGN(4);
 		PROVIDE(__fini_array_start = .);
 
+		KEEP(*(SORT_BY_INIT_PRIORITY(.fini_array.*)));
 		KEEP(*(.fini_array));
-		KEEP(*(SORT(.fini_array.*)));
 
-		. = ALIGN(4);
 		PROVIDE(__fini_array_end = .);
 
 #endif	/* CONFIG_STATIC_DESTRUCTORS_ENABLE == 1 */
 
 		/* end of sub-sections: init, preinit_array, init_array and fini_array */
 
-		. = ALIGN(4);
 		PROVIDE(__text_end = .);
 	} > rom AT > rom
 
@@ -311,36 +305,30 @@ $(printf '%b' "${bssArrayEntries}")
 
 	.bss :
 	{
-		. = ALIGN(4);
 		PROVIDE(__bss_start = .);
 
-		*(.bss* .gnu.linkonce.b.*);
+		*(.bss .bss.* .gnu.linkonce.b.*);
 		*(COMMON);
 
-		. = ALIGN(4);
 		PROVIDE(__bss_end = .);
 	} > ram AT > ram
 
 	.data :
 	{
-		. = ALIGN(4);
 		PROVIDE(__data_init_start = LOADADDR(.data));
 		PROVIDE(__data_start = .);
 
-		*(.data* .gnu.linkonce.d.*);
+		*(.data .data.* .gnu.linkonce.d.*);
 
-		. = ALIGN(4);
 		PROVIDE(__data_end = .);
 	} > ram AT > rom
 
 	.noinit (NOLOAD) :
 	{
-		. = ALIGN(4);
 		PROVIDE(__noinit_start = .);
 
 		*(.noinit);
 
-		. = ALIGN(4);
 		PROVIDE(__noinit_end = .);
 	} > ram AT > ram
 
@@ -362,37 +350,47 @@ $(printf '%b' "${bssArrayEntries}")
 
 $(printf '%b' "${sectionEntries}")
 
-	.stab				0 (NOLOAD) : { *(.stab); }
-	.stabstr			0 (NOLOAD) : { *(.stabstr); }
-	/* DWARF debug sections.
-	* Symbols in the DWARF debugging sections are relative to the beginning
-	* of the section so we begin them at 0. */
+	/* Stabs debugging sections. */
+	.stab 0 : { *(.stab); }
+	.stabstr 0 : { *(.stabstr); }
+	.stab.excl 0 : { *(.stab.excl); }
+	.stab.exclstr 0 : { *(.stab.exclstr); }
+	.stab.index 0 : { *(.stab.index); }
+	.stab.indexstr 0 : { *(.stab.indexstr); }
+	.comment 0 : { *(.comment); }
+	/* DWARF debug sections. */
+	/* Symbols in the DWARF debugging sections are relative to the beginning of the section so we begin them at 0. */
 	/* DWARF 1 */
-	.debug				0 : { *(.debug); }
-	.line				0 : { *(.line); }
+	.debug 0 : { *(.debug); }
+	.line 0 : { *(.line); }
 	/* GNU DWARF 1 extensions */
-	.debug_srcinfo		0 : { *(.debug_srcinfo); }
-	.debug_sfnames		0 : { *(.debug_sfnames); }
+	.debug_srcinfo 0 : { *(.debug_srcinfo); }
+	.debug_sfnames 0 : { *(.debug_sfnames); }
 	/* DWARF 1.1 and DWARF 2 */
-	.debug_aranges		0 : { *(.debug_aranges); }
-	.debug_pubnames		0 : { *(.debug_pubnames); }
+	.debug_aranges 0 : { *(.debug_aranges); }
+	.debug_pubnames 0 : { *(.debug_pubnames); }
 	/* DWARF 2 */
-	.debug_info			0 : { *(.debug_info .gnu.linkonce.wi.*); }
-	.debug_abbrev		0 : { *(.debug_abbrev); }
-	.debug_line			0 : { *(.debug_line); }
-	.debug_frame		0 : { *(.debug_frame); }
-	.debug_str			0 : { *(.debug_str); }
-	.debug_loc			0 : { *(.debug_loc); }
-	.debug_macinfo		0 : { *(.debug_macinfo); }
+	.debug_info 0 : { *(.debug_info .gnu.linkonce.wi.*); }
+	.debug_abbrev 0 : { *(.debug_abbrev); }
+	.debug_line 0 : { *(.debug_line .debug_line.* .debug_line_end); }
+	.debug_frame 0 : { *(.debug_frame); }
+	.debug_str 0 : { *(.debug_str); }
+	.debug_loc 0 : { *(.debug_loc); }
+	.debug_macinfo 0 : { *(.debug_macinfo); }
 	/* SGI/MIPS DWARF 2 extensions */
-	.debug_weaknames	0 : { *(.debug_weaknames); }
-	.debug_funcnames	0 : { *(.debug_funcnames); }
-	.debug_typenames	0 : { *(.debug_typenames); }
-	.debug_varnames		0 : { *(.debug_varnames); }
-
+	.debug_weaknames 0 : { *(.debug_weaknames); }
+	.debug_funcnames 0 : { *(.debug_funcnames); }
+	.debug_typenames 0 : { *(.debug_typenames); }
+	.debug_varnames 0 : { *(.debug_varnames); }
+	/* DWARF 3 */
+	.debug_pubtypes 0 : { *(.debug_pubtypes); }
+	.debug_ranges 0 : { *(.debug_ranges); }
+	/* DWARF Extension. */
+	.debug_macro 0 : { *(.debug_macro); }
+	.debug_addr 0 : { *(.debug_addr); }
+	.ARM.attributes 0 : { KEEP(*(.ARM.attributes)); KEEP(*(.gnu.attributes)); }
 	.note.gnu.arm.ident	0 : { KEEP(*(.note.gnu.arm.ident)); }
-	.ARM.attributes		0 : { KEEP(*(.ARM.attributes)); }
-	/DISCARD/				: { *(.note.GNU-stack); }
+	/DISCARD/ : { *(.note.GNU-stack); *(.gnu_debuglink); *(.gnu.lto_*); }
 }
 
 PROVIDE(__text_size = SIZEOF(.text));

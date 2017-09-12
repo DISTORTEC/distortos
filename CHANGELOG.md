@@ -75,6 +75,8 @@ their generated contents.
 default values for all the arguments which are less important.
 - `chip::configurePin()`, `chip::configureAlternateFunctionPin()`, `chip::configureInputPin()` and
 `chip::configureOutputPin()` for STM32's GPIOv2 now have default values for all the arguments which are less important.
+- Generated linker scripts (either from `.dts` file by `make board` or during compilation when using custom board) are
+more similar to GNU's default linker script.
 - Update *CMSIS* to version 5.1.0.
 - Update *CMSIS-STM32F0* to version 1.8.0.
 - Update *CMSIS-STM32F1* to version 1.6.0.
