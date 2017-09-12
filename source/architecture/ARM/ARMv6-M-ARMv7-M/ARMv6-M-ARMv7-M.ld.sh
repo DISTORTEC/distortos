@@ -268,9 +268,9 @@ $(printf '%b' "${bssArrayEntries}")
 		. = ALIGN(4);
 		PROVIDE(__init_array_end = .);
 
-#if CONFIG_STATIC_DESTRUCTORS_ENABLE == 1
-
 		KEEP(*(.fini));
+
+#if CONFIG_STATIC_DESTRUCTORS_ENABLE == 1
 
 		. = ALIGN(4);
 		PROVIDE(__fini_array_start = .);
