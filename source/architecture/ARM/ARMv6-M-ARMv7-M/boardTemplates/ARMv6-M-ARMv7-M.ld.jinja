@@ -92,18 +92,15 @@ SECTIONS
 {
 	.text :
 	{
-		. = ALIGN(4);
 		PROVIDE(__text_start = .);
 
 		/* sub-section: .vectors */
 
-		. = ALIGN(4);
 		PROVIDE(__vectors_start = .);
 
 		KEEP(*(.coreVectors));
 		KEEP(*(.chipVectors));
 
-		. = ALIGN(4);
 		PROVIDE(__vectors_end = .);
 
 		/* end of sub-section: .vectors */
@@ -166,41 +163,34 @@ LONG(ADDR(.{{ label }}.data) + SIZEOF(.{{ label }}.data));
 
 		KEEP(*(SORT_NONE(.init)));
 
-		. = ALIGN(4);
 		PROVIDE(__preinit_array_start = .);
 
 		KEEP(*(.preinit_array));
 
-		. = ALIGN(4);
 		PROVIDE(__preinit_array_end = .);
 
-		. = ALIGN(4);
 		PROVIDE(__init_array_start = .);
 
 		KEEP(*(SORT_BY_INIT_PRIORITY(.init_array.*)));
 		KEEP(*(.init_array));
 
-		. = ALIGN(4);
 		PROVIDE(__init_array_end = .);
 
 		KEEP(*(SORT_NONE(.fini)));
 
 #if CONFIG_STATIC_DESTRUCTORS_ENABLE == 1
 
-		. = ALIGN(4);
 		PROVIDE(__fini_array_start = .);
 
 		KEEP(*(SORT_BY_INIT_PRIORITY(.fini_array.*)));
 		KEEP(*(.fini_array));
 
-		. = ALIGN(4);
 		PROVIDE(__fini_array_end = .);
 
 #endif	/* CONFIG_STATIC_DESTRUCTORS_ENABLE == 1 */
 
 		/* end of sub-sections: init, preinit_array, init_array and fini_array */
 
-		. = ALIGN(4);
 		PROVIDE(__text_end = .);
 	} > {{ chosenToLabel('distortos,ld,text', True) }} AT > {{ chosenToLabel('distortos,ld,text', False) }}
 
@@ -227,38 +217,32 @@ LONG(ADDR(.{{ label }}.data) + SIZEOF(.{{ label }}.data));
 
 	.bss :
 	{
-		. = ALIGN(4);
 		PROVIDE(__bss_start = .);
 
 		*(.bss .bss.* .gnu.linkonce.b.*);
 		*(COMMON);
 
-		. = ALIGN(4);
 		PROVIDE(__bss_end = .);
 		HIDDEN(__{{ chosenToLabel('distortos,ld,bss', True) }}_limit_low = .);
 	} > {{ chosenToLabel('distortos,ld,bss', True) }} AT > {{ chosenToLabel('distortos,ld,bss', False) }}
 
 	.data :
 	{
-		. = ALIGN(4);
 		PROVIDE(__data_init_start = LOADADDR(.data));
 		PROVIDE(__data_start = .);
 
 		*(.data .data.* .gnu.linkonce.d.*);
 
-		. = ALIGN(4);
 		PROVIDE(__data_end = .);
 		HIDDEN(__{{ chosenToLabel('distortos,ld,data', True) }}_limit_low = .);
 	} > {{ chosenToLabel('distortos,ld,data', True) }} AT > {{ chosenToLabel('distortos,ld,data,load', False) }}
 
 	.noinit (NOLOAD) :
 	{
-		. = ALIGN(4);
 		PROVIDE(__noinit_start = .);
 
 		*(.noinit);
 
-		. = ALIGN(4);
 		PROVIDE(__noinit_end = .);
 		HIDDEN(__{{ chosenToLabel('distortos,ld,noinit', True) }}_limit_low = .);
 	} > {{ chosenToLabel('distortos,ld,noinit', True) }} AT > {{ chosenToLabel('distortos,ld,noinit', False) }}
@@ -267,37 +251,31 @@ LONG(ADDR(.{{ label }}.data) + SIZEOF(.{{ label }}.data));
 
 	.{{ label }}.bss :
 	{
-		. = ALIGN(4);
 		PROVIDE(__{{ label }}_bss_start = .);
 
 		*(.{{ label }}.bss);
 
-		. = ALIGN(4);
 		PROVIDE(__{{ label }}_bss_end = .);
 		HIDDEN(__{{ label }}_limit_low = .);
 	} > {{ label }} AT > {{ label }}
 
 	.{{ label }}.data :
 	{
-		. = ALIGN(4);
 		PROVIDE(__{{ label }}_data_init_start = LOADADDR(.{{ label }}.data));
 		PROVIDE(__{{ label }}_data_start = .);
 
 		*(.{{ label }}.data);
 
-		. = ALIGN(4);
 		PROVIDE(__{{ label }}_data_end = .);
 		HIDDEN(__{{ label }}_limit_low = .);
 	} > {{ label }} AT > {{ chosenToLabel('distortos,ld,' + label + ',load', False) }}
 
 	.{{ label }}.noinit (NOLOAD) :
 	{
-		. = ALIGN(4);
 		PROVIDE(__{{ label }}_noinit_start = .);
 
 		*(.{{ label }}.noinit);
 
-		. = ALIGN(4);
 		PROVIDE(__{{ label }}_noinit_end = .);
 		HIDDEN(__{{ label }}_limit_low = .);
 	} > {{ label }} AT > {{ label }}
