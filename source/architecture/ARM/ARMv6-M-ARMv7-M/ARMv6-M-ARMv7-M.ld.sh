@@ -83,35 +83,29 @@ LONG(ADDR(.${memoryName}.data) + SIZEOF(.${memoryName}.data));\n"
 	sectionEntries="${sectionEntries}\
 	.${memoryName}.bss :
 	{
-		. = ALIGN(4);
 		PROVIDE(__${memoryName}_bss_start = .);
 
 		*(.${memoryName}.bss);
 
-		. = ALIGN(4);
 		PROVIDE(__${memoryName}_bss_end = .);
 	} > ${memoryName} AT > ${memoryName}
 
 	.${memoryName}.data :
 	{
-		. = ALIGN(4);
 		PROVIDE(__${memoryName}_data_init_start = LOADADDR(.${memoryName}.data));
 		PROVIDE(__${memoryName}_data_start = .);
 
 		*(.${memoryName}.data);
 
-		. = ALIGN(4);
 		PROVIDE(__${memoryName}_data_end = .);
 	} > ${memoryName} AT > rom
 
 	.${memoryName}.noinit (NOLOAD) :
 	{
-		. = ALIGN(4);
 		PROVIDE(__${memoryName}_noinit_start = .);
 
 		*(.${memoryName}.noinit);
 
-		. = ALIGN(4);
 		PROVIDE(__${memoryName}_noinit_end = .);
 	} > ${memoryName} AT > ${memoryName}\n\n"
 
@@ -194,18 +188,15 @@ SECTIONS
 {
 	.text :
 	{
-		. = ALIGN(4);
 		PROVIDE(__text_start = .);
 
 		/* sub-section: .vectors */
 
-		. = ALIGN(4);
 		PROVIDE(__vectors_start = .);
 
 		KEEP(*(.coreVectors));
 		KEEP(*(.chipVectors));
 
-		. = ALIGN(4);
 		PROVIDE(__vectors_end = .);
 
 		/* end of sub-section: .vectors */
@@ -261,41 +252,34 @@ $(printf '%b' "${bssArrayEntries}")
 
 		KEEP(*(SORT_NONE(.init)));
 
-		. = ALIGN(4);
 		PROVIDE(__preinit_array_start = .);
 
 		KEEP(*(.preinit_array));
 
-		. = ALIGN(4);
 		PROVIDE(__preinit_array_end = .);
 
-		. = ALIGN(4);
 		PROVIDE(__init_array_start = .);
 
 		KEEP(*(SORT_BY_INIT_PRIORITY(.init_array.*)));
 		KEEP(*(.init_array));
 
-		. = ALIGN(4);
 		PROVIDE(__init_array_end = .);
 
 		KEEP(*(SORT_NONE(.fini)));
 
 #if CONFIG_STATIC_DESTRUCTORS_ENABLE == 1
 
-		. = ALIGN(4);
 		PROVIDE(__fini_array_start = .);
 
 		KEEP(*(SORT_BY_INIT_PRIORITY(.fini_array.*)));
 		KEEP(*(.fini_array));
 
-		. = ALIGN(4);
 		PROVIDE(__fini_array_end = .);
 
 #endif	/* CONFIG_STATIC_DESTRUCTORS_ENABLE == 1 */
 
 		/* end of sub-sections: init, preinit_array, init_array and fini_array */
 
-		. = ALIGN(4);
 		PROVIDE(__text_end = .);
 	} > rom AT > rom
 
@@ -321,36 +305,30 @@ $(printf '%b' "${bssArrayEntries}")
 
 	.bss :
 	{
-		. = ALIGN(4);
 		PROVIDE(__bss_start = .);
 
 		*(.bss .bss.* .gnu.linkonce.b.*);
 		*(COMMON);
 
-		. = ALIGN(4);
 		PROVIDE(__bss_end = .);
 	} > ram AT > ram
 
 	.data :
 	{
-		. = ALIGN(4);
 		PROVIDE(__data_init_start = LOADADDR(.data));
 		PROVIDE(__data_start = .);
 
 		*(.data .data.* .gnu.linkonce.d.*);
 
-		. = ALIGN(4);
 		PROVIDE(__data_end = .);
 	} > ram AT > rom
 
 	.noinit (NOLOAD) :
 	{
-		. = ALIGN(4);
 		PROVIDE(__noinit_start = .);
 
 		*(.noinit);
 
-		. = ALIGN(4);
 		PROVIDE(__noinit_end = .);
 	} > ram AT > ram
 
