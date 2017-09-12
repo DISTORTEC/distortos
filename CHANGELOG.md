@@ -113,6 +113,8 @@ reported with `ENOSPC` error code - won't leave the generated/queued signal pend
 - Fixes required for compilation and proper execution when link-time optimization is enabled.
 - Fix *tup*-based build when `Tupfile.lua` from folder *A* is used to compile files from folder *B*. Previously proper
 folder hierarchy would not be created in the output directory.
+- Fix stack overflow in idle thread for *ARMv6-M* when `Thread::detach()` is enabled, "Optimize for size (-Os)" is
+selected and *GCC 7* is used. In that case idle thread needs 264 bytes of stack, so increase its size to 320 bytes.
 
 ### Removed
 
