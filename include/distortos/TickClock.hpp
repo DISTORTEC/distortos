@@ -2,7 +2,7 @@
  * \file
  * \brief TickClock class header
  *
- * \author Copyright (C) 2014-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -30,7 +30,7 @@ class TickClock
 public:
 
 	/// type of tick counter
-	using rep = uint64_t;
+	using rep = int64_t;
 
 	/// std::ratio type representing the tick period of the clock, seconds
 	using period = std::ratio<1, CONFIG_TICK_FREQUENCY>;

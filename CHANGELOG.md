@@ -77,6 +77,8 @@ default values for all the arguments which are less important.
 `chip::configureOutputPin()` for STM32's GPIOv2 now have default values for all the arguments which are less important.
 - Generated linker scripts (either from `.dts` file by `make board` or during compilation when using custom board) are
 more similar to GNU's default linker script.
+- Type of `TickClock` counter - `TickClock::rep` was changed from `uint64_t` to `int64_t`. This way
+`TickClock::duration` can be negative and `TickClock::time_point` may represent time points before bootup.
 - Update *CMSIS* to version 5.1.0.
 - Update *CMSIS-STM32F0* to version 1.8.0.
 - Update *CMSIS-STM32F1* to version 1.6.0.
