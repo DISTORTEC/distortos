@@ -16,7 +16,7 @@
 #define DISTORTOS_VERSION_MAJOR		0
 
 /// minor version of distortos
-#define DISTORTOS_VERSION_MINOR		4
+#define DISTORTOS_VERSION_MINOR		5
 
 /// patch version of distortos
 #define DISTORTOS_VERSION_PATCH		0
