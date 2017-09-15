@@ -4,6 +4,15 @@ Change Log
 All notable changes to this project will be documented in this file. This project adheres to
 [Semantic Versioning](http://semver.org/).
 
+[Unreleased](https://github.com/DISTORTEC/distortos/compare/v0.5.0...HEAD)
+--------------------------------------------------------------------------
+
+### Fixed
+
+- Fixed *GDB* pretty-printers of *distortos* queues when using *GCC 7*. New version of *libstdc++v3* from *GCC* changed
+implementation of `std::unique_ptr`, which is used internally by queues for managing storage. Fixed pretty-printers from
+`distortos.py` now handle both variants of `std::unique_ptr`.
+
 [0.5.0](https://github.com/DISTORTEC/distortos/compare/v0.4.0...v0.5.0) - 2017-09-14
 ------------------------------------------------------------------------------------
 

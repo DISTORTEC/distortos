@@ -42,6 +42,12 @@ class Semaphore():
 # InternalFifoQueueBase class
 ########################################################################################################################
 
+def handleUniquePointer(uniquePointer):
+	'Gets raw pointer value from std::unique_ptr'
+	# GCC 6 and earlier - uniquePointer['_M_t']['_M_head_impl']
+	# GCC 7 and later - uniquePointer['_M_t']['_M_t']['_M_head_impl']
+	return uniquePointer['_M_t'].get('_M_t', uniquePointer['_M_t'])['_M_head_impl']
+
 class InternalFifoQueueBase:
 	'Print distortos::internal::FifoQueueBase'
 
@@ -80,7 +86,7 @@ class InternalFifoQueueBase:
 		if self.isValid() == False:
 			return iter([])
 		return self.Iterator(self.value['readPosition_'], self.value['popSemaphore_']['value_'],
-				self.value['storageUniquePointer_']['_M_t']['_M_head_impl'], self.value['storageEnd_'],
+				handleUniquePointer(self.value['storageUniquePointer_']), self.value['storageEnd_'],
 				self.value['elementSize_'], self.storageToElement)
 
 	def display_hint(self):
@@ -88,7 +94,7 @@ class InternalFifoQueueBase:
 		return 'array'
 
 	def isValid(self):
-		storageBegin = self.value['storageUniquePointer_']['_M_t']['_M_head_impl']
+		storageBegin = handleUniquePointer(self.value['storageUniquePointer_'])
 		storageEnd = self.value['storageEnd_']
 		# value of "storage begin" must be less than or equal to "storage end"
 		if storageBegin > storageEnd:
