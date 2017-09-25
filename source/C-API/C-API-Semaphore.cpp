@@ -11,6 +11,7 @@
 
 #include "distortos/C-API/Semaphore.h"
 
+#include "distortos/fromCApi.hpp"
 #include "distortos/Semaphore.hpp"
 
 static_assert(sizeof(distortos_Semaphore) == sizeof(distortos::Semaphore),
@@ -37,7 +38,7 @@ int distortos_Semaphore_destruct(distortos_Semaphore* const semaphore)
 	if (semaphore == nullptr)
 		return EINVAL;
 
-	auto& realSemaphore = *reinterpret_cast<const distortos::Semaphore*>(semaphore);
+	auto& realSemaphore = distortos::fromCApi(*semaphore);
 	realSemaphore.~Semaphore();
 	return 0;
 }
@@ -47,7 +48,7 @@ int distortos_Semaphore_getValue(const distortos_Semaphore* const semaphore, uns
 	if (semaphore == nullptr || value == nullptr)
 		return EINVAL;
 
-	auto& realSemaphore = *reinterpret_cast<const distortos::Semaphore*>(semaphore);
+	auto& realSemaphore = distortos::fromCApi(*semaphore);
 	*value = realSemaphore.getValue();
 	return 0;
 }
@@ -57,7 +58,7 @@ int distortos_Semaphore_post(distortos_Semaphore* const semaphore)
 	if (semaphore == nullptr)
 		return EINVAL;
 
-	auto& realSemaphore = *reinterpret_cast<distortos::Semaphore*>(semaphore);
+	auto& realSemaphore = distortos::fromCApi(*semaphore);
 	return realSemaphore.post();
 }
 
@@ -66,7 +67,7 @@ int distortos_Semaphore_tryWait(distortos_Semaphore* const semaphore)
 	if (semaphore == nullptr)
 		return EINVAL;
 
-	auto& realSemaphore = *reinterpret_cast<distortos::Semaphore*>(semaphore);
+	auto& realSemaphore = distortos::fromCApi(*semaphore);
 	return realSemaphore.tryWait();
 }
 
@@ -75,7 +76,7 @@ int distortos_Semaphore_tryWaitFor(distortos_Semaphore* const semaphore, const i
 	if (semaphore == nullptr)
 		return EINVAL;
 
-	auto& realSemaphore = *reinterpret_cast<distortos::Semaphore*>(semaphore);
+	auto& realSemaphore = distortos::fromCApi(*semaphore);
 	return realSemaphore.tryWaitFor(distortos::TickClock::duration{duration});
 }
 
@@ -84,7 +85,7 @@ int distortos_Semaphore_tryWaitUntil(distortos_Semaphore* const semaphore, const
 	if (semaphore == nullptr)
 		return EINVAL;
 
-	auto& realSemaphore = *reinterpret_cast<distortos::Semaphore*>(semaphore);
+	auto& realSemaphore = distortos::fromCApi(*semaphore);
 	return realSemaphore.tryWaitUntil(distortos::TickClock::time_point{distortos::TickClock::duration{timePoint}});
 }
 
@@ -93,6 +94,6 @@ int distortos_Semaphore_wait(distortos_Semaphore* const semaphore)
 	if (semaphore == nullptr)
 		return EINVAL;
 
-	auto& realSemaphore = *reinterpret_cast<distortos::Semaphore*>(semaphore);
+	auto& realSemaphore = distortos::fromCApi(*semaphore);
 	return realSemaphore.wait();
 }
