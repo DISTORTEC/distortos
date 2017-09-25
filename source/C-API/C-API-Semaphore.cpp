@@ -14,10 +14,14 @@
 #include "distortos/fromCApi.hpp"
 #include "distortos/Semaphore.hpp"
 
+#ifndef DISTORTOS_UNIT_TEST
+
 static_assert(sizeof(distortos_Semaphore) == sizeof(distortos::Semaphore),
 		"Size of distortos_Semaphore does not match size of distortos::Semaphore!");
 static_assert(alignof(distortos_Semaphore) == alignof(distortos::Semaphore),
 		"Alignment of distortos_Semaphore does not match alignment of distortos::Semaphore!");
+
+#endif	// !def DISTORTOS_UNIT_TEST
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | global functions
