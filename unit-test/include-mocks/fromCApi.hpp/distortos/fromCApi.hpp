@@ -9,8 +9,8 @@
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#ifndef UNIT_TEST_INCLUDE_MOCKS_DISTORTOS_FROMCAPI_HPP_
-#define UNIT_TEST_INCLUDE_MOCKS_DISTORTOS_FROMCAPI_HPP_
+#ifndef UNIT_TEST_INCLUDE_MOCKS_FROMCAPI_HPP_DISTORTOS_FROMCAPI_HPP_
+#define UNIT_TEST_INCLUDE_MOCKS_FROMCAPI_HPP_DISTORTOS_FROMCAPI_HPP_
 
 #include "unit-test-common.hpp"
 
@@ -53,9 +53,9 @@ public:
 
 private:
 
-	static FromCApiMock*& getInstanceInternal()
+	static const FromCApiMock*& getInstanceInternal()
 	{
-		static FromCApiMock* instance;
+		static const FromCApiMock* instance;
 		return instance;
 	}
 };
@@ -72,4 +72,4 @@ inline static const distortos::Semaphore& fromCApi(const distortos_Semaphore& se
 
 }	// namespace distortos
 
-#endif	// UNIT_TEST_INCLUDE_MOCKS_DISTORTOS_FROMCAPI_HPP_
+#endif	// UNIT_TEST_INCLUDE_MOCKS_FROMCAPI_HPP_DISTORTOS_FROMCAPI_HPP_
