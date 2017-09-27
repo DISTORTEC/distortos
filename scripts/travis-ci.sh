@@ -96,6 +96,8 @@ install() {
 			shift
 			installPydts "${@}"
 			;;
+		unit-test)
+			;;
 		*)
 			echo "\"${1}\" is not a valid argument!" >&2
 			exit 4
@@ -117,6 +119,13 @@ scriptPydts() {
 	"$(dirname "${0}")/test-pydts.sh" "${@}"
 }
 
+unitTest() {
+	mkdir output
+	cd output
+	cmake -G Ninja ../unit-test
+	ninja run
+}
+
 # "script" phase
 script() {
 	case "${1}" in
@@ -127,6 +136,10 @@ script() {
 		pydts)
 			shift
 			scriptPydts "${@}"
+			;;
+		unit-test)
+			shift
+			unitTest "${@}"
 			;;
 		*)
 			echo "\"${1}\" is not a valid argument!" >&2
