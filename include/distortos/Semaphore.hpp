@@ -47,7 +47,7 @@ public:
 
 	constexpr explicit Semaphore(const Value value, const Value maxValue = std::numeric_limits<Value>::max()) :
 			blockedList_{},
-			value_{value <= maxValue ? value : maxValue},
+			value_{value < maxValue ? value : maxValue},
 			maxValue_{maxValue}
 	{
 

@@ -1,0 +1,36 @@
+#
+# file: CMakeLists.txt
+#
+# author: Copyright (C) 2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+#
+# This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
+# distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+#
+
+cmake_minimum_required(VERSION 3.1)
+
+project(distortos-unit-test)
+
+# path to distortos
+set(DISTORTOS_PATH ${CMAKE_SOURCE_DIR}/..)
+
+# path to common main.cpp
+set(MAIN_CPP ${CMAKE_SOURCE_DIR}/main.cpp)
+
+# include path with mocks
+set(INCLUDE_MOCKS ${CMAKE_SOURCE_DIR}/include-mocks)
+
+# use C++14 in all cases
+set(CMAKE_CXX_STANDARD 14)
+
+# standard include folders - valid in all cases
+include_directories(.)
+include_directories(external/Catch)
+include_directories(external/Trompeloeil)
+include_directories(${DISTORTOS_PATH}/include)
+
+add_subdirectory(C-API-Semaphore-unit-test)
+
+add_custom_target(run
+	COMMAND C-API-Semaphore-unit-test
+	USES_TERMINAL)
