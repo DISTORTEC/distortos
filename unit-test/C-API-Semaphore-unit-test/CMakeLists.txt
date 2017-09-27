@@ -14,4 +14,3 @@ add_executable(C-API-Semaphore-unit-test
 
 target_compile_definitions(C-API-Semaphore-unit-test PUBLIC DISTORTOS_UNIT_TEST)
 target_include_directories(C-API-Semaphore-unit-test BEFORE PUBLIC ${INCLUDE_MOCKS})
-target_compile_features(C-API-Semaphore-unit-test PUBLIC cxx_std_14)

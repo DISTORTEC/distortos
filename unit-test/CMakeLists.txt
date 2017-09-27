@@ -7,7 +7,7 @@
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #
 
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.1)
 
 project(distortos-unit-test)
 
@@ -19,6 +19,9 @@ set(MAIN_CPP ${CMAKE_SOURCE_DIR}/main.cpp)
 
 # include path with mocks
 set(INCLUDE_MOCKS ${CMAKE_SOURCE_DIR}/include-mocks)
+
+# use C++14 in all cases
+set(CMAKE_CXX_STANDARD 14)
 
 # standard include folders - valid in all cases
 include_directories(.)
