@@ -14,7 +14,11 @@ sudo: false
 # texinfo is needed to build bleeding-edge-toolchain
 addons:
     apt:
+        sources:
+            - ubuntu-toolchain-r-test
         packages:
+            - gcc-7
+            - g++-7
             - ninja-build
             - texinfo
             - texlive
@@ -31,7 +35,7 @@ matrix:
           env: SUBSTAGE="pydts --quiet"
         - python: '3.6'
           env: SUBSTAGE="pydts --quiet"
-        - env: SUBSTAGE="unit-test"
+        - env: COMPILER_NAME=gcc CXX=g++-7 CC=gcc-7 SUBSTAGE="unit-test"
 
 before_install:
     - "export PATH=${HOME}/.local/bin:${PATH}"
