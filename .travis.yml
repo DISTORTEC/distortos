@@ -15,6 +15,7 @@ sudo: false
 addons:
     apt:
         packages:
+            - ninja-build
             - texinfo
             - texlive
 
@@ -30,6 +31,7 @@ matrix:
           env: SUBSTAGE="pydts --quiet"
         - python: '3.6'
           env: SUBSTAGE="pydts --quiet"
+        - env: SUBSTAGE="unit-test"
 
 before_install:
     - "export PATH=${HOME}/.local/bin:${PATH}"
