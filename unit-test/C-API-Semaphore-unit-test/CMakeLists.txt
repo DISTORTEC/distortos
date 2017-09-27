@@ -23,3 +23,25 @@ add_custom_target(run-C-API-Semaphore-unit-test-0
 	COMMENT C-API-Semaphore-unit-test-0
 	USES_TERMINAL)
 add_dependencies(run run-C-API-Semaphore-unit-test-0)
+
+add_executable(C-API-Semaphore-unit-test-1
+		C-API-Semaphore-unit-test-1.cpp
+		${DISTORTOS_PATH}/source/C-API/C-API-Semaphore.cpp
+		${DISTORTOS_PATH}/source/synchronization/Semaphore.cpp
+		${MAIN_CPP})
+
+target_include_directories(C-API-Semaphore-unit-test-1 BEFORE PUBLIC
+		${INCLUDE_MOCKS}/architecture/enableInterruptMasking.hpp
+		${INCLUDE_MOCKS}/architecture/InterruptMask.hpp
+		${INCLUDE_MOCKS}/architecture/restoreInterruptMasking.hpp
+		${INCLUDE_MOCKS}/internal/scheduler/getScheduler.hpp
+		${INCLUDE_MOCKS}/internal/scheduler/Scheduler.hpp
+		${INCLUDE_MOCKS}/distortosConfiguration.h
+		${INCLUDE_MOCKS}/TickClock.hpp)
+target_compile_options(C-API-Semaphore-unit-test-1 PUBLIC -include ${INCLUDE_MOCKS}/reent.h)
+
+add_custom_target(run-C-API-Semaphore-unit-test-1
+	COMMAND C-API-Semaphore-unit-test-1
+	COMMENT C-API-Semaphore-unit-test-1
+	USES_TERMINAL)
+add_dependencies(run run-C-API-Semaphore-unit-test-1)
