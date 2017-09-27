@@ -11,13 +11,6 @@
 dist: trusty
 sudo: false
 
-# texinfo is needed to build bleeding-edge-toolchain
-addons:
-    apt:
-        packages:
-            - texinfo
-            - texlive
-
 # use minimal environment
 language: generic
 
