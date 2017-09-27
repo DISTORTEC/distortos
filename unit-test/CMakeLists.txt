@@ -24,10 +24,11 @@ set(INCLUDE_MOCKS ${CMAKE_SOURCE_DIR}/include-mocks)
 set(CMAKE_CXX_STANDARD 14)
 
 # standard include folders - valid in all cases
-include_directories(.)
-include_directories(external/Catch)
-include_directories(external/Trompeloeil)
-include_directories(${DISTORTOS_PATH}/include)
+include_directories(
+		.
+		external/Catch
+		external/Trompeloeil
+		${DISTORTOS_PATH}/include)
 
 add_custom_target(run)
 
