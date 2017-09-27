@@ -32,5 +32,5 @@ include_directories(${DISTORTOS_PATH}/include)
 add_subdirectory(C-API-Semaphore-unit-test)
 
 add_custom_target(run
-	COMMAND C-API-Semaphore-unit-test
+	COMMAND C-API-Semaphore-unit-test-0
 	USES_TERMINAL)
