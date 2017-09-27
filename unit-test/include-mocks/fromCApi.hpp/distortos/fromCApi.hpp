@@ -53,9 +53,9 @@ public:
 
 private:
 
-	static FromCApiMock*& getInstanceInternal()
+	static const FromCApiMock*& getInstanceInternal()
 	{
-		static FromCApiMock* instance;
+		static const FromCApiMock* instance;
 		return instance;
 	}
 };
