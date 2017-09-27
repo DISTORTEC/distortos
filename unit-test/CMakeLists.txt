@@ -29,8 +29,6 @@ include_directories(external/Catch)
 include_directories(external/Trompeloeil)
 include_directories(${DISTORTOS_PATH}/include)
 
-add_subdirectory(C-API-Semaphore-unit-test)
+add_custom_target(run)
 
-add_custom_target(run
-	COMMAND C-API-Semaphore-unit-test-0
-	USES_TERMINAL)
+add_subdirectory(C-API-Semaphore-unit-test)

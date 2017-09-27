@@ -16,3 +16,9 @@ target_compile_definitions(C-API-Semaphore-unit-test-0 PUBLIC DISTORTOS_UNIT_TES
 target_include_directories(C-API-Semaphore-unit-test-0 BEFORE PUBLIC ${INCLUDE_MOCKS}/distortosConfiguration.h)
 target_include_directories(C-API-Semaphore-unit-test-0 BEFORE PUBLIC ${INCLUDE_MOCKS}/fromCApi.hpp)
 target_include_directories(C-API-Semaphore-unit-test-0 BEFORE PUBLIC ${INCLUDE_MOCKS}/Semaphore.hpp)
+
+add_custom_target(run-C-API-Semaphore-unit-test-0
+	COMMAND C-API-Semaphore-unit-test-0
+	COMMENT C-API-Semaphore-unit-test-0
+	USES_TERMINAL)
+add_dependencies(run run-C-API-Semaphore-unit-test-0)
