@@ -7,6 +7,16 @@ All notable changes to this project will be documented in this file. This projec
 [Unreleased](https://github.com/DISTORTEC/distortos/compare/v0.5.0...HEAD)
 --------------------------------------------------------------------------
 
+### Added
+
+- `distortos/C-API/Semaphore.h` - C-API for semaphores, implemented as wrappers for `distortos::Semaphore` member
+functions.
+- `distortos::fromCApi()` which can be used to cast referenes to C-API objects (like `distortos_Semaphore`) into
+references to regular C++ API objects (like `distortos::Semaphore`).
+- Unit tests of C-API for semaphores, using [Catch](https://github.com/philsquared/Catch) unit test framework and
+[Trompeloeil](https://github.com/rollbear/trompeloeil) mocking framework. Build system of unit tests uses
+[CMake](https://cmake.org/).
+
 ### Fixed
 
 - Fixed *GDB* pretty-printers of *distortos* queues when using *GCC 7*. New version of *libstdc++v3* from *GCC* changed
