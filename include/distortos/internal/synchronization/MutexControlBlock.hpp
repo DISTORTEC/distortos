@@ -57,6 +57,31 @@ public:
 	};
 
 	/**
+	 * \brief Gets "boosted priority" of the mutex.
+	 *
+	 * "Boosted priority" of the mutex depends on the selected priority protocol:
+	 * - None - 0,
+	 * - PriorityInheritance - effective priority of the highest priority thread blocked on this mutex or 0 if no
+	 * threads are blocked,
+	 * - PriorityProtect - priority ceiling.
+	 *
+	 * \return "boosted priority" of the mutex
+	 */
+
+	uint8_t getBoostedPriority() const;
+
+	/**
+	 * \return owner of the mutex, nullptr if mutex is currently unlocked
+	 */
+
+	ThreadControlBlock* getOwner() const
+	{
+		return owner_;
+	}
+
+protected:
+
+	/**
 	 * \brief MutexControlBlock constructor
 	 *
 	 * \param [in] type is the type of mutex
@@ -113,29 +138,6 @@ public:
 	 */
 
 	void doUnlockOrTransferLock();
-
-	/**
-	 * \brief Gets "boosted priority" of the mutex.
-	 *
-	 * "Boosted priority" of the mutex depends on the selected priority protocol:
-	 * - None - 0,
-	 * - PriorityInheritance - effective priority of the highest priority thread blocked on this mutex or 0 if no
-	 * threads are blocked,
-	 * - PriorityProtect - priority ceiling.
-	 *
-	 * \return "boosted priority" of the mutex
-	 */
-
-	uint8_t getBoostedPriority() const;
-
-	/**
-	 * \return owner of the mutex, nullptr if mutex is currently unlocked
-	 */
-
-	ThreadControlBlock* getOwner() const
-	{
-		return owner_;
-	}
 
 	/**
 	 * \return priority ceiling of mutex, valid only when protocol_ == Protocol::priorityProtect

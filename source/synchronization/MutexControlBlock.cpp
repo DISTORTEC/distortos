@@ -79,6 +79,25 @@ private:
 | public functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
+uint8_t MutexControlBlock::getBoostedPriority() const
+{
+	if (getProtocol() == Protocol::priorityInheritance)
+	{
+		if (blockedList_.empty() == true)
+			return 0;
+		return blockedList_.front().getEffectivePriority();
+	}
+
+	if (getProtocol() == Protocol::priorityProtect)
+		return priorityCeiling_;
+
+	return 0;
+}
+
+/*---------------------------------------------------------------------------------------------------------------------+
+| protected functions
++---------------------------------------------------------------------------------------------------------------------*/
+
 int MutexControlBlock::doBlock()
 {
 	beforeBlock();
@@ -129,21 +148,6 @@ void MutexControlBlock::doUnlockOrTransferLock()
 		return;
 
 	owner_->updateBoostedPriority();
-}
-
-uint8_t MutexControlBlock::getBoostedPriority() const
-{
-	if (getProtocol() == Protocol::priorityInheritance)
-	{
-		if (blockedList_.empty() == true)
-			return 0;
-		return blockedList_.front().getEffectivePriority();
-	}
-
-	if (getProtocol() == Protocol::priorityProtect)
-		return priorityCeiling_;
-
-	return 0;
 }
 
 /*---------------------------------------------------------------------------------------------------------------------+
