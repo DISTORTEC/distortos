@@ -60,7 +60,7 @@ int Mutex::tryLockUntil(const TickClock::time_point timePoint)
 	// - lock successful, recursive lock not possible or deadlock detected;
 	// - lock transferred successfully;
 	// - timeout expired;
-	while ((ret = tryLockInternal()) == EBUSY && (ret = controlBlock_.blockUntil(timePoint)) == EINTR);
+	while ((ret = tryLockInternal()) == EBUSY && (ret = controlBlock_.doBlockUntil(timePoint)) == EINTR);
 	return ret;
 }
 

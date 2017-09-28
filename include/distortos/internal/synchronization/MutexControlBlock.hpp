@@ -75,7 +75,7 @@ public:
 	 * - values returned by Scheduler::blockUntil();
 	 */
 
-	int blockUntil(TickClock::time_point timePoint);
+	int doBlockUntil(TickClock::time_point timePoint);
 
 	/**
 	 * \brief Performs actual locking of previously unlocked mutex.

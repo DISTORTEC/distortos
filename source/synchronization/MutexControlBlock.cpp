@@ -88,7 +88,7 @@ int MutexControlBlock::block()
 			protocol_ == Protocol::priorityInheritance ? &unblockFunctor : nullptr);
 }
 
-int MutexControlBlock::blockUntil(const TickClock::time_point timePoint)
+int MutexControlBlock::doBlockUntil(const TickClock::time_point timePoint)
 {
 	beforeBlock();
 
