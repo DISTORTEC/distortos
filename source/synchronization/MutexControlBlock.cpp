@@ -133,7 +133,7 @@ void MutexControlBlock::unlockOrTransferLock()
 	if (blockedList_.empty() == false)
 		doTransferLock();
 	else
-		unlock();
+		doUnlock();
 
 	if (protocol_ == Protocol::none)
 		return;
@@ -177,7 +177,7 @@ void MutexControlBlock::doTransferLock()
 		owner_->setPriorityInheritanceMutexControlBlock(nullptr);
 }
 
-void MutexControlBlock::unlock()
+void MutexControlBlock::doUnlock()
 {
 	owner_ = nullptr;
 

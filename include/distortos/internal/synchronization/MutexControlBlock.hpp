@@ -163,7 +163,7 @@ private:
 	 * \attention mutex must be locked and blockedList_ must be empty
 	 */
 
-	void unlock();
+	void doUnlock();
 
 	/// ThreadControlBlock objects blocked on mutex
 	ThreadList blockedList_;
