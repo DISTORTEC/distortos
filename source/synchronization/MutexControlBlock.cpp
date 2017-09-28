@@ -2,7 +2,7 @@
  * \file
  * \brief MutexControlBlock class implementation
  *
- * \author Copyright (C) 2014-2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -81,8 +81,7 @@ private:
 
 int MutexControlBlock::block()
 {
-	if (protocol_ == Protocol::priorityInheritance)
-		priorityInheritanceBeforeBlock();
+	beforeBlock();
 
 	const PriorityInheritanceMutexControlBlockUnblockFunctor unblockFunctor {*this};
 	return getScheduler().block(blockedList_, ThreadState::blockedOnMutex,
@@ -91,8 +90,7 @@ int MutexControlBlock::block()
 
 int MutexControlBlock::blockUntil(const TickClock::time_point timePoint)
 {
-	if (protocol_ == Protocol::priorityInheritance)
-		priorityInheritanceBeforeBlock();
+	beforeBlock();
 
 	const PriorityInheritanceMutexControlBlockUnblockFunctor unblockFunctor {*this};
 	return getScheduler().blockUntil(blockedList_, ThreadState::blockedOnMutex, timePoint,
@@ -152,8 +150,11 @@ void MutexControlBlock::unlockOrTransferLock()
 | private functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-void MutexControlBlock::priorityInheritanceBeforeBlock() const
+void MutexControlBlock::beforeBlock() const
 {
+	if (protocol_ != Protocol::priorityInheritance)
+		return;
+
 	auto& currentThreadControlBlock = getScheduler().getCurrentThreadControlBlock();
 
 	currentThreadControlBlock.setPriorityInheritanceMutexControlBlock(this);

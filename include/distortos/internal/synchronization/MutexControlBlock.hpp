@@ -2,7 +2,7 @@
  * \file
  * \brief MutexControlBlock class header
  *
- * \author Copyright (C) 2014-2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -139,14 +139,15 @@ public:
 private:
 
 	/**
-	 * \brief Performs action required for priority inheritance before actually blocking on the mutex.
+	 * \brief Performs any actions required before actually blocking on the mutex.
 	 *
-	 * This must be called in block() and blockUntil() before actually blocking of the calling thread.
+	 * In case of PriorityInheritance protocol, priority of owner thread is boosted and this mutex is set as the
+	 * blocking mutex of the calling thread. In all other cases this function does nothing.
 	 *
-	 * \attantion mutex's protocol must be PriorityInheritance
+	 * \attention must be called in block() and blockUntil() before actually blocking of the calling thread.
 	 */
 
-	void priorityInheritanceBeforeBlock() const;
+	void beforeBlock() const;
 
 	/**
 	 * \brief Performs transfer of lock from current owner to next thread on the list.
