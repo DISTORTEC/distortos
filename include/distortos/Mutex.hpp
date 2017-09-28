@@ -35,7 +35,7 @@ public:
 	using Protocol = MutexControlBlock::Protocol;
 
 	/// type used for counting recursive locks
-	using RecursiveLocksCount = uint16_t;
+	using RecursiveLocksCount = MutexControlBlock::RecursiveLocksCount;
 
 	/// type of mutex
 	using Type = MutexControlBlock::Type;

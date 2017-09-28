@@ -40,6 +40,9 @@ public:
 		priorityProtect,
 	};
 
+	/// type used for counting recursive locks
+	using RecursiveLocksCount = uint16_t;
+
 	/// type of mutex
 	enum class Type : uint8_t
 	{
