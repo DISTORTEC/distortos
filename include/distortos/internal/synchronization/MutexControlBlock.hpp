@@ -78,6 +78,14 @@ public:
 	int blockUntil(TickClock::time_point timePoint);
 
 	/**
+	 * \brief Performs actual locking of previously unlocked mutex.
+	 *
+	 * \attention mutex must be unlocked
+	 */
+
+	void doLock();
+
+	/**
 	 * \brief Gets "boosted priority" of the mutex.
 	 *
 	 * "Boosted priority" of the mutex depends on the selected priority protocol:
@@ -117,14 +125,6 @@ public:
 	{
 		return protocol_;
 	}
-
-	/**
-	 * \brief Performs actual locking of previously unlocked mutex.
-	 *
-	 * \attention mutex must be unlocked
-	 */
-
-	void lock();
 
 	/**
 	 * \brief Performs unlocking or transfer of lock from current owner to next thread on the list.

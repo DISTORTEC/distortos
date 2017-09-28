@@ -101,7 +101,7 @@ int Mutex::tryLockInternal()
 
 	if (controlBlock_.getOwner() == nullptr)
 	{
-		controlBlock_.lock();
+		controlBlock_.doLock();
 		return 0;
 	}
 
