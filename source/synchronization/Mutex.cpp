@@ -35,7 +35,7 @@ int Mutex::lock()
 	// break the loop when one of following conditions is true:
 	// - lock successful, recursive lock not possible or deadlock detected;
 	// - lock transferred successfully;
-	while ((ret = tryLockInternal()) == EBUSY && (ret = controlBlock_.doBlock()) == EINTR);
+	while ((ret = tryLockInternal()) == EBUSY && (ret = doBlock()) == EINTR);
 	return ret;
 }
 
@@ -60,7 +60,7 @@ int Mutex::tryLockUntil(const TickClock::time_point timePoint)
 	// - lock successful, recursive lock not possible or deadlock detected;
 	// - lock transferred successfully;
 	// - timeout expired;
-	while ((ret = tryLockInternal()) == EBUSY && (ret = controlBlock_.doBlockUntil(timePoint)) == EINTR);
+	while ((ret = tryLockInternal()) == EBUSY && (ret = doBlockUntil(timePoint)) == EINTR);
 	return ret;
 }
 
@@ -72,7 +72,7 @@ int Mutex::unlock()
 
 	if (type_ != Type::normal)
 	{
-		if (controlBlock_.getOwner() != &internal::getScheduler().getCurrentThreadControlBlock())
+		if (getOwner() != &internal::getScheduler().getCurrentThreadControlBlock())
 			return EPERM;
 
 		if (type_ == Type::recursive && recursiveLocksCount_ != 0)
@@ -82,7 +82,7 @@ int Mutex::unlock()
 		}
 	}
 
-	controlBlock_.doUnlockOrTransferLock();
+	doUnlockOrTransferLock();
 
 	return 0;
 }
@@ -95,20 +95,20 @@ int Mutex::tryLockInternal()
 {
 	CHECK_FUNCTION_CONTEXT();
 
-	if (controlBlock_.getProtocol() == Protocol::priorityProtect &&
-			internal::getScheduler().getCurrentThreadControlBlock().getPriority() > controlBlock_.getPriorityCeiling())
+	if (getProtocol() == Protocol::priorityProtect &&
+			internal::getScheduler().getCurrentThreadControlBlock().getPriority() > getPriorityCeiling())
 		return EINVAL;
 
-	if (controlBlock_.getOwner() == nullptr)
+	if (getOwner() == nullptr)
 	{
-		controlBlock_.doLock();
+		doLock();
 		return 0;
 	}
 
 	if (type_ == Type::normal)
 		return EBUSY;
 
-	if (controlBlock_.getOwner() == &internal::getScheduler().getCurrentThreadControlBlock())
+	if (getOwner() == &internal::getScheduler().getCurrentThreadControlBlock())
 	{
 		if (type_ == Type::errorChecking)
 			return EDEADLK;
