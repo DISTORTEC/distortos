@@ -18,6 +18,8 @@
 
 #include "distortos/TickClock.hpp"
 
+#include <climits>
+
 namespace distortos
 {
 
@@ -67,9 +69,9 @@ public:
 			blockedList_{},
 			owner_{},
 			recursiveLocksCount_{},
-			protocol_{protocol},
 			priorityCeiling_{priorityCeiling},
-			type_{type}
+			typeProtocol_{static_cast<uint8_t>(static_cast<uint8_t>(type) << typeShift_ |
+					static_cast<uint8_t>(protocol) << protocolShift_)}
 	{
 
 	}
@@ -150,7 +152,7 @@ public:
 
 	Protocol getProtocol() const
 	{
-		return protocol_;
+		return static_cast<Protocol>((typeProtocol_ >> protocolShift_) & ((1 << protocolWidth_) - 1));
 	}
 
 	/**
@@ -168,7 +170,7 @@ public:
 
 	Type getType() const
 	{
-		return type_;
+		return static_cast<Type>((typeProtocol_ >> typeShift_) & ((1 << typeWidth_) - 1));
 	}
 
 private:
@@ -209,14 +211,23 @@ private:
 	/// number of recursive locks, used when mutex type is Recursive
 	RecursiveLocksCount recursiveLocksCount_;
 
-	/// mutex protocol
-	Protocol protocol_;
-
 	/// priority ceiling of mutex, valid only when protocol_ == Protocol::priorityProtect
 	uint8_t priorityCeiling_;
 
-	/// type of mutex
-	Type type_;
+	/// type of mutex and its protocol
+	uint8_t typeProtocol_;
+
+	/// shift of "type" subfield, bits
+	constexpr static uint8_t typeShift_ {0};
+
+	/// width of "type" subfield, bits
+	constexpr static uint8_t typeWidth_ {CHAR_BIT / 2};
+
+	/// shift of "protocol" subfield, bits
+	constexpr static uint8_t protocolShift_ {typeShift_ + typeWidth_};
+
+	/// width of "protocol" subfield, bits
+	constexpr static uint8_t protocolWidth_ {CHAR_BIT / 2};
 };
 
 }	// namespace internal
