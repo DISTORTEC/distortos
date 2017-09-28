@@ -79,7 +79,7 @@ private:
 | public functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-int MutexControlBlock::block()
+int MutexControlBlock::doBlock()
 {
 	beforeBlock();
 

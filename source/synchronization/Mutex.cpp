@@ -35,7 +35,7 @@ int Mutex::lock()
 	// break the loop when one of following conditions is true:
 	// - lock successful, recursive lock not possible or deadlock detected;
 	// - lock transferred successfully;
-	while ((ret = tryLockInternal()) == EBUSY && (ret = controlBlock_.block()) == EINTR);
+	while ((ret = tryLockInternal()) == EBUSY && (ret = controlBlock_.doBlock()) == EINTR);
 	return ret;
 }
 

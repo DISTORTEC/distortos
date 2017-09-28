@@ -64,7 +64,7 @@ public:
 	 * - values returned by Scheduler::block();
 	 */
 
-	int block();
+	int doBlock();
 
 	/**
 	 * \brief Blocks current thread with timeout, transferring it to blockedList_.
