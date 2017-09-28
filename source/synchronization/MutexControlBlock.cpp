@@ -89,7 +89,7 @@ uint8_t MutexControlBlock::getBoostedPriority() const
 	}
 
 	if (getProtocol() == Protocol::priorityProtect)
-		return priorityCeiling_;
+		return getPriorityCeiling();
 
 	return 0;
 }
