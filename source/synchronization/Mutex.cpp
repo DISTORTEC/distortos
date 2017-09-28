@@ -70,12 +70,12 @@ int Mutex::unlock()
 
 	const InterruptMaskingLock interruptMaskingLock;
 
-	if (type_ != Type::normal)
+	if (getType() != Type::normal)
 	{
 		if (getOwner() != &internal::getScheduler().getCurrentThreadControlBlock())
 			return EPERM;
 
-		if (type_ == Type::recursive && recursiveLocksCount_ != 0)
+		if (getType() == Type::recursive && recursiveLocksCount_ != 0)
 		{
 			--recursiveLocksCount_;
 			return 0;
@@ -105,15 +105,15 @@ int Mutex::tryLockInternal()
 		return 0;
 	}
 
-	if (type_ == Type::normal)
+	if (getType() == Type::normal)
 		return EBUSY;
 
 	if (getOwner() == &internal::getScheduler().getCurrentThreadControlBlock())
 	{
-		if (type_ == Type::errorChecking)
+		if (getType() == Type::errorChecking)
 			return EDEADLK;
 
-		if (type_ == Type::recursive)
+		if (getType() == Type::recursive)
 		{
 			if (recursiveLocksCount_ == std::numeric_limits<decltype(recursiveLocksCount_)>::max())
 				return EAGAIN;

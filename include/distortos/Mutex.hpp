@@ -255,6 +255,15 @@ public:
 private:
 
 	/**
+	 * \return type of mutex
+	 */
+
+	Type getType() const
+	{
+		return type_;
+	}
+
+	/**
 	 * \brief Internal version of tryLock().
 	 *
 	 * Internal version with no interrupt masking and additional code for ErrorChecking type (which is not required for
