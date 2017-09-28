@@ -54,16 +54,18 @@ public:
 	/**
 	 * \brief MutexControlBlock constructor
 	 *
+	 * \param [in] type is the type of mutex
 	 * \param [in] protocol is the mutex protocol
 	 * \param [in] priorityCeiling is the priority ceiling of mutex, ignored when protocol != Protocol::priorityProtect
 	 */
 
-	constexpr MutexControlBlock(const Protocol protocol, const uint8_t priorityCeiling) :
+	constexpr MutexControlBlock(const Type type, const Protocol protocol, const uint8_t priorityCeiling) :
 			MutexListNode{},
 			blockedList_{},
 			owner_{},
 			protocol_{protocol},
-			priorityCeiling_{priorityCeiling}
+			priorityCeiling_{priorityCeiling},
+			type_{type}
 	{
 
 	}
@@ -147,6 +149,15 @@ public:
 		return protocol_;
 	}
 
+	/**
+	 * \return type of mutex
+	 */
+
+	Type getType() const
+	{
+		return type_;
+	}
+
 private:
 
 	/**
@@ -187,6 +198,9 @@ private:
 
 	/// priority ceiling of mutex, valid only when protocol_ == Protocol::priorityProtect
 	uint8_t priorityCeiling_;
+
+	/// type of mutex
+	Type type_;
 };
 
 }	// namespace internal
