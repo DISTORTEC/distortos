@@ -82,7 +82,7 @@ int Mutex::unlock()
 		}
 	}
 
-	controlBlock_.unlockOrTransferLock();
+	controlBlock_.doUnlockOrTransferLock();
 
 	return 0;
 }

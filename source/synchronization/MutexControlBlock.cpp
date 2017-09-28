@@ -111,22 +111,7 @@ void MutexControlBlock::doLock()
 		owner_->updateBoostedPriority();
 }
 
-uint8_t MutexControlBlock::getBoostedPriority() const
-{
-	if (protocol_ == Protocol::priorityInheritance)
-	{
-		if (blockedList_.empty() == true)
-			return 0;
-		return blockedList_.front().getEffectivePriority();
-	}
-
-	if (protocol_ == Protocol::priorityProtect)
-		return priorityCeiling_;
-
-	return 0;
-}
-
-void MutexControlBlock::unlockOrTransferLock()
+void MutexControlBlock::doUnlockOrTransferLock()
 {
 	auto& oldOwner = *owner_;
 
@@ -144,6 +129,21 @@ void MutexControlBlock::unlockOrTransferLock()
 		return;
 
 	owner_->updateBoostedPriority();
+}
+
+uint8_t MutexControlBlock::getBoostedPriority() const
+{
+	if (protocol_ == Protocol::priorityInheritance)
+	{
+		if (blockedList_.empty() == true)
+			return 0;
+		return blockedList_.front().getEffectivePriority();
+	}
+
+	if (protocol_ == Protocol::priorityProtect)
+		return priorityCeiling_;
+
+	return 0;
 }
 
 /*---------------------------------------------------------------------------------------------------------------------+

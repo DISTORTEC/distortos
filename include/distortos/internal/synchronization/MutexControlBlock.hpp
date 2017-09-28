@@ -86,6 +86,16 @@ public:
 	void doLock();
 
 	/**
+	 * \brief Performs unlocking or transfer of lock from current owner to next thread on the list.
+	 *
+	 * Mutex is unlocked if blockedList_ is empty, otherwise the ownership is transfered to the next thread.
+	 *
+	 * \attention mutex must be locked
+	 */
+
+	void doUnlockOrTransferLock();
+
+	/**
 	 * \brief Gets "boosted priority" of the mutex.
 	 *
 	 * "Boosted priority" of the mutex depends on the selected priority protocol:
@@ -125,16 +135,6 @@ public:
 	{
 		return protocol_;
 	}
-
-	/**
-	 * \brief Performs unlocking or transfer of lock from current owner to next thread on the list.
-	 *
-	 * Mutex is unlocked if blockedList_ is empty, otherwise the ownership is transfered to the next thread.
-	 *
-	 * \attention mutex must be locked
-	 */
-
-	void unlockOrTransferLock();
 
 private:
 
