@@ -131,7 +131,7 @@ void MutexControlBlock::unlockOrTransferLock()
 	auto& oldOwner = *owner_;
 
 	if (blockedList_.empty() == false)
-		transferLock();
+		doTransferLock();
 	else
 		unlock();
 
@@ -163,7 +163,7 @@ void MutexControlBlock::beforeBlock() const
 	owner_->updateBoostedPriority(currentThreadControlBlock.getEffectivePriority());
 }
 
-void MutexControlBlock::transferLock()
+void MutexControlBlock::doTransferLock()
 {
 	owner_ = &blockedList_.front();	// pass ownership to the unblocked thread
 	getScheduler().unblock(blockedList_.begin());

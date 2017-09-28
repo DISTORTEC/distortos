@@ -155,7 +155,7 @@ private:
 	 * \attention mutex must be locked and blockedList_ must not be empty
 	 */
 
-	void transferLock();
+	void doTransferLock();
 
 	/**
 	 * \brief Performs actual unlocking of previously locked mutex.
