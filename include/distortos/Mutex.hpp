@@ -38,15 +38,7 @@ public:
 	using RecursiveLocksCount = uint16_t;
 
 	/// type of mutex
-	enum class Type : uint8_t
-	{
-		/// normal mutex, similar to PTHREAD_MUTEX_NORMAL
-		normal,
-		/// mutex with additional error checking, similar to PTHREAD_MUTEX_ERRORCHECK
-		errorChecking,
-		/// recursive mutex, similar to PTHREAD_MUTEX_RECURSIVE
-		recursive
-	};
+	using Type = MutexControlBlock::Type;
 
 	/**
 	 * \brief Gets the maximum number of recursive locks possible before returning EAGAIN
