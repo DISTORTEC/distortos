@@ -68,8 +68,7 @@ public:
 
 	constexpr explicit Mutex(const Type type = Type::normal, const Protocol protocol = Protocol::none,
 			const uint8_t priorityCeiling = {}) :
-					MutexControlBlock{type, protocol, priorityCeiling},
-					recursiveLocksCount_{}
+					MutexControlBlock{type, protocol, priorityCeiling}
 	{
 
 	}
@@ -254,15 +253,6 @@ public:
 private:
 
 	/**
-	 * \return reference to number of recursive locks
-	 */
-
-	RecursiveLocksCount& getRecursiveLocksCount()
-	{
-		return recursiveLocksCount_;
-	}
-
-	/**
 	 * \brief Internal version of tryLock().
 	 *
 	 * Internal version with no interrupt masking and additional code for ErrorChecking type (which is not required for
@@ -278,9 +268,6 @@ private:
 	 */
 
 	int tryLockInternal();
-
-	/// number of recursive locks, used when mutex type is Recursive
-	RecursiveLocksCount recursiveLocksCount_;
 };
 
 }	// namespace distortos

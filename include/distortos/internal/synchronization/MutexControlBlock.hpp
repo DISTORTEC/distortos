@@ -66,6 +66,7 @@ public:
 			MutexListNode{},
 			blockedList_{},
 			owner_{},
+			recursiveLocksCount_{},
 			protocol_{protocol},
 			priorityCeiling_{priorityCeiling},
 			type_{type}
@@ -153,6 +154,15 @@ public:
 	}
 
 	/**
+	 * \return reference to number of recursive locks
+	 */
+
+	RecursiveLocksCount& getRecursiveLocksCount()
+	{
+		return recursiveLocksCount_;
+	}
+
+	/**
 	 * \return type of mutex
 	 */
 
@@ -195,6 +205,9 @@ private:
 
 	/// owner of the mutex
 	ThreadControlBlock* owner_;
+
+	/// number of recursive locks, used when mutex type is Recursive
+	RecursiveLocksCount recursiveLocksCount_;
 
 	/// mutex protocol
 	Protocol protocol_;
