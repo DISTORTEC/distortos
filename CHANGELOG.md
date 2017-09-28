@@ -17,6 +17,10 @@ references to regular C++ API objects (like `distortos::Semaphore`).
 [Trompeloeil](https://github.com/rollbear/trompeloeil) mocking framework. Build system of unit tests uses
 [CMake](https://cmake.org/).
 
+### Changed
+
+- Reduced size of `distortos::Mutex` from 28 bytes to 24 bytes (5 pointers + 4 bytes).
+
 ### Fixed
 
 - Fixed *GDB* pretty-printers of *distortos* queues when using *GCC 7*. New version of *libstdc++v3* from *GCC* changed
