@@ -254,6 +254,15 @@ public:
 private:
 
 	/**
+	 * \return reference to number of recursive locks
+	 */
+
+	RecursiveLocksCount& getRecursiveLocksCount()
+	{
+		return recursiveLocksCount_;
+	}
+
+	/**
 	 * \brief Internal version of tryLock().
 	 *
 	 * Internal version with no interrupt masking and additional code for ErrorChecking type (which is not required for

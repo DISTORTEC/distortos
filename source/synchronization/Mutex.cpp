@@ -75,9 +75,9 @@ int Mutex::unlock()
 		if (getOwner() != &internal::getScheduler().getCurrentThreadControlBlock())
 			return EPERM;
 
-		if (getType() == Type::recursive && recursiveLocksCount_ != 0)
+		if (getType() == Type::recursive && getRecursiveLocksCount() != 0)
 		{
-			--recursiveLocksCount_;
+			--getRecursiveLocksCount();
 			return 0;
 		}
 	}
@@ -115,10 +115,10 @@ int Mutex::tryLockInternal()
 
 		if (getType() == Type::recursive)
 		{
-			if (recursiveLocksCount_ == std::numeric_limits<decltype(recursiveLocksCount_)>::max())
+			if (getRecursiveLocksCount() == getMaxRecursiveLocks())
 				return EAGAIN;
 
-			++recursiveLocksCount_;
+			++getRecursiveLocksCount();
 			return 0;
 		}
 	}
