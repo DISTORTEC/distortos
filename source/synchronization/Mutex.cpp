@@ -35,7 +35,7 @@ int Mutex::lock()
 	// break the loop when one of following conditions is true:
 	// - lock successful, recursive lock not possible or deadlock detected;
 	// - lock transferred successfully;
-	while ((ret = tryLockInternal()) == EBUSY && (ret = controlBlock_.block()) == EINTR);
+	while ((ret = tryLockInternal()) == EBUSY && (ret = doBlock()) == EINTR);
 	return ret;
 }
 
@@ -60,7 +60,7 @@ int Mutex::tryLockUntil(const TickClock::time_point timePoint)
 	// - lock successful, recursive lock not possible or deadlock detected;
 	// - lock transferred successfully;
 	// - timeout expired;
-	while ((ret = tryLockInternal()) == EBUSY && (ret = controlBlock_.blockUntil(timePoint)) == EINTR);
+	while ((ret = tryLockInternal()) == EBUSY && (ret = doBlockUntil(timePoint)) == EINTR);
 	return ret;
 }
 
@@ -70,19 +70,19 @@ int Mutex::unlock()
 
 	const InterruptMaskingLock interruptMaskingLock;
 
-	if (type_ != Type::normal)
+	if (getType() != Type::normal)
 	{
-		if (controlBlock_.getOwner() != &internal::getScheduler().getCurrentThreadControlBlock())
+		if (getOwner() != &internal::getScheduler().getCurrentThreadControlBlock())
 			return EPERM;
 
-		if (type_ == Type::recursive && recursiveLocksCount_ != 0)
+		if (getType() == Type::recursive && getRecursiveLocksCount() != 0)
 		{
-			--recursiveLocksCount_;
+			--getRecursiveLocksCount();
 			return 0;
 		}
 	}
 
-	controlBlock_.unlockOrTransferLock();
+	doUnlockOrTransferLock();
 
 	return 0;
 }
@@ -95,30 +95,30 @@ int Mutex::tryLockInternal()
 {
 	CHECK_FUNCTION_CONTEXT();
 
-	if (controlBlock_.getProtocol() == Protocol::priorityProtect &&
-			internal::getScheduler().getCurrentThreadControlBlock().getPriority() > controlBlock_.getPriorityCeiling())
+	if (getProtocol() == Protocol::priorityProtect &&
+			internal::getScheduler().getCurrentThreadControlBlock().getPriority() > getPriorityCeiling())
 		return EINVAL;
 
-	if (controlBlock_.getOwner() == nullptr)
+	if (getOwner() == nullptr)
 	{
-		controlBlock_.lock();
+		doLock();
 		return 0;
 	}
 
-	if (type_ == Type::normal)
+	if (getType() == Type::normal)
 		return EBUSY;
 
-	if (controlBlock_.getOwner() == &internal::getScheduler().getCurrentThreadControlBlock())
+	if (getOwner() == &internal::getScheduler().getCurrentThreadControlBlock())
 	{
-		if (type_ == Type::errorChecking)
+		if (getType() == Type::errorChecking)
 			return EDEADLK;
 
-		if (type_ == Type::recursive)
+		if (getType() == Type::recursive)
 		{
-			if (recursiveLocksCount_ == std::numeric_limits<decltype(recursiveLocksCount_)>::max())
+			if (getRecursiveLocksCount() == getMaxRecursiveLocks())
 				return EAGAIN;
 
-			++recursiveLocksCount_;
+			++getRecursiveLocksCount();
 			return 0;
 		}
 	}

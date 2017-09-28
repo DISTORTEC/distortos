@@ -2,7 +2,7 @@
  * \file
  * \brief MutexControlBlock class implementation
  *
- * \author Copyright (C) 2014-2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -79,90 +79,95 @@ private:
 | public functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-int MutexControlBlock::block()
-{
-	if (protocol_ == Protocol::priorityInheritance)
-		priorityInheritanceBeforeBlock();
-
-	const PriorityInheritanceMutexControlBlockUnblockFunctor unblockFunctor {*this};
-	return getScheduler().block(blockedList_, ThreadState::blockedOnMutex,
-			protocol_ == Protocol::priorityInheritance ? &unblockFunctor : nullptr);
-}
-
-int MutexControlBlock::blockUntil(const TickClock::time_point timePoint)
-{
-	if (protocol_ == Protocol::priorityInheritance)
-		priorityInheritanceBeforeBlock();
-
-	const PriorityInheritanceMutexControlBlockUnblockFunctor unblockFunctor {*this};
-	return getScheduler().blockUntil(blockedList_, ThreadState::blockedOnMutex, timePoint,
-			protocol_ == Protocol::priorityInheritance ? &unblockFunctor : nullptr);
-}
-
 uint8_t MutexControlBlock::getBoostedPriority() const
 {
-	if (protocol_ == Protocol::priorityInheritance)
+	if (getProtocol() == Protocol::priorityInheritance)
 	{
 		if (blockedList_.empty() == true)
 			return 0;
 		return blockedList_.front().getEffectivePriority();
 	}
 
-	if (protocol_ == Protocol::priorityProtect)
-		return priorityCeiling_;
+	if (getProtocol() == Protocol::priorityProtect)
+		return getPriorityCeiling();
 
 	return 0;
 }
 
-void MutexControlBlock::lock()
+/*---------------------------------------------------------------------------------------------------------------------+
+| protected functions
++---------------------------------------------------------------------------------------------------------------------*/
+
+int MutexControlBlock::doBlock()
+{
+	beforeBlock();
+
+	const PriorityInheritanceMutexControlBlockUnblockFunctor unblockFunctor {*this};
+	return getScheduler().block(blockedList_, ThreadState::blockedOnMutex,
+			getProtocol() == Protocol::priorityInheritance ? &unblockFunctor : nullptr);
+}
+
+int MutexControlBlock::doBlockUntil(const TickClock::time_point timePoint)
+{
+	beforeBlock();
+
+	const PriorityInheritanceMutexControlBlockUnblockFunctor unblockFunctor {*this};
+	return getScheduler().blockUntil(blockedList_, ThreadState::blockedOnMutex, timePoint,
+			getProtocol() == Protocol::priorityInheritance ? &unblockFunctor : nullptr);
+}
+
+void MutexControlBlock::doLock()
 {
 	auto& scheduler = getScheduler();
 	owner_ = &scheduler.getCurrentThreadControlBlock();
 
-	if (protocol_ == Protocol::none)
+	if (getProtocol() == Protocol::none)
 		return;
 
-	owner_->getOwnedProtocolMutexList().push_front(*this);
+	getOwner()->getOwnedProtocolMutexList().push_front(*this);
 
-	if (protocol_ == Protocol::priorityProtect)
-		owner_->updateBoostedPriority();
+	if (getProtocol() == Protocol::priorityProtect)
+		getOwner()->updateBoostedPriority();
 }
 
-void MutexControlBlock::unlockOrTransferLock()
+void MutexControlBlock::doUnlockOrTransferLock()
 {
-	auto& oldOwner = *owner_;
+	auto& oldOwner = *getOwner();
 
 	if (blockedList_.empty() == false)
-		transferLock();
+		doTransferLock();
 	else
-		unlock();
+		doUnlock();
 
-	if (protocol_ == Protocol::none)
+	if (getProtocol() == Protocol::none)
 		return;
 
 	oldOwner.updateBoostedPriority();
 
-	if (owner_ == nullptr)
+	if (getOwner() == nullptr)
 		return;
 
-	owner_->updateBoostedPriority();
+	getOwner()->updateBoostedPriority();
 }
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | private functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-void MutexControlBlock::priorityInheritanceBeforeBlock() const
+void MutexControlBlock::beforeBlock() const
 {
+	if (getProtocol() != Protocol::priorityInheritance)
+		return;
+
 	auto& currentThreadControlBlock = getScheduler().getCurrentThreadControlBlock();
 
 	currentThreadControlBlock.setPriorityInheritanceMutexControlBlock(this);
 
 	// calling thread is not yet on the blocked list, that's why it's effective priority is given explicitly
-	owner_->updateBoostedPriority(currentThreadControlBlock.getEffectivePriority());
+	getOwner()->updateBoostedPriority(currentThreadControlBlock.getEffectivePriority());
 }
 
-void MutexControlBlock::transferLock()
+void MutexControlBlock::doTransferLock()
 {
 	owner_ = &blockedList_.front();	// pass ownership to the unblocked thread
 	getScheduler().unblock(blockedList_.begin());
@@ -170,13 +175,13 @@ void MutexControlBlock::transferLock()
 	if (node.isLinked() == false)
 		return;
 
-	MutexList::splice(owner_->getOwnedProtocolMutexList().begin(), MutexList::iterator{*this});
+	MutexList::splice(getOwner()->getOwnedProtocolMutexList().begin(), MutexList::iterator{*this});
 
-	if (protocol_ == Protocol::priorityInheritance)
-		owner_->setPriorityInheritanceMutexControlBlock(nullptr);
+	if (getProtocol() == Protocol::priorityInheritance)
+		getOwner()->setPriorityInheritanceMutexControlBlock(nullptr);
 }
 
-void MutexControlBlock::unlock()
+void MutexControlBlock::doUnlock()
 {
 	owner_ = nullptr;
 

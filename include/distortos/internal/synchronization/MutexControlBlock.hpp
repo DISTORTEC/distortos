@@ -2,7 +2,7 @@
  * \file
  * \brief MutexControlBlock class header
  *
- * \author Copyright (C) 2014-2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -17,6 +17,8 @@
 #include "distortos/internal/synchronization/MutexListNode.hpp"
 
 #include "distortos/TickClock.hpp"
+
+#include <climits>
 
 namespace distortos
 {
@@ -40,42 +42,19 @@ public:
 		priorityProtect,
 	};
 
-	/**
-	 * \brief MutexControlBlock constructor
-	 *
-	 * \param [in] protocol is the mutex protocol
-	 * \param [in] priorityCeiling is the priority ceiling of mutex, ignored when protocol != Protocol::priorityProtect
-	 */
+	/// type used for counting recursive locks
+	using RecursiveLocksCount = uint16_t;
 
-	constexpr MutexControlBlock(const Protocol protocol, const uint8_t priorityCeiling) :
-			MutexListNode{},
-			blockedList_{},
-			owner_{},
-			protocol_{protocol},
-			priorityCeiling_{priorityCeiling}
+	/// type of mutex
+	enum class Type : uint8_t
 	{
-
-	}
-
-	/**
-	 * \brief Blocks current thread, transferring it to blockedList_.
-	 *
-	 * \return 0 on success, error code otherwise:
-	 * - values returned by Scheduler::block();
-	 */
-
-	int block();
-
-	/**
-	 * \brief Blocks current thread with timeout, transferring it to blockedList_.
-	 *
-	 * \param [in] timePoint is the time point at which the thread will be unblocked (if not already unblocked)
-	 *
-	 * \return 0 on success, error code otherwise:
-	 * - values returned by Scheduler::blockUntil();
-	 */
-
-	int blockUntil(TickClock::time_point timePoint);
+		/// normal mutex, similar to PTHREAD_MUTEX_NORMAL
+		normal,
+		/// mutex with additional error checking, similar to PTHREAD_MUTEX_ERRORCHECK
+		errorChecking,
+		/// recursive mutex, similar to PTHREAD_MUTEX_RECURSIVE
+		recursive
+	};
 
 	/**
 	 * \brief Gets "boosted priority" of the mutex.
@@ -100,6 +79,66 @@ public:
 		return owner_;
 	}
 
+protected:
+
+	/**
+	 * \brief MutexControlBlock constructor
+	 *
+	 * \param [in] type is the type of mutex
+	 * \param [in] protocol is the mutex protocol
+	 * \param [in] priorityCeiling is the priority ceiling of mutex, ignored when protocol != Protocol::priorityProtect
+	 */
+
+	constexpr MutexControlBlock(const Type type, const Protocol protocol, const uint8_t priorityCeiling) :
+			MutexListNode{},
+			blockedList_{},
+			owner_{},
+			recursiveLocksCount_{},
+			priorityCeiling_{priorityCeiling},
+			typeProtocol_{static_cast<uint8_t>(static_cast<uint8_t>(type) << typeShift_ |
+					static_cast<uint8_t>(protocol) << protocolShift_)}
+	{
+
+	}
+
+	/**
+	 * \brief Blocks current thread, transferring it to blockedList_.
+	 *
+	 * \return 0 on success, error code otherwise:
+	 * - values returned by Scheduler::block();
+	 */
+
+	int doBlock();
+
+	/**
+	 * \brief Blocks current thread with timeout, transferring it to blockedList_.
+	 *
+	 * \param [in] timePoint is the time point at which the thread will be unblocked (if not already unblocked)
+	 *
+	 * \return 0 on success, error code otherwise:
+	 * - values returned by Scheduler::blockUntil();
+	 */
+
+	int doBlockUntil(TickClock::time_point timePoint);
+
+	/**
+	 * \brief Performs actual locking of previously unlocked mutex.
+	 *
+	 * \attention mutex must be unlocked
+	 */
+
+	void doLock();
+
+	/**
+	 * \brief Performs unlocking or transfer of lock from current owner to next thread on the list.
+	 *
+	 * Mutex is unlocked if blockedList_ is empty, otherwise the ownership is transfered to the next thread.
+	 *
+	 * \attention mutex must be locked
+	 */
+
+	void doUnlockOrTransferLock();
+
 	/**
 	 * \return priority ceiling of mutex, valid only when protocol_ == Protocol::priorityProtect
 	 */
@@ -115,38 +154,39 @@ public:
 
 	Protocol getProtocol() const
 	{
-		return protocol_;
+		return static_cast<Protocol>((typeProtocol_ >> protocolShift_) & ((1 << protocolWidth_) - 1));
 	}
 
 	/**
-	 * \brief Performs actual locking of previously unlocked mutex.
-	 *
-	 * \attention mutex must be unlocked
+	 * \return reference to number of recursive locks
 	 */
 
-	void lock();
+	RecursiveLocksCount& getRecursiveLocksCount()
+	{
+		return recursiveLocksCount_;
+	}
 
 	/**
-	 * \brief Performs unlocking or transfer of lock from current owner to next thread on the list.
-	 *
-	 * Mutex is unlocked if blockedList_ is empty, otherwise the ownership is transfered to the next thread.
-	 *
-	 * \attention mutex must be locked
+	 * \return type of mutex
 	 */
 
-	void unlockOrTransferLock();
+	Type getType() const
+	{
+		return static_cast<Type>((typeProtocol_ >> typeShift_) & ((1 << typeWidth_) - 1));
+	}
 
 private:
 
 	/**
-	 * \brief Performs action required for priority inheritance before actually blocking on the mutex.
+	 * \brief Performs any actions required before actually blocking on the mutex.
 	 *
-	 * This must be called in block() and blockUntil() before actually blocking of the calling thread.
+	 * In case of PriorityInheritance protocol, priority of owner thread is boosted and this mutex is set as the
+	 * blocking mutex of the calling thread. In all other cases this function does nothing.
 	 *
-	 * \attantion mutex's protocol must be PriorityInheritance
+	 * \attention must be called in block() and blockUntil() before actually blocking of the calling thread.
 	 */
 
-	void priorityInheritanceBeforeBlock() const;
+	void beforeBlock() const;
 
 	/**
 	 * \brief Performs transfer of lock from current owner to next thread on the list.
@@ -154,7 +194,7 @@ private:
 	 * \attention mutex must be locked and blockedList_ must not be empty
 	 */
 
-	void transferLock();
+	void doTransferLock();
 
 	/**
 	 * \brief Performs actual unlocking of previously locked mutex.
@@ -162,7 +202,7 @@ private:
 	 * \attention mutex must be locked and blockedList_ must be empty
 	 */
 
-	void unlock();
+	void doUnlock();
 
 	/// ThreadControlBlock objects blocked on mutex
 	ThreadList blockedList_;
@@ -170,11 +210,26 @@ private:
 	/// owner of the mutex
 	ThreadControlBlock* owner_;
 
-	/// mutex protocol
-	Protocol protocol_;
+	/// number of recursive locks, used when mutex type is Recursive
+	RecursiveLocksCount recursiveLocksCount_;
 
 	/// priority ceiling of mutex, valid only when protocol_ == Protocol::priorityProtect
 	uint8_t priorityCeiling_;
+
+	/// type of mutex and its protocol
+	uint8_t typeProtocol_;
+
+	/// shift of "type" subfield, bits
+	constexpr static uint8_t typeShift_ {0};
+
+	/// width of "type" subfield, bits
+	constexpr static uint8_t typeWidth_ {CHAR_BIT / 2};
+
+	/// shift of "protocol" subfield, bits
+	constexpr static uint8_t protocolShift_ {typeShift_ + typeWidth_};
+
+	/// width of "protocol" subfield, bits
+	constexpr static uint8_t protocolWidth_ {CHAR_BIT / 2};
 };
 
 }	// namespace internal

@@ -27,26 +27,18 @@ namespace distortos
  * \ingroup synchronization
  */
 
-class Mutex
+class Mutex : private internal::MutexControlBlock
 {
 public:
 
 	/// mutex protocols
-	using Protocol = internal::MutexControlBlock::Protocol;
+	using Protocol = MutexControlBlock::Protocol;
 
 	/// type used for counting recursive locks
-	using RecursiveLocksCount = uint16_t;
+	using RecursiveLocksCount = MutexControlBlock::RecursiveLocksCount;
 
 	/// type of mutex
-	enum class Type : uint8_t
-	{
-		/// normal mutex, similar to PTHREAD_MUTEX_NORMAL
-		normal,
-		/// mutex with additional error checking, similar to PTHREAD_MUTEX_ERRORCHECK
-		errorChecking,
-		/// recursive mutex, similar to PTHREAD_MUTEX_RECURSIVE
-		recursive
-	};
+	using Type = MutexControlBlock::Type;
 
 	/**
 	 * \brief Gets the maximum number of recursive locks possible before returning EAGAIN
@@ -76,9 +68,7 @@ public:
 
 	constexpr explicit Mutex(const Type type = Type::normal, const Protocol protocol = Protocol::none,
 			const uint8_t priorityCeiling = {}) :
-			controlBlock_{protocol, priorityCeiling},
-			recursiveLocksCount_{},
-			type_{type}
+					MutexControlBlock{type, protocol, priorityCeiling}
 	{
 
 	}
@@ -278,15 +268,6 @@ private:
 	 */
 
 	int tryLockInternal();
-
-	/// instance of control block
-	internal::MutexControlBlock controlBlock_;
-
-	/// number of recursive locks, used when mutex type is Recursive
-	RecursiveLocksCount recursiveLocksCount_;
-
-	/// type of mutex
-	Type type_;
 };
 
 }	// namespace distortos
