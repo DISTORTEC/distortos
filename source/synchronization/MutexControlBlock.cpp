@@ -124,15 +124,15 @@ void MutexControlBlock::doLock()
 	if (getProtocol() == Protocol::none)
 		return;
 
-	owner_->getOwnedProtocolMutexList().push_front(*this);
+	getOwner()->getOwnedProtocolMutexList().push_front(*this);
 
 	if (getProtocol() == Protocol::priorityProtect)
-		owner_->updateBoostedPriority();
+		getOwner()->updateBoostedPriority();
 }
 
 void MutexControlBlock::doUnlockOrTransferLock()
 {
-	auto& oldOwner = *owner_;
+	auto& oldOwner = *getOwner();
 
 	if (blockedList_.empty() == false)
 		doTransferLock();
@@ -144,10 +144,10 @@ void MutexControlBlock::doUnlockOrTransferLock()
 
 	oldOwner.updateBoostedPriority();
 
-	if (owner_ == nullptr)
+	if (getOwner() == nullptr)
 		return;
 
-	owner_->updateBoostedPriority();
+	getOwner()->updateBoostedPriority();
 }
 
 /*---------------------------------------------------------------------------------------------------------------------+
@@ -164,7 +164,7 @@ void MutexControlBlock::beforeBlock() const
 	currentThreadControlBlock.setPriorityInheritanceMutexControlBlock(this);
 
 	// calling thread is not yet on the blocked list, that's why it's effective priority is given explicitly
-	owner_->updateBoostedPriority(currentThreadControlBlock.getEffectivePriority());
+	getOwner()->updateBoostedPriority(currentThreadControlBlock.getEffectivePriority());
 }
 
 void MutexControlBlock::doTransferLock()
@@ -175,10 +175,10 @@ void MutexControlBlock::doTransferLock()
 	if (node.isLinked() == false)
 		return;
 
-	MutexList::splice(owner_->getOwnedProtocolMutexList().begin(), MutexList::iterator{*this});
+	MutexList::splice(getOwner()->getOwnedProtocolMutexList().begin(), MutexList::iterator{*this});
 
 	if (getProtocol() == Protocol::priorityInheritance)
-		owner_->setPriorityInheritanceMutexControlBlock(nullptr);
+		getOwner()->setPriorityInheritanceMutexControlBlock(nullptr);
 }
 
 void MutexControlBlock::doUnlock()
