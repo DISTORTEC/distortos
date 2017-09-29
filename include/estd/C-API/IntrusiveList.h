@@ -1,6 +1,6 @@
 /**
  * \file
- * \brief C-API for distortos::internal::ThreadList
+ * \brief C-API for estd::IntrusiveList
  *
  * \author Copyright (C) 2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
@@ -9,8 +9,8 @@
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#ifndef INCLUDE_DISTORTOS_C_API_INTERNAL_THREADLIST_H_
-#define INCLUDE_DISTORTOS_C_API_INTERNAL_THREADLIST_H_
+#ifndef INCLUDE_ESTD_C_API_INTRUSIVELIST_H_
+#define INCLUDE_ESTD_C_API_INTRUSIVELIST_H_
 
 #ifdef __cplusplus
 extern "C"
@@ -22,12 +22,12 @@ extern "C"
 +---------------------------------------------------------------------------------------------------------------------*/
 
 /**
- * \brief C-API equivalent of distortos::internal::ThreadList
+ * \brief C-API equivalent of estd::IntrusiveList
  *
- * \sa distortos::internal::ThreadList
+ * \sa estd::IntrusiveList
  */
 
-struct distortos_internal_ThreadList
+struct estd_IntrusiveList
 {
 	/** reference to next node on the list */
 	const void* nextNode;
@@ -41,17 +41,17 @@ struct distortos_internal_ThreadList
 +---------------------------------------------------------------------------------------------------------------------*/
 
 /**
- * \brief Initializer for distortos_internal_ThreadList
+ * \brief Initializer for estd_IntrusiveList
  *
- * \sa distortos::internal::ThreadList::ThreadList()
+ * \sa estd::IntrusiveList::IntrusiveList()
  *
  * \param [in] self is an equivalent of `this` hidden argument
  */
 
-#define DISTORTOS_INTERNAL_THREADLIST_INITIALIZER(self)	{&(self), &(self)}
+#define ESTD_INTRUSIVELIST_INITIALIZER(self)	{&(self), &(self)}
 
 #ifdef __cplusplus
 }	/* extern "C" */
 #endif	/* def __cplusplus */
 
-#endif	/* INCLUDE_DISTORTOS_C_API_INTERNAL_THREADLIST_H_ */
+#endif	/* INCLUDE_ESTD_C_API_INTRUSIVELIST_H_ */

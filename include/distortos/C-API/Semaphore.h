@@ -12,7 +12,7 @@
 #ifndef INCLUDE_DISTORTOS_C_API_SEMAPHORE_H_
 #define INCLUDE_DISTORTOS_C_API_SEMAPHORE_H_
 
-#include "distortos/C-API/internal/ThreadList.h"
+#include "estd/C-API/IntrusiveList.h"
 
 #include <limits.h>
 #include <stdint.h>
@@ -42,7 +42,7 @@ extern "C"
 struct distortos_Semaphore
 {
 	/** ThreadControlBlock objects blocked on this semaphore */
-	struct distortos_internal_ThreadList blockedList;
+	struct estd_IntrusiveList blockedList;
 
 	/** internal value of the semaphore */
 	unsigned int value;
@@ -67,8 +67,7 @@ struct distortos_Semaphore
  */
 
 #define DISTORTOS_SEMAPHORE_INITIALIZER(self, value, maxValue) \
-		{DISTORTOS_INTERNAL_THREADLIST_INITIALIZER((self).blockedList), (value) < (maxValue) ? (value) : (maxValue), \
-				(maxValue)}
+		{ESTD_INTRUSIVELIST_INITIALIZER((self).blockedList), (value) < (maxValue) ? (value) : (maxValue), (maxValue)}
 
 /**
  * \brief C-API equivalent of distortos::Semaphore's constructor
