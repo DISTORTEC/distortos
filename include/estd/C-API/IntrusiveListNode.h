@@ -1,6 +1,6 @@
 /**
  * \file
- * \brief C-API for estd::IntrusiveList
+ * \brief C-API for estd::IntrusiveListNode
  *
  * \author Copyright (C) 2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
@@ -9,10 +9,8 @@
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#ifndef INCLUDE_ESTD_C_API_INTRUSIVELIST_H_
-#define INCLUDE_ESTD_C_API_INTRUSIVELIST_H_
-
-#include "estd/C-API/IntrusiveListNode.h"
+#ifndef INCLUDE_ESTD_C_API_INTRUSIVELISTNODE_H_
+#define INCLUDE_ESTD_C_API_INTRUSIVELISTNODE_H_
 
 #ifdef __cplusplus
 extern "C"
@@ -24,15 +22,18 @@ extern "C"
 +---------------------------------------------------------------------------------------------------------------------*/
 
 /**
- * \brief C-API equivalent of estd::IntrusiveList
+ * \brief C-API equivalent of estd::IntrusiveListNode
  *
- * \sa estd::IntrusiveList
+ * \sa estd::IntrusiveListNode
  */
 
-struct estd_IntrusiveList
+struct estd_IntrusiveListNode
 {
-	/** root node of the intrusive list */
-	struct estd_IntrusiveListNode rootNode;
+	/** reference to next node on the list */
+	const void* nextNode;
+
+	/** reference to previous node on the list */
+	const void* previousNode;
 };
 
 /*---------------------------------------------------------------------------------------------------------------------+
@@ -40,17 +41,17 @@ struct estd_IntrusiveList
 +---------------------------------------------------------------------------------------------------------------------*/
 
 /**
- * \brief Initializer for estd_IntrusiveList
+ * \brief Initializer for estd_IntrusiveListNode
  *
- * \sa estd::IntrusiveList::IntrusiveList()
+ * \sa estd::IntrusiveListNode::IntrusiveListNode()
  *
  * \param [in] self is an equivalent of `this` hidden argument
  */
 
-#define ESTD_INTRUSIVELIST_INITIALIZER(self)	{ESTD_INTRUSIVELISTNODE_INITIALIZER((self).rootNode)}
+#define ESTD_INTRUSIVELISTNODE_INITIALIZER(self)	{&(self), &(self)}
 
 #ifdef __cplusplus
 }	/* extern "C" */
 #endif	/* def __cplusplus */
 
-#endif	/* INCLUDE_ESTD_C_API_INTRUSIVELIST_H_ */
+#endif	/* INCLUDE_ESTD_C_API_INTRUSIVELISTNODE_H_ */
