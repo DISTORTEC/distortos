@@ -7,6 +7,17 @@
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #
 
+add_executable(C-API-Semaphore-compile-link-test
+		C-API-Semaphore-compile-link-test.c
+		${DISTORTOS_PATH}/source/C-API/C-API-Semaphore.cpp
+		${MAIN_CPP})
+		
+target_compile_definitions(C-API-Semaphore-compile-link-test PUBLIC DISTORTOS_UNIT_TEST)
+target_include_directories(C-API-Semaphore-compile-link-test BEFORE PUBLIC
+		${INCLUDE_MOCKS}/distortosConfiguration.h
+		${INCLUDE_MOCKS}/fromCApi.hpp
+		${INCLUDE_MOCKS}/Semaphore.hpp)
+
 add_executable(C-API-Semaphore-unit-test-0
 		C-API-Semaphore-unit-test-0.cpp
 		${DISTORTOS_PATH}/source/C-API/C-API-Semaphore.cpp

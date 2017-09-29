@@ -20,6 +20,9 @@ set(MAIN_CPP ${CMAKE_SOURCE_DIR}/main.cpp)
 # include path with mocks
 set(INCLUDE_MOCKS ${CMAKE_SOURCE_DIR}/include-mocks)
 
+# use C99 in all cases
+set(CMAKE_C_STANDARD 99)
+
 # use C++14 in all cases
 set(CMAKE_CXX_STANDARD 14)
 

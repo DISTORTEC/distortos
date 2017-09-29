@@ -123,7 +123,7 @@ unitTest() {
 	mkdir output
 	cd output
 	cmake -G Ninja ../unit-test
-	ninja run
+	ninja all run
 }
 
 # "script" phase
