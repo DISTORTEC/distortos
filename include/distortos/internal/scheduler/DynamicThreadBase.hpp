@@ -220,6 +220,14 @@ private:
 
 	static void run(Thread& thread);
 
+#ifdef CONFIG_THREAD_EXIT_ENABLE
+	/**
+	 * \brief Terminates this thread.
+	 */
+	// [[noreturn]] GCC cannot handle [[noreturn]] virtual functions
+	virtual void exit() override;
+#endif
+
 #if CONFIG_SIGNALS_ENABLE == 1
 
 	/// internal DynamicSignalsReceiver object

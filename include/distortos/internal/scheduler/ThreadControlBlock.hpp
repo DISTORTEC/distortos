@@ -28,6 +28,7 @@ namespace distortos
 {
 
 class SignalsReceiver;
+class ThreadCommon;
 
 namespace internal
 {
@@ -78,7 +79,7 @@ public:
 	 */
 
 	ThreadControlBlock(Stack&& stack, uint8_t priority, SchedulingPolicy schedulingPolicy,
-			ThreadGroupControlBlock* threadGroupControlBlock, SignalsReceiver* signalsReceiver, Thread& owner);
+			ThreadGroupControlBlock* threadGroupControlBlock, SignalsReceiver* signalsReceiver, ThreadCommon& owner);
 
 	/**
 	 * \brief ThreadControlBlock's destructor
@@ -137,7 +138,7 @@ public:
 	 * \return reference to Thread object that owns this ThreadControlBlock
 	 */
 
-	Thread& getOwner() const
+	ThreadCommon& getOwner() const
 	{
 		return owner_;
 	}
@@ -314,7 +315,7 @@ private:
 	Stack stack_;
 
 	/// reference to Thread object that owns this ThreadControlBlock
-	Thread& owner_;
+	ThreadCommon & owner_;
 
 	/// list of mutexes (mutex control blocks) with enabled priority protocol owned by this thread
 	MutexList ownedProtocolMutexList_;

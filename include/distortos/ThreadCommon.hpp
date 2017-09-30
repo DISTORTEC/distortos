@@ -20,6 +20,14 @@
 namespace distortos
 {
 
+#ifdef CONFIG_THREAD_EXIT_ENABLE
+namespace ThisThread
+{
+	// [[noreturn]] GCC cannot handle [[noreturn]] virtual functions
+	void exit();
+}
+#endif
+
 /**
  * \brief ThreadCommon class implements common functionality of threads
  *
@@ -243,8 +251,24 @@ protected:
 
 	static void terminationHook(Thread& thread);
 
+#ifdef CONFIG_THREAD_EXIT_ENABLE
+	// common exit function
+	[[noreturn]]
+	void	exit(void(*const pretermhook)(Thread&), void(&termhook)(Thread&));
 private:
-
+	/**
+	 * \brief Terminates this thread.
+	 * This function must not be called by a thread not being represented by
+	 * this object.\n
+	 * Use ThisThread::exit instead.
+	 *
+	 * \warning This function must not be called from interrupt context!
+	 */
+	[[noreturn]]
+	virtual void exit();
+	friend void ThisThread::exit();
+#endif
+private:
 	/// internal ThreadControlBlock object
 	internal::ThreadControlBlock threadControlBlock_;
 

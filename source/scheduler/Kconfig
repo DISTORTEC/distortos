@@ -41,6 +41,15 @@ config SIGNALS_ENABLE
 		When this options is not selected, these namespaces, functions and
 		classes are not available at all.
 
+config THREAD_EXIT_ENABLE
+	bool "Enable ThisThread::exit()"
+	default n
+	help
+		Enables exit() function in ThisThread.
+
+		When this options is not selected, a thread has to
+		simply return from its function to exit.
+
 config THREAD_DETACH_ENABLE
 	bool "Enable support for thread detachment"
 	default n

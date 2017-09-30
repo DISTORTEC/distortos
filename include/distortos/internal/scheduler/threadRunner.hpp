@@ -12,6 +12,15 @@
 #ifndef INCLUDE_DISTORTOS_INTERNAL_SCHEDULER_THREADRUNNER_HPP_
 #define INCLUDE_DISTORTOS_INTERNAL_SCHEDULER_THREADRUNNER_HPP_
 
+#include <distortos/distortosConfiguration.h>
+
+// GCC cannot handle [[noreturn]] virtual functions
+#if defined(CONFIG_THREAD_EXIT_ENABLE) && defined(__GNUC__) && !defined(__clang__)
+#define	attrib_noreturn
+#else
+#define	attrib_noreturn __attribute__ ((noreturn))
+#endif // defined(CONFIG_THREAD_EXIT_ENABLE) && defined(__GNUC__) && !defined(__clang__)
+
 namespace distortos
 {
 
@@ -39,7 +48,7 @@ namespace internal
  */
 
 void threadRunner(Thread& thread, void (& run)(Thread&), void (* preTerminationHook)(Thread&),
-		void (& terminationHook)(Thread&)) __attribute__ ((noreturn));
+		void (& terminationHook)(Thread&)) attrib_noreturn;
 
 }	// namespace internal
 

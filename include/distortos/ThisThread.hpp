@@ -198,6 +198,16 @@ int sleepUntil(const std::chrono::time_point<TickClock, Duration> timePoint)
 
 void yield();
 
+#ifdef CONFIG_THREAD_EXIT_ENABLE
+/**
+ * \brief Exits the current thread.
+ *
+ * \warning This function must not be called from interrupt context!
+ */
+// [[noreturn]] GCC cannot handle [[noreturn]] virtual functions
+void	exit();
+#endif
+
 /// \}
 
 }	// namespace ThisThread

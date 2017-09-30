@@ -51,6 +51,13 @@ int DynamicThreadBase::detach()
 
 #endif	// CONFIG_THREAD_DETACH_ENABLE == 1
 
+#ifdef CONFIG_THREAD_EXIT_ENABLE
+void	DynamicThreadBase::exit()
+{
+	ThreadCommon::exit(DynamicThreadBase::preTerminationHook, DynamicThreadBase::terminationHook);
+}
+#endif
+
 /*---------------------------------------------------------------------------------------------------------------------+
 | protected static functions
 +---------------------------------------------------------------------------------------------------------------------*/

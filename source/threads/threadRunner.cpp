@@ -16,6 +16,9 @@
 #include "distortos/internal/scheduler/Scheduler.hpp"
 
 #include "distortos/InterruptMaskingLock.hpp"
+#ifdef CONFIG_THREAD_EXIT_ENABLE
+#include <distortos/ThisThread.hpp>
+#endif
 
 namespace distortos
 {
@@ -31,7 +34,11 @@ void threadRunner(Thread& thread, void (& run)(Thread&), void (* preTerminationH
 		void (& terminationHook)(Thread&))
 {
 	run(thread);
-
+#ifdef CONFIG_THREAD_EXIT_ENABLE
+	(void)preTerminationHook;
+	(void)terminationHook;
+	ThisThread::exit();
+#else
 	{
 		const InterruptMaskingLock interruptMaskingLock;
 
@@ -44,6 +51,7 @@ void threadRunner(Thread& thread, void (& run)(Thread&), void (* preTerminationH
 	internal::forceContextSwitch();
 
 	while (1);
+#endif
 }
 
 }	// namespace internal
