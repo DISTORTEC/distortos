@@ -168,7 +168,7 @@ bool testRunner(const std::array<int, totalThreads>& delays, const std::array<Te
 }
 
 /**
- * \brief Test phase of PriorityInheritance protocol.
+ * \brief Test phase of priorityInheritance protocol.
  *
  * \return true if the test phase succeeded, false otherwise
  */
@@ -238,7 +238,7 @@ bool priorityInheritancePhase()
 }
 
 /**
- * \brief Test phase of PriorityProtect protocol.
+ * \brief Test phase of priorityProtect protocol.
  *
  * \return true if the test phase succeeded, false otherwise
  */

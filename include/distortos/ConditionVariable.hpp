@@ -93,7 +93,7 @@ public:
 	 * \param [in] mutex is a reference to mutex which must be owned by calling thread
 	 *
 	 * \return 0 if the wait was completed successfully, error code otherwise:
-	 * - EPERM - the mutex type is ErrorChecking or Recursive, and the current thread does not own the mutex;
+	 * - EPERM - the mutex type is errorChecking or recursive, and the current thread does not own the mutex;
 	 */
 
 	int wait(Mutex& mutex);
@@ -114,7 +114,7 @@ public:
 	 * \param [in] predicate is the predicate that will be checked
 	 *
 	 * \return 0 if the wait was completed successfully, error code otherwise:
-	 * - EPERM - the mutex type is ErrorChecking or Recursive, and the current thread does not own the mutex;
+	 * - EPERM - the mutex type is errorChecking or recursive, and the current thread does not own the mutex;
 	 */
 
 	template<typename Predicate>
@@ -138,7 +138,7 @@ public:
 	 * \param [in] duration is the duration after which the wait for notification will be terminated
 	 *
 	 * \return 0 if the wait was completed successfully, error code otherwise:
-	 * - EPERM - the mutex type is ErrorChecking or Recursive, and the current thread does not own the mutex;
+	 * - EPERM - the mutex type is errorChecking or recursive, and the current thread does not own the mutex;
 	 * - ETIMEDOUT - no notification was received before the specified timeout expired;
 	 */
 
@@ -163,7 +163,7 @@ public:
 	 * \param [in] duration is the duration after which the wait for notification will be terminated
 	 *
 	 * \return 0 if the wait was completed successfully, error code otherwise:
-	 * - EPERM - the mutex type is ErrorChecking or Recursive, and the current thread does not own the mutex;
+	 * - EPERM - the mutex type is errorChecking or recursive, and the current thread does not own the mutex;
 	 * - ETIMEDOUT - no notification was received before the specified timeout expired;
 	 */
 
@@ -195,7 +195,7 @@ public:
 	 * \param [in] predicate is the predicate that will be checked
 	 *
 	 * \return 0 if the wait was completed successfully, error code otherwise:
-	 * - EPERM - the mutex type is ErrorChecking or Recursive, and the current thread does not own the mutex;
+	 * - EPERM - the mutex type is errorChecking or recursive, and the current thread does not own the mutex;
 	 * - ETIMEDOUT - no notification was received before the specified timeout expired;
 	 */
 
@@ -223,7 +223,7 @@ public:
 	 * \param [in] timePoint is the time point at which the wait for notification will be terminated
 	 *
 	 * \return 0 if the wait was completed successfully, error code otherwise:
-	 * - EPERM - the mutex type is ErrorChecking or Recursive, and the current thread does not own the mutex;
+	 * - EPERM - the mutex type is errorChecking or recursive, and the current thread does not own the mutex;
 	 * - ETIMEDOUT - no notification was received before the specified timeout expired;
 	 */
 
@@ -247,7 +247,7 @@ public:
 	 * \param [in] timePoint is the time point at which the wait for notification will be terminated
 	 *
 	 * \return 0 if the wait was completed successfully, error code otherwise:
-	 * - EPERM - the mutex type is ErrorChecking or Recursive, and the current thread does not own the mutex;
+	 * - EPERM - the mutex type is errorChecking or recursive, and the current thread does not own the mutex;
 	 * - ETIMEDOUT - no notification was received before the specified timeout expired;
 	 */
 
@@ -278,7 +278,7 @@ public:
 	 * \param [in] predicate is the predicate that will be checked
 	 *
 	 * \return 0 if the wait was completed successfully, error code otherwise:
-	 * - EPERM - the mutex type is ErrorChecking or Recursive, and the current thread does not own the mutex;
+	 * - EPERM - the mutex type is errorChecking or recursive, and the current thread does not own the mutex;
 	 * - ETIMEDOUT - no notification was received before the specified timeout expired;
 	 */
 

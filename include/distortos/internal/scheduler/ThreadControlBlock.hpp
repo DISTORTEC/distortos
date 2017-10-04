@@ -226,7 +226,7 @@ public:
 	void setPriority(uint8_t priority, bool alwaysBehind = {});
 
 	/**
-	 * \param [in] priorityInheritanceMutexControlBlock is a pointer to MutexControlBlock (with PriorityInheritance
+	 * \param [in] priorityInheritanceMutexControlBlock is a pointer to MutexControlBlock (with priorityInheritance
 	 * protocol) that blocks this thread
 	 */
 
@@ -319,7 +319,7 @@ private:
 	/// list of mutexes (mutex control blocks) with enabled priority protocol owned by this thread
 	MutexList ownedProtocolMutexList_;
 
-	/// pointer to MutexControlBlock (with PriorityInheritance protocol) that blocks this thread
+	/// pointer to MutexControlBlock (with priorityInheritance protocol) that blocks this thread
 	const MutexControlBlock* priorityInheritanceMutexControlBlock_;
 
 	/// pointer to list that has this object

@@ -2,7 +2,7 @@
  * \file
  * \brief MutexPriorityProtectOperationsTestCase class header
  *
- * \author Copyright (C) 2014-2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -21,7 +21,7 @@ namespace test
 {
 
 /**
- * \brief Tests operations in scenarios specific for PriorityProtect protocol of mutex.
+ * \brief Tests operations in scenarios specific for priorityProtect protocol of mutex.
  *
  * Tests detection of lock attempts (lock(), tryLock(), tryLockFor() and tryLockUntil()) from thread with priority above
  * priority ceiling and changes of priority resulting from locking mutexes with this protocol.

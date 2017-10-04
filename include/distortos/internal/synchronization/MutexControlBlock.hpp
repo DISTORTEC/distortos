@@ -60,10 +60,10 @@ public:
 	 * \brief Gets "boosted priority" of the mutex.
 	 *
 	 * "Boosted priority" of the mutex depends on the selected priority protocol:
-	 * - None - 0,
-	 * - PriorityInheritance - effective priority of the highest priority thread blocked on this mutex or 0 if no
+	 * - none - 0,
+	 * - priorityInheritance - effective priority of the highest priority thread blocked on this mutex or 0 if no
 	 * threads are blocked,
-	 * - PriorityProtect - priority ceiling.
+	 * - priorityProtect - priority ceiling.
 	 *
 	 * \return "boosted priority" of the mutex
 	 */
@@ -192,7 +192,7 @@ private:
 	/**
 	 * \brief Performs any actions required before actually blocking on the mutex.
 	 *
-	 * In case of PriorityInheritance protocol, priority of owner thread is boosted and this mutex is set as the
+	 * In case of priorityInheritance protocol, priority of owner thread is boosted and this mutex is set as the
 	 * blocking mutex of the calling thread. In all other cases this function does nothing.
 	 *
 	 * \attention must be called in block() and blockUntil() before actually blocking of the calling thread.
@@ -222,7 +222,7 @@ private:
 	/// owner of the mutex
 	ThreadControlBlock* owner_;
 
-	/// number of recursive locks, used when mutex type is Recursive
+	/// number of recursive locks, used when mutex type is recursive
 	RecursiveLocksCount recursiveLocksCount_;
 
 	/// priority ceiling of mutex, valid only when protocol_ == Protocol::priorityProtect

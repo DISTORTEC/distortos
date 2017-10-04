@@ -2,7 +2,7 @@
  * \file
  * \brief MutexPriorityProtocolTestCase class header
  *
- * \author Copyright (C) 2014-2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -21,7 +21,7 @@ namespace test
 {
 
 /**
- * \brief Executes typical "priority inversion" scenario using mutexes with PriorityInheritance or PriorityProtect
+ * \brief Executes typical "priority inversion" scenario using mutexes with priorityInheritance or priorityProtect
  * protocol.
  *
  * 5 threads are executed and they are expected to execute and preempt each other in exact sequence.
@@ -41,12 +41,12 @@ namespace test
  * - light orange background - thread holds two mutexes
  * - dark orange background - thread holds three mutexes
  * - red background - thread holds four mutexes
- * - arrows - priority changes due to operation of PriorityInheritance or PriorityProtect protocol
+ * - arrows - priority changes due to operation of priorityInheritance or priorityProtect protocol
  *
  * Vertical scale - priority, T1 - lowest, T5 - highest
  * Horizontal scale - time
  *
- * \image html without-PriorityInheritance-or-PriorityProtect.png "Without \"PriorityInheritance\" or \"PriorityProtect\""
+ * \image html without-priorityInheritance-or-priorityProtect.png "Without \"priorityInheritance\" or \"priorityProtect\""
  *
  * This scenario demonstrates typical priority inversion problem - highest priority thread T5 is delayed because lower
  * priority thread T4 executes and doesn't allow other lower priority threads (which hold mutex required by thread T5)
@@ -88,9 +88,9 @@ namespace test
  * - at t29 thread T2 terminates and allows thread T1 to continue
  * - at t30 thread T1 terminates
  *
- * \image html with-PriorityInheritance.png "With \"PriorityInheritance\""
+ * \image html with-priorityInheritance.png "With \"priorityInheritance\""
  *
- * This is the same situation as in previous scenario, but now all mutexes have PriorityInheritance protocol enabled.
+ * This is the same situation as in previous scenario, but now all mutexes have priorityInheritance protocol enabled.
  * Changes of priority due to this protocol prevent the delay of thread T5 caused by thread T4. This is what happens in
  * each marked time point:
  * - at t0 thread T1 starts executing
@@ -138,9 +138,9 @@ namespace test
  * - at t29 thread T2 terminates and allows thread T1 to continue
  * - at t30 thread T1 terminates
  *
- * \image html with-PriorityProtect.png "With \"PriorityProtect\""
+ * \image html with-priorityProtect.png "With \"priorityProtect\""
  *
- * This is the same situation as in previous scenario, but now all mutexes have PriorityProtect protocol enabled.
+ * This is the same situation as in previous scenario, but now all mutexes have priorityProtect protocol enabled.
  * Changes of priority due to this protocol allow highest priority thread T5 to acquire ownership of the mutex much
  * sooner than previously. Additionally the most important critical sections (where mutex with high priority ceiling is
  * used) are as short as possible. This scenario has 9 context switches, which is much less than 22 in both previous

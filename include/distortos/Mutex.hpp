@@ -121,8 +121,8 @@ public:
 	 * \return 0 if the caller successfully locked the mutex, error code otherwise:
 	 * - EAGAIN - the mutex could not be acquired because the maximum number of recursive locks for mutex has been
 	 * exceeded;
-	 * - EDEADLK - the mutex type is ErrorChecking and the current thread already owns the mutex;
-	 * - EINVAL - the mutex was created with the protocol attribute having the value PriorityProtect and the calling
+	 * - EDEADLK - the mutex type is errorChecking and the current thread already owns the mutex;
+	 * - EINVAL - the mutex was created with the protocol attribute having the value priorityProtect and the calling
 	 * thread's priority is higher than the mutex's current priority ceiling;
 	 */
 
@@ -144,7 +144,7 @@ public:
 	 * - EAGAIN - the mutex could not be acquired because the maximum number of recursive locks for mutex has been
 	 * exceeded;
 	 * - EBUSY - the mutex could not be acquired because it was already locked;
-	 * - EINVAL - the mutex was created with the protocol attribute having the value PriorityProtect and the calling
+	 * - EINVAL - the mutex was created with the protocol attribute having the value priorityProtect and the calling
 	 * thread's priority is higher than the mutex's current priority ceiling;
 	 */
 
@@ -171,8 +171,8 @@ public:
 	 * \return 0 if the caller successfully locked the mutex, error code otherwise:
 	 * - EAGAIN - the mutex could not be acquired because the maximum number of recursive locks for mutex has been
 	 * exceeded;
-	 * - EDEADLK - the mutex type is ErrorChecking and the current thread already owns the mutex;
-	 * - EINVAL - the mutex was created with the protocol attribute having the value PriorityProtect and the calling
+	 * - EDEADLK - the mutex type is errorChecking and the current thread already owns the mutex;
+	 * - EINVAL - the mutex was created with the protocol attribute having the value priorityProtect and the calling
 	 * thread's priority is higher than the mutex's current priority ceiling;
 	 * - ETIMEDOUT - the mutex could not be locked before the specified timeout expired;
 	 */
@@ -194,8 +194,8 @@ public:
 	 * \return 0 if the caller successfully locked the mutex, error code otherwise:
 	 * - EAGAIN - the mutex could not be acquired because the maximum number of recursive locks for mutex has been
 	 * exceeded;
-	 * - EDEADLK - the mutex type is ErrorChecking and the current thread already owns the mutex;
-	 * - EINVAL - the mutex was created with the protocol attribute having the value PriorityProtect and the calling
+	 * - EDEADLK - the mutex type is errorChecking and the current thread already owns the mutex;
+	 * - EINVAL - the mutex was created with the protocol attribute having the value priorityProtect and the calling
 	 * thread's priority is higher than the mutex's current priority ceiling;
 	 * - ETIMEDOUT - the mutex could not be locked before the specified timeout expired;
 	 */
@@ -228,8 +228,8 @@ public:
 	 * \return 0 if the caller successfully locked the mutex, error code otherwise:
 	 * - EAGAIN - the mutex could not be acquired because the maximum number of recursive locks for mutex has been
 	 * exceeded;
-	 * - EDEADLK - the mutex type is ErrorChecking and the current thread already owns the mutex;
-	 * - EINVAL - the mutex was created with the protocol attribute having the value PriorityProtect and the calling
+	 * - EDEADLK - the mutex type is errorChecking and the current thread already owns the mutex;
+	 * - EINVAL - the mutex was created with the protocol attribute having the value priorityProtect and the calling
 	 * thread's priority is higher than the mutex's current priority ceiling;
 	 * - ETIMEDOUT - the mutex could not be locked before the specified timeout expired;
 	 */
@@ -250,8 +250,8 @@ public:
 	 * \return 0 if the caller successfully locked the mutex, error code otherwise:
 	 * - EAGAIN - the mutex could not be acquired because the maximum number of recursive locks for mutex has been
 	 * exceeded;
-	 * - EDEADLK - the mutex type is ErrorChecking and the current thread already owns the mutex;
-	 * - EINVAL - the mutex was created with the protocol attribute having the value PriorityProtect and the calling
+	 * - EDEADLK - the mutex type is errorChecking and the current thread already owns the mutex;
+	 * - EINVAL - the mutex was created with the protocol attribute having the value priorityProtect and the calling
 	 * thread's priority is higher than the mutex's current priority ceiling;
 	 * - ETIMEDOUT - the mutex could not be locked before the specified timeout expired;
 	 */
@@ -277,7 +277,7 @@ public:
 	 * \warning This function must not be called from interrupt context!
 	 *
 	 * \return 0 if the caller successfully unlocked the mutex, error code otherwise:
-	 * - EPERM - the mutex type is ErrorChecking or Recursive, and the current thread does not own the mutex;
+	 * - EPERM - the mutex type is errorChecking or recursive, and the current thread does not own the mutex;
 	 */
 
 	int unlock();
@@ -292,15 +292,15 @@ private:
 	/**
 	 * \brief Internal version of tryLock().
 	 *
-	 * Internal version with no interrupt masking and additional code for ErrorChecking type (which is not required for
+	 * Internal version with no interrupt masking and additional code for errorChecking type (which is not required for
 	 * tryLock()).
 	 *
 	 * \return 0 if the caller successfully locked the mutex, error code otherwise:
 	 * - EAGAIN - the mutex could not be acquired because the maximum number of recursive locks for mutex has been
 	 * exceeded;
 	 * - EBUSY - the mutex could not be acquired because it was already locked;
-	 * - EDEADLK - the mutex type is ErrorChecking and the current thread already owns the mutex;
-	 * - EINVAL - the mutex was created with the protocol attribute having the value PriorityProtect and the calling
+	 * - EDEADLK - the mutex type is errorChecking and the current thread already owns the mutex;
+	 * - EINVAL - the mutex was created with the protocol attribute having the value priorityProtect and the calling
 	 * thread's priority is higher than the mutex's current priority ceiling;
 	 */
 

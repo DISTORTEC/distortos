@@ -2,7 +2,7 @@
  * \file
  * \brief mutexTestUnlockFromWrongThread() header
  *
- * \author Copyright (C) 2014 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -21,11 +21,11 @@ namespace test
 {
 
 /**
- * \brief Tests unlocking of ErrorChecking or Recursive mutex from a wrong thread.
+ * \brief Tests unlocking of errorChecking or recursive mutex from a wrong thread.
  *
  * Such operation must fail with EPERM immediately.
  *
- * \param [in] mutex is a reference to mutex that will checked, must be ErrorChecking or Recursive type!
+ * \param [in] mutex is a reference to mutex that will checked, must be errorChecking or recursive type!
  *
  * \return true if test succeeded, false otherwise
  */

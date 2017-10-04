@@ -186,7 +186,7 @@ constexpr size_t testThreadStackSize {512};
 +---------------------------------------------------------------------------------------------------------------------*/
 
 /**
- * \brief Tests basic priority inheritance mechanism of mutexes with PriorityInheritance protocol.
+ * \brief Tests basic priority inheritance mechanism of mutexes with priorityInheritance protocol.
  *
  * 8 threads are created and "connected" into a tree-like hierarchy using mutexes. This structure is presented on the
  * diagram below. Mutexes are marked with "Mx" boxes and threads with "Tx" ellipses. The higher the thread is drawn, the

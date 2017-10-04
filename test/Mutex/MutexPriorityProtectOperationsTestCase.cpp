@@ -2,7 +2,7 @@
  * \file
  * \brief MutexPriorityProtectOperationsTestCase class implementation
  *
- * \author Copyright (C) 2014-2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -96,7 +96,7 @@ bool testInvalidLockAttempt(const Mutex::Type type)
 }
 
 /**
- * \brief Tests changes of priority resulting from locking mutexes with PriorityProtect protocol.
+ * \brief Tests changes of priority resulting from locking mutexes with priorityProtect protocol.
  *
  * \param [in] type is the Mutex::Type that will be tested
  *

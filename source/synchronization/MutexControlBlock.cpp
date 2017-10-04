@@ -28,7 +28,7 @@ namespace
 +---------------------------------------------------------------------------------------------------------------------*/
 
 /// PriorityInheritanceMutexControlBlockUnblockFunctor is a functor executed when unblocking a thread that is blocked on
-/// a mutex with PriorityInheritance protocol
+/// a mutex with priorityInheritance protocol
 class PriorityInheritanceMutexControlBlockUnblockFunctor : public ThreadControlBlock::UnblockFunctor
 {
 public:
@@ -49,7 +49,7 @@ public:
 	 * \brief PriorityInheritanceMutexControlBlockUnblockFunctor's function call operator
 	 *
 	 * If the wait for mutex was interrupted, requests update of boosted priority of current owner of the mutex. Pointer
-	 * to MutexControlBlock with PriorityInheritance protocol which caused the thread to block is reset to nullptr.
+	 * to MutexControlBlock with priorityInheritance protocol which caused the thread to block is reset to nullptr.
 	 *
 	 * \param [in] threadControlBlock is a reference to ThreadControlBlock that is being unblocked
 	 * \param [in] unblockReason is the reason of thread unblocking
