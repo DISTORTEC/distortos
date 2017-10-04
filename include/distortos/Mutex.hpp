@@ -92,6 +92,20 @@ public:
 	}
 
 	/**
+	 * \brief Mutex's destructor
+	 *
+	 * Similar to std::mutex::~mutex() - http://en.cppreference.com/w/cpp/thread/mutex/~mutex
+	 * Similar to pthread_mutex_destroy() -
+	 * http://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_mutex_destroy.html
+	 *
+	 * It shall be safe to destroy an initialized mutex that is unlocked. Attempting to destroy a locked mutex, or a
+	 * mutex that another thread is attempting to lock, or a mutex that is currently being used by a condition variable
+	 * in another thread, results in undefined behavior.
+	 */
+
+	~Mutex() = default;
+
+	/**
 	 * \brief Locks the mutex.
 	 *
 	 * Similar to std::mutex::lock() - http://en.cppreference.com/w/cpp/thread/mutex/lock
@@ -267,6 +281,11 @@ public:
 	 */
 
 	int unlock();
+
+	Mutex(const Mutex&) = delete;
+	Mutex(Mutex&&) = default;
+	const Mutex& operator=(const Mutex&) = delete;
+	Mutex& operator=(Mutex&&) = delete;
 
 private:
 
