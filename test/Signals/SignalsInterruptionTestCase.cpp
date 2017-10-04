@@ -104,10 +104,7 @@ public:
 	 * \brief TestStep's virtual destructor
 	 */
 
-	virtual ~TestStep()
-	{
-
-	}
+	virtual ~TestStep() = default;
 
 	/**
 	 * \brief Runs test step.

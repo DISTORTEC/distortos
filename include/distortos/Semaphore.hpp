@@ -62,10 +62,7 @@ public:
 	 * semaphore upon which other threads are currently blocked is system error.
 	 */
 
-	~Semaphore()
-	{
-
-	}
+	~Semaphore() = default;
 
 	/**
 	 * \brief Gets current value of semaphore.
