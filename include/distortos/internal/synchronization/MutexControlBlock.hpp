@@ -79,6 +79,18 @@ public:
 		return owner_;
 	}
 
+	/// shift of "type" subfield, bits
+	constexpr static uint8_t typeShift {0};
+
+	/// width of "type" subfield, bits
+	constexpr static uint8_t typeWidth {CHAR_BIT / 2};
+
+	/// shift of "protocol" subfield, bits
+	constexpr static uint8_t protocolShift {typeShift + typeWidth};
+
+	/// width of "protocol" subfield, bits
+	constexpr static uint8_t protocolWidth {CHAR_BIT / 2};
+
 protected:
 
 	/**
@@ -95,8 +107,8 @@ protected:
 			owner_{},
 			recursiveLocksCount_{},
 			priorityCeiling_{priorityCeiling},
-			typeProtocol_{static_cast<uint8_t>(static_cast<uint8_t>(type) << typeShift_ |
-					static_cast<uint8_t>(protocol) << protocolShift_)}
+			typeProtocol_{static_cast<uint8_t>(static_cast<uint8_t>(type) << typeShift |
+					static_cast<uint8_t>(protocol) << protocolShift)}
 	{
 
 	}
@@ -154,7 +166,7 @@ protected:
 
 	Protocol getProtocol() const
 	{
-		return static_cast<Protocol>((typeProtocol_ >> protocolShift_) & ((1 << protocolWidth_) - 1));
+		return static_cast<Protocol>((typeProtocol_ >> protocolShift) & ((1 << protocolWidth) - 1));
 	}
 
 	/**
@@ -172,7 +184,7 @@ protected:
 
 	Type getType() const
 	{
-		return static_cast<Type>((typeProtocol_ >> typeShift_) & ((1 << typeWidth_) - 1));
+		return static_cast<Type>((typeProtocol_ >> typeShift) & ((1 << typeWidth) - 1));
 	}
 
 private:
@@ -218,18 +230,6 @@ private:
 
 	/// type of mutex and its protocol
 	uint8_t typeProtocol_;
-
-	/// shift of "type" subfield, bits
-	constexpr static uint8_t typeShift_ {0};
-
-	/// width of "type" subfield, bits
-	constexpr static uint8_t typeWidth_ {CHAR_BIT / 2};
-
-	/// shift of "protocol" subfield, bits
-	constexpr static uint8_t protocolShift_ {typeShift_ + typeWidth_};
-
-	/// width of "protocol" subfield, bits
-	constexpr static uint8_t protocolWidth_ {CHAR_BIT / 2};
 };
 
 }	// namespace internal
