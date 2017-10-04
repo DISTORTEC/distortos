@@ -35,7 +35,7 @@ public:
 
 	constexpr DeferredThreadDeleter() :
 			list_{},
-			mutex_{Mutex::Type::normal, Mutex::Protocol::priorityInheritance},
+			mutex_{Mutex::Protocol::priorityInheritance},
 			notEmpty_{}
 	{
 

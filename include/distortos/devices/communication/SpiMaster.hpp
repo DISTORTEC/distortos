@@ -45,7 +45,7 @@ public:
 	 */
 
 	constexpr explicit SpiMaster(SpiMasterLowLevel& spiMaster) :
-			mutex_{Mutex::Type::normal, Mutex::Protocol::priorityInheritance},
+			mutex_{Mutex::Protocol::priorityInheritance},
 			operationRange_{},
 			ret_{},
 			semaphore_{},

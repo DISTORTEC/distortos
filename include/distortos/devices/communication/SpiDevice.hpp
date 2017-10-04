@@ -54,7 +54,7 @@ public:
 	constexpr SpiDevice(SpiMaster& spiMaster, OutputPin& slaveSelectPin, const SpiMode mode,
 			const uint32_t maxClockFrequency, const uint8_t wordLength, const bool lsbFirst) :
 					conditionVariable_{},
-					mutex_{Mutex::Type::normal, Mutex::Protocol::priorityInheritance},
+					mutex_{Mutex::Protocol::priorityInheritance},
 					maxClockFrequency_{maxClockFrequency},
 					owner_{},
 					slaveSelectPin_{slaveSelectPin},

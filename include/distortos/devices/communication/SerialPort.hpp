@@ -289,8 +289,8 @@ public:
 
 	constexpr SerialPort(UartLowLevel& uart, void* const readBuffer, const size_t readBufferSize,
 			void* const writeBuffer, const size_t writeBufferSize) :
-					readMutex_{Mutex::Type::normal, Mutex::Protocol::priorityInheritance},
-					writeMutex_{Mutex::Type::normal, Mutex::Protocol::priorityInheritance},
+					readMutex_{Mutex::Protocol::priorityInheritance},
+					writeMutex_{Mutex::Protocol::priorityInheritance},
 					readBuffer_{readBuffer, (readBufferSize / 2) * 2},
 					writeBuffer_{writeBuffer, (writeBufferSize / 2) * 2},
 					currentReadBuffer_{&readBuffer_},

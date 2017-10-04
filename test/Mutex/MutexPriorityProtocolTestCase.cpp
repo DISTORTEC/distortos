@@ -2,7 +2,7 @@
  * \file
  * \brief MutexPriorityProtocolTestCase class implementation
  *
- * \author Copyright (C) 2014-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -175,11 +175,11 @@ bool testRunner(const std::array<int, totalThreads>& delays, const std::array<Te
 
 bool priorityInheritancePhase()
 {
-	Mutex mutex12 {Mutex::Type::normal, Mutex::Protocol::priorityInheritance};	// shared by thread 1 and 2
-	Mutex mutex123 {Mutex::Type::normal, Mutex::Protocol::priorityInheritance};	// shared by thread 1, 2 and 3
-	Mutex mutex13 {Mutex::Type::normal, Mutex::Protocol::priorityInheritance};	// shared by thread 1 and 3
-	Mutex mutex23 {Mutex::Type::normal, Mutex::Protocol::priorityInheritance};	// shared by thread 2 and 3
-	Mutex mutex35 {Mutex::Type::normal, Mutex::Protocol::priorityInheritance};	// shared by thread 3 and 5
+	Mutex mutex12 {Mutex::Protocol::priorityInheritance};	// shared by thread 1 and 2
+	Mutex mutex123 {Mutex::Protocol::priorityInheritance};	// shared by thread 1, 2 and 3
+	Mutex mutex13 {Mutex::Protocol::priorityInheritance};	// shared by thread 1 and 3
+	Mutex mutex23 {Mutex::Protocol::priorityInheritance};	// shared by thread 2 and 3
+	Mutex mutex35 {Mutex::Protocol::priorityInheritance};	// shared by thread 3 and 5
 
 	const TestStep steps1[]
 	{
@@ -245,11 +245,11 @@ bool priorityInheritancePhase()
 
 bool priorityProtectPhase()
 {
-	Mutex mutex12 {Mutex::Type::normal, Mutex::Protocol::priorityProtect, 2};	// shared by thread 1 and 2
-	Mutex mutex123 {Mutex::Type::normal, Mutex::Protocol::priorityProtect, 3};	// shared by thread 1, 2 and 3
-	Mutex mutex13 {Mutex::Type::normal, Mutex::Protocol::priorityProtect, 3};	// shared by thread 1 and 3
-	Mutex mutex23 {Mutex::Type::normal, Mutex::Protocol::priorityProtect, 3};	// shared by thread 2 and 3
-	Mutex mutex35 {Mutex::Type::normal, Mutex::Protocol::priorityProtect, 5};	// shared by thread 3 and 5
+	Mutex mutex12 {Mutex::Protocol::priorityProtect, 2};	// shared by thread 1 and 2
+	Mutex mutex123 {Mutex::Protocol::priorityProtect, 3};	// shared by thread 1, 2 and 3
+	Mutex mutex13 {Mutex::Protocol::priorityProtect, 3};	// shared by thread 1 and 3
+	Mutex mutex23 {Mutex::Protocol::priorityProtect, 3};	// shared by thread 2 and 3
+	Mutex mutex35 {Mutex::Protocol::priorityProtect, 5};	// shared by thread 3 and 5
 
 	const TestStep steps1[]
 	{

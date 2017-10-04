@@ -26,17 +26,17 @@ extern "C"
 +---------------------------------------------------------------------------------------------------------------------*/
 
 /// lock used by arc4random()
-__lock __lock___arc4random_mutex {distortos::Mutex::Type::normal, distortos::Mutex::Protocol::priorityInheritance};
+__lock __lock___arc4random_mutex {distortos::Mutex::Protocol::priorityInheritance};
 
 /// lock used by at_quick_exit()
-__lock __lock___at_quick_exit_mutex {distortos::Mutex::Type::normal, distortos::Mutex::Protocol::priorityInheritance};
+__lock __lock___at_quick_exit_mutex {distortos::Mutex::Protocol::priorityInheritance};
 
 /// recursive lock used by atexit()
 __lock __lock___atexit_recursive_mutex {distortos::Mutex::Type::recursive,
 		distortos::Mutex::Protocol::priorityInheritance};
 
 /// lock used by telldir(), seekdir() and cleanupdir()
-__lock __lock___dd_hash_mutex {distortos::Mutex::Type::normal, distortos::Mutex::Protocol::priorityInheritance};
+__lock __lock___dd_hash_mutex {distortos::Mutex::Protocol::priorityInheritance};
 
 /// recursive lock used by getenv(), setenv() and unsetenv()
 __lock __lock___env_recursive_mutex {distortos::Mutex::Type::recursive,
@@ -55,7 +55,7 @@ __lock __lock___sinit_recursive_mutex {distortos::Mutex::Type::recursive,
 		distortos::Mutex::Protocol::priorityInheritance};
 
 /// lock used by time zone related functions
-__lock __lock___tz_mutex {distortos::Mutex::Type::normal, distortos::Mutex::Protocol::priorityInheritance};
+__lock __lock___tz_mutex {distortos::Mutex::Protocol::priorityInheritance};
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | global functions
@@ -113,7 +113,7 @@ void __retarget_lock_close_recursive(const _LOCK_T lock)
 
 void __retarget_lock_init(_LOCK_T* const lock)
 {
-	*lock = new __lock {distortos::Mutex::Type::normal, distortos::Mutex::Protocol::priorityInheritance};
+	*lock = new __lock {distortos::Mutex::Protocol::priorityInheritance};
 }
 
 /**
