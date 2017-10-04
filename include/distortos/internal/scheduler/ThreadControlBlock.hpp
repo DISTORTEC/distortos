@@ -65,7 +65,7 @@ public:
 	};
 
 	/**
-	 * \brief ThreadControlBlock constructor.
+	 * \brief ThreadControlBlock's constructor.
 	 *
 	 * \param [in] stack is an rvalue reference to Stack object which will be adopted for this thread
 	 * \param [in] priority is the thread's priority, 0 - lowest, UINT8_MAX - highest

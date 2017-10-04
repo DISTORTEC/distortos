@@ -37,7 +37,7 @@ class ConditionVariable
 public:
 
 	/**
-	 * \brief ConditionVariable constructor
+	 * \brief ConditionVariable's constructor
 	 *
 	 * Similar to std::condition_variable::condition_variable() -
 	 * http://en.cppreference.com/w/cpp/thread/condition_variable/condition_variable

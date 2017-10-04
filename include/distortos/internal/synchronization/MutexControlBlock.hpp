@@ -82,7 +82,7 @@ public:
 protected:
 
 	/**
-	 * \brief MutexControlBlock constructor
+	 * \brief MutexControlBlock's constructor
 	 *
 	 * \param [in] type is the type of mutex
 	 * \param [in] protocol is the mutex protocol

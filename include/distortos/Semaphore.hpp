@@ -35,7 +35,7 @@ public:
 	using Value = unsigned int;
 
 	/**
-	 * \brief Semaphore constructor
+	 * \brief Semaphore's constructor
 	 *
 	 * Similar to sem_init() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/sem_init.html#
 	 *
@@ -54,7 +54,7 @@ public:
 	}
 
 	/**
-	 * \brief Semaphore destructor
+	 * \brief Semaphore's destructor
 	 *
 	 * Similar to sem_destroy() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/sem_destroy.html#
 	 *

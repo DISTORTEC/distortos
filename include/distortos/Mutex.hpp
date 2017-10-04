@@ -54,7 +54,7 @@ public:
 	}
 
 	/**
-	 * \brief Mutex constructor
+	 * \brief Mutex's constructor
 	 *
 	 * Similar to std::mutex::mutex() - http://en.cppreference.com/w/cpp/thread/mutex/mutex
 	 * Similar to pthread_mutex_init() -
