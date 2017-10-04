@@ -53,7 +53,7 @@ public:
 		/// mutex with additional error checking, similar to PTHREAD_MUTEX_ERRORCHECK
 		errorChecking,
 		/// recursive mutex, similar to PTHREAD_MUTEX_RECURSIVE
-		recursive
+		recursive,
 	};
 
 	/**
