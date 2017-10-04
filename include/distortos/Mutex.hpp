@@ -74,6 +74,24 @@ public:
 	}
 
 	/**
+	 * \brief Mutex's constructor, overload for "normal" type
+	 *
+	 * Similar to std::mutex::mutex() - http://en.cppreference.com/w/cpp/thread/mutex/mutex
+	 * Similar to pthread_mutex_init() -
+	 * http://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_mutex_init.html
+	 *
+	 * \param [in] protocol is the mutex protocol
+	 * \param [in] priorityCeiling is the priority ceiling of mutex, ignored when protocol != Protocol::priorityProtect,
+	 * default - 0
+	 */
+
+	constexpr explicit Mutex(const Protocol protocol, const uint8_t priorityCeiling = {}) :
+			Mutex{Type::normal, protocol, priorityCeiling}
+	{
+
+	}
+
+	/**
 	 * \brief Locks the mutex.
 	 *
 	 * Similar to std::mutex::lock() - http://en.cppreference.com/w/cpp/thread/mutex/lock

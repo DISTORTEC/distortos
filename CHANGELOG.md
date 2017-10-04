@@ -16,6 +16,7 @@ references to regular C++ API objects (like `distortos::Semaphore`).
 - Unit tests of C-API for semaphores, using [Catch](https://github.com/philsquared/Catch) unit test framework and
 [Trompeloeil](https://github.com/rollbear/trompeloeil) mocking framework. Build system of unit tests uses
 [CMake](https://cmake.org/).
+- New overload of `distortos::Mutex`'s constructor for "normal" type.
 
 ### Changed
 
