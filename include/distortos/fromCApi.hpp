@@ -15,6 +15,7 @@
 extern "C"
 {
 
+struct distortos_Mutex;
 struct distortos_Semaphore;
 
 }	// extern "C"
@@ -22,7 +23,34 @@ struct distortos_Semaphore;
 namespace distortos
 {
 
+class Mutex;
 class Semaphore;
+
+/**
+ * \brief Casts C-API distortos_Mutex to distortos::Mutex.
+ *
+ * \param [in] mutex is a reference to distortos_Mutex object
+ *
+ * \return reference to distortos::Mutex object, casted from \a mutex
+ */
+
+inline static distortos::Mutex& fromCApi(distortos_Mutex& mutex)
+{
+	return reinterpret_cast<distortos::Mutex&>(mutex);
+}
+
+/**
+ * \brief Casts const C-API distortos_Mutex to const distortos::Mutex.
+ *
+ * \param [in] mutex is a const reference to distortos_Mutex object
+ *
+ * \return const reference to distortos::Mutex object, casted from \a mutex
+ */
+
+inline static const distortos::Mutex& fromCApi(const distortos_Mutex& mutex)
+{
+	return reinterpret_cast<const distortos::Mutex&>(mutex);
+}
 
 /**
  * \brief Casts C-API distortos_Semaphore to distortos::Semaphore.
