@@ -71,7 +71,7 @@ TEST_CASE("Testing distortos_Semaphore_construct_1()", "[construct]")
 	constexpr unsigned int lowRandomValue {0x799c4209};
 	constexpr unsigned int highRandomValue {0xc5ffe5ab};
 
-	distortos::FromCApiMock fromCApiMock;
+	distortos::FromCApiSemaphoreMock fromCApiMock;
 	distortos::Semaphore semaphoreMock;
 	std::aligned_storage<sizeof(distortos::Semaphore), alignof(distortos::Semaphore)>::type storage;
 
@@ -90,7 +90,7 @@ TEST_CASE("Testing distortos_Semaphore_construct()", "[construct]")
 {
 	constexpr unsigned int randomValue {0x9ba07851};
 
-	distortos::FromCApiMock fromCApiMock;
+	distortos::FromCApiSemaphoreMock fromCApiMock;
 	distortos::Semaphore semaphoreMock;
 	std::aligned_storage<sizeof(distortos::Semaphore), alignof(distortos::Semaphore)>::type storage;
 
@@ -106,7 +106,7 @@ TEST_CASE("Testing distortos_Semaphore_construct()", "[construct]")
 
 TEST_CASE("Testing distortos_Semaphore_destruct()", "[destruct]")
 {
-	distortos::FromCApiMock fromCApiMock;
+	distortos::FromCApiSemaphoreMock fromCApiMock;
 	trompeloeil::deathwatched<distortos::Semaphore> semaphoreMock;
 	distortos_Semaphore semaphore;
 
@@ -123,7 +123,7 @@ TEST_CASE("Testing distortos_Semaphore_getValue()", "[getValue]")
 {
 	constexpr unsigned int randomValue {0x36e9ebac};
 
-	distortos::FromCApiMock fromCApiMock;
+	distortos::FromCApiSemaphoreMock fromCApiMock;
 	distortos::Semaphore semaphoreMock;
 	const distortos_Semaphore semaphore {};
 	unsigned int value;
@@ -140,7 +140,7 @@ TEST_CASE("Testing distortos_Semaphore_getValue()", "[getValue]")
 
 TEST_CASE("Testing distortos_Semaphore_post()", "[post]")
 {
-	distortos::FromCApiMock fromCApiMock;
+	distortos::FromCApiSemaphoreMock fromCApiMock;
 	distortos::Semaphore semaphoreMock;
 	distortos_Semaphore semaphore;
 
@@ -153,7 +153,7 @@ TEST_CASE("Testing distortos_Semaphore_post()", "[post]")
 
 TEST_CASE("Testing distortos_Semaphore_tryWait()", "[tryWait]")
 {
-	distortos::FromCApiMock fromCApiMock;
+	distortos::FromCApiSemaphoreMock fromCApiMock;
 	distortos::Semaphore semaphoreMock;
 	distortos_Semaphore semaphore;
 
@@ -168,7 +168,7 @@ TEST_CASE("Testing distortos_Semaphore_tryWaitFor()", "[tryWaitFor]")
 {
 	constexpr int64_t randomDuration {0x3f1f8c067f94aa71};
 
-	distortos::FromCApiMock fromCApiMock;
+	distortos::FromCApiSemaphoreMock fromCApiMock;
 	distortos::Semaphore semaphoreMock;
 	distortos_Semaphore semaphore;
 
@@ -184,7 +184,7 @@ TEST_CASE("Testing distortos_Semaphore_tryWaitUntil()", "[tryWaitUntil]")
 {
 	constexpr int64_t randomTimePoint {0x6b8cbece059cfa31};
 
-	distortos::FromCApiMock fromCApiMock;
+	distortos::FromCApiSemaphoreMock fromCApiMock;
 	distortos::Semaphore semaphoreMock;
 	distortos_Semaphore semaphore;
 
@@ -198,7 +198,7 @@ TEST_CASE("Testing distortos_Semaphore_tryWaitUntil()", "[tryWaitUntil]")
 
 TEST_CASE("Testing distortos_Semaphore_wait()", "[wait]")
 {
-	distortos::FromCApiMock fromCApiMock;
+	distortos::FromCApiSemaphoreMock fromCApiMock;
 	distortos::Semaphore semaphoreMock;
 	distortos_Semaphore semaphore;
 
