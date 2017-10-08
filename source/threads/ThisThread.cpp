@@ -43,7 +43,12 @@ Thread& get()
 {
 	CHECK_FUNCTION_CONTEXT();
 
-	return internal::getScheduler().getCurrentThreadControlBlock().getOwner();
+	auto & thcom = internal::getScheduler().getCurrentThreadControlBlock().getOwner();
+#ifdef CONFIG_THREAD_DETACH_ENABLE
+	return thcom.getThreadInterface();
+#else
+	return thcom;
+#endif
 }
 
 uint8_t getEffectivePriority()

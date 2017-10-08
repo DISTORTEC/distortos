@@ -133,6 +133,13 @@ public:
 
 	size_t getStackSize() const override;
 
+#ifdef CONFIG_THREAD_DETACH_ENABLE
+	/**
+	 * \return User interface for this thread
+	 */
+	virtual Thread & getThreadInterface(void) { return *this; }
+#endif
+
 	/**
 	 * \return current state of thread
 	 */

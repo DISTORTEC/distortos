@@ -119,6 +119,13 @@ public:
 
 #endif	// CONFIG_THREAD_DETACH_ENABLE != 1
 
+#ifdef CONFIG_THREAD_DETACH_ENABLE
+	/**
+	 * \return User interface for this thread
+	 */
+	virtual Thread & getThreadInterface(void) override;
+#endif
+
 #if CONFIG_THREAD_DETACH_ENABLE == 1
 
 	/**

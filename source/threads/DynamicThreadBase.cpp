@@ -58,6 +58,16 @@ void	DynamicThreadBase::exit()
 }
 #endif
 
+#ifdef CONFIG_THREAD_DETACH_ENABLE
+// User interface for this thread
+Thread & DynamicThreadBase::getThreadInterface(void)
+{
+	if ( owner_ )
+		return *owner_;
+	return *this;
+}
+#endif
+
 /*---------------------------------------------------------------------------------------------------------------------+
 | protected static functions
 +---------------------------------------------------------------------------------------------------------------------*/
