@@ -30,10 +30,10 @@ namespace estd
  * ascending order
  * \tparam T is the type that has the IntrusiveListNode variable
  * \tparam NodePointer is a pointer-to-member to IntrusiveListNode variable in \a T
- * \tparam U is the type that will be stored on the list; it can be different from \a T, but must be implicitly
- * convertible to \a T (so usually a type derived from \a T); default - \a T; using different type than \a T can be used
- * to break circular dependencies, because \a T must be fully defined to instantiate this class, but it is enough to
- * forward declare \a U - it only needs to be fully defined to use member functions
+ * \tparam U is the type that will be stored on the list; it can be different from \a T, but \a U* must be implicitly
+ * convertible to \a T* (so usually a type derived from \a T); default - \a T; using different type than \a T can be
+ * used to break circular dependencies, because \a T must be fully defined to instantiate this class, but it is enough
+ * to forward declare \a U - it only needs to be fully defined to use member functions
  */
 
 template<typename Compare, typename T, IntrusiveListNode T::* NodePointer, typename U = T>
@@ -334,8 +334,8 @@ private:
  * ascending order
  * \tparam T is the type that has the IntrusiveListNode variable
  * \tparam NodePointer is a pointer-to-member to IntrusiveListNode variable in \a T
- * \tparam U is the type that will be stored on the list; it can be different from \a T, but must be implicitly
- * convertible to \a T (so usually a type derived from \a T); default - \a T;
+ * \tparam U is the type that will be stored on the list; it can be different from \a T, but \a U* must be implicitly
+ * convertible to \a T* (so usually a type derived from \a T); default - \a T;
  *
  * \param [in] left is a reference to SortedIntrusiveList with which contents of \a right will be swapped
  * \param [in] right is a reference to SortedIntrusiveList with which contents of \a left will be swapped

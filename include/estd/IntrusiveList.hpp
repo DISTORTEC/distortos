@@ -448,8 +448,8 @@ inline void swap(IntrusiveListBase& left, IntrusiveListBase& right)
  *
  * \tparam T is the type that has the IntrusiveListNode variable
  * \tparam NodePointer is a pointer-to-member to IntrusiveListNode variable in \a T
- * \tparam U is the type that will be stored on the list; it can be different from \a T, but must be implicitly
- * convertible to \a T (so usually a type derived from \a T); default - \a T;
+ * \tparam U is the type that will be stored on the list; it can be different from \a T, but \a U* must be implicitly
+ * convertible to \a T* (so usually a type derived from \a T); default - \a T;
  */
 
 template<typename T, IntrusiveListNode T::* NodePointer, typename U = T>
@@ -503,8 +503,8 @@ public:
 	constexpr explicit IntrusiveListIterator(reference element) :
 			node_{&(element.*NodePointer)}
 	{
-		static_assert(std::is_same<U, T>::value == true || std::is_convertible<U, T>::value == true,
-				"U must be implicitly convertible to T!");
+		static_assert(std::is_same<U, T>::value == true || std::is_convertible<U*, T*>::value == true,
+				"U* must be implicitly convertible to T*!");
 	}
 
 	/**
@@ -602,8 +602,8 @@ private:
 
 	pointer getPointer() const
 	{
-		static_assert(std::is_same<U, T>::value == true || std::is_convertible<U, T>::value == true,
-				"U must be implicitly convertible to T!");
+		static_assert(std::is_same<U, T>::value == true || std::is_convertible<U*, T*>::value == true,
+				"U* must be implicitly convertible to T*!");
 
 		const auto offset = reinterpret_cast<size_t>(&(static_cast<pointer>(nullptr)->*NodePointer));
 		return reinterpret_cast<pointer>(reinterpret_cast<size_t>(node_) - offset);
@@ -618,8 +618,8 @@ private:
  *
  * \tparam T is the type that has the IntrusiveListNode variable
  * \tparam NodePointer is a pointer-to-member to IntrusiveListNode variable in \a T
- * \tparam U is the type that will be stored on the list; it can be different from \a T, but must be implicitly
- * convertible to \a T (so usually a type derived from \a T); default - \a T;
+ * \tparam U is the type that will be stored on the list; it can be different from \a T, but \a U* must be implicitly
+ * convertible to \a T* (so usually a type derived from \a T); default - \a T;
  *
  * \param [in] left is a const reference to IntrusiveListIterator on left-hand side of comparison operator
  * \param [in] right is a const reference to IntrusiveListIterator on right-hand side of comparison operator
@@ -641,8 +641,8 @@ inline bool operator!=(const IntrusiveListIterator<T, NodePointer, U>& left,
  *
  * \tparam T is the type that has the IntrusiveListNode variable
  * \tparam NodePointer is a const pointer-to-member to IntrusiveListNode variable in \a T
- * \tparam U is the type that will be stored on the list; it can be different from \a T, but must be implicitly
- * convertible to \a T (so usually a type derived from \a T); default - \a T;
+ * \tparam U is the type that will be stored on the list; it can be different from \a T, but \a U* must be implicitly
+ * convertible to \a T* (so usually a type derived from \a T); default - \a T;
  */
 
 template<typename T, const IntrusiveListNode T::* NodePointer, typename U = T>
@@ -696,8 +696,8 @@ public:
 	constexpr explicit IntrusiveListConstIterator(reference element) :
 			node_{&(element.*NodePointer)}
 	{
-		static_assert(std::is_same<U, T>::value == true || std::is_convertible<U, T>::value == true,
-				"U must be implicitly convertible to T!");
+		static_assert(std::is_same<U, T>::value == true || std::is_convertible<U*, T*>::value == true,
+				"U* must be implicitly convertible to T*!");
 	}
 
 	/**
@@ -812,8 +812,8 @@ private:
 
 	pointer getPointer() const
 	{
-		static_assert(std::is_same<U, T>::value == true || std::is_convertible<U, T>::value == true,
-				"U must be implicitly convertible to T!");
+		static_assert(std::is_same<U, T>::value == true || std::is_convertible<U*, T*>::value == true,
+				"U* must be implicitly convertible to T*!");
 
 		const auto offset = reinterpret_cast<size_t>(&(static_cast<pointer>(nullptr)->*NodePointer));
 		return reinterpret_cast<pointer>(reinterpret_cast<size_t>(node_) - offset);
@@ -828,8 +828,8 @@ private:
  *
  * \tparam T is the type that has the IntrusiveListNode variable
  * \tparam NodePointer is a const pointer-to-member to IntrusiveListNode variable in \a T
- * \tparam U is the type that will be stored on the list; it can be different from \a T, but must be implicitly
- * convertible to \a T (so usually a type derived from \a T); default - \a T;
+ * \tparam U is the type that will be stored on the list; it can be different from \a T, but \a U* must be implicitly
+ * convertible to \a T* (so usually a type derived from \a T); default - \a T;
  *
  * \param [in] left is a const reference to IntrusiveListConstIterator on left-hand side of comparison operator
  * \param [in] right is a const reference to IntrusiveListConstIterator on right-hand side of comparison operator
@@ -850,8 +850,8 @@ inline bool operator!=(const IntrusiveListConstIterator<T, NodePointer, U>& left
  * \tparam T is the type that has the IntrusiveListNode variable
  * \tparam NodePointer is a pointer-to-member to IntrusiveListNode variable in \a T
  * \tparam ConstNodePointer is a const pointer-to-member to IntrusiveListNode variable in \a T
- * \tparam U is the type that will be stored on the list; it can be different from \a T, but must be implicitly
- * convertible to \a T (so usually a type derived from \a T); default - \a T;
+ * \tparam U is the type that will be stored on the list; it can be different from \a T, but \a U* must be implicitly
+ * convertible to \a T* (so usually a type derived from \a T); default - \a T;
  *
  * \param [in] left is a const reference to IntrusiveListIterator on left-hand side of comparison operator
  * \param [in] right is a const reference to IntrusiveListConstIterator on right-hand side of comparison operator
@@ -872,8 +872,8 @@ inline bool operator==(const IntrusiveListIterator<T, NodePointer, U>& left,
  * \tparam T is the type that has the IntrusiveListNode variable
  * \tparam NodePointer is a pointer-to-member to IntrusiveListNode variable in \a T
  * \tparam ConstNodePointer is a const pointer-to-member to IntrusiveListNode variable in \a T
- * \tparam U is the type that will be stored on the list; it can be different from \a T, but must be implicitly
- * convertible to \a T (so usually a type derived from \a T); default - \a T;
+ * \tparam U is the type that will be stored on the list; it can be different from \a T, but \a U* must be implicitly
+ * convertible to \a T* (so usually a type derived from \a T); default - \a T;
  *
  * \param [in] left is a const reference to IntrusiveListIterator on left-hand side of comparison operator
  * \param [in] right is a const reference to IntrusiveListConstIterator on right-hand side of comparison operator
@@ -894,8 +894,8 @@ inline bool operator!=(const IntrusiveListIterator<T, NodePointer, U>& left,
  * \tparam T is the type that has the IntrusiveListNode variable
  * \tparam NodePointer is a pointer-to-member to IntrusiveListNode variable in \a T
  * \tparam ConstNodePointer is a const pointer-to-member to IntrusiveListNode variable in \a T
- * \tparam U is the type that will be stored on the list; it can be different from \a T, but must be implicitly
- * convertible to \a T (so usually a type derived from \a T); default - \a T;
+ * \tparam U is the type that will be stored on the list; it can be different from \a T, but \a U* must be implicitly
+ * convertible to \a T* (so usually a type derived from \a T); default - \a T;
  *
  * \param [in] left is a const reference to IntrusiveListConstIterator on left-hand side of comparison operator
  * \param [in] right is a const reference to IntrusiveListIterator on right-hand side of comparison operator
@@ -917,10 +917,10 @@ inline bool operator!=(const IntrusiveListConstIterator<T, ConstNodePointer, U>&
  *
  * \tparam T is the type that has the IntrusiveListNode variable
  * \tparam NodePointer is a pointer-to-member to IntrusiveListNode variable in \a T
- * \tparam U is the type that will be stored on the list; it can be different from \a T, but must be implicitly
- * convertible to \a T (so usually a type derived from \a T); default - \a T; using different type than \a T can be used
- * to break circular dependencies, because \a T must be fully defined to instantiate this class, but it is enough to
- * forward declare \a U - it only needs to be fully defined to use member functions
+ * \tparam U is the type that will be stored on the list; it can be different from \a T, but \a U* must be implicitly
+ * convertible to \a T* (so usually a type derived from \a T); default - \a T; using different type than \a T can be
+ * used to break circular dependencies, because \a T must be fully defined to instantiate this class, but it is enough
+ * to forward declare \a U - it only needs to be fully defined to use member functions
  */
 
 template<typename T, IntrusiveListNode T::* NodePointer, typename U = T>
@@ -1154,8 +1154,8 @@ public:
 
 	static iterator insert(const iterator position, reference newElement)
 	{
-		static_assert(std::is_same<U, T>::value == true || std::is_convertible<U, T>::value == true,
-				"U must be implicitly convertible to T!");
+		static_assert(std::is_same<U, T>::value == true || std::is_convertible<U*, T*>::value == true,
+				"U* must be implicitly convertible to T*!");
 
 		auto& positionNode = (*position).*NodePointer;
 		auto& newElementNode = newElement.*NodePointer;
@@ -1195,8 +1195,8 @@ private:
  *
  * \tparam T is the type that has the IntrusiveListNode variable
  * \tparam NodePointer is a pointer-to-member to IntrusiveListNode variable in \a T
- * \tparam U is the type that will be stored on the list; it can be different from \a T, but must be implicitly
- * convertible to \a T (so usually a type derived from \a T); default - \a T;
+ * \tparam U is the type that will be stored on the list; it can be different from \a T, but \a U* must be implicitly
+ * convertible to \a T* (so usually a type derived from \a T); default - \a T;
  *
  * \param [in] left is a reference to IntrusiveList with which contents of \a right will be swapped
  * \param [in] right is a reference to IntrusiveList with which contents of \a left will be swapped
