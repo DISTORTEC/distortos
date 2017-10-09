@@ -17,6 +17,7 @@
 #include "distortos/internal/synchronization/MutexListNode.hpp"
 
 #include "distortos/MutexProtocol.hpp"
+#include "distortos/MutexType.hpp"
 #include "distortos/TickClock.hpp"
 
 #include <climits>
@@ -39,15 +40,7 @@ public:
 	using RecursiveLocksCount = uint16_t;
 
 	/// type of mutex
-	enum class Type : uint8_t
-	{
-		/// normal mutex, similar to PTHREAD_MUTEX_NORMAL
-		normal,
-		/// mutex with additional error checking, similar to PTHREAD_MUTEX_ERRORCHECK
-		errorChecking,
-		/// recursive mutex, similar to PTHREAD_MUTEX_RECURSIVE
-		recursive,
-	};
+	using Type = MutexType;
 
 	/**
 	 * \brief Gets "boosted priority" of the mutex.

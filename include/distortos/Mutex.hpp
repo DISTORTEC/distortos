@@ -38,7 +38,7 @@ public:
 	using RecursiveLocksCount = MutexControlBlock::RecursiveLocksCount;
 
 	/// type of mutex
-	using Type = MutexControlBlock::Type;
+	using Type = MutexType;
 
 	/**
 	 * \brief Gets the maximum number of recursive locks possible before returning EAGAIN
