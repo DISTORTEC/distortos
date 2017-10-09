@@ -55,7 +55,7 @@ private:
 	}
 };
 
-Scheduler& getScheduler()
+inline static Scheduler& getScheduler()
 {
 	return GetSchedulerMock::getInstance().getScheduler();
 }
