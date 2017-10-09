@@ -44,7 +44,7 @@ namespace
 +---------------------------------------------------------------------------------------------------------------------*/
 
 /// SignalsWaitUnblockFunctor is a functor executed when unblocking a thread that is waiting for signal
-class SignalsWaitUnblockFunctor : public internal::ThreadControlBlock::UnblockFunctor
+class SignalsWaitUnblockFunctor : public internal::UnblockFunctor
 {
 public:
 
@@ -57,8 +57,7 @@ public:
 	 * \param [in] unblockReason is the reason of thread unblocking
 	 */
 
-	void operator()(internal::ThreadControlBlock& threadControlBlock, internal::ThreadControlBlock::UnblockReason) const
-			override
+	void operator()(internal::ThreadControlBlock& threadControlBlock, internal::UnblockReason) const override
 	{
 		const auto signalsReceiverControlBlock = threadControlBlock.getSignalsReceiverControlBlock();
 		if (signalsReceiverControlBlock == nullptr)

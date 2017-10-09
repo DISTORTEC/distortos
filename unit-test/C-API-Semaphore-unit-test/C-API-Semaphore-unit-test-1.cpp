@@ -2,6 +2,9 @@
  * \file
  * \brief Semaphore C-API test cases
  *
+ * This test checks whether semaphore objects instantiated with C-API macros and functions are binary identical to
+ * constructed distortos::Semaphore objects.
+ *
  * \author Copyright (C) 2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
@@ -90,12 +93,12 @@ TEST_CASE("Testing distortos_Semaphore_construct_1()", "[construct]")
 	constexpr unsigned int highRandomValue {0xb24e4367};
 
 	{
-		distortos_Semaphore semaphore;
+		distortos_Semaphore semaphore {};
 		REQUIRE(distortos_Semaphore_construct_1(&semaphore, lowRandomValue, highRandomValue) == 0);
 		testCommon(semaphore, lowRandomValue, highRandomValue);
 	}
 	{
-		distortos_Semaphore semaphore;
+		distortos_Semaphore semaphore {};
 		REQUIRE(distortos_Semaphore_construct_1(&semaphore, highRandomValue, lowRandomValue) == 0);
 		testCommon(semaphore, highRandomValue, lowRandomValue);
 	}
@@ -106,7 +109,7 @@ TEST_CASE("Testing distortos_Semaphore_construct()", "[construct]")
 	constexpr unsigned int randomValue {0xb86c251b};
 
 	{
-		distortos_Semaphore semaphore;
+		distortos_Semaphore semaphore {};
 		REQUIRE(distortos_Semaphore_construct(&semaphore, randomValue) == 0);
 		testCommon(semaphore, randomValue);
 	}

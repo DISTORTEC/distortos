@@ -29,7 +29,7 @@ namespace
 
 /// PriorityInheritanceMutexControlBlockUnblockFunctor is a functor executed when unblocking a thread that is blocked on
 /// a mutex with priorityInheritance protocol
-class PriorityInheritanceMutexControlBlockUnblockFunctor : public ThreadControlBlock::UnblockFunctor
+class PriorityInheritanceMutexControlBlockUnblockFunctor : public UnblockFunctor
 {
 public:
 
@@ -55,13 +55,12 @@ public:
 	 * \param [in] unblockReason is the reason of thread unblocking
 	 */
 
-	void operator()(ThreadControlBlock& threadControlBlock, const ThreadControlBlock::UnblockReason unblockReason) const
-			override
+	void operator()(ThreadControlBlock& threadControlBlock, const UnblockReason unblockReason) const override
 	{
 		const auto owner = mutexControlBlock_.getOwner();
 
 		// waiting for mutex was interrupted and some thread still holds it?
-		if (unblockReason != ThreadControlBlock::UnblockReason::unblockRequest && owner != nullptr)
+		if (unblockReason != UnblockReason::unblockRequest && owner != nullptr)
 			owner->updateBoostedPriority();
 
 		threadControlBlock.setPriorityInheritanceMutexControlBlock(nullptr);

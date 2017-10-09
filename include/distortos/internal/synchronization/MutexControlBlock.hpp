@@ -16,6 +16,8 @@
 
 #include "distortos/internal/synchronization/MutexListNode.hpp"
 
+#include "distortos/MutexProtocol.hpp"
+#include "distortos/MutexType.hpp"
 #include "distortos/TickClock.hpp"
 
 #include <climits>
@@ -32,29 +34,13 @@ class MutexControlBlock : public MutexListNode
 public:
 
 	/// mutex protocols
-	enum class Protocol : uint8_t
-	{
-		/// no protocol, similar to PTHREAD_PRIO_NONE
-		none,
-		/// priority inheritance protocol, similar to PTHREAD_PRIO_INHERIT
-		priorityInheritance,
-		/// priority protection protocol (Immediate Ceiling Priority Protocol), similar to PTHREAD_PRIO_PROTECT
-		priorityProtect,
-	};
+	using Protocol = MutexProtocol;
 
 	/// type used for counting recursive locks
 	using RecursiveLocksCount = uint16_t;
 
 	/// type of mutex
-	enum class Type : uint8_t
-	{
-		/// normal mutex, similar to PTHREAD_MUTEX_NORMAL
-		normal,
-		/// mutex with additional error checking, similar to PTHREAD_MUTEX_ERRORCHECK
-		errorChecking,
-		/// recursive mutex, similar to PTHREAD_MUTEX_RECURSIVE
-		recursive,
-	};
+	using Type = MutexType;
 
 	/**
 	 * \brief Gets "boosted priority" of the mutex.

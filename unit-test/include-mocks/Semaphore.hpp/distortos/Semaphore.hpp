@@ -27,7 +27,7 @@ public:
 
 	Semaphore() = default;
 
-	explicit Semaphore(const Value value, const Value maxValue = std::numeric_limits<Value>::max())
+	Semaphore(const Value value, const Value maxValue)
 	{
 		REQUIRE(getProxyInstance() != nullptr);
 		getProxyInstance()->construct(value, maxValue);

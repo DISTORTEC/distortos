@@ -70,15 +70,15 @@ public:
 	 *
 	 * \param [in] container is a reference to destination container to which the thread will be transferred
 	 * \param [in] state is the new state of thread that will be blocked
-	 * \param [in] unblockFunctor is a pointer to ThreadControlBlock::UnblockFunctor which will be executed in
+	 * \param [in] unblockFunctor is a pointer to UnblockFunctor which will be executed in
 	 * ThreadControlBlock::unblockHook(), default - nullptr (no functor will be executed)
 	 *
 	 * \return 0 on success, error code otherwise:
-	 * - EINTR - thread was unblocked with ThreadControlBlock::UnblockReason::signal;
-	 * - ETIMEDOUT - thread was unblocked with ThreadControlBlock::UnblockReason::timeout;
+	 * - EINTR - thread was unblocked with UnblockReason::signal;
+	 * - ETIMEDOUT - thread was unblocked with UnblockReason::timeout;
 	 */
 
-	int block(ThreadList& container, ThreadState state, const ThreadControlBlock::UnblockFunctor* unblockFunctor = {});
+	int block(ThreadList& container, ThreadState state, const UnblockFunctor* unblockFunctor = {});
 
 	/**
 	 * \brief Blocks thread, transferring it to provided container.
@@ -88,19 +88,17 @@ public:
 	 * \param [in] container is a reference to destination container to which the thread will be transferred
 	 * \param [in] iterator is the iterator to the thread that will be blocked
 	 * \param [in] state is the new state of thread that will be blocked
-	 * \param [in] unblockFunctor is a pointer to ThreadControlBlock::UnblockFunctor which will be executed in
+	 * \param [in] unblockFunctor is a pointer to UnblockFunctor which will be executed in
 	 * ThreadControlBlock::unblockHook(), default - nullptr (no functor will be executed)
 	 *
 	 * \return 0 on success, error code otherwise:
-	 * - EINTR - thread was unblocked with ThreadControlBlock::UnblockReason::signal (possible only when blocking
-	 * current thread);
+	 * - EINTR - thread was unblocked with UnblockReason::signal (possible only when blocking current thread);
 	 * - EINVAL - provided thread is not on "runnable" list;
-	 * - ETIMEDOUT - thread was unblocked with ThreadControlBlock::UnblockReason::timeout (possible only when blocking
-	 * current thread);
+	 * - ETIMEDOUT - thread was unblocked with UnblockReason::timeout (possible only when blocking current thread);
 	 */
 
 	int block(ThreadList& container, ThreadList::iterator iterator, ThreadState state,
-			const ThreadControlBlock::UnblockFunctor* unblockFunctor = {});
+			const UnblockFunctor* unblockFunctor = {});
 
 	/**
 	 * \brief Blocks current thread with timeout, transferring it to provided container.
@@ -110,16 +108,16 @@ public:
 	 * \param [in] container is a reference to destination container to which the thread will be transferred
 	 * \param [in] state is the new state of thread that will be blocked
 	 * \param [in] timePoint is the time point at which the thread will be unblocked (if not already unblocked)
-	 * \param [in] unblockFunctor is a pointer to ThreadControlBlock::UnblockFunctor which will be executed in
+	 * \param [in] unblockFunctor is a pointer to UnblockFunctor which will be executed in
 	 * ThreadControlBlock::unblockHook(), default - nullptr (no functor will be executed)
 	 *
 	 * \return 0 on success, error code otherwise:
-	 * - EINTR - thread was unblocked with ThreadControlBlock::UnblockReason::signal;
+	 * - EINTR - thread was unblocked with UnblockReason::signal;
 	 * - ETIMEDOUT - thread was unblocked because timePoint was reached;
 	 */
 
 	int blockUntil(ThreadList& container, ThreadState state, TickClock::time_point timePoint,
-			const ThreadControlBlock::UnblockFunctor* unblockFunctor = {});
+			const UnblockFunctor* unblockFunctor = {});
 
 	/**
 	 * \return number of context switches
@@ -218,7 +216,7 @@ public:
 	 * \warning This function must not be called from interrupt context!
 	 *
 	 * \return 0 on success, error code otherwise:
-	 * - EINTR - thread was unblocked with ThreadControlBlock::UnblockReason::signal;
+	 * - EINTR - thread was unblocked with UnblockReason::signal;
 	 */
 
 	int suspend();
@@ -231,7 +229,7 @@ public:
 	 * \param [in] iterator is the iterator to the thread that will be suspended
 	 *
 	 * \return 0 on success, error code otherwise:
-	 * - EINTR - thread was unblocked with ThreadControlBlock::UnblockReason::signal;
+	 * - EINTR - thread was unblocked with UnblockReason::signal;
 	 * - EINVAL - provided thread is not on "runnable" list;
 	 */
 
@@ -269,12 +267,10 @@ public:
 	 * Current container of the thread is obtained with ThreadControlBlock::getList().
 	 *
 	 * \param [in] iterator is the iterator which points to unblocked thread
-	 * \param [in] unblockReason is the reason of unblocking of the thread, default -
-	 * ThreadControlBlock::UnblockReason::unblockRequest
+	 * \param [in] unblockReason is the reason of unblocking of the thread, default - UnblockReason::unblockRequest
 	 */
 
-	void unblock(ThreadList::iterator iterator,
-			ThreadControlBlock::UnblockReason unblockReason = ThreadControlBlock::UnblockReason::unblockRequest);
+	void unblock(ThreadList::iterator iterator, UnblockReason unblockReason = UnblockReason::unblockRequest);
 
 	/**
 	 * \brief Yields time slot of the scheduler to next thread.
@@ -305,7 +301,7 @@ private:
 	 * \param [in] container is a reference to destination container to which the thread will be transferred
 	 * \param [in] iterator is the iterator to the thread that will be blocked
 	 * \param [in] state is the new state of thread that will be blocked
-	 * \param [in] unblockFunctor is a pointer to ThreadControlBlock::UnblockFunctor which will be executed in
+	 * \param [in] unblockFunctor is a pointer to UnblockFunctor which will be executed in
 	 * ThreadControlBlock::unblockHook()
 	 *
 	 * \return 0 on success, error code otherwise:
@@ -313,7 +309,7 @@ private:
 	 */
 
 	int blockInternal(ThreadList& container, ThreadList::iterator iterator, ThreadState state,
-			const ThreadControlBlock::UnblockFunctor* unblockFunctor);
+			const UnblockFunctor* unblockFunctor);
 
 	/**
 	 * \brief Tests whether context switch is required or not.
@@ -340,7 +336,7 @@ private:
 	 * \param [in] unblockReason is the reason of unblocking of the thread
 	 */
 
-	void unblockInternal(ThreadList::iterator iterator, ThreadControlBlock::UnblockReason unblockReason);
+	void unblockInternal(ThreadList::iterator iterator, UnblockReason unblockReason);
 
 	/// iterator to the currently active ThreadControlBlock
 	ThreadList::iterator currentThreadControlBlock_;

@@ -2,6 +2,9 @@
  * \file
  * \brief Semaphore C-API test cases
  *
+ * This test checks whether semaphore C-API functions properly call appropriate functions from distortos::Semaphore
+ * class.
+ *
  * \author Copyright (C) 2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
