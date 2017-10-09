@@ -50,9 +50,9 @@ public:
 	 */
 
 	constexpr UnblockReasonUnblockFunctorWrapper(const ThreadControlBlock::UnblockFunctor* const unblockFunctor,
-			ThreadControlBlock::UnblockReason& unblockReason) :
-			unblockFunctor_{unblockFunctor},
-			unblockReason_{unblockReason}
+			UnblockReason& unblockReason) :
+					unblockFunctor_{unblockFunctor},
+					unblockReason_{unblockReason}
 	{
 
 	}
@@ -66,8 +66,7 @@ public:
 	 * \param [in] unblockReason is the reason of thread unblocking
 	 */
 
-	void operator()(ThreadControlBlock& threadControlBlock, const ThreadControlBlock::UnblockReason unblockReason) const
-			override
+	void operator()(ThreadControlBlock& threadControlBlock, const UnblockReason unblockReason) const override
 	{
 		unblockReason_ = unblockReason;
 		if (unblockFunctor_ != nullptr)
@@ -80,7 +79,7 @@ private:
 	const ThreadControlBlock::UnblockFunctor* unblockFunctor_;
 
 	/// reference to variable in which the reason of thread unblocking will be stored
-	ThreadControlBlock::UnblockReason& unblockReason_;
+	UnblockReason& unblockReason_;
 };
 
 }	// namespace
@@ -126,7 +125,7 @@ int Scheduler::block(ThreadList& container, const ThreadState state,
 int Scheduler::block(ThreadList& container, const ThreadList::iterator iterator, const ThreadState state,
 		const ThreadControlBlock::UnblockFunctor* const unblockFunctor)
 {
-	ThreadControlBlock::UnblockReason unblockReason {};
+	UnblockReason unblockReason {};
 	const UnblockReasonUnblockFunctorWrapper unblockReasonUnblockFunctorWrapper {unblockFunctor, unblockReason};
 	const auto blockingCurrentThread = iterator == currentThreadControlBlock_;
 
@@ -145,8 +144,8 @@ int Scheduler::block(ThreadList& container, const ThreadList::iterator iterator,
 
 	forceContextSwitch();
 
-	return unblockReason == ThreadControlBlock::UnblockReason::unblockRequest ? 0 :
-			unblockReason == ThreadControlBlock::UnblockReason::timeout ? ETIMEDOUT : EINTR;
+	return unblockReason == UnblockReason::unblockRequest ? 0 :
+			unblockReason == UnblockReason::timeout ? ETIMEDOUT : EINTR;
 }
 
 int Scheduler::blockUntil(ThreadList& container, const ThreadState state, const TickClock::time_point timePoint,
@@ -161,7 +160,7 @@ int Scheduler::blockUntil(ThreadList& container, const ThreadState state, const 
 	if (timePoint <= TickClock::now())
 	{
 		if (unblockFunctor != nullptr)
-			(*unblockFunctor)(*iterator, ThreadControlBlock::UnblockReason::timeout);
+			(*unblockFunctor)(*iterator, UnblockReason::timeout);
 		return ETIMEDOUT;
 	}
 
@@ -171,7 +170,7 @@ int Scheduler::blockUntil(ThreadList& container, const ThreadState state, const 
 	auto softwareTimer = makeStaticSoftwareTimer([this, iterator]()
 			{
 				if (iterator->getList() != &runnableList_)
-					unblockInternal(iterator, ThreadControlBlock::UnblockReason::timeout);
+					unblockInternal(iterator, UnblockReason::timeout);
 			});
 	softwareTimer.start(timePoint);
 
@@ -294,7 +293,7 @@ bool Scheduler::tickInterruptHandler()
 	return isContextSwitchRequired();
 }
 
-void Scheduler::unblock(const ThreadList::iterator iterator, const ThreadControlBlock::UnblockReason unblockReason)
+void Scheduler::unblock(const ThreadList::iterator iterator, const UnblockReason unblockReason)
 {
 	const InterruptMaskingLock interruptMaskingLock;
 
@@ -354,8 +353,7 @@ bool Scheduler::isContextSwitchRequired() const
 	return false;
 }
 
-void Scheduler::unblockInternal(const ThreadList::iterator iterator,
-		const ThreadControlBlock::UnblockReason unblockReason)
+void Scheduler::unblockInternal(const ThreadList::iterator iterator, const UnblockReason unblockReason)
 {
 	auto& threadControlBlock = *iterator;
 	runnableList_.splice(iterator);

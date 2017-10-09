@@ -13,11 +13,11 @@
 #define INCLUDE_DISTORTOS_INTERNAL_SCHEDULER_THREADCONTROLBLOCK_HPP_
 
 #include "distortos/internal/scheduler/RoundRobinQuantum.hpp"
+#include "distortos/internal/scheduler/Stack.hpp"
 #include "distortos/internal/scheduler/ThreadListNode.hpp"
+#include "distortos/internal/scheduler/UnblockReason.hpp"
 
 #include "distortos/internal/synchronization/MutexList.hpp"
-
-#include "distortos/internal/scheduler/Stack.hpp"
 
 #include "distortos/SchedulingPolicy.hpp"
 #include "distortos/ThreadState.hpp"
@@ -40,22 +40,6 @@ class ThreadGroupControlBlock;
 class ThreadControlBlock : public ThreadListNode
 {
 public:
-
-	/// reason of thread unblocking
-	enum class UnblockReason : uint8_t
-	{
-		/// explicit request to unblock the thread - normal unblock
-		unblockRequest,
-		/// timeout - unblock via software timer
-		timeout,
-
-#if CONFIG_SIGNALS_ENABLE == 1
-
-		/// signal handler - unblock to deliver unmasked signal
-		signal,
-
-#endif	// CONFIG_SIGNALS_ENABLE == 1
-	};
 
 	/// UnblockFunctor is a functor executed when unblocking the thread, it receives two parameter - a reference to
 	/// ThreadControlBlock that is being unblocked and the reason of thread unblocking

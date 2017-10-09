@@ -36,7 +36,7 @@ public:
 			const ThreadControlBlock::UnblockFunctor*));
 	MAKE_CONST_MOCK0(getCurrentThreadControlBlock, ThreadControlBlock&());
 	MAKE_MOCK1(unblock, void(ThreadList::iterator));
-	MAKE_MOCK2(unblock, void(ThreadList::iterator, ThreadControlBlock::UnblockReason));
+	MAKE_MOCK2(unblock, void(ThreadList::iterator, UnblockReason));
 };
 
 }	// namespace internal
