@@ -29,7 +29,7 @@ namespace
 
 /// PriorityInheritanceMutexControlBlockUnblockFunctor is a functor executed when unblocking a thread that is blocked on
 /// a mutex with priorityInheritance protocol
-class PriorityInheritanceMutexControlBlockUnblockFunctor : public ThreadControlBlock::UnblockFunctor
+class PriorityInheritanceMutexControlBlockUnblockFunctor : public UnblockFunctor
 {
 public:
 

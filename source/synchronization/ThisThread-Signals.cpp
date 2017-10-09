@@ -44,7 +44,7 @@ namespace
 +---------------------------------------------------------------------------------------------------------------------*/
 
 /// SignalsWaitUnblockFunctor is a functor executed when unblocking a thread that is waiting for signal
-class SignalsWaitUnblockFunctor : public internal::ThreadControlBlock::UnblockFunctor
+class SignalsWaitUnblockFunctor : public internal::UnblockFunctor
 {
 public:
 

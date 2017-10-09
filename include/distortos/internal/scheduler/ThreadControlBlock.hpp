@@ -15,14 +15,12 @@
 #include "distortos/internal/scheduler/RoundRobinQuantum.hpp"
 #include "distortos/internal/scheduler/Stack.hpp"
 #include "distortos/internal/scheduler/ThreadListNode.hpp"
-#include "distortos/internal/scheduler/UnblockReason.hpp"
+#include "distortos/internal/scheduler/UnblockFunctor.hpp"
 
 #include "distortos/internal/synchronization/MutexList.hpp"
 
 #include "distortos/SchedulingPolicy.hpp"
 #include "distortos/ThreadState.hpp"
-
-#include "estd/TypeErasedFunctor.hpp"
 
 namespace distortos
 {
@@ -40,13 +38,6 @@ class ThreadGroupControlBlock;
 class ThreadControlBlock : public ThreadListNode
 {
 public:
-
-	/// UnblockFunctor is a functor executed when unblocking the thread, it receives two parameter - a reference to
-	/// ThreadControlBlock that is being unblocked and the reason of thread unblocking
-	class UnblockFunctor : public estd::TypeErasedFunctor<void(ThreadControlBlock&, UnblockReason)>
-	{
-
-	};
 
 	/**
 	 * \brief ThreadControlBlock's constructor.

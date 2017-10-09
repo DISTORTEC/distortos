@@ -36,9 +36,8 @@ namespace
 | local types
 +---------------------------------------------------------------------------------------------------------------------*/
 
-/// UnblockReasonUnblockFunctorWrapper is a wrapper for ThreadControlBlock::UnblockFunctor that saves reason of thread
-/// unblocking
-class UnblockReasonUnblockFunctorWrapper : public ThreadControlBlock::UnblockFunctor
+/// UnblockReasonUnblockFunctorWrapper is a wrapper for UnblockFunctor that saves reason of thread unblocking
+class UnblockReasonUnblockFunctorWrapper : public UnblockFunctor
 {
 public:
 
@@ -49,7 +48,7 @@ public:
 	 * \param [out] unblockReason is a reference to variable in which the reason of thread unblocking will be stored
 	 */
 
-	constexpr UnblockReasonUnblockFunctorWrapper(const ThreadControlBlock::UnblockFunctor* const unblockFunctor,
+	constexpr UnblockReasonUnblockFunctorWrapper(const UnblockFunctor* const unblockFunctor,
 			UnblockReason& unblockReason) :
 					unblockFunctor_{unblockFunctor},
 					unblockReason_{unblockReason}
@@ -76,7 +75,7 @@ public:
 private:
 
 	/// pointer to wrapped unblock functor
-	const ThreadControlBlock::UnblockFunctor* unblockFunctor_;
+	const UnblockFunctor* unblockFunctor_;
 
 	/// reference to variable in which the reason of thread unblocking will be stored
 	UnblockReason& unblockReason_;
@@ -114,8 +113,7 @@ int Scheduler::add(void (& run)(Thread&), void (* const preTerminationHook)(Thre
 	return 0;
 }
 
-int Scheduler::block(ThreadList& container, const ThreadState state,
-		const ThreadControlBlock::UnblockFunctor* const unblockFunctor)
+int Scheduler::block(ThreadList& container, const ThreadState state, const UnblockFunctor* const unblockFunctor)
 {
 	CHECK_FUNCTION_CONTEXT();
 
@@ -123,7 +121,7 @@ int Scheduler::block(ThreadList& container, const ThreadState state,
 }
 
 int Scheduler::block(ThreadList& container, const ThreadList::iterator iterator, const ThreadState state,
-		const ThreadControlBlock::UnblockFunctor* const unblockFunctor)
+		const UnblockFunctor* const unblockFunctor)
 {
 	UnblockReason unblockReason {};
 	const UnblockReasonUnblockFunctorWrapper unblockReasonUnblockFunctorWrapper {unblockFunctor, unblockReason};
@@ -149,7 +147,7 @@ int Scheduler::block(ThreadList& container, const ThreadList::iterator iterator,
 }
 
 int Scheduler::blockUntil(ThreadList& container, const ThreadState state, const TickClock::time_point timePoint,
-		const ThreadControlBlock::UnblockFunctor* const unblockFunctor)
+		const UnblockFunctor* const unblockFunctor)
 {
 	CHECK_FUNCTION_CONTEXT();
 
@@ -327,7 +325,7 @@ int Scheduler::addInternal(ThreadControlBlock& threadControlBlock)
 }
 
 int Scheduler::blockInternal(ThreadList& container, const ThreadList::iterator iterator, const ThreadState state,
-		const ThreadControlBlock::UnblockFunctor* const unblockFunctor)
+		const UnblockFunctor* const unblockFunctor)
 {
 	auto& threadControlBlock = *iterator;
 

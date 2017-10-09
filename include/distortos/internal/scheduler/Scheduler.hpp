@@ -70,7 +70,7 @@ public:
 	 *
 	 * \param [in] container is a reference to destination container to which the thread will be transferred
 	 * \param [in] state is the new state of thread that will be blocked
-	 * \param [in] unblockFunctor is a pointer to ThreadControlBlock::UnblockFunctor which will be executed in
+	 * \param [in] unblockFunctor is a pointer to UnblockFunctor which will be executed in
 	 * ThreadControlBlock::unblockHook(), default - nullptr (no functor will be executed)
 	 *
 	 * \return 0 on success, error code otherwise:
@@ -78,7 +78,7 @@ public:
 	 * - ETIMEDOUT - thread was unblocked with UnblockReason::timeout;
 	 */
 
-	int block(ThreadList& container, ThreadState state, const ThreadControlBlock::UnblockFunctor* unblockFunctor = {});
+	int block(ThreadList& container, ThreadState state, const UnblockFunctor* unblockFunctor = {});
 
 	/**
 	 * \brief Blocks thread, transferring it to provided container.
@@ -88,7 +88,7 @@ public:
 	 * \param [in] container is a reference to destination container to which the thread will be transferred
 	 * \param [in] iterator is the iterator to the thread that will be blocked
 	 * \param [in] state is the new state of thread that will be blocked
-	 * \param [in] unblockFunctor is a pointer to ThreadControlBlock::UnblockFunctor which will be executed in
+	 * \param [in] unblockFunctor is a pointer to UnblockFunctor which will be executed in
 	 * ThreadControlBlock::unblockHook(), default - nullptr (no functor will be executed)
 	 *
 	 * \return 0 on success, error code otherwise:
@@ -98,7 +98,7 @@ public:
 	 */
 
 	int block(ThreadList& container, ThreadList::iterator iterator, ThreadState state,
-			const ThreadControlBlock::UnblockFunctor* unblockFunctor = {});
+			const UnblockFunctor* unblockFunctor = {});
 
 	/**
 	 * \brief Blocks current thread with timeout, transferring it to provided container.
@@ -108,7 +108,7 @@ public:
 	 * \param [in] container is a reference to destination container to which the thread will be transferred
 	 * \param [in] state is the new state of thread that will be blocked
 	 * \param [in] timePoint is the time point at which the thread will be unblocked (if not already unblocked)
-	 * \param [in] unblockFunctor is a pointer to ThreadControlBlock::UnblockFunctor which will be executed in
+	 * \param [in] unblockFunctor is a pointer to UnblockFunctor which will be executed in
 	 * ThreadControlBlock::unblockHook(), default - nullptr (no functor will be executed)
 	 *
 	 * \return 0 on success, error code otherwise:
@@ -117,7 +117,7 @@ public:
 	 */
 
 	int blockUntil(ThreadList& container, ThreadState state, TickClock::time_point timePoint,
-			const ThreadControlBlock::UnblockFunctor* unblockFunctor = {});
+			const UnblockFunctor* unblockFunctor = {});
 
 	/**
 	 * \return number of context switches
@@ -301,7 +301,7 @@ private:
 	 * \param [in] container is a reference to destination container to which the thread will be transferred
 	 * \param [in] iterator is the iterator to the thread that will be blocked
 	 * \param [in] state is the new state of thread that will be blocked
-	 * \param [in] unblockFunctor is a pointer to ThreadControlBlock::UnblockFunctor which will be executed in
+	 * \param [in] unblockFunctor is a pointer to UnblockFunctor which will be executed in
 	 * ThreadControlBlock::unblockHook()
 	 *
 	 * \return 0 on success, error code otherwise:
@@ -309,7 +309,7 @@ private:
 	 */
 
 	int blockInternal(ThreadList& container, ThreadList::iterator iterator, ThreadState state,
-			const ThreadControlBlock::UnblockFunctor* unblockFunctor);
+			const UnblockFunctor* unblockFunctor);
 
 	/**
 	 * \brief Tests whether context switch is required or not.

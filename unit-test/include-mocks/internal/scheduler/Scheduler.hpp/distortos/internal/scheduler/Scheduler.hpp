@@ -28,12 +28,11 @@ class Scheduler
 public:
 
 	MAKE_MOCK2(block, int(ThreadList&, ThreadState));
-	MAKE_MOCK3(block, int(ThreadList&, ThreadState, const ThreadControlBlock::UnblockFunctor*));
+	MAKE_MOCK3(block, int(ThreadList&, ThreadState, const UnblockFunctor*));
 	MAKE_MOCK3(block, int(ThreadList&, ThreadList::iterator, ThreadState));
-	MAKE_MOCK4(block, int(ThreadList&, ThreadList::iterator, ThreadState, const ThreadControlBlock::UnblockFunctor*));
+	MAKE_MOCK4(block, int(ThreadList&, ThreadList::iterator, ThreadState, const UnblockFunctor*));
 	MAKE_MOCK3(blockUntil, int(ThreadList&, ThreadState, TickClock::time_point));
-	MAKE_MOCK4(blockUntil, int(ThreadList&, ThreadState, TickClock::time_point,
-			const ThreadControlBlock::UnblockFunctor*));
+	MAKE_MOCK4(blockUntil, int(ThreadList&, ThreadState, TickClock::time_point, const UnblockFunctor*));
 	MAKE_CONST_MOCK0(getCurrentThreadControlBlock, ThreadControlBlock&());
 	MAKE_MOCK1(unblock, void(ThreadList::iterator));
 	MAKE_MOCK2(unblock, void(ThreadList::iterator, UnblockReason));
