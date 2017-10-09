@@ -19,6 +19,7 @@
 #include "distortos/internal/CHECK_FUNCTION_CONTEXT.hpp"
 
 #include "distortos/InterruptMaskingLock.hpp"
+#include "distortos/internal/scheduler/forceContextSwitch.hpp"
 
 #include <cerrno>
 
@@ -112,6 +113,28 @@ int ThreadCommon::join()
 	while ((ret = joinSemaphore_.wait()) == EINTR);
 	return ret;
 }
+
+#ifdef CONFIG_THREAD_EXIT_ENABLE
+
+void	ThreadCommon::exit(void(*const pretermhook)(Thread&),
+			   void(&termhook)(Thread&))
+{
+	{
+		const InterruptMaskingLock interruptMaskingLock;
+		if ( pretermhook != nullptr )
+			pretermhook(*this);
+		internal::getScheduler().remove();
+		termhook(*this);
+	}
+	internal::forceContextSwitch();
+	while ( true );
+}
+
+void	ThreadCommon::exit()
+{
+	exit(nullptr, ThreadCommon::terminationHook);
+}
+#endif
 
 #if CONFIG_SIGNALS_ENABLE == 1
 

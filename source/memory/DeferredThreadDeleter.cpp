@@ -17,7 +17,7 @@
 
 #include "distortos/internal/scheduler/ThreadControlBlock.hpp"
 
-#include "distortos/Thread.hpp"
+#include "distortos/ThreadCommon.hpp"
 
 namespace distortos
 {

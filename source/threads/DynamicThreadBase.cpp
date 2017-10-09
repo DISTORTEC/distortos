@@ -51,6 +51,23 @@ int DynamicThreadBase::detach()
 
 #endif	// CONFIG_THREAD_DETACH_ENABLE == 1
 
+#ifdef CONFIG_THREAD_EXIT_ENABLE
+void	DynamicThreadBase::exit()
+{
+	ThreadCommon::exit(DynamicThreadBase::preTerminationHook, DynamicThreadBase::terminationHook);
+}
+#endif
+
+#ifdef CONFIG_THREAD_DETACH_ENABLE
+// User interface for this thread
+Thread & DynamicThreadBase::getThreadInterface(void)
+{
+	if ( owner_ )
+		return *owner_;
+	return *this;
+}
+#endif
+
 /*---------------------------------------------------------------------------------------------------------------------+
 | protected static functions
 +---------------------------------------------------------------------------------------------------------------------*/

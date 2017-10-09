@@ -119,6 +119,13 @@ public:
 
 #endif	// CONFIG_THREAD_DETACH_ENABLE != 1
 
+#ifdef CONFIG_THREAD_DETACH_ENABLE
+	/**
+	 * \return User interface for this thread
+	 */
+	virtual Thread & getThreadInterface(void) override;
+#endif
+
 #if CONFIG_THREAD_DETACH_ENABLE == 1
 
 	/**
@@ -219,6 +226,14 @@ private:
 	 */
 
 	static void run(Thread& thread);
+
+#ifdef CONFIG_THREAD_EXIT_ENABLE
+	/**
+	 * \brief Terminates this thread.
+	 */
+	// [[noreturn]] GCC cannot handle [[noreturn]] virtual functions
+	virtual void exit() override;
+#endif
 
 #if CONFIG_SIGNALS_ENABLE == 1
 

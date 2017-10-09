@@ -16,7 +16,7 @@
 
 #include "distortos/internal/CHECK_FUNCTION_CONTEXT.hpp"
 
-#include "distortos/Thread.hpp"
+#include "distortos/ThreadCommon.hpp"
 
 #include <cerrno>
 
@@ -43,7 +43,12 @@ Thread& get()
 {
 	CHECK_FUNCTION_CONTEXT();
 
-	return internal::getScheduler().getCurrentThreadControlBlock().getOwner();
+	auto & thcom = internal::getScheduler().getCurrentThreadControlBlock().getOwner();
+#ifdef CONFIG_THREAD_DETACH_ENABLE
+	return thcom.getThreadInterface();
+#else
+	return thcom;
+#endif
 }
 
 uint8_t getEffectivePriority()
@@ -110,6 +115,13 @@ void yield()
 
 	internal::getScheduler().yield();
 }
+
+#ifdef CONFIG_THREAD_EXIT_ENABLE
+void	exit()
+{
+	internal::getScheduler().getCurrentThreadControlBlock().getOwner().exit();
+}
+#endif
 
 }	// namespace ThisThread
 
