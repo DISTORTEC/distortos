@@ -32,7 +32,7 @@ class Mutex : private internal::MutexControlBlock
 public:
 
 	/// mutex protocols
-	using Protocol = MutexControlBlock::Protocol;
+	using Protocol = MutexProtocol;
 
 	/// type used for counting recursive locks
 	using RecursiveLocksCount = MutexControlBlock::RecursiveLocksCount;
