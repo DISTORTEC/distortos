@@ -17,3 +17,20 @@ target_include_directories(C-API-Mutex-compile-link-test BEFORE PUBLIC
 		${INCLUDE_MOCKS}/distortosConfiguration.h
 		${INCLUDE_MOCKS}/fromCApi.hpp-Mutex
 		${INCLUDE_MOCKS}/Mutex.hpp)
+
+add_executable(C-API-Mutex-unit-test-0
+		C-API-Mutex-unit-test-0.cpp
+		${DISTORTOS_PATH}/source/C-API/C-API-Mutex.cpp
+		${MAIN_CPP})
+
+target_compile_definitions(C-API-Mutex-unit-test-0 PUBLIC DISTORTOS_UNIT_TEST)
+target_include_directories(C-API-Mutex-unit-test-0 BEFORE PUBLIC
+		${INCLUDE_MOCKS}/distortosConfiguration.h
+		${INCLUDE_MOCKS}/fromCApi.hpp-Mutex
+		${INCLUDE_MOCKS}/Mutex.hpp)
+
+add_custom_target(run-C-API-Mutex-unit-test-0
+		COMMAND C-API-Mutex-unit-test-0
+		COMMENT C-API-Mutex-unit-test-0
+		USES_TERMINAL)
+add_dependencies(run run-C-API-Mutex-unit-test-0)
