@@ -47,9 +47,10 @@ target_include_directories(C-API-Semaphore-unit-test-1 BEFORE PUBLIC
 		${INCLUDE_MOCKS}/architecture/restoreInterruptMasking.hpp
 		${INCLUDE_MOCKS}/internal/scheduler/getScheduler.hpp
 		${INCLUDE_MOCKS}/internal/scheduler/Scheduler.hpp
+		${INCLUDE_MOCKS}/internal/scheduler/ThreadControlBlock.hpp
+		${INCLUDE_MOCKS}/internal/scheduler/ThreadListNode.hpp
 		${INCLUDE_MOCKS}/distortosConfiguration.h
 		${INCLUDE_MOCKS}/TickClock.hpp)
-target_compile_options(C-API-Semaphore-unit-test-1 PUBLIC -include ${INCLUDE_MOCKS}/reent.h)
 
 add_custom_target(run-C-API-Semaphore-unit-test-1
 	COMMAND C-API-Semaphore-unit-test-1
