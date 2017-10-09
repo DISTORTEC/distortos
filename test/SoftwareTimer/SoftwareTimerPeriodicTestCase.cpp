@@ -17,6 +17,8 @@
 #include "distortos/DynamicSoftwareTimer.hpp"
 #include "distortos/ThisThread.hpp"
 
+#include <malloc.h>
+
 namespace distortos
 {
 
@@ -88,37 +90,47 @@ void softwareTimerFunction(SequenceAsserter& sequenceAsserter, uint32_t& counter
 
 bool SoftwareTimerPeriodicTestCase::run_() const
 {
-	SequenceAsserter sequenceAsserter;
-	uint32_t counters[totalSoftwareTimers] {};
-	std::array<DynamicSoftwareTimer, totalSoftwareTimers> softwareTimers
-	{{
-			{softwareTimerFunction, std::ref(sequenceAsserter), std::ref(counters[0]), 1},
-			{softwareTimerFunction, std::ref(sequenceAsserter), std::ref(counters[1]), 2},
-			{softwareTimerFunction, std::ref(sequenceAsserter), std::ref(counters[2]), 3},
-			{softwareTimerFunction, std::ref(sequenceAsserter), std::ref(counters[3]), 4},
-			{softwareTimerFunction, std::ref(sequenceAsserter), std::ref(counters[4]), 5},
-			{softwareTimerFunction, std::ref(sequenceAsserter), std::ref(counters[5]), 6},
-			{softwareTimerFunction, std::ref(sequenceAsserter), std::ref(counters[6]), 7},
-			{softwareTimerFunction, std::ref(sequenceAsserter), std::ref(counters[7]), 8},
-	}};
+	const auto allocatedMemory = mallinfo().uordblks;
 
-	waitForNextTick();
-
-	TickClock::duration period {1};
-	unsigned int expectedSequencePoint {};
-	for (auto& softwareTimer : softwareTimers)
 	{
-		softwareTimer.start(period, period);
-		expectedSequencePoint += testCaseDuration / period;
-		++period;
+		SequenceAsserter sequenceAsserter;
+		uint32_t counters[totalSoftwareTimers] {};
+		std::array<DynamicSoftwareTimer, totalSoftwareTimers> softwareTimers
+		{{
+				{softwareTimerFunction, std::ref(sequenceAsserter), std::ref(counters[0]), 1},
+				{softwareTimerFunction, std::ref(sequenceAsserter), std::ref(counters[1]), 2},
+				{softwareTimerFunction, std::ref(sequenceAsserter), std::ref(counters[2]), 3},
+				{softwareTimerFunction, std::ref(sequenceAsserter), std::ref(counters[3]), 4},
+				{softwareTimerFunction, std::ref(sequenceAsserter), std::ref(counters[4]), 5},
+				{softwareTimerFunction, std::ref(sequenceAsserter), std::ref(counters[5]), 6},
+				{softwareTimerFunction, std::ref(sequenceAsserter), std::ref(counters[6]), 7},
+				{softwareTimerFunction, std::ref(sequenceAsserter), std::ref(counters[7]), 8},
+		}};
+
+		waitForNextTick();
+
+		TickClock::duration period {1};
+		unsigned int expectedSequencePoint {};
+		for (auto& softwareTimer : softwareTimers)
+		{
+			softwareTimer.start(period, period);
+			expectedSequencePoint += testCaseDuration / period;
+			++period;
+		}
+
+		ThisThread::sleepFor(testCaseDuration);
+
+		for (auto& softwareTimer : softwareTimers)
+			softwareTimer.stop();
+
+		if (sequenceAsserter.assertSequence(expectedSequencePoint) == false)
+			return false;
 	}
 
-	ThisThread::sleepFor(testCaseDuration);
+	if (mallinfo().uordblks != allocatedMemory)	// dynamic memory must be deallocated after test
+		return false;
 
-	for (auto& softwareTimer : softwareTimers)
-		softwareTimer.stop();
-
-	return sequenceAsserter.assertSequence(expectedSequencePoint);
+	return true;
 }
 
 }	// namespace test
