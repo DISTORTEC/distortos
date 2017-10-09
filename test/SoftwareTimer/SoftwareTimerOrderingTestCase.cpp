@@ -15,7 +15,7 @@
 #include "SequenceAsserter.hpp"
 #include "waitForNextTick.hpp"
 
-#include "distortos/StaticSoftwareTimer.hpp"
+#include "distortos/DynamicSoftwareTimer.hpp"
 
 namespace distortos
 {
@@ -34,27 +34,16 @@ bool SoftwareTimerOrderingTestCase::run_() const
 	for (const auto& phase : priorityTestPhases)
 	{
 		SequenceAsserter sequenceAsserter;
-
-		using TestSoftwareTimer = decltype(makeStaticSoftwareTimer(&SequenceAsserter::sequencePoint,
-				std::ref(std::declval<SequenceAsserter&>()), std::declval<unsigned int>()));
-		std::array<TestSoftwareTimer, totalSoftwareTimers> softwareTimers
+		std::array<DynamicSoftwareTimer, totalSoftwareTimers> softwareTimers
 		{{
-				makeStaticSoftwareTimer(&SequenceAsserter::sequencePoint, std::ref(sequenceAsserter),
-						static_cast<unsigned int>(phase.first[phase.second[0]].second)),
-				makeStaticSoftwareTimer(&SequenceAsserter::sequencePoint, std::ref(sequenceAsserter),
-						static_cast<unsigned int>(phase.first[phase.second[1]].second)),
-				makeStaticSoftwareTimer(&SequenceAsserter::sequencePoint, std::ref(sequenceAsserter),
-						static_cast<unsigned int>(phase.first[phase.second[2]].second)),
-				makeStaticSoftwareTimer(&SequenceAsserter::sequencePoint, std::ref(sequenceAsserter),
-						static_cast<unsigned int>(phase.first[phase.second[3]].second)),
-				makeStaticSoftwareTimer(&SequenceAsserter::sequencePoint, std::ref(sequenceAsserter),
-						static_cast<unsigned int>(phase.first[phase.second[4]].second)),
-				makeStaticSoftwareTimer(&SequenceAsserter::sequencePoint, std::ref(sequenceAsserter),
-						static_cast<unsigned int>(phase.first[phase.second[5]].second)),
-				makeStaticSoftwareTimer(&SequenceAsserter::sequencePoint, std::ref(sequenceAsserter),
-						static_cast<unsigned int>(phase.first[phase.second[6]].second)),
-				makeStaticSoftwareTimer(&SequenceAsserter::sequencePoint, std::ref(sequenceAsserter),
-						static_cast<unsigned int>(phase.first[phase.second[7]].second)),
+				{&SequenceAsserter::sequencePoint, std::ref(sequenceAsserter), phase.first[phase.second[0]].second},
+				{&SequenceAsserter::sequencePoint, std::ref(sequenceAsserter), phase.first[phase.second[1]].second},
+				{&SequenceAsserter::sequencePoint, std::ref(sequenceAsserter), phase.first[phase.second[2]].second},
+				{&SequenceAsserter::sequencePoint, std::ref(sequenceAsserter), phase.first[phase.second[3]].second},
+				{&SequenceAsserter::sequencePoint, std::ref(sequenceAsserter), phase.first[phase.second[4]].second},
+				{&SequenceAsserter::sequencePoint, std::ref(sequenceAsserter), phase.first[phase.second[5]].second},
+				{&SequenceAsserter::sequencePoint, std::ref(sequenceAsserter), phase.first[phase.second[6]].second},
+				{&SequenceAsserter::sequencePoint, std::ref(sequenceAsserter), phase.first[phase.second[7]].second},
 		}};
 
 		waitForNextTick();

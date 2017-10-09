@@ -2,7 +2,7 @@
  * \file
  * \brief SoftwareTimerOperationsTestCase class implementation
  *
- * \author Copyright (C) 2014-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -13,7 +13,7 @@
 
 #include "waitForNextTick.hpp"
 
-#include "distortos/StaticSoftwareTimer.hpp"
+#include "distortos/DynamicSoftwareTimer.hpp"
 #include "distortos/ThisThread.hpp"
 
 namespace distortos
@@ -42,7 +42,7 @@ public:
 	 */
 
 	explicit SoftwareTimerWrapper(volatile uint32_t& value) :
-			softwareTimer_{&SoftwareTimerWrapper::function, *this},
+			softwareTimer_{&SoftwareTimerWrapper::function, std::ref(*this)},
 			timePoint_{},
 			period_{},
 			value_{value},
@@ -118,12 +118,8 @@ private:
 		stateInFunction_ = softwareTimer_.isRunning();
 	}
 
-	/// type of internal software timer
-	using SoftwareTimerType = decltype(makeStaticSoftwareTimer(&SoftwareTimerWrapper::function,
-			std::ref(std::declval<SoftwareTimerWrapper&>())));
-
 	/// internal software timer
-	SoftwareTimerType softwareTimer_;
+	DynamicSoftwareTimer softwareTimer_;
 
 	/// time point used to restart timer
 	TickClock::time_point timePoint_;

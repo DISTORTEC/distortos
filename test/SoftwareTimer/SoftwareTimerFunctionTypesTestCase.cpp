@@ -11,7 +11,7 @@
 
 #include "SoftwareTimerFunctionTypesTestCase.hpp"
 
-#include "distortos/StaticSoftwareTimer.hpp"
+#include "distortos/DynamicSoftwareTimer.hpp"
 
 namespace distortos
 {
@@ -117,7 +117,7 @@ bool SoftwareTimerFunctionTypesTestCase::run_() const
 		uint32_t sharedVariable {};
 		constexpr uint32_t magicValue {0xd16807d9};
 
-		auto regularFunctionSoftwareTimer = makeStaticSoftwareTimer(regularFunction, std::ref(sharedVariable),
+		auto regularFunctionSoftwareTimer = makeDynamicSoftwareTimer(regularFunction, std::ref(sharedVariable),
 				magicValue);
 		regularFunctionSoftwareTimer.start(singleDuration);
 		while (regularFunctionSoftwareTimer.isRunning() == true)
@@ -134,7 +134,7 @@ bool SoftwareTimerFunctionTypesTestCase::run_() const
 		uint32_t sharedVariable {};
 		constexpr uint32_t magicValue {0x6affeaca};
 
-		auto functorSoftwareTimer = makeStaticSoftwareTimer(Functor{}, std::ref(sharedVariable), magicValue);
+		auto functorSoftwareTimer = makeDynamicSoftwareTimer(Functor{}, std::ref(sharedVariable), magicValue);
 		functorSoftwareTimer.start(singleDuration);
 		while (functorSoftwareTimer.isRunning() == true)
 		{
@@ -150,7 +150,7 @@ bool SoftwareTimerFunctionTypesTestCase::run_() const
 		constexpr uint32_t magicValue {0x7a919ba8};
 		Object object {magicValue};
 
-		auto objectSoftwareTimer = makeStaticSoftwareTimer(&Object::function, std::ref(object));
+		auto objectSoftwareTimer = makeDynamicSoftwareTimer(&Object::function, std::ref(object));
 		objectSoftwareTimer.start(singleDuration);
 		while (objectSoftwareTimer.isRunning() == true)
 		{
@@ -166,7 +166,7 @@ bool SoftwareTimerFunctionTypesTestCase::run_() const
 		uint32_t sharedVariable {};
 		constexpr uint32_t magicValue {0x05da8b27};
 
-		auto capturingLambdaSoftwareTimer = makeStaticSoftwareTimer(
+		auto capturingLambdaSoftwareTimer = makeDynamicSoftwareTimer(
 				[&sharedVariable, magicValue]()
 				{
 					sharedVariable = magicValue;
