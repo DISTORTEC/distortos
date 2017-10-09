@@ -34,6 +34,7 @@ public:
 	MAKE_MOCK3(blockUntil, int(ThreadList&, ThreadState, TickClock::time_point));
 	MAKE_MOCK4(blockUntil, int(ThreadList&, ThreadState, TickClock::time_point,
 			const ThreadControlBlock::UnblockFunctor*));
+	MAKE_CONST_MOCK0(getCurrentThreadControlBlock, ThreadControlBlock&());
 	MAKE_MOCK1(unblock, void(ThreadList::iterator));
 	MAKE_MOCK2(unblock, void(ThreadList::iterator, ThreadControlBlock::UnblockReason));
 };
