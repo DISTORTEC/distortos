@@ -14,6 +14,8 @@ All notable changes to this project will be documented in this file. This projec
 functions.
 - `distortos::fromCApi()` which can be used to cast referenes to C-API objects (like `distortos_Semaphore`) into
 references to regular C++ API objects (like `distortos::Semaphore`).
+- `distortos::DynamicSoftwareTimer` class - a dynamic and (mostly) non-templated counterpart of
+`distortos::StaticSoftwareTimer`.
 - Unit tests of C-API for mutexes and semaphores, using [Catch](https://github.com/philsquared/Catch) unit test
 framework and [Trompeloeil](https://github.com/rollbear/trompeloeil) mocking framework. Build system of unit tests uses
 [CMake](https://cmake.org/).
