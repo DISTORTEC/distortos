@@ -34,3 +34,27 @@ add_custom_target(run-C-API-Mutex-unit-test-0
 		COMMENT C-API-Mutex-unit-test-0
 		USES_TERMINAL)
 add_dependencies(run run-C-API-Mutex-unit-test-0)
+
+add_executable(C-API-Mutex-unit-test-1
+		C-API-Mutex-unit-test-1.cpp
+		${DISTORTOS_PATH}/source/C-API/C-API-Mutex.cpp
+		${DISTORTOS_PATH}/source/synchronization/Mutex.cpp
+		${DISTORTOS_PATH}/source/synchronization/MutexControlBlock.cpp
+		${MAIN_CPP})
+
+target_include_directories(C-API-Mutex-unit-test-1 BEFORE PUBLIC
+		${INCLUDE_MOCKS}/architecture/enableInterruptMasking.hpp
+		${INCLUDE_MOCKS}/architecture/InterruptMask.hpp
+		${INCLUDE_MOCKS}/architecture/restoreInterruptMasking.hpp
+		${INCLUDE_MOCKS}/internal/scheduler/getScheduler.hpp
+		${INCLUDE_MOCKS}/internal/scheduler/Scheduler.hpp
+		${INCLUDE_MOCKS}/internal/scheduler/ThreadControlBlock.hpp
+		${INCLUDE_MOCKS}/internal/scheduler/ThreadListNode.hpp
+		${INCLUDE_MOCKS}/distortosConfiguration.h
+		${INCLUDE_MOCKS}/TickClock.hpp)
+
+add_custom_target(run-C-API-Mutex-unit-test-1
+		COMMAND C-API-Mutex-unit-test-1
+		COMMENT C-API-Mutex-unit-test-1
+		USES_TERMINAL)
+add_dependencies(run run-C-API-Mutex-unit-test-1)
