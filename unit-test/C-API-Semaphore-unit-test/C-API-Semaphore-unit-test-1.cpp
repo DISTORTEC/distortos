@@ -93,12 +93,12 @@ TEST_CASE("Testing distortos_Semaphore_construct_1()", "[construct]")
 	constexpr unsigned int highRandomValue {0xb24e4367};
 
 	{
-		distortos_Semaphore semaphore;
+		distortos_Semaphore semaphore {};
 		REQUIRE(distortos_Semaphore_construct_1(&semaphore, lowRandomValue, highRandomValue) == 0);
 		testCommon(semaphore, lowRandomValue, highRandomValue);
 	}
 	{
-		distortos_Semaphore semaphore;
+		distortos_Semaphore semaphore {};
 		REQUIRE(distortos_Semaphore_construct_1(&semaphore, highRandomValue, lowRandomValue) == 0);
 		testCommon(semaphore, highRandomValue, lowRandomValue);
 	}
@@ -109,7 +109,7 @@ TEST_CASE("Testing distortos_Semaphore_construct()", "[construct]")
 	constexpr unsigned int randomValue {0xb86c251b};
 
 	{
-		distortos_Semaphore semaphore;
+		distortos_Semaphore semaphore {};
 		REQUIRE(distortos_Semaphore_construct(&semaphore, randomValue) == 0);
 		testCommon(semaphore, randomValue);
 	}
