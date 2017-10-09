@@ -30,9 +30,9 @@ target_include_directories(C-API-Semaphore-unit-test-0 BEFORE PUBLIC
 		${INCLUDE_MOCKS}/Semaphore.hpp)
 
 add_custom_target(run-C-API-Semaphore-unit-test-0
-	COMMAND C-API-Semaphore-unit-test-0
-	COMMENT C-API-Semaphore-unit-test-0
-	USES_TERMINAL)
+		COMMAND C-API-Semaphore-unit-test-0
+		COMMENT C-API-Semaphore-unit-test-0
+		USES_TERMINAL)
 add_dependencies(run run-C-API-Semaphore-unit-test-0)
 
 add_executable(C-API-Semaphore-unit-test-1
@@ -53,7 +53,7 @@ target_include_directories(C-API-Semaphore-unit-test-1 BEFORE PUBLIC
 		${INCLUDE_MOCKS}/TickClock.hpp)
 
 add_custom_target(run-C-API-Semaphore-unit-test-1
-	COMMAND C-API-Semaphore-unit-test-1
-	COMMENT C-API-Semaphore-unit-test-1
-	USES_TERMINAL)
+		COMMAND C-API-Semaphore-unit-test-1
+		COMMENT C-API-Semaphore-unit-test-1
+		USES_TERMINAL)
 add_dependencies(run run-C-API-Semaphore-unit-test-1)
