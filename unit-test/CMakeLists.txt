@@ -37,4 +37,5 @@ add_compile_options(-Wall -Wextra -Wshadow)
 
 add_custom_target(run)
 
+add_subdirectory(C-API-Mutex-unit-test)
 add_subdirectory(C-API-Semaphore-unit-test)
