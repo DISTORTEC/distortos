@@ -2,6 +2,9 @@
  * \file
  * \brief Semaphore C-API test cases
  *
+ * This test checks whether semaphore objects instantiated with C-API macros and functions are binary identical to
+ * constructed distortos::Semaphore objects.
+ *
  * \author Copyright (C) 2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
