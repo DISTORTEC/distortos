@@ -13,6 +13,8 @@
 
 #include "distortos/DynamicSoftwareTimer.hpp"
 
+#include <malloc.h>
+
 namespace distortos
 {
 
@@ -112,6 +114,8 @@ bool SoftwareTimerFunctionTypesTestCase::run_() const
 {
 	constexpr auto singleDuration = TickClock::duration{1};
 
+	const auto allocatedMemory = mallinfo().uordblks;
+
 	// software timer with regular function
 	{
 		uint32_t sharedVariable {};
@@ -129,6 +133,9 @@ bool SoftwareTimerFunctionTypesTestCase::run_() const
 			return false;
 	}
 
+	if (mallinfo().uordblks != allocatedMemory)	// dynamic memory must be deallocated after each test phase
+		return false;
+
 	// software timer with state-less functor
 	{
 		uint32_t sharedVariable {};
@@ -145,6 +152,9 @@ bool SoftwareTimerFunctionTypesTestCase::run_() const
 			return false;
 	}
 
+	if (mallinfo().uordblks != allocatedMemory)	// dynamic memory must be deallocated after each test phase
+		return false;
+
 	// software timer with member function of object with state
 	{
 		constexpr uint32_t magicValue {0x7a919ba8};
@@ -160,6 +170,9 @@ bool SoftwareTimerFunctionTypesTestCase::run_() const
 		if (object.getVariable() != magicValue)
 			return false;
 	}
+
+	if (mallinfo().uordblks != allocatedMemory)	// dynamic memory must be deallocated after each test phase
+		return false;
 
 	// software timer with capturing lambda
 	{
@@ -180,6 +193,9 @@ bool SoftwareTimerFunctionTypesTestCase::run_() const
 		if (sharedVariable != magicValue)
 			return false;
 	}
+
+	if (mallinfo().uordblks != allocatedMemory)	// dynamic memory must be deallocated after each test phase
+		return false;
 
 	return true;
 }
