@@ -180,7 +180,7 @@ SECTIONS
 		HIDDEN(__sram_limit_low = .);
 	} > sram AT > sram
 
-	.bss :
+	.bss (NOLOAD) :
 	{
 		PROVIDE(__bss_start = .);
 
@@ -212,7 +212,7 @@ SECTIONS
 		HIDDEN(__sram_limit_low = .);
 	} > sram AT > sram
 
-	.sram.bss :
+	.sram.bss (NOLOAD) :
 	{
 		PROVIDE(__sram_bss_start = .);
 

@@ -30,6 +30,9 @@ framework and [Trompeloeil](https://github.com/rollbear/trompeloeil) mocking fra
 - Fixed *GDB* pretty-printers of *distortos* queues when using *GCC 7*. New version of *libstdc++v3* from *GCC* changed
 implementation of `std::unique_ptr`, which is used internally by queues for managing storage. Fixed pretty-printers from
 `distortos.py` now handle both variants of `std::unique_ptr`.
+- Mark all `.bss` sections in generated linker scripts as `(NOLOAD)`. Without this change `.bin` file for a project
+containing zero-initialized data in additional memories would be extremely large - for example ~134 MB in case of
+*STM32F4* when anything is placed in `.ccm.bss`. 
 
 [0.5.0](https://github.com/DISTORTEC/distortos/compare/v0.4.0...v0.5.0) - 2017-09-14
 ------------------------------------------------------------------------------------

@@ -215,7 +215,7 @@ LONG(ADDR(.{{ label }}.data) + SIZEOF(.{{ label }}.data));
 		HIDDEN(__{{ chosenToLabel('distortos,ld,main_stack', True) }}_limit_low = .);
 	} > {{ chosenToLabel('distortos,ld,main_stack', True) }} AT > {{ chosenToLabel('distortos,ld,main_stack', False) }}
 
-	.bss :
+	.bss (NOLOAD) :
 	{
 		PROVIDE(__bss_start = .);
 
@@ -249,7 +249,7 @@ LONG(ADDR(.{{ label }}.data) + SIZEOF(.{{ label }}.data));
 {% for key, memory in iterateNodes(dictionary, '', memoryProperties) %}
 {% set label = memory['properties']['label'][0] %}
 
-	.{{ label }}.bss :
+	.{{ label }}.bss (NOLOAD) :
 	{
 		PROVIDE(__{{ label }}_bss_start = .);
 
