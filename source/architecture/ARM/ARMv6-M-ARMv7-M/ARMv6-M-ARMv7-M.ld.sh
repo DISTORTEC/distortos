@@ -64,23 +64,27 @@ while [ ${#} -gt 0 ]; do
 	memoryAddress="$(expr "${1}" : '[^,]\+,\([^,]\+\),[^,]\+' || true)"
 	memorySize="$(expr "${1}" : '[^,]\+,[^,]\+,\([^,]\+\)' || true)"
 
-	headerComments="${headerComments} * - ${memorySize} bytes of ${memoryName} at ${memoryAddress};\n"
+	headerComments="${headerComments}
+ * - ${memorySize} bytes of ${memoryName} at ${memoryAddress};"
 
-	memoryEntries="${memoryEntries}\t${memoryName} : org = ${memoryAddress}, len = ${memorySize}\n"
+	memoryEntries="${memoryEntries}
+\t${memoryName} : org = ${memoryAddress}, len = ${memorySize}"
 
-	memorySizes="${memorySizes}\
+	memorySizes="${memorySizes}
+
 PROVIDE(__${memoryName}_start = ORIGIN(${memoryName}));
 PROVIDE(__${memoryName}_size = LENGTH(${memoryName}));
-PROVIDE(__${memoryName}_end = ORIGIN(${memoryName}) + LENGTH(${memoryName}));\n\n"
+PROVIDE(__${memoryName}_end = ORIGIN(${memoryName}) + LENGTH(${memoryName}));"
 
-	dataArrayEntries="${dataArrayEntries}\
+	dataArrayEntries="${dataArrayEntries}
 \t\tLONG(LOADADDR(.${memoryName}.data)); LONG(ADDR(.${memoryName}.data)); \
-LONG(ADDR(.${memoryName}.data) + SIZEOF(.${memoryName}.data));\n"
+LONG(ADDR(.${memoryName}.data) + SIZEOF(.${memoryName}.data));"
 
-	bssArrayEntries="${bssArrayEntries}\
-\t\tLONG(0); LONG(ADDR(.${memoryName}.bss)); LONG(ADDR(.${memoryName}.bss) + SIZEOF(.${memoryName}.bss));\n"
+	bssArrayEntries="${bssArrayEntries}
+\t\tLONG(0); LONG(ADDR(.${memoryName}.bss)); LONG(ADDR(.${memoryName}.bss) + SIZEOF(.${memoryName}.bss));"
 
-	sectionEntries="${sectionEntries}\
+	sectionEntries="${sectionEntries}
+
 	.${memoryName}.bss (NOLOAD) :
 	{
 		PROVIDE(__${memoryName}_bss_start = .);
@@ -107,12 +111,12 @@ LONG(ADDR(.${memoryName}.data) + SIZEOF(.${memoryName}.data));\n"
 		*(.${memoryName}.noinit);
 
 		PROVIDE(__${memoryName}_noinit_end = .);
-	} > ${memoryName} AT > ${memoryName}\n\n"
+	} > ${memoryName} AT > ${memoryName}"
 
-	sectionSizes="${sectionSizes}\
+	sectionSizes="${sectionSizes}
 PROVIDE(__${memoryName}_bss_size = SIZEOF(.${memoryName}.bss));
 PROVIDE(__${memoryName}_data_size = SIZEOF(.${memoryName}.data));
-PROVIDE(__${memoryName}_noinit_size = SIZEOF(.${memoryName}.noinit));\n"
+PROVIDE(__${memoryName}_noinit_size = SIZEOF(.${memoryName}.noinit));"
 
 	shift
 done
@@ -122,7 +126,7 @@ cat << EOF
  * \file
  * \brief Linker script for ${chipName} chip:
  * - ${romSize} bytes of rom at ${romAddress};
- * - ${ramSize} bytes of ram at ${ramAddress};
+ * - ${ramSize} bytes of ram at ${ramAddress};\
 $(printf '%b' "${headerComments}")
  *
  * \author Copyright (C) 2014-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
@@ -160,7 +164,7 @@ PROVIDE(__process_stack_size = ALIGN(CONFIG_MAIN_THREAD_STACK_SIZE, CONFIG_ARCHI
 MEMORY
 {
 	rom : org = ${romAddress}, len = ${romSize}
-	ram : org = ${ramAddress}, len = ${ramSize}
+	ram : org = ${ramAddress}, len = ${ramSize}\
 $(printf '%b' "${memoryEntries}")
 }
 
@@ -170,8 +174,7 @@ PROVIDE(__rom_end = ORIGIN(rom) + LENGTH(rom));
 
 PROVIDE(__ram_start = ORIGIN(ram));
 PROVIDE(__ram_size = LENGTH(ram));
-PROVIDE(__ram_end = ORIGIN(ram) + LENGTH(ram));
-
+PROVIDE(__ram_end = ORIGIN(ram) + LENGTH(ram));\
 $(printf '%b' "${memorySizes}")
 
 /*---------------------------------------------------------------------------------------------------------------------+
@@ -225,7 +228,7 @@ SECTIONS
 		. = ALIGN(4);
 		PROVIDE(__data_array_start = .);
 
-		LONG(LOADADDR(.data)); LONG(ADDR(.data)); LONG(ADDR(.data) + SIZEOF(.data));
+		LONG(LOADADDR(.data)); LONG(ADDR(.data)); LONG(ADDR(.data) + SIZEOF(.data));\
 $(printf '%b' "${dataArrayEntries}")
 
 		. = ALIGN(4);
@@ -240,7 +243,7 @@ $(printf '%b' "${dataArrayEntries}")
 
 		LONG(0); LONG(ADDR(.bss)); LONG(ADDR(.bss) + SIZEOF(.bss));
 		LONG(0xed419f25); LONG(ADDR(.main_stack)); LONG(ADDR(.main_stack) + SIZEOF(.main_stack));
-		LONG(0xed419f25); LONG(ADDR(.process_stack)); LONG(ADDR(.process_stack) + SIZEOF(.process_stack));
+		LONG(0xed419f25); LONG(ADDR(.process_stack)); LONG(ADDR(.process_stack) + SIZEOF(.process_stack));\
 $(printf '%b' "${bssArrayEntries}")
 
 		. = ALIGN(4);
@@ -346,8 +349,7 @@ $(printf '%b' "${bssArrayEntries}")
 
 		. = ALIGN(8);
 		PROVIDE(__process_stack_end = .);
-	} > ram AT > ram
-
+	} > ram AT > ram\
 $(printf '%b' "${sectionEntries}")
 
 	/* Stabs debugging sections. */
@@ -397,7 +399,7 @@ PROVIDE(__text_size = SIZEOF(.text));
 PROVIDE(__exidx_size = SIZEOF(.ARM.exidx));
 PROVIDE(__bss_size = SIZEOF(.bss));
 PROVIDE(__data_size = SIZEOF(.data));
-PROVIDE(__noinit_size = SIZEOF(.noinit));
+PROVIDE(__noinit_size = SIZEOF(.noinit));\
 $(printf '%b' "${sectionSizes}")
 
 PROVIDE(__bss_start__ = __bss_start);
