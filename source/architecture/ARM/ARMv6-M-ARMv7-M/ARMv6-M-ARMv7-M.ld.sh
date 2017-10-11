@@ -81,7 +81,7 @@ LONG(ADDR(.${memoryName}.data) + SIZEOF(.${memoryName}.data));\n"
 \t\tLONG(0); LONG(ADDR(.${memoryName}.bss)); LONG(ADDR(.${memoryName}.bss) + SIZEOF(.${memoryName}.bss));\n"
 
 	sectionEntries="${sectionEntries}\
-	.${memoryName}.bss :
+	.${memoryName}.bss (NOLOAD) :
 	{
 		PROVIDE(__${memoryName}_bss_start = .);
 
@@ -303,7 +303,7 @@ $(printf '%b' "${bssArrayEntries}")
 		PROVIDE(__main_stack_end = .);
 	} > ram AT > ram
 
-	.bss :
+	.bss (NOLOAD) :
 	{
 		PROVIDE(__bss_start = .);
 
