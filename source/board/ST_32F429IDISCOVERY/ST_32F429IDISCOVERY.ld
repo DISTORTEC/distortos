@@ -200,7 +200,7 @@ SECTIONS
 		HIDDEN(__sram_limit_low = .);
 	} > sram AT > sram
 
-	.bss :
+	.bss (NOLOAD) :
 	{
 		PROVIDE(__bss_start = .);
 
@@ -232,7 +232,7 @@ SECTIONS
 		HIDDEN(__sram_limit_low = .);
 	} > sram AT > sram
 
-	.ccm.bss :
+	.ccm.bss (NOLOAD) :
 	{
 		PROVIDE(__ccm_bss_start = .);
 
@@ -263,7 +263,7 @@ SECTIONS
 		HIDDEN(__ccm_limit_low = .);
 	} > ccm AT > ccm
 
-	.sram.bss :
+	.sram.bss (NOLOAD) :
 	{
 		PROVIDE(__sram_bss_start = .);
 
@@ -294,7 +294,7 @@ SECTIONS
 		HIDDEN(__sram_limit_low = .);
 	} > sram AT > sram
 
-	.bkpsram.bss :
+	.bkpsram.bss (NOLOAD) :
 	{
 		PROVIDE(__bkpsram_bss_start = .);
 
