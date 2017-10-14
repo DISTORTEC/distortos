@@ -13,6 +13,8 @@
 
 #include "distortos/architecture/getMainStack.hpp"
 
+#include "distortos/FATAL_ERROR.h"
+
 namespace distortos
 {
 
@@ -53,6 +55,15 @@ MainThread::MainThread(const uint8_t priority, ThreadGroupControlBlock& threadGr
 				&threadGroupControlBlock, signalsReceiver}
 {
 
+}
+
+/*---------------------------------------------------------------------------------------------------------------------+
+| protected functions
++---------------------------------------------------------------------------------------------------------------------*/
+
+void MainThread::run()
+{
+	FATAL_ERROR("This function must not be used!");
 }
 
 }	// namespace internal

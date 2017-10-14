@@ -23,7 +23,13 @@ namespace internal
 /// RunnableThread class defines additional interface functions required for the thread to be actually runnable
 class RunnableThread : public Thread
 {
+protected:
 
+	/**
+	 * \brief Thread's "run" function
+	 */
+
+	virtual void run() = 0;
 };
 
 }	// namespace internal

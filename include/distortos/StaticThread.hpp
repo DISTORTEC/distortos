@@ -81,6 +81,19 @@ public:
 		return UndetachableThread::startInternal(run, nullptr, terminationHook);
 	}
 
+protected:
+
+	/**
+	 * \brief Thread's "run" function
+	 *
+	 * Executes bound function object.
+	 */
+
+	void run() override
+	{
+		boundFunction_();
+	}
+
 private:
 
 	/**

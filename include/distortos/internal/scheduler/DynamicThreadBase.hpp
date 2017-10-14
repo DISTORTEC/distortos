@@ -164,6 +164,14 @@ public:
 
 protected:
 
+	/**
+	 * \brief Thread's "run" function
+	 *
+	 * Executes bound function object.
+	 */
+
+	void run() override;
+
 #if CONFIG_THREAD_DETACH_ENABLE == 1
 
 	/**
