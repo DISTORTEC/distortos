@@ -220,7 +220,7 @@ protected:
 	/**
 	 * \brief Starts the thread.
 	 *
-	 * This operation can be performed on threads in "New" state only.
+	 * This operation can be performed on threads in "created" state only.
 	 *
 	 * \param [in] runFunction is a reference to Thread's "run" function
 	 * \param [in] preTerminationHookFunction is a pointer to Thread's pre-termination hook, nullptr to skip

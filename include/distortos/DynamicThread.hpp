@@ -243,7 +243,7 @@ public:
 	/**
 	 * \brief Starts the thread.
 	 *
-	 * This operation can be performed on threads in "New" state only.
+	 * This operation can be performed on threads in "created" state only.
 	 *
 	 * \return 0 on success, error code otherwise:
 	 * - EINVAL - internal thread object was detached;
