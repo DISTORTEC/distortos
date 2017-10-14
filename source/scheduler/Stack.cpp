@@ -128,15 +128,15 @@ size_t Stack::getHighWaterMark() const
 	return (end - usedElement) * sizeof(*begin);
 }
 
-int Stack::initialize(RunnableThread& runnableThread, void (& run)(RunnableThread&),
-		void (* const preTerminationHook)(RunnableThread&), void (& terminationHook)(RunnableThread&))
+int Stack::initialize(RunnableThread& runnableThread, void (* const preTerminationHook)(RunnableThread&),
+		void (& terminationHook)(RunnableThread&))
 {
 	std::fill_n(static_cast<std::decay<decltype(stackSentinel)>::type*>(adjustedStorage_),
 			adjustedSize_ / sizeof(stackSentinel), stackSentinel);
 	int ret;
 	std::tie(ret, stackPointer_) =
 			architecture::initializeStack(static_cast<uint8_t*>(adjustedStorage_) + stackGuardSize, getSize(),
-					runnableThread, run, preTerminationHook, terminationHook);
+					runnableThread, preTerminationHook, terminationHook);
 	return ret;
 }
 

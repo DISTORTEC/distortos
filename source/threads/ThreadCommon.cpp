@@ -144,11 +144,10 @@ void ThreadCommon::setSchedulingPolicy(const SchedulingPolicy schedulingPolicy)
 | protected functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-int ThreadCommon::startInternal(void (& runFunction)(RunnableThread&),
-		void (* const preTerminationHookFunction)(RunnableThread&), void (& terminationHookFunction)(RunnableThread&))
+int ThreadCommon::startInternal(void (* const preTerminationHookFunction)(RunnableThread&),
+		void (& terminationHookFunction)(RunnableThread&))
 {
-	return getScheduler().add(runFunction, preTerminationHookFunction, terminationHookFunction,
-			getThreadControlBlock());
+	return getScheduler().add(preTerminationHookFunction, terminationHookFunction, getThreadControlBlock());
 }
 
 /*---------------------------------------------------------------------------------------------------------------------+

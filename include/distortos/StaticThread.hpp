@@ -78,7 +78,7 @@ public:
 
 	int start()
 	{
-		return UndetachableThread::startInternal(run, nullptr, terminationHook);
+		return UndetachableThread::startInternal(nullptr, terminationHook);
 	}
 
 protected:
@@ -95,19 +95,6 @@ protected:
 	}
 
 private:
-
-	/**
-	 * \brief Thread's "run" function.
-	 *
-	 * Executes bound function object.
-	 *
-	 * \param [in] runnableThread is a reference to RunnableThread object, this must be StaticThreadBase!
-	 */
-
-	static void run(RunnableThread& runnableThread)
-	{
-		static_cast<StaticThreadBase&>(runnableThread).boundFunction_();
-	}
 
 	/// size of stack adjusted to alignment requirements, bytes
 	constexpr static size_t adjustedStackSize {(StackSize + CONFIG_ARCHITECTURE_STACK_ALIGNMENT - 1) /

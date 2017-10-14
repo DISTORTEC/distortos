@@ -222,7 +222,6 @@ protected:
 	 *
 	 * This operation can be performed on threads in "created" state only.
 	 *
-	 * \param [in] runFunction is a reference to RunnableThread's "run" function
 	 * \param [in] preTerminationHookFunction is a pointer to RunnableThread's pre-termination hook, nullptr to skip
 	 * \param [in] terminationHookFunction is a reference to RunnableThread's termination hook
 	 *
@@ -230,7 +229,7 @@ protected:
 	 * - error codes returned by Scheduler::add();
 	 */
 
-	int startInternal(void (& runFunction)(RunnableThread&), void (* preTerminationHookFunction)(RunnableThread&),
+	int startInternal(void (* preTerminationHookFunction)(RunnableThread&),
 			void (& terminationHookFunction)(RunnableThread&));
 
 	/**

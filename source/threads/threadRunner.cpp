@@ -13,6 +13,7 @@
 
 #include "distortos/internal/scheduler/forceContextSwitch.hpp"
 #include "distortos/internal/scheduler/getScheduler.hpp"
+#include "distortos/internal/scheduler/RunnableThread.hpp"
 #include "distortos/internal/scheduler/Scheduler.hpp"
 
 #include "distortos/InterruptMaskingLock.hpp"
@@ -27,10 +28,10 @@ namespace internal
 | global functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-void threadRunner(RunnableThread& runnableThread, void (& run)(RunnableThread&),
-		void (* const preTerminationHook)(RunnableThread&), void (& terminationHook)(RunnableThread&))
+void threadRunner(RunnableThread& runnableThread, void (* const preTerminationHook)(RunnableThread&),
+		void (& terminationHook)(RunnableThread&))
 {
-	run(runnableThread);
+	runnableThread.run();
 
 	{
 		const InterruptMaskingLock interruptMaskingLock;

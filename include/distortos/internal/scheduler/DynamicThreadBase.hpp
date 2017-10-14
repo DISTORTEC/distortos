@@ -151,9 +151,9 @@ public:
 	int start()
 	{
 #if CONFIG_THREAD_DETACH_ENABLE == 1
-		return ThreadCommon::startInternal(run, preTerminationHook, terminationHook);
+		return ThreadCommon::startInternal(preTerminationHook, terminationHook);
 #else	// CONFIG_THREAD_DETACH_ENABLE != 1
-		return ThreadCommon::startInternal(run, nullptr, terminationHook);
+		return ThreadCommon::startInternal(nullptr, terminationHook);
 #endif	// CONFIG_THREAD_DETACH_ENABLE != 1
 	}
 
@@ -218,16 +218,6 @@ private:
 		return {{new uint8_t[adjustedStackSize + stackGuardSize], storageDeleter<uint8_t>},
 				adjustedStackSize + stackGuardSize};
 	}
-
-	/**
-	 * \brief Thread's "run" function.
-	 *
-	 * Executes bound function object.
-	 *
-	 * \param [in] runnableThread is a reference to RunnableThread object, this must be DynamicThreadBase!
-	 */
-
-	static void run(RunnableThread& runnableThread);
 
 #if CONFIG_SIGNALS_ENABLE == 1
 

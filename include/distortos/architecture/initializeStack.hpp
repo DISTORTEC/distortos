@@ -40,7 +40,6 @@ namespace architecture
  * \param [in] buffer is a pointer to stack's buffer
  * \param [in] size is the size of stack's buffer, bytes
  * \param [in] runnableThread is a reference to internal::RunnableThread object that is being run
- * \param [in] run is a reference to internal::RunnableThread's "run" function
  * \param [in] preTerminationHook is a pointer to internal::RunnableThread's pre-termination hook, nullptr to skip
  * \param [in] terminationHook is a reference to internal::RunnableThread's termination hook
  *
@@ -50,8 +49,7 @@ namespace architecture
  */
 
 std::pair<int, void*> initializeStack(void* buffer, size_t size, internal::RunnableThread& runnableThread,
-		void (& run)(internal::RunnableThread&), void (* preTerminationHook)(internal::RunnableThread&),
-		void (& terminationHook)(internal::RunnableThread&));
+		void (* preTerminationHook)(internal::RunnableThread&), void (& terminationHook)(internal::RunnableThread&));
 
 }	// namespace architecture
 

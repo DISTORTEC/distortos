@@ -86,15 +86,6 @@ void DynamicThreadBase::terminationHook(RunnableThread& runnableThread)
 
 #endif	// CONFIG_THREAD_DETACH_ENABLE == 1
 
-/*---------------------------------------------------------------------------------------------------------------------+
-| private static functions
-+---------------------------------------------------------------------------------------------------------------------*/
-
-void DynamicThreadBase::run(RunnableThread& runnableThread)
-{
-	static_cast<DynamicThreadBase&>(runnableThread).boundFunction_();
-}
-
 }	// namespace internal
 
 }	// namespace distortos
