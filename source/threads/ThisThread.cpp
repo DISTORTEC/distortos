@@ -14,6 +14,7 @@
 #include "distortos/internal/scheduler/getScheduler.hpp"
 #include "distortos/internal/scheduler/RunnableThread.hpp"
 #include "distortos/internal/scheduler/Scheduler.hpp"
+#include "distortos/internal/scheduler/threadExiter.hpp"
 
 #include "distortos/internal/CHECK_FUNCTION_CONTEXT.hpp"
 
@@ -37,6 +38,13 @@ int detach()
 }
 
 #endif	// def CONFIG_THREAD_DETACH_ENABLE
+
+void exit()
+{
+	CHECK_FUNCTION_CONTEXT();
+
+	internal::threadExiter(internal::getScheduler().getCurrentThreadControlBlock().getOwner());
+}
 
 Thread& get()
 {
