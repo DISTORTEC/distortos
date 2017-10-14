@@ -9,8 +9,8 @@
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#ifndef INCLUDE_DISTORTOS_THREADCOMMON_HPP_
-#define INCLUDE_DISTORTOS_THREADCOMMON_HPP_
+#ifndef INCLUDE_DISTORTOS_INTERNAL_SCHEDULER_THREADCOMMON_HPP_
+#define INCLUDE_DISTORTOS_INTERNAL_SCHEDULER_THREADCOMMON_HPP_
 
 #include "distortos/internal/scheduler/ThreadControlBlock.hpp"
 
@@ -20,33 +20,31 @@
 namespace distortos
 {
 
-/**
- * \brief ThreadCommon class implements common functionality of threads
- *
- * \ingroup threads
- */
+namespace internal
+{
 
+/// ThreadCommon class implements common functionality of threads
 class ThreadCommon : public Thread
 {
 public:
 
 	/// unique_ptr (with deleter) to storage for stack
-	using StackStorageUniquePointer = internal::Stack::StorageUniquePointer;
+	using StackStorageUniquePointer = Stack::StorageUniquePointer;
 
 	/**
 	 * \brief ThreadCommon's constructor
 	 *
-	 * \param [in] stack is an rvalue reference to internal::Stack object which will be adopted for this thread
+	 * \param [in] stack is an rvalue reference to Stack object which will be adopted for this thread
 	 * \param [in] priority is the thread's priority, 0 - lowest, UINT8_MAX - highest
 	 * \param [in] schedulingPolicy is the scheduling policy of the thread
-	 * \param [in] threadGroupControlBlock is a pointer to internal::ThreadGroupControlBlock to which this object will
-	 * be added, nullptr to inherit thread group from currently running thread
+	 * \param [in] threadGroupControlBlock is a pointer to ThreadGroupControlBlock to which this object will be added,
+	 * nullptr to inherit thread group from currently running thread
 	 * \param [in] signalsReceiver is a pointer to SignalsReceiver object for this thread, nullptr to disable reception
 	 * of signals for this thread
 	 */
 
-	ThreadCommon(internal::Stack&& stack, uint8_t priority, SchedulingPolicy schedulingPolicy,
-			internal::ThreadGroupControlBlock* threadGroupControlBlock, SignalsReceiver* signalsReceiver);
+	ThreadCommon(Stack&& stack, uint8_t priority, SchedulingPolicy schedulingPolicy,
+			ThreadGroupControlBlock* threadGroupControlBlock, SignalsReceiver* signalsReceiver);
 
 	/**
 	 * \brief ThreadCommon's destructor
@@ -68,7 +66,7 @@ public:
 	 *
 	 * \return 0 on success, error code otherwise:
 	 * - ENOTSUP - reception of signals is disabled for this thread;
-	 * - error codes returned by internal::SignalsReceiverControlBlock::generateSignal();
+	 * - error codes returned by SignalsReceiverControlBlock::generateSignal();
 	 *
 	 * \ingroup signals
 	 */
@@ -166,7 +164,7 @@ public:
 	 *
 	 * \return 0 on success, error code otherwise:
 	 * - ENOTSUP - reception or queuing of signals are disabled for this thread;
-	 * - error codes returned by internal::SignalsReceiverControlBlock::queueSignal();
+	 * - error codes returned by SignalsReceiverControlBlock::queueSignal();
 	 *
 	 * \ingroup signals
 	 */
@@ -205,7 +203,7 @@ protected:
 	 * \return reference to internal ThreadControlBlock object
 	 */
 
-	internal::ThreadControlBlock& getThreadControlBlock()
+	ThreadControlBlock& getThreadControlBlock()
 	{
 		return threadControlBlock_;
 	}
@@ -214,7 +212,7 @@ protected:
 	 * \return const reference to internal ThreadControlBlock object
 	 */
 
-	const internal::ThreadControlBlock& getThreadControlBlock() const
+	const ThreadControlBlock& getThreadControlBlock() const
 	{
 		return threadControlBlock_;
 	}
@@ -229,7 +227,7 @@ protected:
 	 * \param [in] terminationHookFunction is a reference to Thread's termination hook
 	 *
 	 * \return 0 on success, error code otherwise:
-	 * - error codes returned by internal::Scheduler::add();
+	 * - error codes returned by Scheduler::add();
 	 */
 
 	int startInternal(void (& runFunction)(Thread&), void (* preTerminationHookFunction)(Thread&),
@@ -246,12 +244,14 @@ protected:
 private:
 
 	/// internal ThreadControlBlock object
-	internal::ThreadControlBlock threadControlBlock_;
+	ThreadControlBlock threadControlBlock_;
 
 	/// semaphore used by join()
 	Semaphore joinSemaphore_;
 };
 
+}	// namespace internal
+
 }	// namespace distortos
 
-#endif	// INCLUDE_DISTORTOS_THREADCOMMON_HPP_
+#endif	// INCLUDE_DISTORTOS_INTERNAL_SCHEDULER_THREADCOMMON_HPP_

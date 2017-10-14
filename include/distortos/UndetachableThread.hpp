@@ -2,7 +2,7 @@
  * \file
  * \brief UndetachableThread class header
  *
- * \author Copyright (C) 2015-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2015-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -12,7 +12,7 @@
 #ifndef INCLUDE_DISTORTOS_UNDETACHABLETHREAD_HPP_
 #define INCLUDE_DISTORTOS_UNDETACHABLETHREAD_HPP_
 
-#include "distortos/ThreadCommon.hpp"
+#include "distortos/internal/scheduler/ThreadCommon.hpp"
 
 namespace distortos
 {
@@ -25,7 +25,7 @@ namespace distortos
 
 #ifdef CONFIG_THREAD_DETACH_ENABLE
 
-class UndetachableThread : public ThreadCommon
+class UndetachableThread : public internal::ThreadCommon
 {
 public:
 
@@ -48,7 +48,7 @@ public:
 
 #else	// !def CONFIG_THREAD_DETACH_ENABLE
 
-using UndetachableThread = ThreadCommon;
+using UndetachableThread = internal::ThreadCommon;
 
 #endif	// !def CONFIG_THREAD_DETACH_ENABLE
 

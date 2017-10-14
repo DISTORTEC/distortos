@@ -14,9 +14,10 @@
 
 #include "distortos/DynamicSignalsReceiver.hpp"
 #include "distortos/DynamicThreadParameters.hpp"
-#include "distortos/ThreadCommon.hpp"
 
 #include "distortos/internal/memory/storageDeleter.hpp"
+
+#include "distortos/internal/scheduler/ThreadCommon.hpp"
 
 #include <functional>
 
