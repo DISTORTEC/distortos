@@ -24,6 +24,8 @@ framework and [Trompeloeil](https://github.com/rollbear/trompeloeil) mocking fra
 ### Changed
 
 - Reduced size of `distortos::Mutex` from 28 bytes to 24 bytes (5 pointers + 4 bytes).
+- `distortos::ThreadCommon` was moved to `distortos::internal` namespace. `distortos/ThreadCommon.hpp` was moved to
+`distortos/internal/scheduler/ThreadCommon.hpp`. There's no need for this class to be available in the public API.
 
 ### Fixed
 
