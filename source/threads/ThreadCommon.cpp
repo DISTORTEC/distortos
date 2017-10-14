@@ -25,15 +25,18 @@
 namespace distortos
 {
 
+namespace internal
+{
+
 /*---------------------------------------------------------------------------------------------------------------------+
 | public functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-ThreadCommon::ThreadCommon(internal::Stack&& stack, const uint8_t priority, const SchedulingPolicy schedulingPolicy,
-		internal::ThreadGroupControlBlock* const threadGroupControlBlock, SignalsReceiver* const signalsReceiver) :
-		threadControlBlock_{std::move(stack), priority, schedulingPolicy, threadGroupControlBlock, signalsReceiver,
-				*this},
-		joinSemaphore_{0}
+ThreadCommon::ThreadCommon(Stack&& stack, const uint8_t priority, const SchedulingPolicy schedulingPolicy,
+		ThreadGroupControlBlock* const threadGroupControlBlock, SignalsReceiver* const signalsReceiver) :
+				threadControlBlock_{std::move(stack), priority, schedulingPolicy, threadGroupControlBlock,
+						signalsReceiver, *this},
+				joinSemaphore_{0}
 {
 
 }
@@ -105,7 +108,7 @@ int ThreadCommon::join()
 {
 	CHECK_FUNCTION_CONTEXT();
 
-	if (&getThreadControlBlock() == &internal::getScheduler().getCurrentThreadControlBlock())
+	if (&getThreadControlBlock() == &getScheduler().getCurrentThreadControlBlock())
 		return EDEADLK;
 
 	int ret;
@@ -144,7 +147,7 @@ void ThreadCommon::setSchedulingPolicy(const SchedulingPolicy schedulingPolicy)
 int ThreadCommon::startInternal(void (& runFunction)(Thread&), void (* const preTerminationHookFunction)(Thread&),
 		void (& terminationHookFunction)(Thread&))
 {
-	return internal::getScheduler().add(runFunction, preTerminationHookFunction, terminationHookFunction,
+	return getScheduler().add(runFunction, preTerminationHookFunction, terminationHookFunction,
 			getThreadControlBlock());
 }
 
@@ -156,5 +159,7 @@ void ThreadCommon::terminationHook(Thread& thread)
 {
 	static_cast<ThreadCommon&>(thread).joinSemaphore_.post();
 }
+
+}	// namespace internal
 
 }	// namespace distortos

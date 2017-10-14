@@ -25,7 +25,7 @@ namespace distortos
 
 #ifdef CONFIG_THREAD_DETACH_ENABLE
 
-class UndetachableThread : public ThreadCommon
+class UndetachableThread : public internal::ThreadCommon
 {
 public:
 
@@ -48,7 +48,7 @@ public:
 
 #else	// !def CONFIG_THREAD_DETACH_ENABLE
 
-using UndetachableThread = ThreadCommon;
+using UndetachableThread = internal::ThreadCommon;
 
 #endif	// !def CONFIG_THREAD_DETACH_ENABLE
 
