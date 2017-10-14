@@ -12,10 +12,10 @@
 #ifndef INCLUDE_DISTORTOS_INTERNAL_SCHEDULER_THREADCOMMON_HPP_
 #define INCLUDE_DISTORTOS_INTERNAL_SCHEDULER_THREADCOMMON_HPP_
 
+#include "distortos/internal/scheduler/RunnableThread.hpp"
 #include "distortos/internal/scheduler/ThreadControlBlock.hpp"
 
 #include "distortos/Semaphore.hpp"
-#include "distortos/Thread.hpp"
 
 namespace distortos
 {
@@ -24,7 +24,7 @@ namespace internal
 {
 
 /// ThreadCommon class implements common functionality of threads
-class ThreadCommon : public Thread
+class ThreadCommon : public RunnableThread
 {
 public:
 
