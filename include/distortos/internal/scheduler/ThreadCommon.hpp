@@ -23,12 +23,7 @@ namespace distortos
 namespace internal
 {
 
-/**
- * \brief ThreadCommon class implements common functionality of threads
- *
- * \ingroup threads
- */
-
+/// ThreadCommon class implements common functionality of threads
 class ThreadCommon : public Thread
 {
 public:
