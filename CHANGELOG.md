@@ -16,6 +16,8 @@ functions.
 references to regular C++ API objects (like `distortos::Semaphore`).
 - `distortos::DynamicSoftwareTimer` class - a dynamic and (mostly) non-templated counterpart of
 `distortos::StaticSoftwareTimer`.
+- `distortos::ThisThread::exit()`, similar to `pthread_exit()`, which can be used to cause early exit of the current
+thread.
 - Unit tests of C-API for mutexes and semaphores, using [Catch](https://github.com/philsquared/Catch) unit test
 framework and [Trompeloeil](https://github.com/rollbear/trompeloeil) mocking framework. Build system of unit tests uses
 [CMake](https://cmake.org/).

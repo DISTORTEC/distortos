@@ -12,10 +12,10 @@
 #ifndef INCLUDE_DISTORTOS_INTERNAL_SCHEDULER_THREADCOMMON_HPP_
 #define INCLUDE_DISTORTOS_INTERNAL_SCHEDULER_THREADCOMMON_HPP_
 
+#include "distortos/internal/scheduler/RunnableThread.hpp"
 #include "distortos/internal/scheduler/ThreadControlBlock.hpp"
 
 #include "distortos/Semaphore.hpp"
-#include "distortos/Thread.hpp"
 
 namespace distortos
 {
@@ -24,7 +24,7 @@ namespace internal
 {
 
 /// ThreadCommon class implements common functionality of threads
-class ThreadCommon : public Thread
+class ThreadCommon : public RunnableThread
 {
 public:
 
@@ -200,6 +200,26 @@ public:
 protected:
 
 	/**
+	 * \brief Thread's "exit 0" hook function
+	 *
+	 * This hook will be called early during thread's exit - while the thread is still runnable.
+	 *
+	 * Empty default implementation.
+	 */
+
+	void exit0Hook() override;
+
+	/**
+	 * \brief Thread's "exit 1" hook function
+	 *
+	 * This hook will be called late during thread's exit - after the thread is removed from the scheduler.
+	 *
+	 * Posts join() semaphore.
+	 */
+
+	void exit1Hook() override;
+
+	/**
 	 * \return reference to internal ThreadControlBlock object
 	 */
 
@@ -220,26 +240,13 @@ protected:
 	/**
 	 * \brief Starts the thread.
 	 *
-	 * This operation can be performed on threads in "New" state only.
-	 *
-	 * \param [in] runFunction is a reference to Thread's "run" function
-	 * \param [in] preTerminationHookFunction is a pointer to Thread's pre-termination hook, nullptr to skip
-	 * \param [in] terminationHookFunction is a reference to Thread's termination hook
+	 * This operation can be performed on threads in "created" state only.
 	 *
 	 * \return 0 on success, error code otherwise:
 	 * - error codes returned by Scheduler::add();
 	 */
 
-	int startInternal(void (& runFunction)(Thread&), void (* preTerminationHookFunction)(Thread&),
-			void (& terminationHookFunction)(Thread&));
-
-	/**
-	 * \brief Termination hook function of thread
-	 *
-	 * \param [in] thread is a reference to Thread object, this must be ThreadCommon!
-	 */
-
-	static void terminationHook(Thread& thread);
+	int startInternal();
 
 private:
 

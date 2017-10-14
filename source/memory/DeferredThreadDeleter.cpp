@@ -15,9 +15,8 @@
 
 #include "distortos/internal/newlib/locking.hpp"
 
+#include "distortos/internal/scheduler/RunnableThread.hpp"
 #include "distortos/internal/scheduler/ThreadControlBlock.hpp"
-
-#include "distortos/Thread.hpp"
 
 namespace distortos
 {
@@ -85,9 +84,9 @@ int DeferredThreadDeleter::tryCleanupInternal()
 
 	while (localList.empty() == false)
 	{
-		const auto& thread = localList.front().getOwner();
+		const auto& runnableThread = localList.front().getOwner();
 		localList.pop_front();
-		delete &thread;
+		delete &runnableThread;
 	}
 
 	return ret;

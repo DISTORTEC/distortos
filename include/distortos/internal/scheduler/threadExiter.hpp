@@ -1,6 +1,6 @@
 /**
  * \file
- * \brief threadRunner() declaration
+ * \brief threadExiter() declaration
  *
  * \author Copyright (C) 2014-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
@@ -9,8 +9,8 @@
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#ifndef INCLUDE_DISTORTOS_INTERNAL_SCHEDULER_THREADRUNNER_HPP_
-#define INCLUDE_DISTORTOS_INTERNAL_SCHEDULER_THREADRUNNER_HPP_
+#ifndef INCLUDE_DISTORTOS_INTERNAL_SCHEDULER_THREADEXITER_HPP_
+#define INCLUDE_DISTORTOS_INTERNAL_SCHEDULER_THREADEXITER_HPP_
 
 namespace distortos
 {
@@ -21,22 +21,24 @@ namespace internal
 class RunnableThread;
 
 /**
- * \brief Thread runner function - entry point of threads
+ * \brief Thread "exiter" function
  *
  * Performs following actions:
- * - executes thread's "run" function;
- * - calls thread "exiter" function;
+ * - thread's "exit 0" hook is executed;
+ * - thread is terminated and removed from scheduler;
+ * - thread's "exit 1" hook is executed;
+ * - context switch is forced;
  *
  * This function never returns.
  *
- * \param [in] runnableThread is a reference to RunnableThread object that is being run
+ * \param [in] runnableThread is a reference to RunnableThread object that is being exited
  */
 
 __attribute__ ((noreturn))
-void threadRunner(RunnableThread& runnableThread);
+void threadExiter(RunnableThread& runnableThread);
 
 }	// namespace internal
 
 }	// namespace distortos
 
-#endif	// INCLUDE_DISTORTOS_INTERNAL_SCHEDULER_THREADRUNNER_HPP_
+#endif	// INCLUDE_DISTORTOS_INTERNAL_SCHEDULER_THREADEXITER_HPP_

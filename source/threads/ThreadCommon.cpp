@@ -144,20 +144,19 @@ void ThreadCommon::setSchedulingPolicy(const SchedulingPolicy schedulingPolicy)
 | protected functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-int ThreadCommon::startInternal(void (& runFunction)(Thread&), void (* const preTerminationHookFunction)(Thread&),
-		void (& terminationHookFunction)(Thread&))
+void ThreadCommon::exit0Hook()
 {
-	return getScheduler().add(runFunction, preTerminationHookFunction, terminationHookFunction,
-			getThreadControlBlock());
+
 }
 
-/*---------------------------------------------------------------------------------------------------------------------+
-| protected static functions
-+---------------------------------------------------------------------------------------------------------------------*/
-
-void ThreadCommon::terminationHook(Thread& thread)
+void ThreadCommon::exit1Hook()
 {
-	static_cast<ThreadCommon&>(thread).joinSemaphore_.post();
+	joinSemaphore_.post();
+}
+
+int ThreadCommon::startInternal()
+{
+	return getScheduler().add(getThreadControlBlock());
 }
 
 }	// namespace internal

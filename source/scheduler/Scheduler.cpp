@@ -87,8 +87,7 @@ private:
 | public functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-int Scheduler::add(void (& run)(Thread&), void (* const preTerminationHook)(Thread&), void (& terminationHook)(Thread&),
-		ThreadControlBlock& threadControlBlock)
+int Scheduler::add(ThreadControlBlock& threadControlBlock)
 {
 	const InterruptMaskingLock interruptMaskingLock;
 
@@ -96,8 +95,7 @@ int Scheduler::add(void (& run)(Thread&), void (* const preTerminationHook)(Thre
 		return EINVAL;
 
 	{
-		const auto ret = threadControlBlock.getStack().initialize(threadControlBlock.getOwner(), run,
-				preTerminationHook, terminationHook);
+		const auto ret = threadControlBlock.getStack().initialize(threadControlBlock.getOwner());
 		if (ret != 0)
 			return ret;
 	}

@@ -142,7 +142,7 @@ public:
 	/**
 	 * \brief Starts the thread.
 	 *
-	 * This operation can be performed on threads in "New" state only.
+	 * This operation can be performed on threads in "created" state only.
 	 *
 	 * \return 0 on success, error code otherwise:
 	 * - error codes returned by ThreadCommon::startInternal();
@@ -150,11 +150,7 @@ public:
 
 	int start()
 	{
-#if CONFIG_THREAD_DETACH_ENABLE == 1
-		return ThreadCommon::startInternal(run, preTerminationHook, terminationHook);
-#else	// CONFIG_THREAD_DETACH_ENABLE != 1
-		return ThreadCommon::startInternal(run, nullptr, terminationHook);
-#endif	// CONFIG_THREAD_DETACH_ENABLE != 1
+		return ThreadCommon::startInternal();
 	}
 
 	DynamicThreadBase(const DynamicThreadBase&) = delete;
@@ -167,26 +163,34 @@ protected:
 #if CONFIG_THREAD_DETACH_ENABLE == 1
 
 	/**
-	 * \brief Pre-termination hook function of thread
+	 * \brief Thread's "exit 0" hook function
 	 *
-	 * If thread is detached, locks object used for deferred deletion.
+	 * This hook will be called early during thread's exit - while the thread is still runnable.
 	 *
-	 * \param [in] thread is a reference to Thread object, this must be DynamicThreadBase!
+	 * Calls "exit 0" hook of base class and - if thread is detached - locks object used for deferred deletion.
 	 */
 
-	static void preTerminationHook(Thread& thread);
+	void exit0Hook() override;
 
 	/**
-	 * \brief Termination hook function of thread
+	 * \brief Thread's "exit 1" hook function
 	 *
-	 * Calls ThreadCommon::terminationHook() and - if thread is detached - schedules itself for deferred deletion.
+	 * This hook will be called late during thread's exit - after the thread is removed from the scheduler.
 	 *
-	 * \param [in] thread is a reference to Thread object, this must be DynamicThreadBase!
+	 * Calls "exit 1" hook of base class and - if thread is detached - schedules itself for deferred deletion.
 	 */
 
-	static void terminationHook(Thread& thread);
+	void exit1Hook() override;
 
 #endif	// CONFIG_THREAD_DETACH_ENABLE == 1
+
+	/**
+	 * \brief Thread's "run" function
+	 *
+	 * Executes bound function object.
+	 */
+
+	void run() override;
 
 private:
 
@@ -210,16 +214,6 @@ private:
 		return {{new uint8_t[adjustedStackSize + stackGuardSize], storageDeleter<uint8_t>},
 				adjustedStackSize + stackGuardSize};
 	}
-
-	/**
-	 * \brief Thread's "run" function.
-	 *
-	 * Executes bound function object.
-	 *
-	 * \param [in] thread is a reference to Thread object, this must be DynamicThreadBase!
-	 */
-
-	static void run(Thread& thread);
 
 #if CONFIG_SIGNALS_ENABLE == 1
 

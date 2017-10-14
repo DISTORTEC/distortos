@@ -12,6 +12,7 @@
 #include "distortos/internal/scheduler/ThreadControlBlock.hpp"
 
 #include "distortos/internal/scheduler/getScheduler.hpp"
+#include "distortos/internal/scheduler/RunnableThread.hpp"
 #include "distortos/internal/scheduler/Scheduler.hpp"
 #include "distortos/internal/scheduler/ThreadGroupControlBlock.hpp"
 
@@ -37,7 +38,7 @@ namespace internal
 
 ThreadControlBlock::ThreadControlBlock(internal::Stack&& stack, const uint8_t priority,
 		const SchedulingPolicy schedulingPolicy, ThreadGroupControlBlock* const threadGroupControlBlock,
-		SignalsReceiver* const signalsReceiver, Thread& owner) :
+		SignalsReceiver* const signalsReceiver, RunnableThread& owner) :
 		ThreadListNode{priority},
 		stack_{std::move(stack)},
 		owner_{owner},

@@ -49,6 +49,17 @@ int detach();
 #endif	// def CONFIG_THREAD_DETACH_ENABLE
 
 /**
+ * \brief Exits calling (current) thread.
+ *
+ * Similar to POSIX pthread_exit() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_exit.html
+ *
+ * \warning This function must not be called from interrupt context!
+ */
+
+__attribute__ ((noreturn))
+void exit();
+
+/**
  * \warning This function must not be called from interrupt context!
  *
  * \return reference to Thread object of currently active thread

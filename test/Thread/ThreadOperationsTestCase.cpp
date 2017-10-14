@@ -11,6 +11,7 @@
 
 #include "ThreadOperationsTestCase.hpp"
 
+#include "SequenceAsserter.hpp"
 #include "waitForNextTick.hpp"
 
 #include "distortos/DynamicThread.hpp"
@@ -254,6 +255,65 @@ bool phase3()
 	return true;
 }
 
+/**
+ * \brief Phase 4 of test case
+ *
+ * Tests scenarios involving thread exit.
+ *
+ * \return true if test succeeded, false otherwise
+ */
+
+bool phase4()
+{
+	const auto allocatedMemory = mallinfo().uordblks;
+
+	{
+		SequenceAsserter sequenceAsserter;
+		auto testThread = makeAndStartDynamicThread({testThreadStackSize, UINT8_MAX},
+				[&sequenceAsserter]()
+				{
+					sequenceAsserter.sequencePoint(0);
+					ThisThread::exit();
+					sequenceAsserter.sequencePoint(1);
+				});
+		if (testThread.join() != 0)
+			return false;
+
+		if (sequenceAsserter.assertSequence(1) == false)
+			return false;
+	}
+
+	if (mallinfo().uordblks != allocatedMemory)	// dynamic memory must be deallocated after each test phase
+		return false;
+
+#ifdef CONFIG_THREAD_DETACH_ENABLE
+
+	{
+		SequenceAsserter sequenceAsserter;
+		auto testThread = makeAndStartDynamicThread({testThreadStackSize, UINT8_MAX},
+				[&sequenceAsserter]()
+				{
+					if (ThisThread::detach() != 0)
+						return;
+					sequenceAsserter.sequencePoint(0);
+					ThisThread::exit();
+					sequenceAsserter.sequencePoint(1);
+				});
+
+		waitForNextTick();
+
+		if (sequenceAsserter.assertSequence(1) == false)
+			return false;
+	}
+
+	if (mallinfo().uordblks != allocatedMemory)	// dynamic memory must be deallocated after each test phase
+		return false;
+
+#endif	// def CONFIG_THREAD_DETACH_ENABLE
+
+	return true;
+}
+
 }	// namespace
 
 /*---------------------------------------------------------------------------------------------------------------------+
@@ -266,16 +326,18 @@ bool ThreadOperationsTestCase::run_() const
 	constexpr auto phase2ExpectedContextSwitchCount = 0;
 #ifdef CONFIG_THREAD_DETACH_ENABLE
 	constexpr auto phase3ExpectedContextSwitchCount = 11;
+	constexpr auto phase4ExpectedContextSwitchCount = 6;
 #else	// !def CONFIG_THREAD_DETACH_ENABLE
 	constexpr auto phase3ExpectedContextSwitchCount = 0;
+	constexpr auto phase4ExpectedContextSwitchCount = 2;
 #endif	// !def CONFIG_THREAD_DETACH_ENABLE
 	constexpr auto expectedContextSwitchCount = phase1ExpectedContextSwitchCount + phase2ExpectedContextSwitchCount +
-			phase3ExpectedContextSwitchCount;
+			phase3ExpectedContextSwitchCount + phase4ExpectedContextSwitchCount;
 
 	const auto allocatedMemory = mallinfo().uordblks;
 	const auto contextSwitchCount = statistics::getContextSwitchCount();
 
-	for (const auto& function : {phase1, phase2, phase3})
+	for (const auto& function : {phase1, phase2, phase3, phase4})
 	{
 		const auto ret = function();
 		if (ret != true)

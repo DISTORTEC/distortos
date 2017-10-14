@@ -70,7 +70,7 @@ public:
 	/**
 	 * \brief Starts the thread.
 	 *
-	 * This operation can be performed on threads in "New" state only.
+	 * This operation can be performed on threads in "created" state only.
 	 *
 	 * \return 0 on success, error code otherwise:
 	 * - error codes returned by UndetachableThread::startInternal();
@@ -78,23 +78,23 @@ public:
 
 	int start()
 	{
-		return UndetachableThread::startInternal(run, nullptr, terminationHook);
+		return UndetachableThread::startInternal();
+	}
+
+protected:
+
+	/**
+	 * \brief Thread's "run" function
+	 *
+	 * Executes bound function object.
+	 */
+
+	void run() override
+	{
+		boundFunction_();
 	}
 
 private:
-
-	/**
-	 * \brief Thread's "run" function.
-	 *
-	 * Executes bound function object.
-	 *
-	 * \param [in] thread is a reference to Thread object, this must be StaticThreadBase!
-	 */
-
-	static void run(Thread& thread)
-	{
-		static_cast<StaticThreadBase&>(thread).boundFunction_();
-	}
 
 	/// size of stack adjusted to alignment requirements, bytes
 	constexpr static size_t adjustedStackSize {(StackSize + CONFIG_ARCHITECTURE_STACK_ALIGNMENT - 1) /
