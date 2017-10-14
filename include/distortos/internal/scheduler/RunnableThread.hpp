@@ -28,6 +28,14 @@ class RunnableThread : public Thread
 protected:
 
 	/**
+	 * \brief Thread's "exit 0" hook function
+	 *
+	 * This hook will be called early during thread's exit - while the thread is still runnable.
+	 */
+
+	virtual void exit0Hook() = 0;
+
+	/**
 	 * \brief Thread's "run" function
 	 */
 

@@ -55,6 +55,18 @@ int DynamicThreadBase::detach()
 | protected functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
+#if CONFIG_THREAD_DETACH_ENABLE == 1
+
+void DynamicThreadBase::exit0Hook()
+{
+	ThreadCommon::exit0Hook();
+
+	if (owner_ == nullptr)	// thread is detached?
+		getDeferredThreadDeleter().lock();	/// \todo error handling?
+}
+
+#endif	// CONFIG_THREAD_DETACH_ENABLE == 1
+
 void DynamicThreadBase::run()
 {
 	boundFunction_();

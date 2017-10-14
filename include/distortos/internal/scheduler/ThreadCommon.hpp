@@ -200,6 +200,16 @@ public:
 protected:
 
 	/**
+	 * \brief Thread's "exit 0" hook function
+	 *
+	 * This hook will be called early during thread's exit - while the thread is still runnable.
+	 *
+	 * Empty default implementation.
+	 */
+
+	void exit0Hook() override;
+
+	/**
 	 * \return reference to internal ThreadControlBlock object
 	 */
 

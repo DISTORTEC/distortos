@@ -164,6 +164,20 @@ public:
 
 protected:
 
+#if CONFIG_THREAD_DETACH_ENABLE == 1
+
+	/**
+	 * \brief Thread's "exit 0" hook function
+	 *
+	 * This hook will be called early during thread's exit - while the thread is still runnable.
+	 *
+	 * Calls "exit 0" hook of base class and - if thread is detached - locks object used for deferred deletion.
+	 */
+
+	void exit0Hook() override;
+
+#endif	// CONFIG_THREAD_DETACH_ENABLE == 1
+
 	/**
 	 * \brief Thread's "run" function
 	 *

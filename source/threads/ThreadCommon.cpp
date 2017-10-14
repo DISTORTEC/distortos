@@ -144,6 +144,11 @@ void ThreadCommon::setSchedulingPolicy(const SchedulingPolicy schedulingPolicy)
 | protected functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
+void ThreadCommon::exit0Hook()
+{
+
+}
+
 int ThreadCommon::startInternal(void (* const preTerminationHookFunction)(RunnableThread&),
 		void (& terminationHookFunction)(RunnableThread&))
 {
