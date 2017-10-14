@@ -23,7 +23,7 @@ namespace internal
 /// RunnableThread class defines additional interface functions required for the thread to be actually runnable
 class RunnableThread : public Thread
 {
-	friend void threadRunner(RunnableThread&, void (*)(RunnableThread&), void (&)(RunnableThread&));
+	friend void threadRunner(RunnableThread&, void (&)(RunnableThread&));
 
 protected:
 

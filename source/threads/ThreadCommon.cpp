@@ -149,10 +149,9 @@ void ThreadCommon::exit0Hook()
 
 }
 
-int ThreadCommon::startInternal(void (* const preTerminationHookFunction)(RunnableThread&),
-		void (& terminationHookFunction)(RunnableThread&))
+int ThreadCommon::startInternal(void (& terminationHookFunction)(RunnableThread&))
 {
-	return getScheduler().add(preTerminationHookFunction, terminationHookFunction, getThreadControlBlock());
+	return getScheduler().add(terminationHookFunction, getThreadControlBlock());
 }
 
 /*---------------------------------------------------------------------------------------------------------------------+

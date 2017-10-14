@@ -25,7 +25,7 @@ class RunnableThread;
  *
  * Performs following actions:
  * - executes thread's "run" function;
- * - thread's pre-termination hook is executed (if provided);
+ * - thread's "exit 0" hook is executed;
  * - thread is terminated and removed from scheduler;
  * - thread's termination hook is executed;
  * - context switch is forced;
@@ -33,13 +33,11 @@ class RunnableThread;
  * This function never returns.
  *
  * \param [in] runnableThread is a reference to RunnableThread object that is being run
- * \param [in] preTerminationHook is a pointer to RunnableThread's pre-termination hook, nullptr to skip
  * \param [in] terminationHook is a reference to RunnableThread's termination hook
  */
 
 __attribute__ ((noreturn))
-void threadRunner(RunnableThread& runnableThread, void (* preTerminationHook)(RunnableThread&),
-		void (& terminationHook)(RunnableThread&));
+void threadRunner(RunnableThread& runnableThread, void (& terminationHook)(RunnableThread&));
 
 }	// namespace internal
 

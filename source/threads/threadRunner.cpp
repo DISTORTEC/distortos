@@ -28,16 +28,14 @@ namespace internal
 | global functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-void threadRunner(RunnableThread& runnableThread, void (* const preTerminationHook)(RunnableThread&),
-		void (& terminationHook)(RunnableThread&))
+void threadRunner(RunnableThread& runnableThread, void (& terminationHook)(RunnableThread&))
 {
 	runnableThread.run();
 
 	{
 		const InterruptMaskingLock interruptMaskingLock;
 
-		if (preTerminationHook != nullptr)
-			preTerminationHook(runnableThread);
+		runnableThread.exit0Hook();
 		internal::getScheduler().remove();
 		terminationHook(runnableThread);
 	}

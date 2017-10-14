@@ -78,14 +78,6 @@ void DynamicThreadBase::run()
 
 #if CONFIG_THREAD_DETACH_ENABLE == 1
 
-void DynamicThreadBase::preTerminationHook(RunnableThread& runnableThread)
-{
-	auto& that = static_cast<DynamicThreadBase&>(runnableThread);
-
-	if (that.owner_ == nullptr)	// thread is detached?
-		getDeferredThreadDeleter().lock();	/// \todo error handling?
-}
-
 void DynamicThreadBase::terminationHook(RunnableThread& runnableThread)
 {
 	ThreadCommon::terminationHook(runnableThread);

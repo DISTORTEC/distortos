@@ -150,11 +150,7 @@ public:
 
 	int start()
 	{
-#if CONFIG_THREAD_DETACH_ENABLE == 1
-		return ThreadCommon::startInternal(preTerminationHook, terminationHook);
-#else	// CONFIG_THREAD_DETACH_ENABLE != 1
-		return ThreadCommon::startInternal(nullptr, terminationHook);
-#endif	// CONFIG_THREAD_DETACH_ENABLE != 1
+		return ThreadCommon::startInternal(terminationHook);
 	}
 
 	DynamicThreadBase(const DynamicThreadBase&) = delete;
@@ -187,16 +183,6 @@ protected:
 	void run() override;
 
 #if CONFIG_THREAD_DETACH_ENABLE == 1
-
-	/**
-	 * \brief Pre-termination hook function of thread
-	 *
-	 * If thread is detached, locks object used for deferred deletion.
-	 *
-	 * \param [in] runnableThread is a reference to RunnableThread object, this must be DynamicThreadBase!
-	 */
-
-	static void preTerminationHook(RunnableThread& runnableThread);
 
 	/**
 	 * \brief Termination hook function of thread

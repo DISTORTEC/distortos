@@ -120,15 +120,13 @@ public:
 	 * \brief Fills the stack with stack sentinel, initializes its contents and stack pointer value.
 	 *
 	 * \param [in] runnableThread is a reference to RunnableThread object that is being run
-	 * \param [in] preTerminationHook is a pointer to RunnableThread's pre-termination hook, nullptr to skip
 	 * \param [in] terminationHook is a reference to RunnableThread's termination hook
 	 *
 	 * \return 0 on success, error code otherwise:
 	 * - error codes returned by architecture::initializeStack();
 	 */
 
-	int initialize(RunnableThread& runnableThread, void (* preTerminationHook)(RunnableThread&),
-			void (& terminationHook)(RunnableThread&));
+	int initialize(RunnableThread& runnableThread, void (& terminationHook)(RunnableThread&));
 
 	/**
 	 * \brief Sets value of stack pointer.
