@@ -150,7 +150,7 @@ public:
 
 	int start()
 	{
-		return ThreadCommon::startInternal(terminationHook);
+		return ThreadCommon::startInternal();
 	}
 
 	DynamicThreadBase(const DynamicThreadBase&) = delete;
@@ -191,20 +191,6 @@ protected:
 	 */
 
 	void run() override;
-
-#if CONFIG_THREAD_DETACH_ENABLE == 1
-
-	/**
-	 * \brief Termination hook function of thread
-	 *
-	 * Calls ThreadCommon::terminationHook() and - if thread is detached - schedules itself for deferred deletion.
-	 *
-	 * \param [in] runnableThread is a reference to RunnableThread object, this must be DynamicThreadBase!
-	 */
-
-	static void terminationHook(RunnableThread& runnableThread);
-
-#endif	// CONFIG_THREAD_DETACH_ENABLE == 1
 
 private:
 

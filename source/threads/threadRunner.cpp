@@ -28,7 +28,7 @@ namespace internal
 | global functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-void threadRunner(RunnableThread& runnableThread, void (& terminationHook)(RunnableThread&))
+void threadRunner(RunnableThread& runnableThread)
 {
 	runnableThread.run();
 
@@ -37,7 +37,7 @@ void threadRunner(RunnableThread& runnableThread, void (& terminationHook)(Runna
 
 		runnableThread.exit0Hook();
 		internal::getScheduler().remove();
-		terminationHook(runnableThread);
+		runnableThread.exit1Hook();
 	}
 
 	internal::forceContextSwitch();

@@ -49,7 +49,6 @@ public:
 	 *
 	 * ThreadControlBlock's state is changed to "runnable".
 	 *
-	 * \param [in] terminationHook is a reference to RunnableThread's termination hook
 	 * \param [in] threadControlBlock is a reference to added ThreadControlBlock object
 	 *
 	 * \return 0 on success, error code otherwise:
@@ -58,7 +57,7 @@ public:
 	 * - error codes returned by Stack::initialize();
 	 */
 
-	int add(void (& terminationHook)(RunnableThread&), ThreadControlBlock& threadControlBlock);
+	int add(ThreadControlBlock& threadControlBlock);
 
 	/**
 	 * \brief Blocks current thread, transferring it to provided container.

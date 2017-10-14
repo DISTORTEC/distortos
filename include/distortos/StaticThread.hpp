@@ -78,7 +78,7 @@ public:
 
 	int start()
 	{
-		return UndetachableThread::startInternal(terminationHook);
+		return UndetachableThread::startInternal();
 	}
 
 protected:

@@ -40,15 +40,13 @@ namespace architecture
  * \param [in] buffer is a pointer to stack's buffer
  * \param [in] size is the size of stack's buffer, bytes
  * \param [in] runnableThread is a reference to internal::RunnableThread object that is being run
- * \param [in] terminationHook is a reference to internal::RunnableThread's termination hook
  *
  * \return pair with return code (0 on success, error code otherwise) and value that can be used as thread's stack
  * pointer, ready for context switching; error codes:
  * - ENOSPC - size of provided buffer is too small for stack frame;
  */
 
-std::pair<int, void*> initializeStack(void* buffer, size_t size, internal::RunnableThread& runnableThread,
-		void (& terminationHook)(internal::RunnableThread&));
+std::pair<int, void*> initializeStack(void* buffer, size_t size, internal::RunnableThread& runnableThread);
 
 }	// namespace architecture
 

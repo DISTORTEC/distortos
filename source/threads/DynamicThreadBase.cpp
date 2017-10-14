@@ -80,24 +80,6 @@ void DynamicThreadBase::run()
 	boundFunction_();
 }
 
-/*---------------------------------------------------------------------------------------------------------------------+
-| protected static functions
-+---------------------------------------------------------------------------------------------------------------------*/
-
-#if CONFIG_THREAD_DETACH_ENABLE == 1
-
-void DynamicThreadBase::terminationHook(RunnableThread& runnableThread)
-{
-	ThreadCommon::terminationHook(runnableThread);
-
-	auto& that = static_cast<DynamicThreadBase&>(runnableThread);
-
-	if (that.owner_ == nullptr)	// thread is detached?
-		getDeferredThreadDeleter()(that.getThreadControlBlock());	/// \todo error handling?
-}
-
-#endif	// CONFIG_THREAD_DETACH_ENABLE == 1
-
 }	// namespace internal
 
 }	// namespace distortos

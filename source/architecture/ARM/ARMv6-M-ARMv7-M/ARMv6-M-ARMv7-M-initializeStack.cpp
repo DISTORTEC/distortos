@@ -27,8 +27,7 @@ namespace architecture
 | global functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-std::pair<int, void*> initializeStack(void* const buffer, const size_t size, internal::RunnableThread& runnableThread,
-		void (& terminationHook)(internal::RunnableThread&))
+std::pair<int, void*> initializeStack(void* const buffer, const size_t size, internal::RunnableThread& runnableThread)
 {
 	const auto stackFrame = reinterpret_cast<StackFrame*>(static_cast<uint8_t*>(buffer) + size) - 1;
 	if (stackFrame < buffer)
@@ -48,7 +47,7 @@ std::pair<int, void*> initializeStack(void* const buffer, const size_t size, int
 #endif	// __FPU_PRESENT == 1 && __FPU_USED == 1
 
 	stackFrame->exceptionStackFrame.r0 = &runnableThread;
-	stackFrame->exceptionStackFrame.r1 = reinterpret_cast<void*>(&terminationHook);
+	stackFrame->exceptionStackFrame.r1 = reinterpret_cast<void*>(0x11111111);
 	stackFrame->exceptionStackFrame.r2 = reinterpret_cast<void*>(0x22222222);
 	stackFrame->exceptionStackFrame.r3 = reinterpret_cast<void*>(0x33333333);
 	stackFrame->exceptionStackFrame.r12 = reinterpret_cast<void*>(0xcccccccc);

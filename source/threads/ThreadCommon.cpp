@@ -154,18 +154,9 @@ void ThreadCommon::exit1Hook()
 	joinSemaphore_.post();
 }
 
-int ThreadCommon::startInternal(void (& terminationHookFunction)(RunnableThread&))
+int ThreadCommon::startInternal()
 {
-	return getScheduler().add(terminationHookFunction, getThreadControlBlock());
-}
-
-/*---------------------------------------------------------------------------------------------------------------------+
-| protected static functions
-+---------------------------------------------------------------------------------------------------------------------*/
-
-void ThreadCommon::terminationHook(RunnableThread& runnableThread)
-{
-	static_cast<ThreadCommon&>(runnableThread).joinSemaphore_.post();
+	return getScheduler().add(getThreadControlBlock());
 }
 
 }	// namespace internal

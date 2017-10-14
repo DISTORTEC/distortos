@@ -242,21 +242,11 @@ protected:
 	 *
 	 * This operation can be performed on threads in "created" state only.
 	 *
-	 * \param [in] terminationHookFunction is a reference to RunnableThread's termination hook
-	 *
 	 * \return 0 on success, error code otherwise:
 	 * - error codes returned by Scheduler::add();
 	 */
 
-	int startInternal(void (& terminationHookFunction)(RunnableThread&));
-
-	/**
-	 * \brief Termination hook function of thread
-	 *
-	 * \param [in] runnableThread is a reference to RunnableThread object, this must be ThreadCommon!
-	 */
-
-	static void terminationHook(RunnableThread& runnableThread);
+	int startInternal();
 
 private:
 
