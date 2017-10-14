@@ -27,18 +27,18 @@ namespace internal
 | global functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-void threadRunner(Thread& thread, void (& run)(Thread&), void (* preTerminationHook)(Thread&),
-		void (& terminationHook)(Thread&))
+void threadRunner(RunnableThread& runnableThread, void (& run)(RunnableThread&),
+		void (* const preTerminationHook)(RunnableThread&), void (& terminationHook)(RunnableThread&))
 {
-	run(thread);
+	run(runnableThread);
 
 	{
 		const InterruptMaskingLock interruptMaskingLock;
 
 		if (preTerminationHook != nullptr)
-			preTerminationHook(thread);
+			preTerminationHook(runnableThread);
 		internal::getScheduler().remove();
-		terminationHook(thread);
+		terminationHook(runnableThread);
 	}
 
 	internal::forceContextSwitch();

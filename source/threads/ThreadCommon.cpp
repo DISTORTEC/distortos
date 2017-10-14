@@ -144,8 +144,8 @@ void ThreadCommon::setSchedulingPolicy(const SchedulingPolicy schedulingPolicy)
 | protected functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-int ThreadCommon::startInternal(void (& runFunction)(Thread&), void (* const preTerminationHookFunction)(Thread&),
-		void (& terminationHookFunction)(Thread&))
+int ThreadCommon::startInternal(void (& runFunction)(RunnableThread&),
+		void (* const preTerminationHookFunction)(RunnableThread&), void (& terminationHookFunction)(RunnableThread&))
 {
 	return getScheduler().add(runFunction, preTerminationHookFunction, terminationHookFunction,
 			getThreadControlBlock());
@@ -155,9 +155,9 @@ int ThreadCommon::startInternal(void (& runFunction)(Thread&), void (* const pre
 | protected static functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-void ThreadCommon::terminationHook(Thread& thread)
+void ThreadCommon::terminationHook(RunnableThread& runnableThread)
 {
-	static_cast<ThreadCommon&>(thread).joinSemaphore_.post();
+	static_cast<ThreadCommon&>(runnableThread).joinSemaphore_.post();
 }
 
 }	// namespace internal

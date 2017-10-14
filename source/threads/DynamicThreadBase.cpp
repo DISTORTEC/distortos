@@ -57,19 +57,19 @@ int DynamicThreadBase::detach()
 
 #if CONFIG_THREAD_DETACH_ENABLE == 1
 
-void DynamicThreadBase::preTerminationHook(Thread& thread)
+void DynamicThreadBase::preTerminationHook(RunnableThread& runnableThread)
 {
-	auto& that = static_cast<DynamicThreadBase&>(thread);
+	auto& that = static_cast<DynamicThreadBase&>(runnableThread);
 
 	if (that.owner_ == nullptr)	// thread is detached?
 		getDeferredThreadDeleter().lock();	/// \todo error handling?
 }
 
-void DynamicThreadBase::terminationHook(Thread& thread)
+void DynamicThreadBase::terminationHook(RunnableThread& runnableThread)
 {
-	ThreadCommon::terminationHook(thread);
+	ThreadCommon::terminationHook(runnableThread);
 
-	auto& that = static_cast<DynamicThreadBase&>(thread);
+	auto& that = static_cast<DynamicThreadBase&>(runnableThread);
 
 	if (that.owner_ == nullptr)	// thread is detached?
 		getDeferredThreadDeleter()(that.getThreadControlBlock());	/// \todo error handling?
@@ -81,9 +81,9 @@ void DynamicThreadBase::terminationHook(Thread& thread)
 | private static functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-void DynamicThreadBase::run(Thread& thread)
+void DynamicThreadBase::run(RunnableThread& runnableThread)
 {
-	static_cast<DynamicThreadBase&>(thread).boundFunction_();
+	static_cast<DynamicThreadBase&>(runnableThread).boundFunction_();
 }
 
 }	// namespace internal

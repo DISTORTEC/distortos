@@ -222,24 +222,24 @@ protected:
 	 *
 	 * This operation can be performed on threads in "created" state only.
 	 *
-	 * \param [in] runFunction is a reference to Thread's "run" function
-	 * \param [in] preTerminationHookFunction is a pointer to Thread's pre-termination hook, nullptr to skip
-	 * \param [in] terminationHookFunction is a reference to Thread's termination hook
+	 * \param [in] runFunction is a reference to RunnableThread's "run" function
+	 * \param [in] preTerminationHookFunction is a pointer to RunnableThread's pre-termination hook, nullptr to skip
+	 * \param [in] terminationHookFunction is a reference to RunnableThread's termination hook
 	 *
 	 * \return 0 on success, error code otherwise:
 	 * - error codes returned by Scheduler::add();
 	 */
 
-	int startInternal(void (& runFunction)(Thread&), void (* preTerminationHookFunction)(Thread&),
-			void (& terminationHookFunction)(Thread&));
+	int startInternal(void (& runFunction)(RunnableThread&), void (* preTerminationHookFunction)(RunnableThread&),
+			void (& terminationHookFunction)(RunnableThread&));
 
 	/**
 	 * \brief Termination hook function of thread
 	 *
-	 * \param [in] thread is a reference to Thread object, this must be ThreadCommon!
+	 * \param [in] runnableThread is a reference to RunnableThread object, this must be ThreadCommon!
 	 */
 
-	static void terminationHook(Thread& thread);
+	static void terminationHook(RunnableThread& runnableThread);
 
 private:
 

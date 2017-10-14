@@ -49,9 +49,9 @@ public:
 	 *
 	 * ThreadControlBlock's state is changed to "runnable".
 	 *
-	 * \param [in] run is a reference to Thread's "run" function
-	 * \param [in] preTerminationHook is a pointer to Thread's pre-termination hook, nullptr to skip
-	 * \param [in] terminationHook is a reference to Thread's termination hook
+	 * \param [in] run is a reference to RunnableThread's "run" function
+	 * \param [in] preTerminationHook is a pointer to RunnableThread's pre-termination hook, nullptr to skip
+	 * \param [in] terminationHook is a reference to RunnableThread's termination hook
 	 * \param [in] threadControlBlock is a reference to added ThreadControlBlock object
 	 *
 	 * \return 0 on success, error code otherwise:
@@ -60,8 +60,8 @@ public:
 	 * - error codes returned by Stack::initialize();
 	 */
 
-	int add(void (& run)(Thread&), void (* preTerminationHook)(Thread&), void (& terminationHook)(Thread&),
-			ThreadControlBlock& threadControlBlock);
+	int add(void (& run)(RunnableThread&), void (* preTerminationHook)(RunnableThread&),
+			void (& terminationHook)(RunnableThread&), ThreadControlBlock& threadControlBlock);
 
 	/**
 	 * \brief Blocks current thread, transferring it to provided container.

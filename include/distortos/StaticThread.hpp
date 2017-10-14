@@ -88,12 +88,12 @@ private:
 	 *
 	 * Executes bound function object.
 	 *
-	 * \param [in] thread is a reference to Thread object, this must be StaticThreadBase!
+	 * \param [in] runnableThread is a reference to RunnableThread object, this must be StaticThreadBase!
 	 */
 
-	static void run(Thread& thread)
+	static void run(RunnableThread& runnableThread)
 	{
-		static_cast<StaticThreadBase&>(thread).boundFunction_();
+		static_cast<StaticThreadBase&>(runnableThread).boundFunction_();
 	}
 
 	/// size of stack adjusted to alignment requirements, bytes

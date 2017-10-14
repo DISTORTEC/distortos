@@ -87,8 +87,8 @@ private:
 | public functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-int Scheduler::add(void (& run)(Thread&), void (* const preTerminationHook)(Thread&), void (& terminationHook)(Thread&),
-		ThreadControlBlock& threadControlBlock)
+int Scheduler::add(void (& run)(RunnableThread&), void (* const preTerminationHook)(RunnableThread&),
+		void (& terminationHook)(RunnableThread&), ThreadControlBlock& threadControlBlock)
 {
 	const InterruptMaskingLock interruptMaskingLock;
 

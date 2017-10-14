@@ -171,20 +171,20 @@ protected:
 	 *
 	 * If thread is detached, locks object used for deferred deletion.
 	 *
-	 * \param [in] thread is a reference to Thread object, this must be DynamicThreadBase!
+	 * \param [in] runnableThread is a reference to RunnableThread object, this must be DynamicThreadBase!
 	 */
 
-	static void preTerminationHook(Thread& thread);
+	static void preTerminationHook(RunnableThread& runnableThread);
 
 	/**
 	 * \brief Termination hook function of thread
 	 *
 	 * Calls ThreadCommon::terminationHook() and - if thread is detached - schedules itself for deferred deletion.
 	 *
-	 * \param [in] thread is a reference to Thread object, this must be DynamicThreadBase!
+	 * \param [in] runnableThread is a reference to RunnableThread object, this must be DynamicThreadBase!
 	 */
 
-	static void terminationHook(Thread& thread);
+	static void terminationHook(RunnableThread& runnableThread);
 
 #endif	// CONFIG_THREAD_DETACH_ENABLE == 1
 
@@ -216,10 +216,10 @@ private:
 	 *
 	 * Executes bound function object.
 	 *
-	 * \param [in] thread is a reference to Thread object, this must be DynamicThreadBase!
+	 * \param [in] runnableThread is a reference to RunnableThread object, this must be DynamicThreadBase!
 	 */
 
-	static void run(Thread& thread);
+	static void run(RunnableThread& runnableThread);
 
 #if CONFIG_SIGNALS_ENABLE == 1
 

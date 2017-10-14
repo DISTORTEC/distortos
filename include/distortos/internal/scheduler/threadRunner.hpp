@@ -2,7 +2,7 @@
  * \file
  * \brief threadRunner() declaration
  *
- * \author Copyright (C) 2014-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -15,10 +15,10 @@
 namespace distortos
 {
 
-class Thread;
-
 namespace internal
 {
+
+class RunnableThread;
 
 /**
  * \brief Thread runner function - entry point of threads.
@@ -32,14 +32,15 @@ namespace internal
  *
  * This function never returns.
  *
- * \param [in] thread is a reference to Thread object that is being run
- * \param [in] run is a reference to Thread's "run" function
- * \param [in] preTerminationHook is a pointer to Thread's pre-termination hook, nullptr to skip
- * \param [in] terminationHook is a reference to Thread's termination hook
+ * \param [in] runnableThread is a reference to RunnableThread object that is being run
+ * \param [in] run is a reference to RunnableThread's "run" function
+ * \param [in] preTerminationHook is a pointer to RunnableThread's pre-termination hook, nullptr to skip
+ * \param [in] terminationHook is a reference to RunnableThread's termination hook
  */
 
-void threadRunner(Thread& thread, void (& run)(Thread&), void (* preTerminationHook)(Thread&),
-		void (& terminationHook)(Thread&)) __attribute__ ((noreturn));
+__attribute__ ((noreturn))
+void threadRunner(RunnableThread& runnableThread, void (& run)(RunnableThread&),
+		void (* preTerminationHook)(RunnableThread&), void (& terminationHook)(RunnableThread&));
 
 }	// namespace internal
 
