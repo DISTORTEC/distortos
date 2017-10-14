@@ -149,6 +149,11 @@ void ThreadCommon::exit0Hook()
 
 }
 
+void ThreadCommon::exit1Hook()
+{
+	joinSemaphore_.post();
+}
+
 int ThreadCommon::startInternal(void (& terminationHookFunction)(RunnableThread&))
 {
 	return getScheduler().add(terminationHookFunction, getThreadControlBlock());

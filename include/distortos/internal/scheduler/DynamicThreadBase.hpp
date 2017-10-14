@@ -172,6 +172,16 @@ protected:
 
 	void exit0Hook() override;
 
+	/**
+	 * \brief Thread's "exit 1" hook function
+	 *
+	 * This hook will be called late during thread's exit - after the thread is removed from the scheduler.
+	 *
+	 * Calls "exit 1" hook of base class and - if thread is detached - schedules itself for deferred deletion.
+	 */
+
+	void exit1Hook() override;
+
 #endif	// CONFIG_THREAD_DETACH_ENABLE == 1
 
 	/**

@@ -36,6 +36,14 @@ protected:
 	virtual void exit0Hook() = 0;
 
 	/**
+	 * \brief Thread's "exit 1" hook function
+	 *
+	 * This hook will be called late during thread's exit - after the thread is removed from the scheduler.
+	 */
+
+	virtual void exit1Hook() = 0;
+
+	/**
 	 * \brief Thread's "run" function
 	 */
 

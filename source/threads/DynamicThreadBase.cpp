@@ -65,6 +65,14 @@ void DynamicThreadBase::exit0Hook()
 		getDeferredThreadDeleter().lock();	/// \todo error handling?
 }
 
+void DynamicThreadBase::exit1Hook()
+{
+	ThreadCommon::exit1Hook();
+
+	if (owner_ == nullptr)	// thread is detached?
+		getDeferredThreadDeleter()(getThreadControlBlock());	/// \todo error handling?
+}
+
 #endif	// CONFIG_THREAD_DETACH_ENABLE == 1
 
 void DynamicThreadBase::run()

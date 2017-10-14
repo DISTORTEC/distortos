@@ -210,6 +210,16 @@ protected:
 	void exit0Hook() override;
 
 	/**
+	 * \brief Thread's "exit 1" hook function
+	 *
+	 * This hook will be called late during thread's exit - after the thread is removed from the scheduler.
+	 *
+	 * Posts join() semaphore.
+	 */
+
+	void exit1Hook() override;
+
+	/**
 	 * \return reference to internal ThreadControlBlock object
 	 */
 
