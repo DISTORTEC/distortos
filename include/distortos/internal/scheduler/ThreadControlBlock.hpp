@@ -304,6 +304,9 @@ private:
 	/// pointer to MutexControlBlock (with priorityInheritance protocol) that blocks this thread
 	const MutexControlBlock* priorityInheritanceMutexControlBlock_;
 
+	/// sequence number, one half of thread identifier
+	uintptr_t sequenceNumber_;
+
 #if CONFIG_SIGNALS_ENABLE == 1
 
 	/// pointer to SignalsReceiverControlBlock object for this thread, nullptr if this thread cannot receive signals

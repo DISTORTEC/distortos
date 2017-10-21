@@ -30,6 +30,18 @@ namespace distortos
 namespace internal
 {
 
+namespace
+{
+
+/*---------------------------------------------------------------------------------------------------------------------+
+| local objects
++---------------------------------------------------------------------------------------------------------------------*/
+
+/// next value of sequence number
+uintptr_t nextSequenceNumber;
+
+}	// namespace
+
 /*---------------------------------------------------------------------------------------------------------------------+
 | public functions
 +---------------------------------------------------------------------------------------------------------------------*/
@@ -54,6 +66,9 @@ ThreadControlBlock::ThreadControlBlock(internal::Stack&& stack, const uint8_t pr
 				state_{ThreadState::created}
 {
 	_REENT_INIT_PTR(&reent_);
+
+	const InterruptMaskingLock interruptMaskingLock;
+	sequenceNumber_ = nextSequenceNumber++;
 }
 
 #else	// CONFIG_SIGNALS_ENABLE != 1
@@ -74,6 +89,9 @@ ThreadControlBlock::ThreadControlBlock(internal::Stack&& stack, const uint8_t pr
 				state_{ThreadState::created}
 {
 	_REENT_INIT_PTR(&reent_);
+
+	const InterruptMaskingLock interruptMaskingLock;
+	sequenceNumber_ = nextSequenceNumber++;
 }
 
 #endif	// CONFIG_SIGNALS_ENABLE != 1
