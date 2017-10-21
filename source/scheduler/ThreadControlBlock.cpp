@@ -62,7 +62,7 @@ ThreadControlBlock::ThreadControlBlock(internal::Stack&& stack, const uint8_t pr
 
 ThreadControlBlock::ThreadControlBlock(internal::Stack&& stack, const uint8_t priority,
 		const SchedulingPolicy schedulingPolicy, ThreadGroupControlBlock* const threadGroupControlBlock,
-		SignalsReceiver*, Thread& owner) :
+		SignalsReceiver*, RunnableThread& owner) :
 		ThreadListNode{priority},
 		stack_{std::move(stack)},
 		owner_{owner},
