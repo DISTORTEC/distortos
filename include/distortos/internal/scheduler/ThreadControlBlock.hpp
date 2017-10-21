@@ -136,6 +136,15 @@ public:
 		return schedulingPolicy_;
 	}
 
+	/**
+	 * \return sequence number, one half of thread identifier
+	 */
+
+	uintptr_t getSequenceNumber() const
+	{
+		return sequenceNumber_;
+	}
+
 #if CONFIG_SIGNALS_ENABLE == 1
 
 	/**
