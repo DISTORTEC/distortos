@@ -98,6 +98,8 @@ ThreadControlBlock::ThreadControlBlock(internal::Stack&& stack, const uint8_t pr
 
 ThreadControlBlock::~ThreadControlBlock()
 {
+	sequenceNumber_ = ~sequenceNumber_;
+
 	const InterruptMaskingLock interruptMaskingLock;
 
 	_reclaim_reent(&reent_);
