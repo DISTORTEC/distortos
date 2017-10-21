@@ -286,26 +286,23 @@ private:
 
 	void reposition(bool loweringBefore);
 
-	/// internal stack object
-	Stack stack_;
-
-	/// reference to RunnableThread object that owns this ThreadControlBlock
-	RunnableThread& owner_;
-
 	/// list of mutexes (mutex control blocks) with enabled priority protocol owned by this thread
 	MutexList ownedProtocolMutexList_;
 
-	/// pointer to MutexControlBlock (with priorityInheritance protocol) that blocks this thread
-	const MutexControlBlock* priorityInheritanceMutexControlBlock_;
+	/// newlib's _reent structure with thread-specific data
+	_reent reent_;
+
+	/// internal stack object
+	Stack stack_;
 
 	/// pointer to list that has this object
 	ThreadList* list_;
 
-	/// pointer to ThreadGroupControlBlock with which this object is associated
-	ThreadGroupControlBlock* threadGroupControlBlock_;
+	/// reference to RunnableThread object that owns this ThreadControlBlock
+	RunnableThread& owner_;
 
-	/// functor executed in unblockHook()
-	const UnblockFunctor* unblockFunctor_;
+	/// pointer to MutexControlBlock (with priorityInheritance protocol) that blocks this thread
+	const MutexControlBlock* priorityInheritanceMutexControlBlock_;
 
 #if CONFIG_SIGNALS_ENABLE == 1
 
@@ -314,8 +311,11 @@ private:
 
 #endif	// CONFIG_SIGNALS_ENABLE == 1
 
-	/// newlib's _reent structure with thread-specific data
-	_reent reent_;
+	/// pointer to ThreadGroupControlBlock with which this object is associated
+	ThreadGroupControlBlock* threadGroupControlBlock_;
+
+	/// functor executed in unblockHook()
+	const UnblockFunctor* unblockFunctor_;
 
 	/// round-robin quantum
 	RoundRobinQuantum roundRobinQuantum_;
