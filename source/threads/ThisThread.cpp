@@ -18,6 +18,8 @@
 
 #include "distortos/internal/CHECK_FUNCTION_CONTEXT.hpp"
 
+#include "distortos/ThreadIdentifier.hpp"
+
 #include <cerrno>
 
 namespace distortos
@@ -58,6 +60,14 @@ uint8_t getEffectivePriority()
 	CHECK_FUNCTION_CONTEXT();
 
 	return internal::getScheduler().getCurrentThreadControlBlock().getEffectivePriority();
+}
+
+ThreadIdentifier getIdentifier()
+{
+	CHECK_FUNCTION_CONTEXT();
+
+	const auto& threadControlBlock = internal::getScheduler().getCurrentThreadControlBlock();
+	return {threadControlBlock, threadControlBlock.getSequenceNumber()};
 }
 
 uint8_t getPriority()

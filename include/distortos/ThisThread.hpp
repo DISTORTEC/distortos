@@ -19,6 +19,7 @@ namespace distortos
 {
 
 class Thread;
+class ThreadIdentifier;
 
 namespace ThisThread
 {
@@ -74,6 +75,14 @@ Thread& get();
  */
 
 uint8_t getEffectivePriority();
+
+/**
+ * \warning This function must not be called from interrupt context!
+ *
+ * \return thread identifier of calling (current) thread
+ */
+
+ThreadIdentifier getIdentifier();
 
 /**
  * \warning This function must not be called from interrupt context!
