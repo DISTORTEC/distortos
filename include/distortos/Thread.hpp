@@ -23,6 +23,8 @@
 namespace distortos
 {
 
+class ThreadIdentifier;
+
 /**
  * \brief Thread class is a pure abstract interface for threads
  *
@@ -87,6 +89,13 @@ public:
 	 */
 
 	virtual uint8_t getEffectivePriority() const = 0;
+
+	/**
+	 * \return identifier of thread, default-constructed ThreadIdentifier if this object doesn't represent a valid
+	 * thread of execution (e.g. after the thread is detached)
+	 */
+	
+	virtual ThreadIdentifier getIdentifier() const = 0;
 
 #if CONFIG_SIGNALS_ENABLE == 1
 

@@ -129,6 +129,13 @@ public:
 
 	uint8_t getEffectivePriority() const override;
 
+	/**
+	 * \return identifier of thread, default-constructed ThreadIdentifier if this object doesn't represent a valid
+	 * thread of execution (e.g. after the thread is detached)
+	 */
+
+	ThreadIdentifier getIdentifier() const override;
+
 #if CONFIG_SIGNALS_ENABLE == 1
 
 	/**

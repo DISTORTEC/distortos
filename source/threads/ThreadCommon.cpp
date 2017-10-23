@@ -19,6 +19,7 @@
 #include "distortos/internal/CHECK_FUNCTION_CONTEXT.hpp"
 
 #include "distortos/InterruptMaskingLock.hpp"
+#include "distortos/ThreadIdentifier.hpp"
 
 #include <cerrno>
 
@@ -63,6 +64,12 @@ int ThreadCommon::generateSignal(const uint8_t signalNumber)
 uint8_t ThreadCommon::getEffectivePriority() const
 {
 	return getThreadControlBlock().getEffectivePriority();
+}
+
+ThreadIdentifier ThreadCommon::getIdentifier() const
+{
+	const auto& threadControlBlock = getThreadControlBlock();
+	return {threadControlBlock, threadControlBlock.getSequenceNumber()};
 }
 
 #if CONFIG_SIGNALS_ENABLE == 1
