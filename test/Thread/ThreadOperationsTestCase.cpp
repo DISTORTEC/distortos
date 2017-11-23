@@ -19,6 +19,7 @@
 #include "distortos/StaticThread.hpp"
 #include "distortos/statistics.hpp"
 #include "distortos/ThisThread.hpp"
+#include "distortos/ThreadIdentifier.hpp"
 
 #include <malloc.h>
 
@@ -167,6 +168,8 @@ bool phase3()
 			result = false;
 		if (staticThread.getState() != ThreadState::runnable)
 			result = false;
+		if (staticThread.getIdentifier() == ThreadIdentifier{})
+			result = false;
 		if (staticThread.join() != 0 || result == false || sharedRet != ENOTSUP)	// self-detach must fail too
 			return false;
 	}
@@ -181,6 +184,8 @@ bool phase3()
 		if (dynamicThread.start() != EINVAL)	// detached thread cannot be started
 			result = false;
 		if (dynamicThread.getState() != ThreadState::detached)
+			result = false;
+		if (dynamicThread.getIdentifier() != ThreadIdentifier{})
 			result = false;
 		if (dynamicThread.join() != EINVAL || result == false || sharedRet != 0x2e981e48 ||
 				dynamicThread.detach() != EINVAL)	// detached thread cannot be joined, self-detach must fail
@@ -198,6 +203,8 @@ bool phase3()
 		if (dynamicThread.detach() != 0)
 			result = false;
 		if (dynamicThread.getState() != ThreadState::detached)
+			result = false;
+		if (dynamicThread.getIdentifier() != ThreadIdentifier{})
 			result = false;
 		if (dynamicThread.join() != EINVAL)	// detached thread cannot be joined
 			result = false;
@@ -217,6 +224,8 @@ bool phase3()
 		auto dynamicThread = makeAndStartDynamicThread({testThreadStackSize, UINT8_MAX}, lambda, std::ref(sharedRet));
 		bool result {true};
 		if (dynamicThread.getState() != ThreadState::detached)
+			result = false;
+		if (dynamicThread.getIdentifier() != ThreadIdentifier{})
 			result = false;
 		if (dynamicThread.detach() != EINVAL)	// second attempt to detach a thread must fail
 			result = false;
@@ -314,6 +323,103 @@ bool phase4()
 	return true;
 }
 
+/**
+ * \brief Phase 5 of test case
+ *
+ * Tests operation of thread identifiers.
+ *
+ * \return true if test succeeded, false otherwise
+ */
+
+bool phase5()
+{
+	const auto allocatedMemory = mallinfo().uordblks;
+
+	const auto lambda =
+			[](ThreadIdentifier& innerIdentifier, bool& sharedResult)
+			{
+				innerIdentifier = ThisThread::getIdentifier();
+				sharedResult = innerIdentifier.getThread() == &ThisThread::get();
+				ThisThread::setPriority(1);
+			};
+
+	// test identifiers for static thread
+	{
+		ThreadIdentifier innerIdentifier;
+		ThreadIdentifier outerIdentifier;
+		{
+			bool sharedResult;
+			auto staticThread = makeAndStartStaticThread<testThreadStackSize>(UINT8_MAX, lambda,
+					std::ref(innerIdentifier), std::ref(sharedResult));
+			outerIdentifier = staticThread.getIdentifier();
+			const auto result = innerIdentifier != ThreadIdentifier{} && outerIdentifier != ThreadIdentifier{} &&
+					innerIdentifier == outerIdentifier;
+			if (staticThread.join() != 0 || result == false || sharedResult == false)
+				return false;
+		}
+		if (innerIdentifier != ThreadIdentifier{} || outerIdentifier != ThreadIdentifier{} ||
+				innerIdentifier != outerIdentifier)	// both identifiers must no longer be valid, they must be equal
+			return false;
+	}
+
+	// test identifiers for dynamic thread
+	{
+		ThreadIdentifier innerIdentifier;
+		ThreadIdentifier outerIdentifier;
+		{
+			bool sharedResult;
+			auto dynamicThread = makeAndStartDynamicThread({testThreadStackSize, UINT8_MAX}, lambda,
+					std::ref(innerIdentifier), std::ref(sharedResult));
+			outerIdentifier = dynamicThread.getIdentifier();
+			const auto result = innerIdentifier != ThreadIdentifier{} && outerIdentifier != ThreadIdentifier{} &&
+					innerIdentifier == outerIdentifier;
+			if (dynamicThread.join() != 0 || result == false || sharedResult == false)
+				return false;
+		}
+		if (innerIdentifier != ThreadIdentifier{} || outerIdentifier != ThreadIdentifier{} ||
+				innerIdentifier != outerIdentifier)	// both identifiers must no longer be valid, they must be equal
+			return false;
+	}
+
+	if (mallinfo().uordblks != allocatedMemory)	// dynamic memory must be deallocated after each test phase
+		return false;
+
+	// test whether identifiers for different thread instances are not equal
+	{
+		using TestThread = decltype(makeStaticThread<testThreadStackSize>(1, emptyFunction));
+		constexpr size_t totalTestThreads {2};
+		TestThread testThreads[totalTestThreads]
+		{
+				{1, emptyFunction},
+				{1, emptyFunction},
+		};
+		ThreadIdentifier threadIdentifiers[2][totalTestThreads];
+		for (size_t i {}; i < totalTestThreads; ++i)
+			threadIdentifiers[0][i] = testThreads[i].getIdentifier();
+		// identifiers of first and second thread must not be equal
+		if (threadIdentifiers[0][0] == threadIdentifiers[0][1])
+			return false;
+		for (auto& testThread : testThreads)
+		{
+			testThread.~TestThread();
+			new (&testThread) TestThread{1, emptyFunction};
+		}
+		for (size_t i {}; i < totalTestThreads; ++i)
+			threadIdentifiers[1][i] = testThreads[i].getIdentifier();
+		// identifiers of first and second thread must not be equal
+		if (threadIdentifiers[1][0] == threadIdentifiers[1][1])
+			return false;
+		// identifier of the previous instance must not be equal to the identifier of the new instance
+		if (threadIdentifiers[0][0] == threadIdentifiers[1][0] || threadIdentifiers[0][1] == threadIdentifiers[1][1])
+			return false;
+	}
+
+	if (mallinfo().uordblks != allocatedMemory)	// dynamic memory must be deallocated after each test phase
+		return false;
+
+	return true;
+}
+
 }	// namespace
 
 /*---------------------------------------------------------------------------------------------------------------------+
@@ -331,13 +437,14 @@ bool ThreadOperationsTestCase::run_() const
 	constexpr auto phase3ExpectedContextSwitchCount = 0;
 	constexpr auto phase4ExpectedContextSwitchCount = 2;
 #endif	// !def CONFIG_THREAD_DETACH_ENABLE
+	constexpr auto phase5ExpectedContextSwitchCount = 8;
 	constexpr auto expectedContextSwitchCount = phase1ExpectedContextSwitchCount + phase2ExpectedContextSwitchCount +
-			phase3ExpectedContextSwitchCount + phase4ExpectedContextSwitchCount;
+			phase3ExpectedContextSwitchCount + phase4ExpectedContextSwitchCount + phase5ExpectedContextSwitchCount;
 
 	const auto allocatedMemory = mallinfo().uordblks;
 	const auto contextSwitchCount = statistics::getContextSwitchCount();
 
-	for (const auto& function : {phase1, phase2, phase3, phase4})
+	for (const auto& function : {phase1, phase2, phase3, phase4, phase5})
 	{
 		const auto ret = function();
 		if (ret != true)
