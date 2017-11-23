@@ -18,6 +18,8 @@ references to regular C++ API objects (like `distortos::Semaphore`).
 `distortos::StaticSoftwareTimer`.
 - `distortos::ThisThread::exit()`, similar to `pthread_exit()`, which can be used to cause early exit of the current
 thread.
+- `distortos::ThreadIdentifier` type which can be used to uniquely identify and access thread's instance. Identifier of
+the thread can be obtained using `distortos::Thread::getIdentifier()` and `distortos::ThisThread::getIdentifier()`.
 - Unit tests of C-API for mutexes and semaphores, using [Catch](https://github.com/philsquared/Catch) unit test
 framework and [Trompeloeil](https://github.com/rollbear/trompeloeil) mocking framework. Build system of unit tests uses
 [CMake](https://cmake.org/).

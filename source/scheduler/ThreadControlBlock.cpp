@@ -30,6 +30,18 @@ namespace distortos
 namespace internal
 {
 
+namespace
+{
+
+/*---------------------------------------------------------------------------------------------------------------------+
+| local objects
++---------------------------------------------------------------------------------------------------------------------*/
+
+/// next value of sequence number
+uintptr_t nextSequenceNumber;
+
+}	// namespace
+
 /*---------------------------------------------------------------------------------------------------------------------+
 | public functions
 +---------------------------------------------------------------------------------------------------------------------*/
@@ -39,23 +51,24 @@ namespace internal
 ThreadControlBlock::ThreadControlBlock(internal::Stack&& stack, const uint8_t priority,
 		const SchedulingPolicy schedulingPolicy, ThreadGroupControlBlock* const threadGroupControlBlock,
 		SignalsReceiver* const signalsReceiver, RunnableThread& owner) :
-		ThreadListNode{priority},
-		stack_{std::move(stack)},
-		owner_{owner},
-		ownedProtocolMutexList_{},
-		priorityInheritanceMutexControlBlock_{},
-		list_{},
-		threadGroupControlBlock_{threadGroupControlBlock},
-		unblockFunctor_{},
-		signalsReceiverControlBlock_
-		{
-				signalsReceiver != nullptr ? &signalsReceiver->signalsReceiverControlBlock_ : nullptr
-		},
-		roundRobinQuantum_{},
-		schedulingPolicy_{schedulingPolicy},
-		state_{ThreadState::created}
+				ThreadListNode{priority},
+				ownedProtocolMutexList_{},
+				stack_{std::move(stack)},
+				list_{},
+				owner_{owner},
+				priorityInheritanceMutexControlBlock_{},
+				signalsReceiverControlBlock_{signalsReceiver != nullptr ?
+						&signalsReceiver->signalsReceiverControlBlock_ : nullptr},
+				threadGroupControlBlock_{threadGroupControlBlock},
+				unblockFunctor_{},
+				roundRobinQuantum_{},
+				schedulingPolicy_{schedulingPolicy},
+				state_{ThreadState::created}
 {
 	_REENT_INIT_PTR(&reent_);
+
+	const InterruptMaskingLock interruptMaskingLock;
+	sequenceNumber_ = nextSequenceNumber++;
 }
 
 #else	// CONFIG_SIGNALS_ENABLE != 1
@@ -63,25 +76,30 @@ ThreadControlBlock::ThreadControlBlock(internal::Stack&& stack, const uint8_t pr
 ThreadControlBlock::ThreadControlBlock(internal::Stack&& stack, const uint8_t priority,
 		const SchedulingPolicy schedulingPolicy, ThreadGroupControlBlock* const threadGroupControlBlock,
 		SignalsReceiver*, RunnableThread& owner) :
-		ThreadListNode{priority},
-		stack_{std::move(stack)},
-		owner_{owner},
-		ownedProtocolMutexList_{},
-		priorityInheritanceMutexControlBlock_{},
-		list_{},
-		threadGroupControlBlock_{threadGroupControlBlock},
-		unblockFunctor_{},
-		roundRobinQuantum_{},
-		schedulingPolicy_{schedulingPolicy},
-		state_{ThreadState::created}
+				ThreadListNode{priority},
+				ownedProtocolMutexList_{},
+				stack_{std::move(stack)},
+				list_{},
+				owner_{owner},
+				priorityInheritanceMutexControlBlock_{},
+				threadGroupControlBlock_{threadGroupControlBlock},
+				unblockFunctor_{},
+				roundRobinQuantum_{},
+				schedulingPolicy_{schedulingPolicy},
+				state_{ThreadState::created}
 {
 	_REENT_INIT_PTR(&reent_);
+
+	const InterruptMaskingLock interruptMaskingLock;
+	sequenceNumber_ = nextSequenceNumber++;
 }
 
 #endif	// CONFIG_SIGNALS_ENABLE != 1
 
 ThreadControlBlock::~ThreadControlBlock()
 {
+	sequenceNumber_ = ~sequenceNumber_;
+
 	const InterruptMaskingLock interruptMaskingLock;
 
 	_reclaim_reent(&reent_);

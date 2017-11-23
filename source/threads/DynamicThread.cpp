@@ -16,6 +16,7 @@
 #include "distortos/internal/CHECK_FUNCTION_CONTEXT.hpp"
 
 #include "distortos/InterruptMaskingLock.hpp"
+#include "distortos/ThreadIdentifier.hpp"
 
 #include <cerrno>
 
@@ -79,6 +80,16 @@ uint8_t DynamicThread::getEffectivePriority() const
 		return {};
 
 	return detachableThread_->getEffectivePriority();
+}
+
+ThreadIdentifier DynamicThread::getIdentifier() const
+{
+	const InterruptMaskingLock interruptMaskingLock;
+
+	if (detachableThread_ == nullptr)
+		return {};
+
+	return detachableThread_->getIdentifier();
 }
 
 #if CONFIG_SIGNALS_ENABLE == 1
