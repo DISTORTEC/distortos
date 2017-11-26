@@ -51,6 +51,21 @@ public:
 	}
 
 	/**
+	 * \brief ConditionVariable's destructor
+	 *
+	 * Similar to std::condition_variable::~condition_variable() -
+	 * http://en.cppreference.com/w/cpp/thread/condition_variable/~condition_variable
+	 * Similar to pthread_cond_destroy() -
+	 * http://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_cond_destroy.html
+	 *
+	 * It shall be safe to destroy an initialized condition variable upon which no threads are currently blocked.
+	 * Attempting to destroy a condition variable upon which other threads are currently blocked results in undefined
+	 * behavior.
+	 */
+
+	~ConditionVariable() = default;
+
+	/**
 	 * \brief Notifies all waiting threads.
 	 *
 	 * Similar to std::condition_variable::notify_all() -
