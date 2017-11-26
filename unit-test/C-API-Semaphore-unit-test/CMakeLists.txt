@@ -12,10 +12,12 @@ add_executable(C-API-Semaphore-compile-link-test
 		${DISTORTOS_PATH}/source/C-API/C-API-Semaphore.cpp
 		${MAIN_CPP})
 		
-target_compile_definitions(C-API-Semaphore-compile-link-test PUBLIC DISTORTOS_UNIT_TEST)
+target_compile_definitions(C-API-Semaphore-compile-link-test PUBLIC
+		DISTORTOS_UNIT_TEST
+		DISTORTOS_UNIT_TEST_FROMCAPIMOCK_SEMAPHORE)
 target_include_directories(C-API-Semaphore-compile-link-test BEFORE PUBLIC
 		${INCLUDE_MOCKS}/distortosConfiguration.h
-		${INCLUDE_MOCKS}/fromCApi.hpp-Semaphore
+		${INCLUDE_MOCKS}/fromCApi.hpp
 		${INCLUDE_MOCKS}/Semaphore.hpp)
 
 add_executable(C-API-Semaphore-unit-test-0
@@ -23,10 +25,12 @@ add_executable(C-API-Semaphore-unit-test-0
 		${DISTORTOS_PATH}/source/C-API/C-API-Semaphore.cpp
 		${MAIN_CPP})
 
-target_compile_definitions(C-API-Semaphore-unit-test-0 PUBLIC DISTORTOS_UNIT_TEST)
+target_compile_definitions(C-API-Semaphore-unit-test-0 PUBLIC
+		DISTORTOS_UNIT_TEST
+		DISTORTOS_UNIT_TEST_FROMCAPIMOCK_SEMAPHORE)
 target_include_directories(C-API-Semaphore-unit-test-0 BEFORE PUBLIC
 		${INCLUDE_MOCKS}/distortosConfiguration.h
-		${INCLUDE_MOCKS}/fromCApi.hpp-Semaphore
+		${INCLUDE_MOCKS}/fromCApi.hpp
 		${INCLUDE_MOCKS}/Semaphore.hpp)
 
 add_custom_target(run-C-API-Semaphore-unit-test-0
