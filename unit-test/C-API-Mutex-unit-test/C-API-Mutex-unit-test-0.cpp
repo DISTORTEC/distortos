@@ -171,7 +171,7 @@ TEST_CASE("Testing distortos_Mutex_construct_3()", "[construct]")
 	for (auto& typeAssociation : typeAssociations1)
 		for (auto& protocolAssociation : protocolAssociations1)
 		{
-			distortos::FromCApiMutexMock fromCApiMock;
+			distortos::FromCApiMock fromCApiMock;
 			distortos::Mutex mutexMock {distortos::Mutex::UnitTestTag{}};
 			std::aligned_storage<sizeof(distortos::Mutex), alignof(distortos::Mutex)>::type storage;
 
@@ -197,7 +197,7 @@ TEST_CASE("Testing distortos_Mutex_construct_2pc()", "[construct]")
 
 	for (auto& protocolAssociation : protocolAssociations1)
 	{
-		distortos::FromCApiMutexMock fromCApiMock;
+		distortos::FromCApiMock fromCApiMock;
 		distortos::Mutex mutexMock {distortos::Mutex::UnitTestTag{}};
 		std::aligned_storage<sizeof(distortos::Mutex), alignof(distortos::Mutex)>::type storage;
 
@@ -224,7 +224,7 @@ TEST_CASE("Testing distortos_Mutex_construct_2tp()", "[construct]")
 	for (auto& typeAssociation : typeAssociations1)
 		for (auto& protocolAssociation : protocolAssociations1)
 		{
-			distortos::FromCApiMutexMock fromCApiMock;
+			distortos::FromCApiMock fromCApiMock;
 			distortos::Mutex mutexMock {distortos::Mutex::UnitTestTag{}};
 			std::aligned_storage<sizeof(distortos::Mutex), alignof(distortos::Mutex)>::type storage;
 
@@ -250,7 +250,7 @@ TEST_CASE("Testing distortos_Mutex_construct_1p()", "[construct]")
 
 	for (auto& protocolAssociation : protocolAssociations1)
 	{
-		distortos::FromCApiMutexMock fromCApiMock;
+		distortos::FromCApiMock fromCApiMock;
 		distortos::Mutex mutexMock {distortos::Mutex::UnitTestTag{}};
 		std::aligned_storage<sizeof(distortos::Mutex), alignof(distortos::Mutex)>::type storage;
 
@@ -274,7 +274,7 @@ TEST_CASE("Testing distortos_Mutex_construct_1t()", "[construct]")
 
 	for (auto& typeAssociation : typeAssociations1)
 	{
-		distortos::FromCApiMutexMock fromCApiMock;
+		distortos::FromCApiMock fromCApiMock;
 		distortos::Mutex mutexMock {distortos::Mutex::UnitTestTag{}};
 		std::aligned_storage<sizeof(distortos::Mutex), alignof(distortos::Mutex)>::type storage;
 
@@ -291,7 +291,7 @@ TEST_CASE("Testing distortos_Mutex_construct()", "[construct]")
 {
 	REQUIRE(distortos_Mutex_construct(nullptr) == EINVAL);
 
-	distortos::FromCApiMutexMock fromCApiMock;
+	distortos::FromCApiMock fromCApiMock;
 	distortos::Mutex mutexMock {distortos::Mutex::UnitTestTag{}};
 	std::aligned_storage<sizeof(distortos::Mutex), alignof(distortos::Mutex)>::type storage;
 
@@ -305,7 +305,7 @@ TEST_CASE("Testing distortos_Mutex_construct()", "[construct]")
 
 TEST_CASE("Testing distortos_Mutex_destruct()", "[destruct]")
 {
-	distortos::FromCApiMutexMock fromCApiMock;
+	distortos::FromCApiMock fromCApiMock;
 	trompeloeil::deathwatched<distortos::Mutex> mutexMock {distortos::Mutex::UnitTestTag{}};
 	distortos_Mutex mutex;
 
@@ -320,7 +320,7 @@ TEST_CASE("Testing distortos_Mutex_destruct()", "[destruct]")
 
 TEST_CASE("Testing distortos_Mutex_lock()", "[lock]")
 {
-	distortos::FromCApiMutexMock fromCApiMock;
+	distortos::FromCApiMock fromCApiMock;
 	distortos::Mutex mutexMock {distortos::Mutex::UnitTestTag{}};
 	distortos_Mutex mutex;
 
@@ -333,7 +333,7 @@ TEST_CASE("Testing distortos_Mutex_lock()", "[lock]")
 
 TEST_CASE("Testing distortos_Mutex_tryLock()", "[tryLock]")
 {
-	distortos::FromCApiMutexMock fromCApiMock;
+	distortos::FromCApiMock fromCApiMock;
 	distortos::Mutex mutexMock {distortos::Mutex::UnitTestTag{}};
 	distortos_Mutex mutex;
 
@@ -348,7 +348,7 @@ TEST_CASE("Testing distortos_Mutex_tryLockFor()", "[tryLockFor]")
 {
 	constexpr int64_t randomDuration {0x44f439ca83c455c4};
 
-	distortos::FromCApiMutexMock fromCApiMock;
+	distortos::FromCApiMock fromCApiMock;
 	distortos::Mutex mutexMock {distortos::Mutex::UnitTestTag{}};
 	distortos_Mutex mutex;
 
@@ -364,7 +364,7 @@ TEST_CASE("Testing distortos_Mutex_tryLockUntil()", "[tryLockUntil]")
 {
 	constexpr int64_t randomTimePoint {0x5d9094bbfca9ab1a};
 
-	distortos::FromCApiMutexMock fromCApiMock;
+	distortos::FromCApiMock fromCApiMock;
 	distortos::Mutex mutexMock {distortos::Mutex::UnitTestTag{}};
 	distortos_Mutex mutex;
 
@@ -378,7 +378,7 @@ TEST_CASE("Testing distortos_Mutex_tryLockUntil()", "[tryLockUntil]")
 
 TEST_CASE("Testing distortos_Mutex_unlock()", "[unlock]")
 {
-	distortos::FromCApiMutexMock fromCApiMock;
+	distortos::FromCApiMock fromCApiMock;
 	distortos::Mutex mutexMock {distortos::Mutex::UnitTestTag{}};
 	distortos_Mutex mutex;
 
