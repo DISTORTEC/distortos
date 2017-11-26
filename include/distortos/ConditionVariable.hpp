@@ -322,7 +322,8 @@ int ConditionVariable::wait(Mutex& mutex, Predicate predicate)
 }
 
 template<typename Duration, typename Predicate>
-int ConditionVariable::waitUntil(Mutex& mutex, const std::chrono::time_point<TickClock, Duration> timePoint, Predicate predicate)
+int ConditionVariable::waitUntil(Mutex& mutex, const std::chrono::time_point<TickClock, Duration> timePoint,
+		Predicate predicate)
 {
 	CHECK_FUNCTION_CONTEXT();
 
