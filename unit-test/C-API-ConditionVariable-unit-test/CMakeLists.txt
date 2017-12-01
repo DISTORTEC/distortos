@@ -43,3 +43,26 @@ add_custom_target(run-C-API-ConditionVariable-unit-test-0
 		COMMENT C-API-ConditionVariable-unit-test-0
 		USES_TERMINAL)
 add_dependencies(run run-C-API-ConditionVariable-unit-test-0)
+
+add_executable(C-API-ConditionVariable-unit-test-1
+		C-API-ConditionVariable-unit-test-1.cpp
+		${DISTORTOS_PATH}/source/C-API/C-API-ConditionVariable.cpp
+		${DISTORTOS_PATH}/source/synchronization/ConditionVariable.cpp
+		${MAIN_CPP})
+
+target_include_directories(C-API-ConditionVariable-unit-test-1 BEFORE PUBLIC
+		${INCLUDE_MOCKS}/architecture/enableInterruptMasking.hpp
+		${INCLUDE_MOCKS}/architecture/InterruptMask.hpp
+		${INCLUDE_MOCKS}/architecture/restoreInterruptMasking.hpp
+		${INCLUDE_MOCKS}/internal/scheduler/getScheduler.hpp
+		${INCLUDE_MOCKS}/internal/scheduler/Scheduler.hpp
+		${INCLUDE_MOCKS}/internal/scheduler/ThreadControlBlock.hpp
+		${INCLUDE_MOCKS}/distortosConfiguration.h
+		${INCLUDE_MOCKS}/Mutex.hpp
+		${INCLUDE_MOCKS}/TickClock.hpp)
+
+add_custom_target(run-C-API-ConditionVariable-unit-test-1
+		COMMAND C-API-ConditionVariable-unit-test-1
+		COMMENT C-API-ConditionVariable-unit-test-1
+		USES_TERMINAL)
+add_dependencies(run run-C-API-ConditionVariable-unit-test-1)
