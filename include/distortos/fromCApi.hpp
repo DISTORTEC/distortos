@@ -15,6 +15,7 @@
 extern "C"
 {
 
+struct distortos_ConditionVariable;
 struct distortos_Mutex;
 struct distortos_Semaphore;
 
@@ -23,8 +24,35 @@ struct distortos_Semaphore;
 namespace distortos
 {
 
+class ConditionVariable;
 class Mutex;
 class Semaphore;
+
+/**
+ * \brief Casts C-API distortos_ConditionVariable to distortos::ConditionVariable.
+ *
+ * \param [in] conditionVariable is a reference to distortos_ConditionVariable object
+ *
+ * \return reference to distortos::ConditionVariable object, casted from \a conditionVariable
+ */
+
+inline static distortos::ConditionVariable& fromCApi(distortos_ConditionVariable& conditionVariable)
+{
+	return reinterpret_cast<distortos::ConditionVariable&>(conditionVariable);
+}
+
+/**
+ * \brief Casts const C-API distortos_ConditionVariable to const distortos::ConditionVariable.
+ *
+ * \param [in] conditionVariable is a const reference to distortos_ConditionVariable object
+ *
+ * \return const reference to distortos::ConditionVariable object, casted from \a conditionVariable
+ */
+
+inline static const distortos::ConditionVariable& fromCApi(const distortos_ConditionVariable& conditionVariable)
+{
+	return reinterpret_cast<const distortos::ConditionVariable&>(conditionVariable);
+}
 
 /**
  * \brief Casts C-API distortos_Mutex to distortos::Mutex.

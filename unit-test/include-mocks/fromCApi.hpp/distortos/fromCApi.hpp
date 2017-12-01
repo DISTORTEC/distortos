@@ -14,8 +14,24 @@
 
 #include "unit-test-common.hpp"
 
+#ifdef DISTORTOS_UNIT_TEST_FROMCAPIMOCK_INCLUDE_CONDITIONVARIABLE
+#include "distortos/C-API/ConditionVariable.h"
+#endif	// def DISTORTOS_UNIT_TEST_FROMCAPIMOCK_INCLUDE_CONDITIONVARIABLE
+
+#ifdef DISTORTOS_UNIT_TEST_FROMCAPIMOCK_INCLUDE_MUTEX
+#include "distortos/C-API/Mutex.h"
+#endif	// def DISTORTOS_UNIT_TEST_FROMCAPIMOCK_INCLUDE_MUTEX
+
+#ifdef DISTORTOS_UNIT_TEST_FROMCAPIMOCK_INCLUDE_SEMAPHORE
+#include "distortos/C-API/Semaphore.h"
+#endif	// def DISTORTOS_UNIT_TEST_FROMCAPIMOCK_INCLUDE_SEMAPHORE
+
 extern "C"
 {
+
+#ifdef DISTORTOS_UNIT_TEST_FROMCAPIMOCK_CONDITIONVARIABLE
+struct distortos_ConditionVariable;
+#endif	// def DISTORTOS_UNIT_TEST_FROMCAPIMOCK_CONDITIONVARIABLE
 
 #ifdef DISTORTOS_UNIT_TEST_FROMCAPIMOCK_MUTEX
 struct distortos_Mutex;
@@ -29,6 +45,10 @@ struct distortos_Semaphore;
 
 namespace distortos
 {
+
+#ifdef DISTORTOS_UNIT_TEST_FROMCAPIMOCK_CONDITIONVARIABLE
+class ConditionVariable;
+#endif	// def DISTORTOS_UNIT_TEST_FROMCAPIMOCK_CONDITIONVARIABLE
 
 #ifdef DISTORTOS_UNIT_TEST_FROMCAPIMOCK_MUTEX
 class Mutex;
@@ -53,6 +73,14 @@ public:
 		REQUIRE(getInstanceInternal() != nullptr);
 		getInstanceInternal() = {};
 	}
+
+#ifdef DISTORTOS_UNIT_TEST_FROMCAPIMOCK_CONDITIONVARIABLE
+
+	MAKE_CONST_MOCK1(getConditionVariable, distortos::ConditionVariable&(distortos_ConditionVariable&));
+	MAKE_CONST_MOCK1(getConstConditionVariable,
+			const distortos::ConditionVariable&(const distortos_ConditionVariable&));
+
+#endif	// def DISTORTOS_UNIT_TEST_FROMCAPIMOCK_CONDITIONVARIABLE
 
 #ifdef DISTORTOS_UNIT_TEST_FROMCAPIMOCK_MUTEX
 
@@ -82,6 +110,20 @@ private:
 		return instance;
 	}
 };
+
+#ifdef DISTORTOS_UNIT_TEST_FROMCAPIMOCK_CONDITIONVARIABLE
+
+inline static distortos::ConditionVariable& fromCApi(distortos_ConditionVariable& conditionVariable)
+{
+	return FromCApiMock::getInstance().getConditionVariable(conditionVariable);
+}
+
+inline static const distortos::ConditionVariable& fromCApi(const distortos_ConditionVariable& conditionVariable)
+{
+	return FromCApiMock::getInstance().getConstConditionVariable(conditionVariable);
+}
+
+#endif	// def DISTORTOS_UNIT_TEST_FROMCAPIMOCK_CONDITIONVARIABLE
 
 #ifdef DISTORTOS_UNIT_TEST_FROMCAPIMOCK_MUTEX
 
