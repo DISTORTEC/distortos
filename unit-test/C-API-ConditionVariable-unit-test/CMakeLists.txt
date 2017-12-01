@@ -21,3 +21,25 @@ target_include_directories(C-API-ConditionVariable-compile-link-test BEFORE PUBL
 		${INCLUDE_MOCKS}/ConditionVariable.hpp
 		${INCLUDE_MOCKS}/distortosConfiguration.h
 		${INCLUDE_MOCKS}/fromCApi.hpp)
+
+add_executable(C-API-ConditionVariable-unit-test-0
+		C-API-ConditionVariable-unit-test-0.cpp
+		${DISTORTOS_PATH}/source/C-API/C-API-ConditionVariable.cpp
+		${MAIN_CPP})
+
+target_compile_definitions(C-API-ConditionVariable-unit-test-0 PUBLIC
+		DISTORTOS_UNIT_TEST
+		DISTORTOS_UNIT_TEST_FROMCAPIMOCK_CONDITIONVARIABLE
+		DISTORTOS_UNIT_TEST_FROMCAPIMOCK_INCLUDE_MUTEX
+		DISTORTOS_UNIT_TEST_FROMCAPIMOCK_MUTEX)
+target_include_directories(C-API-ConditionVariable-unit-test-0 BEFORE PUBLIC
+		${INCLUDE_MOCKS}/ConditionVariable.hpp
+		${INCLUDE_MOCKS}/distortosConfiguration.h
+		${INCLUDE_MOCKS}/fromCApi.hpp
+		${INCLUDE_MOCKS}/Mutex.hpp)
+
+add_custom_target(run-C-API-ConditionVariable-unit-test-0
+		COMMAND C-API-ConditionVariable-unit-test-0
+		COMMENT C-API-ConditionVariable-unit-test-0
+		USES_TERMINAL)
+add_dependencies(run run-C-API-ConditionVariable-unit-test-0)
