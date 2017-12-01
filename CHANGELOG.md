@@ -9,6 +9,8 @@ All notable changes to this project will be documented in this file. This projec
 
 ### Added
 
+- `distortos/C-API/ConditionVariable.h` - C-API for condition variables, implemented as wrappers for
+`distortos::ConditionVariable` member functions.
 - `distortos/C-API/Mutex.h` - C-API for mutexes, implemented as wrappers for `distortos::Mutex` member functions.
 - `distortos/C-API/Semaphore.h` - C-API for semaphores, implemented as wrappers for `distortos::Semaphore` member
 functions.
@@ -20,8 +22,9 @@ references to regular C++ API objects (like `distortos::Semaphore`).
 thread.
 - `distortos::ThreadIdentifier` type which can be used to uniquely identify and access thread's instance. Identifier of
 the thread can be obtained using `distortos::Thread::getIdentifier()` and `distortos::ThisThread::getIdentifier()`.
-- Unit tests of C-API for mutexes and semaphores, using [Catch](https://github.com/philsquared/Catch) unit test
-framework and [Trompeloeil](https://github.com/rollbear/trompeloeil) mocking framework. Build system of unit tests uses
+- Unit tests of C-API for condition variables, mutexes and semaphores, using
+[Catch](https://github.com/philsquared/Catch) unit test framework and
+[Trompeloeil](https://github.com/rollbear/trompeloeil) mocking framework. Build system of unit tests uses
 [CMake](https://cmake.org/).
 - New overload of `distortos::Mutex`'s constructor for "normal" type.
 
