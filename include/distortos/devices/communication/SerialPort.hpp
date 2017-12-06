@@ -221,7 +221,7 @@ public:
 		/**
 		 * \brief Tests for empty circular buffer.
 		 *
-		 * The buffer is empty is read and write positions are equal, including their MSBs.
+		 * The buffer is empty if read and write positions are equal, including their MSBs.
 		 *
 		 * \param [in] readPosition is the value of \a readPosition_
 		 * \param [in] writePosition is the value of \a writePosition_
@@ -237,7 +237,7 @@ public:
 		/**
 		 * \brief Tests for full circular buffer.
 		 *
-		 * The buffer is full is masked read and write positions are equal, but their MSBs are different.
+		 * The buffer is full if masked read and write positions are equal, but their MSBs are different.
 		 *
 		 * \param [in] readPosition is the value of \a readPosition_
 		 * \param [in] writePosition is the value of \a writePosition_
