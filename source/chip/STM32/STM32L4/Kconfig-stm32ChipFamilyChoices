@@ -1,0 +1,17 @@
+#
+# file: Kconfig-stm32ChipFamilyChoices
+#
+# author: Copyright (C) 2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+#
+# This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
+# distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+#
+
+config CHIP_STM32L4
+	bool "STM32L4"
+	select ARCHITECTURE_ARMV7_M
+	select ARCHITECTURE_ARM_CORTEX_M4
+	select ARCHITECTURE_ARM_CORTEX_M4_R0P1
+	select ARCHITECTURE_HAS_FPU
+	help
+		STM32L4 chip family
