@@ -11,7 +11,7 @@ add_executable(C-API-Semaphore-compile-link-test
 		C-API-Semaphore-compile-link-test.c
 		${DISTORTOS_PATH}/source/C-API/C-API-Semaphore.cpp
 		${MAIN_CPP})
-		
+
 target_compile_definitions(C-API-Semaphore-compile-link-test PUBLIC
 		DISTORTOS_UNIT_TEST
 		DISTORTOS_UNIT_TEST_FROMCAPIMOCK_SEMAPHORE)

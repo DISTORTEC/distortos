@@ -207,8 +207,8 @@ choice
 	help
 		PLLMUL value for main PLL. It is used to multiply PLL input frequency
 		(PLLin). Resulting VCO output frequency (VCOout) must not exceed:
-		- 96 MHz in voltage scale 1 mode, 
-		- 48 MHz in voltage scale 2 mode, 
+		- 96 MHz in voltage scale 1 mode,
+		- 48 MHz in voltage scale 2 mode,
 		- 24 MHz in voltage scale 3 mode.
 
 		VCOout = PLLin * PLLMUL
@@ -417,7 +417,7 @@ choice
 	default CHIP_STM32L0_RCC_APB2_DIV1
 	help
 		APB2 (high speed) clock division factor.
-		
+
 		APB2clk = AHBclk / APB2divider
 
 config CHIP_STM32L0_RCC_APB2_DIV1
