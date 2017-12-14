@@ -1,6 +1,6 @@
 /**
  * \file
- * \brief STM32F0 chip vector table and default weak handlers
+ * \brief STM32L0 chip vector table and default weak handlers
  *
  * \author Copyright (C) 2017 Cezary Gapinski cezary.gapinski@gmail.com
  *
