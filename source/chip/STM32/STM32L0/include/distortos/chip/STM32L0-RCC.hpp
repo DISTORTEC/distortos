@@ -285,4 +285,4 @@ void switchSystemClock(SystemClockSource source);
 
 }	// namespace distortos
 
-#endif	// SOURCE_CHIP_STM32_STM32F0_INCLUDE_DISTORTOS_CHIP_STM32F0_RCC_HPP_
+#endif	// SOURCE_CHIP_STM32_STM32L0_INCLUDE_DISTORTOS_CHIP_STM32L0_RCC_HPP_
