@@ -1,0 +1,1384 @@
+#
+# file: Kconfig-chipOptions
+#
+# author: Copyright (C) 2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+#
+# This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
+# distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+#
+
+if CHIP_STM32L4
+
+comment "STM32L4 chip options"
+
+menu "Clocks configuration"
+
+config CHIP_STM32L4_RCC_SYSCLK_FREQUENCY
+	int "Frequency of SYSCLK, Hz"
+	range 1 80000000
+	default 4000000
+	help
+		Frequency of SYSCLK, Hz. RCC must be configured by user to achieve that
+		frequency.
+
+choice
+	prompt "AHB divider"
+	default CHIP_STM32L4_RCC_AHB_DIV1
+	help
+		AHB clock division factor
+
+		AHBclk = SYSclk / AHBdivider
+
+config CHIP_STM32L4_RCC_AHB_DIV1
+	bool "1"
+	help
+		System clock not divided
+
+config CHIP_STM32L4_RCC_AHB_DIV2
+	bool "2"
+	help
+		System clock divided by 2
+
+config CHIP_STM32L4_RCC_AHB_DIV4
+	bool "4"
+	help
+		System clock divided by 4
+
+config CHIP_STM32L4_RCC_AHB_DIV8
+	bool "8"
+	help
+		System clock divided by 8
+
+config CHIP_STM32L4_RCC_AHB_DIV16
+	bool "16"
+	help
+		System clock divided by 16
+
+config CHIP_STM32L4_RCC_AHB_DIV64
+	bool "64"
+	help
+		System clock divided by 64
+
+config CHIP_STM32L4_RCC_AHB_DIV128
+	bool "128"
+	help
+		System clock divided by 128
+
+config CHIP_STM32L4_RCC_AHB_DIV256
+	bool "256"
+	help
+		System clock divided by 256
+
+config CHIP_STM32L4_RCC_AHB_DIV512
+	bool "512"
+	help
+		System clock divided by 512
+
+endchoice
+
+choice
+	prompt "APB1 (low speed) divider"
+	default CHIP_STM32L4_RCC_APB1_DIV1
+	help
+		APB1 (low speed) clock division factor.
+
+		APB1clk = AHBclk / APB1divider
+
+config CHIP_STM32L4_RCC_APB1_DIV1
+	bool "1"
+	help
+		AHB clock not divided
+
+config CHIP_STM32L4_RCC_APB1_DIV2
+	bool "2"
+	help
+		AHB clock divided by 2
+
+config CHIP_STM32L4_RCC_APB1_DIV4
+	bool "4"
+	help
+		AHB clock divided by 4
+
+config CHIP_STM32L4_RCC_APB1_DIV8
+	bool "8"
+	help
+		AHB clock divided by 8
+
+config CHIP_STM32L4_RCC_APB1_DIV16
+	bool "16"
+	help
+		AHB clock divided by 16
+
+endchoice
+
+choice
+	prompt "APB2 (high speed) divider"
+	default CHIP_STM32L4_RCC_APB2_DIV1
+	help
+		APB2 (high speed) clock division factor.
+
+		APB2clk = AHBclk / APB2divider
+
+config CHIP_STM32L4_RCC_APB2_DIV1
+	bool "1"
+	help
+		AHB clock not divided
+
+config CHIP_STM32L4_RCC_APB2_DIV2
+	bool "2"
+	help
+		AHB clock divided by 2
+
+config CHIP_STM32L4_RCC_APB2_DIV4
+	bool "4"
+	help
+		AHB clock divided by 4
+
+config CHIP_STM32L4_RCC_APB2_DIV8
+	bool "8"
+	help
+		AHB clock divided by 8
+
+config CHIP_STM32L4_RCC_APB2_DIV16
+	bool "16"
+	help
+		AHB clock divided by 16
+
+endchoice
+
+endmenu
+
+menu "Memory configuration"
+
+choice
+	prompt "Unify RAM in linker script"
+	depends on CHIP_STM32L43 || CHIP_STM32L44 || CHIP_STM32L45 || CHIP_STM32L46 || CHIP_STM32L49 || CHIP_STM32L4A
+	default CHIP_STM32L4_UNIFY_SRAM1_SRAM2
+	help
+		Configures unification of SRAM1 and SRAM2 regions in linker script.
+
+config CHIP_STM32L4_UNIFY_NONE
+	bool "No unification"
+	help
+		Don't unify any SRAM regions. .bss, .data, stacks and heap will be
+		located in SRAM1. Special .sram2.bss, .sram2.data and .sram2.noinit
+		sections will be located in SRAM2.
+
+config CHIP_STM32L4_UNIFY_SRAM1_SRAM2
+	bool "SRAM1 and SRAM2"
+	help
+		Unify SRAM1 and SRAM2 regions. .bss, .data, stacks and heap will be
+		located in unified SRAM1 and SRAM2.
+
+endchoice
+
+endmenu
+
+config CHIP_STM32L43
+	bool
+	default n
+
+config CHIP_STM32L431
+	bool
+	default n
+	select CHIP_STM32L43
+
+config CHIP_STM32L431C
+	bool
+	default n
+	select CHIP_STM32L431
+
+config CHIP_STM32L431CB
+	bool
+	default n
+	select CHIP_STM32L431C
+
+config CHIP_STM32L431CC
+	bool
+	default n
+	select CHIP_STM32L431C
+
+config CHIP_STM32L431K
+	bool
+	default n
+	select CHIP_STM32L431
+
+config CHIP_STM32L431KB
+	bool
+	default n
+	select CHIP_STM32L431K
+
+config CHIP_STM32L431KC
+	bool
+	default n
+	select CHIP_STM32L431K
+
+config CHIP_STM32L431R
+	bool
+	default n
+	select CHIP_STM32L431
+
+config CHIP_STM32L431RB
+	bool
+	default n
+	select CHIP_STM32L431R
+
+config CHIP_STM32L431RC
+	bool
+	default n
+	select CHIP_STM32L431R
+
+config CHIP_STM32L431V
+	bool
+	default n
+	select CHIP_STM32L431
+
+config CHIP_STM32L431VC
+	bool
+	default n
+	select CHIP_STM32L431V
+
+config CHIP_STM32L432
+	bool
+	default n
+	select CHIP_STM32L43
+
+config CHIP_STM32L432K
+	bool
+	default n
+	select CHIP_STM32L432
+
+config CHIP_STM32L432KB
+	bool
+	default n
+	select CHIP_STM32L432K
+
+config CHIP_STM32L432KC
+	bool
+	default n
+	select CHIP_STM32L432K
+
+config CHIP_STM32L433
+	bool
+	default n
+	select CHIP_STM32L43
+
+config CHIP_STM32L433C
+	bool
+	default n
+	select CHIP_STM32L433
+
+config CHIP_STM32L433CB
+	bool
+	default n
+	select CHIP_STM32L433C
+
+config CHIP_STM32L433CC
+	bool
+	default n
+	select CHIP_STM32L433C
+
+config CHIP_STM32L433R
+	bool
+	default n
+	select CHIP_STM32L433
+
+config CHIP_STM32L433RB
+	bool
+	default n
+	select CHIP_STM32L433R
+
+config CHIP_STM32L433RC
+	bool
+	default n
+	select CHIP_STM32L433R
+
+config CHIP_STM32L433V
+	bool
+	default n
+	select CHIP_STM32L433
+
+config CHIP_STM32L433VC
+	bool
+	default n
+	select CHIP_STM32L433V
+
+config CHIP_STM32L44
+	bool
+	default n
+
+config CHIP_STM32L442
+	bool
+	default n
+	select CHIP_STM32L44
+
+config CHIP_STM32L442K
+	bool
+	default n
+	select CHIP_STM32L442
+
+config CHIP_STM32L442KC
+	bool
+	default n
+	select CHIP_STM32L442K
+
+config CHIP_STM32L443
+	bool
+	default n
+	select CHIP_STM32L44
+
+config CHIP_STM32L443C
+	bool
+	default n
+	select CHIP_STM32L443
+
+config CHIP_STM32L443CC
+	bool
+	default n
+	select CHIP_STM32L443C
+
+config CHIP_STM32L443R
+	bool
+	default n
+	select CHIP_STM32L443
+
+config CHIP_STM32L443RC
+	bool
+	default n
+	select CHIP_STM32L443R
+
+config CHIP_STM32L443V
+	bool
+	default n
+	select CHIP_STM32L443
+
+config CHIP_STM32L443VC
+	bool
+	default n
+	select CHIP_STM32L443V
+
+config CHIP_STM32L45
+	bool
+	default n
+
+config CHIP_STM32L451
+	bool
+	default n
+	select CHIP_STM32L45
+
+config CHIP_STM32L451C
+	bool
+	default n
+	select CHIP_STM32L451
+
+config CHIP_STM32L451CC
+	bool
+	default n
+	select CHIP_STM32L451C
+
+config CHIP_STM32L451CE
+	bool
+	default n
+	select CHIP_STM32L451C
+
+config CHIP_STM32L451R
+	bool
+	default n
+	select CHIP_STM32L451
+
+config CHIP_STM32L451RC
+	bool
+	default n
+	select CHIP_STM32L451R
+
+config CHIP_STM32L451RE
+	bool
+	default n
+	select CHIP_STM32L451R
+
+config CHIP_STM32L451V
+	bool
+	default n
+	select CHIP_STM32L451
+
+config CHIP_STM32L451VC
+	bool
+	default n
+	select CHIP_STM32L451V
+
+config CHIP_STM32L451VE
+	bool
+	default n
+	select CHIP_STM32L451V
+
+config CHIP_STM32L452
+	bool
+	default n
+	select CHIP_STM32L45
+
+config CHIP_STM32L452C
+	bool
+	default n
+	select CHIP_STM32L452
+
+config CHIP_STM32L452CC
+	bool
+	default n
+	select CHIP_STM32L452C
+
+config CHIP_STM32L452CE
+	bool
+	default n
+	select CHIP_STM32L452C
+
+config CHIP_STM32L452R
+	bool
+	default n
+	select CHIP_STM32L452
+
+config CHIP_STM32L452RC
+	bool
+	default n
+	select CHIP_STM32L452R
+
+config CHIP_STM32L452RE
+	bool
+	default n
+	select CHIP_STM32L452R
+
+config CHIP_STM32L452V
+	bool
+	default n
+	select CHIP_STM32L452
+
+config CHIP_STM32L452VC
+	bool
+	default n
+	select CHIP_STM32L452V
+
+config CHIP_STM32L452VE
+	bool
+	default n
+	select CHIP_STM32L452V
+
+config CHIP_STM32L46
+	bool
+	default n
+
+config CHIP_STM32L462
+	bool
+	default n
+	select CHIP_STM32L46
+
+config CHIP_STM32L462C
+	bool
+	default n
+	select CHIP_STM32L462
+
+config CHIP_STM32L462CE
+	bool
+	default n
+	select CHIP_STM32L462C
+
+config CHIP_STM32L462R
+	bool
+	default n
+	select CHIP_STM32L462
+
+config CHIP_STM32L462RE
+	bool
+	default n
+	select CHIP_STM32L462R
+
+config CHIP_STM32L462V
+	bool
+	default n
+	select CHIP_STM32L462
+
+config CHIP_STM32L462VE
+	bool
+	default n
+	select CHIP_STM32L462V
+
+config CHIP_STM32L47
+	bool
+	default n
+
+config CHIP_STM32L471
+	bool
+	default n
+	select CHIP_STM32L47
+
+config CHIP_STM32L471Q
+	bool
+	default n
+	select CHIP_STM32L471
+
+config CHIP_STM32L471QE
+	bool
+	default n
+	select CHIP_STM32L471Q
+
+config CHIP_STM32L471QG
+	bool
+	default n
+	select CHIP_STM32L471Q
+
+config CHIP_STM32L471R
+	bool
+	default n
+	select CHIP_STM32L471
+
+config CHIP_STM32L471RE
+	bool
+	default n
+	select CHIP_STM32L471R
+
+config CHIP_STM32L471RG
+	bool
+	default n
+	select CHIP_STM32L471R
+
+config CHIP_STM32L471V
+	bool
+	default n
+	select CHIP_STM32L471
+
+config CHIP_STM32L471VE
+	bool
+	default n
+	select CHIP_STM32L471V
+
+config CHIP_STM32L471VG
+	bool
+	default n
+	select CHIP_STM32L471V
+
+config CHIP_STM32L471Z
+	bool
+	default n
+	select CHIP_STM32L471
+
+config CHIP_STM32L471ZE
+	bool
+	default n
+	select CHIP_STM32L471Z
+
+config CHIP_STM32L471ZG
+	bool
+	default n
+	select CHIP_STM32L471Z
+
+config CHIP_STM32L475
+	bool
+	default n
+	select CHIP_STM32L47
+
+config CHIP_STM32L475R
+	bool
+	default n
+	select CHIP_STM32L475
+
+config CHIP_STM32L475RC
+	bool
+	default n
+	select CHIP_STM32L475R
+
+config CHIP_STM32L475RE
+	bool
+	default n
+	select CHIP_STM32L475R
+
+config CHIP_STM32L475RG
+	bool
+	default n
+	select CHIP_STM32L475R
+
+config CHIP_STM32L475V
+	bool
+	default n
+	select CHIP_STM32L475
+
+config CHIP_STM32L475VC
+	bool
+	default n
+	select CHIP_STM32L475V
+
+config CHIP_STM32L475VE
+	bool
+	default n
+	select CHIP_STM32L475V
+
+config CHIP_STM32L475VG
+	bool
+	default n
+	select CHIP_STM32L475V
+
+config CHIP_STM32L476
+	bool
+	default n
+	select CHIP_STM32L47
+
+config CHIP_STM32L476J
+	bool
+	default n
+	select CHIP_STM32L476
+
+config CHIP_STM32L476JE
+	bool
+	default n
+	select CHIP_STM32L476J
+
+config CHIP_STM32L476JG
+	bool
+	default n
+	select CHIP_STM32L476J
+
+config CHIP_STM32L476M
+	bool
+	default n
+	select CHIP_STM32L476
+
+config CHIP_STM32L476ME
+	bool
+	default n
+	select CHIP_STM32L476M
+
+config CHIP_STM32L476MG
+	bool
+	default n
+	select CHIP_STM32L476M
+
+config CHIP_STM32L476Q
+	bool
+	default n
+	select CHIP_STM32L476
+
+config CHIP_STM32L476QE
+	bool
+	default n
+	select CHIP_STM32L476Q
+
+config CHIP_STM32L476QG
+	bool
+	default n
+	select CHIP_STM32L476Q
+
+config CHIP_STM32L476R
+	bool
+	default n
+	select CHIP_STM32L476
+
+config CHIP_STM32L476RC
+	bool
+	default n
+	select CHIP_STM32L476R
+
+config CHIP_STM32L476RE
+	bool
+	default n
+	select CHIP_STM32L476R
+
+config CHIP_STM32L476RG
+	bool
+	default n
+	select CHIP_STM32L476R
+
+config CHIP_STM32L476V
+	bool
+	default n
+	select CHIP_STM32L476
+
+config CHIP_STM32L476VC
+	bool
+	default n
+	select CHIP_STM32L476V
+
+config CHIP_STM32L476VE
+	bool
+	default n
+	select CHIP_STM32L476V
+
+config CHIP_STM32L476VG
+	bool
+	default n
+	select CHIP_STM32L476V
+
+config CHIP_STM32L476Z
+	bool
+	default n
+	select CHIP_STM32L476
+
+config CHIP_STM32L476ZE
+	bool
+	default n
+	select CHIP_STM32L476Z
+
+config CHIP_STM32L476ZG
+	bool
+	default n
+	select CHIP_STM32L476Z
+
+config CHIP_STM32L48
+	bool
+	default n
+
+config CHIP_STM32L486
+	bool
+	default n
+	select CHIP_STM32L48
+
+config CHIP_STM32L486J
+	bool
+	default n
+	select CHIP_STM32L486
+
+config CHIP_STM32L486JG
+	bool
+	default n
+	select CHIP_STM32L486J
+
+config CHIP_STM32L486Q
+	bool
+	default n
+	select CHIP_STM32L486
+
+config CHIP_STM32L486QG
+	bool
+	default n
+	select CHIP_STM32L486Q
+
+config CHIP_STM32L486R
+	bool
+	default n
+	select CHIP_STM32L486
+
+config CHIP_STM32L486RG
+	bool
+	default n
+	select CHIP_STM32L486R
+
+config CHIP_STM32L486V
+	bool
+	default n
+	select CHIP_STM32L486
+
+config CHIP_STM32L486VG
+	bool
+	default n
+	select CHIP_STM32L486V
+
+config CHIP_STM32L486Z
+	bool
+	default n
+	select CHIP_STM32L486
+
+config CHIP_STM32L486ZG
+	bool
+	default n
+	select CHIP_STM32L486Z
+
+config CHIP_STM32L49
+	bool
+	default n
+
+config CHIP_STM32L496
+	bool
+	default n
+	select CHIP_STM32L49
+
+config CHIP_STM32L496A
+	bool
+	default n
+	select CHIP_STM32L496
+
+config CHIP_STM32L496AE
+	bool
+	default n
+	select CHIP_STM32L496A
+
+config CHIP_STM32L496AG
+	bool
+	default n
+	select CHIP_STM32L496A
+
+config CHIP_STM32L496Q
+	bool
+	default n
+	select CHIP_STM32L496
+
+config CHIP_STM32L496QE
+	bool
+	default n
+	select CHIP_STM32L496Q
+
+config CHIP_STM32L496QG
+	bool
+	default n
+	select CHIP_STM32L496Q
+
+config CHIP_STM32L496R
+	bool
+	default n
+	select CHIP_STM32L496
+
+config CHIP_STM32L496RE
+	bool
+	default n
+	select CHIP_STM32L496R
+
+config CHIP_STM32L496RG
+	bool
+	default n
+	select CHIP_STM32L496R
+
+config CHIP_STM32L496V
+	bool
+	default n
+	select CHIP_STM32L496
+
+config CHIP_STM32L496VE
+	bool
+	default n
+	select CHIP_STM32L496V
+
+config CHIP_STM32L496VG
+	bool
+	default n
+	select CHIP_STM32L496V
+
+config CHIP_STM32L496Z
+	bool
+	default n
+	select CHIP_STM32L496
+
+config CHIP_STM32L496ZE
+	bool
+	default n
+	select CHIP_STM32L496Z
+
+config CHIP_STM32L496ZG
+	bool
+	default n
+	select CHIP_STM32L496Z
+
+config CHIP_STM32L4A
+	bool
+	default n
+
+config CHIP_STM32L4A6
+	bool
+	default n
+	select CHIP_STM32L4A
+
+config CHIP_STM32L4A6A
+	bool
+	default n
+	select CHIP_STM32L4A6
+
+config CHIP_STM32L4A6AG
+	bool
+	default n
+	select CHIP_STM32L4A6A
+
+config CHIP_STM32L4A6Q
+	bool
+	default n
+	select CHIP_STM32L4A6
+
+config CHIP_STM32L4A6QG
+	bool
+	default n
+	select CHIP_STM32L4A6Q
+
+config CHIP_STM32L4A6R
+	bool
+	default n
+	select CHIP_STM32L4A6
+
+config CHIP_STM32L4A6RG
+	bool
+	default n
+	select CHIP_STM32L4A6R
+
+config CHIP_STM32L4A6V
+	bool
+	default n
+	select CHIP_STM32L4A6
+
+config CHIP_STM32L4A6VG
+	bool
+	default n
+	select CHIP_STM32L4A6V
+
+config CHIP_STM32L4A6Z
+	bool
+	default n
+	select CHIP_STM32L4A6
+
+config CHIP_STM32L4A6ZG
+	bool
+	default n
+	select CHIP_STM32L4A6Z
+
+config CHIP_ROM_SIZE
+	int
+	default 131072 if CHIP_STM32L431CB
+	default 262144 if CHIP_STM32L431CC
+	default 131072 if CHIP_STM32L431KB
+	default 262144 if CHIP_STM32L431KC
+	default 131072 if CHIP_STM32L431RB
+	default 262144 if CHIP_STM32L431RC
+	default 262144 if CHIP_STM32L431VC
+	default 131072 if CHIP_STM32L432KB
+	default 262144 if CHIP_STM32L432KC
+	default 131072 if CHIP_STM32L433CB
+	default 262144 if CHIP_STM32L433CC
+	default 131072 if CHIP_STM32L433RB
+	default 262144 if CHIP_STM32L433RC
+	default 262144 if CHIP_STM32L433VC
+	default 262144 if CHIP_STM32L442KC
+	default 262144 if CHIP_STM32L443CC
+	default 262144 if CHIP_STM32L443RC
+	default 262144 if CHIP_STM32L443VC
+	default 262144 if CHIP_STM32L451CC
+	default 524288 if CHIP_STM32L451CE
+	default 262144 if CHIP_STM32L451RC
+	default 524288 if CHIP_STM32L451RE
+	default 262144 if CHIP_STM32L451VC
+	default 524288 if CHIP_STM32L451VE
+	default 262144 if CHIP_STM32L452CC
+	default 524288 if CHIP_STM32L452CE
+	default 262144 if CHIP_STM32L452RC
+	default 524288 if CHIP_STM32L452RE
+	default 262144 if CHIP_STM32L452VC
+	default 524288 if CHIP_STM32L452VE
+	default 524288 if CHIP_STM32L462CE
+	default 524288 if CHIP_STM32L462RE
+	default 524288 if CHIP_STM32L462VE
+	default 524288 if CHIP_STM32L471QE
+	default 1048576 if CHIP_STM32L471QG
+	default 524288 if CHIP_STM32L471RE
+	default 1048576 if CHIP_STM32L471RG
+	default 524288 if CHIP_STM32L471VE
+	default 1048576 if CHIP_STM32L471VG
+	default 524288 if CHIP_STM32L471ZE
+	default 1048576 if CHIP_STM32L471ZG
+	default 262144 if CHIP_STM32L475RC
+	default 524288 if CHIP_STM32L475RE
+	default 1048576 if CHIP_STM32L475RG
+	default 262144 if CHIP_STM32L475VC
+	default 524288 if CHIP_STM32L475VE
+	default 1048576 if CHIP_STM32L475VG
+	default 524288 if CHIP_STM32L476JE
+	default 1048576 if CHIP_STM32L476JG
+	default 524288 if CHIP_STM32L476ME
+	default 1048576 if CHIP_STM32L476MG
+	default 524288 if CHIP_STM32L476QE
+	default 1048576 if CHIP_STM32L476QG
+	default 262144 if CHIP_STM32L476RC
+	default 524288 if CHIP_STM32L476RE
+	default 1048576 if CHIP_STM32L476RG
+	default 262144 if CHIP_STM32L476VC
+	default 524288 if CHIP_STM32L476VE
+	default 1048576 if CHIP_STM32L476VG
+	default 524288 if CHIP_STM32L476ZE
+	default 1048576 if CHIP_STM32L476ZG
+	default 1048576 if CHIP_STM32L486JG
+	default 1048576 if CHIP_STM32L486QG
+	default 1048576 if CHIP_STM32L486RG
+	default 1048576 if CHIP_STM32L486VG
+	default 1048576 if CHIP_STM32L486ZG
+	default 524288 if CHIP_STM32L496AE
+	default 1048576 if CHIP_STM32L496AG
+	default 524288 if CHIP_STM32L496QE
+	default 1048576 if CHIP_STM32L496QG
+	default 524288 if CHIP_STM32L496RE
+	default 1048576 if CHIP_STM32L496RG
+	default 524288 if CHIP_STM32L496VE
+	default 1048576 if CHIP_STM32L496VG
+	default 524288 if CHIP_STM32L496ZE
+	default 1048576 if CHIP_STM32L496ZG
+	default 1048576 if CHIP_STM32L4A6AG
+	default 1048576 if CHIP_STM32L4A6QG
+	default 1048576 if CHIP_STM32L4A6RG
+	default 1048576 if CHIP_STM32L4A6VG
+	default 1048576 if CHIP_STM32L4A6ZG
+
+config CHIP_ROM_ADDRESS
+	hex
+	default 0x08000000
+
+config CHIP_STM32L4_SRAM1_SIZE
+	int
+	default 49152 if CHIP_STM32L431CB
+	default 49152 if CHIP_STM32L431CC
+	default 49152 if CHIP_STM32L431KB
+	default 49152 if CHIP_STM32L431KC
+	default 49152 if CHIP_STM32L431RB
+	default 49152 if CHIP_STM32L431RC
+	default 49152 if CHIP_STM32L431VC
+	default 49152 if CHIP_STM32L432KB
+	default 49152 if CHIP_STM32L432KC
+	default 49152 if CHIP_STM32L433CB
+	default 49152 if CHIP_STM32L433CC
+	default 49152 if CHIP_STM32L433RB
+	default 49152 if CHIP_STM32L433RC
+	default 49152 if CHIP_STM32L433VC
+	default 49152 if CHIP_STM32L442KC
+	default 49152 if CHIP_STM32L443CC
+	default 49152 if CHIP_STM32L443RC
+	default 49152 if CHIP_STM32L443VC
+	default 131072 if CHIP_STM32L451CC
+	default 131072 if CHIP_STM32L451CE
+	default 131072 if CHIP_STM32L451RC
+	default 131072 if CHIP_STM32L451RE
+	default 131072 if CHIP_STM32L451VC
+	default 131072 if CHIP_STM32L451VE
+	default 131072 if CHIP_STM32L452CC
+	default 131072 if CHIP_STM32L452CE
+	default 131072 if CHIP_STM32L452RC
+	default 131072 if CHIP_STM32L452RE
+	default 131072 if CHIP_STM32L452VC
+	default 131072 if CHIP_STM32L452VE
+	default 131072 if CHIP_STM32L462CE
+	default 131072 if CHIP_STM32L462RE
+	default 131072 if CHIP_STM32L462VE
+	default 98304 if CHIP_STM32L471QE
+	default 98304 if CHIP_STM32L471QG
+	default 98304 if CHIP_STM32L471RE
+	default 98304 if CHIP_STM32L471RG
+	default 98304 if CHIP_STM32L471VE
+	default 98304 if CHIP_STM32L471VG
+	default 98304 if CHIP_STM32L471ZE
+	default 98304 if CHIP_STM32L471ZG
+	default 98304 if CHIP_STM32L475RC
+	default 98304 if CHIP_STM32L475RE
+	default 98304 if CHIP_STM32L475RG
+	default 98304 if CHIP_STM32L475VC
+	default 98304 if CHIP_STM32L475VE
+	default 98304 if CHIP_STM32L475VG
+	default 98304 if CHIP_STM32L476JE
+	default 98304 if CHIP_STM32L476JG
+	default 98304 if CHIP_STM32L476ME
+	default 98304 if CHIP_STM32L476MG
+	default 98304 if CHIP_STM32L476QE
+	default 98304 if CHIP_STM32L476QG
+	default 98304 if CHIP_STM32L476RC
+	default 98304 if CHIP_STM32L476RE
+	default 98304 if CHIP_STM32L476RG
+	default 98304 if CHIP_STM32L476VC
+	default 98304 if CHIP_STM32L476VE
+	default 98304 if CHIP_STM32L476VG
+	default 98304 if CHIP_STM32L476ZE
+	default 98304 if CHIP_STM32L476ZG
+	default 98304 if CHIP_STM32L486JG
+	default 98304 if CHIP_STM32L486QG
+	default 98304 if CHIP_STM32L486RG
+	default 98304 if CHIP_STM32L486VG
+	default 98304 if CHIP_STM32L486ZG
+	default 262144 if CHIP_STM32L496AE
+	default 262144 if CHIP_STM32L496AG
+	default 262144 if CHIP_STM32L496QE
+	default 262144 if CHIP_STM32L496QG
+	default 262144 if CHIP_STM32L496RE
+	default 262144 if CHIP_STM32L496RG
+	default 262144 if CHIP_STM32L496VE
+	default 262144 if CHIP_STM32L496VG
+	default 262144 if CHIP_STM32L496ZE
+	default 262144 if CHIP_STM32L496ZG
+	default 262144 if CHIP_STM32L4A6AG
+	default 262144 if CHIP_STM32L4A6QG
+	default 262144 if CHIP_STM32L4A6RG
+	default 262144 if CHIP_STM32L4A6VG
+	default 262144 if CHIP_STM32L4A6ZG
+
+config CHIP_STM32L4_SRAM1_ADDRESS
+	hex
+	default 0x20000000
+
+config CHIP_STM32L4_SRAM2_SIZE
+	int
+	default 16384 if CHIP_STM32L431CB
+	default 16384 if CHIP_STM32L431CC
+	default 16384 if CHIP_STM32L431KB
+	default 16384 if CHIP_STM32L431KC
+	default 16384 if CHIP_STM32L431RB
+	default 16384 if CHIP_STM32L431RC
+	default 16384 if CHIP_STM32L431VC
+	default 16384 if CHIP_STM32L432KB
+	default 16384 if CHIP_STM32L432KC
+	default 16384 if CHIP_STM32L433CB
+	default 16384 if CHIP_STM32L433CC
+	default 16384 if CHIP_STM32L433RB
+	default 16384 if CHIP_STM32L433RC
+	default 16384 if CHIP_STM32L433VC
+	default 16384 if CHIP_STM32L442KC
+	default 16384 if CHIP_STM32L443CC
+	default 16384 if CHIP_STM32L443RC
+	default 16384 if CHIP_STM32L443VC
+	default 32768 if CHIP_STM32L451CC
+	default 32768 if CHIP_STM32L451CE
+	default 32768 if CHIP_STM32L451RC
+	default 32768 if CHIP_STM32L451RE
+	default 32768 if CHIP_STM32L451VC
+	default 32768 if CHIP_STM32L451VE
+	default 32768 if CHIP_STM32L452CC
+	default 32768 if CHIP_STM32L452CE
+	default 32768 if CHIP_STM32L452RC
+	default 32768 if CHIP_STM32L452RE
+	default 32768 if CHIP_STM32L452VC
+	default 32768 if CHIP_STM32L452VE
+	default 32768 if CHIP_STM32L462CE
+	default 32768 if CHIP_STM32L462RE
+	default 32768 if CHIP_STM32L462VE
+	default 32768 if CHIP_STM32L471QE
+	default 32768 if CHIP_STM32L471QG
+	default 32768 if CHIP_STM32L471RE
+	default 32768 if CHIP_STM32L471RG
+	default 32768 if CHIP_STM32L471VE
+	default 32768 if CHIP_STM32L471VG
+	default 32768 if CHIP_STM32L471ZE
+	default 32768 if CHIP_STM32L471ZG
+	default 32768 if CHIP_STM32L475RC
+	default 32768 if CHIP_STM32L475RE
+	default 32768 if CHIP_STM32L475RG
+	default 32768 if CHIP_STM32L475VC
+	default 32768 if CHIP_STM32L475VE
+	default 32768 if CHIP_STM32L475VG
+	default 32768 if CHIP_STM32L476JE
+	default 32768 if CHIP_STM32L476JG
+	default 32768 if CHIP_STM32L476ME
+	default 32768 if CHIP_STM32L476MG
+	default 32768 if CHIP_STM32L476QE
+	default 32768 if CHIP_STM32L476QG
+	default 32768 if CHIP_STM32L476RC
+	default 32768 if CHIP_STM32L476RE
+	default 32768 if CHIP_STM32L476RG
+	default 32768 if CHIP_STM32L476VC
+	default 32768 if CHIP_STM32L476VE
+	default 32768 if CHIP_STM32L476VG
+	default 32768 if CHIP_STM32L476ZE
+	default 32768 if CHIP_STM32L476ZG
+	default 32768 if CHIP_STM32L486JG
+	default 32768 if CHIP_STM32L486QG
+	default 32768 if CHIP_STM32L486RG
+	default 32768 if CHIP_STM32L486VG
+	default 32768 if CHIP_STM32L486ZG
+	default 65536 if CHIP_STM32L496AE
+	default 65536 if CHIP_STM32L496AG
+	default 65536 if CHIP_STM32L496QE
+	default 65536 if CHIP_STM32L496QG
+	default 65536 if CHIP_STM32L496RE
+	default 65536 if CHIP_STM32L496RG
+	default 65536 if CHIP_STM32L496VE
+	default 65536 if CHIP_STM32L496VG
+	default 65536 if CHIP_STM32L496ZE
+	default 65536 if CHIP_STM32L496ZG
+	default 65536 if CHIP_STM32L4A6AG
+	default 65536 if CHIP_STM32L4A6QG
+	default 65536 if CHIP_STM32L4A6RG
+	default 65536 if CHIP_STM32L4A6VG
+	default 65536 if CHIP_STM32L4A6ZG
+
+config CHIP_STM32L4_SRAM2_ADDRESS
+	hex
+	default 0x2000c000 if CHIP_STM32L431CB
+	default 0x2000c000 if CHIP_STM32L431CC
+	default 0x2000c000 if CHIP_STM32L431KB
+	default 0x2000c000 if CHIP_STM32L431KC
+	default 0x2000c000 if CHIP_STM32L431RB
+	default 0x2000c000 if CHIP_STM32L431RC
+	default 0x2000c000 if CHIP_STM32L431VC
+	default 0x2000c000 if CHIP_STM32L432KB
+	default 0x2000c000 if CHIP_STM32L432KC
+	default 0x2000c000 if CHIP_STM32L433CB
+	default 0x2000c000 if CHIP_STM32L433CC
+	default 0x2000c000 if CHIP_STM32L433RB
+	default 0x2000c000 if CHIP_STM32L433RC
+	default 0x2000c000 if CHIP_STM32L433VC
+	default 0x2000c000 if CHIP_STM32L442KC
+	default 0x2000c000 if CHIP_STM32L443CC
+	default 0x2000c000 if CHIP_STM32L443RC
+	default 0x2000c000 if CHIP_STM32L443VC
+	default 0x20020000 if CHIP_STM32L451CC
+	default 0x20020000 if CHIP_STM32L451CE
+	default 0x20020000 if CHIP_STM32L451RC
+	default 0x20020000 if CHIP_STM32L451RE
+	default 0x20020000 if CHIP_STM32L451VC
+	default 0x20020000 if CHIP_STM32L451VE
+	default 0x20020000 if CHIP_STM32L452CC
+	default 0x20020000 if CHIP_STM32L452CE
+	default 0x20020000 if CHIP_STM32L452RC
+	default 0x20020000 if CHIP_STM32L452RE
+	default 0x20020000 if CHIP_STM32L452VC
+	default 0x20020000 if CHIP_STM32L452VE
+	default 0x20020000 if CHIP_STM32L462CE
+	default 0x20020000 if CHIP_STM32L462RE
+	default 0x20020000 if CHIP_STM32L462VE
+	default 0x10000000 if CHIP_STM32L471QE
+	default 0x10000000 if CHIP_STM32L471QG
+	default 0x10000000 if CHIP_STM32L471RE
+	default 0x10000000 if CHIP_STM32L471RG
+	default 0x10000000 if CHIP_STM32L471VE
+	default 0x10000000 if CHIP_STM32L471VG
+	default 0x10000000 if CHIP_STM32L471ZE
+	default 0x10000000 if CHIP_STM32L471ZG
+	default 0x10000000 if CHIP_STM32L475RC
+	default 0x10000000 if CHIP_STM32L475RE
+	default 0x10000000 if CHIP_STM32L475RG
+	default 0x10000000 if CHIP_STM32L475VC
+	default 0x10000000 if CHIP_STM32L475VE
+	default 0x10000000 if CHIP_STM32L475VG
+	default 0x10000000 if CHIP_STM32L476JE
+	default 0x10000000 if CHIP_STM32L476JG
+	default 0x10000000 if CHIP_STM32L476ME
+	default 0x10000000 if CHIP_STM32L476MG
+	default 0x10000000 if CHIP_STM32L476QE
+	default 0x10000000 if CHIP_STM32L476QG
+	default 0x10000000 if CHIP_STM32L476RC
+	default 0x10000000 if CHIP_STM32L476RE
+	default 0x10000000 if CHIP_STM32L476RG
+	default 0x10000000 if CHIP_STM32L476VC
+	default 0x10000000 if CHIP_STM32L476VE
+	default 0x10000000 if CHIP_STM32L476VG
+	default 0x10000000 if CHIP_STM32L476ZE
+	default 0x10000000 if CHIP_STM32L476ZG
+	default 0x10000000 if CHIP_STM32L486JG
+	default 0x10000000 if CHIP_STM32L486QG
+	default 0x10000000 if CHIP_STM32L486RG
+	default 0x10000000 if CHIP_STM32L486VG
+	default 0x10000000 if CHIP_STM32L486ZG
+	default 0x20040000 if CHIP_STM32L496AE
+	default 0x20040000 if CHIP_STM32L496AG
+	default 0x20040000 if CHIP_STM32L496QE
+	default 0x20040000 if CHIP_STM32L496QG
+	default 0x20040000 if CHIP_STM32L496RE
+	default 0x20040000 if CHIP_STM32L496RG
+	default 0x20040000 if CHIP_STM32L496VE
+	default 0x20040000 if CHIP_STM32L496VG
+	default 0x20040000 if CHIP_STM32L496ZE
+	default 0x20040000 if CHIP_STM32L496ZG
+	default 0x20040000 if CHIP_STM32L4A6AG
+	default 0x20040000 if CHIP_STM32L4A6QG
+	default 0x20040000 if CHIP_STM32L4A6RG
+	default 0x20040000 if CHIP_STM32L4A6VG
+	default 0x20040000 if CHIP_STM32L4A6ZG
+
+config CHIP_STM32L4_RCC_HPRE
+	int
+	default 1 if CHIP_STM32L4_RCC_AHB_DIV1
+	default 2 if CHIP_STM32L4_RCC_AHB_DIV2
+	default 4 if CHIP_STM32L4_RCC_AHB_DIV4
+	default 8 if CHIP_STM32L4_RCC_AHB_DIV8
+	default 16 if CHIP_STM32L4_RCC_AHB_DIV16
+	default 64 if CHIP_STM32L4_RCC_AHB_DIV64
+	default 128 if CHIP_STM32L4_RCC_AHB_DIV128
+	default 256 if CHIP_STM32L4_RCC_AHB_DIV256
+	default 512 if CHIP_STM32L4_RCC_AHB_DIV512
+
+config CHIP_STM32L4_RCC_PPRE1
+	int
+	default 1 if CHIP_STM32L4_RCC_APB1_DIV1
+	default 2 if CHIP_STM32L4_RCC_APB1_DIV2
+	default 4 if CHIP_STM32L4_RCC_APB1_DIV4
+	default 8 if CHIP_STM32L4_RCC_APB1_DIV8
+	default 16 if CHIP_STM32L4_RCC_APB1_DIV16
+
+config CHIP_STM32L4_RCC_PPRE2
+	int
+	default 1 if CHIP_STM32L4_RCC_APB2_DIV1
+	default 2 if CHIP_STM32L4_RCC_APB2_DIV2
+	default 4 if CHIP_STM32L4_RCC_APB2_DIV4
+	default 8 if CHIP_STM32L4_RCC_APB2_DIV8
+	default 16 if CHIP_STM32L4_RCC_APB2_DIV16
+
+config CHIP
+	string
+	default "STM32L431CB" if CHIP_STM32L431CB
+	default "STM32L431CC" if CHIP_STM32L431CC
+	default "STM32L431KB" if CHIP_STM32L431KB
+	default "STM32L431KC" if CHIP_STM32L431KC
+	default "STM32L431RB" if CHIP_STM32L431RB
+	default "STM32L431RC" if CHIP_STM32L431RC
+	default "STM32L431VC" if CHIP_STM32L431VC
+	default "STM32L432KB" if CHIP_STM32L432KB
+	default "STM32L432KC" if CHIP_STM32L432KC
+	default "STM32L433CB" if CHIP_STM32L433CB
+	default "STM32L433CC" if CHIP_STM32L433CC
+	default "STM32L433RB" if CHIP_STM32L433RB
+	default "STM32L433RC" if CHIP_STM32L433RC
+	default "STM32L433VC" if CHIP_STM32L433VC
+	default "STM32L442KC" if CHIP_STM32L442KC
+	default "STM32L443CC" if CHIP_STM32L443CC
+	default "STM32L443RC" if CHIP_STM32L443RC
+	default "STM32L443VC" if CHIP_STM32L443VC
+	default "STM32L451CC" if CHIP_STM32L451CC
+	default "STM32L451CE" if CHIP_STM32L451CE
+	default "STM32L451RC" if CHIP_STM32L451RC
+	default "STM32L451RE" if CHIP_STM32L451RE
+	default "STM32L451VC" if CHIP_STM32L451VC
+	default "STM32L451VE" if CHIP_STM32L451VE
+	default "STM32L452CC" if CHIP_STM32L452CC
+	default "STM32L452CE" if CHIP_STM32L452CE
+	default "STM32L452RC" if CHIP_STM32L452RC
+	default "STM32L452RE" if CHIP_STM32L452RE
+	default "STM32L452VC" if CHIP_STM32L452VC
+	default "STM32L452VE" if CHIP_STM32L452VE
+	default "STM32L462CE" if CHIP_STM32L462CE
+	default "STM32L462RE" if CHIP_STM32L462RE
+	default "STM32L462VE" if CHIP_STM32L462VE
+	default "STM32L471QE" if CHIP_STM32L471QE
+	default "STM32L471QG" if CHIP_STM32L471QG
+	default "STM32L471RE" if CHIP_STM32L471RE
+	default "STM32L471RG" if CHIP_STM32L471RG
+	default "STM32L471VE" if CHIP_STM32L471VE
+	default "STM32L471VG" if CHIP_STM32L471VG
+	default "STM32L471ZE" if CHIP_STM32L471ZE
+	default "STM32L471ZG" if CHIP_STM32L471ZG
+	default "STM32L475RC" if CHIP_STM32L475RC
+	default "STM32L475RE" if CHIP_STM32L475RE
+	default "STM32L475RG" if CHIP_STM32L475RG
+	default "STM32L475VC" if CHIP_STM32L475VC
+	default "STM32L475VE" if CHIP_STM32L475VE
+	default "STM32L475VG" if CHIP_STM32L475VG
+	default "STM32L476JE" if CHIP_STM32L476JE
+	default "STM32L476JG" if CHIP_STM32L476JG
+	default "STM32L476ME" if CHIP_STM32L476ME
+	default "STM32L476MG" if CHIP_STM32L476MG
+	default "STM32L476QE" if CHIP_STM32L476QE
+	default "STM32L476QG" if CHIP_STM32L476QG
+	default "STM32L476RC" if CHIP_STM32L476RC
+	default "STM32L476RE" if CHIP_STM32L476RE
+	default "STM32L476RG" if CHIP_STM32L476RG
+	default "STM32L476VC" if CHIP_STM32L476VC
+	default "STM32L476VE" if CHIP_STM32L476VE
+	default "STM32L476VG" if CHIP_STM32L476VG
+	default "STM32L476ZE" if CHIP_STM32L476ZE
+	default "STM32L476ZG" if CHIP_STM32L476ZG
+	default "STM32L486JG" if CHIP_STM32L486JG
+	default "STM32L486QG" if CHIP_STM32L486QG
+	default "STM32L486RG" if CHIP_STM32L486RG
+	default "STM32L486VG" if CHIP_STM32L486VG
+	default "STM32L486ZG" if CHIP_STM32L486ZG
+	default "STM32L496AE" if CHIP_STM32L496AE
+	default "STM32L496AG" if CHIP_STM32L496AG
+	default "STM32L496QE" if CHIP_STM32L496QE
+	default "STM32L496QG" if CHIP_STM32L496QG
+	default "STM32L496RE" if CHIP_STM32L496RE
+	default "STM32L496RG" if CHIP_STM32L496RG
+	default "STM32L496VE" if CHIP_STM32L496VE
+	default "STM32L496VG" if CHIP_STM32L496VG
+	default "STM32L496ZE" if CHIP_STM32L496ZE
+	default "STM32L496ZG" if CHIP_STM32L496ZG
+	default "STM32L4A6AG" if CHIP_STM32L4A6AG
+	default "STM32L4A6QG" if CHIP_STM32L4A6QG
+	default "STM32L4A6RG" if CHIP_STM32L4A6RG
+	default "STM32L4A6VG" if CHIP_STM32L4A6VG
+	default "STM32L4A6ZG" if CHIP_STM32L4A6ZG
+
+config CHIP_INCLUDES
+	string
+	default "source/chip/STM32/include source/chip/STM32/STM32L4/include external/CMSIS-STM32L4 external/CMSIS"
+
+endif	# CHIP_STM32L4
