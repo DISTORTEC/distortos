@@ -57,7 +57,7 @@
 #elif defined(CONFIG_CHIP_STM32L4S9)
 	#define STM32L4S9xx
 #else
-	#error "Unsupported STM32F7 chip!"
+	#error "Unsupported STM32L4 chip!"
 #endif
 
 #include "stm32l4xx.h"
