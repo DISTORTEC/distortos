@@ -1,0 +1,26 @@
+{% extends "source/architecture/ARM/ARMv6-M-ARMv7-M/dtsiTemplates/ARMv7-M.dtsi.jinja" %}
+{% block chosen %}
+		distortos,ld,text = &flash;
+		distortos,ld,exidx = &flash;
+		distortos,ld,main_stack = &sram1;
+		distortos,ld,bss = &sram1;
+		distortos,ld,data = &sram1;
+		distortos,ld,data,load = &flash;
+		distortos,ld,noinit = &sram1;
+		distortos,ld,sram1,load = &flash;
+{% if 'sram2' in nodes %}
+		distortos,ld,sram2,load = &flash;
+{% endif %}
+		distortos,ld,process_stack = &sram1;
+		distortos,ld,heap = &sram1;
+{% endblock %}
+{% block cpus %}
+		#address-cells = <1>;
+		#size-cells = <0>;
+
+		cpu@0 {
+			compatible = "ARM,Cortex-M4", "ARM,ARMv7-M";
+			device_type = "cpu";
+			reg = <0>;
+		};
+{% endblock %}
