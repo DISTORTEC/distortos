@@ -12,10 +12,15 @@
 #include "distortos/chip/ChipUartLowLevel.hpp"
 
 #include "distortos/chip/getBusFrequency.hpp"
+#include "distortos/chip/STM32-bit-banding.h"
 
 #include "distortos/devices/communication/UartBase.hpp"
 
+#ifndef DISTORTOS_BITBANDING_SUPPORTED
+
 #include "distortos/InterruptMaskingLock.hpp"
+
+#endif	// !def DISTORTOS_BITBANDING_SUPPORTED
 
 #include <cerrno>
 
@@ -71,6 +76,30 @@ class ChipUartLowLevel::Parameters
 {
 public:
 
+#ifdef DISTORTOS_BITBANDING_SUPPORTED
+
+	/**
+	 * \brief Parameters's constructor
+	 *
+	 * \param [in] uartBase is a base address of UART peripheral
+	 * \param [in] rccEnBb is an address of bitband alias of appropriate U[S]ARTxEN bit in RCC register
+	 * \param [in] rccRstBb is an address of bitband alias of appropriate U[S]ARTxRST bit in RCC register
+	 */
+
+	constexpr Parameters(const uintptr_t uartBase, const uintptr_t rccEnBbAddress, const uintptr_t rccRstBbAddress) :
+			uartBase_{uartBase},
+			peripheralFrequency_{getBusFrequency(uartBase)},
+			rxneieBbAddress_{STM32_BITBAND_IMPLEMENTATION(uartBase, USART_TypeDef, CR1, USART_CR1_RXNEIE)},
+			tcieBbAddress_{STM32_BITBAND_IMPLEMENTATION(uartBase, USART_TypeDef, CR1, USART_CR1_TCIE)},
+			txeieBbAddress_{STM32_BITBAND_IMPLEMENTATION(uartBase, USART_TypeDef, CR1, USART_CR1_TXEIE)},
+			rccEnBbAddress_{rccEnBbAddress},
+			rccRstBbAddress_{rccRstBbAddress}
+	{
+
+	}
+
+#else	// !def DISTORTOS_BITBANDING_SUPPORTED
+
 	/**
 	 * \brief Parameters's constructor
 	 *
@@ -93,6 +122,8 @@ public:
 
 	}
 
+#endif	// !def DISTORTOS_BITBANDING_SUPPORTED
+
 	/**
 	 * \brief Enables or disables peripheral clock in RCC.
 	 *
@@ -101,9 +132,13 @@ public:
 
 	void enablePeripheralClock(const bool enable) const
 	{
+#ifdef DISTORTOS_BITBANDING_SUPPORTED
+		*reinterpret_cast<volatile unsigned long*>(rccEnBbAddress_) = enable;
+#else	// !def DISTORTOS_BITBANDING_SUPPORTED
 		auto& rccEn = *reinterpret_cast<volatile uint32_t*>(RCC_BASE + rccEnOffset_);
 		const InterruptMaskingLock interruptMaskingLock;
 		rccEn = (rccEn & ~rccEnBitmask_) | (enable == true ? rccEnBitmask_ : 0);
+#endif	// !def DISTORTOS_BITBANDING_SUPPORTED
 	}
 
 	/**
@@ -114,9 +149,13 @@ public:
 
 	void enableRxneInterrupt(const bool enable) const
 	{
+#ifdef DISTORTOS_BITBANDING_SUPPORTED
+		*reinterpret_cast<volatile unsigned long*>(rxneieBbAddress_) = enable;
+#else	// !def DISTORTOS_BITBANDING_SUPPORTED
 		auto& uart = getUart();
 		const InterruptMaskingLock interruptMaskingLock;
 		uart.CR1 = (uart.CR1 & ~USART_CR1_RXNEIE) | (enable == true ? USART_CR1_RXNEIE : 0);
+#endif	// !def DISTORTOS_BITBANDING_SUPPORTED
 	}
 
 	/**
@@ -127,9 +166,13 @@ public:
 
 	void enableTcInterrupt(const bool enable) const
 	{
+#ifdef DISTORTOS_BITBANDING_SUPPORTED
+		*reinterpret_cast<volatile unsigned long*>(tcieBbAddress_) = enable;
+#else	// !def DISTORTOS_BITBANDING_SUPPORTED
 		auto& uart = getUart();
 		const InterruptMaskingLock interruptMaskingLock;
 		uart.CR1 = (uart.CR1 & ~USART_CR1_TCIE) | (enable == true ? USART_CR1_TCIE : 0);
+#endif	// !def DISTORTOS_BITBANDING_SUPPORTED
 	}
 
 	/**
@@ -140,9 +183,13 @@ public:
 
 	void enableTxeInterrupt(const bool enable) const
 	{
+#ifdef DISTORTOS_BITBANDING_SUPPORTED
+		*reinterpret_cast<volatile unsigned long*>(txeieBbAddress_) = enable;
+#else	// !def DISTORTOS_BITBANDING_SUPPORTED
 		auto& uart = getUart();
 		const InterruptMaskingLock interruptMaskingLock;
 		uart.CR1 = (uart.CR1 & ~USART_CR1_TXEIE) | (enable == true ? USART_CR1_TXEIE : 0);
+#endif	// !def DISTORTOS_BITBANDING_SUPPORTED
 	}
 
 	/**
@@ -187,10 +234,15 @@ public:
 
 	void resetPeripheral() const
 	{
+#ifdef DISTORTOS_BITBANDING_SUPPORTED
+		*reinterpret_cast<volatile unsigned long*>(rccRstBbAddress_) = 1;
+		*reinterpret_cast<volatile unsigned long*>(rccRstBbAddress_) = 0;
+#else	// !def DISTORTOS_BITBANDING_SUPPORTED
 		auto& rccRst = *reinterpret_cast<volatile uint32_t*>(RCC_BASE + rccRstOffset_);
 		const InterruptMaskingLock interruptMaskingLock;
 		rccRst |= rccRstBitmask_;
 		rccRst &= ~rccRstBitmask_;
+#endif	// !def DISTORTOS_BITBANDING_SUPPORTED
 	}
 
 private:
@@ -200,6 +252,25 @@ private:
 
 	/// peripheral clock frequency, Hz
 	uint32_t peripheralFrequency_;
+
+#ifdef DISTORTOS_BITBANDING_SUPPORTED
+
+	/// address of bitband alias of RXNEIE bit in USART_CR1 register
+	uintptr_t rxneieBbAddress_;
+
+	/// address of bitband alias of TCIE bit in USART_CR1 register
+	uintptr_t tcieBbAddress_;
+
+	/// address of bitband alias of TXEIE bit in USART_CR1 register
+	uintptr_t txeieBbAddress_;
+
+	/// address of bitband alias of appropriate U[S]ARTxEN bit in RCC register
+	uintptr_t rccEnBbAddress_;
+
+	/// address of bitband alias of appropriate U[S]ARTxRST bit in RCC register
+	uintptr_t rccRstBbAddress_;
+
+#else	// !def DISTORTOS_BITBANDING_SUPPORTED
 
 	/// bitmask of appropriate U[S]ARTxEN bit in RCC register at \a rccEnOffset_ offset
 	uint32_t rccEnBitmask_;
@@ -212,95 +283,104 @@ private:
 
 	/// offset of RCC register with appropriate U[S]ARTxRST bit, bytes
 	size_t rccRstOffset_;
+
+#endif	// !def DISTORTOS_BITBANDING_SUPPORTED
 };
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | public static objects
 +---------------------------------------------------------------------------------------------------------------------*/
 
+#ifdef DISTORTOS_BITBANDING_SUPPORTED
+
 #ifdef CONFIG_CHIP_STM32_USARTV2_USART1_ENABLE
-
-const ChipUartLowLevel::Parameters ChipUartLowLevel::usart1Parameters {USART1_BASE, offsetof(RCC_TypeDef, APB2ENR),
-		RCC_APB2ENR_USART1EN, offsetof(RCC_TypeDef, APB2RSTR), RCC_APB2RSTR_USART1RST};
-
+const ChipUartLowLevel::Parameters ChipUartLowLevel::usart1Parameters {USART1_BASE,
+		STM32_BITBAND_ADDRESS(RCC, APB2ENR, USART1EN), STM32_BITBAND_ADDRESS(RCC, APB2RSTR, USART1RST)};
 #endif	// def CONFIG_CHIP_STM32_USARTV2_USART1_ENABLE
 
 #ifdef CONFIG_CHIP_STM32_USARTV2_USART2_ENABLE
-
-const ChipUartLowLevel::Parameters ChipUartLowLevel::usart2Parameters {USART2_BASE, offsetof(RCC_TypeDef, APB1ENR),
-		RCC_APB1ENR_USART2EN, offsetof(RCC_TypeDef, APB1RSTR), RCC_APB1RSTR_USART2RST};
-
+const ChipUartLowLevel::Parameters ChipUartLowLevel::usart2Parameters {USART2_BASE,
+		STM32_BITBAND_ADDRESS(RCC, APB1ENR1, USART2EN), STM32_BITBAND_ADDRESS(RCC, APB1RSTR1, USART2RST)};
 #endif	// def CONFIG_CHIP_STM32_USARTV2_USART2_ENABLE
 
 #ifdef CONFIG_CHIP_STM32_USARTV2_USART3_ENABLE
-
-const ChipUartLowLevel::Parameters ChipUartLowLevel::usart3Parameters {USART3_BASE, offsetof(RCC_TypeDef, APB1ENR),
-		RCC_APB1ENR_USART3EN, offsetof(RCC_TypeDef, APB1RSTR), RCC_APB1RSTR_USART3RST};
-
+const ChipUartLowLevel::Parameters ChipUartLowLevel::usart3Parameters {USART3_BASE,
+		STM32_BITBAND_ADDRESS(RCC, APB1ENR1, USART3EN), STM32_BITBAND_ADDRESS(RCC, APB1RSTR1, USART3RST)};
 #endif	// def CONFIG_CHIP_STM32_USARTV2_USART3_ENABLE
 
 #ifdef CONFIG_CHIP_STM32_USARTV2_UART4_ENABLE
+const ChipUartLowLevel::Parameters ChipUartLowLevel::uart4Parameters {UART4_BASE,
+		STM32_BITBAND_ADDRESS(RCC, APB1ENR1, UART4EN), STM32_BITBAND_ADDRESS(RCC, APB1RSTR1, UART4RST)};
+#endif	// def CONFIG_CHIP_STM32_USARTV2_UART4_ENABLE
 
+#ifdef CONFIG_CHIP_STM32_USARTV2_UART5_ENABLE
+const ChipUartLowLevel::Parameters ChipUartLowLevel::uart5Parameters {UART5_BASE,
+		STM32_BITBAND_ADDRESS(RCC, APB1ENR1, UART5EN), STM32_BITBAND_ADDRESS(RCC, APB1RSTR1, UART5RST)};
+#endif	// def CONFIG_CHIP_STM32_USARTV2_UART5_ENABLE
+
+#else	// !def DISTORTOS_BITBANDING_SUPPORTED
+
+#ifdef CONFIG_CHIP_STM32_USARTV2_USART1_ENABLE
+const ChipUartLowLevel::Parameters ChipUartLowLevel::usart1Parameters {USART1_BASE, offsetof(RCC_TypeDef, APB2ENR),
+		RCC_APB2ENR_USART1EN, offsetof(RCC_TypeDef, APB2RSTR), RCC_APB2RSTR_USART1RST};
+#endif	// def CONFIG_CHIP_STM32_USARTV2_USART1_ENABLE
+
+#ifdef CONFIG_CHIP_STM32_USARTV2_USART2_ENABLE
+const ChipUartLowLevel::Parameters ChipUartLowLevel::usart2Parameters {USART2_BASE, offsetof(RCC_TypeDef, APB1ENR),
+		RCC_APB1ENR_USART2EN, offsetof(RCC_TypeDef, APB1RSTR), RCC_APB1RSTR_USART2RST};
+#endif	// def CONFIG_CHIP_STM32_USARTV2_USART2_ENABLE
+
+#ifdef CONFIG_CHIP_STM32_USARTV2_USART3_ENABLE
+const ChipUartLowLevel::Parameters ChipUartLowLevel::usart3Parameters {USART3_BASE, offsetof(RCC_TypeDef, APB1ENR),
+		RCC_APB1ENR_USART3EN, offsetof(RCC_TypeDef, APB1RSTR), RCC_APB1RSTR_USART3RST};
+#endif	// def CONFIG_CHIP_STM32_USARTV2_USART3_ENABLE
+
+#ifdef CONFIG_CHIP_STM32_USARTV2_UART4_ENABLE
 const ChipUartLowLevel::Parameters ChipUartLowLevel::uart4Parameters {UART4_BASE, offsetof(RCC_TypeDef, APB1ENR),
 		RCC_APB1ENR_UART4EN, offsetof(RCC_TypeDef, APB1RSTR), RCC_APB1RSTR_UART4RST};
-
 #endif	// def CONFIG_CHIP_STM32_USARTV2_UART4_ENABLE
 
 #ifdef CONFIG_CHIP_STM32_USARTV2_USART4_ENABLE
-
 const ChipUartLowLevel::Parameters ChipUartLowLevel::usart4Parameters {USART4_BASE, offsetof(RCC_TypeDef, APB1ENR),
 		RCC_APB1ENR_USART4EN, offsetof(RCC_TypeDef, APB1RSTR), RCC_APB1RSTR_USART4RST};
-
 #endif	// def CONFIG_CHIP_STM32_USARTV2_USART4_ENABLE
 
 #ifdef CONFIG_CHIP_STM32_USARTV2_UART5_ENABLE
-
 const ChipUartLowLevel::Parameters ChipUartLowLevel::uart5Parameters {UART5_BASE, offsetof(RCC_TypeDef, APB1ENR),
 		RCC_APB1ENR_UART5EN, offsetof(RCC_TypeDef, APB1RSTR), RCC_APB1RSTR_UART5RST};
-
 #endif	// def CONFIG_CHIP_STM32_USARTV2_UART5_ENABLE
 
 #ifdef CONFIG_CHIP_STM32_USARTV2_USART5_ENABLE
-
 const ChipUartLowLevel::Parameters ChipUartLowLevel::usart5Parameters {USART5_BASE, offsetof(RCC_TypeDef, APB1ENR),
 		RCC_APB1ENR_USART5EN, offsetof(RCC_TypeDef, APB1RSTR), RCC_APB1RSTR_USART5RST};
-
 #endif	// def CONFIG_CHIP_STM32_USARTV2_USART5_ENABLE
 
 #ifdef CONFIG_CHIP_STM32_USARTV2_USART6_ENABLE
-
 const ChipUartLowLevel::Parameters ChipUartLowLevel::usart6Parameters {USART6_BASE, offsetof(RCC_TypeDef, APB2ENR),
 		RCC_APB2ENR_USART6EN, offsetof(RCC_TypeDef, APB2RSTR), RCC_APB2RSTR_USART6RST};
-
 #endif	// def CONFIG_CHIP_STM32_USARTV2_USART6_ENABLE
 
 #ifdef CONFIG_CHIP_STM32_USARTV2_UART7_ENABLE
-
 const ChipUartLowLevel::Parameters ChipUartLowLevel::uart7Parameters {UART7_BASE, offsetof(RCC_TypeDef, APB1ENR),
 		RCC_APB1ENR_UART7EN, offsetof(RCC_TypeDef, APB1RSTR), RCC_APB1RSTR_UART7RST};
-
 #endif	// def CONFIG_CHIP_STM32_USARTV2_UART7_ENABLE
 
 #ifdef CONFIG_CHIP_STM32_USARTV2_USART7_ENABLE
-
 const ChipUartLowLevel::Parameters ChipUartLowLevel::usart7Parameters {USART7_BASE, offsetof(RCC_TypeDef, APB2ENR),
 		RCC_APB2ENR_USART7EN, offsetof(RCC_TypeDef, APB2RSTR), RCC_APB2RSTR_USART7RST};
-
 #endif	// def CONFIG_CHIP_STM32_USARTV2_USART7_ENABLE
 
 #ifdef CONFIG_CHIP_STM32_USARTV2_UART8_ENABLE
-
 const ChipUartLowLevel::Parameters ChipUartLowLevel::uart8Parameters {UART8_BASE, offsetof(RCC_TypeDef, APB1ENR),
 		RCC_APB1ENR_UART8EN, offsetof(RCC_TypeDef, APB1RSTR), RCC_APB1RSTR_UART8RST};
-
 #endif	// def CONFIG_CHIP_STM32_USARTV2_UART8_ENABLE
 
 #ifdef CONFIG_CHIP_STM32_USARTV2_USART8_ENABLE
-
 const ChipUartLowLevel::Parameters ChipUartLowLevel::usart8Parameters {USART8_BASE, offsetof(RCC_TypeDef, APB2ENR),
 		RCC_APB2ENR_USART8EN, offsetof(RCC_TypeDef, APB2RSTR), RCC_APB2RSTR_USART8RST};
-
 #endif	// def CONFIG_CHIP_STM32_USARTV2_USART8_ENABLE
+
+#endif	// !def DISTORTOS_BITBANDING_SUPPORTED
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | public functions
