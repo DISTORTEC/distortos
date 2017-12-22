@@ -218,89 +218,89 @@ private:
 | public static objects
 +---------------------------------------------------------------------------------------------------------------------*/
 
-#ifdef CONFIG_CHIP_STM32_USARTV2_HAS_USART1
+#ifdef CONFIG_CHIP_STM32_USARTV2_USART1_ENABLE
 
 const ChipUartLowLevel::Parameters ChipUartLowLevel::usart1Parameters {USART1_BASE, offsetof(RCC_TypeDef, APB2ENR),
 		RCC_APB2ENR_USART1EN, offsetof(RCC_TypeDef, APB2RSTR), RCC_APB2RSTR_USART1RST};
 
-#endif	// def CONFIG_CHIP_STM32_USARTV2_HAS_USART1
+#endif	// def CONFIG_CHIP_STM32_USARTV2_USART1_ENABLE
 
-#ifdef CONFIG_CHIP_STM32_USARTV2_HAS_USART2
+#ifdef CONFIG_CHIP_STM32_USARTV2_USART2_ENABLE
 
 const ChipUartLowLevel::Parameters ChipUartLowLevel::usart2Parameters {USART2_BASE, offsetof(RCC_TypeDef, APB1ENR),
 		RCC_APB1ENR_USART2EN, offsetof(RCC_TypeDef, APB1RSTR), RCC_APB1RSTR_USART2RST};
 
-#endif	// def CONFIG_CHIP_STM32_USARTV2_HAS_USART2
+#endif	// def CONFIG_CHIP_STM32_USARTV2_USART2_ENABLE
 
-#ifdef CONFIG_CHIP_STM32_USARTV2_HAS_USART3
+#ifdef CONFIG_CHIP_STM32_USARTV2_USART3_ENABLE
 
 const ChipUartLowLevel::Parameters ChipUartLowLevel::usart3Parameters {USART3_BASE, offsetof(RCC_TypeDef, APB1ENR),
 		RCC_APB1ENR_USART3EN, offsetof(RCC_TypeDef, APB1RSTR), RCC_APB1RSTR_USART3RST};
 
-#endif	// def CONFIG_CHIP_STM32_USARTV2_HAS_USART3
+#endif	// def CONFIG_CHIP_STM32_USARTV2_USART3_ENABLE
 
-#ifdef CONFIG_CHIP_STM32_USARTV2_HAS_UART4
+#ifdef CONFIG_CHIP_STM32_USARTV2_UART4_ENABLE
 
 const ChipUartLowLevel::Parameters ChipUartLowLevel::uart4Parameters {UART4_BASE, offsetof(RCC_TypeDef, APB1ENR),
 		RCC_APB1ENR_UART4EN, offsetof(RCC_TypeDef, APB1RSTR), RCC_APB1RSTR_UART4RST};
 
-#endif	// def CONFIG_CHIP_STM32_USARTV2_HAS_UART4
+#endif	// def CONFIG_CHIP_STM32_USARTV2_UART4_ENABLE
 
-#ifdef CONFIG_CHIP_STM32_USARTV2_HAS_USART4
+#ifdef CONFIG_CHIP_STM32_USARTV2_USART4_ENABLE
 
 const ChipUartLowLevel::Parameters ChipUartLowLevel::usart4Parameters {USART4_BASE, offsetof(RCC_TypeDef, APB1ENR),
 		RCC_APB1ENR_USART4EN, offsetof(RCC_TypeDef, APB1RSTR), RCC_APB1RSTR_USART4RST};
 
-#endif	// def CONFIG_CHIP_STM32_USARTV2_HAS_USART4
+#endif	// def CONFIG_CHIP_STM32_USARTV2_USART4_ENABLE
 
-#ifdef CONFIG_CHIP_STM32_USARTV2_HAS_UART5
+#ifdef CONFIG_CHIP_STM32_USARTV2_UART5_ENABLE
 
 const ChipUartLowLevel::Parameters ChipUartLowLevel::uart5Parameters {UART5_BASE, offsetof(RCC_TypeDef, APB1ENR),
 		RCC_APB1ENR_UART5EN, offsetof(RCC_TypeDef, APB1RSTR), RCC_APB1RSTR_UART5RST};
 
-#endif	// def CONFIG_CHIP_STM32_USARTV2_HAS_UART5
+#endif	// def CONFIG_CHIP_STM32_USARTV2_UART5_ENABLE
 
-#ifdef CONFIG_CHIP_STM32_USARTV2_HAS_USART5
+#ifdef CONFIG_CHIP_STM32_USARTV2_USART5_ENABLE
 
 const ChipUartLowLevel::Parameters ChipUartLowLevel::usart5Parameters {USART5_BASE, offsetof(RCC_TypeDef, APB1ENR),
 		RCC_APB1ENR_USART5EN, offsetof(RCC_TypeDef, APB1RSTR), RCC_APB1RSTR_USART5RST};
 
-#endif	// def CONFIG_CHIP_STM32_USARTV2_HAS_USART5
+#endif	// def CONFIG_CHIP_STM32_USARTV2_USART5_ENABLE
 
-#ifdef CONFIG_CHIP_STM32_USARTV2_HAS_USART6
+#ifdef CONFIG_CHIP_STM32_USARTV2_USART6_ENABLE
 
 const ChipUartLowLevel::Parameters ChipUartLowLevel::usart6Parameters {USART6_BASE, offsetof(RCC_TypeDef, APB2ENR),
 		RCC_APB2ENR_USART6EN, offsetof(RCC_TypeDef, APB2RSTR), RCC_APB2RSTR_USART6RST};
 
-#endif	// def CONFIG_CHIP_STM32_USARTV2_HAS_USART6
+#endif	// def CONFIG_CHIP_STM32_USARTV2_USART6_ENABLE
 
-#ifdef CONFIG_CHIP_STM32_USARTV2_HAS_UART7
+#ifdef CONFIG_CHIP_STM32_USARTV2_UART7_ENABLE
 
 const ChipUartLowLevel::Parameters ChipUartLowLevel::uart7Parameters {UART7_BASE, offsetof(RCC_TypeDef, APB1ENR),
 		RCC_APB1ENR_UART7EN, offsetof(RCC_TypeDef, APB1RSTR), RCC_APB1RSTR_UART7RST};
 
-#endif	// def CONFIG_CHIP_STM32_USARTV2_HAS_UART7
+#endif	// def CONFIG_CHIP_STM32_USARTV2_UART7_ENABLE
 
-#ifdef CONFIG_CHIP_STM32_USARTV2_HAS_USART7
+#ifdef CONFIG_CHIP_STM32_USARTV2_USART7_ENABLE
 
 const ChipUartLowLevel::Parameters ChipUartLowLevel::usart7Parameters {USART7_BASE, offsetof(RCC_TypeDef, APB2ENR),
 		RCC_APB2ENR_USART7EN, offsetof(RCC_TypeDef, APB2RSTR), RCC_APB2RSTR_USART7RST};
 
-#endif	// def CONFIG_CHIP_STM32_USARTV2_HAS_USART7
+#endif	// def CONFIG_CHIP_STM32_USARTV2_USART7_ENABLE
 
-#ifdef CONFIG_CHIP_STM32_USARTV2_HAS_UART8
+#ifdef CONFIG_CHIP_STM32_USARTV2_UART8_ENABLE
 
 const ChipUartLowLevel::Parameters ChipUartLowLevel::uart8Parameters {UART8_BASE, offsetof(RCC_TypeDef, APB1ENR),
 		RCC_APB1ENR_UART8EN, offsetof(RCC_TypeDef, APB1RSTR), RCC_APB1RSTR_UART8RST};
 
-#endif	// def CONFIG_CHIP_STM32_USARTV2_HAS_UART8
+#endif	// def CONFIG_CHIP_STM32_USARTV2_UART8_ENABLE
 
-#ifdef CONFIG_CHIP_STM32_USARTV2_HAS_USART8
+#ifdef CONFIG_CHIP_STM32_USARTV2_USART8_ENABLE
 
 const ChipUartLowLevel::Parameters ChipUartLowLevel::usart8Parameters {USART8_BASE, offsetof(RCC_TypeDef, APB2ENR),
 		RCC_APB2ENR_USART8EN, offsetof(RCC_TypeDef, APB2RSTR), RCC_APB2RSTR_USART8RST};
 
-#endif	// def CONFIG_CHIP_STM32_USARTV2_HAS_USART8
+#endif	// def CONFIG_CHIP_STM32_USARTV2_USART8_ENABLE
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | public functions
