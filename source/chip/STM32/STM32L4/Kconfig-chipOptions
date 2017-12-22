@@ -1379,6 +1379,6 @@ config CHIP
 
 config CHIP_INCLUDES
 	string
-	default "source/chip/STM32/include source/chip/STM32/STM32L4/include source/chip/STM32/peripherals/GPIOv2/include source/chip/STM32/peripherals/SPIv2/include external/CMSIS-STM32L4 external/CMSIS"
+	default "source/chip/STM32/include source/chip/STM32/STM32L4/include source/chip/STM32/peripherals/GPIOv2/include source/chip/STM32/peripherals/SPIv2/include source/chip/STM32/peripherals/USARTv2/include external/CMSIS-STM32L4 external/CMSIS"
 
 endif	# CHIP_STM32L4
