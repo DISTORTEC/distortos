@@ -12,10 +12,15 @@
 #include "distortos/chip/ChipSpiMasterLowLevel.hpp"
 
 #include "distortos/chip/getBusFrequency.hpp"
+#include "distortos/chip/STM32-bit-banding.h"
 
 #include "distortos/devices/communication/SpiMasterBase.hpp"
 
+#ifndef DISTORTOS_BITBANDING_SUPPORTED
+
 #include "distortos/InterruptMaskingLock.hpp"
+
+#endif	// !def DISTORTOS_BITBANDING_SUPPORTED
 
 #include <cerrno>
 
@@ -33,6 +38,31 @@ namespace chip
 class ChipSpiMasterLowLevel::Parameters
 {
 public:
+
+#ifdef DISTORTOS_BITBANDING_SUPPORTED
+
+	/**
+	 * \brief Parameters's constructor
+	 *
+	 * \param [in] spiBase is a base address of SPI peripheral
+	 * \param [in] rccEnBbAddress is an address of bitband alias of appropriate SPIxEN bit in RCC register
+	 * \param [in] rccRstBbAddress is an address of bitband alias of appropriate SPIxRST bit in RCC register
+	 */
+
+	constexpr Parameters(const uintptr_t spiBase, const uintptr_t rccEnBbAddress, const uintptr_t rccRstBbAddress) :
+			spiBase_{spiBase},
+			peripheralFrequency_{getBusFrequency(spiBase)},
+			speBbAddress_{STM32_BITBAND_IMPLEMENTATION(spiBase, SPI_TypeDef, CR1, SPI_CR1_SPE)},
+			errieBbAddress_{STM32_BITBAND_IMPLEMENTATION(spiBase, SPI_TypeDef, CR2, SPI_CR2_ERRIE)},
+			rxneieBbAddress_{STM32_BITBAND_IMPLEMENTATION(spiBase, SPI_TypeDef, CR2, SPI_CR2_RXNEIE)},
+			txeieBbAddress_{STM32_BITBAND_IMPLEMENTATION(spiBase, SPI_TypeDef, CR2, SPI_CR2_TXEIE)},
+			rccEnBbAddress_{rccEnBbAddress},
+			rccRstBbAddress_{rccRstBbAddress}
+	{
+
+	}
+
+#else	// !def DISTORTOS_BITBANDING_SUPPORTED
 
 	/**
 	 * \brief Parameters's constructor
@@ -56,6 +86,8 @@ public:
 
 	}
 
+#endif	// !def DISTORTOS_BITBANDING_SUPPORTED
+
 	/**
 	 * \brief Enables or disables ERR interrupt of SPI.
 	 *
@@ -64,9 +96,13 @@ public:
 
 	void enableErrInterrupt(const bool enable) const
 	{
+#ifdef DISTORTOS_BITBANDING_SUPPORTED
+		*reinterpret_cast<volatile unsigned long*>(errieBbAddress_) = enable;
+#else	// !def DISTORTOS_BITBANDING_SUPPORTED
 		auto& spi = getSpi();
 		const InterruptMaskingLock interruptMaskingLock;
 		spi.CR2 = (spi.CR2 & ~SPI_CR2_ERRIE) | (enable == true ? SPI_CR2_ERRIE : 0);
+#endif	// !def DISTORTOS_BITBANDING_SUPPORTED
 	}
 
 	/**
@@ -77,9 +113,13 @@ public:
 
 	void enablePeripheral(const bool enable) const
 	{
+#ifdef DISTORTOS_BITBANDING_SUPPORTED
+		*reinterpret_cast<volatile unsigned long*>(speBbAddress_) = enable;
+#else	// !def DISTORTOS_BITBANDING_SUPPORTED
 		auto& spi = getSpi();
 		const InterruptMaskingLock interruptMaskingLock;
 		spi.CR1 = (spi.CR1 & ~SPI_CR1_SPE) | (enable == true ? SPI_CR1_SPE : 0);
+#endif	// !def DISTORTOS_BITBANDING_SUPPORTED
 	}
 
 	/**
@@ -90,9 +130,13 @@ public:
 
 	void enablePeripheralClock(const bool enable) const
 	{
+#ifdef DISTORTOS_BITBANDING_SUPPORTED
+		*reinterpret_cast<volatile unsigned long*>(rccEnBbAddress_) = enable;
+#else	// !def DISTORTOS_BITBANDING_SUPPORTED
 		auto& rccEn = *reinterpret_cast<volatile uint32_t*>(RCC_BASE + rccEnOffset_);
 		const InterruptMaskingLock interruptMaskingLock;
 		rccEn = (rccEn & ~rccEnBitmask_) | (enable == true ? rccEnBitmask_ : 0);
+#endif	// !def DISTORTOS_BITBANDING_SUPPORTED
 	}
 
 	/**
@@ -103,9 +147,13 @@ public:
 
 	void enableRxneInterrupt(const bool enable) const
 	{
+#ifdef DISTORTOS_BITBANDING_SUPPORTED
+		*reinterpret_cast<volatile unsigned long*>(rxneieBbAddress_) = enable;
+#else	// !def DISTORTOS_BITBANDING_SUPPORTED
 		auto& spi = getSpi();
 		const InterruptMaskingLock interruptMaskingLock;
 		spi.CR2 = (spi.CR2 & ~SPI_CR2_RXNEIE) | (enable == true ? SPI_CR2_RXNEIE : 0);
+#endif	// !def DISTORTOS_BITBANDING_SUPPORTED
 	}
 
 	/**
@@ -116,9 +164,13 @@ public:
 
 	void enableTxeInterrupt(const bool enable) const
 	{
+#ifdef DISTORTOS_BITBANDING_SUPPORTED
+		*reinterpret_cast<volatile unsigned long*>(txeieBbAddress_) = enable;
+#else	// !def DISTORTOS_BITBANDING_SUPPORTED
 		auto& spi = getSpi();
 		const InterruptMaskingLock interruptMaskingLock;
 		spi.CR2 = (spi.CR2 & ~SPI_CR2_TXEIE) | (enable == true ? SPI_CR2_TXEIE : 0);
+#endif	// !def DISTORTOS_BITBANDING_SUPPORTED
 	}
 
 	/**
@@ -157,10 +209,15 @@ public:
 
 	void resetPeripheral() const
 	{
+#ifdef DISTORTOS_BITBANDING_SUPPORTED
+		*reinterpret_cast<volatile unsigned long*>(rccRstBbAddress_) = 1;
+		*reinterpret_cast<volatile unsigned long*>(rccRstBbAddress_) = 0;
+#else	// !def DISTORTOS_BITBANDING_SUPPORTED
 		auto& rccRst = *reinterpret_cast<volatile uint32_t*>(RCC_BASE + rccRstOffset_);
 		const InterruptMaskingLock interruptMaskingLock;
 		rccRst |= rccRstBitmask_;
 		rccRst &= ~rccRstBitmask_;
+#endif	// !def DISTORTOS_BITBANDING_SUPPORTED
 	}
 
 	/**
@@ -183,6 +240,28 @@ private:
 	/// peripheral clock frequency, Hz
 	uint32_t peripheralFrequency_;
 
+#ifdef DISTORTOS_BITBANDING_SUPPORTED
+
+	/// address of bitband alias of SPE bit in SPI_CR1 register
+	uintptr_t speBbAddress_;
+
+	/// address of bitband alias of ERRIE bit in SPI_CR2 register
+	uintptr_t errieBbAddress_;
+
+	/// address of bitband alias of RXNEIE bit in SPI_CR2 register
+	uintptr_t rxneieBbAddress_;
+
+	/// address of bitband alias of TXEIE bit in SPI_CR2 register
+	uintptr_t txeieBbAddress_;
+
+	/// address of bitband alias of appropriate SPIxEN bit in RCC register
+	uintptr_t rccEnBbAddress_;
+
+	/// address of bitband alias of appropriate SPIxRST bit in RCC register
+	uintptr_t rccRstBbAddress_;
+
+#else	// !def DISTORTOS_BITBANDING_SUPPORTED
+
 	/// bitmask of appropriate SPIxEN bit in RCC register at \a rccEnOffset_ offset
 	uint32_t rccEnBitmask_;
 
@@ -194,53 +273,64 @@ private:
 
 	/// offset of RCC register with appropriate SPIxRST bit, bytes
 	size_t rccRstOffset_;
+
+#endif	// !def DISTORTOS_BITBANDING_SUPPORTED
 };
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | public static objects
 +---------------------------------------------------------------------------------------------------------------------*/
 
+#ifdef DISTORTOS_BITBANDING_SUPPORTED
+
 #ifdef CONFIG_CHIP_STM32_SPIV2_SPI1_ENABLE
-
 const ChipSpiMasterLowLevel::Parameters ChipSpiMasterLowLevel::spi1Parameters {SPI1_BASE,
-		offsetof(RCC_TypeDef, APB2ENR), RCC_APB2ENR_SPI1EN, offsetof(RCC_TypeDef, APB2RSTR), RCC_APB2RSTR_SPI1RST};
-
+		STM32_BITBAND_ADDRESS(RCC, APB2ENR, SPI1EN), STM32_BITBAND_ADDRESS(RCC, APB2RSTR, SPI1RST)};
 #endif	// def CONFIG_CHIP_STM32_SPIV2_SPI1_ENABLE
 
 #ifdef CONFIG_CHIP_STM32_SPIV2_SPI2_ENABLE
-
 const ChipSpiMasterLowLevel::Parameters ChipSpiMasterLowLevel::spi2Parameters {SPI2_BASE,
-		offsetof(RCC_TypeDef, APB1ENR), RCC_APB1ENR_SPI2EN, offsetof(RCC_TypeDef, APB1RSTR), RCC_APB1RSTR_SPI2RST};
-
+		STM32_BITBAND_ADDRESS(RCC, APB1ENR1, SPI2EN), STM32_BITBAND_ADDRESS(RCC, APB1RSTR1, SPI2RST)};
 #endif	// def CONFIG_CHIP_STM32_SPIV2_SPI2_ENABLE
 
 #ifdef CONFIG_CHIP_STM32_SPIV2_SPI3_ENABLE
+const ChipSpiMasterLowLevel::Parameters ChipSpiMasterLowLevel::spi3Parameters {SPI3_BASE,
+		STM32_BITBAND_ADDRESS(RCC, APB1ENR1, SPI3EN), STM32_BITBAND_ADDRESS(RCC, APB1RSTR1, SPI3RST)};
+#endif	// def CONFIG_CHIP_STM32_SPIV2_SPI3_ENABLE
 
+#else	// !def DISTORTOS_BITBANDING_SUPPORTED
+
+#ifdef CONFIG_CHIP_STM32_SPIV2_SPI1_ENABLE
+const ChipSpiMasterLowLevel::Parameters ChipSpiMasterLowLevel::spi1Parameters {SPI1_BASE,
+		offsetof(RCC_TypeDef, APB2ENR), RCC_APB2ENR_SPI1EN, offsetof(RCC_TypeDef, APB2RSTR), RCC_APB2RSTR_SPI1RST};
+#endif	// def CONFIG_CHIP_STM32_SPIV2_SPI1_ENABLE
+
+#ifdef CONFIG_CHIP_STM32_SPIV2_SPI2_ENABLE
+const ChipSpiMasterLowLevel::Parameters ChipSpiMasterLowLevel::spi2Parameters {SPI2_BASE,
+		offsetof(RCC_TypeDef, APB1ENR), RCC_APB1ENR_SPI2EN, offsetof(RCC_TypeDef, APB1RSTR), RCC_APB1RSTR_SPI2RST};
+#endif	// def CONFIG_CHIP_STM32_SPIV2_SPI2_ENABLE
+
+#ifdef CONFIG_CHIP_STM32_SPIV2_SPI3_ENABLE
 const ChipSpiMasterLowLevel::Parameters ChipSpiMasterLowLevel::spi3Parameters {SPI3_BASE,
 		offsetof(RCC_TypeDef, APB1ENR), RCC_APB1ENR_SPI3EN, offsetof(RCC_TypeDef, APB1RSTR), RCC_APB1RSTR_SPI3RST};
-
 #endif	// def CONFIG_CHIP_STM32_SPIV2_SPI3_ENABLE
 
 #ifdef CONFIG_CHIP_STM32_SPIV2_SPI4_ENABLE
-
 const ChipSpiMasterLowLevel::Parameters ChipSpiMasterLowLevel::spi4Parameters {SPI4_BASE,
 		offsetof(RCC_TypeDef, APB2ENR), RCC_APB2ENR_SPI4EN, offsetof(RCC_TypeDef, APB2RSTR), RCC_APB2RSTR_SPI4RST};
-
 #endif	// def CONFIG_CHIP_STM32_SPIV2_SPI4_ENABLE
 
 #ifdef CONFIG_CHIP_STM32_SPIV2_SPI5_ENABLE
-
 const ChipSpiMasterLowLevel::Parameters ChipSpiMasterLowLevel::spi5Parameters {SPI5_BASE,
 		offsetof(RCC_TypeDef, APB2ENR), RCC_APB2ENR_SPI5EN, offsetof(RCC_TypeDef, APB2RSTR), RCC_APB2RSTR_SPI5RST};
-
 #endif	// def CONFIG_CHIP_STM32_SPIV2_SPI5_ENABLE
 
 #ifdef CONFIG_CHIP_STM32_SPIV2_SPI6_ENABLE
-
 const ChipSpiMasterLowLevel::Parameters ChipSpiMasterLowLevel::spi6Parameters {SPI6_BASE,
 		offsetof(RCC_TypeDef, APB2ENR), RCC_APB2ENR_SPI6EN, offsetof(RCC_TypeDef, APB2RSTR), RCC_APB2RSTR_SPI6RST};
-
 #endif	// def CONFIG_CHIP_STM32_SPIV2_SPI6_ENABLE
+
+#endif	// !def DISTORTOS_BITBANDING_SUPPORTED
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | public functions
