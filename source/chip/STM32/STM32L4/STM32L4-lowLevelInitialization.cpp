@@ -11,6 +11,10 @@
 
 #include "distortos/chip/lowLevelInitialization.hpp"
 
+#include "distortos/chip/STM32L4-FLASH.hpp"
+
+#include "distortos/distortosConfiguration.h"
+
 namespace distortos
 {
 
@@ -23,7 +27,23 @@ namespace chip
 
 void lowLevelInitialization()
 {
+#ifdef CONFIG_CHIP_STM32L4_FLASH_PREFETCH_ENABLE
+	configureInstructionPrefetch(true);
+#else	// !def CONFIG_CHIP_STM32L4_FLASH_PREFETCH_ENABLE
+	configureInstructionPrefetch(false);
+#endif	// !def CONFIG_CHIP_STM32L4_FLASH_PREFETCH_ENABLE
 
+#ifdef CONFIG_CHIP_STM32L4_FLASH_DATA_CACHE_ENABLE
+	enableDataCache();
+#else	// !def CONFIG_CHIP_STM32L4_FLASH_DATA_CACHE_ENABLE
+	disableDataCache();
+#endif	// !def CONFIG_CHIP_STM32L4_FLASH_DATA_CACHE_ENABLE
+
+#ifdef CONFIG_CHIP_STM32L4_FLASH_INSTRUCTION_CACHE_ENABLE
+	enableInstructionCache();
+#else	// !def CONFIG_CHIP_STM32L4_FLASH_INSTRUCTION_CACHE_ENABLE
+	disableInstructionCache();
+#endif	// !def CONFIG_CHIP_STM32L4_FLASH_INSTRUCTION_CACHE_ENABLE
 }
 
 }	// namespace chip
