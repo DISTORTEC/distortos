@@ -150,6 +150,24 @@ endmenu
 
 menu "Memory configuration"
 
+config CHIP_STM32L4_FLASH_PREFETCH_ENABLE
+	bool "Enable flash prefetch"
+	default y
+	help
+		Enable flash prefetch option in FLASH->ACR register.
+
+config CHIP_STM32L4_FLASH_DATA_CACHE_ENABLE
+	bool "Enable flash data cache"
+	default y
+	help
+		Enable flash data cache option in FLASH->ACR register.
+
+config CHIP_STM32L4_FLASH_INSTRUCTION_CACHE_ENABLE
+	bool "Enable flash instruction cache"
+	default y
+	help
+		Enable flash instruction cache option in FLASH->ACR register.
+
 choice
 	prompt "Unify RAM in linker script"
 	depends on CHIP_STM32L43 || CHIP_STM32L44 || CHIP_STM32L45 || CHIP_STM32L46 || CHIP_STM32L49 || CHIP_STM32L4A
