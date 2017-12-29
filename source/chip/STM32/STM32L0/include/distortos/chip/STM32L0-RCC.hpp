@@ -236,8 +236,7 @@ void enableHse(bool bypass);
  *
  * \warning Before changing configuration of HSI16 clock make sure that it is not used in any way (as core clock, as
  * source for any PLL or as source of RTC clock).
- *
-  */
+ */
 
 void enableHsi16();
 

@@ -174,7 +174,7 @@ inline bool operator<(const ThreadIdentifier& left, const ThreadIdentifier& righ
 
 inline bool operator>(const ThreadIdentifier& left, const ThreadIdentifier& right)
 {
-	return  right < left;
+	return right < left;
 }
 
 /**

@@ -113,7 +113,7 @@ int enableMsi(const uint8_t range)
 	if (range > maxMsi)
 		return EINVAL;
 
-	RCC->ICSCR = (RCC->ICSCR & ~RCC_ICSCR_MSIRANGE) | range  << RCC_ICSCR_MSIRANGE_Pos;
+	RCC->ICSCR = (RCC->ICSCR & ~RCC_ICSCR_MSIRANGE) | range << RCC_ICSCR_MSIRANGE_Pos;
 
 	RCC->CR |= RCC_CR_MSION;
 	while ((RCC->CR & RCC_CR_MSIRDY) == 0);	// wait until MSI is stable
