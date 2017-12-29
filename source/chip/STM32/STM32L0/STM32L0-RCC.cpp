@@ -129,7 +129,7 @@ void enableHse(const bool bypass)
 
 void enableHsi16()
 {
-	RCC->CR |= RCC_CR_HSION;	/// \todo check whether this can be merged with previous write of RCC->CR
+	RCC->CR |= RCC_CR_HSION;
 	while ((RCC->CR & RCC_CR_HSIRDY) == 0);	// wait until HSI oscillator is stable
 }
 
