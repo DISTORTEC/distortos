@@ -129,10 +129,10 @@ config CHIP_STM32L0_RCC_HSE_FREQUENCY
 	default CHIP_STM32L0_RCC_HSE_FREQUENCY_DEFAULT
 	help
 		Frequency of HSE clock, Hz. This can be:
-		- "HSE Clock Bypass" enabled - external user clock connected to OSC_IN,
-		[1 MHz; 25 MHz];
 		- "HSE Clock Bypass" disabled - crystal/ceramic resonator connected to
-		OSC_IN and OSC_OUT, [0 MHz; 32 MHz];
+		OSC_IN and OSC_OUT, [1 MHz; 25 MHz];
+		- "HSE Clock Bypass" enabled - external user clock connected to OSC_IN,
+		[1 Hz; 32 MHz];
 
 endif	# CHIP_STM32L0_RCC_HSE_FREQUENCY_CONFIGURABLE
 
@@ -147,7 +147,7 @@ config CHIP_STM32L0_RCC_HSE_FREQUENCY
 		- "HSE Clock Bypass" disabled - crystal/ceramic resonator connected to
 		OSC_IN and OSC_OUT, [1 MHz; 25 MHz];
 		- "HSE Clock Bypass" enabled - external user clock connected to OSC_IN,
-		[0 MHz; 32 MHz];
+		[1 Hz; 32 MHz];
 
 		This value is not configurable, as it is set by board.
 
