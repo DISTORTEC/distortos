@@ -2,7 +2,7 @@
  * \file
  * \brief chip::lowLevelInitialization() implementation for STM32L0
  *
- * \author Copyright (C) 2017 Cezary Gapinski cezary.gapinski@gmail.com
+ * \author Copyright (C) 2017-2018 Cezary Gapinski cezary.gapinski@gmail.com
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -36,6 +36,8 @@ void lowLevelInitialization()
 #endif	// !def CONFIG_CHIP_STM32L0_FLASH_PREFETCH_ENABLE
 
 #ifdef CONFIG_CHIP_STM32L0_STANDARD_CLOCK_CONFIGURATION_ENABLE
+
+	RCC->APB1ENR |= RCC_APB1ENR_PWREN;
 
 	configureVoltageScaling(CONFIG_CHIP_STM32L0_PWR_VOLTAGE_SCALE_MODE);
 
