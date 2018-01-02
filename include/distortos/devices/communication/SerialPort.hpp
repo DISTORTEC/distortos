@@ -866,7 +866,7 @@ private:
 	/// pointer to next circular buffer for read operations, used when \a currentReadBuffer_ becomes full
 	CircularBuffer* volatile nextReadBuffer_;
 
-	/// pointer to nest circular buffer for write operations, used when \a currentWriteBuffer_ becomes empty
+	/// pointer to next circular buffer for write operations, used when \a currentWriteBuffer_ becomes empty
 	CircularBuffer* volatile nextWriteBuffer_;
 
 	/// pointer to semaphore used for "read complete" event notifications

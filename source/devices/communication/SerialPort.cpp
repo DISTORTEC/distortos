@@ -517,7 +517,7 @@ int SerialPort::writeImplementation(CircularBuffer& buffer, const size_t minSize
 	const auto adjustedMinSize =
 			std::min(buffer.getCapacity(), characterLength_ <= 8 ? minSize : ((minSize + 1) / 2) * 2);
 
-	decltype(startReadWrapper()) scopeGuardRet {};
+	decltype(startWriteWrapper()) scopeGuardRet {};
 	decltype(std::declval<Semaphore>().wait()) semaphoreRet {};
 	{
 		Semaphore semaphore {0};
