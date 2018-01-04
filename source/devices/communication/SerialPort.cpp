@@ -161,7 +161,7 @@ int SerialPort::close()
 	return 0;
 }
 
-int SerialPort::open(const uint32_t baudRate, const uint8_t characterLength, const devices::UartParity parity,
+int SerialPort::open(const uint32_t baudRate, const uint8_t characterLength, const UartParity parity,
 			const bool _2StopBits)
 {
 	readMutex_.lock();

@@ -365,7 +365,7 @@ public:
 	 * - error codes returned by UartLowLevel::startRead();
 	 */
 
-	int open(uint32_t baudRate, uint8_t characterLength, devices::UartParity parity, bool _2StopBits);
+	int open(uint32_t baudRate, uint8_t characterLength, UartParity parity, bool _2StopBits);
 
 	/**
 	 * \brief Reads data from SerialPort.
@@ -894,7 +894,7 @@ private:
 	uint8_t characterLength_;
 
 	/// current parity
-	devices::UartParity parity_;
+	UartParity parity_;
 
 	/// current configuration of stop bits: 1 (false) or 2 (true)
 	bool _2StopBits_;
