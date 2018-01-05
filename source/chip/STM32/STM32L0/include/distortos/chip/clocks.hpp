@@ -26,14 +26,14 @@ namespace chip
 | global constants
 +---------------------------------------------------------------------------------------------------------------------*/
 
-/// allowed values for MSI frequency, Hz
-/// [0] - range 0 around 65.536 kHz
-/// [1] - range 1 around 131.072 kHz
-/// [2] - range 2 around 262.144 kHz
-/// [3] - range 3 around 524.288 kHz
-/// [4] - range 4 around 1.048 MHz
-/// [5] - range 5 around 2.097 MHz
-/// [6] - range 6 around 4.194 MHz
+/// MSI frequencies, Hz
+/// [0] - range 0
+/// [1] - range 1
+/// [2] - range 2
+/// [3] - range 3
+/// [4] - range 4
+/// [5] - range 5
+/// [6] - range 6
 constexpr uint32_t msiFrequencies[7]
 {
 		65536,
