@@ -13,13 +13,365 @@ comment "STM32L4 chip options"
 
 menu "Clocks configuration"
 
+config CHIP_STM32L4_STANDARD_CLOCK_CONFIGURATION_ENABLE
+	bool "Enable standard configuration of clocks"
+	default y
+	help
+		Enable standard configuration of clocks. This will set values selected
+		below and additionally configure appropriate FLASH latency before
+		switching system clock to selected source.
+
+		If disabled, no clock configuration will be done during chip
+		initialization. The values entered below (frequencies, dividers, ...)
+		will only be used to determine chip clocks. The user must configure the
+		chip manually to match these settings.
+
+if CHIP_STM32L4_STANDARD_CLOCK_CONFIGURATION_ENABLE
+
+config CHIP_STM32L4_PWR_VOLTAGE_SCALING_RANGE
+	int "Voltage scaling range"
+	range 1 2
+	default 1
+	help
+		Select voltage scaling range.
+
+config CHIP_STM32L4_RCC_HSE_ENABLE
+	bool "Enable HSE"
+	default n
+	help
+		Enable HSE (crystal/ceramic resonator or external user clock).
+
+if CHIP_STM32L4_RCC_HSE_ENABLE
+
+config CHIP_STM32L4_RCC_HSE_CLOCK_BYPASS
+	bool
+	prompt "HSE Clock Bypass" if CHIP_STM32L4_RCC_HSE_CLOCK_BYPASS_CONFIGURABLE
+	default CHIP_STM32L4_RCC_HSE_CLOCK_BYPASS_DEFAULT
+	help
+		Selects whether HSE generator is bypassed. If enabled, external user
+		clock connected to OSC_IN / CK_IN must be used. Crystal or ceramic
+		resonator connected to OSC_IN and OSC_OUT must be used otherwise.
+
+comment "HSE Clock Bypass is disabled (not configurable)"
+	depends on !CHIP_STM32L4_RCC_HSE_CLOCK_BYPASS_CONFIGURABLE && !CHIP_STM32L4_RCC_HSE_CLOCK_BYPASS_DEFAULT
+
+comment "HSE Clock Bypass is enabled (not configurable)"
+	depends on !CHIP_STM32L4_RCC_HSE_CLOCK_BYPASS_CONFIGURABLE && CHIP_STM32L4_RCC_HSE_CLOCK_BYPASS_DEFAULT
+
+if CHIP_STM32L4_RCC_HSE_FREQUENCY_CONFIGURABLE
+
+config CHIP_STM32L4_RCC_HSE_FREQUENCY
+	int "Frequency of HSE clock, Hz"
+	range 1 48000000 if CHIP_STM32L4_RCC_HSE_CLOCK_BYPASS
+	range 4000000 48000000
+	default CHIP_STM32L4_RCC_HSE_FREQUENCY_DEFAULT
+	help
+		Frequency of HSE clock, Hz. This can be:
+		- "HSE Clock Bypass" disabled - crystal/ceramic resonator connected to
+		OSC_IN and OSC_OUT, [4 MHz; 48 MHz];
+		- "HSE Clock Bypass" enabled - external user clock connected to
+		OSC_IN / CK_IN, [1 Hz; 48 MHz] in voltage scaling range 1 or
+		[1 Hz; 26 MHz] in voltage scaling range 2;
+
+endif	# CHIP_STM32L4_RCC_HSE_FREQUENCY_CONFIGURABLE
+
+if !CHIP_STM32L4_RCC_HSE_FREQUENCY_CONFIGURABLE
+
+config CHIP_STM32L4_RCC_HSE_FREQUENCY
+	int "Frequency of HSE clock, Hz (not configurable)"
+	range CHIP_STM32L4_RCC_HSE_FREQUENCY_DEFAULT CHIP_STM32L4_RCC_HSE_FREQUENCY_DEFAULT
+	default CHIP_STM32L4_RCC_HSE_FREQUENCY_DEFAULT
+	help
+		Frequency of HSE clock, Hz. This can be:
+		- "HSE Clock Bypass" disabled - crystal/ceramic resonator connected to
+		OSC_IN and OSC_OUT, [4 MHz; 48 MHz];
+		- "HSE Clock Bypass" enabled - external user clock connected to
+		OSC_IN / CK_IN, [1 Hz; 48 MHz] in voltage scaling range 1 or
+		[1 Hz; 26 MHz] in voltage scaling range 2;
+
+		This value is not configurable, as it is set by board.
+
+endif	# !CHIP_STM32L4_RCC_HSE_FREQUENCY_CONFIGURABLE
+
+endif	# CHIP_STM32L4_RCC_HSE_ENABLE
+
+config CHIP_STM32L4_RCC_HSI16_ENABLE
+	bool "Enable HSI16"
+	default y
+	help
+		Enable HSI16.
+
+config CHIP_STM32L4_RCC_MSI_ENABLE
+	bool "Enable MSI"
+	default n
+	help
+		Enable MSI.
+
+if CHIP_STM32L4_RCC_MSI_ENABLE
+
+config CHIP_STM32L4_RCC_MSI_RANGE
+	int "MSI clock range"
+	range 0 11
+	default 8
+	help
+		Select MSI clock range:
+		- range 0 around 100 kHz,
+		- range 1 around 200 kHz,
+		- range 2 around 400 kHz,
+		- range 3 around 800 kHz,
+		- range 4 around 1 MHz,
+		- range 5 around 2 MHz,
+		- range 6 around 4 MHz,
+		- range 7 around 8 MHz,
+		- range 8 around 16 MHz,
+		- range 9 around 24 MHz,
+		- range 10 around 32 MHz,
+		- range 11 around 48 MHz.
+
+endif	# CHIP_STM32L4_RCC_MSI_ENABLE
+
+config CHIP_STM32L4_RCC_PLL_ENABLE
+	bool "Enable PLL"
+	default y
+	depends on CHIP_STM32L4_RCC_HSE_ENABLE || CHIP_STM32L4_RCC_HSI16_ENABLE || CHIP_STM32L4_RCC_MSI_ENABLE
+	help
+		Enable PLL.
+
+if CHIP_STM32L4_RCC_PLL_ENABLE
+
+choice
+	prompt "Clock source of PLLs"
+	default CHIP_STM32L4_RCC_PLLSRC_HSI
+	help
+		Select clock source of PLLs.
+
+config CHIP_STM32L4_RCC_PLLSRC_HSE
+	bool "HSE"
+	depends on CHIP_STM32L4_RCC_HSE_ENABLE
+	help
+		Select HSE as clock source of PLLs.
+
+config CHIP_STM32L4_RCC_PLLSRC_HSI16
+	bool "HSI16"
+	depends on CHIP_STM32L4_RCC_HSI16_ENABLE
+	help
+		Select HSI16 as clock source of PLLs.
+
+config CHIP_STM32L4_RCC_PLLSRC_MSI
+	bool "MSI"
+	depends on CHIP_STM32L4_RCC_MSI_ENABLE
+	help
+		Select MSI as clock source of PLLs.
+
+endchoice
+
+config CHIP_STM32L4_RCC_PLLM
+	int "PLLM value"
+	range 1 8
+	default 2 if CHIP_STM32L4_RCC_PLLSRC_HSE
+	default 4
+	help
+		PLLM value for PLLs. It is used to divide PLL input clock (PLLin)
+		before it is fed to VCO. VCO input frequency (VCOin) must be in the
+		range [4 MHz; 16 MHz].
+
+		VCOin = PLLin / PLLM
+
+config CHIP_STM32L4_RCC_PLLN
+	int "PLLN value"
+	range 8 86
+	default 40
+	help
+		PLLN value for main PLL. It is used to multiply VCO input frequency
+		(VCOin). Resulting VCO output frequency (VCOout) must be in the range
+		[64 MHz; 344 MHz] in voltage scaling range 1 or [64 MHz; 128 MHz] in
+		voltage scaling range 2.
+
+		VCOout = VCOin * PLLN = PLLin / PLLM * PLLN
+
+if CHIP_STM32L43 || CHIP_STM32L44 || CHIP_STM32L45 || CHIP_STM32L46 || CHIP_STM32L496 || CHIP_STM32L4A6
+
+config CHIP_STM32L4_RCC_PLLP
+	int "PLLP value"
+	range 2 31
+	default 2
+	help
+		PLLP value for main PLL. It is used to divide VCO output frequency
+		(VCOout) to produce clock for SAI1 and SAI2 (PLLPout). PLL "P" output
+		frequency (PLLPout) must be in the range [2.0645 MHz; 80 MHz] in
+		voltage scaling range 1 or [2.0645 MHz; 26 MHz] in voltage scaling
+		range 2.
+
+		PLLPout = VCOout / PLLP = PLLin / PLLM * PLLN / PLLP
+
+endif	# CHIP_STM32L43 || CHIP_STM32L44 || CHIP_STM32L45 || CHIP_STM32L46 || CHIP_STM32L496 || CHIP_STM32L4A6
+
+if !CHIP_STM32L43 && !CHIP_STM32L44 && !CHIP_STM32L45 && !CHIP_STM32L46 && !CHIP_STM32L496 && !CHIP_STM32L4A6
+
+choice
+	prompt "PLLP value"
+	default CHIP_STM32L4_RCC_PLLP_DIV7
+	help
+		PLLP value for main PLL. It is used to divide VCO output frequency
+		(VCOout) to produce clock for SAI1 and SAI2 (PLLPout). PLL "Q" output
+		frequency (PLLPout) must be in the range [2.0645 MHz; 80 MHz] in
+		voltage scaling range 1 or [2.0645 MHz; 26 MHz] in voltage scaling
+		range 2.
+
+		PLLPout = VCOout / PLLP = PLLin / PLLM * PLLN / PLLP
+
+config CHIP_STM32L4_RCC_PLLP_DIV7
+	bool "7"
+	help
+		PLLP == 7
+
+config CHIP_STM32L4_RCC_PLLP_DIV17
+	bool "17"
+	help
+		PLLP == 17
+
+endchoice
+
+config CHIP_STM32L4_RCC_PLLP
+	int
+	default 7 if CHIP_STM32L4_RCC_PLLP_DIV7
+	default 17 if CHIP_STM32L4_RCC_PLLP_DIV17
+
+endif	# !CHIP_STM32L43 && !CHIP_STM32L44 && !CHIP_STM32L45 && !CHIP_STM32L46 && !CHIP_STM32L496 && !CHIP_STM32L4A6
+
+choice
+	prompt "PLLQ value"
+	default CHIP_STM32L4_RCC_PLLQ_DIV2
+	help
+		PLLQ value for main PLL. It is used to divide VCO output frequency
+		(VCOout) to produce clock for RNG, SDMMC and USB (PLLQout). PLL "Q"
+		output frequency (PLLQout) must be in the range [8 MHz; 80 MHz] in
+		voltage scaling range 1 or [8 MHz; 26 MHz] in voltage scaling range 2.
+
+		PLLQout = VCOout / PLLQ = PLLin / PLLM * PLLN / PLLQ
+
+config CHIP_STM32L4_RCC_PLLQ_DIV2
+	bool "2"
+	help
+		PLLQ == 2
+
+config CHIP_STM32L4_RCC_PLLQ_DIV4
+	bool "4"
+	help
+		PLLQ == 4
+
+config CHIP_STM32L4_RCC_PLLQ_DIV6
+	bool "6"
+	help
+		PLLQ == 6
+
+config CHIP_STM32L4_RCC_PLLQ_DIV8
+	bool "8"
+	help
+		PLLQ == 8
+
+endchoice
+
+choice
+	prompt "PLLR value"
+	default CHIP_STM32L4_RCC_PLLR_DIV2
+	help
+		PLLR value for main PLL. It is used to divide VCO output frequency
+		(VCOout) to produce system clock (PLLRout). PLL "R" output frequency
+		(PLLRout) must be in the range [8 MHz; 80 MHz] in voltage scaling
+		range 1 or [8 MHz; 26 MHz] in voltage scaling range 2.
+
+		PLLRout = VCOout / PLLR = PLLin / PLLM * PLLN / PLLR
+
+config CHIP_STM32L4_RCC_PLLR_DIV2
+	bool "2"
+	help
+		PLLR == 2
+
+config CHIP_STM32L4_RCC_PLLR_DIV4
+	bool "4"
+	help
+		PLLR == 4
+
+config CHIP_STM32L4_RCC_PLLR_DIV6
+	bool "6"
+	help
+		PLLR == 6
+
+config CHIP_STM32L4_RCC_PLLR_DIV8
+	bool "8"
+	help
+		PLLR == 8
+
+endchoice
+
+config CHIP_STM32L4_RCC_PLLP_ENABLE
+	bool "Enable PLL's \"P\" output"
+	default n
+	help
+		Enable PLL's "P" output.
+
+config CHIP_STM32L4_RCC_PLLQ_ENABLE
+	bool "Enable PLL's \"Q\" output"
+	default n
+	help
+		Enable PLL's "Q" output.
+
+config CHIP_STM32L4_RCC_PLLR_ENABLE
+	bool "Enable PLL's \"R\" output"
+	default y
+	help
+		Enable PLL's "R" output.
+
+endif	# CHIP_STM32L4_RCC_PLL_ENABLE
+
+choice
+	prompt "System clock source"
+	default CHIP_STM32L4_RCC_SYSCLK_PLL
+	help
+		Select system clock source.
+
+config CHIP_STM32L4_RCC_SYSCLK_HSE
+	bool "HSE"
+	depends on CHIP_STM32L4_RCC_HSE_ENABLE
+	help
+		HSE oscillator selected as system clock.
+
+config CHIP_STM32L4_RCC_SYSCLK_HSI16
+	bool "HSI16"
+	depends on CHIP_STM32L4_RCC_HSI16_ENABLE
+	help
+		HSI16 oscillator selected as system clock.
+
+config CHIP_STM32L4_RCC_SYSCLK_MSI
+	bool "MSI"
+	depends on CHIP_STM32L4_RCC_MSI_ENABLE
+	help
+		MSI oscillator selected as system clock.
+
+config CHIP_STM32L4_RCC_SYSCLK_PLL
+	bool "Main PLL's \"R\" output"
+	depends on CHIP_STM32L4_RCC_PLLR_ENABLE
+	help
+		Main PLL's "R" output selected as system clock.
+
+endchoice
+
+endif	# CHIP_STM32L4_STANDARD_CLOCK_CONFIGURATION_ENABLE
+
+if !CHIP_STM32L4_STANDARD_CLOCK_CONFIGURATION_ENABLE
+
 config CHIP_STM32L4_RCC_SYSCLK_FREQUENCY
 	int "Frequency of SYSCLK, Hz"
 	range 1 80000000
 	default 4000000
 	help
 		Frequency of SYSCLK, Hz. RCC must be configured by user to achieve that
-		frequency.
+		frequency. SYSCLK frequency must not exceed:
+		- 80 MHz in voltage scale range 1,
+		- 26 MHz in voltage scale range 2.
+
+endif	# !CHIP_STM32L4_STANDARD_CLOCK_CONFIGURATION_ENABLE
 
 choice
 	prompt "AHB divider"
@@ -149,6 +501,24 @@ endchoice
 endmenu
 
 menu "Memory configuration"
+
+config CHIP_STM32L4_FLASH_PREFETCH_ENABLE
+	bool "Enable flash prefetch"
+	default y
+	help
+		Enable flash prefetch option in FLASH->ACR register.
+
+config CHIP_STM32L4_FLASH_DATA_CACHE_ENABLE
+	bool "Enable flash data cache"
+	default y
+	help
+		Enable flash data cache option in FLASH->ACR register.
+
+config CHIP_STM32L4_FLASH_INSTRUCTION_CACHE_ENABLE
+	bool "Enable flash instruction cache"
+	default y
+	help
+		Enable flash instruction cache option in FLASH->ACR register.
 
 choice
 	prompt "Unify RAM in linker script"
@@ -1265,6 +1635,22 @@ config CHIP_STM32L4_SRAM2_ADDRESS
 	default 0x20040000 if CHIP_STM32L4A6VG
 	default 0x20040000 if CHIP_STM32L4A6ZG
 
+config CHIP_STM32L4_RCC_HSE_CLOCK_BYPASS_CONFIGURABLE
+	bool
+	default y
+
+config CHIP_STM32L4_RCC_HSE_CLOCK_BYPASS_DEFAULT
+	bool
+	default n
+
+config CHIP_STM32L4_RCC_HSE_FREQUENCY_CONFIGURABLE
+	bool
+	default y
+
+config CHIP_STM32L4_RCC_HSE_FREQUENCY_DEFAULT
+	int
+	default 8000000
+
 config CHIP_STM32L4_RCC_HPRE
 	int
 	default 1 if CHIP_STM32L4_RCC_AHB_DIV1
@@ -1276,6 +1662,20 @@ config CHIP_STM32L4_RCC_HPRE
 	default 128 if CHIP_STM32L4_RCC_AHB_DIV128
 	default 256 if CHIP_STM32L4_RCC_AHB_DIV256
 	default 512 if CHIP_STM32L4_RCC_AHB_DIV512
+
+config CHIP_STM32L4_RCC_PLLQ
+	int
+	default 2 if CHIP_STM32L4_RCC_PLLQ_DIV2
+	default 4 if CHIP_STM32L4_RCC_PLLQ_DIV4
+	default 6 if CHIP_STM32L4_RCC_PLLQ_DIV6
+	default 8 if CHIP_STM32L4_RCC_PLLQ_DIV8
+
+config CHIP_STM32L4_RCC_PLLR
+	int
+	default 2 if CHIP_STM32L4_RCC_PLLR_DIV2
+	default 4 if CHIP_STM32L4_RCC_PLLR_DIV4
+	default 6 if CHIP_STM32L4_RCC_PLLR_DIV6
+	default 8 if CHIP_STM32L4_RCC_PLLR_DIV8
 
 config CHIP_STM32L4_RCC_PPRE1
 	int
@@ -1379,6 +1779,6 @@ config CHIP
 
 config CHIP_INCLUDES
 	string
-	default "source/chip/STM32/include source/chip/STM32/STM32L4/include external/CMSIS-STM32L4 external/CMSIS"
+	default "source/chip/STM32/include source/chip/STM32/STM32L4/include source/chip/STM32/peripherals/GPIOv2/include source/chip/STM32/peripherals/SPIv2/include source/chip/STM32/peripherals/USARTv2/include external/CMSIS-STM32L4 external/CMSIS"
 
 endif	# CHIP_STM32L4
