@@ -10,6 +10,8 @@ All notable changes to this project will be documented in this file. This projec
 ### Added
 
 - Support for all 81 [STM32L4](http://www.st.com/stm32l4) devices.
+- Support and test configuration for [NUCLEO-L476RG](http://www.st.com/en/evaluation-tools/nucleo-l476rg.html) board
+with *STM32L4* chip.
 - `distortos/C-API/ConditionVariable.h` - C-API for condition variables, implemented as wrappers for
 `distortos::ConditionVariable` member functions.
 - `distortos/C-API/Mutex.h` - C-API for mutexes, implemented as wrappers for `distortos::Mutex` member functions.
