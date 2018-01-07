@@ -2,7 +2,7 @@
  * \file
  * \brief Header for RCC-related functions for STM32L0
  *
- * \author Copyright (C) 2017 Cezary Gapinski cezary.gapinski@gmail.com
+ * \author Copyright (C) 2017-2018 Cezary Gapinski cezary.gapinski@gmail.com
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -59,17 +59,38 @@ constexpr uint8_t minMsi {0};
 /// maximum allowed value for MSI range
 constexpr uint8_t maxMsi {6};
 
-/// minimum allowed value for PLLMUL
-constexpr uint8_t minPllmul {3};
-
-/// maximum allowed value for PLLMUL
-constexpr uint8_t maxPllmul {48};
-
 /// minimum allowed value for PLLDIV
 constexpr uint8_t minPlldiv {2};
 
 /// maximum allowed value for PLLDIV
 constexpr uint8_t maxPlldiv {4};
+
+/// first allowed value for PLLMUL - 3
+constexpr uint8_t pllMul3 {3};
+
+/// second allowed value for PLLMUL - 4
+constexpr uint8_t pllMul4 {4};
+
+/// third allowed value for PLLMUL - 6
+constexpr uint8_t pllMul6 {6};
+
+/// fourth allowed value for PLLMUL - 8
+constexpr uint8_t pllMul8 {8};
+
+/// fifth allowed value for PLLMUL - 12
+constexpr uint8_t pllMul12 {12};
+
+/// sixth allowed value for PLLMUL - 16
+constexpr uint8_t pllMul16 {16};
+
+/// seventh allowed value for PLLMUL - 24
+constexpr uint8_t pllMul24 {24};
+
+/// eighth allowed value for PLLMUL - 32
+constexpr uint8_t pllMul32 {32};
+
+/// ninth allowed value for PLLMUL - 48
+constexpr uint8_t pllMul48 {48};
 
 /// first allowed value for AHB divider - 1
 constexpr uint16_t hpreDiv1 {1};
@@ -262,9 +283,9 @@ void enableHsi48();
  *
  * \warning Before changing configuration of main PLL make sure that it is not used in any way (as core clock or as
  * source of peripheral clocks) and that it is disabled.
- *
- * \param [in] pllmul is the PLLMUL value for PLL [3; 48] or [minPllmul; maxPllmul]
- * \param [in] pllmdiv is the PLLDIV value for PLL [2; 4] or [minPlldiv; maxPlldiv]
+ * \param [in] pllmul is the PLLMUL value for main PLL, {3, 4, 6, 8, 12, 16, 24, 32, 48} or {pllMul3, pllMul4, pllMul6,
+ * pllMul8, pllMul12, pllMul16, pllMul24, pllMul32, pllMul48}
+ * \param [in] plldiv is the PLLDIV value for main PLL, [2; 4] or [minPlldiv; maxPlldiv]
  *
  * \return 0 on success, error code otherwise:
  * - EINVAL - \a pllmul or \a plldiv value is invalid;
