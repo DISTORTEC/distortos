@@ -104,24 +104,24 @@ SECTIONS
 		*(.gcc_except_table .gcc_except_table.*);
 		*(.gnu_extab*);
 
-		/* sub-section: data_array */
+		/* sub-section: data_initializers */
 
 		. = ALIGN(4);
-		PROVIDE(__data_array_start = .);
+		PROVIDE(__data_initializers_start = .);
 
 		LONG(LOADADDR(.data)); LONG(ADDR(.data)); LONG(ADDR(.data) + SIZEOF(.data));
 		LONG(LOADADDR(.sram1.data)); LONG(ADDR(.sram1.data)); LONG(ADDR(.sram1.data) + SIZEOF(.sram1.data));
 		LONG(LOADADDR(.sram2.data)); LONG(ADDR(.sram2.data)); LONG(ADDR(.sram2.data) + SIZEOF(.sram2.data));
 
 		. = ALIGN(4);
-		PROVIDE(__data_array_end = .);
+		PROVIDE(__data_initializers_end = .);
 
-		/* end of sub-section: data_array */
+		/* end of sub-section: data_initializers */
 
-		/* sub-section: bss_array */
+		/* sub-section: bss_initializers */
 
 		. = ALIGN(4);
-		PROVIDE(__bss_array_start = .);
+		PROVIDE(__bss_initializers_start = .);
 
 		LONG(0); LONG(ADDR(.bss)); LONG(ADDR(.bss) + SIZEOF(.bss));
 		LONG(0xed419f25); LONG(ADDR(.main_stack)); LONG(ADDR(.main_stack) + SIZEOF(.main_stack));
@@ -130,9 +130,9 @@ SECTIONS
 		LONG(0); LONG(ADDR(.sram2.bss)); LONG(ADDR(.sram2.bss) + SIZEOF(.sram2.bss));
 
 		. = ALIGN(4);
-		PROVIDE(__bss_array_end = .);
+		PROVIDE(__bss_initializers_end = .);
 
-		/* end of sub-section: bss_array */
+		/* end of sub-section: bss_initializers */
 
 		/* sub-sections: init, preinit_array, init_array and fini_array */
 
@@ -354,3 +354,8 @@ PROVIDE(__sram2_noinit_size = SIZEOF(.sram2.noinit));
 
 PROVIDE(__bss_start__ = __bss_start);
 PROVIDE(__bss_end__ = __bss_end);
+
+PROVIDE(__bss_array_start = __bss_initializers_start);
+PROVIDE(__bss_array_end = __bss_initializers_end);
+PROVIDE(__data_array_start = __data_initializers_start);
+PROVIDE(__data_array_end = __data_initializers_end);

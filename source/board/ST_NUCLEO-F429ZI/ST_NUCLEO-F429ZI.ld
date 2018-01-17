@@ -6,7 +6,7 @@
  * - 192.0 KiB of sram at 0x20000000;
  * - 4.0 KiB of bkpsram at 0x40024000;
  *
- * \author Copyright (C) 2014-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -112,10 +112,10 @@ SECTIONS
 		*(.gcc_except_table .gcc_except_table.*);
 		*(.gnu_extab*);
 
-		/* sub-section: data_array */
+		/* sub-section: data_initializers */
 
 		. = ALIGN(4);
-		PROVIDE(__data_array_start = .);
+		PROVIDE(__data_initializers_start = .);
 
 		LONG(LOADADDR(.data)); LONG(ADDR(.data)); LONG(ADDR(.data) + SIZEOF(.data));
 		LONG(LOADADDR(.ccm.data)); LONG(ADDR(.ccm.data)); LONG(ADDR(.ccm.data) + SIZEOF(.ccm.data));
@@ -123,14 +123,14 @@ SECTIONS
 		LONG(LOADADDR(.bkpsram.data)); LONG(ADDR(.bkpsram.data)); LONG(ADDR(.bkpsram.data) + SIZEOF(.bkpsram.data));
 
 		. = ALIGN(4);
-		PROVIDE(__data_array_end = .);
+		PROVIDE(__data_initializers_end = .);
 
-		/* end of sub-section: data_array */
+		/* end of sub-section: data_initializers */
 
-		/* sub-section: bss_array */
+		/* sub-section: bss_initializers */
 
 		. = ALIGN(4);
-		PROVIDE(__bss_array_start = .);
+		PROVIDE(__bss_initializers_start = .);
 
 		LONG(0); LONG(ADDR(.bss)); LONG(ADDR(.bss) + SIZEOF(.bss));
 		LONG(0xed419f25); LONG(ADDR(.main_stack)); LONG(ADDR(.main_stack) + SIZEOF(.main_stack));
@@ -140,9 +140,9 @@ SECTIONS
 		LONG(0); LONG(ADDR(.bkpsram.bss)); LONG(ADDR(.bkpsram.bss) + SIZEOF(.bkpsram.bss));
 
 		. = ALIGN(4);
-		PROVIDE(__bss_array_end = .);
+		PROVIDE(__bss_initializers_end = .);
 
-		/* end of sub-section: bss_array */
+		/* end of sub-section: bss_initializers */
 
 		/* sub-sections: init, preinit_array, init_array and fini_array */
 
@@ -398,3 +398,8 @@ PROVIDE(__bkpsram_noinit_size = SIZEOF(.bkpsram.noinit));
 
 PROVIDE(__bss_start__ = __bss_start);
 PROVIDE(__bss_end__ = __bss_end);
+
+PROVIDE(__bss_array_start = __bss_initializers_start);
+PROVIDE(__bss_array_end = __bss_initializers_end);
+PROVIDE(__data_array_start = __data_initializers_start);
+PROVIDE(__data_array_end = __data_initializers_end);
