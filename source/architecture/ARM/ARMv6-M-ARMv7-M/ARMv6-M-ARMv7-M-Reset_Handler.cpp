@@ -33,6 +33,17 @@ __attribute__ ((naked)) void Reset_Handler()
 	asm volatile
 	(
 	R"(
+				ldr		r4, =__low_level_preinitializers_start		// execute low-level preinitializers	
+				ldr		r5, =__low_level_preinitializers_end	
+															
+			1:	cmp		r4, r5								
+				bhs		2f									
+				ldmia	r4!, {r0}							
+				blx		r0									
+				b		1b									
+															
+			2:	
+
 				ldr		r0, =%[lowLevelInitialization0]				// call lowLevelInitialization0() (PSP not set,
 				blx		r0											// CONTROL not modified, memory not initialized)
 															
@@ -123,6 +134,16 @@ __attribute__ ((naked)) void Reset_Handler()
 	)"
 #endif	// !def __ARM_ARCH_6M__
 	R"(
+				ldr		r4, =__low_level_initializers_start			// execute low-level initializers	
+				ldr		r5, =__low_level_initializers_end	
+															
+			1:	cmp		r4, r5								
+				bhs		2f									
+				ldmia	r4!, {r0}							
+				blx		r0									
+				b		1b									
+															
+			2:
 				ldr		r0, =__libc_init_array						// call constructors for global and static objects
 				blx		r0									
 															
