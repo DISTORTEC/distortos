@@ -404,9 +404,4 @@ $(printf '%b' "${sectionSizes}")
 
 PROVIDE(__bss_start__ = __bss_start);
 PROVIDE(__bss_end__ = __bss_end);
-
-PROVIDE(__bss_array_start = __bss_initializers_start);
-PROVIDE(__bss_array_end = __bss_initializers_end);
-PROVIDE(__data_array_start = __data_initializers_start);
-PROVIDE(__data_array_end = __data_initializers_end);
 EOF
