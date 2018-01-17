@@ -251,6 +251,26 @@ $(printf '%b' "${bssInitializers}")
 
 		/* end of sub-section: bss_initializers */
 
+		/* sub-sections: low_level_preinitializers, low_level_initializers */
+
+		. = ALIGN(4);
+		PROVIDE(__low_level_preinitializers_start = .);
+
+		KEEP(*(SORT(.low_level_preinitializers.*)));
+
+		. = ALIGN(4);
+		PROVIDE(__low_level_preinitializers_end = .);
+
+		. = ALIGN(4);
+		PROVIDE(__low_level_initializers_start = .);
+
+		KEEP(*(SORT(.low_level_initializers.*)));
+
+		. = ALIGN(4);
+		PROVIDE(__low_level_initializers_end = .);
+
+		/* end of sub-sections: low_level_preinitializers, low_level_initializers */
+
 		/* sub-sections: init, preinit_array, init_array and fini_array */
 
 		KEEP(*(SORT_NONE(.init)));
