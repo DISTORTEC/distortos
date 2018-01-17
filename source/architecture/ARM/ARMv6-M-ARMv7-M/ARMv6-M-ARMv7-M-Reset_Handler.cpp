@@ -2,7 +2,7 @@
  * \file
  * \brief Reset_Handler() for ARMv6-M and ARMv7-M
  *
- * \author Copyright (C) 2014-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -42,11 +42,11 @@ __attribute__ ((naked)) void Reset_Handler()
 			"	msr		control, r0							\n"
 			"	isb											\n"
 			"												\n"
-			"	ldr		r4, =__data_array_start				\n"		// initialize data_array (including .data)
-			"	ldr		r5, =__data_array_end				\n"
+			"	ldr		r4, =__data_initializers_start		\n"		// initialize data_initializers (including .data)
+			"	ldr		r5, =__data_initializers_end		\n"
 			"												\n"
 #ifdef __ARM_ARCH_6M__
-			"1:	cmp		r4, r5								\n"		// outer loop - addresses from data_array
+			"1:	cmp		r4, r5								\n"		// outer loop - addresses from data_initializers
 			"	bhs		4f									\n"
 			"	ldmia	r4!, {r1-r3}						\n"		// r1 - start of source, r2 - start of destination,
 			"												\n"		// r3 - end of destination
@@ -61,7 +61,7 @@ __attribute__ ((naked)) void Reset_Handler()
 			"4:												\n"
 			"												\n"
 #else	// !def __ARM_ARCH_6M__
-			"1:	cmp		r4, r5								\n"		// outer loop - addresses from data_array
+			"1:	cmp		r4, r5								\n"		// outer loop - addresses from data_initializers
 			"	ite		lo									\n"
 			"	ldmialo	r4!, {r1-r3}						\n"		// r1 - start of source, r2 - start of destination,
 			"	bhs		3f									\n"		// r3 - end of destination
@@ -77,11 +77,11 @@ __attribute__ ((naked)) void Reset_Handler()
 			"3:												\n"
 			"												\n"
 #endif	// !def __ARM_ARCH_6M__
-			"	ldr		r3, =__bss_array_start				\n"		// initialize bss_array (including .bss)
-			"	ldr		r4, =__bss_array_end				\n"
+			"	ldr		r3, =__bss_initializers_start		\n"		// initialize bss_initializers (including .bss)
+			"	ldr		r4, =__bss_initializers_end			\n"
 			"												\n"
 #ifdef __ARM_ARCH_6M__
-			"1:	cmp		r3, r4								\n"		// outer loop - addresses from bss_array
+			"1:	cmp		r3, r4								\n"		// outer loop - addresses from bss_initializers
 			"	bhs		4f									\n"
 			"	ldmia	r3!, {r0-r2}						\n"		// r0 - value, r1 - start of destination, r2 - end
 			"												\n"		// of destination
@@ -95,7 +95,7 @@ __attribute__ ((naked)) void Reset_Handler()
 			"4:												\n"
 			"												\n"
 #else	// !def __ARM_ARCH_6M__
-			"1:	cmp		r3, r4								\n"		// outer loop - addresses from bss_array
+			"1:	cmp		r3, r4								\n"		// outer loop - addresses from bss_initializers
 			"	ite		lo									\n"
 			"	ldmialo	r3!, {r0-r2}						\n"		// r0 - value, r1 - start of destination, r2 - end
 			"	bhs		3f									\n"		// of destination
