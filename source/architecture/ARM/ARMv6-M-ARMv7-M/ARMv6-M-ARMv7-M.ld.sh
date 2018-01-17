@@ -3,7 +3,7 @@
 #
 # file: ARMv6-M-ARMv7-M.ld.sh
 #
-# author: Copyright (C) 2015-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+# author: Copyright (C) 2015-2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
 #
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -48,8 +48,8 @@ shift
 headerComments=''
 memoryEntries=''
 memorySizes=''
-dataArrayEntries=''
-bssArrayEntries=''
+dataInitializers=''
+bssInitializers=''
 sectionEntries=''
 sectionSizes=''
 
@@ -76,11 +76,11 @@ PROVIDE(__${memoryName}_start = ORIGIN(${memoryName}));
 PROVIDE(__${memoryName}_size = LENGTH(${memoryName}));
 PROVIDE(__${memoryName}_end = ORIGIN(${memoryName}) + LENGTH(${memoryName}));"
 
-	dataArrayEntries="${dataArrayEntries}
+	dataInitializers="${dataInitializers}
 \t\tLONG(LOADADDR(.${memoryName}.data)); LONG(ADDR(.${memoryName}.data)); \
 LONG(ADDR(.${memoryName}.data) + SIZEOF(.${memoryName}.data));"
 
-	bssArrayEntries="${bssArrayEntries}
+	bssInitializers="${bssInitializers}
 \t\tLONG(0); LONG(ADDR(.${memoryName}.bss)); LONG(ADDR(.${memoryName}.bss) + SIZEOF(.${memoryName}.bss));"
 
 	sectionEntries="${sectionEntries}
@@ -223,33 +223,33 @@ SECTIONS
 		*(.gcc_except_table .gcc_except_table.*);
 		*(.gnu_extab*);
 
-		/* sub-section: data_array */
+		/* sub-section: data_initializers */
 
 		. = ALIGN(4);
-		PROVIDE(__data_array_start = .);
+		PROVIDE(__data_initializers_start = .);
 
 		LONG(LOADADDR(.data)); LONG(ADDR(.data)); LONG(ADDR(.data) + SIZEOF(.data));\
-$(printf '%b' "${dataArrayEntries}")
+$(printf '%b' "${dataInitializers}")
 
 		. = ALIGN(4);
-		PROVIDE(__data_array_end = .);
+		PROVIDE(__data_initializers_end = .);
 
-		/* end of sub-section: data_array */
+		/* end of sub-section: data_initializers */
 
-		/* sub-section: bss_array */
+		/* sub-section: bss_initializers */
 
 		. = ALIGN(4);
-		PROVIDE(__bss_array_start = .);
+		PROVIDE(__bss_initializers_start = .);
 
 		LONG(0); LONG(ADDR(.bss)); LONG(ADDR(.bss) + SIZEOF(.bss));
 		LONG(0xed419f25); LONG(ADDR(.main_stack)); LONG(ADDR(.main_stack) + SIZEOF(.main_stack));
 		LONG(0xed419f25); LONG(ADDR(.process_stack)); LONG(ADDR(.process_stack) + SIZEOF(.process_stack));\
-$(printf '%b' "${bssArrayEntries}")
+$(printf '%b' "${bssInitializers}")
 
 		. = ALIGN(4);
-		PROVIDE(__bss_array_end = .);
+		PROVIDE(__bss_initializers_end = .);
 
-		/* end of sub-section: bss_array */
+		/* end of sub-section: bss_initializers */
 
 		/* sub-sections: init, preinit_array, init_array and fini_array */
 
@@ -404,4 +404,9 @@ $(printf '%b' "${sectionSizes}")
 
 PROVIDE(__bss_start__ = __bss_start);
 PROVIDE(__bss_end__ = __bss_end);
+
+PROVIDE(__bss_array_start = __bss_initializers_start);
+PROVIDE(__bss_array_end = __bss_initializers_end);
+PROVIDE(__data_array_start = __data_initializers_start);
+PROVIDE(__data_array_end = __data_initializers_end);
 EOF
