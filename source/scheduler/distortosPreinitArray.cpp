@@ -13,8 +13,6 @@
 
 #include "distortos/board/lowLevelInitialization.hpp"
 
-#include "distortos/chip/peripheralsLowLevelInitialization.hpp"
-
 namespace distortos
 {
 
@@ -54,7 +52,6 @@ using FunctionPointer = void(*)();
 /// array of pointers to functions executed before constructors for global and static objects from __libc_init_array()
 const FunctionPointer distortosPreinitArray[] __attribute__ ((section(".preinit_array"), used))
 {
-		chip::peripheralsLowLevelInitialization,
 		boardLowLevelInitializationWrapper,
 		architecture::startScheduling,
 };
