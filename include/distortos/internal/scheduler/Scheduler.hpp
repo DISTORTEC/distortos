@@ -2,7 +2,7 @@
  * \file
  * \brief Scheduler class header
  *
- * \author Copyright (C) 2014-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -21,8 +21,6 @@ namespace distortos
 
 namespace internal
 {
-
-class MainThread;
 
 /// Scheduler class is a system's scheduler
 class Scheduler
@@ -160,13 +158,13 @@ public:
 	 * \attention This must be called after constructor, before enabling any scheduling. Priority of main thread must
 	 * be higher than priority of idle thread
 	 *
-	 * \param [in] mainThread is a reference to main thread
+	 * \param [in] mainThreadControlBlock is a reference to ThreadControlBlock object of main() thread
 	 *
 	 * \return 0 on success, error code otherwise:
 	 * - error codes returned by Scheduler::addInternal();
 	 */
 
-	int initialize(MainThread& mainThread);
+	int initialize(ThreadControlBlock& mainThreadControlBlock);
 
 	/**
 	 * \brief Requests context switch if it is needed.

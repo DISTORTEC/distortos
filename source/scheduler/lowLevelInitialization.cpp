@@ -2,7 +2,7 @@
  * \file
  * \brief internal::lowLevelInitialization() definition
  *
- * \author Copyright (C) 2014-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -91,7 +91,7 @@ void lowLevelInitialization()
 
 	auto& mainThread = *new (&mainThreadStorage) MainThread {CONFIG_MAIN_THREAD_PRIORITY, mainThreadGroupControlBlock,
 			mainThreadStaticSignalsReceiverPointer};
-	getScheduler().initialize(mainThread);	/// \todo error handling?
+	getScheduler().initialize(mainThread.getThreadControlBlock());	/// \todo error handling?
 	mainThread.getThreadControlBlock().switchedToHook();
 
 	auto& idleThread = *new (&idleThreadStorage) IdleThread {0, idleThreadFunction};

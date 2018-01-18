@@ -2,7 +2,7 @@
  * \file
  * \brief Scheduler class implementation
  *
- * \author Copyright (C) 2014-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -14,7 +14,6 @@
 #include "distortos/architecture/requestContextSwitch.hpp"
 
 #include "distortos/internal/scheduler/forceContextSwitch.hpp"
-#include "distortos/internal/scheduler/MainThread.hpp"
 
 #include "distortos/internal/CHECK_FUNCTION_CONTEXT.hpp"
 
@@ -185,9 +184,9 @@ uint64_t Scheduler::getTickCount() const
 	return tickCount_;
 }
 
-int Scheduler::initialize(MainThread& mainThread)
+int Scheduler::initialize(ThreadControlBlock& mainThreadControlBlock)
 {
-	const auto ret = addInternal(mainThread.getThreadControlBlock());
+	const auto ret = addInternal(mainThreadControlBlock);
 	if (ret != 0)
 		return ret;
 
