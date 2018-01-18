@@ -11,8 +11,6 @@
 
 #include "distortos/architecture/startScheduling.hpp"
 
-#include "distortos/board/lowLevelInitialization.hpp"
-
 namespace distortos
 {
 
@@ -21,22 +19,6 @@ namespace internal
 
 namespace
 {
-
-/*---------------------------------------------------------------------------------------------------------------------+
-| local functions
-+---------------------------------------------------------------------------------------------------------------------*/
-
-/**
- * \brief Wrapper for optional board::lowLevelInitialization().
- *
- * Calls board::lowLevelInitialization() if it is defined, otherwise does nothing.
- */
-
-void boardLowLevelInitializationWrapper()
-{
-	if (board::lowLevelInitialization != nullptr)
-		board::lowLevelInitialization();
-}
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | local types
@@ -52,7 +34,6 @@ using FunctionPointer = void(*)();
 /// array of pointers to functions executed before constructors for global and static objects from __libc_init_array()
 const FunctionPointer distortosPreinitArray[] __attribute__ ((section(".preinit_array"), used))
 {
-		boardLowLevelInitializationWrapper,
 		architecture::startScheduling,
 };
 
