@@ -30,12 +30,23 @@ the thread can be obtained using `distortos::Thread::getIdentifier()` and `disto
 [Trompeloeil](https://github.com/rollbear/trompeloeil) mocking framework. Build system of unit tests uses
 [CMake](https://cmake.org/).
 - New overload of `distortos::Mutex`'s constructor for "normal" type.
+- `BIND_LOW_LEVEL_PREINITIALIZER()` and `BIND_LOW_LEVEL_INITIALIZER()` macros, which can be used to bind (at
+compile/link time) any function as low-level preinitializer (executed before *.bss* and *.data* sections'
+initialization, before constructors for global and static objects) or low-level initializer (executed after *.bss* and
+*.data* sections have been initialized, but before constructors for global and static objects). Each
+preinitializer/initializer has its own order of execution from 0 to 99.
+- `include/CONCATENATE.h` and `include/STRINGIFY.h` with useful macros for token concatenation and stringification.
 
 ### Changed
 
 - Reduced size of `distortos::Mutex` from 28 bytes to 24 bytes (5 pointers + 4 bytes).
 - `distortos::ThreadCommon` was moved to `distortos::internal` namespace. `distortos/ThreadCommon.hpp` was moved to
 `distortos/internal/scheduler/ThreadCommon.hpp`. There's no need for this class to be available in the public API.
+- All low-level initializers (architecture, chip, peripherals, scheduler, threads, ...) use
+`BIND_LOW_LEVEL_INITIALIZER()` instead of being called via `distortosPreinitArray[]` from newlib's
+`__libc_init_array()`.
+- Changed linker script symbols related to *.bss* and *.data* section initializers - `__{bss,data}_array_{end,start}`
+becomes `__{bss,data}_initializers_{end,start}`.
 
 ### Fixed
 
@@ -45,6 +56,12 @@ implementation of `std::unique_ptr`, which is used internally by queues for mana
 - Mark all `.bss` sections in generated linker scripts as `(NOLOAD)`. Without this change `.bin` file for a project
 containing zero-initialized data in additional memories would be extremely large - for example ~134 MB in case of
 *STM32F4* when anything is placed in `.ccm.bss`.
+
+### Removed
+
+- Removed call to `lowLevelInitialization0()` from `Reset_Handler()` for *ARMv6-M* and *ARMv7-M*. All low-level
+preinitializers should use `BIND_LOW_LEVEL_PREINITIALIZER()` macro.
+- Removed `board::lowLevelInitialization()` declaration. Low-level initializers of board should use `BIND_LOW_LEVEL_INITIALIZER(60, ...);`.
 
 [0.5.0](https://github.com/DISTORTEC/distortos/compare/v0.4.0...v0.5.0) - 2017-09-14
 ------------------------------------------------------------------------------------
