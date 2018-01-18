@@ -1,18 +1,18 @@
 /**
  * \file
- * \brief startScheduling() implementation for ARMv6-M and ARMv7-M
+ * \brief Start of scheduling for ARMv6-M and ARMv7-M
  *
- * \author Copyright (C) 2014-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#include "distortos/architecture/startScheduling.hpp"
-
 #include "distortos/chip/clocks.hpp"
 #include "distortos/chip/CMSIS-proxy.h"
+
+#include "distortos/BIND_LOW_LEVEL_INITIALIZER.h"
 
 namespace distortos
 {
@@ -20,9 +20,19 @@ namespace distortos
 namespace architecture
 {
 
+namespace
+{
+
 /*---------------------------------------------------------------------------------------------------------------------+
-| global functions
+| local functions
 +---------------------------------------------------------------------------------------------------------------------*/
+
+/**
+ * \brief Start of scheduling for ARMv6-M and ARMv7-M
+ *
+ * Initializes all required hardware/software to perform context switching and starts the scheduling. This function is
+ * called before constructors for global and static objects via BIND_LOW_LEVEL_INITIALIZER().
+ */
 
 void startScheduling()
 {
@@ -50,6 +60,10 @@ void startScheduling()
 	SysTick->CTRL = (divideBy8 == true ? 0 : SysTick_CTRL_CLKSOURCE_Msk) | SysTick_CTRL_ENABLE_Msk |
 			SysTick_CTRL_TICKINT_Msk;
 }
+
+BIND_LOW_LEVEL_INITIALIZER(70, startScheduling);
+
+}	// namespace
 
 }	// namespace architecture
 

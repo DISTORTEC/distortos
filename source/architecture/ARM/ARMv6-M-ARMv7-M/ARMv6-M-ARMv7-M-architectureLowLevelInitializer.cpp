@@ -1,17 +1,17 @@
 /**
  * \file
- * \brief lowLevelInitialization() implementation for ARMv6-M and ARMv7-M
+ * \brief Low-level architecture initializer for ARMv6-M and ARMv7-M
  *
- * \author Copyright (C) 2015-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2015-2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#include "distortos/architecture/lowLevelInitialization.hpp"
-
 #include "distortos/chip/CMSIS-proxy.h"
+
+#include "distortos/BIND_LOW_LEVEL_INITIALIZER.h"
 
 namespace distortos
 {
@@ -19,11 +19,20 @@ namespace distortos
 namespace architecture
 {
 
+namespace
+{
+
 /*---------------------------------------------------------------------------------------------------------------------+
-| global functions
+| local functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-void lowLevelInitialization()
+/**
+ * \brief Low-level architecture initializer for ARMv6-M and ARMv7-M
+ *
+ * This function is called before constructors for global and static objects via BIND_LOW_LEVEL_INITIALIZER().
+ */
+
+void architectureLowLevelInitializer()
 {
 #ifdef CONFIG_ARCHITECTURE_ARM_CORTEX_M3_R1P1
 	SCB->CCR |= SCB_CCR_STKALIGN_Msk;
@@ -32,6 +41,10 @@ void lowLevelInitialization()
 	SCB->CPACR |= 3 << 10 * 2 | 3 << 11 * 2;	// full access to CP10 and CP11
 #endif	// __FPU_PRESENT == 1 && __FPU_USED == 1
 }
+
+BIND_LOW_LEVEL_INITIALIZER(30, architectureLowLevelInitializer);
+
+}	// namespace
 
 }	// namespace architecture
 
