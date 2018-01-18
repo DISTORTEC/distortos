@@ -13,16 +13,7 @@
 
 #include "distortos/StaticThread.hpp"
 
-#include "distortos/internal/scheduler/getScheduler.hpp"
-#include "distortos/internal/scheduler/Scheduler.hpp"
 #include "distortos/internal/scheduler/idleThreadFunction.hpp"
-#include "distortos/internal/scheduler/MainThread.hpp"
-#include "distortos/internal/scheduler/ThreadGroupControlBlock.hpp"
-
-#if __GNUC_PREREQ(5, 1) != 1
-// GCC 4.x doesn't fully support constexpr constructors
-#error "GCC 5.1 is the minimum version supported by distortos"
-#endif
 
 namespace distortos
 {
@@ -50,24 +41,6 @@ using IdleThread = decltype(makeStaticThread<idleThreadStackSize>(0, idleThreadF
 /// storage for idle thread instance
 std::aligned_storage<sizeof(IdleThread), alignof(IdleThread)>::type idleThreadStorage;
 
-/// storage for main thread instance
-std::aligned_storage<sizeof(MainThread), alignof(MainThread)>::type mainThreadStorage;
-
-/// main thread group
-ThreadGroupControlBlock mainThreadGroupControlBlock;
-
-#ifdef CONFIG_MAIN_THREAD_CAN_RECEIVE_SIGNALS
-
-/// type of StaticSignalsReceiver for main thread
-using MainThreadStaticSignalsReceiver =
-		StaticSignalsReceiver<CONFIG_MAIN_THREAD_QUEUED_SIGNALS, CONFIG_MAIN_THREAD_SIGNAL_ACTIONS>;
-
-/// storage for instance of MainThreadStaticSignalsReceiver for main thread
-std::aligned_storage<sizeof(MainThreadStaticSignalsReceiver), alignof(MainThreadStaticSignalsReceiver)>::type
-		mainThreadStaticSignalsReceiverStorage;
-
-#endif	// def CONFIG_MAIN_THREAD_CAN_RECEIVE_SIGNALS
-
 }	// namespace
 
 /*---------------------------------------------------------------------------------------------------------------------+
@@ -76,24 +49,6 @@ std::aligned_storage<sizeof(MainThreadStaticSignalsReceiver), alignof(MainThread
 
 void lowLevelInitialization()
 {
-#ifdef CONFIG_MAIN_THREAD_CAN_RECEIVE_SIGNALS
-
-	auto& mainThreadStaticSignalsReceiver =
-			*new (&mainThreadStaticSignalsReceiverStorage) MainThreadStaticSignalsReceiver;
-	const auto mainThreadStaticSignalsReceiverPointer = &static_cast<SignalsReceiver&>(mainThreadStaticSignalsReceiver);
-
-#else	// !def CONFIG_MAIN_THREAD_CAN_RECEIVE_SIGNALS
-
-	// nullptr - reception of signals is disabled for main thread
-	constexpr auto mainThreadStaticSignalsReceiverPointer = nullptr;
-
-#endif	// !def CONFIG_MAIN_THREAD_CAN_RECEIVE_SIGNALS
-
-	auto& mainThread = *new (&mainThreadStorage) MainThread {CONFIG_MAIN_THREAD_PRIORITY, mainThreadGroupControlBlock,
-			mainThreadStaticSignalsReceiverPointer};
-	getScheduler().initialize(mainThread.getThreadControlBlock());	/// \todo error handling?
-	mainThread.getThreadControlBlock().switchedToHook();
-
 	auto& idleThread = *new (&idleThreadStorage) IdleThread {0, idleThreadFunction};
 	idleThread.start();
 }
