@@ -56,6 +56,9 @@ implementation of `std::unique_ptr`, which is used internally by queues for mana
 - Mark all `.bss` sections in generated linker scripts as `(NOLOAD)`. Without this change `.bin` file for a project
 containing zero-initialized data in additional memories would be extremely large - for example ~134 MB in case of
 *STM32F4* when anything is placed in `.ccm.bss`.
+- Fixed interrupt priorities for *STM32's* *SPIv2* and *USARTv2* for cases when
+`CONFIG_ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI` is defined and non-zero. Previously interrupt priorities of these
+peripherals were always set to 0 (highest possible).
 
 ### Removed
 
