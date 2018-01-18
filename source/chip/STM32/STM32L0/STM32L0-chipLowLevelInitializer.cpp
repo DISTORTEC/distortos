@@ -1,15 +1,13 @@
 /**
  * \file
- * \brief chip::lowLevelInitialization() implementation for STM32L0
+ * \brief Low-level chip initializer for STM32L0
  *
- * \author Copyright (C) 2017 Cezary Gapinski cezary.gapinski@gmail.com
+ * \author Copyright (C) 2017-2018 Cezary Gapinski cezary.gapinski@gmail.com
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-
-#include "distortos/chip/lowLevelInitialization.hpp"
 
 #include "distortos/chip/clocks.hpp"
 #include "distortos/chip/CMSIS-proxy.h"
@@ -17,17 +15,28 @@
 #include "distortos/chip/STM32L0-PWR.hpp"
 #include "distortos/chip/STM32L0-RCC.hpp"
 
+#include "distortos/BIND_LOW_LEVEL_INITIALIZER.h"
+
 namespace distortos
 {
 
 namespace chip
 {
 
+namespace
+{
+
 /*---------------------------------------------------------------------------------------------------------------------+
-| global functions
+| local functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-void lowLevelInitialization()
+/**
+ * \brief Low-level chip initializer for STM32L0
+ *
+ * This function is called before constructors for global and static objects via BIND_LOW_LEVEL_INITIALIZER().
+ */
+
+void chipLowLevelInitializer()
 {
 #ifdef CONFIG_CHIP_STM32L0_FLASH_PREFETCH_ENABLE
 	configurePrefetchBuffer(true);
@@ -122,6 +131,10 @@ void lowLevelInitialization()
 #endif	// def CONFIG_CHIP_STM32_GPIOV2_GPIOH_ENABLE
 			0;
 }
+
+BIND_LOW_LEVEL_INITIALIZER(40, chipLowLevelInitializer);
+
+}	// namespace
 
 }	// namespace chip
 
