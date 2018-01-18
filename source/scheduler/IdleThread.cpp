@@ -1,6 +1,6 @@
 /**
  * \file
- * \brief internal::lowLevelInitialization() definition
+ * \brief Idle thread definition and its low-level initializer
  *
  * \author Copyright (C) 2014-2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
@@ -9,11 +9,11 @@
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#include "distortos/internal/scheduler/lowLevelInitialization.hpp"
+#include "distortos/internal/memory/DeferredThreadDeleter.hpp"
+#include "distortos/internal/memory/getDeferredThreadDeleter.hpp"
 
+#include "distortos/BIND_LOW_LEVEL_INITIALIZER.h"
 #include "distortos/StaticThread.hpp"
-
-#include "distortos/internal/scheduler/idleThreadFunction.hpp"
 
 namespace distortos
 {
@@ -23,6 +23,8 @@ namespace internal
 
 namespace
 {
+
+void idleThreadFunction();
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | local objects
@@ -41,17 +43,45 @@ using IdleThread = decltype(makeStaticThread<idleThreadStackSize>(0, idleThreadF
 /// storage for idle thread instance
 std::aligned_storage<sizeof(IdleThread), alignof(IdleThread)>::type idleThreadStorage;
 
-}	// namespace
-
 /*---------------------------------------------------------------------------------------------------------------------+
-| global functions
+| local functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-void lowLevelInitialization()
+/**
+ * \brief Idle thread's function
+ */
+
+void idleThreadFunction()
+{
+	volatile uint64_t i {};
+
+	while (1)
+	{
+		++i;
+
+#ifdef CONFIG_THREAD_DETACH_ENABLE
+
+		getDeferredThreadDeleter().tryCleanup();	/// \todo error handling?
+
+#endif	// def CONFIG_THREAD_DETACH_ENABLE
+	}
+}
+
+/**
+ * \brief Low-level initializer of idle thread
+ *
+ * This function is called before constructors for global and static objects via BIND_LOW_LEVEL_INITIALIZER().
+ */
+
+void idleThreadLowLevelInitializer()
 {
 	auto& idleThread = *new (&idleThreadStorage) IdleThread {0, idleThreadFunction};
 	idleThread.start();
 }
+
+BIND_LOW_LEVEL_INITIALIZER(20, idleThreadLowLevelInitializer);
+
+}	// namespace
 
 }	// namespace internal
 
