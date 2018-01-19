@@ -237,22 +237,26 @@ LONG(ADDR(.{{ label }}.data) + SIZEOF(.{{ label }}.data));
 
 	.bss (NOLOAD) :
 	{
+		. = ALIGN(4);
 		PROVIDE(__bss_start = .);
 
 		*(.bss .bss.* .gnu.linkonce.b.*);
 		*(COMMON);
 
+		. = ALIGN(4);
 		PROVIDE(__bss_end = .);
 		HIDDEN(__{{ chosenToLabel('distortos,ld,bss', True) }}_limit_low = .);
 	} > {{ chosenToLabel('distortos,ld,bss', True) }} AT > {{ chosenToLabel('distortos,ld,bss', False) }}
 
 	.data :
 	{
+		. = ALIGN(4);
 		PROVIDE(__data_init_start = LOADADDR(.data));
 		PROVIDE(__data_start = .);
 
 		*(.data .data.* .gnu.linkonce.d.*);
 
+		. = ALIGN(4);
 		PROVIDE(__data_end = .);
 		HIDDEN(__{{ chosenToLabel('distortos,ld,data', True) }}_limit_low = .);
 	} > {{ chosenToLabel('distortos,ld,data', True) }} AT > {{ chosenToLabel('distortos,ld,data,load', False) }}
@@ -271,21 +275,25 @@ LONG(ADDR(.{{ label }}.data) + SIZEOF(.{{ label }}.data));
 
 	.{{ label }}.bss (NOLOAD) :
 	{
+		. = ALIGN(4);
 		PROVIDE(__{{ label }}_bss_start = .);
 
 		*(.{{ label }}.bss);
 
+		. = ALIGN(4);
 		PROVIDE(__{{ label }}_bss_end = .);
 		HIDDEN(__{{ label }}_limit_low = .);
 	} > {{ label }} AT > {{ label }}
 
 	.{{ label }}.data :
 	{
+		. = ALIGN(4);
 		PROVIDE(__{{ label }}_data_init_start = LOADADDR(.{{ label }}.data));
 		PROVIDE(__{{ label }}_data_start = .);
 
 		*(.{{ label }}.data);
 
+		. = ALIGN(4);
 		PROVIDE(__{{ label }}_data_end = .);
 		HIDDEN(__{{ label }}_limit_low = .);
 	} > {{ label }} AT > {{ chosenToLabel('distortos,ld,' + label + ',load', False) }}
