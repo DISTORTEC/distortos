@@ -208,22 +208,26 @@ SECTIONS
 
 	.bss (NOLOAD) :
 	{
+		. = ALIGN(4);
 		PROVIDE(__bss_start = .);
 
 		*(.bss .bss.* .gnu.linkonce.b.*);
 		*(COMMON);
 
+		. = ALIGN(4);
 		PROVIDE(__bss_end = .);
 		HIDDEN(__sram_limit_low = .);
 	} > sram AT > sram
 
 	.data :
 	{
+		. = ALIGN(4);
 		PROVIDE(__data_init_start = LOADADDR(.data));
 		PROVIDE(__data_start = .);
 
 		*(.data .data.* .gnu.linkonce.d.*);
 
+		. = ALIGN(4);
 		PROVIDE(__data_end = .);
 		HIDDEN(__sram_limit_low = .);
 	} > sram AT > flash
@@ -240,21 +244,25 @@ SECTIONS
 
 	.sram.bss (NOLOAD) :
 	{
+		. = ALIGN(4);
 		PROVIDE(__sram_bss_start = .);
 
 		*(.sram.bss);
 
+		. = ALIGN(4);
 		PROVIDE(__sram_bss_end = .);
 		HIDDEN(__sram_limit_low = .);
 	} > sram AT > sram
 
 	.sram.data :
 	{
+		. = ALIGN(4);
 		PROVIDE(__sram_data_init_start = LOADADDR(.sram.data));
 		PROVIDE(__sram_data_start = .);
 
 		*(.sram.data);
 
+		. = ALIGN(4);
 		PROVIDE(__sram_data_end = .);
 		HIDDEN(__sram_limit_low = .);
 	} > sram AT > flash

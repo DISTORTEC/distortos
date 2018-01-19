@@ -212,22 +212,26 @@ SECTIONS
 
 	.bss (NOLOAD) :
 	{
+		. = ALIGN(4);
 		PROVIDE(__bss_start = .);
 
 		*(.bss .bss.* .gnu.linkonce.b.*);
 		*(COMMON);
 
+		. = ALIGN(4);
 		PROVIDE(__bss_end = .);
 		HIDDEN(__sram1_limit_low = .);
 	} > sram1 AT > sram1
 
 	.data :
 	{
+		. = ALIGN(4);
 		PROVIDE(__data_init_start = LOADADDR(.data));
 		PROVIDE(__data_start = .);
 
 		*(.data .data.* .gnu.linkonce.d.*);
 
+		. = ALIGN(4);
 		PROVIDE(__data_end = .);
 		HIDDEN(__sram1_limit_low = .);
 	} > sram1 AT > flash
@@ -244,21 +248,25 @@ SECTIONS
 
 	.sram1.bss (NOLOAD) :
 	{
+		. = ALIGN(4);
 		PROVIDE(__sram1_bss_start = .);
 
 		*(.sram1.bss);
 
+		. = ALIGN(4);
 		PROVIDE(__sram1_bss_end = .);
 		HIDDEN(__sram1_limit_low = .);
 	} > sram1 AT > sram1
 
 	.sram1.data :
 	{
+		. = ALIGN(4);
 		PROVIDE(__sram1_data_init_start = LOADADDR(.sram1.data));
 		PROVIDE(__sram1_data_start = .);
 
 		*(.sram1.data);
 
+		. = ALIGN(4);
 		PROVIDE(__sram1_data_end = .);
 		HIDDEN(__sram1_limit_low = .);
 	} > sram1 AT > flash
@@ -275,21 +283,25 @@ SECTIONS
 
 	.sram2.bss (NOLOAD) :
 	{
+		. = ALIGN(4);
 		PROVIDE(__sram2_bss_start = .);
 
 		*(.sram2.bss);
 
+		. = ALIGN(4);
 		PROVIDE(__sram2_bss_end = .);
 		HIDDEN(__sram2_limit_low = .);
 	} > sram2 AT > sram2
 
 	.sram2.data :
 	{
+		. = ALIGN(4);
 		PROVIDE(__sram2_data_init_start = LOADADDR(.sram2.data));
 		PROVIDE(__sram2_data_start = .);
 
 		*(.sram2.data);
 
+		. = ALIGN(4);
 		PROVIDE(__sram2_data_end = .);
 		HIDDEN(__sram2_limit_low = .);
 	} > sram2 AT > flash

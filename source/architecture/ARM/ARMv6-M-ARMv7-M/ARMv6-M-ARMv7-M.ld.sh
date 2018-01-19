@@ -87,20 +87,24 @@ LONG(ADDR(.${memoryName}.data) + SIZEOF(.${memoryName}.data));"
 
 	.${memoryName}.bss (NOLOAD) :
 	{
+		. = ALIGN(4);
 		PROVIDE(__${memoryName}_bss_start = .);
 
 		*(.${memoryName}.bss);
 
+		. = ALIGN(4);
 		PROVIDE(__${memoryName}_bss_end = .);
 	} > ${memoryName} AT > ${memoryName}
 
 	.${memoryName}.data :
 	{
+		. = ALIGN(4);
 		PROVIDE(__${memoryName}_data_init_start = LOADADDR(.${memoryName}.data));
 		PROVIDE(__${memoryName}_data_start = .);
 
 		*(.${memoryName}.data);
 
+		. = ALIGN(4);
 		PROVIDE(__${memoryName}_data_end = .);
 	} > ${memoryName} AT > rom
 
@@ -328,21 +332,25 @@ $(printf '%b' "${bssInitializers}")
 
 	.bss (NOLOAD) :
 	{
+		. = ALIGN(4);
 		PROVIDE(__bss_start = .);
 
 		*(.bss .bss.* .gnu.linkonce.b.*);
 		*(COMMON);
 
+		. = ALIGN(4);
 		PROVIDE(__bss_end = .);
 	} > ram AT > ram
 
 	.data :
 	{
+		. = ALIGN(4);
 		PROVIDE(__data_init_start = LOADADDR(.data));
 		PROVIDE(__data_start = .);
 
 		*(.data .data.* .gnu.linkonce.d.*);
 
+		. = ALIGN(4);
 		PROVIDE(__data_end = .);
 	} > ram AT > rom
 

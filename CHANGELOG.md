@@ -59,6 +59,10 @@ containing zero-initialized data in additional memories would be extremely large
 - Fixed interrupt priorities for *STM32's* *SPIv2* and *USARTv2* for cases when
 `CONFIG_ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI` is defined and non-zero. Previously interrupt priorities of these
 peripherals were always set to 0 (highest possible).
+- Restore 4-byte alignment for `.bss` and `.data` sections in linker scripts generated for *ARMv6-M* and *ARMv7-M*
+architectures. Previously when beginning/end of these sections were not 4-byte aligned (for example there's just one
+byte in such section), the `__..._start` / `__..._end` symbols would not be properly aligned for use by
+`Reset_Handler()`'s initialization code, which initializes 4 bytes at a time.
 
 ### Removed
 
