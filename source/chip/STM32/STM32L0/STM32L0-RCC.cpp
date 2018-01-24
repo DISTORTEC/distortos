@@ -145,16 +145,34 @@ void enableHsi48()
 
 int enablePll(const uint8_t pllmul, const uint8_t plldiv)
 {
-	if (pllmul < minPllmul || pllmul > maxPllmul ||
-			plldiv < minPlldiv || plldiv > maxPlldiv)
+	if (plldiv < minPlldiv || plldiv > maxPlldiv)
 		return EINVAL;
 
-	RCC->CFGR = (RCC->CFGR & ~(RCC_CFGR_PLLMUL | RCC_CFGR_PLLDIV)) |
-			(pllmul / 2 - 1) << RCC_CFGR_PLLMUL_Pos | (plldiv - 1) << RCC_CFGR_PLLDIV_Pos;
+	static const std::pair<decltype(pllmul), decltype(RCC_CFGR_PLLMUL3)> associations[]
+	{
+			{pllMul3, RCC_CFGR_PLLMUL3},
+			{pllMul4, RCC_CFGR_PLLMUL4},
+			{pllMul6, RCC_CFGR_PLLMUL6},
+			{pllMul8, RCC_CFGR_PLLMUL8},
+			{pllMul12, RCC_CFGR_PLLMUL12},
+			{pllMul16, RCC_CFGR_PLLMUL16},
+			{pllMul24, RCC_CFGR_PLLMUL24},
+			{pllMul32, RCC_CFGR_PLLMUL32},
+			{pllMul48, RCC_CFGR_PLLMUL48},
+	};
 
-	RCC->CR |= RCC_CR_PLLON;
-	while ((RCC->CR & RCC_CR_PLLRDY) == 0);	// wait until PLL is stable
-	return 0;
+	for (auto& association : associations)
+		if (association.first == pllmul)
+		{
+			RCC->CFGR = (RCC->CFGR & ~(RCC_CFGR_PLLMUL | RCC_CFGR_PLLDIV)) |
+					association.second | (plldiv - 1) << RCC_CFGR_PLLDIV_Pos;
+
+			RCC->CR |= RCC_CR_PLLON;
+			while ((RCC->CR & RCC_CR_PLLRDY) == 0);	// wait until PLL is stable
+			return 0;
+		}
+
+	return EINVAL;
 }
 
 void switchSystemClock(const SystemClockSource source)
