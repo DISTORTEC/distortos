@@ -1,0 +1,124 @@
+chip:
+  compatible:
+  - ST,STM32L476VE
+  - ST,STM32L4
+  - ST,STM32
+CPUs:
+  0:
+    compatible:
+    - ARM,Cortex-M4
+    - ARM,ARMv7-M
+    revision: r0p1
+    FPU:
+      compatible:
+      - ARM,FPv4-SP-D16
+clocks:
+  HSE:
+    compatible:
+    - ST,STM32-HSE
+    - fixed-clock
+    frequency: 0
+    bypass: false
+    $labels:
+    - HSE
+memories:
+  flash:
+    compatible:
+    - on-chip-flash
+    address: 134217728
+    size: 524288
+    $labels:
+    - flash
+  SRAM1:
+    compatible:
+    - on-chip-RAM
+    address: 536870912
+    size: 98304
+    $labels:
+    - SRAM1
+  SRAM2:
+    compatible:
+    - on-chip-RAM
+    address: 268435456
+    size: 32768
+    $labels:
+    - SRAM2
+pin-controller:
+  compatible:
+  - ST,STM32-GPIOv2-pin-controller
+GPIOs:
+  afBits: 4
+  hasHighSpeed: true
+  GPIOA:
+    compatible:
+    - ST,STM32-GPIOv2
+    $labels:
+    - GPIOA
+  GPIOB:
+    compatible:
+    - ST,STM32-GPIOv2
+    $labels:
+    - GPIOB
+  GPIOC:
+    compatible:
+    - ST,STM32-GPIOv2
+    $labels:
+    - GPIOC
+  GPIOD:
+    compatible:
+    - ST,STM32-GPIOv2
+    $labels:
+    - GPIOD
+  GPIOE:
+    compatible:
+    - ST,STM32-GPIOv2
+    $labels:
+    - GPIOE
+  GPIOH:
+    compatible:
+    - ST,STM32-GPIOv2
+    $labels:
+    - GPIOH
+SPIs:
+  SPI1:
+    compatible:
+    - ST,STM32-SPIv2
+    $labels:
+    - SPI1
+  SPI2:
+    compatible:
+    - ST,STM32-SPIv2
+    $labels:
+    - SPI2
+  SPI3:
+    compatible:
+    - ST,STM32-SPIv2
+    $labels:
+    - SPI3
+UARTs:
+  hasCrM1Bit: true
+  USART1:
+    compatible:
+    - ST,STM32-USARTv2
+    $labels:
+    - USART1
+  USART2:
+    compatible:
+    - ST,STM32-USARTv2
+    $labels:
+    - USART2
+  USART3:
+    compatible:
+    - ST,STM32-USARTv2
+    $labels:
+    - USART3
+  UART4:
+    compatible:
+    - ST,STM32-USARTv2
+    $labels:
+    - UART4
+  UART5:
+    compatible:
+    - ST,STM32-USARTv2
+    $labels:
+    - UART5
