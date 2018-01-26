@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 #
-# file: generateBoard.py
+# file: generateBoard-dts.py
 #
 # author: Copyright (C) 2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
 #

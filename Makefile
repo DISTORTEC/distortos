@@ -1,7 +1,7 @@
 #
 # file: Makefile
 #
-# author: Copyright (C) 2015-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+# author: Copyright (C) 2015-2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
 #
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -304,7 +304,7 @@ endif
 	$(eval DTS_CPPFLAGS := -nostdinc -undef -E -x assembler-with-cpp \
 			$(shell find -L . -type d -name 'dtsi' -exec echo -I {} \;))
 	$(CPP) $(DTS_CPPFLAGS) $(CONFIG_FILE) | \
-	./$(DISTORTOS_PATH)scripts/generateBoard.py - $(BOARD_ARGUMENTS) ./$(DISTORTOS_PATH)
+	./$(DISTORTOS_PATH)scripts/generateBoard-dts.py - $(BOARD_ARGUMENTS) ./$(DISTORTOS_PATH)
 
 .PHONY: configure
 configure:
