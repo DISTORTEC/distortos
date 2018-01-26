@@ -64,7 +64,7 @@ def parseFirstRow(firstRow):
 		keys[0:i] = previousKeys[0:-i]
 
 		for i, key in enumerate(keys):
-			if isinstance(key, str):
+			if isinstance(key, str) == True:
 				key, separator, label = key.partition('$')
 				key = parseString(key)
 				keys[i] = key
