@@ -185,7 +185,7 @@ if __name__ == '__main__':
 		# jinja expects forward slashes on all systems - https://github.com/pallets/jinja/issues/767
 		currentDirectory = currentDirectory.replace('\\', '/')
 		files = [posixpath.join(currentDirectory, filename) for filename in filenames]
-		for metadataFile in fnmatch.filter(files, '*/boardTemplates/*.metadata'):
+		for metadataFile in fnmatch.filter(files, '*/boardTemplates-dts/*.metadata'):
 			print('Trying {}... '.format(metadataFile))
 			metadata = jinjaEnvironment.get_template(metadataFile).render(dictionary = dictionary)
 			for templateFile, templateArguments, outputFile in ast.literal_eval('[' + metadata + ']'):

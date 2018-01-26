@@ -1,6 +1,0 @@
-('source/board/boardTemplates/Rules.mk.jinja',
-		{},
-		'Rules.mk'),
-('source/board/boardTemplates/Tupfile.lua.jinja',
-		{},
-		'Tupfile.lua'),

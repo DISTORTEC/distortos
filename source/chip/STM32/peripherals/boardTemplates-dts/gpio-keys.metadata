@@ -6,11 +6,11 @@
 		if gpioKeys['properties']['status'][0] == 'okay' and
 		iterateNodes(dictionary, path + '/', [('status$', 'okay$')]) | first != None %}
 {% set sanitizedKeys = path.rpartition('/')[2] | sanitize('[^0-9A-Za-z]') %}
-('source/board/boardTemplates/gpio-keys.cpp.jinja',
+('source/board/boardTemplates-dts/gpio-keys.cpp.jinja',
 		{'path': '{{ path }}',
 				'sanitizedKeys': '{{ sanitizedKeys }}',
 				'chipInputPinImport':
-						'source/chip/STM32/peripherals/GPIOv{{ stm32GpioVersion }}/boardTemplates/ChipInputPin.jinja'},
+						'source/chip/STM32/peripherals/GPIOv{{ stm32GpioVersion }}/boardTemplates-dts/ChipInputPin.jinja'},
 		'{{ sanitizedBoard }}-{{ sanitizedKeys }}.cpp'),
 {% endfor %}
 {% endif %}

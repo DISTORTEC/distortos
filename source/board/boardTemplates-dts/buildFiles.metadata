@@ -1,0 +1,6 @@
+('source/board/boardTemplates-dts/Rules.mk.jinja',
+		{},
+		'Rules.mk'),
+('source/board/boardTemplates-dts/Tupfile.lua.jinja',
+		{},
+		'Tupfile.lua'),

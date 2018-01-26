@@ -3,12 +3,12 @@
 		if gpioLeds['properties']['status'][0] == 'okay' and
 		iterateNodes(dictionary, path + '/', [('status$', 'okay$')]) | first != None %}
 {% set sanitizedLeds = path.rpartition('/')[2] | sanitize('[^0-9A-Za-z]') %}
-('source/board/boardTemplates/gpio-leds.hpp.jinja',
+('source/board/boardTemplates-dts/gpio-leds.hpp.jinja',
 		{'path': '{{ path }}',
 				'sanitizedLeds': '{{ sanitizedLeds }}'},
 		'include/distortos/board/{{ sanitizedLeds }}.hpp'),
 {% if sanitizedLeds == 'leds' %}
-('source/board/boardTemplates/Kconfig-boardOptions-feature-has-enable.jinja',
+('source/board/boardTemplates-dts/Kconfig-boardOptions-feature-has-enable.jinja',
 		{'sanitizedFeature': '{{ sanitizedLeds }}'},
 		'Kconfig-boardOptions-{{ sanitizedLeds }}'),
 {% endif %}

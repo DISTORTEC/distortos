@@ -6,11 +6,11 @@
 		if gpioLeds['properties']['status'][0] == 'okay' and
 		iterateNodes(dictionary, path + '/', [('status$', 'okay$')]) | first != None %}
 {% set sanitizedLeds = path.rpartition('/')[2] | sanitize('[^0-9A-Za-z]') %}
-('source/board/boardTemplates/gpio-leds.cpp.jinja',
+('source/board/boardTemplates-dts/gpio-leds.cpp.jinja',
 		{'path': '{{ path }}',
 				'sanitizedLeds': '{{ sanitizedLeds }}',
 				'chipOutputPinImport':
-						'source/chip/STM32/peripherals/GPIOv{{ stm32GpioVersion }}/boardTemplates/ChipOutputPin.jinja'},
+						'source/chip/STM32/peripherals/GPIOv{{ stm32GpioVersion }}/boardTemplates-dts/ChipOutputPin.jinja'},
 		'{{ sanitizedBoard }}-{{ sanitizedLeds }}.cpp'),
 {% endfor %}
 {% endif %}
