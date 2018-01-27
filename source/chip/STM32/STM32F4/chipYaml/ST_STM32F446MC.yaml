@@ -40,6 +40,9 @@ memories:
     - on-chip-RAM
     address: 1073889280
     size: 4096
+    sections:
+    - .BKPSRAM.noinit
+    - .noinit
     $labels:
     - BKPSRAM
 pin-controller:
