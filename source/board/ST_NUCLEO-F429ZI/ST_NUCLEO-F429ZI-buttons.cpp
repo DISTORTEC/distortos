@@ -14,6 +14,8 @@
 
 #include "distortos/board/buttons.hpp"
 
+#if defined(CONFIG_BOARD_BUTTONS_ENABLE) && DISTORTOS_BOARD_TOTAL_BUTTONS != 0
+
 #include "distortos/chip/ChipInputPin.hpp"
 
 namespace distortos
@@ -28,9 +30,13 @@ namespace board
 
 const chip::ChipInputPin buttons[totalButtons]
 {
+#ifdef CONFIG_BOARD_BUTTONS_B1_ENABLE
 		chip::ChipInputPin{chip::Pin::pc13, chip::PinPull::none, false},
+#endif	// def CONFIG_BOARD_BUTTONS_B1_ENABLE
 };
 
 }	// namespace board
 
 }	// namespace distortos
+
+#endif	// defined(CONFIG_BOARD_BUTTONS_ENABLE) && DISTORTOS_BOARD_TOTAL_BUTTONS != 0

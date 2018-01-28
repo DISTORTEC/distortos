@@ -15,10 +15,20 @@
 #ifndef SOURCE_BOARD_ST_NUCLEO_F429ZI_INCLUDE_DISTORTOS_BOARD_BUTTONS_HPP_
 #define SOURCE_BOARD_ST_NUCLEO_F429ZI_INCLUDE_DISTORTOS_BOARD_BUTTONS_HPP_
 
+#include "distortos/distortosConfiguration.h"
+
 #include <cstddef>
 
+#ifdef CONFIG_BOARD_BUTTONS_B1_ENABLE
+#define DISTORTOS_BOARD_BUTTONS_B1_ENABLED	1
+#else	// !def CONFIG_BOARD_BUTTONS_B1_ENABLE
+#define DISTORTOS_BOARD_BUTTONS_B1_ENABLED	0
+#endif	// !def CONFIG_BOARD_BUTTONS_B1_ENABLE
+
 /// total number of buttons on the board
-#define DISTORTOS_BOARD_TOTAL_BUTTONS		(1)
+#define DISTORTOS_BOARD_TOTAL_BUTTONS	(DISTORTOS_BOARD_BUTTONS_B1_ENABLED)
+
+#if defined(CONFIG_BOARD_BUTTONS_ENABLE) && DISTORTOS_BOARD_TOTAL_BUTTONS != 0
 
 namespace distortos
 {
@@ -42,16 +52,22 @@ constexpr size_t totalButtons {DISTORTOS_BOARD_TOTAL_BUTTONS};
 
 enum
 {
+#ifdef CONFIG_BOARD_BUTTONS_B1_ENABLE
 		/// index of b1 button (user)
 		b1ButtonIndex,
+#endif	// def CONFIG_BOARD_BUTTONS_B1_ENABLE
 };
 
 /*---------------------------------------------------------------------------------------------------------------------+
-| alternative (label-based) indexes of buttons
+| alternative indexes of buttons
 +---------------------------------------------------------------------------------------------------------------------*/
+
+#ifdef CONFIG_BOARD_BUTTONS_B1_ENABLE
 
 /// alternative index of b1 button (user)
 constexpr size_t userButtonIndex {b1ButtonIndex};
+
+#endif	// def CONFIG_BOARD_BUTTONS_B1_ENABLE
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | indexed access to buttons objects
@@ -63,5 +79,7 @@ extern const chip::ChipInputPin buttons[totalButtons];
 }	// namespace board
 
 }	// namespace distortos
+
+#endif	// defined(CONFIG_BOARD_BUTTONS_ENABLE) && DISTORTOS_BOARD_TOTAL_BUTTONS != 0
 
 #endif	// SOURCE_BOARD_ST_NUCLEO_F429ZI_INCLUDE_DISTORTOS_BOARD_BUTTONS_HPP_

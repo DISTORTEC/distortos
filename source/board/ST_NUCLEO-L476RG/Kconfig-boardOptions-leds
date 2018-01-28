@@ -11,9 +11,19 @@
 
 if BOARD_SOURCE_BOARD_ST_NUCLEO_L476RG_ST_NUCLEO_L476RG
 
-config BOARD_HAS_LEDS
-	bool
+comment "ST,NUCLEO-L476RG leds options"
+
+config BOARD_LEDS_ENABLE
+	bool "Enable leds"
 	default y
-	select BOARD_LEDS_ENABLE
+
+if BOARD_LEDS_ENABLE
+
+config BOARD_LEDS_LD2_ENABLE
+	bool "Enable ld2 LED (green)"
+	default y
+	select CHIP_STM32_GPIOV2_GPIOA_ENABLE
+
+endif	# BOARD_LEDS_ENABLE
 
 endif	# BOARD_SOURCE_BOARD_ST_NUCLEO_L476RG_ST_NUCLEO_L476RG
