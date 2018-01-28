@@ -32,7 +32,7 @@ def addLabels(dictionary, labels):
 			for key in keys:
 				node = node[key]
 			node['$labels'] = [label]
-		except:
+		except KeyError:
 			pass
 
 	return dictionary
