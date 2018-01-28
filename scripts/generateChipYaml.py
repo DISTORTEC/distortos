@@ -55,7 +55,7 @@ def parseFirstRow(firstRow):
 	previousKeys = firstRow[0].split('/')
 	paths = []
 	labels = []
-	for column, header in enumerate(firstRow):
+	for header in firstRow:
 		keys = header.split('/')
 
 		i = 0
