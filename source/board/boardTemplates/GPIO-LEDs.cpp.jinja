@@ -1,0 +1,48 @@
+{% import chipOutputPinImport as ChipOutputPin %}
+{% set board = dictionary['board']['compatible'][0] %}
+/**
+ * \file
+ * \brief Definition of {{ sanitizedDictionaryKey }} for {{ board }}
+ *
+ * \author Copyright (C) 2014-{{ year }} Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ *
+ * \par License
+ * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
+ * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ *
+ * \warning
+ * Automatically generated file - do not edit!
+ */
+
+#include "distortos/board/{{ sanitizedDictionaryKey }}.hpp"
+
+#if defined(CONFIG_BOARD_{{ sanitizedDictionaryKey | upper }}_ENABLE) && {# remove whitespace -#}
+DISTORTOS_BOARD_TOTAL_{{ sanitizedDictionaryKey | upper }} != 0
+
+#include "distortos/chip/ChipOutputPin.hpp"
+
+namespace distortos
+{
+
+namespace board
+{
+
+/*---------------------------------------------------------------------------------------------------------------------+
+| global objects
++---------------------------------------------------------------------------------------------------------------------*/
+
+chip::ChipOutputPin {{ sanitizedDictionaryKey }}[total{{ sanitizedDictionaryKey | capitalize }}]
+{
+{% for key, value in dictionary[dictionaryKey].items() if value is mapping %}
+#ifdef CONFIG_BOARD_{{ sanitizedDictionaryKey | upper }}_{{ key | sanitize('[^0-9A-Za-z]') | upper }}_ENABLE
+		{{ ChipOutputPin.initializer(value['GPIO']) }},
+#endif	// def CONFIG_BOARD_{{ sanitizedDictionaryKey | upper }}_{{ key | sanitize('[^0-9A-Za-z]') | upper }}_ENABLE
+{% endfor %}
+};
+
+}	// namespace board
+
+}	// namespace distortos
+
+#endif	// defined(CONFIG_BOARD_{{ sanitizedDictionaryKey | upper }}_ENABLE) && {# remove whitespace -#}
+DISTORTOS_BOARD_TOTAL_{{ sanitizedDictionaryKey | upper }} != 0
