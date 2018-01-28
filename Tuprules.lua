@@ -133,7 +133,7 @@ CXXFLAGS += "-ffunction-sections -fdata-sections -fno-rtti -fno-exceptions"
 CXXFLAGS += CONFIG_ASSERT
 
 if CONFIG_LDSCRIPT ~= nil then
-	-- path to board's linker script (possibly generated from devicetree)
+	-- path to board's linker script (possibly from board generator)
 	RAW_LDSCRIPT = DISTORTOS_TOP .. CONFIG_LDSCRIPT
 else
 	-- path to linker script (generated automatically)

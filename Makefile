@@ -135,7 +135,7 @@ CXXFLAGS += -ffunction-sections -fdata-sections -fno-rtti -fno-exceptions
 CXXFLAGS += $(CONFIG_ASSERT)
 
 ifdef CONFIG_LDSCRIPT
-	# path to board's linker script (possibly generated from devicetree)
+	# path to board's linker script (possibly from board generator)
 	RAW_LDSCRIPT := $(DISTORTOS_PATH)$(call UNQUOTE_DOUBLE,$(CONFIG_LDSCRIPT))
 else
 	# path to linker script (generated automatically)
@@ -301,10 +301,7 @@ ifdef OUTPUT_PATH
 else
 	$(eval BOARD_ARGUMENTS := $(dir $(CONFIG_FILE)))
 endif
-	$(eval DTS_CPPFLAGS := -nostdinc -undef -E -x assembler-with-cpp \
-			$(shell find -L . -type d -name 'dtsi' -exec echo -I {} \;))
-	$(CPP) $(DTS_CPPFLAGS) $(CONFIG_FILE) | \
-	./$(DISTORTOS_PATH)scripts/generateBoard-dts.py - $(BOARD_ARGUMENTS) ./$(DISTORTOS_PATH)
+	./$(DISTORTOS_PATH)scripts/generateBoard.py $(CONFIG_FILE) $(BOARD_ARGUMENTS) ./$(DISTORTOS_PATH)
 
 .PHONY: configure
 configure:
@@ -355,7 +352,7 @@ all - build current configuration
 clean - remove the build output
 board CONFIG_FILE=<config_file> [OUTPUT_PATH=<output_path>] - generate board
   files;
-  <config_file> .. path to .dts config file with board configuration
+  <config_file> .. path to .yaml config file with board configuration
   <output_path> .. optional path to output directory where board will be
     generated; if not specified, files will be generated in the same folder as
     the one with config file
