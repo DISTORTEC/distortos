@@ -1,0 +1,44 @@
+#
+# file: ST_NUCLEO-F401RE.yaml
+#
+# author: Copyright (C) 2017-2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+#
+# This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
+# distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+#
+
+$extends:
+- 'source/chip/STM32/STM32F4/chipYaml/ST_STM32F401RE.yaml'
+board:
+  compatible:
+  - ST,NUCLEO-F401RE
+  model: STMicroelectronics NUCLEO-F401RE
+chip:
+  VDD: !Reference {label: VDD}
+buttons:
+  compatible:
+  - GPIO-buttons
+  b1:
+    GPIO:
+      port: !Reference {label: GPIOC}
+      pin: 13
+      activeLow: True
+    alternative-names:
+    - user
+leds:
+  compatible:
+  - GPIO-LEDs
+  ld2:
+    GPIO:
+      port: !Reference {label: GPIOA}
+      pin: 5
+    alternative-names:
+    - green
+regulators:
+  VDD:
+    compatible:
+    - fixed-regulator
+    always-on: True
+    output-voltage: 3.3
+    $labels:
+    - VDD

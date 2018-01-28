@@ -1,0 +1,46 @@
+#
+# file: ST_32F746GDISCOVERY.yaml
+#
+# author: Copyright (C) 2017-2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+#
+# This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
+# distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+#
+
+$extends:
+- 'source/chip/STM32/STM32F7/chipYaml/ST_STM32F746NG.yaml'
+board:
+  compatible:
+  - ST,32F746GDISCOVERY
+  model: STMicroelectronics 32F746GDISCOVERY
+chip:
+  VDD: !Reference {label: VDD}
+buttons:
+  compatible:
+  - GPIO-buttons
+  b1:
+    GPIO:
+      port: !Reference {label: GPIOI}
+      pin: 11
+    alternative-names:
+    - user
+leds:
+  compatible:
+  - GPIO-LEDs
+  ld1:
+    GPIO:
+      port: !Reference {label: GPIOI}
+      pin: 1
+    alternative-names:
+    - green
+regulators:
+  VDD:
+    compatible:
+    - fixed-regulator
+    always-on: True
+    output-voltage: 3.3
+    $labels:
+    - VDD
+!Reference {label: HSE}:
+  frequency: 25000000
+  bypass: True

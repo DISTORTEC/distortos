@@ -1,0 +1,58 @@
+#
+# file: ST_NUCLEO-F429ZI.yaml
+#
+# author: Copyright (C) 2017-2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+#
+# This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
+# distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+#
+
+$extends:
+- 'source/chip/STM32/STM32F4/chipYaml/ST_STM32F429ZI.yaml'
+board:
+  compatible:
+  - ST,NUCLEO-F429ZI
+  model: STMicroelectronics ST,NUCLEO-F429ZI
+chip:
+  VDD: !Reference {label: VDD}
+buttons:
+  compatible:
+  - GPIO-buttons
+  b1:
+    GPIO:
+      port: !Reference {label: GPIOC}
+      pin: 13
+    alternative-names:
+    - user
+leds:
+  compatible:
+  - GPIO-LEDs
+  ld1:
+    GPIO:
+      port: !Reference {label: GPIOB}
+      pin: 0
+    alternative-names:
+    - green
+  ld2:
+    GPIO:
+      port: !Reference {label: GPIOB}
+      pin: 7
+    alternative-names:
+    - blue
+  ld3:
+    GPIO:
+      port: !Reference {label: GPIOB}
+      pin: 14
+    alternative-names:
+    - red
+regulators:
+  VDD:
+    compatible:
+    - fixed-regulator
+    always-on: True
+    output-voltage: 3.3
+    $labels:
+    - VDD
+!Reference {label: HSE}:
+  frequency: 8000000
+  bypass: True
