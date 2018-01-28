@@ -1,5 +1,5 @@
-{% if iterateNodes(dictionary, '/cpus/cpu@[0-9]+$', [('compatible$', 'ARM,ARMv[67]-M$')]) | first %}
-{% set sanitizedBoard = dictionary['/']['properties']['compatible'][0] | sanitize %}
+{% if 'ARM,ARMv6-M' in dictionary['CPUs'][0]['compatible'] or 'ARM,ARMv7-M' in dictionary['CPUs'][0]['compatible'] %}
+{% set sanitizedBoard = dictionary['board']['compatible'][0] | sanitize %}
 ('source/architecture/ARM/ARMv6-M-ARMv7-M/boardTemplates/ARMv6-M-ARMv7-M.ld.jinja',
 		{},
 		'{{ sanitizedBoard }}.ld'),

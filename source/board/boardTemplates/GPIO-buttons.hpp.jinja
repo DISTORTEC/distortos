@@ -1,0 +1,112 @@
+{% set board = dictionary['board']['compatible'][0] %}
+{% set includeGuard = outputFile | sanitize('[^0-9A-Za-z]') | upper + '_' %}
+/**
+ * \file
+ * \brief Declaration of {{ sanitizedDictionaryKey }} for {{ board }}
+ *
+ * \author Copyright (C) 2014-{{ year }} Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ *
+ * \par License
+ * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
+ * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ *
+ * \warning
+ * Automatically generated file - do not edit!
+ */
+
+#ifndef {{ includeGuard }}
+#define {{ includeGuard }}
+
+#include "distortos/distortosConfiguration.h"
+
+#include <cstddef>
+{% for key, value in dictionary[dictionaryKey].items() if value is mapping %}
+
+#ifdef CONFIG_BOARD_{{ sanitizedDictionaryKey | upper }}_{{ key | sanitize('[^0-9A-Za-z]') | upper }}_ENABLE
+#define DISTORTOS_BOARD_{{ sanitizedDictionaryKey | upper }}_{{ key | sanitize('[^0-9A-Za-z]') | upper }}_ENABLED	1
+#else	// !def CONFIG_BOARD_{{ sanitizedDictionaryKey | upper }}_{{ key | sanitize('[^0-9A-Za-z]') | upper }}_ENABLE
+#define DISTORTOS_BOARD_{{ sanitizedDictionaryKey | upper }}_{{ key | sanitize('[^0-9A-Za-z]') | upper }}_ENABLED	0
+#endif	// !def CONFIG_BOARD_{{ sanitizedDictionaryKey | upper }}_{{ key | sanitize('[^0-9A-Za-z]') | upper }}_ENABLE
+{%endfor%}
+
+/// total number of {{ sanitizedDictionaryKey }} on the board
+#define DISTORTOS_BOARD_TOTAL_{{ sanitizedDictionaryKey | upper }}	(
+{%- for key, value in dictionary[dictionaryKey].items() if value is mapping %}
+{% if loop.first == False %}{{ '\t\t' }}{% endif -%}
+DISTORTOS_BOARD_{{ sanitizedDictionaryKey | upper }}_{{ key | sanitize('[^0-9A-Za-z]') | upper }}_ENABLED
+{%- if loop.last == False %} + \{% else %}){% endif %}{{ '' }}
+{% endfor %}
+
+#if defined(CONFIG_BOARD_{{ sanitizedDictionaryKey | upper }}_ENABLE) && {# remove whitespace -#}
+DISTORTOS_BOARD_TOTAL_{{ sanitizedDictionaryKey | upper }} != 0
+
+namespace distortos
+{
+
+namespace chip
+{
+
+class ChipInputPin;
+
+}	// namespace chip
+
+namespace board
+{
+
+/// total number of {{ sanitizedDictionaryKey }} on the board
+constexpr size_t total{{ sanitizedDictionaryKey | capitalize }} {# remove whitespace -#}
+{DISTORTOS_BOARD_TOTAL_{{ sanitizedDictionaryKey | upper }}};
+
+/*---------------------------------------------------------------------------------------------------------------------+
+| indexes of {{ sanitizedDictionaryKey }}
++---------------------------------------------------------------------------------------------------------------------*/
+
+enum
+{
+{% for key, value in dictionary[dictionaryKey].items() if value is mapping %}
+#ifdef CONFIG_BOARD_{{ sanitizedDictionaryKey | upper }}_{{ key | sanitize('[^0-9A-Za-z]') | upper }}_ENABLE
+		/// index of {{ key }} button{# remove whitespace -#}
+		{% if 'alternative-names' in value %} ({{ value['alternative-names'] | join(', ') }}){% endif %}{{ '' }}
+		{{ key | sanitize('[^0-9A-Za-z]') }}ButtonIndex,
+#endif	// def CONFIG_BOARD_{{ sanitizedDictionaryKey | upper }}_{{ key | sanitize('[^0-9A-Za-z]') | upper }}_ENABLE
+{% endfor %}
+};
+{% for key, value in dictionary[dictionaryKey].items() if value is mapping and 'alternative-names' in value %}
+{% set outerLoop = loop %}
+{% for alternativeName in value['alternative-names'] %}
+{% if outerLoop.first == True and loop.first == True %}
+
+/*---------------------------------------------------------------------------------------------------------------------+
+| alternative indexes of {{ sanitizedDictionaryKey }}
++---------------------------------------------------------------------------------------------------------------------*/
+{% endif%}
+{% if loop.first == True %}
+
+#ifdef CONFIG_BOARD_{{ sanitizedDictionaryKey | upper }}_{{ key | sanitize('[^0-9A-Za-z]') | upper }}_ENABLE
+{% endif %}
+
+/// alternative index of {{ key }} button ({{ alternativeName }})
+constexpr size_t {{ alternativeName | sanitize('[^0-9A-Za-z]') }}ButtonIndex {# remove whitespace -#}
+{{ '{' }}{{ key | sanitize('[^0-9A-Za-z]') }}ButtonIndex};
+{% if loop.last == True %}
+
+#endif	// def CONFIG_BOARD_{{ sanitizedDictionaryKey | upper }}_{{ key | sanitize('[^0-9A-Za-z]') | upper }}_ENABLE
+{% endif %}
+{% endfor %}
+{% endfor %}
+
+/*---------------------------------------------------------------------------------------------------------------------+
+| indexed access to {{ sanitizedDictionaryKey }} objects
++---------------------------------------------------------------------------------------------------------------------*/
+
+/// array with all {{ sanitizedDictionaryKey }} objects
+extern const chip::ChipInputPin {{ sanitizedDictionaryKey }}[total{{ sanitizedDictionaryKey | capitalize }}];
+
+}	// namespace board
+
+}	// namespace distortos
+
+#endif	// defined(CONFIG_BOARD_{{ sanitizedDictionaryKey | upper }}_ENABLE) && {# remove whitespace -#}
+DISTORTOS_BOARD_TOTAL_{{ sanitizedDictionaryKey | upper }} != 0
+
+#endif	// {{ includeGuard }}

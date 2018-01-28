@@ -3,151 +3,139 @@
 #
 # file: generateBoard.py
 #
-# author: Copyright (C) 2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+# author: Copyright (C) 2017-2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
 #
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #
 
-from __future__ import print_function
-
 import argparse
 import ast
+import common
 import datetime
 import fnmatch
 import jinja2
 import os
 import posixpath
-import pydts
-import re
+import ruamel.yaml
+
+# reference to label in YAML
+class Reference():
+
+	yaml_tag = '!Reference'
+
+	def __init__(self, label):
+		self.label = label
+
+	def __repr__(self):
+		return "{}(label = {})".format(self.__class__.__name__, self.label)
+
+	def __eq__(self, other):
+		if isinstance(self, other.__class__) == True:
+			return self.label == other.label
+		return False
+
+	def __ne__(self, other):
+		return not self.__eq__(other)
+
+	def __hash__(self):
+		return self.label.__hash__()
 
 #
-# Returns devicetree node from specified path.
+# Extends each node of the dictionary with its path.
 #
-# param [in] dictionary is the dictionary with devicetree
-# param [in] path is the path of selected node in devicetree
+# For each node of the dictionary a '$path' key is added, which holds node's path - a list of keys.
 #
-# return devicetree node from specified path
-#
-
-def getNode(dictionary, path):
-	pathComponents = path.split('/')
-	if pathComponents[0] == '':
-		pathComponents[0] = '/'
-	node = dictionary
-	for pathComponent in pathComponents:
-		node = node.get('nodes', node)[pathComponent]
-	return node
-
-#
-# Tests whether a devicetree node contains matching property names with matching values.
-#
-# param [in] node is the node which will be tested
-# param [in] propertyPatterns is a list of tuples, each with property name pattern and property value pattern, empty
-# list accepts all nodes
-#
-# return True if node contains matching property names with matching values (or if propertyPatterns is an empty list),
-# False otherwise
+# param [in] dictionary is the dictionary in which paths will be added
+# param [in] path is the current path (list of keys) in the dictionary, default - None
 #
 
-def testProperties(node, propertyPatterns):
-	if len(propertyPatterns) == 0:
-		return True
-	for namePattern, valuePattern in propertyPatterns:
-		nameRegex = re.compile(namePattern)
-		valueRegex = re.compile(valuePattern)
-		for name, values in node['properties'].items():
-			if nameRegex.match(name) != None:
-				for value in values:
-					if valueRegex.match(value) != None:
-						return True
-	return False
-
-#
-# Generator which can be used to iterate devicetree nodes.
-#
-# param [in] dictionary is the dictionary which will be iterated over
-# param [in] path is the list with current path components
-#
-# return node path and node dictionary
-#
-
-def iterateNodesImplementation(dictionary, path = None):
+def addPaths(dictionary, path = None):
 	path = path or []
-	for name, node in dictionary.items():
-		if 'nodes' in node and 'properties' in node:
-			yield '/'.join(path + [name]).replace('//', '/'), node
-			for subpath, subnode in iterateNodesImplementation(node['nodes'], path + [name]):
-				yield subpath, subnode
+	for key, value in dictionary.items():
+		if isinstance(value, dict) == True:
+			newPath = path + [key]
+			value['$path'] = newPath
+			addPaths(value, newPath)
 
 #
-# Generator which can be used to iterate devicetree nodes, with optional filtering by node path and/or by presence of
-# matching property names with matching values
+# Builds a dictionary with labels
 #
-# param [in] dictionary is the dictionary which will be iterated over
-# param [in] pathPattern is the path pattern, empty string accepts all paths, default - empty string
-# param [in] propertyPatterns is a list of tuples, each with property name pattern and property value pattern, empty
-# list (or None) accepts all nodes, default - None
+# Each entry in the dictionary has label as the key and node as value.
 #
-# return node path and node dictionary
+# param [in] dictionary is the dictionary in which labels are searched for
+# param [in] labels is the current stage of dictionary with labels, default - None
 #
-
-def iterateNodes(dictionary, pathPattern = '', propertyPatterns = None):
-	propertyPatterns = propertyPatterns or []
-	regex = re.compile(pathPattern)
-	for path, node in iterateNodesImplementation(dictionary):
-		if regex.match(path) != None:
-			if testProperties(node, propertyPatterns) == True:
-				yield path, node
-
-#
-# Generator which can be used to iterate devicetree properties, with optional filtering by property names
-#
-# param [in] dictionary is the dictionary which will be iterated over
-# param [in] propertyNames is a list of property names, empty list (or None) accepts all properties, default - None
-#
-# return property name and list of property values
+# return dictionary with labels
 #
 
-def iterateProperties(dictionary, propertyNames = None):
-	propertyNames = propertyNames or []
-	for node in dictionary.values():
-		if 'nodes' in node and 'properties' in node:
-			for propertyName, propertyValues in node['properties'].items():
-				if len(propertyNames) == 0 or propertyName in propertyNames:
-					yield propertyName, propertyValues
-			for propertyName, propertyValues in iterateProperties(node['nodes'], propertyNames):
-				yield propertyName, propertyValues
+def getLabels(dictionary, labels = None):
+	labels = labels or {}
+	for key, value in dictionary.items():
+		if key == '$labels':
+			for label in value:
+				labels[label] = dictionary
+		elif isinstance(value, dict) == True:
+			labels = getLabels(value, labels)
+	return labels
 
 #
-# Generator which can be used to iterate devicetree properties, with optional filtering by property names - unpacked
-# variant
+# Merges two dictionaries into one
 #
-# param [in] dictionary is the dictionary which will be iterated over
-# param [in] propertyNames is a list of property names, empty list (or None) accepts all properties, default - None
+# Recursively handles nested dictionaries. If given key exists in both dictionaries, value from b overwrites value from
+# a.
 #
-# return property name and property value
+# param [in] a is the dictionary into which b will be merged
+# param [in] b is the dictionary which will be merged into a
 #
-
-def iteratePropertiesUnpacked(dictionary, propertyNames = None):
-	propertyNames = propertyNames or []
-	for propertyName, propertyValues in iterateProperties(dictionary, propertyNames):
-		for propertyValue in propertyValues:
-			yield propertyName, propertyValue
-
-#
-# Filter which sanitizes provided path
-#
-# param [in] path is the path that will be sanitized
-# param [in] pattern is the pattern which will be replaced, default - '[^0-9A-Za-z-]'
-# param [in] replacement is the replacement string, default - '_'
-#
-# return sanitized path
+# return merged dictionary
 #
 
-def sanitize(path, pattern = '[^0-9A-Za-z-]', replacement = '_'):
-	regex = re.compile(pattern)
-	return regex.sub(replacement, path)
+def mergeDictionaries(a, b):
+	for key in b:
+		if key in a:
+			if isinstance(a[key], dict) == True and isinstance(b[key], dict) == True:
+				mergeDictionaries(a[key], b[key])
+			elif a[key] != b[key]:
+				a[key] = b[key]
+		else:
+			a[key] = b[key]
+	return a
+
+#
+# Recursively resolves all '$extends' keys.
+#
+# param [in] dictionary is the dictionary in which '$extends' keys will be recursively resolved
+#
+# return dictionary with recursively resolved '$extends' keys
+#
+
+def resolveExtensions(dictionary):
+	if '$extends' in dictionary:
+		for filename in dictionary['$extends']:
+			with open(filename) as yamlFile:
+				extendedDictionary = yaml.load(yamlFile)
+			extendedDictionary = resolveExtensions(extendedDictionary)
+			dictionary = mergeDictionaries(extendedDictionary, dictionary)
+		del dictionary['$extends']
+	return dictionary
+
+#
+# Resolves all references in a dictionary.
+#
+# param [in] dictionary is a dictionary of a list in which references will be resolved
+# param [in] labels is a dictionary with labels
+#
+
+def resolveReferences(dictionary, labels):
+	for key, value in dictionary.items():
+		if isinstance(key, Reference) == True:
+			mergeDictionaries(labels[key.label], value)
+			del dictionary[key]
+		elif isinstance(value, Reference) == True:
+			dictionary[key] = labels[value.label]
+		elif isinstance(value, dict) == True:
+			resolveReferences(value, labels)
 
 ########################################################################################################################
 # main
@@ -155,31 +143,28 @@ def sanitize(path, pattern = '[^0-9A-Za-z-]', replacement = '_'):
 
 if __name__ == '__main__':
 	parser = argparse.ArgumentParser()
-	parser.add_argument('-I', '--in-format', choices = ['dts', 'pickle'], default = 'dts',
-			help = 'input format, default - dts')
 	parser.add_argument('inputFile', type = argparse.FileType('r'), help = 'input file')
 	parser.add_argument('outputPath', help = 'output path')
 	parser.add_argument('distortosPath', help = 'distortos path')
 	arguments = parser.parse_args()
 
+	yaml = ruamel.yaml.YAML()
+	yaml.register_class(Reference)
+
+	dictionary = yaml.load(arguments.inputFile)
+	dictionary = resolveExtensions(dictionary)
+	addPaths(dictionary)
+	labels = getLabels(dictionary)
+	resolveReferences(dictionary, labels)
+
 	relativeOutputPath = posixpath.relpath(posixpath.realpath(arguments.outputPath),
 			posixpath.realpath(arguments.distortosPath))
-
-	print()
-	print('Reading dts...')
-
-	dictionary = pydts.loadDictionary(arguments.inputFile, arguments.in_format == 'dts')
-
-	print()
-	print('Searching for metadata and rendering files...')
 
 	jinjaEnvironment = jinja2.Environment(trim_blocks = True, lstrip_blocks = True, keep_trailing_newline = True,
 			loader = jinja2.FileSystemLoader(['.', arguments.distortosPath]))
 	jinjaEnvironment.globals['outputPath'] = relativeOutputPath
 	jinjaEnvironment.globals['year'] = datetime.date.today().year
-	jinjaEnvironment.globals['getNode'] = getNode
-	jinjaEnvironment.globals['iterateNodes'] = iterateNodes
-	jinjaEnvironment.filters['sanitize'] = sanitize
+	jinjaEnvironment.filters['sanitize'] = common.sanitize
 
 	for currentDirectory, directories, filenames in os.walk('.', followlinks = True):
 		# jinja expects forward slashes on all systems - https://github.com/pallets/jinja/issues/767

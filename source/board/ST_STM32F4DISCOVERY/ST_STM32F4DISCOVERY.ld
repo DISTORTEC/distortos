@@ -2,9 +2,9 @@
  * \file
  * \brief Linker script for ST,STM32F4DISCOVERY board with ST,STM32F407VG chip:
  * - 1.0 MiB of flash at 0x8000000;
- * - 64.0 KiB of ccm at 0x10000000;
- * - 128.0 KiB of sram at 0x20000000;
- * - 4.0 KiB of bkpsram at 0x40024000;
+ * - 128.0 KiB of SRAM at 0x20000000;
+ * - 64.0 KiB of CCM at 0x10000000;
+ * - 4.0 KiB of BKPSRAM at 0x40024000;
  *
  * \author Copyright (C) 2014-2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
@@ -39,32 +39,26 @@ PROVIDE(__process_stack_size = ALIGN(CONFIG_MAIN_THREAD_STACK_SIZE, CONFIG_ARCHI
 MEMORY
 {
 	flash : org = 0x8000000, len = 1048576
-	ccm : org = 0x10000000, len = 65536
-	sram : org = 0x20000000, len = 131072
-	bkpsram : org = 0x40024000, len = 4096
+	SRAM : org = 0x20000000, len = 131072
+	CCM : org = 0x10000000, len = 65536
+	BKPSRAM : org = 0x40024000, len = 4096
 }
 
 PROVIDE(__flash_start = ORIGIN(flash));
 PROVIDE(__flash_size = LENGTH(flash));
 PROVIDE(__flash_end = ORIGIN(flash) + LENGTH(flash));
 
-PROVIDE(__ccm_start = ORIGIN(ccm));
-PROVIDE(__ccm_size = LENGTH(ccm));
-PROVIDE(__ccm_end = ORIGIN(ccm) + LENGTH(ccm));
-HIDDEN(__ccm_limit_low = ORIGIN(ccm));
-HIDDEN(__ccm_limit_high = ORIGIN(ccm) + LENGTH(ccm));
+PROVIDE(__SRAM_start = ORIGIN(SRAM));
+PROVIDE(__SRAM_size = LENGTH(SRAM));
+PROVIDE(__SRAM_end = ORIGIN(SRAM) + LENGTH(SRAM));
 
-PROVIDE(__sram_start = ORIGIN(sram));
-PROVIDE(__sram_size = LENGTH(sram));
-PROVIDE(__sram_end = ORIGIN(sram) + LENGTH(sram));
-HIDDEN(__sram_limit_low = ORIGIN(sram));
-HIDDEN(__sram_limit_high = ORIGIN(sram) + LENGTH(sram));
+PROVIDE(__CCM_start = ORIGIN(CCM));
+PROVIDE(__CCM_size = LENGTH(CCM));
+PROVIDE(__CCM_end = ORIGIN(CCM) + LENGTH(CCM));
 
-PROVIDE(__bkpsram_start = ORIGIN(bkpsram));
-PROVIDE(__bkpsram_size = LENGTH(bkpsram));
-PROVIDE(__bkpsram_end = ORIGIN(bkpsram) + LENGTH(bkpsram));
-HIDDEN(__bkpsram_limit_low = ORIGIN(bkpsram));
-HIDDEN(__bkpsram_limit_high = ORIGIN(bkpsram) + LENGTH(bkpsram));
+PROVIDE(__BKPSRAM_start = ORIGIN(BKPSRAM));
+PROVIDE(__BKPSRAM_size = LENGTH(BKPSRAM));
+PROVIDE(__BKPSRAM_end = ORIGIN(BKPSRAM) + LENGTH(BKPSRAM));
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | entry point
@@ -75,6 +69,81 @@ ENTRY(Reset_Handler);
 /*---------------------------------------------------------------------------------------------------------------------+
 | put data in sections
 +---------------------------------------------------------------------------------------------------------------------*/
+
+#ifdef CONFIG_BOARD_SOURCE_BOARD_ST_STM32F4DISCOVERY_ST_STM32F4DISCOVERY_LD_TEXT_REGION_FLASH
+REGION_ALIAS("textVmaRegion", flash);
+REGION_ALIAS("textLmaRegion", flash);
+#endif	/* CONFIG_BOARD_SOURCE_BOARD_ST_STM32F4DISCOVERY_ST_STM32F4DISCOVERY_LD_TEXT_REGION_FLASH */
+
+#ifdef CONFIG_BOARD_SOURCE_BOARD_ST_STM32F4DISCOVERY_ST_STM32F4DISCOVERY_LD_ARM_EXIDX_REGION_FLASH
+REGION_ALIAS("armExidxVmaRegion", flash);
+REGION_ALIAS("armExidxLmaRegion", flash);
+#endif	/* CONFIG_BOARD_SOURCE_BOARD_ST_STM32F4DISCOVERY_ST_STM32F4DISCOVERY_LD_ARM_EXIDX_REGION_FLASH */
+
+#ifdef CONFIG_BOARD_SOURCE_BOARD_ST_STM32F4DISCOVERY_ST_STM32F4DISCOVERY_LD_MAIN_STACK_REGION_SRAM
+REGION_ALIAS("mainStackVmaRegion", SRAM);
+REGION_ALIAS("mainStackLmaRegion", SRAM);
+#endif	/* CONFIG_BOARD_SOURCE_BOARD_ST_STM32F4DISCOVERY_ST_STM32F4DISCOVERY_LD_MAIN_STACK_REGION_SRAM */
+
+#ifdef CONFIG_BOARD_SOURCE_BOARD_ST_STM32F4DISCOVERY_ST_STM32F4DISCOVERY_LD_MAIN_STACK_REGION_CCM
+REGION_ALIAS("mainStackVmaRegion", CCM);
+REGION_ALIAS("mainStackLmaRegion", CCM);
+#endif	/* CONFIG_BOARD_SOURCE_BOARD_ST_STM32F4DISCOVERY_ST_STM32F4DISCOVERY_LD_MAIN_STACK_REGION_CCM */
+
+#ifdef CONFIG_BOARD_SOURCE_BOARD_ST_STM32F4DISCOVERY_ST_STM32F4DISCOVERY_LD_BSS_REGION_SRAM
+REGION_ALIAS("bssVmaRegion", SRAM);
+REGION_ALIAS("bssLmaRegion", SRAM);
+#endif	/* CONFIG_BOARD_SOURCE_BOARD_ST_STM32F4DISCOVERY_ST_STM32F4DISCOVERY_LD_BSS_REGION_SRAM */
+
+#ifdef CONFIG_BOARD_SOURCE_BOARD_ST_STM32F4DISCOVERY_ST_STM32F4DISCOVERY_LD_BSS_REGION_CCM
+REGION_ALIAS("bssVmaRegion", CCM);
+REGION_ALIAS("bssLmaRegion", CCM);
+#endif	/* CONFIG_BOARD_SOURCE_BOARD_ST_STM32F4DISCOVERY_ST_STM32F4DISCOVERY_LD_BSS_REGION_CCM */
+
+#ifdef CONFIG_BOARD_SOURCE_BOARD_ST_STM32F4DISCOVERY_ST_STM32F4DISCOVERY_LD_DATA_VMA_REGION_SRAM
+REGION_ALIAS("dataVmaRegion", SRAM);
+#endif	/* CONFIG_BOARD_SOURCE_BOARD_ST_STM32F4DISCOVERY_ST_STM32F4DISCOVERY_LD_DATA_VMA_REGION_SRAM */
+
+#ifdef CONFIG_BOARD_SOURCE_BOARD_ST_STM32F4DISCOVERY_ST_STM32F4DISCOVERY_LD_DATA_VMA_REGION_CCM
+REGION_ALIAS("dataVmaRegion", CCM);
+#endif	/* CONFIG_BOARD_SOURCE_BOARD_ST_STM32F4DISCOVERY_ST_STM32F4DISCOVERY_LD_DATA_VMA_REGION_CCM */
+
+#ifdef CONFIG_BOARD_SOURCE_BOARD_ST_STM32F4DISCOVERY_ST_STM32F4DISCOVERY_LD_DATA_LMA_REGION_FLASH
+REGION_ALIAS("dataLmaRegion", flash);
+#endif	/* CONFIG_BOARD_SOURCE_BOARD_ST_STM32F4DISCOVERY_ST_STM32F4DISCOVERY_LD_DATA_LMA_REGION_FLASH */
+
+#ifdef CONFIG_BOARD_SOURCE_BOARD_ST_STM32F4DISCOVERY_ST_STM32F4DISCOVERY_LD_NOINIT_REGION_SRAM
+REGION_ALIAS("noinitVmaRegion", SRAM);
+REGION_ALIAS("noinitLmaRegion", SRAM);
+#endif	/* CONFIG_BOARD_SOURCE_BOARD_ST_STM32F4DISCOVERY_ST_STM32F4DISCOVERY_LD_NOINIT_REGION_SRAM */
+
+#ifdef CONFIG_BOARD_SOURCE_BOARD_ST_STM32F4DISCOVERY_ST_STM32F4DISCOVERY_LD_NOINIT_REGION_CCM
+REGION_ALIAS("noinitVmaRegion", CCM);
+REGION_ALIAS("noinitLmaRegion", CCM);
+#endif	/* CONFIG_BOARD_SOURCE_BOARD_ST_STM32F4DISCOVERY_ST_STM32F4DISCOVERY_LD_NOINIT_REGION_CCM */
+
+#ifdef CONFIG_BOARD_SOURCE_BOARD_ST_STM32F4DISCOVERY_ST_STM32F4DISCOVERY_LD_NOINIT_REGION_BKPSRAM
+REGION_ALIAS("noinitVmaRegion", BKPSRAM);
+REGION_ALIAS("noinitLmaRegion", BKPSRAM);
+#endif	/* CONFIG_BOARD_SOURCE_BOARD_ST_STM32F4DISCOVERY_ST_STM32F4DISCOVERY_LD_NOINIT_REGION_BKPSRAM */
+
+#ifdef CONFIG_BOARD_SOURCE_BOARD_ST_STM32F4DISCOVERY_ST_STM32F4DISCOVERY_LD_SRAM_DATA_LMA_REGION_FLASH
+REGION_ALIAS("SRAMDataLmaRegion", flash);
+#endif	/* CONFIG_BOARD_SOURCE_BOARD_ST_STM32F4DISCOVERY_ST_STM32F4DISCOVERY_LD_SRAM_DATA_LMA_REGION_FLASH */
+
+#ifdef CONFIG_BOARD_SOURCE_BOARD_ST_STM32F4DISCOVERY_ST_STM32F4DISCOVERY_LD_CCM_DATA_LMA_REGION_FLASH
+REGION_ALIAS("CCMDataLmaRegion", flash);
+#endif	/* CONFIG_BOARD_SOURCE_BOARD_ST_STM32F4DISCOVERY_ST_STM32F4DISCOVERY_LD_CCM_DATA_LMA_REGION_FLASH */
+
+#ifdef CONFIG_BOARD_SOURCE_BOARD_ST_STM32F4DISCOVERY_ST_STM32F4DISCOVERY_LD_PROCESS_STACK_REGION_SRAM
+PROVIDE(__process_stack_end = __SRAM_end / 8 * 8);
+#endif	/* def CONFIG_BOARD_SOURCE_BOARD_ST_STM32F4DISCOVERY_ST_STM32F4DISCOVERY_LD_PROCESS_STACK_REGION_SRAM */
+
+#ifdef CONFIG_BOARD_SOURCE_BOARD_ST_STM32F4DISCOVERY_ST_STM32F4DISCOVERY_LD_PROCESS_STACK_REGION_CCM
+PROVIDE(__process_stack_end = __CCM_end / 8 * 8);
+#endif	/* def CONFIG_BOARD_SOURCE_BOARD_ST_STM32F4DISCOVERY_ST_STM32F4DISCOVERY_LD_PROCESS_STACK_REGION_CCM */
+
+PROVIDE(__process_stack_start = (__process_stack_end - __process_stack_size) / 8 * 8);
 
 SECTIONS
 {
@@ -118,9 +187,8 @@ SECTIONS
 		PROVIDE(__data_initializers_start = .);
 
 		LONG(LOADADDR(.data)); LONG(ADDR(.data)); LONG(ADDR(.data) + SIZEOF(.data));
-		LONG(LOADADDR(.ccm.data)); LONG(ADDR(.ccm.data)); LONG(ADDR(.ccm.data) + SIZEOF(.ccm.data));
-		LONG(LOADADDR(.sram.data)); LONG(ADDR(.sram.data)); LONG(ADDR(.sram.data) + SIZEOF(.sram.data));
-		LONG(LOADADDR(.bkpsram.data)); LONG(ADDR(.bkpsram.data)); LONG(ADDR(.bkpsram.data) + SIZEOF(.bkpsram.data));
+		LONG(LOADADDR(.SRAM.data)); LONG(ADDR(.SRAM.data)); LONG(ADDR(.SRAM.data) + SIZEOF(.SRAM.data));
+		LONG(LOADADDR(.CCM.data)); LONG(ADDR(.CCM.data)); LONG(ADDR(.CCM.data) + SIZEOF(.CCM.data));
 
 		. = ALIGN(4);
 		PROVIDE(__data_initializers_end = .);
@@ -135,9 +203,8 @@ SECTIONS
 		LONG(0); LONG(ADDR(.bss)); LONG(ADDR(.bss) + SIZEOF(.bss));
 		LONG(0xed419f25); LONG(ADDR(.main_stack)); LONG(ADDR(.main_stack) + SIZEOF(.main_stack));
 		LONG(0xed419f25); LONG(ADDR(.process_stack)); LONG(ADDR(.process_stack) + SIZEOF(.process_stack));
-		LONG(0); LONG(ADDR(.ccm.bss)); LONG(ADDR(.ccm.bss) + SIZEOF(.ccm.bss));
-		LONG(0); LONG(ADDR(.sram.bss)); LONG(ADDR(.sram.bss) + SIZEOF(.sram.bss));
-		LONG(0); LONG(ADDR(.bkpsram.bss)); LONG(ADDR(.bkpsram.bss) + SIZEOF(.bkpsram.bss));
+		LONG(0); LONG(ADDR(.SRAM.bss)); LONG(ADDR(.SRAM.bss) + SIZEOF(.SRAM.bss));
+		LONG(0); LONG(ADDR(.CCM.bss)); LONG(ADDR(.CCM.bss) + SIZEOF(.CCM.bss));
 
 		. = ALIGN(4);
 		PROVIDE(__bss_initializers_end = .);
@@ -197,7 +264,7 @@ SECTIONS
 		/* end of sub-sections: init, preinit_array, init_array and fini_array */
 
 		PROVIDE(__text_end = .);
-	} > flash AT > flash
+	} > textVmaRegion AT > textLmaRegion
 
 	.ARM.exidx :
 	{
@@ -206,7 +273,7 @@ SECTIONS
 		*(.ARM.exidx* .gnu.linkonce.armexidx.*);	/* index entries for section unwinding */
 
 		PROVIDE(__exidx_end = .);
-	} > flash AT > flash
+	} > armExidxVmaRegion AT > armExidxLmaRegion
 
 	.main_stack :
 	{
@@ -217,8 +284,7 @@ SECTIONS
 
 		. = ALIGN(8);
 		PROVIDE(__main_stack_end = .);
-		HIDDEN(__sram_limit_low = .);
-	} > sram AT > sram
+	} > mainStackVmaRegion AT > mainStackLmaRegion
 
 	.bss (NOLOAD) :
 	{
@@ -230,8 +296,7 @@ SECTIONS
 
 		. = ALIGN(4);
 		PROVIDE(__bss_end = .);
-		HIDDEN(__sram_limit_low = .);
-	} > sram AT > sram
+	} > bssVmaRegion AT > bssLmaRegion
 
 	.data :
 	{
@@ -243,8 +308,7 @@ SECTIONS
 
 		. = ALIGN(4);
 		PROVIDE(__data_end = .);
-		HIDDEN(__sram_limit_low = .);
-	} > sram AT > flash
+	} > dataVmaRegion AT > dataLmaRegion
 
 	.noinit (NOLOAD) :
 	{
@@ -253,126 +317,85 @@ SECTIONS
 		*(.noinit);
 
 		PROVIDE(__noinit_end = .);
-		HIDDEN(__sram_limit_low = .);
-	} > sram AT > sram
+	} > noinitVmaRegion AT > noinitLmaRegion
 
-	.ccm.bss (NOLOAD) :
+	.SRAM.bss (NOLOAD) :
 	{
 		. = ALIGN(4);
-		PROVIDE(__ccm_bss_start = .);
+		PROVIDE(__SRAM_bss_start = .);
 
-		*(.ccm.bss);
+		*(.SRAM.bss);
 
 		. = ALIGN(4);
-		PROVIDE(__ccm_bss_end = .);
-		HIDDEN(__ccm_limit_low = .);
-	} > ccm AT > ccm
+		PROVIDE(__SRAM_bss_end = .);
+	} > SRAM AT > SRAM
 
-	.ccm.data :
+	.SRAM.data :
 	{
 		. = ALIGN(4);
-		PROVIDE(__ccm_data_init_start = LOADADDR(.ccm.data));
-		PROVIDE(__ccm_data_start = .);
+		PROVIDE(__SRAM_data_init_start = LOADADDR(.SRAM.data));
+		PROVIDE(__SRAM_data_start = .);
 
-		*(.ccm.data);
+		*(.SRAM.data);
 
 		. = ALIGN(4);
-		PROVIDE(__ccm_data_end = .);
-		HIDDEN(__ccm_limit_low = .);
-	} > ccm AT > flash
+		PROVIDE(__SRAM_data_end = .);
+	} > SRAM AT > SRAMDataLmaRegion
 
-	.ccm.noinit (NOLOAD) :
+	.SRAM.noinit (NOLOAD) :
 	{
-		PROVIDE(__ccm_noinit_start = .);
+		PROVIDE(__SRAM_noinit_start = .);
 
-		*(.ccm.noinit);
+		*(.SRAM.noinit);
 
-		PROVIDE(__ccm_noinit_end = .);
-		HIDDEN(__ccm_limit_low = .);
-	} > ccm AT > ccm
+		PROVIDE(__SRAM_noinit_end = .);
+	} > SRAM AT > SRAM
 
-	.sram.bss (NOLOAD) :
+	.CCM.bss (NOLOAD) :
 	{
 		. = ALIGN(4);
-		PROVIDE(__sram_bss_start = .);
+		PROVIDE(__CCM_bss_start = .);
 
-		*(.sram.bss);
+		*(.CCM.bss);
 
 		. = ALIGN(4);
-		PROVIDE(__sram_bss_end = .);
-		HIDDEN(__sram_limit_low = .);
-	} > sram AT > sram
+		PROVIDE(__CCM_bss_end = .);
+	} > CCM AT > CCM
 
-	.sram.data :
+	.CCM.data :
 	{
 		. = ALIGN(4);
-		PROVIDE(__sram_data_init_start = LOADADDR(.sram.data));
-		PROVIDE(__sram_data_start = .);
+		PROVIDE(__CCM_data_init_start = LOADADDR(.CCM.data));
+		PROVIDE(__CCM_data_start = .);
 
-		*(.sram.data);
+		*(.CCM.data);
 
 		. = ALIGN(4);
-		PROVIDE(__sram_data_end = .);
-		HIDDEN(__sram_limit_low = .);
-	} > sram AT > flash
+		PROVIDE(__CCM_data_end = .);
+	} > CCM AT > CCMDataLmaRegion
 
-	.sram.noinit (NOLOAD) :
+	.CCM.noinit (NOLOAD) :
 	{
-		PROVIDE(__sram_noinit_start = .);
+		PROVIDE(__CCM_noinit_start = .);
 
-		*(.sram.noinit);
+		*(.CCM.noinit);
 
-		PROVIDE(__sram_noinit_end = .);
-		HIDDEN(__sram_limit_low = .);
-	} > sram AT > sram
+		PROVIDE(__CCM_noinit_end = .);
+	} > CCM AT > CCM
 
-	.bkpsram.bss (NOLOAD) :
+	.BKPSRAM.noinit (NOLOAD) :
 	{
-		. = ALIGN(4);
-		PROVIDE(__bkpsram_bss_start = .);
+		PROVIDE(__BKPSRAM_noinit_start = .);
 
-		*(.bkpsram.bss);
+		*(.BKPSRAM.noinit);
 
-		. = ALIGN(4);
-		PROVIDE(__bkpsram_bss_end = .);
-		HIDDEN(__bkpsram_limit_low = .);
-	} > bkpsram AT > bkpsram
-
-	.bkpsram.data :
-	{
-		. = ALIGN(4);
-		PROVIDE(__bkpsram_data_init_start = LOADADDR(.bkpsram.data));
-		PROVIDE(__bkpsram_data_start = .);
-
-		*(.bkpsram.data);
-
-		. = ALIGN(4);
-		PROVIDE(__bkpsram_data_end = .);
-		HIDDEN(__bkpsram_limit_low = .);
-	} > bkpsram AT > flash
-
-	.bkpsram.noinit (NOLOAD) :
-	{
-		PROVIDE(__bkpsram_noinit_start = .);
-
-		*(.bkpsram.noinit);
-
-		PROVIDE(__bkpsram_noinit_end = .);
-		HIDDEN(__bkpsram_limit_low = .);
-	} > bkpsram AT > bkpsram
-
-	PROVIDE(__process_stack_end = __sram_end / 8 * 8);
-	PROVIDE(__process_stack_start = (__process_stack_end - __process_stack_size) / 8 * 8);
+		PROVIDE(__BKPSRAM_noinit_end = .);
+	} > BKPSRAM AT > BKPSRAM
 
 	.process_stack __process_stack_start : AT(__process_stack_start)
 	{
-		HIDDEN(__sram_limit_high = .);
-
 		. += __process_stack_size;
 	}
-
-	PROVIDE(__heap_start = ALIGN(__sram_limit_low, 8));
-	PROVIDE(__heap_end = __sram_limit_high / 8 * 8);
 
 	/* Stabs debugging sections. */
 	.stab 0 : { *(.stab); }
@@ -417,20 +440,36 @@ SECTIONS
 	/DISCARD/ : { *(.note.GNU-stack); *(.gnu_debuglink); *(.gnu.lto_*); }
 }
 
+#ifdef CONFIG_BOARD_SOURCE_BOARD_ST_STM32F4DISCOVERY_ST_STM32F4DISCOVERY_LD_HEAP_REGION_SRAM
+PROVIDE(__heap_start = ALIGN(__SRAM_noinit_end, 8));
+#ifdef CONFIG_BOARD_SOURCE_BOARD_ST_STM32F4DISCOVERY_ST_STM32F4DISCOVERY_LD_PROCESS_STACK_REGION_SRAM
+PROVIDE(__heap_end = __process_stack_start / 8 * 8);
+#else	/* !def CONFIG_BOARD_SOURCE_BOARD_ST_STM32F4DISCOVERY_ST_STM32F4DISCOVERY_LD_PROCESS_STACK_REGION_SRAM */
+PROVIDE(__heap_end = __SRAM_end / 8 * 8);
+#endif	/* !def CONFIG_BOARD_SOURCE_BOARD_ST_STM32F4DISCOVERY_ST_STM32F4DISCOVERY_LD_PROCESS_STACK_REGION_SRAM */
+#endif	/* def CONFIG_BOARD_SOURCE_BOARD_ST_STM32F4DISCOVERY_ST_STM32F4DISCOVERY_LD_HEAP_REGION_SRAM */
+
+#ifdef CONFIG_BOARD_SOURCE_BOARD_ST_STM32F4DISCOVERY_ST_STM32F4DISCOVERY_LD_HEAP_REGION_CCM
+PROVIDE(__heap_start = ALIGN(__CCM_noinit_end, 8));
+#ifdef CONFIG_BOARD_SOURCE_BOARD_ST_STM32F4DISCOVERY_ST_STM32F4DISCOVERY_LD_PROCESS_STACK_REGION_CCM
+PROVIDE(__heap_end = __process_stack_start / 8 * 8);
+#else	/* !def CONFIG_BOARD_SOURCE_BOARD_ST_STM32F4DISCOVERY_ST_STM32F4DISCOVERY_LD_PROCESS_STACK_REGION_CCM */
+PROVIDE(__heap_end = __CCM_end / 8 * 8);
+#endif	/* !def CONFIG_BOARD_SOURCE_BOARD_ST_STM32F4DISCOVERY_ST_STM32F4DISCOVERY_LD_PROCESS_STACK_REGION_CCM */
+#endif	/* def CONFIG_BOARD_SOURCE_BOARD_ST_STM32F4DISCOVERY_ST_STM32F4DISCOVERY_LD_HEAP_REGION_CCM */
+
 PROVIDE(__text_size = SIZEOF(.text));
 PROVIDE(__exidx_size = SIZEOF(.ARM.exidx));
 PROVIDE(__bss_size = SIZEOF(.bss));
 PROVIDE(__data_size = SIZEOF(.data));
 PROVIDE(__noinit_size = SIZEOF(.noinit));
-PROVIDE(__ccm_bss_size = SIZEOF(.ccm.bss));
-PROVIDE(__ccm_data_size = SIZEOF(.ccm.data));
-PROVIDE(__ccm_noinit_size = SIZEOF(.ccm.noinit));
-PROVIDE(__sram_bss_size = SIZEOF(.sram.bss));
-PROVIDE(__sram_data_size = SIZEOF(.sram.data));
-PROVIDE(__sram_noinit_size = SIZEOF(.sram.noinit));
-PROVIDE(__bkpsram_bss_size = SIZEOF(.bkpsram.bss));
-PROVIDE(__bkpsram_data_size = SIZEOF(.bkpsram.data));
-PROVIDE(__bkpsram_noinit_size = SIZEOF(.bkpsram.noinit));
+PROVIDE(__SRAM_bss_size = SIZEOF(.SRAM.bss));
+PROVIDE(__SRAM_data_size = SIZEOF(.SRAM.data));
+PROVIDE(__SRAM_noinit_size = SIZEOF(.SRAM.noinit));
+PROVIDE(__CCM_bss_size = SIZEOF(.CCM.bss));
+PROVIDE(__CCM_data_size = SIZEOF(.CCM.data));
+PROVIDE(__CCM_noinit_size = SIZEOF(.CCM.noinit));
+PROVIDE(__BKPSRAM_noinit_size = SIZEOF(.BKPSRAM.noinit));
 
 PROVIDE(__bss_start__ = __bss_start);
 PROVIDE(__bss_end__ = __bss_end);

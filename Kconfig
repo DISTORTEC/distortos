@@ -120,7 +120,7 @@ config ASSERT_ENABLE
 config LDSCRIPT_ROM_SIZE_MANUAL_CONFIGURATION
 	bool "Configure ROM's address & size in linker script"
 	default n
-	depends on !BOARD_HAS_DTS
+	depends on !BOARD_HAS_YAML
 	help
 		Enables manual configuration of ROM's offset and size in generated
 		linker script. Example uses of this option are:

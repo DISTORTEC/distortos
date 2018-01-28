@@ -2,8 +2,8 @@
  * \file
  * \brief Linker script for ST,NUCLEO-L073RZ board with ST,STM32L073RZ chip:
  * - 192.0 KiB of flash at 0x8000000;
- * - 6.0 KiB of eeprom at 0x8080000;
- * - 20.0 KiB of sram at 0x20000000;
+ * - 20.0 KiB of SRAM at 0x20000000;
+ * - 6.0 KiB of EEPROM at 0x8080000;
  *
  * \author Copyright (C) 2014-2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
@@ -38,23 +38,21 @@ PROVIDE(__process_stack_size = ALIGN(CONFIG_MAIN_THREAD_STACK_SIZE, CONFIG_ARCHI
 MEMORY
 {
 	flash : org = 0x8000000, len = 196608
-	eeprom : org = 0x8080000, len = 6144
-	sram : org = 0x20000000, len = 20480
+	SRAM : org = 0x20000000, len = 20480
+	EEPROM : org = 0x8080000, len = 6144
 }
 
 PROVIDE(__flash_start = ORIGIN(flash));
 PROVIDE(__flash_size = LENGTH(flash));
 PROVIDE(__flash_end = ORIGIN(flash) + LENGTH(flash));
 
-PROVIDE(__eeprom_start = ORIGIN(eeprom));
-PROVIDE(__eeprom_size = LENGTH(eeprom));
-PROVIDE(__eeprom_end = ORIGIN(eeprom) + LENGTH(eeprom));
+PROVIDE(__SRAM_start = ORIGIN(SRAM));
+PROVIDE(__SRAM_size = LENGTH(SRAM));
+PROVIDE(__SRAM_end = ORIGIN(SRAM) + LENGTH(SRAM));
 
-PROVIDE(__sram_start = ORIGIN(sram));
-PROVIDE(__sram_size = LENGTH(sram));
-PROVIDE(__sram_end = ORIGIN(sram) + LENGTH(sram));
-HIDDEN(__sram_limit_low = ORIGIN(sram));
-HIDDEN(__sram_limit_high = ORIGIN(sram) + LENGTH(sram));
+PROVIDE(__EEPROM_start = ORIGIN(EEPROM));
+PROVIDE(__EEPROM_size = LENGTH(EEPROM));
+PROVIDE(__EEPROM_end = ORIGIN(EEPROM) + LENGTH(EEPROM));
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | entry point
@@ -65,6 +63,49 @@ ENTRY(Reset_Handler);
 /*---------------------------------------------------------------------------------------------------------------------+
 | put data in sections
 +---------------------------------------------------------------------------------------------------------------------*/
+
+#ifdef CONFIG_BOARD_SOURCE_BOARD_ST_NUCLEO_L073RZ_ST_NUCLEO_L073RZ_LD_TEXT_REGION_FLASH
+REGION_ALIAS("textVmaRegion", flash);
+REGION_ALIAS("textLmaRegion", flash);
+#endif	/* CONFIG_BOARD_SOURCE_BOARD_ST_NUCLEO_L073RZ_ST_NUCLEO_L073RZ_LD_TEXT_REGION_FLASH */
+
+#ifdef CONFIG_BOARD_SOURCE_BOARD_ST_NUCLEO_L073RZ_ST_NUCLEO_L073RZ_LD_ARM_EXIDX_REGION_FLASH
+REGION_ALIAS("armExidxVmaRegion", flash);
+REGION_ALIAS("armExidxLmaRegion", flash);
+#endif	/* CONFIG_BOARD_SOURCE_BOARD_ST_NUCLEO_L073RZ_ST_NUCLEO_L073RZ_LD_ARM_EXIDX_REGION_FLASH */
+
+#ifdef CONFIG_BOARD_SOURCE_BOARD_ST_NUCLEO_L073RZ_ST_NUCLEO_L073RZ_LD_MAIN_STACK_REGION_SRAM
+REGION_ALIAS("mainStackVmaRegion", SRAM);
+REGION_ALIAS("mainStackLmaRegion", SRAM);
+#endif	/* CONFIG_BOARD_SOURCE_BOARD_ST_NUCLEO_L073RZ_ST_NUCLEO_L073RZ_LD_MAIN_STACK_REGION_SRAM */
+
+#ifdef CONFIG_BOARD_SOURCE_BOARD_ST_NUCLEO_L073RZ_ST_NUCLEO_L073RZ_LD_BSS_REGION_SRAM
+REGION_ALIAS("bssVmaRegion", SRAM);
+REGION_ALIAS("bssLmaRegion", SRAM);
+#endif	/* CONFIG_BOARD_SOURCE_BOARD_ST_NUCLEO_L073RZ_ST_NUCLEO_L073RZ_LD_BSS_REGION_SRAM */
+
+#ifdef CONFIG_BOARD_SOURCE_BOARD_ST_NUCLEO_L073RZ_ST_NUCLEO_L073RZ_LD_DATA_VMA_REGION_SRAM
+REGION_ALIAS("dataVmaRegion", SRAM);
+#endif	/* CONFIG_BOARD_SOURCE_BOARD_ST_NUCLEO_L073RZ_ST_NUCLEO_L073RZ_LD_DATA_VMA_REGION_SRAM */
+
+#ifdef CONFIG_BOARD_SOURCE_BOARD_ST_NUCLEO_L073RZ_ST_NUCLEO_L073RZ_LD_DATA_LMA_REGION_FLASH
+REGION_ALIAS("dataLmaRegion", flash);
+#endif	/* CONFIG_BOARD_SOURCE_BOARD_ST_NUCLEO_L073RZ_ST_NUCLEO_L073RZ_LD_DATA_LMA_REGION_FLASH */
+
+#ifdef CONFIG_BOARD_SOURCE_BOARD_ST_NUCLEO_L073RZ_ST_NUCLEO_L073RZ_LD_NOINIT_REGION_SRAM
+REGION_ALIAS("noinitVmaRegion", SRAM);
+REGION_ALIAS("noinitLmaRegion", SRAM);
+#endif	/* CONFIG_BOARD_SOURCE_BOARD_ST_NUCLEO_L073RZ_ST_NUCLEO_L073RZ_LD_NOINIT_REGION_SRAM */
+
+#ifdef CONFIG_BOARD_SOURCE_BOARD_ST_NUCLEO_L073RZ_ST_NUCLEO_L073RZ_LD_SRAM_DATA_LMA_REGION_FLASH
+REGION_ALIAS("SRAMDataLmaRegion", flash);
+#endif	/* CONFIG_BOARD_SOURCE_BOARD_ST_NUCLEO_L073RZ_ST_NUCLEO_L073RZ_LD_SRAM_DATA_LMA_REGION_FLASH */
+
+#ifdef CONFIG_BOARD_SOURCE_BOARD_ST_NUCLEO_L073RZ_ST_NUCLEO_L073RZ_LD_PROCESS_STACK_REGION_SRAM
+PROVIDE(__process_stack_end = __SRAM_end / 8 * 8);
+#endif	/* def CONFIG_BOARD_SOURCE_BOARD_ST_NUCLEO_L073RZ_ST_NUCLEO_L073RZ_LD_PROCESS_STACK_REGION_SRAM */
+
+PROVIDE(__process_stack_start = (__process_stack_end - __process_stack_size) / 8 * 8);
 
 SECTIONS
 {
@@ -108,7 +149,7 @@ SECTIONS
 		PROVIDE(__data_initializers_start = .);
 
 		LONG(LOADADDR(.data)); LONG(ADDR(.data)); LONG(ADDR(.data) + SIZEOF(.data));
-		LONG(LOADADDR(.sram.data)); LONG(ADDR(.sram.data)); LONG(ADDR(.sram.data) + SIZEOF(.sram.data));
+		LONG(LOADADDR(.SRAM.data)); LONG(ADDR(.SRAM.data)); LONG(ADDR(.SRAM.data) + SIZEOF(.SRAM.data));
 
 		. = ALIGN(4);
 		PROVIDE(__data_initializers_end = .);
@@ -123,7 +164,7 @@ SECTIONS
 		LONG(0); LONG(ADDR(.bss)); LONG(ADDR(.bss) + SIZEOF(.bss));
 		LONG(0xed419f25); LONG(ADDR(.main_stack)); LONG(ADDR(.main_stack) + SIZEOF(.main_stack));
 		LONG(0xed419f25); LONG(ADDR(.process_stack)); LONG(ADDR(.process_stack) + SIZEOF(.process_stack));
-		LONG(0); LONG(ADDR(.sram.bss)); LONG(ADDR(.sram.bss) + SIZEOF(.sram.bss));
+		LONG(0); LONG(ADDR(.SRAM.bss)); LONG(ADDR(.SRAM.bss) + SIZEOF(.SRAM.bss));
 
 		. = ALIGN(4);
 		PROVIDE(__bss_initializers_end = .);
@@ -183,7 +224,7 @@ SECTIONS
 		/* end of sub-sections: init, preinit_array, init_array and fini_array */
 
 		PROVIDE(__text_end = .);
-	} > flash AT > flash
+	} > textVmaRegion AT > textLmaRegion
 
 	.ARM.exidx :
 	{
@@ -192,7 +233,7 @@ SECTIONS
 		*(.ARM.exidx* .gnu.linkonce.armexidx.*);	/* index entries for section unwinding */
 
 		PROVIDE(__exidx_end = .);
-	} > flash AT > flash
+	} > armExidxVmaRegion AT > armExidxLmaRegion
 
 	.main_stack :
 	{
@@ -203,8 +244,7 @@ SECTIONS
 
 		. = ALIGN(8);
 		PROVIDE(__main_stack_end = .);
-		HIDDEN(__sram_limit_low = .);
-	} > sram AT > sram
+	} > mainStackVmaRegion AT > mainStackLmaRegion
 
 	.bss (NOLOAD) :
 	{
@@ -216,8 +256,7 @@ SECTIONS
 
 		. = ALIGN(4);
 		PROVIDE(__bss_end = .);
-		HIDDEN(__sram_limit_low = .);
-	} > sram AT > sram
+	} > bssVmaRegion AT > bssLmaRegion
 
 	.data :
 	{
@@ -229,8 +268,7 @@ SECTIONS
 
 		. = ALIGN(4);
 		PROVIDE(__data_end = .);
-		HIDDEN(__sram_limit_low = .);
-	} > sram AT > flash
+	} > dataVmaRegion AT > dataLmaRegion
 
 	.noinit (NOLOAD) :
 	{
@@ -239,56 +277,44 @@ SECTIONS
 		*(.noinit);
 
 		PROVIDE(__noinit_end = .);
-		HIDDEN(__sram_limit_low = .);
-	} > sram AT > sram
+	} > noinitVmaRegion AT > noinitLmaRegion
 
-	.sram.bss (NOLOAD) :
+	.SRAM.bss (NOLOAD) :
 	{
 		. = ALIGN(4);
-		PROVIDE(__sram_bss_start = .);
+		PROVIDE(__SRAM_bss_start = .);
 
-		*(.sram.bss);
+		*(.SRAM.bss);
 
 		. = ALIGN(4);
-		PROVIDE(__sram_bss_end = .);
-		HIDDEN(__sram_limit_low = .);
-	} > sram AT > sram
+		PROVIDE(__SRAM_bss_end = .);
+	} > SRAM AT > SRAM
 
-	.sram.data :
+	.SRAM.data :
 	{
 		. = ALIGN(4);
-		PROVIDE(__sram_data_init_start = LOADADDR(.sram.data));
-		PROVIDE(__sram_data_start = .);
+		PROVIDE(__SRAM_data_init_start = LOADADDR(.SRAM.data));
+		PROVIDE(__SRAM_data_start = .);
 
-		*(.sram.data);
+		*(.SRAM.data);
 
 		. = ALIGN(4);
-		PROVIDE(__sram_data_end = .);
-		HIDDEN(__sram_limit_low = .);
-	} > sram AT > flash
+		PROVIDE(__SRAM_data_end = .);
+	} > SRAM AT > SRAMDataLmaRegion
 
-	.sram.noinit (NOLOAD) :
+	.SRAM.noinit (NOLOAD) :
 	{
-		PROVIDE(__sram_noinit_start = .);
+		PROVIDE(__SRAM_noinit_start = .);
 
-		*(.sram.noinit);
+		*(.SRAM.noinit);
 
-		PROVIDE(__sram_noinit_end = .);
-		HIDDEN(__sram_limit_low = .);
-	} > sram AT > sram
-
-	PROVIDE(__process_stack_end = __sram_end / 8 * 8);
-	PROVIDE(__process_stack_start = (__process_stack_end - __process_stack_size) / 8 * 8);
+		PROVIDE(__SRAM_noinit_end = .);
+	} > SRAM AT > SRAM
 
 	.process_stack __process_stack_start : AT(__process_stack_start)
 	{
-		HIDDEN(__sram_limit_high = .);
-
 		. += __process_stack_size;
 	}
-
-	PROVIDE(__heap_start = ALIGN(__sram_limit_low, 8));
-	PROVIDE(__heap_end = __sram_limit_high / 8 * 8);
 
 	/* Stabs debugging sections. */
 	.stab 0 : { *(.stab); }
@@ -333,14 +359,23 @@ SECTIONS
 	/DISCARD/ : { *(.note.GNU-stack); *(.gnu_debuglink); *(.gnu.lto_*); }
 }
 
+#ifdef CONFIG_BOARD_SOURCE_BOARD_ST_NUCLEO_L073RZ_ST_NUCLEO_L073RZ_LD_HEAP_REGION_SRAM
+PROVIDE(__heap_start = ALIGN(__SRAM_noinit_end, 8));
+#ifdef CONFIG_BOARD_SOURCE_BOARD_ST_NUCLEO_L073RZ_ST_NUCLEO_L073RZ_LD_PROCESS_STACK_REGION_SRAM
+PROVIDE(__heap_end = __process_stack_start / 8 * 8);
+#else	/* !def CONFIG_BOARD_SOURCE_BOARD_ST_NUCLEO_L073RZ_ST_NUCLEO_L073RZ_LD_PROCESS_STACK_REGION_SRAM */
+PROVIDE(__heap_end = __SRAM_end / 8 * 8);
+#endif	/* !def CONFIG_BOARD_SOURCE_BOARD_ST_NUCLEO_L073RZ_ST_NUCLEO_L073RZ_LD_PROCESS_STACK_REGION_SRAM */
+#endif	/* def CONFIG_BOARD_SOURCE_BOARD_ST_NUCLEO_L073RZ_ST_NUCLEO_L073RZ_LD_HEAP_REGION_SRAM */
+
 PROVIDE(__text_size = SIZEOF(.text));
 PROVIDE(__exidx_size = SIZEOF(.ARM.exidx));
 PROVIDE(__bss_size = SIZEOF(.bss));
 PROVIDE(__data_size = SIZEOF(.data));
 PROVIDE(__noinit_size = SIZEOF(.noinit));
-PROVIDE(__sram_bss_size = SIZEOF(.sram.bss));
-PROVIDE(__sram_data_size = SIZEOF(.sram.data));
-PROVIDE(__sram_noinit_size = SIZEOF(.sram.noinit));
+PROVIDE(__SRAM_bss_size = SIZEOF(.SRAM.bss));
+PROVIDE(__SRAM_data_size = SIZEOF(.SRAM.data));
+PROVIDE(__SRAM_noinit_size = SIZEOF(.SRAM.noinit));
 
 PROVIDE(__bss_start__ = __bss_start);
 PROVIDE(__bss_end__ = __bss_end);

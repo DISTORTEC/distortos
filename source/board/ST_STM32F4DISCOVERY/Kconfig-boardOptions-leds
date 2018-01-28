@@ -11,9 +11,34 @@
 
 if BOARD_SOURCE_BOARD_ST_STM32F4DISCOVERY_ST_STM32F4DISCOVERY
 
-config BOARD_HAS_LEDS
-	bool
+comment "ST,STM32F4DISCOVERY leds options"
+
+config BOARD_LEDS_ENABLE
+	bool "Enable leds"
 	default y
-	select BOARD_LEDS_ENABLE
+
+if BOARD_LEDS_ENABLE
+
+config BOARD_LEDS_LD3_ENABLE
+	bool "Enable ld3 LED (orange)"
+	default y
+	select CHIP_STM32_GPIOV2_GPIOD_ENABLE
+
+config BOARD_LEDS_LD4_ENABLE
+	bool "Enable ld4 LED (green)"
+	default y
+	select CHIP_STM32_GPIOV2_GPIOD_ENABLE
+
+config BOARD_LEDS_LD5_ENABLE
+	bool "Enable ld5 LED (red)"
+	default y
+	select CHIP_STM32_GPIOV2_GPIOD_ENABLE
+
+config BOARD_LEDS_LD6_ENABLE
+	bool "Enable ld6 LED (blue)"
+	default y
+	select CHIP_STM32_GPIOV2_GPIOD_ENABLE
+
+endif	# BOARD_LEDS_ENABLE
 
 endif	# BOARD_SOURCE_BOARD_ST_STM32F4DISCOVERY_ST_STM32F4DISCOVERY

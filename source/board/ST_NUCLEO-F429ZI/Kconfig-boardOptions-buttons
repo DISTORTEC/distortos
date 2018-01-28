@@ -11,9 +11,19 @@
 
 if BOARD_SOURCE_BOARD_ST_NUCLEO_F429ZI_ST_NUCLEO_F429ZI
 
-config BOARD_HAS_BUTTONS
-	bool
+comment "ST,NUCLEO-F429ZI buttons options"
+
+config BOARD_BUTTONS_ENABLE
+	bool "Enable buttons"
 	default y
-	select BOARD_BUTTONS_ENABLE
+
+if BOARD_BUTTONS_ENABLE
+
+config BOARD_BUTTONS_B1_ENABLE
+	bool "Enable b1 button (user)"
+	default y
+	select CHIP_STM32_GPIOV2_GPIOC_ENABLE
+
+endif	# BOARD_BUTTONS_ENABLE
 
 endif	# BOARD_SOURCE_BOARD_ST_NUCLEO_F429ZI_ST_NUCLEO_F429ZI

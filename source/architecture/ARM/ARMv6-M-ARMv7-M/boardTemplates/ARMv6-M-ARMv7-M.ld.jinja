@@ -1,24 +1,13 @@
-{% macro chosenToLabel(value, vma) %}
-{% set labels = dictionary['labels'] %}
-{% set chosen = dictionary['/']['nodes']['chosen']['properties'] %}
-{% set node = labels[chosen[value][0]['label']]['node'] %}
-{{ node['properties']['label'][0] }}{% if vma == True and 'virtual-reg' in node['properties'] %}Vma{% endif %}
-{% endmacro %}
-{% set memoryProperties = [('device_type', 'memory')] %}
-{% set allProperties = memoryProperties + [('compatible', 'on-chip-flash'), ('compatible', 'on-chip-eeprom')] %}
 /**
  * \file
-{% set board = dictionary['/']['properties']['compatible'][0] %}
-{% set chip = dictionary['/']['properties']['compatible'][1] %}
+{% set board = dictionary['board']['compatible'][0] %}
+{% set chip = dictionary['chip']['compatible'][0] %}
+{% set prefix = ('CONFIG_BOARD_' + outputPath + '_' + board) | sanitize('[^0-9A-Za-z]') | upper %}
  * \brief Linker script for {{ board }} board with {{ chip }} chip:
-{% for key, memory in iterateNodes(dictionary, '', allProperties) %}
-{% set size = memory['properties']['reg'][0][1] %}
-{% set label = memory['properties']['label'][0] %}
-{% set address = memory['properties']['reg'][0][0] %}
- * - {{ size | filesizeformat(binary = True) }} of {{ label }} at {{ '0x%x' % address -}}
-{% if 'virtual-reg' in memory['properties'] %}
-{% set virtualAddress = memory['properties']['virtual-reg'][0][0] %}
- (VMA {{ '0x%x' % virtualAddress }})
+{% for key, memory in dictionary['memories'].items() if memory is mapping %}
+ * - {{ memory['size'] | filesizeformat(binary = True) }} of {{ key }} at {{ '0x%x' % memory['address'] -}}
+{% if 'virtualAddress' in memory %}
+ (VMA {{ '0x%x' % memory['virtualAddress'] }})
 {%- endif %}
 ;
 {% endfor %}
@@ -55,27 +44,18 @@ PROVIDE(__process_stack_size = ALIGN(CONFIG_MAIN_THREAD_STACK_SIZE, CONFIG_ARCHI
 
 MEMORY
 {
-{% for key, memory in iterateNodes(dictionary, '', allProperties) %}
-{% set size = memory['properties']['reg'][0][1] %}
-{% set label = memory['properties']['label'][0] %}
-{% set address = memory['properties']['reg'][0][0] %}
-	{{ label }} : org = {{ '0x%x' % address }}, len = {{ size }}
-{% if 'virtual-reg' in memory['properties'] %}
-{% set virtualAddress = memory['properties']['virtual-reg'][0][0] %}
-	{{ label }}Vma : org = {{ '0x%x' % virtualAddress }}, len = {{ size }}
+{% for key, memory in dictionary['memories'].items() if memory is mapping %}
+	{{ key }} : org = {{ '0x%x' % memory['address'] }}, len = {{ memory['size'] }}
+{% if 'virtualAddress' in memory %}
+	{{ key }}Vma : org = {{ '0x%x' % memory['virtualAddress'] }}, len = {{ memory['size'] }}
 {% endif %}
 {% endfor %}
 }
-{% for key, memory in iterateNodes(dictionary, '', allProperties) %}
-{% set label = memory['properties']['label'][0] %}
+{% for key, memory in dictionary['memories'].items() if memory is mapping %}
 
-PROVIDE(__{{ label }}_start = ORIGIN({{ label }}));
-PROVIDE(__{{ label }}_size = LENGTH({{ label }}));
-PROVIDE(__{{ label }}_end = ORIGIN({{ label }}) + LENGTH({{ label }}));
-{% if memory['properties']['device_type'] is defined and memory['properties']['device_type'][0] == 'memory' %}
-HIDDEN(__{{ label }}_limit_low = ORIGIN({{ label }}));
-HIDDEN(__{{ label }}_limit_high = ORIGIN({{ label }}) + LENGTH({{ label }}));
-{% endif %}
+PROVIDE(__{{ key }}_start = ORIGIN({{ key }}));
+PROVIDE(__{{ key }}_size = LENGTH({{ key }}));
+PROVIDE(__{{ key }}_end = ORIGIN({{ key }}) + LENGTH({{ key }}));
 {% endfor %}
 
 /*---------------------------------------------------------------------------------------------------------------------+
@@ -87,6 +67,81 @@ ENTRY(Reset_Handler);
 /*---------------------------------------------------------------------------------------------------------------------+
 | put data in sections
 +---------------------------------------------------------------------------------------------------------------------*/
+{% for key, memory in dictionary['memories'].items() if memory is mapping and
+		'on-chip-flash' in memory['compatible'] and '.text' in memory.get('sections', ['.text']) %}
+
+#ifdef {{ prefix }}_LD_TEXT_REGION_{{ key | upper }}
+REGION_ALIAS("textVmaRegion", {{ key }}{% if 'virtualAddress' in memory %}Vma{% endif %});
+REGION_ALIAS("textLmaRegion", {{ key }});
+#endif	/* {{ prefix }}_LD_TEXT_REGION_{{ key | upper }} */
+{% endfor %}
+{% for key, memory in dictionary['memories'].items() if memory is mapping and
+		'on-chip-flash' in memory['compatible'] and '.ARM.exidx' in memory.get('sections', ['.ARM.exidx']) %}
+
+#ifdef {{ prefix }}_LD_ARM_EXIDX_REGION_{{ key | upper }}
+REGION_ALIAS("armExidxVmaRegion", {{ key }}{% if 'virtualAddress' in memory %}Vma{% endif %});
+REGION_ALIAS("armExidxLmaRegion", {{ key }});
+#endif	/* {{ prefix }}_LD_ARM_EXIDX_REGION_{{ key | upper }} */
+{% endfor %}
+{% for key, memory in dictionary['memories'].items() if memory is mapping and
+		'on-chip-RAM' in memory['compatible'] and '.main_stack' in memory.get('sections', ['.main_stack']) %}
+
+#ifdef {{ prefix }}_LD_MAIN_STACK_REGION_{{ key | upper }}
+REGION_ALIAS("mainStackVmaRegion", {{ key }}{% if 'virtualAddress' in memory %}Vma{% endif %});
+REGION_ALIAS("mainStackLmaRegion", {{ key }});
+#endif	/* {{ prefix }}_LD_MAIN_STACK_REGION_{{ key | upper }} */
+{% endfor %}
+{% for key, memory in dictionary['memories'].items() if memory is mapping and
+		'on-chip-RAM' in memory['compatible'] and '.bss' in memory.get('sections', ['.bss']) %}
+
+#ifdef {{ prefix }}_LD_BSS_REGION_{{ key | upper }}
+REGION_ALIAS("bssVmaRegion", {{ key }}{% if 'virtualAddress' in memory %}Vma{% endif %});
+REGION_ALIAS("bssLmaRegion", {{ key }});
+#endif	/* {{ prefix }}_LD_BSS_REGION_{{ key | upper }} */
+{% endfor %}
+{% for key, memory in dictionary['memories'].items() if memory is mapping and
+		'on-chip-RAM' in memory['compatible'] and '.data' in memory.get('sections', ['.data']) %}
+
+#ifdef {{ prefix }}_LD_DATA_VMA_REGION_{{ key | upper }}
+REGION_ALIAS("dataVmaRegion", {{ key }}{% if 'virtualAddress' in memory %}Vma{% endif %});
+#endif	/* {{ prefix }}_LD_DATA_VMA_REGION_{{ key | upper }} */
+{% endfor %}
+{% for key, memory in dictionary['memories'].items() if memory is mapping and
+		'on-chip-flash' in memory['compatible'] and '.data' in memory.get('sections', ['.data']) %}
+
+#ifdef {{ prefix }}_LD_DATA_LMA_REGION_{{ key | upper }}
+REGION_ALIAS("dataLmaRegion", {{ key }});
+#endif	/* {{ prefix }}_LD_DATA_LMA_REGION_{{ key | upper }} */
+{% endfor %}
+{% for key, memory in dictionary['memories'].items() if memory is mapping and
+		'on-chip-RAM' in memory['compatible'] and '.noinit' in memory.get('sections', ['.noinit']) %}
+
+#ifdef {{ prefix }}_LD_NOINIT_REGION_{{ key | upper }}
+REGION_ALIAS("noinitVmaRegion", {{ key }}{% if 'virtualAddress' in memory %}Vma{% endif %});
+REGION_ALIAS("noinitLmaRegion", {{ key }});
+#endif	/* {{ prefix }}_LD_NOINIT_REGION_{{ key | upper }} */
+{% endfor %}
+{% for ramKey, ramMemory in dictionary['memories'].items() if ramMemory is mapping and
+		'on-chip-RAM' in ramMemory['compatible'] and
+		'.{}.data'.format(ramKey) in ramMemory.get('sections', ['.{}.data'.format(ramKey)]) %}
+{% for romKey, romMemory in dictionary['memories'].items() if romMemory is mapping and
+		'on-chip-flash' in romMemory['compatible'] and
+		'.{}.data'.format(ramKey) in ramMemory.get('sections', ['.{}.data'.format(ramKey)]) %}
+
+#ifdef {{ prefix }}_LD_{{ ramKey | upper }}_DATA_LMA_REGION_{{ romKey | upper }}
+REGION_ALIAS("{{ ramKey }}DataLmaRegion", {{ romKey }});
+#endif	/* {{ prefix }}_LD_{{ ramKey | upper }}_DATA_LMA_REGION_{{ romKey | upper }} */
+{% endfor %}
+{% endfor %}
+{% for key, memory in dictionary['memories'].items() if memory is mapping and
+		'on-chip-RAM' in memory['compatible'] and '.process_stack' in memory.get('sections', ['.process_stack']) %}
+
+#ifdef {{ prefix }}_LD_PROCESS_STACK_REGION_{{ key | upper }}
+PROVIDE(__process_stack_end = __{{ key }}_end / 8 * 8);
+#endif	/* def {{ prefix }}_LD_PROCESS_STACK_REGION_{{ key | upper }} */
+{% endfor %}
+
+PROVIDE(__process_stack_start = (__process_stack_end - __process_stack_size) / 8 * 8);
 
 SECTIONS
 {
@@ -130,10 +185,11 @@ SECTIONS
 		PROVIDE(__data_initializers_start = .);
 
 		LONG(LOADADDR(.data)); LONG(ADDR(.data)); LONG(ADDR(.data) + SIZEOF(.data));
-{% for key, memory in iterateNodes(dictionary, '', memoryProperties) %}
-{% set label = memory['properties']['label'][0] %}
-		LONG(LOADADDR(.{{ label }}.data)); LONG(ADDR(.{{ label }}.data)); {# remove whitespace -#}
-LONG(ADDR(.{{ label }}.data) + SIZEOF(.{{ label }}.data));
+{% for key, memory in dictionary['memories'].items() if memory is mapping and
+		'on-chip-RAM' in memory['compatible'] and
+		'.{}.data'.format(key) in memory.get('sections', ['.{}.data'.format(key)]) %}
+		LONG(LOADADDR(.{{ key }}.data)); LONG(ADDR(.{{ key }}.data)); {# remove whitespace -#}
+LONG(ADDR(.{{ key }}.data) + SIZEOF(.{{ key }}.data));
 {% endfor %}
 
 		. = ALIGN(4);
@@ -149,9 +205,10 @@ LONG(ADDR(.{{ label }}.data) + SIZEOF(.{{ label }}.data));
 		LONG(0); LONG(ADDR(.bss)); LONG(ADDR(.bss) + SIZEOF(.bss));
 		LONG(0xed419f25); LONG(ADDR(.main_stack)); LONG(ADDR(.main_stack) + SIZEOF(.main_stack));
 		LONG(0xed419f25); LONG(ADDR(.process_stack)); LONG(ADDR(.process_stack) + SIZEOF(.process_stack));
-{% for key, memory in iterateNodes(dictionary, '', memoryProperties) %}
-{% set label = memory['properties']['label'][0] %}
-		LONG(0); LONG(ADDR(.{{ label }}.bss)); LONG(ADDR(.{{ label }}.bss) + SIZEOF(.{{ label }}.bss));
+{% for key, memory in dictionary['memories'].items() if memory is mapping and
+		'on-chip-RAM' in memory['compatible'] and
+		'.{}.bss'.format(key) in memory.get('sections', ['.{}.bss'.format(key)]) %}
+		LONG(0); LONG(ADDR(.{{ key }}.bss)); LONG(ADDR(.{{ key }}.bss) + SIZEOF(.{{ key }}.bss));
 {% endfor %}
 
 		. = ALIGN(4);
@@ -212,7 +269,7 @@ LONG(ADDR(.{{ label }}.data) + SIZEOF(.{{ label }}.data));
 		/* end of sub-sections: init, preinit_array, init_array and fini_array */
 
 		PROVIDE(__text_end = .);
-	} > {{ chosenToLabel('distortos,ld,text', True) }} AT > {{ chosenToLabel('distortos,ld,text', False) }}
+	} > textVmaRegion AT > textLmaRegion
 
 	.ARM.exidx :
 	{
@@ -221,7 +278,7 @@ LONG(ADDR(.{{ label }}.data) + SIZEOF(.{{ label }}.data));
 		*(.ARM.exidx* .gnu.linkonce.armexidx.*);	/* index entries for section unwinding */
 
 		PROVIDE(__exidx_end = .);
-	} > {{ chosenToLabel('distortos,ld,exidx', True) }} AT > {{ chosenToLabel('distortos,ld,exidx', False) }}
+	} > armExidxVmaRegion AT > armExidxLmaRegion
 
 	.main_stack :
 	{
@@ -232,8 +289,7 @@ LONG(ADDR(.{{ label }}.data) + SIZEOF(.{{ label }}.data));
 
 		. = ALIGN(8);
 		PROVIDE(__main_stack_end = .);
-		HIDDEN(__{{ chosenToLabel('distortos,ld,main_stack', True) }}_limit_low = .);
-	} > {{ chosenToLabel('distortos,ld,main_stack', True) }} AT > {{ chosenToLabel('distortos,ld,main_stack', False) }}
+	} > mainStackVmaRegion AT > mainStackLmaRegion
 
 	.bss (NOLOAD) :
 	{
@@ -245,8 +301,7 @@ LONG(ADDR(.{{ label }}.data) + SIZEOF(.{{ label }}.data));
 
 		. = ALIGN(4);
 		PROVIDE(__bss_end = .);
-		HIDDEN(__{{ chosenToLabel('distortos,ld,bss', True) }}_limit_low = .);
-	} > {{ chosenToLabel('distortos,ld,bss', True) }} AT > {{ chosenToLabel('distortos,ld,bss', False) }}
+	} > bssVmaRegion AT > bssLmaRegion
 
 	.data :
 	{
@@ -258,8 +313,7 @@ LONG(ADDR(.{{ label }}.data) + SIZEOF(.{{ label }}.data));
 
 		. = ALIGN(4);
 		PROVIDE(__data_end = .);
-		HIDDEN(__{{ chosenToLabel('distortos,ld,data', True) }}_limit_low = .);
-	} > {{ chosenToLabel('distortos,ld,data', True) }} AT > {{ chosenToLabel('distortos,ld,data,load', False) }}
+	} > dataVmaRegion AT > dataLmaRegion
 
 	.noinit (NOLOAD) :
 	{
@@ -268,59 +322,52 @@ LONG(ADDR(.{{ label }}.data) + SIZEOF(.{{ label }}.data));
 		*(.noinit);
 
 		PROVIDE(__noinit_end = .);
-		HIDDEN(__{{ chosenToLabel('distortos,ld,noinit', True) }}_limit_low = .);
-	} > {{ chosenToLabel('distortos,ld,noinit', True) }} AT > {{ chosenToLabel('distortos,ld,noinit', False) }}
-{% for key, memory in iterateNodes(dictionary, '', memoryProperties) %}
-{% set label = memory['properties']['label'][0] %}
+	} > noinitVmaRegion AT > noinitLmaRegion
+{% for key, memory in dictionary['memories'].items() if memory is mapping and 'on-chip-RAM' in memory['compatible'] %}
+{% if '.{}.bss'.format(key) in memory.get('sections', ['.{}.bss'.format(key)]) %}
 
-	.{{ label }}.bss (NOLOAD) :
+	.{{ key }}.bss (NOLOAD) :
 	{
 		. = ALIGN(4);
-		PROVIDE(__{{ label }}_bss_start = .);
+		PROVIDE(__{{ key }}_bss_start = .);
 
-		*(.{{ label }}.bss);
+		*(.{{ key }}.bss);
 
 		. = ALIGN(4);
-		PROVIDE(__{{ label }}_bss_end = .);
-		HIDDEN(__{{ label }}_limit_low = .);
-	} > {{ label }} AT > {{ label }}
+		PROVIDE(__{{ key }}_bss_end = .);
+	} > {{ key }} AT > {{ key }}
+{% endif %}
+{% if '.{}.data'.format(key) in memory.get('sections', ['.{}.data'.format(key)]) %}
 
-	.{{ label }}.data :
+	.{{ key }}.data :
 	{
 		. = ALIGN(4);
-		PROVIDE(__{{ label }}_data_init_start = LOADADDR(.{{ label }}.data));
-		PROVIDE(__{{ label }}_data_start = .);
+		PROVIDE(__{{ key }}_data_init_start = LOADADDR(.{{ key }}.data));
+		PROVIDE(__{{ key }}_data_start = .);
 
-		*(.{{ label }}.data);
+		*(.{{ key }}.data);
 
 		. = ALIGN(4);
-		PROVIDE(__{{ label }}_data_end = .);
-		HIDDEN(__{{ label }}_limit_low = .);
-	} > {{ label }} AT > {{ chosenToLabel('distortos,ld,' + label + ',load', False) }}
+		PROVIDE(__{{ key }}_data_end = .);
+	} > {{ key }} AT > {{ key }}DataLmaRegion
+{% endif %}
+{% if '.{}.noinit'.format(key) in memory.get('sections', ['.{}.noinit'.format(key)]) %}
 
-	.{{ label }}.noinit (NOLOAD) :
+	.{{ key }}.noinit (NOLOAD) :
 	{
-		PROVIDE(__{{ label }}_noinit_start = .);
+		PROVIDE(__{{ key }}_noinit_start = .);
 
-		*(.{{ label }}.noinit);
+		*(.{{ key }}.noinit);
 
-		PROVIDE(__{{ label }}_noinit_end = .);
-		HIDDEN(__{{ label }}_limit_low = .);
-	} > {{ label }} AT > {{ label }}
+		PROVIDE(__{{ key }}_noinit_end = .);
+	} > {{ key }} AT > {{ key }}
+{% endif %}
 {% endfor %}
-
-	PROVIDE(__process_stack_end = __{{ chosenToLabel('distortos,ld,process_stack', True) }}_end / 8 * 8);
-	PROVIDE(__process_stack_start = (__process_stack_end - __process_stack_size) / 8 * 8);
 
 	.process_stack __process_stack_start : AT(__process_stack_start)
 	{
-		HIDDEN(__{{ chosenToLabel('distortos,ld,process_stack', True) }}_limit_high = .);
-
 		. += __process_stack_size;
 	}
-
-	PROVIDE(__heap_start = ALIGN(__{{ chosenToLabel('distortos,ld,heap', True) }}_limit_low, 8));
-	PROVIDE(__heap_end = __{{ chosenToLabel('distortos,ld,heap', True) }}_limit_high / 8 * 8);
 
 	/* Stabs debugging sections. */
 	.stab 0 : { *(.stab); }
@@ -364,17 +411,34 @@ LONG(ADDR(.{{ label }}.data) + SIZEOF(.{{ label }}.data));
 	.note.gnu.arm.ident	0 : { KEEP(*(.note.gnu.arm.ident)); }
 	/DISCARD/ : { *(.note.GNU-stack); *(.gnu_debuglink); *(.gnu.lto_*); }
 }
+{% for key, memory in dictionary['memories'].items() if memory is mapping and
+		'on-chip-RAM' in memory['compatible'] and '.heap' in memory.get('sections', ['.heap']) %}
+
+#ifdef {{ prefix }}_LD_HEAP_REGION_{{ key | upper }}
+PROVIDE(__heap_start = ALIGN(__{{ key }}_noinit_end, 8));
+#ifdef {{ prefix }}_LD_PROCESS_STACK_REGION_{{ key | upper }}
+PROVIDE(__heap_end = __process_stack_start / 8 * 8);
+#else	/* !def {{ prefix }}_LD_PROCESS_STACK_REGION_{{ key | upper }} */
+PROVIDE(__heap_end = __{{ key }}_end / 8 * 8);
+#endif	/* !def {{ prefix }}_LD_PROCESS_STACK_REGION_{{ key | upper }} */
+#endif	/* def {{ prefix }}_LD_HEAP_REGION_{{ key | upper }} */
+{% endfor %}
 
 PROVIDE(__text_size = SIZEOF(.text));
 PROVIDE(__exidx_size = SIZEOF(.ARM.exidx));
 PROVIDE(__bss_size = SIZEOF(.bss));
 PROVIDE(__data_size = SIZEOF(.data));
 PROVIDE(__noinit_size = SIZEOF(.noinit));
-{% for key, memory in iterateNodes(dictionary, '', memoryProperties) %}
-{% set label = memory['properties']['label'][0] %}
-PROVIDE(__{{ label }}_bss_size = SIZEOF(.{{ label }}.bss));
-PROVIDE(__{{ label }}_data_size = SIZEOF(.{{ label }}.data));
-PROVIDE(__{{ label }}_noinit_size = SIZEOF(.{{ label }}.noinit));
+{% for key, memory in dictionary['memories'].items() if memory is mapping and 'on-chip-RAM' in memory['compatible'] %}
+{% if '.{}.bss'.format(key) in memory.get('sections', ['.{}.bss'.format(key)]) %}
+PROVIDE(__{{ key }}_bss_size = SIZEOF(.{{ key }}.bss));
+{% endif %}
+{% if '.{}.data'.format(key) in memory.get('sections', ['.{}.data'.format(key)]) %}
+PROVIDE(__{{ key }}_data_size = SIZEOF(.{{ key }}.data));
+{% endif %}
+{% if '.{}.noinit'.format(key) in memory.get('sections', ['.{}.noinit'.format(key)]) %}
+PROVIDE(__{{ key }}_noinit_size = SIZEOF(.{{ key }}.noinit));
+{% endif %}
 {% endfor %}
 
 PROVIDE(__bss_start__ = __bss_start);

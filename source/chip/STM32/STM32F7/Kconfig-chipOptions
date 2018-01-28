@@ -430,7 +430,7 @@ config CHIP_STM32F7_FLASH_ART_ACCELERATOR_ENABLE
 choice
 	prompt "Unify RAM in linker script"
 	default CHIP_STM32F7_UNIFY_DTCM_SRAM1_SRAM2
-	depends on !BOARD_HAS_DTS
+	depends on !BOARD_HAS_YAML
 	help
 		Configures unification of DTCM and/or SRAM1 and/or SRAM2 regions in
 		linker script.

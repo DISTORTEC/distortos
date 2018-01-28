@@ -1,9 +1,0 @@
-	{{ label }}: {% block name %}{% endblock %}@{{ '%x' % node.address }} {
-{% block properties %}
-{% endblock %}
-		reg = <{{ '0x%x' % node.address }} {{ node.size }}>;
-{% if node.virtualAddress is defined %}
-		virtual-reg = <{{ '0x%x' % node.virtualAddress }}>;
-{% endif %}
-		label = "{{ label }}";
-	};

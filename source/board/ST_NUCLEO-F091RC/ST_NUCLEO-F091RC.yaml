@@ -1,0 +1,34 @@
+#
+# file: ST_NUCLEO-F091RC.yaml
+#
+# author: Copyright (C) 2017-2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+#
+# This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
+# distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+#
+
+$extends:
+- 'source/chip/STM32/STM32F0/chipYaml/ST_STM32F091RC.yaml'
+board:
+  compatible:
+  - ST,NUCLEO-F091RC
+  model: STMicroelectronics NUCLEO-F091RC
+buttons:
+  compatible:
+  - GPIO-buttons
+  b1:
+    GPIO:
+      port: !Reference {label: GPIOC}
+      pin: 13
+      activeLow: True
+    alternative-names:
+    - user
+leds:
+  compatible:
+  - GPIO-LEDs
+  ld2:
+    GPIO:
+      port: !Reference {label: GPIOA}
+      pin: 5
+    alternative-names:
+    - green

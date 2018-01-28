@@ -490,7 +490,7 @@ choice
 	prompt "Unify RAM in linker script"
 	default CHIP_STM32F4_UNIFY_SRAM1_SRAM2_SRAM3 if CHIP_STM32F4_SRAM2_SIZE != 0 && CHIP_STM32F4_SRAM3_SIZE != 0
 	default CHIP_STM32F4_UNIFY_SRAM1_SRAM2 if CHIP_STM32F4_SRAM2_SIZE != 0
-	depends on !BOARD_HAS_DTS && (CHIP_STM32F4_SRAM2_SIZE != 0 || CHIP_STM32F4_SRAM3_SIZE != 0)
+	depends on !BOARD_HAS_YAML && (CHIP_STM32F4_SRAM2_SIZE != 0 || CHIP_STM32F4_SRAM3_SIZE != 0)
 	help
 		Configures unification of SRAM1 and/or SRAM2 and/or SRAM3 regions in
 		linker script.

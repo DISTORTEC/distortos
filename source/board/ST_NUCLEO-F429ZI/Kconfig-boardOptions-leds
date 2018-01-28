@@ -11,9 +11,29 @@
 
 if BOARD_SOURCE_BOARD_ST_NUCLEO_F429ZI_ST_NUCLEO_F429ZI
 
-config BOARD_HAS_LEDS
-	bool
+comment "ST,NUCLEO-F429ZI leds options"
+
+config BOARD_LEDS_ENABLE
+	bool "Enable leds"
 	default y
-	select BOARD_LEDS_ENABLE
+
+if BOARD_LEDS_ENABLE
+
+config BOARD_LEDS_LD1_ENABLE
+	bool "Enable ld1 LED (green)"
+	default y
+	select CHIP_STM32_GPIOV2_GPIOB_ENABLE
+
+config BOARD_LEDS_LD2_ENABLE
+	bool "Enable ld2 LED (blue)"
+	default y
+	select CHIP_STM32_GPIOV2_GPIOB_ENABLE
+
+config BOARD_LEDS_LD3_ENABLE
+	bool "Enable ld3 LED (red)"
+	default y
+	select CHIP_STM32_GPIOV2_GPIOB_ENABLE
+
+endif	# BOARD_LEDS_ENABLE
 
 endif	# BOARD_SOURCE_BOARD_ST_NUCLEO_F429ZI_ST_NUCLEO_F429ZI

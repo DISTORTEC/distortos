@@ -1,4 +1,4 @@
-{% if iterateNodes(dictionary, '/$', [('compatible$', 'ST,STM32[A-Z][0-9]{3}[A-Z][0-9A-Z]$')]) | first %}
+{% if 'ST,STM32' in dictionary['chip']['compatible'] %}
 ('source/chip/STM32/boardTemplates/Kconfig-boardChoices.jinja',
 		{},
 		'Kconfig-boardChoices'),

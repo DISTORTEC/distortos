@@ -15,10 +15,27 @@
 #ifndef SOURCE_BOARD_ST_32F429IDISCOVERY_INCLUDE_DISTORTOS_BOARD_LEDS_HPP_
 #define SOURCE_BOARD_ST_32F429IDISCOVERY_INCLUDE_DISTORTOS_BOARD_LEDS_HPP_
 
+#include "distortos/distortosConfiguration.h"
+
 #include <cstddef>
 
+#ifdef CONFIG_BOARD_LEDS_LD3_ENABLE
+#define DISTORTOS_BOARD_LEDS_LD3_ENABLED	1
+#else	// !def CONFIG_BOARD_LEDS_LD3_ENABLE
+#define DISTORTOS_BOARD_LEDS_LD3_ENABLED	0
+#endif	// !def CONFIG_BOARD_LEDS_LD3_ENABLE
+
+#ifdef CONFIG_BOARD_LEDS_LD4_ENABLE
+#define DISTORTOS_BOARD_LEDS_LD4_ENABLED	1
+#else	// !def CONFIG_BOARD_LEDS_LD4_ENABLE
+#define DISTORTOS_BOARD_LEDS_LD4_ENABLED	0
+#endif	// !def CONFIG_BOARD_LEDS_LD4_ENABLE
+
 /// total number of leds on the board
-#define DISTORTOS_BOARD_TOTAL_LEDS		(1 + 1)
+#define DISTORTOS_BOARD_TOTAL_LEDS	(DISTORTOS_BOARD_LEDS_LD3_ENABLED + \
+		DISTORTOS_BOARD_LEDS_LD4_ENABLED)
+
+#if defined(CONFIG_BOARD_LEDS_ENABLE) && DISTORTOS_BOARD_TOTAL_LEDS != 0
 
 namespace distortos
 {
@@ -42,21 +59,33 @@ constexpr size_t totalLeds {DISTORTOS_BOARD_TOTAL_LEDS};
 
 enum
 {
+#ifdef CONFIG_BOARD_LEDS_LD3_ENABLE
 		/// index of ld3 LED (green)
 		ld3LedIndex,
+#endif	// def CONFIG_BOARD_LEDS_LD3_ENABLE
+#ifdef CONFIG_BOARD_LEDS_LD4_ENABLE
 		/// index of ld4 LED (red)
 		ld4LedIndex,
+#endif	// def CONFIG_BOARD_LEDS_LD4_ENABLE
 };
 
 /*---------------------------------------------------------------------------------------------------------------------+
-| alternative (label-based) indexes of leds
+| alternative indexes of leds
 +---------------------------------------------------------------------------------------------------------------------*/
+
+#ifdef CONFIG_BOARD_LEDS_LD3_ENABLE
 
 /// alternative index of ld3 LED (green)
 constexpr size_t greenLedIndex {ld3LedIndex};
 
+#endif	// def CONFIG_BOARD_LEDS_LD3_ENABLE
+
+#ifdef CONFIG_BOARD_LEDS_LD4_ENABLE
+
 /// alternative index of ld4 LED (red)
 constexpr size_t redLedIndex {ld4LedIndex};
+
+#endif	// def CONFIG_BOARD_LEDS_LD4_ENABLE
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | indexed access to leds objects
@@ -68,5 +97,7 @@ extern chip::ChipOutputPin leds[totalLeds];
 }	// namespace board
 
 }	// namespace distortos
+
+#endif	// defined(CONFIG_BOARD_LEDS_ENABLE) && DISTORTOS_BOARD_TOTAL_LEDS != 0
 
 #endif	// SOURCE_BOARD_ST_32F429IDISCOVERY_INCLUDE_DISTORTOS_BOARD_LEDS_HPP_

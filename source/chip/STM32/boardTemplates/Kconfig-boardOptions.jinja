@@ -1,8 +1,7 @@
 {% extends "source/board/boardTemplates/Kconfig-boardOptions.jinja" %}
 {% block options %}
-{% set chipFamily = dictionary['/']['properties']['compatible'][1][3:10] %}
-{% if 'vdd_regulator' in dictionary['labels'] %}
-{% set vddRegulator = dictionary['labels']['vdd_regulator']['node']['properties'] %}
+{% set chipFamily = dictionary['chip']['compatible'][1].rpartition(',')[2] %}
+{% if 'VDD' in dictionary['chip'] %}
 
 config CHIP_{{ chipFamily }}_VDD_MV_CONFIGURABLE
 	bool
@@ -10,11 +9,11 @@ config CHIP_{{ chipFamily }}_VDD_MV_CONFIGURABLE
 
 config CHIP_{{ chipFamily }}_VDD_MV_DEFAULT
 	int
-	default {{ vddRegulator['regulator-min-microvolt'][0][0] // 1000 }}
+	default {{ (dictionary['chip']['VDD']['output-voltage'] * 1000) | int }}
 {% endif %}
-{% if 'clocks' in dictionary['/']['nodes'] and 'clock-hse' in dictionary['/']['nodes']['clocks']['nodes'] %}
-{% set clockHse = dictionary['/']['nodes']['clocks']['nodes']['clock-hse']['properties'] %}
-{% if clockHse['clock-frequency'][0][0] != 0 or 'ST,STM32-HSE-bypass' in clockHse %}
+{% if 'clocks' in dictionary %}
+{% for key, clock in dictionary['clocks'].items() if 'ST,STM32-HSE' in clock['compatible'] %}
+{% if clock['frequency'] != 0 or clock.get('bypass', False) == True %}
 
 config CHIP_{{ chipFamily }}_RCC_HSE_CLOCK_BYPASS_CONFIGURABLE
 	bool
@@ -22,9 +21,9 @@ config CHIP_{{ chipFamily }}_RCC_HSE_CLOCK_BYPASS_CONFIGURABLE
 
 config CHIP_{{ chipFamily }}_RCC_HSE_CLOCK_BYPASS_DEFAULT
 	bool
-	default {% if 'ST,STM32-HSE-bypass' in clockHse %}y{% else %}n{% endif %}{{ '' }}
+	default {% if clock.get('bypass', False) == True %}y{% else %}n{% endif %}{{ '' }}
 {% endif %}
-{% if clockHse['clock-frequency'][0][0] != 0 %}
+{% if clock['frequency'] != 0 %}
 
 config CHIP_{{ chipFamily }}_RCC_HSE_FREQUENCY_CONFIGURABLE
 	bool
@@ -32,7 +31,8 @@ config CHIP_{{ chipFamily }}_RCC_HSE_FREQUENCY_CONFIGURABLE
 
 config CHIP_{{ chipFamily }}_RCC_HSE_FREQUENCY_DEFAULT
 	int
-	default {{ clockHse['clock-frequency'][0][0] }}
+	default {{ clock['frequency'] }}
 {% endif %}
+{% endfor %}
 {% endif %}
 {% endblock %}
