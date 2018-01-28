@@ -1,8 +1,0 @@
-{% macro initializer(dictionary, gpio) %}
-{% set gpioLabel = gpio[0]['label'] %}
-{% set gpioBankName = dictionary['labels'][gpioLabel]['node']['properties']['ST,GPIO-bank-name'][0] %}
-{% set pinNumber = gpio[1] %}
-{% set inverted = gpio[2] %}
-chip::ChipOutputPin{chip::Pin::p{{ gpioBankName[4] | lower }}{{ pinNumber }}, false, {# remove whitespace -#}
-chip::PinOutputSpeed::_2Mhz, false, {% if inverted == 0 %}false{% else %}true{% endif %}}
-{%- endmacro %}
