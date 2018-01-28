@@ -1,9 +1,0 @@
-	pin-controller {
-		{{ label }}: gpio@{{ '%x' % node.address }} {
-{% block properties %}
-{% endblock %}
-			#gpio-cells = <2>;
-			reg = <{{ '0x%x' % node.address }} {{ node.size }}>;
-			status = "disabled";
-		};
-	};
