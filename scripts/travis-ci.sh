@@ -3,7 +3,7 @@
 #
 # file: travis-ci.sh
 #
-# author: Copyright (C) 2016-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+# author: Copyright (C) 2016-2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
 #
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -68,33 +68,12 @@ installBuild() {
 	esac
 }
 
-# "install pydts" phase
-installPydts() {
-	(
-	cd /tmp
-	echo 'Installing dtc-1.4.4.tar.gz...'
-	wget https://github.com/dgibson/dtc/archive/v1.4.4.tar.gz -O dtc-1.4.4.tar.gz
-	echo 'Extracting dtc-1.4.4.tar.gz...'
-	tar -xf dtc-1.4.4.tar.gz
-	echo 'Building dtc-1.4.4...'
-	cd dtc-1.4.4
-	make -j$(nproc)
-	make  PREFIX="${HOME}/.local" install
-	)
-	echo 'Installing ply...'
-	pip install --user ply
-}
-
 # "install" phase
 install() {
 	case "${1}" in
 		build)
 			shift
 			installBuild "${@}"
-			;;
-		pydts)
-			shift
-			installPydts "${@}"
 			;;
 		unit-test)
 			;;
@@ -114,11 +93,6 @@ scriptBuild() {
 	"$(dirname "${0}")/buildAllConfigurations.sh" "${@}"
 }
 
-# "script pydts" phase
-scriptPydts() {
-	"$(dirname "${0}")/test-pydts.sh" "${@}"
-}
-
 unitTest() {
 	mkdir output
 	cd output
@@ -132,10 +106,6 @@ script() {
 		build)
 			shift
 			scriptBuild "${@}"
-			;;
-		pydts)
-			shift
-			scriptPydts "${@}"
 			;;
 		unit-test)
 			shift
