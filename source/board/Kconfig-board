@@ -1,37 +1,13 @@
 #
 # file: Kconfig-board
 #
-# author: Copyright (C) 2016-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+# author: Copyright (C) 2016-2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
 #
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #
 
 source "$OUTPUT/Kconfig-boardOptions" # pattern: Kconfig-boardOptions*
-
-comment "Generic board options"
-
-config BOARD_BUTTONS_ENABLE
-	bool "Enable buttons"
-	depends on BOARD_HAS_BUTTONS
-	default y
-	help
-		Enables board buttons.
-
-config BOARD_LEDS_ENABLE
-	bool "Enable LEDs"
-	depends on BOARD_HAS_LEDS
-	default y
-	help
-		Enables board LEDs.
-
-config BOARD_HAS_BUTTONS
-	bool
-	default n
-
-config BOARD_HAS_LEDS
-	bool
-	default n
 
 config BOARD_HAS_YAML
 	bool
