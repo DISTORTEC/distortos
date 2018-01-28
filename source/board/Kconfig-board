@@ -33,7 +33,7 @@ config BOARD_HAS_LEDS
 	bool
 	default n
 
-config BOARD_HAS_DTS
+config BOARD_HAS_YAML
 	bool
 	default n
 
