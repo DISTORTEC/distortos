@@ -179,7 +179,8 @@ if __name__ == '__main__':
 
 	print()
 
-	for templateFile, templateArguments, outputFile in metadata:
+	for metadataIndex, metadataRow in enumerate(metadata):
+		templateFile, templateArguments, outputFile = metadataRow
 		relativeOutputFile = posixpath.normpath(posixpath.join(relativeOutputPath, outputFile))
 		outputFile = posixpath.normpath(posixpath.join(arguments.outputPath, outputFile))
 
@@ -188,7 +189,7 @@ if __name__ == '__main__':
 			os.makedirs(outputDirectory)
 
 		output = jinjaEnvironment.get_template(templateFile).render(dictionary = dictionary, metadata = metadata,
-				outputFile = relativeOutputFile, **templateArguments)
+				metadataIndex = metadataIndex, outputFile = relativeOutputFile, **templateArguments)
 		with open(outputFile, 'w') as file:
 			print('Writing {} ({})'.format(outputFile, templateFile))
 			file.write(output)
