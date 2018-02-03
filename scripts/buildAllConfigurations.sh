@@ -3,7 +3,7 @@
 #
 # file: buildAllConfigurations.sh
 #
-# author: Copyright (C) 2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+# author: Copyright (C) 2016-2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
 #
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -18,4 +18,11 @@ basedir="$(dirname "${0}")"
 
 if command -v tup >/dev/null 2>&1; then
 	"${basedir}/forAllConfigurations.sh" 'tup --verbose' "${@}"
+fi
+
+if command -v cmake >/dev/null 2>&1; then
+	"${basedir}/forAllConfigurations.sh" \
+			"mkdir output && cd output && cmake .. -DCMAKE_TOOLCHAIN_FILE=../cmake/Toolchain-arm-none-eabi.cmake &&
+			make -j$(nproc) VERBOSE=1 && cd -" \
+			"${@}"
 fi
