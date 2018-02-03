@@ -1,0 +1,87 @@
+#
+# file: distortos-utilities.cmake
+#
+# author: Copyright (C) 2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+#
+# This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
+# distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+#
+
+#
+# Converts ELF file named `elfFilename` to binary file named `binFilename`.
+#
+
+function(bin elfFilename binFilename)
+	add_custom_command(OUTPUT ${binFilename}
+			COMMAND ${CMAKE_OBJCOPY} -O binary ${elfFilename} ${binFilename}
+			DEPENDS ${elfFilename}
+			USES_TERMINAL)
+	add_custom_target(${elfFilename}-to-${binFilename} ALL DEPENDS ${binFilename})
+endfunction()
+
+#
+# Dumps symbols from ELF file named `elfFilename` to file named `dmpFilename`.
+#
+
+function(dmp elfFilename dmpFilename)
+	add_custom_command(OUTPUT ${dmpFilename}
+			COMMAND ${CMAKE_OBJDUMP} -x --syms --demangle ${elfFilename} > ${dmpFilename}
+			DEPENDS ${elfFilename}
+			USES_TERMINAL)
+	add_custom_target(${elfFilename}-to-${dmpFilename} ALL DEPENDS ${dmpFilename})
+endfunction()
+
+#
+# Converts ELF file named `elfFilename` to Intel HEX file named `hexFilename`.
+#
+
+function(hex elfFilename hexFilename)
+	add_custom_command(OUTPUT ${hexFilename}
+			COMMAND ${CMAKE_OBJCOPY} -O ihex ${elfFilename} ${hexFilename}
+			DEPENDS ${elfFilename}
+			USES_TERMINAL)
+	add_custom_target(${elfFilename}-to-${hexFilename} ALL DEPENDS ${hexFilename})
+endfunction()
+
+#
+# Loads configuration variables from kconfig file named `filename`.
+#
+
+function(loadConfiguration filename)
+	file(STRINGS ${filename} lines)
+	foreach(line ${lines})
+		if("${line}" MATCHES "^([^=]+)=(.*)$")
+			set(key ${CMAKE_MATCH_1})
+			set(value ${CMAKE_MATCH_2})
+			if(${value} STREQUAL y)	# bool? convert to ON
+				set(value ON)
+			elseif(${value} MATCHES "^\"(.*)\"$")	# string? remove quotes and convert to a ;-list
+				separate_arguments(value UNIX_COMMAND ${CMAKE_MATCH_1})
+			endif()
+			set(${key} ${value} PARENT_SCOPE)
+		endif()
+	endforeach()
+endfunction()
+
+#
+# Generates disassembly of ELF file named `elfFilename` to file named `lssFilename`.
+#
+
+function(lss elfFilename lssFilename)
+	add_custom_command(OUTPUT ${lssFilename}
+			COMMAND ${CMAKE_OBJDUMP} --demangle -S ${elfFilename} > ${lssFilename}
+			DEPENDS ${elfFilename}
+			USES_TERMINAL)
+	add_custom_target(${elfFilename}-to-${lssFilename} ALL DEPENDS ${lssFilename})
+endfunction()
+
+#
+# Prints size of ELF file named `elfFilename`.
+#
+
+function(size elfFilename)
+	add_custom_target(${elfFilename}-size ALL
+			COMMAND ${CMAKE_SIZE} -B ${elfFilename}
+			DEPENDS ${elfFilename}
+			USES_TERMINAL)
+endfunction()
