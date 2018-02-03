@@ -1,6 +1,6 @@
 /**
  * \file
- * \brief chip::usartLowLevelInitialization() definition for USARTv1 in STM32
+ * \brief Low-level peripheral initializer for USARTv1 in STM32
  *
  * \author Copyright (C) 2016-2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
