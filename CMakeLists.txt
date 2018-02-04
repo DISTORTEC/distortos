@@ -19,25 +19,25 @@ include(distortos-utilities)
 # load variables from selectedConfiguration.mk
 #-----------------------------------------------------------------------------------------------------------------------
 
-if(NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/selectedConfiguration.mk)
-	message(FATAL_ERROR "${CMAKE_CURRENT_SOURCE_DIR}/selectedConfiguration.mk file does not exist; Please run first "
+if(NOT EXISTS ${CMAKE_SOURCE_DIR}/selectedConfiguration.mk)
+	message(FATAL_ERROR "${CMAKE_SOURCE_DIR}/selectedConfiguration.mk file does not exist; Please run first "
 	"'make configure [CONFIG_PATH=<path-to-distortosConfiguration.mk>]'")
 endif()
 # force CMake to rerun if selectedConfiguration.mk file changes
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/selectedConfiguration.mk selectedConfiguration.mk)
-loadConfiguration(${CMAKE_CURRENT_SOURCE_DIR}/selectedConfiguration.mk)
+configure_file(${CMAKE_SOURCE_DIR}/selectedConfiguration.mk selectedConfiguration.mk)
+loadConfiguration(${CMAKE_SOURCE_DIR}/selectedConfiguration.mk)
 
 #-----------------------------------------------------------------------------------------------------------------------
 # load variables from selected distortosConfiguration.mk
 #-----------------------------------------------------------------------------------------------------------------------
 
-if(NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${CONFIG_SELECTED_CONFIGURATION})
-	message(FATAL_ERROR "Selected configuration file '${CMAKE_CURRENT_SOURCE_DIR}/${CONFIG_SELECTED_CONFIGURATION}' "
-	"does not exist")
+if(NOT EXISTS ${CMAKE_SOURCE_DIR}/${CONFIG_SELECTED_CONFIGURATION})
+	message(FATAL_ERROR "Selected configuration file '${CMAKE_SOURCE_DIR}/${CONFIG_SELECTED_CONFIGURATION}' does not "
+	"exist")
 endif()
 # force CMake to rerun if selected distortosConfiguration.mk file changes
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/${CONFIG_SELECTED_CONFIGURATION} ${CONFIG_SELECTED_CONFIGURATION})
-loadConfiguration(${CMAKE_CURRENT_SOURCE_DIR}/${CONFIG_SELECTED_CONFIGURATION})
+configure_file(${CMAKE_SOURCE_DIR}/${CONFIG_SELECTED_CONFIGURATION} ${CONFIG_SELECTED_CONFIGURATION})
+loadConfiguration(${CMAKE_SOURCE_DIR}/${CONFIG_SELECTED_CONFIGURATION})
 
 #-----------------------------------------------------------------------------------------------------------------------
 # generate distortosConfiguration.h
@@ -46,10 +46,10 @@ loadConfiguration(${CMAKE_CURRENT_SOURCE_DIR}/${CONFIG_SELECTED_CONFIGURATION})
 add_custom_command(OUTPUT include/distortos/distortosConfiguration.h
 		COMMAND ${CMAKE_COMMAND} -E make_directory include/distortos
 		COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/scripts/makeDistortosConfiguration.sh
-		${CMAKE_CURRENT_SOURCE_DIR}/${CONFIG_SELECTED_CONFIGURATION} > include/distortos/distortosConfiguration.h
+		${CMAKE_SOURCE_DIR}/${CONFIG_SELECTED_CONFIGURATION} > include/distortos/distortosConfiguration.h
 		DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/scripts/makeDistortosConfiguration.sh
-		DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/${CONFIG_SELECTED_CONFIGURATION}
-		DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/selectedConfiguration.mk
+		DEPENDS ${CMAKE_SOURCE_DIR}/${CONFIG_SELECTED_CONFIGURATION}
+		DEPENDS ${CMAKE_SOURCE_DIR}/selectedConfiguration.mk
 		USES_TERMINAL)
 add_custom_target(distortosConfiguration_h ALL DEPENDS include/distortos/distortosConfiguration.h)
 
@@ -145,7 +145,7 @@ target_link_libraries(distortosInterface INTERFACE
 		-L${CMAKE_CURRENT_BINARY_DIR}
 		-T${LDSCRIPT}
 		-Wl,--whole-archive -ldistortos -Wl,--no-whole-archive)
-add_dependencies(distortosInterface distortos)
+add_dependencies(distortosInterface distortos ldscript)
 
 #-----------------------------------------------------------------------------------------------------------------------
 # distortos::distortos alias library
