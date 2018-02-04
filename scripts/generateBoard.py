@@ -166,26 +166,33 @@ if __name__ == '__main__':
 	jinjaEnvironment.globals['year'] = datetime.date.today().year
 	jinjaEnvironment.filters['sanitize'] = common.sanitize
 
+	metadata = []
+
 	for currentDirectory, directories, filenames in os.walk('.', followlinks = True):
 		# jinja expects forward slashes on all systems - https://github.com/pallets/jinja/issues/767
 		currentDirectory = currentDirectory.replace('\\', '/')
 		files = [posixpath.join(currentDirectory, filename) for filename in filenames]
 		for metadataFile in fnmatch.filter(files, '*/boardTemplates/*.metadata'):
-			print('Trying {}... '.format(metadataFile))
-			metadata = jinjaEnvironment.get_template(metadataFile).render(dictionary = dictionary)
-			for templateFile, templateArguments, outputFile in ast.literal_eval('[' + metadata + ']'):
-				relativeOutputFile = posixpath.normpath(posixpath.join(relativeOutputPath, outputFile))
-				outputFile = posixpath.normpath(posixpath.join(arguments.outputPath, outputFile))
+			print('Loading {}'.format(metadataFile))
+			metadataFragment = jinjaEnvironment.get_template(metadataFile).render(dictionary = dictionary)
+			metadata += ast.literal_eval('[' + metadataFragment + ']')
 
-				outputDirectory = posixpath.dirname(outputFile)
-				if posixpath.exists(outputDirectory) == False:
-					os.makedirs(outputDirectory)
+	print()
 
-				output = jinjaEnvironment.get_template(templateFile).render(dictionary = dictionary,
-						outputFile = relativeOutputFile, **templateArguments)
-				with open(outputFile, 'w') as file:
-					print(' - {} -> {}'.format(templateFile, outputFile))
-					file.write(output)
+	for metadataIndex, metadataRow in enumerate(metadata):
+		templateFile, templateArguments, outputFile = metadataRow
+		relativeOutputFile = posixpath.normpath(posixpath.join(relativeOutputPath, outputFile))
+		outputFile = posixpath.normpath(posixpath.join(arguments.outputPath, outputFile))
+
+		outputDirectory = posixpath.dirname(outputFile)
+		if posixpath.exists(outputDirectory) == False:
+			os.makedirs(outputDirectory)
+
+		output = jinjaEnvironment.get_template(templateFile).render(dictionary = dictionary, metadata = metadata,
+				metadataIndex = metadataIndex, outputFile = relativeOutputFile, **templateArguments)
+		with open(outputFile, 'w') as file:
+			print('Writing {} ({})'.format(outputFile, templateFile))
+			file.write(output)
 
 	print()
 	print('Done')
