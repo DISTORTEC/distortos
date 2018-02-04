@@ -15,7 +15,7 @@ import gdb.printing
 ########################################################################################################################
 
 class GenericIntrusiveListIterator:
-	'Generic iterator for intrusive list'
+	"""Generic iterator for intrusive list"""
 
 	def __init__(self, begin, end, nodeValidator, nodePointer, u):
 		self.end = end
@@ -47,10 +47,10 @@ class GenericIntrusiveListIterator:
 ########################################################################################################################
 
 class ContiguousRange:
-	'Print estd::ContiguousRange'
+	"""Print `estd::ContiguousRange`."""
 
 	class Iterator:
-		'Iterate over estd::ContiguousRange'
+		"""Iterate over `estd::ContiguousRange`."""
 
 		def __init__(self, begin, end):
 			self.end = end
@@ -101,10 +101,10 @@ class ContiguousRange:
 ########################################################################################################################
 
 class IntrusiveList:
-	'Print estd::IntrusiveList'
+	"""Print `estd::IntrusiveList`."""
 
 	class Iterator(GenericIntrusiveListIterator):
-		'Iterate over estd::IntrusiveList'
+		"""Iterate over `estd::IntrusiveList`."""
 
 		def __init__(self, begin, end, nodePointer, u):
 			super().__init__(begin, end, IntrusiveList.isNodeValid, nodePointer, u)
@@ -154,7 +154,7 @@ class IntrusiveList:
 ########################################################################################################################
 
 class IntrusiveListIterator(IntrusiveList):
-	'Print estd::IntrusiveListIterator'
+	"""Print `estd::IntrusiveListIterator`."""
 
 	def __init__(self, value):
 		super().__init__(value, 'estd::IntrusiveListIterator')
@@ -171,7 +171,7 @@ class IntrusiveListIterator(IntrusiveList):
 ########################################################################################################################
 
 class SortedIntrusiveList(IntrusiveList):
-	'Print estd::SortedIntrusiveList'
+	"""Print `estd::SortedIntrusiveList`."""
 
 	def __init__(self, value, name = 'estd::SortedIntrusiveList'):
 		super().__init__(value['implementation_']['intrusiveList'], name)
@@ -181,10 +181,10 @@ class SortedIntrusiveList(IntrusiveList):
 ########################################################################################################################
 
 class IntrusiveForwardList:
-	'Print estd::IntrusiveForwardList'
+	"""Print `estd::IntrusiveForwardList`."""
 
 	class Iterator(GenericIntrusiveListIterator):
-		'Iterate over estd::IntrusiveForwardList'
+		"""Iterate over `estd::IntrusiveForwardList`."""
 
 		def __init__(self, begin, end, nodePointer, u):
 			super().__init__(begin, end, IntrusiveForwardList.isNodeValid, nodePointer, u)
@@ -224,7 +224,7 @@ class IntrusiveForwardList:
 ########################################################################################################################
 
 class IntrusiveForwardListIterator(IntrusiveForwardList):
-	'Print estd::IntrusiveForwardListIterator'
+	"""Print `estd::IntrusiveForwardListIterator`."""
 
 	def __init__(self, value):
 		super().__init__(value, 'estd::IntrusiveForwardListIterator')
@@ -241,7 +241,7 @@ class IntrusiveForwardListIterator(IntrusiveForwardList):
 ########################################################################################################################
 
 class SortedIntrusiveForwardList(IntrusiveForwardList):
-	'Print estd::SortedIntrusiveForwardList'
+	"""Print `estd::SortedIntrusiveForwardList`."""
 
 	def __init__(self, value):
 		super().__init__(value['implementation_']['intrusiveForwardList'], 'estd::SortedIntrusiveForwardList')
@@ -251,8 +251,7 @@ class SortedIntrusiveForwardList(IntrusiveForwardList):
 ########################################################################################################################
 
 def registerPrettyPrinters(obj):
-	'Register pretty-printers for estd'
-
+	"""Register pretty-printers for `estd` namespace."""
 	prettyPrinters = gdb.printing.RegexpCollectionPrettyPrinter('estd')
 	prettyPrinters.add_printer('estd::ContiguousRange', '^estd::ContiguousRange<.*>$', ContiguousRange)
 	prettyPrinters.add_printer('estd::IntrusiveForwardListIterator', '^estd::IntrusiveForwardListIterator<.*>$',
