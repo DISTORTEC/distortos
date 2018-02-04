@@ -145,7 +145,7 @@ target_link_libraries(distortosInterface INTERFACE
 		-L${CMAKE_CURRENT_BINARY_DIR}
 		-T${LDSCRIPT}
 		-Wl,--whole-archive -ldistortos -Wl,--no-whole-archive)
-add_dependencies(distortosInterface distortos)
+add_dependencies(distortosInterface distortos ldscript)
 
 #-----------------------------------------------------------------------------------------------------------------------
 # distortos::distortos alias library
