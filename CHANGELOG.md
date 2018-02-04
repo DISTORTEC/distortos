@@ -36,6 +36,14 @@ initialization, before constructors for global and static objects) or low-level 
 *.data* sections have been initialized, but before constructors for global and static objects). Each
 preinitializer/initializer has its own order of execution from 0 to 99.
 - `include/CONCATENATE.h` and `include/STRINGIFY.h` with useful macros for token concatenation and stringification.
+- *CMake*-based build system. At this moment all configuration is still done with *Kconfig* - *CMake* loads selected
+`distortosConfiguration.mk` and only deals with compilation. Typical use case involves following steps: select
+configuration with `make configure CONFIG_PATH=...`, create output folder of your choice (`mkdir output`) and enter it
+(`cd output`), configure compilation with `cmake .. -DCMAKE_TOOLCHAIN_FILE=../cmake/Toolchain-arm-none-eabi.cmake` and
+finally start the build with `make`. You can obviously use other
+[*CMake* generators](https://cmake.org/cmake/help/latest/manual/cmake-generators.7.html), e.g. *Ninja*, *Eclipse CDT4*
+project, ... *CMake*-based build system will only support configurations with proper board, i.e. "Custom board" choice
+for "Board" in *Kconfig* is not supported.
 
 ### Changed
 
