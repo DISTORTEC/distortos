@@ -19,8 +19,8 @@ import os
 import posixpath
 import ruamel.yaml
 
-# reference to label in YAML
 class Reference():
+	"""Reference to label in YAML"""
 
 	yaml_tag = '!Reference'
 
@@ -41,16 +41,14 @@ class Reference():
 	def __hash__(self):
 		return self.label.__hash__()
 
-#
-# Extends each node of the dictionary with its path.
-#
-# For each node of the dictionary a '$path' key is added, which holds node's path - a list of keys.
-#
-# param [in] dictionary is the dictionary in which paths will be added
-# param [in] path is the current path (list of keys) in the dictionary, default - None
-#
-
 def addPaths(dictionary, path = None):
+	"""Extend each node of the dictionary with its path.
+
+	For each node of the dictionary a `'$path'` key is added, which holds node's path - a list of keys.
+
+	* `dictionary` is the dictionary in which paths will be added
+	* `path` is the current path (list of keys) in the dictionary, default - `None`
+	"""
 	path = path or []
 	for key, value in dictionary.items():
 		if isinstance(value, dict) == True:
@@ -58,18 +56,14 @@ def addPaths(dictionary, path = None):
 			value['$path'] = newPath
 			addPaths(value, newPath)
 
-#
-# Builds a dictionary with labels
-#
-# Each entry in the dictionary has label as the key and node as value.
-#
-# param [in] dictionary is the dictionary in which labels are searched for
-# param [in] labels is the current stage of dictionary with labels, default - None
-#
-# return dictionary with labels
-#
-
 def getLabels(dictionary, labels = None):
+	"""Build a dictionary with labels and return it.
+
+	Each entry in the dictionary has label as the key and node as value.
+
+	* `dictionary` is the dictionary in which labels are searched for
+	* `labels `is the current stage of dictionary with labels, default - `None`
+	"""
 	labels = labels or {}
 	for key, value in dictionary.items():
 		if key == '$labels':
@@ -79,19 +73,15 @@ def getLabels(dictionary, labels = None):
 			labels = getLabels(value, labels)
 	return labels
 
-#
-# Merges two dictionaries into one
-#
-# Recursively handles nested dictionaries. If given key exists in both dictionaries, value from b overwrites value from
-# a.
-#
-# param [in] a is the dictionary into which b will be merged
-# param [in] b is the dictionary which will be merged into a
-#
-# return merged dictionary
-#
-
 def mergeDictionaries(a, b):
+	"""Merge two dictionaries into one and return merged dictionary.
+
+	Recursively handle nested dictionaries. If given key exists in both dictionaries, value from `b` overwrites value
+	from `a`.
+
+	* `a` is the dictionary into which `b` will be merged
+	* `b` is the dictionary which will be merged into `a`
+	"""
 	for key in b:
 		if key in a:
 			if isinstance(a[key], dict) == True and isinstance(b[key], dict) == True:
@@ -102,15 +92,11 @@ def mergeDictionaries(a, b):
 			a[key] = b[key]
 	return a
 
-#
-# Recursively resolves all '$extends' keys.
-#
-# param [in] dictionary is the dictionary in which '$extends' keys will be recursively resolved
-#
-# return dictionary with recursively resolved '$extends' keys
-#
-
 def resolveExtensions(dictionary):
+	"""Recursively resolve all `'$extends'` keys and return dictionary with resolved keys.
+
+	* `dictionary` is the dictionary in which `'$extends'` keys will be recursively resolved
+	"""
 	if '$extends' in dictionary:
 		for filename in dictionary['$extends']:
 			with open(filename) as yamlFile:
@@ -120,14 +106,12 @@ def resolveExtensions(dictionary):
 		del dictionary['$extends']
 	return dictionary
 
-#
-# Resolves all references in a dictionary.
-#
-# param [in] dictionary is a dictionary of a list in which references will be resolved
-# param [in] labels is a dictionary with labels
-#
-
 def resolveReferences(dictionary, labels):
+	"""Resolve all references in a dictionary.
+
+	* `dictionary` is a dictionary of a list in which references will be resolved
+	* `labels` is a dictionary with labels
+	"""
 	for key, value in dictionary.items():
 		if isinstance(key, Reference) == True:
 			mergeDictionaries(labels[key.label], value)

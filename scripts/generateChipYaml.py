@@ -16,16 +16,12 @@ import csv
 import os
 import ruamel.yaml
 
-#
-# Adds '$labels' keys to appropriate nodes in dictionary.
-#
-# param [in] dictionary is a dictionary representing an assembled row of CSV file
-# param [in] labels is a list of labels which should be added to the dictionary
-#
-# return dictionary with added labels
-#
-
 def addLabels(dictionary, labels):
+	"""Add `'$labels'` keys to appropriate nodes in dictionary and return this dictionary.
+
+	* `dictionary` is a dictionary representing an assembled row of CSV file
+	* `labels` is a list of labels which should be added to the dictionary
+	"""
 	for keys, label in labels:
 		try:
 			node = dictionary
@@ -37,21 +33,17 @@ def addLabels(dictionary, labels):
 
 	return dictionary
 
-#
-# Parses first row of the CSV file into list of paths and list of labels.
-#
-# List of paths has one entry for each column in the CSV file. Each entry is a list of keys for the element in that
-# column.
-#
-# List of labels has one entry for any path which should have the label added. Each entry is a tuple of path (list of
-# keys) and a label for the node on that path.
-#
-# param [in] firstRow is a list of strings representing the first row of the CSV file
-#
-# return tuple with a list of paths and a list of labels
-#
-
 def parseFirstRow(firstRow):
+	"""Parse first row of the CSV file into list of paths and list of labels and return tuple with the list of paths.
+
+	List of paths has one entry for each column in the CSV file. Each entry is a list of keys for the element in that
+	column.
+
+	List of labels has one entry for any path which should have the label added. Each entry is a tuple of path (list of
+	keys) and a label for the node on that path.
+
+	* `firstRow` is a list of strings representing the first row of the CSV file
+	"""
 	previousKeys = firstRow[0].split('/')
 	paths = []
 	labels = []
@@ -76,16 +68,12 @@ def parseFirstRow(firstRow):
 
 	return paths, labels
 
-#
-# Assembles single row from CSV file into a dictionary
-#
-# param [in] row is a list of strings representing a single row of CSV file
-# param [in] paths is a list of paths parsed from the first row of CSV file
-#
-# return dictionary representing data from row assembled according to paths
-#
-
 def parseRow(row, paths):
+	"""Assemble single row from CSV file into a dictionary and return this dictionary.
+
+	* `row` is a list of strings representing a single row of CSV file
+	* `paths` is a list of paths parsed from the first row of CSV file
+	"""
 	dictionary = {}
 	for column, element in enumerate(row):
 		if element != '':
@@ -96,15 +84,11 @@ def parseRow(row, paths):
 
 	return dictionary
 
-#
-# Tries to parse string into proper type
-#
-# param [in] string is the string which will be parsed
-#
-# return string possibly parsed into another type
-#
-
 def parseString(string):
+	"""Try to parse `string` into proper type and return it.
+
+	* `string` is the string which will be parsed
+	"""
 	try:
 		return ast.literal_eval(string)
 	except ValueError:
