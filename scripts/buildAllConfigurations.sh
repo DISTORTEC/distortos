@@ -14,16 +14,16 @@ set -u
 
 basedir="$(dirname "${0}")"
 
-"${basedir}/forAllConfigurations.sh" "make -j$(nproc) VERBOSE=1" "${@}"
-
-if command -v tup >/dev/null 2>&1; then
-	"${basedir}/forAllConfigurations.sh" 'tup --verbose' "${@}"
-fi
-
 if command -v cmake >/dev/null 2>&1; then
 	"${basedir}/forAllConfigurations.sh" \
 			"mkdir output && cd output &&
 			cmake .. -DCMAKE_TOOLCHAIN_FILE=${basedir}/../cmake/Toolchain-arm-none-eabi.cmake &&
 			make -j$(nproc) VERBOSE=1 && cd -" \
 			"${@}"
+fi
+
+"${basedir}/forAllConfigurations.sh" "make -j$(nproc) VERBOSE=1" "${@}"
+
+if command -v tup >/dev/null 2>&1; then
+	"${basedir}/forAllConfigurations.sh" 'tup --verbose' "${@}"
 fi
