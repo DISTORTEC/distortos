@@ -22,7 +22,8 @@ fi
 
 if command -v cmake >/dev/null 2>&1; then
 	"${basedir}/forAllConfigurations.sh" \
-			"mkdir output && cd output && cmake .. -DCMAKE_TOOLCHAIN_FILE=../cmake/Toolchain-arm-none-eabi.cmake &&
+			"mkdir output && cd output &&
+			cmake .. -DCMAKE_TOOLCHAIN_FILE=${basedir}/../cmake/Toolchain-arm-none-eabi.cmake &&
 			make -j$(nproc) VERBOSE=1 && cd -" \
 			"${@}"
 fi
