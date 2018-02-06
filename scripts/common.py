@@ -11,16 +11,12 @@
 
 import re
 
-#
-# Sanitizes provided string
-#
-# param [in] string is the string that will be sanitized
-# param [in] pattern is the pattern which will be replaced, default - '[^0-9A-Za-z-]'
-# param [in] replacement is the replacement string, default - '_'
-#
-# return sanitized string
-#
-
 def sanitize(string, pattern = '[^0-9A-Za-z-]', replacement = '_'):
+	"""Sanitize and return provided string.
+
+	* `string` is the string that will be sanitized
+	* `pattern` is the pattern which will be replaced, default - `'[^0-9A-Za-z-]'`
+	* `replacement` is the replacement string, default - `'_'`
+	"""
 	regex = re.compile(pattern)
 	return regex.sub(replacement, string)

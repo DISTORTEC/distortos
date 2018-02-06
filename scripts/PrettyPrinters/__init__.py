@@ -12,8 +12,7 @@
 ########################################################################################################################
 
 def registerPrettyPrinters(obj):
-	'Register pretty-printers'
-
+	"""Register pretty-printers."""
 	import PrettyPrinters.estd
 	PrettyPrinters.estd.registerPrettyPrinters(obj)
 	import PrettyPrinters.distortos

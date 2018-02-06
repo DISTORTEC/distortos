@@ -16,7 +16,7 @@ import PrettyPrinters.estd
 ########################################################################################################################
 
 class InternalThreadList(PrettyPrinters.estd.SortedIntrusiveList):
-	'Print distortos::internal::ThreadList'
+	"""Print `distortos::internal::ThreadList`."""
 
 	def __init__(self, value):
 		super().__init__(value, 'distortos::internal::ThreadList')
@@ -26,7 +26,7 @@ class InternalThreadList(PrettyPrinters.estd.SortedIntrusiveList):
 ########################################################################################################################
 
 class Semaphore():
-	'Helper class for distortos::Semaphore'
+	"""Helper class for `distortos::Semaphore`"""
 
 	def __init__(self, value):
 		self.value = value
@@ -43,16 +43,16 @@ class Semaphore():
 ########################################################################################################################
 
 def handleUniquePointer(uniquePointer):
-	'Gets raw pointer value from std::unique_ptr'
+	"""Get raw pointer value from `std::unique_ptr`."""
 	# GCC 6 and earlier - uniquePointer['_M_t']['_M_head_impl']
 	# GCC 7 and later - uniquePointer['_M_t']['_M_t']['_M_head_impl']
 	return uniquePointer['_M_t'].get('_M_t', uniquePointer['_M_t'])['_M_head_impl']
 
 class InternalFifoQueueBase:
-	'Print distortos::internal::FifoQueueBase'
+	"""Print `distortos::internal::FifoQueueBase`."""
 
 	class Iterator:
-		'Iterate over distortos::internal::FifoQueueBase'
+		"""Iterate over `distortos::internal::FifoQueueBase`."""
 
 		def __init__(self, begin, length, storageBegin, storageEnd, elementSize, storageToElement):
 			uint8PointerType = gdb.lookup_type('uint8_t').pointer()
@@ -131,7 +131,7 @@ class InternalFifoQueueBase:
 ########################################################################################################################
 
 class FifoQueue(InternalFifoQueueBase):
-	'Print distortos::FifoQueue'
+	"""Print `distortos::FifoQueue`."""
 
 	def __init__(self, value, name = 'distortos::FifoQueue'):
 		super().__init__(value['fifoQueueBase_'], name)
@@ -145,7 +145,7 @@ class FifoQueue(InternalFifoQueueBase):
 ########################################################################################################################
 
 class DynamicFifoQueue(FifoQueue):
-	'Print distortos::DynamicFifoQueue'
+	"""Print `distortos::DynamicFifoQueue`."""
 
 	def __init__(self, value, name = 'distortos::DynamicFifoQueue'):
 		super().__init__(value, name)
@@ -155,7 +155,7 @@ class DynamicFifoQueue(FifoQueue):
 ########################################################################################################################
 
 class StaticFifoQueue(FifoQueue):
-	'Print distortos::StaticFifoQueue'
+	"""Print `distortos::StaticFifoQueue`."""
 
 	def __init__(self, value, name = 'distortos::StaticFifoQueue'):
 		super().__init__(value, name)
@@ -165,7 +165,7 @@ class StaticFifoQueue(FifoQueue):
 ########################################################################################################################
 
 class RawFifoQueue(InternalFifoQueueBase):
-	'Print distortos::RawFifoQueue'
+	"""Print `distortos::RawFifoQueue`."""
 
 	def __init__(self, value, name = 'distortos::RawFifoQueue'):
 		super().__init__(value['fifoQueueBase_'], name)
@@ -178,7 +178,7 @@ class RawFifoQueue(InternalFifoQueueBase):
 ########################################################################################################################
 
 class DynamicRawFifoQueue(RawFifoQueue):
-	'Print distortos::DynamicRawFifoQueue'
+	"""Print `distortos::DynamicRawFifoQueue`."""
 
 	def __init__(self, value, name = 'distortos::DynamicRawFifoQueue'):
 		super().__init__(value, name)
@@ -188,7 +188,7 @@ class DynamicRawFifoQueue(RawFifoQueue):
 ########################################################################################################################
 
 class StaticRawFifoQueue(RawFifoQueue):
-	'Print distortos::StaticRawFifoQueue'
+	"""Print `distortos::StaticRawFifoQueue`."""
 
 	def __init__(self, value, name = 'distortos::StaticRawFifoQueue'):
 		super().__init__(value, name)
@@ -198,10 +198,10 @@ class StaticRawFifoQueue(RawFifoQueue):
 ########################################################################################################################
 
 class InternalMessageQueueBase:
-	'Print distortos::internal::MessageQueueBase'
+	"""Print `distortos::internal::MessageQueueBase`."""
 
 	class Iterator:
-		'Iterate over distortos::internal::MessageQueueBase'
+		"""Iterate over `distortos::internal::MessageQueueBase`."""
 
 		def __init__(self, entryList, storageToElement):
 			self.storageToElement = storageToElement
@@ -262,7 +262,7 @@ class InternalMessageQueueBase:
 ########################################################################################################################
 
 class MessageQueue(InternalMessageQueueBase):
-	'Print distortos::MessageQueue'
+	"""Print `distortos::MessageQueue`."""
 
 	def __init__(self, value, name = 'distortos::MessageQueue'):
 		super().__init__(value['messageQueueBase_'], name)
@@ -276,7 +276,7 @@ class MessageQueue(InternalMessageQueueBase):
 ########################################################################################################################
 
 class DynamicMessageQueue(MessageQueue):
-	'Print distortos::DynamicMessageQueue'
+	"""Print `distortos::DynamicMessageQueue`."""
 
 	def __init__(self, value, name = 'distortos::DynamicMessageQueue'):
 		super().__init__(value, name)
@@ -286,7 +286,7 @@ class DynamicMessageQueue(MessageQueue):
 ########################################################################################################################
 
 class StaticMessageQueue(MessageQueue):
-	'Print distortos::StaticMessageQueue'
+	"""Print `distortos::StaticMessageQueue`."""
 
 	def __init__(self, value, name = 'distortos::StaticMessageQueue'):
 		super().__init__(value, name)
@@ -296,7 +296,7 @@ class StaticMessageQueue(MessageQueue):
 ########################################################################################################################
 
 class RawMessageQueue(InternalMessageQueueBase):
-	'Print distortos::RawMessageQueue'
+	"""Print `distortos::RawMessageQueue`."""
 
 	def __init__(self, value, name = 'distortos::RawMessageQueue'):
 		super().__init__(value['messageQueueBase_'], name)
@@ -311,7 +311,7 @@ class RawMessageQueue(InternalMessageQueueBase):
 ########################################################################################################################
 
 class DynamicRawMessageQueue(RawMessageQueue):
-	'Print distortos::DynamicRawMessageQueue'
+	"""Print `distortos::DynamicRawMessageQueue`."""
 
 	def __init__(self, value, name = 'distortos::DynamicRawMessageQueue'):
 		super().__init__(value, name)
@@ -321,7 +321,7 @@ class DynamicRawMessageQueue(RawMessageQueue):
 ########################################################################################################################
 
 class StaticRawMessageQueue(RawMessageQueue):
-	'Print distortos::StaticRawMessageQueue'
+	"""Print `distortos::StaticRawMessageQueue`."""
 
 	def __init__(self, value, name = 'distortos::StaticRawMessageQueue'):
 		super().__init__(value, name)
@@ -331,8 +331,7 @@ class StaticRawMessageQueue(RawMessageQueue):
 ########################################################################################################################
 
 def registerPrettyPrinters(obj):
-	'Register pretty-printers for distortos'
-
+	"""Register pretty-printers for `distortos` namespace."""
 	prettyPrinters = gdb.printing.RegexpCollectionPrettyPrinter('distortos::internal')
 	prettyPrinters.add_printer('distortos::internal::FifoQueueBase', '^distortos::internal::FifoQueueBase$',
 			InternalFifoQueueBase)
