@@ -21,7 +21,7 @@ import os
 import posixpath
 import ruamel.yaml
 
-class Reference():
+class Reference(object):
 	"""Reference to label in YAML"""
 
 	yaml_tag = '!Reference'
