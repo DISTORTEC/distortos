@@ -68,12 +68,24 @@ installBuild() {
 	esac
 }
 
+# "install generateBoard" phase
+installGenerateBoard() {
+	echo 'Installing jinja2...'
+	pip install jinja2
+	echo 'Installing ruamel.yaml...'
+	pip install ruamel.yaml
+}
+
 # "install" phase
 install() {
 	case "${1}" in
 		build)
 			shift
 			installBuild "${@}"
+			;;
+		generateBoard)
+			shift
+			installGenerateBoard "${@}"
 			;;
 		unit-test)
 			;;
@@ -93,6 +105,22 @@ scriptBuild() {
 	"$(dirname "${0}")/buildAllConfigurations.sh" "${@}"
 }
 
+# "script generateBoard" phase
+scriptGenerateBoard() {
+	distortosPath="$(cd $(dirname ${0})/.. && pwd)"
+
+	for yamlFile in $(/usr/bin/find -L "${distortosPath}/source/board" -name '*.yaml')
+	do
+		(
+			cd "${distortosPath}"
+			make board CONFIG_FILE="${yamlFile}"
+		)
+	done
+
+	git add -N .
+	git diff --exit-code
+}
+
 unitTest() {
 	mkdir output
 	cd output
@@ -106,6 +134,10 @@ script() {
 		build)
 			shift
 			scriptBuild "${@}"
+			;;
+		generateBoard)
+			shift
+			scriptGenerateBoard "${@}"
 			;;
 		unit-test)
 			shift

@@ -11,14 +11,18 @@
 dist: trusty
 sudo: false
 
-# use minimal environment
-language: generic
+# use Python environment for generateBoard stage
+language: python
 
 matrix:
     include:
         - env: SUBSTAGE="build 5"
         - env: SUBSTAGE="build 6"
         - env: SUBSTAGE="build 7"
+        - python: '2.7'
+          env: SUBSTAGE="generateBoard"
+        - python: '3.6'
+          env: SUBSTAGE="generateBoard"
         - env: SUBSTAGE="unit-test" COMPILER_NAME=gcc CC=gcc-7 CXX=g++-7
           addons:
               apt:

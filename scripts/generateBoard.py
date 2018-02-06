@@ -9,6 +9,8 @@
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #
 
+from __future__ import print_function
+
 import argparse
 import ast
 import common
@@ -19,7 +21,7 @@ import os
 import posixpath
 import ruamel.yaml
 
-class Reference():
+class Reference(object):
 	"""Reference to label in YAML"""
 
 	yaml_tag = '!Reference'
