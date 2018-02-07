@@ -18,6 +18,6 @@ config BOARD_{{ (outputPath + '_' + board) | sanitize('[^0-9A-Za-z]') | upper }}
 {% block selects %}
 {% endblock %}
 	help
-		{{ board }} board with {{ chip }} chip
+		{{ board }} ({{ chip }} chip)
 
 		Location: {{ outputPath }}
