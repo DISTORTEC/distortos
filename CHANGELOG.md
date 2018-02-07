@@ -61,7 +61,8 @@ becomes `__{bss,data}_initializers_{end,start}`.
 - Replaced *devicetree*-based board generator with one using `*.yaml` files as input. Model of data in `*.yaml` files
 resembles devicetree, but is more suited for requirements of *distortos* (static code generation instead of dynamic run
 time configuration). New version of `generateBoard.py` requires *ruamel.yaml* parser/emitter module and *jinja2*
-template engine.
+template engine. It is also possible to use chip `*.yaml` files directly to generate so-called "raw" board, which can
+then be used by CMake.
 
 ### Fixed
 
