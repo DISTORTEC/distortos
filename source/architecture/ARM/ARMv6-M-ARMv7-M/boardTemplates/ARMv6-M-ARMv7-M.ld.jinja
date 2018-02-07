@@ -1,6 +1,5 @@
 /**
  * \file
-{% set board = dictionary['board']['compatible'][0] %}
 {% set chip = dictionary['chip']['compatible'][0] %}
 {% set prefix = ('CONFIG_BOARD_' + outputPath + '_' + board) | sanitize('[^0-9A-Za-z]') | upper %}
  * \brief Linker script for {{ board }} board with {{ chip }} chip:
