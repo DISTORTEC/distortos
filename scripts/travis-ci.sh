@@ -119,6 +119,15 @@ scriptGenerateBoard() {
 
 	git add -N .
 	git diff --exit-code
+
+	for yamlFile in $(/usr/bin/find -L "${distortosPath}/source/chip" -name '*.yaml')
+	do
+		echo $(basename ${yamlFile} .yaml)
+		(
+			cd "${distortosPath}"
+			make board CONFIG_FILE="${yamlFile}" OUTPUT_PATH="/tmp/$(basename ${yamlFile} .yaml)"
+		)
+	done
 }
 
 unitTest() {
