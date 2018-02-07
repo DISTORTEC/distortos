@@ -1,6 +1,6 @@
 /**
  * \file
- * \brief Linker script for ST,NUCLEO-L476RG board with ST,STM32L476RG chip:
+ * \brief Linker script for ST,NUCLEO-L476RG (ST,STM32L476RG chip):
  * - 1.0 MiB of flash at 0x8000000;
  * - 96.0 KiB of SRAM1 at 0x20000000;
  * - 32.0 KiB of SRAM2 at 0x10000000;

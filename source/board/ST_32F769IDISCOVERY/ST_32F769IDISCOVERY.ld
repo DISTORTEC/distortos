@@ -1,6 +1,6 @@
 /**
  * \file
- * \brief Linker script for ST,32F769IDISCOVERY board with ST,STM32F769NI chip:
+ * \brief Linker script for ST,32F769IDISCOVERY (ST,STM32F769NI chip):
  * - 2.0 MiB of flash at 0x8000000 (VMA 0x200000);
  * - 512.0 KiB of SRAM at 0x20000000;
  * - 16.0 KiB of ITCM at 0x0;

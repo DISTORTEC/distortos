@@ -1,6 +1,6 @@
 /**
  * \file
- * \brief Linker script for ST,NUCLEO-L073RZ board with ST,STM32L073RZ chip:
+ * \brief Linker script for ST,NUCLEO-L073RZ (ST,STM32L073RZ chip):
  * - 192.0 KiB of flash at 0x8000000;
  * - 20.0 KiB of SRAM at 0x20000000;
  * - 6.0 KiB of EEPROM at 0x8080000;

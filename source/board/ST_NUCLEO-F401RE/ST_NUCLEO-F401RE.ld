@@ -1,6 +1,6 @@
 /**
  * \file
- * \brief Linker script for ST,NUCLEO-F401RE board with ST,STM32F401RE chip:
+ * \brief Linker script for ST,NUCLEO-F401RE (ST,STM32F401RE chip):
  * - 512.0 KiB of flash at 0x8000000;
  * - 96.0 KiB of SRAM at 0x20000000;
  *
