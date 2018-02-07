@@ -1,4 +1,3 @@
-{% set board = dictionary['board']['compatible'][0] %}
 {% macro yearsRange(startYear, endYear = year) %}
 {{ startYear }}{% if startYear != endYear %}-{{ endYear }}{% endif %}
 {% endmacro %}
@@ -14,9 +13,11 @@
 #
 
 if(CONFIG_BOARD_{{ (outputPath + '_' + board) | sanitize('[^0-9A-Za-z]') | upper }})
+{% for metadataRow in metadata if metadataRow[2].endswith('.cpp') %}
+{% if loop.first == True %}
 
 	target_sources(distortos PRIVATE
-{% for metadataRow in metadata if metadataRow[2].endswith('.cpp') %}
+{% endif %}
 			${CMAKE_CURRENT_LIST_DIR}/{{ metadataRow[2] }}{% if loop.last == True %}){% endif %}{{ '' }}
 {% endfor %}
 

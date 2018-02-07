@@ -1,6 +1,6 @@
 /**
  * \file
- * \brief Linker script for ST,NUCLEO-F091RC board with ST,STM32F091RC chip:
+ * \brief Linker script for ST,NUCLEO-F091RC (ST,STM32F091RC chip):
  * - 256.0 KiB of flash at 0x8000000;
  * - 32.0 KiB of SRAM at 0x20000000;
  *

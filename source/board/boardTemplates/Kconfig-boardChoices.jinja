@@ -1,4 +1,3 @@
-{% set board = dictionary['board']['compatible'][0] %}
 {% set chip = dictionary['chip']['compatible'][0] %}
 #
 # file: {{ metadata[metadataIndex][2] }}
@@ -19,6 +18,6 @@ config BOARD_{{ (outputPath + '_' + board) | sanitize('[^0-9A-Za-z]') | upper }}
 {% block selects %}
 {% endblock %}
 	help
-		{{ board }} board with {{ chip }} chip
+		{{ board }} ({{ chip }} chip)
 
 		Location: {{ outputPath }}

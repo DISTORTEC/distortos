@@ -143,14 +143,19 @@ if __name__ == '__main__':
 	labels = getLabels(dictionary)
 	resolveReferences(dictionary, labels)
 
+	# in case of "raw" board - generated directly from chip YAML file - use chip name as board
+	board = dictionary.get('board', dictionary['chip'])['compatible'][0]
+
 	relativeOutputPath = posixpath.relpath(posixpath.realpath(arguments.outputPath),
 			posixpath.realpath(arguments.distortosPath))
 
 	jinjaEnvironment = jinja2.Environment(trim_blocks = True, lstrip_blocks = True, keep_trailing_newline = True,
 			loader = jinja2.FileSystemLoader(['.', arguments.distortosPath]))
-	jinjaEnvironment.globals['outputPath'] = relativeOutputPath
-	jinjaEnvironment.globals['year'] = datetime.date.today().year
 	jinjaEnvironment.filters['sanitize'] = common.sanitize
+	jinjaEnvironment.globals['board'] = board
+	jinjaEnvironment.globals['outputPath'] = relativeOutputPath
+	jinjaEnvironment.globals['sanitizedBoard'] = common.sanitize(board)
+	jinjaEnvironment.globals['year'] = datetime.date.today().year
 
 	metadata = []
 

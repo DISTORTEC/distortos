@@ -1,6 +1,6 @@
 /**
  * \file
- * \brief Linker script for ST,32F429IDISCOVERY board with ST,STM32F429ZI chip:
+ * \brief Linker script for ST,32F429IDISCOVERY (ST,STM32F429ZI chip):
  * - 2.0 MiB of flash at 0x8000000;
  * - 192.0 KiB of SRAM at 0x20000000;
  * - 64.0 KiB of CCM at 0x10000000;

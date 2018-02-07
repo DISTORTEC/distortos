@@ -1,6 +1,6 @@
 /**
  * \file
- * \brief Linker script for ST,STM32F4DISCOVERY board with ST,STM32F407VG chip:
+ * \brief Linker script for ST,STM32F4DISCOVERY (ST,STM32F407VG chip):
  * - 1.0 MiB of flash at 0x8000000;
  * - 128.0 KiB of SRAM at 0x20000000;
  * - 64.0 KiB of CCM at 0x10000000;

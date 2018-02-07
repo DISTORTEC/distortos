@@ -1,6 +1,6 @@
 /**
  * \file
- * \brief Linker script for ST,NUCLEO-F103RB board with ST,STM32F103RB chip:
+ * \brief Linker script for ST,NUCLEO-F103RB (ST,STM32F103RB chip):
  * - 128.0 KiB of flash at 0x8000000;
  * - 20.0 KiB of SRAM at 0x20000000;
  *
