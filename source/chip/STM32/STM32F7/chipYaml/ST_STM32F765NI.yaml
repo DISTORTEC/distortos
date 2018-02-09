@@ -26,7 +26,7 @@ memories:
     - on-chip-flash
     address: 134217728
     size: 2097152
-    virtualAddress: 2097152
+    virtual-address: 2097152
     $labels:
     - flash
   SRAM:
@@ -56,9 +56,9 @@ memories:
 pin-controller:
   compatible:
   - ST,STM32-GPIOv2-pin-controller
+  AF-bits: 4
+  has-high-speed: true
 GPIOs:
-  afBits: 4
-  hasHighSpeed: true
   GPIOA:
     compatible:
     - ST,STM32-GPIOv2
@@ -146,7 +146,7 @@ SPIs:
     $labels:
     - SPI6
 UARTs:
-  hasCrM1Bit: true
+  has-CR-M1-bit: true
   USART1:
     compatible:
     - ST,STM32-USARTv2

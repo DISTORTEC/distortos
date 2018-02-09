@@ -35,9 +35,9 @@ memories:
 pin-controller:
   compatible:
   - ST,STM32-GPIOv2-pin-controller
+  AF-bits: 3
+  has-high-speed: false
 GPIOs:
-  afBits: 3
-  hasHighSpeed: false
   GPIOA:
     compatible:
     - ST,STM32-GPIOv2
@@ -80,8 +80,8 @@ SPIs:
     $labels:
     - SPI2
 UARTs:
-  hasCrM1Bit: true
-  combinedInterrupt:
+  has-CR-M1-bit: true
+  combined-interrupt:
   - 3
   - 4
   - 5
