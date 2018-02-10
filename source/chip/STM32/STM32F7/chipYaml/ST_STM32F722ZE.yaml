@@ -1,3 +1,14 @@
+#
+# file: ST_STM32F722ZE.yaml
+#
+# author: Copyright (C) 2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+#
+# This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
+# distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+#
+# Automatically generated file - do not edit!
+#
+
 chip:
   compatible:
   - ST,STM32F722ZE
@@ -26,7 +37,7 @@ memories:
     - on-chip-flash
     address: 134217728
     size: 524288
-    virtualAddress: 2097152
+    virtual-address: 2097152
     $labels:
     - flash
   SRAM:
@@ -56,9 +67,9 @@ memories:
 pin-controller:
   compatible:
   - ST,STM32-GPIOv2-pin-controller
+  AF-bits: 4
+  has-high-speed: true
 GPIOs:
-  afBits: 4
-  hasHighSpeed: true
   GPIOA:
     compatible:
     - ST,STM32-GPIOv2
@@ -126,7 +137,9 @@ SPIs:
     $labels:
     - SPI5
 UARTs:
-  hasCrM1Bit: true
+  compatible:
+  - ST,STM32-USARTv2-common
+  has-CR-M1-bit: true
   USART1:
     compatible:
     - ST,STM32-USARTv2

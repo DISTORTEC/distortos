@@ -1,3 +1,14 @@
+#
+# file: ST_STM32L073CZ.yaml
+#
+# author: Copyright (C) 2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+#
+# This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
+# distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+#
+# Automatically generated file - do not edit!
+#
+
 chip:
   compatible:
   - ST,STM32L073CZ
@@ -43,9 +54,9 @@ memories:
 pin-controller:
   compatible:
   - ST,STM32-GPIOv2-pin-controller
+  AF-bits: 3
+  has-high-speed: true
 GPIOs:
-  afBits: 3
-  hasHighSpeed: true
   GPIOA:
     compatible:
     - ST,STM32-GPIOv2
@@ -78,8 +89,10 @@ SPIs:
     $labels:
     - SPI2
 UARTs:
-  hasCrM1Bit: true
-  combinedInterrupt:
+  compatible:
+  - ST,STM32-USARTv2-common
+  has-CR-M1-bit: true
+  combined-interrupt:
   - 4
   - 5
   USART1:

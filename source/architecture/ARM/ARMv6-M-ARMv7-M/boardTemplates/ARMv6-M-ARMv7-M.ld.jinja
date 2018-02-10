@@ -5,8 +5,8 @@
  * \brief Linker script for {{ board }} ({{ chip }} chip):
 {% for key, memory in dictionary['memories'].items() if memory is mapping %}
  * - {{ memory['size'] | filesizeformat(binary = True) }} of {{ key }} at {{ '0x%x' % memory['address'] -}}
-{% if 'virtualAddress' in memory %}
- (VMA {{ '0x%x' % memory['virtualAddress'] }})
+{% if 'virtual-address' in memory %}
+ (VMA {{ '0x%x' % memory['virtual-address'] }})
 {%- endif %}
 ;
 {% endfor %}
@@ -45,8 +45,8 @@ MEMORY
 {
 {% for key, memory in dictionary['memories'].items() if memory is mapping %}
 	{{ key }} : org = {{ '0x%x' % memory['address'] }}, len = {{ memory['size'] }}
-{% if 'virtualAddress' in memory %}
-	{{ key }}Vma : org = {{ '0x%x' % memory['virtualAddress'] }}, len = {{ memory['size'] }}
+{% if 'virtual-address' in memory %}
+	{{ key }}Vma : org = {{ '0x%x' % memory['virtual-address'] }}, len = {{ memory['size'] }}
 {% endif %}
 {% endfor %}
 }
@@ -70,7 +70,7 @@ ENTRY(Reset_Handler);
 		'on-chip-flash' in memory['compatible'] and '.text' in memory.get('sections', ['.text']) %}
 
 #ifdef {{ prefix }}_LD_TEXT_REGION_{{ key | upper }}
-REGION_ALIAS("textVmaRegion", {{ key }}{% if 'virtualAddress' in memory %}Vma{% endif %});
+REGION_ALIAS("textVmaRegion", {{ key }}{% if 'virtual-address' in memory %}Vma{% endif %});
 REGION_ALIAS("textLmaRegion", {{ key }});
 #endif	/* {{ prefix }}_LD_TEXT_REGION_{{ key | upper }} */
 {% endfor %}
@@ -78,7 +78,7 @@ REGION_ALIAS("textLmaRegion", {{ key }});
 		'on-chip-flash' in memory['compatible'] and '.ARM.exidx' in memory.get('sections', ['.ARM.exidx']) %}
 
 #ifdef {{ prefix }}_LD_ARM_EXIDX_REGION_{{ key | upper }}
-REGION_ALIAS("armExidxVmaRegion", {{ key }}{% if 'virtualAddress' in memory %}Vma{% endif %});
+REGION_ALIAS("armExidxVmaRegion", {{ key }}{% if 'virtual-address' in memory %}Vma{% endif %});
 REGION_ALIAS("armExidxLmaRegion", {{ key }});
 #endif	/* {{ prefix }}_LD_ARM_EXIDX_REGION_{{ key | upper }} */
 {% endfor %}
@@ -86,7 +86,7 @@ REGION_ALIAS("armExidxLmaRegion", {{ key }});
 		'on-chip-RAM' in memory['compatible'] and '.main_stack' in memory.get('sections', ['.main_stack']) %}
 
 #ifdef {{ prefix }}_LD_MAIN_STACK_REGION_{{ key | upper }}
-REGION_ALIAS("mainStackVmaRegion", {{ key }}{% if 'virtualAddress' in memory %}Vma{% endif %});
+REGION_ALIAS("mainStackVmaRegion", {{ key }}{% if 'virtual-address' in memory %}Vma{% endif %});
 REGION_ALIAS("mainStackLmaRegion", {{ key }});
 #endif	/* {{ prefix }}_LD_MAIN_STACK_REGION_{{ key | upper }} */
 {% endfor %}
@@ -94,7 +94,7 @@ REGION_ALIAS("mainStackLmaRegion", {{ key }});
 		'on-chip-RAM' in memory['compatible'] and '.bss' in memory.get('sections', ['.bss']) %}
 
 #ifdef {{ prefix }}_LD_BSS_REGION_{{ key | upper }}
-REGION_ALIAS("bssVmaRegion", {{ key }}{% if 'virtualAddress' in memory %}Vma{% endif %});
+REGION_ALIAS("bssVmaRegion", {{ key }}{% if 'virtual-address' in memory %}Vma{% endif %});
 REGION_ALIAS("bssLmaRegion", {{ key }});
 #endif	/* {{ prefix }}_LD_BSS_REGION_{{ key | upper }} */
 {% endfor %}
@@ -102,7 +102,7 @@ REGION_ALIAS("bssLmaRegion", {{ key }});
 		'on-chip-RAM' in memory['compatible'] and '.data' in memory.get('sections', ['.data']) %}
 
 #ifdef {{ prefix }}_LD_DATA_VMA_REGION_{{ key | upper }}
-REGION_ALIAS("dataVmaRegion", {{ key }}{% if 'virtualAddress' in memory %}Vma{% endif %});
+REGION_ALIAS("dataVmaRegion", {{ key }}{% if 'virtual-address' in memory %}Vma{% endif %});
 #endif	/* {{ prefix }}_LD_DATA_VMA_REGION_{{ key | upper }} */
 {% endfor %}
 {% for key, memory in dictionary['memories'].items() if memory is mapping and
@@ -116,7 +116,7 @@ REGION_ALIAS("dataLmaRegion", {{ key }});
 		'on-chip-RAM' in memory['compatible'] and '.noinit' in memory.get('sections', ['.noinit']) %}
 
 #ifdef {{ prefix }}_LD_NOINIT_REGION_{{ key | upper }}
-REGION_ALIAS("noinitVmaRegion", {{ key }}{% if 'virtualAddress' in memory %}Vma{% endif %});
+REGION_ALIAS("noinitVmaRegion", {{ key }}{% if 'virtual-address' in memory %}Vma{% endif %});
 REGION_ALIAS("noinitLmaRegion", {{ key }});
 #endif	/* {{ prefix }}_LD_NOINIT_REGION_{{ key | upper }} */
 {% endfor %}

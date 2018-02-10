@@ -1,3 +1,14 @@
+#
+# file: ST_STM32F410C8.yaml
+#
+# author: Copyright (C) 2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+#
+# This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
+# distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+#
+# Automatically generated file - do not edit!
+#
+
 chip:
   compatible:
   - ST,STM32F410C8
@@ -38,9 +49,9 @@ memories:
 pin-controller:
   compatible:
   - ST,STM32-GPIOv2-pin-controller
+  AF-bits: 4
+  has-high-speed: true
 GPIOs:
-  afBits: 4
-  hasHighSpeed: true
   GPIOA:
     compatible:
     - ST,STM32-GPIOv2
@@ -78,7 +89,9 @@ SPIs:
     $labels:
     - SPI5
 UARTs:
-  hasCr1Over8Bit: true
+  compatible:
+  - ST,STM32-USARTv1-common
+  has-CR1-OVER8-bit: true
   USART1:
     compatible:
     - ST,STM32-USARTv1
