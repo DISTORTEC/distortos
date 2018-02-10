@@ -13,6 +13,7 @@ import argparse
 import ast
 import common
 import csv
+import datetime
 import os
 import ruamel.yaml
 
@@ -104,6 +105,8 @@ if __name__ == '__main__':
 	parser.add_argument('outputPath', help = 'output path')
 	arguments = parser.parse_args()
 
+	year = datetime.date.today().year
+
 	with open(arguments.csvFile) as csvFile:
 		csvReader = csv.reader(csvFile)
 		firstRow = next(csvReader)
@@ -115,4 +118,17 @@ if __name__ == '__main__':
 			with open(yamlFilename, 'w') as yamlFile:
 				dictionary = parseRow(row, paths)
 				dictionary = addLabels(dictionary, labels)
+				yamlFile.write("#\n"
+						"# file: {}\n"
+						"#\n"
+						"# author: Copyright (C) {} Kamil Szczygiel http://www.distortec.com "
+						"http://www.freddiechopin.info\n"
+						"#\n"
+						"# This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a "
+						"copy of the MPL was not\n"
+						"# distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.\n"
+						"#\n"
+						"# Automatically generated file - do not edit!\n"
+						"#\n"
+						"\n".format(os.path.basename(yamlFilename), year))
 				yaml.dump(dictionary, yamlFile)
