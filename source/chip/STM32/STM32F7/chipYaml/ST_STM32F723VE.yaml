@@ -111,6 +111,8 @@ SPIs:
     $labels:
     - SPI4
 UARTs:
+  compatible:
+  - ST,STM32-USARTv2-common
   has-CR-M1-bit: true
   USART1:
     compatible:

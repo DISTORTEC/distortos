@@ -58,6 +58,8 @@ SPIs:
     $labels:
     - SPI1
 UARTs:
+  compatible:
+  - ST,STM32-USARTv1-common
   has-CR1-OVER8-bit: false
   USART1:
     compatible:

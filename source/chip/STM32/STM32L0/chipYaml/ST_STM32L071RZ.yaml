@@ -83,6 +83,8 @@ SPIs:
     $labels:
     - SPI2
 UARTs:
+  compatible:
+  - ST,STM32-USARTv2-common
   has-CR-M1-bit: true
   combined-interrupt:
   - 4

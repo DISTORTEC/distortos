@@ -73,6 +73,8 @@ SPIs:
     $labels:
     - SPI1
 UARTs:
+  compatible:
+  - ST,STM32-USARTv2-common
   has-CR-M1-bit: true
   USART2:
     compatible:
