@@ -45,39 +45,39 @@ memories:
     - SRAM
 pin-controller:
   compatible:
-  - ST,STM32-GPIOv2-pin-controller
+  - ST,STM32-GPIO-v2-pin-controller
   AF-bits: 3
   has-high-speed: false
 GPIOs:
   GPIOA:
     compatible:
-    - ST,STM32-GPIOv2
+    - ST,STM32-GPIO-v2
     $labels:
     - GPIOA
   GPIOB:
     compatible:
-    - ST,STM32-GPIOv2
+    - ST,STM32-GPIO-v2
     $labels:
     - GPIOB
   GPIOC:
     compatible:
-    - ST,STM32-GPIOv2
+    - ST,STM32-GPIO-v2
     $labels:
     - GPIOC
   GPIOF:
     compatible:
-    - ST,STM32-GPIOv2
+    - ST,STM32-GPIO-v2
     $labels:
     - GPIOF
 SPIs:
   SPI1:
     compatible:
-    - ST,STM32-SPIv2
+    - ST,STM32-SPI-v2
     $labels:
     - SPI1
 UARTs:
   compatible:
-  - ST,STM32-USARTv2-common
+  - ST,STM32-USART-v2-common
   has-CR-M1-bit: false
   combined-interrupt:
   - 3
@@ -88,11 +88,11 @@ UARTs:
   - 8
   USART1:
     compatible:
-    - ST,STM32-USARTv2
+    - ST,STM32-USART-v2
     $labels:
     - USART1
   USART2:
     compatible:
-    - ST,STM32-USARTv2
+    - ST,STM32-USART-v2
     $labels:
     - USART2

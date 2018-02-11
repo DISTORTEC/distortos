@@ -48,77 +48,77 @@ memories:
     - SRAM
 pin-controller:
   compatible:
-  - ST,STM32-GPIOv2-pin-controller
+  - ST,STM32-GPIO-v2-pin-controller
   AF-bits: 4
   has-high-speed: true
 GPIOs:
   GPIOA:
     compatible:
-    - ST,STM32-GPIOv2
+    - ST,STM32-GPIO-v2
     $labels:
     - GPIOA
   GPIOB:
     compatible:
-    - ST,STM32-GPIOv2
+    - ST,STM32-GPIO-v2
     $labels:
     - GPIOB
   GPIOC:
     compatible:
-    - ST,STM32-GPIOv2
+    - ST,STM32-GPIO-v2
     $labels:
     - GPIOC
   GPIOD:
     compatible:
-    - ST,STM32-GPIOv2
+    - ST,STM32-GPIO-v2
     $labels:
     - GPIOD
   GPIOH:
     compatible:
-    - ST,STM32-GPIOv2
+    - ST,STM32-GPIO-v2
     $labels:
     - GPIOH
 SPIs:
   SPI1:
     compatible:
-    - ST,STM32-SPIv1
+    - ST,STM32-SPI-v1
     $labels:
     - SPI1
   SPI2:
     compatible:
-    - ST,STM32-SPIv1
+    - ST,STM32-SPI-v1
     $labels:
     - SPI2
   SPI3:
     compatible:
-    - ST,STM32-SPIv1
+    - ST,STM32-SPI-v1
     $labels:
     - SPI3
   SPI4:
     compatible:
-    - ST,STM32-SPIv1
+    - ST,STM32-SPI-v1
     $labels:
     - SPI4
   SPI5:
     compatible:
-    - ST,STM32-SPIv1
+    - ST,STM32-SPI-v1
     $labels:
     - SPI5
 UARTs:
   compatible:
-  - ST,STM32-USARTv1-common
+  - ST,STM32-USART-v1-common
   has-CR1-OVER8-bit: true
   USART1:
     compatible:
-    - ST,STM32-USARTv1
+    - ST,STM32-USART-v1
     $labels:
     - USART1
   USART2:
     compatible:
-    - ST,STM32-USARTv1
+    - ST,STM32-USART-v1
     $labels:
     - USART2
   USART6:
     compatible:
-    - ST,STM32-USARTv1
+    - ST,STM32-USART-v1
     $labels:
     - USART6
