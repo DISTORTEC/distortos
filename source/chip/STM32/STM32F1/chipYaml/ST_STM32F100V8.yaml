@@ -47,6 +47,8 @@ pin-controller:
   compatible:
   - ST,STM32-GPIO-v1-pin-controller
 GPIOs:
+  compatible:
+  - ST,STM32-GPIOs-v1-group
   GPIOA:
     compatible:
     - ST,STM32-GPIO-v1
@@ -73,6 +75,8 @@ GPIOs:
     $labels:
     - GPIOE
 SPIs:
+  compatible:
+  - ST,STM32-SPIs-v1-group
   SPI1:
     compatible:
     - ST,STM32-SPI-v1
@@ -85,7 +89,7 @@ SPIs:
     - SPI2
 UARTs:
   compatible:
-  - ST,STM32-USART-v1-common
+  - ST,STM32-USARTs-v1-group
   has-CR1-OVER8-bit: false
   USART1:
     compatible:

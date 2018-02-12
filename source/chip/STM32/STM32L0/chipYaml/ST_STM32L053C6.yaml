@@ -57,6 +57,8 @@ pin-controller:
   AF-bits: 3
   has-high-speed: true
 GPIOs:
+  compatible:
+  - ST,STM32-GPIOs-v2-group
   GPIOA:
     compatible:
     - ST,STM32-GPIO-v2
@@ -78,6 +80,8 @@ GPIOs:
     $labels:
     - GPIOH
 SPIs:
+  compatible:
+  - ST,STM32-SPIs-v1-group
   SPI1:
     compatible:
     - ST,STM32-SPI-v1
@@ -90,7 +94,7 @@ SPIs:
     - SPI2
 UARTs:
   compatible:
-  - ST,STM32-USART-v2-common
+  - ST,STM32-USARTs-v2-group
   has-CR-M1-bit: true
   USART1:
     compatible:
