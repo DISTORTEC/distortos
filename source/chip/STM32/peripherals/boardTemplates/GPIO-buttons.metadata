@@ -1,14 +1,14 @@
 {% if 'pin-controller' in dictionary %}
-{% for compatible in dictionary['pin-controller']['compatible'] if compatible == 'ST,STM32-GPIOv1-pin-controller' or
-		compatible == 'ST,STM32-GPIOv2-pin-controller' %}
-{% set gpioVersion = compatible.split(',')[1].split('-')[1] %}
+{% for compatible in dictionary['pin-controller']['compatible'] if compatible == 'ST,STM32-GPIO-v1-pin-controller' or
+		compatible == 'ST,STM32-GPIO-v2-pin-controller' %}
+{% set gpioVersion = compatible.split(',')[1].split('-')[2] %}
 {% for key, value in dictionary.items() if 'compatible' in value and 'GPIO-buttons' in value['compatible'] %}
 {% set sanitizedKey = key | sanitize('[^0-9A-Za-z]') %}
 ('source/board/boardTemplates/GPIO-buttons.cpp.jinja',
 		{'dictionaryKey': '{{ key }}',
 				'sanitizedDictionaryKey': '{{ sanitizedKey }}',
 				'chipInputPinImport':
-						'source/chip/STM32/peripherals/{{ gpioVersion }}/boardTemplates/ChipInputPin.jinja'},
+						'source/chip/STM32/peripherals/GPIO{{ gpioVersion }}/boardTemplates/ChipInputPin.jinja'},
 		'{{ sanitizedBoard }}-{{ sanitizedKey }}.cpp'),
 {% endfor %}
 {% endfor %}

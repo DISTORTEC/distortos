@@ -22,7 +22,7 @@ if BOARD_BUTTONS_ENABLE
 config BOARD_BUTTONS_B1_ENABLE
 	bool "Enable b1 button (user)"
 	default y
-	select CHIP_STM32_GPIOV2_GPIOI_ENABLE
+	select CHIP_STM32_GPIO_V2_GPIOI_ENABLE
 
 endif	# BOARD_BUTTONS_ENABLE
 
