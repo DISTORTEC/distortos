@@ -94,16 +94,17 @@ def mergeDictionaries(a, b):
 			a[key] = b[key]
 	return a
 
-def resolveExtensions(dictionary):
+def resolveExtensions(dictionary, distortosPath):
 	"""Recursively resolve all `'$extends'` keys and return dictionary with resolved keys.
 
 	* `dictionary` is the dictionary in which `'$extends'` keys will be recursively resolved
+	* `distortosPath` is the path to distortos, prepended to all values of `'$extends'` keys
 	"""
 	if '$extends' in dictionary:
 		for filename in dictionary['$extends']:
-			with open(filename) as yamlFile:
+			with open(os.path.join(distortosPath, filename)) as yamlFile:
 				extendedDictionary = yaml.load(yamlFile)
-			extendedDictionary = resolveExtensions(extendedDictionary)
+			extendedDictionary = resolveExtensions(extendedDictionary, distortosPath)
 			dictionary = mergeDictionaries(extendedDictionary, dictionary)
 		del dictionary['$extends']
 	return dictionary
@@ -138,7 +139,7 @@ if __name__ == '__main__':
 	yaml.register_class(Reference)
 
 	dictionary = yaml.load(arguments.inputFile)
-	dictionary = resolveExtensions(dictionary)
+	dictionary = resolveExtensions(dictionary, arguments.distortosPath)
 	addPaths(dictionary)
 	labels = getLabels(dictionary)
 	resolveReferences(dictionary, labels)
