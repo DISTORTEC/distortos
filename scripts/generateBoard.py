@@ -163,28 +163,28 @@ if __name__ == '__main__':
 	for currentDirectory, directories, filenames in os.walk('.', followlinks = True):
 		# jinja expects forward slashes on all systems - https://github.com/pallets/jinja/issues/767
 		currentDirectory = currentDirectory.replace('\\', '/')
-		files = [posixpath.join(currentDirectory, filename) for filename in filenames]
-		for metadataFile in fnmatch.filter(files, '*/boardTemplates/*.metadata'):
-			print('Loading {}'.format(metadataFile))
-			metadataFragment = jinjaEnvironment.get_template(metadataFile).render(dictionary = dictionary)
+		localFilenames = [posixpath.join(currentDirectory, filename) for filename in filenames]
+		for metadataFilename in fnmatch.filter(localFilenames, '*/boardTemplates/*.metadata'):
+			print('Loading {}'.format(metadataFilename))
+			metadataFragment = jinjaEnvironment.get_template(metadataFilename).render(dictionary = dictionary)
 			metadata += ast.literal_eval('[' + metadataFragment + ']')
 
 	print()
 
 	for metadataIndex, metadataRow in enumerate(metadata):
-		templateFile, templateArguments, outputFile = metadataRow
-		relativeOutputFile = posixpath.normpath(posixpath.join(relativeOutputPath, outputFile))
-		outputFile = posixpath.normpath(posixpath.join(arguments.outputPath, outputFile))
+		templateFilename, templateArguments, outputFilename = metadataRow
+		relativeOutputFilename = posixpath.normpath(posixpath.join(relativeOutputPath, outputFilename))
+		outputFilename = posixpath.normpath(posixpath.join(arguments.outputPath, outputFilename))
 
-		outputDirectory = posixpath.dirname(outputFile)
+		outputDirectory = posixpath.dirname(outputFilename)
 		if posixpath.exists(outputDirectory) == False:
 			os.makedirs(outputDirectory)
 
-		output = jinjaEnvironment.get_template(templateFile).render(dictionary = dictionary, metadata = metadata,
-				metadataIndex = metadataIndex, outputFile = relativeOutputFile, **templateArguments)
-		with open(outputFile, 'w') as file:
-			print('Writing {} ({})'.format(outputFile, templateFile))
-			file.write(output)
+		output = jinjaEnvironment.get_template(templateFilename).render(dictionary = dictionary, metadata = metadata,
+				metadataIndex = metadataIndex, outputFilename = relativeOutputFilename, **templateArguments)
+		with open(outputFilename, 'w') as outputFile:
+			print('Writing {} ({})'.format(outputFilename, templateFilename))
+			outputFile.write(output)
 
 	print()
 	print('Done')
