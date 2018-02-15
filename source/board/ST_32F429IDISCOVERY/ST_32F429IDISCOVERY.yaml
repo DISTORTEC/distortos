@@ -17,7 +17,6 @@ chip:
   VDD: !Reference {label: VDD}
 buttons:
   compatible:
-  - GPIO-buttons
   - GPIO-inputs
   b1:
     GPIO:
@@ -27,7 +26,6 @@ buttons:
     - user
 leds:
   compatible:
-  - GPIO-LEDs
   - GPIO-outputs
   ld3:
     GPIO:

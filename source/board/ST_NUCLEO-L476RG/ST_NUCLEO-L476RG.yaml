@@ -15,7 +15,6 @@ board:
   model: STMicroelectronics NUCLEO-L476RG
 buttons:
   compatible:
-  - GPIO-buttons
   - GPIO-inputs
   b1:
     GPIO:
@@ -26,7 +25,6 @@ buttons:
     - user
 leds:
   compatible:
-  - GPIO-LEDs
   - GPIO-outputs
   ld2:
     GPIO:
