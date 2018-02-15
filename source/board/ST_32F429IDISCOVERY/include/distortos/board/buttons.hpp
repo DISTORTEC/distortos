@@ -53,8 +53,8 @@ constexpr size_t totalButtons {DISTORTOS_BOARD_TOTAL_BUTTONS};
 enum
 {
 #ifdef CONFIG_BOARD_BUTTONS_B1_ENABLE
-		/// index of b1 button (user)
-		b1ButtonIndex,
+		/// index of b1 (user) from buttons
+		buttonsB1Index,
 #endif	// def CONFIG_BOARD_BUTTONS_B1_ENABLE
 };
 
@@ -64,8 +64,8 @@ enum
 
 #ifdef CONFIG_BOARD_BUTTONS_B1_ENABLE
 
-/// alternative index of b1 button (user)
-constexpr size_t userButtonIndex {b1ButtonIndex};
+/// alternative index of b1 (user) from buttons
+constexpr size_t buttonsUserIndex {buttonsB1Index};
 
 #endif	// def CONFIG_BOARD_BUTTONS_B1_ENABLE
 

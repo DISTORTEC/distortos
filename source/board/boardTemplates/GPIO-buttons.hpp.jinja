@@ -64,9 +64,10 @@ enum
 {
 {% for key, value in dictionary[dictionaryKey].items() if value is mapping %}
 #ifdef CONFIG_BOARD_{{ sanitizedDictionaryKey | upper }}_{{ key | sanitize('[^0-9A-Za-z]') | upper }}_ENABLE
-		/// index of {{ key }} button{# remove whitespace -#}
-		{% if 'alternative-names' in value %} ({{ value['alternative-names'] | join(', ') }}){% endif %}{{ '' }}
-		{{ key | sanitize('[^0-9A-Za-z]') }}ButtonIndex,
+		/// index of {{ key -}}
+		{% if 'alternative-names' in value %} ({{ value['alternative-names'] | join(', ') }}){% endif -%}
+		{{ '' }} from {{ sanitizedDictionaryKey }}
+		{{ sanitizedDictionaryKey }}{{ key | sanitize('[^0-9A-Za-z]') | capitalize }}Index,
 #endif	// def CONFIG_BOARD_{{ sanitizedDictionaryKey | upper }}_{{ key | sanitize('[^0-9A-Za-z]') | upper }}_ENABLE
 {% endfor %}
 };
@@ -84,9 +85,10 @@ enum
 #ifdef CONFIG_BOARD_{{ sanitizedDictionaryKey | upper }}_{{ key | sanitize('[^0-9A-Za-z]') | upper }}_ENABLE
 {% endif %}
 
-/// alternative index of {{ key }} button ({{ alternativeName }})
-constexpr size_t {{ alternativeName | sanitize('[^0-9A-Za-z]') }}ButtonIndex {# remove whitespace -#}
-{{ '{' }}{{ key | sanitize('[^0-9A-Za-z]') }}ButtonIndex};
+/// alternative index of {{ key }} ({{ alternativeName }}) from {{ sanitizedDictionaryKey }}
+constexpr size_t {# remove whitespace -#}
+{{ sanitizedDictionaryKey }}{{ alternativeName | sanitize('[^0-9A-Za-z]') | capitalize }}Index {# remove whitespace -#}
+{{ '{' }}{{ sanitizedDictionaryKey }}{{ key | sanitize('[^0-9A-Za-z]') | capitalize }}Index};
 {% if loop.last == True %}
 
 #endif	// def CONFIG_BOARD_{{ sanitizedDictionaryKey | upper }}_{{ key | sanitize('[^0-9A-Za-z]') | upper }}_ENABLE
