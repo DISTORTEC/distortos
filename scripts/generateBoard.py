@@ -180,10 +180,11 @@ if __name__ == '__main__':
 		if posixpath.exists(outputDirectory) == False:
 			os.makedirs(outputDirectory)
 
-		output = jinjaEnvironment.get_template(templateFilename).render(dictionary = dictionary, metadata = metadata,
+		templateFile = jinjaEnvironment.get_template(templateFilename)
+		output = templateFile.render(dictionary = dictionary, metadata = metadata,
 				metadataIndex = metadataIndex, outputFilename = relativeOutputFilename, **templateArguments)
 		with open(outputFilename, 'w') as outputFile:
-			print('Writing {} ({})'.format(outputFilename, templateFilename))
+			print('Writing {} ({})'.format(outputFilename, templateFile.filename))
 			outputFile.write(output)
 
 	print()
