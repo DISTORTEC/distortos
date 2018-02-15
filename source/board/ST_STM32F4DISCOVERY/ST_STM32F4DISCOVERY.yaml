@@ -18,6 +18,7 @@ chip:
 buttons:
   compatible:
   - GPIO-buttons
+  - GPIO-inputs
   b1:
     GPIO:
       port: !Reference {label: GPIOA}
@@ -27,6 +28,7 @@ buttons:
 leds:
   compatible:
   - GPIO-LEDs
+  - GPIO-outputs
   ld3:
     GPIO:
       port: !Reference {label: GPIOD}
