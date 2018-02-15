@@ -1,10 +1,10 @@
-{% for key, value in dictionary.items() if 'compatible' in value and 'GPIO-buttons' in value['compatible'] %}
+{% for key, value in dictionary.items() if 'compatible' in value and 'GPIO-inputs' in value['compatible'] %}
 {% set sanitizedKey = key | sanitize('[^0-9A-Za-z]') %}
-('source/board/boardTemplates/GPIO-buttons.hpp.jinja',
+('source/board/boardTemplates/GPIO-inputs.hpp.jinja',
 		{'dictionaryKey': '{{ key }}',
 				'sanitizedDictionaryKey': '{{ sanitizedKey }}'},
 		'include/distortos/board/{{ sanitizedKey }}.hpp'),
-('source/board/boardTemplates/Kconfig-boardOptions-GPIO-buttons.jinja',
+('source/board/boardTemplates/Kconfig-boardOptions-GPIO-inputs.jinja',
 		{'dictionaryKey': '{{ key }}',
 				'sanitizedDictionaryKey': '{{ sanitizedKey }}'},
 		'Kconfig-boardOptions-{{ sanitizedKey }}'),

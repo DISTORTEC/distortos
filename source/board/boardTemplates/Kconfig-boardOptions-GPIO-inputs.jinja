@@ -21,7 +21,7 @@ if BOARD_{{ sanitizedDictionaryKey | upper }}_ENABLE
 {% for key, value in dictionary[dictionaryKey].items() if value is mapping %}
 
 config BOARD_{{ sanitizedDictionaryKey | upper }}_{{ key | sanitize('[^0-9A-Za-z]') | upper }}_ENABLE
-	bool "Enable {{ key }} button
+	bool "Enable {{ key }}
 	{%- if 'alternative-names' in value %} ({{ value['alternative-names'] | join(', ') }}){% endif %}"
 	default y
 	select CHIP_{{ value['GPIO']['port']['compatible'][0].rpartition(',')[2] | sanitize('[^0-9A-Za-z]') | upper }}_
