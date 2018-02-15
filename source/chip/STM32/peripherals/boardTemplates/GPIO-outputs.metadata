@@ -2,9 +2,9 @@
 {% for compatible in dictionary['pin-controller']['compatible'] if compatible == 'ST,STM32-GPIO-v1-pin-controller' or
 		compatible == 'ST,STM32-GPIO-v2-pin-controller' %}
 {% set gpioVersion = compatible.split(',')[1].split('-')[2] %}
-{% for key, value in dictionary.items() if 'compatible' in value and 'GPIO-LEDs' in value['compatible'] %}
+{% for key, value in dictionary.items() if 'compatible' in value and 'GPIO-outputs' in value['compatible'] %}
 {% set sanitizedKey = key | sanitize('[^0-9A-Za-z]') %}
-('source/board/boardTemplates/GPIO-LEDs.cpp.jinja',
+('source/board/boardTemplates/GPIO-outputs.cpp.jinja',
 		{'dictionaryKey': '{{ key }}',
 				'sanitizedDictionaryKey': '{{ sanitizedKey }}',
 				'chipOutputPinImport':
