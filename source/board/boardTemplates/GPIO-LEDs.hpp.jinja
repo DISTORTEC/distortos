@@ -1,4 +1,4 @@
-{% set includeGuard = outputFile | sanitize('[^0-9A-Za-z]') | upper + '_' %}
+{% set includeGuard = outputFilename | sanitize('[^0-9A-Za-z]') | upper + '_' %}
 /**
  * \file
  * \brief Declaration of {{ sanitizedDictionaryKey }} for {{ board }}
