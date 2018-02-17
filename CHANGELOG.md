@@ -62,7 +62,8 @@ becomes `__{bss,data}_initializers_{end,start}`.
 resembles devicetree, but is more suited for requirements of *distortos* (static code generation instead of dynamic run
 time configuration). New version of `generateBoard.py` requires *ruamel.yaml* parser/emitter module and *jinja2*
 template engine. It is also possible to use chip `*.yaml` files directly to generate so-called "raw" board, which can
-then be used by CMake.
+then be used by CMake. Basic documentation of bindings for chip and board `*.yaml` files is included in
+`documentation/yaml-bindings/`.
 - Indexes of board buttons and LEDs - generated automatically by `generateBoard.py` - were changed from
 `<name>ButtonIndex` and `<name>LedIndex` to `<group><Name>Index`. For example `b1ButtonIndex` and `ld3LedIndex` were
 changed to `buttonsB1Index` and `ledsLd3Index`.
