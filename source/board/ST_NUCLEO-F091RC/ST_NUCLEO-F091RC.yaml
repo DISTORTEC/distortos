@@ -20,7 +20,7 @@ buttons:
     GPIO:
       port: !Reference {label: GPIOC}
       pin: 13
-      active-low: True
+      active-low: true
     alternative-names:
     - user
 leds:

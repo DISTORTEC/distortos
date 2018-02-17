@@ -22,7 +22,7 @@ buttons:
     GPIO:
       port: !Reference {label: GPIOC}
       pin: 13
-      active-low: True
+      active-low: true
     alternative-names:
     - user
 leds:
@@ -38,7 +38,7 @@ regulators:
   VDD:
     compatible:
     - fixed-regulator
-    always-on: True
+    always-on: true
     output-voltage: 3.3
     $labels:
     - VDD

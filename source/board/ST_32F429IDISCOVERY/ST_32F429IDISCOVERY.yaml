@@ -43,7 +43,7 @@ regulators:
   VDD:
     compatible:
     - fixed-regulator
-    always-on: True
+    always-on: true
     output-voltage: 3.0
     $labels:
     - VDD

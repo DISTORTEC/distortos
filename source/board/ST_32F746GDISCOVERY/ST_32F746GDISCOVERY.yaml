@@ -37,10 +37,10 @@ regulators:
   VDD:
     compatible:
     - fixed-regulator
-    always-on: True
+    always-on: true
     output-voltage: 3.3
     $labels:
     - VDD
 !Reference {label: HSE}:
   frequency: 25000000
-  bypass: True
+  bypass: true
