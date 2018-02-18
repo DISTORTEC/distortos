@@ -91,6 +91,7 @@ preinitializers should use `BIND_LOW_LEVEL_PREINITIALIZER()` macro.
 - Removed `board::lowLevelInitialization()` declaration. Low-level initializers of board should use
 `BIND_LOW_LEVEL_INITIALIZER(60, ...);`.
 - Removed `pydts.py`, as new version of board generator uses `*.yaml` files as input.
+- Removed *tup* build infrastructure - *tup* is no longer supported for building *distortos*.
 
 [0.5.0](https://github.com/DISTORTEC/distortos/compare/v0.4.0...v0.5.0) - 2017-09-14
 ------------------------------------------------------------------------------------

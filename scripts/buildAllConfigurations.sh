@@ -23,7 +23,3 @@ if command -v cmake >/dev/null 2>&1 && [ -f "CMakeLists.txt" ]; then
 fi
 
 "${basedir}/forAllConfigurations.sh" "make -j$(nproc) VERBOSE=1" "${@}"
-
-if command -v tup >/dev/null 2>&1; then
-	"${basedir}/forAllConfigurations.sh" 'tup --verbose' "${@}"
-fi

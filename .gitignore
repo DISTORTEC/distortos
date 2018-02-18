@@ -1,6 +1,3 @@
-# tup database
-.tup/
-
 # configuration output
 selectedConfiguration.mk
 
