@@ -12,11 +12,6 @@
 set -e
 set -u
 
-if [ -d .tup ]; then
-	echo 'Removing tup database...'
-	rm -rf .tup/
-fi
-
 if [ -d output ]; then
 	echo 'Removing build outputs...'
 	rm -rf output/
