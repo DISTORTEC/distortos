@@ -23,5 +23,4 @@ documentation/html/
 .gdbinit
 __pycache__
 *.pyc
-parsetab.py
 .~lock.*
