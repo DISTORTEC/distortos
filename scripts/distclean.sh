@@ -3,7 +3,7 @@
 #
 # file: distclean.sh
 #
-# author: Copyright (C) 2015-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+# author: Copyright (C) 2015-2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
 #
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -30,12 +30,6 @@ fi
 if [ -f selectedConfiguration.mk ]; then
 	echo 'Removing selectedConfiguration.mk file...'
 	rm -f selectedConfiguration.mk
-fi
-
-parsetabPy="$(dirname "${0}")/parsetab.py"
-if [ -f "${parsetabPy}" ]; then
-	echo "Removing ${parsetabPy} file..."
-	rm -f "${parsetabPy}"
 fi
 
 echo 'Project cleaned successfully.'
