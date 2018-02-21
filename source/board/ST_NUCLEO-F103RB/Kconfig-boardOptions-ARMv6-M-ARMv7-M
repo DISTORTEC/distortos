@@ -17,124 +17,44 @@ config LDSCRIPT
 	string
 	default "source/board/ST_NUCLEO-F103RB/ST_NUCLEO-F103RB.ld"
 
-choice
-	prompt ".text memory region"
-	help
-		Select memory region for .text section in linker script
-
 config BOARD_SOURCE_BOARD_ST_NUCLEO_F103RB_ST_NUCLEO_F103RB_LD_TEXT_REGION_FLASH
-	bool "flash"
-	help
-		Use flash as memory region for .text section
-
-endchoice
-
-choice
-	prompt ".ARM.exidx memory region"
-	help
-		Select memory region for .ARM.exidx section in linker script
+	bool
+	default y
 
 config BOARD_SOURCE_BOARD_ST_NUCLEO_F103RB_ST_NUCLEO_F103RB_LD_ARM_EXIDX_REGION_FLASH
-	bool "flash"
-	help
-		Use flash as memory region for .ARM.exidx section
-
-endchoice
-
-choice
-	prompt "Main stack memory region"
-	help
-		Select memory region for main stack in linker script
+	bool
+	default y
 
 config BOARD_SOURCE_BOARD_ST_NUCLEO_F103RB_ST_NUCLEO_F103RB_LD_MAIN_STACK_REGION_SRAM
-	bool "SRAM"
-	help
-		Use SRAM as memory region for main stack
-
-endchoice
-
-choice
-	prompt ".bss memory region"
-	help
-		Select memory region for .bss section in linker script
+	bool
+	default y
 
 config BOARD_SOURCE_BOARD_ST_NUCLEO_F103RB_ST_NUCLEO_F103RB_LD_BSS_REGION_SRAM
-	bool "SRAM"
-	help
-		Use SRAM as memory region for .bss section
-
-endchoice
-
-choice
-	prompt ".data VMA memory region"
-	help
-		Select VMA memory region for .data section in linker script
+	bool
+	default y
 
 config BOARD_SOURCE_BOARD_ST_NUCLEO_F103RB_ST_NUCLEO_F103RB_LD_DATA_VMA_REGION_SRAM
-	bool "SRAM"
-	help
-		Use SRAM as VMA memory region for .data section
-
-endchoice
-
-choice
-	prompt ".data LMA memory region"
-	help
-		Select LMA memory region for .data section in linker script
+	bool
+	default y
 
 config BOARD_SOURCE_BOARD_ST_NUCLEO_F103RB_ST_NUCLEO_F103RB_LD_DATA_LMA_REGION_FLASH
-	bool "flash"
-	help
-		Use flash as LMA memory region for .data section
-
-endchoice
-
-choice
-	prompt ".noinit memory region"
-	help
-		Select memory region for .noinit section in linker script
+	bool
+	default y
 
 config BOARD_SOURCE_BOARD_ST_NUCLEO_F103RB_ST_NUCLEO_F103RB_LD_NOINIT_REGION_SRAM
-	bool "SRAM"
-	help
-		Use SRAM as memory region for .noinit section
-
-endchoice
-
-choice
-	prompt ".SRAM.data LMA memory region"
-	help
-		Select LMA memory region for .SRAM.data section in linker script
+	bool
+	default y
 
 config BOARD_SOURCE_BOARD_ST_NUCLEO_F103RB_ST_NUCLEO_F103RB_LD_SRAM_DATA_LMA_REGION_FLASH
-	bool "flash"
-	help
-		Use flash as LMA memory region for .SRAM.data section
-
-endchoice
-
-choice
-	prompt "Process stack memory region"
-	help
-		Select memory region for process stack in linker script
+	bool
+	default y
 
 config BOARD_SOURCE_BOARD_ST_NUCLEO_F103RB_ST_NUCLEO_F103RB_LD_PROCESS_STACK_REGION_SRAM
-	bool "SRAM"
-	help
-		Use SRAM as memory region for process stack
-
-endchoice
-
-choice
-	prompt "Heap memory region"
-	help
-		Select memory region for heap in linker script
+	bool
+	default y
 
 config BOARD_SOURCE_BOARD_ST_NUCLEO_F103RB_ST_NUCLEO_F103RB_LD_HEAP_REGION_SRAM
-	bool "SRAM"
-	help
-		Use SRAM as memory region for heap
-
-endchoice
+	bool
+	default y
 
 endif	# BOARD_SOURCE_BOARD_ST_NUCLEO_F103RB_ST_NUCLEO_F103RB

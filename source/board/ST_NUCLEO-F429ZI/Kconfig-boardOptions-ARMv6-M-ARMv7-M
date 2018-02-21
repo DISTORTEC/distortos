@@ -17,29 +17,13 @@ config LDSCRIPT
 	string
 	default "source/board/ST_NUCLEO-F429ZI/ST_NUCLEO-F429ZI.ld"
 
-choice
-	prompt ".text memory region"
-	help
-		Select memory region for .text section in linker script
-
 config BOARD_SOURCE_BOARD_ST_NUCLEO_F429ZI_ST_NUCLEO_F429ZI_LD_TEXT_REGION_FLASH
-	bool "flash"
-	help
-		Use flash as memory region for .text section
-
-endchoice
-
-choice
-	prompt ".ARM.exidx memory region"
-	help
-		Select memory region for .ARM.exidx section in linker script
+	bool
+	default y
 
 config BOARD_SOURCE_BOARD_ST_NUCLEO_F429ZI_ST_NUCLEO_F429ZI_LD_ARM_EXIDX_REGION_FLASH
-	bool "flash"
-	help
-		Use flash as memory region for .ARM.exidx section
-
-endchoice
+	bool
+	default y
 
 choice
 	prompt "Main stack memory region"
@@ -92,17 +76,9 @@ config BOARD_SOURCE_BOARD_ST_NUCLEO_F429ZI_ST_NUCLEO_F429ZI_LD_DATA_VMA_REGION_C
 
 endchoice
 
-choice
-	prompt ".data LMA memory region"
-	help
-		Select LMA memory region for .data section in linker script
-
 config BOARD_SOURCE_BOARD_ST_NUCLEO_F429ZI_ST_NUCLEO_F429ZI_LD_DATA_LMA_REGION_FLASH
-	bool "flash"
-	help
-		Use flash as LMA memory region for .data section
-
-endchoice
+	bool
+	default y
 
 choice
 	prompt ".noinit memory region"
@@ -126,29 +102,13 @@ config BOARD_SOURCE_BOARD_ST_NUCLEO_F429ZI_ST_NUCLEO_F429ZI_LD_NOINIT_REGION_BKP
 
 endchoice
 
-choice
-	prompt ".SRAM.data LMA memory region"
-	help
-		Select LMA memory region for .SRAM.data section in linker script
-
 config BOARD_SOURCE_BOARD_ST_NUCLEO_F429ZI_ST_NUCLEO_F429ZI_LD_SRAM_DATA_LMA_REGION_FLASH
-	bool "flash"
-	help
-		Use flash as LMA memory region for .SRAM.data section
-
-endchoice
-
-choice
-	prompt ".CCM.data LMA memory region"
-	help
-		Select LMA memory region for .CCM.data section in linker script
+	bool
+	default y
 
 config BOARD_SOURCE_BOARD_ST_NUCLEO_F429ZI_ST_NUCLEO_F429ZI_LD_CCM_DATA_LMA_REGION_FLASH
-	bool "flash"
-	help
-		Use flash as LMA memory region for .CCM.data section
-
-endchoice
+	bool
+	default y
 
 choice
 	prompt "Process stack memory region"
