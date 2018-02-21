@@ -14,12 +14,10 @@ set -u
 
 basedir="$(dirname "${0}")"
 
-if command -v cmake >/dev/null 2>&1 && [ -f "CMakeLists.txt" ]; then
-	"${basedir}/forAllConfigurations.sh" \
-			"mkdir output && cd output &&
-			cmake .. -DCMAKE_TOOLCHAIN_FILE=${basedir}/../cmake/Toolchain-arm-none-eabi.cmake &&
-			make -j$(nproc) VERBOSE=1 && cd -" \
-			"${@}"
-fi
+"${basedir}/forAllConfigurations.sh" \
+		"mkdir output && cd output &&
+		cmake .. -DCMAKE_TOOLCHAIN_FILE=${basedir}/../cmake/Toolchain-arm-none-eabi.cmake &&
+		make -j$(nproc) VERBOSE=1 && cd -" \
+		"${@}"
 
 "${basedir}/forAllConfigurations.sh" "make -j$(nproc) VERBOSE=1" "${@}"
