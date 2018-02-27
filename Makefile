@@ -315,18 +315,16 @@ distclean:
 doxygen: all
 	$(eval EXCLUDE_STRING := EXCLUDE =)
 	$(eval EXCLUDE_STRING += $(DISTORTOS_PATH)scripts)
+	$(eval EXCLUDE_STRING += $(DISTORTOS_PATH)test)
 	$(eval EXCLUDE_STRING += $(DISTORTOS_PATH)unit-test)
 	$(eval EXCLUDE_STRING += $(DOXYGEN_EXCLUDE))
 	$(eval HTML_FOOTER_STRING := HTML_FOOTER =)
 	$(eval HTML_FOOTER_STRING += $(HTML_FOOTER))
-	$(eval IMAGE_PATH_STRING := IMAGE_PATH =)
-	$(eval IMAGE_PATH_STRING += $(DISTORTOS_PATH)documentation/images)
 	$(eval INCLUDE_PATH_STRING := INCLUDE_PATH =)
 	$(eval INCLUDE_PATH_STRING += $(patsubst -I%,%,$(STANDARD_INCLUDES)))
 	$(eval INCLUDE_PATH_STRING += $(patsubst -I%,%,$(ARCHITECTURE_INCLUDES)))
 	$(eval INCLUDE_PATH_STRING += $(patsubst -I%,%,$(CHIP_INCLUDES)))
 	$(eval INCLUDE_PATH_STRING += $(patsubst -I%,%,$(BOARD_INCLUDES)))
-	$(eval INCLUDE_PATH_STRING += $(DISTORTOS_PATH)test)
 	$(eval PREDEFINED_STRING := PREDEFINED =)
 	$(eval PREDEFINED_STRING += DOXYGEN)
 	$(eval PREDEFINED_STRING += \"__attribute__\(x\)=\")
@@ -337,8 +335,8 @@ doxygen: all
 			-e 's/^\\\\\\#define \([^ ]*\) \(.*\)$$/\\"\1=\2\\"/'))
 	$(eval PROJECT_NUMBER_STRING := PROJECT_NUMBER =)
 	$(eval PROJECT_NUMBER_STRING += $(shell git describe --dirty 2>/dev/null || date +%Y%m%d%H%M%S))
-	(cat $(DISTORTOS_PATH)Doxyfile; echo $(EXCLUDE_STRING); echo $(HTML_FOOTER_STRING); echo $(IMAGE_PATH_STRING); \
-			echo $(INCLUDE_PATH_STRING); echo $(PREDEFINED_STRING); echo $(PROJECT_NUMBER_STRING)) | doxygen -
+	(cat $(DISTORTOS_PATH)Doxyfile; echo $(EXCLUDE_STRING); echo $(HTML_FOOTER_STRING); echo $(INCLUDE_PATH_STRING); \
+			echo $(PREDEFINED_STRING); echo $(PROJECT_NUMBER_STRING)) | doxygen -
 
 define NEWLINE
 
