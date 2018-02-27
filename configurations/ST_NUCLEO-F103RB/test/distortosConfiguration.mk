@@ -48,7 +48,7 @@ CONFIG_BOARD_HAS_YAML=y
 CONFIG_CHIP_ROM_SIZE=131072
 CONFIG_CHIP_ROM_ADDRESS=0x08000000
 CONFIG_CHIP="STM32F103RB"
-CONFIG_CHIP_INCLUDES="source/chip/STM32/include source/chip/STM32/STM32F1/include source/chip/STM32/peripherals/GPIOv1/include source/chip/STM32/peripherals/SPIv1/include source/chip/STM32/peripherals/USARTv1/include external/CMSIS-STM32F1"
+CONFIG_CHIP_INCLUDES="source/chip/STM32/include source/chip/STM32/STM32F1/include source/chip/STM32/peripherals/GPIOv1/include source/chip/STM32/peripherals/SPIv1/include source/chip/STM32/peripherals/USARTv1/include source/chip/STM32/STM32F1/external/CMSIS-STM32F1"
 
 #
 # STM32F1 chip options
