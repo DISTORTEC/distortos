@@ -63,7 +63,7 @@ CONFIG_BOARD_HAS_YAML=y
 CONFIG_CHIP_ROM_SIZE=1048576
 CONFIG_CHIP_ROM_ADDRESS=0x08000000
 CONFIG_CHIP="STM32F746NG"
-CONFIG_CHIP_INCLUDES="source/chip/STM32/include source/chip/STM32/STM32F7/include source/chip/STM32/peripherals/GPIOv2/include source/chip/STM32/peripherals/SPIv2/include source/chip/STM32/peripherals/USARTv2/include external/CMSIS-STM32F7 external/CMSIS"
+CONFIG_CHIP_INCLUDES="source/chip/STM32/include source/chip/STM32/STM32F7/include source/chip/STM32/peripherals/GPIOv2/include source/chip/STM32/peripherals/SPIv2/include source/chip/STM32/peripherals/USARTv2/include source/chip/STM32/STM32F7/external/CMSIS-STM32F7"
 
 #
 # STM32F7 chip options
@@ -374,7 +374,7 @@ CONFIG_ARCHITECTURE_ARM_CORTEX_M7_R0P1=y
 # CONFIG_ARCHITECTURE_ARM_CORTEX_M7_R1P1 is not set
 # CONFIG_ARCHITECTURE_HAS_FPV5_D16 is not set
 CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_MAIN_STACK_SIZE=1024
-CONFIG_ARCHITECTURE_INCLUDES="source/architecture/ARM/ARMv6-M-ARMv7-M/include"
+CONFIG_ARCHITECTURE_INCLUDES="source/architecture/ARM/ARMv6-M-ARMv7-M/include source/architecture/ARM/ARMv6-M-ARMv7-M/external/CMSIS"
 
 #
 # Generic architecture options

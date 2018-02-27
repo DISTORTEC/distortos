@@ -16,6 +16,7 @@ ifeq ($(CONFIG_BOARD_SOURCE_BOARD_ST_NUCLEO_F429ZI_ST_NUCLEO_F429ZI),y)
 #-----------------------------------------------------------------------------------------------------------------------
 
 CXXFLAGS_$(d) := $(CXXFLAGS_$(d)) $(STANDARD_INCLUDES)
+CXXFLAGS_$(d) := $(CXXFLAGS_$(d)) $(ARCHITECTURE_INCLUDES)
 CXXFLAGS_$(d) := $(CXXFLAGS_$(d)) $(CHIP_INCLUDES)
 CXXFLAGS_$(d) := $(CXXFLAGS_$(d)) $(BOARD_INCLUDES)
 

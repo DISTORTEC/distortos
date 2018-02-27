@@ -12,10 +12,10 @@ Only headers from CMSIS_5-5.1.0/CMSIS/Core/Include were copied from the package.
 Single change was applied to the code to make it warning-free:
 
 ```
-diff --git a/external/CMSIS/mpu_armv7.h b/external/CMSIS/mpu_armv7.h
+diff --git a/source/architecture/ARM/ARMv6-M-ARMv7-M/external/CMSIS/mpu_armv7.h b/source/architecture/ARM/ARMv6-M-ARMv7-M/external/CMSIS/mpu_armv7.h
 index fb1a339b..8465abb3 100644
---- a/external/CMSIS/mpu_armv7.h
-+++ b/external/CMSIS/mpu_armv7.h
+--- a/source/architecture/ARM/ARMv6-M-ARMv7-M/external/CMSIS/mpu_armv7.h
++++ b/source/architecture/ARM/ARMv6-M-ARMv7-M/external/CMSIS/mpu_armv7.h
 @@ -115,7 +115,7 @@ __STATIC_INLINE void ARM_MPU_Enable(uint32_t MPU_Control)
  
  /** Disable the MPU.
