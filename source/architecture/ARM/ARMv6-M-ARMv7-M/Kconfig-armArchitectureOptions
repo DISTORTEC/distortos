@@ -187,6 +187,6 @@ config ARCHITECTURE_ARMV6_M_ARMV7_M_MAIN_STACK_SIZE
 
 config ARCHITECTURE_INCLUDES
 	string
-	default "source/architecture/ARM/ARMv6-M-ARMv7-M/include"
+	default "source/architecture/ARM/ARMv6-M-ARMv7-M/include external/CMSIS"
 
 endif	# ARCHITECTURE_ARMV6_M || ARCHITECTURE_ARMV7_M
