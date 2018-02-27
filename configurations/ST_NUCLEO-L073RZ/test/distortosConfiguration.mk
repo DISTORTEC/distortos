@@ -48,7 +48,7 @@ CONFIG_BOARD_HAS_YAML=y
 CONFIG_CHIP_ROM_SIZE=196608
 CONFIG_CHIP_ROM_ADDRESS=0x08000000
 CONFIG_CHIP="STM32L073RZ"
-CONFIG_CHIP_INCLUDES="source/chip/STM32/include source/chip/STM32/STM32L0/include source/chip/STM32/peripherals/GPIOv2/include source/chip/STM32/peripherals/SPIv1/include source/chip/STM32/peripherals/USARTv2/include external/CMSIS-STM32L0"
+CONFIG_CHIP_INCLUDES="source/chip/STM32/include source/chip/STM32/STM32L0/include source/chip/STM32/peripherals/GPIOv2/include source/chip/STM32/peripherals/SPIv1/include source/chip/STM32/peripherals/USARTv2/include source/chip/STM32/STM32L0/external/CMSIS-STM32L0"
 
 #
 # STM32L0 chip options
