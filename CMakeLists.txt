@@ -154,6 +154,14 @@ add_dependencies(distortosInterface distortos ldscript)
 add_library(distortos::distortos ALIAS distortosInterface)
 
 #-----------------------------------------------------------------------------------------------------------------------
+# distortos-doxygen
+#-----------------------------------------------------------------------------------------------------------------------
+
+doxygen(INPUT ${CMAKE_CURRENT_SOURCE_DIR}/documentation ${CMAKE_CURRENT_BINARY_DIR}/include
+		${CMAKE_CURRENT_SOURCE_DIR}/include
+		INCLUDE_PATH ${CMAKE_CURRENT_BINARY_DIR}/include ${CMAKE_CURRENT_SOURCE_DIR}/include)
+
+#-----------------------------------------------------------------------------------------------------------------------
 # distortosTest application
 #-----------------------------------------------------------------------------------------------------------------------
 

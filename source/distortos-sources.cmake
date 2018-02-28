@@ -10,6 +10,17 @@
 target_sources(distortos PRIVATE
 		${CMAKE_CURRENT_LIST_DIR}/fatalErrorHandler.cpp)
 
+doxygen(INPUT ${CMAKE_CURRENT_LIST_DIR}/fatalErrorHandler.cpp
+		${CMAKE_CURRENT_LIST_DIR}/C-API
+		${CMAKE_CURRENT_LIST_DIR}/clocks
+		${CMAKE_CURRENT_LIST_DIR}/devices
+		${CMAKE_CURRENT_LIST_DIR}/gcc
+		${CMAKE_CURRENT_LIST_DIR}/memory
+		${CMAKE_CURRENT_LIST_DIR}/newlib
+		${CMAKE_CURRENT_LIST_DIR}/scheduler
+		${CMAKE_CURRENT_LIST_DIR}/synchronization
+		${CMAKE_CURRENT_LIST_DIR}/threads)
+
 include(${CMAKE_CURRENT_LIST_DIR}/architecture/distortos-sources.cmake)
 include(${CMAKE_CURRENT_LIST_DIR}/C-API/distortos-sources.cmake)
 include(${CMAKE_CURRENT_LIST_DIR}/chip/distortos-sources.cmake)
