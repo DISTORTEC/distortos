@@ -9,6 +9,8 @@
 
 if(CONFIG_CHIP_STM32)
 
+	doxygen(INPUT ${CMAKE_CURRENT_LIST_DIR}/include INCLUDE_PATH ${CMAKE_CURRENT_LIST_DIR}/include)
+
 	include(${CMAKE_CURRENT_LIST_DIR}/peripherals/distortos-sources.cmake)
 	include(${CMAKE_CURRENT_LIST_DIR}/STM32F0/distortos-sources.cmake)
 	include(${CMAKE_CURRENT_LIST_DIR}/STM32F1/distortos-sources.cmake)
