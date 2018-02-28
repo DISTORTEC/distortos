@@ -21,4 +21,6 @@ if(CONFIG_BOARD_{{ (outputPath + '_' + board) | sanitize('[^0-9A-Za-z]') | upper
 			${CMAKE_CURRENT_LIST_DIR}/{{ metadataRow[2] }}{% if loop.last == True %}){% endif %}{{ '' }}
 {% endfor %}
 
+	doxygen(INPUT ${CMAKE_CURRENT_LIST_DIR} INCLUDE_PATH ${CMAKE_CURRENT_LIST_DIR}/include)
+
 endif()
