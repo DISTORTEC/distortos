@@ -161,6 +161,49 @@ doxygen(INPUT ${CMAKE_CURRENT_SOURCE_DIR}/documentation ${CMAKE_CURRENT_BINARY_D
 		${CMAKE_CURRENT_SOURCE_DIR}/include
 		INCLUDE_PATH ${CMAKE_CURRENT_BINARY_DIR}/include ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
+get_target_property(doxygenCompileOptions distortos COMPILE_OPTIONS)
+# for now C++11 standard with GNU extensions is hardcoded here...
+execute_process(COMMAND ${CMAKE_COMMAND} -E echo ""
+		COMMAND ${CMAKE_CXX_COMPILER} ${doxygenCompileOptions} -std=gnu++11 -E -P -dD -x c++ -
+		OUTPUT_VARIABLE preprocessedOutput)
+string(REGEX REPLACE "[\r\n]+" ";" preprocessedOutput "${preprocessedOutput}")
+foreach(predefinedEntry ${preprocessedOutput})
+	if("${predefinedEntry}" MATCHES "^#define ([^ ]+) (.*)$")
+		set(key ${CMAKE_MATCH_1})
+		set(value ${CMAKE_MATCH_2})
+		string(REPLACE "\"" "\\\"" value "${value}")
+		list(APPEND doxygenPredefined "\"${key}=${value}\"")
+	endif()
+endforeach()
+
+execute_process(COMMAND git describe --dirty
+		WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+		RESULT_VARIABLE gitDescribeResult
+		OUTPUT_VARIABLE doxygenProjectNumber
+		ERROR_QUIET
+		OUTPUT_STRIP_TRAILING_WHITESPACE)
+if(NOT gitDescribeResult EQUAL 0)
+	string(TIMESTAMP doxygenProjectNumber "%Y%m%d%H%M%S")
+endif()
+
+string(REPLACE ";" " " doxygenExclude "$ENV{doxygenExclude}")
+string(REPLACE ";" " " doxygenIncludePath "$ENV{doxygenIncludePath}")
+string(REPLACE ";" " " doxygenInput "$ENV{doxygenInput}")
+string(REPLACE ";" " " doxygenPredefined "${doxygenPredefined}")
+file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile.extension
+		"EXCLUDE = ${doxygenExclude}\n"
+		"INCLUDE_PATH = ${doxygenIncludePath}\n"
+		"INPUT = ${doxygenInput}\n"
+		"PREDEFINED = DOXYGEN \"__attribute__(x)=\" \"__GNUC_PREREQ(x, y)=1\" ${doxygenPredefined}\n"
+		"PROJECT_NUMBER = ${doxygenProjectNumber}\n"
+		"STRIP_FROM_PATH = ${CMAKE_CURRENT_SOURCE_DIR}\n")
+
+set(doxyfiles "${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile;${CMAKE_CURRENT_BINARY_DIR}/Doxyfile.extension")
+add_custom_target(distortos-doxygen
+		${CMAKE_COMMAND} -D "DOXYFILES=${doxyfiles}" -P ${CMAKE_CURRENT_SOURCE_DIR}/cmake/doxygen.cmake
+		DEPENDS include/distortos/distortosConfiguration.h
+		VERBATIM)
+
 #-----------------------------------------------------------------------------------------------------------------------
 # distortosTest application
 #-----------------------------------------------------------------------------------------------------------------------
