@@ -53,7 +53,7 @@ def addPaths(dictionary, path = None):
 	"""
 	path = path or []
 	for key, value in dictionary.items():
-		if isinstance(value, dict) == True:
+		if isinstance(value, dict) == True and '$path' not in value:
 			newPath = path + [key]
 			value['$path'] = newPath
 			addPaths(value, newPath)
@@ -144,9 +144,9 @@ if __name__ == '__main__':
 
 	dictionary = yaml.load(arguments.inputFile)
 	dictionary = resolveExtensions(dictionary, arguments.distortosPath)
-	addPaths(dictionary)
 	labels = getLabels(dictionary)
 	resolveReferences(dictionary, labels)
+	addPaths(dictionary)
 
 	# in case of "raw" board - generated directly from chip YAML file - use chip name as board
 	board = dictionary.get('board', dictionary['chip'])['compatible'][0]
