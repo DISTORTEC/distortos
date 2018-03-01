@@ -60,19 +60,19 @@ add_custom_target(distortosConfiguration_h ALL DEPENDS include/distortos/distort
 if(NOT CONFIG_LDSCRIPT)
 	message(FATAL_ERROR "Non-board configurations are not supported")
 endif()
-set(RAW_LDSCRIPT "${CMAKE_CURRENT_SOURCE_DIR}/${CONFIG_LDSCRIPT}")
-if(NOT EXISTS ${RAW_LDSCRIPT})
-	message(FATAL_ERROR "Linker script file '${RAW_LDSCRIPT}' does not exist")
+set(LDSCRIPT "${CMAKE_CURRENT_SOURCE_DIR}/${CONFIG_LDSCRIPT}")
+if(NOT EXISTS ${LDSCRIPT})
+	message(FATAL_ERROR "Linker script file '${LDSCRIPT}' does not exist")
 endif()
-get_filename_component(LDSCRIPT ${RAW_LDSCRIPT} NAME_WE)
-set(LDSCRIPT "${LDSCRIPT}.preprocessed.ld")
-add_custom_command(OUTPUT ${LDSCRIPT}
+get_filename_component(PREPROCESSED_LDSCRIPT ${LDSCRIPT} NAME_WE)
+set(PREPROCESSED_LDSCRIPT "${PREPROCESSED_LDSCRIPT}.preprocessed.ld")
+add_custom_command(OUTPUT ${PREPROCESSED_LDSCRIPT}
 		COMMAND ${CMAKE_CXX_COMPILER} -nostdinc -undef -C -E -P -x assembler-with-cpp
-		-I${CMAKE_CURRENT_BINARY_DIR}/include ${RAW_LDSCRIPT} -o ${LDSCRIPT}
-		DEPENDS ${RAW_LDSCRIPT}
+		-I${CMAKE_CURRENT_BINARY_DIR}/include ${LDSCRIPT} -o ${PREPROCESSED_LDSCRIPT}
+		DEPENDS ${LDSCRIPT}
 		DEPENDS include/distortos/distortosConfiguration.h
 		USES_TERMINAL)
-add_custom_target(ldscript ALL DEPENDS ${LDSCRIPT})
+add_custom_target(ldscript ALL DEPENDS ${PREPROCESSED_LDSCRIPT})
 
 #-----------------------------------------------------------------------------------------------------------------------
 # generate distortos static library
@@ -143,7 +143,7 @@ target_link_libraries(distortosInterface INTERFACE
 		${CONFIG_LINK_TIME_OPTIMIZATION_LINKING}
 		-Wl,--gc-sections
 		-L${CMAKE_CURRENT_BINARY_DIR}
-		-T${LDSCRIPT}
+		-T${PREPROCESSED_LDSCRIPT}
 		-Wl,--whole-archive -ldistortos -Wl,--no-whole-archive)
 add_dependencies(distortosInterface distortos ldscript)
 
