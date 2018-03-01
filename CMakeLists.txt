@@ -57,10 +57,12 @@ add_custom_target(distortosConfiguration_h ALL DEPENDS include/distortos/distort
 # preprocess linker script
 #-----------------------------------------------------------------------------------------------------------------------
 
-if(NOT CONFIG_LDSCRIPT)
-	message(FATAL_ERROR "Non-board configurations are not supported")
+if(NOT LDSCRIPT)
+	if(NOT CONFIG_LDSCRIPT)
+		message(FATAL_ERROR "Non-board configurations are not supported")
+	endif()
+	set(LDSCRIPT "${CMAKE_CURRENT_SOURCE_DIR}/${CONFIG_LDSCRIPT}")
 endif()
-set(LDSCRIPT "${CMAKE_CURRENT_SOURCE_DIR}/${CONFIG_LDSCRIPT}")
 if(NOT EXISTS ${LDSCRIPT})
 	message(FATAL_ERROR "Linker script file '${LDSCRIPT}' does not exist")
 endif()
