@@ -115,14 +115,18 @@ def resolveReferences(dictionary, labels):
 	* `dictionary` is a dictionary of a list in which references will be resolved
 	* `labels` is a dictionary with labels
 	"""
+	keysForDeletion = []
 	for key, value in dictionary.items():
 		if isinstance(key, Reference) == True:
 			mergeDictionaries(labels[key.label], value)
-			del dictionary[key]
+			keysForDeletion.append(key)
 		elif isinstance(value, Reference) == True:
 			dictionary[key] = labels[value.label]
 		elif isinstance(value, dict) == True:
 			resolveReferences(value, labels)
+
+	for keyForDeletion in keysForDeletion:
+		del dictionary[keyForDeletion]
 
 ########################################################################################################################
 # main
