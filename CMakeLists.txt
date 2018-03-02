@@ -40,7 +40,7 @@ configure_file(${CMAKE_SOURCE_DIR}/${CONFIG_SELECTED_CONFIGURATION} ${CONFIG_SEL
 loadConfiguration(${CMAKE_SOURCE_DIR}/${CONFIG_SELECTED_CONFIGURATION})
 
 #-----------------------------------------------------------------------------------------------------------------------
-# generate distortosConfiguration.h
+# distortosConfiguration.h
 #-----------------------------------------------------------------------------------------------------------------------
 
 add_custom_command(OUTPUT include/distortos/distortosConfiguration.h
@@ -54,7 +54,7 @@ add_custom_command(OUTPUT include/distortos/distortosConfiguration.h
 add_custom_target(distortosConfiguration_h ALL DEPENDS include/distortos/distortosConfiguration.h)
 
 #-----------------------------------------------------------------------------------------------------------------------
-# generate distortos static library
+# distortos static library
 #-----------------------------------------------------------------------------------------------------------------------
 
 add_library(distortos STATIC "")
