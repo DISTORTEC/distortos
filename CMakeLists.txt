@@ -51,7 +51,7 @@ add_custom_command(OUTPUT include/distortos/distortosConfiguration.h
 		DEPENDS ${CMAKE_SOURCE_DIR}/${CONFIG_SELECTED_CONFIGURATION}
 		DEPENDS ${CMAKE_SOURCE_DIR}/selectedConfiguration.mk
 		USES_TERMINAL)
-add_custom_target(distortosConfiguration_h ALL DEPENDS include/distortos/distortosConfiguration.h)
+add_custom_target(distortosConfiguration-h ALL DEPENDS include/distortos/distortosConfiguration.h)
 
 #-----------------------------------------------------------------------------------------------------------------------
 # distortos static library
@@ -81,7 +81,7 @@ target_include_directories(distortos PRIVATE
 		${CONFIG_ARCHITECTURE_INCLUDES}
 		${CONFIG_CHIP_INCLUDES}
 		${CONFIG_BOARD_INCLUDES})
-add_dependencies(distortos distortosConfiguration_h)
+add_dependencies(distortos distortosConfiguration-h)
 
 include(source/distortos-sources.cmake)
 
@@ -114,11 +114,11 @@ add_custom_command(OUTPUT ${PREPROCESSED_LDSCRIPT}
 add_custom_target(ldscript ALL DEPENDS ${PREPROCESSED_LDSCRIPT})
 
 #-----------------------------------------------------------------------------------------------------------------------
-# distortos interface library
+# distortos-distortos interface library
 #-----------------------------------------------------------------------------------------------------------------------
 
-add_library(distortosInterface INTERFACE)
-target_compile_options(distortosInterface INTERFACE
+add_library(distortos-distortos INTERFACE)
+target_compile_options(distortos-distortos INTERFACE
 		-Wall
 		-Wextra
 		-Wshadow
@@ -132,13 +132,13 @@ target_compile_options(distortosInterface INTERFACE
 		-fno-rtti
 		-fno-exceptions
 		${CONFIG_ASSERT})
-target_include_directories(distortosInterface INTERFACE
+target_include_directories(distortos-distortos INTERFACE
 		${CMAKE_CURRENT_BINARY_DIR}/include
 		include
 		${CONFIG_ARCHITECTURE_INCLUDES}
 		${CONFIG_CHIP_INCLUDES}
 		${CONFIG_BOARD_INCLUDES})
-target_link_libraries(distortosInterface INTERFACE
+target_link_libraries(distortos-distortos INTERFACE
 		${CONFIG_ARCHITECTURE_FLAGS}
 		${CONFIG_DEBUGGING_INFORMATION_LINKING}
 		${CONFIG_BUILD_OPTIMIZATION}
@@ -147,13 +147,13 @@ target_link_libraries(distortosInterface INTERFACE
 		-L${CMAKE_CURRENT_BINARY_DIR}
 		-T${PREPROCESSED_LDSCRIPT}
 		-Wl,--whole-archive -ldistortos -Wl,--no-whole-archive)
-add_dependencies(distortosInterface distortos ldscript)
+add_dependencies(distortos-distortos distortos ldscript)
 
 #-----------------------------------------------------------------------------------------------------------------------
 # distortos::distortos alias library
 #-----------------------------------------------------------------------------------------------------------------------
 
-add_library(distortos::distortos ALIAS distortosInterface)
+add_library(distortos::distortos ALIAS distortos-distortos)
 
 #-----------------------------------------------------------------------------------------------------------------------
 # distortos-doxygen
