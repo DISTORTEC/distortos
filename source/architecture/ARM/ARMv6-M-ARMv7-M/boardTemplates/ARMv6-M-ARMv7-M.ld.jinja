@@ -67,6 +67,14 @@ ENTRY(Reset_Handler);
 | put data in sections
 +---------------------------------------------------------------------------------------------------------------------*/
 {% for key, memory in dictionary['memories'].items() if memory is mapping and
+		'on-chip-flash' in memory['compatible'] and '.text.vectors' in memory.get('sections', ['.text.vectors']) %}
+
+#ifdef {{ prefix }}_LD_TEXT_VECTORS_REGION_{{ key | upper }}
+REGION_ALIAS("textVectorsVmaRegion", {{ key }}{% if 'virtual-address' in memory %}Vma{% endif %});
+REGION_ALIAS("textVectorsLmaRegion", {{ key }});
+#endif	/* {{ prefix }}_LD_TEXT_VECTORS_REGION_{{ key | upper }} */
+{% endfor %}
+{% for key, memory in dictionary['memories'].items() if memory is mapping and
 		'on-chip-flash' in memory['compatible'] and '.text' in memory.get('sections', ['.text']) %}
 
 #ifdef {{ prefix }}_LD_TEXT_REGION_{{ key | upper }}
@@ -144,20 +152,19 @@ PROVIDE(__process_stack_start = (__process_stack_end - __process_stack_size) / 8
 
 SECTIONS
 {
-	.text :
+	.text.vectors :
 	{
-		PROVIDE(__text_start = .);
-
-		/* sub-section: .vectors */
-
-		PROVIDE(__vectors_start = .);
+		PROVIDE(__text_vectors_start = .);
 
 		KEEP(*(.coreVectors));
 		KEEP(*(.chipVectors));
 
-		PROVIDE(__vectors_end = .);
+		PROVIDE(__text_vectors_end = .);
+	} > textVectorsVmaRegion AT > textVectorsLmaRegion
 
-		/* end of sub-section: .vectors */
+	.text :
+	{
+		PROVIDE(__text_start = .);
 
 		*(.text.unlikely .text.*_unlikely .text.unlikely.*);
 		*(.text.exit .text.exit.*);
@@ -423,6 +430,7 @@ PROVIDE(__heap_end = __{{ key }}_end / 8 * 8);
 #endif	/* def {{ prefix }}_LD_HEAP_REGION_{{ key | upper }} */
 {% endfor %}
 
+PROVIDE(__text_vectors_size = SIZEOF(.text.vectors));
 PROVIDE(__text_size = SIZEOF(.text));
 PROVIDE(__exidx_size = SIZEOF(.ARM.exidx));
 PROVIDE(__bss_size = SIZEOF(.bss));
