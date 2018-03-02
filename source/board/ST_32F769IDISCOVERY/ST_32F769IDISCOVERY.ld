@@ -71,6 +71,11 @@ ENTRY(Reset_Handler);
 | put data in sections
 +---------------------------------------------------------------------------------------------------------------------*/
 
+#ifdef CONFIG_BOARD_SOURCE_BOARD_ST_32F769IDISCOVERY_ST_32F769IDISCOVERY_LD_TEXT_VECTORS_REGION_FLASH
+REGION_ALIAS("textVectorsVmaRegion", flashVma);
+REGION_ALIAS("textVectorsLmaRegion", flash);
+#endif	/* CONFIG_BOARD_SOURCE_BOARD_ST_32F769IDISCOVERY_ST_32F769IDISCOVERY_LD_TEXT_VECTORS_REGION_FLASH */
+
 #ifdef CONFIG_BOARD_SOURCE_BOARD_ST_32F769IDISCOVERY_ST_32F769IDISCOVERY_LD_TEXT_REGION_FLASH
 REGION_ALIAS("textVmaRegion", flashVma);
 REGION_ALIAS("textLmaRegion", flash);
@@ -148,20 +153,19 @@ PROVIDE(__process_stack_start = (__process_stack_end - __process_stack_size) / 8
 
 SECTIONS
 {
-	.text :
+	.text.vectors :
 	{
-		PROVIDE(__text_start = .);
-
-		/* sub-section: .vectors */
-
-		PROVIDE(__vectors_start = .);
+		PROVIDE(__text_vectors_start = .);
 
 		KEEP(*(.coreVectors));
 		KEEP(*(.chipVectors));
 
-		PROVIDE(__vectors_end = .);
+		PROVIDE(__text_vectors_end = .);
+	} > textVectorsVmaRegion AT > textVectorsLmaRegion
 
-		/* end of sub-section: .vectors */
+	.text :
+	{
+		PROVIDE(__text_start = .);
 
 		*(.text.unlikely .text.*_unlikely .text.unlikely.*);
 		*(.text.exit .text.exit.*);
@@ -459,6 +463,7 @@ PROVIDE(__heap_end = __ITCM_end / 8 * 8);
 #endif	/* !def CONFIG_BOARD_SOURCE_BOARD_ST_32F769IDISCOVERY_ST_32F769IDISCOVERY_LD_PROCESS_STACK_REGION_ITCM */
 #endif	/* def CONFIG_BOARD_SOURCE_BOARD_ST_32F769IDISCOVERY_ST_32F769IDISCOVERY_LD_HEAP_REGION_ITCM */
 
+PROVIDE(__text_vectors_size = SIZEOF(.text.vectors));
 PROVIDE(__text_size = SIZEOF(.text));
 PROVIDE(__exidx_size = SIZEOF(.ARM.exidx));
 PROVIDE(__bss_size = SIZEOF(.bss));

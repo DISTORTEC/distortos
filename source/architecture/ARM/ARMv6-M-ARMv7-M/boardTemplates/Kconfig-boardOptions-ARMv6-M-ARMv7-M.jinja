@@ -18,6 +18,30 @@ config LDSCRIPT
 	string
 	default "{{ outputPath }}/{{ sanitizedBoard }}.ld"
 {% for key, memory in dictionary['memories'].items() if memory is mapping and
+		'on-chip-flash' in memory['compatible'] and '.text.vectors' in memory.get('sections', ['.text.vectors']) %}
+{% if loop.first == True and loop.last == False %}
+
+choice
+	prompt ".text.vectors memory region"
+	help
+		Select memory region for .text.vectors section in linker script
+{% endif %}
+
+config {{ prefix }}_LD_TEXT_VECTORS_REGION_{{ key | upper }}
+{% if loop.first == loop.last == True %}
+	bool
+	default y
+{% else %}
+	bool "{{ key }}"
+	help
+		Use {{ key }} as memory region for .text.vectors section
+{% endif %}
+{% if loop.last == True and loop.first == False %}
+
+endchoice
+{% endif %}
+{% endfor %}
+{% for key, memory in dictionary['memories'].items() if memory is mapping and
 		'on-chip-flash' in memory['compatible'] and '.text' in memory.get('sections', ['.text']) %}
 {% if loop.first == True and loop.last == False %}
 
