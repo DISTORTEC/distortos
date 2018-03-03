@@ -50,6 +50,7 @@ add_custom_command(OUTPUT include/distortos/distortosConfiguration.h
 		DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/scripts/makeDistortosConfiguration.sh
 		DEPENDS ${CMAKE_SOURCE_DIR}/${CONFIG_SELECTED_CONFIGURATION}
 		DEPENDS ${CMAKE_SOURCE_DIR}/selectedConfiguration.mk
+		VERBATIM
 		USES_TERMINAL)
 add_custom_target(distortosConfiguration-h ALL DEPENDS include/distortos/distortosConfiguration.h)
 
@@ -110,6 +111,7 @@ add_custom_command(OUTPUT ${PREPROCESSED_LDSCRIPT}
 		-I${CMAKE_CURRENT_BINARY_DIR}/include ${LDSCRIPT} -o ${PREPROCESSED_LDSCRIPT}
 		DEPENDS ${LDSCRIPT}
 		DEPENDS include/distortos/distortosConfiguration.h
+		VERBATIM
 		USES_TERMINAL)
 add_custom_target(ldscript ALL DEPENDS ${PREPROCESSED_LDSCRIPT})
 
@@ -144,7 +146,7 @@ target_link_libraries(distortos-distortos INTERFACE
 		${CONFIG_BUILD_OPTIMIZATION}
 		${CONFIG_LINK_TIME_OPTIMIZATION_LINKING}
 		-Wl,--gc-sections
-		-L${CMAKE_CURRENT_BINARY_DIR}
+		-L"${CMAKE_CURRENT_BINARY_DIR}"
 		-T${PREPROCESSED_LDSCRIPT}
 		-Wl,--whole-archive -ldistortos -Wl,--no-whole-archive)
 add_dependencies(distortos-distortos distortos ldscript)
@@ -213,17 +215,23 @@ if(NOT gitDescribeResult EQUAL 0)
 	string(TIMESTAMP doxygenProjectNumber "%Y%m%d%H%M%S")
 endif()
 
-string(REPLACE ";" " " doxygenExclude "$ENV{doxygenExclude}")
-string(REPLACE ";" " " doxygenIncludePath "$ENV{doxygenIncludePath}")
-string(REPLACE ";" " " doxygenInput "$ENV{doxygenInput}")
+foreach(doxygenExcludeEntry $ENV{doxygenExclude})
+	string(APPEND doxygenExclude " \"${doxygenExcludeEntry}\"")
+endforeach()
+foreach(doxygenIncludePathEntry $ENV{doxygenIncludePath})
+	string(APPEND doxygenIncludePath " \"${doxygenIncludePathEntry}\"")
+endforeach()
+foreach(doxygenInputEntry $ENV{doxygenInput})
+	string(APPEND doxygenInput " \"${doxygenInputEntry}\"")
+endforeach()
 string(REPLACE ";" " " doxygenPredefined "${doxygenPredefined}")
 file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile.extension
-		"EXCLUDE = ${doxygenExclude}\n"
-		"INCLUDE_PATH = ${doxygenIncludePath}\n"
-		"INPUT = ${doxygenInput}\n"
+		"EXCLUDE =${doxygenExclude}\n"
+		"INCLUDE_PATH =${doxygenIncludePath}\n"
+		"INPUT =${doxygenInput}\n"
 		"PREDEFINED = DOXYGEN \"__attribute__(x)=\" \"__GNUC_PREREQ(x, y)=1\" ${doxygenPredefined}\n"
 		"PROJECT_NUMBER = ${doxygenProjectNumber}\n"
-		"STRIP_FROM_PATH = ${CMAKE_CURRENT_SOURCE_DIR}\n")
+		"STRIP_FROM_PATH = \"${CMAKE_CURRENT_SOURCE_DIR}\"\n")
 
 set(doxyfiles "${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile;${CMAKE_CURRENT_BINARY_DIR}/Doxyfile.extension")
 add_custom_target(distortos-doxygen
