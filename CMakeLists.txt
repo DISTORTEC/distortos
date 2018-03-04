@@ -86,7 +86,8 @@ add_dependencies(distortos distortosConfiguration-h)
 
 include(source/distortos-sources.cmake)
 
-file(GLOB_RECURSE distortosBoardSourcesFiles FOLLOW_SYMLINKS LIST_DIRECTORIES false "distortos-board-sources.cmake")
+file(GLOB_RECURSE distortosBoardSourcesFiles FOLLOW_SYMLINKS LIST_DIRECTORIES false
+		"${CMAKE_SOURCE_DIR}/*/distortos-board-sources.cmake")
 foreach(distortosBoardSources ${distortosBoardSourcesFiles})
 	include(${distortosBoardSources})
 endforeach()
