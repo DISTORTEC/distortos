@@ -189,7 +189,10 @@ if __name__ == '__main__':
 		localFilenames = [posixpath.join(currentDirectory, filename) for filename in filenames]
 		for metadataFilename in fnmatch.filter(localFilenames, '*/boardTemplates/*.metadata'):
 			print('Loading {}'.format(metadataFilename))
-			metadataFragment = jinjaEnvironment.get_template(metadataFilename).render(dictionary = dictionary)
+			try:
+				metadataFragment = jinjaEnvironment.get_template(metadataFilename).render(dictionary = dictionary)
+			except jinja2.exceptions.TemplateAssertionError as exception:
+				sys.exit("{}:{}: error: {}".format(exception.filename, exception.lineno, exception.message))
 			metadata += ast.literal_eval('[' + metadataFragment + ']')
 
 	print()
@@ -208,7 +211,7 @@ if __name__ == '__main__':
 			output = templateFile.render(dictionary = dictionary, metadata = metadata,
 					metadataIndex = metadataIndex, outputFilename = relativeOutputFilename, **templateArguments)
 		except jinja2.exceptions.TemplateAssertionError as exception:
-			sys.exit("{}:{}: {}".format(exception.filename, exception.lineno, exception.message))
+			sys.exit("{}:{}: error: {}".format(exception.filename, exception.lineno, exception.message))
 		with open(outputFilename, 'w') as outputFile:
 			print('Writing {} ({})'.format(outputFilename, templateFile.filename))
 			outputFile.write(output)
