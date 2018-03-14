@@ -20,6 +20,7 @@ import jinja2
 import jinja2.ext
 import os
 import posixpath
+import re
 import ruamel.yaml
 import sys
 
@@ -146,6 +147,15 @@ def resolveReferences(dictionary, labels):
 	for keyForDeletion in keysForDeletion:
 		del dictionary[keyForDeletion]
 
+def isFullMatch(string, pattern, flags = 0):
+	"""Tests whether string fully matches given pattern.
+
+	* `string` is the string that will be tested
+	* `pattern` is the pattern which will be used in the test
+	* `flags` are flags passed to `re.fullmatch()`, default - `0`
+	"""
+	return re.fullmatch(pattern, str(string), flags) != None
+
 ########################################################################################################################
 # main
 ########################################################################################################################
@@ -180,6 +190,7 @@ if __name__ == '__main__':
 	jinjaEnvironment.globals['outputPath'] = relativeOutputPath
 	jinjaEnvironment.globals['sanitizedBoard'] = common.sanitize(board)
 	jinjaEnvironment.globals['year'] = datetime.date.today().year
+	jinjaEnvironment.tests['fullMatch'] = isFullMatch
 
 	metadata = []
 
