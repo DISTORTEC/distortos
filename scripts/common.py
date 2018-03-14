@@ -19,4 +19,4 @@ def sanitize(string, pattern = '[^0-9A-Za-z-]', replacement = '_'):
 	* `replacement` is the replacement string, default - `'_'`
 	"""
 	regex = re.compile(pattern)
-	return regex.sub(replacement, string)
+	return regex.sub(replacement, str(string))
