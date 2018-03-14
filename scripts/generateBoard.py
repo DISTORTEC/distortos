@@ -17,9 +17,26 @@ import common
 import datetime
 import fnmatch
 import jinja2
+import jinja2.ext
 import os
 import posixpath
 import ruamel.yaml
+
+class RaiseExtension(jinja2.ext.Extension):
+	"""Extension that can raise an exception from within Jinja template"""
+
+	tags = set(['raise'])
+
+	def parse(self, parser):
+		lineNumber = next(parser.stream).lineno
+		message = parser.parse_expression()
+		name = parser.name
+		filename = parser.filename
+		arguments = [message, jinja2.nodes.Const(lineNumber), jinja2.nodes.Const(name), jinja2.nodes.Const(filename)]
+		return jinja2.nodes.CallBlock(self.call_method('raiseImplementation', arguments), [], [], [])
+
+	def raiseImplementation(self, message, lineNumber, name, filename, caller):
+		raise jinja2.exceptions.TemplateAssertionError(message, lineNumber, name, filename)
 
 class Reference(object):
 	"""Reference to label in YAML"""
@@ -156,6 +173,7 @@ if __name__ == '__main__':
 
 	jinjaEnvironment = jinja2.Environment(trim_blocks = True, lstrip_blocks = True, keep_trailing_newline = True,
 			loader = jinja2.FileSystemLoader(['.', arguments.distortosPath]))
+	jinjaEnvironment.add_extension(RaiseExtension)
 	jinjaEnvironment.filters['sanitize'] = common.sanitize
 	jinjaEnvironment.globals['board'] = board
 	jinjaEnvironment.globals['outputPath'] = relativeOutputPath
