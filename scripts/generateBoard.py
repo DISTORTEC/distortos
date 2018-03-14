@@ -21,6 +21,7 @@ import jinja2.ext
 import os
 import posixpath
 import ruamel.yaml
+import sys
 
 class RaiseExtension(jinja2.ext.Extension):
 	"""Extension that can raise an exception from within Jinja template"""
@@ -203,8 +204,11 @@ if __name__ == '__main__':
 			os.makedirs(outputDirectory)
 
 		templateFile = jinjaEnvironment.get_template(templateFilename)
-		output = templateFile.render(dictionary = dictionary, metadata = metadata,
-				metadataIndex = metadataIndex, outputFilename = relativeOutputFilename, **templateArguments)
+		try:
+			output = templateFile.render(dictionary = dictionary, metadata = metadata,
+					metadataIndex = metadataIndex, outputFilename = relativeOutputFilename, **templateArguments)
+		except jinja2.exceptions.TemplateAssertionError as exception:
+			sys.exit("{}:{}: {}".format(exception.filename, exception.lineno, exception.message))
 		with open(outputFilename, 'w') as outputFile:
 			print('Writing {} ({})'.format(outputFilename, templateFile.filename))
 			outputFile.write(output)
