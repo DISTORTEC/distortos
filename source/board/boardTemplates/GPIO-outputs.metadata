@@ -1,4 +1,17 @@
 {% for key, value in dictionary.items() if 'compatible' in value and 'GPIO-outputs' in value['compatible'] %}
+{% if key is not fullMatch('[A-Za-z_][0-9A-Za-z_]*') %}
+{% raise '\'{}\' is not a valid C/C++ identifier'.format(key) %}
+{% endif %}
+{% for subKey, subValue in dictionary[key].items() if subValue is mapping %}
+{% if subKey is not fullMatch('[0-9A-Za-z_]+') %}
+{% raise '\'{}\' is not a valid C/C++ identifier'.format(subKey) %}
+{% endif %}
+{% for alternativeName in subValue.get('alternative-names', []) %}
+{% if alternativeName is not fullMatch('[0-9A-Za-z_]+') %}
+{% raise '\'{}\' is not a valid C/C++ identifier'.format(alternativeName) %}
+{% endif %}
+{% endfor %}
+{% endfor %}
 {% set sanitizedKey = key | sanitize('[^0-9A-Za-z]') %}
 ('source/board/boardTemplates/GPIO-outputs.hpp.jinja',
 		{'dictionaryKey': '{{ key }}',
