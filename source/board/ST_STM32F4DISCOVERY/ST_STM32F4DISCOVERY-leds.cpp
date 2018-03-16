@@ -14,7 +14,7 @@
 
 #include "distortos/board/leds.hpp"
 
-#if defined(CONFIG_BOARD_LEDS_ENABLE) && DISTORTOS_BOARD_TOTAL_LEDS != 0
+#if defined(CONFIG_BOARD_LEDS_ENABLE) && DISTORTOS_BOARD_LEDS_COUNT != 0
 
 #include "distortos/chip/ChipOutputPin.hpp"
 
@@ -28,7 +28,7 @@ namespace board
 | global objects
 +---------------------------------------------------------------------------------------------------------------------*/
 
-chip::ChipOutputPin leds[totalLeds]
+chip::ChipOutputPin leds[ledsCount]
 {
 #ifdef CONFIG_BOARD_LEDS_LD3_ENABLE
 		chip::ChipOutputPin{chip::Pin::pd13, false, chip::PinOutputSpeed::low, chip::PinPull::none, false, false},
@@ -48,4 +48,4 @@ chip::ChipOutputPin leds[totalLeds]
 
 }	// namespace distortos
 
-#endif	// defined(CONFIG_BOARD_LEDS_ENABLE) && DISTORTOS_BOARD_TOTAL_LEDS != 0
+#endif	// defined(CONFIG_BOARD_LEDS_ENABLE) && DISTORTOS_BOARD_LEDS_COUNT != 0
