@@ -65,7 +65,7 @@ enum
 		/// index of {{ key -}}
 		{% if 'alternative-names' in value %} ({{ value['alternative-names'] | join(', ') }}){% endif -%}
 		{{ '' }} from {{ dictionaryKey }}
-		{{ dictionaryKey }}{{ key | capitalize }}Index,
+		{{ dictionaryKey }}{{ key }}Index,
 #endif	// def CONFIG_BOARD_{{ dictionaryKey | upper }}_{{ key | upper }}_ENABLE
 {% endfor %}
 };
@@ -84,8 +84,7 @@ enum
 {% endif %}
 
 /// alternative index of {{ key }} ({{ alternativeName }}) from {{ dictionaryKey }}
-constexpr size_t {{ dictionaryKey }}{{ alternativeName | capitalize }}Index {# remove whitespace -#}
-{{ '{' }}{{ dictionaryKey }}{{ key | capitalize }}Index};
+constexpr size_t {{ dictionaryKey }}{{ alternativeName }}Index {{ '{' }}{{ dictionaryKey }}{{ key }}Index};
 {% if loop.last == True %}
 
 #endif	// def CONFIG_BOARD_{{ dictionaryKey | upper }}_{{ key | upper }}_ENABLE

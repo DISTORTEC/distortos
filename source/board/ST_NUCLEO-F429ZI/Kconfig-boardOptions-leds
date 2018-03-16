@@ -20,17 +20,17 @@ config BOARD_LEDS_ENABLE
 if BOARD_LEDS_ENABLE
 
 config BOARD_LEDS_LD1_ENABLE
-	bool "Enable ld1 (green)"
+	bool "Enable Ld1 (Green)"
 	default y
 	select CHIP_STM32_GPIO_V2_GPIOB_ENABLE
 
 config BOARD_LEDS_LD2_ENABLE
-	bool "Enable ld2 (blue)"
+	bool "Enable Ld2 (Blue)"
 	default y
 	select CHIP_STM32_GPIO_V2_GPIOB_ENABLE
 
 config BOARD_LEDS_LD3_ENABLE
-	bool "Enable ld3 (red)"
+	bool "Enable Ld3 (Red)"
 	default y
 	select CHIP_STM32_GPIO_V2_GPIOB_ENABLE
 

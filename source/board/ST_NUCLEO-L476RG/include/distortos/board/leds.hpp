@@ -53,7 +53,7 @@ constexpr size_t ledsCount {DISTORTOS_BOARD_LEDS_COUNT};
 enum
 {
 #ifdef CONFIG_BOARD_LEDS_LD2_ENABLE
-		/// index of ld2 (green) from leds
+		/// index of Ld2 (Green) from leds
 		ledsLd2Index,
 #endif	// def CONFIG_BOARD_LEDS_LD2_ENABLE
 };
@@ -64,7 +64,7 @@ enum
 
 #ifdef CONFIG_BOARD_LEDS_LD2_ENABLE
 
-/// alternative index of ld2 (green) from leds
+/// alternative index of Ld2 (Green) from leds
 constexpr size_t ledsGreenIndex {ledsLd2Index};
 
 #endif	// def CONFIG_BOARD_LEDS_LD2_ENABLE

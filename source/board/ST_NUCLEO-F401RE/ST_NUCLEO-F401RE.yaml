@@ -28,12 +28,12 @@ buttons:
 leds:
   compatible:
   - GPIO-outputs
-  ld2:
+  Ld2:
     GPIO:
       port: !Reference {label: GPIOA}
       pin: 5
     alternative-names:
-    - green
+    - Green
 regulators:
   VDD:
     compatible:
