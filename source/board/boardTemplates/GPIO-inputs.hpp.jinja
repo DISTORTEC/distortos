@@ -1,7 +1,7 @@
 {% set includeGuard = outputFilename | sanitize('[^0-9A-Za-z]') | upper + '_' %}
 /**
  * \file
- * \brief Declaration of {{ sanitizedDictionaryKey }} for {{ board }}
+ * \brief Declaration of {{ dictionaryKey }} for {{ board }}
  *
  * \author Copyright (C) 2014-{{ year }} Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
@@ -21,23 +21,22 @@
 #include <cstddef>
 {% for key, value in dictionary[dictionaryKey].items() if value is mapping %}
 
-#ifdef CONFIG_BOARD_{{ sanitizedDictionaryKey | upper }}_{{ key | sanitize('[^0-9A-Za-z]') | upper }}_ENABLE
-#define DISTORTOS_BOARD_{{ sanitizedDictionaryKey | upper }}_{{ key | sanitize('[^0-9A-Za-z]') | upper }}_ENABLED	1
-#else	// !def CONFIG_BOARD_{{ sanitizedDictionaryKey | upper }}_{{ key | sanitize('[^0-9A-Za-z]') | upper }}_ENABLE
-#define DISTORTOS_BOARD_{{ sanitizedDictionaryKey | upper }}_{{ key | sanitize('[^0-9A-Za-z]') | upper }}_ENABLED	0
-#endif	// !def CONFIG_BOARD_{{ sanitizedDictionaryKey | upper }}_{{ key | sanitize('[^0-9A-Za-z]') | upper }}_ENABLE
+#ifdef CONFIG_BOARD_{{ dictionaryKey | upper }}_{{ key | sanitize('[^0-9A-Za-z]') | upper }}_ENABLE
+#define DISTORTOS_BOARD_{{ dictionaryKey | upper }}_{{ key | sanitize('[^0-9A-Za-z]') | upper }}_ENABLED	1
+#else	// !def CONFIG_BOARD_{{ dictionaryKey | upper }}_{{ key | sanitize('[^0-9A-Za-z]') | upper }}_ENABLE
+#define DISTORTOS_BOARD_{{ dictionaryKey | upper }}_{{ key | sanitize('[^0-9A-Za-z]') | upper }}_ENABLED	0
+#endif	// !def CONFIG_BOARD_{{ dictionaryKey | upper }}_{{ key | sanitize('[^0-9A-Za-z]') | upper }}_ENABLE
 {%endfor%}
 
-/// total number of {{ sanitizedDictionaryKey }} on the board
-#define DISTORTOS_BOARD_TOTAL_{{ sanitizedDictionaryKey | upper }}	(
+/// total number of {{ dictionaryKey }} on the board
+#define DISTORTOS_BOARD_TOTAL_{{ dictionaryKey | upper }}	(
 {%- for key, value in dictionary[dictionaryKey].items() if value is mapping %}
 {% if loop.first == False %}{{ '\t\t' }}{% endif -%}
-DISTORTOS_BOARD_{{ sanitizedDictionaryKey | upper }}_{{ key | sanitize('[^0-9A-Za-z]') | upper }}_ENABLED
+DISTORTOS_BOARD_{{ dictionaryKey | upper }}_{{ key | sanitize('[^0-9A-Za-z]') | upper }}_ENABLED
 {%- if loop.last == False %} + \{% else %}){% endif %}{{ '' }}
 {% endfor %}
 
-#if defined(CONFIG_BOARD_{{ sanitizedDictionaryKey | upper }}_ENABLE) && {# remove whitespace -#}
-DISTORTOS_BOARD_TOTAL_{{ sanitizedDictionaryKey | upper }} != 0
+#if defined(CONFIG_BOARD_{{ dictionaryKey | upper }}_ENABLE) && DISTORTOS_BOARD_TOTAL_{{ dictionaryKey | upper }} != 0
 
 namespace distortos
 {
@@ -52,23 +51,22 @@ class ChipInputPin;
 namespace board
 {
 
-/// total number of {{ sanitizedDictionaryKey }} on the board
-constexpr size_t total{{ sanitizedDictionaryKey | capitalize }} {# remove whitespace -#}
-{DISTORTOS_BOARD_TOTAL_{{ sanitizedDictionaryKey | upper }}};
+/// total number of {{ dictionaryKey }} on the board
+constexpr size_t total{{ dictionaryKey | capitalize }} {DISTORTOS_BOARD_TOTAL_{{ dictionaryKey | upper }}};
 
 /*---------------------------------------------------------------------------------------------------------------------+
-| indexes of {{ sanitizedDictionaryKey }}
+| indexes of {{ dictionaryKey }}
 +---------------------------------------------------------------------------------------------------------------------*/
 
 enum
 {
 {% for key, value in dictionary[dictionaryKey].items() if value is mapping %}
-#ifdef CONFIG_BOARD_{{ sanitizedDictionaryKey | upper }}_{{ key | sanitize('[^0-9A-Za-z]') | upper }}_ENABLE
+#ifdef CONFIG_BOARD_{{ dictionaryKey | upper }}_{{ key | sanitize('[^0-9A-Za-z]') | upper }}_ENABLE
 		/// index of {{ key -}}
 		{% if 'alternative-names' in value %} ({{ value['alternative-names'] | join(', ') }}){% endif -%}
-		{{ '' }} from {{ sanitizedDictionaryKey }}
-		{{ sanitizedDictionaryKey }}{{ key | sanitize('[^0-9A-Za-z]') | capitalize }}Index,
-#endif	// def CONFIG_BOARD_{{ sanitizedDictionaryKey | upper }}_{{ key | sanitize('[^0-9A-Za-z]') | upper }}_ENABLE
+		{{ '' }} from {{ dictionaryKey }}
+		{{ dictionaryKey }}{{ key | sanitize('[^0-9A-Za-z]') | capitalize }}Index,
+#endif	// def CONFIG_BOARD_{{ dictionaryKey | upper }}_{{ key | sanitize('[^0-9A-Za-z]') | upper }}_ENABLE
 {% endfor %}
 };
 {% for key, value in dictionary[dictionaryKey].items() if value is mapping and 'alternative-names' in value %}
@@ -77,37 +75,37 @@ enum
 {% if outerLoop.first == True and loop.first == True %}
 
 /*---------------------------------------------------------------------------------------------------------------------+
-| alternative indexes of {{ sanitizedDictionaryKey }}
+| alternative indexes of {{ dictionaryKey }}
 +---------------------------------------------------------------------------------------------------------------------*/
 {% endif%}
 {% if loop.first == True %}
 
-#ifdef CONFIG_BOARD_{{ sanitizedDictionaryKey | upper }}_{{ key | sanitize('[^0-9A-Za-z]') | upper }}_ENABLE
+#ifdef CONFIG_BOARD_{{ dictionaryKey | upper }}_{{ key | sanitize('[^0-9A-Za-z]') | upper }}_ENABLE
 {% endif %}
 
-/// alternative index of {{ key }} ({{ alternativeName }}) from {{ sanitizedDictionaryKey }}
+/// alternative index of {{ key }} ({{ alternativeName }}) from {{ dictionaryKey }}
 constexpr size_t {# remove whitespace -#}
-{{ sanitizedDictionaryKey }}{{ alternativeName | sanitize('[^0-9A-Za-z]') | capitalize }}Index {# remove whitespace -#}
-{{ '{' }}{{ sanitizedDictionaryKey }}{{ key | sanitize('[^0-9A-Za-z]') | capitalize }}Index};
+{{ dictionaryKey }}{{ alternativeName | sanitize('[^0-9A-Za-z]') | capitalize }}Index {# remove whitespace -#}
+{{ '{' }}{{ dictionaryKey }}{{ key | sanitize('[^0-9A-Za-z]') | capitalize }}Index};
 {% if loop.last == True %}
 
-#endif	// def CONFIG_BOARD_{{ sanitizedDictionaryKey | upper }}_{{ key | sanitize('[^0-9A-Za-z]') | upper }}_ENABLE
+#endif	// def CONFIG_BOARD_{{ dictionaryKey | upper }}_{{ key | sanitize('[^0-9A-Za-z]') | upper }}_ENABLE
 {% endif %}
 {% endfor %}
 {% endfor %}
 
 /*---------------------------------------------------------------------------------------------------------------------+
-| indexed access to {{ sanitizedDictionaryKey }} objects
+| indexed access to {{ dictionaryKey }} objects
 +---------------------------------------------------------------------------------------------------------------------*/
 
-/// array with all {{ sanitizedDictionaryKey }} objects
-extern const chip::ChipInputPin {{ sanitizedDictionaryKey }}[total{{ sanitizedDictionaryKey | capitalize }}];
+/// array with all {{ dictionaryKey }} objects
+extern const chip::ChipInputPin {{ dictionaryKey }}[total{{ dictionaryKey | capitalize }}];
 
 }	// namespace board
 
 }	// namespace distortos
 
-#endif	// defined(CONFIG_BOARD_{{ sanitizedDictionaryKey | upper }}_ENABLE) && {# remove whitespace -#}
-DISTORTOS_BOARD_TOTAL_{{ sanitizedDictionaryKey | upper }} != 0
+#endif	// defined(CONFIG_BOARD_{{ dictionaryKey | upper }}_ENABLE) && {# remove whitespace -#}
+DISTORTOS_BOARD_TOTAL_{{ dictionaryKey | upper }} != 0
 
 #endif	// {{ includeGuard }}

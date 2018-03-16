@@ -1,7 +1,7 @@
 {% import chipInputPinImport as ChipInputPin %}
 /**
  * \file
- * \brief Definition of {{ sanitizedDictionaryKey }} for {{ board }}
+ * \brief Definition of {{ dictionaryKey }} for {{ board }}
  *
  * \author Copyright (C) 2014-{{ year }} Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
@@ -13,10 +13,9 @@
  * Automatically generated file - do not edit!
  */
 
-#include "distortos/board/{{ sanitizedDictionaryKey }}.hpp"
+#include "distortos/board/{{ dictionaryKey }}.hpp"
 
-#if defined(CONFIG_BOARD_{{ sanitizedDictionaryKey | upper }}_ENABLE) && {# remove whitespace -#}
-DISTORTOS_BOARD_TOTAL_{{ sanitizedDictionaryKey | upper }} != 0
+#if defined(CONFIG_BOARD_{{ dictionaryKey | upper }}_ENABLE) && DISTORTOS_BOARD_TOTAL_{{ dictionaryKey | upper }} != 0
 
 #include "distortos/chip/ChipInputPin.hpp"
 
@@ -30,12 +29,12 @@ namespace board
 | global objects
 +---------------------------------------------------------------------------------------------------------------------*/
 
-const chip::ChipInputPin {{ sanitizedDictionaryKey }}[total{{ sanitizedDictionaryKey | capitalize }}]
+const chip::ChipInputPin {{ dictionaryKey }}[total{{ dictionaryKey | capitalize }}]
 {
 {% for key, value in dictionary[dictionaryKey].items() if value is mapping %}
-#ifdef CONFIG_BOARD_{{ sanitizedDictionaryKey | upper }}_{{ key | sanitize('[^0-9A-Za-z]') | upper }}_ENABLE
+#ifdef CONFIG_BOARD_{{ dictionaryKey | upper }}_{{ key | sanitize('[^0-9A-Za-z]') | upper }}_ENABLE
 		{{ ChipInputPin.initializer(value['GPIO']) }},
-#endif	// def CONFIG_BOARD_{{ sanitizedDictionaryKey | upper }}_{{ key | sanitize('[^0-9A-Za-z]') | upper }}_ENABLE
+#endif	// def CONFIG_BOARD_{{ dictionaryKey | upper }}_{{ key | sanitize('[^0-9A-Za-z]') | upper }}_ENABLE
 {% endfor %}
 };
 
@@ -43,5 +42,5 @@ const chip::ChipInputPin {{ sanitizedDictionaryKey }}[total{{ sanitizedDictionar
 
 }	// namespace distortos
 
-#endif	// defined(CONFIG_BOARD_{{ sanitizedDictionaryKey | upper }}_ENABLE) && {# remove whitespace -#}
-DISTORTOS_BOARD_TOTAL_{{ sanitizedDictionaryKey | upper }} != 0
+#endif	// defined(CONFIG_BOARD_{{ dictionaryKey | upper }}_ENABLE) && {# remove whitespace -#}
+DISTORTOS_BOARD_TOTAL_{{ dictionaryKey | upper }} != 0
