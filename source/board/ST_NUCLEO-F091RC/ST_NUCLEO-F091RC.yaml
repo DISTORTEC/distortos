@@ -16,19 +16,19 @@ board:
 buttons:
   compatible:
   - GPIO-inputs
-  b1:
+  B1:
     GPIO:
       port: !Reference {label: GPIOC}
       pin: 13
       active-low: true
     alternative-names:
-    - user
+    - User
 leds:
   compatible:
   - GPIO-outputs
-  ld2:
+  Ld2:
     GPIO:
       port: !Reference {label: GPIOA}
       pin: 5
     alternative-names:
-    - green
+    - Green

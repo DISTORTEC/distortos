@@ -11,16 +11,16 @@
 
 if BOARD_{{ (outputPath + '_' + board) | sanitize('[^0-9A-Za-z]') | upper }}
 
-comment "{{ board }} {{ sanitizedDictionaryKey }} options"
+comment "{{ board }} {{ dictionaryKey }} options"
 
-config BOARD_{{ sanitizedDictionaryKey | upper }}_ENABLE
-	bool "Enable {{ sanitizedDictionaryKey }}"
+config BOARD_{{ dictionaryKey | upper }}_ENABLE
+	bool "Enable {{ dictionaryKey }}"
 	default y
 
-if BOARD_{{ sanitizedDictionaryKey | upper }}_ENABLE
+if BOARD_{{ dictionaryKey | upper }}_ENABLE
 {% for key, value in dictionary[dictionaryKey].items() if value is mapping %}
 
-config BOARD_{{ sanitizedDictionaryKey | upper }}_{{ key | sanitize('[^0-9A-Za-z]') | upper }}_ENABLE
+config BOARD_{{ dictionaryKey | upper }}_{{ key | upper }}_ENABLE
 	bool "Enable {{ key }}
 	{%- if 'alternative-names' in value %} ({{ value['alternative-names'] | join(', ') }}){% endif %}"
 	default y
@@ -28,6 +28,6 @@ config BOARD_{{ sanitizedDictionaryKey | upper }}_{{ key | sanitize('[^0-9A-Za-z
 	{{- value['GPIO']['port']['$path'][-1] }}_ENABLE
 {%endfor%}
 
-endif	# BOARD_{{ sanitizedDictionaryKey | upper }}_ENABLE
+endif	# BOARD_{{ dictionaryKey | upper }}_ENABLE
 
 endif	# BOARD_{{ (outputPath + '_' + board) | sanitize('[^0-9A-Za-z]') | upper }}

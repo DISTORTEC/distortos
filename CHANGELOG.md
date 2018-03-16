@@ -66,7 +66,9 @@ then be used by CMake. Basic documentation of bindings for chip and board `*.yam
 `documentation/yaml-bindings/`.
 - Indexes of board buttons and LEDs - generated automatically by `generateBoard.py` - were changed from
 `<name>ButtonIndex` and `<name>LedIndex` to `<group><Name>Index`. For example `b1ButtonIndex` and `ld3LedIndex` were
-changed to `buttonsB1Index` and `ledsLd3Index`.
+changed to `buttonsB1Index` and `ledsLd3Index`. Similar change was done for counts of available board buttons and LEDs -
+they were changed from `total<Name>` to `<group>Count`. For example `totalButtons` and `totalLeds` were changed to
+`buttonsCount` and `ledsCount`.
 
 ### Fixed
 

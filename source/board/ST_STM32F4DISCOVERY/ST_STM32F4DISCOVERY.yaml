@@ -18,39 +18,39 @@ chip:
 buttons:
   compatible:
   - GPIO-inputs
-  b1:
+  B1:
     GPIO:
       port: !Reference {label: GPIOA}
       pin: 0
     alternative-names:
-    - user
+    - User
 leds:
   compatible:
   - GPIO-outputs
-  ld3:
+  Ld3:
     GPIO:
       port: !Reference {label: GPIOD}
       pin: 13
     alternative-names:
-    - orange
-  ld4:
+    - Orange
+  Ld4:
     GPIO:
       port: !Reference {label: GPIOD}
       pin: 12
     alternative-names:
-    - green
-  ld5:
+    - Green
+  Ld5:
     GPIO:
       port: !Reference {label: GPIOD}
       pin: 14
     alternative-names:
-    - red
-  ld6:
+    - Red
+  Ld6:
     GPIO:
       port: !Reference {label: GPIOD}
       pin: 15
     alternative-names:
-    - blue
+    - Blue
 regulators:
   VDD:
     compatible:

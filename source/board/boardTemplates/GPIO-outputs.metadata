@@ -1,11 +1,21 @@
 {% for key, value in dictionary.items() if 'compatible' in value and 'GPIO-outputs' in value['compatible'] %}
-{% set sanitizedKey = key | sanitize('[^0-9A-Za-z]') %}
+{% if key is not fullMatch('[A-Za-z_][0-9A-Za-z_]*') %}
+{% raise '\'{}\' is not a valid C/C++ identifier'.format(key) %}
+{% endif %}
+{% for subKey, subValue in dictionary[key].items() if subValue is mapping %}
+{% if subKey is not fullMatch('[0-9A-Za-z_]+') %}
+{% raise '\'{}\' is not a valid C/C++ identifier'.format(subKey) %}
+{% endif %}
+{% for alternativeName in subValue.get('alternative-names', []) %}
+{% if alternativeName is not fullMatch('[0-9A-Za-z_]+') %}
+{% raise '\'{}\' is not a valid C/C++ identifier'.format(alternativeName) %}
+{% endif %}
+{% endfor %}
+{% endfor %}
 ('source/board/boardTemplates/GPIO-outputs.hpp.jinja',
-		{'dictionaryKey': '{{ key }}',
-				'sanitizedDictionaryKey': '{{ sanitizedKey }}'},
-		'include/distortos/board/{{ sanitizedKey }}.hpp'),
-('source/board/boardTemplates/Kconfig-boardOptions-GPIO-outputs.jinja',
-		{'dictionaryKey': '{{ key }}',
-				'sanitizedDictionaryKey': '{{ sanitizedKey }}'},
-		'Kconfig-boardOptions-{{ sanitizedKey }}'),
+		{'dictionaryKey': '{{ key }}'},
+		'include/distortos/board/{{ key }}.hpp'),
+('source/board/boardTemplates/Kconfig-boardOptions-GPIO-inputs-outputs.jinja',
+		{'dictionaryKey': '{{ key }}'},
+		'Kconfig-boardOptions-{{ key }}'),
 {% endfor %}
