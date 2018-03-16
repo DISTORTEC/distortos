@@ -21,18 +21,18 @@
 #include <cstddef>
 {% for key, value in dictionary[dictionaryKey].items() if value is mapping %}
 
-#ifdef CONFIG_BOARD_{{ dictionaryKey | upper }}_{{ key | sanitize('[^0-9A-Za-z]') | upper }}_ENABLE
-#define DISTORTOS_BOARD_{{ dictionaryKey | upper }}_{{ key | sanitize('[^0-9A-Za-z]') | upper }}_ENABLED	1
-#else	// !def CONFIG_BOARD_{{ dictionaryKey | upper }}_{{ key | sanitize('[^0-9A-Za-z]') | upper }}_ENABLE
-#define DISTORTOS_BOARD_{{ dictionaryKey | upper }}_{{ key | sanitize('[^0-9A-Za-z]') | upper }}_ENABLED	0
-#endif	// !def CONFIG_BOARD_{{ dictionaryKey | upper }}_{{ key | sanitize('[^0-9A-Za-z]') | upper }}_ENABLE
+#ifdef CONFIG_BOARD_{{ dictionaryKey | upper }}_{{ key | upper }}_ENABLE
+#define DISTORTOS_BOARD_{{ dictionaryKey | upper }}_{{ key | upper }}_ENABLED	1
+#else	// !def CONFIG_BOARD_{{ dictionaryKey | upper }}_{{ key | upper }}_ENABLE
+#define DISTORTOS_BOARD_{{ dictionaryKey | upper }}_{{ key | upper }}_ENABLED	0
+#endif	// !def CONFIG_BOARD_{{ dictionaryKey | upper }}_{{ key | upper }}_ENABLE
 {%endfor%}
 
 /// count of {{ dictionaryKey }} on the board
 #define DISTORTOS_BOARD_{{ dictionaryKey | upper }}_COUNT	(
 {%- for key, value in dictionary[dictionaryKey].items() if value is mapping %}
 {% if loop.first == False %}{{ '\t\t' }}{% endif -%}
-DISTORTOS_BOARD_{{ dictionaryKey | upper }}_{{ key | sanitize('[^0-9A-Za-z]') | upper }}_ENABLED
+DISTORTOS_BOARD_{{ dictionaryKey | upper }}_{{ key | upper }}_ENABLED
 {%- if loop.last == False %} + \{% else %}){% endif %}{{ '' }}
 {% endfor %}
 
@@ -61,12 +61,12 @@ constexpr size_t {{ dictionaryKey }}Count {DISTORTOS_BOARD_{{ dictionaryKey | up
 enum
 {
 {% for key, value in dictionary[dictionaryKey].items() if value is mapping %}
-#ifdef CONFIG_BOARD_{{ dictionaryKey | upper }}_{{ key | sanitize('[^0-9A-Za-z]') | upper }}_ENABLE
+#ifdef CONFIG_BOARD_{{ dictionaryKey | upper }}_{{ key | upper }}_ENABLE
 		/// index of {{ key -}}
 		{% if 'alternative-names' in value %} ({{ value['alternative-names'] | join(', ') }}){% endif -%}
 		{{ '' }} from {{ dictionaryKey }}
-		{{ dictionaryKey }}{{ key | sanitize('[^0-9A-Za-z]') | capitalize }}Index,
-#endif	// def CONFIG_BOARD_{{ dictionaryKey | upper }}_{{ key | sanitize('[^0-9A-Za-z]') | upper }}_ENABLE
+		{{ dictionaryKey }}{{ key | capitalize }}Index,
+#endif	// def CONFIG_BOARD_{{ dictionaryKey | upper }}_{{ key | upper }}_ENABLE
 {% endfor %}
 };
 {% for key, value in dictionary[dictionaryKey].items() if value is mapping and 'alternative-names' in value %}
@@ -80,16 +80,15 @@ enum
 {% endif%}
 {% if loop.first == True %}
 
-#ifdef CONFIG_BOARD_{{ dictionaryKey | upper }}_{{ key | sanitize('[^0-9A-Za-z]') | upper }}_ENABLE
+#ifdef CONFIG_BOARD_{{ dictionaryKey | upper }}_{{ key | upper }}_ENABLE
 {% endif %}
 
 /// alternative index of {{ key }} ({{ alternativeName }}) from {{ dictionaryKey }}
-constexpr size_t {# remove whitespace -#}
-{{ dictionaryKey }}{{ alternativeName | sanitize('[^0-9A-Za-z]') | capitalize }}Index {# remove whitespace -#}
-{{ '{' }}{{ dictionaryKey }}{{ key | sanitize('[^0-9A-Za-z]') | capitalize }}Index};
+constexpr size_t {{ dictionaryKey }}{{ alternativeName | capitalize }}Index {# remove whitespace -#}
+{{ '{' }}{{ dictionaryKey }}{{ key | capitalize }}Index};
 {% if loop.last == True %}
 
-#endif	// def CONFIG_BOARD_{{ dictionaryKey | upper }}_{{ key | sanitize('[^0-9A-Za-z]') | upper }}_ENABLE
+#endif	// def CONFIG_BOARD_{{ dictionaryKey | upper }}_{{ key | upper }}_ENABLE
 {% endif %}
 {% endfor %}
 {% endfor %}

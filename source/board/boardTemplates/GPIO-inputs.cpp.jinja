@@ -32,9 +32,9 @@ namespace board
 const chip::ChipInputPin {{ dictionaryKey }}[{{ dictionaryKey }}Count]
 {
 {% for key, value in dictionary[dictionaryKey].items() if value is mapping %}
-#ifdef CONFIG_BOARD_{{ dictionaryKey | upper }}_{{ key | sanitize('[^0-9A-Za-z]') | upper }}_ENABLE
+#ifdef CONFIG_BOARD_{{ dictionaryKey | upper }}_{{ key | upper }}_ENABLE
 		{{ ChipInputPin.initializer(value['GPIO']) }},
-#endif	// def CONFIG_BOARD_{{ dictionaryKey | upper }}_{{ key | sanitize('[^0-9A-Za-z]') | upper }}_ENABLE
+#endif	// def CONFIG_BOARD_{{ dictionaryKey | upper }}_{{ key | upper }}_ENABLE
 {% endfor %}
 };
 

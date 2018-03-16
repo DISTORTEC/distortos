@@ -20,7 +20,7 @@ config BOARD_{{ dictionaryKey | upper }}_ENABLE
 if BOARD_{{ dictionaryKey | upper }}_ENABLE
 {% for key, value in dictionary[dictionaryKey].items() if value is mapping %}
 
-config BOARD_{{ dictionaryKey | upper }}_{{ key | sanitize('[^0-9A-Za-z]') | upper }}_ENABLE
+config BOARD_{{ dictionaryKey | upper }}_{{ key | upper }}_ENABLE
 	bool "Enable {{ key }}
 	{%- if 'alternative-names' in value %} ({{ value['alternative-names'] | join(', ') }}){% endif %}"
 	default y
