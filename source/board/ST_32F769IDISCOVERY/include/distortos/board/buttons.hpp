@@ -25,10 +25,10 @@
 #define DISTORTOS_BOARD_BUTTONS_B1_ENABLED	0
 #endif	// !def CONFIG_BOARD_BUTTONS_B1_ENABLE
 
-/// total number of buttons on the board
-#define DISTORTOS_BOARD_TOTAL_BUTTONS	(DISTORTOS_BOARD_BUTTONS_B1_ENABLED)
+/// count of buttons on the board
+#define DISTORTOS_BOARD_BUTTONS_COUNT	(DISTORTOS_BOARD_BUTTONS_B1_ENABLED)
 
-#if defined(CONFIG_BOARD_BUTTONS_ENABLE) && DISTORTOS_BOARD_TOTAL_BUTTONS != 0
+#if defined(CONFIG_BOARD_BUTTONS_ENABLE) && DISTORTOS_BOARD_BUTTONS_COUNT != 0
 
 namespace distortos
 {
@@ -43,8 +43,8 @@ class ChipInputPin;
 namespace board
 {
 
-/// total number of buttons on the board
-constexpr size_t totalButtons {DISTORTOS_BOARD_TOTAL_BUTTONS};
+/// count of buttons on the board
+constexpr size_t buttonsCount {DISTORTOS_BOARD_BUTTONS_COUNT};
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | indexes of buttons
@@ -74,12 +74,12 @@ constexpr size_t buttonsUserIndex {buttonsB1Index};
 +---------------------------------------------------------------------------------------------------------------------*/
 
 /// array with all buttons objects
-extern const chip::ChipInputPin buttons[totalButtons];
+extern const chip::ChipInputPin buttons[buttonsCount];
 
 }	// namespace board
 
 }	// namespace distortos
 
-#endif	// defined(CONFIG_BOARD_BUTTONS_ENABLE) && DISTORTOS_BOARD_TOTAL_BUTTONS != 0
+#endif	// defined(CONFIG_BOARD_BUTTONS_ENABLE) && DISTORTOS_BOARD_BUTTONS_COUNT != 0
 
 #endif	// SOURCE_BOARD_ST_32F769IDISCOVERY_INCLUDE_DISTORTOS_BOARD_BUTTONS_HPP_
