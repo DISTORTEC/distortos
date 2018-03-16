@@ -3,13 +3,11 @@
 		compatible == 'ST,STM32-GPIO-v2-pin-controller' %}
 {% set gpioVersion = compatible.split(',')[1].split('-')[2] %}
 {% for key, value in dictionary.items() if 'compatible' in value and 'GPIO-inputs' in value['compatible'] %}
-{% set sanitizedKey = key | sanitize('[^0-9A-Za-z]') %}
 ('source/board/boardTemplates/GPIO-inputs.cpp.jinja',
 		{'dictionaryKey': '{{ key }}',
-				'sanitizedDictionaryKey': '{{ sanitizedKey }}',
 				'chipInputPinImport':
 						'source/chip/STM32/peripherals/GPIO{{ gpioVersion }}/boardTemplates/ChipInputPin.jinja'},
-		'{{ sanitizedBoard }}-{{ sanitizedKey }}.cpp'),
+		'{{ sanitizedBoard }}-{{ key }}.cpp'),
 {% endfor %}
 {% endfor %}
 {% endif %}

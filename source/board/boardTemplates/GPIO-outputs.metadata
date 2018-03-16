@@ -12,13 +12,10 @@
 {% endif %}
 {% endfor %}
 {% endfor %}
-{% set sanitizedKey = key | sanitize('[^0-9A-Za-z]') %}
 ('source/board/boardTemplates/GPIO-outputs.hpp.jinja',
-		{'dictionaryKey': '{{ key }}',
-				'sanitizedDictionaryKey': '{{ sanitizedKey }}'},
-		'include/distortos/board/{{ sanitizedKey }}.hpp'),
+		{'dictionaryKey': '{{ key }}'},
+		'include/distortos/board/{{ key }}.hpp'),
 ('source/board/boardTemplates/Kconfig-boardOptions-GPIO-inputs-outputs.jinja',
-		{'dictionaryKey': '{{ key }}',
-				'sanitizedDictionaryKey': '{{ sanitizedKey }}'},
-		'Kconfig-boardOptions-{{ sanitizedKey }}'),
+		{'dictionaryKey': '{{ key }}'},
+		'Kconfig-boardOptions-{{ key }}'),
 {% endfor %}
