@@ -94,6 +94,15 @@ def getLabels(dictionary, labels = None):
 			labels = getLabels(value, labels)
 	return labels
 
+def isFullMatch(string, pattern, flags = 0):
+	"""Tests whether string fully matches given pattern.
+
+	* `string` is the string that will be tested
+	* `pattern` is the pattern which will be used in the test
+	* `flags` are flags passed to `re.fullmatch()`, default - `0`
+	"""
+	return re.fullmatch(pattern, str(string), flags) != None
+
 def mergeDictionaries(a, b):
 	"""Merge two dictionaries into one and return merged dictionary.
 
@@ -146,15 +155,6 @@ def resolveReferences(dictionary, labels):
 
 	for keyForDeletion in keysForDeletion:
 		del dictionary[keyForDeletion]
-
-def isFullMatch(string, pattern, flags = 0):
-	"""Tests whether string fully matches given pattern.
-
-	* `string` is the string that will be tested
-	* `pattern` is the pattern which will be used in the test
-	* `flags` are flags passed to `re.fullmatch()`, default - `0`
-	"""
-	return re.fullmatch(pattern, str(string), flags) != None
 
 ########################################################################################################################
 # main
