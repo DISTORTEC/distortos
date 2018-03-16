@@ -18,13 +18,13 @@ chip:
 buttons:
   compatible:
   - GPIO-inputs
-  b1:
+  B1:
     GPIO:
       port: !Reference {label: GPIOC}
       pin: 13
       active-low: true
     alternative-names:
-    - user
+    - User
 leds:
   compatible:
   - GPIO-outputs
