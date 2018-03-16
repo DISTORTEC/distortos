@@ -17,7 +17,7 @@
 		{'dictionaryKey': '{{ key }}',
 				'sanitizedDictionaryKey': '{{ sanitizedKey }}'},
 		'include/distortos/board/{{ sanitizedKey }}.hpp'),
-('source/board/boardTemplates/Kconfig-boardOptions-GPIO-inputs.jinja',
+('source/board/boardTemplates/Kconfig-boardOptions-GPIO-inputs-outputs.jinja',
 		{'dictionaryKey': '{{ key }}',
 				'sanitizedDictionaryKey': '{{ sanitizedKey }}'},
 		'Kconfig-boardOptions-{{ sanitizedKey }}'),
