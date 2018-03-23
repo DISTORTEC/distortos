@@ -524,6 +524,7 @@ choice
 	prompt "Unify RAM in linker script"
 	depends on CHIP_STM32L43 || CHIP_STM32L44 || CHIP_STM32L45 || CHIP_STM32L46 || CHIP_STM32L49 || CHIP_STM32L4A
 	default CHIP_STM32L4_UNIFY_SRAM1_SRAM2
+	depends on !BOARD_HAS_YAML
 	help
 		Configures unification of SRAM1 and SRAM2 regions in linker script.
 
