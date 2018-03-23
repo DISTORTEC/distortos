@@ -1,0 +1,24 @@
+#
+# file: ST_NUCLEO-L432KC.yaml
+#
+# author: Copyright (C) 2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+#
+# This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
+# distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+#
+
+$extends:
+- 'source/chip/STM32/STM32L4/chipYaml/ST_STM32L432KC.yaml'
+board:
+  compatible:
+  - ST,NUCLEO-L432KC
+  model: STMicroelectronics NUCLEO-L432KC
+leds:
+  compatible:
+  - GPIO-outputs
+  Ld3:
+    GPIO:
+      port: !Reference {label: GPIOB}
+      pin: 3
+    alternative-names:
+    - Green
