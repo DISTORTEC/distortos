@@ -1,0 +1,44 @@
+#
+# file: ST_NUCLEO-F446RE.yaml
+#
+# author: Copyright (C) 2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+#
+# This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
+# distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+#
+
+$extends:
+- 'source/chip/STM32/STM32F4/chipYaml/ST_STM32F446RE.yaml'
+board:
+  compatible:
+  - ST,NUCLEO-F446RE
+  model: STMicroelectronics NUCLEO-F446RE
+chip:
+  VDD: !Reference {label: VDD}
+buttons:
+  compatible:
+  - GPIO-inputs
+  B1:
+    GPIO:
+      port: !Reference {label: GPIOC}
+      pin: 13
+      active-low: true
+    alternative-names:
+    - User
+leds:
+  compatible:
+  - GPIO-outputs
+  Ld2:
+    GPIO:
+      port: !Reference {label: GPIOA}
+      pin: 5
+    alternative-names:
+    - Green
+regulators:
+  VDD:
+    compatible:
+    - fixed-regulator
+    always-on: true
+    output-voltage: 3.3
+    $labels:
+    - VDD
