@@ -111,7 +111,7 @@ add_custom_command(OUTPUT ${PREPROCESSED_LDSCRIPT}
 		COMMAND ${CMAKE_CXX_COMPILER} -nostdinc -undef -C -E -P -x assembler-with-cpp
 		-I${CMAKE_CURRENT_BINARY_DIR}/include ${LDSCRIPT} -o ${PREPROCESSED_LDSCRIPT}
 		DEPENDS ${LDSCRIPT}
-		DEPENDS include/distortos/distortosConfiguration.h
+		DEPENDS distortosConfiguration-h
 		VERBATIM
 		USES_TERMINAL)
 add_custom_target(ldscript ALL DEPENDS ${PREPROCESSED_LDSCRIPT})
