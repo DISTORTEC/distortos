@@ -46,6 +46,8 @@ finally start the build with `make`. You can obviously use other
 [*CMake* generators](https://cmake.org/cmake/help/latest/manual/cmake-generators.7.html), e.g. *Ninja*, *Eclipse CDT4*
 project, ... *CMake*-based build system will only support configurations with proper board, i.e. "Custom board" choice
 for "Board" in *Kconfig* is not supported.
+- Added `rbegin()`, `rend()`, `crbegin()` and `crend()` functions to `IntrusiveList` and `SortedIntrusiveList` classes,
+making them usable with `estd::ReverseAdaptor`.
 
 ### Changed
 

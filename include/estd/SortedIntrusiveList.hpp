@@ -2,7 +2,7 @@
  * \file
  * \brief SortedIntrusiveList template class header
  *
- * \author Copyright (C) 2015-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2015-2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -147,6 +147,25 @@ public:
 	}
 
 	/**
+	 * \return const reverse iterator to first element in the reversed list (last element of the non-reversed list)
+	 */
+
+	const_reverse_iterator crbegin() const
+	{
+		return implementation_.intrusiveList.crbegin();
+	}
+
+	/**
+	 * \return const reverse iterator to "one past the last" element in the reversed list ("one before the first"
+	 * element of the non-reversed list)
+	 */
+
+	const_reverse_iterator crend() const
+	{
+		return implementation_.intrusiveList.crend();
+	}
+
+	/**
 	 * \return true is the list is empty, false otherwise
 	 */
 
@@ -220,6 +239,44 @@ public:
 	void pop_front()
 	{
 		implementation_.intrusiveList.pop_front();
+	}
+
+	/**
+	 * \return reverse iterator to first element in the reversed list (last element of the non-reversed list)
+	 */
+
+	reverse_iterator rbegin()
+	{
+		return implementation_.intrusiveList.rbegin();
+	}
+
+	/**
+	 * \return const reverse iterator to first element in the reversed list (last element of the non-reversed list)
+	 */
+
+	const_reverse_iterator rbegin() const
+	{
+		return implementation_.intrusiveList.rbegin();
+	}
+
+	/**
+	 * \return reverse iterator to "one past the last" element in the reversed list ("one before the first" element of
+	 * the non-reversed list)
+	 */
+
+	reverse_iterator rend()
+	{
+		return implementation_.intrusiveList.rend();
+	}
+
+	/**
+	 * \return const reverse iterator to "one past the last" element in the reversed list ("one before the first"
+	 * element of the non-reversed list)
+	 */
+
+	const_reverse_iterator rend() const
+	{
+		return implementation_.intrusiveList.rend();
 	}
 
 	/**
