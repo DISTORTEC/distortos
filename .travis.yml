@@ -38,3 +38,11 @@ install:
 
 script:
     - "./scripts/travis-ci.sh script ${SUBSTAGE}"
+
+after_failure:
+    - "echo \"********** ls -la ${TRAVIS_BUILD_DIR}/output\""
+    - "ls -la ${TRAVIS_BUILD_DIR}/output"
+    - "echo \"********** cat ${TRAVIS_BUILD_DIR}/output/*.preprocessed.ld\""
+    - "cat ${TRAVIS_BUILD_DIR}/output/*.preprocessed.ld"
+    - "echo \"********** cat output/include/distortos/distortosConfiguration.h\""
+    - "cat output/include/distortos/distortosConfiguration.h"
