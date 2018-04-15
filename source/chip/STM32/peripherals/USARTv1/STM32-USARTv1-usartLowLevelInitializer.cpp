@@ -26,7 +26,7 @@ namespace
 | local objects
 +---------------------------------------------------------------------------------------------------------------------*/
 
-/// priority of SPI interrupts
+/// priority of USART interrupts
 #if defined(CONFIG_ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI)
 constexpr uint8_t interruptPriority {CONFIG_ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI};
 #else	// !defined(CONFIG_ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI)
