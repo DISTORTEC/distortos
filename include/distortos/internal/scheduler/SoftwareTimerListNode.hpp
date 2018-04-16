@@ -71,7 +71,7 @@ protected:
 
 private:
 
-	///time point of expiration
+	/// time point of expiration
 	TickClock::time_point timePoint_;
 };
 
