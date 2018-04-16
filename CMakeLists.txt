@@ -55,6 +55,31 @@ add_custom_command(OUTPUT include/distortos/distortosConfiguration.h
 add_custom_target(distortosConfiguration-h ALL DEPENDS include/distortos/distortosConfiguration.h)
 
 #-----------------------------------------------------------------------------------------------------------------------
+# distortos-cFlags interface library
+#-----------------------------------------------------------------------------------------------------------------------
+
+add_library(distortos-cFlags INTERFACE)
+target_compile_options(distortos-cFlags INTERFACE
+		${CONFIG_ARCHITECTURE_FLAGS}
+		${CONFIG_DEBUGGING_INFORMATION_COMPILATION}
+		${CONFIG_BUILD_OPTIMIZATION}
+		${CONFIG_LINK_TIME_OPTIMIZATION_COMPILATION}
+		${CONFIG_ASSERT})
+target_include_directories(distortos-cFlags INTERFACE
+		${CMAKE_CURRENT_BINARY_DIR}/include
+		include
+		${CONFIG_ARCHITECTURE_INCLUDES}
+		${CONFIG_CHIP_INCLUDES}
+		${CONFIG_BOARD_INCLUDES})
+add_dependencies(distortos-cFlags distortosConfiguration-h)
+
+#-----------------------------------------------------------------------------------------------------------------------
+# distortos::cFlags alias library
+#-----------------------------------------------------------------------------------------------------------------------
+
+add_library(distortos::cFlags ALIAS distortos-cFlags)
+
+#-----------------------------------------------------------------------------------------------------------------------
 # distortos static library
 #-----------------------------------------------------------------------------------------------------------------------
 
@@ -158,31 +183,6 @@ add_dependencies(distortos-distortos distortos ldscript)
 #-----------------------------------------------------------------------------------------------------------------------
 
 add_library(distortos::distortos ALIAS distortos-distortos)
-
-#-----------------------------------------------------------------------------------------------------------------------
-# distortos-cFlags interface library
-#-----------------------------------------------------------------------------------------------------------------------
-
-add_library(distortos-cFlags INTERFACE)
-target_compile_options(distortos-cFlags INTERFACE
-		${CONFIG_ARCHITECTURE_FLAGS}
-		${CONFIG_DEBUGGING_INFORMATION_COMPILATION}
-		${CONFIG_BUILD_OPTIMIZATION}
-		${CONFIG_LINK_TIME_OPTIMIZATION_COMPILATION}
-		${CONFIG_ASSERT})
-target_include_directories(distortos-cFlags INTERFACE
-		${CMAKE_CURRENT_BINARY_DIR}/include
-		include
-		${CONFIG_ARCHITECTURE_INCLUDES}
-		${CONFIG_CHIP_INCLUDES}
-		${CONFIG_BOARD_INCLUDES})
-add_dependencies(distortos-cFlags distortosConfiguration-h)
-
-#-----------------------------------------------------------------------------------------------------------------------
-# distortos::cFlags alias library
-#-----------------------------------------------------------------------------------------------------------------------
-
-add_library(distortos::cFlags ALIAS distortos-cFlags)
 
 #-----------------------------------------------------------------------------------------------------------------------
 # distortos-doxygen
