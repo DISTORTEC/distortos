@@ -225,6 +225,11 @@ endforeach()
 foreach(doxygenInputEntry $ENV{doxygenInput})
 	string(APPEND doxygenInput " \"${doxygenInputEntry}\"")
 endforeach()
+set(doxygenStripFromIncludePathList "$ENV{doxygenIncludePath};$ENV{doxygenInput}")
+list(REMOVE_DUPLICATES doxygenStripFromIncludePathList)
+foreach(doxygenStripFromIncludePathEntry ${doxygenStripFromIncludePathList})
+	string(APPEND doxygenStripFromIncludePath " \"${doxygenStripFromIncludePathEntry}\"")
+endforeach()
 string(REPLACE ";" " " doxygenPredefined "${doxygenPredefined}")
 file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile.extension
 		"EXCLUDE =${doxygenExclude}\n"
@@ -232,6 +237,7 @@ file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile.extension
 		"INPUT =${doxygenInput}\n"
 		"PREDEFINED = DOXYGEN \"__attribute__(x)=\" \"__GNUC_PREREQ(x, y)=1\" ${doxygenPredefined}\n"
 		"PROJECT_NUMBER = ${doxygenProjectNumber}\n"
+		"STRIP_FROM_INC_PATH =${doxygenStripFromIncludePath}\n"
 		"STRIP_FROM_PATH = \"${CMAKE_CURRENT_SOURCE_DIR}\"\n")
 
 set(doxyfiles "${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile;${CMAKE_CURRENT_BINARY_DIR}/Doxyfile.extension")
