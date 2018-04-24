@@ -112,6 +112,7 @@ add_custom_command(OUTPUT ${PREPROCESSED_LDSCRIPT}
 		-I${CMAKE_CURRENT_BINARY_DIR}/include ${LDSCRIPT} -o ${PREPROCESSED_LDSCRIPT}
 		DEPENDS ${LDSCRIPT}
 		DEPENDS distortosConfiguration-h
+		DEPENDS include/distortos/distortosConfiguration.h
 		VERBATIM
 		USES_TERMINAL)
 add_custom_target(ldscript ALL DEPENDS ${PREPROCESSED_LDSCRIPT})
