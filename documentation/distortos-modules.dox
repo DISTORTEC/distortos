@@ -48,6 +48,9 @@
  *
  * \{
  *
+ * \defgroup mutexCApi Mutex C-API
+ * \brief Mutex-related C-API of distortos
+ *
  * \defgroup semaphoreCApi Semaphore C-API
  * \brief Semaphore-related C-API of distortos
  *
