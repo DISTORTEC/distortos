@@ -48,6 +48,9 @@
  *
  * \{
  *
+ * \defgroup conditionVariableCApi Condition Variable C-API
+ * \brief Condition-Variable-related C-API of distortos
+ *
  * \defgroup mutexCApi Mutex C-API
  * \brief Mutex-related C-API of distortos
  *
