@@ -73,6 +73,7 @@ then be used by CMake. Basic documentation of bindings for chip and board `*.yam
 changed to `buttonsB1Index` and `ledsLd3Index`. Similar change was done for counts of available board buttons and LEDs -
 they were changed from `total<Name>` to `<group>Count`. For example `totalButtons` and `totalLeds` were changed to
 `buttonsCount` and `ledsCount`.
+- Update *CMSIS* to version 5.3.0.
 
 ### Fixed
 
