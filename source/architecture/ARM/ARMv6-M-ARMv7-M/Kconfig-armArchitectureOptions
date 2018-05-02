@@ -1,7 +1,7 @@
 #
 # file: Kconfig-armArchitectureOptions
 #
-# author: Copyright (C) 2015-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+# author: Copyright (C) 2015-2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
 #
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -63,15 +63,15 @@ config ARCHITECTURE_HAS_ITERATIVE_MULTIPLIER
 
 config ARCHITECTURE_FLAGS
 	string
-	default "-mcpu=cortex-m0.small-multiply -mthumb" if ARCHITECTURE_ARM_CORTEX_M0 && \
+	default "-mcpu=cortex-m0.small-multiply -march=armv6s-m -mthumb" if ARCHITECTURE_ARM_CORTEX_M0 && \
 		ARCHITECTURE_HAS_ITERATIVE_MULTIPLIER
-	default "-mcpu=cortex-m0 -mthumb" if ARCHITECTURE_ARM_CORTEX_M0
-	default "-mcpu=cortex-m0plus.small-multiply -mthumb" if ARCHITECTURE_ARM_CORTEX_M0PLUS && \
+	default "-mcpu=cortex-m0 -march=armv6s-m -mthumb" if ARCHITECTURE_ARM_CORTEX_M0
+	default "-mcpu=cortex-m0plus.small-multiply -march=armv6s-m -mthumb" if ARCHITECTURE_ARM_CORTEX_M0PLUS && \
 		ARCHITECTURE_HAS_ITERATIVE_MULTIPLIER
-	default "-mcpu=cortex-m0plus -mthumb" if ARCHITECTURE_ARM_CORTEX_M0PLUS
-	default "-mcpu=cortex-m1.small-multiply -mthumb" if ARCHITECTURE_ARM_CORTEX_M1 && \
+	default "-mcpu=cortex-m0plus -march=armv6s-m -mthumb" if ARCHITECTURE_ARM_CORTEX_M0PLUS
+	default "-mcpu=cortex-m1.small-multiply -march=armv6s-m -mthumb" if ARCHITECTURE_ARM_CORTEX_M1 && \
 		ARCHITECTURE_HAS_ITERATIVE_MULTIPLIER
-	default "-mcpu=cortex-m1 -mthumb" if ARCHITECTURE_ARM_CORTEX_M1
+	default "-mcpu=cortex-m1 -march=armv6s-m -mthumb" if ARCHITECTURE_ARM_CORTEX_M1
 
 endif	# ARCHITECTURE_ARMV6_M
 
