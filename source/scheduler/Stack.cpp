@@ -2,7 +2,7 @@
  * \file
  * \brief Stack class implementation
  *
- * \author Copyright (C) 2014-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -73,7 +73,7 @@ size_t adjustSize(void* const storage, const size_t size, void* const adjustedSt
 {
 	const auto storageEnd = reinterpret_cast<uintptr_t>(storage) + size;
 	const auto adjustedStorageEnd = storageEnd / alignment * alignment;
-	return adjustedStorageEnd - reinterpret_cast<decltype(adjustedStorageEnd)>(adjustedStorage);
+	return adjustedStorageEnd - reinterpret_cast<uintptr_t>(adjustedStorage);
 }
 
 }	// namespace
