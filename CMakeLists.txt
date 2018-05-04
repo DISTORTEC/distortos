@@ -244,6 +244,7 @@ file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile.extension
 set(doxyfiles "${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile;${CMAKE_CURRENT_BINARY_DIR}/Doxyfile.extension")
 add_custom_target(distortos-doxygen
 		${CMAKE_COMMAND} -D "DOXYFILES=${doxyfiles}" -P ${CMAKE_CURRENT_SOURCE_DIR}/cmake/doxygen.cmake
+		DEPENDS distortosConfiguration-h
 		DEPENDS include/distortos/distortosConfiguration.h
 		VERBATIM)
 
