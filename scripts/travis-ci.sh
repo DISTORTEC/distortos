@@ -34,8 +34,8 @@ installBuild5() {
 	EOF
 }
 
-# "install build 6" and "install build 7" phase
-installBuild67() {
+# "install build 6", "install build 7" and "install build 8" phase
+installBuild678() {
 	local gccVersion="${1}"
 	local buildDate="${2}"
 	echo "Downloading arm-none-eabi-gcc-${gccVersion}-${buildDate}.tar.xz..."
@@ -57,10 +57,13 @@ installBuild() {
 			installBuild5
 			;;
 		6)
-			installBuild67 '6.3.0' '170821'
+			installBuild678 '6.3.0' '170821'
 			;;
 		7)
-			installBuild67 '7.3.0' '180127'
+			installBuild678 '7.3.0' '180127'
+			;;
+		8)
+			installBuild678 '8.1.0' '180504'
 			;;
 		*)
 			echo "\"${1}\" is not a valid argument!" >&2
