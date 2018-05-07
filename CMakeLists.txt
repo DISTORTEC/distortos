@@ -160,6 +160,21 @@ target_link_libraries(distortos-cxxFlags INTERFACE
 add_library(distortos::cxxFlags ALIAS distortos-cxxFlags)
 
 #-----------------------------------------------------------------------------------------------------------------------
+# distortos-allCxxFlags interface library
+#-----------------------------------------------------------------------------------------------------------------------
+
+add_library(distortos-allCxxFlags INTERFACE)
+target_link_libraries(distortos-allCxxFlags INTERFACE
+		distortos::cxxFlags
+		distortos::allCFlags)
+
+#-----------------------------------------------------------------------------------------------------------------------
+# distortos::allCxxFlags alias library
+#-----------------------------------------------------------------------------------------------------------------------
+
+add_library(distortos::allCxxFlags ALIAS distortos-allCxxFlags)
+
+#-----------------------------------------------------------------------------------------------------------------------
 # distortos static library
 #-----------------------------------------------------------------------------------------------------------------------
 
