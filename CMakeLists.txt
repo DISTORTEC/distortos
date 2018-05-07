@@ -74,18 +74,33 @@ add_dependencies(distortos-includes distortosConfiguration-h)
 add_library(distortos::includes ALIAS distortos-includes)
 
 #-----------------------------------------------------------------------------------------------------------------------
+# distortos-baseCFlags interface library
+#-----------------------------------------------------------------------------------------------------------------------
+
+add_library(distortos-baseCFlags INTERFACE)
+target_compile_options(distortos-baseCFlags INTERFACE
+		${CONFIG_ARCHITECTURE_FLAGS})
+
+#-----------------------------------------------------------------------------------------------------------------------
+# distortos::baseCFlags alias library
+#-----------------------------------------------------------------------------------------------------------------------
+
+add_library(distortos::baseCFlags ALIAS distortos-baseCFlags)
+
+#-----------------------------------------------------------------------------------------------------------------------
 # distortos-cFlags interface library
 #-----------------------------------------------------------------------------------------------------------------------
 
 add_library(distortos-cFlags INTERFACE)
 target_compile_options(distortos-cFlags INTERFACE
-		${CONFIG_ARCHITECTURE_FLAGS}
 		${CONFIG_DEBUGGING_INFORMATION_COMPILATION}
 		${CONFIG_BUILD_OPTIMIZATION}
 		${CONFIG_LINK_TIME_OPTIMIZATION_COMPILATION}
 		-ffunction-sections
 		-fdata-sections
 		${CONFIG_ASSERT})
+target_link_libraries(distortos-cFlags INTERFACE
+		distortos::baseCFlags)
 
 #-----------------------------------------------------------------------------------------------------------------------
 # distortos::cFlags alias library
