@@ -182,21 +182,8 @@ add_library(distortos STATIC "")
 set_target_properties(distortos PROPERTIES
 		CXX_STANDARD 11
 		CXX_STANDARD_REQUIRED ON)
-target_compile_options(distortos PRIVATE
-		-Wall
-		-Wextra
-		-Wshadow
-		${CONFIG_ARCHITECTURE_FLAGS}
-		${CONFIG_DEBUGGING_INFORMATION_COMPILATION}
-		${CONFIG_BUILD_OPTIMIZATION}
-		${CONFIG_LINK_TIME_OPTIMIZATION_COMPILATION}
-		${CONFIG_STATIC_DESTRUCTORS_RUN_TIME_REGISTRATION}
-		-ffunction-sections
-		-fdata-sections
-		-fno-rtti
-		-fno-exceptions
-		${CONFIG_ASSERT})
 target_link_libraries(distortos PRIVATE
+		distortos::allCxxFlags
 		distortos::includes)
 
 include(source/distortos-sources.cmake)
