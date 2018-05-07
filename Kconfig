@@ -206,7 +206,7 @@ config BUILD_OPTIMIZATION
 
 config LINK_TIME_OPTIMIZATION_COMPILATION
 	string
-	default "-flto" if LINK_TIME_OPTIMIZATION_ENABLE
+	default "-flto -ffat-lto-objects" if LINK_TIME_OPTIMIZATION_ENABLE
 	default ""
 
 config LINK_TIME_OPTIMIZATION_LINKING
