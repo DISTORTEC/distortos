@@ -127,6 +127,24 @@ target_link_libraries(distortos-allCFlags INTERFACE
 add_library(distortos::allCFlags ALIAS distortos-allCFlags)
 
 #-----------------------------------------------------------------------------------------------------------------------
+# distortos-baseCxxFlags interface library
+#-----------------------------------------------------------------------------------------------------------------------
+
+add_library(distortos-baseCxxFlags INTERFACE)
+target_compile_options(distortos-baseCxxFlags INTERFACE
+		${CONFIG_STATIC_DESTRUCTORS_RUN_TIME_REGISTRATION}
+		-fno-rtti
+		-fno-exceptions)
+target_link_libraries(distortos-baseCxxFlags INTERFACE
+		distortos::baseCFlags)
+
+#-----------------------------------------------------------------------------------------------------------------------
+# distortos::baseCxxFlags alias library
+#-----------------------------------------------------------------------------------------------------------------------
+
+add_library(distortos::baseCxxFlags ALIAS distortos-baseCxxFlags)
+
+#-----------------------------------------------------------------------------------------------------------------------
 # distortos static library
 #-----------------------------------------------------------------------------------------------------------------------
 
