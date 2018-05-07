@@ -34,6 +34,7 @@ if(CONFIG_TEST_APPLICATION_ENABLE)
 			${CMAKE_CURRENT_SOURCE_DIR})
 	target_link_libraries(distortosTest.elf
 			distortos::distortos
+			distortos::allCxxFlags
 			-Xlinker -Map="${CMAKE_CURRENT_BINARY_DIR}/distortosTest.map")
 
 	include(architecture/distortosTest.elf-sources.cmake)
