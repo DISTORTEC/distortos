@@ -238,13 +238,8 @@ target_compile_options(distortos-distortos INTERFACE
 		-fno-rtti
 		-fno-exceptions
 		${CONFIG_ASSERT})
-target_include_directories(distortos-distortos INTERFACE
-		${CMAKE_CURRENT_BINARY_DIR}/include
-		include
-		${CONFIG_ARCHITECTURE_INCLUDES}
-		${CONFIG_CHIP_INCLUDES}
-		${CONFIG_BOARD_INCLUDES})
 target_link_libraries(distortos-distortos INTERFACE
+		distortos::includes
 		${CONFIG_ARCHITECTURE_FLAGS}
 		${CONFIG_DEBUGGING_INFORMATION_LINKING}
 		${CONFIG_BUILD_OPTIMIZATION}
