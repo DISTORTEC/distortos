@@ -94,6 +94,24 @@ target_compile_options(distortos-cFlags INTERFACE
 add_library(distortos::cFlags ALIAS distortos-cFlags)
 
 #-----------------------------------------------------------------------------------------------------------------------
+# distortos-allCFlags interface library
+#-----------------------------------------------------------------------------------------------------------------------
+
+add_library(distortos-allCFlags INTERFACE)
+target_compile_options(distortos-allCFlags INTERFACE
+		-Wall
+		-Wextra
+		-Wshadow)
+target_link_libraries(distortos-allCFlags INTERFACE
+		distortos::cFlags)
+
+#-----------------------------------------------------------------------------------------------------------------------
+# distortos::allCFlags alias library
+#-----------------------------------------------------------------------------------------------------------------------
+
+add_library(distortos::allCFlags ALIAS distortos-allCFlags)
+
+#-----------------------------------------------------------------------------------------------------------------------
 # distortos static library
 #-----------------------------------------------------------------------------------------------------------------------
 
