@@ -83,6 +83,8 @@ target_compile_options(distortos-cFlags INTERFACE
 		${CONFIG_DEBUGGING_INFORMATION_COMPILATION}
 		${CONFIG_BUILD_OPTIMIZATION}
 		${CONFIG_LINK_TIME_OPTIMIZATION_COMPILATION}
+		-ffunction-sections
+		-fdata-sections
 		${CONFIG_ASSERT})
 
 #-----------------------------------------------------------------------------------------------------------------------
