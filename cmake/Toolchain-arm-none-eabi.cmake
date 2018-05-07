@@ -14,6 +14,8 @@ set(CMAKE_SYSTEM_PROCESSOR arm)
 set(TARGET_TRIPLE "arm-none-eabi-")
 set(CMAKE_C_COMPILER ${TARGET_TRIPLE}gcc)
 set(CMAKE_CXX_COMPILER ${TARGET_TRIPLE}g++)
+SET(CMAKE_AR ${TARGET_TRIPLE}gcc-ar CACHE STRING "Name of archiving tool for static libraries.")
+SET(CMAKE_RANLIB ${TARGET_TRIPLE}gcc-ranlib CACHE STRING "Name of randomizing tool for static libraries.")
 set(CMAKE_SIZE ${TARGET_TRIPLE}size)
 
 set(CMAKE_TRY_COMPILE_TARGET_TYPE STATIC_LIBRARY)
