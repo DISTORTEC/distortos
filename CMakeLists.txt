@@ -224,21 +224,8 @@ add_custom_target(ldscript ALL DEPENDS ${PREPROCESSED_LDSCRIPT})
 #-----------------------------------------------------------------------------------------------------------------------
 
 add_library(distortos-distortos INTERFACE)
-target_compile_options(distortos-distortos INTERFACE
-		-Wall
-		-Wextra
-		-Wshadow
-		${CONFIG_ARCHITECTURE_FLAGS}
-		${CONFIG_DEBUGGING_INFORMATION_COMPILATION}
-		${CONFIG_BUILD_OPTIMIZATION}
-		${CONFIG_LINK_TIME_OPTIMIZATION_COMPILATION}
-		${CONFIG_STATIC_DESTRUCTORS_RUN_TIME_REGISTRATION}
-		-ffunction-sections
-		-fdata-sections
-		-fno-rtti
-		-fno-exceptions
-		${CONFIG_ASSERT})
 target_link_libraries(distortos-distortos INTERFACE
+		distortos::baseCxxFlags
 		distortos::includes
 		${CONFIG_ARCHITECTURE_FLAGS}
 		${CONFIG_DEBUGGING_INFORMATION_LINKING}
