@@ -282,7 +282,31 @@ doxygen(INPUT ${CMAKE_CURRENT_SOURCE_DIR}/documentation ${CMAKE_CURRENT_BINARY_D
 		${CMAKE_CURRENT_SOURCE_DIR}/include
 		INCLUDE_PATH ${CMAKE_CURRENT_BINARY_DIR}/include ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
-get_target_property(doxygenCompileOptions distortos COMPILE_OPTIONS)
+function(getTargetPropertyRecursive outputVariable target property)
+	get_target_property(type ${target} TYPE)
+	if(type STREQUAL INTERFACE_LIBRARY)
+		set(interfacePrefix INTERFACE_)
+	else()
+		unset(interfacePrefix)
+	endif()
+
+	get_target_property(linkLibraries ${target} "${interfacePrefix}LINK_LIBRARIES")
+	foreach(linkLibrary ${linkLibraries})
+		if(linkLibrary)
+			getTargetPropertyRecursive(${outputVariable} ${linkLibrary} ${property})
+		endif()
+	endforeach()
+
+	get_target_property(propertyValue ${target} "${interfacePrefix}${property}")
+	if(propertyValue)
+		list(APPEND ${outputVariable} ${propertyValue})
+		list(REMOVE_DUPLICATES ${outputVariable})
+	endif()
+
+	set(${outputVariable} ${${outputVariable}} PARENT_SCOPE)
+endfunction()
+
+getTargetPropertyRecursive(doxygenCompileOptions distortos COMPILE_OPTIONS)
 # for now C++11 standard with GNU extensions is hardcoded here...
 execute_process(COMMAND ${CMAKE_COMMAND} -E echo ""
 		COMMAND ${CMAKE_CXX_COMPILER} ${doxygenCompileOptions} -std=gnu++11 -E -P -dD -x c++ -
