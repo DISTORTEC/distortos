@@ -196,13 +196,8 @@ target_compile_options(distortos PRIVATE
 		-fno-rtti
 		-fno-exceptions
 		${CONFIG_ASSERT})
-target_include_directories(distortos PRIVATE
-		${CMAKE_CURRENT_BINARY_DIR}/include
-		include
-		${CONFIG_ARCHITECTURE_INCLUDES}
-		${CONFIG_CHIP_INCLUDES}
-		${CONFIG_BOARD_INCLUDES})
-add_dependencies(distortos distortosConfiguration-h)
+target_link_libraries(distortos PRIVATE
+		distortos::includes)
 
 include(source/distortos-sources.cmake)
 
