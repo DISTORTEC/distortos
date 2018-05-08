@@ -55,15 +55,14 @@ function(doxygen)
 endfunction()
 
 #
-# Converts ELF file named `elfFilename` to Intel HEX file named `hexFilename`.
+# Converts output file of `target` to Intel HEX file named `hexFilename`.
 #
 
-function(hex elfFilename hexFilename)
-	add_custom_command(OUTPUT ${hexFilename}
-			COMMAND ${CMAKE_OBJCOPY} -O ihex ${elfFilename} ${hexFilename}
-			DEPENDS ${elfFilename}
-			USES_TERMINAL)
-	add_custom_target(${elfFilename}-to-${hexFilename} ALL DEPENDS ${hexFilename})
+function(hex target hexFilename)
+	add_custom_command(TARGET ${target} POST_BUILD
+			COMMAND ${CMAKE_OBJCOPY} -O ihex $<TARGET_FILE:${target}> ${hexFilename}
+			BYPRODUCTS ${hexFilename}
+			VERBATIM)
 endfunction()
 
 #
