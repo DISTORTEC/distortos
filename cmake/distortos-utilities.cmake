@@ -19,15 +19,14 @@ function(bin target binFilename)
 endfunction()
 
 #
-# Dumps symbols from ELF file named `elfFilename` to file named `dmpFilename`.
+# Dumps symbols from output file of `target` to file named `dmpFilename`.
 #
 
-function(dmp elfFilename dmpFilename)
-	add_custom_command(OUTPUT ${dmpFilename}
-			COMMAND ${CMAKE_OBJDUMP} -x --syms --demangle ${elfFilename} > ${dmpFilename}
-			DEPENDS ${elfFilename}
-			USES_TERMINAL)
-	add_custom_target(${elfFilename}-to-${dmpFilename} ALL DEPENDS ${dmpFilename})
+function(dmp target dmpFilename)
+	add_custom_command(TARGET ${target} POST_BUILD
+			COMMAND ${CMAKE_OBJDUMP} -x --syms --demangle $<TARGET_FILE:${target}> > ${dmpFilename}
+			BYPRODUCTS ${dmpFilename}
+			VERBATIM)
 endfunction()
 
 #
