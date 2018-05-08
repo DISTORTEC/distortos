@@ -8,15 +8,14 @@
 #
 
 #
-# Converts ELF file named `elfFilename` to binary file named `binFilename`.
+# Converts output file of `target` to binary file named `binFilename`.
 #
 
-function(bin elfFilename binFilename)
-	add_custom_command(OUTPUT ${binFilename}
-			COMMAND ${CMAKE_OBJCOPY} -O binary ${elfFilename} ${binFilename}
-			DEPENDS ${elfFilename}
-			USES_TERMINAL)
-	add_custom_target(${elfFilename}-to-${binFilename} ALL DEPENDS ${binFilename})
+function(bin target binFilename)
+	add_custom_command(TARGET ${target} POST_BUILD
+			COMMAND ${CMAKE_OBJCOPY} -O binary $<TARGET_FILE:${target}> ${binFilename}
+			BYPRODUCTS ${binFilename}
+			VERBATIM)
 endfunction()
 
 #
