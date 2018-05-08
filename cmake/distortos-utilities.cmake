@@ -86,15 +86,14 @@ function(loadConfiguration filename)
 endfunction()
 
 #
-# Generates disassembly of ELF file named `elfFilename` to file named `lssFilename`.
+# Generates disassembly of output file of `target` to file named `lssFilename`.
 #
 
-function(lss elfFilename lssFilename)
-	add_custom_command(OUTPUT ${lssFilename}
-			COMMAND ${CMAKE_OBJDUMP} --demangle -S ${elfFilename} > ${lssFilename}
-			DEPENDS ${elfFilename}
-			USES_TERMINAL)
-	add_custom_target(${elfFilename}-to-${lssFilename} ALL DEPENDS ${lssFilename})
+function(lss target lssFilename)
+	add_custom_command(TARGET ${target} POST_BUILD
+			COMMAND ${CMAKE_OBJDUMP} --demangle -S $<TARGET_FILE:${target}> > ${lssFilename}
+			BYPRODUCTS ${lssFilename}
+			VERBATIM)
 endfunction()
 
 #
