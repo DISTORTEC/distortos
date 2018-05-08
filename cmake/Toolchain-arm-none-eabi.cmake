@@ -7,6 +7,11 @@
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #
 
+if(CMAKE_TOOLCHAIN_ARM_NONE_EABI_CMAKE_)
+	return()
+endif()
+set(CMAKE_TOOLCHAIN_ARM_NONE_EABI_CMAKE_ 1)
+
 set(CMAKE_SYSTEM_NAME Generic)
 set(CMAKE_SYSTEM_VERSION 1)
 set(CMAKE_SYSTEM_PROCESSOR arm)
