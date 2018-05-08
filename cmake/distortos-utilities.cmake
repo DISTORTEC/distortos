@@ -97,12 +97,12 @@ function(lss target lssFilename)
 endfunction()
 
 #
-# Prints size of ELF file named `elfFilename`.
+# Prints size of output file of `target`.
 #
 
-function(size elfFilename)
-	add_custom_target(${elfFilename}-size ALL
-			COMMAND ${CMAKE_SIZE} -B ${elfFilename}
-			DEPENDS ${elfFilename}
+function(size target)
+	add_custom_command(TARGET ${target} POST_BUILD
+			COMMAND ${CMAKE_SIZE} -B $<TARGET_FILE:${target}>
+			VERBATIM
 			USES_TERMINAL)
 endfunction()
