@@ -8,27 +8,25 @@
 #
 
 #
-# Converts ELF file named `elfFilename` to binary file named `binFilename`.
+# Converts output file of `target` to binary file named `binFilename`.
 #
 
-function(bin elfFilename binFilename)
-	add_custom_command(OUTPUT ${binFilename}
-			COMMAND ${CMAKE_OBJCOPY} -O binary ${elfFilename} ${binFilename}
-			DEPENDS ${elfFilename}
-			USES_TERMINAL)
-	add_custom_target(${elfFilename}-to-${binFilename} ALL DEPENDS ${binFilename})
+function(bin target binFilename)
+	add_custom_command(TARGET ${target} POST_BUILD
+			COMMAND ${CMAKE_OBJCOPY} -O binary $<TARGET_FILE:${target}> ${binFilename}
+			BYPRODUCTS ${binFilename}
+			VERBATIM)
 endfunction()
 
 #
-# Dumps symbols from ELF file named `elfFilename` to file named `dmpFilename`.
+# Dumps symbols from output file of `target` to file named `dmpFilename`.
 #
 
-function(dmp elfFilename dmpFilename)
-	add_custom_command(OUTPUT ${dmpFilename}
-			COMMAND ${CMAKE_OBJDUMP} -x --syms --demangle ${elfFilename} > ${dmpFilename}
-			DEPENDS ${elfFilename}
-			USES_TERMINAL)
-	add_custom_target(${elfFilename}-to-${dmpFilename} ALL DEPENDS ${dmpFilename})
+function(dmp target dmpFilename)
+	add_custom_command(TARGET ${target} POST_BUILD
+			COMMAND ${CMAKE_OBJDUMP} -x --syms --demangle $<TARGET_FILE:${target}> > ${dmpFilename}
+			BYPRODUCTS ${dmpFilename}
+			VERBATIM)
 endfunction()
 
 #
@@ -57,15 +55,14 @@ function(doxygen)
 endfunction()
 
 #
-# Converts ELF file named `elfFilename` to Intel HEX file named `hexFilename`.
+# Converts output file of `target` to Intel HEX file named `hexFilename`.
 #
 
-function(hex elfFilename hexFilename)
-	add_custom_command(OUTPUT ${hexFilename}
-			COMMAND ${CMAKE_OBJCOPY} -O ihex ${elfFilename} ${hexFilename}
-			DEPENDS ${elfFilename}
-			USES_TERMINAL)
-	add_custom_target(${elfFilename}-to-${hexFilename} ALL DEPENDS ${hexFilename})
+function(hex target hexFilename)
+	add_custom_command(TARGET ${target} POST_BUILD
+			COMMAND ${CMAKE_OBJCOPY} -O ihex $<TARGET_FILE:${target}> ${hexFilename}
+			BYPRODUCTS ${hexFilename}
+			VERBATIM)
 endfunction()
 
 #
@@ -89,24 +86,23 @@ function(loadConfiguration filename)
 endfunction()
 
 #
-# Generates disassembly of ELF file named `elfFilename` to file named `lssFilename`.
+# Generates disassembly of output file of `target` to file named `lssFilename`.
 #
 
-function(lss elfFilename lssFilename)
-	add_custom_command(OUTPUT ${lssFilename}
-			COMMAND ${CMAKE_OBJDUMP} --demangle -S ${elfFilename} > ${lssFilename}
-			DEPENDS ${elfFilename}
-			USES_TERMINAL)
-	add_custom_target(${elfFilename}-to-${lssFilename} ALL DEPENDS ${lssFilename})
+function(lss target lssFilename)
+	add_custom_command(TARGET ${target} POST_BUILD
+			COMMAND ${CMAKE_OBJDUMP} --demangle -S $<TARGET_FILE:${target}> > ${lssFilename}
+			BYPRODUCTS ${lssFilename}
+			VERBATIM)
 endfunction()
 
 #
-# Prints size of ELF file named `elfFilename`.
+# Prints size of output file of `target`.
 #
 
-function(size elfFilename)
-	add_custom_target(${elfFilename}-size ALL
-			COMMAND ${CMAKE_SIZE} -B ${elfFilename}
-			DEPENDS ${elfFilename}
+function(size target)
+	add_custom_command(TARGET ${target} POST_BUILD
+			COMMAND ${CMAKE_SIZE} -B $<TARGET_FILE:${target}>
+			VERBATIM
 			USES_TERMINAL)
 endfunction()

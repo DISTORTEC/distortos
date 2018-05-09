@@ -1,5 +1,5 @@
 #
-# file: distortosTest.elf-sources.cmake
+# file: distortosTest-sources.cmake
 #
 # author: Copyright (C) 2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
 #
@@ -9,7 +9,7 @@
 
 if(CONFIG_ARCHITECTURE_ARMV7_M)
 
-	target_sources(distortosTest.elf PRIVATE
+	target_sources(distortosTest PRIVATE
 			${CMAKE_CURRENT_LIST_DIR}/ARMv7-M-architectureTestCases.cpp
 			${CMAKE_CURRENT_LIST_DIR}/ARMv7-M-checkFpuRegisters.cpp
 			${CMAKE_CURRENT_LIST_DIR}/ARMv7-M-FpuSignalTestCase.cpp

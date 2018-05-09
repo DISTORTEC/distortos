@@ -1,5 +1,5 @@
 #
-# file: distortosTest.elf-sources.cmake
+# file: distortosTest-sources.cmake
 #
 # author: Copyright (C) 2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
 #
@@ -7,9 +7,7 @@
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #
 
-if(CONFIG_ARCHITECTURE_ARM)
-
-	include(${CMAKE_CURRENT_LIST_DIR}/ARMv6-M/distortosTest.elf-sources.cmake)
-	include(${CMAKE_CURRENT_LIST_DIR}/ARMv7-M/distortosTest.elf-sources.cmake)
-
-endif()
+target_sources(distortosTest PRIVATE
+		${CMAKE_CURRENT_LIST_DIR}/SemaphoreOperationsTestCase.cpp
+		${CMAKE_CURRENT_LIST_DIR}/SemaphorePriorityTestCase.cpp
+		${CMAKE_CURRENT_LIST_DIR}/semaphoreTestCases.cpp)

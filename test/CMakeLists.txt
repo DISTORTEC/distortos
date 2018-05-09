@@ -15,7 +15,7 @@ if(CONFIG_TEST_APPLICATION_ENABLE)
 # distortosTest application
 #-----------------------------------------------------------------------------------------------------------------------
 
-	add_executable(distortosTest.elf
+	add_executable(distortosTest
 			main.cpp
 			OperationCountingType.cpp
 			PrioritizedTestCase.cpp
@@ -27,30 +27,30 @@ if(CONFIG_TEST_APPLICATION_ENABLE)
 			testCases.cpp
 			waitForNextTick.cpp
 			wasteTime.cpp)
-	set_target_properties(distortosTest.elf PROPERTIES
+	set_target_properties(distortosTest PROPERTIES
 			CXX_STANDARD 11
 			CXX_STANDARD_REQUIRED ON)
-	target_include_directories(distortosTest.elf PRIVATE
+	target_include_directories(distortosTest PRIVATE
 			${CMAKE_CURRENT_SOURCE_DIR})
-	target_link_libraries(distortosTest.elf
+	target_link_libraries(distortosTest
 			distortos::distortos
 			distortos::allCxxFlags
 			-Xlinker -Map="${CMAKE_CURRENT_BINARY_DIR}/distortosTest.map")
 
-	include(architecture/distortosTest.elf-sources.cmake)
-	include(CallOnce/distortosTest.elf-sources.cmake)
-	include(ConditionVariable/distortosTest.elf-sources.cmake)
-	include(Mutex/distortosTest.elf-sources.cmake)
-	include(Queue/distortosTest.elf-sources.cmake)
-	include(Semaphore/distortosTest.elf-sources.cmake)
-	include(Signals/distortosTest.elf-sources.cmake)
-	include(SoftwareTimer/distortosTest.elf-sources.cmake)
-	include(Thread/distortosTest.elf-sources.cmake)
+	include(architecture/distortosTest-sources.cmake)
+	include(CallOnce/distortosTest-sources.cmake)
+	include(ConditionVariable/distortosTest-sources.cmake)
+	include(Mutex/distortosTest-sources.cmake)
+	include(Queue/distortosTest-sources.cmake)
+	include(Semaphore/distortosTest-sources.cmake)
+	include(Signals/distortosTest-sources.cmake)
+	include(SoftwareTimer/distortosTest-sources.cmake)
+	include(Thread/distortosTest-sources.cmake)
 
-	bin(distortosTest.elf distortosTest.bin)
-	dmp(distortosTest.elf distortosTest.dmp)
-	hex(distortosTest.elf distortosTest.hex)
-	lss(distortosTest.elf distortosTest.lss)
-	size(distortosTest.elf)
+	bin(distortosTest distortosTest.bin)
+	dmp(distortosTest distortosTest.dmp)
+	hex(distortosTest distortosTest.hex)
+	lss(distortosTest distortosTest.lss)
+	size(distortosTest)
 
 endif()
