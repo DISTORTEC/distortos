@@ -1,5 +1,5 @@
 #
-# file: distortosTest.elf-sources.cmake
+# file: distortosTest-sources.cmake
 #
 # author: Copyright (C) 2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
 #
@@ -7,7 +7,7 @@
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #
 
-target_sources(distortosTest.elf PRIVATE
+target_sources(distortosTest PRIVATE
 		${CMAKE_CURRENT_LIST_DIR}/FifoQueuePriorityTestCase.cpp
 		${CMAKE_CURRENT_LIST_DIR}/MessageQueuePriorityTestCase.cpp
 		${CMAKE_CURRENT_LIST_DIR}/QueueOperationsTestCase.cpp
