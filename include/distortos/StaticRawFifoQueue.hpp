@@ -1,8 +1,8 @@
 /**
  * \file
- * \brief StaticRawFifoQueue and StaticRawFifoQueue2 classes header
+ * \brief StaticRawFifoQueue class header
  *
- * \author Copyright (C) 2015-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2015-2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -20,12 +20,12 @@ namespace distortos
 {
 
 /**
- * \brief StaticRawFifoQueue2 class is a variant of RawFifoQueue that has automatic storage for queue's contents.
+ * \brief StaticRawFifoQueue class is a variant of RawFifoQueue that has automatic storage for queue's contents.
  *
- * This class is a replacement for StaticRawFifoQueue and StaticRawFifoQueueFromSize. To use this new API modify your
- * code in following way:
- * - `'StaticRawFifoQueue<T, QueueSize>'` -> `'StaticRawFifoQueue2<sizeof(T), QueueSize>'`;
- * - `'StaticRawFifoQueueFromSize<ElementSize, QueueSize>'` -> `'StaticRawFifoQueue2<ElementSize, QueueSize>'`;
+ * This class is a replacement for StaticRawFifoQueue with old API and removed StaticRawFifoQueueFromSize. To use this
+ * new API modify your code in following way:
+ * - old `"StaticRawFifoQueue<T, QueueSize>"` -> `"StaticRawFifoQueue<sizeof(T), QueueSize>"`;
+ * - removed `"StaticRawFifoQueueFromSize<ElementSize, QueueSize>"` -> `"StaticRawFifoQueue<ElementSize, QueueSize>"`;
  *
  * Transition schedule:
  * 1. v0.5.0 - `StaticRawFifoQueue<T, QueueSize>` and `StaticRawFifoQueueFromSize<ElementSize, QueueSize>` are converted
@@ -43,15 +43,15 @@ namespace distortos
  */
 
 template<size_t ElementSize, size_t QueueSize>
-class StaticRawFifoQueue2 : public RawFifoQueue
+class StaticRawFifoQueue : public RawFifoQueue
 {
 public:
 
 	/**
-	 * \brief StaticRawFifoQueue2's constructor
+	 * \brief StaticRawFifoQueue's constructor
 	 */
 
-	explicit StaticRawFifoQueue2() :
+	explicit StaticRawFifoQueue() :
 			RawFifoQueue{{storage_.data(), internal::dummyDeleter<uint8_t>}, ElementSize, QueueSize}
 	{
 
@@ -64,33 +64,19 @@ private:
 };
 
 /**
- * \brief StaticRawFifoQueue class is a variant of RawFifoQueue that has automatic storage for queue's contents.
+ * \brief StaticRawFifoQueue2 class is a variant of RawFifoQueue that has automatic storage for queue's contents.
  *
- * \deprecated scheduled to be removed after v0.5.0, use `StaticRawFifoQueue2<sizeof(T), QueueSize>`
+ * \deprecated scheduled to be removed after v0.6.0, use `StaticRawFifoQueue<ElementSize, QueueSize>`
  *
- * \tparam T is the type of data in queue
+ * \tparam ElementSize is the size of single queue element, bytes
  * \tparam QueueSize is the maximum number of elements in queue
  *
  * \ingroup queues
  */
 
-template<typename T, size_t QueueSize>
-using StaticRawFifoQueue __attribute__ ((deprecated("Use StaticRawFifoQueue2<sizeof(T), QueueSize>"))) =
-		StaticRawFifoQueue2<sizeof(T), QueueSize>;
-
-/**
- * \brief StaticRawFifoQueueFromSize type alias is a variant of StaticRawFifoQueue which uses size of element (instead
- * of type) as template argument.
- *
- * \deprecated scheduled to be removed after v0.5.0, use `StaticRawFifoQueue2<ElementSize, QueueSize>`
- *
- * \tparam ElementSize is the size of single queue element, bytes
- * \tparam QueueSize is the maximum number of elements in queue
- */
-
 template<size_t ElementSize, size_t QueueSize>
-using StaticRawFifoQueueFromSize __attribute__ ((deprecated("Use StaticRawFifoQueue2<ElementSize, QueueSize>"))) =
-		StaticRawFifoQueue2<ElementSize, QueueSize>;
+using StaticRawFifoQueue2 __attribute__ ((deprecated("Use StaticRawFifoQueue<ElementSize, QueueSize>"))) =
+		StaticRawFifoQueue<ElementSize, QueueSize>;
 
 }	// namespace distortos
 

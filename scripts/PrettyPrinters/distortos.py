@@ -1,7 +1,7 @@
 #
 # file: distortos.py
 #
-# author: Copyright (C) 2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+# author: Copyright (C) 2017-2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
 #
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -356,8 +356,8 @@ def registerPrettyPrinters(obj):
 	prettyPrinters.add_printer('distortos::StaticFifoQueue', '^distortos::StaticFifoQueue<.*>$', StaticFifoQueue)
 	prettyPrinters.add_printer('distortos::StaticMessageQueue', '^distortos::StaticMessageQueue<.*>$',
 			StaticMessageQueue)
-	prettyPrinters.add_printer('distortos::StaticRawFifoQueue2', '^distortos::StaticRawFifoQueue2<.*>$',
+	prettyPrinters.add_printer('distortos::StaticRawFifoQueue', '^distortos::StaticRawFifoQueue<.*>$',
 			StaticRawFifoQueue)
-	prettyPrinters.add_printer('distortos::StaticRawMessageQueue2', '^distortos::StaticRawMessageQueue2<.*>$',
+	prettyPrinters.add_printer('distortos::StaticRawMessageQueue', '^distortos::StaticRawMessageQueue<.*>$',
 			StaticRawMessageQueue)
 	gdb.printing.register_pretty_printer(obj, prettyPrinters)

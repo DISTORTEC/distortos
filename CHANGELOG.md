@@ -73,6 +73,8 @@ then be used by CMake. Basic documentation of bindings for chip and board `*.yam
 changed to `buttonsB1Index` and `ledsLd3Index`. Similar change was done for counts of available board buttons and LEDs -
 they were changed from `total<Name>` to `<group>Count`. For example `totalButtons` and `totalLeds` were changed to
 `buttonsCount` and `ledsCount`.
+- Renamed `StaticRawFifoQueue2` to `StaticRawFifoQueue` and `StaticRawMessageQueue2` to `StaticRawMessageQueue`. Aliases
+for old names were added and marked as deprecated and are scheduled to be removed after v0.6.0
 - Update *CMSIS* to version 5.3.0.
 
 ### Fixed
@@ -102,6 +104,9 @@ preinitializers should use `BIND_LOW_LEVEL_PREINITIALIZER()` macro.
 `BIND_LOW_LEVEL_INITIALIZER(60, ...);`.
 - Removed `pydts.py`, as new version of board generator uses `*.yaml` files as input.
 - Removed *tup* build infrastructure - *tup* is no longer supported for building *distortos*.
+- Removed deprecated functions and aliases: `StaticRawFifoQueueFromSize`, old `StaticRawFifoQueue`,
+`StaticRawMessageQueueFromSize`, old `StaticRawMessageQueue`, old variant of STM32's GPIOv2
+`configureAlternateFunctionPin()`.
 
 [0.5.0](https://github.com/DISTORTEC/distortos/compare/v0.4.0...v0.5.0) - 2017-09-14
 ------------------------------------------------------------------------------------

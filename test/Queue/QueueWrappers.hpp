@@ -2,7 +2,7 @@
  * \file
  * \brief QueueWrapper, [Non]RawQueueWrapper and [Dynamic|Static][Raw]{Fifo,Message}QueueWrapper classes header
  *
- * \author Copyright (C) 2015-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2015-2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -873,8 +873,8 @@ class StaticRawFifoQueueWrapper : public RawFifoQueueWrapper
 {
 public:
 
-	/// StaticRawFifoQueue2 with \a OperationCountingType::Value and storage for \a QueueSize elements
-	using TestStaticRawFifoQueue = StaticRawFifoQueue2<sizeof(OperationCountingType::Value), QueueSize>;
+	/// StaticRawFifoQueue with \a OperationCountingType::Value and storage for \a QueueSize elements
+	using TestStaticRawFifoQueue = StaticRawFifoQueue<sizeof(OperationCountingType::Value), QueueSize>;
 
 	/**
 	 * \brief StaticFifoQueueWrapper's constructor
@@ -1012,8 +1012,8 @@ class StaticRawMessageQueueWrapper : public RawMessageQueueWrapper
 {
 public:
 
-	/// StaticRawMessageQueue2 with \a OperationCountingType::Value and storage for \a QueueSize elements
-	using TestStaticRawMessageQueue = StaticRawMessageQueue2<sizeof(OperationCountingType::Value), QueueSize>;
+	/// StaticRawMessageQueue with \a OperationCountingType::Value and storage for \a QueueSize elements
+	using TestStaticRawMessageQueue = StaticRawMessageQueue<sizeof(OperationCountingType::Value), QueueSize>;
 
 	/**
 	 * \brief StaticMessageQueueWrapper's constructor
