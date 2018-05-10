@@ -1,6 +1,6 @@
 /**
  * \file
- * \brief StaticRawMessageQueue and StaticRawMessageQueue2 classes header
+ * \brief StaticRawMessageQueue class header
  *
  * \author Copyright (C) 2015-2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
@@ -20,12 +20,13 @@ namespace distortos
 {
 
 /**
- * \brief StaticRawMessageQueue2 class is a variant of RawMessageQueue that has automatic storage for queue's contents.
+ * \brief StaticRawMessageQueue class is a variant of RawMessageQueue that has automatic storage for queue's contents.
  *
- * This class is a replacement for StaticRawMessageQueue and StaticRawMessageQueueFromSize. To use this new API modify
- * your code in following way:
- * - `'StaticRawMessageQueue<T, QueueSize>'` -> `'StaticRawMessageQueue2<sizeof(T), QueueSize>'`;
- * - `'StaticRawMessageQueueFromSize<ElementSize, QueueSize>'` -> `'StaticRawMessageQueue2<ElementSize, QueueSize>'`;
+ * This class is a replacement for StaticRawMessageQueue with old API and removed StaticRawMessageQueueFromSize. To use
+ * this new API modify your code in following way:
+ * - old `"StaticRawMessageQueue<T, QueueSize>"` -> `"StaticRawMessageQueue<sizeof(T), QueueSize>"`;
+ * - removed `"StaticRawMessageQueueFromSize<ElementSize, QueueSize>"` ->
+ * `"StaticRawMessageQueue<ElementSize, QueueSize>"`;
  *
  * Transition schedule:
  * 1. v0.5.0 - `StaticRawMessageQueue<T, QueueSize>` and `StaticRawMessageQueueFromSize<ElementSize, QueueSize>` are
@@ -43,15 +44,15 @@ namespace distortos
  */
 
 template<size_t ElementSize, size_t QueueSize>
-class StaticRawMessageQueue2 : public RawMessageQueue
+class StaticRawMessageQueue : public RawMessageQueue
 {
 public:
 
 	/**
-	 * \brief StaticRawMessageQueue2's constructor
+	 * \brief StaticRawMessageQueue's constructor
 	 */
 
-	explicit StaticRawMessageQueue2() :
+	explicit StaticRawMessageQueue() :
 			RawMessageQueue{{entryStorage_.data(), internal::dummyDeleter<EntryStorage>},
 					{valueStorage_.data(), internal::dummyDeleter<uint8_t>}, ElementSize, QueueSize}
 	{
@@ -66,6 +67,18 @@ private:
 	/// storage for queue's contents
 	std::array<uint8_t, ElementSize * QueueSize> valueStorage_;
 };
+
+/**
+ * \brief StaticRawMessageQueue2 class is a variant of RawMessageQueue that has automatic storage for queue's contents.
+ *
+ * \tparam ElementSize is the size of single queue element, bytes
+ * \tparam QueueSize is the maximum number of elements in queue
+ *
+ * \ingroup queues
+ */
+
+template<size_t ElementSize, size_t QueueSize>
+using StaticRawMessageQueue2 = StaticRawMessageQueue<ElementSize, QueueSize>;
 
 }	// namespace distortos
 
