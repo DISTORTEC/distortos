@@ -67,21 +67,6 @@ private:
 	std::array<uint8_t, ElementSize * QueueSize> valueStorage_;
 };
 
-/**
- * \brief StaticRawMessageQueue class is a variant of RawMessageQueue that has automatic storage for queue's contents.
- *
- * \deprecated scheduled to be removed after v0.5.0, use `StaticRawMessageQueue2<sizeof(T), QueueSize>`
- *
- * \tparam T is the type of data in queue
- * \tparam QueueSize is the maximum number of elements in queue
- *
- * \ingroup queues
- */
-
-template<typename T, size_t QueueSize>
-using StaticRawMessageQueue __attribute__ ((deprecated("Use StaticRawMessageQueue2<sizeof(T), QueueSize>"))) =
-		StaticRawMessageQueue2<sizeof(T), QueueSize>;
-
 }	// namespace distortos
 
 #endif	// INCLUDE_DISTORTOS_STATICRAWMESSAGEQUEUE_HPP_
