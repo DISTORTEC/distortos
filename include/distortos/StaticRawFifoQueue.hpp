@@ -66,6 +66,8 @@ private:
 /**
  * \brief StaticRawFifoQueue2 class is a variant of RawFifoQueue that has automatic storage for queue's contents.
  *
+ * \deprecated scheduled to be removed after v0.6.0, use `StaticRawFifoQueue<ElementSize, QueueSize>`
+ *
  * \tparam ElementSize is the size of single queue element, bytes
  * \tparam QueueSize is the maximum number of elements in queue
  *
@@ -73,7 +75,8 @@ private:
  */
 
 template<size_t ElementSize, size_t QueueSize>
-using StaticRawFifoQueue2 = StaticRawFifoQueue<ElementSize, QueueSize>;
+using StaticRawFifoQueue2 __attribute__ ((deprecated("Use StaticRawFifoQueue<ElementSize, QueueSize>"))) =
+		StaticRawFifoQueue<ElementSize, QueueSize>;
 
 }	// namespace distortos
 
