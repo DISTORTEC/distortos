@@ -1,6 +1,6 @@
 /**
  * \file
- * \brief StaticRawFifoQueue and StaticRawFifoQueue2 classes header
+ * \brief StaticRawFifoQueue class header
  *
  * \author Copyright (C) 2015-2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
@@ -20,12 +20,12 @@ namespace distortos
 {
 
 /**
- * \brief StaticRawFifoQueue2 class is a variant of RawFifoQueue that has automatic storage for queue's contents.
+ * \brief StaticRawFifoQueue class is a variant of RawFifoQueue that has automatic storage for queue's contents.
  *
- * This class is a replacement for StaticRawFifoQueue and StaticRawFifoQueueFromSize. To use this new API modify your
- * code in following way:
- * - `'StaticRawFifoQueue<T, QueueSize>'` -> `'StaticRawFifoQueue2<sizeof(T), QueueSize>'`;
- * - `'StaticRawFifoQueueFromSize<ElementSize, QueueSize>'` -> `'StaticRawFifoQueue2<ElementSize, QueueSize>'`;
+ * This class is a replacement for StaticRawFifoQueue with old API and removed StaticRawFifoQueueFromSize. To use this
+ * new API modify your code in following way:
+ * - old `"StaticRawFifoQueue<T, QueueSize>"` -> `"StaticRawFifoQueue<sizeof(T), QueueSize>"`;
+ * - removed `"StaticRawFifoQueueFromSize<ElementSize, QueueSize>"` -> `"StaticRawFifoQueue<ElementSize, QueueSize>"`;
  *
  * Transition schedule:
  * 1. v0.5.0 - `StaticRawFifoQueue<T, QueueSize>` and `StaticRawFifoQueueFromSize<ElementSize, QueueSize>` are converted
@@ -43,15 +43,15 @@ namespace distortos
  */
 
 template<size_t ElementSize, size_t QueueSize>
-class StaticRawFifoQueue2 : public RawFifoQueue
+class StaticRawFifoQueue : public RawFifoQueue
 {
 public:
 
 	/**
-	 * \brief StaticRawFifoQueue2's constructor
+	 * \brief StaticRawFifoQueue's constructor
 	 */
 
-	explicit StaticRawFifoQueue2() :
+	explicit StaticRawFifoQueue() :
 			RawFifoQueue{{storage_.data(), internal::dummyDeleter<uint8_t>}, ElementSize, QueueSize}
 	{
 
@@ -62,6 +62,18 @@ private:
 	/// storage for queue's contents
 	std::array<uint8_t, ElementSize * QueueSize> storage_;
 };
+
+/**
+ * \brief StaticRawFifoQueue2 class is a variant of RawFifoQueue that has automatic storage for queue's contents.
+ *
+ * \tparam ElementSize is the size of single queue element, bytes
+ * \tparam QueueSize is the maximum number of elements in queue
+ *
+ * \ingroup queues
+ */
+
+template<size_t ElementSize, size_t QueueSize>
+using StaticRawFifoQueue2 = StaticRawFifoQueue<ElementSize, QueueSize>;
 
 }	// namespace distortos
 
