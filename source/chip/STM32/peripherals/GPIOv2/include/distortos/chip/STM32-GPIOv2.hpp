@@ -2,7 +2,7 @@
  * \file
  * \brief Header for GPIOv2 functions for STM32
  *
- * \author Copyright (C) 2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2016-2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -590,27 +590,6 @@ void configurePin(Pin pin, PinMode mode, bool openDrain, PinOutputSpeed outputSp
 
 inline void configureAlternateFunctionPin(const Pin pin, const PinAlternateFunction alternateFunction,
 		const bool openDrain = {}, const PinOutputSpeed outputSpeed = {}, const PinPull pull = {})
-{
-	configurePin(pin, PinMode::alternateFunction, openDrain, outputSpeed, pull, alternateFunction, {});
-}
-
-/**
- * \brief Configures pin for "alternate function" mode.
- *
- * \deprecated scheduled to be removed after v0.5.0, use
- * configureAlternateFunctionPin(Pin, PinAlternateFunction, bool, PinOutputSpeed, PinPull)
- *
- * \param [in] pin is the identifier of pin
- * \param [in] openDrain is the desired output type of pin: push-pull (false) or open-drain (true)
- * \param [in] outputSpeed is the desired output speed of pin
- * \param [in] pull is the desired pull-up/pull-down configuration of pin
- * \param [in] alternateFunction is the desired alternate function of pin
- */
-
-__attribute__ ((deprecated("Use configureAlternateFunctionPin(Pin, PinAlternateFunction, bool, PinOutputSpeed, "
-		"PinPull)")))
-inline void configureAlternateFunctionPin(const Pin pin, const bool openDrain, const PinOutputSpeed outputSpeed,
-		const PinPull pull, const PinAlternateFunction alternateFunction)
 {
 	configurePin(pin, PinMode::alternateFunction, openDrain, outputSpeed, pull, alternateFunction, {});
 }
