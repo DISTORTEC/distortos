@@ -2,7 +2,7 @@
  * \file
  * \brief StaticRawFifoQueue and StaticRawFifoQueue2 classes header
  *
- * \author Copyright (C) 2015-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2015-2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -77,20 +77,6 @@ private:
 template<typename T, size_t QueueSize>
 using StaticRawFifoQueue __attribute__ ((deprecated("Use StaticRawFifoQueue2<sizeof(T), QueueSize>"))) =
 		StaticRawFifoQueue2<sizeof(T), QueueSize>;
-
-/**
- * \brief StaticRawFifoQueueFromSize type alias is a variant of StaticRawFifoQueue which uses size of element (instead
- * of type) as template argument.
- *
- * \deprecated scheduled to be removed after v0.5.0, use `StaticRawFifoQueue2<ElementSize, QueueSize>`
- *
- * \tparam ElementSize is the size of single queue element, bytes
- * \tparam QueueSize is the maximum number of elements in queue
- */
-
-template<size_t ElementSize, size_t QueueSize>
-using StaticRawFifoQueueFromSize __attribute__ ((deprecated("Use StaticRawFifoQueue2<ElementSize, QueueSize>"))) =
-		StaticRawFifoQueue2<ElementSize, QueueSize>;
 
 }	// namespace distortos
 
