@@ -71,6 +71,8 @@ private:
 /**
  * \brief StaticRawMessageQueue2 class is a variant of RawMessageQueue that has automatic storage for queue's contents.
  *
+ * \deprecated scheduled to be removed after v0.6.0, use `StaticRawMessageQueue<ElementSize, QueueSize>`
+ *
  * \tparam ElementSize is the size of single queue element, bytes
  * \tparam QueueSize is the maximum number of elements in queue
  *
@@ -78,7 +80,8 @@ private:
  */
 
 template<size_t ElementSize, size_t QueueSize>
-using StaticRawMessageQueue2 = StaticRawMessageQueue<ElementSize, QueueSize>;
+using StaticRawMessageQueue2 __attribute__ ((deprecated("Use StaticRawMessageQueue<ElementSize, QueueSize>"))) =
+		StaticRawMessageQueue<ElementSize, QueueSize>;
 
 }	// namespace distortos
 
