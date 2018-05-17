@@ -52,6 +52,15 @@ function(distortosLss target lssFilename)
 endfunction()
 
 #
+# Requests generation of linker map file named `mapFilename` during linking of `target`.
+#
+
+function(distortosMap target mapFilename)
+	target_link_libraries(${target} PRIVATE
+			-Xlinker -Map="${CMAKE_CURRENT_BINARY_DIR}/${mapFilename}")
+endfunction()
+
+#
 # Prints size of output file of `target`.
 #
 
