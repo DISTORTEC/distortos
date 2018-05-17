@@ -19,6 +19,31 @@ include(distortos-utilities)
 #-----------------------------------------------------------------------------------------------------------------------
 
 #
+# Adds given folders to doxygen `INPUT`, `INCLUDE_PATH` and/or `EXCLUDE`.
+#
+# `doxygen([INPUT inputFolder ...] [INCLUDE_PATH includePathFolder ...] [EXCLUDE excludeFolder ...])`
+#
+
+function(doxygen)
+	cmake_parse_arguments(PARSE_ARGV 0 DOXYGEN "" "" "EXCLUDE;INCLUDE_PATH;INPUT")
+	if(DOXYGEN_EXCLUDE)
+		set(envDoxygenExclude "$ENV{doxygenExclude}")
+		list(APPEND envDoxygenExclude ${DOXYGEN_EXCLUDE})
+		set(ENV{doxygenExclude} "${envDoxygenExclude}")
+	endif()
+	if(DOXYGEN_INCLUDE_PATH)
+		set(envDoxygenIncludePath "$ENV{doxygenIncludePath}")
+		list(APPEND envDoxygenIncludePath ${DOXYGEN_INCLUDE_PATH})
+		set(ENV{doxygenIncludePath} "${envDoxygenIncludePath}")
+	endif()
+	if(DOXYGEN_INPUT)
+		set(envDoxygenInput "$ENV{doxygenInput}")
+		list(APPEND envDoxygenInput ${DOXYGEN_INPUT})
+		set(ENV{doxygenInput} "${envDoxygenInput}")
+	endif()
+endfunction()
+
+#
 # Recursively gets `property` from the `target` and all of its (interface) link libraries, saving the result to
 # `outputVariable`.
 #
