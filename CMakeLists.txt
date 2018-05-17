@@ -15,6 +15,39 @@ project(distortos)
 include(distortos-utilities)
 
 #-----------------------------------------------------------------------------------------------------------------------
+# local functions
+#-----------------------------------------------------------------------------------------------------------------------
+
+#
+# Recursively gets `property` from the `target` and all of its (interface) link libraries, saving the result to
+# `outputVariable`.
+#
+
+function(getTargetPropertyRecursive outputVariable target property)
+	get_target_property(type ${target} TYPE)
+	if(type STREQUAL INTERFACE_LIBRARY)
+		set(interfacePrefix INTERFACE_)
+	else()
+		unset(interfacePrefix)
+	endif()
+
+	get_target_property(linkLibraries ${target} "${interfacePrefix}LINK_LIBRARIES")
+	foreach(linkLibrary ${linkLibraries})
+		if(linkLibrary)
+			getTargetPropertyRecursive(${outputVariable} ${linkLibrary} ${property})
+		endif()
+	endforeach()
+
+	get_target_property(propertyValue ${target} "${interfacePrefix}${property}")
+	if(propertyValue)
+		list(APPEND ${outputVariable} ${propertyValue})
+		list(REMOVE_DUPLICATES ${outputVariable})
+	endif()
+
+	set(${outputVariable} ${${outputVariable}} PARENT_SCOPE)
+endfunction()
+
+#-----------------------------------------------------------------------------------------------------------------------
 # load variables from selectedConfiguration.mk
 #-----------------------------------------------------------------------------------------------------------------------
 
@@ -249,30 +282,6 @@ add_library(distortos::distortos ALIAS distortos-distortos)
 doxygen(INPUT ${CMAKE_CURRENT_SOURCE_DIR}/documentation ${CMAKE_CURRENT_BINARY_DIR}/include
 		${CMAKE_CURRENT_SOURCE_DIR}/include
 		INCLUDE_PATH ${CMAKE_CURRENT_BINARY_DIR}/include ${CMAKE_CURRENT_SOURCE_DIR}/include)
-
-function(getTargetPropertyRecursive outputVariable target property)
-	get_target_property(type ${target} TYPE)
-	if(type STREQUAL INTERFACE_LIBRARY)
-		set(interfacePrefix INTERFACE_)
-	else()
-		unset(interfacePrefix)
-	endif()
-
-	get_target_property(linkLibraries ${target} "${interfacePrefix}LINK_LIBRARIES")
-	foreach(linkLibrary ${linkLibraries})
-		if(linkLibrary)
-			getTargetPropertyRecursive(${outputVariable} ${linkLibrary} ${property})
-		endif()
-	endforeach()
-
-	get_target_property(propertyValue ${target} "${interfacePrefix}${property}")
-	if(propertyValue)
-		list(APPEND ${outputVariable} ${propertyValue})
-		list(REMOVE_DUPLICATES ${outputVariable})
-	endif()
-
-	set(${outputVariable} ${${outputVariable}} PARENT_SCOPE)
-endfunction()
 
 getTargetPropertyRecursive(doxygenCompileOptions distortos COMPILE_OPTIONS)
 # for now C++11 standard with GNU extensions is hardcoded here...
