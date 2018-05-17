@@ -32,7 +32,7 @@ if(CONFIG_TEST_APPLICATION_ENABLE)
 			CXX_STANDARD_REQUIRED ON)
 	target_include_directories(distortosTest PRIVATE
 			${CMAKE_CURRENT_SOURCE_DIR})
-	target_link_libraries(distortosTest
+	target_link_libraries(distortosTest PRIVATE
 			distortos::distortos
 			distortos::allCxxFlags
 			-Xlinker -Map="${CMAKE_CURRENT_BINARY_DIR}/distortosTest.map")
