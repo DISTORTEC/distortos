@@ -32,10 +32,9 @@ if(CONFIG_TEST_APPLICATION_ENABLE)
 			CXX_STANDARD_REQUIRED ON)
 	target_include_directories(distortosTest PRIVATE
 			${CMAKE_CURRENT_SOURCE_DIR})
-	target_link_libraries(distortosTest
+	target_link_libraries(distortosTest PRIVATE
 			distortos::distortos
-			distortos::allCxxFlags
-			-Xlinker -Map="${CMAKE_CURRENT_BINARY_DIR}/distortosTest.map")
+			distortos::allCxxFlags)
 
 	include(architecture/distortosTest-sources.cmake)
 	include(CallOnce/distortosTest-sources.cmake)
@@ -47,10 +46,11 @@ if(CONFIG_TEST_APPLICATION_ENABLE)
 	include(SoftwareTimer/distortosTest-sources.cmake)
 	include(Thread/distortosTest-sources.cmake)
 
-	bin(distortosTest distortosTest.bin)
-	dmp(distortosTest distortosTest.dmp)
-	hex(distortosTest distortosTest.hex)
-	lss(distortosTest distortosTest.lss)
-	size(distortosTest)
+	distortosBin(distortosTest distortosTest.bin)
+	distortosDmp(distortosTest distortosTest.dmp)
+	distortosHex(distortosTest distortosTest.hex)
+	distortosLss(distortosTest distortosTest.lss)
+	distortosMap(distortosTest distortosTest.map)
+	distortosSize(distortosTest)
 
 endif()

@@ -15,6 +15,84 @@ project(distortos)
 include(distortos-utilities)
 
 #-----------------------------------------------------------------------------------------------------------------------
+# local functions
+#-----------------------------------------------------------------------------------------------------------------------
+
+#
+# Adds given folders to doxygen `INPUT`, `INCLUDE_PATH` and/or `EXCLUDE`.
+#
+# `doxygen([INPUT inputFolder ...] [INCLUDE_PATH includePathFolder ...] [EXCLUDE excludeFolder ...])`
+#
+
+function(doxygen)
+	cmake_parse_arguments(PARSE_ARGV 0 DOXYGEN "" "" "EXCLUDE;INCLUDE_PATH;INPUT")
+	if(DOXYGEN_EXCLUDE)
+		set(envDoxygenExclude "$ENV{doxygenExclude}")
+		list(APPEND envDoxygenExclude ${DOXYGEN_EXCLUDE})
+		set(ENV{doxygenExclude} "${envDoxygenExclude}")
+	endif()
+	if(DOXYGEN_INCLUDE_PATH)
+		set(envDoxygenIncludePath "$ENV{doxygenIncludePath}")
+		list(APPEND envDoxygenIncludePath ${DOXYGEN_INCLUDE_PATH})
+		set(ENV{doxygenIncludePath} "${envDoxygenIncludePath}")
+	endif()
+	if(DOXYGEN_INPUT)
+		set(envDoxygenInput "$ENV{doxygenInput}")
+		list(APPEND envDoxygenInput ${DOXYGEN_INPUT})
+		set(ENV{doxygenInput} "${envDoxygenInput}")
+	endif()
+endfunction()
+
+#
+# Recursively gets `property` from the `target` and all of its (interface) link libraries, saving the result to
+# `outputVariable`.
+#
+
+function(getTargetPropertyRecursive outputVariable target property)
+	get_target_property(type ${target} TYPE)
+	if(type STREQUAL INTERFACE_LIBRARY)
+		set(interfacePrefix INTERFACE_)
+	else()
+		unset(interfacePrefix)
+	endif()
+
+	get_target_property(linkLibraries ${target} "${interfacePrefix}LINK_LIBRARIES")
+	foreach(linkLibrary ${linkLibraries})
+		if(linkLibrary)
+			getTargetPropertyRecursive(${outputVariable} ${linkLibrary} ${property})
+		endif()
+	endforeach()
+
+	get_target_property(propertyValue ${target} "${interfacePrefix}${property}")
+	if(propertyValue)
+		list(APPEND ${outputVariable} ${propertyValue})
+		list(REMOVE_DUPLICATES ${outputVariable})
+	endif()
+
+	set(${outputVariable} ${${outputVariable}} PARENT_SCOPE)
+endfunction()
+
+#
+# Loads configuration variables from kconfig file named `filename`.
+#
+
+function(loadConfiguration filename)
+	file(STRINGS ${filename} lines)
+	foreach(line ${lines})
+		if("${line}" MATCHES "^([^=]+)=(.*)$")
+			set(key ${CMAKE_MATCH_1})
+			set(value ${CMAKE_MATCH_2})
+			if(${value} STREQUAL y)	# bool? convert to ON
+				set(value ON)
+			elseif(${value} MATCHES "^\"(.*)\"$")	# string? remove quotes and convert to a ;-list
+				separate_arguments(value UNIX_COMMAND ${CMAKE_MATCH_1})
+			endif()
+			set(${key} ${value} PARENT_SCOPE)
+		endif()
+	endforeach()
+endfunction()
+
+#-----------------------------------------------------------------------------------------------------------------------
 # load variables from selectedConfiguration.mk
 #-----------------------------------------------------------------------------------------------------------------------
 
@@ -249,30 +327,6 @@ add_library(distortos::distortos ALIAS distortos-distortos)
 doxygen(INPUT ${CMAKE_CURRENT_SOURCE_DIR}/documentation ${CMAKE_CURRENT_BINARY_DIR}/include
 		${CMAKE_CURRENT_SOURCE_DIR}/include
 		INCLUDE_PATH ${CMAKE_CURRENT_BINARY_DIR}/include ${CMAKE_CURRENT_SOURCE_DIR}/include)
-
-function(getTargetPropertyRecursive outputVariable target property)
-	get_target_property(type ${target} TYPE)
-	if(type STREQUAL INTERFACE_LIBRARY)
-		set(interfacePrefix INTERFACE_)
-	else()
-		unset(interfacePrefix)
-	endif()
-
-	get_target_property(linkLibraries ${target} "${interfacePrefix}LINK_LIBRARIES")
-	foreach(linkLibrary ${linkLibraries})
-		if(linkLibrary)
-			getTargetPropertyRecursive(${outputVariable} ${linkLibrary} ${property})
-		endif()
-	endforeach()
-
-	get_target_property(propertyValue ${target} "${interfacePrefix}${property}")
-	if(propertyValue)
-		list(APPEND ${outputVariable} ${propertyValue})
-		list(REMOVE_DUPLICATES ${outputVariable})
-	endif()
-
-	set(${outputVariable} ${${outputVariable}} PARENT_SCOPE)
-endfunction()
 
 getTargetPropertyRecursive(doxygenCompileOptions distortos COMPILE_OPTIONS)
 # for now C++11 standard with GNU extensions is hardcoded here...
