@@ -72,6 +72,26 @@ function(getTargetPropertyRecursive outputVariable target property)
 	set(${outputVariable} ${${outputVariable}} PARENT_SCOPE)
 endfunction()
 
+#
+# Loads configuration variables from kconfig file named `filename`.
+#
+
+function(loadConfiguration filename)
+	file(STRINGS ${filename} lines)
+	foreach(line ${lines})
+		if("${line}" MATCHES "^([^=]+)=(.*)$")
+			set(key ${CMAKE_MATCH_1})
+			set(value ${CMAKE_MATCH_2})
+			if(${value} STREQUAL y)	# bool? convert to ON
+				set(value ON)
+			elseif(${value} MATCHES "^\"(.*)\"$")	# string? remove quotes and convert to a ;-list
+				separate_arguments(value UNIX_COMMAND ${CMAKE_MATCH_1})
+			endif()
+			set(${key} ${value} PARENT_SCOPE)
+		endif()
+	endforeach()
+endfunction()
+
 #-----------------------------------------------------------------------------------------------------------------------
 # load variables from selectedConfiguration.mk
 #-----------------------------------------------------------------------------------------------------------------------
