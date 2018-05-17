@@ -11,7 +11,7 @@
 # Converts output file of `target` to binary file named `binFilename`.
 #
 
-function(bin target binFilename)
+function(distortosBin target binFilename)
 	add_custom_command(TARGET ${target} POST_BUILD
 			COMMAND ${CMAKE_OBJCOPY} -O binary $<TARGET_FILE:${target}> ${binFilename}
 			BYPRODUCTS ${binFilename}
@@ -22,7 +22,7 @@ endfunction()
 # Dumps symbols from output file of `target` to file named `dmpFilename`.
 #
 
-function(dmp target dmpFilename)
+function(distortosDmp target dmpFilename)
 	add_custom_command(TARGET ${target} POST_BUILD
 			COMMAND ${CMAKE_OBJDUMP} -x --syms --demangle $<TARGET_FILE:${target}> > ${dmpFilename}
 			BYPRODUCTS ${dmpFilename}
@@ -33,7 +33,7 @@ endfunction()
 # Converts output file of `target` to Intel HEX file named `hexFilename`.
 #
 
-function(hex target hexFilename)
+function(distortosHex target hexFilename)
 	add_custom_command(TARGET ${target} POST_BUILD
 			COMMAND ${CMAKE_OBJCOPY} -O ihex $<TARGET_FILE:${target}> ${hexFilename}
 			BYPRODUCTS ${hexFilename}
@@ -44,7 +44,7 @@ endfunction()
 # Generates disassembly of output file of `target` to file named `lssFilename`.
 #
 
-function(lss target lssFilename)
+function(distortosLss target lssFilename)
 	add_custom_command(TARGET ${target} POST_BUILD
 			COMMAND ${CMAKE_OBJDUMP} --demangle -S $<TARGET_FILE:${target}> > ${lssFilename}
 			BYPRODUCTS ${lssFilename}
@@ -55,7 +55,7 @@ endfunction()
 # Prints size of output file of `target`.
 #
 
-function(size target)
+function(distortosSize target)
 	add_custom_command(TARGET ${target} POST_BUILD
 			COMMAND ${CMAKE_SIZE} -B $<TARGET_FILE:${target}>
 			VERBATIM
