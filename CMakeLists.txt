@@ -286,6 +286,7 @@ if(NOT EXISTS ${LDSCRIPT})
 endif()
 get_filename_component(PREPROCESSED_LDSCRIPT ${LDSCRIPT} NAME_WE)
 set(PREPROCESSED_LDSCRIPT "${PREPROCESSED_LDSCRIPT}.preprocessed.ld")
+set(ENV{DISTORTOS_LINKER_SCRIPT} "${CMAKE_CURRENT_BINARY_DIR}/${PREPROCESSED_LDSCRIPT}")
 add_custom_command(OUTPUT ${PREPROCESSED_LDSCRIPT}
 		COMMAND ${CMAKE_CXX_COMPILER} -nostdinc -undef -C -E -P -x assembler-with-cpp
 		-I${CMAKE_CURRENT_BINARY_DIR}/include ${LDSCRIPT} -o ${PREPROCESSED_LDSCRIPT}
@@ -310,7 +311,6 @@ target_link_libraries(distortos-distortos INTERFACE
 		${CONFIG_LINK_TIME_OPTIMIZATION_LINKING}
 		-Wl,--gc-sections
 		-L"${CMAKE_CURRENT_BINARY_DIR}"
-		-T${PREPROCESSED_LDSCRIPT}
 		-Wl,--whole-archive -ldistortos -Wl,--no-whole-archive)
 add_dependencies(distortos-distortos distortos ldscript)
 

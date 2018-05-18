@@ -70,3 +70,28 @@ function(distortosSize target)
 			VERBATIM
 			USES_TERMINAL)
 endfunction()
+
+#
+# Specifies linker script(s) used for linking `target`.
+#
+# `distortosTargetLinkerScripts(target [linker-script.ld ...])`
+#
+# Most common use will be with single linker script provided by distortos:
+# `distortosTargetLinkerScripts(target $ENV{DISTORTOS_LINKER_SCRIPT})`
+#
+# Proper linker flag is added, as well as CMake dependency via LINK_DEPENDS target property.
+#
+
+function(distortosTargetLinkerScripts target)
+	foreach(linkerScript IN LISTS ARGN)
+		target_link_libraries(${target} PRIVATE
+				-T"${linkerScript}")
+		get_target_property(linkDepends ${target} LINK_DEPENDS)
+		if(NOT linkDepends)
+			unset(linkDepends)
+		endif()
+		list(APPEND linkDepends "${linkerScript}")
+		set_target_properties(${target} PROPERTIES
+				LINK_DEPENDS "${linkDepends}")
+	endforeach()
+endfunction()

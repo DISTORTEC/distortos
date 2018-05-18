@@ -36,6 +36,8 @@ if(CONFIG_TEST_APPLICATION_ENABLE)
 			distortos::distortos
 			distortos::allCxxFlags)
 
+	distortosTargetLinkerScripts(distortosTest $ENV{DISTORTOS_LINKER_SCRIPT})
+
 	include(architecture/distortosTest-sources.cmake)
 	include(CallOnce/distortosTest-sources.cmake)
 	include(ConditionVariable/distortosTest-sources.cmake)
