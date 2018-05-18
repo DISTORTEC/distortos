@@ -311,7 +311,6 @@ target_link_libraries(distortos-distortos INTERFACE
 		${CONFIG_LINK_TIME_OPTIMIZATION_LINKING}
 		-Wl,--gc-sections
 		-L"${CMAKE_CURRENT_BINARY_DIR}"
-		-T${PREPROCESSED_LDSCRIPT}
 		-Wl,--whole-archive -ldistortos -Wl,--no-whole-archive)
 add_dependencies(distortos-distortos distortos ldscript)
 
