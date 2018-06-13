@@ -122,7 +122,7 @@ loadConfiguration(${CMAKE_SOURCE_DIR}/${CONFIG_SELECTED_CONFIGURATION})
 
 add_custom_command(OUTPUT include/distortos/distortosConfiguration.h
 		COMMAND ${CMAKE_COMMAND} -E make_directory include/distortos
-		COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/scripts/makeDistortosConfiguration.sh
+		COMMAND sh ${CMAKE_CURRENT_SOURCE_DIR}/scripts/makeDistortosConfiguration.sh
 		${CMAKE_SOURCE_DIR}/${CONFIG_SELECTED_CONFIGURATION} > include/distortos/distortosConfiguration.h
 		DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/scripts/makeDistortosConfiguration.sh
 		DEPENDS ${CMAKE_SOURCE_DIR}/${CONFIG_SELECTED_CONFIGURATION}
