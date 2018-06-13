@@ -16,7 +16,7 @@ basedir="$(dirname "${0}")"
 
 "${basedir}/forAllConfigurations.sh" \
 		"mkdir output && cd output &&
-		cmake .. -DCMAKE_TOOLCHAIN_FILE=${basedir}/../cmake/Toolchain-arm-none-eabi.cmake &&
+		cmake .. -DCMAKE_TOOLCHAIN_FILE=${basedir}/../cmake/Toolchain-arm-none-eabi.cmake -G \"Unix Makefiles\" &&
 		make -j$(nproc) VERBOSE=1 && cd -" \
 		"${@}"
 
