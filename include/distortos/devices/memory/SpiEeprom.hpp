@@ -219,13 +219,16 @@ public:
 	 * \param [in] type is the type of SPI EEPROM
 	 * \param [in] mode3 selects whether SPI mode 0 - CPOL == 0, CPHA == 0 - (false) or SPI mode 3 - CPOL == 1,
 	 * CPHA == 1 - (true) will be used, default - SPI mode 0 (false)
-	 * \param [in] maxClockFrequency is the max clock frequency supported by SPI EEPROM, Hz, default - 1 MHz
+	 * \param [in] clockFrequency is the desired clock frequency of SPI EEPROM, Hz, default - 1 MHz
 	 */
 
 	constexpr SpiEeprom(SpiMaster& spiMaster, OutputPin& slaveSelectPin, const Type type, const bool mode3 = {},
-			const uint32_t maxClockFrequency = 1000000) :
-					spiDevice_{spiMaster, slaveSelectPin, mode3 == false ? SpiMode::_0 : SpiMode::_3, maxClockFrequency,
+			const uint32_t clockFrequency = 1000000) :
+					spiDevice_{spiMaster, slaveSelectPin, mode3 == false ? SpiMode::_0 : SpiMode::_3, clockFrequency,
 							8, false},
+					slaveSelectPin_{slaveSelectPin},
+					clockFrequency_{clockFrequency},
+					mode_{mode3 == false ? SpiMode::_0 : SpiMode::_3},
 					type_{type}
 	{
 
@@ -373,6 +376,15 @@ private:
 
 	/// internal SPI slave device
 	SpiDevice spiDevice_;
+
+	/// reference to slave select pin of this SPI EEPROM
+	OutputPin& slaveSelectPin_;
+
+	/// desired clock frequency of SPI EEPROM, Hz
+	uint32_t clockFrequency_;
+
+	/// SPI mode used by SPI EEPROM
+	SpiMode mode_;
 
 	/// type of SPI EEPROM
 	Type type_;
