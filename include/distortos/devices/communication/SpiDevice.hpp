@@ -2,7 +2,7 @@
  * \file
  * \brief SpiDevice class header
  *
- * \author Copyright (C) 2016-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2016-2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -12,8 +12,8 @@
 #ifndef INCLUDE_DISTORTOS_DEVICES_COMMUNICATION_SPIDEVICE_HPP_
 #define INCLUDE_DISTORTOS_DEVICES_COMMUNICATION_SPIDEVICE_HPP_
 
+#include "distortos/devices/communication/SpiMasterOperationsRange.hpp"
 #include "distortos/devices/communication/SpiMode.hpp"
-#include "distortos/devices/communication/SpiMasterOperationRange.hpp"
 
 #include "distortos/ConditionVariable.hpp"
 #include "distortos/Mutex.hpp"
@@ -98,16 +98,16 @@ public:
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
-	 * \param [in] operationRange is the range of operations that will be executed
+	 * \param [in] operationsRange is the range of operations that will be executed
 	 *
 	 * \return pair with return code (0 on success, error code otherwise) and number of successfully completed
-	 * operations from \a operationRange; error codes:
+	 * operations from \a operationsRange; error codes:
 	 * - EBADF - the device is not opened;
-	 * - EINVAL - \a operationRange has no operations;
+	 * - EINVAL - \a operationsRange has no operations;
 	 * - error codes returned by SpiMaster::executeTransaction();
 	 */
 
-	std::pair<int, size_t> executeTransaction(SpiMasterOperationRange operationRange);
+	std::pair<int, size_t> executeTransaction(SpiMasterOperationsRange operationsRange);
 
 	/**
 	 * \return false if data should be transmitted/received to/from the SPI slave device with

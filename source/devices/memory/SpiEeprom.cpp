@@ -2,7 +2,7 @@
  * \file
  * \brief SpiEeprom class implementation
  *
- * \author Copyright (C) 2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2016-2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -148,7 +148,7 @@ std::pair<int, size_t> SpiEeprom::read(const uint32_t address, void* const buffe
 			getCommandWithAddress(capacity, readCommand, address, commandBuffer),
 			SpiMasterOperation::Transfer{nullptr, buffer, address + size <= capacity ? size : capacity - address},
 	};
-	const auto ret = spiDevice_.executeTransaction(SpiMasterOperationRange{operations});
+	const auto ret = spiDevice_.executeTransaction(SpiMasterOperationsRange{operations});
 	return {ret.first, operations[1].getTransfer()->getBytesTransfered()};
 }
 
@@ -208,14 +208,14 @@ std::pair<int, uint8_t> SpiEeprom::readStatusRegister()
 {
 	uint8_t buffer[2] {rdsrCommand, 0xff};
 	SpiMasterOperation operation {SpiMasterOperation::Transfer{buffer, buffer, sizeof(buffer)}};
-	const auto ret = spiDevice_.executeTransaction(SpiMasterOperationRange{operation});
+	const auto ret = spiDevice_.executeTransaction(SpiMasterOperationsRange{operation});
 	return {ret.first, buffer[1]};
 }
 
 int SpiEeprom::writeEnable()
 {
 	SpiMasterOperation operation {SpiMasterOperation::Transfer{&wrenCommand, nullptr, sizeof(wrenCommand)}};
-	return spiDevice_.executeTransaction(SpiMasterOperationRange{operation}).first;
+	return spiDevice_.executeTransaction(SpiMasterOperationsRange{operation}).first;
 }
 
 std::pair<int, size_t> SpiEeprom::writePage(const uint32_t address, const void* const buffer, const size_t size)
@@ -243,7 +243,7 @@ std::pair<int, size_t> SpiEeprom::writePage(const uint32_t address, const void* 
 			getCommandWithAddress(capacity, writeCommand, address, commandBuffer),
 			SpiMasterOperation::Transfer{buffer, nullptr, writeSize},
 	};
-	const auto ret = spiDevice_.executeTransaction(SpiMasterOperationRange{operations});
+	const auto ret = spiDevice_.executeTransaction(SpiMasterOperationsRange{operations});
 	return {ret.first, operations[1].getTransfer()->getBytesTransfered()};
 }
 

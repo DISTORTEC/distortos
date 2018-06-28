@@ -79,11 +79,11 @@ int SpiDevice::close()
 	return 0;
 }
 
-std::pair<int, size_t> SpiDevice::executeTransaction(const SpiMasterOperationRange operationRange)
+std::pair<int, size_t> SpiDevice::executeTransaction(const SpiMasterOperationsRange operationsRange)
 {
 	CHECK_FUNCTION_CONTEXT();
 
-	if (operationRange.size() == 0)
+	if (operationsRange.size() == 0)
 		return {EINVAL, {}};
 
 	const std::lock_guard<distortos::Mutex> lockGuard {mutex_};
@@ -98,7 +98,7 @@ std::pair<int, size_t> SpiDevice::executeTransaction(const SpiMasterOperationRan
 	if (openCount_ == 0)
 		return {EBADF, {}};
 
-	return spiMaster_.executeTransaction(*this, operationRange);
+	return spiMaster_.executeTransaction(*this, operationsRange);
 }
 
 bool SpiDevice::lock()

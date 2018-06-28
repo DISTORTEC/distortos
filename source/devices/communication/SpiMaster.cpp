@@ -69,11 +69,11 @@ int SpiMaster::close()
 }
 
 std::pair<int, size_t> SpiMaster::executeTransaction(const SpiDevice& device,
-		const SpiMasterOperationRange operationRange)
+		const SpiMasterOperationsRange operationsRange)
 {
 	CHECK_FUNCTION_CONTEXT();
 
-	if (operationRange.size() == 0)
+	if (operationsRange.size() == 0)
 		return {EINVAL, {}};
 
 	const std::lock_guard<distortos::Mutex> lockGuard {mutex_};
@@ -91,18 +91,18 @@ std::pair<int, size_t> SpiMaster::executeTransaction(const SpiDevice& device,
 	device.getSlaveSelectPin().set(false);
 	Semaphore semaphore {0};
 	semaphore_ = &semaphore;
-	operationRange_ = operationRange;
+	operationsRange_ = operationsRange;
 	ret_ = {};
 	const auto cleanupScopeGuard = estd::makeScopeGuard(
 			[this, &device]()
 			{
-				operationRange_ = {};
+				operationsRange_ = {};
 				semaphore_ = {};
 				device.getSlaveSelectPin().set(true);
 			});
 
 	{
-		const auto transfer = operationRange_.begin()->getTransfer();
+		const auto transfer = operationsRange_.begin()->getTransfer();
 		assert(transfer != nullptr);
 		const auto ret = spiMaster_.startTransfer(transfer->getWriteBuffer(), transfer->getReadBuffer(),
 				transfer->getSize());
@@ -112,7 +112,7 @@ std::pair<int, size_t> SpiMaster::executeTransaction(const SpiDevice& device,
 
 	while (semaphore.wait() != 0);
 
-	const auto handledOperations = operationRange_.begin() - operationRange.begin();
+	const auto handledOperations = operationsRange_.begin() - operationsRange.begin();
 	return {ret_, handledOperations};
 }
 
@@ -148,26 +148,26 @@ void SpiMaster::notifyWaiter(const int ret)
 
 void SpiMaster::transferCompleteEvent(SpiMasterErrorSet errorSet, size_t bytesTransfered)
 {
-	assert(operationRange_.size() != 0 && "Invalid range of operations!");
+	assert(operationsRange_.size() != 0 && "Invalid range of operations!");
 
 	{
-		const auto previousTransfer = operationRange_.begin()->getTransfer();
+		const auto previousTransfer = operationsRange_.begin()->getTransfer();
 		assert(previousTransfer != nullptr && "Invalid type of previous operation!");
 		previousTransfer->finalize(errorSet, bytesTransfered);
 	}
 
 	const auto error = errorSet.any();
 	if (error == false)	// handling of last operation successful?
-		operationRange_ = {operationRange_.begin() + 1, operationRange_.end()};
+		operationsRange_ = {operationsRange_.begin() + 1, operationsRange_.end()};
 
-	if (operationRange_.size() == 0 || error == true)	// all operations are done or handling of last one failed?
+	if (operationsRange_.size() == 0 || error == true)	// all operations are done or handling of last one failed?
 	{
 		notifyWaiter(error == false ? 0 : EIO);
 		return;
 	}
 
 	{
-		const auto nextTransfer = operationRange_.begin()->getTransfer();
+		const auto nextTransfer = operationsRange_.begin()->getTransfer();
 		assert(nextTransfer != nullptr && "Invalid type of next operation!");
 		const auto ret = spiMaster_.startTransfer(nextTransfer->getWriteBuffer(), nextTransfer->getReadBuffer(),
 				nextTransfer->getSize());

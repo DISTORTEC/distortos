@@ -2,7 +2,7 @@
  * \file
  * \brief SpiMaster class header
  *
- * \author Copyright (C) 2016-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2016-2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -13,7 +13,7 @@
 #define INCLUDE_DISTORTOS_DEVICES_COMMUNICATION_SPIMASTER_HPP_
 
 #include "distortos/devices/communication/SpiMasterBase.hpp"
-#include "distortos/devices/communication/SpiMasterOperationRange.hpp"
+#include "distortos/devices/communication/SpiMasterOperationsRange.hpp"
 
 #include "distortos/Mutex.hpp"
 
@@ -46,7 +46,7 @@ public:
 
 	constexpr explicit SpiMaster(SpiMasterLowLevel& spiMaster) :
 			mutex_{Mutex::Protocol::priorityInheritance},
-			operationRange_{},
+			operationsRange_{},
 			ret_{},
 			semaphore_{},
 			spiMaster_{spiMaster},
@@ -89,18 +89,18 @@ public:
 	 * \warning This function must not be called from interrupt context!
 	 *
 	 * \param [in] device is a reference to SPI device which is the target of the transaction
-	 * \param [in] operationRange is the range of operations that will be executed
+	 * \param [in] operationsRange is the range of operations that will be executed
 	 *
 	 * \return pair with return code (0 on success, error code otherwise) and number of successfully completed
-	 * operations from \a operationRange; error codes:
+	 * operations from \a operationsRange; error codes:
 	 * - EBADF - the device is not opened;
-	 * - EINVAL - \a operationRange has no operations;
+	 * - EINVAL - \a operationsRange has no operations;
 	 * - EIO - failure detected by low-level SPI master driver;
 	 * - error codes returned by SpiMasterLowLevel::configure();
 	 * - error codes returned by SpiMasterLowLevel::startTransfer();
 	 */
 
-	std::pair<int, size_t> executeTransaction(const SpiDevice& device, SpiMasterOperationRange operationRange);
+	std::pair<int, size_t> executeTransaction(const SpiDevice& device, SpiMasterOperationsRange operationsRange);
 
 	/**
 	 * \brief Opens SPI master.
@@ -146,7 +146,7 @@ private:
 	Mutex mutex_;
 
 	/// range of operations that are part of currently handled transaction
-	SpiMasterOperationRange operationRange_;
+	SpiMasterOperationsRange operationsRange_;
 
 	/// error codes detected in transferCompleteEvent()
 	volatile int ret_;
