@@ -2,7 +2,7 @@
  * \file
  * \brief callOnce() header
  *
- * \author Copyright (C) 2015-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2015-2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -17,7 +17,8 @@
 #include "distortos/OnceFlag.hpp"
 
 #include "estd/invoke.hpp"
-#include "estd/ScopeGuard.hpp"
+
+#include <mutex>
 
 namespace distortos
 {
@@ -48,12 +49,7 @@ void callOnce(OnceFlag& onceFlag, Function&& function, Args&&... args)
 	if (onceFlag.done_ == true)
 		return;
 
-	onceFlag.mutex_.lock();
-	const auto mutexUnlockScopeGuard = estd::makeScopeGuard(
-			[&onceFlag]()
-			{
-				onceFlag.mutex_.unlock();
-			});
+	const std::lock_guard<distortos::Mutex> lock {onceFlag.mutex_};
 
 	if (onceFlag.done_ == true)
 		return;

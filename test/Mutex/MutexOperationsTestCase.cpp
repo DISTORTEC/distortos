@@ -2,7 +2,7 @@
  * \file
  * \brief MutexOperationsTestCase class implementation
  *
- * \author Copyright (C) 2014-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -17,6 +17,8 @@
 #include "distortos/DynamicThread.hpp"
 #include "distortos/Mutex.hpp"
 #include "distortos/ThisThread.hpp"
+
+#include <mutex>
 
 #include <cerrno>
 
@@ -77,8 +79,9 @@ void lockUnlockThread(Mutex& mutex, bool& sharedRet, Mutex& semaphoreMutex)
 	if (sharedRet == false)
 		return;
 
-	semaphoreMutex.lock();
-	semaphoreMutex.unlock();
+	{
+		const std::lock_guard<distortos::Mutex> lock {semaphoreMutex};
+	}
 
 	{
 		// simple unlock - must succeed immediately
@@ -272,9 +275,9 @@ bool phase3(const Mutex::Type type, const Mutex::Protocol protocol, const uint8_
 
 	const auto sleepUntilFunctor = [&mutex](const TickClock::time_point timePoint)
 			{
-				mutex.lock();
+				const std::lock_guard<distortos::Mutex> lock {mutex};
+
 				ThisThread::sleepUntil(timePoint);
-				mutex.unlock();
 			};
 
 	{

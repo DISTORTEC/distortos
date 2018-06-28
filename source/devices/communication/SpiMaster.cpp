@@ -2,7 +2,7 @@
  * \file
  * \brief SpiMaster class implementation
  *
- * \author Copyright (C) 2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2016-2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -24,6 +24,8 @@
 
 #include "estd/ScopeGuard.hpp"
 
+#include <mutex>
+
 #include <cerrno>
 
 namespace distortos
@@ -43,24 +45,14 @@ SpiMaster::~SpiMaster()
 	if (openCount_ == 0)
 		return;
 
-	mutex_.lock();
-	const auto mutexScopeGuard = estd::makeScopeGuard(
-			[this]()
-			{
-				mutex_.unlock();
-			});
+	const std::lock_guard<distortos::Mutex> lock {mutex_};
 
 	spiMaster_.stop();
 }
 
 int SpiMaster::close()
 {
-	mutex_.lock();
-	const auto mutexScopeGuard = estd::makeScopeGuard(
-			[this]()
-			{
-				mutex_.unlock();
-			});
+	const std::lock_guard<distortos::Mutex> lock {mutex_};
 
 	if (openCount_ == 0)	// device is not open anymore?
 		return EBADF;
@@ -84,12 +76,7 @@ std::pair<int, size_t> SpiMaster::executeTransaction(const SpiDevice& device,
 	if (operationRange.size() == 0)
 		return {EINVAL, {}};
 
-	mutex_.lock();
-	const auto mutexScopeGuard = estd::makeScopeGuard(
-			[this]()
-			{
-				mutex_.unlock();
-			});
+	const std::lock_guard<distortos::Mutex> lock {mutex_};
 
 	if (openCount_ == 0)
 		return {EBADF, {}};
@@ -131,12 +118,7 @@ std::pair<int, size_t> SpiMaster::executeTransaction(const SpiDevice& device,
 
 int SpiMaster::open()
 {
-	mutex_.lock();
-	const auto mutexScopeGuard = estd::makeScopeGuard(
-			[this]()
-			{
-				mutex_.unlock();
-			});
+	const std::lock_guard<distortos::Mutex> lock {mutex_};
 
 	if (openCount_ == std::numeric_limits<decltype(openCount_)>::max())	// device is already opened too many times?
 		return EMFILE;

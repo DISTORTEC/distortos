@@ -2,7 +2,7 @@
  * \file
  * \brief MutexPriorityTestCase class implementation
  *
- * \author Copyright (C) 2014-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -18,6 +18,8 @@
 #include "distortos/InterruptMaskingLock.hpp"
 #include "distortos/Mutex.hpp"
 #include "distortos/ThisThread.hpp"
+
+#include <mutex>
 
 namespace distortos
 {
@@ -51,9 +53,9 @@ constexpr size_t testThreadStackSize {512};
 
 void thread(SequenceAsserter& sequenceAsserter, const unsigned int sequencePoint, Mutex& mutex)
 {
-	mutex.lock();
+	const std::lock_guard<distortos::Mutex> lock {mutex};
+
 	sequenceAsserter.sequencePoint(sequencePoint);
-	mutex.unlock();
 }
 
 /**
@@ -112,26 +114,27 @@ bool MutexPriorityTestCase::run_() const
 					makeTestThread(phase.first[phase.second[7]], sequenceAsserter, mutex),
 			}};
 
-			mutex.lock();
+			bool invalidState {};
 
 			{
-				const InterruptMaskingLock interruptMaskingLock;
+				const std::lock_guard<distortos::Mutex> lock {mutex};
 
-				for (auto& thread : threads)
 				{
-					thread.start();
-					// make sure each test threads blocks on mutex in the order of starting, even if current thread
-					// inherits test thread's high priority
-					ThisThread::sleepFor(TickClock::duration{1});
+					const InterruptMaskingLock interruptMaskingLock;
+
+					for (auto& thread : threads)
+					{
+						thread.start();
+						// make sure each test threads blocks on mutex in the order of starting, even if current thread
+						// inherits test thread's high priority
+						ThisThread::sleepFor(TickClock::duration{1});
+					}
 				}
+
+				for (const auto& thread : threads)
+					if (thread.getState() != ThreadState::blockedOnMutex)
+						invalidState = true;
 			}
-
-			bool invalidState {};
-			for (const auto& thread : threads)
-				if (thread.getState() != ThreadState::blockedOnMutex)
-					invalidState = true;
-
-			mutex.unlock();
 
 			for (auto& thread : threads)
 				thread.join();
