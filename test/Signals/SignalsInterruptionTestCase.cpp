@@ -2,7 +2,7 @@
  * \file
  * \brief SignalsInterruptionTestCase class implementation
  *
- * \author Copyright (C) 2015-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2015-2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -28,6 +28,8 @@
 #include "distortos/statistics.hpp"
 #include "distortos/ThisThread.hpp"
 #include "distortos/ThisThread-Signals.hpp"
+
+#include <mutex>
 
 #include <cerrno>
 
@@ -403,10 +405,12 @@ private:
 	void mutexLockerThreadFunction()
 	{
 		sequenceAsserter_.sequencePoint(0);
-		mutex_.lock();
-		ThisThread::setPriority(veryLowPriority);
-		sequenceAsserter_.sequencePoint(5);
-		mutex_.unlock();
+		{
+			const std::lock_guard<distortos::Mutex> lock {mutex_};
+
+			ThisThread::setPriority(veryLowPriority);
+			sequenceAsserter_.sequencePoint(5);
+		}
 		sequenceAsserter_.sequencePoint(7);
 	}
 
