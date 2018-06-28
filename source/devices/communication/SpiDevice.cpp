@@ -2,7 +2,7 @@
  * \file
  * \brief SpiDevice class implementation
  *
- * \author Copyright (C) 2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2016-2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -20,6 +20,8 @@
 #include "distortos/ThisThread.hpp"
 
 #include "estd/ScopeGuard.hpp"
+
+#include <mutex>
 
 #include <cerrno>
 
@@ -40,13 +42,13 @@ SpiDevice::~SpiDevice()
 	if (openCount_ == 0)
 		return;
 
-	mutex_.lock();
+	const std::lock_guard<distortos::Mutex> lock {mutex_};
+
 	const auto previousLockState = lockInternal();
 	const auto mutexScopeGuard = estd::makeScopeGuard(
 			[this, previousLockState]()
 			{
 				unlockInternal(previousLockState);
-				mutex_.unlock();
 			});
 
 	spiMaster_.close();
@@ -54,13 +56,13 @@ SpiDevice::~SpiDevice()
 
 int SpiDevice::close()
 {
-	mutex_.lock();
+	const std::lock_guard<distortos::Mutex> lock {mutex_};
+
 	const auto previousLockState = lockInternal();
 	const auto mutexScopeGuard = estd::makeScopeGuard(
 			[this, previousLockState]()
 			{
 				unlockInternal(previousLockState);
-				mutex_.unlock();
 			});
 
 	if (openCount_ == 0)	// device is not open anymore?
@@ -84,13 +86,13 @@ std::pair<int, size_t> SpiDevice::executeTransaction(const SpiMasterOperationRan
 	if (operationRange.size() == 0)
 		return {EINVAL, {}};
 
-	mutex_.lock();
+	const std::lock_guard<distortos::Mutex> lock {mutex_};
+
 	const auto previousLockState = lockInternal();
 	const auto mutexScopeGuard = estd::makeScopeGuard(
 			[this, previousLockState]()
 			{
 				unlockInternal(previousLockState);
-				mutex_.unlock();
 			});
 
 	if (openCount_ == 0)
@@ -101,25 +103,20 @@ std::pair<int, size_t> SpiDevice::executeTransaction(const SpiMasterOperationRan
 
 bool SpiDevice::lock()
 {
-	mutex_.lock();
-	const auto mutexScopeGuard = estd::makeScopeGuard(
-			[this]()
-			{
-				mutex_.unlock();
-			});
+	const std::lock_guard<distortos::Mutex> lock {mutex_};
 
 	return lockInternal();
 }
 
 int SpiDevice::open()
 {
-	mutex_.lock();
+	const std::lock_guard<distortos::Mutex> lock {mutex_};
+
 	const auto previousLockState = lockInternal();
 	const auto mutexScopeGuard = estd::makeScopeGuard(
 			[this, previousLockState]()
 			{
 				unlockInternal(previousLockState);
-				mutex_.unlock();
 			});
 
 	if (openCount_ == std::numeric_limits<decltype(openCount_)>::max())	// device is already opened too many times?
@@ -138,12 +135,7 @@ int SpiDevice::open()
 
 void SpiDevice::unlock(const bool previousLockState)
 {
-	mutex_.lock();
-	const auto mutexScopeGuard = estd::makeScopeGuard(
-			[this]()
-			{
-				mutex_.unlock();
-			});
+	const std::lock_guard<distortos::Mutex> lock {mutex_};
 
 	unlockInternal(previousLockState);
 }
