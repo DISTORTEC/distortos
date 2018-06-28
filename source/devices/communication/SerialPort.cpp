@@ -2,7 +2,7 @@
  * \file
  * \brief SerialPort class implementation
  *
- * \author Copyright (C) 2016-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2016-2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -19,6 +19,8 @@
 #include "distortos/Semaphore.hpp"
 
 #include "estd/ScopeGuard.hpp"
+
+#include <mutex>
 
 #include <cerrno>
 #include <cstring>
@@ -99,14 +101,8 @@ SerialPort::~SerialPort()
 	if (openCount_ == 0)
 		return;
 
-	readMutex_.lock();
-	writeMutex_.lock();
-	const auto readWriteMutexScopeGuard = estd::makeScopeGuard(
-			[this]()
-			{
-				writeMutex_.unlock();
-				readMutex_.unlock();
-			});
+	const std::lock_guard<distortos::Mutex> readLock {readMutex_};
+	const std::lock_guard<distortos::Mutex> writeLock {writeMutex_};
 
 	uart_.stopRead();
 	uart_.stopWrite();
@@ -115,14 +111,8 @@ SerialPort::~SerialPort()
 
 int SerialPort::close()
 {
-	readMutex_.lock();
-	writeMutex_.lock();
-	const auto readWriteMutexScopeGuard = estd::makeScopeGuard(
-			[this]()
-			{
-				writeMutex_.unlock();
-				readMutex_.unlock();
-			});
+	const std::lock_guard<distortos::Mutex> readLock {readMutex_};
+	const std::lock_guard<distortos::Mutex> writeLock {writeMutex_};
 
 	if (openCount_ == 0)	// device is not open anymore?
 		return EBADF;
@@ -164,14 +154,8 @@ int SerialPort::close()
 int SerialPort::open(const uint32_t baudRate, const uint8_t characterLength, const UartParity parity,
 			const bool _2StopBits)
 {
-	readMutex_.lock();
-	writeMutex_.lock();
-	const auto readWriteMutexScopeGuard = estd::makeScopeGuard(
-			[this]()
-			{
-				writeMutex_.unlock();
-				readMutex_.unlock();
-			});
+	const std::lock_guard<distortos::Mutex> readLock {readMutex_};
+	const std::lock_guard<distortos::Mutex> writeLock {writeMutex_};
 
 	if (openCount_ == std::numeric_limits<decltype(openCount_)>::max())	// device is already opened too many times?
 		return EMFILE;
@@ -223,11 +207,8 @@ std::pair<int, size_t> SerialPort::read(void* const buffer, const size_t size, c
 		if (ret != 0)
 			return {ret != EBUSY ? ret : EAGAIN, {}};
 	}
-	const auto readMutexScopeGuard = estd::makeScopeGuard(
-			[this]()
-			{
-				readMutex_.unlock();
-			});
+
+	const std::lock_guard<distortos::Mutex> readLock {readMutex_, std::adopt_lock};
 
 	if (openCount_ == 0)
 		return {EBADF, {}};
@@ -255,11 +236,8 @@ std::pair<int, size_t> SerialPort::write(const void* const buffer, const size_t 
 		if (ret != 0)
 			return {ret != EBUSY ? ret : EAGAIN, {}};
 	}
-	const auto writeMutexScopeGuard = estd::makeScopeGuard(
-			[this]()
-			{
-				writeMutex_.unlock();
-			});
+
+	const std::lock_guard<distortos::Mutex> writeLock {writeMutex_, std::adopt_lock};
 
 	if (openCount_ == 0)
 		return {EBADF, {}};
