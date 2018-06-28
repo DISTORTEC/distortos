@@ -2,7 +2,7 @@
  * \file
  * \brief ConditionVariablePriorityTestCase class implementation
  *
- * \author Copyright (C) 2014-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -18,6 +18,8 @@
 #include "distortos/DynamicThread.hpp"
 #include "distortos/Mutex.hpp"
 #include "distortos/statistics.hpp"
+
+#include <mutex>
 
 namespace distortos
 {
@@ -53,10 +55,10 @@ constexpr size_t testThreadStackSize {512};
 void thread(SequenceAsserter& sequenceAsserter, const unsigned int sequencePoint, ConditionVariable& conditionVariable,
 		Mutex& mutex)
 {
-	mutex.lock();
+	const std::lock_guard<distortos::Mutex> lock {mutex};
+
 	conditionVariable.wait(mutex);
 	sequenceAsserter.sequencePoint(sequencePoint);
-	mutex.unlock();
 }
 
 /**
