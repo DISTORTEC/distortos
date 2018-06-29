@@ -49,7 +49,7 @@ void callOnce(OnceFlag& onceFlag, Function&& function, Args&&... args)
 	if (onceFlag.done_ == true)
 		return;
 
-	const std::lock_guard<distortos::Mutex> lock {onceFlag.mutex_};
+	const std::lock_guard<distortos::Mutex> lockGuard {onceFlag.mutex_};
 
 	if (onceFlag.done_ == true)
 		return;

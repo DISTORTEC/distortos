@@ -406,7 +406,7 @@ private:
 	{
 		sequenceAsserter_.sequencePoint(0);
 		{
-			const std::lock_guard<distortos::Mutex> lock {mutex_};
+			const std::lock_guard<distortos::Mutex> lockGuard {mutex_};
 
 			ThisThread::setPriority(veryLowPriority);
 			sequenceAsserter_.sequencePoint(5);

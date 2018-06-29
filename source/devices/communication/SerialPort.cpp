@@ -101,8 +101,8 @@ SerialPort::~SerialPort()
 	if (openCount_ == 0)
 		return;
 
-	const std::lock_guard<distortos::Mutex> readLock {readMutex_};
-	const std::lock_guard<distortos::Mutex> writeLock {writeMutex_};
+	const std::lock_guard<distortos::Mutex> readLockGuard {readMutex_};
+	const std::lock_guard<distortos::Mutex> writeLockGuard {writeMutex_};
 
 	uart_.stopRead();
 	uart_.stopWrite();
@@ -111,8 +111,8 @@ SerialPort::~SerialPort()
 
 int SerialPort::close()
 {
-	const std::lock_guard<distortos::Mutex> readLock {readMutex_};
-	const std::lock_guard<distortos::Mutex> writeLock {writeMutex_};
+	const std::lock_guard<distortos::Mutex> readLockGuard {readMutex_};
+	const std::lock_guard<distortos::Mutex> writeLockGuard {writeMutex_};
 
 	if (openCount_ == 0)	// device is not open anymore?
 		return EBADF;
@@ -154,8 +154,8 @@ int SerialPort::close()
 int SerialPort::open(const uint32_t baudRate, const uint8_t characterLength, const UartParity parity,
 			const bool _2StopBits)
 {
-	const std::lock_guard<distortos::Mutex> readLock {readMutex_};
-	const std::lock_guard<distortos::Mutex> writeLock {writeMutex_};
+	const std::lock_guard<distortos::Mutex> readLockGuard {readMutex_};
+	const std::lock_guard<distortos::Mutex> writeLockGuard {writeMutex_};
 
 	if (openCount_ == std::numeric_limits<decltype(openCount_)>::max())	// device is already opened too many times?
 		return EMFILE;
@@ -208,7 +208,7 @@ std::pair<int, size_t> SerialPort::read(void* const buffer, const size_t size, c
 			return {ret != EBUSY ? ret : EAGAIN, {}};
 	}
 
-	const std::lock_guard<distortos::Mutex> readLock {readMutex_, std::adopt_lock};
+	const std::lock_guard<distortos::Mutex> readLockGuard {readMutex_, std::adopt_lock};
 
 	if (openCount_ == 0)
 		return {EBADF, {}};
@@ -237,7 +237,7 @@ std::pair<int, size_t> SerialPort::write(const void* const buffer, const size_t 
 			return {ret != EBUSY ? ret : EAGAIN, {}};
 	}
 
-	const std::lock_guard<distortos::Mutex> writeLock {writeMutex_, std::adopt_lock};
+	const std::lock_guard<distortos::Mutex> writeLockGuard {writeMutex_, std::adopt_lock};
 
 	if (openCount_ == 0)
 		return {EBADF, {}};

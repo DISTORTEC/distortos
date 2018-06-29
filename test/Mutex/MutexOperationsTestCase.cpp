@@ -80,7 +80,7 @@ void lockUnlockThread(Mutex& mutex, bool& sharedRet, Mutex& semaphoreMutex)
 		return;
 
 	{
-		const std::lock_guard<distortos::Mutex> lock {semaphoreMutex};
+		const std::lock_guard<distortos::Mutex> lockGuard {semaphoreMutex};
 	}
 
 	{
@@ -275,7 +275,7 @@ bool phase3(const Mutex::Type type, const Mutex::Protocol protocol, const uint8_
 
 	const auto sleepUntilFunctor = [&mutex](const TickClock::time_point timePoint)
 			{
-				const std::lock_guard<distortos::Mutex> lock {mutex};
+				const std::lock_guard<distortos::Mutex> lockGuard {mutex};
 
 				ThisThread::sleepUntil(timePoint);
 			};

@@ -53,7 +53,7 @@ constexpr size_t testThreadStackSize {512};
 
 void thread(SequenceAsserter& sequenceAsserter, const unsigned int sequencePoint, Mutex& mutex)
 {
-	const std::lock_guard<distortos::Mutex> lock {mutex};
+	const std::lock_guard<distortos::Mutex> lockGuard {mutex};
 
 	sequenceAsserter.sequencePoint(sequencePoint);
 }
@@ -117,7 +117,7 @@ bool MutexPriorityTestCase::run_() const
 			bool invalidState {};
 
 			{
-				const std::lock_guard<distortos::Mutex> lock {mutex};
+				const std::lock_guard<distortos::Mutex> lockGuard {mutex};
 
 				{
 					const InterruptMaskingLock interruptMaskingLock;

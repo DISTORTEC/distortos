@@ -55,7 +55,7 @@ constexpr size_t testThreadStackSize {512};
 void thread(SequenceAsserter& sequenceAsserter, const unsigned int sequencePoint, ConditionVariable& conditionVariable,
 		Mutex& mutex)
 {
-	const std::lock_guard<distortos::Mutex> lock {mutex};
+	const std::lock_guard<distortos::Mutex> lockGuard {mutex};
 
 	conditionVariable.wait(mutex);
 	sequenceAsserter.sequencePoint(sequencePoint);

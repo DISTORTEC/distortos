@@ -42,7 +42,7 @@ SpiDevice::~SpiDevice()
 	if (openCount_ == 0)
 		return;
 
-	const std::lock_guard<distortos::Mutex> lock {mutex_};
+	const std::lock_guard<distortos::Mutex> lockGuard {mutex_};
 
 	const auto previousLockState = lockInternal();
 	const auto mutexScopeGuard = estd::makeScopeGuard(
@@ -56,7 +56,7 @@ SpiDevice::~SpiDevice()
 
 int SpiDevice::close()
 {
-	const std::lock_guard<distortos::Mutex> lock {mutex_};
+	const std::lock_guard<distortos::Mutex> lockGuard {mutex_};
 
 	const auto previousLockState = lockInternal();
 	const auto mutexScopeGuard = estd::makeScopeGuard(
@@ -86,7 +86,7 @@ std::pair<int, size_t> SpiDevice::executeTransaction(const SpiMasterOperationRan
 	if (operationRange.size() == 0)
 		return {EINVAL, {}};
 
-	const std::lock_guard<distortos::Mutex> lock {mutex_};
+	const std::lock_guard<distortos::Mutex> lockGuard {mutex_};
 
 	const auto previousLockState = lockInternal();
 	const auto mutexScopeGuard = estd::makeScopeGuard(
@@ -103,14 +103,14 @@ std::pair<int, size_t> SpiDevice::executeTransaction(const SpiMasterOperationRan
 
 bool SpiDevice::lock()
 {
-	const std::lock_guard<distortos::Mutex> lock {mutex_};
+	const std::lock_guard<distortos::Mutex> lockGuard {mutex_};
 
 	return lockInternal();
 }
 
 int SpiDevice::open()
 {
-	const std::lock_guard<distortos::Mutex> lock {mutex_};
+	const std::lock_guard<distortos::Mutex> lockGuard {mutex_};
 
 	const auto previousLockState = lockInternal();
 	const auto mutexScopeGuard = estd::makeScopeGuard(
@@ -135,7 +135,7 @@ int SpiDevice::open()
 
 void SpiDevice::unlock(const bool previousLockState)
 {
-	const std::lock_guard<distortos::Mutex> lock {mutex_};
+	const std::lock_guard<distortos::Mutex> lockGuard {mutex_};
 
 	unlockInternal(previousLockState);
 }
