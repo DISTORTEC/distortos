@@ -2,7 +2,7 @@
  * \file
  * \brief distortos version
  *
- * \author Copyright (C) 2016-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2016-2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -16,7 +16,7 @@
 #define DISTORTOS_VERSION_MAJOR		0
 
 /// minor version of distortos
-#define DISTORTOS_VERSION_MINOR		5
+#define DISTORTOS_VERSION_MINOR		6
 
 /// patch version of distortos
 #define DISTORTOS_VERSION_PATCH		0
