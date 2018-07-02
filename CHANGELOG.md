@@ -4,6 +4,35 @@ Change Log
 All notable changes to this project will be documented in this file. This project adheres to
 [Semantic Versioning](http://semver.org/).
 
+[Unreleased](https://github.com/DISTORTEC/distortos/compare/v0.6.0...HEAD)
+--------------------------------------------------------------------------
+
+### Added
+
+- Added `SpiEepromProxy`, `SpiDeviceProxy`, `SpiMasterProxy` and `SpiDeviceSelectGuard`, which build new SPI-related
+API. These classes can be used for RAII-style locking/unlocking or selecting/deselecting of appropriate devices and also
+serve as proxies for accessing core functionalities of associated objects.
+
+### Changed
+
+- Renamed `SpiMasterOperationRange` to `SpiMasterOperationsRange`. Alias for old name was added, marked as deprecated
+and is scheduled to be removed after v0.7.0.
+- `SpiMasterBase` object is now bound to `SpiMasterLowLevel` in `SpiMasterLowLevel::startTransfer()` instead of
+`SpiMasterLowLevel::start()`.
+
+### Deprecated
+
+- Old variant of `SpiMaster::executeTransaction()`, old variant of `SpiDevice` constructor,
+`SpiDevice::executeTransaction()`, `SpiDevice::getLsbFirst()`, `SpiDevice::getMaxClockFrequency()`,
+`SpiDevice::getMode()`, `SpiDevice::getSlaveSelectPin()` and `SpiDevice::getWordLength()` were marked as deprecated and
+are scheduled to be removed after v0.7.0. Use functionality exposed by `SpiDeviceProxy`, `SpiMasterProxy` and
+`SpiDeviceSelectGuard`.
+
+### Removed
+
+- Removed previous style of `SpiDevice::lock()`, `SpiDevice::unlock()`, `SpiEeprom::lock()` and `SpiEeprom::unlock()`.
+Use `SpiEepromProxy` and `SpiDeviceProxy`.
+
 [0.6.0](https://github.com/DISTORTEC/distortos/compare/v0.5.0...v0.6.0) - 2018-07-01
 ------------------------------------------------------------------------------------
 
