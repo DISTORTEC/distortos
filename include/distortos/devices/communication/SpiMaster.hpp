@@ -99,14 +99,13 @@ public:
 	 *
 	 * \return pair with return code (0 on success, error code otherwise) and number of successfully completed
 	 * operations from \a operationsRange; error codes:
-	 * - EBADF - the device is not opened;
 	 * - EINVAL - \a operationsRange has no operations;
 	 * - EIO - failure detected by low-level SPI master driver;
-	 * - error codes returned by SpiMasterLowLevel::configure();
+	 * - error codes returned by SpiMasterProxy::configure();
 	 * - error codes returned by SpiMasterLowLevel::startTransfer();
 	 */
 
-	std::pair<int, size_t> executeTransaction(const SpiDevice& device, SpiMasterOperationsRange operationsRange);
+	std::pair<int, size_t> executeTransaction(SpiDevice& device, SpiMasterOperationsRange operationsRange);
 
 	/**
 	 * \brief Opens SPI master.

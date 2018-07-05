@@ -12,8 +12,10 @@
 #include "distortos/devices/communication/SpiMaster.hpp"
 
 #include "distortos/devices/communication/SpiDevice.hpp"
+#include "distortos/devices/communication/SpiDeviceProxy.hpp"
 #include "distortos/devices/communication/SpiMasterLowLevel.hpp"
 #include "distortos/devices/communication/SpiMasterOperation.hpp"
+#include "distortos/devices/communication/SpiMasterProxy.hpp"
 
 #include "distortos/devices/io/OutputPin.hpp"
 
@@ -68,21 +70,18 @@ int SpiMaster::close()
 	return 0;
 }
 
-std::pair<int, size_t> SpiMaster::executeTransaction(const SpiDevice& device,
-		const SpiMasterOperationsRange operationsRange)
+std::pair<int, size_t> SpiMaster::executeTransaction(SpiDevice& device, const SpiMasterOperationsRange operationsRange)
 {
 	CHECK_FUNCTION_CONTEXT();
 
 	if (operationsRange.size() == 0)
 		return {EINVAL, {}};
 
-	const std::lock_guard<distortos::Mutex> lockGuard {mutex_};
-
-	if (openCount_ == 0)
-		return {EBADF, {}};
+	const SpiDevice::Proxy spiDeviceProxy {device};
+	Proxy proxy {spiDeviceProxy};
 
 	{
-		const auto ret = spiMaster_.configure(device.getMode(), device.getMaxClockFrequency(), device.getWordLength(),
+		const auto ret = proxy.configure(device.getMode(), device.getMaxClockFrequency(), device.getWordLength(),
 				device.getLsbFirst());
 		if (ret.first != 0)
 			return {ret.first, {}};
