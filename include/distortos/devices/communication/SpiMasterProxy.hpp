@@ -12,9 +12,8 @@
 #ifndef INCLUDE_DISTORTOS_DEVICES_COMMUNICATION_SPIMASTERPROXY_HPP_
 #define INCLUDE_DISTORTOS_DEVICES_COMMUNICATION_SPIMASTERPROXY_HPP_
 
+#include "distortos/devices/communication/SpiMasterOperationsRange.hpp"
 #include "distortos/devices/communication/SpiMode.hpp"
-
-#include <utility>
 
 namespace distortos
 {
@@ -71,6 +70,25 @@ public:
 	 */
 
 	std::pair<int, uint32_t> configure(SpiMode mode, uint32_t clockFrequency, uint8_t wordLength, bool lsbFirst) const;
+
+	/**
+	 * \brief Executes series of operations as a single atomic transaction.
+	 *
+	 * The transaction is finished when all operations are complete or when any error is detected.
+	 *
+	 * \warning This function must not be called from interrupt context!
+	 *
+	 * \param [in] operationsRange is the range of operations that will be executed
+	 *
+	 * \return pair with return code (0 on success, error code otherwise) and number of successfully completed
+	 * operations from \a operationsRange; error codes:
+	 * - EBADF - associated SPI device or associated SPI master are not opened;
+	 * - EINVAL - \a operationsRange has no operations;
+	 * - EIO - failure detected by low-level SPI master driver;
+	 * - error codes returned by SpiMasterLowLevel::startTransfer();
+	 */
+
+	std::pair<int, size_t> executeTransaction(SpiMasterOperationsRange operationsRange);
 
 	SpiMasterProxy(const SpiMasterProxy&) = delete;
 	SpiMasterProxy& operator=(const SpiMasterProxy&) = delete;

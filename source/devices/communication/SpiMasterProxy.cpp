@@ -14,6 +14,14 @@
 #include "distortos/devices/communication/SpiDeviceProxy.hpp"
 #include "distortos/devices/communication/SpiMaster.hpp"
 #include "distortos/devices/communication/SpiMasterLowLevel.hpp"
+#include "distortos/devices/communication/SpiMasterOperation.hpp"
+
+#include "distortos/internal/CHECK_FUNCTION_CONTEXT.hpp"
+
+#include "distortos/assert.h"
+#include "distortos/Semaphore.hpp"
+
+#include "estd/ScopeGuard.hpp"
 
 namespace distortos
 {
@@ -44,6 +52,43 @@ std::pair<int, uint32_t> SpiMasterProxy::configure(const SpiMode mode, const uin
 		return {EBADF, {}};
 
 	return spiMaster.spiMaster_.configure(mode, clockFrequency, wordLength, lsbFirst);
+}
+
+std::pair<int, size_t> SpiMasterProxy::executeTransaction(const SpiMasterOperationsRange operationsRange)
+{
+	CHECK_FUNCTION_CONTEXT();
+
+	if (operationsRange.size() == 0)
+		return {EINVAL, {}};
+
+	auto& spiMaster = getSpiMaster();
+	if (spiDeviceProxy_.isOpened() == false || spiMaster.openCount_ == 0)
+		return {EBADF, {}};
+
+	Semaphore semaphore {0};
+	spiMaster.semaphore_ = &semaphore;
+	spiMaster.operationsRange_ = operationsRange;
+	spiMaster.ret_ = {};
+	const auto cleanupScopeGuard = estd::makeScopeGuard(
+			[&spiMaster]()
+			{
+				spiMaster.operationsRange_ = {};
+				spiMaster.semaphore_ = {};
+			});
+
+	{
+		const auto transfer = spiMaster.operationsRange_.begin()->getTransfer();
+		assert(transfer != nullptr);
+		const auto ret = spiMaster.spiMaster_.startTransfer(transfer->getWriteBuffer(), transfer->getReadBuffer(),
+				transfer->getSize());
+		if (ret != 0)
+			return {ret, {}};
+	}
+
+	while (semaphore.wait() != 0);
+
+	const auto handledOperations = spiMaster.operationsRange_.begin() - operationsRange.begin();
+	return {spiMaster.ret_, handledOperations};
 }
 
 /*---------------------------------------------------------------------------------------------------------------------+
