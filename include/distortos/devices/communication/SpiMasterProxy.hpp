@@ -12,6 +12,10 @@
 #ifndef INCLUDE_DISTORTOS_DEVICES_COMMUNICATION_SPIMASTERPROXY_HPP_
 #define INCLUDE_DISTORTOS_DEVICES_COMMUNICATION_SPIMASTERPROXY_HPP_
 
+#include "distortos/devices/communication/SpiMode.hpp"
+
+#include <utility>
+
 namespace distortos
 {
 
@@ -52,6 +56,21 @@ public:
 	 */
 
 	~SpiMasterProxy();
+
+	/**
+	 * \brief Configures parameters of associated SPI master.
+	 *
+	 * \param [in] mode is the desired SPI mode
+	 * \param [in] clockFrequency is the desired clock frequency, Hz
+	 * \param [in] wordLength selects word length, bits, [1; 32]
+	 * \param [in] lsbFirst selects whether MSB (false) or LSB (true) is transmitted first
+	 *
+	 * \return pair with return code (0 on success, error code otherwise) and real clock frequency; error codes:
+	 * - EBADF - associated SPI device or associated SPI master are not opened;
+	 * - error codes returned by SpiMasterLowLevel::configure();
+	 */
+
+	std::pair<int, uint32_t> configure(SpiMode mode, uint32_t clockFrequency, uint8_t wordLength, bool lsbFirst) const;
 
 	SpiMasterProxy(const SpiMasterProxy&) = delete;
 	SpiMasterProxy& operator=(const SpiMasterProxy&) = delete;

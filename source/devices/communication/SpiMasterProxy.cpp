@@ -13,6 +13,7 @@
 
 #include "distortos/devices/communication/SpiDeviceProxy.hpp"
 #include "distortos/devices/communication/SpiMaster.hpp"
+#include "distortos/devices/communication/SpiMasterLowLevel.hpp"
 
 namespace distortos
 {
@@ -33,6 +34,16 @@ SpiMasterProxy::SpiMasterProxy(const SpiDeviceProxy& spiDeviceProxy) :
 SpiMasterProxy::~SpiMasterProxy()
 {
 	getSpiMaster().mutex_.unlock();
+}
+
+std::pair<int, uint32_t> SpiMasterProxy::configure(const SpiMode mode, const uint32_t clockFrequency,
+		const uint8_t wordLength, const bool lsbFirst) const
+{
+	auto& spiMaster = getSpiMaster();
+	if (spiDeviceProxy_.isOpened() == false || spiMaster.openCount_ == 0)
+		return {EBADF, {}};
+
+	return spiMaster.spiMaster_.configure(mode, clockFrequency, wordLength, lsbFirst);
 }
 
 /*---------------------------------------------------------------------------------------------------------------------+
