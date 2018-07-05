@@ -32,6 +32,8 @@ class SpiMaster;
 
 class SpiDeviceProxy
 {
+	friend class SpiMasterProxy;
+
 public:
 
 	/**

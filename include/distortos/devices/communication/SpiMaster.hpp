@@ -27,6 +27,7 @@ namespace devices
 
 class SpiDevice;
 class SpiMasterLowLevel;
+class SpiMasterProxy;
 
 /**
  * SpiMaster class is a driver for SPI master
@@ -36,7 +37,12 @@ class SpiMasterLowLevel;
 
 class SpiMaster : private SpiMasterBase
 {
+	friend class SpiMasterProxy;
+
 public:
+
+	/// import SpiMasterProxy as SpiMaster::Proxy
+	using Proxy = SpiMasterProxy;
 
 	/**
 	 * \brief SpiMaster's constructor
@@ -45,7 +51,7 @@ public:
 	 */
 
 	constexpr explicit SpiMaster(SpiMasterLowLevel& spiMaster) :
-			mutex_{Mutex::Protocol::priorityInheritance},
+			mutex_{Mutex::Type::recursive, Mutex::Protocol::priorityInheritance},
 			operationsRange_{},
 			ret_{},
 			semaphore_{},
