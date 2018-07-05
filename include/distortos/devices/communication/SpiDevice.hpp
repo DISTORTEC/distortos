@@ -15,18 +15,16 @@
 #include "distortos/devices/communication/SpiMasterOperationsRange.hpp"
 #include "distortos/devices/communication/SpiMode.hpp"
 
-#include "distortos/ConditionVariable.hpp"
 #include "distortos/Mutex.hpp"
 
 namespace distortos
 {
 
-class Thread;
-
 namespace devices
 {
 
 class OutputPin;
+class SpiDeviceProxy;
 class SpiMaster;
 
 /**
@@ -37,7 +35,12 @@ class SpiMaster;
 
 class SpiDevice
 {
+	friend class SpiDeviceProxy;
+
 public:
+
+	/// import SpiDeviceProxy as SpiDevice::Proxy
+	using Proxy = SpiDeviceProxy;
 
 	/**
 	 * \brief SpiDevice's constructor
@@ -53,10 +56,8 @@ public:
 
 	constexpr SpiDevice(SpiMaster& spiMaster, OutputPin& slaveSelectPin, const SpiMode mode,
 			const uint32_t maxClockFrequency, const uint8_t wordLength, const bool lsbFirst) :
-					conditionVariable_{},
-					mutex_{Mutex::Protocol::priorityInheritance},
+					mutex_{Mutex::Type::recursive, Mutex::Protocol::priorityInheritance},
 					maxClockFrequency_{maxClockFrequency},
-					owner_{},
 					slaveSelectPin_{slaveSelectPin},
 					spiMaster_{spiMaster},
 					lsbFirst_{lsbFirst},
@@ -156,22 +157,6 @@ public:
 	}
 
 	/**
-	 * \brief Locks the object for exclusive use by current thread using condition variable and mutex.
-	 *
-	 * When the object is locked, any call to any member function from other thread will be blocked until the object is
-	 * unlocked. Locking is optional, but may be useful when more than one transaction must be done atomically.
-	 *
-	 * \note Locks may be nested.
-	 *
-	 * \warning This function must not be called from interrupt context!
-	 *
-	 * \return previous state of lock: false if this SPI device was unlocked before this call, true if it was already
-	 * locked by current thread
-	 */
-
-	bool lock();
-
-	/**
 	 * \brief Opens SPI device.
 	 *
 	 * Does nothing if any user already has this device opened. Otherwise associated SPI master is opened.
@@ -185,52 +170,13 @@ public:
 
 	int open();
 
-	/**
-	 * \brief Unlocks the object that was previously locked by current thread.
-	 *
-	 * Does nothing if SPI device is not locked by current thread.
-	 *
-	 * \note Locks may be nested.
-	 *
-	 * \warning This function must not be called from interrupt context!
-	 *
-	 * \param previousLockState is the value returned by matching call to lock()
-	 */
-
-	void unlock(bool previousLockState);
-
 private:
-
-	/**
-	 * \brief Internal version of lock() - without locking the mutex.
-	 *
-	 * \return previous state of lock: false if this SPI device was unlocked before this call, true if it was already
-	 * locked by current thread
-	 */
-
-	bool lockInternal();
-
-	/**
-	 * \brief Internal version of unlock() - without locking the mutex.
-	 *
-	 * Does nothing if SPI device is not locked by current thread.
-	 *
-	 * \param previousLockState is the value returned by matching call to lockInternal()
-	 */
-
-	void unlockInternal(bool previousLockState);
-
-	/// condition variable used for locking access to this object
-	ConditionVariable conditionVariable_;
 
 	/// mutex used to serialize access to this object
 	Mutex mutex_;
 
 	/// max clock frequency supported by SPI slave device, Hz
 	uint32_t maxClockFrequency_;
-
-	/// pointer to thread that locked this object
-	const Thread* owner_;
 
 	/// reference to slave select pin of this SPI slave device
 	OutputPin& slaveSelectPin_;

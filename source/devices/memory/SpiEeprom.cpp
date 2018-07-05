@@ -13,12 +13,12 @@
 
 #include "distortos/devices/communication/SpiMasterOperation.hpp"
 
+#include "distortos/devices/memory/SpiEepromProxy.hpp"
+
 #include "distortos/internal/CHECK_FUNCTION_CONTEXT.hpp"
 
 #include "distortos/assert.h"
 #include "distortos/ThisThread.hpp"
-
-#include "estd/ScopeGuard.hpp"
 
 #include <tuple>
 
@@ -111,11 +111,6 @@ std::pair<int, bool> SpiEeprom::isWriteInProgress()
 	return {ret.first, (ret.second & statusRegisterWip) != 0};
 }
 
-bool SpiEeprom::lock()
-{
-	return spiDevice_.lock();
-}
-
 int SpiEeprom::open()
 {
 	return spiDevice_.open();
@@ -129,12 +124,7 @@ std::pair<int, size_t> SpiEeprom::read(const uint32_t address, void* const buffe
 	if (address >= capacity || buffer == nullptr || size == 0)
 		return {EINVAL, {}};
 
-	const auto previousLockState = spiDevice_.lock();
-	const auto unlockScopeGuard = estd::makeScopeGuard(
-			[this, previousLockState]()
-			{
-				spiDevice_.unlock(previousLockState);
-			});
+	const Proxy proxy {*this};
 
 	{
 		const auto ret = waitWhileWriteInProgress();
@@ -150,11 +140,6 @@ std::pair<int, size_t> SpiEeprom::read(const uint32_t address, void* const buffe
 	};
 	const auto ret = spiDevice_.executeTransaction(SpiMasterOperationsRange{operations});
 	return {ret.first, operations[1].getTransfer()->getBytesTransfered()};
-}
-
-void SpiEeprom::unlock(const bool previousLockState)
-{
-	spiDevice_.unlock(previousLockState);
 }
 
 int SpiEeprom::waitWhileWriteInProgress()
@@ -179,12 +164,7 @@ std::pair<int, size_t> SpiEeprom::write(const uint32_t address, const void* cons
 	if (address >= capacity || buffer == nullptr || size == 0)
 		return {EINVAL, {}};
 
-	const auto previousLockState = spiDevice_.lock();
-	const auto unlockScopeGuard = estd::makeScopeGuard(
-			[this, previousLockState]()
-			{
-				spiDevice_.unlock(previousLockState);
-			});
+	const Proxy proxy {*this};
 
 	size_t written {};
 	const auto writeSize = address + size <= capacity ? size : capacity - address;

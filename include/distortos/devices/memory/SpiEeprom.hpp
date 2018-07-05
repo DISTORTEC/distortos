@@ -2,7 +2,7 @@
  * \file
  * \brief SpiEeprom class header
  *
- * \author Copyright (C) 2016-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2016-2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -20,6 +20,8 @@ namespace distortos
 namespace devices
 {
 
+class SpiEepromProxy;
+
 /**
  * SpiEeprom class is a SPI EEPROM memory: Atmel AT25xxx, ON Semiconductor CAT25xxx, ST M95xxx, Microchip 25xxxxx or
  * similar.
@@ -29,6 +31,8 @@ namespace devices
 
 class SpiEeprom
 {
+	friend class SpiEepromProxy;
+
 	/// bit shift of field with page size encoded in device's type
 	constexpr static size_t pageSizeShift_ {0};
 
@@ -48,6 +52,9 @@ class SpiEeprom
 	constexpr static size_t capacityMask_ {((1 << capacityWidth_) - 1) << capacityShift_};
 
 public:
+
+	/// import SpiEepromProxy as SpiEeprom::Proxy
+	using Proxy = SpiEepromProxy;
 
 	/// type of device - determines capacity and page size
 	enum class Type : uint8_t
@@ -268,19 +275,6 @@ public:
 	std::pair<int, bool> isWriteInProgress();
 
 	/**
-	 * \brief Wrapper for SpiDevice::lock()
-	 *
-	 * \note Locks may be nested.
-	 *
-	 * \warning This function must not be called from interrupt context!
-	 *
-	 * \return previous state of lock: false if this SPI EEPROM was unlocked before this call, true if it was already
-	 * locked by current thread
-	 */
-
-	bool lock();
-
-	/**
 	 * \brief Opens SPI EEPROM.
 	 *
 	 * Wrapper for SpiDevice::open().
@@ -310,20 +304,6 @@ public:
 	 */
 
 	std::pair<int, size_t> read(uint32_t address, void* buffer, size_t size);
-
-	/**
-	 * \brief Wrapper for SpiDevice::unlock()
-	 *
-	 * Does nothing if SPI EEPROM is not locked by current thread.
-	 *
-	 * \note Locks may be nested.
-	 *
-	 * \warning This function must not be called from interrupt context!
-	 *
-	 * \param previousLockState is the value returned by matching call to lock()
-	 */
-
-	void unlock(bool previousLockState);
 
 	/**
 	 * \brief Waits while any write operation is currently in progress.

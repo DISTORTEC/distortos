@@ -11,17 +11,11 @@
 
 #include "distortos/devices/communication/SpiDevice.hpp"
 
+#include "distortos/devices/communication/SpiDeviceProxy.hpp"
 #include "distortos/devices/communication/SpiMaster.hpp"
 #include "distortos/devices/communication/SpiMasterOperation.hpp"
 
 #include "distortos/internal/CHECK_FUNCTION_CONTEXT.hpp"
-
-#include "distortos/assert.h"
-#include "distortos/ThisThread.hpp"
-
-#include "estd/ScopeGuard.hpp"
-
-#include <mutex>
 
 #include <cerrno>
 
@@ -42,28 +36,14 @@ SpiDevice::~SpiDevice()
 	if (openCount_ == 0)
 		return;
 
-	const std::lock_guard<distortos::Mutex> lockGuard {mutex_};
-
-	const auto previousLockState = lockInternal();
-	const auto mutexScopeGuard = estd::makeScopeGuard(
-			[this, previousLockState]()
-			{
-				unlockInternal(previousLockState);
-			});
+	const Proxy proxy {*this};
 
 	spiMaster_.close();
 }
 
 int SpiDevice::close()
 {
-	const std::lock_guard<distortos::Mutex> lockGuard {mutex_};
-
-	const auto previousLockState = lockInternal();
-	const auto mutexScopeGuard = estd::makeScopeGuard(
-			[this, previousLockState]()
-			{
-				unlockInternal(previousLockState);
-			});
+	const Proxy proxy {*this};
 
 	if (openCount_ == 0)	// device is not open anymore?
 		return EBADF;
@@ -86,14 +66,7 @@ std::pair<int, size_t> SpiDevice::executeTransaction(const SpiMasterOperationsRa
 	if (operationsRange.size() == 0)
 		return {EINVAL, {}};
 
-	const std::lock_guard<distortos::Mutex> lockGuard {mutex_};
-
-	const auto previousLockState = lockInternal();
-	const auto mutexScopeGuard = estd::makeScopeGuard(
-			[this, previousLockState]()
-			{
-				unlockInternal(previousLockState);
-			});
+	const Proxy proxy {*this};
 
 	if (openCount_ == 0)
 		return {EBADF, {}};
@@ -101,23 +74,9 @@ std::pair<int, size_t> SpiDevice::executeTransaction(const SpiMasterOperationsRa
 	return spiMaster_.executeTransaction(*this, operationsRange);
 }
 
-bool SpiDevice::lock()
-{
-	const std::lock_guard<distortos::Mutex> lockGuard {mutex_};
-
-	return lockInternal();
-}
-
 int SpiDevice::open()
 {
-	const std::lock_guard<distortos::Mutex> lockGuard {mutex_};
-
-	const auto previousLockState = lockInternal();
-	const auto mutexScopeGuard = estd::makeScopeGuard(
-			[this, previousLockState]()
-			{
-				unlockInternal(previousLockState);
-			});
+	const Proxy proxy {*this};
 
 	if (openCount_ == std::numeric_limits<decltype(openCount_)>::max())	// device is already opened too many times?
 		return EMFILE;
@@ -131,43 +90,6 @@ int SpiDevice::open()
 
 	++openCount_;
 	return 0;
-}
-
-void SpiDevice::unlock(const bool previousLockState)
-{
-	const std::lock_guard<distortos::Mutex> lockGuard {mutex_};
-
-	unlockInternal(previousLockState);
-}
-
-/*---------------------------------------------------------------------------------------------------------------------+
-| private functions
-+---------------------------------------------------------------------------------------------------------------------*/
-
-bool SpiDevice::lockInternal()
-{
-	const auto& thisThread = ThisThread::get();
-	if (owner_ == &thisThread)
-		return true;
-
-	const auto ret = conditionVariable_.wait(mutex_,
-			[this]()
-			{
-				return owner_ == nullptr;
-			});
-	assert(ret == 0 && "Unexpected value returned by ConditionVariable::wait()!");
-
-	owner_ = &thisThread;
-	return false;
-}
-
-void SpiDevice::unlockInternal(const bool previousLockState)
-{
-	if (previousLockState == true || owner_ != &ThisThread::get())
-		return;
-
-	owner_ = nullptr;
-	conditionVariable_.notifyOne();
 }
 
 }	// namespace devices
