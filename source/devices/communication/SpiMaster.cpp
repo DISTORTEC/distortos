@@ -88,31 +88,13 @@ std::pair<int, size_t> SpiMaster::executeTransaction(SpiDevice& device, const Sp
 	}
 
 	device.getSlaveSelectPin().set(false);
-	Semaphore semaphore {0};
-	semaphore_ = &semaphore;
-	operationsRange_ = operationsRange;
-	ret_ = {};
 	const auto cleanupScopeGuard = estd::makeScopeGuard(
-			[this, &device]()
+			[&device]()
 			{
-				operationsRange_ = {};
-				semaphore_ = {};
 				device.getSlaveSelectPin().set(true);
 			});
 
-	{
-		const auto transfer = operationsRange_.begin()->getTransfer();
-		assert(transfer != nullptr);
-		const auto ret = spiMaster_.startTransfer(transfer->getWriteBuffer(), transfer->getReadBuffer(),
-				transfer->getSize());
-		if (ret != 0)
-			return {ret, {}};
-	}
-
-	while (semaphore.wait() != 0);
-
-	const auto handledOperations = operationsRange_.begin() - operationsRange.begin();
-	return {ret_, handledOperations};
+	return proxy.executeTransaction(operationsRange);
 }
 
 int SpiMaster::open()

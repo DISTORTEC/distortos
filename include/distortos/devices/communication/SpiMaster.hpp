@@ -100,9 +100,8 @@ public:
 	 * \return pair with return code (0 on success, error code otherwise) and number of successfully completed
 	 * operations from \a operationsRange; error codes:
 	 * - EINVAL - \a operationsRange has no operations;
-	 * - EIO - failure detected by low-level SPI master driver;
 	 * - error codes returned by SpiMasterProxy::configure();
-	 * - error codes returned by SpiMasterLowLevel::startTransfer();
+	 * - error codes returned by SpiMasterProxy::executeTransaction();
 	 */
 
 	std::pair<int, size_t> executeTransaction(SpiDevice& device, SpiMasterOperationsRange operationsRange);
