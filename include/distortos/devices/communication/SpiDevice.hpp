@@ -36,6 +36,7 @@ class SpiMaster;
 class SpiDevice
 {
 	friend class SpiDeviceProxy;
+	friend class SpiDeviceSelectGuard;
 
 public:
 
