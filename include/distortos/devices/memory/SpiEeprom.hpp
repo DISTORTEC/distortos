@@ -266,13 +266,13 @@ public:
 	}
 
 	/**
-	 * \brief Checks whether any write operation is currently in progress.
+	 * \brief Wrapper for Proxy::isWriteInProgress()
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
 	 * \return pair with return code (0 on success, error code otherwise) and current status of device: false - device
 	 * is idle, true - write operation is in progress; error codes:
-	 * - error codes returned by readStatusRegister();
+	 * - error codes returned by Proxy::isWriteInProgress();
 	 */
 
 	std::pair<int, bool> isWriteInProgress();
@@ -291,7 +291,7 @@ public:
 	int open();
 
 	/**
-	 * \brief Reads data from SPI EEPROM.
+	 * \brief Wrapper for Proxy::read()
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
@@ -301,27 +301,24 @@ public:
 	 *
 	 * \return pair with return code (0 on success, error code otherwise) and number of read bytes (valid even when
 	 * error code is returned); error codes:
-	 * - EINVAL - \a address and/or \a buffer and/or \a size are not valid;
-	 * - error codes returned by waitWhileWriteInProgress();
-	 * - error codes returned by SpiDevice::executeTransaction;
+	 * - error codes returned by Proxy::read();
 	 */
 
 	std::pair<int, size_t> read(uint32_t address, void* buffer, size_t size);
 
 	/**
-	 * \brief Waits while any write operation is currently in progress.
+	 * \brief Wrapper for Proxy::waitWhileWriteInProgress()
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
 	 * \return 0 on success, error code otherwise:
-	 * - error codes returned by isWriteInProgress();
-	 * - error codes returned by ThisThread::sleepFor();
+	 * - error codes returned by Proxy::waitWhileWriteInProgress();
 	 */
 
 	int waitWhileWriteInProgress();
 
 	/**
-	 * \brief Writes data to SPI EEPROM.
+	 * \brief Wrapper for Proxy::write()
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
@@ -331,48 +328,12 @@ public:
 	 *
 	 * \return pair with return code (0 on success, error code otherwise) and number of written bytes (valid even when
 	 * error code is returned); error codes:
-	 * - EINVAL - \a address and/or \a buffer and/or \a size are not valid;
-	 * - error codes returned by writePage();
+	 * - error codes returned by Proxy::write();
 	 */
 
 	std::pair<int, size_t> write(uint32_t address, const void* buffer, size_t size);
 
 private:
-
-	/**
-	 * \brief Reads value of status register of SPI EEPROM.
-	 *
-	 * \return pair with return code (0 on success, error code otherwise) and value of status register of SPI EEPROM;
-	 * error codes:
-	 * - error codes returned by SpiDevice::executeTransaction();
-	 */
-
-	std::pair<int, uint8_t> readStatusRegister();
-
-	/**
-	 * \brief Enables writes in SPI EEPROM.
-	 *
-	 * \return 0 on success, error code otherwise:
-	 * - error codes returned by SpiDevice::executeTransaction();
-	 */
-
-	int writeEnable();
-
-	/**
-	 * \brief Writes single page.
-	 *
-	 * \param [in] address is the address of data that will be written, must be valid!
-	 * \param [in] buffer is the buffer with data that will be written
-	 * \param [in] size is the size of \a buffer, bytes
-	 *
-	 * \return pair with return code (0 on success, error code otherwise) and number of written bytes (valid even when
-	 * error code is returned); error codes:
-	 * - error codes returned by waitWhileWriteInProgress();
-	 * - error codes returned by writeEnable();
-	 * - error codes returned by SpiDevice::executeTransaction();
-	 */
-
-	std::pair<int, size_t> writePage(uint32_t address, const void* buffer, size_t size);
 
 	/// internal SPI slave device
 	SpiDevice spiDevice_;
