@@ -86,6 +86,8 @@ public:
 	 * is selected and the operations are executed. The transaction is finished when all operations are complete or when
 	 * any error is detected - in either case the device is unselected and this function returns.
 	 *
+	 * \deprecated scheduled to be removed after v0.7.0, use SpiDeviceProxy, SpiMasterProxy and SpiDeviceSelectGuard
+	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
 	 * \param [in] device is a reference to SPI device which is the target of the transaction
@@ -98,6 +100,7 @@ public:
 	 * - error codes returned by SpiMasterProxy::executeTransaction();
 	 */
 
+	__attribute__ ((deprecated("Use SpiDeviceProxy, SpiMasterProxy and SpiDeviceSelectGuard")))
 	std::pair<int, size_t> executeTransaction(SpiDevice& device, SpiMasterOperationsRange operationsRange);
 
 	/**
