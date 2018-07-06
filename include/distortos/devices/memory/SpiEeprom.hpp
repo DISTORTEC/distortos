@@ -2,7 +2,7 @@
  * \file
  * \brief SpiEeprom class header
  *
- * \author Copyright (C) 2016-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2016-2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -20,6 +20,8 @@ namespace distortos
 namespace devices
 {
 
+class SpiEepromProxy;
+
 /**
  * SpiEeprom class is a SPI EEPROM memory: Atmel AT25xxx, ON Semiconductor CAT25xxx, ST M95xxx, Microchip 25xxxxx or
  * similar.
@@ -29,6 +31,8 @@ namespace devices
 
 class SpiEeprom
 {
+	friend class SpiEepromProxy;
+
 	/// bit shift of field with page size encoded in device's type
 	constexpr static size_t pageSizeShift_ {0};
 
@@ -48,6 +52,9 @@ class SpiEeprom
 	constexpr static size_t capacityMask_ {((1 << capacityWidth_) - 1) << capacityShift_};
 
 public:
+
+	/// import SpiEepromProxy as SpiEeprom::Proxy
+	using Proxy = SpiEepromProxy;
 
 	/// type of device - determines capacity and page size
 	enum class Type : uint8_t
@@ -212,13 +219,15 @@ public:
 	 * \param [in] type is the type of SPI EEPROM
 	 * \param [in] mode3 selects whether SPI mode 0 - CPOL == 0, CPHA == 0 - (false) or SPI mode 3 - CPOL == 1,
 	 * CPHA == 1 - (true) will be used, default - SPI mode 0 (false)
-	 * \param [in] maxClockFrequency is the max clock frequency supported by SPI EEPROM, Hz, default - 1 MHz
+	 * \param [in] clockFrequency is the desired clock frequency of SPI EEPROM, Hz, default - 1 MHz
 	 */
 
 	constexpr SpiEeprom(SpiMaster& spiMaster, OutputPin& slaveSelectPin, const Type type, const bool mode3 = {},
-			const uint32_t maxClockFrequency = 1000000) :
-					spiDevice_{spiMaster, slaveSelectPin, mode3 == false ? SpiMode::_0 : SpiMode::_3, maxClockFrequency,
-							8, false},
+			const uint32_t clockFrequency = 1000000) :
+					spiDevice_{spiMaster, slaveSelectPin},
+					slaveSelectPin_{slaveSelectPin},
+					clockFrequency_{clockFrequency},
+					mode_{mode3 == false ? SpiMode::_0 : SpiMode::_3},
 					type_{type}
 	{
 
@@ -256,29 +265,16 @@ public:
 	}
 
 	/**
-	 * \brief Checks whether any write operation is currently in progress.
+	 * \brief Wrapper for Proxy::isWriteInProgress()
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
 	 * \return pair with return code (0 on success, error code otherwise) and current status of device: false - device
 	 * is idle, true - write operation is in progress; error codes:
-	 * - error codes returned by readStatusRegister();
+	 * - error codes returned by Proxy::isWriteInProgress();
 	 */
 
 	std::pair<int, bool> isWriteInProgress();
-
-	/**
-	 * \brief Wrapper for SpiDevice::lock()
-	 *
-	 * \note Locks may be nested.
-	 *
-	 * \warning This function must not be called from interrupt context!
-	 *
-	 * \return previous state of lock: false if this SPI EEPROM was unlocked before this call, true if it was already
-	 * locked by current thread
-	 */
-
-	bool lock();
 
 	/**
 	 * \brief Opens SPI EEPROM.
@@ -294,7 +290,7 @@ public:
 	int open();
 
 	/**
-	 * \brief Reads data from SPI EEPROM.
+	 * \brief Wrapper for Proxy::read()
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
@@ -304,41 +300,24 @@ public:
 	 *
 	 * \return pair with return code (0 on success, error code otherwise) and number of read bytes (valid even when
 	 * error code is returned); error codes:
-	 * - EINVAL - \a address and/or \a buffer and/or \a size are not valid;
-	 * - error codes returned by waitWhileWriteInProgress();
-	 * - error codes returned by SpiDevice::executeTransaction;
+	 * - error codes returned by Proxy::read();
 	 */
 
 	std::pair<int, size_t> read(uint32_t address, void* buffer, size_t size);
 
 	/**
-	 * \brief Wrapper for SpiDevice::unlock()
-	 *
-	 * Does nothing if SPI EEPROM is not locked by current thread.
-	 *
-	 * \note Locks may be nested.
-	 *
-	 * \warning This function must not be called from interrupt context!
-	 *
-	 * \param previousLockState is the value returned by matching call to lock()
-	 */
-
-	void unlock(bool previousLockState);
-
-	/**
-	 * \brief Waits while any write operation is currently in progress.
+	 * \brief Wrapper for Proxy::waitWhileWriteInProgress()
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
 	 * \return 0 on success, error code otherwise:
-	 * - error codes returned by isWriteInProgress();
-	 * - error codes returned by ThisThread::sleepFor();
+	 * - error codes returned by Proxy::waitWhileWriteInProgress();
 	 */
 
 	int waitWhileWriteInProgress();
 
 	/**
-	 * \brief Writes data to SPI EEPROM.
+	 * \brief Wrapper for Proxy::write()
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
@@ -348,51 +327,24 @@ public:
 	 *
 	 * \return pair with return code (0 on success, error code otherwise) and number of written bytes (valid even when
 	 * error code is returned); error codes:
-	 * - EINVAL - \a address and/or \a buffer and/or \a size are not valid;
-	 * - error codes returned by writePage();
+	 * - error codes returned by Proxy::write();
 	 */
 
 	std::pair<int, size_t> write(uint32_t address, const void* buffer, size_t size);
 
 private:
 
-	/**
-	 * \brief Reads value of status register of SPI EEPROM.
-	 *
-	 * \return pair with return code (0 on success, error code otherwise) and value of status register of SPI EEPROM;
-	 * error codes:
-	 * - error codes returned by SpiDevice::executeTransaction();
-	 */
-
-	std::pair<int, uint8_t> readStatusRegister();
-
-	/**
-	 * \brief Enables writes in SPI EEPROM.
-	 *
-	 * \return 0 on success, error code otherwise:
-	 * - error codes returned by SpiDevice::executeTransaction();
-	 */
-
-	int writeEnable();
-
-	/**
-	 * \brief Writes single page.
-	 *
-	 * \param [in] address is the address of data that will be written, must be valid!
-	 * \param [in] buffer is the buffer with data that will be written
-	 * \param [in] size is the size of \a buffer, bytes
-	 *
-	 * \return pair with return code (0 on success, error code otherwise) and number of written bytes (valid even when
-	 * error code is returned); error codes:
-	 * - error codes returned by waitWhileWriteInProgress();
-	 * - error codes returned by writeEnable();
-	 * - error codes returned by SpiDevice::executeTransaction();
-	 */
-
-	std::pair<int, size_t> writePage(uint32_t address, const void* buffer, size_t size);
-
 	/// internal SPI slave device
 	SpiDevice spiDevice_;
+
+	/// reference to slave select pin of this SPI EEPROM
+	OutputPin& slaveSelectPin_;
+
+	/// desired clock frequency of SPI EEPROM, Hz
+	uint32_t clockFrequency_;
+
+	/// SPI mode used by SPI EEPROM
+	SpiMode mode_;
 
 	/// type of SPI EEPROM
 	Type type_;

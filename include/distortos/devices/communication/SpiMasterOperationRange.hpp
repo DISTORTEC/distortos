@@ -1,8 +1,9 @@
 /**
  * \file
  * \brief SpiMasterOperationRange type alias header
+ * \deprecated scheduled to be removed after v0.7.0, use SpiMasterOperationsRange
  *
- * \author Copyright (C) 2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2016-2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -12,7 +13,9 @@
 #ifndef INCLUDE_DISTORTOS_DEVICES_COMMUNICATION_SPIMASTEROPERATIONRANGE_HPP_
 #define INCLUDE_DISTORTOS_DEVICES_COMMUNICATION_SPIMASTEROPERATIONRANGE_HPP_
 
-#include "estd/ContiguousRange.hpp"
+#warning "'distortos/devices/communication/SpiMasterOperationRange.hpp' is deprecated: Use SpiMasterOperationsRange"
+
+#include "distortos/devices/communication/SpiMasterOperationsRange.hpp"
 
 namespace distortos
 {
@@ -20,15 +23,13 @@ namespace distortos
 namespace devices
 {
 
-class SpiMasterOperation;
-
 /**
  * SpiMasterOperationRange is an alias for ContiguousRange of SpiMasterOperation elements
  *
- * \ingroup devices
+ * \deprecated scheduled to be removed after v0.7.0, use SpiMasterOperationsRange
  */
 
-using SpiMasterOperationRange = estd::ContiguousRange<SpiMasterOperation>;
+using SpiMasterOperationRange __attribute__ ((deprecated("Use SpiMasterOperationsRange"))) = SpiMasterOperationsRange;
 
 }	// namespace devices
 

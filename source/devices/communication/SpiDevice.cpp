@@ -11,17 +11,12 @@
 
 #include "distortos/devices/communication/SpiDevice.hpp"
 
+#include "distortos/devices/communication/SpiDeviceProxy.hpp"
+#include "distortos/devices/communication/SpiDeviceSelectGuard.hpp"
 #include "distortos/devices/communication/SpiMaster.hpp"
-#include "distortos/devices/communication/SpiMasterOperation.hpp"
+#include "distortos/devices/communication/SpiMasterProxy.hpp"
 
 #include "distortos/internal/CHECK_FUNCTION_CONTEXT.hpp"
-
-#include "distortos/assert.h"
-#include "distortos/ThisThread.hpp"
-
-#include "estd/ScopeGuard.hpp"
-
-#include <mutex>
 
 #include <cerrno>
 
@@ -42,28 +37,14 @@ SpiDevice::~SpiDevice()
 	if (openCount_ == 0)
 		return;
 
-	const std::lock_guard<distortos::Mutex> lockGuard {mutex_};
-
-	const auto previousLockState = lockInternal();
-	const auto mutexScopeGuard = estd::makeScopeGuard(
-			[this, previousLockState]()
-			{
-				unlockInternal(previousLockState);
-			});
+	const Proxy proxy {*this};
 
 	spiMaster_.close();
 }
 
 int SpiDevice::close()
 {
-	const std::lock_guard<distortos::Mutex> lockGuard {mutex_};
-
-	const auto previousLockState = lockInternal();
-	const auto mutexScopeGuard = estd::makeScopeGuard(
-			[this, previousLockState]()
-			{
-				unlockInternal(previousLockState);
-			});
+	const Proxy proxy {*this};
 
 	if (openCount_ == 0)	// device is not open anymore?
 		return EBADF;
@@ -79,45 +60,25 @@ int SpiDevice::close()
 	return 0;
 }
 
-std::pair<int, size_t> SpiDevice::executeTransaction(const SpiMasterOperationRange operationRange)
+std::pair<int, size_t> SpiDevice::executeTransaction(const SpiMasterOperationsRange operationsRange)
 {
-	CHECK_FUNCTION_CONTEXT();
+	const Proxy proxy {*this};
+	SpiMasterProxy spiMasterProxy {proxy};
 
-	if (operationRange.size() == 0)
-		return {EINVAL, {}};
+	{
+		const auto ret = spiMasterProxy.configure(mode_, maxClockFrequency_, wordLength_, lsbFirst_);
+		if (ret.first != 0)
+			return {ret.first, {}};
+	}
 
-	const std::lock_guard<distortos::Mutex> lockGuard {mutex_};
+	const SpiDeviceSelectGuard spiDeviceSelectGuard {spiMasterProxy};
 
-	const auto previousLockState = lockInternal();
-	const auto mutexScopeGuard = estd::makeScopeGuard(
-			[this, previousLockState]()
-			{
-				unlockInternal(previousLockState);
-			});
-
-	if (openCount_ == 0)
-		return {EBADF, {}};
-
-	return spiMaster_.executeTransaction(*this, operationRange);
-}
-
-bool SpiDevice::lock()
-{
-	const std::lock_guard<distortos::Mutex> lockGuard {mutex_};
-
-	return lockInternal();
+	return spiMasterProxy.executeTransaction(operationsRange);
 }
 
 int SpiDevice::open()
 {
-	const std::lock_guard<distortos::Mutex> lockGuard {mutex_};
-
-	const auto previousLockState = lockInternal();
-	const auto mutexScopeGuard = estd::makeScopeGuard(
-			[this, previousLockState]()
-			{
-				unlockInternal(previousLockState);
-			});
+	const Proxy proxy {*this};
 
 	if (openCount_ == std::numeric_limits<decltype(openCount_)>::max())	// device is already opened too many times?
 		return EMFILE;
@@ -131,43 +92,6 @@ int SpiDevice::open()
 
 	++openCount_;
 	return 0;
-}
-
-void SpiDevice::unlock(const bool previousLockState)
-{
-	const std::lock_guard<distortos::Mutex> lockGuard {mutex_};
-
-	unlockInternal(previousLockState);
-}
-
-/*---------------------------------------------------------------------------------------------------------------------+
-| private functions
-+---------------------------------------------------------------------------------------------------------------------*/
-
-bool SpiDevice::lockInternal()
-{
-	const auto& thisThread = ThisThread::get();
-	if (owner_ == &thisThread)
-		return true;
-
-	const auto ret = conditionVariable_.wait(mutex_,
-			[this]()
-			{
-				return owner_ == nullptr;
-			});
-	assert(ret == 0 && "Unexpected value returned by ConditionVariable::wait()!");
-
-	owner_ = &thisThread;
-	return false;
-}
-
-void SpiDevice::unlockInternal(const bool previousLockState)
-{
-	if (previousLockState == true || owner_ != &ThisThread::get())
-		return;
-
-	owner_ = nullptr;
-	conditionVariable_.notifyOne();
 }
 
 }	// namespace devices

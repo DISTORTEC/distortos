@@ -2,7 +2,7 @@
  * \file
  * \brief SpiDevice class header
  *
- * \author Copyright (C) 2016-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2016-2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -12,21 +12,19 @@
 #ifndef INCLUDE_DISTORTOS_DEVICES_COMMUNICATION_SPIDEVICE_HPP_
 #define INCLUDE_DISTORTOS_DEVICES_COMMUNICATION_SPIDEVICE_HPP_
 
+#include "distortos/devices/communication/SpiMasterOperationsRange.hpp"
 #include "distortos/devices/communication/SpiMode.hpp"
-#include "distortos/devices/communication/SpiMasterOperationRange.hpp"
 
-#include "distortos/ConditionVariable.hpp"
 #include "distortos/Mutex.hpp"
 
 namespace distortos
 {
 
-class Thread;
-
 namespace devices
 {
 
 class OutputPin;
+class SpiDeviceProxy;
 class SpiMaster;
 
 /**
@@ -37,10 +35,39 @@ class SpiMaster;
 
 class SpiDevice
 {
+	friend class SpiDeviceProxy;
+	friend class SpiDeviceSelectGuard;
+
 public:
+
+	/// import SpiDeviceProxy as SpiDevice::Proxy
+	using Proxy = SpiDeviceProxy;
 
 	/**
 	 * \brief SpiDevice's constructor
+	 *
+	 * \param [in] spiMaster is a reference to SPI master to which this SPI slave device is connected
+	 * \param [in] slaveSelectPin is a reference to slave select pin of this SPI slave device
+	 */
+
+	constexpr SpiDevice(SpiMaster& spiMaster, OutputPin& slaveSelectPin) :
+			mutex_{Mutex::Type::recursive, Mutex::Protocol::priorityInheritance},
+			maxClockFrequency_{},
+			slaveSelectPin_{slaveSelectPin},
+			spiMaster_{spiMaster},
+			lsbFirst_{},
+			mode_{},
+			openCount_{},
+			wordLength_{}
+	{
+
+	}
+
+	/**
+	 * \brief SpiDevice's constructor
+	 *
+	 * \deprecated scheduled to be removed after v0.7.0, use SpiDevice::SpiDevice(SpiMaster&, OutputPin&),
+	 * SpiDeviceProxy, SpiMasterProxy and SpiDeviceSelectGuard
 	 *
 	 * \param [in] spiMaster is a reference to SPI master to which this SPI slave device is connected
 	 * \param [in] slaveSelectPin is a reference to slave select pin of this SPI slave device
@@ -51,12 +78,12 @@ public:
 	 * MSB (false) or LSB (true) first
 	 */
 
+	__attribute__ ((deprecated("Use SpiDevice::SpiDevice(SpiMaster&, OutputPin&), SpiDeviceProxy, SpiMasterProxy and "
+			"SpiDeviceSelectGuard")))
 	constexpr SpiDevice(SpiMaster& spiMaster, OutputPin& slaveSelectPin, const SpiMode mode,
 			const uint32_t maxClockFrequency, const uint8_t wordLength, const bool lsbFirst) :
-					conditionVariable_{},
-					mutex_{Mutex::Protocol::priorityInheritance},
+					mutex_{Mutex::Type::recursive, Mutex::Protocol::priorityInheritance},
 					maxClockFrequency_{maxClockFrequency},
-					owner_{},
 					slaveSelectPin_{slaveSelectPin},
 					spiMaster_{spiMaster},
 					lsbFirst_{lsbFirst},
@@ -94,82 +121,81 @@ public:
 	/**
 	 * \brief Executes series of operations as a single atomic transaction.
 	 *
-	 * Wrapper for SpiMaster::executeTransaction().
+	 * \deprecated scheduled to be removed after v0.7.0, use SpiDeviceProxy, SpiMasterProxy and SpiDeviceSelectGuard
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
-	 * \param [in] operationRange is the range of operations that will be executed
+	 * \param [in] operationsRange is the range of operations that will be executed
 	 *
 	 * \return pair with return code (0 on success, error code otherwise) and number of successfully completed
-	 * operations from \a operationRange; error codes:
-	 * - EBADF - the device is not opened;
-	 * - EINVAL - \a operationRange has no operations;
-	 * - error codes returned by SpiMaster::executeTransaction();
+	 * operations from \a operationsRange; error codes:
+	 * - error codes returned by SpiMasterProxy::configure();
+	 * - error codes returned by SpiMasterProxy::executeTransaction();
 	 */
 
-	std::pair<int, size_t> executeTransaction(SpiMasterOperationRange operationRange);
+	__attribute__ ((deprecated("Use SpiDeviceProxy, SpiMasterProxy and SpiDeviceSelectGuard")))
+	std::pair<int, size_t> executeTransaction(SpiMasterOperationsRange operationsRange);
 
 	/**
+	 * \deprecated scheduled to be removed after v0.7.0, use SpiDeviceProxy, SpiMasterProxy and SpiDeviceSelectGuard
+	 *
 	 * \return false if data should be transmitted/received to/from the SPI slave device with
 	 * MSB first, true if data should be transmitted/received to/from the SPI slave device with LSB first
 	 */
 
+	__attribute__ ((deprecated("Use SpiDeviceProxy, SpiMasterProxy and SpiDeviceSelectGuard")))
 	bool getLsbFirst() const
 	{
 		return lsbFirst_;
 	}
 
 	/**
+	 * \deprecated scheduled to be removed after v0.7.0, use SpiDeviceProxy, SpiMasterProxy and SpiDeviceSelectGuard
+	 *
 	 * \return max clock frequency supported by SPI slave device, Hz
 	 */
 
+	__attribute__ ((deprecated("Use SpiDeviceProxy, SpiMasterProxy and SpiDeviceSelectGuard")))
 	uint32_t getMaxClockFrequency() const
 	{
 		return maxClockFrequency_;
 	}
 
 	/**
+	 * \deprecated scheduled to be removed after v0.7.0, use SpiDeviceProxy, SpiMasterProxy and SpiDeviceSelectGuard
+	 *
 	 * \return SPI mode used by SPI slave device
 	 */
 
+	__attribute__ ((deprecated("Use SpiDeviceProxy, SpiMasterProxy and SpiDeviceSelectGuard")))
 	SpiMode getMode() const
 	{
 		return mode_;
 	}
 
 	/**
+	 * \deprecated scheduled to be removed after v0.7.0, use SpiDeviceProxy, SpiMasterProxy and SpiDeviceSelectGuard
+	 *
 	 * \return reference to slave select pin of this SPI slave device
 	 */
 
+	__attribute__ ((deprecated("Use SpiDeviceProxy, SpiMasterProxy and SpiDeviceSelectGuard")))
 	OutputPin& getSlaveSelectPin() const
 	{
 		return slaveSelectPin_;
 	}
 
 	/**
+	 * \deprecated scheduled to be removed after v0.7.0, use SpiDeviceProxy, SpiMasterProxy and SpiDeviceSelectGuard
+	 *
 	 * \return word length used by SPI slave device, bits
 	 */
 
+	__attribute__ ((deprecated("Use SpiDeviceProxy, SpiMasterProxy and SpiDeviceSelectGuard")))
 	uint8_t getWordLength() const
 	{
 		return wordLength_;
 	}
-
-	/**
-	 * \brief Locks the object for exclusive use by current thread using condition variable and mutex.
-	 *
-	 * When the object is locked, any call to any member function from other thread will be blocked until the object is
-	 * unlocked. Locking is optional, but may be useful when more than one transaction must be done atomically.
-	 *
-	 * \note Locks may be nested.
-	 *
-	 * \warning This function must not be called from interrupt context!
-	 *
-	 * \return previous state of lock: false if this SPI device was unlocked before this call, true if it was already
-	 * locked by current thread
-	 */
-
-	bool lock();
 
 	/**
 	 * \brief Opens SPI device.
@@ -185,52 +211,13 @@ public:
 
 	int open();
 
-	/**
-	 * \brief Unlocks the object that was previously locked by current thread.
-	 *
-	 * Does nothing if SPI device is not locked by current thread.
-	 *
-	 * \note Locks may be nested.
-	 *
-	 * \warning This function must not be called from interrupt context!
-	 *
-	 * \param previousLockState is the value returned by matching call to lock()
-	 */
-
-	void unlock(bool previousLockState);
-
 private:
-
-	/**
-	 * \brief Internal version of lock() - without locking the mutex.
-	 *
-	 * \return previous state of lock: false if this SPI device was unlocked before this call, true if it was already
-	 * locked by current thread
-	 */
-
-	bool lockInternal();
-
-	/**
-	 * \brief Internal version of unlock() - without locking the mutex.
-	 *
-	 * Does nothing if SPI device is not locked by current thread.
-	 *
-	 * \param previousLockState is the value returned by matching call to lockInternal()
-	 */
-
-	void unlockInternal(bool previousLockState);
-
-	/// condition variable used for locking access to this object
-	ConditionVariable conditionVariable_;
 
 	/// mutex used to serialize access to this object
 	Mutex mutex_;
 
 	/// max clock frequency supported by SPI slave device, Hz
 	uint32_t maxClockFrequency_;
-
-	/// pointer to thread that locked this object
-	const Thread* owner_;
 
 	/// reference to slave select pin of this SPI slave device
 	OutputPin& slaveSelectPin_;

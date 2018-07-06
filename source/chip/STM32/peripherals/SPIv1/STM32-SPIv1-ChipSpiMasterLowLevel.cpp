@@ -2,7 +2,7 @@
  * \file
  * \brief ChipSpiMasterLowLevel class implementation for SPIv1 in STM32
  *
- * \author Copyright (C) 2016-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2016-2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -15,6 +15,8 @@
 #include "distortos/chip/STM32-bit-banding.h"
 
 #include "distortos/devices/communication/SpiMasterBase.hpp"
+
+#include "distortos/assert.h"
 
 #ifndef DISTORTOS_BITBANDING_SUPPORTED
 
@@ -472,24 +474,28 @@ void ChipSpiMasterLowLevel::interruptHandler()
 		writeBuffer_ = {};
 		readBuffer_ = {};
 
-		spiMasterBase_->transferCompleteEvent(errorSet, bytesTransfered);
+		const auto spiMasterBase = spiMasterBase_;
+		spiMasterBase_ = nullptr;
+		assert(spiMasterBase != nullptr);
+		spiMasterBase->transferCompleteEvent(errorSet, bytesTransfered);
 	}
 }
 
-int ChipSpiMasterLowLevel::start(devices::SpiMasterBase& spiMasterBase)
+int ChipSpiMasterLowLevel::start()
 {
 	if (isStarted() == true)
 		return EBADF;
 
 	parameters_.enablePeripheralClock(true);
 	parameters_.resetPeripheral();
-	spiMasterBase_ = &spiMasterBase;
 	parameters_.getSpi().CR1 = SPI_CR1_SSM | SPI_CR1_SSI | SPI_CR1_SPE | SPI_CR1_BR | SPI_CR1_MSTR;
+	started_ = true;
 
 	return 0;
 }
 
-int ChipSpiMasterLowLevel::startTransfer(const void* const writeBuffer, void* const readBuffer, const size_t size)
+int ChipSpiMasterLowLevel::startTransfer(devices::SpiMasterBase& spiMasterBase, const void* const writeBuffer,
+		void* const readBuffer, const size_t size)
 {
 	if (size == 0)
 		return EINVAL;
@@ -503,6 +509,7 @@ int ChipSpiMasterLowLevel::startTransfer(const void* const writeBuffer, void* co
 	if (size % (parameters_.getWordLength() / 8) != 0)
 		return EINVAL;
 
+	spiMasterBase_ = &spiMasterBase;
 	readBuffer_ = static_cast<uint8_t*>(readBuffer);
 	writeBuffer_ = static_cast<const uint8_t*>(writeBuffer);
 	size_ = size;
@@ -525,7 +532,7 @@ int ChipSpiMasterLowLevel::stop()
 
 	parameters_.resetPeripheral();
 	parameters_.enablePeripheralClock(false);
-	spiMasterBase_ = nullptr;
+	started_ = false;
 	return 0;
 }
 
