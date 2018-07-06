@@ -48,6 +48,26 @@ public:
 	 *
 	 * \param [in] spiMaster is a reference to SPI master to which this SPI slave device is connected
 	 * \param [in] slaveSelectPin is a reference to slave select pin of this SPI slave device
+	 */
+
+	constexpr SpiDevice(SpiMaster& spiMaster, OutputPin& slaveSelectPin) :
+			mutex_{Mutex::Type::recursive, Mutex::Protocol::priorityInheritance},
+			maxClockFrequency_{},
+			slaveSelectPin_{slaveSelectPin},
+			spiMaster_{spiMaster},
+			lsbFirst_{},
+			mode_{},
+			openCount_{},
+			wordLength_{}
+	{
+
+	}
+
+	/**
+	 * \brief SpiDevice's constructor
+	 *
+	 * \param [in] spiMaster is a reference to SPI master to which this SPI slave device is connected
+	 * \param [in] slaveSelectPin is a reference to slave select pin of this SPI slave device
 	 * \param [in] mode is the SPI mode used by SPI slave device
 	 * \param [in] maxClockFrequency is the max clock frequency supported by SPI slave device, Hz
 	 * \param [in] wordLength is the word length used by SPI slave device, bits
