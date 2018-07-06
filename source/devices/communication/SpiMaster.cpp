@@ -13,18 +13,15 @@
 
 #include "distortos/devices/communication/SpiDevice.hpp"
 #include "distortos/devices/communication/SpiDeviceProxy.hpp"
+#include "distortos/devices/communication/SpiDeviceSelectGuard.hpp"
 #include "distortos/devices/communication/SpiMasterLowLevel.hpp"
 #include "distortos/devices/communication/SpiMasterOperation.hpp"
 #include "distortos/devices/communication/SpiMasterProxy.hpp"
-
-#include "distortos/devices/io/OutputPin.hpp"
 
 #include "distortos/internal/CHECK_FUNCTION_CONTEXT.hpp"
 
 #include "distortos/assert.h"
 #include "distortos/Semaphore.hpp"
-
-#include "estd/ScopeGuard.hpp"
 
 #include <mutex>
 
@@ -87,12 +84,7 @@ std::pair<int, size_t> SpiMaster::executeTransaction(SpiDevice& device, const Sp
 			return {ret.first, {}};
 	}
 
-	device.getSlaveSelectPin().set(false);
-	const auto cleanupScopeGuard = estd::makeScopeGuard(
-			[&device]()
-			{
-				device.getSlaveSelectPin().set(true);
-			});
+	const SpiDeviceSelectGuard spiDeviceSelectGuard {proxy};
 
 	return proxy.executeTransaction(operationsRange);
 }
