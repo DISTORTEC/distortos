@@ -11,6 +11,9 @@
 
 #include "distortos/devices/memory/SpiEepromProxy.hpp"
 
+#include "distortos/devices/communication/SpiDeviceSelectGuard.hpp"
+#include "distortos/devices/communication/SpiMasterProxy.hpp"
+
 #include "distortos/devices/memory/SpiEeprom.hpp"
 
 namespace distortos
@@ -28,6 +31,25 @@ SpiEepromProxy::SpiEepromProxy(SpiEeprom& spiEeprom) :
 		spiEeprom_{spiEeprom}
 {
 
+}
+
+/*---------------------------------------------------------------------------------------------------------------------+
+| private functions
++---------------------------------------------------------------------------------------------------------------------*/
+
+std::pair<int, size_t> SpiEepromProxy::executeTransaction(const SpiMasterOperationsRange operationsRange) const
+{
+	SpiMasterProxy spiMasterProxy {spiDeviceProxy_};
+
+	{
+		const auto ret = spiMasterProxy.configure(spiEeprom_.mode_, spiEeprom_.clockFrequency_, 8, false);
+		if (ret.first != 0)
+			return {ret.first, {}};
+	}
+
+	const SpiDeviceSelectGuard spiDeviceSelectGuard {spiMasterProxy};
+
+	return spiMasterProxy.executeTransaction(operationsRange);
 }
 
 }	// namespace devices

@@ -13,6 +13,7 @@
 #define INCLUDE_DISTORTOS_DEVICES_MEMORY_SPIEEPROMPROXY_HPP_
 
 #include "distortos/devices/communication/SpiDeviceProxy.hpp"
+#include "distortos/devices/communication/SpiMasterOperationsRange.hpp"
 
 namespace distortos
 {
@@ -46,6 +47,19 @@ public:
 	explicit SpiEepromProxy(SpiEeprom& spiEeprom);
 
 private:
+
+	/**
+	 * \brief Executes series of operations as a single atomic transaction.
+	 *
+	 * \param [in] operationsRange is the range of operations that will be executed
+	 *
+	 * \return pair with return code (0 on success, error code otherwise) and number of successfully completed
+	 * operations from \a operationsRange; error codes:
+	 * - error codes returned by SpiMasterProxy::configure();
+	 * - error codes returned by SpiMasterProxy::executeTransaction();
+	 */
+
+	std::pair<int, size_t> executeTransaction(SpiMasterOperationsRange operationsRange) const;
 
 	/// internal proxy for SPI device
 	SpiDeviceProxy spiDeviceProxy_;
