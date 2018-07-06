@@ -12,15 +12,12 @@
 #ifndef INCLUDE_DISTORTOS_DEVICES_COMMUNICATION_SPIMASTER_HPP_
 #define INCLUDE_DISTORTOS_DEVICES_COMMUNICATION_SPIMASTER_HPP_
 
-#include "distortos/devices/communication/SpiMasterBase.hpp"
 #include "distortos/devices/communication/SpiMasterOperationsRange.hpp"
 
 #include "distortos/Mutex.hpp"
 
 namespace distortos
 {
-
-class Semaphore;
 
 namespace devices
 {
@@ -35,7 +32,7 @@ class SpiMasterProxy;
  * \ingroup devices
  */
 
-class SpiMaster : private SpiMasterBase
+class SpiMaster
 {
 	friend class SpiMasterProxy;
 
@@ -52,9 +49,6 @@ public:
 
 	constexpr explicit SpiMaster(SpiMasterLowLevel& spiMaster) :
 			mutex_{Mutex::Type::recursive, Mutex::Protocol::priorityInheritance},
-			operationsRange_{},
-			ret_{},
-			semaphore_{},
 			spiMaster_{spiMaster},
 			openCount_{}
 	{
@@ -69,7 +63,7 @@ public:
 	 * \warning This function must not be called from interrupt context!
 	 */
 
-	~SpiMaster() override;
+	~SpiMaster();
 
 	/**
 	 * \brief Closes SPI master.
@@ -122,41 +116,8 @@ public:
 
 private:
 
-	/**
-	 * \brief Notifies waiting thread about completion of transaction.
-	 *
-	 * \param [in] ret is the last error code returned by transaction handling code, default - 0
-	 */
-
-	void notifyWaiter(int ret = {});
-
-	/**
-	 * \brief "Transfer complete" event
-	 *
-	 * Called by low-level SPI master driver when the transfer is physically finished.
-	 *
-	 * Handles the next operation from the currently handled transaction. If there are no more operations, waiting
-	 * thread is notified about completion of transaction.
-	 *
-	 * \param [in] errorSet is the set of error bits
-	 * \param [in] bytesTransfered is the number of bytes transfered by low-level SPI master driver (read from write
-	 * buffer and/or written to read buffer), may be unreliable if \a errorSet is not empty (i.e. transfer error was
-	 * detected)
-	 */
-
-	void transferCompleteEvent(SpiMasterErrorSet errorSet, size_t bytesTransfered) override;
-
 	/// mutex used to serialize access to this object
 	Mutex mutex_;
-
-	/// range of operations that are part of currently handled transaction
-	SpiMasterOperationsRange operationsRange_;
-
-	/// error codes detected in transferCompleteEvent()
-	volatile int ret_;
-
-	/// pointer to semaphore used to notify waiting thread about completion of transaction
-	Semaphore* volatile semaphore_;
 
 	/// reference to low-level implementation of SpiMasterLowLevel interface
 	SpiMasterLowLevel& spiMaster_;

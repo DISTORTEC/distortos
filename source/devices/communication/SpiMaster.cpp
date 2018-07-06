@@ -20,9 +20,6 @@
 
 #include "distortos/internal/CHECK_FUNCTION_CONTEXT.hpp"
 
-#include "distortos/assert.h"
-#include "distortos/Semaphore.hpp"
-
 #include <mutex>
 
 #include <cerrno>
@@ -105,48 +102,6 @@ int SpiMaster::open()
 
 	++openCount_;
 	return 0;
-}
-
-/*---------------------------------------------------------------------------------------------------------------------+
-| private functions
-+---------------------------------------------------------------------------------------------------------------------*/
-
-void SpiMaster::notifyWaiter(const int ret)
-{
-	ret_ = ret;
-	const auto semaphore = semaphore_;
-	assert(semaphore != nullptr);
-	semaphore->post();
-}
-
-void SpiMaster::transferCompleteEvent(SpiMasterErrorSet errorSet, size_t bytesTransfered)
-{
-	assert(operationsRange_.size() != 0 && "Invalid range of operations!");
-
-	{
-		const auto previousTransfer = operationsRange_.begin()->getTransfer();
-		assert(previousTransfer != nullptr && "Invalid type of previous operation!");
-		previousTransfer->finalize(errorSet, bytesTransfered);
-	}
-
-	const auto error = errorSet.any();
-	if (error == false)	// handling of last operation successful?
-		operationsRange_ = {operationsRange_.begin() + 1, operationsRange_.end()};
-
-	if (operationsRange_.size() == 0 || error == true)	// all operations are done or handling of last one failed?
-	{
-		notifyWaiter(error == false ? 0 : EIO);
-		return;
-	}
-
-	{
-		const auto nextTransfer = operationsRange_.begin()->getTransfer();
-		assert(nextTransfer != nullptr && "Invalid type of next operation!");
-		const auto ret = spiMaster_.startTransfer(*this, nextTransfer->getWriteBuffer(), nextTransfer->getReadBuffer(),
-				nextTransfer->getSize());
-		if (ret != 0)
-			notifyWaiter(ret);
-	}
 }
 
 }	// namespace devices

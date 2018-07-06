@@ -12,11 +12,14 @@
 #ifndef INCLUDE_DISTORTOS_DEVICES_COMMUNICATION_SPIMASTERPROXY_HPP_
 #define INCLUDE_DISTORTOS_DEVICES_COMMUNICATION_SPIMASTERPROXY_HPP_
 
+#include "distortos/devices/communication/SpiMasterBase.hpp"
 #include "distortos/devices/communication/SpiMasterOperationsRange.hpp"
 #include "distortos/devices/communication/SpiMode.hpp"
 
 namespace distortos
 {
+
+class Semaphore;
 
 namespace devices
 {
@@ -34,7 +37,7 @@ class SpiMaster;
  * \ingroup devices
  */
 
-class SpiMasterProxy
+class SpiMasterProxy : private SpiMasterBase
 {
 	friend class SpiDeviceSelectGuard;
 
@@ -56,7 +59,7 @@ public:
 	 * \warning This function must not be called from interrupt context!
 	 */
 
-	~SpiMasterProxy();
+	~SpiMasterProxy() override;
 
 	/**
 	 * \brief Configures parameters of associated SPI master.
@@ -109,8 +112,41 @@ private:
 
     SpiMaster& getSpiMaster() const;
 
+	/**
+	 * \brief Notifies waiting thread about completion of transaction.
+	 *
+	 * \param [in] ret is the last error code returned by transaction handling code, default - 0
+	 */
+
+	void notifyWaiter(int ret = {});
+
+	/**
+	 * \brief "Transfer complete" event
+	 *
+	 * Called by low-level SPI master driver when the transfer is physically finished.
+	 *
+	 * Handles the next operation from the currently handled transaction. If there are no more operations, waiting
+	 * thread is notified about completion of transaction.
+	 *
+	 * \param [in] errorSet is the set of error bits
+	 * \param [in] bytesTransfered is the number of bytes transfered by low-level SPI master driver (read from write
+	 * buffer and/or written to read buffer), may be unreliable if \a errorSet is not empty (i.e. transfer error was
+	 * detected)
+	 */
+
+	void transferCompleteEvent(SpiMasterErrorSet errorSet, size_t bytesTransfered) override;
+
+	/// range of operations that are part of currently handled transaction
+	SpiMasterOperationsRange operationsRange_;
+
 	/// reference to SpiDeviceProxy associated with this proxy
 	const SpiDeviceProxy& spiDeviceProxy_;
+
+	/// error codes detected in transferCompleteEvent()
+	volatile int ret_;
+
+	/// pointer to semaphore used to notify waiting thread about completion of transaction
+	Semaphore* volatile semaphore_;
 };
 
 }	// namespace devices
