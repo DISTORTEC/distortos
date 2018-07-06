@@ -98,7 +98,7 @@ int SpiMaster::open()
 
 	if (openCount_ == 0)	// first open?
 	{
-		const auto ret = spiMaster_.start(*this);
+		const auto ret = spiMaster_.start();
 		if (ret != 0)
 			return ret;
 	}
@@ -142,7 +142,7 @@ void SpiMaster::transferCompleteEvent(SpiMasterErrorSet errorSet, size_t bytesTr
 	{
 		const auto nextTransfer = operationsRange_.begin()->getTransfer();
 		assert(nextTransfer != nullptr && "Invalid type of next operation!");
-		const auto ret = spiMaster_.startTransfer(nextTransfer->getWriteBuffer(), nextTransfer->getReadBuffer(),
+		const auto ret = spiMaster_.startTransfer(*this, nextTransfer->getWriteBuffer(), nextTransfer->getReadBuffer(),
 				nextTransfer->getSize());
 		if (ret != 0)
 			notifyWaiter(ret);

@@ -79,8 +79,8 @@ std::pair<int, size_t> SpiMasterProxy::executeTransaction(const SpiMasterOperati
 	{
 		const auto transfer = spiMaster.operationsRange_.begin()->getTransfer();
 		assert(transfer != nullptr);
-		const auto ret = spiMaster.spiMaster_.startTransfer(transfer->getWriteBuffer(), transfer->getReadBuffer(),
-				transfer->getSize());
+		const auto ret = spiMaster.spiMaster_.startTransfer(spiMaster, transfer->getWriteBuffer(),
+				transfer->getReadBuffer(), transfer->getSize());
 		if (ret != 0)
 			return {ret, {}};
 	}

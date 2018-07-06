@@ -16,6 +16,8 @@
 
 #include "distortos/devices/communication/SpiMasterBase.hpp"
 
+#include "distortos/assert.h"
+
 #ifndef DISTORTOS_BITBANDING_SUPPORTED
 
 #include "distortos/InterruptMaskingLock.hpp"
@@ -466,18 +468,20 @@ void ChipSpiMasterLowLevel::interruptHandler()
 		writeBuffer_ = {};
 		readBuffer_ = {};
 
-		spiMasterBase_->transferCompleteEvent(errorSet, bytesTransfered);
+		const auto spiMasterBase = spiMasterBase_;
+		spiMasterBase_ = nullptr;
+		assert(spiMasterBase != nullptr);
+		spiMasterBase->transferCompleteEvent(errorSet, bytesTransfered);
 	}
 }
 
-int ChipSpiMasterLowLevel::start(devices::SpiMasterBase& spiMasterBase)
+int ChipSpiMasterLowLevel::start()
 {
 	if (isStarted() == true)
 		return EBADF;
 
 	parameters_.enablePeripheralClock(true);
 	parameters_.resetPeripheral();
-	spiMasterBase_ = &spiMasterBase;
 	auto& spi = parameters_.getSpi();
 	spi.CR1 = SPI_CR1_SSM | SPI_CR1_SSI | SPI_CR1_SPE | SPI_CR1_BR | SPI_CR1_MSTR;
 	spi.CR2 = SPI_CR2_FRXTH | (8 - 1) << SPI_CR2_DS_Pos;
@@ -486,7 +490,8 @@ int ChipSpiMasterLowLevel::start(devices::SpiMasterBase& spiMasterBase)
 	return 0;
 }
 
-int ChipSpiMasterLowLevel::startTransfer(const void* const writeBuffer, void* const readBuffer, const size_t size)
+int ChipSpiMasterLowLevel::startTransfer(devices::SpiMasterBase& spiMasterBase, const void* const writeBuffer,
+		void* const readBuffer, const size_t size)
 {
 	if (size == 0)
 		return EINVAL;
@@ -500,6 +505,7 @@ int ChipSpiMasterLowLevel::startTransfer(const void* const writeBuffer, void* co
 	if (size % ((parameters_.getWordLength() + 8 - 1) / 8) != 0)
 		return EINVAL;
 
+	spiMasterBase_ = &spiMasterBase;
 	readBuffer_ = static_cast<uint8_t*>(readBuffer);
 	writeBuffer_ = static_cast<const uint8_t*>(writeBuffer);
 	size_ = size;
@@ -522,7 +528,6 @@ int ChipSpiMasterLowLevel::stop()
 
 	parameters_.resetPeripheral();
 	parameters_.enablePeripheralClock(false);
-	spiMasterBase_ = nullptr;
 	started_ = false;
 	return 0;
 }
