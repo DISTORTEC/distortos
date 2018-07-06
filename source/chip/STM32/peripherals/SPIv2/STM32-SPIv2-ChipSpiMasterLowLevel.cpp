@@ -2,7 +2,7 @@
  * \file
  * \brief ChipSpiMasterLowLevel class implementation for SPIv2 in STM32
  *
- * \author Copyright (C) 2016-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2016-2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -481,6 +481,7 @@ int ChipSpiMasterLowLevel::start(devices::SpiMasterBase& spiMasterBase)
 	auto& spi = parameters_.getSpi();
 	spi.CR1 = SPI_CR1_SSM | SPI_CR1_SSI | SPI_CR1_SPE | SPI_CR1_BR | SPI_CR1_MSTR;
 	spi.CR2 = SPI_CR2_FRXTH | (8 - 1) << SPI_CR2_DS_Pos;
+	started_ = true;
 
 	return 0;
 }
@@ -522,6 +523,7 @@ int ChipSpiMasterLowLevel::stop()
 	parameters_.resetPeripheral();
 	parameters_.enablePeripheralClock(false);
 	spiMasterBase_ = nullptr;
+	started_ = false;
 	return 0;
 }
 
