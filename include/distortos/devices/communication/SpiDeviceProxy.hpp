@@ -52,6 +52,12 @@ public:
 
 	~SpiDeviceProxy();
 
+	/**
+	 * \return true if associated SPI device is opened, false otherwise
+	 */
+
+	bool isOpened() const;
+
 	SpiDeviceProxy(const SpiDeviceProxy&) = delete;
 	SpiDeviceProxy& operator=(const SpiDeviceProxy&) = delete;
 
