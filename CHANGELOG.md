@@ -12,6 +12,10 @@ All notable changes to this project will be documented in this file. This projec
 - Added `SpiEepromProxy`, `SpiDeviceProxy`, `SpiMasterProxy` and `SpiDeviceSelectGuard`, which build new SPI-related
 API. These classes can be used for RAII-style locking/unlocking or selecting/deselecting of appropriate devices and also
 serve as proxies for accessing core functionalities of associated objects.
+- Added `SpiSdMmcCard` and `SpiSdMmcCardProxy` classes, which can be used with *SD* or *MMC* card connected via *SPI*.
+At this moment the code handles only *SD version 2.0* cards, has no support for run-time detection of card
+insertion/removal and has no support for detecting whether card is write-protected. It was tested only with 32 GB *SDXC*
+card.
 
 ### Changed
 
