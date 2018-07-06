@@ -224,8 +224,7 @@ public:
 
 	constexpr SpiEeprom(SpiMaster& spiMaster, OutputPin& slaveSelectPin, const Type type, const bool mode3 = {},
 			const uint32_t clockFrequency = 1000000) :
-					spiDevice_{spiMaster, slaveSelectPin, mode3 == false ? SpiMode::_0 : SpiMode::_3, clockFrequency,
-							8, false},
+					spiDevice_{spiMaster, slaveSelectPin},
 					slaveSelectPin_{slaveSelectPin},
 					clockFrequency_{clockFrequency},
 					mode_{mode3 == false ? SpiMode::_0 : SpiMode::_3},
