@@ -2,7 +2,7 @@
  * \file
  * \brief ChipSpiMasterLowLevel class header for SPIv1 in STM32
  *
- * \author Copyright (C) 2016-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2016-2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -91,7 +91,8 @@ public:
 			size_{},
 			readPosition_{},
 			writePosition_{},
-			errorSet_{}
+			errorSet_{},
+			started_{}
 	{
 
 	}
@@ -188,7 +189,7 @@ private:
 
 	bool isStarted() const
 	{
-		return spiMasterBase_ != nullptr;
+		return started_;
 	}
 
 	/**
@@ -223,6 +224,9 @@ private:
 
 	/// current set of detected errors
 	devices::SpiMasterErrorSet errorSet_;
+
+	/// true if driver is started, false otherwise
+	bool started_;
 };
 
 }	// namespace chip
