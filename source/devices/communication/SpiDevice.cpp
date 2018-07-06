@@ -12,8 +12,9 @@
 #include "distortos/devices/communication/SpiDevice.hpp"
 
 #include "distortos/devices/communication/SpiDeviceProxy.hpp"
+#include "distortos/devices/communication/SpiDeviceSelectGuard.hpp"
 #include "distortos/devices/communication/SpiMaster.hpp"
-#include "distortos/devices/communication/SpiMasterOperation.hpp"
+#include "distortos/devices/communication/SpiMasterProxy.hpp"
 
 #include "distortos/internal/CHECK_FUNCTION_CONTEXT.hpp"
 
@@ -61,17 +62,18 @@ int SpiDevice::close()
 
 std::pair<int, size_t> SpiDevice::executeTransaction(const SpiMasterOperationsRange operationsRange)
 {
-	CHECK_FUNCTION_CONTEXT();
-
-	if (operationsRange.size() == 0)
-		return {EINVAL, {}};
-
 	const Proxy proxy {*this};
+	SpiMasterProxy spiMasterProxy {proxy};
 
-	if (openCount_ == 0)
-		return {EBADF, {}};
+	{
+		const auto ret = spiMasterProxy.configure(mode_, maxClockFrequency_, wordLength_, lsbFirst_);
+		if (ret.first != 0)
+			return {ret.first, {}};
+	}
 
-	return spiMaster_.executeTransaction(*this, operationsRange);
+	const SpiDeviceSelectGuard spiDeviceSelectGuard {spiMasterProxy};
+
+	return spiMasterProxy.executeTransaction(operationsRange);
 }
 
 int SpiDevice::open()
