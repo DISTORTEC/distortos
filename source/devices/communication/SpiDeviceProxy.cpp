@@ -26,12 +26,12 @@ namespace devices
 SpiDeviceProxy::SpiDeviceProxy(SpiDevice& spiDevice) :
 		spiDevice_{spiDevice}
 {
-	spiDevice_.mutex_.lock();
+	spiDevice_.lock();
 }
 
 SpiDeviceProxy::~SpiDeviceProxy()
 {
-	spiDevice_.mutex_.unlock();
+	spiDevice_.unlock();
 }
 
 bool SpiDeviceProxy::isOpened() const
