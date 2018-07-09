@@ -304,6 +304,22 @@ public:
 	int open();
 
 	/**
+	 * \brief Wrapper for Proxy::program()
+	 *
+	 * \warning This function must not be called from interrupt context!
+	 *
+	 * \param [in] address is the address of data that will be programmed
+	 * \param [in] buffer is the buffer with data that will be programmed
+	 * \param [in] size is the size of \a buffer, bytes
+	 *
+	 * \return pair with return code (0 on success, error code otherwise) and number of programmed bytes (valid even
+	 * when error code is returned); error codes:
+	 * - error codes returned by Proxy::program();
+	 */
+
+	std::pair<int, size_t> program(uint32_t address, const void* buffer, size_t size);
+
+	/**
 	 * \brief Wrapper for Proxy::read()
 	 *
 	 * \warning This function must not be called from interrupt context!
@@ -331,7 +347,9 @@ public:
 	int waitWhileWriteInProgress();
 
 	/**
-	 * \brief Wrapper for Proxy::write()
+	 * \brief Wrapper for program()
+	 *
+	 * \deprecated scheduled to be removed after v0.7.0, use SpiEeprom::program()
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
@@ -341,10 +359,14 @@ public:
 	 *
 	 * \return pair with return code (0 on success, error code otherwise) and number of written bytes (valid even when
 	 * error code is returned); error codes:
-	 * - error codes returned by Proxy::write();
+	 * - error codes returned by program();
 	 */
 
-	std::pair<int, size_t> write(uint32_t address, const void* buffer, size_t size);
+	__attribute__ ((deprecated("Use SpiEeprom::program()")))
+	std::pair<int, size_t> write(const uint32_t address, const void* const buffer, const size_t size)
+	{
+		return program(address, buffer, size);
+	}
 
 private:
 

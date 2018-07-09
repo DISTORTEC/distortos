@@ -55,7 +55,7 @@ public:
 	 * \param [in] size is the size of erased range, bytes
 	 *
 	 * \return 0 on success, error code otherwise:
-	 * - error codes returned by eraseOrWrite();
+	 * - error codes returned by eraseOrProgram();
 	 */
 
 	int erase(uint64_t address, uint64_t size) const;
@@ -71,6 +71,23 @@ public:
 	 */
 
 	std::pair<int, bool> isWriteInProgress() const;
+
+	/**
+	 * \brief Programs data to SPI EEPROM.
+	 *
+	 * \warning This function must not be called from interrupt context!
+	 *
+	 * \param [in] address is the address of data that will be programmed
+	 * \param [in] buffer is the buffer with data that will be programmed
+	 * \param [in] size is the size of \a buffer, bytes
+	 *
+	 * \return pair with return code (0 on success, error code otherwise) and number of programmed bytes (valid even
+	 * when error code is returned); error codes:
+	 * - EINVAL - \a buffer is not valid;
+	 * - error codes returned by eraseOrProgram();
+	 */
+
+	std::pair<int, size_t> program(uint32_t address, const void* buffer, size_t size) const;
 
 	/**
 	 * \brief Reads data from SPI EEPROM.
@@ -102,55 +119,38 @@ public:
 
 	int waitWhileWriteInProgress() const;
 
-	/**
-	 * \brief Writes data to SPI EEPROM.
-	 *
-	 * \warning This function must not be called from interrupt context!
-	 *
-	 * \param [in] address is the address of data that will be written
-	 * \param [in] buffer is the buffer with data that will be written
-	 * \param [in] size is the size of \a buffer, bytes
-	 *
-	 * \return pair with return code (0 on success, error code otherwise) and number of written bytes (valid even when
-	 * error code is returned); error codes:
-	 * - EINVAL - \a buffer is not valid;
-	 * - error codes returned by eraseOrWrite();
-	 */
-
-	std::pair<int, size_t> write(uint32_t address, const void* buffer, size_t size) const;
-
 private:
 
 	/**
-	 * \brief Implementation of erase() and write()
+	 * \brief Implementation of erase() and program()
 	 *
-	 * \param [in] address is the address of data that will be erased or written
-	 * \param [in] buffer is the buffer with data that will be written, nullptr to erase
+	 * \param [in] address is the address of data that will be erased or programmed
+	 * \param [in] buffer is the buffer with data that will be programmed, nullptr to erase
 	 * \param [in] size is the size of erase (`buffer == nullptr`) or size of \a buffer (`buffer != nullptr`), bytes
 	 *
-	 * \return pair with return code (0 on success, error code otherwise) and number of erased/written bytes (valid even
-	 * when error code is returned); error codes:
+	 * \return pair with return code (0 on success, error code otherwise) and number of erased/programmed bytes (valid
+	 * even when error code is returned); error codes:
 	 * - EINVAL - \a address and/or \a size are not valid;
-	 * - error codes returned by eraseOrWritePage();
+	 * - error codes returned by eraseOrProgramPage();
 	 */
 
-	std::pair<int, uint64_t> eraseOrWrite(uint64_t address, const void* buffer, uint64_t size) const;
+	std::pair<int, uint64_t> eraseOrProgram(uint64_t address, const void* buffer, uint64_t size) const;
 
 	/**
-	 * \brief Erases or writes single page.
+	 * \brief Erases or programs single page.
 	 *
-	 * \param [in] address is the address of data that will be erased or written, must be valid!
-	 * \param [in] buffer is the buffer with data that will be written, nullptr to erase
+	 * \param [in] address is the address of data that will be erased or programmed, must be valid!
+	 * \param [in] buffer is the buffer with data that will be programmed, nullptr to erase
 	 * \param [in] size is the size of erase (`buffer == nullptr`) or size of \a buffer (`buffer != nullptr`), bytes
 	 *
-	 * \return pair with return code (0 on success, error code otherwise) and number of erased/written bytes (valid even
-	 * when error code is returned); error codes:
+	 * \return pair with return code (0 on success, error code otherwise) and number of erased/programmed bytes (valid
+	 * even when error code is returned); error codes:
 	 * - error codes returned by waitWhileWriteInProgress();
 	 * - error codes returned by writeEnable();
 	 * - error codes returned by SpiDevice::executeTransaction();
 	 */
 
-	std::pair<int, size_t> eraseOrWritePage(uint32_t address, const void* buffer, size_t size) const;
+	std::pair<int, size_t> eraseOrProgramPage(uint32_t address, const void* buffer, size_t size) const;
 
 	/**
 	 * \brief Executes series of operations as a single atomic transaction.

@@ -43,6 +43,11 @@ int SpiEeprom::open()
 	return spiDevice_.open();
 }
 
+std::pair<int, size_t> SpiEeprom::program(const uint32_t address, const void* const buffer, const size_t size)
+{
+	return Proxy{*this}.program(address, buffer, size);
+}
+
 std::pair<int, size_t> SpiEeprom::read(const uint32_t address, void* const buffer, const size_t size)
 {
 	return Proxy{*this}.read(address, buffer, size);
@@ -51,11 +56,6 @@ std::pair<int, size_t> SpiEeprom::read(const uint32_t address, void* const buffe
 int SpiEeprom::waitWhileWriteInProgress()
 {
 	return Proxy{*this}.waitWhileWriteInProgress();
-}
-
-std::pair<int, size_t> SpiEeprom::write(const uint32_t address, const void* const buffer, const size_t size)
-{
-	return Proxy{*this}.write(address, buffer, size);
 }
 
 }	// namespace devices
