@@ -110,6 +110,22 @@ public:
 	int open();
 
 	/**
+	 * \brief Wrapper for Proxy::program()
+	 *
+	 * \warning This function must not be called from interrupt context!
+	 *
+	 * \param [in] address is the address of data that will be programmed, must be a multiple of block size
+	 * \param [in] buffer is the buffer with data that will be programmed
+	 * \param [in] size is the size of \a buffer, bytes, must be a multiple of block size
+	 *
+	 * \return pair with return code (0 on success, error code otherwise) and number of programmed bytes (valid even when
+	 * error code is returned); error codes:
+	 * - error codes returned by Proxy::program();
+	 */
+
+	std::pair<int, size_t> program(uint64_t address, const void* buffer, size_t size);
+
+	/**
 	 * \brief Wrapper for Proxy::read()
 	 *
 	 * \warning This function must not be called from interrupt context!
@@ -124,22 +140,6 @@ public:
 	 */
 
 	std::pair<int, size_t> read(uint64_t address, void* buffer, size_t size);
-
-	/**
-	 * \brief Wrapper for Proxy::write()
-	 *
-	 * \warning This function must not be called from interrupt context!
-	 *
-	 * \param [in] address is the address of data that will be written, must be a multiple of block size
-	 * \param [in] buffer is the buffer with data that will be written
-	 * \param [in] size is the size of \a buffer, bytes, must be a multiple of block size
-	 *
-	 * \return pair with return code (0 on success, error code otherwise) and number of written bytes (valid even when
-	 * error code is returned); error codes:
-	 * - error codes returned by Proxy::write();
-	 */
-
-	std::pair<int, size_t> write(uint64_t address, const void* buffer, size_t size);
 
 private:
 

@@ -79,6 +79,32 @@ public:
 	}
 
 	/**
+	 * \brief Programs data to SD or MMC card connected via SPI.
+	 *
+	 * Selected range of blocks must have been erased prior to being programmed.
+	 *
+	 * \warning This function must not be called from interrupt context!
+	 *
+	 * \param [in] address is the address of data that will be programmed, must be a multiple of block size
+	 * \param [in] buffer is the buffer with data that will be programmed
+	 * \param [in] size is the size of \a buffer, bytes, must be a multiple of block size
+	 *
+	 * \return pair with return code (0 on success, error code otherwise) and number of programmed bytes (valid even
+	 * when error code is returned); error codes:
+	 * - EBADF - associated SD or MMC card is not opened;
+	 * - EINVAL - \a address and/or \a buffer and/or \a size are not valid;
+	 * - EIO - error during communication with SD or MMC card;
+	 * - ENOSPC - selected range is invalid;
+	 * - error codes returned by executeCmd24();
+	 * - error codes returned by executeCmd25();
+	 * - error codes returned by waitWhileBusy();
+	 * - error codes returned by writeDataBlock();
+	 * - error codes returned by SpiMasterProxy::executeTransaction();
+	 */
+
+	std::pair<int, size_t> program(uint64_t address, const void* buffer, size_t size) const;
+
+	/**
 	 * \brief Reads data from SD or MMC card connected via SPI.
 	 *
 	 * \warning This function must not be called from interrupt context!
@@ -100,31 +126,6 @@ public:
 	 */
 
 	std::pair<int, size_t> read(uint64_t address, void* buffer, size_t size) const;
-
-	/**
-	 * \brief Writes data to SD or MMC card connected via SPI.
-	 *
-	 * \warning This function must not be called from interrupt context!
-	 *
-	 * \param [in] address is the address of data that will be written, must be a multiple of block size
-	 * \param [in] buffer is the buffer with data that will be written
-	 * \param [in] size is the size of \a buffer, bytes, must be a multiple of block size
-	 *
-	 * \return pair with return code (0 on success, error code otherwise) and number of written bytes (valid even when
-	 * error code is returned); error codes:
-	 * - EBADF - associated SD or MMC card is not opened;
-	 * - EINVAL - \a address and/or \a buffer and/or \a size are not valid;
-	 * - EIO - error during communication with SD or MMC card;
-	 * - ENOSPC - selected range is invalid;
-	 * - error codes returned by executeAcmd23();
-	 * - error codes returned by executeCmd24();
-	 * - error codes returned by executeCmd25();
-	 * - error codes returned by waitWhileBusy();
-	 * - error codes returned by writeDataBlock();
-	 * - error codes returned by SpiMasterProxy::executeTransaction();
-	 */
-
-	std::pair<int, size_t> write(uint64_t address, const void* buffer, size_t size) const;
 
 private:
 

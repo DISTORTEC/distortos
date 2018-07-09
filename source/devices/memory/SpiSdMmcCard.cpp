@@ -71,14 +71,14 @@ int SpiSdMmcCard::open()
 	return 0;
 }
 
+std::pair<int, size_t> SpiSdMmcCard::program(const uint64_t address, const void* const buffer, const size_t size)
+{
+	return Proxy{*this}.program(address, buffer, size);
+}
+
 std::pair<int, size_t> SpiSdMmcCard::read(const uint64_t address, void* const buffer, const size_t size)
 {
 	return Proxy{*this}.read(address, buffer, size);
-}
-
-std::pair<int, size_t> SpiSdMmcCard::write(const uint64_t address, const void* const buffer, const size_t size)
-{
-	return Proxy{*this}.write(address, buffer, size);
 }
 
 }	// namespace devices
