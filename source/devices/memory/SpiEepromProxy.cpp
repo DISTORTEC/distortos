@@ -157,8 +157,23 @@ std::pair<int, size_t> SpiEepromProxy::write(const uint32_t address, const void*
 {
 	CHECK_FUNCTION_CONTEXT();
 
+	if (buffer == nullptr)
+		return {EINVAL, {}};
+
+	return eraseOrWrite(address, buffer, size);
+}
+
+/*---------------------------------------------------------------------------------------------------------------------+
+| private functions
++---------------------------------------------------------------------------------------------------------------------*/
+
+std::pair<int, uint64_t> SpiEepromProxy::eraseOrWrite(const uint64_t address, const void* const buffer,
+		const uint64_t size) const
+{
+	CHECK_FUNCTION_CONTEXT();
+
 	const auto capacity = spiEeprom_.getCapacity();
-	if (address >= capacity || buffer == nullptr || size == 0)
+	if (address >= capacity || size == 0)
 		return {EINVAL, {}};
 
 	size_t written {};
@@ -166,7 +181,8 @@ std::pair<int, size_t> SpiEepromProxy::write(const uint32_t address, const void*
 	const auto bufferUint8 = static_cast<const uint8_t*>(buffer);
 	while (written < writeSize)
 	{
-		const auto ret = eraseOrWritePage(address + written, &bufferUint8[written], writeSize - written);
+		const auto ret = eraseOrWritePage(address + written, bufferUint8 != nullptr ? bufferUint8 + written : bufferUint8,
+				writeSize - written);
 		written += ret.second;
 		if (ret.first != 0)
 			return {ret.first, written};
@@ -174,10 +190,6 @@ std::pair<int, size_t> SpiEepromProxy::write(const uint32_t address, const void*
 
 	return {{}, written};
 }
-
-/*---------------------------------------------------------------------------------------------------------------------+
-| private functions
-+---------------------------------------------------------------------------------------------------------------------*/
 
 std::pair<int, size_t> SpiEepromProxy::eraseOrWritePage(const uint32_t address, const void* const buffer,
 		const size_t size) const

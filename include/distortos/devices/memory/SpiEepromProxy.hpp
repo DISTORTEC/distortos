@@ -99,13 +99,28 @@ public:
 	 *
 	 * \return pair with return code (0 on success, error code otherwise) and number of written bytes (valid even when
 	 * error code is returned); error codes:
-	 * - EINVAL - \a address and/or \a buffer and/or \a size are not valid;
-	 * - error codes returned by eraseOrWritePage();
+	 * - EINVAL - \a buffer is not valid;
+	 * - error codes returned by eraseOrWrite();
 	 */
 
 	std::pair<int, size_t> write(uint32_t address, const void* buffer, size_t size) const;
 
 private:
+
+	/**
+	 * \brief Implementation of erase() and write()
+	 *
+	 * \param [in] address is the address of data that will be erased or written
+	 * \param [in] buffer is the buffer with data that will be written, nullptr to erase
+	 * \param [in] size is the size of erase (`buffer == nullptr`) or size of \a buffer (`buffer != nullptr`), bytes
+	 *
+	 * \return pair with return code (0 on success, error code otherwise) and number of erased/written bytes (valid even
+	 * when error code is returned); error codes:
+	 * - EINVAL - \a address and/or \a size are not valid;
+	 * - error codes returned by eraseOrWritePage();
+	 */
+
+	std::pair<int, uint64_t> eraseOrWrite(uint64_t address, const void* buffer, uint64_t size) const;
 
 	/**
 	 * \brief Erases or writes single page.
