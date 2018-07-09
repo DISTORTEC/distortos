@@ -23,6 +23,11 @@ namespace devices
 | public functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
+SpiEeprom::~SpiEeprom()
+{
+
+}
+
 int SpiEeprom::close()
 {
 	return spiDevice_.close();
@@ -33,9 +38,39 @@ int SpiEeprom::erase(const uint64_t address, const uint64_t size)
 	return Proxy{*this}.erase(address, size);
 }
 
+size_t SpiEeprom::getEraseBlockSize() const
+{
+	return 1;
+}
+
+std::pair<bool, uint8_t> SpiEeprom::getErasedValue() const
+{
+	return {true, UINT8_MAX};
+}
+
+size_t SpiEeprom::getProgramBlockSize() const
+{
+	return 1;
+}
+
+size_t SpiEeprom::getReadBlockSize() const
+{
+	return 1;
+}
+
+uint64_t SpiEeprom::getSize() const
+{
+	return 128 * (1 << ((static_cast<uint8_t>(type_) & sizeMask_) >> sizeShift_));
+}
+
 std::pair<int, bool> SpiEeprom::isWriteInProgress()
 {
 	return Proxy{*this}.isWriteInProgress();
+}
+
+int SpiEeprom::lock()
+{
+	return spiDevice_.lock();
 }
 
 int SpiEeprom::open()
@@ -43,12 +78,12 @@ int SpiEeprom::open()
 	return spiDevice_.open();
 }
 
-std::pair<int, size_t> SpiEeprom::program(const uint32_t address, const void* const buffer, const size_t size)
+std::pair<int, size_t> SpiEeprom::program(const uint64_t address, const void* const buffer, const size_t size)
 {
 	return Proxy{*this}.program(address, buffer, size);
 }
 
-std::pair<int, size_t> SpiEeprom::read(const uint32_t address, void* const buffer, const size_t size)
+std::pair<int, size_t> SpiEeprom::read(const uint64_t address, void* const buffer, const size_t size)
 {
 	return Proxy{*this}.read(address, buffer, size);
 }
@@ -56,6 +91,16 @@ std::pair<int, size_t> SpiEeprom::read(const uint32_t address, void* const buffe
 int SpiEeprom::synchronize()
 {
 	return Proxy{*this}.synchronize();
+}
+
+int SpiEeprom::trim(uint64_t, uint64_t)
+{
+	return {};
+}
+
+int SpiEeprom::unlock()
+{
+	return spiDevice_.unlock();
 }
 
 }	// namespace devices

@@ -14,6 +14,8 @@
 
 #include "distortos/devices/communication/SpiDevice.hpp"
 
+#include "distortos/devices/memory/BlockDevice.hpp"
+
 namespace distortos
 {
 
@@ -29,7 +31,7 @@ class SpiEepromProxy;
  * \ingroup devices
  */
 
-class SpiEeprom
+class SpiEeprom : public BlockDevice
 {
 	friend class SpiEepromProxy;
 
@@ -234,9 +236,13 @@ public:
 	}
 
 	/**
+	 * \brief SpiEeprom's destructor
+	 */
+
+	~SpiEeprom() override;
+
+	/**
 	 * \brief Closes SPI EEPROM.
-	 *
-	 * Wrapper for SpiDevice::close().
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
@@ -244,10 +250,10 @@ public:
 	 * - error codes returned by SpiDevice::close();
 	 */
 
-	int close();
+	int close() override;
 
 	/**
-	 * \brief Wrapper for Proxy::erase()
+	 * \brief Erases blocks on SPI EEPROM.
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
@@ -258,7 +264,7 @@ public:
 	 * - error codes returned by Proxy::erase();
 	 */
 
-	int erase(uint64_t address, uint64_t size);
+	int erase(uint64_t address, uint64_t size) override;
 
 	/**
 	 * \deprecated scheduled to be removed after v0.7.0, use SpiEeprom::getSize()
@@ -273,6 +279,19 @@ public:
 	}
 
 	/**
+	 * \return erase block size, bytes
+	 */
+
+	size_t getEraseBlockSize() const override;
+
+	/**
+	 * \return pair with bool telling whether erased value is defined (true) or not (false) and value of erased bytes
+	 * (valid only if defined);
+	 */
+
+	std::pair<bool, uint8_t> getErasedValue() const override;
+
+	/**
 	 * \return size of single page, bytes
 	 */
 
@@ -282,13 +301,22 @@ public:
 	}
 
 	/**
+	 * \return program block size, bytes
+	 */
+
+	size_t getProgramBlockSize() const override;
+
+	/**
+	 * \return read block size, bytes
+	 */
+
+	size_t getReadBlockSize() const override;
+
+	/**
 	 * \return size of SPI EEPROM, bytes
 	 */
 
-	uint64_t getSize() const
-	{
-		return 128 * (1 << ((static_cast<uint8_t>(type_) & sizeMask_) >> sizeShift_));
-	}
+	uint64_t getSize() const override;
 
 	/**
 	 * \brief Wrapper for Proxy::isWriteInProgress()
@@ -302,10 +330,24 @@ public:
 
 	std::pair<int, bool> isWriteInProgress();
 
+ 	/**
+	 * \brief Locks SPI EEPROM for exclusive use by current thread.
+	 *
+	 * When the object is locked, any call to any member function from other thread will be blocked until the object is
+	 * unlocked. Locking is optional, but may be useful when more than one transaction must be done atomically.
+	 *
+	 * \note Locks are recursive.
+	 *
+	 * \warning This function must not be called from interrupt context!
+	 *
+	 * \return 0 on success, error code otherwise:
+	 * - error codes returned by SpiDevice::lock();
+	 */
+
+	int lock() override;
+
 	/**
 	 * \brief Opens SPI EEPROM.
-	 *
-	 * Wrapper for SpiDevice::open().
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
@@ -313,10 +355,10 @@ public:
 	 * - error codes returned by SpiDevice::open();
 	 */
 
-	int open();
+	int open() override;
 
 	/**
-	 * \brief Wrapper for Proxy::program()
+	 * \brief Programs data to SPI EEPROM.
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
@@ -329,15 +371,15 @@ public:
 	 * - error codes returned by Proxy::program();
 	 */
 
-	std::pair<int, size_t> program(uint32_t address, const void* buffer, size_t size);
+	std::pair<int, size_t> program(uint64_t address, const void* buffer, size_t size) override;
 
 	/**
-	 * \brief Wrapper for Proxy::read()
+	 * \brief Reads data from SPI EEPROM.
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
 	 * \param [in] address is the address of data that will be read
-	 * \param [out] buffer is the buffer to which the data will be written
+	 * \param [out] buffer is the buffer into which the data will be read
 	 * \param [in] size is the size of \a buffer, bytes
 	 *
 	 * \return pair with return code (0 on success, error code otherwise) and number of read bytes (valid even when
@@ -345,10 +387,10 @@ public:
 	 * - error codes returned by Proxy::read();
 	 */
 
-	std::pair<int, size_t> read(uint32_t address, void* buffer, size_t size);
+	std::pair<int, size_t> read(uint64_t address, void* buffer, size_t size) override;
 
 	/**
-	 * \brief Wrapper for Proxy::synchronize()
+	 * \brief Synchronizes state of SPI EEPROM, ensuring all cached writes are finished.
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
@@ -356,7 +398,33 @@ public:
 	 * - error codes returned by Proxy::synchronize();
 	 */
 
-	int synchronize();
+	int synchronize() override;
+
+	/**
+	 * \brief Trims unused blocks on SPI EEPROM.
+	 *
+	 * Selected range of blocks is no longer used and SPI EEPROM may erase it when convenient.
+	 *
+	 * \param [in] address is the address of range that will be trimmed, must be a multiple of erase block size
+	 * \param [in] size is the size of trimmed range, bytes, must be a multiple of erase block size
+	 *
+	 * \return always 0
+	 */
+
+	int trim(uint64_t address, uint64_t size) override;
+
+	/**
+	 * \brief Unlocks SPI EEPROM which was previously locked by current thread.
+	 *
+	 * \note Locks are recursive.
+	 *
+	 * \warning This function must not be called from interrupt context!
+	 *
+	 * \return 0 on success, error code otherwise:
+	 * - error codes returned by SpiDevice::unlock();
+	 */
+
+	int unlock() override;
 
 	/**
 	 * \brief Wrapper for synchronize()

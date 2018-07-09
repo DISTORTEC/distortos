@@ -87,7 +87,7 @@ public:
 	 * - error codes returned by eraseOrProgram();
 	 */
 
-	std::pair<int, size_t> program(uint32_t address, const void* buffer, size_t size) const;
+	std::pair<int, size_t> program(uint64_t address, const void* buffer, size_t size) const;
 
 	/**
 	 * \brief Reads data from SPI EEPROM.
@@ -105,7 +105,7 @@ public:
 	 * - error codes returned by synchronize();
 	 */
 
-	std::pair<int, size_t> read(uint32_t address, void* buffer, size_t size) const;
+	std::pair<int, size_t> read(uint64_t address, void* buffer, size_t size) const;
 
 	/**
 	 * \brief Synchronizes state of SPI EEPROM, ensuring all cached writes are finished.

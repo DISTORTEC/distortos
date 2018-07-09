@@ -121,7 +121,7 @@ std::pair<int, bool> SpiEepromProxy::isWriteInProgress() const
 	return {ret.first, (ret.second & statusRegisterWip) != 0};
 }
 
-std::pair<int, size_t> SpiEepromProxy::program(const uint32_t address, const void* const buffer,
+std::pair<int, size_t> SpiEepromProxy::program(const uint64_t address, const void* const buffer,
 		const size_t size) const
 {
 	CHECK_FUNCTION_CONTEXT();
@@ -132,7 +132,7 @@ std::pair<int, size_t> SpiEepromProxy::program(const uint32_t address, const voi
 	return eraseOrProgram(address, buffer, size);
 }
 
-std::pair<int, size_t> SpiEepromProxy::read(const uint32_t address, void* const buffer, const size_t size) const
+std::pair<int, size_t> SpiEepromProxy::read(const uint64_t address, void* const buffer, const size_t size) const
 {
 	CHECK_FUNCTION_CONTEXT();
 
