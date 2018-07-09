@@ -100,12 +100,28 @@ public:
 	 * \return pair with return code (0 on success, error code otherwise) and number of written bytes (valid even when
 	 * error code is returned); error codes:
 	 * - EINVAL - \a address and/or \a buffer and/or \a size are not valid;
-	 * - error codes returned by writePage();
+	 * - error codes returned by eraseOrWritePage();
 	 */
 
 	std::pair<int, size_t> write(uint32_t address, const void* buffer, size_t size) const;
 
 private:
+
+	/**
+	 * \brief Erases or writes single page.
+	 *
+	 * \param [in] address is the address of data that will be erased or written, must be valid!
+	 * \param [in] buffer is the buffer with data that will be written, nullptr to erase
+	 * \param [in] size is the size of erase (`buffer == nullptr`) or size of \a buffer (`buffer != nullptr`), bytes
+	 *
+	 * \return pair with return code (0 on success, error code otherwise) and number of erased/written bytes (valid even
+	 * when error code is returned); error codes:
+	 * - error codes returned by waitWhileWriteInProgress();
+	 * - error codes returned by writeEnable();
+	 * - error codes returned by SpiDevice::executeTransaction();
+	 */
+
+	std::pair<int, size_t> eraseOrWritePage(uint32_t address, const void* buffer, size_t size) const;
 
 	/**
 	 * \brief Executes series of operations as a single atomic transaction.
@@ -138,22 +154,6 @@ private:
 	 */
 
 	int writeEnable() const;
-
-	/**
-	 * \brief Writes single page.
-	 *
-	 * \param [in] address is the address of data that will be written, must be valid!
-	 * \param [in] buffer is the buffer with data that will be written
-	 * \param [in] size is the size of \a buffer, bytes
-	 *
-	 * \return pair with return code (0 on success, error code otherwise) and number of written bytes (valid even when
-	 * error code is returned); error codes:
-	 * - error codes returned by waitWhileWriteInProgress();
-	 * - error codes returned by writeEnable();
-	 * - error codes returned by SpiDevice::executeTransaction();
-	 */
-
-	std::pair<int, size_t> writePage(uint32_t address, const void* buffer, size_t size) const;
 
 	/// internal proxy for SPI device
 	SpiDeviceProxy spiDeviceProxy_;

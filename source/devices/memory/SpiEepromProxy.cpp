@@ -166,7 +166,7 @@ std::pair<int, size_t> SpiEepromProxy::write(const uint32_t address, const void*
 	const auto bufferUint8 = static_cast<const uint8_t*>(buffer);
 	while (written < writeSize)
 	{
-		const auto ret = writePage(address + written, &bufferUint8[written], writeSize - written);
+		const auto ret = eraseOrWritePage(address + written, &bufferUint8[written], writeSize - written);
 		written += ret.second;
 		if (ret.first != 0)
 			return {ret.first, written};
@@ -178,6 +178,36 @@ std::pair<int, size_t> SpiEepromProxy::write(const uint32_t address, const void*
 /*---------------------------------------------------------------------------------------------------------------------+
 | private functions
 +---------------------------------------------------------------------------------------------------------------------*/
+
+std::pair<int, size_t> SpiEepromProxy::eraseOrWritePage(const uint32_t address, const void* const buffer,
+		const size_t size) const
+{
+	const auto capacity = spiEeprom_.getCapacity();
+	assert(address < capacity && "Invalid address!");
+
+	{
+		const auto ret = waitWhileWriteInProgress();
+		if (ret != 0)
+			return {ret, {}};
+	}
+	{
+		const auto ret = writeEnable();
+		if (ret != 0)
+			return {ret, {}};
+	}
+
+	const auto pageSize = spiEeprom_.getPageSize();
+	const auto pageOffset = address & (pageSize - 1);
+	const auto writeSize = pageOffset + size <= pageSize ? size : pageSize - pageOffset;
+	CommandWithAddressBuffer commandBuffer;
+	SpiMasterOperation operations[]
+	{
+			getCommandWithAddress(capacity, writeCommand, address, commandBuffer),
+			{{buffer, nullptr, writeSize}},
+	};
+	const auto ret = executeTransaction(SpiMasterOperationsRange{operations});
+	return {ret.first, operations[1].getTransfer()->getBytesTransfered()};
+}
 
 std::pair<int, size_t> SpiEepromProxy::executeTransaction(const SpiMasterOperationsRange operationsRange) const
 {
@@ -208,36 +238,6 @@ int SpiEepromProxy::writeEnable() const
 	SpiMasterOperation operation {{&wrenCommand, nullptr, sizeof(wrenCommand)}};
 	const auto ret = executeTransaction(SpiMasterOperationsRange{operation});
 	return ret.first;
-}
-
-std::pair<int, size_t> SpiEepromProxy::writePage(const uint32_t address, const void* const buffer,
-		const size_t size) const
-{
-	const auto capacity = spiEeprom_.getCapacity();
-	assert(address < capacity && "Invalid address!");
-
-	{
-		const auto ret = waitWhileWriteInProgress();
-		if (ret != 0)
-			return {ret, {}};
-	}
-	{
-		const auto ret = writeEnable();
-		if (ret != 0)
-			return {ret, {}};
-	}
-
-	const auto pageSize = spiEeprom_.getPageSize();
-	const auto pageOffset = address & (pageSize - 1);
-	const auto writeSize = pageOffset + size <= pageSize ? size : pageSize - pageOffset;
-	CommandWithAddressBuffer commandBuffer;
-	SpiMasterOperation operations[]
-	{
-			getCommandWithAddress(capacity, writeCommand, address, commandBuffer),
-			{{buffer, nullptr, writeSize}},
-	};
-	const auto ret = executeTransaction(SpiMasterOperationsRange{operations});
-	return {ret.first, operations[1].getTransfer()->getBytesTransfered()};
 }
 
 }	// namespace devices
