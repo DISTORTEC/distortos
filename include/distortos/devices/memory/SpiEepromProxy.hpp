@@ -102,13 +102,13 @@ public:
 	 * error code is returned); error codes:
 	 * - EINVAL - \a address and/or \a buffer and/or \a size are not valid;
 	 * - error codes returned by executeTransaction();
-	 * - error codes returned by waitWhileWriteInProgress();
+	 * - error codes returned by synchronize();
 	 */
 
 	std::pair<int, size_t> read(uint32_t address, void* buffer, size_t size) const;
 
 	/**
-	 * \brief Waits while any write operation is currently in progress.
+	 * \brief Synchronizes state of SPI EEPROM, ensuring all cached writes are finished.
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
@@ -117,7 +117,7 @@ public:
 	 * - error codes returned by ThisThread::sleepFor();
 	 */
 
-	int waitWhileWriteInProgress() const;
+	int synchronize() const;
 
 private:
 
@@ -145,7 +145,7 @@ private:
 	 *
 	 * \return pair with return code (0 on success, error code otherwise) and number of erased/programmed bytes (valid
 	 * even when error code is returned); error codes:
-	 * - error codes returned by waitWhileWriteInProgress();
+	 * - error codes returned by synchronize();
 	 * - error codes returned by writeEnable();
 	 * - error codes returned by SpiDevice::executeTransaction();
 	 */

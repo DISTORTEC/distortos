@@ -336,15 +336,32 @@ public:
 	std::pair<int, size_t> read(uint32_t address, void* buffer, size_t size);
 
 	/**
-	 * \brief Wrapper for Proxy::waitWhileWriteInProgress()
+	 * \brief Wrapper for Proxy::synchronize()
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
 	 * \return 0 on success, error code otherwise:
-	 * - error codes returned by Proxy::waitWhileWriteInProgress();
+	 * - error codes returned by Proxy::synchronize();
 	 */
 
-	int waitWhileWriteInProgress();
+	int synchronize();
+
+	/**
+	 * \brief Wrapper for synchronize()
+	 *
+	 * \deprecated scheduled to be removed after v0.7.0, use SpiEeprom::synchronize()
+	 *
+	 * \warning This function must not be called from interrupt context!
+	 *
+	 * \return 0 on success, error code otherwise:
+	 * - error codes returned by synchronize();
+	 */
+
+	__attribute__ ((deprecated("Use SpiEeprom::synchronize()")))
+	int waitWhileWriteInProgress()
+	{
+		return synchronize();
+	}
 
 	/**
 	 * \brief Wrapper for program()

@@ -141,7 +141,7 @@ std::pair<int, size_t> SpiEepromProxy::read(const uint32_t address, void* const 
 		return {EINVAL, {}};
 
 	{
-		const auto ret = waitWhileWriteInProgress();
+		const auto ret = synchronize();
 		if (ret != 0)
 			return {ret, {}};
 	}
@@ -156,7 +156,7 @@ std::pair<int, size_t> SpiEepromProxy::read(const uint32_t address, void* const 
 	return {ret.first, operations[1].getTransfer()->getBytesTransfered()};
 }
 
-int SpiEepromProxy::waitWhileWriteInProgress() const
+int SpiEepromProxy::synchronize() const
 {
 	decltype(isWriteInProgress().first) ret;
 	decltype(isWriteInProgress().second) writeInProgress;
@@ -205,7 +205,7 @@ std::pair<int, size_t> SpiEepromProxy::eraseOrProgramPage(const uint32_t address
 	assert(address < capacity && "Invalid address!");
 
 	{
-		const auto ret = waitWhileWriteInProgress();
+		const auto ret = synchronize();
 		if (ret != 0)
 			return {ret, {}};
 	}

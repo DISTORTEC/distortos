@@ -53,9 +53,9 @@ std::pair<int, size_t> SpiEeprom::read(const uint32_t address, void* const buffe
 	return Proxy{*this}.read(address, buffer, size);
 }
 
-int SpiEeprom::waitWhileWriteInProgress()
+int SpiEeprom::synchronize()
 {
-	return Proxy{*this}.waitWhileWriteInProgress();
+	return Proxy{*this}.synchronize();
 }
 
 }	// namespace devices
