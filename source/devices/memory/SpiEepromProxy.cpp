@@ -184,7 +184,8 @@ std::pair<int, size_t> SpiEepromProxy::executeTransaction(const SpiMasterOperati
 	SpiMasterProxy spiMasterProxy {spiDeviceProxy_};
 
 	{
-		const auto ret = spiMasterProxy.configure(spiEeprom_.mode_, spiEeprom_.clockFrequency_, 8, false);
+		// only datasheet for ST M95xxx series says that erased state is 0, assume this is true for all other devices
+		const auto ret = spiMasterProxy.configure(spiEeprom_.mode_, spiEeprom_.clockFrequency_, 8, false, {});
 		if (ret.first != 0)
 			return {ret.first, {}};
 	}

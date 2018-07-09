@@ -48,13 +48,13 @@ SpiMasterProxy::~SpiMasterProxy()
 }
 
 std::pair<int, uint32_t> SpiMasterProxy::configure(const SpiMode mode, const uint32_t clockFrequency,
-		const uint8_t wordLength, const bool lsbFirst) const
+		const uint8_t wordLength, const bool lsbFirst, const uint32_t dummyData) const
 {
 	auto& spiMaster = getSpiMaster();
 	if (spiDeviceProxy_.isOpened() == false || spiMaster.openCount_ == 0)
 		return {EBADF, {}};
 
-	return spiMaster.spiMaster_.configure(mode, clockFrequency, wordLength, lsbFirst);
+	return spiMaster.spiMaster_.configure(mode, clockFrequency, wordLength, lsbFirst, dummyData);
 }
 
 std::pair<int, size_t> SpiMasterProxy::executeTransaction(const SpiMasterOperationsRange operationsRange)

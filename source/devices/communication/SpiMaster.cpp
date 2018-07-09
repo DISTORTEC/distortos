@@ -79,7 +79,7 @@ std::pair<int, size_t> SpiMaster::executeTransaction(SpiDevice& device, const Sp
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 
 		const auto ret = proxy.configure(device.getMode(), device.getMaxClockFrequency(), device.getWordLength(),
-				device.getLsbFirst());
+				device.getLsbFirst(), {});
 
 #pragma GCC diagnostic pop
 

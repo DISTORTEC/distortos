@@ -997,7 +997,7 @@ int SpiSdMmcCardProxy::initialize() const
 	SpiMasterProxy spiMasterProxy {spiDeviceProxy_};
 
 	{
-		const auto ret = spiMasterProxy.configure(SpiMode::_0, 400000, 8, false);
+		const auto ret = spiMasterProxy.configure(SpiMode::_0, 400000, 8, false, UINT32_MAX);
 		if (ret.first != 0)
 			return ret.first;
 	}
@@ -1076,7 +1076,7 @@ int SpiSdMmcCardProxy::initialize() const
 		}
 	}
 	{
-		const auto ret = spiMasterProxy.configure(SpiMode::_0, spiSdMmcCard_.clockFrequency_, 8, false);
+		const auto ret = spiMasterProxy.configure(SpiMode::_0, spiSdMmcCard_.clockFrequency_, 8, false, UINT32_MAX);
 		if (ret.first != 0)
 			return ret.first;
 	}

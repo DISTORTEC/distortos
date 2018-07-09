@@ -66,7 +66,7 @@ std::pair<int, size_t> SpiDevice::executeTransaction(const SpiMasterOperationsRa
 	SpiMasterProxy spiMasterProxy {proxy};
 
 	{
-		const auto ret = spiMasterProxy.configure(mode_, maxClockFrequency_, wordLength_, lsbFirst_);
+		const auto ret = spiMasterProxy.configure(mode_, maxClockFrequency_, wordLength_, lsbFirst_, {});
 		if (ret.first != 0)
 			return {ret.first, {}};
 	}
