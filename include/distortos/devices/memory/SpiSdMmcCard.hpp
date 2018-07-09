@@ -99,6 +99,7 @@ public:
 	 * - error codes returned by executeCmd32();
 	 * - error codes returned by executeCmd33();
 	 * - error codes returned by executeCmd38();
+	 * - error codes returned by SpiMasterProxy::configure();
 	 */
 
 	int erase(uint64_t address, uint64_t size) override;
@@ -183,6 +184,7 @@ public:
 	 * - error codes returned by executeCmd25();
 	 * - error codes returned by waitWhileBusy();
 	 * - error codes returned by writeDataBlock();
+	 * - error codes returned by SpiMasterProxy::configure();
 	 * - error codes returned by SpiMasterProxy::executeTransaction();
 	 */
 
@@ -207,6 +209,7 @@ public:
 	 * - error codes returned by executeCmd17();
 	 * - error codes returned by executeCmd18();
 	 * - error codes returned by readDataBlock();
+	 * - error codes returned by SpiMasterProxy::configure();
 	 */
 
 	std::pair<int, size_t> read(uint64_t address, void* buffer, size_t size) override;

@@ -915,6 +915,13 @@ int SpiSdMmcCard::erase(const uint64_t address, const uint64_t size)
 		return ENOSPC;
 
 	SpiMasterProxy spiMasterProxy {spiDeviceProxy};
+
+	{
+		const auto ret = spiMasterProxy.configure(SpiMode::_0, clockFrequency_, 8, false, UINT32_MAX);
+		if (ret.first != 0)
+			return ret.first;
+	}
+
 	const SpiDeviceSelectGuard spiDeviceSelectGuard {spiMasterProxy};
 
 	{
@@ -1024,6 +1031,13 @@ std::pair<int, size_t> SpiSdMmcCard::program(const uint64_t address, const void*
 		return {ENOSPC, {}};
 
 	SpiMasterProxy spiMasterProxy {spiDeviceProxy};
+
+	{
+		const auto ret = spiMasterProxy.configure(SpiMode::_0, clockFrequency_, 8, false, UINT32_MAX);
+		if (ret.first != 0)
+			return {ret.first, {}};
+	}
+
 	const SpiDeviceSelectGuard spiDeviceSelectGuard {spiMasterProxy};
 
 	{
@@ -1090,6 +1104,13 @@ std::pair<int, size_t> SpiSdMmcCard::read(const uint64_t address, void* const bu
 		return {ENOSPC, {}};
 
 	SpiMasterProxy spiMasterProxy {spiDeviceProxy};
+
+	{
+		const auto ret = spiMasterProxy.configure(SpiMode::_0, clockFrequency_, 8, false, UINT32_MAX);
+		if (ret.first != 0)
+			return {ret.first, {}};
+	}
+
 	const SpiDeviceSelectGuard spiDeviceSelectGuard {spiMasterProxy};
 
 	{
