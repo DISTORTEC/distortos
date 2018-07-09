@@ -37,6 +37,11 @@ int SpiSdMmcCard::close()
 	return ret;
 }
 
+int SpiSdMmcCard::erase(const uint64_t address, const uint64_t size)
+{
+	return Proxy{*this}.erase(address, size);
+}
+
 int SpiSdMmcCard::open()
 {
 	const Proxy proxy {*this};

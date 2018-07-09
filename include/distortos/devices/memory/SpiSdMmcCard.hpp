@@ -84,6 +84,20 @@ public:
 	int close();
 
 	/**
+	 * \brief Wrapper for Proxy::erase()
+	 *
+	 * \warning This function must not be called from interrupt context!
+	 *
+	 * \param [in] address is the address of range that will be erased, must be a multiple of erase block size
+	 * \param [in] size is the size of erased range, bytes, must be a multiple of erase block size
+	 *
+	 * \return 0 on success, error code otherwise:
+	 * - error codes returned by Proxy::erase();
+	 */
+
+	int erase(uint64_t address, uint64_t size);
+
+	/**
 	 * \brief Opens SD or MMC card connected via SPI.
 	 *
 	 * \warning This function must not be called from interrupt context!

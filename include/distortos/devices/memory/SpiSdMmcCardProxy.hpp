@@ -53,6 +53,23 @@ public:
 	explicit SpiSdMmcCardProxy(SpiSdMmcCard& spiSdMmcCard);
 
 	/**
+	 * \brief Erases blocks on SD or MMC card connected via SPI..
+	 *
+	 * \param [in] address is the address of range that will be erased, must be a multiple of erase block size
+	 * \param [in] size is the size of erased range, bytes, must be a multiple of erase block size
+	 *
+	 * \return 0 on success, error code otherwise:
+	 * - EBADF - the device is not opened;
+	 * - EINVAL - \a address and/or \a size are not valid;
+	 * - ENOSPC - selected range is greater than size of device;
+	 * - error codes returned by executeCmd32();
+	 * - error codes returned by executeCmd33();
+	 * - error codes returned by executeCmd38();
+	 */
+
+	int erase(uint64_t address, uint64_t size) const;
+
+	/**
 	 * \return true if associated SPI device is opened, false otherwise
 	 */
 

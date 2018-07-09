@@ -716,6 +716,63 @@ std::pair<int, uint8_t> executeCmd25(SpiMasterProxy& spiMasterProxy, const uint3
 }
 
 /**
+ * \brief Executes CMD32 command on SD or MMC card connected via SPI.
+ *
+ * This is ERASE_WR_BLK_START_ADDR command.
+ *
+ * \param [in] spiMasterProxy is a reference to SpiMasterProxy object used for communication
+ * \param [in] address is the address of first block marked for erase, bytes or blocks
+ *
+ * \return pair with return code (0 on success, error code otherwise) and R1 response; error codes:
+ * - error codes returned by writeCmdReadR1();
+ */
+
+std::pair<int, uint8_t> executeCmd32(SpiMasterProxy& spiMasterProxy, const uint32_t address)
+{
+	return writeCmdReadR1(spiMasterProxy, 32, address);
+}
+
+/**
+ * \brief Executes CMD33 command on SD or MMC card connected via SPI.
+ *
+ * This is ERASE_WR_BLK_END_ADDR command.
+ *
+ * \param [in] spiMasterProxy is a reference to SpiMasterProxy object used for communication
+ * \param [in] address is the address of last block marked for erase, bytes or blocks
+ *
+ * \return pair with return code (0 on success, error code otherwise) and R1 response; error codes:
+ * - error codes returned by writeCmdReadR1();
+ */
+
+std::pair<int, uint8_t> executeCmd33(SpiMasterProxy& spiMasterProxy, const uint32_t address)
+{
+	return writeCmdReadR1(spiMasterProxy, 33, address);
+}
+
+/**
+ * \brief Executes CMD38 command on SD or MMC card connected via SPI.
+ *
+ * This is ERASE command.
+ *
+ * \param [in] spiMasterProxy is a reference to SpiMasterProxy object used for communication
+ * \param [in] duration is the duration of wait before giving up
+ *
+ * \return pair with return code (0 on success, error code otherwise) and R1 response; error codes:
+ * - error codes returned by waitWhileBusy();
+ * - error codes returned by writeCmdReadR1();
+ */
+
+std::pair<int, uint8_t> executeCmd38(SpiMasterProxy& spiMasterProxy, const distortos::TickClock::duration duration)
+{
+	const auto response = writeCmdReadR1(spiMasterProxy, 38);
+	if (response.first != 0)
+		return response;
+
+	const auto ret = waitWhileBusy(spiMasterProxy, duration);
+	return {ret, response.second};
+}
+
+/**
  * \brief Executes CMD55 command on SD or MMC card connected via SPI.
  *
  * This is APP_CMD command.
@@ -844,6 +901,56 @@ SpiSdMmcCardProxy::SpiSdMmcCardProxy(SpiSdMmcCard& spiSdMmcCard) :
 		spiSdMmcCard_{spiSdMmcCard}
 {
 
+}
+
+int SpiSdMmcCardProxy::erase(const uint64_t address, const uint64_t size) const
+{
+	CHECK_FUNCTION_CONTEXT();
+
+	if (spiSdMmcCard_.type_ == SpiSdMmcCard::Type::unknown)
+		return EBADF;
+
+	if (size == 0)
+		return {};
+
+	if (address % SpiSdMmcCard::blockSize != 0 || size % SpiSdMmcCard::blockSize != 0)
+		return EINVAL;
+
+	const auto firstBlock = address / SpiSdMmcCard::blockSize;
+	const auto blocks = size / SpiSdMmcCard::blockSize;
+
+	if (firstBlock + blocks > spiSdMmcCard_.blocksCount_)
+		return ENOSPC;
+
+	SpiMasterProxy spiMasterProxy {spiDeviceProxy_};
+	const SpiDeviceSelectGuard spiDeviceSelectGuard {spiMasterProxy};
+
+	{
+		const auto commandAddress = spiSdMmcCard_.blockAddressing_ == true ? firstBlock : address;
+		const auto ret = executeCmd32(spiMasterProxy, commandAddress);
+		if (ret.first != 0)
+			return ret.first;
+		if (ret.second != 0)
+			return EIO;
+	}
+	{
+		const auto commandAddress = spiSdMmcCard_.blockAddressing_ == true ? firstBlock + blocks - 1 :
+				(address + size - SpiSdMmcCard::blockSize);
+		const auto ret = executeCmd33(spiMasterProxy, commandAddress);
+		if (ret.first != 0)
+			return ret.first;
+		if (ret.second != 0)
+			return EIO;
+	}
+	{
+		const auto ret = executeCmd38(spiMasterProxy, std::chrono::seconds{1});
+		if (ret.first != 0)
+			return ret.first;
+		if (ret.second != 0)
+			return EIO;
+	}
+
+	return {};
 }
 
 std::pair<int, size_t> SpiSdMmcCardProxy::read(const uint64_t address, void* const buffer, const size_t size) const
