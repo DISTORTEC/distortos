@@ -23,6 +23,8 @@ card.
 and is scheduled to be removed after v0.7.0.
 - `SpiMasterBase` object is now bound to `SpiMasterLowLevel` in `SpiMasterLowLevel::startTransfer()` instead of
 `SpiMasterLowLevel::start()`.
+- `SpiMasterLowLevel::configure()` allows configuration of dummy data that will be sent if write buffer of transfer is
+`nullptr`.
 
 ### Deprecated
 
