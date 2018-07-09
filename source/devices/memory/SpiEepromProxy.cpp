@@ -136,7 +136,7 @@ std::pair<int, size_t> SpiEepromProxy::read(const uint32_t address, void* const 
 {
 	CHECK_FUNCTION_CONTEXT();
 
-	const auto capacity = spiEeprom_.getCapacity();
+	const auto capacity = spiEeprom_.getSize();
 	if (address >= capacity || buffer == nullptr || size == 0)
 		return {EINVAL, {}};
 
@@ -150,7 +150,7 @@ std::pair<int, size_t> SpiEepromProxy::read(const uint32_t address, void* const 
 	SpiMasterOperation operations[]
 	{
 			getCommandWithAddress(capacity, readCommand, address, commandBuffer),
-			{{nullptr, buffer, address + size <= capacity ? size : capacity - address}},
+			{{nullptr, buffer, address + size <= capacity ? size : static_cast<size_t>(capacity - address)}},
 	};
 	const auto ret = executeTransaction(SpiMasterOperationsRange{operations});
 	return {ret.first, operations[1].getTransfer()->getBytesTransfered()};
@@ -179,7 +179,7 @@ std::pair<int, uint64_t> SpiEepromProxy::eraseOrProgram(const uint64_t address, 
 {
 	CHECK_FUNCTION_CONTEXT();
 
-	const auto capacity = spiEeprom_.getCapacity();
+	const auto capacity = spiEeprom_.getSize();
 	if (address >= capacity || size == 0)
 		return {EINVAL, {}};
 
@@ -201,7 +201,7 @@ std::pair<int, uint64_t> SpiEepromProxy::eraseOrProgram(const uint64_t address, 
 std::pair<int, size_t> SpiEepromProxy::eraseOrProgramPage(const uint32_t address, const void* const buffer,
 		const size_t size) const
 {
-	const auto capacity = spiEeprom_.getCapacity();
+	const auto capacity = spiEeprom_.getSize();
 	assert(address < capacity && "Invalid address!");
 
 	{

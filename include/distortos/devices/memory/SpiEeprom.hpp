@@ -42,59 +42,59 @@ class SpiEeprom
 	/// bit mask of field with page size encoded in device's type
 	constexpr static size_t pageSizeMask_ {((1 << pageSizeWidth_) - 1) << pageSizeShift_};
 
-	/// bit shift of field with capacity encoded in device's type
-	constexpr static size_t capacityShift_ {pageSizeWidth_};
+	/// bit shift of field with size encoded in device's type
+	constexpr static size_t sizeShift_ {pageSizeWidth_};
 
-	/// bit width of field with capacity encoded in device's type
-	constexpr static size_t capacityWidth_ {8 - pageSizeWidth_};
+	/// bit width of field with size encoded in device's type
+	constexpr static size_t sizeWidth_ {8 - pageSizeWidth_};
 
-	/// bit mask of field with capacity encoded in device's type
-	constexpr static size_t capacityMask_ {((1 << capacityWidth_) - 1) << capacityShift_};
+	/// bit mask of field with size encoded in device's type
+	constexpr static size_t sizeMask_ {((1 << sizeWidth_) - 1) << sizeShift_};
 
 public:
 
 	/// import SpiEepromProxy as SpiEeprom::Proxy
 	using Proxy = SpiEepromProxy;
 
-	/// type of device - determines capacity and page size
+	/// type of device - determines size and page size
 	enum class Type : uint8_t
 	{
-		/// 128 B (1 kb) capacity, 8 bytes per page
-		_128Bytes8BytesPerPage = 0 << capacityShift_ | 0 << pageSizeShift_,
-		/// 128 B (1 kb) capacity, 16 bytes per page
-		_128Bytes16BytesPerPage = 0 << capacityShift_ | 1 << pageSizeShift_,
-		/// 256 B (2 kb) capacity, 8 bytes per page
-		_256Bytes8BytesPerPage = 1 << capacityShift_ | 0 << pageSizeShift_,
-		/// 256 B (2 kb) capacity, 16 bytes per page
-		_256Bytes16BytesPerPage = 1 << capacityShift_ | 1 << pageSizeShift_,
-		/// 512 B (4 kb) capacity, 8 bytes per page
-		_512Bytes8BytesPerPage = 2 << capacityShift_ | 0 << pageSizeShift_,
-		/// 512 B (4 kb) capacity, 16 bytes per page
-		_512Bytes16BytesPerPage = 2 << capacityShift_ | 1 << pageSizeShift_,
-		/// 1 kB (8 kb) capacity, 16 bytes per page
-		_1KBytes16BytesPerPage = 3 << capacityShift_ | 1 << pageSizeShift_,
-		/// 1 kB (8 kb) capacity, 32 bytes per page
-		_1KBytes32BytesPerPage = 3 << capacityShift_ | 2 << pageSizeShift_,
-		/// 2 kB (16 kb) capacity, 16 bytes per page
-		_2KBytes16BytesPerPage = 4 << capacityShift_ | 1 << pageSizeShift_,
-		/// 2 kB (16 kb) capacity, 32 bytes per page
-		_2KBytes32BytesPerPage = 4 << capacityShift_ | 2 << pageSizeShift_,
-		/// 4 kB (32 kb) capacity, 32 bytes per page
-		_4KBytes32BytesPerPage = 5 << capacityShift_ | 2 << pageSizeShift_,
-		/// 8 kB (64 kb) capacity, 32 bytes per page
-		_8KBytes32BytesPerPage = 6 << capacityShift_ | 2 << pageSizeShift_,
-		/// 8 kB (64 kb) capacity, 64 bytes per page
-		_8KBytes64BytesPerPage = 6 << capacityShift_ | 3 << pageSizeShift_,
-		/// 16 kB (128 kb) capacity, 64 bytes per page
-		_16KBytes64BytesPerPage = 7 << capacityShift_ | 3 << pageSizeShift_,
-		/// 32 kB (256 kb) capacity, 64 bytes per page
-		_32KBytes64BytesPerPage = 8 << capacityShift_ | 3 << pageSizeShift_,
-		/// 64 kB (512 kb) capacity, 128 bytes per page
-		_64KBytes128BytesPerPage = 9 << capacityShift_ | 4 << pageSizeShift_,
-		/// 128 kB (1 Mb) capacity, 256 bytes per page
-		_128KBytes256BytesPerPage = 10 << capacityShift_ | 5 << pageSizeShift_,
-		/// 256 kB (2 Mb) capacity, 256 bytes per page
-		_256KBytes256BytesPerPage = 11 << capacityShift_ | 5 << pageSizeShift_,
+		/// 128 B (1 kb) size, 8 bytes per page
+		_128Bytes8BytesPerPage = 0 << sizeShift_ | 0 << pageSizeShift_,
+		/// 128 B (1 kb) size, 16 bytes per page
+		_128Bytes16BytesPerPage = 0 << sizeShift_ | 1 << pageSizeShift_,
+		/// 256 B (2 kb) size, 8 bytes per page
+		_256Bytes8BytesPerPage = 1 << sizeShift_ | 0 << pageSizeShift_,
+		/// 256 B (2 kb) size, 16 bytes per page
+		_256Bytes16BytesPerPage = 1 << sizeShift_ | 1 << pageSizeShift_,
+		/// 512 B (4 kb) size, 8 bytes per page
+		_512Bytes8BytesPerPage = 2 << sizeShift_ | 0 << pageSizeShift_,
+		/// 512 B (4 kb) size, 16 bytes per page
+		_512Bytes16BytesPerPage = 2 << sizeShift_ | 1 << pageSizeShift_,
+		/// 1 kB (8 kb) size, 16 bytes per page
+		_1KBytes16BytesPerPage = 3 << sizeShift_ | 1 << pageSizeShift_,
+		/// 1 kB (8 kb) size, 32 bytes per page
+		_1KBytes32BytesPerPage = 3 << sizeShift_ | 2 << pageSizeShift_,
+		/// 2 kB (16 kb) size, 16 bytes per page
+		_2KBytes16BytesPerPage = 4 << sizeShift_ | 1 << pageSizeShift_,
+		/// 2 kB (16 kb) size, 32 bytes per page
+		_2KBytes32BytesPerPage = 4 << sizeShift_ | 2 << pageSizeShift_,
+		/// 4 kB (32 kb) size, 32 bytes per page
+		_4KBytes32BytesPerPage = 5 << sizeShift_ | 2 << pageSizeShift_,
+		/// 8 kB (64 kb) size, 32 bytes per page
+		_8KBytes32BytesPerPage = 6 << sizeShift_ | 2 << pageSizeShift_,
+		/// 8 kB (64 kb) size, 64 bytes per page
+		_8KBytes64BytesPerPage = 6 << sizeShift_ | 3 << pageSizeShift_,
+		/// 16 kB (128 kb) size, 64 bytes per page
+		_16KBytes64BytesPerPage = 7 << sizeShift_ | 3 << pageSizeShift_,
+		/// 32 kB (256 kb) size, 64 bytes per page
+		_32KBytes64BytesPerPage = 8 << sizeShift_ | 3 << pageSizeShift_,
+		/// 64 kB (512 kb) size, 128 bytes per page
+		_64KBytes128BytesPerPage = 9 << sizeShift_ | 4 << pageSizeShift_,
+		/// 128 kB (1 Mb) size, 256 bytes per page
+		_128KBytes256BytesPerPage = 10 << sizeShift_ | 5 << pageSizeShift_,
+		/// 256 kB (2 Mb) size, 256 bytes per page
+		_256KBytes256BytesPerPage = 11 << sizeShift_ | 5 << pageSizeShift_,
 
 		/// Atmel AT25010
 		at25010 = _128Bytes8BytesPerPage,
@@ -261,12 +261,15 @@ public:
 	int erase(uint64_t address, uint64_t size);
 
 	/**
+	 * \deprecated scheduled to be removed after v0.7.0, use SpiEeprom::getSize()
+	 *
 	 * \return total capacity of the device, bytes
 	 */
 
+	__attribute__ ((deprecated("Use SpiEeprom::getSize()")))
 	size_t getCapacity() const
 	{
-		return 128 * (1 << ((static_cast<uint8_t>(type_) & capacityMask_) >> capacityShift_));
+		return getSize();
 	}
 
 	/**
@@ -276,6 +279,15 @@ public:
 	size_t getPageSize() const
 	{
 		return 8 * (1 << ((static_cast<uint8_t>(type_) & pageSizeMask_) >> pageSizeShift_));
+	}
+
+	/**
+	 * \return size of SPI EEPROM, bytes
+	 */
+
+	uint64_t getSize() const
+	{
+		return 128 * (1 << ((static_cast<uint8_t>(type_) & sizeMask_) >> sizeShift_));
 	}
 
 	/**
