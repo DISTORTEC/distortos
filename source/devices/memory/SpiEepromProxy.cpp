@@ -107,6 +107,12 @@ SpiEepromProxy::SpiEepromProxy(SpiEeprom& spiEeprom) :
 
 }
 
+int SpiEepromProxy::erase(const uint64_t address, const uint64_t size) const
+{
+	const auto ret = eraseOrWrite(address, nullptr, size);
+	return ret.first;
+}
+
 std::pair<int, bool> SpiEepromProxy::isWriteInProgress() const
 {
 	CHECK_FUNCTION_CONTEXT();

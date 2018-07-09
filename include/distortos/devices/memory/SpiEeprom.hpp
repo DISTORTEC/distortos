@@ -247,6 +247,20 @@ public:
 	int close();
 
 	/**
+	 * \brief Wrapper for Proxy::erase()
+	 *
+	 * \warning This function must not be called from interrupt context!
+	 *
+	 * \param [in] address is the address of range that will be erased
+	 * \param [in] size is the size of erased range, bytes
+	 *
+	 * \return 0 on success, error code otherwise:
+	 * - error codes returned by Proxy::erase();
+	 */
+
+	int erase(uint64_t address, uint64_t size);
+
+	/**
 	 * \return total capacity of the device, bytes
 	 */
 

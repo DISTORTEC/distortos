@@ -28,6 +28,11 @@ int SpiEeprom::close()
 	return spiDevice_.close();
 }
 
+int SpiEeprom::erase(const uint64_t address, const uint64_t size)
+{
+	return Proxy{*this}.erase(address, size);
+}
+
 std::pair<int, bool> SpiEeprom::isWriteInProgress()
 {
 	return Proxy{*this}.isWriteInProgress();
