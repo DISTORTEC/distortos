@@ -92,6 +92,7 @@ public:
 			readPosition_{},
 			writePosition_{},
 			errorSet_{},
+			dummyData_{},
 			started_{}
 	{
 
@@ -112,6 +113,7 @@ public:
 	 * \param [in] clockFrequency is the desired clock frequency, Hz
 	 * \param [in] wordLength selects word length, bits, {8, 16}
 	 * \param [in] lsbFirst selects whether MSB (false) or LSB (true) is transmitted first
+	 * \param [in] dummyData is the dummy data that will be sent if write buffer of transfer is nullptr
 	 *
 	 * \return pair with return code (0 on success, error code otherwise) and real clock frequency; error codes:
 	 * - EBADF - the driver is not started;
@@ -120,7 +122,7 @@ public:
 	 */
 
 	std::pair<int, uint32_t> configure(devices::SpiMode mode, uint32_t clockFrequency, uint8_t wordLength,
-			bool lsbFirst) override;
+			bool lsbFirst, uint32_t dummyData) override;
 
 	/**
 	 * \brief Interrupt handler
@@ -224,6 +226,9 @@ private:
 
 	/// current set of detected errors
 	devices::SpiMasterErrorSet errorSet_;
+
+	/// dummy data that will be sent if write buffer of transfer is nullptr
+	uint16_t dummyData_;
 
 	/// true if driver is started, false otherwise
 	bool started_;

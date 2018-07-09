@@ -54,7 +54,7 @@ std::pair<int, uint32_t> SpiMasterProxy::configure(const SpiMode mode, const uin
 	if (spiDeviceProxy_.isOpened() == false || spiMaster.openCount_ == 0)
 		return {EBADF, {}};
 
-	return spiMaster.spiMaster_.configure(mode, clockFrequency, wordLength, lsbFirst);
+	return spiMaster.spiMaster_.configure(mode, clockFrequency, wordLength, lsbFirst, {});
 }
 
 std::pair<int, size_t> SpiMasterProxy::executeTransaction(const SpiMasterOperationsRange operationsRange)

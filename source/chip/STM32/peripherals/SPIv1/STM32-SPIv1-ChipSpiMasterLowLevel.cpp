@@ -350,7 +350,7 @@ ChipSpiMasterLowLevel::~ChipSpiMasterLowLevel()
 }
 
 std::pair<int, uint32_t> ChipSpiMasterLowLevel::configure(const devices::SpiMode mode, const uint32_t clockFrequency,
-		const uint8_t wordLength, const bool lsbFirst)
+		const uint8_t wordLength, const bool lsbFirst, const uint32_t dummyData)
 {
 	if (wordLength != 8 && wordLength != 16)
 		return {EINVAL, {}};
@@ -381,6 +381,8 @@ std::pair<int, uint32_t> ChipSpiMasterLowLevel::configure(const devices::SpiMode
 
 	if (disablePeripheral == true)
 		parameters_.enablePeripheral(true);
+
+	dummyData_ = dummyData;
 
 	return {{}, peripheralFrequency / (1 << (br + 1))};
 }
@@ -452,7 +454,7 @@ void ChipSpiMasterLowLevel::interruptHandler()
 		else
 		{
 			writePosition += wordLength / 8;
-			word = 0xffff;
+			word = dummyData_;
 		}
 		writePosition_ = writePosition;
 		spi.DR = word;
