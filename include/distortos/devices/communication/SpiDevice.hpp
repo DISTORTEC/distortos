@@ -197,6 +197,25 @@ public:
 		return wordLength_;
 	}
 
+ 	/**
+	 * \brief Locks the device for exclusive use by current thread.
+	 *
+	 * When the object is locked, any call to any member function from other thread will be blocked until the object is
+	 * unlocked. Locking is optional, but may be useful when more than one transaction must be done atomically.
+	 *
+	 * \note Locks are recursive.
+	 *
+	 * \warning This function must not be called from interrupt context!
+	 *
+	 * \return 0 on success, error code otherwise:
+	 * - error codes returned by Mutex::lock();
+	 */
+
+	int lock()
+	{
+		return mutex_.lock();
+	}
+
 	/**
 	 * \brief Opens SPI device.
 	 *
@@ -210,6 +229,22 @@ public:
 	 */
 
 	int open();
+
+	/**
+	 * \brief Unlocks the device which was previously locked by current thread.
+	 *
+	 * \note Locks are recursive.
+	 *
+	 * \warning This function must not be called from interrupt context!
+	 *
+	 * \return 0 on success, error code otherwise:
+	 * - error codes returned by Mutex::unlock();
+	 */
+
+	int unlock()
+	{
+		return mutex_.unlock();
+	}
 
 private:
 
