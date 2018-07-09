@@ -22,8 +22,6 @@ namespace distortos
 namespace devices
 {
 
-class SpiSdMmcCardProxy;
-
 /**
  * SpiSdMmcCard class is a SD or MMC card connected via SPI.
  *
@@ -32,12 +30,7 @@ class SpiSdMmcCardProxy;
 
 class SpiSdMmcCard : public BlockDevice
 {
-	friend class SpiSdMmcCardProxy;
-
 public:
-
-	/// import SpiSdMmcCardProxy as SpiSdMmcCard::Proxy
-	using Proxy = SpiSdMmcCardProxy;
 
 	/// type of card connected via SPI
 	enum class Type : uint8_t
@@ -100,7 +93,12 @@ public:
 	 * \param [in] size is the size of erased range, bytes, must be a multiple of erase block size
 	 *
 	 * \return 0 on success, error code otherwise:
-	 * - error codes returned by Proxy::erase();
+	 * - EBADF - the device is not opened;
+	 * - EINVAL - \a address and/or \a size are not valid;
+	 * - ENOSPC - selected range is greater than size of device;
+	 * - error codes returned by executeCmd32();
+	 * - error codes returned by executeCmd33();
+	 * - error codes returned by executeCmd38();
 	 */
 
 	int erase(uint64_t address, uint64_t size) override;
@@ -158,7 +156,7 @@ public:
 	 * \warning This function must not be called from interrupt context!
 	 *
 	 * \return 0 on success, error code otherwise:
-	 * - error codes returned by Proxy::initialize();
+	 * - error codes returned by initialize();
 	 * - error codes returned by SpiDevice::open();
 	 */
 
@@ -177,7 +175,15 @@ public:
 	 *
 	 * \return pair with return code (0 on success, error code otherwise) and number of programmed bytes (valid even
 	 * when error code is returned); error codes:
-	 * - error codes returned by Proxy::program();
+	 * - EBADF - the device is not opened;
+	 * - EINVAL - \a address and/or \a buffer and/or \a size are not valid;
+	 * - EIO - error during communication with SD or MMC card;
+	 * - ENOSPC - selected range is greater than size of device;
+	 * - error codes returned by executeCmd24();
+	 * - error codes returned by executeCmd25();
+	 * - error codes returned by waitWhileBusy();
+	 * - error codes returned by writeDataBlock();
+	 * - error codes returned by SpiMasterProxy::executeTransaction();
 	 */
 
 	std::pair<int, size_t> program(uint64_t address, const void* buffer, size_t size) override;
@@ -193,7 +199,14 @@ public:
 	 *
 	 * \return pair with return code (0 on success, error code otherwise) and number of read bytes (valid even when
 	 * error code is returned); error codes:
-	 * - error codes returned by Proxy::read();
+	 * - EBADF - the device is not opened;
+	 * - EINVAL - \a address and/or \a buffer and/or \a size are not valid;
+	 * - EIO - error during communication with SD or MMC card;
+	 * - ENOSPC - selected range is greater than size of device;
+	 * - error codes returned by executeCmd12();
+	 * - error codes returned by executeCmd17();
+	 * - error codes returned by executeCmd18();
+	 * - error codes returned by readDataBlock();
 	 */
 
 	std::pair<int, size_t> read(uint64_t address, void* buffer, size_t size) override;
@@ -233,6 +246,36 @@ public:
 	int unlock() override;
 
 private:
+
+	/**
+	 * \brief Deinitializes SD or MMC card connected via SPI.
+	 */
+
+	void deinitialize();
+
+	/**
+	 * \brief Initializes SD or MMC card connected via SPI.
+	 *
+	 * Algorithm is based on ChaN's
+	 * [How to Use MMC/SDC: Initialization Procedure for SPI Mode](http://elm-chan.org/docs/mmc/mmc_e.html#spiinit).
+	 *
+	 * \param [in] spiDeviceProxy is a reference to SpiDeviceProxy associated with this object
+	 *
+	 * \return 0 on success, error code otherwise:
+	 * - EIO - error during communication with SD or MMC card;
+	 * - ETIMEDOUT - timed-out while waiting for SD or MMC card to respond;
+	 * - error codes returned by executeAcmd41();
+	 * - error codes returned by executeCmd0();
+	 * - error codes returned by executeCmd1();
+	 * - error codes returned by executeCmd8();
+	 * - error codes returned by executeCmd9();
+	 * - error codes returned by executeCmd16();
+	 * - error codes returned by executeCmd58();
+	 * - error codes returned by SpiMasterProxy::configure();
+	 * - error codes returned by SpiMasterProxy::executeTransaction();
+	 */
+
+	int initialize(const SpiDeviceProxy& spiDeviceProxy);
 
 	/// internal SPI slave device
 	SpiDevice spiDevice_;
