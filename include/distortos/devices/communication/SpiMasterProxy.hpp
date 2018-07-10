@@ -112,7 +112,7 @@ private:
 	 * \return reference to SpiMaster associated with this proxy
 	 */
 
-    SpiMaster& getSpiMaster() const;
+	SpiMaster& getSpiMaster() const;
 
 	/**
 	 * \brief Notifies waiting thread about completion of transaction.

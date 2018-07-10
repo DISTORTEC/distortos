@@ -65,9 +65,9 @@ private:
 	 * \return reference to SpiDevice associated with this select guard
 	 */
 
-    SpiDevice& getSpiDevice() const;
+	SpiDevice& getSpiDevice() const;
 
-    /// reference to SpiMasterProxy associated with this select guard
+	/// reference to SpiMasterProxy associated with this select guard
 	SpiMasterProxy& spiMasterProxy_;
 };
 

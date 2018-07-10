@@ -69,7 +69,7 @@ private:
 	 * \return reference to SpiMaster associated with this proxy
 	 */
 
-    SpiMaster& getSpiMaster() const;
+	SpiMaster& getSpiMaster() const;
 
 	/// reference to SpiDevice associated with this proxy
 	SpiDevice& spiDevice_;
