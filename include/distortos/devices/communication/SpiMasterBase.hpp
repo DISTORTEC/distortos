@@ -45,7 +45,7 @@ public:
 	 * Called by low-level SPI master driver when the transfer is physically finished.
 	 *
 	 * \param [in] errorSet is the set of error bits
-	 * \param [in] bytesTransfered is the number of bytes transfered by low-level SPI master driver (read from write
+	 * \param [in] bytesTransfered is the number of bytes transferred by low-level SPI master driver (read from write
 	 * buffer and/or written to read buffer), may be unreliable if \a errorSet is not empty (i.e. transfer error was
 	 * detected)
 	 */

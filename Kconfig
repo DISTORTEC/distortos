@@ -127,7 +127,7 @@ config LDSCRIPT_ROM_SIZE_MANUAL_CONFIGURATION
 		- the device has a bootloader at the beginning of flash, so the
 		application must not use the memory reserved for bootloader;
 		- the application is a bootloader, so rest of flash must be left for
-		loaded aplication;
+		loaded application;
 		- the application uses a few last ROM pages for its own purposes (e.g.
 		emulated EEPROM, storing configuration, logging, ...);
 		- ...
@@ -145,7 +145,7 @@ config LDSCRIPT_ROM_SIZE_MANUAL_CONFIGURATION
 		 ║0║1║2║3║4║5║6║7║8║9║
 		 ╚═╩═╩═╩═╩═╩═╩═╩═╩═╩═╝
 
-		2. beggining of ROM (3 bytes) left unused, rest (7 bytes) used by
+		2. beginning of ROM (3 bytes) left unused, rest (7 bytes) used by
 		application - begin == 3, end == 10
 
 		      begin          end

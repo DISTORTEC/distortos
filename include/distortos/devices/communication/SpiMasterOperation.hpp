@@ -59,9 +59,9 @@ public:
 		 * \brief Finalizes transfer operation.
 		 *
 		 * \param [in] errorSet is the set of error bits
-		 * \param [in] bytesTransfered is the number of bytes transfered by low-level SPI master driver (read from write
-		 * buffer and/or written to read buffer), may be unreliable if \a errorSet is not empty (i.e. transfer error was
-		 * detected)
+		 * \param [in] bytesTransfered is the number of bytes transferred by low-level SPI master driver (read from
+		 * write buffer and/or written to read buffer), may be unreliable if \a errorSet is not empty (i.e. transfer
+		 * error was detected)
 		 */
 
 		void finalize(const SpiMasterErrorSet errorSet, const size_t bytesTransfered)
@@ -71,7 +71,7 @@ public:
 		}
 
 		/**
-		 * \return number of bytes transfered by low-level SPI master driver (read from write buffer and/or written to
+		 * \return number of bytes transferred by low-level SPI master driver (read from write buffer and/or written to
 		 * read buffer), may be unreliable if error set is not empty (i.e. transfer error was detected)
 		 */
 
@@ -127,7 +127,7 @@ public:
 		/// size of transfer (size of \a readBuffer_ and/or \a writeBuffer_), bytes
 		size_t size_;
 
-		/// number of bytes transfered by low-level SPI master driver (read from \a writeBuffer_ and/or written to
+		/// number of bytes transferred by low-level SPI master driver (read from \a writeBuffer_ and/or written to
 		/// \a readBuffer_), may be unreliable if \a errorSet_ is not empty (i.e. transfer error was detected)
 		size_t bytesTransfered_;
 

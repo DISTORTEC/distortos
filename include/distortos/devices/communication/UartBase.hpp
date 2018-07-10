@@ -96,7 +96,7 @@ public:
 	/**
 	 * \brief "Write complete" event
 	 *
-	 * Called by low-level UART driver when whole write buffer was transfered - the transmission may still be in
+	 * Called by low-level UART driver when whole write buffer was transferred - the transmission may still be in
 	 * progress.
 	 *
 	 * \param [in] bytesWritten is the number of bytes written by low-level UART driver (and read from write buffer)

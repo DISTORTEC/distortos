@@ -130,7 +130,7 @@ protected:
 	/**
 	 * \brief Performs unlocking or transfer of lock from current owner to next thread on the list.
 	 *
-	 * Mutex is unlocked if blockedList_ is empty, otherwise the ownership is transfered to the next thread.
+	 * Mutex is unlocked if blockedList_ is empty, otherwise the ownership is transferred to the next thread.
 	 *
 	 * \attention mutex must be locked
 	 */

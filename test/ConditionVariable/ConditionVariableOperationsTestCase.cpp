@@ -76,7 +76,7 @@ constexpr decltype(statistics::getContextSwitchCount()) phase3SoftwareTimerConte
  *
  * \param [in] mutex is a reference to mutex that will be tested and unlocked
  *
- * \return true if test succeeded and mutex was sucessfully unlocked, false otherwise
+ * \return true if test succeeded and mutex was successfully unlocked, false otherwise
  */
 
 bool testMutexAndUnlock(Mutex& mutex)

@@ -58,7 +58,7 @@ with *STM32F4* chip.
 - `distortos/C-API/Mutex.h` - C-API for mutexes, implemented as wrappers for `distortos::Mutex` member functions.
 - `distortos/C-API/Semaphore.h` - C-API for semaphores, implemented as wrappers for `distortos::Semaphore` member
 functions.
-- `distortos::fromCApi()` which can be used to cast referenes to C-API objects (like `distortos_Semaphore`) into
+- `distortos::fromCApi()` which can be used to cast references to C-API objects (like `distortos_Semaphore`) into
 references to regular C++ API objects (like `distortos::Semaphore`).
 - `distortos::DynamicSoftwareTimer` class - a dynamic and (mostly) non-templated counterpart of
 `distortos::StaticSoftwareTimer`.
@@ -362,8 +362,8 @@ macros are now generated automatically by `buttons.hpp` and `leds.hpp` respectiv
 - Compiler's built-in defines are passed automatically to *doxygen*, which fixes some missing documentation entries (for
 example bit-banding macros).
 - Fixed failures in several test cases (`ThreadSleepForTestCase`, `SignalsInterruptionTestCase` and
-`CallOnceOperationsTestCase`) that occured only with low core frequency due to very strict timing requirements.
-- Fixed stack overflow in `CallOnceOperationsTestCase` which occured only on *ARM Cortex-M0* cores with `-Og`
+`CallOnceOperationsTestCase`) that occurred only with low core frequency due to very strict timing requirements.
+- Fixed stack overflow in `CallOnceOperationsTestCase` which occurred only on *ARM Cortex-M0* cores with `-Og`
 optimization level.
 - Maximum values of APB1 and APB2 frequencies for *STM32F4* take into account whether over-drive is enabled or not.
 

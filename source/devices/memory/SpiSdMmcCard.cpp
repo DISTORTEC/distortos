@@ -457,8 +457,8 @@ std::tuple<int, uint8_t, uint32_t> readR3(SpiMasterProxy& spiMasterProxy)
  * \param [in] spiMasterProxy is a reference to SpiMasterProxy object used for communication
  * \param [in] command is the command that will be written
  * \param [in] argument is the argument for command, default - 0
- * \param [in] crc7 is the value of CRC-7 appended to the transfered block, default - 0
- * \param [in] stuffByte selects whether stuff byte will be appended to the transfered block, default - false
+ * \param [in] crc7 is the value of CRC-7 appended to the transferred block, default - 0
+ * \param [in] stuffByte selects whether stuff byte will be appended to the transferred block, default - false
  *
  * \return 0 on success, error code otherwise:
  * - error codes returned by SpiMasterProxy::executeTransaction();
@@ -488,8 +488,8 @@ int writeCmd(SpiMasterProxy& spiMasterProxy, const uint8_t command, const uint32
  * \param [in] spiMasterProxy is a reference to SpiMasterProxy object used for communication
  * \param [in] command is the command that will be written
  * \param [in] argument is the argument for command, default - 0
- * \param [in] crc7 is the value of CRC-7 appended to the transfered block, default - 0
- * \param [in] stuffByte selects whether stuff byte will be appended to the transfered block, default - false
+ * \param [in] crc7 is the value of CRC-7 appended to the transferred block, default - 0
+ * \param [in] stuffByte selects whether stuff byte will be appended to the transferred block, default - false
  *
  * \return pair with return code (0 on success, error code otherwise) and R1 response; error codes:
  * - error codes returned by readR1();
@@ -512,8 +512,8 @@ std::pair<int, uint8_t> writeCmdReadR1(SpiMasterProxy& spiMasterProxy, const uin
  * \param [in] spiMasterProxy is a reference to SpiMasterProxy object used for communication
  * \param [in] command is the command that will be written
  * \param [in] argument is the argument for command, default - 0
- * \param [in] crc7 is the value of CRC-7 appended to the transfered block, default - 0
- * \param [in] stuffByte selects whether stuff byte will be appended to the transfered block, default - false
+ * \param [in] crc7 is the value of CRC-7 appended to the transferred block, default - 0
+ * \param [in] stuffByte selects whether stuff byte will be appended to the transferred block, default - false
  *
  * \return tuple with return code (0 on success, error code otherwise), R1 response and value of OCR; error codes:
  * - error codes returned by readR3();
@@ -809,8 +809,8 @@ std::tuple<int, uint8_t, uint32_t> executeCmd58(SpiMasterProxy& spiMasterProxy)
  * \param [in] spiMasterProxy is a reference to SpiMasterProxy object used for communication
  * \param [in] command is the command that will be written
  * \param [in] argument is the argument for command, default - 0
- * \param [in] crc7 is the value of CRC-7 appended to the transfered block, default - 0
- * \param [in] stuffByte selects whether stuff byte will be appended to the transfered block, default - false
+ * \param [in] crc7 is the value of CRC-7 appended to the transferred block, default - 0
+ * \param [in] stuffByte selects whether stuff byte will be appended to the transferred block, default - false
  *
  * \return 0 on success, error code otherwise:
  * - EIO - unexpected R1 response for CMD55 was read;
@@ -836,8 +836,8 @@ int writeAcmd(SpiMasterProxy& spiMasterProxy, const uint8_t command, const uint3
  * \param [in] spiMasterProxy is a reference to SpiMasterProxy object used for communication
  * \param [in] command is the command that will be written
  * \param [in] argument is the argument for command, default - 0
- * \param [in] crc7 is the value of CRC-7 appended to the transfered block, default - 0
- * \param [in] stuffByte selects whether stuff byte will be appended to the transfered block, default - false
+ * \param [in] crc7 is the value of CRC-7 appended to the transferred block, default - 0
+ * \param [in] stuffByte selects whether stuff byte will be appended to the transferred block, default - false
  *
  * \return pair with return code (0 on success, error code otherwise) and R1 response; error codes:
  * - error codes returned by readR1();
