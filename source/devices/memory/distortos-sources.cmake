@@ -8,7 +8,6 @@
 #
 
 target_sources(distortos PRIVATE
+		${CMAKE_CURRENT_LIST_DIR}/BlockDevice.cpp
 		${CMAKE_CURRENT_LIST_DIR}/SpiEeprom.cpp
-		${CMAKE_CURRENT_LIST_DIR}/SpiEepromProxy.cpp
-		${CMAKE_CURRENT_LIST_DIR}/SpiSdMmcCard.cpp
-		${CMAKE_CURRENT_LIST_DIR}/SpiSdMmcCardProxy.cpp)
+		${CMAKE_CURRENT_LIST_DIR}/SpiSdMmcCard.cpp)

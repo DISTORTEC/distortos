@@ -9,11 +9,12 @@ All notable changes to this project will be documented in this file. This projec
 
 ### Added
 
-- Added `SpiEepromProxy`, `SpiDeviceProxy`, `SpiMasterProxy` and `SpiDeviceSelectGuard`, which build new SPI-related
-API. These classes can be used for RAII-style locking/unlocking or selecting/deselecting of appropriate devices and also
-serve as proxies for accessing core functionalities of associated objects.
-- Added `SpiSdMmcCard` and `SpiSdMmcCardProxy` classes, which can be used with *SD* or *MMC* card connected via *SPI*.
-At this moment the code handles only *SD version 2.0* cards, has no support for run-time detection of card
+- Added `BlockDevice` interface class.
+- Added `SpiDeviceProxy`, `SpiMasterProxy` and `SpiDeviceSelectGuard`, which build new SPI-related API. These classes
+can be used for RAII-style locking/unlocking or selecting/deselecting of appropriate devices and also serve as proxies
+for accessing core functionalities of associated objects.
+- Added `SpiSdMmcCard` class, based on `BlockDevice` interface, which can be used with *SD* or *MMC* card connected via
+*SPI*. At this moment the code handles only *SD version 2.0* cards, has no support for run-time detection of card
 insertion/removal and has no support for detecting whether card is write-protected. It was tested only with 32 GB *SDXC*
 card.
 
@@ -25,6 +26,9 @@ and is scheduled to be removed after v0.7.0.
 `SpiMasterLowLevel::start()`.
 - `SpiMasterLowLevel::configure()` allows configuration of dummy data that will be sent if write buffer of transfer is
 `nullptr`.
+- `...::lock()` and `...::unlock()` functions in `SpiDevice` and `SpiEeprom` were changed to use recursive mutexes
+internally and thus take no arguments.
+- `SpiEeprom` implements `BlockDevice` interface.
 
 ### Deprecated
 
@@ -33,11 +37,11 @@ and is scheduled to be removed after v0.7.0.
 `SpiDevice::getMode()`, `SpiDevice::getSlaveSelectPin()` and `SpiDevice::getWordLength()` were marked as deprecated and
 are scheduled to be removed after v0.7.0. Use functionality exposed by `SpiDeviceProxy`, `SpiMasterProxy` and
 `SpiDeviceSelectGuard`.
-
-### Removed
-
-- Removed previous style of `SpiDevice::lock()`, `SpiDevice::unlock()`, `SpiEeprom::lock()` and `SpiEeprom::unlock()`.
-Use `SpiEepromProxy` and `SpiDeviceProxy`.
+- `SpiEeprom::getCapacity()`, `SpiEeprom::waitWhileWriteInProgress()` and `SpiEeprom::write()` were marked as deprecated
+and are scheduled to be removed after v0.7.0. Use functions inherited from `BlockDevice` interface class -
+`SpiEeprom::getSize()`, `SpiEeprom::synchronize()` and `SpiEeprom::program()`.
+- `SpiEeprom::getPageSize()` and `SpiEeprom::isWriteInProgress()` were marked as deprecated and are scheduled to be
+removed after v0.7.0.
 
 [0.6.0](https://github.com/DISTORTEC/distortos/compare/v0.5.0...v0.6.0) - 2018-07-01
 ------------------------------------------------------------------------------------

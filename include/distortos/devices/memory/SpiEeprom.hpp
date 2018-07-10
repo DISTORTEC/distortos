@@ -14,13 +14,13 @@
 
 #include "distortos/devices/communication/SpiDevice.hpp"
 
+#include "distortos/devices/memory/BlockDevice.hpp"
+
 namespace distortos
 {
 
 namespace devices
 {
-
-class SpiEepromProxy;
 
 /**
  * SpiEeprom class is a SPI EEPROM memory: Atmel AT25xxx, ON Semiconductor CAT25xxx, ST M95xxx, Microchip 25xxxxx or
@@ -29,10 +29,8 @@ class SpiEepromProxy;
  * \ingroup devices
  */
 
-class SpiEeprom
+class SpiEeprom : public BlockDevice
 {
-	friend class SpiEepromProxy;
-
 	/// bit shift of field with page size encoded in device's type
 	constexpr static size_t pageSizeShift_ {0};
 
@@ -42,59 +40,56 @@ class SpiEeprom
 	/// bit mask of field with page size encoded in device's type
 	constexpr static size_t pageSizeMask_ {((1 << pageSizeWidth_) - 1) << pageSizeShift_};
 
-	/// bit shift of field with capacity encoded in device's type
-	constexpr static size_t capacityShift_ {pageSizeWidth_};
+	/// bit shift of field with size encoded in device's type
+	constexpr static size_t sizeShift_ {pageSizeWidth_};
 
-	/// bit width of field with capacity encoded in device's type
-	constexpr static size_t capacityWidth_ {8 - pageSizeWidth_};
+	/// bit width of field with size encoded in device's type
+	constexpr static size_t sizeWidth_ {8 - pageSizeWidth_};
 
-	/// bit mask of field with capacity encoded in device's type
-	constexpr static size_t capacityMask_ {((1 << capacityWidth_) - 1) << capacityShift_};
+	/// bit mask of field with size encoded in device's type
+	constexpr static size_t sizeMask_ {((1 << sizeWidth_) - 1) << sizeShift_};
 
 public:
 
-	/// import SpiEepromProxy as SpiEeprom::Proxy
-	using Proxy = SpiEepromProxy;
-
-	/// type of device - determines capacity and page size
+	/// type of device - determines size and page size
 	enum class Type : uint8_t
 	{
-		/// 128 B (1 kb) capacity, 8 bytes per page
-		_128Bytes8BytesPerPage = 0 << capacityShift_ | 0 << pageSizeShift_,
-		/// 128 B (1 kb) capacity, 16 bytes per page
-		_128Bytes16BytesPerPage = 0 << capacityShift_ | 1 << pageSizeShift_,
-		/// 256 B (2 kb) capacity, 8 bytes per page
-		_256Bytes8BytesPerPage = 1 << capacityShift_ | 0 << pageSizeShift_,
-		/// 256 B (2 kb) capacity, 16 bytes per page
-		_256Bytes16BytesPerPage = 1 << capacityShift_ | 1 << pageSizeShift_,
-		/// 512 B (4 kb) capacity, 8 bytes per page
-		_512Bytes8BytesPerPage = 2 << capacityShift_ | 0 << pageSizeShift_,
-		/// 512 B (4 kb) capacity, 16 bytes per page
-		_512Bytes16BytesPerPage = 2 << capacityShift_ | 1 << pageSizeShift_,
-		/// 1 kB (8 kb) capacity, 16 bytes per page
-		_1KBytes16BytesPerPage = 3 << capacityShift_ | 1 << pageSizeShift_,
-		/// 1 kB (8 kb) capacity, 32 bytes per page
-		_1KBytes32BytesPerPage = 3 << capacityShift_ | 2 << pageSizeShift_,
-		/// 2 kB (16 kb) capacity, 16 bytes per page
-		_2KBytes16BytesPerPage = 4 << capacityShift_ | 1 << pageSizeShift_,
-		/// 2 kB (16 kb) capacity, 32 bytes per page
-		_2KBytes32BytesPerPage = 4 << capacityShift_ | 2 << pageSizeShift_,
-		/// 4 kB (32 kb) capacity, 32 bytes per page
-		_4KBytes32BytesPerPage = 5 << capacityShift_ | 2 << pageSizeShift_,
-		/// 8 kB (64 kb) capacity, 32 bytes per page
-		_8KBytes32BytesPerPage = 6 << capacityShift_ | 2 << pageSizeShift_,
-		/// 8 kB (64 kb) capacity, 64 bytes per page
-		_8KBytes64BytesPerPage = 6 << capacityShift_ | 3 << pageSizeShift_,
-		/// 16 kB (128 kb) capacity, 64 bytes per page
-		_16KBytes64BytesPerPage = 7 << capacityShift_ | 3 << pageSizeShift_,
-		/// 32 kB (256 kb) capacity, 64 bytes per page
-		_32KBytes64BytesPerPage = 8 << capacityShift_ | 3 << pageSizeShift_,
-		/// 64 kB (512 kb) capacity, 128 bytes per page
-		_64KBytes128BytesPerPage = 9 << capacityShift_ | 4 << pageSizeShift_,
-		/// 128 kB (1 Mb) capacity, 256 bytes per page
-		_128KBytes256BytesPerPage = 10 << capacityShift_ | 5 << pageSizeShift_,
-		/// 256 kB (2 Mb) capacity, 256 bytes per page
-		_256KBytes256BytesPerPage = 11 << capacityShift_ | 5 << pageSizeShift_,
+		/// 128 B (1 kb) size, 8 bytes per page
+		_128Bytes8BytesPerPage = 0 << sizeShift_ | 0 << pageSizeShift_,
+		/// 128 B (1 kb) size, 16 bytes per page
+		_128Bytes16BytesPerPage = 0 << sizeShift_ | 1 << pageSizeShift_,
+		/// 256 B (2 kb) size, 8 bytes per page
+		_256Bytes8BytesPerPage = 1 << sizeShift_ | 0 << pageSizeShift_,
+		/// 256 B (2 kb) size, 16 bytes per page
+		_256Bytes16BytesPerPage = 1 << sizeShift_ | 1 << pageSizeShift_,
+		/// 512 B (4 kb) size, 8 bytes per page
+		_512Bytes8BytesPerPage = 2 << sizeShift_ | 0 << pageSizeShift_,
+		/// 512 B (4 kb) size, 16 bytes per page
+		_512Bytes16BytesPerPage = 2 << sizeShift_ | 1 << pageSizeShift_,
+		/// 1 kB (8 kb) size, 16 bytes per page
+		_1KBytes16BytesPerPage = 3 << sizeShift_ | 1 << pageSizeShift_,
+		/// 1 kB (8 kb) size, 32 bytes per page
+		_1KBytes32BytesPerPage = 3 << sizeShift_ | 2 << pageSizeShift_,
+		/// 2 kB (16 kb) size, 16 bytes per page
+		_2KBytes16BytesPerPage = 4 << sizeShift_ | 1 << pageSizeShift_,
+		/// 2 kB (16 kb) size, 32 bytes per page
+		_2KBytes32BytesPerPage = 4 << sizeShift_ | 2 << pageSizeShift_,
+		/// 4 kB (32 kb) size, 32 bytes per page
+		_4KBytes32BytesPerPage = 5 << sizeShift_ | 2 << pageSizeShift_,
+		/// 8 kB (64 kb) size, 32 bytes per page
+		_8KBytes32BytesPerPage = 6 << sizeShift_ | 2 << pageSizeShift_,
+		/// 8 kB (64 kb) size, 64 bytes per page
+		_8KBytes64BytesPerPage = 6 << sizeShift_ | 3 << pageSizeShift_,
+		/// 16 kB (128 kb) size, 64 bytes per page
+		_16KBytes64BytesPerPage = 7 << sizeShift_ | 3 << pageSizeShift_,
+		/// 32 kB (256 kb) size, 64 bytes per page
+		_32KBytes64BytesPerPage = 8 << sizeShift_ | 3 << pageSizeShift_,
+		/// 64 kB (512 kb) size, 128 bytes per page
+		_64KBytes128BytesPerPage = 9 << sizeShift_ | 4 << pageSizeShift_,
+		/// 128 kB (1 Mb) size, 256 bytes per page
+		_128KBytes256BytesPerPage = 10 << sizeShift_ | 5 << pageSizeShift_,
+		/// 256 kB (2 Mb) size, 256 bytes per page
+		_256KBytes256BytesPerPage = 11 << sizeShift_ | 5 << pageSizeShift_,
 
 		/// Atmel AT25010
 		at25010 = _128Bytes8BytesPerPage,
@@ -225,7 +220,6 @@ public:
 	constexpr SpiEeprom(SpiMaster& spiMaster, OutputPin& slaveSelectPin, const Type type, const bool mode3 = {},
 			const uint32_t clockFrequency = 1000000) :
 					spiDevice_{spiMaster, slaveSelectPin},
-					slaveSelectPin_{slaveSelectPin},
 					clockFrequency_{clockFrequency},
 					mode_{mode3 == false ? SpiMode::_0 : SpiMode::_3},
 					type_{type}
@@ -234,9 +228,13 @@ public:
 	}
 
 	/**
+	 * \brief SpiEeprom's destructor
+	 */
+
+	~SpiEeprom() override;
+
+	/**
 	 * \brief Closes SPI EEPROM.
-	 *
-	 * Wrapper for SpiDevice::close().
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
@@ -244,42 +242,110 @@ public:
 	 * - error codes returned by SpiDevice::close();
 	 */
 
-	int close();
+	int close() override;
 
 	/**
+	 * \brief Erases blocks on SPI EEPROM.
+	 *
+	 * \warning This function must not be called from interrupt context!
+	 *
+	 * \param [in] address is the address of range that will be erased
+	 * \param [in] size is the size of erased range, bytes
+	 *
+	 * \return 0 on success, error code otherwise:
+	 * - error codes returned by eraseOrProgram();
+	 */
+
+	int erase(uint64_t address, uint64_t size) override;
+
+	/**
+	 * \deprecated scheduled to be removed after v0.7.0, use SpiEeprom::getSize()
+	 *
 	 * \return total capacity of the device, bytes
 	 */
 
+	__attribute__ ((deprecated("Use SpiEeprom::getSize()")))
 	size_t getCapacity() const
 	{
-		return 128 * (1 << ((static_cast<uint8_t>(type_) & capacityMask_) >> capacityShift_));
+		return getSize();
 	}
 
 	/**
+	 * \return erase block size, bytes
+	 */
+
+	size_t getEraseBlockSize() const override;
+
+	/**
+	 * \return pair with bool telling whether erased value is defined (true) or not (false) and value of erased bytes
+	 * (valid only if defined);
+	 */
+
+	std::pair<bool, uint8_t> getErasedValue() const override;
+
+	/**
+	 * \deprecated scheduled to be made private after v0.7.0
+	 *
 	 * \return size of single page, bytes
 	 */
 
+	__attribute__ ((deprecated))
 	size_t getPageSize() const
 	{
 		return 8 * (1 << ((static_cast<uint8_t>(type_) & pageSizeMask_) >> pageSizeShift_));
 	}
 
 	/**
-	 * \brief Wrapper for Proxy::isWriteInProgress()
+	 * \return program block size, bytes
+	 */
+
+	size_t getProgramBlockSize() const override;
+
+	/**
+	 * \return read block size, bytes
+	 */
+
+	size_t getReadBlockSize() const override;
+
+	/**
+	 * \return size of SPI EEPROM, bytes
+	 */
+
+	uint64_t getSize() const override;
+
+	/**
+	 * \brief Checks whether any write operation is currently in progress.
+	 *
+	 * \deprecated scheduled to be removed after v0.7.0, use SpiEeprom::synchronize()
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
 	 * \return pair with return code (0 on success, error code otherwise) and current status of device: false - device
 	 * is idle, true - write operation is in progress; error codes:
-	 * - error codes returned by Proxy::isWriteInProgress();
+	 * - error codes returned by isWriteInProgress(const SpiDeviceProxy&);
 	 */
 
+	__attribute__ ((deprecated("Use SpiEeprom::synchronize()")))
 	std::pair<int, bool> isWriteInProgress();
+
+ 	/**
+	 * \brief Locks SPI EEPROM for exclusive use by current thread.
+	 *
+	 * When the object is locked, any call to any member function from other thread will be blocked until the object is
+	 * unlocked. Locking is optional, but may be useful when more than one transaction must be done atomically.
+	 *
+	 * \note Locks are recursive.
+	 *
+	 * \warning This function must not be called from interrupt context!
+	 *
+	 * \return 0 on success, error code otherwise:
+	 * - error codes returned by SpiDevice::lock();
+	 */
+
+	int lock() override;
 
 	/**
 	 * \brief Opens SPI EEPROM.
-	 *
-	 * Wrapper for SpiDevice::open().
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
@@ -287,37 +353,101 @@ public:
 	 * - error codes returned by SpiDevice::open();
 	 */
 
-	int open();
+	int open() override;
 
 	/**
-	 * \brief Wrapper for Proxy::read()
+	 * \brief Programs data to SPI EEPROM.
+	 *
+	 * \warning This function must not be called from interrupt context!
+	 *
+	 * \param [in] address is the address of data that will be programmed
+	 * \param [in] buffer is the buffer with data that will be programmed
+	 * \param [in] size is the size of \a buffer, bytes
+	 *
+	 * \return pair with return code (0 on success, error code otherwise) and number of programmed bytes (valid even
+	 * when error code is returned); error codes:
+	 * - EINVAL - \a buffer is not valid;
+	 * - error codes returned by eraseOrProgram();
+	 */
+
+	std::pair<int, size_t> program(uint64_t address, const void* buffer, size_t size) override;
+
+	/**
+	 * \brief Reads data from SPI EEPROM.
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
 	 * \param [in] address is the address of data that will be read
-	 * \param [out] buffer is the buffer to which the data will be written
+	 * \param [out] buffer is the buffer into which the data will be read
 	 * \param [in] size is the size of \a buffer, bytes
 	 *
 	 * \return pair with return code (0 on success, error code otherwise) and number of read bytes (valid even when
 	 * error code is returned); error codes:
-	 * - error codes returned by Proxy::read();
+	 * - EINVAL - \a address and/or \a buffer and/or \a size are not valid;
+	 * - error codes returned by executeTransaction();
+	 * - error codes returned by synchronize(const SpiDeviceProxy&);
 	 */
 
-	std::pair<int, size_t> read(uint32_t address, void* buffer, size_t size);
+	std::pair<int, size_t> read(uint64_t address, void* buffer, size_t size) override;
 
 	/**
-	 * \brief Wrapper for Proxy::waitWhileWriteInProgress()
+	 * \brief Synchronizes state of SPI EEPROM, ensuring all cached writes are finished.
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
 	 * \return 0 on success, error code otherwise:
-	 * - error codes returned by Proxy::waitWhileWriteInProgress();
+	 * - error codes returned by synchronize(const SpiDeviceProxy&);
 	 */
 
-	int waitWhileWriteInProgress();
+	int synchronize() override;
 
 	/**
-	 * \brief Wrapper for Proxy::write()
+	 * \brief Trims unused blocks on SPI EEPROM.
+	 *
+	 * Selected range of blocks is no longer used and SPI EEPROM may erase it when convenient.
+	 *
+	 * \param [in] address is the address of range that will be trimmed, must be a multiple of erase block size
+	 * \param [in] size is the size of trimmed range, bytes, must be a multiple of erase block size
+	 *
+	 * \return always 0
+	 */
+
+	int trim(uint64_t address, uint64_t size) override;
+
+	/**
+	 * \brief Unlocks SPI EEPROM which was previously locked by current thread.
+	 *
+	 * \note Locks are recursive.
+	 *
+	 * \warning This function must not be called from interrupt context!
+	 *
+	 * \return 0 on success, error code otherwise:
+	 * - error codes returned by SpiDevice::unlock();
+	 */
+
+	int unlock() override;
+
+	/**
+	 * \brief Wrapper for synchronize()
+	 *
+	 * \deprecated scheduled to be removed after v0.7.0, use SpiEeprom::synchronize()
+	 *
+	 * \warning This function must not be called from interrupt context!
+	 *
+	 * \return 0 on success, error code otherwise:
+	 * - error codes returned by synchronize();
+	 */
+
+	__attribute__ ((deprecated("Use SpiEeprom::synchronize()")))
+	int waitWhileWriteInProgress()
+	{
+		return synchronize();
+	}
+
+	/**
+	 * \brief Wrapper for program()
+	 *
+	 * \deprecated scheduled to be removed after v0.7.0, use SpiEeprom::program()
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
@@ -327,18 +457,109 @@ public:
 	 *
 	 * \return pair with return code (0 on success, error code otherwise) and number of written bytes (valid even when
 	 * error code is returned); error codes:
-	 * - error codes returned by Proxy::write();
+	 * - error codes returned by program();
 	 */
 
-	std::pair<int, size_t> write(uint32_t address, const void* buffer, size_t size);
+	__attribute__ ((deprecated("Use SpiEeprom::program()")))
+	std::pair<int, size_t> write(const uint32_t address, const void* const buffer, const size_t size)
+	{
+		return program(address, buffer, size);
+	}
 
 private:
 
+	/**
+	 * \brief Implementation of erase() and program()
+	 *
+	 * \param [in] address is the address of data that will be erased or programmed
+	 * \param [in] buffer is the buffer with data that will be programmed, nullptr to erase
+	 * \param [in] size is the size of erase (`buffer == nullptr`) or size of \a buffer (`buffer != nullptr`), bytes
+	 *
+	 * \return pair with return code (0 on success, error code otherwise) and number of erased/programmed bytes (valid
+	 * even when error code is returned); error codes:
+	 * - EINVAL - \a address and/or \a size are not valid;
+	 * - error codes returned by eraseOrProgramPage();
+	 */
+
+	std::pair<int, uint64_t> eraseOrProgram(const SpiDeviceProxy& spiDeviceProxy, uint64_t address, const void* buffer,
+			uint64_t size);
+
+	/**
+	 * \brief Erases or programs single page.
+	 *
+	 * \param [in] address is the address of data that will be erased or programmed, must be valid!
+	 * \param [in] buffer is the buffer with data that will be programmed, nullptr to erase
+	 * \param [in] size is the size of erase (`buffer == nullptr`) or size of \a buffer (`buffer != nullptr`), bytes
+	 *
+	 * \return pair with return code (0 on success, error code otherwise) and number of erased/programmed bytes (valid
+	 * even when error code is returned); error codes:
+	 * - error codes returned by synchronize();
+	 * - error codes returned by writeEnable();
+	 * - error codes returned by SpiDevice::executeTransaction();
+	 */
+
+	std::pair<int, size_t> eraseOrProgramPage(const SpiDeviceProxy& spiDeviceProxy, uint32_t address,
+			const void* buffer, size_t size);
+
+	/**
+	 * \brief Executes series of operations as a single atomic transaction.
+	 *
+	 * \param [in] operationsRange is the range of operations that will be executed
+	 *
+	 * \return pair with return code (0 on success, error code otherwise) and number of successfully completed
+	 * operations from \a operationsRange; error codes:
+	 * - error codes returned by SpiMasterProxy::configure();
+	 * - error codes returned by SpiMasterProxy::executeTransaction();
+	 */
+
+	std::pair<int, size_t> executeTransaction(const SpiDeviceProxy& spiDeviceProxy,
+			SpiMasterOperationsRange operationsRange) const;
+
+	/**
+	 * \brief Internal implementation of isWriteInProgress()
+	 *
+	 * \param [in] spiDeviceProxy is a reference to SpiDeviceProxy associated with this object
+	 *
+	 * \return pair with return code (0 on success, error code otherwise) and current status of device: false - device
+	 * is idle, true - write operation is in progress; error codes:
+	 * - error codes returned by readStatusRegister();
+	 */
+
+	std::pair<int, bool> isWriteInProgress(const SpiDeviceProxy& spiDeviceProxy);
+
+	/**
+	 * \brief Reads value of status register of SPI EEPROM.
+	 *
+	 * \return pair with return code (0 on success, error code otherwise) and value of status register of SPI EEPROM;
+	 * error codes:
+	 * - error codes returned by executeTransaction();
+	 */
+
+	std::pair<int, uint8_t> readStatusRegister(const SpiDeviceProxy& spiDeviceProxy) const;
+
+	/**
+	 * \brief Internal implementation of synchronize()
+	 *
+	 * \param [in] spiDeviceProxy is a reference to SpiDeviceProxy associated with this object
+	 *
+	 * \return 0 on success, error code otherwise:
+	 * - error codes returned by isWriteInProgress(const SpiDeviceProxy&);
+	 * - error codes returned by ThisThread::sleepFor();
+	 */
+
+	int synchronize(const SpiDeviceProxy& spiDeviceProxy);
+
+	/**
+	 * \brief Enables writes in SPI EEPROM.
+	 *
+	 * \return 0 on success, error code otherwise:
+	 * - error codes returned by executeTransaction();
+	 */
+
+	int writeEnable(const SpiDeviceProxy& spiDeviceProxy) const;
+
 	/// internal SPI slave device
 	SpiDevice spiDevice_;
-
-	/// reference to slave select pin of this SPI EEPROM
-	OutputPin& slaveSelectPin_;
 
 	/// desired clock frequency of SPI EEPROM, Hz
 	uint32_t clockFrequency_;
