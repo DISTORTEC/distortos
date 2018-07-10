@@ -255,7 +255,13 @@ std::pair<int, size_t> SpiEeprom::eraseOrProgramPage(const SpiDeviceProxy& spiDe
 			return {ret, {}};
 	}
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+
 	const auto pageSize = getPageSize();
+
+#pragma GCC diagnostic pop
+
 	const auto pageOffset = address & (pageSize - 1);
 	const auto writeSize = pageOffset + size <= pageSize ? size : pageSize - pageOffset;
 	CommandWithAddressBuffer commandBuffer;

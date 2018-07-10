@@ -285,9 +285,12 @@ public:
 	std::pair<bool, uint8_t> getErasedValue() const override;
 
 	/**
+	 * \deprecated scheduled to be made private after v0.7.0
+	 *
 	 * \return size of single page, bytes
 	 */
 
+	__attribute__ ((deprecated))
 	size_t getPageSize() const
 	{
 		return 8 * (1 << ((static_cast<uint8_t>(type_) & pageSizeMask_) >> pageSizeShift_));
@@ -314,6 +317,8 @@ public:
 	/**
 	 * \brief Checks whether any write operation is currently in progress.
 	 *
+	 * \deprecated scheduled to be removed after v0.7.0, use SpiEeprom::synchronize()
+	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
 	 * \return pair with return code (0 on success, error code otherwise) and current status of device: false - device
@@ -321,6 +326,7 @@ public:
 	 * - error codes returned by isWriteInProgress(const SpiDeviceProxy&);
 	 */
 
+	__attribute__ ((deprecated("Use SpiEeprom::synchronize()")))
 	std::pair<int, bool> isWriteInProgress();
 
  	/**
