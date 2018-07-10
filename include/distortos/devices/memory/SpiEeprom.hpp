@@ -22,8 +22,6 @@ namespace distortos
 namespace devices
 {
 
-class SpiEepromProxy;
-
 /**
  * SpiEeprom class is a SPI EEPROM memory: Atmel AT25xxx, ON Semiconductor CAT25xxx, ST M95xxx, Microchip 25xxxxx or
  * similar.
@@ -33,8 +31,6 @@ class SpiEepromProxy;
 
 class SpiEeprom : public BlockDevice
 {
-	friend class SpiEepromProxy;
-
 	/// bit shift of field with page size encoded in device's type
 	constexpr static size_t pageSizeShift_ {0};
 
@@ -54,9 +50,6 @@ class SpiEeprom : public BlockDevice
 	constexpr static size_t sizeMask_ {((1 << sizeWidth_) - 1) << sizeShift_};
 
 public:
-
-	/// import SpiEepromProxy as SpiEeprom::Proxy
-	using Proxy = SpiEepromProxy;
 
 	/// type of device - determines size and page size
 	enum class Type : uint8_t
@@ -261,7 +254,7 @@ public:
 	 * \param [in] size is the size of erased range, bytes
 	 *
 	 * \return 0 on success, error code otherwise:
-	 * - error codes returned by Proxy::erase();
+	 * - error codes returned by eraseOrProgram();
 	 */
 
 	int erase(uint64_t address, uint64_t size) override;
@@ -319,13 +312,13 @@ public:
 	uint64_t getSize() const override;
 
 	/**
-	 * \brief Wrapper for Proxy::isWriteInProgress()
+	 * \brief Checks whether any write operation is currently in progress.
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
 	 * \return pair with return code (0 on success, error code otherwise) and current status of device: false - device
 	 * is idle, true - write operation is in progress; error codes:
-	 * - error codes returned by Proxy::isWriteInProgress();
+	 * - error codes returned by isWriteInProgress(const SpiDeviceProxy&);
 	 */
 
 	std::pair<int, bool> isWriteInProgress();
@@ -368,7 +361,8 @@ public:
 	 *
 	 * \return pair with return code (0 on success, error code otherwise) and number of programmed bytes (valid even
 	 * when error code is returned); error codes:
-	 * - error codes returned by Proxy::program();
+	 * - EINVAL - \a buffer is not valid;
+	 * - error codes returned by eraseOrProgram();
 	 */
 
 	std::pair<int, size_t> program(uint64_t address, const void* buffer, size_t size) override;
@@ -384,7 +378,9 @@ public:
 	 *
 	 * \return pair with return code (0 on success, error code otherwise) and number of read bytes (valid even when
 	 * error code is returned); error codes:
-	 * - error codes returned by Proxy::read();
+	 * - EINVAL - \a address and/or \a buffer and/or \a size are not valid;
+	 * - error codes returned by executeTransaction();
+	 * - error codes returned by synchronize(const SpiDeviceProxy&);
 	 */
 
 	std::pair<int, size_t> read(uint64_t address, void* buffer, size_t size) override;
@@ -395,7 +391,7 @@ public:
 	 * \warning This function must not be called from interrupt context!
 	 *
 	 * \return 0 on success, error code otherwise:
-	 * - error codes returned by Proxy::synchronize();
+	 * - error codes returned by synchronize(const SpiDeviceProxy&);
 	 */
 
 	int synchronize() override;
@@ -466,6 +462,96 @@ public:
 	}
 
 private:
+
+	/**
+	 * \brief Implementation of erase() and program()
+	 *
+	 * \param [in] address is the address of data that will be erased or programmed
+	 * \param [in] buffer is the buffer with data that will be programmed, nullptr to erase
+	 * \param [in] size is the size of erase (`buffer == nullptr`) or size of \a buffer (`buffer != nullptr`), bytes
+	 *
+	 * \return pair with return code (0 on success, error code otherwise) and number of erased/programmed bytes (valid
+	 * even when error code is returned); error codes:
+	 * - EINVAL - \a address and/or \a size are not valid;
+	 * - error codes returned by eraseOrProgramPage();
+	 */
+
+	std::pair<int, uint64_t> eraseOrProgram(const SpiDeviceProxy& spiDeviceProxy, uint64_t address, const void* buffer,
+			uint64_t size);
+
+	/**
+	 * \brief Erases or programs single page.
+	 *
+	 * \param [in] address is the address of data that will be erased or programmed, must be valid!
+	 * \param [in] buffer is the buffer with data that will be programmed, nullptr to erase
+	 * \param [in] size is the size of erase (`buffer == nullptr`) or size of \a buffer (`buffer != nullptr`), bytes
+	 *
+	 * \return pair with return code (0 on success, error code otherwise) and number of erased/programmed bytes (valid
+	 * even when error code is returned); error codes:
+	 * - error codes returned by synchronize();
+	 * - error codes returned by writeEnable();
+	 * - error codes returned by SpiDevice::executeTransaction();
+	 */
+
+	std::pair<int, size_t> eraseOrProgramPage(const SpiDeviceProxy& spiDeviceProxy, uint32_t address,
+			const void* buffer, size_t size);
+
+	/**
+	 * \brief Executes series of operations as a single atomic transaction.
+	 *
+	 * \param [in] operationsRange is the range of operations that will be executed
+	 *
+	 * \return pair with return code (0 on success, error code otherwise) and number of successfully completed
+	 * operations from \a operationsRange; error codes:
+	 * - error codes returned by SpiMasterProxy::configure();
+	 * - error codes returned by SpiMasterProxy::executeTransaction();
+	 */
+
+	std::pair<int, size_t> executeTransaction(const SpiDeviceProxy& spiDeviceProxy,
+			SpiMasterOperationsRange operationsRange) const;
+
+	/**
+	 * \brief Internal implementation of isWriteInProgress()
+	 *
+	 * \param [in] spiDeviceProxy is a reference to SpiDeviceProxy associated with this object
+	 *
+	 * \return pair with return code (0 on success, error code otherwise) and current status of device: false - device
+	 * is idle, true - write operation is in progress; error codes:
+	 * - error codes returned by readStatusRegister();
+	 */
+
+	std::pair<int, bool> isWriteInProgress(const SpiDeviceProxy& spiDeviceProxy);
+
+	/**
+	 * \brief Reads value of status register of SPI EEPROM.
+	 *
+	 * \return pair with return code (0 on success, error code otherwise) and value of status register of SPI EEPROM;
+	 * error codes:
+	 * - error codes returned by executeTransaction();
+	 */
+
+	std::pair<int, uint8_t> readStatusRegister(const SpiDeviceProxy& spiDeviceProxy) const;
+
+	/**
+	 * \brief Internal implementation of synchronize()
+	 *
+	 * \param [in] spiDeviceProxy is a reference to SpiDeviceProxy associated with this object
+	 *
+	 * \return 0 on success, error code otherwise:
+	 * - error codes returned by isWriteInProgress(const SpiDeviceProxy&);
+	 * - error codes returned by ThisThread::sleepFor();
+	 */
+
+	int synchronize(const SpiDeviceProxy& spiDeviceProxy);
+
+	/**
+	 * \brief Enables writes in SPI EEPROM.
+	 *
+	 * \return 0 on success, error code otherwise:
+	 * - error codes returned by executeTransaction();
+	 */
+
+	int writeEnable(const SpiDeviceProxy& spiDeviceProxy) const;
 
 	/// internal SPI slave device
 	SpiDevice spiDevice_;
