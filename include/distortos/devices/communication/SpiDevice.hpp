@@ -197,7 +197,7 @@ public:
 		return wordLength_;
 	}
 
- 	/**
+	/**
 	 * \brief Locks the device for exclusive use by current thread.
 	 *
 	 * When the object is locked, any call to any member function from other thread will be blocked until the object is

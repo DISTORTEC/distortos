@@ -328,7 +328,7 @@ public:
 	__attribute__ ((deprecated("Use SpiEeprom::synchronize()")))
 	std::pair<int, bool> isWriteInProgress();
 
- 	/**
+	/**
 	 * \brief Locks SPI EEPROM for exclusive use by current thread.
 	 *
 	 * When the object is locked, any call to any member function from other thread will be blocked until the object is
