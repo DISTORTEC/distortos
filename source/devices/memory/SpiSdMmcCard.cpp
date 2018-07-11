@@ -974,7 +974,7 @@ size_t SpiSdMmcCard::getReadBlockSize() const
 
 uint64_t SpiSdMmcCard::getSize() const
 {
-	return blockSize * blocksCount_;
+	return static_cast<decltype(getSize())>(blockSize) * blocksCount_;
 }
 
 int SpiSdMmcCard::lock()
