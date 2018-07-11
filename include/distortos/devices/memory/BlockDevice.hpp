@@ -190,6 +190,10 @@ public:
 	 */
 
 	virtual int unlock() = 0;
+
+	BlockDevice() = default;
+	BlockDevice(const BlockDevice&) = delete;
+	BlockDevice& operator=(const BlockDevice&) = delete;
 };
 
 }	// namespace devices
