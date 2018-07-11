@@ -7,9 +7,7 @@
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #
 
-target_sources(distortos PRIVATE
-		${CMAKE_CURRENT_LIST_DIR}/Directory.cpp
-		${CMAKE_CURRENT_LIST_DIR}/File.cpp
-		${CMAKE_CURRENT_LIST_DIR}/FileSystem.cpp)
+doxygen(INCLUDE_PATH ${CMAKE_CURRENT_LIST_DIR}/external/littlefs
+		EXCLUDE ${CMAKE_CURRENT_LIST_DIR}/external)
 
-include(${CMAKE_CURRENT_LIST_DIR}/littlefs/distortos-sources.cmake)
+include(${CMAKE_CURRENT_LIST_DIR}/external/littlefs-sources.cmake)
