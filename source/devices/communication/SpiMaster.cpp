@@ -41,14 +41,14 @@ SpiMaster::~SpiMaster()
 	if (openCount_ == 0)
 		return;
 
-	const std::lock_guard<distortos::Mutex> lockGuard {mutex_};
+	const std::lock_guard<Mutex> lockGuard {mutex_};
 
 	spiMaster_.stop();
 }
 
 int SpiMaster::close()
 {
-	const std::lock_guard<distortos::Mutex> lockGuard {mutex_};
+	const std::lock_guard<Mutex> lockGuard {mutex_};
 
 	if (openCount_ == 0)	// device is not open anymore?
 		return EBADF;
@@ -94,7 +94,7 @@ std::pair<int, size_t> SpiMaster::executeTransaction(SpiDevice& device, const Sp
 
 int SpiMaster::open()
 {
-	const std::lock_guard<distortos::Mutex> lockGuard {mutex_};
+	const std::lock_guard<Mutex> lockGuard {mutex_};
 
 	if (openCount_ == std::numeric_limits<decltype(openCount_)>::max())	// device is already opened too many times?
 		return EMFILE;
