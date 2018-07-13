@@ -7,6 +7,9 @@
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #
 
+target_sources(distortos PRIVATE
+		${CMAKE_CURRENT_LIST_DIR}/littlefsErrorToErrorCode.cpp)
+
 doxygen(INCLUDE_PATH ${CMAKE_CURRENT_LIST_DIR}/external/littlefs
 		EXCLUDE ${CMAKE_CURRENT_LIST_DIR}/external)
 
