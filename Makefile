@@ -166,6 +166,9 @@ CHIP_INCLUDES += $(patsubst %,-I$(DISTORTOS_PATH)%,$(call UNQUOTE_DOUBLE,$(CONFI
 # board includes
 BOARD_INCLUDES += $(patsubst %,-I$(DISTORTOS_PATH)%,$(call UNQUOTE_DOUBLE,$(CONFIG_BOARD_INCLUDES)))
 
+# littlefs includes
+LITTLEFS_INCLUDES += -I$(DISTORTOS_PATH)source/FileSystem/littlefs/external/littlefs
+
 #-----------------------------------------------------------------------------------------------------------------------
 # build macros
 #-----------------------------------------------------------------------------------------------------------------------

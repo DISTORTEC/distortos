@@ -262,6 +262,8 @@ set_target_properties(distortos PROPERTIES
 target_link_libraries(distortos PRIVATE
 		distortos::allCxxFlags
 		distortos::includes)
+target_link_libraries(distortos PUBLIC
+		littlefs)
 
 include(source/distortos-sources.cmake)
 

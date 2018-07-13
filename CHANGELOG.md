@@ -18,6 +18,9 @@ for accessing core functionalities of associated objects.
 insertion/removal and has no support for detecting whether card is write-protected. It was tested only with 32 GB *SDXC*
 card.
 - Basic framework for file systems in the form of 3 abstract classes: `FileSystem`, `File` and `Directory`.
+- Support for [littlefs](https://github.com/ARMmbed/littlefs) file system, provided by `LittlefsFileSystem`,
+`LittlefsFile` and `LittlefsDirectory` classes, which implement interface of `FileSystem`, `File` and `Directory`
+classes.
 - `sys/dirent.h` and `sys/statvfs.h` headers, which are not provided by *newlib*.
 
 ### Changed
