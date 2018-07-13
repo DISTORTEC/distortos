@@ -38,6 +38,9 @@
  * \defgroup threads Threads
  * \brief Threads-related API of distortos
  *
+ * \defgroup fileSystem File System
+ * \brief File-system-related API of distortos
+ *
  * \defgroup cApi C-API
  * \brief C-API of distortos
  *
