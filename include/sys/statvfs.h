@@ -34,6 +34,24 @@ extern "C"
 | global types
 +---------------------------------------------------------------------------------------------------------------------*/
 
+// toolchains with GCC 5 don't have fsblkcnt_t and fsfilcnt_t types, these were introduced in newlib in
+// https://sourceware.org/git/gitweb.cgi?p=newlib-cygwin.git;a=commit;h=f3e587d30a9f65d0c6551ad14095300f6e81672e
+#ifndef _FSBLKCNT_T_DECLARED
+
+#ifndef __machine_fsblkcnt_t_defined
+typedef __uint64_t __fsblkcnt_t;
+#endif
+#ifndef __machine_fsfilcnt_t_defined
+typedef __uint32_t __fsfilcnt_t;
+#endif
+
+typedef __fsblkcnt_t fsblkcnt_t;
+typedef __fsfilcnt_t fsfilcnt_t;
+
+#define _FSBLKCNT_T_DECLARED
+
+#endif	/* !def _FSBLKCNT_T_DECLARED */
+
 /** file System information structure */
 struct statvfs
 {
