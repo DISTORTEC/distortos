@@ -9,6 +9,7 @@
 
 target_sources(distortos PRIVATE
 		${CMAKE_CURRENT_LIST_DIR}/littlefsErrorToErrorCode.cpp
+		${CMAKE_CURRENT_LIST_DIR}/LittlefsFile.cpp
 		${CMAKE_CURRENT_LIST_DIR}/LittlefsFileSystem.cpp)
 
 doxygen(INCLUDE_PATH ${CMAKE_CURRENT_LIST_DIR}/external/littlefs

@@ -34,6 +34,8 @@ namespace distortos
 
 class LittlefsFileSystem : public FileSystem
 {
+	friend class LittlefsFile;
+
 public:
 
 	/**
