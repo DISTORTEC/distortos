@@ -8,6 +8,7 @@
 #
 
 target_sources(distortos PRIVATE
+		${CMAKE_CURRENT_LIST_DIR}/LittlefsDirectory.cpp
 		${CMAKE_CURRENT_LIST_DIR}/littlefsErrorToErrorCode.cpp
 		${CMAKE_CURRENT_LIST_DIR}/LittlefsFile.cpp
 		${CMAKE_CURRENT_LIST_DIR}/LittlefsFileSystem.cpp)
