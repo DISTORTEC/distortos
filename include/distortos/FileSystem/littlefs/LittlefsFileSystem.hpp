@@ -180,6 +180,24 @@ public:
 	int mount(devices::BlockDevice& blockDevice) override;
 
 	/**
+	 * \brief Opens directory.
+	 *
+	 * Similar to [opendir()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/opendir.html)
+	 *
+	 * \warning This function must not be called from interrupt context!
+	 *
+	 * \param [in] path is the path of directory that will be opened
+	 *
+	 * \return pair with return code (0 on success, error code otherwise) and `std::unique_ptr` with opened directory;
+	 * error codes:
+	 * - EBADF - no file system mounted;
+	 * - ENOMEM - unable to allocate memory for directory;
+	 * - error codes returned by LittlefsDirectory::open();
+	 */
+
+	std::pair<int, std::unique_ptr<Directory>> openDirectory(const char* path) override;
+
+	/**
 	 * \brief Opens file.
 	 *
 	 * Similar to [open()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/open.html)
