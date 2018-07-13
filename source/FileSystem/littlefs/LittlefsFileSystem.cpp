@@ -15,6 +15,8 @@
 
 #include "distortos/devices/memory/BlockDevice.hpp"
 
+#include "distortos/FileSystem/littlefs/LittlefsFile.hpp"
+
 #include "distortos/assert.h"
 
 #include "estd/ScopeGuard.hpp"
@@ -309,6 +311,26 @@ int LittlefsFileSystem::mount(devices::BlockDevice& blockDevice)
 	blockDevice_ = &blockDevice;
 	closeScopeGuard.release();
 	return 0;
+}
+
+std::pair<int, std::unique_ptr<File>> LittlefsFileSystem::openFile(const char* const path, const int flags)
+{
+	const std::lock_guard<LittlefsFileSystem> lockGuard {*this};
+
+	if (blockDevice_ == nullptr)
+		return {EBADF, std::unique_ptr<LittlefsFile>{}};
+
+	std::unique_ptr<LittlefsFile> file {new (std::nothrow) LittlefsFile{*this}};
+	if (file == nullptr)
+		return {ENOMEM, std::unique_ptr<LittlefsFile>{}};
+
+	{
+		const auto ret = file->open(path, flags);
+		if (ret != 0)
+			return {ret, std::unique_ptr<LittlefsFile>{}};
+	}
+
+	return {{}, std::move(file)};
 }
 
 int LittlefsFileSystem::remove(const char* const path)
