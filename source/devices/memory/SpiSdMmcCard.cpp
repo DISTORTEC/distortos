@@ -1056,7 +1056,7 @@ std::pair<int, size_t> SpiSdMmcCard::program(const uint64_t address, const void*
 	for (size_t block {}; block < blocks; ++block)
 	{
 		const auto ret = writeDataBlock(spiMasterProxy, blocks == 1 ? startBlockToken : startBlockWriteToken,
-				bufferUint8 + block * blockSize, blockSize, std::chrono::milliseconds{250});
+				bufferUint8 + block * blockSize, blockSize, std::chrono::milliseconds{writeTimeoutMs_});
 		bytesWritten += ret.second;
 		if (ret.first != 0)
 			return {ret.first, bytesWritten};
@@ -1076,7 +1076,7 @@ std::pair<int, size_t> SpiSdMmcCard::program(const uint64_t address, const void*
 				return {ret.first, bytesWritten};
 		}
 		{
-			const auto ret = waitWhileBusy(spiMasterProxy, std::chrono::milliseconds{250});
+			const auto ret = waitWhileBusy(spiMasterProxy, std::chrono::milliseconds{writeTimeoutMs_});
 			if (ret != 0)
 				return {ret, bytesWritten};
 		}
