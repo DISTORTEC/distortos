@@ -61,6 +61,7 @@ public:
 			spiDevice_{spiMaster, slaveSelectPin},
 			blocksCount_{},
 			clockFrequency_{clockFrequency},
+			readTimeoutMs_{},
 			blockAddressing_{},
 			type_{}
 	{
@@ -288,6 +289,9 @@ private:
 
 	/// desired clock frequency of SD or MMC card, Hz
 	uint32_t clockFrequency_;
+
+	/// timeout of read operation, milliseconds
+	uint16_t readTimeoutMs_;
 
 	/// selects whether card uses byte (false) or block (true) addressing
 	bool blockAddressing_;
