@@ -602,6 +602,7 @@ std::tuple<int, uint8_t, std::array<uint8_t, 16>> executeCmd9(SpiMasterProxy& sp
 			return decltype(executeCmd9(spiMasterProxy)){ret.first, ret.second, {}};
 	}
 	std::array<uint8_t, 16> csdBuffer;
+	// "7.2.6 Read CID/CSD Registers" of Physical Layer Simplified Specification Version 6.00 - use fixed read timeout
 	const auto ret = readDataBlock(spiMasterProxy, csdBuffer.begin(), csdBuffer.size(), std::chrono::milliseconds{100});
 	return decltype(executeCmd9(spiMasterProxy)){ret.first, {}, csdBuffer};
 }
@@ -1128,7 +1129,7 @@ std::pair<int, size_t> SpiSdMmcCard::read(const uint64_t address, void* const bu
 	for (size_t block {}; block < blocks; ++block)
 	{
 		const auto ret = readDataBlock(spiMasterProxy, bufferUint8 + block * blockSize, blockSize,
-				std::chrono::milliseconds{100});
+				std::chrono::milliseconds{readTimeoutMs_});
 		bytesRead += ret.second;
 		if (ret.first != 0)
 			return {ret.first, bytesRead};
@@ -1136,7 +1137,7 @@ std::pair<int, size_t> SpiSdMmcCard::read(const uint64_t address, void* const bu
 
 	if (blocks != 1)
 	{
-		const auto ret = executeCmd12(spiMasterProxy, std::chrono::milliseconds{100});
+		const auto ret = executeCmd12(spiMasterProxy, std::chrono::milliseconds{readTimeoutMs_});
 		if (ret.first != 0)
 			return {ret.first, bytesRead};
 		if (ret.second != 0)
