@@ -1168,6 +1168,7 @@ int SpiSdMmcCard::unlock()
 void SpiSdMmcCard::deinitialize()
 {
 	blocksCount_ = {};
+	readTimeoutMs_ = {};
 	blockAddressing_ = {};
 	type_ = {};
 }
