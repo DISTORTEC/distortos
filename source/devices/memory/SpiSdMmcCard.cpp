@@ -1171,6 +1171,10 @@ void SpiSdMmcCard::deinitialize()
 	blocksCount_ = {};
 	readTimeoutMs_ = {};
 	writeTimeoutMs_ = {};
+	eraseSize_ = {};
+	auSize_ = {};
+	eraseOffset_ = {};
+	eraseTimeout_ = {};
 	blockAddressing_ = {};
 	type_ = {};
 }
