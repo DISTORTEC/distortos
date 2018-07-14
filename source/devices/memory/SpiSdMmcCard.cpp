@@ -1170,6 +1170,7 @@ void SpiSdMmcCard::deinitialize()
 {
 	blocksCount_ = {};
 	readTimeoutMs_ = {};
+	writeTimeoutMs_ = {};
 	blockAddressing_ = {};
 	type_ = {};
 }
