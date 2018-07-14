@@ -62,6 +62,7 @@ public:
 			blocksCount_{},
 			clockFrequency_{clockFrequency},
 			readTimeoutMs_{},
+			writeTimeoutMs_{},
 			blockAddressing_{},
 			type_{}
 	{
@@ -292,6 +293,9 @@ private:
 
 	/// timeout of read operation, milliseconds
 	uint16_t readTimeoutMs_;
+
+	/// timeout of write operation, milliseconds
+	uint16_t writeTimeoutMs_;
 
 	/// selects whether card uses byte (false) or block (true) addressing
 	bool blockAddressing_;
