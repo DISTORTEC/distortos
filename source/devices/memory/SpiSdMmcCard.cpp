@@ -1298,7 +1298,9 @@ int SpiSdMmcCard::initialize(const SpiDeviceProxy& spiDeviceProxy)
 		blocksCount_ = (static_cast<uint64_t>(csd.csdV2.cSize) + 1) * 512 * 1024 / blockSize;
 	}
 
-	readTimeoutMs_ = 100;	/// \todo for SDSC this should be calculated from CSD contents
+	/// \todo for SDSC these should be calculated from CSD contents
+	readTimeoutMs_ = 100;
+	writeTimeoutMs_ = getSize() <= 32ull * 1024 * 1024 * 1024 ? 250 : 500;	// SDHC (<= 32 GB) - 250 ms, SDXC - 500 ms
 
 	return 0;
 }
