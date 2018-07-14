@@ -1296,6 +1296,8 @@ int SpiSdMmcCard::initialize(const SpiDeviceProxy& spiDeviceProxy)
 		blocksCount_ = (static_cast<uint64_t>(csd.csdV2.cSize) + 1) * 512 * 1024 / blockSize;
 	}
 
+	readTimeoutMs_ = 100;	/// \todo for SDSC this should be calculated from CSD contents
+
 	return 0;
 }
 
