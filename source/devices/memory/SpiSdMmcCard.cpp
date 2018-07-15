@@ -1094,7 +1094,33 @@ int SpiSdMmcCard::erase(const uint64_t address, const uint64_t size)
 			return EIO;
 	}
 	{
-		const auto ret = executeCmd38(spiMasterProxy, std::chrono::seconds{1});
+		static const uint32_t auSizeAssociation[]
+		{
+				16 * 1024,
+				32 * 1024,
+				64 * 1024,
+				128 * 1024,
+				256 * 1024,
+				512 * 1024,
+				1 * 1024 * 1024,
+				2 * 1024 * 1024,
+				4 * 1024 * 1024,
+				8 * 1024 * 1024,
+				12 * 1024 * 1024,
+				16 * 1024 * 1024,
+				24 * 1024 * 1024,
+				32 * 1024 * 1024,
+				64 * 1024 * 1024,
+		};
+		const auto decodedAuSize = auSizeAssociation[auSize_ - 1];
+		const auto firstAu = address / decodedAuSize;
+		const auto firstAuPartial = address % decodedAuSize != 0;
+		const auto lastAu = (address + size - 1) / decodedAuSize;
+		const auto lastAuPartial = (address + size - 1) % decodedAuSize != 0;
+		const auto auCount = lastAu - firstAu + 1;
+		const auto timeout = std::max(auCount * eraseTimeout_ / eraseSize_ + eraseOffset_, 1llu);
+		const auto ret = executeCmd38(spiMasterProxy,
+				std::chrono::seconds{timeout} + std::chrono::milliseconds{250} * (firstAuPartial + lastAuPartial));
 		if (ret.first != 0)
 			return ret.first;
 		if (ret.second != 0)
@@ -1466,6 +1492,9 @@ int SpiSdMmcCard::initialize(const SpiDeviceProxy& spiDeviceProxy)
 			return EIO;
 
 		const auto sdStatus = decodeSdStatus(std::get<2>(ret));
+		if (sdStatus.auSize == 0 || sdStatus.eraseSize == 0 || sdStatus.eraseTimeout == 0)
+			return EIO;	/// \todo add support for estimating erase timeout
+		
 		auSize_ = sdStatus.auSize;
 		eraseSize_ = sdStatus.eraseSize;
 		eraseTimeout_ = sdStatus.eraseTimeout;
