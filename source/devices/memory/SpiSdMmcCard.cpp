@@ -1376,6 +1376,14 @@ int SpiSdMmcCard::initialize(const SpiDeviceProxy& spiDeviceProxy)
 	{
 		const SelectGuard spiDeviceSelectGuard {spiMasterProxy};
 
+		// 3500 milliseconds - max time of single AU partial erase
+		const auto ret = waitWhileBusy(spiMasterProxy, std::chrono::milliseconds{3500});
+		if (ret != 0)
+			return ret;
+	}
+	{
+		const SelectGuard spiDeviceSelectGuard {spiMasterProxy};
+
 		const auto ret = executeCmd0(spiMasterProxy);
 		if (ret.first != 0)
 			return ret.first;
