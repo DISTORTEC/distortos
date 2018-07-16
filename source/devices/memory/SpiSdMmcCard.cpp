@@ -108,6 +108,58 @@ struct Csd
 	uint8_t csdStructure;
 };
 
+/// R2 response
+struct R2Response
+{
+	/// part with R1 response
+	uint8_t r1;
+	/// remaining part of R2 response
+	uint8_t r2;
+};
+
+/// SD Status
+struct SdStatus
+{
+	/// SIZE_OF_PROTECTED_AREA, size of protected area
+	uint32_t sizeOfProtectedArea;
+	/// SUS_ADDR, suspension address
+	uint32_t susAddr;
+	/// SD_CARD_TYPE, type of SD card
+	uint16_t sdCardType;
+	/// ERASE_SIZE, number of AUs to be erased at a time
+	uint16_t eraseSize;
+	/// VSC_AU_SIZE, AU size in MB for video speed class
+	uint16_t vscAuSize;
+	/// DAT_BUS_WIDTH, currently defined data bus width
+	uint8_t datBusWidth;
+	/// SECURED_MODE, tells whether card is in secured mode of operation
+	uint8_t securedMode;
+	/// SPEED_CLASS, speed class of the card
+	uint8_t speedClass;
+	/// PERFORMANCE_MOVE, performance of move indicated by 1 [MB/s] step
+	uint8_t performanceMove;
+	/// AU_SIZE, size of AU
+	uint8_t auSize;
+	/// ERASE_TIMEOUT, timeout value for erasing areas specified by UNIT_OF_ERASE_AU
+	uint8_t eraseTimeout;
+	/// ERASE_OFFSET, fixed offset value added to erase time
+	uint8_t eraseOffset;
+	/// UHS_SPEED_GRADE, speed grade for UHS mode
+	uint8_t uhsSpeedGrade;
+	/// UHS_AU_SIZE, size of AU for UHS mode
+	uint8_t uhsAuSize;
+	/// VIDEO_SPEED_CLASS, video speed class value of the card
+	uint8_t videoSpeedClass;
+	/// APP_PERF_CLASS, application performance class value of the card
+	uint8_t appPerfClass;
+	/// PERFORMANCE_ENHANCE, support for performance enhancement functionalities
+	uint8_t performanceEnhance;
+	/// DISCARD_SUPPORT, discard support
+	uint8_t discardSupport;
+	/// FULE_SUPPORT, full user area logical erase support
+	uint8_t fuleSupport;
+};
+
 /// select guard for SD or MMC card connected via SPI
 class SelectGuard : public SpiDeviceSelectGuard
 {
@@ -228,6 +280,39 @@ Csd decodeCsd(const std::array<uint8_t, 16>& buffer)
 	csd.csdV2.tmpWriteProtect = extractBits(ConstUint8Range{buffer}, 12, 1);
 	csd.csdV2.fileFormat = extractBits(ConstUint8Range{buffer}, 10, 2);
 	return csd;
+}
+
+/**
+ * \brief Decodes raw data into SD Status.
+ *
+ * \param [in] buffer is a reference to array with raw data containing SD Status
+ *
+ * \return decoded SD Status
+ */
+
+SdStatus decodeSdStatus(const std::array<uint8_t, 64>& buffer)
+{
+	SdStatus sdStatus {};
+	sdStatus.datBusWidth = extractBits(ConstUint8Range{buffer}, 510, 511 - 510 + 1);
+	sdStatus.securedMode = extractBits(ConstUint8Range{buffer}, 509, 509 - 509 + 1);
+	sdStatus.sdCardType = extractBits(ConstUint8Range{buffer}, 480, 495 - 480 + 1);
+	sdStatus.sizeOfProtectedArea = extractBits(ConstUint8Range{buffer}, 448, 479 - 448 + 1);
+	sdStatus.speedClass = extractBits(ConstUint8Range{buffer}, 440, 447 - 440 + 1);
+	sdStatus.performanceMove = extractBits(ConstUint8Range{buffer}, 432, 439 - 432 + 1);
+	sdStatus.auSize = extractBits(ConstUint8Range{buffer}, 428, 431 - 428 + 1);
+	sdStatus.eraseSize = extractBits(ConstUint8Range{buffer}, 408, 423 - 408 + 1);
+	sdStatus.eraseTimeout = extractBits(ConstUint8Range{buffer}, 402, 407 - 402 + 1);
+	sdStatus.eraseOffset = extractBits(ConstUint8Range{buffer}, 400, 401 - 400 + 1);
+	sdStatus.uhsSpeedGrade = extractBits(ConstUint8Range{buffer}, 396, 399 - 396 + 1);
+	sdStatus.uhsAuSize = extractBits(ConstUint8Range{buffer}, 392, 395 - 392 + 1);
+	sdStatus.videoSpeedClass = extractBits(ConstUint8Range{buffer}, 384, 391 - 384 + 1);
+	sdStatus.vscAuSize = extractBits(ConstUint8Range{buffer}, 368, 377 - 368 + 1);
+	sdStatus.susAddr = extractBits(ConstUint8Range{buffer}, 346, 367 - 346 + 1);
+	sdStatus.appPerfClass = extractBits(ConstUint8Range{buffer}, 336, 339 - 336 + 1);
+	sdStatus.performanceEnhance = extractBits(ConstUint8Range{buffer}, 328, 335 - 328 + 1);
+	sdStatus.discardSupport = extractBits(ConstUint8Range{buffer}, 313, 313 - 313 + 1);
+	sdStatus.fuleSupport = extractBits(ConstUint8Range{buffer}, 312, 312 - 312 + 1);
+	return sdStatus;
 }
 
 /**
@@ -436,6 +521,22 @@ std::pair<int, uint8_t> readR1(SpiMasterProxy& spiMasterProxy)
 }
 
 /**
+ * \brief Reads R2 response from SD or MMC card connected via SPI.
+ *
+ * \param [in] spiMasterProxy is a reference to SpiMasterProxy object used for communication
+ *
+ * \return pair with return code (0 on success, error code otherwise) and R2 response; error codes:
+ * - error codes returned by readResponse();
+ */
+
+std::pair<int, R2Response> readR2(SpiMasterProxy& spiMasterProxy)
+{
+	uint8_t r2[2];
+	const auto ret = readResponse(spiMasterProxy, Uint8Range{r2});
+	return {ret, {r2[0], r2[1]}};
+}
+
+/**
  * \brief Reads R3 response from SD or MMC card connected via SPI.
  *
  * \param [in] spiMasterProxy is a reference to SpiMasterProxy object used for communication
@@ -602,6 +703,7 @@ std::tuple<int, uint8_t, std::array<uint8_t, 16>> executeCmd9(SpiMasterProxy& sp
 			return decltype(executeCmd9(spiMasterProxy)){ret.first, ret.second, {}};
 	}
 	std::array<uint8_t, 16> csdBuffer;
+	// "7.2.6 Read CID/CSD Registers" of Physical Layer Simplified Specification Version 6.00 - use fixed read timeout
 	const auto ret = readDataBlock(spiMasterProxy, csdBuffer.begin(), csdBuffer.size(), std::chrono::milliseconds{100});
 	return decltype(executeCmd9(spiMasterProxy)){ret.first, {}, csdBuffer};
 }
@@ -855,6 +957,57 @@ std::pair<int, uint8_t> writeAcmdReadR1(SpiMasterProxy& spiMasterProxy, const ui
 }
 
 /**
+ * \brief Writes application (ACMD) command and reads R2 response to/from SD or MMC card connected via SPI.
+ *
+ * \param [in] spiMasterProxy is a reference to SpiMasterProxy object used for communication
+ * \param [in] command is the command that will be written
+ * \param [in] argument is the argument for command, default - 0
+ * \param [in] crc7 is the value of CRC-7 appended to the transferred block, default - 0
+ * \param [in] stuffByte selects whether stuff byte will be appended to the transferred block, default - false
+ *
+ * \return pair with return code (0 on success, error code otherwise) and R2 response; error codes:
+ * - error codes returned by readR2();
+ * - error codes returned by writeAcmd();
+ */
+
+std::pair<int, R2Response> writeAcmdReadR2(SpiMasterProxy& spiMasterProxy, const uint8_t command,
+		const uint32_t argument = {}, const uint8_t crc7 = {}, const bool stuffByte = {})
+{
+	const auto ret = writeAcmd(spiMasterProxy, command, argument, crc7, stuffByte);
+	if (ret != 0)
+		return {ret, {}};
+
+	return readR2(spiMasterProxy);
+}
+
+/**
+ * \brief Executes ACMD13 command on SD or MMC card connected via SPI.
+ *
+ * This is SD_STATUS command.
+ *
+ * \param [in] spiMasterProxy is a reference to SpiMasterProxy object used for communication
+ * \param [in] duration is the duration of wait before giving up
+ *
+ * \return tuple with return code (0 on success, error code otherwise), R2 response and array with raw data containing
+ * SD Status register; error codes:
+ * - error codes returned by readDataBlock();
+ * - error codes returned by writeAcmdReadR2();
+ */
+
+std::tuple<int, R2Response, std::array<uint8_t, 64>> executeAcmd13(SpiMasterProxy& spiMasterProxy,
+		const distortos::TickClock::duration duration)
+{
+	{
+		const auto ret = writeAcmdReadR2(spiMasterProxy, 13);
+		if (ret.first != 0 || ret.second.r1 != 0)
+			return decltype(executeAcmd13(spiMasterProxy, duration)){ret.first, ret.second, {}};
+	}
+	std::array<uint8_t, 64> sdStatusBuffer;
+	const auto ret = readDataBlock(spiMasterProxy, sdStatusBuffer.begin(), sdStatusBuffer.size(), duration);
+	return decltype(executeAcmd13(spiMasterProxy, duration)){ret.first, {}, sdStatusBuffer};
+}
+
+/**
  * \brief Executes ACMD41 command on SD or MMC card connected via SPI.
  *
  * This is SD_SEND_OP_COND command.
@@ -941,7 +1094,33 @@ int SpiSdMmcCard::erase(const uint64_t address, const uint64_t size)
 			return EIO;
 	}
 	{
-		const auto ret = executeCmd38(spiMasterProxy, std::chrono::seconds{1});
+		static const uint32_t auSizeAssociation[]
+		{
+				16 * 1024,
+				32 * 1024,
+				64 * 1024,
+				128 * 1024,
+				256 * 1024,
+				512 * 1024,
+				1 * 1024 * 1024,
+				2 * 1024 * 1024,
+				4 * 1024 * 1024,
+				8 * 1024 * 1024,
+				12 * 1024 * 1024,
+				16 * 1024 * 1024,
+				24 * 1024 * 1024,
+				32 * 1024 * 1024,
+				64 * 1024 * 1024,
+		};
+		const auto decodedAuSize = auSizeAssociation[auSize_ - 1];
+		const auto firstAu = address / decodedAuSize;
+		const auto firstAuPartial = address % decodedAuSize != 0;
+		const auto lastAu = (address + size - 1) / decodedAuSize;
+		const auto lastAuPartial = (address + size - 1) % decodedAuSize != 0;
+		const auto auCount = lastAu - firstAu + 1;
+		const auto timeout = std::max(auCount * eraseTimeout_ / eraseSize_ + eraseOffset_, 1llu);
+		const auto ret = executeCmd38(spiMasterProxy,
+				std::chrono::seconds{timeout} + std::chrono::milliseconds{250} * (firstAuPartial + lastAuPartial));
 		if (ret.first != 0)
 			return ret.first;
 		if (ret.second != 0)
@@ -1055,7 +1234,7 @@ std::pair<int, size_t> SpiSdMmcCard::program(const uint64_t address, const void*
 	for (size_t block {}; block < blocks; ++block)
 	{
 		const auto ret = writeDataBlock(spiMasterProxy, blocks == 1 ? startBlockToken : startBlockWriteToken,
-				bufferUint8 + block * blockSize, blockSize, std::chrono::milliseconds{250});
+				bufferUint8 + block * blockSize, blockSize, std::chrono::milliseconds{writeTimeoutMs_});
 		bytesWritten += ret.second;
 		if (ret.first != 0)
 			return {ret.first, bytesWritten};
@@ -1075,7 +1254,7 @@ std::pair<int, size_t> SpiSdMmcCard::program(const uint64_t address, const void*
 				return {ret.first, bytesWritten};
 		}
 		{
-			const auto ret = waitWhileBusy(spiMasterProxy, std::chrono::milliseconds{250});
+			const auto ret = waitWhileBusy(spiMasterProxy, std::chrono::milliseconds{writeTimeoutMs_});
 			if (ret != 0)
 				return {ret, bytesWritten};
 		}
@@ -1128,7 +1307,7 @@ std::pair<int, size_t> SpiSdMmcCard::read(const uint64_t address, void* const bu
 	for (size_t block {}; block < blocks; ++block)
 	{
 		const auto ret = readDataBlock(spiMasterProxy, bufferUint8 + block * blockSize, blockSize,
-				std::chrono::milliseconds{100});
+				std::chrono::milliseconds{readTimeoutMs_});
 		bytesRead += ret.second;
 		if (ret.first != 0)
 			return {ret.first, bytesRead};
@@ -1136,7 +1315,7 @@ std::pair<int, size_t> SpiSdMmcCard::read(const uint64_t address, void* const bu
 
 	if (blocks != 1)
 	{
-		const auto ret = executeCmd12(spiMasterProxy, std::chrono::milliseconds{100});
+		const auto ret = executeCmd12(spiMasterProxy, std::chrono::milliseconds{readTimeoutMs_});
 		if (ret.first != 0)
 			return {ret.first, bytesRead};
 		if (ret.second != 0)
@@ -1168,6 +1347,12 @@ int SpiSdMmcCard::unlock()
 void SpiSdMmcCard::deinitialize()
 {
 	blocksCount_ = {};
+	readTimeoutMs_ = {};
+	writeTimeoutMs_ = {};
+	eraseSize_ = {};
+	auSize_ = {};
+	eraseOffset_ = {};
+	eraseTimeout_ = {};
 	blockAddressing_ = {};
 	type_ = {};
 }
@@ -1293,6 +1478,27 @@ int SpiSdMmcCard::initialize(const SpiDeviceProxy& spiDeviceProxy)
 			return EIO;	/// \todo add support for other versions of CSD
 
 		blocksCount_ = (static_cast<uint64_t>(csd.csdV2.cSize) + 1) * 512 * 1024 / blockSize;
+	}
+
+	/// \todo for SDSC these should be calculated from CSD contents
+	readTimeoutMs_ = 100;
+	writeTimeoutMs_ = getSize() <= 32ull * 1024 * 1024 * 1024 ? 250 : 500;	// SDHC (<= 32 GB) - 250 ms, SDXC - 500 ms
+
+	{
+		const auto ret = executeAcmd13(spiMasterProxy, std::chrono::milliseconds{readTimeoutMs_});
+		if (std::get<0>(ret) != 0)
+			return std::get<0>(ret);
+		if (std::get<1>(ret).r1 != 0 || std::get<1>(ret).r2 != 0)
+			return EIO;
+
+		const auto sdStatus = decodeSdStatus(std::get<2>(ret));
+		if (sdStatus.auSize == 0 || sdStatus.eraseSize == 0 || sdStatus.eraseTimeout == 0)
+			return EIO;	/// \todo add support for estimating erase timeout
+		
+		auSize_ = sdStatus.auSize;
+		eraseSize_ = sdStatus.eraseSize;
+		eraseTimeout_ = sdStatus.eraseTimeout;
+		eraseOffset_ = sdStatus.eraseOffset;
 	}
 
 	return 0;

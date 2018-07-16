@@ -61,6 +61,12 @@ public:
 			spiDevice_{spiMaster, slaveSelectPin},
 			blocksCount_{},
 			clockFrequency_{clockFrequency},
+			readTimeoutMs_{},
+			writeTimeoutMs_{},
+			eraseSize_{},
+			auSize_{},
+			eraseOffset_{},
+			eraseTimeout_{},
 			blockAddressing_{},
 			type_{}
 	{
@@ -288,6 +294,24 @@ private:
 
 	/// desired clock frequency of SD or MMC card, Hz
 	uint32_t clockFrequency_;
+
+	/// timeout of read operation, milliseconds
+	uint16_t readTimeoutMs_;
+
+	/// timeout of write operation, milliseconds
+	uint16_t writeTimeoutMs_;
+
+	/// ERASE_SIZE field read from SD Status register
+	uint16_t eraseSize_;
+
+	/// AU_SIZE field read from SD Status register
+	uint8_t auSize_;
+
+	/// ERASE_OFFSET field read from SD Status register
+	uint8_t eraseOffset_;
+
+	/// ERASE_TIMEOUT field read from SD Status register
+	uint8_t eraseTimeout_;
 
 	/// selects whether card uses byte (false) or block (true) addressing
 	bool blockAddressing_;
