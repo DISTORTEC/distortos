@@ -1078,6 +1078,26 @@ int SpiSdMmcCard::erase(const uint64_t address, const uint64_t size)
 	if (firstBlock + blocks > blocksCount_)
 		return ENOSPC;
 
+	static const uint32_t auSizeAssociation[]
+	{
+			16 * 1024,
+			32 * 1024,
+			64 * 1024,
+			128 * 1024,
+			256 * 1024,
+			512 * 1024,
+			1 * 1024 * 1024,
+			2 * 1024 * 1024,
+			4 * 1024 * 1024,
+			8 * 1024 * 1024,
+			12 * 1024 * 1024,
+			16 * 1024 * 1024,
+			24 * 1024 * 1024,
+			32 * 1024 * 1024,
+			64 * 1024 * 1024,
+	};
+	const auto decodedAuSize = auSizeAssociation[auSize_ - 1];
+
 	SpiMasterProxy spiMasterProxy {spiDeviceProxy};
 
 	{
@@ -1086,56 +1106,49 @@ int SpiSdMmcCard::erase(const uint64_t address, const uint64_t size)
 			return ret.first;
 	}
 
-	const SpiDeviceSelectGuard spiDeviceSelectGuard {spiMasterProxy};
+	uint64_t erased {};
+	while (erased < size)
+	{
+		const auto beginAddress = address + erased;
+		// erase no more than 1 AU at a time
+		const auto endAddress = std::min(address + size, beginAddress / decodedAuSize * decodedAuSize + decodedAuSize);
 
-	{
-		const auto commandAddress = blockAddressing_ == true ? firstBlock : address;
-		const auto ret = executeCmd32(spiMasterProxy, commandAddress);
-		if (ret.first != 0)
-			return ret.first;
-		if (ret.second != 0)
-			return EIO;
-	}
-	{
-		const auto commandAddress = blockAddressing_ == true ? firstBlock + blocks - 1 : (address + size - blockSize);
-		const auto ret = executeCmd33(spiMasterProxy, commandAddress);
-		if (ret.first != 0)
-			return ret.first;
-		if (ret.second != 0)
-			return EIO;
-	}
-	{
-		static const uint32_t auSizeAssociation[]
 		{
-				16 * 1024,
-				32 * 1024,
-				64 * 1024,
-				128 * 1024,
-				256 * 1024,
-				512 * 1024,
-				1 * 1024 * 1024,
-				2 * 1024 * 1024,
-				4 * 1024 * 1024,
-				8 * 1024 * 1024,
-				12 * 1024 * 1024,
-				16 * 1024 * 1024,
-				24 * 1024 * 1024,
-				32 * 1024 * 1024,
-				64 * 1024 * 1024,
-		};
-		const auto decodedAuSize = auSizeAssociation[auSize_ - 1];
-		const auto firstAu = address / decodedAuSize;
-		const auto firstAuPartial = address % decodedAuSize != 0;
-		const auto lastAu = (address + size - 1) / decodedAuSize;
-		const auto lastAuPartial = (address + size - 1) % decodedAuSize != 0;
-		const auto auCount = lastAu - firstAu + 1;
-		const auto timeout = std::max(auCount * eraseTimeout_ / eraseSize_ + eraseOffset_, 1llu);
-		const auto ret = executeCmd38(spiMasterProxy,
-				std::chrono::seconds{timeout} + std::chrono::milliseconds{250} * (firstAuPartial + lastAuPartial));
-		if (ret.first != 0)
-			return ret.first;
-		if (ret.second != 0)
-			return EIO;
+			const SelectGuard selectGuard {spiMasterProxy};
+
+			const auto commandAddress = blockAddressing_ == true ? beginAddress / blockSize : beginAddress;
+			const auto ret = executeCmd32(spiMasterProxy, commandAddress);
+			if (ret.first != 0)
+				return ret.first;
+			if (ret.second != 0)
+				return EIO;
+		}
+		{
+			const SelectGuard selectGuard {spiMasterProxy};
+
+			const auto commandAddress = blockAddressing_ == true ? (endAddress - blockSize) / blockSize :
+					(endAddress - blockSize);
+			const auto ret = executeCmd33(spiMasterProxy, commandAddress);
+			if (ret.first != 0)
+				return ret.first;
+			if (ret.second != 0)
+				return EIO;
+		}
+		{
+			const SelectGuard selectGuard {spiMasterProxy};
+
+			const auto beginPartial = beginAddress % decodedAuSize != 0;
+			const auto endPartial = endAddress % decodedAuSize != 0;
+			const auto timeout = std::max(eraseTimeout_ / eraseSize_ + eraseOffset_, 1);
+			const auto ret = executeCmd38(spiMasterProxy,
+					std::chrono::seconds{timeout} + std::chrono::milliseconds{250} * (beginPartial + endPartial));
+			if (ret.first != 0)
+				return ret.first;
+			if (ret.second != 0)
+				return EIO;
+		}
+
+		erased += endAddress - beginAddress;
 	}
 
 	return {};
