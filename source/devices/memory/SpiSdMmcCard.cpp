@@ -1078,26 +1078,6 @@ int SpiSdMmcCard::erase(const uint64_t address, const uint64_t size)
 	if (firstBlock + blocks > blocksCount_)
 		return ENOSPC;
 
-	static const uint32_t auSizeAssociation[]
-	{
-			16 * 1024,
-			32 * 1024,
-			64 * 1024,
-			128 * 1024,
-			256 * 1024,
-			512 * 1024,
-			1 * 1024 * 1024,
-			2 * 1024 * 1024,
-			4 * 1024 * 1024,
-			8 * 1024 * 1024,
-			12 * 1024 * 1024,
-			16 * 1024 * 1024,
-			24 * 1024 * 1024,
-			32 * 1024 * 1024,
-			64 * 1024 * 1024,
-	};
-	const auto decodedAuSize = auSizeAssociation[auSize_ - 1];
-
 	SpiMasterProxy spiMasterProxy {spiDeviceProxy};
 
 	{
@@ -1111,7 +1091,7 @@ int SpiSdMmcCard::erase(const uint64_t address, const uint64_t size)
 	{
 		const auto beginAddress = address + erased;
 		// erase no more than 1 AU at a time
-		const auto endAddress = std::min(address + size, beginAddress / decodedAuSize * decodedAuSize + decodedAuSize);
+		const auto endAddress = std::min(address + size, beginAddress / auSize_ * auSize_ + auSize_);
 
 		{
 			const SelectGuard selectGuard {spiMasterProxy};
@@ -1137,8 +1117,8 @@ int SpiSdMmcCard::erase(const uint64_t address, const uint64_t size)
 		{
 			const SelectGuard selectGuard {spiMasterProxy};
 
-			const auto beginPartial = beginAddress % decodedAuSize != 0;
-			const auto endPartial = endAddress % decodedAuSize != 0;
+			const auto beginPartial = beginAddress % auSize_ != 0;
+			const auto endPartial = endAddress % auSize_ != 0;
 			const auto timeout = std::max(eraseTimeout_ / eraseSize_ + eraseOffset_, 1);
 			const auto ret = executeCmd38(spiMasterProxy,
 					std::chrono::seconds{timeout} + std::chrono::milliseconds{250} * (beginPartial + endPartial));
@@ -1371,10 +1351,10 @@ int SpiSdMmcCard::unlock()
 void SpiSdMmcCard::deinitialize()
 {
 	blocksCount_ = {};
+	auSize_ = {};
 	readTimeoutMs_ = {};
 	writeTimeoutMs_ = {};
 	eraseSize_ = {};
-	auSize_ = {};
 	eraseOffset_ = {};
 	eraseTimeout_ = {};
 	blockAddressing_ = {};
@@ -1536,7 +1516,26 @@ int SpiSdMmcCard::initialize(const SpiDeviceProxy& spiDeviceProxy)
 		if (sdStatus.auSize == 0 || sdStatus.eraseSize == 0 || sdStatus.eraseTimeout == 0)
 			return EIO;	/// \todo add support for estimating erase timeout
 		
-		auSize_ = sdStatus.auSize;
+		static const uint32_t auSizeAssociation[]
+		{
+				16 * 1024,
+				32 * 1024,
+				64 * 1024,
+				128 * 1024,
+				256 * 1024,
+				512 * 1024,
+				1 * 1024 * 1024,
+				2 * 1024 * 1024,
+				4 * 1024 * 1024,
+				8 * 1024 * 1024,
+				12 * 1024 * 1024,
+				16 * 1024 * 1024,
+				24 * 1024 * 1024,
+				32 * 1024 * 1024,
+				64 * 1024 * 1024,
+		};
+		assert(sdStatus.auSize - 1u < sizeof(auSizeAssociation) / sizeof(*auSizeAssociation));
+		auSize_ = auSizeAssociation[sdStatus.auSize - 1u];
 		eraseSize_ = sdStatus.eraseSize;
 		eraseTimeout_ = sdStatus.eraseTimeout;
 		eraseOffset_ = sdStatus.eraseOffset;

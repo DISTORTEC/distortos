@@ -60,11 +60,11 @@ public:
 	constexpr SpiSdMmcCard(SpiMaster& spiMaster, OutputPin& slaveSelectPin, const uint32_t clockFrequency = 5000000) :
 			spiDevice_{spiMaster, slaveSelectPin},
 			blocksCount_{},
+			auSize_{},
 			clockFrequency_{clockFrequency},
 			readTimeoutMs_{},
 			writeTimeoutMs_{},
 			eraseSize_{},
-			auSize_{},
 			eraseOffset_{},
 			eraseTimeout_{},
 			blockAddressing_{},
@@ -292,6 +292,9 @@ private:
 	/// number of blocks available on SD or MMC card
 	size_t blocksCount_;
 
+	/// size of AU, bytes
+	uint32_t auSize_;
+
 	/// desired clock frequency of SD or MMC card, Hz
 	uint32_t clockFrequency_;
 
@@ -303,9 +306,6 @@ private:
 
 	/// ERASE_SIZE field read from SD Status register
 	uint16_t eraseSize_;
-
-	/// AU_SIZE field read from SD Status register
-	uint8_t auSize_;
 
 	/// ERASE_OFFSET field read from SD Status register
 	uint8_t eraseOffset_;
