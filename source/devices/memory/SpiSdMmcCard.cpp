@@ -117,6 +117,21 @@ struct R2Response
 	uint8_t r2;
 };
 
+/// R7 response
+struct R7Response
+{
+	/// reserved bits
+	uint16_t reservedBits;
+	/// part with R1 response
+	uint8_t r1;
+	/// command version
+	uint8_t commandVersion;
+	/// voltage range accepted by the card
+	uint8_t voltageAccepted;
+	/// check pattern echoed back to the host
+	uint8_t checkPattern;
+};
+
 /// SD Status
 struct SdStatus
 {
@@ -564,6 +579,28 @@ std::tuple<int, uint8_t, uint32_t> readR3(SpiMasterProxy& spiMasterProxy)
 }
 
 /**
+ * \brief Reads R7 response from SD or MMC card connected via SPI.
+ *
+ * \param [in] spiMasterProxy is a reference to SpiMasterProxy object used for communication
+ *
+ * \return pair with return code (0 on success, error code otherwise) and R7 response; error codes:
+ * - error codes returned by readResponse();
+ */
+
+std::pair<int, R7Response> readR7(SpiMasterProxy& spiMasterProxy)
+{
+	uint8_t r7[5];
+	const auto ret = readResponse(spiMasterProxy, Uint8Range{r7});
+	R7Response r7Response {};
+	r7Response.r1 = r7[0];
+	r7Response.commandVersion = r7[1] >> 4;
+	r7Response.reservedBits = (r7[1] & 0xf) << 12 | r7[2] << 4 | r7[3] >> 4;
+	r7Response.voltageAccepted = r7[3] & 0xf;
+	r7Response.checkPattern = r7[4];
+	return {ret, r7Response};
+}
+
+/**
  * \brief Writes regular (CMD) command to SD or MMC card connected via SPI.
  *
  * \param [in] spiMasterProxy is a reference to SpiMasterProxy object used for communication
@@ -643,6 +680,30 @@ std::tuple<int, uint8_t, uint32_t> writeCmdReadR3(SpiMasterProxy& spiMasterProxy
 }
 
 /**
+ * \brief Writes regular (CMD) command and reads R7 response to/from SD or MMC card connected via SPI.
+ *
+ * \param [in] spiMasterProxy is a reference to SpiMasterProxy object used for communication
+ * \param [in] command is the command that will be written
+ * \param [in] argument is the argument for command, default - 0
+ * \param [in] crc7 is the value of CRC-7 appended to the transferred block, default - 0
+ * \param [in] stuffByte selects whether stuff byte will be appended to the transferred block, default - false
+ *
+ * \return pair with return code (0 on success, error code otherwise) and R7 response; error codes:
+ * - error codes returned by readR7();
+ * - error codes returned by writeCmd();
+ */
+
+std::pair<int, R7Response> writeCmdReadR7(SpiMasterProxy& spiMasterProxy, const uint8_t command,
+		const uint32_t argument = {}, const uint8_t crc7 = {}, const bool stuffByte = {})
+{
+	const auto ret = writeCmd(spiMasterProxy, command, argument, crc7, stuffByte);
+	if (ret != 0)
+		return {ret, {}};
+
+	return readR7(spiMasterProxy);
+}
+
+/**
  * \brief Executes CMD0 command on SD or MMC card connected via SPI.
  *
  * This is GO_IDLE_STATE command.
@@ -683,14 +744,16 @@ std::pair<int, uint8_t> executeCmd1(SpiMasterProxy& spiMasterProxy)
  *
  * \return tuple with return code (0 on success, error code otherwise), R1 response and a boolean value which tells
  * whether pattern was matched; error codes:
- * - error codes returned by writeCmdReadR3();
+ * - error codes returned by writeCmdReadR7();
  */
 
 std::tuple<int, uint8_t, bool> executeCmd8(SpiMasterProxy& spiMasterProxy)
 {
-	constexpr uint32_t pattern {0x1aa};
-	const auto ret = writeCmdReadR3(spiMasterProxy, 8, pattern, 0x43);
-	return std::make_tuple(std::get<0>(ret), std::get<1>(ret), std::get<2>(ret) == pattern);
+	constexpr uint8_t supplyVoltage {1};	// 2.7 - 3.6 V
+	constexpr uint8_t checkPattern {0xaa};
+	const auto ret = writeCmdReadR7(spiMasterProxy, 8, supplyVoltage << 8 | checkPattern, 0x43);
+	const auto match = ret.second.checkPattern == checkPattern && ret.second.voltageAccepted == supplyVoltage;
+	return std::make_tuple(ret.first, ret.second.r1, match);
 }
 
 /**
