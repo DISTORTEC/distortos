@@ -1297,31 +1297,36 @@ std::pair<int, size_t> SpiSdMmcCard::read(const uint64_t address, void* const bu
 			return {ret.first, {}};
 	}
 
-	const SelectGuard selectGuard {spiMasterProxy};
-
-	{
-		const auto commandAddress = blockAddressing_ == true ? firstBlock : address;
-		const auto ret = blocks == 1 ? executeCmd17(spiMasterProxy, commandAddress) :
-				executeCmd18(spiMasterProxy, commandAddress);
-		if (ret.first != 0)
-			return {ret.first, {}};
-		if (ret.second != 0)
-			return {EIO, {}};
-	}
-
-	const auto bufferUint8 = static_cast<uint8_t*>(buffer);
 	size_t bytesRead {};
-	for (size_t block {}; block < blocks; ++block)
+
 	{
-		const auto ret = readDataBlock(spiMasterProxy, bufferUint8 + block * blockSize, blockSize,
-				std::chrono::milliseconds{readTimeoutMs_});
-		bytesRead += ret.second;
-		if (ret.first != 0)
-			return {ret.first, bytesRead};
+		const SelectGuard selectGuard {spiMasterProxy};
+
+		{
+			const auto commandAddress = blockAddressing_ == true ? firstBlock : address;
+			const auto ret = blocks == 1 ? executeCmd17(spiMasterProxy, commandAddress) :
+					executeCmd18(spiMasterProxy, commandAddress);
+			if (ret.first != 0)
+				return {ret.first, {}};
+			if (ret.second != 0)
+				return {EIO, {}};
+		}
+
+		const auto bufferUint8 = static_cast<uint8_t*>(buffer);
+		for (size_t block {}; block < blocks; ++block)
+		{
+			const auto ret = readDataBlock(spiMasterProxy, bufferUint8 + block * blockSize, blockSize,
+					std::chrono::milliseconds{readTimeoutMs_});
+			bytesRead += ret.second;
+			if (ret.first != 0)
+				return {ret.first, bytesRead};
+		}
 	}
 
 	if (blocks != 1)
 	{
+		const SelectGuard selectGuard {spiMasterProxy};
+
 		const auto ret = executeCmd12(spiMasterProxy, std::chrono::milliseconds{readTimeoutMs_});
 		if (ret.first != 0)
 			return {ret.first, bytesRead};
