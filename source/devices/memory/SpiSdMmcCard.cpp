@@ -1119,9 +1119,8 @@ int SpiSdMmcCard::erase(const uint64_t address, const uint64_t size)
 
 			const auto beginPartial = beginAddress % auSize_ != 0;
 			const auto endPartial = endAddress % auSize_ != 0;
-			const auto timeout = std::max(eraseTimeout_ / eraseSize_ + eraseOffset_, 1);
-			const auto ret = executeCmd38(spiMasterProxy,
-					std::chrono::seconds{timeout} + std::chrono::milliseconds{250} * (beginPartial + endPartial));
+			const auto ret = executeCmd38(spiMasterProxy, std::chrono::milliseconds{eraseTimeoutMs_} +
+					std::chrono::milliseconds{250} * (beginPartial + endPartial));
 			if (ret.first != 0)
 				return ret.first;
 			if (ret.second != 0)
@@ -1352,11 +1351,9 @@ void SpiSdMmcCard::deinitialize()
 {
 	blocksCount_ = {};
 	auSize_ = {};
+	eraseTimeoutMs_ = {};
 	readTimeoutMs_ = {};
 	writeTimeoutMs_ = {};
-	eraseSize_ = {};
-	eraseOffset_ = {};
-	eraseTimeout_ = {};
 	blockAddressing_ = {};
 	type_ = {};
 }
@@ -1536,9 +1533,8 @@ int SpiSdMmcCard::initialize(const SpiDeviceProxy& spiDeviceProxy)
 		};
 		assert(sdStatus.auSize - 1u < sizeof(auSizeAssociation) / sizeof(*auSizeAssociation));
 		auSize_ = auSizeAssociation[sdStatus.auSize - 1u];
-		eraseSize_ = sdStatus.eraseSize;
-		eraseTimeout_ = sdStatus.eraseTimeout;
-		eraseOffset_ = sdStatus.eraseOffset;
+		eraseTimeoutMs_ =
+				std::max(sdStatus.eraseTimeout * 1000 / sdStatus.eraseSize + sdStatus.eraseOffset * 1000, 1000);
 	}
 
 	return 0;

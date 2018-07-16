@@ -62,11 +62,9 @@ public:
 			blocksCount_{},
 			auSize_{},
 			clockFrequency_{clockFrequency},
+			eraseTimeoutMs_{},
 			readTimeoutMs_{},
 			writeTimeoutMs_{},
-			eraseSize_{},
-			eraseOffset_{},
-			eraseTimeout_{},
 			blockAddressing_{},
 			type_{}
 	{
@@ -298,20 +296,14 @@ private:
 	/// desired clock frequency of SD or MMC card, Hz
 	uint32_t clockFrequency_;
 
+	/// timeout of erase operation of single AU, milliseconds
+	uint16_t eraseTimeoutMs_;
+
 	/// timeout of read operation, milliseconds
 	uint16_t readTimeoutMs_;
 
 	/// timeout of write operation, milliseconds
 	uint16_t writeTimeoutMs_;
-
-	/// ERASE_SIZE field read from SD Status register
-	uint16_t eraseSize_;
-
-	/// ERASE_OFFSET field read from SD Status register
-	uint8_t eraseOffset_;
-
-	/// ERASE_TIMEOUT field read from SD Status register
-	uint8_t eraseTimeout_;
 
 	/// selects whether card uses byte (false) or block (true) addressing
 	bool blockAddressing_;
