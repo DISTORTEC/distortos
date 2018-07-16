@@ -117,6 +117,15 @@ struct R2Response
 	uint8_t r2;
 };
 
+/// R3 response
+struct R3Response
+{
+	/// OCR register
+	uint32_t ocr;
+	/// part with R1 response
+	uint8_t r1;
+};
+
 /// R7 response
 struct R7Response
 {
@@ -567,15 +576,18 @@ std::pair<int, R2Response> readR2(SpiMasterProxy& spiMasterProxy)
  *
  * \param [in] spiMasterProxy is a reference to SpiMasterProxy object used for communication
  *
- * \return tuple with return code (0 on success, error code otherwise), R1 response and value of OCR; error codes:
+ * \return pair with return code (0 on success, error code otherwise) and R3 response; error codes:
  * - error codes returned by readResponse();
  */
 
-std::tuple<int, uint8_t, uint32_t> readR3(SpiMasterProxy& spiMasterProxy)
+std::pair<int, R3Response> readR3(SpiMasterProxy& spiMasterProxy)
 {
 	uint8_t r3[5];
 	const auto ret = readResponse(spiMasterProxy, Uint8Range{r3});
-	return std::make_tuple(ret, r3[0], static_cast<uint32_t>(r3[1] << 24 | r3[2] << 16 | r3[3] << 8 | r3[4]));
+	R3Response r3Response {};
+	r3Response.r1 = r3[0];
+	r3Response.ocr = r3[1] << 24 | r3[2] << 16 | r3[3] << 8 | r3[4];
+	return {ret, r3Response};
 }
 
 /**
@@ -664,17 +676,17 @@ std::pair<int, uint8_t> writeCmdReadR1(SpiMasterProxy& spiMasterProxy, const uin
  * \param [in] crc7 is the value of CRC-7 appended to the transferred block, default - 0
  * \param [in] stuffByte selects whether stuff byte will be appended to the transferred block, default - false
  *
- * \return tuple with return code (0 on success, error code otherwise), R1 response and value of OCR; error codes:
+ * \return pair with return code (0 on success, error code otherwise) and R3 response; error codes:
  * - error codes returned by readR3();
  * - error codes returned by writeCmd();
  */
 
-std::tuple<int, uint8_t, uint32_t> writeCmdReadR3(SpiMasterProxy& spiMasterProxy, const uint8_t command,
+std::pair<int, R3Response> writeCmdReadR3(SpiMasterProxy& spiMasterProxy, const uint8_t command,
 		const uint32_t argument = {}, const uint8_t crc7 = {}, const bool stuffByte = {})
 {
 	const auto ret = writeCmd(spiMasterProxy, command, argument, crc7, stuffByte);
 	if (ret != 0)
-		return decltype(writeCmdReadR3(spiMasterProxy, command, argument, crc7, stuffByte)){ret, {}, {}};
+		return {ret, {}};
 
 	return readR3(spiMasterProxy);
 }
@@ -970,11 +982,11 @@ std::pair<int, uint8_t> executeCmd55(SpiMasterProxy& spiMasterProxy)
  *
  * \param [in] spiMasterProxy is a reference to SpiMasterProxy object used for communication
  *
- * \return tuple with return code (0 on success, error code otherwise), R1 response and value of OCR; error codes:
+ * \return pair with return code (0 on success, error code otherwise) and R3 response; error codes:
  * - error codes returned by writeCmdReadR3();
  */
 
-std::tuple<int, uint8_t, uint32_t> executeCmd58(SpiMasterProxy& spiMasterProxy)
+std::pair<int, R3Response> executeCmd58(SpiMasterProxy& spiMasterProxy)
 {
 	return writeCmdReadR3(spiMasterProxy, 58);
 }
@@ -1541,12 +1553,12 @@ int SpiSdMmcCard::initialize(const SpiDeviceProxy& spiDeviceProxy)
 		const SelectGuard spiDeviceSelectGuard {spiMasterProxy};
 
 		const auto ret = executeCmd58(spiMasterProxy);
-		if (std::get<0>(ret) != 0)
-			return std::get<0>(ret);
-		if (std::get<1>(ret) != 0)
+		if (ret.first != 0)
+			return ret.first;
+		if (ret.second.r1 != 0)
 			return EIO;
 
-		blockAddressing_ = (std::get<2>(ret) & ocrCcsMask) != 0;
+		blockAddressing_ = (ret.second.ocr & ocrCcsMask) != 0;
 	}
 
 	if (blockAddressing_ == false)
