@@ -1185,9 +1185,13 @@ int SpiSdMmcCard::open()
 				close();
 			});
 
-	const auto ret = initialize(spiDeviceProxy);
-	if (ret != 0)
-		return ret;
+	{
+		decltype(initialize(spiDeviceProxy)) ret;
+		unsigned int attempt {};
+		while (ret = initialize(spiDeviceProxy), ret != 0)
+			if (++attempt >= 100)
+				return ret;
+	}
 
 	closeScopeGuard.release();
 	return 0;
