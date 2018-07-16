@@ -165,7 +165,18 @@ class SelectGuard : public SpiDeviceSelectGuard
 {
 public:
 
-	using SpiDeviceSelectGuard::SpiDeviceSelectGuard;
+	/**
+	 * \brief SelectGuard's constructor
+	 *
+	 * \param [in] spiMasterProxy is a reference to SpiMasterProxy associated with this select guard
+	 */
+
+	explicit SelectGuard(SpiMasterProxy& spiMasterProxy) :
+			SpiDeviceSelectGuard{spiMasterProxy}
+	{
+		SpiMasterOperation operation {{nullptr, nullptr, 1}};
+		getSpiMasterProxy().executeTransaction(SpiMasterOperationsRange{operation});
+	}
 
 	/**
 	 * \brief SelectGuard's destructor
