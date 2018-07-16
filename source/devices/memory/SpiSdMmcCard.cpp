@@ -1383,10 +1383,9 @@ int SpiSdMmcCard::initialize(const SpiDeviceProxy& spiDeviceProxy)
 		if (ret.first != 0)
 			return ret.first;
 	}
-
-	const SelectGuard spiDeviceSelectGuard {spiMasterProxy};
-
 	{
+		const SelectGuard spiDeviceSelectGuard {spiMasterProxy};
+
 		const auto ret = executeCmd0(spiMasterProxy);
 		if (ret.first != 0)
 			return ret.first;
@@ -1394,6 +1393,8 @@ int SpiSdMmcCard::initialize(const SpiDeviceProxy& spiDeviceProxy)
 			return EIO;
 	}
 	{
+		const SelectGuard spiDeviceSelectGuard {spiMasterProxy};
+
 		const auto ret = executeCmd8(spiMasterProxy);
 		if (std::get<0>(ret) != 0)
 			return std::get<0>(ret);
@@ -1410,22 +1411,26 @@ int SpiSdMmcCard::initialize(const SpiDeviceProxy& spiDeviceProxy)
 		const auto deadline = TickClock::now() + std::chrono::seconds{1};
 		while (1)
 		{
-			const auto ret = executeAcmd41(spiMasterProxy, type_ == Type::sdVersion2);
-			if (ret.first != 0)
-				return ret.first;
-			if (ret.second == 0)
 			{
-				if (type_ == Type::unknown)
-					type_ = Type::sdVersion1;
+				const SelectGuard spiDeviceSelectGuard {spiMasterProxy};
 
-				break;
-			}
-			if (ret.second != r1InIdleStateMask || TickClock::now() >= deadline)
-			{
-				if (type_ == Type::sdVersion2)
-					return ret.second != r1InIdleStateMask ? EIO : ETIMEDOUT;
-				else
+				const auto ret = executeAcmd41(spiMasterProxy, type_ == Type::sdVersion2);
+				if (ret.first != 0)
+					return ret.first;
+				if (ret.second == 0)
+				{
+					if (type_ == Type::unknown)
+						type_ = Type::sdVersion1;
+
 					break;
+				}
+				if (ret.second != r1InIdleStateMask || TickClock::now() >= deadline)
+				{
+					if (type_ == Type::sdVersion2)
+						return ret.second != r1InIdleStateMask ? EIO : ETIMEDOUT;
+					else
+						break;
+				}
 			}
 
 			ThisThread::sleepFor({});
@@ -1437,16 +1442,20 @@ int SpiSdMmcCard::initialize(const SpiDeviceProxy& spiDeviceProxy)
 		const auto deadline = TickClock::now() + std::chrono::seconds{1};
 		while (1)
 		{
-			const auto ret = executeCmd1(spiMasterProxy);
-			if (ret.first != 0)
-				return ret.first;
-			if (ret.second == 0)
 			{
-				type_ = Type::mmc;
-				break;
+				const SelectGuard spiDeviceSelectGuard {spiMasterProxy};
+
+				const auto ret = executeCmd1(spiMasterProxy);
+				if (ret.first != 0)
+					return ret.first;
+				if (ret.second == 0)
+				{
+					type_ = Type::mmc;
+					break;
+				}
+				if (ret.second != r1InIdleStateMask || TickClock::now() >= deadline)
+					return ret.second != r1InIdleStateMask ? EIO : ETIMEDOUT;
 			}
-			if (ret.second != r1InIdleStateMask || TickClock::now() >= deadline)
-				return ret.second != r1InIdleStateMask ? EIO : ETIMEDOUT;
 
 			ThisThread::sleepFor({});
 		}
@@ -1459,6 +1468,8 @@ int SpiSdMmcCard::initialize(const SpiDeviceProxy& spiDeviceProxy)
 
 	if (type_ == Type::sdVersion2)
 	{
+		const SelectGuard spiDeviceSelectGuard {spiMasterProxy};
+
 		const auto ret = executeCmd58(spiMasterProxy);
 		if (std::get<0>(ret) != 0)
 			return std::get<0>(ret);
@@ -1470,6 +1481,8 @@ int SpiSdMmcCard::initialize(const SpiDeviceProxy& spiDeviceProxy)
 
 	if (blockAddressing_ == false)
 	{
+		const SelectGuard spiDeviceSelectGuard {spiMasterProxy};
+
 		const auto ret = executeCmd16(spiMasterProxy, blockSize);
 		if (ret.first != 0)
 			return ret.first;
@@ -1478,6 +1491,8 @@ int SpiSdMmcCard::initialize(const SpiDeviceProxy& spiDeviceProxy)
 	}
 
 	{
+		const SelectGuard spiDeviceSelectGuard {spiMasterProxy};
+
 		const auto ret = executeCmd9(spiMasterProxy);
 		if (std::get<0>(ret) != 0)
 			return std::get<0>(ret);
@@ -1496,6 +1511,8 @@ int SpiSdMmcCard::initialize(const SpiDeviceProxy& spiDeviceProxy)
 	writeTimeoutMs_ = getSize() <= 32ull * 1024 * 1024 * 1024 ? 250 : 500;	// SDHC (<= 32 GB) - 250 ms, SDXC - 500 ms
 
 	{
+		const SelectGuard spiDeviceSelectGuard {spiMasterProxy};
+
 		const auto ret = executeAcmd13(spiMasterProxy, std::chrono::milliseconds{readTimeoutMs_});
 		if (std::get<0>(ret) != 0)
 			return std::get<0>(ret);
