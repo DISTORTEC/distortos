@@ -1224,7 +1224,7 @@ std::pair<int, size_t> SpiSdMmcCard::program(const uint64_t address, const void*
 			return {ret.first, {}};
 	}
 
-	const SpiDeviceSelectGuard spiDeviceSelectGuard {spiMasterProxy};
+	const SelectGuard selectGuard {spiMasterProxy};
 
 	{
 		const auto commandAddress = blockAddressing_ == true ? firstBlock : address;
@@ -1297,7 +1297,7 @@ std::pair<int, size_t> SpiSdMmcCard::read(const uint64_t address, void* const bu
 			return {ret.first, {}};
 	}
 
-	const SpiDeviceSelectGuard spiDeviceSelectGuard {spiMasterProxy};
+	const SelectGuard selectGuard {spiMasterProxy};
 
 	{
 		const auto commandAddress = blockAddressing_ == true ? firstBlock : address;
