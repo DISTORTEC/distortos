@@ -17,6 +17,8 @@
 
 #include "distortos/assert.h"
 
+#include <cerrno>
+
 extern "C"
 {
 
