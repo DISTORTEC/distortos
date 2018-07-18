@@ -14,12 +14,7 @@
 
 #include "distortos/FileSystem/File.hpp"
 
-extern "C"
-{
-
 #include "lfs.h"
-
-}	// extern "C"
 
 namespace distortos
 {

@@ -11,12 +11,7 @@
 
 #include "littlefsErrorToErrorCode.hpp"
 
-extern "C"
-{
-
 #include "lfs.h"
-
-}	// extern "C"
 
 #include <cerrno>
 

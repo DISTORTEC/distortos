@@ -16,12 +16,7 @@
 
 #include "distortos/Mutex.hpp"
 
-extern "C"
-{
-
 #include "lfs.h"
-
-}	// extern "C"
 
 namespace distortos
 {
