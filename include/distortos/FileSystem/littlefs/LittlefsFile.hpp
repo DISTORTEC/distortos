@@ -251,7 +251,7 @@ private:
 	 * [open()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/open.html)
 	 *
 	 * \return 0 on success, error code otherwise:
-	 * - EINVAL - \a flags are not valid;
+	 * - EINVAL - \a path and/or \a flags are not valid;
 	 * - converted error codes returned by lfs_file_open();
 	 */
 

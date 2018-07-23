@@ -185,6 +185,9 @@ int LittlefsFile::open(const char* const path, const int flags)
 {
 	assert(opened_ == false);
 
+	if (path == nullptr)
+		return EINVAL;
+
 	constexpr int mask {O_RDONLY | O_WRONLY | O_RDWR};
 	int convertedFlags;
 	if ((flags & mask) == O_RDONLY)
