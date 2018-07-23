@@ -170,6 +170,7 @@ private:
 	 * \param [in] path is the path of directory that will be opened
 	 *
 	 * \return 0 on success, error code otherwise:
+	 * - EINVAL - \path is not valid;
 	 * - converted error codes returned by lfs_dir_open();
 	 */
 

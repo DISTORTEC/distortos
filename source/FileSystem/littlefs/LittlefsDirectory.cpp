@@ -125,6 +125,9 @@ int LittlefsDirectory::open(const char* const path)
 {
 	assert(opened_ == false);
 
+	if (path == nullptr)
+		return EINVAL;
+
 	const auto ret = lfs_dir_open(&fileSystem_.fileSystem_, &directory_, path);
 	if (ret == LFS_ERR_OK)
 		opened_ = true;
