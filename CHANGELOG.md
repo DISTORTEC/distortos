@@ -24,6 +24,7 @@ card.
 `LittlefsFile` and `LittlefsDirectory` classes, which implement interface of `FileSystem`, `File` and `Directory`
 classes.
 - Added `sys/dirent.h` and `sys/statvfs.h` headers, which are not provided by *newlib*.
+- Added unit tests of all `estd::ContiguousRange` constructor overloads.
 
 ### Changed
 
@@ -49,6 +50,11 @@ and are scheduled to be removed after v0.7.0. Use functions inherited from `Bloc
 `SpiEeprom::getSize()`, `SpiEeprom::synchronize()` and `SpiEeprom::program()`.
 - `SpiEeprom::getPageSize()` and `SpiEeprom::isWriteInProgress()` were marked as deprecated and are scheduled to be
 removed after v0.7.0.
+
+### Fixed
+
+- Fixed `estd::ContiguousRange` to allow construction of `estd::ContiguousRange<const T>` from
+`const std::array<const T, N>&`.
 
 [0.6.0](https://github.com/DISTORTEC/distortos/compare/v0.5.0...v0.6.0) - 2018-07-01
 ------------------------------------------------------------------------------------
