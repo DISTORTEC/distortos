@@ -1,7 +1,7 @@
 #
 # file: CMakeLists.txt
 #
-# author: Copyright (C) 2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+# author: Copyright (C) 2017-2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
 #
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -40,3 +40,4 @@ add_custom_target(run)
 add_subdirectory(C-API-ConditionVariable-unit-test)
 add_subdirectory(C-API-Mutex-unit-test)
 add_subdirectory(C-API-Semaphore-unit-test)
+add_subdirectory(estd-ContiguousRange-unit-test)
