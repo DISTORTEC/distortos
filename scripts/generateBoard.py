@@ -183,6 +183,8 @@ if __name__ == '__main__':
 	# in case of "raw" board - generated directly from chip YAML file - use chip name as board
 	board = dictionary.get('board', dictionary['chip'])['compatible'][0]
 
+	relativeDistortosPath = posixpath.relpath(posixpath.realpath(arguments.distortosPath),
+			posixpath.realpath(arguments.outputPath))
 	relativeOutputPath = posixpath.relpath(posixpath.realpath(arguments.outputPath),
 			posixpath.realpath(arguments.distortosPath))
 
@@ -191,6 +193,7 @@ if __name__ == '__main__':
 	jinjaEnvironment.add_extension(RaiseExtension)
 	jinjaEnvironment.filters['sanitize'] = common.sanitize
 	jinjaEnvironment.globals['board'] = board
+	jinjaEnvironment.globals['distortosPath'] = relativeDistortosPath
 	jinjaEnvironment.globals['outputPath'] = relativeOutputPath
 	jinjaEnvironment.globals['sanitizedBoard'] = common.sanitize(board)
 	jinjaEnvironment.globals['year'] = datetime.date.today().year
