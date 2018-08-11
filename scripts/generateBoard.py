@@ -101,7 +101,7 @@ def isFullMatch(string, pattern, flags = 0):
 
 	* `string` is the string that will be tested
 	* `pattern` is the pattern which will be used in the test
-	* `flags` are flags passed to `re.fullmatch()`, default - `0`
+	* `flags` are flags passed to `re.match()`, default - `0`
 	"""
 	# equivalent of re.fullmatch() which works in Python versions prior to 3.4
 	return re.match('(?:' + pattern + ')\Z', str(string), flags)
