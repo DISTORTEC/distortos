@@ -19,6 +19,7 @@ import datetime
 import fnmatch
 import jinja2
 import jinja2.ext
+import operator
 import os
 import posixpath
 import re
@@ -211,6 +212,7 @@ if __name__ == '__main__':
 
 	print()
 
+	metadata.sort(key = operator.itemgetter(2))
 	for metadataIndex, metadataRow in enumerate(metadata):
 		templateFilename, templateArguments, outputFilename = metadataRow
 		relativeOutputFilename = posixpath.normpath(posixpath.join(relativeOutputPath, outputFilename))
