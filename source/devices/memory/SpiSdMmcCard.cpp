@@ -1604,16 +1604,23 @@ int SpiSdMmcCard::initialize(const SpiDeviceProxy& spiDeviceProxy)
 			return EIO;
 
 		const auto csd = decodeCsd(std::get<2>(ret));
-		if (csd.csdStructure != 1)
-			return EIO;	/// \todo add support for other versions of CSD
-
-		blocksCount_ = (static_cast<uint64_t>(csd.csdV2.cSize) + 1) * 512 * 1024 / blockSize;
+		if (csd.csdStructure == 0)	// CSD version 1.0
+		{
+			blocksCount_ = (csd.csdV1.cSize + 1) * (1 << (csd.csdV1.cSizeMult + 2)) * (1 << csd.readBlLen) / blockSize;
+			/// \todo compute read and write timeout from CSD contents
+			readTimeoutMs_ = 100;
+			writeTimeoutMs_ = 250;
+		}
+		else if (csd.csdStructure == 1)	// CSD version 2.0
+		{
+			blocksCount_ = (static_cast<uint64_t>(csd.csdV2.cSize) + 1) * 512 * 1024 / blockSize;
+			readTimeoutMs_ = 100;
+			// SDHC (<= 32 GB) - 250 ms, SDXC - 500 ms
+			writeTimeoutMs_ = getSize() <= 32ull * 1024 * 1024 * 1024 ? 250 : 500;
+		}
+		else
+			return EIO;
 	}
-
-	/// \todo for SDSC these should be calculated from CSD contents
-	readTimeoutMs_ = 100;
-	writeTimeoutMs_ = getSize() <= 32ull * 1024 * 1024 * 1024 ? 250 : 500;	// SDHC (<= 32 GB) - 250 ms, SDXC - 500 ms
-
 	{
 		const SelectGuard spiDeviceSelectGuard {spiMasterProxy};
 
