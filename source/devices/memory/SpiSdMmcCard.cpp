@@ -189,18 +189,8 @@ class SelectGuard : public SpiDeviceSelectGuard
 {
 public:
 
-	/**
-	 * \brief SelectGuard's constructor
-	 *
-	 * \param [in] spiMasterProxy is a reference to SpiMasterProxy associated with this select guard
-	 */
-
-	explicit SelectGuard(SpiMasterProxy& spiMasterProxy) :
-			SpiDeviceSelectGuard{spiMasterProxy}
-	{
-		SpiMasterOperation operation {{nullptr, nullptr, 1}};
-		getSpiMasterProxy().executeTransaction(SpiMasterOperationsRange{operation});
-	}
+	/// import SpiDeviceSelectGuard's constructor
+	using SpiDeviceSelectGuard::SpiDeviceSelectGuard;
 
 	/**
 	 * \brief SelectGuard's destructor
@@ -630,6 +620,7 @@ int writeCmd(SpiMasterProxy& spiMasterProxy, const uint8_t command, const uint32
 {
 	const uint8_t buffer[]
 	{
+			0xff,	// dummy byte as a delay before the command
 			static_cast<uint8_t>(0x40 | command),
 			static_cast<uint8_t>(argument >> 24),
 			static_cast<uint8_t>(argument >> 16),
