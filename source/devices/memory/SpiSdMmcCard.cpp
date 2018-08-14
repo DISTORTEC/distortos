@@ -44,6 +44,24 @@ using Uint8Range = estd::ContiguousRange<uint8_t>;
 /// range of const uint8_t elements
 using ConstUint8Range = estd::ContiguousRange<const uint8_t>;
 
+/// fields unique to CSD version 1.0
+struct CsdV1
+{
+	/// C_SIZE, device size
+	uint16_t cSize;
+
+	/// VDD_R_CURR_MIN, max. read current @VDD min
+	uint8_t vddRCurrMin;
+	/// VDD_R_CURR_MAX, max. read current @VDD max
+	uint8_t vddRCurrMax;
+	/// VDD_W_CURR_MIN, max. write current @VDD min
+	uint8_t vddWCurrMin;
+	/// VDD_W_CURR_MAX, max. write current @VDD max
+	uint8_t vddWCurrMax;
+	/// C_SIZE_MULT, device size multiplier
+	uint8_t cSizeMult;
+};
+
 /// fields unique to CSD version 2.0
 struct CsdV2
 {
@@ -56,6 +74,8 @@ struct Csd
 {
 	union
 	{
+		/// fields unique to CSD version 1.0, valid only if csdStructure == 0
+		CsdV1 csdV1;
 		/// fields unique to CSD version 2.0, valid only if csdStructure == 1
 		CsdV2 csdV2;
 	};
@@ -290,7 +310,19 @@ Csd decodeCsd(const std::array<uint8_t, 16>& buffer)
 	csd.writeBlkMisalign = extractBits(ConstUint8Range{buffer}, 78, 1);
 	csd.readBlkMisalign = extractBits(ConstUint8Range{buffer}, 77, 1);
 	csd.dsrImp = extractBits(ConstUint8Range{buffer}, 76, 1);
-	csd.csdV2.cSize = extractBits(ConstUint8Range{buffer}, 48, 22);
+
+	if (csd.csdStructure == 0)
+	{
+		csd.csdV1.cSize = extractBits(ConstUint8Range{buffer}, 62, 12);
+		csd.csdV1.vddRCurrMin = extractBits(ConstUint8Range{buffer}, 59, 3);
+		csd.csdV1.vddRCurrMax = extractBits(ConstUint8Range{buffer}, 56, 3);
+		csd.csdV1.vddWCurrMin = extractBits(ConstUint8Range{buffer}, 53, 3);
+		csd.csdV1.vddWCurrMax = extractBits(ConstUint8Range{buffer}, 50, 3);
+		csd.csdV1.cSizeMult = extractBits(ConstUint8Range{buffer}, 47, 3);
+	}
+	else if (csd.csdStructure == 1)
+		csd.csdV2.cSize = extractBits(ConstUint8Range{buffer}, 48, 22);
+
 	csd.eraseBlkEn = extractBits(ConstUint8Range{buffer}, 46, 1);
 	csd.sectorSize = extractBits(ConstUint8Range{buffer}, 39, 7);
 	csd.wpGrpSize = extractBits(ConstUint8Range{buffer}, 32, 7);
