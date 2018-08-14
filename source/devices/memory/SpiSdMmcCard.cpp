@@ -44,15 +44,27 @@ using Uint8Range = estd::ContiguousRange<uint8_t>;
 /// range of const uint8_t elements
 using ConstUint8Range = estd::ContiguousRange<const uint8_t>;
 
-/// CSD version 2.0
+/// fields unique to CSD version 2.0
 struct CsdV2
 {
 	/// C_SIZE, device size
 	uint32_t cSize;
+};
+
+/// CSD
+struct Csd
+{
+	union
+	{
+		/// fields unique to CSD version 2.0, valid only if csdStructure == 1
+		CsdV2 csdV2;
+	};
 
 	/// CCC, card command classes
 	uint16_t ccc;
 
+	/// CSD_STRUCTURE, CSD structure
+	uint8_t csdStructure;
 	/// TAAC, data read access-time
 	uint8_t taac;
 	/// NSAC, data read access-time in CLK cycles (NSAC*100)
@@ -93,19 +105,6 @@ struct CsdV2
 	uint8_t tmpWriteProtect;
 	/// FILE_FORMAT, file format
 	uint8_t fileFormat;
-};
-
-/// CSD
-struct Csd
-{
-	union
-	{
-		/// CSD version 2.0, valid only if csdStructure == 1
-		CsdV2 csdV2;
-	};
-
-	/// CSD_STRUCTURE, CSD structure
-	uint8_t csdStructure;
 };
 
 /// R2 response
@@ -282,28 +281,28 @@ Csd decodeCsd(const std::array<uint8_t, 16>& buffer)
 {
 	Csd csd {};
 	csd.csdStructure = extractBits(ConstUint8Range{buffer}, 126, 2);
-	csd.csdV2.taac = extractBits(ConstUint8Range{buffer}, 112, 8);
-	csd.csdV2.nsac = extractBits(ConstUint8Range{buffer}, 104, 8);
-	csd.csdV2.tranSpeed = extractBits(ConstUint8Range{buffer}, 96, 8);
-	csd.csdV2.ccc = extractBits(ConstUint8Range{buffer}, 84, 12);
-	csd.csdV2.readBlLen = extractBits(ConstUint8Range{buffer}, 80, 4);
-	csd.csdV2.readBlPartial = extractBits(ConstUint8Range{buffer}, 79, 1);
-	csd.csdV2.writeBlkMisalign = extractBits(ConstUint8Range{buffer}, 78, 1);
-	csd.csdV2.readBlkMisalign = extractBits(ConstUint8Range{buffer}, 77, 1);
-	csd.csdV2.dsrImp = extractBits(ConstUint8Range{buffer}, 76, 1);
+	csd.taac = extractBits(ConstUint8Range{buffer}, 112, 8);
+	csd.nsac = extractBits(ConstUint8Range{buffer}, 104, 8);
+	csd.tranSpeed = extractBits(ConstUint8Range{buffer}, 96, 8);
+	csd.ccc = extractBits(ConstUint8Range{buffer}, 84, 12);
+	csd.readBlLen = extractBits(ConstUint8Range{buffer}, 80, 4);
+	csd.readBlPartial = extractBits(ConstUint8Range{buffer}, 79, 1);
+	csd.writeBlkMisalign = extractBits(ConstUint8Range{buffer}, 78, 1);
+	csd.readBlkMisalign = extractBits(ConstUint8Range{buffer}, 77, 1);
+	csd.dsrImp = extractBits(ConstUint8Range{buffer}, 76, 1);
 	csd.csdV2.cSize = extractBits(ConstUint8Range{buffer}, 48, 22);
-	csd.csdV2.eraseBlkEn = extractBits(ConstUint8Range{buffer}, 46, 1);
-	csd.csdV2.sectorSize = extractBits(ConstUint8Range{buffer}, 39, 7);
-	csd.csdV2.wpGrpSize = extractBits(ConstUint8Range{buffer}, 32, 7);
-	csd.csdV2.wpGrpEnable = extractBits(ConstUint8Range{buffer}, 31, 1);
-	csd.csdV2.r2wFactor = extractBits(ConstUint8Range{buffer}, 26, 3);
-	csd.csdV2.writeBlLen = extractBits(ConstUint8Range{buffer}, 22, 4);
-	csd.csdV2.writeBlPartial = extractBits(ConstUint8Range{buffer}, 21, 1);
-	csd.csdV2.fileFormatGrp = extractBits(ConstUint8Range{buffer}, 15, 1);
-	csd.csdV2.copy = extractBits(ConstUint8Range{buffer}, 14, 1);
-	csd.csdV2.permWriteProtect = extractBits(ConstUint8Range{buffer}, 13, 1);
-	csd.csdV2.tmpWriteProtect = extractBits(ConstUint8Range{buffer}, 12, 1);
-	csd.csdV2.fileFormat = extractBits(ConstUint8Range{buffer}, 10, 2);
+	csd.eraseBlkEn = extractBits(ConstUint8Range{buffer}, 46, 1);
+	csd.sectorSize = extractBits(ConstUint8Range{buffer}, 39, 7);
+	csd.wpGrpSize = extractBits(ConstUint8Range{buffer}, 32, 7);
+	csd.wpGrpEnable = extractBits(ConstUint8Range{buffer}, 31, 1);
+	csd.r2wFactor = extractBits(ConstUint8Range{buffer}, 26, 3);
+	csd.writeBlLen = extractBits(ConstUint8Range{buffer}, 22, 4);
+	csd.writeBlPartial = extractBits(ConstUint8Range{buffer}, 21, 1);
+	csd.fileFormatGrp = extractBits(ConstUint8Range{buffer}, 15, 1);
+	csd.copy = extractBits(ConstUint8Range{buffer}, 14, 1);
+	csd.permWriteProtect = extractBits(ConstUint8Range{buffer}, 13, 1);
+	csd.tmpWriteProtect = extractBits(ConstUint8Range{buffer}, 12, 1);
+	csd.fileFormat = extractBits(ConstUint8Range{buffer}, 10, 2);
 	return csd;
 }
 
