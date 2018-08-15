@@ -1620,6 +1620,9 @@ int SpiSdMmcCard::initialize(const SpiDeviceProxy& spiDeviceProxy)
 		}
 		else
 			return EIO;
+
+		if (csd.eraseBlkEn == 0)
+			return EIO;	/// \todo add support for cards with ERASE_BLK_EN == 0 (sector erase granularity)
 	}
 	{
 		const SelectGuard spiDeviceSelectGuard {spiMasterProxy};
