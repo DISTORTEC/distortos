@@ -56,6 +56,7 @@ removed after v0.7.0.
 
 - Fixed `estd::ContiguousRange` to allow construction of `estd::ContiguousRange<const T>` from
 `const std::array<const T, N>&`.
+- Fixed `generateBoard.py` for *ruamel.yaml* 0.15.52 or later.
 
 [0.6.0](https://github.com/DISTORTEC/distortos/compare/v0.5.0...v0.6.0) - 2018-07-01
 ------------------------------------------------------------------------------------
