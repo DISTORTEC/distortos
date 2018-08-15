@@ -417,9 +417,12 @@ static int lfs_dir_alloc(lfs_t *lfs, lfs_dir_t *dir) {
     // rather than clobbering one of the blocks we just pretend
     // the revision may be valid
     int err = lfs_bd_read(lfs, dir->pair[0], 0, &dir->d.rev, 4);
-    dir->d.rev = lfs_fromle32(dir->d.rev);
-    if (err) {
+    if (err && err != LFS_ERR_CORRUPT) {
         return err;
+    }
+
+    if (err != LFS_ERR_CORRUPT) {
+        dir->d.rev = lfs_fromle32(dir->d.rev);
     }
 
     // set defaults
@@ -445,6 +448,9 @@ static int lfs_dir_fetch(lfs_t *lfs,
         int err = lfs_bd_read(lfs, tpair[i], 0, &test, sizeof(test));
         lfs_dir_fromle32(&test);
         if (err) {
+            if (err == LFS_ERR_CORRUPT) {
+                continue;
+            }
             return err;
         }
 
@@ -464,6 +470,9 @@ static int lfs_dir_fetch(lfs_t *lfs,
         err = lfs_bd_crc(lfs, tpair[i], sizeof(test),
                 (0x7fffffff & test.size) - sizeof(test), &crc);
         if (err) {
+            if (err == LFS_ERR_CORRUPT) {
+                continue;
+            }
             return err;
         }
 
@@ -1282,8 +1291,9 @@ static int lfs_ctz_traverse(lfs_t *lfs,
 
 
 /// Top level file operations ///
-int lfs_file_open(lfs_t *lfs, lfs_file_t *file,
-        const char *path, int flags) {
+int lfs_file_opencfg(lfs_t *lfs, lfs_file_t *file,
+        const char *path, int flags,
+        const struct lfs_file_config *cfg) {
     // deorphan if we haven't yet, needed at most once after poweron
     if ((flags & 3) != LFS_O_RDONLY && !lfs->deorphaned) {
         int err = lfs_deorphan(lfs);
@@ -1323,6 +1333,7 @@ int lfs_file_open(lfs_t *lfs, lfs_file_t *file,
     }
 
     // setup file struct
+    file->cfg = cfg;
     file->pair[0] = cwd.pair[0];
     file->pair[1] = cwd.pair[1];
     file->poff = entry.off;
@@ -1340,7 +1351,10 @@ int lfs_file_open(lfs_t *lfs, lfs_file_t *file,
     }
 
     // allocate buffer if needed
-    if (lfs->cfg->file_buffer) {
+    file->cache.block = 0xffffffff;
+    if (file->cfg && file->cfg->buffer) {
+        file->cache.buffer = file->cfg->buffer;
+    } else if (lfs->cfg->file_buffer) {
         if (lfs->files) {
             // already in use
             return LFS_ERR_NOMEM;
@@ -1368,6 +1382,11 @@ int lfs_file_open(lfs_t *lfs, lfs_file_t *file,
     return 0;
 }
 
+int lfs_file_open(lfs_t *lfs, lfs_file_t *file,
+        const char *path, int flags) {
+    return lfs_file_opencfg(lfs, file, path, flags, NULL);
+}
+
 int lfs_file_close(lfs_t *lfs, lfs_file_t *file) {
     int err = lfs_file_sync(lfs, file);
 
@@ -1380,7 +1399,7 @@ int lfs_file_close(lfs_t *lfs, lfs_file_t *file) {
     }
 
     // clean up memory
-    if (!lfs->cfg->file_buffer) {
+    if (!(file->cfg && file->cfg->buffer) && !lfs->cfg->file_buffer) {
         lfs_free(file->cache.buffer);
     }
 
@@ -1997,6 +2016,21 @@ int lfs_rename(lfs_t *lfs, const char *oldpath, const char *newpath) {
 
 
 /// Filesystem operations ///
+static void lfs_deinit(lfs_t *lfs) {
+    // free allocated memory
+    if (!lfs->cfg->read_buffer) {
+        lfs_free(lfs->rcache.buffer);
+    }
+
+    if (!lfs->cfg->prog_buffer) {
+        lfs_free(lfs->pcache.buffer);
+    }
+
+    if (!lfs->cfg->lookahead_buffer) {
+        lfs_free(lfs->free.buffer);
+    }
+}
+
 static int lfs_init(lfs_t *lfs, const struct lfs_config *cfg) {
     lfs->cfg = cfg;
 
@@ -2006,7 +2040,7 @@ static int lfs_init(lfs_t *lfs, const struct lfs_config *cfg) {
     } else {
         lfs->rcache.buffer = lfs_malloc(lfs->cfg->read_size);
         if (!lfs->rcache.buffer) {
-            return LFS_ERR_NOMEM;
+            goto cleanup;
         }
     }
 
@@ -2016,7 +2050,7 @@ static int lfs_init(lfs_t *lfs, const struct lfs_config *cfg) {
     } else {
         lfs->pcache.buffer = lfs_malloc(lfs->cfg->prog_size);
         if (!lfs->pcache.buffer) {
-            return LFS_ERR_NOMEM;
+            goto cleanup;
         }
     }
 
@@ -2032,7 +2066,7 @@ static int lfs_init(lfs_t *lfs, const struct lfs_config *cfg) {
     } else {
         lfs->free.buffer = lfs_malloc(lfs->cfg->lookahead/8);
         if (!lfs->free.buffer) {
-            return LFS_ERR_NOMEM;
+            goto cleanup;
         }
     }
 
@@ -2052,23 +2086,10 @@ static int lfs_init(lfs_t *lfs, const struct lfs_config *cfg) {
     lfs->deorphaned = false;
 
     return 0;
-}
 
-static int lfs_deinit(lfs_t *lfs) {
-    // free allocated memory
-    if (!lfs->cfg->read_buffer) {
-        lfs_free(lfs->rcache.buffer);
-    }
-
-    if (!lfs->cfg->prog_buffer) {
-        lfs_free(lfs->pcache.buffer);
-    }
-
-    if (!lfs->cfg->lookahead_buffer) {
-        lfs_free(lfs->free.buffer);
-    }
-
-    return 0;
+cleanup:
+    lfs_deinit(lfs);
+    return LFS_ERR_NOMEM;
 }
 
 int lfs_format(lfs_t *lfs, const struct lfs_config *cfg) {
@@ -2088,19 +2109,19 @@ int lfs_format(lfs_t *lfs, const struct lfs_config *cfg) {
     lfs_dir_t superdir;
     err = lfs_dir_alloc(lfs, &superdir);
     if (err) {
-        return err;
+        goto cleanup;
     }
 
     // write root directory
     lfs_dir_t root;
     err = lfs_dir_alloc(lfs, &root);
     if (err) {
-        return err;
+        goto cleanup;
     }
 
     err = lfs_dir_commit(lfs, &root, NULL, 0);
     if (err) {
-        return err;
+        goto cleanup;
     }
 
     lfs->root[0] = root.pair[0];
@@ -2131,24 +2152,28 @@ int lfs_format(lfs_t *lfs, const struct lfs_config *cfg) {
                  &superblock.d, sizeof(superblock.d)}
             }, 1);
         if (err && err != LFS_ERR_CORRUPT) {
-            return err;
+            goto cleanup;
         }
 
         valid = valid || !err;
     }
 
     if (!valid) {
-        return LFS_ERR_CORRUPT;
+        err = LFS_ERR_CORRUPT;
+        goto cleanup;
     }
 
     // sanity check that fetch works
     err = lfs_dir_fetch(lfs, &superdir, (const lfs_block_t[2]){0, 1});
     if (err) {
-        return err;
+        goto cleanup;
     }
 
     lfs_alloc_ack(lfs);
-    return lfs_deinit(lfs);
+
+cleanup:
+    lfs_deinit(lfs);
+    return err;
 }
 
 int lfs_mount(lfs_t *lfs, const struct lfs_config *cfg) {
@@ -2168,7 +2193,7 @@ int lfs_mount(lfs_t *lfs, const struct lfs_config *cfg) {
     lfs_superblock_t superblock;
     err = lfs_dir_fetch(lfs, &dir, (const lfs_block_t[2]){0, 1});
     if (err && err != LFS_ERR_CORRUPT) {
-        return err;
+        goto cleanup;
     }
 
     if (!err) {
@@ -2176,7 +2201,7 @@ int lfs_mount(lfs_t *lfs, const struct lfs_config *cfg) {
                 &superblock.d, sizeof(superblock.d));
         lfs_superblock_fromle32(&superblock.d);
         if (err) {
-            return err;
+            goto cleanup;
         }
 
         lfs->root[0] = superblock.d.root[0];
@@ -2185,7 +2210,8 @@ int lfs_mount(lfs_t *lfs, const struct lfs_config *cfg) {
 
     if (err || memcmp(superblock.d.magic, "littlefs", 8) != 0) {
         LFS_ERROR("Invalid superblock at %d %d", 0, 1);
-        return LFS_ERR_CORRUPT;
+        err = LFS_ERR_CORRUPT;
+        goto cleanup;
     }
 
     uint16_t major_version = (0xffff & (superblock.d.version >> 16));
@@ -2193,14 +2219,21 @@ int lfs_mount(lfs_t *lfs, const struct lfs_config *cfg) {
     if ((major_version != LFS_DISK_VERSION_MAJOR ||
          minor_version > LFS_DISK_VERSION_MINOR)) {
         LFS_ERROR("Invalid version %d.%d", major_version, minor_version);
-        return LFS_ERR_INVAL;
+        err = LFS_ERR_INVAL;
+        goto cleanup;
     }
 
     return 0;
+
+cleanup:
+
+    lfs_deinit(lfs);
+    return err;
 }
 
 int lfs_unmount(lfs_t *lfs) {
-    return lfs_deinit(lfs);
+    lfs_deinit(lfs);
+    return 0;
 }
 
 
