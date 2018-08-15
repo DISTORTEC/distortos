@@ -13,6 +13,7 @@ from __future__ import print_function
 
 import argparse
 import ast
+import collections
 import common
 import datetime
 import fnmatch
@@ -72,7 +73,7 @@ def addPaths(dictionary, path = None):
 	"""
 	path = path or []
 	for key, value in dictionary.items():
-		if isinstance(value, dict) == True and '$path' not in value:
+		if isinstance(value, collections.MutableMapping) == True and '$path' not in value:
 			newPath = path + [key]
 			value['$path'] = newPath
 			addPaths(value, newPath)
@@ -90,7 +91,7 @@ def getLabels(dictionary, labels = None):
 		if key == '$labels':
 			for label in value:
 				labels[label] = dictionary
-		elif isinstance(value, dict) == True:
+		elif isinstance(value, collections.MutableMapping) == True:
 			labels = getLabels(value, labels)
 	return labels
 
@@ -115,7 +116,8 @@ def mergeDictionaries(a, b):
 	"""
 	for key in b:
 		if key in a:
-			if isinstance(a[key], dict) == True and isinstance(b[key], dict) == True:
+			if (isinstance(a[key], collections.MutableMapping) == True and
+					isinstance(b[key], collections.MutableMapping) == True):
 				mergeDictionaries(a[key], b[key])
 			elif a[key] != b[key]:
 				a[key] = b[key]
@@ -151,7 +153,7 @@ def resolveReferences(dictionary, labels):
 			keysForDeletion.append(key)
 		elif isinstance(value, Reference) == True:
 			dictionary[key] = labels[value.label]
-		elif isinstance(value, dict) == True:
+		elif isinstance(value, collections.MutableMapping) == True:
 			resolveReferences(value, labels)
 
 	for keyForDeletion in keysForDeletion:
