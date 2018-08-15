@@ -15,8 +15,8 @@ can be used for RAII-style locking/unlocking or selecting/deselecting of appropr
 for accessing core functionalities of associated objects.
 - Added `SpiSdMmcCard` class, based on `BlockDevice` interface, which can be used with *SD* or *MMC* card connected via
 *SPI*. At this moment the code handles only *SD version 2.0* cards, has no support for run-time detection of card
-insertion/removal and has no support for detecting whether card is write-protected. It was tested only with 32 GB *SDHC*
-card.
+insertion/removal and has no support for detecting whether card is write-protected. Code was tested with 2 GB *SDSC* and
+32 GB *SDHC* cards.
 - Added basic framework for file systems in the form of 3 abstract classes: `FileSystem`, `File` and `Directory`.
 - Added global `openFile()`, taking `FileSystem` reference and returning a fully functional `FILE*` for use with
 `<stdio.h>` functions.

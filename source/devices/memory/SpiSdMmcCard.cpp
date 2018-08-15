@@ -44,15 +44,47 @@ using Uint8Range = estd::ContiguousRange<uint8_t>;
 /// range of const uint8_t elements
 using ConstUint8Range = estd::ContiguousRange<const uint8_t>;
 
-/// CSD version 2.0
+/// fields unique to CSD version 1.0
+struct CsdV1
+{
+	/// C_SIZE, device size
+	uint16_t cSize;
+
+	/// VDD_R_CURR_MIN, max. read current @VDD min
+	uint8_t vddRCurrMin;
+	/// VDD_R_CURR_MAX, max. read current @VDD max
+	uint8_t vddRCurrMax;
+	/// VDD_W_CURR_MIN, max. write current @VDD min
+	uint8_t vddWCurrMin;
+	/// VDD_W_CURR_MAX, max. write current @VDD max
+	uint8_t vddWCurrMax;
+	/// C_SIZE_MULT, device size multiplier
+	uint8_t cSizeMult;
+};
+
+/// fields unique to CSD version 2.0
 struct CsdV2
 {
 	/// C_SIZE, device size
 	uint32_t cSize;
+};
+
+/// CSD
+struct Csd
+{
+	union
+	{
+		/// fields unique to CSD version 1.0, valid only if csdStructure == 0
+		CsdV1 csdV1;
+		/// fields unique to CSD version 2.0, valid only if csdStructure == 1
+		CsdV2 csdV2;
+	};
 
 	/// CCC, card command classes
 	uint16_t ccc;
 
+	/// CSD_STRUCTURE, CSD structure
+	uint8_t csdStructure;
 	/// TAAC, data read access-time
 	uint8_t taac;
 	/// NSAC, data read access-time in CLK cycles (NSAC*100)
@@ -93,19 +125,6 @@ struct CsdV2
 	uint8_t tmpWriteProtect;
 	/// FILE_FORMAT, file format
 	uint8_t fileFormat;
-};
-
-/// CSD
-struct Csd
-{
-	union
-	{
-		/// CSD version 2.0, valid only if csdStructure == 1
-		CsdV2 csdV2;
-	};
-
-	/// CSD_STRUCTURE, CSD structure
-	uint8_t csdStructure;
 };
 
 /// R2 response
@@ -189,18 +208,8 @@ class SelectGuard : public SpiDeviceSelectGuard
 {
 public:
 
-	/**
-	 * \brief SelectGuard's constructor
-	 *
-	 * \param [in] spiMasterProxy is a reference to SpiMasterProxy associated with this select guard
-	 */
-
-	explicit SelectGuard(SpiMasterProxy& spiMasterProxy) :
-			SpiDeviceSelectGuard{spiMasterProxy}
-	{
-		SpiMasterOperation operation {{nullptr, nullptr, 1}};
-		getSpiMasterProxy().executeTransaction(SpiMasterOperationsRange{operation});
-	}
+	/// import SpiDeviceSelectGuard's constructor
+	using SpiDeviceSelectGuard::SpiDeviceSelectGuard;
 
 	/**
 	 * \brief SelectGuard's destructor
@@ -292,28 +301,40 @@ Csd decodeCsd(const std::array<uint8_t, 16>& buffer)
 {
 	Csd csd {};
 	csd.csdStructure = extractBits(ConstUint8Range{buffer}, 126, 2);
-	csd.csdV2.taac = extractBits(ConstUint8Range{buffer}, 112, 8);
-	csd.csdV2.nsac = extractBits(ConstUint8Range{buffer}, 104, 8);
-	csd.csdV2.tranSpeed = extractBits(ConstUint8Range{buffer}, 96, 8);
-	csd.csdV2.ccc = extractBits(ConstUint8Range{buffer}, 84, 12);
-	csd.csdV2.readBlLen = extractBits(ConstUint8Range{buffer}, 80, 4);
-	csd.csdV2.readBlPartial = extractBits(ConstUint8Range{buffer}, 79, 1);
-	csd.csdV2.writeBlkMisalign = extractBits(ConstUint8Range{buffer}, 78, 1);
-	csd.csdV2.readBlkMisalign = extractBits(ConstUint8Range{buffer}, 77, 1);
-	csd.csdV2.dsrImp = extractBits(ConstUint8Range{buffer}, 76, 1);
-	csd.csdV2.cSize = extractBits(ConstUint8Range{buffer}, 48, 22);
-	csd.csdV2.eraseBlkEn = extractBits(ConstUint8Range{buffer}, 46, 1);
-	csd.csdV2.sectorSize = extractBits(ConstUint8Range{buffer}, 39, 7);
-	csd.csdV2.wpGrpSize = extractBits(ConstUint8Range{buffer}, 32, 7);
-	csd.csdV2.wpGrpEnable = extractBits(ConstUint8Range{buffer}, 31, 1);
-	csd.csdV2.r2wFactor = extractBits(ConstUint8Range{buffer}, 26, 3);
-	csd.csdV2.writeBlLen = extractBits(ConstUint8Range{buffer}, 22, 4);
-	csd.csdV2.writeBlPartial = extractBits(ConstUint8Range{buffer}, 21, 1);
-	csd.csdV2.fileFormatGrp = extractBits(ConstUint8Range{buffer}, 15, 1);
-	csd.csdV2.copy = extractBits(ConstUint8Range{buffer}, 14, 1);
-	csd.csdV2.permWriteProtect = extractBits(ConstUint8Range{buffer}, 13, 1);
-	csd.csdV2.tmpWriteProtect = extractBits(ConstUint8Range{buffer}, 12, 1);
-	csd.csdV2.fileFormat = extractBits(ConstUint8Range{buffer}, 10, 2);
+	csd.taac = extractBits(ConstUint8Range{buffer}, 112, 8);
+	csd.nsac = extractBits(ConstUint8Range{buffer}, 104, 8);
+	csd.tranSpeed = extractBits(ConstUint8Range{buffer}, 96, 8);
+	csd.ccc = extractBits(ConstUint8Range{buffer}, 84, 12);
+	csd.readBlLen = extractBits(ConstUint8Range{buffer}, 80, 4);
+	csd.readBlPartial = extractBits(ConstUint8Range{buffer}, 79, 1);
+	csd.writeBlkMisalign = extractBits(ConstUint8Range{buffer}, 78, 1);
+	csd.readBlkMisalign = extractBits(ConstUint8Range{buffer}, 77, 1);
+	csd.dsrImp = extractBits(ConstUint8Range{buffer}, 76, 1);
+
+	if (csd.csdStructure == 0)
+	{
+		csd.csdV1.cSize = extractBits(ConstUint8Range{buffer}, 62, 12);
+		csd.csdV1.vddRCurrMin = extractBits(ConstUint8Range{buffer}, 59, 3);
+		csd.csdV1.vddRCurrMax = extractBits(ConstUint8Range{buffer}, 56, 3);
+		csd.csdV1.vddWCurrMin = extractBits(ConstUint8Range{buffer}, 53, 3);
+		csd.csdV1.vddWCurrMax = extractBits(ConstUint8Range{buffer}, 50, 3);
+		csd.csdV1.cSizeMult = extractBits(ConstUint8Range{buffer}, 47, 3);
+	}
+	else if (csd.csdStructure == 1)
+		csd.csdV2.cSize = extractBits(ConstUint8Range{buffer}, 48, 22);
+
+	csd.eraseBlkEn = extractBits(ConstUint8Range{buffer}, 46, 1);
+	csd.sectorSize = extractBits(ConstUint8Range{buffer}, 39, 7);
+	csd.wpGrpSize = extractBits(ConstUint8Range{buffer}, 32, 7);
+	csd.wpGrpEnable = extractBits(ConstUint8Range{buffer}, 31, 1);
+	csd.r2wFactor = extractBits(ConstUint8Range{buffer}, 26, 3);
+	csd.writeBlLen = extractBits(ConstUint8Range{buffer}, 22, 4);
+	csd.writeBlPartial = extractBits(ConstUint8Range{buffer}, 21, 1);
+	csd.fileFormatGrp = extractBits(ConstUint8Range{buffer}, 15, 1);
+	csd.copy = extractBits(ConstUint8Range{buffer}, 14, 1);
+	csd.permWriteProtect = extractBits(ConstUint8Range{buffer}, 13, 1);
+	csd.tmpWriteProtect = extractBits(ConstUint8Range{buffer}, 12, 1);
+	csd.fileFormat = extractBits(ConstUint8Range{buffer}, 10, 2);
 	return csd;
 }
 
@@ -630,6 +651,7 @@ int writeCmd(SpiMasterProxy& spiMasterProxy, const uint8_t command, const uint32
 {
 	const uint8_t buffer[]
 	{
+			0xff,	// dummy byte as a delay before the command
 			static_cast<uint8_t>(0x40 | command),
 			static_cast<uint8_t>(argument >> 24),
 			static_cast<uint8_t>(argument >> 16),
@@ -1582,16 +1604,26 @@ int SpiSdMmcCard::initialize(const SpiDeviceProxy& spiDeviceProxy)
 			return EIO;
 
 		const auto csd = decodeCsd(std::get<2>(ret));
-		if (csd.csdStructure != 1)
-			return EIO;	/// \todo add support for other versions of CSD
+		if (csd.csdStructure == 0)	// CSD version 1.0
+		{
+			blocksCount_ = (csd.csdV1.cSize + 1) * (1 << (csd.csdV1.cSizeMult + 2)) * (1 << csd.readBlLen) / blockSize;
+			/// \todo compute read and write timeout from CSD contents
+			readTimeoutMs_ = 100;
+			writeTimeoutMs_ = 250;
+		}
+		else if (csd.csdStructure == 1)	// CSD version 2.0
+		{
+			blocksCount_ = (static_cast<uint64_t>(csd.csdV2.cSize) + 1) * 512 * 1024 / blockSize;
+			readTimeoutMs_ = 100;
+			// SDHC (<= 32 GB) - 250 ms, SDXC - 500 ms
+			writeTimeoutMs_ = getSize() <= 32ull * 1024 * 1024 * 1024 ? 250 : 500;
+		}
+		else
+			return EIO;
 
-		blocksCount_ = (static_cast<uint64_t>(csd.csdV2.cSize) + 1) * 512 * 1024 / blockSize;
+		if (csd.eraseBlkEn == 0)
+			return EIO;	/// \todo add support for cards with ERASE_BLK_EN == 0 (sector erase granularity)
 	}
-
-	/// \todo for SDSC these should be calculated from CSD contents
-	readTimeoutMs_ = 100;
-	writeTimeoutMs_ = getSize() <= 32ull * 1024 * 1024 * 1024 ? 250 : 500;	// SDHC (<= 32 GB) - 250 ms, SDXC - 500 ms
-
 	{
 		const SelectGuard spiDeviceSelectGuard {spiMasterProxy};
 
