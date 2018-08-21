@@ -14,4 +14,25 @@ set -u
 
 basedir="$(dirname "${0}")"
 
+searchPath='.'
+
+# If any additional argument was given, then use it as the search path, otherwise search in current directory.
+if [ ${#} -ge 1 ]; then
+	searchPath="${1}"
+fi
+
+rm -rf output
+
+for configuration in $(find -L "${searchPath}" -name 'distortosConfiguration.cmake' -printf '%P ')
+do
+
+	mkdir output
+	cd output
+	cmake -C ../${configuration} .. -G Ninja
+	ninja -v distortosTest
+	cd -
+	rm -rf output
+
+done
+
 "${basedir}/forAllConfigurations.sh" "make -j$(nproc) VERBOSE=1" "${@}"
