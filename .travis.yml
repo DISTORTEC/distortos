@@ -37,6 +37,7 @@ matrix:
                   packages:
                       - gcc-7
                       - g++-7
+                      - ninja-build
 
 install:
     - "./scripts/travis-ci.sh install ${SUBSTAGE}"
