@@ -1,0 +1,5 @@
+{% if 'ST,STM32-GPIOs-v2-group' in dictionary['GPIOs']['compatible'] %}
+('source/chip/STM32/peripherals/GPIOv2/boardTemplates/STM32-GPIOv2.cmake.jinja',
+		{},
+		'cmake/70-STM32-GPIOv2.cmake'),
+{% endif %}

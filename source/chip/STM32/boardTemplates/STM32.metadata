@@ -1,0 +1,11 @@
+{% if 'ST,STM32' in dictionary['chip']['compatible'] %}
+('source/chip/STM32/boardTemplates/Kconfig-boardChoices.jinja',
+		{},
+		'Kconfig-boardChoices'),
+('source/chip/STM32/boardTemplates/Kconfig-boardOptions.jinja',
+		{},
+		'Kconfig-boardOptions'),
+('source/chip/STM32/boardTemplates/STM32.cmake.jinja',
+		{},
+		'cmake/80-STM32.cmake'),
+{% endif %}

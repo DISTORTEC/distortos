@@ -22,9 +22,7 @@ doxygen(INPUT ${CMAKE_CURRENT_LIST_DIR}/fatalErrorHandler.cpp
 		${CMAKE_CURRENT_LIST_DIR}/synchronization
 		${CMAKE_CURRENT_LIST_DIR}/threads)
 
-include(${CMAKE_CURRENT_LIST_DIR}/architecture/distortos-sources.cmake)
 include(${CMAKE_CURRENT_LIST_DIR}/C-API/distortos-sources.cmake)
-include(${CMAKE_CURRENT_LIST_DIR}/chip/distortos-sources.cmake)
 include(${CMAKE_CURRENT_LIST_DIR}/clocks/distortos-sources.cmake)
 include(${CMAKE_CURRENT_LIST_DIR}/devices/distortos-sources.cmake)
 include(${CMAKE_CURRENT_LIST_DIR}/FileSystem/distortos-sources.cmake)

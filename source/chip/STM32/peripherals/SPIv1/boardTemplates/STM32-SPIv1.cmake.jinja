@@ -1,0 +1,20 @@
+#
+# file: {{ metadata[metadataIndex][2] }}
+#
+# author: Copyright (C) 2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+#
+# This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
+# distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+#
+# Automatically generated file - do not edit!
+#
+{% for key, spi in dictionary['SPIs'].items() if spi is mapping and 'ST,STM32-SPI-v1' in spi['compatible'] %}
+
+distortosSetConfiguration(BOOLEAN
+		distortos_Peripherals_{{ key }}
+		OFF
+		HELP "Enable {{ key | upper }} low-level driver."
+		OUTPUT_NAME CONFIG_CHIP_STM32_SPIV1_{{ key | upper }}_ENABLE)
+{% endfor %}
+
+include("${CMAKE_CURRENT_SOURCE_DIR}/source/chip/STM32/peripherals/SPIv1/distortos-sources.cmake")
