@@ -11,7 +11,8 @@
 
 distortosSetConfiguration(STRING
 		CONFIG_BOARD
-		"ST,32F746GDISCOVERY")
+		"ST,32F746GDISCOVERY"
+		INTERNAL)
 
 target_include_directories(distortos PUBLIC
 		${CMAKE_CURRENT_LIST_DIR}/include)

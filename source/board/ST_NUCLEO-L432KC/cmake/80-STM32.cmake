@@ -37,6 +37,7 @@ distortosSetConfiguration(BOOLEAN
 distortosSetConfiguration(STRING
 		CONFIG_CHIP
 		"STM32L432KC"
+		INTERNAL
 		OUTPUT_TYPES BOOLEAN STRING)
 
 distortosSetConfiguration(BOOLEAN

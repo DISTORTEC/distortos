@@ -11,7 +11,8 @@
 
 distortosSetConfiguration(STRING
 		CONFIG_BOARD
-		"ST,NUCLEO-F103RB")
+		"ST,NUCLEO-F103RB"
+		INTERNAL)
 
 target_include_directories(distortos PUBLIC
 		${CMAKE_CURRENT_LIST_DIR}/include)

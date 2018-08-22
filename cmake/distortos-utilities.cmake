@@ -187,29 +187,33 @@ endfunction()
 #
 
 function(distortosSetStringConfiguration name help)
-	list(FIND ARGN DEFAULT index)
+	cmake_parse_arguments(PARSE_ARGV 2 STRING "INTERNAL" "" "")
+
+	list(FIND STRING_UNPARSED_ARGUMENTS DEFAULT index)
 	if(NOT index EQUAL -1)
 		if(index EQUAL 0)
 			message(FATAL_ERROR "\"DEFAULT\" does not follow a string value")
 		endif()
-		list(REMOVE_AT ARGN ${index})
+		list(REMOVE_AT STRING_UNPARSED_ARGUMENTS ${index})
 		math(EXPR index "${index} - 1")
-		list(GET ARGN ${index} defaultValue)
+		list(GET STRING_UNPARSED_ARGUMENTS ${index} defaultValue)
 	else()
-		list(GET ARGN 0 defaultValue)
+		list(GET STRING_UNPARSED_ARGUMENTS 0 defaultValue)
 	endif()
 
-	list(LENGTH ARGN length)
+	list(LENGTH STRING_UNPARSED_ARGUMENTS length)
 	if(length EQUAL 0)
 		message(FATAL_ERROR "No string values provided")
-	elseif(length GREATER 1)
+	endif()
+
+	if(NOT STRING_INTERNAL)
 		set(type STRING)
 	else()
 		set(type INTERNAL)
 	endif()
 
 	set("${name}" "${defaultValue}" CACHE ${type} "${help}")
-	set_property(CACHE "${name}" PROPERTY STRINGS "${ARGN}")
+	set_property(CACHE "${name}" PROPERTY STRINGS "${STRING_UNPARSED_ARGUMENTS}")
 	get_property(currentType CACHE "${name}" PROPERTY TYPE)
 	if(NOT currentType STREQUAL type)
 		set_property(CACHE "${name}" PROPERTY TYPE ${type})
@@ -217,7 +221,7 @@ function(distortosSetStringConfiguration name help)
 
 	# verify currently set value
 	set(currentValue ${${name}})
-	list(FIND ARGN "${currentValue}" index)
+	list(FIND STRING_UNPARSED_ARGUMENTS "${currentValue}" index)
 	if(index EQUAL -1)
 		message(FATAL_ERROR "\"${name}\": \"${currentValue}\" is not an allowed value")
 	endif()
@@ -226,13 +230,14 @@ endfunction()
 #
 # Sets new distortos cache configuration named `name` with type `type`.
 #
-# `distortosSetConfiguration(BOOLEAN name defaultValue [INTERNAL] [generic-options])`
-# `distortosSetConfiguration(INTEGER name defaultValue [INTERNAL] [MIN min] [MAX max] [generic-options])`
+# `distortosSetConfiguration(BOOLEAN name defaultValue [generic-options])`
+# `distortosSetConfiguration(INTEGER name defaultValue [MIN min] [MAX max] [generic-options])`
 # `distortosSetConfiguration(STRING name string1 [[[string2] string3] ...] [generic-options])`
 #
 # generic options:
 # - `[HELP "help message ..."]` - help message displayed in the GUI; all whitespace after newlines is removed, so the
 # message may be indented to match other code;
+# - `[INTERNAL]` - causes the cache entry to be hidden in the GUI;
 # - `[NO_OUTPUT]` - suppress generation of macro in the header; must not be used with `OUTPUT_NAME` and/or
 # `OUTPUT_TYPES`;
 # - `[OUTPUT_NAME outputName]` - name of macro generated in the header; `name` is used as output name if this option is
@@ -242,17 +247,16 @@ endfunction()
 # is omitted; must not be used with `NO_OUTPUT`;
 #
 # `BOOLEAN` variant
-# `defaultValue` must be either `ON` or `OFF`. `INTERNAL` causes the cache entry to be hidden in the GUI.
+# `defaultValue` must be either `ON` or `OFF`.
 #
 # `INTEGER` variant
 # `defaultValue`, `min` and `max` must be decimal integers in [-2147483648; 2147483647] range. -2147483648 is used as
 # `min` if this option is omitted. 2147483647 is used as `max` if this option is omitted. `max` must be greater than or
-# equal to `min`. `defaultValue` must be in [`min`; `max`] range. `INTERNAL` causes the cache entry to be hidden in the
-# GUI.
+# equal to `min`. `defaultValue` must be in [`min`; `max`] range.
 #
 # `STRING` variant
-# If there is only one string provided, the cache entry will be hidden in the GUI. String followed by `DEFAULT` will be
-# used as the default one. If `DEFAULT` is not present, first string will be used as the default one.
+# String followed by `DEFAULT` will be used as the default one. If `DEFAULT` is not present, first string will be used
+# as the default one.
 #
 
 function(distortosSetConfiguration type name)

@@ -37,6 +37,7 @@ distortosSetConfiguration(BOOLEAN
 distortosSetConfiguration(STRING
 		CONFIG_CHIP
 		"STM32L476RG"
+		INTERNAL
 		OUTPUT_TYPES BOOLEAN STRING)
 
 include("${CMAKE_CURRENT_SOURCE_DIR}/source/chip/STM32/STM32L4/distortos-sources.cmake")

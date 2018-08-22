@@ -339,7 +339,7 @@ set("distortos_Clocks_06_PLL"
 set("distortos_Clocks_07_Clock_source_of_PLLs"
 		"HSI16"
 		CACHE
-		"INTERNAL"
+		"STRING"
 		"Select clock source of PLLs.")
 set("distortos_Clocks_08_PLLM"
 		"4"
@@ -419,17 +419,17 @@ set("distortos_Memory_02_Flash_instruction_cache"
 set("distortos_Memory_regions_00_text_vectors"
 		"flash"
 		CACHE
-		"INTERNAL"
+		"STRING"
 		"Memory region for .text.vectors section in linker script")
 set("distortos_Memory_regions_01_text"
 		"flash"
 		CACHE
-		"INTERNAL"
+		"STRING"
 		"Memory region for .text section in linker script")
 set("distortos_Memory_regions_02_ARM_exidx"
 		"flash"
 		CACHE
-		"INTERNAL"
+		"STRING"
 		"Memory region for .ARM.exidx section in linker script")
 set("distortos_Memory_regions_03_Main_stack"
 		"SRAM1"
@@ -449,7 +449,7 @@ set("distortos_Memory_regions_05_data_VMA"
 set("distortos_Memory_regions_06_data_LMA"
 		"flash"
 		CACHE
-		"INTERNAL"
+		"STRING"
 		"LMA memory region for .data section in linker script")
 set("distortos_Memory_regions_07_noinit"
 		"SRAM1"
@@ -459,12 +459,12 @@ set("distortos_Memory_regions_07_noinit"
 set("distortos_Memory_regions_08_SRAM1_data_LMA"
 		"flash"
 		CACHE
-		"INTERNAL"
+		"STRING"
 		"LMA memory region for .SRAM1.data section in linker script")
 set("distortos_Memory_regions_09_SRAM2_data_LMA"
 		"flash"
 		CACHE
-		"INTERNAL"
+		"STRING"
 		"LMA memory region for .SRAM2.data section in linker script")
 set("distortos_Memory_regions_10_Process_stack"
 		"SRAM1"

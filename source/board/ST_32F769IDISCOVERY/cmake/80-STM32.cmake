@@ -37,6 +37,7 @@ distortosSetConfiguration(BOOLEAN
 distortosSetConfiguration(STRING
 		CONFIG_CHIP
 		"STM32F769NI"
+		INTERNAL
 		OUTPUT_TYPES BOOLEAN STRING)
 
 distortosSetConfiguration(INTEGER

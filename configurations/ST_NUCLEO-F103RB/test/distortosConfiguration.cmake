@@ -324,7 +324,7 @@ set("distortos_Clocks_08_PLL"
 set("distortos_Clocks_09_Clock_source_of_PLL"
 		"HSIDIV2"
 		CACHE
-		"INTERNAL"
+		"STRING"
 		"Select clock source of main PLL.\n\nPLL input frequency (PLLin) must be in the range:\n- [1 MHz; 24 MHz] for STM32F100 chips,\n- [3 MHz; 12 MHz] for STM32F105 and STM32F107 chips,\n- [1 MHz; 25 MHz] for other chips.")
 set("distortos_Clocks_12_PLLMUL"
 		"16"
@@ -364,57 +364,57 @@ set("distortos_Memory_01_Flash_half_cycle_access"
 set("distortos_Memory_regions_00_text_vectors"
 		"flash"
 		CACHE
-		"INTERNAL"
+		"STRING"
 		"Memory region for .text.vectors section in linker script")
 set("distortos_Memory_regions_01_text"
 		"flash"
 		CACHE
-		"INTERNAL"
+		"STRING"
 		"Memory region for .text section in linker script")
 set("distortos_Memory_regions_02_ARM_exidx"
 		"flash"
 		CACHE
-		"INTERNAL"
+		"STRING"
 		"Memory region for .ARM.exidx section in linker script")
 set("distortos_Memory_regions_03_Main_stack"
 		"SRAM"
 		CACHE
-		"INTERNAL"
+		"STRING"
 		"Memory region for main stack in linker script")
 set("distortos_Memory_regions_04_bss"
 		"SRAM"
 		CACHE
-		"INTERNAL"
+		"STRING"
 		"Memory region for .bss section in linker script")
 set("distortos_Memory_regions_05_data_VMA"
 		"SRAM"
 		CACHE
-		"INTERNAL"
+		"STRING"
 		"VMA memory region for .data section in linker script")
 set("distortos_Memory_regions_06_data_LMA"
 		"flash"
 		CACHE
-		"INTERNAL"
+		"STRING"
 		"LMA memory region for .data section in linker script")
 set("distortos_Memory_regions_07_noinit"
 		"SRAM"
 		CACHE
-		"INTERNAL"
+		"STRING"
 		"Memory region for .noinit section in linker script")
 set("distortos_Memory_regions_08_SRAM_data_LMA"
 		"flash"
 		CACHE
-		"INTERNAL"
+		"STRING"
 		"LMA memory region for .SRAM.data section in linker script")
 set("distortos_Memory_regions_09_Process_stack"
 		"SRAM"
 		CACHE
-		"INTERNAL"
+		"STRING"
 		"Memory region for process stack in linker script")
 set("distortos_Memory_regions_10_Heap"
 		"SRAM"
 		CACHE
-		"INTERNAL"
+		"STRING"
 		"Memory region for heap in linker script")
 set("distortos_Peripherals_GPIOA"
 		"ON"

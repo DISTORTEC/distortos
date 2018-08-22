@@ -409,17 +409,17 @@ set("distortos_Memory_01_Flash_ART_accelerator"
 set("distortos_Memory_regions_00_text_vectors"
 		"flash"
 		CACHE
-		"INTERNAL"
+		"STRING"
 		"Memory region for .text.vectors section in linker script")
 set("distortos_Memory_regions_01_text"
 		"flash"
 		CACHE
-		"INTERNAL"
+		"STRING"
 		"Memory region for .text section in linker script")
 set("distortos_Memory_regions_02_ARM_exidx"
 		"flash"
 		CACHE
-		"INTERNAL"
+		"STRING"
 		"Memory region for .ARM.exidx section in linker script")
 set("distortos_Memory_regions_03_Main_stack"
 		"SRAM"
@@ -439,7 +439,7 @@ set("distortos_Memory_regions_05_data_VMA"
 set("distortos_Memory_regions_06_data_LMA"
 		"flash"
 		CACHE
-		"INTERNAL"
+		"STRING"
 		"LMA memory region for .data section in linker script")
 set("distortos_Memory_regions_07_noinit"
 		"SRAM"
@@ -449,12 +449,12 @@ set("distortos_Memory_regions_07_noinit"
 set("distortos_Memory_regions_08_SRAM_data_LMA"
 		"flash"
 		CACHE
-		"INTERNAL"
+		"STRING"
 		"LMA memory region for .SRAM.data section in linker script")
 set("distortos_Memory_regions_09_ITCM_data_LMA"
 		"flash"
 		CACHE
-		"INTERNAL"
+		"STRING"
 		"LMA memory region for .ITCM.data section in linker script")
 set("distortos_Memory_regions_10_Process_stack"
 		"SRAM"

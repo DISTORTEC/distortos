@@ -11,7 +11,8 @@
 
 distortosSetConfiguration(STRING
 		CONFIG_BOARD
-		"{{ board }}")
+		"{{ board }}"
+		INTERNAL)
 {% for metadataRow in metadata if metadataRow[2].endswith('.cpp') %}
 {% if loop.first == True %}
 
