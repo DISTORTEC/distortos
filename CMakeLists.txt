@@ -202,6 +202,11 @@ if(distortos_Checks_03_Stack_guard_contents_during_context_switch OR
 endif(distortos_Checks_03_Stack_guard_contents_during_context_switch OR
 		distortos_Checks_04_Stack_guard_contents_during_system_tick)
 
+if(NOT CMAKE_BUILD_TYPE)
+	message(STATUS "CMAKE_BUILD_TYPE not set, defaulting to RelWithDebInfo")
+	set_property(CACHE CMAKE_BUILD_TYPE PROPERTY VALUE RelWithDebInfo)
+endif()
+
 #-----------------------------------------------------------------------------------------------------------------------
 # local functions
 #-----------------------------------------------------------------------------------------------------------------------
