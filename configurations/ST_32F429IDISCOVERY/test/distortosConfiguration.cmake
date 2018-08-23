@@ -6,6 +6,12 @@
 # Automatically generated file - do not edit!
 #
 
+if(DEFINED ENV{DISTORTOS_PATH})
+	set(DISTORTOS_PATH "$ENV{DISTORTOS_PATH}")
+else()
+	set(DISTORTOS_PATH "../")
+endif()
+
 set("CMAKE_BUILD_TYPE"
 		"RelWithDebInfo"
 		CACHE
@@ -167,7 +173,7 @@ set("CMAKE_STATIC_LINKER_FLAGS_RELWITHDEBINFO"
 		"STRING"
 		"Flags used by the linker during the creation of static libraries during RELWITHDEBINFO builds.")
 set("CMAKE_TOOLCHAIN_FILE"
-		"../source/board/ST_32F429IDISCOVERY/Toolchain-ST_32F429IDISCOVERY.cmake"
+		"${DISTORTOS_PATH}/source/board/ST_32F429IDISCOVERY/Toolchain-ST_32F429IDISCOVERY.cmake"
 		CACHE
 		"FILEPATH"
 		"The CMake toolchain file")
