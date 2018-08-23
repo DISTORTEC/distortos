@@ -512,7 +512,7 @@ foreach(cacheVariable ${cmakeConfigurationNames} ${DISTORTOS_CONFIGURATION_NAMES
 
 	if(type STREQUAL FILEPATH)
 		file(RELATIVE_PATH value "${CMAKE_CURRENT_SOURCE_DIR}" "${value}")
-		string(PREPEND value "\${DISTORTOS_PATH}/")
+		set(value "\${DISTORTOS_PATH}/${value}")
 	endif()
 
 	file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/distortosConfiguration.cmake
