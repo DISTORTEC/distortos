@@ -487,6 +487,7 @@ set(cmakeConfigurationNames
 		CMAKE_TOOLCHAIN_FILE
 		CMAKE_VERBOSE_MAKEFILE)
 
+file(RELATIVE_PATH distortosPath "${CMAKE_BINARY_DIR}" "${CMAKE_CURRENT_SOURCE_DIR}")
 file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/distortosConfiguration.cmake
 		"#\n"
 		"# \\file\n"
@@ -495,6 +496,12 @@ file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/distortosConfiguration.cmake
 		"# \\warning\n"
 		"# Automatically generated file - do not edit!\n"
 		"#\n"
+		"\n"
+		"if(DEFINED ENV{DISTORTOS_PATH})\n"
+		"	set(DISTORTOS_PATH \"\$ENV{DISTORTOS_PATH}\")\n"
+		"else()\n"
+		"	set(DISTORTOS_PATH \"${distortosPath}\")\n"
+		"endif()\n"
 		"\n")
 foreach(cacheVariable ${cmakeConfigurationNames} ${DISTORTOS_CONFIGURATION_NAMES})
 	get_property(helpstring CACHE "${cacheVariable}" PROPERTY HELPSTRING)
@@ -504,7 +511,8 @@ foreach(cacheVariable ${cmakeConfigurationNames} ${DISTORTOS_CONFIGURATION_NAMES
 	set(value "${${cacheVariable}}")
 
 	if(type STREQUAL FILEPATH)
-		file(RELATIVE_PATH value "${CMAKE_BINARY_DIR}" "${value}")
+		file(RELATIVE_PATH value "${CMAKE_CURRENT_SOURCE_DIR}" "${value}")
+		string(PREPEND value "\${DISTORTOS_PATH}/")
 	endif()
 
 	file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/distortosConfiguration.cmake
