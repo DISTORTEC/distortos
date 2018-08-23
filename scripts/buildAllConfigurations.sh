@@ -23,7 +23,7 @@ fi
 
 rm -rf output
 
-for configuration in $(find -L "${searchPath}" -name 'distortosConfiguration.cmake' -printf '%P ')
+for configuration in $(find -L "${searchPath}" -name 'distortosConfiguration.cmake' -printf '%p ')
 do
 
 	mkdir output
