@@ -105,7 +105,7 @@ scriptBuild() {
 	toolchain="$(find "${HOME}/toolchain/" -mindepth 1 -maxdepth 1 -name '*.sh')"
 	echo "Using ${toolchain}..."
 	. "${toolchain}"
-	"$(dirname "${0}")/buildAllConfigurations.sh" "${@}"
+	"$(dirname "${0}")/buildAllConfigurations.sh" ${@}
 }
 
 # "script generateBoard" phase

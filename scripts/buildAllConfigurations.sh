@@ -21,6 +21,9 @@ if [ ${#} -ge 1 ]; then
 	searchPath="${1}"
 fi
 
+arguments=${@}
+shift
+
 rm -rf output
 
 for configuration in $(find -L "${searchPath}" -name 'distortosConfiguration.cmake' -printf '%p ')
@@ -29,10 +32,10 @@ do
 	mkdir output
 	cd output
 	cmake -C ../${configuration} .. -G Ninja
-	ninja -v distortosTest
+	ninja -v ${@}
 	cd -
 	rm -rf output
 
 done
 
-"${basedir}/forAllConfigurations.sh" "make -j$(nproc) VERBOSE=1" "${@}"
+"${basedir}/forAllConfigurations.sh" "make -j$(nproc) VERBOSE=1" ${arguments}

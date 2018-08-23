@@ -43,7 +43,7 @@ install:
     - "./scripts/travis-ci.sh install ${SUBSTAGE}"
 
 script:
-    - "./scripts/travis-ci.sh script ${SUBSTAGE}"
+    - "./scripts/travis-ci.sh script ${SUBSTAGE} configurations distortosTest"
 
 after_failure:
     - "echo \"********** ls -la ${TRAVIS_BUILD_DIR}/output\""
