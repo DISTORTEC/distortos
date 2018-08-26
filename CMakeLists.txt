@@ -270,9 +270,16 @@ endfunction()
 #-----------------------------------------------------------------------------------------------------------------------
 
 add_library(distortos STATIC "")
-set_target_properties(distortos PROPERTIES
-		CXX_STANDARD 11
-		CXX_STANDARD_REQUIRED ON)
+if(CMAKE_VERSION VERSION_GREATER_EQUAL 3.8)
+	target_compile_features(distortos PUBLIC
+			cxx_std_11
+			c_std_99)
+else()
+	# equivalents of C++11 and C99 for earlier versions of CMake
+	target_compile_features(distortos PUBLIC
+			cxx_constexpr
+			c_restrict)
+endif()
 target_include_directories(distortos PUBLIC
 		${CMAKE_CURRENT_BINARY_DIR}/include
 		include)
