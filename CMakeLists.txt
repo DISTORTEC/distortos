@@ -9,7 +9,7 @@
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #
 
-cmake_minimum_required(VERSION 3.1)
+cmake_minimum_required(VERSION 3.7)
 project(distortos)
 
 distortosSetConfiguration(BOOLEAN
