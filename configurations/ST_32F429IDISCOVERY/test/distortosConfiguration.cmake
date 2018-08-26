@@ -316,7 +316,7 @@ set("distortos_Checks_02_Stack_pointer_range_during_system_tick"
 		"ON"
 		CACHE
 		"BOOL"
-		"Check stack pointer range during system tick.\n\nSimilar to \"Check stack pointer range during context switch\", but executed during every system tick.")
+		"Check stack pointer range during system tick.\n\nSimilar to \"distortos_Checks_01_Stack_pointer_range_during_context_switch\", but executed during every system\ntick.")
 set("distortos_Checks_03_Stack_guard_contents_during_context_switch"
 		"ON"
 		CACHE
@@ -326,12 +326,12 @@ set("distortos_Checks_04_Stack_guard_contents_during_system_tick"
 		"ON"
 		CACHE
 		"BOOL"
-		"Check stack guard contents during system tick.\n\nSimilar to \"Check stack guard contents during context switch\", but executed during every system tick.")
+		"Check stack guard contents during system tick.\n\nSimilar to \"distortos_Checks_03_Stack_guard_contents_during_context_switch\", but executed during every system\ntick.")
 set("distortos_Checks_05_Stack_guard_size"
 		"32"
 		CACHE
 		"STRING"
-		"Size (in bytes) of \"stack guard\".\n\nAny value which is not a multiple of stack alignment required by architecture will be rounded up.\n\nAllowed range: [1; 2147483647]")
+		"Size (in bytes) of \"stack guard\".\n\nAny value which is not a multiple of stack alignment required by architecture, will be rounded up.\n\nAllowed range: [1; 2147483647]")
 set("distortos_Clocks_00_Standard_configuration_of_clocks"
 		"ON"
 		CACHE
@@ -351,7 +351,7 @@ set("distortos_Clocks_03_HSE"
 		"ON"
 		CACHE
 		"BOOL"
-		"Enable HSE (crystal/ceramic resonator or external user clock).")
+		"Enable HSE crystal/ceramic resonator, 8000000 Hz.")
 set("distortos_Clocks_04_PLL"
 		"ON"
 		CACHE
