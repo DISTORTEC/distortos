@@ -24,10 +24,16 @@ if(distortos_Clocks_00_Standard_configuration_of_clocks)
 
 	if(CONFIG_CHIP_STM32F0_RCC_HSE_FREQUENCY)
 
+		if(CONFIG_CHIP_STM32F0_RCC_HSE_CLOCK_BYPASS)
+			set(help "Enable HSE external user clock, ${CONFIG_CHIP_STM32F0_RCC_HSE_FREQUENCY} Hz.")
+		else()
+			set(help "Enable HSE crystal/ceramic resonator, ${CONFIG_CHIP_STM32F0_RCC_HSE_FREQUENCY} Hz.")
+		endif()
+
 		distortosSetConfiguration(BOOLEAN
 				distortos_Clocks_01_HSE
 				OFF
-				HELP "Enable HSE (crystal/ceramic resonator or external user clock)."
+				HELP ${help}
 				OUTPUT_NAME CONFIG_CHIP_STM32F0_RCC_HSE_ENABLE)
 
 	endif(CONFIG_CHIP_STM32F0_RCC_HSE_FREQUENCY)
