@@ -23,9 +23,6 @@ add_executable(distortosTest EXCLUDE_FROM_ALL
 		testCases.cpp
 		waitForNextTick.cpp
 		wasteTime.cpp)
-set_target_properties(distortosTest PROPERTIES
-		CXX_STANDARD 11
-		CXX_STANDARD_REQUIRED ON)
 target_include_directories(distortosTest PRIVATE
 		${CMAKE_CURRENT_SOURCE_DIR})
 target_link_libraries(distortosTest PRIVATE
