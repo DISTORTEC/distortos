@@ -28,6 +28,9 @@ classes.
 
 ### Changed
 
+- Implemended full support for configuring and building with *CMake*. The new *CMake* workflow does not need *Kconfig*
+or any shell tools - just *CMake* (version 3.7 or later), build tool (it is recommended to use *Ninja*) and
+*arm-none-eabi bleeding-edge-toolchain* (*GCC* version 5 or later). Check `README.md` for more details about usage.
 - Renamed `SpiMasterOperationRange` to `SpiMasterOperationsRange`. Alias for old name was added, marked as deprecated
 and is scheduled to be removed after v0.7.0.
 - `SpiMasterBase` object is now bound to `SpiMasterLowLevel` in `SpiMasterLowLevel::startTransfer()` instead of
