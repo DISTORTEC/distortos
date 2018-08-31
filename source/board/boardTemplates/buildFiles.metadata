@@ -1,6 +1,3 @@
 ('source/board/boardTemplates/distortos-board-sources.cmake.jinja',
 		{},
 		'distortos-board-sources.cmake'),
-('source/board/boardTemplates/Rules.mk.jinja',
-		{},
-		'Rules.mk'),
