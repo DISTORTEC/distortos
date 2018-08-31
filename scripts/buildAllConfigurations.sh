@@ -37,5 +37,3 @@ do
 	rm -rf output
 
 done
-
-"${basedir}/forAllConfigurations.sh" "make -j$(nproc) VERBOSE=1" ${arguments}
