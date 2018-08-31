@@ -9,14 +9,26 @@
 # Automatically generated file - do not edit!
 #
 
-if(CONFIG_BOARD_SOURCE_BOARD_ST_32F429IDISCOVERY_ST_32F429IDISCOVERY)
+distortosSetConfiguration(STRING
+		CONFIG_BOARD
+		"ST,32F429IDISCOVERY"
+		INTERNAL)
 
-	target_sources(distortos PRIVATE
-			${CMAKE_CURRENT_LIST_DIR}/ST_32F429IDISCOVERY-buttons.cpp
-			${CMAKE_CURRENT_LIST_DIR}/ST_32F429IDISCOVERY-leds.cpp)
+target_include_directories(distortos PUBLIC
+		${CMAKE_CURRENT_LIST_DIR}/include)
 
-	doxygen(INPUT ${CMAKE_CURRENT_LIST_DIR} INCLUDE_PATH ${CMAKE_CURRENT_LIST_DIR}/include)
+target_sources(distortos PRIVATE
+		${CMAKE_CURRENT_LIST_DIR}/ST_32F429IDISCOVERY-buttons.cpp
+		${CMAKE_CURRENT_LIST_DIR}/ST_32F429IDISCOVERY-leds.cpp)
 
-	include(${CMAKE_CURRENT_LIST_DIR}/distortos-board-sources.extension.cmake OPTIONAL)
+doxygen(INPUT ${CMAKE_CURRENT_LIST_DIR} INCLUDE_PATH ${CMAKE_CURRENT_LIST_DIR}/include)
 
-endif()
+include(${CMAKE_CURRENT_LIST_DIR}/cmake/10-buttons.cmake)
+include(${CMAKE_CURRENT_LIST_DIR}/cmake/10-leds.cmake)
+include(${CMAKE_CURRENT_LIST_DIR}/cmake/70-STM32-GPIOv2.cmake)
+include(${CMAKE_CURRENT_LIST_DIR}/cmake/70-STM32-SPIv1.cmake)
+include(${CMAKE_CURRENT_LIST_DIR}/cmake/70-STM32-USARTv1.cmake)
+include(${CMAKE_CURRENT_LIST_DIR}/cmake/80-STM32.cmake)
+include(${CMAKE_CURRENT_LIST_DIR}/cmake/90-ARMv6-M-ARMv7-M.cmake)
+
+include(${CMAKE_CURRENT_LIST_DIR}/distortos-board-sources.extension.cmake OPTIONAL)

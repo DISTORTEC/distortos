@@ -1,0 +1,5 @@
+{% if 'ST,STM32-USARTs-v1-group' in dictionary['UARTs']['compatible'] %}
+('source/chip/STM32/peripherals/USARTv1/boardTemplates/STM32-USARTv1.cmake.jinja',
+		{},
+		'cmake/70-STM32-USARTv1.cmake'),
+{% endif %}

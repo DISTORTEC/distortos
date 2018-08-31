@@ -19,6 +19,7 @@ import datetime
 import fnmatch
 import jinja2
 import jinja2.ext
+import operator
 import os
 import posixpath
 import re
@@ -100,7 +101,7 @@ def isFullMatch(string, pattern, flags = 0):
 
 	* `string` is the string that will be tested
 	* `pattern` is the pattern which will be used in the test
-	* `flags` are flags passed to `re.fullmatch()`, default - `0`
+	* `flags` are flags passed to `re.match()`, default - `0`
 	"""
 	# equivalent of re.fullmatch() which works in Python versions prior to 3.4
 	return re.match('(?:' + pattern + ')\Z', str(string), flags)
@@ -182,6 +183,8 @@ if __name__ == '__main__':
 	# in case of "raw" board - generated directly from chip YAML file - use chip name as board
 	board = dictionary.get('board', dictionary['chip'])['compatible'][0]
 
+	relativeDistortosPath = posixpath.relpath(posixpath.realpath(arguments.distortosPath),
+			posixpath.realpath(arguments.outputPath))
 	relativeOutputPath = posixpath.relpath(posixpath.realpath(arguments.outputPath),
 			posixpath.realpath(arguments.distortosPath))
 
@@ -190,6 +193,7 @@ if __name__ == '__main__':
 	jinjaEnvironment.add_extension(RaiseExtension)
 	jinjaEnvironment.filters['sanitize'] = common.sanitize
 	jinjaEnvironment.globals['board'] = board
+	jinjaEnvironment.globals['distortosPath'] = relativeDistortosPath
 	jinjaEnvironment.globals['outputPath'] = relativeOutputPath
 	jinjaEnvironment.globals['sanitizedBoard'] = common.sanitize(board)
 	jinjaEnvironment.globals['year'] = datetime.date.today().year
@@ -211,6 +215,7 @@ if __name__ == '__main__':
 
 	print()
 
+	metadata.sort(key = operator.itemgetter(2))
 	for metadataIndex, metadataRow in enumerate(metadata):
 		templateFilename, templateArguments, outputFilename = metadataRow
 		relativeOutputFilename = posixpath.normpath(posixpath.join(relativeOutputPath, outputFilename))

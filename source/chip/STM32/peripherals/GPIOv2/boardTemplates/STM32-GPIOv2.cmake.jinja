@@ -1,0 +1,47 @@
+#
+# file: {{ metadata[metadataIndex][2] }}
+#
+# author: Copyright (C) 2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+#
+# This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
+# distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+#
+# Automatically generated file - do not edit!
+#
+
+distortosSetConfiguration(BOOLEAN
+		CONFIG_CHIP_STM32_GPIOV2_HAS_4_AF_BITS
+{% if dictionary['pin-controller']['AF-bits'] == 4 %}
+		ON
+{% else %}
+		OFF
+{% endif %}
+		INTERNAL)
+
+distortosSetConfiguration(BOOLEAN
+		CONFIG_CHIP_STM32_GPIOV2_HAS_HIGH_SPEED
+{% if dictionary['pin-controller']['has-high-speed'] == true %}
+		ON
+{% else %}
+		OFF
+{% endif %}
+		INTERNAL)
+{% for key, gpio in dictionary['GPIOs'].items() if gpio is mapping and 'ST,STM32-GPIO-v2' in gpio['compatible'] %}
+
+if(FORCE_STM32_GPIO_V2_{{ key | upper }}_ENABLE)
+	set(value ON)
+	set(internal INTERNAL)
+else()
+	set(value OFF)
+	unset(internal)
+endif()
+
+distortosSetConfiguration(BOOLEAN
+		distortos_Peripherals_{{ key }}
+		${value}
+		${internal}
+		HELP "Enable {{ key | upper }}."
+		OUTPUT_NAME CONFIG_CHIP_STM32_GPIO_V2_{{ key | upper }}_ENABLE)
+{% endfor %}
+
+include("${CMAKE_CURRENT_SOURCE_DIR}/source/chip/STM32/peripherals/GPIOv2/distortos-sources.cmake")

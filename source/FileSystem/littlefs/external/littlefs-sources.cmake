@@ -19,10 +19,3 @@ target_compile_definitions(littlefs PUBLIC
 		LFS_NO_ERROR)
 target_include_directories(littlefs INTERFACE
 		${CMAKE_CURRENT_LIST_DIR}/littlefs)
-target_link_libraries(littlefs PRIVATE
-		distortos::allCFlags)
-
-if(NOT CONFIG_ASSERT_ENABLE)
-	target_compile_definitions(littlefs PUBLIC
-			LFS_NO_ASSERT)
-endif()

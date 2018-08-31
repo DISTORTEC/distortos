@@ -1,0 +1,34 @@
+#
+# file: {{ metadata[metadataIndex][2] }}
+#
+# author: Copyright (C) 2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+#
+# This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
+# distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+#
+# Automatically generated file - do not edit!
+#
+
+distortosSetConfiguration(BOOLEAN
+		distortos_{{ dictionaryKey }}
+		ON
+		HELP "Enable {{ dictionaryKey }}"
+		OUTPUT_NAME CONFIG_BOARD_{{ dictionaryKey | upper }}_ENABLE)
+
+if(distortos_{{ dictionaryKey }})
+{% for key, value in dictionary[dictionaryKey].items() if value is mapping %}
+
+	distortosSetConfiguration(BOOLEAN
+			distortos_{{ dictionaryKey }}_{{ key }}
+			ON
+			HELP "Enable {{ key }}
+			{%- if 'alternative-names' in value %} ({{ value['alternative-names'] | join(', ') }}){% endif %}"
+			OUTPUT_NAME CONFIG_BOARD_{{ dictionaryKey | upper }}_{{ key | upper }}_ENABLE)
+
+	if(distortos_{{ dictionaryKey }}_{{ key }})
+		set(FORCE_{{ value['GPIO']['port']['compatible'][0].rpartition(',')[2] | sanitize('[^0-9A-Za-z]') | upper }}_
+				{{- value['GPIO']['port']['$path'][-1] }}_ENABLE ON)
+	endif()
+{% endfor %}
+
+endif(distortos_{{ dictionaryKey }})

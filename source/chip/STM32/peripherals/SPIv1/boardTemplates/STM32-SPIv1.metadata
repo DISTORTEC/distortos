@@ -1,0 +1,5 @@
+{% if 'ST,STM32-SPIs-v1-group' in dictionary['SPIs']['compatible'] %}
+('source/chip/STM32/peripherals/SPIv1/boardTemplates/STM32-SPIv1.cmake.jinja',
+		{},
+		'cmake/70-STM32-SPIv1.cmake'),
+{% endif %}

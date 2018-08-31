@@ -5,4 +5,10 @@
 ('source/architecture/ARM/ARMv6-M-ARMv7-M/boardTemplates/Kconfig-boardOptions-ARMv6-M-ARMv7-M.jinja',
 		{},
 		'Kconfig-boardOptions-ARMv6-M-ARMv7-M'),
+('source/architecture/ARM/ARMv6-M-ARMv7-M/boardTemplates/Toolchain-ARMv6-M-ARMv7-M.cmake.jinja',
+		{},
+		'Toolchain-{{ sanitizedBoard }}.cmake'),
+('source/architecture/ARM/ARMv6-M-ARMv7-M/boardTemplates/ARMv6-M-ARMv7-M.cmake.jinja',
+		{},
+		'cmake/90-ARMv6-M-ARMv7-M.cmake'),
 {% endif %}

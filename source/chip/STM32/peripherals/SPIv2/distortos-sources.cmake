@@ -7,13 +7,12 @@
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #
 
-if(CONFIG_CHIP_STM32_SPIV2)
+target_include_directories(distortos PUBLIC
+		${CMAKE_CURRENT_LIST_DIR}/include)
 
-	target_sources(distortos PRIVATE
-			${CMAKE_CURRENT_LIST_DIR}/STM32-SPIv2-ChipSpiMasterLowLevel.cpp
-			${CMAKE_CURRENT_LIST_DIR}/STM32-SPIv2-spiLowLevelInitializer.cpp
-			${CMAKE_CURRENT_LIST_DIR}/STM32-SPIv2-spis.cpp)
+target_sources(distortos PRIVATE
+		${CMAKE_CURRENT_LIST_DIR}/STM32-SPIv2-ChipSpiMasterLowLevel.cpp
+		${CMAKE_CURRENT_LIST_DIR}/STM32-SPIv2-spiLowLevelInitializer.cpp
+		${CMAKE_CURRENT_LIST_DIR}/STM32-SPIv2-spis.cpp)
 
-	doxygen(INPUT ${CMAKE_CURRENT_LIST_DIR} INCLUDE_PATH ${CMAKE_CURRENT_LIST_DIR}/include)
-
-endif()
+doxygen(INPUT ${CMAKE_CURRENT_LIST_DIR} INCLUDE_PATH ${CMAKE_CURRENT_LIST_DIR}/include)

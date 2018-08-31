@@ -1,10 +1,7 @@
-{% macro yearsRange(startYear, endYear = year) %}
-{{ startYear }}{% if startYear != endYear %}-{{ endYear }}{% endif %}
-{% endmacro %}
 #
 # file: {{ metadata[metadataIndex][2] }}
 #
-# author: Copyright (C) {{ yearsRange(2018) }} Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+# author: Copyright (C) 2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
 #
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -12,17 +9,25 @@
 # Automatically generated file - do not edit!
 #
 
-if(CONFIG_BOARD_{{ (outputPath + '_' + board) | sanitize('[^0-9A-Za-z]') | upper }})
+distortosSetConfiguration(STRING
+		CONFIG_BOARD
+		"{{ board }}"
+		INTERNAL)
 {% for metadataRow in metadata if metadataRow[2].endswith('.cpp') %}
 {% if loop.first == True %}
 
-	target_sources(distortos PRIVATE
+target_include_directories(distortos PUBLIC
+		${CMAKE_CURRENT_LIST_DIR}/include)
+
+target_sources(distortos PRIVATE
 {% endif %}
-			${CMAKE_CURRENT_LIST_DIR}/{{ metadataRow[2] }}{% if loop.last == True %}){% endif %}{{ '' }}
+		${CMAKE_CURRENT_LIST_DIR}/{{ metadataRow[2] }}{% if loop.last == True %}){% endif %}{{ '' }}
 {% endfor %}
 
-	doxygen(INPUT ${CMAKE_CURRENT_LIST_DIR} INCLUDE_PATH ${CMAKE_CURRENT_LIST_DIR}/include)
+doxygen(INPUT ${CMAKE_CURRENT_LIST_DIR} INCLUDE_PATH ${CMAKE_CURRENT_LIST_DIR}/include)
 
-	include(${CMAKE_CURRENT_LIST_DIR}/distortos-board-sources.extension.cmake OPTIONAL)
+{% for metadataRow in metadata if metadataRow[2].startswith('cmake/') and metadataRow[2].endswith('.cmake') %}
+include(${CMAKE_CURRENT_LIST_DIR}/{{ metadataRow[2] }})
+{% endfor %}
 
-endif()
+include(${CMAKE_CURRENT_LIST_DIR}/distortos-board-sources.extension.cmake OPTIONAL)

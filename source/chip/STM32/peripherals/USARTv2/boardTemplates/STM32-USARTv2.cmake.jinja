@@ -1,0 +1,37 @@
+#
+# file: {{ metadata[metadataIndex][2] }}
+#
+# author: Copyright (C) 2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+#
+# This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
+# distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+#
+# Automatically generated file - do not edit!
+#
+
+distortosSetConfiguration(BOOLEAN
+		CONFIG_CHIP_STM32_USARTV2_HAS_CR1_M1_BIT
+{% if dictionary['UARTs']['has-CR-M1-bit'] == True %}
+		ON
+{% else %}
+		OFF
+{% endif %}
+		INTERNAL)
+{% if 'combined-interrupt' in dictionary['UARTs'] %}
+
+distortosSetConfiguration(BOOLEAN
+		CONFIG_CHIP_STM32_USARTV2_USART{{ dictionary['UARTs']['combined-interrupt'][0] }}_USART
+		{{- dictionary['UARTs']['combined-interrupt'][-1] }}_COMBINED_INTERRUPT
+		ON
+		INTERNAL)
+{% endif %}
+{% for key, uart in dictionary['UARTs'].items() if uart is mapping and 'ST,STM32-USART-v2' in uart['compatible'] %}
+
+distortosSetConfiguration(BOOLEAN
+		distortos_Peripherals_{{ key }}
+		OFF
+		HELP "Enable {{ key | upper }} low-level driver."
+		OUTPUT_NAME CONFIG_CHIP_STM32_USARTV2_{{ key | upper }}_ENABLE)
+{% endfor %}
+
+include("${CMAKE_CURRENT_SOURCE_DIR}/source/chip/STM32/peripherals/USARTv2/distortos-sources.cmake")

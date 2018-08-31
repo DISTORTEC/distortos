@@ -14,10 +14,28 @@ set -u
 
 basedir="$(dirname "${0}")"
 
-"${basedir}/forAllConfigurations.sh" \
-		"mkdir output && cd output &&
-		cmake .. -DCMAKE_TOOLCHAIN_FILE=${basedir}/../cmake/Toolchain-arm-none-eabi.cmake -G \"Unix Makefiles\" &&
-		make -j$(nproc) VERBOSE=1 && cd -" \
-		"${@}"
+searchPath='.'
 
-"${basedir}/forAllConfigurations.sh" "make -j$(nproc) VERBOSE=1" "${@}"
+# If any additional argument was given, then use it as the search path, otherwise search in current directory.
+if [ ${#} -ge 1 ]; then
+	searchPath="${1}"
+fi
+
+arguments=${@}
+shift
+
+rm -rf output
+
+for configuration in $(find -L "${searchPath}" -name 'distortosConfiguration.cmake' -printf '%p ')
+do
+
+	mkdir output
+	cd output
+	cmake -C ../${configuration} .. -G Ninja
+	ninja -v ${@}
+	cd -
+	rm -rf output
+
+done
+
+"${basedir}/forAllConfigurations.sh" "make -j$(nproc) VERBOSE=1" ${arguments}

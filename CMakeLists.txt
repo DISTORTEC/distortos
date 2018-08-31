@@ -9,10 +9,203 @@
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #
 
-cmake_minimum_required(VERSION 3.1)
+cmake_minimum_required(VERSION 3.7)
 project(distortos)
 
-include(distortos-utilities)
+distortosSetConfiguration(BOOLEAN
+		distortos_Build_00_Static_destructors
+		OFF
+		HELP "Enable static destructors.
+
+		Enable destructors for objects with static storage duration. As embedded applications almost never \"exit\",
+		these destructors are usually never executed, wasting ROM."
+		OUTPUT_NAME CONFIG_STATIC_DESTRUCTORS_ENABLE)
+
+distortosSetConfiguration(INTEGER
+		distortos_Scheduler_00_Tick_frequency
+		1000
+		MIN 1
+		HELP "System's tick frequency, Hz."
+		OUTPUT_NAME CONFIG_TICK_FREQUENCY)
+
+distortosSetConfiguration(INTEGER
+		distortos_Scheduler_01_Round_robin_frequency
+		10
+		MIN 1
+		MAX ${distortos_Scheduler_00_Tick_frequency}
+		HELP "Round-robin frequency, Hz."
+		OUTPUT_NAME CONFIG_ROUND_ROBIN_FREQUENCY)
+
+distortosSetConfiguration(BOOLEAN
+		distortos_Scheduler_02_Support_for_signals
+		OFF
+		HELP "Enable support for signals.
+
+		Enable namespaces, functions and classes related to signals:
+		- ThisThread::Signals namespace;
+		- Thread::generateSignal();
+		- Thread::getPendingSignalSet();
+		- Thread::queueSignal();
+		- DynamicSignalsReceiver class;
+		- SignalInformationQueueWrapper class;
+		- SignalsCatcher class;
+		- SignalsReceiver class;
+		- StaticSignalsReceiver class;
+
+		When this options is not selected, these namespaces, functions and classes are not available at all."
+		OUTPUT_NAME CONFIG_SIGNALS_ENABLE)
+
+distortosSetConfiguration(BOOLEAN
+		distortos_Scheduler_03_Support_for_thread_detachment
+		OFF
+		HELP "Enable support for thread detachment.
+
+		Enable functions that \"detach\" dynamic threads:
+		- ThisThread::detach();
+		- Thread::detach();
+
+		When this options is not selected, these functions are not available at all.
+
+		When dynamic and detached thread terminates, it will be added to the global list of threads pending for deferred
+		deletion. The thread will actually be deleted in idle thread, but only when two mutexes are successfully locked:
+		- mutex that protects dynamic memory allocator;
+		- mutex that synchronizes access to the list of threads pending for deferred deletion;"
+		OUTPUT_NAME CONFIG_THREAD_DETACH_ENABLE)
+
+distortosSetConfiguration(INTEGER
+		distortos_Scheduler_04_Main_thread_stack_size
+		2048
+		MIN 1
+		HELP "Size (in bytes) of stack used by thread with main() function."
+		OUTPUT_NAME CONFIG_MAIN_THREAD_STACK_SIZE)
+
+distortosSetConfiguration(INTEGER
+		distortos_Scheduler_05_Main_thread_priority
+		127
+		MIN 1
+		MAX 255
+		HELP "Initial priority of main thread."
+		OUTPUT_NAME CONFIG_MAIN_THREAD_PRIORITY)
+
+if(distortos_Scheduler_02_Support_for_signals)
+
+	distortosSetConfiguration(BOOLEAN
+			distortos_Scheduler_06_Reception_of_signals_by_main_thread
+			OFF
+			HELP "Enable reception of signals for main thread."
+			OUTPUT_NAME CONFIG_MAIN_THREAD_CAN_RECEIVE_SIGNALS)
+
+	if(distortos_Scheduler_06_Reception_of_signals_by_main_thread)
+
+		distortosSetConfiguration(INTEGER
+				distortos_Scheduler_07_Queued_signals_for_main_thread
+				0
+				MIN 0
+				HELP "Maximal number of queued signals for main thread. 0 disables queuing of signals for main thread."
+				OUTPUT_NAME CONFIG_MAIN_THREAD_QUEUED_SIGNALS)
+
+		distortosSetConfiguration(INTEGER
+				distortos_Scheduler_08_SignalAction_objects_for_main_thread
+				0
+				MIN 0
+				MAX 32
+				HELP "Maximal number of different SignalAction objects for main thread. 0 disables catching of signals \
+				for main thread."
+				OUTPUT_NAME CONFIG_MAIN_THREAD_SIGNAL_ACTIONS)
+
+	endif(distortos_Scheduler_06_Reception_of_signals_by_main_thread)
+
+endif(distortos_Scheduler_02_Support_for_signals)
+
+distortosSetConfiguration(BOOLEAN
+		distortos_Checks_00_Context_of_functions
+		OFF
+		HELP "Check context of functions.
+
+		Some functions may only be used from thread context, as using them from interrupt context results in undefined
+		behaviour. There are several groups of functions to which this restriction applies (some functions fall into
+		several categories at once):
+		1. all blocking functions, like callOnce(), FifoQueue::push(), Semaphore::wait(), ..., as an attempt to block
+		current thread of execution (not to be confused with current thread) is not possible in interrupt context;
+		2. all mutex functions, as the concept of ownership by a thread - core feature of mutex - cannot be fulfilled in
+		interrupt context;
+		3. all functions from ThisThread namespace (including ThisThread::Signals namespace), as in interrupt context
+		they would access a random thread that happened to be executing at that particular moment;
+
+		Using such functions from interrupt context is a common bug in applications which can be easily introduced and
+		very hard to find, as the symptoms may appear only under certain circumstances.
+
+		Selecting this option enables context checks in all functions with such requirements. If any of them is used
+		from interrupt context, FATAL_ERROR() will be called."
+		OUTPUT_NAME CONFIG_CHECK_FUNCTION_CONTEXT_ENABLE)
+
+distortosSetConfiguration(BOOLEAN
+		distortos_Checks_01_Stack_pointer_range_during_context_switch
+		OFF
+		HELP "Check stack pointer range during context switch.
+
+		Simple range checking of preempted thread's stack pointer can be performed during context switches. It is
+		relatively fast, but cannot detect all stack overflows. The check is done before the software stack frame is
+		pushed on thread's stack, but the size of this pending stack frame is accounted for - the intent is to detect a
+		stack overflow which is about to happen, before it can cause (further) data corrution. FATAL_ERROR() will be
+		called if the stack pointer is outside valid range."
+		OUTPUT_NAME CONFIG_CHECK_STACK_POINTER_RANGE_CONTEXT_SWITCH_ENABLE)
+
+distortosSetConfiguration(BOOLEAN
+		distortos_Checks_02_Stack_pointer_range_during_system_tick
+		OFF
+		HELP "Check stack pointer range during system tick.
+
+		Similar to \"distortos_Checks_01_Stack_pointer_range_during_context_switch\", but executed during every system
+		tick."
+		OUTPUT_NAME CONFIG_CHECK_STACK_POINTER_RANGE_SYSTEM_TICK_ENABLE)
+
+distortosSetConfiguration(BOOLEAN
+		distortos_Checks_03_Stack_guard_contents_during_context_switch
+		OFF
+		HELP "Check stack guard contents during context switch.
+
+		Selecting this option extends stacks for all threads (including main() thread) with a \"stack guard\" at the
+		overflow end. This \"stack guard\" - just as the whole stack - is filled with a sentinel value 0xed419f25 during
+		thread initialization. The contents of \"stack guard\" of preempted thread are checked during each context
+		switch and if any byte has changed, FATAL_ERROR() will be called.
+
+		This method is slower than simple stack pointer range checking, but is able to detect stack overflows much more
+		reliably. It is still sufficiently fast, assuming that the size of \"stack guard\" is reasonable.
+
+		Be advised that uninitialized variables on stack which are larger than size of \"stack guard\" can create
+		\"holes\" in the stack, thus circumventing this detection mechanism. This especially applies to arrays used as
+		buffers."
+		OUTPUT_NAME CONFIG_CHECK_STACK_GUARD_CONTEXT_SWITCH_ENABLE)
+
+distortosSetConfiguration(BOOLEAN
+		distortos_Checks_04_Stack_guard_contents_during_system_tick
+		OFF
+		HELP "Check stack guard contents during system tick.
+
+		Similar to \"distortos_Checks_03_Stack_guard_contents_during_context_switch\", but executed during every system
+		tick."
+		OUTPUT_NAME CONFIG_CHECK_STACK_GUARD_SYSTEM_TICK_ENABLE)
+
+if(distortos_Checks_03_Stack_guard_contents_during_context_switch OR
+		distortos_Checks_04_Stack_guard_contents_during_system_tick)
+
+	distortosSetConfiguration(INTEGER
+			distortos_Checks_05_Stack_guard_size
+			32
+			MIN 1
+			HELP "Size (in bytes) of \"stack guard\".
+
+			Any value which is not a multiple of stack alignment required by architecture, will be rounded up."
+			OUTPUT_NAME CONFIG_STACK_GUARD_SIZE)
+
+endif(distortos_Checks_03_Stack_guard_contents_during_context_switch OR
+		distortos_Checks_04_Stack_guard_contents_during_system_tick)
+
+if(NOT CMAKE_BUILD_TYPE)
+	message(STATUS "CMAKE_BUILD_TYPE not set, defaulting to RelWithDebInfo")
+	set_property(CACHE CMAKE_BUILD_TYPE PROPERTY VALUE RelWithDebInfo)
+endif()
 
 #-----------------------------------------------------------------------------------------------------------------------
 # local functions
@@ -72,232 +265,29 @@ function(getTargetPropertyRecursive outputVariable target property)
 	set(${outputVariable} ${${outputVariable}} PARENT_SCOPE)
 endfunction()
 
-#
-# Loads configuration variables from kconfig file named `filename`.
-#
-
-function(loadConfiguration filename)
-	file(STRINGS ${filename} lines)
-	foreach(line ${lines})
-		if("${line}" MATCHES "^([^=]+)=(.*)$")
-			set(key ${CMAKE_MATCH_1})
-			set(value ${CMAKE_MATCH_2})
-			if(${value} STREQUAL y)	# bool? convert to ON
-				set(value ON)
-			elseif(${value} MATCHES "^\"(.*)\"$")	# string? remove quotes and convert to a ;-list
-				separate_arguments(value UNIX_COMMAND ${CMAKE_MATCH_1})
-			endif()
-			set(${key} ${value} PARENT_SCOPE)
-		endif()
-	endforeach()
-endfunction()
-
-#-----------------------------------------------------------------------------------------------------------------------
-# load variables from selectedConfiguration.mk
-#-----------------------------------------------------------------------------------------------------------------------
-
-if(NOT EXISTS ${CMAKE_SOURCE_DIR}/selectedConfiguration.mk)
-	message(FATAL_ERROR "${CMAKE_SOURCE_DIR}/selectedConfiguration.mk file does not exist; Please run first "
-	"'make configure [CONFIG_PATH=<path-to-distortosConfiguration.mk>]'")
-endif()
-# force CMake to rerun if selectedConfiguration.mk file changes
-configure_file(${CMAKE_SOURCE_DIR}/selectedConfiguration.mk selectedConfiguration.mk)
-loadConfiguration(${CMAKE_SOURCE_DIR}/selectedConfiguration.mk)
-
-#-----------------------------------------------------------------------------------------------------------------------
-# load variables from selected distortosConfiguration.mk
-#-----------------------------------------------------------------------------------------------------------------------
-
-if(NOT EXISTS ${CMAKE_SOURCE_DIR}/${CONFIG_SELECTED_CONFIGURATION})
-	message(FATAL_ERROR "Selected configuration file '${CMAKE_SOURCE_DIR}/${CONFIG_SELECTED_CONFIGURATION}' does not "
-	"exist")
-endif()
-# force CMake to rerun if selected distortosConfiguration.mk file changes
-configure_file(${CMAKE_SOURCE_DIR}/${CONFIG_SELECTED_CONFIGURATION} ${CONFIG_SELECTED_CONFIGURATION})
-loadConfiguration(${CMAKE_SOURCE_DIR}/${CONFIG_SELECTED_CONFIGURATION})
-
-#-----------------------------------------------------------------------------------------------------------------------
-# distortosConfiguration.h
-#-----------------------------------------------------------------------------------------------------------------------
-
-add_custom_command(OUTPUT include/distortos/distortosConfiguration.h
-		COMMAND ${CMAKE_COMMAND} -E make_directory include/distortos
-		COMMAND sh ${CMAKE_CURRENT_SOURCE_DIR}/scripts/makeDistortosConfiguration.sh
-		${CMAKE_SOURCE_DIR}/${CONFIG_SELECTED_CONFIGURATION} > include/distortos/distortosConfiguration.h
-		DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/scripts/makeDistortosConfiguration.sh
-		DEPENDS ${CMAKE_SOURCE_DIR}/${CONFIG_SELECTED_CONFIGURATION}
-		DEPENDS ${CMAKE_SOURCE_DIR}/selectedConfiguration.mk
-		VERBATIM
-		USES_TERMINAL)
-add_custom_target(distortosConfiguration-h ALL DEPENDS include/distortos/distortosConfiguration.h)
-
-#-----------------------------------------------------------------------------------------------------------------------
-# distortos-includes interface library
-#-----------------------------------------------------------------------------------------------------------------------
-
-add_library(distortos-includes INTERFACE)
-target_include_directories(distortos-includes INTERFACE
-		${CMAKE_CURRENT_BINARY_DIR}/include
-		include
-		${CONFIG_ARCHITECTURE_INCLUDES}
-		${CONFIG_CHIP_INCLUDES}
-		${CONFIG_BOARD_INCLUDES})
-add_dependencies(distortos-includes distortosConfiguration-h)
-
-#-----------------------------------------------------------------------------------------------------------------------
-# distortos::includes alias library
-#-----------------------------------------------------------------------------------------------------------------------
-
-add_library(distortos::includes ALIAS distortos-includes)
-
-#-----------------------------------------------------------------------------------------------------------------------
-# distortos-baseCFlags interface library
-#-----------------------------------------------------------------------------------------------------------------------
-
-add_library(distortos-baseCFlags INTERFACE)
-target_compile_options(distortos-baseCFlags INTERFACE
-		${CONFIG_ARCHITECTURE_FLAGS})
-
-#-----------------------------------------------------------------------------------------------------------------------
-# distortos::baseCFlags alias library
-#-----------------------------------------------------------------------------------------------------------------------
-
-add_library(distortos::baseCFlags ALIAS distortos-baseCFlags)
-
-#-----------------------------------------------------------------------------------------------------------------------
-# distortos-cFlags interface library
-#-----------------------------------------------------------------------------------------------------------------------
-
-add_library(distortos-cFlags INTERFACE)
-target_compile_options(distortos-cFlags INTERFACE
-		${CONFIG_DEBUGGING_INFORMATION_COMPILATION}
-		${CONFIG_BUILD_OPTIMIZATION}
-		${CONFIG_LINK_TIME_OPTIMIZATION_COMPILATION}
-		-ffunction-sections
-		-fdata-sections
-		${CONFIG_ASSERT})
-target_link_libraries(distortos-cFlags INTERFACE
-		distortos::baseCFlags)
-
-#-----------------------------------------------------------------------------------------------------------------------
-# distortos::cFlags alias library
-#-----------------------------------------------------------------------------------------------------------------------
-
-add_library(distortos::cFlags ALIAS distortos-cFlags)
-
-#-----------------------------------------------------------------------------------------------------------------------
-# distortos-allCFlags interface library
-#-----------------------------------------------------------------------------------------------------------------------
-
-add_library(distortos-allCFlags INTERFACE)
-target_compile_options(distortos-allCFlags INTERFACE
-		-Wall
-		-Wextra
-		-Wshadow)
-target_link_libraries(distortos-allCFlags INTERFACE
-		distortos::cFlags)
-
-#-----------------------------------------------------------------------------------------------------------------------
-# distortos::allCFlags alias library
-#-----------------------------------------------------------------------------------------------------------------------
-
-add_library(distortos::allCFlags ALIAS distortos-allCFlags)
-
-#-----------------------------------------------------------------------------------------------------------------------
-# distortos-baseCxxFlags interface library
-#-----------------------------------------------------------------------------------------------------------------------
-
-add_library(distortos-baseCxxFlags INTERFACE)
-target_compile_options(distortos-baseCxxFlags INTERFACE
-		${CONFIG_STATIC_DESTRUCTORS_RUN_TIME_REGISTRATION}
-		-fno-rtti
-		-fno-exceptions)
-target_link_libraries(distortos-baseCxxFlags INTERFACE
-		distortos::baseCFlags)
-
-#-----------------------------------------------------------------------------------------------------------------------
-# distortos::baseCxxFlags alias library
-#-----------------------------------------------------------------------------------------------------------------------
-
-add_library(distortos::baseCxxFlags ALIAS distortos-baseCxxFlags)
-
-#-----------------------------------------------------------------------------------------------------------------------
-# distortos-cxxFlags interface library
-#-----------------------------------------------------------------------------------------------------------------------
-
-add_library(distortos-cxxFlags INTERFACE)
-target_link_libraries(distortos-cxxFlags INTERFACE
-		distortos::baseCxxFlags
-		distortos::cFlags)
-
-#-----------------------------------------------------------------------------------------------------------------------
-# distortos::cxxFlags alias library
-#-----------------------------------------------------------------------------------------------------------------------
-
-add_library(distortos::cxxFlags ALIAS distortos-cxxFlags)
-
-#-----------------------------------------------------------------------------------------------------------------------
-# distortos-allCxxFlags interface library
-#-----------------------------------------------------------------------------------------------------------------------
-
-add_library(distortos-allCxxFlags INTERFACE)
-target_link_libraries(distortos-allCxxFlags INTERFACE
-		distortos::cxxFlags
-		distortos::allCFlags)
-
-#-----------------------------------------------------------------------------------------------------------------------
-# distortos::allCxxFlags alias library
-#-----------------------------------------------------------------------------------------------------------------------
-
-add_library(distortos::allCxxFlags ALIAS distortos-allCxxFlags)
-
 #-----------------------------------------------------------------------------------------------------------------------
 # distortos static library
 #-----------------------------------------------------------------------------------------------------------------------
 
 add_library(distortos STATIC "")
-set_target_properties(distortos PROPERTIES
-		CXX_STANDARD 11
-		CXX_STANDARD_REQUIRED ON)
-target_link_libraries(distortos PRIVATE
-		distortos::allCxxFlags
-		distortos::includes)
+if(CMAKE_VERSION VERSION_GREATER_EQUAL 3.8)
+	target_compile_features(distortos PUBLIC
+			cxx_std_11
+			c_std_99)
+else()
+	# equivalents of C++11 and C99 for earlier versions of CMake
+	target_compile_features(distortos PUBLIC
+			cxx_constexpr
+			c_restrict)
+endif()
+target_include_directories(distortos PUBLIC
+		${CMAKE_CURRENT_BINARY_DIR}/include
+		include)
 target_link_libraries(distortos PUBLIC
 		littlefs)
 
+include(${DISTORTOS_BOARD_PATH}/distortos-board-sources.cmake)
 include(source/distortos-sources.cmake)
-
-file(GLOB_RECURSE distortosBoardSourcesFiles FOLLOW_SYMLINKS LIST_DIRECTORIES false
-		"${CMAKE_SOURCE_DIR}/*/distortos-board-sources.cmake")
-foreach(distortosBoardSources ${distortosBoardSourcesFiles})
-	include(${distortosBoardSources})
-endforeach()
-
-#-----------------------------------------------------------------------------------------------------------------------
-# preprocess linker script
-#-----------------------------------------------------------------------------------------------------------------------
-
-if(NOT LDSCRIPT)
-	if(NOT CONFIG_LDSCRIPT)
-		message(FATAL_ERROR "Non-board configurations are not supported")
-	endif()
-	set(LDSCRIPT "${CMAKE_CURRENT_SOURCE_DIR}/${CONFIG_LDSCRIPT}")
-endif()
-if(NOT EXISTS ${LDSCRIPT})
-	message(FATAL_ERROR "Linker script file '${LDSCRIPT}' does not exist")
-endif()
-get_filename_component(PREPROCESSED_LDSCRIPT ${LDSCRIPT} NAME_WE)
-set(PREPROCESSED_LDSCRIPT "${PREPROCESSED_LDSCRIPT}.preprocessed.ld")
-set(ENV{DISTORTOS_LINKER_SCRIPT} "${CMAKE_CURRENT_BINARY_DIR}/${PREPROCESSED_LDSCRIPT}")
-add_custom_command(OUTPUT ${PREPROCESSED_LDSCRIPT}
-		COMMAND ${CMAKE_CXX_COMPILER} -nostdinc -undef -C -E -P -x assembler-with-cpp
-		-I${CMAKE_CURRENT_BINARY_DIR}/include ${LDSCRIPT} -o ${PREPROCESSED_LDSCRIPT}
-		DEPENDS ${LDSCRIPT}
-		DEPENDS distortosConfiguration-h
-		DEPENDS include/distortos/distortosConfiguration.h
-		VERBATIM
-		USES_TERMINAL)
-add_custom_target(ldscript ALL DEPENDS ${PREPROCESSED_LDSCRIPT})
 
 #-----------------------------------------------------------------------------------------------------------------------
 # distortos-distortos interface library
@@ -305,18 +295,9 @@ add_custom_target(ldscript ALL DEPENDS ${PREPROCESSED_LDSCRIPT})
 
 add_library(distortos-distortos INTERFACE)
 target_link_libraries(distortos-distortos INTERFACE
-		distortos::baseCxxFlags
-		distortos::includes
-		${CONFIG_ARCHITECTURE_FLAGS}
-		${CONFIG_DEBUGGING_INFORMATION_LINKING}
-		${CONFIG_BUILD_OPTIMIZATION}
-		${CONFIG_LINK_TIME_OPTIMIZATION_LINKING}
-		-Wl,--gc-sections
-		-L"${CMAKE_CURRENT_BINARY_DIR}"
 		-Wl,--whole-archive
 		distortos
 		-Wl,--no-whole-archive)
-add_dependencies(distortos-distortos ldscript)
 
 #-----------------------------------------------------------------------------------------------------------------------
 # distortos::distortos alias library
@@ -384,9 +365,198 @@ file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile.extension
 set(doxyfiles "${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile;${CMAKE_CURRENT_BINARY_DIR}/Doxyfile.extension")
 add_custom_target(distortos-doxygen
 		${CMAKE_COMMAND} -D "DOXYFILES=${doxyfiles}" -P ${CMAKE_CURRENT_SOURCE_DIR}/cmake/doxygen.cmake
-		DEPENDS distortosConfiguration-h
-		DEPENDS include/distortos/distortosConfiguration.h
 		VERBATIM)
+
+#-----------------------------------------------------------------------------------------------------------------------
+# cleanup distortos configuration
+#-----------------------------------------------------------------------------------------------------------------------
+
+if(PREVIOUS_DISTORTOS_CONFIGURATION_NAMES)
+	set(namesToUnset ${PREVIOUS_DISTORTOS_CONFIGURATION_NAMES})
+	list(REMOVE_ITEM namesToUnset ${DISTORTOS_CONFIGURATION_NAMES})
+	foreach(name ${namesToUnset})
+		unset(${name} CACHE)
+	endforeach()
+endif()
+
+list(SORT DISTORTOS_CONFIGURATION_NAMES)
+set(PREVIOUS_DISTORTOS_CONFIGURATION_NAMES ${DISTORTOS_CONFIGURATION_NAMES} CACHE INTERNAL "")
+
+#-----------------------------------------------------------------------------------------------------------------------
+# distortosConfiguration.h
+#-----------------------------------------------------------------------------------------------------------------------
+
+message(STATUS "Generating ${CMAKE_CURRENT_BINARY_DIR}/include/distortos/distortosConfiguration.h")
+
+unset(distortosConfiguration)
+foreach(name ${DISTORTOS_CONFIGURATION_NAMES})
+
+	set(type ${${name}_TYPE})
+	set(outputName ${${name}_OUTPUT_NAME})
+	set(outputTypes ${${name}_OUTPUT_TYPES})
+	set(value ${${name}})
+
+	foreach(outputType ${outputTypes})
+
+		if(outputType STREQUAL type)
+			set(configurationName ${outputName})
+			set(configurationValue ${value})
+		elseif(outputType STREQUAL BOOLEAN)
+			string(TOUPPER ${outputName}_${value} configurationName)
+			set(configurationValue ON)
+		elseif(outputType STREQUAL INTEGER)
+			distortosCheckInteger("${name}" "${value}" -2147483648 2147483647)
+			set(configurationName ${outputName})
+			set(configurationValue ${value})
+		else()
+			message(FATAL_ERROR "Conversion from \"${type}\" to \"${outputType}\" is not implemented/possible")
+		endif()
+
+		if(outputType STREQUAL BOOLEAN)
+			if(configurationValue)
+				list(APPEND distortosConfiguration "#define ${configurationName} 1")
+			endif()
+		elseif(outputType STREQUAL INTEGER)
+			list(APPEND distortosConfiguration "#define ${configurationName} ${configurationValue}")
+		elseif(outputType STREQUAL STRING)
+			list(APPEND distortosConfiguration "#define ${configurationName} \"${configurationValue}\"")
+		endif()
+
+	endforeach()
+endforeach()
+
+string(TIMESTAMP timestamp "%Y-%m-%d %H:%M:%S")
+file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/include/distortos/distortosConfiguration.h
+		"/**\n"
+		" * \\file\n"
+		" * \\brief distortos configuration\n"
+		" *\n"
+		" * \\warning\n"
+		" * Automatically generated file - do not edit!\n"
+		" *\n"
+		" * \\date ${timestamp}\n"
+		" */\n"
+		"\n"
+		"#ifndef INCLUDE_DISTORTOS_DISTORTOSCONFIGURATION_H_\n"
+		"#define INCLUDE_DISTORTOS_DISTORTOSCONFIGURATION_H_\n"
+		"\n")
+list(SORT distortosConfiguration)
+foreach(line ${distortosConfiguration})
+	file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/include/distortos/distortosConfiguration.h "${line}\n")
+endforeach()
+file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/include/distortos/distortosConfiguration.h
+		"\n"
+		"#ifndef CONFIG_STACK_GUARD_SIZE\n"
+		"	#define CONFIG_STACK_GUARD_SIZE 0\n"
+		"#endif	/* !def CONFIG_STACK_GUARD_SIZE */\n"
+		"\n"
+		"#endif	/* INCLUDE_DISTORTOS_DISTORTOSCONFIGURATION_H_ */")
+
+#-----------------------------------------------------------------------------------------------------------------------
+# distortosConfiguration.cmake
+#-----------------------------------------------------------------------------------------------------------------------
+
+message(STATUS "Generating ${CMAKE_CURRENT_BINARY_DIR}/distortosConfiguration.cmake")
+
+set(cmakeConfigurationNames
+		CMAKE_BUILD_TYPE
+		CMAKE_CXX_FLAGS
+		CMAKE_CXX_FLAGS_DEBUG
+		CMAKE_CXX_FLAGS_MINSIZEREL
+		CMAKE_CXX_FLAGS_RELEASE
+		CMAKE_CXX_FLAGS_RELWITHDEBINFO
+		CMAKE_C_FLAGS
+		CMAKE_C_FLAGS_DEBUG
+		CMAKE_C_FLAGS_MINSIZEREL
+		CMAKE_C_FLAGS_RELEASE
+		CMAKE_C_FLAGS_RELWITHDEBINFO
+		CMAKE_EXE_LINKER_FLAGS
+		CMAKE_EXE_LINKER_FLAGS_DEBUG
+		CMAKE_EXE_LINKER_FLAGS_MINSIZEREL
+		CMAKE_EXE_LINKER_FLAGS_RELEASE
+		CMAKE_EXE_LINKER_FLAGS_RELWITHDEBINFO
+		CMAKE_EXPORT_COMPILE_COMMANDS
+		CMAKE_MODULE_LINKER_FLAGS
+		CMAKE_MODULE_LINKER_FLAGS_DEBUG
+		CMAKE_MODULE_LINKER_FLAGS_MINSIZEREL
+		CMAKE_MODULE_LINKER_FLAGS_RELEASE
+		CMAKE_MODULE_LINKER_FLAGS_RELWITHDEBINFO
+		CMAKE_SHARED_LINKER_FLAGS
+		CMAKE_SHARED_LINKER_FLAGS_DEBUG
+		CMAKE_SHARED_LINKER_FLAGS_MINSIZEREL
+		CMAKE_SHARED_LINKER_FLAGS_RELEASE
+		CMAKE_SHARED_LINKER_FLAGS_RELWITHDEBINFO
+		CMAKE_STATIC_LINKER_FLAGS
+		CMAKE_STATIC_LINKER_FLAGS_DEBUG
+		CMAKE_STATIC_LINKER_FLAGS_MINSIZEREL
+		CMAKE_STATIC_LINKER_FLAGS_RELEASE
+		CMAKE_STATIC_LINKER_FLAGS_RELWITHDEBINFO
+		CMAKE_TOOLCHAIN_FILE
+		CMAKE_VERBOSE_MAKEFILE)
+
+file(RELATIVE_PATH distortosPath "${CMAKE_BINARY_DIR}" "${CMAKE_CURRENT_SOURCE_DIR}")
+file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/distortosConfiguration.cmake
+		"#\n"
+		"# \\file\n"
+		"# \\brief distortos configuration\n"
+		"#\n"
+		"# \\warning\n"
+		"# Automatically generated file - do not edit!\n"
+		"#\n"
+		"\n"
+		"if(DEFINED ENV{DISTORTOS_PATH})\n"
+		"	set(DISTORTOS_PATH \"\$ENV{DISTORTOS_PATH}\")\n"
+		"else()\n"
+		"	set(DISTORTOS_PATH \"${distortosPath}\")\n"
+		"endif()\n"
+		"\n")
+foreach(cacheVariable ${cmakeConfigurationNames} ${DISTORTOS_CONFIGURATION_NAMES})
+	get_property(helpstring CACHE "${cacheVariable}" PROPERTY HELPSTRING)
+	string(REPLACE "\n" "\\n" helpstring "${helpstring}")
+	string(REPLACE "\"" "\\\"" helpstring "${helpstring}")
+	get_property(type CACHE "${cacheVariable}" PROPERTY TYPE)
+	set(value "${${cacheVariable}}")
+
+	if(type STREQUAL FILEPATH)
+		file(RELATIVE_PATH value "${CMAKE_CURRENT_SOURCE_DIR}" "${value}")
+		set(value "\${DISTORTOS_PATH}/${value}")
+	endif()
+
+	file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/distortosConfiguration.cmake
+			"set(\"${cacheVariable}\"\n"
+			"		\"${value}\"\n"
+			"		CACHE\n"
+			"		\"${type}\"\n"
+			"		\"${helpstring}\")\n")
+endforeach()
+
+#-----------------------------------------------------------------------------------------------------------------------
+# preprocessed linker script
+#-----------------------------------------------------------------------------------------------------------------------
+
+if(NOT DISTORTOS_RAW_LINKER_SCRIPT)
+	message(FATAL_ERROR "DISTORTOS_RAW_LINKER_SCRIPT not set")
+endif()
+set(DISTORTOS_RAW_LINKER_SCRIPT "${CMAKE_CURRENT_SOURCE_DIR}/${DISTORTOS_RAW_LINKER_SCRIPT}")
+if(NOT EXISTS ${DISTORTOS_RAW_LINKER_SCRIPT})
+	message(FATAL_ERROR "Linker script file '${DISTORTOS_RAW_LINKER_SCRIPT}' does not exist")
+endif()
+get_filename_component(filenameComponent ${DISTORTOS_RAW_LINKER_SCRIPT} NAME_WE)
+set(ENV{DISTORTOS_LINKER_SCRIPT} "${CMAKE_CURRENT_BINARY_DIR}/${filenameComponent}.preprocessed.ld")
+
+message(STATUS "Generating $ENV{DISTORTOS_LINKER_SCRIPT}")
+
+execute_process(COMMAND ${CMAKE_CXX_COMPILER} -nostdinc -undef -C -E -P -x assembler-with-cpp
+		-I${CMAKE_CURRENT_BINARY_DIR}/include ${DISTORTOS_RAW_LINKER_SCRIPT} -o $ENV{DISTORTOS_LINKER_SCRIPT}
+		RESULT_VARIABLE result)
+
+if(result)
+	message(FATAL_ERROR "Preprocessing linker script failed, error code ${result}")
+endif()
+
+get_filename_component(filenameComponent ${DISTORTOS_RAW_LINKER_SCRIPT} NAME)
+# force CMake to rerun if raw linker script changes
+configure_file(${DISTORTOS_RAW_LINKER_SCRIPT} ${filenameComponent} COPYONLY)
 
 #-----------------------------------------------------------------------------------------------------------------------
 # distortosTest application
