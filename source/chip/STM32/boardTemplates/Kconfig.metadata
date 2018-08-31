@@ -1,8 +1,0 @@
-{% if 'ST,STM32' in dictionary['chip']['compatible'] %}
-('source/chip/STM32/boardTemplates/Kconfig-boardChoices.jinja',
-		{},
-		'Kconfig-boardChoices'),
-('source/chip/STM32/boardTemplates/Kconfig-boardOptions.jinja',
-		{},
-		'Kconfig-boardOptions'),
-{% endif %}

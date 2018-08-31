@@ -1,7 +1,0 @@
-{% extends "source/board/boardTemplates/Kconfig-boardChoices.jinja" %}
-{% block depends %}
-	depends on CHIP_{{ dictionary['chip']['compatible'][1].rpartition(',')[2] }}
-{% endblock %}
-{% block selects %}
-	select CHIP_{{ dictionary['chip']['compatible'][0].rpartition(',')[2] }}
-{% endblock %}
