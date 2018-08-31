@@ -1,14 +1,5 @@
-# configuration output
-selectedConfiguration.mk
-
-# configuration backups
-distortosConfiguration.mk.old
-
 # build output
 output/
-
-# doxygen documentation output
-documentation/html/
 
 # Eclipse project files
 .cproject
