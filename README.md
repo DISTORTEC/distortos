@@ -22,7 +22,8 @@ later);
 so-called *toolchain file*. Toolchain files in *distortos* also serve another purpose - they select the board which is
 going to be used by your application.
 
-1. Download [source package of distortos](https://github.com/DISTORTEC/distortos/archive/master.zip) and extract it;
+1. Download source package of distortos in [zip](https://github.com/DISTORTEC/distortos/archive/master.zip) or
+[tar.gz](https://github.com/DISTORTEC/distortos/archive/master.tar.gz) format and extract it;
 2. Create a build folder, for example `output`;
 3. From within the build folder, initialize it with *CMake*, for example with
 `cmake .. -DCMAKE_TOOLCHAIN_FILE=../source/board/ST_STM32F4DISCOVERY/Toolchain-ST_STM32F4DISCOVERY.cmake -GNinja` if you
