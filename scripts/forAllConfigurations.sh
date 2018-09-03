@@ -17,22 +17,19 @@ if [ ${#} -lt 1 ]; then
 	exit 1
 fi
 
-command="${1}"
+searchPath="${1}"
+shift
 
-searchPath='.'
+rm -rf output
 
-# If any additional argument was given, then use it as the search path, otherwise search in current directory.
-if [ ${#} -ge 2 ]; then
-	searchPath="${2}"
-fi
-
-make distclean
-
-for configurationPath in $(find -L "${searchPath}" -name 'distortosConfiguration.mk' -printf '%h ')
+for configuration in $(find -L "${searchPath}" -name 'distortosConfiguration.cmake' -printf '%p ')
 do
 
-	make configure "CONFIG_PATH=${configurationPath}"
-	eval ${command}
-	make distclean
+	mkdir output
+	cd output
+	cmake -C ../${configuration} .. -G Ninja
+	eval ${@}
+	cd -
+	rm -rf output
 
 done

@@ -62,6 +62,11 @@ removed after v0.7.0.
 - Fixed `generateBoard.py` for *ruamel.yaml* 0.15.52 or later.
 - Fixed frequent overrun errors appearing in *STM32's* *SPIv1* and *SPIv2* drivers.
 
+### Removed
+
+- Removed support for configuring with *Kconfig* and building with *make*. Both of these tasks are now handled by
+*CMake*.
+
 [0.6.0](https://github.com/DISTORTEC/distortos/compare/v0.5.0...v0.6.0) - 2018-07-01
 ------------------------------------------------------------------------------------
 

@@ -12,30 +12,13 @@
 set -e
 set -u
 
-basedir="$(dirname "${0}")"
-
-searchPath='.'
-
-# If any additional argument was given, then use it as the search path, otherwise search in current directory.
-if [ ${#} -ge 1 ]; then
-	searchPath="${1}"
+if [ ${#} -lt 1 ]; then
+	echo 'This script requires at least 1 argument!' >&2
+	exit 1
 fi
 
-arguments=${@}
+searchPath="${1}"
 shift
 
-rm -rf output
-
-for configuration in $(find -L "${searchPath}" -name 'distortosConfiguration.cmake' -printf '%p ')
-do
-
-	mkdir output
-	cd output
-	cmake -C ../${configuration} .. -G Ninja
-	ninja -v ${@}
-	cd -
-	rm -rf output
-
-done
-
-"${basedir}/forAllConfigurations.sh" "make -j$(nproc) VERBOSE=1" ${arguments}
+basedir="$(dirname "${0}")"
+"${basedir}/forAllConfigurations.sh" "${searchPath}" ninja -v ${@}
