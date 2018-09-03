@@ -76,21 +76,21 @@ distortosSetConfiguration(STRING
 		distortos_Memory_regions_00_text_vectors
 		"flash"
 		HELP "Memory region for .text.vectors section in linker script"
-		OUTPUT_NAME CONFIG_BOARD_SOURCE_BOARD_ST_NUCLEO_L476RG_ST_NUCLEO_L476RG_LD_TEXT_VECTORS_REGION
+		OUTPUT_NAME CONFIG_LD_TEXT_VECTORS_REGION
 		OUTPUT_TYPES BOOLEAN)
 
 distortosSetConfiguration(STRING
 		distortos_Memory_regions_01_text
 		"flash"
 		HELP "Memory region for .text section in linker script"
-		OUTPUT_NAME CONFIG_BOARD_SOURCE_BOARD_ST_NUCLEO_L476RG_ST_NUCLEO_L476RG_LD_TEXT_REGION
+		OUTPUT_NAME CONFIG_LD_TEXT_REGION
 		OUTPUT_TYPES BOOLEAN)
 
 distortosSetConfiguration(STRING
 		distortos_Memory_regions_02_ARM_exidx
 		"flash"
 		HELP "Memory region for .ARM.exidx section in linker script"
-		OUTPUT_NAME CONFIG_BOARD_SOURCE_BOARD_ST_NUCLEO_L476RG_ST_NUCLEO_L476RG_LD_ARM_EXIDX_REGION
+		OUTPUT_NAME CONFIG_LD_ARM_EXIDX_REGION
 		OUTPUT_TYPES BOOLEAN)
 
 distortosSetConfiguration(STRING
@@ -98,7 +98,7 @@ distortosSetConfiguration(STRING
 		"SRAM1"
 		"SRAM2"
 		HELP "Memory region for main stack in linker script"
-		OUTPUT_NAME CONFIG_BOARD_SOURCE_BOARD_ST_NUCLEO_L476RG_ST_NUCLEO_L476RG_LD_MAIN_STACK_REGION
+		OUTPUT_NAME CONFIG_LD_MAIN_STACK_REGION
 		OUTPUT_TYPES BOOLEAN)
 
 distortosSetConfiguration(STRING
@@ -106,7 +106,7 @@ distortosSetConfiguration(STRING
 		"SRAM1"
 		"SRAM2"
 		HELP "Memory region for .bss section in linker script"
-		OUTPUT_NAME CONFIG_BOARD_SOURCE_BOARD_ST_NUCLEO_L476RG_ST_NUCLEO_L476RG_LD_BSS_REGION
+		OUTPUT_NAME CONFIG_LD_BSS_REGION
 		OUTPUT_TYPES BOOLEAN)
 
 distortosSetConfiguration(STRING
@@ -114,14 +114,14 @@ distortosSetConfiguration(STRING
 		"SRAM1"
 		"SRAM2"
 		HELP "VMA memory region for .data section in linker script"
-		OUTPUT_NAME CONFIG_BOARD_SOURCE_BOARD_ST_NUCLEO_L476RG_ST_NUCLEO_L476RG_LD_DATA_VMA_REGION
+		OUTPUT_NAME CONFIG_LD_DATA_VMA_REGION
 		OUTPUT_TYPES BOOLEAN)
 
 distortosSetConfiguration(STRING
 		distortos_Memory_regions_06_data_LMA
 		"flash"
 		HELP "LMA memory region for .data section in linker script"
-		OUTPUT_NAME CONFIG_BOARD_SOURCE_BOARD_ST_NUCLEO_L476RG_ST_NUCLEO_L476RG_LD_DATA_LMA_REGION
+		OUTPUT_NAME CONFIG_LD_DATA_LMA_REGION
 		OUTPUT_TYPES BOOLEAN)
 
 distortosSetConfiguration(STRING
@@ -129,21 +129,21 @@ distortosSetConfiguration(STRING
 		"SRAM1"
 		"SRAM2"
 		HELP "Memory region for .noinit section in linker script"
-		OUTPUT_NAME CONFIG_BOARD_SOURCE_BOARD_ST_NUCLEO_L476RG_ST_NUCLEO_L476RG_LD_NOINIT_REGION
+		OUTPUT_NAME CONFIG_LD_NOINIT_REGION
 		OUTPUT_TYPES BOOLEAN)
 
 distortosSetConfiguration(STRING
 		distortos_Memory_regions_08_SRAM1_data_LMA
 		"flash"
 		HELP "LMA memory region for .SRAM1.data section in linker script"
-		OUTPUT_NAME CONFIG_BOARD_SOURCE_BOARD_ST_NUCLEO_L476RG_ST_NUCLEO_L476RG_LD_SRAM1_DATA_LMA_REGION
+		OUTPUT_NAME CONFIG_LD_SRAM1_DATA_LMA_REGION
 		OUTPUT_TYPES BOOLEAN)
 
 distortosSetConfiguration(STRING
 		distortos_Memory_regions_09_SRAM2_data_LMA
 		"flash"
 		HELP "LMA memory region for .SRAM2.data section in linker script"
-		OUTPUT_NAME CONFIG_BOARD_SOURCE_BOARD_ST_NUCLEO_L476RG_ST_NUCLEO_L476RG_LD_SRAM2_DATA_LMA_REGION
+		OUTPUT_NAME CONFIG_LD_SRAM2_DATA_LMA_REGION
 		OUTPUT_TYPES BOOLEAN)
 
 distortosSetConfiguration(STRING
@@ -151,7 +151,7 @@ distortosSetConfiguration(STRING
 		"SRAM1"
 		"SRAM2"
 		HELP "Memory region for process stack in linker script"
-		OUTPUT_NAME CONFIG_BOARD_SOURCE_BOARD_ST_NUCLEO_L476RG_ST_NUCLEO_L476RG_LD_PROCESS_STACK_REGION
+		OUTPUT_NAME CONFIG_LD_PROCESS_STACK_REGION
 		OUTPUT_TYPES BOOLEAN)
 
 distortosSetConfiguration(STRING
@@ -159,7 +159,7 @@ distortosSetConfiguration(STRING
 		"SRAM1"
 		"SRAM2"
 		HELP "Memory region for heap in linker script"
-		OUTPUT_NAME CONFIG_BOARD_SOURCE_BOARD_ST_NUCLEO_L476RG_ST_NUCLEO_L476RG_LD_HEAP_REGION
+		OUTPUT_NAME CONFIG_LD_HEAP_REGION
 		OUTPUT_TYPES BOOLEAN)
 
 include("${CMAKE_CURRENT_SOURCE_DIR}/source/architecture/ARM/ARMv6-M-ARMv7-M/distortos-sources.cmake")

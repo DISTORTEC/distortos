@@ -1,7 +1,6 @@
 /**
  * \file
 {% set chip = dictionary['chip']['compatible'][0] %}
-{% set prefix = ('CONFIG_BOARD_' + outputPath + '_' + board) | sanitize('[^0-9A-Za-z]') | upper %}
  * \brief Linker script for {{ board }} ({{ chip }} chip):
 {% for key, memory in dictionary['memories'].items() if memory is mapping %}
  * - {{ memory['size'] | filesizeformat(binary = True) }} of {{ key }} at {{ '0x%x' % memory['address'] -}}
@@ -69,64 +68,64 @@ ENTRY(Reset_Handler);
 {% for key, memory in dictionary['memories'].items() if memory is mapping and
 		'on-chip-flash' in memory['compatible'] and '.text.vectors' in memory.get('sections', ['.text.vectors']) %}
 
-#ifdef {{ prefix }}_LD_TEXT_VECTORS_REGION_{{ key | upper }}
+#ifdef CONFIG_LD_TEXT_VECTORS_REGION_{{ key | upper }}
 REGION_ALIAS("textVectorsVmaRegion", {{ key }}{% if 'virtual-address' in memory %}Vma{% endif %});
 REGION_ALIAS("textVectorsLmaRegion", {{ key }});
-#endif	/* {{ prefix }}_LD_TEXT_VECTORS_REGION_{{ key | upper }} */
+#endif	/* CONFIG_LD_TEXT_VECTORS_REGION_{{ key | upper }} */
 {% endfor %}
 {% for key, memory in dictionary['memories'].items() if memory is mapping and
 		'on-chip-flash' in memory['compatible'] and '.text' in memory.get('sections', ['.text']) %}
 
-#ifdef {{ prefix }}_LD_TEXT_REGION_{{ key | upper }}
+#ifdef CONFIG_LD_TEXT_REGION_{{ key | upper }}
 REGION_ALIAS("textVmaRegion", {{ key }}{% if 'virtual-address' in memory %}Vma{% endif %});
 REGION_ALIAS("textLmaRegion", {{ key }});
-#endif	/* {{ prefix }}_LD_TEXT_REGION_{{ key | upper }} */
+#endif	/* CONFIG_LD_TEXT_REGION_{{ key | upper }} */
 {% endfor %}
 {% for key, memory in dictionary['memories'].items() if memory is mapping and
 		'on-chip-flash' in memory['compatible'] and '.ARM.exidx' in memory.get('sections', ['.ARM.exidx']) %}
 
-#ifdef {{ prefix }}_LD_ARM_EXIDX_REGION_{{ key | upper }}
+#ifdef CONFIG_LD_ARM_EXIDX_REGION_{{ key | upper }}
 REGION_ALIAS("armExidxVmaRegion", {{ key }}{% if 'virtual-address' in memory %}Vma{% endif %});
 REGION_ALIAS("armExidxLmaRegion", {{ key }});
-#endif	/* {{ prefix }}_LD_ARM_EXIDX_REGION_{{ key | upper }} */
+#endif	/* CONFIG_LD_ARM_EXIDX_REGION_{{ key | upper }} */
 {% endfor %}
 {% for key, memory in dictionary['memories'].items() if memory is mapping and
 		'on-chip-RAM' in memory['compatible'] and '.main_stack' in memory.get('sections', ['.main_stack']) %}
 
-#ifdef {{ prefix }}_LD_MAIN_STACK_REGION_{{ key | upper }}
+#ifdef CONFIG_LD_MAIN_STACK_REGION_{{ key | upper }}
 REGION_ALIAS("mainStackVmaRegion", {{ key }}{% if 'virtual-address' in memory %}Vma{% endif %});
 REGION_ALIAS("mainStackLmaRegion", {{ key }});
-#endif	/* {{ prefix }}_LD_MAIN_STACK_REGION_{{ key | upper }} */
+#endif	/* CONFIG_LD_MAIN_STACK_REGION_{{ key | upper }} */
 {% endfor %}
 {% for key, memory in dictionary['memories'].items() if memory is mapping and
 		'on-chip-RAM' in memory['compatible'] and '.bss' in memory.get('sections', ['.bss']) %}
 
-#ifdef {{ prefix }}_LD_BSS_REGION_{{ key | upper }}
+#ifdef CONFIG_LD_BSS_REGION_{{ key | upper }}
 REGION_ALIAS("bssVmaRegion", {{ key }}{% if 'virtual-address' in memory %}Vma{% endif %});
 REGION_ALIAS("bssLmaRegion", {{ key }});
-#endif	/* {{ prefix }}_LD_BSS_REGION_{{ key | upper }} */
+#endif	/* CONFIG_LD_BSS_REGION_{{ key | upper }} */
 {% endfor %}
 {% for key, memory in dictionary['memories'].items() if memory is mapping and
 		'on-chip-RAM' in memory['compatible'] and '.data' in memory.get('sections', ['.data']) %}
 
-#ifdef {{ prefix }}_LD_DATA_VMA_REGION_{{ key | upper }}
+#ifdef CONFIG_LD_DATA_VMA_REGION_{{ key | upper }}
 REGION_ALIAS("dataVmaRegion", {{ key }}{% if 'virtual-address' in memory %}Vma{% endif %});
-#endif	/* {{ prefix }}_LD_DATA_VMA_REGION_{{ key | upper }} */
+#endif	/* CONFIG_LD_DATA_VMA_REGION_{{ key | upper }} */
 {% endfor %}
 {% for key, memory in dictionary['memories'].items() if memory is mapping and
 		'on-chip-flash' in memory['compatible'] and '.data' in memory.get('sections', ['.data']) %}
 
-#ifdef {{ prefix }}_LD_DATA_LMA_REGION_{{ key | upper }}
+#ifdef CONFIG_LD_DATA_LMA_REGION_{{ key | upper }}
 REGION_ALIAS("dataLmaRegion", {{ key }});
-#endif	/* {{ prefix }}_LD_DATA_LMA_REGION_{{ key | upper }} */
+#endif	/* CONFIG_LD_DATA_LMA_REGION_{{ key | upper }} */
 {% endfor %}
 {% for key, memory in dictionary['memories'].items() if memory is mapping and
 		'on-chip-RAM' in memory['compatible'] and '.noinit' in memory.get('sections', ['.noinit']) %}
 
-#ifdef {{ prefix }}_LD_NOINIT_REGION_{{ key | upper }}
+#ifdef CONFIG_LD_NOINIT_REGION_{{ key | upper }}
 REGION_ALIAS("noinitVmaRegion", {{ key }}{% if 'virtual-address' in memory %}Vma{% endif %});
 REGION_ALIAS("noinitLmaRegion", {{ key }});
-#endif	/* {{ prefix }}_LD_NOINIT_REGION_{{ key | upper }} */
+#endif	/* CONFIG_LD_NOINIT_REGION_{{ key | upper }} */
 {% endfor %}
 {% for ramKey, ramMemory in dictionary['memories'].items() if ramMemory is mapping and
 		'on-chip-RAM' in ramMemory['compatible'] and
@@ -135,17 +134,17 @@ REGION_ALIAS("noinitLmaRegion", {{ key }});
 		'on-chip-flash' in romMemory['compatible'] and
 		'.{}.data'.format(ramKey) in ramMemory.get('sections', ['.{}.data'.format(ramKey)]) %}
 
-#ifdef {{ prefix }}_LD_{{ ramKey | upper }}_DATA_LMA_REGION_{{ romKey | upper }}
+#ifdef CONFIG_LD_{{ ramKey | upper }}_DATA_LMA_REGION_{{ romKey | upper }}
 REGION_ALIAS("{{ ramKey }}DataLmaRegion", {{ romKey }});
-#endif	/* {{ prefix }}_LD_{{ ramKey | upper }}_DATA_LMA_REGION_{{ romKey | upper }} */
+#endif	/* CONFIG_LD_{{ ramKey | upper }}_DATA_LMA_REGION_{{ romKey | upper }} */
 {% endfor %}
 {% endfor %}
 {% for key, memory in dictionary['memories'].items() if memory is mapping and
 		'on-chip-RAM' in memory['compatible'] and '.process_stack' in memory.get('sections', ['.process_stack']) %}
 
-#ifdef {{ prefix }}_LD_PROCESS_STACK_REGION_{{ key | upper }}
+#ifdef CONFIG_LD_PROCESS_STACK_REGION_{{ key | upper }}
 PROVIDE(__process_stack_end = __{{ key }}_end / 8 * 8);
-#endif	/* def {{ prefix }}_LD_PROCESS_STACK_REGION_{{ key | upper }} */
+#endif	/* def CONFIG_LD_PROCESS_STACK_REGION_{{ key | upper }} */
 {% endfor %}
 
 PROVIDE(__process_stack_start = (__process_stack_end - __process_stack_size) / 8 * 8);
@@ -420,14 +419,14 @@ LONG(ADDR(.{{ key }}.data) + SIZEOF(.{{ key }}.data));
 {% for key, memory in dictionary['memories'].items() if memory is mapping and
 		'on-chip-RAM' in memory['compatible'] and '.heap' in memory.get('sections', ['.heap']) %}
 
-#ifdef {{ prefix }}_LD_HEAP_REGION_{{ key | upper }}
+#ifdef CONFIG_LD_HEAP_REGION_{{ key | upper }}
 PROVIDE(__heap_start = ALIGN(__{{ key }}_noinit_end, 8));
-#ifdef {{ prefix }}_LD_PROCESS_STACK_REGION_{{ key | upper }}
+#ifdef CONFIG_LD_PROCESS_STACK_REGION_{{ key | upper }}
 PROVIDE(__heap_end = __process_stack_start / 8 * 8);
-#else	/* !def {{ prefix }}_LD_PROCESS_STACK_REGION_{{ key | upper }} */
+#else	/* !def CONFIG_LD_PROCESS_STACK_REGION_{{ key | upper }} */
 PROVIDE(__heap_end = __{{ key }}_end / 8 * 8);
-#endif	/* !def {{ prefix }}_LD_PROCESS_STACK_REGION_{{ key | upper }} */
-#endif	/* def {{ prefix }}_LD_HEAP_REGION_{{ key | upper }} */
+#endif	/* !def CONFIG_LD_PROCESS_STACK_REGION_{{ key | upper }} */
+#endif	/* def CONFIG_LD_HEAP_REGION_{{ key | upper }} */
 {% endfor %}
 
 PROVIDE(__text_vectors_size = SIZEOF(.text.vectors));
