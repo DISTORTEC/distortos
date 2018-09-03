@@ -439,6 +439,8 @@ void ChipSpiMasterLowLevel::interruptHandler()
 			parameters_.enableRxneInterrupt(false);
 			done = true;
 		}
+		else
+			parameters_.enableTxeInterrupt(true);
 	}
 	else if ((sr & SPI_SR_TXE) != 0 && (cr2 & SPI_CR2_TXEIE) != 0)	// write?
 	{
@@ -458,8 +460,8 @@ void ChipSpiMasterLowLevel::interruptHandler()
 		}
 		writePosition_ = writePosition;
 		spi.DR = word;
-		if (writePosition == size_)
-			parameters_.enableTxeInterrupt(false);
+
+		parameters_.enableTxeInterrupt(false);
 	}
 
 	if (done == true)	// transfer finished of failed?
