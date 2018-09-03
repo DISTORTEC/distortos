@@ -11,7 +11,7 @@ object-oriented C++ RTOS for microcontrollers
 Configuration & building
 ------------------------
 
-To configure & build distortos you need:
+To configure & build *distortos* you need:
 - [CMake](https://cmake.org/) (version 3.7 or later);
 - [a build tool supported by CMake](https://cmake.org/cmake/help/latest/manual/cmake-generators.7.html#manual:cmake-generators(7)) -
 it is highly recommended to use [Ninja](https://ninja-build.org/);
@@ -22,7 +22,7 @@ later);
 so-called *toolchain file*. Toolchain files in *distortos* also serve another purpose - they select the board which is
 going to be used by your application.
 
-1. Download source package of distortos in [zip](https://github.com/DISTORTEC/distortos/archive/master.zip) or
+1. Download source package of *distortos* in [zip](https://github.com/DISTORTEC/distortos/archive/master.zip) or
 [tar.gz](https://github.com/DISTORTEC/distortos/archive/master.tar.gz) format and extract it;
 2. Create a build folder, for example `output`;
 3. From within the build folder, initialize it with *CMake*, for example with
