@@ -56,10 +56,12 @@ endfunction()
 #
 # Dumps symbols from output file of `target` to file named `dmpFilename`.
 #
+# All additional arguments are passed to ${CMAKE_OBJDUMP}.
+#
 
 function(distortosDmp target dmpFilename)
 	add_custom_command(TARGET ${target} POST_BUILD
-			COMMAND ${CMAKE_OBJDUMP} -x --syms --demangle $<TARGET_FILE:${target}> > ${dmpFilename}
+			COMMAND ${CMAKE_OBJDUMP} ${ARGN} -x --syms --demangle $<TARGET_FILE:${target}> > ${dmpFilename}
 			BYPRODUCTS ${dmpFilename}
 			VERBATIM)
 endfunction()
