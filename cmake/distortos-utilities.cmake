@@ -69,10 +69,12 @@ endfunction()
 #
 # Converts output file of `target` to Intel HEX file named `hexFilename`.
 #
+# All additional arguments are passed to ${CMAKE_OBJCOPY}.
+#
 
 function(distortosHex target hexFilename)
 	add_custom_command(TARGET ${target} POST_BUILD
-			COMMAND ${CMAKE_OBJCOPY} -O ihex $<TARGET_FILE:${target}> ${hexFilename}
+			COMMAND ${CMAKE_OBJCOPY} ${ARGN} -O ihex $<TARGET_FILE:${target}> ${hexFilename}
 			BYPRODUCTS ${hexFilename}
 			VERBATIM)
 endfunction()
