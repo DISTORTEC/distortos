@@ -114,7 +114,7 @@ scriptGenerateBoard() {
 
 	for yamlFile in $(/usr/bin/find -L "${distortosPath}/source/board" -name '*.yaml')
 	do
-		${distortosPath}/scripts/generateBoard.py ${yamlFile} $(dirname ${yamlFile}) ${distortosPath}
+		${distortosPath}/scripts/generateBoard.py ${yamlFile}
 	done
 
 	git add -N .
@@ -122,7 +122,7 @@ scriptGenerateBoard() {
 
 	for yamlFile in $(/usr/bin/find -L "${distortosPath}/source/chip" -name '*.yaml')
 	do
-		${distortosPath}/scripts/generateBoard.py ${yamlFile} /tmp/$(basename ${yamlFile} .yaml) ${distortosPath}
+		${distortosPath}/scripts/generateBoard.py ${yamlFile} -o /tmp/$(basename ${yamlFile} .yaml)
 	done
 }
 
