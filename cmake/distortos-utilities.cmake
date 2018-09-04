@@ -312,10 +312,12 @@ endfunction()
 #
 # Prints size of output file of `target`.
 #
+# All additional arguments are passed to ${CMAKE_SIZE}.
+#
 
 function(distortosSize target)
 	add_custom_command(TARGET ${target} POST_BUILD
-			COMMAND ${CMAKE_SIZE} -B $<TARGET_FILE:${target}>
+			COMMAND ${CMAKE_SIZE} ${ARGN} -B $<TARGET_FILE:${target}>
 			VERBATIM
 			USES_TERMINAL)
 endfunction()
