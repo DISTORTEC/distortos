@@ -18,10 +18,12 @@ endfunction()
 #
 # Converts output file of `target` to binary file named `binFilename`.
 #
+# All additional arguments are passed to ${CMAKE_OBJCOPY}.
+#
 
 function(distortosBin target binFilename)
 	add_custom_command(TARGET ${target} POST_BUILD
-			COMMAND ${CMAKE_OBJCOPY} -O binary $<TARGET_FILE:${target}> ${binFilename}
+			COMMAND ${CMAKE_OBJCOPY} ${ARGN} -O binary $<TARGET_FILE:${target}> ${binFilename}
 			BYPRODUCTS ${binFilename}
 			VERBATIM)
 endfunction()
@@ -54,10 +56,12 @@ endfunction()
 #
 # Dumps symbols from output file of `target` to file named `dmpFilename`.
 #
+# All additional arguments are passed to ${CMAKE_OBJDUMP}.
+#
 
 function(distortosDmp target dmpFilename)
 	add_custom_command(TARGET ${target} POST_BUILD
-			COMMAND ${CMAKE_OBJDUMP} -x --syms --demangle $<TARGET_FILE:${target}> > ${dmpFilename}
+			COMMAND ${CMAKE_OBJDUMP} ${ARGN} -x --syms --demangle $<TARGET_FILE:${target}> > ${dmpFilename}
 			BYPRODUCTS ${dmpFilename}
 			VERBATIM)
 endfunction()
@@ -65,10 +69,12 @@ endfunction()
 #
 # Converts output file of `target` to Intel HEX file named `hexFilename`.
 #
+# All additional arguments are passed to ${CMAKE_OBJCOPY}.
+#
 
 function(distortosHex target hexFilename)
 	add_custom_command(TARGET ${target} POST_BUILD
-			COMMAND ${CMAKE_OBJCOPY} -O ihex $<TARGET_FILE:${target}> ${hexFilename}
+			COMMAND ${CMAKE_OBJCOPY} ${ARGN} -O ihex $<TARGET_FILE:${target}> ${hexFilename}
 			BYPRODUCTS ${hexFilename}
 			VERBATIM)
 endfunction()
@@ -76,10 +82,12 @@ endfunction()
 #
 # Generates disassembly of output file of `target` to file named `lssFilename`.
 #
+# All additional arguments are passed to ${CMAKE_OBJDUMP}.
+#
 
 function(distortosLss target lssFilename)
 	add_custom_command(TARGET ${target} POST_BUILD
-			COMMAND ${CMAKE_OBJDUMP} --demangle -S $<TARGET_FILE:${target}> > ${lssFilename}
+			COMMAND ${CMAKE_OBJDUMP} ${ARGN} --demangle -S $<TARGET_FILE:${target}> > ${lssFilename}
 			BYPRODUCTS ${lssFilename}
 			VERBATIM)
 endfunction()
@@ -304,10 +312,12 @@ endfunction()
 #
 # Prints size of output file of `target`.
 #
+# All additional arguments are passed to ${CMAKE_SIZE}.
+#
 
 function(distortosSize target)
 	add_custom_command(TARGET ${target} POST_BUILD
-			COMMAND ${CMAKE_SIZE} -B $<TARGET_FILE:${target}>
+			COMMAND ${CMAKE_SIZE} ${ARGN} -B $<TARGET_FILE:${target}>
 			VERBATIM
 			USES_TERMINAL)
 endfunction()
