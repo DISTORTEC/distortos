@@ -44,6 +44,9 @@ internally and thus take no arguments.
 and `distortosSize()` are passed to the appropriate commands (`${CMAKE_OBJCOPY}`, `${CMAKE_OBJDUMP}` or
 `${CMAKE_SIZE}`). This can be especially useful in case of binary files which are used to calculate firmware checksums,
 where it may be necessary to pass flags like `--gap-fill 0xff`.
+- `generateBoard.py` now requires only one argument - the input `*.yaml` file. Arguments with output path and
+*distortos* path are both optional. Default output path is the folder of input `*.yaml` file. Default *distortos* path
+is calculated as a relative path from current directory to the folder above the script.
 - Update *CMSIS* to version 5.4.0.
 
 ### Deprecated
