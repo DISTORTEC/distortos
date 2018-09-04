@@ -82,10 +82,12 @@ endfunction()
 #
 # Generates disassembly of output file of `target` to file named `lssFilename`.
 #
+# All additional arguments are passed to ${CMAKE_OBJDUMP}.
+#
 
 function(distortosLss target lssFilename)
 	add_custom_command(TARGET ${target} POST_BUILD
-			COMMAND ${CMAKE_OBJDUMP} --demangle -S $<TARGET_FILE:${target}> > ${lssFilename}
+			COMMAND ${CMAKE_OBJDUMP} ${ARGN} --demangle -S $<TARGET_FILE:${target}> > ${lssFilename}
 			BYPRODUCTS ${lssFilename}
 			VERBATIM)
 endfunction()
