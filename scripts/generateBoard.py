@@ -167,10 +167,12 @@ def resolveReferences(dictionary, labels):
 if __name__ == '__main__':
 	parser = argparse.ArgumentParser()
 	parser.add_argument('inputFile', type = argparse.FileType('r'), help = 'input file')
-	parser.add_argument('outputPath', help = 'output path')
+	parser.add_argument('-o', '--outputPath', help = 'output path')
 	parser.add_argument('-d', '--distortosPath', help = 'distortos path')
 	arguments = parser.parse_args()
 
+	if not arguments.outputPath:
+		arguments.outputPath = os.path.dirname(arguments.inputFile.name)
 	if not arguments.distortosPath:
 		arguments.distortosPath = os.path.relpath(sys.argv[0] + '/../..')
 
