@@ -40,6 +40,10 @@ and is scheduled to be removed after v0.7.0.
 - `...::lock()` and `...::unlock()` functions in `SpiDevice` and `SpiEeprom` were changed to use recursive mutexes
 internally and thus take no arguments.
 - `SpiEeprom` implements `BlockDevice` interface.
+- All additional arguments of *CMake* functions `distortosBin()`, `distortosDmp()`, `distortosHex()`, `distortosLss()`
+and `distortosSize()` are passed to the appropriate commands (`${CMAKE_OBJCOPY}`, `${CMAKE_OBJDUMP}` or
+`${CMAKE_SIZE}`). This can be especially useful in case of binary files which are used to calculate firmware checksums,
+where it may be necessary to pass flags like `--gap-fill 0xff`.
 - Update *CMSIS* to version 5.4.0.
 
 ### Deprecated
