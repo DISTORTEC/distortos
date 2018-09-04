@@ -47,6 +47,8 @@ where it may be necessary to pass flags like `--gap-fill 0xff`.
 - `generateBoard.py` now requires only one argument - the input `*.yaml` file. Arguments with output path and
 *distortos* path are both optional. Default output path is the folder of input `*.yaml` file. Default *distortos* path
 is calculated as a relative path from current directory to the folder above the script.
+- `generateChipYaml.py` now requires only one argument - the input `*.csv` file. Second argument - output path - is
+optional and default value is `chipYaml/` in the folder of input `*.csv` file.
 - Update *CMSIS* to version 5.4.0.
 
 ### Deprecated

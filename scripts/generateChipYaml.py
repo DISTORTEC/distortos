@@ -102,8 +102,11 @@ def parseString(string):
 if __name__ == '__main__':
 	parser = argparse.ArgumentParser()
 	parser.add_argument('csvFile', help = 'input CSV file')
-	parser.add_argument('outputPath', help = 'output path')
+	parser.add_argument('-o','--outputPath', help = 'output path')
 	arguments = parser.parse_args()
+
+	if not arguments.outputPath:
+		arguments.outputPath = os.path.dirname(arguments.csvFile) + '/chipYaml'
 
 	year = datetime.date.today().year
 
