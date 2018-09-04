@@ -18,10 +18,12 @@ endfunction()
 #
 # Converts output file of `target` to binary file named `binFilename`.
 #
+# All additional arguments are passed to ${CMAKE_OBJCOPY}.
+#
 
 function(distortosBin target binFilename)
 	add_custom_command(TARGET ${target} POST_BUILD
-			COMMAND ${CMAKE_OBJCOPY} -O binary $<TARGET_FILE:${target}> ${binFilename}
+			COMMAND ${CMAKE_OBJCOPY} ${ARGN} -O binary $<TARGET_FILE:${target}> ${binFilename}
 			BYPRODUCTS ${binFilename}
 			VERBATIM)
 endfunction()
