@@ -23,6 +23,103 @@ CPUs:
     FPU:
       compatible:
       - ARM,FPv4-SP-D16
+NVIC:
+  compatible:
+  - ARM,NVIC
+  - interrupt-controller
+  core-vectors:
+    1: Reset
+    2: NMI
+    3: HardFault
+    4: MemManage
+    5: BusFault
+    6: UsageFault
+    11: SVC
+    12: DebugMon
+    14: PendSV
+    15: SysTick
+  chip-vectors:
+    16: WWDG
+    17: PVD_PVM
+    18: RTC_TAMP_STAMP
+    19: RTC_WKUP
+    20: FLASH
+    21: RCC
+    22: EXTI0
+    23: EXTI1
+    24: EXTI2
+    25: EXTI3
+    26: EXTI4
+    27: DMA1_Channel1
+    28: DMA1_Channel2
+    29: DMA1_Channel3
+    30: DMA1_Channel4
+    31: DMA1_Channel5
+    32: DMA1_Channel6
+    33: DMA1_Channel7
+    34: ADC1_2
+    35: CAN1_TX
+    36: CAN1_RX0
+    37: CAN1_RX1
+    38: CAN1_SCE
+    39: EXTI9_5
+    40: TIM1_BRK_TIM15
+    41: TIM1_UP_TIM16
+    42: TIM1_TRG_COM_TIM17
+    43: TIM1_CC
+    44: TIM2
+    45: TIM3
+    46: TIM4
+    47: I2C1_EV
+    48: I2C1_ER
+    49: I2C2_EV
+    50: I2C2_ER
+    51: SPI1
+    52: SPI2
+    53: USART1
+    54: USART2
+    55: USART3
+    56: EXTI15_10
+    57: RTC_Alarm
+    58: DFSDM1_FLT3
+    59: TIM8_BRK
+    60: TIM8_UP
+    61: TIM8_TRG_COM
+    62: TIM8_CC
+    63: ADC3
+    64: FMC
+    65: SDMMC1
+    66: TIM5
+    67: SPI3
+    68: UART4
+    69: UART5
+    70: TIM6_DAC
+    71: TIM7
+    72: DMA2_Channel1
+    73: DMA2_Channel2
+    74: DMA2_Channel3
+    75: DMA2_Channel4
+    76: DMA2_Channel5
+    77: DFSDM1_FLT0
+    78: DFSDM1_FLT1
+    79: DFSDM1_FLT2
+    80: COMP
+    81: LPTIM1
+    82: LPTIM2
+    84: DMA2_Channel6
+    85: DMA2_Channel7
+    86: LPUART1
+    87: QUADSPI
+    88: I2C3_EV
+    89: I2C3_ER
+    90: SAI1
+    91: SAI2
+    92: SWPMI1
+    93: TSC
+    96: RNG
+    97: FPU
+  $labels:
+  - NVIC
 clocks:
   HSE:
     compatible:
