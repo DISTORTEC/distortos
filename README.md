@@ -69,3 +69,32 @@ or
     $ cmake -C../configurations/ST_STM32F4DISCOVERY/test/distortosConfiguration.cmake .. -GNinja
 	$ cmake-gui ..
     $ ninja
+
+Generating board
+----------------
+
+To generate a board you need:
+- [Python](https://www.python.org/) (version 2.7, version 3.6 or later);
+- [Jinja2](http://jinja.pocoo.org/) template engine for *Python* (version 2.10 or later);
+- [ruamel.yaml](https://bitbucket.org/ruamel/yaml) YAML loader/dumper package for *Python*;
+
+Both *Jinja2* and *ruamel.yaml* can be easily installed with `pip install jinja2 && pip install ruamel.yaml` (or
+`python -m pip install jinja2` followed by `python -m pip install ruamel.yaml` on *Windows*), however they may also be
+available in the package manager of your system.
+
+Board generator - `scripts/generateBoard.py` - takes a `*.yaml` file as an input and produces a folder containing
+various board files: source files, headers, *CMake* files (including *CMake* toolchain file) and so on. The input
+`*.yaml` file describes the board hardware in a tree-like form. The idea is very close to *devicetree* and in fact
+earlier versions of board generator used *devicetree* files.
+
+To get an idea about the format of the board YAML files, take a look at some of the existing files, for example
+`source/board/ST_STM32F4DISCOVERY/ST_STM32F4DISCOVERY.yaml` - which describes *STM32F4DISCOVERY* board from *ST* - or
+`source/chip/STM32/STM32F4/chipYaml/ST_STM32F407VG.yaml` - which describes *STM32F407VG* chip used on this board. There
+is also some documentation about YAML bindings in `documentation/yaml-bindings`
+
+Assumming that you already have *distortos* either as part of your project or as a standalone folder, the basic
+invocation of the board generator is just `path/to/distortos/scripts/generateBoard.py path/to/board.yaml` (or
+`python path/to/distortos/scripts/generateBoard.py path/to/board.yaml` on *Windows*), for example
+`./scripts/generateBoard.py source/board/ST_STM32F4DISCOVERY/ST_STM32F4DISCOVERY.yaml`. You may also generate so-called
+*raw-boards*, using chip YAML file as the input directly, for example
+`./scripts/generateBoard.py source/chip/STM32/STM32F4/chipYaml/ST_STM32F407VG.yaml -o output/path/of/raw/board`.
