@@ -31,3 +31,5 @@ include(${CMAKE_CURRENT_LIST_DIR}/cmake/80-STM32.cmake)
 include(${CMAKE_CURRENT_LIST_DIR}/cmake/90-ARMv6-M-ARMv7-M.cmake)
 
 include(${CMAKE_CURRENT_LIST_DIR}/distortos-board-sources.extension.cmake OPTIONAL)
+
+set(DISTORTOS_BOARD_VERSION 0)
