@@ -287,6 +287,19 @@ target_link_libraries(distortos PUBLIC
 		littlefs)
 
 include(${DISTORTOS_BOARD_PATH}/distortos-board-sources.cmake)
+
+set(DISTORTOS_BOARD_VERSION_MIN 0)
+if(NOT DEFINED DISTORTOS_BOARD_VERSION OR NOT DISTORTOS_BOARD_VERSION EQUAL DISTORTOS_BOARD_VERSION_MIN)
+	if(NOT DEFINED DISTORTOS_BOARD_VERSION)
+		message(FATAL_ERROR "Generated board has no version information. "
+				"Please regenerate your board with scripts/generateBoard.py")
+	else()
+		message(FATAL_ERROR "Generated board has version ${DISTORTOS_BOARD_VERSION} while"
+				" ${DISTORTOS_BOARD_VERSION_MIN} is required. "
+				"Please regenerate your board with scripts/generateBoard.py")
+	endif()
+endif()
+
 include(source/distortos-sources.cmake)
 
 #-----------------------------------------------------------------------------------------------------------------------
