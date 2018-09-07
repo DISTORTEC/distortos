@@ -18,7 +18,8 @@ target_include_directories(distortos PUBLIC
 		${CMAKE_CURRENT_LIST_DIR}/include)
 
 target_sources(distortos PRIVATE
-		${CMAKE_CURRENT_LIST_DIR}/ST_NUCLEO-L432KC-leds.cpp)
+		${CMAKE_CURRENT_LIST_DIR}/ST_NUCLEO-L432KC-leds.cpp
+		${CMAKE_CURRENT_LIST_DIR}/ST_NUCLEO-L432KC-vectorTable.cpp)
 
 doxygen(INPUT ${CMAKE_CURRENT_LIST_DIR} INCLUDE_PATH ${CMAKE_CURRENT_LIST_DIR}/include)
 

@@ -326,9 +326,6 @@ target_include_directories(distortos PUBLIC
 		${CMAKE_CURRENT_LIST_DIR}/external/CMSIS-STM32L4)
 
 target_sources(distortos PRIVATE
-		${CMAKE_CURRENT_LIST_DIR}/STM32L4-3-4-5-6-chipVectors.cpp.cpp
-		${CMAKE_CURRENT_LIST_DIR}/STM32L4-71-chipVectors.cpp
-		${CMAKE_CURRENT_LIST_DIR}/STM32L4-75-76-8-9-A-chipVectors.cpp
 		${CMAKE_CURRENT_LIST_DIR}/STM32L4-chipLowLevelInitializer.cpp
 		${CMAKE_CURRENT_LIST_DIR}/STM32L4-FLASH.cpp
 		${CMAKE_CURRENT_LIST_DIR}/STM32L4-PWR.cpp
