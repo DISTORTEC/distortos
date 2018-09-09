@@ -186,7 +186,6 @@ target_include_directories(distortos PUBLIC
 
 target_sources(distortos PRIVATE
 		${CMAKE_CURRENT_LIST_DIR}/STM32F0-chipLowLevelInitializer.cpp
-		${CMAKE_CURRENT_LIST_DIR}/STM32F0-chipVectors.cpp
 		${CMAKE_CURRENT_LIST_DIR}/STM32F0-FLASH.cpp
 		${CMAKE_CURRENT_LIST_DIR}/STM32F0-RCC.cpp)
 

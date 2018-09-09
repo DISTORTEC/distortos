@@ -18,7 +18,8 @@ target_include_directories(distortos PUBLIC
 		${CMAKE_CURRENT_LIST_DIR}/include)
 
 target_sources(distortos PRIVATE
-		${CMAKE_CURRENT_LIST_DIR}/ST_NUCLEO-L432KC-leds.cpp)
+		${CMAKE_CURRENT_LIST_DIR}/ST_NUCLEO-L432KC-leds.cpp
+		${CMAKE_CURRENT_LIST_DIR}/ST_NUCLEO-L432KC-vectorTable.cpp)
 
 doxygen(INPUT ${CMAKE_CURRENT_LIST_DIR} INCLUDE_PATH ${CMAKE_CURRENT_LIST_DIR}/include)
 
@@ -30,3 +31,5 @@ include(${CMAKE_CURRENT_LIST_DIR}/cmake/80-STM32.cmake)
 include(${CMAKE_CURRENT_LIST_DIR}/cmake/90-ARMv6-M-ARMv7-M.cmake)
 
 include(${CMAKE_CURRENT_LIST_DIR}/distortos-board-sources.extension.cmake OPTIONAL)
+
+set(DISTORTOS_BOARD_VERSION 0)

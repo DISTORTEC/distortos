@@ -66,12 +66,13 @@ ENTRY(Reset_Handler);
 | put data in sections
 +---------------------------------------------------------------------------------------------------------------------*/
 {% for key, memory in dictionary['memories'].items() if memory is mapping and
-		'on-chip-flash' in memory['compatible'] and '.text.vectors' in memory.get('sections', ['.text.vectors']) %}
+		'on-chip-flash' in memory['compatible'] and
+		'.text.vectorTable' in memory.get('sections', ['.text.vectorTable']) %}
 
-#ifdef CONFIG_LD_TEXT_VECTORS_REGION_{{ key | upper }}
-REGION_ALIAS("textVectorsVmaRegion", {{ key }}{% if 'virtual-address' in memory %}Vma{% endif %});
-REGION_ALIAS("textVectorsLmaRegion", {{ key }});
-#endif	/* CONFIG_LD_TEXT_VECTORS_REGION_{{ key | upper }} */
+#ifdef CONFIG_LD_TEXT_VECTOR_TABLE_REGION_{{ key | upper }}
+REGION_ALIAS("textVectorTableVmaRegion", {{ key }}{% if 'virtual-address' in memory %}Vma{% endif %});
+REGION_ALIAS("textVectorTableLmaRegion", {{ key }});
+#endif	/* CONFIG_LD_TEXT_VECTOR_TABLE_REGION_{{ key | upper }} */
 {% endfor %}
 {% for key, memory in dictionary['memories'].items() if memory is mapping and
 		'on-chip-flash' in memory['compatible'] and '.text' in memory.get('sections', ['.text']) %}
@@ -151,15 +152,14 @@ PROVIDE(__process_stack_start = (__process_stack_end - __process_stack_size) / 8
 
 SECTIONS
 {
-	.text.vectors :
+	.text.vectorTable :
 	{
-		PROVIDE(__text_vectors_start = .);
+		PROVIDE(__text_vectorTable_start = .);
 
-		KEEP(*(.coreVectors));
-		KEEP(*(.chipVectors));
+		KEEP(*(.vectorTable));
 
-		PROVIDE(__text_vectors_end = .);
-	} > textVectorsVmaRegion AT > textVectorsLmaRegion
+		PROVIDE(__text_vectorTable_end = .);
+	} > textVectorTableVmaRegion AT > textVectorTableLmaRegion
 
 	.text :
 	{
@@ -429,7 +429,7 @@ PROVIDE(__heap_end = __{{ key }}_end / 8 * 8);
 #endif	/* def CONFIG_LD_HEAP_REGION_{{ key | upper }} */
 {% endfor %}
 
-PROVIDE(__text_vectors_size = SIZEOF(.text.vectors));
+PROVIDE(__text_vectorTable_size = SIZEOF(.text.vectorTable));
 PROVIDE(__text_size = SIZEOF(.text));
 PROVIDE(__exidx_size = SIZEOF(.ARM.exidx));
 PROVIDE(__bss_size = SIZEOF(.bss));

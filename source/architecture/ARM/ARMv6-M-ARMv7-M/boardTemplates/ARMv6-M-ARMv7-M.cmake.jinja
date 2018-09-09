@@ -78,13 +78,13 @@ distortosSetConfiguration(INTEGER
 
 {% set context = namespace(counter = 0) %}
 distortosSetConfiguration(STRING
-		distortos_Memory_regions_{{ '{:02d}'.format(context.counter) }}_text_vectors
+		distortos_Memory_regions_{{ '{:02d}'.format(context.counter) }}_text_vectorTable
 {% for key, memory in dictionary['memories'].items() if memory is mapping and
-	'on-chip-flash' in memory['compatible'] and '.text.vectors' in memory.get('sections', ['.text.vectors']) %}
+	'on-chip-flash' in memory['compatible'] and '.text.vectorTable' in memory.get('sections', ['.text.vectorTable']) %}
 		"{{ key }}"
 {% endfor %}
-		HELP "Memory region for .text.vectors section in linker script"
-		OUTPUT_NAME CONFIG_LD_TEXT_VECTORS_REGION
+		HELP "Memory region for .text.vectorTable section in linker script"
+		OUTPUT_NAME CONFIG_LD_TEXT_VECTOR_TABLE_REGION
 		OUTPUT_TYPES BOOLEAN)
 
 {% set context.counter = context.counter + 1 %}

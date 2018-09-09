@@ -1,0 +1,86 @@
+{% macro handlerComment(name, exceptionNumber) -%}
+{{ name }}, address {{ '{:#x}'.format(exceptionNumber * 4) }}, exception number {{ exceptionNumber }}, IRQ number {{ exceptionNumber - 16 }}
+{%- endmacro %}
+/**
+ * \file
+ * \brief {{ board }} ({{ dictionary['chip']['compatible'][0] }} chip) vector table and default weak handlers
+ *
+ * \author Copyright (C) 2014-2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ *
+ * \par License
+ * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
+ * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ *
+ * \warning
+ * Automatically generated file - do not edit!
+ */
+
+extern "C"
+{
+
+/*---------------------------------------------------------------------------------------------------------------------+
+| default weak handlers
++---------------------------------------------------------------------------------------------------------------------*/
+{% for key, value in dictionary['NVIC']['core-vectors'].items() if key is number and key != 1 %}
+
+// {{ handlerComment(value, key) }}
+__attribute__ ((weak)) void {{ value }}_Handler()
+{
+	while (1);
+}
+{% endfor %}
+{% for key, value in dictionary['NVIC']['chip-vectors'].items() if key is number %}
+
+// {{ handlerComment(value, key) }}
+__attribute__ ((weak)) void {{ value }}_IRQHandler()
+{
+	while (1);
+}
+{% endfor %}
+
+/*---------------------------------------------------------------------------------------------------------------------+
+| global symbols' declarations
++---------------------------------------------------------------------------------------------------------------------*/
+
+extern const char __main_stack_end[];		// main stack end - imported from linker script
+
+void Reset_Handler();		// import the address of Reset_Handler()
+
+}	// extern "C"
+
+namespace
+{
+
+/*---------------------------------------------------------------------------------------------------------------------+
+| local types
++---------------------------------------------------------------------------------------------------------------------*/
+
+/// single exception vector - pointer to function with no arguments and no return value
+using ExceptionVector = void(*)();
+
+}	// namespace
+
+/*---------------------------------------------------------------------------------------------------------------------+
+| global variables
++---------------------------------------------------------------------------------------------------------------------*/
+{% set context = namespace(exceptionNumber = 1) %}
+
+/// vector table
+extern "C" const ExceptionVector vectorTable[] __attribute__ ((section(".vectorTable"), used))
+{
+		reinterpret_cast<ExceptionVector>(__main_stack_end),	// 0x0: Main stack end address
+{% for key, value in dictionary['NVIC']['core-vectors'].items() if key is number %}
+{% for number in range(context.exceptionNumber, key) %}
+		nullptr,		// {{ handlerComment('Reserved', number) }}
+{% endfor %}
+		{{ value }}_Handler,		// {{ handlerComment(value, key) }}
+{% set context.exceptionNumber = key + 1 %}
+{% endfor %}
+{% for key, value in dictionary['NVIC']['chip-vectors'].items() if key is number %}
+{% for number in range(context.exceptionNumber, key) %}
+		nullptr,		// {{ handlerComment('Reserved', number) }}
+{% endfor %}
+		{{ value }}_IRQHandler,		// {{ handlerComment(value, key) }}
+{% set context.exceptionNumber = key + 1 %}
+{% endfor %}
+};

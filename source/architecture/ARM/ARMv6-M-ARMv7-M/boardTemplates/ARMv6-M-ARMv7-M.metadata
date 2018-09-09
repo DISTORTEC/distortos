@@ -9,3 +9,8 @@
 		{},
 		'cmake/90-ARMv6-M-ARMv7-M.cmake'),
 {% endif %}
+{% if 'NVIC' in dictionary and 'ARM,NVIC' in dictionary['NVIC']['compatible'] %}
+('source/architecture/ARM/ARMv6-M-ARMv7-M/boardTemplates/ARMv6-M-ARMv7-M-vectorTable.cpp.jinja',
+		{},
+		'{{ sanitizedBoard }}-vectorTable.cpp'),
+{% endif %}

@@ -58,10 +58,10 @@ ENTRY(Reset_Handler);
 | put data in sections
 +---------------------------------------------------------------------------------------------------------------------*/
 
-#ifdef CONFIG_LD_TEXT_VECTORS_REGION_FLASH
-REGION_ALIAS("textVectorsVmaRegion", flash);
-REGION_ALIAS("textVectorsLmaRegion", flash);
-#endif	/* CONFIG_LD_TEXT_VECTORS_REGION_FLASH */
+#ifdef CONFIG_LD_TEXT_VECTOR_TABLE_REGION_FLASH
+REGION_ALIAS("textVectorTableVmaRegion", flash);
+REGION_ALIAS("textVectorTableLmaRegion", flash);
+#endif	/* CONFIG_LD_TEXT_VECTOR_TABLE_REGION_FLASH */
 
 #ifdef CONFIG_LD_TEXT_REGION_FLASH
 REGION_ALIAS("textVmaRegion", flash);
@@ -108,15 +108,14 @@ PROVIDE(__process_stack_start = (__process_stack_end - __process_stack_size) / 8
 
 SECTIONS
 {
-	.text.vectors :
+	.text.vectorTable :
 	{
-		PROVIDE(__text_vectors_start = .);
+		PROVIDE(__text_vectorTable_start = .);
 
-		KEEP(*(.coreVectors));
-		KEEP(*(.chipVectors));
+		KEEP(*(.vectorTable));
 
-		PROVIDE(__text_vectors_end = .);
-	} > textVectorsVmaRegion AT > textVectorsLmaRegion
+		PROVIDE(__text_vectorTable_end = .);
+	} > textVectorTableVmaRegion AT > textVectorTableLmaRegion
 
 	.text :
 	{
@@ -366,7 +365,7 @@ PROVIDE(__heap_end = __SRAM_end / 8 * 8);
 #endif	/* !def CONFIG_LD_PROCESS_STACK_REGION_SRAM */
 #endif	/* def CONFIG_LD_HEAP_REGION_SRAM */
 
-PROVIDE(__text_vectors_size = SIZEOF(.text.vectors));
+PROVIDE(__text_vectorTable_size = SIZEOF(.text.vectorTable));
 PROVIDE(__text_size = SIZEOF(.text));
 PROVIDE(__exidx_size = SIZEOF(.ARM.exidx));
 PROVIDE(__bss_size = SIZEOF(.bss));

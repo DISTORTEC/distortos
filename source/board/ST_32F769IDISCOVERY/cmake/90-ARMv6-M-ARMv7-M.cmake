@@ -73,10 +73,10 @@ distortosSetConfiguration(INTEGER
 		OUTPUT_NAME CONFIG_ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI)
 
 distortosSetConfiguration(STRING
-		distortos_Memory_regions_00_text_vectors
+		distortos_Memory_regions_00_text_vectorTable
 		"flash"
-		HELP "Memory region for .text.vectors section in linker script"
-		OUTPUT_NAME CONFIG_LD_TEXT_VECTORS_REGION
+		HELP "Memory region for .text.vectorTable section in linker script"
+		OUTPUT_NAME CONFIG_LD_TEXT_VECTOR_TABLE_REGION
 		OUTPUT_TYPES BOOLEAN)
 
 distortosSetConfiguration(STRING

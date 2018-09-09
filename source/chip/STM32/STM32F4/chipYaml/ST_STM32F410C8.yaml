@@ -23,6 +23,78 @@ CPUs:
     FPU:
       compatible:
       - ARM,FPv4-SP-D16
+NVIC:
+  compatible:
+  - ARM,NVIC
+  - interrupt-controller
+  core-vectors:
+    1: Reset
+    2: NMI
+    3: HardFault
+    4: MemManage
+    5: BusFault
+    6: UsageFault
+    11: SVC
+    12: DebugMon
+    14: PendSV
+    15: SysTick
+  chip-vectors:
+    16: WWDG
+    17: PVD
+    18: TAMP_STAMP
+    19: RTC_WKUP
+    20: FLASH
+    21: RCC
+    22: EXTI0
+    23: EXTI1
+    24: EXTI2
+    25: EXTI3
+    26: EXTI4
+    27: DMA1_Stream0
+    28: DMA1_Stream1
+    29: DMA1_Stream2
+    30: DMA1_Stream3
+    31: DMA1_Stream4
+    32: DMA1_Stream5
+    33: DMA1_Stream6
+    34: ADC
+    39: EXTI9_5
+    40: TIM1_BRK_TIM9
+    41: TIM1_UP
+    42: TIM1_TRG_COM_TIM11
+    43: TIM1_CC
+    47: I2C1_EV
+    48: I2C1_ER
+    49: I2C2_EV
+    50: I2C2_ER
+    51: SPI1
+    52: SPI2
+    53: USART1
+    54: USART2
+    56: EXTI15_10
+    57: RTC_Alarm
+    63: DMA1_Stream7
+    66: TIM5
+    70: TIM6_DAC
+    72: DMA2_Stream0
+    73: DMA2_Stream1
+    74: DMA2_Stream2
+    75: DMA2_Stream3
+    76: DMA2_Stream4
+    78: EXTI19
+    84: DMA2_Stream5
+    85: DMA2_Stream6
+    86: DMA2_Stream7
+    87: USART6
+    92: EXTI20
+    96: RNG
+    97: FPU
+    101: SPI5
+    111: FMPI2C1_EV
+    112: FMPI2C1_ER
+    113: LPTIM1
+  $labels:
+  - NVIC
 clocks:
   HSE:
     compatible:

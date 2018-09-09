@@ -13,7 +13,6 @@ target_include_directories(distortos PUBLIC
 
 target_sources(distortos PRIVATE
 		${CMAKE_CURRENT_LIST_DIR}/ARMv6-M-ARMv7-M-architectureLowLevelInitializer.cpp
-		${CMAKE_CURRENT_LIST_DIR}/ARMv6-M-ARMv7-M-coreVectors.cpp
 		${CMAKE_CURRENT_LIST_DIR}/ARMv6-M-ARMv7-M-disableInterruptMasking.cpp
 		${CMAKE_CURRENT_LIST_DIR}/ARMv6-M-ARMv7-M-enableInterruptMasking.cpp
 		${CMAKE_CURRENT_LIST_DIR}/ARMv6-M-ARMv7-M-getMainStack.cpp
