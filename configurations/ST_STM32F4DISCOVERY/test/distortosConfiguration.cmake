@@ -412,11 +412,11 @@ set("distortos_Memory_02_Flash_instruction_cache"
 		CACHE
 		"BOOL"
 		"Enable flash instruction cache option in FLASH->ACR register.")
-set("distortos_Memory_regions_00_text_vectors"
+set("distortos_Memory_regions_00_text_vectorTable"
 		"flash"
 		CACHE
 		"STRING"
-		"Memory region for .text.vectors section in linker script")
+		"Memory region for .text.vectorTable section in linker script")
 set("distortos_Memory_regions_01_text"
 		"flash"
 		CACHE
