@@ -49,6 +49,12 @@ where it may be necessary to pass flags like `--gap-fill 0xff`.
 is calculated as a relative path from current directory to the folder above the script.
 - `generateChipYaml.py` now requires only one argument - the input `*.csv` file. Second argument - output path - is
 optional and default value is `chipYaml/` in the folder of input `*.csv` file.
+- Replaced `ARMv6-M-ARMv7-M-coreVectors.cpp` and `...-chipVectors.cpp` files with `...-vectorTable.cpp` generated for
+each board. Data used to generate vector table is taken from chip *YAML* files, which now contain information about
+*NVIC* and implemented vectors. This change requires the board to be regenerated and this requirement is enforced by
+*CMake*. Additionally `distortos_Memory_regions_..._text_vectors` *CMake* configuration option was renamed to
+`distortos_Memory_regions_..._text_vectorTable`, which is related to the rename of `.text.vectors` linker section to
+`.text.vectorTable`.
 - Update *CMSIS* to version 5.4.0.
 
 ### Deprecated
