@@ -435,8 +435,8 @@ using ExceptionVector = void(*)();
 | global variables
 +---------------------------------------------------------------------------------------------------------------------*/
 
-/// core vector table
-extern "C" const ExceptionVector coreVectors[] __attribute__ ((section(".coreVectors"), used))
+/// vector table
+extern "C" const ExceptionVector vectorTable[] __attribute__ ((section(".vectorTable"), used))
 {
 		reinterpret_cast<ExceptionVector>(__main_stack_end),	// 0x0: Main stack end address
 		Reset_Handler,		// Reset, address 0x4, exception number 1, IRQ number -15
@@ -454,11 +454,6 @@ extern "C" const ExceptionVector coreVectors[] __attribute__ ((section(".coreVec
 		nullptr,		// Reserved, address 0x34, exception number 13, IRQ number -3
 		PendSV_Handler,		// PendSV, address 0x38, exception number 14, IRQ number -2
 		SysTick_Handler,		// SysTick, address 0x3c, exception number 15, IRQ number -1
-};
-
-/// chip vector table
-extern "C" const ExceptionVector chipVectors[] __attribute__ ((section(".chipVectors"), used))
-{
 		WWDG_IRQHandler,		// WWDG, address 0x40, exception number 16, IRQ number 0
 		PVD_IRQHandler,		// PVD, address 0x44, exception number 17, IRQ number 1
 		TAMP_STAMP_IRQHandler,		// TAMP_STAMP, address 0x48, exception number 18, IRQ number 2

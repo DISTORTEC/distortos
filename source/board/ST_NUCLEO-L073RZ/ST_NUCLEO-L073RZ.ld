@@ -118,8 +118,7 @@ SECTIONS
 	{
 		PROVIDE(__text_vectors_start = .);
 
-		KEEP(*(.coreVectors));
-		KEEP(*(.chipVectors));
+		KEEP(*(.vectorTable));
 
 		PROVIDE(__text_vectors_end = .);
 	} > textVectorsVmaRegion AT > textVectorsLmaRegion
