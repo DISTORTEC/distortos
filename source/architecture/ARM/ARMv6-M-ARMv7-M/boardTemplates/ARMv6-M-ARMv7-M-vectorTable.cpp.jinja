@@ -21,18 +21,19 @@ extern "C"
 /*---------------------------------------------------------------------------------------------------------------------+
 | default weak handlers
 +---------------------------------------------------------------------------------------------------------------------*/
-{% for key, value in dictionary['NVIC']['core-vectors'].items() if key is number and key != 1 %}
+{% for exceptionNumber, item in enumerate(dictionary['NVIC']['core-vectors'][1:], 2) if item %}
 
-// {{ handlerComment(value, key) }}
-__attribute__ ((weak)) void {{ value }}_Handler()
+// {{ handlerComment(item['name'], exceptionNumber) }}
+__attribute__ ((weak)) void {{ item['name'] }}_Handler()
 {
 	while (1);
 }
 {% endfor %}
-{% for key, value in dictionary['NVIC']['chip-vectors'].items() if key is number %}
+{% for exceptionNumber, item in enumerate(dictionary['NVIC']['chip-vectors'],
+		len(dictionary['NVIC']['core-vectors']) + 1) if item %}
 
-// {{ handlerComment(value, key) }}
-__attribute__ ((weak)) void {{ value }}_IRQHandler()
+// {{ handlerComment(item['name'], exceptionNumber) }}
+__attribute__ ((weak)) void {{ item['name'] }}_IRQHandler()
 {
 	while (1);
 }
@@ -63,24 +64,24 @@ using ExceptionVector = void(*)();
 /*---------------------------------------------------------------------------------------------------------------------+
 | global variables
 +---------------------------------------------------------------------------------------------------------------------*/
-{% set context = namespace(exceptionNumber = 1) %}
 
 /// vector table
 extern "C" const ExceptionVector vectorTable[] __attribute__ ((section(".vectorTable"), used))
 {
 		reinterpret_cast<ExceptionVector>(__main_stack_end),	// 0x0: Main stack end address
-{% for key, value in dictionary['NVIC']['core-vectors'].items() if key is number %}
-{% for number in range(context.exceptionNumber, key) %}
-		nullptr,		// {{ handlerComment('Reserved', number) }}
+{% for exceptionNumber, item in enumerate(dictionary['NVIC']['core-vectors'], 1) %}
+{% if item %}
+		{{ item['name'] }}_Handler,		// {{ handlerComment(item['name'], exceptionNumber) }}
+{% else %}
+		nullptr,		// {{ handlerComment('Reserved', exceptionNumber) }}
+{% endif %}
 {% endfor %}
-		{{ value }}_Handler,		// {{ handlerComment(value, key) }}
-{% set context.exceptionNumber = key + 1 %}
-{% endfor %}
-{% for key, value in dictionary['NVIC']['chip-vectors'].items() if key is number %}
-{% for number in range(context.exceptionNumber, key) %}
-		nullptr,		// {{ handlerComment('Reserved', number) }}
-{% endfor %}
-		{{ value }}_IRQHandler,		// {{ handlerComment(value, key) }}
-{% set context.exceptionNumber = key + 1 %}
+{% for exceptionNumber, item in enumerate(dictionary['NVIC']['chip-vectors'],
+		len(dictionary['NVIC']['core-vectors']) + 1) %}
+{% if item %}
+		{{ item['name'] }}_IRQHandler,		// {{ handlerComment(item['name'], exceptionNumber) }}
+{% else %}
+		nullptr,		// {{ handlerComment('Reserved', exceptionNumber) }}
+{% endif %}
 {% endfor %}
 };

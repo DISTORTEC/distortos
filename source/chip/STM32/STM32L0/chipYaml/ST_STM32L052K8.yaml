@@ -25,43 +25,54 @@ NVIC:
   - ARM,NVIC
   - interrupt-controller
   core-vectors:
-    1: Reset
-    2: NMI
-    3: HardFault
-    11: SVC
-    14: PendSV
-    15: SysTick
+  - name: Reset
+  - name: NMI
+  - name: HardFault
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - name: SVC
+  - 
+  - 
+  - name: PendSV
+  - name: SysTick
   chip-vectors:
-    16: WWDG
-    17: PVD
-    18: RTC
-    19: FLASH
-    20: RCC_CRS
-    21: EXTI0_1
-    22: EXTI2_3
-    23: EXTI4_15
-    24: TSC
-    25: DMA_Ch1
-    26: DMA_Ch2_3
-    27: DMA_Ch4_5_6_7
-    28: ADC1_COMP
-    29: LPTIM1
-    30: USART4_5
-    31: TIM2
-    32: TIM3
-    33: TIM6_DAC
-    34: TIM7
-    36: TIM21
-    37: I2C3
-    38: TIM22
-    39: I2C1
-    40: I2C2
-    41: SPI1
-    42: SPI2
-    43: USART1
-    44: USART2
-    45: AES_RNG_LPUART1
-    47: USB
+  - name: WWDG
+  - name: PVD
+  - name: RTC
+  - name: FLASH
+  - name: RCC_CRS
+  - name: EXTI0_1
+  - name: EXTI2_3
+  - name: EXTI4_15
+  - name: TSC
+  - name: DMA_Ch1
+  - name: DMA_Ch2_3
+  - name: DMA_Ch4_5_6_7
+  - name: ADC1_COMP
+  - name: LPTIM1
+  - name: USART4_5
+  - name: TIM2
+  - name: TIM3
+  - name: TIM6_DAC
+  - name: TIM7
+  - 
+  - name: TIM21
+  - name: I2C3
+  - name: TIM22
+  - name: I2C1
+  - name: I2C2
+  - name: SPI1
+  - name: SPI2
+  - name: USART1
+  - name: USART2
+  - name: AES_RNG_LPUART1
+  - 
+  - name: USB
   $labels:
   - NVIC
 memories:
