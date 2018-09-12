@@ -199,6 +199,8 @@ if __name__ == '__main__':
 	jinjaEnvironment.filters['sanitize'] = common.sanitize
 	jinjaEnvironment.globals['board'] = board
 	jinjaEnvironment.globals['distortosPath'] = relativeDistortosPath
+	jinjaEnvironment.globals['enumerate'] = enumerate
+	jinjaEnvironment.globals['len'] = len
 	jinjaEnvironment.globals['outputPath'] = relativeOutputPath
 	jinjaEnvironment.globals['sanitizedBoard'] = common.sanitize(board)
 	jinjaEnvironment.globals['year'] = datetime.date.today().year
