@@ -56,7 +56,7 @@ the test application, specify `distortosTest` as the target (for example `ninja 
     $ mkdir output
     $ cd output
     $ cmake .. -DCMAKE_TOOLCHAIN_FILE=../source/board/ST_STM32F4DISCOVERY/Toolchain-ST_STM32F4DISCOVERY.cmake -GNinja
-	$ cmake-gui ..
+    $ cmake-gui ..
     $ ninja
 
 or
@@ -67,7 +67,7 @@ or
     $ mkdir output
     $ cd output
     $ cmake -C../configurations/ST_STM32F4DISCOVERY/test/distortosConfiguration.cmake .. -GNinja
-	$ cmake-gui ..
+    $ cmake-gui ..
     $ ninja
 
 Generating board
