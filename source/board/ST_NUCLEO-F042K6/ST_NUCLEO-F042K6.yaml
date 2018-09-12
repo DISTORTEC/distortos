@@ -1,0 +1,24 @@
+#
+# file: ST_NUCLEO-F042K6.yaml
+#
+# author: Copyright (C) 2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+#
+# This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
+# distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+#
+
+$extends:
+- 'source/chip/STM32/STM32F0/chipYaml/ST_STM32F042K6.yaml'
+board:
+  compatible:
+  - ST,NUCLEO-F042K6
+  model: STMicroelectronics NUCLEO-F042K6
+leds:
+  compatible:
+  - GPIO-outputs
+  Ld3:
+    GPIO:
+      port: !Reference {label: GPIOB}
+      pin: 3
+    alternative-names:
+    - Green

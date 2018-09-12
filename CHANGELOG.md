@@ -9,6 +9,7 @@ All notable changes to this project will be documented in this file. This projec
 
 ### Added
 
+- Support for [NUCLEO-F042K6](https://www.st.com/en/evaluation-tools/nucleo-f042k6.html) board with *STM32F0* chip.
 - Added `BlockDevice` interface class.
 - Added `SpiDeviceProxy`, `SpiMasterProxy` and `SpiDeviceSelectGuard`, which build new SPI-related API. These classes
 can be used for RAII-style locking/unlocking or selecting/deselecting of appropriate devices and also serve as proxies
