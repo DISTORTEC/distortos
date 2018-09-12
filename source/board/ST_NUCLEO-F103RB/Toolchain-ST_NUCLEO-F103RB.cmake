@@ -99,7 +99,6 @@ distortosRemoveFlag(CMAKE_C_FLAGS "-mfloat-abi")
 distortosRemoveFlag(CMAKE_CXX_FLAGS "-mfloat-abi")
 distortosRemoveFlag(CMAKE_EXE_LINKER_FLAGS "-mfloat-abi")
 
-
 distortosRemoveFlag(CMAKE_CXX_FLAGS "-f(no-)?use-cxa-atexit")
 if(NOT distortos_Build_00_Static_destructors OR NOT distortos_Build_01_Run_time_registration_of_static_destructors)
 	distortosAddFlag(CMAKE_CXX_FLAGS "-fno-use-cxa-atexit")
