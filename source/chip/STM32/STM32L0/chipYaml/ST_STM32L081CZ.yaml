@@ -56,6 +56,9 @@ NVIC:
   - name: ADC1_COMP
   - name: LPTIM1
   - name: USART4_5
+    subvectors:
+    - USART4
+    - USART5
   - name: TIM2
   - name: TIM3
   - name: TIM6
