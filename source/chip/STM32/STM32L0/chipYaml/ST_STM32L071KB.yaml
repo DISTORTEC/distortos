@@ -136,6 +136,10 @@ SPIs:
   SPI1:
     compatible:
     - ST,STM32-SPI-v1
+    interrupt:
+      controller: !Reference
+        label: NVIC
+      vector: SPI1
     $labels:
     - SPI1
 UARTs:
@@ -148,20 +152,36 @@ UARTs:
   USART1:
     compatible:
     - ST,STM32-USART-v2
+    interrupt:
+      controller: !Reference
+        label: NVIC
+      vector: USART1
     $labels:
     - USART1
   USART2:
     compatible:
     - ST,STM32-USART-v2
+    interrupt:
+      controller: !Reference
+        label: NVIC
+      vector: USART2
     $labels:
     - USART2
   USART4:
     compatible:
     - ST,STM32-USART-v2
+    interrupt:
+      controller: !Reference
+        label: NVIC
+      vector: USART4
     $labels:
     - USART4
   USART5:
     compatible:
     - ST,STM32-USART-v2
+    interrupt:
+      controller: !Reference
+        label: NVIC
+      vector: USART5
     $labels:
     - USART5
