@@ -71,6 +71,13 @@ NVIC:
   - name: USART1
   - name: USART2
   - name: USART3_8
+    subvectors:
+    - USART3
+    - USART4
+    - USART5
+    - USART6
+    - USART7
+    - USART8
   - name: CEC_CAN
   - name: USB
   $labels:
