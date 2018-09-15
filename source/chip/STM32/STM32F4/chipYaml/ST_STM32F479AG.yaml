@@ -238,26 +238,46 @@ SPIs:
   SPI1:
     compatible:
     - ST,STM32-SPI-v1
+    interrupt:
+      controller: !Reference
+        label: NVIC
+      vector: SPI1
     $labels:
     - SPI1
   SPI2:
     compatible:
     - ST,STM32-SPI-v1
+    interrupt:
+      controller: !Reference
+        label: NVIC
+      vector: SPI2
     $labels:
     - SPI2
   SPI3:
     compatible:
     - ST,STM32-SPI-v1
+    interrupt:
+      controller: !Reference
+        label: NVIC
+      vector: SPI3
     $labels:
     - SPI3
   SPI4:
     compatible:
     - ST,STM32-SPI-v1
+    interrupt:
+      controller: !Reference
+        label: NVIC
+      vector: SPI4
     $labels:
     - SPI4
   SPI6:
     compatible:
     - ST,STM32-SPI-v1
+    interrupt:
+      controller: !Reference
+        label: NVIC
+      vector: SPI6
     $labels:
     - SPI6
 UARTs:
@@ -267,40 +287,72 @@ UARTs:
   USART1:
     compatible:
     - ST,STM32-USART-v1
+    interrupt:
+      controller: !Reference
+        label: NVIC
+      vector: USART1
     $labels:
     - USART1
   USART2:
     compatible:
     - ST,STM32-USART-v1
+    interrupt:
+      controller: !Reference
+        label: NVIC
+      vector: USART2
     $labels:
     - USART2
   USART3:
     compatible:
     - ST,STM32-USART-v1
+    interrupt:
+      controller: !Reference
+        label: NVIC
+      vector: USART3
     $labels:
     - USART3
   UART4:
     compatible:
     - ST,STM32-USART-v1
+    interrupt:
+      controller: !Reference
+        label: NVIC
+      vector: UART4
     $labels:
     - UART4
   UART5:
     compatible:
     - ST,STM32-USART-v1
+    interrupt:
+      controller: !Reference
+        label: NVIC
+      vector: UART5
     $labels:
     - UART5
   USART6:
     compatible:
     - ST,STM32-USART-v1
+    interrupt:
+      controller: !Reference
+        label: NVIC
+      vector: USART6
     $labels:
     - USART6
   UART7:
     compatible:
     - ST,STM32-USART-v1
+    interrupt:
+      controller: !Reference
+        label: NVIC
+      vector: UART7
     $labels:
     - UART7
   UART8:
     compatible:
     - ST,STM32-USART-v1
+    interrupt:
+      controller: !Reference
+        label: NVIC
+      vector: UART8
     $labels:
     - UART8
