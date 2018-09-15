@@ -15,6 +15,7 @@ import argparse
 import ast
 import collections
 import common
+from common import Reference
 import datetime
 import fnmatch
 import jinja2
@@ -41,28 +42,6 @@ class RaiseExtension(jinja2.ext.Extension):
 
 	def raiseImplementation(self, message, lineNumber, name, filename, caller):
 		raise jinja2.exceptions.TemplateAssertionError(message, lineNumber, name, filename)
-
-class Reference(object):
-	"""Reference to label in YAML"""
-
-	yaml_tag = '!Reference'
-
-	def __init__(self, label):
-		self.label = label
-
-	def __repr__(self):
-		return "{}(label = {})".format(self.__class__.__name__, self.label)
-
-	def __eq__(self, other):
-		if isinstance(self, other.__class__) == True:
-			return self.label == other.label
-		return False
-
-	def __ne__(self, other):
-		return not self.__eq__(other)
-
-	def __hash__(self):
-		return self.label.__hash__()
 
 def addPaths(dictionary, path = None):
 	"""Extend each node of the dictionary with its path.
