@@ -12,9 +12,11 @@
 import argparse
 import ast
 import common
+from common import Reference
 import csv
 import datetime
 import os
+import re
 import ruamel.yaml
 
 def addLabels(dictionary, labels):
@@ -93,7 +95,11 @@ def parseString(string):
 	try:
 		return ast.literal_eval(string)
 	except ValueError:
-		return string
+		match = re.match("Reference\(label = '(\w+)'\)\Z", string)
+		if match:
+			return Reference(label = match[1])
+		else:
+			return string
 
 ########################################################################################################################
 # main
@@ -115,6 +121,7 @@ if __name__ == '__main__':
 		firstRow = next(csvReader)
 		paths, labels = parseFirstRow(firstRow)
 		yaml = ruamel.yaml.YAML()
+		yaml.register_class(Reference)
 		for row in csvReader:
 			yamlFilename = os.path.join(arguments.outputPath, common.sanitize(parseString(row[0])[0]) + '.yaml')
 			print('Generating {}...'.format(yamlFilename))
