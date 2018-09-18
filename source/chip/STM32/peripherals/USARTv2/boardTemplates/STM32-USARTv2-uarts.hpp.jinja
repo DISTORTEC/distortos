@@ -1,0 +1,46 @@
+{% set includeGuard = outputFilename | sanitize('[^0-9A-Za-z]') | upper + '_' %}
+/**
+ * \file
+ * \brief Declarations of low-level UART drivers for USARTv2 in {{ board }} ({{ dictionary['chip']['compatible'][0] }} chip)
+ *
+ * \author Copyright (C) 2016-2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ *
+ * \par License
+ * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
+ * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ *
+ * \warning
+ * Automatically generated file - do not edit!
+ */
+
+#ifndef {{ includeGuard }}
+#define {{ includeGuard }}
+
+#include "distortos/distortosConfiguration.h"
+
+namespace distortos
+{
+
+namespace chip
+{
+
+class ChipUartLowLevel;
+
+/*---------------------------------------------------------------------------------------------------------------------+
+| global objects
++---------------------------------------------------------------------------------------------------------------------*/
+{% for key, uart in dictionary['UARTs'].items() if uart is mapping and 'ST,STM32-USART-v2' in uart['compatible'] %}
+
+#ifdef CONFIG_CHIP_STM32_USARTV2_{{ key | upper }}_ENABLE
+
+/// UART low-level driver for {{ key }}
+extern ChipUartLowLevel {{ key | lower }};
+
+#endif	// def CONFIG_CHIP_STM32_USARTV2_{{ key | upper }}_ENABLE
+{% endfor %}
+
+}	// namespace chip
+
+}	// namespace distortos
+
+#endif	// {{ includeGuard }}

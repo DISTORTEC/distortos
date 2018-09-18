@@ -1,4 +1,10 @@
 {% if 'ST,STM32-USARTs-v1-group' in dictionary['UARTs']['compatible'] %}
+('source/chip/STM32/peripherals/USARTv1/boardTemplates/STM32-USARTv1-uarts.cpp.jinja',
+		{},
+		'{{ sanitizedBoard }}-uarts.cpp'),
+('source/chip/STM32/peripherals/USARTv1/boardTemplates/STM32-USARTv1-uarts.hpp.jinja',
+		{},
+		'include/distortos/chip/uarts.hpp'),
 ('source/chip/STM32/peripherals/USARTv1/boardTemplates/STM32-USARTv1.cmake.jinja',
 		{},
 		'cmake/70-STM32-USARTv1.cmake'),

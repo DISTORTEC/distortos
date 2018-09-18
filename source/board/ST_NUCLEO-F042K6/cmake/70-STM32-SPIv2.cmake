@@ -15,4 +15,8 @@ distortosSetConfiguration(BOOLEAN
 		HELP "Enable SPI1 low-level driver."
 		OUTPUT_NAME CONFIG_CHIP_STM32_SPIV2_SPI1_ENABLE)
 
+if(distortos_Peripherals_SPI1)
+	set(ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_SPI1_ENABLE ON)
+endif()
+
 include("${CMAKE_CURRENT_SOURCE_DIR}/source/chip/STM32/peripherals/SPIv2/distortos-sources.cmake")

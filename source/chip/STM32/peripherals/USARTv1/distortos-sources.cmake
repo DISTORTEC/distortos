@@ -11,8 +11,6 @@ target_include_directories(distortos PUBLIC
 		${CMAKE_CURRENT_LIST_DIR}/include)
 
 target_sources(distortos PRIVATE
-		${CMAKE_CURRENT_LIST_DIR}/STM32-USARTv1-ChipUartLowLevel.cpp
-		${CMAKE_CURRENT_LIST_DIR}/STM32-USARTv1-uarts.cpp
-		${CMAKE_CURRENT_LIST_DIR}/STM32-USARTv1-usartLowLevelInitializer.cpp)
+		${CMAKE_CURRENT_LIST_DIR}/STM32-USARTv1-ChipUartLowLevel.cpp)
 
 doxygen(INPUT ${CMAKE_CURRENT_LIST_DIR} INCLUDE_PATH ${CMAKE_CURRENT_LIST_DIR}/include)

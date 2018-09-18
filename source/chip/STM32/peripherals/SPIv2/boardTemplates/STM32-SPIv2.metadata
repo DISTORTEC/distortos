@@ -1,4 +1,10 @@
 {% if 'ST,STM32-SPIs-v2-group' in dictionary['SPIs']['compatible'] %}
+('source/chip/STM32/peripherals/SPIv2/boardTemplates/STM32-SPIv2-spis.cpp.jinja',
+		{},
+		'{{ sanitizedBoard }}-spis.cpp'),
+('source/chip/STM32/peripherals/SPIv2/boardTemplates/STM32-SPIv2-spis.hpp.jinja',
+		{},
+		'include/distortos/chip/spis.hpp'),
 ('source/chip/STM32/peripherals/SPIv2/boardTemplates/STM32-SPIv2.cmake.jinja',
 		{},
 		'cmake/70-STM32-SPIv2.cmake'),

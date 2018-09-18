@@ -3,7 +3,7 @@
 {%- endmacro %}
 /**
  * \file
- * \brief {{ board }} ({{ dictionary['chip']['compatible'][0] }} chip) vector table and default weak handlers
+ * \brief {{ board }} ({{ dictionary['chip']['compatible'][0] }} chip) vector table, default handlers and NVIC low-level initializer
  *
  * \author Copyright (C) 2014-2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
@@ -15,11 +15,64 @@
  * Automatically generated file - do not edit!
  */
 
+#include "distortos/chip/CMSIS-proxy.h"
+
+#include "distortos/BIND_LOW_LEVEL_INITIALIZER.h"
+
+namespace
+{
+
+/*---------------------------------------------------------------------------------------------------------------------+
+| local types
++---------------------------------------------------------------------------------------------------------------------*/
+
+/// single exception vector - pointer to function with no arguments and no return value
+using ExceptionVector = void(*)();
+
+/*---------------------------------------------------------------------------------------------------------------------+
+| local objects
++---------------------------------------------------------------------------------------------------------------------*/
+
+/// priority of interrupts
+{% if 'ARM,ARMv7-M' in dictionary['CPUs'][0]['compatible'] %}
+#if defined(CONFIG_ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI)
+constexpr uint8_t interruptPriority {CONFIG_ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI};
+#else	// !defined(CONFIG_ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI)
+{% endif %}
+constexpr uint8_t interruptPriority {};
+{% if 'ARM,ARMv7-M' in dictionary['CPUs'][0]['compatible'] %}
+#endif	// !defined(CONFIG_ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI)
+{% endif %}
+
+/*---------------------------------------------------------------------------------------------------------------------+
+| local functions
++---------------------------------------------------------------------------------------------------------------------*/
+
+/**
+ * \brief Low-level peripheral initializer for NVIC
+ *
+ * This function is called before constructors for global and static objects via BIND_LOW_LEVEL_INITIALIZER().
+ */
+
+void nvicLowLevelInitializer()
+{
+{% for item in dictionary['NVIC']['chip-vectors'] if item %}
+#ifdef CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_{{ item['name'] | upper }}_ENABLE
+	NVIC_SetPriority({{ item['name'] }}_IRQn, interruptPriority);
+	NVIC_EnableIRQ({{ item['name'] }}_IRQn);
+#endif	// def CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_{{ item['name'] | upper }}_ENABLE
+{% endfor %}
+}
+
+BIND_LOW_LEVEL_INITIALIZER(50, nvicLowLevelInitializer);
+
+}	// namespace
+
 extern "C"
 {
 
 /*---------------------------------------------------------------------------------------------------------------------+
-| default weak handlers
+| default handlers
 +---------------------------------------------------------------------------------------------------------------------*/
 {% for exceptionNumber, item in enumerate(dictionary['NVIC']['core-vectors'][1:], 2) if item %}
 
@@ -33,9 +86,19 @@ __attribute__ ((weak)) void {{ item['name'] }}_Handler()
 		len(dictionary['NVIC']['core-vectors']) + 1) if item %}
 
 // {{ handlerComment(item['name'], exceptionNumber) }}
-__attribute__ ((weak)) void {{ item['name'] }}_IRQHandler()
+{% if 'subvectors' not in item %}__attribute__ ((weak)) {% endif %}void {{ item['name'] }}_IRQHandler()
 {
+{% for subvector in item.get('subvectors', []) %}
+	__attribute__ ((weak)) void {{ subvector }}_IRQHandler();
+{% if loop.last == True %}
+
+{% endif %}
+{% endfor %}
+{% for subvector in item.get('subvectors', []) %}
+	{{ subvector }}_IRQHandler();
+{% else %}
 	while (1);
+{% endfor %}
 }
 {% endfor %}
 
@@ -47,26 +110,12 @@ extern const char __main_stack_end[];		// main stack end - imported from linker 
 
 void Reset_Handler();		// import the address of Reset_Handler()
 
-}	// extern "C"
-
-namespace
-{
-
 /*---------------------------------------------------------------------------------------------------------------------+
-| local types
-+---------------------------------------------------------------------------------------------------------------------*/
-
-/// single exception vector - pointer to function with no arguments and no return value
-using ExceptionVector = void(*)();
-
-}	// namespace
-
-/*---------------------------------------------------------------------------------------------------------------------+
-| global variables
+| global objects
 +---------------------------------------------------------------------------------------------------------------------*/
 
 /// vector table
-extern "C" const ExceptionVector vectorTable[] __attribute__ ((section(".vectorTable"), used))
+const ExceptionVector vectorTable[] __attribute__ ((section(".vectorTable"), used))
 {
 		reinterpret_cast<ExceptionVector>(__main_stack_end),	// 0x0: Main stack end address
 {% for exceptionNumber, item in enumerate(dictionary['NVIC']['core-vectors'], 1) %}
@@ -85,3 +134,5 @@ extern "C" const ExceptionVector vectorTable[] __attribute__ ((section(".vectorT
 {% endif %}
 {% endfor %}
 };
+
+}	// extern "C"

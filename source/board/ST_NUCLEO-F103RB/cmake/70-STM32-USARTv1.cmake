@@ -20,16 +20,28 @@ distortosSetConfiguration(BOOLEAN
 		HELP "Enable USART1 low-level driver."
 		OUTPUT_NAME CONFIG_CHIP_STM32_USARTV1_USART1_ENABLE)
 
+if(distortos_Peripherals_USART1)
+	set(ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_USART1_ENABLE ON)
+endif()
+
 distortosSetConfiguration(BOOLEAN
 		distortos_Peripherals_USART2
 		OFF
 		HELP "Enable USART2 low-level driver."
 		OUTPUT_NAME CONFIG_CHIP_STM32_USARTV1_USART2_ENABLE)
 
+if(distortos_Peripherals_USART2)
+	set(ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_USART2_ENABLE ON)
+endif()
+
 distortosSetConfiguration(BOOLEAN
 		distortos_Peripherals_USART3
 		OFF
 		HELP "Enable USART3 low-level driver."
 		OUTPUT_NAME CONFIG_CHIP_STM32_USARTV1_USART3_ENABLE)
+
+if(distortos_Peripherals_USART3)
+	set(ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_USART3_ENABLE ON)
+endif()
 
 include("${CMAKE_CURRENT_SOURCE_DIR}/source/chip/STM32/peripherals/USARTv1/distortos-sources.cmake")

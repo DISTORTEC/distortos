@@ -11,8 +11,6 @@ target_include_directories(distortos PUBLIC
 		${CMAKE_CURRENT_LIST_DIR}/include)
 
 target_sources(distortos PRIVATE
-		${CMAKE_CURRENT_LIST_DIR}/STM32-SPIv2-ChipSpiMasterLowLevel.cpp
-		${CMAKE_CURRENT_LIST_DIR}/STM32-SPIv2-spiLowLevelInitializer.cpp
-		${CMAKE_CURRENT_LIST_DIR}/STM32-SPIv2-spis.cpp)
+		${CMAKE_CURRENT_LIST_DIR}/STM32-SPIv2-ChipSpiMasterLowLevel.cpp)
 
 doxygen(INPUT ${CMAKE_CURRENT_LIST_DIR} INCLUDE_PATH ${CMAKE_CURRENT_LIST_DIR}/include)

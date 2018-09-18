@@ -1,6 +1,6 @@
 /**
  * \file
- * \brief ST,NUCLEO-F103RB (ST,STM32F103RB chip) vector table and default weak handlers
+ * \brief ST,NUCLEO-F103RB (ST,STM32F103RB chip) vector table, default handlers and NVIC low-level initializer
  *
  * \author Copyright (C) 2014-2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
@@ -12,11 +12,294 @@
  * Automatically generated file - do not edit!
  */
 
+#include "distortos/chip/CMSIS-proxy.h"
+
+#include "distortos/BIND_LOW_LEVEL_INITIALIZER.h"
+
+namespace
+{
+
+/*---------------------------------------------------------------------------------------------------------------------+
+| local types
++---------------------------------------------------------------------------------------------------------------------*/
+
+/// single exception vector - pointer to function with no arguments and no return value
+using ExceptionVector = void(*)();
+
+/*---------------------------------------------------------------------------------------------------------------------+
+| local objects
++---------------------------------------------------------------------------------------------------------------------*/
+
+/// priority of interrupts
+#if defined(CONFIG_ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI)
+constexpr uint8_t interruptPriority {CONFIG_ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI};
+#else	// !defined(CONFIG_ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI)
+constexpr uint8_t interruptPriority {};
+#endif	// !defined(CONFIG_ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI)
+
+/*---------------------------------------------------------------------------------------------------------------------+
+| local functions
++---------------------------------------------------------------------------------------------------------------------*/
+
+/**
+ * \brief Low-level peripheral initializer for NVIC
+ *
+ * This function is called before constructors for global and static objects via BIND_LOW_LEVEL_INITIALIZER().
+ */
+
+void nvicLowLevelInitializer()
+{
+#ifdef CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_WWDG_ENABLE
+	NVIC_SetPriority(WWDG_IRQn, interruptPriority);
+	NVIC_EnableIRQ(WWDG_IRQn);
+#endif	// def CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_WWDG_ENABLE
+#ifdef CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_PVD_ENABLE
+	NVIC_SetPriority(PVD_IRQn, interruptPriority);
+	NVIC_EnableIRQ(PVD_IRQn);
+#endif	// def CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_PVD_ENABLE
+#ifdef CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_TAMPER_ENABLE
+	NVIC_SetPriority(TAMPER_IRQn, interruptPriority);
+	NVIC_EnableIRQ(TAMPER_IRQn);
+#endif	// def CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_TAMPER_ENABLE
+#ifdef CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_RTC_ENABLE
+	NVIC_SetPriority(RTC_IRQn, interruptPriority);
+	NVIC_EnableIRQ(RTC_IRQn);
+#endif	// def CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_RTC_ENABLE
+#ifdef CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_FLASH_ENABLE
+	NVIC_SetPriority(FLASH_IRQn, interruptPriority);
+	NVIC_EnableIRQ(FLASH_IRQn);
+#endif	// def CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_FLASH_ENABLE
+#ifdef CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_RCC_ENABLE
+	NVIC_SetPriority(RCC_IRQn, interruptPriority);
+	NVIC_EnableIRQ(RCC_IRQn);
+#endif	// def CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_RCC_ENABLE
+#ifdef CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_EXTI0_ENABLE
+	NVIC_SetPriority(EXTI0_IRQn, interruptPriority);
+	NVIC_EnableIRQ(EXTI0_IRQn);
+#endif	// def CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_EXTI0_ENABLE
+#ifdef CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_EXTI1_ENABLE
+	NVIC_SetPriority(EXTI1_IRQn, interruptPriority);
+	NVIC_EnableIRQ(EXTI1_IRQn);
+#endif	// def CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_EXTI1_ENABLE
+#ifdef CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_EXTI2_ENABLE
+	NVIC_SetPriority(EXTI2_IRQn, interruptPriority);
+	NVIC_EnableIRQ(EXTI2_IRQn);
+#endif	// def CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_EXTI2_ENABLE
+#ifdef CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_EXTI3_ENABLE
+	NVIC_SetPriority(EXTI3_IRQn, interruptPriority);
+	NVIC_EnableIRQ(EXTI3_IRQn);
+#endif	// def CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_EXTI3_ENABLE
+#ifdef CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_EXTI4_ENABLE
+	NVIC_SetPriority(EXTI4_IRQn, interruptPriority);
+	NVIC_EnableIRQ(EXTI4_IRQn);
+#endif	// def CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_EXTI4_ENABLE
+#ifdef CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_DMA1_CHANNEL1_ENABLE
+	NVIC_SetPriority(DMA1_Channel1_IRQn, interruptPriority);
+	NVIC_EnableIRQ(DMA1_Channel1_IRQn);
+#endif	// def CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_DMA1_CHANNEL1_ENABLE
+#ifdef CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_DMA1_CHANNEL2_ENABLE
+	NVIC_SetPriority(DMA1_Channel2_IRQn, interruptPriority);
+	NVIC_EnableIRQ(DMA1_Channel2_IRQn);
+#endif	// def CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_DMA1_CHANNEL2_ENABLE
+#ifdef CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_DMA1_CHANNEL3_ENABLE
+	NVIC_SetPriority(DMA1_Channel3_IRQn, interruptPriority);
+	NVIC_EnableIRQ(DMA1_Channel3_IRQn);
+#endif	// def CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_DMA1_CHANNEL3_ENABLE
+#ifdef CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_DMA1_CHANNEL4_ENABLE
+	NVIC_SetPriority(DMA1_Channel4_IRQn, interruptPriority);
+	NVIC_EnableIRQ(DMA1_Channel4_IRQn);
+#endif	// def CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_DMA1_CHANNEL4_ENABLE
+#ifdef CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_DMA1_CHANNEL5_ENABLE
+	NVIC_SetPriority(DMA1_Channel5_IRQn, interruptPriority);
+	NVIC_EnableIRQ(DMA1_Channel5_IRQn);
+#endif	// def CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_DMA1_CHANNEL5_ENABLE
+#ifdef CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_DMA1_CHANNEL6_ENABLE
+	NVIC_SetPriority(DMA1_Channel6_IRQn, interruptPriority);
+	NVIC_EnableIRQ(DMA1_Channel6_IRQn);
+#endif	// def CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_DMA1_CHANNEL6_ENABLE
+#ifdef CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_DMA1_CHANNEL7_ENABLE
+	NVIC_SetPriority(DMA1_Channel7_IRQn, interruptPriority);
+	NVIC_EnableIRQ(DMA1_Channel7_IRQn);
+#endif	// def CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_DMA1_CHANNEL7_ENABLE
+#ifdef CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_ADC1_2_ENABLE
+	NVIC_SetPriority(ADC1_2_IRQn, interruptPriority);
+	NVIC_EnableIRQ(ADC1_2_IRQn);
+#endif	// def CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_ADC1_2_ENABLE
+#ifdef CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_USB_HP_CAN1_TX_ENABLE
+	NVIC_SetPriority(USB_HP_CAN1_TX_IRQn, interruptPriority);
+	NVIC_EnableIRQ(USB_HP_CAN1_TX_IRQn);
+#endif	// def CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_USB_HP_CAN1_TX_ENABLE
+#ifdef CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_USB_LP_CAN1_RX0_ENABLE
+	NVIC_SetPriority(USB_LP_CAN1_RX0_IRQn, interruptPriority);
+	NVIC_EnableIRQ(USB_LP_CAN1_RX0_IRQn);
+#endif	// def CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_USB_LP_CAN1_RX0_ENABLE
+#ifdef CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_CAN1_RX1_ENABLE
+	NVIC_SetPriority(CAN1_RX1_IRQn, interruptPriority);
+	NVIC_EnableIRQ(CAN1_RX1_IRQn);
+#endif	// def CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_CAN1_RX1_ENABLE
+#ifdef CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_CAN1_SCE_ENABLE
+	NVIC_SetPriority(CAN1_SCE_IRQn, interruptPriority);
+	NVIC_EnableIRQ(CAN1_SCE_IRQn);
+#endif	// def CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_CAN1_SCE_ENABLE
+#ifdef CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_EXTI9_5_ENABLE
+	NVIC_SetPriority(EXTI9_5_IRQn, interruptPriority);
+	NVIC_EnableIRQ(EXTI9_5_IRQn);
+#endif	// def CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_EXTI9_5_ENABLE
+#ifdef CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_TIM1_BRK_ENABLE
+	NVIC_SetPriority(TIM1_BRK_IRQn, interruptPriority);
+	NVIC_EnableIRQ(TIM1_BRK_IRQn);
+#endif	// def CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_TIM1_BRK_ENABLE
+#ifdef CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_TIM1_UP_ENABLE
+	NVIC_SetPriority(TIM1_UP_IRQn, interruptPriority);
+	NVIC_EnableIRQ(TIM1_UP_IRQn);
+#endif	// def CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_TIM1_UP_ENABLE
+#ifdef CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_TIM1_TRG_COM_ENABLE
+	NVIC_SetPriority(TIM1_TRG_COM_IRQn, interruptPriority);
+	NVIC_EnableIRQ(TIM1_TRG_COM_IRQn);
+#endif	// def CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_TIM1_TRG_COM_ENABLE
+#ifdef CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_TIM1_CC_ENABLE
+	NVIC_SetPriority(TIM1_CC_IRQn, interruptPriority);
+	NVIC_EnableIRQ(TIM1_CC_IRQn);
+#endif	// def CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_TIM1_CC_ENABLE
+#ifdef CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_TIM2_ENABLE
+	NVIC_SetPriority(TIM2_IRQn, interruptPriority);
+	NVIC_EnableIRQ(TIM2_IRQn);
+#endif	// def CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_TIM2_ENABLE
+#ifdef CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_TIM3_ENABLE
+	NVIC_SetPriority(TIM3_IRQn, interruptPriority);
+	NVIC_EnableIRQ(TIM3_IRQn);
+#endif	// def CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_TIM3_ENABLE
+#ifdef CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_TIM4_ENABLE
+	NVIC_SetPriority(TIM4_IRQn, interruptPriority);
+	NVIC_EnableIRQ(TIM4_IRQn);
+#endif	// def CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_TIM4_ENABLE
+#ifdef CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_I2C1_EV_ENABLE
+	NVIC_SetPriority(I2C1_EV_IRQn, interruptPriority);
+	NVIC_EnableIRQ(I2C1_EV_IRQn);
+#endif	// def CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_I2C1_EV_ENABLE
+#ifdef CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_I2C1_ER_ENABLE
+	NVIC_SetPriority(I2C1_ER_IRQn, interruptPriority);
+	NVIC_EnableIRQ(I2C1_ER_IRQn);
+#endif	// def CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_I2C1_ER_ENABLE
+#ifdef CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_I2C2_EV_ENABLE
+	NVIC_SetPriority(I2C2_EV_IRQn, interruptPriority);
+	NVIC_EnableIRQ(I2C2_EV_IRQn);
+#endif	// def CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_I2C2_EV_ENABLE
+#ifdef CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_I2C2_ER_ENABLE
+	NVIC_SetPriority(I2C2_ER_IRQn, interruptPriority);
+	NVIC_EnableIRQ(I2C2_ER_IRQn);
+#endif	// def CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_I2C2_ER_ENABLE
+#ifdef CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_SPI1_ENABLE
+	NVIC_SetPriority(SPI1_IRQn, interruptPriority);
+	NVIC_EnableIRQ(SPI1_IRQn);
+#endif	// def CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_SPI1_ENABLE
+#ifdef CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_SPI2_ENABLE
+	NVIC_SetPriority(SPI2_IRQn, interruptPriority);
+	NVIC_EnableIRQ(SPI2_IRQn);
+#endif	// def CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_SPI2_ENABLE
+#ifdef CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_USART1_ENABLE
+	NVIC_SetPriority(USART1_IRQn, interruptPriority);
+	NVIC_EnableIRQ(USART1_IRQn);
+#endif	// def CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_USART1_ENABLE
+#ifdef CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_USART2_ENABLE
+	NVIC_SetPriority(USART2_IRQn, interruptPriority);
+	NVIC_EnableIRQ(USART2_IRQn);
+#endif	// def CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_USART2_ENABLE
+#ifdef CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_USART3_ENABLE
+	NVIC_SetPriority(USART3_IRQn, interruptPriority);
+	NVIC_EnableIRQ(USART3_IRQn);
+#endif	// def CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_USART3_ENABLE
+#ifdef CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_EXTI15_10_ENABLE
+	NVIC_SetPriority(EXTI15_10_IRQn, interruptPriority);
+	NVIC_EnableIRQ(EXTI15_10_IRQn);
+#endif	// def CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_EXTI15_10_ENABLE
+#ifdef CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_RTC_ALARM_ENABLE
+	NVIC_SetPriority(RTC_Alarm_IRQn, interruptPriority);
+	NVIC_EnableIRQ(RTC_Alarm_IRQn);
+#endif	// def CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_RTC_ALARM_ENABLE
+#ifdef CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_USBWAKEUP_ENABLE
+	NVIC_SetPriority(USBWakeUp_IRQn, interruptPriority);
+	NVIC_EnableIRQ(USBWakeUp_IRQn);
+#endif	// def CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_USBWAKEUP_ENABLE
+#ifdef CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_TIM8_BRK_ENABLE
+	NVIC_SetPriority(TIM8_BRK_IRQn, interruptPriority);
+	NVIC_EnableIRQ(TIM8_BRK_IRQn);
+#endif	// def CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_TIM8_BRK_ENABLE
+#ifdef CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_TIM8_UP_ENABLE
+	NVIC_SetPriority(TIM8_UP_IRQn, interruptPriority);
+	NVIC_EnableIRQ(TIM8_UP_IRQn);
+#endif	// def CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_TIM8_UP_ENABLE
+#ifdef CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_TIM8_TRG_COM_ENABLE
+	NVIC_SetPriority(TIM8_TRG_COM_IRQn, interruptPriority);
+	NVIC_EnableIRQ(TIM8_TRG_COM_IRQn);
+#endif	// def CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_TIM8_TRG_COM_ENABLE
+#ifdef CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_TIM8_CC_ENABLE
+	NVIC_SetPriority(TIM8_CC_IRQn, interruptPriority);
+	NVIC_EnableIRQ(TIM8_CC_IRQn);
+#endif	// def CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_TIM8_CC_ENABLE
+#ifdef CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_ADC3_ENABLE
+	NVIC_SetPriority(ADC3_IRQn, interruptPriority);
+	NVIC_EnableIRQ(ADC3_IRQn);
+#endif	// def CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_ADC3_ENABLE
+#ifdef CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_FSMC_ENABLE
+	NVIC_SetPriority(FSMC_IRQn, interruptPriority);
+	NVIC_EnableIRQ(FSMC_IRQn);
+#endif	// def CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_FSMC_ENABLE
+#ifdef CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_SDIO_ENABLE
+	NVIC_SetPriority(SDIO_IRQn, interruptPriority);
+	NVIC_EnableIRQ(SDIO_IRQn);
+#endif	// def CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_SDIO_ENABLE
+#ifdef CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_TIM5_ENABLE
+	NVIC_SetPriority(TIM5_IRQn, interruptPriority);
+	NVIC_EnableIRQ(TIM5_IRQn);
+#endif	// def CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_TIM5_ENABLE
+#ifdef CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_SPI3_ENABLE
+	NVIC_SetPriority(SPI3_IRQn, interruptPriority);
+	NVIC_EnableIRQ(SPI3_IRQn);
+#endif	// def CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_SPI3_ENABLE
+#ifdef CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_UART4_ENABLE
+	NVIC_SetPriority(UART4_IRQn, interruptPriority);
+	NVIC_EnableIRQ(UART4_IRQn);
+#endif	// def CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_UART4_ENABLE
+#ifdef CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_UART5_ENABLE
+	NVIC_SetPriority(UART5_IRQn, interruptPriority);
+	NVIC_EnableIRQ(UART5_IRQn);
+#endif	// def CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_UART5_ENABLE
+#ifdef CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_TIM6_ENABLE
+	NVIC_SetPriority(TIM6_IRQn, interruptPriority);
+	NVIC_EnableIRQ(TIM6_IRQn);
+#endif	// def CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_TIM6_ENABLE
+#ifdef CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_TIM7_ENABLE
+	NVIC_SetPriority(TIM7_IRQn, interruptPriority);
+	NVIC_EnableIRQ(TIM7_IRQn);
+#endif	// def CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_TIM7_ENABLE
+#ifdef CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_DMA2_CHANNEL1_ENABLE
+	NVIC_SetPriority(DMA2_Channel1_IRQn, interruptPriority);
+	NVIC_EnableIRQ(DMA2_Channel1_IRQn);
+#endif	// def CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_DMA2_CHANNEL1_ENABLE
+#ifdef CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_DMA2_CHANNEL2_ENABLE
+	NVIC_SetPriority(DMA2_Channel2_IRQn, interruptPriority);
+	NVIC_EnableIRQ(DMA2_Channel2_IRQn);
+#endif	// def CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_DMA2_CHANNEL2_ENABLE
+#ifdef CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_DMA2_CHANNEL3_ENABLE
+	NVIC_SetPriority(DMA2_Channel3_IRQn, interruptPriority);
+	NVIC_EnableIRQ(DMA2_Channel3_IRQn);
+#endif	// def CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_DMA2_CHANNEL3_ENABLE
+#ifdef CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_DMA2_CHANNEL4_5_ENABLE
+	NVIC_SetPriority(DMA2_Channel4_5_IRQn, interruptPriority);
+	NVIC_EnableIRQ(DMA2_Channel4_5_IRQn);
+#endif	// def CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_DMA2_CHANNEL4_5_ENABLE
+}
+
+BIND_LOW_LEVEL_INITIALIZER(50, nvicLowLevelInitializer);
+
+}	// namespace
+
 extern "C"
 {
 
 /*---------------------------------------------------------------------------------------------------------------------+
-| default weak handlers
+| default handlers
 +---------------------------------------------------------------------------------------------------------------------*/
 
 // NMI, address 0x8, exception number 2, IRQ number -14
@@ -441,26 +724,12 @@ extern const char __main_stack_end[];		// main stack end - imported from linker 
 
 void Reset_Handler();		// import the address of Reset_Handler()
 
-}	// extern "C"
-
-namespace
-{
-
 /*---------------------------------------------------------------------------------------------------------------------+
-| local types
-+---------------------------------------------------------------------------------------------------------------------*/
-
-/// single exception vector - pointer to function with no arguments and no return value
-using ExceptionVector = void(*)();
-
-}	// namespace
-
-/*---------------------------------------------------------------------------------------------------------------------+
-| global variables
+| global objects
 +---------------------------------------------------------------------------------------------------------------------*/
 
 /// vector table
-extern "C" const ExceptionVector vectorTable[] __attribute__ ((section(".vectorTable"), used))
+const ExceptionVector vectorTable[] __attribute__ ((section(".vectorTable"), used))
 {
 		reinterpret_cast<ExceptionVector>(__main_stack_end),	// 0x0: Main stack end address
 		Reset_Handler,		// Reset, address 0x4, exception number 1, IRQ number -15
@@ -539,3 +808,5 @@ extern "C" const ExceptionVector vectorTable[] __attribute__ ((section(".vectorT
 		DMA2_Channel3_IRQHandler,		// DMA2_Channel3, address 0x128, exception number 74, IRQ number 58
 		DMA2_Channel4_5_IRQHandler,		// DMA2_Channel4_5, address 0x12c, exception number 75, IRQ number 59
 };
+
+}	// extern "C"

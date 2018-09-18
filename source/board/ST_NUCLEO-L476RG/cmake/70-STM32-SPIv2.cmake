@@ -15,16 +15,28 @@ distortosSetConfiguration(BOOLEAN
 		HELP "Enable SPI1 low-level driver."
 		OUTPUT_NAME CONFIG_CHIP_STM32_SPIV2_SPI1_ENABLE)
 
+if(distortos_Peripherals_SPI1)
+	set(ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_SPI1_ENABLE ON)
+endif()
+
 distortosSetConfiguration(BOOLEAN
 		distortos_Peripherals_SPI2
 		OFF
 		HELP "Enable SPI2 low-level driver."
 		OUTPUT_NAME CONFIG_CHIP_STM32_SPIV2_SPI2_ENABLE)
 
+if(distortos_Peripherals_SPI2)
+	set(ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_SPI2_ENABLE ON)
+endif()
+
 distortosSetConfiguration(BOOLEAN
 		distortos_Peripherals_SPI3
 		OFF
 		HELP "Enable SPI3 low-level driver."
 		OUTPUT_NAME CONFIG_CHIP_STM32_SPIV2_SPI3_ENABLE)
+
+if(distortos_Peripherals_SPI3)
+	set(ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_SPI3_ENABLE ON)
+endif()
 
 include("${CMAKE_CURRENT_SOURCE_DIR}/source/chip/STM32/peripherals/SPIv2/distortos-sources.cmake")

@@ -1,0 +1,58 @@
+/**
+ * \file
+ * \brief Definitions of low-level UART drivers for USARTv1 in {{ board }} ({{ dictionary['chip']['compatible'][0] }} chip)
+ *
+ * \author Copyright (C) 2016-2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ *
+ * \par License
+ * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
+ * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ *
+ * \warning
+ * Automatically generated file - do not edit!
+ */
+
+#include "distortos/chip/uarts.hpp"
+
+#include "distortos/chip/ChipUartLowLevel.hpp"
+
+namespace distortos
+{
+
+namespace chip
+{
+
+/*---------------------------------------------------------------------------------------------------------------------+
+| global objects
++---------------------------------------------------------------------------------------------------------------------*/
+{% for key, uart in dictionary['UARTs'].items() if uart is mapping and 'ST,STM32-USART-v1' in uart['compatible'] %}
+
+#ifdef CONFIG_CHIP_STM32_USARTV1_{{ key | upper }}_ENABLE
+
+ChipUartLowLevel {{ key | lower }} {ChipUartLowLevel::{{ key | lower }}Parameters};
+
+#endif	// def CONFIG_CHIP_STM32_USARTV1_{{ key | upper }}_ENABLE
+{% endfor %}
+
+/*---------------------------------------------------------------------------------------------------------------------+
+| global functions
++---------------------------------------------------------------------------------------------------------------------*/
+{% for key, uart in dictionary['UARTs'].items() if uart is mapping and 'ST,STM32-USART-v1' in uart['compatible'] %}
+
+#ifdef CONFIG_CHIP_STM32_USARTV1_{{ key | upper }}_ENABLE
+
+/**
+ * \brief {{ uart['interrupt']['vector'] }} interrupt handler
+ */
+
+extern "C" void {{ uart['interrupt']['vector'] }}_IRQHandler()
+{
+	{{ key | lower }}.interruptHandler();
+}
+
+#endif	// def CONFIG_CHIP_STM32_USARTV1_{{ key | upper }}_ENABLE
+{% endfor %}
+
+}	// namespace chip
+
+}	// namespace distortos
