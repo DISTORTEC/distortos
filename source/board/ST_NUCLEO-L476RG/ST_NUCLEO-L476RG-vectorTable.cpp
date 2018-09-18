@@ -85,8 +85,8 @@ __attribute__ ((weak)) void PVD_PVM_IRQHandler()
 	while (1);
 }
 
-// RTC_TAMP_STAMP, address 0x48, exception number 18, IRQ number 2
-__attribute__ ((weak)) void RTC_TAMP_STAMP_IRQHandler()
+// TAMP_STAMP, address 0x48, exception number 18, IRQ number 2
+__attribute__ ((weak)) void TAMP_STAMP_IRQHandler()
 {
 	while (1);
 }
@@ -612,7 +612,7 @@ extern "C" const ExceptionVector vectorTable[] __attribute__ ((section(".vectorT
 		SysTick_Handler,		// SysTick, address 0x3c, exception number 15, IRQ number -1
 		WWDG_IRQHandler,		// WWDG, address 0x40, exception number 16, IRQ number 0
 		PVD_PVM_IRQHandler,		// PVD_PVM, address 0x44, exception number 17, IRQ number 1
-		RTC_TAMP_STAMP_IRQHandler,		// RTC_TAMP_STAMP, address 0x48, exception number 18, IRQ number 2
+		TAMP_STAMP_IRQHandler,		// TAMP_STAMP, address 0x48, exception number 18, IRQ number 2
 		RTC_WKUP_IRQHandler,		// RTC_WKUP, address 0x4c, exception number 19, IRQ number 3
 		FLASH_IRQHandler,		// FLASH, address 0x50, exception number 20, IRQ number 4
 		RCC_IRQHandler,		// RCC, address 0x54, exception number 21, IRQ number 5
