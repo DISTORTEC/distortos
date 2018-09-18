@@ -85,14 +85,14 @@ __attribute__ ((weak)) void PVD_IRQHandler()
 	while (1);
 }
 
-// TAMP_STAMP, address 0x48, exception number 18, IRQ number 2
-__attribute__ ((weak)) void TAMP_STAMP_IRQHandler()
+// TAMPER, address 0x48, exception number 18, IRQ number 2
+__attribute__ ((weak)) void TAMPER_IRQHandler()
 {
 	while (1);
 }
 
-// RTC_WKUP, address 0x4c, exception number 19, IRQ number 3
-__attribute__ ((weak)) void RTC_WKUP_IRQHandler()
+// RTC, address 0x4c, exception number 19, IRQ number 3
+__attribute__ ((weak)) void RTC_IRQHandler()
 {
 	while (1);
 }
@@ -325,8 +325,8 @@ __attribute__ ((weak)) void RTC_Alarm_IRQHandler()
 	while (1);
 }
 
-// USB_WKUP, address 0xe8, exception number 58, IRQ number 42
-__attribute__ ((weak)) void USB_WKUP_IRQHandler()
+// USBWakeUp, address 0xe8, exception number 58, IRQ number 42
+__attribute__ ((weak)) void USBWakeUp_IRQHandler()
 {
 	while (1);
 }
@@ -480,8 +480,8 @@ extern "C" const ExceptionVector vectorTable[] __attribute__ ((section(".vectorT
 		SysTick_Handler,		// SysTick, address 0x3c, exception number 15, IRQ number -1
 		WWDG_IRQHandler,		// WWDG, address 0x40, exception number 16, IRQ number 0
 		PVD_IRQHandler,		// PVD, address 0x44, exception number 17, IRQ number 1
-		TAMP_STAMP_IRQHandler,		// TAMP_STAMP, address 0x48, exception number 18, IRQ number 2
-		RTC_WKUP_IRQHandler,		// RTC_WKUP, address 0x4c, exception number 19, IRQ number 3
+		TAMPER_IRQHandler,		// TAMPER, address 0x48, exception number 18, IRQ number 2
+		RTC_IRQHandler,		// RTC, address 0x4c, exception number 19, IRQ number 3
 		FLASH_IRQHandler,		// FLASH, address 0x50, exception number 20, IRQ number 4
 		RCC_IRQHandler,		// RCC, address 0x54, exception number 21, IRQ number 5
 		EXTI0_IRQHandler,		// EXTI0, address 0x58, exception number 22, IRQ number 6
@@ -520,7 +520,7 @@ extern "C" const ExceptionVector vectorTable[] __attribute__ ((section(".vectorT
 		USART3_IRQHandler,		// USART3, address 0xdc, exception number 55, IRQ number 39
 		EXTI15_10_IRQHandler,		// EXTI15_10, address 0xe0, exception number 56, IRQ number 40
 		RTC_Alarm_IRQHandler,		// RTC_Alarm, address 0xe4, exception number 57, IRQ number 41
-		USB_WKUP_IRQHandler,		// USB_WKUP, address 0xe8, exception number 58, IRQ number 42
+		USBWakeUp_IRQHandler,		// USBWakeUp, address 0xe8, exception number 58, IRQ number 42
 		TIM8_BRK_IRQHandler,		// TIM8_BRK, address 0xec, exception number 59, IRQ number 43
 		TIM8_UP_IRQHandler,		// TIM8_UP, address 0xf0, exception number 60, IRQ number 44
 		TIM8_TRG_COM_IRQHandler,		// TIM8_TRG_COM, address 0xf4, exception number 61, IRQ number 45

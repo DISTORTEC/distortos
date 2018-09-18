@@ -43,8 +43,8 @@ NVIC:
   chip-vectors:
   - name: WWDG
   - name: PVD
-  - name: TAMP_STAMP
-  - name: RTC_WKUP
+  - name: TAMPER
+  - name: RTC
   - name: FLASH
   - name: RCC
   - name: EXTI0

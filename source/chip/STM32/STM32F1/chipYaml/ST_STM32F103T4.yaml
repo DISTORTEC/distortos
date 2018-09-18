@@ -43,8 +43,8 @@ NVIC:
   chip-vectors:
   - name: WWDG
   - name: PVD
-  - name: TAMP_STAMP
-  - name: RTC_WKUP
+  - name: TAMPER
+  - name: RTC
   - name: FLASH
   - name: RCC
   - name: EXTI0
@@ -83,7 +83,7 @@ NVIC:
   - name: USART3
   - name: EXTI15_10
   - name: RTC_Alarm
-  - name: USB_WKUP
+  - name: USBWakeUp
   - name: TIM8_BRK
   - name: TIM8_UP
   - name: TIM8_TRG_COM
