@@ -3,7 +3,7 @@
 {%- endmacro %}
 /**
  * \file
- * \brief {{ board }} ({{ dictionary['chip']['compatible'][0] }} chip) vector table and default weak handlers
+ * \brief {{ board }} ({{ dictionary['chip']['compatible'][0] }} chip) vector table, default handlers and NVIC low-level initializer
  *
  * \author Copyright (C) 2014-2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
@@ -15,38 +15,9 @@
  * Automatically generated file - do not edit!
  */
 
-extern "C"
-{
+#include "distortos/chip/CMSIS-proxy.h"
 
-/*---------------------------------------------------------------------------------------------------------------------+
-| default weak handlers
-+---------------------------------------------------------------------------------------------------------------------*/
-{% for key, value in dictionary['NVIC']['core-vectors'].items() if key is number and key != 1 %}
-
-// {{ handlerComment(value, key) }}
-__attribute__ ((weak)) void {{ value }}_Handler()
-{
-	while (1);
-}
-{% endfor %}
-{% for key, value in dictionary['NVIC']['chip-vectors'].items() if key is number %}
-
-// {{ handlerComment(value, key) }}
-__attribute__ ((weak)) void {{ value }}_IRQHandler()
-{
-	while (1);
-}
-{% endfor %}
-
-/*---------------------------------------------------------------------------------------------------------------------+
-| global symbols' declarations
-+---------------------------------------------------------------------------------------------------------------------*/
-
-extern const char __main_stack_end[];		// main stack end - imported from linker script
-
-void Reset_Handler();		// import the address of Reset_Handler()
-
-}	// extern "C"
+#include "distortos/BIND_LOW_LEVEL_INITIALIZER.h"
 
 namespace
 {
@@ -58,29 +29,110 @@ namespace
 /// single exception vector - pointer to function with no arguments and no return value
 using ExceptionVector = void(*)();
 
-}	// namespace
+/*---------------------------------------------------------------------------------------------------------------------+
+| local objects
++---------------------------------------------------------------------------------------------------------------------*/
+
+/// priority of interrupts
+{% if 'ARM,ARMv7-M' in dictionary['CPUs'][0]['compatible'] %}
+#if defined(CONFIG_ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI)
+constexpr uint8_t interruptPriority {CONFIG_ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI};
+#else	// !defined(CONFIG_ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI)
+{% endif %}
+constexpr uint8_t interruptPriority {};
+{% if 'ARM,ARMv7-M' in dictionary['CPUs'][0]['compatible'] %}
+#endif	// !defined(CONFIG_ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI)
+{% endif %}
 
 /*---------------------------------------------------------------------------------------------------------------------+
-| global variables
+| local functions
 +---------------------------------------------------------------------------------------------------------------------*/
-{% set context = namespace(exceptionNumber = 1) %}
+
+/**
+ * \brief Low-level peripheral initializer for NVIC
+ *
+ * This function is called before constructors for global and static objects via BIND_LOW_LEVEL_INITIALIZER().
+ */
+
+void nvicLowLevelInitializer()
+{
+{% for item in dictionary['NVIC']['chip-vectors'] if item %}
+#ifdef CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_{{ item['name'] | upper }}_ENABLE
+	NVIC_SetPriority({{ item['name'] }}_IRQn, interruptPriority);
+	NVIC_EnableIRQ({{ item['name'] }}_IRQn);
+#endif	// def CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_{{ item['name'] | upper }}_ENABLE
+{% endfor %}
+}
+
+BIND_LOW_LEVEL_INITIALIZER(50, nvicLowLevelInitializer);
+
+}	// namespace
+
+extern "C"
+{
+
+/*---------------------------------------------------------------------------------------------------------------------+
+| default handlers
++---------------------------------------------------------------------------------------------------------------------*/
+{% for exceptionNumber, item in enumerate(dictionary['NVIC']['core-vectors'][1:], 2) if item %}
+
+// {{ handlerComment(item['name'], exceptionNumber) }}
+__attribute__ ((weak)) void {{ item['name'] }}_Handler()
+{
+	while (1);
+}
+{% endfor %}
+{% for exceptionNumber, item in enumerate(dictionary['NVIC']['chip-vectors'],
+		len(dictionary['NVIC']['core-vectors']) + 1) if item %}
+
+// {{ handlerComment(item['name'], exceptionNumber) }}
+{% if 'subvectors' not in item %}__attribute__ ((weak)) {% endif %}void {{ item['name'] }}_IRQHandler()
+{
+{% for subvector in item.get('subvectors', []) %}
+	__attribute__ ((weak)) void {{ subvector }}_IRQHandler();
+{% if loop.last == True %}
+
+{% endif %}
+{% endfor %}
+{% for subvector in item.get('subvectors', []) %}
+	{{ subvector }}_IRQHandler();
+{% else %}
+	while (1);
+{% endfor %}
+}
+{% endfor %}
+
+/*---------------------------------------------------------------------------------------------------------------------+
+| global symbols' declarations
++---------------------------------------------------------------------------------------------------------------------*/
+
+extern const char __main_stack_end[];		// main stack end - imported from linker script
+
+void Reset_Handler();		// import the address of Reset_Handler()
+
+/*---------------------------------------------------------------------------------------------------------------------+
+| global objects
++---------------------------------------------------------------------------------------------------------------------*/
 
 /// vector table
-extern "C" const ExceptionVector vectorTable[] __attribute__ ((section(".vectorTable"), used))
+const ExceptionVector vectorTable[] __attribute__ ((section(".vectorTable"), used))
 {
 		reinterpret_cast<ExceptionVector>(__main_stack_end),	// 0x0: Main stack end address
-{% for key, value in dictionary['NVIC']['core-vectors'].items() if key is number %}
-{% for number in range(context.exceptionNumber, key) %}
-		nullptr,		// {{ handlerComment('Reserved', number) }}
+{% for exceptionNumber, item in enumerate(dictionary['NVIC']['core-vectors'], 1) %}
+{% if item %}
+		{{ item['name'] }}_Handler,		// {{ handlerComment(item['name'], exceptionNumber) }}
+{% else %}
+		nullptr,		// {{ handlerComment('Reserved', exceptionNumber) }}
+{% endif %}
 {% endfor %}
-		{{ value }}_Handler,		// {{ handlerComment(value, key) }}
-{% set context.exceptionNumber = key + 1 %}
-{% endfor %}
-{% for key, value in dictionary['NVIC']['chip-vectors'].items() if key is number %}
-{% for number in range(context.exceptionNumber, key) %}
-		nullptr,		// {{ handlerComment('Reserved', number) }}
-{% endfor %}
-		{{ value }}_IRQHandler,		// {{ handlerComment(value, key) }}
-{% set context.exceptionNumber = key + 1 %}
+{% for exceptionNumber, item in enumerate(dictionary['NVIC']['chip-vectors'],
+		len(dictionary['NVIC']['core-vectors']) + 1) %}
+{% if item %}
+		{{ item['name'] }}_IRQHandler,		// {{ handlerComment(item['name'], exceptionNumber) }}
+{% else %}
+		nullptr,		// {{ handlerComment('Reserved', exceptionNumber) }}
+{% endif %}
 {% endfor %}
 };
+
+}	// extern "C"

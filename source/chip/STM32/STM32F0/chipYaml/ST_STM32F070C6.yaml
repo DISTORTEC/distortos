@@ -25,40 +25,59 @@ NVIC:
   - ARM,NVIC
   - interrupt-controller
   core-vectors:
-    1: Reset
-    2: NMI
-    3: HardFault
-    11: SVC
-    14: PendSV
-    15: SysTick
+  - name: Reset
+  - name: NMI
+  - name: HardFault
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - name: SVC
+  - 
+  - 
+  - name: PendSV
+  - name: SysTick
   chip-vectors:
-    16: WWDG
-    18: RTC
-    19: FLASH
-    20: RCC
-    21: EXTI0_1
-    22: EXTI2_3
-    23: EXTI4_15
-    25: DMA_Ch1
-    26: DMA_Ch2_3
-    27: DMA_Ch4_5
-    28: ADC
-    29: TIM1_BRK_UP_TRG_COM
-    30: TIM1_CC
-    32: TIM3
-    33: TIM6
-    35: TIM14
-    36: TIM15
-    37: TIM16
-    38: TIM17
-    39: I2C1
-    40: I2C2
-    41: SPI1
-    42: SPI2
-    43: USART1
-    44: USART2
-    45: USART3_6
-    47: USB
+  - name: WWDG
+  - 
+  - name: RTC
+  - name: FLASH
+  - name: RCC
+  - name: EXTI0_1
+  - name: EXTI2_3
+  - name: EXTI4_15
+  - 
+  - name: DMA1_Ch1
+  - name: DMA1_Ch2_3
+  - name: DMA1_Ch4_5
+  - name: ADC1
+  - name: TIM1_BRK_UP_TRG_COM
+  - name: TIM1_CC
+  - 
+  - name: TIM3
+  - name: TIM6
+  - 
+  - name: TIM14
+  - name: TIM15
+  - name: TIM16
+  - name: TIM17
+  - name: I2C1
+  - name: I2C2
+  - name: SPI1
+  - name: SPI2
+  - name: USART1
+  - name: USART2
+  - name: USART3_6
+    subvectors:
+    - USART3
+    - USART4
+    - USART5
+    - USART6
+  - 
+  - name: USB
   $labels:
   - NVIC
 clocks:
@@ -118,6 +137,10 @@ SPIs:
   SPI1:
     compatible:
     - ST,STM32-SPI-v2
+    interrupt:
+      controller: !Reference
+        label: NVIC
+      vector: SPI1
     $labels:
     - SPI1
 UARTs:
@@ -132,10 +155,18 @@ UARTs:
   USART1:
     compatible:
     - ST,STM32-USART-v2
+    interrupt:
+      controller: !Reference
+        label: NVIC
+      vector: USART1
     $labels:
     - USART1
   USART2:
     compatible:
     - ST,STM32-USART-v2
+    interrupt:
+      controller: !Reference
+        label: NVIC
+      vector: USART2
     $labels:
     - USART2

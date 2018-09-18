@@ -28,90 +28,107 @@ NVIC:
   - ARM,NVIC
   - interrupt-controller
   core-vectors:
-    1: Reset
-    2: NMI
-    3: HardFault
-    4: MemManage
-    5: BusFault
-    6: UsageFault
-    11: SVC
-    12: DebugMon
-    14: PendSV
-    15: SysTick
+  - name: Reset
+  - name: NMI
+  - name: HardFault
+  - name: MemManage
+  - name: BusFault
+  - name: UsageFault
+  - 
+  - 
+  - 
+  - 
+  - name: SVC
+  - name: DebugMon
+  - 
+  - name: PendSV
+  - name: SysTick
   chip-vectors:
-    16: WWDG
-    17: PVD_PVM
-    18: RTC_TAMP_STAMP
-    19: RTC_WKUP
-    20: FLASH
-    21: RCC
-    22: EXTI0
-    23: EXTI1
-    24: EXTI2
-    25: EXTI3
-    26: EXTI4
-    27: DMA1_Channel1
-    28: DMA1_Channel2
-    29: DMA1_Channel3
-    30: DMA1_Channel4
-    31: DMA1_Channel5
-    32: DMA1_Channel6
-    33: DMA1_Channel7
-    34: ADC1
-    35: CAN1_TX
-    36: CAN1_RX0
-    37: CAN1_RX1
-    38: CAN1_SCE
-    39: EXTI9_5
-    40: TIM1_BRK_TIM15
-    41: TIM1_UP_TIM16
-    42: TIM1_TRG_COM
-    43: TIM1_CC
-    44: TIM2
-    45: TIM3
-    47: I2C1_EV
-    48: I2C1_ER
-    49: I2C2_EV
-    50: I2C2_ER
-    51: SPI1
-    52: SPI2
-    53: USART1
-    54: USART2
-    55: USART3
-    56: EXTI15_10
-    57: RTC_Alarm
-    65: SDMMC1
-    67: SPI3
-    68: UART4
-    70: TIM6_DAC
-    71: TIM7
-    72: DMA2_Channel1
-    73: DMA2_Channel2
-    74: DMA2_Channel3
-    75: DMA2_Channel4
-    76: DMA2_Channel5
-    77: DFSDM1_FLT0
-    78: DFSDM1_FLT1
-    80: COMP
-    81: LPTIM1
-    82: LPTIM2
-    83: USB
-    84: DMA2_Channel6
-    85: DMA2_Channel7
-    86: LPUART1
-    87: QUADSPI
-    88: I2C3_EV
-    89: I2C3_ER
-    90: SAI1
-    92: SWPMI1
-    93: TSC
-    94: LCD
-    95: AES
-    96: RNG
-    97: FPU
-    98: CRS
-    99: I2C4_EV
-    100: I2C4_ER
+  - name: WWDG
+  - name: PVD_PVM
+  - name: TAMP_STAMP
+  - name: RTC_WKUP
+  - name: FLASH
+  - name: RCC
+  - name: EXTI0
+  - name: EXTI1
+  - name: EXTI2
+  - name: EXTI3
+  - name: EXTI4
+  - name: DMA1_Channel1
+  - name: DMA1_Channel2
+  - name: DMA1_Channel3
+  - name: DMA1_Channel4
+  - name: DMA1_Channel5
+  - name: DMA1_Channel6
+  - name: DMA1_Channel7
+  - name: ADC1
+  - name: CAN1_TX
+  - name: CAN1_RX0
+  - name: CAN1_RX1
+  - name: CAN1_SCE
+  - name: EXTI9_5
+  - name: TIM1_BRK_TIM15
+  - name: TIM1_UP_TIM16
+  - name: TIM1_TRG_COM
+  - name: TIM1_CC
+  - name: TIM2
+  - name: TIM3
+  - 
+  - name: I2C1_EV
+  - name: I2C1_ER
+  - name: I2C2_EV
+  - name: I2C2_ER
+  - name: SPI1
+  - name: SPI2
+  - name: USART1
+  - name: USART2
+  - name: USART3
+  - name: EXTI15_10
+  - name: RTC_Alarm
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - name: SDMMC1
+  - 
+  - name: SPI3
+  - name: UART4
+  - 
+  - name: TIM6_DAC
+  - name: TIM7
+  - name: DMA2_Channel1
+  - name: DMA2_Channel2
+  - name: DMA2_Channel3
+  - name: DMA2_Channel4
+  - name: DMA2_Channel5
+  - name: DFSDM1_FLT0
+  - name: DFSDM1_FLT1
+  - 
+  - name: COMP
+  - name: LPTIM1
+  - name: LPTIM2
+  - name: USB
+  - name: DMA2_Channel6
+  - name: DMA2_Channel7
+  - name: LPUART1
+  - name: QUADSPI
+  - name: I2C3_EV
+  - name: I2C3_ER
+  - name: SAI1
+  - 
+  - name: SWPMI1
+  - name: TSC
+  - name: LCD
+  - name: AES
+  - name: RNG
+  - name: FPU
+  - name: CRS
+  - name: I2C4_EV
+  - name: I2C4_ER
   $labels:
   - NVIC
 clocks:
@@ -172,16 +189,28 @@ SPIs:
   SPI1:
     compatible:
     - ST,STM32-SPI-v2
+    interrupt:
+      controller: !Reference
+        label: NVIC
+      vector: SPI1
     $labels:
     - SPI1
   SPI2:
     compatible:
     - ST,STM32-SPI-v2
+    interrupt:
+      controller: !Reference
+        label: NVIC
+      vector: SPI2
     $labels:
     - SPI2
   SPI3:
     compatible:
     - ST,STM32-SPI-v2
+    interrupt:
+      controller: !Reference
+        label: NVIC
+      vector: SPI3
     $labels:
     - SPI3
 UARTs:
@@ -191,20 +220,36 @@ UARTs:
   USART1:
     compatible:
     - ST,STM32-USART-v2
+    interrupt:
+      controller: !Reference
+        label: NVIC
+      vector: USART1
     $labels:
     - USART1
   USART2:
     compatible:
     - ST,STM32-USART-v2
+    interrupt:
+      controller: !Reference
+        label: NVIC
+      vector: USART2
     $labels:
     - USART2
   USART3:
     compatible:
     - ST,STM32-USART-v2
+    interrupt:
+      controller: !Reference
+        label: NVIC
+      vector: USART3
     $labels:
     - USART3
   UART4:
     compatible:
     - ST,STM32-USART-v2
+    interrupt:
+      controller: !Reference
+        label: NVIC
+      vector: UART4
     $labels:
     - UART4

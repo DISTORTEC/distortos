@@ -201,5 +201,22 @@ distortosSetConfiguration(STRING
 		HELP "Memory region for heap in linker script"
 		OUTPUT_NAME CONFIG_LD_HEAP_REGION
 		OUTPUT_TYPES BOOLEAN)
+{% if 'NVIC' in dictionary and 'ARM,NVIC' in dictionary['NVIC']['compatible'] %}
+{% for item in dictionary['NVIC']['chip-vectors'] if item %}
+{% for subvector in item.get('subvectors', []) %}
+
+if(ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_{{ subvector | upper }}_ENABLE)
+	set(ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_{{ item['name'] | upper }}_ENABLE ON)
+endif(ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_{{ subvector | upper }}_ENABLE)
+{% endfor %}
+
+if(ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_{{ item['name'] | upper }}_ENABLE)
+	distortosSetConfiguration(BOOLEAN
+			CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_{{ item['name'] | upper }}_ENABLE
+			ON
+			INTERNAL)
+endif(ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_{{ item['name'] | upper }}_ENABLE)
+{% endfor %}
+{% endif %}
 
 include("${CMAKE_CURRENT_SOURCE_DIR}/source/architecture/ARM/ARMv6-M-ARMv7-M/distortos-sources.cmake")

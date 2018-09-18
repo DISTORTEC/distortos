@@ -20,6 +20,8 @@ target_include_directories(distortos PUBLIC
 target_sources(distortos PRIVATE
 		${CMAKE_CURRENT_LIST_DIR}/ST_NUCLEO-L476RG-buttons.cpp
 		${CMAKE_CURRENT_LIST_DIR}/ST_NUCLEO-L476RG-leds.cpp
+		${CMAKE_CURRENT_LIST_DIR}/ST_NUCLEO-L476RG-spis.cpp
+		${CMAKE_CURRENT_LIST_DIR}/ST_NUCLEO-L476RG-uarts.cpp
 		${CMAKE_CURRENT_LIST_DIR}/ST_NUCLEO-L476RG-vectorTable.cpp)
 
 doxygen(INPUT ${CMAKE_CURRENT_LIST_DIR} INCLUDE_PATH ${CMAKE_CURRENT_LIST_DIR}/include)
@@ -34,4 +36,4 @@ include(${CMAKE_CURRENT_LIST_DIR}/cmake/90-ARMv6-M-ARMv7-M.cmake)
 
 include(${CMAKE_CURRENT_LIST_DIR}/distortos-board-sources.extension.cmake OPTIONAL)
 
-set(DISTORTOS_BOARD_VERSION 0)
+set(DISTORTOS_BOARD_VERSION 1)

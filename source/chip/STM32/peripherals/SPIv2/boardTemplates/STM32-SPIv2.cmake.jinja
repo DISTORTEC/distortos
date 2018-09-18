@@ -15,6 +15,10 @@ distortosSetConfiguration(BOOLEAN
 		OFF
 		HELP "Enable {{ key | upper }} low-level driver."
 		OUTPUT_NAME CONFIG_CHIP_STM32_SPIV2_{{ key | upper }}_ENABLE)
+
+if(distortos_Peripherals_{{ key }})
+	set(ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_{{ spi['interrupt']['vector'] | upper }}_ENABLE ON)
+endif()
 {% endfor %}
 
 include("${CMAKE_CURRENT_SOURCE_DIR}/source/chip/STM32/peripherals/SPIv2/distortos-sources.cmake")

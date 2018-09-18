@@ -28,101 +28,126 @@ NVIC:
   - ARM,NVIC
   - interrupt-controller
   core-vectors:
-    1: Reset
-    2: NMI
-    3: HardFault
-    4: MemManage
-    5: BusFault
-    6: UsageFault
-    11: SVC
-    12: DebugMon
-    14: PendSV
-    15: SysTick
+  - name: Reset
+  - name: NMI
+  - name: HardFault
+  - name: MemManage
+  - name: BusFault
+  - name: UsageFault
+  - 
+  - 
+  - 
+  - 
+  - name: SVC
+  - name: DebugMon
+  - 
+  - name: PendSV
+  - name: SysTick
   chip-vectors:
-    16: WWDG
-    17: PVD
-    18: TAMP_STAMP
-    19: RTC_WKUP
-    20: FLASH
-    21: RCC
-    22: EXTI0
-    23: EXTI1
-    24: EXTI2
-    25: EXTI3
-    26: EXTI4
-    27: DMA1_Stream0
-    28: DMA1_Stream1
-    29: DMA1_Stream2
-    30: DMA1_Stream3
-    31: DMA1_Stream4
-    32: DMA1_Stream5
-    33: DMA1_Stream6
-    34: ADC
-    35: CAN1_TX
-    36: CAN1_RX0
-    37: CAN1_RX1
-    38: CAN1_SCE
-    39: EXTI9_5
-    40: TIM1_BRK_TIM9
-    41: TIM1_UP_TIM10
-    42: TIM1_TRG_COM_TIM11
-    43: TIM1_CC
-    44: TIM2
-    45: TIM3
-    46: TIM4
-    47: I2C1_EV
-    48: I2C1_ER
-    49: I2C2_EV
-    50: I2C2_ER
-    51: SPI1
-    52: SPI2
-    53: USART1
-    54: USART2
-    55: USART3
-    56: EXTI15_10
-    57: RTC_Alarm
-    58: OTG_FS_WKUP
-    59: TIM8_BRK_TIM12
-    60: TIM8_UP_TIM13
-    61: TIM8_TRG_COM_TIM14
-    62: TIM8_CC
-    63: DMA1_Stream7
-    64: FMC
-    65: SDMMC1
-    66: TIM5
-    67: SPI3
-    68: UART4
-    69: UART5
-    70: TIM6_DAC
-    71: TIM7
-    72: DMA2_Stream0
-    73: DMA2_Stream1
-    74: DMA2_Stream2
-    75: DMA2_Stream3
-    76: DMA2_Stream4
-    83: OTG_FS
-    84: DMA2_Stream5
-    85: DMA2_Stream6
-    86: DMA2_Stream7
-    87: USART6
-    88: I2C3_EV
-    89: I2C3_ER
-    90: OTG_HS_EP1_OUT
-    91: OTG_HS_EP1_IN
-    92: OTG_HS_WKUP
-    93: OTG_HS
-    95: AES
-    96: RNG
-    97: FPU
-    98: UART7
-    99: UART8
-    100: SPI4
-    101: SPI5
-    103: SAI1
-    107: SAI2
-    108: QUADSPI
-    109: LPTIM1
-    119: SDMMC2
+  - name: WWDG
+  - name: PVD
+  - name: TAMP_STAMP
+  - name: RTC_WKUP
+  - name: FLASH
+  - name: RCC
+  - name: EXTI0
+  - name: EXTI1
+  - name: EXTI2
+  - name: EXTI3
+  - name: EXTI4
+  - name: DMA1_Stream0
+  - name: DMA1_Stream1
+  - name: DMA1_Stream2
+  - name: DMA1_Stream3
+  - name: DMA1_Stream4
+  - name: DMA1_Stream5
+  - name: DMA1_Stream6
+  - name: ADC
+  - name: CAN1_TX
+  - name: CAN1_RX0
+  - name: CAN1_RX1
+  - name: CAN1_SCE
+  - name: EXTI9_5
+  - name: TIM1_BRK_TIM9
+  - name: TIM1_UP_TIM10
+  - name: TIM1_TRG_COM_TIM11
+  - name: TIM1_CC
+  - name: TIM2
+  - name: TIM3
+  - name: TIM4
+  - name: I2C1_EV
+  - name: I2C1_ER
+  - name: I2C2_EV
+  - name: I2C2_ER
+  - name: SPI1
+  - name: SPI2
+  - name: USART1
+  - name: USART2
+  - name: USART3
+  - name: EXTI15_10
+  - name: RTC_Alarm
+  - name: OTG_FS_WKUP
+  - name: TIM8_BRK_TIM12
+  - name: TIM8_UP_TIM13
+  - name: TIM8_TRG_COM_TIM14
+  - name: TIM8_CC
+  - name: DMA1_Stream7
+  - name: FMC
+  - name: SDMMC1
+  - name: TIM5
+  - name: SPI3
+  - name: UART4
+  - name: UART5
+  - name: TIM6_DAC
+  - name: TIM7
+  - name: DMA2_Stream0
+  - name: DMA2_Stream1
+  - name: DMA2_Stream2
+  - name: DMA2_Stream3
+  - name: DMA2_Stream4
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - name: OTG_FS
+  - name: DMA2_Stream5
+  - name: DMA2_Stream6
+  - name: DMA2_Stream7
+  - name: USART6
+  - name: I2C3_EV
+  - name: I2C3_ER
+  - name: OTG_HS_EP1_OUT
+  - name: OTG_HS_EP1_IN
+  - name: OTG_HS_WKUP
+  - name: OTG_HS
+  - 
+  - name: AES
+  - name: RNG
+  - name: FPU
+  - name: UART7
+  - name: UART8
+  - name: SPI4
+  - name: SPI5
+  - 
+  - name: SAI1
+  - 
+  - 
+  - 
+  - name: SAI2
+  - name: QUADSPI
+  - name: LPTIM1
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - name: SDMMC2
   $labels:
   - NVIC
 clocks:
@@ -220,26 +245,46 @@ SPIs:
   SPI1:
     compatible:
     - ST,STM32-SPI-v2
+    interrupt:
+      controller: !Reference
+        label: NVIC
+      vector: SPI1
     $labels:
     - SPI1
   SPI2:
     compatible:
     - ST,STM32-SPI-v2
+    interrupt:
+      controller: !Reference
+        label: NVIC
+      vector: SPI2
     $labels:
     - SPI2
   SPI3:
     compatible:
     - ST,STM32-SPI-v2
+    interrupt:
+      controller: !Reference
+        label: NVIC
+      vector: SPI3
     $labels:
     - SPI3
   SPI4:
     compatible:
     - ST,STM32-SPI-v2
+    interrupt:
+      controller: !Reference
+        label: NVIC
+      vector: SPI4
     $labels:
     - SPI4
   SPI5:
     compatible:
     - ST,STM32-SPI-v2
+    interrupt:
+      controller: !Reference
+        label: NVIC
+      vector: SPI5
     $labels:
     - SPI5
 UARTs:
@@ -249,40 +294,72 @@ UARTs:
   USART1:
     compatible:
     - ST,STM32-USART-v2
+    interrupt:
+      controller: !Reference
+        label: NVIC
+      vector: USART1
     $labels:
     - USART1
   USART2:
     compatible:
     - ST,STM32-USART-v2
+    interrupt:
+      controller: !Reference
+        label: NVIC
+      vector: USART2
     $labels:
     - USART2
   USART3:
     compatible:
     - ST,STM32-USART-v2
+    interrupt:
+      controller: !Reference
+        label: NVIC
+      vector: USART3
     $labels:
     - USART3
   UART4:
     compatible:
     - ST,STM32-USART-v2
+    interrupt:
+      controller: !Reference
+        label: NVIC
+      vector: UART4
     $labels:
     - UART4
   UART5:
     compatible:
     - ST,STM32-USART-v2
+    interrupt:
+      controller: !Reference
+        label: NVIC
+      vector: UART5
     $labels:
     - UART5
   USART6:
     compatible:
     - ST,STM32-USART-v2
+    interrupt:
+      controller: !Reference
+        label: NVIC
+      vector: USART6
     $labels:
     - USART6
   UART7:
     compatible:
     - ST,STM32-USART-v2
+    interrupt:
+      controller: !Reference
+        label: NVIC
+      vector: UART7
     $labels:
     - UART7
   UART8:
     compatible:
     - ST,STM32-USART-v2
+    interrupt:
+      controller: !Reference
+        label: NVIC
+      vector: UART8
     $labels:
     - UART8
