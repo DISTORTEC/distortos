@@ -50,9 +50,9 @@ NVIC:
   - name: EXTI2_3
   - name: EXTI4_15
   - 
-  - name: DMA_Ch1
-  - name: DMA_Ch2_3
-  - name: DMA_Ch4_5_6_7
+  - name: DMA1_Channel1
+  - name: DMA1_Channel2_3
+  - name: DMA1_Channel4_5_6_7
   - name: ADC1_COMP
   - name: LPTIM1
   - name: USART4_5
