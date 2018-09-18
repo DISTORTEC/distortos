@@ -12,6 +12,7 @@ ARM,NVIC
 
 Each item corrensponding to an implemented interrupt shall be a mapping:
 - `name`, required, string, vector name;
+- `subvectors`, optional, list of strings, names of subvectors;
 
 Each item corrensponding to an unimplemented interrupt shall be empty.
 
@@ -49,10 +50,10 @@ NVIC:
   - name: EXTI2_3
   - name: EXTI4_15
   -
-  - name: DMA_Ch1
-  - name: DMA_Ch2_3
-  - name: DMA_Ch4_5
-  - name: ADC
+  - name: DMA1_Ch1
+  - name: DMA1_Ch2_3
+  - name: DMA1_Ch4_5
+  - name: ADC1
   - name: TIM1_BRK_UP_TRG_COM
   - name: TIM1_CC
   -
@@ -70,6 +71,11 @@ NVIC:
   - name: USART1
   - name: USART2
   - name: USART3_6
+    subvectors:
+    - USART3
+    - USART4
+    - USART5
+    - USART6
   -
   - name: USB
 ```
@@ -98,8 +104,8 @@ NVIC:
   chip-vectors:
   - name: WWDG
   - name: PVD
-  - name: TAMP_STAMP
-  - name: RTC_WKUP
+  - name: TAMPER
+  - name: RTC
   - name: FLASH
   - name: RCC
   - name: EXTI0
