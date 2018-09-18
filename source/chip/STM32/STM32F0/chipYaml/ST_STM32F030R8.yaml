@@ -50,10 +50,10 @@ NVIC:
   - name: EXTI2_3
   - name: EXTI4_15
   - 
-  - name: DMA_Ch1
-  - name: DMA_Ch2_3
-  - name: DMA_Ch4_5
-  - name: ADC
+  - name: DMA1_Ch1
+  - name: DMA1_Ch2_3
+  - name: DMA1_Ch4_5
+  - name: ADC1
   - name: TIM1_BRK_UP_TRG_COM
   - name: TIM1_CC
   - 

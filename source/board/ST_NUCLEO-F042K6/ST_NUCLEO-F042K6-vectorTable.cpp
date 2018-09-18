@@ -103,26 +103,26 @@ __attribute__ ((weak)) void TSC_IRQHandler()
 	while (1);
 }
 
-// DMA_Ch1, address 0x64, exception number 25, IRQ number 9
-__attribute__ ((weak)) void DMA_Ch1_IRQHandler()
+// DMA1_Ch1, address 0x64, exception number 25, IRQ number 9
+__attribute__ ((weak)) void DMA1_Ch1_IRQHandler()
 {
 	while (1);
 }
 
-// DMA_Ch2_3_DMA2_Ch1_2, address 0x68, exception number 26, IRQ number 10
-__attribute__ ((weak)) void DMA_Ch2_3_DMA2_Ch1_2_IRQHandler()
+// DMA1_Ch2_3_DMA2_Ch1_2, address 0x68, exception number 26, IRQ number 10
+__attribute__ ((weak)) void DMA1_Ch2_3_DMA2_Ch1_2_IRQHandler()
 {
 	while (1);
 }
 
-// DMA_Ch4_7_DMA2_Ch3_5, address 0x6c, exception number 27, IRQ number 11
-__attribute__ ((weak)) void DMA_Ch4_7_DMA2_Ch3_5_IRQHandler()
+// DMA1_Ch4_7_DMA2_Ch3_5, address 0x6c, exception number 27, IRQ number 11
+__attribute__ ((weak)) void DMA1_Ch4_7_DMA2_Ch3_5_IRQHandler()
 {
 	while (1);
 }
 
-// ADC_COMP, address 0x70, exception number 28, IRQ number 12
-__attribute__ ((weak)) void ADC_COMP_IRQHandler()
+// ADC1_COMP, address 0x70, exception number 28, IRQ number 12
+__attribute__ ((weak)) void ADC1_COMP_IRQHandler()
 {
 	while (1);
 }
@@ -295,10 +295,10 @@ extern "C" const ExceptionVector vectorTable[] __attribute__ ((section(".vectorT
 		EXTI2_3_IRQHandler,		// EXTI2_3, address 0x58, exception number 22, IRQ number 6
 		EXTI4_15_IRQHandler,		// EXTI4_15, address 0x5c, exception number 23, IRQ number 7
 		TSC_IRQHandler,		// TSC, address 0x60, exception number 24, IRQ number 8
-		DMA_Ch1_IRQHandler,		// DMA_Ch1, address 0x64, exception number 25, IRQ number 9
-		DMA_Ch2_3_DMA2_Ch1_2_IRQHandler,		// DMA_Ch2_3_DMA2_Ch1_2, address 0x68, exception number 26, IRQ number 10
-		DMA_Ch4_7_DMA2_Ch3_5_IRQHandler,		// DMA_Ch4_7_DMA2_Ch3_5, address 0x6c, exception number 27, IRQ number 11
-		ADC_COMP_IRQHandler,		// ADC_COMP, address 0x70, exception number 28, IRQ number 12
+		DMA1_Ch1_IRQHandler,		// DMA1_Ch1, address 0x64, exception number 25, IRQ number 9
+		DMA1_Ch2_3_DMA2_Ch1_2_IRQHandler,		// DMA1_Ch2_3_DMA2_Ch1_2, address 0x68, exception number 26, IRQ number 10
+		DMA1_Ch4_7_DMA2_Ch3_5_IRQHandler,		// DMA1_Ch4_7_DMA2_Ch3_5, address 0x6c, exception number 27, IRQ number 11
+		ADC1_COMP_IRQHandler,		// ADC1_COMP, address 0x70, exception number 28, IRQ number 12
 		TIM1_BRK_UP_TRG_COM_IRQHandler,		// TIM1_BRK_UP_TRG_COM, address 0x74, exception number 29, IRQ number 13
 		TIM1_CC_IRQHandler,		// TIM1_CC, address 0x78, exception number 30, IRQ number 14
 		TIM2_IRQHandler,		// TIM2, address 0x7c, exception number 31, IRQ number 15
