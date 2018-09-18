@@ -56,6 +56,10 @@ each board. Data used to generate vector table is taken from chip *YAML* files, 
 *CMake*. Additionally `distortos_Memory_regions_..._text_vectors` *CMake* configuration option was renamed to
 `distortos_Memory_regions_..._text_vectorTable`, which is related to the rename of `.text.vectors` linker section to
 `.text.vectorTable`.
+- Replaced `spis` and `uarts` modules with files generated for each board. This change requires the board to be
+regenerated.
+- Changed names of some interrupt vectors of *STM32F0*, *STM32F1*, *STM32L0* and *STM32L4* to be consistent with
+`..._IRQn` names of `IRQn_Type` enum.
 - Update *CMSIS* to version 5.4.0.
 
 ### Deprecated
