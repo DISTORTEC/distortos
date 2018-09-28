@@ -1,6 +1,6 @@
 /**
  * \file
- * \brief SpiMasterOperation class header
+ * \brief SpiMasterOperation type alias header
  *
  * \author Copyright (C) 2016-2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
@@ -20,47 +20,8 @@ namespace distortos
 namespace devices
 {
 
-/**
- * SpiMasterOperation class is a single operation that can be executed by SPI master as part of a transaction.
- *
- * \ingroup devices
- */
-
-class SpiMasterOperation
-{
-public:
-
-	/// import SpiMasterTransfer as Transfer
-	using Transfer = SpiMasterTransfer;
-
-	/**
-	 * \brief SpiMasterOperation's constructor with transfer operation
-	 *
-	 * \param [in] transfer is the transfer operation that will be executed
-	 *
-	 * \note non-explicit on purpose
-	 */
-
-	constexpr SpiMasterOperation(const Transfer transfer) :
-			transfer_{transfer}
-	{
-
-	}
-
-	/**
-	 * \return pointer to contained transfer operation, nullptr if this object contains different type of operation
-	 */
-
-	Transfer* getTransfer()
-	{
-		return &transfer_;
-	}
-
-private:
-
-	/// single transfer operation
-	Transfer transfer_;
-};
+/// SpiMasterOperation is an alias for SpiMasterTransfer
+using SpiMasterOperation = SpiMasterTransfer;
 
 }	// namespace devices
 

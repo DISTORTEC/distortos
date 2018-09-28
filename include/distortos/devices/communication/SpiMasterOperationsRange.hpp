@@ -12,7 +12,7 @@
 #ifndef INCLUDE_DISTORTOS_DEVICES_COMMUNICATION_SPIMASTEROPERATIONSRANGE_HPP_
 #define INCLUDE_DISTORTOS_DEVICES_COMMUNICATION_SPIMASTEROPERATIONSRANGE_HPP_
 
-#include "estd/ContiguousRange.hpp"
+#include "distortos/devices/communication/SpiMasterTransfersRange.hpp"
 
 namespace distortos
 {
@@ -20,15 +20,13 @@ namespace distortos
 namespace devices
 {
 
-class SpiMasterOperation;
-
 /**
- * SpiMasterOperationsRange is an alias for ContiguousRange of SpiMasterOperation elements
+ * SpiMasterOperationsRange is an alias for SpiMasterTransfersRange
  *
  * \ingroup devices
  */
 
-using SpiMasterOperationsRange = estd::ContiguousRange<SpiMasterOperation>;
+using SpiMasterOperationsRange = SpiMasterTransfersRange;
 
 }	// namespace devices
 

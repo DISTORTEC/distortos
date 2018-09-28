@@ -80,8 +80,7 @@ std::pair<int, size_t> SpiMasterProxy::executeTransaction(const SpiMasterOperati
 			});
 
 	{
-		const auto transfer = operationsRange_.begin()->getTransfer();
-		assert(transfer != nullptr);
+		const auto transfer = operationsRange_.begin();
 		const auto ret = spiMaster.spiMaster_.startTransfer(*this, transfer->getWriteBuffer(),
 				transfer->getReadBuffer(), transfer->getSize());
 		if (ret != 0)
@@ -121,8 +120,7 @@ void SpiMasterProxy::transferCompleteEvent(SpiMasterErrorSet errorSet, size_t by
 	assert(operationsRange_.size() != 0 && "Invalid range of operations!");
 
 	{
-		const auto previousTransfer = operationsRange_.begin()->getTransfer();
-		assert(previousTransfer != nullptr && "Invalid type of previous operation!");
+		const auto previousTransfer = operationsRange_.begin();
 		previousTransfer->finalize(errorSet, bytesTransfered);
 	}
 
@@ -137,8 +135,7 @@ void SpiMasterProxy::transferCompleteEvent(SpiMasterErrorSet errorSet, size_t by
 	}
 
 	{
-		const auto nextTransfer = operationsRange_.begin()->getTransfer();
-		assert(nextTransfer != nullptr && "Invalid type of next operation!");
+		const auto nextTransfer = operationsRange_.begin();
 		const auto ret = getSpiMaster().spiMaster_.startTransfer(*this, nextTransfer->getWriteBuffer(),
 				nextTransfer->getReadBuffer(), nextTransfer->getSize());
 		if (ret != 0)
