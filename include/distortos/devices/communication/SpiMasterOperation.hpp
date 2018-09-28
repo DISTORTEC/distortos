@@ -1,6 +1,7 @@
 /**
  * \file
  * \brief SpiMasterOperation type alias header
+ * \deprecated scheduled to be removed after v0.7.0, use SpiMasterTransfer
  *
  * \author Copyright (C) 2016-2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
@@ -12,6 +13,8 @@
 #ifndef INCLUDE_DISTORTOS_DEVICES_COMMUNICATION_SPIMASTEROPERATION_HPP_
 #define INCLUDE_DISTORTOS_DEVICES_COMMUNICATION_SPIMASTEROPERATION_HPP_
 
+#warning "'distortos/devices/communication/SpiMasterOperation.hpp' is deprecated: Use SpiMasterTransfer"
+
 #include "distortos/devices/communication/SpiMasterTransfer.hpp"
 
 namespace distortos
@@ -20,8 +23,13 @@ namespace distortos
 namespace devices
 {
 
-/// SpiMasterOperation is an alias for SpiMasterTransfer
-using SpiMasterOperation = SpiMasterTransfer;
+/**
+ * SpiMasterOperation is an alias for SpiMasterTransfer.
+ *
+ * \deprecated scheduled to be removed after v0.7.0, use SpiMasterTransfer
+ */
+
+using SpiMasterOperation __attribute__ ((deprecated("Use SpiMasterTransfer"))) = SpiMasterTransfer;
 
 }	// namespace devices
 
