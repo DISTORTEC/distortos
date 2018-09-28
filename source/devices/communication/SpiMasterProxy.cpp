@@ -14,7 +14,7 @@
 #include "distortos/devices/communication/SpiDeviceProxy.hpp"
 #include "distortos/devices/communication/SpiMaster.hpp"
 #include "distortos/devices/communication/SpiMasterLowLevel.hpp"
-#include "distortos/devices/communication/SpiMasterOperation.hpp"
+#include "distortos/devices/communication/SpiMasterTransfer.hpp"
 
 #include "distortos/internal/CHECK_FUNCTION_CONTEXT.hpp"
 
@@ -34,7 +34,7 @@ namespace devices
 +---------------------------------------------------------------------------------------------------------------------*/
 
 SpiMasterProxy::SpiMasterProxy(const SpiDeviceProxy& spiDeviceProxy) :
-		operationsRange_{},
+		transfersRange_{},
 		spiDeviceProxy_{spiDeviceProxy},
 		ret_{},
 		semaphore_{}
@@ -57,11 +57,11 @@ std::pair<int, uint32_t> SpiMasterProxy::configure(const SpiMode mode, const uin
 	return spiMaster.spiMaster_.configure(mode, clockFrequency, wordLength, lsbFirst, dummyData);
 }
 
-std::pair<int, size_t> SpiMasterProxy::executeTransaction(const SpiMasterOperationsRange operationsRange)
+std::pair<int, size_t> SpiMasterProxy::executeTransaction(const SpiMasterTransfersRange transfersRange)
 {
 	CHECK_FUNCTION_CONTEXT();
 
-	if (operationsRange.size() == 0)
+	if (transfersRange.size() == 0)
 		return {EINVAL, {}};
 
 	auto& spiMaster = getSpiMaster();
@@ -70,18 +70,17 @@ std::pair<int, size_t> SpiMasterProxy::executeTransaction(const SpiMasterOperati
 
 	Semaphore semaphore {0};
 	semaphore_ = &semaphore;
-	operationsRange_ = operationsRange;
+	transfersRange_ = transfersRange;
 	ret_ = {};
 	const auto cleanupScopeGuard = estd::makeScopeGuard(
 			[this]()
 			{
-				operationsRange_ = {};
+				transfersRange_ = {};
 				semaphore_ = {};
 			});
 
 	{
-		const auto transfer = operationsRange_.begin()->getTransfer();
-		assert(transfer != nullptr);
+		const auto transfer = transfersRange_.begin();
 		const auto ret = spiMaster.spiMaster_.startTransfer(*this, transfer->getWriteBuffer(),
 				transfer->getReadBuffer(), transfer->getSize());
 		if (ret != 0)
@@ -90,8 +89,8 @@ std::pair<int, size_t> SpiMasterProxy::executeTransaction(const SpiMasterOperati
 
 	while (semaphore.wait() != 0);
 
-	const auto handledOperations = operationsRange_.begin() - operationsRange.begin();
-	return {ret_, handledOperations};
+	const auto handledTransfers = transfersRange_.begin() - transfersRange.begin();
+	return {ret_, handledTransfers};
 }
 
 /*---------------------------------------------------------------------------------------------------------------------+
@@ -118,27 +117,25 @@ void SpiMasterProxy::notifyWaiter(const int ret)
 
 void SpiMasterProxy::transferCompleteEvent(SpiMasterErrorSet errorSet, size_t bytesTransfered)
 {
-	assert(operationsRange_.size() != 0 && "Invalid range of operations!");
+	assert(transfersRange_.size() != 0 && "Invalid range of transfers!");
 
 	{
-		const auto previousTransfer = operationsRange_.begin()->getTransfer();
-		assert(previousTransfer != nullptr && "Invalid type of previous operation!");
+		const auto previousTransfer = transfersRange_.begin();
 		previousTransfer->finalize(errorSet, bytesTransfered);
 	}
 
 	const auto error = errorSet.any();
-	if (error == false)	// handling of last operation successful?
-		operationsRange_ = {operationsRange_.begin() + 1, operationsRange_.end()};
+	if (error == false)	// handling of last transfer successful?
+		transfersRange_ = {transfersRange_.begin() + 1, transfersRange_.end()};
 
-	if (operationsRange_.size() == 0 || error == true)	// all operations are done or handling of last one failed?
+	if (transfersRange_.size() == 0 || error == true)	// all transfers are done or handling of last one failed?
 	{
 		notifyWaiter(error == false ? 0 : EIO);
 		return;
 	}
 
 	{
-		const auto nextTransfer = operationsRange_.begin()->getTransfer();
-		assert(nextTransfer != nullptr && "Invalid type of next operation!");
+		const auto nextTransfer = transfersRange_.begin();
 		const auto ret = getSpiMaster().spiMaster_.startTransfer(*this, nextTransfer->getWriteBuffer(),
 				nextTransfer->getReadBuffer(), nextTransfer->getSize());
 		if (ret != 0)

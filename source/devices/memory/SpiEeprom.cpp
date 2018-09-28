@@ -13,8 +13,8 @@
 
 #include "distortos/devices/communication/SpiDeviceProxy.hpp"
 #include "distortos/devices/communication/SpiDeviceSelectGuard.hpp"
-#include "distortos/devices/communication/SpiMasterOperation.hpp"
 #include "distortos/devices/communication/SpiMasterProxy.hpp"
+#include "distortos/devices/communication/SpiMasterTransfer.hpp"
 
 #include "distortos/internal/CHECK_FUNCTION_CONTEXT.hpp"
 
@@ -63,7 +63,7 @@ constexpr uint8_t statusRegisterWip {1 << 0};
 +---------------------------------------------------------------------------------------------------------------------*/
 
 /**
- * \brief Combines command with address into a "transfer" SpiMasterOperation.
+ * \brief Combines command with address into a SpiMasterTransfer.
  *
  * The address for READ and WRITE commands is encoded into variable number of bytes, depending on capacity of EEPROM
  * chip:
@@ -79,10 +79,10 @@ constexpr uint8_t statusRegisterWip {1 << 0};
  * \param [in] address is the address that will be combined with \a command into \a buffer
  * \param [out] buffer is a reference to buffer into which \a command and \a address will be combined
  *
- * \return "transfer" SpiMasterOperation with combined \a command and \a address
+ * \return SpiMasterTransfer with combined \a command and \a address
  */
 
-SpiMasterOperation::Transfer getCommandWithAddress(const size_t capacity, const uint8_t command, const uint32_t address,
+SpiMasterTransfer getCommandWithAddress(const size_t capacity, const uint8_t command, const uint32_t address,
 		CommandWithAddressBuffer& buffer)
 {
 	buffer[0] = command | (capacity == 512 && (address & 0x100) != 0 ? 0x8 : 0);
@@ -185,13 +185,13 @@ std::pair<int, size_t> SpiEeprom::read(const uint64_t address, void* const buffe
 	}
 
 	CommandWithAddressBuffer commandBuffer;
-	SpiMasterOperation operations[]
+	SpiMasterTransfer transfers[]
 	{
 			getCommandWithAddress(capacity, readCommand, address, commandBuffer),
-			{{nullptr, buffer, address + size <= capacity ? size : static_cast<size_t>(capacity - address)}},
+			{nullptr, buffer, address + size <= capacity ? size : static_cast<size_t>(capacity - address)},
 	};
-	const auto ret = executeTransaction(spiDeviceProxy, SpiMasterOperationsRange{operations});
-	return {ret.first, operations[1].getTransfer()->getBytesTransfered()};
+	const auto ret = executeTransaction(spiDeviceProxy, SpiMasterTransfersRange{transfers});
+	return {ret.first, transfers[1].getBytesTransfered()};
 }
 
 int SpiEeprom::synchronize()
@@ -265,17 +265,17 @@ std::pair<int, size_t> SpiEeprom::eraseOrProgramPage(const SpiDeviceProxy& spiDe
 	const auto pageOffset = address & (pageSize - 1);
 	const auto writeSize = pageOffset + size <= pageSize ? size : pageSize - pageOffset;
 	CommandWithAddressBuffer commandBuffer;
-	SpiMasterOperation operations[]
+	SpiMasterTransfer transfers[]
 	{
 			getCommandWithAddress(capacity, writeCommand, address, commandBuffer),
-			{{buffer, nullptr, writeSize}},
+			{buffer, nullptr, writeSize},
 	};
-	const auto ret = executeTransaction(spiDeviceProxy, SpiMasterOperationsRange{operations});
-	return {ret.first, operations[1].getTransfer()->getBytesTransfered()};
+	const auto ret = executeTransaction(spiDeviceProxy, SpiMasterTransfersRange{transfers});
+	return {ret.first, transfers[1].getBytesTransfered()};
 }
 
 std::pair<int, size_t> SpiEeprom::executeTransaction(const SpiDeviceProxy& spiDeviceProxy,
-		const SpiMasterOperationsRange operationsRange) const
+		const SpiMasterTransfersRange transfersRange) const
 {
 	SpiMasterProxy spiMasterProxy {spiDeviceProxy};
 
@@ -288,7 +288,7 @@ std::pair<int, size_t> SpiEeprom::executeTransaction(const SpiDeviceProxy& spiDe
 
 	const SpiDeviceSelectGuard spiDeviceSelectGuard {spiMasterProxy};
 
-	return spiMasterProxy.executeTransaction(operationsRange);
+	return spiMasterProxy.executeTransaction(transfersRange);
 }
 
 std::pair<int, bool> SpiEeprom::isWriteInProgress(const SpiDeviceProxy& spiDeviceProxy)
@@ -300,8 +300,8 @@ std::pair<int, bool> SpiEeprom::isWriteInProgress(const SpiDeviceProxy& spiDevic
 std::pair<int, uint8_t> SpiEeprom::readStatusRegister(const SpiDeviceProxy& spiDeviceProxy) const
 {
 	uint8_t buffer[2] {rdsrCommand, 0xff};
-	SpiMasterOperation operation {{buffer, buffer, sizeof(buffer)}};
-	const auto ret = executeTransaction(spiDeviceProxy, SpiMasterOperationsRange{operation});
+	SpiMasterTransfer transfer {buffer, buffer, sizeof(buffer)};
+	const auto ret = executeTransaction(spiDeviceProxy, SpiMasterTransfersRange{transfer});
 	return {ret.first, buffer[1]};
 }
 
@@ -321,8 +321,8 @@ int SpiEeprom::synchronize(const SpiDeviceProxy& spiDeviceProxy)
 
 int SpiEeprom::writeEnable(const SpiDeviceProxy& spiDeviceProxy) const
 {
-	SpiMasterOperation operation {{&wrenCommand, nullptr, sizeof(wrenCommand)}};
-	const auto ret = executeTransaction(spiDeviceProxy, SpiMasterOperationsRange{operation});
+	SpiMasterTransfer transfer {&wrenCommand, nullptr, sizeof(wrenCommand)};
+	const auto ret = executeTransaction(spiDeviceProxy, SpiMasterTransfersRange{transfer});
 	return ret.first;
 }
 

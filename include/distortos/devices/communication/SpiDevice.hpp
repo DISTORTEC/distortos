@@ -12,7 +12,7 @@
 #ifndef INCLUDE_DISTORTOS_DEVICES_COMMUNICATION_SPIDEVICE_HPP_
 #define INCLUDE_DISTORTOS_DEVICES_COMMUNICATION_SPIDEVICE_HPP_
 
-#include "distortos/devices/communication/SpiMasterOperationsRange.hpp"
+#include "distortos/devices/communication/SpiMasterTransfersRange.hpp"
 #include "distortos/devices/communication/SpiMode.hpp"
 
 #include "distortos/Mutex.hpp"
@@ -119,22 +119,22 @@ public:
 	int close();
 
 	/**
-	 * \brief Executes series of operations as a single atomic transaction.
+	 * \brief Executes series of transfers as a single atomic transaction.
 	 *
 	 * \deprecated scheduled to be removed after v0.7.0, use SpiDeviceProxy, SpiMasterProxy and SpiDeviceSelectGuard
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
-	 * \param [in] operationsRange is the range of operations that will be executed
+	 * \param [in] transfersRange is the range of transfers that will be executed
 	 *
-	 * \return pair with return code (0 on success, error code otherwise) and number of successfully completed
-	 * operations from \a operationsRange; error codes:
+	 * \return pair with return code (0 on success, error code otherwise) and number of successfully completed transfers
+	 * from \a transfersRange; error codes:
 	 * - error codes returned by SpiMasterProxy::configure();
 	 * - error codes returned by SpiMasterProxy::executeTransaction();
 	 */
 
 	__attribute__ ((deprecated("Use SpiDeviceProxy, SpiMasterProxy and SpiDeviceSelectGuard")))
-	std::pair<int, size_t> executeTransaction(SpiMasterOperationsRange operationsRange);
+	std::pair<int, size_t> executeTransaction(SpiMasterTransfersRange transfersRange);
 
 	/**
 	 * \deprecated scheduled to be removed after v0.7.0, use SpiDeviceProxy, SpiMasterProxy and SpiDeviceSelectGuard

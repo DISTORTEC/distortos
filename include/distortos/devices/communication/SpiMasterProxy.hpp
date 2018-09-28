@@ -13,7 +13,7 @@
 #define INCLUDE_DISTORTOS_DEVICES_COMMUNICATION_SPIMASTERPROXY_HPP_
 
 #include "distortos/devices/communication/SpiMasterBase.hpp"
-#include "distortos/devices/communication/SpiMasterOperationsRange.hpp"
+#include "distortos/devices/communication/SpiMasterTransfersRange.hpp"
 #include "distortos/devices/communication/SpiMode.hpp"
 
 namespace distortos
@@ -79,23 +79,23 @@ public:
 			uint32_t dummyData) const;
 
 	/**
-	 * \brief Executes series of operations as a single atomic transaction.
+	 * \brief Executes series of transfers as a single atomic transaction.
 	 *
-	 * The transaction is finished when all operations are complete or when any error is detected.
+	 * The transaction is finished when all transfers are complete or when any error is detected.
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
-	 * \param [in] operationsRange is the range of operations that will be executed
+	 * \param [in] transfersRange is the range of transfers that will be executed
 	 *
-	 * \return pair with return code (0 on success, error code otherwise) and number of successfully completed
-	 * operations from \a operationsRange; error codes:
+	 * \return pair with return code (0 on success, error code otherwise) and number of successfully completed transfers
+	 * from \a transfersRange; error codes:
 	 * - EBADF - associated SPI device or associated SPI master are not opened;
-	 * - EINVAL - \a operationsRange has no operations;
+	 * - EINVAL - \a transfersRange has no transfers;
 	 * - EIO - failure detected by low-level SPI master driver;
 	 * - error codes returned by SpiMasterLowLevel::startTransfer();
 	 */
 
-	std::pair<int, size_t> executeTransaction(SpiMasterOperationsRange operationsRange);
+	std::pair<int, size_t> executeTransaction(SpiMasterTransfersRange transfersRange);
 
 	SpiMasterProxy(const SpiMasterProxy&) = delete;
 	SpiMasterProxy& operator=(const SpiMasterProxy&) = delete;
@@ -127,8 +127,8 @@ private:
 	 *
 	 * Called by low-level SPI master driver when the transfer is physically finished.
 	 *
-	 * Handles the next operation from the currently handled transaction. If there are no more operations, waiting
-	 * thread is notified about completion of transaction.
+	 * Handles the next transfer from the currently handled transaction. If there are no more transfers, waiting thread
+	 * is notified about completion of transaction.
 	 *
 	 * \param [in] errorSet is the set of error bits
 	 * \param [in] bytesTransfered is the number of bytes transferred by low-level SPI master driver (read from write
@@ -138,8 +138,8 @@ private:
 
 	void transferCompleteEvent(SpiMasterErrorSet errorSet, size_t bytesTransfered) override;
 
-	/// range of operations that are part of currently handled transaction
-	SpiMasterOperationsRange operationsRange_;
+	/// range of transfers that are part of currently handled transaction
+	SpiMasterTransfersRange transfersRange_;
 
 	/// reference to SpiDeviceProxy associated with this proxy
 	const SpiDeviceProxy& spiDeviceProxy_;

@@ -60,7 +60,7 @@ int SpiDevice::close()
 	return 0;
 }
 
-std::pair<int, size_t> SpiDevice::executeTransaction(const SpiMasterOperationsRange operationsRange)
+std::pair<int, size_t> SpiDevice::executeTransaction(const SpiMasterTransfersRange transfersRange)
 {
 	const Proxy proxy {*this};
 	SpiMasterProxy spiMasterProxy {proxy};
@@ -73,7 +73,7 @@ std::pair<int, size_t> SpiDevice::executeTransaction(const SpiMasterOperationsRa
 
 	const SpiDeviceSelectGuard spiDeviceSelectGuard {spiMasterProxy};
 
-	return spiMasterProxy.executeTransaction(operationsRange);
+	return spiMasterProxy.executeTransaction(transfersRange);
 }
 
 int SpiDevice::open()

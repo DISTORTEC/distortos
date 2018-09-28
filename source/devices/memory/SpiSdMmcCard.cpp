@@ -13,8 +13,8 @@
 
 #include "distortos/devices/communication/SpiDeviceProxy.hpp"
 #include "distortos/devices/communication/SpiDeviceSelectGuard.hpp"
-#include "distortos/devices/communication/SpiMasterOperation.hpp"
 #include "distortos/devices/communication/SpiMasterProxy.hpp"
+#include "distortos/devices/communication/SpiMasterTransfer.hpp"
 
 #include "distortos/assert.h"
 #include "distortos/ThisThread.hpp"
@@ -217,8 +217,8 @@ public:
 
 	~SelectGuard()
 	{
-		SpiMasterOperation operation {{nullptr, nullptr, 1}};
-		getSpiMasterProxy().executeTransaction(SpiMasterOperationsRange{operation});
+		SpiMasterTransfer transfer {nullptr, nullptr, 1};
+		getSpiMasterProxy().executeTransaction(SpiMasterTransfersRange{transfer});
 	}
 };
 
@@ -393,8 +393,8 @@ std::pair<int, uint8_t> waitWhile(SpiMasterProxy& spiMasterProxy, const distorto
 	while (distortos::TickClock::now() < deadline)
 	{
 		uint8_t byte;
-		SpiMasterOperation operation {{nullptr, &byte, sizeof(byte)}};
-		const auto ret = spiMasterProxy.executeTransaction(SpiMasterOperationsRange{operation});
+		SpiMasterTransfer transfer {nullptr, &byte, sizeof(byte)};
+		const auto ret = spiMasterProxy.executeTransaction(SpiMasterTransfersRange{transfer});
 		if (ret.first != 0)
 			return {ret.first, {}};
 		if (functor(byte) == false)
@@ -454,13 +454,13 @@ std::pair<int, size_t> readDataBlock(SpiMasterProxy& spiMasterProxy, void* const
 			return {EIO, {}};
 	}
 
-	SpiMasterOperation operations[]
+	SpiMasterTransfer transfers[]
 	{
-			{{nullptr, buffer, size}},
-			{{nullptr, nullptr, 2}},	// crc
+			{nullptr, buffer, size},
+			{nullptr, nullptr, 2},	// crc
 	};
-	const auto ret = spiMasterProxy.executeTransaction(SpiMasterOperationsRange{operations});
-	const auto bytesRead = operations[0].getTransfer()->getBytesTransfered();
+	const auto ret = spiMasterProxy.executeTransaction(SpiMasterTransfersRange{transfers});
+	const auto bytesRead = transfers[0].getBytesTransfered();
 	return {ret.first, bytesRead};
 }
 
@@ -487,14 +487,14 @@ std::pair<int, size_t> writeDataBlock(SpiMasterProxy& spiMasterProxy, const uint
 	size_t bytesWritten {};
 	{
 		const uint8_t header[] {0xff, token};
-		SpiMasterOperation operations[]
+		SpiMasterTransfer transfers[]
 		{
-				{{&header, nullptr, sizeof(header)}},
-				{{buffer, nullptr, size}},
-				{{nullptr, footer, sizeof(footer)}},
+				{&header, nullptr, sizeof(header)},
+				{buffer, nullptr, size},
+				{nullptr, footer, sizeof(footer)},
 		};
-		const auto ret = spiMasterProxy.executeTransaction(SpiMasterOperationsRange{operations});
-		bytesWritten = operations[1].getTransfer()->getBytesTransfered();
+		const auto ret = spiMasterProxy.executeTransaction(SpiMasterTransfersRange{transfers});
+		bytesWritten = transfers[1].getBytesTransfered();
 		if (ret.first != 0)
 			return {ret.first, bytesWritten};
 	}
@@ -530,8 +530,8 @@ int readResponse(SpiMasterProxy& spiMasterProxy, const Uint8Range buffer)
 	while (bytesRead < maxBytesRead)
 	{
 		const auto readSize = buffer.size() - validBytesRead;
-		SpiMasterOperation operation {{nullptr, buffer.begin() + validBytesRead, readSize}};
-		const auto ret = spiMasterProxy.executeTransaction(SpiMasterOperationsRange{operation});
+		SpiMasterTransfer transfer {nullptr, buffer.begin() + validBytesRead, readSize};
+		const auto ret = spiMasterProxy.executeTransaction(SpiMasterTransfersRange{transfer});
 		if (ret.first != 0)
 			return ret.first;
 
@@ -660,8 +660,8 @@ int writeCmd(SpiMasterProxy& spiMasterProxy, const uint8_t command, const uint32
 			static_cast<uint8_t>(crc7 << 1 | 1),
 			0xff,	// stuff byte
 	};
-	SpiMasterOperation operation {{buffer, nullptr, sizeof(buffer) - !stuffByte}};
-	const auto ret = spiMasterProxy.executeTransaction(SpiMasterOperationsRange{operation});
+	SpiMasterTransfer transfer {buffer, nullptr, sizeof(buffer) - !stuffByte};
+	const auto ret = spiMasterProxy.executeTransaction(SpiMasterTransfersRange{transfer});
 	return ret.first;
 }
 
@@ -1352,8 +1352,8 @@ std::pair<int, size_t> SpiSdMmcCard::program(const uint64_t address, const void*
 					stopTranToken,
 					0xff,
 			};
-			SpiMasterOperation operation {{stopTransfer, nullptr, sizeof(stopTransfer)}};
-			const auto ret = spiMasterProxy.executeTransaction(SpiMasterOperationsRange{operation});
+			SpiMasterTransfer transfer {stopTransfer, nullptr, sizeof(stopTransfer)};
+			const auto ret = spiMasterProxy.executeTransaction(SpiMasterTransfersRange{transfer});
 			if (ret.first != 0)
 				return {ret.first, bytesWritten};
 		}
@@ -1474,8 +1474,8 @@ int SpiSdMmcCard::initialize(const SpiDeviceProxy& spiDeviceProxy)
 			return ret.first;
 	}
 	{
-		SpiMasterOperation operation {{nullptr, nullptr, (74 + CHAR_BIT - 1) / CHAR_BIT}};
-		const auto ret = spiMasterProxy.executeTransaction(SpiMasterOperationsRange{operation});
+		SpiMasterTransfer transfer {nullptr, nullptr, (74 + CHAR_BIT - 1) / CHAR_BIT};
+		const auto ret = spiMasterProxy.executeTransaction(SpiMasterTransfersRange{transfer});
 		if (ret.first != 0)
 			return ret.first;
 	}

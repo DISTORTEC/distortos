@@ -502,18 +502,18 @@ private:
 			const void* buffer, size_t size);
 
 	/**
-	 * \brief Executes series of operations as a single atomic transaction.
+	 * \brief Executes series of transfers as a single atomic transaction.
 	 *
-	 * \param [in] operationsRange is the range of operations that will be executed
+	 * \param [in] transfersRange is the range of transfers that will be executed
 	 *
-	 * \return pair with return code (0 on success, error code otherwise) and number of successfully completed
-	 * operations from \a operationsRange; error codes:
+	 * \return pair with return code (0 on success, error code otherwise) and number of successfully completed transfers
+	 * from \a transfersRange; error codes:
 	 * - error codes returned by SpiMasterProxy::configure();
 	 * - error codes returned by SpiMasterProxy::executeTransaction();
 	 */
 
 	std::pair<int, size_t> executeTransaction(const SpiDeviceProxy& spiDeviceProxy,
-			SpiMasterOperationsRange operationsRange) const;
+			SpiMasterTransfersRange transfersRange) const;
 
 	/**
 	 * \brief Internal implementation of isWriteInProgress()
