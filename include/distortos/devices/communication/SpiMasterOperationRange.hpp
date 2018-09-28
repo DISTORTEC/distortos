@@ -1,7 +1,7 @@
 /**
  * \file
  * \brief SpiMasterOperationRange type alias header
- * \deprecated scheduled to be removed after v0.7.0, use SpiMasterOperationsRange
+ * \deprecated scheduled to be removed after v0.7.0, use SpiMasterTransfersRange
  *
  * \author Copyright (C) 2016-2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
@@ -13,9 +13,9 @@
 #ifndef INCLUDE_DISTORTOS_DEVICES_COMMUNICATION_SPIMASTEROPERATIONRANGE_HPP_
 #define INCLUDE_DISTORTOS_DEVICES_COMMUNICATION_SPIMASTEROPERATIONRANGE_HPP_
 
-#warning "'distortos/devices/communication/SpiMasterOperationRange.hpp' is deprecated: Use SpiMasterOperationsRange"
+#warning "'distortos/devices/communication/SpiMasterOperationRange.hpp' is deprecated: Use SpiMasterTransfersRange"
 
-#include "distortos/devices/communication/SpiMasterOperationsRange.hpp"
+#include "distortos/devices/communication/SpiMasterTransfersRange.hpp"
 
 namespace distortos
 {
@@ -26,10 +26,10 @@ namespace devices
 /**
  * SpiMasterOperationRange is an alias for ContiguousRange of SpiMasterOperation elements
  *
- * \deprecated scheduled to be removed after v0.7.0, use SpiMasterOperationsRange
+ * \deprecated scheduled to be removed after v0.7.0, use SpiMasterTransfersRange
  */
 
-using SpiMasterOperationRange __attribute__ ((deprecated("Use SpiMasterOperationsRange"))) = SpiMasterOperationsRange;
+using SpiMasterOperationRange __attribute__ ((deprecated("Use SpiMasterTransfersRange"))) = SpiMasterTransfersRange;
 
 }	// namespace devices
 
