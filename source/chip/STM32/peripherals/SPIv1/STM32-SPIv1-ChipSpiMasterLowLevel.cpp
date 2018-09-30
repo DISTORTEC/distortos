@@ -395,14 +395,8 @@ void ChipSpiMasterLowLevel::interruptHandler()
 	const auto cr2 = spi.CR2;
 	const auto wordLength = parameters_.getWordLength();
 
-	if ((sr & (SPI_SR_MODF | SPI_SR_OVR | SPI_SR_CRCERR)) != 0 && (cr2 & SPI_CR2_ERRIE) != 0)	// error?
+	if ((sr & (SPI_SR_OVR | SPI_SR_CRCERR)) != 0 && (cr2 & SPI_CR2_ERRIE) != 0)	// error?
 	{
-		if ((sr & SPI_SR_MODF) != 0)	// master mode fault?
-		{
-			parameters_.enablePeripheral(false);	// clears MODF flag
-			errorSet_[devices::SpiMasterErrorSet::masterModeFault] = true;
-			done = true;
-		}
 		if ((sr & SPI_SR_OVR) != 0)	// overrun error?
 		{
 			spi.DR;
