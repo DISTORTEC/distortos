@@ -122,13 +122,13 @@ void SpiMasterProxy::transferCompleteEvent(const size_t bytesTransfered)
 	const auto previousTransfer = transfersRange_.begin();
 	previousTransfer->finalize(bytesTransfered);
 
-	const auto error = previousTransfer->getSize() != bytesTransfered;
-	if (error == false)	// handling of last transfer successful?
+	const auto success = previousTransfer->getSize() == bytesTransfered;
+	if (success == true)	// handling of last transfer successful?
 		transfersRange_ = {transfersRange_.begin() + 1, transfersRange_.end()};
 
-	if (transfersRange_.size() == 0 || error == true)	// all transfers are done or handling of last one failed?
+	if (transfersRange_.size() == 0 || success == false)	// all transfers are done or handling of last one failed?
 	{
-		notifyWaiter(error == false ? 0 : EIO);
+		notifyWaiter(success == true ? 0 : EIO);
 		return;
 	}
 
