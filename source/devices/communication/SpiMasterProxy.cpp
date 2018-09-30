@@ -13,6 +13,7 @@
 
 #include "distortos/devices/communication/SpiDeviceProxy.hpp"
 #include "distortos/devices/communication/SpiMaster.hpp"
+#include "distortos/devices/communication/SpiMasterErrorSet.hpp"
 #include "distortos/devices/communication/SpiMasterLowLevel.hpp"
 #include "distortos/devices/communication/SpiMasterTransfer.hpp"
 
@@ -121,7 +122,7 @@ void SpiMasterProxy::transferCompleteEvent(SpiMasterErrorSet errorSet, size_t by
 
 	{
 		const auto previousTransfer = transfersRange_.begin();
-		previousTransfer->finalize(errorSet, bytesTransfered);
+		previousTransfer->finalize(bytesTransfered);
 	}
 
 	const auto error = errorSet.any();
