@@ -76,15 +76,6 @@ public:
 	}
 
 	/**
-	 * \return set of error bits detected during the transfer
-	 */
-
-	SpiMasterErrorSet getErrorSet() const
-	{
-		return errorSet_;
-	}
-
-	/**
 	 * \return buffer with data that will be read, nullptr to ignore received data
 	 */
 
