@@ -390,7 +390,6 @@ void ChipSpiMasterLowLevel::interruptHandler()
 	{
 		spi.DR;
 		spi.SR;	// clears OVR flag
-		errorSet_[devices::SpiMasterErrorSet::overrunError] = true;
 
 		parameters_.enableTxeInterrupt(false);
 
@@ -449,8 +448,6 @@ void ChipSpiMasterLowLevel::interruptHandler()
 		parameters_.enableTxeInterrupt(false);
 		parameters_.enableRxneInterrupt(false);
 		parameters_.enableErrInterrupt(false);
-		const auto errorSet = errorSet_;
-		errorSet_.reset();
 		writePosition_ = {};
 		const auto bytesTransfered = readPosition_;
 		readPosition_ = {};
@@ -461,7 +458,7 @@ void ChipSpiMasterLowLevel::interruptHandler()
 		const auto spiMasterBase = spiMasterBase_;
 		spiMasterBase_ = nullptr;
 		assert(spiMasterBase != nullptr);
-		spiMasterBase->transferCompleteEvent(errorSet, bytesTransfered);
+		spiMasterBase->transferCompleteEvent(bytesTransfered);
 	}
 }
 

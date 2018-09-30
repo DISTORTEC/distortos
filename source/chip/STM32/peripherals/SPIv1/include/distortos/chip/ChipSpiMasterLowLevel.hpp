@@ -12,7 +12,6 @@
 #ifndef SOURCE_CHIP_STM32_PERIPHERALS_SPIV1_INCLUDE_DISTORTOS_CHIP_CHIPSPIMASTERLOWLEVEL_HPP_
 #define SOURCE_CHIP_STM32_PERIPHERALS_SPIV1_INCLUDE_DISTORTOS_CHIP_CHIPSPIMASTERLOWLEVEL_HPP_
 
-#include "distortos/devices/communication/SpiMasterErrorSet.hpp"
 #include "distortos/devices/communication/SpiMasterLowLevel.hpp"
 
 #include "distortos/distortosConfiguration.h"
@@ -91,7 +90,6 @@ public:
 			size_{},
 			readPosition_{},
 			writePosition_{},
-			errorSet_{},
 			dummyData_{},
 			started_{}
 	{
@@ -223,9 +221,6 @@ private:
 
 	/// current position in \a writeBuffer_
 	volatile size_t writePosition_;
-
-	/// current set of detected errors
-	devices::SpiMasterErrorSet errorSet_;
 
 	/// dummy data that will be sent if write buffer of transfer is nullptr
 	uint16_t dummyData_;

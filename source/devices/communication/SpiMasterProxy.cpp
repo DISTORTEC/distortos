@@ -13,7 +13,6 @@
 
 #include "distortos/devices/communication/SpiDeviceProxy.hpp"
 #include "distortos/devices/communication/SpiMaster.hpp"
-#include "distortos/devices/communication/SpiMasterErrorSet.hpp"
 #include "distortos/devices/communication/SpiMasterLowLevel.hpp"
 #include "distortos/devices/communication/SpiMasterTransfer.hpp"
 
@@ -116,16 +115,14 @@ void SpiMasterProxy::notifyWaiter(const int ret)
 	semaphore->post();
 }
 
-void SpiMasterProxy::transferCompleteEvent(SpiMasterErrorSet errorSet, size_t bytesTransfered)
+void SpiMasterProxy::transferCompleteEvent(const size_t bytesTransfered)
 {
 	assert(transfersRange_.size() != 0 && "Invalid range of transfers!");
 
-	{
-		const auto previousTransfer = transfersRange_.begin();
-		previousTransfer->finalize(bytesTransfered);
-	}
+	const auto previousTransfer = transfersRange_.begin();
+	previousTransfer->finalize(bytesTransfered);
 
-	const auto error = errorSet.any();
+	const auto error = previousTransfer->getSize() != bytesTransfered;
 	if (error == false)	// handling of last transfer successful?
 		transfersRange_ = {transfersRange_.begin() + 1, transfersRange_.end()};
 
