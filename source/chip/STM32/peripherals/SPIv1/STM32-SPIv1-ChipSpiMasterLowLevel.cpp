@@ -395,19 +395,11 @@ void ChipSpiMasterLowLevel::interruptHandler()
 	const auto cr2 = spi.CR2;
 	const auto wordLength = parameters_.getWordLength();
 
-	if ((sr & (SPI_SR_OVR | SPI_SR_CRCERR)) != 0 && (cr2 & SPI_CR2_ERRIE) != 0)	// error?
+	if ((sr & SPI_SR_OVR) != 0 && (cr2 & SPI_CR2_ERRIE) != 0)	// overrun error?
 	{
-		if ((sr & SPI_SR_OVR) != 0)	// overrun error?
-		{
-			spi.DR;
-			spi.SR;	// clears OVR flag
-			errorSet_[devices::SpiMasterErrorSet::overrunError] = true;
-		}
-		if ((sr & SPI_SR_CRCERR) != 0)	// CRC error?
-		{
-			spi.SR = 0;	// clears CRCERR flag
-			errorSet_[devices::SpiMasterErrorSet::crcError] = true;
-		}
+		spi.DR;
+		spi.SR;	// clears OVR flag
+		errorSet_[devices::SpiMasterErrorSet::overrunError] = true;
 
 		parameters_.enableTxeInterrupt(false);
 
