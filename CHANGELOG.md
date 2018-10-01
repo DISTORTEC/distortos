@@ -60,6 +60,11 @@ each board. Data used to generate vector table is taken from chip *YAML* files, 
 regenerated.
 - Changed names of some interrupt vectors of *STM32F0*, *STM32F1*, *STM32L0* and *STM32L4* to be consistent with
 `..._IRQn` names of `IRQn_Type` enum.
+- Simplified SPI drivers and interfaces: removed handling of errors which are not possible with current configuration
+and removed critical sections or bit-banding use where it makes no difference.
+`distortos::chip::ChipSpiMasterLowLevel::Parameters` class was moved to separate header and renamed to
+`distortos::chip::SpiPeripheral`. Removed `distortos::chip::ChipSpiMasterLowLevel::spi...Parameters` static objects and
+replaced them with local objects generated for each board. This change requires the board to be regenerated.
 - Update *CMSIS* to version 5.4.0.
 
 ### Deprecated
