@@ -15,6 +15,9 @@
 #include "distortos/chip/spis.hpp"
 
 #include "distortos/chip/ChipSpiMasterLowLevel.hpp"
+#include "distortos/chip/CMSIS-proxy.h"
+
+#include "distortos/BIND_LOW_LEVEL_INITIALIZER.h"
 
 namespace distortos
 {
@@ -28,6 +31,32 @@ namespace chip
 /*---------------------------------------------------------------------------------------------------------------------+
 | {{ key | upper }}
 +---------------------------------------------------------------------------------------------------------------------*/
+
+namespace
+{
+
+/**
+ * \brief Low-level chip initializer for {{ key | upper }}
+ *
+ * This function is called before constructors for global and static objects via BIND_LOW_LEVEL_INITIALIZER().
+ */
+
+void {{ key | lower }}LowLevelInitializer()
+{
+#if defined(RCC_APB1ENR_{{ key | upper }}EN)
+	RCC->APB1ENR |= RCC_APB1ENR_{{ key | upper }}EN;
+#elif defined(RCC_APB1ENR1_{{ key | upper }}EN)
+	RCC->APB1ENR1 |= RCC_APB1ENR1_{{ key | upper }}EN;
+#elif defined(RCC_APB2ENR_{{ key | upper }}EN)
+	RCC->APB2ENR |= RCC_APB2ENR_{{ key | upper }}EN;
+#else
+	#error "Unsupported bus for {{ key | upper }}!"
+#endif
+}
+
+BIND_LOW_LEVEL_INITIALIZER(50, {{ key | lower }}LowLevelInitializer);
+
+}	// namespace
 
 ChipSpiMasterLowLevel {{ key | lower }} {ChipSpiMasterLowLevel::{{ key | lower }}Parameters};
 

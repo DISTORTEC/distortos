@@ -15,6 +15,9 @@
 #include "distortos/chip/spis.hpp"
 
 #include "distortos/chip/ChipSpiMasterLowLevel.hpp"
+#include "distortos/chip/CMSIS-proxy.h"
+
+#include "distortos/BIND_LOW_LEVEL_INITIALIZER.h"
 
 namespace distortos
 {
@@ -27,6 +30,30 @@ namespace chip
 /*---------------------------------------------------------------------------------------------------------------------+
 | SPI1
 +---------------------------------------------------------------------------------------------------------------------*/
+
+namespace
+{
+
+/**
+ * \brief Low-level chip initializer for SPI1
+ *
+ * This function is called before constructors for global and static objects via BIND_LOW_LEVEL_INITIALIZER().
+ */
+
+void spi1LowLevelInitializer()
+{
+#if defined(RCC_APB1ENR_SPI1EN)
+	RCC->APB1ENR |= RCC_APB1ENR_SPI1EN;
+#elif defined(RCC_APB2ENR_SPI1EN)
+	RCC->APB2ENR |= RCC_APB2ENR_SPI1EN;
+#else
+	#error "Unsupported bus for SPI1!"
+#endif
+}
+
+BIND_LOW_LEVEL_INITIALIZER(50, spi1LowLevelInitializer);
+
+}	// namespace
 
 ChipSpiMasterLowLevel spi1 {ChipSpiMasterLowLevel::spi1Parameters};
 
@@ -47,6 +74,30 @@ extern "C" void SPI1_IRQHandler()
 | SPI2
 +---------------------------------------------------------------------------------------------------------------------*/
 
+namespace
+{
+
+/**
+ * \brief Low-level chip initializer for SPI2
+ *
+ * This function is called before constructors for global and static objects via BIND_LOW_LEVEL_INITIALIZER().
+ */
+
+void spi2LowLevelInitializer()
+{
+#if defined(RCC_APB1ENR_SPI2EN)
+	RCC->APB1ENR |= RCC_APB1ENR_SPI2EN;
+#elif defined(RCC_APB2ENR_SPI2EN)
+	RCC->APB2ENR |= RCC_APB2ENR_SPI2EN;
+#else
+	#error "Unsupported bus for SPI2!"
+#endif
+}
+
+BIND_LOW_LEVEL_INITIALIZER(50, spi2LowLevelInitializer);
+
+}	// namespace
+
 ChipSpiMasterLowLevel spi2 {ChipSpiMasterLowLevel::spi2Parameters};
 
 /**
@@ -65,6 +116,30 @@ extern "C" void SPI2_IRQHandler()
 /*---------------------------------------------------------------------------------------------------------------------+
 | SPI3
 +---------------------------------------------------------------------------------------------------------------------*/
+
+namespace
+{
+
+/**
+ * \brief Low-level chip initializer for SPI3
+ *
+ * This function is called before constructors for global and static objects via BIND_LOW_LEVEL_INITIALIZER().
+ */
+
+void spi3LowLevelInitializer()
+{
+#if defined(RCC_APB1ENR_SPI3EN)
+	RCC->APB1ENR |= RCC_APB1ENR_SPI3EN;
+#elif defined(RCC_APB2ENR_SPI3EN)
+	RCC->APB2ENR |= RCC_APB2ENR_SPI3EN;
+#else
+	#error "Unsupported bus for SPI3!"
+#endif
+}
+
+BIND_LOW_LEVEL_INITIALIZER(50, spi3LowLevelInitializer);
+
+}	// namespace
 
 ChipSpiMasterLowLevel spi3 {ChipSpiMasterLowLevel::spi3Parameters};
 
