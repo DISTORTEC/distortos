@@ -51,7 +51,6 @@ public:
 			spiBase_{spiBase},
 #ifdef DISTORTOS_BITBANDING_SUPPORTED
 			peripheralFrequency_{getBusFrequency(spiBase)},
-			speBbAddress_{STM32_BITBAND_IMPLEMENTATION(spiBase, SPI_TypeDef, CR1, SPI_CR1_SPE)},
 			rxneieBbAddress_{STM32_BITBAND_IMPLEMENTATION(spiBase, SPI_TypeDef, CR2, SPI_CR2_RXNEIE)},
 			txeieBbAddress_{STM32_BITBAND_IMPLEMENTATION(spiBase, SPI_TypeDef, CR2, SPI_CR2_TXEIE)}
 #else	// !def DISTORTOS_BITBANDING_SUPPORTED
@@ -59,23 +58,6 @@ public:
 #endif	// !def DISTORTOS_BITBANDING_SUPPORTED
 	{
 
-	}
-
-	/**
-	 * \brief Enables or disables peripheral in SPI_CR1.
-	 *
-	 * \param [in] enable selects whether the peripheral will be enabled (true) or disabled (false)
-	 */
-
-	void enablePeripheral(const bool enable) const
-	{
-#ifdef DISTORTOS_BITBANDING_SUPPORTED
-		*reinterpret_cast<volatile unsigned long*>(speBbAddress_) = enable;
-#else	// !def DISTORTOS_BITBANDING_SUPPORTED
-		auto& spi = getSpi();
-		const InterruptMaskingLock interruptMaskingLock;
-		spi.CR1 = (spi.CR1 & ~SPI_CR1_SPE) | (enable == true ? SPI_CR1_SPE : 0);
-#endif	// !def DISTORTOS_BITBANDING_SUPPORTED
 	}
 
 	/**
@@ -161,9 +143,6 @@ private:
 	uint32_t peripheralFrequency_;
 
 #ifdef DISTORTOS_BITBANDING_SUPPORTED
-
-	/// address of bitband alias of SPE bit in SPI_CR1 register
-	uintptr_t speBbAddress_;
 
 	/// address of bitband alias of RXNEIE bit in SPI_CR2 register
 	uintptr_t rxneieBbAddress_;

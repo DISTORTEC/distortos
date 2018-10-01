@@ -51,7 +51,6 @@ public:
 			spiBase_{spiBase},
 #ifdef DISTORTOS_BITBANDING_SUPPORTED
 			peripheralFrequency_{getBusFrequency(spiBase)},
-			speBbAddress_{STM32_BITBAND_IMPLEMENTATION(spiBase, SPI_TypeDef, CR1, SPI_CR1_SPE)},
 			rxneieBbAddress_{STM32_BITBAND_IMPLEMENTATION(spiBase, SPI_TypeDef, CR2, SPI_CR2_RXNEIE)},
 			txeieBbAddress_{STM32_BITBAND_IMPLEMENTATION(spiBase, SPI_TypeDef, CR2, SPI_CR2_TXEIE)}
 #else	// !def DISTORTOS_BITBANDING_SUPPORTED
@@ -59,23 +58,6 @@ public:
 #endif	// !def DISTORTOS_BITBANDING_SUPPORTED
 	{
 
-	}
-
-	/**
-	 * \brief Enables or disables peripheral in SPI_CR1.
-	 *
-	 * \param [in] enable selects whether the peripheral will be enabled (true) or disabled (false)
-	 */
-
-	void enablePeripheral(const bool enable) const
-	{
-#ifdef DISTORTOS_BITBANDING_SUPPORTED
-		*reinterpret_cast<volatile unsigned long*>(speBbAddress_) = enable;
-#else	// !def DISTORTOS_BITBANDING_SUPPORTED
-		auto& spi = getSpi();
-		const InterruptMaskingLock interruptMaskingLock;
-		spi.CR1 = (spi.CR1 & ~SPI_CR1_SPE) | (enable == true ? SPI_CR1_SPE : 0);
-#endif	// !def DISTORTOS_BITBANDING_SUPPORTED
 	}
 
 	/**
@@ -148,9 +130,6 @@ private:
 	uint32_t peripheralFrequency_;
 
 #ifdef DISTORTOS_BITBANDING_SUPPORTED
-
-	/// address of bitband alias of SPE bit in SPI_CR1 register
-	uintptr_t speBbAddress_;
 
 	/// address of bitband alias of RXNEIE bit in SPI_CR2 register
 	uintptr_t rxneieBbAddress_;
@@ -226,7 +205,7 @@ std::pair<int, uint32_t> ChipSpiMasterLowLevel::configure(const devices::SpiMode
 	// value of DFF bit (which determines word length) must be changed only when SPI peripheral is disabled
 	const auto disablePeripheral = wordLength != parameters_.getWordLength();
 	if (disablePeripheral == true)
-		parameters_.enablePeripheral(false);
+		spi.CR1 &= ~SPI_CR1_SPE;	// disable peripheral
 
 	spi.CR1 = (spi.CR1 & ~(SPI_CR1_DFF | SPI_CR1_LSBFIRST | SPI_CR1_BR | SPI_CR1_CPOL | SPI_CR1_CPHA)) |
 			(wordLength == 16) << SPI_CR1_DFF_Pos | lsbFirst << SPI_CR1_LSBFIRST_Pos | br << SPI_CR1_BR_Pos |
@@ -234,7 +213,7 @@ std::pair<int, uint32_t> ChipSpiMasterLowLevel::configure(const devices::SpiMode
 			(mode == devices::SpiMode::cpol0cpha1 || mode == devices::SpiMode::cpol1cpha1) << SPI_CR1_CPHA_Pos;
 
 	if (disablePeripheral == true)
-		parameters_.enablePeripheral(true);
+		spi.CR1 |= SPI_CR1_SPE;	// enable peripheral
 
 	dummyData_ = dummyData;
 
