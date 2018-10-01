@@ -14,8 +14,6 @@
 
 #include "distortos/devices/communication/SpiMasterLowLevel.hpp"
 
-#include "distortos/distortosConfiguration.h"
-
 namespace distortos
 {
 
@@ -39,48 +37,6 @@ public:
 
 	/// maximum allowed value for word length
 	constexpr static uint8_t maxWordLength {16};
-
-#ifdef CONFIG_CHIP_STM32_SPIV2_SPI1_ENABLE
-
-	/// raw SPI1 peripheral
-	static const SpiPeripheral spi1Parameters;
-
-#endif	// def CONFIG_CHIP_STM32_SPIV2_SPI1_ENABLE
-
-#ifdef CONFIG_CHIP_STM32_SPIV2_SPI2_ENABLE
-
-	/// raw SPI2 peripheral
-	static const SpiPeripheral spi2Parameters;
-
-#endif	// def CONFIG_CHIP_STM32_SPIV2_SPI2_ENABLE
-
-#ifdef CONFIG_CHIP_STM32_SPIV2_SPI3_ENABLE
-
-	/// raw SPI3 peripheral
-	static const SpiPeripheral spi3Parameters;
-
-#endif	// def CONFIG_CHIP_STM32_SPIV2_SPI3_ENABLE
-
-#ifdef CONFIG_CHIP_STM32_SPIV2_SPI4_ENABLE
-
-	/// raw SPI4 peripheral
-	static const SpiPeripheral spi4Parameters;
-
-#endif	// def CONFIG_CHIP_STM32_SPIV2_SPI4_ENABLE
-
-#ifdef CONFIG_CHIP_STM32_SPIV2_SPI5_ENABLE
-
-	/// raw SPI5 peripheral
-	static const SpiPeripheral spi5Parameters;
-
-#endif	// def CONFIG_CHIP_STM32_SPIV2_SPI5_ENABLE
-
-#ifdef CONFIG_CHIP_STM32_SPIV2_SPI6_ENABLE
-
-	/// raw SPI6 peripheral
-	static const SpiPeripheral spi6Parameters;
-
-#endif	// def CONFIG_CHIP_STM32_SPIV2_SPI6_ENABLE
 
 	/**
 	 * \brief ChipSpiMasterLowLevel's constructor

@@ -15,7 +15,7 @@
 #include "distortos/chip/spis.hpp"
 
 #include "distortos/chip/ChipSpiMasterLowLevel.hpp"
-#include "distortos/chip/CMSIS-proxy.h"
+#include "distortos/chip/STM32-SPIv2-SpiPeripheral.hpp"
 
 #include "distortos/BIND_LOW_LEVEL_INITIALIZER.h"
 
@@ -55,9 +55,12 @@ void spi1LowLevelInitializer()
 
 BIND_LOW_LEVEL_INITIALIZER(50, spi1LowLevelInitializer);
 
+/// raw SPI1 peripheral
+const SpiPeripheral spi1Peripheral {SPI1_BASE};
+
 }	// namespace
 
-ChipSpiMasterLowLevel spi1 {ChipSpiMasterLowLevel::spi1Parameters};
+ChipSpiMasterLowLevel spi1 {spi1Peripheral};
 
 /**
  * \brief SPI1 interrupt handler

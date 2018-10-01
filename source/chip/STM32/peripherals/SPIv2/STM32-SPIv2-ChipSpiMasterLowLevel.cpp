@@ -49,34 +49,6 @@ constexpr uint8_t getWordLength(const uint16_t cr2)
 }	// namespace
 
 /*---------------------------------------------------------------------------------------------------------------------+
-| public static objects
-+---------------------------------------------------------------------------------------------------------------------*/
-
-#ifdef CONFIG_CHIP_STM32_SPIV2_SPI1_ENABLE
-const SpiPeripheral ChipSpiMasterLowLevel::spi1Parameters {SPI1_BASE};
-#endif	// def CONFIG_CHIP_STM32_SPIV2_SPI1_ENABLE
-
-#ifdef CONFIG_CHIP_STM32_SPIV2_SPI2_ENABLE
-const SpiPeripheral ChipSpiMasterLowLevel::spi2Parameters {SPI2_BASE};
-#endif	// def CONFIG_CHIP_STM32_SPIV2_SPI2_ENABLE
-
-#ifdef CONFIG_CHIP_STM32_SPIV2_SPI3_ENABLE
-const SpiPeripheral ChipSpiMasterLowLevel::spi3Parameters {SPI3_BASE};
-#endif	// def CONFIG_CHIP_STM32_SPIV2_SPI3_ENABLE
-
-#ifdef CONFIG_CHIP_STM32_SPIV2_SPI4_ENABLE
-const SpiPeripheral ChipSpiMasterLowLevel::spi4Parameters {SPI4_BASE};
-#endif	// def CONFIG_CHIP_STM32_SPIV2_SPI4_ENABLE
-
-#ifdef CONFIG_CHIP_STM32_SPIV2_SPI5_ENABLE
-const SpiPeripheral ChipSpiMasterLowLevel::spi5Parameters {SPI5_BASE};
-#endif	// def CONFIG_CHIP_STM32_SPIV2_SPI5_ENABLE
-
-#ifdef CONFIG_CHIP_STM32_SPIV2_SPI6_ENABLE
-const SpiPeripheral ChipSpiMasterLowLevel::spi6Parameters {SPI6_BASE};
-#endif	// def CONFIG_CHIP_STM32_SPIV2_SPI6_ENABLE
-
-/*---------------------------------------------------------------------------------------------------------------------+
 | public functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
