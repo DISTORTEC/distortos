@@ -12,17 +12,10 @@
 #include "distortos/chip/ChipSpiMasterLowLevel.hpp"
 
 #include "distortos/chip/getBusFrequency.hpp"
-#include "distortos/chip/STM32-bit-banding.h"
 
 #include "distortos/devices/communication/SpiMasterBase.hpp"
 
 #include "distortos/assert.h"
-
-#ifndef DISTORTOS_BITBANDING_SUPPORTED
-
-#include "distortos/InterruptMaskingLock.hpp"
-
-#endif	// !def DISTORTOS_BITBANDING_SUPPORTED
 
 #include <cerrno>
 
@@ -49,31 +42,9 @@ public:
 
 	constexpr explicit Parameters(const uintptr_t spiBase) :
 			spiBase_{spiBase},
-#ifdef DISTORTOS_BITBANDING_SUPPORTED
-			peripheralFrequency_{getBusFrequency(spiBase)},
-			txeieBbAddress_{STM32_BITBAND_IMPLEMENTATION(spiBase, SPI_TypeDef, CR2, SPI_CR2_TXEIE)}
-#else	// !def DISTORTOS_BITBANDING_SUPPORTED
 			peripheralFrequency_{getBusFrequency(spiBase)}
-#endif	// !def DISTORTOS_BITBANDING_SUPPORTED
 	{
 
-	}
-
-	/**
-	 * \brief Enables or disables TXE interrupt of SPI.
-	 *
-	 * \param [in] enable selects whether the interrupt will be enabled (true) or disabled (false)
-	 */
-
-	void enableTxeInterrupt(const bool enable) const
-	{
-#ifdef DISTORTOS_BITBANDING_SUPPORTED
-		*reinterpret_cast<volatile unsigned long*>(txeieBbAddress_) = enable;
-#else	// !def DISTORTOS_BITBANDING_SUPPORTED
-		auto& spi = getSpi();
-		const InterruptMaskingLock interruptMaskingLock;
-		spi.CR2 = (spi.CR2 & ~SPI_CR2_TXEIE) | (enable == true ? SPI_CR2_TXEIE : 0);
-#endif	// !def DISTORTOS_BITBANDING_SUPPORTED
 	}
 
 	/**
@@ -123,13 +94,6 @@ private:
 
 	/// peripheral clock frequency, Hz
 	uint32_t peripheralFrequency_;
-
-#ifdef DISTORTOS_BITBANDING_SUPPORTED
-
-	/// address of bitband alias of TXEIE bit in SPI_CR2 register
-	uintptr_t txeieBbAddress_;
-
-#endif	// !def DISTORTOS_BITBANDING_SUPPORTED
 };
 
 /*---------------------------------------------------------------------------------------------------------------------+
@@ -218,7 +182,7 @@ void ChipSpiMasterLowLevel::interruptHandler()
 		spi.DR;
 		spi.SR;	// clears OVR flag
 
-		parameters_.enableTxeInterrupt(false);
+		spi.CR2 &= ~SPI_CR2_TXEIE;	// disable TXE interrupt
 
 		if ((sr & SPI_SR_BSY) == 0)
 			done = true;
@@ -240,7 +204,7 @@ void ChipSpiMasterLowLevel::interruptHandler()
 		if (readPosition == size_)
 			done = true;
 		else
-			parameters_.enableTxeInterrupt(true);
+			spi.CR2 |= SPI_CR2_TXEIE;	// enable TXE interrupt
 	}
 	else if ((sr & SPI_SR_TXE) != 0 && (cr2 & SPI_CR2_TXEIE) != 0)	// write?
 	{
@@ -264,13 +228,12 @@ void ChipSpiMasterLowLevel::interruptHandler()
 		else
 			spi.DR = word;
 
-		parameters_.enableTxeInterrupt(false);
+		spi.CR2 &= ~SPI_CR2_TXEIE;	// disable TXE interrupt
 	}
 
 	if (done == true)	// transfer finished of failed?
 	{
-		parameters_.enableTxeInterrupt(false);
-		spi.CR2 &= ~(SPI_CR2_RXNEIE | SPI_CR2_ERRIE);	// disable RXNE and ERR interrupts
+		spi.CR2 &= ~(SPI_CR2_TXEIE | SPI_CR2_RXNEIE | SPI_CR2_ERRIE);	// disable TXE, RXNE and ERR interrupts
 		writePosition_ = {};
 		const auto bytesTransfered = readPosition_;
 		readPosition_ = {};
@@ -320,8 +283,7 @@ int ChipSpiMasterLowLevel::startTransfer(devices::SpiMasterBase& spiMasterBase, 
 	readPosition_ = 0;
 	writePosition_ = 0;
 
-	parameters_.getSpi().CR2 |= SPI_CR2_RXNEIE | SPI_CR2_ERRIE;	// enable RXNE and ERR interrupts
-	parameters_.enableTxeInterrupt(true);
+	parameters_.getSpi().CR2 |= SPI_CR2_TXEIE | SPI_CR2_RXNEIE | SPI_CR2_ERRIE;	// enable TXE, RXNE and ERR interrupts
 	return 0;
 }
 
