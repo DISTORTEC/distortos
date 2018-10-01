@@ -79,7 +79,7 @@ std::pair<int, uint32_t> ChipSpiMasterLowLevel::configure(const devices::SpiMode
 	if (divider > 256)
 		return {EINVAL, {}};
 
-	const uint32_t br = divider <= 2 ? 0 : 31 - __CLZ(divider - 1);
+	const uint32_t br = divider <= 2 ? 0 : 31 - __builtin_clz(divider - 1);
 	auto& spi = spiPeripheral_.getSpi();
 	spi.CR1 = (spi.CR1 & ~(SPI_CR1_LSBFIRST | SPI_CR1_BR | SPI_CR1_CPOL | SPI_CR1_CPHA)) |
 			lsbFirst << SPI_CR1_LSBFIRST_Pos | br << SPI_CR1_BR_Pos |

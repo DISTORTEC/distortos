@@ -78,7 +78,7 @@ std::pair<int, uint32_t> ChipSpiMasterLowLevel::configure(const devices::SpiMode
 	if (divider > 256)
 		return {EINVAL, {}};
 
-	const uint32_t br = divider <= 2 ? 0 : 31 - __CLZ(divider - 1);
+	const uint32_t br = divider <= 2 ? 0 : 31 - __builtin_clz(divider - 1);
 	auto& spi = spiPeripheral_.getSpi();
 
 	// value of DFF bit (which determines word length) must be changed only when SPI peripheral is disabled
