@@ -51,18 +51,18 @@ constexpr uint8_t getWordLength(const uint16_t cr1)
 | public types
 +---------------------------------------------------------------------------------------------------------------------*/
 
-/// parameters for construction of SPI master low-level drivers
-class ChipSpiMasterLowLevel::Parameters
+/// ChipSpiMasterLowLevel::SpiPeripheral class is a raw SPI peripheral
+class ChipSpiMasterLowLevel::SpiPeripheral
 {
 public:
 
 	/**
-	 * \brief Parameters's constructor
+	 * \brief SpiPeripheral's constructor
 	 *
 	 * \param [in] spiBase is a base address of SPI peripheral
 	 */
 
-	constexpr explicit Parameters(const uintptr_t spiBase) :
+	constexpr explicit SpiPeripheral(const uintptr_t spiBase) :
 			spiBase_{spiBase},
 			peripheralFrequency_{getBusFrequency(spiBase)}
 	{
@@ -101,27 +101,27 @@ private:
 +---------------------------------------------------------------------------------------------------------------------*/
 
 #ifdef CONFIG_CHIP_STM32_SPIV1_SPI1_ENABLE
-const ChipSpiMasterLowLevel::Parameters ChipSpiMasterLowLevel::spi1Parameters {SPI1_BASE};
+const ChipSpiMasterLowLevel::SpiPeripheral ChipSpiMasterLowLevel::spi1Parameters {SPI1_BASE};
 #endif	// def CONFIG_CHIP_STM32_SPIV1_SPI1_ENABLE
 
 #ifdef CONFIG_CHIP_STM32_SPIV1_SPI2_ENABLE
-const ChipSpiMasterLowLevel::Parameters ChipSpiMasterLowLevel::spi2Parameters {SPI2_BASE};
+const ChipSpiMasterLowLevel::SpiPeripheral ChipSpiMasterLowLevel::spi2Parameters {SPI2_BASE};
 #endif	// def CONFIG_CHIP_STM32_SPIV1_SPI2_ENABLE
 
 #ifdef CONFIG_CHIP_STM32_SPIV1_SPI3_ENABLE
-const ChipSpiMasterLowLevel::Parameters ChipSpiMasterLowLevel::spi3Parameters {SPI3_BASE};
+const ChipSpiMasterLowLevel::SpiPeripheral ChipSpiMasterLowLevel::spi3Parameters {SPI3_BASE};
 #endif	// def CONFIG_CHIP_STM32_SPIV1_SPI3_ENABLE
 
 #ifdef CONFIG_CHIP_STM32_SPIV1_SPI4_ENABLE
-const ChipSpiMasterLowLevel::Parameters ChipSpiMasterLowLevel::spi4Parameters {SPI4_BASE};
+const ChipSpiMasterLowLevel::SpiPeripheral ChipSpiMasterLowLevel::spi4Parameters {SPI4_BASE};
 #endif	// def CONFIG_CHIP_STM32_SPIV1_SPI4_ENABLE
 
 #ifdef CONFIG_CHIP_STM32_SPIV1_SPI5_ENABLE
-const ChipSpiMasterLowLevel::Parameters ChipSpiMasterLowLevel::spi5Parameters {SPI5_BASE};
+const ChipSpiMasterLowLevel::SpiPeripheral ChipSpiMasterLowLevel::spi5Parameters {SPI5_BASE};
 #endif	// def CONFIG_CHIP_STM32_SPIV1_SPI5_ENABLE
 
 #ifdef CONFIG_CHIP_STM32_SPIV1_SPI6_ENABLE
-const ChipSpiMasterLowLevel::Parameters ChipSpiMasterLowLevel::spi6Parameters {SPI6_BASE};
+const ChipSpiMasterLowLevel::SpiPeripheral ChipSpiMasterLowLevel::spi6Parameters {SPI6_BASE};
 #endif	// def CONFIG_CHIP_STM32_SPIV1_SPI6_ENABLE
 
 /*---------------------------------------------------------------------------------------------------------------------+
@@ -134,8 +134,8 @@ ChipSpiMasterLowLevel::~ChipSpiMasterLowLevel()
 		return;
 
 	// reset peripheral
-	parameters_.getSpi().CR1 = {};
-	parameters_.getSpi().CR2 = {};
+	spiPeripheral_.getSpi().CR1 = {};
+	spiPeripheral_.getSpi().CR2 = {};
 }
 
 std::pair<int, uint32_t> ChipSpiMasterLowLevel::configure(const devices::SpiMode mode, const uint32_t clockFrequency,
@@ -150,13 +150,13 @@ std::pair<int, uint32_t> ChipSpiMasterLowLevel::configure(const devices::SpiMode
 	if (isTransferInProgress() == true)
 		return {EBUSY, {}};
 
-	const auto peripheralFrequency = parameters_.getPeripheralFrequency();
+	const auto peripheralFrequency = spiPeripheral_.getPeripheralFrequency();
 	const auto divider = (peripheralFrequency + clockFrequency - 1) / clockFrequency;
 	if (divider > 256)
 		return {EINVAL, {}};
 
 	const uint32_t br = divider <= 2 ? 0 : 31 - __CLZ(divider - 1);
-	auto& spi = parameters_.getSpi();
+	auto& spi = spiPeripheral_.getSpi();
 
 	// value of DFF bit (which determines word length) must be changed only when SPI peripheral is disabled
 	const auto disablePeripheral = wordLength != getWordLength(spi.CR1);
@@ -179,7 +179,7 @@ std::pair<int, uint32_t> ChipSpiMasterLowLevel::configure(const devices::SpiMode
 void ChipSpiMasterLowLevel::interruptHandler()
 {
 	bool done {};
-	auto& spi = parameters_.getSpi();
+	auto& spi = spiPeripheral_.getSpi();
 	const auto sr = spi.SR;
 	const auto cr2 = spi.CR2;
 	const auto wordLength = getWordLength(spi.CR1);
@@ -257,8 +257,8 @@ int ChipSpiMasterLowLevel::start()
 	if (isStarted() == true)
 		return EBADF;
 
-	parameters_.getSpi().CR1 = SPI_CR1_SSM | SPI_CR1_SSI | SPI_CR1_SPE | SPI_CR1_BR | SPI_CR1_MSTR;
-	parameters_.getSpi().CR2 = {};
+	spiPeripheral_.getSpi().CR1 = SPI_CR1_SSM | SPI_CR1_SSI | SPI_CR1_SPE | SPI_CR1_BR | SPI_CR1_MSTR;
+	spiPeripheral_.getSpi().CR2 = {};
 	started_ = true;
 
 	return 0;
@@ -276,7 +276,8 @@ int ChipSpiMasterLowLevel::startTransfer(devices::SpiMasterBase& spiMasterBase, 
 	if (isTransferInProgress() == true)
 		return EBUSY;
 
-	if (size % (getWordLength(parameters_.getSpi().CR1) / 8) != 0)
+	auto& spi = spiPeripheral_.getSpi();
+	if (size % (getWordLength(spi.CR1) / 8) != 0)
 		return EINVAL;
 
 	spiMasterBase_ = &spiMasterBase;
@@ -286,7 +287,7 @@ int ChipSpiMasterLowLevel::startTransfer(devices::SpiMasterBase& spiMasterBase, 
 	readPosition_ = 0;
 	writePosition_ = 0;
 
-	parameters_.getSpi().CR2 |= SPI_CR2_TXEIE | SPI_CR2_RXNEIE | SPI_CR2_ERRIE;	// enable TXE, RXNE and ERR interrupts
+	spi.CR2 |= SPI_CR2_TXEIE | SPI_CR2_RXNEIE | SPI_CR2_ERRIE;	// enable TXE, RXNE and ERR interrupts
 	return 0;
 }
 
@@ -299,8 +300,8 @@ int ChipSpiMasterLowLevel::stop()
 		return EBUSY;
 
 	// reset peripheral
-	parameters_.getSpi().CR1 = {};
-	parameters_.getSpi().CR2 = {};
+	spiPeripheral_.getSpi().CR1 = {};
+	spiPeripheral_.getSpi().CR2 = {};
 	started_ = false;
 	return 0;
 }

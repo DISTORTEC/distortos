@@ -38,58 +38,58 @@ public:
 	/// maximum allowed value for word length
 	constexpr static uint8_t maxWordLength {16};
 
-	class Parameters;
+	class SpiPeripheral;
 
 #ifdef CONFIG_CHIP_STM32_SPIV2_SPI1_ENABLE
 
-	/// parameters for construction of SPI master low-level driver for SPI1
-	static const Parameters spi1Parameters;
+	/// raw SPI1 peripheral
+	static const SpiPeripheral spi1Parameters;
 
 #endif	// def CONFIG_CHIP_STM32_SPIV2_SPI1_ENABLE
 
 #ifdef CONFIG_CHIP_STM32_SPIV2_SPI2_ENABLE
 
-	/// parameters for construction of SPI master low-level driver for SPI2
-	static const Parameters spi2Parameters;
+	/// raw SPI2 peripheral
+	static const SpiPeripheral spi2Parameters;
 
 #endif	// def CONFIG_CHIP_STM32_SPIV2_SPI2_ENABLE
 
 #ifdef CONFIG_CHIP_STM32_SPIV2_SPI3_ENABLE
 
-	/// parameters for construction of SPI master low-level driver for SPI3
-	static const Parameters spi3Parameters;
+	/// raw SPI3 peripheral
+	static const SpiPeripheral spi3Parameters;
 
 #endif	// def CONFIG_CHIP_STM32_SPIV2_SPI3_ENABLE
 
 #ifdef CONFIG_CHIP_STM32_SPIV2_SPI4_ENABLE
 
-	/// parameters for construction of SPI master low-level driver for SPI4
-	static const Parameters spi4Parameters;
+	/// raw SPI4 peripheral
+	static const SpiPeripheral spi4Parameters;
 
 #endif	// def CONFIG_CHIP_STM32_SPIV2_SPI4_ENABLE
 
 #ifdef CONFIG_CHIP_STM32_SPIV2_SPI5_ENABLE
 
-	/// parameters for construction of SPI master low-level driver for SPI5
-	static const Parameters spi5Parameters;
+	/// raw SPI5 peripheral
+	static const SpiPeripheral spi5Parameters;
 
 #endif	// def CONFIG_CHIP_STM32_SPIV2_SPI5_ENABLE
 
 #ifdef CONFIG_CHIP_STM32_SPIV2_SPI6_ENABLE
 
-	/// parameters for construction of SPI master low-level driver for SPI6
-	static const Parameters spi6Parameters;
+	/// raw SPI6 peripheral
+	static const SpiPeripheral spi6Parameters;
 
 #endif	// def CONFIG_CHIP_STM32_SPIV2_SPI6_ENABLE
 
 	/**
 	 * \brief ChipSpiMasterLowLevel's constructor
 	 *
-	 * \param [in] parameters is a reference to object with peripheral parameters
+	 * \param [in] spiPeripheral is a reference to raw SPI peripheral
 	 */
 
-	constexpr explicit ChipSpiMasterLowLevel(const Parameters& parameters) :
-			parameters_{parameters},
+	constexpr explicit ChipSpiMasterLowLevel(const SpiPeripheral& spiPeripheral) :
+			spiPeripheral_{spiPeripheral},
 			spiMasterBase_{},
 			readBuffer_{},
 			writeBuffer_{},
@@ -207,8 +207,8 @@ private:
 		return size_ != 0;
 	}
 
-	/// reference to configuration parameters
-	const Parameters& parameters_;
+	/// reference to raw SPI peripheral
+	const SpiPeripheral& spiPeripheral_;
 
 	/// pointer to SpiMasterBase object associated with this one
 	devices::SpiMasterBase* volatile spiMasterBase_;
