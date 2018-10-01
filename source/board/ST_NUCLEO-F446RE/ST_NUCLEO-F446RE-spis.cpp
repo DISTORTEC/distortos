@@ -22,33 +22,13 @@ namespace distortos
 namespace chip
 {
 
-/*---------------------------------------------------------------------------------------------------------------------+
-| global objects
-+---------------------------------------------------------------------------------------------------------------------*/
-
 #ifdef CONFIG_CHIP_STM32_SPIV1_SPI1_ENABLE
+
+/*---------------------------------------------------------------------------------------------------------------------+
+| SPI1
++---------------------------------------------------------------------------------------------------------------------*/
 
 ChipSpiMasterLowLevel spi1 {ChipSpiMasterLowLevel::spi1Parameters};
-
-#endif	// def CONFIG_CHIP_STM32_SPIV1_SPI1_ENABLE
-
-#ifdef CONFIG_CHIP_STM32_SPIV1_SPI2_ENABLE
-
-ChipSpiMasterLowLevel spi2 {ChipSpiMasterLowLevel::spi2Parameters};
-
-#endif	// def CONFIG_CHIP_STM32_SPIV1_SPI2_ENABLE
-
-#ifdef CONFIG_CHIP_STM32_SPIV1_SPI3_ENABLE
-
-ChipSpiMasterLowLevel spi3 {ChipSpiMasterLowLevel::spi3Parameters};
-
-#endif	// def CONFIG_CHIP_STM32_SPIV1_SPI3_ENABLE
-
-/*---------------------------------------------------------------------------------------------------------------------+
-| global functions
-+---------------------------------------------------------------------------------------------------------------------*/
-
-#ifdef CONFIG_CHIP_STM32_SPIV1_SPI1_ENABLE
 
 /**
  * \brief SPI1 interrupt handler
@@ -63,6 +43,12 @@ extern "C" void SPI1_IRQHandler()
 
 #ifdef CONFIG_CHIP_STM32_SPIV1_SPI2_ENABLE
 
+/*---------------------------------------------------------------------------------------------------------------------+
+| SPI2
++---------------------------------------------------------------------------------------------------------------------*/
+
+ChipSpiMasterLowLevel spi2 {ChipSpiMasterLowLevel::spi2Parameters};
+
 /**
  * \brief SPI2 interrupt handler
  */
@@ -75,6 +61,12 @@ extern "C" void SPI2_IRQHandler()
 #endif	// def CONFIG_CHIP_STM32_SPIV1_SPI2_ENABLE
 
 #ifdef CONFIG_CHIP_STM32_SPIV1_SPI3_ENABLE
+
+/*---------------------------------------------------------------------------------------------------------------------+
+| SPI3
++---------------------------------------------------------------------------------------------------------------------*/
+
+ChipSpiMasterLowLevel spi3 {ChipSpiMasterLowLevel::spi3Parameters};
 
 /**
  * \brief SPI3 interrupt handler

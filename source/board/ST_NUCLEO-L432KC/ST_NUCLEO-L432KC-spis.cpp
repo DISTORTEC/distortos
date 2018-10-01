@@ -22,27 +22,13 @@ namespace distortos
 namespace chip
 {
 
-/*---------------------------------------------------------------------------------------------------------------------+
-| global objects
-+---------------------------------------------------------------------------------------------------------------------*/
-
 #ifdef CONFIG_CHIP_STM32_SPIV2_SPI1_ENABLE
+
+/*---------------------------------------------------------------------------------------------------------------------+
+| SPI1
++---------------------------------------------------------------------------------------------------------------------*/
 
 ChipSpiMasterLowLevel spi1 {ChipSpiMasterLowLevel::spi1Parameters};
-
-#endif	// def CONFIG_CHIP_STM32_SPIV2_SPI1_ENABLE
-
-#ifdef CONFIG_CHIP_STM32_SPIV2_SPI3_ENABLE
-
-ChipSpiMasterLowLevel spi3 {ChipSpiMasterLowLevel::spi3Parameters};
-
-#endif	// def CONFIG_CHIP_STM32_SPIV2_SPI3_ENABLE
-
-/*---------------------------------------------------------------------------------------------------------------------+
-| global functions
-+---------------------------------------------------------------------------------------------------------------------*/
-
-#ifdef CONFIG_CHIP_STM32_SPIV2_SPI1_ENABLE
 
 /**
  * \brief SPI1 interrupt handler
@@ -56,6 +42,12 @@ extern "C" void SPI1_IRQHandler()
 #endif	// def CONFIG_CHIP_STM32_SPIV2_SPI1_ENABLE
 
 #ifdef CONFIG_CHIP_STM32_SPIV2_SPI3_ENABLE
+
+/*---------------------------------------------------------------------------------------------------------------------+
+| SPI3
++---------------------------------------------------------------------------------------------------------------------*/
+
+ChipSpiMasterLowLevel spi3 {ChipSpiMasterLowLevel::spi3Parameters};
 
 /**
  * \brief SPI3 interrupt handler

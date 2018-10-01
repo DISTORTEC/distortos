@@ -21,25 +21,15 @@ namespace distortos
 
 namespace chip
 {
-
-/*---------------------------------------------------------------------------------------------------------------------+
-| global objects
-+---------------------------------------------------------------------------------------------------------------------*/
 {% for key, spi in dictionary['SPIs'].items() if spi is mapping and 'ST,STM32-SPI-v2' in spi['compatible'] %}
 
 #ifdef CONFIG_CHIP_STM32_SPIV2_{{ key | upper }}_ENABLE
+
+/*---------------------------------------------------------------------------------------------------------------------+
+| {{ key | upper }}
++---------------------------------------------------------------------------------------------------------------------*/
 
 ChipSpiMasterLowLevel {{ key | lower }} {ChipSpiMasterLowLevel::{{ key | lower }}Parameters};
-
-#endif	// def CONFIG_CHIP_STM32_SPIV2_{{ key | upper }}_ENABLE
-{% endfor %}
-
-/*---------------------------------------------------------------------------------------------------------------------+
-| global functions
-+---------------------------------------------------------------------------------------------------------------------*/
-{% for key, spi in dictionary['SPIs'].items() if spi is mapping and 'ST,STM32-SPI-v2' in spi['compatible'] %}
-
-#ifdef CONFIG_CHIP_STM32_SPIV2_{{ key | upper }}_ENABLE
 
 /**
  * \brief {{ spi['interrupt']['vector'] }} interrupt handler
