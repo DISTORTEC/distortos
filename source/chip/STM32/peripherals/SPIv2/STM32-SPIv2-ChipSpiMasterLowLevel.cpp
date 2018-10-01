@@ -52,7 +52,6 @@ public:
 #ifdef DISTORTOS_BITBANDING_SUPPORTED
 			peripheralFrequency_{getBusFrequency(spiBase)},
 			speBbAddress_{STM32_BITBAND_IMPLEMENTATION(spiBase, SPI_TypeDef, CR1, SPI_CR1_SPE)},
-			errieBbAddress_{STM32_BITBAND_IMPLEMENTATION(spiBase, SPI_TypeDef, CR2, SPI_CR2_ERRIE)},
 			rxneieBbAddress_{STM32_BITBAND_IMPLEMENTATION(spiBase, SPI_TypeDef, CR2, SPI_CR2_RXNEIE)},
 			txeieBbAddress_{STM32_BITBAND_IMPLEMENTATION(spiBase, SPI_TypeDef, CR2, SPI_CR2_TXEIE)}
 #else	// !def DISTORTOS_BITBANDING_SUPPORTED
@@ -60,23 +59,6 @@ public:
 #endif	// !def DISTORTOS_BITBANDING_SUPPORTED
 	{
 
-	}
-
-	/**
-	 * \brief Enables or disables ERR interrupt of SPI.
-	 *
-	 * \param [in] enable selects whether the interrupt will be enabled (true) or disabled (false)
-	 */
-
-	void enableErrInterrupt(const bool enable) const
-	{
-#ifdef DISTORTOS_BITBANDING_SUPPORTED
-		*reinterpret_cast<volatile unsigned long*>(errieBbAddress_) = enable;
-#else	// !def DISTORTOS_BITBANDING_SUPPORTED
-		auto& spi = getSpi();
-		const InterruptMaskingLock interruptMaskingLock;
-		spi.CR2 = (spi.CR2 & ~SPI_CR2_ERRIE) | (enable == true ? SPI_CR2_ERRIE : 0);
-#endif	// !def DISTORTOS_BITBANDING_SUPPORTED
 	}
 
 	/**
@@ -182,9 +164,6 @@ private:
 
 	/// address of bitband alias of SPE bit in SPI_CR1 register
 	uintptr_t speBbAddress_;
-
-	/// address of bitband alias of ERRIE bit in SPI_CR2 register
-	uintptr_t errieBbAddress_;
 
 	/// address of bitband alias of RXNEIE bit in SPI_CR2 register
 	uintptr_t rxneieBbAddress_;
@@ -337,7 +316,7 @@ void ChipSpiMasterLowLevel::interruptHandler()
 	{
 		parameters_.enableTxeInterrupt(false);
 		parameters_.enableRxneInterrupt(false);
-		parameters_.enableErrInterrupt(false);
+		spi.CR2 &= ~SPI_CR2_ERRIE;	// disable ERR interrupt
 		writePosition_ = {};
 		const auto bytesTransfered = readPosition_;
 		readPosition_ = {};
@@ -387,7 +366,7 @@ int ChipSpiMasterLowLevel::startTransfer(devices::SpiMasterBase& spiMasterBase, 
 	readPosition_ = 0;
 	writePosition_ = 0;
 
-	parameters_.enableErrInterrupt(true);
+	parameters_.getSpi().CR2 |= SPI_CR2_ERRIE;	// enable ERR interrupt
 	parameters_.enableRxneInterrupt(true);
 	parameters_.enableTxeInterrupt(true);
 	return 0;
