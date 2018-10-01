@@ -115,22 +115,20 @@ void SpiMasterProxy::notifyWaiter(const int ret)
 	semaphore->post();
 }
 
-void SpiMasterProxy::transferCompleteEvent(SpiMasterErrorSet errorSet, size_t bytesTransfered)
+void SpiMasterProxy::transferCompleteEvent(const size_t bytesTransfered)
 {
 	assert(transfersRange_.size() != 0 && "Invalid range of transfers!");
 
-	{
-		const auto previousTransfer = transfersRange_.begin();
-		previousTransfer->finalize(errorSet, bytesTransfered);
-	}
+	const auto previousTransfer = transfersRange_.begin();
+	previousTransfer->finalize(bytesTransfered);
 
-	const auto error = errorSet.any();
-	if (error == false)	// handling of last transfer successful?
+	const auto success = previousTransfer->getSize() == bytesTransfered;
+	if (success == true)	// handling of last transfer successful?
 		transfersRange_ = {transfersRange_.begin() + 1, transfersRange_.end()};
 
-	if (transfersRange_.size() == 0 || error == true)	// all transfers are done or handling of last one failed?
+	if (transfersRange_.size() == 0 || success == false)	// all transfers are done or handling of last one failed?
 	{
-		notifyWaiter(error == false ? 0 : EIO);
+		notifyWaiter(success == true ? 0 : EIO);
 		return;
 	}
 

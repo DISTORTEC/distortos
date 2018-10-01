@@ -15,6 +15,9 @@
 #include "distortos/chip/spis.hpp"
 
 #include "distortos/chip/ChipSpiMasterLowLevel.hpp"
+#include "distortos/chip/STM32-SPIv2-SpiPeripheral.hpp"
+
+#include "distortos/BIND_LOW_LEVEL_INITIALIZER.h"
 
 namespace distortos
 {
@@ -22,27 +25,42 @@ namespace distortos
 namespace chip
 {
 
-/*---------------------------------------------------------------------------------------------------------------------+
-| global objects
-+---------------------------------------------------------------------------------------------------------------------*/
-
 #ifdef CONFIG_CHIP_STM32_SPIV2_SPI1_ENABLE
 
-ChipSpiMasterLowLevel spi1 {ChipSpiMasterLowLevel::spi1Parameters};
-
-#endif	// def CONFIG_CHIP_STM32_SPIV2_SPI1_ENABLE
-
-#ifdef CONFIG_CHIP_STM32_SPIV2_SPI3_ENABLE
-
-ChipSpiMasterLowLevel spi3 {ChipSpiMasterLowLevel::spi3Parameters};
-
-#endif	// def CONFIG_CHIP_STM32_SPIV2_SPI3_ENABLE
-
 /*---------------------------------------------------------------------------------------------------------------------+
-| global functions
+| SPI1
 +---------------------------------------------------------------------------------------------------------------------*/
 
-#ifdef CONFIG_CHIP_STM32_SPIV2_SPI1_ENABLE
+namespace
+{
+
+/**
+ * \brief Low-level chip initializer for SPI1
+ *
+ * This function is called before constructors for global and static objects via BIND_LOW_LEVEL_INITIALIZER().
+ */
+
+void spi1LowLevelInitializer()
+{
+#if defined(RCC_APB1ENR_SPI1EN)
+	RCC->APB1ENR |= RCC_APB1ENR_SPI1EN;
+#elif defined(RCC_APB1ENR1_SPI1EN)
+	RCC->APB1ENR1 |= RCC_APB1ENR1_SPI1EN;
+#elif defined(RCC_APB2ENR_SPI1EN)
+	RCC->APB2ENR |= RCC_APB2ENR_SPI1EN;
+#else
+	#error "Unsupported bus for SPI1!"
+#endif
+}
+
+BIND_LOW_LEVEL_INITIALIZER(50, spi1LowLevelInitializer);
+
+/// raw SPI1 peripheral
+const SpiPeripheral spi1Peripheral {SPI1_BASE};
+
+}	// namespace
+
+ChipSpiMasterLowLevel spi1 {spi1Peripheral};
 
 /**
  * \brief SPI1 interrupt handler
@@ -56,6 +74,41 @@ extern "C" void SPI1_IRQHandler()
 #endif	// def CONFIG_CHIP_STM32_SPIV2_SPI1_ENABLE
 
 #ifdef CONFIG_CHIP_STM32_SPIV2_SPI3_ENABLE
+
+/*---------------------------------------------------------------------------------------------------------------------+
+| SPI3
++---------------------------------------------------------------------------------------------------------------------*/
+
+namespace
+{
+
+/**
+ * \brief Low-level chip initializer for SPI3
+ *
+ * This function is called before constructors for global and static objects via BIND_LOW_LEVEL_INITIALIZER().
+ */
+
+void spi3LowLevelInitializer()
+{
+#if defined(RCC_APB1ENR_SPI3EN)
+	RCC->APB1ENR |= RCC_APB1ENR_SPI3EN;
+#elif defined(RCC_APB1ENR1_SPI3EN)
+	RCC->APB1ENR1 |= RCC_APB1ENR1_SPI3EN;
+#elif defined(RCC_APB2ENR_SPI3EN)
+	RCC->APB2ENR |= RCC_APB2ENR_SPI3EN;
+#else
+	#error "Unsupported bus for SPI3!"
+#endif
+}
+
+BIND_LOW_LEVEL_INITIALIZER(50, spi3LowLevelInitializer);
+
+/// raw SPI3 peripheral
+const SpiPeripheral spi3Peripheral {SPI3_BASE};
+
+}	// namespace
+
+ChipSpiMasterLowLevel spi3 {spi3Peripheral};
 
 /**
  * \brief SPI3 interrupt handler

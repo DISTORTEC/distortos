@@ -2,7 +2,7 @@
  * \file
  * \brief SpiMasterBase class header
  *
- * \author Copyright (C) 2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2016-2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -19,8 +19,6 @@ namespace distortos
 
 namespace devices
 {
-
-class SpiMasterErrorSet;
 
 /**
  * SpiMasterBase class is an interface with callbacks for low-level SPI master driver, which can serve as a base for
@@ -44,13 +42,12 @@ public:
 	 *
 	 * Called by low-level SPI master driver when the transfer is physically finished.
 	 *
-	 * \param [in] errorSet is the set of error bits
 	 * \param [in] bytesTransfered is the number of bytes transferred by low-level SPI master driver (read from write
-	 * buffer and/or written to read buffer), may be unreliable if \a errorSet is not empty (i.e. transfer error was
-	 * detected)
+	 * buffer and/or written to read buffer), may be unreliable if transfer error was detected (\a bytesTransfered is
+	 * not equal to size of transfer)
 	 */
 
-	virtual void transferCompleteEvent(SpiMasterErrorSet errorSet, size_t bytesTransfered) = 0;
+	virtual void transferCompleteEvent(size_t bytesTransfered) = 0;
 };
 
 }	// namespace devices

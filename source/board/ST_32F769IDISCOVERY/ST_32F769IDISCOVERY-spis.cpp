@@ -15,6 +15,9 @@
 #include "distortos/chip/spis.hpp"
 
 #include "distortos/chip/ChipSpiMasterLowLevel.hpp"
+#include "distortos/chip/STM32-SPIv2-SpiPeripheral.hpp"
+
+#include "distortos/BIND_LOW_LEVEL_INITIALIZER.h"
 
 namespace distortos
 {
@@ -22,51 +25,42 @@ namespace distortos
 namespace chip
 {
 
-/*---------------------------------------------------------------------------------------------------------------------+
-| global objects
-+---------------------------------------------------------------------------------------------------------------------*/
-
 #ifdef CONFIG_CHIP_STM32_SPIV2_SPI1_ENABLE
 
-ChipSpiMasterLowLevel spi1 {ChipSpiMasterLowLevel::spi1Parameters};
-
-#endif	// def CONFIG_CHIP_STM32_SPIV2_SPI1_ENABLE
-
-#ifdef CONFIG_CHIP_STM32_SPIV2_SPI2_ENABLE
-
-ChipSpiMasterLowLevel spi2 {ChipSpiMasterLowLevel::spi2Parameters};
-
-#endif	// def CONFIG_CHIP_STM32_SPIV2_SPI2_ENABLE
-
-#ifdef CONFIG_CHIP_STM32_SPIV2_SPI3_ENABLE
-
-ChipSpiMasterLowLevel spi3 {ChipSpiMasterLowLevel::spi3Parameters};
-
-#endif	// def CONFIG_CHIP_STM32_SPIV2_SPI3_ENABLE
-
-#ifdef CONFIG_CHIP_STM32_SPIV2_SPI4_ENABLE
-
-ChipSpiMasterLowLevel spi4 {ChipSpiMasterLowLevel::spi4Parameters};
-
-#endif	// def CONFIG_CHIP_STM32_SPIV2_SPI4_ENABLE
-
-#ifdef CONFIG_CHIP_STM32_SPIV2_SPI5_ENABLE
-
-ChipSpiMasterLowLevel spi5 {ChipSpiMasterLowLevel::spi5Parameters};
-
-#endif	// def CONFIG_CHIP_STM32_SPIV2_SPI5_ENABLE
-
-#ifdef CONFIG_CHIP_STM32_SPIV2_SPI6_ENABLE
-
-ChipSpiMasterLowLevel spi6 {ChipSpiMasterLowLevel::spi6Parameters};
-
-#endif	// def CONFIG_CHIP_STM32_SPIV2_SPI6_ENABLE
-
 /*---------------------------------------------------------------------------------------------------------------------+
-| global functions
+| SPI1
 +---------------------------------------------------------------------------------------------------------------------*/
 
-#ifdef CONFIG_CHIP_STM32_SPIV2_SPI1_ENABLE
+namespace
+{
+
+/**
+ * \brief Low-level chip initializer for SPI1
+ *
+ * This function is called before constructors for global and static objects via BIND_LOW_LEVEL_INITIALIZER().
+ */
+
+void spi1LowLevelInitializer()
+{
+#if defined(RCC_APB1ENR_SPI1EN)
+	RCC->APB1ENR |= RCC_APB1ENR_SPI1EN;
+#elif defined(RCC_APB1ENR1_SPI1EN)
+	RCC->APB1ENR1 |= RCC_APB1ENR1_SPI1EN;
+#elif defined(RCC_APB2ENR_SPI1EN)
+	RCC->APB2ENR |= RCC_APB2ENR_SPI1EN;
+#else
+	#error "Unsupported bus for SPI1!"
+#endif
+}
+
+BIND_LOW_LEVEL_INITIALIZER(50, spi1LowLevelInitializer);
+
+/// raw SPI1 peripheral
+const SpiPeripheral spi1Peripheral {SPI1_BASE};
+
+}	// namespace
+
+ChipSpiMasterLowLevel spi1 {spi1Peripheral};
 
 /**
  * \brief SPI1 interrupt handler
@@ -81,6 +75,41 @@ extern "C" void SPI1_IRQHandler()
 
 #ifdef CONFIG_CHIP_STM32_SPIV2_SPI2_ENABLE
 
+/*---------------------------------------------------------------------------------------------------------------------+
+| SPI2
++---------------------------------------------------------------------------------------------------------------------*/
+
+namespace
+{
+
+/**
+ * \brief Low-level chip initializer for SPI2
+ *
+ * This function is called before constructors for global and static objects via BIND_LOW_LEVEL_INITIALIZER().
+ */
+
+void spi2LowLevelInitializer()
+{
+#if defined(RCC_APB1ENR_SPI2EN)
+	RCC->APB1ENR |= RCC_APB1ENR_SPI2EN;
+#elif defined(RCC_APB1ENR1_SPI2EN)
+	RCC->APB1ENR1 |= RCC_APB1ENR1_SPI2EN;
+#elif defined(RCC_APB2ENR_SPI2EN)
+	RCC->APB2ENR |= RCC_APB2ENR_SPI2EN;
+#else
+	#error "Unsupported bus for SPI2!"
+#endif
+}
+
+BIND_LOW_LEVEL_INITIALIZER(50, spi2LowLevelInitializer);
+
+/// raw SPI2 peripheral
+const SpiPeripheral spi2Peripheral {SPI2_BASE};
+
+}	// namespace
+
+ChipSpiMasterLowLevel spi2 {spi2Peripheral};
+
 /**
  * \brief SPI2 interrupt handler
  */
@@ -93,6 +122,41 @@ extern "C" void SPI2_IRQHandler()
 #endif	// def CONFIG_CHIP_STM32_SPIV2_SPI2_ENABLE
 
 #ifdef CONFIG_CHIP_STM32_SPIV2_SPI3_ENABLE
+
+/*---------------------------------------------------------------------------------------------------------------------+
+| SPI3
++---------------------------------------------------------------------------------------------------------------------*/
+
+namespace
+{
+
+/**
+ * \brief Low-level chip initializer for SPI3
+ *
+ * This function is called before constructors for global and static objects via BIND_LOW_LEVEL_INITIALIZER().
+ */
+
+void spi3LowLevelInitializer()
+{
+#if defined(RCC_APB1ENR_SPI3EN)
+	RCC->APB1ENR |= RCC_APB1ENR_SPI3EN;
+#elif defined(RCC_APB1ENR1_SPI3EN)
+	RCC->APB1ENR1 |= RCC_APB1ENR1_SPI3EN;
+#elif defined(RCC_APB2ENR_SPI3EN)
+	RCC->APB2ENR |= RCC_APB2ENR_SPI3EN;
+#else
+	#error "Unsupported bus for SPI3!"
+#endif
+}
+
+BIND_LOW_LEVEL_INITIALIZER(50, spi3LowLevelInitializer);
+
+/// raw SPI3 peripheral
+const SpiPeripheral spi3Peripheral {SPI3_BASE};
+
+}	// namespace
+
+ChipSpiMasterLowLevel spi3 {spi3Peripheral};
 
 /**
  * \brief SPI3 interrupt handler
@@ -107,6 +171,41 @@ extern "C" void SPI3_IRQHandler()
 
 #ifdef CONFIG_CHIP_STM32_SPIV2_SPI4_ENABLE
 
+/*---------------------------------------------------------------------------------------------------------------------+
+| SPI4
++---------------------------------------------------------------------------------------------------------------------*/
+
+namespace
+{
+
+/**
+ * \brief Low-level chip initializer for SPI4
+ *
+ * This function is called before constructors for global and static objects via BIND_LOW_LEVEL_INITIALIZER().
+ */
+
+void spi4LowLevelInitializer()
+{
+#if defined(RCC_APB1ENR_SPI4EN)
+	RCC->APB1ENR |= RCC_APB1ENR_SPI4EN;
+#elif defined(RCC_APB1ENR1_SPI4EN)
+	RCC->APB1ENR1 |= RCC_APB1ENR1_SPI4EN;
+#elif defined(RCC_APB2ENR_SPI4EN)
+	RCC->APB2ENR |= RCC_APB2ENR_SPI4EN;
+#else
+	#error "Unsupported bus for SPI4!"
+#endif
+}
+
+BIND_LOW_LEVEL_INITIALIZER(50, spi4LowLevelInitializer);
+
+/// raw SPI4 peripheral
+const SpiPeripheral spi4Peripheral {SPI4_BASE};
+
+}	// namespace
+
+ChipSpiMasterLowLevel spi4 {spi4Peripheral};
+
 /**
  * \brief SPI4 interrupt handler
  */
@@ -120,6 +219,41 @@ extern "C" void SPI4_IRQHandler()
 
 #ifdef CONFIG_CHIP_STM32_SPIV2_SPI5_ENABLE
 
+/*---------------------------------------------------------------------------------------------------------------------+
+| SPI5
++---------------------------------------------------------------------------------------------------------------------*/
+
+namespace
+{
+
+/**
+ * \brief Low-level chip initializer for SPI5
+ *
+ * This function is called before constructors for global and static objects via BIND_LOW_LEVEL_INITIALIZER().
+ */
+
+void spi5LowLevelInitializer()
+{
+#if defined(RCC_APB1ENR_SPI5EN)
+	RCC->APB1ENR |= RCC_APB1ENR_SPI5EN;
+#elif defined(RCC_APB1ENR1_SPI5EN)
+	RCC->APB1ENR1 |= RCC_APB1ENR1_SPI5EN;
+#elif defined(RCC_APB2ENR_SPI5EN)
+	RCC->APB2ENR |= RCC_APB2ENR_SPI5EN;
+#else
+	#error "Unsupported bus for SPI5!"
+#endif
+}
+
+BIND_LOW_LEVEL_INITIALIZER(50, spi5LowLevelInitializer);
+
+/// raw SPI5 peripheral
+const SpiPeripheral spi5Peripheral {SPI5_BASE};
+
+}	// namespace
+
+ChipSpiMasterLowLevel spi5 {spi5Peripheral};
+
 /**
  * \brief SPI5 interrupt handler
  */
@@ -132,6 +266,41 @@ extern "C" void SPI5_IRQHandler()
 #endif	// def CONFIG_CHIP_STM32_SPIV2_SPI5_ENABLE
 
 #ifdef CONFIG_CHIP_STM32_SPIV2_SPI6_ENABLE
+
+/*---------------------------------------------------------------------------------------------------------------------+
+| SPI6
++---------------------------------------------------------------------------------------------------------------------*/
+
+namespace
+{
+
+/**
+ * \brief Low-level chip initializer for SPI6
+ *
+ * This function is called before constructors for global and static objects via BIND_LOW_LEVEL_INITIALIZER().
+ */
+
+void spi6LowLevelInitializer()
+{
+#if defined(RCC_APB1ENR_SPI6EN)
+	RCC->APB1ENR |= RCC_APB1ENR_SPI6EN;
+#elif defined(RCC_APB1ENR1_SPI6EN)
+	RCC->APB1ENR1 |= RCC_APB1ENR1_SPI6EN;
+#elif defined(RCC_APB2ENR_SPI6EN)
+	RCC->APB2ENR |= RCC_APB2ENR_SPI6EN;
+#else
+	#error "Unsupported bus for SPI6!"
+#endif
+}
+
+BIND_LOW_LEVEL_INITIALIZER(50, spi6LowLevelInitializer);
+
+/// raw SPI6 peripheral
+const SpiPeripheral spi6Peripheral {SPI6_BASE};
+
+}	// namespace
+
+ChipSpiMasterLowLevel spi6 {spi6Peripheral};
 
 /**
  * \brief SPI6 interrupt handler

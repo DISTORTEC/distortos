@@ -12,16 +12,15 @@
 #ifndef SOURCE_CHIP_STM32_PERIPHERALS_SPIV2_INCLUDE_DISTORTOS_CHIP_CHIPSPIMASTERLOWLEVEL_HPP_
 #define SOURCE_CHIP_STM32_PERIPHERALS_SPIV2_INCLUDE_DISTORTOS_CHIP_CHIPSPIMASTERLOWLEVEL_HPP_
 
-#include "distortos/devices/communication/SpiMasterErrorSet.hpp"
 #include "distortos/devices/communication/SpiMasterLowLevel.hpp"
-
-#include "distortos/distortosConfiguration.h"
 
 namespace distortos
 {
 
 namespace chip
 {
+
+class SpiPeripheral;
 
 /**
  * ChipSpiMasterLowLevel class is a low-level SPI master driver for SPIv2 in STM32
@@ -39,65 +38,20 @@ public:
 	/// maximum allowed value for word length
 	constexpr static uint8_t maxWordLength {16};
 
-	class Parameters;
-
-#ifdef CONFIG_CHIP_STM32_SPIV2_SPI1_ENABLE
-
-	/// parameters for construction of SPI master low-level driver for SPI1
-	static const Parameters spi1Parameters;
-
-#endif	// def CONFIG_CHIP_STM32_SPIV2_SPI1_ENABLE
-
-#ifdef CONFIG_CHIP_STM32_SPIV2_SPI2_ENABLE
-
-	/// parameters for construction of SPI master low-level driver for SPI2
-	static const Parameters spi2Parameters;
-
-#endif	// def CONFIG_CHIP_STM32_SPIV2_SPI2_ENABLE
-
-#ifdef CONFIG_CHIP_STM32_SPIV2_SPI3_ENABLE
-
-	/// parameters for construction of SPI master low-level driver for SPI3
-	static const Parameters spi3Parameters;
-
-#endif	// def CONFIG_CHIP_STM32_SPIV2_SPI3_ENABLE
-
-#ifdef CONFIG_CHIP_STM32_SPIV2_SPI4_ENABLE
-
-	/// parameters for construction of SPI master low-level driver for SPI4
-	static const Parameters spi4Parameters;
-
-#endif	// def CONFIG_CHIP_STM32_SPIV2_SPI4_ENABLE
-
-#ifdef CONFIG_CHIP_STM32_SPIV2_SPI5_ENABLE
-
-	/// parameters for construction of SPI master low-level driver for SPI5
-	static const Parameters spi5Parameters;
-
-#endif	// def CONFIG_CHIP_STM32_SPIV2_SPI5_ENABLE
-
-#ifdef CONFIG_CHIP_STM32_SPIV2_SPI6_ENABLE
-
-	/// parameters for construction of SPI master low-level driver for SPI6
-	static const Parameters spi6Parameters;
-
-#endif	// def CONFIG_CHIP_STM32_SPIV2_SPI6_ENABLE
-
 	/**
 	 * \brief ChipSpiMasterLowLevel's constructor
 	 *
-	 * \param [in] parameters is a reference to object with peripheral parameters
+	 * \param [in] spiPeripheral is a reference to raw SPI peripheral
 	 */
 
-	constexpr explicit ChipSpiMasterLowLevel(const Parameters& parameters) :
-			parameters_{parameters},
+	constexpr explicit ChipSpiMasterLowLevel(const SpiPeripheral& spiPeripheral) :
+			spiPeripheral_{spiPeripheral},
 			spiMasterBase_{},
 			readBuffer_{},
 			writeBuffer_{},
 			size_{},
 			readPosition_{},
 			writePosition_{},
-			errorSet_{},
 			dummyData_{},
 			started_{}
 	{
@@ -209,8 +163,8 @@ private:
 		return size_ != 0;
 	}
 
-	/// reference to configuration parameters
-	const Parameters& parameters_;
+	/// reference to raw SPI peripheral
+	const SpiPeripheral& spiPeripheral_;
 
 	/// pointer to SpiMasterBase object associated with this one
 	devices::SpiMasterBase* volatile spiMasterBase_;
@@ -229,9 +183,6 @@ private:
 
 	/// current position in \a writeBuffer_
 	volatile size_t writePosition_;
-
-	/// current set of detected errors
-	devices::SpiMasterErrorSet errorSet_;
 
 	/// dummy data that will be sent if write buffer of transfer is nullptr
 	uint16_t dummyData_;

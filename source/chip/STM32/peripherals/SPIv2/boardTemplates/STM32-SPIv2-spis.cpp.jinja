@@ -15,31 +15,53 @@
 #include "distortos/chip/spis.hpp"
 
 #include "distortos/chip/ChipSpiMasterLowLevel.hpp"
+#include "distortos/chip/STM32-SPIv2-SpiPeripheral.hpp"
+
+#include "distortos/BIND_LOW_LEVEL_INITIALIZER.h"
 
 namespace distortos
 {
 
 namespace chip
 {
-
-/*---------------------------------------------------------------------------------------------------------------------+
-| global objects
-+---------------------------------------------------------------------------------------------------------------------*/
 {% for key, spi in dictionary['SPIs'].items() if spi is mapping and 'ST,STM32-SPI-v2' in spi['compatible'] %}
 
 #ifdef CONFIG_CHIP_STM32_SPIV2_{{ key | upper }}_ENABLE
 
-ChipSpiMasterLowLevel {{ key | lower }} {ChipSpiMasterLowLevel::{{ key | lower }}Parameters};
-
-#endif	// def CONFIG_CHIP_STM32_SPIV2_{{ key | upper }}_ENABLE
-{% endfor %}
-
 /*---------------------------------------------------------------------------------------------------------------------+
-| global functions
+| {{ key | upper }}
 +---------------------------------------------------------------------------------------------------------------------*/
-{% for key, spi in dictionary['SPIs'].items() if spi is mapping and 'ST,STM32-SPI-v2' in spi['compatible'] %}
 
-#ifdef CONFIG_CHIP_STM32_SPIV2_{{ key | upper }}_ENABLE
+namespace
+{
+
+/**
+ * \brief Low-level chip initializer for {{ key | upper }}
+ *
+ * This function is called before constructors for global and static objects via BIND_LOW_LEVEL_INITIALIZER().
+ */
+
+void {{ key | lower }}LowLevelInitializer()
+{
+#if defined(RCC_APB1ENR_{{ key | upper }}EN)
+	RCC->APB1ENR |= RCC_APB1ENR_{{ key | upper }}EN;
+#elif defined(RCC_APB1ENR1_{{ key | upper }}EN)
+	RCC->APB1ENR1 |= RCC_APB1ENR1_{{ key | upper }}EN;
+#elif defined(RCC_APB2ENR_{{ key | upper }}EN)
+	RCC->APB2ENR |= RCC_APB2ENR_{{ key | upper }}EN;
+#else
+	#error "Unsupported bus for {{ key | upper }}!"
+#endif
+}
+
+BIND_LOW_LEVEL_INITIALIZER(50, {{ key | lower }}LowLevelInitializer);
+
+/// raw {{ key | upper }} peripheral
+const SpiPeripheral {{ key | lower }}Peripheral {{ '{' }}{{ key | upper }}_BASE};
+
+}	// namespace
+
+ChipSpiMasterLowLevel {{ key | lower }} {{ '{' }}{{ key | lower }}Peripheral};
 
 /**
  * \brief {{ spi['interrupt']['vector'] }} interrupt handler

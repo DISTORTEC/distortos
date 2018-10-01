@@ -12,7 +12,7 @@
 #ifndef INCLUDE_DISTORTOS_DEVICES_COMMUNICATION_SPIMASTERTRANSFER_HPP_
 #define INCLUDE_DISTORTOS_DEVICES_COMMUNICATION_SPIMASTERTRANSFER_HPP_
 
-#include "distortos/devices/communication/SpiMasterErrorSet.hpp"
+#include <cstddef>
 
 namespace distortos
 {
@@ -44,8 +44,7 @@ public:
 			readBuffer_{readBuffer},
 			writeBuffer_{writeBuffer},
 			size_{size},
-			bytesTransfered_{},
-			errorSet_{}
+			bytesTransfered_{}
 	{
 
 	}
@@ -53,15 +52,13 @@ public:
 	/**
 	 * \brief Finalizes transfer operation.
 	 *
-	 * \param [in] errorSet is the set of error bits
 	 * \param [in] bytesTransfered is the number of bytes transferred by low-level SPI master driver (read from write
-	 * buffer and/or written to read buffer), may be unreliable if \a errorSet is not empty (i.e. transfer error was
-	 * detected)
+	 * buffer and/or written to read buffer), may be unreliable if transfer error was detected (\a bytesTransfered is
+	 * not equal to size of transfer)
 	 */
 
-	void finalize(const SpiMasterErrorSet errorSet, const size_t bytesTransfered)
+	void finalize(const size_t bytesTransfered)
 	{
-		errorSet_ = errorSet;
 		bytesTransfered_ = bytesTransfered;
 	}
 
@@ -73,15 +70,6 @@ public:
 	size_t getBytesTransfered() const
 	{
 		return bytesTransfered_;
-	}
-
-	/**
-	 * \return set of error bits detected during the transfer
-	 */
-
-	SpiMasterErrorSet getErrorSet() const
-	{
-		return errorSet_;
 	}
 
 	/**
@@ -125,9 +113,6 @@ private:
 	/// number of bytes transferred by low-level SPI master driver (read from \a writeBuffer_ and/or written to
 	/// \a readBuffer_), may be unreliable if \a errorSet_ is not empty (i.e. transfer error was detected)
 	size_t bytesTransfered_;
-
-	/// set of error bits detected during the transfer
-	SpiMasterErrorSet errorSet_;
 };
 
 }	// namespace devices

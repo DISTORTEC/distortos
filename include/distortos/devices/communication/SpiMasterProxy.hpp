@@ -130,13 +130,12 @@ private:
 	 * Handles the next transfer from the currently handled transaction. If there are no more transfers, waiting thread
 	 * is notified about completion of transaction.
 	 *
-	 * \param [in] errorSet is the set of error bits
 	 * \param [in] bytesTransfered is the number of bytes transferred by low-level SPI master driver (read from write
-	 * buffer and/or written to read buffer), may be unreliable if \a errorSet is not empty (i.e. transfer error was
-	 * detected)
+	 * buffer and/or written to read buffer), may be unreliable if transfer error was detected (\a bytesTransfered is
+	 * not equal to size of transfer)
 	 */
 
-	void transferCompleteEvent(SpiMasterErrorSet errorSet, size_t bytesTransfered) override;
+	void transferCompleteEvent(size_t bytesTransfered) override;
 
 	/// range of transfers that are part of currently handled transaction
 	SpiMasterTransfersRange transfersRange_;
