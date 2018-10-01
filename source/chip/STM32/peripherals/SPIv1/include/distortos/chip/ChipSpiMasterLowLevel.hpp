@@ -22,6 +22,8 @@ namespace distortos
 namespace chip
 {
 
+class SpiPeripheral;
+
 /**
  * ChipSpiMasterLowLevel class is a low-level SPI master driver for SPIv1 in STM32
  *
@@ -31,8 +33,6 @@ namespace chip
 class ChipSpiMasterLowLevel : public devices::SpiMasterLowLevel
 {
 public:
-
-	class SpiPeripheral;
 
 #ifdef CONFIG_CHIP_STM32_SPIV1_SPI1_ENABLE
 

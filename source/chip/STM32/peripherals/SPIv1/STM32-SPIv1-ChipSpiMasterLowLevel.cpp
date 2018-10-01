@@ -11,7 +11,7 @@
 
 #include "distortos/chip/ChipSpiMasterLowLevel.hpp"
 
-#include "distortos/chip/getBusFrequency.hpp"
+#include "distortos/chip/STM32-SPIv1-SpiPeripheral.hpp"
 
 #include "distortos/devices/communication/SpiMasterBase.hpp"
 
@@ -48,80 +48,31 @@ constexpr uint8_t getWordLength(const uint16_t cr1)
 }	// namespace
 
 /*---------------------------------------------------------------------------------------------------------------------+
-| public types
-+---------------------------------------------------------------------------------------------------------------------*/
-
-/// ChipSpiMasterLowLevel::SpiPeripheral class is a raw SPI peripheral
-class ChipSpiMasterLowLevel::SpiPeripheral
-{
-public:
-
-	/**
-	 * \brief SpiPeripheral's constructor
-	 *
-	 * \param [in] spiBase is a base address of SPI peripheral
-	 */
-
-	constexpr explicit SpiPeripheral(const uintptr_t spiBase) :
-			spiBase_{spiBase},
-			peripheralFrequency_{getBusFrequency(spiBase)}
-	{
-
-	}
-
-	/**
-	 * \return peripheral clock frequency, Hz
-	 */
-
-	uint32_t getPeripheralFrequency() const
-	{
-		return peripheralFrequency_;
-	}
-
-	/**
-	 * \return reference to SPI_TypeDef object
-	 */
-
-	SPI_TypeDef& getSpi() const
-	{
-		return *reinterpret_cast<SPI_TypeDef*>(spiBase_);
-	}
-
-private:
-
-	/// base address of SPI peripheral
-	uintptr_t spiBase_;
-
-	/// peripheral clock frequency, Hz
-	uint32_t peripheralFrequency_;
-};
-
-/*---------------------------------------------------------------------------------------------------------------------+
 | public static objects
 +---------------------------------------------------------------------------------------------------------------------*/
 
 #ifdef CONFIG_CHIP_STM32_SPIV1_SPI1_ENABLE
-const ChipSpiMasterLowLevel::SpiPeripheral ChipSpiMasterLowLevel::spi1Parameters {SPI1_BASE};
+const SpiPeripheral ChipSpiMasterLowLevel::spi1Parameters {SPI1_BASE};
 #endif	// def CONFIG_CHIP_STM32_SPIV1_SPI1_ENABLE
 
 #ifdef CONFIG_CHIP_STM32_SPIV1_SPI2_ENABLE
-const ChipSpiMasterLowLevel::SpiPeripheral ChipSpiMasterLowLevel::spi2Parameters {SPI2_BASE};
+const SpiPeripheral ChipSpiMasterLowLevel::spi2Parameters {SPI2_BASE};
 #endif	// def CONFIG_CHIP_STM32_SPIV1_SPI2_ENABLE
 
 #ifdef CONFIG_CHIP_STM32_SPIV1_SPI3_ENABLE
-const ChipSpiMasterLowLevel::SpiPeripheral ChipSpiMasterLowLevel::spi3Parameters {SPI3_BASE};
+const SpiPeripheral ChipSpiMasterLowLevel::spi3Parameters {SPI3_BASE};
 #endif	// def CONFIG_CHIP_STM32_SPIV1_SPI3_ENABLE
 
 #ifdef CONFIG_CHIP_STM32_SPIV1_SPI4_ENABLE
-const ChipSpiMasterLowLevel::SpiPeripheral ChipSpiMasterLowLevel::spi4Parameters {SPI4_BASE};
+const SpiPeripheral ChipSpiMasterLowLevel::spi4Parameters {SPI4_BASE};
 #endif	// def CONFIG_CHIP_STM32_SPIV1_SPI4_ENABLE
 
 #ifdef CONFIG_CHIP_STM32_SPIV1_SPI5_ENABLE
-const ChipSpiMasterLowLevel::SpiPeripheral ChipSpiMasterLowLevel::spi5Parameters {SPI5_BASE};
+const SpiPeripheral ChipSpiMasterLowLevel::spi5Parameters {SPI5_BASE};
 #endif	// def CONFIG_CHIP_STM32_SPIV1_SPI5_ENABLE
 
 #ifdef CONFIG_CHIP_STM32_SPIV1_SPI6_ENABLE
-const ChipSpiMasterLowLevel::SpiPeripheral ChipSpiMasterLowLevel::spi6Parameters {SPI6_BASE};
+const SpiPeripheral ChipSpiMasterLowLevel::spi6Parameters {SPI6_BASE};
 #endif	// def CONFIG_CHIP_STM32_SPIV1_SPI6_ENABLE
 
 /*---------------------------------------------------------------------------------------------------------------------+

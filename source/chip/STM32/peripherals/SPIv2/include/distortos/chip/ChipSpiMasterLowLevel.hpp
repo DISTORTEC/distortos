@@ -22,6 +22,8 @@ namespace distortos
 namespace chip
 {
 
+class SpiPeripheral;
+
 /**
  * ChipSpiMasterLowLevel class is a low-level SPI master driver for SPIv2 in STM32
  *
@@ -37,8 +39,6 @@ public:
 
 	/// maximum allowed value for word length
 	constexpr static uint8_t maxWordLength {16};
-
-	class SpiPeripheral;
 
 #ifdef CONFIG_CHIP_STM32_SPIV2_SPI1_ENABLE
 
