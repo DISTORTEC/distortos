@@ -131,7 +131,7 @@ extern "C" __attribute__ ((naked)) void PendSV_Handler()
 #if __FPU_PRESENT == 1 && __FPU_USED == 1
 			"	tst			lr, #1 << 4							\n"	// was floating-point used by the thread?
 			"	it			eq									\n"
-			"	subeq		r0, r0, #0x40						\n"	// account for size of "floating-pont" context
+			"	subeq		r0, r0, #0x40						\n"	// account for size of "floating-point" context
 			"	sub			r0, r0, #0x28						\n"
 #else	// __FPU_PRESENT != 1 || __FPU_USED != 1
 			"	sub			r0, r0, #0x20						\n"
