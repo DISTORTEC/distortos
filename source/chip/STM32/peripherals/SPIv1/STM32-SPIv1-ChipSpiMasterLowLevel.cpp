@@ -51,30 +51,12 @@ public:
 			spiBase_{spiBase},
 #ifdef DISTORTOS_BITBANDING_SUPPORTED
 			peripheralFrequency_{getBusFrequency(spiBase)},
-			rxneieBbAddress_{STM32_BITBAND_IMPLEMENTATION(spiBase, SPI_TypeDef, CR2, SPI_CR2_RXNEIE)},
 			txeieBbAddress_{STM32_BITBAND_IMPLEMENTATION(spiBase, SPI_TypeDef, CR2, SPI_CR2_TXEIE)}
 #else	// !def DISTORTOS_BITBANDING_SUPPORTED
 			peripheralFrequency_{getBusFrequency(spiBase)}
 #endif	// !def DISTORTOS_BITBANDING_SUPPORTED
 	{
 
-	}
-
-	/**
-	 * \brief Enables or disables RXNE interrupt of SPI.
-	 *
-	 * \param [in] enable selects whether the interrupt will be enabled (true) or disabled (false)
-	 */
-
-	void enableRxneInterrupt(const bool enable) const
-	{
-#ifdef DISTORTOS_BITBANDING_SUPPORTED
-		*reinterpret_cast<volatile unsigned long*>(rxneieBbAddress_) = enable;
-#else	// !def DISTORTOS_BITBANDING_SUPPORTED
-		auto& spi = getSpi();
-		const InterruptMaskingLock interruptMaskingLock;
-		spi.CR2 = (spi.CR2 & ~SPI_CR2_RXNEIE) | (enable == true ? SPI_CR2_RXNEIE : 0);
-#endif	// !def DISTORTOS_BITBANDING_SUPPORTED
 	}
 
 	/**
@@ -130,9 +112,6 @@ private:
 	uint32_t peripheralFrequency_;
 
 #ifdef DISTORTOS_BITBANDING_SUPPORTED
-
-	/// address of bitband alias of RXNEIE bit in SPI_CR2 register
-	uintptr_t rxneieBbAddress_;
 
 	/// address of bitband alias of TXEIE bit in SPI_CR2 register
 	uintptr_t txeieBbAddress_;
@@ -253,10 +232,7 @@ void ChipSpiMasterLowLevel::interruptHandler()
 			readPosition += wordLength / 8;
 		readPosition_ = readPosition;
 		if (readPosition == size_)
-		{
-			parameters_.enableRxneInterrupt(false);
 			done = true;
-		}
 		else
 			parameters_.enableTxeInterrupt(true);
 	}
@@ -285,8 +261,7 @@ void ChipSpiMasterLowLevel::interruptHandler()
 	if (done == true)	// transfer finished of failed?
 	{
 		parameters_.enableTxeInterrupt(false);
-		parameters_.enableRxneInterrupt(false);
-		spi.CR2 &= ~SPI_CR2_ERRIE;	// disable ERR interrupt
+		spi.CR2 &= ~(SPI_CR2_RXNEIE | SPI_CR2_ERRIE);	// disable RXNE and ERR interrupts
 		writePosition_ = {};
 		const auto bytesTransfered = readPosition_;
 		readPosition_ = {};
@@ -335,8 +310,7 @@ int ChipSpiMasterLowLevel::startTransfer(devices::SpiMasterBase& spiMasterBase, 
 	readPosition_ = 0;
 	writePosition_ = 0;
 
-	parameters_.getSpi().CR2 |= SPI_CR2_ERRIE;	// enable ERR interrupt
-	parameters_.enableRxneInterrupt(true);
+	parameters_.getSpi().CR2 |= SPI_CR2_RXNEIE | SPI_CR2_ERRIE;	// enable RXNE and ERR interrupts
 	parameters_.enableTxeInterrupt(true);
 	return 0;
 }
