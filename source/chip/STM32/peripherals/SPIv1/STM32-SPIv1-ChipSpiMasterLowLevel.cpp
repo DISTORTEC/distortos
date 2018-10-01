@@ -25,6 +25,28 @@ namespace distortos
 namespace chip
 {
 
+namespace
+{
+
+/*---------------------------------------------------------------------------------------------------------------------+
+| local functions
++---------------------------------------------------------------------------------------------------------------------*/
+
+/**
+ * \brief Gets current word length of SPI peripheral.
+ *
+ * \param [in] cr2 is the current value of CR1 register in SPI module
+ *
+ * \return current word length, bits, {8, 16}
+ */
+
+constexpr uint8_t getWordLength(const uint16_t cr1)
+{
+	return (cr1 & SPI_CR1_DFF) == 0 ? 8 : 16;
+}
+
+}	// namespace
+
 /*---------------------------------------------------------------------------------------------------------------------+
 | public types
 +---------------------------------------------------------------------------------------------------------------------*/
@@ -63,15 +85,6 @@ public:
 	SPI_TypeDef& getSpi() const
 	{
 		return *reinterpret_cast<SPI_TypeDef*>(spiBase_);
-	}
-
-	/**
-	 * \return current word length, bits, {8, 16}
-	 */
-
-	uint8_t getWordLength() const
-	{
-		return (getSpi().CR1 & SPI_CR1_DFF) == 0 ? 8 : 16;
 	}
 
 private:
@@ -146,7 +159,7 @@ std::pair<int, uint32_t> ChipSpiMasterLowLevel::configure(const devices::SpiMode
 	auto& spi = parameters_.getSpi();
 
 	// value of DFF bit (which determines word length) must be changed only when SPI peripheral is disabled
-	const auto disablePeripheral = wordLength != parameters_.getWordLength();
+	const auto disablePeripheral = wordLength != getWordLength(spi.CR1);
 	if (disablePeripheral == true)
 		spi.CR1 &= ~SPI_CR1_SPE;	// disable peripheral
 
@@ -169,7 +182,7 @@ void ChipSpiMasterLowLevel::interruptHandler()
 	auto& spi = parameters_.getSpi();
 	const auto sr = spi.SR;
 	const auto cr2 = spi.CR2;
-	const auto wordLength = parameters_.getWordLength();
+	const auto wordLength = getWordLength(spi.CR1);
 
 	if ((sr & SPI_SR_OVR) != 0 && (cr2 & SPI_CR2_ERRIE) != 0)	// overrun error?
 	{
@@ -263,7 +276,7 @@ int ChipSpiMasterLowLevel::startTransfer(devices::SpiMasterBase& spiMasterBase, 
 	if (isTransferInProgress() == true)
 		return EBUSY;
 
-	if (size % (parameters_.getWordLength() / 8) != 0)
+	if (size % (getWordLength(parameters_.getSpi().CR1) / 8) != 0)
 		return EINVAL;
 
 	spiMasterBase_ = &spiMasterBase;
