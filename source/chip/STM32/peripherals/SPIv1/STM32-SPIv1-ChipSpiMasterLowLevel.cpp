@@ -45,6 +45,32 @@ constexpr uint8_t getWordLength(const uint16_t cr1)
 	return (cr1 & SPI_CR1_DFF) == 0 ? 8 : 16;
 }
 
+/**
+ * \brief Modifies current value of CR1 register.
+ *
+ * \param [in] spiPeripheral is a reference to raw SPI peripheral
+ * \param [in] clear is the bitmask of bits that should be cleared in CR1 register
+ * \param [in] set is the bitmask of bits that should be set in CR1 register
+ */
+
+void modifyCr1(const SpiPeripheral& spiPeripheral, const uint32_t clear, const uint32_t set)
+{
+	spiPeripheral.writeCr1((spiPeripheral.readCr1() & ~clear) | set);
+}
+
+/**
+ * \brief Modifies current value of CR2 register.
+ *
+ * \param [in] spiPeripheral is a reference to raw SPI peripheral
+ * \param [in] clear is the bitmask of bits that should be cleared in CR2 register
+ * \param [in] set is the bitmask of bits that should be set in CR2 register
+ */
+
+void modifyCr2(const SpiPeripheral& spiPeripheral, const uint32_t clear, const uint32_t set)
+{
+	spiPeripheral.writeCr2((spiPeripheral.readCr2() & ~clear) | set);
+}
+
 }	// namespace
 
 /*---------------------------------------------------------------------------------------------------------------------+
@@ -57,8 +83,8 @@ ChipSpiMasterLowLevel::~ChipSpiMasterLowLevel()
 		return;
 
 	// reset peripheral
-	spiPeripheral_.getSpi().CR1 = {};
-	spiPeripheral_.getSpi().CR2 = {};
+	spiPeripheral_.writeCr1({});
+	spiPeripheral_.writeCr2({});
 }
 
 std::pair<int, uint32_t> ChipSpiMasterLowLevel::configure(const devices::SpiMode mode, const uint32_t clockFrequency,
@@ -79,20 +105,21 @@ std::pair<int, uint32_t> ChipSpiMasterLowLevel::configure(const devices::SpiMode
 		return {EINVAL, {}};
 
 	const uint32_t br = divider <= 2 ? 0 : 31 - __builtin_clz(divider - 1);
-	auto& spi = spiPeripheral_.getSpi();
 
 	// value of DFF bit (which determines word length) must be changed only when SPI peripheral is disabled
-	const auto disablePeripheral = wordLength != getWordLength(spi.CR1);
+	const auto disablePeripheral = wordLength != getWordLength(spiPeripheral_.readCr1());
 	if (disablePeripheral == true)
-		spi.CR1 &= ~SPI_CR1_SPE;	// disable peripheral
+		modifyCr1(spiPeripheral_, SPI_CR1_SPE, {});	// disable peripheral
 
-	spi.CR1 = (spi.CR1 & ~(SPI_CR1_DFF | SPI_CR1_LSBFIRST | SPI_CR1_BR | SPI_CR1_CPOL | SPI_CR1_CPHA)) |
-			(wordLength == 16) << SPI_CR1_DFF_Pos | lsbFirst << SPI_CR1_LSBFIRST_Pos | br << SPI_CR1_BR_Pos |
+	modifyCr1(spiPeripheral_, SPI_CR1_DFF | SPI_CR1_LSBFIRST | SPI_CR1_BR | SPI_CR1_CPOL | SPI_CR1_CPHA,
+			(wordLength == 16) << SPI_CR1_DFF_Pos |
+			lsbFirst << SPI_CR1_LSBFIRST_Pos |
+			br << SPI_CR1_BR_Pos |
 			(mode == devices::SpiMode::cpol1cpha0 || mode == devices::SpiMode::cpol1cpha1) << SPI_CR1_CPOL_Pos |
-			(mode == devices::SpiMode::cpol0cpha1 || mode == devices::SpiMode::cpol1cpha1) << SPI_CR1_CPHA_Pos;
+			(mode == devices::SpiMode::cpol0cpha1 || mode == devices::SpiMode::cpol1cpha1) << SPI_CR1_CPHA_Pos);
 
 	if (disablePeripheral == true)
-		spi.CR1 |= SPI_CR1_SPE;	// enable peripheral
+		modifyCr1(spiPeripheral_, {}, SPI_CR1_SPE);	// enable peripheral
 
 	dummyData_ = dummyData;
 
@@ -102,24 +129,23 @@ std::pair<int, uint32_t> ChipSpiMasterLowLevel::configure(const devices::SpiMode
 void ChipSpiMasterLowLevel::interruptHandler()
 {
 	bool done {};
-	auto& spi = spiPeripheral_.getSpi();
-	const auto sr = spi.SR;
-	const auto cr2 = spi.CR2;
-	const auto wordLength = getWordLength(spi.CR1);
+	const auto sr = spiPeripheral_.readSr();
+	const auto cr2 = spiPeripheral_.readCr2();
+	const auto wordLength = getWordLength(spiPeripheral_.readCr1());
 
 	if ((sr & SPI_SR_OVR) != 0 && (cr2 & SPI_CR2_ERRIE) != 0)	// overrun error?
 	{
-		spi.DR;
-		spi.SR;	// clears OVR flag
+		spiPeripheral_.readDr();
+		spiPeripheral_.readSr();	// clears OVR flag
 
-		spi.CR2 &= ~SPI_CR2_TXEIE;	// disable TXE interrupt
+		modifyCr2(spiPeripheral_, SPI_CR2_TXEIE, {});	// disable TXE interrupt
 
 		if ((sr & SPI_SR_BSY) == 0)
 			done = true;
 	}
 	else if ((sr & SPI_SR_RXNE) != 0 && (cr2 & SPI_CR2_RXNEIE) != 0)	// read?
 	{
-		const uint16_t word = spi.DR;
+		const uint16_t word = spiPeripheral_.readDr();
 		const auto readBuffer = readBuffer_;
 		auto readPosition = readPosition_;
 		if (readBuffer != nullptr)
@@ -134,7 +160,7 @@ void ChipSpiMasterLowLevel::interruptHandler()
 		if (readPosition == size_)
 			done = true;
 		else
-			spi.CR2 |= SPI_CR2_TXEIE;	// enable TXE interrupt
+			modifyCr2(spiPeripheral_, {}, SPI_CR2_TXEIE);	// enable TXE interrupt
 	}
 	else if ((sr & SPI_SR_TXE) != 0 && (cr2 & SPI_CR2_TXEIE) != 0)	// write?
 	{
@@ -153,14 +179,15 @@ void ChipSpiMasterLowLevel::interruptHandler()
 			word = dummyData_;
 		}
 		writePosition_ = writePosition;
-		spi.DR = word;
+		spiPeripheral_.writeDr(word);
 
-		spi.CR2 &= ~SPI_CR2_TXEIE;	// disable TXE interrupt
+		modifyCr2(spiPeripheral_, SPI_CR2_TXEIE, {});	// disable TXE interrupt
 	}
 
 	if (done == true)	// transfer finished of failed?
 	{
-		spi.CR2 &= ~(SPI_CR2_TXEIE | SPI_CR2_RXNEIE | SPI_CR2_ERRIE);	// disable TXE, RXNE and ERR interrupts
+		// disable TXE, RXNE and ERR interrupts
+		modifyCr2(spiPeripheral_, SPI_CR2_TXEIE | SPI_CR2_RXNEIE | SPI_CR2_ERRIE, {});
 		writePosition_ = {};
 		const auto bytesTransfered = readPosition_;
 		readPosition_ = {};
@@ -180,8 +207,8 @@ int ChipSpiMasterLowLevel::start()
 	if (isStarted() == true)
 		return EBADF;
 
-	spiPeripheral_.getSpi().CR1 = SPI_CR1_SSM | SPI_CR1_SSI | SPI_CR1_SPE | SPI_CR1_BR | SPI_CR1_MSTR;
-	spiPeripheral_.getSpi().CR2 = {};
+	spiPeripheral_.writeCr1(SPI_CR1_SSM | SPI_CR1_SSI | SPI_CR1_SPE | SPI_CR1_BR | SPI_CR1_MSTR);
+	spiPeripheral_.writeCr2({});
 	started_ = true;
 
 	return 0;
@@ -199,8 +226,7 @@ int ChipSpiMasterLowLevel::startTransfer(devices::SpiMasterBase& spiMasterBase, 
 	if (isTransferInProgress() == true)
 		return EBUSY;
 
-	auto& spi = spiPeripheral_.getSpi();
-	if (size % (getWordLength(spi.CR1) / 8) != 0)
+	if (size % (getWordLength(spiPeripheral_.readCr1()) / 8) != 0)
 		return EINVAL;
 
 	spiMasterBase_ = &spiMasterBase;
@@ -210,7 +236,9 @@ int ChipSpiMasterLowLevel::startTransfer(devices::SpiMasterBase& spiMasterBase, 
 	readPosition_ = 0;
 	writePosition_ = 0;
 
-	spi.CR2 |= SPI_CR2_TXEIE | SPI_CR2_RXNEIE | SPI_CR2_ERRIE;	// enable TXE, RXNE and ERR interrupts
+	// enable TXE, RXNE and ERR interrupts
+	modifyCr2(spiPeripheral_, {}, SPI_CR2_TXEIE | SPI_CR2_RXNEIE | SPI_CR2_ERRIE);
+
 	return 0;
 }
 
@@ -223,8 +251,8 @@ int ChipSpiMasterLowLevel::stop()
 		return EBUSY;
 
 	// reset peripheral
-	spiPeripheral_.getSpi().CR1 = {};
-	spiPeripheral_.getSpi().CR2 = {};
+	spiPeripheral_.writeCr1({});
+	spiPeripheral_.writeCr2({});
 	started_ = false;
 	return 0;
 }
