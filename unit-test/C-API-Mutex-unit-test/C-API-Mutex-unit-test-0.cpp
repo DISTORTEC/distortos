@@ -4,7 +4,7 @@
  *
  * This test checks whether mutex C-API functions properly call appropriate functions from distortos::Mutex class.
  *
- * \author Copyright (C) 2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2017-2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -240,8 +240,6 @@ TEST_CASE("Testing distortos_Mutex_construct_2tp()", "[construct]")
 
 TEST_CASE("Testing distortos_Mutex_construct_1p()", "[construct]")
 {
-	constexpr uint8_t randomValue {0x63};
-
 	{
 		distortos_Mutex mutex;
 		REQUIRE(distortos_Mutex_construct_1p(nullptr, distortos_Mutex_Protocol_none) == EINVAL);

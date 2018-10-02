@@ -1,7 +1,8 @@
 /*
  * Trompeloeil C++ mocking framework
  *
- * Copyright Björn Fahller 2014-2017
+ * Copyright Björn Fahller 2014-2018
+ * Copyright (C) 2017, 2018 Andrew Paxie
  *
  *  Use, modification and distribution is subject to the
  *  Boost Software License, Version 1.0. (See accompanying
@@ -27,16 +28,86 @@
 // * If a macro kills a kitten, this threatens extinction of all felines!
 
 #if defined(_MSC_VER)
-#  define TROMPELOEIL_NORETURN
+
+#  define TROMPELOEIL_NORETURN __declspec(noreturn)
+
 #  if (!defined(__cplusplus) || _MSC_VER < 1900)
 #    error requires C++ in Visual Studio 2015 RC or later
 #  endif
+
 #else
+
 #  define TROMPELOEIL_NORETURN [[noreturn]]
-#  if (!defined(__cplusplus) || __cplusplus <= 201103)
-#    error requires C++14 or higher
+
+#  if (!defined(__cplusplus) || __cplusplus < 201103L)
+#    error requires C++11 or higher
 #  endif
+
 #endif
+
+#if defined(__clang__)
+
+#  define TROMPELOEIL_CLANG 1
+#  define TROMPELOEIL_GCC 0
+#  define TROMPELOEIL_MSVC 0
+
+#  define TROMPELOEIL_CLANG_VERSION \
+  (__clang_major__ * 10000 + __clang_minor__ * 100 + __clang_patchlevel__)
+
+#  define TROMPELOEIL_GCC_VERSION 0
+
+#  define TROMPELOEIL_CPLUSPLUS __cplusplus
+
+#elif defined(__GNUC__)
+
+#  define TROMPELOEIL_CLANG 0
+#  define TROMPELOEIL_GCC 1
+#  define TROMPELOEIL_MSVC 0
+
+#  define TROMPELOEIL_CLANG_VERSION 0
+#  define TROMPELOEIL_GCC_VERSION \
+  (__GNUC__ * 10000 + __GNUC_MINOR__ * 100 + __GNUC_PATCHLEVEL__)
+
+#  define TROMPELOEIL_CPLUSPLUS __cplusplus
+
+#elif defined(_MSC_VER)
+
+#  define TROMPELOEIL_CLANG 0
+#  define TROMPELOEIL_GCC 0
+#  define TROMPELOEIL_MSVC 1
+
+#  define TROMPELOEIL_CLANG_VERSION 0
+#  define TROMPELOEIL_GCC_VERSION 0
+
+#  if defined(_MSVC_LANG)
+
+    // Compiler is at least Microsoft Visual Studio 2015 Update 3.
+#    define TROMPELOEIL_CPLUSPLUS _MSVC_LANG
+
+#  else /* defined(_MSVC_LANG) */
+
+    /*
+     * This version of Microsoft Visual C++ is released
+     * in a version of Microsoft Visual Studio between
+     * 2015 RC and less than 2015 Update 3.
+     *
+     * It is an amalgam of C++ versions, with no provision
+     * to specify C++11 mode.
+     *
+     * It also has a __cplusplus macro stuck at 199711L with
+     * no way to change it, such as /Zc:__cplusplus.
+     *
+     * Assume the C++14 code path, but don't promise that it is a
+     * fully conforming implementation of C++14 either.
+     * Hence a value of 201401L, which less than 201402L,
+     * the standards conforming value of __cplusplus.
+     */
+#    define TROMPELOEIL_CPLUSPLUS 201401L
+
+#  endif /* !defined(_MSVC_LANG) */
+
+#endif
+
 #include <tuple>
 #include <iomanip>
 #include <sstream>
@@ -47,7 +118,10 @@
 #include <regex>
 #include <mutex>
 #include <atomic>
+#include <initializer_list>
 #include <type_traits>
+#include <utility>
+
 
 #ifdef TROMPELOEIL_SANITY_CHECKS
 #include <cassert>
@@ -162,7 +236,6 @@
   TROMPELOEIL_PARAM_LIST4(func_type),                                          \
     ::trompeloeil::param_list_t<func_type, 4> p5
 
-
 #define TROMPELOEIL_PARAM_LIST4(func_type)                                     \
   TROMPELOEIL_PARAM_LIST3(func_type),                                          \
     ::trompeloeil::param_list_t<func_type, 3> p4
@@ -203,19 +276,404 @@
 
 #define TROMPELOEIL_PARAMS(num) TROMPELOEIL_CONCAT(TROMPELOEIL_PARAMS, num)
 
+
+#if (TROMPELOEIL_CPLUSPLUS == 201103L)
+
+#define TROMPELOEIL_DECLTYPE_AUTO \
+  auto
+
+#define TROMPELOEIL_TRAILING_RETURN_TYPE(return_type) \
+  -> return_type
+
+#else /* (TROMPELOEIL_CPLUSPLUS == 201103L) */
+
+#define TROMPELOEIL_DECLTYPE_AUTO \
+  decltype(auto)
+
+#define TROMPELOEIL_TRAILING_RETURN_TYPE(return_type) \
+  /**/
+
+#endif /* !(TROMPELOEIL_CPLUSPLUS == 201103L) */
+
 namespace trompeloeil
 {
+  template <typename T>
+  struct identity_type
+  {
+    using type = T;
+  };
+
+  template <typename R, typename C, typename ... Args>
+  identity_type<R(Args...)>
+  nonconst_member_signature(R (C::*)(Args...))
+  {
+    return {};
+  }
+
+  template <typename R, typename C, typename ... Args>
+  identity_type<R(Args...)>
+  const_member_signature(R (C::*)(Args...) const)
+  {
+    return {};
+  }
+
+  template <typename ...>
+  struct void_t_
+  {
+    using type = void;
+  };
+
+  template <typename ... T>
+  using void_t = typename void_t_<T...>::type;
+
+  template <template <typename ...> class, typename, typename ...>
+  struct is_detected_{
+    using type = std::false_type;
+  };
+
+  template <template <typename ...> class D, typename ... Ts>
+  struct is_detected_<D, void_t<D<Ts...>>, Ts...>
+  {
+    using type = std::true_type;
+  };
+
+  template <template <typename ...> class D, typename ... Ts>
+  using is_detected = typename is_detected_<D, void, Ts...>::type;
+
+# if (TROMPELOEIL_CPLUSPLUS == 201103L)
+
+  namespace detail
+  {
+    /* Implement C++14 features using only C++11 entities. */
+
+    /* <memory> */
+
+    /* Implementation of make_unique is from
+     *
+     * Stephan T. Lavavej, "make_unique (Revision 1),"
+     * ISO/IEC JTC1 SC22 WG21 N3656, 18 April 2013.
+     * Available: http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2013/n3656.htm
+     * Accessed: 14 June 2017
+     */
+    template <class T>
+    struct _Unique_if
+    {
+      typedef std::unique_ptr<T> _Single_object;
+    };
+
+    template <class T>
+    struct _Unique_if<T[]>
+    {
+      typedef std::unique_ptr<T[]> _Unknown_bound;
+    };
+
+    template <class T, size_t N>
+    struct _Unique_if<T[N]>
+    {
+      typedef void _Known_bound;
+    };
+
+    template <class T, class... Args>
+    typename _Unique_if<T>::_Single_object
+    make_unique(Args&&... args)
+    {
+      return std::unique_ptr<T>(new T(std::forward<Args>(args)...));
+    }
+
+    template <class T>
+    typename _Unique_if<T>::_Unknown_bound
+    make_unique(size_t n)
+    {
+      typedef typename std::remove_extent<T>::type U;
+      return std::unique_ptr<T>(new U[n]());
+    }
+
+    template <class T, class... Args>
+    typename _Unique_if<T>::_Known_bound
+    make_unique(Args&&...) = delete;
+
+    /* <type_traits> */
+
+    /* The implementation of these is from
+     *
+     * Walter E. Brown, "TransformationTraits Redux, v2,"
+     * ISO/IEC JTC1 SC22 WG21 N3655, 18 April 2013.
+     * Available: http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2013/n3655.pdf
+     * Accessed: 2 November 2017
+     *
+     * Minor changes to capitalize template parameter `bool B` has been made.
+     *
+     * See also:
+     * http://en.cppreference.com/w/cpp/types/conditional
+     * http://en.cppreference.com/w/cpp/types/decay
+     * http://en.cppreference.com/w/cpp/types/enable_if
+     * http://en.cppreference.com/w/cpp/types/remove_pointer
+     * http://en.cppreference.com/w/cpp/types/remove_reference
+     * Accessed: 17 May 2017
+     */
+    template <bool B, typename T, typename F>
+    using conditional_t = typename std::conditional<B, T, F>::type;
+
+    template <typename T>
+    using decay_t = typename std::decay<T>::type;
+
+    template <bool B, typename T = void>
+    using enable_if_t = typename std::enable_if<B, T>::type;
+
+    template <typename T>
+    using remove_pointer_t = typename std::remove_pointer<T>::type;
+
+    template <typename T>
+    using remove_reference_t = typename std::remove_reference<T>::type;
+
+    /* <utility> */
+
+    /* This implementation of exchange is from
+     *
+     * Jeffrey Yasskin, "exchange() utility function, revision 3,"
+     * ISO/IEC JTC1 SC22 WG21 N3688, 19 April 2013.
+     * Available: http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2013/n3668.html
+     * Accessed: 2 November 2017
+     *
+     * See also:
+     * http://en.cppreference.com/w/cpp/utility/exchange
+     * Accessed: 17 May 2017
+     */
+    template<class T, class U = T>
+    inline
+    T
+    exchange(
+      T& obj,
+      U&& new_value)
+    {
+      T old_value = std::move(obj);
+      obj = std::forward<U>(new_value);
+      return old_value;
+    }
+
+    /* integer_sequence and index_sequence implemenations are from
+     *
+     * Jonathan Wakely, "Compile-time integer sequences,"
+     * ISO/IEC JTC1 SC22 WG21 N3658, 18 April 2013.
+     * Available: http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2013/n3658.html
+     * Accessed: 2 November 2017
+     *
+     * See also:
+     * http://en.cppreference.com/w/cpp/utility/integer_sequence
+     * Accessed: 17 May 2017
+     */
+    template <typename T, T... I>
+    struct integer_sequence
+    {
+      // Replaces a typedef used in the definition found in N3658.
+      using value_type = T;
+
+      static constexpr size_t size() noexcept
+      {
+          return sizeof...(I);
+      }
+    };
+
+    template <size_t... I>
+    using index_sequence = integer_sequence<size_t, I...>;
+
+    /* This implementation of make_integer_sequence is from boost/mp11,
+     *
+     * Copyright 2015, 2017 Peter Dimov
+     *
+     * Distributed under the Boost Software License, Version 1.0.
+     *
+     * Implemented here:
+     *
+     * https://github.com/pdimov/mp11/blob/master/include/boost/
+     *   integer_sequence.hpp
+     * Accessed: 17 May 2017
+     *
+     * (now missing) and here:
+     *
+     * https://github.com/boostorg/mp11/blob/develop/include/boost/
+     *   mp11/integer_sequence.hpp
+     * Accessed: 13 August 2017
+     */
+    namespace impl
+    {
+      // iseq_if_c
+      template <bool C, class T, class E>
+      struct iseq_if_c_impl;
+
+      template <class T, class E>
+      struct iseq_if_c_impl<true, T, E>
+      {
+        using type = T;
+      };
+
+      template <class T, class E>
+      struct iseq_if_c_impl<false, T, E>
+      {
+        using type = E;
+      };
+
+      template <bool C, class T, class E>
+      using iseq_if_c = typename iseq_if_c_impl<C, T, E>::type;
+
+      // iseq_identity
+      template <class T>
+      struct iseq_identity
+      {
+        using type = T;
+      };
+
+      template <class S1, class S2>
+      struct append_integer_sequence;
+
+      template <class T, T... I, T... J>
+      struct append_integer_sequence<integer_sequence<T, I...>, integer_sequence<T, J...>>
+      {
+        using type = integer_sequence<T, I..., ( J + sizeof...(I) )...>;
+      };
+
+      template <class T, T N>
+      struct make_integer_sequence_impl;
+
+      template <class T, T N>
+      struct make_integer_sequence_impl_
+      {
+      private:
+
+        static_assert( N >= 0, "make_integer_sequence<T, N>: N must not be negative" );
+
+        static T const M = N / 2;
+        static T const R = N % 2;
+
+        using S1 = typename make_integer_sequence_impl<T, M>::type;
+        using S2 = typename append_integer_sequence<S1, S1>::type;
+        using S3 = typename make_integer_sequence_impl<T, R>::type;
+        using S4 = typename append_integer_sequence<S2, S3>::type;
+
+      public:
+
+        using type = S4;
+      };
+
+      template <class T, T N>
+      struct make_integer_sequence_impl:
+        iseq_if_c<N == 0,
+          iseq_identity<integer_sequence<T>>,
+          iseq_if_c<N == 1,
+            iseq_identity<integer_sequence<T, 0>>,
+            make_integer_sequence_impl_<T, N>>>
+      {
+      };
+    }
+
+    template<class T, T N>
+    using make_integer_sequence = typename impl::make_integer_sequence_impl<T, N>::type;
+
+    template <size_t N>
+    using make_index_sequence = make_integer_sequence<size_t, N>;
+
+    template <typename... T>
+    using index_sequence_for = make_index_sequence<sizeof...(T)>;
+
+  } /* namespace detail */
+
+# else /* (TROMPELOEIL_CPLUSPLUS == 201103L) */
+
+  /* Only these entities really need to
+   * be available in namespace detail, but
+   * VS 2015 has a problem with this approach.
+   *
+   *  namespace detail {
+   *
+   *  using std::make_unique;
+   *
+   *  using std::conditional_t;
+   *  using std::decay_t;
+   *  using std::enable_if_t;
+   *  using std::remove_pointer_t;
+   *  using std::remove_reference_t;
+   *
+   *  using std::exchange;
+   *  using std::index_sequence;
+   *  using std::index_sequence_for;
+   *  using std::integer_sequence;
+   *  using std::make_index_sequence;
+   *
+   *  }
+   *
+   * Instead, use a namespace alias.
+   */
+  namespace detail = std;
+
+# endif /* !(TROMPELOEIL_CPLUSPLUS == 201103L) */
+
+# if TROMPELOEIL_CPLUSPLUS >= 201703L
+#   if TROMPELOEIL_CLANG && TROMPELOEIL_CLANG_VERSION >= 60000
+
+  // these are mostly added to work around clang++ bugs
+  // https://bugs.llvm.org/show_bug.cgi?id=38033
+  // https://bugs.llvm.org/show_bug.cgi?id=38010
+
+  template <typename T>
+  using move_construct_type = decltype(T(std::declval<T&&>()));
+
+  template <typename T>
+  using copy_construct_type = decltype(T(std::declval<const T&>()));
+
+  template <typename T>
+  using can_move_construct = is_detected<move_construct_type, detail::decay_t<T>>;
+
+  template <typename T>
+  using can_copy_construct = is_detected<copy_construct_type, detail::decay_t<T>>;
+
+#   else
+  template <typename T>
+  using can_move_construct = std::is_move_constructible<T>;
+
+  template <typename T>
+  using can_copy_construct = std::is_copy_constructible<T>;
+#   endif
+
+  template <typename F, typename ... A>
+  using invoke_result_type = decltype(std::declval<F&>()(std::declval<A>()...));
+
+# else
+
+  template <typename T>
+  using can_move_construct = std::is_move_constructible<T>;
+
+  template <typename T>
+  using can_copy_construct = std::is_copy_constructible<T>;
+
+  template <typename F, typename ... A>
+  using invoke_result_type = decltype(std::declval<F&>()(std::declval<A>()...));
+
+# endif
+
   class specialized;
+
+  namespace {
+    inline
+    const std::shared_ptr<std::recursive_mutex>&
+    get_mutex_obj()
+    {
+      static auto obj = std::make_shared<std::recursive_mutex>();
+      return obj;
+    }
+
+    auto mutex_holder = get_mutex_obj();
+
+  }
 
   template <typename T = void>
   std::unique_lock<std::recursive_mutex> get_lock()
   {
-    static std::recursive_mutex lock;
-    return std::unique_lock<std::recursive_mutex>{ lock };
+    return std::unique_lock<std::recursive_mutex>{ *get_mutex_obj() };
   }
+
   template <size_t N, typename T>
   using conditional_tuple_element
-    = std::conditional_t<(N < std::tuple_size<T>::value),
+    = detail::conditional_t<(N < std::tuple_size<T>::value),
                          typename std::tuple_element<N, T>::type,
                          int>;
 
@@ -278,7 +736,8 @@ namespace trompeloeil
                                            std::string const &msg)>;
 
   inline
-  void default_reporter(
+  void
+  default_reporter(
     severity,
     char const *file,
     unsigned long line,
@@ -301,10 +760,11 @@ namespace trompeloeil
   }
 
   inline
-  reporter_func set_reporter(
+  reporter_func
+  set_reporter(
     reporter_func f)
   {
-    return std::exchange(reporter_obj(), std::move(f));
+    return detail::exchange(reporter_obj(), std::move(f));
   }
 
   class tracer;
@@ -312,7 +772,7 @@ namespace trompeloeil
   inline
   tracer*&
   tracer_obj()
-    noexcept
+  noexcept
   {
     static tracer* ptr = nullptr;
     return ptr;
@@ -341,9 +801,7 @@ namespace trompeloeil
       unsigned long line,
       std::string const &call) = 0;
   protected:
-    tracer()
-    noexcept
-      : previous{set_tracer(this)} {}
+    tracer() = default;
     tracer(tracer const&) = delete;
     tracer& operator=(tracer const&) = delete;
     virtual
@@ -352,7 +810,7 @@ namespace trompeloeil
       set_tracer(previous);
     }
   private:
-    tracer* previous = nullptr;
+    tracer* previous = set_tracer(this);
   };
 
   class stream_tracer : public tracer
@@ -458,36 +916,70 @@ namespace trompeloeil
     }
   };
 
-  template <typename ...>
-  struct void_t_
-  {
-    using type = void;
-  };
-
-  template <typename ... T>
-  using void_t = typename void_t_<T...>::type;
-
-  template <template <typename ...> class, typename, typename ...>
-  struct is_detected_{
-    using type = std::false_type;
-  };
-
-  template <template <typename ...> class D, typename ... Ts>
-  struct is_detected_<D, void_t<D<Ts...>>, Ts...>
-  {
-    using type = std::true_type;
-  };
-
-  template <template <typename ...> class D, typename ... Ts>
-  using is_detected = typename is_detected_<D, void, Ts...>::type;
-
   struct matcher { };
 
-  template <typename T>
+  struct wildcard : public matcher
+  {
+    // This abomination of constructor seems necessary for g++ 4.9 and 5.1
+    template <typename ... T>
+    constexpr
+    wildcard(
+      T&& ...)
+    noexcept
+    {}
+
+#if (!TROMPELOEIL_GCC) || \
+    (TROMPELOEIL_GCC && TROMPELOEIL_GCC_VERSION >= 40900)
+
+    // g++ 4.8 gives a "conversion from <T> to <U> is ambiguous" error
+    // if this operator is defined.
+    template <typename T,
+              typename = detail::enable_if_t<!std::is_lvalue_reference<T>::value>>
+    operator T&&()
+    const;
+
+#endif
+
+    template <
+      typename T,
+      typename = detail::enable_if_t<
+        can_copy_construct<T>::value
+        || !can_move_construct<T>::value
+      >
+    >
+    operator T&()
+    const;
+
+    template <typename T>
+    constexpr
+    bool
+    matches(
+      T const&)
+    const
+    noexcept
+    {
+      return true;
+    }
+
+    friend
+    std::ostream&
+    operator<<(
+      std::ostream& os,
+      wildcard const&)
+    noexcept
+    {
+      return os << " matching _";
+    }
+  };
+
+  static constexpr wildcard const _{};
+
+
+template <typename T>
   using matcher_access = decltype(static_cast<matcher*>(std::declval<typename std::add_pointer<T>::type>()));
 
   template <typename T>
-  using is_matcher = typename is_detected<matcher_access, T>::type; 
+  using is_matcher = typename is_detected<matcher_access, T>::type;
 
   template <typename T>
   struct typed_matcher : matcher
@@ -503,7 +995,7 @@ namespace trompeloeil
 
     template <typename T,
               typename = decltype(std::declval<T>() == nullptr),
-              typename = std::enable_if_t<std::is_copy_constructible<T>::value>>
+              typename = detail::enable_if_t<can_copy_construct<T>::value>>
     operator T&()const;
 
     template <typename T, typename C>
@@ -514,12 +1006,21 @@ namespace trompeloeil
   class duck_typed_matcher : public matcher
   {
   public:
+#if (!TROMPELOEIL_GCC) || \
+    (TROMPELOEIL_GCC && TROMPELOEIL_GCC_VERSION >= 40900)
+
+    // g++ 4.8 gives a "conversion from <T> to <U> is ambiguous" error
+    // if this operator is defined.
     template <typename V,
-              typename = decltype(std::declval<Pred>()(std::declval<V&&>(), std::declval<T>()...))>
+              typename = detail::enable_if_t<!is_matcher<V>{}>,
+              typename = invoke_result_type<Pred, V&&, T...>>
     operator V&&() const;
 
+#endif
+
     template <typename V,
-              typename = decltype(std::declval<Pred>()(std::declval<V&>(), std::declval<T>()...))>
+              typename = detail::enable_if_t<!is_matcher<V>{}>,
+              typename = invoke_result_type<Pred, V&, T...>>
     operator V&() const;
   };
 
@@ -596,6 +1097,7 @@ namespace trompeloeil
     using tag = std::integral_constant<bool, is_null_comparable<T>::value
                                        && !is_matcher<T>::value
                                        && !std::is_array<T>::value>;
+
     return ::trompeloeil::is_null(t, tag{});
   }
 
@@ -613,7 +1115,7 @@ namespace trompeloeil
 
   template <typename T,
             bool = is_output_streamable<T>::value,
-            bool = is_collection<std::remove_reference_t<T>>::value>
+            bool = is_collection<detail::remove_reference_t<T>>::value>
   struct streamer
   {
     static
@@ -636,7 +1138,7 @@ namespace trompeloeil
       std::ostream& os,
       std::tuple<T...> const&  t)
     {
-      print_tuple(os, t, std::index_sequence_for<T...>{});
+      print_tuple(os, t, detail::index_sequence_for<T...>{});
     }
     template <size_t ... I>
     static
@@ -644,7 +1146,7 @@ namespace trompeloeil
     print_tuple(
       std::ostream& os,
       std::tuple<T...> const& t,
-      std::index_sequence<I...>)
+      detail::index_sequence<I...>)
     {
       os << "{ ";
       const char* sep = "";
@@ -706,7 +1208,7 @@ namespace trompeloeil
       stream_sentry s(os);
       static const char *linebreak = "\n";
       os << sizeof(T) << "-byte object={";
-      os << (linebreak + (sizeof(T) <= 8)); // stupid construction silences VS2015 warining
+      os << (linebreak + (sizeof(T) <= 8)); // stupid construction silences VS2015 warning
       os << std::setfill('0') << std::hex;
       auto p = reinterpret_cast<uint8_t const*>(&t);
       for (size_t i = 0; i < sizeof(T); ++i)
@@ -739,6 +1241,7 @@ namespace trompeloeil
   auto
   param_compare_operator(
     ...)
+  TROMPELOEIL_TRAILING_RETURN_TYPE(const char*)
   {
     return " == ";
   }
@@ -748,6 +1251,7 @@ namespace trompeloeil
   auto
   param_compare_operator(
     matcher const*)
+  TROMPELOEIL_TRAILING_RETURN_TYPE(const char*)
   {
     return "";
   }
@@ -1078,7 +1582,7 @@ namespace trompeloeil
 
     bool
     is_completed()
-      const
+    const
     noexcept;
 
     bool
@@ -1180,7 +1684,7 @@ namespace trompeloeil
   inline
   bool
   sequence_type::is_completed()
-    const
+  const
   noexcept
   {
     return matchers.empty();
@@ -1254,52 +1758,6 @@ namespace trompeloeil
     matchers.push_back(m);
   }
 
-  struct wildcard : public matcher
-  {
-    // This abomination of constructor seems necessary for g++ 4.9 and 5.1
-    template <typename ... T>
-    constexpr
-    wildcard(
-      T&& ...)
-    noexcept
-    {}
-
-    template<typename T,
-             typename = std::enable_if_t<!std::is_lvalue_reference<T>::value>>
-    operator T&&()
-    const;
-
-    template<typename T,
-             typename = std::enable_if_t<std::is_copy_constructible<T>::value
-                                         || !std::is_move_constructible<T>::value>>
-    operator T&()
-    const;
-
-    template <typename T>
-    constexpr
-    bool
-    matches(
-      T const&)
-    const
-    noexcept
-    {
-      return true;
-    }
-
-    friend
-    std::ostream&
-    operator<<(
-      std::ostream& os,
-      wildcard const&)
-    noexcept
-    {
-      return os << " matching _";
-    }
-  };
-
-
-  static constexpr wildcard const _{};
-
   template <typename T>
   void can_match_parameter(T&);
 
@@ -1311,7 +1769,7 @@ namespace trompeloeil
   {
   public:
     template <typename U,
-              typename = decltype(can_match_parameter<std::remove_reference_t<decltype(*std::declval<U>())>>(std::declval<M>()))>
+              typename = decltype(can_match_parameter<detail::remove_reference_t<decltype(*std::declval<U>())>>(std::declval<M>()))>
     operator U() const;
 
     template <typename U>
@@ -1348,7 +1806,7 @@ namespace trompeloeil
   {
   public:
     template <typename U,
-              typename = decltype(can_match_parameter<std::remove_reference_t<decltype(std::declval<U>())>>(std::declval<M>()))>
+              typename = decltype(can_match_parameter<detail::remove_reference_t<decltype(std::declval<U>())>>(std::declval<M>()))>
     operator U() const;
 
     template <typename U>
@@ -1423,7 +1881,7 @@ namespace trompeloeil
       const
       noexcept(noexcept(std::declval<Predicate const&>()(std::declval<V&&>(), std::declval<const T&>()...)))
     {
-      return matches_(std::forward<V>(v), std::make_index_sequence<sizeof...(T)>{});
+      return matches_(std::forward<V>(v), detail::make_index_sequence<sizeof...(T)>{});
     }
 
     friend
@@ -1432,7 +1890,7 @@ namespace trompeloeil
       std::ostream& os,
       predicate_matcher const& v)
     {
-      return v.print_(os, std::make_index_sequence<sizeof...(T)>{});
+      return v.print_(os, detail::make_index_sequence<sizeof...(T)>{});
     }
   private:
     // The below function call operator must be declared to
@@ -1445,13 +1903,13 @@ namespace trompeloeil
     void operator()(U&&...) const = delete;
 
     template <typename V, size_t ... I>
-    bool matches_(V&& v, std::index_sequence<I...>) const
+    bool matches_(V&& v, detail::index_sequence<I...>) const
     {
       return Predicate::operator()(std::forward<V>(v), std::get<I>(value)...);
     }
 
     template <size_t ... I>
-    std::ostream& print_(std::ostream& os_, std::index_sequence<I...>) const
+    std::ostream& print_(std::ostream& os_, detail::index_sequence<I...>) const
     {
       Printer::operator()(os_, std::get<I>(value)...);
       return os_;
@@ -1460,7 +1918,27 @@ namespace trompeloeil
     std::tuple<T...> value;
   };
 
+  template <typename MatchType, typename Predicate, typename Printer, typename ... T>
+  using make_matcher_return =
+    predicate_matcher<Predicate,
+      Printer,
+      matcher_kind_t<MatchType, Predicate, detail::decay_t<T>...>,
+      detail::decay_t<T>...>;
+
   namespace lambdas {
+
+    struct any_predicate
+    {
+      template <typename T>
+      bool
+      operator()(
+        T&&)
+      const
+      {
+        return true;
+      }
+    };
+
     // The below must be classes/structs to work with VS 2015 update 3
     // since it doesn't respect the trailing return type declaration on
     // the lambdas of template deduction context
@@ -1472,7 +1950,7 @@ namespace trompeloeil
       {                                                                 \
         ::trompeloeil::ignore(x,y);                                     \
         return x op y;                                                  \
-        }                                                               \
+      }                                                                 \
     }
     TROMPELOEIL_MK_PRED_BINOP(equal, ==);
     TROMPELOEIL_MK_PRED_BINOP(not_equal, !=);
@@ -1481,116 +1959,167 @@ namespace trompeloeil
     TROMPELOEIL_MK_PRED_BINOP(greater, >);
     TROMPELOEIL_MK_PRED_BINOP(greater_equal, >=);
     #undef TROMPELOEIL_MK_PRED_BINOP
+
+    // Define `struct` with `operator()` to replace generic lambdas.
+
+    struct any_printer
+    {
+      explicit
+      any_printer(
+        char const* type_name_)
+        : type_name(type_name_)
+      {}
+
+      void
+      operator()(
+        std::ostream& os)
+      const
+      {
+        os << " matching ANY(" << type_name << ")";
+      }
+
+    private:
+      char const* type_name;
+    };
+
+    // These structures replace the `op` printer lambdas.
+
+    #define TROMPELOEIL_MK_OP_PRINTER(name, op_string)                  \
+    struct name ## _printer                                             \
+    {                                                                   \
+      template <typename T>                                             \
+      void                                                              \
+      operator()(                                                       \
+        std::ostream& os,                                               \
+        T const& value)                                                 \
+      const                                                             \
+      {                                                                 \
+        os << op_string;                                                \
+        ::trompeloeil::print(os, value);                                \
+      }                                                                 \
+    }
+    TROMPELOEIL_MK_OP_PRINTER(equal, " == ");
+    TROMPELOEIL_MK_OP_PRINTER(not_equal, " != ");
+    TROMPELOEIL_MK_OP_PRINTER(less, " < ");
+    TROMPELOEIL_MK_OP_PRINTER(less_equal, " <= ");
+    TROMPELOEIL_MK_OP_PRINTER(greater, " > ");
+    TROMPELOEIL_MK_OP_PRINTER(greater_equal, " >= ");
+    #undef TROMPELOEIL_MK_OP_PRINTER
+
   }
+
   template <typename MatchType, typename Predicate, typename Printer, typename ... T>
   inline
-  predicate_matcher <Predicate, Printer, matcher_kind_t<MatchType, Predicate, std::decay_t<T>...>, std::decay_t<T>...>
+  make_matcher_return<MatchType, Predicate, Printer, T...>
   make_matcher(Predicate pred, Printer print, T&& ... t)
   {
     return {std::move(pred), std::move(print), std::forward<T>(t)...};
   }
 
-  template <typename T>
+  template <
+    typename T,
+    typename R = make_matcher_return<T, lambdas::any_predicate, lambdas::any_printer>>
   inline
   auto
   any_matcher(char const* type_name)
+  TROMPELOEIL_TRAILING_RETURN_TYPE(R)
   {
-    return make_matcher<T>([](auto&&) { return true; },
-                           [type_name](std::ostream& os)
-                           { os << " matching ANY(" << type_name << ")";});
+    return make_matcher<T>(lambdas::any_predicate(), lambdas::any_printer(type_name));
   }
-  template <typename T = wildcard, typename V>
+
+  template <
+    typename T = wildcard,
+    typename V,
+    typename R = make_matcher_return<T, lambdas::equal, lambdas::equal_printer, V>>
   inline
   auto
   eq(
     V&& v)
+  TROMPELOEIL_TRAILING_RETURN_TYPE(R)
   {
     return make_matcher<T>(lambdas::equal(),
-                           [](std::ostream& os, auto const& value) {
-                             os << " == ";
-                             ::trompeloeil::print(os, value);
-                           },
+                           lambdas::equal_printer(),
                            std::forward<V>(v));
   }
-  template <typename  T = wildcard, typename V>
+
+  template <
+    typename T = wildcard,
+    typename V,
+    typename R = make_matcher_return<T, lambdas::not_equal, lambdas::not_equal_printer, V>>
   inline
   auto
   ne(
     V&& v)
+  TROMPELOEIL_TRAILING_RETURN_TYPE(R)
   {
     return make_matcher<T>(lambdas::not_equal(),
-                           [](std::ostream& os, auto const& value) {
-                             os << " != ";
-                             ::trompeloeil::print(os, value);
-                           },
+                           lambdas::not_equal_printer(),
                            std::forward<V>(v));
   }
 
-
-  template <typename T = wildcard, typename V>
+  template <
+    typename T = wildcard,
+    typename V,
+    typename R = make_matcher_return<T, lambdas::greater_equal, lambdas::greater_equal_printer, V>>
   inline
   auto
   ge(
     V&& v)
+  TROMPELOEIL_TRAILING_RETURN_TYPE(R)
   {
     return make_matcher<T>(lambdas::greater_equal(),
-                           [](std::ostream& os, auto const& value) {
-                             os << " >= ";
-                             ::trompeloeil::print(os, value);
-                           },
+                           lambdas::greater_equal_printer(),
                            std::forward<V>(v));
   }
 
-  template <typename T = wildcard, typename V>
+  template <
+    typename T = wildcard,
+    typename V,
+    typename R = make_matcher_return<T, lambdas::greater, lambdas::greater_printer, V>>
   inline
   auto
   gt(
     V&& v)
+  TROMPELOEIL_TRAILING_RETURN_TYPE(R)
   {
     return make_matcher<T>(lambdas::greater(),
-                           [](std::ostream& os, auto const& value) {
-                             os << " > ";
-                             ::trompeloeil::print(os, value);
-                           },
+                           lambdas::greater_printer(),
                            std::forward<V>(v));
   }
 
-  template <typename T = wildcard, typename V>
+  template <
+    typename T = wildcard,
+    typename V,
+    typename R = make_matcher_return<T, lambdas::less, lambdas::less_printer, V>>
   inline
   auto
   lt(
     V&& v)
+  TROMPELOEIL_TRAILING_RETURN_TYPE(R)
   {
     return make_matcher<T>(lambdas::less(),
-                           [](std::ostream& os, auto const& value) {
-                             os << " < ";
-                             ::trompeloeil::print(os, value);
-                           },
+                           lambdas::less_printer(),
                            std::forward<V>(v));
   }
 
-  template <typename T = wildcard, typename V>
+  template <
+    typename T = wildcard,
+    typename V,
+    typename R = make_matcher_return<T, lambdas::less_equal, lambdas::less_equal_printer,  V>>
   inline
   auto
   le(
     V&& v)
+  TROMPELOEIL_TRAILING_RETURN_TYPE(R)
   {
     return make_matcher<T>(lambdas::less_equal(),
-                           [](std::ostream& os, auto const& value) {
-                             os << " <= ";
-                             ::trompeloeil::print(os, value);
-                           },
+                           lambdas::less_equal_printer(),
                            std::forward<V>(v));
   }
 
   namespace lambdas {
 
-
-    inline
-    auto
-    regex_check(
-      std::regex&& re,
-      std::regex_constants::match_flag_type match_type)
+    struct regex_check
     {
 
       class string_helper // a vastly simplified string_view type of class
@@ -1620,28 +2149,52 @@ namespace trompeloeil
         char const* str;
       };
 
-      return [re, match_type](string_helper str, auto const&)
-        -> decltype(std::regex_search(str.c_str(), re, match_type))
-        {
-          return !::trompeloeil::is_null(str.c_str())
-            && std::regex_search(str.c_str(), re, match_type);
-        };
-    }
+      regex_check(
+        std::regex&& re_,
+        std::regex_constants::match_flag_type match_type_)
+        : re(std::move(re_)),
+          match_type(match_type_)
+      {}
 
-    inline auto regex_printer()
+      template <typename T>
+      bool
+      operator()(
+        string_helper str,
+        T const&)
+      const
+      {
+          return !::trompeloeil::is_null(str.c_str())
+                 && std::regex_search(str.c_str(), re, match_type);
+      }
+
+    private:
+      std::regex re;
+      std::regex_constants::match_flag_type match_type;
+    };
+
+    struct regex_printer
     {
-      return [](std::ostream& os, auto const& str)
-        {
-          os << " matching regular expression /" << str << "/";
-        };
-    }
+      template <typename T>
+      void
+      operator()(
+        std::ostream& os,
+        T const& str)
+      const
+      {
+        os << " matching regular expression /" << str << "/";
+      }
+    };
   }
-  template <typename Kind = wildcard>
+
+  template <
+    typename Kind = wildcard,
+    typename R = make_matcher_return<Kind, lambdas::regex_check, lambdas::regex_printer, std::string&&>>
   auto
   re(
     std::string s,
     std::regex_constants::syntax_option_type opt = std::regex_constants::ECMAScript,
     std::regex_constants::match_flag_type match_type = std::regex_constants::match_default)
+  TROMPELOEIL_TRAILING_RETURN_TYPE(R)
   {
     return make_matcher<Kind>(lambdas::regex_check(std::regex(s, opt),
                                                    match_type),
@@ -1649,11 +2202,14 @@ namespace trompeloeil
                               std::move(s));
   }
 
-  template <typename Kind = wildcard>
+  template <
+    typename Kind = wildcard,
+    typename R = make_matcher_return<Kind, lambdas::regex_check, lambdas::regex_printer, std::string&&>>
   auto
   re(
     std::string s,
     std::regex_constants::match_flag_type match_type)
+  TROMPELOEIL_TRAILING_RETURN_TYPE(R)
   {
     return make_matcher<Kind>(lambdas::regex_check(std::regex(s), match_type),
                               lambdas::regex_printer(),
@@ -1860,7 +2416,7 @@ namespace trompeloeil
                   "virtual destructor is a necessity for deathwatched to work");
   public:
     template <typename ... U,
-              typename = std::enable_if_t<std::is_constructible<T,U...>::value>>
+              typename = detail::enable_if_t<std::is_constructible<T,U...>::value>>
     deathwatched(
       U&& ...u)
     noexcept(noexcept(T(std::declval<U>()...)))
@@ -1919,7 +2475,7 @@ namespace trompeloeil
 
     lifetime_monitor(lifetime_monitor const&) = delete;
 
-    ~lifetime_monitor()
+    ~lifetime_monitor() override
     {
       auto lock = get_lock();
       if (!died)
@@ -1976,29 +2532,30 @@ namespace trompeloeil
                              os.str());
   }
 
-  template<typename T>
+  template <typename T>
   struct return_of;
 
-  template<typename R, typename ... A>
+  template <typename R, typename ... A>
   struct return_of<R(A...)>
   {
     using type = R;
   };
 
-  template<typename T>
+  template <typename T>
   using return_of_t = typename return_of<T>::type;
 
-  template<typename T>
+  template <typename T>
   struct call_params_type;
 
-  template<typename R, typename ... T>
+  template <typename R, typename ... T>
   struct call_params_type<R(T...)>
   {
     using type = std::tuple<typename std::add_lvalue_reference<T>::type...>;
   };
 
-  template<typename T>
+  template <typename T>
   using call_params_type_t = typename call_params_type<T>::type;
+
 
   template <typename R>
   struct default_return_t
@@ -2014,8 +2571,21 @@ namespace trompeloeil
   R
   default_return()
   {
-    return default_return_t<R>::value();
+    /* Work around VS 2017 15.7.x C4702 warning by
+     * enclosing the operation in an otherwise
+     * unnecessary try/catch block.
+     */
+    try
+    {
+      return default_return_t<R>::value();
+    }
+    catch (...)
+    {
+      throw;
+    }
   }
+
+
 
   template <>
   inline
@@ -2024,7 +2594,7 @@ namespace trompeloeil
   {
   }
 
-  template<typename Sig>
+  template <typename Sig>
   struct call_matcher_base;
 
   template <typename Sig>
@@ -2045,8 +2615,8 @@ namespace trompeloeil
     }
   };
 
-  template<typename Sig>
-  struct call_matcher_base : public list_elem<call_matcher_base<Sig> >
+  template <typename Sig>
+  struct call_matcher_base : public list_elem<call_matcher_base<Sig>>
   {
     call_matcher_base(
       location loc_,
@@ -2125,7 +2695,7 @@ namespace trompeloeil
 
   template <typename T,
             typename U,
-            typename = std::enable_if_t<is_equal_comparable<T, U>::value>>
+            typename = detail::enable_if_t<is_equal_comparable<T, U>::value>>
   inline
   U&
   identity(
@@ -2137,7 +2707,7 @@ namespace trompeloeil
 
   template <typename T,
             typename U,
-            typename = std::enable_if_t<!is_equal_comparable<T, U>::value>>
+            typename = detail::enable_if_t<!is_equal_comparable<T, U>::value>>
   inline
   T
   identity(
@@ -2171,7 +2741,7 @@ namespace trompeloeil
   template <size_t ... I, typename T, typename U>
   bool
   match_parameters(
-    std::index_sequence<I...>,
+    detail::index_sequence<I...>,
     T const& t,
     U const& u)
     noexcept(noexcept(std::initializer_list<bool>{trompeloeil::param_matches(std::get<I>(t),std::get<I>(u))...}))
@@ -2187,9 +2757,9 @@ namespace trompeloeil
   match_parameters(
     std::tuple<T...> const& t,
     std::tuple<U...> const& u)
-  noexcept(noexcept(match_parameters(std::make_index_sequence<sizeof...(T)>{}, t, u)))
+  noexcept(noexcept(match_parameters(detail::make_index_sequence<sizeof...(T)>{}, t, u)))
   {
-    return ::trompeloeil::match_parameters(std::make_index_sequence<sizeof...(T)>{}, t, u);
+    return ::trompeloeil::match_parameters(detail::make_index_sequence<sizeof...(T)>{}, t, u);
   }
 
   template <typename V, typename P>
@@ -2210,7 +2780,7 @@ namespace trompeloeil
   template <typename ... V, typename ... P, size_t ... I>
   void print_mismatch(
     std::ostream& os,
-    std::index_sequence<I...>,
+    detail::index_sequence<I...>,
     std::tuple<V...> const& v,
     std::tuple<P...> const& p)
   {
@@ -2224,7 +2794,7 @@ namespace trompeloeil
     std::tuple<V...> const& v,
     std::tuple<P...> const& p)
   {
-    print_mismatch(os, std::make_index_sequence<sizeof...(V)>{}, v, p);
+    print_mismatch(os, detail::make_index_sequence<sizeof...(V)>{}, v, p);
   }
 
   template <typename T>
@@ -2243,7 +2813,7 @@ namespace trompeloeil
   template <size_t ... I, typename ... T>
   void stream_params(
     std::ostream &os,
-    std::index_sequence<I...>,
+    detail::index_sequence<I...>,
     std::tuple<T...> const &t)
   {
     ::trompeloeil::ignore(os, t);  // Kills unmotivated VS2015 warning in the empty case
@@ -2256,7 +2826,7 @@ namespace trompeloeil
     std::ostream &os,
     std::tuple<T...> const &t)
   {
-    stream_params(os, std::make_index_sequence<sizeof...(T)>{}, t);
+    stream_params(os, detail::make_index_sequence<sizeof...(T)>{}, t);
   }
 
   template <typename ... T>
@@ -2431,7 +3001,7 @@ namespace trompeloeil
   };
 
 
-  template <typename Ret, typename F, typename P, typename = std::enable_if_t<std::is_void<Ret>::value>>
+  template <typename Ret, typename F, typename P, typename = detail::enable_if_t<std::is_void<Ret>::value>>
   void
   trace_return(
     trace_agent&,
@@ -2441,14 +3011,25 @@ namespace trompeloeil
     func(params);
   }
 
-  template <typename Ret, typename F, typename P, typename = std::enable_if_t<!std::is_void<Ret>::value>>
+  template <typename Ret, typename F, typename P, typename = detail::enable_if_t<!std::is_void<Ret>::value>>
   Ret
   trace_return(
     trace_agent& agent,
     F& func,
     P& params)
   {
-    return agent.trace_return(func(params));
+    /* Work around VS 2017 15.7.x C4702 warning by
+     * enclosing the operation in an otherwise
+     * unnecessary try/catch block.
+     */
+    try
+    {
+      return agent.trace_return(func(params));
+    }
+    catch (...)
+    {
+      throw;
+    }
   }
 
   template <typename Sig, typename T>
@@ -2473,8 +3054,8 @@ namespace trompeloeil
     T func;
   };
 
-  template<typename Sig>
-  class condition_base : public list_elem<condition_base<Sig> >
+  template <typename Sig>
+  class condition_base : public list_elem<condition_base<Sig>>
   {
   public:
     condition_base(
@@ -2505,9 +3086,9 @@ namespace trompeloeil
   };
 
   template <typename Sig>
-  using condition_list = list<condition_base<Sig>, delete_disposer >;
+  using condition_list = list<condition_base<Sig>, delete_disposer>;
 
-  template<typename Sig, typename Cond>
+  template <typename Sig, typename Cond>
   struct condition : public condition_base<Sig>
   {
     condition(
@@ -2529,8 +3110,8 @@ namespace trompeloeil
     Cond c;
   };
 
-  template<typename Sig>
-  struct side_effect_base : public list_elem<side_effect_base<Sig> >
+  template <typename Sig>
+  struct side_effect_base : public list_elem<side_effect_base<Sig>>
   {
     virtual
     ~side_effect_base() = default;
@@ -2542,10 +3123,10 @@ namespace trompeloeil
     const = 0;
   };
 
-  template<typename Sig>
+  template <typename Sig>
   using side_effect_list = list<side_effect_base<Sig>, delete_disposer>;
 
-  template<typename Sig, typename Action>
+  template <typename Sig, typename Action>
   struct side_effect : public side_effect_base<Sig>
   {
     template <typename A>
@@ -2569,7 +3150,7 @@ namespace trompeloeil
   template <unsigned long long L, unsigned long long H = L>
   struct multiplicity { };
 
-  template<typename R, typename Parent>
+  template <typename R, typename Parent>
   struct return_injector : Parent
   {
     using return_type = R;
@@ -2657,19 +3238,23 @@ namespace trompeloeil
       using ret = decltype(std::declval<H>()(std::declval<params_type>()));
       // don't know why MS VS 2015 RC doesn't like std::result_of
 
-      constexpr bool is_illegal_type   = std::is_same<std::decay_t<ret>, illegal_argument>::value;
+      constexpr bool is_illegal_type   = std::is_same<detail::decay_t<ret>, illegal_argument>::value;
       constexpr bool is_first_return   = std::is_same<return_type, void>::value;
       constexpr bool void_signature    = std::is_same<sigret, void>::value;
       constexpr bool is_pointer_sigret = std::is_pointer<sigret>::value;
-      constexpr bool is_pointer_ret    = std::is_pointer<std::decay_t<ret>>::value;
-      constexpr bool ptr_const_mismatch = is_pointer_ret && is_pointer_sigret && !std::is_const<std::remove_pointer_t<sigret>>{} && std::is_const<std::remove_pointer_t<std::decay_t<ret>>>{};
+      constexpr bool is_pointer_ret    = std::is_pointer<detail::decay_t<ret>>::value;
+      constexpr bool ptr_const_mismatch =
+        is_pointer_ret &&
+        is_pointer_sigret &&
+        !std::is_const<detail::remove_pointer_t<sigret>>{} &&
+        std::is_const<detail::remove_pointer_t<detail::decay_t<ret>>>{};
       constexpr bool is_ref_sigret     = std::is_reference<sigret>::value;
       constexpr bool is_ref_ret        = std::is_reference<ret>::value;
       constexpr bool ref_const_mismatch=
         is_ref_ret &&
         is_ref_sigret &&
-        !std::is_const<std::remove_reference_t<sigret>>::value &&
-        std::is_const<std::remove_reference_t<ret>>::value;
+        !std::is_const<detail::remove_reference_t<sigret>>::value &&
+        std::is_const<detail::remove_reference_t<ret>>::value;
       constexpr bool matching_ret_type = std::is_constructible<sigret, ret>::value;
       constexpr bool ref_value_mismatch = !is_ref_ret && is_ref_sigret;
 
@@ -2699,8 +3284,47 @@ namespace trompeloeil
       return {matcher};
     }
 
+    call_modifier&&
+    null_modifier()
+    {
+      return std::move(*this);
+    }
+
+  private:
     template <typename H>
-    call_modifier<Matcher, modifier_tag, throw_injector<Parent> >
+    struct throw_handler_t
+    {
+      using R = decltype(default_return<return_of_t<signature>>());
+
+      throw_handler_t(H&& h_)
+        : h(std::forward<H>(h_))
+      {}
+
+      template <typename T>
+      R operator()(T& p)
+      {
+        /* Work around VS 2017 15.7.x C4702 warning by
+         * enclosing the operation in an otherwise
+         * unnecessary try/catch block.
+         */
+        try
+        {
+          h(p);
+        }
+        catch (...)
+        {
+          throw;
+        }
+        return R();
+      }
+
+    private:
+      H h;
+    };
+
+  public:
+    template <typename H>
+    call_modifier<Matcher, modifier_tag, throw_injector<Parent>>
     handle_throw(
       H&& h)
     {
@@ -2717,14 +3341,11 @@ namespace trompeloeil
 
       constexpr bool valid = !throws && !has_return;// && !forbidden;
       using tag = std::integral_constant<bool, valid>;
-      auto handler = [=](auto& p) -> decltype(auto)
-      {
-        h(p);
-        return trompeloeil::default_return<return_of_t<signature>>();
-      };
+      auto handler = throw_handler_t<H>(std::forward<H>(h));
       matcher->set_return(tag{}, std::move(handler));
       return {matcher};
     }
+
     template <unsigned long long L,
               unsigned long long H,
               bool               times_set = call_limit_set>
@@ -2831,13 +3452,13 @@ namespace trompeloeil
   };
 
 
-  template<typename Sig, typename Value>
+  template <typename Sig, typename Value>
   struct call_matcher : public call_matcher_base<Sig>, expectation
   {
     using call_matcher_base<Sig>::name;
     using call_matcher_base<Sig>::loc;
 
-    template<typename ... U>
+    template <typename ... U>
     call_matcher(
       char const *file,
       unsigned long line,
@@ -2849,7 +3470,7 @@ namespace trompeloeil
 
     call_matcher(call_matcher &&r) = delete;
 
-    ~call_matcher()
+    ~call_matcher() override
     {
       auto lock = get_lock();
       if (is_unfulfilled())
@@ -3027,6 +3648,7 @@ namespace trompeloeil
         call_count,
         loc);
     }
+
     template <typename C>
     void
     add_condition(
@@ -3087,14 +3709,21 @@ namespace trompeloeil
     bool                                   reported = false;
   };
 
-
-  template<int N, typename T>
+  /* Clang (all versions) does not like computing the return type R
+   * before determining if the function overload is the best match.
+   */
+  template <
+    int N,
+    typename T,
+    typename = detail::enable_if_t<N <= std::tuple_size<T>::value>,
+    typename R = decltype(std::get<N-1>(std::declval<T>()))
+  >
   constexpr
-  inline
-  decltype(auto)
+  TROMPELOEIL_DECLTYPE_AUTO
   arg(
     T* t,
     std::true_type)
+  TROMPELOEIL_TRAILING_RETURN_TYPE(R)
   {
     return std::get<N-1>(*t);
   }
@@ -3111,11 +3740,17 @@ namespace trompeloeil
     return {};
   }
 
-  template <int N, typename T>
-  decltype(auto)
+  template <
+    int N,
+    typename T,
+    typename R = decltype(arg<N>(std::declval<T*>(),
+                                 std::integral_constant<bool, (N <= std::tuple_size<T>::value)>{}))
+  >
+  TROMPELOEIL_DECLTYPE_AUTO
   mkarg(
     T& t)
   noexcept
+  TROMPELOEIL_TRAILING_RETURN_TYPE(R)
   {
     return arg<N>(&t, std::integral_constant<bool, (N <= std::tuple_size<T>::value)>{});
   }
@@ -3130,6 +3765,7 @@ namespace trompeloeil
       call_modifier<M, Tag, Info>&& m)
     const
     noexcept
+    TROMPELOEIL_TRAILING_RETURN_TYPE(std::unique_ptr<expectation>)
     {
       auto lock = get_lock();
       m.matcher->hook_last(obj.trompeloeil_matcher_list(static_cast<Tag*>(nullptr)));
@@ -3148,6 +3784,7 @@ namespace trompeloeil
     operator+(
       call_modifier<M, Tag, Info>&& t)
     const
+    TROMPELOEIL_TRAILING_RETURN_TYPE(std::unique_ptr<expectation>)
     {
       using call = call_modifier<M, Tag, Info>;
       using sigret = return_of_t<typename call::signature>;
@@ -3163,7 +3800,7 @@ namespace trompeloeil
   };
 
   template <typename T,
-            typename = std::enable_if_t<std::is_lvalue_reference<T&&>::value>>
+            typename = detail::enable_if_t<std::is_lvalue_reference<T&&>::value>>
   inline
   T&&
   decay_return_type(
@@ -3173,7 +3810,7 @@ namespace trompeloeil
   }
 
   template <typename T,
-            typename = std::enable_if_t<std::is_rvalue_reference<T&&>::value>>
+            typename = detail::enable_if_t<std::is_rvalue_reference<T&&>::value>>
   inline
   T
   decay_return_type(
@@ -3282,31 +3919,57 @@ namespace trompeloeil
                                    tag,
                                    matcher_info<sig>>;
 
-
   template <typename M,
-            typename = std::enable_if_t<::trompeloeil::is_matcher<M>::value>>
+            typename = detail::enable_if_t<::trompeloeil::is_matcher<M>::value>>
   inline
-  ::trompeloeil::ptr_deref<std::decay_t<M>>
+  ::trompeloeil::ptr_deref<detail::decay_t<M>>
   operator*(
     M&& m)
   {
-    return ::trompeloeil::ptr_deref<std::decay_t<M>>{std::forward<M>(m)};
+    return ::trompeloeil::ptr_deref<detail::decay_t<M>>{std::forward<M>(m)};
   }
 
   template <typename M,
-            typename = std::enable_if_t<::trompeloeil::is_matcher<M>::value>>
+            typename = detail::enable_if_t<::trompeloeil::is_matcher<M>::value>>
   inline
-  ::trompeloeil::neg_matcher<std::decay_t<M>>
+  ::trompeloeil::neg_matcher<detail::decay_t<M>>
   operator!(
     M&& m)
   {
-    return ::trompeloeil::neg_matcher<std::decay_t<M>>{std::forward<M>(m)};
+    return ::trompeloeil::neg_matcher<detail::decay_t<M>>{std::forward<M>(m)};
   }
+
+  /*
+   * Convert the signature S of a mock function to the signature of
+   * a member function of class T that takes the same parameters P
+   * but returns R.
+   *
+   * The member function has the same constness as the mock function.
+   */
+  template <typename T, typename R, typename S>
+  struct signature_to_member_function;
+
+  template <typename T, typename R, typename R_of_S, typename... P>
+  struct signature_to_member_function<T, R, R_of_S(P...)>
+  {
+    using type = detail::conditional_t<
+      std::is_const<T>::value,
+      R (T::*)(P...) const,
+      R (T::*)(P...)>;
+  };
+
+  template <typename T>
+  struct mock_interface : public T
+  {
+    using trompeloeil_interface_name = T;
+    using T::T;
+ };
 
 }
 
 #define TROMPELOEIL_LINE_ID(name)                                        \
   TROMPELOEIL_CONCAT(trompeloeil_l_ ## name ## _, __LINE__)
+
 #define TROMPELOEIL_COUNT_ID(name)                                       \
   TROMPELOEIL_CONCAT(trompeloeil_c_ ## name ## _, __COUNTER__)
 
@@ -3449,6 +4112,77 @@ namespace trompeloeil
 
 #endif
 
+#define TROMPELOEIL_IMPLEMENT_MOCK0(name) \
+  TROMPELOEIL_IMPLEMENT_MOCK_(0, name)
+#define TROMPELOEIL_IMPLEMENT_MOCK1(name) \
+  TROMPELOEIL_IMPLEMENT_MOCK_(1, name)
+#define TROMPELOEIL_IMPLEMENT_MOCK2(name) \
+  TROMPELOEIL_IMPLEMENT_MOCK_(2, name)
+#define TROMPELOEIL_IMPLEMENT_MOCK3(name) \
+  TROMPELOEIL_IMPLEMENT_MOCK_(3, name)
+#define TROMPELOEIL_IMPLEMENT_MOCK4(name) \
+  TROMPELOEIL_IMPLEMENT_MOCK_(4, name)
+#define TROMPELOEIL_IMPLEMENT_MOCK5(name) \
+  TROMPELOEIL_IMPLEMENT_MOCK_(5, name)
+#define TROMPELOEIL_IMPLEMENT_MOCK6(name) \
+  TROMPELOEIL_IMPLEMENT_MOCK_(6, name)
+#define TROMPELOEIL_IMPLEMENT_MOCK7(name) \
+  TROMPELOEIL_IMPLEMENT_MOCK_(7, name)
+#define TROMPELOEIL_IMPLEMENT_MOCK8(name) \
+  TROMPELOEIL_IMPLEMENT_MOCK_(8, name)
+#define TROMPELOEIL_IMPLEMENT_MOCK9(name) \
+  TROMPELOEIL_IMPLEMENT_MOCK_(9, name)
+#define TROMPELOEIL_IMPLEMENT_MOCK10(name) \
+  TROMPELOEIL_IMPLEMENT_MOCK_(10, name)
+#define TROMPELOEIL_IMPLEMENT_MOCK11(name) \
+  TROMPELOEIL_IMPLEMENT_MOCK_(11, name)
+#define TROMPELOEIL_IMPLEMENT_MOCK12(name) \
+  TROMPELOEIL_IMPLEMENT_MOCK_(12, name)
+#define TROMPELOEIL_IMPLEMENT_MOCK13(name) \
+  TROMPELOEIL_IMPLEMENT_MOCK_(13, name)
+#define TROMPELOEIL_IMPLEMENT_MOCK14(name) \
+  TROMPELOEIL_IMPLEMENT_MOCK_(14, name)
+#define TROMPELOEIL_IMPLEMENT_MOCK15(name) \
+  TROMPELOEIL_IMPLEMENT_MOCK_(15, name)
+
+#define TROMPELOEIL_IMPLEMENT_CONST_MOCK0(name) \
+  TROMPELOEIL_IMPLEMENT_CONST_MOCK_(0, name)
+#define TROMPELOEIL_IMPLEMENT_CONST_MOCK1(name) \
+  TROMPELOEIL_IMPLEMENT_CONST_MOCK_(1, name)
+#define TROMPELOEIL_IMPLEMENT_CONST_MOCK2(name) \
+  TROMPELOEIL_IMPLEMENT_CONST_MOCK_(2, name)
+#define TROMPELOEIL_IMPLEMENT_CONST_MOCK3(name) \
+  TROMPELOEIL_IMPLEMENT_CONST_MOCK_(3, name)
+#define TROMPELOEIL_IMPLEMENT_CONST_MOCK4(name) \
+  TROMPELOEIL_IMPLEMENT_CONST_MOCK_(4, name)
+#define TROMPELOEIL_IMPLEMENT_CONST_MOCK5(name) \
+  TROMPELOEIL_IMPLEMENT_CONST_MOCK_(5, name)
+#define TROMPELOEIL_IMPLEMENT_CONST_MOCK6(name) \
+  TROMPELOEIL_IMPLEMENT_CONST_MOCK_(6, name)
+#define TROMPELOEIL_IMPLEMENT_CONST_MOCK7(name) \
+  TROMPELOEIL_IMPLEMENT_CONST_MOCK_(7, name)
+#define TROMPELOEIL_IMPLEMENT_CONST_MOCK8(name) \
+  TROMPELOEIL_IMPLEMENT_CONST_MOCK_(8, name)
+#define TROMPELOEIL_IMPLEMENT_CONST_MOCK9(name) \
+  TROMPELOEIL_IMPLEMENT_CONST_MOCK_(9, name)
+#define TROMPELOEIL_IMPLEMENT_CONST_MOCK10(name) \
+  TROMPELOEIL_IMPLEMENT_CONST_MOCK_(10, name)
+#define TROMPELOEIL_IMPLEMENT_CONST_MOCK11(name) \
+  TROMPELOEIL_IMPLEMENT_CONST_MOCK_(11, name)
+#define TROMPELOEIL_IMPLEMENT_CONST_MOCK12(name) \
+  TROMPELOEIL_IMPLEMENT_CONST_MOCK_(12, name)
+#define TROMPELOEIL_IMPLEMENT_CONST_MOCK13(name) \
+  TROMPELOEIL_IMPLEMENT_CONST_MOCK_(13, name)
+#define TROMPELOEIL_IMPLEMENT_CONST_MOCK14(name) \
+  TROMPELOEIL_IMPLEMENT_CONST_MOCK_(14, name)
+#define TROMPELOEIL_IMPLEMENT_CONST_MOCK15(name) \
+  TROMPELOEIL_IMPLEMENT_CONST_MOCK_(15, name)
+
+#define TROMPELOEIL_IMPLEMENT_MOCK_(num, name) \
+  TROMPELOEIL_MAKE_MOCK_(name,,num, decltype(::trompeloeil::nonconst_member_signature(&trompeloeil_interface_name::name))::type,override,)
+#define TROMPELOEIL_IMPLEMENT_CONST_MOCK_(num, name) \
+  TROMPELOEIL_MAKE_MOCK_(name,const,num, decltype(::trompeloeil::const_member_signature(&trompeloeil_interface_name::name))::type,override,)
+
 #define TROMPELOEIL_MAKE_MOCK_(name, constness, num, sig, spec, ...)           \
   using TROMPELOEIL_LINE_ID(cardinality_match) =                               \
     std::integral_constant<bool, num == ::trompeloeil::param_list<sig>::size>; \
@@ -3456,17 +4190,26 @@ namespace trompeloeil
                 "Function signature does not have " #num " parameters");       \
   using TROMPELOEIL_LINE_ID(matcher_list_t) = ::trompeloeil::call_matcher_list<sig>;\
   using TROMPELOEIL_LINE_ID(expectation_list_t) = ::trompeloeil::expectations<sig>; \
-  mutable TROMPELOEIL_LINE_ID(expectation_list_t) TROMPELOEIL_LINE_ID(expectations);\
   struct TROMPELOEIL_LINE_ID(tag_type_trompeloeil)                             \
   {                                                                            \
     const char* trompeloeil_expectation_file;                                  \
     unsigned long trompeloeil_expectation_line;                                \
     const char *trompeloeil_expectation_string;                                \
                                                                                \
+    /* Work around parsing bug in VS 2015 when a "complex" */                  \
+    /* decltype() appears in a trailing return type. */                        \
+    /* Further, work around C2066 defect in VS 2017 15.7.1. */                 \
+    using trompeloeil_sig_t = typename ::trompeloeil::identity_type<sig>::type;\
+                                                                               \
+    using trompeloeil_call_params_type_t =                                     \
+      ::trompeloeil::call_params_type_t<sig>;                                  \
+                                                                               \
+    using trompeloeil_return_of_t = ::trompeloeil::return_of_t<sig>;           \
+                                                                               \
     template <typename ... trompeloeil_param_type>                             \
     auto name(                                                                 \
       trompeloeil_param_type&& ... trompeloeil_param)                          \
-      -> ::trompeloeil::modifier_t<sig,                                        \
+      -> ::trompeloeil::modifier_t<trompeloeil_sig_t,                          \
                                    TROMPELOEIL_LINE_ID(tag_type_trompeloeil),  \
                                    trompeloeil_param_type...>                  \
     {                                                                          \
@@ -3492,12 +4235,27 @@ namespace trompeloeil
   {                                                                            \
     return TROMPELOEIL_LINE_ID(expectations).active;                           \
   }                                                                            \
+                                                                               \
   ::trompeloeil::return_of_t<sig>                                              \
   name(                                                                        \
     TROMPELOEIL_PARAM_LIST(num, sig))                                          \
   constness                                                                    \
   spec                                                                         \
   {                                                                            \
+    /* Use the auxiliary functions to avoid unneeded-member-function warning */\
+    using T_ ## name = typename std::remove_reference<decltype(*this)>::type;  \
+                                                                               \
+    using pmf_s_t = typename ::trompeloeil::signature_to_member_function<      \
+      T_ ## name, decltype(*this), sig>::type;                                 \
+                                                                               \
+    using pmf_e_t = typename ::trompeloeil::signature_to_member_function<      \
+      T_ ## name, TROMPELOEIL_LINE_ID(tag_type_trompeloeil), sig>::type;       \
+                                                                               \
+    auto s_ptr = static_cast<pmf_s_t>(&T_ ## name::trompeloeil_self_ ## name); \
+    auto e_ptr = static_cast<pmf_e_t>(&T_ ## name::trompeloeil_tag_ ## name);  \
+                                                                               \
+    ::trompeloeil::ignore(s_ptr, e_ptr);                                       \
+                                                                               \
     return ::trompeloeil::mock_func<sig>(TROMPELOEIL_LINE_ID(cardinality_match){},  \
                                          TROMPELOEIL_LINE_ID(expectations),    \
                                          #name,                                \
@@ -3507,13 +4265,169 @@ namespace trompeloeil
                                                                                \
   auto                                                                         \
   trompeloeil_self_ ## name(TROMPELOEIL_PARAM_LIST(num, sig)) constness        \
-    -> decltype(*this);                                                        \
+    -> decltype(*this)                                                         \
+  {                                                                            \
+    ::trompeloeil::ignore(#name TROMPELOEIL_PARAMS(num));                      \
+    return *this;                                                              \
+  }                                                                            \
                                                                                \
   TROMPELOEIL_LINE_ID(tag_type_trompeloeil)                                    \
-  trompeloeil_tag_ ## name(TROMPELOEIL_PARAM_LIST(num, sig)) constness
+  trompeloeil_tag_ ## name(TROMPELOEIL_PARAM_LIST(num, sig)) constness         \
+  {                                                                            \
+    ::trompeloeil::ignore(#name TROMPELOEIL_PARAMS(num));                      \
+    return {nullptr, 0ul, nullptr};                                            \
+  }                                                                            \
+                                                                               \
+  mutable TROMPELOEIL_LINE_ID(expectation_list_t) TROMPELOEIL_LINE_ID(expectations)
 
 
+#define TROMPELOEIL_LPAREN (
 
+#define TROMPELOEIL_MORE_THAN_TWO_ARGS(...)                                    \
+  TROMPELOEIL_IDENTITY(                                                        \
+    TROMPELOEIL_ARG16(__VA_ARGS__,                                             \
+                      T, T, T, T, T, T, T, T, T, T, T, T, T, F, F, F))
+
+
+#define TROMPELOEIL_REQUIRE_CALL_V(...)                                        \
+  TROMPELOEIL_IDENTITY(TROMPELOEIL_REQUIRE_CALL_IMPL TROMPELOEIL_LPAREN        \
+      TROMPELOEIL_MORE_THAN_TWO_ARGS(__VA_ARGS__), __VA_ARGS__))
+
+// Dispatch to _F (0, 1, or 2 arguments) or _T (> 2 arguments) macro
+#define TROMPELOEIL_REQUIRE_CALL_IMPL(N, ...)                                  \
+    TROMPELOEIL_IDENTITY(                                                      \
+      TROMPELOEIL_REQUIRE_CALL_ ## N TROMPELOEIL_LPAREN __VA_ARGS__))
+
+// Accept only two arguments
+#define TROMPELOEIL_REQUIRE_CALL_F(obj, func)                                  \
+  auto TROMPELOEIL_COUNT_ID(call_obj) =                                        \
+    TROMPELOEIL_REQUIRE_CALL_V_LAMBDA(obj, func, #obj, #func, .null_modifier())
+
+// Accept three or more arguments.
+#define TROMPELOEIL_REQUIRE_CALL_T(obj, func, ...)                             \
+  auto TROMPELOEIL_COUNT_ID(call_obj) =                                        \
+    TROMPELOEIL_REQUIRE_CALL_V_LAMBDA(obj, func, #obj, #func, __VA_ARGS__)
+
+
+#define TROMPELOEIL_REQUIRE_CALL_V_LAMBDA(obj, func, obj_s, func_s, ...)       \
+  [&]                                                                          \
+  {                                                                            \
+    using s_t = decltype((obj).TROMPELOEIL_CONCAT(trompeloeil_self_, func));   \
+    using e_t = decltype((obj).TROMPELOEIL_CONCAT(trompeloeil_tag_,func));     \
+                                                                               \
+    return TROMPELOEIL_REQUIRE_CALL_LAMBDA_OBJ(obj, func, obj_s, func_s)       \
+      __VA_ARGS__                                                              \
+      ;                                                                        \
+  }()
+
+
+#define TROMPELOEIL_REQUIRE_CALL_LAMBDA_OBJ(obj, func, obj_s, func_s)          \
+  ::trompeloeil::call_validator_t<s_t>{(obj)} +                                \
+      ::trompeloeil::detail::conditional_t<false,                              \
+                                           decltype((obj).func),               \
+                                           e_t>                                \
+    {__FILE__, static_cast<unsigned long>(__LINE__), obj_s "." func_s}.func
+
+
+#define TROMPELOEIL_NAMED_REQUIRE_CALL_V(...)                                  \
+  TROMPELOEIL_IDENTITY(TROMPELOEIL_NAMED_REQUIRE_CALL_IMPL TROMPELOEIL_LPAREN  \
+    TROMPELOEIL_MORE_THAN_TWO_ARGS(__VA_ARGS__), __VA_ARGS__))
+
+// Dispatch to _F (0, 1, or 2 arguments) or _T (> 2 arguments) macro
+#define TROMPELOEIL_NAMED_REQUIRE_CALL_IMPL(N, ...)                            \
+  TROMPELOEIL_IDENTITY(                                                        \
+    TROMPELOEIL_NAMED_REQUIRE_CALL_ ## N TROMPELOEIL_LPAREN __VA_ARGS__))
+
+// Accept only two arguments
+#define TROMPELOEIL_NAMED_REQUIRE_CALL_F(obj, func)                            \
+  TROMPELOEIL_REQUIRE_CALL_V_LAMBDA(obj, func, #obj, #func, .null_modifier())
+
+// Accept three or more arguments.
+#define TROMPELOEIL_NAMED_REQUIRE_CALL_T(obj, func, ...)                       \
+  TROMPELOEIL_REQUIRE_CALL_V_LAMBDA(obj, func, #obj, #func, __VA_ARGS__)
+
+
+#define TROMPELOEIL_ALLOW_CALL_V(...)                                          \
+  TROMPELOEIL_IDENTITY(TROMPELOEIL_ALLOW_CALL_IMPL TROMPELOEIL_LPAREN          \
+    TROMPELOEIL_MORE_THAN_TWO_ARGS(__VA_ARGS__), __VA_ARGS__))
+
+// Dispatch to _F (0, 1, or 2 arguments) or _T (> 2 arguments) macro
+#define TROMPELOEIL_ALLOW_CALL_IMPL(N, ...)                                    \
+  TROMPELOEIL_IDENTITY(                                                        \
+    TROMPELOEIL_ALLOW_CALL_ ## N TROMPELOEIL_LPAREN __VA_ARGS__))
+
+// Accept only two arguments
+#define TROMPELOEIL_ALLOW_CALL_F(obj, func)                                    \
+  TROMPELOEIL_REQUIRE_CALL_T(obj, func, .TROMPELOEIL_TIMES(0, ~0ULL))
+
+// Accept three or more arguments.
+#define TROMPELOEIL_ALLOW_CALL_T(obj, func, ...)                               \
+  TROMPELOEIL_REQUIRE_CALL_T(obj,                                              \
+                             func,                                             \
+                             .TROMPELOEIL_TIMES(0, ~0ULL) __VA_ARGS__)
+
+
+#define TROMPELOEIL_NAMED_ALLOW_CALL_V(...)                                    \
+  TROMPELOEIL_IDENTITY(TROMPELOEIL_NAMED_ALLOW_CALL_IMPL TROMPELOEIL_LPAREN    \
+    TROMPELOEIL_MORE_THAN_TWO_ARGS(__VA_ARGS__), __VA_ARGS__))
+
+// Dispatch to _F (0, 1, or 2 arguments) or _T (> 2 arguments) macro
+#define TROMPELOEIL_NAMED_ALLOW_CALL_IMPL(N, ...)                              \
+  TROMPELOEIL_IDENTITY(                                                        \
+    TROMPELOEIL_NAMED_ALLOW_CALL_ ## N TROMPELOEIL_LPAREN __VA_ARGS__))
+
+// Accept only two arguments
+#define TROMPELOEIL_NAMED_ALLOW_CALL_F(obj, func)                              \
+  TROMPELOEIL_NAMED_REQUIRE_CALL_T(obj, func, .TROMPELOEIL_TIMES(0, ~0ULL))
+
+// Accept three or more arguments.
+#define TROMPELOEIL_NAMED_ALLOW_CALL_T(obj, func, ...)                         \
+  TROMPELOEIL_NAMED_REQUIRE_CALL_T(obj,                                        \
+                                   func,                                       \
+                                   .TROMPELOEIL_TIMES(0, ~0ULL) __VA_ARGS__)
+
+
+#define TROMPELOEIL_FORBID_CALL_V(...)                                         \
+  TROMPELOEIL_IDENTITY(TROMPELOEIL_FORBID_CALL_IMPL TROMPELOEIL_LPAREN         \
+    TROMPELOEIL_MORE_THAN_TWO_ARGS(__VA_ARGS__), __VA_ARGS__))
+
+// Dispatch to _F (0, 1, or 2 arguments) or _T (> 2 arguments) macro
+#define TROMPELOEIL_FORBID_CALL_IMPL(N, ...)                                   \
+  TROMPELOEIL_IDENTITY(                                                        \
+    TROMPELOEIL_FORBID_CALL_ ## N TROMPELOEIL_LPAREN __VA_ARGS__))
+
+// Accept only two arguments
+#define TROMPELOEIL_FORBID_CALL_F(obj, func)                                   \
+  TROMPELOEIL_REQUIRE_CALL_T(obj, func, .TROMPELOEIL_TIMES(0))
+
+// Accept three or more arguments.
+#define TROMPELOEIL_FORBID_CALL_T(obj, func, ...)                              \
+  TROMPELOEIL_REQUIRE_CALL_T(obj,                                              \
+                             func,                                             \
+                             .TROMPELOEIL_TIMES(0) __VA_ARGS__)
+
+
+#define TROMPELOEIL_NAMED_FORBID_CALL_V(...)                                   \
+  TROMPELOEIL_IDENTITY(TROMPELOEIL_NAMED_FORBID_CALL_IMPL TROMPELOEIL_LPAREN   \
+    TROMPELOEIL_MORE_THAN_TWO_ARGS(__VA_ARGS__), __VA_ARGS__))
+
+// Dispatch to _F (0, 1, or 2 arguments) or _T (> 2 arguments) macro
+#define TROMPELOEIL_NAMED_FORBID_CALL_IMPL(N, ...)                             \
+  TROMPELOEIL_IDENTITY(                                                        \
+    TROMPELOEIL_NAMED_FORBID_CALL_ ## N TROMPELOEIL_LPAREN __VA_ARGS__))
+
+// Accept only two arguments
+#define TROMPELOEIL_NAMED_FORBID_CALL_F(obj, func)                             \
+  TROMPELOEIL_NAMED_REQUIRE_CALL_T(obj, func, .TROMPELOEIL_TIMES(0))
+
+// Accept three or more arguments.
+#define TROMPELOEIL_NAMED_FORBID_CALL_T(obj, func, ...)                        \
+  TROMPELOEIL_NAMED_REQUIRE_CALL_T(obj,                                        \
+                                   func,                                       \
+                                   .TROMPELOEIL_TIMES(0) __VA_ARGS__)
+
+
+#if (TROMPELOEIL_CPLUSPLUS > 201103L)
 
 #define TROMPELOEIL_REQUIRE_CALL(obj, func)                                    \
   TROMPELOEIL_REQUIRE_CALL_(obj, func, #obj, #func)
@@ -3522,21 +4436,22 @@ namespace trompeloeil
   auto TROMPELOEIL_COUNT_ID(call_obj) = TROMPELOEIL_REQUIRE_CALL_OBJ(obj, func,\
                                                                obj_s, func_s)
 
-
 #define TROMPELOEIL_NAMED_REQUIRE_CALL(obj, func)                              \
   TROMPELOEIL_NAMED_REQUIRE_CALL_(obj, func, #obj, #func)
 
 #define TROMPELOEIL_NAMED_REQUIRE_CALL_(obj, func, obj_s, func_s)              \
   TROMPELOEIL_REQUIRE_CALL_OBJ(obj, func, obj_s, func_s)
 
+
 #define TROMPELOEIL_REQUIRE_CALL_OBJ(obj, func, obj_s, func_s)                 \
   ::trompeloeil::call_validator_t<decltype((obj).TROMPELOEIL_CONCAT(trompeloeil_self_, func))>{(obj)} + \
-    std::conditional_t<false,                                                  \
+    ::trompeloeil::detail::conditional_t<false,                                \
                        decltype((obj).func),                                   \
                        decltype((obj).TROMPELOEIL_CONCAT(trompeloeil_tag_,func))>\
     {__FILE__, static_cast<unsigned long>(__LINE__), obj_s "." func_s}.func
 
-#define TROMPELOEIL_ALLOW_CALL(obj, func)               \
+
+#define TROMPELOEIL_ALLOW_CALL(obj, func)                                      \
   TROMPELOEIL_ALLOW_CALL_(obj, func, #obj, #func)
 
 #define TROMPELOEIL_ALLOW_CALL_(obj, func, obj_s, func_s)                      \
@@ -3551,12 +4466,14 @@ namespace trompeloeil
   TROMPELOEIL_NAMED_REQUIRE_CALL_(obj, func, obj_s, func_s)                    \
     .TROMPELOEIL_TIMES(0, ~0ULL)
 
+
 #define TROMPELOEIL_FORBID_CALL(obj, func)                                     \
   TROMPELOEIL_FORBID_CALL_(obj, func, #obj, #func)
 
 #define TROMPELOEIL_FORBID_CALL_(obj, func, obj_s, func_s)                     \
   TROMPELOEIL_REQUIRE_CALL_(obj, func, obj_s, func_s)                          \
     .TROMPELOEIL_TIMES(0)
+
 
 #define TROMPELOEIL_NAMED_FORBID_CALL(obj, func)                               \
   TROMPELOEIL_NAMED_FORBID_CALL_(obj, func, #obj, #func)
@@ -3565,9 +4482,41 @@ namespace trompeloeil
   TROMPELOEIL_NAMED_REQUIRE_CALL_(obj, func, obj_s, func_s)                    \
     .TROMPELOEIL_TIMES(0)
 
+#endif /* (TROMPELOEIL_CPLUSPLUS > 201103L) */
+
 
 #define TROMPELOEIL_WITH(...)    TROMPELOEIL_WITH_(=,#__VA_ARGS__, __VA_ARGS__)
 #define TROMPELOEIL_LR_WITH(...) TROMPELOEIL_WITH_(&,#__VA_ARGS__, __VA_ARGS__)
+
+
+#if (TROMPELOEIL_CPLUSPLUS == 201103L)
+
+#define TROMPELOEIL_WITH_(capture, arg_s, ...)                                 \
+  with(                                                                        \
+    arg_s,                                                                     \
+    [capture](e_t::trompeloeil_call_params_type_t const& trompeloeil_x)        \
+    {                                                                          \
+      auto& _1 = ::trompeloeil::mkarg<1>(trompeloeil_x);                       \
+      auto& _2 = ::trompeloeil::mkarg<2>(trompeloeil_x);                       \
+      auto& _3 = ::trompeloeil::mkarg<3>(trompeloeil_x);                       \
+      auto& _4 = ::trompeloeil::mkarg<4>(trompeloeil_x);                       \
+      auto& _5 = ::trompeloeil::mkarg<5>(trompeloeil_x);                       \
+      auto& _6 = ::trompeloeil::mkarg<6>(trompeloeil_x);                       \
+      auto& _7 = ::trompeloeil::mkarg<7>(trompeloeil_x);                       \
+      auto& _8 = ::trompeloeil::mkarg<8>(trompeloeil_x);                       \
+      auto& _9 = ::trompeloeil::mkarg<9>(trompeloeil_x);                       \
+      auto&_10 = ::trompeloeil::mkarg<10>(trompeloeil_x);                      \
+      auto&_11 = ::trompeloeil::mkarg<11>(trompeloeil_x);                      \
+      auto&_12 = ::trompeloeil::mkarg<12>(trompeloeil_x);                      \
+      auto&_13 = ::trompeloeil::mkarg<13>(trompeloeil_x);                      \
+      auto&_14 = ::trompeloeil::mkarg<14>(trompeloeil_x);                      \
+      auto&_15 = ::trompeloeil::mkarg<15>(trompeloeil_x);                      \
+      ::trompeloeil::ignore(                                                   \
+        _1,_2,_3,_4,_5,_6,_7,_8,_9,_10,_11,_12,_13,_14,_15);                   \
+      return __VA_ARGS__;                                                      \
+    })
+
+#else /* (TROMPELOEIL_CPLUSPLUS == 201103L) */
 
 #define TROMPELOEIL_WITH_(capture, arg_s, ...)                                 \
   with(arg_s, [capture](auto const& trompeloeil_x) {                           \
@@ -3590,8 +4539,39 @@ namespace trompeloeil
     return __VA_ARGS__;                                                        \
   })
 
+#endif /* !(TROMPELOEIL_CPLUSPLUS == 201103L) */
+
+
 #define TROMPELOEIL_SIDE_EFFECT(...)    TROMPELOEIL_SIDE_EFFECT_(=, __VA_ARGS__)
 #define TROMPELOEIL_LR_SIDE_EFFECT(...) TROMPELOEIL_SIDE_EFFECT_(&, __VA_ARGS__)
+
+
+#if (TROMPELOEIL_CPLUSPLUS == 201103L)
+
+#define TROMPELOEIL_SIDE_EFFECT_(capture, ...)                                 \
+  sideeffect(                                                                  \
+    [capture](e_t::trompeloeil_call_params_type_t& trompeloeil_x) {            \
+      auto& _1 = ::trompeloeil::mkarg<1>(trompeloeil_x);                       \
+      auto& _2 = ::trompeloeil::mkarg<2>(trompeloeil_x);                       \
+      auto& _3 = ::trompeloeil::mkarg<3>(trompeloeil_x);                       \
+      auto& _4 = ::trompeloeil::mkarg<4>(trompeloeil_x);                       \
+      auto& _5 = ::trompeloeil::mkarg<5>(trompeloeil_x);                       \
+      auto& _6 = ::trompeloeil::mkarg<6>(trompeloeil_x);                       \
+      auto& _7 = ::trompeloeil::mkarg<7>(trompeloeil_x);                       \
+      auto& _8 = ::trompeloeil::mkarg<8>(trompeloeil_x);                       \
+      auto& _9 = ::trompeloeil::mkarg<9>(trompeloeil_x);                       \
+      auto&_10 = ::trompeloeil::mkarg<10>(trompeloeil_x);                      \
+      auto&_11 = ::trompeloeil::mkarg<11>(trompeloeil_x);                      \
+      auto&_12 = ::trompeloeil::mkarg<12>(trompeloeil_x);                      \
+      auto&_13 = ::trompeloeil::mkarg<13>(trompeloeil_x);                      \
+      auto&_14 = ::trompeloeil::mkarg<14>(trompeloeil_x);                      \
+      auto&_15 = ::trompeloeil::mkarg<15>(trompeloeil_x);                      \
+      ::trompeloeil::ignore(                                                   \
+        _1,_2,_3,_4,_5,_6,_7,_8,_9,_10,_11,_12,_13,_14,_15);                   \
+      __VA_ARGS__;                                                             \
+    })
+
+#else /* (TROMPELOEIL_CPLUSPLUS == 201103L) */
 
 #define TROMPELOEIL_SIDE_EFFECT_(capture, ...)                                 \
   sideeffect([capture](auto& trompeloeil_x) {                                  \
@@ -3614,8 +4594,41 @@ namespace trompeloeil
     __VA_ARGS__;                                                               \
   })
 
+#endif /* !(TROMPELOEIL_CPLUSPLUS == 201103L) */
+
+
 #define TROMPELOEIL_RETURN(...)    TROMPELOEIL_RETURN_(=, __VA_ARGS__)
 #define TROMPELOEIL_LR_RETURN(...) TROMPELOEIL_RETURN_(&, __VA_ARGS__)
+
+
+#if (TROMPELOEIL_CPLUSPLUS == 201103L)
+
+#define TROMPELOEIL_RETURN_(capture, ...)                                      \
+  handle_return(                                                               \
+    [capture](e_t::trompeloeil_call_params_type_t& trompeloeil_x)              \
+      -> e_t::trompeloeil_return_of_t                                          \
+    {                                                                          \
+      auto& _1 = ::trompeloeil::mkarg<1>(trompeloeil_x);                       \
+      auto& _2 = ::trompeloeil::mkarg<2>(trompeloeil_x);                       \
+      auto& _3 = ::trompeloeil::mkarg<3>(trompeloeil_x);                       \
+      auto& _4 = ::trompeloeil::mkarg<4>(trompeloeil_x);                       \
+      auto& _5 = ::trompeloeil::mkarg<5>(trompeloeil_x);                       \
+      auto& _6 = ::trompeloeil::mkarg<6>(trompeloeil_x);                       \
+      auto& _7 = ::trompeloeil::mkarg<7>(trompeloeil_x);                       \
+      auto& _8 = ::trompeloeil::mkarg<8>(trompeloeil_x);                       \
+      auto& _9 = ::trompeloeil::mkarg<9>(trompeloeil_x);                       \
+      auto&_10 = ::trompeloeil::mkarg<10>(trompeloeil_x);                      \
+      auto&_11 = ::trompeloeil::mkarg<11>(trompeloeil_x);                      \
+      auto&_12 = ::trompeloeil::mkarg<12>(trompeloeil_x);                      \
+      auto&_13 = ::trompeloeil::mkarg<13>(trompeloeil_x);                      \
+      auto&_14 = ::trompeloeil::mkarg<14>(trompeloeil_x);                      \
+      auto&_15 = ::trompeloeil::mkarg<15>(trompeloeil_x);                      \
+      ::trompeloeil::ignore(                                                   \
+        _1,_2,_3,_4,_5,_6,_7,_8,_9,_10,_11,_12,_13,_14,_15);                   \
+      return ::trompeloeil::decay_return_type(__VA_ARGS__);                    \
+    })
+
+#else /* (TROMPELOEIL_CPLUSPLUS == 201103L) */
 
 #define TROMPELOEIL_RETURN_(capture, ...)                                      \
   handle_return([capture](auto& trompeloeil_x) -> decltype(auto) {             \
@@ -3635,11 +4648,42 @@ namespace trompeloeil
     auto&_14 = ::trompeloeil::mkarg<14>(trompeloeil_x);                        \
     auto&_15 = ::trompeloeil::mkarg<15>(trompeloeil_x);                        \
     ::trompeloeil::ignore(_1,_2,_3,_4,_5,_6,_7,_8,_9,_10,_11,_12,_13,_14,_15); \
-    return ::trompeloeil::decay_return_type(__VA_ARGS__);                                                        \
+    return ::trompeloeil::decay_return_type(__VA_ARGS__);                      \
   })
+
+#endif /* !(TROMPELOEIL_CPLUSPLUS == 201103L) */
+
 
 #define TROMPELOEIL_THROW(...)    TROMPELOEIL_THROW_(=, __VA_ARGS__)
 #define TROMPELOEIL_LR_THROW(...) TROMPELOEIL_THROW_(&, __VA_ARGS__)
+
+
+#if (TROMPELOEIL_CPLUSPLUS == 201103L)
+
+#define TROMPELOEIL_THROW_(capture, ...)                                       \
+  handle_throw(                                                                \
+    [capture](e_t::trompeloeil_call_params_type_t& trompeloeil_x) {            \
+      auto& _1 = ::trompeloeil::mkarg<1>(trompeloeil_x);                       \
+      auto& _2 = ::trompeloeil::mkarg<2>(trompeloeil_x);                       \
+      auto& _3 = ::trompeloeil::mkarg<3>(trompeloeil_x);                       \
+      auto& _4 = ::trompeloeil::mkarg<4>(trompeloeil_x);                       \
+      auto& _5 = ::trompeloeil::mkarg<5>(trompeloeil_x);                       \
+      auto& _6 = ::trompeloeil::mkarg<6>(trompeloeil_x);                       \
+      auto& _7 = ::trompeloeil::mkarg<7>(trompeloeil_x);                       \
+      auto& _8 = ::trompeloeil::mkarg<8>(trompeloeil_x);                       \
+      auto& _9 = ::trompeloeil::mkarg<9>(trompeloeil_x);                       \
+      auto&_10 = ::trompeloeil::mkarg<10>(trompeloeil_x);                      \
+      auto&_11 = ::trompeloeil::mkarg<11>(trompeloeil_x);                      \
+      auto&_12 = ::trompeloeil::mkarg<12>(trompeloeil_x);                      \
+      auto&_13 = ::trompeloeil::mkarg<13>(trompeloeil_x);                      \
+      auto&_14 = ::trompeloeil::mkarg<14>(trompeloeil_x);                      \
+      auto&_15 = ::trompeloeil::mkarg<15>(trompeloeil_x);                      \
+      ::trompeloeil::ignore(                                                   \
+        _1,_2,_3,_4,_5,_6,_7,_8,_9,_10,_11,_12,_13,_14,_15);                   \
+      throw __VA_ARGS__;                                                       \
+    })
+
+#else /* (TROMPELOEIL_CPLUSPLUS == 201103L) */
 
 #define TROMPELOEIL_THROW_(capture, ...)                                       \
   handle_throw([capture](auto& trompeloeil_x)  {                               \
@@ -3661,6 +4705,8 @@ namespace trompeloeil
     ::trompeloeil::ignore(_1,_2,_3,_4,_5,_6,_7,_8,_9,_10,_11,_12,_13,_14,_15); \
     throw __VA_ARGS__;                                                         \
  })
+
+#endif /* !(TROMPELOEIL_CPLUSPLUS == 201103L) */
 
 
 #define TROMPELOEIL_TIMES(...) times(::trompeloeil::multiplicity<__VA_ARGS__>{})
@@ -3687,7 +4733,7 @@ namespace trompeloeil
 #define TROMPELOEIL_NAMED_REQUIRE_DESTRUCTION_(prefix, obj, obj_s)             \
   trompeloeil::lifetime_monitor_releaser{} +                                   \
   trompeloeil::lifetime_monitor_modifier<false>{                               \
-    std::make_unique<trompeloeil::lifetime_monitor>(                           \
+    ::trompeloeil::detail::make_unique<trompeloeil::lifetime_monitor>(         \
       obj,                                                                     \
       obj_s,                                                                   \
       prefix "REQUIRE_DESTRUCTION(" obj_s ")",                                 \
@@ -3731,12 +4777,58 @@ namespace trompeloeil
 #define MAKE_CONST_MOCK14         TROMPELOEIL_MAKE_CONST_MOCK14
 #define MAKE_CONST_MOCK15         TROMPELOEIL_MAKE_CONST_MOCK15
 
+#define IMPLEMENT_MOCK0           TROMPELOEIL_IMPLEMENT_MOCK0
+#define IMPLEMENT_MOCK1           TROMPELOEIL_IMPLEMENT_MOCK1
+#define IMPLEMENT_MOCK2           TROMPELOEIL_IMPLEMENT_MOCK2
+#define IMPLEMENT_MOCK3           TROMPELOEIL_IMPLEMENT_MOCK3
+#define IMPLEMENT_MOCK4           TROMPELOEIL_IMPLEMENT_MOCK4
+#define IMPLEMENT_MOCK5           TROMPELOEIL_IMPLEMENT_MOCK5
+#define IMPLEMENT_MOCK6           TROMPELOEIL_IMPLEMENT_MOCK6
+#define IMPLEMENT_MOCK7           TROMPELOEIL_IMPLEMENT_MOCK7
+#define IMPLEMENT_MOCK8           TROMPELOEIL_IMPLEMENT_MOCK8
+#define IMPLEMENT_MOCK9           TROMPELOEIL_IMPLEMENT_MOCK9
+#define IMPLEMENT_MOCK10          TROMPELOEIL_IMPLEMENT_MOCK10
+#define IMPLEMENT_MOCK11          TROMPELOEIL_IMPLEMENT_MOCK11
+#define IMPLEMENT_MOCK12          TROMPELOEIL_IMPLEMENT_MOCK12
+#define IMPLEMENT_MOCK13          TROMPELOEIL_IMPLEMENT_MOCK13
+#define IMPLEMENT_MOCK14          TROMPELOEIL_IMPLEMENT_MOCK14
+#define IMPLEMENT_MOCK15          TROMPELOEIL_IMPLEMENT_MOCK15
+
+#define IMPLEMENT_CONST_MOCK0     TROMPELOEIL_IMPLEMENT_CONST_MOCK0
+#define IMPLEMENT_CONST_MOCK1     TROMPELOEIL_IMPLEMENT_CONST_MOCK1
+#define IMPLEMENT_CONST_MOCK2     TROMPELOEIL_IMPLEMENT_CONST_MOCK2
+#define IMPLEMENT_CONST_MOCK3     TROMPELOEIL_IMPLEMENT_CONST_MOCK3
+#define IMPLEMENT_CONST_MOCK4     TROMPELOEIL_IMPLEMENT_CONST_MOCK4
+#define IMPLEMENT_CONST_MOCK5     TROMPELOEIL_IMPLEMENT_CONST_MOCK5
+#define IMPLEMENT_CONST_MOCK6     TROMPELOEIL_IMPLEMENT_CONST_MOCK6
+#define IMPLEMENT_CONST_MOCK7     TROMPELOEIL_IMPLEMENT_CONST_MOCK7
+#define IMPLEMENT_CONST_MOCK8     TROMPELOEIL_IMPLEMENT_CONST_MOCK8
+#define IMPLEMENT_CONST_MOCK9     TROMPELOEIL_IMPLEMENT_CONST_MOCK9
+#define IMPLEMENT_CONST_MOCK10    TROMPELOEIL_IMPLEMENT_CONST_MOCK10
+#define IMPLEMENT_CONST_MOCK11    TROMPELOEIL_IMPLEMENT_CONST_MOCK11
+#define IMPLEMENT_CONST_MOCK12    TROMPELOEIL_IMPLEMENT_CONST_MOCK12
+#define IMPLEMENT_CONST_MOCK13    TROMPELOEIL_IMPLEMENT_CONST_MOCK13
+#define IMPLEMENT_CONST_MOCK14    TROMPELOEIL_IMPLEMENT_CONST_MOCK14
+#define IMPLEMENT_CONST_MOCK15    TROMPELOEIL_IMPLEMENT_CONST_MOCK15
+
+#define REQUIRE_CALL_V            TROMPELOEIL_REQUIRE_CALL_V
+#define NAMED_REQUIRE_CALL_V      TROMPELOEIL_NAMED_REQUIRE_CALL_V
+#define ALLOW_CALL_V              TROMPELOEIL_ALLOW_CALL_V
+#define NAMED_ALLOW_CALL_V        TROMPELOEIL_NAMED_ALLOW_CALL_V
+#define FORBID_CALL_V             TROMPELOEIL_FORBID_CALL_V
+#define NAMED_FORBID_CALL_V       TROMPELOEIL_NAMED_FORBID_CALL_V
+
+#if (TROMPELOEIL_CPLUSPLUS > 201103L)
+
 #define REQUIRE_CALL              TROMPELOEIL_REQUIRE_CALL
 #define NAMED_REQUIRE_CALL        TROMPELOEIL_NAMED_REQUIRE_CALL
 #define ALLOW_CALL                TROMPELOEIL_ALLOW_CALL
 #define NAMED_ALLOW_CALL          TROMPELOEIL_NAMED_ALLOW_CALL
 #define FORBID_CALL               TROMPELOEIL_FORBID_CALL
 #define NAMED_FORBID_CALL         TROMPELOEIL_NAMED_FORBID_CALL
+
+#endif /* (TROMPELOEIL_CPLUSPLUS > 201103L) */
+
 #define WITH                      TROMPELOEIL_WITH
 #define LR_WITH                   TROMPELOEIL_LR_WITH
 #define SIDE_EFFECT               TROMPELOEIL_SIDE_EFFECT
@@ -3745,6 +4837,7 @@ namespace trompeloeil
 #define LR_RETURN                 TROMPELOEIL_LR_RETURN
 #define THROW                     TROMPELOEIL_THROW
 #define LR_THROW                  TROMPELOEIL_LR_THROW
+
 #define TIMES                     TROMPELOEIL_TIMES
 #define IN_SEQUENCE               TROMPELOEIL_IN_SEQUENCE
 #define ANY                       TROMPELOEIL_ANY

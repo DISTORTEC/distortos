@@ -2,8 +2,8 @@ Trompeloeil
 ===========
 
 - link: [Trompeloeil](https://github.com/rollbear/trompeloeil)
-- package name: trompeloeil-28
-- package version: 28
-- download date: 2017-09-25
+- package name: trompeloeil-32
+- package version: v32
+- download date: 2018-10-02
 
-Only trompeloeil-28/include/trompeloeil.hpp header was copied from the package.
+Only trompeloeil-32/include/trompeloeil.hpp header was copied from the package.
