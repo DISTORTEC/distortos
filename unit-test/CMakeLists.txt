@@ -29,7 +29,7 @@ set(CMAKE_CXX_STANDARD 14)
 # standard include folders - valid in all cases
 include_directories(
 		.
-		external/Catch
+		external/Catch2
 		external/Trompeloeil
 		${DISTORTOS_PATH}/include)
 
