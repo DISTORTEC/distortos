@@ -125,12 +125,10 @@ std::pair<int, uint32_t> ChipSpiMasterLowLevel::configure(const devices::SpiMode
 	cr1 = modifyCr1(cr1, spiPeripheral_, SPI_CR1_DFF | SPI_CR1_LSBFIRST | SPI_CR1_BR | SPI_CR1_CPOL | SPI_CR1_CPHA,
 			(wordLength == 16) << SPI_CR1_DFF_Pos |
 			lsbFirst << SPI_CR1_LSBFIRST_Pos |
+			SPI_CR1_SPE |
 			br << SPI_CR1_BR_Pos |
 			(mode == devices::SpiMode::cpol1cpha0 || mode == devices::SpiMode::cpol1cpha1) << SPI_CR1_CPOL_Pos |
 			(mode == devices::SpiMode::cpol0cpha1 || mode == devices::SpiMode::cpol1cpha1) << SPI_CR1_CPHA_Pos);
-
-	if (disablePeripheral == true)
-		cr1 = modifyCr1(cr1, spiPeripheral_, {}, SPI_CR1_SPE);	// enable peripheral
 
 	dummyData_ = dummyData;
 
