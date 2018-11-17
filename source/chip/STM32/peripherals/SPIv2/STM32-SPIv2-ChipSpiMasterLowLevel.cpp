@@ -131,22 +131,11 @@ std::pair<int, uint32_t> ChipSpiMasterLowLevel::configure(const devices::SpiMode
 
 void ChipSpiMasterLowLevel::interruptHandler()
 {
-	bool done {};
 	const auto sr = spiPeripheral_.readSr();
 	auto cr2 = spiPeripheral_.readCr2();
 	const auto wordLength = getWordLength(cr2);
 
-	if ((sr & SPI_SR_OVR) != 0 && (cr2 & SPI_CR2_ERRIE) != 0)	// overrun error?
-	{
-		spiPeripheral_.readDr(maxWordLength);
-		spiPeripheral_.readSr();	// clears OVR flag
-
-		cr2 = modifyCr2(cr2, spiPeripheral_, SPI_CR2_TXEIE, {});	// disable TXE interrupt
-
-		if ((sr & SPI_SR_BSY) == 0)
-			done = true;
-	}
-	else if ((sr & SPI_SR_RXNE) != 0 && (cr2 & SPI_CR2_RXNEIE) != 0)	// read?
+	if ((sr & SPI_SR_RXNE) != 0 && (cr2 & SPI_CR2_RXNEIE) != 0)	// read?
 	{
 		const uint16_t word = spiPeripheral_.readDr(wordLength);
 		const auto readBuffer = readBuffer_;
@@ -160,8 +149,22 @@ void ChipSpiMasterLowLevel::interruptHandler()
 		else
 			readPosition += (wordLength + 8 - 1) / 8;
 		readPosition_ = readPosition;
-		if (readPosition == size_)
-			done = true;
+		if (readPosition == size_)	// transfer finished?
+		{
+			// disable TXE and RXNE interrupts
+			cr2 = modifyCr2(cr2, spiPeripheral_, SPI_CR2_TXEIE | SPI_CR2_RXNEIE, {});
+			writePosition_ = {};
+			const auto bytesTransfered = readPosition_;
+			readPosition_ = {};
+			size_ = {};
+			writeBuffer_ = {};
+			readBuffer_ = {};
+
+			const auto spiMasterBase = spiMasterBase_;
+			spiMasterBase_ = nullptr;
+			assert(spiMasterBase != nullptr);
+			spiMasterBase->transferCompleteEvent(bytesTransfered);
+		}
 		else
 			cr2 = modifyCr2(cr2, spiPeripheral_, {}, SPI_CR2_TXEIE);	// enable TXE interrupt
 	}
@@ -185,23 +188,6 @@ void ChipSpiMasterLowLevel::interruptHandler()
 		spiPeripheral_.writeDr(wordLength, word);
 
 		cr2 = modifyCr2(cr2, spiPeripheral_, SPI_CR2_TXEIE, {});	// disable TXE interrupt
-	}
-
-	if (done == true)	// transfer finished of failed?
-	{
-		// disable TXE, RXNE and ERR interrupts
-		cr2 = modifyCr2(cr2, spiPeripheral_, SPI_CR2_TXEIE | SPI_CR2_RXNEIE | SPI_CR2_ERRIE, {});
-		writePosition_ = {};
-		const auto bytesTransfered = readPosition_;
-		readPosition_ = {};
-		size_ = {};
-		writeBuffer_ = {};
-		readBuffer_ = {};
-
-		const auto spiMasterBase = spiMasterBase_;
-		spiMasterBase_ = nullptr;
-		assert(spiMasterBase != nullptr);
-		spiMasterBase->transferCompleteEvent(bytesTransfered);
 	}
 }
 
@@ -240,8 +226,8 @@ int ChipSpiMasterLowLevel::startTransfer(devices::SpiMasterBase& spiMasterBase, 
 	readPosition_ = 0;
 	writePosition_ = 0;
 
-	// enable TXE, RXNE and ERR interrupts
-	modifyCr2(cr2, spiPeripheral_, {}, SPI_CR2_TXEIE | SPI_CR2_RXNEIE | SPI_CR2_ERRIE);
+	// enable TXE and RXNE interrupts
+	modifyCr2(cr2, spiPeripheral_, {}, SPI_CR2_TXEIE | SPI_CR2_RXNEIE);
 	return 0;
 }
 
