@@ -35,7 +35,7 @@ namespace
 /**
  * \brief Gets current word length of SPI peripheral.
  *
- * \param [in] cr2 is the current value of CR1 register in SPI module
+ * \param [in] cr1 is the current value of CR1 register in SPI module
  *
  * \return current word length, bits, {8, 16}
  */
