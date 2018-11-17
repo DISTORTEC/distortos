@@ -48,15 +48,6 @@ public:
 	}
 
 	/**
-	 * \return reference to SPI_TypeDef object
-	 */
-
-	SPI_TypeDef& getSpi() const
-	{
-		return *reinterpret_cast<SPI_TypeDef*>(spiBase_);
-	}
-
-	/**
 	 * \return current value of CR1 register
 	 */
 
@@ -147,6 +138,15 @@ public:
 	}
 
 private:
+
+	/**
+	 * \return reference to SPI_TypeDef object
+	 */
+
+	SPI_TypeDef& getSpi() const
+	{
+		return *reinterpret_cast<SPI_TypeDef*>(spiBase_);
+	}
 
 	/// base address of SPI peripheral
 	uintptr_t spiBase_;
