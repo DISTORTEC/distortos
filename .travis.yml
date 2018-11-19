@@ -7,9 +7,8 @@
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #
 
-# use "trusty", container-based infrastructure
-dist: trusty
-sudo: false
+dist: xenial
+sudo: required
 
 addons:
     apt:
@@ -29,14 +28,14 @@ matrix:
           env: SUBSTAGE="generateBoard"
         - python: '3.6'
           env: SUBSTAGE="generateBoard"
-        - env: SUBSTAGE="unit-test" COMPILER_NAME=gcc CC=gcc-7 CXX=g++-7
+        - env: SUBSTAGE="unit-test" COMPILER_NAME=gcc CC=gcc-8 CXX=g++-8
           addons:
               apt:
                   sources:
                       - ubuntu-toolchain-r-test
                   packages:
-                      - gcc-7
-                      - g++-7
+                      - gcc-8
+                      - g++-8
                       - ninja-build
 
 install:
