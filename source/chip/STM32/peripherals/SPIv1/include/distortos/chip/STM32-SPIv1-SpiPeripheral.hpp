@@ -48,6 +48,88 @@ public:
 	}
 
 	/**
+	 * \return current value of CR1 register
+	 */
+
+	uint32_t readCr1() const
+	{
+		return getSpi().CR1;
+	}
+
+	/**
+	 * \return current value of CR2 register
+	 */
+
+	uint32_t readCr2() const
+	{
+		return getSpi().CR2;
+	}
+
+	/**
+	 * \return current value of DR register
+	 */
+
+	uint32_t readDr() const
+	{
+		return getSpi().DR;
+	}
+
+	/**
+	 * \return current value of SR register
+	 */
+
+	uint32_t readSr() const
+	{
+		return getSpi().SR;
+	}
+
+	/**
+	 * \brief Writes value to CR1 register.
+	 *
+	 * \param [in] cr1 is the value that will be written to CR1 register
+	 */
+
+	void writeCr1(const uint32_t cr1) const
+	{
+		getSpi().CR1 = cr1;
+	}
+
+	/**
+	 * \brief Writes value to CR2 register.
+	 *
+	 * \param [in] cr2 is the value that will be written to CR2 register
+	 */
+
+	void writeCr2(const uint32_t cr2) const
+	{
+		getSpi().CR2 = cr2;
+	}
+
+	/**
+	 * \brief Writes value to DR register.
+	 *
+	 * \param [in] dr is the value that will be written to DR register
+	 */
+
+	void writeDr(const uint32_t dr) const
+	{
+		getSpi().DR = dr;
+	}
+
+	/**
+	 * \brief Writes value to SR register.
+	 *
+	 * \param [in] sr is the value that will be written to SR register
+	 */
+
+	void writeSr(const uint32_t sr) const
+	{
+		getSpi().SR = sr;
+	}
+
+private:
+
+	/**
 	 * \return reference to SPI_TypeDef object
 	 */
 
@@ -55,8 +137,6 @@ public:
 	{
 		return *reinterpret_cast<SPI_TypeDef*>(spiBase_);
 	}
-
-private:
 
 	/// base address of SPI peripheral
 	uintptr_t spiBase_;
