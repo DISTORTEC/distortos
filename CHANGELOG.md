@@ -25,6 +25,7 @@ insertion/removal and has no support for detecting whether card is write-protect
 `LittlefsFile` and `LittlefsDirectory` classes, which implement interface of `FileSystem`, `File` and `Directory`
 classes.
 - Added `sys/dirent.h` and `sys/statvfs.h` headers, which are not provided by *newlib*.
+- Added unit tests of *STM32's* *SPIv1* and *SPIv2* drivers.
 - Added unit tests of all `estd::ContiguousRange` constructor overloads.
 
 ### Changed
@@ -65,6 +66,7 @@ and removed critical sections or bit-banding use where it makes no difference.
 `distortos::chip::ChipSpiMasterLowLevel::Parameters` class was moved to separate header and renamed to
 `distortos::chip::SpiPeripheral`. Removed `distortos::chip::ChipSpiMasterLowLevel::spi...Parameters` static objects and
 replaced them with local objects generated for each board. This change requires the board to be regenerated.
+- Improved performance of interrupt-based *STM32's* *SPIv1* and *SPIv2* drivers.
 - Update *CMSIS* to version 5.4.0.
 
 ### Deprecated
