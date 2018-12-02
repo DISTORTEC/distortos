@@ -17,14 +17,6 @@ distortosSetConfiguration(BOOLEAN
 		OFF
 {% endif %}
 		INTERNAL)
-{% if 'combined-interrupt' in dictionary['UARTs'] %}
-
-distortosSetConfiguration(BOOLEAN
-		CONFIG_CHIP_STM32_USARTV2_USART{{ dictionary['UARTs']['combined-interrupt'][0] }}_USART
-		{{- dictionary['UARTs']['combined-interrupt'][-1] }}_COMBINED_INTERRUPT
-		ON
-		INTERNAL)
-{% endif %}
 {% for key, uart in dictionary['UARTs'].items() if uart is mapping and 'ST,STM32-USART-v2' in uart['compatible'] %}
 
 distortosSetConfiguration(BOOLEAN

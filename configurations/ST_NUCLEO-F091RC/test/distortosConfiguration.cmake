@@ -267,11 +267,6 @@ set("CONFIG_CHIP_STM32_USARTV2_HAS_CR1_M1_BIT"
 		CACHE
 		"INTERNAL"
 		"")
-set("CONFIG_CHIP_STM32_USARTV2_USART3_USART8_COMBINED_INTERRUPT"
-		"ON"
-		CACHE
-		"INTERNAL"
-		"")
 set("distortos_Architecture_00_Interrupt_stack_size"
 		"1024"
 		CACHE
