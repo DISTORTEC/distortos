@@ -15,11 +15,6 @@ distortosSetConfiguration(BOOLEAN
 		INTERNAL)
 
 distortosSetConfiguration(BOOLEAN
-		CONFIG_CHIP_STM32_USARTV2_USART4_USART5_COMBINED_INTERRUPT
-		ON
-		INTERNAL)
-
-distortosSetConfiguration(BOOLEAN
 		distortos_Peripherals_USART1
 		OFF
 		HELP "Enable USART1 low-level driver."
