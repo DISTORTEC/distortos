@@ -52,7 +52,13 @@ NVIC:
   - 
   - name: DMA1_Ch1
   - name: DMA1_Ch2_3
+    subvectors:
+    - DMA1_Ch2
+    - DMA1_Ch3
   - name: DMA1_Ch4_5
+    subvectors:
+    - DMA1_Ch4
+    - DMA1_Ch5
   - name: ADC1
   - name: TIM1_BRK_UP_TRG_COM
   - name: TIM1_CC

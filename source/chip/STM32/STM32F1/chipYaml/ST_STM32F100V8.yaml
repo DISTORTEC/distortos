@@ -101,6 +101,9 @@ NVIC:
   - name: DMA2_Channel2
   - name: DMA2_Channel3
   - name: DMA2_Channel4_5
+    subvectors:
+    - DMA2_Channel4
+    - DMA2_Channel5
   $labels:
   - NVIC
 clocks:

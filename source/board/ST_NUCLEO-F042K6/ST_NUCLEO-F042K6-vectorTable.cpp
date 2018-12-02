@@ -277,15 +277,37 @@ __attribute__ ((weak)) void DMA1_Ch1_IRQHandler()
 }
 
 // DMA1_Ch2_3_DMA2_Ch1_2, address 0x68, exception number 26, IRQ number 10
-__attribute__ ((weak)) void DMA1_Ch2_3_DMA2_Ch1_2_IRQHandler()
+void DMA1_Ch2_3_DMA2_Ch1_2_IRQHandler()
 {
-	while (1);
+	__attribute__ ((weak)) void DMA1_Ch2_IRQHandler();
+	__attribute__ ((weak)) void DMA1_Ch3_IRQHandler();
+	__attribute__ ((weak)) void DMA2_Ch1_IRQHandler();
+	__attribute__ ((weak)) void DMA2_Ch2_IRQHandler();
+
+	DMA1_Ch2_IRQHandler();
+	DMA1_Ch3_IRQHandler();
+	DMA2_Ch1_IRQHandler();
+	DMA2_Ch2_IRQHandler();
 }
 
 // DMA1_Ch4_7_DMA2_Ch3_5, address 0x6c, exception number 27, IRQ number 11
-__attribute__ ((weak)) void DMA1_Ch4_7_DMA2_Ch3_5_IRQHandler()
+void DMA1_Ch4_7_DMA2_Ch3_5_IRQHandler()
 {
-	while (1);
+	__attribute__ ((weak)) void DMA1_Ch4_IRQHandler();
+	__attribute__ ((weak)) void DMA1_Ch5_IRQHandler();
+	__attribute__ ((weak)) void DMA1_Ch6_IRQHandler();
+	__attribute__ ((weak)) void DMA1_Ch7_IRQHandler();
+	__attribute__ ((weak)) void DMA2_Ch3_IRQHandler();
+	__attribute__ ((weak)) void DMA2_Ch4_IRQHandler();
+	__attribute__ ((weak)) void DMA2_Ch5_IRQHandler();
+
+	DMA1_Ch4_IRQHandler();
+	DMA1_Ch5_IRQHandler();
+	DMA1_Ch6_IRQHandler();
+	DMA1_Ch7_IRQHandler();
+	DMA2_Ch3_IRQHandler();
+	DMA2_Ch4_IRQHandler();
+	DMA2_Ch5_IRQHandler();
 }
 
 // ADC1_COMP, address 0x70, exception number 28, IRQ number 12

@@ -711,9 +711,13 @@ __attribute__ ((weak)) void DMA2_Channel3_IRQHandler()
 }
 
 // DMA2_Channel4_5, address 0x12c, exception number 75, IRQ number 59
-__attribute__ ((weak)) void DMA2_Channel4_5_IRQHandler()
+void DMA2_Channel4_5_IRQHandler()
 {
-	while (1);
+	__attribute__ ((weak)) void DMA2_Channel4_IRQHandler();
+	__attribute__ ((weak)) void DMA2_Channel5_IRQHandler();
+
+	DMA2_Channel4_IRQHandler();
+	DMA2_Channel5_IRQHandler();
 }
 
 /*---------------------------------------------------------------------------------------------------------------------+
