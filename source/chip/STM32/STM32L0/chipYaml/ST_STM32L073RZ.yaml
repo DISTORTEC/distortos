@@ -167,9 +167,6 @@ UARTs:
   compatible:
   - ST,STM32-USARTs-v2-group
   has-CR-M1-bit: true
-  combined-interrupt:
-  - 4
-  - 5
   USART1:
     compatible:
     - ST,STM32-USART-v2
