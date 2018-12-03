@@ -129,6 +129,39 @@ memories:
     size: 32768
     $labels:
     - SRAM
+DMAs:
+  compatible:
+  - ST,STM32-DMAs-v1-group
+  DMA1:
+    compatible:
+    - ST,STM32-DMA-v1
+    interrupts:
+      controller: !Reference
+        label: NVIC
+      vectors:
+      - DMA1_Channel1
+      - DMA1_Channel2
+      - DMA1_Channel3
+      - DMA1_Channel4
+      - DMA1_Channel5
+      - DMA1_Channel6
+      - DMA1_Channel7
+    $labels:
+    - DMA1
+  DMA2:
+    compatible:
+    - ST,STM32-DMA-v1
+    interrupts:
+      controller: !Reference
+        label: NVIC
+      vectors:
+      - DMA2_Channel1
+      - DMA2_Channel2
+      - DMA2_Channel3
+      - DMA2_Channel4
+      - DMA2_Channel5
+    $labels:
+    - DMA2
 pin-controller:
   compatible:
   - ST,STM32-GPIO-v1-pin-controller

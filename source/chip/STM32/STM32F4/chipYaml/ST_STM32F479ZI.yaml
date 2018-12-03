@@ -179,6 +179,43 @@ memories:
     - .noinit
     $labels:
     - BKPSRAM
+DMAs:
+  compatible:
+  - ST,STM32-DMAs-v2-group
+  DMA1:
+    compatible:
+    - ST,STM32-DMA-v2
+    interrupts:
+      controller: !Reference
+        label: NVIC
+      vectors:
+      - DMA1_Stream0
+      - DMA1_Stream1
+      - DMA1_Stream2
+      - DMA1_Stream3
+      - DMA1_Stream4
+      - DMA1_Stream5
+      - DMA1_Stream6
+      - DMA1_Stream7
+    $labels:
+    - DMA1
+  DMA2:
+    compatible:
+    - ST,STM32-DMA-v2
+    interrupts:
+      controller: !Reference
+        label: NVIC
+      vectors:
+      - DMA2_Stream0
+      - DMA2_Stream1
+      - DMA2_Stream2
+      - DMA2_Stream3
+      - DMA2_Stream4
+      - DMA2_Stream5
+      - DMA2_Stream6
+      - DMA2_Stream7
+    $labels:
+    - DMA2
 pin-controller:
   compatible:
   - ST,STM32-GPIO-v2-pin-controller
