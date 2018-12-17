@@ -273,22 +273,6 @@ void nvicLowLevelInitializer()
 	NVIC_SetPriority(TIM7_IRQn, interruptPriority);
 	NVIC_EnableIRQ(TIM7_IRQn);
 #endif	// def CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_TIM7_ENABLE
-#ifdef CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_DMA2_CHANNEL1_ENABLE
-	NVIC_SetPriority(DMA2_Channel1_IRQn, interruptPriority);
-	NVIC_EnableIRQ(DMA2_Channel1_IRQn);
-#endif	// def CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_DMA2_CHANNEL1_ENABLE
-#ifdef CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_DMA2_CHANNEL2_ENABLE
-	NVIC_SetPriority(DMA2_Channel2_IRQn, interruptPriority);
-	NVIC_EnableIRQ(DMA2_Channel2_IRQn);
-#endif	// def CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_DMA2_CHANNEL2_ENABLE
-#ifdef CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_DMA2_CHANNEL3_ENABLE
-	NVIC_SetPriority(DMA2_Channel3_IRQn, interruptPriority);
-	NVIC_EnableIRQ(DMA2_Channel3_IRQn);
-#endif	// def CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_DMA2_CHANNEL3_ENABLE
-#ifdef CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_DMA2_CHANNEL4_5_ENABLE
-	NVIC_SetPriority(DMA2_Channel4_5_IRQn, interruptPriority);
-	NVIC_EnableIRQ(DMA2_Channel4_5_IRQn);
-#endif	// def CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_DMA2_CHANNEL4_5_ENABLE
 }
 
 BIND_LOW_LEVEL_INITIALIZER(50, nvicLowLevelInitializer);
@@ -692,34 +676,6 @@ __attribute__ ((weak)) void TIM7_IRQHandler()
 	while (1);
 }
 
-// DMA2_Channel1, address 0x120, exception number 72, IRQ number 56
-__attribute__ ((weak)) void DMA2_Channel1_IRQHandler()
-{
-	while (1);
-}
-
-// DMA2_Channel2, address 0x124, exception number 73, IRQ number 57
-__attribute__ ((weak)) void DMA2_Channel2_IRQHandler()
-{
-	while (1);
-}
-
-// DMA2_Channel3, address 0x128, exception number 74, IRQ number 58
-__attribute__ ((weak)) void DMA2_Channel3_IRQHandler()
-{
-	while (1);
-}
-
-// DMA2_Channel4_5, address 0x12c, exception number 75, IRQ number 59
-void DMA2_Channel4_5_IRQHandler()
-{
-	__attribute__ ((weak)) void DMA2_Channel4_IRQHandler();
-	__attribute__ ((weak)) void DMA2_Channel5_IRQHandler();
-
-	DMA2_Channel4_IRQHandler();
-	DMA2_Channel5_IRQHandler();
-}
-
 /*---------------------------------------------------------------------------------------------------------------------+
 | global symbols' declarations
 +---------------------------------------------------------------------------------------------------------------------*/
@@ -807,10 +763,6 @@ const ExceptionVector vectorTable[] __attribute__ ((section(".vectorTable"), use
 		UART5_IRQHandler,		// UART5, address 0x114, exception number 69, IRQ number 53
 		TIM6_IRQHandler,		// TIM6, address 0x118, exception number 70, IRQ number 54
 		TIM7_IRQHandler,		// TIM7, address 0x11c, exception number 71, IRQ number 55
-		DMA2_Channel1_IRQHandler,		// DMA2_Channel1, address 0x120, exception number 72, IRQ number 56
-		DMA2_Channel2_IRQHandler,		// DMA2_Channel2, address 0x124, exception number 73, IRQ number 57
-		DMA2_Channel3_IRQHandler,		// DMA2_Channel3, address 0x128, exception number 74, IRQ number 58
-		DMA2_Channel4_5_IRQHandler,		// DMA2_Channel4_5, address 0x12c, exception number 75, IRQ number 59
 };
 
 }	// extern "C"

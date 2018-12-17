@@ -97,13 +97,6 @@ NVIC:
   - name: UART5
   - name: TIM6
   - name: TIM7
-  - name: DMA2_Channel1
-  - name: DMA2_Channel2
-  - name: DMA2_Channel3
-  - name: DMA2_Channel4_5
-    subvectors:
-    - DMA2_Channel4
-    - DMA2_Channel5
   $labels:
   - NVIC
 clocks:
