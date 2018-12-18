@@ -1,0 +1,104 @@
+{% set chip = dictionary['chip']['compatible'][0] %}
+/**
+ * \file
+ * \brief Definitions of low-level DMA channel drivers for DMAv2 in {{ board }} ({{ chip }} chip)
+ *
+ * \author Copyright (C) 2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ *
+ * \par License
+ * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
+ * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ *
+ * \warning
+ * Automatically generated file - do not edit!
+ */
+
+#include "distortos/chip/dmas.hpp"
+
+#include "distortos/chip/DmaChannel.hpp"
+#include "distortos/chip/STM32-DMAv2-DmaChannelPeripheral.hpp"
+#include "distortos/chip/STM32-DMAv2-DmaPeripheral.hpp"
+
+#include "distortos/BIND_LOW_LEVEL_INITIALIZER.h"
+
+namespace distortos
+{
+
+namespace chip
+{
+{% for key, dma in dictionary['DMAs'].items() if dma is mapping and 'ST,STM32-DMA-v2' in dma['compatible'] %}
+
+#ifdef CONFIG_CHIP_STM32_DMAV2_{{ key | upper }}_ENABLE
+
+/*---------------------------------------------------------------------------------------------------------------------+
+| {{ key | upper }}
++---------------------------------------------------------------------------------------------------------------------*/
+
+namespace
+{
+
+/**
+ * \brief Low-level chip initializer for {{ key | upper }}
+ *
+ * This function is called before constructors for global and static objects via BIND_LOW_LEVEL_INITIALIZER().
+ */
+
+void {{ key | lower }}LowLevelInitializer()
+{
+#if defined(RCC_AHB1ENR_{{ key | upper }}EN)
+	RCC->AHB1ENR |= RCC_AHB1ENR_{{ key | upper }}EN;
+#elif defined(RCC_AHBENR_{{ key | upper }}EN)
+	RCC->AHBENR |= RCC_AHBENR_{{ key | upper }}EN;
+#else
+	#error "Unsupported bus for {{ key | upper }}!"
+#endif
+}
+
+BIND_LOW_LEVEL_INITIALIZER(50, {{ key | lower }}LowLevelInitializer);
+
+/// raw {{ key | upper }} peripheral
+const DmaPeripheral {{ key | lower }}Peripheral {{ '{' }}{{ key | upper }}_BASE};
+
+}	// namespace
+{% for vector in dma['interrupts']['vectors'] %}
+
+#ifdef CONFIG_CHIP_STM32_DMAV2_{{ key | upper }}_CHANNEL{{ loop.index0 }}_ENABLE
+
+/*---------------------------------------------------------------------------------------------------------------------+
+| {{ key | upper }} channel {{ loop.index0 }}
++---------------------------------------------------------------------------------------------------------------------*/
+
+namespace
+{
+
+#ifndef {{ key | upper }}_Stream{{ loop.index0 }}_BASE
+#error "{{ key | upper }} channel {{ loop.index0 }} not present!"
+#endif	// !def {{ key | upper }}_Stream{{ loop.index0 }}_BASE
+
+/// raw {{ key | upper }} channel {{ loop.index0 }} peripheral
+const DmaChannelPeripheral {{ key | lower }}Channel{{ loop.index0 }}Peripheral {{ '{' }}{{ key | upper }}_BASE,
+{#- remove whitespace #} {{ loop.index0 }}};
+
+}	// namespace
+
+DmaChannel {{ key | lower }}Channel{{ loop.index0 }} {{ '{' }}{{ key | lower }}Peripheral,
+{#- remove whitespace #} {{ key | lower }}Channel{{ loop.index0 }}Peripheral};
+
+/**
+ * \brief {{ vector }} interrupt handler
+ */
+
+extern "C" void {{ vector }}_IRQHandler()
+{
+	{{ key | lower }}Channel{{ loop.index0 }}.interruptHandler();
+}
+
+#endif	// def CONFIG_CHIP_STM32_DMAV2_{{ key | upper }}_CHANNEL{{ loop.index0 }}_ENABLE
+{% endfor %}
+
+#endif	// def CONFIG_CHIP_STM32_DMAV2_{{ key | upper }}_ENABLE
+{% endfor %}
+
+}	// namespace chip
+
+}	// namespace distortos

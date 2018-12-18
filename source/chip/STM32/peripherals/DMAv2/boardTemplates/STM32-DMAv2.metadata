@@ -1,0 +1,11 @@
+{% if 'ST,STM32-DMAs-v2-group' in dictionary['DMAs']['compatible'] %}
+('source/chip/STM32/peripherals/DMAv2/boardTemplates/STM32-DMAv2-dmas.cpp.jinja',
+		{},
+		'{{ sanitizedBoard }}-dmas.cpp'),
+('source/chip/STM32/peripherals/DMAv2/boardTemplates/STM32-DMAv2-dmas.hpp.jinja',
+		{},
+		'include/distortos/chip/dmas.hpp'),
+('source/chip/STM32/peripherals/DMAv2/boardTemplates/STM32-DMAv2.cmake.jinja',
+		{},
+		'cmake/70-STM32-DMAv2.cmake'),
+{% endif %}
