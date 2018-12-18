@@ -36,4 +36,4 @@ include(${CMAKE_CURRENT_LIST_DIR}/cmake/90-ARMv6-M-ARMv7-M.cmake)
 
 include(${CMAKE_CURRENT_LIST_DIR}/distortos-board-sources.extension.cmake OPTIONAL)
 
-set(DISTORTOS_BOARD_VERSION 6)
+set(DISTORTOS_BOARD_VERSION 7)

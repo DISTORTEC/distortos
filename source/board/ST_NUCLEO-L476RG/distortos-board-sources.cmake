@@ -19,6 +19,7 @@ target_include_directories(distortos PUBLIC
 
 target_sources(distortos PRIVATE
 		${CMAKE_CURRENT_LIST_DIR}/ST_NUCLEO-L476RG-buttons.cpp
+		${CMAKE_CURRENT_LIST_DIR}/ST_NUCLEO-L476RG-dmas.cpp
 		${CMAKE_CURRENT_LIST_DIR}/ST_NUCLEO-L476RG-leds.cpp
 		${CMAKE_CURRENT_LIST_DIR}/ST_NUCLEO-L476RG-spis.cpp
 		${CMAKE_CURRENT_LIST_DIR}/ST_NUCLEO-L476RG-uarts.cpp
@@ -31,9 +32,10 @@ include(${CMAKE_CURRENT_LIST_DIR}/cmake/10-leds.cmake)
 include(${CMAKE_CURRENT_LIST_DIR}/cmake/60-STM32-GPIOv2.cmake)
 include(${CMAKE_CURRENT_LIST_DIR}/cmake/60-STM32-SPIv2.cmake)
 include(${CMAKE_CURRENT_LIST_DIR}/cmake/60-STM32-USARTv2.cmake)
+include(${CMAKE_CURRENT_LIST_DIR}/cmake/70-STM32-DMAv1.cmake)
 include(${CMAKE_CURRENT_LIST_DIR}/cmake/80-STM32.cmake)
 include(${CMAKE_CURRENT_LIST_DIR}/cmake/90-ARMv6-M-ARMv7-M.cmake)
 
 include(${CMAKE_CURRENT_LIST_DIR}/distortos-board-sources.extension.cmake OPTIONAL)
 
-set(DISTORTOS_BOARD_VERSION 6)
+set(DISTORTOS_BOARD_VERSION 7)
