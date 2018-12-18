@@ -1,7 +1,7 @@
 #
 # file: CMakeLists.txt
 #
-# author: Copyright (C) 2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+# author: Copyright (C) 2017-2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
 #
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -51,13 +51,11 @@ add_executable(C-API-ConditionVariable-unit-test-1
 		${MAIN_CPP})
 
 target_include_directories(C-API-ConditionVariable-unit-test-1 BEFORE PUBLIC
-		${INCLUDE_MOCKS}/architecture/enableInterruptMasking.hpp
-		${INCLUDE_MOCKS}/architecture/InterruptMask.hpp
-		${INCLUDE_MOCKS}/architecture/restoreInterruptMasking.hpp
 		${INCLUDE_MOCKS}/internal/scheduler/getScheduler.hpp
 		${INCLUDE_MOCKS}/internal/scheduler/Scheduler.hpp
 		${INCLUDE_MOCKS}/internal/scheduler/ThreadControlBlock.hpp
 		${INCLUDE_MOCKS}/distortosConfiguration.h
+		${INCLUDE_MOCKS}/InterruptMaskingLock.hpp
 		${INCLUDE_MOCKS}/Mutex.hpp
 		${INCLUDE_MOCKS}/TickClock.hpp)
 
