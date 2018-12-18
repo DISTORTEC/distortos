@@ -15,8 +15,8 @@ add_executable(STM32-SPIv2-ChipSpiMasterLowLevel-unit-test
 		${MAIN_CPP})
 
 target_include_directories(STM32-SPIv2-ChipSpiMasterLowLevel-unit-test BEFORE PUBLIC
-		${INCLUDE_MOCKS}/distortosConfiguration.h
-		${INCLUDE_MOCKS}/chip/STM32-SPIv2-SpiPeripheral.hpp)
+		${INCLUDE_MOCKS}/chip/STM32-SPIv2-SpiPeripheral.hpp
+		${INCLUDE_MOCKS}/distortosConfiguration.h)
 target_include_directories(STM32-SPIv2-ChipSpiMasterLowLevel-unit-test PUBLIC
 		${DISTORTOS_PATH}/source/chip/STM32/peripherals/SPIv2/include)
 
