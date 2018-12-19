@@ -40,7 +40,7 @@ public:
 	 * \brief SpiMasterLowLevel's destructor
 	 */
 
-	virtual ~SpiMasterLowLevel() = 0;
+	virtual ~SpiMasterLowLevel() = default;
 
 	/**
 	 * \brief Configures parameters of low-level SPI master driver.

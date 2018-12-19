@@ -2,7 +2,7 @@
  * \file
  * \brief UartBase class header
  *
- * \author Copyright (C) 2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2016-2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -54,7 +54,7 @@ public:
 	 * \brief UartBase's destructor
 	 */
 
-	virtual ~UartBase() = 0;
+	virtual ~UartBase() = default;
 
 	/**
 	 * \brief "Read complete" event

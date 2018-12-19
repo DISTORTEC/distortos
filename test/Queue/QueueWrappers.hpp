@@ -38,7 +38,7 @@ public:
 	 * \brief QueueWrapper's destructor
 	 */
 
-	virtual ~QueueWrapper() = 0;
+	virtual ~QueueWrapper() = default;
 
 	/**
 	 * \brief Tests whether pushed and popped data match.

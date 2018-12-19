@@ -12,7 +12,6 @@ target_sources(distortos PRIVATE
 		${CMAKE_CURRENT_LIST_DIR}/DynamicThread.cpp
 		${CMAKE_CURRENT_LIST_DIR}/ThisThread.cpp
 		${CMAKE_CURRENT_LIST_DIR}/ThreadCommon.cpp
-		${CMAKE_CURRENT_LIST_DIR}/Thread.cpp
 		${CMAKE_CURRENT_LIST_DIR}/threadExiter.cpp
 		${CMAKE_CURRENT_LIST_DIR}/ThreadIdentifier.cpp
 		${CMAKE_CURRENT_LIST_DIR}/threadRunner.cpp

@@ -46,7 +46,7 @@ public:
 	 * \brief FileSystem's destructor
 	 */
 
-	virtual ~FileSystem() = 0;
+	virtual ~FileSystem() = default;
 
 	/**
 	 * \brief Unmounts current file system (if any is mounted), formats block device with the file system and mounts it.

@@ -13,9 +13,5 @@ target_sources(distortos PRIVATE
 		${CMAKE_CURRENT_LIST_DIR}/SpiDevice.cpp
 		${CMAKE_CURRENT_LIST_DIR}/SpiDeviceProxy.cpp
 		${CMAKE_CURRENT_LIST_DIR}/SpiDeviceSelectGuard.cpp
-		${CMAKE_CURRENT_LIST_DIR}/SpiMasterBase.cpp
 		${CMAKE_CURRENT_LIST_DIR}/SpiMaster.cpp
-		${CMAKE_CURRENT_LIST_DIR}/SpiMasterLowLevel.cpp
-		${CMAKE_CURRENT_LIST_DIR}/SpiMasterProxy.cpp
-		${CMAKE_CURRENT_LIST_DIR}/UartBase.cpp
-		${CMAKE_CURRENT_LIST_DIR}/UartLowLevel.cpp)
+		${CMAKE_CURRENT_LIST_DIR}/SpiMasterProxy.cpp)

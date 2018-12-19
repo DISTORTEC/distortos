@@ -33,7 +33,7 @@ public:
 	 * \brief Directory's destructor
 	 */
 
-	virtual ~Directory() = 0;
+	virtual ~Directory() = default;
 
 	/**
 	 * \brief Closes directory.
