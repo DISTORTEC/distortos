@@ -52,7 +52,13 @@ NVIC:
   -
   - name: DMA1_Ch1
   - name: DMA1_Ch2_3
+    subvectors:
+    - DMA1_Ch2
+    - DMA1_Ch3
   - name: DMA1_Ch4_5
+    subvectors:
+    - DMA1_Ch4
+    - DMA1_Ch5
   - name: ADC1
   - name: TIM1_BRK_UP_TRG_COM
   - name: TIM1_CC
@@ -78,6 +84,8 @@ NVIC:
     - USART6
   -
   - name: USB
+  $labels:
+  - NVIC
 ```
 
 ```
@@ -162,5 +170,9 @@ NVIC:
   - name: DMA2_Channel2
   - name: DMA2_Channel3
   - name: DMA2_Channel4_5
-  - name: DMA2_Channel5
+    subvectors:
+    - DMA2_Channel4
+    - DMA2_Channel5
+  $labels:
+  - NVIC
 ```
