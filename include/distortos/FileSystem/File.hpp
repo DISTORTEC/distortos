@@ -44,7 +44,7 @@ public:
 	 * \brief File's destructor
 	 */
 
-	virtual ~File() = 0;
+	virtual ~File() = default;
 
 	/**
 	 * \brief Closes file.
