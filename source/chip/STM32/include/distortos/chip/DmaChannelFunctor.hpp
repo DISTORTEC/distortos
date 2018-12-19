@@ -42,7 +42,7 @@ public:
 	 * Called by low-level DMA channel driver when the transfer is physically finished.
 	 */
 
-	virtual void transferComplete() = 0;
+	virtual void transferCompleteEvent() = 0;
 
 	/**
 	 * \brief "Transfer error" event
@@ -52,7 +52,7 @@ public:
 	 * \param [in] transactionsLeft is the number transactions left
 	 */
 
-	virtual void transferError(size_t transactionsLeft) = 0;
+	virtual void transferErrorEvent(size_t transactionsLeft) = 0;
 };
 
 }	// namespace chip

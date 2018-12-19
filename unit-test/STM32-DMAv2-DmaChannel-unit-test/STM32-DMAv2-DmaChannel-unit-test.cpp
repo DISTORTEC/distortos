@@ -31,8 +31,8 @@ class DmaChannelFunctor : public distortos::chip::DmaChannelFunctor
 {
 public:
 
-	MAKE_MOCK0(transferComplete, void());
-	MAKE_MOCK1(transferError, void(size_t));
+	MAKE_MOCK0(transferCompleteEvent, void());
+	MAKE_MOCK1(transferErrorEvent, void(size_t));
 };
 
 /*---------------------------------------------------------------------------------------------------------------------+
@@ -408,7 +408,7 @@ TEST_CASE("Testing transfers", "[transfers]")
 							if ((tcif && tcie) == true)
 							{
 								expectations.emplace_back(NAMED_REQUIRE_CALL(functorMock,
-										transferComplete()).IN_SEQUENCE(sequence));
+										transferCompleteEvent()).IN_SEQUENCE(sequence));
 							}
 							if ((teif && teie) == true)
 							{
@@ -416,7 +416,7 @@ TEST_CASE("Testing transfers", "[transfers]")
 								expectations.emplace_back(NAMED_REQUIRE_CALL(channelPeripheralMock,
 										readNdtr()).IN_SEQUENCE(sequence).RETURN(transactionsLeft));
 								expectations.emplace_back(NAMED_REQUIRE_CALL(functorMock,
-										transferError(transactionsLeft)).IN_SEQUENCE(sequence));
+										transferErrorEvent(transactionsLeft)).IN_SEQUENCE(sequence));
 							}
 
 							channel.interruptHandler();
