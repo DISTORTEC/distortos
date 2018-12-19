@@ -37,7 +37,7 @@ public:
 	 * \brief BlockDevice's destructor
 	 */
 
-	virtual ~BlockDevice() = 0;
+	virtual ~BlockDevice() = default;
 
 	/**
 	 * \brief Closes block device.
