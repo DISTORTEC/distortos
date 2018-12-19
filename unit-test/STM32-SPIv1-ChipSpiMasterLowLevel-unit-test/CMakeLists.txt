@@ -9,7 +9,7 @@
 
 add_executable(STM32-SPIv1-ChipSpiMasterLowLevel-unit-test
 		STM32-SPIv1-ChipSpiMasterLowLevel-unit-test.cpp
-		${DISTORTOS_PATH}/source/chip/STM32/peripherals/SPIv1/STM32-SPIv1-ChipSpiMasterLowLevel.cpp
+		${DISTORTOS_PATH}/source/chip/STM32/peripherals/SPIv1/STM32-SPIv1-SpiMasterLowLevelInterruptBased.cpp
 		${MAIN_CPP})
 
 target_include_directories(STM32-SPIv1-ChipSpiMasterLowLevel-unit-test BEFORE PUBLIC
