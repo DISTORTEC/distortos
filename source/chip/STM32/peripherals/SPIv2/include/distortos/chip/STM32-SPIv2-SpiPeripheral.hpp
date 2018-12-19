@@ -69,7 +69,7 @@ public:
 	 * \brief Reads current value of DR register.
 	 *
 	 * \param [in] wordLength selects word length, bits, [4; 16] or
-	 * [ChipSpiMasterLowLevel::minWordLength; ChipSpiMasterLowLevel::maxWordLength]
+	 * [SpiMasterLowLevelInterruptBased::minWordLength; SpiMasterLowLevelInterruptBased::maxWordLength]
 	 *
 	 * \return current value of DR register
 	 */
@@ -114,7 +114,7 @@ public:
 	 * \brief Writes value to DR register.
 	 *
 	 * \param [in] wordLength selects word length, bits, [4; 16] or
-	 * [ChipSpiMasterLowLevel::minWordLength; ChipSpiMasterLowLevel::maxWordLength]
+	 * [SpiMasterLowLevelInterruptBased::minWordLength; SpiMasterLowLevelInterruptBased::maxWordLength]
 	 * \param [in] dr is the value that will be written to DR register
 	 */
 
