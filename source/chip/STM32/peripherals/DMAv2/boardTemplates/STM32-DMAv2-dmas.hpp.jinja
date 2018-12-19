@@ -1,0 +1,49 @@
+{% set chip = dictionary['chip']['compatible'][0] %}
+{% set includeGuard = outputFilename | sanitize('[^0-9A-Za-z]') | upper + '_' %}
+/**
+ * \file
+ * \brief Declarations of low-level DMA channel drivers for DMAv2 in {{ board }} ({{ chip }} chip)
+ *
+ * \author Copyright (C) 2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ *
+ * \par License
+ * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
+ * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ *
+ * \warning
+ * Automatically generated file - do not edit!
+ */
+
+#ifndef {{ includeGuard }}
+#define {{ includeGuard }}
+
+#include "distortos/distortosConfiguration.h"
+
+namespace distortos
+{
+
+namespace chip
+{
+
+class DmaChannel;
+
+/*---------------------------------------------------------------------------------------------------------------------+
+| global objects
++---------------------------------------------------------------------------------------------------------------------*/
+{% for key, dma in dictionary['DMAs'].items() if dma is mapping and 'ST,STM32-DMA-v2' in dma['compatible'] %}
+{% for vector in dma['interrupts']['vectors'] %}
+
+#ifdef CONFIG_CHIP_STM32_DMAV2_{{ key | upper }}_CHANNEL{{ loop.index0 }}_ENABLE
+
+/// {{ key }} channel {{ loop.index0 }} low-level driver
+extern DmaChannel {{ key | lower }}Channel{{ loop.index0 }};
+
+#endif	// def CONFIG_CHIP_STM32_DMAV2_{{ key | upper }}_CHANNEL{{ loop.index0 }}_ENABLE
+{% endfor %}
+{% endfor %}
+
+}	// namespace chip
+
+}	// namespace distortos
+
+#endif	// {{ includeGuard }}

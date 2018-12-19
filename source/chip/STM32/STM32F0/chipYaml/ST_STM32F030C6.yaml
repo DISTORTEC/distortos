@@ -52,7 +52,13 @@ NVIC:
   - 
   - name: DMA1_Ch1
   - name: DMA1_Ch2_3
+    subvectors:
+    - DMA1_Ch2
+    - DMA1_Ch3
   - name: DMA1_Ch4_5
+    subvectors:
+    - DMA1_Ch4
+    - DMA1_Ch5
   - name: ADC1
   - name: TIM1_BRK_UP_TRG_COM
   - name: TIM1_CC
@@ -103,6 +109,23 @@ memories:
     size: 4096
     $labels:
     - SRAM
+DMAs:
+  compatible:
+  - ST,STM32-DMAs-v1-group
+  DMA1:
+    compatible:
+    - ST,STM32-DMA-v1
+    interrupts:
+      controller: !Reference
+        label: NVIC
+      vectors:
+      - DMA1_Ch1
+      - DMA1_Ch2
+      - DMA1_Ch3
+      - DMA1_Ch4
+      - DMA1_Ch5
+    $labels:
+    - DMA1
 pin-controller:
   compatible:
   - ST,STM32-GPIOv2-pin-controller

@@ -9,7 +9,10 @@ All notable changes to this project will be documented in this file. This projec
 
 ### Added
 
-- Support for [NUCLEO-F042K6](https://www.st.com/en/evaluation-tools/nucleo-f042k6.html) board with *STM32F0* chip.
+- Added support for [NUCLEO-F042K6](https://www.st.com/en/evaluation-tools/nucleo-f042k6.html) board with *STM32F0*
+chip.
+- Added basic support for *STM32's* *DMAv1* and *DMAv2*, along with data in *CSV* and *YAML* files for each supported
+chip and unit tests.
 - Added `BlockDevice` interface class.
 - Added `SpiDeviceProxy`, `SpiMasterProxy` and `SpiDeviceSelectGuard`, which build new SPI-related API. These classes
 can be used for RAII-style locking/unlocking or selecting/deselecting of appropriate devices and also serve as proxies
@@ -93,6 +96,10 @@ removed after v0.7.0.
 
 - Removed support for configuring with *Kconfig* and building with *make*. Both of these tasks are now handled by
 *CMake*.
+- Removed some nonexistent or problematic interrupt vectors for some of *STM32F1* chips. Only *high density*,
+*XL density* and *connectivity line* *STM32F1* chips have *DMA2*. Some of them map *DMA2 channel 5* interrupt to either
+shared interrupt vector (with *DMA2 channel 4*) or to a separate interrupt vector, but enabling the latter has multiple
+unrelated side effects, so use the former one only.
 
 [0.6.0](https://github.com/DISTORTEC/distortos/compare/v0.5.0...v0.6.0) - 2018-07-01
 ------------------------------------------------------------------------------------
