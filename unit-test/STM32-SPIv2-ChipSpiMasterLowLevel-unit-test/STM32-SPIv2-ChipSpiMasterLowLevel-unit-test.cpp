@@ -1,9 +1,9 @@
 /**
  * \file
- * \brief STM32 SPIv2's ChipSpiMasterLowLevel test cases
+ * \brief STM32 SPIv2's SpiMasterLowLevelInterruptBased test cases
  *
- * This test checks whether STM32 SPIv2's ChipSpiMasterLowLevel performs all h/w operations properly and in correct
- * order.
+ * This test checks whether STM32 SPIv2's SpiMasterLowLevelInterruptBased performs all h/w operations properly and in
+ * correct order.
  *
  * \author Copyright (C) 2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
@@ -12,7 +12,7 @@
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#include "distortos/chip/ChipSpiMasterLowLevel.hpp"
+#include "distortos/chip/SpiMasterLowLevelInterruptBased.hpp"
 #include "distortos/chip/STM32-SPIv2-SpiPeripheral.hpp"
 
 #include "distortos/devices/communication/SpiMasterBase.hpp"
@@ -54,7 +54,7 @@ TEST_CASE("Testing start() & stop() interactions", "[start/stop]")
 	trompeloeil::sequence sequence {};
 	std::vector<std::unique_ptr<trompeloeil::expectation>> expectations {};
 
-	distortos::chip::ChipSpiMasterLowLevel spi {peripheralMock};
+	distortos::chip::SpiMasterLowLevelInterruptBased spi {peripheralMock};
 
 	ALLOW_CALL(peripheralMock, getPeripheralFrequency()).RETURN(peripheralFrequency);
 
@@ -96,7 +96,7 @@ TEST_CASE("Testing configure()", "[configure]")
 	distortos::chip::SpiPeripheral peripheralMock {};
 	trompeloeil::sequence sequence {};
 
-	distortos::chip::ChipSpiMasterLowLevel spi {peripheralMock};
+	distortos::chip::SpiMasterLowLevelInterruptBased spi {peripheralMock};
 
 	ALLOW_CALL(peripheralMock, getPeripheralFrequency()).RETURN(peripheralFrequency);
 
@@ -113,8 +113,8 @@ TEST_CASE("Testing configure()", "[configure]")
 
 	for (uint8_t wordLength {}; wordLength <= 32; ++wordLength)
 	{
-		if (wordLength >= distortos::chip::ChipSpiMasterLowLevel::minWordLength &&
-				wordLength <= distortos::chip::ChipSpiMasterLowLevel::maxWordLength)
+		if (wordLength >= distortos::chip::SpiMasterLowLevelInterruptBased::minWordLength &&
+				wordLength <= distortos::chip::SpiMasterLowLevelInterruptBased::maxWordLength)
 			continue;
 
 		DYNAMIC_SECTION("Trying to use word length " << wordLength << " should fail with EINVAL")
@@ -208,8 +208,8 @@ TEST_CASE("Testing configure()", "[configure]")
 
 	SECTION("Trying to change word length to valid value should succeed")
 	{
-		for (auto wordLength {distortos::chip::ChipSpiMasterLowLevel::minWordLength};
-				wordLength <= distortos::chip::ChipSpiMasterLowLevel::minWordLength;
+		for (auto wordLength {distortos::chip::SpiMasterLowLevelInterruptBased::minWordLength};
+				wordLength <= distortos::chip::SpiMasterLowLevelInterruptBased::minWordLength;
 				++wordLength)
 		{
 			const auto newCr2 = (initialCr2 & ~(SPI_CR2_FRXTH | SPI_CR2_DS)) |
@@ -258,7 +258,7 @@ TEST_CASE("Testing startTransfer()", "[startTransfer]")
 	distortos::chip::SpiPeripheral peripheralMock {};
 	trompeloeil::sequence sequence {};
 
-	distortos::chip::ChipSpiMasterLowLevel spi {peripheralMock};
+	distortos::chip::SpiMasterLowLevelInterruptBased spi {peripheralMock};
 
 	ALLOW_CALL(peripheralMock, getPeripheralFrequency()).RETURN(peripheralFrequency);
 
@@ -275,7 +275,8 @@ TEST_CASE("Testing startTransfer()", "[startTransfer]")
 
 	SECTION("Starting transfer with odd length when word length is greater than 8 bits should fail with EINVAL")
 	{
-		for (uint8_t wordLength {9}; wordLength <= distortos::chip::ChipSpiMasterLowLevel::maxWordLength; ++wordLength)
+		for (uint8_t wordLength {9}; wordLength <= distortos::chip::SpiMasterLowLevelInterruptBased::maxWordLength;
+				++wordLength)
 		{
 			const auto cr2 = (initialCr2 & ~(SPI_CR2_FRXTH | SPI_CR2_DS)) |
 					(wordLength - 1) << SPI_CR2_DS_Pos;
@@ -286,7 +287,8 @@ TEST_CASE("Testing startTransfer()", "[startTransfer]")
 
 	constexpr uint16_t dummyData {0xd515};
 
-	for (uint8_t wordLength {distortos::chip::ChipSpiMasterLowLevel::minWordLength}; wordLength <= 8; ++wordLength)
+	for (uint8_t wordLength {distortos::chip::SpiMasterLowLevelInterruptBased::minWordLength}; wordLength <= 8;
+			++wordLength)
 	{
 		const auto cr2 = (initialCr2 & ~(SPI_CR2_FRXTH | SPI_CR2_DS)) |
 				(wordLength <= 8) << SPI_CR2_FRXTH_Pos |
@@ -370,7 +372,8 @@ TEST_CASE("Testing startTransfer()", "[startTransfer]")
 			}
 		}
 	}
-	for (uint8_t wordLength {9}; wordLength <= distortos::chip::ChipSpiMasterLowLevel::maxWordLength; ++wordLength)
+	for (uint8_t wordLength {9}; wordLength <= distortos::chip::SpiMasterLowLevelInterruptBased::maxWordLength;
+			++wordLength)
 	{
 		const auto cr2 = (initialCr2 & ~(SPI_CR2_FRXTH | SPI_CR2_DS)) |
 				(wordLength <= 8) << SPI_CR2_FRXTH_Pos |

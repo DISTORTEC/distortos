@@ -1,9 +1,9 @@
 /**
  * \file
- * \brief STM32 SPIv1's ChipSpiMasterLowLevel test cases
+ * \brief STM32 SPIv1's SpiMasterLowLevelInterruptBased test cases
  *
- * This test checks whether STM32 SPIv1's ChipSpiMasterLowLevel performs all h/w operations properly and in correct
- * order.
+ * This test checks whether STM32 SPIv1's SpiMasterLowLevelInterruptBased performs all h/w operations properly and in
+ * correct order.
  *
  * \author Copyright (C) 2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
@@ -12,7 +12,7 @@
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#include "distortos/chip/ChipSpiMasterLowLevel.hpp"
+#include "distortos/chip/SpiMasterLowLevelInterruptBased.hpp"
 #include "distortos/chip/STM32-SPIv1-SpiPeripheral.hpp"
 
 #include "distortos/devices/communication/SpiMasterBase.hpp"
@@ -54,7 +54,7 @@ TEST_CASE("Testing start() & stop() interactions", "[start/stop]")
 	trompeloeil::sequence sequence {};
 	std::vector<std::unique_ptr<trompeloeil::expectation>> expectations {};
 
-	distortos::chip::ChipSpiMasterLowLevel spi {peripheralMock};
+	distortos::chip::SpiMasterLowLevelInterruptBased spi {peripheralMock};
 
 	ALLOW_CALL(peripheralMock, getPeripheralFrequency()).RETURN(peripheralFrequency);
 
@@ -96,7 +96,7 @@ TEST_CASE("Testing configure()", "[configure]")
 	distortos::chip::SpiPeripheral peripheralMock {};
 	trompeloeil::sequence sequence {};
 
-	distortos::chip::ChipSpiMasterLowLevel spi {peripheralMock};
+	distortos::chip::SpiMasterLowLevelInterruptBased spi {peripheralMock};
 
 	ALLOW_CALL(peripheralMock, getPeripheralFrequency()).RETURN(peripheralFrequency);
 
@@ -251,7 +251,7 @@ TEST_CASE("Testing startTransfer()", "[startTransfer]")
 	distortos::chip::SpiPeripheral peripheralMock {};
 	trompeloeil::sequence sequence {};
 
-	distortos::chip::ChipSpiMasterLowLevel spi {peripheralMock};
+	distortos::chip::SpiMasterLowLevelInterruptBased spi {peripheralMock};
 
 	ALLOW_CALL(peripheralMock, getPeripheralFrequency()).RETURN(peripheralFrequency);
 
