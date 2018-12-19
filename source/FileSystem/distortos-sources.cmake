@@ -10,7 +10,6 @@
 target_sources(distortos PRIVATE
 		${CMAKE_CURRENT_LIST_DIR}/Directory.cpp
 		${CMAKE_CURRENT_LIST_DIR}/File.cpp
-		${CMAKE_CURRENT_LIST_DIR}/FileSystem.cpp
 		${CMAKE_CURRENT_LIST_DIR}/openFile.cpp)
 
 include(${CMAKE_CURRENT_LIST_DIR}/littlefs/distortos-sources.cmake)
