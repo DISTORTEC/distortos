@@ -1,6 +1,6 @@
 /**
  * \file
- * \brief ChipSpiMasterLowLevel class header for SPIv2 in STM32
+ * \brief SpiMasterLowLevelInterruptBased class header for SPIv2 in STM32
  *
  * \author Copyright (C) 2016-2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
@@ -23,12 +23,14 @@ namespace chip
 class SpiPeripheral;
 
 /**
- * ChipSpiMasterLowLevel class is a low-level SPI master driver for SPIv2 in STM32
+ * SpiMasterLowLevelInterruptBased class is a low-level SPI master driver for SPIv2 in STM32.
+ *
+ * This driver uses interrupts for data transfers.
  *
  * \ingroup devices
  */
 
-class ChipSpiMasterLowLevel : public devices::SpiMasterLowLevel
+class SpiMasterLowLevelInterruptBased : public devices::SpiMasterLowLevel
 {
 public:
 
@@ -39,12 +41,12 @@ public:
 	constexpr static uint8_t maxWordLength {16};
 
 	/**
-	 * \brief ChipSpiMasterLowLevel's constructor
+	 * \brief SpiMasterLowLevelInterruptBased's constructor
 	 *
 	 * \param [in] spiPeripheral is a reference to raw SPI peripheral
 	 */
 
-	constexpr explicit ChipSpiMasterLowLevel(const SpiPeripheral& spiPeripheral) :
+	constexpr explicit SpiMasterLowLevelInterruptBased(const SpiPeripheral& spiPeripheral) :
 			spiPeripheral_{spiPeripheral},
 			spiMasterBase_{},
 			readBuffer_{},
@@ -64,7 +66,7 @@ public:
 	 * Does nothing if driver is already stopped. If it's not, performs forced stop of operation.
 	 */
 
-	~ChipSpiMasterLowLevel() override;
+	~SpiMasterLowLevelInterruptBased() override;
 
 	/**
 	 * \brief Configures parameters of low-level SPI master driver.

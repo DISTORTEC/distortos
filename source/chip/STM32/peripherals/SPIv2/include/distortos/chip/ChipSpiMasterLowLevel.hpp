@@ -14,4 +14,25 @@
 
 #include "distortos/chip/SpiMasterLowLevelInterruptBased.hpp"
 
+namespace distortos
+{
+
+namespace chip
+{
+
+/**
+ * ChipSpiMasterLowLevel is an alias for SpiMasterLowLevelInterruptBased.
+ */
+
+class ChipSpiMasterLowLevel : public SpiMasterLowLevelInterruptBased
+{
+public:
+
+	using SpiMasterLowLevelInterruptBased::SpiMasterLowLevelInterruptBased;
+};
+
+}	// namespace chip
+
+}	// namespace distortos
+
 #endif	// SOURCE_CHIP_STM32_PERIPHERALS_SPIV2_INCLUDE_DISTORTOS_CHIP_CHIPSPIMASTERLOWLEVEL_HPP_
