@@ -35,7 +35,7 @@ public:
 	 * \brief SpiMasterBase's destructor
 	 */
 
-	virtual ~SpiMasterBase() = 0;
+	virtual ~SpiMasterBase() = default;
 
 	/**
 	 * \brief "Transfer complete" event
