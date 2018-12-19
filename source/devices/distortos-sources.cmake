@@ -8,5 +8,4 @@
 #
 
 include(${CMAKE_CURRENT_LIST_DIR}/communication/distortos-sources.cmake)
-include(${CMAKE_CURRENT_LIST_DIR}/io/distortos-sources.cmake)
 include(${CMAKE_CURRENT_LIST_DIR}/memory/distortos-sources.cmake)
