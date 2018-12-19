@@ -14,7 +14,7 @@
 
 #include "distortos/chip/spis.hpp"
 
-#include "distortos/chip/ChipSpiMasterLowLevel.hpp"
+#include "distortos/chip/SpiMasterLowLevelInterruptBased.hpp"
 #include "distortos/chip/STM32-SPIv1-SpiPeripheral.hpp"
 
 #include "distortos/BIND_LOW_LEVEL_INITIALIZER.h"
@@ -58,7 +58,7 @@ const SpiPeripheral spi1Peripheral {SPI1_BASE};
 
 }	// namespace
 
-ChipSpiMasterLowLevel spi1 {spi1Peripheral};
+SpiMasterLowLevelInterruptBased spi1 {spi1Peripheral};
 
 /**
  * \brief SPI1 interrupt handler
@@ -104,7 +104,7 @@ const SpiPeripheral spi2Peripheral {SPI2_BASE};
 
 }	// namespace
 
-ChipSpiMasterLowLevel spi2 {spi2Peripheral};
+SpiMasterLowLevelInterruptBased spi2 {spi2Peripheral};
 
 /**
  * \brief SPI2 interrupt handler
@@ -150,7 +150,7 @@ const SpiPeripheral spi3Peripheral {SPI3_BASE};
 
 }	// namespace
 
-ChipSpiMasterLowLevel spi3 {spi3Peripheral};
+SpiMasterLowLevelInterruptBased spi3 {spi3Peripheral};
 
 /**
  * \brief SPI3 interrupt handler
@@ -196,7 +196,7 @@ const SpiPeripheral spi4Peripheral {SPI4_BASE};
 
 }	// namespace
 
-ChipSpiMasterLowLevel spi4 {spi4Peripheral};
+SpiMasterLowLevelInterruptBased spi4 {spi4Peripheral};
 
 /**
  * \brief SPI4 interrupt handler
@@ -242,7 +242,7 @@ const SpiPeripheral spi5Peripheral {SPI5_BASE};
 
 }	// namespace
 
-ChipSpiMasterLowLevel spi5 {spi5Peripheral};
+SpiMasterLowLevelInterruptBased spi5 {spi5Peripheral};
 
 /**
  * \brief SPI5 interrupt handler
@@ -288,7 +288,7 @@ const SpiPeripheral spi6Peripheral {SPI6_BASE};
 
 }	// namespace
 
-ChipSpiMasterLowLevel spi6 {spi6Peripheral};
+SpiMasterLowLevelInterruptBased spi6 {spi6Peripheral};
 
 /**
  * \brief SPI6 interrupt handler

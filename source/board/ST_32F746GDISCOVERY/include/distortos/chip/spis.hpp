@@ -23,7 +23,7 @@ namespace distortos
 namespace chip
 {
 
-class ChipSpiMasterLowLevel;
+class SpiMasterLowLevelInterruptBased;
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | global objects
@@ -32,42 +32,42 @@ class ChipSpiMasterLowLevel;
 #ifdef CONFIG_CHIP_STM32_SPIV2_SPI1_ENABLE
 
 /// SPI master low-level driver for SPI1
-extern ChipSpiMasterLowLevel spi1;
+extern SpiMasterLowLevelInterruptBased spi1;
 
 #endif	// def CONFIG_CHIP_STM32_SPIV2_SPI1_ENABLE
 
 #ifdef CONFIG_CHIP_STM32_SPIV2_SPI2_ENABLE
 
 /// SPI master low-level driver for SPI2
-extern ChipSpiMasterLowLevel spi2;
+extern SpiMasterLowLevelInterruptBased spi2;
 
 #endif	// def CONFIG_CHIP_STM32_SPIV2_SPI2_ENABLE
 
 #ifdef CONFIG_CHIP_STM32_SPIV2_SPI3_ENABLE
 
 /// SPI master low-level driver for SPI3
-extern ChipSpiMasterLowLevel spi3;
+extern SpiMasterLowLevelInterruptBased spi3;
 
 #endif	// def CONFIG_CHIP_STM32_SPIV2_SPI3_ENABLE
 
 #ifdef CONFIG_CHIP_STM32_SPIV2_SPI4_ENABLE
 
 /// SPI master low-level driver for SPI4
-extern ChipSpiMasterLowLevel spi4;
+extern SpiMasterLowLevelInterruptBased spi4;
 
 #endif	// def CONFIG_CHIP_STM32_SPIV2_SPI4_ENABLE
 
 #ifdef CONFIG_CHIP_STM32_SPIV2_SPI5_ENABLE
 
 /// SPI master low-level driver for SPI5
-extern ChipSpiMasterLowLevel spi5;
+extern SpiMasterLowLevelInterruptBased spi5;
 
 #endif	// def CONFIG_CHIP_STM32_SPIV2_SPI5_ENABLE
 
 #ifdef CONFIG_CHIP_STM32_SPIV2_SPI6_ENABLE
 
 /// SPI master low-level driver for SPI6
-extern ChipSpiMasterLowLevel spi6;
+extern SpiMasterLowLevelInterruptBased spi6;
 
 #endif	// def CONFIG_CHIP_STM32_SPIV2_SPI6_ENABLE
 

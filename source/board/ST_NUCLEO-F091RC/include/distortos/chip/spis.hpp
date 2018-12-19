@@ -23,7 +23,7 @@ namespace distortos
 namespace chip
 {
 
-class ChipSpiMasterLowLevel;
+class SpiMasterLowLevelInterruptBased;
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | global objects
@@ -32,14 +32,14 @@ class ChipSpiMasterLowLevel;
 #ifdef CONFIG_CHIP_STM32_SPIV2_SPI1_ENABLE
 
 /// SPI master low-level driver for SPI1
-extern ChipSpiMasterLowLevel spi1;
+extern SpiMasterLowLevelInterruptBased spi1;
 
 #endif	// def CONFIG_CHIP_STM32_SPIV2_SPI1_ENABLE
 
 #ifdef CONFIG_CHIP_STM32_SPIV2_SPI2_ENABLE
 
 /// SPI master low-level driver for SPI2
-extern ChipSpiMasterLowLevel spi2;
+extern SpiMasterLowLevelInterruptBased spi2;
 
 #endif	// def CONFIG_CHIP_STM32_SPIV2_SPI2_ENABLE
 

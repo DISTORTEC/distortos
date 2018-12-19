@@ -14,7 +14,7 @@
 
 #include "distortos/chip/spis.hpp"
 
-#include "distortos/chip/ChipSpiMasterLowLevel.hpp"
+#include "distortos/chip/SpiMasterLowLevelInterruptBased.hpp"
 #include "distortos/chip/STM32-SPIv1-SpiPeripheral.hpp"
 
 #include "distortos/BIND_LOW_LEVEL_INITIALIZER.h"
@@ -59,7 +59,7 @@ const SpiPeripheral {{ key | lower }}Peripheral {{ '{' }}{{ key | upper }}_BASE}
 
 }	// namespace
 
-ChipSpiMasterLowLevel {{ key | lower }} {{ '{' }}{{ key | lower }}Peripheral};
+SpiMasterLowLevelInterruptBased {{ key | lower }} {{ '{' }}{{ key | lower }}Peripheral};
 
 /**
  * \brief {{ spi['interrupt']['vector'] }} interrupt handler
