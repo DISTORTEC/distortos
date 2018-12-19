@@ -1,6 +1,6 @@
 /**
  * \file
- * \brief ChipSpiMasterLowLevel class implementation for SPIv1 in STM32
+ * \brief SpiMasterLowLevelInterruptBased class implementation for SPIv1 in STM32
  *
  * \author Copyright (C) 2016-2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
@@ -87,7 +87,7 @@ uint32_t modifyCr2(const uint32_t cr2, const SpiPeripheral& spiPeripheral, const
 | public functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-ChipSpiMasterLowLevel::~ChipSpiMasterLowLevel()
+SpiMasterLowLevelInterruptBased::~SpiMasterLowLevelInterruptBased()
 {
 	if (isStarted() == false)
 		return;
@@ -97,8 +97,8 @@ ChipSpiMasterLowLevel::~ChipSpiMasterLowLevel()
 	spiPeripheral_.writeCr2({});
 }
 
-std::pair<int, uint32_t> ChipSpiMasterLowLevel::configure(const devices::SpiMode mode, const uint32_t clockFrequency,
-		const uint8_t wordLength, const bool lsbFirst, const uint32_t dummyData)
+std::pair<int, uint32_t> SpiMasterLowLevelInterruptBased::configure(const devices::SpiMode mode,
+		const uint32_t clockFrequency, const uint8_t wordLength, const bool lsbFirst, const uint32_t dummyData)
 {
 	if (wordLength != 8 && wordLength != 16)
 		return {EINVAL, {}};
@@ -135,7 +135,7 @@ std::pair<int, uint32_t> ChipSpiMasterLowLevel::configure(const devices::SpiMode
 	return {{}, peripheralFrequency / (1 << (br + 1))};
 }
 
-void ChipSpiMasterLowLevel::interruptHandler()
+void SpiMasterLowLevelInterruptBased::interruptHandler()
 {
 	const uint16_t word = spiPeripheral_.readDr();
 	const auto wordLength = getWordLength(spiPeripheral_.readCr1());
@@ -173,7 +173,7 @@ void ChipSpiMasterLowLevel::interruptHandler()
 	spiMasterBase->transferCompleteEvent(readPosition);
 }
 
-int ChipSpiMasterLowLevel::start()
+int SpiMasterLowLevelInterruptBased::start()
 {
 	if (isStarted() == true)
 		return EBADF;
@@ -185,7 +185,7 @@ int ChipSpiMasterLowLevel::start()
 	return 0;
 }
 
-int ChipSpiMasterLowLevel::startTransfer(devices::SpiMasterBase& spiMasterBase, const void* const writeBuffer,
+int SpiMasterLowLevelInterruptBased::startTransfer(devices::SpiMasterBase& spiMasterBase, const void* const writeBuffer,
 		void* const readBuffer, const size_t size)
 {
 	if (size == 0)
@@ -214,7 +214,7 @@ int ChipSpiMasterLowLevel::startTransfer(devices::SpiMasterBase& spiMasterBase, 
 	return 0;
 }
 
-int ChipSpiMasterLowLevel::stop()
+int SpiMasterLowLevelInterruptBased::stop()
 {
 	if (isStarted() == false)
 		return EBADF;
@@ -233,7 +233,7 @@ int ChipSpiMasterLowLevel::stop()
 | private functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-void ChipSpiMasterLowLevel::writeNextItem(const uint8_t wordLength)
+void SpiMasterLowLevelInterruptBased::writeNextItem(const uint8_t wordLength)
 {
 	const auto writeBuffer = writeBuffer_;
 	auto writePosition = writePosition_;
