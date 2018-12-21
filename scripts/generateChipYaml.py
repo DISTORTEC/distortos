@@ -92,16 +92,28 @@ def parseRow(row, paths):
 def parseString(string):
 	"""Try to parse `string` into proper type and return it.
 
+	Only selected Python constructs are whitelisted, everything else will be rejected. The code is based on
+	https://stackoverflow.com/a/4236328/157344
+
 	* `string` is the string which will be parsed
 	"""
+	tree = ast.parse(string)
 	try:
-		return ast.literal_eval(string)
-	except (SyntaxError, ValueError):
-		match = re.match("Reference\(label = '(\w+)'\)\Z", string)
-		if match:
-			return Reference(label = match[1])
-		else:
-			raise
+		# Python 3 has `ast.NameConstant`...
+		whitelist = (ast.Dict, ast.Expr, ast.keyword, ast.List, ast.Load, ast.Module, ast.Name, ast.NameConstant,
+				ast.Num, ast.Str)
+	except AttributeError:
+		# ... while Python 2 does not
+		whitelist = (ast.Dict, ast.Expr, ast.keyword, ast.List, ast.Load, ast.Module, ast.Name, ast.Num, ast.Str)
+	for node in ast.walk(tree):
+		if isinstance(node, whitelist):
+			continue
+		if isinstance(node, ast.Call) and isinstance(node.func, ast.Name) and node.func.id == 'Reference':
+			continue
+
+		raise SyntaxError(string)
+
+	return eval(string)
 
 ########################################################################################################################
 # main
