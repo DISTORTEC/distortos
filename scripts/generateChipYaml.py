@@ -56,12 +56,15 @@ def parseFirstRow(firstRow):
 		i = 0
 		while keys[i] == '..':
 			i += 1
-		keys[0:i] = previousKeys[0:-i]
+		prefix = previousKeys[0:-i]
+		keys[0:i] = prefix
+		prefixLength = len(prefix)
 
-		for i, key in enumerate(keys):
+		for i, key in enumerate(keys[prefixLength:], start = prefixLength):
+			key = parseString(key)
+			keys[i] = key
 			if isinstance(key, str) == True:
 				key, separator, label = key.partition('$')
-				key = parseString(key)
 				keys[i] = key
 				if separator == '$':
 					labels.append((keys[:i + 1], label or key))
@@ -94,7 +97,7 @@ def parseString(string):
 	"""
 	try:
 		return ast.literal_eval(string)
-	except ValueError:
+	except (SyntaxError, ValueError):
 		match = re.match("Reference\(label = '(\w+)'\)\Z", string)
 		if match:
 			return Reference(label = match[1])
