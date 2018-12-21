@@ -51,7 +51,7 @@ def parseFirstRow(firstRow):
 	paths = []
 	labels = []
 	for header in firstRow:
-		keys = header.split('/')
+		keys = parseString(header)
 
 		i = 0
 		while keys[i] == '..':
@@ -61,7 +61,6 @@ def parseFirstRow(firstRow):
 		prefixLength = len(prefix)
 
 		for i, key in enumerate(keys[prefixLength:], start = prefixLength):
-			key = parseString(key)
 			keys[i] = key
 			if isinstance(key, str) == True:
 				key, separator, label = key.partition('$')
