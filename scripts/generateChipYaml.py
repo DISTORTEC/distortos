@@ -101,7 +101,7 @@ def parseString(string):
 		if match:
 			return Reference(label = match[1])
 		else:
-			return string
+			raise
 
 ########################################################################################################################
 # main
