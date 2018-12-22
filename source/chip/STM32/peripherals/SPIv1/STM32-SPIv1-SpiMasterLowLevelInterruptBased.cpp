@@ -45,42 +45,6 @@ constexpr uint8_t getWordLength(const uint16_t cr1)
 	return (cr1 & SPI_CR1_DFF) == 0 ? 8 : 16;
 }
 
-/**
- * \brief Modifies current value of CR1 register.
- *
- * \param [in] cr1 is the current value of CR1 register
- * \param [in] spiPeripheral is a reference to raw SPI peripheral
- * \param [in] clear is the bitmask of bits that should be cleared in CR1 register
- * \param [in] set is the bitmask of bits that should be set in CR1 register
- *
- * \return value written to CR1 register
- */
-
-uint32_t modifyCr1(const uint32_t cr1, const SpiPeripheral& spiPeripheral, const uint32_t clear, const uint32_t set)
-{
-	const auto newCr1 = (cr1 & ~clear) | set;
-	spiPeripheral.writeCr1(newCr1);
-	return newCr1;
-}
-
-/**
- * \brief Modifies current value of CR2 register.
- *
- * \param [in] cr2 is the current value of CR2 register
- * \param [in] spiPeripheral is a reference to raw SPI peripheral
- * \param [in] clear is the bitmask of bits that should be cleared in CR2 register
- * \param [in] set is the bitmask of bits that should be set in CR2 register
- *
- * \return value written to CR2 register
- */
-
-uint32_t modifyCr2(const uint32_t cr2, const SpiPeripheral& spiPeripheral, const uint32_t clear, const uint32_t set)
-{
-	const auto newCr2 = (cr2 & ~clear) | set;
-	spiPeripheral.writeCr2(newCr2);
-	return newCr2;
-}
-
 }	// namespace
 
 /*---------------------------------------------------------------------------------------------------------------------+
@@ -120,9 +84,13 @@ std::pair<int, uint32_t> SpiMasterLowLevelInterruptBased::configure(const device
 	// value of DFF bit (which determines word length) must be changed only when SPI peripheral is disabled
 	const auto disablePeripheral = wordLength != getWordLength(cr1);
 	if (disablePeripheral == true)
-		cr1 = modifyCr1(cr1, spiPeripheral_, SPI_CR1_SPE, {});	// disable peripheral
+	{
+		// disable peripheral
+		cr1 &= ~SPI_CR1_SPE;
+		spiPeripheral_.writeCr1(cr1);
+	}
 
-	cr1 = modifyCr1(cr1, spiPeripheral_, SPI_CR1_DFF | SPI_CR1_LSBFIRST | SPI_CR1_BR | SPI_CR1_CPOL | SPI_CR1_CPHA,
+	spiPeripheral_.writeCr1((cr1 & ~(SPI_CR1_DFF | SPI_CR1_LSBFIRST | SPI_CR1_BR | SPI_CR1_CPOL | SPI_CR1_CPHA)) |
 			(wordLength == 16) << SPI_CR1_DFF_Pos |
 			lsbFirst << SPI_CR1_LSBFIRST_Pos |
 			SPI_CR1_SPE |
@@ -158,7 +126,7 @@ void SpiMasterLowLevelInterruptBased::interruptHandler()
 	}
 
 	// transfer finished
-	modifyCr2(spiPeripheral_.readCr2(), spiPeripheral_, SPI_CR2_RXNEIE, {});	// disable RXNE interrupt
+	spiPeripheral_.writeCr2(spiPeripheral_.readCr2() & ~SPI_CR2_RXNEIE);	// disable RXNE interrupt
 
 	const auto spiMasterBase = spiMasterBase_;
 
@@ -208,7 +176,7 @@ int SpiMasterLowLevelInterruptBased::startTransfer(devices::SpiMasterBase& spiMa
 	readPosition_ = 0;
 	writePosition_ = 0;
 
-	modifyCr2(spiPeripheral_.readCr2(), spiPeripheral_, {}, SPI_CR2_RXNEIE);	// enable RXNE interrupt
+	spiPeripheral_.writeCr2(spiPeripheral_.readCr2() | SPI_CR2_RXNEIE);	// enable RXNE interrupt
 	writeNextItem(wordLength);	// write first item to start the transfer
 
 	return 0;
