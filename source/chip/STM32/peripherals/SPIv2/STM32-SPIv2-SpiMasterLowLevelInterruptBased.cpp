@@ -25,29 +25,6 @@ namespace distortos
 namespace chip
 {
 
-namespace
-{
-
-/*---------------------------------------------------------------------------------------------------------------------+
-| local functions
-+---------------------------------------------------------------------------------------------------------------------*/
-
-/**
- * \brief Gets current word length of SPI peripheral.
- *
- * \param [in] cr2 is the current value of CR2 register in SPI module
- *
- * \return current word length, bits, [4; 16] or
- * [SpiMasterLowLevelInterruptBased::minWordLength; SpiMasterLowLevelInterruptBased::maxWordLength]
- */
-
-constexpr uint8_t getWordLength(const uint16_t cr2)
-{
-	return ((cr2 & SPI_CR2_DS) >> SPI_CR2_DS_Pos) + 1;
-}
-
-}	// namespace
-
 /*---------------------------------------------------------------------------------------------------------------------+
 | public functions
 +---------------------------------------------------------------------------------------------------------------------*/
@@ -91,35 +68,34 @@ std::pair<int, uint32_t> SpiMasterLowLevelInterruptBased::configure(const device
 			(wordLength - 1) << SPI_CR2_DS_Pos);
 
 	dummyData_ = dummyData;
+	wordLength_ = wordLength;
 
 	return {{}, peripheralFrequency / (1 << (br + 1))};
 }
 
 void SpiMasterLowLevelInterruptBased::interruptHandler()
 {
-	const auto cr2 = spiPeripheral_.readCr2();
-	const auto wordLength = getWordLength(cr2);
-	const uint16_t word = spiPeripheral_.readDr(wordLength);
+	const uint16_t word = spiPeripheral_.readDr(wordLength_);
 	const auto readBuffer = readBuffer_;
 	auto readPosition = readPosition_;
 	if (readBuffer != nullptr)
 	{
 		readBuffer[readPosition++] = word;
-		if (wordLength > 8)
+		if (wordLength_ > 8)
 			readBuffer[readPosition++] = word >> 8;
 	}
 	else
-		readPosition += (wordLength + 8 - 1) / 8;
+		readPosition += (wordLength_ + 8 - 1) / 8;
 	readPosition_ = readPosition;
 
 	if (readPosition < size_)	// transfer not finished yet?
 	{
-		writeNextItem(wordLength);
+		writeNextItem();
 		return;
 	}
 
 	// transfer finished
-	spiPeripheral_.writeCr2(cr2 & ~SPI_CR2_RXNEIE);	// disable RXNE interrupt
+	spiPeripheral_.writeCr2(spiPeripheral_.readCr2() & ~SPI_CR2_RXNEIE);	// disable RXNE interrupt
 
 	const auto spiMasterBase = spiMasterBase_;
 
@@ -139,8 +115,9 @@ int SpiMasterLowLevelInterruptBased::start()
 	if (isStarted() == true)
 		return EBADF;
 
+	wordLength_ = 8;
 	spiPeripheral_.writeCr1(SPI_CR1_SSM | SPI_CR1_SSI | SPI_CR1_SPE | SPI_CR1_BR | SPI_CR1_MSTR);
-	spiPeripheral_.writeCr2(SPI_CR2_FRXTH | (8 - 1) << SPI_CR2_DS_Pos);
+	spiPeripheral_.writeCr2(SPI_CR2_FRXTH | (wordLength_ - 1) << SPI_CR2_DS_Pos);
 	started_ = true;
 
 	return 0;
@@ -158,9 +135,7 @@ int SpiMasterLowLevelInterruptBased::startTransfer(devices::SpiMasterBase& spiMa
 	if (isTransferInProgress() == true)
 		return EBUSY;
 
-	const auto cr2 = spiPeripheral_.readCr2();
-	const auto wordLength = getWordLength(cr2);
-	if (size % ((wordLength + 8 - 1) / 8) != 0)
+	if (size % ((wordLength_ + 8 - 1) / 8) != 0)
 		return EINVAL;
 
 	spiMasterBase_ = &spiMasterBase;
@@ -170,8 +145,8 @@ int SpiMasterLowLevelInterruptBased::startTransfer(devices::SpiMasterBase& spiMa
 	readPosition_ = 0;
 	writePosition_ = 0;
 
-	spiPeripheral_.writeCr2(cr2 | SPI_CR2_RXNEIE);	// enable RXNE interrupt
-	writeNextItem(wordLength);	// write first item to start the transfer
+	spiPeripheral_.writeCr2(spiPeripheral_.readCr2() | SPI_CR2_RXNEIE);	// enable RXNE interrupt
+	writeNextItem();	// write first item to start the transfer
 
 	return 0;
 }
@@ -195,7 +170,7 @@ int SpiMasterLowLevelInterruptBased::stop()
 | private functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-void SpiMasterLowLevelInterruptBased::writeNextItem(const uint8_t wordLength)
+void SpiMasterLowLevelInterruptBased::writeNextItem()
 {
 	const auto writeBuffer = writeBuffer_;
 	auto writePosition = writePosition_;
@@ -203,16 +178,16 @@ void SpiMasterLowLevelInterruptBased::writeNextItem(const uint8_t wordLength)
 	if (writeBuffer != nullptr)
 	{
 		const uint16_t characterLow = writeBuffer[writePosition++];
-		const uint16_t characterHigh = wordLength > 8 ? writeBuffer[writePosition++] : 0;
+		const uint16_t characterHigh = wordLength_ > 8 ? writeBuffer[writePosition++] : 0;
 		word = characterLow | characterHigh << 8;
 	}
 	else
 	{
-		writePosition += (wordLength + 8 - 1) / 8;
+		writePosition += (wordLength_ + 8 - 1) / 8;
 		word = dummyData_;
 	}
 	writePosition_ = writePosition;
-	spiPeripheral_.writeDr(wordLength, word);
+	spiPeripheral_.writeDr(wordLength_, word);
 }
 
 }	// namespace chip
