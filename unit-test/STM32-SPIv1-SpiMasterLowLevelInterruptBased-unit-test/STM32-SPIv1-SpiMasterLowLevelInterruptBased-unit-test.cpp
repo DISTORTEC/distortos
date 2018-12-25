@@ -269,12 +269,6 @@ TEST_CASE("Testing startTransfer()", "[startTransfer]")
 		REQUIRE(spi.startTransfer(masterMock, nullptr, nullptr, 0) == EINVAL);
 	}
 
-	SECTION("Starting transfer with odd length when word length is 16 should fail with EINVAL")
-	{
-		REQUIRE_CALL(peripheralMock, readCr1()).IN_SEQUENCE(sequence).RETURN(initialCr1 | SPI_CR1_DFF);
-		REQUIRE(spi.startTransfer(masterMock, nullptr, nullptr, 1) == EINVAL);
-	}
-
 	constexpr uint16_t dummyData {0xd515};
 
 	SECTION("Testing 8-bit transfers")
@@ -289,7 +283,6 @@ TEST_CASE("Testing startTransfer()", "[startTransfer]")
 			const std::array<uint8_t, 1> rxData {{0x9f}};
 			std::array<uint8_t, rxData.size()> rxBuffer {};
 
-			REQUIRE_CALL(peripheralMock, readCr1()).IN_SEQUENCE(sequence).RETURN(initialCr1);
 			REQUIRE_CALL(peripheralMock, readCr2()).IN_SEQUENCE(sequence).RETURN(initialCr2);
 			REQUIRE_CALL(peripheralMock, writeCr2(initialCr2 | SPI_CR2_RXNEIE)).IN_SEQUENCE(sequence);
 			REQUIRE_CALL(peripheralMock, writeDr(dummyData)).IN_SEQUENCE(sequence);
@@ -305,7 +298,6 @@ TEST_CASE("Testing startTransfer()", "[startTransfer]")
 			REQUIRE(spi.stop() == EBUSY);
 
 			REQUIRE_CALL(peripheralMock, readDr()).IN_SEQUENCE(sequence).RETURN(rxData[0]);
-			REQUIRE_CALL(peripheralMock, readCr1()).IN_SEQUENCE(sequence).RETURN(initialCr1);
 			REQUIRE_CALL(peripheralMock, readCr2()).IN_SEQUENCE(sequence).RETURN(initialCr2 | SPI_CR2_RXNEIE);
 			REQUIRE_CALL(peripheralMock, writeCr2(initialCr2)).IN_SEQUENCE(sequence);
 			REQUIRE_CALL(masterMock, transferCompleteEvent(sizeof(rxBuffer))).IN_SEQUENCE(sequence);
@@ -319,7 +311,6 @@ TEST_CASE("Testing startTransfer()", "[startTransfer]")
 			const std::array<uint8_t, txBuffer.size()> rxData {{0x20, 0xf7, 0xdb, 0xbf, 0xe7}};
 			std::array<uint8_t, rxData.size()> rxBuffer {};
 
-			REQUIRE_CALL(peripheralMock, readCr1()).IN_SEQUENCE(sequence).RETURN(initialCr1);
 			REQUIRE_CALL(peripheralMock, readCr2()).IN_SEQUENCE(sequence).RETURN(initialCr2);
 			REQUIRE_CALL(peripheralMock, writeCr2(initialCr2 | SPI_CR2_RXNEIE)).IN_SEQUENCE(sequence);
 			REQUIRE_CALL(peripheralMock, writeDr(txBuffer.front())).IN_SEQUENCE(sequence);
@@ -339,7 +330,6 @@ TEST_CASE("Testing startTransfer()", "[startTransfer]")
 				std::vector<std::unique_ptr<trompeloeil::expectation>> expectations {};
 
 				REQUIRE_CALL(peripheralMock, readDr()).IN_SEQUENCE(sequence).RETURN(rxData[i]);
-				REQUIRE_CALL(peripheralMock, readCr1()).IN_SEQUENCE(sequence).RETURN(initialCr1);
 				if (i != txBuffer.size() - 1)
 					expectations.emplace_back(NAMED_REQUIRE_CALL(peripheralMock,
 							writeDr(txBuffer[i + 1])).IN_SEQUENCE(sequence));
@@ -365,12 +355,15 @@ TEST_CASE("Testing startTransfer()", "[startTransfer]")
 		REQUIRE_CALL(peripheralMock, writeCr1(initialCr1 | SPI_CR1_DFF)).IN_SEQUENCE(sequence);
 		REQUIRE(spi.configure({}, peripheralFrequency / 256, 16, {}, dummyData).first == 0);
 
+		SECTION("Starting transfer with odd length when word length is 16 should fail with EINVAL")
+		{
+			REQUIRE(spi.startTransfer(masterMock, nullptr, nullptr, 1) == EINVAL);
+		}
 		SECTION("Testing 16-bit transfer of 1 item")
 		{
 			const std::array<uint16_t, 1> rxData {{0xad74}};
 			std::array<uint16_t, rxData.size()> rxBuffer {};
 
-			REQUIRE_CALL(peripheralMock, readCr1()).IN_SEQUENCE(sequence).RETURN(initialCr1 | SPI_CR1_DFF);
 			REQUIRE_CALL(peripheralMock, readCr2()).IN_SEQUENCE(sequence).RETURN(initialCr2);
 			REQUIRE_CALL(peripheralMock, writeCr2(initialCr2 | SPI_CR2_RXNEIE)).IN_SEQUENCE(sequence);
 			REQUIRE_CALL(peripheralMock, writeDr(dummyData)).IN_SEQUENCE(sequence);
@@ -386,7 +379,6 @@ TEST_CASE("Testing startTransfer()", "[startTransfer]")
 			REQUIRE(spi.stop() == EBUSY);
 
 			REQUIRE_CALL(peripheralMock, readDr()).IN_SEQUENCE(sequence).RETURN(rxData[0]);
-			REQUIRE_CALL(peripheralMock, readCr1()).IN_SEQUENCE(sequence).RETURN(initialCr1 | SPI_CR1_DFF);
 			REQUIRE_CALL(peripheralMock, readCr2()).IN_SEQUENCE(sequence).RETURN(initialCr2 | SPI_CR2_RXNEIE);
 			REQUIRE_CALL(peripheralMock, writeCr2(initialCr2)).IN_SEQUENCE(sequence);
 			REQUIRE_CALL(masterMock, transferCompleteEvent(sizeof(rxData))).IN_SEQUENCE(sequence);
@@ -400,7 +392,6 @@ TEST_CASE("Testing startTransfer()", "[startTransfer]")
 			const std::array<uint16_t, txBuffer.size()> rxData {{0x4939, 0x376a, 0x29fa, 0x6c4e, 0x7a87}};
 			std::array<uint16_t, rxData.size()> rxBuffer {};
 
-			REQUIRE_CALL(peripheralMock, readCr1()).IN_SEQUENCE(sequence).RETURN(initialCr1 | SPI_CR1_DFF);
 			REQUIRE_CALL(peripheralMock, readCr2()).IN_SEQUENCE(sequence).RETURN(initialCr2);
 			REQUIRE_CALL(peripheralMock, writeCr2(initialCr2 | SPI_CR2_RXNEIE)).IN_SEQUENCE(sequence);
 			REQUIRE_CALL(peripheralMock, writeDr(txBuffer.front())).IN_SEQUENCE(sequence);
@@ -420,7 +411,6 @@ TEST_CASE("Testing startTransfer()", "[startTransfer]")
 				std::vector<std::unique_ptr<trompeloeil::expectation>> expectations {};
 
 				REQUIRE_CALL(peripheralMock, readDr()).IN_SEQUENCE(sequence).RETURN(rxData[i]);
-				REQUIRE_CALL(peripheralMock, readCr1()).IN_SEQUENCE(sequence).RETURN(initialCr1 | SPI_CR1_DFF);
 				if (i != txBuffer.size() - 1)
 					expectations.emplace_back(NAMED_REQUIRE_CALL(peripheralMock,
 							writeDr(txBuffer[i + 1])).IN_SEQUENCE(sequence));

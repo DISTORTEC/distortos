@@ -49,7 +49,8 @@ public:
 			readPosition_{},
 			writePosition_{},
 			dummyData_{},
-			started_{}
+			started_{},
+			wordLength_{8}
 	{
 
 	}
@@ -151,11 +152,9 @@ private:
 
 	/**
 	 * \brief Writes next item to SPI peripheral.
-	 *
-	 * \param [in] wordLength selects word length, bits, {8, 16}
 	 */
 
-	void writeNextItem(uint8_t wordLength);
+	void writeNextItem();
 
 	/// reference to raw SPI peripheral
 	const SpiPeripheral& spiPeripheral_;
@@ -183,6 +182,9 @@ private:
 
 	/// true if driver is started, false otherwise
 	bool started_;
+
+	/// selected word length, bits, {8, 16}
+	uint8_t wordLength_;
 };
 
 }	// namespace chip
