@@ -81,14 +81,10 @@ std::pair<int, uint32_t> SpiMasterLowLevelInterruptBased::configure(const device
 	const uint32_t br = divider <= 2 ? 0 : 31 - __builtin_clz(divider - 1);
 
 	auto cr1 = spiPeripheral_.readCr1();
+
 	// value of DFF bit (which determines word length) must be changed only when SPI peripheral is disabled
-	const auto disablePeripheral = wordLength != getWordLength(cr1);
-	if (disablePeripheral == true)
-	{
-		// disable peripheral
-		cr1 &= ~SPI_CR1_SPE;
-		spiPeripheral_.writeCr1(cr1);
-	}
+	cr1 &= ~SPI_CR1_SPE;
+	spiPeripheral_.writeCr1(cr1);
 
 	spiPeripheral_.writeCr1((cr1 & ~(SPI_CR1_DFF | SPI_CR1_LSBFIRST | SPI_CR1_BR | SPI_CR1_CPOL | SPI_CR1_CPHA)) |
 			(wordLength == 16) << SPI_CR1_DFF_Pos |

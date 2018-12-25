@@ -143,6 +143,7 @@ TEST_CASE("Testing configure()", "[configure]")
 			const auto oldCr1 = newCr1 ^ (SPI_CR1_CPOL | SPI_CR1_CPHA);
 
 			REQUIRE_CALL(peripheralMock, readCr1()).IN_SEQUENCE(sequence).RETURN(oldCr1);
+			REQUIRE_CALL(peripheralMock, writeCr1(oldCr1 & ~SPI_CR1_SPE)).IN_SEQUENCE(sequence);
 			REQUIRE_CALL(peripheralMock, writeCr1(newCr1)).IN_SEQUENCE(sequence);
 			REQUIRE(spi.configure(mode, peripheralFrequency / 256, 8, {}, {}).first == 0);
 		}
@@ -196,6 +197,7 @@ TEST_CASE("Testing configure()", "[configure]")
 			const auto realClockFrequency = peripheralFrequency / (1 << (br + 1));
 
 			REQUIRE_CALL(peripheralMock, readCr1()).IN_SEQUENCE(sequence).RETURN(oldCr1);
+			REQUIRE_CALL(peripheralMock, writeCr1(oldCr1 & ~SPI_CR1_SPE)).IN_SEQUENCE(sequence);
 			REQUIRE_CALL(peripheralMock, writeCr1(newCr1)).IN_SEQUENCE(sequence);
 			REQUIRE(spi.configure({}, clockFrequency, 8, {}, {}) == std::make_pair(0, realClockFrequency));
 		}
@@ -233,6 +235,7 @@ TEST_CASE("Testing configure()", "[configure]")
 			const auto oldCr1 = newCr1 ^ SPI_CR1_LSBFIRST;
 
 			REQUIRE_CALL(peripheralMock, readCr1()).IN_SEQUENCE(sequence).RETURN(oldCr1);
+			REQUIRE_CALL(peripheralMock, writeCr1(oldCr1 & ~SPI_CR1_SPE)).IN_SEQUENCE(sequence);
 			REQUIRE_CALL(peripheralMock, writeCr1(newCr1)).IN_SEQUENCE(sequence);
 			REQUIRE(spi.configure({}, peripheralFrequency / 256, 8, lsbFirst, {}).first == 0);
 		}
@@ -277,6 +280,7 @@ TEST_CASE("Testing startTransfer()", "[startTransfer]")
 	SECTION("Testing 8-bit transfers")
 	{
 		REQUIRE_CALL(peripheralMock, readCr1()).IN_SEQUENCE(sequence).RETURN(initialCr1);
+		REQUIRE_CALL(peripheralMock, writeCr1(initialCr1 & ~SPI_CR1_SPE)).IN_SEQUENCE(sequence);
 		REQUIRE_CALL(peripheralMock, writeCr1(initialCr1)).IN_SEQUENCE(sequence);
 		REQUIRE(spi.configure({}, peripheralFrequency / 256, 8, {}, dummyData).first == 0);
 
@@ -357,6 +361,7 @@ TEST_CASE("Testing startTransfer()", "[startTransfer]")
 	SECTION("Testing 16-bit transfers")
 	{
 		REQUIRE_CALL(peripheralMock, readCr1()).IN_SEQUENCE(sequence).RETURN(initialCr1 | SPI_CR1_DFF);
+		REQUIRE_CALL(peripheralMock, writeCr1((initialCr1 | SPI_CR1_DFF) & ~SPI_CR1_SPE)).IN_SEQUENCE(sequence);
 		REQUIRE_CALL(peripheralMock, writeCr1(initialCr1 | SPI_CR1_DFF)).IN_SEQUENCE(sequence);
 		REQUIRE(spi.configure({}, peripheralFrequency / 256, 16, {}, dummyData).first == 0);
 
