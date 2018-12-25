@@ -9,6 +9,7 @@
 
 add_executable(STM32-SPIv1-SpiMasterLowLevelInterruptBased-unit-test
 		STM32-SPIv1-SpiMasterLowLevelInterruptBased-unit-test.cpp
+		${DISTORTOS_PATH}/source/chip/STM32/peripherals/SPIv1/STM32-SPIv1.cpp
 		${DISTORTOS_PATH}/source/chip/STM32/peripherals/SPIv1/STM32-SPIv1-SpiMasterLowLevelInterruptBased.cpp
 		${MAIN_CPP})
 
