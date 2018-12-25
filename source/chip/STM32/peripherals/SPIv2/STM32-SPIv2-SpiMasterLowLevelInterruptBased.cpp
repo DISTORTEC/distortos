@@ -11,6 +11,7 @@
 
 #include "distortos/chip/SpiMasterLowLevelInterruptBased.hpp"
 
+#include "distortos/chip/STM32-SPIv2.hpp"
 #include "distortos/chip/STM32-SPIv2-SpiPeripheral.hpp"
 
 #include "distortos/devices/communication/SpiMasterBase.hpp"
@@ -42,35 +43,19 @@ SpiMasterLowLevelInterruptBased::~SpiMasterLowLevelInterruptBased()
 std::pair<int, uint32_t> SpiMasterLowLevelInterruptBased::configure(const devices::SpiMode mode,
 		const uint32_t clockFrequency, const uint8_t wordLength, const bool lsbFirst, const uint32_t dummyData)
 {
-	if (wordLength < minWordLength || wordLength > maxWordLength)
-		return {EINVAL, {}};
-
 	if (isStarted() == false)
 		return {EBADF, {}};
 
 	if (isTransferInProgress() == true)
 		return {EBUSY, {}};
 
-	const auto peripheralFrequency = spiPeripheral_.getPeripheralFrequency();
-	const auto divider = (peripheralFrequency + clockFrequency - 1) / clockFrequency;
-	if (divider > 256)
-		return {EINVAL, {}};
-
-	const uint32_t br = divider <= 2 ? 0 : 31 - __builtin_clz(divider - 1);
-	const auto cr1 = spiPeripheral_.readCr1();
-	spiPeripheral_.writeCr1((cr1 & ~(SPI_CR1_LSBFIRST | SPI_CR1_BR | SPI_CR1_CPOL | SPI_CR1_CPHA)) |
-			lsbFirst << SPI_CR1_LSBFIRST_Pos | br << SPI_CR1_BR_Pos |
-			(mode == devices::SpiMode::cpol1cpha0 || mode == devices::SpiMode::cpol1cpha1) << SPI_CR1_CPOL_Pos |
-			(mode == devices::SpiMode::cpol0cpha1 || mode == devices::SpiMode::cpol1cpha1) << SPI_CR1_CPHA_Pos);
-	const auto cr2 = spiPeripheral_.readCr2();
-	spiPeripheral_.writeCr2((cr2 & ~(SPI_CR2_FRXTH | SPI_CR2_DS)) |
-			(wordLength <= 8) << SPI_CR2_FRXTH_Pos |
-			(wordLength - 1) << SPI_CR2_DS_Pos);
+	const auto ret = configureSpi(spiPeripheral_, mode, clockFrequency, wordLength, lsbFirst);
+	if (ret.first != 0)
+		return ret;
 
 	dummyData_ = dummyData;
 	wordLength_ = wordLength;
-
-	return {{}, peripheralFrequency / (1 << (br + 1))};
+	return ret;
 }
 
 void SpiMasterLowLevelInterruptBased::interruptHandler()

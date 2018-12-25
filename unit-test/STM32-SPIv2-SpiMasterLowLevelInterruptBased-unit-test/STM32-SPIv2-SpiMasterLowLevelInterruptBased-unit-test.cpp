@@ -13,6 +13,7 @@
  */
 
 #include "distortos/chip/SpiMasterLowLevelInterruptBased.hpp"
+#include "distortos/chip/STM32-SPIv2.hpp"
 #include "distortos/chip/STM32-SPIv2-SpiPeripheral.hpp"
 
 #include "distortos/devices/communication/SpiMasterBase.hpp"
@@ -113,8 +114,7 @@ TEST_CASE("Testing configure()", "[configure]")
 
 	for (uint8_t wordLength {}; wordLength <= 32; ++wordLength)
 	{
-		if (wordLength >= distortos::chip::SpiMasterLowLevelInterruptBased::minWordLength &&
-				wordLength <= distortos::chip::SpiMasterLowLevelInterruptBased::maxWordLength)
+		if (wordLength >= distortos::chip::minSpiWordLength && wordLength <= distortos::chip::maxSpiWordLength)
 			continue;
 
 		DYNAMIC_SECTION("Trying to use word length " << wordLength << " should fail with EINVAL")
@@ -208,8 +208,7 @@ TEST_CASE("Testing configure()", "[configure]")
 
 	SECTION("Trying to change word length to valid value should succeed")
 	{
-		for (auto wordLength {distortos::chip::SpiMasterLowLevelInterruptBased::minWordLength};
-				wordLength <= distortos::chip::SpiMasterLowLevelInterruptBased::minWordLength;
+		for (auto wordLength {distortos::chip::minSpiWordLength}; wordLength <= distortos::chip::minSpiWordLength;
 				++wordLength)
 		{
 			const auto newCr2 = (initialCr2 & ~(SPI_CR2_FRXTH | SPI_CR2_DS)) |
@@ -275,8 +274,7 @@ TEST_CASE("Testing startTransfer()", "[startTransfer]")
 
 	constexpr uint16_t dummyData {0xd515};
 
-	for (uint8_t wordLength {distortos::chip::SpiMasterLowLevelInterruptBased::minWordLength}; wordLength <= 8;
-			++wordLength)
+	for (uint8_t wordLength {distortos::chip::minSpiWordLength}; wordLength <= 8; ++wordLength)
 	{
 		const auto cr2 = (initialCr2 & ~(SPI_CR2_FRXTH | SPI_CR2_DS)) |
 				(wordLength <= 8) << SPI_CR2_FRXTH_Pos |
@@ -361,8 +359,7 @@ TEST_CASE("Testing startTransfer()", "[startTransfer]")
 			}
 		}
 	}
-	for (uint8_t wordLength {9}; wordLength <= distortos::chip::SpiMasterLowLevelInterruptBased::maxWordLength;
-			++wordLength)
+	for (uint8_t wordLength {9}; wordLength <= distortos::chip::maxSpiWordLength; ++wordLength)
 	{
 		const auto cr2 = (initialCr2 & ~(SPI_CR2_FRXTH | SPI_CR2_DS)) |
 				(wordLength <= 8) << SPI_CR2_FRXTH_Pos |

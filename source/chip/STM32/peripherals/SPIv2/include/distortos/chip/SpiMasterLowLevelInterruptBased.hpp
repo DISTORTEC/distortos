@@ -34,12 +34,6 @@ class SpiMasterLowLevelInterruptBased : public devices::SpiMasterLowLevel
 {
 public:
 
-	/// minimum allowed value for word length
-	constexpr static uint8_t minWordLength {4};
-
-	/// maximum allowed value for word length
-	constexpr static uint8_t maxWordLength {16};
-
 	/**
 	 * \brief SpiMasterLowLevelInterruptBased's constructor
 	 *
@@ -74,14 +68,14 @@ public:
 	 *
 	 * \param [in] mode is the desired SPI mode
 	 * \param [in] clockFrequency is the desired clock frequency, Hz
-	 * \param [in] wordLength selects word length, bits, [4; 16] or [minWordLength; maxWordLength]
+	 * \param [in] wordLength selects word length, bits, [4; 16] or [minSpiWordLength; maxSpiWordLength]
 	 * \param [in] lsbFirst selects whether MSB (false) or LSB (true) is transmitted first
 	 * \param [in] dummyData is the dummy data that will be sent if write buffer of transfer is nullptr
 	 *
 	 * \return pair with return code (0 on success, error code otherwise) and real clock frequency; error codes:
 	 * - EBADF - the driver is not started;
 	 * - EBUSY - transfer is in progress;
-	 * - EINVAL - selected SPI mode and/or clock frequency and/or format are invalid;
+	 * - error codes returned by configureSpi();
 	 */
 
 	std::pair<int, uint32_t> configure(devices::SpiMode mode, uint32_t clockFrequency, uint8_t wordLength,
