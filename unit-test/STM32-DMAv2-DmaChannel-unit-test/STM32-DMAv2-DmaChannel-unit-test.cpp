@@ -136,12 +136,12 @@ TEST_CASE("Testing reserve() & release() interactions", "[reserve/release]")
 			REQUIRE_CALL(interruptMaskingLockProxyMock, destruct()).IN_SEQUENCE(sequence);
 			REQUIRE(handle.reserve(channel, request2, functorMock) == 0);
 		}
-		SECTION("Reserving reserved driver with a different handle should fail with EBADF")
+		SECTION("Reserving reserved driver with a different handle should fail with EBUSY")
 		{
 			distortos::chip::DmaChannel::UniqueHandle anotherHandle;
 			REQUIRE_CALL(interruptMaskingLockProxyMock, construct()).IN_SEQUENCE(sequence);
 			REQUIRE_CALL(interruptMaskingLockProxyMock, destruct()).IN_SEQUENCE(sequence);
-			REQUIRE(anotherHandle.reserve(channel, 0, functorMock) == EBADF);
+			REQUIRE(anotherHandle.reserve(channel, 0, functorMock) == EBUSY);
 		}
 
 		const auto oldCr = UINT32_MAX;

@@ -136,7 +136,7 @@ int DmaChannel::reserve(const uint8_t request, DmaChannelFunctor& functor)
 	const InterruptMaskingLock interruptMaskingLock;
 
 	if (functor_ != nullptr)
-		return EBADF;
+		return EBUSY;
 
 	functor_ = &functor;
 

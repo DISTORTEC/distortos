@@ -217,7 +217,7 @@ private:
 	 * events
 	 *
 	 * \return 0 on success, error code otherwise:
-	 * - EBADF - the driver is not released;
+	 * - EBUSY - the driver is not released;
 	 * - EINVAL - \a request is invalid;
 	 */
 
