@@ -143,6 +143,11 @@ void DmaChannel::interruptHandler()
 | private functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
+size_t DmaChannel::getTransactionsLeft() const
+{
+	return dmaChannelPeripheral_.readNdtr();
+}
+
 void DmaChannel::release()
 {
 	stopTransfer();
