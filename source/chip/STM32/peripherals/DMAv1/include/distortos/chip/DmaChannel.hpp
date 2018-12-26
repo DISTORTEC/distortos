@@ -12,6 +12,8 @@
 #ifndef SOURCE_CHIP_STM32_PERIPHERALS_DMAV1_INCLUDE_DISTORTOS_CHIP_DMACHANNEL_HPP_
 #define SOURCE_CHIP_STM32_PERIPHERALS_DMAV1_INCLUDE_DISTORTOS_CHIP_DMACHANNEL_HPP_
 
+#include <utility>
+
 #include <cerrno>
 #include <cstddef>
 #include <cstdint>
@@ -58,6 +60,20 @@ public:
 		~UniqueHandle()
 		{
 			release();
+		}
+
+		/**
+		 * \return pair with return code (0 on success, error code otherwise) and number of transactions left; error
+		 * codes:
+		 * - EBADF - no low-level DMA channel driver is associated with this handle;
+		 */
+
+		std::pair<int, size_t> getTransactionsLeft() const
+		{
+			if (channel_ == nullptr)
+				return {EBADF, {}};
+
+			return {{}, channel_->getTransactionsLeft()};
 		}
 
 		/**
@@ -201,6 +217,12 @@ public:
 	void interruptHandler();
 
 private:
+
+	/**
+	 * \return number of transactions left
+	 */
+
+	size_t getTransactionsLeft() const;
 
 	/**
 	 * \brief Releases low-level DMA channel driver.
