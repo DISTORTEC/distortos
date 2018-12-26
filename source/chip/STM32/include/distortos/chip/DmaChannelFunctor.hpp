@@ -49,7 +49,7 @@ public:
 	 *
 	 * Called by low-level DMA channel driver when transfer error is detected.
 	 *
-	 * \param [in] transactionsLeft is the number transactions left
+	 * \param [in] transactionsLeft is the number of transactions left
 	 */
 
 	virtual void transferErrorEvent(size_t transactionsLeft) = 0;
