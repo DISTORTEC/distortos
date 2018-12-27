@@ -122,39 +122,6 @@ void DmaChannel::interruptHandler()
 | private functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-size_t DmaChannel::getTransactionsLeft() const
-{
-	return dmaChannelPeripheral_.readCndtr();
-}
-
-void DmaChannel::release()
-{
-	stopTransfer();
-	functor_ = {};
-}
-
-int DmaChannel::reserve(const uint8_t request, DmaChannelFunctor& functor)
-{
-	if (request > maxRequest)
-		return EINVAL;
-
-	const InterruptMaskingLock interruptMaskingLock;
-
-	if (functor_ != nullptr)
-		return EBUSY;
-
-	functor_ = &functor;
-
-#if DISTORTOS_CHIP_DMA_CHANNEL_REQUEST_BITS != 0
-
-	const auto channelShift = getChannelShift(dmaChannelPeripheral_.getChannelId());
-	modifyCselr(dmaPeripheral_.readCselr(), dmaPeripheral_, maxRequest << channelShift, request << channelShift);
-
-#endif	// DISTORTOS_CHIP_DMA_CHANNEL_REQUEST_BITS != 0
-
-	return {};
-}
-
 int DmaChannel::configureTransfer(const uintptr_t memoryAddress, const size_t memoryDataSize,
 		const bool memoryIncrement, const uintptr_t peripheralAddress, const size_t peripheralDataSize,
 		const bool peripheralIncrement, const size_t transactions, const bool memoryToPeripheral,
@@ -187,6 +154,39 @@ int DmaChannel::configureTransfer(const uintptr_t memoryAddress, const size_t me
 	dmaChannelPeripheral_.writeCndtr(transactions);
 	dmaChannelPeripheral_.writeCpar(peripheralAddress);
 	dmaChannelPeripheral_.writeCmar(memoryAddress);
+	return {};
+}
+
+size_t DmaChannel::getTransactionsLeft() const
+{
+	return dmaChannelPeripheral_.readCndtr();
+}
+
+void DmaChannel::release()
+{
+	stopTransfer();
+	functor_ = {};
+}
+
+int DmaChannel::reserve(const uint8_t request, DmaChannelFunctor& functor)
+{
+	if (request > maxRequest)
+		return EINVAL;
+
+	const InterruptMaskingLock interruptMaskingLock;
+
+	if (functor_ != nullptr)
+		return EBUSY;
+
+	functor_ = &functor;
+
+#if DISTORTOS_CHIP_DMA_CHANNEL_REQUEST_BITS != 0
+
+	const auto channelShift = getChannelShift(dmaChannelPeripheral_.getChannelId());
+	modifyCselr(dmaPeripheral_.readCselr(), dmaPeripheral_, maxRequest << channelShift, request << channelShift);
+
+#endif	// DISTORTOS_CHIP_DMA_CHANNEL_REQUEST_BITS != 0
+
 	return {};
 }
 

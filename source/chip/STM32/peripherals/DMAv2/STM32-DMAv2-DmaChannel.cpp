@@ -143,33 +143,6 @@ void DmaChannel::interruptHandler()
 | private functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-size_t DmaChannel::getTransactionsLeft() const
-{
-	return dmaChannelPeripheral_.readNdtr();
-}
-
-void DmaChannel::release()
-{
-	stopTransfer();
-	functor_ = {};
-}
-
-int DmaChannel::reserve(const uint8_t request, DmaChannelFunctor& functor)
-{
-	if (request > maxRequest)
-		return EINVAL;
-
-	const InterruptMaskingLock interruptMaskingLock;
-
-	if (functor_ != nullptr)
-		return EBUSY;
-
-	functor_ = &functor;
-	request_ = request;
-
-	return {};
-}
-
 int DmaChannel::configureTransfer(const uintptr_t memoryAddress, const size_t memoryDataSize,
 		const bool memoryIncrement, const uintptr_t peripheralAddress, const size_t peripheralDataSize,
 		const bool peripheralIncrement, const size_t transactions, const bool memoryToPeripheral,
@@ -204,6 +177,33 @@ int DmaChannel::configureTransfer(const uintptr_t memoryAddress, const size_t me
 	dmaChannelPeripheral_.writePar(peripheralAddress);
 	dmaChannelPeripheral_.writeM0ar(memoryAddress);
 	dmaChannelPeripheral_.writeFcr(DMA_SxFCR_DMDIS | DMA_SxFCR_FTH);
+	return {};
+}
+
+size_t DmaChannel::getTransactionsLeft() const
+{
+	return dmaChannelPeripheral_.readNdtr();
+}
+
+void DmaChannel::release()
+{
+	stopTransfer();
+	functor_ = {};
+}
+
+int DmaChannel::reserve(const uint8_t request, DmaChannelFunctor& functor)
+{
+	if (request > maxRequest)
+		return EINVAL;
+
+	const InterruptMaskingLock interruptMaskingLock;
+
+	if (functor_ != nullptr)
+		return EBUSY;
+
+	functor_ = &functor;
+	request_ = request;
+
 	return {};
 }
 

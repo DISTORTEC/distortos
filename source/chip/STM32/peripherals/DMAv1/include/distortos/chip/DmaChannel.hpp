@@ -76,6 +76,38 @@ public:
 		}
 
 		/**
+		 * \brief Configures parameters of transfer.
+		 *
+		 * \param [in] memoryAddress is the memory address, must be divisible by \a memoryDataSize
+		 * \param [in] memoryDataSize is the memory data size, {1, 2, 4}
+		 * \param [in] memoryIncrement selects whether memory address is incremented after each transaction (true) or not
+		 * (false)
+		 * \param [in] peripheralAddress is the peripheral address, must be divisible by \a peripheralDataSize
+		 * \param [in] peripheralDataSize is the peripheral data size, {1, 2, 4}
+		 * \param [in] peripheralIncrement selects whether peripheral address is incremented after each transaction (true)
+		 * or not (false)
+		 * \param [in] transactions is the number of transactions
+		 * \param [in] memoryToPeripheral selects whether the transfer is from memory to peripheral (true) or from
+		 * peripheral to memory (false)
+		 * \param [in] priority is the priority of transfer
+		 *
+		 * \return 0 on success, error code otherwise:
+		 * - EBADF - no low-level DMA channel driver is associated with this handle;
+		 * - error codes returned by DmaChannel::configureTransfer();
+		 */
+
+		int configureTransfer(const uintptr_t memoryAddress, const size_t memoryDataSize, const bool memoryIncrement,
+				const uintptr_t peripheralAddress, const size_t peripheralDataSize, const bool peripheralIncrement,
+				const size_t transactions, const bool memoryToPeripheral, const Priority priority) const
+		{
+			if (channel_ == nullptr)
+				return EBADF;
+
+			return channel_->configureTransfer(memoryAddress, memoryDataSize, memoryIncrement, peripheralAddress,
+					peripheralDataSize, peripheralIncrement, transactions, memoryToPeripheral, priority);
+		}
+
+		/**
 		 * \return pair with return code (0 on success, error code otherwise) and number of transactions left; error
 		 * codes:
 		 * - EBADF - no low-level DMA channel driver is associated with this handle;
@@ -124,38 +156,6 @@ public:
 
 			channel_ = &channel;
 			return {};
-		}
-
-		/**
-		 * \brief Configures parameters of transfer.
-		 *
-		 * \param [in] memoryAddress is the memory address, must be divisible by \a memoryDataSize
-		 * \param [in] memoryDataSize is the memory data size, {1, 2, 4}
-		 * \param [in] memoryIncrement selects whether memory address is incremented after each transaction (true) or not
-		 * (false)
-		 * \param [in] peripheralAddress is the peripheral address, must be divisible by \a peripheralDataSize
-		 * \param [in] peripheralDataSize is the peripheral data size, {1, 2, 4}
-		 * \param [in] peripheralIncrement selects whether peripheral address is incremented after each transaction (true)
-		 * or not (false)
-		 * \param [in] transactions is the number of transactions
-		 * \param [in] memoryToPeripheral selects whether the transfer is from memory to peripheral (true) or from
-		 * peripheral to memory (false)
-		 * \param [in] priority is the priority of transfer
-		 *
-		 * \return 0 on success, error code otherwise:
-		 * - EBADF - no low-level DMA channel driver is associated with this handle;
-		 * - error codes returned by DmaChannel::configureTransfer();
-		 */
-
-		int configureTransfer(const uintptr_t memoryAddress, const size_t memoryDataSize, const bool memoryIncrement,
-				const uintptr_t peripheralAddress, const size_t peripheralDataSize, const bool peripheralIncrement,
-				const size_t transactions, const bool memoryToPeripheral, const Priority priority) const
-		{
-			if (channel_ == nullptr)
-				return EBADF;
-
-			return channel_->configureTransfer(memoryAddress, memoryDataSize, memoryIncrement, peripheralAddress,
-					peripheralDataSize, peripheralIncrement, transactions, memoryToPeripheral, priority);
 		}
 
 		/**
@@ -233,32 +233,6 @@ public:
 private:
 
 	/**
-	 * \return number of transactions left
-	 */
-
-	size_t getTransactionsLeft() const;
-
-	/**
-	 * \brief Releases low-level DMA channel driver.
-	 */
-
-	void release();
-
-	/**
-	 * \brief Reserves low-level DMA channel driver for exclusive use.
-	 *
-	 * \param [in] request is the request identifier with which this object will be associated
-	 * \param [in] functor is a reference to DmaChannelFunctor object that will be notified about transfer-related
-	 * events
-	 *
-	 * \return 0 on success, error code otherwise:
-	 * - EBUSY - the driver is not released;
-	 * - EINVAL - \a request is invalid;
-	 */
-
-	int reserve(uint8_t request, DmaChannelFunctor& functor);
-
-	/**
 	 * \brief Configures parameters of transfer.
 	 *
 	 * \param [in] memoryAddress is the memory address, must be divisible by \a memoryDataSize
@@ -284,6 +258,32 @@ private:
 	int configureTransfer(uintptr_t memoryAddress, size_t memoryDataSize, bool memoryIncrement,
 			uintptr_t peripheralAddress, size_t peripheralDataSize, bool peripheralIncrement, size_t transactions,
 			bool memoryToPeripheral, Priority priority) const;
+
+	/**
+	 * \return number of transactions left
+	 */
+
+	size_t getTransactionsLeft() const;
+
+	/**
+	 * \brief Releases low-level DMA channel driver.
+	 */
+
+	void release();
+
+	/**
+	 * \brief Reserves low-level DMA channel driver for exclusive use.
+	 *
+	 * \param [in] request is the request identifier with which this object will be associated
+	 * \param [in] functor is a reference to DmaChannelFunctor object that will be notified about transfer-related
+	 * events
+	 *
+	 * \return 0 on success, error code otherwise:
+	 * - EBUSY - the driver is not released;
+	 * - EINVAL - \a request is invalid;
+	 */
+
+	int reserve(uint8_t request, DmaChannelFunctor& functor);
 
 	/**
 	 * \brief Starts asynchronous transfer.
