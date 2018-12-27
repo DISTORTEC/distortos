@@ -172,7 +172,8 @@ int DmaChannel::reserve(const uint8_t request, DmaChannelFunctor& functor)
 
 int DmaChannel::configureTransfer(const uintptr_t memoryAddress, const size_t memoryDataSize,
 		const bool memoryIncrement, const uintptr_t peripheralAddress, const size_t peripheralDataSize,
-		const bool peripheralIncrement, const size_t transactions, const bool memoryToPeripheral) const
+		const bool peripheralIncrement, const size_t transactions, const bool memoryToPeripheral,
+		const Priority priority) const
 {
 	if ((memoryDataSize != 1 && memoryDataSize != 2 && memoryDataSize != 4) ||
 			(peripheralDataSize != 1 && peripheralDataSize != 2 && peripheralDataSize != 4))
@@ -191,6 +192,7 @@ int DmaChannel::configureTransfer(const uintptr_t memoryAddress, const size_t me
 		return EBUSY;
 
 	dmaChannelPeripheral_.writeCr(request_ << DMA_SxCR_CHSEL_Pos |
+			static_cast<uint32_t>(priority) << DMA_SxCR_PL_Pos |
 			memoryDataSize / 2 << DMA_SxCR_MSIZE_Pos |
 			peripheralDataSize / 2 << DMA_SxCR_PSIZE_Pos |
 			memoryIncrement << DMA_SxCR_MINC_Pos |
