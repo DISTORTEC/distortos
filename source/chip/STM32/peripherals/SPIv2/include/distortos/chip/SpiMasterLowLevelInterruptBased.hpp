@@ -56,7 +56,7 @@ public:
 	}
 
 	/**
-	 * \brief SpiMasterLowLevel's destructor
+	 * \brief SpiMasterLowLevelInterruptBased's destructor
 	 *
 	 * Does nothing if driver is already stopped. If it's not, performs forced stop of operation.
 	 */
@@ -183,7 +183,7 @@ private:
 	/// true if driver is started, false otherwise
 	bool started_;
 
-	/// selected word length, bits, {8, 16}
+	/// selected word length, bits, [4; 16] or [minSpiWordLength; maxSpiWordLength]
 	uint8_t wordLength_;
 };
 
