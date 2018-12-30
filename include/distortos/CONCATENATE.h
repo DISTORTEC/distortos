@@ -50,4 +50,26 @@
 
 #define CONCATENATE3(a, b, c)	CONCATENATE3_IMPLEMENTATION(a, b, c)
 
+/**
+ * \brief Implementation of CONCATENATE4()
+ *
+ * \param [in] a is the first token
+ * \param [in] b is the second token
+ * \param [in] c is the third token
+ * \param [in] d is the fourth token
+ */
+
+#define CONCATENATE4_IMPLEMENTATION(a, b, c, d)	a ## b ## c ## d
+
+/**
+ * \brief Concatenates 4 tokens.
+ *
+ * \param [in] a is the first token
+ * \param [in] b is the second token
+ * \param [in] c is the third token
+ * \param [in] d is the fourth token
+ */
+
+#define CONCATENATE4(a, b, c, d)	CONCATENATE4_IMPLEMENTATION(a, b, c, d)
+
 #endif	/* INCLUDE_DISTORTOS_CONCATENATE_H_ */
