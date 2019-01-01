@@ -1,7 +1,7 @@
 #
 # file: distortos-utilities.cmake
 #
-# author: Copyright (C) 2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+# author: Copyright (C) 2018-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
 #
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -116,7 +116,7 @@ endfunction()
 #
 
 function(distortosSetBooleanConfiguration name help)
-	cmake_parse_arguments(PARSE_ARGV 2 BOOL "INTERNAL" "" "")
+	cmake_parse_arguments(PARSE_ARGV 2 BOOL "FORCE;INTERNAL" "" "")
 	list(LENGTH BOOL_UNPARSED_ARGUMENTS length)
 	if(NOT length EQUAL 1)
 		message(FATAL_ERROR "Invalid arguments: \"${BOOL_UNPARSED_ARGUMENTS}\"")
@@ -125,13 +125,19 @@ function(distortosSetBooleanConfiguration name help)
 	set(defaultValue ${BOOL_UNPARSED_ARGUMENTS})
 	distortosCheckBoolean("${name}.DEFAULT" ${defaultValue})
 
+	if(BOOL_FORCE)
+		set(force FORCE)
+	else()
+		unset(force)
+	endif()
+
 	if(NOT BOOL_INTERNAL)
 		set(type BOOL)
 	else()
 		set(type INTERNAL)
 	endif()
 
-	set("${name}" "${defaultValue}" CACHE ${type} "")
+	set("${name}" "${defaultValue}" CACHE ${type} "" ${force})
 	set_property(CACHE "${name}" PROPERTY HELPSTRING "${help}")
 	get_property(currentType CACHE "${name}" PROPERTY TYPE)
 	if(NOT currentType STREQUAL type)
@@ -148,7 +154,7 @@ endfunction()
 #
 
 function(distortosSetIntegerConfiguration name help)
-	cmake_parse_arguments(PARSE_ARGV 2 INTEGER "INTERNAL" "MIN;MAX" "")
+	cmake_parse_arguments(PARSE_ARGV 2 INTEGER "FORCE;INTERNAL" "MIN;MAX" "")
 	list(LENGTH INTEGER_UNPARSED_ARGUMENTS length)
 	if(NOT length EQUAL 1)
 		message(FATAL_ERROR "Invalid arguments: \"${INTEGER_UNPARSED_ARGUMENTS}\"")
@@ -170,6 +176,12 @@ function(distortosSetIntegerConfiguration name help)
 	set(defaultValue ${INTEGER_UNPARSED_ARGUMENTS})
 	distortosCheckInteger("${name}.DEFAULT" ${defaultValue} ${INTEGER_MIN} ${INTEGER_MAX})
 
+	if(INTEGER_FORCE)
+		set(force FORCE)
+	else()
+		unset(force)
+	endif()
+
 	if(NOT INTEGER_INTERNAL)
 		set(type STRING)
 	else()
@@ -180,7 +192,7 @@ function(distortosSetIntegerConfiguration name help)
 		string(APPEND help "\n\nAllowed range: [${INTEGER_MIN}; ${INTEGER_MAX}]")
 	endif()
 
-	set("${name}" "${defaultValue}" CACHE ${type} "")
+	set("${name}" "${defaultValue}" CACHE ${type} "" ${force})
 	set_property(CACHE "${name}" PROPERTY HELPSTRING "${help}")
 	get_property(currentType CACHE "${name}" PROPERTY TYPE)
 	if(NOT currentType STREQUAL type)
@@ -197,7 +209,7 @@ endfunction()
 #
 
 function(distortosSetStringConfiguration name help)
-	cmake_parse_arguments(PARSE_ARGV 2 STRING "INTERNAL" "" "")
+	cmake_parse_arguments(PARSE_ARGV 2 STRING "FORCE;INTERNAL" "" "")
 
 	list(FIND STRING_UNPARSED_ARGUMENTS DEFAULT index)
 	if(NOT index EQUAL -1)
@@ -216,13 +228,19 @@ function(distortosSetStringConfiguration name help)
 		message(FATAL_ERROR "No string values provided")
 	endif()
 
+	if(STRING_FORCE)
+		set(force FORCE)
+	else()
+		unset(force)
+	endif()
+
 	if(NOT STRING_INTERNAL)
 		set(type STRING)
 	else()
 		set(type INTERNAL)
 	endif()
 
-	set("${name}" "${defaultValue}" CACHE ${type} "")
+	set("${name}" "${defaultValue}" CACHE ${type} "" ${force})
 	set_property(CACHE "${name}" PROPERTY HELPSTRING "${help}")
 	set_property(CACHE "${name}" PROPERTY STRINGS "${STRING_UNPARSED_ARGUMENTS}")
 	get_property(currentType CACHE "${name}" PROPERTY TYPE)
@@ -246,6 +264,7 @@ endfunction()
 # `distortosSetConfiguration(STRING name string1 [[[string2] string3] ...] [generic-options])`
 #
 # generic options:
+# - `[FORCE]` - forces the value of cache entry to `defaultValue`;
 # - `[HELP "help message ..."]` - help message displayed in the GUI; all whitespace after newlines is removed, so the
 # message may be indented to match other code;
 # - `[INTERNAL]` - causes the cache entry to be hidden in the GUI;
