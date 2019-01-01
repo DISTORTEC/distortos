@@ -3,7 +3,7 @@
 #
 # file: generateBoard.py
 #
-# author: Copyright (C) 2017-2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+# author: Copyright (C) 2017-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
 #
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -120,20 +120,28 @@ def resolveExtensions(dictionary, distortosPath):
 		del dictionary['$extends']
 	return dictionary
 
+def itemsWrapper(dictionary):
+	"""Wrapper for dict.items().
+
+	* `dictionary` is a dictionary for which dict.items() will be called
+	"""
+	return dictionary.items()
+
 def resolveReferences(dictionary, labels):
 	"""Resolve all references in a dictionary.
 
-	* `dictionary` is a dictionary of a list in which references will be resolved
+	* `dictionary` is a dictionary or a list in which references will be resolved
 	* `labels` is a dictionary with labels
 	"""
 	keysForDeletion = []
-	for key, value in dictionary.items():
+	iterator = itemsWrapper if isinstance(dictionary, collections.MutableMapping) else enumerate
+	for key, value in iterator(dictionary):
 		if isinstance(key, Reference) == True:
 			mergeDictionaries(labels[key.label], value)
 			keysForDeletion.append(key)
 		elif isinstance(value, Reference) == True:
 			dictionary[key] = labels[value.label]
-		elif isinstance(value, collections.MutableMapping) == True:
+		elif isinstance(value, (collections.MutableMapping, collections.MutableSequence)) == True:
 			resolveReferences(value, labels)
 
 	for keyForDeletion in keysForDeletion:
