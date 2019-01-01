@@ -27,6 +27,11 @@ import re
 import ruamel.yaml
 import sys
 
+try:
+	collectionsAbc = collections.abc
+except AttributeError:
+	collectionsAbc = collections
+
 class RaiseExtension(jinja2.ext.Extension):
 	"""Extension that can raise an exception from within Jinja template"""
 
@@ -53,7 +58,7 @@ def addPaths(dictionary, path = None):
 	"""
 	path = path or []
 	for key, value in dictionary.items():
-		if isinstance(value, collections.MutableMapping) == True and '$path' not in value:
+		if isinstance(value, collectionsAbc.MutableMapping) == True and '$path' not in value:
 			newPath = path + [key]
 			value['$path'] = newPath
 			addPaths(value, newPath)
@@ -71,7 +76,7 @@ def getLabels(dictionary, labels = None):
 		if key == '$labels':
 			for label in value:
 				labels[label] = dictionary
-		elif isinstance(value, collections.MutableMapping) == True:
+		elif isinstance(value, collectionsAbc.MutableMapping) == True:
 			labels = getLabels(value, labels)
 	return labels
 
@@ -96,8 +101,8 @@ def mergeDictionaries(a, b):
 	"""
 	for key in b:
 		if key in a:
-			if (isinstance(a[key], collections.MutableMapping) == True and
-					isinstance(b[key], collections.MutableMapping) == True):
+			if (isinstance(a[key], collectionsAbc.MutableMapping) == True and
+					isinstance(b[key], collectionsAbc.MutableMapping) == True):
 				mergeDictionaries(a[key], b[key])
 			elif a[key] != b[key]:
 				a[key] = b[key]
@@ -134,14 +139,14 @@ def resolveReferences(dictionary, labels):
 	* `labels` is a dictionary with labels
 	"""
 	keysForDeletion = []
-	iterator = itemsWrapper if isinstance(dictionary, collections.MutableMapping) else enumerate
+	iterator = itemsWrapper if isinstance(dictionary, collectionsAbc.MutableMapping) else enumerate
 	for key, value in iterator(dictionary):
 		if isinstance(key, Reference) == True:
 			mergeDictionaries(labels[key.label], value)
 			keysForDeletion.append(key)
 		elif isinstance(value, Reference) == True:
 			dictionary[key] = labels[value.label]
-		elif isinstance(value, (collections.MutableMapping, collections.MutableSequence)) == True:
+		elif isinstance(value, (collectionsAbc.MutableMapping, collectionsAbc.MutableSequence)) == True:
 			resolveReferences(value, labels)
 
 	for keyForDeletion in keysForDeletion:
