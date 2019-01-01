@@ -16,7 +16,6 @@ import ast
 import collections
 import common
 from common import Reference
-import datetime
 import fnmatch
 import jinja2
 import jinja2.ext
@@ -195,7 +194,6 @@ if __name__ == '__main__':
 	jinjaEnvironment.globals['len'] = len
 	jinjaEnvironment.globals['outputPath'] = relativeOutputPath
 	jinjaEnvironment.globals['sanitizedBoard'] = common.sanitize(board)
-	jinjaEnvironment.globals['year'] = datetime.date.today().year
 	jinjaEnvironment.tests['fullMatch'] = isFullMatch
 
 	metadata = []
