@@ -14,8 +14,7 @@ add_executable(STM32-SPIv1-SpiMasterLowLevelInterruptBased-unit-test
 
 target_include_directories(STM32-SPIv1-SpiMasterLowLevelInterruptBased-unit-test BEFORE PUBLIC
 		${INCLUDE_MOCKS}/chip/STM32-SPIv1-SPIv2.hpp
-		${INCLUDE_MOCKS}/chip/STM32-SPIv1-SpiPeripheral.hpp
-		${INCLUDE_MOCKS}/distortosConfiguration.h)
+		${INCLUDE_MOCKS}/chip/STM32-SPIv1-SpiPeripheral.hpp)
 target_include_directories(STM32-SPIv1-SpiMasterLowLevelInterruptBased-unit-test PUBLIC
 		${DISTORTOS_PATH}/source/chip/STM32/peripherals/SPIv1/include)
 
