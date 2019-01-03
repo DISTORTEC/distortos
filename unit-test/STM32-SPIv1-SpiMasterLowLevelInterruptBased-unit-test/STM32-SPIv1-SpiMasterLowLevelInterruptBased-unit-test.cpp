@@ -5,7 +5,7 @@
  * This test checks whether STM32 SPIv1's SpiMasterLowLevelInterruptBased performs all h/w operations properly and in
  * correct order.
  *
- * \author Copyright (C) 2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2018-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -13,6 +13,7 @@
  */
 
 #include "distortos/chip/SpiMasterLowLevelInterruptBased.hpp"
+#include "distortos/chip/STM32-SPIv1.hpp"
 #include "distortos/chip/STM32-SPIv1-SpiPeripheral.hpp"
 
 #include "distortos/devices/communication/SpiMasterBase.hpp"
@@ -39,7 +40,6 @@ public:
 
 constexpr uint16_t initialCr1 {SPI_CR1_SSM | SPI_CR1_SSI | SPI_CR1_SPE | SPI_CR1_BR | SPI_CR1_MSTR};
 constexpr uint16_t initialCr2 {};
-constexpr uint32_t peripheralFrequency {256000000};
 
 }	// namespace
 
@@ -55,8 +55,6 @@ TEST_CASE("Testing start() & stop() interactions", "[start/stop]")
 	std::vector<std::unique_ptr<trompeloeil::expectation>> expectations {};
 
 	distortos::chip::SpiMasterLowLevelInterruptBased spi {peripheralMock};
-
-	ALLOW_CALL(peripheralMock, getPeripheralFrequency()).RETURN(peripheralFrequency);
 
 	SECTION("Stopping stopped driver should fail with EBADF")
 	{
@@ -94,32 +92,15 @@ TEST_CASE("Testing start() & stop() interactions", "[start/stop]")
 TEST_CASE("Testing configure()", "[configure]")
 {
 	distortos::chip::SpiPeripheral peripheralMock {};
+	distortos::chip::Stm32Spiv1Spiv2Mock stm32Spiv1Spiv2Mock {};
 	trompeloeil::sequence sequence {};
 
 	distortos::chip::SpiMasterLowLevelInterruptBased spi {peripheralMock};
-
-	ALLOW_CALL(peripheralMock, getPeripheralFrequency()).RETURN(peripheralFrequency);
 
 	{
 		REQUIRE_CALL(peripheralMock, writeCr1(initialCr1)).IN_SEQUENCE(sequence);
 		REQUIRE_CALL(peripheralMock, writeCr2(initialCr2)).IN_SEQUENCE(sequence);
 		REQUIRE(spi.start() == 0);
-	}
-
-	SECTION("Trying to use clock frequency lower than `peripheral frequency / 256` should fail with EINVAL")
-	{
-		REQUIRE(spi.configure({}, peripheralFrequency / 256 - 1, 8, {}, {}).first == EINVAL);
-	}
-
-	for (uint8_t wordLength {}; wordLength <= 32; ++wordLength)
-	{
-		if (wordLength == 8 || wordLength == 16)
-			continue;
-
-		DYNAMIC_SECTION("Trying to use word length " << wordLength << " should fail with EINVAL")
-		{
-			REQUIRE(spi.configure({}, {}, wordLength, {}, {}).first == EINVAL);
-		}
 	}
 
 	const distortos::devices::SpiMode modes[]
@@ -129,117 +110,42 @@ TEST_CASE("Testing configure()", "[configure]")
 			distortos::devices::SpiMode::_2,
 			distortos::devices::SpiMode::_3,
 	};
-	for (auto mode : modes)
-	{
-		DYNAMIC_SECTION("Trying to use mode " << static_cast<int>(mode) << " should succeed")
-		{
-			const auto cpol =
-					mode == distortos::devices::SpiMode::cpol1cpha0 || mode == distortos::devices::SpiMode::cpol1cpha1;
-			const auto cpha =
-					mode == distortos::devices::SpiMode::cpol0cpha1 || mode == distortos::devices::SpiMode::cpol1cpha1;
-			const auto newCr1 = (initialCr1 & ~(SPI_CR1_CPOL | SPI_CR1_CPHA)) |
-					cpol << SPI_CR1_CPOL_Pos |
-					cpha << SPI_CR1_CPHA_Pos;
-			const auto oldCr1 = newCr1 ^ (SPI_CR1_CPOL | SPI_CR1_CPHA);
-
-			REQUIRE_CALL(peripheralMock, readCr1()).IN_SEQUENCE(sequence).RETURN(oldCr1);
-			REQUIRE_CALL(peripheralMock, writeCr1(oldCr1 & ~SPI_CR1_SPE)).IN_SEQUENCE(sequence);
-			REQUIRE_CALL(peripheralMock, writeCr1(newCr1)).IN_SEQUENCE(sequence);
-			REQUIRE(spi.configure(mode, peripheralFrequency / 256, 8, {}, {}).first == 0);
-		}
-	}
-
 	const uint32_t clockFrequencies[]
 	{
-			peripheralFrequency + 1,
-			peripheralFrequency,
-			peripheralFrequency - 1,
-
-			peripheralFrequency / 2 + 1,
-			peripheralFrequency / 2,
-			peripheralFrequency / 2 - 1,
-
-			peripheralFrequency / 4 + 1,
-			peripheralFrequency / 4,
-			peripheralFrequency / 4 - 1,
-
-			peripheralFrequency / 8 + 1,
-			peripheralFrequency / 8,
-			peripheralFrequency / 8 - 1,
-
-			peripheralFrequency / 16 + 1,
-			peripheralFrequency / 16,
-			peripheralFrequency / 16 - 1,
-
-			peripheralFrequency / 32 + 1,
-			peripheralFrequency / 32,
-			peripheralFrequency / 32 - 1,
-
-			peripheralFrequency / 64 + 1,
-			peripheralFrequency / 64,
-			peripheralFrequency / 64 - 1,
-
-			peripheralFrequency / 128 + 1,
-			peripheralFrequency / 128,
-			peripheralFrequency / 128 - 1,
-
-			peripheralFrequency / 256 + 1,
-			peripheralFrequency / 256,
+			0xc059f6bf,
+			0xe7170695,
+			0x947e8c38,
+			0x193d5a74,
 	};
-	for (auto clockFrequency : clockFrequencies)
+	const uint8_t wordLengths[]
 	{
-		DYNAMIC_SECTION("Trying to use clock frequency " << clockFrequency << " should succeed")
-		{
-			const auto divider = (peripheralFrequency + clockFrequency - 1) / clockFrequency;
-			const auto br = divider <= 2 ? 0 : 31 - __builtin_clz(divider - 1);
-			const auto newCr1 = (initialCr1 & ~SPI_CR1_BR) | br << SPI_CR1_BR_Pos;
-			const auto oldCr1 = newCr1 ^ SPI_CR1_BR;
-			const auto realClockFrequency = peripheralFrequency / (1 << (br + 1));
-
-			REQUIRE_CALL(peripheralMock, readCr1()).IN_SEQUENCE(sequence).RETURN(oldCr1);
-			REQUIRE_CALL(peripheralMock, writeCr1(oldCr1 & ~SPI_CR1_SPE)).IN_SEQUENCE(sequence);
-			REQUIRE_CALL(peripheralMock, writeCr1(newCr1)).IN_SEQUENCE(sequence);
-			REQUIRE(spi.configure({}, clockFrequency, 8, {}, {}) == std::make_pair(0, realClockFrequency));
-		}
-	}
-
-	SECTION("Trying to change word length to valid value should succeed")
-	{
-		const uint8_t wordLengths[]
-		{
-				16,
-				8,
-		};
-		for (auto wordLength : wordLengths)
-		{
-			const auto newCr1 = (initialCr1 & ~SPI_CR1_DFF) | (wordLength == 16) << SPI_CR1_DFF_Pos;
-			const auto oldCr1 = newCr1 ^ SPI_CR1_DFF;
-
-			REQUIRE_CALL(peripheralMock, readCr1()).IN_SEQUENCE(sequence).RETURN(oldCr1);
-			REQUIRE_CALL(peripheralMock, writeCr1(oldCr1 & ~SPI_CR1_SPE)).IN_SEQUENCE(sequence);
-			REQUIRE_CALL(peripheralMock, writeCr1(newCr1)).IN_SEQUENCE(sequence);
-			REQUIRE(spi.configure({}, peripheralFrequency / 256, wordLength, {}, {}).first == 0);
-		}
-	}
-
+			0xc7,
+			0x6d,
+			0x8a,
+			0x88,
+	};
 	const bool lsbFirsts[]
 	{
 			false,
 			true,
 	};
-	for (auto lsbFirst : lsbFirsts)
+	const std::pair<int, uint32_t> rets[]
 	{
-		DYNAMIC_SECTION("Trying to use LSB first " << lsbFirst << " should succeed")
-		{
-			const auto newCr1 = (initialCr1 & ~SPI_CR1_LSBFIRST) | lsbFirst << SPI_CR1_LSBFIRST_Pos;
-			const auto oldCr1 = newCr1 ^ SPI_CR1_LSBFIRST;
-
-			REQUIRE_CALL(peripheralMock, readCr1()).IN_SEQUENCE(sequence).RETURN(oldCr1);
-			REQUIRE_CALL(peripheralMock, writeCr1(oldCr1 & ~SPI_CR1_SPE)).IN_SEQUENCE(sequence);
-			REQUIRE_CALL(peripheralMock, writeCr1(newCr1)).IN_SEQUENCE(sequence);
-			REQUIRE(spi.configure({}, peripheralFrequency / 256, 8, lsbFirst, {}).first == 0);
-		}
-	}
+			{0x558befc4, 0x08d543bf},
+			{0x051c780b, 0x1b8aa8ff},
+			{0x61093262, 0x3092c5a1},
+			{0x760d6032, 0xd29abd55},
+	};
+	for (auto mode : modes)
+		for (auto clockFrequency : clockFrequencies)
+			for (auto wordLength : wordLengths)
+				for (auto lsbFirst : lsbFirsts)
+					for (auto ret : rets)
+					{
+						REQUIRE_CALL(stm32Spiv1Spiv2Mock, configureSpi(_, mode, clockFrequency, wordLength,
+								lsbFirst)).LR_WITH(&_1 == &peripheralMock).IN_SEQUENCE(sequence).RETURN(ret);
+						REQUIRE(spi.configure(mode, clockFrequency, wordLength, lsbFirst, {}) == ret);
+					}
 
 	{
 		REQUIRE_CALL(peripheralMock, writeCr1(0u)).IN_SEQUENCE(sequence);
@@ -252,11 +158,10 @@ TEST_CASE("Testing startTransfer()", "[startTransfer]")
 {
 	SpiMaster masterMock {};
 	distortos::chip::SpiPeripheral peripheralMock {};
+	distortos::chip::Stm32Spiv1Spiv2Mock stm32Spiv1Spiv2Mock {};
 	trompeloeil::sequence sequence {};
 
 	distortos::chip::SpiMasterLowLevelInterruptBased spi {peripheralMock};
-
-	ALLOW_CALL(peripheralMock, getPeripheralFrequency()).RETURN(peripheralFrequency);
 
 	{
 		REQUIRE_CALL(peripheralMock, writeCr1(initialCr1)).IN_SEQUENCE(sequence);
@@ -273,10 +178,9 @@ TEST_CASE("Testing startTransfer()", "[startTransfer]")
 
 	SECTION("Testing 8-bit transfers")
 	{
-		REQUIRE_CALL(peripheralMock, readCr1()).IN_SEQUENCE(sequence).RETURN(initialCr1);
-		REQUIRE_CALL(peripheralMock, writeCr1(initialCr1 & ~SPI_CR1_SPE)).IN_SEQUENCE(sequence);
-		REQUIRE_CALL(peripheralMock, writeCr1(initialCr1)).IN_SEQUENCE(sequence);
-		REQUIRE(spi.configure({}, peripheralFrequency / 256, 8, {}, dummyData).first == 0);
+		REQUIRE_CALL(stm32Spiv1Spiv2Mock, configureSpi(_, distortos::devices::SpiMode{}, uint32_t{}, 8,
+				bool{})).LR_WITH(&_1 == &peripheralMock).IN_SEQUENCE(sequence).RETURN(std::make_pair(0, 0));
+		REQUIRE(spi.configure({}, {}, 8, {}, dummyData).first == 0);
 
 		SECTION("Testing 8-bit transfer of 1 item")
 		{
@@ -292,7 +196,7 @@ TEST_CASE("Testing startTransfer()", "[startTransfer]")
 			REQUIRE(spi.startTransfer(masterMock, nullptr, rxBuffer.begin(), sizeof(rxBuffer)) == EBUSY);
 
 			// trying to configure the driver when a transfer is ongoing should fail with EBUSY
-			REQUIRE(spi.configure({}, peripheralFrequency / 256, 8, {}, dummyData).first == EBUSY);
+			REQUIRE(spi.configure({}, {}, 8, {}, dummyData).first == EBUSY);
 
 			// trying to stop the driver when a transfer is ongoing should fail with EBUSY
 			REQUIRE(spi.stop() == EBUSY);
@@ -320,7 +224,7 @@ TEST_CASE("Testing startTransfer()", "[startTransfer]")
 			REQUIRE(spi.startTransfer(masterMock, txBuffer.begin(), rxBuffer.begin(), sizeof(rxBuffer)) == EBUSY);
 
 			// trying to configure the driver when a transfer is ongoing should fail with EBUSY
-			REQUIRE(spi.configure({}, peripheralFrequency / 256, 8, {}, dummyData).first == EBUSY);
+			REQUIRE(spi.configure({}, {}, 8, {}, dummyData).first == EBUSY);
 
 			// trying to stop the driver when a transfer is ongoing should fail with EBUSY
 			REQUIRE(spi.stop() == EBUSY);
@@ -350,10 +254,9 @@ TEST_CASE("Testing startTransfer()", "[startTransfer]")
 	}
 	SECTION("Testing 16-bit transfers")
 	{
-		REQUIRE_CALL(peripheralMock, readCr1()).IN_SEQUENCE(sequence).RETURN(initialCr1 | SPI_CR1_DFF);
-		REQUIRE_CALL(peripheralMock, writeCr1((initialCr1 | SPI_CR1_DFF) & ~SPI_CR1_SPE)).IN_SEQUENCE(sequence);
-		REQUIRE_CALL(peripheralMock, writeCr1(initialCr1 | SPI_CR1_DFF)).IN_SEQUENCE(sequence);
-		REQUIRE(spi.configure({}, peripheralFrequency / 256, 16, {}, dummyData).first == 0);
+		REQUIRE_CALL(stm32Spiv1Spiv2Mock, configureSpi(_, distortos::devices::SpiMode{}, uint32_t{}, 16,
+				bool{})).LR_WITH(&_1 == &peripheralMock).IN_SEQUENCE(sequence).RETURN(std::make_pair(0, 0));
+		REQUIRE(spi.configure({}, {}, 16, {}, dummyData).first == 0);
 
 		SECTION("Starting transfer with odd length when word length is 16 should fail with EINVAL")
 		{
@@ -373,7 +276,7 @@ TEST_CASE("Testing startTransfer()", "[startTransfer]")
 			REQUIRE(spi.startTransfer(masterMock, nullptr, rxBuffer.begin(), sizeof(rxBuffer)) == EBUSY);
 
 			// trying to configure the driver when a transfer is ongoing should fail with EBUSY
-			REQUIRE(spi.configure({}, peripheralFrequency / 256, 16, {}, dummyData).first == EBUSY);
+			REQUIRE(spi.configure({}, {}, 16, {}, dummyData).first == EBUSY);
 
 			// trying to stop the driver when a transfer is ongoing should fail with EBUSY
 			REQUIRE(spi.stop() == EBUSY);
@@ -401,7 +304,7 @@ TEST_CASE("Testing startTransfer()", "[startTransfer]")
 			REQUIRE(spi.startTransfer(masterMock, txBuffer.begin(), rxBuffer.begin(), sizeof(rxBuffer)) == EBUSY);
 
 			// trying to configure the driver when a transfer is ongoing should fail with EBUSY
-			REQUIRE(spi.configure({}, peripheralFrequency / 256, 16, {}, dummyData).first == EBUSY);
+			REQUIRE(spi.configure({}, {}, 16, {}, dummyData).first == EBUSY);
 
 			// trying to stop the driver when a transfer is ongoing should fail with EBUSY
 			REQUIRE(spi.stop() == EBUSY);

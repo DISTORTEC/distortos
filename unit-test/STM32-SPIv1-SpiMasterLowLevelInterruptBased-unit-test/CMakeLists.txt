@@ -1,7 +1,7 @@
 #
 # file: CMakeLists.txt
 #
-# author: Copyright (C) 2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+# author: Copyright (C) 2018-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
 #
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -9,11 +9,11 @@
 
 add_executable(STM32-SPIv1-SpiMasterLowLevelInterruptBased-unit-test
 		STM32-SPIv1-SpiMasterLowLevelInterruptBased-unit-test.cpp
-		${DISTORTOS_PATH}/source/chip/STM32/peripherals/SPIv1/STM32-SPIv1.cpp
 		${DISTORTOS_PATH}/source/chip/STM32/peripherals/SPIv1/STM32-SPIv1-SpiMasterLowLevelInterruptBased.cpp
 		${MAIN_CPP})
 
 target_include_directories(STM32-SPIv1-SpiMasterLowLevelInterruptBased-unit-test BEFORE PUBLIC
+		${INCLUDE_MOCKS}/chip/STM32-SPIv1-SPIv2.hpp
 		${INCLUDE_MOCKS}/chip/STM32-SPIv1-SpiPeripheral.hpp
 		${INCLUDE_MOCKS}/distortosConfiguration.h)
 target_include_directories(STM32-SPIv1-SpiMasterLowLevelInterruptBased-unit-test PUBLIC
