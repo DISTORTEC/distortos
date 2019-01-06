@@ -397,6 +397,16 @@ set("distortos_Memory_regions_10_Heap"
 		CACHE
 		"STRING"
 		"Memory region for heap in linker script")
+set("distortos_Peripherals_DMA1"
+		"OFF"
+		CACHE
+		"BOOL"
+		"Enable DMA1 low-level driver.")
+set("distortos_Peripherals_DMA2"
+		"OFF"
+		CACHE
+		"BOOL"
+		"Enable DMA2 low-level driver.")
 set("distortos_Peripherals_GPIOA"
 		"ON"
 		CACHE
