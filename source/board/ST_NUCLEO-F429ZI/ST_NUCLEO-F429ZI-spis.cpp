@@ -2,7 +2,7 @@
  * \file
  * \brief Definitions of low-level SPI master drivers for SPIv1 in ST,NUCLEO-F429ZI (ST,STM32F429ZI chip)
  *
- * \author Copyright (C) 2016-2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2016-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -14,10 +14,21 @@
 
 #include "distortos/chip/spis.hpp"
 
-#include "distortos/chip/ChipSpiMasterLowLevel.hpp"
+#include "distortos/chip/dmas.hpp"
+#include "distortos/chip/SpiMasterLowLevelDmaBased.hpp"
+#include "distortos/chip/SpiMasterLowLevelInterruptBased.hpp"
 #include "distortos/chip/STM32-SPIv1-SpiPeripheral.hpp"
 
 #include "distortos/BIND_LOW_LEVEL_INITIALIZER.h"
+
+/**
+ * \brief Generates name of DMA channel object in the form `dma<dmaId>Channel<channelId>`.
+ *
+ * \param [in] dmaId is a DMA identifier
+ * \param [in] channelId is a DMA channel identifier
+ */
+
+#define DMA_CHANNEL(dmaId, channelId)	CONCATENATE4(dma, dmaId, Channel, channelId)
 
 namespace distortos
 {
@@ -58,7 +69,20 @@ const SpiPeripheral spi1Peripheral {SPI1_BASE};
 
 }	// namespace
 
-ChipSpiMasterLowLevel spi1 {spi1Peripheral};
+#ifdef CONFIG_CHIP_STM32_SPIV1_SPI1_DMA_BASED
+
+SpiMasterLowLevelDmaBased spi1
+{
+		spi1Peripheral,
+		DMA_CHANNEL(CONFIG_CHIP_STM32_SPIV1_SPI1_RX_DMA, CONFIG_CHIP_STM32_SPIV1_SPI1_RX_DMA_CHANNEL),
+		CONFIG_CHIP_STM32_SPIV1_SPI1_RX_DMA_REQUEST,
+		DMA_CHANNEL(CONFIG_CHIP_STM32_SPIV1_SPI1_TX_DMA, CONFIG_CHIP_STM32_SPIV1_SPI1_TX_DMA_CHANNEL),
+		CONFIG_CHIP_STM32_SPIV1_SPI1_TX_DMA_REQUEST
+};
+
+#else	// !def CONFIG_CHIP_STM32_SPIV1_SPI1_DMA_BASED
+
+SpiMasterLowLevelInterruptBased spi1 {spi1Peripheral};
 
 /**
  * \brief SPI1 interrupt handler
@@ -68,6 +92,8 @@ extern "C" void SPI1_IRQHandler()
 {
 	spi1.interruptHandler();
 }
+
+#endif	// !def CONFIG_CHIP_STM32_SPIV1_SPI1_DMA_BASED
 
 #endif	// def CONFIG_CHIP_STM32_SPIV1_SPI1_ENABLE
 
@@ -104,7 +130,20 @@ const SpiPeripheral spi2Peripheral {SPI2_BASE};
 
 }	// namespace
 
-ChipSpiMasterLowLevel spi2 {spi2Peripheral};
+#ifdef CONFIG_CHIP_STM32_SPIV1_SPI2_DMA_BASED
+
+SpiMasterLowLevelDmaBased spi2
+{
+		spi2Peripheral,
+		DMA_CHANNEL(CONFIG_CHIP_STM32_SPIV1_SPI2_RX_DMA, CONFIG_CHIP_STM32_SPIV1_SPI2_RX_DMA_CHANNEL),
+		CONFIG_CHIP_STM32_SPIV1_SPI2_RX_DMA_REQUEST,
+		DMA_CHANNEL(CONFIG_CHIP_STM32_SPIV1_SPI2_TX_DMA, CONFIG_CHIP_STM32_SPIV1_SPI2_TX_DMA_CHANNEL),
+		CONFIG_CHIP_STM32_SPIV1_SPI2_TX_DMA_REQUEST
+};
+
+#else	// !def CONFIG_CHIP_STM32_SPIV1_SPI2_DMA_BASED
+
+SpiMasterLowLevelInterruptBased spi2 {spi2Peripheral};
 
 /**
  * \brief SPI2 interrupt handler
@@ -114,6 +153,8 @@ extern "C" void SPI2_IRQHandler()
 {
 	spi2.interruptHandler();
 }
+
+#endif	// !def CONFIG_CHIP_STM32_SPIV1_SPI2_DMA_BASED
 
 #endif	// def CONFIG_CHIP_STM32_SPIV1_SPI2_ENABLE
 
@@ -150,7 +191,20 @@ const SpiPeripheral spi3Peripheral {SPI3_BASE};
 
 }	// namespace
 
-ChipSpiMasterLowLevel spi3 {spi3Peripheral};
+#ifdef CONFIG_CHIP_STM32_SPIV1_SPI3_DMA_BASED
+
+SpiMasterLowLevelDmaBased spi3
+{
+		spi3Peripheral,
+		DMA_CHANNEL(CONFIG_CHIP_STM32_SPIV1_SPI3_RX_DMA, CONFIG_CHIP_STM32_SPIV1_SPI3_RX_DMA_CHANNEL),
+		CONFIG_CHIP_STM32_SPIV1_SPI3_RX_DMA_REQUEST,
+		DMA_CHANNEL(CONFIG_CHIP_STM32_SPIV1_SPI3_TX_DMA, CONFIG_CHIP_STM32_SPIV1_SPI3_TX_DMA_CHANNEL),
+		CONFIG_CHIP_STM32_SPIV1_SPI3_TX_DMA_REQUEST
+};
+
+#else	// !def CONFIG_CHIP_STM32_SPIV1_SPI3_DMA_BASED
+
+SpiMasterLowLevelInterruptBased spi3 {spi3Peripheral};
 
 /**
  * \brief SPI3 interrupt handler
@@ -160,6 +214,8 @@ extern "C" void SPI3_IRQHandler()
 {
 	spi3.interruptHandler();
 }
+
+#endif	// !def CONFIG_CHIP_STM32_SPIV1_SPI3_DMA_BASED
 
 #endif	// def CONFIG_CHIP_STM32_SPIV1_SPI3_ENABLE
 
@@ -196,7 +252,20 @@ const SpiPeripheral spi4Peripheral {SPI4_BASE};
 
 }	// namespace
 
-ChipSpiMasterLowLevel spi4 {spi4Peripheral};
+#ifdef CONFIG_CHIP_STM32_SPIV1_SPI4_DMA_BASED
+
+SpiMasterLowLevelDmaBased spi4
+{
+		spi4Peripheral,
+		DMA_CHANNEL(CONFIG_CHIP_STM32_SPIV1_SPI4_RX_DMA, CONFIG_CHIP_STM32_SPIV1_SPI4_RX_DMA_CHANNEL),
+		CONFIG_CHIP_STM32_SPIV1_SPI4_RX_DMA_REQUEST,
+		DMA_CHANNEL(CONFIG_CHIP_STM32_SPIV1_SPI4_TX_DMA, CONFIG_CHIP_STM32_SPIV1_SPI4_TX_DMA_CHANNEL),
+		CONFIG_CHIP_STM32_SPIV1_SPI4_TX_DMA_REQUEST
+};
+
+#else	// !def CONFIG_CHIP_STM32_SPIV1_SPI4_DMA_BASED
+
+SpiMasterLowLevelInterruptBased spi4 {spi4Peripheral};
 
 /**
  * \brief SPI4 interrupt handler
@@ -206,6 +275,8 @@ extern "C" void SPI4_IRQHandler()
 {
 	spi4.interruptHandler();
 }
+
+#endif	// !def CONFIG_CHIP_STM32_SPIV1_SPI4_DMA_BASED
 
 #endif	// def CONFIG_CHIP_STM32_SPIV1_SPI4_ENABLE
 
@@ -242,7 +313,20 @@ const SpiPeripheral spi5Peripheral {SPI5_BASE};
 
 }	// namespace
 
-ChipSpiMasterLowLevel spi5 {spi5Peripheral};
+#ifdef CONFIG_CHIP_STM32_SPIV1_SPI5_DMA_BASED
+
+SpiMasterLowLevelDmaBased spi5
+{
+		spi5Peripheral,
+		DMA_CHANNEL(CONFIG_CHIP_STM32_SPIV1_SPI5_RX_DMA, CONFIG_CHIP_STM32_SPIV1_SPI5_RX_DMA_CHANNEL),
+		CONFIG_CHIP_STM32_SPIV1_SPI5_RX_DMA_REQUEST,
+		DMA_CHANNEL(CONFIG_CHIP_STM32_SPIV1_SPI5_TX_DMA, CONFIG_CHIP_STM32_SPIV1_SPI5_TX_DMA_CHANNEL),
+		CONFIG_CHIP_STM32_SPIV1_SPI5_TX_DMA_REQUEST
+};
+
+#else	// !def CONFIG_CHIP_STM32_SPIV1_SPI5_DMA_BASED
+
+SpiMasterLowLevelInterruptBased spi5 {spi5Peripheral};
 
 /**
  * \brief SPI5 interrupt handler
@@ -252,6 +336,8 @@ extern "C" void SPI5_IRQHandler()
 {
 	spi5.interruptHandler();
 }
+
+#endif	// !def CONFIG_CHIP_STM32_SPIV1_SPI5_DMA_BASED
 
 #endif	// def CONFIG_CHIP_STM32_SPIV1_SPI5_ENABLE
 
@@ -288,7 +374,20 @@ const SpiPeripheral spi6Peripheral {SPI6_BASE};
 
 }	// namespace
 
-ChipSpiMasterLowLevel spi6 {spi6Peripheral};
+#ifdef CONFIG_CHIP_STM32_SPIV1_SPI6_DMA_BASED
+
+SpiMasterLowLevelDmaBased spi6
+{
+		spi6Peripheral,
+		DMA_CHANNEL(CONFIG_CHIP_STM32_SPIV1_SPI6_RX_DMA, CONFIG_CHIP_STM32_SPIV1_SPI6_RX_DMA_CHANNEL),
+		CONFIG_CHIP_STM32_SPIV1_SPI6_RX_DMA_REQUEST,
+		DMA_CHANNEL(CONFIG_CHIP_STM32_SPIV1_SPI6_TX_DMA, CONFIG_CHIP_STM32_SPIV1_SPI6_TX_DMA_CHANNEL),
+		CONFIG_CHIP_STM32_SPIV1_SPI6_TX_DMA_REQUEST
+};
+
+#else	// !def CONFIG_CHIP_STM32_SPIV1_SPI6_DMA_BASED
+
+SpiMasterLowLevelInterruptBased spi6 {spi6Peripheral};
 
 /**
  * \brief SPI6 interrupt handler
@@ -298,6 +397,8 @@ extern "C" void SPI6_IRQHandler()
 {
 	spi6.interruptHandler();
 }
+
+#endif	// !def CONFIG_CHIP_STM32_SPIV1_SPI6_DMA_BASED
 
 #endif	// def CONFIG_CHIP_STM32_SPIV1_SPI6_ENABLE
 

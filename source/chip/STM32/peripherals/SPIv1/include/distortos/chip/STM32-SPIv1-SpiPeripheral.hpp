@@ -39,6 +39,15 @@ public:
 	}
 
 	/**
+	 * \return address of DR register
+	 */
+
+	uintptr_t getDrAddress() const
+	{
+		return reinterpret_cast<uintptr_t>(&getSpi().DR);
+	}
+
+	/**
 	 * \return peripheral clock frequency, Hz
 	 */
 

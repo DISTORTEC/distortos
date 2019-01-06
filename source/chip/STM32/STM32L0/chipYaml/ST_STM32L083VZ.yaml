@@ -1,7 +1,7 @@
 #
 # file: ST_STM32L083VZ.yaml
 #
-# author: Copyright (C) 2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+# author: Copyright (C) 2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
 #
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -184,6 +184,16 @@ SPIs:
       controller: !Reference
         label: NVIC
       vector: SPI1
+    RX-DMA:
+    - controller: !Reference
+        label: DMA1
+      channel: 2
+      request: 1
+    TX-DMA:
+    - controller: !Reference
+        label: DMA1
+      channel: 3
+      request: 1
     $labels:
     - SPI1
   SPI2:
@@ -193,6 +203,24 @@ SPIs:
       controller: !Reference
         label: NVIC
       vector: SPI2
+    RX-DMA:
+    - controller: !Reference
+        label: DMA1
+      channel: 4
+      request: 2
+    - controller: !Reference
+        label: DMA1
+      channel: 6
+      request: 2
+    TX-DMA:
+    - controller: !Reference
+        label: DMA1
+      channel: 5
+      request: 2
+    - controller: !Reference
+        label: DMA1
+      channel: 7
+      request: 2
     $labels:
     - SPI2
 UARTs:

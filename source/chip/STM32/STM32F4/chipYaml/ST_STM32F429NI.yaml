@@ -1,7 +1,7 @@
 #
 # file: ST_STM32F429NI.yaml
 #
-# author: Copyright (C) 2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+# author: Copyright (C) 2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
 #
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -287,6 +287,24 @@ SPIs:
       controller: !Reference
         label: NVIC
       vector: SPI1
+    RX-DMA:
+    - controller: !Reference
+        label: DMA2
+      channel: 0
+      request: 3
+    - controller: !Reference
+        label: DMA2
+      channel: 2
+      request: 3
+    TX-DMA:
+    - controller: !Reference
+        label: DMA2
+      channel: 3
+      request: 3
+    - controller: !Reference
+        label: DMA2
+      channel: 5
+      request: 3
     $labels:
     - SPI1
   SPI2:
@@ -296,6 +314,16 @@ SPIs:
       controller: !Reference
         label: NVIC
       vector: SPI2
+    RX-DMA:
+    - controller: !Reference
+        label: DMA1
+      channel: 3
+      request: 0
+    TX-DMA:
+    - controller: !Reference
+        label: DMA1
+      channel: 4
+      request: 0
     $labels:
     - SPI2
   SPI3:
@@ -305,6 +333,24 @@ SPIs:
       controller: !Reference
         label: NVIC
       vector: SPI3
+    RX-DMA:
+    - controller: !Reference
+        label: DMA1
+      channel: 0
+      request: 0
+    - controller: !Reference
+        label: DMA1
+      channel: 2
+      request: 0
+    TX-DMA:
+    - controller: !Reference
+        label: DMA1
+      channel: 5
+      request: 0
+    - controller: !Reference
+        label: DMA1
+      channel: 7
+      request: 0
     $labels:
     - SPI3
   SPI4:
@@ -314,6 +360,24 @@ SPIs:
       controller: !Reference
         label: NVIC
       vector: SPI4
+    RX-DMA:
+    - controller: !Reference
+        label: DMA2
+      channel: 0
+      request: 4
+    - controller: !Reference
+        label: DMA2
+      channel: 3
+      request: 5
+    TX-DMA:
+    - controller: !Reference
+        label: DMA2
+      channel: 1
+      request: 4
+    - controller: !Reference
+        label: DMA2
+      channel: 4
+      request: 5
     $labels:
     - SPI4
   SPI5:
@@ -323,6 +387,24 @@ SPIs:
       controller: !Reference
         label: NVIC
       vector: SPI5
+    RX-DMA:
+    - controller: !Reference
+        label: DMA2
+      channel: 3
+      request: 2
+    - controller: !Reference
+        label: DMA2
+      channel: 5
+      request: 7
+    TX-DMA:
+    - controller: !Reference
+        label: DMA2
+      channel: 4
+      request: 2
+    - controller: !Reference
+        label: DMA2
+      channel: 6
+      request: 7
     $labels:
     - SPI5
   SPI6:
@@ -332,6 +414,16 @@ SPIs:
       controller: !Reference
         label: NVIC
       vector: SPI6
+    RX-DMA:
+    - controller: !Reference
+        label: DMA2
+      channel: 6
+      request: 1
+    TX-DMA:
+    - controller: !Reference
+        label: DMA2
+      channel: 5
+      request: 1
     $labels:
     - SPI6
 UARTs:

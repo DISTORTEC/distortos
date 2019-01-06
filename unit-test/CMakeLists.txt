@@ -1,7 +1,7 @@
 #
 # file: CMakeLists.txt
 #
-# author: Copyright (C) 2017-2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+# author: Copyright (C) 2017-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
 #
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -43,5 +43,9 @@ add_subdirectory(C-API-Semaphore-unit-test)
 add_subdirectory(estd-ContiguousRange-unit-test)
 add_subdirectory(STM32-DMAv1-DmaChannel-unit-test)
 add_subdirectory(STM32-DMAv2-DmaChannel-unit-test)
-add_subdirectory(STM32-SPIv1-ChipSpiMasterLowLevel-unit-test)
-add_subdirectory(STM32-SPIv2-ChipSpiMasterLowLevel-unit-test)
+add_subdirectory(STM32-SPIv1-unit-test)
+add_subdirectory(STM32-SPIv1-SpiMasterLowLevelDmaBased-unit-test)
+add_subdirectory(STM32-SPIv1-SpiMasterLowLevelInterruptBased-unit-test)
+add_subdirectory(STM32-SPIv2-unit-test)
+add_subdirectory(STM32-SPIv2-SpiMasterLowLevelDmaBased-unit-test)
+add_subdirectory(STM32-SPIv2-SpiMasterLowLevelInterruptBased-unit-test)

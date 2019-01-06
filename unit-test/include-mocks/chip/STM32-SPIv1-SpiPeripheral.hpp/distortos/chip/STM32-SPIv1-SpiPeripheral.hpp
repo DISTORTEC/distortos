@@ -2,7 +2,7 @@
  * \file
  * \brief Mock of SpiPeripheral class for SPIv1 in STM32
  *
- * \author Copyright (C) 2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2018-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -24,6 +24,7 @@ class SpiPeripheral
 {
 public:
 
+	MAKE_CONST_MOCK0(getDrAddress, uintptr_t());
 	MAKE_CONST_MOCK0(getPeripheralFrequency, uint32_t());
 	MAKE_CONST_MOCK0(readCr1, uint32_t());
 	MAKE_CONST_MOCK0(readCr2, uint32_t());

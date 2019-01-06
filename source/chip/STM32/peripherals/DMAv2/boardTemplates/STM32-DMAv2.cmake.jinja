@@ -1,7 +1,7 @@
 #
 # file: {{ metadata[metadataIndex][2] }}
 #
-# author: Copyright (C) 2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+# author: Copyright (C) 2018-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
 #
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -10,18 +10,41 @@
 #
 {% for key, dma in dictionary['DMAs'].items() if dma is mapping and 'ST,STM32-DMA-v2' in dma['compatible'] %}
 
+if(NOT distortos_Peripherals_{{ key }} AND STM32_DMA_V2_{{ key | upper }}_DEPENDENTS)
+	string(REPLACE ";" ", " dependents "${STM32_DMA_V2_{{ key | upper }}_DEPENDENTS}")
+	message(STATUS "Auto-enabling {{ key }}. Dependents: ${dependents}")
+	set(value ON FORCE)
+else()
+	set(value OFF)
+endif()
+
 distortosSetConfiguration(BOOLEAN
 		distortos_Peripherals_{{ key }}
-		OFF
+		${value}
 		HELP "Enable {{ key | upper }} low-level driver."
 		OUTPUT_NAME CONFIG_CHIP_STM32_DMAV2_{{ key | upper }}_ENABLE)
 
 if(distortos_Peripherals_{{ key }})
 {% for vector in dma['interrupts']['vectors'] %}
 
+	string(REPLACE ";" ", " dependents "${STM32_DMA_V2_{{ key | upper }}_CHANNEL{{ loop.index0 }}_DEPENDENTS}")
+	if(NOT distortos_Peripherals_{{ key }}_channel_{{ loop.index0 }} AND
+			STM32_DMA_V2_{{ key | upper }}_CHANNEL{{ loop.index0 }}_DEPENDENTS)
+		message(STATUS "Auto-enabling {{ key }} channel {{ loop.index0 }}. Dependents: ${dependents}")
+		set(value ON FORCE)
+	else()
+		set(value OFF)
+	endif()
+
+	list(LENGTH STM32_DMA_V2_{{ key | upper }}_CHANNEL{{ loop.index0 }}_DEPENDENTS length)
+	if(length GREATER 1)
+		message(STATUS "Warning: {{ key }} channel {{ loop.index0 }} has ${length} dependents: ${dependents}. "
+				"DMA channel cannot be used simultaneously by multiple drivers.")
+	endif()
+
 	distortosSetConfiguration(BOOLEAN
 			distortos_Peripherals_{{ key }}_channel_{{ loop.index0 }}
-			OFF
+			${value}
 			HELP "Enable {{ key | upper }} channel {{ loop.index0 }} low-level driver."
 			OUTPUT_NAME CONFIG_CHIP_STM32_DMAV2_{{ key | upper }}_CHANNEL{{ loop.index0 }}_ENABLE)
 

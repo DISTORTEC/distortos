@@ -39,6 +39,15 @@ public:
 	}
 
 	/**
+	 * \return address of DR register
+	 */
+
+	uintptr_t getDrAddress() const
+	{
+		return reinterpret_cast<uintptr_t>(&getSpi().DR);
+	}
+
+	/**
 	 * \return peripheral clock frequency, Hz
 	 */
 
@@ -68,8 +77,7 @@ public:
 	/**
 	 * \brief Reads current value of DR register.
 	 *
-	 * \param [in] wordLength selects word length, bits, [4; 16] or
-	 * [ChipSpiMasterLowLevel::minWordLength; ChipSpiMasterLowLevel::maxWordLength]
+	 * \param [in] wordLength selects word length, bits, [4; 16] or [minSpiWordLength; maxSpiWordLength]
 	 *
 	 * \return current value of DR register
 	 */
@@ -113,8 +121,7 @@ public:
 	/**
 	 * \brief Writes value to DR register.
 	 *
-	 * \param [in] wordLength selects word length, bits, [4; 16] or
-	 * [ChipSpiMasterLowLevel::minWordLength; ChipSpiMasterLowLevel::maxWordLength]
+	 * \param [in] wordLength selects word length, bits, [4; 16] or [minSpiWordLength; maxSpiWordLength]
 	 * \param [in] dr is the value that will be written to DR register
 	 */
 

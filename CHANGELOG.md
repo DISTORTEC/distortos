@@ -13,6 +13,8 @@ All notable changes to this project will be documented in this file. This projec
 chip.
 - Added basic support for *STM32's* *DMAv1* and *DMAv2*, along with data in *CSV* and *YAML* files for each supported
 chip and unit tests.
+- Added `chip::SpiMasterLowLevelDmaBased` classes for *STM32's* *SPIv1* and *SPIv2*. These classes implement
+`devices::SpiMasterLowLevel` interface and use *DMA* for transfers.
 - Added `BlockDevice` interface class.
 - Added `SpiDeviceProxy`, `SpiMasterProxy` and `SpiDeviceSelectGuard`, which build new SPI-related API. These classes
 can be used for RAII-style locking/unlocking or selecting/deselecting of appropriate devices and also serve as proxies
@@ -28,7 +30,7 @@ insertion/removal and has no support for detecting whether card is write-protect
 `LittlefsFile` and `LittlefsDirectory` classes, which implement interface of `FileSystem`, `File` and `Directory`
 classes.
 - Added `sys/dirent.h` and `sys/statvfs.h` headers, which are not provided by *newlib*.
-- Added unit tests of *STM32's* *SPIv1* and *SPIv2* drivers.
+- Added unit tests of *STM32's* *DMAv1*, *DMAv2*, *SPIv1* and *SPIv2* drivers.
 - Added unit tests of all `estd::ContiguousRange` constructor overloads.
 
 ### Changed
@@ -68,6 +70,9 @@ regenerated.
 and removed critical sections or bit-banding use where it makes no difference.
 `distortos::chip::ChipSpiMasterLowLevel::Parameters` class was moved to separate header and renamed to
 `distortos::chip::SpiPeripheral`. Removed `distortos::chip::ChipSpiMasterLowLevel::spi...Parameters` static objects and
+- Renamed *STM32's* *SPIv1* and *SPIv2* `chip::ChipSpiMasterLowLevel` classes to
+`chip::SpiMasterLowLevelInterruptBased` to make it consistent with newly added `chip::SpiMasterLowLevelDmaBased`.
+Aliases for old names were added, marked as deprecated and are scheduled to be removed after v0.7.0.
 replaced them with local objects generated for each board. This change requires the board to be regenerated.
 - Improved performance of interrupt-based *STM32's* *SPIv1* and *SPIv2* drivers.
 - Update *CMSIS* to version 5.4.0.
