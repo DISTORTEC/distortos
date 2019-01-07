@@ -2,7 +2,7 @@
  * \file
  * \brief SpiSdMmcCard class implementation
  *
- * \author Copyright (C) 2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2018-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -1439,11 +1439,6 @@ int SpiSdMmcCard::synchronize()
 	return {};
 }
 
-int SpiSdMmcCard::trim(uint64_t, uint64_t)
-{
-	return {};
-}
-
 int SpiSdMmcCard::unlock()
 {
 	return spiDevice_.unlock();
@@ -1636,7 +1631,7 @@ int SpiSdMmcCard::initialize(const SpiDeviceProxy& spiDeviceProxy)
 		const auto sdStatus = decodeSdStatus(std::get<2>(ret));
 		if (sdStatus.auSize == 0 || sdStatus.eraseSize == 0 || sdStatus.eraseTimeout == 0)
 			return EIO;	/// \todo add support for estimating erase timeout
-		
+
 		static const uint32_t auSizeAssociation[]
 		{
 				16 * 1024,

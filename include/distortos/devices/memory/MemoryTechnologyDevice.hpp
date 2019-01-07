@@ -163,22 +163,6 @@ public:
 	virtual int synchronize() = 0;
 
 	/**
-	 * \brief Trims unused blocks on a device.
-	 *
-	 * Selected range of blocks is no longer used and device may erase it when convenient.
-	 *
-	 * \param [in] address is the address of range that will be trimmed, must be a multiple of erase block size
-	 * \param [in] size is the size of trimmed range, bytes, must be a multiple of erase block size
-	 *
-	 * \return 0 on success, error code otherwise:
-	 * - EBADF - the device is not opened;
-	 * - EINVAL - \a address and/or \a size are not valid;
-	 * - ENOSPC - selected range is greater than size of device;
-	 */
-
-	virtual int trim(uint64_t address, uint64_t size) = 0;
-
-	/**
 	 * \brief Unlocks the device which was previously locked by current thread.
 	 *
 	 * \note Locks are recursive.

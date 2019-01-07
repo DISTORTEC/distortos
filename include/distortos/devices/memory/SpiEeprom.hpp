@@ -402,19 +402,6 @@ public:
 	int synchronize() override;
 
 	/**
-	 * \brief Trims unused blocks on SPI EEPROM.
-	 *
-	 * Selected range of blocks is no longer used and SPI EEPROM may erase it when convenient.
-	 *
-	 * \param [in] address is the address of range that will be trimmed, must be a multiple of erase block size
-	 * \param [in] size is the size of trimmed range, bytes, must be a multiple of erase block size
-	 *
-	 * \return always 0
-	 */
-
-	int trim(uint64_t address, uint64_t size) override;
-
-	/**
 	 * \brief Unlocks SPI EEPROM which was previously locked by current thread.
 	 *
 	 * \note Locks are recursive.
