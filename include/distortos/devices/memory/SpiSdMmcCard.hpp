@@ -28,7 +28,7 @@ namespace devices
  * \ingroup devices
  */
 
-class SpiSdMmcCard : public BlockDevice
+class SpiSdMmcCard : public MemoryTechnologyDevice
 {
 public:
 

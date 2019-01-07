@@ -29,7 +29,7 @@ namespace devices
  * \ingroup devices
  */
 
-class SpiEeprom : public BlockDevice
+class SpiEeprom : public MemoryTechnologyDevice
 {
 	/// bit shift of field with page size encoded in device's type
 	constexpr static size_t pageSizeShift_ {0};
