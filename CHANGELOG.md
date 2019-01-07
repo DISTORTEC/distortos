@@ -14,13 +14,13 @@ chip.
 - Added basic support for *STM32's* *DMAv1* and *DMAv2*, along with data in *CSV* and *YAML* files for each supported
 chip and unit tests.
 - Added `chip::SpiMasterLowLevelDmaBased` classes for *STM32's* *SPIv1* and *SPIv2*. These classes implement
-`devices::SpiMasterLowLevel` interface and use *DMA* for transfers.
+`devices::SpiMasterLowLevel` interface and use DMA for transfers.
 - Added `BlockDevice` interface class.
 - Added `SpiDeviceProxy`, `SpiMasterProxy` and `SpiDeviceSelectGuard`, which build new SPI-related API. These classes
 can be used for RAII-style locking/unlocking or selecting/deselecting of appropriate devices and also serve as proxies
 for accessing core functionalities of associated objects.
 - Added `SpiSdMmcCard` class, based on `BlockDevice` interface, which can be used with *SD* or *MMC* card connected via
-*SPI*. At this moment the code handles only *SD version 2.0* cards, has no support for run-time detection of card
+SPI. At this moment the code handles only *SD version 2.0* cards, has no support for run-time detection of card
 insertion/removal and has no support for detecting whether card is write-protected. Code was tested with 2 GB *SDSC* and
 32 GB *SDHC* cards.
 - Added basic framework for file systems in the form of 3 abstract classes: `FileSystem`, `File` and `Directory`.
