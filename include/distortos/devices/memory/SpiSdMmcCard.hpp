@@ -115,13 +115,6 @@ public:
 	size_t getEraseBlockSize() const override;
 
 	/**
-	 * \return pair with bool telling whether erased value is defined (true) or not (false) and value of erased bytes
-	 * (valid only if defined);
-	 */
-
-	std::pair<bool, uint8_t> getErasedValue() const override;
-
-	/**
 	 * \return program block size, bytes
 	 */
 

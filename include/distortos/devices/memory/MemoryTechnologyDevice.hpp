@@ -69,13 +69,6 @@ public:
 	virtual size_t getEraseBlockSize() const = 0;
 
 	/**
-	 * \return pair with bool telling whether erased value is defined (true) or not (false) and value of erased bytes
-	 * (valid only if defined);
-	 */
-
-	virtual std::pair<bool, uint8_t> getErasedValue() const = 0;
-
-	/**
 	 * \return program block size, bytes
 	 */
 

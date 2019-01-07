@@ -121,11 +121,6 @@ size_t SpiEeprom::getEraseBlockSize() const
 	return 1;
 }
 
-std::pair<bool, uint8_t> SpiEeprom::getErasedValue() const
-{
-	return {true, {}};
-}
-
 size_t SpiEeprom::getProgramBlockSize() const
 {
 	return 1;

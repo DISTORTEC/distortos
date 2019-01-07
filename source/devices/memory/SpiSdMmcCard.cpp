@@ -1235,12 +1235,6 @@ size_t SpiSdMmcCard::getEraseBlockSize() const
 	return blockSize;
 }
 
-std::pair<bool, uint8_t> SpiSdMmcCard::getErasedValue() const
-{
-	/// \todo implement by reading DATA_STAT_AFTER_ERASE from SCR register
-	return {};
-}
-
 size_t SpiSdMmcCard::getProgramBlockSize() const
 {
 	return blockSize;
