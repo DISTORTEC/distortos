@@ -13,22 +13,24 @@ All notable changes to this project will be documented in this file. This projec
 chip.
 - Added basic support for *STM32's* *DMAv1* and *DMAv2*, along with data in *CSV* and *YAML* files for each supported
 chip and unit tests.
-- Added `chip::SpiMasterLowLevelDmaBased` classes for *STM32's* *SPIv1* and *SPIv2*. These classes implement
-`devices::SpiMasterLowLevel` interface and use DMA for transfers.
-- Added `BlockDevice` interface class.
-- Added `SpiDeviceProxy`, `SpiMasterProxy` and `SpiDeviceSelectGuard`, which build new SPI-related API. These classes
-can be used for RAII-style locking/unlocking or selecting/deselecting of appropriate devices and also serve as proxies
-for accessing core functionalities of associated objects.
-- Added `SpiSdMmcCard` class, based on `BlockDevice` interface, which can be used with *SD* or *MMC* card connected via
-SPI. At this moment the code handles only *SD version 2.0* cards, has no support for run-time detection of card
-insertion/removal and has no support for detecting whether card is write-protected. Code was tested with 2 GB *SDSC* and
-32 GB *SDHC* cards.
-- Added basic framework for file systems in the form of 3 abstract classes: `FileSystem`, `File` and `Directory`.
-- Added global `openFile()`, taking `FileSystem` reference and returning a fully functional `FILE*` for use with
-`<stdio.h>` functions.
-- Added support for [littlefs](https://github.com/ARMmbed/littlefs) file system, provided by `LittlefsFileSystem`,
-`LittlefsFile` and `LittlefsDirectory` classes, which implement interface of `FileSystem`, `File` and `Directory`
-classes.
+- Added `distortos::chip::SpiMasterLowLevelDmaBased` classes for *STM32's* *SPIv1* and *SPIv2*. These classes implement
+`distortos::devices::SpiMasterLowLevel` interface and use DMA for transfers.
+- Added `distortos::devices::BlockDevice` interface class.
+- Added `distortos::devices::SpiDeviceProxy`, `distortos::devices::SpiMasterProxy` and
+`distortos::devices::SpiDeviceSelectGuard`, which build new SPI-related API. These classes can be used for RAII-style
+locking/unlocking or selecting/deselecting of appropriate devices and also serve as proxies for accessing core
+functionalities of associated objects.
+- Added `distortos::devices::SpiSdMmcCard` class, based on `distortos::devices::BlockDevice` interface, which can be
+used with *SD* or *MMC* card connected via SPI. At this moment the code handles only *SD version 2.0* cards, has no
+support for run-time detection of card insertion/removal and has no support for detecting whether card is
+write-protected. Code was tested with 2 GB *SDSC* and 32 GB *SDHC* cards.
+- Added basic framework for file systems in the form of 3 abstract classes: `distortos::FileSystem`, `distortos::File`
+and `distortos::Directory`.
+- Added global `distortos::openFile()`, taking `distortos::FileSystem` reference and returning a fully functional
+`FILE*` for use with `<stdio.h>` functions.
+- Added support for [littlefs](https://github.com/ARMmbed/littlefs) file system, provided by
+`distortos::LittlefsFileSystem`, `distortos::LittlefsFile` and `distortos::LittlefsDirectory` classes, which implement
+interface of `distortos::FileSystem`, `distortos::File` and `distortos::Directory` classes.
 - Added `sys/dirent.h` and `sys/statvfs.h` headers, which are not provided by *newlib*.
 - Added unit tests of *STM32's* *DMAv1*, *DMAv2*, *SPIv1* and *SPIv2* drivers.
 - Added unit tests of all `estd::ContiguousRange` constructor overloads.
@@ -38,15 +40,16 @@ classes.
 - Implemended full support for configuring and building with *CMake*. The new *CMake* workflow does not need *Kconfig*
 or any shell tools - just *CMake* (version 3.7 or later), build tool (it is recommended to use *Ninja*) and
 *arm-none-eabi bleeding-edge-toolchain* (*GCC* version 5 or later). Check `README.md` for more details about usage.
-- Replaced `SpiMasterOperation` and `SpiMasterOperationRange` with `SpiMasterTransfer` and `SpiMasterTransfersRange`
-respectively. Aliases for old names were added, marked as deprecated and are scheduled to be removed after v0.7.0.
-- `SpiMasterBase` object is now bound to `SpiMasterLowLevel` in `SpiMasterLowLevel::startTransfer()` instead of
-`SpiMasterLowLevel::start()`.
-- `SpiMasterLowLevel::configure()` allows configuration of dummy data that will be sent if write buffer of transfer is
-`nullptr`.
-- `...::lock()` and `...::unlock()` functions in `SpiDevice` and `SpiEeprom` were changed to use recursive mutexes
-internally and thus take no arguments.
-- `SpiEeprom` implements `BlockDevice` interface.
+- Replaced `distortos::devices::SpiMasterOperation` and `distortos::devices::SpiMasterOperationRange` with
+`distortos::devices::SpiMasterTransfer` and `distortos::devices::SpiMasterTransfersRange` respectively. Aliases for old
+names were added, marked as deprecated and are scheduled to be removed after v0.7.0.
+- `distortos::devices::SpiMasterBase` object is now bound to `distortos::devices::SpiMasterLowLevel` in
+`distortos::devices::SpiMasterLowLevel::startTransfer()` instead of `distortos::devices::SpiMasterLowLevel::start()`.
+- `distortos::devices::SpiMasterLowLevel::configure()` allows configuration of dummy data that will be sent if write
+buffer of transfer is `nullptr`.
+- `...::lock()` and `...::unlock()` functions in `distortos::devices::SpiDevice` and `distortos::devices::SpiEeprom`
+were changed to use recursive mutexes internally and thus take no arguments.
+- `distortos::devices::SpiEeprom` implements `distortos::devices::BlockDevice` interface.
 - All additional arguments of *CMake* functions `distortosBin()`, `distortosDmp()`, `distortosHex()`, `distortosLss()`
 and `distortosSize()` are passed to the appropriate commands (`${CMAKE_OBJCOPY}`, `${CMAKE_OBJDUMP}` or
 `${CMAKE_SIZE}`). This can be especially useful in case of binary files which are used to calculate firmware checksums,
@@ -71,24 +74,28 @@ and removed critical sections or bit-banding use where it makes no difference.
 `distortos::chip::ChipSpiMasterLowLevel::Parameters` class was moved to separate header and renamed to
 `distortos::chip::SpiPeripheral`. Removed `distortos::chip::ChipSpiMasterLowLevel::spi...Parameters` static objects and
 replaced them with local objects generated for each board. This change requires the board to be regenerated.
-- Renamed *STM32's* *SPIv1* and *SPIv2* `chip::ChipSpiMasterLowLevel` classes to
-`chip::SpiMasterLowLevelInterruptBased` to make it consistent with newly added `chip::SpiMasterLowLevelDmaBased`.
-Aliases for old names were added, marked as deprecated and are scheduled to be removed after v0.7.0.
+- Renamed *STM32's* *SPIv1* and *SPIv2* `distortos::chip::ChipSpiMasterLowLevel` classes to
+`distortos::chip::SpiMasterLowLevelInterruptBased` to make it consistent with newly added
+`distortos::chip::SpiMasterLowLevelDmaBased`. Aliases for old names were added, marked as deprecated and are scheduled
+to be removed after v0.7.0.
 - Improved performance of interrupt-based *STM32's* *SPIv1* and *SPIv2* drivers.
 - Update *CMSIS* to version 5.4.0.
 
 ### Deprecated
 
-- Old variant of `SpiMaster::executeTransaction()`, old variant of `SpiDevice` constructor,
-`SpiDevice::executeTransaction()`, `SpiDevice::getLsbFirst()`, `SpiDevice::getMaxClockFrequency()`,
-`SpiDevice::getMode()`, `SpiDevice::getSlaveSelectPin()` and `SpiDevice::getWordLength()` were marked as deprecated and
-are scheduled to be removed after v0.7.0. Use functionality exposed by `SpiDeviceProxy`, `SpiMasterProxy` and
-`SpiDeviceSelectGuard`.
-- `SpiEeprom::getCapacity()`, `SpiEeprom::waitWhileWriteInProgress()` and `SpiEeprom::write()` were marked as deprecated
-and are scheduled to be removed after v0.7.0. Use functions inherited from `BlockDevice` interface class -
-`SpiEeprom::getSize()`, `SpiEeprom::synchronize()` and `SpiEeprom::program()`.
-- `SpiEeprom::getPageSize()` and `SpiEeprom::isWriteInProgress()` were marked as deprecated and are scheduled to be
-removed after v0.7.0.
+- Old variant of `distortos::devices::SpiMaster::executeTransaction()`, old variant of `distortos::devices::SpiDevice`
+constructor, `distortos::devices::SpiDevice::executeTransaction()`, `distortos::devices::SpiDevice::getLsbFirst()`,
+`distortos::devices::SpiDevice::getMaxClockFrequency()`, `distortos::devices::SpiDevice::getMode()`,
+`distortos::devices::SpiDevice::getSlaveSelectPin()` and `distortos::devices::SpiDevice::getWordLength()` were marked as
+deprecated and are scheduled to be removed after v0.7.0. Use functionality exposed by
+`distortos::devices::SpiDeviceProxy`, `distortos::devices::SpiMasterProxy` and
+`distortos::devices::SpiDeviceSelectGuard`.
+- `distortos::devices::SpiEeprom::getCapacity()`, `distortos::devices::SpiEeprom::waitWhileWriteInProgress()` and
+`distortos::devices::SpiEeprom::write()` were marked as deprecated and are scheduled to be removed after v0.7.0. Use
+functions inherited from `distortos::devices::BlockDevice` interface class - `distortos::devices::SpiEeprom::getSize()`,
+`distortos::devices::SpiEeprom::synchronize()` and `distortos::devices::SpiEeprom::program()`.
+- `distortos::devices::SpiEeprom::getPageSize()` and `distortos::devices::SpiEeprom::isWriteInProgress()` were marked as
+deprecated and are scheduled to be removed after v0.7.0.
 
 ### Fixed
 
