@@ -70,10 +70,10 @@ regenerated.
 and removed critical sections or bit-banding use where it makes no difference.
 `distortos::chip::ChipSpiMasterLowLevel::Parameters` class was moved to separate header and renamed to
 `distortos::chip::SpiPeripheral`. Removed `distortos::chip::ChipSpiMasterLowLevel::spi...Parameters` static objects and
+replaced them with local objects generated for each board. This change requires the board to be regenerated.
 - Renamed *STM32's* *SPIv1* and *SPIv2* `chip::ChipSpiMasterLowLevel` classes to
 `chip::SpiMasterLowLevelInterruptBased` to make it consistent with newly added `chip::SpiMasterLowLevelDmaBased`.
 Aliases for old names were added, marked as deprecated and are scheduled to be removed after v0.7.0.
-replaced them with local objects generated for each board. This change requires the board to be regenerated.
 - Improved performance of interrupt-based *STM32's* *SPIv1* and *SPIv2* drivers.
 - Update *CMSIS* to version 5.4.0.
 
