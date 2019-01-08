@@ -187,32 +187,6 @@ LittlefsFileSystem::~LittlefsFileSystem()
 	unmount();
 }
 
-int LittlefsFileSystem::formatAndMount(devices::MemoryTechnologyDevice* const memoryTechnologyDevice)
-{
-	const std::lock_guard<LittlefsFileSystem> lockGuard {*this};
-
-	const auto oldMemoryTechnologyDevice = memoryTechnologyDevice_;
-	const auto newMemoryTechnologyDevice =
-			memoryTechnologyDevice != nullptr ? memoryTechnologyDevice : oldMemoryTechnologyDevice;
-	if (newMemoryTechnologyDevice == nullptr)
-		return EINVAL;
-
-	if (memoryTechnologyDevice_ != nullptr)
-	{
-		const auto ret = unmount();
-		if (ret != 0)
-			return ret;
-	}
-	{
-		const auto ret = format(*newMemoryTechnologyDevice, readBlockSize_, programBlockSize_, eraseBlockSize_,
-				blocksCount_, lookahead_);
-		if (ret != 0)
-			return ret;
-	}
-
-	return mount(*newMemoryTechnologyDevice);
-}
-
 std::pair<int, struct stat> LittlefsFileSystem::getFileStatus(const char* const path)
 {
 	const std::lock_guard<LittlefsFileSystem> lockGuard {*this};

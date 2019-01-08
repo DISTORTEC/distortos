@@ -71,23 +71,6 @@ public:
 	~LittlefsFileSystem() override;
 
 	/**
-	 * \brief Unmounts current file system (if any is mounted), formats device with the file system and mounts it.
-	 *
-	 * \warning This function must not be called from interrupt context!
-	 *
-	 * \param [in] memoryTechnologyDevice is a pointer to memory technology device which will be formatted with the file
-	 * system and be mounted, nullptr to use currently mounted memory technology device
-	 *
-	 * \return 0 on success, error code otherwise:
-	 * - EINVAL - no file system is currently mounted and \a memoryTechnologyDevice is nullptr;
-	 * - error codes returned by format();
-	 * - error codes returned by mount();
-	 * - error codes returned by unmount();
-	 */
-
-	int formatAndMount(devices::MemoryTechnologyDevice* memoryTechnologyDevice) override;
-
-	/**
 	 * \brief Returns status of file.
 	 *
 	 * Similar to [stat()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/stat.html)

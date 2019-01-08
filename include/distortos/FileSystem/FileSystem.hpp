@@ -49,20 +49,6 @@ public:
 	virtual ~FileSystem() = default;
 
 	/**
-	 * \brief Unmounts current file system (if any is mounted), formats device with the file system and mounts it.
-	 *
-	 * \param [in] memoryTechnologyDevice is a pointer to memory technology device which will be formatted with the file
-	 * system and be mounted, nullptr to use currently mounted memory technology device
-	 *
-	 * \return 0 on success, error code otherwise:
-	 * - EINVAL - no file system is currently mounted and \a memoryTechnologyDevice is nullptr;
-	 * - error codes returned by mount();
-	 * - error codes returned by unmount();
-	 */
-
-	virtual int formatAndMount(devices::MemoryTechnologyDevice* memoryTechnologyDevice) = 0;
-
-	/**
 	 * \brief Returns status of file.
 	 *
 	 * Similar to [stat()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/stat.html)
