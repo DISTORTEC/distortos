@@ -187,6 +187,43 @@ LittlefsFileSystem::~LittlefsFileSystem()
 	unmount();
 }
 
+int LittlefsFileSystem::format()
+{
+	const std::lock_guard<LittlefsFileSystem> lockGuard {*this};
+
+	if (mounted_ == true)
+		return EBUSY;
+
+	{
+		const auto ret = memoryTechnologyDevice_.open();
+		if (ret != 0)
+			return ret;
+	}
+
+	const auto closeScopeGuard = estd::makeScopeGuard([this]()
+			{
+				memoryTechnologyDevice_.close();
+			});
+
+	configuration_ = {};
+	fileSystem_ = {};
+	configuration_.context = &memoryTechnologyDevice_;
+	configuration_.read = littlefsMemoryTechnologyDeviceRead;
+	configuration_.prog = littlefsMemoryTechnologyDeviceProgram;
+	configuration_.erase = littlefsMemoryTechnologyDeviceErase;
+	configuration_.sync = littlefsMemoryTechnologyDeviceSynchronize;
+	configuration_.read_size = readBlockSize_ != 0 ? readBlockSize_ : memoryTechnologyDevice_.getReadBlockSize();
+	configuration_.prog_size =
+			programBlockSize_ != 0 ? programBlockSize_ : memoryTechnologyDevice_.getProgramBlockSize();
+	configuration_.block_size = eraseBlockSize_ != 0 ? eraseBlockSize_ : memoryTechnologyDevice_.getEraseBlockSize();
+	configuration_.block_count =
+			blocksCount_ != 0 ? blocksCount_ : (memoryTechnologyDevice_.getSize() / configuration_.block_size);
+	configuration_.lookahead = (std::max(lookahead_, 1u) + 31) / 32 * 32;
+
+	const auto ret = lfs_format(&fileSystem_, &configuration_);
+	return littlefsErrorToErrorCode(ret);
+}
+
 std::pair<int, struct stat> LittlefsFileSystem::getFileStatus(const char* const path)
 {
 	const std::lock_guard<LittlefsFileSystem> lockGuard {*this};
@@ -371,42 +408,6 @@ int LittlefsFileSystem::unmount()
 	mounted_ = {};
 
 	return unmountRet != LFS_ERR_OK ? littlefsErrorToErrorCode(unmountRet) : closeRet;
-}
-
-/*---------------------------------------------------------------------------------------------------------------------+
-| public static functions
-+---------------------------------------------------------------------------------------------------------------------*/
-
-int LittlefsFileSystem::format(devices::MemoryTechnologyDevice& memoryTechnologyDevice, const size_t readBlockSize,
-		const size_t programBlockSize, const size_t eraseBlockSize, const size_t blocksCount, const size_t lookahead)
-{
-	{
-		const auto ret = memoryTechnologyDevice.open();
-		if (ret != 0)
-			return ret;
-	}
-
-	const auto closeScopeGuard = estd::makeScopeGuard([&memoryTechnologyDevice]()
-			{
-				memoryTechnologyDevice.close();
-			});
-
-	lfs_config configuration {};
-	lfs_t fileSystem {};
-	configuration.context = &memoryTechnologyDevice;
-	configuration.read = littlefsMemoryTechnologyDeviceRead;
-	configuration.prog = littlefsMemoryTechnologyDeviceProgram;
-	configuration.erase = littlefsMemoryTechnologyDeviceErase;
-	configuration.sync = littlefsMemoryTechnologyDeviceSynchronize;
-	configuration.read_size = readBlockSize != 0 ? readBlockSize : memoryTechnologyDevice.getReadBlockSize();
-	configuration.prog_size = programBlockSize != 0 ? programBlockSize : memoryTechnologyDevice.getProgramBlockSize();
-	configuration.block_size = eraseBlockSize != 0 ? eraseBlockSize : memoryTechnologyDevice.getEraseBlockSize();
-	configuration.block_count =
-			blocksCount != 0 ? blocksCount : (memoryTechnologyDevice.getSize() / configuration.block_size);
-	configuration.lookahead = (std::max(lookahead, 1u) + 31) / 32 * 32;
-
-	const auto ret = lfs_format(&fileSystem, &configuration);
-	return littlefsErrorToErrorCode(ret);
 }
 
 }	// namespace distortos

@@ -82,6 +82,19 @@ public:
 	~LittlefsFileSystem() override;
 
 	/**
+	 * \brief Formats associated device with the file system.
+	 *
+	 * \warning This function must not be called from interrupt context!
+	 *
+	 * \return 0 on success, error code otherwise:
+	 * - EBUSY - file system is mounted;
+	 * - converted error codes returned by lfs_format();
+	 * - error codes returned by MemoryTechnologyDevice::open();
+	 */
+
+	int format() override;
+
+	/**
 	 * \brief Returns status of file.
 	 *
 	 * Similar to [stat()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/stat.html)
@@ -261,28 +274,6 @@ public:
 	 */
 
 	int unmount() override;
-
-	/**
-	 * \brief Formats device with the file system.
-	 *
-	 * \warning This function must not be called from interrupt context!
-	 *
-	 * \param [in] memoryTechnologyDevice is a reference to memory technology device which will be formatted
-	 * \param [in] readBlockSize is the read block size, bytes, 0 to use default value of device, default - 0
-	 * \param [in] programBlockSize is the program block size, bytes, 0 to use default value of device, default - 0
-	 * \param [in] eraseBlockSize is the erase block size, bytes, 0 to use default value of device, default - 0
-	 * \param [in] blocksCount is the number of erase blocks used for file system, 0 to use max value of device,
-	 * default - 0
-	 * \param [in] lookahead is the number of blocks to lookahead during block allocation, default - 512
-	 *
-	 * \return 0 on success, error code otherwise:
-	 * - converted error codes returned by lfs_format();
-	 * - error codes returned by MemoryTechnologyDevice::open();
-	 */
-
-	static int format(devices::MemoryTechnologyDevice& memoryTechnologyDevice, size_t readBlockSize = {},
-			size_t programBlockSize = {}, size_t eraseBlockSize = {}, size_t blocksCount = {},
-			size_t lookahead = 32 * 16);
 
 private:
 

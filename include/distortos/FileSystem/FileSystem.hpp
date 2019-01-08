@@ -42,6 +42,15 @@ public:
 	virtual ~FileSystem() = default;
 
 	/**
+	 * \brief Formats associated device with the file system.
+	 *
+	 * \return 0 on success, error code otherwise:
+	 * - EBUSY - file system is mounted;
+	 */
+
+	virtual int format() = 0;
+
+	/**
 	 * \brief Returns status of file.
 	 *
 	 * Similar to [stat()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/stat.html)
