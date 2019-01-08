@@ -22,13 +22,6 @@
 namespace distortos
 {
 
-namespace devices
-{
-
-class MemoryTechnologyDevice;
-
-}	// namespace devices
-
 class Directory;
 class File;
 
@@ -117,10 +110,7 @@ public:
 	virtual int makeDirectory(const char* path, mode_t mode) = 0;
 
 	/**
-	 * \brief Mounts file system on provided device.
-	 *
-	 * \param [in] memoryTechnologyDevice is a reference to memory technology device on which the file system will be
-	 * mounted
+	 * \brief Mounts file system on associated device.
 	 *
 	 * \return 0 on success, error code otherwise:
 	 * - EBUSY - file system is already mounted;
@@ -128,7 +118,7 @@ public:
 	 * - ENOMEM - unable to allocate memory for file system;
 	 */
 
-	virtual int mount(devices::MemoryTechnologyDevice& memoryTechnologyDevice) = 0;
+	virtual int mount() = 0;
 
 	/**
 	 * \brief Opens directory.

@@ -191,7 +191,7 @@ std::pair<int, struct stat> LittlefsFileSystem::getFileStatus(const char* const 
 {
 	const std::lock_guard<LittlefsFileSystem> lockGuard {*this};
 
-	if (memoryTechnologyDevice_ == nullptr)
+	if (mounted_ == false)
 		return {EBADF, {}};
 
 	lfs_info info;
@@ -212,7 +212,7 @@ std::pair<int, struct statvfs> LittlefsFileSystem::getStatus()
 {
 	const std::lock_guard<LittlefsFileSystem> lockGuard {*this};
 
-	if (memoryTechnologyDevice_ == nullptr)
+	if (mounted_ == false)
 		return {EBADF, {}};
 
 	size_t usedBlocks {};
@@ -241,44 +241,44 @@ int LittlefsFileSystem::makeDirectory(const char* const path, mode_t)
 {
 	const std::lock_guard<LittlefsFileSystem> lockGuard {*this};
 
-	if (memoryTechnologyDevice_ == nullptr)
+	if (mounted_ == false)
 		return EBADF;
 
 	const auto ret = lfs_mkdir(&fileSystem_, path);
 	return littlefsErrorToErrorCode(ret);
 }
 
-int LittlefsFileSystem::mount(devices::MemoryTechnologyDevice& memoryTechnologyDevice)
+int LittlefsFileSystem::mount()
 {
 	const std::lock_guard<LittlefsFileSystem> lockGuard {*this};
 
-	if (memoryTechnologyDevice_ != nullptr)
+	if (mounted_ == true)
 		return EBUSY;
 
 	{
-		const auto ret = memoryTechnologyDevice.open();
+		const auto ret = memoryTechnologyDevice_.open();
 		if (ret != 0)
 			return ret;
 	}
 
-	auto closeScopeGuard = estd::makeScopeGuard([&memoryTechnologyDevice]()
+	auto closeScopeGuard = estd::makeScopeGuard([this]()
 			{
-				memoryTechnologyDevice.close();
+				memoryTechnologyDevice_.close();
 			});
 
 	configuration_ = {};
 	fileSystem_ = {};
-	configuration_.context = &memoryTechnologyDevice;
+	configuration_.context = &memoryTechnologyDevice_;
 	configuration_.read = littlefsMemoryTechnologyDeviceRead;
 	configuration_.prog = littlefsMemoryTechnologyDeviceProgram;
 	configuration_.erase = littlefsMemoryTechnologyDeviceErase;
 	configuration_.sync = littlefsMemoryTechnologyDeviceSynchronize;
-	configuration_.read_size = readBlockSize_ != 0 ? readBlockSize_ : memoryTechnologyDevice.getReadBlockSize();
+	configuration_.read_size = readBlockSize_ != 0 ? readBlockSize_ : memoryTechnologyDevice_.getReadBlockSize();
 	configuration_.prog_size =
-			programBlockSize_ != 0 ? programBlockSize_ : memoryTechnologyDevice.getProgramBlockSize();
-	configuration_.block_size = eraseBlockSize_ != 0 ? eraseBlockSize_ : memoryTechnologyDevice.getEraseBlockSize();
+			programBlockSize_ != 0 ? programBlockSize_ : memoryTechnologyDevice_.getProgramBlockSize();
+	configuration_.block_size = eraseBlockSize_ != 0 ? eraseBlockSize_ : memoryTechnologyDevice_.getEraseBlockSize();
 	configuration_.block_count =
-			blocksCount_ != 0 ? blocksCount_ : (memoryTechnologyDevice.getSize() / configuration_.block_size);
+			blocksCount_ != 0 ? blocksCount_ : (memoryTechnologyDevice_.getSize() / configuration_.block_size);
 	configuration_.lookahead = (std::max(lookahead_, 1u) + 31) / 32 * 32;
 
 	{
@@ -287,7 +287,7 @@ int LittlefsFileSystem::mount(devices::MemoryTechnologyDevice& memoryTechnologyD
 			return littlefsErrorToErrorCode(ret);
 	}
 
-	memoryTechnologyDevice_ = &memoryTechnologyDevice;
+	mounted_ = true;
 	closeScopeGuard.release();
 	return 0;
 }
@@ -296,7 +296,7 @@ std::pair<int, std::unique_ptr<Directory>> LittlefsFileSystem::openDirectory(con
 {
 	const std::lock_guard<LittlefsFileSystem> lockGuard {*this};
 
-	if (memoryTechnologyDevice_ == nullptr)
+	if (mounted_ == false)
 		return {EBADF, std::unique_ptr<LittlefsDirectory>{}};
 
 	std::unique_ptr<LittlefsDirectory> directory {new (std::nothrow) LittlefsDirectory{*this}};
@@ -316,7 +316,7 @@ std::pair<int, std::unique_ptr<File>> LittlefsFileSystem::openFile(const char* c
 {
 	const std::lock_guard<LittlefsFileSystem> lockGuard {*this};
 
-	if (memoryTechnologyDevice_ == nullptr)
+	if (mounted_ == false)
 		return {EBADF, std::unique_ptr<LittlefsFile>{}};
 
 	std::unique_ptr<LittlefsFile> file {new (std::nothrow) LittlefsFile{*this}};
@@ -336,7 +336,7 @@ int LittlefsFileSystem::remove(const char* const path)
 {
 	const std::lock_guard<LittlefsFileSystem> lockGuard {*this};
 
-	if (memoryTechnologyDevice_ == nullptr)
+	if (mounted_ == false)
 		return EBADF;
 
 	const auto ret = lfs_remove(&fileSystem_, path);
@@ -347,7 +347,7 @@ int LittlefsFileSystem::rename(const char* const path, const char* const newPath
 {
 	const std::lock_guard<LittlefsFileSystem> lockGuard {*this};
 
-	if (memoryTechnologyDevice_ == nullptr)
+	if (mounted_ == false)
 		return EBADF;
 
 	const auto ret = lfs_rename(&fileSystem_, path, newPath);
@@ -363,12 +363,12 @@ int LittlefsFileSystem::unmount()
 {
 	const std::lock_guard<LittlefsFileSystem> lockGuard {*this};
 
-	if (memoryTechnologyDevice_ == nullptr)
+	if (mounted_ == false)
 		return EBADF;
 
 	const auto unmountRet = lfs_unmount(&fileSystem_);
-	const auto closeRet = memoryTechnologyDevice_->close();
-	memoryTechnologyDevice_ = {};
+	const auto closeRet = memoryTechnologyDevice_.close();
+	mounted_ = {};
 
 	return unmountRet != LFS_ERR_OK ? littlefsErrorToErrorCode(unmountRet) : closeRet;
 }

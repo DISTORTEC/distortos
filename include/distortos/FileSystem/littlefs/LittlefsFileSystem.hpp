@@ -21,6 +21,13 @@
 namespace distortos
 {
 
+namespace devices
+{
+
+class MemoryTechnologyDevice;
+
+}	// namespace devices
+
 /**
  * LittlefsFileSystem class is an [littlefs](https://github.com/ARMmbed/littlefs) file system.
  *
@@ -37,6 +44,8 @@ public:
 	/**
 	 * \brief LittlefsFileSystem's constructor
 	 *
+	 * \param [in] memoryTechnologyDevice is a reference to memory technology device on which the file system will be
+	 * mounted
 	 * \param [in] readBlockSize is the read block size, bytes, 0 to use default value of device, default - 0
 	 * \param [in] programBlockSize is the program block size, bytes, 0 to use default value of device, default - 0
 	 * \param [in] eraseBlockSize is the erase block size, bytes, 0 to use default value of device, default - 0
@@ -45,17 +54,19 @@ public:
 	 * \param [in] lookahead is the number of blocks to lookahead during block allocation, default - 512
 	 */
 
-	constexpr explicit LittlefsFileSystem(const size_t readBlockSize = {}, const size_t programBlockSize = {},
-			const size_t eraseBlockSize = {}, const size_t blocksCount = {}, const size_t lookahead = 32 * 16) :
+	constexpr explicit LittlefsFileSystem(devices::MemoryTechnologyDevice& memoryTechnologyDevice,
+			const size_t readBlockSize = {}, const size_t programBlockSize = {}, const size_t eraseBlockSize = {},
+			const size_t blocksCount = {}, const size_t lookahead = 32 * 16) :
 					configuration_{},
 					fileSystem_{},
 					mutex_{Mutex::Type::recursive, Mutex::Protocol::priorityInheritance},
-					memoryTechnologyDevice_{},
+					memoryTechnologyDevice_{memoryTechnologyDevice},
 					readBlockSize_{readBlockSize},
 					programBlockSize_{programBlockSize},
 					eraseBlockSize_{eraseBlockSize},
 					blocksCount_{blocksCount},
-					lookahead_{lookahead}
+					lookahead_{lookahead},
+					mounted_{}
 	{
 
 	}
@@ -142,12 +153,9 @@ public:
 	int makeDirectory(const char* path, mode_t mode) override;
 
 	/**
-	 * \brief Mounts file system on provided device.
+	 * \brief Mounts file system on associated device.
 	 *
 	 * \warning This function must not be called from interrupt context!
-	 *
-	 * \param [in] memoryTechnologyDevice is a reference to memory technology device on which the file system will be
-	 * mounted
 	 *
 	 * \return 0 on success, error code otherwise:
 	 * - EBUSY - file system is already mounted;
@@ -155,7 +163,7 @@ public:
 	 * - error codes returned by MemoryTechnologyDevice::open();
 	 */
 
-	int mount(devices::MemoryTechnologyDevice& memoryTechnologyDevice) override;
+	int mount() override;
 
 	/**
 	 * \brief Opens directory.
@@ -287,9 +295,8 @@ private:
 	/// mutex for serializing access to the object
 	distortos::Mutex mutex_;
 
-	/// pointer to memory technology device on which file system is currently mounted, nullptr if file system is not
-	/// mounted
-	devices::MemoryTechnologyDevice* memoryTechnologyDevice_;
+	/// reference to associated memory technology device
+	devices::MemoryTechnologyDevice& memoryTechnologyDevice_;
 
 	/// read block size, bytes, 0 to use default value of device
 	size_t readBlockSize_;
@@ -305,6 +312,9 @@ private:
 
 	/// number of blocks to lookahead during block allocation
 	size_t lookahead_;
+
+	/// tells whether the file system is currently mounted on associated memory technology device (true) or not (false)
+	bool mounted_;
 };
 
 }	// namespace distortos
