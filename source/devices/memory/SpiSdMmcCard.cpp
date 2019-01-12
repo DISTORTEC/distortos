@@ -1116,6 +1116,23 @@ std::tuple<int, R2Response, std::array<uint8_t, 64>> executeAcmd13(SpiMasterProx
 }
 
 /**
+ * \brief Executes ACMD23 command on SD or MMC card connected via SPI.
+ *
+ * This is SET_WR_BLK_ERASE_COUNT command.
+ *
+ * \param [in] spiMasterProxy is a reference to SpiMasterProxy object used for communication
+ * \param [in] blocksCount is the number of blocks to pre-erase with next multi-block write command
+ *
+ * \return pair with return code (0 on success, error code otherwise) and R1 response; error codes:
+ * - error codes returned by writeAcmdReadR1();
+ */
+
+std::pair<int, uint8_t> executeAcmd23(SpiMasterProxy& spiMasterProxy, const uint32_t blocksCount)
+{
+	return writeAcmdReadR1(spiMasterProxy, 23, blocksCount);
+}
+
+/**
  * \brief Executes ACMD41 command on SD or MMC card connected via SPI.
  *
  * This is SD_SEND_OP_COND command.
@@ -1230,17 +1247,7 @@ int SpiSdMmcCard::erase(const uint64_t address, const uint64_t size)
 	return {};
 }
 
-size_t SpiSdMmcCard::getEraseBlockSize() const
-{
-	return blockSize;
-}
-
-size_t SpiSdMmcCard::getProgramBlockSize() const
-{
-	return blockSize;
-}
-
-size_t SpiSdMmcCard::getReadBlockSize() const
+size_t SpiSdMmcCard::getBlockSize() const
 {
 	return blockSize;
 }
@@ -1286,77 +1293,6 @@ int SpiSdMmcCard::open()
 
 	closeScopeGuard.release();
 	return 0;
-}
-
-int SpiSdMmcCard::program(const uint64_t address, const void* const buffer, const size_t size)
-{
-	const SpiDeviceProxy spiDeviceProxy {spiDevice_};
-
-	if (type_ == Type::unknown)
-		return EBADF;
-
-	if (size == 0)
-		return {};
-
-	if (buffer == nullptr || address % blockSize != 0 || size % blockSize != 0)
-		return EINVAL;
-
-	const auto firstBlock = address / blockSize;
-	const auto blocks = size / blockSize;
-
-	if (firstBlock + blocks > blocksCount_)
-		return ENOSPC;
-
-	SpiMasterProxy spiMasterProxy {spiDeviceProxy};
-
-	{
-		const auto ret = spiMasterProxy.configure(SpiMode::_0, clockFrequency_, 8, false, UINT32_MAX);
-		if (ret.first != 0)
-			return ret.first;
-	}
-
-	const SelectGuard selectGuard {spiMasterProxy};
-
-	{
-		const auto commandAddress = blockAddressing_ == true ? firstBlock : address;
-		const auto ret = blocks == 1 ? executeCmd24(spiMasterProxy, commandAddress) :
-				executeCmd25(spiMasterProxy, commandAddress);
-		if (ret.first != 0)
-			return ret.first;
-		if (ret.second != 0)
-			return EIO;
-	}
-
-	const auto bufferUint8 = static_cast<const uint8_t*>(buffer);
-	for (size_t block {}; block < blocks; ++block)
-	{
-		const auto ret = writeDataBlock(spiMasterProxy, blocks == 1 ? startBlockToken : startBlockWriteToken,
-				bufferUint8 + block * blockSize, blockSize, std::chrono::milliseconds{writeTimeoutMs_});
-		if (ret.first != 0)
-			return ret.first;
-	}
-
-	if (blocks != 1)
-	{
-		{
-			const uint8_t stopTransfer[]
-			{
-					stopTranToken,
-					0xff,
-			};
-			SpiMasterTransfer transfer {stopTransfer, nullptr, sizeof(stopTransfer)};
-			const auto ret = spiMasterProxy.executeTransaction(SpiMasterTransfersRange{transfer});
-			if (ret.first != 0)
-				return ret.first;
-		}
-		{
-			const auto ret = waitWhileBusy(spiMasterProxy, std::chrono::milliseconds{writeTimeoutMs_});
-			if (ret != 0)
-				return ret;
-		}
-	}
-
-	return {};
 }
 
 int SpiSdMmcCard::read(const uint64_t address, void* const buffer, const size_t size)
@@ -1430,6 +1366,88 @@ int SpiSdMmcCard::synchronize()
 int SpiSdMmcCard::unlock()
 {
 	return spiDevice_.unlock();
+}
+
+int SpiSdMmcCard::write(const uint64_t address, const void* const buffer, const size_t size)
+{
+	const SpiDeviceProxy spiDeviceProxy {spiDevice_};
+
+	if (type_ == Type::unknown)
+		return EBADF;
+
+	if (size == 0)
+		return {};
+
+	if (buffer == nullptr || address % blockSize != 0 || size % blockSize != 0)
+		return EINVAL;
+
+	const auto firstBlock = address / blockSize;
+	const auto blocks = size / blockSize;
+
+	if (firstBlock + blocks > blocksCount_)
+		return ENOSPC;
+
+	SpiMasterProxy spiMasterProxy {spiDeviceProxy};
+
+	{
+		const auto ret = spiMasterProxy.configure(SpiMode::_0, clockFrequency_, 8, false, UINT32_MAX);
+		if (ret.first != 0)
+			return ret.first;
+	}
+
+	if (blocks != 1)
+	{
+		const SelectGuard selectGuard {spiMasterProxy};
+
+		const auto ret = executeAcmd23(spiMasterProxy, blocks);
+		if (ret.first != 0)
+			return ret.first;
+		if (ret.second != 0)
+			return EIO;
+	}
+
+	const SelectGuard selectGuard {spiMasterProxy};
+
+	{
+		const auto commandAddress = blockAddressing_ == true ? firstBlock : address;
+		const auto ret = blocks == 1 ? executeCmd24(spiMasterProxy, commandAddress) :
+				executeCmd25(spiMasterProxy, commandAddress);
+		if (ret.first != 0)
+			return ret.first;
+		if (ret.second != 0)
+			return EIO;
+	}
+
+	const auto bufferUint8 = static_cast<const uint8_t*>(buffer);
+	for (size_t block {}; block < blocks; ++block)
+	{
+		const auto ret = writeDataBlock(spiMasterProxy, blocks == 1 ? startBlockToken : startBlockWriteToken,
+				bufferUint8 + block * blockSize, blockSize, std::chrono::milliseconds{writeTimeoutMs_});
+		if (ret.first != 0)
+			return ret.first;
+	}
+
+	if (blocks != 1)
+	{
+		{
+			const uint8_t stopTransfer[]
+			{
+					stopTranToken,
+					0xff,
+			};
+			SpiMasterTransfer transfer {stopTransfer, nullptr, sizeof(stopTransfer)};
+			const auto ret = spiMasterProxy.executeTransaction(SpiMasterTransfersRange{transfer});
+			if (ret.first != 0)
+				return ret.first;
+		}
+		{
+			const auto ret = waitWhileBusy(spiMasterProxy, std::chrono::milliseconds{writeTimeoutMs_});
+			if (ret != 0)
+				return ret;
+		}
+	}
+
+	return {};
 }
 
 /*---------------------------------------------------------------------------------------------------------------------+

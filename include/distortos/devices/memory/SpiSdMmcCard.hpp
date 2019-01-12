@@ -14,7 +14,7 @@
 
 #include "distortos/devices/communication/SpiDevice.hpp"
 
-#include "distortos/devices/memory/MemoryTechnologyDevice.hpp"
+#include "distortos/devices/memory/BlockDevice.hpp"
 
 namespace distortos
 {
@@ -28,7 +28,7 @@ namespace devices
  * \ingroup devices
  */
 
-class SpiSdMmcCard : public MemoryTechnologyDevice
+class SpiSdMmcCard : public BlockDevice
 {
 public:
 
@@ -109,22 +109,10 @@ public:
 	int erase(uint64_t address, uint64_t size) override;
 
 	/**
-	 * \return erase block size, bytes
+	 * \return block size, bytes
 	 */
 
-	size_t getEraseBlockSize() const override;
-
-	/**
-	 * \return program block size, bytes
-	 */
-
-	size_t getProgramBlockSize() const override;
-
-	/**
-	 * \return read block size, bytes
-	 */
-
-	size_t getReadBlockSize() const override;
+	size_t getBlockSize() const override;
 
 	/**
 	 * \return size of SD or MMC card connected via SPI, bytes
@@ -159,32 +147,6 @@ public:
 	 */
 
 	int open() override;
-
-	/**
-	 * \brief Programs data to SD or MMC card connected via SPI.
-	 *
-	 * Selected range of blocks must have been erased prior to being programmed.
-	 *
-	 * \warning This function must not be called from interrupt context!
-	 *
-	 * \param [in] address is the address of data that will be programmed, must be a multiple of program block size
-	 * \param [in] buffer is the buffer with data that will be programmed
-	 * \param [in] size is the size of \a buffer, bytes, must be a multiple of program block size
-	 *
-	 * \return 0 on success, error code otherwise:
-	 * - EBADF - the device is not opened;
-	 * - EINVAL - \a address and/or \a buffer and/or \a size are not valid;
-	 * - EIO - error during communication with SD or MMC card;
-	 * - ENOSPC - selected range is greater than size of device;
-	 * - error codes returned by executeCmd24();
-	 * - error codes returned by executeCmd25();
-	 * - error codes returned by waitWhileBusy();
-	 * - error codes returned by writeDataBlock();
-	 * - error codes returned by SpiMasterProxy::configure();
-	 * - error codes returned by SpiMasterProxy::executeTransaction();
-	 */
-
-	int program(uint64_t address, const void* buffer, size_t size) override;
 
 	/**
 	 * \brief Reads data from SD or MMC card connected via SPI.
@@ -229,6 +191,31 @@ public:
 	 */
 
 	int unlock() override;
+
+	/**
+	 * \brief Writes data to SD or MMC card connected via SPI.
+	 *
+	 * \warning This function must not be called from interrupt context!
+	 *
+	 * \param [in] address is the address of data that will be written, must be a multiple of block size
+	 * \param [in] buffer is the buffer with data that will be written
+	 * \param [in] size is the size of \a buffer, bytes, must be a multiple of block size
+	 *
+	 * \return 0 on success, error code otherwise:
+	 * - EBADF - the device is not opened;
+	 * - EINVAL - \a address and/or \a buffer and/or \a size are not valid;
+	 * - EIO - error during communication with SD or MMC card;
+	 * - ENOSPC - selected range is greater than size of device;
+	 * - error codes returned by executeAcmd23();
+	 * - error codes returned by executeCmd24();
+	 * - error codes returned by executeCmd25();
+	 * - error codes returned by waitWhileBusy();
+	 * - error codes returned by writeDataBlock();
+	 * - error codes returned by SpiMasterProxy::configure();
+	 * - error codes returned by SpiMasterProxy::executeTransaction();
+	 */
+
+	int write(uint64_t address, const void* buffer, size_t size) override;
 
 private:
 
