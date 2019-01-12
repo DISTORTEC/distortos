@@ -112,20 +112,10 @@ int SpiEeprom::close()
 int SpiEeprom::erase(const uint64_t address, const uint64_t size)
 {
 	const SpiDeviceProxy spiDeviceProxy {spiDevice_};
-	return eraseOrProgram(spiDeviceProxy, address, nullptr, size);
+	return eraseOrWrite(spiDeviceProxy, address, nullptr, size);
 }
 
-size_t SpiEeprom::getEraseBlockSize() const
-{
-	return 1;
-}
-
-size_t SpiEeprom::getProgramBlockSize() const
-{
-	return 1;
-}
-
-size_t SpiEeprom::getReadBlockSize() const
+size_t SpiEeprom::getBlockSize() const
 {
 	return 1;
 }
@@ -149,17 +139,6 @@ int SpiEeprom::lock()
 int SpiEeprom::open()
 {
 	return spiDevice_.open();
-}
-
-int SpiEeprom::program(const uint64_t address, const void* const buffer, const size_t size)
-{
-	CHECK_FUNCTION_CONTEXT();
-
-	if (buffer == nullptr)
-		return EINVAL;
-
-	const SpiDeviceProxy spiDeviceProxy {spiDevice_};
-	return eraseOrProgram(spiDeviceProxy, address, buffer, size);
 }
 
 int SpiEeprom::read(const uint64_t address, void* const buffer, const size_t size)
@@ -199,11 +178,22 @@ int SpiEeprom::unlock()
 	return spiDevice_.unlock();
 }
 
+int SpiEeprom::write(const uint64_t address, const void* const buffer, const size_t size)
+{
+	CHECK_FUNCTION_CONTEXT();
+
+	if (buffer == nullptr)
+		return EINVAL;
+
+	const SpiDeviceProxy spiDeviceProxy {spiDevice_};
+	return eraseOrWrite(spiDeviceProxy, address, buffer, size);
+}
+
 /*---------------------------------------------------------------------------------------------------------------------+
 | private functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-int SpiEeprom::eraseOrProgram(const SpiDeviceProxy& spiDeviceProxy, const uint64_t address, const void* const buffer,
+int SpiEeprom::eraseOrWrite(const SpiDeviceProxy& spiDeviceProxy, const uint64_t address, const void* const buffer,
 		const uint64_t size)
 {
 	CHECK_FUNCTION_CONTEXT();
@@ -217,7 +207,7 @@ int SpiEeprom::eraseOrProgram(const SpiDeviceProxy& spiDeviceProxy, const uint64
 	const auto bufferUint8 = static_cast<const uint8_t*>(buffer);
 	while (written < writeSize)
 	{
-		const auto ret = eraseOrProgramPage(spiDeviceProxy, address + written,
+		const auto ret = eraseOrWritePage(spiDeviceProxy, address + written,
 				bufferUint8 != nullptr ? bufferUint8 + written : bufferUint8, writeSize - written);
 		written += ret.second;
 		if (ret.first != 0)
@@ -227,7 +217,7 @@ int SpiEeprom::eraseOrProgram(const SpiDeviceProxy& spiDeviceProxy, const uint64
 	return {};
 }
 
-std::pair<int, size_t> SpiEeprom::eraseOrProgramPage(const SpiDeviceProxy& spiDeviceProxy, const uint32_t address,
+std::pair<int, size_t> SpiEeprom::eraseOrWritePage(const SpiDeviceProxy& spiDeviceProxy, const uint32_t address,
 		const void* const buffer, const size_t size)
 {
 	const auto capacity = getSize();
