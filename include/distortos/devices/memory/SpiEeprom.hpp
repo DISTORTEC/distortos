@@ -357,13 +357,12 @@ public:
 	 * \param [in] buffer is the buffer with data that will be programmed
 	 * \param [in] size is the size of \a buffer, bytes
 	 *
-	 * \return pair with return code (0 on success, error code otherwise) and number of programmed bytes (valid even
-	 * when error code is returned); error codes:
+	 * \return 0 on success, error code otherwise:
 	 * - EINVAL - \a buffer is not valid;
 	 * - error codes returned by eraseOrProgram();
 	 */
 
-	std::pair<int, size_t> program(uint64_t address, const void* buffer, size_t size) override;
+	int program(uint64_t address, const void* buffer, size_t size) override;
 
 	/**
 	 * \brief Reads data from SPI EEPROM.
@@ -374,14 +373,13 @@ public:
 	 * \param [out] buffer is the buffer into which the data will be read
 	 * \param [in] size is the size of \a buffer, bytes
 	 *
-	 * \return pair with return code (0 on success, error code otherwise) and number of read bytes (valid even when
-	 * error code is returned); error codes:
+	 * \return 0 on success, error code otherwise:
 	 * - EINVAL - \a address and/or \a buffer and/or \a size are not valid;
 	 * - error codes returned by executeTransaction();
 	 * - error codes returned by synchronize(const SpiDeviceProxy&);
 	 */
 
-	std::pair<int, size_t> read(uint64_t address, void* buffer, size_t size) override;
+	int read(uint64_t address, void* buffer, size_t size) override;
 
 	/**
 	 * \brief Synchronizes state of SPI EEPROM, ensuring all cached writes are finished.
@@ -435,13 +433,12 @@ public:
 	 * \param [in] buffer is the buffer with data that will be written
 	 * \param [in] size is the size of \a buffer, bytes
 	 *
-	 * \return pair with return code (0 on success, error code otherwise) and number of written bytes (valid even when
-	 * error code is returned); error codes:
+	 * \return 0 on success, error code otherwise:
 	 * - error codes returned by program();
 	 */
 
 	__attribute__ ((deprecated("Use SpiEeprom::program()")))
-	std::pair<int, size_t> write(const uint32_t address, const void* const buffer, const size_t size)
+	int write(const uint32_t address, const void* const buffer, const size_t size)
 	{
 		return program(address, buffer, size);
 	}
@@ -455,14 +452,12 @@ private:
 	 * \param [in] buffer is the buffer with data that will be programmed, nullptr to erase
 	 * \param [in] size is the size of erase (`buffer == nullptr`) or size of \a buffer (`buffer != nullptr`), bytes
 	 *
-	 * \return pair with return code (0 on success, error code otherwise) and number of erased/programmed bytes (valid
-	 * even when error code is returned); error codes:
+	 * \return 0 on success, error code otherwise:
 	 * - EINVAL - \a address and/or \a size are not valid;
 	 * - error codes returned by eraseOrProgramPage();
 	 */
 
-	std::pair<int, uint64_t> eraseOrProgram(const SpiDeviceProxy& spiDeviceProxy, uint64_t address, const void* buffer,
-			uint64_t size);
+	int eraseOrProgram(const SpiDeviceProxy& spiDeviceProxy, uint64_t address, const void* buffer, uint64_t size);
 
 	/**
 	 * \brief Erases or programs single page.

@@ -12,8 +12,6 @@
 #ifndef INCLUDE_DISTORTOS_DEVICES_MEMORY_MEMORYTECHNOLOGYDEVICE_HPP_
 #define INCLUDE_DISTORTOS_DEVICES_MEMORY_MEMORYTECHNOLOGYDEVICE_HPP_
 
-#include <utility>
-
 #include <cstddef>
 #include <cstdint>
 
@@ -121,14 +119,13 @@ public:
 	 * \param [in] buffer is the buffer with data that will be programmed
 	 * \param [in] size is the size of \a buffer, bytes, must be a multiple of program block size
 	 *
-	 * \return pair with return code (0 on success, error code otherwise) and number of programmed bytes (valid even
-	 * when error code is returned); error codes:
+	 * \return 0 on success, error code otherwise:
 	 * - EBADF - the device is not opened;
 	 * - EINVAL - \a address and/or \a buffer and/or \a size are not valid;
 	 * - ENOSPC - selected range is greater than size of device;
 	 */
 
-	virtual std::pair<int, size_t> program(uint64_t address, const void* buffer, size_t size) = 0;
+	virtual int program(uint64_t address, const void* buffer, size_t size) = 0;
 
 	/**
 	 * \brief Reads data from a device.
@@ -137,14 +134,13 @@ public:
 	 * \param [out] buffer is the buffer into which the data will be read
 	 * \param [in] size is the size of \a buffer, bytes, must be a multiple of read block size
 	 *
-	 * \return pair with return code (0 on success, error code otherwise) and number of read bytes (valid even when
-	 * error code is returned); error codes:
+	 * \return 0 on success, error code otherwise:
 	 * - EBADF - the device is not opened;
 	 * - EINVAL - \a address and/or \a buffer and/or \a size are not valid;
 	 * - ENOSPC - selected range is greater than size of device;
 	 */
 
-	virtual std::pair<int, size_t> read(uint64_t address, void* buffer, size_t size) = 0;
+	virtual int read(uint64_t address, void* buffer, size_t size) = 0;
 
 	/**
 	 * \brief Synchronizes state of a device, ensuring all cached writes are finished.

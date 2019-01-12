@@ -171,8 +171,7 @@ public:
 	 * \param [in] buffer is the buffer with data that will be programmed
 	 * \param [in] size is the size of \a buffer, bytes, must be a multiple of program block size
 	 *
-	 * \return pair with return code (0 on success, error code otherwise) and number of programmed bytes (valid even
-	 * when error code is returned); error codes:
+	 * \return 0 on success, error code otherwise:
 	 * - EBADF - the device is not opened;
 	 * - EINVAL - \a address and/or \a buffer and/or \a size are not valid;
 	 * - EIO - error during communication with SD or MMC card;
@@ -185,7 +184,7 @@ public:
 	 * - error codes returned by SpiMasterProxy::executeTransaction();
 	 */
 
-	std::pair<int, size_t> program(uint64_t address, const void* buffer, size_t size) override;
+	int program(uint64_t address, const void* buffer, size_t size) override;
 
 	/**
 	 * \brief Reads data from SD or MMC card connected via SPI.
@@ -196,8 +195,7 @@ public:
 	 * \param [out] buffer is the buffer into which the data will be read
 	 * \param [in] size is the size of \a buffer, bytes, must be a multiple of read block size
 	 *
-	 * \return pair with return code (0 on success, error code otherwise) and number of read bytes (valid even when
-	 * error code is returned); error codes:
+	 * \return 0 on success, error code otherwise:
 	 * - EBADF - the device is not opened;
 	 * - EINVAL - \a address and/or \a buffer and/or \a size are not valid;
 	 * - EIO - error during communication with SD or MMC card;
@@ -209,7 +207,7 @@ public:
 	 * - error codes returned by SpiMasterProxy::configure();
 	 */
 
-	std::pair<int, size_t> read(uint64_t address, void* buffer, size_t size) override;
+	int read(uint64_t address, void* buffer, size_t size) override;
 
 	/**
 	 * \brief Synchronizes state of SD or MMC card connected via SPI, ensuring all cached writes are finished.

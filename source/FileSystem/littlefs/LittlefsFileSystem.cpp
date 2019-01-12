@@ -131,7 +131,7 @@ int littlefsMemoryTechnologyDeviceProgram(const lfs_config* const configuration,
 	assert(memoryTechnologyDevice != nullptr);
 	const auto ret = memoryTechnologyDevice->program(static_cast<uint64_t>(block) * configuration->block_size + offset,
 			buffer, size);
-	return errorCodeToLittlefsError(ret.first);
+	return errorCodeToLittlefsError(ret);
 }
 
 /**
@@ -155,7 +155,7 @@ int littlefsMemoryTechnologyDeviceRead(const lfs_config* const configuration, co
 	assert(memoryTechnologyDevice != nullptr);
 	const auto ret = memoryTechnologyDevice->read(static_cast<uint64_t>(block) * configuration->block_size + offset,
 			buffer, size);
-	return errorCodeToLittlefsError(ret.first);
+	return errorCodeToLittlefsError(ret);
 }
 
 /**

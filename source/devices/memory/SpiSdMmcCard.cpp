@@ -1288,31 +1288,31 @@ int SpiSdMmcCard::open()
 	return 0;
 }
 
-std::pair<int, size_t> SpiSdMmcCard::program(const uint64_t address, const void* const buffer, const size_t size)
+int SpiSdMmcCard::program(const uint64_t address, const void* const buffer, const size_t size)
 {
 	const SpiDeviceProxy spiDeviceProxy {spiDevice_};
 
 	if (type_ == Type::unknown)
-		return {EBADF, {}};
+		return EBADF;
 
 	if (size == 0)
-		return {{}, {}};
+		return {};
 
 	if (buffer == nullptr || address % blockSize != 0 || size % blockSize != 0)
-		return {EINVAL, {}};
+		return EINVAL;
 
 	const auto firstBlock = address / blockSize;
 	const auto blocks = size / blockSize;
 
 	if (firstBlock + blocks > blocksCount_)
-		return {ENOSPC, {}};
+		return ENOSPC;
 
 	SpiMasterProxy spiMasterProxy {spiDeviceProxy};
 
 	{
 		const auto ret = spiMasterProxy.configure(SpiMode::_0, clockFrequency_, 8, false, UINT32_MAX);
 		if (ret.first != 0)
-			return {ret.first, {}};
+			return ret.first;
 	}
 
 	const SelectGuard selectGuard {spiMasterProxy};
@@ -1322,20 +1322,18 @@ std::pair<int, size_t> SpiSdMmcCard::program(const uint64_t address, const void*
 		const auto ret = blocks == 1 ? executeCmd24(spiMasterProxy, commandAddress) :
 				executeCmd25(spiMasterProxy, commandAddress);
 		if (ret.first != 0)
-			return {ret.first, {}};
+			return ret.first;
 		if (ret.second != 0)
-			return {EIO, {}};
+			return EIO;
 	}
 
 	const auto bufferUint8 = static_cast<const uint8_t*>(buffer);
-	size_t bytesWritten {};
 	for (size_t block {}; block < blocks; ++block)
 	{
 		const auto ret = writeDataBlock(spiMasterProxy, blocks == 1 ? startBlockToken : startBlockWriteToken,
 				bufferUint8 + block * blockSize, blockSize, std::chrono::milliseconds{writeTimeoutMs_});
-		bytesWritten += ret.second;
 		if (ret.first != 0)
-			return {ret.first, bytesWritten};
+			return ret.first;
 	}
 
 	if (blocks != 1)
@@ -1349,47 +1347,44 @@ std::pair<int, size_t> SpiSdMmcCard::program(const uint64_t address, const void*
 			SpiMasterTransfer transfer {stopTransfer, nullptr, sizeof(stopTransfer)};
 			const auto ret = spiMasterProxy.executeTransaction(SpiMasterTransfersRange{transfer});
 			if (ret.first != 0)
-				return {ret.first, bytesWritten};
+				return ret.first;
 		}
 		{
 			const auto ret = waitWhileBusy(spiMasterProxy, std::chrono::milliseconds{writeTimeoutMs_});
 			if (ret != 0)
-				return {ret, bytesWritten};
+				return ret;
 		}
 	}
 
-	return {{}, bytesWritten};
+	return {};
 }
 
-std::pair<int, size_t> SpiSdMmcCard::read(const uint64_t address, void* const buffer, const size_t size)
+int SpiSdMmcCard::read(const uint64_t address, void* const buffer, const size_t size)
 {
 	const SpiDeviceProxy spiDeviceProxy {spiDevice_};
 
 	if (type_ == Type::unknown)
-		return {EBADF, {}};
+		return EBADF;
 
 	if (size == 0)
-		return {{}, {}};
+		return {};
 
 	if (buffer == nullptr || address % blockSize != 0 || size % blockSize != 0)
-		return {EINVAL, {}};
+		return EINVAL;
 
 	const auto firstBlock = address / blockSize;
 	const auto blocks = size / blockSize;
 
 	if (firstBlock + blocks > blocksCount_)
-		return {ENOSPC, {}};
+		return ENOSPC;
 
 	SpiMasterProxy spiMasterProxy {spiDeviceProxy};
 
 	{
 		const auto ret = spiMasterProxy.configure(SpiMode::_0, clockFrequency_, 8, false, UINT32_MAX);
 		if (ret.first != 0)
-			return {ret.first, {}};
+			return ret.first;
 	}
-
-	size_t bytesRead {};
-
 	{
 		const SelectGuard selectGuard {spiMasterProxy};
 
@@ -1398,9 +1393,9 @@ std::pair<int, size_t> SpiSdMmcCard::read(const uint64_t address, void* const bu
 			const auto ret = blocks == 1 ? executeCmd17(spiMasterProxy, commandAddress) :
 					executeCmd18(spiMasterProxy, commandAddress);
 			if (ret.first != 0)
-				return {ret.first, {}};
+				return ret.first;
 			if (ret.second != 0)
-				return {EIO, {}};
+				return EIO;
 		}
 
 		const auto bufferUint8 = static_cast<uint8_t*>(buffer);
@@ -1408,9 +1403,8 @@ std::pair<int, size_t> SpiSdMmcCard::read(const uint64_t address, void* const bu
 		{
 			const auto ret = readDataBlock(spiMasterProxy, bufferUint8 + block * blockSize, blockSize,
 					std::chrono::milliseconds{readTimeoutMs_});
-			bytesRead += ret.second;
 			if (ret.first != 0)
-				return {ret.first, bytesRead};
+				return ret.first;
 		}
 	}
 
@@ -1420,12 +1414,12 @@ std::pair<int, size_t> SpiSdMmcCard::read(const uint64_t address, void* const bu
 
 		const auto ret = executeCmd12(spiMasterProxy, std::chrono::milliseconds{readTimeoutMs_});
 		if (ret.first != 0)
-			return {ret.first, bytesRead};
+			return ret.first;
 		if (ret.second != 0)
-			return {EIO, bytesRead};
+			return EIO;
 	}
 
-	return {{}, bytesRead};
+	return {};
 }
 
 int SpiSdMmcCard::synchronize()
