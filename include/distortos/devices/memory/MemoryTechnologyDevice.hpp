@@ -1,16 +1,16 @@
 /**
  * \file
- * \brief BlockDevice class header
+ * \brief MemoryTechnologyDevice class header
  *
- * \author Copyright (C) 2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2018-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#ifndef INCLUDE_DISTORTOS_DEVICES_MEMORY_BLOCKDEVICE_HPP_
-#define INCLUDE_DISTORTOS_DEVICES_MEMORY_BLOCKDEVICE_HPP_
+#ifndef INCLUDE_DISTORTOS_DEVICES_MEMORY_MEMORYTECHNOLOGYDEVICE_HPP_
+#define INCLUDE_DISTORTOS_DEVICES_MEMORY_MEMORYTECHNOLOGYDEVICE_HPP_
 
 #include <cstddef>
 #include <cstdint>
@@ -22,20 +22,20 @@ namespace devices
 {
 
 /**
- * BlockDevice class is an interface for a block device.
+ * MemoryTechnologyDevice class is an interface for a memory technology device (flash memory).
  *
  * \ingroup devices
  */
 
-class BlockDevice
+class MemoryTechnologyDevice
 {
 public:
 
 	/**
-	 * \brief BlockDevice's destructor
+	 * \brief MemoryTechnologyDevice's destructor
 	 */
 
-	virtual ~BlockDevice() = default;
+	virtual ~MemoryTechnologyDevice() = default;
 
 	/**
 	 * \brief Closes device.
@@ -49,8 +49,8 @@ public:
 	/**
 	 * \brief Erases blocks on a device.
 	 *
-	 * \param [in] address is the address of range that will be erased, must be a multiple of block size
-	 * \param [in] size is the size of erased range, bytes, must be a multiple of block size
+	 * \param [in] address is the address of range that will be erased, must be a multiple of erase block size
+	 * \param [in] size is the size of erased range, bytes, must be a multiple of erase block size
 	 *
 	 * \return 0 on success, error code otherwise:
 	 * - EBADF - the device is not opened;
@@ -61,13 +61,25 @@ public:
 	virtual int erase(uint64_t address, uint64_t size) = 0;
 
 	/**
-	 * \return block size, bytes
+	 * \return erase block size, bytes
 	 */
 
-	virtual size_t getBlockSize() const = 0;
+	virtual size_t getEraseBlockSize() const = 0;
 
 	/**
-	 * \return size of block device, bytes
+	 * \return program block size, bytes
+	 */
+
+	virtual size_t getProgramBlockSize() const = 0;
+
+	/**
+	 * \return read block size, bytes
+	 */
+
+	virtual size_t getReadBlockSize() const = 0;
+
+	/**
+	 * \return size of device, bytes
 	 */
 
 	virtual uint64_t getSize() const = 0;
@@ -99,11 +111,28 @@ public:
 	virtual int open() = 0;
 
 	/**
+	 * \brief Programs data to a device.
+	 *
+	 * Selected range of blocks must have been erased prior to being programmed.
+	 *
+	 * \param [in] address is the address of data that will be programmed, must be a multiple of program block size
+	 * \param [in] buffer is the buffer with data that will be programmed
+	 * \param [in] size is the size of \a buffer, bytes, must be a multiple of program block size
+	 *
+	 * \return 0 on success, error code otherwise:
+	 * - EBADF - the device is not opened;
+	 * - EINVAL - \a address and/or \a buffer and/or \a size are not valid;
+	 * - ENOSPC - selected range is greater than size of device;
+	 */
+
+	virtual int program(uint64_t address, const void* buffer, size_t size) = 0;
+
+	/**
 	 * \brief Reads data from a device.
 	 *
-	 * \param [in] address is the address of data that will be read, must be a multiple of block size
+	 * \param [in] address is the address of data that will be read, must be a multiple of read block size
 	 * \param [out] buffer is the buffer into which the data will be read
-	 * \param [in] size is the size of \a buffer, bytes, must be a multiple of block size
+	 * \param [in] size is the size of \a buffer, bytes, must be a multiple of read block size
 	 *
 	 * \return 0 on success, error code otherwise:
 	 * - EBADF - the device is not opened;
@@ -135,28 +164,13 @@ public:
 
 	virtual int unlock() = 0;
 
-	/**
-	 * \brief Writes data to a device.
-	 *
-	 * \param [in] address is the address of data that will be written, must be a multiple of block size
-	 * \param [in] buffer is the buffer with data that will be written
-	 * \param [in] size is the size of \a buffer, bytes, must be a multiple of block size
-	 *
-	 * \return 0 on success, error code otherwise:
-	 * - EBADF - the device is not opened;
-	 * - EINVAL - \a address and/or \a buffer and/or \a size are not valid;
-	 * - ENOSPC - selected range is greater than size of device;
-	 */
-
-	virtual int write(uint64_t address, const void* buffer, size_t size) = 0;
-
-	BlockDevice() = default;
-	BlockDevice(const BlockDevice&) = delete;
-	BlockDevice& operator=(const BlockDevice&) = delete;
+	MemoryTechnologyDevice() = default;
+	MemoryTechnologyDevice(const MemoryTechnologyDevice&) = delete;
+	MemoryTechnologyDevice& operator=(const MemoryTechnologyDevice&) = delete;
 };
 
 }	// namespace devices
 
 }	// namespace distortos
 
-#endif	// INCLUDE_DISTORTOS_DEVICES_MEMORY_BLOCKDEVICE_HPP_
+#endif	// INCLUDE_DISTORTOS_DEVICES_MEMORY_MEMORYTECHNOLOGYDEVICE_HPP_

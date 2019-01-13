@@ -2,7 +2,7 @@
  * \file
  * \brief SpiEeprom class header
  *
- * \author Copyright (C) 2016-2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2016-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -253,10 +253,16 @@ public:
 	 * \param [in] size is the size of erased range, bytes
 	 *
 	 * \return 0 on success, error code otherwise:
-	 * - error codes returned by eraseOrProgram();
+	 * - error codes returned by eraseOrWrite();
 	 */
 
 	int erase(uint64_t address, uint64_t size) override;
+
+	/**
+	 * \return block size, bytes
+	 */
+
+	size_t getBlockSize() const override;
 
 	/**
 	 * \deprecated scheduled to be removed after v0.7.0, use SpiEeprom::getSize()
@@ -271,19 +277,6 @@ public:
 	}
 
 	/**
-	 * \return erase block size, bytes
-	 */
-
-	size_t getEraseBlockSize() const override;
-
-	/**
-	 * \return pair with bool telling whether erased value is defined (true) or not (false) and value of erased bytes
-	 * (valid only if defined);
-	 */
-
-	std::pair<bool, uint8_t> getErasedValue() const override;
-
-	/**
 	 * \deprecated scheduled to be made private after v0.7.0
 	 *
 	 * \return size of single page, bytes
@@ -294,18 +287,6 @@ public:
 	{
 		return 8 * (1 << ((static_cast<uint8_t>(type_) & pageSizeMask_) >> pageSizeShift_));
 	}
-
-	/**
-	 * \return program block size, bytes
-	 */
-
-	size_t getProgramBlockSize() const override;
-
-	/**
-	 * \return read block size, bytes
-	 */
-
-	size_t getReadBlockSize() const override;
 
 	/**
 	 * \return size of SPI EEPROM, bytes
@@ -356,23 +337,6 @@ public:
 	int open() override;
 
 	/**
-	 * \brief Programs data to SPI EEPROM.
-	 *
-	 * \warning This function must not be called from interrupt context!
-	 *
-	 * \param [in] address is the address of data that will be programmed
-	 * \param [in] buffer is the buffer with data that will be programmed
-	 * \param [in] size is the size of \a buffer, bytes
-	 *
-	 * \return pair with return code (0 on success, error code otherwise) and number of programmed bytes (valid even
-	 * when error code is returned); error codes:
-	 * - EINVAL - \a buffer is not valid;
-	 * - error codes returned by eraseOrProgram();
-	 */
-
-	std::pair<int, size_t> program(uint64_t address, const void* buffer, size_t size) override;
-
-	/**
 	 * \brief Reads data from SPI EEPROM.
 	 *
 	 * \warning This function must not be called from interrupt context!
@@ -381,14 +345,13 @@ public:
 	 * \param [out] buffer is the buffer into which the data will be read
 	 * \param [in] size is the size of \a buffer, bytes
 	 *
-	 * \return pair with return code (0 on success, error code otherwise) and number of read bytes (valid even when
-	 * error code is returned); error codes:
+	 * \return 0 on success, error code otherwise:
 	 * - EINVAL - \a address and/or \a buffer and/or \a size are not valid;
 	 * - error codes returned by executeTransaction();
 	 * - error codes returned by synchronize(const SpiDeviceProxy&);
 	 */
 
-	std::pair<int, size_t> read(uint64_t address, void* buffer, size_t size) override;
+	int read(uint64_t address, void* buffer, size_t size) override;
 
 	/**
 	 * \brief Synchronizes state of SPI EEPROM, ensuring all cached writes are finished.
@@ -400,19 +363,6 @@ public:
 	 */
 
 	int synchronize() override;
-
-	/**
-	 * \brief Trims unused blocks on SPI EEPROM.
-	 *
-	 * Selected range of blocks is no longer used and SPI EEPROM may erase it when convenient.
-	 *
-	 * \param [in] address is the address of range that will be trimmed, must be a multiple of erase block size
-	 * \param [in] size is the size of trimmed range, bytes, must be a multiple of erase block size
-	 *
-	 * \return always 0
-	 */
-
-	int trim(uint64_t address, uint64_t size) override;
 
 	/**
 	 * \brief Unlocks SPI EEPROM which was previously locked by current thread.
@@ -445,9 +395,7 @@ public:
 	}
 
 	/**
-	 * \brief Wrapper for program()
-	 *
-	 * \deprecated scheduled to be removed after v0.7.0, use SpiEeprom::program()
+	 * \brief Writes data to SPI EEPROM.
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
@@ -455,50 +403,44 @@ public:
 	 * \param [in] buffer is the buffer with data that will be written
 	 * \param [in] size is the size of \a buffer, bytes
 	 *
-	 * \return pair with return code (0 on success, error code otherwise) and number of written bytes (valid even when
-	 * error code is returned); error codes:
-	 * - error codes returned by program();
+	 * \return 0 on success, error code otherwise:
+	 * - EINVAL - \a buffer is not valid;
+	 * - error codes returned by eraseOrWrite();
 	 */
 
-	__attribute__ ((deprecated("Use SpiEeprom::program()")))
-	std::pair<int, size_t> write(const uint32_t address, const void* const buffer, const size_t size)
-	{
-		return program(address, buffer, size);
-	}
+	int write(uint64_t address, const void* buffer, size_t size) override;
 
 private:
 
 	/**
-	 * \brief Implementation of erase() and program()
+	 * \brief Implementation of erase() and write()
 	 *
-	 * \param [in] address is the address of data that will be erased or programmed
-	 * \param [in] buffer is the buffer with data that will be programmed, nullptr to erase
+	 * \param [in] address is the address of data that will be erased or written
+	 * \param [in] buffer is the buffer with data that will be written, nullptr to erase
 	 * \param [in] size is the size of erase (`buffer == nullptr`) or size of \a buffer (`buffer != nullptr`), bytes
 	 *
-	 * \return pair with return code (0 on success, error code otherwise) and number of erased/programmed bytes (valid
-	 * even when error code is returned); error codes:
+	 * \return 0 on success, error code otherwise:
 	 * - EINVAL - \a address and/or \a size are not valid;
-	 * - error codes returned by eraseOrProgramPage();
+	 * - error codes returned by eraseOrWritePage();
 	 */
 
-	std::pair<int, uint64_t> eraseOrProgram(const SpiDeviceProxy& spiDeviceProxy, uint64_t address, const void* buffer,
-			uint64_t size);
+	int eraseOrWrite(const SpiDeviceProxy& spiDeviceProxy, uint64_t address, const void* buffer, uint64_t size);
 
 	/**
-	 * \brief Erases or programs single page.
+	 * \brief Erases or writes single page.
 	 *
-	 * \param [in] address is the address of data that will be erased or programmed, must be valid!
-	 * \param [in] buffer is the buffer with data that will be programmed, nullptr to erase
+	 * \param [in] address is the address of data that will be erased or written, must be valid!
+	 * \param [in] buffer is the buffer with data that will be written, nullptr to erase
 	 * \param [in] size is the size of erase (`buffer == nullptr`) or size of \a buffer (`buffer != nullptr`), bytes
 	 *
-	 * \return pair with return code (0 on success, error code otherwise) and number of erased/programmed bytes (valid
-	 * even when error code is returned); error codes:
+	 * \return pair with return code (0 on success, error code otherwise) and number of erased/written bytes (valid even
+	 * when error code is returned); error codes:
 	 * - error codes returned by synchronize();
 	 * - error codes returned by writeEnable();
 	 * - error codes returned by SpiDevice::executeTransaction();
 	 */
 
-	std::pair<int, size_t> eraseOrProgramPage(const SpiDeviceProxy& spiDeviceProxy, uint32_t address,
+	std::pair<int, size_t> eraseOrWritePage(const SpiDeviceProxy& spiDeviceProxy, uint32_t address,
 			const void* buffer, size_t size);
 
 	/**

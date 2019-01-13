@@ -2,7 +2,7 @@
  * \file
  * \brief LittlefsFileSystem class header
  *
- * \author Copyright (C) 2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2018-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -21,6 +21,13 @@
 namespace distortos
 {
 
+namespace devices
+{
+
+class MemoryTechnologyDevice;
+
+}	// namespace devices
+
 /**
  * LittlefsFileSystem class is an [littlefs](https://github.com/ARMmbed/littlefs) file system.
  *
@@ -37,26 +44,29 @@ public:
 	/**
 	 * \brief LittlefsFileSystem's constructor
 	 *
-	 * \param [in] readBlockSize is the read block size, bytes, 0 to use default value of block device, default - 0
-	 * \param [in] programBlockSize is the program block size, bytes, 0 to use default value of block device,
-	 * default - 0
-	 * \param [in] eraseBlockSize is the erase block size, bytes, 0 to use default value of block device, default - 0
-	 * \param [in] blocksCount is the number of erase blocks used for file system, 0 to use max value of block device,
+	 * \param [in] memoryTechnologyDevice is a reference to memory technology device on which the file system will be
+	 * mounted
+	 * \param [in] readBlockSize is the read block size, bytes, 0 to use default value of device, default - 0
+	 * \param [in] programBlockSize is the program block size, bytes, 0 to use default value of device, default - 0
+	 * \param [in] eraseBlockSize is the erase block size, bytes, 0 to use default value of device, default - 0
+	 * \param [in] blocksCount is the number of erase blocks used for file system, 0 to use max value of device,
 	 * default - 0
 	 * \param [in] lookahead is the number of blocks to lookahead during block allocation, default - 512
 	 */
 
-	constexpr explicit LittlefsFileSystem(const size_t readBlockSize = {}, const size_t programBlockSize = {},
-			const size_t eraseBlockSize = {}, const size_t blocksCount = {}, const size_t lookahead = 32 * 16) :
+	constexpr explicit LittlefsFileSystem(devices::MemoryTechnologyDevice& memoryTechnologyDevice,
+			const size_t readBlockSize = {}, const size_t programBlockSize = {}, const size_t eraseBlockSize = {},
+			const size_t blocksCount = {}, const size_t lookahead = 32 * 16) :
 					configuration_{},
 					fileSystem_{},
 					mutex_{Mutex::Type::recursive, Mutex::Protocol::priorityInheritance},
-					blockDevice_{},
+					memoryTechnologyDevice_{memoryTechnologyDevice},
 					readBlockSize_{readBlockSize},
 					programBlockSize_{programBlockSize},
 					eraseBlockSize_{eraseBlockSize},
 					blocksCount_{blocksCount},
-					lookahead_{lookahead}
+					lookahead_{lookahead},
+					mounted_{}
 	{
 
 	}
@@ -72,21 +82,17 @@ public:
 	~LittlefsFileSystem() override;
 
 	/**
-	 * \brief Unmounts current file system (if any is mounted), formats block device with the file system and mounts it.
+	 * \brief Formats associated device with the file system.
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
-	 * \param [in] blockDevice is a pointer to block device which will be formatted with the file system and be mounted,
-	 * nullptr to use currently mounted block device
-	 *
 	 * \return 0 on success, error code otherwise:
-	 * - EINVAL - no file system is currently mounted and \a blockDevice is nullptr;
-	 * - error codes returned by format();
-	 * - error codes returned by mount();
-	 * - error codes returned by unmount();
+	 * - EBUSY - file system is mounted;
+	 * - converted error codes returned by lfs_format();
+	 * - error codes returned by MemoryTechnologyDevice::open();
 	 */
 
-	int formatAndMount(devices::BlockDevice* blockDevice) override;
+	int format() override;
 
 	/**
 	 * \brief Returns status of file.
@@ -160,19 +166,17 @@ public:
 	int makeDirectory(const char* path, mode_t mode) override;
 
 	/**
-	 * \brief Mounts file system on provided block device.
+	 * \brief Mounts file system on associated device.
 	 *
 	 * \warning This function must not be called from interrupt context!
-	 *
-	 * \param [in] blockDevice is a reference to block device on which the file system will be mounted
 	 *
 	 * \return 0 on success, error code otherwise:
 	 * - EBUSY - file system is already mounted;
 	 * - converted error codes returned by lfs_mount();
-	 * - error codes returned by BlockDevice::open();
+	 * - error codes returned by MemoryTechnologyDevice::open();
 	 */
 
-	int mount(devices::BlockDevice& blockDevice) override;
+	int mount() override;
 
 	/**
 	 * \brief Opens directory.
@@ -259,39 +263,17 @@ public:
 	int unlock() override;
 
 	/**
-	 * \brief Unmounts file system from associated block device.
+	 * \brief Unmounts file system from associated device.
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
 	 * \return 0 on success, error code otherwise:
 	 * - EBADF - no file system mounted;
 	 * - converted error codes returned by lfs_unmount();
-	 * - error codes returned by BlockDevice::close();
+	 * - error codes returned by MemoryTechnologyDevice::close();
 	 */
 
 	int unmount() override;
-
-	/**
-	 * \brief Formats block device with the file system.
-	 *
-	 * \warning This function must not be called from interrupt context!
-	 *
-	 * \param [in] blockDevice is a reference to block device which will be formatted
-	 * \param [in] readBlockSize is the read block size, bytes, 0 to use default value of block device, default - 0
-	 * \param [in] programBlockSize is the program block size, bytes, 0 to use default value of block device,
-	 * default - 0
-	 * \param [in] eraseBlockSize is the erase block size, bytes, 0 to use default value of block device, default - 0
-	 * \param [in] blocksCount is the number of erase blocks used for file system, 0 to use max value of block device,
-	 * default - 0
-	 * \param [in] lookahead is the number of blocks to lookahead during block allocation, default - 512
-	 *
-	 * \return 0 on success, error code otherwise:
-	 * - converted error codes returned by lfs_format();
-	 * - error codes returned by BlockDevice::open();
-	 */
-
-	static int format(devices::BlockDevice& blockDevice, size_t readBlockSize = {}, size_t programBlockSize = {},
-			size_t eraseBlockSize = {}, size_t blocksCount = {}, size_t lookahead = 32 * 16);
 
 private:
 
@@ -304,23 +286,26 @@ private:
 	/// mutex for serializing access to the object
 	distortos::Mutex mutex_;
 
-	/// pointer to block device on which file system is currently mounted, nullptr if file system is not mounted
-	devices::BlockDevice* blockDevice_;
+	/// reference to associated memory technology device
+	devices::MemoryTechnologyDevice& memoryTechnologyDevice_;
 
-	/// read block size, bytes, 0 to use default value of block device
+	/// read block size, bytes, 0 to use default value of device
 	size_t readBlockSize_;
 
-	/// program block size, bytes, 0 to use default value of block device
+	/// program block size, bytes, 0 to use default value of device
 	size_t programBlockSize_;
 
-	/// erase block size, bytes, 0 to use default value of block device
+	/// erase block size, bytes, 0 to use default value of device
 	size_t eraseBlockSize_;
 
-	/// number of erase blocks used for file system, 0 to use max value of block device
+	/// number of erase blocks used for file system, 0 to use max value of device
 	size_t blocksCount_;
 
 	/// number of blocks to lookahead during block allocation
 	size_t lookahead_;
+
+	/// tells whether the file system is currently mounted on associated memory technology device (true) or not (false)
+	bool mounted_;
 };
 
 }	// namespace distortos

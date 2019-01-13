@@ -15,7 +15,9 @@ chip.
 chip and unit tests.
 - Added `distortos::chip::SpiMasterLowLevelDmaBased` classes for *STM32's* *SPIv1* and *SPIv2*. These classes implement
 `distortos::devices::SpiMasterLowLevel` interface and use DMA for transfers.
-- Added `distortos::devices::BlockDevice` interface class.
+- Added `distortos::devices::BlockDevice` and `distortos::devices::MemoryTechnologyDevice` interface classes.
+- Added `distortos::devices::BlockDeviceToMemoryTechnologyDevice` class which wraps `distortos::devices::BlockDevice`
+object and exposes `distortos::devices::MemoryTechnologyDevice` interface.
 - Added `distortos::devices::SpiDeviceProxy`, `distortos::devices::SpiMasterProxy` and
 `distortos::devices::SpiDeviceSelectGuard`, which build new SPI-related API. These classes can be used for RAII-style
 locking/unlocking or selecting/deselecting of appropriate devices and also serve as proxies for accessing core
@@ -32,6 +34,7 @@ and `distortos::Directory`.
 `distortos::LittlefsFileSystem`, `distortos::LittlefsFile` and `distortos::LittlefsDirectory` classes, which implement
 interface of `distortos::FileSystem`, `distortos::File` and `distortos::Directory` classes.
 - Added `sys/dirent.h` and `sys/statvfs.h` headers, which are not provided by *newlib*.
+- Added unit test of `distortos::devices::BlockDeviceToMemoryTechnologyDevice` class.
 - Added unit tests of *STM32's* *DMAv1*, *DMAv2*, *SPIv1* and *SPIv2* drivers.
 - Added unit tests of all `estd::ContiguousRange` constructor overloads.
 
@@ -49,7 +52,9 @@ names were added, marked as deprecated and are scheduled to be removed after v0.
 buffer of transfer is `nullptr`.
 - `...::lock()` and `...::unlock()` functions in `distortos::devices::SpiDevice` and `distortos::devices::SpiEeprom`
 were changed to use recursive mutexes internally and thus take no arguments.
-- `distortos::devices::SpiEeprom` implements `distortos::devices::BlockDevice` interface.
+- `distortos::devices::SpiEeprom` implements `distortos::devices::BlockDevice` interface. This changes return type of
+`distortos::devices::SpiEeprom::read()` and `distortos::devices::SpiEeprom::write()` from `std::pair<int, size_t>` to
+just `int`.
 - All additional arguments of *CMake* functions `distortosBin()`, `distortosDmp()`, `distortosHex()`, `distortosLss()`
 and `distortosSize()` are passed to the appropriate commands (`${CMAKE_OBJCOPY}`, `${CMAKE_OBJDUMP}` or
 `${CMAKE_SIZE}`). This can be especially useful in case of binary files which are used to calculate firmware checksums,
@@ -90,10 +95,10 @@ constructor, `distortos::devices::SpiDevice::executeTransaction()`, `distortos::
 deprecated and are scheduled to be removed after v0.7.0. Use functionality exposed by
 `distortos::devices::SpiDeviceProxy`, `distortos::devices::SpiMasterProxy` and
 `distortos::devices::SpiDeviceSelectGuard`.
-- `distortos::devices::SpiEeprom::getCapacity()`, `distortos::devices::SpiEeprom::waitWhileWriteInProgress()` and
-`distortos::devices::SpiEeprom::write()` were marked as deprecated and are scheduled to be removed after v0.7.0. Use
-functions inherited from `distortos::devices::BlockDevice` interface class - `distortos::devices::SpiEeprom::getSize()`,
-`distortos::devices::SpiEeprom::synchronize()` and `distortos::devices::SpiEeprom::program()`.
+- `distortos::devices::SpiEeprom::getCapacity()` and `distortos::devices::SpiEeprom::waitWhileWriteInProgress()` were
+marked as deprecated and are scheduled to be removed after v0.7.0. Use functions inherited from
+`distortos::devices::BlockDevice` interface class -
+`distortos::devices::SpiEeprom::getSize()` and `distortos::devices::SpiEeprom::synchronize()`.
 - `distortos::devices::SpiEeprom::getPageSize()` and `distortos::devices::SpiEeprom::isWriteInProgress()` were marked as
 deprecated and are scheduled to be removed after v0.7.0.
 

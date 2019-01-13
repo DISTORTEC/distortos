@@ -2,7 +2,7 @@
  * \file
  * \brief LittlefsFileSystem class implementation
  *
- * \author Copyright (C) 2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2018-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -13,7 +13,7 @@
 
 #include "littlefsErrorToErrorCode.hpp"
 
-#include "distortos/devices/memory/BlockDevice.hpp"
+#include "distortos/devices/memory/MemoryTechnologyDevice.hpp"
 
 #include "distortos/FileSystem/littlefs/LittlefsDirectory.hpp"
 #include "distortos/FileSystem/littlefs/LittlefsFile.hpp"
@@ -91,27 +91,27 @@ int errorCodeToLittlefsError(const int errorCode)
 }
 
 /**
- * \brief Wrapper for BlockDevice::erase()
+ * \brief Wrapper for MemoryTechnologyDevice::erase()
  *
  * \param [in] configuration is a pointer to littlefs configuration
  * \param [in] block is the index of block that will be erased
  *
  * \return LFS_ERR_OK on success, error code otherwise:
- * - converted error codes returned by BlockDevice::erase();
+ * - converted error codes returned by MemoryTechnologyDevice::erase();
  */
 
-int littlefsBlockDeviceErase(const lfs_config* const configuration, const lfs_block_t block)
+int littlefsMemoryTechnologyDeviceErase(const lfs_config* const configuration, const lfs_block_t block)
 {
 	assert(configuration != nullptr);
-	const auto blockDevice = static_cast<devices::BlockDevice*>(configuration->context);
-	assert(blockDevice != nullptr);
-	const auto ret = blockDevice->erase(static_cast<uint64_t>(block) * configuration->block_size,
+	const auto memoryTechnologyDevice = static_cast<devices::MemoryTechnologyDevice*>(configuration->context);
+	assert(memoryTechnologyDevice != nullptr);
+	const auto ret = memoryTechnologyDevice->erase(static_cast<uint64_t>(block) * configuration->block_size,
 			configuration->block_size);
 	return errorCodeToLittlefsError(ret);
 }
 
 /**
- * \brief Wrapper for BlockDevice::program()
+ * \brief Wrapper for MemoryTechnologyDevice::program()
  *
  * \param [in] configuration is a pointer to littlefs configuration
  * \param [in] block is the index of block that will be programmed
@@ -120,22 +120,22 @@ int littlefsBlockDeviceErase(const lfs_config* const configuration, const lfs_bl
  * \param [in] size is the size of \a buffer, bytes
  *
  * \return LFS_ERR_OK on success, error code otherwise:
- * - converted error codes returned by BlockDevice::program();
+ * - converted error codes returned by MemoryTechnologyDevice::program();
  */
 
-int littlefsBlockDeviceProgram(const lfs_config* const configuration, const lfs_block_t block, const lfs_off_t offset,
-		const void* const buffer, const lfs_size_t size)
+int littlefsMemoryTechnologyDeviceProgram(const lfs_config* const configuration, const lfs_block_t block,
+		const lfs_off_t offset, const void* const buffer, const lfs_size_t size)
 {
 	assert(configuration != nullptr);
-	const auto blockDevice = static_cast<devices::BlockDevice*>(configuration->context);
-	assert(blockDevice != nullptr);
-	const auto ret = blockDevice->program(static_cast<uint64_t>(block) * configuration->block_size + offset, buffer,
-			size);
-	return errorCodeToLittlefsError(ret.first);
+	const auto memoryTechnologyDevice = static_cast<devices::MemoryTechnologyDevice*>(configuration->context);
+	assert(memoryTechnologyDevice != nullptr);
+	const auto ret = memoryTechnologyDevice->program(static_cast<uint64_t>(block) * configuration->block_size + offset,
+			buffer, size);
+	return errorCodeToLittlefsError(ret);
 }
 
 /**
- * \brief Wrapper for BlockDevice::read()
+ * \brief Wrapper for MemoryTechnologyDevice::read()
  *
  * \param [in] configuration is a pointer to littlefs configuration
  * \param [in] block is the index of block that will be read
@@ -144,34 +144,35 @@ int littlefsBlockDeviceProgram(const lfs_config* const configuration, const lfs_
  * \param [in] size is the size of \a buffer, bytes
  *
  * \return LFS_ERR_OK on success, error code otherwise:
- * - converted error codes returned by BlockDevice::read();
+ * - converted error codes returned by MemoryTechnologyDevice::read();
  */
 
-int littlefsBlockDeviceRead(const lfs_config* const configuration, const lfs_block_t block, const lfs_off_t offset,
-		void* const buffer, const lfs_size_t size)
+int littlefsMemoryTechnologyDeviceRead(const lfs_config* const configuration, const lfs_block_t block,
+		const lfs_off_t offset, void* const buffer, const lfs_size_t size)
 {
 	assert(configuration != nullptr);
-	const auto blockDevice = static_cast<devices::BlockDevice*>(configuration->context);
-	assert(blockDevice != nullptr);
-	const auto ret = blockDevice->read(static_cast<uint64_t>(block) * configuration->block_size + offset, buffer, size);
-	return errorCodeToLittlefsError(ret.first);
+	const auto memoryTechnologyDevice = static_cast<devices::MemoryTechnologyDevice*>(configuration->context);
+	assert(memoryTechnologyDevice != nullptr);
+	const auto ret = memoryTechnologyDevice->read(static_cast<uint64_t>(block) * configuration->block_size + offset,
+			buffer, size);
+	return errorCodeToLittlefsError(ret);
 }
 
 /**
- * \brief Wrapper for BlockDevice::synchronize()
+ * \brief Wrapper for MemoryTechnologyDevice::synchronize()
  *
  * \param [in] configuration is a pointer to littlefs configuration
  *
  * \return LFS_ERR_OK on success, error code otherwise:
- * - converted error codes returned by BlockDevice::synchronize();
+ * - converted error codes returned by MemoryTechnologyDevice::synchronize();
  */
 
-int littlefsBlockDeviceSynchronize(const lfs_config* const configuration)
+int littlefsMemoryTechnologyDeviceSynchronize(const lfs_config* const configuration)
 {
 	assert(configuration != nullptr);
-	const auto blockDevice = static_cast<devices::BlockDevice*>(configuration->context);
-	assert(blockDevice != nullptr);
-	const auto ret = blockDevice->synchronize();
+	const auto memoryTechnologyDevice = static_cast<devices::MemoryTechnologyDevice*>(configuration->context);
+	assert(memoryTechnologyDevice != nullptr);
+	const auto ret = memoryTechnologyDevice->synchronize();
 	return errorCodeToLittlefsError(ret);
 }
 
@@ -186,36 +187,48 @@ LittlefsFileSystem::~LittlefsFileSystem()
 	unmount();
 }
 
-int LittlefsFileSystem::formatAndMount(devices::BlockDevice* const blockDevice)
+int LittlefsFileSystem::format()
 {
 	const std::lock_guard<LittlefsFileSystem> lockGuard {*this};
 
-	const auto oldBlockDevice = blockDevice_;
-	const auto newBlockDevice = blockDevice != nullptr ? blockDevice : oldBlockDevice;
-	if (newBlockDevice == nullptr)
-		return EINVAL;
+	if (mounted_ == true)
+		return EBUSY;
 
-	if (blockDevice_ != nullptr)
 	{
-		const auto ret = unmount();
-		if (ret != 0)
-			return ret;
-	}
-	{
-		const auto ret = format(*newBlockDevice, readBlockSize_, programBlockSize_, eraseBlockSize_, blocksCount_,
-				lookahead_);
+		const auto ret = memoryTechnologyDevice_.open();
 		if (ret != 0)
 			return ret;
 	}
 
-	return mount(*newBlockDevice);
+	const auto closeScopeGuard = estd::makeScopeGuard([this]()
+			{
+				memoryTechnologyDevice_.close();
+			});
+
+	configuration_ = {};
+	fileSystem_ = {};
+	configuration_.context = &memoryTechnologyDevice_;
+	configuration_.read = littlefsMemoryTechnologyDeviceRead;
+	configuration_.prog = littlefsMemoryTechnologyDeviceProgram;
+	configuration_.erase = littlefsMemoryTechnologyDeviceErase;
+	configuration_.sync = littlefsMemoryTechnologyDeviceSynchronize;
+	configuration_.read_size = readBlockSize_ != 0 ? readBlockSize_ : memoryTechnologyDevice_.getReadBlockSize();
+	configuration_.prog_size =
+			programBlockSize_ != 0 ? programBlockSize_ : memoryTechnologyDevice_.getProgramBlockSize();
+	configuration_.block_size = eraseBlockSize_ != 0 ? eraseBlockSize_ : memoryTechnologyDevice_.getEraseBlockSize();
+	configuration_.block_count =
+			blocksCount_ != 0 ? blocksCount_ : (memoryTechnologyDevice_.getSize() / configuration_.block_size);
+	configuration_.lookahead = (std::max(lookahead_, 1u) + 31) / 32 * 32;
+
+	const auto ret = lfs_format(&fileSystem_, &configuration_);
+	return littlefsErrorToErrorCode(ret);
 }
 
 std::pair<int, struct stat> LittlefsFileSystem::getFileStatus(const char* const path)
 {
 	const std::lock_guard<LittlefsFileSystem> lockGuard {*this};
 
-	if (blockDevice_ == nullptr)
+	if (mounted_ == false)
 		return {EBADF, {}};
 
 	lfs_info info;
@@ -236,7 +249,7 @@ std::pair<int, struct statvfs> LittlefsFileSystem::getStatus()
 {
 	const std::lock_guard<LittlefsFileSystem> lockGuard {*this};
 
-	if (blockDevice_ == nullptr)
+	if (mounted_ == false)
 		return {EBADF, {}};
 
 	size_t usedBlocks {};
@@ -265,42 +278,44 @@ int LittlefsFileSystem::makeDirectory(const char* const path, mode_t)
 {
 	const std::lock_guard<LittlefsFileSystem> lockGuard {*this};
 
-	if (blockDevice_ == nullptr)
+	if (mounted_ == false)
 		return EBADF;
 
 	const auto ret = lfs_mkdir(&fileSystem_, path);
 	return littlefsErrorToErrorCode(ret);
 }
 
-int LittlefsFileSystem::mount(devices::BlockDevice& blockDevice)
+int LittlefsFileSystem::mount()
 {
 	const std::lock_guard<LittlefsFileSystem> lockGuard {*this};
 
-	if (blockDevice_ != nullptr)
+	if (mounted_ == true)
 		return EBUSY;
 
 	{
-		const auto ret = blockDevice.open();
+		const auto ret = memoryTechnologyDevice_.open();
 		if (ret != 0)
 			return ret;
 	}
 
-	auto closeScopeGuard = estd::makeScopeGuard([&blockDevice]()
+	auto closeScopeGuard = estd::makeScopeGuard([this]()
 			{
-				blockDevice.close();
+				memoryTechnologyDevice_.close();
 			});
 
 	configuration_ = {};
 	fileSystem_ = {};
-	configuration_.context = &blockDevice;
-	configuration_.read = littlefsBlockDeviceRead;
-	configuration_.prog = littlefsBlockDeviceProgram;
-	configuration_.erase = littlefsBlockDeviceErase;
-	configuration_.sync = littlefsBlockDeviceSynchronize;
-	configuration_.read_size = readBlockSize_ != 0 ? readBlockSize_ : blockDevice.getReadBlockSize();
-	configuration_.prog_size = programBlockSize_ != 0 ? programBlockSize_ : blockDevice.getProgramBlockSize();
-	configuration_.block_size = eraseBlockSize_ != 0 ? eraseBlockSize_ : blockDevice.getEraseBlockSize();
-	configuration_.block_count = blocksCount_ != 0 ? blocksCount_ : (blockDevice.getSize() / configuration_.block_size);
+	configuration_.context = &memoryTechnologyDevice_;
+	configuration_.read = littlefsMemoryTechnologyDeviceRead;
+	configuration_.prog = littlefsMemoryTechnologyDeviceProgram;
+	configuration_.erase = littlefsMemoryTechnologyDeviceErase;
+	configuration_.sync = littlefsMemoryTechnologyDeviceSynchronize;
+	configuration_.read_size = readBlockSize_ != 0 ? readBlockSize_ : memoryTechnologyDevice_.getReadBlockSize();
+	configuration_.prog_size =
+			programBlockSize_ != 0 ? programBlockSize_ : memoryTechnologyDevice_.getProgramBlockSize();
+	configuration_.block_size = eraseBlockSize_ != 0 ? eraseBlockSize_ : memoryTechnologyDevice_.getEraseBlockSize();
+	configuration_.block_count =
+			blocksCount_ != 0 ? blocksCount_ : (memoryTechnologyDevice_.getSize() / configuration_.block_size);
 	configuration_.lookahead = (std::max(lookahead_, 1u) + 31) / 32 * 32;
 
 	{
@@ -309,7 +324,7 @@ int LittlefsFileSystem::mount(devices::BlockDevice& blockDevice)
 			return littlefsErrorToErrorCode(ret);
 	}
 
-	blockDevice_ = &blockDevice;
+	mounted_ = true;
 	closeScopeGuard.release();
 	return 0;
 }
@@ -318,7 +333,7 @@ std::pair<int, std::unique_ptr<Directory>> LittlefsFileSystem::openDirectory(con
 {
 	const std::lock_guard<LittlefsFileSystem> lockGuard {*this};
 
-	if (blockDevice_ == nullptr)
+	if (mounted_ == false)
 		return {EBADF, std::unique_ptr<LittlefsDirectory>{}};
 
 	std::unique_ptr<LittlefsDirectory> directory {new (std::nothrow) LittlefsDirectory{*this}};
@@ -338,7 +353,7 @@ std::pair<int, std::unique_ptr<File>> LittlefsFileSystem::openFile(const char* c
 {
 	const std::lock_guard<LittlefsFileSystem> lockGuard {*this};
 
-	if (blockDevice_ == nullptr)
+	if (mounted_ == false)
 		return {EBADF, std::unique_ptr<LittlefsFile>{}};
 
 	std::unique_ptr<LittlefsFile> file {new (std::nothrow) LittlefsFile{*this}};
@@ -358,7 +373,7 @@ int LittlefsFileSystem::remove(const char* const path)
 {
 	const std::lock_guard<LittlefsFileSystem> lockGuard {*this};
 
-	if (blockDevice_ == nullptr)
+	if (mounted_ == false)
 		return EBADF;
 
 	const auto ret = lfs_remove(&fileSystem_, path);
@@ -369,7 +384,7 @@ int LittlefsFileSystem::rename(const char* const path, const char* const newPath
 {
 	const std::lock_guard<LittlefsFileSystem> lockGuard {*this};
 
-	if (blockDevice_ == nullptr)
+	if (mounted_ == false)
 		return EBADF;
 
 	const auto ret = lfs_rename(&fileSystem_, path, newPath);
@@ -385,49 +400,14 @@ int LittlefsFileSystem::unmount()
 {
 	const std::lock_guard<LittlefsFileSystem> lockGuard {*this};
 
-	if (blockDevice_ == nullptr)
+	if (mounted_ == false)
 		return EBADF;
 
 	const auto unmountRet = lfs_unmount(&fileSystem_);
-	const auto closeRet = blockDevice_->close();
-	blockDevice_ = {};
+	const auto closeRet = memoryTechnologyDevice_.close();
+	mounted_ = {};
 
 	return unmountRet != LFS_ERR_OK ? littlefsErrorToErrorCode(unmountRet) : closeRet;
-}
-
-/*---------------------------------------------------------------------------------------------------------------------+
-| public static functions
-+---------------------------------------------------------------------------------------------------------------------*/
-
-int LittlefsFileSystem::format(devices::BlockDevice& blockDevice, const size_t readBlockSize,
-		const size_t programBlockSize, const size_t eraseBlockSize, const size_t blocksCount, const size_t lookahead)
-{
-	{
-		const auto ret = blockDevice.open();
-		if (ret != 0)
-			return ret;
-	}
-
-	const auto closeScopeGuard = estd::makeScopeGuard([&blockDevice]()
-			{
-				blockDevice.close();
-			});
-
-	lfs_config configuration {};
-	lfs_t fileSystem {};
-	configuration.context = &blockDevice;
-	configuration.read = littlefsBlockDeviceRead;
-	configuration.prog = littlefsBlockDeviceProgram;
-	configuration.erase = littlefsBlockDeviceErase;
-	configuration.sync = littlefsBlockDeviceSynchronize;
-	configuration.read_size = readBlockSize != 0 ? readBlockSize : blockDevice.getReadBlockSize();
-	configuration.prog_size = programBlockSize != 0 ? programBlockSize : blockDevice.getProgramBlockSize();
-	configuration.block_size = eraseBlockSize != 0 ? eraseBlockSize : blockDevice.getEraseBlockSize();
-	configuration.block_count = blocksCount != 0 ? blocksCount : (blockDevice.getSize() / configuration.block_size);
-	configuration.lookahead = (std::max(lookahead, 1u) + 31) / 32 * 32;
-
-	const auto ret = lfs_format(&fileSystem, &configuration);
-	return littlefsErrorToErrorCode(ret);
 }
 
 }	// namespace distortos
