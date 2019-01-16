@@ -3,7 +3,7 @@
 #
 # This is the main CMakeLists.txt for distortos
 #
-# author: Copyright (C) 2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+# author: Copyright (C) 2018-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
 #
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -402,7 +402,7 @@ set(PREVIOUS_DISTORTOS_CONFIGURATION_NAMES ${DISTORTOS_CONFIGURATION_NAMES} CACH
 message(STATUS "Generating ${CMAKE_CURRENT_BINARY_DIR}/include/distortos/distortosConfiguration.h")
 
 unset(distortosConfiguration)
-foreach(name ${DISTORTOS_CONFIGURATION_NAMES})
+foreach(name ${DISTORTOS_CONFIGURATION_NAMES} ${DISTORTOS_FIXED_CONFIGURATION_NAMES})
 
 	set(type ${${name}_TYPE})
 	set(outputName ${${name}_OUTPUT_NAME})
