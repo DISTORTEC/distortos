@@ -182,106 +182,6 @@ set("CMAKE_VERBOSE_MAKEFILE"
 		CACHE
 		"BOOL"
 		"If this value is on, makefiles will be generated without the .SILENT directive, and all commands will be echoed to the console during the make.  This is useful for debugging only. With Visual Studio IDE projects all commands are done without /nologo.")
-set("CONFIG_ARCHITECTURE_ARM"
-		"ON"
-		CACHE
-		"INTERNAL"
-		"")
-set("CONFIG_ARCHITECTURE_ARMV7_M"
-		"ON"
-		CACHE
-		"INTERNAL"
-		"")
-set("CONFIG_ARCHITECTURE_ARM_CORTEX_M7"
-		"ON"
-		CACHE
-		"INTERNAL"
-		"")
-set("CONFIG_ARCHITECTURE_ARM_CORTEX_M7_R0P1"
-		"ON"
-		CACHE
-		"INTERNAL"
-		"")
-set("CONFIG_ARCHITECTURE_ASCENDING_STACK"
-		"OFF"
-		CACHE
-		"INTERNAL"
-		"")
-set("CONFIG_ARCHITECTURE_EMPTY_STACK"
-		"OFF"
-		CACHE
-		"INTERNAL"
-		"")
-set("CONFIG_ARCHITECTURE_STACK_ALIGNMENT"
-		"8"
-		CACHE
-		"INTERNAL"
-		"")
-set("CONFIG_BOARD"
-		"ST,32F746GDISCOVERY"
-		CACHE
-		"INTERNAL"
-		"")
-set("CONFIG_CHIP"
-		"STM32F746NG"
-		CACHE
-		"INTERNAL"
-		"")
-set("CONFIG_CHIP_STM32"
-		"ON"
-		CACHE
-		"INTERNAL"
-		"")
-set("CONFIG_CHIP_STM32F7"
-		"ON"
-		CACHE
-		"INTERNAL"
-		"")
-set("CONFIG_CHIP_STM32F74"
-		"ON"
-		CACHE
-		"INTERNAL"
-		"")
-set("CONFIG_CHIP_STM32F746"
-		"ON"
-		CACHE
-		"INTERNAL"
-		"")
-set("CONFIG_CHIP_STM32F746N"
-		"ON"
-		CACHE
-		"INTERNAL"
-		"")
-set("CONFIG_CHIP_STM32F7_RCC_HSE_CLOCK_BYPASS"
-		"ON"
-		CACHE
-		"INTERNAL"
-		"")
-set("CONFIG_CHIP_STM32F7_RCC_HSE_FREQUENCY"
-		"25000000"
-		CACHE
-		"INTERNAL"
-		"")
-set("CONFIG_CHIP_STM32F7_VDD_MV"
-		"3300"
-		CACHE
-		"INTERNAL"
-		"")
-set("CONFIG_CHIP_STM32_GPIOV2_HAS_4_AF_BITS"
-		"ON"
-		CACHE
-		"INTERNAL"
-		"")
-set("CONFIG_CHIP_STM32_GPIOV2_HAS_HIGH_SPEED"
-		"ON"
-		CACHE
-		"INTERNAL"
-		"")
-set("CONFIG_CHIP_STM32_USARTV2_HAS_CR1_M1_BIT"
-		"ON"
-		CACHE
-		"INTERNAL"
-		"")
 set("distortos_Architecture_00_Interrupt_stack_size"
 		"1024"
 		CACHE
@@ -525,7 +425,7 @@ set("distortos_Peripherals_GPIOH"
 set("distortos_Peripherals_GPIOI"
 		"ON"
 		CACHE
-		"INTERNAL"
+		"BOOL"
 		"Enable GPIOI.")
 set("distortos_Peripherals_GPIOJ"
 		"OFF"

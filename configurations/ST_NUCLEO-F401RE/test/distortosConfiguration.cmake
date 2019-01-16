@@ -182,96 +182,6 @@ set("CMAKE_VERBOSE_MAKEFILE"
 		CACHE
 		"BOOL"
 		"If this value is on, makefiles will be generated without the .SILENT directive, and all commands will be echoed to the console during the make.  This is useful for debugging only. With Visual Studio IDE projects all commands are done without /nologo.")
-set("CONFIG_ARCHITECTURE_ARM"
-		"ON"
-		CACHE
-		"INTERNAL"
-		"")
-set("CONFIG_ARCHITECTURE_ARMV7_M"
-		"ON"
-		CACHE
-		"INTERNAL"
-		"")
-set("CONFIG_ARCHITECTURE_ARM_CORTEX_M4"
-		"ON"
-		CACHE
-		"INTERNAL"
-		"")
-set("CONFIG_ARCHITECTURE_ARM_CORTEX_M4_R0P1"
-		"ON"
-		CACHE
-		"INTERNAL"
-		"")
-set("CONFIG_ARCHITECTURE_ASCENDING_STACK"
-		"OFF"
-		CACHE
-		"INTERNAL"
-		"")
-set("CONFIG_ARCHITECTURE_EMPTY_STACK"
-		"OFF"
-		CACHE
-		"INTERNAL"
-		"")
-set("CONFIG_ARCHITECTURE_STACK_ALIGNMENT"
-		"8"
-		CACHE
-		"INTERNAL"
-		"")
-set("CONFIG_BOARD"
-		"ST,NUCLEO-F401RE"
-		CACHE
-		"INTERNAL"
-		"")
-set("CONFIG_CHIP"
-		"STM32F401RE"
-		CACHE
-		"INTERNAL"
-		"")
-set("CONFIG_CHIP_STM32"
-		"ON"
-		CACHE
-		"INTERNAL"
-		"")
-set("CONFIG_CHIP_STM32F4"
-		"ON"
-		CACHE
-		"INTERNAL"
-		"")
-set("CONFIG_CHIP_STM32F40"
-		"ON"
-		CACHE
-		"INTERNAL"
-		"")
-set("CONFIG_CHIP_STM32F401"
-		"ON"
-		CACHE
-		"INTERNAL"
-		"")
-set("CONFIG_CHIP_STM32F401R"
-		"ON"
-		CACHE
-		"INTERNAL"
-		"")
-set("CONFIG_CHIP_STM32F4_VDD_MV"
-		"3300"
-		CACHE
-		"INTERNAL"
-		"")
-set("CONFIG_CHIP_STM32_GPIOV2_HAS_4_AF_BITS"
-		"ON"
-		CACHE
-		"INTERNAL"
-		"")
-set("CONFIG_CHIP_STM32_GPIOV2_HAS_HIGH_SPEED"
-		"ON"
-		CACHE
-		"INTERNAL"
-		"")
-set("CONFIG_CHIP_STM32_USARTV1_HAS_CR1_OVER8_BIT"
-		"ON"
-		CACHE
-		"INTERNAL"
-		"")
 set("distortos_Architecture_00_Interrupt_stack_size"
 		"1024"
 		CACHE
@@ -465,7 +375,7 @@ set("distortos_Peripherals_DMA2"
 set("distortos_Peripherals_GPIOA"
 		"ON"
 		CACHE
-		"INTERNAL"
+		"BOOL"
 		"Enable GPIOA.")
 set("distortos_Peripherals_GPIOB"
 		"OFF"
@@ -475,7 +385,7 @@ set("distortos_Peripherals_GPIOB"
 set("distortos_Peripherals_GPIOC"
 		"ON"
 		CACHE
-		"INTERNAL"
+		"BOOL"
 		"Enable GPIOC.")
 set("distortos_Peripherals_GPIOD"
 		"OFF"
