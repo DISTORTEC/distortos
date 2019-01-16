@@ -1,7 +1,7 @@
 #
 # file: distortos-sources.cmake
 #
-# author: Copyright (C) 2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+# author: Copyright (C) 2018-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
 #
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -277,18 +277,15 @@ if(distortos_Clocks_00_Standard_configuration_of_clocks)
 			set(pllmul6_5 OFF)
 		endif()
 
-		distortosSetConfiguration(INTEGER
+		distortosSetFixedConfiguration(INTEGER
 				CONFIG_CHIP_STM32F1_RCC_PLLMUL_NUMERATOR
-				${numerator}
-				INTERNAL)
-		distortosSetConfiguration(INTEGER
+				${numerator})
+		distortosSetFixedConfiguration(INTEGER
 				CONFIG_CHIP_STM32F1_RCC_PLLMUL_DENOMINATOR
-				${denominator}
-				INTERNAL)
-		distortosSetConfiguration(BOOLEAN
+				${denominator})
+		distortosSetFixedConfiguration(BOOLEAN
 				CONFIG_CHIP_STM32F1_RCC_PLLMUL6_5
-				${pllmul6_5}
-				INTERNAL)
+				${pllmul6_5})
 
 	endif(distortos_Clocks_08_PLL)
 

@@ -36,18 +36,15 @@ if(distortos_Peripherals_SPI1)
 				"DMA([0-9]+) channel ([0-9]+) \\(request ([0-9]+)\\)"
 				dummy
 				"${distortos_Peripherals_SPI1_01_RX_DMA}")
-		distortosSetConfiguration(INTEGER
+		distortosSetFixedConfiguration(INTEGER
 				CONFIG_CHIP_STM32_SPIV2_SPI1_RX_DMA
-				"${CMAKE_MATCH_1}"
-				INTERNAL)
-		distortosSetConfiguration(INTEGER
+				"${CMAKE_MATCH_1}")
+		distortosSetFixedConfiguration(INTEGER
 				CONFIG_CHIP_STM32_SPIV2_SPI1_RX_DMA_CHANNEL
-				"${CMAKE_MATCH_2}"
-				INTERNAL)
-		distortosSetConfiguration(INTEGER
+				"${CMAKE_MATCH_2}")
+		distortosSetFixedConfiguration(INTEGER
 				CONFIG_CHIP_STM32_SPIV2_SPI1_RX_DMA_REQUEST
-				"${CMAKE_MATCH_3}"
-				INTERNAL)
+				"${CMAKE_MATCH_3}")
 		list(APPEND STM32_DMA_V1_DMA${CMAKE_MATCH_1}_DEPENDENTS "SPI1 RX")
 		list(APPEND STM32_DMA_V1_DMA${CMAKE_MATCH_1}_CHANNEL${CMAKE_MATCH_2}_DEPENDENTS "SPI1 RX")
 
@@ -62,18 +59,15 @@ if(distortos_Peripherals_SPI1)
 				"DMA([0-9]+) channel ([0-9]+) \\(request ([0-9]+)\\)"
 				dummy
 				"${distortos_Peripherals_SPI1_02_TX_DMA}")
-		distortosSetConfiguration(INTEGER
+		distortosSetFixedConfiguration(INTEGER
 				CONFIG_CHIP_STM32_SPIV2_SPI1_TX_DMA
-				"${CMAKE_MATCH_1}"
-				INTERNAL)
-		distortosSetConfiguration(INTEGER
+				"${CMAKE_MATCH_1}")
+		distortosSetFixedConfiguration(INTEGER
 				CONFIG_CHIP_STM32_SPIV2_SPI1_TX_DMA_CHANNEL
-				"${CMAKE_MATCH_2}"
-				INTERNAL)
-		distortosSetConfiguration(INTEGER
+				"${CMAKE_MATCH_2}")
+		distortosSetFixedConfiguration(INTEGER
 				CONFIG_CHIP_STM32_SPIV2_SPI1_TX_DMA_REQUEST
-				"${CMAKE_MATCH_3}"
-				INTERNAL)
+				"${CMAKE_MATCH_3}")
 		list(APPEND STM32_DMA_V1_DMA${CMAKE_MATCH_1}_DEPENDENTS "SPI1 TX")
 		list(APPEND STM32_DMA_V1_DMA${CMAKE_MATCH_1}_CHANNEL${CMAKE_MATCH_2}_DEPENDENTS "SPI1 TX")
 
@@ -111,18 +105,15 @@ if(distortos_Peripherals_SPI3)
 				"DMA([0-9]+) channel ([0-9]+) \\(request ([0-9]+)\\)"
 				dummy
 				"${distortos_Peripherals_SPI3_01_RX_DMA}")
-		distortosSetConfiguration(INTEGER
+		distortosSetFixedConfiguration(INTEGER
 				CONFIG_CHIP_STM32_SPIV2_SPI3_RX_DMA
-				"${CMAKE_MATCH_1}"
-				INTERNAL)
-		distortosSetConfiguration(INTEGER
+				"${CMAKE_MATCH_1}")
+		distortosSetFixedConfiguration(INTEGER
 				CONFIG_CHIP_STM32_SPIV2_SPI3_RX_DMA_CHANNEL
-				"${CMAKE_MATCH_2}"
-				INTERNAL)
-		distortosSetConfiguration(INTEGER
+				"${CMAKE_MATCH_2}")
+		distortosSetFixedConfiguration(INTEGER
 				CONFIG_CHIP_STM32_SPIV2_SPI3_RX_DMA_REQUEST
-				"${CMAKE_MATCH_3}"
-				INTERNAL)
+				"${CMAKE_MATCH_3}")
 		list(APPEND STM32_DMA_V1_DMA${CMAKE_MATCH_1}_DEPENDENTS "SPI3 RX")
 		list(APPEND STM32_DMA_V1_DMA${CMAKE_MATCH_1}_CHANNEL${CMAKE_MATCH_2}_DEPENDENTS "SPI3 RX")
 
@@ -136,18 +127,15 @@ if(distortos_Peripherals_SPI3)
 				"DMA([0-9]+) channel ([0-9]+) \\(request ([0-9]+)\\)"
 				dummy
 				"${distortos_Peripherals_SPI3_02_TX_DMA}")
-		distortosSetConfiguration(INTEGER
+		distortosSetFixedConfiguration(INTEGER
 				CONFIG_CHIP_STM32_SPIV2_SPI3_TX_DMA
-				"${CMAKE_MATCH_1}"
-				INTERNAL)
-		distortosSetConfiguration(INTEGER
+				"${CMAKE_MATCH_1}")
+		distortosSetFixedConfiguration(INTEGER
 				CONFIG_CHIP_STM32_SPIV2_SPI3_TX_DMA_CHANNEL
-				"${CMAKE_MATCH_2}"
-				INTERNAL)
-		distortosSetConfiguration(INTEGER
+				"${CMAKE_MATCH_2}")
+		distortosSetFixedConfiguration(INTEGER
 				CONFIG_CHIP_STM32_SPIV2_SPI3_TX_DMA_REQUEST
-				"${CMAKE_MATCH_3}"
-				INTERNAL)
+				"${CMAKE_MATCH_3}")
 		list(APPEND STM32_DMA_V1_DMA${CMAKE_MATCH_1}_DEPENDENTS "SPI3 TX")
 		list(APPEND STM32_DMA_V1_DMA${CMAKE_MATCH_1}_CHANNEL${CMAKE_MATCH_2}_DEPENDENTS "SPI3 TX")
 

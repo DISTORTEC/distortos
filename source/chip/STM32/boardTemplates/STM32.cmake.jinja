@@ -3,7 +3,7 @@
 #
 # file: {{ metadata[metadataIndex][2] }}
 #
-# author: Copyright (C) 2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+# author: Copyright (C) 2018-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
 #
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -11,64 +11,52 @@
 # Automatically generated file - do not edit!
 #
 
-distortosSetConfiguration(BOOLEAN
+distortosSetFixedConfiguration(BOOLEAN
 		CONFIG_CHIP_{{ chip[:-6] }}
-		ON
-		INTERNAL)
+		ON)
 
-distortosSetConfiguration(BOOLEAN
+distortosSetFixedConfiguration(BOOLEAN
 		CONFIG_CHIP_{{ chip[:-4] }}
-		ON
-		INTERNAL)
+		ON)
 
-distortosSetConfiguration(BOOLEAN
+distortosSetFixedConfiguration(BOOLEAN
 		CONFIG_CHIP_{{ chip[:-3] }}
-		ON
-		INTERNAL)
+		ON)
 
-distortosSetConfiguration(BOOLEAN
+distortosSetFixedConfiguration(BOOLEAN
 		CONFIG_CHIP_{{ chip[:-2] }}
-		ON
-		INTERNAL)
+		ON)
 
-distortosSetConfiguration(BOOLEAN
+distortosSetFixedConfiguration(BOOLEAN
 		CONFIG_CHIP_{{ chip[:-1] }}
-		ON
-		INTERNAL)
+		ON)
 
-distortosSetConfiguration(STRING
+distortosSetFixedConfiguration(BOOLEAN
+		CONFIG_CHIP_{{ chip }}
+		ON)
+
+distortosSetFixedConfiguration(STRING
 		CONFIG_CHIP
-		"{{ chip }}"
-		INTERNAL
-		OUTPUT_TYPES BOOLEAN STRING)
+		"{{ chip }}")
 {% if 'VDD' in dictionary['chip'] %}
 
-distortosSetConfiguration(INTEGER
+distortosSetFixedConfiguration(INTEGER
 		CONFIG_CHIP_{{ chipFamily }}_VDD_MV
-		{{ (dictionary['chip']['VDD']['output-voltage'] * 1000) | int }}
-		INTERNAL
-		MIN 1800
-		MAX 3600)
+		{{ (dictionary['chip']['VDD']['output-voltage'] * 1000) | int }})
 {% endif %}
 {% if 'clocks' in dictionary %}
 {% for key, clock in dictionary['clocks'].items() if 'ST,STM32-HSE' in clock['compatible'] %}
 {% if clock['frequency'] != 0 or clock.get('bypass', False) == True %}
 
-distortosSetConfiguration(BOOLEAN
+distortosSetFixedConfiguration(BOOLEAN
 		CONFIG_CHIP_{{ chipFamily }}_RCC_HSE_CLOCK_BYPASS
-{% if clock.get('bypass', False) == True %}
-		ON
-{% else %}
-		OFF
-{% endif %}
-		INTERNAL)
+{{ '\t\t' }}{% if clock.get('bypass', False) == True %}ON{% else %}OFF{% endif %})
 {% endif %}
 {% if clock['frequency'] != 0 %}
 
-distortosSetConfiguration(INTEGER
+distortosSetFixedConfiguration(INTEGER
 		CONFIG_CHIP_{{ chipFamily }}_RCC_HSE_FREQUENCY
-		{{ clock['frequency'] }}
-		INTERNAL)
+		{{ clock['frequency'] }})
 {% endif %}
 {% endfor %}
 {% endif %}
