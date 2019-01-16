@@ -329,6 +329,44 @@ function(distortosSetConfiguration type name)
 endfunction()
 
 #
+# Sets new distortos fixed configuration named `name` with type `type` and value `value`.
+#
+# `BOOLEAN` type
+# `value` must be either `ON` or `OFF`.
+#
+# `INTEGER` type
+# `value` must be decimal integer in [-2147483648; 2147483647] range.
+#
+# `STRING` type
+# Any string is accepted as `value`.
+#
+
+function(distortosSetFixedConfiguration type name value)
+	list(FIND DISTORTOS_FIXED_CONFIGURATION_NAMES "${name}" index)
+	if(NOT index EQUAL -1)
+		message(FATAL_ERROR "Fixed configuration variable \"${name}\" is already set")
+	endif()
+
+	if(type STREQUAL BOOLEAN)
+		distortosCheckBoolean("${name}" "${value}")
+	elseif(type STREQUAL INTEGER)
+		distortosCheckInteger("${name}" "${value}" -2147483648 2147483647)
+	elseif(type STREQUAL STRING)
+		# nothing to check, accept everything
+	else()
+		message(FATAL_ERROR "\"${type}\" is not a valid type")
+	endif()
+
+	set("${name}" "${value}" PARENT_SCOPE)
+
+	list(APPEND DISTORTOS_FIXED_CONFIGURATION_NAMES "${name}")
+	set(DISTORTOS_FIXED_CONFIGURATION_NAMES ${DISTORTOS_FIXED_CONFIGURATION_NAMES} PARENT_SCOPE)
+	set("${name}_TYPE" "${type}" PARENT_SCOPE)
+	set("${name}_OUTPUT_NAME" "${name}" PARENT_SCOPE)
+	set("${name}_OUTPUT_TYPES" "${type}" PARENT_SCOPE)
+endfunction()
+
+#
 # Prints size of output file of `target`.
 #
 # All additional arguments are passed to ${CMAKE_SIZE}.
