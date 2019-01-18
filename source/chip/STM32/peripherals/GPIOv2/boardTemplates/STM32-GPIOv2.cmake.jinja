@@ -18,18 +18,10 @@ distortosSetFixedConfiguration(BOOLEAN
 {{ '\t\t' }}{% if dictionary['pin-controller']['has-high-speed'] == true %}ON{% else %}OFF{% endif %})
 {% for key, gpio in dictionary['GPIOs'].items() if gpio is mapping and 'ST,STM32-GPIO-v2' in gpio['compatible'] %}
 
-if(FORCE_STM32_GPIO_V2_{{ key | upper }}_ENABLE)
-	set(value ON)
-	set(internal INTERNAL)
-else()
-	set(value OFF)
-	unset(internal)
-endif()
-
 distortosSetConfiguration(BOOLEAN
 		distortos_Peripherals_{{ key }}
-		${value}
-		${internal}
+		OFF
+		DEPENDENTS ${STM32_GPIO_V2_{{ key | upper }}_DEPENDENTS}
 		HELP "Enable {{ key | upper }}."
 		OUTPUT_NAME CONFIG_CHIP_STM32_GPIO_V2_{{ key | upper }}_ENABLE)
 {% endfor %}

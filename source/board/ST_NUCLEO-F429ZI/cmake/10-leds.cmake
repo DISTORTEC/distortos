@@ -1,7 +1,7 @@
 #
 # file: cmake/10-leds.cmake
 #
-# author: Copyright (C) 2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+# author: Copyright (C) 2018-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
 #
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -24,7 +24,7 @@ if(distortos_leds)
 			OUTPUT_NAME CONFIG_BOARD_LEDS_LD1_ENABLE)
 
 	if(distortos_leds_Ld1)
-		set(FORCE_STM32_GPIO_V2_GPIOB_ENABLE ON)
+		list(APPEND STM32_GPIO_V2_GPIOB_DEPENDENTS "leds Ld1")
 	endif()
 
 	distortosSetConfiguration(BOOLEAN
@@ -34,7 +34,7 @@ if(distortos_leds)
 			OUTPUT_NAME CONFIG_BOARD_LEDS_LD2_ENABLE)
 
 	if(distortos_leds_Ld2)
-		set(FORCE_STM32_GPIO_V2_GPIOB_ENABLE ON)
+		list(APPEND STM32_GPIO_V2_GPIOB_DEPENDENTS "leds Ld2")
 	endif()
 
 	distortosSetConfiguration(BOOLEAN
@@ -44,7 +44,7 @@ if(distortos_leds)
 			OUTPUT_NAME CONFIG_BOARD_LEDS_LD3_ENABLE)
 
 	if(distortos_leds_Ld3)
-		set(FORCE_STM32_GPIO_V2_GPIOB_ENABLE ON)
+		list(APPEND STM32_GPIO_V2_GPIOB_DEPENDENTS "leds Ld3")
 	endif()
 
 endif(distortos_leds)

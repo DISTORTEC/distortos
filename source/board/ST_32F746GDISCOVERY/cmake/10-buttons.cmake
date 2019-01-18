@@ -1,7 +1,7 @@
 #
 # file: cmake/10-buttons.cmake
 #
-# author: Copyright (C) 2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+# author: Copyright (C) 2018-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
 #
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -24,7 +24,7 @@ if(distortos_buttons)
 			OUTPUT_NAME CONFIG_BOARD_BUTTONS_B1_ENABLE)
 
 	if(distortos_buttons_B1)
-		set(FORCE_STM32_GPIO_V2_GPIOI_ENABLE ON)
+		list(APPEND STM32_GPIO_V2_GPIOI_DEPENDENTS "buttons B1")
 	endif()
 
 endif(distortos_buttons)

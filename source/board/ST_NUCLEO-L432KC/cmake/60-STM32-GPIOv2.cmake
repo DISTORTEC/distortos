@@ -17,63 +17,31 @@ distortosSetFixedConfiguration(BOOLEAN
 		CONFIG_CHIP_STM32_GPIOV2_HAS_HIGH_SPEED
 		ON)
 
-if(FORCE_STM32_GPIO_V2_GPIOA_ENABLE)
-	set(value ON)
-	set(internal INTERNAL)
-else()
-	set(value OFF)
-	unset(internal)
-endif()
-
 distortosSetConfiguration(BOOLEAN
 		distortos_Peripherals_GPIOA
-		${value}
-		${internal}
+		OFF
+		DEPENDENTS ${STM32_GPIO_V2_GPIOA_DEPENDENTS}
 		HELP "Enable GPIOA."
 		OUTPUT_NAME CONFIG_CHIP_STM32_GPIO_V2_GPIOA_ENABLE)
 
-if(FORCE_STM32_GPIO_V2_GPIOB_ENABLE)
-	set(value ON)
-	set(internal INTERNAL)
-else()
-	set(value OFF)
-	unset(internal)
-endif()
-
 distortosSetConfiguration(BOOLEAN
 		distortos_Peripherals_GPIOB
-		${value}
-		${internal}
+		OFF
+		DEPENDENTS ${STM32_GPIO_V2_GPIOB_DEPENDENTS}
 		HELP "Enable GPIOB."
 		OUTPUT_NAME CONFIG_CHIP_STM32_GPIO_V2_GPIOB_ENABLE)
 
-if(FORCE_STM32_GPIO_V2_GPIOC_ENABLE)
-	set(value ON)
-	set(internal INTERNAL)
-else()
-	set(value OFF)
-	unset(internal)
-endif()
-
 distortosSetConfiguration(BOOLEAN
 		distortos_Peripherals_GPIOC
-		${value}
-		${internal}
+		OFF
+		DEPENDENTS ${STM32_GPIO_V2_GPIOC_DEPENDENTS}
 		HELP "Enable GPIOC."
 		OUTPUT_NAME CONFIG_CHIP_STM32_GPIO_V2_GPIOC_ENABLE)
 
-if(FORCE_STM32_GPIO_V2_GPIOH_ENABLE)
-	set(value ON)
-	set(internal INTERNAL)
-else()
-	set(value OFF)
-	unset(internal)
-endif()
-
 distortosSetConfiguration(BOOLEAN
 		distortos_Peripherals_GPIOH
-		${value}
-		${internal}
+		OFF
+		DEPENDENTS ${STM32_GPIO_V2_GPIOH_DEPENDENTS}
 		HELP "Enable GPIOH."
 		OUTPUT_NAME CONFIG_CHIP_STM32_GPIO_V2_GPIOH_ENABLE)
 
