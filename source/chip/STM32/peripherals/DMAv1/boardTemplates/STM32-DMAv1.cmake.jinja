@@ -10,43 +10,29 @@
 #
 {% for key, dma in dictionary['DMAs'].items() if dma is mapping and 'ST,STM32-DMA-v1' in dma['compatible'] %}
 
-if(NOT distortos_Peripherals_{{ key }} AND STM32_DMA_V1_{{ key | upper }}_DEPENDENTS)
-	string(REPLACE ";" ", " dependents "${STM32_DMA_V1_{{ key | upper }}_DEPENDENTS}")
-	message(STATUS "Auto-enabling {{ key }}. Dependents: ${dependents}")
-	set(value ON FORCE)
-else()
-	set(value OFF)
-endif()
-
 distortosSetConfiguration(BOOLEAN
 		distortos_Peripherals_{{ key }}
-		${value}
+		OFF
+		DEPENDENTS ${STM32_DMA_V1_{{ key | upper }}_DEPENDENTS}
 		HELP "Enable {{ key | upper }} low-level driver."
 		OUTPUT_NAME CONFIG_CHIP_STM32_DMAV1_{{ key | upper }}_ENABLE)
 
 if(distortos_Peripherals_{{ key }})
 {% for vector in dma['interrupts']['vectors'] %}
 
-	string(REPLACE ";" ", " dependents "${STM32_DMA_V1_{{ key | upper }}_CHANNEL{{ loop.index }}_DEPENDENTS}")
-	if(NOT distortos_Peripherals_{{ key }}_channel_{{ loop.index }} AND
-			STM32_DMA_V1_{{ key | upper }}_CHANNEL{{ loop.index }}_DEPENDENTS)
-		message(STATUS "Auto-enabling {{ key }} channel {{ loop.index }}. Dependents: ${dependents}")
-		set(value ON FORCE)
-	else()
-		set(value OFF)
-	endif()
+	distortosSetConfiguration(BOOLEAN
+			distortos_Peripherals_{{ key }}_channel_{{ loop.index }}
+			OFF
+			DEPENDENTS ${STM32_DMA_V1_{{ key | upper }}_CHANNEL{{ loop.index }}_DEPENDENTS}
+			HELP "Enable {{ key | upper }} channel {{ loop.index }} low-level driver."
+			OUTPUT_NAME CONFIG_CHIP_STM32_DMAV1_{{ key | upper }}_CHANNEL{{ loop.index }}_ENABLE)
 
 	list(LENGTH STM32_DMA_V1_{{ key | upper }}_CHANNEL{{ loop.index }}_DEPENDENTS length)
 	if(length GREATER 1)
+		string(REPLACE ";" ", " dependents "${STM32_DMA_V1_{{ key | upper }}_CHANNEL{{ loop.index }}_DEPENDENTS}")
 		message(STATUS "Warning: {{ key }} channel {{ loop.index }} has ${length} dependents: ${dependents}. "
 				"DMA channel cannot be used simultaneously by multiple drivers.")
 	endif()
-
-	distortosSetConfiguration(BOOLEAN
-			distortos_Peripherals_{{ key }}_channel_{{ loop.index }}
-			${value}
-			HELP "Enable {{ key | upper }} channel {{ loop.index }} low-level driver."
-			OUTPUT_NAME CONFIG_CHIP_STM32_DMAV1_{{ key | upper }}_CHANNEL{{ loop.index }}_ENABLE)
 
 	if(distortos_Peripherals_{{ key }}_channel_{{ loop.index }})
 		set(ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_{{ vector | upper }}_ENABLE ON)
