@@ -116,10 +116,14 @@ endfunction()
 #
 
 function(distortosSetBooleanConfiguration name help)
-	cmake_parse_arguments(PARSE_ARGV 2 BOOL "FORCE;INTERNAL" "" "DEPENDENTS")
+	cmake_parse_arguments(PARSE_ARGV 2 BOOL "FORCE;INTERNAL" "" "DEPENDENTS;OFF_DEPENDENTS")
 	list(LENGTH BOOL_UNPARSED_ARGUMENTS length)
 	if(NOT length EQUAL 1)
 		message(FATAL_ERROR "Invalid arguments: \"${BOOL_UNPARSED_ARGUMENTS}\"")
+	endif()
+
+	if(BOOL_DEPENDENTS AND BOOL_OFF_DEPENDENTS)
+		message(FATAL_ERROR "Only one of DEPENDENTS and OFF_DEPENDENTS may be used")
 	endif()
 
 	set(defaultValue ${BOOL_UNPARSED_ARGUMENTS})
@@ -135,6 +139,12 @@ function(distortosSetBooleanConfiguration name help)
 		string(REPLACE ";" ", " dependents "${BOOL_DEPENDENTS}")
 		message(STATUS "Auto-enabling ${name}. Dependents: ${dependents}")
 		set(defaultValue ON)
+		set(force FORCE)
+	endif()
+	if(${name} AND BOOL_OFF_DEPENDENTS)
+		string(REPLACE ";" ", " offDependents "${BOOL_OFF_DEPENDENTS}")
+		message(STATUS "Auto-disabling ${name}. Off-dependents: ${offDependents}")
+		set(defaultValue OFF)
 		set(force FORCE)
 	endif()
 
@@ -266,7 +276,8 @@ endfunction()
 #
 # Sets new distortos cache configuration named `name` with type `type`.
 #
-# `distortosSetConfiguration(BOOLEAN name defaultValue [DEPENDENTS [dependent1 [dependent2 [...]]]] [generic-options])`
+# `distortosSetConfiguration(BOOLEAN name defaultValue [[OFF_]DEPENDENTS [dependent1 [dependent2 [...]]]]
+#		[generic-options])`
 # `distortosSetConfiguration(INTEGER name defaultValue [MIN min] [MAX max] [generic-options])`
 # `distortosSetConfiguration(STRING name string1 [string2 [string3 [...]]] [generic-options])`
 #
@@ -284,8 +295,8 @@ endfunction()
 # is omitted; must not be used with `NO_OUTPUT`;
 #
 # `BOOLEAN` variant
-# `defaultValue` must be either `ON` or `OFF`. If `DEPENDENTS` is a non-empty list, then this option will be
-# auto-enabled.
+# `defaultValue` must be either `ON` or `OFF`. If `DEPENDENTS` or `OFF_DEPENDENTS` is a non-empty list, then this option
+# will be auto-enabled or auto-disabled. Only one of `DEPENDENTS` and `OFF_DEPENDENTS` may be used.
 #
 # `INTEGER` variant
 # `defaultValue`, `min` and `max` must be decimal integers in [-2147483648; 2147483647] range. -2147483648 is used as
