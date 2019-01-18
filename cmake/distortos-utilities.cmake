@@ -112,7 +112,7 @@ function(distortosRemoveFlag variable flag)
 endfunction()
 
 #
-# Implementation of `distortosSetConfiguration(BOOLEAN ...`. Do not use directly.
+# Implementation of `distortosSetConfiguration(BOOLEAN ...)`. Do not use directly.
 #
 
 function(distortosSetBooleanConfiguration name help)
@@ -150,7 +150,7 @@ function(distortosSetBooleanConfiguration name help)
 endfunction()
 
 #
-# Implementation of `distortosSetConfiguration(INTEGER ...`. Do not use directly.
+# Implementation of `distortosSetConfiguration(INTEGER ...)`. Do not use directly.
 #
 
 function(distortosSetIntegerConfiguration name help)
@@ -205,7 +205,7 @@ function(distortosSetIntegerConfiguration name help)
 endfunction()
 
 #
-# Implementation of `distortosSetConfiguration(STRING ...`. Do not use directly.
+# Implementation of `distortosSetConfiguration(STRING ...)`. Do not use directly.
 #
 
 function(distortosSetStringConfiguration name help)
