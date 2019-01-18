@@ -384,17 +384,17 @@ distortosSetConfiguration(STRING
 if(NOT CONFIG_CHIP MATCHES "STM32F100")
 
 	if(distortos_Clocks_14_HPRE STREQUAL 1)
-		unset(internal)
+		unset(dependents)
 	else()
-		set(internal INTERNAL)
+		set(dependents "HPRE != 1")
 	endif()
 
 	distortosSetConfiguration(BOOLEAN
 			distortos_Memory_00_Flash_prefetch
 			ON
-			HELP "Enable flash prefetch option in FLASH->ACR register."
-			OUTPUT_NAME CONFIG_CHIP_STM32F1_FLASH_PREFETCH_ENABLE
-			${internal})
+			DEPENDENTS ${dependents}
+			HELP "Enable flash prefetch option in FLASH->ACR register. Has to be enabled when HPRE != 1."
+			OUTPUT_NAME CONFIG_CHIP_STM32F1_FLASH_PREFETCH_ENABLE)
 
 endif(NOT CONFIG_CHIP MATCHES "STM32F100")
 
