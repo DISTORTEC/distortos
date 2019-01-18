@@ -399,9 +399,9 @@ if(NOT CONFIG_CHIP MATCHES "STM32F100")
 endif(NOT CONFIG_CHIP MATCHES "STM32F100")
 
 if(distortos_Clocks_14_HPRE STREQUAL 1)
-	set(internal INTERNAL)
-else()
 	unset(internal)
+else()
+	set(internal INTERNAL)
 endif()
 
 distortosSetConfiguration(BOOLEAN
