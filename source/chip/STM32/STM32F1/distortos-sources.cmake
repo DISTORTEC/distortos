@@ -399,17 +399,17 @@ if(NOT CONFIG_CHIP MATCHES "STM32F100")
 endif(NOT CONFIG_CHIP MATCHES "STM32F100")
 
 if(distortos_Clocks_14_HPRE STREQUAL 1)
-	unset(internal)
+	unset(offDependents)
 else()
-	set(internal INTERNAL)
+	set(offDependents "HPRE != 1")
 endif()
 
 distortosSetConfiguration(BOOLEAN
 		distortos_Memory_01_Flash_half_cycle_access
 		OFF
-		HELP "Enable flash half cycle access option in FLASH->ACR register."
-		OUTPUT_NAME CONFIG_CHIP_STM32F1_FLASH_HALF_CYCLE_ACCESS_ENABLE
-		${internal})
+		OFF_DEPENDENTS ${offDependents}
+		HELP "Enable flash half cycle access option in FLASH->ACR register. Has to be disabled when HPRE != 1."
+		OUTPUT_NAME CONFIG_CHIP_STM32F1_FLASH_HALF_CYCLE_ACCESS_ENABLE)
 
 target_include_directories(distortos PUBLIC
 		${CMAKE_CURRENT_LIST_DIR}/../include
