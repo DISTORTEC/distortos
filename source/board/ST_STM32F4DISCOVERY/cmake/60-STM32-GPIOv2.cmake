@@ -1,7 +1,7 @@
 #
 # file: cmake/60-STM32-GPIOv2.cmake
 #
-# author: Copyright (C) 2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+# author: Copyright (C) 2018-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
 #
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -9,103 +9,53 @@
 # Automatically generated file - do not edit!
 #
 
-distortosSetConfiguration(BOOLEAN
+distortosSetFixedConfiguration(BOOLEAN
 		CONFIG_CHIP_STM32_GPIOV2_HAS_4_AF_BITS
-		ON
-		INTERNAL)
+		ON)
 
-distortosSetConfiguration(BOOLEAN
+distortosSetFixedConfiguration(BOOLEAN
 		CONFIG_CHIP_STM32_GPIOV2_HAS_HIGH_SPEED
-		ON
-		INTERNAL)
-
-if(FORCE_STM32_GPIO_V2_GPIOA_ENABLE)
-	set(value ON)
-	set(internal INTERNAL)
-else()
-	set(value OFF)
-	unset(internal)
-endif()
+		ON)
 
 distortosSetConfiguration(BOOLEAN
 		distortos_Peripherals_GPIOA
-		${value}
-		${internal}
+		OFF
+		DEPENDENTS ${STM32_GPIO_V2_GPIOA_DEPENDENTS}
 		HELP "Enable GPIOA."
 		OUTPUT_NAME CONFIG_CHIP_STM32_GPIO_V2_GPIOA_ENABLE)
 
-if(FORCE_STM32_GPIO_V2_GPIOB_ENABLE)
-	set(value ON)
-	set(internal INTERNAL)
-else()
-	set(value OFF)
-	unset(internal)
-endif()
-
 distortosSetConfiguration(BOOLEAN
 		distortos_Peripherals_GPIOB
-		${value}
-		${internal}
+		OFF
+		DEPENDENTS ${STM32_GPIO_V2_GPIOB_DEPENDENTS}
 		HELP "Enable GPIOB."
 		OUTPUT_NAME CONFIG_CHIP_STM32_GPIO_V2_GPIOB_ENABLE)
 
-if(FORCE_STM32_GPIO_V2_GPIOC_ENABLE)
-	set(value ON)
-	set(internal INTERNAL)
-else()
-	set(value OFF)
-	unset(internal)
-endif()
-
 distortosSetConfiguration(BOOLEAN
 		distortos_Peripherals_GPIOC
-		${value}
-		${internal}
+		OFF
+		DEPENDENTS ${STM32_GPIO_V2_GPIOC_DEPENDENTS}
 		HELP "Enable GPIOC."
 		OUTPUT_NAME CONFIG_CHIP_STM32_GPIO_V2_GPIOC_ENABLE)
 
-if(FORCE_STM32_GPIO_V2_GPIOD_ENABLE)
-	set(value ON)
-	set(internal INTERNAL)
-else()
-	set(value OFF)
-	unset(internal)
-endif()
-
 distortosSetConfiguration(BOOLEAN
 		distortos_Peripherals_GPIOD
-		${value}
-		${internal}
+		OFF
+		DEPENDENTS ${STM32_GPIO_V2_GPIOD_DEPENDENTS}
 		HELP "Enable GPIOD."
 		OUTPUT_NAME CONFIG_CHIP_STM32_GPIO_V2_GPIOD_ENABLE)
 
-if(FORCE_STM32_GPIO_V2_GPIOE_ENABLE)
-	set(value ON)
-	set(internal INTERNAL)
-else()
-	set(value OFF)
-	unset(internal)
-endif()
-
 distortosSetConfiguration(BOOLEAN
 		distortos_Peripherals_GPIOE
-		${value}
-		${internal}
+		OFF
+		DEPENDENTS ${STM32_GPIO_V2_GPIOE_DEPENDENTS}
 		HELP "Enable GPIOE."
 		OUTPUT_NAME CONFIG_CHIP_STM32_GPIO_V2_GPIOE_ENABLE)
 
-if(FORCE_STM32_GPIO_V2_GPIOH_ENABLE)
-	set(value ON)
-	set(internal INTERNAL)
-else()
-	set(value OFF)
-	unset(internal)
-endif()
-
 distortosSetConfiguration(BOOLEAN
 		distortos_Peripherals_GPIOH
-		${value}
-		${internal}
+		OFF
+		DEPENDENTS ${STM32_GPIO_V2_GPIOH_DEPENDENTS}
 		HELP "Enable GPIOH."
 		OUTPUT_NAME CONFIG_CHIP_STM32_GPIO_V2_GPIOH_ENABLE)
 

@@ -3,7 +3,7 @@
 #
 # file: {{ metadata[metadataIndex][2] }}
 #
-# author: Copyright (C) 2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+# author: Copyright (C) 2018-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
 #
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -13,40 +13,33 @@
 
 set(DISTORTOS_RAW_LINKER_SCRIPT "{{ outputPath }}/{{ sanitizedBoard }}.ld")
 
-distortosSetConfiguration(BOOLEAN
+distortosSetFixedConfiguration(BOOLEAN
 		CONFIG_ARCHITECTURE_ASCENDING_STACK
-		OFF
-		INTERNAL)
+		OFF)
 
-distortosSetConfiguration(BOOLEAN
+distortosSetFixedConfiguration(BOOLEAN
 		CONFIG_ARCHITECTURE_EMPTY_STACK
-		OFF
-		INTERNAL)
+		OFF)
 
-distortosSetConfiguration(INTEGER
+distortosSetFixedConfiguration(INTEGER
 		CONFIG_ARCHITECTURE_STACK_ALIGNMENT
-		8
-		INTERNAL)
+		8)
 
-distortosSetConfiguration(BOOLEAN
+distortosSetFixedConfiguration(BOOLEAN
 		CONFIG_ARCHITECTURE_ARM
-		ON
-		INTERNAL)
+		ON)
 
-distortosSetConfiguration(BOOLEAN
+distortosSetFixedConfiguration(BOOLEAN
 		CONFIG_ARCHITECTURE_{{ sanitizedArchitecture }}
-		ON
-		INTERNAL)
+		ON)
 
-distortosSetConfiguration(BOOLEAN
+distortosSetFixedConfiguration(BOOLEAN
 		CONFIG_ARCHITECTURE_{{ sanitizedCpu }}
-		ON
-		INTERNAL)
+		ON)
 
-distortosSetConfiguration(BOOLEAN
+distortosSetFixedConfiguration(BOOLEAN
 		CONFIG_ARCHITECTURE_{{ sanitizedCpu }}_{{ dictionary['CPUs'][0]['revision'] | upper }}
-		ON
-		INTERNAL)
+		ON)
 
 distortosSetConfiguration(INTEGER
 		distortos_Architecture_00_Interrupt_stack_size
@@ -211,10 +204,9 @@ endif(ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_{{ subvector | upper }}_ENABLE)
 {% endfor %}
 
 if(ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_{{ item['name'] | upper }}_ENABLE)
-	distortosSetConfiguration(BOOLEAN
+	distortosSetFixedConfiguration(BOOLEAN
 			CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_{{ item['name'] | upper }}_ENABLE
-			ON
-			INTERNAL)
+			ON)
 endif(ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_{{ item['name'] | upper }}_ENABLE)
 {% endfor %}
 {% endif %}

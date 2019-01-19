@@ -182,106 +182,6 @@ set("CMAKE_VERBOSE_MAKEFILE"
 		CACHE
 		"BOOL"
 		"If this value is on, makefiles will be generated without the .SILENT directive, and all commands will be echoed to the console during the make.  This is useful for debugging only. With Visual Studio IDE projects all commands are done without /nologo.")
-set("CONFIG_ARCHITECTURE_ARM"
-		"ON"
-		CACHE
-		"INTERNAL"
-		"")
-set("CONFIG_ARCHITECTURE_ARMV7_M"
-		"ON"
-		CACHE
-		"INTERNAL"
-		"")
-set("CONFIG_ARCHITECTURE_ARM_CORTEX_M4"
-		"ON"
-		CACHE
-		"INTERNAL"
-		"")
-set("CONFIG_ARCHITECTURE_ARM_CORTEX_M4_R0P1"
-		"ON"
-		CACHE
-		"INTERNAL"
-		"")
-set("CONFIG_ARCHITECTURE_ASCENDING_STACK"
-		"OFF"
-		CACHE
-		"INTERNAL"
-		"")
-set("CONFIG_ARCHITECTURE_EMPTY_STACK"
-		"OFF"
-		CACHE
-		"INTERNAL"
-		"")
-set("CONFIG_ARCHITECTURE_STACK_ALIGNMENT"
-		"8"
-		CACHE
-		"INTERNAL"
-		"")
-set("CONFIG_BOARD"
-		"ST,32F429IDISCOVERY"
-		CACHE
-		"INTERNAL"
-		"")
-set("CONFIG_CHIP"
-		"STM32F429ZI"
-		CACHE
-		"INTERNAL"
-		"")
-set("CONFIG_CHIP_STM32"
-		"ON"
-		CACHE
-		"INTERNAL"
-		"")
-set("CONFIG_CHIP_STM32F4"
-		"ON"
-		CACHE
-		"INTERNAL"
-		"")
-set("CONFIG_CHIP_STM32F42"
-		"ON"
-		CACHE
-		"INTERNAL"
-		"")
-set("CONFIG_CHIP_STM32F429"
-		"ON"
-		CACHE
-		"INTERNAL"
-		"")
-set("CONFIG_CHIP_STM32F429Z"
-		"ON"
-		CACHE
-		"INTERNAL"
-		"")
-set("CONFIG_CHIP_STM32F4_RCC_HSE_CLOCK_BYPASS"
-		"OFF"
-		CACHE
-		"INTERNAL"
-		"")
-set("CONFIG_CHIP_STM32F4_RCC_HSE_FREQUENCY"
-		"8000000"
-		CACHE
-		"INTERNAL"
-		"")
-set("CONFIG_CHIP_STM32F4_VDD_MV"
-		"3000"
-		CACHE
-		"INTERNAL"
-		"")
-set("CONFIG_CHIP_STM32_GPIOV2_HAS_4_AF_BITS"
-		"ON"
-		CACHE
-		"INTERNAL"
-		"")
-set("CONFIG_CHIP_STM32_GPIOV2_HAS_HIGH_SPEED"
-		"ON"
-		CACHE
-		"INTERNAL"
-		"")
-set("CONFIG_CHIP_STM32_USARTV1_HAS_CR1_OVER8_BIT"
-		"ON"
-		CACHE
-		"INTERNAL"
-		"")
 set("distortos_Architecture_00_Interrupt_stack_size"
 		"1024"
 		CACHE
@@ -490,7 +390,7 @@ set("distortos_Peripherals_DMA2"
 set("distortos_Peripherals_GPIOA"
 		"ON"
 		CACHE
-		"INTERNAL"
+		"BOOL"
 		"Enable GPIOA.")
 set("distortos_Peripherals_GPIOB"
 		"OFF"
@@ -520,7 +420,7 @@ set("distortos_Peripherals_GPIOF"
 set("distortos_Peripherals_GPIOG"
 		"ON"
 		CACHE
-		"INTERNAL"
+		"BOOL"
 		"Enable GPIOG.")
 set("distortos_Peripherals_GPIOH"
 		"OFF"

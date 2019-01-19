@@ -40,18 +40,15 @@ if(distortos_Peripherals_{{ key }})
 				"DMA([0-9]+) channel ([0-9]+) \\(request ([0-9]+)\\)"
 				dummy
 				"${distortos_Peripherals_{{ key }}_01_RX_DMA}")
-		distortosSetConfiguration(INTEGER
+		distortosSetFixedConfiguration(INTEGER
 				CONFIG_CHIP_STM32_SPIV2_{{ key | upper }}_RX_DMA
-				"${CMAKE_MATCH_1}"
-				INTERNAL)
-		distortosSetConfiguration(INTEGER
+				"${CMAKE_MATCH_1}")
+		distortosSetFixedConfiguration(INTEGER
 				CONFIG_CHIP_STM32_SPIV2_{{ key | upper }}_RX_DMA_CHANNEL
-				"${CMAKE_MATCH_2}"
-				INTERNAL)
-		distortosSetConfiguration(INTEGER
+				"${CMAKE_MATCH_2}")
+		distortosSetFixedConfiguration(INTEGER
 				CONFIG_CHIP_STM32_SPIV2_{{ key | upper }}_RX_DMA_REQUEST
-				"${CMAKE_MATCH_3}"
-				INTERNAL)
+				"${CMAKE_MATCH_3}")
 		list(APPEND {{ dmaVersion }}_DMA${CMAKE_MATCH_1}_DEPENDENTS "{{ key }} RX")
 		list(APPEND {{ dmaVersion }}_DMA${CMAKE_MATCH_1}_CHANNEL${CMAKE_MATCH_2}_DEPENDENTS "{{ key }} RX")
 
@@ -67,18 +64,15 @@ if(distortos_Peripherals_{{ key }})
 				"DMA([0-9]+) channel ([0-9]+) \\(request ([0-9]+)\\)"
 				dummy
 				"${distortos_Peripherals_{{ key }}_02_TX_DMA}")
-		distortosSetConfiguration(INTEGER
+		distortosSetFixedConfiguration(INTEGER
 				CONFIG_CHIP_STM32_SPIV2_{{ key | upper }}_TX_DMA
-				"${CMAKE_MATCH_1}"
-				INTERNAL)
-		distortosSetConfiguration(INTEGER
+				"${CMAKE_MATCH_1}")
+		distortosSetFixedConfiguration(INTEGER
 				CONFIG_CHIP_STM32_SPIV2_{{ key | upper }}_TX_DMA_CHANNEL
-				"${CMAKE_MATCH_2}"
-				INTERNAL)
-		distortosSetConfiguration(INTEGER
+				"${CMAKE_MATCH_2}")
+		distortosSetFixedConfiguration(INTEGER
 				CONFIG_CHIP_STM32_SPIV2_{{ key | upper }}_TX_DMA_REQUEST
-				"${CMAKE_MATCH_3}"
-				INTERNAL)
+				"${CMAKE_MATCH_3}")
 		list(APPEND {{ dmaVersion }}_DMA${CMAKE_MATCH_1}_DEPENDENTS "{{ key }} TX")
 		list(APPEND {{ dmaVersion }}_DMA${CMAKE_MATCH_1}_CHANNEL${CMAKE_MATCH_2}_DEPENDENTS "{{ key }} TX")
 

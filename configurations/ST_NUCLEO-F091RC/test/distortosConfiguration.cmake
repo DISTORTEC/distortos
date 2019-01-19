@@ -182,91 +182,6 @@ set("CMAKE_VERBOSE_MAKEFILE"
 		CACHE
 		"BOOL"
 		"If this value is on, makefiles will be generated without the .SILENT directive, and all commands will be echoed to the console during the make.  This is useful for debugging only. With Visual Studio IDE projects all commands are done without /nologo.")
-set("CONFIG_ARCHITECTURE_ARM"
-		"ON"
-		CACHE
-		"INTERNAL"
-		"")
-set("CONFIG_ARCHITECTURE_ARMV6_M"
-		"ON"
-		CACHE
-		"INTERNAL"
-		"")
-set("CONFIG_ARCHITECTURE_ARM_CORTEX_M0"
-		"ON"
-		CACHE
-		"INTERNAL"
-		"")
-set("CONFIG_ARCHITECTURE_ARM_CORTEX_M0_R0P0"
-		"ON"
-		CACHE
-		"INTERNAL"
-		"")
-set("CONFIG_ARCHITECTURE_ASCENDING_STACK"
-		"OFF"
-		CACHE
-		"INTERNAL"
-		"")
-set("CONFIG_ARCHITECTURE_EMPTY_STACK"
-		"OFF"
-		CACHE
-		"INTERNAL"
-		"")
-set("CONFIG_ARCHITECTURE_STACK_ALIGNMENT"
-		"8"
-		CACHE
-		"INTERNAL"
-		"")
-set("CONFIG_BOARD"
-		"ST,NUCLEO-F091RC"
-		CACHE
-		"INTERNAL"
-		"")
-set("CONFIG_CHIP"
-		"STM32F091RC"
-		CACHE
-		"INTERNAL"
-		"")
-set("CONFIG_CHIP_STM32"
-		"ON"
-		CACHE
-		"INTERNAL"
-		"")
-set("CONFIG_CHIP_STM32F0"
-		"ON"
-		CACHE
-		"INTERNAL"
-		"")
-set("CONFIG_CHIP_STM32F09"
-		"ON"
-		CACHE
-		"INTERNAL"
-		"")
-set("CONFIG_CHIP_STM32F091"
-		"ON"
-		CACHE
-		"INTERNAL"
-		"")
-set("CONFIG_CHIP_STM32F091R"
-		"ON"
-		CACHE
-		"INTERNAL"
-		"")
-set("CONFIG_CHIP_STM32_GPIOV2_HAS_4_AF_BITS"
-		"OFF"
-		CACHE
-		"INTERNAL"
-		"")
-set("CONFIG_CHIP_STM32_GPIOV2_HAS_HIGH_SPEED"
-		"OFF"
-		CACHE
-		"INTERNAL"
-		"")
-set("CONFIG_CHIP_STM32_USARTV2_HAS_CR1_M1_BIT"
-		"ON"
-		CACHE
-		"INTERNAL"
-		"")
 set("distortos_Architecture_00_Interrupt_stack_size"
 		"1024"
 		CACHE
@@ -410,7 +325,7 @@ set("distortos_Peripherals_DMA2"
 set("distortos_Peripherals_GPIOA"
 		"ON"
 		CACHE
-		"INTERNAL"
+		"BOOL"
 		"Enable GPIOA.")
 set("distortos_Peripherals_GPIOB"
 		"OFF"
@@ -420,7 +335,7 @@ set("distortos_Peripherals_GPIOB"
 set("distortos_Peripherals_GPIOC"
 		"ON"
 		CACHE
-		"INTERNAL"
+		"BOOL"
 		"Enable GPIOC.")
 set("distortos_Peripherals_GPIOD"
 		"OFF"

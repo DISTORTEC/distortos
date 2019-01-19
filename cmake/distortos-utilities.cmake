@@ -112,14 +112,18 @@ function(distortosRemoveFlag variable flag)
 endfunction()
 
 #
-# Implementation of `distortosSetConfiguration(BOOLEAN ...`. Do not use directly.
+# Implementation of `distortosSetConfiguration(BOOLEAN ...)`. Do not use directly.
 #
 
 function(distortosSetBooleanConfiguration name help)
-	cmake_parse_arguments(PARSE_ARGV 2 BOOL "FORCE;INTERNAL" "" "")
+	cmake_parse_arguments(PARSE_ARGV 2 BOOL "FORCE;INTERNAL" "" "DEPENDENTS;OFF_DEPENDENTS")
 	list(LENGTH BOOL_UNPARSED_ARGUMENTS length)
 	if(NOT length EQUAL 1)
 		message(FATAL_ERROR "Invalid arguments: \"${BOOL_UNPARSED_ARGUMENTS}\"")
+	endif()
+
+	if(BOOL_DEPENDENTS AND BOOL_OFF_DEPENDENTS)
+		message(FATAL_ERROR "Only one of DEPENDENTS and OFF_DEPENDENTS may be used")
 	endif()
 
 	set(defaultValue ${BOOL_UNPARSED_ARGUMENTS})
@@ -129,6 +133,19 @@ function(distortosSetBooleanConfiguration name help)
 		set(force FORCE)
 	else()
 		unset(force)
+	endif()
+
+	if(NOT ${name} AND BOOL_DEPENDENTS)
+		string(REPLACE ";" ", " dependents "${BOOL_DEPENDENTS}")
+		message(STATUS "Auto-enabling ${name}. Dependents: ${dependents}")
+		set(defaultValue ON)
+		set(force FORCE)
+	endif()
+	if(${name} AND BOOL_OFF_DEPENDENTS)
+		string(REPLACE ";" ", " offDependents "${BOOL_OFF_DEPENDENTS}")
+		message(STATUS "Auto-disabling ${name}. Off-dependents: ${offDependents}")
+		set(defaultValue OFF)
+		set(force FORCE)
 	endif()
 
 	if(NOT BOOL_INTERNAL)
@@ -150,7 +167,7 @@ function(distortosSetBooleanConfiguration name help)
 endfunction()
 
 #
-# Implementation of `distortosSetConfiguration(INTEGER ...`. Do not use directly.
+# Implementation of `distortosSetConfiguration(INTEGER ...)`. Do not use directly.
 #
 
 function(distortosSetIntegerConfiguration name help)
@@ -205,7 +222,7 @@ function(distortosSetIntegerConfiguration name help)
 endfunction()
 
 #
-# Implementation of `distortosSetConfiguration(STRING ...`. Do not use directly.
+# Implementation of `distortosSetConfiguration(STRING ...)`. Do not use directly.
 #
 
 function(distortosSetStringConfiguration name help)
@@ -259,9 +276,10 @@ endfunction()
 #
 # Sets new distortos cache configuration named `name` with type `type`.
 #
-# `distortosSetConfiguration(BOOLEAN name defaultValue [generic-options])`
+# `distortosSetConfiguration(BOOLEAN name defaultValue [[OFF_]DEPENDENTS [dependent1 [dependent2 [...]]]]
+#		[generic-options])`
 # `distortosSetConfiguration(INTEGER name defaultValue [MIN min] [MAX max] [generic-options])`
-# `distortosSetConfiguration(STRING name string1 [[[string2] string3] ...] [generic-options])`
+# `distortosSetConfiguration(STRING name string1 [string2 [string3 [...]]] [generic-options])`
 #
 # generic options:
 # - `[FORCE]` - forces the value of cache entry to `defaultValue`;
@@ -277,7 +295,8 @@ endfunction()
 # is omitted; must not be used with `NO_OUTPUT`;
 #
 # `BOOLEAN` variant
-# `defaultValue` must be either `ON` or `OFF`.
+# `defaultValue` must be either `ON` or `OFF`. If `DEPENDENTS` or `OFF_DEPENDENTS` is a non-empty list, then this option
+# will be auto-enabled or auto-disabled. Only one of `DEPENDENTS` and `OFF_DEPENDENTS` may be used.
 #
 # `INTEGER` variant
 # `defaultValue`, `min` and `max` must be decimal integers in [-2147483648; 2147483647] range. -2147483648 is used as
@@ -326,6 +345,44 @@ function(distortosSetConfiguration type name)
 	set(${name}_TYPE ${type} PARENT_SCOPE)
 	set(${name}_OUTPUT_NAME ${PREFIX_OUTPUT_NAME} PARENT_SCOPE)
 	set(${name}_OUTPUT_TYPES ${PREFIX_OUTPUT_TYPES} PARENT_SCOPE)
+endfunction()
+
+#
+# Sets new distortos fixed configuration named `name` with type `type` and value `value`.
+#
+# `BOOLEAN` type
+# `value` must be either `ON` or `OFF`.
+#
+# `INTEGER` type
+# `value` must be decimal integer in [-2147483648; 2147483647] range.
+#
+# `STRING` type
+# Any string is accepted as `value`.
+#
+
+function(distortosSetFixedConfiguration type name value)
+	list(FIND DISTORTOS_FIXED_CONFIGURATION_NAMES "${name}" index)
+	if(NOT index EQUAL -1)
+		message(FATAL_ERROR "Fixed configuration variable \"${name}\" is already set")
+	endif()
+
+	if(type STREQUAL BOOLEAN)
+		distortosCheckBoolean("${name}" "${value}")
+	elseif(type STREQUAL INTEGER)
+		distortosCheckInteger("${name}" "${value}" -2147483648 2147483647)
+	elseif(type STREQUAL STRING)
+		# nothing to check, accept everything
+	else()
+		message(FATAL_ERROR "\"${type}\" is not a valid type")
+	endif()
+
+	set("${name}" "${value}" PARENT_SCOPE)
+
+	list(APPEND DISTORTOS_FIXED_CONFIGURATION_NAMES "${name}")
+	set(DISTORTOS_FIXED_CONFIGURATION_NAMES ${DISTORTOS_FIXED_CONFIGURATION_NAMES} PARENT_SCOPE)
+	set("${name}_TYPE" "${type}" PARENT_SCOPE)
+	set("${name}_OUTPUT_NAME" "${name}" PARENT_SCOPE)
+	set("${name}_OUTPUT_TYPES" "${type}" PARENT_SCOPE)
 endfunction()
 
 #

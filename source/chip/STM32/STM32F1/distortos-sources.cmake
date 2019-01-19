@@ -1,7 +1,7 @@
 #
 # file: distortos-sources.cmake
 #
-# author: Copyright (C) 2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+# author: Copyright (C) 2018-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
 #
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -277,18 +277,15 @@ if(distortos_Clocks_00_Standard_configuration_of_clocks)
 			set(pllmul6_5 OFF)
 		endif()
 
-		distortosSetConfiguration(INTEGER
+		distortosSetFixedConfiguration(INTEGER
 				CONFIG_CHIP_STM32F1_RCC_PLLMUL_NUMERATOR
-				${numerator}
-				INTERNAL)
-		distortosSetConfiguration(INTEGER
+				${numerator})
+		distortosSetFixedConfiguration(INTEGER
 				CONFIG_CHIP_STM32F1_RCC_PLLMUL_DENOMINATOR
-				${denominator}
-				INTERNAL)
-		distortosSetConfiguration(BOOLEAN
+				${denominator})
+		distortosSetFixedConfiguration(BOOLEAN
 				CONFIG_CHIP_STM32F1_RCC_PLLMUL6_5
-				${pllmul6_5}
-				INTERNAL)
+				${pllmul6_5})
 
 	endif(distortos_Clocks_08_PLL)
 
@@ -387,32 +384,32 @@ distortosSetConfiguration(STRING
 if(NOT CONFIG_CHIP MATCHES "STM32F100")
 
 	if(distortos_Clocks_14_HPRE STREQUAL 1)
-		unset(internal)
+		unset(dependents)
 	else()
-		set(internal INTERNAL)
+		set(dependents "HPRE != 1")
 	endif()
 
 	distortosSetConfiguration(BOOLEAN
 			distortos_Memory_00_Flash_prefetch
 			ON
-			HELP "Enable flash prefetch option in FLASH->ACR register."
-			OUTPUT_NAME CONFIG_CHIP_STM32F1_FLASH_PREFETCH_ENABLE
-			${internal})
+			DEPENDENTS ${dependents}
+			HELP "Enable flash prefetch option in FLASH->ACR register. Has to be enabled when HPRE != 1."
+			OUTPUT_NAME CONFIG_CHIP_STM32F1_FLASH_PREFETCH_ENABLE)
 
 endif(NOT CONFIG_CHIP MATCHES "STM32F100")
 
 if(distortos_Clocks_14_HPRE STREQUAL 1)
-	set(internal INTERNAL)
+	unset(offDependents)
 else()
-	unset(internal)
+	set(offDependents "HPRE != 1")
 endif()
 
 distortosSetConfiguration(BOOLEAN
 		distortos_Memory_01_Flash_half_cycle_access
 		OFF
-		HELP "Enable flash half cycle access option in FLASH->ACR register."
-		OUTPUT_NAME CONFIG_CHIP_STM32F1_FLASH_HALF_CYCLE_ACCESS_ENABLE
-		${internal})
+		OFF_DEPENDENTS ${offDependents}
+		HELP "Enable flash half cycle access option in FLASH->ACR register. Has to be disabled when HPRE != 1."
+		OUTPUT_NAME CONFIG_CHIP_STM32F1_FLASH_HALF_CYCLE_ACCESS_ENABLE)
 
 target_include_directories(distortos PUBLIC
 		${CMAKE_CURRENT_LIST_DIR}/../include

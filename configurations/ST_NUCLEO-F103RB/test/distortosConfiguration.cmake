@@ -182,96 +182,6 @@ set("CMAKE_VERBOSE_MAKEFILE"
 		CACHE
 		"BOOL"
 		"If this value is on, makefiles will be generated without the .SILENT directive, and all commands will be echoed to the console during the make.  This is useful for debugging only. With Visual Studio IDE projects all commands are done without /nologo.")
-set("CONFIG_ARCHITECTURE_ARM"
-		"ON"
-		CACHE
-		"INTERNAL"
-		"")
-set("CONFIG_ARCHITECTURE_ARMV7_M"
-		"ON"
-		CACHE
-		"INTERNAL"
-		"")
-set("CONFIG_ARCHITECTURE_ARM_CORTEX_M3"
-		"ON"
-		CACHE
-		"INTERNAL"
-		"")
-set("CONFIG_ARCHITECTURE_ARM_CORTEX_M3_R1P1"
-		"ON"
-		CACHE
-		"INTERNAL"
-		"")
-set("CONFIG_ARCHITECTURE_ASCENDING_STACK"
-		"OFF"
-		CACHE
-		"INTERNAL"
-		"")
-set("CONFIG_ARCHITECTURE_EMPTY_STACK"
-		"OFF"
-		CACHE
-		"INTERNAL"
-		"")
-set("CONFIG_ARCHITECTURE_STACK_ALIGNMENT"
-		"8"
-		CACHE
-		"INTERNAL"
-		"")
-set("CONFIG_BOARD"
-		"ST,NUCLEO-F103RB"
-		CACHE
-		"INTERNAL"
-		"")
-set("CONFIG_CHIP"
-		"STM32F103RB"
-		CACHE
-		"INTERNAL"
-		"")
-set("CONFIG_CHIP_STM32"
-		"ON"
-		CACHE
-		"INTERNAL"
-		"")
-set("CONFIG_CHIP_STM32F1"
-		"ON"
-		CACHE
-		"INTERNAL"
-		"")
-set("CONFIG_CHIP_STM32F10"
-		"ON"
-		CACHE
-		"INTERNAL"
-		"")
-set("CONFIG_CHIP_STM32F103"
-		"ON"
-		CACHE
-		"INTERNAL"
-		"")
-set("CONFIG_CHIP_STM32F103R"
-		"ON"
-		CACHE
-		"INTERNAL"
-		"")
-set("CONFIG_CHIP_STM32F1_RCC_PLLMUL6_5"
-		"OFF"
-		CACHE
-		"INTERNAL"
-		"")
-set("CONFIG_CHIP_STM32F1_RCC_PLLMUL_DENOMINATOR"
-		"1"
-		CACHE
-		"INTERNAL"
-		"")
-set("CONFIG_CHIP_STM32F1_RCC_PLLMUL_NUMERATOR"
-		"16"
-		CACHE
-		"INTERNAL"
-		"")
-set("CONFIG_CHIP_STM32_USARTV1_HAS_CR1_OVER8_BIT"
-		"OFF"
-		CACHE
-		"INTERNAL"
-		"")
 set("distortos_Architecture_00_Interrupt_stack_size"
 		"1024"
 		CACHE
@@ -361,12 +271,12 @@ set("distortos_Memory_00_Flash_prefetch"
 		"ON"
 		CACHE
 		"BOOL"
-		"Enable flash prefetch option in FLASH->ACR register.")
+		"Enable flash prefetch option in FLASH->ACR register. Has to be enabled when HPRE != 1.")
 set("distortos_Memory_01_Flash_half_cycle_access"
 		"OFF"
 		CACHE
-		"INTERNAL"
-		"Enable flash half cycle access option in FLASH->ACR register.")
+		"BOOL"
+		"Enable flash half cycle access option in FLASH->ACR register. Has to be disabled when HPRE != 1.")
 set("distortos_Memory_regions_00_text_vectorTable"
 		"flash"
 		CACHE
@@ -430,7 +340,7 @@ set("distortos_Peripherals_DMA1"
 set("distortos_Peripherals_GPIOA"
 		"ON"
 		CACHE
-		"INTERNAL"
+		"BOOL"
 		"Enable GPIOA.")
 set("distortos_Peripherals_GPIOB"
 		"OFF"
@@ -440,7 +350,7 @@ set("distortos_Peripherals_GPIOB"
 set("distortos_Peripherals_GPIOC"
 		"ON"
 		CACHE
-		"INTERNAL"
+		"BOOL"
 		"Enable GPIOC.")
 set("distortos_Peripherals_GPIOD"
 		"OFF"

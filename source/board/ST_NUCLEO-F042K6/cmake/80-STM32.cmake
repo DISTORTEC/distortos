@@ -1,7 +1,7 @@
 #
 # file: cmake/80-STM32.cmake
 #
-# author: Copyright (C) 2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+# author: Copyright (C) 2018-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
 #
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -9,35 +9,32 @@
 # Automatically generated file - do not edit!
 #
 
-distortosSetConfiguration(BOOLEAN
+distortosSetFixedConfiguration(BOOLEAN
 		CONFIG_CHIP_STM32
-		ON
-		INTERNAL)
+		ON)
 
-distortosSetConfiguration(BOOLEAN
+distortosSetFixedConfiguration(BOOLEAN
 		CONFIG_CHIP_STM32F0
-		ON
-		INTERNAL)
+		ON)
 
-distortosSetConfiguration(BOOLEAN
+distortosSetFixedConfiguration(BOOLEAN
 		CONFIG_CHIP_STM32F04
-		ON
-		INTERNAL)
+		ON)
 
-distortosSetConfiguration(BOOLEAN
+distortosSetFixedConfiguration(BOOLEAN
 		CONFIG_CHIP_STM32F042
-		ON
-		INTERNAL)
+		ON)
 
-distortosSetConfiguration(BOOLEAN
+distortosSetFixedConfiguration(BOOLEAN
 		CONFIG_CHIP_STM32F042K
-		ON
-		INTERNAL)
+		ON)
 
-distortosSetConfiguration(STRING
+distortosSetFixedConfiguration(BOOLEAN
+		CONFIG_CHIP_STM32F042K6
+		ON)
+
+distortosSetFixedConfiguration(STRING
 		CONFIG_CHIP
-		"STM32F042K6"
-		INTERNAL
-		OUTPUT_TYPES BOOLEAN STRING)
+		"STM32F042K6")
 
 include("${CMAKE_CURRENT_SOURCE_DIR}/source/chip/STM32/STM32F0/distortos-sources.cmake")

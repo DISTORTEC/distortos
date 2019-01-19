@@ -1,7 +1,7 @@
 #
 # file: {{ metadata[metadataIndex][2] }}
 #
-# author: Copyright (C) 2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+# author: Copyright (C) 2018-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
 #
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -26,8 +26,8 @@ if(distortos_{{ dictionaryKey }})
 			OUTPUT_NAME CONFIG_BOARD_{{ dictionaryKey | upper }}_{{ key | upper }}_ENABLE)
 
 	if(distortos_{{ dictionaryKey }}_{{ key }})
-		set(FORCE_{{ value['GPIO']['port']['compatible'][0].rpartition(',')[2] | sanitize('[^0-9A-Za-z]') | upper }}_
-				{{- value['GPIO']['port']['$path'][-1] }}_ENABLE ON)
+		list(APPEND {{ value['GPIO']['port']['compatible'][0].rpartition(',')[2] | sanitize('[^0-9A-Za-z]') | upper }}_
+				{{- value['GPIO']['port']['$path'][-1] }}_DEPENDENTS "{{ dictionaryKey }} {{ key }}")
 	endif()
 {% endfor %}
 
