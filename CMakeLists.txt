@@ -384,8 +384,8 @@ add_custom_target(distortos-doxygen
 # cleanup distortos configuration
 #-----------------------------------------------------------------------------------------------------------------------
 
-if(PREVIOUS_DISTORTOS_CONFIGURATION_NAMES)
-	set(namesToUnset ${PREVIOUS_DISTORTOS_CONFIGURATION_NAMES})
+if(DISTORTOS_CONFIGURATION_NAMES)
+	set(namesToUnset ${DISTORTOS_CONFIGURATION_NAMES})
 	list(REMOVE_ITEM namesToUnset ${DISTORTOS_ACTIVE_CONFIGURATION_NAMES})
 	foreach(name ${namesToUnset})
 		unset(${name} CACHE)
@@ -393,7 +393,7 @@ if(PREVIOUS_DISTORTOS_CONFIGURATION_NAMES)
 endif()
 
 list(SORT DISTORTOS_ACTIVE_CONFIGURATION_NAMES)
-set(PREVIOUS_DISTORTOS_CONFIGURATION_NAMES ${DISTORTOS_ACTIVE_CONFIGURATION_NAMES} CACHE INTERNAL "")
+set(DISTORTOS_CONFIGURATION_NAMES ${DISTORTOS_ACTIVE_CONFIGURATION_NAMES} CACHE INTERNAL "")
 
 #-----------------------------------------------------------------------------------------------------------------------
 # distortosConfiguration.h
