@@ -523,7 +523,7 @@ file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/distortosConfiguration.cmake
 		"	set(DISTORTOS_PATH \"${distortosPath}\")\n"
 		"endif()\n"
 		"\n")
-foreach(cacheVariable ${cmakeConfigurationNames} ${DISTORTOS_ACTIVE_CONFIGURATION_NAMES})
+foreach(cacheVariable ${cmakeConfigurationNames} ${DISTORTOS_ACTIVE_CONFIGURATION_NAMES} DISTORTOS_CONFIGURATION_NAMES)
 	get_property(helpstring CACHE "${cacheVariable}" PROPERTY HELPSTRING)
 	string(REPLACE "\n" "\\n" helpstring "${helpstring}")
 	string(REPLACE "\"" "\\\"" helpstring "${helpstring}")
