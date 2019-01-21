@@ -384,16 +384,31 @@ add_custom_target(distortos-doxygen
 # cleanup distortos configuration
 #-----------------------------------------------------------------------------------------------------------------------
 
-if(PREVIOUS_DISTORTOS_CONFIGURATION_NAMES)
-	set(namesToUnset ${PREVIOUS_DISTORTOS_CONFIGURATION_NAMES})
-	list(REMOVE_ITEM namesToUnset ${DISTORTOS_CONFIGURATION_NAMES})
-	foreach(name ${namesToUnset})
-		unset(${name} CACHE)
-	endforeach()
+if(DISTORTOS_CONFIGURATION_NAMES)
+	set(namesToUnset ${DISTORTOS_CONFIGURATION_NAMES})
+	list(REMOVE_ITEM namesToUnset ${DISTORTOS_ACTIVE_CONFIGURATION_NAMES})
 endif()
 
-list(SORT DISTORTOS_CONFIGURATION_NAMES)
-set(PREVIOUS_DISTORTOS_CONFIGURATION_NAMES ${DISTORTOS_CONFIGURATION_NAMES} CACHE INTERNAL "")
+list(SORT DISTORTOS_ACTIVE_CONFIGURATION_NAMES)
+set(DISTORTOS_CONFIGURATION_NAMES ${DISTORTOS_ACTIVE_CONFIGURATION_NAMES} CACHE INTERNAL "")
+
+get_cmake_property(variables VARIABLES)
+foreach(variable ${variables})
+	get_property(type CACHE ${variable} PROPERTY TYPE)
+	if(type AND NOT type STREQUAL STATIC AND variable MATCHES "^distortos_.+" AND
+			NOT variable IN_LIST DISTORTOS_ACTIVE_CONFIGURATION_NAMES)
+		# unset unknown cache variables which are prefixed with "distortos_", excluding CMake's "STATIC" variables
+		list(APPEND namesToUnset ${variable})
+	endif()
+endforeach()
+
+if(namesToUnset)
+	message(STATUS "Unsetting removed configuration variables:")
+	foreach(nameToUnset ${namesToUnset})
+		message(STATUS "${nameToUnset} = ${${nameToUnset}}")
+		unset(${nameToUnset} CACHE)
+	endforeach()
+endif()
 
 #-----------------------------------------------------------------------------------------------------------------------
 # distortosConfiguration.h
@@ -402,7 +417,7 @@ set(PREVIOUS_DISTORTOS_CONFIGURATION_NAMES ${DISTORTOS_CONFIGURATION_NAMES} CACH
 message(STATUS "Generating ${CMAKE_CURRENT_BINARY_DIR}/include/distortos/distortosConfiguration.h")
 
 unset(distortosConfiguration)
-foreach(name ${DISTORTOS_CONFIGURATION_NAMES} ${DISTORTOS_FIXED_CONFIGURATION_NAMES})
+foreach(name ${DISTORTOS_ACTIVE_CONFIGURATION_NAMES} ${DISTORTOS_FIXED_CONFIGURATION_NAMES})
 
 	set(type ${${name}_TYPE})
 	set(outputName ${${name}_OUTPUT_NAME})
@@ -523,7 +538,7 @@ file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/distortosConfiguration.cmake
 		"	set(DISTORTOS_PATH \"${distortosPath}\")\n"
 		"endif()\n"
 		"\n")
-foreach(cacheVariable ${cmakeConfigurationNames} ${DISTORTOS_CONFIGURATION_NAMES})
+foreach(cacheVariable ${cmakeConfigurationNames} ${DISTORTOS_ACTIVE_CONFIGURATION_NAMES} DISTORTOS_CONFIGURATION_NAMES)
 	get_property(helpstring CACHE "${cacheVariable}" PROPERTY HELPSTRING)
 	string(REPLACE "\n" "\\n" helpstring "${helpstring}")
 	string(REPLACE "\"" "\\\"" helpstring "${helpstring}")
