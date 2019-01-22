@@ -2,7 +2,7 @@
  * \file
  * \brief Definitions of clocks for STM32F7
  *
- * \author Copyright (C) 2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2017-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -98,45 +98,49 @@ constexpr uint32_t maxApb1Frequency {maxApb1Frequencies[overDriveIndex]};
 /// maximum allowed APB2 (high speed) frequency, Hz
 constexpr uint32_t maxApb2Frequency {maxApb2Frequencies[overDriveIndex]};
 
-#ifdef CONFIG_CHIP_STM32F7_RCC_PLL_ENABLE
+#ifdef CONFIG_CHIP_STM32F7_RCC_PLLS_ENABLE
 
-/// PLL input frequency, Hz
+/// input frequency of main and audio PLLs, Hz
 #if defined(CONFIG_CHIP_STM32F7_RCC_PLLSRC_HSI)
 constexpr uint32_t pllInFrequency {hsiFrequency};
 #elif defined(CONFIG_CHIP_STM32F7_RCC_PLLSRC_HSE)
 constexpr uint32_t pllInFrequency {CONFIG_CHIP_STM32F7_RCC_HSE_FREQUENCY};
 #endif
 
-/// VCO input frequency, Hz
+/// VCO input frequency of main and audio PLLs, Hz
 constexpr uint32_t vcoInFrequency {pllInFrequency / CONFIG_CHIP_STM32F7_RCC_PLLM};
 
 static_assert(minVcoInFrequency <= vcoInFrequency && vcoInFrequency <= maxVcoInFrequency,
 		"Invalid VCO input frequency!");
 
-/// VCO output frequency, Hz
+#ifdef CONFIG_CHIP_STM32F7_RCC_PLL_ENABLE
+
+/// VCO output frequency of main PLL, Hz
 constexpr uint32_t vcoOutFrequency {vcoInFrequency * CONFIG_CHIP_STM32F7_RCC_PLLN};
 
 static_assert(minVcoOutFrequency <= vcoOutFrequency && vcoOutFrequency <= maxVcoOutFrequency,
 		"Invalid VCO output frequency!");
 
-/// PLL output frequency, Hz
+/// main PLL output frequency, Hz
 constexpr uint32_t pllOutFrequency {vcoOutFrequency / CONFIG_CHIP_STM32F7_RCC_PLLP};
 
 static_assert(pllOutFrequency <= maxPllOutFrequency, "Invalid PLL output frequency!");
 
-/// PLL "Q" output frequency, Hz
+/// main PLL "Q" output frequency, Hz
 constexpr uint32_t pllqOutFrequency {vcoOutFrequency / CONFIG_CHIP_STM32F7_RCC_PLLQ};
 
 static_assert(pllqOutFrequency <= maxPllqOutFrequency, "Invalid PLL \"/Q\" output frequency!");
 
 #if defined(CONFIG_CHIP_STM32F76) || defined(CONFIG_CHIP_STM32F77)
 
-/// PLL "R" output frequency, Hz
+/// main PLL "R" output frequency, Hz
 constexpr uint32_t pllrOutFrequency {vcoOutFrequency / CONFIG_CHIP_STM32F7_RCC_PLLR};
 
 #endif	// defined(CONFIG_CHIP_STM32F76) || defined(CONFIG_CHIP_STM32F77)
 
 #endif	// def CONFIG_CHIP_STM32F7_RCC_PLL_ENABLE
+
+#endif	// def CONFIG_CHIP_STM32F7_RCC_PLLS_ENABLE
 
 /// SYSCLK frequency, Hz
 #if defined(CONFIG_CHIP_STM32F7_RCC_SYSCLK_HSI)

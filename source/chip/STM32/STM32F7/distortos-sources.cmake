@@ -1,7 +1,7 @@
 #
 # file: distortos-sources.cmake
 #
-# author: Copyright (C) 2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+# author: Copyright (C) 2018-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
 #
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -57,12 +57,12 @@ if(distortos_Clocks_00_Standard_configuration_of_clocks)
 	endif(CONFIG_CHIP_STM32F7_RCC_HSE_FREQUENCY)
 
 	distortosSetConfiguration(BOOLEAN
-			distortos_Clocks_04_PLL
+			distortos_Clocks_04_PLLs
 			ON
-			HELP "Enable PLL."
-			OUTPUT_NAME CONFIG_CHIP_STM32F7_RCC_PLL_ENABLE)
+			HELP "Enable PLLs."
+			OUTPUT_NAME CONFIG_CHIP_STM32F7_RCC_PLLS_ENABLE)
 
-	if(distortos_Clocks_04_PLL)
+	if(distortos_Clocks_04_PLLs)
 
 		if(distortos_Clocks_03_HSE)
 			set(pllClockSourceHse HSE)
@@ -83,83 +83,93 @@ if(distortos_Clocks_00_Standard_configuration_of_clocks)
 				MAX 63
 				HELP "PLLM value for main and audio PLLs.
 
-				It is used to divide PLL input clock (PLLin) before it is fed to VCO. VCO input frequency (VCOin) must
-				be in the range [1 MHz; 2 MHz], 2 MHz is recommended to limit PLL jitter.
+				It is used to divide PLL input clock (PLLin) before it is fed to VCO of each PLL. VCO input frequency
+				(VCOin) must be in the range [1 MHz; 2 MHz], 2 MHz is recommended to limit PLL jitter.
 
 				VCOin = PLLin / PLLM"
 				OUTPUT_NAME CONFIG_CHIP_STM32F7_RCC_PLLM)
 
-		distortosSetConfiguration(INTEGER
-				distortos_Clocks_07_PLLN
-				336
-				MIN 50
-				MAX 432
-				HELP "PLLN value for main PLL.
+		distortosSetConfiguration(BOOLEAN
+				distortos_Clocks_07_PLL
+				ON
+				HELP "Enable main PLL."
+				OUTPUT_NAME CONFIG_CHIP_STM32F7_RCC_PLL_ENABLE)
 
-				It is used to multiply VCO input frequency (VCOin). Resulting VCO output frequency (VCOout) must be in
-				the range [100 MHz; 432 MHz].
-
-				VCOout = VCOin * PLLN = PLLin / PLLM * PLLN"
-				OUTPUT_NAME CONFIG_CHIP_STM32F7_RCC_PLLN)
-
-		distortosSetConfiguration(STRING
-				distortos_Clocks_08_PLLP
-				2
-				4
-				6
-				8
-				HELP "PLLP value for main PLL.
-
-				It is used to divide VCO output frequency (VCOout). PLL output frequency (PLLout) must not exceed:
-				- 216 MHz (with over-drive mode) or 180 MHz (otherwise) in voltage scale 1 mode,
-				- 180 MHz (with over-drive mode) or 168 MHz (otherwise) in voltage scale 2 mode,
-				- 144 MHz in voltage scale 3 mode.
-
-				PLLout = VCOout / PLLP = PLLin / PLLM * PLLN / PLLP"
-				OUTPUT_NAME CONFIG_CHIP_STM32F7_RCC_PLLP
-				OUTPUT_TYPES INTEGER)
-
-		distortosSetConfiguration(INTEGER
-				distortos_Clocks_09_PLLQ
-				7
-				MIN 2
-				MAX 15
-				HELP "PLLQ value for main PLL.
-
-				It is used to divide VCO output frequency (VCOout) to produce clock for USB OTG FS, SDMMC and RNG
-				(PLLQout). USB OTG FS requires a 48 MHz clock for correct operation, while SDMMC and RNG need a
-				frequency lower than or equal to 48 MHz to work correctly.
-
-				PLLQout = VCOout / PLLQ = PLLin / PLLM * PLLN / PLLQ"
-				OUTPUT_NAME CONFIG_CHIP_STM32F7_RCC_PLLQ)
-
-		if(CONFIG_CHIP MATCHES "STM32F7[67]")
+		if(distortos_Clocks_07_PLL)
 
 			distortosSetConfiguration(INTEGER
-					distortos_Clocks_10_PLLR
+					distortos_Clocks_08_PLLN
+					336
+					MIN 50
+					MAX 432
+					HELP "PLLN value for main PLL.
+
+					It is used to multiply VCO input frequency (VCOin). Resulting VCO output frequency (VCOout) must be
+					in the range [100 MHz; 432 MHz].
+
+					VCOout = VCOin * PLLN = PLLin / PLLM * PLLN"
+					OUTPUT_NAME CONFIG_CHIP_STM32F7_RCC_PLLN)
+
+			distortosSetConfiguration(STRING
+					distortos_Clocks_09_PLLP
+					2
+					4
+					6
+					8
+					HELP "PLLP value for main PLL.
+
+					It is used to divide VCO output frequency (VCOout). PLL output frequency (PLLout) must not exceed:
+					- 216 MHz (with over-drive mode) or 180 MHz (otherwise) in voltage scale 1 mode,
+					- 180 MHz (with over-drive mode) or 168 MHz (otherwise) in voltage scale 2 mode,
+					- 144 MHz in voltage scale 3 mode.
+
+					PLLout = VCOout / PLLP = PLLin / PLLM * PLLN / PLLP"
+					OUTPUT_NAME CONFIG_CHIP_STM32F7_RCC_PLLP
+					OUTPUT_TYPES INTEGER)
+
+			distortosSetConfiguration(INTEGER
+					distortos_Clocks_10_PLLQ
 					7
 					MIN 2
-					MAX 7
-					HELP "PLLR value for main PLL.
+					MAX 15
+					HELP "PLLQ value for main PLL.
 
-					It is used to divide VCO output frequency (VCOout) to produce clock for DSI (PLLRout).
+					It is used to divide VCO output frequency (VCOout) to produce clock for USB OTG FS, SDMMC and RNG
+					(PLLQout). USB OTG FS requires a 48 MHz clock for correct operation, while SDMMC and RNG need a
+					frequency lower than or equal to 48 MHz to work correctly.
 
-					PLLRout = VCOout / PLLR = PLLin / PLLM * PLLN / PLLR"
-					OUTPUT_NAME CONFIG_CHIP_STM32F7_RCC_PLLR)
+					PLLQout = VCOout / PLLQ = PLLin / PLLM * PLLN / PLLQ"
+					OUTPUT_NAME CONFIG_CHIP_STM32F7_RCC_PLLQ)
 
-		endif(CONFIG_CHIP MATCHES "STM32F7[67]")
+			if(CONFIG_CHIP MATCHES "STM32F7[67]")
 
-	endif(distortos_Clocks_04_PLL)
+				distortosSetConfiguration(INTEGER
+						distortos_Clocks_11_PLLR
+						7
+						MIN 2
+						MAX 7
+						HELP "PLLR value for main PLL.
+
+						It is used to divide VCO output frequency (VCOout) to produce clock for DSI (PLLRout).
+
+						PLLRout = VCOout / PLLR = PLLin / PLLM * PLLN / PLLR"
+						OUTPUT_NAME CONFIG_CHIP_STM32F7_RCC_PLLR)
+
+			endif(CONFIG_CHIP MATCHES "STM32F7[67]")
+
+		endif(distortos_Clocks_07_PLL)
+
+	endif(distortos_Clocks_04_PLLs)
 
 	if(distortos_Clocks_03_HSE)
 		set(systemClockSourceHse HSE)
 	endif()
-	if(distortos_Clocks_04_PLL)
+	if(distortos_Clocks_07_PLL)
 		set(systemClockSourcePll PLL DEFAULT)
 	endif()
 
 	distortosSetConfiguration(STRING
-			distortos_Clocks_11_System_clock_source
+			distortos_Clocks_12_System_clock_source
 			HSI
 			${systemClockSourceHse}
 			${systemClockSourcePll}
@@ -185,7 +195,7 @@ else(distortos_Clocks_00_Standard_configuration_of_clocks)
 endif(distortos_Clocks_00_Standard_configuration_of_clocks)
 
 distortosSetConfiguration(STRING
-		distortos_Clocks_12_HPRE
+		distortos_Clocks_13_HPRE
 		1
 		2
 		4
@@ -202,7 +212,7 @@ distortosSetConfiguration(STRING
 		OUTPUT_TYPES INTEGER)
 
 distortosSetConfiguration(STRING
-		distortos_Clocks_13_PPRE1
+		distortos_Clocks_14_PPRE1
 		1
 		2
 		4 DEFAULT
@@ -217,7 +227,7 @@ distortosSetConfiguration(STRING
 		OUTPUT_TYPES INTEGER)
 
 distortosSetConfiguration(STRING
-		distortos_Clocks_14_PPRE2
+		distortos_Clocks_15_PPRE2
 		1
 		2 DEFAULT
 		4
