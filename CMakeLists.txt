@@ -396,7 +396,8 @@ get_cmake_property(variables VARIABLES)
 foreach(variable ${variables})
 	get_property(type CACHE ${variable} PROPERTY TYPE)
 	if(type AND NOT type STREQUAL STATIC AND variable MATCHES "^distortos_.+" AND
-			NOT variable IN_LIST DISTORTOS_ACTIVE_CONFIGURATION_NAMES)
+			NOT variable IN_LIST DISTORTOS_ACTIVE_CONFIGURATION_NAMES AND
+			NOT variable IN_LIST namesToUnset)
 		# unset unknown cache variables which are prefixed with "distortos_", excluding CMake's "STATIC" variables
 		list(APPEND namesToUnset ${variable})
 	endif()
