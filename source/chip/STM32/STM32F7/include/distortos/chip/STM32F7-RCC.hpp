@@ -59,15 +59,11 @@ constexpr uint8_t minPllq {2};
 /// maximum allowed value for PLLQ
 constexpr uint8_t maxPllq {15};
 
-#if defined(CONFIG_CHIP_STM32F76) || defined(CONFIG_CHIP_STM32F77)
-
 /// minimum allowed value for PLLR
 constexpr uint8_t minPllr {2};
 
 /// maximum allowed value for PLLR
 constexpr uint8_t maxPllr {7};
-
-#endif	// defined(CONFIG_CHIP_STM32F76) || defined(CONFIG_CHIP_STM32F77)
 
 /// first allowed value for PLLP - 2
 constexpr uint8_t pllpDiv2 {2};
@@ -268,6 +264,49 @@ int enablePll(uint16_t plln, uint8_t pllp, uint8_t pllq, uint8_t pllr);
 int enablePll(uint16_t plln, uint8_t pllp, uint8_t pllq);
 
 #endif	// !defined(CONFIG_CHIP_STM32F76) && !defined(CONFIG_CHIP_STM32F77)
+
+#if defined(CONFIG_CHIP_STM32F72) || defined(CONFIG_CHIP_STM32F73)
+
+/**
+ * \brief Enables PLLI2S.
+ *
+ * Enables PLLI2S using selected parameters and waits until it is stable.
+ *
+ * \warning Before changing configuration of PLLI2S make sure that it is not used in any way (as source of peripheral
+ * clocks) and that it is disabled.
+ *
+ * \param [in] plli2sn is the PLLI2SN value for PLLI2S, [50; 432] or [minPlln; maxPlln]
+ * \param [in] plli2sq is the PLLI2SQ value for PLLI2S, [2; 15] or [minPllq; maxPllq]
+ * \param [in] plli2sr is the PLLI2SR value for PLLI2S, [2; 7] or [minPllr; maxPllr]
+ *
+ * \return 0 on success, error code otherwise:
+ * - EINVAL - \a plli2sn or \a plli2sq or \a plli2sr value is invalid;
+ */
+
+int enablePlli2s(uint16_t plli2sn, uint8_t plli2sq, uint8_t plli2sr);
+
+#else	// !defined(CONFIG_CHIP_STM32F72) && !defined(CONFIG_CHIP_STM32F73)
+
+/**
+ * \brief Enables PLLI2S.
+ *
+ * Enables PLLI2S using selected parameters and waits until it is stable.
+ *
+ * \warning Before changing configuration of PLLI2S make sure that it is not used in any way (as source of peripheral
+ * clocks) and that it is disabled.
+ *
+ * \param [in] plli2sn is the PLLI2SN value for PLLI2S, [50; 432] or [minPlln; maxPlln]
+ * \param [in] plli2sp is the PLLI2SP value for PLLI2S, {2, 4, 6, 8} or {pllpDiv2, pllpDiv4, pllpDiv6, pllpDiv8}
+ * \param [in] plli2sq is the PLLI2SQ value for PLLI2S, [2; 15] or [minPllq; maxPllq]
+ * \param [in] plli2sr is the PLLI2SR value for PLLI2S, [2; 7] or [minPllr; maxPllr]
+ *
+ * \return 0 on success, error code otherwise:
+ * - EINVAL - \a plli2sn or \a plli2sp or \a plli2sq or \a plli2sr value is invalid;
+ */
+
+int enablePlli2s(uint16_t plli2sn, uint8_t plli2sp, uint8_t plli2sq, uint8_t plli2sr);
+
+#endif	// !defined(CONFIG_CHIP_STM32F72) && !defined(CONFIG_CHIP_STM32F73)
 
 /**
  * \brief Switches system clock.
