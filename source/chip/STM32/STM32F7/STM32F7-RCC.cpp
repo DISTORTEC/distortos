@@ -103,6 +103,11 @@ void disablePlli2s()
 	RCC->CR &= ~RCC_CR_PLLI2SON;
 }
 
+void disablePllsai()
+{
+	RCC->CR &= ~RCC_CR_PLLSAION;
+}
+
 void enableHse(const bool bypass)
 {
 	RCC->CR = (RCC->CR & ~RCC_CR_HSEBYP) | bypass << RCC_CR_HSEBYP_Pos;

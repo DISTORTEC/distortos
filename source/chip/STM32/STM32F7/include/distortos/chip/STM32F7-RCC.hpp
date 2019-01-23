@@ -204,6 +204,15 @@ void disablePll();
 void disablePlli2s();
 
 /**
+ * \brief Disables PLLSAI.
+ *
+ * \warning Before changing configuration of PLLSAI make sure that it is not used in any way (as source of peripheral
+ * clocks).
+ */
+
+void disablePllsai();
+
+/**
  * \brief Enables HSE clock.
  *
  * Enables HSE clock using crystal/ceramic resonator (bypass disabled) or external user clock (bypass enabled). This
