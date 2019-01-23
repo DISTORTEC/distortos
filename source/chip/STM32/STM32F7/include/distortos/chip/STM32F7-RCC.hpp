@@ -2,7 +2,7 @@
  * \file
  * \brief Header for RCC-related functions for STM32F7
  *
- * \author Copyright (C) 2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2017-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -193,6 +193,15 @@ void disableHse();
  */
 
 void disablePll();
+
+/**
+ * \brief Disables PLLI2S.
+ *
+ * \warning Before changing configuration of PLLI2S make sure that it is not used in any way (as source of peripheral
+ * clocks).
+ */
+
+void disablePlli2s();
 
 /**
  * \brief Enables HSE clock.
