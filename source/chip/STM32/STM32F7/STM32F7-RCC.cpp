@@ -183,6 +183,43 @@ int enablePlli2s(const uint16_t plli2sn, const uint8_t plli2sp, const uint8_t pl
 	return 0;
 }
 
+#if defined(CONFIG_CHIP_STM32F72) || defined(CONFIG_CHIP_STM32F73)
+int enablePllsai(const uint16_t pllsain, const uint8_t pllsaip, const uint8_t pllsaiq)
+#else	// !defined(CONFIG_CHIP_STM32F72) && !defined(CONFIG_CHIP_STM32F73)
+int enablePllsai(const uint16_t pllsain, const uint8_t pllsaip, const uint8_t pllsaiq, const uint8_t pllsair)
+#endif	// !defined(CONFIG_CHIP_STM32F72) && !defined(CONFIG_CHIP_STM32F73)
+{
+	if (pllsain < minPlln || pllsain > maxPlln ||
+			(pllsaip != pllpDiv2 && pllsaip != pllpDiv4 && pllsaip != pllpDiv6 && pllsaip != pllpDiv8) ||
+			pllsaiq < minPllq || pllsaiq > maxPllq)
+		return EINVAL;
+
+#if defined(CONFIG_CHIP_STM32F72) || defined(CONFIG_CHIP_STM32F73)
+
+	RCC->PLLSAICFGR = (RCC->PLLSAICFGR & ~(RCC_PLLSAICFGR_PLLSAIN | RCC_PLLSAICFGR_PLLSAIP | RCC_PLLSAICFGR_PLLSAIQ)) |
+			pllsain << RCC_PLLSAICFGR_PLLSAIN_Pos |
+			(pllsaip / 2 - 1) << RCC_PLLSAICFGR_PLLSAIP_Pos |
+			pllsaiq << RCC_PLLSAICFGR_PLLSAIQ_Pos;
+
+#else	// !defined(CONFIG_CHIP_STM32F72) && !defined(CONFIG_CHIP_STM32F73)
+
+	if (pllsair < minPllr || pllsair > maxPllr)
+		return EINVAL;
+
+	RCC->PLLSAICFGR = (RCC->PLLSAICFGR & ~(RCC_PLLSAICFGR_PLLSAIN | RCC_PLLSAICFGR_PLLSAIP | RCC_PLLSAICFGR_PLLSAIQ |
+			RCC_PLLSAICFGR_PLLSAIR)) |
+			pllsain << RCC_PLLSAICFGR_PLLSAIN_Pos |
+			(pllsaip / 2 - 1) << RCC_PLLSAICFGR_PLLSAIP_Pos |
+			pllsaiq << RCC_PLLSAICFGR_PLLSAIQ_Pos |
+			pllsair << RCC_PLLSAICFGR_PLLSAIR_Pos;
+
+#endif	// !defined(CONFIG_CHIP_STM32F72) && !defined(CONFIG_CHIP_STM32F73)
+
+	RCC->CR |= RCC_CR_PLLSAION;
+	while ((RCC->CR & RCC_CR_PLLSAIRDY) == 0);	// wait until PLLSAI is stable
+	return 0;
+}
+
 void switchSystemClock(const SystemClockSource source)
 {
 	const auto sourceValue = static_cast<uint32_t>(source);

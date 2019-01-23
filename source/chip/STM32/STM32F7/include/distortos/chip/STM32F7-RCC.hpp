@@ -308,6 +308,49 @@ int enablePlli2s(uint16_t plli2sn, uint8_t plli2sp, uint8_t plli2sq, uint8_t pll
 
 #endif	// !defined(CONFIG_CHIP_STM32F72) && !defined(CONFIG_CHIP_STM32F73)
 
+#if defined(CONFIG_CHIP_STM32F72) || defined(CONFIG_CHIP_STM32F73)
+
+/**
+ * \brief Enables PLLSAI.
+ *
+ * Enables PLLSAI using selected parameters and waits until it is stable.
+ *
+ * \warning Before changing configuration of PLLSAI make sure that it is not used in any way (as source of peripheral
+ * clocks) and that it is disabled.
+ *
+ * \param [in] pllsain is the PLLSAIN value for PLLSAI, [50; 432] or [minPlln; maxPlln]
+ * \param [in] pllsaip is the PLLSAIP value for PLLSAI, {2, 4, 6, 8} or {pllpDiv2, pllpDiv4, pllpDiv6, pllpDiv8}
+ * \param [in] pllsaiq is the PLLSAIQ value for PLLSAI, [2; 15] or [minPllq; maxPllq]
+ *
+ * \return 0 on success, error code otherwise:
+ * - EINVAL - \a pllsain or \a pllsaip or \a pllsaiq value is invalid;
+ */
+
+int enablePllsai(uint16_t pllsain, uint8_t pllsaip, uint8_t pllsaiq);
+
+#else	// !defined(CONFIG_CHIP_STM32F72) && !defined(CONFIG_CHIP_STM32F73)
+
+/**
+ * \brief Enables PLLSAI.
+ *
+ * Enables PLLSAI using selected parameters and waits until it is stable.
+ *
+ * \warning Before changing configuration of PLLSAI make sure that it is not used in any way (as source of peripheral
+ * clocks) and that it is disabled.
+ *
+ * \param [in] pllsain is the PLLSAIN value for PLLSAI, [50; 432] or [minPlln; maxPlln]
+ * \param [in] pllsaip is the PLLSAIP value for PLLSAI, {2, 4, 6, 8} or {pllpDiv2, pllpDiv4, pllpDiv6, pllpDiv8}
+ * \param [in] pllsaiq is the PLLSAIQ value for PLLSAI, [2; 15] or [minPllq; maxPllq]
+ * \param [in] pllsair is the PLLSAIR value for PLLSAI, [2; 7] or [minPllr; maxPllr]
+ *
+ * \return 0 on success, error code otherwise:
+ * - EINVAL - \a pllsain or \a pllsaip or \a pllsaiq or \a pllsair value is invalid;
+ */
+
+int enablePllsai(uint16_t pllsain, uint8_t pllsaip, uint8_t pllsaiq, uint8_t pllsair);
+
+#endif	// !defined(CONFIG_CHIP_STM32F72) && !defined(CONFIG_CHIP_STM32F73)
+
 /**
  * \brief Switches system clock.
  *
