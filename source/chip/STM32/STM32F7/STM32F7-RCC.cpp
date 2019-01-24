@@ -74,6 +74,11 @@ int configureApbClockDivider(const bool ppre2, const uint8_t ppre)
 	return EINVAL;
 }
 
+void configurePll48ClockSource(const bool pllsaip)
+{
+	RCC->DCKCFGR2 = (RCC->DCKCFGR2 & ~RCC_DCKCFGR2_CK48MSEL) | pllsaip << RCC_DCKCFGR2_CK48MSEL_Pos;
+}
+
 void configurePllClockSource(const bool hse)
 {
 	RCC->PLLCFGR = (RCC->PLLCFGR & ~RCC_PLLCFGR_PLLSRC) | hse << RCC_PLLCFGR_PLLSRC_Pos;

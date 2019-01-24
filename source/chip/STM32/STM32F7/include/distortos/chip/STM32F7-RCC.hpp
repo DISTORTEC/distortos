@@ -148,6 +148,14 @@ int configureAhbClockDivider(uint16_t hpre);
 int configureApbClockDivider(bool ppre2, uint8_t ppre);
 
 /**
+ * \brief Configures source of PLL48 clock.
+ *
+ * \param [in] pllsaip selects whether PLLQ (false) or PLLSAIP (true) is used as source of PLL48 clock
+ */
+
+void configurePll48ClockSource(bool pllsaip);
+
+/**
  * \brief Configures clock source of main and audio PLLs.
  *
  * \warning Before changing configuration of any PLL make sure that they are not used in any way (as core clock or as
