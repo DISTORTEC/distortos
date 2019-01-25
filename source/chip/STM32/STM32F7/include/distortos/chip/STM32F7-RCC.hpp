@@ -2,7 +2,7 @@
  * \file
  * \brief Header for RCC-related functions for STM32F7
  *
- * \author Copyright (C) 2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2017-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -59,15 +59,11 @@ constexpr uint8_t minPllq {2};
 /// maximum allowed value for PLLQ
 constexpr uint8_t maxPllq {15};
 
-#if defined(CONFIG_CHIP_STM32F76) || defined(CONFIG_CHIP_STM32F77)
-
 /// minimum allowed value for PLLR
 constexpr uint8_t minPllr {2};
 
 /// maximum allowed value for PLLR
 constexpr uint8_t maxPllr {7};
-
-#endif	// defined(CONFIG_CHIP_STM32F76) || defined(CONFIG_CHIP_STM32F77)
 
 /// first allowed value for PLLP - 2
 constexpr uint8_t pllpDiv2 {2};
@@ -152,6 +148,14 @@ int configureAhbClockDivider(uint16_t hpre);
 int configureApbClockDivider(bool ppre2, uint8_t ppre);
 
 /**
+ * \brief Configures source of PLL48 clock.
+ *
+ * \param [in] pllsaip selects whether PLLQ (false) or PLLSAIP (true) is used as source of PLL48 clock
+ */
+
+void configurePll48ClockSource(bool pllsaip);
+
+/**
  * \brief Configures clock source of main and audio PLLs.
  *
  * \warning Before changing configuration of any PLL make sure that they are not used in any way (as core clock or as
@@ -193,6 +197,24 @@ void disableHse();
  */
 
 void disablePll();
+
+/**
+ * \brief Disables PLLI2S.
+ *
+ * \warning Before changing configuration of PLLI2S make sure that it is not used in any way (as source of peripheral
+ * clocks).
+ */
+
+void disablePlli2s();
+
+/**
+ * \brief Disables PLLSAI.
+ *
+ * \warning Before changing configuration of PLLSAI make sure that it is not used in any way (as source of peripheral
+ * clocks).
+ */
+
+void disablePllsai();
 
 /**
  * \brief Enables HSE clock.
@@ -250,6 +272,92 @@ int enablePll(uint16_t plln, uint8_t pllp, uint8_t pllq, uint8_t pllr);
 int enablePll(uint16_t plln, uint8_t pllp, uint8_t pllq);
 
 #endif	// !defined(CONFIG_CHIP_STM32F76) && !defined(CONFIG_CHIP_STM32F77)
+
+#if defined(CONFIG_CHIP_STM32F72) || defined(CONFIG_CHIP_STM32F73)
+
+/**
+ * \brief Enables PLLI2S.
+ *
+ * Enables PLLI2S using selected parameters and waits until it is stable.
+ *
+ * \warning Before changing configuration of PLLI2S make sure that it is not used in any way (as source of peripheral
+ * clocks) and that it is disabled.
+ *
+ * \param [in] plli2sn is the PLLI2SN value for PLLI2S, [50; 432] or [minPlln; maxPlln]
+ * \param [in] plli2sq is the PLLI2SQ value for PLLI2S, [2; 15] or [minPllq; maxPllq]
+ * \param [in] plli2sr is the PLLI2SR value for PLLI2S, [2; 7] or [minPllr; maxPllr]
+ *
+ * \return 0 on success, error code otherwise:
+ * - EINVAL - \a plli2sn or \a plli2sq or \a plli2sr value is invalid;
+ */
+
+int enablePlli2s(uint16_t plli2sn, uint8_t plli2sq, uint8_t plli2sr);
+
+#else	// !defined(CONFIG_CHIP_STM32F72) && !defined(CONFIG_CHIP_STM32F73)
+
+/**
+ * \brief Enables PLLI2S.
+ *
+ * Enables PLLI2S using selected parameters and waits until it is stable.
+ *
+ * \warning Before changing configuration of PLLI2S make sure that it is not used in any way (as source of peripheral
+ * clocks) and that it is disabled.
+ *
+ * \param [in] plli2sn is the PLLI2SN value for PLLI2S, [50; 432] or [minPlln; maxPlln]
+ * \param [in] plli2sp is the PLLI2SP value for PLLI2S, {2, 4, 6, 8} or {pllpDiv2, pllpDiv4, pllpDiv6, pllpDiv8}
+ * \param [in] plli2sq is the PLLI2SQ value for PLLI2S, [2; 15] or [minPllq; maxPllq]
+ * \param [in] plli2sr is the PLLI2SR value for PLLI2S, [2; 7] or [minPllr; maxPllr]
+ *
+ * \return 0 on success, error code otherwise:
+ * - EINVAL - \a plli2sn or \a plli2sp or \a plli2sq or \a plli2sr value is invalid;
+ */
+
+int enablePlli2s(uint16_t plli2sn, uint8_t plli2sp, uint8_t plli2sq, uint8_t plli2sr);
+
+#endif	// !defined(CONFIG_CHIP_STM32F72) && !defined(CONFIG_CHIP_STM32F73)
+
+#if defined(CONFIG_CHIP_STM32F72) || defined(CONFIG_CHIP_STM32F73)
+
+/**
+ * \brief Enables PLLSAI.
+ *
+ * Enables PLLSAI using selected parameters and waits until it is stable.
+ *
+ * \warning Before changing configuration of PLLSAI make sure that it is not used in any way (as source of peripheral
+ * clocks) and that it is disabled.
+ *
+ * \param [in] pllsain is the PLLSAIN value for PLLSAI, [50; 432] or [minPlln; maxPlln]
+ * \param [in] pllsaip is the PLLSAIP value for PLLSAI, {2, 4, 6, 8} or {pllpDiv2, pllpDiv4, pllpDiv6, pllpDiv8}
+ * \param [in] pllsaiq is the PLLSAIQ value for PLLSAI, [2; 15] or [minPllq; maxPllq]
+ *
+ * \return 0 on success, error code otherwise:
+ * - EINVAL - \a pllsain or \a pllsaip or \a pllsaiq value is invalid;
+ */
+
+int enablePllsai(uint16_t pllsain, uint8_t pllsaip, uint8_t pllsaiq);
+
+#else	// !defined(CONFIG_CHIP_STM32F72) && !defined(CONFIG_CHIP_STM32F73)
+
+/**
+ * \brief Enables PLLSAI.
+ *
+ * Enables PLLSAI using selected parameters and waits until it is stable.
+ *
+ * \warning Before changing configuration of PLLSAI make sure that it is not used in any way (as source of peripheral
+ * clocks) and that it is disabled.
+ *
+ * \param [in] pllsain is the PLLSAIN value for PLLSAI, [50; 432] or [minPlln; maxPlln]
+ * \param [in] pllsaip is the PLLSAIP value for PLLSAI, {2, 4, 6, 8} or {pllpDiv2, pllpDiv4, pllpDiv6, pllpDiv8}
+ * \param [in] pllsaiq is the PLLSAIQ value for PLLSAI, [2; 15] or [minPllq; maxPllq]
+ * \param [in] pllsair is the PLLSAIR value for PLLSAI, [2; 7] or [minPllr; maxPllr]
+ *
+ * \return 0 on success, error code otherwise:
+ * - EINVAL - \a pllsain or \a pllsaip or \a pllsaiq or \a pllsair value is invalid;
+ */
+
+int enablePllsai(uint16_t pllsain, uint8_t pllsaip, uint8_t pllsaiq, uint8_t pllsair);
+
+#endif	// !defined(CONFIG_CHIP_STM32F72) && !defined(CONFIG_CHIP_STM32F73)
 
 /**
  * \brief Switches system clock.

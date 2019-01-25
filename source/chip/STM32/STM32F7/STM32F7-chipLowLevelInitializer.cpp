@@ -2,7 +2,7 @@
  * \file
  * \brief Low-level chip initializer for STM32F7
  *
- * \author Copyright (C) 2017-2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2017-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -72,7 +72,7 @@ void chipLowLevelInitializer()
 
 #endif	// def CONFIG_CHIP_STM32F7_RCC_HSE_ENABLE
 
-#ifdef CONFIG_CHIP_STM32F7_RCC_PLL_ENABLE
+#ifdef CONFIG_CHIP_STM32F7_RCC_PLLS_ENABLE
 
 #if defined(CONFIG_CHIP_STM32F7_RCC_PLLSRC_HSI)
 	configurePllClockSource(false);
@@ -81,6 +81,8 @@ void chipLowLevelInitializer()
 #endif
 
 	configurePllInputClockDivider(CONFIG_CHIP_STM32F7_RCC_PLLM);
+
+#ifdef CONFIG_CHIP_STM32F7_RCC_PLL_ENABLE
 
 #if defined(CONFIG_CHIP_STM32F76) || defined(CONFIG_CHIP_STM32F77)
 
@@ -94,6 +96,44 @@ void chipLowLevelInitializer()
 #endif	// !defined(CONFIG_CHIP_STM32F76) && !defined(CONFIG_CHIP_STM32F77)
 
 #endif	// def CONFIG_CHIP_STM32F7_RCC_PLL_ENABLE
+
+#ifdef CONFIG_CHIP_STM32F7_RCC_PLLI2S_ENABLE
+
+#ifdef CONFIG_CHIP_STM32F7_RCC_PLLI2SP
+
+	enablePlli2s(CONFIG_CHIP_STM32F7_RCC_PLLI2SN, CONFIG_CHIP_STM32F7_RCC_PLLI2SP, CONFIG_CHIP_STM32F7_RCC_PLLI2SQ,
+			CONFIG_CHIP_STM32F7_RCC_PLLI2SR);
+
+#else	// !def CONFIG_CHIP_STM32F7_RCC_PLLI2SP
+
+	enablePlli2s(CONFIG_CHIP_STM32F7_RCC_PLLI2SN, CONFIG_CHIP_STM32F7_RCC_PLLI2SQ, CONFIG_CHIP_STM32F7_RCC_PLLI2SR);
+
+#endif	// !def CONFIG_CHIP_STM32F7_RCC_PLLI2SP
+
+#endif	// def CONFIG_CHIP_STM32F7_RCC_PLLI2S_ENABLE
+
+#ifdef CONFIG_CHIP_STM32F7_RCC_PLLSAI_ENABLE
+
+#ifdef CONFIG_CHIP_STM32F7_RCC_PLLSAIR
+
+	enablePllsai(CONFIG_CHIP_STM32F7_RCC_PLLSAIN, CONFIG_CHIP_STM32F7_RCC_PLLSAIP, CONFIG_CHIP_STM32F7_RCC_PLLSAIQ,
+			CONFIG_CHIP_STM32F7_RCC_PLLSAIR);
+
+#else	// !def CONFIG_CHIP_STM32F7_RCC_PLLSAIR
+
+	enablePllsai(CONFIG_CHIP_STM32F7_RCC_PLLSAIN, CONFIG_CHIP_STM32F7_RCC_PLLSAIP, CONFIG_CHIP_STM32F7_RCC_PLLSAIQ);
+
+#endif	// !def CONFIG_CHIP_STM32F7_RCC_PLLSAIR
+
+#endif	// def CONFIG_CHIP_STM32F7_RCC_PLLSAI_ENABLE
+
+#if defined(CONFIG_CHIP_STM32F7_RCC_PLL48CLK_PLLQ)
+	configurePll48ClockSource(false);
+#elif defined(CONFIG_CHIP_STM32F7_RCC_PLL48CLK_PLLSAIP)
+	configurePll48ClockSource(true);
+#endif	// defined(CONFIG_CHIP_STM32F7_RCC_PLL48CLK_PLLSAIP)
+
+#endif	// def CONFIG_CHIP_STM32F7_RCC_PLLS_ENABLE
 
 	configureAhbClockDivider(CONFIG_CHIP_STM32F7_RCC_HPRE);
 	configureApbClockDivider(false, CONFIG_CHIP_STM32F7_RCC_PPRE1);

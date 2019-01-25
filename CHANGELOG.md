@@ -33,6 +33,7 @@ and `distortos::Directory`.
 - Added support for [littlefs](https://github.com/ARMmbed/littlefs) file system, provided by
 `distortos::LittlefsFileSystem`, `distortos::LittlefsFile` and `distortos::LittlefsDirectory` classes, which implement
 interface of `distortos::FileSystem`, `distortos::File` and `distortos::Directory` classes.
+- Added configuration of *STM32F7's* *PLLI2S*, *PLLSAI* and *PLL48CLK* to *CMake*.
 - Added `sys/dirent.h` and `sys/statvfs.h` headers, which are not provided by *newlib*.
 - Added unit test of `distortos::devices::BlockDeviceToMemoryTechnologyDevice` class.
 - Added unit tests of *STM32's* *DMAv1*, *DMAv2*, *SPIv1* and *SPIv2* drivers.
