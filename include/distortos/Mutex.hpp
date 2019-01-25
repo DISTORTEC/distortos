@@ -263,6 +263,22 @@ public:
 	}
 
 	/**
+	 * \brief Tries to lock the mutex.
+	 *
+	 * Wrapper for tryLock() which implements
+	 * [std::mutex::try_lock()](http://en.cppreference.com/w/cpp/thread/mutex/try_lock) API.
+	 *
+	 * \warning This function must not be called from interrupt context!
+	 *
+	 * \return true if the caller successfully locked the mutex, false otherwise
+	 */
+
+	bool try_lock()
+	{
+		return tryLock() == 0;
+	}
+
+	/**
 	 * \brief Unlocks the mutex.
 	 *
 	 * Similar to std::mutex::unlock() - http://en.cppreference.com/w/cpp/thread/mutex/unlock
