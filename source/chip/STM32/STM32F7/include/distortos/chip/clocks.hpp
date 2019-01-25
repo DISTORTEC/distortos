@@ -67,6 +67,24 @@ constexpr uint32_t maxApb1Frequencies[2] {45000000, 54000000};
 /// [1] - over-drive enabled
 constexpr uint32_t maxApb2Frequencies[2] {90000000, 108000000};
 
+/// maximum allowed value for PLLI2S output frequency, Hz
+constexpr uint32_t maxPlli2sOutFrequency {216000000};
+
+/// maximum allowed value for PLLI2S "Q" output frequency, Hz
+constexpr uint32_t maxPlli2sqOutFrequency {216000000};
+
+/// maximum allowed value for PLLI2S "R" output frequency, Hz
+constexpr uint32_t maxPlli2srOutFrequency {192000000};
+
+/// maximum allowed value for PLLSAI output frequency, Hz
+constexpr uint32_t maxPllsaiOutFrequency {48000000};
+
+/// maximum allowed value for PLLSAI "Q" output frequency, Hz
+constexpr uint32_t maxPllsaiqOutFrequency {216000000};
+
+/// maximum allowed value for PLLSAI "R" output frequency, Hz
+constexpr uint32_t maxPllsairOutFrequency {216000000};
+
 #ifdef CONFIG_CHIP_STM32F7_STANDARD_CLOCK_CONFIGURATION_ENABLE
 
 #if defined(CONFIG_CHIP_STM32F7_PWR_OVER_DRIVE_ENABLE)
@@ -140,6 +158,71 @@ constexpr uint32_t pllrOutFrequency {vcoOutFrequency / CONFIG_CHIP_STM32F7_RCC_P
 
 #endif	// def CONFIG_CHIP_STM32F7_RCC_PLL_ENABLE
 
+#ifdef CONFIG_CHIP_STM32F7_RCC_PLLI2S_ENABLE
+
+/// VCO output frequency of PLLI2S, Hz
+constexpr uint32_t plli2sVcoOutFrequency {vcoInFrequency * CONFIG_CHIP_STM32F7_RCC_PLLI2SN};
+
+static_assert(minVcoOutFrequency <= plli2sVcoOutFrequency && plli2sVcoOutFrequency <= maxVcoOutFrequency,
+		"Invalid PLLI2S VCO output frequency!");
+
+#ifdef CONFIG_CHIP_STM32F7_RCC_PLLI2SP
+
+/// PLLI2S output frequency, Hz
+constexpr uint32_t plli2sOutFrequency {plli2sVcoOutFrequency / CONFIG_CHIP_STM32F7_RCC_PLLI2SP};
+
+static_assert(plli2sOutFrequency <= maxPlli2sOutFrequency, "Invalid PLLI2S output frequency!");
+
+#endif	// def CONFIG_CHIP_STM32F7_RCC_PLLI2SP
+
+/// PLLI2S "Q" output frequency, Hz
+constexpr uint32_t plli2sqOutFrequency {plli2sVcoOutFrequency / CONFIG_CHIP_STM32F7_RCC_PLLI2SQ};
+
+static_assert(plli2sqOutFrequency <= maxPlli2sqOutFrequency, "Invalid PLLI2S \"/Q\" output frequency!");
+
+/// PLLI2S "R" output frequency, Hz
+constexpr uint32_t plli2srOutFrequency {plli2sVcoOutFrequency / CONFIG_CHIP_STM32F7_RCC_PLLI2SR};
+
+static_assert(plli2srOutFrequency <= maxPlli2srOutFrequency, "Invalid PLLI2S \"/R\" output frequency!");
+
+#endif	// def CONFIG_CHIP_STM32F7_RCC_PLLI2S_ENABLE
+
+#ifdef CONFIG_CHIP_STM32F7_RCC_PLLSAI_ENABLE
+
+/// VCO output frequency of PLLSAI, Hz
+constexpr uint32_t pllsaiVcoOutFrequency {vcoInFrequency * CONFIG_CHIP_STM32F7_RCC_PLLSAIN};
+
+static_assert(minVcoOutFrequency <= pllsaiVcoOutFrequency && pllsaiVcoOutFrequency <= maxVcoOutFrequency,
+		"Invalid PLLSAI VCO output frequency!");
+
+/// PLLSAI output frequency, Hz
+constexpr uint32_t pllsaiOutFrequency {pllsaiVcoOutFrequency / CONFIG_CHIP_STM32F7_RCC_PLLSAIP};
+
+static_assert(pllsaiOutFrequency <= maxPllsaiOutFrequency, "Invalid PLLSAI output frequency!");
+
+/// PLLSAI "Q" output frequency, Hz
+constexpr uint32_t pllsaiqOutFrequency {pllsaiVcoOutFrequency / CONFIG_CHIP_STM32F7_RCC_PLLSAIQ};
+
+static_assert(pllsaiqOutFrequency <= maxPllsaiqOutFrequency, "Invalid PLLSAI \"/Q\" output frequency!");
+
+#ifdef CONFIG_CHIP_STM32F7_RCC_PLLSAIR
+
+/// PLLSAI "R" output frequency, Hz
+constexpr uint32_t pllsairOutFrequency {pllsaiVcoOutFrequency / CONFIG_CHIP_STM32F7_RCC_PLLSAIR};
+
+static_assert(pllsairOutFrequency <= maxPllsairOutFrequency, "Invalid PLLSAI \"/R\" output frequency!");
+
+#endif	// def CONFIG_CHIP_STM32F7_RCC_PLLSAIR
+
+#endif	// def CONFIG_CHIP_STM32F7_RCC_PLLSAI_ENABLE
+
+/// PLL48CLK frequency, Hz
+#if defined(CONFIG_CHIP_STM32F7_RCC_PLL48CLK_PLLQ)
+constexpr uint32_t pll48clkFrequency {pllqOutFrequency};
+#elif defined(CONFIG_CHIP_STM32F7_RCC_PLL48CLK_PLLSAIP)
+constexpr uint32_t pll48clkFrequency {pllsaiOutFrequency};
+#endif	// defined(CONFIG_CHIP_STM32F7_RCC_PLL48CLK_PLLSAIP)
+
 #endif	// def CONFIG_CHIP_STM32F7_RCC_PLLS_ENABLE
 
 /// SYSCLK frequency, Hz
@@ -155,6 +238,13 @@ constexpr uint32_t sysclkFrequency {pllOutFrequency};
 
 /// SYSCLK frequency, Hz
 constexpr uint32_t sysclkFrequency {CONFIG_CHIP_STM32F7_RCC_SYSCLK_FREQUENCY};
+
+#if CONFIG_CHIP_STM32F7_RCC_PLL48CLK_FREQUENCY != 0
+
+/// PLL48CLK frequency, Hz
+constexpr uint32_t pll48clkFrequency {CONFIG_CHIP_STM32F7_RCC_PLL48CLK_FREQUENCY};
+
+#endif	// CONFIG_CHIP_STM32F7_RCC_PLL48CLK_FREQUENCY != 0
 
 /// maximum allowed APB1 (low speed) frequency, Hz
 constexpr uint32_t maxApb1Frequency {maxApb1Frequencies[1]};
