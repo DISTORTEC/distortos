@@ -2,7 +2,7 @@
  * \file
  * \brief Mutex class header
  *
- * \author Copyright (C) 2014-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -180,7 +180,7 @@ public:
 	int tryLockFor(TickClock::duration duration);
 
 	/**
-	 * Tries to lock the mutex for given duration of time.
+	 * \brief Tries to lock the mutex for given duration of time.
 	 *
 	 * Template variant of tryLockFor(TickClock::duration duration).
 	 *
@@ -260,6 +260,65 @@ public:
 	int tryLockUntil(const std::chrono::time_point<TickClock, Duration> timePoint)
 	{
 		return tryLockUntil(std::chrono::time_point_cast<TickClock::duration>(timePoint));
+	}
+
+	/**
+	 * \brief Tries to lock the mutex.
+	 *
+	 * Wrapper for tryLock() which implements
+	 * [std::mutex::try_lock()](http://en.cppreference.com/w/cpp/thread/mutex/try_lock) API.
+	 *
+	 * \warning This function must not be called from interrupt context!
+	 *
+	 * \return true if the caller successfully locked the mutex, false otherwise
+	 */
+
+	bool try_lock()
+	{
+		return tryLock() == 0;
+	}
+
+	/**
+	 * \brief Tries to lock the mutex for given duration of time.
+	 *
+	 * Wrapper for tryLockFor() which implements
+	 * [std::timed_mutex::try_lock_for()](http://en.cppreference.com/w/cpp/thread/timed_mutex/try_lock_for) API.
+	 *
+	 * \warning This function must not be called from interrupt context!
+	 *
+	 * \tparam Rep is type of tick counter
+	 * \tparam Period is std::ratio type representing the tick period of the clock, seconds
+	 *
+	 * \param [in] duration is the duration after which the wait will be terminated without locking the mutex
+	 *
+	 * \return true if the caller successfully locked the mutex, false otherwise
+	 */
+
+	template<typename Rep, typename Period>
+	bool try_lock_for(const std::chrono::duration<Rep, Period> duration)
+	{
+		return tryLockFor(duration) == 0;
+	}
+
+	/**
+	 * \brief Tries to lock the mutex until given time point.
+	 *
+	 * Wrapper for tryLockUntil() which implements
+	 * [std::timed_mutex::try_lock_until()](http://en.cppreference.com/w/cpp/thread/timed_mutex/try_lock_until) API.
+	 *
+	 * \warning This function must not be called from interrupt context!
+	 *
+	 * \tparam Duration is a std::chrono::duration type used to measure duration
+	 *
+	 * \param [in] timePoint is the time point at which the wait will be terminated without locking the mutex
+	 *
+	 * \return true if the caller successfully locked the mutex, false otherwise
+	 */
+
+	template<typename Duration>
+	bool try_lock_until(const std::chrono::time_point<TickClock, Duration> timePoint)
+	{
+		return tryLockUntil(timePoint) == 0;
 	}
 
 	/**

@@ -34,6 +34,17 @@ and `distortos::Directory`.
 `distortos::LittlefsFileSystem`, `distortos::LittlefsFile` and `distortos::LittlefsDirectory` classes, which implement
 interface of `distortos::FileSystem`, `distortos::File` and `distortos::Directory` classes.
 - Added configuration of *STM32F7's* *PLLI2S*, *PLLSAI* and *PLL48CLK* to *CMake*.
+- Added `distortos::Mutex::try_lock()`, `distortos::Mutex::try_lock_for()` and `distortos::Mutex::try_lock_until()`
+wrappers, which implement APIs of [`std::mutex::try_lock()`](http://en.cppreference.com/w/cpp/thread/mutex/try_lock),
+[`std::timed_mutex::try_lock_for()`](http://en.cppreference.com/w/cpp/thread/timed_mutex/try_lock_for) and
+[`std::timed_mutex::try_lock_until()`](http://en.cppreference.com/w/cpp/thread/timed_mutex/try_lock_until) respectively.
+This allows using `distortos::Mutex` with all mutex helpers from
+[`<mutex>` header](https://en.cppreference.com/w/cpp/header/mutex):
+[`std::lock_guard`](https://en.cppreference.com/w/cpp/thread/lock_guard),
+[`std::unique_lock`](https://en.cppreference.com/w/cpp/thread/unique_lock),
+[`std::scoped_lock`](https://en.cppreference.com/w/cpp/thread/scoped_lock),
+[`std::try_lock()`](https://en.cppreference.com/w/cpp/thread/try_lock) and
+[`std::lock()`](https://en.cppreference.com/w/cpp/thread/lock).
 - Added `sys/dirent.h` and `sys/statvfs.h` headers, which are not provided by *newlib*.
 - Added unit test of `distortos::devices::BlockDeviceToMemoryTechnologyDevice` class.
 - Added unit tests of *STM32's* *DMAv1*, *DMAv2*, *SPIv1* and *SPIv2* drivers.
