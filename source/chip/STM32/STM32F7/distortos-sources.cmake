@@ -159,6 +159,161 @@ if(distortos_Clocks_00_Standard_configuration_of_clocks)
 
 		endif(distortos_Clocks_07_PLL)
 
+		distortosSetConfiguration(BOOLEAN
+				distortos_Clocks_12_PLLI2S
+				OFF
+				HELP "Enable PLLI2S."
+				OUTPUT_NAME CONFIG_CHIP_STM32F7_RCC_PLLI2S_ENABLE)
+
+		if(distortos_Clocks_12_PLLI2S)
+
+			distortosSetConfiguration(INTEGER
+					distortos_Clocks_13_PLLI2SN
+					336
+					MIN 50
+					MAX 432
+					HELP "PLLI2SN value for PLLI2S.
+
+					It is used to multiply VCO input frequency (VCOin). Resulting PLLI2S VCO output frequency
+					(PLLI2SVCOout) must be in the range [100 MHz; 432 MHz].
+
+					PLLI2SVCOout = VCOin * PLLI2SN = PLLin / PLLM * PLLI2SN"
+					OUTPUT_NAME CONFIG_CHIP_STM32F7_RCC_PLLI2SN)
+
+			if(NOT CONFIG_CHIP MATCHES "STM32F7[23]")
+
+				distortosSetConfiguration(STRING
+						distortos_Clocks_14_PLLI2SP
+						2
+						4
+						6
+						8
+						HELP "PLLI2SP value for PLLI2S.
+
+						It is used to divide PLLI2S VCO output frequency (PLLI2SVCOout) to produce clock for SPDIFRX
+						(PLLI2Sout). PLLI2S output frequency must not exceed 216 MHz.
+
+						PLLI2Sout = PLLI2SVCOout / PLLI2SP = PLLin / PLLM * PLLI2SN / PLLI2SP"
+						OUTPUT_NAME CONFIG_CHIP_STM32F7_RCC_PLLI2SP
+						OUTPUT_TYPES INTEGER)
+
+			endif(NOT CONFIG_CHIP MATCHES "STM32F7[23]")
+
+			distortosSetConfiguration(INTEGER
+					distortos_Clocks_15_PLLI2SQ
+					2
+					MIN 2
+					MAX 15
+					HELP "PLLI2SQ value for PLLI2S.
+
+					It is used to divide PLLI2S VCO output frequency (PLLI2SVCOout) to produce clock for SAIs
+					(PLLI2SQout). PLLI2S \"Q\" output frequency must not exceed 216 MHz.
+
+					PLLI2SQout = PLLI2SVCOout / PLLI2SQ = PLLin / PLLM * PLLI2SN / PLLI2SQ"
+					OUTPUT_NAME CONFIG_CHIP_STM32F7_RCC_PLLI2SQ)
+
+			distortosSetConfiguration(INTEGER
+					distortos_Clocks_16_PLLI2SR
+					2
+					MIN 2
+					MAX 7
+					HELP "PLLI2SR value for PLLI2S.
+
+					It is used to divide PLLI2S VCO output frequency (PLLI2SVCOout) to produce clock for I2S
+					(PLLI2SRout). PLLI2S \"R\" output frequency must not exceed 192 MHz.
+
+					PLLI2SRout = PLLI2SVCOout / PLLI2SR = PLLin / PLLM * PLLI2SN / PLLI2SR"
+					OUTPUT_NAME CONFIG_CHIP_STM32F7_RCC_PLLI2SR)
+
+		endif(distortos_Clocks_12_PLLI2S)
+
+		distortosSetConfiguration(BOOLEAN
+				distortos_Clocks_17_PLLSAI
+				OFF
+				HELP "Enable PLLSAI."
+				OUTPUT_NAME CONFIG_CHIP_STM32F7_RCC_PLLSAI_ENABLE)
+
+		if(distortos_Clocks_17_PLLSAI)
+
+			distortosSetConfiguration(INTEGER
+					distortos_Clocks_18_PLLSAIN
+					288
+					MIN 50
+					MAX 432
+					HELP "PLLSAIN value for PLLSAI.
+
+					It is used to multiply VCO input frequency (VCOin). Resulting PLLSAI VCO output frequency
+					(PLLSAIVCOout) must be in the range [100 MHz; 432 MHz].
+
+					PLLSAIVCOout = VCOin * PLLSAIN = PLLin / PLLM * PLLSAIN"
+					OUTPUT_NAME CONFIG_CHIP_STM32F7_RCC_PLLSAIN)
+
+			distortosSetConfiguration(STRING
+					distortos_Clocks_19_PLLSAIP
+					2
+					4
+					6 DEFAULT
+					8
+					HELP "PLLSAIP value for PLLSAI.
+
+					It is used to divide PLLSAI VCO output frequency (PLLSAIVCOout) to produce clock for USB, RNG
+					and SDMMC (PLLSAIout). PLLSAI output frequency must not exceed 48 MHz.
+
+					PLLSAIout = PLLSAIVCOout / PLLSAIP = PLLin / PLLM * PLLSAIN / PLLSAIP"
+					OUTPUT_NAME CONFIG_CHIP_STM32F7_RCC_PLLSAIP
+					OUTPUT_TYPES INTEGER)
+
+			distortosSetConfiguration(INTEGER
+					distortos_Clocks_20_PLLSAIQ
+					2
+					MIN 2
+					MAX 15
+					HELP "PLLSAIQ value for PLLSAI.
+
+					It is used to divide PLLSAI VCO output frequency (PLLSAIVCOout) to produce clock for SAI
+					(PLLSAIQout). PLLSAI \"Q\" output frequency must not exceed 216 MHz.
+
+					PLLSAIQout = PLLSAIVCOout / PLLSAIQ = PLLin / PLLM * PLLSAIN / PLLSAIQ"
+					OUTPUT_NAME CONFIG_CHIP_STM32F7_RCC_PLLSAIQ)
+
+			if(NOT CONFIG_CHIP MATCHES "STM32F7[23]")
+
+				distortosSetConfiguration(INTEGER
+						distortos_Clocks_21_PLLSAIR
+						2
+						MIN 2
+						MAX 7
+						HELP "PLLSAIR value for PLLSAI.
+
+						It is used to divide PLLSAI VCO output frequency (PLLSAIVCOout) to produce clock for LCD
+						(PLLSAIRout). PLLSAI \"R\" output frequency must not exceed 216 MHz.
+
+						PLLSAIRout = PLLSAIVCOout / PLLSAIR = PLLin / PLLM * PLLSAIN / PLLSAIR"
+						OUTPUT_NAME CONFIG_CHIP_STM32F7_RCC_PLLSAIR)
+
+			endif(NOT CONFIG_CHIP MATCHES "STM32F7[23]")
+
+		endif(distortos_Clocks_17_PLLSAI)
+
+		if(distortos_Clocks_07_PLL OR distortos_Clocks_17_PLLSAI)
+
+			if(distortos_Clocks_07_PLL)
+				set(pll48ClockSourcePllq PLLQ)
+			endif()
+			if(distortos_Clocks_17_PLLSAI)
+				set(pll48ClockSourcePllsaip PLLSAIP)
+			endif()
+
+			distortosSetConfiguration(STRING
+					distortos_Clocks_22_PLL48_clock_source
+					${pll48ClockSourcePllq}
+					${pll48ClockSourcePllsaip}
+					HELP "Select PLL48 clock source."
+					OUTPUT_NAME CONFIG_CHIP_STM32F7_RCC_PLL48CLK
+					OUTPUT_TYPES BOOLEAN)
+
+		endif(distortos_Clocks_07_PLL OR distortos_Clocks_17_PLLSAI)
+
 	endif(distortos_Clocks_04_PLLs)
 
 	if(distortos_Clocks_03_HSE)
@@ -169,7 +324,7 @@ if(distortos_Clocks_00_Standard_configuration_of_clocks)
 	endif()
 
 	distortosSetConfiguration(STRING
-			distortos_Clocks_12_System_clock_source
+			distortos_Clocks_23_System_clock_source
 			HSI
 			${systemClockSourceHse}
 			${systemClockSourcePll}
@@ -192,10 +347,21 @@ else(distortos_Clocks_00_Standard_configuration_of_clocks)
 			- 144 MHz in voltage scale 3 mode."
 			OUTPUT_NAME CONFIG_CHIP_STM32F7_RCC_SYSCLK_FREQUENCY)
 
+	distortosSetConfiguration(INTEGER
+			distortos_Clocks_02_PLL48CLK_frequency
+			0
+			MIN 0
+			MAX 48000000
+			HELP "Frequency of PLL48CLK, Hz.
+
+			RCC must be configured by user to achieve that frequency. PLL48CLK frequency must not exceed 48 MHz. Set to
+			0 if PLL48CLK is not available."
+			OUTPUT_NAME CONFIG_CHIP_STM32F7_RCC_PLL48CLK_FREQUENCY)
+
 endif(distortos_Clocks_00_Standard_configuration_of_clocks)
 
 distortosSetConfiguration(STRING
-		distortos_Clocks_13_HPRE
+		distortos_Clocks_24_HPRE
 		1
 		2
 		4
@@ -212,7 +378,7 @@ distortosSetConfiguration(STRING
 		OUTPUT_TYPES INTEGER)
 
 distortosSetConfiguration(STRING
-		distortos_Clocks_14_PPRE1
+		distortos_Clocks_25_PPRE1
 		1
 		2
 		4 DEFAULT
@@ -227,7 +393,7 @@ distortosSetConfiguration(STRING
 		OUTPUT_TYPES INTEGER)
 
 distortosSetConfiguration(STRING
-		distortos_Clocks_15_PPRE2
+		distortos_Clocks_26_PPRE2
 		1
 		2 DEFAULT
 		4
