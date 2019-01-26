@@ -284,7 +284,8 @@ endfunction()
 # generic options:
 # - `[FORCE]` - forces the value of cache entry to `defaultValue`;
 # - `[HELP "help message ..."]` - help message displayed in the GUI; all whitespace after newlines is removed, so the
-# message may be indented to match other code;
+# message may be indented to match other code; all single newlines are replaced with a space, unless they are followed
+# by a '-' character (as in case of a list);
 # - `[INTERNAL]` - causes the cache entry to be hidden in the GUI;
 # - `[NO_OUTPUT]` - suppress generation of macro in the header; must not be used with `OUTPUT_NAME` and/or
 # `OUTPUT_TYPES`;
@@ -329,6 +330,7 @@ function(distortosSetConfiguration type name)
 	endif()
 
 	string(REGEX REPLACE "\t+" "" PREFIX_HELP "${PREFIX_HELP}")
+	string(REGEX REPLACE "([^\n])\n([^\n-])" "\\1 \\2" PREFIX_HELP "${PREFIX_HELP}")
 
 	if(type STREQUAL BOOLEAN)
 		distortosSetBooleanConfiguration("${name}" "${PREFIX_HELP}" ${PREFIX_UNPARSED_ARGUMENTS})

@@ -191,37 +191,37 @@ set("distortos_Architecture_01_Interrupt_priority_disabled_in_critical_sections"
 		"0"
 		CACHE
 		"STRING"
-		"Interrupt priority disabled in critical sections.\n\nMinimal numerical priority (inclusive) of interrupt handlers that can use system's functions.\n\nDuring critical sections all interrupts with numerical priority above or equal to this value will be disabled.\nInterrupts with numerical priority below this value are never disabled, but they may not use any system's\nfunctions.\n\nNote - \"lower\" logical priority has \"higher\" numeric value! If this option is set to \"x\", then interrupts\nwith priorities between \"x\" and 255 (both inclusive) may use system's functions, while interrupts with\npriorities between 0 and \"x - 1\" (both inclusive) may not. If 0 is chosen, then all interrupts (except\nHardFault and NMI) are disabled during critical sections, so they may use system's functions.\n\nAllowed range: [-2147483648; 15]")
+		"Interrupt priority disabled in critical sections.\n\nMinimal numerical priority (inclusive) of interrupt handlers that can use system's functions.\n\nDuring critical sections all interrupts with numerical priority above or equal to this value will be disabled. Interrupts with numerical priority below this value are never disabled, but they may not use any system's functions.\n\nNote - \"lower\" logical priority has \"higher\" numeric value! If this option is set to \"x\", then interrupts with priorities between \"x\" and 255 (both inclusive) may use system's functions, while interrupts with priorities between 0 and \"x - 1\" (both inclusive) may not. If 0 is chosen, then all interrupts (except HardFault and NMI) are disabled during critical sections, so they may use system's functions.\n\nAllowed range: [0; 15]")
 set("distortos_Build_00_Static_destructors"
 		"OFF"
 		CACHE
 		"BOOL"
-		"Enable static destructors.\n\nEnable destructors for objects with static storage duration. As embedded applications almost never \"exit\",\nthese destructors are usually never executed, wasting ROM.")
+		"Enable static destructors.\n\nEnable destructors for objects with static storage duration. As embedded applications almost never \"exit\", these destructors are usually never executed, wasting ROM.")
 set("distortos_Checks_00_Context_of_functions"
 		"ON"
 		CACHE
 		"BOOL"
-		"Check context of functions.\n\nSome functions may only be used from thread context, as using them from interrupt context results in undefined\nbehaviour. There are several groups of functions to which this restriction applies (some functions fall into\nseveral categories at once):\n1. all blocking functions, like callOnce(), FifoQueue::push(), Semaphore::wait(), ..., as an attempt to block\ncurrent thread of execution (not to be confused with current thread) is not possible in interrupt context;\n2. all mutex functions, as the concept of ownership by a thread - core feature of mutex - cannot be fulfilled in\ninterrupt context;\n3. all functions from ThisThread namespace (including ThisThread::Signals namespace), as in interrupt context\nthey would access a random thread that happened to be executing at that particular moment;\n\nUsing such functions from interrupt context is a common bug in applications which can be easily introduced and\nvery hard to find, as the symptoms may appear only under certain circumstances.\n\nSelecting this option enables context checks in all functions with such requirements. If any of them is used\nfrom interrupt context, FATAL_ERROR() will be called.")
+		"Check context of functions.\n\nSome functions may only be used from thread context, as using them from interrupt context results in undefined behaviour. There are several groups of functions to which this restriction applies (some functions fall into several categories at once): 1. all blocking functions, like callOnce(), FifoQueue::push(), Semaphore::wait(), ..., as an attempt to block current thread of execution (not to be confused with current thread) is not possible in interrupt context; 2. all mutex functions, as the concept of ownership by a thread - core feature of mutex - cannot be fulfilled in interrupt context; 3. all functions from ThisThread namespace (including ThisThread::Signals namespace), as in interrupt context they would access a random thread that happened to be executing at that particular moment;\n\nUsing such functions from interrupt context is a common bug in applications which can be easily introduced and very hard to find, as the symptoms may appear only under certain circumstances.\n\nSelecting this option enables context checks in all functions with such requirements. If any of them is used from interrupt context, FATAL_ERROR() will be called.")
 set("distortos_Checks_01_Stack_pointer_range_during_context_switch"
 		"ON"
 		CACHE
 		"BOOL"
-		"Check stack pointer range during context switch.\n\nSimple range checking of preempted thread's stack pointer can be performed during context switches. It is\nrelatively fast, but cannot detect all stack overflows. The check is done before the software stack frame is\npushed on thread's stack, but the size of this pending stack frame is accounted for - the intent is to detect a\nstack overflow which is about to happen, before it can cause (further) data corrution. FATAL_ERROR() will be\ncalled if the stack pointer is outside valid range.")
+		"Check stack pointer range during context switch.\n\nSimple range checking of preempted thread's stack pointer can be performed during context switches. It is relatively fast, but cannot detect all stack overflows. The check is done before the software stack frame is pushed on thread's stack, but the size of this pending stack frame is accounted for - the intent is to detect a stack overflow which is about to happen, before it can cause (further) data corrution. FATAL_ERROR() will be called if the stack pointer is outside valid range.")
 set("distortos_Checks_02_Stack_pointer_range_during_system_tick"
 		"ON"
 		CACHE
 		"BOOL"
-		"Check stack pointer range during system tick.\n\nSimilar to \"distortos_Checks_01_Stack_pointer_range_during_context_switch\", but executed during every system\ntick.")
+		"Check stack pointer range during system tick.\n\nSimilar to \"distortos_Checks_01_Stack_pointer_range_during_context_switch\", but executed during every system tick.")
 set("distortos_Checks_03_Stack_guard_contents_during_context_switch"
 		"ON"
 		CACHE
 		"BOOL"
-		"Check stack guard contents during context switch.\n\nSelecting this option extends stacks for all threads (including main() thread) with a \"stack guard\" at the\noverflow end. This \"stack guard\" - just as the whole stack - is filled with a sentinel value 0xed419f25 during\nthread initialization. The contents of \"stack guard\" of preempted thread are checked during each context\nswitch and if any byte has changed, FATAL_ERROR() will be called.\n\nThis method is slower than simple stack pointer range checking, but is able to detect stack overflows much more\nreliably. It is still sufficiently fast, assuming that the size of \"stack guard\" is reasonable.\n\nBe advised that uninitialized variables on stack which are larger than size of \"stack guard\" can create\n\"holes\" in the stack, thus circumventing this detection mechanism. This especially applies to arrays used as\nbuffers.")
+		"Check stack guard contents during context switch.\n\nSelecting this option extends stacks for all threads (including main() thread) with a \"stack guard\" at the overflow end. This \"stack guard\" - just as the whole stack - is filled with a sentinel value 0xed419f25 during thread initialization. The contents of \"stack guard\" of preempted thread are checked during each context switch and if any byte has changed, FATAL_ERROR() will be called.\n\nThis method is slower than simple stack pointer range checking, but is able to detect stack overflows much more reliably. It is still sufficiently fast, assuming that the size of \"stack guard\" is reasonable.\n\nBe advised that uninitialized variables on stack which are larger than size of \"stack guard\" can create \"holes\" in the stack, thus circumventing this detection mechanism. This especially applies to arrays used as buffers.")
 set("distortos_Checks_04_Stack_guard_contents_during_system_tick"
 		"ON"
 		CACHE
 		"BOOL"
-		"Check stack guard contents during system tick.\n\nSimilar to \"distortos_Checks_03_Stack_guard_contents_during_context_switch\", but executed during every system\ntick.")
+		"Check stack guard contents during system tick.\n\nSimilar to \"distortos_Checks_03_Stack_guard_contents_during_context_switch\", but executed during every system tick.")
 set("distortos_Checks_05_Stack_guard_size"
 		"32"
 		CACHE
@@ -231,7 +231,7 @@ set("distortos_Clocks_00_Standard_configuration_of_clocks"
 		"ON"
 		CACHE
 		"BOOL"
-		"Enable standard configuration of clocks.\n\nThis will set values selected below and additionally configure appropriate FLASH latency before switching system\nclock to selected source.\n\nIf disabled, no clock configuration will be done during chip initialization. The values entered below\n(frequencies, dividers, ...) will only be used to determine chip clocks. The user must configure the chip\nmanually to match these settings.")
+		"Enable standard configuration of clocks.\n\nThis will set values selected below and additionally configure appropriate FLASH latency before switching system clock to selected source.\n\nIf disabled, no clock configuration will be done during chip initialization. The values entered below (frequencies, dividers, ...) will only be used to determine chip clocks. The user must configure the chip manually to match these settings.")
 set("distortos_Clocks_08_PLL"
 		"ON"
 		CACHE
@@ -246,7 +246,7 @@ set("distortos_Clocks_12_PLLMUL"
 		"16"
 		CACHE
 		"STRING"
-		"PLLMUL value for main PLL.\n\nIt is used to multiply main PLL input frequency (PLLin). Resulting PLL output frequency (PLLout) must be\nin the range:\n- [16 MHz; 24 MHz] for STM32F100 chips,\n- [16 MHz; 36 MHz] for STM32F101 chips,\n- [16 MHz; 48 MHz] for STM32F102 chips,\n- [18 MHz; 72 MHz] for STM32F105 and STM32F107 chips,\n- [16 MHz; 72 MHz] for other chips.\n\nPLLout = PLLin * PLLMUL")
+		"PLLMUL value for main PLL.\n\nIt is used to multiply main PLL input frequency (PLLin). Resulting PLL output frequency (PLLout) must be in the range:\n- [16 MHz; 24 MHz] for STM32F100 chips,\n- [16 MHz; 36 MHz] for STM32F101 chips,\n- [16 MHz; 48 MHz] for STM32F102 chips,\n- [18 MHz; 72 MHz] for STM32F105 and STM32F107 chips,\n- [16 MHz; 72 MHz] for other chips.\n\nPLLout = PLLin * PLLMUL")
 set("distortos_Clocks_13_System_clock_source"
 		"PLL"
 		CACHE
@@ -401,7 +401,7 @@ set("distortos_Scheduler_03_Support_for_thread_detachment"
 		"ON"
 		CACHE
 		"BOOL"
-		"Enable support for thread detachment.\n\nEnable functions that \"detach\" dynamic threads:\n- ThisThread::detach();\n- Thread::detach();\n\nWhen this options is not selected, these functions are not available at all.\n\nWhen dynamic and detached thread terminates, it will be added to the global list of threads pending for deferred\ndeletion. The thread will actually be deleted in idle thread, but only when two mutexes are successfully locked:\n- mutex that protects dynamic memory allocator;\n- mutex that synchronizes access to the list of threads pending for deferred deletion;")
+		"Enable support for thread detachment.\n\nEnable functions that \"detach\" dynamic threads:\n- ThisThread::detach();\n- Thread::detach();\n\nWhen this options is not selected, these functions are not available at all.\n\nWhen dynamic and detached thread terminates, it will be added to the global list of threads pending for deferred deletion. The thread will actually be deleted in idle thread, but only when two mutexes are successfully locked:\n- mutex that protects dynamic memory allocator;\n- mutex that synchronizes access to the list of threads pending for deferred deletion;")
 set("distortos_Scheduler_04_Main_thread_stack_size"
 		"4096"
 		CACHE
@@ -421,12 +421,12 @@ set("distortos_Scheduler_07_Queued_signals_for_main_thread"
 		"8"
 		CACHE
 		"STRING"
-		"Maximal number of queued signals for main thread. 0 disables queuing of signals for main thread.\n\nAllowed range: [-2147483648; 2147483647]")
+		"Maximal number of queued signals for main thread. 0 disables queuing of signals for main thread.\n\nAllowed range: [0; 2147483647]")
 set("distortos_Scheduler_08_SignalAction_objects_for_main_thread"
 		"8"
 		CACHE
 		"STRING"
-		"Maximal number of different SignalAction objects for main thread. 0 disables catching of signals for main thread.\n\nAllowed range: [-2147483648; 32]")
+		"Maximal number of different SignalAction objects for main thread. 0 disables catching of signals for main thread.\n\nAllowed range: [0; 32]")
 set("distortos_buttons"
 		"ON"
 		CACHE
