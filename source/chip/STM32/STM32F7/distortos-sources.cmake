@@ -407,6 +407,62 @@ distortosSetConfiguration(STRING
 		OUTPUT_NAME CONFIG_CHIP_STM32F7_RCC_PPRE2
 		OUTPUT_TYPES INTEGER)
 
+if(distortos_Clocks_00_Standard_configuration_of_clocks)
+
+	if(distortos_Clocks_04_PLLs AND (distortos_Clocks_07_PLL OR distortos_Clocks_17_PLLSAI))
+		set(sdmmcClockSourcePll48clk PLL48CLK)
+	endif(distortos_Clocks_04_PLLs AND (distortos_Clocks_07_PLL OR distortos_Clocks_17_PLLSAI))
+
+	distortosSetConfiguration(STRING
+			distortos_Clocks_27_SDMMC1_clock_source
+			${sdmmcClockSourcePll48clk}
+			SYSCLK
+			HELP "Select SDMMC1 adapter clock source."
+			OUTPUT_NAME CONFIG_CHIP_STM32F7_RCC_SDMMC1CLK
+			OUTPUT_TYPES BOOLEAN)
+
+	if(CONFIG_CHIP MATCHES "STM32F7[2367]")
+
+		distortosSetConfiguration(STRING
+				distortos_Clocks_28_SDMMC2_clock_source
+				${sdmmcClockSourcePll48clk}
+				SYSCLK
+				HELP "Select SDMMC2 adapter clock source."
+				OUTPUT_NAME CONFIG_CHIP_STM32F7_RCC_SDMMC2CLK
+				OUTPUT_TYPES BOOLEAN)
+
+	endif(CONFIG_CHIP MATCHES "STM32F7[2367]")
+
+else(distortos_Clocks_00_Standard_configuration_of_clocks)
+
+	distortosSetConfiguration(INTEGER
+			distortos_Clocks_03_SDMMC1CLK_frequency
+			0
+			MIN 0
+			MAX 48000000
+			HELP "Frequency of SDMMC1CLK, Hz.
+
+			RCC must be configured by user to achieve that frequency. SDMMC1CLK frequency must not exceed 48 MHz. Set to
+			0 if SDMMC1CLK is not available."
+			OUTPUT_NAME CONFIG_CHIP_STM32F7_RCC_SDMMC1CLK_FREQUENCY)
+
+	if(CONFIG_CHIP MATCHES "STM32F7[2367]")
+
+		distortosSetConfiguration(INTEGER
+				distortos_Clocks_04_SDMMC2CLK_frequency
+				0
+				MIN 0
+				MAX 48000000
+				HELP "Frequency of SDMMC2CLK, Hz.
+
+				RCC must be configured by user to achieve that frequency. SDMMC2CLK frequency must not exceed 48 MHz.
+				Set to 0 if SDMMC2CLK is not available."
+				OUTPUT_NAME CONFIG_CHIP_STM32F7_RCC_SDMMC2CLK_FREQUENCY)
+
+	endif(CONFIG_CHIP MATCHES "STM32F7[2367]")
+
+endif(distortos_Clocks_00_Standard_configuration_of_clocks)
+
 distortosSetConfiguration(BOOLEAN
 		distortos_Memory_00_Flash_prefetch
 		ON
