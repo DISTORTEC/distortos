@@ -5,7 +5,7 @@
  * - 20.0 KiB of SRAM at 0x20000000;
  * - 6.0 KiB of EEPROM at 0x8080000;
  *
- * \author Copyright (C) 2014-2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -114,7 +114,7 @@ PROVIDE(__process_stack_start = (__process_stack_end - __process_stack_size) / 8
 
 SECTIONS
 {
-	.text.vectorTable :
+	.text.vectorTable : ALIGN_WITH_INPUT
 	{
 		PROVIDE(__text_vectorTable_start = .);
 
@@ -123,7 +123,7 @@ SECTIONS
 		PROVIDE(__text_vectorTable_end = .);
 	} > textVectorTableVmaRegion AT > textVectorTableLmaRegion
 
-	.text :
+	.text : ALIGN_WITH_INPUT
 	{
 		PROVIDE(__text_start = .);
 

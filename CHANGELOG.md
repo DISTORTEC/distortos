@@ -120,6 +120,9 @@ deprecated and are scheduled to be removed after v0.7.0.
 `const std::array<const T, N>&`.
 - Fixed `generateBoard.py` for *ruamel.yaml* 0.15.52 or later.
 - Fixed frequent overrun errors appearing in *STM32's* *SPIv1* and *SPIv2* drivers.
+- Fix critical linker script bug which affects *STM32F7* chips. If program contained and object with big alignment in
+`.text` section, *LMA* and *VMA* were aligned differently. This resulted in undefined behaviour right from the start,
+usually causing a *Hard Fault* exception within several cycles.
 
 ### Removed
 
