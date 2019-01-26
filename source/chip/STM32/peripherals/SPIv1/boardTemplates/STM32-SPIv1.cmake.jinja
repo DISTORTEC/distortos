@@ -10,7 +10,7 @@
 #
 {% for key, spi in dictionary['SPIs'].items() if spi is mapping and 'ST,STM32-SPI-v1' in spi['compatible'] %}
 {% set dmaVersion =
-		spi['RX-DMA'][0]['controller']['compatible'][0].rpartition(',')[2]  | sanitize('[^0-9A-Za-z]') | upper %}
+		spi['RX-DMA'][0]['controller']['compatible'][0].rpartition(',')[2] | sanitize('[^0-9A-Za-z]') | upper %}
 
 distortosSetConfiguration(BOOLEAN
 		distortos_Peripherals_{{ key }}
