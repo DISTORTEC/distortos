@@ -160,41 +160,6 @@ void DmaChannel::interruptHandler()
 | private functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-int DmaChannel::configureTransfer(const uintptr_t memoryAddress, const size_t memoryDataSize,
-		const bool memoryIncrement, const uintptr_t peripheralAddress, const size_t peripheralDataSize,
-		const bool peripheralIncrement, const size_t transactions, const bool memoryToPeripheral,
-		const Priority priority) const
-{
-	if ((memoryDataSize != 1 && memoryDataSize != 2 && memoryDataSize != 4) ||
-			(peripheralDataSize != 1 && peripheralDataSize != 2 && peripheralDataSize != 4))
-		return EINVAL;
-
-	if (memoryAddress % memoryDataSize != 0 || peripheralAddress % peripheralDataSize != 0)
-		return EINVAL;
-
-	if (transactions == 0)
-		return EINVAL;
-
-	if (transactions > UINT16_MAX)	/// \todo add support for very high number of transactions
-		return ENOTSUP;
-
-	if ((dmaChannelPeripheral_.readCcr() & DMA_CCR_EN) != 0)
-		return EBUSY;
-
-	dmaChannelPeripheral_.writeCcr(static_cast<uint32_t>(priority) << DMA_CCR_PL_Pos |
-			memoryDataSize / 2 << DMA_CCR_MSIZE_Pos |
-			peripheralDataSize / 2 << DMA_CCR_PSIZE_Pos |
-			memoryIncrement << DMA_CCR_MINC_Pos |
-			peripheralIncrement << DMA_CCR_PINC_Pos |
-			memoryToPeripheral << DMA_CCR_DIR_Pos |
-			DMA_CCR_TEIE |
-			DMA_CCR_TCIE);
-	dmaChannelPeripheral_.writeCndtr(transactions);
-	dmaChannelPeripheral_.writeCpar(peripheralAddress);
-	dmaChannelPeripheral_.writeCmar(memoryAddress);
-	return {};
-}
-
 int DmaChannel::configureTransfer(const uintptr_t memoryAddress, const uintptr_t peripheralAddress,
 		const size_t transactions, const Flags flags) const
 {

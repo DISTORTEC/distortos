@@ -109,19 +109,6 @@ public:
 	/// import DmaChannelFlags
 	using Flags = DmaChannelFlags;
 
-	/// channel priority level
-	enum class Priority : uint8_t
-	{
-		/// low priority
-		low,
-		/// medium priority
-		medium,
-		/// high priority
-		high,
-		/// very high priority
-		veryHigh
-	};
-
 	/// UniqueHandle class can be used to access DmaChannel's functionality
 	class UniqueHandle
 	{
@@ -144,38 +131,6 @@ public:
 		~UniqueHandle()
 		{
 			release();
-		}
-
-		/**
-		 * \brief Configures parameters of transfer.
-		 *
-		 * \param [in] memoryAddress is the memory address, must be divisible by \a memoryDataSize
-		 * \param [in] memoryDataSize is the memory data size, {1, 2, 4}
-		 * \param [in] memoryIncrement selects whether memory address is incremented after each transaction (true) or not
-		 * (false)
-		 * \param [in] peripheralAddress is the peripheral address, must be divisible by \a peripheralDataSize
-		 * \param [in] peripheralDataSize is the peripheral data size, {1, 2, 4}
-		 * \param [in] peripheralIncrement selects whether peripheral address is incremented after each transaction (true)
-		 * or not (false)
-		 * \param [in] transactions is the number of transactions
-		 * \param [in] memoryToPeripheral selects whether the transfer is from memory to peripheral (true) or from
-		 * peripheral to memory (false)
-		 * \param [in] priority is the priority of transfer
-		 *
-		 * \return 0 on success, error code otherwise:
-		 * - EBADF - no low-level DMA channel driver is associated with this handle;
-		 * - error codes returned by DmaChannel::configureTransfer();
-		 */
-
-		int configureTransfer(const uintptr_t memoryAddress, const size_t memoryDataSize, const bool memoryIncrement,
-				const uintptr_t peripheralAddress, const size_t peripheralDataSize, const bool peripheralIncrement,
-				const size_t transactions, const bool memoryToPeripheral, const Priority priority) const
-		{
-			if (channel_ == nullptr)
-				return EBADF;
-
-			return channel_->configureTransfer(memoryAddress, memoryDataSize, memoryIncrement, peripheralAddress,
-					peripheralDataSize, peripheralIncrement, transactions, memoryToPeripheral, priority);
 		}
 
 		/**
@@ -324,33 +279,6 @@ public:
 	void interruptHandler();
 
 private:
-
-	/**
-	 * \brief Configures parameters of transfer.
-	 *
-	 * \param [in] memoryAddress is the memory address, must be divisible by \a memoryDataSize
-	 * \param [in] memoryDataSize is the memory data size, {1, 2, 4}
-	 * \param [in] memoryIncrement selects whether memory address is incremented after each transaction (true) or not
-	 * (false)
-	 * \param [in] peripheralAddress is the peripheral address, must be divisible by \a peripheralDataSize
-	 * \param [in] peripheralDataSize is the peripheral data size, {1, 2, 4}
-	 * \param [in] peripheralIncrement selects whether peripheral address is incremented after each transaction (true)
-	 * or not (false)
-	 * \param [in] transactions is the number of transactions, [1; 65535]
-	 * \param [in] memoryToPeripheral selects whether the transfer is from memory to peripheral (true) or from
-	 * peripheral to memory (false)
-	 * \param [in] priority is the priority of transfer
-	 *
-	 * \return 0 on success, error code otherwise:
-	 * - EBUSY - transfer is in progress;
-	 * - EINVAL - \a memoryAddress and/or \a memoryDataSize and/or \a peripheralAddress and/or \a peripheralDataSize
-	 * and/or \a transactions are invalid;
-	 * - ENOTSUP - more than 65535 \a transactions are not supported;
-	 */
-
-	int configureTransfer(uintptr_t memoryAddress, size_t memoryDataSize, bool memoryIncrement,
-			uintptr_t peripheralAddress, size_t peripheralDataSize, bool peripheralIncrement, size_t transactions,
-			bool memoryToPeripheral, Priority priority) const;
 
 	/**
 	 * \brief Configures parameters of transfer.
