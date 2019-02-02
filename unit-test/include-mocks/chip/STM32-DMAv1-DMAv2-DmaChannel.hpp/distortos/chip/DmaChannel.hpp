@@ -16,6 +16,55 @@
 
 #include "distortos/chip/DmaChannelFunctor.hpp"
 
+#include "estd/EnumClassFlags.hpp"
+
+namespace distortos
+{
+
+namespace chip
+{
+
+/// DMA transfer configuration flags
+enum class DmaChannelFlags : uint16_t
+{
+	peripheralToMemory = 0 << 0,
+	memoryToPeripheral = 1 << 0,
+
+	peripheralFixed = 0 << 1,
+	peripheralIncrement = 1 << 1,
+
+	memoryFixed = 0 << 2,
+	memoryIncrement = 1 << 2,
+
+	peripheralDataSize1 = 0 << 3,
+	peripheralDataSize2 = 1 << 3,
+	peripheralDataSize4 = 2 << 3,
+
+	memoryDataSize1 = 0 << 5,
+	memoryDataSize2 = 1 << 5,
+	memoryDataSize4 = 2 << 5,
+
+	lowPriority = 0 << 7,
+	mediumPriority = 1 << 7,
+	highPriority = 2 << 7,
+	veryHighPriority = 3 << 7,
+
+	dataSize1 = peripheralDataSize1 | memoryDataSize1,
+	dataSize2 = peripheralDataSize2 | memoryDataSize2,
+	dataSize4 = peripheralDataSize4 | memoryDataSize4,
+};
+
+}	// namespace chip
+
+}	// namespace distortos
+
+/// \brief Enable bitwise operators for distortos::chip::DmaChannelFlags
+template<>
+struct estd::isEnumClassFlags<distortos::chip::DmaChannelFlags> : std::true_type
+{
+
+};
+
 namespace distortos
 {
 
@@ -26,13 +75,7 @@ class DmaChannel
 {
 public:
 
-	enum class Priority : uint8_t
-	{
-		low,
-		medium,
-		high,
-		veryHigh
-	};
+	using Flags = DmaChannelFlags;
 
 	class UniqueHandle
 	{
@@ -49,15 +92,13 @@ public:
 			release();
 		}
 
-		int configureTransfer(const uintptr_t memoryAddress, const size_t memoryDataSize, const bool memoryIncrement,
-				const uintptr_t peripheralAddress, const size_t peripheralDataSize, const bool peripheralIncrement,
-				const size_t transactions, const bool memoryToPeripheral, const Priority priority) const
+		int configureTransfer(const uintptr_t memoryAddress, const uintptr_t peripheralAddress,
+				const size_t transactions, const Flags flags) const
 		{
 			if (channel_ == nullptr)
 				return EBADF;
 
-			return channel_->configureTransfer(memoryAddress, memoryDataSize, memoryIncrement, peripheralAddress,
-					peripheralDataSize, peripheralIncrement, transactions, memoryToPeripheral, priority);
+			return channel_->configureTransfer(memoryAddress, peripheralAddress, transactions, flags);
 		}
 
 		std::pair<int, size_t> getTransactionsLeft() const
@@ -116,7 +157,7 @@ public:
 		DmaChannel* channel_;
 	};
 
-	MAKE_CONST_MOCK9(configureTransfer, int(uintptr_t, size_t, bool, uintptr_t, size_t, bool, size_t, bool, Priority));
+	MAKE_CONST_MOCK4(configureTransfer, int(uintptr_t, uintptr_t, size_t, Flags));
 	MAKE_CONST_MOCK0(getTransactionsLeft, size_t());
 	MAKE_MOCK0(release, void());
 	MAKE_MOCK2(reserve, int(uint8_t, DmaChannelFunctor&));

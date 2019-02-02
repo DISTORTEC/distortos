@@ -4,7 +4,7 @@
  *
  * This test checks whether STM32 DMAv2's DmaChannel performs all h/w operations properly and in correct order.
  *
- * \author Copyright (C) 2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2018-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -19,6 +19,7 @@
 #include "distortos/InterruptMaskingLock.hpp"
 
 using trompeloeil::_;
+using Flags = distortos::chip::DmaChannel::Flags;
 
 namespace
 {
@@ -86,7 +87,7 @@ TEST_CASE("Testing reserve() & release() interactions", "[reserve/release]")
 	SECTION("Configuring released driver should fail with EBADF")
 	{
 		distortos::chip::DmaChannel::UniqueHandle handle;
-		REQUIRE(handle.configureTransfer({}, {}, {}, {}, {}, {}, {}, {}, {}) == EBADF);
+		REQUIRE(handle.configureTransfer({}, {}, {}, {}) == EBADF);
 	}
 	SECTION("Starting a transfer with released driver should fail with EBADF")
 	{
@@ -184,66 +185,92 @@ TEST_CASE("Testing configureTransfer()", "[configureTransfer]")
 		REQUIRE(handle.reserve(channel, request1, functorMock) == 0);
 	}
 
-	for (uint8_t dataSize {}; dataSize <= 8; ++dataSize)
+	SECTION("Trying to use invalid data size should fail with EINVAL")
 	{
-		if (dataSize == 1 || dataSize == 2 || dataSize == 4)
-			continue;
-
-		DYNAMIC_SECTION("Trying to use data size " << static_cast<int>(dataSize) << " should fail with EINVAL")
-		{
-			REQUIRE(handle.configureTransfer({}, dataSize, {}, {}, 1, {}, 1, {}, {}) == EINVAL);
-			REQUIRE(handle.configureTransfer({}, 1, {}, {}, dataSize, {}, 1, {}, {}) == EINVAL);
-			REQUIRE(handle.configureTransfer({}, dataSize, {}, {}, dataSize, {}, 1, {}, {}) == EINVAL);
-		}
+		constexpr auto memoryDataSize = Flags::memoryDataSize2 | Flags::memoryDataSize4;
+		REQUIRE(handle.configureTransfer({}, {}, 1, memoryDataSize) == EINVAL);
+		constexpr auto peripheralDataSize = Flags::peripheralDataSize2 | Flags::peripheralDataSize4;
+		REQUIRE(handle.configureTransfer({}, {}, 1, peripheralDataSize) == EINVAL);
+		constexpr auto dataSize = Flags::dataSize2 | Flags::dataSize4;
+		REQUIRE(handle.configureTransfer({}, {}, 1, dataSize) == EINVAL);
 	}
 
-	const uint8_t dataSizes[]
 	{
-			1,
-			2,
-			4,
-	};
-	for (const auto dataSize : dataSizes)
-		for (uintptr_t address {1}; address < dataSize; ++address)
+		const uint8_t dataSizes[]
 		{
-			DYNAMIC_SECTION("Trying to use address " << static_cast<int>(address) << " when data size is " <<
-					static_cast<int>(dataSize) << " should fail with EINVAL")
+				2,
+				4,
+		};
+		for (const auto dataSize : dataSizes)
+			for (uintptr_t address {1}; address < dataSize; ++address)
 			{
-				REQUIRE(handle.configureTransfer(address, dataSize, {}, {}, 1, {}, 1, {}, {}) == EINVAL);
-				REQUIRE(handle.configureTransfer({}, 1, {}, address, dataSize, {}, 1, {}, {}) == EINVAL);
+				DYNAMIC_SECTION("Trying to use address " << static_cast<int>(address) << " when data size is " <<
+						static_cast<int>(dataSize) << " should fail with EINVAL")
+				{
+					const auto memoryDataSize = dataSize == 2 ? Flags::memoryDataSize2 : Flags::memoryDataSize4;
+					REQUIRE(handle.configureTransfer(address, {}, 1, memoryDataSize) == EINVAL);
+					const auto peripheralDataSize =
+							dataSize == 2 ? Flags::peripheralDataSize2 : Flags::peripheralDataSize4;
+					REQUIRE(handle.configureTransfer({}, address, 1, peripheralDataSize) == EINVAL);
+					const auto dataSizeFlags =
+							dataSize == 2 ? Flags::dataSize2 : Flags::dataSize4;
+					REQUIRE(handle.configureTransfer(address, address, 1, dataSizeFlags) == EINVAL);
+				}
 			}
-		}
+	}
 
 	SECTION("Trying to use 0 transactions should fail with EINVAL")
 	{
-		REQUIRE(handle.configureTransfer({}, 1, {}, {}, 1, {}, 0, {}, {}) == EINVAL);
+		REQUIRE(handle.configureTransfer({}, {}, 0, {}) == EINVAL);
 	}
 
 	SECTION("Trying to configure the driver when transfer is ongoing should fail with EBUSY")
 	{
 		REQUIRE_CALL(channelPeripheralMock, readCr()).IN_SEQUENCE(sequence).RETURN(DMA_SxCR_EN);
-		REQUIRE(handle.configureTransfer({}, 1, {}, {}, 1, {}, 1, {}, {}) == EBUSY);
+		REQUIRE(handle.configureTransfer({}, {}, 1, {}) == EBUSY);
 	}
 
 	SECTION("Trying to use valid configuration should succeed")
 	{
-		const bool falseTrue[]
+		const Flags directions[]
 		{
-				false,
-				true
+				Flags::peripheralToMemory,
+				Flags::memoryToPeripheral,
 		};
-		const distortos::chip::DmaChannel::Priority priorities[]
+		const Flags peripheralIncrements[]
 		{
-				distortos::chip::DmaChannel::Priority::low,
-				distortos::chip::DmaChannel::Priority::medium,
-				distortos::chip::DmaChannel::Priority::high,
-				distortos::chip::DmaChannel::Priority::veryHigh
+				Flags::peripheralFixed,
+				Flags::peripheralIncrement
 		};
-		for (const auto memoryDataSize : dataSizes)
-			for (const auto memoryIncrement : falseTrue)
-				for (const auto peripheralDataSize : dataSizes)
-					for (const auto peripheralIncrement : falseTrue)
-						for (const auto memoryToPeripheral : falseTrue)
+		const Flags memoryIncrements[]
+		{
+				Flags::memoryFixed,
+				Flags::memoryIncrement
+		};
+		const Flags peripheralDataSizes[]
+		{
+				Flags::peripheralDataSize1,
+				Flags::peripheralDataSize2,
+				Flags::peripheralDataSize4
+		};
+		const Flags memoryDataSizes[]
+		{
+				Flags::memoryDataSize1,
+				Flags::memoryDataSize2,
+				Flags::memoryDataSize4
+		};
+		const Flags priorities[]
+		{
+				Flags::lowPriority,
+				Flags::mediumPriority,
+				Flags::highPriority,
+				Flags::veryHighPriority
+		};
+		for (const auto direction : directions)
+			for (const auto peripheralIncrement : peripheralIncrements)
+				for (const auto memoryIncrement : memoryIncrements)
+					for (const auto peripheralDataSize : peripheralDataSizes)
+						for (const auto memoryDataSize : memoryDataSizes)
 							for (const auto priority : priorities)
 							{
 								constexpr uintptr_t memoryAddress {0xdf5d76a8};
@@ -252,12 +279,12 @@ TEST_CASE("Testing configureTransfer()", "[configureTransfer]")
 
 								REQUIRE_CALL(channelPeripheralMock, readCr()).IN_SEQUENCE(sequence).RETURN(0);
 								const auto cr = request1 << DMA_SxCR_CHSEL_Pos |
-										static_cast<uint32_t>(priority) << DMA_SxCR_PL_Pos |
-										memoryDataSize / 2 << DMA_SxCR_MSIZE_Pos |
-										peripheralDataSize / 2 << DMA_SxCR_PSIZE_Pos |
-										memoryIncrement << DMA_SxCR_MINC_Pos |
-										peripheralIncrement << DMA_SxCR_PINC_Pos |
-										memoryToPeripheral << DMA_SxCR_DIR_Pos |
+										static_cast<uint32_t>(direction) |
+										static_cast<uint32_t>(peripheralIncrement) |
+										static_cast<uint32_t>(memoryIncrement) |
+										static_cast<uint32_t>(peripheralDataSize) |
+										static_cast<uint32_t>(memoryDataSize) |
+										static_cast<uint32_t>(priority) |
 										DMA_SxCR_TCIE |
 										DMA_SxCR_TEIE;
 								REQUIRE_CALL(channelPeripheralMock, writeCr(cr)).IN_SEQUENCE(sequence);
@@ -266,9 +293,9 @@ TEST_CASE("Testing configureTransfer()", "[configureTransfer]")
 								REQUIRE_CALL(channelPeripheralMock, writeM0ar(memoryAddress)).IN_SEQUENCE(sequence);
 								const auto fcr = DMA_SxFCR_DMDIS | DMA_SxFCR_FTH;
 								REQUIRE_CALL(channelPeripheralMock, writeFcr(fcr)).IN_SEQUENCE(sequence);
-								REQUIRE(handle.configureTransfer(memoryAddress, memoryDataSize, memoryIncrement,
-										peripheralAddress, peripheralDataSize, peripheralIncrement, transactions,
-										memoryToPeripheral, priority) == 0);
+								REQUIRE(handle.configureTransfer(memoryAddress, peripheralAddress, transactions,
+										direction | peripheralIncrement | memoryIncrement | peripheralDataSize |
+										memoryDataSize | priority) == 0);
 							}
 	}
 

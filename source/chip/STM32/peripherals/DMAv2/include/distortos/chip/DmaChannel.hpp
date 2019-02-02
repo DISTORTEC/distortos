@@ -2,7 +2,7 @@
  * \file
  * \brief DmaChannel class header for DMAv2 in STM32
  *
- * \author Copyright (C) 2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2018-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -12,11 +12,79 @@
 #ifndef SOURCE_CHIP_STM32_PERIPHERALS_DMAV2_INCLUDE_DISTORTOS_CHIP_DMACHANNEL_HPP_
 #define SOURCE_CHIP_STM32_PERIPHERALS_DMAV2_INCLUDE_DISTORTOS_CHIP_DMACHANNEL_HPP_
 
+#include "estd/EnumClassFlags.hpp"
+
 #include <utility>
 
 #include <cerrno>
 #include <cstddef>
 #include <cstdint>
+
+namespace distortos
+{
+
+namespace chip
+{
+
+/// DMA transfer configuration flags
+enum class DmaChannelFlags : uint32_t
+{
+	/// transfer from peripheral to memory
+	peripheralToMemory = 0 << 6,
+	/// transfer from memory to peripheral
+	memoryToPeripheral = 1 << 6,
+
+	/// peripheral address is fixed
+	peripheralFixed = 0 << 9,
+	/// peripheral address is incremented after each transaction
+	peripheralIncrement = 1 << 9,
+
+	/// memory address is fixed
+	memoryFixed = 0 << 10,
+	/// memory address is incremented after each transaction
+	memoryIncrement = 1 << 10,
+
+	/// peripheral data size - 1 byte
+	peripheralDataSize1 = 0 << 11,
+	/// peripheral data size - 2 bytes
+	peripheralDataSize2 = 1 << 11,
+	/// peripheral data size - 4 bytes
+	peripheralDataSize4 = 2 << 11,
+
+	/// memory data size - 1 byte
+	memoryDataSize1 = 0 << 13,
+	/// memory data size - 2 bytes
+	memoryDataSize2 = 1 << 13,
+	/// memory data size - 4 bytes
+	memoryDataSize4 = 2 << 13,
+
+	/// low priority
+	lowPriority = 0 << 16,
+	/// medium priority
+	mediumPriority = 1 << 16,
+	/// high priority
+	highPriority = 2 << 16,
+	/// very high priority
+	veryHighPriority = 3 << 16,
+
+	/// memory and peripheral data size - 1 byte
+	dataSize1 = peripheralDataSize1 | memoryDataSize1,
+	/// memory and peripheral data size - 2 bytes
+	dataSize2 = peripheralDataSize2 | memoryDataSize2,
+	/// memory and peripheral data size - 4 bytes
+	dataSize4 = peripheralDataSize4 | memoryDataSize4,
+};
+
+}	// namespace chip
+
+}	// namespace distortos
+
+/// \brief Enable bitwise operators for distortos::chip::DmaChannelFlags
+template<>
+struct estd::isEnumClassFlags<distortos::chip::DmaChannelFlags> : std::true_type
+{
+
+};
 
 namespace distortos
 {
@@ -38,18 +106,8 @@ class DmaChannel
 {
 public:
 
-	/// channel priority level
-	enum class Priority : uint8_t
-	{
-		/// low priority
-		low,
-		/// medium priority
-		medium,
-		/// high priority
-		high,
-		/// very high priority
-		veryHigh
-	};
+	/// import DmaChannelFlags
+	using Flags = DmaChannelFlags;
 
 	/// UniqueHandle class can be used to access DmaChannel's functionality
 	class UniqueHandle
@@ -78,33 +136,23 @@ public:
 		/**
 		 * \brief Configures parameters of transfer.
 		 *
-		 * \param [in] memoryAddress is the memory address, must be divisible by \a memoryDataSize
-		 * \param [in] memoryDataSize is the memory data size, {1, 2, 4}
-		 * \param [in] memoryIncrement selects whether memory address is incremented after each transaction (true) or not
-		 * (false)
-		 * \param [in] peripheralAddress is the peripheral address, must be divisible by \a peripheralDataSize
-		 * \param [in] peripheralDataSize is the peripheral data size, {1, 2, 4}
-		 * \param [in] peripheralIncrement selects whether peripheral address is incremented after each transaction (true)
-		 * or not (false)
+		 * \param [in] memoryAddress is the memory address, must be divisible by configured memory data size
+		 * \param [in] peripheralAddress is the peripheral address, must be divisible by peripheral data size
 		 * \param [in] transactions is the number of transactions
-		 * \param [in] memoryToPeripheral selects whether the transfer is from memory to peripheral (true) or from
-		 * peripheral to memory (false)
-		 * \param [in] priority is the priority of transfer
+		 * \param [in] flags are configuration flags
 		 *
 		 * \return 0 on success, error code otherwise:
 		 * - EBADF - no low-level DMA channel driver is associated with this handle;
 		 * - error codes returned by DmaChannel::configureTransfer();
 		 */
 
-		int configureTransfer(const uintptr_t memoryAddress, const size_t memoryDataSize, const bool memoryIncrement,
-				const uintptr_t peripheralAddress, const size_t peripheralDataSize, const bool peripheralIncrement,
-				const size_t transactions, const bool memoryToPeripheral, const Priority priority) const
+		int configureTransfer(const uintptr_t memoryAddress, const uintptr_t peripheralAddress,
+				const size_t transactions, const Flags flags) const
 		{
 			if (channel_ == nullptr)
 				return EBADF;
 
-			return channel_->configureTransfer(memoryAddress, memoryDataSize, memoryIncrement, peripheralAddress,
-					peripheralDataSize, peripheralIncrement, transactions, memoryToPeripheral, priority);
+			return channel_->configureTransfer(memoryAddress, peripheralAddress, transactions, flags);
 		}
 
 		/**
@@ -236,29 +284,18 @@ private:
 	/**
 	 * \brief Configures parameters of transfer.
 	 *
-	 * \param [in] memoryAddress is the memory address, must be divisible by \a memoryDataSize
-	 * \param [in] memoryDataSize is the memory data size, {1, 2, 4}
-	 * \param [in] memoryIncrement selects whether memory address is incremented after each transaction (true) or not
-	 * (false)
-	 * \param [in] peripheralAddress is the peripheral address, must be divisible by \a peripheralDataSize
-	 * \param [in] peripheralDataSize is the peripheral data size, {1, 2, 4}
-	 * \param [in] peripheralIncrement selects whether peripheral address is incremented after each transaction (true)
-	 * or not (false)
-	 * \param [in] transactions is the number of transactions, [1; 65535]
-	 * \param [in] memoryToPeripheral selects whether the transfer is from memory to peripheral (true) or from
-	 * peripheral to memory (false)
-	 * \param [in] priority is the priority of transfer
+	 * \param [in] memoryAddress is the memory address, must be divisible by configured memory data size
+	 * \param [in] peripheralAddress is the peripheral address, must be divisible by peripheral data size
+	 * \param [in] transactions is the number of transactions
+	 * \param [in] flags are configuration flags
 	 *
 	 * \return 0 on success, error code otherwise:
 	 * - EBUSY - transfer is in progress;
-	 * - EINVAL - \a memoryAddress and/or \a memoryDataSize and/or \a peripheralAddress and/or \a peripheralDataSize
-	 * and/or \a transactions are invalid;
+	 * - EINVAL - \a memoryAddress and/or \a peripheralAddress and/or \a transactions and/or \a flags are invalid;
 	 * - ENOTSUP - more than 65535 \a transactions are not supported;
 	 */
 
-	int configureTransfer(uintptr_t memoryAddress, size_t memoryDataSize, bool memoryIncrement,
-			uintptr_t peripheralAddress, size_t peripheralDataSize, bool peripheralIncrement, size_t transactions,
-			bool memoryToPeripheral, Priority priority) const;
+	int configureTransfer(uintptr_t memoryAddress, uintptr_t peripheralAddress, size_t transactions, Flags flags) const;
 
 	/**
 	 * \return number of transactions left
