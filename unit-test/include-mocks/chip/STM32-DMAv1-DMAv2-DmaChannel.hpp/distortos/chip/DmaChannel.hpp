@@ -77,14 +77,6 @@ public:
 
 	using Flags = DmaChannelFlags;
 
-	enum class Priority : uint8_t
-	{
-		low,
-		medium,
-		high,
-		veryHigh
-	};
-
 	class UniqueHandle
 	{
 	public:
@@ -98,17 +90,6 @@ public:
 		~UniqueHandle()
 		{
 			release();
-		}
-
-		int configureTransfer(const uintptr_t memoryAddress, const size_t memoryDataSize, const bool memoryIncrement,
-				const uintptr_t peripheralAddress, const size_t peripheralDataSize, const bool peripheralIncrement,
-				const size_t transactions, const bool memoryToPeripheral, const Priority priority) const
-		{
-			if (channel_ == nullptr)
-				return EBADF;
-
-			return channel_->configureTransfer(memoryAddress, memoryDataSize, memoryIncrement, peripheralAddress,
-					peripheralDataSize, peripheralIncrement, transactions, memoryToPeripheral, priority);
 		}
 
 		int configureTransfer(const uintptr_t memoryAddress, const uintptr_t peripheralAddress,
@@ -176,7 +157,6 @@ public:
 		DmaChannel* channel_;
 	};
 
-	MAKE_CONST_MOCK9(configureTransfer, int(uintptr_t, size_t, bool, uintptr_t, size_t, bool, size_t, bool, Priority));
 	MAKE_CONST_MOCK4(configureTransfer, int(uintptr_t, uintptr_t, size_t, Flags));
 	MAKE_CONST_MOCK0(getTransactionsLeft, size_t());
 	MAKE_MOCK0(release, void());
