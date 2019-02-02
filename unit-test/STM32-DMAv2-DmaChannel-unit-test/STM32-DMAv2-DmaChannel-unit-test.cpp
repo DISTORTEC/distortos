@@ -232,71 +232,53 @@ TEST_CASE("Testing configureTransfer()", "[configureTransfer]")
 
 	SECTION("Trying to use valid configuration should succeed")
 	{
-		const Flags directions[]
+		const Flags flagsArray[]
 		{
-				Flags::peripheralToMemory,
-				Flags::memoryToPeripheral,
-		};
-		const Flags peripheralIncrements[]
-		{
-				Flags::peripheralFixed,
-				Flags::peripheralIncrement
-		};
-		const Flags memoryIncrements[]
-		{
-				Flags::memoryFixed,
-				Flags::memoryIncrement
+			Flags::dmaFlowController | Flags::peripheralToMemory | Flags::peripheralFixed | Flags::memoryFixed |
+					Flags::lowPriority,
+			Flags::peripheralFlowController | Flags::memoryToPeripheral | Flags::peripheralIncrement |
+					Flags::memoryIncrement | Flags::mediumPriority,
+			Flags::dmaFlowController | Flags::peripheralToMemory | Flags::peripheralFixed | Flags::memoryFixed |
+					Flags::highPriority,
+			Flags::peripheralFlowController | Flags::memoryToPeripheral | Flags::peripheralIncrement |
+					Flags::memoryIncrement | Flags::veryHighPriority,
 		};
 		const Flags peripheralDataSizes[]
 		{
 				Flags::peripheralDataSize1,
 				Flags::peripheralDataSize2,
-				Flags::peripheralDataSize4
+				Flags::peripheralDataSize4,
 		};
 		const Flags memoryDataSizes[]
 		{
 				Flags::memoryDataSize1,
 				Flags::memoryDataSize2,
-				Flags::memoryDataSize4
+				Flags::memoryDataSize4,
 		};
-		const Flags priorities[]
-		{
-				Flags::lowPriority,
-				Flags::mediumPriority,
-				Flags::highPriority,
-				Flags::veryHighPriority
-		};
-		for (const auto direction : directions)
-			for (const auto peripheralIncrement : peripheralIncrements)
-				for (const auto memoryIncrement : memoryIncrements)
-					for (const auto peripheralDataSize : peripheralDataSizes)
-						for (const auto memoryDataSize : memoryDataSizes)
-							for (const auto priority : priorities)
-							{
-								constexpr uintptr_t memoryAddress {0xdf5d76a8};
-								constexpr uintptr_t peripheralAddress {0x1b932358};
-								constexpr uint16_t transactions {0xd353};
+		for (const auto flags : flagsArray)
+			for (const auto peripheralDataSize : peripheralDataSizes)
+				for (const auto memoryDataSize : memoryDataSizes)
+				{
+					constexpr uintptr_t memoryAddress {0xdf5d76a8};
+					constexpr uintptr_t peripheralAddress {0x1b932358};
+					constexpr uint16_t transactions {0xd353};
 
-								REQUIRE_CALL(channelPeripheralMock, readCr()).IN_SEQUENCE(sequence).RETURN(0);
-								const auto cr = request1 << DMA_SxCR_CHSEL_Pos |
-										static_cast<uint32_t>(direction) |
-										static_cast<uint32_t>(peripheralIncrement) |
-										static_cast<uint32_t>(memoryIncrement) |
-										static_cast<uint32_t>(peripheralDataSize) |
-										static_cast<uint32_t>(memoryDataSize) |
-										static_cast<uint32_t>(priority) |
-										DMA_SxCR_TCIE |
-										DMA_SxCR_TEIE;
-								REQUIRE_CALL(channelPeripheralMock, writeCr(cr)).IN_SEQUENCE(sequence);
-								REQUIRE_CALL(channelPeripheralMock, writeNdtr(transactions)).IN_SEQUENCE(sequence);
-								REQUIRE_CALL(channelPeripheralMock, writePar(peripheralAddress)).IN_SEQUENCE(sequence);
-								REQUIRE_CALL(channelPeripheralMock, writeM0ar(memoryAddress)).IN_SEQUENCE(sequence);
-								const auto fcr = DMA_SxFCR_DMDIS | DMA_SxFCR_FTH;
-								REQUIRE_CALL(channelPeripheralMock, writeFcr(fcr)).IN_SEQUENCE(sequence);
-								REQUIRE(handle.configureTransfer(memoryAddress, peripheralAddress, transactions,
-										direction | peripheralIncrement | memoryIncrement | peripheralDataSize |
-										memoryDataSize | priority) == 0);
-							}
+					REQUIRE_CALL(channelPeripheralMock, readCr()).IN_SEQUENCE(sequence).RETURN(0);
+					const auto cr = request1 << DMA_SxCR_CHSEL_Pos |
+							static_cast<uint32_t>(flags) |
+							static_cast<uint32_t>(peripheralDataSize) |
+							static_cast<uint32_t>(memoryDataSize) |
+							DMA_SxCR_TCIE |
+							DMA_SxCR_TEIE;
+					REQUIRE_CALL(channelPeripheralMock, writeCr(cr)).IN_SEQUENCE(sequence);
+					REQUIRE_CALL(channelPeripheralMock, writeNdtr(transactions)).IN_SEQUENCE(sequence);
+					REQUIRE_CALL(channelPeripheralMock, writePar(peripheralAddress)).IN_SEQUENCE(sequence);
+					REQUIRE_CALL(channelPeripheralMock, writeM0ar(memoryAddress)).IN_SEQUENCE(sequence);
+					const auto fcr = DMA_SxFCR_DMDIS | DMA_SxFCR_FTH;
+					REQUIRE_CALL(channelPeripheralMock, writeFcr(fcr)).IN_SEQUENCE(sequence);
+					REQUIRE(handle.configureTransfer(memoryAddress, peripheralAddress, transactions,
+							flags | peripheralDataSize | memoryDataSize) == 0);
+				}
 	}
 
 	const auto oldCr = UINT32_MAX;
