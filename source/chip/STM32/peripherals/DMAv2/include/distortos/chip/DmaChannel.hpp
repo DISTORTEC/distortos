@@ -29,6 +29,11 @@ namespace chip
 /// DMA transfer configuration flags
 enum class DmaChannelFlags : uint32_t
 {
+	/// DMA is the flow controller
+	dmaFlowController = 0 << 5,
+	/// peripheral is the flow controller
+	peripheralFlowController = 1 << 5,
+
 	/// transfer from peripheral to memory
 	peripheralToMemory = 0 << 6,
 	/// transfer from memory to peripheral

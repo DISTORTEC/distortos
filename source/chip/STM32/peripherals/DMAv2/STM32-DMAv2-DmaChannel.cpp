@@ -28,6 +28,11 @@ namespace chip
 namespace
 {
 
+static_assert(static_cast<uint32_t>(DmaChannel::Flags::dmaFlowController) == 0,
+		"DmaChannel::Flags::dmaFlowController doesn't match expected value of DMA_SxCR_PFCTRL field!");
+static_assert(static_cast<uint32_t>(DmaChannel::Flags::peripheralFlowController) == DMA_SxCR_PFCTRL,
+		"DmaChannel::Flags::peripheralFlowController doesn't match expected value of DMA_SxCR_PFCTRL field!");
+
 static_assert(static_cast<uint32_t>(DmaChannel::Flags::peripheralToMemory) == 0,
 		"DmaChannel::Flags::peripheralToMemory doesn't match expected value of DMA_SxCR_DIR field!");
 static_assert(static_cast<uint32_t>(DmaChannel::Flags::memoryToPeripheral) == DMA_SxCR_DIR_0,
