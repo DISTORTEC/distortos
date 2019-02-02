@@ -2,7 +2,7 @@
  * \file
  * \brief SpiMasterLowLevelDmaBased class implementation for SPIv2 in STM32
  *
- * \author Copyright (C) 2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2018-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -110,17 +110,26 @@ int SpiMasterLowLevelDmaBased::startTransfer(devices::SpiMasterBase& spiMasterBa
 
 	const auto transactions = size / dataSize;
 
+	const auto commonDmaFlags = DmaChannel::Flags::peripheralFixed |
+			(dataSize == 1 ? DmaChannel::Flags::dataSize1 : DmaChannel::Flags::dataSize2);
+
 	{
 		const auto memoryAddress = reinterpret_cast<uintptr_t>(readBuffer != nullptr ? readBuffer : &rxDummyData_);
-		const auto ret = rxDmaChannelUniqueHandle_.configureTransfer(memoryAddress, dataSize, readBuffer != nullptr,
-				spiPeripheral_.getDrAddress(), dataSize, false, transactions, false, DmaChannel::Priority::veryHigh);
+		const auto rxDmaFlags = DmaChannel::Flags::peripheralToMemory |
+				(readBuffer != nullptr ? DmaChannel::Flags::memoryIncrement : DmaChannel::Flags::memoryFixed) |
+				DmaChannel::Flags::veryHighPriority;
+		const auto ret = rxDmaChannelUniqueHandle_.configureTransfer(memoryAddress, spiPeripheral_.getDrAddress(),
+				transactions, commonDmaFlags | rxDmaFlags);
 		if (ret != 0)
 			return ret;
 	}
 	{
 		const auto memoryAddress = reinterpret_cast<uintptr_t>(writeBuffer != nullptr ? writeBuffer : &txDummyData_);
-		const auto ret = txDmaChannelUniqueHandle_.configureTransfer(memoryAddress, dataSize, writeBuffer != nullptr,
-				spiPeripheral_.getDrAddress(), dataSize, false, transactions, true, DmaChannel::Priority::low);
+		const auto txDmaFlags = DmaChannel::Flags::memoryToPeripheral |
+				(writeBuffer != nullptr ? DmaChannel::Flags::memoryIncrement : DmaChannel::Flags{}) |
+				DmaChannel::Flags::lowPriority;
+		const auto ret = txDmaChannelUniqueHandle_.configureTransfer(memoryAddress, spiPeripheral_.getDrAddress(),
+				transactions, commonDmaFlags | txDmaFlags);
 		if (ret != 0)
 			return ret;
 	}

@@ -20,6 +20,7 @@
 #include "distortos/devices/communication/SpiMasterBase.hpp"
 
 using trompeloeil::_;
+using Flags = distortos::chip::DmaChannel::Flags;
 
 namespace
 {
@@ -43,9 +44,7 @@ constexpr uintptr_t drAddress {0xe0105554};
 constexpr uint16_t initialCr1 {SPI_CR1_SSM | SPI_CR1_SSI | SPI_CR1_SPE | SPI_CR1_BR | SPI_CR1_MSTR};
 constexpr uint16_t initialCr2 {SPI_CR2_FRXTH | (8 - 1) << SPI_CR2_DS_Pos | SPI_CR2_TXDMAEN | SPI_CR2_RXDMAEN};
 constexpr uint8_t rxDmaRequest {0xb9};
-constexpr auto rxPriority = distortos::chip::DmaChannel::Priority::veryHigh;
 constexpr uint8_t txDmaRequest {0x0c};
-constexpr auto txPriority = distortos::chip::DmaChannel::Priority::low;
 
 }	// namespace
 
@@ -221,16 +220,16 @@ TEST_CASE("Testing startTransfer()", "[startTransfer]")
 	{
 		REQUIRE_CALL(peripheralMock, getDrAddress()).IN_SEQUENCE(sequence).RETURN(drAddress);
 		constexpr int ret {0x396f53d2};
-		REQUIRE_CALL(rxDmaChannelMock, configureTransfer(_, _, _, _, _, _, _, _, _)).IN_SEQUENCE(sequence).RETURN(ret);
+		REQUIRE_CALL(rxDmaChannelMock, configureTransfer(_, _, _, _)).IN_SEQUENCE(sequence).RETURN(ret);
 		REQUIRE(spi.startTransfer(masterMock, nullptr, nullptr, 2) == ret);
 	}
 	SECTION("TX DMA configuration error should propagate error code to caller")
 	{
 		REQUIRE_CALL(peripheralMock, getDrAddress()).IN_SEQUENCE(sequence).RETURN(drAddress);
-		REQUIRE_CALL(rxDmaChannelMock, configureTransfer(_, _, _, _, _, _, _, _, _)).IN_SEQUENCE(sequence).RETURN(0);
+		REQUIRE_CALL(rxDmaChannelMock, configureTransfer(_, _, _, _)).IN_SEQUENCE(sequence).RETURN(0);
 		constexpr int ret {0x438431bf};
 		REQUIRE_CALL(peripheralMock, getDrAddress()).IN_SEQUENCE(sequence).RETURN(drAddress);
-		REQUIRE_CALL(txDmaChannelMock, configureTransfer(_, _, _, _, _, _, _, _, _)).IN_SEQUENCE(sequence).RETURN(ret);
+		REQUIRE_CALL(txDmaChannelMock, configureTransfer(_, _, _, _)).IN_SEQUENCE(sequence).RETURN(ret);
 		REQUIRE(spi.startTransfer(masterMock, nullptr, nullptr, 2) == ret);
 	}
 
@@ -269,27 +268,37 @@ TEST_CASE("Testing startTransfer()", "[startTransfer]")
 							(rxBuffer != nullptr ? "non-" : "") << "null destination")
 					{
 						const auto dataSize = (wordLength + 8 - 1) / 8u;
+						const auto commonDmaFlags = Flags::peripheralFixed |
+								(dataSize == 1 ? Flags::dataSize1 : Flags::dataSize2);
 
 						REQUIRE_CALL(peripheralMock, getDrAddress()).IN_SEQUENCE(sequence).RETURN(drAddress);
+						const auto rxDmaFlags = commonDmaFlags |
+								Flags::peripheralToMemory |
+								Flags::peripheralFixed |
+								(rxBuffer != nullptr ? Flags::memoryIncrement : Flags::memoryFixed) |
+								Flags::veryHighPriority;
 						const auto rxAddressMatcher = [rxBuffer](const uintptr_t address)
 								{
 									return rxBuffer != nullptr ?
 											address == reinterpret_cast<uintptr_t>(rxBuffer) :
 											true;
 								};
-						REQUIRE_CALL(rxDmaChannelMock, configureTransfer(_, dataSize, rxBuffer != nullptr,
-								drAddress, dataSize, false, transferSize / dataSize, false,
-								rxPriority)).WITH(rxAddressMatcher(_1)).IN_SEQUENCE(sequence).RETURN(0);
+						REQUIRE_CALL(rxDmaChannelMock, configureTransfer(_, drAddress, transferSize / dataSize,
+								rxDmaFlags)).WITH(rxAddressMatcher(_1)).IN_SEQUENCE(sequence).RETURN(0);
 						REQUIRE_CALL(peripheralMock, getDrAddress()).IN_SEQUENCE(sequence).RETURN(drAddress);
+						const auto txDmaFlags = commonDmaFlags |
+								Flags::memoryToPeripheral |
+								Flags::peripheralFixed |
+								(txBuffer != nullptr ? Flags::memoryIncrement : Flags::memoryFixed) |
+								Flags::lowPriority;
 						const auto txAddressMatcher = [dataSize, dummyData, txBuffer](const uintptr_t address)
 								{
 									return txBuffer != nullptr ?
 											address == reinterpret_cast<uintptr_t>(txBuffer) :
 											memcmp(reinterpret_cast<const void*>(address), &dummyData, dataSize) == 0;
 								};
-						REQUIRE_CALL(txDmaChannelMock, configureTransfer(_, dataSize, txBuffer != nullptr,
-								drAddress, dataSize, false, transferSize / dataSize, true,
-								txPriority)).WITH(txAddressMatcher(_1)).IN_SEQUENCE(sequence).RETURN(0);
+						REQUIRE_CALL(txDmaChannelMock, configureTransfer(_, drAddress, transferSize / dataSize,
+								txDmaFlags)).WITH(txAddressMatcher(_1)).IN_SEQUENCE(sequence).RETURN(0);
 						REQUIRE_CALL(rxDmaChannelMock, startTransfer()).IN_SEQUENCE(sequence).RETURN(0);
 						REQUIRE_CALL(txDmaChannelMock, startTransfer()).IN_SEQUENCE(sequence).RETURN(0);
 						REQUIRE(spi.startTransfer(masterMock, txBuffer, rxBuffer, transferSize) == 0);
