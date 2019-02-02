@@ -2,7 +2,7 @@
  * \file
  * \brief DmaChannel class implementation for DMAv2 in STM32
  *
- * \author Copyright (C) 2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2018-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -27,6 +27,44 @@ namespace chip
 
 namespace
 {
+
+static_assert(static_cast<uint32_t>(DmaChannel::Flags::peripheralToMemory) == 0,
+		"DmaChannel::Flags::peripheralToMemory doesn't match expected value of DMA_SxCR_DIR field!");
+static_assert(static_cast<uint32_t>(DmaChannel::Flags::memoryToPeripheral) == DMA_SxCR_DIR_0,
+		"DmaChannel::Flags::memoryToPeripheral doesn't match expected value of DMA_SxCR_DIR field!");
+
+static_assert(static_cast<uint32_t>(DmaChannel::Flags::peripheralFixed) == 0,
+		"DmaChannel::Flags::peripheralFixed doesn't match expected value of DMA_SxCR_PINC field!");
+static_assert(static_cast<uint32_t>(DmaChannel::Flags::peripheralIncrement) == DMA_SxCR_PINC,
+		"DmaChannel::Flags::peripheralIncrement doesn't match expected value of DMA_SxCR_PINC field!");
+
+static_assert(static_cast<uint32_t>(DmaChannel::Flags::memoryFixed) == 0,
+		"DmaChannel::Flags::memoryFixed doesn't match expected value of DMA_SxCR_MINC field!");
+static_assert(static_cast<uint32_t>(DmaChannel::Flags::memoryIncrement) == DMA_SxCR_MINC,
+		"DmaChannel::Flags::memoryIncrement doesn't match expected value of DMA_SxCR_MINC field!");
+
+static_assert(static_cast<uint32_t>(DmaChannel::Flags::peripheralDataSize1) == 0,
+		"DmaChannel::Flags::peripheralDataSize1 doesn't match expected value of DMA_SxCR_PSIZE field!");
+static_assert(static_cast<uint32_t>(DmaChannel::Flags::peripheralDataSize2) == DMA_SxCR_PSIZE_0,
+		"DmaChannel::Flags::peripheralDataSize2 doesn't match expected value of DMA_SxCR_PSIZE field!");
+static_assert(static_cast<uint32_t>(DmaChannel::Flags::peripheralDataSize4) == DMA_SxCR_PSIZE_1,
+		"DmaChannel::Flags::peripheralDataSize4 doesn't match expected value of DMA_SxCR_PSIZE field!");
+
+static_assert(static_cast<uint32_t>(DmaChannel::Flags::memoryDataSize1) == 0,
+		"DmaChannel::Flags::memoryDataSize1 doesn't match expected value of DMA_SxCR_MSIZE field!");
+static_assert(static_cast<uint32_t>(DmaChannel::Flags::memoryDataSize2) == DMA_SxCR_MSIZE_0,
+		"DmaChannel::Flags::memoryDataSize2 doesn't match expected value of DMA_SxCR_MSIZE field!");
+static_assert(static_cast<uint32_t>(DmaChannel::Flags::memoryDataSize4) == DMA_SxCR_MSIZE_1,
+		"DmaChannel::Flags::memoryDataSize4 doesn't match expected value of DMA_SxCR_MSIZE field!");
+
+static_assert(static_cast<uint32_t>(DmaChannel::Flags::lowPriority) == 0,
+		"DmaChannel::Flags::lowPriority doesn't match expected value of DMA_SxCR_PL field!");
+static_assert(static_cast<uint32_t>(DmaChannel::Flags::mediumPriority) == DMA_SxCR_PL_0,
+		"DmaChannel::Flags::mediumPriority doesn't match expected value of DMA_SxCR_PL field!");
+static_assert(static_cast<uint32_t>(DmaChannel::Flags::highPriority) == DMA_SxCR_PL_1,
+		"DmaChannel::Flags::highPriority doesn't match expected value of DMA_SxCR_PL field!");
+static_assert(static_cast<uint32_t>(DmaChannel::Flags::veryHighPriority) == DMA_SxCR_PL,
+		"DmaChannel::Flags::veryHighPriority doesn't match expected value of DMA_SxCR_PL field!");
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | local functions
@@ -171,6 +209,48 @@ int DmaChannel::configureTransfer(const uintptr_t memoryAddress, const size_t me
 			memoryIncrement << DMA_SxCR_MINC_Pos |
 			peripheralIncrement << DMA_SxCR_PINC_Pos |
 			memoryToPeripheral << DMA_SxCR_DIR_Pos |
+			DMA_SxCR_TEIE |
+			DMA_SxCR_TCIE);
+	dmaChannelPeripheral_.writeNdtr(transactions);
+	dmaChannelPeripheral_.writePar(peripheralAddress);
+	dmaChannelPeripheral_.writeM0ar(memoryAddress);
+	dmaChannelPeripheral_.writeFcr(DMA_SxFCR_DMDIS | DMA_SxFCR_FTH);
+	return {};
+}
+
+int DmaChannel::configureTransfer(const uintptr_t memoryAddress, const uintptr_t peripheralAddress,
+		const size_t transactions, const Flags flags) const
+{
+	constexpr auto memoryDataSizeMask = Flags::memoryDataSize1 | Flags::memoryDataSize2 | Flags::memoryDataSize4;
+	const auto memoryDataSizeFlags = flags & memoryDataSizeMask;
+	const auto memoryDataSize = memoryDataSizeFlags == Flags::memoryDataSize1 ? 1 :
+			memoryDataSizeFlags == Flags::memoryDataSize2 ? 2 :
+			memoryDataSizeFlags == Flags::memoryDataSize4 ? 4 : 0;
+
+	constexpr auto peripheralDataSizeMask =
+			Flags::peripheralDataSize1 | Flags::peripheralDataSize2 | Flags::peripheralDataSize4;
+	const auto peripheralDataSizeFlags = flags & peripheralDataSizeMask;
+	const auto peripheralDataSize = peripheralDataSizeFlags == Flags::peripheralDataSize1 ? 1 :
+			peripheralDataSizeFlags == Flags::peripheralDataSize2 ? 2 :
+			peripheralDataSizeFlags == Flags::peripheralDataSize4 ? 4 : 0;
+
+	if (memoryDataSize == 0 || peripheralDataSize == 0)
+		return EINVAL;
+
+	if (memoryAddress % memoryDataSize != 0 || peripheralAddress % peripheralDataSize != 0)
+		return EINVAL;
+
+	if (transactions == 0)
+		return EINVAL;
+
+	if (transactions > UINT16_MAX)	/// \todo add support for very high number of transactions
+		return ENOTSUP;
+
+	if ((dmaChannelPeripheral_.readCr() & DMA_SxCR_EN) != 0)
+		return EBUSY;
+
+	dmaChannelPeripheral_.writeCr(request_ << DMA_SxCR_CHSEL_Pos |
+			static_cast<uint32_t>(flags) |
 			DMA_SxCR_TEIE |
 			DMA_SxCR_TCIE);
 	dmaChannelPeripheral_.writeNdtr(transactions);
