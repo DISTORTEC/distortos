@@ -49,6 +49,7 @@ This allows using `distortos::Mutex` with all mutex helpers from
 - Added unit test of `distortos::devices::BlockDeviceToMemoryTechnologyDevice` class.
 - Added unit tests of *STM32's* *DMAv1*, *DMAv2*, *SPIv1* and *SPIv2* drivers.
 - Added unit tests of all `estd::ContiguousRange` constructor overloads.
+- Added `estd/EnumClassFlags.hpp` which provides templated bitwise operators for enum class flags.
 
 ### Changed
 
