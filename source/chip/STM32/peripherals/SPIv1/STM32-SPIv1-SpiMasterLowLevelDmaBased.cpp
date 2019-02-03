@@ -115,7 +115,8 @@ int SpiMasterLowLevelDmaBased::startTransfer(devices::SpiMasterBase& spiMasterBa
 
 	{
 		const auto memoryAddress = reinterpret_cast<uintptr_t>(readBuffer != nullptr ? readBuffer : &rxDummyData_);
-		const auto rxDmaFlags = DmaChannel::Flags::peripheralToMemory |
+		const auto rxDmaFlags = DmaChannel::Flags::transferCompleteInterruptEnable |
+				DmaChannel::Flags::peripheralToMemory |
 				(readBuffer != nullptr ? DmaChannel::Flags::memoryIncrement : DmaChannel::Flags::memoryFixed) |
 				DmaChannel::Flags::veryHighPriority;
 		const auto ret = rxDmaChannelUniqueHandle_.configureTransfer(memoryAddress, spiPeripheral_.getDrAddress(),
@@ -125,7 +126,8 @@ int SpiMasterLowLevelDmaBased::startTransfer(devices::SpiMasterBase& spiMasterBa
 	}
 	{
 		const auto memoryAddress = reinterpret_cast<uintptr_t>(writeBuffer != nullptr ? writeBuffer : &txDummyData_);
-		const auto txDmaFlags = DmaChannel::Flags::memoryToPeripheral |
+		const auto txDmaFlags = DmaChannel::Flags::transferCompleteInterruptDisable |
+				DmaChannel::Flags::memoryToPeripheral |
 				(writeBuffer != nullptr ? DmaChannel::Flags::memoryIncrement : DmaChannel::Flags{}) |
 				DmaChannel::Flags::lowPriority;
 		const auto ret = txDmaChannelUniqueHandle_.configureTransfer(memoryAddress, spiPeripheral_.getDrAddress(),

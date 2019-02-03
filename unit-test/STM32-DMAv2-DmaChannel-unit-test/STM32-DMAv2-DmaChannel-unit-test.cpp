@@ -266,14 +266,14 @@ TEST_CASE("Testing configureTransfer()", "[configureTransfer]")
 	{
 		const Flags flagsArray[]
 		{
-			Flags::dmaFlowController | Flags::peripheralToMemory | Flags::peripheralFixed | Flags::memoryFixed |
-					Flags::lowPriority,
-			Flags::peripheralFlowController | Flags::memoryToPeripheral | Flags::peripheralIncrement |
-					Flags::memoryIncrement | Flags::mediumPriority,
-			Flags::dmaFlowController | Flags::peripheralToMemory | Flags::peripheralFixed | Flags::memoryFixed |
-					Flags::highPriority,
-			Flags::peripheralFlowController | Flags::memoryToPeripheral | Flags::peripheralIncrement |
-					Flags::memoryIncrement | Flags::veryHighPriority,
+			Flags::transferCompleteInterruptDisable | Flags::dmaFlowController | Flags::peripheralToMemory |
+					Flags::peripheralFixed | Flags::memoryFixed | Flags::lowPriority,
+			Flags::transferCompleteInterruptEnable | Flags::peripheralFlowController | Flags::memoryToPeripheral |
+					Flags::peripheralIncrement | Flags::memoryIncrement | Flags::mediumPriority,
+			Flags::transferCompleteInterruptDisable | Flags::dmaFlowController | Flags::peripheralToMemory |
+					Flags::peripheralFixed | Flags::memoryFixed | Flags::highPriority,
+			Flags::transferCompleteInterruptEnable | Flags::peripheralFlowController | Flags::memoryToPeripheral |
+					Flags::peripheralIncrement | Flags::memoryIncrement | Flags::veryHighPriority,
 		};
 		const Flags peripheralDataSizes[]
 		{
@@ -321,7 +321,6 @@ TEST_CASE("Testing configureTransfer()", "[configureTransfer]")
 								static_cast<uint32_t>(peripheralDataSize) |
 								static_cast<uint32_t>(memoryBurstDataSize) |
 								static_cast<uint32_t>(peripheralBurstSize) |
-								DMA_SxCR_TCIE |
 								DMA_SxCR_TEIE;
 						REQUIRE_CALL(channelPeripheralMock, writeCr(cr)).IN_SEQUENCE(sequence);
 						REQUIRE_CALL(channelPeripheralMock, writeNdtr(transactions)).IN_SEQUENCE(sequence);

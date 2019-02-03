@@ -28,6 +28,11 @@ namespace chip
 namespace
 {
 
+static_assert(static_cast<uint32_t>(DmaChannel::Flags::transferCompleteInterruptDisable) == 0,
+		"DmaChannel::Flags::transferCompleteInterruptDisable doesn't match expected value of DMA_SxCR_TCIE field!");
+static_assert(static_cast<uint32_t>(DmaChannel::Flags::transferCompleteInterruptEnable) == DMA_SxCR_TCIE,
+		"DmaChannel::Flags::transferCompleteInterruptEnable doesn't match expected value of DMA_SxCR_TCIE field!");
+
 static_assert(static_cast<uint32_t>(DmaChannel::Flags::dmaFlowController) == 0,
 		"DmaChannel::Flags::dmaFlowController doesn't match expected value of DMA_SxCR_PFCTRL field!");
 static_assert(static_cast<uint32_t>(DmaChannel::Flags::peripheralFlowController) == DMA_SxCR_PFCTRL,
@@ -255,8 +260,7 @@ int DmaChannel::configureTransfer(const uintptr_t memoryAddress, const uintptr_t
 
 	dmaChannelPeripheral_.writeCr(request_ << DMA_SxCR_CHSEL_Pos |
 			static_cast<uint32_t>(flags) |
-			DMA_SxCR_TEIE |
-			DMA_SxCR_TCIE);
+			DMA_SxCR_TEIE);
 	dmaChannelPeripheral_.writeNdtr(transactions);
 	dmaChannelPeripheral_.writePar(peripheralAddress);
 	dmaChannelPeripheral_.writeM0ar(memoryAddress);

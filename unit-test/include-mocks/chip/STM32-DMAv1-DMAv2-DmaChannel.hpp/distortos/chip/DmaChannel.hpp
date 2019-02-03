@@ -27,27 +27,30 @@ namespace chip
 /// DMA transfer configuration flags
 enum class DmaChannelFlags : uint16_t
 {
-	peripheralToMemory = 0 << 0,
-	memoryToPeripheral = 1 << 0,
+	transferCompleteInterruptDisable = 0 << 0,
+	transferCompleteInterruptEnable = 1 << 0,
 
-	peripheralFixed = 0 << 1,
-	peripheralIncrement = 1 << 1,
+	peripheralToMemory = 0 << 1,
+	memoryToPeripheral = 1 << 1,
 
-	memoryFixed = 0 << 2,
-	memoryIncrement = 1 << 2,
+	peripheralFixed = 0 << 2,
+	peripheralIncrement = 1 << 2,
 
-	peripheralDataSize1 = 0 << 3,
-	peripheralDataSize2 = 1 << 3,
-	peripheralDataSize4 = 2 << 3,
+	memoryFixed = 0 << 3,
+	memoryIncrement = 1 << 3,
 
-	memoryDataSize1 = 0 << 5,
-	memoryDataSize2 = 1 << 5,
-	memoryDataSize4 = 2 << 5,
+	peripheralDataSize1 = 0 << 4,
+	peripheralDataSize2 = 1 << 4,
+	peripheralDataSize4 = 2 << 4,
 
-	lowPriority = 0 << 7,
-	mediumPriority = 1 << 7,
-	highPriority = 2 << 7,
-	veryHighPriority = 3 << 7,
+	memoryDataSize1 = 0 << 6,
+	memoryDataSize2 = 1 << 6,
+	memoryDataSize4 = 2 << 6,
+
+	lowPriority = 0 << 8,
+	mediumPriority = 1 << 8,
+	highPriority = 2 << 8,
+	veryHighPriority = 3 << 8,
 
 	dataSize1 = peripheralDataSize1 | memoryDataSize1,
 	dataSize2 = peripheralDataSize2 | memoryDataSize2,

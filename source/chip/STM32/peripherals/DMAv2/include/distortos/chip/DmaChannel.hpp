@@ -29,6 +29,11 @@ namespace chip
 /// DMA transfer configuration flags
 enum class DmaChannelFlags : uint32_t
 {
+	/// "transfer complete" interrupt is disabled
+	transferCompleteInterruptDisable = 0 << 4,
+	/// "transfer complete" interrupt is enabled
+	transferCompleteInterruptEnable = 1 << 4,
+
 	/// DMA is the flow controller
 	dmaFlowController = 0 << 5,
 	/// peripheral is the flow controller
