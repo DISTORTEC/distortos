@@ -203,11 +203,6 @@ void SpiMasterLowLevelDmaBased::RxDmaChannelFunctor::transferErrorEvent(const si
 | SpiMasterLowLevelDmaBased::TxDmaChannelFunctor public functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-void SpiMasterLowLevelDmaBased::TxDmaChannelFunctor::transferCompleteEvent()
-{
-
-}
-
 void SpiMasterLowLevelDmaBased::TxDmaChannelFunctor::transferErrorEvent(const size_t transactionsLeft)
 {
 	owner_.eventHandler(transactionsLeft);
