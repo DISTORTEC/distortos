@@ -29,6 +29,16 @@ namespace chip
 /// DMA transfer configuration flags
 enum class DmaChannelFlags : uint32_t
 {
+	/// "transfer complete" interrupt is disabled
+	transferCompleteInterruptDisable = 0 << 4,
+	/// "transfer complete" interrupt is enabled
+	transferCompleteInterruptEnable = 1 << 4,
+
+	/// DMA is the flow controller
+	dmaFlowController = 0 << 5,
+	/// peripheral is the flow controller
+	peripheralFlowController = 1 << 5,
+
 	/// transfer from peripheral to memory
 	peripheralToMemory = 0 << 6,
 	/// transfer from memory to peripheral
@@ -67,12 +77,39 @@ enum class DmaChannelFlags : uint32_t
 	/// very high priority
 	veryHighPriority = 3 << 16,
 
+	/// peripheral burst size - single transfer
+	peripheralBurstSize1 = 0 << 21,
+	/// peripheral burst size - incremental burst of 4 beats
+	peripheralBurstSize4 = 1 << 21,
+	/// peripheral burst size - incremental burst of 8 beats
+	peripheralBurstSize8 = 2 << 21,
+	/// peripheral burst size - incremental burst of 16 beats
+	peripheralBurstSize16 = 3 << 21,
+
+	/// memory burst size - single transfer
+	memoryBurstSize1 = 0 << 23,
+	/// memory burst size - incremental burst of 4 beats
+	memoryBurstSize4 = 1 << 23,
+	/// memory burst size - incremental burst of 8 beats
+	memoryBurstSize8 = 2 << 23,
+	/// memory burst size - incremental burst of 16 beats
+	memoryBurstSize16 = 3 << 23,
+
 	/// memory and peripheral data size - 1 byte
 	dataSize1 = peripheralDataSize1 | memoryDataSize1,
 	/// memory and peripheral data size - 2 bytes
 	dataSize2 = peripheralDataSize2 | memoryDataSize2,
 	/// memory and peripheral data size - 4 bytes
 	dataSize4 = peripheralDataSize4 | memoryDataSize4,
+
+	/// memory and peripheral burst size - single transfer
+	burstSize1 = peripheralBurstSize1 | memoryBurstSize1,
+	/// memory and peripheral burst size - incremental burst of 4 beats
+	burstSize4 = peripheralBurstSize4 | memoryBurstSize4,
+	/// memory and peripheral burst size - incremental burst of 8 beats
+	burstSize8 = peripheralBurstSize8 | memoryBurstSize8,
+	/// memory and peripheral burst size - incremental burst of 16 beats
+	burstSize16 = peripheralBurstSize16 | memoryBurstSize16,
 };
 
 }	// namespace chip
@@ -284,8 +321,10 @@ private:
 	/**
 	 * \brief Configures parameters of transfer.
 	 *
-	 * \param [in] memoryAddress is the memory address, must be divisible by configured memory data size
-	 * \param [in] peripheralAddress is the peripheral address, must be divisible by peripheral data size
+	 * \param [in] memoryAddress is the memory address, must be divisible by configured memory data size multiplied by
+	 * configured memory burst size (which must be less than or equal to 16)
+	 * \param [in] peripheralAddress is the peripheral address, must be divisible by peripheral data size multiplied by
+	 * configured peripheral burst size
 	 * \param [in] transactions is the number of transactions
 	 * \param [in] flags are configuration flags
 	 *

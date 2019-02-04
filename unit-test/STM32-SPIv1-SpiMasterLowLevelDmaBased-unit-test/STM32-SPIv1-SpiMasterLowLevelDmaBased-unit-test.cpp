@@ -277,6 +277,7 @@ TEST_CASE("Testing startTransfer()", "[startTransfer]")
 
 						REQUIRE_CALL(peripheralMock, getDrAddress()).IN_SEQUENCE(sequence).RETURN(drAddress);
 						const auto rxDmaFlags = commonDmaFlags |
+								Flags::transferCompleteInterruptEnable |
 								Flags::peripheralToMemory |
 								(rxBuffer != nullptr ? Flags::memoryIncrement : Flags::memoryFixed) |
 								Flags::veryHighPriority;
@@ -290,6 +291,7 @@ TEST_CASE("Testing startTransfer()", "[startTransfer]")
 								rxDmaFlags)).WITH(rxAddressMatcher(_1)).IN_SEQUENCE(sequence).RETURN(0);
 						REQUIRE_CALL(peripheralMock, getDrAddress()).IN_SEQUENCE(sequence).RETURN(drAddress);
 						const auto txDmaFlags = commonDmaFlags |
+								Flags::transferCompleteInterruptDisable |
 								Flags::memoryToPeripheral |
 								Flags::peripheralFixed |
 								(txBuffer != nullptr ? Flags::memoryIncrement : Flags::memoryFixed) |

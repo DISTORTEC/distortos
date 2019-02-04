@@ -2,7 +2,7 @@
  * \file
  * \brief SpiMasterLowLevelDmaBased class header for SPIv2 in STM32
  *
- * \author Copyright (C) 2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2018-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -13,7 +13,7 @@
 #define SOURCE_CHIP_STM32_PERIPHERALS_SPIV2_INCLUDE_DISTORTOS_CHIP_SPIMASTERLOWLEVELDMABASED_HPP_
 
 #include "distortos/chip/DmaChannel.hpp"
-#include "distortos/chip/DmaChannelFunctor.hpp"
+#include "distortos/chip/DmaChannelFunctorCommon.hpp"
 
 #include "distortos/devices/communication/SpiMasterLowLevel.hpp"
 
@@ -180,8 +180,8 @@ private:
 		SpiMasterLowLevelDmaBased& owner_;
 	};
 
-	/// TxDmaChannelFunctor class is a DmaChannelFunctor for DMA channel used for transmission
-	class TxDmaChannelFunctor : public DmaChannelFunctor
+	/// TxDmaChannelFunctor class is a DmaChannelFunctorCommon for DMA channel used for transmission
+	class TxDmaChannelFunctor : public DmaChannelFunctorCommon
 	{
 	public:
 
@@ -196,14 +196,6 @@ private:
 		{
 
 		}
-
-		/**
-		 * \brief "Transfer complete" event
-		 *
-		 * Called by low-level DMA channel driver when the transfer is physically finished.
-		 */
-
-		void transferCompleteEvent() override;
 
 		/**
 		 * \brief "Transfer error" event

@@ -196,25 +196,57 @@ TEST_CASE("Testing configureTransfer()", "[configureTransfer]")
 	}
 
 	{
+		const uint8_t burstSizes[]
+		{
+				1,
+				4,
+				8,
+				16,
+		};
 		const uint8_t dataSizes[]
 		{
+				1,
 				2,
 				4,
 		};
-		for (const auto dataSize : dataSizes)
-			for (uintptr_t address {1}; address < dataSize; ++address)
+		for (const auto burstSize : burstSizes)
+			for (const auto dataSize : dataSizes)
 			{
-				DYNAMIC_SECTION("Trying to use address " << static_cast<int>(address) << " when data size is " <<
-						static_cast<int>(dataSize) << " should fail with EINVAL")
+				const auto memoryBurstSize = burstSize == 1 ? Flags::memoryBurstSize1 :
+						burstSize == 4 ? Flags::memoryBurstSize4 :
+						burstSize == 8 ? Flags::memoryBurstSize8 : Flags::memoryBurstSize16;
+				const auto memoryDataSize = dataSize == 1 ? Flags::memoryDataSize1 :
+						dataSize == 2 ? Flags::memoryDataSize2 : Flags::memoryDataSize4;
+				if (burstSize * dataSize > 16)
 				{
-					const auto memoryDataSize = dataSize == 2 ? Flags::memoryDataSize2 : Flags::memoryDataSize4;
-					REQUIRE(handle.configureTransfer(address, {}, 1, memoryDataSize) == EINVAL);
-					const auto peripheralDataSize =
-							dataSize == 2 ? Flags::peripheralDataSize2 : Flags::peripheralDataSize4;
-					REQUIRE(handle.configureTransfer({}, address, 1, peripheralDataSize) == EINVAL);
-					const auto dataSizeFlags =
-							dataSize == 2 ? Flags::dataSize2 : Flags::dataSize4;
-					REQUIRE(handle.configureTransfer(address, address, 1, dataSizeFlags) == EINVAL);
+					DYNAMIC_SECTION("Trying to use memory burst size " << static_cast<int>(burstSize) <<
+							" and memory data size " << static_cast<int>(dataSize) << " should fail with EINVAL")
+					{
+						REQUIRE(handle.configureTransfer({}, {}, 1, memoryBurstSize | memoryDataSize) == EINVAL);
+					}
+				}
+				for (uintptr_t address {1}; address < (burstSize * dataSize); ++address)
+				{
+					DYNAMIC_SECTION("Trying to use address " << static_cast<int>(address) << " when burst size is " <<
+							static_cast<int>(burstSize) << " and data size is " << static_cast<int>(dataSize) <<
+							" should fail with EINVAL")
+					{
+						REQUIRE(handle.configureTransfer(address, {}, 1, memoryBurstSize | memoryDataSize) == EINVAL);
+						const auto peripheralBurstSize = burstSize == 1 ? Flags::peripheralBurstSize1 :
+								 burstSize == 4 ? Flags::peripheralBurstSize4 :
+								 burstSize == 8 ? Flags::peripheralBurstSize8 : Flags::peripheralBurstSize16;
+						const auto peripheralDataSize = dataSize == 1 ? Flags::peripheralDataSize1 :
+								dataSize == 2 ? Flags::peripheralDataSize2 : Flags::peripheralDataSize4;
+						REQUIRE(handle.configureTransfer({}, address, 1,
+								peripheralBurstSize | peripheralDataSize) == EINVAL);
+						const auto burstSizeFlags = burstSize == 1 ? Flags::burstSize1 :
+								burstSize == 4 ? Flags::burstSize4 :
+								burstSize == 8 ? Flags::burstSize8 : Flags::burstSize16;
+						const auto dataSizeFlags = dataSize == 1 ? Flags::dataSize1 :
+								dataSize == 2 ? Flags::dataSize2 : Flags::dataSize4;
+						REQUIRE(handle.configureTransfer(address, address, 1,
+								burstSizeFlags | dataSizeFlags) == EINVAL);
+					}
 				}
 			}
 	}
@@ -232,71 +264,73 @@ TEST_CASE("Testing configureTransfer()", "[configureTransfer]")
 
 	SECTION("Trying to use valid configuration should succeed")
 	{
-		const Flags directions[]
+		const Flags flagsArray[]
 		{
-				Flags::peripheralToMemory,
-				Flags::memoryToPeripheral,
-		};
-		const Flags peripheralIncrements[]
-		{
-				Flags::peripheralFixed,
-				Flags::peripheralIncrement
-		};
-		const Flags memoryIncrements[]
-		{
-				Flags::memoryFixed,
-				Flags::memoryIncrement
+			Flags::transferCompleteInterruptDisable | Flags::dmaFlowController | Flags::peripheralToMemory |
+					Flags::peripheralFixed | Flags::memoryFixed | Flags::lowPriority,
+			Flags::transferCompleteInterruptEnable | Flags::peripheralFlowController | Flags::memoryToPeripheral |
+					Flags::peripheralIncrement | Flags::memoryIncrement | Flags::mediumPriority,
+			Flags::transferCompleteInterruptDisable | Flags::dmaFlowController | Flags::peripheralToMemory |
+					Flags::peripheralFixed | Flags::memoryFixed | Flags::highPriority,
+			Flags::transferCompleteInterruptEnable | Flags::peripheralFlowController | Flags::memoryToPeripheral |
+					Flags::peripheralIncrement | Flags::memoryIncrement | Flags::veryHighPriority,
 		};
 		const Flags peripheralDataSizes[]
 		{
 				Flags::peripheralDataSize1,
 				Flags::peripheralDataSize2,
-				Flags::peripheralDataSize4
+				Flags::peripheralDataSize4,
 		};
-		const Flags memoryDataSizes[]
+		const Flags memoryBurstDataSizes[]
 		{
-				Flags::memoryDataSize1,
-				Flags::memoryDataSize2,
-				Flags::memoryDataSize4
-		};
-		const Flags priorities[]
-		{
-				Flags::lowPriority,
-				Flags::mediumPriority,
-				Flags::highPriority,
-				Flags::veryHighPriority
-		};
-		for (const auto direction : directions)
-			for (const auto peripheralIncrement : peripheralIncrements)
-				for (const auto memoryIncrement : memoryIncrements)
-					for (const auto peripheralDataSize : peripheralDataSizes)
-						for (const auto memoryDataSize : memoryDataSizes)
-							for (const auto priority : priorities)
-							{
-								constexpr uintptr_t memoryAddress {0xdf5d76a8};
-								constexpr uintptr_t peripheralAddress {0x1b932358};
-								constexpr uint16_t transactions {0xd353};
+				Flags::memoryBurstSize1 | Flags::memoryDataSize1,
+				Flags::memoryBurstSize1 | Flags::memoryDataSize2,
+				Flags::memoryBurstSize1 | Flags::memoryDataSize4,
 
-								REQUIRE_CALL(channelPeripheralMock, readCr()).IN_SEQUENCE(sequence).RETURN(0);
-								const auto cr = request1 << DMA_SxCR_CHSEL_Pos |
-										static_cast<uint32_t>(direction) |
-										static_cast<uint32_t>(peripheralIncrement) |
-										static_cast<uint32_t>(memoryIncrement) |
-										static_cast<uint32_t>(peripheralDataSize) |
-										static_cast<uint32_t>(memoryDataSize) |
-										static_cast<uint32_t>(priority) |
-										DMA_SxCR_TCIE |
-										DMA_SxCR_TEIE;
-								REQUIRE_CALL(channelPeripheralMock, writeCr(cr)).IN_SEQUENCE(sequence);
-								REQUIRE_CALL(channelPeripheralMock, writeNdtr(transactions)).IN_SEQUENCE(sequence);
-								REQUIRE_CALL(channelPeripheralMock, writePar(peripheralAddress)).IN_SEQUENCE(sequence);
-								REQUIRE_CALL(channelPeripheralMock, writeM0ar(memoryAddress)).IN_SEQUENCE(sequence);
-								const auto fcr = DMA_SxFCR_DMDIS | DMA_SxFCR_FTH;
-								REQUIRE_CALL(channelPeripheralMock, writeFcr(fcr)).IN_SEQUENCE(sequence);
-								REQUIRE(handle.configureTransfer(memoryAddress, peripheralAddress, transactions,
-										direction | peripheralIncrement | memoryIncrement | peripheralDataSize |
-										memoryDataSize | priority) == 0);
-							}
+				Flags::memoryBurstSize4 | Flags::memoryDataSize1,
+				Flags::memoryBurstSize4 | Flags::memoryDataSize2,
+				Flags::memoryBurstSize4 | Flags::memoryDataSize4,
+
+				Flags::memoryBurstSize8 | Flags::memoryDataSize1,
+				Flags::memoryBurstSize8 | Flags::memoryDataSize2,
+				// Flags::memoryBurstSize8 | Flags::memoryDataSize4,	// invalid
+
+				Flags::memoryBurstSize16 | Flags::memoryDataSize1,
+				// Flags::memoryBurstSize16 | Flags::memoryDataSize2,	// invalid
+				// Flags::memoryBurstSize16 | Flags::memoryDataSize4,	// invalid
+		};
+		const Flags peripheralBurstSizes[]
+		{
+				Flags::peripheralBurstSize1,
+				Flags::peripheralBurstSize4,
+				Flags::peripheralBurstSize8,
+				Flags::peripheralBurstSize16,
+		};
+		for (const auto flags : flagsArray)
+			for (const auto peripheralDataSize : peripheralDataSizes)
+				for (const auto memoryBurstDataSize : memoryBurstDataSizes)
+					for (const auto peripheralBurstSize : peripheralBurstSizes)
+					{
+						constexpr uintptr_t memoryAddress {0xdf5d76a0};
+						constexpr uintptr_t peripheralAddress {0x1b932340};
+						constexpr uint16_t transactions {0xd353};
+
+						REQUIRE_CALL(channelPeripheralMock, readCr()).IN_SEQUENCE(sequence).RETURN(0);
+						const auto cr = request1 << DMA_SxCR_CHSEL_Pos |
+								static_cast<uint32_t>(flags) |
+								static_cast<uint32_t>(peripheralDataSize) |
+								static_cast<uint32_t>(memoryBurstDataSize) |
+								static_cast<uint32_t>(peripheralBurstSize) |
+								DMA_SxCR_TEIE;
+						REQUIRE_CALL(channelPeripheralMock, writeCr(cr)).IN_SEQUENCE(sequence);
+						REQUIRE_CALL(channelPeripheralMock, writeNdtr(transactions)).IN_SEQUENCE(sequence);
+						REQUIRE_CALL(channelPeripheralMock, writePar(peripheralAddress)).IN_SEQUENCE(sequence);
+						REQUIRE_CALL(channelPeripheralMock, writeM0ar(memoryAddress)).IN_SEQUENCE(sequence);
+						const auto fcr = DMA_SxFCR_DMDIS | DMA_SxFCR_FTH;
+						REQUIRE_CALL(channelPeripheralMock, writeFcr(fcr)).IN_SEQUENCE(sequence);
+						REQUIRE(handle.configureTransfer(memoryAddress, peripheralAddress, transactions,
+								flags | peripheralDataSize | memoryBurstDataSize | peripheralBurstSize) == 0);
+					}
 	}
 
 	const auto oldCr = UINT32_MAX;

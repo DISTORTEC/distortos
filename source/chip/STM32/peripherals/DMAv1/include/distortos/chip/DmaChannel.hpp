@@ -29,6 +29,11 @@ namespace chip
 /// DMA transfer configuration flags
 enum class DmaChannelFlags : uint16_t
 {
+	/// "transfer complete" interrupt is disabled
+	transferCompleteInterruptDisable = 0 << 1,
+	/// "transfer complete" interrupt is enabled
+	transferCompleteInterruptEnable = 1 << 1,
+
 	/// transfer from peripheral to memory
 	peripheralToMemory = 0 << 4,
 	/// transfer from memory to peripheral

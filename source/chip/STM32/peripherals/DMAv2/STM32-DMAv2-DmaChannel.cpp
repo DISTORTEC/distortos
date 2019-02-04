@@ -28,6 +28,16 @@ namespace chip
 namespace
 {
 
+static_assert(static_cast<uint32_t>(DmaChannel::Flags::transferCompleteInterruptDisable) == 0,
+		"DmaChannel::Flags::transferCompleteInterruptDisable doesn't match expected value of DMA_SxCR_TCIE field!");
+static_assert(static_cast<uint32_t>(DmaChannel::Flags::transferCompleteInterruptEnable) == DMA_SxCR_TCIE,
+		"DmaChannel::Flags::transferCompleteInterruptEnable doesn't match expected value of DMA_SxCR_TCIE field!");
+
+static_assert(static_cast<uint32_t>(DmaChannel::Flags::dmaFlowController) == 0,
+		"DmaChannel::Flags::dmaFlowController doesn't match expected value of DMA_SxCR_PFCTRL field!");
+static_assert(static_cast<uint32_t>(DmaChannel::Flags::peripheralFlowController) == DMA_SxCR_PFCTRL,
+		"DmaChannel::Flags::peripheralFlowController doesn't match expected value of DMA_SxCR_PFCTRL field!");
+
 static_assert(static_cast<uint32_t>(DmaChannel::Flags::peripheralToMemory) == 0,
 		"DmaChannel::Flags::peripheralToMemory doesn't match expected value of DMA_SxCR_DIR field!");
 static_assert(static_cast<uint32_t>(DmaChannel::Flags::memoryToPeripheral) == DMA_SxCR_DIR_0,
@@ -65,6 +75,24 @@ static_assert(static_cast<uint32_t>(DmaChannel::Flags::highPriority) == DMA_SxCR
 		"DmaChannel::Flags::highPriority doesn't match expected value of DMA_SxCR_PL field!");
 static_assert(static_cast<uint32_t>(DmaChannel::Flags::veryHighPriority) == DMA_SxCR_PL,
 		"DmaChannel::Flags::veryHighPriority doesn't match expected value of DMA_SxCR_PL field!");
+
+static_assert(static_cast<uint32_t>(DmaChannel::Flags::peripheralBurstSize1) == 0,
+		"DmaChannel::Flags::peripheralBurstSize1 doesn't match expected value of DMA_SxCR_PBURST field!");
+static_assert(static_cast<uint32_t>(DmaChannel::Flags::peripheralBurstSize4) == DMA_SxCR_PBURST_0,
+		"DmaChannel::Flags::peripheralBurstSize4 doesn't match expected value of DMA_SxCR_PBURST field!");
+static_assert(static_cast<uint32_t>(DmaChannel::Flags::peripheralBurstSize8) == DMA_SxCR_PBURST_1,
+		"DmaChannel::Flags::peripheralBurstSize8 doesn't match expected value of DMA_SxCR_PBURST field!");
+static_assert(static_cast<uint32_t>(DmaChannel::Flags::peripheralBurstSize16) == DMA_SxCR_PBURST,
+		"DmaChannel::Flags::peripheralBurstSize16 doesn't match expected value of DMA_SxCR_PBURST field!");
+
+static_assert(static_cast<uint32_t>(DmaChannel::Flags::memoryBurstSize1) == 0,
+		"DmaChannel::Flags::memoryBurstSize1 doesn't match expected value of DMA_SxCR_MBURST field!");
+static_assert(static_cast<uint32_t>(DmaChannel::Flags::memoryBurstSize4) == DMA_SxCR_MBURST_0,
+		"DmaChannel::Flags::memoryBurstSize4 doesn't match expected value of DMA_SxCR_MBURST field!");
+static_assert(static_cast<uint32_t>(DmaChannel::Flags::memoryBurstSize8) == DMA_SxCR_MBURST_1,
+		"DmaChannel::Flags::memoryBurstSize8 doesn't match expected value of DMA_SxCR_MBURST field!");
+static_assert(static_cast<uint32_t>(DmaChannel::Flags::memoryBurstSize16) == DMA_SxCR_MBURST,
+		"DmaChannel::Flags::memoryBurstSize16 doesn't match expected value of DMA_SxCR_MBURST field!");
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | local functions
@@ -200,7 +228,25 @@ int DmaChannel::configureTransfer(const uintptr_t memoryAddress, const uintptr_t
 	if (memoryDataSize == 0 || peripheralDataSize == 0)
 		return EINVAL;
 
-	if (memoryAddress % memoryDataSize != 0 || peripheralAddress % peripheralDataSize != 0)
+	constexpr auto memoryBurstSizeMask = Flags::memoryBurstSize1 | Flags::memoryBurstSize4 | Flags::memoryBurstSize8 |
+			Flags::memoryBurstSize16;
+	const auto memoryBurstSizeFlags = flags & memoryBurstSizeMask;
+	const auto memoryBurstSize = memoryBurstSizeFlags == Flags::memoryBurstSize1 ? 1 :
+			memoryBurstSizeFlags == Flags::memoryBurstSize4 ? 4 :
+			memoryBurstSizeFlags == Flags::memoryBurstSize8 ? 8 : 16;
+
+	if (memoryDataSize * memoryBurstSize > 16)
+		return EINVAL;
+
+	constexpr auto peripheralBurstSizeMask = Flags::peripheralBurstSize1 | Flags::peripheralBurstSize4 |
+			Flags::peripheralBurstSize8 | Flags::peripheralBurstSize16;
+	const auto peripheralBurstSizeFlags = flags & peripheralBurstSizeMask;
+	const auto peripheralBurstSize = peripheralBurstSizeFlags == Flags::peripheralBurstSize1 ? 1 :
+			peripheralBurstSizeFlags == Flags::peripheralBurstSize4 ? 4 :
+			peripheralBurstSizeFlags == Flags::peripheralBurstSize8 ? 8 : 16;
+
+	if (memoryAddress % (memoryDataSize * memoryBurstSize) != 0 ||
+			peripheralAddress % (peripheralDataSize * peripheralBurstSize) != 0)
 		return EINVAL;
 
 	if (transactions == 0)
@@ -214,8 +260,7 @@ int DmaChannel::configureTransfer(const uintptr_t memoryAddress, const uintptr_t
 
 	dmaChannelPeripheral_.writeCr(request_ << DMA_SxCR_CHSEL_Pos |
 			static_cast<uint32_t>(flags) |
-			DMA_SxCR_TEIE |
-			DMA_SxCR_TCIE);
+			DMA_SxCR_TEIE);
 	dmaChannelPeripheral_.writeNdtr(transactions);
 	dmaChannelPeripheral_.writePar(peripheralAddress);
 	dmaChannelPeripheral_.writeM0ar(memoryAddress);
