@@ -14,6 +14,8 @@
 #include "distortos/chip/STM32-SPIv2.hpp"
 #include "distortos/chip/STM32-SPIv2-SpiPeripheral.hpp"
 
+#include "estd/log2u.hpp"
+
 using trompeloeil::_;
 
 namespace
@@ -127,7 +129,7 @@ TEST_CASE("Testing configure()", "[configure]")
 		DYNAMIC_SECTION("Trying to use clock frequency " << clockFrequency << " should succeed")
 		{
 			const auto divider = (peripheralFrequency + clockFrequency - 1) / clockFrequency;
-			const auto br = divider <= 2 ? 0 : 31 - __builtin_clz(divider - 1);
+			const auto br = divider <= 2 ? 0 : estd::log2u(divider - 1);
 			const auto newCr1 = (initialCr1 & ~SPI_CR1_BR) | br << SPI_CR1_BR_Pos;
 			const auto oldCr1 = newCr1 ^ SPI_CR1_BR;
 			const auto realClockFrequency = peripheralFrequency / (1 << (br + 1));

@@ -2,7 +2,7 @@
  * \file
  * \brief Implementation of SPIv1 functions for STM32
  *
- * \author Copyright (C) 2016-2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2016-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -12,6 +12,8 @@
 #include "distortos/chip/STM32-SPIv1.hpp"
 
 #include "distortos/chip/STM32-SPIv1-SpiPeripheral.hpp"
+
+#include "estd/log2u.hpp"
 
 #include <cerrno>
 
@@ -36,7 +38,7 @@ std::pair<int, uint32_t> configureSpi(const SpiPeripheral& spiPeripheral, const 
 	if (divider > 256)
 		return {EINVAL, {}};
 
-	const uint32_t br = divider <= 2 ? 0 : 31 - __builtin_clz(divider - 1);
+	const uint32_t br = divider <= 2 ? 0 : estd::log2u(divider - 1);
 
 	auto cr1 = spiPeripheral.readCr1();
 
