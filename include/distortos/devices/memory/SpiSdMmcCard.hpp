@@ -93,8 +93,8 @@ public:
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
-	 * \param [in] address is the address of range that will be erased, must be a multiple of erase block size
-	 * \param [in] size is the size of erased range, bytes, must be a multiple of erase block size
+	 * \param [in] address is the address of range that will be erased, must be a multiple of block size
+	 * \param [in] size is the size of erased range, bytes, must be a multiple of block size
 	 *
 	 * \return 0 on success, error code otherwise:
 	 * - EBADF - the device is not opened;
@@ -153,9 +153,9 @@ public:
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
-	 * \param [in] address is the address of data that will be read, must be a multiple of read block size
+	 * \param [in] address is the address of data that will be read, must be a multiple of block size
 	 * \param [out] buffer is the buffer into which the data will be read
-	 * \param [in] size is the size of \a buffer, bytes, must be a multiple of read block size
+	 * \param [in] size is the size of \a buffer, bytes, must be a multiple of block size
 	 *
 	 * \return 0 on success, error code otherwise:
 	 * - EBADF - the device is not opened;
