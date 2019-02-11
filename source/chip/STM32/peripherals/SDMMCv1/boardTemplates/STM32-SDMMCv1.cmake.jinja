@@ -1,0 +1,52 @@
+#
+# file: {{ metadata[metadataIndex][2] }}
+#
+# author: Copyright (C) 2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+#
+# This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
+# distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+#
+# Automatically generated file - do not edit!
+#
+{% for key, sdmmc in dictionary['SDMMCs'].items() if sdmmc is mapping and 'ST,STM32-SDMMC-v1' in sdmmc['compatible'] %}
+{% set dmaVersion =
+		sdmmc['DMA'][0]['controller']['compatible'][0].rpartition(',')[2] | sanitize('[^0-9A-Za-z]') | upper %}
+
+distortosSetConfiguration(BOOLEAN
+		distortos_Peripherals_{{ key }}
+		OFF
+		HELP "Enable {{ key }} low-level driver."
+		OUTPUT_NAME CONFIG_CHIP_STM32_SDMMCV1_{{ key | upper }}_ENABLE)
+
+if(distortos_Peripherals_{{ key }})
+
+	distortosSetConfiguration(STRING
+			distortos_Peripherals_{{ key }}_00_DMA
+{% for dma in sdmmc['DMA'] %}
+			"{{ dma['controller']['$path'][-1] }} channel {{ dma['channel'] }} (request {{ dma['request'] }})"
+{% endfor %}
+			HELP "Select DMA channel used by {{ key }} low-level driver."
+			NO_OUTPUT)
+
+	string(REGEX MATCH
+			"DMA([0-9]+) channel ([0-9]+) \\(request ([0-9]+)\\)"
+			dummy
+			"${distortos_Peripherals_{{ key }}_00_DMA}")
+	distortosSetFixedConfiguration(INTEGER
+			CONFIG_CHIP_STM32_SDMMCV1_{{ key | upper }}_DMA
+			"${CMAKE_MATCH_1}")
+	distortosSetFixedConfiguration(INTEGER
+			CONFIG_CHIP_STM32_SDMMCV1_{{ key | upper }}_DMA_CHANNEL
+			"${CMAKE_MATCH_2}")
+	distortosSetFixedConfiguration(INTEGER
+			CONFIG_CHIP_STM32_SDMMCV1_{{ key | upper }}_DMA_REQUEST
+			"${CMAKE_MATCH_3}")
+	list(APPEND {{ dmaVersion }}_DMA${CMAKE_MATCH_1}_DEPENDENTS "{{ key }}")
+	list(APPEND {{ dmaVersion }}_DMA${CMAKE_MATCH_1}_CHANNEL${CMAKE_MATCH_2}_DEPENDENTS "{{ key }}")
+
+	set(ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_{{ sdmmc['interrupt']['vector'] | upper }}_ENABLE ON)
+
+endif(distortos_Peripherals_{{ key }})
+{% endfor %}
+
+include("${CMAKE_CURRENT_SOURCE_DIR}/source/chip/STM32/peripherals/SDMMCv1/distortos-sources.cmake")
