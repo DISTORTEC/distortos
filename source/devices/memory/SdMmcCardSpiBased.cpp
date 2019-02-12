@@ -9,7 +9,7 @@
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#include "distortos/devices/memory/SpiSdMmcCard.hpp"
+#include "distortos/devices/memory/SdMmcCardSpiBased.hpp"
 
 #include "distortos/devices/communication/SpiDeviceProxy.hpp"
 #include "distortos/devices/communication/SpiDeviceSelectGuard.hpp"

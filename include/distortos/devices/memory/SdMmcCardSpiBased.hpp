@@ -9,8 +9,8 @@
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#ifndef INCLUDE_DISTORTOS_DEVICES_MEMORY_SPISDMMCCARD_HPP_
-#define INCLUDE_DISTORTOS_DEVICES_MEMORY_SPISDMMCCARD_HPP_
+#ifndef INCLUDE_DISTORTOS_DEVICES_MEMORY_SDMMCCARDSPIBASED_HPP_
+#define INCLUDE_DISTORTOS_DEVICES_MEMORY_SDMMCCARDSPIBASED_HPP_
 
 #include "distortos/devices/communication/SpiDevice.hpp"
 
@@ -281,4 +281,4 @@ private:
 
 }	// namespace distortos
 
-#endif	// INCLUDE_DISTORTOS_DEVICES_MEMORY_SPISDMMCCARD_HPP_
+#endif	// INCLUDE_DISTORTOS_DEVICES_MEMORY_SDMMCCARDSPIBASED_HPP_
