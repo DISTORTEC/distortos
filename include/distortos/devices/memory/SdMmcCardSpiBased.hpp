@@ -54,11 +54,11 @@ public:
 	 *
 	 * \param [in] spiMaster is a reference to SPI master to which this SD or MMC card is connected
 	 * \param [in] slaveSelectPin is a reference to slave select pin of this SD or MMC card
-	 * \param [in] clockFrequency is the desired clock frequency of SD or MMC card, Hz, default - 5 MHz
+	 * \param [in] clockFrequency is the desired clock frequency of SD or MMC card, Hz, default - 25 MHz
 	 */
 
 	constexpr SdMmcCardSpiBased(SpiMaster& spiMaster, OutputPin& slaveSelectPin,
-			const uint32_t clockFrequency = 5000000) :
+			const uint32_t clockFrequency = 25000000) :
 					spiDevice_{spiMaster, slaveSelectPin},
 					blocksCount_{},
 					auSize_{},
