@@ -1,6 +1,6 @@
 /**
  * \file
- * \brief SpiSdMmcCard class implementation
+ * \brief SdMmcCardSpiBased class implementation
  *
  * \author Copyright (C) 2018-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
@@ -9,7 +9,7 @@
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#include "distortos/devices/memory/SpiSdMmcCard.hpp"
+#include "distortos/devices/memory/SdMmcCardSpiBased.hpp"
 
 #include "distortos/devices/communication/SpiDeviceProxy.hpp"
 #include "distortos/devices/communication/SpiDeviceSelectGuard.hpp"
@@ -1156,12 +1156,12 @@ std::pair<int, uint8_t> executeAcmd41(SpiMasterProxy& spiMasterProxy, const bool
 | public functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-SpiSdMmcCard::~SpiSdMmcCard()
+SdMmcCardSpiBased::~SdMmcCardSpiBased()
 {
 
 }
 
-int SpiSdMmcCard::close()
+int SdMmcCardSpiBased::close()
 {
 	const SpiDeviceProxy spiDeviceProxy {spiDevice_};
 
@@ -1173,7 +1173,7 @@ int SpiSdMmcCard::close()
 	return ret;
 }
 
-int SpiSdMmcCard::erase(const uint64_t address, const uint64_t size)
+int SdMmcCardSpiBased::erase(const uint64_t address, const uint64_t size)
 {
 	const SpiDeviceProxy spiDeviceProxy {spiDevice_};
 
@@ -1247,22 +1247,22 @@ int SpiSdMmcCard::erase(const uint64_t address, const uint64_t size)
 	return {};
 }
 
-size_t SpiSdMmcCard::getBlockSize() const
+size_t SdMmcCardSpiBased::getBlockSize() const
 {
 	return blockSize;
 }
 
-uint64_t SpiSdMmcCard::getSize() const
+uint64_t SdMmcCardSpiBased::getSize() const
 {
 	return static_cast<decltype(getSize())>(blockSize) * blocksCount_;
 }
 
-int SpiSdMmcCard::lock()
+int SdMmcCardSpiBased::lock()
 {
 	return spiDevice_.lock();
 }
 
-int SpiSdMmcCard::open()
+int SdMmcCardSpiBased::open()
 {
 	const SpiDeviceProxy spiDeviceProxy {spiDevice_};
 
@@ -1295,7 +1295,7 @@ int SpiSdMmcCard::open()
 	return 0;
 }
 
-int SpiSdMmcCard::read(const uint64_t address, void* const buffer, const size_t size)
+int SdMmcCardSpiBased::read(const uint64_t address, void* const buffer, const size_t size)
 {
 	const SpiDeviceProxy spiDeviceProxy {spiDevice_};
 
@@ -1358,17 +1358,17 @@ int SpiSdMmcCard::read(const uint64_t address, void* const buffer, const size_t 
 	return {};
 }
 
-int SpiSdMmcCard::synchronize()
+int SdMmcCardSpiBased::synchronize()
 {
 	return {};
 }
 
-int SpiSdMmcCard::unlock()
+int SdMmcCardSpiBased::unlock()
 {
 	return spiDevice_.unlock();
 }
 
-int SpiSdMmcCard::write(const uint64_t address, const void* const buffer, const size_t size)
+int SdMmcCardSpiBased::write(const uint64_t address, const void* const buffer, const size_t size)
 {
 	const SpiDeviceProxy spiDeviceProxy {spiDevice_};
 
@@ -1454,7 +1454,7 @@ int SpiSdMmcCard::write(const uint64_t address, const void* const buffer, const 
 | private functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-void SpiSdMmcCard::deinitialize()
+void SdMmcCardSpiBased::deinitialize()
 {
 	blocksCount_ = {};
 	auSize_ = {};
@@ -1465,7 +1465,7 @@ void SpiSdMmcCard::deinitialize()
 	type_ = {};
 }
 
-int SpiSdMmcCard::initialize(const SpiDeviceProxy& spiDeviceProxy)
+int SdMmcCardSpiBased::initialize(const SpiDeviceProxy& spiDeviceProxy)
 {
 	SpiMasterProxy spiMasterProxy {spiDeviceProxy};
 
