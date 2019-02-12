@@ -13,6 +13,9 @@ All notable changes to this project will be documented in this file. This projec
 chip.
 - Added basic support for *STM32's* *DMAv1* and *DMAv2*, along with data in *CSV* and *YAML* files for each supported
 chip and unit tests.
+- Added basic support for *STM32's* *SDMMCv1*, currently only for *STM32F7* chip family. Support includes data in *CSV*
+and *YAML* files, as well as unit tests of `distortos::chip::SdMmcCardLowLevel` low-level driver, which implements
+`distortos::devices::SdMmcCardLowLevel` interface.
 - Added `distortos::chip::SpiMasterLowLevelDmaBased` classes for *STM32's* *SPIv1* and *SPIv2*. These classes implement
 `distortos::devices::SpiMasterLowLevel` interface and use DMA for transfers.
 - Added `distortos::devices::BlockDevice` and `distortos::devices::MemoryTechnologyDevice` interface classes.

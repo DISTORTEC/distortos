@@ -270,6 +270,27 @@ GPIOs:
     - ST,STM32-GPIO-v2
     $labels:
     - GPIOH
+SDMMCs:
+  compatible:
+  - ST,STM32-SDMMCs-v1-group
+  SDMMC1:
+    compatible:
+    - ST,STM32-SDMMC-v1
+    interrupt:
+      controller: !Reference
+        label: NVIC
+      vector: SDMMC1
+    DMA:
+    - controller: !Reference
+        label: DMA2
+      channel: 3
+      request: 4
+    - controller: !Reference
+        label: DMA2
+      channel: 6
+      request: 4
+    $labels:
+    - SDMMC1
 SPIs:
   compatible:
   - ST,STM32-SPIs-v2-group

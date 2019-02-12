@@ -24,37 +24,66 @@ namespace distortos
 namespace chip
 {
 
-/// DMA transfer configuration flags
-enum class DmaChannelFlags : uint16_t
+enum class DmaChannelFlags : uint32_t
 {
-	transferCompleteInterruptDisable = 0 << 0,
-	transferCompleteInterruptEnable = 1 << 0,
+	transferCompleteInterruptDisable = 0 << 4,
+	transferCompleteInterruptEnable = 1 << 4,
 
-	peripheralToMemory = 0 << 1,
-	memoryToPeripheral = 1 << 1,
+#ifdef DISTORTOS_CHIP_STM32_DMAV2
 
-	peripheralFixed = 0 << 2,
-	peripheralIncrement = 1 << 2,
+	dmaFlowController = 0 << 5,
+	peripheralFlowController = 1 << 5,
 
-	memoryFixed = 0 << 3,
-	memoryIncrement = 1 << 3,
+#endif	// def DISTORTOS_CHIP_STM32_DMAV2
 
-	peripheralDataSize1 = 0 << 4,
-	peripheralDataSize2 = 1 << 4,
-	peripheralDataSize4 = 2 << 4,
+	peripheralToMemory = 0 << 6,
+	memoryToPeripheral = 1 << 6,
 
-	memoryDataSize1 = 0 << 6,
-	memoryDataSize2 = 1 << 6,
-	memoryDataSize4 = 2 << 6,
+	peripheralFixed = 0 << 9,
+	peripheralIncrement = 1 << 9,
 
-	lowPriority = 0 << 8,
-	mediumPriority = 1 << 8,
-	highPriority = 2 << 8,
-	veryHighPriority = 3 << 8,
+	memoryFixed = 0 << 10,
+	memoryIncrement = 1 << 10,
+
+	peripheralDataSize1 = 0 << 11,
+	peripheralDataSize2 = 1 << 11,
+	peripheralDataSize4 = 2 << 11,
+
+	memoryDataSize1 = 0 << 13,
+	memoryDataSize2 = 1 << 13,
+	memoryDataSize4 = 2 << 13,
+
+	lowPriority = 0 << 16,
+	mediumPriority = 1 << 16,
+	highPriority = 2 << 16,
+	veryHighPriority = 3 << 16,
+
+#ifdef DISTORTOS_CHIP_STM32_DMAV2
+
+	peripheralBurstSize1 = 0 << 21,
+	peripheralBurstSize4 = 1 << 21,
+	peripheralBurstSize8 = 2 << 21,
+	peripheralBurstSize16 = 3 << 21,
+
+	memoryBurstSize1 = 0 << 23,
+	memoryBurstSize4 = 1 << 23,
+	memoryBurstSize8 = 2 << 23,
+	memoryBurstSize16 = 3 << 23,
+
+#endif	// def DISTORTOS_CHIP_STM32_DMAV2
 
 	dataSize1 = peripheralDataSize1 | memoryDataSize1,
 	dataSize2 = peripheralDataSize2 | memoryDataSize2,
 	dataSize4 = peripheralDataSize4 | memoryDataSize4,
+
+#ifdef DISTORTOS_CHIP_STM32_DMAV2
+
+	burstSize1 = peripheralBurstSize1 | memoryBurstSize1,
+	burstSize4 = peripheralBurstSize4 | memoryBurstSize4,
+	burstSize8 = peripheralBurstSize8 | memoryBurstSize8,
+	burstSize16 = peripheralBurstSize16 | memoryBurstSize16,
+
+#endif	// def DISTORTOS_CHIP_STM32_DMAV2
 };
 
 }	// namespace chip

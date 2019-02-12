@@ -85,6 +85,9 @@ constexpr uint32_t maxPllsaiqOutFrequency {216000000};
 /// maximum allowed value for PLLSAI "R" output frequency, Hz
 constexpr uint32_t maxPllsairOutFrequency {216000000};
 
+/// maximum allowed value for SDMMC adapter clock frequency, Hz
+constexpr uint32_t maxSdmmcFrequency {48000000};
+
 #ifdef CONFIG_CHIP_STM32F7_STANDARD_CLOCK_CONFIGURATION_ENABLE
 
 #if defined(CONFIG_CHIP_STM32F7_PWR_OVER_DRIVE_ENABLE)
@@ -234,6 +237,32 @@ constexpr uint32_t sysclkFrequency {CONFIG_CHIP_STM32F7_RCC_HSE_FREQUENCY};
 constexpr uint32_t sysclkFrequency {pllOutFrequency};
 #endif	// defined(CONFIG_CHIP_STM32F7_RCC_SYSCLK_PLL)
 
+#if defined(CONFIG_CHIP_STM32F7_RCC_SDMMC1CLK_PLL48CLK) || defined(CONFIG_CHIP_STM32F7_RCC_SDMMC1CLK_SYSCLK)
+
+/// SDMMC1 adapter clock frequency, Hz
+#if defined(CONFIG_CHIP_STM32F7_RCC_SDMMC1CLK_PLL48CLK)
+constexpr uint32_t sdmmc1clkFrequency {pll48clkFrequency};
+#elif defined(CONFIG_CHIP_STM32F7_RCC_SDMMC1CLK_SYSCLK)
+constexpr uint32_t sdmmc1clkFrequency {sysclkFrequency};
+#endif	// defined(CONFIG_CHIP_STM32F7_RCC_SDMMC1CLK_SYSCLK)
+
+static_assert(sdmmc1clkFrequency <= maxSdmmcFrequency, "Invalid SDMMC1 adapter clock frequency!");
+
+#endif	// defined(CONFIG_CHIP_STM32F7_RCC_SDMMC1CLK_PLL48CLK) || defined(CONFIG_CHIP_STM32F7_RCC_SDMMC1CLK_SYSCLK)
+
+#if defined(CONFIG_CHIP_STM32F7_RCC_SDMMC2CLK_PLL48CLK) || defined(CONFIG_CHIP_STM32F7_RCC_SDMMC2CLK_SYSCLK)
+
+/// SDMMC2 adapter clock frequency, Hz
+#if defined(CONFIG_CHIP_STM32F7_RCC_SDMMC2CLK_PLL48CLK)
+constexpr uint32_t sdmmc2clkFrequency {pll48clkFrequency};
+#elif defined(CONFIG_CHIP_STM32F7_RCC_SDMMC2CLK_SYSCLK)
+constexpr uint32_t sdmmc2clkFrequency {sysclkFrequency};
+#endif	// defined(CONFIG_CHIP_STM32F7_RCC_SDMMC2CLK_SYSCLK)
+
+static_assert(sdmmc2clkFrequency <= maxSdmmcFrequency, "Invalid SDMMC2 adapter clock frequency!");
+
+#endif	// defined(CONFIG_CHIP_STM32F7_RCC_SDMMC2CLK_PLL48CLK) || defined(CONFIG_CHIP_STM32F7_RCC_SDMMC2CLK_SYSCLK)
+
 #else	// !def CONFIG_CHIP_STM32F7_STANDARD_CLOCK_CONFIGURATION_ENABLE
 
 /// SYSCLK frequency, Hz
@@ -245,6 +274,20 @@ constexpr uint32_t sysclkFrequency {CONFIG_CHIP_STM32F7_RCC_SYSCLK_FREQUENCY};
 constexpr uint32_t pll48clkFrequency {CONFIG_CHIP_STM32F7_RCC_PLL48CLK_FREQUENCY};
 
 #endif	// CONFIG_CHIP_STM32F7_RCC_PLL48CLK_FREQUENCY != 0
+
+#if CONFIG_CHIP_STM32F7_RCC_SDMMC1CLK_FREQUENCY != 0
+
+/// SDMMC1 adapter clock frequency, Hz
+constexpr uint32_t sdmmc1clkFrequency {CONFIG_CHIP_STM32F7_RCC_SDMMC1CLK_FREQUENCY};
+
+#endif	// CONFIG_CHIP_STM32F7_RCC_SDMMC1CLK_FREQUENCY != 0
+
+#if CONFIG_CHIP_STM32F7_RCC_SDMMC2CLK_FREQUENCY != 0
+
+/// SDMMC2 adapter clock frequency, Hz
+constexpr uint32_t sdmmc2clkFrequency {CONFIG_CHIP_STM32F7_RCC_SDMMC2CLK_FREQUENCY};
+
+#endif	// CONFIG_CHIP_STM32F7_RCC_SDMMC2CLK_FREQUENCY != 0
 
 /// maximum allowed APB1 (low speed) frequency, Hz
 constexpr uint32_t maxApb1Frequency {maxApb1Frequencies[1]};

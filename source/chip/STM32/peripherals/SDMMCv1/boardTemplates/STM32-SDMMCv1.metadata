@@ -1,0 +1,11 @@
+{% if 'SDMMCs' in dictionary and 'ST,STM32-SDMMCs-v1-group' in dictionary['SDMMCs']['compatible'] %}
+('source/chip/STM32/peripherals/SDMMCv1/boardTemplates/STM32-SDMMCv1-sdmmcs.cpp.jinja',
+		{},
+		'{{ sanitizedBoard }}-sdmmcs.cpp'),
+('source/chip/STM32/peripherals/SDMMCv1/boardTemplates/STM32-SDMMCv1-sdmmcs.hpp.jinja',
+		{},
+		'include/distortos/chip/sdmmcs.hpp'),
+('source/chip/STM32/peripherals/SDMMCv1/boardTemplates/STM32-SDMMCv1.cmake.jinja',
+		{},
+		'cmake/60-STM32-SDMMCv1.cmake'),
+{% endif %}
