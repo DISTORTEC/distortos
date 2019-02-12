@@ -84,12 +84,17 @@ enum class DmaChannelFlags : uint16_t
 
 }	// namespace distortos
 
+namespace estd
+{
+
 /// \brief Enable bitwise operators for distortos::chip::DmaChannelFlags
 template<>
-struct estd::isEnumClassFlags<distortos::chip::DmaChannelFlags> : std::true_type
+struct isEnumClassFlags<distortos::chip::DmaChannelFlags> : std::true_type
 {
 
 };
+
+}	// namespace estd
 
 namespace distortos
 {
