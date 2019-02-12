@@ -1,6 +1,6 @@
 /**
  * \file
- * \brief SpiSdMmcCard class header
+ * \brief SdMmcCardSpiBased class header
  *
  * \author Copyright (C) 2018-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
@@ -23,12 +23,12 @@ namespace devices
 {
 
 /**
- * SpiSdMmcCard class is a SD or MMC card connected via SPI.
+ * SdMmcCardSpiBased class is a SD or MMC card connected via SPI.
  *
  * \ingroup devices
  */
 
-class SpiSdMmcCard : public BlockDevice
+class SdMmcCardSpiBased : public BlockDevice
 {
 public:
 
@@ -50,32 +50,33 @@ public:
 	constexpr static size_t blockSize {512};
 
 	/**
-	 * \brief SpiSdMmcCard's constructor
+	 * \brief SdMmcCardSpiBased's constructor
 	 *
 	 * \param [in] spiMaster is a reference to SPI master to which this SD or MMC card is connected
 	 * \param [in] slaveSelectPin is a reference to slave select pin of this SD or MMC card
 	 * \param [in] clockFrequency is the desired clock frequency of SD or MMC card, Hz, default - 5 MHz
 	 */
 
-	constexpr SpiSdMmcCard(SpiMaster& spiMaster, OutputPin& slaveSelectPin, const uint32_t clockFrequency = 5000000) :
-			spiDevice_{spiMaster, slaveSelectPin},
-			blocksCount_{},
-			auSize_{},
-			clockFrequency_{clockFrequency},
-			eraseTimeoutMs_{},
-			readTimeoutMs_{},
-			writeTimeoutMs_{},
-			blockAddressing_{},
-			type_{}
+	constexpr SdMmcCardSpiBased(SpiMaster& spiMaster, OutputPin& slaveSelectPin,
+			const uint32_t clockFrequency = 5000000) :
+					spiDevice_{spiMaster, slaveSelectPin},
+					blocksCount_{},
+					auSize_{},
+					clockFrequency_{clockFrequency},
+					eraseTimeoutMs_{},
+					readTimeoutMs_{},
+					writeTimeoutMs_{},
+					blockAddressing_{},
+					type_{}
 	{
 
 	}
 
 	/**
-	 * \brief SpiSdMmcCard's destructor
+	 * \brief SdMmcCardSpiBased's destructor
 	 */
 
-	~SpiSdMmcCard() override;
+	~SdMmcCardSpiBased() override;
 
 	/**
 	 * \brief Closes SD or MMC card connected via SPI.
