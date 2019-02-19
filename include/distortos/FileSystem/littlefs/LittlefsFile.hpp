@@ -2,7 +2,7 @@
  * \file
  * \brief LittlefsFile class header
  *
- * \author Copyright (C) 2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2018-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -14,7 +14,11 @@
 
 #include "distortos/FileSystem/File.hpp"
 
+#include "distortos/distortosConfiguration.h"
+
 #include "lfs.h"
+
+#include <memory>
 
 namespace distortos
 {
@@ -236,6 +240,8 @@ private:
 	 */
 
 	constexpr explicit LittlefsFile(LittlefsFileSystem& fileSystem) :
+			buffer_{},
+			configuration_{},
 			file_{},
 			fileSystem_{fileSystem},
 			opened_{}
@@ -256,6 +262,12 @@ private:
 	 */
 
 	int open(const char* path, int flags);
+
+	/// file buffer
+	std::unique_ptr<uint8_t[]> buffer_;
+
+	/// littlefs file configuration
+	lfs_file_config configuration_;
 
 	/// littlefs file
 	lfs_file_t file_;

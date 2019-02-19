@@ -2,7 +2,7 @@
  * \file
  * \brief LittlefsFile class implementation
  *
- * \author Copyright (C) 2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2018-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -208,10 +208,26 @@ int LittlefsFile::open(const char* const path, const int flags)
 	if ((flags & O_APPEND) != 0)
 		convertedFlags |= LFS_O_APPEND;
 
-	const auto ret = lfs_file_open(&fileSystem_.fileSystem_, &file_, path, convertedFlags);
-	if (ret == LFS_ERR_OK)
-		opened_ = true;
-	return littlefsErrorToErrorCode(ret);
+	constexpr size_t alignment {CONFIG_MEMORYTECHNOLOGYDEVICE_BUFFER_ALIGNMENT};
+	constexpr size_t alignmentMargin {alignment > __BIGGEST_ALIGNMENT__ ? alignment - __BIGGEST_ALIGNMENT__ : 0};
+	const size_t bufferSize {fileSystem_.fileSystem_.cfg->prog_size + alignmentMargin};
+	std::unique_ptr<uint8_t[]> buffer {new (std::nothrow) uint8_t[bufferSize]};
+	if (buffer.get() == nullptr)
+		return ENOMEM;
+
+	// configuration_ is zeroed neither before use nor after failure - it is asumed that open() can be used only once
+	// and only on a newly constructed object
+
+	configuration_.buffer = reinterpret_cast<void*>((reinterpret_cast<uintptr_t>(buffer.get()) + alignment - 1) /
+			alignment * alignment);
+
+	const auto ret = lfs_file_opencfg(&fileSystem_.fileSystem_, &file_, path, convertedFlags, &configuration_);
+	if (ret != LFS_ERR_OK)
+		return littlefsErrorToErrorCode(ret);
+
+	buffer_ = std::move(buffer);
+	opened_ = true;
+	return {};
 }
 
 }	// namespace distortos
