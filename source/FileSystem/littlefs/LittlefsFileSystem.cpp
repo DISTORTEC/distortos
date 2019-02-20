@@ -31,6 +31,16 @@ namespace
 {
 
 /*---------------------------------------------------------------------------------------------------------------------+
+| local objects
++---------------------------------------------------------------------------------------------------------------------*/
+
+/// required buffer alignment of memory technology device
+constexpr size_t alignment {CONFIG_MEMORYTECHNOLOGYDEVICE_BUFFER_ALIGNMENT};
+
+/// margin between platform's biggest alignment and required buffer alignment
+constexpr size_t alignmentMargin {alignment > __BIGGEST_ALIGNMENT__ ? alignment - __BIGGEST_ALIGNMENT__ : 0};
+
+/*---------------------------------------------------------------------------------------------------------------------+
 | local functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
@@ -220,6 +230,29 @@ int LittlefsFileSystem::format()
 			blocksCount_ != 0 ? blocksCount_ : (memoryTechnologyDevice_.getSize() / configuration_.block_size);
 	configuration_.lookahead = (std::max(lookahead_, 1u) + 31) / 32 * 32;
 
+	const size_t lookaheadBufferSize {configuration_.lookahead / CHAR_BIT};
+	const std::unique_ptr<uint8_t[]> lookaheadBuffer {new (std::nothrow) uint8_t[lookaheadBufferSize]};
+	if (lookaheadBuffer.get() == nullptr)
+		return ENOMEM;
+
+	const size_t programBufferSize {configuration_.prog_size + alignmentMargin};
+	const std::unique_ptr<uint8_t[]> programBuffer {new (std::nothrow) uint8_t[programBufferSize]};
+	if (programBuffer.get() == nullptr)
+		return ENOMEM;
+
+	const size_t readBufferSize {configuration_.read_size + alignmentMargin};
+	const std::unique_ptr<uint8_t[]> readBuffer {new (std::nothrow) uint8_t[readBufferSize]};
+	if (readBuffer.get() == nullptr)
+		return ENOMEM;
+
+	configuration_.lookahead_buffer = lookaheadBuffer.get();
+	configuration_.prog_buffer =
+			reinterpret_cast<void*>((reinterpret_cast<uintptr_t>(programBuffer.get()) + alignment - 1) /
+			alignment * alignment);
+	configuration_.read_buffer =
+			reinterpret_cast<void*>((reinterpret_cast<uintptr_t>(readBuffer.get()) + alignment - 1) /
+			alignment * alignment);
+
 	const auto ret = lfs_format(&fileSystem_, &configuration_);
 	return littlefsErrorToErrorCode(ret);
 }
@@ -318,13 +351,37 @@ int LittlefsFileSystem::mount()
 			blocksCount_ != 0 ? blocksCount_ : (memoryTechnologyDevice_.getSize() / configuration_.block_size);
 	configuration_.lookahead = (std::max(lookahead_, 1u) + 31) / 32 * 32;
 
-	{
-		const auto ret = lfs_mount(&fileSystem_, &configuration_);
-		if (ret != LFS_ERR_OK)
-			return littlefsErrorToErrorCode(ret);
-	}
+	const size_t lookaheadBufferSize {configuration_.lookahead / CHAR_BIT};
+	std::unique_ptr<uint8_t[]> lookaheadBuffer {new (std::nothrow) uint8_t[lookaheadBufferSize]};
+	if (lookaheadBuffer.get() == nullptr)
+		return ENOMEM;
+
+	const size_t programBufferSize {configuration_.prog_size + alignmentMargin};
+	std::unique_ptr<uint8_t[]> programBuffer {new (std::nothrow) uint8_t[programBufferSize]};
+	if (programBuffer.get() == nullptr)
+		return ENOMEM;
+
+	const size_t readBufferSize {configuration_.read_size + alignmentMargin};
+	std::unique_ptr<uint8_t[]> readBuffer {new (std::nothrow) uint8_t[readBufferSize]};
+	if (readBuffer.get() == nullptr)
+		return ENOMEM;
+
+	configuration_.lookahead_buffer = lookaheadBuffer.get();
+	configuration_.prog_buffer =
+			reinterpret_cast<void*>((reinterpret_cast<uintptr_t>(programBuffer.get()) + alignment - 1) /
+			alignment * alignment);
+	configuration_.read_buffer =
+			reinterpret_cast<void*>((reinterpret_cast<uintptr_t>(readBuffer.get()) + alignment - 1) /
+			alignment * alignment);
+
+	const auto ret = lfs_mount(&fileSystem_, &configuration_);
+	if (ret != LFS_ERR_OK)
+		return littlefsErrorToErrorCode(ret);
 
 	mounted_ = true;
+	lookaheadBuffer_ = std::move(lookaheadBuffer);
+	programBuffer_ = std::move(programBuffer);
+	readBuffer_ = std::move(readBuffer);
 	closeScopeGuard.release();
 	return 0;
 }
@@ -406,6 +463,9 @@ int LittlefsFileSystem::unmount()
 	const auto unmountRet = lfs_unmount(&fileSystem_);
 	const auto closeRet = memoryTechnologyDevice_.close();
 	mounted_ = {};
+	lookaheadBuffer_.reset();
+	programBuffer_.reset();
+	readBuffer_.reset();
 
 	return unmountRet != LFS_ERR_OK ? littlefsErrorToErrorCode(unmountRet) : closeRet;
 }
