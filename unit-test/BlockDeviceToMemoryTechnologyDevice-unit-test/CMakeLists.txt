@@ -12,6 +12,9 @@ add_executable(BlockDeviceToMemoryTechnologyDevice-unit-test
 		${DISTORTOS_PATH}/source/devices/memory/BlockDeviceToMemoryTechnologyDevice.cpp
 		${MAIN_CPP})
 
+target_compile_definitions(BlockDeviceToMemoryTechnologyDevice-unit-test PUBLIC
+		DISTORTOS_UNIT_TEST)
+
 add_custom_target(run-BlockDeviceToMemoryTechnologyDevice-unit-test
 		COMMAND BlockDeviceToMemoryTechnologyDevice-unit-test
 		COMMENT BlockDeviceToMemoryTechnologyDevice-unit-test

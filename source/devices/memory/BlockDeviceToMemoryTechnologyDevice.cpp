@@ -13,6 +13,12 @@
 
 #include "distortos/devices/memory/BlockDevice.hpp"
 
+#ifndef DISTORTOS_UNIT_TEST
+
+#include "distortos/distortosConfiguration.h"
+
+#endif	// !def DISTORTOS_UNIT_TEST
+
 #include <mutex>
 
 namespace distortos
@@ -20,6 +26,13 @@ namespace distortos
 
 namespace devices
 {
+
+#ifndef DISTORTOS_UNIT_TEST
+
+static_assert(CONFIG_BLOCKDEVICE_BUFFER_ALIGNMENT <= CONFIG_MEMORYTECHNOLOGYDEVICE_BUFFER_ALIGNMENT,
+		"Buffer alignment for BlockDevice is greater than for MemoryTechnologyDevice!");
+
+#endif	// !def DISTORTOS_UNIT_TEST
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | public functions
