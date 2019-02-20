@@ -16,6 +16,7 @@ set_target_properties(littlefs PROPERTIES
 target_compile_definitions(littlefs PUBLIC
 		LFS_NO_DEBUG
 		LFS_NO_ERROR
+		LFS_NO_MALLOC
 		LFS_NO_WARN)
 target_include_directories(littlefs INTERFACE
 		${CMAKE_CURRENT_LIST_DIR}/littlefs)
