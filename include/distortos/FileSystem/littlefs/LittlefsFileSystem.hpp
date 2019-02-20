@@ -60,6 +60,9 @@ public:
 					configuration_{},
 					fileSystem_{},
 					mutex_{Mutex::Type::recursive, Mutex::Protocol::priorityInheritance},
+					lookaheadBuffer_{},
+					programBuffer_{},
+					readBuffer_{},
 					memoryTechnologyDevice_{memoryTechnologyDevice},
 					readBlockSize_{readBlockSize},
 					programBlockSize_{programBlockSize},
@@ -285,6 +288,15 @@ private:
 
 	/// mutex for serializing access to the object
 	distortos::Mutex mutex_;
+
+	/// lookahead buffer
+	std::unique_ptr<uint8_t[]> lookaheadBuffer_;
+
+	/// program buffer
+	std::unique_ptr<uint8_t[]> programBuffer_;
+
+	/// read buffer
+	std::unique_ptr<uint8_t[]> readBuffer_;
 
 	/// reference to associated memory technology device
 	devices::MemoryTechnologyDevice& memoryTechnologyDevice_;

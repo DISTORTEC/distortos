@@ -102,6 +102,25 @@ function(distortosMap target mapFilename)
 endfunction()
 
 #
+# Returns max value from the list of integers (passed after named arguments, at least one must be present) in variable
+# `output`.
+#
+
+function(distortosMax output)
+	if(ARGC LESS 2)
+		message(FATAL_ERROR "List of integers not provided")
+	endif()
+	unset(max)
+	foreach(item ${ARGN})
+		distortosCheckInteger("item" ${item} -2147483648 2147483647)
+		if(NOT DEFINED max OR max LESS item)
+			set(max ${item})
+		endif()
+	endforeach()
+	set("${output}" "${max}" PARENT_SCOPE)
+endfunction()
+
+#
 # Removes flag which matches `flag` pattern from cache variable `variable`. The flag is removed with any optional value
 # and any leading whitespace. Useful for cache variables like `CMAKE_CXX_FLAGS` and similar.
 #

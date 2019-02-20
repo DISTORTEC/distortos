@@ -7,6 +7,8 @@
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #
 
+list(APPEND DISTORTOS_SDMMCCARD_BUFFER_ALIGNMENTS 16)
+
 target_include_directories(distortos PUBLIC
 		${CMAKE_CURRENT_LIST_DIR}/include)
 
