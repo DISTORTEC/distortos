@@ -202,6 +202,18 @@ if(distortos_Checks_03_Stack_guard_contents_during_context_switch OR
 endif(distortos_Checks_03_Stack_guard_contents_during_context_switch OR
 		distortos_Checks_04_Stack_guard_contents_during_system_tick)
 
+distortosSetConfiguration(BOOLEAN
+		distortos_Checks_06_Asserts
+		ON
+		HELP "Enable asserts.
+
+		Some errors, which are clearly program bugs, are never reported using error codes. When this option is enabled,
+		these preconditions, postconditions, invariants and assertions are checked with assert() macro. On the other
+		hand - with this option disabled, they are completely ignored.
+
+		It is highly recommended to keep this option enabled until the application is thoroughly tested."
+		NO_OUTPUT)
+
 if(NOT CMAKE_BUILD_TYPE)
 	message(STATUS "CMAKE_BUILD_TYPE not set, defaulting to RelWithDebInfo")
 	set_property(CACHE CMAKE_BUILD_TYPE PROPERTY VALUE RelWithDebInfo)
@@ -285,6 +297,11 @@ target_include_directories(distortos PUBLIC
 		include)
 target_link_libraries(distortos PUBLIC
 		littlefs)
+
+if(NOT distortos_Checks_06_Asserts)
+	target_compile_definitions(distortos PUBLIC
+			NDEBUG)
+endif(NOT distortos_Checks_06_Asserts)
 
 include(${DISTORTOS_BOARD_PATH}/distortos-board-sources.cmake)
 
