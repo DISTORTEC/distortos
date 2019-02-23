@@ -3,7 +3,7 @@
 #
 # file: travis-ci.sh
 #
-# author: Copyright (C) 2016-2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+# author: Copyright (C) 2016-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
 #
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -63,7 +63,7 @@ installBuild() {
 			installBuild678 '7.3.0' '180127'
 			;;
 		8)
-			installBuild678 '8.2.0' '180726'
+			installBuild678 '8.3.0' '190223'
 			;;
 		*)
 			echo "\"${1}\" is not a valid argument!" >&2
