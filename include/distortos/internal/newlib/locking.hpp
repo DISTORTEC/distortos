@@ -37,7 +37,7 @@ extern "C"
 
 extern __lock __lock___malloc_recursive_mutex;
 
-};	// extern "C"
+}	// extern "C"
 
 #endif	// defined(_RETARGETABLE_LOCKING)
 
