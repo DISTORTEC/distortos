@@ -37,6 +37,26 @@ add_compile_options(-Wall -Wextra -Wshadow)
 
 add_custom_target(run)
 
+option(COVERAGE "Enable generation of coverage reports with gcovr")
+
+if(COVERAGE)
+
+	add_compile_options(--coverage -fprofile-abs-path)
+
+	if(CMAKE_VERSION VERSION_GREATER_EQUAL 3.13)
+		add_link_options(--coverage)
+	else()
+		link_libraries(--coverage)
+	endif()
+
+	add_custom_target(coverage
+			COMMAND gcovr --html-details --exclude ${CMAKE_SOURCE_DIR} --output ${CMAKE_BINARY_DIR}/coverage.html
+			USES_TERMINAL
+			WORKING_DIRECTORY ${DISTORTOS_PATH})
+	add_dependencies(coverage run)
+
+endif(COVERAGE)
+
 add_subdirectory(BlockDeviceToMemoryTechnologyDevice-unit-test)
 add_subdirectory(C-API-ConditionVariable-unit-test)
 add_subdirectory(C-API-Mutex-unit-test)
