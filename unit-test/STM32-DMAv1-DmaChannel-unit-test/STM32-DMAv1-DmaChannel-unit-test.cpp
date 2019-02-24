@@ -186,51 +186,6 @@ TEST_CASE("Testing configureTransfer()", "[configureTransfer]")
 		REQUIRE(handle.reserve(channel, request1, functorMock) == 0);
 	}
 
-	SECTION("Trying to use invalid data size should fail with EINVAL")
-	{
-		constexpr auto memoryDataSize = Flags::memoryDataSize2 | Flags::memoryDataSize4;
-		REQUIRE(handle.configureTransfer({}, {}, 1, memoryDataSize) == EINVAL);
-		constexpr auto peripheralDataSize = Flags::peripheralDataSize2 | Flags::peripheralDataSize4;
-		REQUIRE(handle.configureTransfer({}, {}, 1, peripheralDataSize) == EINVAL);
-		constexpr auto dataSize = Flags::dataSize2 | Flags::dataSize4;
-		REQUIRE(handle.configureTransfer({}, {}, 1, dataSize) == EINVAL);
-	}
-
-	{
-		const uint8_t dataSizes[]
-		{
-				2,
-				4,
-		};
-		for (const auto dataSize : dataSizes)
-			for (uintptr_t address {1}; address < dataSize; ++address)
-			{
-				DYNAMIC_SECTION("Trying to use address " << static_cast<int>(address) << " when data size is " <<
-						static_cast<int>(dataSize) << " should fail with EINVAL")
-				{
-					const auto memoryDataSize = dataSize == 2 ? Flags::memoryDataSize2 : Flags::memoryDataSize4;
-					REQUIRE(handle.configureTransfer(address, {}, 1, memoryDataSize) == EINVAL);
-					const auto peripheralDataSize =
-							dataSize == 2 ? Flags::peripheralDataSize2 : Flags::peripheralDataSize4;
-					REQUIRE(handle.configureTransfer({}, address, 1, peripheralDataSize) == EINVAL);
-					const auto dataSizeFlags =
-							dataSize == 2 ? Flags::dataSize2 : Flags::dataSize4;
-					REQUIRE(handle.configureTransfer(address, address, 1, dataSizeFlags) == EINVAL);
-				}
-			}
-	}
-
-	SECTION("Trying to use 0 transactions should fail with EINVAL")
-	{
-		REQUIRE(handle.configureTransfer({}, {}, 0, {}) == EINVAL);
-	}
-
-	SECTION("Trying to configure the driver when transfer is ongoing should fail with EBUSY")
-	{
-		REQUIRE_CALL(channelPeripheralMock, readCcr()).IN_SEQUENCE(sequence).RETURN(DMA_CCR_EN);
-		REQUIRE(handle.configureTransfer({}, {}, 1, {}) == EBUSY);
-	}
-
 	SECTION("Trying to use valid configuration should succeed")
 	{
 		const Flags flagsArray[]

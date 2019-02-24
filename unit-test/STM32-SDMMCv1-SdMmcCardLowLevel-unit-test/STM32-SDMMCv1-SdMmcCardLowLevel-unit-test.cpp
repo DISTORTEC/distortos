@@ -391,18 +391,6 @@ TEST_CASE("Testing startTransaction()", "[startTransaction]")
 		REQUIRE(sdMmc.startTransaction(cardMock, {}, {}, Response{response},
 				Transfer{buffer, 1 << 25, blockSize, 100}) == EINVAL);
 	}
-	SECTION("DMA configuration error should propagate error code to caller")
-	{
-		constexpr size_t blockSize {512};
-
-		REQUIRE_CALL(peripheralMock, getFifoAddress()).IN_SEQUENCE(sequence).RETURN(fifoAddress);
-		constexpr int ret {0x7972c3f9};
-		REQUIRE_CALL(dmaChannelMock, configureTransfer(_, _, _, _)).IN_SEQUENCE(sequence).RETURN(ret);
-		uint32_t response;
-		uint8_t buffer[blockSize];
-		REQUIRE(sdMmc.startTransaction(cardMock, {}, {}, Response{response},
-				Transfer{buffer, sizeof(buffer), blockSize, 100}) == ret);
-	}
 
 	SECTION("Testing transactions without response")
 	{
@@ -560,7 +548,7 @@ TEST_CASE("Testing startTransaction()", "[startTransaction]")
 									return address == reinterpret_cast<uintptr_t>(buffer);
 								};
 						REQUIRE_CALL(dmaChannelMock, configureTransfer(_, fifoAddress, sizeof(buffer) / 4,
-								dmaFlags)).WITH(addressMatcher(_1)).IN_SEQUENCE(sequence).RETURN(0);
+								dmaFlags)).WITH(addressMatcher(_1)).IN_SEQUENCE(sequence);
 						REQUIRE_CALL(dmaChannelMock, startTransfer()).IN_SEQUENCE(sequence);
 						const auto dtimer = (adapterFrequency / 257 + 1000 - 1) / 1000 * timeoutMs;
 						REQUIRE_CALL(peripheralMock, writeDtimer(dtimer)).IN_SEQUENCE(sequence);
@@ -659,7 +647,7 @@ TEST_CASE("Testing startTransaction()", "[startTransaction]")
 									return address == reinterpret_cast<uintptr_t>(buffer);
 								};
 						REQUIRE_CALL(dmaChannelMock, configureTransfer(_, fifoAddress, sizeof(buffer) / 4,
-								dmaFlags)).WITH(addressMatcher(_1)).IN_SEQUENCE(sequence).RETURN(0);
+								dmaFlags)).WITH(addressMatcher(_1)).IN_SEQUENCE(sequence);
 						REQUIRE_CALL(dmaChannelMock, startTransfer()).IN_SEQUENCE(sequence);
 						const auto dtimer = (adapterFrequency / 257 + 1000 - 1) / 1000 * timeoutMs;
 						REQUIRE_CALL(peripheralMock, writeDtimer(dtimer)).IN_SEQUENCE(sequence);

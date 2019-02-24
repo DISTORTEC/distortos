@@ -146,14 +146,16 @@ public:
 		/**
 		 * \brief Configures parameters of transfer.
 		 *
+		 * \pre \a memoryAddress and \a peripheralAddress and \a transactions and \a flags are valid.
+		 * \pre No transfer is in progress.
+		 *
 		 * \param [in] memoryAddress is the memory address, must be divisible by configured memory data size
 		 * \param [in] peripheralAddress is the peripheral address, must be divisible by peripheral data size
-		 * \param [in] transactions is the number of transactions
+		 * \param [in] transactions is the number of transactions, [1; 65535]
 		 * \param [in] flags are configuration flags
 		 *
 		 * \return 0 on success, error code otherwise:
 		 * - EBADF - no low-level DMA channel driver is associated with this handle;
-		 * - error codes returned by DmaChannel::configureTransfer();
 		 */
 
 		int configureTransfer(const uintptr_t memoryAddress, const uintptr_t peripheralAddress,
@@ -162,7 +164,8 @@ public:
 			if (channel_ == nullptr)
 				return EBADF;
 
-			return channel_->configureTransfer(memoryAddress, peripheralAddress, transactions, flags);
+			channel_->configureTransfer(memoryAddress, peripheralAddress, transactions, flags);
+			return {};
 		}
 
 		/**
@@ -299,18 +302,17 @@ private:
 	/**
 	 * \brief Configures parameters of transfer.
 	 *
+	 * \pre \a memoryAddress and \a peripheralAddress and \a transactions and \a flags are valid.
+	 * \pre No transfer is in progress.
+	 *
 	 * \param [in] memoryAddress is the memory address, must be divisible by configured memory data size
 	 * \param [in] peripheralAddress is the peripheral address, must be divisible by peripheral data size
-	 * \param [in] transactions is the number of transactions
+	 * \param [in] transactions is the number of transactions, [1; 65535]
 	 * \param [in] flags are configuration flags
-	 *
-	 * \return 0 on success, error code otherwise:
-	 * - EBUSY - transfer is in progress;
-	 * - EINVAL - \a memoryAddress and/or \a peripheralAddress and/or \a transactions and/or \a flags are invalid;
-	 * - ENOTSUP - more than 65535 \a transactions are not supported;
 	 */
 
-	int configureTransfer(uintptr_t memoryAddress, uintptr_t peripheralAddress, size_t transactions, Flags flags) const;
+	void configureTransfer(uintptr_t memoryAddress, uintptr_t peripheralAddress, size_t transactions,
+			Flags flags) const;
 
 	/**
 	 * \return number of transactions left

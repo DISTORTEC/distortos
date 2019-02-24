@@ -130,7 +130,8 @@ public:
 			if (channel_ == nullptr)
 				return EBADF;
 
-			return channel_->configureTransfer(memoryAddress, peripheralAddress, transactions, flags);
+			channel_->configureTransfer(memoryAddress, peripheralAddress, transactions, flags);
+			return {};
 		}
 
 		std::pair<int, size_t> getTransactionsLeft() const
@@ -190,7 +191,7 @@ public:
 		DmaChannel* channel_;
 	};
 
-	MAKE_CONST_MOCK4(configureTransfer, int(uintptr_t, uintptr_t, size_t, Flags));
+	MAKE_CONST_MOCK4(configureTransfer, void(uintptr_t, uintptr_t, size_t, Flags));
 	MAKE_CONST_MOCK0(getTransactionsLeft, size_t());
 	MAKE_MOCK0(release, void());
 	MAKE_MOCK2(reserve, int(uint8_t, DmaChannelFunctor&));
