@@ -305,7 +305,7 @@ endif(NOT distortos_Checks_06_Asserts)
 
 include(${DISTORTOS_BOARD_PATH}/distortos-board-sources.cmake)
 
-set(DISTORTOS_BOARD_VERSION_MIN 8)
+set(DISTORTOS_BOARD_VERSION_MIN 9)
 if(NOT DEFINED DISTORTOS_BOARD_VERSION OR NOT DISTORTOS_BOARD_VERSION EQUAL DISTORTOS_BOARD_VERSION_MIN)
 	if(NOT DEFINED DISTORTOS_BOARD_VERSION)
 		message(FATAL_ERROR "Generated board has no version information. "
@@ -396,6 +396,24 @@ set(doxyfiles "${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile;${CMAKE_CURRENT_BINARY_DIR}/
 add_custom_target(distortos-doxygen
 		${CMAKE_COMMAND} -D "DOXYFILES=${doxyfiles}" -P ${CMAKE_CURRENT_SOURCE_DIR}/cmake/doxygen.cmake
 		VERBATIM)
+
+#-----------------------------------------------------------------------------------------------------------------------
+# update distortos configuration
+#-----------------------------------------------------------------------------------------------------------------------
+
+set(newConfigurationVersion 1)
+
+if(DISTORTOS_CONFIGURATION_VERSION LESS newConfigurationVersion)
+	message(STATUS "Updated configuration from version ${DISTORTOS_CONFIGURATION_VERSION} to "
+			"${newConfigurationVersion}")
+endif(DISTORTOS_CONFIGURATION_VERSION LESS newConfigurationVersion)
+
+unset(DISTORTOS_CONFIGURATION_VERSION)
+distortosSetConfiguration(INTEGER
+		DISTORTOS_CONFIGURATION_VERSION
+		${newConfigurationVersion}
+		INTERNAL
+		NO_OUTPUT)
 
 #-----------------------------------------------------------------------------------------------------------------------
 # cleanup distortos configuration
