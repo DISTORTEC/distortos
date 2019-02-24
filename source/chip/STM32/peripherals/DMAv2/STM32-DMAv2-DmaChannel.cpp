@@ -15,6 +15,7 @@
 #include "distortos/chip/STM32-DMAv2-DmaChannelPeripheral.hpp"
 #include "distortos/chip/STM32-DMAv2-DmaPeripheral.hpp"
 
+#include "distortos/assert.h"
 #include "distortos/InterruptMaskingLock.hpp"
 
 #include <array>
@@ -295,14 +296,11 @@ int DmaChannel::reserve(const uint8_t request, DmaChannelFunctor& functor)
 	return {};
 }
 
-int DmaChannel::startTransfer() const
+void DmaChannel::startTransfer() const
 {
 	const auto cr = dmaChannelPeripheral_.readCr();
-	if ((cr & DMA_SxCR_EN) != 0)
-		return EBUSY;
-
+	assert((cr & DMA_SxCR_EN) == 0);
 	modifyCr(cr, dmaChannelPeripheral_, {}, DMA_SxCR_EN);
-	return {};
 }
 
 void DmaChannel::stopTransfer() const

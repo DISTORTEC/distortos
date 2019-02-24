@@ -304,8 +304,8 @@ TEST_CASE("Testing startTransfer()", "[startTransfer]")
 								};
 						REQUIRE_CALL(txDmaChannelMock, configureTransfer(_, drAddress, transferSize / dataSize,
 								txDmaFlags)).WITH(txAddressMatcher(_1)).IN_SEQUENCE(sequence).RETURN(0);
-						REQUIRE_CALL(rxDmaChannelMock, startTransfer()).IN_SEQUENCE(sequence).RETURN(0);
-						REQUIRE_CALL(txDmaChannelMock, startTransfer()).IN_SEQUENCE(sequence).RETURN(0);
+						REQUIRE_CALL(rxDmaChannelMock, startTransfer()).IN_SEQUENCE(sequence);
+						REQUIRE_CALL(txDmaChannelMock, startTransfer()).IN_SEQUENCE(sequence);
 						REQUIRE(spi.startTransfer(masterMock, txBuffer, rxBuffer, transferSize) == 0);
 
 						// starting another transfer when the previous one is ongoing should fail with EBUSY

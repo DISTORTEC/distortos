@@ -561,7 +561,7 @@ TEST_CASE("Testing startTransaction()", "[startTransaction]")
 								};
 						REQUIRE_CALL(dmaChannelMock, configureTransfer(_, fifoAddress, sizeof(buffer) / 4,
 								dmaFlags)).WITH(addressMatcher(_1)).IN_SEQUENCE(sequence).RETURN(0);
-						REQUIRE_CALL(dmaChannelMock, startTransfer()).IN_SEQUENCE(sequence).RETURN(0);
+						REQUIRE_CALL(dmaChannelMock, startTransfer()).IN_SEQUENCE(sequence);
 						const auto dtimer = (adapterFrequency / 257 + 1000 - 1) / 1000 * timeoutMs;
 						REQUIRE_CALL(peripheralMock, writeDtimer(dtimer)).IN_SEQUENCE(sequence);
 						REQUIRE_CALL(peripheralMock, writeDlen(sizeof(buffer))).IN_SEQUENCE(sequence);
@@ -660,7 +660,7 @@ TEST_CASE("Testing startTransaction()", "[startTransaction]")
 								};
 						REQUIRE_CALL(dmaChannelMock, configureTransfer(_, fifoAddress, sizeof(buffer) / 4,
 								dmaFlags)).WITH(addressMatcher(_1)).IN_SEQUENCE(sequence).RETURN(0);
-						REQUIRE_CALL(dmaChannelMock, startTransfer()).IN_SEQUENCE(sequence).RETURN(0);
+						REQUIRE_CALL(dmaChannelMock, startTransfer()).IN_SEQUENCE(sequence);
 						const auto dtimer = (adapterFrequency / 257 + 1000 - 1) / 1000 * timeoutMs;
 						REQUIRE_CALL(peripheralMock, writeDtimer(dtimer)).IN_SEQUENCE(sequence);
 						REQUIRE_CALL(peripheralMock, writeDlen(sizeof(buffer))).IN_SEQUENCE(sequence);

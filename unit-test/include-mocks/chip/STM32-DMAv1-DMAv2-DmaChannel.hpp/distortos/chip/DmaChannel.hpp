@@ -167,7 +167,8 @@ public:
 			if (channel_ == nullptr)
 				return EBADF;
 
-			return channel_->startTransfer();
+			channel_->startTransfer();
+			return {};
 		}
 
 		int stopTransfer() const
@@ -193,7 +194,7 @@ public:
 	MAKE_CONST_MOCK0(getTransactionsLeft, size_t());
 	MAKE_MOCK0(release, void());
 	MAKE_MOCK2(reserve, int(uint8_t, DmaChannelFunctor&));
-	MAKE_CONST_MOCK0(startTransfer, int());
+	MAKE_CONST_MOCK0(startTransfer, void());
 	MAKE_CONST_MOCK0(stopTransfer, void());
 };
 

@@ -328,12 +328,6 @@ TEST_CASE("Testing transfers", "[transfers]")
 		REQUIRE(handle.reserve(channel, request1, functorMock) == 0);
 	}
 
-	SECTION("Starting another transfer when the previous one is ongoing should fail with EBUSY")
-	{
-		REQUIRE_CALL(channelPeripheralMock, readCcr()).IN_SEQUENCE(sequence).RETURN(DMA_CCR_EN);
-		REQUIRE(handle.startTransfer() == EBUSY);
-	}
-
 	SECTION("Testing startTransfer()")
 	{
 		const auto newCcr = 0xaaaaaaaa | DMA_CCR_EN;
