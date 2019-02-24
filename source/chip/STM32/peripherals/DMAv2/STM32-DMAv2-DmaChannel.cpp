@@ -276,7 +276,9 @@ size_t DmaChannel::getTransactionsLeft() const
 
 void DmaChannel::release()
 {
-	stopTransfer();
+	constexpr uint32_t tcieHtieTeieDmeieEnFlags {DMA_SxCR_TCIE | DMA_SxCR_HTIE | DMA_SxCR_TEIE | DMA_SxCR_DMEIE |
+			DMA_SxCR_EN};
+	assert((dmaChannelPeripheral_.readCr() & tcieHtieTeieDmeieEnFlags) == 0);
 	functor_ = {};
 }
 

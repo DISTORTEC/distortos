@@ -212,7 +212,8 @@ size_t DmaChannel::getTransactionsLeft() const
 
 void DmaChannel::release()
 {
-	stopTransfer();
+	constexpr uint32_t teieHtieTcieEnFlags {DMA_CCR_TEIE | DMA_CCR_HTIE | DMA_CCR_TCIE | DMA_CCR_EN};
+	assert((dmaChannelPeripheral_.readCcr() & teieHtieTcieEnFlags) == 0);
 	functor_ = {};
 }
 

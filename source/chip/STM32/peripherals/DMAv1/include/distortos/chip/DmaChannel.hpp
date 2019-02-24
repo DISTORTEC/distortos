@@ -181,6 +181,8 @@ public:
 
 		/**
 		 * \brief Releases any associated low-level DMA channel driver.
+		 *
+		 * \pre No transfer is in progress.
 		 */
 
 		void release()
@@ -318,6 +320,8 @@ private:
 
 	/**
 	 * \brief Releases low-level DMA channel driver.
+	 *
+	 * \pre No transfer is in progress.
 	 */
 
 	void release();
