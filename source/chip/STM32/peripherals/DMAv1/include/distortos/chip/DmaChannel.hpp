@@ -195,6 +195,8 @@ public:
 		/**
 		 * \brief Reserves low-level DMA channel driver for exclusive use via this handle.
 		 *
+		 * \pre \a request is valid.
+		 *
 		 * \param [in] channel is a reference to low-level DMA channel driver which will be associated with this handle
 		 * \param [in] request is the request identifier with which low-level DMA channel driver will be associated
 		 * \param [in] functor is a reference to DmaChannelFunctor object that will be notified about transfer-related
@@ -323,13 +325,14 @@ private:
 	/**
 	 * \brief Reserves low-level DMA channel driver for exclusive use.
 	 *
+	 * \pre \a request is valid.
+	 *
 	 * \param [in] request is the request identifier with which this object will be associated
 	 * \param [in] functor is a reference to DmaChannelFunctor object that will be notified about transfer-related
 	 * events
 	 *
 	 * \return 0 on success, error code otherwise:
 	 * - EBUSY - the driver is not released;
-	 * - EINVAL - \a request is invalid;
 	 */
 
 	int reserve(uint8_t request, DmaChannelFunctor& functor);

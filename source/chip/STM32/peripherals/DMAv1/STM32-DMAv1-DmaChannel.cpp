@@ -218,8 +218,7 @@ void DmaChannel::release()
 
 int DmaChannel::reserve(const uint8_t request, DmaChannelFunctor& functor)
 {
-	if (request > maxRequest)
-		return EINVAL;
+	assert(request <= maxRequest);
 
 	const InterruptMaskingLock interruptMaskingLock;
 

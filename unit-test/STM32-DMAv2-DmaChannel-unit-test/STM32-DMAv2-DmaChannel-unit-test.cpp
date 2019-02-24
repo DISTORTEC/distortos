@@ -99,11 +99,6 @@ TEST_CASE("Testing reserve() & release() interactions", "[reserve/release]")
 		distortos::chip::DmaChannel::UniqueHandle handle;
 		REQUIRE(handle.stopTransfer() == EBADF);
 	}
-	SECTION("Reserving released driver with wrong request number should fail with EINVAL")
-	{
-		distortos::chip::DmaChannel::UniqueHandle handle;
-		REQUIRE(handle.reserve(channel, maxRequest + 1, functorMock) == EINVAL);
-	}
 	SECTION("Releasing released driver results in hardware accesses")
 	{
 		distortos::chip::DmaChannel::UniqueHandle handle;
