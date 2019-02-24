@@ -54,6 +54,9 @@ This allows using `distortos::Mutex` with all mutex helpers from
 - Added unit tests of all `estd::ContiguousRange` constructor overloads.
 - Added `estd/EnumClassFlags.hpp` which provides templated bitwise operators for enum class flags.
 - Added `estd/log2u.hpp` with `log2()`-like `constexpr` function for `unsigned int`.
+- Added option to test coverage in unit tests. Enable it by setting *CMake* variable `COVERAGE` of unit test subproject.
+You will then be able to use new `coverage` target to generate detailed *HTML* coverage reports with
+[gcovr](https://gcovr.com/) in build folder of unit test subproject.
 
 ### Changed
 
