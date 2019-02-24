@@ -28,12 +28,12 @@ set("CMAKE_CXX_FLAGS_DEBUG"
 		"STRING"
 		"Flags used by the CXX compiler during DEBUG builds.")
 set("CMAKE_CXX_FLAGS_MINSIZEREL"
-		"-Os -DNDEBUG"
+		"-Os"
 		CACHE
 		"STRING"
 		"Flags used by the CXX compiler during MINSIZEREL builds.")
 set("CMAKE_CXX_FLAGS_RELEASE"
-		"-O2 -DNDEBUG"
+		"-O2"
 		CACHE
 		"STRING"
 		"Flags used by the CXX compiler during RELEASE builds.")
@@ -53,12 +53,12 @@ set("CMAKE_C_FLAGS_DEBUG"
 		"STRING"
 		"Flags used by the C compiler during DEBUG builds.")
 set("CMAKE_C_FLAGS_MINSIZEREL"
-		"-Os -DNDEBUG"
+		"-Os"
 		CACHE
 		"STRING"
 		"Flags used by the C compiler during MINSIZEREL builds.")
 set("CMAKE_C_FLAGS_RELEASE"
-		"-O2 -DNDEBUG"
+		"-O2"
 		CACHE
 		"STRING"
 		"Flags used by the C compiler during RELEASE builds.")
@@ -182,6 +182,11 @@ set("CMAKE_VERBOSE_MAKEFILE"
 		CACHE
 		"BOOL"
 		"If this value is on, makefiles will be generated without the .SILENT directive, and all commands will be echoed to the console during the make.  This is useful for debugging only. With Visual Studio IDE projects all commands are done without /nologo.")
+set("DISTORTOS_CONFIGURATION_VERSION"
+		"1"
+		CACHE
+		"INTERNAL"
+		"")
 set("distortos_Architecture_00_Interrupt_stack_size"
 		"1024"
 		CACHE
@@ -232,6 +237,11 @@ set("distortos_Checks_05_Stack_guard_size"
 		CACHE
 		"STRING"
 		"Size (in bytes) of \"stack guard\".\n\nAny value which is not a multiple of stack alignment required by architecture, will be rounded up.\n\nAllowed range: [1; 2147483647]")
+set("distortos_Checks_06_Asserts"
+		"ON"
+		CACHE
+		"BOOL"
+		"Enable asserts.\n\nSome errors, which are clearly program bugs, are never reported using error codes. When this option is enabled, these preconditions, postconditions, invariants and assertions are checked with assert() macro. On the other hand - with this option disabled, they are completely ignored.\n\nIt is highly recommended to keep this option enabled until the application is thoroughly tested.")
 set("distortos_Clocks_00_Standard_configuration_of_clocks"
 		"ON"
 		CACHE
@@ -573,7 +583,7 @@ set("distortos_leds_Ld3"
 		"BOOL"
 		"Enable Ld3 (Red)")
 set("DISTORTOS_CONFIGURATION_NAMES"
-		"distortos_Architecture_00_Interrupt_stack_size;distortos_Architecture_01_Interrupt_priority_disabled_in_critical_sections;distortos_Build_00_Static_destructors;distortos_Build_02_Floating_point_ABI;distortos_Checks_00_Context_of_functions;distortos_Checks_01_Stack_pointer_range_during_context_switch;distortos_Checks_02_Stack_pointer_range_during_system_tick;distortos_Checks_03_Stack_guard_contents_during_context_switch;distortos_Checks_04_Stack_guard_contents_during_system_tick;distortos_Checks_05_Stack_guard_size;distortos_Clocks_00_Standard_configuration_of_clocks;distortos_Clocks_01_Voltage_scale_mode;distortos_Clocks_02_Over_drive_mode;distortos_Clocks_03_HSE;distortos_Clocks_04_PLL;distortos_Clocks_05_Clock_source_of_PLLs;distortos_Clocks_06_PLLM;distortos_Clocks_07_PLLN;distortos_Clocks_08_PLLP;distortos_Clocks_09_PLLQ;distortos_Clocks_11_System_clock_source;distortos_Clocks_12_HPRE;distortos_Clocks_13_PPRE1;distortos_Clocks_14_PPRE2;distortos_Memory_00_Flash_prefetch;distortos_Memory_01_Flash_data_cache;distortos_Memory_02_Flash_instruction_cache;distortos_Memory_regions_00_text_vectorTable;distortos_Memory_regions_01_text;distortos_Memory_regions_02_ARM_exidx;distortos_Memory_regions_03_Main_stack;distortos_Memory_regions_04_bss;distortos_Memory_regions_05_data_VMA;distortos_Memory_regions_06_data_LMA;distortos_Memory_regions_07_noinit;distortos_Memory_regions_08_SRAM_data_LMA;distortos_Memory_regions_09_CCM_data_LMA;distortos_Memory_regions_10_Process_stack;distortos_Memory_regions_11_Heap;distortos_Peripherals_DMA1;distortos_Peripherals_DMA2;distortos_Peripherals_GPIOA;distortos_Peripherals_GPIOB;distortos_Peripherals_GPIOC;distortos_Peripherals_GPIOD;distortos_Peripherals_GPIOE;distortos_Peripherals_GPIOF;distortos_Peripherals_GPIOG;distortos_Peripherals_GPIOH;distortos_Peripherals_SPI1;distortos_Peripherals_SPI2;distortos_Peripherals_SPI3;distortos_Peripherals_SPI4;distortos_Peripherals_SPI5;distortos_Peripherals_SPI6;distortos_Peripherals_UART4;distortos_Peripherals_UART5;distortos_Peripherals_UART7;distortos_Peripherals_UART8;distortos_Peripherals_USART1;distortos_Peripherals_USART2;distortos_Peripherals_USART3;distortos_Peripherals_USART6;distortos_Scheduler_00_Tick_frequency;distortos_Scheduler_01_Round_robin_frequency;distortos_Scheduler_02_Support_for_signals;distortos_Scheduler_03_Support_for_thread_detachment;distortos_Scheduler_04_Main_thread_stack_size;distortos_Scheduler_05_Main_thread_priority;distortos_Scheduler_06_Reception_of_signals_by_main_thread;distortos_Scheduler_07_Queued_signals_for_main_thread;distortos_Scheduler_08_SignalAction_objects_for_main_thread;distortos_buttons;distortos_buttons_B1;distortos_leds;distortos_leds_Ld1;distortos_leds_Ld2;distortos_leds_Ld3"
+		"DISTORTOS_CONFIGURATION_VERSION;distortos_Architecture_00_Interrupt_stack_size;distortos_Architecture_01_Interrupt_priority_disabled_in_critical_sections;distortos_Build_00_Static_destructors;distortos_Build_02_Floating_point_ABI;distortos_Checks_00_Context_of_functions;distortos_Checks_01_Stack_pointer_range_during_context_switch;distortos_Checks_02_Stack_pointer_range_during_system_tick;distortos_Checks_03_Stack_guard_contents_during_context_switch;distortos_Checks_04_Stack_guard_contents_during_system_tick;distortos_Checks_05_Stack_guard_size;distortos_Checks_06_Asserts;distortos_Clocks_00_Standard_configuration_of_clocks;distortos_Clocks_01_Voltage_scale_mode;distortos_Clocks_02_Over_drive_mode;distortos_Clocks_03_HSE;distortos_Clocks_04_PLL;distortos_Clocks_05_Clock_source_of_PLLs;distortos_Clocks_06_PLLM;distortos_Clocks_07_PLLN;distortos_Clocks_08_PLLP;distortos_Clocks_09_PLLQ;distortos_Clocks_11_System_clock_source;distortos_Clocks_12_HPRE;distortos_Clocks_13_PPRE1;distortos_Clocks_14_PPRE2;distortos_Memory_00_Flash_prefetch;distortos_Memory_01_Flash_data_cache;distortos_Memory_02_Flash_instruction_cache;distortos_Memory_regions_00_text_vectorTable;distortos_Memory_regions_01_text;distortos_Memory_regions_02_ARM_exidx;distortos_Memory_regions_03_Main_stack;distortos_Memory_regions_04_bss;distortos_Memory_regions_05_data_VMA;distortos_Memory_regions_06_data_LMA;distortos_Memory_regions_07_noinit;distortos_Memory_regions_08_SRAM_data_LMA;distortos_Memory_regions_09_CCM_data_LMA;distortos_Memory_regions_10_Process_stack;distortos_Memory_regions_11_Heap;distortos_Peripherals_DMA1;distortos_Peripherals_DMA2;distortos_Peripherals_GPIOA;distortos_Peripherals_GPIOB;distortos_Peripherals_GPIOC;distortos_Peripherals_GPIOD;distortos_Peripherals_GPIOE;distortos_Peripherals_GPIOF;distortos_Peripherals_GPIOG;distortos_Peripherals_GPIOH;distortos_Peripherals_SPI1;distortos_Peripherals_SPI2;distortos_Peripherals_SPI3;distortos_Peripherals_SPI4;distortos_Peripherals_SPI5;distortos_Peripherals_SPI6;distortos_Peripherals_UART4;distortos_Peripherals_UART5;distortos_Peripherals_UART7;distortos_Peripherals_UART8;distortos_Peripherals_USART1;distortos_Peripherals_USART2;distortos_Peripherals_USART3;distortos_Peripherals_USART6;distortos_Scheduler_00_Tick_frequency;distortos_Scheduler_01_Round_robin_frequency;distortos_Scheduler_02_Support_for_signals;distortos_Scheduler_03_Support_for_thread_detachment;distortos_Scheduler_04_Main_thread_stack_size;distortos_Scheduler_05_Main_thread_priority;distortos_Scheduler_06_Reception_of_signals_by_main_thread;distortos_Scheduler_07_Queued_signals_for_main_thread;distortos_Scheduler_08_SignalAction_objects_for_main_thread;distortos_buttons;distortos_buttons_B1;distortos_leds;distortos_leds_Ld1;distortos_leds_Ld2;distortos_leds_Ld3"
 		CACHE
 		"INTERNAL"
 		"")

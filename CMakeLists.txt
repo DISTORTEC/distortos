@@ -202,6 +202,18 @@ if(distortos_Checks_03_Stack_guard_contents_during_context_switch OR
 endif(distortos_Checks_03_Stack_guard_contents_during_context_switch OR
 		distortos_Checks_04_Stack_guard_contents_during_system_tick)
 
+distortosSetConfiguration(BOOLEAN
+		distortos_Checks_06_Asserts
+		ON
+		HELP "Enable asserts.
+
+		Some errors, which are clearly program bugs, are never reported using error codes. When this option is enabled,
+		these preconditions, postconditions, invariants and assertions are checked with assert() macro. On the other
+		hand - with this option disabled, they are completely ignored.
+
+		It is highly recommended to keep this option enabled until the application is thoroughly tested."
+		NO_OUTPUT)
+
 if(NOT CMAKE_BUILD_TYPE)
 	message(STATUS "CMAKE_BUILD_TYPE not set, defaulting to RelWithDebInfo")
 	set_property(CACHE CMAKE_BUILD_TYPE PROPERTY VALUE RelWithDebInfo)
@@ -286,9 +298,14 @@ target_include_directories(distortos PUBLIC
 target_link_libraries(distortos PUBLIC
 		littlefs)
 
+if(NOT distortos_Checks_06_Asserts)
+	target_compile_definitions(distortos PUBLIC
+			NDEBUG)
+endif(NOT distortos_Checks_06_Asserts)
+
 include(${DISTORTOS_BOARD_PATH}/distortos-board-sources.cmake)
 
-set(DISTORTOS_BOARD_VERSION_MIN 8)
+set(DISTORTOS_BOARD_VERSION_MIN 9)
 if(NOT DEFINED DISTORTOS_BOARD_VERSION OR NOT DISTORTOS_BOARD_VERSION EQUAL DISTORTOS_BOARD_VERSION_MIN)
 	if(NOT DEFINED DISTORTOS_BOARD_VERSION)
 		message(FATAL_ERROR "Generated board has no version information. "
@@ -379,6 +396,24 @@ set(doxyfiles "${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile;${CMAKE_CURRENT_BINARY_DIR}/
 add_custom_target(distortos-doxygen
 		${CMAKE_COMMAND} -D "DOXYFILES=${doxyfiles}" -P ${CMAKE_CURRENT_SOURCE_DIR}/cmake/doxygen.cmake
 		VERBATIM)
+
+#-----------------------------------------------------------------------------------------------------------------------
+# update distortos configuration
+#-----------------------------------------------------------------------------------------------------------------------
+
+set(newConfigurationVersion 1)
+
+if(DISTORTOS_CONFIGURATION_VERSION LESS newConfigurationVersion)
+	message(STATUS "Updated configuration from version ${DISTORTOS_CONFIGURATION_VERSION} to "
+			"${newConfigurationVersion}")
+endif(DISTORTOS_CONFIGURATION_VERSION LESS newConfigurationVersion)
+
+unset(DISTORTOS_CONFIGURATION_VERSION)
+distortosSetConfiguration(INTEGER
+		DISTORTOS_CONFIGURATION_VERSION
+		${newConfigurationVersion}
+		INTERNAL
+		NO_OUTPUT)
 
 #-----------------------------------------------------------------------------------------------------------------------
 # cleanup distortos configuration

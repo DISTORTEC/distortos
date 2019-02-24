@@ -1,7 +1,7 @@
 #
 # file: Toolchain-ST_32F769IDISCOVERY.cmake
 #
-# author: Copyright (C) 2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+# author: Copyright (C) 2018-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
 #
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -21,6 +21,16 @@ include(distortos-utilities)
 set(CMAKE_SYSTEM_NAME distortos)
 set(CMAKE_SYSTEM_VERSION 1)
 set(CMAKE_SYSTEM_PROCESSOR arm)
+
+if(NOT DEFINED DISTORTOS_CONFIGURATION_VERSION)
+	if(NOT DEFINED DISTORTOS_CONFIGURATION_NAMES)
+		# completely new configuration - no need to update anything
+		set(DISTORTOS_CONFIGURATION_VERSION 2147483647)
+	else()
+		# existing configuration, without defined configuration version - full update required
+		set(DISTORTOS_CONFIGURATION_VERSION 0)
+	endif()
+endif()
 
 set(TARGET_TRIPLE "arm-none-eabi-")
 set(CMAKE_C_COMPILER "${TARGET_TRIPLE}gcc")
@@ -77,6 +87,19 @@ set(CMAKE_EXE_LINKER_FLAGS_RELEASE
 set(CMAKE_EXE_LINKER_FLAGS_RELWITHDEBINFO
 		"" CACHE STRING
 		"Flags used by the linker during RELWITHDEBINFO builds.")
+
+if(DISTORTOS_CONFIGURATION_VERSION LESS 1)
+
+	message(STATUS "Removing \"-DNDEBUG\" from CMAKE_{C,CXX}_FLAGS_{MINSIZEREL,RELEASE,RELWITHDEBINFO}.")
+	message(STATUS "Assertions are now configured with distortos_Checks_..._Asserts option.")
+	distortosRemoveFlag(CMAKE_C_FLAGS_MINSIZEREL "-DNDEBUG")
+	distortosRemoveFlag(CMAKE_C_FLAGS_RELEASE "-DNDEBUG")
+	distortosRemoveFlag(CMAKE_C_FLAGS_RELWITHDEBINFO "-DNDEBUG")
+	distortosRemoveFlag(CMAKE_CXX_FLAGS_MINSIZEREL "-DNDEBUG")
+	distortosRemoveFlag(CMAKE_CXX_FLAGS_RELEASE "-DNDEBUG")
+	distortosRemoveFlag(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-DNDEBUG")
+
+endif(DISTORTOS_CONFIGURATION_VERSION LESS 1)
 
 if(distortos_Build_00_Static_destructors)
 
