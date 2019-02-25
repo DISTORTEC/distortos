@@ -254,8 +254,7 @@ public:
 				const Flags flags) const
 		{
 			assert(channel_ != nullptr);
-			channel_->configureTransfer(memoryAddress, peripheralAddress, transactions, flags);
-			channel_->startTransfer();
+			channel_->startTransfer(memoryAddress, peripheralAddress, transactions, flags);
 		}
 
 		/**
@@ -312,23 +311,6 @@ public:
 private:
 
 	/**
-	 * \brief Configures parameters of transfer.
-	 *
-	 * \pre \a memoryAddress and \a peripheralAddress and \a transactions and \a flags are valid.
-	 * \pre No transfer is in progress.
-	 *
-	 * \param [in] memoryAddress is the memory address, must be divisible by configured memory data size multiplied by
-	 * configured memory burst size (which must be less than or equal to 16)
-	 * \param [in] peripheralAddress is the peripheral address, must be divisible by peripheral data size multiplied by
-	 * configured peripheral burst size
-	 * \param [in] transactions is the number of transactions, [1; 65535]
-	 * \param [in] flags are configuration flags
-	 */
-
-	void configureTransfer(uintptr_t memoryAddress, uintptr_t peripheralAddress, size_t transactions,
-			Flags flags) const;
-
-	/**
 	 * \return number of transactions left
 	 */
 
@@ -358,16 +340,24 @@ private:
 	int reserve(uint8_t request, DmaChannelFunctor& functor);
 
 	/**
-	 * \brief Starts asynchronous transfer.
+	 * \brief Configures and starts asynchronous transfer.
 	 *
 	 * This function returns immediately. When the transfer is physically finished (either expected number of
 	 * transactions were executed or an error was detected), one of DmaChannelFunctor functions will be executed.
 	 *
+	 * \pre \a memoryAddress and \a peripheralAddress and \a transactions and \a flags are valid.
 	 * \pre No transfer is in progress.
 	 * \post Transfer is in progress.
+	 *
+	 * \param [in] memoryAddress is the memory address, must be divisible by configured memory data size multiplied by
+	 * configured memory burst size (which must be less than or equal to 16)
+	 * \param [in] peripheralAddress is the peripheral address, must be divisible by peripheral data size multiplied by
+	 * configured peripheral burst size
+	 * \param [in] transactions is the number of transactions, [1; 65535]
+	 * \param [in] flags are configuration flags
 	 */
 
-	void startTransfer() const;
+	void startTransfer(uintptr_t memoryAddress, uintptr_t peripheralAddress, size_t transactions, Flags flags) const;
 
 	/**
 	 * \brief Stops transfer.

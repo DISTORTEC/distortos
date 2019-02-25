@@ -260,9 +260,8 @@ TEST_CASE("Testing startTransfer()", "[startTransfer]")
 											address == reinterpret_cast<uintptr_t>(rxBuffer) :
 											true;
 								};
-						REQUIRE_CALL(rxDmaChannelMock, configureTransfer(_, drAddress, transferSize / dataSize,
+						REQUIRE_CALL(rxDmaChannelMock, startTransfer(_, drAddress, transferSize / dataSize,
 								rxDmaFlags)).WITH(rxAddressMatcher(_1)).IN_SEQUENCE(sequence);
-						REQUIRE_CALL(rxDmaChannelMock, startTransfer()).IN_SEQUENCE(sequence);
 						REQUIRE_CALL(peripheralMock, getDrAddress()).IN_SEQUENCE(sequence).RETURN(drAddress);
 						const auto txDmaFlags = commonDmaFlags |
 								Flags::transferCompleteInterruptDisable |
@@ -276,9 +275,8 @@ TEST_CASE("Testing startTransfer()", "[startTransfer]")
 											address == reinterpret_cast<uintptr_t>(txBuffer) :
 											memcmp(reinterpret_cast<const void*>(address), &dummyData, dataSize) == 0;
 								};
-						REQUIRE_CALL(txDmaChannelMock, configureTransfer(_, drAddress, transferSize / dataSize,
+						REQUIRE_CALL(txDmaChannelMock, startTransfer(_, drAddress, transferSize / dataSize,
 								txDmaFlags)).WITH(txAddressMatcher(_1)).IN_SEQUENCE(sequence);
-						REQUIRE_CALL(txDmaChannelMock, startTransfer()).IN_SEQUENCE(sequence);
 						REQUIRE(spi.startTransfer(masterMock, txBuffer, rxBuffer, transferSize) == 0);
 
 						// starting another transfer when the previous one is ongoing should fail with EBUSY

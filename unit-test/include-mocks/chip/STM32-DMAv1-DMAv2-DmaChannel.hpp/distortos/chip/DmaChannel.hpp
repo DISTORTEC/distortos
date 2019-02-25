@@ -155,8 +155,7 @@ public:
 				const Flags flags) const
 		{
 			assert(channel_ != nullptr);
-			channel_->configureTransfer(memoryAddress, peripheralAddress, transactions, flags);
-			channel_->startTransfer();
+			channel_->startTransfer(memoryAddress, peripheralAddress, transactions, flags);
 		}
 
 		void stopTransfer() const
@@ -175,11 +174,10 @@ public:
 		DmaChannel* channel_;
 	};
 
-	MAKE_CONST_MOCK4(configureTransfer, void(uintptr_t, uintptr_t, size_t, Flags));
 	MAKE_CONST_MOCK0(getTransactionsLeft, size_t());
 	MAKE_MOCK0(release, void());
 	MAKE_MOCK2(reserve, int(uint8_t, DmaChannelFunctor&));
-	MAKE_CONST_MOCK0(startTransfer, void());
+	MAKE_CONST_MOCK4(startTransfer, void(uintptr_t, uintptr_t, size_t, Flags));
 	MAKE_CONST_MOCK0(stopTransfer, void());
 };
 

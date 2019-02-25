@@ -186,20 +186,19 @@ TEST_CASE("Testing transfer configuration", "[configuration]")
 						constexpr uint16_t transactions {0xd353};
 
 						REQUIRE_CALL(channelPeripheralMock, readCr()).IN_SEQUENCE(sequence).RETURN(0);
-						const auto cr = request1 << DMA_SxCR_CHSEL_Pos |
-								static_cast<uint32_t>(flags) |
-								static_cast<uint32_t>(peripheralDataSize) |
-								static_cast<uint32_t>(memoryBurstDataSize) |
-								static_cast<uint32_t>(peripheralBurstSize) |
-								DMA_SxCR_TEIE;
-						REQUIRE_CALL(channelPeripheralMock, writeCr(cr)).IN_SEQUENCE(sequence);
 						REQUIRE_CALL(channelPeripheralMock, writeNdtr(transactions)).IN_SEQUENCE(sequence);
 						REQUIRE_CALL(channelPeripheralMock, writePar(peripheralAddress)).IN_SEQUENCE(sequence);
 						REQUIRE_CALL(channelPeripheralMock, writeM0ar(memoryAddress)).IN_SEQUENCE(sequence);
 						const auto fcr = DMA_SxFCR_DMDIS | DMA_SxFCR_FTH;
 						REQUIRE_CALL(channelPeripheralMock, writeFcr(fcr)).IN_SEQUENCE(sequence);
-						REQUIRE_CALL(channelPeripheralMock, readCr()).IN_SEQUENCE(sequence).RETURN(cr);
-						REQUIRE_CALL(channelPeripheralMock, writeCr(cr | DMA_SxCR_EN)).IN_SEQUENCE(sequence);
+						const auto cr = request1 << DMA_SxCR_CHSEL_Pos |
+								static_cast<uint32_t>(flags) |
+								static_cast<uint32_t>(peripheralDataSize) |
+								static_cast<uint32_t>(memoryBurstDataSize) |
+								static_cast<uint32_t>(peripheralBurstSize) |
+								DMA_SxCR_TEIE |
+								DMA_SxCR_EN;
+						REQUIRE_CALL(channelPeripheralMock, writeCr(cr)).IN_SEQUENCE(sequence);
 						handle.startTransfer(memoryAddress, peripheralAddress, transactions,
 								flags | peripheralDataSize | memoryBurstDataSize | peripheralBurstSize);
 					}

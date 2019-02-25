@@ -212,7 +212,33 @@ void DmaChannel::interruptHandler()
 | private functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-void DmaChannel::configureTransfer(const uintptr_t memoryAddress, const uintptr_t peripheralAddress,
+size_t DmaChannel::getTransactionsLeft() const
+{
+	return dmaChannelPeripheral_.readNdtr();
+}
+
+void DmaChannel::release()
+{
+	assert((dmaChannelPeripheral_.readCr() & tcieHtieTeieDmeieEnFlags) == 0);
+	functor_ = {};
+}
+
+int DmaChannel::reserve(const uint8_t request, DmaChannelFunctor& functor)
+{
+	assert(request <= maxRequest);
+
+	const InterruptMaskingLock interruptMaskingLock;
+
+	if (functor_ != nullptr)
+		return EBUSY;
+
+	functor_ = &functor;
+	request_ = request;
+
+	return {};
+}
+
+void DmaChannel::startTransfer(const uintptr_t memoryAddress, const uintptr_t peripheralAddress,
 		const size_t transactions, const Flags flags) const
 {
 	constexpr auto memoryDataSizeMask = Flags::memoryDataSize1 | Flags::memoryDataSize2 | Flags::memoryDataSize4;
@@ -252,46 +278,14 @@ void DmaChannel::configureTransfer(const uintptr_t memoryAddress, const uintptr_
 	assert(transactions != 0 && transactions <= UINT16_MAX);
 	assert((dmaChannelPeripheral_.readCr() & tcieHtieTeieDmeieEnFlags) == 0);
 
-	dmaChannelPeripheral_.writeCr(request_ << DMA_SxCR_CHSEL_Pos |
-			static_cast<uint32_t>(flags) |
-			DMA_SxCR_TEIE);
 	dmaChannelPeripheral_.writeNdtr(transactions);
 	dmaChannelPeripheral_.writePar(peripheralAddress);
 	dmaChannelPeripheral_.writeM0ar(memoryAddress);
 	dmaChannelPeripheral_.writeFcr(DMA_SxFCR_DMDIS | DMA_SxFCR_FTH);
-}
-
-size_t DmaChannel::getTransactionsLeft() const
-{
-	return dmaChannelPeripheral_.readNdtr();
-}
-
-void DmaChannel::release()
-{
-	assert((dmaChannelPeripheral_.readCr() & tcieHtieTeieDmeieEnFlags) == 0);
-	functor_ = {};
-}
-
-int DmaChannel::reserve(const uint8_t request, DmaChannelFunctor& functor)
-{
-	assert(request <= maxRequest);
-
-	const InterruptMaskingLock interruptMaskingLock;
-
-	if (functor_ != nullptr)
-		return EBUSY;
-
-	functor_ = &functor;
-	request_ = request;
-
-	return {};
-}
-
-void DmaChannel::startTransfer() const
-{
-	const auto cr = dmaChannelPeripheral_.readCr();
-	assert((cr & DMA_SxCR_EN) == 0);
-	modifyCr(cr, dmaChannelPeripheral_, {}, DMA_SxCR_EN);
+	dmaChannelPeripheral_.writeCr(request_ << DMA_SxCR_CHSEL_Pos |
+			static_cast<uint32_t>(flags) |
+			DMA_SxCR_TEIE |
+			DMA_SxCR_EN);
 }
 
 void DmaChannel::stopTransfer() const

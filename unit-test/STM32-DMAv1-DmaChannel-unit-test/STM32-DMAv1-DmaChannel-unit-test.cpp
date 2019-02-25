@@ -186,16 +186,15 @@ TEST_CASE("Testing transfer configuration", "[configuration]")
 					constexpr uint16_t transactions {0xd353};
 
 					REQUIRE_CALL(channelPeripheralMock, readCcr()).IN_SEQUENCE(sequence).RETURN(0);
-					const auto ccr = static_cast<uint32_t>(flags) |
-							static_cast<uint32_t>(peripheralDataSize) |
-							static_cast<uint32_t>(memoryDataSize) |
-							DMA_CCR_TEIE;
-					REQUIRE_CALL(channelPeripheralMock, writeCcr(ccr)).IN_SEQUENCE(sequence);
 					REQUIRE_CALL(channelPeripheralMock, writeCndtr(transactions)).IN_SEQUENCE(sequence);
 					REQUIRE_CALL(channelPeripheralMock, writeCpar(peripheralAddress)).IN_SEQUENCE(sequence);
 					REQUIRE_CALL(channelPeripheralMock, writeCmar(memoryAddress)).IN_SEQUENCE(sequence);
-					REQUIRE_CALL(channelPeripheralMock, readCcr()).IN_SEQUENCE(sequence).RETURN(ccr);
-					REQUIRE_CALL(channelPeripheralMock, writeCcr(ccr | DMA_CCR_EN)).IN_SEQUENCE(sequence);
+					const auto ccr = static_cast<uint32_t>(flags) |
+							static_cast<uint32_t>(peripheralDataSize) |
+							static_cast<uint32_t>(memoryDataSize) |
+							DMA_CCR_TEIE |
+							DMA_CCR_EN;
+					REQUIRE_CALL(channelPeripheralMock, writeCcr(ccr)).IN_SEQUENCE(sequence);
 					handle.startTransfer(memoryAddress, peripheralAddress, transactions,
 							flags | peripheralDataSize | memoryDataSize);
 				}

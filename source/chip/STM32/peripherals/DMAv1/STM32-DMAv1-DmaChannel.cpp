@@ -167,34 +167,6 @@ void DmaChannel::interruptHandler()
 | private functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-void DmaChannel::configureTransfer(const uintptr_t memoryAddress, const uintptr_t peripheralAddress,
-		const size_t transactions, const Flags flags) const
-{
-	constexpr auto memoryDataSizeMask = Flags::memoryDataSize1 | Flags::memoryDataSize2 | Flags::memoryDataSize4;
-	const auto memoryDataSizeFlags = flags & memoryDataSizeMask;
-	const auto memoryDataSize = memoryDataSizeFlags == Flags::memoryDataSize1 ? 1 :
-			memoryDataSizeFlags == Flags::memoryDataSize2 ? 2 :
-			memoryDataSizeFlags == Flags::memoryDataSize4 ? 4 : 0;
-
-	constexpr auto peripheralDataSizeMask =
-			Flags::peripheralDataSize1 | Flags::peripheralDataSize2 | Flags::peripheralDataSize4;
-	const auto peripheralDataSizeFlags = flags & peripheralDataSizeMask;
-	const auto peripheralDataSize = peripheralDataSizeFlags == Flags::peripheralDataSize1 ? 1 :
-			peripheralDataSizeFlags == Flags::peripheralDataSize2 ? 2 :
-			peripheralDataSizeFlags == Flags::peripheralDataSize4 ? 4 : 0;
-
-	assert(memoryDataSize != 0 && peripheralDataSize != 0);
-	assert(memoryAddress % memoryDataSize == 0 && peripheralAddress % peripheralDataSize == 0);
-	assert(transactions != 0 && transactions <= UINT16_MAX);
-	assert((dmaChannelPeripheral_.readCcr() & teieHtieTcieEnFlags) == 0);
-
-	dmaChannelPeripheral_.writeCcr(static_cast<uint32_t>(flags) |
-			DMA_CCR_TEIE);
-	dmaChannelPeripheral_.writeCndtr(transactions);
-	dmaChannelPeripheral_.writeCpar(peripheralAddress);
-	dmaChannelPeripheral_.writeCmar(memoryAddress);
-}
-
 size_t DmaChannel::getTransactionsLeft() const
 {
 	return dmaChannelPeripheral_.readCndtr();
@@ -227,11 +199,33 @@ int DmaChannel::reserve(const uint8_t request, DmaChannelFunctor& functor)
 	return {};
 }
 
-void DmaChannel::startTransfer() const
+void DmaChannel::startTransfer(const uintptr_t memoryAddress, const uintptr_t peripheralAddress,
+		const size_t transactions, const Flags flags) const
 {
-	const auto ccr = dmaChannelPeripheral_.readCcr();
-	assert((ccr & DMA_CCR_EN) == 0);
-	modifyCcr(ccr, dmaChannelPeripheral_, {}, DMA_CCR_EN);
+	constexpr auto memoryDataSizeMask = Flags::memoryDataSize1 | Flags::memoryDataSize2 | Flags::memoryDataSize4;
+	const auto memoryDataSizeFlags = flags & memoryDataSizeMask;
+	const auto memoryDataSize = memoryDataSizeFlags == Flags::memoryDataSize1 ? 1 :
+			memoryDataSizeFlags == Flags::memoryDataSize2 ? 2 :
+			memoryDataSizeFlags == Flags::memoryDataSize4 ? 4 : 0;
+
+	constexpr auto peripheralDataSizeMask =
+			Flags::peripheralDataSize1 | Flags::peripheralDataSize2 | Flags::peripheralDataSize4;
+	const auto peripheralDataSizeFlags = flags & peripheralDataSizeMask;
+	const auto peripheralDataSize = peripheralDataSizeFlags == Flags::peripheralDataSize1 ? 1 :
+			peripheralDataSizeFlags == Flags::peripheralDataSize2 ? 2 :
+			peripheralDataSizeFlags == Flags::peripheralDataSize4 ? 4 : 0;
+
+	assert(memoryDataSize != 0 && peripheralDataSize != 0);
+	assert(memoryAddress % memoryDataSize == 0 && peripheralAddress % peripheralDataSize == 0);
+	assert(transactions != 0 && transactions <= UINT16_MAX);
+	assert((dmaChannelPeripheral_.readCcr() & teieHtieTcieEnFlags) == 0);
+
+	dmaChannelPeripheral_.writeCndtr(transactions);
+	dmaChannelPeripheral_.writeCpar(peripheralAddress);
+	dmaChannelPeripheral_.writeCmar(memoryAddress);
+	dmaChannelPeripheral_.writeCcr(static_cast<uint32_t>(flags) |
+			DMA_CCR_TEIE |
+			DMA_CCR_EN);
 }
 
 void DmaChannel::stopTransfer() const
