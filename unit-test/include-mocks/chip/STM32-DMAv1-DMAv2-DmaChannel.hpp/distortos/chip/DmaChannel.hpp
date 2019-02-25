@@ -121,7 +121,7 @@ public:
 
 		~UniqueHandle()
 		{
-			release();
+			assert(channel_ == nullptr);
 		}
 
 		void configureTransfer(const uintptr_t memoryAddress, const uintptr_t peripheralAddress,

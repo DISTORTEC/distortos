@@ -64,7 +64,6 @@ TEST_CASE("Testing start() & stop() interactions", "[start/stop]")
 	distortos::chip::SdmmcPeripheral peripheralMock {};
 	distortos::chip::DmaChannel dmaChannelMock {};
 	trompeloeil::sequence sequence {};
-	std::vector<std::unique_ptr<trompeloeil::expectation>> expectations {};
 
 	distortos::chip::SdMmcCardLowLevel sdMmc {peripheralMock, dmaChannelMock, dmaRequest};
 
@@ -94,27 +93,17 @@ TEST_CASE("Testing start() & stop() interactions", "[start/stop]")
 		REQUIRE_CALL(peripheralMock, writePower(initialPower)).IN_SEQUENCE(sequence);
 		REQUIRE(sdMmc.start() == 0);
 
-		SECTION("Starting started driver should fail with EBADF")
-		{
-			REQUIRE(sdMmc.start() == EBADF);
+		// starting started driver should fail with EBADF
+		REQUIRE(sdMmc.start() == EBADF);
 
-			expectations.emplace_back(NAMED_REQUIRE_CALL(peripheralMock, writeMask(0u)).IN_SEQUENCE(sequence));
-			expectations.emplace_back(NAMED_REQUIRE_CALL(peripheralMock, writeDctrl(0u)).IN_SEQUENCE(sequence));
-			expectations.emplace_back(NAMED_REQUIRE_CALL(peripheralMock, writeCmd(0u)).IN_SEQUENCE(sequence));
-			expectations.emplace_back(NAMED_REQUIRE_CALL(peripheralMock, writeClkcr(0u)).IN_SEQUENCE(sequence));
-			expectations.emplace_back(NAMED_REQUIRE_CALL(peripheralMock, writePower(0u)).IN_SEQUENCE(sequence));
-			expectations.emplace_back(NAMED_REQUIRE_CALL(dmaChannelMock, release()).IN_SEQUENCE(sequence));
-		}
-		SECTION("Stopping started driver should succeed")
-		{
-			REQUIRE_CALL(dmaChannelMock, release()).IN_SEQUENCE(sequence);
-			REQUIRE_CALL(peripheralMock, writeMask(0u)).IN_SEQUENCE(sequence);
-			REQUIRE_CALL(peripheralMock, writeDctrl(0u)).IN_SEQUENCE(sequence);
-			REQUIRE_CALL(peripheralMock, writeCmd(0u)).IN_SEQUENCE(sequence);
-			REQUIRE_CALL(peripheralMock, writeClkcr(0u)).IN_SEQUENCE(sequence);
-			REQUIRE_CALL(peripheralMock, writePower(0u)).IN_SEQUENCE(sequence);
-			REQUIRE(sdMmc.stop() == 0);
-		}
+		// stopping started driver should succeed
+		REQUIRE_CALL(dmaChannelMock, release()).IN_SEQUENCE(sequence);
+		REQUIRE_CALL(peripheralMock, writeMask(0u)).IN_SEQUENCE(sequence);
+		REQUIRE_CALL(peripheralMock, writeDctrl(0u)).IN_SEQUENCE(sequence);
+		REQUIRE_CALL(peripheralMock, writeCmd(0u)).IN_SEQUENCE(sequence);
+		REQUIRE_CALL(peripheralMock, writeClkcr(0u)).IN_SEQUENCE(sequence);
+		REQUIRE_CALL(peripheralMock, writePower(0u)).IN_SEQUENCE(sequence);
+		REQUIRE(sdMmc.stop() == 0);
 	}
 }
 

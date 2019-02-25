@@ -170,11 +170,13 @@ public:
 
 		/**
 		 * \brief UniqueHandle's destructor
+		 *
+		 * \pre No driver is reserved with this handle.
 		 */
 
 		~UniqueHandle()
 		{
-			release();
+			assert(channel_ == nullptr);
 		}
 
 		/**

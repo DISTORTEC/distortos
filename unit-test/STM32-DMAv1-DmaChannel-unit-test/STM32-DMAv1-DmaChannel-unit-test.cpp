@@ -67,7 +67,6 @@ TEST_CASE("Testing reserve() & release() interactions", "[reserve/release]")
 	distortos::chip::DmaChannelPeripheral channelPeripheralMock {};
 	distortos::InterruptMaskingLock::Proxy interruptMaskingLockProxyMock {};
 	trompeloeil::sequence sequence {};
-	std::vector<std::unique_ptr<trompeloeil::expectation>> expectations {};
 
 	constexpr uint8_t channelId {6};
 
@@ -114,8 +113,8 @@ TEST_CASE("Testing reserve() & release() interactions", "[reserve/release]")
 			REQUIRE(anotherHandle.reserve(channel, 0, functorMock) == EBUSY);
 		}
 
-		expectations.emplace_back(NAMED_REQUIRE_CALL(channelPeripheralMock,
-				readCcr()).IN_SEQUENCE(sequence).RETURN(0));
+		REQUIRE_CALL(channelPeripheralMock, readCcr()).IN_SEQUENCE(sequence).RETURN(0);
+		handle.release();
 	}
 }
 
