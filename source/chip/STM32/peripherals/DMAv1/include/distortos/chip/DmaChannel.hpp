@@ -271,6 +271,8 @@ public:
 	 * \brief Interrupt handler
 	 *
 	 * \note this must not be called by user code
+	 *
+	 * \pre Driver is reserved.
 	 */
 
 	void interruptHandler();

@@ -144,6 +144,8 @@ constexpr uint32_t teieHtieTcieEnFlags {DMA_CCR_TEIE | DMA_CCR_HTIE | DMA_CCR_TC
 
 void DmaChannel::interruptHandler()
 {
+	assert(functor_ != nullptr);
+
 	const auto channelShift = getChannelShift(dmaChannelPeripheral_.getChannelId());
 	const auto teFlag = DMA_ISR_TEIF1 << channelShift;
 	const auto tcFlag = DMA_ISR_TCIF1 << channelShift;
