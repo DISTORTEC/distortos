@@ -98,14 +98,6 @@ TEST_CASE("Testing reserve() & release() interactions", "[reserve/release]")
 			REQUIRE(handle.reserve(channel, request1, functorMock) == 0);
 		}
 
-		SECTION("Reserving reserved driver with the same handle should succeed")
-		{
-			REQUIRE_CALL(channelPeripheralMock, readCr()).IN_SEQUENCE(sequence).RETURN(0);
-
-			REQUIRE_CALL(interruptMaskingLockProxyMock, construct()).IN_SEQUENCE(sequence);
-			REQUIRE_CALL(interruptMaskingLockProxyMock, destruct()).IN_SEQUENCE(sequence);
-			REQUIRE(handle.reserve(channel, request2, functorMock) == 0);
-		}
 		SECTION("Reserving reserved driver with a different handle should fail with EBUSY")
 		{
 			distortos::chip::DmaChannel::UniqueHandle anotherHandle;

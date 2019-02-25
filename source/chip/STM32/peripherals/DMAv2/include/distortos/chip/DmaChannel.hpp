@@ -227,6 +227,7 @@ public:
 		/**
 		 * \brief Reserves low-level DMA channel driver for exclusive use via this handle.
 		 *
+		 * \pre No driver is reserved with this handle.
 		 * \pre \a request is valid.
 		 *
 		 * \param [in] channel is a reference to low-level DMA channel driver which will be associated with this handle
@@ -240,7 +241,7 @@ public:
 
 		int reserve(DmaChannel& channel, const uint8_t request, DmaChannelFunctor& functor)
 		{
-			release();
+			assert(channel_ == nullptr);
 
 			const auto ret = channel.reserve(request, functor);
 			if (ret != 0)

@@ -148,7 +148,7 @@ public:
 
 		int reserve(DmaChannel& channel, const uint8_t request, DmaChannelFunctor& functor)
 		{
-			release();
+			assert(channel_ == nullptr);
 
 			const auto ret = channel.reserve(request, functor);
 			if (ret != 0)
