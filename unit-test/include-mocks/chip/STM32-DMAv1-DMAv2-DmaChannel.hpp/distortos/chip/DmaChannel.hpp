@@ -131,12 +131,10 @@ public:
 			channel_->configureTransfer(memoryAddress, peripheralAddress, transactions, flags);
 		}
 
-		std::pair<int, size_t> getTransactionsLeft() const
+		size_t getTransactionsLeft() const
 		{
-			if (channel_ == nullptr)
-				return {EBADF, {}};
-
-			return {{}, channel_->getTransactionsLeft()};
+			assert(channel_ != nullptr);
+			return channel_->getTransactionsLeft();
 		}
 
 		void release()

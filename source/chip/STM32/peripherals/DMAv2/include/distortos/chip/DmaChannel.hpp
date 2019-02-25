@@ -198,17 +198,15 @@ public:
 		}
 
 		/**
-		 * \return pair with return code (0 on success, error code otherwise) and number of transactions left; error
-		 * codes:
-		 * - EBADF - no low-level DMA channel driver is associated with this handle;
+		 * \pre Driver is reserved with this handle.
+		 *
+		 * \return number of transactions left
 		 */
 
-		std::pair<int, size_t> getTransactionsLeft() const
+		size_t getTransactionsLeft() const
 		{
-			if (channel_ == nullptr)
-				return {EBADF, {}};
-
-			return {{}, channel_->getTransactionsLeft()};
+			assert(channel_ != nullptr);
+			return channel_->getTransactionsLeft();
 		}
 
 		/**
