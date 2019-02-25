@@ -314,6 +314,7 @@ private:
 	 * This function returns immediately. When the transfer is physically finished (either expected number of
 	 * transactions were executed or an error was detected), one of DmaChannelFunctor functions will be executed.
 	 *
+	 * \pre Driver is reserved.
 	 * \pre \a memoryAddress and \a peripheralAddress and \a transactions and \a flags are valid.
 	 * \pre No transfer is in progress.
 	 * \post Transfer is in progress.

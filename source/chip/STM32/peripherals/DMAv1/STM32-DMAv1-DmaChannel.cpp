@@ -204,6 +204,8 @@ int DmaChannel::reserve(const uint8_t request, DmaChannelFunctor& functor)
 void DmaChannel::startTransfer(const uintptr_t memoryAddress, const uintptr_t peripheralAddress,
 		const size_t transactions, const Flags flags) const
 {
+	assert(functor_ != nullptr);
+
 	constexpr auto memoryDataSizeMask = Flags::memoryDataSize1 | Flags::memoryDataSize2 | Flags::memoryDataSize4;
 	const auto memoryDataSizeFlags = flags & memoryDataSizeMask;
 	const auto memoryDataSize = memoryDataSizeFlags == Flags::memoryDataSize1 ? 1 :
