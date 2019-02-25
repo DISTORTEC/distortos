@@ -121,7 +121,6 @@ public:
 	 * - EBADF - the driver is not started;
 	 * - EBUSY - transfer is in progress;
 	 * - EINVAL - \a size is invalid;
-	 * - error codes returned by DmaChannelUniqueHandle::configureTransfer();
 	 */
 
 	int startTransfer(devices::SpiMasterBase& spiMasterBase, const void* writeBuffer, void* readBuffer,

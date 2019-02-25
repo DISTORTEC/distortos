@@ -124,14 +124,11 @@ public:
 			release();
 		}
 
-		int configureTransfer(const uintptr_t memoryAddress, const uintptr_t peripheralAddress,
+		void configureTransfer(const uintptr_t memoryAddress, const uintptr_t peripheralAddress,
 				const size_t transactions, const Flags flags) const
 		{
-			if (channel_ == nullptr)
-				return EBADF;
-
+			assert(channel_ != nullptr);
 			channel_->configureTransfer(memoryAddress, peripheralAddress, transactions, flags);
-			return {};
 		}
 
 		std::pair<int, size_t> getTransactionsLeft() const

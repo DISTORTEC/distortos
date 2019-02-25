@@ -81,11 +81,6 @@ TEST_CASE("Testing reserve() & release() interactions", "[reserve/release]")
 
 	ALLOW_CALL(channelPeripheralMock, getChannelId()).RETURN(channelId);
 
-	SECTION("Configuring released driver should fail with EBADF")
-	{
-		distortos::chip::DmaChannel::UniqueHandle handle;
-		REQUIRE(handle.configureTransfer({}, {}, {}, {}) == EBADF);
-	}
 	SECTION("Releasing released driver causes no hardware accesses")
 	{
 		distortos::chip::DmaChannel::UniqueHandle handle;
@@ -218,8 +213,8 @@ TEST_CASE("Testing configureTransfer()", "[configureTransfer]")
 					REQUIRE_CALL(channelPeripheralMock, writeCndtr(transactions)).IN_SEQUENCE(sequence);
 					REQUIRE_CALL(channelPeripheralMock, writeCpar(peripheralAddress)).IN_SEQUENCE(sequence);
 					REQUIRE_CALL(channelPeripheralMock, writeCmar(memoryAddress)).IN_SEQUENCE(sequence);
-					REQUIRE(handle.configureTransfer(memoryAddress, peripheralAddress, transactions,
-							flags | peripheralDataSize | memoryDataSize) == 0);
+					handle.configureTransfer(memoryAddress, peripheralAddress, transactions,
+							flags | peripheralDataSize | memoryDataSize);
 				}
 	}
 

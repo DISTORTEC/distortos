@@ -148,6 +148,7 @@ public:
 		/**
 		 * \brief Configures parameters of transfer.
 		 *
+		 * \pre Driver is reserved with this handle.
 		 * \pre \a memoryAddress and \a peripheralAddress and \a transactions and \a flags are valid.
 		 * \pre No transfer is in progress.
 		 *
@@ -155,19 +156,13 @@ public:
 		 * \param [in] peripheralAddress is the peripheral address, must be divisible by peripheral data size
 		 * \param [in] transactions is the number of transactions, [1; 65535]
 		 * \param [in] flags are configuration flags
-		 *
-		 * \return 0 on success, error code otherwise:
-		 * - EBADF - no low-level DMA channel driver is associated with this handle;
 		 */
 
-		int configureTransfer(const uintptr_t memoryAddress, const uintptr_t peripheralAddress,
+		void configureTransfer(const uintptr_t memoryAddress, const uintptr_t peripheralAddress,
 				const size_t transactions, const Flags flags) const
 		{
-			if (channel_ == nullptr)
-				return EBADF;
-
+			assert(channel_ != nullptr);
 			channel_->configureTransfer(memoryAddress, peripheralAddress, transactions, flags);
-			return {};
 		}
 
 		/**
