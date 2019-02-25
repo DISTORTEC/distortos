@@ -195,6 +195,7 @@ public:
 		 * \brief Releases any associated low-level DMA channel driver.
 		 *
 		 * \pre No transfer is in progress.
+		 * \post No driver is reserved with this handle.
 		 */
 
 		void release()
@@ -322,6 +323,7 @@ private:
 	 * \brief Releases low-level DMA channel driver.
 	 *
 	 * \pre No transfer is in progress.
+	 * \post Driver is not reserved.
 	 */
 
 	void release();
@@ -369,6 +371,7 @@ private:
 	 * state. It may also be used to stop any ongoing asynchronous transfer.
 	 *
 	 * \pre Driver is reserved.
+	 * \post No transfer is in progress.
 	 */
 
 	void stopTransfer() const;
