@@ -207,10 +207,8 @@ int SdMmcCardLowLevel::startTransaction(devices::SdMmcCardBase& sdMmcCardBase, c
 			if (ret != 0)
 				return ret;
 		}
-		{
-			const auto ret = dmaChannelUniqueHandle_.startTransfer();
-			assert(ret == 0);
-		}
+
+		dmaChannelUniqueHandle_.startTransfer();
 
 		sdmmcPeripheral_.writeDtimer(dtimer);
 		sdmmcPeripheral_.writeDlen(dlen);

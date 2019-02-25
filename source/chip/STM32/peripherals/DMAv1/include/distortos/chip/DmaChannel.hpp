@@ -231,19 +231,15 @@ public:
 		 * This function returns immediately. When the transfer is physically finished (either expected number of
 		 * transactions were executed or an error was detected), one of DmaChannelFunctor functions will be executed.
 		 *
+		 * \pre Driver is reserved with this handle.
 		 * \pre No transfer is in progress.
-		 *
-		 * \return 0 on success, error code otherwise:
-		 * - EBADF - no low-level DMA channel driver is associated with this handle;
+		 * \post Transfer is in progress.
 		 */
 
-		int startTransfer() const
+		void startTransfer() const
 		{
-			if (channel_ == nullptr)
-				return EBADF;
-
+			assert(channel_ != nullptr);
 			channel_->startTransfer();
-			return {};
 		}
 
 		/**

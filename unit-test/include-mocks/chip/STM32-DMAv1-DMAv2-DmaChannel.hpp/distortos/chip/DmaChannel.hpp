@@ -163,13 +163,10 @@ public:
 			return {};
 		}
 
-		int startTransfer() const
+		void startTransfer() const
 		{
-			if (channel_ == nullptr)
-				return EBADF;
-
+			assert(channel_ != nullptr);
 			channel_->startTransfer();
-			return {};
 		}
 
 		void stopTransfer() const

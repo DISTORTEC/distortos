@@ -88,11 +88,6 @@ TEST_CASE("Testing reserve() & release() interactions", "[reserve/release]")
 		distortos::chip::DmaChannel::UniqueHandle handle;
 		REQUIRE(handle.configureTransfer({}, {}, {}, {}) == EBADF);
 	}
-	SECTION("Starting a transfer with released driver should fail with EBADF")
-	{
-		distortos::chip::DmaChannel::UniqueHandle handle;
-		REQUIRE(handle.startTransfer() == EBADF);
-	}
 	SECTION("Releasing released driver causes no hardware accesses")
 	{
 		distortos::chip::DmaChannel::UniqueHandle handle;
@@ -256,7 +251,7 @@ TEST_CASE("Testing transfers", "[transfers]")
 		const auto oldCr = newCr ^ DMA_SxCR_EN;
 		REQUIRE_CALL(channelPeripheralMock, readCr()).IN_SEQUENCE(sequence).RETURN(oldCr);
 		REQUIRE_CALL(channelPeripheralMock, writeCr(newCr)).IN_SEQUENCE(sequence);
-		REQUIRE(handle.startTransfer() == 0);
+		handle.startTransfer();
 	}
 	SECTION("Testing stopTransfer()")
 	{

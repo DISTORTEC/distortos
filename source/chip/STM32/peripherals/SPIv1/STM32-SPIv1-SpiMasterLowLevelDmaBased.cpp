@@ -139,14 +139,8 @@ int SpiMasterLowLevelDmaBased::startTransfer(devices::SpiMasterBase& spiMasterBa
 	spiMasterBase_ = &spiMasterBase;
 	size_ = size;
 
-	{
-		const auto ret = rxDmaChannelUniqueHandle_.startTransfer();
-		assert(ret == 0);
-	}
-	{
-		const auto ret = txDmaChannelUniqueHandle_.startTransfer();
-		assert(ret == 0);
-	}
+	rxDmaChannelUniqueHandle_.startTransfer();
+	txDmaChannelUniqueHandle_.startTransfer();
 
 	return 0;
 }
