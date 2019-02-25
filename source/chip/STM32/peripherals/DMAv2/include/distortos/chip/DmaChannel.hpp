@@ -367,6 +367,8 @@ private:
 	 *
 	 * This function should be used after previous asynchronous transfer is finished to restore DMA channel to proper
 	 * state. It may also be used to stop any ongoing asynchronous transfer.
+	 *
+	 * \pre Driver is reserved.
 	 */
 
 	void stopTransfer() const;

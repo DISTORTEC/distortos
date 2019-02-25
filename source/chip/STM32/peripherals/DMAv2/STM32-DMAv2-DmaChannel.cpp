@@ -294,6 +294,8 @@ void DmaChannel::startTransfer(const uintptr_t memoryAddress, const uintptr_t pe
 
 void DmaChannel::stopTransfer() const
 {
+	assert(functor_ != nullptr);
+
 	modifyCr(dmaChannelPeripheral_.readCr(), dmaChannelPeripheral_,
 			DMA_SxCR_TCIE | DMA_SxCR_HTIE | DMA_SxCR_TEIE | DMA_SxCR_DMEIE | DMA_SxCR_EN, {});
 	while ((dmaChannelPeripheral_.readCr() & DMA_SxCR_EN) != 0);
