@@ -172,13 +172,10 @@ public:
 			return {};
 		}
 
-		int stopTransfer() const
+		void stopTransfer() const
 		{
-			if (channel_ == nullptr)
-				return EBADF;
-
+			assert(channel_ != nullptr);
 			channel_->stopTransfer();
-			return {};
 		}
 
 		UniqueHandle(const UniqueHandle&) = delete;

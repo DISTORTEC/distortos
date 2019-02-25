@@ -15,7 +15,6 @@
 #include "distortos/chip/STM32-DMAv2-DmaChannelPeripheral.hpp"
 #include "distortos/chip/STM32-DMAv2-DmaPeripheral.hpp"
 
-#include "distortos/assert.h"
 #include "distortos/InterruptMaskingLock.hpp"
 
 #include <array>

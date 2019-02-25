@@ -12,6 +12,8 @@
 #ifndef SOURCE_CHIP_STM32_PERIPHERALS_DMAV1_INCLUDE_DISTORTOS_CHIP_DMACHANNEL_HPP_
 #define SOURCE_CHIP_STM32_PERIPHERALS_DMAV1_INCLUDE_DISTORTOS_CHIP_DMACHANNEL_HPP_
 
+#include "distortos/assert.h"
+
 #include "estd/EnumClassFlags.hpp"
 
 #include <utility>
@@ -250,17 +252,14 @@ public:
 		 * This function should be used after previous asynchronous transfer is finished to restore DMA channel to
 		 * proper state. It may also be used to stop any ongoing asynchronous transfer.
 		 *
-		 * \return 0 on success, error code otherwise:
-		 * - EBADF - no low-level DMA channel driver is associated with this handle;
+		 * \pre Driver is reserved with this handle.
+		 * \post No transfer is in progress.
 		 */
 
-		int stopTransfer() const
+		void stopTransfer() const
 		{
-			if (channel_ == nullptr)
-				return EBADF;
-
+			assert(channel_ != nullptr);
 			channel_->stopTransfer();
-			return {};
 		}
 
 		UniqueHandle(const UniqueHandle&) = delete;

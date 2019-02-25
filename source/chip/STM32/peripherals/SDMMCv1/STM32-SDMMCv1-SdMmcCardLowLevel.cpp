@@ -95,8 +95,7 @@ void SdMmcCardLowLevel::interruptHandler()
 	if (dctrl != 0 && (writeTransferPending == false || result != devices::SdMmcCardBase::Result::success))
 	{
 		sdmmcPeripheral_.writeDctrl({});
-		const auto ret = dmaChannelUniqueHandle_.stopTransfer();
-		assert(ret == 0);
+		dmaChannelUniqueHandle_.stopTransfer();
 	}
 
 	// write transfer pending and transaction successful so far?

@@ -93,11 +93,6 @@ TEST_CASE("Testing reserve() & release() interactions", "[reserve/release]")
 		distortos::chip::DmaChannel::UniqueHandle handle;
 		REQUIRE(handle.startTransfer() == EBADF);
 	}
-	SECTION("Stopping a transfer with released driver should fail with EBADF")
-	{
-		distortos::chip::DmaChannel::UniqueHandle handle;
-		REQUIRE(handle.stopTransfer() == EBADF);
-	}
 	SECTION("Releasing released driver causes no hardware accesses")
 	{
 		distortos::chip::DmaChannel::UniqueHandle handle;
