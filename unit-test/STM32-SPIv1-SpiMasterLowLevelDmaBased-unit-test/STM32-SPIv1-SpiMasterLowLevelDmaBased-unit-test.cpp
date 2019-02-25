@@ -265,6 +265,7 @@ TEST_CASE("Testing startTransfer()", "[startTransfer]")
 								};
 						REQUIRE_CALL(rxDmaChannelMock, configureTransfer(_, drAddress, transferSize / dataSize,
 								rxDmaFlags)).WITH(rxAddressMatcher(_1)).IN_SEQUENCE(sequence);
+						REQUIRE_CALL(rxDmaChannelMock, startTransfer()).IN_SEQUENCE(sequence);
 						REQUIRE_CALL(peripheralMock, getDrAddress()).IN_SEQUENCE(sequence).RETURN(drAddress);
 						const auto txDmaFlags = commonDmaFlags |
 								Flags::transferCompleteInterruptDisable |
@@ -280,7 +281,6 @@ TEST_CASE("Testing startTransfer()", "[startTransfer]")
 								};
 						REQUIRE_CALL(txDmaChannelMock, configureTransfer(_, drAddress, transferSize / dataSize,
 								txDmaFlags)).WITH(txAddressMatcher(_1)).IN_SEQUENCE(sequence);
-						REQUIRE_CALL(rxDmaChannelMock, startTransfer()).IN_SEQUENCE(sequence);
 						REQUIRE_CALL(txDmaChannelMock, startTransfer()).IN_SEQUENCE(sequence);
 						REQUIRE(spi.startTransfer(masterMock, txBuffer, rxBuffer, transferSize) == 0);
 

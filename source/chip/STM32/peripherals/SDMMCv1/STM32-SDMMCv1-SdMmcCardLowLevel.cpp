@@ -194,7 +194,7 @@ int SdMmcCardLowLevel::startTransaction(devices::SdMmcCardBase& sdMmcCardBase, c
 					transfer.getReadBuffer() : transfer.getWriteBuffer());
 			const auto directionFlags = transfer.isWriteTransfer() == false ? DmaChannel::Flags::peripheralToMemory :
 					DmaChannel::Flags::memoryToPeripheral;
-			dmaChannelUniqueHandle_.configureTransfer(memoryAddress,
+			dmaChannelUniqueHandle_.startTransfer(memoryAddress,
 					sdmmcPeripheral_.getFifoAddress(), transfer.getSize() / 4,
 					DmaChannel::Flags::transferCompleteInterruptDisable |
 					DmaChannel::Flags::peripheralFlowController |
@@ -205,8 +205,6 @@ int SdMmcCardLowLevel::startTransaction(devices::SdMmcCardBase& sdMmcCardBase, c
 					DmaChannel::Flags::dataSize4 |
 					DmaChannel::Flags::burstSize4);
 		}
-
-		dmaChannelUniqueHandle_.startTransfer();
 
 		sdmmcPeripheral_.writeDtimer(dtimer);
 		sdmmcPeripheral_.writeDlen(dlen);

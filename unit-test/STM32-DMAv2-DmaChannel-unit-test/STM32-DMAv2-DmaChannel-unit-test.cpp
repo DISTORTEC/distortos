@@ -110,7 +110,7 @@ TEST_CASE("Testing reserve() & release() interactions", "[reserve/release]")
 	}
 }
 
-TEST_CASE("Testing configureTransfer()", "[configureTransfer]")
+TEST_CASE("Testing transfer configuration", "[configuration]")
 {
 	DmaChannelFunctor functorMock {};
 	distortos::chip::DmaPeripheral peripheralMock {};
@@ -198,7 +198,9 @@ TEST_CASE("Testing configureTransfer()", "[configureTransfer]")
 						REQUIRE_CALL(channelPeripheralMock, writeM0ar(memoryAddress)).IN_SEQUENCE(sequence);
 						const auto fcr = DMA_SxFCR_DMDIS | DMA_SxFCR_FTH;
 						REQUIRE_CALL(channelPeripheralMock, writeFcr(fcr)).IN_SEQUENCE(sequence);
-						handle.configureTransfer(memoryAddress, peripheralAddress, transactions,
+						REQUIRE_CALL(channelPeripheralMock, readCr()).IN_SEQUENCE(sequence).RETURN(cr);
+						REQUIRE_CALL(channelPeripheralMock, writeCr(cr | DMA_SxCR_EN)).IN_SEQUENCE(sequence);
+						handle.startTransfer(memoryAddress, peripheralAddress, transactions,
 								flags | peripheralDataSize | memoryBurstDataSize | peripheralBurstSize);
 					}
 	}
@@ -231,14 +233,6 @@ TEST_CASE("Testing transfers", "[transfers]")
 		REQUIRE(handle.reserve(channel, request1, functorMock) == 0);
 	}
 
-	SECTION("Testing startTransfer()")
-	{
-		const auto newCr = 0xaaaaaaaa | DMA_SxCR_EN;
-		const auto oldCr = newCr ^ DMA_SxCR_EN;
-		REQUIRE_CALL(channelPeripheralMock, readCr()).IN_SEQUENCE(sequence).RETURN(oldCr);
-		REQUIRE_CALL(channelPeripheralMock, writeCr(newCr)).IN_SEQUENCE(sequence);
-		handle.startTransfer();
-	}
 	SECTION("Testing stopTransfer()")
 	{
 		const auto oldCr = UINT32_MAX;

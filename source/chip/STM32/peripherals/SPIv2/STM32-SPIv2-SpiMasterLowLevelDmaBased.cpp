@@ -108,8 +108,10 @@ int SpiMasterLowLevelDmaBased::startTransfer(devices::SpiMasterBase& spiMasterBa
 	if (size % dataSize != 0)
 		return EINVAL;
 
-	const auto transactions = size / dataSize;
+	spiMasterBase_ = &spiMasterBase;
+	size_ = size;
 
+	const auto transactions = size / dataSize;
 	const auto commonDmaFlags = DmaChannel::Flags::peripheralFixed |
 			(dataSize == 1 ? DmaChannel::Flags::dataSize1 : DmaChannel::Flags::dataSize2);
 
@@ -119,7 +121,7 @@ int SpiMasterLowLevelDmaBased::startTransfer(devices::SpiMasterBase& spiMasterBa
 				DmaChannel::Flags::peripheralToMemory |
 				(readBuffer != nullptr ? DmaChannel::Flags::memoryIncrement : DmaChannel::Flags::memoryFixed) |
 				DmaChannel::Flags::veryHighPriority;
-		rxDmaChannelUniqueHandle_.configureTransfer(memoryAddress, spiPeripheral_.getDrAddress(), transactions,
+		rxDmaChannelUniqueHandle_.startTransfer(memoryAddress, spiPeripheral_.getDrAddress(), transactions,
 				commonDmaFlags | rxDmaFlags);
 	}
 	{
@@ -128,15 +130,9 @@ int SpiMasterLowLevelDmaBased::startTransfer(devices::SpiMasterBase& spiMasterBa
 				DmaChannel::Flags::memoryToPeripheral |
 				(writeBuffer != nullptr ? DmaChannel::Flags::memoryIncrement : DmaChannel::Flags{}) |
 				DmaChannel::Flags::lowPriority;
-		txDmaChannelUniqueHandle_.configureTransfer(memoryAddress, spiPeripheral_.getDrAddress(), transactions,
+		txDmaChannelUniqueHandle_.startTransfer(memoryAddress, spiPeripheral_.getDrAddress(), transactions,
 				commonDmaFlags | txDmaFlags);
 	}
-
-	spiMasterBase_ = &spiMasterBase;
-	size_ = size;
-
-	rxDmaChannelUniqueHandle_.startTransfer();
-	txDmaChannelUniqueHandle_.startTransfer();
 
 	return 0;
 }

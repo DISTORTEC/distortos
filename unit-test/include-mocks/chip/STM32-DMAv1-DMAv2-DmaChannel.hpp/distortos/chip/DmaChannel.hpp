@@ -124,13 +124,6 @@ public:
 			assert(channel_ == nullptr);
 		}
 
-		void configureTransfer(const uintptr_t memoryAddress, const uintptr_t peripheralAddress,
-				const size_t transactions, const Flags flags) const
-		{
-			assert(channel_ != nullptr);
-			channel_->configureTransfer(memoryAddress, peripheralAddress, transactions, flags);
-		}
-
 		size_t getTransactionsLeft() const
 		{
 			assert(channel_ != nullptr);
@@ -158,9 +151,11 @@ public:
 			return {};
 		}
 
-		void startTransfer() const
+		void startTransfer(const uintptr_t memoryAddress, const uintptr_t peripheralAddress, const size_t transactions,
+				const Flags flags) const
 		{
 			assert(channel_ != nullptr);
+			channel_->configureTransfer(memoryAddress, peripheralAddress, transactions, flags);
 			channel_->startTransfer();
 		}
 

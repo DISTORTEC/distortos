@@ -180,26 +180,6 @@ public:
 		}
 
 		/**
-		 * \brief Configures parameters of transfer.
-		 *
-		 * \pre Driver is reserved with this handle.
-		 * \pre \a memoryAddress and \a peripheralAddress and \a transactions and \a flags are valid.
-		 * \pre No transfer is in progress.
-		 *
-		 * \param [in] memoryAddress is the memory address, must be divisible by configured memory data size
-		 * \param [in] peripheralAddress is the peripheral address, must be divisible by peripheral data size
-		 * \param [in] transactions is the number of transactions, [1; 65535]
-		 * \param [in] flags are configuration flags
-		 */
-
-		void configureTransfer(const uintptr_t memoryAddress, const uintptr_t peripheralAddress,
-				const size_t transactions, const Flags flags) const
-		{
-			assert(channel_ != nullptr);
-			channel_->configureTransfer(memoryAddress, peripheralAddress, transactions, flags);
-		}
-
-		/**
 		 * \pre Driver is reserved with this handle.
 		 *
 		 * \return number of transactions left
@@ -254,19 +234,27 @@ public:
 		}
 
 		/**
-		 * \brief Starts asynchronous transfer.
+		 * \brief Configures and starts asynchronous transfer.
 		 *
 		 * This function returns immediately. When the transfer is physically finished (either expected number of
 		 * transactions were executed or an error was detected), one of DmaChannelFunctor functions will be executed.
 		 *
 		 * \pre Driver is reserved with this handle.
+		 * \pre \a memoryAddress and \a peripheralAddress and \a transactions and \a flags are valid.
 		 * \pre No transfer is in progress.
 		 * \post Transfer is in progress.
+		 *
+		 * \param [in] memoryAddress is the memory address, must be divisible by configured memory data size
+		 * \param [in] peripheralAddress is the peripheral address, must be divisible by peripheral data size
+		 * \param [in] transactions is the number of transactions, [1; 65535]
+		 * \param [in] flags are configuration flags
 		 */
 
-		void startTransfer() const
+		void startTransfer(const uintptr_t memoryAddress, const uintptr_t peripheralAddress, const size_t transactions,
+				const Flags flags) const
 		{
 			assert(channel_ != nullptr);
+			channel_->configureTransfer(memoryAddress, peripheralAddress, transactions, flags);
 			channel_->startTransfer();
 		}
 
