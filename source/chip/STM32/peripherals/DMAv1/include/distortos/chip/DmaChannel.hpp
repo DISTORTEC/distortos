@@ -269,6 +269,17 @@ public:
 	}
 
 	/**
+	 * \brief DmaChannel's destructor
+	 *
+	 * \pre Driver is not reserved.
+	 */
+
+	~DmaChannel()
+	{
+		assert(functor_ == nullptr);
+	}
+
+	/**
 	 * \brief Interrupt handler
 	 *
 	 * \note this must not be called by user code
