@@ -140,11 +140,10 @@ int SdMmcCardLowLevel::start()
 int SdMmcCardLowLevel::startTransaction(devices::SdMmcCardBase& sdMmcCardBase, const uint8_t command,
 		const uint32_t argument, const Response response, const Transfer transfer)
 {
+	assert(isStarted() == true);
+
 	if (command > maxCommand)
 		return EINVAL;
-
-	if (isStarted() == false)
-		return EBADF;
 
 	if (isTransactionInProgress() == true)
 		return EBUSY;

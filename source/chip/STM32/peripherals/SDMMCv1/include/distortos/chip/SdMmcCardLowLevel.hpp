@@ -107,6 +107,8 @@ public:
 	 * response and associated transfer were sent/received or an error was detected),
 	 * SdMmcCardBase::transactionCompleteEvent() will be executed.
 	 *
+	 * \pre Driver is started.
+	 *
 	 * \param [in] sdMmcCardBase is a reference to SdMmcCardBase object that will be notified about completed
 	 * transaction
 	 * \param [in] command is the command associated with the transaction, [0; maxCommand]
@@ -116,7 +118,6 @@ public:
 	 * \param [in,out] transfer is the transfer associated with transaction
 	 *
 	 * \return 0 on success, error code otherwise:
-	 * - EBADF - the driver is not started;
 	 * - EBUSY - transaction is in progress;
 	 * - EINVAL - \a command and/or \a response and/or \a transfer are not valid;
 	 */

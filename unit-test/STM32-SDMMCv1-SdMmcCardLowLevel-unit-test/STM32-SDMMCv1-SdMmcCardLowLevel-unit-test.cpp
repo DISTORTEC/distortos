@@ -73,10 +73,6 @@ TEST_CASE("Testing start() & stop() interactions", "[start/stop]")
 	{
 		REQUIRE(sdMmc.stop() == EBADF);
 	}
-	SECTION("Starting transaction with stopped driver should fail with EBADF")
-	{
-		REQUIRE(sdMmc.startTransaction(cardMock, {}, {}, {}, {}) == EBADF);
-	}
 	SECTION("Starting stopped driver when DMA channel is busy should fail with EBUSY")
 	{
 		REQUIRE_CALL(dmaChannelMock, reserve(dmaRequest, _)).IN_SEQUENCE(sequence).RETURN(EBUSY);
