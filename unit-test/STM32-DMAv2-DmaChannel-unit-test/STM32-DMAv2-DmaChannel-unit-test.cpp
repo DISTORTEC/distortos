@@ -40,6 +40,14 @@ public:
 | local functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
+uint8_t getNextChannelId()
+{
+	static uint8_t channelId {};
+	const auto nextChannelId = channelId;
+	channelId = (channelId + 1) % 8;
+	return nextChannelId;
+}
+
 uint8_t getChannelShift(const uint8_t channelId)
 {
 	static const std::array<uint8_t, 4> channelShifts
@@ -75,36 +83,14 @@ TEST_CASE("Testing reserve() & release() interactions", "[reserve/release]")
 	distortos::chip::DmaChannelPeripheral channelPeripheralMock {};
 	distortos::InterruptMaskingLock::Proxy interruptMaskingLockProxyMock {};
 	trompeloeil::sequence sequence {};
-	std::vector<std::unique_ptr<trompeloeil::expectation>> expectations {};
 
-	constexpr uint8_t channelId {4};
-	const auto channelShift = getChannelShift(channelId);
+	const auto channelId = getNextChannelId();
 
 	distortos::chip::DmaChannel channel {peripheralMock, channelPeripheralMock};
 
 	ALLOW_CALL(channelPeripheralMock, getChannelId()).RETURN(channelId);
 
-	SECTION("Configuring released driver should fail with EBADF")
-	{
-		distortos::chip::DmaChannel::UniqueHandle handle;
-		REQUIRE(handle.configureTransfer({}, {}, {}, {}) == EBADF);
-	}
-	SECTION("Starting a transfer with released driver should fail with EBADF")
-	{
-		distortos::chip::DmaChannel::UniqueHandle handle;
-		REQUIRE(handle.startTransfer() == EBADF);
-	}
-	SECTION("Stopping a transfer with released driver should fail with EBADF")
-	{
-		distortos::chip::DmaChannel::UniqueHandle handle;
-		REQUIRE(handle.stopTransfer() == EBADF);
-	}
-	SECTION("Reserving released driver with wrong request number should fail with EINVAL")
-	{
-		distortos::chip::DmaChannel::UniqueHandle handle;
-		REQUIRE(handle.reserve(channel, maxRequest + 1, functorMock) == EINVAL);
-	}
-	SECTION("Releasing released driver results in hardware accesses")
+	SECTION("Releasing released driver causes no hardware accesses")
 	{
 		distortos::chip::DmaChannel::UniqueHandle handle;
 		handle.release();
@@ -119,24 +105,6 @@ TEST_CASE("Testing reserve() & release() interactions", "[reserve/release]")
 			REQUIRE(handle.reserve(channel, request1, functorMock) == 0);
 		}
 
-		SECTION("Reserving reserved driver with the same handle should succeed")
-		{
-			const auto oldCr = UINT32_MAX;
-			REQUIRE_CALL(channelPeripheralMock, readCr()).IN_SEQUENCE(sequence).RETURN(oldCr);
-			const auto newCr = oldCr & ~(DMA_SxCR_TCIE | DMA_SxCR_HTIE | DMA_SxCR_TEIE | DMA_SxCR_DMEIE | DMA_SxCR_EN);
-			REQUIRE_CALL(channelPeripheralMock, writeCr(newCr)).IN_SEQUENCE(sequence);
-			REQUIRE_CALL(channelPeripheralMock, readCr()).IN_SEQUENCE(sequence).RETURN(newCr);
-			if (channelId <= 3)
-				expectations.emplace_back(NAMED_REQUIRE_CALL(peripheralMock,
-						writeLifcr(allFlags << channelShift)).IN_SEQUENCE(sequence));
-			else
-				expectations.emplace_back(NAMED_REQUIRE_CALL(peripheralMock,
-						writeHifcr(allFlags << channelShift)).IN_SEQUENCE(sequence));
-
-			REQUIRE_CALL(interruptMaskingLockProxyMock, construct()).IN_SEQUENCE(sequence);
-			REQUIRE_CALL(interruptMaskingLockProxyMock, destruct()).IN_SEQUENCE(sequence);
-			REQUIRE(handle.reserve(channel, request2, functorMock) == 0);
-		}
 		SECTION("Reserving reserved driver with a different handle should fail with EBUSY")
 		{
 			distortos::chip::DmaChannel::UniqueHandle anotherHandle;
@@ -145,33 +113,20 @@ TEST_CASE("Testing reserve() & release() interactions", "[reserve/release]")
 			REQUIRE(anotherHandle.reserve(channel, 0, functorMock) == EBUSY);
 		}
 
-		const auto oldCr = UINT32_MAX;
-		expectations.emplace_back(NAMED_REQUIRE_CALL(channelPeripheralMock,
-				readCr()).IN_SEQUENCE(sequence).RETURN(oldCr));
-		const auto newCr = oldCr & ~(DMA_SxCR_TCIE | DMA_SxCR_HTIE | DMA_SxCR_TEIE | DMA_SxCR_DMEIE | DMA_SxCR_EN);
-		expectations.emplace_back(NAMED_REQUIRE_CALL(channelPeripheralMock, writeCr(newCr)).IN_SEQUENCE(sequence));
-		expectations.emplace_back(NAMED_REQUIRE_CALL(channelPeripheralMock,
-				readCr()).IN_SEQUENCE(sequence).RETURN(newCr));
-		if (channelId <= 3)
-			expectations.emplace_back(NAMED_REQUIRE_CALL(peripheralMock,
-					writeLifcr(allFlags << channelShift)).IN_SEQUENCE(sequence));
-		else
-			expectations.emplace_back(NAMED_REQUIRE_CALL(peripheralMock,
-					writeHifcr(allFlags << channelShift)).IN_SEQUENCE(sequence));
+		REQUIRE_CALL(channelPeripheralMock, readCr()).IN_SEQUENCE(sequence).RETURN(0);
+		handle.release();
 	}
 }
 
-TEST_CASE("Testing configureTransfer()", "[configureTransfer]")
+TEST_CASE("Testing transfer configuration", "[configuration]")
 {
 	DmaChannelFunctor functorMock {};
 	distortos::chip::DmaPeripheral peripheralMock {};
 	distortos::chip::DmaChannelPeripheral channelPeripheralMock {};
 	distortos::InterruptMaskingLock::Proxy interruptMaskingLockProxyMock {};
 	trompeloeil::sequence sequence {};
-	std::vector<std::unique_ptr<trompeloeil::expectation>> expectations {};
 
-	constexpr uint8_t channelId {6};
-	const auto channelShift = getChannelShift(channelId);
+	const auto channelId = getNextChannelId();
 
 	distortos::chip::DmaChannel channel {peripheralMock, channelPeripheralMock};
 
@@ -183,83 +138,6 @@ TEST_CASE("Testing configureTransfer()", "[configureTransfer]")
 		REQUIRE_CALL(interruptMaskingLockProxyMock, construct()).IN_SEQUENCE(sequence);
 		REQUIRE_CALL(interruptMaskingLockProxyMock, destruct()).IN_SEQUENCE(sequence);
 		REQUIRE(handle.reserve(channel, request1, functorMock) == 0);
-	}
-
-	SECTION("Trying to use invalid data size should fail with EINVAL")
-	{
-		constexpr auto memoryDataSize = Flags::memoryDataSize2 | Flags::memoryDataSize4;
-		REQUIRE(handle.configureTransfer({}, {}, 1, memoryDataSize) == EINVAL);
-		constexpr auto peripheralDataSize = Flags::peripheralDataSize2 | Flags::peripheralDataSize4;
-		REQUIRE(handle.configureTransfer({}, {}, 1, peripheralDataSize) == EINVAL);
-		constexpr auto dataSize = Flags::dataSize2 | Flags::dataSize4;
-		REQUIRE(handle.configureTransfer({}, {}, 1, dataSize) == EINVAL);
-	}
-
-	{
-		const uint8_t burstSizes[]
-		{
-				1,
-				4,
-				8,
-				16,
-		};
-		const uint8_t dataSizes[]
-		{
-				1,
-				2,
-				4,
-		};
-		for (const auto burstSize : burstSizes)
-			for (const auto dataSize : dataSizes)
-			{
-				const auto memoryBurstSize = burstSize == 1 ? Flags::memoryBurstSize1 :
-						burstSize == 4 ? Flags::memoryBurstSize4 :
-						burstSize == 8 ? Flags::memoryBurstSize8 : Flags::memoryBurstSize16;
-				const auto memoryDataSize = dataSize == 1 ? Flags::memoryDataSize1 :
-						dataSize == 2 ? Flags::memoryDataSize2 : Flags::memoryDataSize4;
-				if (burstSize * dataSize > 16)
-				{
-					DYNAMIC_SECTION("Trying to use memory burst size " << static_cast<int>(burstSize) <<
-							" and memory data size " << static_cast<int>(dataSize) << " should fail with EINVAL")
-					{
-						REQUIRE(handle.configureTransfer({}, {}, 1, memoryBurstSize | memoryDataSize) == EINVAL);
-					}
-				}
-				for (uintptr_t address {1}; address < (burstSize * dataSize); ++address)
-				{
-					DYNAMIC_SECTION("Trying to use address " << static_cast<int>(address) << " when burst size is " <<
-							static_cast<int>(burstSize) << " and data size is " << static_cast<int>(dataSize) <<
-							" should fail with EINVAL")
-					{
-						REQUIRE(handle.configureTransfer(address, {}, 1, memoryBurstSize | memoryDataSize) == EINVAL);
-						const auto peripheralBurstSize = burstSize == 1 ? Flags::peripheralBurstSize1 :
-								 burstSize == 4 ? Flags::peripheralBurstSize4 :
-								 burstSize == 8 ? Flags::peripheralBurstSize8 : Flags::peripheralBurstSize16;
-						const auto peripheralDataSize = dataSize == 1 ? Flags::peripheralDataSize1 :
-								dataSize == 2 ? Flags::peripheralDataSize2 : Flags::peripheralDataSize4;
-						REQUIRE(handle.configureTransfer({}, address, 1,
-								peripheralBurstSize | peripheralDataSize) == EINVAL);
-						const auto burstSizeFlags = burstSize == 1 ? Flags::burstSize1 :
-								burstSize == 4 ? Flags::burstSize4 :
-								burstSize == 8 ? Flags::burstSize8 : Flags::burstSize16;
-						const auto dataSizeFlags = dataSize == 1 ? Flags::dataSize1 :
-								dataSize == 2 ? Flags::dataSize2 : Flags::dataSize4;
-						REQUIRE(handle.configureTransfer(address, address, 1,
-								burstSizeFlags | dataSizeFlags) == EINVAL);
-					}
-				}
-			}
-	}
-
-	SECTION("Trying to use 0 transactions should fail with EINVAL")
-	{
-		REQUIRE(handle.configureTransfer({}, {}, 0, {}) == EINVAL);
-	}
-
-	SECTION("Trying to configure the driver when transfer is ongoing should fail with EBUSY")
-	{
-		REQUIRE_CALL(channelPeripheralMock, readCr()).IN_SEQUENCE(sequence).RETURN(DMA_SxCR_EN);
-		REQUIRE(handle.configureTransfer({}, {}, 1, {}) == EBUSY);
 	}
 
 	SECTION("Trying to use valid configuration should succeed")
@@ -316,34 +194,25 @@ TEST_CASE("Testing configureTransfer()", "[configureTransfer]")
 						constexpr uint16_t transactions {0xd353};
 
 						REQUIRE_CALL(channelPeripheralMock, readCr()).IN_SEQUENCE(sequence).RETURN(0);
-						const auto cr = request1 << DMA_SxCR_CHSEL_Pos |
-								static_cast<uint32_t>(flags) |
-								static_cast<uint32_t>(peripheralDataSize) |
-								static_cast<uint32_t>(memoryBurstDataSize) |
-								static_cast<uint32_t>(peripheralBurstSize) |
-								DMA_SxCR_TEIE;
-						REQUIRE_CALL(channelPeripheralMock, writeCr(cr)).IN_SEQUENCE(sequence);
 						REQUIRE_CALL(channelPeripheralMock, writeNdtr(transactions)).IN_SEQUENCE(sequence);
 						REQUIRE_CALL(channelPeripheralMock, writePar(peripheralAddress)).IN_SEQUENCE(sequence);
 						REQUIRE_CALL(channelPeripheralMock, writeM0ar(memoryAddress)).IN_SEQUENCE(sequence);
 						const auto fcr = DMA_SxFCR_DMDIS | DMA_SxFCR_FTH;
 						REQUIRE_CALL(channelPeripheralMock, writeFcr(fcr)).IN_SEQUENCE(sequence);
-						REQUIRE(handle.configureTransfer(memoryAddress, peripheralAddress, transactions,
-								flags | peripheralDataSize | memoryBurstDataSize | peripheralBurstSize) == 0);
+						const auto cr = request1 << DMA_SxCR_CHSEL_Pos |
+								static_cast<uint32_t>(flags) |
+								static_cast<uint32_t>(peripheralDataSize) |
+								static_cast<uint32_t>(memoryBurstDataSize) |
+								static_cast<uint32_t>(peripheralBurstSize) |
+								DMA_SxCR_TEIE |
+								DMA_SxCR_EN;
+						REQUIRE_CALL(channelPeripheralMock, writeCr(cr)).IN_SEQUENCE(sequence);
+						handle.startTransfer(memoryAddress, peripheralAddress, transactions,
+								flags | peripheralDataSize | memoryBurstDataSize | peripheralBurstSize);
 					}
 	}
 
-	const auto oldCr = UINT32_MAX;
-	REQUIRE_CALL(channelPeripheralMock, readCr()).IN_SEQUENCE(sequence).RETURN(oldCr);
-	const auto newCr = oldCr & ~(DMA_SxCR_TCIE | DMA_SxCR_HTIE | DMA_SxCR_TEIE | DMA_SxCR_DMEIE | DMA_SxCR_EN);
-	REQUIRE_CALL(channelPeripheralMock, writeCr(newCr)).IN_SEQUENCE(sequence);
-	REQUIRE_CALL(channelPeripheralMock, readCr()).IN_SEQUENCE(sequence).RETURN(newCr);
-	if (channelId <= 3)
-		expectations.emplace_back(NAMED_REQUIRE_CALL(peripheralMock,
-				writeLifcr(allFlags << channelShift)).IN_SEQUENCE(sequence));
-	else
-		expectations.emplace_back(NAMED_REQUIRE_CALL(peripheralMock,
-				writeHifcr(allFlags << channelShift)).IN_SEQUENCE(sequence));
+	REQUIRE_CALL(channelPeripheralMock, readCr()).IN_SEQUENCE(sequence).RETURN(0);
 	handle.release();
 }
 
@@ -356,7 +225,7 @@ TEST_CASE("Testing transfers", "[transfers]")
 	trompeloeil::sequence sequence {};
 	std::vector<std::unique_ptr<trompeloeil::expectation>> expectations {};
 
-	constexpr uint8_t channelId {3};
+	const auto channelId = getNextChannelId();
 	const auto channelShift = getChannelShift(channelId);
 
 	distortos::chip::DmaChannel channel {peripheralMock, channelPeripheralMock};
@@ -371,20 +240,6 @@ TEST_CASE("Testing transfers", "[transfers]")
 		REQUIRE(handle.reserve(channel, request1, functorMock) == 0);
 	}
 
-	SECTION("Starting another transfer when the previous one is ongoing should fail with EBUSY")
-	{
-		REQUIRE_CALL(channelPeripheralMock, readCr()).IN_SEQUENCE(sequence).RETURN(DMA_SxCR_EN);
-		REQUIRE(handle.startTransfer() == EBUSY);
-	}
-
-	SECTION("Testing startTransfer()")
-	{
-		const auto newCr = 0xaaaaaaaa | DMA_SxCR_EN;
-		const auto oldCr = newCr ^ DMA_SxCR_EN;
-		REQUIRE_CALL(channelPeripheralMock, readCr()).IN_SEQUENCE(sequence).RETURN(oldCr);
-		REQUIRE_CALL(channelPeripheralMock, writeCr(newCr)).IN_SEQUENCE(sequence);
-		REQUIRE(handle.startTransfer() == 0);
-	}
 	SECTION("Testing stopTransfer()")
 	{
 		const auto oldCr = UINT32_MAX;
@@ -405,54 +260,63 @@ TEST_CASE("Testing transfers", "[transfers]")
 					writeHifcr(allFlags << channelShift)).IN_SEQUENCE(sequence));
 		handle.stopTransfer();
 	}
-	SECTION("Testing interruptHandler()")
+
+	SECTION("Testing interruptHandler() - both TCIF and TEIF flags cleared")
 	{
-		{
-			const auto isr = UINT32_MAX & ~((DMA_LISR_TCIF0 | DMA_LISR_TEIF0) << channelShift);
-			if (channelId <= 3)
-				expectations.emplace_back(NAMED_REQUIRE_CALL(peripheralMock,
-						readLisr()).IN_SEQUENCE(sequence).RETURN(isr));
-			else
-				expectations.emplace_back(NAMED_REQUIRE_CALL(peripheralMock,
-						readHisr()).IN_SEQUENCE(sequence).RETURN(isr));
-			channel.interruptHandler();
-		}
-		{
-			const bool falseTrue[]
+		const auto isr = UINT32_MAX & ~((DMA_LISR_TCIF0 | DMA_LISR_TEIF0) << channelShift);
+		if (channelId <= 3)
+			expectations.emplace_back(NAMED_REQUIRE_CALL(peripheralMock,
+					readLisr()).IN_SEQUENCE(sequence).RETURN(isr));
+		else
+			expectations.emplace_back(NAMED_REQUIRE_CALL(peripheralMock,
+					readHisr()).IN_SEQUENCE(sequence).RETURN(isr));
+		channel.interruptHandler();
+	}
+	const bool falseTrue[]
+	{
+			false,
+			true,
+	};
+	SECTION("Testing interruptHandler() - TCIF and/or TEIF flags set but corresponding interrupts disabled")
+	{
+		for (const auto tcif : falseTrue)
+			for (const auto teif : falseTrue)
 			{
-					false,
-					true,
-			};
-			for (const auto tcif : falseTrue)
-				for (const auto teif : falseTrue)
-				{
-					if (tcif == false && teif == false)
-						continue;
+				if (tcif == false && teif == false)
+					continue;
 
-					const auto isr = UINT32_MAX & ~((DMA_LISR_TCIF0 | DMA_LISR_TEIF0) << channelShift) |
-							tcif << (DMA_LISR_TCIF0_Pos + channelShift) |
-							teif << (DMA_LISR_TEIF0_Pos + channelShift);
-					if (channelId <= 3)
-						expectations.emplace_back(NAMED_REQUIRE_CALL(peripheralMock,
-								readLisr()).IN_SEQUENCE(sequence).RETURN(isr));
-					else
-						expectations.emplace_back(NAMED_REQUIRE_CALL(peripheralMock,
-								readHisr()).IN_SEQUENCE(sequence).RETURN(isr));
-					const auto cr = UINT32_MAX & ~(DMA_SxCR_TCIE | DMA_SxCR_TEIE) |
-							!tcif << DMA_SxCR_TCIE_Pos |
-							!teif << DMA_SxCR_TEIE_Pos;
-					REQUIRE_CALL(channelPeripheralMock, readCr()).IN_SEQUENCE(sequence).RETURN(cr);
-					channel.interruptHandler();
-				}
+				const auto isr = UINT32_MAX & ~((DMA_LISR_TCIF0 | DMA_LISR_TEIF0) << channelShift) |
+						tcif << (DMA_LISR_TCIF0_Pos + channelShift) |
+						teif << (DMA_LISR_TEIF0_Pos + channelShift);
+				if (channelId <= 3)
+					expectations.emplace_back(NAMED_REQUIRE_CALL(peripheralMock,
+							readLisr()).IN_SEQUENCE(sequence).RETURN(isr));
+				else
+					expectations.emplace_back(NAMED_REQUIRE_CALL(peripheralMock,
+							readHisr()).IN_SEQUENCE(sequence).RETURN(isr));
+				const auto cr = UINT32_MAX & ~(DMA_SxCR_TCIE | DMA_SxCR_TEIE) |
+						!tcif << DMA_SxCR_TCIE_Pos |
+						!teif << DMA_SxCR_TEIE_Pos;
+				REQUIRE_CALL(channelPeripheralMock, readCr()).IN_SEQUENCE(sequence).RETURN(cr);
+				channel.interruptHandler();
+			}
+	}
+	SECTION("Testing interruptHandler() - TCIF and/or TEIF flags set and corresponding interrupts enabled")
+	{
+		for (const auto tcif : falseTrue)
+			for (const auto teif : falseTrue)
+				for (const auto tcie : falseTrue)
+					for (const auto teie : falseTrue)
+					{
+						if ((tcif && tcie) == false && (teif && teie) == false)
+							continue;
 
-			for (const auto tcif : falseTrue)
-				for (const auto teif : falseTrue)
-					for (const auto tcie : falseTrue)
-						for (const auto teie : falseTrue)
+						DYNAMIC_SECTION("Testing interruptHandler() - "
+								"TCIF flag " << (tcif == false ? "cleared" : "set") <<
+								", TEIF flag " << (teif == false ? "cleared" : "set") <<
+								", TC interrupt " << (tcie == false ? "disabled" : "enabled") <<
+								" and TE interrupt " << (teie == false ? "disabled" : "enabled"))
 						{
-							if ((tcif && tcie) == false && (teif && teie) == false)
-								continue;
-
 							const auto isr = UINT32_MAX & ~((DMA_LISR_TCIF0 | DMA_LISR_TEIF0) << channelShift) |
 									tcif << (DMA_LISR_TCIF0_Pos + channelShift) |
 									teif << (DMA_LISR_TEIF0_Pos + channelShift);
@@ -491,19 +355,9 @@ TEST_CASE("Testing transfers", "[transfers]")
 
 							channel.interruptHandler();
 						}
-		}
+					}
 	}
 
-	const auto oldCr = UINT32_MAX;
-	REQUIRE_CALL(channelPeripheralMock, readCr()).IN_SEQUENCE(sequence).RETURN(oldCr);
-	const auto newCr = oldCr & ~(DMA_SxCR_TCIE | DMA_SxCR_HTIE | DMA_SxCR_TEIE | DMA_SxCR_DMEIE | DMA_SxCR_EN);
-	REQUIRE_CALL(channelPeripheralMock, writeCr(newCr)).IN_SEQUENCE(sequence);
-	REQUIRE_CALL(channelPeripheralMock, readCr()).IN_SEQUENCE(sequence).RETURN(newCr);
-	if (channelId <= 3)
-		expectations.emplace_back(NAMED_REQUIRE_CALL(peripheralMock,
-				writeLifcr(allFlags << channelShift)).IN_SEQUENCE(sequence));
-	else
-		expectations.emplace_back(NAMED_REQUIRE_CALL(peripheralMock,
-				writeHifcr(allFlags << channelShift)).IN_SEQUENCE(sequence));
+	REQUIRE_CALL(channelPeripheralMock, readCr()).IN_SEQUENCE(sequence).RETURN(0);
 	handle.release();
 }

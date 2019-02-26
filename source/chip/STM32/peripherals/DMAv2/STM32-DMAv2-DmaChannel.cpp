@@ -176,6 +176,9 @@ void writeIfcr(const DmaPeripheral& dmaPeripheral, const uint8_t channelId, cons
 
 /// maximum allowed value for request identifier
 constexpr uint8_t maxRequest {DMA_SxCR_CHSEL_Msk >> DMA_SxCR_CHSEL_Pos};
+/// TCIE, HTIE, TEIE, DMEIE and EN flags of CR register
+constexpr uint32_t tcieHtieTeieDmeieEnFlags {DMA_SxCR_TCIE | DMA_SxCR_HTIE | DMA_SxCR_TEIE | DMA_SxCR_DMEIE |
+		DMA_SxCR_EN};
 
 }	// namespace
 
@@ -185,6 +188,8 @@ constexpr uint8_t maxRequest {DMA_SxCR_CHSEL_Msk >> DMA_SxCR_CHSEL_Pos};
 
 void DmaChannel::interruptHandler()
 {
+	assert(functor_ != nullptr);
+
 	const auto channelId = dmaChannelPeripheral_.getChannelId();
 	const auto channelShift = getChannelShift(channelId);
 	const auto tcFlag = DMA_LISR_TCIF0 << channelShift;
@@ -202,16 +207,44 @@ void DmaChannel::interruptHandler()
 	if ((enabledFlags & tcFlag) != 0)
 		functor_->transferCompleteEvent();
 	if ((enabledFlags & teFlag) != 0)
-		functor_->transferErrorEvent(dmaChannelPeripheral_.readNdtr());
+		functor_->transferErrorEvent(getTransactionsLeft());
 }
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | private functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-int DmaChannel::configureTransfer(const uintptr_t memoryAddress, const uintptr_t peripheralAddress,
+size_t DmaChannel::getTransactionsLeft() const
+{
+	return dmaChannelPeripheral_.readNdtr();
+}
+
+void DmaChannel::release()
+{
+	assert((dmaChannelPeripheral_.readCr() & tcieHtieTeieDmeieEnFlags) == 0);
+	functor_ = {};
+}
+
+int DmaChannel::reserve(const uint8_t request, DmaChannelFunctor& functor)
+{
+	assert(request <= maxRequest);
+
+	const InterruptMaskingLock interruptMaskingLock;
+
+	if (functor_ != nullptr)
+		return EBUSY;
+
+	functor_ = &functor;
+	request_ = request;
+
+	return {};
+}
+
+void DmaChannel::startTransfer(const uintptr_t memoryAddress, const uintptr_t peripheralAddress,
 		const size_t transactions, const Flags flags) const
 {
+	assert(functor_ != nullptr);
+
 	constexpr auto memoryDataSizeMask = Flags::memoryDataSize1 | Flags::memoryDataSize2 | Flags::memoryDataSize4;
 	const auto memoryDataSizeFlags = flags & memoryDataSizeMask;
 	const auto memoryDataSize = memoryDataSizeFlags == Flags::memoryDataSize1 ? 1 :
@@ -225,8 +258,7 @@ int DmaChannel::configureTransfer(const uintptr_t memoryAddress, const uintptr_t
 			peripheralDataSizeFlags == Flags::peripheralDataSize2 ? 2 :
 			peripheralDataSizeFlags == Flags::peripheralDataSize4 ? 4 : 0;
 
-	if (memoryDataSize == 0 || peripheralDataSize == 0)
-		return EINVAL;
+	assert(memoryDataSize != 0 && peripheralDataSize != 0);
 
 	constexpr auto memoryBurstSizeMask = Flags::memoryBurstSize1 | Flags::memoryBurstSize4 | Flags::memoryBurstSize8 |
 			Flags::memoryBurstSize16;
@@ -235,8 +267,7 @@ int DmaChannel::configureTransfer(const uintptr_t memoryAddress, const uintptr_t
 			memoryBurstSizeFlags == Flags::memoryBurstSize4 ? 4 :
 			memoryBurstSizeFlags == Flags::memoryBurstSize8 ? 8 : 16;
 
-	if (memoryDataSize * memoryBurstSize > 16)
-		return EINVAL;
+	assert(memoryDataSize * memoryBurstSize <= 16);
 
 	constexpr auto peripheralBurstSizeMask = Flags::peripheralBurstSize1 | Flags::peripheralBurstSize4 |
 			Flags::peripheralBurstSize8 | Flags::peripheralBurstSize16;
@@ -245,68 +276,26 @@ int DmaChannel::configureTransfer(const uintptr_t memoryAddress, const uintptr_t
 			peripheralBurstSizeFlags == Flags::peripheralBurstSize4 ? 4 :
 			peripheralBurstSizeFlags == Flags::peripheralBurstSize8 ? 8 : 16;
 
-	if (memoryAddress % (memoryDataSize * memoryBurstSize) != 0 ||
-			peripheralAddress % (peripheralDataSize * peripheralBurstSize) != 0)
-		return EINVAL;
+	assert(memoryAddress % (memoryDataSize * memoryBurstSize) == 0 &&
+			peripheralAddress % (peripheralDataSize * peripheralBurstSize) == 0);
 
-	if (transactions == 0)
-		return EINVAL;
+	assert(transactions != 0 && transactions <= UINT16_MAX);
+	assert((dmaChannelPeripheral_.readCr() & tcieHtieTeieDmeieEnFlags) == 0);
 
-	if (transactions > UINT16_MAX)	/// \todo add support for very high number of transactions
-		return ENOTSUP;
-
-	if ((dmaChannelPeripheral_.readCr() & DMA_SxCR_EN) != 0)
-		return EBUSY;
-
-	dmaChannelPeripheral_.writeCr(request_ << DMA_SxCR_CHSEL_Pos |
-			static_cast<uint32_t>(flags) |
-			DMA_SxCR_TEIE);
 	dmaChannelPeripheral_.writeNdtr(transactions);
 	dmaChannelPeripheral_.writePar(peripheralAddress);
 	dmaChannelPeripheral_.writeM0ar(memoryAddress);
 	dmaChannelPeripheral_.writeFcr(DMA_SxFCR_DMDIS | DMA_SxFCR_FTH);
-	return {};
-}
-
-size_t DmaChannel::getTransactionsLeft() const
-{
-	return dmaChannelPeripheral_.readNdtr();
-}
-
-void DmaChannel::release()
-{
-	stopTransfer();
-	functor_ = {};
-}
-
-int DmaChannel::reserve(const uint8_t request, DmaChannelFunctor& functor)
-{
-	if (request > maxRequest)
-		return EINVAL;
-
-	const InterruptMaskingLock interruptMaskingLock;
-
-	if (functor_ != nullptr)
-		return EBUSY;
-
-	functor_ = &functor;
-	request_ = request;
-
-	return {};
-}
-
-int DmaChannel::startTransfer() const
-{
-	const auto cr = dmaChannelPeripheral_.readCr();
-	if ((cr & DMA_SxCR_EN) != 0)
-		return EBUSY;
-
-	modifyCr(cr, dmaChannelPeripheral_, {}, DMA_SxCR_EN);
-	return {};
+	dmaChannelPeripheral_.writeCr(request_ << DMA_SxCR_CHSEL_Pos |
+			static_cast<uint32_t>(flags) |
+			DMA_SxCR_TEIE |
+			DMA_SxCR_EN);
 }
 
 void DmaChannel::stopTransfer() const
 {
+	assert(functor_ != nullptr);
+
 	modifyCr(dmaChannelPeripheral_.readCr(), dmaChannelPeripheral_,
 			DMA_SxCR_TCIE | DMA_SxCR_HTIE | DMA_SxCR_TEIE | DMA_SxCR_DMEIE | DMA_SxCR_EN, {});
 	while ((dmaChannelPeripheral_.readCr() & DMA_SxCR_EN) != 0);

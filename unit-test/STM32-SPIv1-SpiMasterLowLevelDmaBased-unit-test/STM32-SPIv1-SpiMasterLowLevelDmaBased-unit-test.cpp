@@ -59,7 +59,6 @@ TEST_CASE("Testing start() & stop() interactions", "[start/stop]")
 	distortos::chip::DmaChannel rxDmaChannelMock {};
 	distortos::chip::DmaChannel txDmaChannelMock {};
 	trompeloeil::sequence sequence {};
-	std::vector<std::unique_ptr<trompeloeil::expectation>> expectations {};
 
 	distortos::chip::SpiMasterLowLevelDmaBased spi {peripheralMock, rxDmaChannelMock, rxDmaRequest, txDmaChannelMock,
 			txDmaRequest};
@@ -96,22 +95,15 @@ TEST_CASE("Testing start() & stop() interactions", "[start/stop]")
 		REQUIRE_CALL(peripheralMock, writeCr2(initialCr2)).IN_SEQUENCE(sequence);
 		REQUIRE(spi.start() == 0);
 
-		SECTION("Starting started driver should fail with EBADF")
-		{
-			REQUIRE(spi.start() == EBADF);
-			expectations.emplace_back(NAMED_REQUIRE_CALL(peripheralMock, writeCr1(0u)).IN_SEQUENCE(sequence));
-			expectations.emplace_back(NAMED_REQUIRE_CALL(peripheralMock, writeCr2(0u)).IN_SEQUENCE(sequence));
-			expectations.emplace_back(NAMED_REQUIRE_CALL(txDmaChannelMock, release()).IN_SEQUENCE(sequence));
-			expectations.emplace_back(NAMED_REQUIRE_CALL(rxDmaChannelMock, release()).IN_SEQUENCE(sequence));
-		}
-		SECTION("Stopping started driver should succeed")
-		{
-			REQUIRE_CALL(rxDmaChannelMock, release()).IN_SEQUENCE(sequence);
-			REQUIRE_CALL(txDmaChannelMock, release()).IN_SEQUENCE(sequence);
-			REQUIRE_CALL(peripheralMock, writeCr1(0u)).IN_SEQUENCE(sequence);
-			REQUIRE_CALL(peripheralMock, writeCr2(0u)).IN_SEQUENCE(sequence);
-			REQUIRE(spi.stop() == 0);
-		}
+		// starting started driver should fail with EBADF
+		REQUIRE(spi.start() == EBADF);
+
+		// stopping started driver should succeed
+		REQUIRE_CALL(rxDmaChannelMock, release()).IN_SEQUENCE(sequence);
+		REQUIRE_CALL(txDmaChannelMock, release()).IN_SEQUENCE(sequence);
+		REQUIRE_CALL(peripheralMock, writeCr1(0u)).IN_SEQUENCE(sequence);
+		REQUIRE_CALL(peripheralMock, writeCr2(0u)).IN_SEQUENCE(sequence);
+		REQUIRE(spi.stop() == 0);
 	}
 }
 
@@ -216,22 +208,6 @@ TEST_CASE("Testing startTransfer()", "[startTransfer]")
 	{
 		REQUIRE(spi.startTransfer(masterMock, nullptr, nullptr, 0) == EINVAL);
 	}
-	SECTION("RX DMA configuration error should propagate error code to caller")
-	{
-		REQUIRE_CALL(peripheralMock, getDrAddress()).IN_SEQUENCE(sequence).RETURN(drAddress);
-		constexpr int ret {0x58cf6045};
-		REQUIRE_CALL(rxDmaChannelMock, configureTransfer(_, _, _, _)).IN_SEQUENCE(sequence).RETURN(ret);
-		REQUIRE(spi.startTransfer(masterMock, nullptr, nullptr, 2) == ret);
-	}
-	SECTION("TX DMA configuration error should propagate error code to caller")
-	{
-		REQUIRE_CALL(peripheralMock, getDrAddress()).IN_SEQUENCE(sequence).RETURN(drAddress);
-		REQUIRE_CALL(rxDmaChannelMock, configureTransfer(_, _, _, _)).IN_SEQUENCE(sequence).RETURN(0);
-		constexpr int ret {0x17e727e9};
-		REQUIRE_CALL(peripheralMock, getDrAddress()).IN_SEQUENCE(sequence).RETURN(drAddress);
-		REQUIRE_CALL(txDmaChannelMock, configureTransfer(_, _, _, _)).IN_SEQUENCE(sequence).RETURN(ret);
-		REQUIRE(spi.startTransfer(masterMock, nullptr, nullptr, 2) == ret);
-	}
 
 	const uint8_t wordLengths[]
 	{
@@ -287,8 +263,8 @@ TEST_CASE("Testing startTransfer()", "[startTransfer]")
 											address == reinterpret_cast<uintptr_t>(rxBuffer) :
 											true;
 								};
-						REQUIRE_CALL(rxDmaChannelMock, configureTransfer(_, drAddress, transferSize / dataSize,
-								rxDmaFlags)).WITH(rxAddressMatcher(_1)).IN_SEQUENCE(sequence).RETURN(0);
+						REQUIRE_CALL(rxDmaChannelMock, startTransfer(_, drAddress, transferSize / dataSize,
+								rxDmaFlags)).WITH(rxAddressMatcher(_1)).IN_SEQUENCE(sequence);
 						REQUIRE_CALL(peripheralMock, getDrAddress()).IN_SEQUENCE(sequence).RETURN(drAddress);
 						const auto txDmaFlags = commonDmaFlags |
 								Flags::transferCompleteInterruptDisable |
@@ -302,10 +278,8 @@ TEST_CASE("Testing startTransfer()", "[startTransfer]")
 											address == reinterpret_cast<uintptr_t>(txBuffer) :
 											memcmp(reinterpret_cast<const void*>(address), &dummyData, dataSize) == 0;
 								};
-						REQUIRE_CALL(txDmaChannelMock, configureTransfer(_, drAddress, transferSize / dataSize,
-								txDmaFlags)).WITH(txAddressMatcher(_1)).IN_SEQUENCE(sequence).RETURN(0);
-						REQUIRE_CALL(rxDmaChannelMock, startTransfer()).IN_SEQUENCE(sequence).RETURN(0);
-						REQUIRE_CALL(txDmaChannelMock, startTransfer()).IN_SEQUENCE(sequence).RETURN(0);
+						REQUIRE_CALL(txDmaChannelMock, startTransfer(_, drAddress, transferSize / dataSize,
+								txDmaFlags)).WITH(txAddressMatcher(_1)).IN_SEQUENCE(sequence);
 						REQUIRE(spi.startTransfer(masterMock, txBuffer, rxBuffer, transferSize) == 0);
 
 						// starting another transfer when the previous one is ongoing should fail with EBUSY

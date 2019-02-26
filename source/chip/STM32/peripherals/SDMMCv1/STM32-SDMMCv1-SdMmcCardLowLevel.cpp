@@ -95,8 +95,7 @@ void SdMmcCardLowLevel::interruptHandler()
 	if (dctrl != 0 && (writeTransferPending == false || result != devices::SdMmcCardBase::Result::success))
 	{
 		sdmmcPeripheral_.writeDctrl({});
-		const auto ret = dmaChannelUniqueHandle_.stopTransfer();
-		assert(ret == 0);
+		dmaChannelUniqueHandle_.stopTransfer();
 	}
 
 	// write transfer pending and transaction successful so far?
@@ -195,7 +194,7 @@ int SdMmcCardLowLevel::startTransaction(devices::SdMmcCardBase& sdMmcCardBase, c
 					transfer.getReadBuffer() : transfer.getWriteBuffer());
 			const auto directionFlags = transfer.isWriteTransfer() == false ? DmaChannel::Flags::peripheralToMemory :
 					DmaChannel::Flags::memoryToPeripheral;
-			const auto ret = dmaChannelUniqueHandle_.configureTransfer(memoryAddress,
+			dmaChannelUniqueHandle_.startTransfer(memoryAddress,
 					sdmmcPeripheral_.getFifoAddress(), transfer.getSize() / 4,
 					DmaChannel::Flags::transferCompleteInterruptDisable |
 					DmaChannel::Flags::peripheralFlowController |
@@ -205,12 +204,6 @@ int SdMmcCardLowLevel::startTransaction(devices::SdMmcCardBase& sdMmcCardBase, c
 					DmaChannel::Flags::veryHighPriority |
 					DmaChannel::Flags::dataSize4 |
 					DmaChannel::Flags::burstSize4);
-			if (ret != 0)
-				return ret;
-		}
-		{
-			const auto ret = dmaChannelUniqueHandle_.startTransfer();
-			assert(ret == 0);
 		}
 
 		sdmmcPeripheral_.writeDtimer(dtimer);

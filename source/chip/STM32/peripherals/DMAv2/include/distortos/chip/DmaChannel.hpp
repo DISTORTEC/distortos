@@ -12,6 +12,8 @@
 #ifndef SOURCE_CHIP_STM32_PERIPHERALS_DMAV2_INCLUDE_DISTORTOS_CHIP_DMACHANNEL_HPP_
 #define SOURCE_CHIP_STM32_PERIPHERALS_DMAV2_INCLUDE_DISTORTOS_CHIP_DMACHANNEL_HPP_
 
+#include "distortos/assert.h"
+
 #include "estd/EnumClassFlags.hpp"
 
 #include <utility>
@@ -168,51 +170,32 @@ public:
 
 		/**
 		 * \brief UniqueHandle's destructor
+		 *
+		 * \pre No driver is reserved with this handle.
 		 */
 
 		~UniqueHandle()
 		{
-			release();
+			assert(channel_ == nullptr);
 		}
 
 		/**
-		 * \brief Configures parameters of transfer.
+		 * \pre Driver is reserved with this handle.
 		 *
-		 * \param [in] memoryAddress is the memory address, must be divisible by configured memory data size
-		 * \param [in] peripheralAddress is the peripheral address, must be divisible by peripheral data size
-		 * \param [in] transactions is the number of transactions
-		 * \param [in] flags are configuration flags
-		 *
-		 * \return 0 on success, error code otherwise:
-		 * - EBADF - no low-level DMA channel driver is associated with this handle;
-		 * - error codes returned by DmaChannel::configureTransfer();
+		 * \return number of transactions left
 		 */
 
-		int configureTransfer(const uintptr_t memoryAddress, const uintptr_t peripheralAddress,
-				const size_t transactions, const Flags flags) const
+		size_t getTransactionsLeft() const
 		{
-			if (channel_ == nullptr)
-				return EBADF;
-
-			return channel_->configureTransfer(memoryAddress, peripheralAddress, transactions, flags);
-		}
-
-		/**
-		 * \return pair with return code (0 on success, error code otherwise) and number of transactions left; error
-		 * codes:
-		 * - EBADF - no low-level DMA channel driver is associated with this handle;
-		 */
-
-		std::pair<int, size_t> getTransactionsLeft() const
-		{
-			if (channel_ == nullptr)
-				return {EBADF, {}};
-
-			return {{}, channel_->getTransactionsLeft()};
+			assert(channel_ != nullptr);
+			return channel_->getTransactionsLeft();
 		}
 
 		/**
 		 * \brief Releases any associated low-level DMA channel driver.
+		 *
+		 * \pre No transfer is in progress.
+		 * \post No driver is reserved with this handle.
 		 */
 
 		void release()
@@ -227,6 +210,9 @@ public:
 		/**
 		 * \brief Reserves low-level DMA channel driver for exclusive use via this handle.
 		 *
+		 * \pre No driver is reserved with this handle.
+		 * \pre \a request is valid.
+		 *
 		 * \param [in] channel is a reference to low-level DMA channel driver which will be associated with this handle
 		 * \param [in] request is the request identifier with which low-level DMA channel driver will be associated
 		 * \param [in] functor is a reference to DmaChannelFunctor object that will be notified about transfer-related
@@ -238,7 +224,7 @@ public:
 
 		int reserve(DmaChannel& channel, const uint8_t request, DmaChannelFunctor& functor)
 		{
-			release();
+			assert(channel_ == nullptr);
 
 			const auto ret = channel.reserve(request, functor);
 			if (ret != 0)
@@ -249,22 +235,30 @@ public:
 		}
 
 		/**
-		 * \brief Starts asynchronous transfer.
+		 * \brief Configures and starts asynchronous transfer.
 		 *
 		 * This function returns immediately. When the transfer is physically finished (either expected number of
 		 * transactions were executed or an error was detected), one of DmaChannelFunctor functions will be executed.
 		 *
-		 * \return 0 on success, error code otherwise:
-		 * - EBADF - no low-level DMA channel driver is associated with this handle;
-		 * - error codes returned by DmaChannel::startTransfer();
+		 * \pre Driver is reserved with this handle.
+		 * \pre \a memoryAddress and \a peripheralAddress and \a transactions and \a flags are valid.
+		 * \pre Memory data size multiplied by memory burst size is less than or equal to 16.
+		 * \pre No transfer is in progress.
+		 * \post Transfer is in progress.
+		 *
+		 * \param [in] memoryAddress is the memory address, must be divisible by configured memory data size multiplied
+		 * by configured memory burst size
+		 * \param [in] peripheralAddress is the peripheral address, must be divisible by peripheral data size multiplied
+		 * by configured peripheral burst size
+		 * \param [in] transactions is the number of transactions, [1; 65535]
+		 * \param [in] flags are configuration flags
 		 */
 
-		int startTransfer() const
+		void startTransfer(const uintptr_t memoryAddress, const uintptr_t peripheralAddress, const size_t transactions,
+				const Flags flags) const
 		{
-			if (channel_ == nullptr)
-				return EBADF;
-
-			return channel_->startTransfer();
+			assert(channel_ != nullptr);
+			channel_->startTransfer(memoryAddress, peripheralAddress, transactions, flags);
 		}
 
 		/**
@@ -273,17 +267,14 @@ public:
 		 * This function should be used after previous asynchronous transfer is finished to restore DMA channel to
 		 * proper state. It may also be used to stop any ongoing asynchronous transfer.
 		 *
-		 * \return 0 on success, error code otherwise:
-		 * - EBADF - no low-level DMA channel driver is associated with this handle;
+		 * \pre Driver is reserved with this handle.
+		 * \post No transfer is in progress.
 		 */
 
-		int stopTransfer() const
+		void stopTransfer() const
 		{
-			if (channel_ == nullptr)
-				return EBADF;
-
+			assert(channel_ != nullptr);
 			channel_->stopTransfer();
-			return {};
 		}
 
 		UniqueHandle(const UniqueHandle&) = delete;
@@ -314,32 +305,27 @@ public:
 	}
 
 	/**
+	 * \brief DmaChannel's destructor
+	 *
+	 * \pre Driver is not reserved.
+	 */
+
+	~DmaChannel()
+	{
+		assert(functor_ == nullptr);
+	}
+
+	/**
 	 * \brief Interrupt handler
 	 *
 	 * \note this must not be called by user code
+	 *
+	 * \pre Driver is reserved.
 	 */
 
 	void interruptHandler();
 
 private:
-
-	/**
-	 * \brief Configures parameters of transfer.
-	 *
-	 * \param [in] memoryAddress is the memory address, must be divisible by configured memory data size multiplied by
-	 * configured memory burst size (which must be less than or equal to 16)
-	 * \param [in] peripheralAddress is the peripheral address, must be divisible by peripheral data size multiplied by
-	 * configured peripheral burst size
-	 * \param [in] transactions is the number of transactions
-	 * \param [in] flags are configuration flags
-	 *
-	 * \return 0 on success, error code otherwise:
-	 * - EBUSY - transfer is in progress;
-	 * - EINVAL - \a memoryAddress and/or \a peripheralAddress and/or \a transactions and/or \a flags are invalid;
-	 * - ENOTSUP - more than 65535 \a transactions are not supported;
-	 */
-
-	int configureTransfer(uintptr_t memoryAddress, uintptr_t peripheralAddress, size_t transactions, Flags flags) const;
 
 	/**
 	 * \return number of transactions left
@@ -349,6 +335,9 @@ private:
 
 	/**
 	 * \brief Releases low-level DMA channel driver.
+	 *
+	 * \pre No transfer is in progress.
+	 * \post Driver is not reserved.
 	 */
 
 	void release();
@@ -356,34 +345,48 @@ private:
 	/**
 	 * \brief Reserves low-level DMA channel driver for exclusive use.
 	 *
+	 * \pre \a request is valid.
+	 *
 	 * \param [in] request is the request identifier with which this object will be associated
 	 * \param [in] functor is a reference to DmaChannelFunctor object that will be notified about transfer-related
 	 * events
 	 *
 	 * \return 0 on success, error code otherwise:
 	 * - EBUSY - the driver is not released;
-	 * - EINVAL - \a request is invalid;
 	 */
 
 	int reserve(uint8_t request, DmaChannelFunctor& functor);
 
 	/**
-	 * \brief Starts asynchronous transfer.
+	 * \brief Configures and starts asynchronous transfer.
 	 *
 	 * This function returns immediately. When the transfer is physically finished (either expected number of
 	 * transactions were executed or an error was detected), one of DmaChannelFunctor functions will be executed.
 	 *
-	 * \return 0 on success, error code otherwise:
-	 * - EBUSY - transfer is in progress;
+	 * \pre Driver is reserved.
+	 * \pre \a memoryAddress and \a peripheralAddress and \a transactions and \a flags are valid.
+	 * \pre Memory data size multiplied by memory burst size is less than or equal to 16.
+	 * \pre No transfer is in progress.
+	 * \post Transfer is in progress.
+	 *
+	 * \param [in] memoryAddress is the memory address, must be divisible by configured memory data size multiplied by
+	 * configured memory burst size
+	 * \param [in] peripheralAddress is the peripheral address, must be divisible by peripheral data size multiplied by
+	 * configured peripheral burst size
+	 * \param [in] transactions is the number of transactions, [1; 65535]
+	 * \param [in] flags are configuration flags
 	 */
 
-	int startTransfer() const;
+	void startTransfer(uintptr_t memoryAddress, uintptr_t peripheralAddress, size_t transactions, Flags flags) const;
 
 	/**
 	 * \brief Stops transfer.
 	 *
 	 * This function should be used after previous asynchronous transfer is finished to restore DMA channel to proper
 	 * state. It may also be used to stop any ongoing asynchronous transfer.
+	 *
+	 * \pre Driver is reserved.
+	 * \post No transfer is in progress.
 	 */
 
 	void stopTransfer() const;

@@ -64,7 +64,6 @@ TEST_CASE("Testing start() & stop() interactions", "[start/stop]")
 	distortos::chip::SdmmcPeripheral peripheralMock {};
 	distortos::chip::DmaChannel dmaChannelMock {};
 	trompeloeil::sequence sequence {};
-	std::vector<std::unique_ptr<trompeloeil::expectation>> expectations {};
 
 	distortos::chip::SdMmcCardLowLevel sdMmc {peripheralMock, dmaChannelMock, dmaRequest};
 
@@ -94,27 +93,17 @@ TEST_CASE("Testing start() & stop() interactions", "[start/stop]")
 		REQUIRE_CALL(peripheralMock, writePower(initialPower)).IN_SEQUENCE(sequence);
 		REQUIRE(sdMmc.start() == 0);
 
-		SECTION("Starting started driver should fail with EBADF")
-		{
-			REQUIRE(sdMmc.start() == EBADF);
+		// starting started driver should fail with EBADF
+		REQUIRE(sdMmc.start() == EBADF);
 
-			expectations.emplace_back(NAMED_REQUIRE_CALL(peripheralMock, writeMask(0u)).IN_SEQUENCE(sequence));
-			expectations.emplace_back(NAMED_REQUIRE_CALL(peripheralMock, writeDctrl(0u)).IN_SEQUENCE(sequence));
-			expectations.emplace_back(NAMED_REQUIRE_CALL(peripheralMock, writeCmd(0u)).IN_SEQUENCE(sequence));
-			expectations.emplace_back(NAMED_REQUIRE_CALL(peripheralMock, writeClkcr(0u)).IN_SEQUENCE(sequence));
-			expectations.emplace_back(NAMED_REQUIRE_CALL(peripheralMock, writePower(0u)).IN_SEQUENCE(sequence));
-			expectations.emplace_back(NAMED_REQUIRE_CALL(dmaChannelMock, release()).IN_SEQUENCE(sequence));
-		}
-		SECTION("Stopping started driver should succeed")
-		{
-			REQUIRE_CALL(dmaChannelMock, release()).IN_SEQUENCE(sequence);
-			REQUIRE_CALL(peripheralMock, writeMask(0u)).IN_SEQUENCE(sequence);
-			REQUIRE_CALL(peripheralMock, writeDctrl(0u)).IN_SEQUENCE(sequence);
-			REQUIRE_CALL(peripheralMock, writeCmd(0u)).IN_SEQUENCE(sequence);
-			REQUIRE_CALL(peripheralMock, writeClkcr(0u)).IN_SEQUENCE(sequence);
-			REQUIRE_CALL(peripheralMock, writePower(0u)).IN_SEQUENCE(sequence);
-			REQUIRE(sdMmc.stop() == 0);
-		}
+		// stopping started driver should succeed
+		REQUIRE_CALL(dmaChannelMock, release()).IN_SEQUENCE(sequence);
+		REQUIRE_CALL(peripheralMock, writeMask(0u)).IN_SEQUENCE(sequence);
+		REQUIRE_CALL(peripheralMock, writeDctrl(0u)).IN_SEQUENCE(sequence);
+		REQUIRE_CALL(peripheralMock, writeCmd(0u)).IN_SEQUENCE(sequence);
+		REQUIRE_CALL(peripheralMock, writeClkcr(0u)).IN_SEQUENCE(sequence);
+		REQUIRE_CALL(peripheralMock, writePower(0u)).IN_SEQUENCE(sequence);
+		REQUIRE(sdMmc.stop() == 0);
 	}
 }
 
@@ -391,18 +380,6 @@ TEST_CASE("Testing startTransaction()", "[startTransaction]")
 		REQUIRE(sdMmc.startTransaction(cardMock, {}, {}, Response{response},
 				Transfer{buffer, 1 << 25, blockSize, 100}) == EINVAL);
 	}
-	SECTION("DMA configuration error should propagate error code to caller")
-	{
-		constexpr size_t blockSize {512};
-
-		REQUIRE_CALL(peripheralMock, getFifoAddress()).IN_SEQUENCE(sequence).RETURN(fifoAddress);
-		constexpr int ret {0x7972c3f9};
-		REQUIRE_CALL(dmaChannelMock, configureTransfer(_, _, _, _)).IN_SEQUENCE(sequence).RETURN(ret);
-		uint32_t response;
-		uint8_t buffer[blockSize];
-		REQUIRE(sdMmc.startTransaction(cardMock, {}, {}, Response{response},
-				Transfer{buffer, sizeof(buffer), blockSize, 100}) == ret);
-	}
 
 	SECTION("Testing transactions without response")
 	{
@@ -559,9 +536,8 @@ TEST_CASE("Testing startTransaction()", "[startTransaction]")
 								{
 									return address == reinterpret_cast<uintptr_t>(buffer);
 								};
-						REQUIRE_CALL(dmaChannelMock, configureTransfer(_, fifoAddress, sizeof(buffer) / 4,
-								dmaFlags)).WITH(addressMatcher(_1)).IN_SEQUENCE(sequence).RETURN(0);
-						REQUIRE_CALL(dmaChannelMock, startTransfer()).IN_SEQUENCE(sequence).RETURN(0);
+						REQUIRE_CALL(dmaChannelMock, startTransfer(_, fifoAddress, sizeof(buffer) / 4,
+								dmaFlags)).WITH(addressMatcher(_1)).IN_SEQUENCE(sequence);
 						const auto dtimer = (adapterFrequency / 257 + 1000 - 1) / 1000 * timeoutMs;
 						REQUIRE_CALL(peripheralMock, writeDtimer(dtimer)).IN_SEQUENCE(sequence);
 						REQUIRE_CALL(peripheralMock, writeDlen(sizeof(buffer))).IN_SEQUENCE(sequence);
@@ -658,9 +634,8 @@ TEST_CASE("Testing startTransaction()", "[startTransaction]")
 								{
 									return address == reinterpret_cast<uintptr_t>(buffer);
 								};
-						REQUIRE_CALL(dmaChannelMock, configureTransfer(_, fifoAddress, sizeof(buffer) / 4,
-								dmaFlags)).WITH(addressMatcher(_1)).IN_SEQUENCE(sequence).RETURN(0);
-						REQUIRE_CALL(dmaChannelMock, startTransfer()).IN_SEQUENCE(sequence).RETURN(0);
+						REQUIRE_CALL(dmaChannelMock, startTransfer(_, fifoAddress, sizeof(buffer) / 4,
+								dmaFlags)).WITH(addressMatcher(_1)).IN_SEQUENCE(sequence);
 						const auto dtimer = (adapterFrequency / 257 + 1000 - 1) / 1000 * timeoutMs;
 						REQUIRE_CALL(peripheralMock, writeDtimer(dtimer)).IN_SEQUENCE(sequence);
 						REQUIRE_CALL(peripheralMock, writeDlen(sizeof(buffer))).IN_SEQUENCE(sequence);

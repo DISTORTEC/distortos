@@ -115,7 +115,6 @@ public:
 	 * - EBADF - the driver is not started;
 	 * - EBUSY - transaction is in progress;
 	 * - EINVAL - \a command and/or \a response and/or \a transfer are not valid;
-	 * - error codes returned by DmaChannelUniqueHandle::configureTransfer();
 	 */
 
 	int startTransaction(devices::SdMmcCardBase& sdMmcCardBase, uint8_t command, uint32_t argument, Response response,

@@ -121,24 +121,13 @@ public:
 
 		~UniqueHandle()
 		{
-			release();
+			assert(channel_ == nullptr);
 		}
 
-		int configureTransfer(const uintptr_t memoryAddress, const uintptr_t peripheralAddress,
-				const size_t transactions, const Flags flags) const
+		size_t getTransactionsLeft() const
 		{
-			if (channel_ == nullptr)
-				return EBADF;
-
-			return channel_->configureTransfer(memoryAddress, peripheralAddress, transactions, flags);
-		}
-
-		std::pair<int, size_t> getTransactionsLeft() const
-		{
-			if (channel_ == nullptr)
-				return {EBADF, {}};
-
-			return {{}, channel_->getTransactionsLeft()};
+			assert(channel_ != nullptr);
+			return channel_->getTransactionsLeft();
 		}
 
 		void release()
@@ -152,7 +141,7 @@ public:
 
 		int reserve(DmaChannel& channel, const uint8_t request, DmaChannelFunctor& functor)
 		{
-			release();
+			assert(channel_ == nullptr);
 
 			const auto ret = channel.reserve(request, functor);
 			if (ret != 0)
@@ -162,21 +151,17 @@ public:
 			return {};
 		}
 
-		int startTransfer() const
+		void startTransfer(const uintptr_t memoryAddress, const uintptr_t peripheralAddress, const size_t transactions,
+				const Flags flags) const
 		{
-			if (channel_ == nullptr)
-				return EBADF;
-
-			return channel_->startTransfer();
+			assert(channel_ != nullptr);
+			channel_->startTransfer(memoryAddress, peripheralAddress, transactions, flags);
 		}
 
-		int stopTransfer() const
+		void stopTransfer() const
 		{
-			if (channel_ == nullptr)
-				return EBADF;
-
+			assert(channel_ != nullptr);
 			channel_->stopTransfer();
-			return {};
 		}
 
 		UniqueHandle(const UniqueHandle&) = delete;
@@ -189,11 +174,10 @@ public:
 		DmaChannel* channel_;
 	};
 
-	MAKE_CONST_MOCK4(configureTransfer, int(uintptr_t, uintptr_t, size_t, Flags));
 	MAKE_CONST_MOCK0(getTransactionsLeft, size_t());
 	MAKE_MOCK0(release, void());
 	MAKE_MOCK2(reserve, int(uint8_t, DmaChannelFunctor&));
-	MAKE_CONST_MOCK0(startTransfer, int());
+	MAKE_CONST_MOCK4(startTransfer, void(uintptr_t, uintptr_t, size_t, Flags));
 	MAKE_CONST_MOCK0(stopTransfer, void());
 };
 
