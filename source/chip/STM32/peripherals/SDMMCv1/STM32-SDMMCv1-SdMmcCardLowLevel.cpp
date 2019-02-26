@@ -210,8 +210,7 @@ void SdMmcCardLowLevel::startTransaction(devices::SdMmcCardBase& sdMmcCardBase, 
 
 int SdMmcCardLowLevel::stop()
 {
-	if (isStarted() == false)
-		return EBADF;
+	assert(isStarted() == true);
 
 	if (isTransactionInProgress() == true)
 		return EBUSY;

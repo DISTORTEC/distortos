@@ -134,8 +134,9 @@ public:
 	/**
 	 * \brief Stops low-level SD/MMC card driver.
 	 *
+	 * \pre Driver is started.
+	 *
 	 * \return 0 on success, error code otherwise:
-	 * - EBADF - the driver is not started;
 	 * - EBUSY - transaction is in progress;
 	 */
 

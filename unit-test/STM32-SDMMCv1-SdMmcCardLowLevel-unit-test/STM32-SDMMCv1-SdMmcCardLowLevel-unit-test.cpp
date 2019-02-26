@@ -69,10 +69,6 @@ TEST_CASE("Testing start() & stop() interactions", "[start/stop]")
 
 	ALLOW_CALL(peripheralMock, getAdapterFrequency()).RETURN(adapterFrequency);
 
-	SECTION("Stopping stopped driver should fail with EBADF")
-	{
-		REQUIRE(sdMmc.stop() == EBADF);
-	}
 	SECTION("Starting stopped driver when DMA channel is busy should fail with EBUSY")
 	{
 		REQUIRE_CALL(dmaChannelMock, reserve(dmaRequest, _)).IN_SEQUENCE(sequence).RETURN(EBUSY);
