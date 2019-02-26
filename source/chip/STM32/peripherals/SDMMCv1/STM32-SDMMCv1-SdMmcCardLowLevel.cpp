@@ -37,9 +37,7 @@ SdMmcCardLowLevel::~SdMmcCardLowLevel()
 int SdMmcCardLowLevel::configure(const BusMode busMode, const uint32_t clockFrequency)
 {
 	assert(isStarted() == true);
-
-	if (isTransactionInProgress() == true)
-		return EBUSY;
+	assert(isTransactionInProgress() == false);
 
 	const auto adapterFrequency = sdmmcPeripheral_.getAdapterFrequency();
 	const auto divider = (adapterFrequency + clockFrequency - 1) / clockFrequency;

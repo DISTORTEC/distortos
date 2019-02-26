@@ -391,9 +391,6 @@ TEST_CASE("Testing startTransaction()", "[startTransaction]")
 		// starting another transaction when the previous one is ongoing should fail with EBUSY
 		REQUIRE(sdMmc.startTransaction(cardMock, command, argument, {}, {}) == EBUSY);
 
-		// trying to configure the driver when a transaction is ongoing should fail with EBUSY
-		REQUIRE(sdMmc.configure({}, adapterFrequency) == EBUSY);
-
 		// trying to stop the driver when a transaction is ongoing should fail with EBUSY
 		REQUIRE(sdMmc.stop() == EBUSY);
 
@@ -445,9 +442,6 @@ TEST_CASE("Testing startTransaction()", "[startTransaction]")
 
 					// starting another transaction when the previous one is ongoing should fail with EBUSY
 					REQUIRE(sdMmc.startTransaction(cardMock, command, argument, response, {}) == EBUSY);
-
-					// trying to configure the driver when a transaction is ongoing should fail with EBUSY
-					REQUIRE(sdMmc.configure({}, adapterFrequency) == EBUSY);
 
 					// trying to stop the driver when a transaction is ongoing should fail with EBUSY
 					REQUIRE(sdMmc.stop() == EBUSY);
@@ -553,9 +547,6 @@ TEST_CASE("Testing startTransaction()", "[startTransaction]")
 						REQUIRE(sdMmc.startTransaction(cardMock, command, argument, Response{response},
 								ReadTransfer{buffer, sizeof(buffer), blockSize, timeoutMs}) == EBUSY);
 
-						// trying to configure the driver when a transaction is ongoing should fail with EBUSY
-						REQUIRE(sdMmc.configure({}, adapterFrequency) == EBUSY);
-
 						// trying to stop the driver when a transaction is ongoing should fail with EBUSY
 						REQUIRE(sdMmc.stop() == EBUSY);
 
@@ -648,9 +639,6 @@ TEST_CASE("Testing startTransaction()", "[startTransaction]")
 						// starting another transaction when the previous one is ongoing should fail with EBUSY
 						REQUIRE(sdMmc.startTransaction(cardMock, command, argument, Response{response},
 								WriteTransfer{buffer, sizeof(buffer), blockSize, timeoutMs}) == EBUSY);
-
-						// trying to configure the driver when a transaction is ongoing should fail with EBUSY
-						REQUIRE(sdMmc.configure({}, adapterFrequency) == EBUSY);
 
 						// trying to stop the driver when a transaction is ongoing should fail with EBUSY
 						REQUIRE(sdMmc.stop() == EBUSY);
