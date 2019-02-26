@@ -69,18 +69,6 @@ TEST_CASE("Testing start() & stop() interactions", "[start/stop]")
 
 	ALLOW_CALL(peripheralMock, getAdapterFrequency()).RETURN(adapterFrequency);
 
-	SECTION("Stopping stopped driver should fail with EBADF")
-	{
-		REQUIRE(sdMmc.stop() == EBADF);
-	}
-	SECTION("Configuring stopped driver should fail with EBADF")
-	{
-		REQUIRE(sdMmc.configure({}, {}) == EBADF);
-	}
-	SECTION("Starting transaction with stopped driver should fail with EBADF")
-	{
-		REQUIRE(sdMmc.startTransaction(cardMock, {}, {}, {}, {}) == EBADF);
-	}
 	SECTION("Starting stopped driver when DMA channel is busy should fail with EBUSY")
 	{
 		REQUIRE_CALL(dmaChannelMock, reserve(dmaRequest, _)).IN_SEQUENCE(sequence).RETURN(EBUSY);
@@ -93,9 +81,6 @@ TEST_CASE("Testing start() & stop() interactions", "[start/stop]")
 		REQUIRE_CALL(peripheralMock, writePower(initialPower)).IN_SEQUENCE(sequence);
 		REQUIRE(sdMmc.start() == 0);
 
-		// starting started driver should fail with EBADF
-		REQUIRE(sdMmc.start() == EBADF);
-
 		// stopping started driver should succeed
 		REQUIRE_CALL(dmaChannelMock, release()).IN_SEQUENCE(sequence);
 		REQUIRE_CALL(peripheralMock, writeMask(0u)).IN_SEQUENCE(sequence);
@@ -103,7 +88,7 @@ TEST_CASE("Testing start() & stop() interactions", "[start/stop]")
 		REQUIRE_CALL(peripheralMock, writeCmd(0u)).IN_SEQUENCE(sequence);
 		REQUIRE_CALL(peripheralMock, writeClkcr(0u)).IN_SEQUENCE(sequence);
 		REQUIRE_CALL(peripheralMock, writePower(0u)).IN_SEQUENCE(sequence);
-		REQUIRE(sdMmc.stop() == 0);
+		sdMmc.stop();
 	}
 }
 
@@ -125,11 +110,6 @@ TEST_CASE("Testing configure()", "[configure]")
 		REQUIRE(sdMmc.start() == 0);
 	}
 
-	SECTION("Trying to use clock frequency lower than `adapter frequency / 257` should fail with EINVAL")
-	{
-		REQUIRE(sdMmc.configure({}, adapterFrequency / 257 - 1) == EINVAL);
-	}
-
 	const distortos::devices::SdMmcCardLowLevel::BusMode busModes[]
 	{
 			distortos::devices::SdMmcCardLowLevel::BusMode::_1Bit,
@@ -148,7 +128,7 @@ TEST_CASE("Testing configure()", "[configure]")
 
 			REQUIRE_CALL(peripheralMock, readClkcr()).IN_SEQUENCE(sequence).RETURN(oldClkcr);
 			REQUIRE_CALL(peripheralMock, writeClkcr(newClkcr)).IN_SEQUENCE(sequence);
-			REQUIRE(sdMmc.configure(busMode, adapterFrequency / 257) == 0);
+			sdMmc.configure(busMode, adapterFrequency / 257);
 		}
 	}
 
@@ -217,7 +197,7 @@ TEST_CASE("Testing configure()", "[configure]")
 
 			REQUIRE_CALL(peripheralMock, readClkcr()).IN_SEQUENCE(sequence).RETURN(oldClkcr);
 			REQUIRE_CALL(peripheralMock, writeClkcr(newClkcr)).IN_SEQUENCE(sequence);
-			REQUIRE(sdMmc.configure({}, clockFrequency) == 0);
+			sdMmc.configure({}, clockFrequency);
 		}
 	}
 
@@ -228,7 +208,7 @@ TEST_CASE("Testing configure()", "[configure]")
 		REQUIRE_CALL(peripheralMock, writeCmd(0u)).IN_SEQUENCE(sequence);
 		REQUIRE_CALL(peripheralMock, writeClkcr(0u)).IN_SEQUENCE(sequence);
 		REQUIRE_CALL(peripheralMock, writePower(0u)).IN_SEQUENCE(sequence);
-		REQUIRE(sdMmc.stop() == 0);
+		sdMmc.stop();
 	}
 }
 
@@ -254,133 +234,6 @@ TEST_CASE("Testing startTransaction()", "[startTransaction]")
 		REQUIRE(sdMmc.start() == 0);
 	}
 
-	SECTION("Starting transaction with invalid command should fail with EINVAL")
-	{
-		REQUIRE(sdMmc.startTransaction(cardMock,
-				distortos::devices::SdMmcCardLowLevel::maxCommand + 1, {}, {}, {}) == EINVAL);
-	}
-	SECTION("Starting transaction with no response expected and valid transfer should fail with EINVAL")
-	{
-		constexpr size_t blockSize {512};
-
-		uint8_t buffer[blockSize];
-		REQUIRE(sdMmc.startTransaction(cardMock, {}, {}, {},
-				Transfer{buffer, sizeof(buffer), blockSize, 100}) == EINVAL);
-	}
-	SECTION("Starting transaction with nullptr as transfer's buffer should fail with EINVAL")
-	{
-		constexpr size_t blockSize {512};
-
-		uint32_t response;
-		REQUIRE(sdMmc.startTransaction(cardMock, {}, {}, Response{response},
-				ReadTransfer{{}, blockSize, blockSize, 100}) == EINVAL);
-		REQUIRE(sdMmc.startTransaction(cardMock, {}, {}, Response{response},
-				WriteTransfer{{}, blockSize, blockSize, 100}) == EINVAL);
-	}
-	SECTION("Starting transaction with transfer's block size less than 4 should fail with EINVAL")
-	{
-		uint32_t response;
-		uint8_t buffer[512];
-		for (size_t blockSize {}; blockSize < 4; ++blockSize)
-			REQUIRE(sdMmc.startTransaction(cardMock, {}, {}, Response{response},
-					Transfer{buffer, sizeof(buffer), blockSize, 100}) == EINVAL);
-	}
-	SECTION("Starting transaction when transfer's size is not a multiple of block size should fail with EINVAL")
-	{
-		constexpr size_t blockSize {512};
-
-		uint32_t response;
-		uint8_t buffer[blockSize * 4];
-
-		const size_t sizes[]
-		{
-				blockSize * 0 + 1,
-				blockSize * 1 / 2,
-				blockSize * 1 - 1,
-				blockSize * 1 + 1,
-				blockSize * 3 / 2,
-				blockSize * 2 - 1,
-				blockSize * 2 + 1,
-				blockSize * 5 / 2,
-				blockSize * 3 - 1,
-				blockSize * 3 + 1,
-				blockSize * 7 / 2,
-				blockSize * 4 - 1,
-		};
-		for (const auto size : sizes)
-			REQUIRE(sdMmc.startTransaction(cardMock, {}, {}, Response{response},
-					Transfer{buffer, size, blockSize, 100}) == EINVAL);
-	}
-	SECTION("Starting transaction with invalid transfer's block size should fail with EINVAL")
-	{
-		uint32_t response;
-		uint8_t buffer[16384];
-		const size_t blockSizes[]
-		{
-				4 + 1,
-				8 - 1,
-				8 + 1,
-				16 - 1,
-				16 + 1,
-				32 - 1,
-				32 + 1,
-				64 - 1,
-				64 + 1,
-				128 - 1,
-				128 + 1,
-				256 - 1,
-				256 + 1,
-				512 - 1,
-				512 + 1,
-				1024 - 1,
-				1024 + 1,
-				2048 - 1,
-				2048 + 1,
-				4096 - 1,
-				4096 + 1,
-				8192 - 1,
-				8192 + 1,
-				16384 - 1,
-		};
-		for (const auto blockSize : blockSizes)
-			REQUIRE(sdMmc.startTransaction(cardMock, {}, {}, Response{response},
-					Transfer{buffer, blockSize, blockSize, 100}) == EINVAL);
-	}
-	SECTION("Starting transaction with transfer's block size greater than 16384 should fail with EINVAL")
-	{
-		constexpr size_t blockSize {32768};
-
-		uint32_t response;
-		uint8_t buffer[blockSize];
-		REQUIRE(sdMmc.startTransaction(cardMock, {}, {}, Response{response},
-				Transfer{buffer, sizeof(buffer), blockSize, 100}) == EINVAL);
-	}
-	SECTION("Starting transaction with invalid transfer's timeout should fail with EINVAL")
-	{
-		constexpr size_t blockSize {512};
-		constexpr uint32_t otherAdapterFrequency {131072000};
-		constexpr uint16_t timeoutMs {(UINT32_MAX * 1000ull + otherAdapterFrequency - 1) / otherAdapterFrequency};
-
-		REQUIRE_CALL(peripheralMock, getAdapterFrequency()).RETURN(otherAdapterFrequency);
-		REQUIRE_CALL(peripheralMock, readClkcr()).IN_SEQUENCE(sequence).RETURN(initialClkcr);
-		REQUIRE_CALL(peripheralMock, writeClkcr(_)).IN_SEQUENCE(sequence);
-		REQUIRE(sdMmc.configure({}, otherAdapterFrequency) == 0);
-
-		uint32_t response;
-		uint8_t buffer[blockSize];
-		REQUIRE(sdMmc.startTransaction(cardMock, {}, {}, Response{response},
-				Transfer{buffer, sizeof(buffer), blockSize, timeoutMs}) == EINVAL);
-	}
-	SECTION("Starting transaction with invalid transfer's size should fail with EINVAL")
-	{
-		constexpr size_t blockSize {512};
-
-		uint32_t response;
-		uint8_t buffer[blockSize];
-		REQUIRE(sdMmc.startTransaction(cardMock, {}, {}, Response{response},
-				Transfer{buffer, 1 << 25, blockSize, 100}) == EINVAL);
-	}
-
 	SECTION("Testing transactions without response")
 	{
 		constexpr uint8_t command {0x2e};
@@ -390,16 +243,7 @@ TEST_CASE("Testing startTransaction()", "[startTransaction]")
 		const auto cmd = SDMMC_CMD_CPSMEN | command << SDMMC_CMD_CMDINDEX_Pos;
 		REQUIRE_CALL(peripheralMock, writeCmd(cmd)).IN_SEQUENCE(sequence);
 		REQUIRE_CALL(peripheralMock, writeMask(SDMMC_MASK_CMDSENTIE)).IN_SEQUENCE(sequence);
-		REQUIRE(sdMmc.startTransaction(cardMock, command, argument, {}, {}) == 0);
-
-		// starting another transaction when the previous one is ongoing should fail with EBUSY
-		REQUIRE(sdMmc.startTransaction(cardMock, command, argument, {}, {}) == EBUSY);
-
-		// trying to configure the driver when a transaction is ongoing should fail with EBUSY
-		REQUIRE(sdMmc.configure({}, adapterFrequency) == EBUSY);
-
-		// trying to stop the driver when a transaction is ongoing should fail with EBUSY
-		REQUIRE(sdMmc.stop() == EBUSY);
+		sdMmc.startTransaction(cardMock, command, argument, {}, {});
 
 		REQUIRE_CALL(peripheralMock, readSta()).IN_SEQUENCE(sequence).RETURN(SDMMC_STA_CMDSENT);
 		REQUIRE_CALL(peripheralMock, writeIcr(allIcrBits)).IN_SEQUENCE(sequence);
@@ -445,16 +289,7 @@ TEST_CASE("Testing startTransaction()", "[startTransaction]")
 					REQUIRE_CALL(peripheralMock, writeCmd(cmd)).IN_SEQUENCE(sequence);
 					const auto mask = SDMMC_MASK_CMDRENDIE | SDMMC_MASK_CTIMEOUTIE | SDMMC_MASK_CCRCFAILIE;
 					REQUIRE_CALL(peripheralMock, writeMask(mask)).IN_SEQUENCE(sequence);
-					REQUIRE(sdMmc.startTransaction(cardMock, command, argument, response, {}) == 0);
-
-					// starting another transaction when the previous one is ongoing should fail with EBUSY
-					REQUIRE(sdMmc.startTransaction(cardMock, command, argument, response, {}) == EBUSY);
-
-					// trying to configure the driver when a transaction is ongoing should fail with EBUSY
-					REQUIRE(sdMmc.configure({}, adapterFrequency) == EBUSY);
-
-					// trying to stop the driver when a transaction is ongoing should fail with EBUSY
-					REQUIRE(sdMmc.stop() == EBUSY);
+					sdMmc.startTransaction(cardMock, command, argument, response, {});
 
 					REQUIRE_CALL(peripheralMock, readSta()).IN_SEQUENCE(sequence).RETURN(step.sta);
 					REQUIRE_CALL(peripheralMock, writeIcr(allIcrBits)).IN_SEQUENCE(sequence);
@@ -550,18 +385,8 @@ TEST_CASE("Testing startTransaction()", "[startTransaction]")
 						const auto mask = SDMMC_MASK_DATAENDIE | SDMMC_MASK_RXOVERRIE | SDMMC_MASK_DTIMEOUTIE |
 								SDMMC_MASK_CTIMEOUTIE | SDMMC_MASK_DCRCFAILIE | SDMMC_MASK_CCRCFAILIE;
 						REQUIRE_CALL(peripheralMock, writeMask(mask)).IN_SEQUENCE(sequence);
-						REQUIRE(sdMmc.startTransaction(cardMock, command, argument, Response{response},
-								ReadTransfer{buffer, sizeof(buffer), blockSize, timeoutMs}) == 0);
-
-						// starting another transaction when the previous one is ongoing should fail with EBUSY
-						REQUIRE(sdMmc.startTransaction(cardMock, command, argument, Response{response},
-								ReadTransfer{buffer, sizeof(buffer), blockSize, timeoutMs}) == EBUSY);
-
-						// trying to configure the driver when a transaction is ongoing should fail with EBUSY
-						REQUIRE(sdMmc.configure({}, adapterFrequency) == EBUSY);
-
-						// trying to stop the driver when a transaction is ongoing should fail with EBUSY
-						REQUIRE(sdMmc.stop() == EBUSY);
+						sdMmc.startTransaction(cardMock, command, argument, Response{response},
+								ReadTransfer{buffer, sizeof(buffer), blockSize, timeoutMs});
 
 						if (dmaError == true)
 							dmaChannelFunctor->transferErrorEvent(1);
@@ -646,18 +471,8 @@ TEST_CASE("Testing startTransaction()", "[startTransaction]")
 						REQUIRE_CALL(peripheralMock, writeCmd(cmd)).IN_SEQUENCE(sequence);
 						const auto mask0 = SDMMC_MASK_CMDRENDIE | SDMMC_MASK_CTIMEOUTIE | SDMMC_MASK_CCRCFAILIE;
 						REQUIRE_CALL(peripheralMock, writeMask(mask0)).IN_SEQUENCE(sequence);
-						REQUIRE(sdMmc.startTransaction(cardMock, command, argument, Response{response},
-								WriteTransfer{buffer, sizeof(buffer), blockSize, timeoutMs}) == 0);
-
-						// starting another transaction when the previous one is ongoing should fail with EBUSY
-						REQUIRE(sdMmc.startTransaction(cardMock, command, argument, Response{response},
-								WriteTransfer{buffer, sizeof(buffer), blockSize, timeoutMs}) == EBUSY);
-
-						// trying to configure the driver when a transaction is ongoing should fail with EBUSY
-						REQUIRE(sdMmc.configure({}, adapterFrequency) == EBUSY);
-
-						// trying to stop the driver when a transaction is ongoing should fail with EBUSY
-						REQUIRE(sdMmc.stop() == EBUSY);
+						sdMmc.startTransaction(cardMock, command, argument, Response{response},
+								WriteTransfer{buffer, sizeof(buffer), blockSize, timeoutMs});
 
 						if (dmaError == 1)
 							dmaChannelFunctor->transferErrorEvent(1);
@@ -704,6 +519,6 @@ TEST_CASE("Testing startTransaction()", "[startTransaction]")
 		REQUIRE_CALL(peripheralMock, writeCmd(0u)).IN_SEQUENCE(sequence);
 		REQUIRE_CALL(peripheralMock, writeClkcr(0u)).IN_SEQUENCE(sequence);
 		REQUIRE_CALL(peripheralMock, writePower(0u)).IN_SEQUENCE(sequence);
-		REQUIRE(sdMmc.stop() == 0);
+		sdMmc.stop();
 	}
 }

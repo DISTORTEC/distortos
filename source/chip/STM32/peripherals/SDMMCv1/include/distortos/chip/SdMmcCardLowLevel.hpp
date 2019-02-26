@@ -60,6 +60,8 @@ public:
 
 	/**
 	 * \brief SdMmcCardLowLevel's destructor
+	 *
+	 * \pre Driver is stopped.
 	 */
 
 	~SdMmcCardLowLevel() override;
@@ -67,21 +69,23 @@ public:
 	/**
 	 * \brief Configures parameters of low-level SD/MMC card driver.
 	 *
-	 * \param [in] busMode is the desired bus mode
-	 * \param [in] clockFrequency is the desired clock frequency, Hz
+	 * \pre Driver is started.
+	 * \pre No transaction is in progress.
+	 * \pre \a clockFrequency is valid.
 	 *
-	 * \return 0 on success, error code otherwise:
-	 * - EBADF - the driver is not started;
-	 * - EBUSY - transfer is in progress;
-	 * - EINVAL - selected clock frequency is invalid;
+	 * \param [in] busMode is the desired bus mode
+	 * \param [in] clockFrequency is the desired clock frequency, Hz, must be greater than or equal to 400 kHz
 	 */
 
-	int configure(BusMode busMode, uint32_t clockFrequency) override;
+	void configure(BusMode busMode, uint32_t clockFrequency) override;
 
 	/**
 	 * \brief Interrupt handler
 	 *
 	 * \note this must not be called by user code
+	 *
+	 * \pre Driver is started.
+	 * \pre Transaction is in progress.
 	 */
 
 	void interruptHandler();
@@ -89,8 +93,9 @@ public:
 	/**
 	 * \brief Starts low-level SD/MMC card driver.
 	 *
+	 * \pre Driver is stopped.
+	 *
 	 * \return 0 on success, error code otherwise:
-	 * - EBADF - the driver is not stopped;
 	 * - error codes returned by DmaChannelUniqueHandle::reserve();
 	 */
 
@@ -103,6 +108,18 @@ public:
 	 * response and associated transfer were sent/received or an error was detected),
 	 * SdMmcCardBase::transactionCompleteEvent() will be executed.
 	 *
+	 * \pre Driver is started.
+	 * \pre No transaction is in progress.
+	 * \pre \a command is valid.
+	 * \pre When there is an associated transfer:
+	 * - either short or long response is expected;
+	 * - transfer's read buffer (for read transfers) or write buffer (for write transfers) is valid and its address is
+	 * aligned to DISTORTOS_SDMMCCARD_BUFFER_ALIGNMENT;
+	 * - transfer's block size is a power of two, greater than or equal to 4 and less than or equal to 2^14;
+	 * - transfer's size is an integer multiple of block size and less than or equal to 2^25 - 1;
+	 * - transfer's timeout converted to clock cycles must be less than or equal to 2^32 - 1;
+	 * \post Transaction is in progress.
+	 *
 	 * \param [in] sdMmcCardBase is a reference to SdMmcCardBase object that will be notified about completed
 	 * transaction
 	 * \param [in] command is the command associated with the transaction, [0; maxCommand]
@@ -110,25 +127,20 @@ public:
 	 * \param [out] response is the buffer into which the command response will be read, it's size determines what type
 	 * of response is expected (none, short or long)
 	 * \param [in,out] transfer is the transfer associated with transaction
-	 *
-	 * \return 0 on success, error code otherwise:
-	 * - EBADF - the driver is not started;
-	 * - EBUSY - transaction is in progress;
-	 * - EINVAL - \a command and/or \a response and/or \a transfer are not valid;
 	 */
 
-	int startTransaction(devices::SdMmcCardBase& sdMmcCardBase, uint8_t command, uint32_t argument, Response response,
+	void startTransaction(devices::SdMmcCardBase& sdMmcCardBase, uint8_t command, uint32_t argument, Response response,
 			Transfer transfer) override;
 
 	/**
 	 * \brief Stops low-level SD/MMC card driver.
 	 *
-	 * \return 0 on success, error code otherwise:
-	 * - EBADF - the driver is not started;
-	 * - EBUSY - transaction is in progress;
+	 * \pre Driver is started.
+	 * \pre No transaction is in progress.
+	 * \post Driver is stopped.
 	 */
 
-	int stop() override;
+	void stop() override;
 
 private:
 

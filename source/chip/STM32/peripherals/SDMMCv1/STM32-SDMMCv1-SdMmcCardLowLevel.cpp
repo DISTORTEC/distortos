@@ -31,29 +31,17 @@ namespace chip
 
 SdMmcCardLowLevel::~SdMmcCardLowLevel()
 {
-	if (isStarted() == false)
-		return;
-
-	// reset peripheral
-	sdmmcPeripheral_.writeMask({});
-	sdmmcPeripheral_.writeDctrl({});
-	sdmmcPeripheral_.writeCmd({});
-	sdmmcPeripheral_.writeClkcr({});
-	sdmmcPeripheral_.writePower({});
+	assert(isStarted() == false);
 }
 
-int SdMmcCardLowLevel::configure(const BusMode busMode, const uint32_t clockFrequency)
+void SdMmcCardLowLevel::configure(const BusMode busMode, const uint32_t clockFrequency)
 {
-	if (isStarted() == false)
-		return EBADF;
-
-	if (isTransactionInProgress() == true)
-		return EBUSY;
+	assert(isStarted() == true);
+	assert(isTransactionInProgress() == false);
 
 	const auto adapterFrequency = sdmmcPeripheral_.getAdapterFrequency();
 	const auto divider = (adapterFrequency + clockFrequency - 1) / clockFrequency;
-	if (divider > (SDMMC_CLKCR_CLKDIV >> SDMMC_CLKCR_CLKDIV_Pos) + 2)
-		return EINVAL;
+	assert(divider <= (SDMMC_CLKCR_CLKDIV >> SDMMC_CLKCR_CLKDIV_Pos) + 2);
 
 	const auto widbus = busMode == BusMode::_1Bit ? 0 :
 			busMode == BusMode::_4Bit ? SDMMC_CLKCR_WIDBUS_0 : SDMMC_CLKCR_WIDBUS_1;
@@ -66,11 +54,13 @@ int SdMmcCardLowLevel::configure(const BusMode busMode, const uint32_t clockFreq
 			bypass |
 			clkdiv);
 	clockFrequency_ = bypass == false ? adapterFrequency / divider : adapterFrequency;
-	return {};
 }
 
 void SdMmcCardLowLevel::interruptHandler()
 {
+	assert(isStarted() == true);
+	assert(isTransactionInProgress() == true);
+
 	const auto sta = sdmmcPeripheral_.readSta();
 	sdmmcPeripheral_.writeIcr(SDMMC_ICR_SDIOITC | SDMMC_ICR_DBCKENDC | SDMMC_ICR_DATAENDC | SDMMC_ICR_CMDSENTC |
 			SDMMC_ICR_CMDRENDC | SDMMC_ICR_RXOVERRC | SDMMC_ICR_TXUNDERRC | SDMMC_ICR_DTIMEOUTC | SDMMC_ICR_CTIMEOUTC |
@@ -126,15 +116,12 @@ void SdMmcCardLowLevel::interruptHandler()
 
 	const auto sdMmcCardBase = sdMmcCardBase_;
 	sdMmcCardBase_ = {};
-
-	assert(sdMmcCardBase != nullptr);
 	sdMmcCardBase->transactionCompleteEvent(result);
 }
 
 int SdMmcCardLowLevel::start()
 {
-	if (isStarted() == true)
-		return EBADF;
+	assert(isStarted() == false);
 
 	{
 		const auto ret = dmaChannelUniqueHandle_.reserve(dmaChannel_, dmaRequest_, dmaChannelFunctor_);
@@ -149,43 +136,30 @@ int SdMmcCardLowLevel::start()
 	return {};
 }
 
-int SdMmcCardLowLevel::startTransaction(devices::SdMmcCardBase& sdMmcCardBase, const uint8_t command,
+void SdMmcCardLowLevel::startTransaction(devices::SdMmcCardBase& sdMmcCardBase, const uint8_t command,
 		const uint32_t argument, const Response response, const Transfer transfer)
 {
-	if (command > maxCommand)
-		return EINVAL;
-
-	if (isStarted() == false)
-		return EBADF;
-
-	if (isTransactionInProgress() == true)
-		return EBUSY;
+	assert(isStarted() == true);
+	assert(isTransactionInProgress() == false);
+	assert(command <= maxCommand);
 
 	if (transfer.getSize() != 0)
 	{
-		if (response.size() == 0)
-			return EINVAL;
+		assert(response.size() != 0);
 
-		if ((transfer.isWriteTransfer() == false && transfer.getReadBuffer() == nullptr) ||
-				(transfer.isWriteTransfer() == true && transfer.getWriteBuffer() == nullptr))
-			return EINVAL;
-		if (transfer.getBlockSize() < 4)
-			return EINVAL;
-		if (transfer.getSize() % transfer.getBlockSize() != 0)
-			return EINVAL;
+		assert((transfer.isWriteTransfer() == false ? transfer.getReadBuffer() : transfer.getWriteBuffer()) != nullptr);
 
 		const auto dblocksize = estd::log2u(transfer.getBlockSize());
-		if (transfer.getBlockSize() != 1u << dblocksize)
-			return EINVAL;
-		if (dblocksize > 14)
-			return EINVAL;
+		assert(transfer.getBlockSize() >= 4);
+		assert(transfer.getBlockSize() == 1u << dblocksize);
+		assert(dblocksize <= 14);
+
+		const auto dlen = transfer.getSize();
+		assert(transfer.getSize() % transfer.getBlockSize() == 0);
+		assert(dlen <= SDMMC_DLEN_DATALENGTH >> SDMMC_DLEN_DATALENGTH_Pos);
 
 		const auto dtimer = static_cast<uint64_t>((clockFrequency_ + 1000 - 1) / 1000) * transfer.getTimeoutMs();
-		if (dtimer > (SDMMC_DTIMER_DATATIME >> SDMMC_DTIMER_DATATIME_Pos))
-			return EINVAL;
-		const auto dlen = transfer.getSize();
-		if (dlen > (SDMMC_DLEN_DATALENGTH >> SDMMC_DLEN_DATALENGTH_Pos))
-			return EINVAL;
+		assert(dtimer <= SDMMC_DTIMER_DATATIME >> SDMMC_DTIMER_DATATIME_Pos);
 
 		dmaError_ = {};
 
@@ -231,17 +205,12 @@ int SdMmcCardLowLevel::startTransaction(devices::SdMmcCardBase& sdMmcCardBase, c
 	sdMmcCardBase_ = &sdMmcCardBase;
 	response_ = response;
 	sdmmcPeripheral_.writeMask(mask);
-
-	return {};
 }
 
-int SdMmcCardLowLevel::stop()
+void SdMmcCardLowLevel::stop()
 {
-	if (isStarted() == false)
-		return EBADF;
-
-	if (isTransactionInProgress() == true)
-		return EBUSY;
+	assert(isStarted() == true);
+	assert(isTransactionInProgress() == false);
 
 	dmaChannelUniqueHandle_.release();
 
@@ -253,8 +222,6 @@ int SdMmcCardLowLevel::stop()
 	sdmmcPeripheral_.writePower({});
 
 	clockFrequency_ = {};
-
-	return {};
 }
 
 /*---------------------------------------------------------------------------------------------------------------------+
