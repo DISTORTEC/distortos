@@ -40,6 +40,14 @@ public:
 | local functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
+uint8_t getNextChannelId()
+{
+	static uint8_t channelId {};
+	const auto nextChannelId = channelId;
+	channelId = (channelId + 1) % 8;
+	return nextChannelId;
+}
+
 uint8_t getChannelShift(const uint8_t channelId)
 {
 	static const std::array<uint8_t, 4> channelShifts
@@ -76,7 +84,7 @@ TEST_CASE("Testing reserve() & release() interactions", "[reserve/release]")
 	distortos::InterruptMaskingLock::Proxy interruptMaskingLockProxyMock {};
 	trompeloeil::sequence sequence {};
 
-	constexpr uint8_t channelId {4};
+	const auto channelId = getNextChannelId();
 
 	distortos::chip::DmaChannel channel {peripheralMock, channelPeripheralMock};
 
@@ -118,7 +126,7 @@ TEST_CASE("Testing transfer configuration", "[configuration]")
 	distortos::InterruptMaskingLock::Proxy interruptMaskingLockProxyMock {};
 	trompeloeil::sequence sequence {};
 
-	constexpr uint8_t channelId {6};
+	const auto channelId = getNextChannelId();
 
 	distortos::chip::DmaChannel channel {peripheralMock, channelPeripheralMock};
 
@@ -217,7 +225,7 @@ TEST_CASE("Testing transfers", "[transfers]")
 	trompeloeil::sequence sequence {};
 	std::vector<std::unique_ptr<trompeloeil::expectation>> expectations {};
 
-	constexpr uint8_t channelId {3};
+	const auto channelId = getNextChannelId();
 	const auto channelShift = getChannelShift(channelId);
 
 	distortos::chip::DmaChannel channel {peripheralMock, channelPeripheralMock};
@@ -252,54 +260,63 @@ TEST_CASE("Testing transfers", "[transfers]")
 					writeHifcr(allFlags << channelShift)).IN_SEQUENCE(sequence));
 		handle.stopTransfer();
 	}
-	SECTION("Testing interruptHandler()")
+
+	SECTION("Testing interruptHandler() - both TCIF and TEIF flags cleared")
 	{
-		{
-			const auto isr = UINT32_MAX & ~((DMA_LISR_TCIF0 | DMA_LISR_TEIF0) << channelShift);
-			if (channelId <= 3)
-				expectations.emplace_back(NAMED_REQUIRE_CALL(peripheralMock,
-						readLisr()).IN_SEQUENCE(sequence).RETURN(isr));
-			else
-				expectations.emplace_back(NAMED_REQUIRE_CALL(peripheralMock,
-						readHisr()).IN_SEQUENCE(sequence).RETURN(isr));
-			channel.interruptHandler();
-		}
-		{
-			const bool falseTrue[]
+		const auto isr = UINT32_MAX & ~((DMA_LISR_TCIF0 | DMA_LISR_TEIF0) << channelShift);
+		if (channelId <= 3)
+			expectations.emplace_back(NAMED_REQUIRE_CALL(peripheralMock,
+					readLisr()).IN_SEQUENCE(sequence).RETURN(isr));
+		else
+			expectations.emplace_back(NAMED_REQUIRE_CALL(peripheralMock,
+					readHisr()).IN_SEQUENCE(sequence).RETURN(isr));
+		channel.interruptHandler();
+	}
+	const bool falseTrue[]
+	{
+			false,
+			true,
+	};
+	SECTION("Testing interruptHandler() - TCIF and/or TEIF flags set but corresponding interrupts disabled")
+	{
+		for (const auto tcif : falseTrue)
+			for (const auto teif : falseTrue)
 			{
-					false,
-					true,
-			};
-			for (const auto tcif : falseTrue)
-				for (const auto teif : falseTrue)
-				{
-					if (tcif == false && teif == false)
-						continue;
+				if (tcif == false && teif == false)
+					continue;
 
-					const auto isr = UINT32_MAX & ~((DMA_LISR_TCIF0 | DMA_LISR_TEIF0) << channelShift) |
-							tcif << (DMA_LISR_TCIF0_Pos + channelShift) |
-							teif << (DMA_LISR_TEIF0_Pos + channelShift);
-					if (channelId <= 3)
-						expectations.emplace_back(NAMED_REQUIRE_CALL(peripheralMock,
-								readLisr()).IN_SEQUENCE(sequence).RETURN(isr));
-					else
-						expectations.emplace_back(NAMED_REQUIRE_CALL(peripheralMock,
-								readHisr()).IN_SEQUENCE(sequence).RETURN(isr));
-					const auto cr = UINT32_MAX & ~(DMA_SxCR_TCIE | DMA_SxCR_TEIE) |
-							!tcif << DMA_SxCR_TCIE_Pos |
-							!teif << DMA_SxCR_TEIE_Pos;
-					REQUIRE_CALL(channelPeripheralMock, readCr()).IN_SEQUENCE(sequence).RETURN(cr);
-					channel.interruptHandler();
-				}
+				const auto isr = UINT32_MAX & ~((DMA_LISR_TCIF0 | DMA_LISR_TEIF0) << channelShift) |
+						tcif << (DMA_LISR_TCIF0_Pos + channelShift) |
+						teif << (DMA_LISR_TEIF0_Pos + channelShift);
+				if (channelId <= 3)
+					expectations.emplace_back(NAMED_REQUIRE_CALL(peripheralMock,
+							readLisr()).IN_SEQUENCE(sequence).RETURN(isr));
+				else
+					expectations.emplace_back(NAMED_REQUIRE_CALL(peripheralMock,
+							readHisr()).IN_SEQUENCE(sequence).RETURN(isr));
+				const auto cr = UINT32_MAX & ~(DMA_SxCR_TCIE | DMA_SxCR_TEIE) |
+						!tcif << DMA_SxCR_TCIE_Pos |
+						!teif << DMA_SxCR_TEIE_Pos;
+				REQUIRE_CALL(channelPeripheralMock, readCr()).IN_SEQUENCE(sequence).RETURN(cr);
+				channel.interruptHandler();
+			}
+	}
+	SECTION("Testing interruptHandler() - TCIF and/or TEIF flags set and corresponding interrupts enabled")
+	{
+		for (const auto tcif : falseTrue)
+			for (const auto teif : falseTrue)
+				for (const auto tcie : falseTrue)
+					for (const auto teie : falseTrue)
+					{
+						if ((tcif && tcie) == false && (teif && teie) == false)
+							continue;
 
-			for (const auto tcif : falseTrue)
-				for (const auto teif : falseTrue)
-					for (const auto tcie : falseTrue)
-						for (const auto teie : falseTrue)
+						DYNAMIC_SECTION("Testing interruptHandler() - "
+								"TCIF flag " << (tcif == false ? "cleared" : "set") <<
+								", TEIF flag " << (teif == false ? "cleared" : "set") <<
+								", TC interrupt " << (tcie == false ? "disabled" : "enabled") <<
+								" and TE interrupt " << (teie == false ? "disabled" : "enabled"))
 						{
-							if ((tcif && tcie) == false && (teif && teie) == false)
-								continue;
-
 							const auto isr = UINT32_MAX & ~((DMA_LISR_TCIF0 | DMA_LISR_TEIF0) << channelShift) |
 									tcif << (DMA_LISR_TCIF0_Pos + channelShift) |
 									teif << (DMA_LISR_TEIF0_Pos + channelShift);
@@ -338,7 +355,7 @@ TEST_CASE("Testing transfers", "[transfers]")
 
 							channel.interruptHandler();
 						}
-		}
+					}
 	}
 
 	REQUIRE_CALL(channelPeripheralMock, readCr()).IN_SEQUENCE(sequence).RETURN(0);
