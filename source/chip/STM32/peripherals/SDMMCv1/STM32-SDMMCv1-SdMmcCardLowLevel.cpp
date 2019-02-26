@@ -31,15 +31,7 @@ namespace chip
 
 SdMmcCardLowLevel::~SdMmcCardLowLevel()
 {
-	if (isStarted() == false)
-		return;
-
-	// reset peripheral
-	sdmmcPeripheral_.writeMask({});
-	sdmmcPeripheral_.writeDctrl({});
-	sdmmcPeripheral_.writeCmd({});
-	sdmmcPeripheral_.writeClkcr({});
-	sdmmcPeripheral_.writePower({});
+	assert(isStarted() == false);
 }
 
 int SdMmcCardLowLevel::configure(const BusMode busMode, const uint32_t clockFrequency)

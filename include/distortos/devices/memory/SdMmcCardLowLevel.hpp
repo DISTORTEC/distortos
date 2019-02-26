@@ -323,6 +323,8 @@ public:
 
 	/**
 	 * \brief SdMmcCardLowLevel's destructor
+	 *
+	 * \pre Driver is stopped.
 	 */
 
 	virtual ~SdMmcCardLowLevel() = default;

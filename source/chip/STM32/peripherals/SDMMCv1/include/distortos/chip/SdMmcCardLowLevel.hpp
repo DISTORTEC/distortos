@@ -60,6 +60,8 @@ public:
 
 	/**
 	 * \brief SdMmcCardLowLevel's destructor
+	 *
+	 * \pre Driver is stopped.
 	 */
 
 	~SdMmcCardLowLevel() override;
