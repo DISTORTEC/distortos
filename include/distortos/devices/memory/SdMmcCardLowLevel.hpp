@@ -363,6 +363,7 @@ public:
 	 *
 	 * \pre Driver is started.
 	 * \pre No transaction is in progress.
+	 * \pre \a command is valid.
 	 *
 	 * \param [in] sdMmcCardBase is a reference to SdMmcCardBase object that will be notified about completed
 	 * transaction
@@ -373,7 +374,7 @@ public:
 	 * \param [in,out] transfer is the transfer associated with transaction
 	 *
 	 * \return 0 on success, error code otherwise:
-	 * - EINVAL - \a command and/or \a response and/or \a transfer are not valid;
+	 * - EINVAL - \a response and/or \a transfer are not valid;
 	 */
 
 	virtual int startTransaction(SdMmcCardBase& sdMmcCardBase, uint8_t command, uint32_t argument, Response response,

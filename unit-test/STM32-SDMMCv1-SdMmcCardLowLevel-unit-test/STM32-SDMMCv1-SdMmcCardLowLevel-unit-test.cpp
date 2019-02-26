@@ -243,11 +243,6 @@ TEST_CASE("Testing startTransaction()", "[startTransaction]")
 		REQUIRE(sdMmc.start() == 0);
 	}
 
-	SECTION("Starting transaction with invalid command should fail with EINVAL")
-	{
-		REQUIRE(sdMmc.startTransaction(cardMock,
-				distortos::devices::SdMmcCardLowLevel::maxCommand + 1, {}, {}, {}) == EINVAL);
-	}
 	SECTION("Starting transaction with no response expected and valid transfer should fail with EINVAL")
 	{
 		constexpr size_t blockSize {512};
