@@ -243,14 +243,6 @@ TEST_CASE("Testing startTransaction()", "[startTransaction]")
 		REQUIRE(sdMmc.start() == 0);
 	}
 
-	SECTION("Starting transaction with no response expected and valid transfer should fail with EINVAL")
-	{
-		constexpr size_t blockSize {512};
-
-		uint8_t buffer[blockSize];
-		REQUIRE(sdMmc.startTransaction(cardMock, {}, {}, {},
-				Transfer{buffer, sizeof(buffer), blockSize, 100}) == EINVAL);
-	}
 	SECTION("Starting transaction with nullptr as transfer's buffer should fail with EINVAL")
 	{
 		constexpr size_t blockSize {512};

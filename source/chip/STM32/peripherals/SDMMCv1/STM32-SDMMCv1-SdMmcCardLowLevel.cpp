@@ -146,8 +146,7 @@ int SdMmcCardLowLevel::startTransaction(devices::SdMmcCardBase& sdMmcCardBase, c
 
 	if (transfer.getSize() != 0)
 	{
-		if (response.size() == 0)
-			return EINVAL;
+		assert(response.size() != 0);
 
 		if ((transfer.isWriteTransfer() == false && transfer.getReadBuffer() == nullptr) ||
 				(transfer.isWriteTransfer() == true && transfer.getWriteBuffer() == nullptr))
