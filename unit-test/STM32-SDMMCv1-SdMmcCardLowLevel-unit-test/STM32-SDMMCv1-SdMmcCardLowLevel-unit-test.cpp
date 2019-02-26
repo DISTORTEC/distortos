@@ -243,120 +243,6 @@ TEST_CASE("Testing startTransaction()", "[startTransaction]")
 		REQUIRE(sdMmc.start() == 0);
 	}
 
-	SECTION("Starting transaction with nullptr as transfer's buffer should fail with EINVAL")
-	{
-		constexpr size_t blockSize {512};
-
-		uint32_t response;
-		REQUIRE(sdMmc.startTransaction(cardMock, {}, {}, Response{response},
-				ReadTransfer{{}, blockSize, blockSize, 100}) == EINVAL);
-		REQUIRE(sdMmc.startTransaction(cardMock, {}, {}, Response{response},
-				WriteTransfer{{}, blockSize, blockSize, 100}) == EINVAL);
-	}
-	SECTION("Starting transaction with transfer's block size less than 4 should fail with EINVAL")
-	{
-		uint32_t response;
-		uint8_t buffer[512];
-		for (size_t blockSize {}; blockSize < 4; ++blockSize)
-			REQUIRE(sdMmc.startTransaction(cardMock, {}, {}, Response{response},
-					Transfer{buffer, sizeof(buffer), blockSize, 100}) == EINVAL);
-	}
-	SECTION("Starting transaction when transfer's size is not a multiple of block size should fail with EINVAL")
-	{
-		constexpr size_t blockSize {512};
-
-		uint32_t response;
-		uint8_t buffer[blockSize * 4];
-
-		const size_t sizes[]
-		{
-				blockSize * 0 + 1,
-				blockSize * 1 / 2,
-				blockSize * 1 - 1,
-				blockSize * 1 + 1,
-				blockSize * 3 / 2,
-				blockSize * 2 - 1,
-				blockSize * 2 + 1,
-				blockSize * 5 / 2,
-				blockSize * 3 - 1,
-				blockSize * 3 + 1,
-				blockSize * 7 / 2,
-				blockSize * 4 - 1,
-		};
-		for (const auto size : sizes)
-			REQUIRE(sdMmc.startTransaction(cardMock, {}, {}, Response{response},
-					Transfer{buffer, size, blockSize, 100}) == EINVAL);
-	}
-	SECTION("Starting transaction with invalid transfer's block size should fail with EINVAL")
-	{
-		uint32_t response;
-		uint8_t buffer[16384];
-		const size_t blockSizes[]
-		{
-				4 + 1,
-				8 - 1,
-				8 + 1,
-				16 - 1,
-				16 + 1,
-				32 - 1,
-				32 + 1,
-				64 - 1,
-				64 + 1,
-				128 - 1,
-				128 + 1,
-				256 - 1,
-				256 + 1,
-				512 - 1,
-				512 + 1,
-				1024 - 1,
-				1024 + 1,
-				2048 - 1,
-				2048 + 1,
-				4096 - 1,
-				4096 + 1,
-				8192 - 1,
-				8192 + 1,
-				16384 - 1,
-		};
-		for (const auto blockSize : blockSizes)
-			REQUIRE(sdMmc.startTransaction(cardMock, {}, {}, Response{response},
-					Transfer{buffer, blockSize, blockSize, 100}) == EINVAL);
-	}
-	SECTION("Starting transaction with transfer's block size greater than 16384 should fail with EINVAL")
-	{
-		constexpr size_t blockSize {32768};
-
-		uint32_t response;
-		uint8_t buffer[blockSize];
-		REQUIRE(sdMmc.startTransaction(cardMock, {}, {}, Response{response},
-				Transfer{buffer, sizeof(buffer), blockSize, 100}) == EINVAL);
-	}
-	SECTION("Starting transaction with invalid transfer's timeout should fail with EINVAL")
-	{
-		constexpr size_t blockSize {512};
-		constexpr uint32_t otherAdapterFrequency {131072000};
-		constexpr uint16_t timeoutMs {(UINT32_MAX * 1000ull + otherAdapterFrequency - 1) / otherAdapterFrequency};
-
-		REQUIRE_CALL(peripheralMock, getAdapterFrequency()).RETURN(otherAdapterFrequency);
-		REQUIRE_CALL(peripheralMock, readClkcr()).IN_SEQUENCE(sequence).RETURN(initialClkcr);
-		REQUIRE_CALL(peripheralMock, writeClkcr(_)).IN_SEQUENCE(sequence);
-		REQUIRE(sdMmc.configure({}, otherAdapterFrequency) == 0);
-
-		uint32_t response;
-		uint8_t buffer[blockSize];
-		REQUIRE(sdMmc.startTransaction(cardMock, {}, {}, Response{response},
-				Transfer{buffer, sizeof(buffer), blockSize, timeoutMs}) == EINVAL);
-	}
-	SECTION("Starting transaction with invalid transfer's size should fail with EINVAL")
-	{
-		constexpr size_t blockSize {512};
-
-		uint32_t response;
-		uint8_t buffer[blockSize];
-		REQUIRE(sdMmc.startTransaction(cardMock, {}, {}, Response{response},
-				Transfer{buffer, 1 << 25, blockSize, 100}) == EINVAL);
-	}
-
 	SECTION("Testing transactions without response")
 	{
 		constexpr uint8_t command {0x2e};
@@ -366,7 +252,7 @@ TEST_CASE("Testing startTransaction()", "[startTransaction]")
 		const auto cmd = SDMMC_CMD_CPSMEN | command << SDMMC_CMD_CMDINDEX_Pos;
 		REQUIRE_CALL(peripheralMock, writeCmd(cmd)).IN_SEQUENCE(sequence);
 		REQUIRE_CALL(peripheralMock, writeMask(SDMMC_MASK_CMDSENTIE)).IN_SEQUENCE(sequence);
-		REQUIRE(sdMmc.startTransaction(cardMock, command, argument, {}, {}) == 0);
+		sdMmc.startTransaction(cardMock, command, argument, {}, {});
 
 		// trying to stop the driver when a transaction is ongoing should fail with EBUSY
 		REQUIRE(sdMmc.stop() == EBUSY);
@@ -415,7 +301,7 @@ TEST_CASE("Testing startTransaction()", "[startTransaction]")
 					REQUIRE_CALL(peripheralMock, writeCmd(cmd)).IN_SEQUENCE(sequence);
 					const auto mask = SDMMC_MASK_CMDRENDIE | SDMMC_MASK_CTIMEOUTIE | SDMMC_MASK_CCRCFAILIE;
 					REQUIRE_CALL(peripheralMock, writeMask(mask)).IN_SEQUENCE(sequence);
-					REQUIRE(sdMmc.startTransaction(cardMock, command, argument, response, {}) == 0);
+					sdMmc.startTransaction(cardMock, command, argument, response, {});
 
 					// trying to stop the driver when a transaction is ongoing should fail with EBUSY
 					REQUIRE(sdMmc.stop() == EBUSY);
@@ -514,8 +400,8 @@ TEST_CASE("Testing startTransaction()", "[startTransaction]")
 						const auto mask = SDMMC_MASK_DATAENDIE | SDMMC_MASK_RXOVERRIE | SDMMC_MASK_DTIMEOUTIE |
 								SDMMC_MASK_CTIMEOUTIE | SDMMC_MASK_DCRCFAILIE | SDMMC_MASK_CCRCFAILIE;
 						REQUIRE_CALL(peripheralMock, writeMask(mask)).IN_SEQUENCE(sequence);
-						REQUIRE(sdMmc.startTransaction(cardMock, command, argument, Response{response},
-								ReadTransfer{buffer, sizeof(buffer), blockSize, timeoutMs}) == 0);
+						sdMmc.startTransaction(cardMock, command, argument, Response{response},
+								ReadTransfer{buffer, sizeof(buffer), blockSize, timeoutMs});
 
 						// trying to stop the driver when a transaction is ongoing should fail with EBUSY
 						REQUIRE(sdMmc.stop() == EBUSY);
@@ -603,8 +489,8 @@ TEST_CASE("Testing startTransaction()", "[startTransaction]")
 						REQUIRE_CALL(peripheralMock, writeCmd(cmd)).IN_SEQUENCE(sequence);
 						const auto mask0 = SDMMC_MASK_CMDRENDIE | SDMMC_MASK_CTIMEOUTIE | SDMMC_MASK_CCRCFAILIE;
 						REQUIRE_CALL(peripheralMock, writeMask(mask0)).IN_SEQUENCE(sequence);
-						REQUIRE(sdMmc.startTransaction(cardMock, command, argument, Response{response},
-								WriteTransfer{buffer, sizeof(buffer), blockSize, timeoutMs}) == 0);
+						sdMmc.startTransaction(cardMock, command, argument, Response{response},
+								WriteTransfer{buffer, sizeof(buffer), blockSize, timeoutMs});
 
 						// trying to stop the driver when a transaction is ongoing should fail with EBUSY
 						REQUIRE(sdMmc.stop() == EBUSY);

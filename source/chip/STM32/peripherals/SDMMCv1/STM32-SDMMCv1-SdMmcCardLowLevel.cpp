@@ -137,7 +137,7 @@ int SdMmcCardLowLevel::start()
 	return {};
 }
 
-int SdMmcCardLowLevel::startTransaction(devices::SdMmcCardBase& sdMmcCardBase, const uint8_t command,
+void SdMmcCardLowLevel::startTransaction(devices::SdMmcCardBase& sdMmcCardBase, const uint8_t command,
 		const uint32_t argument, const Response response, const Transfer transfer)
 {
 	assert(isStarted() == true);
@@ -148,26 +148,19 @@ int SdMmcCardLowLevel::startTransaction(devices::SdMmcCardBase& sdMmcCardBase, c
 	{
 		assert(response.size() != 0);
 
-		if ((transfer.isWriteTransfer() == false && transfer.getReadBuffer() == nullptr) ||
-				(transfer.isWriteTransfer() == true && transfer.getWriteBuffer() == nullptr))
-			return EINVAL;
-		if (transfer.getBlockSize() < 4)
-			return EINVAL;
-		if (transfer.getSize() % transfer.getBlockSize() != 0)
-			return EINVAL;
+		assert((transfer.isWriteTransfer() == false ? transfer.getReadBuffer() : transfer.getWriteBuffer()) != nullptr);
 
 		const auto dblocksize = estd::log2u(transfer.getBlockSize());
-		if (transfer.getBlockSize() != 1u << dblocksize)
-			return EINVAL;
-		if (dblocksize > 14)
-			return EINVAL;
+		assert(transfer.getBlockSize() >= 4);
+		assert(transfer.getBlockSize() == 1u << dblocksize);
+		assert(dblocksize <= 14);
+
+		const auto dlen = transfer.getSize();
+		assert(transfer.getSize() % transfer.getBlockSize() == 0);
+		assert(dlen <= SDMMC_DLEN_DATALENGTH >> SDMMC_DLEN_DATALENGTH_Pos);
 
 		const auto dtimer = static_cast<uint64_t>((clockFrequency_ + 1000 - 1) / 1000) * transfer.getTimeoutMs();
-		if (dtimer > (SDMMC_DTIMER_DATATIME >> SDMMC_DTIMER_DATATIME_Pos))
-			return EINVAL;
-		const auto dlen = transfer.getSize();
-		if (dlen > (SDMMC_DLEN_DATALENGTH >> SDMMC_DLEN_DATALENGTH_Pos))
-			return EINVAL;
+		assert(dtimer <= SDMMC_DTIMER_DATATIME >> SDMMC_DTIMER_DATATIME_Pos);
 
 		dmaError_ = {};
 
@@ -213,8 +206,6 @@ int SdMmcCardLowLevel::startTransaction(devices::SdMmcCardBase& sdMmcCardBase, c
 	sdMmcCardBase_ = &sdMmcCardBase;
 	response_ = response;
 	sdmmcPeripheral_.writeMask(mask);
-
-	return {};
 }
 
 int SdMmcCardLowLevel::stop()
