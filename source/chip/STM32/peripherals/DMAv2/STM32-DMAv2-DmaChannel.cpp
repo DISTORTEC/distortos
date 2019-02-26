@@ -207,7 +207,7 @@ void DmaChannel::interruptHandler()
 	if ((enabledFlags & tcFlag) != 0)
 		functor_->transferCompleteEvent();
 	if ((enabledFlags & teFlag) != 0)
-		functor_->transferErrorEvent(dmaChannelPeripheral_.readNdtr());
+		functor_->transferErrorEvent(getTransactionsLeft());
 }
 
 /*---------------------------------------------------------------------------------------------------------------------+
