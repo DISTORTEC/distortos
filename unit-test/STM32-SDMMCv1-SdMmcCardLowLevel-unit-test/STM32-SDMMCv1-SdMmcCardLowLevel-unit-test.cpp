@@ -89,9 +89,6 @@ TEST_CASE("Testing start() & stop() interactions", "[start/stop]")
 		REQUIRE_CALL(peripheralMock, writePower(initialPower)).IN_SEQUENCE(sequence);
 		REQUIRE(sdMmc.start() == 0);
 
-		// starting started driver should fail with EBADF
-		REQUIRE(sdMmc.start() == EBADF);
-
 		// stopping started driver should succeed
 		REQUIRE_CALL(dmaChannelMock, release()).IN_SEQUENCE(sequence);
 		REQUIRE_CALL(peripheralMock, writeMask(0u)).IN_SEQUENCE(sequence);

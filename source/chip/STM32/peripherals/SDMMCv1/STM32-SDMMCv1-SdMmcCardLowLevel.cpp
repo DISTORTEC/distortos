@@ -122,8 +122,7 @@ void SdMmcCardLowLevel::interruptHandler()
 
 int SdMmcCardLowLevel::start()
 {
-	if (isStarted() == true)
-		return EBADF;
+	assert(isStarted() == false);
 
 	{
 		const auto ret = dmaChannelUniqueHandle_.reserve(dmaChannel_, dmaRequest_, dmaChannelFunctor_);

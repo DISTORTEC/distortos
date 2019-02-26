@@ -92,8 +92,9 @@ public:
 	/**
 	 * \brief Starts low-level SD/MMC card driver.
 	 *
+	 * \pre Driver is stopped.
+	 *
 	 * \return 0 on success, error code otherwise:
-	 * - EBADF - the driver is not stopped;
 	 * - error codes returned by DmaChannelUniqueHandle::reserve();
 	 */
 
