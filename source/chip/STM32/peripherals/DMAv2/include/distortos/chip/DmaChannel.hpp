@@ -242,11 +242,14 @@ public:
 		 *
 		 * \pre Driver is reserved with this handle.
 		 * \pre \a memoryAddress and \a peripheralAddress and \a transactions and \a flags are valid.
+		 * \pre Memory data size multiplied by memory burst size is less than or equal to 16.
 		 * \pre No transfer is in progress.
 		 * \post Transfer is in progress.
 		 *
-		 * \param [in] memoryAddress is the memory address, must be divisible by configured memory data size
-		 * \param [in] peripheralAddress is the peripheral address, must be divisible by peripheral data size
+		 * \param [in] memoryAddress is the memory address, must be divisible by configured memory data size multiplied
+		 * by configured memory burst size
+		 * \param [in] peripheralAddress is the peripheral address, must be divisible by peripheral data size multiplied
+		 * by configured peripheral burst size
 		 * \param [in] transactions is the number of transactions, [1; 65535]
 		 * \param [in] flags are configuration flags
 		 */
@@ -362,11 +365,12 @@ private:
 	 *
 	 * \pre Driver is reserved.
 	 * \pre \a memoryAddress and \a peripheralAddress and \a transactions and \a flags are valid.
+	 * \pre Memory data size multiplied by memory burst size is less than or equal to 16.
 	 * \pre No transfer is in progress.
 	 * \post Transfer is in progress.
 	 *
 	 * \param [in] memoryAddress is the memory address, must be divisible by configured memory data size multiplied by
-	 * configured memory burst size (which must be less than or equal to 16)
+	 * configured memory burst size
 	 * \param [in] peripheralAddress is the peripheral address, must be divisible by peripheral data size multiplied by
 	 * configured peripheral burst size
 	 * \param [in] transactions is the number of transactions, [1; 65535]
