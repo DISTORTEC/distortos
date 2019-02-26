@@ -69,11 +69,12 @@ public:
 	/**
 	 * \brief Configures parameters of low-level SD/MMC card driver.
 	 *
+	 * \pre Driver is started.
+	 *
 	 * \param [in] busMode is the desired bus mode
 	 * \param [in] clockFrequency is the desired clock frequency, Hz
 	 *
 	 * \return 0 on success, error code otherwise:
-	 * - EBADF - the driver is not started;
 	 * - EBUSY - transfer is in progress;
 	 * - EINVAL - selected clock frequency is invalid;
 	 */

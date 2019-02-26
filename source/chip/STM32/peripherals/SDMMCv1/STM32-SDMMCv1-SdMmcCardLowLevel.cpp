@@ -36,8 +36,7 @@ SdMmcCardLowLevel::~SdMmcCardLowLevel()
 
 int SdMmcCardLowLevel::configure(const BusMode busMode, const uint32_t clockFrequency)
 {
-	if (isStarted() == false)
-		return EBADF;
+	assert(isStarted() == true);
 
 	if (isTransactionInProgress() == true)
 		return EBUSY;

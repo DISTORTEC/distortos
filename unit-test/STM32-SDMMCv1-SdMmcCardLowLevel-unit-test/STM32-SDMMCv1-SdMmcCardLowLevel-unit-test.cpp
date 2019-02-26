@@ -73,10 +73,6 @@ TEST_CASE("Testing start() & stop() interactions", "[start/stop]")
 	{
 		REQUIRE(sdMmc.stop() == EBADF);
 	}
-	SECTION("Configuring stopped driver should fail with EBADF")
-	{
-		REQUIRE(sdMmc.configure({}, {}) == EBADF);
-	}
 	SECTION("Starting transaction with stopped driver should fail with EBADF")
 	{
 		REQUIRE(sdMmc.startTransaction(cardMock, {}, {}, {}, {}) == EBADF);
