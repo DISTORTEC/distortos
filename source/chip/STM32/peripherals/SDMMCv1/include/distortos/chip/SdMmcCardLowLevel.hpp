@@ -71,15 +71,13 @@ public:
 	 *
 	 * \pre Driver is started.
 	 * \pre No transaction is in progress.
+	 * \pre \a clockFrequency is valid.
 	 *
 	 * \param [in] busMode is the desired bus mode
-	 * \param [in] clockFrequency is the desired clock frequency, Hz
-	 *
-	 * \return 0 on success, error code otherwise:
-	 * - EINVAL - selected clock frequency is invalid;
+	 * \param [in] clockFrequency is the desired clock frequency, Hz, must be greater than or equal to 400 kHz
 	 */
 
-	int configure(BusMode busMode, uint32_t clockFrequency) override;
+	void configure(BusMode busMode, uint32_t clockFrequency) override;
 
 	/**
 	 * \brief Interrupt handler

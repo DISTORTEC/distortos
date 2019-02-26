@@ -110,11 +110,6 @@ TEST_CASE("Testing configure()", "[configure]")
 		REQUIRE(sdMmc.start() == 0);
 	}
 
-	SECTION("Trying to use clock frequency lower than `adapter frequency / 257` should fail with EINVAL")
-	{
-		REQUIRE(sdMmc.configure({}, adapterFrequency / 257 - 1) == EINVAL);
-	}
-
 	const distortos::devices::SdMmcCardLowLevel::BusMode busModes[]
 	{
 			distortos::devices::SdMmcCardLowLevel::BusMode::_1Bit,
@@ -133,7 +128,7 @@ TEST_CASE("Testing configure()", "[configure]")
 
 			REQUIRE_CALL(peripheralMock, readClkcr()).IN_SEQUENCE(sequence).RETURN(oldClkcr);
 			REQUIRE_CALL(peripheralMock, writeClkcr(newClkcr)).IN_SEQUENCE(sequence);
-			REQUIRE(sdMmc.configure(busMode, adapterFrequency / 257) == 0);
+			sdMmc.configure(busMode, adapterFrequency / 257);
 		}
 	}
 
@@ -202,7 +197,7 @@ TEST_CASE("Testing configure()", "[configure]")
 
 			REQUIRE_CALL(peripheralMock, readClkcr()).IN_SEQUENCE(sequence).RETURN(oldClkcr);
 			REQUIRE_CALL(peripheralMock, writeClkcr(newClkcr)).IN_SEQUENCE(sequence);
-			REQUIRE(sdMmc.configure({}, clockFrequency) == 0);
+			sdMmc.configure({}, clockFrequency);
 		}
 	}
 

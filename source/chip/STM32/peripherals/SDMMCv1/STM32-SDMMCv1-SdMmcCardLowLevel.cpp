@@ -34,15 +34,14 @@ SdMmcCardLowLevel::~SdMmcCardLowLevel()
 	assert(isStarted() == false);
 }
 
-int SdMmcCardLowLevel::configure(const BusMode busMode, const uint32_t clockFrequency)
+void SdMmcCardLowLevel::configure(const BusMode busMode, const uint32_t clockFrequency)
 {
 	assert(isStarted() == true);
 	assert(isTransactionInProgress() == false);
 
 	const auto adapterFrequency = sdmmcPeripheral_.getAdapterFrequency();
 	const auto divider = (adapterFrequency + clockFrequency - 1) / clockFrequency;
-	if (divider > (SDMMC_CLKCR_CLKDIV >> SDMMC_CLKCR_CLKDIV_Pos) + 2)
-		return EINVAL;
+	assert(divider <= (SDMMC_CLKCR_CLKDIV >> SDMMC_CLKCR_CLKDIV_Pos) + 2);
 
 	const auto widbus = busMode == BusMode::_1Bit ? 0 :
 			busMode == BusMode::_4Bit ? SDMMC_CLKCR_WIDBUS_0 : SDMMC_CLKCR_WIDBUS_1;
@@ -55,7 +54,6 @@ int SdMmcCardLowLevel::configure(const BusMode busMode, const uint32_t clockFreq
 			bypass |
 			clkdiv);
 	clockFrequency_ = bypass == false ? adapterFrequency / divider : adapterFrequency;
-	return {};
 }
 
 void SdMmcCardLowLevel::interruptHandler()
