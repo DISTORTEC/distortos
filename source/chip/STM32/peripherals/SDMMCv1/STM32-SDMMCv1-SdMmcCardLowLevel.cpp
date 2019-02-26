@@ -208,12 +208,10 @@ void SdMmcCardLowLevel::startTransaction(devices::SdMmcCardBase& sdMmcCardBase, 
 	sdmmcPeripheral_.writeMask(mask);
 }
 
-int SdMmcCardLowLevel::stop()
+void SdMmcCardLowLevel::stop()
 {
 	assert(isStarted() == true);
-
-	if (isTransactionInProgress() == true)
-		return EBUSY;
+	assert(isTransactionInProgress() == false);
 
 	dmaChannelUniqueHandle_.release();
 
@@ -225,8 +223,6 @@ int SdMmcCardLowLevel::stop()
 	sdmmcPeripheral_.writePower({});
 
 	clockFrequency_ = {};
-
-	return {};
 }
 
 /*---------------------------------------------------------------------------------------------------------------------+

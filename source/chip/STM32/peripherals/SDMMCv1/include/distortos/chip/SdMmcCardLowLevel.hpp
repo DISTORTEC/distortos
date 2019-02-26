@@ -135,12 +135,11 @@ public:
 	 * \brief Stops low-level SD/MMC card driver.
 	 *
 	 * \pre Driver is started.
-	 *
-	 * \return 0 on success, error code otherwise:
-	 * - EBUSY - transaction is in progress;
+	 * \pre No transaction is in progress.
+	 * \post Driver is stopped.
 	 */
 
-	int stop() override;
+	void stop() override;
 
 private:
 

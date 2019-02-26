@@ -88,7 +88,7 @@ TEST_CASE("Testing start() & stop() interactions", "[start/stop]")
 		REQUIRE_CALL(peripheralMock, writeCmd(0u)).IN_SEQUENCE(sequence);
 		REQUIRE_CALL(peripheralMock, writeClkcr(0u)).IN_SEQUENCE(sequence);
 		REQUIRE_CALL(peripheralMock, writePower(0u)).IN_SEQUENCE(sequence);
-		REQUIRE(sdMmc.stop() == 0);
+		sdMmc.stop();
 	}
 }
 
@@ -213,7 +213,7 @@ TEST_CASE("Testing configure()", "[configure]")
 		REQUIRE_CALL(peripheralMock, writeCmd(0u)).IN_SEQUENCE(sequence);
 		REQUIRE_CALL(peripheralMock, writeClkcr(0u)).IN_SEQUENCE(sequence);
 		REQUIRE_CALL(peripheralMock, writePower(0u)).IN_SEQUENCE(sequence);
-		REQUIRE(sdMmc.stop() == 0);
+		sdMmc.stop();
 	}
 }
 
@@ -249,9 +249,6 @@ TEST_CASE("Testing startTransaction()", "[startTransaction]")
 		REQUIRE_CALL(peripheralMock, writeCmd(cmd)).IN_SEQUENCE(sequence);
 		REQUIRE_CALL(peripheralMock, writeMask(SDMMC_MASK_CMDSENTIE)).IN_SEQUENCE(sequence);
 		sdMmc.startTransaction(cardMock, command, argument, {}, {});
-
-		// trying to stop the driver when a transaction is ongoing should fail with EBUSY
-		REQUIRE(sdMmc.stop() == EBUSY);
 
 		REQUIRE_CALL(peripheralMock, readSta()).IN_SEQUENCE(sequence).RETURN(SDMMC_STA_CMDSENT);
 		REQUIRE_CALL(peripheralMock, writeIcr(allIcrBits)).IN_SEQUENCE(sequence);
@@ -298,9 +295,6 @@ TEST_CASE("Testing startTransaction()", "[startTransaction]")
 					const auto mask = SDMMC_MASK_CMDRENDIE | SDMMC_MASK_CTIMEOUTIE | SDMMC_MASK_CCRCFAILIE;
 					REQUIRE_CALL(peripheralMock, writeMask(mask)).IN_SEQUENCE(sequence);
 					sdMmc.startTransaction(cardMock, command, argument, response, {});
-
-					// trying to stop the driver when a transaction is ongoing should fail with EBUSY
-					REQUIRE(sdMmc.stop() == EBUSY);
 
 					REQUIRE_CALL(peripheralMock, readSta()).IN_SEQUENCE(sequence).RETURN(step.sta);
 					REQUIRE_CALL(peripheralMock, writeIcr(allIcrBits)).IN_SEQUENCE(sequence);
@@ -399,9 +393,6 @@ TEST_CASE("Testing startTransaction()", "[startTransaction]")
 						sdMmc.startTransaction(cardMock, command, argument, Response{response},
 								ReadTransfer{buffer, sizeof(buffer), blockSize, timeoutMs});
 
-						// trying to stop the driver when a transaction is ongoing should fail with EBUSY
-						REQUIRE(sdMmc.stop() == EBUSY);
-
 						if (dmaError == true)
 							dmaChannelFunctor->transferErrorEvent(1);
 
@@ -488,9 +479,6 @@ TEST_CASE("Testing startTransaction()", "[startTransaction]")
 						sdMmc.startTransaction(cardMock, command, argument, Response{response},
 								WriteTransfer{buffer, sizeof(buffer), blockSize, timeoutMs});
 
-						// trying to stop the driver when a transaction is ongoing should fail with EBUSY
-						REQUIRE(sdMmc.stop() == EBUSY);
-
 						if (dmaError == 1)
 							dmaChannelFunctor->transferErrorEvent(1);
 
@@ -536,6 +524,6 @@ TEST_CASE("Testing startTransaction()", "[startTransaction]")
 		REQUIRE_CALL(peripheralMock, writeCmd(0u)).IN_SEQUENCE(sequence);
 		REQUIRE_CALL(peripheralMock, writeClkcr(0u)).IN_SEQUENCE(sequence);
 		REQUIRE_CALL(peripheralMock, writePower(0u)).IN_SEQUENCE(sequence);
-		REQUIRE(sdMmc.stop() == 0);
+		sdMmc.stop();
 	}
 }
