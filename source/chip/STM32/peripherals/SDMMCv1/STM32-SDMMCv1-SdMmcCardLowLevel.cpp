@@ -58,6 +58,9 @@ void SdMmcCardLowLevel::configure(const BusMode busMode, const uint32_t clockFre
 
 void SdMmcCardLowLevel::interruptHandler()
 {
+	assert(isStarted() == true);
+	assert(isTransactionInProgress() == true);
+
 	const auto sta = sdmmcPeripheral_.readSta();
 	sdmmcPeripheral_.writeIcr(SDMMC_ICR_SDIOITC | SDMMC_ICR_DBCKENDC | SDMMC_ICR_DATAENDC | SDMMC_ICR_CMDSENTC |
 			SDMMC_ICR_CMDRENDC | SDMMC_ICR_RXOVERRC | SDMMC_ICR_TXUNDERRC | SDMMC_ICR_DTIMEOUTC | SDMMC_ICR_CTIMEOUTC |
@@ -113,8 +116,6 @@ void SdMmcCardLowLevel::interruptHandler()
 
 	const auto sdMmcCardBase = sdMmcCardBase_;
 	sdMmcCardBase_ = {};
-
-	assert(sdMmcCardBase != nullptr);
 	sdMmcCardBase->transactionCompleteEvent(result);
 }
 
