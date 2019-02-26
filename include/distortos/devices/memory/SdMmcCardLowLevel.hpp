@@ -362,6 +362,7 @@ public:
 	 * SdMmcCardBase::transactionCompleteEvent() will be executed.
 	 *
 	 * \pre Driver is started.
+	 * \pre No transaction is in progress.
 	 *
 	 * \param [in] sdMmcCardBase is a reference to SdMmcCardBase object that will be notified about completed
 	 * transaction
@@ -372,7 +373,6 @@ public:
 	 * \param [in,out] transfer is the transfer associated with transaction
 	 *
 	 * \return 0 on success, error code otherwise:
-	 * - EBUSY - transaction is in progress;
 	 * - EINVAL - \a command and/or \a response and/or \a transfer are not valid;
 	 */
 

@@ -141,12 +141,10 @@ int SdMmcCardLowLevel::startTransaction(devices::SdMmcCardBase& sdMmcCardBase, c
 		const uint32_t argument, const Response response, const Transfer transfer)
 {
 	assert(isStarted() == true);
+	assert(isTransactionInProgress() == false);
 
 	if (command > maxCommand)
 		return EINVAL;
-
-	if (isTransactionInProgress() == true)
-		return EBUSY;
 
 	if (transfer.getSize() != 0)
 	{

@@ -381,9 +381,6 @@ TEST_CASE("Testing startTransaction()", "[startTransaction]")
 		REQUIRE_CALL(peripheralMock, writeMask(SDMMC_MASK_CMDSENTIE)).IN_SEQUENCE(sequence);
 		REQUIRE(sdMmc.startTransaction(cardMock, command, argument, {}, {}) == 0);
 
-		// starting another transaction when the previous one is ongoing should fail with EBUSY
-		REQUIRE(sdMmc.startTransaction(cardMock, command, argument, {}, {}) == EBUSY);
-
 		// trying to stop the driver when a transaction is ongoing should fail with EBUSY
 		REQUIRE(sdMmc.stop() == EBUSY);
 
@@ -432,9 +429,6 @@ TEST_CASE("Testing startTransaction()", "[startTransaction]")
 					const auto mask = SDMMC_MASK_CMDRENDIE | SDMMC_MASK_CTIMEOUTIE | SDMMC_MASK_CCRCFAILIE;
 					REQUIRE_CALL(peripheralMock, writeMask(mask)).IN_SEQUENCE(sequence);
 					REQUIRE(sdMmc.startTransaction(cardMock, command, argument, response, {}) == 0);
-
-					// starting another transaction when the previous one is ongoing should fail with EBUSY
-					REQUIRE(sdMmc.startTransaction(cardMock, command, argument, response, {}) == EBUSY);
 
 					// trying to stop the driver when a transaction is ongoing should fail with EBUSY
 					REQUIRE(sdMmc.stop() == EBUSY);
@@ -536,10 +530,6 @@ TEST_CASE("Testing startTransaction()", "[startTransaction]")
 						REQUIRE(sdMmc.startTransaction(cardMock, command, argument, Response{response},
 								ReadTransfer{buffer, sizeof(buffer), blockSize, timeoutMs}) == 0);
 
-						// starting another transaction when the previous one is ongoing should fail with EBUSY
-						REQUIRE(sdMmc.startTransaction(cardMock, command, argument, Response{response},
-								ReadTransfer{buffer, sizeof(buffer), blockSize, timeoutMs}) == EBUSY);
-
 						// trying to stop the driver when a transaction is ongoing should fail with EBUSY
 						REQUIRE(sdMmc.stop() == EBUSY);
 
@@ -628,10 +618,6 @@ TEST_CASE("Testing startTransaction()", "[startTransaction]")
 						REQUIRE_CALL(peripheralMock, writeMask(mask0)).IN_SEQUENCE(sequence);
 						REQUIRE(sdMmc.startTransaction(cardMock, command, argument, Response{response},
 								WriteTransfer{buffer, sizeof(buffer), blockSize, timeoutMs}) == 0);
-
-						// starting another transaction when the previous one is ongoing should fail with EBUSY
-						REQUIRE(sdMmc.startTransaction(cardMock, command, argument, Response{response},
-								WriteTransfer{buffer, sizeof(buffer), blockSize, timeoutMs}) == EBUSY);
 
 						// trying to stop the driver when a transaction is ongoing should fail with EBUSY
 						REQUIRE(sdMmc.stop() == EBUSY);
