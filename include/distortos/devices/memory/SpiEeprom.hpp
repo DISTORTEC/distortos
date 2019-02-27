@@ -438,7 +438,7 @@ private:
 	 * \param [in] size is the size of erase (`buffer == nullptr`) or size of \a buffer (`buffer != nullptr`), bytes
 	 *
 	 * \return 0 on success, error code otherwise:
-	 * - EINVAL - \a address and/or \a size are not valid;
+	 * - EINVAL - \a address is not valid;
 	 * - error codes returned by eraseOrWritePage();
 	 */
 
