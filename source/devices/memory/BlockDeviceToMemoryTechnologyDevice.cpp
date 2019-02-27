@@ -211,8 +211,7 @@ int BlockDeviceToMemoryTechnologyDevice::read(const uint64_t address, void* cons
 {
 	const std::lock_guard<BlockDeviceToMemoryTechnologyDevice> lockGuard {*this};
 
-	if (openCount_ == 0)
-		return EBADF;
+	assert(openCount_ != 0);
 
 	if (size == 0)
 		return {};
