@@ -109,6 +109,10 @@ SpiEeprom::~SpiEeprom()
 
 int SpiEeprom::close()
 {
+	const SpiDeviceProxy spiDeviceProxy {spiDevice_};
+
+	assert(spiDeviceProxy.isOpened() == true);
+
 	return spiDevice_.close();
 }
 

@@ -1168,6 +1168,8 @@ int SdMmcCardSpiBased::close()
 {
 	const SpiDeviceProxy spiDeviceProxy {spiDevice_};
 
+	assert(type_ != Type::unknown);
+
 	const auto ret = spiDevice_.close();
 
 	if (spiDeviceProxy.isOpened() == false)

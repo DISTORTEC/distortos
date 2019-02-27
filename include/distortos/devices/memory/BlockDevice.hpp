@@ -42,8 +42,9 @@ public:
 	/**
 	 * \brief Closes device.
 	 *
-	 * \return 0 on success, error code otherwise:
-	 * - EBADF - the device is already completely closed;
+	 * \pre Device is opened.
+	 *
+	 * \return 0 on success, error code otherwise
 	 */
 
 	virtual int close() = 0;
