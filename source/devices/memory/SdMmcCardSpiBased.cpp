@@ -1304,8 +1304,7 @@ int SdMmcCardSpiBased::read(const uint64_t address, void* const buffer, const si
 {
 	const SpiDeviceProxy spiDeviceProxy {spiDevice_};
 
-	if (type_ == Type::unknown)
-		return EBADF;
+	assert(type_ != Type::unknown);
 
 	if (size == 0)
 		return {};

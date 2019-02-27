@@ -348,6 +348,8 @@ public:
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
+	 * \pre Device is opened.
+	 *
 	 * \param [in] address is the address of data that will be read
 	 * \param [out] buffer is the buffer into which the data will be read
 	 * \param [in] size is the size of \a buffer, bytes

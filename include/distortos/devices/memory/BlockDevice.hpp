@@ -105,12 +105,13 @@ public:
 	/**
 	 * \brief Reads data from a device.
 	 *
+	 * \pre Device is opened.
+	 *
 	 * \param [in] address is the address of data that will be read, must be a multiple of block size
 	 * \param [out] buffer is the buffer into which the data will be read
 	 * \param [in] size is the size of \a buffer, bytes, must be a multiple of block size
 	 *
 	 * \return 0 on success, error code otherwise:
-	 * - EBADF - the device is not opened;
 	 * - EINVAL - \a address and/or \a buffer and/or \a size are not valid;
 	 * - ENOSPC - selected range is greater than size of device;
 	 */

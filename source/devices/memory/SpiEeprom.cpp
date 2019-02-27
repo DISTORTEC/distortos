@@ -154,13 +154,13 @@ int SpiEeprom::open()
 
 int SpiEeprom::read(const uint64_t address, void* const buffer, const size_t size)
 {
-	CHECK_FUNCTION_CONTEXT();
+	const SpiDeviceProxy spiDeviceProxy {spiDevice_};
+
+	assert(spiDeviceProxy.isOpened() == true);
 
 	const auto capacity = getSize();
 	if (address >= capacity || buffer == nullptr || size == 0)
 		return EINVAL;
-
-	const SpiDeviceProxy spiDeviceProxy {spiDevice_};
 
 	{
 		const auto ret = synchronize(spiDeviceProxy);
