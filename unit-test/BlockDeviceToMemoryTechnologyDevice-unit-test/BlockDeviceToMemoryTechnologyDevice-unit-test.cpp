@@ -37,7 +37,7 @@ public:
 	MAKE_MOCK0(open, int());
 	MAKE_MOCK3(read, int(uint64_t, void*, size_t));
 	MAKE_MOCK0(synchronize, int());
-	MAKE_MOCK0(unlock, int());
+	MAKE_MOCK0(unlock, void());
 	MAKE_MOCK3(write, int(uint64_t, const void*, size_t));
 };
 
@@ -71,7 +71,7 @@ TEST_CASE("Testing get*BlockSize()", "[get*BlockSize]")
 	REQUIRE(bd2Mtd.getReadBlockSize() == anotherBlockSize);
 
 	expectations.emplace_back(NAMED_REQUIRE_CALL(blockDeviceMock, lock()).IN_SEQUENCE(sequence).RETURN(0));
-	expectations.emplace_back(NAMED_REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence).RETURN(0));
+	expectations.emplace_back(NAMED_REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence));
 }
 
 TEST_CASE("Testing getSize()", "[getSize]")
@@ -87,7 +87,7 @@ TEST_CASE("Testing getSize()", "[getSize]")
 	REQUIRE(bd2Mtd.getSize() == size);
 
 	expectations.emplace_back(NAMED_REQUIRE_CALL(blockDeviceMock, lock()).IN_SEQUENCE(sequence).RETURN(0));
-	expectations.emplace_back(NAMED_REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence).RETURN(0));
+	expectations.emplace_back(NAMED_REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence));
 }
 
 TEST_CASE("Testing open() & close()", "[open/close]")
@@ -103,14 +103,14 @@ TEST_CASE("Testing open() & close()", "[open/close]")
 		REQUIRE_CALL(blockDeviceMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
 		constexpr int ret {0x79500842};
 		REQUIRE_CALL(blockDeviceMock, open()).IN_SEQUENCE(sequence).RETURN(ret);
-		REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
+		REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence);
 		REQUIRE(bd2Mtd.open() == ret);
 	}
 	SECTION("Opening closed device should succeed")
 	{
 		REQUIRE_CALL(blockDeviceMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
 		REQUIRE_CALL(blockDeviceMock, open()).IN_SEQUENCE(sequence).RETURN(0);
-		REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
+		REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence);
 		REQUIRE(bd2Mtd.open() == 0);
 
 		SECTION("Block device close error should propagate error code to caller")
@@ -118,7 +118,7 @@ TEST_CASE("Testing open() & close()", "[open/close]")
 			REQUIRE_CALL(blockDeviceMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
 			constexpr int ret {0x58516981};
 			REQUIRE_CALL(blockDeviceMock, close()).IN_SEQUENCE(sequence).RETURN(ret);
-			REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
+			REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence);
 			REQUIRE(bd2Mtd.close() == ret);
 		}
 		SECTION("Opening device 255 times should succeed")
@@ -127,14 +127,14 @@ TEST_CASE("Testing open() & close()", "[open/close]")
 			while (openCount < UINT8_MAX)
 			{
 				REQUIRE_CALL(blockDeviceMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
-				REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
+				REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence);
 				REQUIRE(bd2Mtd.open() == 0);
 				++openCount;
 			}
 			while (openCount > 1)
 			{
 				REQUIRE_CALL(blockDeviceMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
-				REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
+				REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence);
 				REQUIRE(bd2Mtd.close() == 0);
 				--openCount;
 			}
@@ -142,18 +142,18 @@ TEST_CASE("Testing open() & close()", "[open/close]")
 
 		REQUIRE_CALL(blockDeviceMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
 		REQUIRE_CALL(blockDeviceMock, close()).IN_SEQUENCE(sequence).RETURN(0);
-		REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
+		REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence);
 		REQUIRE(bd2Mtd.close() == 0);
 	}
 	SECTION("Last close of the device should flush any pending erase")
 	{
 		REQUIRE_CALL(blockDeviceMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
 		REQUIRE_CALL(blockDeviceMock, open()).IN_SEQUENCE(sequence).RETURN(0);
-		REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
+		REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence);
 		REQUIRE(bd2Mtd.open() == 0);
 
 		REQUIRE_CALL(blockDeviceMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
-		REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
+		REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence);
 		REQUIRE(bd2Mtd.open() == 0);
 
 		constexpr uint64_t address {0xb03505570b02d81d};
@@ -162,28 +162,28 @@ TEST_CASE("Testing open() & close()", "[open/close]")
 		REQUIRE_CALL(blockDeviceMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
 		REQUIRE_CALL(blockDeviceMock, getBlockSize()).IN_SEQUENCE(sequence).RETURN(blockSize);
 		REQUIRE_CALL(blockDeviceMock, getSize()).IN_SEQUENCE(sequence).RETURN(deviceSize);
-		REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
+		REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence);
 		REQUIRE(bd2Mtd.erase(address, size) == 0);
 
 		REQUIRE_CALL(blockDeviceMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
-		REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
+		REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence);
 		REQUIRE(bd2Mtd.close() == 0);
 
 		REQUIRE_CALL(blockDeviceMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
 		constexpr int ret {0x591eb333};
 		REQUIRE_CALL(blockDeviceMock, erase(address, size)).IN_SEQUENCE(sequence).RETURN(ret);
-		REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
+		REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence);
 		REQUIRE(bd2Mtd.close() == ret);
 
 		REQUIRE_CALL(blockDeviceMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
 		REQUIRE_CALL(blockDeviceMock, erase(address, size)).IN_SEQUENCE(sequence).RETURN(0);
 		REQUIRE_CALL(blockDeviceMock, close()).IN_SEQUENCE(sequence).RETURN(0);
-		REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
+		REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence);
 		REQUIRE(bd2Mtd.close() == 0);
 	}
 
 	expectations.emplace_back(NAMED_REQUIRE_CALL(blockDeviceMock, lock()).IN_SEQUENCE(sequence).RETURN(0));
-	expectations.emplace_back(NAMED_REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence).RETURN(0));
+	expectations.emplace_back(NAMED_REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence));
 }
 
 TEST_CASE("Testing synchronize()", "[synchronize]")
@@ -196,22 +196,22 @@ TEST_CASE("Testing synchronize()", "[synchronize]")
 
 	REQUIRE_CALL(blockDeviceMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
 	REQUIRE_CALL(blockDeviceMock, open()).IN_SEQUENCE(sequence).RETURN(0);
-	REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
+	REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence);
 	REQUIRE(bd2Mtd.open() == 0);
 
 	constexpr int ret {0x79910589};
 	REQUIRE_CALL(blockDeviceMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
 	REQUIRE_CALL(blockDeviceMock, synchronize()).IN_SEQUENCE(sequence).RETURN(ret);
-	REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
+	REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence);
 	REQUIRE(bd2Mtd.synchronize() == ret);
 
 	REQUIRE_CALL(blockDeviceMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
 	REQUIRE_CALL(blockDeviceMock, close()).IN_SEQUENCE(sequence).RETURN(0);
-	REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
+	REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence);
 	REQUIRE(bd2Mtd.close() == 0);
 
 	expectations.emplace_back(NAMED_REQUIRE_CALL(blockDeviceMock, lock()).IN_SEQUENCE(sequence).RETURN(0));
-	expectations.emplace_back(NAMED_REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence).RETURN(0));
+	expectations.emplace_back(NAMED_REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence));
 }
 
 TEST_CASE("Testing erase(), program() & read()", "[erase/program/read]")
@@ -226,7 +226,7 @@ TEST_CASE("Testing erase(), program() & read()", "[erase/program/read]")
 	{
 		REQUIRE_CALL(blockDeviceMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
 		REQUIRE_CALL(blockDeviceMock, open()).IN_SEQUENCE(sequence).RETURN(0);
-		REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
+		REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence);
 		REQUIRE(bd2Mtd.open() == 0);
 
 		uint8_t buffer[1] {};
@@ -238,7 +238,7 @@ TEST_CASE("Testing erase(), program() & read()", "[erase/program/read]")
 			REQUIRE_CALL(blockDeviceMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
 			REQUIRE_CALL(blockDeviceMock, getBlockSize()).IN_SEQUENCE(sequence).RETURN(blockSize);
 			REQUIRE_CALL(blockDeviceMock, getSize()).IN_SEQUENCE(sequence).RETURN(deviceSize);
-			REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
+			REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence);
 
 			SECTION("Erasing zero bytes should succeed")
 			{
@@ -286,7 +286,7 @@ TEST_CASE("Testing erase(), program() & read()", "[erase/program/read]")
 						REQUIRE_CALL(blockDeviceMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
 						REQUIRE_CALL(blockDeviceMock, getBlockSize()).IN_SEQUENCE(sequence).RETURN(blockSize);
 						REQUIRE_CALL(blockDeviceMock, getSize()).IN_SEQUENCE(sequence).RETURN(deviceSize);
-						REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
+						REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence);
 						REQUIRE(bd2Mtd.erase(steps[i].address, steps[i].size) == 0);
 					}
 
@@ -296,7 +296,7 @@ TEST_CASE("Testing erase(), program() & read()", "[erase/program/read]")
 						REQUIRE_CALL(blockDeviceMock, erase(steps[step].mergedAddress,
 								steps[step].mergedSize)).IN_SEQUENCE(sequence).RETURN(0);
 						REQUIRE_CALL(blockDeviceMock, synchronize()).IN_SEQUENCE(sequence).RETURN(0);
-						REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
+						REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence);
 						REQUIRE(bd2Mtd.synchronize() == 0);
 					}
 					SECTION("Non-overlapping and non-adjacent erase should flush any pending erase")
@@ -309,13 +309,13 @@ TEST_CASE("Testing erase(), program() & read()", "[erase/program/read]")
 						REQUIRE_CALL(blockDeviceMock, getSize()).IN_SEQUENCE(sequence).RETURN(deviceSize);
 						REQUIRE_CALL(blockDeviceMock, erase(steps[step].mergedAddress,
 								steps[step].mergedSize)).IN_SEQUENCE(sequence).RETURN(0);
-						REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
+						REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence);
 						REQUIRE(bd2Mtd.erase(address, size) == 0);
 
 						REQUIRE_CALL(blockDeviceMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
 						REQUIRE_CALL(blockDeviceMock, erase(address, size)).IN_SEQUENCE(sequence).RETURN(0);
 						REQUIRE_CALL(blockDeviceMock, synchronize()).IN_SEQUENCE(sequence).RETURN(0);
-						REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
+						REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence);
 						REQUIRE(bd2Mtd.synchronize() == 0);
 					}
 				}
@@ -361,7 +361,7 @@ TEST_CASE("Testing erase(), program() & read()", "[erase/program/read]")
 							REQUIRE_CALL(blockDeviceMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
 							REQUIRE_CALL(blockDeviceMock, getBlockSize()).IN_SEQUENCE(sequence).RETURN(blockSize);
 							REQUIRE_CALL(blockDeviceMock, getSize()).IN_SEQUENCE(sequence).RETURN(deviceSize);
-							REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
+							REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence);
 							REQUIRE(bd2Mtd.erase(steps[i].eraseAddress, steps[i].eraseSize) == 0);
 						}
 
@@ -377,7 +377,7 @@ TEST_CASE("Testing erase(), program() & read()", "[erase/program/read]")
 
 						REQUIRE_CALL(blockDeviceMock, write(steps[i].writeAddress, buffer,
 								steps[i].writeSize)).IN_SEQUENCE(sequence).RETURN(0);
-						REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
+						REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence);
 						REQUIRE(bd2Mtd.program(steps[i].writeAddress, buffer, steps[i].writeSize) == 0);
 					}
 
@@ -387,7 +387,7 @@ TEST_CASE("Testing erase(), program() & read()", "[erase/program/read]")
 						REQUIRE_CALL(blockDeviceMock, erase(steps[step].erasedAddress1,
 								steps[step].erasedSize1)).IN_SEQUENCE(sequence).RETURN(0);
 						REQUIRE_CALL(blockDeviceMock, synchronize()).IN_SEQUENCE(sequence).RETURN(0);
-						REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
+						REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence);
 						REQUIRE(bd2Mtd.synchronize() == 0);
 					}
 				}
@@ -433,7 +433,7 @@ TEST_CASE("Testing erase(), program() & read()", "[erase/program/read]")
 							REQUIRE_CALL(blockDeviceMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
 							REQUIRE_CALL(blockDeviceMock, getBlockSize()).IN_SEQUENCE(sequence).RETURN(blockSize);
 							REQUIRE_CALL(blockDeviceMock, getSize()).IN_SEQUENCE(sequence).RETURN(deviceSize);
-							REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
+							REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence);
 							REQUIRE(bd2Mtd.erase(steps[i].eraseAddress, steps[i].eraseSize) == 0);
 						}
 
@@ -449,7 +449,7 @@ TEST_CASE("Testing erase(), program() & read()", "[erase/program/read]")
 
 						REQUIRE_CALL(blockDeviceMock,
 								read(steps[i].readAddress, buffer, steps[i].readSize)).IN_SEQUENCE(sequence).RETURN(0);
-						REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
+						REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence);
 						REQUIRE(bd2Mtd.read(steps[i].readAddress, buffer, steps[i].readSize) == 0);
 					}
 
@@ -459,7 +459,7 @@ TEST_CASE("Testing erase(), program() & read()", "[erase/program/read]")
 						REQUIRE_CALL(blockDeviceMock, erase(steps[step].erasedAddress1,
 								steps[step].erasedSize1)).IN_SEQUENCE(sequence).RETURN(0);
 						REQUIRE_CALL(blockDeviceMock, synchronize()).IN_SEQUENCE(sequence).RETURN(0);
-						REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
+						REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence);
 						REQUIRE(bd2Mtd.synchronize() == 0);
 					}
 				}
@@ -473,7 +473,7 @@ TEST_CASE("Testing erase(), program() & read()", "[erase/program/read]")
 			REQUIRE_CALL(blockDeviceMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
 			REQUIRE_CALL(blockDeviceMock, getBlockSize()).IN_SEQUENCE(sequence).RETURN(blockSize);
 			REQUIRE_CALL(blockDeviceMock, getSize()).IN_SEQUENCE(sequence).RETURN(deviceSize);
-			REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
+			REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence);
 			REQUIRE(bd2Mtd.erase(address, size) == 0);
 
 			SECTION("Test via synchronize()")
@@ -481,7 +481,7 @@ TEST_CASE("Testing erase(), program() & read()", "[erase/program/read]")
 				REQUIRE_CALL(blockDeviceMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
 				constexpr int ret {0x4ce2b62c};
 				REQUIRE_CALL(blockDeviceMock, erase(address, size)).IN_SEQUENCE(sequence).RETURN(ret);
-				REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
+				REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence);
 				REQUIRE(bd2Mtd.synchronize() == ret);
 			}
 			SECTION("Test via non-overlapping and non-adjacent erase()")
@@ -491,7 +491,7 @@ TEST_CASE("Testing erase(), program() & read()", "[erase/program/read]")
 				REQUIRE_CALL(blockDeviceMock, getSize()).IN_SEQUENCE(sequence).RETURN(deviceSize);
 				constexpr int ret {0x7ad1c3b0};
 				REQUIRE_CALL(blockDeviceMock, erase(address, size)).IN_SEQUENCE(sequence).RETURN(ret);
-				REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
+				REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence);
 				REQUIRE(bd2Mtd.erase(address + size + blockSize, size) == ret);
 			}
 			SECTION("Test via overlapping and non-adjacent program()")
@@ -501,7 +501,7 @@ TEST_CASE("Testing erase(), program() & read()", "[erase/program/read]")
 				REQUIRE_CALL(blockDeviceMock, getSize()).IN_SEQUENCE(sequence).RETURN(deviceSize);
 				constexpr int ret {0x61e1b3e5};
 				REQUIRE_CALL(blockDeviceMock, erase(address, blockSize)).IN_SEQUENCE(sequence).RETURN(ret);
-				REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
+				REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence);
 				REQUIRE(bd2Mtd.program(address + blockSize, buffer, size - 2 * blockSize) == ret);
 			}
 			SECTION("Test via overlapping and non-adjacent read()")
@@ -511,14 +511,14 @@ TEST_CASE("Testing erase(), program() & read()", "[erase/program/read]")
 				REQUIRE_CALL(blockDeviceMock, getSize()).IN_SEQUENCE(sequence).RETURN(deviceSize);
 				constexpr int ret {0x2250ef2c};
 				REQUIRE_CALL(blockDeviceMock, erase(address, size - blockSize)).IN_SEQUENCE(sequence).RETURN(ret);
-				REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
+				REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence);
 				REQUIRE(bd2Mtd.read(address + blockSize, buffer, size - 2 * blockSize) == ret);
 			}
 
 			REQUIRE_CALL(blockDeviceMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
 			REQUIRE_CALL(blockDeviceMock, erase(address, size)).IN_SEQUENCE(sequence).RETURN(0);
 			REQUIRE_CALL(blockDeviceMock, synchronize()).IN_SEQUENCE(sequence).RETURN(0);
-			REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
+			REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence);
 			REQUIRE(bd2Mtd.synchronize() == 0);
 		}
 		SECTION("Block device write error should propagate error code to caller")
@@ -529,7 +529,7 @@ TEST_CASE("Testing erase(), program() & read()", "[erase/program/read]")
 			REQUIRE_CALL(blockDeviceMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
 			REQUIRE_CALL(blockDeviceMock, getBlockSize()).IN_SEQUENCE(sequence).RETURN(blockSize);
 			REQUIRE_CALL(blockDeviceMock, getSize()).IN_SEQUENCE(sequence).RETURN(deviceSize);
-			REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
+			REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence);
 			REQUIRE(bd2Mtd.erase(address, size) == 0);
 
 			REQUIRE_CALL(blockDeviceMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
@@ -539,13 +539,13 @@ TEST_CASE("Testing erase(), program() & read()", "[erase/program/read]")
 			constexpr int ret {0x44645a96};
 			REQUIRE_CALL(blockDeviceMock,
 					write(address + blockSize, buffer, size - 2 * blockSize)).IN_SEQUENCE(sequence).RETURN(ret);
-			REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
+			REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence);
 			REQUIRE(bd2Mtd.program(address + blockSize, buffer, size - 2 * blockSize) == ret);
 
 			REQUIRE_CALL(blockDeviceMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
 			REQUIRE_CALL(blockDeviceMock, erase(address + blockSize, size - blockSize)).IN_SEQUENCE(sequence).RETURN(0);
 			REQUIRE_CALL(blockDeviceMock, synchronize()).IN_SEQUENCE(sequence).RETURN(0);
-			REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
+			REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence);
 			REQUIRE(bd2Mtd.synchronize() == 0);
 		}
 		SECTION("Block device read error should propagate error code to caller")
@@ -557,16 +557,16 @@ TEST_CASE("Testing erase(), program() & read()", "[erase/program/read]")
 			REQUIRE_CALL(blockDeviceMock, getSize()).IN_SEQUENCE(sequence).RETURN(deviceSize);
 			constexpr int ret {0x51d4894f};
 			REQUIRE_CALL(blockDeviceMock, read(address, buffer, sizeof(buffer))).IN_SEQUENCE(sequence).RETURN(ret);
-			REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
+			REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence);
 			REQUIRE(bd2Mtd.read(address, buffer, sizeof(buffer)) == ret);
 		}
 
 		REQUIRE_CALL(blockDeviceMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
 		REQUIRE_CALL(blockDeviceMock, close()).IN_SEQUENCE(sequence).RETURN(0);
-		REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
+		REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence);
 		REQUIRE(bd2Mtd.close() == 0);
 	}
 
 	expectations.emplace_back(NAMED_REQUIRE_CALL(blockDeviceMock, lock()).IN_SEQUENCE(sequence).RETURN(0));
-	expectations.emplace_back(NAMED_REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence).RETURN(0));
+	expectations.emplace_back(NAMED_REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence));
 }

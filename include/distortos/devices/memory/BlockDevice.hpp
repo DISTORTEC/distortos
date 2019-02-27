@@ -129,11 +129,10 @@ public:
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
-	 * \return 0 on success, error code otherwise:
-	 * - EPERM - current thread did not lock the device;
+	 * \pre This function is called by the thread that locked the device.
 	 */
 
-	virtual int unlock() = 0;
+	virtual void unlock() = 0;
 
 	/**
 	 * \brief Writes data to a device.

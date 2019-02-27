@@ -176,9 +176,10 @@ int SpiEeprom::synchronize()
 	return synchronize(spiDeviceProxy);
 }
 
-int SpiEeprom::unlock()
+void SpiEeprom::unlock()
 {
-	return spiDevice_.unlock();
+	const auto ret = spiDevice_.unlock();
+	assert(ret == 0);
 }
 
 int SpiEeprom::write(const uint64_t address, const void* const buffer, const size_t size)

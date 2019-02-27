@@ -270,8 +270,7 @@ int BlockDeviceToMemoryTechnologyDevice::synchronize()
 
 void BlockDeviceToMemoryTechnologyDevice::unlock()
 {
-	const auto ret = blockDevice_.unlock();
-	assert(ret == 0);
+	blockDevice_.unlock();
 }
 
 }	// namespace devices
