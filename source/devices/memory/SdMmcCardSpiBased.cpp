@@ -1182,8 +1182,7 @@ int SdMmcCardSpiBased::erase(const uint64_t address, const uint64_t size)
 {
 	const SpiDeviceProxy spiDeviceProxy {spiDevice_};
 
-	if (type_ == Type::unknown)
-		return EBADF;
+	assert(type_ != Type::unknown);
 
 	if (size == 0)
 		return {};

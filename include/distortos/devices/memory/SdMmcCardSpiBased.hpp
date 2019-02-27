@@ -98,11 +98,12 @@ public:
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
+	 * \pre Device is opened.
+	 *
 	 * \param [in] address is the address of range that will be erased, must be a multiple of block size
 	 * \param [in] size is the size of erased range, bytes, must be a multiple of block size
 	 *
 	 * \return 0 on success, error code otherwise:
-	 * - EBADF - the device is not opened;
 	 * - EINVAL - \a address and/or \a size are not valid;
 	 * - ENOSPC - selected range is greater than size of device;
 	 * - error codes returned by executeCmd32();

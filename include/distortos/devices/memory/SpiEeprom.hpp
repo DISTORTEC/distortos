@@ -253,6 +253,8 @@ public:
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
+	 * \pre Device is opened.
+	 *
 	 * \param [in] address is the address of range that will be erased
 	 * \param [in] size is the size of erased range, bytes
 	 *

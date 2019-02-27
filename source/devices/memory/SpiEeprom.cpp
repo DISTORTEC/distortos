@@ -119,6 +119,9 @@ int SpiEeprom::close()
 int SpiEeprom::erase(const uint64_t address, const uint64_t size)
 {
 	const SpiDeviceProxy spiDeviceProxy {spiDevice_};
+
+	assert(spiDeviceProxy.isOpened() == true);
+
 	return eraseOrWrite(spiDeviceProxy, address, nullptr, size);
 }
 
