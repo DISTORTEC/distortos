@@ -267,6 +267,8 @@ int BlockDeviceToMemoryTechnologyDevice::synchronize()
 {
 	const std::lock_guard<BlockDeviceToMemoryTechnologyDevice> lockGuard {*this};
 
+	assert(openCount_ != 0);
+
 	if (pendingEraseSize_ != 0)
 	{
 		const auto ret = blockDevice_.erase(pendingEraseAddress_, pendingEraseSize_);

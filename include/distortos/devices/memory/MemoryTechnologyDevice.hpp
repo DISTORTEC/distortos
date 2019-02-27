@@ -151,8 +151,9 @@ public:
 	/**
 	 * \brief Synchronizes state of a device, ensuring all cached writes are finished.
 	 *
-	 * \return 0 on success, error code otherwise:
-	 * - EBADF - the device is not opened;
+	 * \pre Device is opened.
+	 *
+	 * \return 0 on success, error code otherwise
 	 */
 
 	virtual int synchronize() = 0;
