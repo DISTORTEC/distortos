@@ -82,12 +82,12 @@ public:
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
-	 * \return 0 on success, error code otherwise:
-	 * - EAGAIN - the lock could not be acquired because the maximum number of recursive locks for device has been
-	 * exceeded;
+	 * \pre The number of recursive locks of device is less than 65535.
+	 *
+	 * \post Device is locked.
 	 */
 
-	virtual int lock() = 0;
+	virtual void lock() = 0;
 
 	/**
 	 * \brief Opens device.

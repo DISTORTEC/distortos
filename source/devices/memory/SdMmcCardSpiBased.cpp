@@ -1260,9 +1260,10 @@ uint64_t SdMmcCardSpiBased::getSize() const
 	return static_cast<decltype(getSize())>(blockSize) * blocksCount_;
 }
 
-int SdMmcCardSpiBased::lock()
+void SdMmcCardSpiBased::lock()
 {
-	return spiDevice_.lock();
+	const auto ret = spiDevice_.lock();
+	assert(ret == 0);
 }
 
 int SdMmcCardSpiBased::open()

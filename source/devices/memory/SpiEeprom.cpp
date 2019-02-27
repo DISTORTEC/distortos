@@ -134,9 +134,10 @@ std::pair<int, bool> SpiEeprom::isWriteInProgress()
 	return isWriteInProgress(spiDeviceProxy);
 }
 
-int SpiEeprom::lock()
+void SpiEeprom::lock()
 {
-	return spiDevice_.lock();
+	const auto ret = spiDevice_.lock();
+	assert(ret == 0);
 }
 
 int SpiEeprom::open()
