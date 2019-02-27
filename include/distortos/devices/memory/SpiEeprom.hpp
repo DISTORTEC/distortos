@@ -352,6 +352,7 @@ public:
 	 *
 	 * \pre Device is opened.
 	 * \pre \a address and \a buffer and \a size are valid.
+	 * \pre Selected range is within address space of device.
 	 *
 	 * \param [in] address is the address of data that will be read
 	 * \param [out] buffer is the buffer into which the data will be read, must be valid

@@ -162,7 +162,10 @@ int SpiEeprom::read(const uint64_t address, void* const buffer, const size_t siz
 	assert(buffer != nullptr);
 
 	const auto capacity = getSize();
-	if (address >= capacity || size == 0)
+
+	assert(address + size <= capacity);
+
+	if (size == 0)
 		return EINVAL;
 
 	{

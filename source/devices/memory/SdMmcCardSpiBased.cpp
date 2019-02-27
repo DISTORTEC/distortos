@@ -1312,8 +1312,7 @@ int SdMmcCardSpiBased::read(const uint64_t address, void* const buffer, const si
 	const auto firstBlock = address / blockSize;
 	const auto blocks = size / blockSize;
 
-	if (firstBlock + blocks > blocksCount_)
-		return ENOSPC;
+	assert(firstBlock + blocks <= blocksCount_);
 
 	SpiMasterProxy spiMasterProxy {spiDeviceProxy};
 
