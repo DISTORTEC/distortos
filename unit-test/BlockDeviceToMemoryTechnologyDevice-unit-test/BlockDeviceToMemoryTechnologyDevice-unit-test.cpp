@@ -54,7 +54,7 @@ constexpr uint64_t deviceSize {UINT64_MAX};
 | global test cases
 +---------------------------------------------------------------------------------------------------------------------*/
 
-TEST_CASE("Testing lock() & unlock", "[lock/unlock]")
+TEST_CASE("Testing lock()", "[lock]")
 {
 	BlockDevice blockDeviceMock;
 	trompeloeil::sequence sequence {};
@@ -66,11 +66,6 @@ TEST_CASE("Testing lock() & unlock", "[lock/unlock]")
 		constexpr int ret {0x511bcb85};
 		REQUIRE_CALL(blockDeviceMock, lock()).IN_SEQUENCE(sequence).RETURN(ret);
 		REQUIRE(bd2Mtd.lock() == ret);
-	}
-	{
-		constexpr int ret {0x1726b1c1};
-		REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence).RETURN(ret);
-		REQUIRE(bd2Mtd.unlock() == ret);
 	}
 
 	expectations.emplace_back(NAMED_REQUIRE_CALL(blockDeviceMock, lock()).IN_SEQUENCE(sequence).RETURN(0));

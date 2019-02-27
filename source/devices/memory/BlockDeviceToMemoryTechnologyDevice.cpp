@@ -13,6 +13,8 @@
 
 #include "distortos/devices/memory/BlockDevice.hpp"
 
+#include "distortos/assert.h"
+
 #ifndef DISTORTOS_UNIT_TEST
 
 #include "distortos/distortosConfiguration.h"
@@ -287,9 +289,10 @@ int BlockDeviceToMemoryTechnologyDevice::synchronize()
 	return blockDevice_.synchronize();
 }
 
-int BlockDeviceToMemoryTechnologyDevice::unlock()
+void BlockDeviceToMemoryTechnologyDevice::unlock()
 {
-	return blockDevice_.unlock();
+	const auto ret = blockDevice_.unlock();
+	assert(ret == 0);
 }
 
 }	// namespace devices
