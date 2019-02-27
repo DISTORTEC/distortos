@@ -1192,8 +1192,7 @@ int SdMmcCardSpiBased::erase(const uint64_t address, const uint64_t size)
 	const auto firstBlock = address / blockSize;
 	const auto blocks = size / blockSize;
 
-	if (firstBlock + blocks > blocksCount_)
-		return ENOSPC;
+	assert(firstBlock + blocks <= blocksCount_);
 
 	SpiMasterProxy spiMasterProxy {spiDeviceProxy};
 

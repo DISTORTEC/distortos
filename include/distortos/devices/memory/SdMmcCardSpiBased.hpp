@@ -100,12 +100,12 @@ public:
 	 *
 	 * \pre Device is opened.
 	 * \pre \a address and \a size are valid.
+	 * \pre Selected range is within address space of device.
 	 *
 	 * \param [in] address is the address of range that will be erased, must be a multiple of block size
 	 * \param [in] size is the size of erased range, bytes, must be a multiple of block size
 	 *
 	 * \return 0 on success, error code otherwise:
-	 * - ENOSPC - selected range is greater than size of device;
 	 * - error codes returned by executeCmd32();
 	 * - error codes returned by executeCmd33();
 	 * - error codes returned by executeCmd38();

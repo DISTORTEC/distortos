@@ -120,6 +120,10 @@ int SpiEeprom::erase(const uint64_t address, const uint64_t size)
 
 	assert(spiDeviceProxy.isOpened() == true);
 
+	const auto capacity = getSize();
+
+	assert(address + size <= capacity);
+
 	return eraseOrWrite(spiDeviceProxy, address, nullptr, size);
 }
 

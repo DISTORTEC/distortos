@@ -255,6 +255,7 @@ public:
 	 *
 	 * \pre Device is opened.
 	 * \pre \a address and \a size are valid.
+	 * \pre Selected range is within address space of device.
 	 *
 	 * \param [in] address is the address of range that will be erased
 	 * \param [in] size is the size of erased range, bytes
