@@ -52,6 +52,8 @@ public:
 	 * \brief BlockDeviceToMemoryTechnologyDevice's destructor
 	 *
 	 * \warning This function must not be called from interrupt context!
+	 *
+	 * \pre Device is closed.
 	 */
 
 	~BlockDeviceToMemoryTechnologyDevice() override;

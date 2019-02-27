@@ -33,6 +33,8 @@ public:
 
 	/**
 	 * \brief MemoryTechnologyDevice's destructor
+	 *
+	 * \pre Device is closed.
 	 */
 
 	virtual ~MemoryTechnologyDevice() = default;

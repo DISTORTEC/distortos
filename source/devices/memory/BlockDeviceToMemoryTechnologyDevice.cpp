@@ -44,13 +44,7 @@ BlockDeviceToMemoryTechnologyDevice::~BlockDeviceToMemoryTechnologyDevice()
 {
 	const std::lock_guard<BlockDeviceToMemoryTechnologyDevice> lockGuard {*this};
 
-	if (openCount_ == 0)
-		return;
-
-	if (pendingEraseSize_ != 0)
-		blockDevice_.erase(pendingEraseAddress_, pendingEraseSize_);
-
-	blockDevice_.close();
+	assert(openCount_ == 0);
 }
 
 int BlockDeviceToMemoryTechnologyDevice::close()

@@ -201,51 +201,6 @@ TEST_CASE("Testing open() & close()", "[open/close]")
 	expectations.emplace_back(NAMED_REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence).RETURN(0));
 }
 
-TEST_CASE("Testing destructor", "[destructor]")
-{
-	BlockDevice blockDeviceMock;
-	trompeloeil::sequence sequence {};
-	std::vector<std::unique_ptr<trompeloeil::expectation>> expectations {};
-
-	distortos::devices::BlockDeviceToMemoryTechnologyDevice bd2Mtd {blockDeviceMock};
-
-	for (size_t i {}; i < 10; ++i)
-	{
-		REQUIRE_CALL(blockDeviceMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
-		if (i == 0)
-			expectations.emplace_back(NAMED_REQUIRE_CALL(blockDeviceMock, open()).IN_SEQUENCE(sequence).RETURN(0));
-		REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
-		REQUIRE(bd2Mtd.open() == 0);
-	}
-
-	SECTION("Destructor should force close the device")
-	{
-		expectations.emplace_back(NAMED_REQUIRE_CALL(blockDeviceMock, lock()).IN_SEQUENCE(sequence).RETURN(0));
-		constexpr int closeRet {0x68402928};
-		expectations.emplace_back(NAMED_REQUIRE_CALL(blockDeviceMock, close()).IN_SEQUENCE(sequence).RETURN(closeRet));
-		expectations.emplace_back(NAMED_REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence).RETURN(0));
-	}
-	SECTION("Destructor should flush any pending erase")
-	{
-		constexpr uint64_t address {0xd6707349b4b3056b};
-		constexpr uint64_t size {0xde330485};
-
-		REQUIRE_CALL(blockDeviceMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
-		REQUIRE_CALL(blockDeviceMock, getBlockSize()).IN_SEQUENCE(sequence).RETURN(blockSize);
-		REQUIRE_CALL(blockDeviceMock, getSize()).IN_SEQUENCE(sequence).RETURN(deviceSize);
-		REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
-		REQUIRE(bd2Mtd.erase(address, size) == 0);
-
-		expectations.emplace_back(NAMED_REQUIRE_CALL(blockDeviceMock, lock()).IN_SEQUENCE(sequence).RETURN(0));
-		constexpr int eraseRet {0x5835e2ec};
-		expectations.emplace_back(NAMED_REQUIRE_CALL(blockDeviceMock,
-				erase(address, size)).IN_SEQUENCE(sequence).RETURN(eraseRet));
-		constexpr int closeRet {0x68402928};
-		expectations.emplace_back(NAMED_REQUIRE_CALL(blockDeviceMock, close()).IN_SEQUENCE(sequence).RETURN(closeRet));
-		expectations.emplace_back(NAMED_REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence).RETURN(0));
-	}
-}
-
 TEST_CASE("Testing synchronize()", "[synchronize]")
 {
 	BlockDevice blockDeviceMock;
