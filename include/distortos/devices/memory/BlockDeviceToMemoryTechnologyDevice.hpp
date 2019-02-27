@@ -150,12 +150,13 @@ public:
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
+	 * \pre Device is opened.
+	 *
 	 * \param [in] address is the address of data that will be programmed, must be a multiple of program block size
 	 * \param [in] buffer is the buffer with data that will be programmed
 	 * \param [in] size is the size of \a buffer, bytes, must be a multiple of program block size
 	 *
 	 * \return 0 on success, error code otherwise:
-	 * - EBADF - the device is not opened;
 	 * - EINVAL - \a address and/or \a buffer and/or \a size are not valid;
 	 * - ENOSPC - selected range is greater than size of device;
 	 * - error codes returned by BlockDevice::erase();
