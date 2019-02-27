@@ -140,9 +140,10 @@ uint64_t BlockDeviceToMemoryTechnologyDevice::getSize() const
 	return blockDevice_.getSize();
 }
 
-int BlockDeviceToMemoryTechnologyDevice::lock()
+void BlockDeviceToMemoryTechnologyDevice::lock()
 {
-	return blockDevice_.lock();
+	const auto ret = blockDevice_.lock();
+	assert(ret == 0);
 }
 
 int BlockDeviceToMemoryTechnologyDevice::open()

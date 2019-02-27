@@ -54,24 +54,6 @@ constexpr uint64_t deviceSize {UINT64_MAX};
 | global test cases
 +---------------------------------------------------------------------------------------------------------------------*/
 
-TEST_CASE("Testing lock()", "[lock]")
-{
-	BlockDevice blockDeviceMock;
-	trompeloeil::sequence sequence {};
-	std::vector<std::unique_ptr<trompeloeil::expectation>> expectations {};
-
-	distortos::devices::BlockDeviceToMemoryTechnologyDevice bd2Mtd {blockDeviceMock};
-
-	{
-		constexpr int ret {0x511bcb85};
-		REQUIRE_CALL(blockDeviceMock, lock()).IN_SEQUENCE(sequence).RETURN(ret);
-		REQUIRE(bd2Mtd.lock() == ret);
-	}
-
-	expectations.emplace_back(NAMED_REQUIRE_CALL(blockDeviceMock, lock()).IN_SEQUENCE(sequence).RETURN(0));
-	expectations.emplace_back(NAMED_REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence).RETURN(0));
-}
-
 TEST_CASE("Testing get*BlockSize()", "[get*BlockSize]")
 {
 	BlockDevice blockDeviceMock;
