@@ -213,9 +213,7 @@ int BlockDeviceToMemoryTechnologyDevice::read(const uint64_t address, void* cons
 
 	const auto blockSize = blockDevice_.getBlockSize();
 	assert(address % blockSize == 0 && size % blockSize == 0);
-
-	if (address + size > blockDevice_.getSize())
-		return ENOSPC;
+	assert(address + size <= blockDevice_.getSize());
 
 	const auto overlapBegin = std::max(address, pendingEraseAddress_);
 	const auto overlapEnd = std::min(address + size, pendingEraseAddress_ + pendingEraseSize_);

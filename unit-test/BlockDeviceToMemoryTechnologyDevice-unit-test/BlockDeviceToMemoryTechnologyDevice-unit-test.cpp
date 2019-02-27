@@ -256,17 +256,6 @@ TEST_CASE("Testing erase(), program() & read()", "[erase/program/read]")
 				REQUIRE(bd2Mtd.read(address, buffer, {}) == 0);
 			}
 		}
-		SECTION("Read range greater than device size should fail with ENOSPC")
-		{
-			constexpr size_t anotherBlockSize {10};
-			constexpr uint64_t anotherDeviceSize {anotherBlockSize * 10};
-
-			REQUIRE_CALL(blockDeviceMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
-			REQUIRE_CALL(blockDeviceMock, getBlockSize()).IN_SEQUENCE(sequence).RETURN(anotherBlockSize);
-			REQUIRE_CALL(blockDeviceMock, getSize()).IN_SEQUENCE(sequence).RETURN(anotherDeviceSize);
-			REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
-			REQUIRE(bd2Mtd.read(anotherBlockSize, buffer, anotherDeviceSize) == ENOSPC);
-		}
 		SECTION("Overlaping and adjacent erases should be merged")
 		{
 			struct Step

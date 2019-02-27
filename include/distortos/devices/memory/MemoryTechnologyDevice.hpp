@@ -137,13 +137,13 @@ public:
 	 *
 	 * \pre Device is opened.
 	 * \pre \a address and \a buffer and \a size are valid.
+	 * \pre Selected range is within address space of device.
 	 *
 	 * \param [in] address is the address of data that will be read, must be a multiple of read block size
 	 * \param [out] buffer is the buffer into which the data will be read, must be valid
 	 * \param [in] size is the size of \a buffer, bytes, must be a multiple of read block size
 	 *
-	 * \return 0 on success, error code otherwise:
-	 * - ENOSPC - selected range is greater than size of device;
+	 * \return 0 on success, error code otherwise
 	 */
 
 	virtual int read(uint64_t address, void* buffer, size_t size) = 0;
