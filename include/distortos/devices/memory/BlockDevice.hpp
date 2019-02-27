@@ -143,12 +143,13 @@ public:
 	/**
 	 * \brief Writes data to a device.
 	 *
+	 * \pre Device is opened.
+	 *
 	 * \param [in] address is the address of data that will be written, must be a multiple of block size
 	 * \param [in] buffer is the buffer with data that will be written
 	 * \param [in] size is the size of \a buffer, bytes, must be a multiple of block size
 	 *
 	 * \return 0 on success, error code otherwise:
-	 * - EBADF - the device is not opened;
 	 * - EINVAL - \a address and/or \a buffer and/or \a size are not valid;
 	 * - ENOSPC - selected range is greater than size of device;
 	 */

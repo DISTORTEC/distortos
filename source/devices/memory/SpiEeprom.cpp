@@ -16,8 +16,6 @@
 #include "distortos/devices/communication/SpiMasterProxy.hpp"
 #include "distortos/devices/communication/SpiMasterTransfer.hpp"
 
-#include "distortos/internal/CHECK_FUNCTION_CONTEXT.hpp"
-
 #include "distortos/assert.h"
 #include "distortos/ThisThread.hpp"
 
@@ -195,12 +193,13 @@ void SpiEeprom::unlock()
 
 int SpiEeprom::write(const uint64_t address, const void* const buffer, const size_t size)
 {
-	CHECK_FUNCTION_CONTEXT();
+	const SpiDeviceProxy spiDeviceProxy {spiDevice_};
+
+	assert(spiDeviceProxy.isOpened() == true);
 
 	if (buffer == nullptr)
 		return EINVAL;
 
-	const SpiDeviceProxy spiDeviceProxy {spiDevice_};
 	return eraseOrWrite(spiDeviceProxy, address, buffer, size);
 }
 
@@ -211,8 +210,6 @@ int SpiEeprom::write(const uint64_t address, const void* const buffer, const siz
 int SpiEeprom::eraseOrWrite(const SpiDeviceProxy& spiDeviceProxy, const uint64_t address, const void* const buffer,
 		const uint64_t size)
 {
-	CHECK_FUNCTION_CONTEXT();
-
 	const auto capacity = getSize();
 	if (address >= capacity || size == 0)
 		return EINVAL;

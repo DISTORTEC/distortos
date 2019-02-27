@@ -1379,8 +1379,7 @@ int SdMmcCardSpiBased::write(const uint64_t address, const void* const buffer, c
 {
 	const SpiDeviceProxy spiDeviceProxy {spiDevice_};
 
-	if (type_ == Type::unknown)
-		return EBADF;
+	assert(type_ != Type::unknown);
 
 	if (size == 0)
 		return {};

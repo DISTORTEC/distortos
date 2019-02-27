@@ -409,6 +409,8 @@ public:
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
+	 * \pre Device is opened.
+	 *
 	 * \param [in] address is the address of data that will be written
 	 * \param [in] buffer is the buffer with data that will be written
 	 * \param [in] size is the size of \a buffer, bytes
