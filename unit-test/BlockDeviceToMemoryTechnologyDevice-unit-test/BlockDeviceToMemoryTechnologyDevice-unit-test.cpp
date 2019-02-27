@@ -217,15 +217,11 @@ TEST_CASE("Testing erase(), program() & read()", "[erase/program/read]")
 
 	distortos::devices::BlockDeviceToMemoryTechnologyDevice bd2Mtd {blockDeviceMock};
 
-	SECTION("Erasing/programming/reading closed device should fail with EBADF")
+	SECTION("Programming/reading closed device should fail with EBADF")
 	{
 		REQUIRE_CALL(blockDeviceMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
 		REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
 
-		SECTION("Erasing closed device should fail with EBADF")
-		{
-			REQUIRE(bd2Mtd.erase({}, 1) == EBADF);
-		}
 		SECTION("Programming closed device should fail with EBADF")
 		{
 			REQUIRE(bd2Mtd.program({}, {}, 1) == EBADF);
