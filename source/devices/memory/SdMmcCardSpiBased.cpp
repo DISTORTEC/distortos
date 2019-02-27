@@ -1364,6 +1364,8 @@ int SdMmcCardSpiBased::read(const uint64_t address, void* const buffer, const si
 
 int SdMmcCardSpiBased::synchronize()
 {
+	assert(type_ != Type::unknown);
+
 	return {};
 }
 

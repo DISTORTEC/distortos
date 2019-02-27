@@ -367,6 +367,8 @@ public:
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
+	 * \pre Device is opened.
+	 *
 	 * \return 0 on success, error code otherwise:
 	 * - error codes returned by synchronize(const SpiDeviceProxy&);
 	 */

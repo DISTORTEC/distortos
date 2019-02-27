@@ -181,6 +181,9 @@ int SpiEeprom::read(const uint64_t address, void* const buffer, const size_t siz
 int SpiEeprom::synchronize()
 {
 	const SpiDeviceProxy spiDeviceProxy {spiDevice_};
+
+	assert(spiDeviceProxy.isOpened() == true);
+
 	return synchronize(spiDeviceProxy);
 }
 

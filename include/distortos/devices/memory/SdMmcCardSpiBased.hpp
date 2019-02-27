@@ -182,6 +182,8 @@ public:
 	/**
 	 * \brief Synchronizes state of SD or MMC card connected via SPI, ensuring all cached writes are finished.
 	 *
+	 * \pre Device is opened.
+	 *
 	 * \return always 0
 	 */
 
