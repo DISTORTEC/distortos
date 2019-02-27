@@ -52,6 +52,8 @@ public:
 	 * \brief BlockDeviceToMemoryTechnologyDevice's destructor
 	 *
 	 * \warning This function must not be called from interrupt context!
+	 *
+	 * \pre Device is closed.
 	 */
 
 	~BlockDeviceToMemoryTechnologyDevice() override;
@@ -61,8 +63,9 @@ public:
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
+	 * \pre Device is opened.
+	 *
 	 * \return 0 on success, error code otherwise:
-	 * - EBADF - the device is already completely closed;
 	 * - error codes returned by BlockDevice::close();
 	 * - error codes returned by BlockDevice::erase();
 	 */
@@ -74,13 +77,14 @@ public:
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
+	 * \pre Device is opened.
+	 * \pre \a address and \a size are valid.
+	 * \pre Selected range is within address space of device.
+	 *
 	 * \param [in] address is the address of range that will be erased, must be a multiple of erase block size
 	 * \param [in] size is the size of erased range, bytes, must be a multiple of erase block size
 	 *
 	 * \return 0 on success, error code otherwise:
-	 * - EBADF - the device is not opened;
-	 * - EINVAL - \a address and/or \a size are not valid;
-	 * - ENOSPC - selected range is greater than size of device;
 	 * - error codes returned by BlockDevice::erase();
 	 */
 
@@ -120,19 +124,21 @@ public:
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
-	 * \return 0 on success, error code otherwise:
-	 * - error codes returned by BlockDevice::lock();
+	 * \pre The number of recursive locks of device is less than 65535.
+	 *
+	 * \post Device is locked.
 	 */
 
-	int lock() override;
+	void lock() override;
 
 	/**
 	 * \brief Opens device.
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
+	 * \pre The number of times the device is opened is less than 255.
+	 *
 	 * \return 0 on success, error code otherwise:
-	 * - EMFILE - this device is already opened too many times;
 	 * - error codes returned by BlockDevice::open();
 	 */
 
@@ -145,14 +151,15 @@ public:
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
+	 * \pre Device is opened.
+	 * \pre \a address and \a buffer and \a size are valid.
+	 * \pre Selected range is within address space of device.
+	 *
 	 * \param [in] address is the address of data that will be programmed, must be a multiple of program block size
-	 * \param [in] buffer is the buffer with data that will be programmed
+	 * \param [in] buffer is the buffer with data that will be programmed, must be valid
 	 * \param [in] size is the size of \a buffer, bytes, must be a multiple of program block size
 	 *
 	 * \return 0 on success, error code otherwise:
-	 * - EBADF - the device is not opened;
-	 * - EINVAL - \a address and/or \a buffer and/or \a size are not valid;
-	 * - ENOSPC - selected range is greater than size of device;
 	 * - error codes returned by BlockDevice::erase();
 	 * - error codes returned by BlockDevice::write();
 	 */
@@ -164,14 +171,15 @@ public:
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
+	 * \pre Device is opened.
+	 * \pre \a address and \a buffer and \a size are valid.
+	 * \pre Selected range is within address space of device.
+	 *
 	 * \param [in] address is the address of data that will be read, must be a multiple of read block size
-	 * \param [out] buffer is the buffer into which the data will be read
+	 * \param [out] buffer is the buffer into which the data will be read, must be valid
 	 * \param [in] size is the size of \a buffer, bytes, must be a multiple of read block size
 	 *
 	 * \return 0 on success, error code otherwise:
-	 * - EBADF - the device is not opened;
-	 * - EINVAL - \a address and/or \a buffer and/or \a size are not valid;
-	 * - ENOSPC - selected range is greater than size of device;
 	 * - error codes returned by BlockDevice::erase();
 	 * - error codes returned by BlockDevice::read();
 	 */
@@ -182,6 +190,8 @@ public:
 	 * \brief Synchronizes state of a device, ensuring all cached writes are finished.
 	 *
 	 * \warning This function must not be called from interrupt context!
+	 *
+	 * \pre Device is opened.
 	 *
 	 * \return 0 on success, error code otherwise:
 	 * - error codes returned by BlockDevice::erase();
@@ -197,11 +207,10 @@ public:
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
-	 * \return 0 on success, error code otherwise:
-	 * - error codes returned by BlockDevice::unlock();
+	 * \pre This function is called by the thread that locked the device.
 	 */
 
-	int unlock() override;
+	void unlock() override;
 
 private:
 

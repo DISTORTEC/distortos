@@ -33,6 +33,8 @@ public:
 
 	/**
 	 * \brief MemoryTechnologyDevice's destructor
+	 *
+	 * \pre Device is closed.
 	 */
 
 	virtual ~MemoryTechnologyDevice() = default;
@@ -40,8 +42,9 @@ public:
 	/**
 	 * \brief Closes device.
 	 *
-	 * \return 0 on success, error code otherwise:
-	 * - EBADF - the device is already completely closed;
+	 * \pre Device is opened.
+	 *
+	 * \return 0 on success, error code otherwise
 	 */
 
 	virtual int close() = 0;
@@ -49,13 +52,14 @@ public:
 	/**
 	 * \brief Erases blocks on a device.
 	 *
+	 * \pre Device is opened.
+	 * \pre \a address and \a size are valid.
+	 * \pre Selected range is within address space of device.
+	 *
 	 * \param [in] address is the address of range that will be erased, must be a multiple of erase block size
 	 * \param [in] size is the size of erased range, bytes, must be a multiple of erase block size
 	 *
-	 * \return 0 on success, error code otherwise:
-	 * - EBADF - the device is not opened;
-	 * - EINVAL - \a address and/or \a size are not valid;
-	 * - ENOSPC - selected range is greater than size of device;
+	 * \return 0 on success, error code otherwise
 	 */
 
 	virtual int erase(uint64_t address, uint64_t size) = 0;
@@ -94,18 +98,19 @@ public:
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
-	 * \return 0 on success, error code otherwise:
-	 * - EAGAIN - the lock could not be acquired because the maximum number of recursive locks for device has been
-	 * exceeded;
+	 * \pre The number of recursive locks of device is less than 65535.
+	 *
+	 * \post Device is locked.
 	 */
 
-	virtual int lock() = 0;
+	virtual void lock() = 0;
 
 	/**
 	 * \brief Opens device.
 	 *
-	 * \return 0 on success, error code otherwise:
-	 * - EMFILE - this device is already opened too many times;
+	 * \pre The number of times the device is opened is less than 255.
+	 *
+	 * \return 0 on success, error code otherwise
 	 */
 
 	virtual int open() = 0;
@@ -115,14 +120,15 @@ public:
 	 *
 	 * Selected range of blocks must have been erased prior to being programmed.
 	 *
+	 * \pre Device is opened.
+	 * \pre \a address and \a buffer and \a size are valid.
+	 * \pre Selected range is within address space of device.
+	 *
 	 * \param [in] address is the address of data that will be programmed, must be a multiple of program block size
-	 * \param [in] buffer is the buffer with data that will be programmed
+	 * \param [in] buffer is the buffer with data that will be programmed, must be valid
 	 * \param [in] size is the size of \a buffer, bytes, must be a multiple of program block size
 	 *
-	 * \return 0 on success, error code otherwise:
-	 * - EBADF - the device is not opened;
-	 * - EINVAL - \a address and/or \a buffer and/or \a size are not valid;
-	 * - ENOSPC - selected range is greater than size of device;
+	 * \return 0 on success, error code otherwise
 	 */
 
 	virtual int program(uint64_t address, const void* buffer, size_t size) = 0;
@@ -130,14 +136,15 @@ public:
 	/**
 	 * \brief Reads data from a device.
 	 *
+	 * \pre Device is opened.
+	 * \pre \a address and \a buffer and \a size are valid.
+	 * \pre Selected range is within address space of device.
+	 *
 	 * \param [in] address is the address of data that will be read, must be a multiple of read block size
-	 * \param [out] buffer is the buffer into which the data will be read
+	 * \param [out] buffer is the buffer into which the data will be read, must be valid
 	 * \param [in] size is the size of \a buffer, bytes, must be a multiple of read block size
 	 *
-	 * \return 0 on success, error code otherwise:
-	 * - EBADF - the device is not opened;
-	 * - EINVAL - \a address and/or \a buffer and/or \a size are not valid;
-	 * - ENOSPC - selected range is greater than size of device;
+	 * \return 0 on success, error code otherwise
 	 */
 
 	virtual int read(uint64_t address, void* buffer, size_t size) = 0;
@@ -145,8 +152,9 @@ public:
 	/**
 	 * \brief Synchronizes state of a device, ensuring all cached writes are finished.
 	 *
-	 * \return 0 on success, error code otherwise:
-	 * - EBADF - the device is not opened;
+	 * \pre Device is opened.
+	 *
+	 * \return 0 on success, error code otherwise
 	 */
 
 	virtual int synchronize() = 0;
@@ -158,11 +166,10 @@ public:
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
-	 * \return 0 on success, error code otherwise:
-	 * - EPERM - current thread did not lock the device;
+	 * \pre This function is called by the thread that locked the device.
 	 */
 
-	virtual int unlock() = 0;
+	virtual void unlock() = 0;
 
 	MemoryTechnologyDevice() = default;
 	MemoryTechnologyDevice(const MemoryTechnologyDevice&) = delete;

@@ -13,6 +13,8 @@
 
 #include "distortos/devices/memory/BlockDevice.hpp"
 
+#include "distortos/assert.h"
+
 #ifndef DISTORTOS_UNIT_TEST
 
 #include "distortos/distortosConfiguration.h"
@@ -42,21 +44,14 @@ BlockDeviceToMemoryTechnologyDevice::~BlockDeviceToMemoryTechnologyDevice()
 {
 	const std::lock_guard<BlockDeviceToMemoryTechnologyDevice> lockGuard {*this};
 
-	if (openCount_ == 0)
-		return;
-
-	if (pendingEraseSize_ != 0)
-		blockDevice_.erase(pendingEraseAddress_, pendingEraseSize_);
-
-	blockDevice_.close();
+	assert(openCount_ == 0);
 }
 
 int BlockDeviceToMemoryTechnologyDevice::close()
 {
 	const std::lock_guard<BlockDeviceToMemoryTechnologyDevice> lockGuard {*this};
 
-	if (openCount_ == 0)	// device is not open anymore?
-		return EBADF;
+	assert(openCount_ != 0);
 
 	if (openCount_ == 1)	// last close?
 	{
@@ -83,18 +78,14 @@ int BlockDeviceToMemoryTechnologyDevice::erase(const uint64_t address, const uin
 {
 	const std::lock_guard<BlockDeviceToMemoryTechnologyDevice> lockGuard {*this};
 
-	if (openCount_ == 0)
-		return EBADF;
+	assert(openCount_ != 0);
+
+	const auto blockSize = blockDevice_.getBlockSize();
+	assert(address % blockSize == 0 && size % blockSize == 0);
+	assert(address + size <= blockDevice_.getSize());
 
 	if (size == 0)
 		return {};
-
-	const auto blockSize = blockDevice_.getBlockSize();
-	if (address % blockSize != 0 || size % blockSize != 0)
-		return EINVAL;
-
-	if (address + size > blockDevice_.getSize())
-		return ENOSPC;
 
 	if (pendingEraseSize_ != 0)
 	{
@@ -138,17 +129,17 @@ uint64_t BlockDeviceToMemoryTechnologyDevice::getSize() const
 	return blockDevice_.getSize();
 }
 
-int BlockDeviceToMemoryTechnologyDevice::lock()
+void BlockDeviceToMemoryTechnologyDevice::lock()
 {
-	return blockDevice_.lock();
+	const auto ret = blockDevice_.lock();
+	assert(ret == 0);
 }
 
 int BlockDeviceToMemoryTechnologyDevice::open()
 {
 	const std::lock_guard<BlockDeviceToMemoryTechnologyDevice> lockGuard {*this};
 
-	if (openCount_ == std::numeric_limits<decltype(openCount_)>::max())	// device is already opened too many times?
-		return EMFILE;
+	assert(openCount_ < std::numeric_limits<decltype(openCount_)>::max());
 
 	if (openCount_ == 0)	// first open?
 	{
@@ -165,21 +156,15 @@ int BlockDeviceToMemoryTechnologyDevice::program(const uint64_t address, const v
 {
 	const std::lock_guard<BlockDeviceToMemoryTechnologyDevice> lockGuard {*this};
 
-	if (openCount_ == 0)
-		return EBADF;
+	assert(openCount_ != 0);
+	assert(buffer != nullptr);
+
+	const auto blockSize = blockDevice_.getBlockSize();
+	assert(address % blockSize == 0 && size % blockSize == 0);
+	assert(address + size <= blockDevice_.getSize());
 
 	if (size == 0)
 		return {};
-
-	if (buffer == nullptr)
-		return EINVAL;
-
-	const auto blockSize = blockDevice_.getBlockSize();
-	if (address % blockSize != 0 || size % blockSize != 0)
-		return EINVAL;
-
-	if (address + size > blockDevice_.getSize())
-		return ENOSPC;
 
 	if (pendingEraseSize_ != 0 && address > pendingEraseAddress_ &&
 			address + size < pendingEraseAddress_ + pendingEraseSize_)
@@ -217,21 +202,15 @@ int BlockDeviceToMemoryTechnologyDevice::read(const uint64_t address, void* cons
 {
 	const std::lock_guard<BlockDeviceToMemoryTechnologyDevice> lockGuard {*this};
 
-	if (openCount_ == 0)
-		return EBADF;
+	assert(openCount_ != 0);
+	assert(buffer != nullptr);
+
+	const auto blockSize = blockDevice_.getBlockSize();
+	assert(address % blockSize == 0 && size % blockSize == 0);
+	assert(address + size <= blockDevice_.getSize());
 
 	if (size == 0)
 		return {};
-
-	if (buffer == nullptr)
-		return EINVAL;
-
-	const auto blockSize = blockDevice_.getBlockSize();
-	if (address % blockSize != 0 || size % blockSize != 0)
-		return EINVAL;
-
-	if (address + size > blockDevice_.getSize())
-		return ENOSPC;
 
 	const auto overlapBegin = std::max(address, pendingEraseAddress_);
 	const auto overlapEnd = std::min(address + size, pendingEraseAddress_ + pendingEraseSize_);
@@ -274,6 +253,8 @@ int BlockDeviceToMemoryTechnologyDevice::synchronize()
 {
 	const std::lock_guard<BlockDeviceToMemoryTechnologyDevice> lockGuard {*this};
 
+	assert(openCount_ != 0);
+
 	if (pendingEraseSize_ != 0)
 	{
 		const auto ret = blockDevice_.erase(pendingEraseAddress_, pendingEraseSize_);
@@ -287,9 +268,10 @@ int BlockDeviceToMemoryTechnologyDevice::synchronize()
 	return blockDevice_.synchronize();
 }
 
-int BlockDeviceToMemoryTechnologyDevice::unlock()
+void BlockDeviceToMemoryTechnologyDevice::unlock()
 {
-	return blockDevice_.unlock();
+	const auto ret = blockDevice_.unlock();
+	assert(ret == 0);
 }
 
 }	// namespace devices

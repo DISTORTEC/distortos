@@ -54,29 +54,6 @@ constexpr uint64_t deviceSize {UINT64_MAX};
 | global test cases
 +---------------------------------------------------------------------------------------------------------------------*/
 
-TEST_CASE("Testing lock() & unlock", "[lock/unlock]")
-{
-	BlockDevice blockDeviceMock;
-	trompeloeil::sequence sequence {};
-	std::vector<std::unique_ptr<trompeloeil::expectation>> expectations {};
-
-	distortos::devices::BlockDeviceToMemoryTechnologyDevice bd2Mtd {blockDeviceMock};
-
-	{
-		constexpr int ret {0x511bcb85};
-		REQUIRE_CALL(blockDeviceMock, lock()).IN_SEQUENCE(sequence).RETURN(ret);
-		REQUIRE(bd2Mtd.lock() == ret);
-	}
-	{
-		constexpr int ret {0x1726b1c1};
-		REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence).RETURN(ret);
-		REQUIRE(bd2Mtd.unlock() == ret);
-	}
-
-	expectations.emplace_back(NAMED_REQUIRE_CALL(blockDeviceMock, lock()).IN_SEQUENCE(sequence).RETURN(0));
-	expectations.emplace_back(NAMED_REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence).RETURN(0));
-}
-
 TEST_CASE("Testing get*BlockSize()", "[get*BlockSize]")
 {
 	BlockDevice blockDeviceMock;
@@ -121,12 +98,6 @@ TEST_CASE("Testing open() & close()", "[open/close]")
 
 	distortos::devices::BlockDeviceToMemoryTechnologyDevice bd2Mtd {blockDeviceMock};
 
-	SECTION("Closing closed device should fail with EBADF")
-	{
-		REQUIRE_CALL(blockDeviceMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
-		REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
-		REQUIRE(bd2Mtd.close() == EBADF);
-	}
 	SECTION("Block device open error should propagate error code to caller")
 	{
 		REQUIRE_CALL(blockDeviceMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
@@ -134,10 +105,6 @@ TEST_CASE("Testing open() & close()", "[open/close]")
 		REQUIRE_CALL(blockDeviceMock, open()).IN_SEQUENCE(sequence).RETURN(ret);
 		REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
 		REQUIRE(bd2Mtd.open() == ret);
-
-		REQUIRE_CALL(blockDeviceMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
-		REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
-		REQUIRE(bd2Mtd.close() == EBADF);
 	}
 	SECTION("Opening closed device should succeed")
 	{
@@ -154,7 +121,7 @@ TEST_CASE("Testing open() & close()", "[open/close]")
 			REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
 			REQUIRE(bd2Mtd.close() == ret);
 		}
-		SECTION("Opening device too many times should fail with EMFILE")
+		SECTION("Opening device 255 times should succeed")
 		{
 			size_t openCount {1};
 			while (openCount < UINT8_MAX)
@@ -164,11 +131,6 @@ TEST_CASE("Testing open() & close()", "[open/close]")
 				REQUIRE(bd2Mtd.open() == 0);
 				++openCount;
 			}
-
-			REQUIRE_CALL(blockDeviceMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
-			REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
-			REQUIRE(bd2Mtd.open() == EMFILE);
-
 			while (openCount > 1)
 			{
 				REQUIRE_CALL(blockDeviceMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
@@ -224,51 +186,6 @@ TEST_CASE("Testing open() & close()", "[open/close]")
 	expectations.emplace_back(NAMED_REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence).RETURN(0));
 }
 
-TEST_CASE("Testing destructor", "[destructor]")
-{
-	BlockDevice blockDeviceMock;
-	trompeloeil::sequence sequence {};
-	std::vector<std::unique_ptr<trompeloeil::expectation>> expectations {};
-
-	distortos::devices::BlockDeviceToMemoryTechnologyDevice bd2Mtd {blockDeviceMock};
-
-	for (size_t i {}; i < 10; ++i)
-	{
-		REQUIRE_CALL(blockDeviceMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
-		if (i == 0)
-			expectations.emplace_back(NAMED_REQUIRE_CALL(blockDeviceMock, open()).IN_SEQUENCE(sequence).RETURN(0));
-		REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
-		REQUIRE(bd2Mtd.open() == 0);
-	}
-
-	SECTION("Destructor should force close the device")
-	{
-		expectations.emplace_back(NAMED_REQUIRE_CALL(blockDeviceMock, lock()).IN_SEQUENCE(sequence).RETURN(0));
-		constexpr int closeRet {0x68402928};
-		expectations.emplace_back(NAMED_REQUIRE_CALL(blockDeviceMock, close()).IN_SEQUENCE(sequence).RETURN(closeRet));
-		expectations.emplace_back(NAMED_REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence).RETURN(0));
-	}
-	SECTION("Destructor should flush any pending erase")
-	{
-		constexpr uint64_t address {0xd6707349b4b3056b};
-		constexpr uint64_t size {0xde330485};
-
-		REQUIRE_CALL(blockDeviceMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
-		REQUIRE_CALL(blockDeviceMock, getBlockSize()).IN_SEQUENCE(sequence).RETURN(blockSize);
-		REQUIRE_CALL(blockDeviceMock, getSize()).IN_SEQUENCE(sequence).RETURN(deviceSize);
-		REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
-		REQUIRE(bd2Mtd.erase(address, size) == 0);
-
-		expectations.emplace_back(NAMED_REQUIRE_CALL(blockDeviceMock, lock()).IN_SEQUENCE(sequence).RETURN(0));
-		constexpr int eraseRet {0x5835e2ec};
-		expectations.emplace_back(NAMED_REQUIRE_CALL(blockDeviceMock,
-				erase(address, size)).IN_SEQUENCE(sequence).RETURN(eraseRet));
-		constexpr int closeRet {0x68402928};
-		expectations.emplace_back(NAMED_REQUIRE_CALL(blockDeviceMock, close()).IN_SEQUENCE(sequence).RETURN(closeRet));
-		expectations.emplace_back(NAMED_REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence).RETURN(0));
-	}
-}
-
 TEST_CASE("Testing synchronize()", "[synchronize]")
 {
 	BlockDevice blockDeviceMock;
@@ -277,11 +194,21 @@ TEST_CASE("Testing synchronize()", "[synchronize]")
 
 	distortos::devices::BlockDeviceToMemoryTechnologyDevice bd2Mtd {blockDeviceMock};
 
+	REQUIRE_CALL(blockDeviceMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
+	REQUIRE_CALL(blockDeviceMock, open()).IN_SEQUENCE(sequence).RETURN(0);
+	REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
+	REQUIRE(bd2Mtd.open() == 0);
+
 	constexpr int ret {0x79910589};
 	REQUIRE_CALL(blockDeviceMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
 	REQUIRE_CALL(blockDeviceMock, synchronize()).IN_SEQUENCE(sequence).RETURN(ret);
 	REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
 	REQUIRE(bd2Mtd.synchronize() == ret);
+
+	REQUIRE_CALL(blockDeviceMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
+	REQUIRE_CALL(blockDeviceMock, close()).IN_SEQUENCE(sequence).RETURN(0);
+	REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
+	REQUIRE(bd2Mtd.close() == 0);
 
 	expectations.emplace_back(NAMED_REQUIRE_CALL(blockDeviceMock, lock()).IN_SEQUENCE(sequence).RETURN(0));
 	expectations.emplace_back(NAMED_REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence).RETURN(0));
@@ -295,24 +222,6 @@ TEST_CASE("Testing erase(), program() & read()", "[erase/program/read]")
 
 	distortos::devices::BlockDeviceToMemoryTechnologyDevice bd2Mtd {blockDeviceMock};
 
-	SECTION("Erasing/programming/reading closed device should fail with EBADF")
-	{
-		REQUIRE_CALL(blockDeviceMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
-		REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
-
-		SECTION("Erasing closed device should fail with EBADF")
-		{
-			REQUIRE(bd2Mtd.erase({}, 1) == EBADF);
-		}
-		SECTION("Programming closed device should fail with EBADF")
-		{
-			REQUIRE(bd2Mtd.program({}, {}, 1) == EBADF);
-		}
-		SECTION("Reading closed device should fail with EBADF")
-		{
-			REQUIRE(bd2Mtd.read({}, {}, 1) == EBADF);
-		}
-	}
 	SECTION("Testing erase/program/read")
 	{
 		REQUIRE_CALL(blockDeviceMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
@@ -327,6 +236,8 @@ TEST_CASE("Testing erase(), program() & read()", "[erase/program/read]")
 			constexpr uint64_t address {0x536b92a6a5f7b5f9};
 
 			REQUIRE_CALL(blockDeviceMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
+			REQUIRE_CALL(blockDeviceMock, getBlockSize()).IN_SEQUENCE(sequence).RETURN(blockSize);
+			REQUIRE_CALL(blockDeviceMock, getSize()).IN_SEQUENCE(sequence).RETURN(deviceSize);
 			REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
 
 			SECTION("Erasing zero bytes should succeed")
@@ -340,79 +251,6 @@ TEST_CASE("Testing erase(), program() & read()", "[erase/program/read]")
 			SECTION("Reading zero bytes should succeed")
 			{
 				REQUIRE(bd2Mtd.read(address, buffer, {}) == 0);
-			}
-		}
-		SECTION("Providing nullptr as program/read buffer should fail with EINVAL")
-		{
-			constexpr uint64_t address {0x2ee0d68164108f7c};
-			constexpr size_t size {0xd2d3630e};
-
-			REQUIRE_CALL(blockDeviceMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
-			REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
-
-			SECTION("Providing nullptr as program buffer should fail with EINVAL")
-			{
-				REQUIRE(bd2Mtd.program(address, {}, size) == EINVAL);
-			}
-			SECTION("Providing nullptr as read buffer should fail with EINVAL")
-			{
-				REQUIRE(bd2Mtd.read(address, {}, size) == EINVAL);
-			}
-		}
-		SECTION("Unaligned erase/program/read should fail with EINVAL")
-		{
-			constexpr size_t anotherBlockSize {10};
-
-			REQUIRE_CALL(blockDeviceMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
-			REQUIRE_CALL(blockDeviceMock, getBlockSize()).IN_SEQUENCE(sequence).RETURN(anotherBlockSize);
-			REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
-
-			SECTION("Unaligned erase address should fail with EINVAL")
-			{
-				REQUIRE(bd2Mtd.erase(anotherBlockSize + 1, anotherBlockSize) == EINVAL);
-			}
-			SECTION("Unaligned erase size should fail with EINVAL")
-			{
-				REQUIRE(bd2Mtd.erase(anotherBlockSize, anotherBlockSize + 1) == EINVAL);
-			}
-			SECTION("Unaligned program address should fail with EINVAL")
-			{
-				REQUIRE(bd2Mtd.program(anotherBlockSize + 1, buffer, anotherBlockSize) == EINVAL);
-			}
-			SECTION("Unaligned program size should fail with EINVAL")
-			{
-				REQUIRE(bd2Mtd.program(anotherBlockSize, buffer, anotherBlockSize + 1) == EINVAL);
-			}
-			SECTION("Unaligned read address should fail with EINVAL")
-			{
-				REQUIRE(bd2Mtd.read(anotherBlockSize + 1, buffer, anotherBlockSize) == EINVAL);
-			}
-			SECTION("Unaligned read size should fail with EINVAL")
-			{
-				REQUIRE(bd2Mtd.read(anotherBlockSize, buffer, anotherBlockSize + 1) == EINVAL);
-			}
-		}
-		SECTION("Erase/program/read range greater than device size should fail with ENOSPC")
-		{
-			constexpr size_t anotherBlockSize {10};
-			constexpr uint64_t anotherDeviceSize {anotherBlockSize * 10};
-
-			REQUIRE_CALL(blockDeviceMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
-			REQUIRE_CALL(blockDeviceMock, getBlockSize()).IN_SEQUENCE(sequence).RETURN(anotherBlockSize);
-			REQUIRE_CALL(blockDeviceMock, getSize()).IN_SEQUENCE(sequence).RETURN(anotherDeviceSize);
-			REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
-
-			SECTION("Erase range greater than device size should fail with ENOSPC")
-			{
-				REQUIRE(bd2Mtd.erase(anotherBlockSize, anotherDeviceSize) == ENOSPC);
-			}
-			SECTION("Program range greater than device size should fail with ENOSPC")
-			{
-				REQUIRE(bd2Mtd.program(anotherBlockSize, buffer, anotherDeviceSize) == ENOSPC);
-			}
-			SECTION("Read range greater than device size should fail with ENOSPC")
-			{
-				REQUIRE(bd2Mtd.read(anotherBlockSize, buffer, anotherDeviceSize) == ENOSPC);
 			}
 		}
 		SECTION("Overlaping and adjacent erases should be merged")
