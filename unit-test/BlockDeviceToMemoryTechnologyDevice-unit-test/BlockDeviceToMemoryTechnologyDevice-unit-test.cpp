@@ -256,24 +256,16 @@ TEST_CASE("Testing erase(), program() & read()", "[erase/program/read]")
 				REQUIRE(bd2Mtd.read(address, buffer, {}) == 0);
 			}
 		}
-		SECTION("Providing nullptr as program/read buffer should fail with EINVAL")
+		SECTION("Providing nullptr as read buffer should fail with EINVAL")
 		{
 			constexpr uint64_t address {0x2ee0d68164108f7c};
 			constexpr size_t size {0xd2d3630e};
 
 			REQUIRE_CALL(blockDeviceMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
 			REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
-
-			SECTION("Providing nullptr as program buffer should fail with EINVAL")
-			{
-				REQUIRE(bd2Mtd.program(address, {}, size) == EINVAL);
-			}
-			SECTION("Providing nullptr as read buffer should fail with EINVAL")
-			{
-				REQUIRE(bd2Mtd.read(address, {}, size) == EINVAL);
-			}
+			REQUIRE(bd2Mtd.read(address, {}, size) == EINVAL);
 		}
-		SECTION("Unaligned program/read should fail with EINVAL")
+		SECTION("Unaligned read should fail with EINVAL")
 		{
 			constexpr size_t anotherBlockSize {10};
 
@@ -281,14 +273,6 @@ TEST_CASE("Testing erase(), program() & read()", "[erase/program/read]")
 			REQUIRE_CALL(blockDeviceMock, getBlockSize()).IN_SEQUENCE(sequence).RETURN(anotherBlockSize);
 			REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
 
-			SECTION("Unaligned program address should fail with EINVAL")
-			{
-				REQUIRE(bd2Mtd.program(anotherBlockSize + 1, buffer, anotherBlockSize) == EINVAL);
-			}
-			SECTION("Unaligned program size should fail with EINVAL")
-			{
-				REQUIRE(bd2Mtd.program(anotherBlockSize, buffer, anotherBlockSize + 1) == EINVAL);
-			}
 			SECTION("Unaligned read address should fail with EINVAL")
 			{
 				REQUIRE(bd2Mtd.read(anotherBlockSize + 1, buffer, anotherBlockSize) == EINVAL);
