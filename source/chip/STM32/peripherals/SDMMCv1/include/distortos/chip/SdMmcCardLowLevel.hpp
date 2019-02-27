@@ -118,6 +118,7 @@ public:
 	 * - transfer's block size is a power of two, greater than or equal to 4 and less than or equal to 2^14;
 	 * - transfer's size is an integer multiple of block size and less than or equal to 2^25 - 1;
 	 * - transfer's timeout converted to clock cycles must be less than or equal to 2^32 - 1;
+	 *
 	 * \post Transaction is in progress.
 	 *
 	 * \param [in] sdMmcCardBase is a reference to SdMmcCardBase object that will be notified about completed
@@ -137,6 +138,7 @@ public:
 	 *
 	 * \pre Driver is started.
 	 * \pre No transaction is in progress.
+	 *
 	 * \post Driver is stopped.
 	 */
 

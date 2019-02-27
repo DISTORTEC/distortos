@@ -195,6 +195,7 @@ public:
 		 * \brief Releases any associated low-level DMA channel driver.
 		 *
 		 * \pre No transfer is in progress.
+		 *
 		 * \post No driver is reserved with this handle.
 		 */
 
@@ -244,6 +245,7 @@ public:
 		 * \pre \a memoryAddress and \a peripheralAddress and \a transactions and \a flags are valid.
 		 * \pre Memory data size multiplied by memory burst size is less than or equal to 16.
 		 * \pre No transfer is in progress.
+		 *
 		 * \post Transfer is in progress.
 		 *
 		 * \param [in] memoryAddress is the memory address, must be divisible by configured memory data size multiplied
@@ -268,6 +270,7 @@ public:
 		 * proper state. It may also be used to stop any ongoing asynchronous transfer.
 		 *
 		 * \pre Driver is reserved with this handle.
+		 *
 		 * \post No transfer is in progress.
 		 */
 
@@ -337,6 +340,7 @@ private:
 	 * \brief Releases low-level DMA channel driver.
 	 *
 	 * \pre No transfer is in progress.
+	 *
 	 * \post Driver is not reserved.
 	 */
 
@@ -367,6 +371,7 @@ private:
 	 * \pre \a memoryAddress and \a peripheralAddress and \a transactions and \a flags are valid.
 	 * \pre Memory data size multiplied by memory burst size is less than or equal to 16.
 	 * \pre No transfer is in progress.
+	 *
 	 * \post Transfer is in progress.
 	 *
 	 * \param [in] memoryAddress is the memory address, must be divisible by configured memory data size multiplied by
@@ -386,6 +391,7 @@ private:
 	 * state. It may also be used to stop any ongoing asynchronous transfer.
 	 *
 	 * \pre Driver is reserved.
+	 *
 	 * \post No transfer is in progress.
 	 */
 
