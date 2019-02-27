@@ -1273,6 +1273,7 @@ int SdMmcCardSpiBased::open()
 
 	{
 		const auto ret = spiDevice_.open();
+		assert(ret != EMFILE);
 		if (ret != 0)
 			return ret;
 	}

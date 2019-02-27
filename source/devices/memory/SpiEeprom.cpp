@@ -151,7 +151,9 @@ void SpiEeprom::lock()
 
 int SpiEeprom::open()
 {
-	return spiDevice_.open();
+	const auto ret = spiDevice_.open();
+	assert(ret != EMFILE);
+	return ret;
 }
 
 int SpiEeprom::read(const uint64_t address, void* const buffer, const size_t size)

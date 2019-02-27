@@ -96,8 +96,9 @@ public:
 	/**
 	 * \brief Opens device.
 	 *
-	 * \return 0 on success, error code otherwise:
-	 * - EMFILE - this device is already opened too many times;
+	 * \pre The number of times the device is opened is less than 255.
+	 *
+	 * \return 0 on success, error code otherwise
 	 */
 
 	virtual int open() = 0;
