@@ -273,7 +273,7 @@ TEST_CASE("Testing erase(), program() & read()", "[erase/program/read]")
 				REQUIRE(bd2Mtd.read(address, {}, size) == EINVAL);
 			}
 		}
-		SECTION("Unaligned erase/program/read should fail with EINVAL")
+		SECTION("Unaligned program/read should fail with EINVAL")
 		{
 			constexpr size_t anotherBlockSize {10};
 
@@ -281,14 +281,6 @@ TEST_CASE("Testing erase(), program() & read()", "[erase/program/read]")
 			REQUIRE_CALL(blockDeviceMock, getBlockSize()).IN_SEQUENCE(sequence).RETURN(anotherBlockSize);
 			REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
 
-			SECTION("Unaligned erase address should fail with EINVAL")
-			{
-				REQUIRE(bd2Mtd.erase(anotherBlockSize + 1, anotherBlockSize) == EINVAL);
-			}
-			SECTION("Unaligned erase size should fail with EINVAL")
-			{
-				REQUIRE(bd2Mtd.erase(anotherBlockSize, anotherBlockSize + 1) == EINVAL);
-			}
 			SECTION("Unaligned program address should fail with EINVAL")
 			{
 				REQUIRE(bd2Mtd.program(anotherBlockSize + 1, buffer, anotherBlockSize) == EINVAL);
