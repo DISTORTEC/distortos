@@ -161,13 +161,13 @@ public:
 	 * \warning This function must not be called from interrupt context!
 	 *
 	 * \pre Device is opened.
+	 * \pre \a address and \a buffer and \a size are valid.
 	 *
 	 * \param [in] address is the address of data that will be read, must be a multiple of block size
-	 * \param [out] buffer is the buffer into which the data will be read
+	 * \param [out] buffer is the buffer into which the data will be read, must be valid
 	 * \param [in] size is the size of \a buffer, bytes, must be a multiple of block size
 	 *
 	 * \return 0 on success, error code otherwise:
-	 * - EINVAL - \a address and/or \a buffer and/or \a size are not valid;
 	 * - EIO - error during communication with SD or MMC card;
 	 * - ENOSPC - selected range is greater than size of device;
 	 * - error codes returned by executeCmd12();

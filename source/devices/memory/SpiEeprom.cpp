@@ -155,9 +155,10 @@ int SpiEeprom::read(const uint64_t address, void* const buffer, const size_t siz
 	const SpiDeviceProxy spiDeviceProxy {spiDevice_};
 
 	assert(spiDeviceProxy.isOpened() == true);
+	assert(buffer != nullptr);
 
 	const auto capacity = getSize();
-	if (address >= capacity || buffer == nullptr || size == 0)
+	if (address >= capacity || size == 0)
 		return EINVAL;
 
 	{

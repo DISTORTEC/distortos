@@ -350,13 +350,13 @@ public:
 	 * \warning This function must not be called from interrupt context!
 	 *
 	 * \pre Device is opened.
+	 * \pre \a address and \a buffer and \a size are valid.
 	 *
 	 * \param [in] address is the address of data that will be read
-	 * \param [out] buffer is the buffer into which the data will be read
+	 * \param [out] buffer is the buffer into which the data will be read, must be valid
 	 * \param [in] size is the size of \a buffer, bytes
 	 *
 	 * \return 0 on success, error code otherwise:
-	 * - EINVAL - \a address and/or \a buffer and/or \a size are not valid;
 	 * - error codes returned by executeTransaction();
 	 * - error codes returned by synchronize(const SpiDeviceProxy&);
 	 */
