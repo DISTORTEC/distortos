@@ -53,12 +53,12 @@ public:
 	 * \brief Erases blocks on a device.
 	 *
 	 * \pre Device is opened.
+	 * \pre \a address and \a size are valid.
 	 *
 	 * \param [in] address is the address of range that will be erased, must be a multiple of block size
 	 * \param [in] size is the size of erased range, bytes, must be a multiple of block size
 	 *
 	 * \return 0 on success, error code otherwise:
-	 * - EINVAL - \a address and/or \a size are not valid;
 	 * - ENOSPC - selected range is greater than size of device;
 	 */
 

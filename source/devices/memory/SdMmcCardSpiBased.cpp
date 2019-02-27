@@ -1187,8 +1187,7 @@ int SdMmcCardSpiBased::erase(const uint64_t address, const uint64_t size)
 	if (size == 0)
 		return {};
 
-	if (address % blockSize != 0 || size % blockSize != 0)
-		return EINVAL;
+	assert(address % blockSize == 0 && size % blockSize == 0);
 
 	const auto firstBlock = address / blockSize;
 	const auto blocks = size / blockSize;
