@@ -33,6 +33,8 @@ public:
 
 	/**
 	 * \brief BlockDevice's destructor
+	 *
+	 * \pre Device is closed.
 	 */
 
 	virtual ~BlockDevice() = default;

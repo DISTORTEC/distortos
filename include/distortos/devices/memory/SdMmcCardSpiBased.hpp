@@ -74,6 +74,8 @@ public:
 
 	/**
 	 * \brief SdMmcCardSpiBased's destructor
+	 *
+	 * \pre Device is closed.
 	 */
 
 	~SdMmcCardSpiBased() override;

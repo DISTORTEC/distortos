@@ -104,7 +104,7 @@ SpiMasterTransfer getCommandWithAddress(const size_t capacity, const uint8_t com
 
 SpiEeprom::~SpiEeprom()
 {
-
+	assert(SpiDeviceProxy{spiDevice_}.isOpened() == false);
 }
 
 int SpiEeprom::close()

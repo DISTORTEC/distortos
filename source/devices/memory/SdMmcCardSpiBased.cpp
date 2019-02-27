@@ -1161,7 +1161,7 @@ std::pair<int, uint8_t> executeAcmd41(SpiMasterProxy& spiMasterProxy, const bool
 
 SdMmcCardSpiBased::~SdMmcCardSpiBased()
 {
-
+	assert(type_ == Type::unknown);
 }
 
 int SdMmcCardSpiBased::close()

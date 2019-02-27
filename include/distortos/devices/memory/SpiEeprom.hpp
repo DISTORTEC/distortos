@@ -229,6 +229,8 @@ public:
 
 	/**
 	 * \brief SpiEeprom's destructor
+	 *
+	 * \pre Device is closed.
 	 */
 
 	~SpiEeprom() override;
