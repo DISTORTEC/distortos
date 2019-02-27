@@ -63,8 +63,9 @@ public:
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
+	 * \pre Device is opened.
+	 *
 	 * \return 0 on success, error code otherwise:
-	 * - EBADF - the device is already completely closed;
 	 * - error codes returned by BlockDevice::close();
 	 * - error codes returned by BlockDevice::erase();
 	 */

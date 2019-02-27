@@ -51,8 +51,7 @@ int BlockDeviceToMemoryTechnologyDevice::close()
 {
 	const std::lock_guard<BlockDeviceToMemoryTechnologyDevice> lockGuard {*this};
 
-	if (openCount_ == 0)	// device is not open anymore?
-		return EBADF;
+	assert(openCount_ != 0);
 
 	if (openCount_ == 1)	// last close?
 	{

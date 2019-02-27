@@ -98,12 +98,6 @@ TEST_CASE("Testing open() & close()", "[open/close]")
 
 	distortos::devices::BlockDeviceToMemoryTechnologyDevice bd2Mtd {blockDeviceMock};
 
-	SECTION("Closing closed device should fail with EBADF")
-	{
-		REQUIRE_CALL(blockDeviceMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
-		REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
-		REQUIRE(bd2Mtd.close() == EBADF);
-	}
 	SECTION("Block device open error should propagate error code to caller")
 	{
 		REQUIRE_CALL(blockDeviceMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
@@ -111,10 +105,6 @@ TEST_CASE("Testing open() & close()", "[open/close]")
 		REQUIRE_CALL(blockDeviceMock, open()).IN_SEQUENCE(sequence).RETURN(ret);
 		REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
 		REQUIRE(bd2Mtd.open() == ret);
-
-		REQUIRE_CALL(blockDeviceMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
-		REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
-		REQUIRE(bd2Mtd.close() == EBADF);
 	}
 	SECTION("Opening closed device should succeed")
 	{
