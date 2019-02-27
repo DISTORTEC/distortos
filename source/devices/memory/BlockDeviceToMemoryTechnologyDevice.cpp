@@ -85,9 +85,7 @@ int BlockDeviceToMemoryTechnologyDevice::erase(const uint64_t address, const uin
 
 	const auto blockSize = blockDevice_.getBlockSize();
 	assert(address % blockSize == 0 && size % blockSize == 0);
-
-	if (address + size > blockDevice_.getSize())
-		return ENOSPC;
+	assert(address + size <= blockDevice_.getSize());
 
 	if (pendingEraseSize_ != 0)
 	{
