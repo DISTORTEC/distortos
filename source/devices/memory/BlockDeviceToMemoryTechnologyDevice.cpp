@@ -213,12 +213,10 @@ int BlockDeviceToMemoryTechnologyDevice::read(const uint64_t address, void* cons
 	if (size == 0)
 		return {};
 
-	if (buffer == nullptr)
-		return EINVAL;
+	assert(buffer != nullptr);
 
 	const auto blockSize = blockDevice_.getBlockSize();
-	if (address % blockSize != 0 || size % blockSize != 0)
-		return EINVAL;
+	assert(address % blockSize == 0 && size % blockSize == 0);
 
 	if (address + size > blockDevice_.getSize())
 		return ENOSPC;
