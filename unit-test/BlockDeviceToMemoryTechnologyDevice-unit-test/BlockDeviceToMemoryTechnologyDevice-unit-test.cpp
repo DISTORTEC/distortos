@@ -121,7 +121,7 @@ TEST_CASE("Testing open() & close()", "[open/close]")
 			REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
 			REQUIRE(bd2Mtd.close() == ret);
 		}
-		SECTION("Opening device too many times should fail with EMFILE")
+		SECTION("Opening device 255 times should succeed")
 		{
 			size_t openCount {1};
 			while (openCount < UINT8_MAX)
@@ -131,11 +131,6 @@ TEST_CASE("Testing open() & close()", "[open/close]")
 				REQUIRE(bd2Mtd.open() == 0);
 				++openCount;
 			}
-
-			REQUIRE_CALL(blockDeviceMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
-			REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
-			REQUIRE(bd2Mtd.open() == EMFILE);
-
 			while (openCount > 1)
 			{
 				REQUIRE_CALL(blockDeviceMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
