@@ -1382,8 +1382,7 @@ int SdMmcCardSpiBased::write(const uint64_t address, const void* const buffer, c
 	if (size == 0)
 		return {};
 
-	if (buffer == nullptr || address % blockSize != 0 || size % blockSize != 0)
-		return EINVAL;
+	assert(buffer != nullptr && address % blockSize == 0 && size % blockSize == 0);
 
 	const auto firstBlock = address / blockSize;
 	const auto blocks = size / blockSize;

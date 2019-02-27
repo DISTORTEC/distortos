@@ -197,9 +197,7 @@ int SpiEeprom::write(const uint64_t address, const void* const buffer, const siz
 	const SpiDeviceProxy spiDeviceProxy {spiDevice_};
 
 	assert(spiDeviceProxy.isOpened() == true);
-
-	if (buffer == nullptr)
-		return EINVAL;
+	assert(buffer != nullptr);
 
 	return eraseOrWrite(spiDeviceProxy, address, buffer, size);
 }

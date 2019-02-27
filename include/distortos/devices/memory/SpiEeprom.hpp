@@ -411,13 +411,13 @@ public:
 	 * \warning This function must not be called from interrupt context!
 	 *
 	 * \pre Device is opened.
+	 * \pre \a address and \a buffer and \a size are valid.
 	 *
 	 * \param [in] address is the address of data that will be written
-	 * \param [in] buffer is the buffer with data that will be written
+	 * \param [in] buffer is the buffer with data that will be written, must be valid
 	 * \param [in] size is the size of \a buffer, bytes
 	 *
 	 * \return 0 on success, error code otherwise:
-	 * - EINVAL - \a buffer is not valid;
 	 * - error codes returned by eraseOrWrite();
 	 */
 
