@@ -80,12 +80,12 @@ int BlockDeviceToMemoryTechnologyDevice::erase(const uint64_t address, const uin
 
 	assert(openCount_ != 0);
 
-	if (size == 0)
-		return {};
-
 	const auto blockSize = blockDevice_.getBlockSize();
 	assert(address % blockSize == 0 && size % blockSize == 0);
 	assert(address + size <= blockDevice_.getSize());
+
+	if (size == 0)
+		return {};
 
 	if (pendingEraseSize_ != 0)
 	{
@@ -157,15 +157,14 @@ int BlockDeviceToMemoryTechnologyDevice::program(const uint64_t address, const v
 	const std::lock_guard<BlockDeviceToMemoryTechnologyDevice> lockGuard {*this};
 
 	assert(openCount_ != 0);
-
-	if (size == 0)
-		return {};
-
 	assert(buffer != nullptr);
 
 	const auto blockSize = blockDevice_.getBlockSize();
 	assert(address % blockSize == 0 && size % blockSize == 0);
 	assert(address + size <= blockDevice_.getSize());
+
+	if (size == 0)
+		return {};
 
 	if (pendingEraseSize_ != 0 && address > pendingEraseAddress_ &&
 			address + size < pendingEraseAddress_ + pendingEraseSize_)
@@ -204,15 +203,14 @@ int BlockDeviceToMemoryTechnologyDevice::read(const uint64_t address, void* cons
 	const std::lock_guard<BlockDeviceToMemoryTechnologyDevice> lockGuard {*this};
 
 	assert(openCount_ != 0);
-
-	if (size == 0)
-		return {};
-
 	assert(buffer != nullptr);
 
 	const auto blockSize = blockDevice_.getBlockSize();
 	assert(address % blockSize == 0 && size % blockSize == 0);
 	assert(address + size <= blockDevice_.getSize());
+
+	if (size == 0)
+		return {};
 
 	const auto overlapBegin = std::max(address, pendingEraseAddress_);
 	const auto overlapEnd = std::min(address + size, pendingEraseAddress_ + pendingEraseSize_);

@@ -236,6 +236,8 @@ TEST_CASE("Testing erase(), program() & read()", "[erase/program/read]")
 			constexpr uint64_t address {0x536b92a6a5f7b5f9};
 
 			REQUIRE_CALL(blockDeviceMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
+			REQUIRE_CALL(blockDeviceMock, getBlockSize()).IN_SEQUENCE(sequence).RETURN(blockSize);
+			REQUIRE_CALL(blockDeviceMock, getSize()).IN_SEQUENCE(sequence).RETURN(deviceSize);
 			REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
 
 			SECTION("Erasing zero bytes should succeed")
