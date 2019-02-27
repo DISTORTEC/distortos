@@ -145,13 +145,13 @@ public:
 	 *
 	 * \pre Device is opened.
 	 * \pre \a address and \a buffer and \a size are valid.
+	 * \pre Selected range is within address space of device.
 	 *
 	 * \param [in] address is the address of data that will be written, must be a multiple of block size
 	 * \param [in] buffer is the buffer with data that will be written, must be valid
 	 * \param [in] size is the size of \a buffer, bytes, must be a multiple of block size
 	 *
-	 * \return 0 on success, error code otherwise:
-	 * - ENOSPC - selected range is greater than size of device;
+	 * \return 0 on success, error code otherwise
 	 */
 
 	virtual int write(uint64_t address, const void* buffer, size_t size) = 0;

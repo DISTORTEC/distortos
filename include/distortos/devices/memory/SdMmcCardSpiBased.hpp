@@ -208,6 +208,7 @@ public:
 	 *
 	 * \pre Device is opened.
 	 * \pre \a address and \a buffer and \a size are valid.
+	 * \pre Selected range is within address space of device.
 	 *
 	 * \param [in] address is the address of data that will be written, must be a multiple of block size
 	 * \param [in] buffer is the buffer with data that will be written, must be valid
@@ -215,7 +216,6 @@ public:
 	 *
 	 * \return 0 on success, error code otherwise:
 	 * - EIO - error during communication with SD or MMC card;
-	 * - ENOSPC - selected range is greater than size of device;
 	 * - error codes returned by executeAcmd23();
 	 * - error codes returned by executeCmd24();
 	 * - error codes returned by executeCmd25();

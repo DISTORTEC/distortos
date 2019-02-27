@@ -414,6 +414,7 @@ public:
 	 *
 	 * \pre Device is opened.
 	 * \pre \a address and \a buffer and \a size are valid.
+	 * \pre Selected range is within address space of device.
 	 *
 	 * \param [in] address is the address of data that will be written
 	 * \param [in] buffer is the buffer with data that will be written, must be valid
