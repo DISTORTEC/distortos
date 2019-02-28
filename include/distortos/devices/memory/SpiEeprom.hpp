@@ -229,6 +229,8 @@ public:
 
 	/**
 	 * \brief SpiEeprom's destructor
+	 *
+	 * \pre Device is closed.
 	 */
 
 	~SpiEeprom() override;
@@ -237,6 +239,8 @@ public:
 	 * \brief Closes SPI EEPROM.
 	 *
 	 * \warning This function must not be called from interrupt context!
+	 *
+	 * \pre Device is opened.
 	 *
 	 * \return 0 on success, error code otherwise:
 	 * - error codes returned by SpiDevice::close();
@@ -248,6 +252,10 @@ public:
 	 * \brief Erases blocks on SPI EEPROM.
 	 *
 	 * \warning This function must not be called from interrupt context!
+	 *
+	 * \pre Device is opened.
+	 * \pre \a address and \a size are valid.
+	 * \pre Selected range is within address space of device.
 	 *
 	 * \param [in] address is the address of range that will be erased
 	 * \param [in] size is the size of erased range, bytes
@@ -319,16 +327,19 @@ public:
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
-	 * \return 0 on success, error code otherwise:
-	 * - error codes returned by SpiDevice::lock();
+	 * \pre The number of recursive locks of device is less than 65535.
+	 *
+	 * \post Device is locked.
 	 */
 
-	int lock() override;
+	void lock() override;
 
 	/**
 	 * \brief Opens SPI EEPROM.
 	 *
 	 * \warning This function must not be called from interrupt context!
+	 *
+	 * \pre The number of times the device is opened is less than 255.
 	 *
 	 * \return 0 on success, error code otherwise:
 	 * - error codes returned by SpiDevice::open();
@@ -341,12 +352,15 @@ public:
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
+	 * \pre Device is opened.
+	 * \pre \a address and \a buffer and \a size are valid.
+	 * \pre Selected range is within address space of device.
+	 *
 	 * \param [in] address is the address of data that will be read
-	 * \param [out] buffer is the buffer into which the data will be read
+	 * \param [out] buffer is the buffer into which the data will be read, must be valid
 	 * \param [in] size is the size of \a buffer, bytes
 	 *
 	 * \return 0 on success, error code otherwise:
-	 * - EINVAL - \a address and/or \a buffer and/or \a size are not valid;
 	 * - error codes returned by executeTransaction();
 	 * - error codes returned by synchronize(const SpiDeviceProxy&);
 	 */
@@ -357,6 +371,8 @@ public:
 	 * \brief Synchronizes state of SPI EEPROM, ensuring all cached writes are finished.
 	 *
 	 * \warning This function must not be called from interrupt context!
+	 *
+	 * \pre Device is opened.
 	 *
 	 * \return 0 on success, error code otherwise:
 	 * - error codes returned by synchronize(const SpiDeviceProxy&);
@@ -371,11 +387,10 @@ public:
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
-	 * \return 0 on success, error code otherwise:
-	 * - error codes returned by SpiDevice::unlock();
+	 * \pre This function is called by the thread that locked the device.
 	 */
 
-	int unlock() override;
+	void unlock() override;
 
 	/**
 	 * \brief Wrapper for synchronize()
@@ -399,12 +414,15 @@ public:
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
+	 * \pre Device is opened.
+	 * \pre \a address and \a buffer and \a size are valid.
+	 * \pre Selected range is within address space of device.
+	 *
 	 * \param [in] address is the address of data that will be written
-	 * \param [in] buffer is the buffer with data that will be written
+	 * \param [in] buffer is the buffer with data that will be written, must be valid
 	 * \param [in] size is the size of \a buffer, bytes
 	 *
 	 * \return 0 on success, error code otherwise:
-	 * - EINVAL - \a buffer is not valid;
 	 * - error codes returned by eraseOrWrite();
 	 */
 
@@ -415,12 +433,14 @@ private:
 	/**
 	 * \brief Implementation of erase() and write()
 	 *
+	 * \pre Device is opened.
+	 * \pre Selected range is within address space of device.
+	 *
 	 * \param [in] address is the address of data that will be erased or written
 	 * \param [in] buffer is the buffer with data that will be written, nullptr to erase
 	 * \param [in] size is the size of erase (`buffer == nullptr`) or size of \a buffer (`buffer != nullptr`), bytes
 	 *
 	 * \return 0 on success, error code otherwise:
-	 * - EINVAL - \a address and/or \a size are not valid;
 	 * - error codes returned by eraseOrWritePage();
 	 */
 

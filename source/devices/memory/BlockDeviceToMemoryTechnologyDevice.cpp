@@ -131,8 +131,7 @@ uint64_t BlockDeviceToMemoryTechnologyDevice::getSize() const
 
 void BlockDeviceToMemoryTechnologyDevice::lock()
 {
-	const auto ret = blockDevice_.lock();
-	assert(ret == 0);
+	blockDevice_.lock();
 }
 
 int BlockDeviceToMemoryTechnologyDevice::open()
@@ -270,8 +269,7 @@ int BlockDeviceToMemoryTechnologyDevice::synchronize()
 
 void BlockDeviceToMemoryTechnologyDevice::unlock()
 {
-	const auto ret = blockDevice_.unlock();
-	assert(ret == 0);
+	blockDevice_.unlock();
 }
 
 }	// namespace devices

@@ -16,8 +16,6 @@
 #include "distortos/devices/communication/SpiMasterProxy.hpp"
 #include "distortos/devices/communication/SpiMasterTransfer.hpp"
 
-#include "distortos/internal/CHECK_FUNCTION_CONTEXT.hpp"
-
 #include "distortos/assert.h"
 #include "distortos/ThisThread.hpp"
 
@@ -104,17 +102,22 @@ SpiMasterTransfer getCommandWithAddress(const size_t capacity, const uint8_t com
 
 SpiEeprom::~SpiEeprom()
 {
-
+	assert(SpiDeviceProxy{spiDevice_}.isOpened() == false);
 }
 
 int SpiEeprom::close()
 {
+	const SpiDeviceProxy spiDeviceProxy {spiDevice_};
+
+	assert(spiDeviceProxy.isOpened() == true);
+
 	return spiDevice_.close();
 }
 
 int SpiEeprom::erase(const uint64_t address, const uint64_t size)
 {
 	const SpiDeviceProxy spiDeviceProxy {spiDevice_};
+
 	return eraseOrWrite(spiDeviceProxy, address, nullptr, size);
 }
 
@@ -134,25 +137,31 @@ std::pair<int, bool> SpiEeprom::isWriteInProgress()
 	return isWriteInProgress(spiDeviceProxy);
 }
 
-int SpiEeprom::lock()
+void SpiEeprom::lock()
 {
-	return spiDevice_.lock();
+	const auto ret = spiDevice_.lock();
+	assert(ret == 0);
 }
 
 int SpiEeprom::open()
 {
-	return spiDevice_.open();
+	const auto ret = spiDevice_.open();
+	assert(ret != EMFILE);
+	return ret;
 }
 
 int SpiEeprom::read(const uint64_t address, void* const buffer, const size_t size)
 {
-	CHECK_FUNCTION_CONTEXT();
+	const SpiDeviceProxy spiDeviceProxy {spiDevice_};
+
+	assert(spiDeviceProxy.isOpened() == true);
+	assert(buffer != nullptr);
 
 	const auto capacity = getSize();
-	if (address >= capacity || buffer == nullptr || size == 0)
-		return EINVAL;
+	assert(address + size <= capacity);
 
-	const SpiDeviceProxy spiDeviceProxy {spiDevice_};
+	if (size == 0)
+		return {};
 
 	{
 		const auto ret = synchronize(spiDeviceProxy);
@@ -173,22 +182,24 @@ int SpiEeprom::read(const uint64_t address, void* const buffer, const size_t siz
 int SpiEeprom::synchronize()
 {
 	const SpiDeviceProxy spiDeviceProxy {spiDevice_};
+
+	assert(spiDeviceProxy.isOpened() == true);
+
 	return synchronize(spiDeviceProxy);
 }
 
-int SpiEeprom::unlock()
+void SpiEeprom::unlock()
 {
-	return spiDevice_.unlock();
+	const auto ret = spiDevice_.unlock();
+	assert(ret == 0);
 }
 
 int SpiEeprom::write(const uint64_t address, const void* const buffer, const size_t size)
 {
-	CHECK_FUNCTION_CONTEXT();
-
-	if (buffer == nullptr)
-		return EINVAL;
-
 	const SpiDeviceProxy spiDeviceProxy {spiDevice_};
+
+	assert(buffer != nullptr);
+
 	return eraseOrWrite(spiDeviceProxy, address, buffer, size);
 }
 
@@ -199,11 +210,13 @@ int SpiEeprom::write(const uint64_t address, const void* const buffer, const siz
 int SpiEeprom::eraseOrWrite(const SpiDeviceProxy& spiDeviceProxy, const uint64_t address, const void* const buffer,
 		const uint64_t size)
 {
-	CHECK_FUNCTION_CONTEXT();
+	assert(spiDeviceProxy.isOpened() == true);
 
 	const auto capacity = getSize();
-	if (address >= capacity || size == 0)
-		return EINVAL;
+	assert(address + size <= capacity);
+
+	if (size == 0)
+		return {};
 
 	size_t written {};
 	const auto writeSize = address + size <= capacity ? size : capacity - address;

@@ -74,6 +74,8 @@ public:
 
 	/**
 	 * \brief SdMmcCardSpiBased's destructor
+	 *
+	 * \pre Device is closed.
 	 */
 
 	~SdMmcCardSpiBased() override;
@@ -82,6 +84,8 @@ public:
 	 * \brief Closes SD or MMC card connected via SPI.
 	 *
 	 * \warning This function must not be called from interrupt context!
+	 *
+	 * \pre Device is opened.
 	 *
 	 * \return 0 on success, error code otherwise:
 	 * - error codes returned by SpiDevice::close();
@@ -94,13 +98,14 @@ public:
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
+	 * \pre Device is opened.
+	 * \pre \a address and \a size are valid.
+	 * \pre Selected range is within address space of device.
+	 *
 	 * \param [in] address is the address of range that will be erased, must be a multiple of block size
 	 * \param [in] size is the size of erased range, bytes, must be a multiple of block size
 	 *
 	 * \return 0 on success, error code otherwise:
-	 * - EBADF - the device is not opened;
-	 * - EINVAL - \a address and/or \a size are not valid;
-	 * - ENOSPC - selected range is greater than size of device;
 	 * - error codes returned by executeCmd32();
 	 * - error codes returned by executeCmd33();
 	 * - error codes returned by executeCmd38();
@@ -131,16 +136,19 @@ public:
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
-	 * \return 0 on success, error code otherwise:
-	 * - error codes returned by SpiDevice::lock();
+	 * \pre The number of recursive locks of device is less than 65535.
+	 *
+	 * \post Device is locked.
 	 */
 
-	int lock() override;
+	void lock() override;
 
 	/**
 	 * \brief Opens SD or MMC card connected via SPI.
 	 *
 	 * \warning This function must not be called from interrupt context!
+	 *
+	 * \pre The number of times the device is opened is less than 255.
 	 *
 	 * \return 0 on success, error code otherwise:
 	 * - error codes returned by initialize();
@@ -154,15 +162,16 @@ public:
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
+	 * \pre Device is opened.
+	 * \pre \a address and \a buffer and \a size are valid.
+	 * \pre Selected range is within address space of device.
+	 *
 	 * \param [in] address is the address of data that will be read, must be a multiple of block size
-	 * \param [out] buffer is the buffer into which the data will be read
+	 * \param [out] buffer is the buffer into which the data will be read, must be valid
 	 * \param [in] size is the size of \a buffer, bytes, must be a multiple of block size
 	 *
 	 * \return 0 on success, error code otherwise:
-	 * - EBADF - the device is not opened;
-	 * - EINVAL - \a address and/or \a buffer and/or \a size are not valid;
 	 * - EIO - error during communication with SD or MMC card;
-	 * - ENOSPC - selected range is greater than size of device;
 	 * - error codes returned by executeCmd12();
 	 * - error codes returned by executeCmd17();
 	 * - error codes returned by executeCmd18();
@@ -174,6 +183,8 @@ public:
 
 	/**
 	 * \brief Synchronizes state of SD or MMC card connected via SPI, ensuring all cached writes are finished.
+	 *
+	 * \pre Device is opened.
 	 *
 	 * \return always 0
 	 */
@@ -187,26 +198,26 @@ public:
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
-	 * \return 0 on success, error code otherwise:
-	 * - error codes returned by SpiDevice::unlock();
+	 * \pre This function is called by the thread that locked the device.
 	 */
 
-	int unlock() override;
+	void unlock() override;
 
 	/**
 	 * \brief Writes data to SD or MMC card connected via SPI.
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
+	 * \pre Device is opened.
+	 * \pre \a address and \a buffer and \a size are valid.
+	 * \pre Selected range is within address space of device.
+	 *
 	 * \param [in] address is the address of data that will be written, must be a multiple of block size
-	 * \param [in] buffer is the buffer with data that will be written
+	 * \param [in] buffer is the buffer with data that will be written, must be valid
 	 * \param [in] size is the size of \a buffer, bytes, must be a multiple of block size
 	 *
 	 * \return 0 on success, error code otherwise:
-	 * - EBADF - the device is not opened;
-	 * - EINVAL - \a address and/or \a buffer and/or \a size are not valid;
 	 * - EIO - error during communication with SD or MMC card;
-	 * - ENOSPC - selected range is greater than size of device;
 	 * - error codes returned by executeAcmd23();
 	 * - error codes returned by executeCmd24();
 	 * - error codes returned by executeCmd25();

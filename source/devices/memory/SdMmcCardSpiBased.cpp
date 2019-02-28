@@ -1161,12 +1161,14 @@ std::pair<int, uint8_t> executeAcmd41(SpiMasterProxy& spiMasterProxy, const bool
 
 SdMmcCardSpiBased::~SdMmcCardSpiBased()
 {
-
+	assert(type_ == Type::unknown);
 }
 
 int SdMmcCardSpiBased::close()
 {
 	const SpiDeviceProxy spiDeviceProxy {spiDevice_};
+
+	assert(type_ != Type::unknown);
 
 	const auto ret = spiDevice_.close();
 
@@ -1180,20 +1182,15 @@ int SdMmcCardSpiBased::erase(const uint64_t address, const uint64_t size)
 {
 	const SpiDeviceProxy spiDeviceProxy {spiDevice_};
 
-	if (type_ == Type::unknown)
-		return EBADF;
-
-	if (size == 0)
-		return {};
-
-	if (address % blockSize != 0 || size % blockSize != 0)
-		return EINVAL;
+	assert(type_ != Type::unknown);
+	assert(address % blockSize == 0 && size % blockSize == 0);
 
 	const auto firstBlock = address / blockSize;
 	const auto blocks = size / blockSize;
+	assert(firstBlock + blocks <= blocksCount_);
 
-	if (firstBlock + blocks > blocksCount_)
-		return ENOSPC;
+	if (size == 0)
+		return {};
 
 	SpiMasterProxy spiMasterProxy {spiDeviceProxy};
 
@@ -1260,9 +1257,10 @@ uint64_t SdMmcCardSpiBased::getSize() const
 	return static_cast<decltype(getSize())>(blockSize) * blocksCount_;
 }
 
-int SdMmcCardSpiBased::lock()
+void SdMmcCardSpiBased::lock()
 {
-	return spiDevice_.lock();
+	const auto ret = spiDevice_.lock();
+	assert(ret == 0);
 }
 
 int SdMmcCardSpiBased::open()
@@ -1273,6 +1271,7 @@ int SdMmcCardSpiBased::open()
 
 	{
 		const auto ret = spiDevice_.open();
+		assert(ret != EMFILE);
 		if (ret != 0)
 			return ret;
 	}
@@ -1302,20 +1301,15 @@ int SdMmcCardSpiBased::read(const uint64_t address, void* const buffer, const si
 {
 	const SpiDeviceProxy spiDeviceProxy {spiDevice_};
 
-	if (type_ == Type::unknown)
-		return EBADF;
-
-	if (size == 0)
-		return {};
-
-	if (buffer == nullptr || address % blockSize != 0 || size % blockSize != 0)
-		return EINVAL;
+	assert(type_ != Type::unknown);
+	assert(buffer != nullptr && address % blockSize == 0 && size % blockSize == 0);
 
 	const auto firstBlock = address / blockSize;
 	const auto blocks = size / blockSize;
+	assert(firstBlock + blocks <= blocksCount_);
 
-	if (firstBlock + blocks > blocksCount_)
-		return ENOSPC;
+	if (size == 0)
+		return {};
 
 	SpiMasterProxy spiMasterProxy {spiDeviceProxy};
 
@@ -1363,32 +1357,30 @@ int SdMmcCardSpiBased::read(const uint64_t address, void* const buffer, const si
 
 int SdMmcCardSpiBased::synchronize()
 {
+	assert(type_ != Type::unknown);
+
 	return {};
 }
 
-int SdMmcCardSpiBased::unlock()
+void SdMmcCardSpiBased::unlock()
 {
-	return spiDevice_.unlock();
+	const auto ret = spiDevice_.unlock();
+	assert(ret == 0);
 }
 
 int SdMmcCardSpiBased::write(const uint64_t address, const void* const buffer, const size_t size)
 {
 	const SpiDeviceProxy spiDeviceProxy {spiDevice_};
 
-	if (type_ == Type::unknown)
-		return EBADF;
-
-	if (size == 0)
-		return {};
-
-	if (buffer == nullptr || address % blockSize != 0 || size % blockSize != 0)
-		return EINVAL;
+	assert(type_ != Type::unknown);
+	assert(buffer != nullptr && address % blockSize == 0 && size % blockSize == 0);
 
 	const auto firstBlock = address / blockSize;
 	const auto blocks = size / blockSize;
+	assert(firstBlock + blocks <= blocksCount_);
 
-	if (firstBlock + blocks > blocksCount_)
-		return ENOSPC;
+	if (size == 0)
+		return {};
 
 	SpiMasterProxy spiMasterProxy {spiDeviceProxy};
 
