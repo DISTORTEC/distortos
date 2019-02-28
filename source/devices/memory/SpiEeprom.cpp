@@ -118,11 +118,6 @@ int SpiEeprom::erase(const uint64_t address, const uint64_t size)
 {
 	const SpiDeviceProxy spiDeviceProxy {spiDevice_};
 
-	assert(spiDeviceProxy.isOpened() == true);
-
-	const auto capacity = getSize();
-	assert(address + size <= capacity);
-
 	return eraseOrWrite(spiDeviceProxy, address, nullptr, size);
 }
 
@@ -203,11 +198,7 @@ int SpiEeprom::write(const uint64_t address, const void* const buffer, const siz
 {
 	const SpiDeviceProxy spiDeviceProxy {spiDevice_};
 
-	assert(spiDeviceProxy.isOpened() == true);
 	assert(buffer != nullptr);
-
-	const auto capacity = getSize();
-	assert(address + size <= capacity);
 
 	return eraseOrWrite(spiDeviceProxy, address, buffer, size);
 }
@@ -219,12 +210,13 @@ int SpiEeprom::write(const uint64_t address, const void* const buffer, const siz
 int SpiEeprom::eraseOrWrite(const SpiDeviceProxy& spiDeviceProxy, const uint64_t address, const void* const buffer,
 		const uint64_t size)
 {
-	if (size == 0)
-		return {};
+	assert(spiDeviceProxy.isOpened() == true);
 
 	const auto capacity = getSize();
-	if (address >= capacity)
-		return EINVAL;
+	assert(address + size <= capacity);
+
+	if (size == 0)
+		return {};
 
 	size_t written {};
 	const auto writeSize = address + size <= capacity ? size : capacity - address;

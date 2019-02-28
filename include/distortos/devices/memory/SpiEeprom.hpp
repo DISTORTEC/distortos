@@ -433,12 +433,14 @@ private:
 	/**
 	 * \brief Implementation of erase() and write()
 	 *
+	 * \pre Device is opened.
+	 * \pre Selected range is within address space of device.
+	 *
 	 * \param [in] address is the address of data that will be erased or written
 	 * \param [in] buffer is the buffer with data that will be written, nullptr to erase
 	 * \param [in] size is the size of erase (`buffer == nullptr`) or size of \a buffer (`buffer != nullptr`), bytes
 	 *
 	 * \return 0 on success, error code otherwise:
-	 * - EINVAL - \a address is not valid;
 	 * - error codes returned by eraseOrWritePage();
 	 */
 
