@@ -25,17 +25,23 @@ public:
 
 	using Value = unsigned int;
 
-	Semaphore() = default;
-
-	Semaphore(const Value value, const Value maxValue = std::numeric_limits<Value>::max())
+	Semaphore()
 	{
-		REQUIRE(getProxyInstance() != nullptr);
-		getProxyInstance()->construct(value, maxValue);
+		auto& instance = getInstanceInternal();
+		REQUIRE(instance == nullptr);
+		instance = this;
+	}
+
+	explicit Semaphore(const Value value, const Value maxValue = std::numeric_limits<Value>::max())
+	{
+		getInstance().construct(value, maxValue);
 	}
 
 	virtual ~Semaphore()
 	{
-
+		auto& instance = getInstanceInternal();
+		if (instance == this)
+			instance = {};
 	}
 
 	MAKE_MOCK2(construct, void(Value, Value));
@@ -46,10 +52,19 @@ public:
 	MAKE_MOCK1(tryWaitUntil, int(TickClock::time_point));
 	MAKE_MOCK0(wait, int());
 
-	static Semaphore*& getProxyInstance()
+	static Semaphore& getInstance()
 	{
-		static Semaphore* proxyInstance;
-		return proxyInstance;
+		const auto instance = getInstanceInternal();
+		REQUIRE(instance != nullptr);
+		return *instance;
+	}
+
+private:
+
+	static Semaphore*& getInstanceInternal()
+	{
+		static Semaphore* instance;
+		return instance;
 	}
 };
 
