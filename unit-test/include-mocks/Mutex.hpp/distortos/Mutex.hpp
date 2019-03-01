@@ -50,14 +50,15 @@ public:
 
 	Mutex(UnitTestTag)
 	{
-
+		auto& instance = getInstanceInternal();
+		REQUIRE(instance == nullptr);
+		instance = this;
 	}
 
 	explicit Mutex(const Type type = Type::normal, const Protocol protocol = Protocol::none,
 			const uint8_t priorityCeiling = {})
 	{
-		REQUIRE(getProxyInstance() != nullptr);
-		getProxyInstance()->construct(type, protocol, priorityCeiling);
+		getInstance().construct(type, protocol, priorityCeiling);
 	}
 
 	explicit Mutex(const Protocol protocol, const uint8_t priorityCeiling = {}) :
@@ -66,7 +67,12 @@ public:
 
 	}
 
-	virtual ~Mutex() = default;
+	virtual ~Mutex()
+	{
+		auto& instance = getInstanceInternal();
+		if (instance == this)
+			instance = {};
+	}
 
 	MAKE_MOCK3(construct, void(Type, Protocol, uint8_t));
 	MAKE_MOCK0(lock, int());
@@ -75,10 +81,19 @@ public:
 	MAKE_MOCK1(tryLockUntil, int(TickClock::time_point));
 	MAKE_MOCK0(unlock, int());
 
-	static Mutex*& getProxyInstance()
+	static Mutex& getInstance()
 	{
-		static Mutex* proxyInstance;
-		return proxyInstance;
+		const auto instance = getInstanceInternal();
+		REQUIRE(instance != nullptr);
+		return *instance;
+	}
+
+private:
+
+	static Mutex*& getInstanceInternal()
+	{
+		static Mutex* instance;
+		return instance;
 	}
 };
 

@@ -4,7 +4,7 @@
  *
  * This test checks whether mutex C-API functions properly call appropriate functions from distortos::Mutex class.
  *
- * \author Copyright (C) 2017-2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2017-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -175,11 +175,9 @@ TEST_CASE("Testing distortos_Mutex_construct_3()", "[construct]")
 			distortos::Mutex mutexMock {distortos::Mutex::UnitTestTag{}};
 			std::aligned_storage<sizeof(distortos::Mutex), alignof(distortos::Mutex)>::type storage;
 
-			distortos::Mutex::getProxyInstance() = &mutexMock;
 			REQUIRE_CALL(mutexMock, construct(typeAssociation.second, protocolAssociation.second, randomValue));
 			REQUIRE(distortos_Mutex_construct_3(reinterpret_cast<distortos_Mutex*>(&storage), typeAssociation.first,
 					protocolAssociation.first, randomValue) == 0);
-			distortos::Mutex::getProxyInstance() = {};
 
 			reinterpret_cast<distortos::Mutex*>(&storage)->~Mutex();
 		}
@@ -201,11 +199,9 @@ TEST_CASE("Testing distortos_Mutex_construct_2pc()", "[construct]")
 		distortos::Mutex mutexMock {distortos::Mutex::UnitTestTag{}};
 		std::aligned_storage<sizeof(distortos::Mutex), alignof(distortos::Mutex)>::type storage;
 
-		distortos::Mutex::getProxyInstance() = &mutexMock;
 		REQUIRE_CALL(mutexMock, construct(distortos::Mutex::Type::normal, protocolAssociation.second, randomValue));
 		REQUIRE(distortos_Mutex_construct_2pc(reinterpret_cast<distortos_Mutex*>(&storage), protocolAssociation.first,
 				randomValue) == 0);
-		distortos::Mutex::getProxyInstance() = {};
 
 		reinterpret_cast<distortos::Mutex*>(&storage)->~Mutex();
 	}
@@ -228,11 +224,9 @@ TEST_CASE("Testing distortos_Mutex_construct_2tp()", "[construct]")
 			distortos::Mutex mutexMock {distortos::Mutex::UnitTestTag{}};
 			std::aligned_storage<sizeof(distortos::Mutex), alignof(distortos::Mutex)>::type storage;
 
-			distortos::Mutex::getProxyInstance() = &mutexMock;
 			REQUIRE_CALL(mutexMock, construct(typeAssociation.second, protocolAssociation.second, 0));
 			REQUIRE(distortos_Mutex_construct_2tp(reinterpret_cast<distortos_Mutex*>(&storage), typeAssociation.first,
 					protocolAssociation.first) == 0);
-			distortos::Mutex::getProxyInstance() = {};
 
 			reinterpret_cast<distortos::Mutex*>(&storage)->~Mutex();
 		}
@@ -252,11 +246,9 @@ TEST_CASE("Testing distortos_Mutex_construct_1p()", "[construct]")
 		distortos::Mutex mutexMock {distortos::Mutex::UnitTestTag{}};
 		std::aligned_storage<sizeof(distortos::Mutex), alignof(distortos::Mutex)>::type storage;
 
-		distortos::Mutex::getProxyInstance() = &mutexMock;
 		REQUIRE_CALL(mutexMock, construct(distortos::Mutex::Type::normal, protocolAssociation.second, 0));
 		REQUIRE(distortos_Mutex_construct_1p(reinterpret_cast<distortos_Mutex*>(&storage),
 				protocolAssociation.first) == 0);
-		distortos::Mutex::getProxyInstance() = {};
 
 		reinterpret_cast<distortos::Mutex*>(&storage)->~Mutex();
 	}
@@ -276,10 +268,8 @@ TEST_CASE("Testing distortos_Mutex_construct_1t()", "[construct]")
 		distortos::Mutex mutexMock {distortos::Mutex::UnitTestTag{}};
 		std::aligned_storage<sizeof(distortos::Mutex), alignof(distortos::Mutex)>::type storage;
 
-		distortos::Mutex::getProxyInstance() = &mutexMock;
 		REQUIRE_CALL(mutexMock, construct(typeAssociation.second, distortos::Mutex::Protocol::none, 0));
 		REQUIRE(distortos_Mutex_construct_1t(reinterpret_cast<distortos_Mutex*>(&storage), typeAssociation.first) == 0);
-		distortos::Mutex::getProxyInstance() = {};
 
 		reinterpret_cast<distortos::Mutex*>(&storage)->~Mutex();
 	}
@@ -293,10 +283,8 @@ TEST_CASE("Testing distortos_Mutex_construct()", "[construct]")
 	distortos::Mutex mutexMock {distortos::Mutex::UnitTestTag{}};
 	std::aligned_storage<sizeof(distortos::Mutex), alignof(distortos::Mutex)>::type storage;
 
-	distortos::Mutex::getProxyInstance() = &mutexMock;
 	REQUIRE_CALL(mutexMock, construct(distortos::Mutex::Type::normal, distortos::Mutex::Protocol::none, 0));
 	REQUIRE(distortos_Mutex_construct(reinterpret_cast<distortos_Mutex*>(&storage)) == 0);
-	distortos::Mutex::getProxyInstance() = {};
 
 	reinterpret_cast<distortos::Mutex*>(&storage)->~Mutex();
 }
