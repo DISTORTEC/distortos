@@ -2,7 +2,7 @@
  * \file
  * \brief Mock of Semaphore class
  *
- * \author Copyright (C) 2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2017-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -27,7 +27,7 @@ public:
 
 	Semaphore() = default;
 
-	Semaphore(const Value value, const Value maxValue)
+	Semaphore(const Value value, const Value maxValue = std::numeric_limits<Value>::max())
 	{
 		REQUIRE(getProxyInstance() != nullptr);
 		getProxyInstance()->construct(value, maxValue);
