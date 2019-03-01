@@ -2,7 +2,7 @@
  * \file
  * \brief Mock of Mutex class
  *
- * \author Copyright (C) 2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2017-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -53,10 +53,17 @@ public:
 
 	}
 
-	Mutex(const Type type, const Protocol protocol, const uint8_t priorityCeiling)
+	explicit Mutex(const Type type = Type::normal, const Protocol protocol = Protocol::none,
+			const uint8_t priorityCeiling = {})
 	{
 		REQUIRE(getProxyInstance() != nullptr);
 		getProxyInstance()->construct(type, protocol, priorityCeiling);
+	}
+
+	explicit Mutex(const Protocol protocol, const uint8_t priorityCeiling = {}) :
+			Mutex{Type::normal, protocol, priorityCeiling}
+	{
+
 	}
 
 	virtual ~Mutex() = default;
