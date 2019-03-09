@@ -10,4 +10,5 @@
 target_sources(distortos PRIVATE
 		${CMAKE_CURRENT_LIST_DIR}/BlockDeviceToMemoryTechnologyDevice.cpp
 		${CMAKE_CURRENT_LIST_DIR}/SdMmcCardSpiBased.cpp
-		${CMAKE_CURRENT_LIST_DIR}/SpiEeprom.cpp)
+		${CMAKE_CURRENT_LIST_DIR}/SpiEeprom.cpp
+		${CMAKE_CURRENT_LIST_DIR}/SynchronousSdMmcCardLowLevel.cpp)
