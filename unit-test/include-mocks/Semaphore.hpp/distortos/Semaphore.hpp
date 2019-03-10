@@ -19,6 +19,13 @@
 namespace distortos
 {
 
+#ifdef DISTORTOS_UNIT_TEST_SEMAPHOREMOCK_USE_WRAPPER
+
+namespace mock
+{
+
+#endif	// def DISTORTOS_UNIT_TEST_SEMAPHOREMOCK_USE_WRAPPER
+
 class Semaphore
 {
 public:
@@ -67,6 +74,34 @@ private:
 		return instance;
 	}
 };
+
+#ifdef DISTORTOS_UNIT_TEST_SEMAPHOREMOCK_USE_WRAPPER
+
+}	// namespace mock
+
+class Semaphore
+{
+public:
+
+	using Value = mock::Semaphore::Value;
+
+	constexpr explicit Semaphore(Value, Value = std::numeric_limits<Value>::max())
+	{
+
+	}
+
+	int post()
+	{
+		return mock::Semaphore::getInstance().post();
+	}
+
+	int wait()
+	{
+		return mock::Semaphore::getInstance().wait();
+	}
+};
+
+#endif	// def DISTORTOS_UNIT_TEST_SEMAPHOREMOCK_USE_WRAPPER
 
 }	// namespace distortos
 
