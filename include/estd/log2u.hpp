@@ -17,10 +17,10 @@
 /**
  * \brief Produces a `static_assert()` where the expression is also used as the message.
  *
- * \param [in] expression is the expression that will be tested, which will also be used as the message
+ * \param [in] __VA_ARGS__ is the expression that will be tested, which will also be used as the message
  */
 
-#define STATIC_ASSERT(expression) static_assert(expression, #expression)
+#define STATIC_ASSERT(...) static_assert(__VA_ARGS__, #__VA_ARGS__)
 
 namespace estd
 {
