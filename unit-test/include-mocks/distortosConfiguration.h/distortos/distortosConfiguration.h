@@ -2,7 +2,7 @@
  * \file
  * \brief Mock distortos configuration
  *
- * \author Copyright (C) 2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2017-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -13,7 +13,9 @@
 #define UNIT_TEST_INCLUDE_MOCKS_DISTORTOSCONFIGURATION_H_DISTORTOS_DISTORTOSCONFIGURATION_H_
 
 #define CONFIG_ARCHITECTURE_STACK_ALIGNMENT 8
+#define CONFIG_BLOCKDEVICE_BUFFER_ALIGNMENT 16
 #define CONFIG_ROUND_ROBIN_FREQUENCY 10
+#define CONFIG_SDMMCCARD_BUFFER_ALIGNMENT 16
 #define CONFIG_STACK_GUARD_SIZE 32
 #define CONFIG_TICK_FREQUENCY 1000
 
