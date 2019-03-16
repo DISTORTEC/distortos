@@ -23,6 +23,11 @@
 namespace distortos
 {
 
+#ifdef DISTORTOS_UNIT_TEST_MUTEXMOCK_USE_WRAPPER
+namespace mock
+{
+#endif	// def DISTORTOS_UNIT_TEST_MUTEXMOCK_USE_WRAPPER
+
 namespace internal
 {
 
@@ -96,6 +101,40 @@ private:
 		return instance;
 	}
 };
+
+#ifdef DISTORTOS_UNIT_TEST_MUTEXMOCK_USE_WRAPPER
+}	// namespace mock
+
+class Mutex
+{
+public:
+
+	using Protocol = mock::Mutex::Protocol;
+	using Type = mock::Mutex::Type;
+
+	constexpr explicit Mutex(Type = Type::normal, Protocol = Protocol::none, uint8_t = {})
+	{
+
+	}
+
+	constexpr explicit Mutex(const Protocol protocol, const uint8_t priorityCeiling = {}) :
+			Mutex{Type::normal, protocol, priorityCeiling}
+	{
+
+	}
+
+	int lock()
+	{
+		return mock::Mutex::getInstance().lock();
+	}
+
+	int unlock()
+	{
+		return mock::Mutex::getInstance().unlock();
+	}
+};
+
+#endif	// def DISTORTOS_UNIT_TEST_MUTEXMOCK_USE_WRAPPER
 
 }	// namespace distortos
 
