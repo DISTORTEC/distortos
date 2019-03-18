@@ -2,7 +2,7 @@
  * \file
  * \brief Mock of Mutex class
  *
- * \author Copyright (C) 2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2017-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -22,6 +22,11 @@
 
 namespace distortos
 {
+
+#ifdef DISTORTOS_UNIT_TEST_MUTEXMOCK_USE_WRAPPER
+namespace mock
+{
+#endif	// def DISTORTOS_UNIT_TEST_MUTEXMOCK_USE_WRAPPER
 
 namespace internal
 {
@@ -50,16 +55,29 @@ public:
 
 	Mutex(UnitTestTag)
 	{
-
+		auto& instance = getInstanceInternal();
+		REQUIRE(instance == nullptr);
+		instance = this;
 	}
 
-	Mutex(const Type type, const Protocol protocol, const uint8_t priorityCeiling)
+	explicit Mutex(const Type type = Type::normal, const Protocol protocol = Protocol::none,
+			const uint8_t priorityCeiling = {})
 	{
-		REQUIRE(getProxyInstance() != nullptr);
-		getProxyInstance()->construct(type, protocol, priorityCeiling);
+		getInstance().construct(type, protocol, priorityCeiling);
 	}
 
-	virtual ~Mutex() = default;
+	explicit Mutex(const Protocol protocol, const uint8_t priorityCeiling = {}) :
+			Mutex{Type::normal, protocol, priorityCeiling}
+	{
+
+	}
+
+	virtual ~Mutex()
+	{
+		auto& instance = getInstanceInternal();
+		if (instance == this)
+			instance = {};
+	}
 
 	MAKE_MOCK3(construct, void(Type, Protocol, uint8_t));
 	MAKE_MOCK0(lock, int());
@@ -68,12 +86,55 @@ public:
 	MAKE_MOCK1(tryLockUntil, int(TickClock::time_point));
 	MAKE_MOCK0(unlock, int());
 
-	static Mutex*& getProxyInstance()
+	static Mutex& getInstance()
 	{
-		static Mutex* proxyInstance;
-		return proxyInstance;
+		const auto instance = getInstanceInternal();
+		REQUIRE(instance != nullptr);
+		return *instance;
+	}
+
+private:
+
+	static Mutex*& getInstanceInternal()
+	{
+		static Mutex* instance;
+		return instance;
 	}
 };
+
+#ifdef DISTORTOS_UNIT_TEST_MUTEXMOCK_USE_WRAPPER
+}	// namespace mock
+
+class Mutex
+{
+public:
+
+	using Protocol = mock::Mutex::Protocol;
+	using Type = mock::Mutex::Type;
+
+	constexpr explicit Mutex(Type = Type::normal, Protocol = Protocol::none, uint8_t = {})
+	{
+
+	}
+
+	constexpr explicit Mutex(const Protocol protocol, const uint8_t priorityCeiling = {}) :
+			Mutex{Type::normal, protocol, priorityCeiling}
+	{
+
+	}
+
+	int lock()
+	{
+		return mock::Mutex::getInstance().lock();
+	}
+
+	int unlock()
+	{
+		return mock::Mutex::getInstance().unlock();
+	}
+};
+
+#endif	// def DISTORTOS_UNIT_TEST_MUTEXMOCK_USE_WRAPPER
 
 }	// namespace distortos
 

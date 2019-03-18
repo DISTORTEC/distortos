@@ -5,7 +5,7 @@
  * This test checks whether semaphore C-API functions properly call appropriate functions from distortos::Semaphore
  * class.
  *
- * \author Copyright (C) 2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2017-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -80,11 +80,9 @@ TEST_CASE("Testing distortos_Semaphore_construct_1()", "[construct]")
 
 	REQUIRE(distortos_Semaphore_construct_1(nullptr, lowRandomValue, highRandomValue) == EINVAL);
 
-	distortos::Semaphore::getProxyInstance() = &semaphoreMock;
 	REQUIRE_CALL(semaphoreMock, construct(lowRandomValue, highRandomValue));
 	REQUIRE(distortos_Semaphore_construct_1(reinterpret_cast<distortos_Semaphore*>(&storage), lowRandomValue,
 			highRandomValue) == 0);
-	distortos::Semaphore::getProxyInstance() = {};
 
 	reinterpret_cast<distortos::Semaphore*>(&storage)->~Semaphore();
 }
@@ -99,10 +97,8 @@ TEST_CASE("Testing distortos_Semaphore_construct()", "[construct]")
 
 	REQUIRE(distortos_Semaphore_construct(nullptr, randomValue) == EINVAL);
 
-	distortos::Semaphore::getProxyInstance() = &semaphoreMock;
 	REQUIRE_CALL(semaphoreMock, construct(randomValue, UINT_MAX));
 	REQUIRE(distortos_Semaphore_construct(reinterpret_cast<distortos_Semaphore*>(&storage), randomValue) == 0);
-	distortos::Semaphore::getProxyInstance() = {};
 
 	reinterpret_cast<distortos::Semaphore*>(&storage)->~Semaphore();
 }
