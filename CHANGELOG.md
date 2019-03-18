@@ -9,8 +9,8 @@ All notable changes to this project will be documented in this file. This projec
 
 ### Added
 
-- Added support for [NUCLEO-F042K6](https://www.st.com/en/evaluation-tools/nucleo-f042k6.html) board with *STM32F0*
-chip.
+- Added support for [NUCLEO-F042K6](https://www.st.com/en/evaluation-tools/nucleo-f042k6.html) and
+[32F072BDISCOVERY](https://www.st.com/en/evaluation-tools/32f072bdiscovery.html) boards with *STM32F0* chips.
 - Added basic support for *STM32's* *DMAv1* and *DMAv2*, along with data in *CSV* and *YAML* files for each supported
 chip and unit tests.
 - Added basic support for *STM32's* *SDMMCv1*, currently only for *STM32F7* chip family. Support includes data in *CSV*
