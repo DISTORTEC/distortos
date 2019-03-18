@@ -125,11 +125,11 @@ distortosSetConfiguration(BOOLEAN
 		Some functions may only be used from thread context, as using them from interrupt context results in undefined
 		behaviour. There are several groups of functions to which this restriction applies (some functions fall into
 		several categories at once):
-		1. all blocking functions, like callOnce(), FifoQueue::push(), Semaphore::wait(), ..., as an attempt to block
+		- all blocking functions, like callOnce(), FifoQueue::push(), Semaphore::wait(), ..., as an attempt to block
 		current thread of execution (not to be confused with current thread) is not possible in interrupt context;
-		2. all mutex functions, as the concept of ownership by a thread - core feature of mutex - cannot be fulfilled in
+		- all mutex functions, as the concept of ownership by a thread - core feature of mutex - cannot be fulfilled in
 		interrupt context;
-		3. all functions from ThisThread namespace (including ThisThread::Signals namespace), as in interrupt context
+		- all functions from ThisThread namespace (including ThisThread::Signals namespace), as in interrupt context
 		they would access a random thread that happened to be executing at that particular moment;
 
 		Using such functions from interrupt context is a common bug in applications which can be easily introduced and
