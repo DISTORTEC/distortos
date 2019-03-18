@@ -25,6 +25,10 @@ object and exposes `distortos::devices::MemoryTechnologyDevice` interface.
 `distortos::devices::SpiDeviceSelectGuard`, which build new SPI-related API. These classes can be used for RAII-style
 locking/unlocking or selecting/deselecting of appropriate devices and also serve as proxies for accessing core
 functionalities of associated objects.
+- Added `distortos::devices::SdCard` class, based on `distortos::devices::BlockDevice` interface, which can be used with
+*SD* cards connected via SDMMC. This code handles only *SD version 2.0* cards, has no support for run-time detection of
+card insertion/removal and has no support for detecting whether card is write-protected. Code was tested with 2 GB
+*SDSC* and 32 GB *SDHC* cards.
 - Added `distortos::devices::SdMmcCardSpiBased` class, based on `distortos::devices::BlockDevice` interface, which can
 be used with *SD* or *MMC* card connected via SPI. At this moment the code handles only *SD version 2.0* cards, has no
 support for run-time detection of card insertion/removal and has no support for detecting whether card is
@@ -49,11 +53,16 @@ This allows using `distortos::Mutex` with all mutex helpers from
 [`std::try_lock()`](https://en.cppreference.com/w/cpp/thread/try_lock) and
 [`std::lock()`](https://en.cppreference.com/w/cpp/thread/lock).
 - Added `sys/dirent.h` and `sys/statvfs.h` headers, which are not provided by *newlib*.
-- Added unit test of `distortos::devices::BlockDeviceToMemoryTechnologyDevice` class.
+- Added unit tests of `distortos::devices::BlockDeviceToMemoryTechnologyDevice` and `distortos::devices::SdCard`
+classes.
 - Added unit tests of *STM32's* *DMAv1*, *DMAv2*, *SPIv1* and *SPIv2* drivers.
 - Added unit tests of all `estd::ContiguousRange` constructor overloads.
 - Added `estd/EnumClassFlags.hpp` which provides templated bitwise operators for enum class flags.
 - Added `estd/log2u.hpp` with `log2()`-like `constexpr` function for `unsigned int`.
+- Added `estd/TypeFromSize.hpp` with `estd::TypeFromSize<>` template, which selects fixed width type from requested byte
+size.
+- Added `estd/extractBitField.hpp`, which provides a completely "inline-able" (with enabled optimizations) function
+template to extract bit field from array of raw data.
 - Added option to test coverage in unit tests. Enable it by setting *CMake* variable `COVERAGE` of unit test subproject.
 You will then be able to use new `coverage` target to generate detailed *HTML* coverage reports with
 [gcovr](https://gcovr.com/) in build folder of unit test subproject.
