@@ -25,26 +25,14 @@ namespace devices
 /**
  * SdMmcCardSpiBased class is a SD or MMC card connected via SPI.
  *
+ * This class supports SD version 2.0 cards only.
+ *
  * \ingroup devices
  */
 
 class SdMmcCardSpiBased : public BlockDevice
 {
 public:
-
-	/// type of card connected via SPI
-	enum class Type : uint8_t
-	{
-		/// unknown type
-		unknown,
-
-		/// MMC card
-		mmc,
-		/// SD version 1.0 card
-		sdVersion1,
-		/// SD version 2.0 card
-		sdVersion2,
-	};
 
 	/// size of block, bytes
 	constexpr static size_t blockSize {512};
@@ -66,8 +54,7 @@ public:
 					eraseTimeoutMs_{},
 					readTimeoutMs_{},
 					writeTimeoutMs_{},
-					blockAddressing_{},
-					type_{}
+					blockAddressing_{}
 	{
 
 	}
@@ -250,7 +237,6 @@ private:
 	 * - ETIMEDOUT - timed-out while waiting for SD or MMC card to respond;
 	 * - error codes returned by executeAcmd41();
 	 * - error codes returned by executeCmd0();
-	 * - error codes returned by executeCmd1();
 	 * - error codes returned by executeCmd8();
 	 * - error codes returned by executeCmd9();
 	 * - error codes returned by executeCmd16();
@@ -284,9 +270,6 @@ private:
 
 	/// selects whether card uses byte (false) or block (true) addressing
 	bool blockAddressing_;
-
-	/// type of card connected via SPI
-	Type type_;
 };
 
 }	// namespace devices

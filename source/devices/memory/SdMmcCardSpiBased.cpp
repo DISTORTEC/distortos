@@ -757,22 +757,6 @@ std::pair<int, uint8_t> executeCmd0(SpiMasterProxy& spiMasterProxy)
 }
 
 /**
- * \brief Executes CMD1 command on SD or MMC card connected via SPI.
- *
- * This is SEND_OP_COND command.
- *
- * \param [in] spiMasterProxy is a reference to SpiMasterProxy object used for communication
- *
- * \return pair with return code (0 on success, error code otherwise) and R1 response; error codes:
- * - error codes returned by writeCmdReadR1();
- */
-
-std::pair<int, uint8_t> executeCmd1(SpiMasterProxy& spiMasterProxy)
-{
-	return writeCmdReadR1(spiMasterProxy, 1);
-}
-
-/**
  * \brief Executes CMD8 command on SD or MMC card connected via SPI.
  *
  * This is SEND_IF_COND command.
@@ -1161,14 +1145,14 @@ std::pair<int, uint8_t> executeAcmd41(SpiMasterProxy& spiMasterProxy, const bool
 
 SdMmcCardSpiBased::~SdMmcCardSpiBased()
 {
-	assert(type_ == Type::unknown);
+	assert(SpiDeviceProxy{spiDevice_}.isOpened() == false);
 }
 
 int SdMmcCardSpiBased::close()
 {
 	const SpiDeviceProxy spiDeviceProxy {spiDevice_};
 
-	assert(type_ != Type::unknown);
+	assert(spiDeviceProxy.isOpened() == true);
 
 	const auto ret = spiDevice_.close();
 
@@ -1182,7 +1166,7 @@ int SdMmcCardSpiBased::erase(const uint64_t address, const uint64_t size)
 {
 	const SpiDeviceProxy spiDeviceProxy {spiDevice_};
 
-	assert(type_ != Type::unknown);
+	assert(spiDeviceProxy.isOpened() == true);
 	assert(address % blockSize == 0 && size % blockSize == 0);
 
 	const auto firstBlock = address / blockSize;
@@ -1301,7 +1285,7 @@ int SdMmcCardSpiBased::read(const uint64_t address, void* const buffer, const si
 {
 	const SpiDeviceProxy spiDeviceProxy {spiDevice_};
 
-	assert(type_ != Type::unknown);
+	assert(spiDeviceProxy.isOpened() == true);
 	assert(buffer != nullptr && address % blockSize == 0 && size % blockSize == 0);
 
 	const auto firstBlock = address / blockSize;
@@ -1357,7 +1341,7 @@ int SdMmcCardSpiBased::read(const uint64_t address, void* const buffer, const si
 
 int SdMmcCardSpiBased::synchronize()
 {
-	assert(type_ != Type::unknown);
+	assert(SpiDeviceProxy{spiDevice_}.isOpened() == true);
 
 	return {};
 }
@@ -1372,7 +1356,7 @@ int SdMmcCardSpiBased::write(const uint64_t address, const void* const buffer, c
 {
 	const SpiDeviceProxy spiDeviceProxy {spiDevice_};
 
-	assert(type_ != Type::unknown);
+	assert(spiDeviceProxy.isOpened() == true);
 	assert(buffer != nullptr && address % blockSize == 0 && size % blockSize == 0);
 
 	const auto firstBlock = address / blockSize;
@@ -1457,7 +1441,6 @@ void SdMmcCardSpiBased::deinitialize()
 	readTimeoutMs_ = {};
 	writeTimeoutMs_ = {};
 	blockAddressing_ = {};
-	type_ = {};
 }
 
 int SdMmcCardSpiBased::initialize(const SpiDeviceProxy& spiDeviceProxy)
@@ -1498,14 +1481,10 @@ int SdMmcCardSpiBased::initialize(const SpiDeviceProxy& spiDeviceProxy)
 		const auto ret = executeCmd8(spiMasterProxy);
 		if (std::get<0>(ret) != 0)
 			return std::get<0>(ret);
-
-		if (std::get<1>(ret) == r1InIdleStateMask)
-		{
-			if (std::get<2>(ret) == false)
-				return EIO;	// voltage range not supported
-
-			type_ = Type::sdVersion2;
-		}
+		if (std::get<1>(ret) != r1InIdleStateMask)
+			return EIO;
+		if (std::get<2>(ret) == false)
+			return EIO;	// voltage range not supported
 	}
 	{
 		const auto deadline = TickClock::now() + std::chrono::seconds{1};
@@ -1514,59 +1493,27 @@ int SdMmcCardSpiBased::initialize(const SpiDeviceProxy& spiDeviceProxy)
 			{
 				const SelectGuard spiDeviceSelectGuard {spiMasterProxy};
 
-				const auto ret = executeAcmd41(spiMasterProxy, type_ == Type::sdVersion2);
+				const auto ret = executeAcmd41(spiMasterProxy, true);
 				if (ret.first != 0)
 					return ret.first;
 				if (ret.second == 0)
-				{
-					if (type_ == Type::unknown)
-						type_ = Type::sdVersion1;
-
 					break;
-				}
-				if (ret.second != r1InIdleStateMask || TickClock::now() >= deadline)
-				{
-					if (type_ == Type::sdVersion2)
-						return ret.second != r1InIdleStateMask ? EIO : ETIMEDOUT;
-					else
-						break;
-				}
+				if (ret.second != r1InIdleStateMask)
+					return EIO;
+				if (TickClock::now() >= deadline)
+					return ETIMEDOUT;
 			}
 
 			ThisThread::sleepFor({});
 		}
 	}
 
-	if (type_ == Type::unknown)
-	{
-		const auto deadline = TickClock::now() + std::chrono::seconds{1};
-		while (1)
-		{
-			{
-				const SelectGuard spiDeviceSelectGuard {spiMasterProxy};
-
-				const auto ret = executeCmd1(spiMasterProxy);
-				if (ret.first != 0)
-					return ret.first;
-				if (ret.second == 0)
-				{
-					type_ = Type::mmc;
-					break;
-				}
-				if (ret.second != r1InIdleStateMask || TickClock::now() >= deadline)
-					return ret.second != r1InIdleStateMask ? EIO : ETIMEDOUT;
-			}
-
-			ThisThread::sleepFor({});
-		}
-	}
 	{
 		const auto ret = spiMasterProxy.configure(SpiMode::_0, clockFrequency_, 8, false, UINT32_MAX);
 		if (ret.first != 0)
 			return ret.first;
 	}
 
-	if (type_ == Type::sdVersion2)
 	{
 		const SelectGuard spiDeviceSelectGuard {spiMasterProxy};
 
