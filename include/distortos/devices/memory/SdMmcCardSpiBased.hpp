@@ -1,6 +1,6 @@
 /**
  * \file
- * \brief SdMmcCardSpiBased class header
+ * \brief SdCardSpiBased class header
  *
  * \author Copyright (C) 2018-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
@@ -23,14 +23,14 @@ namespace devices
 {
 
 /**
- * SdMmcCardSpiBased class is a SD or MMC card connected via SPI.
+ * SdCardSpiBased class is a SD card connected via SPI.
  *
  * This class supports SD version 2.0 cards only.
  *
  * \ingroup devices
  */
 
-class SdMmcCardSpiBased : public BlockDevice
+class SdCardSpiBased : public BlockDevice
 {
 public:
 
@@ -38,14 +38,14 @@ public:
 	constexpr static size_t blockSize {512};
 
 	/**
-	 * \brief SdMmcCardSpiBased's constructor
+	 * \brief SdCardSpiBased's constructor
 	 *
-	 * \param [in] spiMaster is a reference to SPI master to which this SD or MMC card is connected
-	 * \param [in] slaveSelectPin is a reference to slave select pin of this SD or MMC card
-	 * \param [in] clockFrequency is the desired clock frequency of SD or MMC card, Hz, default - 25 MHz
+	 * \param [in] spiMaster is a reference to SPI master to which this SD card is connected
+	 * \param [in] slaveSelectPin is a reference to slave select pin of this SD card
+	 * \param [in] clockFrequency is the desired clock frequency of SD card, Hz, default - 25 MHz
 	 */
 
-	constexpr SdMmcCardSpiBased(SpiMaster& spiMaster, OutputPin& slaveSelectPin,
+	constexpr SdCardSpiBased(SpiMaster& spiMaster, OutputPin& slaveSelectPin,
 			const uint32_t clockFrequency = 25000000) :
 					spiDevice_{spiMaster, slaveSelectPin},
 					blocksCount_{},
@@ -60,15 +60,15 @@ public:
 	}
 
 	/**
-	 * \brief SdMmcCardSpiBased's destructor
+	 * \brief SdCardSpiBased's destructor
 	 *
 	 * \pre Device is closed.
 	 */
 
-	~SdMmcCardSpiBased() override;
+	~SdCardSpiBased() override;
 
 	/**
-	 * \brief Closes SD or MMC card connected via SPI.
+	 * \brief Closes SD card connected via SPI.
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
@@ -81,7 +81,7 @@ public:
 	int close() override;
 
 	/**
-	 * \brief Erases blocks on a SD or MMC card connected via SPI.
+	 * \brief Erases blocks on a SD card connected via SPI.
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
@@ -108,7 +108,7 @@ public:
 	size_t getBlockSize() const override;
 
 	/**
-	 * \return size of SD or MMC card connected via SPI, bytes
+	 * \return size of SD card connected via SPI, bytes
 	 */
 
 	uint64_t getSize() const override;
@@ -131,7 +131,7 @@ public:
 	void lock() override;
 
 	/**
-	 * \brief Opens SD or MMC card connected via SPI.
+	 * \brief Opens SD card connected via SPI.
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
@@ -145,7 +145,7 @@ public:
 	int open() override;
 
 	/**
-	 * \brief Reads data from SD or MMC card connected via SPI.
+	 * \brief Reads data from SD card connected via SPI.
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
@@ -158,7 +158,7 @@ public:
 	 * \param [in] size is the size of \a buffer, bytes, must be a multiple of block size
 	 *
 	 * \return 0 on success, error code otherwise:
-	 * - EIO - error during communication with SD or MMC card;
+	 * - EIO - error during communication with SD card;
 	 * - error codes returned by executeCmd12();
 	 * - error codes returned by executeCmd17();
 	 * - error codes returned by executeCmd18();
@@ -169,7 +169,7 @@ public:
 	int read(uint64_t address, void* buffer, size_t size) override;
 
 	/**
-	 * \brief Synchronizes state of SD or MMC card connected via SPI, ensuring all cached writes are finished.
+	 * \brief Synchronizes state of SD card connected via SPI, ensuring all cached writes are finished.
 	 *
 	 * \pre Device is opened.
 	 *
@@ -191,7 +191,7 @@ public:
 	void unlock() override;
 
 	/**
-	 * \brief Writes data to SD or MMC card connected via SPI.
+	 * \brief Writes data to SD card connected via SPI.
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
@@ -204,7 +204,7 @@ public:
 	 * \param [in] size is the size of \a buffer, bytes, must be a multiple of block size
 	 *
 	 * \return 0 on success, error code otherwise:
-	 * - EIO - error during communication with SD or MMC card;
+	 * - EIO - error during communication with SD card;
 	 * - error codes returned by executeAcmd23();
 	 * - error codes returned by executeCmd24();
 	 * - error codes returned by executeCmd25();
@@ -219,13 +219,13 @@ public:
 private:
 
 	/**
-	 * \brief Deinitializes SD or MMC card connected via SPI.
+	 * \brief Deinitializes SD card connected via SPI.
 	 */
 
 	void deinitialize();
 
 	/**
-	 * \brief Initializes SD or MMC card connected via SPI.
+	 * \brief Initializes SD card connected via SPI.
 	 *
 	 * Algorithm is based on ChaN's
 	 * [How to Use MMC/SDC: Initialization Procedure for SPI Mode](http://elm-chan.org/docs/mmc/mmc_e.html#spiinit).
@@ -233,8 +233,8 @@ private:
 	 * \param [in] spiDeviceProxy is a reference to SpiDeviceProxy associated with this object
 	 *
 	 * \return 0 on success, error code otherwise:
-	 * - EIO - error during communication with SD or MMC card;
-	 * - ETIMEDOUT - timed-out while waiting for SD or MMC card to respond;
+	 * - EIO - error during communication with SD card;
+	 * - ETIMEDOUT - timed-out while waiting for SD card to respond;
 	 * - error codes returned by executeAcmd41();
 	 * - error codes returned by executeCmd0();
 	 * - error codes returned by executeCmd8();
@@ -250,13 +250,13 @@ private:
 	/// internal SPI slave device
 	SpiDevice spiDevice_;
 
-	/// number of blocks available on SD or MMC card
+	/// number of blocks available on SD card
 	size_t blocksCount_;
 
 	/// size of AU, bytes
 	uint32_t auSize_;
 
-	/// desired clock frequency of SD or MMC card, Hz
+	/// desired clock frequency of SD card, Hz
 	uint32_t clockFrequency_;
 
 	/// timeout of erase operation of single AU, milliseconds
