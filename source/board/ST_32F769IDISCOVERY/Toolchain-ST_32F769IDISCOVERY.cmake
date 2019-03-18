@@ -139,6 +139,10 @@ if(NOT distortos_Build_00_Static_destructors OR NOT distortos_Build_01_Run_time_
 	distortosAddFlag(CMAKE_CXX_FLAGS "-fno-use-cxa-atexit")
 endif()
 
+if(CMAKE_GENERATOR STREQUAL "Ninja")
+	add_compile_options(-fdiagnostics-color=always)
+endif()
+
 set(CMAKE_TRY_COMPILE_TARGET_TYPE STATIC_LIBRARY)
 
 set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)

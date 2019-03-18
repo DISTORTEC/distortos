@@ -35,6 +35,12 @@ include_directories(
 
 add_compile_options(-Wall -Wextra -Wshadow)
 
+if(CMAKE_GENERATOR STREQUAL "Ninja")
+	if (CMAKE_C_COMPILER_ID STREQUAL GNU OR CMAKE_CXX_COMPILER_ID STREQUAL GNU)
+		add_compile_options(-fdiagnostics-color=always)
+	endif()
+endif()
+
 add_custom_target(run)
 
 option(COVERAGE "Enable generation of coverage reports with gcovr")
