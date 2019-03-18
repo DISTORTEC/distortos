@@ -1,6 +1,6 @@
 /**
  * \file
- * \brief SdMmcCardSpiBased class implementation
+ * \brief SdCardSpiBased class implementation
  *
  * \author Copyright (C) 2018-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
@@ -9,7 +9,7 @@
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#include "distortos/devices/memory/SdMmcCardSpiBased.hpp"
+#include "distortos/devices/memory/SdCardSpiBased.hpp"
 
 #include "distortos/devices/communication/SpiDeviceProxy.hpp"
 #include "distortos/devices/communication/SpiDeviceSelectGuard.hpp"
@@ -206,7 +206,7 @@ struct SdStatus
 	uint8_t fuleSupport;
 };
 
-/// select guard for SD or MMC card connected via SPI
+/// select guard for SD card connected via SPI
 class SelectGuard : public SpiDeviceSelectGuard
 {
 public:
@@ -408,7 +408,7 @@ std::pair<int, uint8_t> waitWhile(SpiMasterProxy& spiMasterProxy, const distorto
 }
 
 /**
- * \brief Waits while SD or MMC card connected via SPI is busy.
+ * \brief Waits while SD card connected via SPI is busy.
  *
  * \param [in] spiMasterProxy is a reference to SpiMasterProxy object used for communication
  * \param [in] duration is the duration of wait before giving up
@@ -428,7 +428,7 @@ int waitWhileBusy(SpiMasterProxy& spiMasterProxy, const distortos::TickClock::du
 }
 
 /**
- * \brief Reads data block from SD or MMC card connected via SPI.
+ * \brief Reads data block from SD card connected via SPI.
  *
  * \param [in] spiMasterProxy is a reference to SpiMasterProxy object used for communication
  * \param [out] buffer is a pointer to buffer for received data
@@ -468,7 +468,7 @@ std::pair<int, size_t> readDataBlock(SpiMasterProxy& spiMasterProxy, void* const
 }
 
 /**
- * \brief Writes data block to SD or MMC card connected via SPI.
+ * \brief Writes data block to SD card connected via SPI.
  *
  * \param [in] spiMasterProxy is a reference to SpiMasterProxy object used for communication
  * \param [in] token is the token which will be used to start data block
@@ -515,7 +515,7 @@ std::pair<int, size_t> writeDataBlock(SpiMasterProxy& spiMasterProxy, const uint
 }
 
 /**
- * \brief Reads response from SD or MMC card connected via SPI.
+ * \brief Reads response from SD card connected via SPI.
  *
  * \param [in] spiMasterProxy is a reference to SpiMasterProxy object used for communication
  * \param [in] buffer is a buffer for received response
@@ -564,7 +564,7 @@ int readResponse(SpiMasterProxy& spiMasterProxy, const Uint8Range buffer)
 }
 
 /**
- * \brief Reads R1 response from SD or MMC card connected via SPI.
+ * \brief Reads R1 response from SD card connected via SPI.
  *
  * \param [in] spiMasterProxy is a reference to SpiMasterProxy object used for communication
  *
@@ -580,7 +580,7 @@ std::pair<int, uint8_t> readR1(SpiMasterProxy& spiMasterProxy)
 }
 
 /**
- * \brief Reads R2 response from SD or MMC card connected via SPI.
+ * \brief Reads R2 response from SD card connected via SPI.
  *
  * \param [in] spiMasterProxy is a reference to SpiMasterProxy object used for communication
  *
@@ -596,7 +596,7 @@ std::pair<int, R2Response> readR2(SpiMasterProxy& spiMasterProxy)
 }
 
 /**
- * \brief Reads R3 response from SD or MMC card connected via SPI.
+ * \brief Reads R3 response from SD card connected via SPI.
  *
  * \param [in] spiMasterProxy is a reference to SpiMasterProxy object used for communication
  *
@@ -615,7 +615,7 @@ std::pair<int, R3Response> readR3(SpiMasterProxy& spiMasterProxy)
 }
 
 /**
- * \brief Reads R7 response from SD or MMC card connected via SPI.
+ * \brief Reads R7 response from SD card connected via SPI.
  *
  * \param [in] spiMasterProxy is a reference to SpiMasterProxy object used for communication
  *
@@ -637,7 +637,7 @@ std::pair<int, R7Response> readR7(SpiMasterProxy& spiMasterProxy)
 }
 
 /**
- * \brief Writes regular (CMD) command to SD or MMC card connected via SPI.
+ * \brief Writes regular (CMD) command to SD card connected via SPI.
  *
  * \param [in] spiMasterProxy is a reference to SpiMasterProxy object used for communication
  * \param [in] command is the command that will be written
@@ -669,7 +669,7 @@ int writeCmd(SpiMasterProxy& spiMasterProxy, const uint8_t command, const uint32
 }
 
 /**
- * \brief Writes regular (CMD) command and reads R1 response to/from SD or MMC card connected via SPI.
+ * \brief Writes regular (CMD) command and reads R1 response to/from SD card connected via SPI.
  *
  * \param [in] spiMasterProxy is a reference to SpiMasterProxy object used for communication
  * \param [in] command is the command that will be written
@@ -693,7 +693,7 @@ std::pair<int, uint8_t> writeCmdReadR1(SpiMasterProxy& spiMasterProxy, const uin
 }
 
 /**
- * \brief Writes regular (CMD) command and reads R3 response to/from SD or MMC card connected via SPI.
+ * \brief Writes regular (CMD) command and reads R3 response to/from SD card connected via SPI.
  *
  * \param [in] spiMasterProxy is a reference to SpiMasterProxy object used for communication
  * \param [in] command is the command that will be written
@@ -717,7 +717,7 @@ std::pair<int, R3Response> writeCmdReadR3(SpiMasterProxy& spiMasterProxy, const 
 }
 
 /**
- * \brief Writes regular (CMD) command and reads R7 response to/from SD or MMC card connected via SPI.
+ * \brief Writes regular (CMD) command and reads R7 response to/from SD card connected via SPI.
  *
  * \param [in] spiMasterProxy is a reference to SpiMasterProxy object used for communication
  * \param [in] command is the command that will be written
@@ -741,7 +741,7 @@ std::pair<int, R7Response> writeCmdReadR7(SpiMasterProxy& spiMasterProxy, const 
 }
 
 /**
- * \brief Executes CMD0 command on SD or MMC card connected via SPI.
+ * \brief Executes CMD0 command on SD card connected via SPI.
  *
  * This is GO_IDLE_STATE command.
  *
@@ -757,23 +757,7 @@ std::pair<int, uint8_t> executeCmd0(SpiMasterProxy& spiMasterProxy)
 }
 
 /**
- * \brief Executes CMD1 command on SD or MMC card connected via SPI.
- *
- * This is SEND_OP_COND command.
- *
- * \param [in] spiMasterProxy is a reference to SpiMasterProxy object used for communication
- *
- * \return pair with return code (0 on success, error code otherwise) and R1 response; error codes:
- * - error codes returned by writeCmdReadR1();
- */
-
-std::pair<int, uint8_t> executeCmd1(SpiMasterProxy& spiMasterProxy)
-{
-	return writeCmdReadR1(spiMasterProxy, 1);
-}
-
-/**
- * \brief Executes CMD8 command on SD or MMC card connected via SPI.
+ * \brief Executes CMD8 command on SD card connected via SPI.
  *
  * This is SEND_IF_COND command.
  *
@@ -794,7 +778,7 @@ std::tuple<int, uint8_t, bool> executeCmd8(SpiMasterProxy& spiMasterProxy)
 }
 
 /**
- * \brief Executes CMD9 command on SD or MMC card connected via SPI.
+ * \brief Executes CMD9 command on SD card connected via SPI.
  *
  * This is SEND_CSD command.
  *
@@ -820,7 +804,7 @@ std::tuple<int, uint8_t, std::array<uint8_t, 16>> executeCmd9(SpiMasterProxy& sp
 }
 
 /**
- * \brief Executes CMD12 command on SD or MMC card connected via SPI.
+ * \brief Executes CMD12 command on SD card connected via SPI.
  *
  * This is STOP_TRANSMISSION command.
  *
@@ -843,7 +827,7 @@ std::pair<int, uint8_t> executeCmd12(SpiMasterProxy& spiMasterProxy, const disto
 }
 
 /**
- * \brief Executes CMD16 command on SD or MMC card connected via SPI.
+ * \brief Executes CMD16 command on SD card connected via SPI.
  *
  * This is SET_BLOCKLEN command.
  *
@@ -860,7 +844,7 @@ std::pair<int, uint8_t> executeCmd16(SpiMasterProxy& spiMasterProxy, const uint3
 }
 
 /**
- * \brief Executes CMD17 command on SD or MMC card connected via SPI.
+ * \brief Executes CMD17 command on SD card connected via SPI.
  *
  * This is READ_SINGLE_BLOCK command.
  *
@@ -877,7 +861,7 @@ std::pair<int, uint8_t> executeCmd17(SpiMasterProxy& spiMasterProxy, const uint3
 }
 
 /**
- * \brief Executes CMD18 command on SD or MMC card connected via SPI.
+ * \brief Executes CMD18 command on SD card connected via SPI.
  *
  * This is READ_MULTIPLE_BLOCK command.
  *
@@ -894,7 +878,7 @@ std::pair<int, uint8_t> executeCmd18(SpiMasterProxy& spiMasterProxy, const uint3
 }
 
 /**
- * \brief Executes CMD24 command on SD or MMC card connected via SPI.
+ * \brief Executes CMD24 command on SD card connected via SPI.
  *
  * This is WRITE_BLOCK command.
  *
@@ -911,7 +895,7 @@ std::pair<int, uint8_t> executeCmd24(SpiMasterProxy& spiMasterProxy, const uint3
 }
 
 /**
- * \brief Executes CMD25 command on SD or MMC card connected via SPI.
+ * \brief Executes CMD25 command on SD card connected via SPI.
  *
  * This is WRITE_MULTIPLE_BLOCK command.
  *
@@ -928,7 +912,7 @@ std::pair<int, uint8_t> executeCmd25(SpiMasterProxy& spiMasterProxy, const uint3
 }
 
 /**
- * \brief Executes CMD32 command on SD or MMC card connected via SPI.
+ * \brief Executes CMD32 command on SD card connected via SPI.
  *
  * This is ERASE_WR_BLK_START_ADDR command.
  *
@@ -945,7 +929,7 @@ std::pair<int, uint8_t> executeCmd32(SpiMasterProxy& spiMasterProxy, const uint3
 }
 
 /**
- * \brief Executes CMD33 command on SD or MMC card connected via SPI.
+ * \brief Executes CMD33 command on SD card connected via SPI.
  *
  * This is ERASE_WR_BLK_END_ADDR command.
  *
@@ -962,7 +946,7 @@ std::pair<int, uint8_t> executeCmd33(SpiMasterProxy& spiMasterProxy, const uint3
 }
 
 /**
- * \brief Executes CMD38 command on SD or MMC card connected via SPI.
+ * \brief Executes CMD38 command on SD card connected via SPI.
  *
  * This is ERASE command.
  *
@@ -985,7 +969,7 @@ std::pair<int, uint8_t> executeCmd38(SpiMasterProxy& spiMasterProxy, const disto
 }
 
 /**
- * \brief Executes CMD55 command on SD or MMC card connected via SPI.
+ * \brief Executes CMD55 command on SD card connected via SPI.
  *
  * This is APP_CMD command.
  *
@@ -1001,7 +985,7 @@ std::pair<int, uint8_t> executeCmd55(SpiMasterProxy& spiMasterProxy)
 }
 
 /**
- * \brief Executes CMD58 command on SD or MMC card connected via SPI.
+ * \brief Executes CMD58 command on SD card connected via SPI.
  *
  * This is READ_OCR command.
  *
@@ -1017,7 +1001,7 @@ std::pair<int, R3Response> executeCmd58(SpiMasterProxy& spiMasterProxy)
 }
 
 /**
- * \brief Writes application (ACMD) command to SD or MMC card connected via SPI.
+ * \brief Writes application (ACMD) command to SD card connected via SPI.
  *
  * \param [in] spiMasterProxy is a reference to SpiMasterProxy object used for communication
  * \param [in] command is the command that will be written
@@ -1044,7 +1028,7 @@ int writeAcmd(SpiMasterProxy& spiMasterProxy, const uint8_t command, const uint3
 }
 
 /**
- * \brief Writes application (ACMD) command and reads R1 response to/from SD or MMC card connected via SPI.
+ * \brief Writes application (ACMD) command and reads R1 response to/from SD card connected via SPI.
  *
  * \param [in] spiMasterProxy is a reference to SpiMasterProxy object used for communication
  * \param [in] command is the command that will be written
@@ -1068,7 +1052,7 @@ std::pair<int, uint8_t> writeAcmdReadR1(SpiMasterProxy& spiMasterProxy, const ui
 }
 
 /**
- * \brief Writes application (ACMD) command and reads R2 response to/from SD or MMC card connected via SPI.
+ * \brief Writes application (ACMD) command and reads R2 response to/from SD card connected via SPI.
  *
  * \param [in] spiMasterProxy is a reference to SpiMasterProxy object used for communication
  * \param [in] command is the command that will be written
@@ -1092,7 +1076,7 @@ std::pair<int, R2Response> writeAcmdReadR2(SpiMasterProxy& spiMasterProxy, const
 }
 
 /**
- * \brief Executes ACMD13 command on SD or MMC card connected via SPI.
+ * \brief Executes ACMD13 command on SD card connected via SPI.
  *
  * This is SD_STATUS command.
  *
@@ -1119,7 +1103,7 @@ std::tuple<int, R2Response, std::array<uint8_t, 64>> executeAcmd13(SpiMasterProx
 }
 
 /**
- * \brief Executes ACMD23 command on SD or MMC card connected via SPI.
+ * \brief Executes ACMD23 command on SD card connected via SPI.
  *
  * This is SET_WR_BLK_ERASE_COUNT command.
  *
@@ -1136,13 +1120,13 @@ std::pair<int, uint8_t> executeAcmd23(SpiMasterProxy& spiMasterProxy, const uint
 }
 
 /**
- * \brief Executes ACMD41 command on SD or MMC card connected via SPI.
+ * \brief Executes ACMD41 command on SD card connected via SPI.
  *
  * This is SD_SEND_OP_COND command.
  *
  * \param [in] spiMasterProxy is a reference to SpiMasterProxy object used for communication
- * \param [in] hcs is the value of HCS (Host Capacity Support) bit sent to the SD or MMC card, which selects whether
- * host supports SDHC or SDXC cards
+ * \param [in] hcs is the value of HCS (Host Capacity Support) bit sent to the SD card, which selects whether host
+ * supports SDHC or SDXC cards
  *
  * \return pair with return code (0 on success, error code otherwise) and R1 response; error codes:
  * - error codes returned by writeAcmdReadR1();
@@ -1159,16 +1143,16 @@ std::pair<int, uint8_t> executeAcmd41(SpiMasterProxy& spiMasterProxy, const bool
 | public functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-SdMmcCardSpiBased::~SdMmcCardSpiBased()
+SdCardSpiBased::~SdCardSpiBased()
 {
-	assert(type_ == Type::unknown);
+	assert(SpiDeviceProxy{spiDevice_}.isOpened() == false);
 }
 
-int SdMmcCardSpiBased::close()
+int SdCardSpiBased::close()
 {
 	const SpiDeviceProxy spiDeviceProxy {spiDevice_};
 
-	assert(type_ != Type::unknown);
+	assert(spiDeviceProxy.isOpened() == true);
 
 	const auto ret = spiDevice_.close();
 
@@ -1178,11 +1162,11 @@ int SdMmcCardSpiBased::close()
 	return ret;
 }
 
-int SdMmcCardSpiBased::erase(const uint64_t address, const uint64_t size)
+int SdCardSpiBased::erase(const uint64_t address, const uint64_t size)
 {
 	const SpiDeviceProxy spiDeviceProxy {spiDevice_};
 
-	assert(type_ != Type::unknown);
+	assert(spiDeviceProxy.isOpened() == true);
 	assert(address % blockSize == 0 && size % blockSize == 0);
 
 	const auto firstBlock = address / blockSize;
@@ -1247,23 +1231,23 @@ int SdMmcCardSpiBased::erase(const uint64_t address, const uint64_t size)
 	return {};
 }
 
-size_t SdMmcCardSpiBased::getBlockSize() const
+size_t SdCardSpiBased::getBlockSize() const
 {
 	return blockSize;
 }
 
-uint64_t SdMmcCardSpiBased::getSize() const
+uint64_t SdCardSpiBased::getSize() const
 {
 	return static_cast<decltype(getSize())>(blockSize) * blocksCount_;
 }
 
-void SdMmcCardSpiBased::lock()
+void SdCardSpiBased::lock()
 {
 	const auto ret = spiDevice_.lock();
 	assert(ret == 0);
 }
 
-int SdMmcCardSpiBased::open()
+int SdCardSpiBased::open()
 {
 	const SpiDeviceProxy spiDeviceProxy {spiDevice_};
 
@@ -1297,11 +1281,11 @@ int SdMmcCardSpiBased::open()
 	return 0;
 }
 
-int SdMmcCardSpiBased::read(const uint64_t address, void* const buffer, const size_t size)
+int SdCardSpiBased::read(const uint64_t address, void* const buffer, const size_t size)
 {
 	const SpiDeviceProxy spiDeviceProxy {spiDevice_};
 
-	assert(type_ != Type::unknown);
+	assert(spiDeviceProxy.isOpened() == true);
 	assert(buffer != nullptr && address % blockSize == 0 && size % blockSize == 0);
 
 	const auto firstBlock = address / blockSize;
@@ -1355,24 +1339,24 @@ int SdMmcCardSpiBased::read(const uint64_t address, void* const buffer, const si
 	return {};
 }
 
-int SdMmcCardSpiBased::synchronize()
+int SdCardSpiBased::synchronize()
 {
-	assert(type_ != Type::unknown);
+	assert(SpiDeviceProxy{spiDevice_}.isOpened() == true);
 
 	return {};
 }
 
-void SdMmcCardSpiBased::unlock()
+void SdCardSpiBased::unlock()
 {
 	const auto ret = spiDevice_.unlock();
 	assert(ret == 0);
 }
 
-int SdMmcCardSpiBased::write(const uint64_t address, const void* const buffer, const size_t size)
+int SdCardSpiBased::write(const uint64_t address, const void* const buffer, const size_t size)
 {
 	const SpiDeviceProxy spiDeviceProxy {spiDevice_};
 
-	assert(type_ != Type::unknown);
+	assert(spiDeviceProxy.isOpened() == true);
 	assert(buffer != nullptr && address % blockSize == 0 && size % blockSize == 0);
 
 	const auto firstBlock = address / blockSize;
@@ -1449,7 +1433,7 @@ int SdMmcCardSpiBased::write(const uint64_t address, const void* const buffer, c
 | private functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-void SdMmcCardSpiBased::deinitialize()
+void SdCardSpiBased::deinitialize()
 {
 	blocksCount_ = {};
 	auSize_ = {};
@@ -1457,10 +1441,9 @@ void SdMmcCardSpiBased::deinitialize()
 	readTimeoutMs_ = {};
 	writeTimeoutMs_ = {};
 	blockAddressing_ = {};
-	type_ = {};
 }
 
-int SdMmcCardSpiBased::initialize(const SpiDeviceProxy& spiDeviceProxy)
+int SdCardSpiBased::initialize(const SpiDeviceProxy& spiDeviceProxy)
 {
 	SpiMasterProxy spiMasterProxy {spiDeviceProxy};
 
@@ -1498,14 +1481,10 @@ int SdMmcCardSpiBased::initialize(const SpiDeviceProxy& spiDeviceProxy)
 		const auto ret = executeCmd8(spiMasterProxy);
 		if (std::get<0>(ret) != 0)
 			return std::get<0>(ret);
-
-		if (std::get<1>(ret) == r1InIdleStateMask)
-		{
-			if (std::get<2>(ret) == false)
-				return EIO;	// voltage range not supported
-
-			type_ = Type::sdVersion2;
-		}
+		if (std::get<1>(ret) != r1InIdleStateMask)
+			return EIO;
+		if (std::get<2>(ret) == false)
+			return EIO;	// voltage range not supported
 	}
 	{
 		const auto deadline = TickClock::now() + std::chrono::seconds{1};
@@ -1514,59 +1493,27 @@ int SdMmcCardSpiBased::initialize(const SpiDeviceProxy& spiDeviceProxy)
 			{
 				const SelectGuard spiDeviceSelectGuard {spiMasterProxy};
 
-				const auto ret = executeAcmd41(spiMasterProxy, type_ == Type::sdVersion2);
+				const auto ret = executeAcmd41(spiMasterProxy, true);
 				if (ret.first != 0)
 					return ret.first;
 				if (ret.second == 0)
-				{
-					if (type_ == Type::unknown)
-						type_ = Type::sdVersion1;
-
 					break;
-				}
-				if (ret.second != r1InIdleStateMask || TickClock::now() >= deadline)
-				{
-					if (type_ == Type::sdVersion2)
-						return ret.second != r1InIdleStateMask ? EIO : ETIMEDOUT;
-					else
-						break;
-				}
+				if (ret.second != r1InIdleStateMask)
+					return EIO;
+				if (TickClock::now() >= deadline)
+					return ETIMEDOUT;
 			}
 
 			ThisThread::sleepFor({});
 		}
 	}
 
-	if (type_ == Type::unknown)
-	{
-		const auto deadline = TickClock::now() + std::chrono::seconds{1};
-		while (1)
-		{
-			{
-				const SelectGuard spiDeviceSelectGuard {spiMasterProxy};
-
-				const auto ret = executeCmd1(spiMasterProxy);
-				if (ret.first != 0)
-					return ret.first;
-				if (ret.second == 0)
-				{
-					type_ = Type::mmc;
-					break;
-				}
-				if (ret.second != r1InIdleStateMask || TickClock::now() >= deadline)
-					return ret.second != r1InIdleStateMask ? EIO : ETIMEDOUT;
-			}
-
-			ThisThread::sleepFor({});
-		}
-	}
 	{
 		const auto ret = spiMasterProxy.configure(SpiMode::_0, clockFrequency_, 8, false, UINT32_MAX);
 		if (ret.first != 0)
 			return ret.first;
 	}
 
-	if (type_ == Type::sdVersion2)
 	{
 		const SelectGuard spiDeviceSelectGuard {spiMasterProxy};
 

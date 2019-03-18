@@ -25,14 +25,10 @@ object and exposes `distortos::devices::MemoryTechnologyDevice` interface.
 `distortos::devices::SpiDeviceSelectGuard`, which build new SPI-related API. These classes can be used for RAII-style
 locking/unlocking or selecting/deselecting of appropriate devices and also serve as proxies for accessing core
 functionalities of associated objects.
-- Added `distortos::devices::SdCard` class, based on `distortos::devices::BlockDevice` interface, which can be used with
-*SD* cards connected via SDMMC. This code handles only *SD version 2.0* cards, has no support for run-time detection of
-card insertion/removal and has no support for detecting whether card is write-protected. Code was tested with 2 GB
-*SDSC* and 32 GB *SDHC* cards.
-- Added `distortos::devices::SdMmcCardSpiBased` class, based on `distortos::devices::BlockDevice` interface, which can
-be used with *SD* or *MMC* card connected via SPI. At this moment the code handles only *SD version 2.0* cards, has no
-support for run-time detection of card insertion/removal and has no support for detecting whether card is
-write-protected. Code was tested with 2 GB *SDSC* and 32 GB *SDHC* cards.
+- Added `distortos::devices::SdCard` and `distortos::devices::SdCardSpiBased` classes, both based on
+`distortos::devices::BlockDevice` interface, which can be used with *SD* cards connected via SDMMC or SPI respectively.
+This code handles only *SD version 2.0* cards, has no support for run-time detection of card insertion/removal and has
+no support for detecting whether card is write-protected. Code was tested with 2 GB *SDSC* and 32 GB *SDHC* cards.
 - Added basic framework for file systems in the form of 3 abstract classes: `distortos::FileSystem`, `distortos::File`
 and `distortos::Directory`.
 - Added global `distortos::openFile()`, taking `distortos::FileSystem` reference and returning a fully functional
