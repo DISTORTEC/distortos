@@ -1247,7 +1247,7 @@ std::tuple<int, R1Response, SdStatus> executeAcmd13(SynchronousSdMmcCardLowLevel
 	SdStatus::RawSdStatus sdStatus __attribute__((aligned(CONFIG_SDMMCCARD_BUFFER_ALIGNMENT))) {};
 	const auto ret = executeAcmdWithR1Response(sdCard, rca, 13, {},
 			SdMmcCardLowLevel::ReadTransfer{sdStatus.data(), sizeof(sdStatus), sizeof(sdStatus), timeoutMs});
-	return {ret.first, ret.second, SdStatus{sdStatus}};
+	return std::make_tuple(ret.first, ret.second, SdStatus{sdStatus});
 }
 
 /**
