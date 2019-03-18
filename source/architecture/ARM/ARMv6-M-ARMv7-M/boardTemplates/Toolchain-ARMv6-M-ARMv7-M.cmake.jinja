@@ -87,26 +87,26 @@ set(CMAKE_C_FLAGS_DEBUG
 		"-Og -g -ggdb3"
 		CACHE STRING "Flags used by the C compiler during DEBUG builds.")
 set(CMAKE_C_FLAGS_MINSIZEREL
-		"-Os -DNDEBUG"
+		"-Os"
 		CACHE STRING "Flags used by the C compiler during MINSIZEREL builds.")
 set(CMAKE_C_FLAGS_RELEASE
-		"-O2 -DNDEBUG"
+		"-O2"
 		CACHE STRING "Flags used by the C compiler during RELEASE builds.")
 set(CMAKE_C_FLAGS_RELWITHDEBINFO
-		"-O2 -g -ggdb3 -DNDEBUG"
+		"-O2 -g -ggdb3"
 		CACHE STRING "Flags used by the C compiler during RELWITHDEBINFO builds.")
 
 set(CMAKE_CXX_FLAGS_DEBUG
 		"-Og -g -ggdb3" CACHE STRING
 		"Flags used by the CXX compiler during DEBUG builds.")
 set(CMAKE_CXX_FLAGS_MINSIZEREL
-		"-Os -DNDEBUG" CACHE STRING
+		"-Os" CACHE STRING
 		"Flags used by the CXX compiler during MINSIZEREL builds.")
 set(CMAKE_CXX_FLAGS_RELEASE
-		"-O2 -DNDEBUG" CACHE STRING
+		"-O2" CACHE STRING
 		"Flags used by the CXX compiler during RELEASE builds.")
 set(CMAKE_CXX_FLAGS_RELWITHDEBINFO
-		"-O2 -g -ggdb3 -DNDEBUG" CACHE STRING
+		"-O2 -g -ggdb3" CACHE STRING
 		"Flags used by the CXX compiler during RELWITHDEBINFO builds.")
 
 set(CMAKE_EXE_LINKER_FLAGS_DEBUG
@@ -122,7 +122,7 @@ set(CMAKE_EXE_LINKER_FLAGS_RELWITHDEBINFO
 		"" CACHE STRING
 		"Flags used by the linker during RELWITHDEBINFO builds.")
 
-if(DISTORTOS_CONFIGURATION_VERSION LESS 1)
+if(DISTORTOS_CONFIGURATION_VERSION LESS 2)
 
 	message(STATUS "Removing \"-DNDEBUG\" from CMAKE_{C,CXX}_FLAGS_{MINSIZEREL,RELEASE,RELWITHDEBINFO}.")
 	message(STATUS "Assertions are now configured with distortos_Checks_..._Asserts option.")
@@ -133,7 +133,7 @@ if(DISTORTOS_CONFIGURATION_VERSION LESS 1)
 	distortosRemoveFlag(CMAKE_CXX_FLAGS_RELEASE "-DNDEBUG")
 	distortosRemoveFlag(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-DNDEBUG")
 
-endif(DISTORTOS_CONFIGURATION_VERSION LESS 1)
+endif(DISTORTOS_CONFIGURATION_VERSION LESS 2)
 
 if(distortos_Build_00_Static_destructors)
 

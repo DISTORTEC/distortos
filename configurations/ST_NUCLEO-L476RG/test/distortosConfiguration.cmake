@@ -183,7 +183,7 @@ set("CMAKE_VERBOSE_MAKEFILE"
 		"BOOL"
 		"If this value is on, makefiles will be generated without the .SILENT directive, and all commands will be echoed to the console during the make.  This is useful for debugging only. With Visual Studio IDE projects all commands are done without /nologo.")
 set("DISTORTOS_CONFIGURATION_VERSION"
-		"1"
+		"2"
 		CACHE
 		"INTERNAL"
 		"")
