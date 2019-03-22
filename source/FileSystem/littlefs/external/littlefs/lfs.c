@@ -44,20 +44,6 @@ static int lfs_cache_read(lfs_t *lfs, lfs_cache_t *rcache,
             continue;
         }
 
-        if (off % lfs->cfg->read_size == 0 && size >= lfs->cfg->read_size) {
-            // bypass cache?
-            lfs_size_t diff = size - (size % lfs->cfg->read_size);
-            int err = lfs->cfg->read(lfs->cfg, block, off, data, diff);
-            if (err) {
-                return err;
-            }
-
-            data += diff;
-            off += diff;
-            size -= diff;
-            continue;
-        }
-
         // load to cache, first condition can no longer fail
         rcache->block = block;
         rcache->off = off - (off % lfs->cfg->read_size);
@@ -181,33 +167,6 @@ static int lfs_cache_prog(lfs_t *lfs, lfs_cache_t *pcache,
         // pcache must have been flushed, either by programming and
         // entire block or manually flushing the pcache
         LFS_ASSERT(pcache->block == 0xffffffff);
-
-        if (off % lfs->cfg->prog_size == 0 &&
-                size >= lfs->cfg->prog_size) {
-            // bypass pcache?
-            lfs_size_t diff = size - (size % lfs->cfg->prog_size);
-            int err = lfs->cfg->prog(lfs->cfg, block, off, data, diff);
-            if (err) {
-                return err;
-            }
-
-            if (rcache) {
-                int res = lfs_cache_cmp(lfs, rcache, NULL,
-                        block, off, data, diff);
-                if (res < 0) {
-                    return res;
-                }
-
-                if (!res) {
-                    return LFS_ERR_CORRUPT;
-                }
-            }
-
-            data += diff;
-            off += diff;
-            size -= diff;
-            continue;
-        }
 
         // prepare pcache, first condition can no longer fail
         pcache->block = block;
