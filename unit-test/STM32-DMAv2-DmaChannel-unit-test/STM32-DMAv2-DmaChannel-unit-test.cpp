@@ -11,8 +11,8 @@
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#include "distortos/chip/DmaChannel.hpp"
 #include "distortos/chip/DmaChannelFunctor.hpp"
+#include "distortos/chip/DmaChannelUniqueHandle.hpp"
 #include "distortos/chip/STM32-DMAv2-DmaChannelPeripheral.hpp"
 #include "distortos/chip/STM32-DMAv2-DmaPeripheral.hpp"
 

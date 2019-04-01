@@ -103,76 +103,15 @@ namespace distortos
 namespace chip
 {
 
+class DmaChannelUniqueHandle;
+
 class DmaChannel
 {
 public:
 
 	using Flags = DmaChannelFlags;
 
-	class UniqueHandle
-	{
-	public:
-
-		constexpr UniqueHandle() :
-				channel_{}
-		{
-
-		}
-
-		~UniqueHandle()
-		{
-			assert(channel_ == nullptr);
-		}
-
-		size_t getTransactionsLeft() const
-		{
-			assert(channel_ != nullptr);
-			return channel_->getTransactionsLeft();
-		}
-
-		void release()
-		{
-			if (channel_ == nullptr)
-				return;
-
-			channel_->release();
-			channel_ = {};
-		}
-
-		int reserve(DmaChannel& channel, const uint8_t request, DmaChannelFunctor& functor)
-		{
-			assert(channel_ == nullptr);
-
-			const auto ret = channel.reserve(request, functor);
-			if (ret != 0)
-				return ret;
-
-			channel_ = &channel;
-			return {};
-		}
-
-		void startTransfer(const uintptr_t memoryAddress, const uintptr_t peripheralAddress, const size_t transactions,
-				const Flags flags) const
-		{
-			assert(channel_ != nullptr);
-			channel_->startTransfer(memoryAddress, peripheralAddress, transactions, flags);
-		}
-
-		void stopTransfer() const
-		{
-			assert(channel_ != nullptr);
-			channel_->stopTransfer();
-		}
-
-		UniqueHandle(const UniqueHandle&) = delete;
-		UniqueHandle(UniqueHandle&&) = delete;
-		const UniqueHandle& operator=(const UniqueHandle&) = delete;
-		UniqueHandle& operator=(UniqueHandle&&) = delete;
-
-	private:
-
-		DmaChannel* channel_;
-	};
+	using UniqueHandle = DmaChannelUniqueHandle;
 
 	MAKE_CONST_MOCK0(getTransactionsLeft, size_t());
 	MAKE_MOCK0(release, void());

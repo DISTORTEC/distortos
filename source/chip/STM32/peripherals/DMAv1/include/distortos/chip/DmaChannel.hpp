@@ -106,6 +106,7 @@ namespace chip
 
 class DmaChannelFunctor;
 class DmaChannelPeripheral;
+class DmaChannelUniqueHandle;
 class DmaPeripheral;
 
 /**
@@ -116,145 +117,15 @@ class DmaPeripheral;
 
 class DmaChannel
 {
+	friend DmaChannelUniqueHandle;
+
 public:
 
 	/// import DmaChannelFlags
 	using Flags = DmaChannelFlags;
 
-	/// UniqueHandle class can be used to access DmaChannel's functionality
-	class UniqueHandle
-	{
-	public:
-
-		/**
-		 * \brief UniqueHandle's constructor
-		 */
-
-		constexpr UniqueHandle() :
-				channel_{}
-		{
-
-		}
-
-		/**
-		 * \brief UniqueHandle's destructor
-		 *
-		 * \pre No driver is reserved with this handle.
-		 */
-
-		~UniqueHandle()
-		{
-			assert(channel_ == nullptr);
-		}
-
-		/**
-		 * \pre Driver is reserved with this handle.
-		 *
-		 * \return number of transactions left
-		 */
-
-		size_t getTransactionsLeft() const
-		{
-			assert(channel_ != nullptr);
-			return channel_->getTransactionsLeft();
-		}
-
-		/**
-		 * \brief Releases any associated low-level DMA channel driver.
-		 *
-		 * \pre No transfer is in progress.
-		 *
-		 * \post No driver is reserved with this handle.
-		 */
-
-		void release()
-		{
-			if (channel_ == nullptr)
-				return;
-
-			channel_->release();
-			channel_ = {};
-		}
-
-		/**
-		 * \brief Reserves low-level DMA channel driver for exclusive use via this handle.
-		 *
-		 * \pre No driver is reserved with this handle.
-		 * \pre \a request is valid.
-		 *
-		 * \param [in] channel is a reference to low-level DMA channel driver which will be associated with this handle
-		 * \param [in] request is the request identifier with which low-level DMA channel driver will be associated
-		 * \param [in] functor is a reference to DmaChannelFunctor object that will be notified about transfer-related
-		 * events
-		 *
-		 * \return 0 on success, error code otherwise:
-		 * - error codes returned by DmaChannel::reserve();
-		 */
-
-		int reserve(DmaChannel& channel, const uint8_t request, DmaChannelFunctor& functor)
-		{
-			assert(channel_ == nullptr);
-
-			const auto ret = channel.reserve(request, functor);
-			if (ret != 0)
-				return ret;
-
-			channel_ = &channel;
-			return {};
-		}
-
-		/**
-		 * \brief Configures and starts asynchronous transfer.
-		 *
-		 * This function returns immediately. When the transfer is physically finished (either expected number of
-		 * transactions were executed or an error was detected), one of DmaChannelFunctor functions will be executed.
-		 *
-		 * \pre Driver is reserved with this handle.
-		 * \pre \a memoryAddress and \a peripheralAddress and \a transactions and \a flags are valid.
-		 * \pre No transfer is in progress.
-		 *
-		 * \post Transfer is in progress.
-		 *
-		 * \param [in] memoryAddress is the memory address, must be divisible by configured memory data size
-		 * \param [in] peripheralAddress is the peripheral address, must be divisible by peripheral data size
-		 * \param [in] transactions is the number of transactions, [1; 65535]
-		 * \param [in] flags are configuration flags
-		 */
-
-		void startTransfer(const uintptr_t memoryAddress, const uintptr_t peripheralAddress, const size_t transactions,
-				const Flags flags) const
-		{
-			assert(channel_ != nullptr);
-			channel_->startTransfer(memoryAddress, peripheralAddress, transactions, flags);
-		}
-
-		/**
-		 * \brief Stops transfer.
-		 *
-		 * This function should be used after previous asynchronous transfer is finished to restore DMA channel to
-		 * proper state. It may also be used to stop any ongoing asynchronous transfer.
-		 *
-		 * \pre Driver is reserved with this handle.
-		 *
-		 * \post No transfer is in progress.
-		 */
-
-		void stopTransfer() const
-		{
-			assert(channel_ != nullptr);
-			channel_->stopTransfer();
-		}
-
-		UniqueHandle(const UniqueHandle&) = delete;
-		UniqueHandle(UniqueHandle&&) = delete;
-		const UniqueHandle& operator=(const UniqueHandle&) = delete;
-		UniqueHandle& operator=(UniqueHandle&&) = delete;
-
-	private:
-
-		/// pointer to low-level DMA channel driver associated with this handle
-		DmaChannel* channel_;
-	};
+	/// import DmaChannelUniqueHandle
+	using UniqueHandle = DmaChannelUniqueHandle;
 
 	/**
 	 * \brief DmaChannel's constructor

@@ -12,8 +12,8 @@
 #ifndef SOURCE_CHIP_STM32_PERIPHERALS_SPIV2_INCLUDE_DISTORTOS_CHIP_SPIMASTERLOWLEVELDMABASED_HPP_
 #define SOURCE_CHIP_STM32_PERIPHERALS_SPIV2_INCLUDE_DISTORTOS_CHIP_SPIMASTERLOWLEVELDMABASED_HPP_
 
-#include "distortos/chip/DmaChannel.hpp"
 #include "distortos/chip/DmaChannelFunctorCommon.hpp"
+#include "distortos/chip/DmaChannelUniqueHandle.hpp"
 
 #include "distortos/devices/communication/SpiMasterLowLevel.hpp"
 

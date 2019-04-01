@@ -12,8 +12,8 @@
 #ifndef SOURCE_CHIP_STM32_PERIPHERALS_SDMMCV1_INCLUDE_DISTORTOS_CHIP_SDMMCCARDLOWLEVEL_HPP_
 #define SOURCE_CHIP_STM32_PERIPHERALS_SDMMCV1_INCLUDE_DISTORTOS_CHIP_SDMMCCARDLOWLEVEL_HPP_
 
-#include "distortos/chip/DmaChannel.hpp"
 #include "distortos/chip/DmaChannelFunctorCommon.hpp"
+#include "distortos/chip/DmaChannelUniqueHandle.hpp"
 
 #include "distortos/devices/memory/SdMmcCardLowLevel.hpp"
 
