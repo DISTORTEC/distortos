@@ -10,5 +10,4 @@
 target_sources(distortos PRIVATE
 		${CMAKE_CURRENT_LIST_DIR}/Rs485.cpp
 		${CMAKE_CURRENT_LIST_DIR}/SerialPort.cpp
-		${CMAKE_CURRENT_LIST_DIR}/SpiMaster.cpp
-		${CMAKE_CURRENT_LIST_DIR}/SpiMasterHandle.cpp)
+		${CMAKE_CURRENT_LIST_DIR}/SpiMaster.cpp)

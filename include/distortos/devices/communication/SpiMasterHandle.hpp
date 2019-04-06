@@ -13,7 +13,6 @@
 #define INCLUDE_DISTORTOS_DEVICES_COMMUNICATION_SPIMASTERHANDLE_HPP_
 
 #include "distortos/devices/communication/SpiMaster.hpp"
-#include "distortos/devices/communication/SpiMode.hpp"
 
 namespace distortos
 {
@@ -83,12 +82,14 @@ public:
 	 * \param [in] dummyData is the dummy data that will be sent if write buffer of transfer is nullptr
 	 *
 	 * \return pair with return code (0 on success, error code otherwise) and real clock frequency; error codes:
-	 * - EBADF - associated SPI master is not opened;
-	 * - error codes returned by SpiMasterLowLevel::configure();
+	 * - error codes returned by SpiMaster::configure();
 	 */
 
-	std::pair<int, uint32_t> configure(SpiMode mode, uint32_t clockFrequency, uint8_t wordLength, bool lsbFirst,
-			uint32_t dummyData) const;
+	std::pair<int, uint32_t> configure(const SpiMode mode, const uint32_t clockFrequency, const uint8_t wordLength,
+			const bool lsbFirst,const uint32_t dummyData) const
+	{
+		return spiMaster_.configure(mode, clockFrequency, wordLength, lsbFirst, dummyData);
+	}
 
 	/**
 	 * \brief Executes series of transfers as a single atomic transaction.
