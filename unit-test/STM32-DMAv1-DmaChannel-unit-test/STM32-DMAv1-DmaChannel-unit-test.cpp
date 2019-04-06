@@ -12,7 +12,7 @@
  */
 
 #include "distortos/chip/DmaChannelFunctor.hpp"
-#include "distortos/chip/DmaChannelUniqueHandle.hpp"
+#include "distortos/chip/DmaChannelHandle.hpp"
 #include "distortos/chip/STM32-DMAv1-DmaChannelPeripheral.hpp"
 #include "distortos/chip/STM32-DMAv1-DmaPeripheral.hpp"
 
