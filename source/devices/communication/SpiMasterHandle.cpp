@@ -97,11 +97,6 @@ std::pair<int, size_t> SpiMasterHandle::executeTransaction(const SpiMasterTransf
 | private functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-SpiDevice& SpiMasterHandle::getSpiDevice() const
-{
-	return spiDeviceHandle_.spiDevice_;
-}
-
 SpiMaster& SpiMasterHandle::getSpiMaster() const
 {
 	return spiDeviceHandle_.getSpiMaster();

@@ -24,7 +24,6 @@ class Semaphore;
 namespace devices
 {
 
-class SpiDevice;
 class SpiDeviceHandle;
 class SpiMaster;
 
@@ -101,12 +100,6 @@ public:
 	SpiMasterHandle& operator=(const SpiMasterHandle&) = delete;
 
 private:
-
-	/**
-	 * \return reference to SpiDevice associated with this handle
-	 */
-
-	SpiDevice& getSpiDevice() const;
 
 	/**
 	 * \return reference to SpiMaster associated with this handle
