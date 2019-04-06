@@ -53,6 +53,7 @@ public:
 					blocksCount_{},
 					auSize_{},
 					clockFrequency_{clockFrequency},
+					slaveSelectPin_{slaveSelectPin},
 					eraseTimeoutMs_{},
 					readTimeoutMs_{},
 					writeTimeoutMs_{},
@@ -260,6 +261,9 @@ private:
 
 	/// desired clock frequency of SD card, Hz
 	uint32_t clockFrequency_;
+
+	/// reference to slave select pin of this SD card
+	OutputPin& slaveSelectPin_;
 
 	/// timeout of erase operation of single AU, milliseconds
 	uint16_t eraseTimeoutMs_;
