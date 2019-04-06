@@ -12,9 +12,9 @@
 #ifndef INCLUDE_DISTORTOS_DEVICES_MEMORY_SDCARDSPIBASED_HPP_
 #define INCLUDE_DISTORTOS_DEVICES_MEMORY_SDCARDSPIBASED_HPP_
 
-#include "distortos/devices/communication/SpiDevice.hpp"
-
 #include "distortos/devices/memory/BlockDevice.hpp"
+
+#include "distortos/Mutex.hpp"
 
 namespace distortos
 {
@@ -23,6 +23,7 @@ namespace devices
 {
 
 class OutputPin;
+class SpiMaster;
 
 /**
  * SdCardSpiBased class is a SD card connected via SPI.
@@ -50,7 +51,6 @@ public:
 	constexpr SdCardSpiBased(SpiMaster& spiMaster, OutputPin& slaveSelectPin,
 			const uint32_t clockFrequency = 25000000) :
 					mutex_{Mutex::Type::recursive, Mutex::Protocol::priorityInheritance},
-					spiDevice_{spiMaster},
 					blocksCount_{},
 					auSize_{},
 					clockFrequency_{clockFrequency},
@@ -59,7 +59,8 @@ public:
 					eraseTimeoutMs_{},
 					readTimeoutMs_{},
 					writeTimeoutMs_{},
-					blockAddressing_{}
+					blockAddressing_{},
+					openCount_{}
 	{
 
 	}
@@ -80,7 +81,7 @@ public:
 	 * \pre Device is opened.
 	 *
 	 * \return 0 on success, error code otherwise:
-	 * - error codes returned by SpiDevice::close();
+	 * - error codes returned by SpiMaster::close();
 	 */
 
 	int close() override;
@@ -144,7 +145,7 @@ public:
 	 *
 	 * \return 0 on success, error code otherwise:
 	 * - error codes returned by initialize();
-	 * - error codes returned by SpiDevice::open();
+	 * - error codes returned by SpiMaster::open();
 	 */
 
 	int open() override;
@@ -253,9 +254,6 @@ private:
 	/// mutex used to serialize access to this object
 	Mutex mutex_;
 
-	/// internal SPI slave device
-	SpiDevice spiDevice_;
-
 	/// number of blocks available on SD card
 	size_t blocksCount_;
 
@@ -282,6 +280,9 @@ private:
 
 	/// selects whether card uses byte (false) or block (true) addressing
 	bool blockAddressing_;
+
+	/// number of times this device was opened but not yet closed
+	uint8_t openCount_;
 };
 
 }	// namespace devices

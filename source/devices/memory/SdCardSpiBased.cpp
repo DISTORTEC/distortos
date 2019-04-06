@@ -12,6 +12,7 @@
 #include "distortos/devices/memory/SdCardSpiBased.hpp"
 
 #include "distortos/devices/communication/SpiDeviceSelectGuard.hpp"
+#include "distortos/devices/communication/SpiMaster.hpp"
 #include "distortos/devices/communication/SpiMasterHandle.hpp"
 #include "distortos/devices/communication/SpiMasterTransfer.hpp"
 
@@ -1161,20 +1162,23 @@ std::pair<int, uint8_t> executeAcmd41(SpiMasterHandle& spiMasterHandle, const bo
 
 SdCardSpiBased::~SdCardSpiBased()
 {
-	assert(spiDevice_.isOpened() == false);
+	assert(openCount_ == 0);
 }
 
 int SdCardSpiBased::close()
 {
 	const std::lock_guard<Mutex> lockGuard {mutex_};
 
-	assert(spiDevice_.isOpened() == true);
+	assert(openCount_ != 0);
 
-	const auto ret = spiDevice_.close();
-
-	if (spiDevice_.isOpened() == false)
+	decltype(spiMaster_.close()) ret {};
+	if (openCount_ == 1)	// last close?
+	{
+		ret = spiMaster_.close();
 		deinitialize();
+	}
 
+	--openCount_;
 	return ret;
 }
 
@@ -1182,7 +1186,7 @@ int SdCardSpiBased::erase(const uint64_t address, const uint64_t size)
 {
 	const std::lock_guard<Mutex> lockGuard {mutex_};
 
-	assert(spiDevice_.isOpened() == true);
+	assert(openCount_ != 0);
 	assert(address % blockSize == 0 && size % blockSize == 0);
 
 	const auto firstBlock = address / blockSize;
@@ -1267,22 +1271,26 @@ int SdCardSpiBased::open()
 {
 	const std::lock_guard<Mutex> lockGuard {mutex_};
 
-	const auto opened = spiDevice_.isOpened();
+	assert(openCount_ < std::numeric_limits<decltype(openCount_)>::max());
 
+	if (openCount_ == 0)	// first open?
 	{
-		const auto ret = spiDevice_.open();
-		assert(ret != EMFILE);
+		const auto ret = spiMaster_.open();
 		if (ret != 0)
 			return ret;
 	}
 
-	if (opened == true)
+	++openCount_;
+
+	if (openCount_ > 1)
 		return {};
 
 	auto closeScopeGuard = estd::makeScopeGuard(
 			[this]()
 			{
-				close();
+				spiMaster_.close();
+				deinitialize();
+				openCount_ = {};
 			});
 
 	{
@@ -1294,14 +1302,14 @@ int SdCardSpiBased::open()
 	}
 
 	closeScopeGuard.release();
-	return 0;
+	return {};
 }
 
 int SdCardSpiBased::read(const uint64_t address, void* const buffer, const size_t size)
 {
 	const std::lock_guard<Mutex> lockGuard {mutex_};
 
-	assert(spiDevice_.isOpened() == true);
+	assert(openCount_ != 0);
 	assert(buffer != nullptr && address % blockSize == 0 && size % blockSize == 0);
 
 	const auto firstBlock = address / blockSize;
@@ -1357,7 +1365,7 @@ int SdCardSpiBased::read(const uint64_t address, void* const buffer, const size_
 
 int SdCardSpiBased::synchronize()
 {
-	assert(spiDevice_.isOpened() == true);
+	assert(openCount_ != 0);
 
 	return {};
 }
@@ -1372,7 +1380,7 @@ int SdCardSpiBased::write(const uint64_t address, const void* const buffer, cons
 {
 	const std::lock_guard<Mutex> lockGuard {mutex_};
 
-	assert(spiDevice_.isOpened() == true);
+	assert(openCount_ != 0);
 	assert(buffer != nullptr && address % blockSize == 0 && size % blockSize == 0);
 
 	const auto firstBlock = address / blockSize;
