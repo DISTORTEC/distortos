@@ -67,6 +67,20 @@ public:
 	}
 
 	/**
+	 * \brief Closes associated SPI master.
+	 *
+	 * \warning This function must not be called from interrupt context!
+	 *
+	 * \return 0 on success, error code otherwise:
+	 * - error codes returned by SpiMaster::close();
+	 */
+
+	int close() const
+	{
+		return spiMaster_.close();
+	}
+
+	/**
 	 * \brief Configures parameters of associated SPI master.
 	 *
 	 * \param [in] mode is the desired SPI mode
@@ -101,6 +115,20 @@ public:
 	 */
 
 	std::pair<int, size_t> executeTransaction(SpiMasterTransfersRange transfersRange);
+
+	/**
+	 * \brief Opens associated SPI master.
+	 *
+	 * \warning This function must not be called from interrupt context!
+	 *
+	 * \return 0 on success, error code otherwise:
+	 * - error codes returned by SpiMaster::open();
+	 */
+
+	int open() const
+	{
+		return spiMaster_.open();
+	}
 
 	SpiMasterHandle(const SpiMasterHandle&) = delete;
 	SpiMasterHandle& operator=(const SpiMasterHandle&) = delete;
