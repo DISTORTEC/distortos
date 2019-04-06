@@ -1170,10 +1170,10 @@ int SdCardSpiBased::close()
 
 	assert(openCount_ != 0);
 
-	decltype(spiMaster_.close()) ret {};
+	int ret {};
 	if (openCount_ == 1)	// last close?
 	{
-		ret = spiMaster_.close();
+		ret = SpiMasterHandle{spiMaster_}.close();
 		deinitialize();
 	}
 
@@ -1274,7 +1274,7 @@ int SdCardSpiBased::open()
 
 	if (openCount_ == 0)	// first open?
 	{
-		const auto ret = spiMaster_.open();
+		const auto ret = SpiMasterHandle{spiMaster_}.open();
 		if (ret != 0)
 			return ret;
 	}
@@ -1287,7 +1287,7 @@ int SdCardSpiBased::open()
 	auto closeScopeGuard = estd::makeScopeGuard(
 			[this]()
 			{
-				spiMaster_.close();
+				SpiMasterHandle{spiMaster_}.close();
 				deinitialize();
 				openCount_ = {};
 			});

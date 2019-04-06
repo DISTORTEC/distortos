@@ -81,7 +81,7 @@ public:
 	 * \pre Device is opened.
 	 *
 	 * \return 0 on success, error code otherwise:
-	 * - error codes returned by SpiMaster::close();
+	 * - error codes returned by SpiMasterHandle::close();
 	 */
 
 	int close() override;
@@ -145,7 +145,7 @@ public:
 	 *
 	 * \return 0 on success, error code otherwise:
 	 * - error codes returned by initialize();
-	 * - error codes returned by SpiMaster::open();
+	 * - error codes returned by SpiMasterHandle::open();
 	 */
 
 	int open() override;
