@@ -33,9 +33,9 @@ namespace devices
 | public functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-SpiMasterProxy::SpiMasterProxy(const SpiDeviceProxy& spiDeviceProxy) :
+SpiMasterProxy::SpiMasterProxy(const SpiDeviceHandle& spiDeviceHandle) :
 		transfersRange_{},
-		spiDeviceProxy_{spiDeviceProxy},
+		spiDeviceHandle_{spiDeviceHandle},
 		ret_{},
 		semaphore_{}
 {
@@ -51,7 +51,7 @@ std::pair<int, uint32_t> SpiMasterProxy::configure(const SpiMode mode, const uin
 		const uint8_t wordLength, const bool lsbFirst, const uint32_t dummyData) const
 {
 	auto& spiMaster = getSpiMaster();
-	if (spiDeviceProxy_.isOpened() == false || spiMaster.openCount_ == 0)
+	if (spiDeviceHandle_.isOpened() == false || spiMaster.openCount_ == 0)
 		return {EBADF, {}};
 
 	return spiMaster.spiMaster_.configure(mode, clockFrequency, wordLength, lsbFirst, dummyData);
@@ -65,7 +65,7 @@ std::pair<int, size_t> SpiMasterProxy::executeTransaction(const SpiMasterTransfe
 		return {EINVAL, {}};
 
 	auto& spiMaster = getSpiMaster();
-	if (spiDeviceProxy_.isOpened() == false || spiMaster.openCount_ == 0)
+	if (spiDeviceHandle_.isOpened() == false || spiMaster.openCount_ == 0)
 		return {EBADF, {}};
 
 	Semaphore semaphore {0};
@@ -99,12 +99,12 @@ std::pair<int, size_t> SpiMasterProxy::executeTransaction(const SpiMasterTransfe
 
 SpiDevice& SpiMasterProxy::getSpiDevice() const
 {
-	return spiDeviceProxy_.spiDevice_;
+	return spiDeviceHandle_.spiDevice_;
 }
 
 SpiMaster& SpiMasterProxy::getSpiMaster() const
 {
-	return spiDeviceProxy_.getSpiMaster();
+	return spiDeviceHandle_.getSpiMaster();
 }
 
 void SpiMasterProxy::notifyWaiter(const int ret)

@@ -37,14 +37,14 @@ SpiDevice::~SpiDevice()
 	if (openCount_ == 0)
 		return;
 
-	const Proxy proxy {*this};
+	const Handle handle {*this};
 
 	spiMaster_.close();
 }
 
 int SpiDevice::close()
 {
-	const Proxy proxy {*this};
+	const Handle handle {*this};
 
 	if (openCount_ == 0)	// device is not open anymore?
 		return EBADF;
@@ -62,8 +62,8 @@ int SpiDevice::close()
 
 std::pair<int, size_t> SpiDevice::executeTransaction(const SpiMasterTransfersRange transfersRange)
 {
-	const Proxy proxy {*this};
-	SpiMasterProxy spiMasterProxy {proxy};
+	const Handle handle {*this};
+	SpiMasterProxy spiMasterProxy {handle};
 
 	{
 		const auto ret = spiMasterProxy.configure(mode_, maxClockFrequency_, wordLength_, lsbFirst_, {});
@@ -78,7 +78,7 @@ std::pair<int, size_t> SpiDevice::executeTransaction(const SpiMasterTransfersRan
 
 int SpiDevice::open()
 {
-	const Proxy proxy {*this};
+	const Handle handle {*this};
 
 	if (openCount_ == std::numeric_limits<decltype(openCount_)>::max())	// device is already opened too many times?
 		return EMFILE;

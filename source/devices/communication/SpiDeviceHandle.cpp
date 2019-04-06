@@ -1,6 +1,6 @@
 /**
  * \file
- * \brief SpiDeviceProxy class implementation
+ * \brief SpiDeviceHandle class implementation
  *
  * \author Copyright (C) 2018-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
@@ -23,18 +23,18 @@ namespace devices
 | public functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-SpiDeviceProxy::SpiDeviceProxy(SpiDevice& spiDevice) :
+SpiDeviceHandle::SpiDeviceHandle(SpiDevice& spiDevice) :
 		spiDevice_{spiDevice}
 {
 	spiDevice_.lock();
 }
 
-SpiDeviceProxy::~SpiDeviceProxy()
+SpiDeviceHandle::~SpiDeviceHandle()
 {
 	spiDevice_.unlock();
 }
 
-bool SpiDeviceProxy::isOpened() const
+bool SpiDeviceHandle::isOpened() const
 {
 	return spiDevice_.openCount_ != 0;
 }
@@ -43,7 +43,7 @@ bool SpiDeviceProxy::isOpened() const
 | private functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-SpiMaster& SpiDeviceProxy::getSpiMaster() const
+SpiMaster& SpiDeviceHandle::getSpiMaster() const
 {
 	return spiDevice_.spiMaster_;
 }

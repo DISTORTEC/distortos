@@ -102,23 +102,23 @@ SpiMasterTransfer getCommandWithAddress(const size_t capacity, const uint8_t com
 
 SpiEeprom::~SpiEeprom()
 {
-	assert(SpiDeviceProxy{spiDevice_}.isOpened() == false);
+	assert(SpiDeviceHandle{spiDevice_}.isOpened() == false);
 }
 
 int SpiEeprom::close()
 {
-	const SpiDeviceProxy spiDeviceProxy {spiDevice_};
+	const SpiDeviceHandle spiDeviceHandle {spiDevice_};
 
-	assert(spiDeviceProxy.isOpened() == true);
+	assert(spiDeviceHandle.isOpened() == true);
 
 	return spiDevice_.close();
 }
 
 int SpiEeprom::erase(const uint64_t address, const uint64_t size)
 {
-	const SpiDeviceProxy spiDeviceProxy {spiDevice_};
+	const SpiDeviceHandle spiDeviceHandle {spiDevice_};
 
-	return eraseOrWrite(spiDeviceProxy, address, nullptr, size);
+	return eraseOrWrite(spiDeviceHandle, address, nullptr, size);
 }
 
 size_t SpiEeprom::getBlockSize() const
@@ -133,8 +133,8 @@ uint64_t SpiEeprom::getSize() const
 
 std::pair<int, bool> SpiEeprom::isWriteInProgress()
 {
-	const SpiDeviceProxy spiDeviceProxy {spiDevice_};
-	return isWriteInProgress(spiDeviceProxy);
+	const SpiDeviceHandle spiDeviceHandle {spiDevice_};
+	return isWriteInProgress(spiDeviceHandle);
 }
 
 void SpiEeprom::lock()
@@ -152,9 +152,9 @@ int SpiEeprom::open()
 
 int SpiEeprom::read(const uint64_t address, void* const buffer, const size_t size)
 {
-	const SpiDeviceProxy spiDeviceProxy {spiDevice_};
+	const SpiDeviceHandle spiDeviceHandle {spiDevice_};
 
-	assert(spiDeviceProxy.isOpened() == true);
+	assert(spiDeviceHandle.isOpened() == true);
 	assert(buffer != nullptr);
 
 	const auto capacity = getSize();
@@ -164,7 +164,7 @@ int SpiEeprom::read(const uint64_t address, void* const buffer, const size_t siz
 		return {};
 
 	{
-		const auto ret = synchronize(spiDeviceProxy);
+		const auto ret = synchronize(spiDeviceHandle);
 		if (ret != 0)
 			return ret;
 	}
@@ -175,17 +175,17 @@ int SpiEeprom::read(const uint64_t address, void* const buffer, const size_t siz
 			getCommandWithAddress(capacity, readCommand, address, commandBuffer),
 			{nullptr, buffer, address + size <= capacity ? size : static_cast<size_t>(capacity - address)},
 	};
-	const auto ret = executeTransaction(spiDeviceProxy, SpiMasterTransfersRange{transfers});
+	const auto ret = executeTransaction(spiDeviceHandle, SpiMasterTransfersRange{transfers});
 	return ret.first;
 }
 
 int SpiEeprom::synchronize()
 {
-	const SpiDeviceProxy spiDeviceProxy {spiDevice_};
+	const SpiDeviceHandle spiDeviceHandle {spiDevice_};
 
-	assert(spiDeviceProxy.isOpened() == true);
+	assert(spiDeviceHandle.isOpened() == true);
 
-	return synchronize(spiDeviceProxy);
+	return synchronize(spiDeviceHandle);
 }
 
 void SpiEeprom::unlock()
@@ -196,21 +196,21 @@ void SpiEeprom::unlock()
 
 int SpiEeprom::write(const uint64_t address, const void* const buffer, const size_t size)
 {
-	const SpiDeviceProxy spiDeviceProxy {spiDevice_};
+	const SpiDeviceHandle spiDeviceHandle {spiDevice_};
 
 	assert(buffer != nullptr);
 
-	return eraseOrWrite(spiDeviceProxy, address, buffer, size);
+	return eraseOrWrite(spiDeviceHandle, address, buffer, size);
 }
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | private functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-int SpiEeprom::eraseOrWrite(const SpiDeviceProxy& spiDeviceProxy, const uint64_t address, const void* const buffer,
+int SpiEeprom::eraseOrWrite(const SpiDeviceHandle& spiDeviceHandle, const uint64_t address, const void* const buffer,
 		const uint64_t size)
 {
-	assert(spiDeviceProxy.isOpened() == true);
+	assert(spiDeviceHandle.isOpened() == true);
 
 	const auto capacity = getSize();
 	assert(address + size <= capacity);
@@ -223,7 +223,7 @@ int SpiEeprom::eraseOrWrite(const SpiDeviceProxy& spiDeviceProxy, const uint64_t
 	const auto bufferUint8 = static_cast<const uint8_t*>(buffer);
 	while (written < writeSize)
 	{
-		const auto ret = eraseOrWritePage(spiDeviceProxy, address + written,
+		const auto ret = eraseOrWritePage(spiDeviceHandle, address + written,
 				bufferUint8 != nullptr ? bufferUint8 + written : bufferUint8, writeSize - written);
 		written += ret.second;
 		if (ret.first != 0)
@@ -233,19 +233,19 @@ int SpiEeprom::eraseOrWrite(const SpiDeviceProxy& spiDeviceProxy, const uint64_t
 	return {};
 }
 
-std::pair<int, size_t> SpiEeprom::eraseOrWritePage(const SpiDeviceProxy& spiDeviceProxy, const uint32_t address,
+std::pair<int, size_t> SpiEeprom::eraseOrWritePage(const SpiDeviceHandle& spiDeviceHandle, const uint32_t address,
 		const void* const buffer, const size_t size)
 {
 	const auto capacity = getSize();
 	assert(address < capacity && "Invalid address!");
 
 	{
-		const auto ret = synchronize(spiDeviceProxy);
+		const auto ret = synchronize(spiDeviceHandle);
 		if (ret != 0)
 			return {ret, {}};
 	}
 	{
-		const auto ret = writeEnable(spiDeviceProxy);
+		const auto ret = writeEnable(spiDeviceHandle);
 		if (ret != 0)
 			return {ret, {}};
 	}
@@ -265,14 +265,14 @@ std::pair<int, size_t> SpiEeprom::eraseOrWritePage(const SpiDeviceProxy& spiDevi
 			getCommandWithAddress(capacity, writeCommand, address, commandBuffer),
 			{buffer, nullptr, writeSize},
 	};
-	const auto ret = executeTransaction(spiDeviceProxy, SpiMasterTransfersRange{transfers});
+	const auto ret = executeTransaction(spiDeviceHandle, SpiMasterTransfersRange{transfers});
 	return {ret.first, transfers[1].getBytesTransfered()};
 }
 
-std::pair<int, size_t> SpiEeprom::executeTransaction(const SpiDeviceProxy& spiDeviceProxy,
+std::pair<int, size_t> SpiEeprom::executeTransaction(const SpiDeviceHandle& spiDeviceHandle,
 		const SpiMasterTransfersRange transfersRange) const
 {
-	SpiMasterProxy spiMasterProxy {spiDeviceProxy};
+	SpiMasterProxy spiMasterProxy {spiDeviceHandle};
 
 	{
 		// only datasheet for ST M95xxx series says that erased state is 0, assume this is true for all other devices
@@ -286,25 +286,25 @@ std::pair<int, size_t> SpiEeprom::executeTransaction(const SpiDeviceProxy& spiDe
 	return spiMasterProxy.executeTransaction(transfersRange);
 }
 
-std::pair<int, bool> SpiEeprom::isWriteInProgress(const SpiDeviceProxy& spiDeviceProxy)
+std::pair<int, bool> SpiEeprom::isWriteInProgress(const SpiDeviceHandle& spiDeviceHandle)
 {
-	const auto ret = readStatusRegister(spiDeviceProxy);
+	const auto ret = readStatusRegister(spiDeviceHandle);
 	return {ret.first, (ret.second & statusRegisterWip) != 0};
 }
 
-std::pair<int, uint8_t> SpiEeprom::readStatusRegister(const SpiDeviceProxy& spiDeviceProxy) const
+std::pair<int, uint8_t> SpiEeprom::readStatusRegister(const SpiDeviceHandle& spiDeviceHandle) const
 {
 	uint8_t buffer[2] {rdsrCommand, 0xff};
 	SpiMasterTransfer transfer {buffer, buffer, sizeof(buffer)};
-	const auto ret = executeTransaction(spiDeviceProxy, SpiMasterTransfersRange{transfer});
+	const auto ret = executeTransaction(spiDeviceHandle, SpiMasterTransfersRange{transfer});
 	return {ret.first, buffer[1]};
 }
 
-int SpiEeprom::synchronize(const SpiDeviceProxy& spiDeviceProxy)
+int SpiEeprom::synchronize(const SpiDeviceHandle& spiDeviceHandle)
 {
-	decltype(isWriteInProgress(spiDeviceProxy).first) ret;
-	decltype(isWriteInProgress(spiDeviceProxy).second) writeInProgress;
-	while (std::tie(ret, writeInProgress) = isWriteInProgress(spiDeviceProxy), ret == 0 && writeInProgress == true)
+	decltype(isWriteInProgress(spiDeviceHandle).first) ret;
+	decltype(isWriteInProgress(spiDeviceHandle).second) writeInProgress;
+	while (std::tie(ret, writeInProgress) = isWriteInProgress(spiDeviceHandle), ret == 0 && writeInProgress == true)
 	{
 		const auto sleepForRet = ThisThread::sleepFor(std::chrono::milliseconds{1});
 		if (sleepForRet != 0)
@@ -314,10 +314,10 @@ int SpiEeprom::synchronize(const SpiDeviceProxy& spiDeviceProxy)
 	return ret;
 }
 
-int SpiEeprom::writeEnable(const SpiDeviceProxy& spiDeviceProxy) const
+int SpiEeprom::writeEnable(const SpiDeviceHandle& spiDeviceHandle) const
 {
 	SpiMasterTransfer transfer {&wrenCommand, nullptr, sizeof(wrenCommand)};
-	const auto ret = executeTransaction(spiDeviceProxy, SpiMasterTransfersRange{transfer});
+	const auto ret = executeTransaction(spiDeviceHandle, SpiMasterTransfersRange{transfer});
 	return ret.first;
 }
 

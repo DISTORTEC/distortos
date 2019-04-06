@@ -1145,18 +1145,18 @@ std::pair<int, uint8_t> executeAcmd41(SpiMasterProxy& spiMasterProxy, const bool
 
 SdCardSpiBased::~SdCardSpiBased()
 {
-	assert(SpiDeviceProxy{spiDevice_}.isOpened() == false);
+	assert(SpiDeviceHandle{spiDevice_}.isOpened() == false);
 }
 
 int SdCardSpiBased::close()
 {
-	const SpiDeviceProxy spiDeviceProxy {spiDevice_};
+	const SpiDeviceHandle spiDeviceHandle {spiDevice_};
 
-	assert(spiDeviceProxy.isOpened() == true);
+	assert(spiDeviceHandle.isOpened() == true);
 
 	const auto ret = spiDevice_.close();
 
-	if (spiDeviceProxy.isOpened() == false)
+	if (spiDeviceHandle.isOpened() == false)
 		deinitialize();
 
 	return ret;
@@ -1164,9 +1164,9 @@ int SdCardSpiBased::close()
 
 int SdCardSpiBased::erase(const uint64_t address, const uint64_t size)
 {
-	const SpiDeviceProxy spiDeviceProxy {spiDevice_};
+	const SpiDeviceHandle spiDeviceHandle {spiDevice_};
 
-	assert(spiDeviceProxy.isOpened() == true);
+	assert(spiDeviceHandle.isOpened() == true);
 	assert(address % blockSize == 0 && size % blockSize == 0);
 
 	const auto firstBlock = address / blockSize;
@@ -1176,7 +1176,7 @@ int SdCardSpiBased::erase(const uint64_t address, const uint64_t size)
 	if (size == 0)
 		return {};
 
-	SpiMasterProxy spiMasterProxy {spiDeviceProxy};
+	SpiMasterProxy spiMasterProxy {spiDeviceHandle};
 
 	{
 		const auto ret = spiMasterProxy.configure(SpiMode::_0, clockFrequency_, 8, false, UINT32_MAX);
@@ -1249,9 +1249,9 @@ void SdCardSpiBased::lock()
 
 int SdCardSpiBased::open()
 {
-	const SpiDeviceProxy spiDeviceProxy {spiDevice_};
+	const SpiDeviceHandle spiDeviceHandle {spiDevice_};
 
-	const auto opened = spiDeviceProxy.isOpened();
+	const auto opened = spiDeviceHandle.isOpened();
 
 	{
 		const auto ret = spiDevice_.open();
@@ -1270,9 +1270,9 @@ int SdCardSpiBased::open()
 			});
 
 	{
-		decltype(initialize(spiDeviceProxy)) ret;
+		decltype(initialize(spiDeviceHandle)) ret;
 		unsigned int attempt {};
-		while (ret = initialize(spiDeviceProxy), ret != 0)
+		while (ret = initialize(spiDeviceHandle), ret != 0)
 			if (++attempt >= 100)
 				return ret;
 	}
@@ -1283,9 +1283,9 @@ int SdCardSpiBased::open()
 
 int SdCardSpiBased::read(const uint64_t address, void* const buffer, const size_t size)
 {
-	const SpiDeviceProxy spiDeviceProxy {spiDevice_};
+	const SpiDeviceHandle spiDeviceHandle {spiDevice_};
 
-	assert(spiDeviceProxy.isOpened() == true);
+	assert(spiDeviceHandle.isOpened() == true);
 	assert(buffer != nullptr && address % blockSize == 0 && size % blockSize == 0);
 
 	const auto firstBlock = address / blockSize;
@@ -1295,7 +1295,7 @@ int SdCardSpiBased::read(const uint64_t address, void* const buffer, const size_
 	if (size == 0)
 		return {};
 
-	SpiMasterProxy spiMasterProxy {spiDeviceProxy};
+	SpiMasterProxy spiMasterProxy {spiDeviceHandle};
 
 	{
 		const auto ret = spiMasterProxy.configure(SpiMode::_0, clockFrequency_, 8, false, UINT32_MAX);
@@ -1341,7 +1341,7 @@ int SdCardSpiBased::read(const uint64_t address, void* const buffer, const size_
 
 int SdCardSpiBased::synchronize()
 {
-	assert(SpiDeviceProxy{spiDevice_}.isOpened() == true);
+	assert(SpiDeviceHandle{spiDevice_}.isOpened() == true);
 
 	return {};
 }
@@ -1354,9 +1354,9 @@ void SdCardSpiBased::unlock()
 
 int SdCardSpiBased::write(const uint64_t address, const void* const buffer, const size_t size)
 {
-	const SpiDeviceProxy spiDeviceProxy {spiDevice_};
+	const SpiDeviceHandle spiDeviceHandle {spiDevice_};
 
-	assert(spiDeviceProxy.isOpened() == true);
+	assert(spiDeviceHandle.isOpened() == true);
 	assert(buffer != nullptr && address % blockSize == 0 && size % blockSize == 0);
 
 	const auto firstBlock = address / blockSize;
@@ -1366,7 +1366,7 @@ int SdCardSpiBased::write(const uint64_t address, const void* const buffer, cons
 	if (size == 0)
 		return {};
 
-	SpiMasterProxy spiMasterProxy {spiDeviceProxy};
+	SpiMasterProxy spiMasterProxy {spiDeviceHandle};
 
 	{
 		const auto ret = spiMasterProxy.configure(SpiMode::_0, clockFrequency_, 8, false, UINT32_MAX);
@@ -1443,9 +1443,9 @@ void SdCardSpiBased::deinitialize()
 	blockAddressing_ = {};
 }
 
-int SdCardSpiBased::initialize(const SpiDeviceProxy& spiDeviceProxy)
+int SdCardSpiBased::initialize(const SpiDeviceHandle& spiDeviceHandle)
 {
-	SpiMasterProxy spiMasterProxy {spiDeviceProxy};
+	SpiMasterProxy spiMasterProxy {spiDeviceHandle};
 
 	{
 		const auto ret = spiMasterProxy.configure(SpiMode::_0, 400000, 8, false, UINT32_MAX);

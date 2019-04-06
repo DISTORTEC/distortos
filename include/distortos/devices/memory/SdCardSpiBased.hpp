@@ -230,7 +230,7 @@ private:
 	 * Algorithm is based on ChaN's
 	 * [How to Use MMC/SDC: Initialization Procedure for SPI Mode](http://elm-chan.org/docs/mmc/mmc_e.html#spiinit).
 	 *
-	 * \param [in] spiDeviceProxy is a reference to SpiDeviceProxy associated with this object
+	 * \param [in] spiDeviceHandle is a reference to SpiDeviceHandle associated with this object
 	 *
 	 * \return 0 on success, error code otherwise:
 	 * - EIO - error during communication with SD card;
@@ -245,7 +245,7 @@ private:
 	 * - error codes returned by SpiMasterProxy::executeTransaction();
 	 */
 
-	int initialize(const SpiDeviceProxy& spiDeviceProxy);
+	int initialize(const SpiDeviceHandle& spiDeviceHandle);
 
 	/// internal SPI slave device
 	SpiDevice spiDevice_;

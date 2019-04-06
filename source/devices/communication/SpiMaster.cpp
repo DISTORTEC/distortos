@@ -71,8 +71,8 @@ std::pair<int, size_t> SpiMaster::executeTransaction(SpiDevice& device, const Sp
 	if (transfersRange.size() == 0)
 		return {EINVAL, {}};
 
-	const SpiDevice::Proxy spiDeviceProxy {device};
-	Proxy proxy {spiDeviceProxy};
+	const SpiDevice::Handle spiDeviceHandle {device};
+	Proxy proxy {spiDeviceHandle};
 
 	{
 #pragma GCC diagnostic push

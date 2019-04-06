@@ -311,7 +311,7 @@ public:
 	 *
 	 * \return pair with return code (0 on success, error code otherwise) and current status of device: false - device
 	 * is idle, true - write operation is in progress; error codes:
-	 * - error codes returned by isWriteInProgress(const SpiDeviceProxy&);
+	 * - error codes returned by isWriteInProgress(const SpiDeviceHandle&);
 	 */
 
 	__attribute__ ((deprecated("Use SpiEeprom::synchronize()")))
@@ -362,7 +362,7 @@ public:
 	 *
 	 * \return 0 on success, error code otherwise:
 	 * - error codes returned by executeTransaction();
-	 * - error codes returned by synchronize(const SpiDeviceProxy&);
+	 * - error codes returned by synchronize(const SpiDeviceHandle&);
 	 */
 
 	int read(uint64_t address, void* buffer, size_t size) override;
@@ -375,7 +375,7 @@ public:
 	 * \pre Device is opened.
 	 *
 	 * \return 0 on success, error code otherwise:
-	 * - error codes returned by synchronize(const SpiDeviceProxy&);
+	 * - error codes returned by synchronize(const SpiDeviceHandle&);
 	 */
 
 	int synchronize() override;
@@ -444,7 +444,7 @@ private:
 	 * - error codes returned by eraseOrWritePage();
 	 */
 
-	int eraseOrWrite(const SpiDeviceProxy& spiDeviceProxy, uint64_t address, const void* buffer, uint64_t size);
+	int eraseOrWrite(const SpiDeviceHandle& spiDeviceHandle, uint64_t address, const void* buffer, uint64_t size);
 
 	/**
 	 * \brief Erases or writes single page.
@@ -460,7 +460,7 @@ private:
 	 * - error codes returned by SpiDevice::executeTransaction();
 	 */
 
-	std::pair<int, size_t> eraseOrWritePage(const SpiDeviceProxy& spiDeviceProxy, uint32_t address,
+	std::pair<int, size_t> eraseOrWritePage(const SpiDeviceHandle& spiDeviceHandle, uint32_t address,
 			const void* buffer, size_t size);
 
 	/**
@@ -474,20 +474,20 @@ private:
 	 * - error codes returned by SpiMasterProxy::executeTransaction();
 	 */
 
-	std::pair<int, size_t> executeTransaction(const SpiDeviceProxy& spiDeviceProxy,
+	std::pair<int, size_t> executeTransaction(const SpiDeviceHandle& spiDeviceHandle,
 			SpiMasterTransfersRange transfersRange) const;
 
 	/**
 	 * \brief Internal implementation of isWriteInProgress()
 	 *
-	 * \param [in] spiDeviceProxy is a reference to SpiDeviceProxy associated with this object
+	 * \param [in] spiDeviceHandle is a reference to SpiDeviceHandle associated with this object
 	 *
 	 * \return pair with return code (0 on success, error code otherwise) and current status of device: false - device
 	 * is idle, true - write operation is in progress; error codes:
 	 * - error codes returned by readStatusRegister();
 	 */
 
-	std::pair<int, bool> isWriteInProgress(const SpiDeviceProxy& spiDeviceProxy);
+	std::pair<int, bool> isWriteInProgress(const SpiDeviceHandle& spiDeviceHandle);
 
 	/**
 	 * \brief Reads value of status register of SPI EEPROM.
@@ -497,19 +497,19 @@ private:
 	 * - error codes returned by executeTransaction();
 	 */
 
-	std::pair<int, uint8_t> readStatusRegister(const SpiDeviceProxy& spiDeviceProxy) const;
+	std::pair<int, uint8_t> readStatusRegister(const SpiDeviceHandle& spiDeviceHandle) const;
 
 	/**
 	 * \brief Internal implementation of synchronize()
 	 *
-	 * \param [in] spiDeviceProxy is a reference to SpiDeviceProxy associated with this object
+	 * \param [in] spiDeviceHandle is a reference to SpiDeviceHandle associated with this object
 	 *
 	 * \return 0 on success, error code otherwise:
-	 * - error codes returned by isWriteInProgress(const SpiDeviceProxy&);
+	 * - error codes returned by isWriteInProgress(const SpiDeviceHandle&);
 	 * - error codes returned by ThisThread::sleepFor();
 	 */
 
-	int synchronize(const SpiDeviceProxy& spiDeviceProxy);
+	int synchronize(const SpiDeviceHandle& spiDeviceHandle);
 
 	/**
 	 * \brief Enables writes in SPI EEPROM.
@@ -518,7 +518,7 @@ private:
 	 * - error codes returned by executeTransaction();
 	 */
 
-	int writeEnable(const SpiDeviceProxy& spiDeviceProxy) const;
+	int writeEnable(const SpiDeviceHandle& spiDeviceHandle) const;
 
 	/// internal SPI slave device
 	SpiDevice spiDevice_;

@@ -2,7 +2,7 @@
  * \file
  * \brief SpiMaster class header
  *
- * \author Copyright (C) 2016-2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2016-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -86,7 +86,7 @@ public:
 	 * is selected and the transfers are executed. The transaction is finished when all transfers are complete or when
 	 * any error is detected - in either case the device is unselected and this function returns.
 	 *
-	 * \deprecated scheduled to be removed after v0.7.0, use SpiDeviceProxy, SpiMasterProxy and SpiDeviceSelectGuard
+	 * \deprecated scheduled to be removed after v0.7.0, use SpiDeviceHandle, SpiMasterProxy and SpiDeviceSelectGuard
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
@@ -100,7 +100,7 @@ public:
 	 * - error codes returned by SpiMasterProxy::executeTransaction();
 	 */
 
-	__attribute__ ((deprecated("Use SpiDeviceProxy, SpiMasterProxy and SpiDeviceSelectGuard")))
+	__attribute__ ((deprecated("Use SpiDeviceHandle, SpiMasterProxy and SpiDeviceSelectGuard")))
 	std::pair<int, size_t> executeTransaction(SpiDevice& device, SpiMasterTransfersRange transfersRange);
 
 	/**

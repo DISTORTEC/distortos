@@ -21,7 +21,7 @@ and *YAML* files, as well as unit tests of `distortos::chip::SdMmcCardLowLevel` 
 - Added `distortos::devices::BlockDevice` and `distortos::devices::MemoryTechnologyDevice` interface classes.
 - Added `distortos::devices::BlockDeviceToMemoryTechnologyDevice` class which wraps `distortos::devices::BlockDevice`
 object and exposes `distortos::devices::MemoryTechnologyDevice` interface.
-- Added `distortos::devices::SpiDeviceProxy`, `distortos::devices::SpiMasterProxy` and
+- Added `distortos::devices::SpiDeviceHandle`, `distortos::devices::SpiMasterProxy` and
 `distortos::devices::SpiDeviceSelectGuard`, which build new SPI-related API. These classes can be used for RAII-style
 locking/unlocking or selecting/deselecting of appropriate devices and also serve as proxies for accessing core
 functionalities of associated objects.
@@ -118,7 +118,7 @@ constructor, `distortos::devices::SpiDevice::executeTransaction()`, `distortos::
 `distortos::devices::SpiDevice::getMaxClockFrequency()`, `distortos::devices::SpiDevice::getMode()`,
 `distortos::devices::SpiDevice::getSlaveSelectPin()` and `distortos::devices::SpiDevice::getWordLength()` were marked as
 deprecated and are scheduled to be removed after v0.7.0. Use functionality exposed by
-`distortos::devices::SpiDeviceProxy`, `distortos::devices::SpiMasterProxy` and
+`distortos::devices::SpiDeviceHandle`, `distortos::devices::SpiMasterProxy` and
 `distortos::devices::SpiDeviceSelectGuard`.
 - `distortos::devices::SpiEeprom::getCapacity()` and `distortos::devices::SpiEeprom::waitWhileWriteInProgress()` were
 marked as deprecated and are scheduled to be removed after v0.7.0. Use functions inherited from

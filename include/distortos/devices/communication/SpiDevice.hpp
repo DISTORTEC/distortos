@@ -2,7 +2,7 @@
  * \file
  * \brief SpiDevice class header
  *
- * \author Copyright (C) 2016-2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2016-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -24,7 +24,7 @@ namespace devices
 {
 
 class OutputPin;
-class SpiDeviceProxy;
+class SpiDeviceHandle;
 class SpiMaster;
 
 /**
@@ -35,13 +35,13 @@ class SpiMaster;
 
 class SpiDevice
 {
-	friend class SpiDeviceProxy;
+	friend class SpiDeviceHandle;
 	friend class SpiDeviceSelectGuard;
 
 public:
 
-	/// import SpiDeviceProxy as SpiDevice::Proxy
-	using Proxy = SpiDeviceProxy;
+	/// import SpiDeviceHandle as SpiDevice::Handle
+	using Handle = SpiDeviceHandle;
 
 	/**
 	 * \brief SpiDevice's constructor
@@ -67,7 +67,7 @@ public:
 	 * \brief SpiDevice's constructor
 	 *
 	 * \deprecated scheduled to be removed after v0.7.0, use SpiDevice::SpiDevice(SpiMaster&, OutputPin&),
-	 * SpiDeviceProxy, SpiMasterProxy and SpiDeviceSelectGuard
+	 * SpiDeviceHandle, SpiMasterProxy and SpiDeviceSelectGuard
 	 *
 	 * \param [in] spiMaster is a reference to SPI master to which this SPI slave device is connected
 	 * \param [in] slaveSelectPin is a reference to slave select pin of this SPI slave device
@@ -78,7 +78,7 @@ public:
 	 * MSB (false) or LSB (true) first
 	 */
 
-	__attribute__ ((deprecated("Use SpiDevice::SpiDevice(SpiMaster&, OutputPin&), SpiDeviceProxy, SpiMasterProxy and "
+	__attribute__ ((deprecated("Use SpiDevice::SpiDevice(SpiMaster&, OutputPin&), SpiDeviceHandle, SpiMasterProxy and "
 			"SpiDeviceSelectGuard")))
 	constexpr SpiDevice(SpiMaster& spiMaster, OutputPin& slaveSelectPin, const SpiMode mode,
 			const uint32_t maxClockFrequency, const uint8_t wordLength, const bool lsbFirst) :
@@ -121,7 +121,7 @@ public:
 	/**
 	 * \brief Executes series of transfers as a single atomic transaction.
 	 *
-	 * \deprecated scheduled to be removed after v0.7.0, use SpiDeviceProxy, SpiMasterProxy and SpiDeviceSelectGuard
+	 * \deprecated scheduled to be removed after v0.7.0, use SpiDeviceHandle, SpiMasterProxy and SpiDeviceSelectGuard
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
@@ -133,65 +133,65 @@ public:
 	 * - error codes returned by SpiMasterProxy::executeTransaction();
 	 */
 
-	__attribute__ ((deprecated("Use SpiDeviceProxy, SpiMasterProxy and SpiDeviceSelectGuard")))
+	__attribute__ ((deprecated("Use SpiDeviceHandle, SpiMasterProxy and SpiDeviceSelectGuard")))
 	std::pair<int, size_t> executeTransaction(SpiMasterTransfersRange transfersRange);
 
 	/**
-	 * \deprecated scheduled to be removed after v0.7.0, use SpiDeviceProxy, SpiMasterProxy and SpiDeviceSelectGuard
+	 * \deprecated scheduled to be removed after v0.7.0, use SpiDeviceHandle, SpiMasterProxy and SpiDeviceSelectGuard
 	 *
 	 * \return false if data should be transmitted/received to/from the SPI slave device with
 	 * MSB first, true if data should be transmitted/received to/from the SPI slave device with LSB first
 	 */
 
-	__attribute__ ((deprecated("Use SpiDeviceProxy, SpiMasterProxy and SpiDeviceSelectGuard")))
+	__attribute__ ((deprecated("Use SpiDeviceHandle, SpiMasterProxy and SpiDeviceSelectGuard")))
 	bool getLsbFirst() const
 	{
 		return lsbFirst_;
 	}
 
 	/**
-	 * \deprecated scheduled to be removed after v0.7.0, use SpiDeviceProxy, SpiMasterProxy and SpiDeviceSelectGuard
+	 * \deprecated scheduled to be removed after v0.7.0, use SpiDeviceHandle, SpiMasterProxy and SpiDeviceSelectGuard
 	 *
 	 * \return max clock frequency supported by SPI slave device, Hz
 	 */
 
-	__attribute__ ((deprecated("Use SpiDeviceProxy, SpiMasterProxy and SpiDeviceSelectGuard")))
+	__attribute__ ((deprecated("Use SpiDeviceHandle, SpiMasterProxy and SpiDeviceSelectGuard")))
 	uint32_t getMaxClockFrequency() const
 	{
 		return maxClockFrequency_;
 	}
 
 	/**
-	 * \deprecated scheduled to be removed after v0.7.0, use SpiDeviceProxy, SpiMasterProxy and SpiDeviceSelectGuard
+	 * \deprecated scheduled to be removed after v0.7.0, use SpiDeviceHandle, SpiMasterProxy and SpiDeviceSelectGuard
 	 *
 	 * \return SPI mode used by SPI slave device
 	 */
 
-	__attribute__ ((deprecated("Use SpiDeviceProxy, SpiMasterProxy and SpiDeviceSelectGuard")))
+	__attribute__ ((deprecated("Use SpiDeviceHandle, SpiMasterProxy and SpiDeviceSelectGuard")))
 	SpiMode getMode() const
 	{
 		return mode_;
 	}
 
 	/**
-	 * \deprecated scheduled to be removed after v0.7.0, use SpiDeviceProxy, SpiMasterProxy and SpiDeviceSelectGuard
+	 * \deprecated scheduled to be removed after v0.7.0, use SpiDeviceHandle, SpiMasterProxy and SpiDeviceSelectGuard
 	 *
 	 * \return reference to slave select pin of this SPI slave device
 	 */
 
-	__attribute__ ((deprecated("Use SpiDeviceProxy, SpiMasterProxy and SpiDeviceSelectGuard")))
+	__attribute__ ((deprecated("Use SpiDeviceHandle, SpiMasterProxy and SpiDeviceSelectGuard")))
 	OutputPin& getSlaveSelectPin() const
 	{
 		return slaveSelectPin_;
 	}
 
 	/**
-	 * \deprecated scheduled to be removed after v0.7.0, use SpiDeviceProxy, SpiMasterProxy and SpiDeviceSelectGuard
+	 * \deprecated scheduled to be removed after v0.7.0, use SpiDeviceHandle, SpiMasterProxy and SpiDeviceSelectGuard
 	 *
 	 * \return word length used by SPI slave device, bits
 	 */
 
-	__attribute__ ((deprecated("Use SpiDeviceProxy, SpiMasterProxy and SpiDeviceSelectGuard")))
+	__attribute__ ((deprecated("Use SpiDeviceHandle, SpiMasterProxy and SpiDeviceSelectGuard")))
 	uint8_t getWordLength() const
 	{
 		return wordLength_;

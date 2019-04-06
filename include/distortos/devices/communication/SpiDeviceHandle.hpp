@@ -1,6 +1,6 @@
 /**
  * \file
- * \brief SpiDeviceProxy class header
+ * \brief SpiDeviceHandle class header
  *
  * \author Copyright (C) 2018-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
@@ -22,7 +22,7 @@ class SpiDevice;
 class SpiMaster;
 
 /**
- * SpiDeviceProxy is a [std::lock_guard](https://en.cppreference.com/w/cpp/thread/lock_guard)-like class for locking
+ * SpiDeviceHandle is a [std::lock_guard](https://en.cppreference.com/w/cpp/thread/lock_guard)-like class for locking
  * SpiDevice and for accessing its core functionality.
  *
  * \note Locks are recursive.
@@ -30,29 +30,29 @@ class SpiMaster;
  * \ingroup devices
  */
 
-class SpiDeviceProxy
+class SpiDeviceHandle
 {
 	friend class SpiMasterProxy;
 
 public:
 
 	/**
-	 * \brief SpiDeviceProxy's constructor
+	 * \brief SpiDeviceHandle's constructor
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
-	 * \param [in] spiDevice is a reference to SpiDevice associated with this proxy
+	 * \param [in] spiDevice is a reference to SpiDevice associated with this handle
 	 */
 
-	explicit SpiDeviceProxy(SpiDevice& spiDevice);
+	explicit SpiDeviceHandle(SpiDevice& spiDevice);
 
 	/**
-	 * \brief SpiDeviceProxy's destructor
+	 * \brief SpiDeviceHandle's destructor
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 */
 
-	~SpiDeviceProxy();
+	~SpiDeviceHandle();
 
 	/**
 	 * \return true if associated SPI device is opened, false otherwise
@@ -60,18 +60,18 @@ public:
 
 	bool isOpened() const;
 
-	SpiDeviceProxy(const SpiDeviceProxy&) = delete;
-	SpiDeviceProxy& operator=(const SpiDeviceProxy&) = delete;
+	SpiDeviceHandle(const SpiDeviceHandle&) = delete;
+	SpiDeviceHandle& operator=(const SpiDeviceHandle&) = delete;
 
 private:
 
 	/**
-	 * \return reference to SpiMaster associated with this proxy
+	 * \return reference to SpiMaster associated with this handle
 	 */
 
 	SpiMaster& getSpiMaster() const;
 
-	/// reference to SpiDevice associated with this proxy
+	/// reference to SpiDevice associated with this handle
 	SpiDevice& spiDevice_;
 };
 
