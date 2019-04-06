@@ -2,7 +2,7 @@
  * \file
  * \brief SpiDeviceSelectGuard class header
  *
- * \author Copyright (C) 2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2018-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -18,8 +18,7 @@ namespace distortos
 namespace devices
 {
 
-class SpiDevice;
-class SpiMasterHandle;
+class OutputPin;
 
 /**
  * SpiDeviceSelectGuard is a RAII-style class for selecting SpiDevice.
@@ -34,10 +33,10 @@ public:
 	/**
 	 * \brief SpiDeviceSelectGuard's constructor
 	 *
-	 * \param [in] spiMasterHandle is a reference to SpiMasterHandle associated with this select guard
+	 * \param [in] slaveSelectPin is a reference to slave select pin of this SPI slave device
 	 */
 
-	explicit SpiDeviceSelectGuard(SpiMasterHandle& spiMasterHandle);
+	explicit SpiDeviceSelectGuard(OutputPin& slaveSelectPin);
 
 	/**
 	 * \brief SpiDeviceSelectGuard's destructor
@@ -48,27 +47,10 @@ public:
 	SpiDeviceSelectGuard(const SpiDeviceSelectGuard&) = delete;
 	SpiDeviceSelectGuard& operator=(const SpiDeviceSelectGuard&) = delete;
 
-protected:
-
-	/**
-	 * \return reference to SpiMasterHandle associated with this select guard
-	 */
-
-	SpiMasterHandle& getSpiMasterHandle() const
-	{
-		return spiMasterHandle_;
-	}
-
 private:
 
-	/**
-	 * \return reference to SpiDevice associated with this select guard
-	 */
-
-	SpiDevice& getSpiDevice() const;
-
-	/// reference to SpiMasterHandle associated with this select guard
-	SpiMasterHandle& spiMasterHandle_;
+	/// reference to slave select pin of this SPI slave device
+	OutputPin& slaveSelectPin_;
 };
 
 }	// namespace devices

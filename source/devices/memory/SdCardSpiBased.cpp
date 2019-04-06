@@ -214,11 +214,12 @@ public:
 	/**
 	 * \brief SelectGuard's constructor
 	 *
+	 * \param [in] slaveSelectPin is a reference to slave select pin of this SPI slave device
 	 * \param [in] spiMasterHandle is a reference to SpiMasterHandle associated with this select guard
 	 */
 
-	explicit SelectGuard(SpiMasterHandle& spiMasterHandle) :
-			SpiDeviceSelectGuard{spiMasterHandle},
+	SelectGuard(OutputPin& slaveSelectPin, SpiMasterHandle& spiMasterHandle) :
+			SpiDeviceSelectGuard{slaveSelectPin},
 			spiMasterHandle_{spiMasterHandle}
 	{
 
@@ -1208,7 +1209,7 @@ int SdCardSpiBased::erase(const uint64_t address, const uint64_t size)
 		const auto endAddress = std::min(address + size, beginAddress / auSize_ * auSize_ + auSize_);
 
 		{
-			const SelectGuard selectGuard {spiMasterHandle};
+			const SelectGuard selectGuard {slaveSelectPin_ ,spiMasterHandle};
 
 			const auto commandAddress = blockAddressing_ == true ? beginAddress / blockSize : beginAddress;
 			const auto ret = executeCmd32(spiMasterHandle, commandAddress);
@@ -1218,7 +1219,7 @@ int SdCardSpiBased::erase(const uint64_t address, const uint64_t size)
 				return EIO;
 		}
 		{
-			const SelectGuard selectGuard {spiMasterHandle};
+			const SelectGuard selectGuard {slaveSelectPin_ ,spiMasterHandle};
 
 			const auto commandAddress = blockAddressing_ == true ? (endAddress - blockSize) / blockSize :
 					(endAddress - blockSize);
@@ -1229,7 +1230,7 @@ int SdCardSpiBased::erase(const uint64_t address, const uint64_t size)
 				return EIO;
 		}
 		{
-			const SelectGuard selectGuard {spiMasterHandle};
+			const SelectGuard selectGuard {slaveSelectPin_ ,spiMasterHandle};
 
 			const auto beginPartial = beginAddress % auSize_ != 0;
 			const auto endPartial = endAddress % auSize_ != 0;
@@ -1319,7 +1320,7 @@ int SdCardSpiBased::read(const uint64_t address, void* const buffer, const size_
 			return ret.first;
 	}
 	{
-		const SelectGuard selectGuard {spiMasterHandle};
+		const SelectGuard selectGuard {slaveSelectPin_ ,spiMasterHandle};
 
 		{
 			const auto commandAddress = blockAddressing_ == true ? firstBlock : address;
@@ -1343,7 +1344,7 @@ int SdCardSpiBased::read(const uint64_t address, void* const buffer, const size_
 
 	if (blocks != 1)
 	{
-		const SelectGuard selectGuard {spiMasterHandle};
+		const SelectGuard selectGuard {slaveSelectPin_ ,spiMasterHandle};
 
 		const auto ret = executeCmd12(spiMasterHandle, std::chrono::milliseconds{readTimeoutMs_});
 		if (ret.first != 0)
@@ -1392,7 +1393,7 @@ int SdCardSpiBased::write(const uint64_t address, const void* const buffer, cons
 
 	if (blocks != 1)
 	{
-		const SelectGuard selectGuard {spiMasterHandle};
+		const SelectGuard selectGuard {slaveSelectPin_ ,spiMasterHandle};
 
 		const auto ret = executeAcmd23(spiMasterHandle, blocks);
 		if (ret.first != 0)
@@ -1401,7 +1402,7 @@ int SdCardSpiBased::write(const uint64_t address, const void* const buffer, cons
 			return EIO;
 	}
 
-	const SelectGuard selectGuard {spiMasterHandle};
+	const SelectGuard selectGuard {slaveSelectPin_ ,spiMasterHandle};
 
 	{
 		const auto commandAddress = blockAddressing_ == true ? firstBlock : address;
@@ -1475,7 +1476,7 @@ int SdCardSpiBased::initialize(const SpiDeviceHandle& spiDeviceHandle)
 			return ret.first;
 	}
 	{
-		const SelectGuard spiDeviceSelectGuard {spiMasterHandle};
+		const SelectGuard selectGuard {slaveSelectPin_ ,spiMasterHandle};
 
 		// 3500 milliseconds - max time of single AU partial erase
 		const auto ret = waitWhileBusy(spiMasterHandle, std::chrono::milliseconds{3500});
@@ -1483,7 +1484,7 @@ int SdCardSpiBased::initialize(const SpiDeviceHandle& spiDeviceHandle)
 			return ret;
 	}
 	{
-		const SelectGuard spiDeviceSelectGuard {spiMasterHandle};
+		const SelectGuard selectGuard {slaveSelectPin_ ,spiMasterHandle};
 
 		const auto ret = executeCmd0(spiMasterHandle);
 		if (ret.first != 0)
@@ -1492,7 +1493,7 @@ int SdCardSpiBased::initialize(const SpiDeviceHandle& spiDeviceHandle)
 			return EIO;
 	}
 	{
-		const SelectGuard spiDeviceSelectGuard {spiMasterHandle};
+		const SelectGuard selectGuard {slaveSelectPin_ ,spiMasterHandle};
 
 		const auto ret = executeCmd8(spiMasterHandle);
 		if (std::get<0>(ret) != 0)
@@ -1507,7 +1508,7 @@ int SdCardSpiBased::initialize(const SpiDeviceHandle& spiDeviceHandle)
 		while (1)
 		{
 			{
-				const SelectGuard spiDeviceSelectGuard {spiMasterHandle};
+				const SelectGuard selectGuard {slaveSelectPin_ ,spiMasterHandle};
 
 				const auto ret = executeAcmd41(spiMasterHandle, true);
 				if (ret.first != 0)
@@ -1531,7 +1532,7 @@ int SdCardSpiBased::initialize(const SpiDeviceHandle& spiDeviceHandle)
 	}
 
 	{
-		const SelectGuard spiDeviceSelectGuard {spiMasterHandle};
+		const SelectGuard selectGuard {slaveSelectPin_ ,spiMasterHandle};
 
 		const auto ret = executeCmd58(spiMasterHandle);
 		if (ret.first != 0)
@@ -1544,7 +1545,7 @@ int SdCardSpiBased::initialize(const SpiDeviceHandle& spiDeviceHandle)
 
 	if (blockAddressing_ == false)
 	{
-		const SelectGuard spiDeviceSelectGuard {spiMasterHandle};
+		const SelectGuard selectGuard {slaveSelectPin_ ,spiMasterHandle};
 
 		const auto ret = executeCmd16(spiMasterHandle, blockSize);
 		if (ret.first != 0)
@@ -1554,7 +1555,7 @@ int SdCardSpiBased::initialize(const SpiDeviceHandle& spiDeviceHandle)
 	}
 
 	{
-		const SelectGuard spiDeviceSelectGuard {spiMasterHandle};
+		const SelectGuard selectGuard {slaveSelectPin_ ,spiMasterHandle};
 
 		const auto ret = executeCmd9(spiMasterHandle);
 		if (std::get<0>(ret) != 0)
@@ -1584,7 +1585,7 @@ int SdCardSpiBased::initialize(const SpiDeviceHandle& spiDeviceHandle)
 			return EIO;	/// \todo add support for cards with ERASE_BLK_EN == 0 (sector erase granularity)
 	}
 	{
-		const SelectGuard spiDeviceSelectGuard {spiMasterHandle};
+		const SelectGuard selectGuard {slaveSelectPin_ ,spiMasterHandle};
 
 		const auto ret = executeAcmd13(spiMasterHandle, std::chrono::milliseconds{readTimeoutMs_});
 		if (std::get<0>(ret) != 0)

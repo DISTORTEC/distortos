@@ -281,7 +281,7 @@ std::pair<int, size_t> SpiEeprom::executeTransaction(const SpiDeviceHandle& spiD
 			return {ret.first, {}};
 	}
 
-	const SpiDeviceSelectGuard spiDeviceSelectGuard {spiMasterHandle};
+	const SpiDeviceSelectGuard spiDeviceSelectGuard {slaveSelectPin_};
 
 	return spiMasterHandle.executeTransaction(transfersRange);
 }

@@ -11,9 +11,6 @@
 
 #include "distortos/devices/communication/SpiDeviceSelectGuard.hpp"
 
-#include "distortos/devices/communication/SpiDevice.hpp"
-#include "distortos/devices/communication/SpiMasterHandle.hpp"
-
 #include "distortos/devices/io/OutputPin.hpp"
 
 namespace distortos
@@ -26,24 +23,15 @@ namespace devices
 | public functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-SpiDeviceSelectGuard::SpiDeviceSelectGuard(SpiMasterHandle& spiMasterHandle) :
-		spiMasterHandle_{spiMasterHandle}
+SpiDeviceSelectGuard::SpiDeviceSelectGuard(OutputPin& slaveSelectPin) :
+		slaveSelectPin_{slaveSelectPin}
 {
-	getSpiDevice().slaveSelectPin_.set(false);
+	slaveSelectPin_.set(false);
 }
 
 SpiDeviceSelectGuard::~SpiDeviceSelectGuard()
 {
-	getSpiDevice().slaveSelectPin_.set(true);
-}
-
-/*---------------------------------------------------------------------------------------------------------------------+
-| private functions
-+---------------------------------------------------------------------------------------------------------------------*/
-
-SpiDevice& SpiDeviceSelectGuard::getSpiDevice() const
-{
-	return spiMasterHandle_.getSpiDevice();
+	slaveSelectPin_.set(true);
 }
 
 }	// namespace devices
