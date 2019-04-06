@@ -72,7 +72,7 @@ std::pair<int, size_t> SpiMaster::executeTransaction(SpiDevice& device, const Sp
 		return {EINVAL, {}};
 
 	const SpiDeviceHandle spiDeviceHandle {device};
-	Proxy proxy {spiDeviceHandle};
+	SpiMasterProxy proxy {spiDeviceHandle};
 
 	{
 #pragma GCC diagnostic push
