@@ -53,12 +53,6 @@ public:
 
 	~SpiDeviceHandle();
 
-	/**
-	 * \return true if associated SPI device is opened, false otherwise
-	 */
-
-	bool isOpened() const;
-
 	SpiDeviceHandle(const SpiDeviceHandle&) = delete;
 	SpiDeviceHandle& operator=(const SpiDeviceHandle&) = delete;
 

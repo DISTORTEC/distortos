@@ -34,11 +34,6 @@ SpiDeviceHandle::~SpiDeviceHandle()
 	spiDevice_.unlock();
 }
 
-bool SpiDeviceHandle::isOpened() const
-{
-	return spiDevice_.openCount_ != 0;
-}
-
 }	// namespace devices
 
 }	// namespace distortos

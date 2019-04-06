@@ -102,14 +102,14 @@ SpiMasterTransfer getCommandWithAddress(const size_t capacity, const uint8_t com
 
 SpiEeprom::~SpiEeprom()
 {
-	assert(SpiDeviceHandle{spiDevice_}.isOpened() == false);
+	assert(spiDevice_.isOpened() == false);
 }
 
 int SpiEeprom::close()
 {
 	const SpiDeviceHandle spiDeviceHandle {spiDevice_};
 
-	assert(spiDeviceHandle.isOpened() == true);
+	assert(spiDevice_.isOpened() == true);
 
 	return spiDevice_.close();
 }
@@ -154,7 +154,7 @@ int SpiEeprom::read(const uint64_t address, void* const buffer, const size_t siz
 {
 	const SpiDeviceHandle spiDeviceHandle {spiDevice_};
 
-	assert(spiDeviceHandle.isOpened() == true);
+	assert(spiDevice_.isOpened() == true);
 	assert(buffer != nullptr);
 
 	const auto capacity = getSize();
@@ -183,7 +183,7 @@ int SpiEeprom::synchronize()
 {
 	const SpiDeviceHandle spiDeviceHandle {spiDevice_};
 
-	assert(spiDeviceHandle.isOpened() == true);
+	assert(spiDevice_.isOpened() == true);
 
 	return synchronize(spiDeviceHandle);
 }
@@ -210,7 +210,7 @@ int SpiEeprom::write(const uint64_t address, const void* const buffer, const siz
 int SpiEeprom::eraseOrWrite(const SpiDeviceHandle& spiDeviceHandle, const uint64_t address, const void* const buffer,
 		const uint64_t size)
 {
-	assert(spiDeviceHandle.isOpened() == true);
+	assert(spiDevice_.isOpened() == true);
 
 	const auto capacity = getSize();
 	assert(address + size <= capacity);

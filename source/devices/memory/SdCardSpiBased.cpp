@@ -1162,18 +1162,18 @@ std::pair<int, uint8_t> executeAcmd41(SpiMasterHandle& spiMasterHandle, const bo
 
 SdCardSpiBased::~SdCardSpiBased()
 {
-	assert(SpiDeviceHandle{spiDevice_}.isOpened() == false);
+	assert(spiDevice_.isOpened() == false);
 }
 
 int SdCardSpiBased::close()
 {
 	const SpiDeviceHandle spiDeviceHandle {spiDevice_};
 
-	assert(spiDeviceHandle.isOpened() == true);
+	assert(spiDevice_.isOpened() == true);
 
 	const auto ret = spiDevice_.close();
 
-	if (spiDeviceHandle.isOpened() == false)
+	if (spiDevice_.isOpened() == false)
 		deinitialize();
 
 	return ret;
@@ -1183,7 +1183,7 @@ int SdCardSpiBased::erase(const uint64_t address, const uint64_t size)
 {
 	const SpiDeviceHandle spiDeviceHandle {spiDevice_};
 
-	assert(spiDeviceHandle.isOpened() == true);
+	assert(spiDevice_.isOpened() == true);
 	assert(address % blockSize == 0 && size % blockSize == 0);
 
 	const auto firstBlock = address / blockSize;
@@ -1268,7 +1268,7 @@ int SdCardSpiBased::open()
 {
 	const SpiDeviceHandle spiDeviceHandle {spiDevice_};
 
-	const auto opened = spiDeviceHandle.isOpened();
+	const auto opened = spiDevice_.isOpened();
 
 	{
 		const auto ret = spiDevice_.open();
@@ -1302,7 +1302,7 @@ int SdCardSpiBased::read(const uint64_t address, void* const buffer, const size_
 {
 	const SpiDeviceHandle spiDeviceHandle {spiDevice_};
 
-	assert(spiDeviceHandle.isOpened() == true);
+	assert(spiDevice_.isOpened() == true);
 	assert(buffer != nullptr && address % blockSize == 0 && size % blockSize == 0);
 
 	const auto firstBlock = address / blockSize;
@@ -1358,7 +1358,7 @@ int SdCardSpiBased::read(const uint64_t address, void* const buffer, const size_
 
 int SdCardSpiBased::synchronize()
 {
-	assert(SpiDeviceHandle{spiDevice_}.isOpened() == true);
+	assert(spiDevice_.isOpened() == true);
 
 	return {};
 }
@@ -1373,7 +1373,7 @@ int SdCardSpiBased::write(const uint64_t address, const void* const buffer, cons
 {
 	const SpiDeviceHandle spiDeviceHandle {spiDevice_};
 
-	assert(spiDeviceHandle.isOpened() == true);
+	assert(spiDevice_.isOpened() == true);
 	assert(buffer != nullptr && address % blockSize == 0 && size % blockSize == 0);
 
 	const auto firstBlock = address / blockSize;
