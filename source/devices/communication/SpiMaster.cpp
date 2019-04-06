@@ -111,6 +111,12 @@ std::pair<int, size_t> SpiMaster::executeTransaction(const SpiMasterTransfersRan
 	return {ret_, handledTransfers};
 }
 
+void SpiMaster::lock()
+{
+	const auto ret = mutex_.lock();
+	assert(ret == 0);
+}
+
 void SpiMaster::notifyWaiter(const int ret)
 {
 	ret_ = ret;
@@ -159,6 +165,12 @@ void SpiMaster::transferCompleteEvent(const size_t bytesTransfered)
 		if (ret != 0)
 			notifyWaiter(ret);
 	}
+}
+
+void SpiMaster::unlock()
+{
+	const auto ret = mutex_.unlock();
+	assert(ret == 0);
 }
 
 }	// namespace devices

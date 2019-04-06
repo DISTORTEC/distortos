@@ -120,6 +120,20 @@ private:
 	std::pair<int, size_t> executeTransaction(SpiMasterTransfersRange transfersRange);
 
 	/**
+	 * \brief Locks SPI master for exclusive use by current thread.
+	 *
+	 * \note Locks are recursive.
+	 *
+	 * \warning This function must not be called from interrupt context!
+	 *
+	 * \pre The number of recursive locks of device is less than 65535.
+	 *
+	 * \post Device is locked.
+	 */
+
+	void lock();
+
+	/**
 	 * \brief Notifies waiting thread about completion of transaction.
 	 *
 	 * \param [in] ret is the last error code returned by transaction handling code
@@ -155,6 +169,18 @@ private:
 	 */
 
 	void transferCompleteEvent(size_t bytesTransfered) override;
+
+	/**
+	 * \brief Unlocks SPI master which was previously locked by current thread.
+	 *
+	 * \note Locks are recursive.
+	 *
+	 * \warning This function must not be called from interrupt context!
+	 *
+	 * \pre This function is called by the thread that locked the device.
+	 */
+
+	void unlock();
 
 	/// mutex used to serialize access to this object
 	Mutex mutex_;
