@@ -227,6 +227,7 @@ public:
 					spiDevice_{spiMaster},
 					clockFrequency_{clockFrequency},
 					slaveSelectPin_{slaveSelectPin},
+					spiMaster_{spiMaster},
 					mode_{mode3 == false ? SpiMode::_0 : SpiMode::_3},
 					type_{type}
 	{
@@ -541,6 +542,9 @@ private:
 
 	/// reference to slave select pin of this SPI EEPROM
 	OutputPin& slaveSelectPin_;
+
+	/// reference to SPI master to which this SPI EEPROM is connected
+	SpiMaster& spiMaster_;
 
 	/// SPI mode used by SPI EEPROM
 	SpiMode mode_;
