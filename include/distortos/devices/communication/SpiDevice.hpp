@@ -12,9 +12,6 @@
 #ifndef INCLUDE_DISTORTOS_DEVICES_COMMUNICATION_SPIDEVICE_HPP_
 #define INCLUDE_DISTORTOS_DEVICES_COMMUNICATION_SPIDEVICE_HPP_
 
-#include "distortos/devices/communication/SpiMasterTransfersRange.hpp"
-#include "distortos/devices/communication/SpiMode.hpp"
-
 #include "distortos/Mutex.hpp"
 
 namespace distortos
@@ -48,44 +45,9 @@ public:
 
 	constexpr SpiDevice(SpiMaster& spiMaster, OutputPin& slaveSelectPin) :
 			mutex_{Mutex::Type::recursive, Mutex::Protocol::priorityInheritance},
-			maxClockFrequency_{},
 			slaveSelectPin_{slaveSelectPin},
 			spiMaster_{spiMaster},
-			lsbFirst_{},
-			mode_{},
-			openCount_{},
-			wordLength_{}
-	{
-
-	}
-
-	/**
-	 * \brief SpiDevice's constructor
-	 *
-	 * \deprecated scheduled to be removed after v0.7.0, use SpiDevice::SpiDevice(SpiMaster&, OutputPin&),
-	 * SpiDeviceHandle, SpiMasterHandle and SpiDeviceSelectGuard
-	 *
-	 * \param [in] spiMaster is a reference to SPI master to which this SPI slave device is connected
-	 * \param [in] slaveSelectPin is a reference to slave select pin of this SPI slave device
-	 * \param [in] mode is the SPI mode used by SPI slave device
-	 * \param [in] maxClockFrequency is the max clock frequency supported by SPI slave device, Hz
-	 * \param [in] wordLength is the word length used by SPI slave device, bits
-	 * \param [in] lsbFirst selects whether data should be transmitted/received to/from the SPI slave device with
-	 * MSB (false) or LSB (true) first
-	 */
-
-	__attribute__ ((deprecated("Use SpiDevice::SpiDevice(SpiMaster&, OutputPin&), SpiDeviceHandle, SpiMasterHandle and "
-			"SpiDeviceSelectGuard")))
-	constexpr SpiDevice(SpiMaster& spiMaster, OutputPin& slaveSelectPin, const SpiMode mode,
-			const uint32_t maxClockFrequency, const uint8_t wordLength, const bool lsbFirst) :
-					mutex_{Mutex::Type::recursive, Mutex::Protocol::priorityInheritance},
-					maxClockFrequency_{maxClockFrequency},
-					slaveSelectPin_{slaveSelectPin},
-					spiMaster_{spiMaster},
-					lsbFirst_{lsbFirst},
-					mode_{mode},
-					openCount_{},
-					wordLength_{wordLength}
+			openCount_{}
 	{
 
 	}
@@ -113,85 +75,6 @@ public:
 	 */
 
 	int close();
-
-	/**
-	 * \brief Executes series of transfers as a single atomic transaction.
-	 *
-	 * \deprecated scheduled to be removed after v0.7.0, use SpiDeviceHandle, SpiMasterHandle and SpiDeviceSelectGuard
-	 *
-	 * \warning This function must not be called from interrupt context!
-	 *
-	 * \param [in] transfersRange is the range of transfers that will be executed
-	 *
-	 * \return pair with return code (0 on success, error code otherwise) and number of successfully completed transfers
-	 * from \a transfersRange; error codes:
-	 * - error codes returned by SpiMasterHandle::configure();
-	 * - error codes returned by SpiMasterHandle::executeTransaction();
-	 */
-
-	__attribute__ ((deprecated("Use SpiDeviceHandle, SpiMasterHandle and SpiDeviceSelectGuard")))
-	std::pair<int, size_t> executeTransaction(SpiMasterTransfersRange transfersRange);
-
-	/**
-	 * \deprecated scheduled to be removed after v0.7.0, use SpiDeviceHandle, SpiMasterHandle and SpiDeviceSelectGuard
-	 *
-	 * \return false if data should be transmitted/received to/from the SPI slave device with
-	 * MSB first, true if data should be transmitted/received to/from the SPI slave device with LSB first
-	 */
-
-	__attribute__ ((deprecated("Use SpiDeviceHandle, SpiMasterHandle and SpiDeviceSelectGuard")))
-	bool getLsbFirst() const
-	{
-		return lsbFirst_;
-	}
-
-	/**
-	 * \deprecated scheduled to be removed after v0.7.0, use SpiDeviceHandle, SpiMasterHandle and SpiDeviceSelectGuard
-	 *
-	 * \return max clock frequency supported by SPI slave device, Hz
-	 */
-
-	__attribute__ ((deprecated("Use SpiDeviceHandle, SpiMasterHandle and SpiDeviceSelectGuard")))
-	uint32_t getMaxClockFrequency() const
-	{
-		return maxClockFrequency_;
-	}
-
-	/**
-	 * \deprecated scheduled to be removed after v0.7.0, use SpiDeviceHandle, SpiMasterHandle and SpiDeviceSelectGuard
-	 *
-	 * \return SPI mode used by SPI slave device
-	 */
-
-	__attribute__ ((deprecated("Use SpiDeviceHandle, SpiMasterHandle and SpiDeviceSelectGuard")))
-	SpiMode getMode() const
-	{
-		return mode_;
-	}
-
-	/**
-	 * \deprecated scheduled to be removed after v0.7.0, use SpiDeviceHandle, SpiMasterHandle and SpiDeviceSelectGuard
-	 *
-	 * \return reference to slave select pin of this SPI slave device
-	 */
-
-	__attribute__ ((deprecated("Use SpiDeviceHandle, SpiMasterHandle and SpiDeviceSelectGuard")))
-	OutputPin& getSlaveSelectPin() const
-	{
-		return slaveSelectPin_;
-	}
-
-	/**
-	 * \deprecated scheduled to be removed after v0.7.0, use SpiDeviceHandle, SpiMasterHandle and SpiDeviceSelectGuard
-	 *
-	 * \return word length used by SPI slave device, bits
-	 */
-
-	__attribute__ ((deprecated("Use SpiDeviceHandle, SpiMasterHandle and SpiDeviceSelectGuard")))
-	uint8_t getWordLength() const
-	{
-		return wordLength_;
-	}
 
 	/**
 	 * \brief Locks the device for exclusive use by current thread.
@@ -247,27 +130,14 @@ private:
 	/// mutex used to serialize access to this object
 	Mutex mutex_;
 
-	/// max clock frequency supported by SPI slave device, Hz
-	uint32_t maxClockFrequency_;
-
 	/// reference to slave select pin of this SPI slave device
 	OutputPin& slaveSelectPin_;
 
 	/// reference to SPI master to which this SPI slave device is connected
 	SpiMaster& spiMaster_;
 
-	/// selects whether data should be transmitted/received to/from the SPI slave device with MSB (false) or LSB
-	/// (true) first
-	bool lsbFirst_;
-
-	/// SPI mode used by SPI slave device
-	SpiMode mode_;
-
 	/// number of times this device was opened but not yet closed
 	uint8_t openCount_;
-
-	/// word length used by SPI slave device, bits
-	uint8_t wordLength_;
 };
 
 }	// namespace devices

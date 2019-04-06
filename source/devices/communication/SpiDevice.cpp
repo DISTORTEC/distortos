@@ -12,9 +12,7 @@
 #include "distortos/devices/communication/SpiDevice.hpp"
 
 #include "distortos/devices/communication/SpiDeviceHandle.hpp"
-#include "distortos/devices/communication/SpiDeviceSelectGuard.hpp"
 #include "distortos/devices/communication/SpiMaster.hpp"
-#include "distortos/devices/communication/SpiMasterHandle.hpp"
 
 #include "distortos/internal/CHECK_FUNCTION_CONTEXT.hpp"
 
@@ -58,22 +56,6 @@ int SpiDevice::close()
 
 	--openCount_;
 	return 0;
-}
-
-std::pair<int, size_t> SpiDevice::executeTransaction(const SpiMasterTransfersRange transfersRange)
-{
-	const SpiDeviceHandle handle {*this};
-	SpiMasterHandle spiMasterHandle {handle};
-
-	{
-		const auto ret = spiMasterHandle.configure(mode_, maxClockFrequency_, wordLength_, lsbFirst_, {});
-		if (ret.first != 0)
-			return {ret.first, {}};
-	}
-
-	const SpiDeviceSelectGuard spiDeviceSelectGuard {spiMasterHandle};
-
-	return spiMasterHandle.executeTransaction(transfersRange);
 }
 
 int SpiDevice::open()

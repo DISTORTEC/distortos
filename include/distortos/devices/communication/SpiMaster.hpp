@@ -12,8 +12,6 @@
 #ifndef INCLUDE_DISTORTOS_DEVICES_COMMUNICATION_SPIMASTER_HPP_
 #define INCLUDE_DISTORTOS_DEVICES_COMMUNICATION_SPIMASTER_HPP_
 
-#include "distortos/devices/communication/SpiMasterTransfersRange.hpp"
-
 #include "distortos/Mutex.hpp"
 
 namespace distortos
@@ -22,7 +20,6 @@ namespace distortos
 namespace devices
 {
 
-class SpiDevice;
 class SpiMasterLowLevel;
 
 /**
@@ -74,30 +71,6 @@ public:
 	 */
 
 	int close();
-
-	/**
-	 * \brief Executes series of transfers as a single atomic transaction.
-	 *
-	 * First SPI is configured to match parameters of SPI device (clock frequency, mode, format, ...). Then the device
-	 * is selected and the transfers are executed. The transaction is finished when all transfers are complete or when
-	 * any error is detected - in either case the device is unselected and this function returns.
-	 *
-	 * \deprecated scheduled to be removed after v0.7.0, use SpiDeviceHandle, SpiMasterHandle and SpiDeviceSelectGuard
-	 *
-	 * \warning This function must not be called from interrupt context!
-	 *
-	 * \param [in] device is a reference to SPI device which is the target of the transaction
-	 * \param [in] transfersRange is the range of transfers that will be executed
-	 *
-	 * \return pair with return code (0 on success, error code otherwise) and number of successfully completed transfers
-	 * from \a transfersRange; error codes:
-	 * - EINVAL - \a transfersRange has no transfers;
-	 * - error codes returned by SpiMasterHandle::configure();
-	 * - error codes returned by SpiMasterHandle::executeTransaction();
-	 */
-
-	__attribute__ ((deprecated("Use SpiDeviceHandle, SpiMasterHandle and SpiDeviceSelectGuard")))
-	std::pair<int, size_t> executeTransaction(SpiDevice& device, SpiMasterTransfersRange transfersRange);
 
 	/**
 	 * \brief Opens SPI master.

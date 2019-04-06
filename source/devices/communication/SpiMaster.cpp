@@ -11,12 +11,7 @@
 
 #include "distortos/devices/communication/SpiMaster.hpp"
 
-#include "distortos/devices/communication/SpiDevice.hpp"
-#include "distortos/devices/communication/SpiDeviceHandle.hpp"
-#include "distortos/devices/communication/SpiDeviceSelectGuard.hpp"
 #include "distortos/devices/communication/SpiMasterLowLevel.hpp"
-#include "distortos/devices/communication/SpiMasterHandle.hpp"
-#include "distortos/devices/communication/SpiMasterTransfer.hpp"
 
 #include "distortos/internal/CHECK_FUNCTION_CONTEXT.hpp"
 
@@ -62,34 +57,6 @@ int SpiMaster::close()
 
 	--openCount_;
 	return 0;
-}
-
-std::pair<int, size_t> SpiMaster::executeTransaction(SpiDevice& device, const SpiMasterTransfersRange transfersRange)
-{
-	CHECK_FUNCTION_CONTEXT();
-
-	if (transfersRange.size() == 0)
-		return {EINVAL, {}};
-
-	const SpiDeviceHandle spiDeviceHandle {device};
-	SpiMasterHandle handle {spiDeviceHandle};
-
-	{
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-
-		const auto ret = handle.configure(device.getMode(), device.getMaxClockFrequency(), device.getWordLength(),
-				device.getLsbFirst(), {});
-
-#pragma GCC diagnostic pop
-
-		if (ret.first != 0)
-			return {ret.first, {}};
-	}
-
-	const SpiDeviceSelectGuard spiDeviceSelectGuard {handle};
-
-	return handle.executeTransaction(transfersRange);
 }
 
 int SpiMaster::open()

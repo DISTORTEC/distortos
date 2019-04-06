@@ -13,6 +13,8 @@
 #define INCLUDE_DISTORTOS_DEVICES_MEMORY_SPIEEPROM_HPP_
 
 #include "distortos/devices/communication/SpiDevice.hpp"
+#include "distortos/devices/communication/SpiMasterTransfersRange.hpp"
+#include "distortos/devices/communication/SpiMode.hpp"
 
 #include "distortos/devices/memory/BlockDevice.hpp"
 
