@@ -44,7 +44,7 @@ public:
 	explicit SpiMasterHandle(SpiMaster& spiMaster) :
 			spiMaster_{spiMaster}
 	{
-		spiMaster_.mutex_.lock();
+		spiMaster_.lock();
 	}
 
 	/**
@@ -55,7 +55,7 @@ public:
 
 	~SpiMasterHandle()
 	{
-		spiMaster_.mutex_.unlock();
+		spiMaster_.unlock();
 	}
 
 	/**
