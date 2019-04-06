@@ -55,6 +55,7 @@ public:
 					auSize_{},
 					clockFrequency_{clockFrequency},
 					slaveSelectPin_{slaveSelectPin},
+					spiMaster_{spiMaster},
 					eraseTimeoutMs_{},
 					readTimeoutMs_{},
 					writeTimeoutMs_{},
@@ -265,6 +266,9 @@ private:
 
 	/// reference to slave select pin of this SD card
 	OutputPin& slaveSelectPin_;
+
+	/// reference to SPI master to which this SD card is connected
+	SpiMaster& spiMaster_;
 
 	/// timeout of erase operation of single AU, milliseconds
 	uint16_t eraseTimeoutMs_;
