@@ -438,6 +438,7 @@ private:
 	 * \pre Device is opened.
 	 * \pre Selected range is within address space of device.
 	 *
+	 * \param [in] spiDeviceHandle is a reference to SpiDeviceHandle associated with this object
 	 * \param [in] address is the address of data that will be erased or written
 	 * \param [in] buffer is the buffer with data that will be written, nullptr to erase
 	 * \param [in] size is the size of erase (`buffer == nullptr`) or size of \a buffer (`buffer != nullptr`), bytes
@@ -451,6 +452,7 @@ private:
 	/**
 	 * \brief Erases or writes single page.
 	 *
+	 * \param [in] spiDeviceHandle is a reference to SpiDeviceHandle associated with this object
 	 * \param [in] address is the address of data that will be erased or written, must be valid!
 	 * \param [in] buffer is the buffer with data that will be written, nullptr to erase
 	 * \param [in] size is the size of erase (`buffer == nullptr`) or size of \a buffer (`buffer != nullptr`), bytes
@@ -468,6 +470,7 @@ private:
 	/**
 	 * \brief Executes series of transfers as a single atomic transaction.
 	 *
+	 * \param [in] spiDeviceHandle is a reference to SpiDeviceHandle associated with this object
 	 * \param [in] transfersRange is the range of transfers that will be executed
 	 *
 	 * \return pair with return code (0 on success, error code otherwise) and number of successfully completed transfers
@@ -494,6 +497,8 @@ private:
 	/**
 	 * \brief Reads value of status register of SPI EEPROM.
 	 *
+	 * \param [in] spiDeviceHandle is a reference to SpiDeviceHandle associated with this object
+	 *
 	 * \return pair with return code (0 on success, error code otherwise) and value of status register of SPI EEPROM;
 	 * error codes:
 	 * - error codes returned by executeTransaction();
@@ -515,6 +520,8 @@ private:
 
 	/**
 	 * \brief Enables writes in SPI EEPROM.
+	 *
+	 * \param [in] spiDeviceHandle is a reference to SpiDeviceHandle associated with this object
 	 *
 	 * \return 0 on success, error code otherwise:
 	 * - error codes returned by executeTransaction();
