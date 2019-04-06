@@ -48,7 +48,7 @@ public:
 					clockFrequency_{},
 					dmaChannel_{dmaChannel},
 					dmaChannelFunctor_{*this},
-					dmaChannelUniqueHandle_{},
+					dmaChannelHandle_{},
 					response_{},
 					sdMmcCardBase_{},
 					sdmmcPeripheral_{sdmmcPeripheral},
@@ -96,7 +96,7 @@ public:
 	 * \pre Driver is stopped.
 	 *
 	 * \return 0 on success, error code otherwise:
-	 * - error codes returned by DmaChannelUniqueHandle::reserve();
+	 * - error codes returned by DmaChannelHandle::reserve();
 	 */
 
 	int start() override;
@@ -214,8 +214,8 @@ private:
 	/// functor for DMA channel used for transfers
 	DmaChannelFunctor dmaChannelFunctor_;
 
-	/// unique handle of DMA channel used for transfers
-	DmaChannelUniqueHandle dmaChannelUniqueHandle_;
+	/// handle of DMA channel used for transfers
+	DmaChannelHandle dmaChannelHandle_;
 
 	/// buffer into which the command response will be read
 	Response response_;

@@ -52,8 +52,8 @@ public:
 					spiPeripheral_{spiPeripheral},
 					rxDmaChannel_{rxDmaChannel},
 					txDmaChannel_{txDmaChannel},
-					rxDmaChannelUniqueHandle_{},
-					txDmaChannelUniqueHandle_{},
+					rxDmaChannelHandle_{},
+					txDmaChannelHandle_{},
 					rxDmaChannelFunctor_{*this},
 					txDmaChannelFunctor_{*this},
 					spiMasterBase_{},
@@ -99,7 +99,7 @@ public:
 	 *
 	 * \return 0 on success, error code otherwise:
 	 * - EBADF - the driver is not stopped;
-	 * - error codes returned by DmaChannelUniqueHandle::reserve();
+	 * - error codes returned by DmaChannelHandle::reserve();
 	 */
 
 	int start() override;
@@ -247,11 +247,11 @@ private:
 	/// reference to DMA channel used for transmission
 	DmaChannel& txDmaChannel_;
 
-	/// unique handle of DMA channel used for reception
-	DmaChannelUniqueHandle rxDmaChannelUniqueHandle_;
+	/// handle of DMA channel used for reception
+	DmaChannelHandle rxDmaChannelHandle_;
 
-	/// unique handle of DMA channel used for transmission
-	DmaChannelUniqueHandle txDmaChannelUniqueHandle_;
+	/// handle of DMA channel used for transmission
+	DmaChannelHandle txDmaChannelHandle_;
 
 	/// functor for DMA channel used for reception
 	RxDmaChannelFunctor rxDmaChannelFunctor_;

@@ -66,23 +66,23 @@ int SpiMasterLowLevelDmaBased::start()
 		return EBADF;
 
 	{
-		const auto ret = rxDmaChannelUniqueHandle_.reserve(rxDmaChannel_, rxDmaRequest_, rxDmaChannelFunctor_);
+		const auto ret = rxDmaChannelHandle_.reserve(rxDmaChannel_, rxDmaRequest_, rxDmaChannelFunctor_);
 		if (ret != 0)
 			return ret;
 	}
 
-	auto rxDmaChannelUniqueHandleScopeGuard = estd::makeScopeGuard([this]()
+	auto rxDmaChannelHandleScopeGuard = estd::makeScopeGuard([this]()
 			{
-				rxDmaChannelUniqueHandle_.release();
+				rxDmaChannelHandle_.release();
 			});
 
 	{
-		const auto ret = txDmaChannelUniqueHandle_.reserve(txDmaChannel_, txDmaRequest_, txDmaChannelFunctor_);
+		const auto ret = txDmaChannelHandle_.reserve(txDmaChannel_, txDmaRequest_, txDmaChannelFunctor_);
 		if (ret != 0)
 			return ret;
 	}
 
-	rxDmaChannelUniqueHandleScopeGuard.release();
+	rxDmaChannelHandleScopeGuard.release();
 
 	wordLength_ = 8;
 	spiPeripheral_.writeCr1(SPI_CR1_SSM | SPI_CR1_SSI | SPI_CR1_SPE | SPI_CR1_BR | SPI_CR1_MSTR);
@@ -121,7 +121,7 @@ int SpiMasterLowLevelDmaBased::startTransfer(devices::SpiMasterBase& spiMasterBa
 				DmaChannel::Flags::peripheralToMemory |
 				(readBuffer != nullptr ? DmaChannel::Flags::memoryIncrement : DmaChannel::Flags::memoryFixed) |
 				DmaChannel::Flags::veryHighPriority;
-		rxDmaChannelUniqueHandle_.startTransfer(memoryAddress, spiPeripheral_.getDrAddress(), transactions,
+		rxDmaChannelHandle_.startTransfer(memoryAddress, spiPeripheral_.getDrAddress(), transactions,
 				commonDmaFlags | rxDmaFlags);
 	}
 	{
@@ -130,7 +130,7 @@ int SpiMasterLowLevelDmaBased::startTransfer(devices::SpiMasterBase& spiMasterBa
 				DmaChannel::Flags::memoryToPeripheral |
 				(writeBuffer != nullptr ? DmaChannel::Flags::memoryIncrement : DmaChannel::Flags{}) |
 				DmaChannel::Flags::lowPriority;
-		txDmaChannelUniqueHandle_.startTransfer(memoryAddress, spiPeripheral_.getDrAddress(), transactions,
+		txDmaChannelHandle_.startTransfer(memoryAddress, spiPeripheral_.getDrAddress(), transactions,
 				commonDmaFlags | txDmaFlags);
 	}
 
@@ -145,8 +145,8 @@ int SpiMasterLowLevelDmaBased::stop()
 	if (isTransferInProgress() == true)
 		return EBUSY;
 
-	rxDmaChannelUniqueHandle_.release();
-	txDmaChannelUniqueHandle_.release();
+	rxDmaChannelHandle_.release();
+	txDmaChannelHandle_.release();
 
 	// reset peripheral
 	spiPeripheral_.writeCr1({});
@@ -161,8 +161,8 @@ int SpiMasterLowLevelDmaBased::stop()
 
 void SpiMasterLowLevelDmaBased::eventHandler(const size_t transactionsLeft)
 {
-	txDmaChannelUniqueHandle_.stopTransfer();
-	rxDmaChannelUniqueHandle_.stopTransfer();
+	txDmaChannelHandle_.stopTransfer();
+	rxDmaChannelHandle_.stopTransfer();
 
 	const auto bytesTransfered = size_ - transactionsLeft * ((wordLength_ + 8 - 1) / 8);
 	size_ = {};

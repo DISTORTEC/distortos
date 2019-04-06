@@ -1,6 +1,6 @@
 /**
  * \file
- * \brief DmaChannelUniqueHandle class header for STM32
+ * \brief DmaChannelHandle class header for STM32
  *
  * \author Copyright (C) 2018-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
@@ -21,12 +21,12 @@ namespace chip
 {
 
 /**
- * DmaChannelUniqueHandle class can be used to access DmaChannel's functionality.
+ * DmaChannelHandle class can be used to access DmaChannel's functionality.
  *
  * \ingroup devices
  */
 
-class DmaChannelUniqueHandle
+class DmaChannelHandle
 {
 public:
 
@@ -34,22 +34,22 @@ public:
 	using Flags = DmaChannelFlags;
 
 	/**
-	 * \brief DmaChannelUniqueHandle's constructor
+	 * \brief DmaChannelHandle's constructor
 	 */
 
-	constexpr DmaChannelUniqueHandle() :
+	constexpr DmaChannelHandle() :
 			channel_{}
 	{
 
 	}
 
 	/**
-	 * \brief DmaChannelUniqueHandle's destructor
+	 * \brief DmaChannelHandle's destructor
 	 *
 	 * \pre No driver is reserved with this handle.
 	 */
 
-	~DmaChannelUniqueHandle()
+	~DmaChannelHandle()
 	{
 		assert(channel_ == nullptr);
 	}
@@ -155,10 +155,10 @@ public:
 		channel_->stopTransfer();
 	}
 
-	DmaChannelUniqueHandle(const DmaChannelUniqueHandle&) = delete;
-	DmaChannelUniqueHandle(DmaChannelUniqueHandle&&) = delete;
-	const DmaChannelUniqueHandle& operator=(const DmaChannelUniqueHandle&) = delete;
-	DmaChannelUniqueHandle& operator=(DmaChannelUniqueHandle&&) = delete;
+	DmaChannelHandle(const DmaChannelHandle&) = delete;
+	DmaChannelHandle(DmaChannelHandle&&) = delete;
+	const DmaChannelHandle& operator=(const DmaChannelHandle&) = delete;
+	DmaChannelHandle& operator=(DmaChannelHandle&&) = delete;
 
 private:
 

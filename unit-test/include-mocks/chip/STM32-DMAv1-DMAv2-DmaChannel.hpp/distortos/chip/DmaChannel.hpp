@@ -103,7 +103,7 @@ namespace distortos
 namespace chip
 {
 
-class DmaChannelUniqueHandle;
+class DmaChannelHandle;
 
 class DmaChannel
 {

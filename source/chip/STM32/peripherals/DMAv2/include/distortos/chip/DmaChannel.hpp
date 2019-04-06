@@ -148,7 +148,7 @@ class DmaPeripheral;
 
 class DmaChannel
 {
-	friend class DmaChannelUniqueHandle;
+	friend class DmaChannelHandle;
 
 public:
 
