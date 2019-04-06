@@ -12,8 +12,14 @@
 #include "distortos/devices/communication/SpiMaster.hpp"
 
 #include "distortos/devices/communication/SpiMasterLowLevel.hpp"
+#include "distortos/devices/communication/SpiMasterTransfer.hpp"
 
 #include "distortos/internal/CHECK_FUNCTION_CONTEXT.hpp"
+
+#include "distortos/assert.h"
+#include "distortos/Semaphore.hpp"
+
+#include "estd/ScopeGuard.hpp"
 
 #include <mutex>
 
@@ -61,6 +67,49 @@ int SpiMaster::close()
 	return 0;
 }
 
+std::pair<int, size_t> SpiMaster::executeTransaction(const SpiMasterTransfersRange transfersRange)
+{
+	CHECK_FUNCTION_CONTEXT();
+
+	if (transfersRange.size() == 0)
+		return {EINVAL, {}};
+
+	if (openCount_ == 0)
+		return {EBADF, {}};
+
+	Semaphore semaphore {0};
+	semaphore_ = &semaphore;
+	transfersRange_ = transfersRange;
+	ret_ = {};
+	const auto cleanupScopeGuard = estd::makeScopeGuard(
+			[this]()
+			{
+				transfersRange_ = {};
+				semaphore_ = {};
+			});
+
+	{
+		const auto transfer = transfersRange_.begin();
+		const auto ret = spiMaster_.startTransfer(*this, transfer->getWriteBuffer(), transfer->getReadBuffer(),
+				transfer->getSize());
+		if (ret != 0)
+			return {ret, {}};
+	}
+
+	while (semaphore.wait() != 0);
+
+	const auto handledTransfers = transfersRange_.begin() - transfersRange.begin();
+	return {ret_, handledTransfers};
+}
+
+void SpiMaster::notifyWaiter(const int ret)
+{
+	ret_ = ret;
+	const auto semaphore = semaphore_;
+	assert(semaphore != nullptr);
+	semaphore->post();
+}
+
 int SpiMaster::open()
 {
 	if (openCount_ == std::numeric_limits<decltype(openCount_)>::max())	// device is already opened too many times?
@@ -75,6 +124,32 @@ int SpiMaster::open()
 
 	++openCount_;
 	return 0;
+}
+
+void SpiMaster::transferCompleteEvent(const size_t bytesTransfered)
+{
+	assert(transfersRange_.size() != 0 && "Invalid range of transfers!");
+
+	const auto previousTransfer = transfersRange_.begin();
+	previousTransfer->finalize(bytesTransfered);
+
+	const auto success = previousTransfer->getSize() == bytesTransfered;
+	if (success == true)	// handling of last transfer successful?
+		transfersRange_ = {transfersRange_.begin() + 1, transfersRange_.end()};
+
+	if (transfersRange_.size() == 0 || success == false)	// all transfers are done or handling of last one failed?
+	{
+		notifyWaiter(success == true ? 0 : EIO);
+		return;
+	}
+
+	{
+		const auto nextTransfer = transfersRange_.begin();
+		const auto ret = spiMaster_.startTransfer(*this, nextTransfer->getWriteBuffer(), nextTransfer->getReadBuffer(),
+				nextTransfer->getSize());
+		if (ret != 0)
+			notifyWaiter(ret);
+	}
 }
 
 }	// namespace devices

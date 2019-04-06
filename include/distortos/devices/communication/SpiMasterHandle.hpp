@@ -13,14 +13,10 @@
 #define INCLUDE_DISTORTOS_DEVICES_COMMUNICATION_SPIMASTERHANDLE_HPP_
 
 #include "distortos/devices/communication/SpiMaster.hpp"
-#include "distortos/devices/communication/SpiMasterBase.hpp"
-#include "distortos/devices/communication/SpiMasterTransfersRange.hpp"
 #include "distortos/devices/communication/SpiMode.hpp"
 
 namespace distortos
 {
-
-class Semaphore;
 
 namespace devices
 {
@@ -34,7 +30,7 @@ namespace devices
  * \ingroup devices
  */
 
-class SpiMasterHandle : private SpiMasterBase
+class SpiMasterHandle
 {
 public:
 
@@ -47,9 +43,6 @@ public:
 	 */
 
 	explicit SpiMasterHandle(SpiMaster& spiMaster) :
-			transfersRange_{},
-			ret_{},
-			semaphore_{},
 			spiMaster_{spiMaster}
 	{
 		spiMaster_.mutex_.lock();
@@ -61,7 +54,7 @@ public:
 	 * \warning This function must not be called from interrupt context!
 	 */
 
-	~SpiMasterHandle() override
+	~SpiMasterHandle()
 	{
 		spiMaster_.mutex_.unlock();
 	}
@@ -100,21 +93,19 @@ public:
 	/**
 	 * \brief Executes series of transfers as a single atomic transaction.
 	 *
-	 * The transaction is finished when all transfers are complete or when any error is detected.
-	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
 	 * \param [in] transfersRange is the range of transfers that will be executed
 	 *
 	 * \return pair with return code (0 on success, error code otherwise) and number of successfully completed transfers
 	 * from \a transfersRange; error codes:
-	 * - EBADF - associated SPI master is not opened;
-	 * - EINVAL - \a transfersRange has no transfers;
-	 * - EIO - failure detected by low-level SPI master driver;
-	 * - error codes returned by SpiMasterLowLevel::startTransfer();
+	 * - error codes returned by SpiMasterLowLevel::executeTransaction();
 	 */
 
-	std::pair<int, size_t> executeTransaction(SpiMasterTransfersRange transfersRange);
+	std::pair<int, size_t> executeTransaction(const SpiMasterTransfersRange transfersRange) const
+	{
+		return spiMaster_.executeTransaction(transfersRange);
+	}
 
 	/**
 	 * \brief Opens associated SPI master.
@@ -134,38 +125,6 @@ public:
 	SpiMasterHandle& operator=(const SpiMasterHandle&) = delete;
 
 private:
-
-	/**
-	 * \brief Notifies waiting thread about completion of transaction.
-	 *
-	 * \param [in] ret is the last error code returned by transaction handling code, default - 0
-	 */
-
-	void notifyWaiter(int ret = {});
-
-	/**
-	 * \brief "Transfer complete" event
-	 *
-	 * Called by low-level SPI master driver when the transfer is physically finished.
-	 *
-	 * Handles the next transfer from the currently handled transaction. If there are no more transfers, waiting thread
-	 * is notified about completion of transaction.
-	 *
-	 * \param [in] bytesTransfered is the number of bytes transferred by low-level SPI master driver (read from write
-	 * buffer and/or written to read buffer), may be unreliable if transfer error was detected (\a bytesTransfered is
-	 * not equal to size of transfer)
-	 */
-
-	void transferCompleteEvent(size_t bytesTransfered) override;
-
-	/// range of transfers that are part of currently handled transaction
-	SpiMasterTransfersRange transfersRange_;
-
-	/// error codes detected in transferCompleteEvent()
-	volatile int ret_;
-
-	/// pointer to semaphore used to notify waiting thread about completion of transaction
-	Semaphore* volatile semaphore_;
 
 	/// reference to SpiMaster associated with this handle
 	SpiMaster& spiMaster_;
