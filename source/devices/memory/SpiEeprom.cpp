@@ -175,7 +175,7 @@ int SpiEeprom::read(const uint64_t address, void* const buffer, const size_t siz
 			getCommandWithAddress(capacity, readCommand, address, commandBuffer),
 			{nullptr, buffer, address + size <= capacity ? size : static_cast<size_t>(capacity - address)},
 	};
-	const auto ret = executeTransaction(spiDeviceHandle, SpiMasterTransfersRange{transfers});
+	const auto ret = executeTransaction(SpiMasterTransfersRange{transfers});
 	return ret.first;
 }
 
@@ -245,7 +245,7 @@ std::pair<int, size_t> SpiEeprom::eraseOrWritePage(const SpiDeviceHandle& spiDev
 			return {ret, {}};
 	}
 	{
-		const auto ret = writeEnable(spiDeviceHandle);
+		const auto ret = writeEnable();
 		if (ret != 0)
 			return {ret, {}};
 	}
@@ -265,14 +265,13 @@ std::pair<int, size_t> SpiEeprom::eraseOrWritePage(const SpiDeviceHandle& spiDev
 			getCommandWithAddress(capacity, writeCommand, address, commandBuffer),
 			{buffer, nullptr, writeSize},
 	};
-	const auto ret = executeTransaction(spiDeviceHandle, SpiMasterTransfersRange{transfers});
+	const auto ret = executeTransaction(SpiMasterTransfersRange{transfers});
 	return {ret.first, transfers[1].getBytesTransfered()};
 }
 
-std::pair<int, size_t> SpiEeprom::executeTransaction(const SpiDeviceHandle& spiDeviceHandle,
-		const SpiMasterTransfersRange transfersRange) const
+std::pair<int, size_t> SpiEeprom::executeTransaction(const SpiMasterTransfersRange transfersRange) const
 {
-	SpiMasterHandle spiMasterHandle {spiDeviceHandle};
+	SpiMasterHandle spiMasterHandle {spiMaster_};
 
 	{
 		// only datasheet for ST M95xxx series says that erased state is 0, assume this is true for all other devices
@@ -286,17 +285,17 @@ std::pair<int, size_t> SpiEeprom::executeTransaction(const SpiDeviceHandle& spiD
 	return spiMasterHandle.executeTransaction(transfersRange);
 }
 
-std::pair<int, bool> SpiEeprom::isWriteInProgress(const SpiDeviceHandle& spiDeviceHandle)
+std::pair<int, bool> SpiEeprom::isWriteInProgress(const SpiDeviceHandle&)
 {
-	const auto ret = readStatusRegister(spiDeviceHandle);
+	const auto ret = readStatusRegister();
 	return {ret.first, (ret.second & statusRegisterWip) != 0};
 }
 
-std::pair<int, uint8_t> SpiEeprom::readStatusRegister(const SpiDeviceHandle& spiDeviceHandle) const
+std::pair<int, uint8_t> SpiEeprom::readStatusRegister() const
 {
 	uint8_t buffer[2] {rdsrCommand, 0xff};
 	SpiMasterTransfer transfer {buffer, buffer, sizeof(buffer)};
-	const auto ret = executeTransaction(spiDeviceHandle, SpiMasterTransfersRange{transfer});
+	const auto ret = executeTransaction(SpiMasterTransfersRange{transfer});
 	return {ret.first, buffer[1]};
 }
 
@@ -314,10 +313,10 @@ int SpiEeprom::synchronize(const SpiDeviceHandle& spiDeviceHandle)
 	return ret;
 }
 
-int SpiEeprom::writeEnable(const SpiDeviceHandle& spiDeviceHandle) const
+int SpiEeprom::writeEnable() const
 {
 	SpiMasterTransfer transfer {&wrenCommand, nullptr, sizeof(wrenCommand)};
-	const auto ret = executeTransaction(spiDeviceHandle, SpiMasterTransfersRange{transfer});
+	const auto ret = executeTransaction(SpiMasterTransfersRange{transfer});
 	return ret.first;
 }
 

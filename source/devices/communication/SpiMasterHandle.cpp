@@ -11,7 +11,6 @@
 
 #include "distortos/devices/communication/SpiMasterHandle.hpp"
 
-#include "distortos/devices/communication/SpiDeviceHandle.hpp"
 #include "distortos/devices/communication/SpiMaster.hpp"
 #include "distortos/devices/communication/SpiMasterLowLevel.hpp"
 #include "distortos/devices/communication/SpiMasterTransfer.hpp"
@@ -33,28 +32,27 @@ namespace devices
 | public functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-SpiMasterHandle::SpiMasterHandle(const SpiDeviceHandle& spiDeviceHandle) :
+SpiMasterHandle::SpiMasterHandle(SpiMaster& spiMaster) :
 		transfersRange_{},
-		spiDeviceHandle_{spiDeviceHandle},
 		ret_{},
-		semaphore_{}
+		semaphore_{},
+		spiMaster_{spiMaster}
 {
-	getSpiMaster().mutex_.lock();
+	spiMaster_.mutex_.lock();
 }
 
 SpiMasterHandle::~SpiMasterHandle()
 {
-	getSpiMaster().mutex_.unlock();
+	spiMaster_.mutex_.unlock();
 }
 
 std::pair<int, uint32_t> SpiMasterHandle::configure(const SpiMode mode, const uint32_t clockFrequency,
 		const uint8_t wordLength, const bool lsbFirst, const uint32_t dummyData) const
 {
-	auto& spiMaster = getSpiMaster();
-	if (spiMaster.openCount_ == 0)
+	if (spiMaster_.openCount_ == 0)
 		return {EBADF, {}};
 
-	return spiMaster.spiMaster_.configure(mode, clockFrequency, wordLength, lsbFirst, dummyData);
+	return spiMaster_.spiMaster_.configure(mode, clockFrequency, wordLength, lsbFirst, dummyData);
 }
 
 std::pair<int, size_t> SpiMasterHandle::executeTransaction(const SpiMasterTransfersRange transfersRange)
@@ -64,8 +62,7 @@ std::pair<int, size_t> SpiMasterHandle::executeTransaction(const SpiMasterTransf
 	if (transfersRange.size() == 0)
 		return {EINVAL, {}};
 
-	auto& spiMaster = getSpiMaster();
-	if (spiMaster.openCount_ == 0)
+	if (spiMaster_.openCount_ == 0)
 		return {EBADF, {}};
 
 	Semaphore semaphore {0};
@@ -81,7 +78,7 @@ std::pair<int, size_t> SpiMasterHandle::executeTransaction(const SpiMasterTransf
 
 	{
 		const auto transfer = transfersRange_.begin();
-		const auto ret = spiMaster.spiMaster_.startTransfer(*this, transfer->getWriteBuffer(),
+		const auto ret = spiMaster_.spiMaster_.startTransfer(*this, transfer->getWriteBuffer(),
 				transfer->getReadBuffer(), transfer->getSize());
 		if (ret != 0)
 			return {ret, {}};
@@ -96,11 +93,6 @@ std::pair<int, size_t> SpiMasterHandle::executeTransaction(const SpiMasterTransf
 /*---------------------------------------------------------------------------------------------------------------------+
 | private functions
 +---------------------------------------------------------------------------------------------------------------------*/
-
-SpiMaster& SpiMasterHandle::getSpiMaster() const
-{
-	return spiDeviceHandle_.getSpiMaster();
-}
 
 void SpiMasterHandle::notifyWaiter(const int ret)
 {
@@ -129,7 +121,7 @@ void SpiMasterHandle::transferCompleteEvent(const size_t bytesTransfered)
 
 	{
 		const auto nextTransfer = transfersRange_.begin();
-		const auto ret = getSpiMaster().spiMaster_.startTransfer(*this, nextTransfer->getWriteBuffer(),
+		const auto ret = spiMaster_.spiMaster_.startTransfer(*this, nextTransfer->getWriteBuffer(),
 				nextTransfer->getReadBuffer(), nextTransfer->getSize());
 		if (ret != 0)
 			notifyWaiter(ret);

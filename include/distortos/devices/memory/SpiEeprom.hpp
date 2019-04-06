@@ -475,7 +475,6 @@ private:
 	/**
 	 * \brief Executes series of transfers as a single atomic transaction.
 	 *
-	 * \param [in] spiDeviceHandle is a reference to SpiDeviceHandle associated with this object
 	 * \param [in] transfersRange is the range of transfers that will be executed
 	 *
 	 * \return pair with return code (0 on success, error code otherwise) and number of successfully completed transfers
@@ -484,8 +483,7 @@ private:
 	 * - error codes returned by SpiMasterHandle::executeTransaction();
 	 */
 
-	std::pair<int, size_t> executeTransaction(const SpiDeviceHandle& spiDeviceHandle,
-			SpiMasterTransfersRange transfersRange) const;
+	std::pair<int, size_t> executeTransaction(SpiMasterTransfersRange transfersRange) const;
 
 	/**
 	 * \brief Internal implementation of isWriteInProgress()
@@ -502,14 +500,12 @@ private:
 	/**
 	 * \brief Reads value of status register of SPI EEPROM.
 	 *
-	 * \param [in] spiDeviceHandle is a reference to SpiDeviceHandle associated with this object
-	 *
 	 * \return pair with return code (0 on success, error code otherwise) and value of status register of SPI EEPROM;
 	 * error codes:
 	 * - error codes returned by executeTransaction();
 	 */
 
-	std::pair<int, uint8_t> readStatusRegister(const SpiDeviceHandle& spiDeviceHandle) const;
+	std::pair<int, uint8_t> readStatusRegister() const;
 
 	/**
 	 * \brief Internal implementation of synchronize()
@@ -526,13 +522,11 @@ private:
 	/**
 	 * \brief Enables writes in SPI EEPROM.
 	 *
-	 * \param [in] spiDeviceHandle is a reference to SpiDeviceHandle associated with this object
-	 *
 	 * \return 0 on success, error code otherwise:
 	 * - error codes returned by executeTransaction();
 	 */
 
-	int writeEnable(const SpiDeviceHandle& spiDeviceHandle) const;
+	int writeEnable() const;
 
 	/// internal SPI slave device
 	SpiDevice spiDevice_;

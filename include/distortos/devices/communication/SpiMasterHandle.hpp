@@ -24,7 +24,6 @@ class Semaphore;
 namespace devices
 {
 
-class SpiDeviceHandle;
 class SpiMaster;
 
 /**
@@ -38,8 +37,6 @@ class SpiMaster;
 
 class SpiMasterHandle : private SpiMasterBase
 {
-	friend class SpiDeviceSelectGuard;
-
 public:
 
 	/**
@@ -47,10 +44,10 @@ public:
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
-	 * \param [in] spiDeviceHandle is a reference to SpiDeviceHandle associated with this handle
+	 * \param [in] spiMaster is a reference to SpiMaster associated with this handle
 	 */
 
-	explicit SpiMasterHandle(const SpiDeviceHandle& spiDeviceHandle);
+	explicit SpiMasterHandle(SpiMaster& spiMaster);
 
 	/**
 	 * \brief SpiMasterHandle's destructor
@@ -102,12 +99,6 @@ public:
 private:
 
 	/**
-	 * \return reference to SpiMaster associated with this handle
-	 */
-
-	SpiMaster& getSpiMaster() const;
-
-	/**
 	 * \brief Notifies waiting thread about completion of transaction.
 	 *
 	 * \param [in] ret is the last error code returned by transaction handling code, default - 0
@@ -133,14 +124,14 @@ private:
 	/// range of transfers that are part of currently handled transaction
 	SpiMasterTransfersRange transfersRange_;
 
-	/// reference to SpiDeviceHandle associated with this handle
-	const SpiDeviceHandle& spiDeviceHandle_;
-
 	/// error codes detected in transferCompleteEvent()
 	volatile int ret_;
 
 	/// pointer to semaphore used to notify waiting thread about completion of transaction
 	Semaphore* volatile semaphore_;
+
+	/// reference to SpiMaster associated with this handle
+	SpiMaster& spiMaster_;
 };
 
 }	// namespace devices

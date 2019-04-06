@@ -23,7 +23,6 @@ namespace devices
 {
 
 class OutputPin;
-class SpiDeviceHandle;
 
 /**
  * SdCardSpiBased class is a SD card connected via SPI.
@@ -235,8 +234,6 @@ private:
 	 * Algorithm is based on ChaN's
 	 * [How to Use MMC/SDC: Initialization Procedure for SPI Mode](http://elm-chan.org/docs/mmc/mmc_e.html#spiinit).
 	 *
-	 * \param [in] spiDeviceHandle is a reference to SpiDeviceHandle associated with this object
-	 *
 	 * \return 0 on success, error code otherwise:
 	 * - EIO - error during communication with SD card;
 	 * - ETIMEDOUT - timed-out while waiting for SD card to respond;
@@ -250,7 +247,7 @@ private:
 	 * - error codes returned by SpiMasterHandle::executeTransaction();
 	 */
 
-	int initialize(const SpiDeviceHandle& spiDeviceHandle);
+	int initialize();
 
 	/// internal SPI slave device
 	SpiDevice spiDevice_;

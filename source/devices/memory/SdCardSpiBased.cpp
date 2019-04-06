@@ -1193,7 +1193,7 @@ int SdCardSpiBased::erase(const uint64_t address, const uint64_t size)
 	if (size == 0)
 		return {};
 
-	SpiMasterHandle spiMasterHandle {spiDeviceHandle};
+	SpiMasterHandle spiMasterHandle {spiMaster_};
 
 	{
 		const auto ret = spiMasterHandle.configure(SpiMode::_0, clockFrequency_, 8, false, UINT32_MAX);
@@ -1287,9 +1287,9 @@ int SdCardSpiBased::open()
 			});
 
 	{
-		decltype(initialize(spiDeviceHandle)) ret;
+		decltype(initialize()) ret;
 		unsigned int attempt {};
-		while (ret = initialize(spiDeviceHandle), ret != 0)
+		while (ret = initialize(), ret != 0)
 			if (++attempt >= 100)
 				return ret;
 	}
@@ -1312,7 +1312,7 @@ int SdCardSpiBased::read(const uint64_t address, void* const buffer, const size_
 	if (size == 0)
 		return {};
 
-	SpiMasterHandle spiMasterHandle {spiDeviceHandle};
+	SpiMasterHandle spiMasterHandle {spiMaster_};
 
 	{
 		const auto ret = spiMasterHandle.configure(SpiMode::_0, clockFrequency_, 8, false, UINT32_MAX);
@@ -1383,7 +1383,7 @@ int SdCardSpiBased::write(const uint64_t address, const void* const buffer, cons
 	if (size == 0)
 		return {};
 
-	SpiMasterHandle spiMasterHandle {spiDeviceHandle};
+	SpiMasterHandle spiMasterHandle {spiMaster_};
 
 	{
 		const auto ret = spiMasterHandle.configure(SpiMode::_0, clockFrequency_, 8, false, UINT32_MAX);
@@ -1460,9 +1460,9 @@ void SdCardSpiBased::deinitialize()
 	blockAddressing_ = {};
 }
 
-int SdCardSpiBased::initialize(const SpiDeviceHandle& spiDeviceHandle)
+int SdCardSpiBased::initialize()
 {
-	SpiMasterHandle spiMasterHandle {spiDeviceHandle};
+	SpiMasterHandle spiMasterHandle {spiMaster_};
 
 	{
 		const auto ret = spiMasterHandle.configure(SpiMode::_0, 400000, 8, false, UINT32_MAX);
