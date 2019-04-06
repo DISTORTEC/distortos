@@ -225,6 +225,7 @@ public:
 			const uint32_t clockFrequency = 1000000) :
 					spiDevice_{spiMaster, slaveSelectPin},
 					clockFrequency_{clockFrequency},
+					slaveSelectPin_{slaveSelectPin},
 					mode_{mode3 == false ? SpiMode::_0 : SpiMode::_3},
 					type_{type}
 	{
@@ -536,6 +537,9 @@ private:
 
 	/// desired clock frequency of SPI EEPROM, Hz
 	uint32_t clockFrequency_;
+
+	/// reference to slave select pin of this SPI EEPROM
+	OutputPin& slaveSelectPin_;
 
 	/// SPI mode used by SPI EEPROM
 	SpiMode mode_;
