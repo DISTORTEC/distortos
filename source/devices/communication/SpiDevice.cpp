@@ -11,10 +11,11 @@
 
 #include "distortos/devices/communication/SpiDevice.hpp"
 
-#include "distortos/devices/communication/SpiDeviceHandle.hpp"
 #include "distortos/devices/communication/SpiMaster.hpp"
 
 #include "distortos/internal/CHECK_FUNCTION_CONTEXT.hpp"
+
+#include <mutex>
 
 #include <cerrno>
 
@@ -35,14 +36,14 @@ SpiDevice::~SpiDevice()
 	if (openCount_ == 0)
 		return;
 
-	const SpiDeviceHandle handle {*this};
+	const std::lock_guard<Mutex> lockGuard {mutex_};
 
 	spiMaster_.close();
 }
 
 int SpiDevice::close()
 {
-	const SpiDeviceHandle handle {*this};
+	const std::lock_guard<Mutex> lockGuard {mutex_};
 
 	if (openCount_ == 0)	// device is not open anymore?
 		return EBADF;
@@ -60,7 +61,7 @@ int SpiDevice::close()
 
 int SpiDevice::open()
 {
-	const SpiDeviceHandle handle {*this};
+	const std::lock_guard<Mutex> lockGuard {mutex_};
 
 	if (openCount_ == std::numeric_limits<decltype(openCount_)>::max())	// device is already opened too many times?
 		return EMFILE;
