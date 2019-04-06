@@ -49,6 +49,7 @@ public:
 
 	constexpr SdCardSpiBased(SpiMaster& spiMaster, OutputPin& slaveSelectPin,
 			const uint32_t clockFrequency = 25000000) :
+					mutex_{Mutex::Type::recursive, Mutex::Protocol::priorityInheritance},
 					spiDevice_{spiMaster},
 					blocksCount_{},
 					auSize_{},
@@ -248,6 +249,9 @@ private:
 	 */
 
 	int initialize();
+
+	/// mutex used to serialize access to this object
+	Mutex mutex_;
 
 	/// internal SPI slave device
 	SpiDevice spiDevice_;

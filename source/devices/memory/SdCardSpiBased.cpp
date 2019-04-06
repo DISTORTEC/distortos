@@ -11,7 +11,6 @@
 
 #include "distortos/devices/memory/SdCardSpiBased.hpp"
 
-#include "distortos/devices/communication/SpiDeviceHandle.hpp"
 #include "distortos/devices/communication/SpiDeviceSelectGuard.hpp"
 #include "distortos/devices/communication/SpiMasterHandle.hpp"
 #include "distortos/devices/communication/SpiMasterTransfer.hpp"
@@ -21,7 +20,7 @@
 
 #include "estd/ScopeGuard.hpp"
 
-#include <tuple>
+#include <mutex>
 
 #include <cstring>
 
@@ -1167,7 +1166,7 @@ SdCardSpiBased::~SdCardSpiBased()
 
 int SdCardSpiBased::close()
 {
-	const SpiDeviceHandle spiDeviceHandle {spiDevice_};
+	const std::lock_guard<Mutex> lockGuard {mutex_};
 
 	assert(spiDevice_.isOpened() == true);
 
@@ -1181,7 +1180,7 @@ int SdCardSpiBased::close()
 
 int SdCardSpiBased::erase(const uint64_t address, const uint64_t size)
 {
-	const SpiDeviceHandle spiDeviceHandle {spiDevice_};
+	const std::lock_guard<Mutex> lockGuard {mutex_};
 
 	assert(spiDevice_.isOpened() == true);
 	assert(address % blockSize == 0 && size % blockSize == 0);
@@ -1260,13 +1259,13 @@ uint64_t SdCardSpiBased::getSize() const
 
 void SdCardSpiBased::lock()
 {
-	const auto ret = spiDevice_.lock();
+	const auto ret = mutex_.lock();
 	assert(ret == 0);
 }
 
 int SdCardSpiBased::open()
 {
-	const SpiDeviceHandle spiDeviceHandle {spiDevice_};
+	const std::lock_guard<Mutex> lockGuard {mutex_};
 
 	const auto opened = spiDevice_.isOpened();
 
@@ -1300,7 +1299,7 @@ int SdCardSpiBased::open()
 
 int SdCardSpiBased::read(const uint64_t address, void* const buffer, const size_t size)
 {
-	const SpiDeviceHandle spiDeviceHandle {spiDevice_};
+	const std::lock_guard<Mutex> lockGuard {mutex_};
 
 	assert(spiDevice_.isOpened() == true);
 	assert(buffer != nullptr && address % blockSize == 0 && size % blockSize == 0);
@@ -1365,13 +1364,13 @@ int SdCardSpiBased::synchronize()
 
 void SdCardSpiBased::unlock()
 {
-	const auto ret = spiDevice_.unlock();
+	const auto ret = mutex_.unlock();
 	assert(ret == 0);
 }
 
 int SdCardSpiBased::write(const uint64_t address, const void* const buffer, const size_t size)
 {
-	const SpiDeviceHandle spiDeviceHandle {spiDevice_};
+	const std::lock_guard<Mutex> lockGuard {mutex_};
 
 	assert(spiDevice_.isOpened() == true);
 	assert(buffer != nullptr && address % blockSize == 0 && size % blockSize == 0);
