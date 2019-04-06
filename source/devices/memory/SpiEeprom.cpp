@@ -11,7 +11,6 @@
 
 #include "distortos/devices/memory/SpiEeprom.hpp"
 
-#include "distortos/devices/communication/SpiDeviceHandle.hpp"
 #include "distortos/devices/communication/SpiDeviceSelectGuard.hpp"
 #include "distortos/devices/communication/SpiMasterHandle.hpp"
 #include "distortos/devices/communication/SpiMasterTransfer.hpp"
@@ -19,7 +18,7 @@
 #include "distortos/assert.h"
 #include "distortos/ThisThread.hpp"
 
-#include <tuple>
+#include <mutex>
 
 namespace distortos
 {
@@ -107,7 +106,7 @@ SpiEeprom::~SpiEeprom()
 
 int SpiEeprom::close()
 {
-	const SpiDeviceHandle spiDeviceHandle {spiDevice_};
+	const std::lock_guard<Mutex> lockGuard {mutex_};
 
 	assert(spiDevice_.isOpened() == true);
 
@@ -116,7 +115,7 @@ int SpiEeprom::close()
 
 int SpiEeprom::erase(const uint64_t address, const uint64_t size)
 {
-	const SpiDeviceHandle spiDeviceHandle {spiDevice_};
+	const std::lock_guard<Mutex> lockGuard {mutex_};
 
 	return eraseOrWrite(address, nullptr, size);
 }
@@ -133,12 +132,14 @@ uint64_t SpiEeprom::getSize() const
 
 void SpiEeprom::lock()
 {
-	const auto ret = spiDevice_.lock();
+	const auto ret = mutex_.lock();
 	assert(ret == 0);
 }
 
 int SpiEeprom::open()
 {
+	const std::lock_guard<Mutex> lockGuard {mutex_};
+
 	const auto ret = spiDevice_.open();
 	assert(ret != EMFILE);
 	return ret;
@@ -146,7 +147,7 @@ int SpiEeprom::open()
 
 int SpiEeprom::read(const uint64_t address, void* const buffer, const size_t size)
 {
-	const SpiDeviceHandle spiDeviceHandle {spiDevice_};
+	const std::lock_guard<Mutex> lockGuard {mutex_};
 
 	assert(spiDevice_.isOpened() == true);
 	assert(buffer != nullptr);
@@ -175,7 +176,7 @@ int SpiEeprom::read(const uint64_t address, void* const buffer, const size_t siz
 
 int SpiEeprom::synchronize()
 {
-	const SpiDeviceHandle spiDeviceHandle {spiDevice_};
+	const std::lock_guard<Mutex> lockGuard {mutex_};
 
 	assert(spiDevice_.isOpened() == true);
 
@@ -184,13 +185,13 @@ int SpiEeprom::synchronize()
 
 void SpiEeprom::unlock()
 {
-	const auto ret = spiDevice_.unlock();
+	const auto ret = mutex_.unlock();
 	assert(ret == 0);
 }
 
 int SpiEeprom::write(const uint64_t address, const void* const buffer, const size_t size)
 {
-	const SpiDeviceHandle spiDeviceHandle {spiDevice_};
+	const std::lock_guard<Mutex> lockGuard {mutex_};
 
 	assert(buffer != nullptr);
 

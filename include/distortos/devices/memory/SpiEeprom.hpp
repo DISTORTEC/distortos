@@ -223,6 +223,7 @@ public:
 
 	constexpr SpiEeprom(SpiMaster& spiMaster, OutputPin& slaveSelectPin, const Type type, const bool mode3 = {},
 			const uint32_t clockFrequency = 1000000) :
+					mutex_{Mutex::Type::recursive, Mutex::Protocol::priorityInheritance},
 					spiDevice_{spiMaster},
 					clockFrequency_{clockFrequency},
 					slaveSelectPin_{slaveSelectPin},
@@ -472,6 +473,9 @@ private:
 	 */
 
 	int writeEnable() const;
+
+	/// mutex used to serialize access to this object
+	Mutex mutex_;
 
 	/// internal SPI slave device
 	SpiDevice spiDevice_;
