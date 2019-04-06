@@ -248,10 +248,10 @@ private:
 	DmaChannel& txDmaChannel_;
 
 	/// unique handle of DMA channel used for reception
-	DmaChannel::UniqueHandle rxDmaChannelUniqueHandle_;
+	DmaChannelUniqueHandle rxDmaChannelUniqueHandle_;
 
 	/// unique handle of DMA channel used for transmission
-	DmaChannel::UniqueHandle txDmaChannelUniqueHandle_;
+	DmaChannelUniqueHandle txDmaChannelUniqueHandle_;
 
 	/// functor for DMA channel used for reception
 	RxDmaChannelFunctor rxDmaChannelFunctor_;

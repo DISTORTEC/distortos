@@ -138,7 +138,6 @@ namespace chip
 
 class DmaChannelFunctor;
 class DmaChannelPeripheral;
-class DmaChannelUniqueHandle;
 class DmaPeripheral;
 
 /**
@@ -149,15 +148,12 @@ class DmaPeripheral;
 
 class DmaChannel
 {
-	friend DmaChannelUniqueHandle;
+	friend class DmaChannelUniqueHandle;
 
 public:
 
 	/// import DmaChannelFlags
 	using Flags = DmaChannelFlags;
-
-	/// import DmaChannelUniqueHandle
-	using UniqueHandle = DmaChannelUniqueHandle;
 
 	/**
 	 * \brief DmaChannel's constructor

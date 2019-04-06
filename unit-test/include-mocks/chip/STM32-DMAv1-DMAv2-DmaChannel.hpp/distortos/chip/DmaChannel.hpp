@@ -111,8 +111,6 @@ public:
 
 	using Flags = DmaChannelFlags;
 
-	using UniqueHandle = DmaChannelUniqueHandle;
-
 	MAKE_CONST_MOCK0(getTransactionsLeft, size_t());
 	MAKE_MOCK0(release, void());
 	MAKE_MOCK2(reserve, int(uint8_t, DmaChannelFunctor&));

@@ -82,12 +82,12 @@ TEST_CASE("Testing reserve() & release() interactions", "[reserve/release]")
 
 	SECTION("Releasing released driver causes no hardware accesses")
 	{
-		distortos::chip::DmaChannel::UniqueHandle handle;
+		distortos::chip::DmaChannelUniqueHandle handle;
 		handle.release();
 	}
 	SECTION("Reserving released driver should succeed")
 	{
-		distortos::chip::DmaChannel::UniqueHandle handle;
+		distortos::chip::DmaChannelUniqueHandle handle;
 
 		{
 			REQUIRE_CALL(interruptMaskingLockProxyMock, construct()).IN_SEQUENCE(sequence);
@@ -107,7 +107,7 @@ TEST_CASE("Testing reserve() & release() interactions", "[reserve/release]")
 
 		SECTION("Reserving reserved driver with a different handle should fail with EBUSY")
 		{
-			distortos::chip::DmaChannel::UniqueHandle anotherHandle;
+			distortos::chip::DmaChannelUniqueHandle anotherHandle;
 			REQUIRE_CALL(interruptMaskingLockProxyMock, construct()).IN_SEQUENCE(sequence);
 			REQUIRE_CALL(interruptMaskingLockProxyMock, destruct()).IN_SEQUENCE(sequence);
 			REQUIRE(anotherHandle.reserve(channel, 0, functorMock) == EBUSY);
@@ -130,7 +130,7 @@ TEST_CASE("Testing transfer configuration", "[configuration]")
 
 	distortos::chip::DmaChannel channel {peripheralMock, channelPeripheralMock};
 
-	distortos::chip::DmaChannel::UniqueHandle handle;
+	distortos::chip::DmaChannelUniqueHandle handle;
 
 	ALLOW_CALL(channelPeripheralMock, getChannelId()).RETURN(channelId);
 
@@ -218,7 +218,7 @@ TEST_CASE("Testing transfers", "[transfers]")
 
 	distortos::chip::DmaChannel channel {peripheralMock, channelPeripheralMock};
 
-	distortos::chip::DmaChannel::UniqueHandle handle;
+	distortos::chip::DmaChannelUniqueHandle handle;
 
 	ALLOW_CALL(channelPeripheralMock, getChannelId()).RETURN(channelId);
 

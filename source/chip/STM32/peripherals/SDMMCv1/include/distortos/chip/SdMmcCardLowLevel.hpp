@@ -215,7 +215,7 @@ private:
 	DmaChannelFunctor dmaChannelFunctor_;
 
 	/// unique handle of DMA channel used for transfers
-	DmaChannel::UniqueHandle dmaChannelUniqueHandle_;
+	DmaChannelUniqueHandle dmaChannelUniqueHandle_;
 
 	/// buffer into which the command response will be read
 	Response response_;
