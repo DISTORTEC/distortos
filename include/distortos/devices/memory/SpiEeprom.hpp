@@ -472,8 +472,8 @@ private:
 	 *
 	 * \return pair with return code (0 on success, error code otherwise) and number of successfully completed transfers
 	 * from \a transfersRange; error codes:
-	 * - error codes returned by SpiMasterProxy::configure();
-	 * - error codes returned by SpiMasterProxy::executeTransaction();
+	 * - error codes returned by SpiMasterHandle::configure();
+	 * - error codes returned by SpiMasterHandle::executeTransaction();
 	 */
 
 	std::pair<int, size_t> executeTransaction(const SpiDeviceHandle& spiDeviceHandle,

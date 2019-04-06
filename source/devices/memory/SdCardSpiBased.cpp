@@ -221,7 +221,7 @@ public:
 	~SelectGuard()
 	{
 		SpiMasterTransfer transfer {nullptr, nullptr, 1};
-		getSpiMasterProxy().executeTransaction(SpiMasterTransfersRange{transfer});
+		getSpiMasterHandle().executeTransaction(SpiMasterTransfersRange{transfer});
 	}
 };
 
@@ -379,17 +379,17 @@ SdStatus decodeSdStatus(const std::array<uint8_t, 64>& buffer)
  *
  * \tparam Functor is the type of functor, should be callable as bool(const uint8_t&)
  *
- * \param [in] spiMasterProxy is a reference to SpiMasterProxy object used for communication
+ * \param [in] spiMasterHandle is a reference to SpiMasterHandle object used for communication
  * \param [in] duration is the duration of wait before giving up
  * \param [in] functor is the functor used to check predicate
  *
  * \return pair with return code (0 on success, error code otherwise) and last byte that was received; error codes:
  * - ETIMEDOUT - the wait could not be completed before the specified timeout expired;
- * - error codes returned by SpiMasterProxy::executeTransaction();
+ * - error codes returned by SpiMasterHandle::executeTransaction();
  */
 
 template<typename Functor>
-std::pair<int, uint8_t> waitWhile(SpiMasterProxy& spiMasterProxy, const distortos::TickClock::duration duration,
+std::pair<int, uint8_t> waitWhile(SpiMasterHandle& spiMasterHandle, const distortos::TickClock::duration duration,
 		Functor functor)
 {
 	const auto deadline = distortos::TickClock::now() + duration;
@@ -397,7 +397,7 @@ std::pair<int, uint8_t> waitWhile(SpiMasterProxy& spiMasterProxy, const distorto
 	{
 		uint8_t byte;
 		SpiMasterTransfer transfer {nullptr, &byte, sizeof(byte)};
-		const auto ret = spiMasterProxy.executeTransaction(SpiMasterTransfersRange{transfer});
+		const auto ret = spiMasterHandle.executeTransaction(SpiMasterTransfersRange{transfer});
 		if (ret.first != 0)
 			return {ret.first, {}};
 		if (functor(byte) == false)
@@ -410,16 +410,16 @@ std::pair<int, uint8_t> waitWhile(SpiMasterProxy& spiMasterProxy, const distorto
 /**
  * \brief Waits while SD card connected via SPI is busy.
  *
- * \param [in] spiMasterProxy is a reference to SpiMasterProxy object used for communication
+ * \param [in] spiMasterHandle is a reference to SpiMasterHandle object used for communication
  * \param [in] duration is the duration of wait before giving up
  *
  * \return 0 on success, error code otherwise:
  * - error codes returned by waitWhile();
  */
 
-int waitWhileBusy(SpiMasterProxy& spiMasterProxy, const distortos::TickClock::duration duration)
+int waitWhileBusy(SpiMasterHandle& spiMasterHandle, const distortos::TickClock::duration duration)
 {
-	const auto ret = waitWhile(spiMasterProxy, duration,
+	const auto ret = waitWhile(spiMasterHandle, duration,
 			[](const uint8_t& byte)
 			{
 				return byte != 0xff;
@@ -430,7 +430,7 @@ int waitWhileBusy(SpiMasterProxy& spiMasterProxy, const distortos::TickClock::du
 /**
  * \brief Reads data block from SD card connected via SPI.
  *
- * \param [in] spiMasterProxy is a reference to SpiMasterProxy object used for communication
+ * \param [in] spiMasterHandle is a reference to SpiMasterHandle object used for communication
  * \param [out] buffer is a pointer to buffer for received data
  * \param [in] size is the size of data block that should be read, bytes
  * \param [in] duration is the duration of wait before giving up
@@ -439,14 +439,14 @@ int waitWhileBusy(SpiMasterProxy& spiMasterProxy, const distortos::TickClock::du
  * code is returned); error codes:
  * - EIO - unexpected control token was read;
  * - error codes returned by waitWhile();
- * - error codes returned by SpiMasterProxy::executeTransaction();
+ * - error codes returned by SpiMasterHandle::executeTransaction();
  */
 
-std::pair<int, size_t> readDataBlock(SpiMasterProxy& spiMasterProxy, void* const buffer, const size_t size,
+std::pair<int, size_t> readDataBlock(SpiMasterHandle& spiMasterHandle, void* const buffer, const size_t size,
 		const distortos::TickClock::duration duration)
 {
 	{
-		const auto ret = waitWhile(spiMasterProxy, duration,
+		const auto ret = waitWhile(spiMasterHandle, duration,
 				[](const uint8_t& byte)
 				{
 					return byte == 0xff;
@@ -462,7 +462,7 @@ std::pair<int, size_t> readDataBlock(SpiMasterProxy& spiMasterProxy, void* const
 			{nullptr, buffer, size},
 			{nullptr, nullptr, 2},	// crc
 	};
-	const auto ret = spiMasterProxy.executeTransaction(SpiMasterTransfersRange{transfers});
+	const auto ret = spiMasterHandle.executeTransaction(SpiMasterTransfersRange{transfers});
 	const auto bytesRead = transfers[0].getBytesTransfered();
 	return {ret.first, bytesRead};
 }
@@ -470,7 +470,7 @@ std::pair<int, size_t> readDataBlock(SpiMasterProxy& spiMasterProxy, void* const
 /**
  * \brief Writes data block to SD card connected via SPI.
  *
- * \param [in] spiMasterProxy is a reference to SpiMasterProxy object used for communication
+ * \param [in] spiMasterHandle is a reference to SpiMasterHandle object used for communication
  * \param [in] token is the token which will be used to start data block
  * \param [in] buffer is a pointer to buffer with written data
  * \param [in] size is the size of data block that should be written, bytes
@@ -480,10 +480,10 @@ std::pair<int, size_t> readDataBlock(SpiMasterProxy& spiMasterProxy, void* const
  * code is returned); error codes:
  * - EIO - unexpected data response token was read;
  * - error codes returned by waitWhileBusy();
- * - error codes returned by SpiMasterProxy::executeTransaction();
+ * - error codes returned by SpiMasterHandle::executeTransaction();
  */
 
-std::pair<int, size_t> writeDataBlock(SpiMasterProxy& spiMasterProxy, const uint8_t token,
+std::pair<int, size_t> writeDataBlock(SpiMasterHandle& spiMasterHandle, const uint8_t token,
 		const void* const buffer, const size_t size, const distortos::TickClock::duration duration)
 {
 	uint8_t footer[3];	// crc + data response token
@@ -496,13 +496,13 @@ std::pair<int, size_t> writeDataBlock(SpiMasterProxy& spiMasterProxy, const uint
 				{buffer, nullptr, size},
 				{nullptr, footer, sizeof(footer)},
 		};
-		const auto ret = spiMasterProxy.executeTransaction(SpiMasterTransfersRange{transfers});
+		const auto ret = spiMasterHandle.executeTransaction(SpiMasterTransfersRange{transfers});
 		bytesWritten = transfers[1].getBytesTransfered();
 		if (ret.first != 0)
 			return {ret.first, bytesWritten};
 	}
 	{
-		const auto ret = waitWhileBusy(spiMasterProxy, duration);
+		const auto ret = waitWhileBusy(spiMasterHandle, duration);
 		if (ret != 0)
 			return {ret, bytesWritten};
 	}
@@ -517,15 +517,15 @@ std::pair<int, size_t> writeDataBlock(SpiMasterProxy& spiMasterProxy, const uint
 /**
  * \brief Reads response from SD card connected via SPI.
  *
- * \param [in] spiMasterProxy is a reference to SpiMasterProxy object used for communication
+ * \param [in] spiMasterHandle is a reference to SpiMasterHandle object used for communication
  * \param [in] buffer is a buffer for received response
  *
  * \return 0 on success, error code otherwise:
  * - ETIMEDOUT - expected number of valid bytes could not be received within allowed number of transfers;
- * - error codes returned by SpiMasterProxy::executeTransaction();
+ * - error codes returned by SpiMasterHandle::executeTransaction();
  */
 
-int readResponse(SpiMasterProxy& spiMasterProxy, const Uint8Range buffer)
+int readResponse(SpiMasterHandle& spiMasterHandle, const Uint8Range buffer)
 {
 	size_t bytesRead {};
 	size_t validBytesRead {};
@@ -534,7 +534,7 @@ int readResponse(SpiMasterProxy& spiMasterProxy, const Uint8Range buffer)
 	{
 		const auto readSize = buffer.size() - validBytesRead;
 		SpiMasterTransfer transfer {nullptr, buffer.begin() + validBytesRead, readSize};
-		const auto ret = spiMasterProxy.executeTransaction(SpiMasterTransfersRange{transfer});
+		const auto ret = spiMasterHandle.executeTransaction(SpiMasterTransfersRange{transfer});
 		if (ret.first != 0)
 			return ret.first;
 
@@ -566,48 +566,48 @@ int readResponse(SpiMasterProxy& spiMasterProxy, const Uint8Range buffer)
 /**
  * \brief Reads R1 response from SD card connected via SPI.
  *
- * \param [in] spiMasterProxy is a reference to SpiMasterProxy object used for communication
+ * \param [in] spiMasterHandle is a reference to SpiMasterHandle object used for communication
  *
  * \return pair with return code (0 on success, error code otherwise) and R1 response; error codes:
  * - error codes returned by readResponse();
  */
 
-std::pair<int, uint8_t> readR1(SpiMasterProxy& spiMasterProxy)
+std::pair<int, uint8_t> readR1(SpiMasterHandle& spiMasterHandle)
 {
 	uint8_t r1;
-	const auto ret = readResponse(spiMasterProxy, Uint8Range{r1});
+	const auto ret = readResponse(spiMasterHandle, Uint8Range{r1});
 	return {ret, r1};
 }
 
 /**
  * \brief Reads R2 response from SD card connected via SPI.
  *
- * \param [in] spiMasterProxy is a reference to SpiMasterProxy object used for communication
+ * \param [in] spiMasterHandle is a reference to SpiMasterHandle object used for communication
  *
  * \return pair with return code (0 on success, error code otherwise) and R2 response; error codes:
  * - error codes returned by readResponse();
  */
 
-std::pair<int, R2Response> readR2(SpiMasterProxy& spiMasterProxy)
+std::pair<int, R2Response> readR2(SpiMasterHandle& spiMasterHandle)
 {
 	uint8_t r2[2];
-	const auto ret = readResponse(spiMasterProxy, Uint8Range{r2});
+	const auto ret = readResponse(spiMasterHandle, Uint8Range{r2});
 	return {ret, {r2[0], r2[1]}};
 }
 
 /**
  * \brief Reads R3 response from SD card connected via SPI.
  *
- * \param [in] spiMasterProxy is a reference to SpiMasterProxy object used for communication
+ * \param [in] spiMasterHandle is a reference to SpiMasterHandle object used for communication
  *
  * \return pair with return code (0 on success, error code otherwise) and R3 response; error codes:
  * - error codes returned by readResponse();
  */
 
-std::pair<int, R3Response> readR3(SpiMasterProxy& spiMasterProxy)
+std::pair<int, R3Response> readR3(SpiMasterHandle& spiMasterHandle)
 {
 	uint8_t r3[5];
-	const auto ret = readResponse(spiMasterProxy, Uint8Range{r3});
+	const auto ret = readResponse(spiMasterHandle, Uint8Range{r3});
 	R3Response r3Response {};
 	r3Response.r1 = r3[0];
 	r3Response.ocr = r3[1] << 24 | r3[2] << 16 | r3[3] << 8 | r3[4];
@@ -617,16 +617,16 @@ std::pair<int, R3Response> readR3(SpiMasterProxy& spiMasterProxy)
 /**
  * \brief Reads R7 response from SD card connected via SPI.
  *
- * \param [in] spiMasterProxy is a reference to SpiMasterProxy object used for communication
+ * \param [in] spiMasterHandle is a reference to SpiMasterHandle object used for communication
  *
  * \return pair with return code (0 on success, error code otherwise) and R7 response; error codes:
  * - error codes returned by readResponse();
  */
 
-std::pair<int, R7Response> readR7(SpiMasterProxy& spiMasterProxy)
+std::pair<int, R7Response> readR7(SpiMasterHandle& spiMasterHandle)
 {
 	uint8_t r7[5];
-	const auto ret = readResponse(spiMasterProxy, Uint8Range{r7});
+	const auto ret = readResponse(spiMasterHandle, Uint8Range{r7});
 	R7Response r7Response {};
 	r7Response.r1 = r7[0];
 	r7Response.commandVersion = r7[1] >> 4;
@@ -639,17 +639,17 @@ std::pair<int, R7Response> readR7(SpiMasterProxy& spiMasterProxy)
 /**
  * \brief Writes regular (CMD) command to SD card connected via SPI.
  *
- * \param [in] spiMasterProxy is a reference to SpiMasterProxy object used for communication
+ * \param [in] spiMasterHandle is a reference to SpiMasterHandle object used for communication
  * \param [in] command is the command that will be written
  * \param [in] argument is the argument for command, default - 0
  * \param [in] crc7 is the value of CRC-7 appended to the transferred block, default - 0
  * \param [in] stuffByte selects whether stuff byte will be appended to the transferred block, default - false
  *
  * \return 0 on success, error code otherwise:
- * - error codes returned by SpiMasterProxy::executeTransaction();
+ * - error codes returned by SpiMasterHandle::executeTransaction();
  */
 
-int writeCmd(SpiMasterProxy& spiMasterProxy, const uint8_t command, const uint32_t argument = {},
+int writeCmd(SpiMasterHandle& spiMasterHandle, const uint8_t command, const uint32_t argument = {},
 		const uint8_t crc7 = {}, const bool stuffByte = {})
 {
 	const uint8_t buffer[]
@@ -664,14 +664,14 @@ int writeCmd(SpiMasterProxy& spiMasterProxy, const uint8_t command, const uint32
 			0xff,	// stuff byte
 	};
 	SpiMasterTransfer transfer {buffer, nullptr, sizeof(buffer) - !stuffByte};
-	const auto ret = spiMasterProxy.executeTransaction(SpiMasterTransfersRange{transfer});
+	const auto ret = spiMasterHandle.executeTransaction(SpiMasterTransfersRange{transfer});
 	return ret.first;
 }
 
 /**
  * \brief Writes regular (CMD) command and reads R1 response to/from SD card connected via SPI.
  *
- * \param [in] spiMasterProxy is a reference to SpiMasterProxy object used for communication
+ * \param [in] spiMasterHandle is a reference to SpiMasterHandle object used for communication
  * \param [in] command is the command that will be written
  * \param [in] argument is the argument for command, default - 0
  * \param [in] crc7 is the value of CRC-7 appended to the transferred block, default - 0
@@ -682,20 +682,20 @@ int writeCmd(SpiMasterProxy& spiMasterProxy, const uint8_t command, const uint32
  * - error codes returned by writeCmd();
  */
 
-std::pair<int, uint8_t> writeCmdReadR1(SpiMasterProxy& spiMasterProxy, const uint8_t command,
+std::pair<int, uint8_t> writeCmdReadR1(SpiMasterHandle& spiMasterHandle, const uint8_t command,
 		const uint32_t argument = {}, const uint8_t crc7 = {}, const bool stuffByte = {})
 {
-	const auto ret = writeCmd(spiMasterProxy, command, argument, crc7, stuffByte);
+	const auto ret = writeCmd(spiMasterHandle, command, argument, crc7, stuffByte);
 	if (ret != 0)
 		return {ret, {}};
 
-	return readR1(spiMasterProxy);
+	return readR1(spiMasterHandle);
 }
 
 /**
  * \brief Writes regular (CMD) command and reads R3 response to/from SD card connected via SPI.
  *
- * \param [in] spiMasterProxy is a reference to SpiMasterProxy object used for communication
+ * \param [in] spiMasterHandle is a reference to SpiMasterHandle object used for communication
  * \param [in] command is the command that will be written
  * \param [in] argument is the argument for command, default - 0
  * \param [in] crc7 is the value of CRC-7 appended to the transferred block, default - 0
@@ -706,20 +706,20 @@ std::pair<int, uint8_t> writeCmdReadR1(SpiMasterProxy& spiMasterProxy, const uin
  * - error codes returned by writeCmd();
  */
 
-std::pair<int, R3Response> writeCmdReadR3(SpiMasterProxy& spiMasterProxy, const uint8_t command,
+std::pair<int, R3Response> writeCmdReadR3(SpiMasterHandle& spiMasterHandle, const uint8_t command,
 		const uint32_t argument = {}, const uint8_t crc7 = {}, const bool stuffByte = {})
 {
-	const auto ret = writeCmd(spiMasterProxy, command, argument, crc7, stuffByte);
+	const auto ret = writeCmd(spiMasterHandle, command, argument, crc7, stuffByte);
 	if (ret != 0)
 		return {ret, {}};
 
-	return readR3(spiMasterProxy);
+	return readR3(spiMasterHandle);
 }
 
 /**
  * \brief Writes regular (CMD) command and reads R7 response to/from SD card connected via SPI.
  *
- * \param [in] spiMasterProxy is a reference to SpiMasterProxy object used for communication
+ * \param [in] spiMasterHandle is a reference to SpiMasterHandle object used for communication
  * \param [in] command is the command that will be written
  * \param [in] argument is the argument for command, default - 0
  * \param [in] crc7 is the value of CRC-7 appended to the transferred block, default - 0
@@ -730,14 +730,14 @@ std::pair<int, R3Response> writeCmdReadR3(SpiMasterProxy& spiMasterProxy, const 
  * - error codes returned by writeCmd();
  */
 
-std::pair<int, R7Response> writeCmdReadR7(SpiMasterProxy& spiMasterProxy, const uint8_t command,
+std::pair<int, R7Response> writeCmdReadR7(SpiMasterHandle& spiMasterHandle, const uint8_t command,
 		const uint32_t argument = {}, const uint8_t crc7 = {}, const bool stuffByte = {})
 {
-	const auto ret = writeCmd(spiMasterProxy, command, argument, crc7, stuffByte);
+	const auto ret = writeCmd(spiMasterHandle, command, argument, crc7, stuffByte);
 	if (ret != 0)
 		return {ret, {}};
 
-	return readR7(spiMasterProxy);
+	return readR7(spiMasterHandle);
 }
 
 /**
@@ -745,15 +745,15 @@ std::pair<int, R7Response> writeCmdReadR7(SpiMasterProxy& spiMasterProxy, const 
  *
  * This is GO_IDLE_STATE command.
  *
- * \param [in] spiMasterProxy is a reference to SpiMasterProxy object used for communication
+ * \param [in] spiMasterHandle is a reference to SpiMasterHandle object used for communication
  *
  * \return pair with return code (0 on success, error code otherwise) and R1 response; error codes:
  * - error codes returned by writeCmdReadR1();
  */
 
-std::pair<int, uint8_t> executeCmd0(SpiMasterProxy& spiMasterProxy)
+std::pair<int, uint8_t> executeCmd0(SpiMasterHandle& spiMasterHandle)
 {
-	return writeCmdReadR1(spiMasterProxy, 0, {}, 0x4a);
+	return writeCmdReadR1(spiMasterHandle, 0, {}, 0x4a);
 }
 
 /**
@@ -761,18 +761,18 @@ std::pair<int, uint8_t> executeCmd0(SpiMasterProxy& spiMasterProxy)
  *
  * This is SEND_IF_COND command.
  *
- * \param [in] spiMasterProxy is a reference to SpiMasterProxy object used for communication
+ * \param [in] spiMasterHandle is a reference to SpiMasterHandle object used for communication
  *
  * \return tuple with return code (0 on success, error code otherwise), R1 response and a boolean value which tells
  * whether pattern was matched; error codes:
  * - error codes returned by writeCmdReadR7();
  */
 
-std::tuple<int, uint8_t, bool> executeCmd8(SpiMasterProxy& spiMasterProxy)
+std::tuple<int, uint8_t, bool> executeCmd8(SpiMasterHandle& spiMasterHandle)
 {
 	constexpr uint8_t supplyVoltage {1};	// 2.7 - 3.6 V
 	constexpr uint8_t checkPattern {0xaa};
-	const auto ret = writeCmdReadR7(spiMasterProxy, 8, supplyVoltage << 8 | checkPattern, 0x43);
+	const auto ret = writeCmdReadR7(spiMasterHandle, 8, supplyVoltage << 8 | checkPattern, 0x43);
 	const auto match = ret.second.checkPattern == checkPattern && ret.second.voltageAccepted == supplyVoltage;
 	return std::make_tuple(ret.first, ret.second.r1, match);
 }
@@ -782,7 +782,7 @@ std::tuple<int, uint8_t, bool> executeCmd8(SpiMasterProxy& spiMasterProxy)
  *
  * This is SEND_CSD command.
  *
- * \param [in] spiMasterProxy is a reference to SpiMasterProxy object used for communication
+ * \param [in] spiMasterHandle is a reference to SpiMasterHandle object used for communication
  *
  * \return tuple with return code (0 on success, error code otherwise), R1 response and array with raw data containing
  * CSD; error codes:
@@ -790,17 +790,18 @@ std::tuple<int, uint8_t, bool> executeCmd8(SpiMasterProxy& spiMasterProxy)
  * - error codes returned by writeCmdReadR1();
  */
 
-std::tuple<int, uint8_t, std::array<uint8_t, 16>> executeCmd9(SpiMasterProxy& spiMasterProxy)
+std::tuple<int, uint8_t, std::array<uint8_t, 16>> executeCmd9(SpiMasterHandle& spiMasterHandle)
 {
 	{
-		const auto ret = writeCmdReadR1(spiMasterProxy, 9);
+		const auto ret = writeCmdReadR1(spiMasterHandle, 9);
 		if (ret.first != 0 || ret.second != 0)
-			return decltype(executeCmd9(spiMasterProxy)){ret.first, ret.second, {}};
+			return decltype(executeCmd9(spiMasterHandle)){ret.first, ret.second, {}};
 	}
 	std::array<uint8_t, 16> csdBuffer;
 	// "7.2.6 Read CID/CSD Registers" of Physical Layer Simplified Specification Version 6.00 - use fixed read timeout
-	const auto ret = readDataBlock(spiMasterProxy, csdBuffer.begin(), csdBuffer.size(), std::chrono::milliseconds{100});
-	return decltype(executeCmd9(spiMasterProxy)){ret.first, {}, csdBuffer};
+	const auto ret =
+			readDataBlock(spiMasterHandle, csdBuffer.begin(), csdBuffer.size(), std::chrono::milliseconds{100});
+	return decltype(executeCmd9(spiMasterHandle)){ret.first, {}, csdBuffer};
 }
 
 /**
@@ -808,7 +809,7 @@ std::tuple<int, uint8_t, std::array<uint8_t, 16>> executeCmd9(SpiMasterProxy& sp
  *
  * This is STOP_TRANSMISSION command.
  *
- * \param [in] spiMasterProxy is a reference to SpiMasterProxy object used for communication
+ * \param [in] spiMasterHandle is a reference to SpiMasterHandle object used for communication
  * \param [in] duration is the duration of wait before giving up
  *
  * \return pair with return code (0 on success, error code otherwise) and R1 response; error codes:
@@ -816,13 +817,13 @@ std::tuple<int, uint8_t, std::array<uint8_t, 16>> executeCmd9(SpiMasterProxy& sp
  * - error codes returned by writeCmdReadR1();
  */
 
-std::pair<int, uint8_t> executeCmd12(SpiMasterProxy& spiMasterProxy, const distortos::TickClock::duration duration)
+std::pair<int, uint8_t> executeCmd12(SpiMasterHandle& spiMasterHandle, const distortos::TickClock::duration duration)
 {
-	const auto response = writeCmdReadR1(spiMasterProxy, 12, {}, {}, true);
+	const auto response = writeCmdReadR1(spiMasterHandle, 12, {}, {}, true);
 	if (response.first != 0)
 		return response;
 
-	const auto ret = waitWhileBusy(spiMasterProxy, duration);
+	const auto ret = waitWhileBusy(spiMasterHandle, duration);
 	return {ret, response.second};
 }
 
@@ -831,16 +832,16 @@ std::pair<int, uint8_t> executeCmd12(SpiMasterProxy& spiMasterProxy, const disto
  *
  * This is SET_BLOCKLEN command.
  *
- * \param [in] spiMasterProxy is a reference to SpiMasterProxy object used for communication
+ * \param [in] spiMasterHandle is a reference to SpiMasterHandle object used for communication
  * \param [in] blockLength is the length of read/write block, bytes
  *
  * \return pair with return code (0 on success, error code otherwise) and R1 response; error codes:
  * - error codes returned by writeCmdReadR1();
  */
 
-std::pair<int, uint8_t> executeCmd16(SpiMasterProxy& spiMasterProxy, const uint32_t blockLength)
+std::pair<int, uint8_t> executeCmd16(SpiMasterHandle& spiMasterHandle, const uint32_t blockLength)
 {
-	return writeCmdReadR1(spiMasterProxy, 16, blockLength);
+	return writeCmdReadR1(spiMasterHandle, 16, blockLength);
 }
 
 /**
@@ -848,16 +849,16 @@ std::pair<int, uint8_t> executeCmd16(SpiMasterProxy& spiMasterProxy, const uint3
  *
  * This is READ_SINGLE_BLOCK command.
  *
- * \param [in] spiMasterProxy is a reference to SpiMasterProxy object used for communication
+ * \param [in] spiMasterHandle is a reference to SpiMasterHandle object used for communication
  * \param [in] address is the address from which data will be read, bytes or blocks
  *
  * \return pair with return code (0 on success, error code otherwise) and R1 response; error codes:
  * - error codes returned by writeCmdReadR1();
  */
 
-std::pair<int, uint8_t> executeCmd17(SpiMasterProxy& spiMasterProxy, const uint32_t address)
+std::pair<int, uint8_t> executeCmd17(SpiMasterHandle& spiMasterHandle, const uint32_t address)
 {
-	return writeCmdReadR1(spiMasterProxy, 17, address);
+	return writeCmdReadR1(spiMasterHandle, 17, address);
 }
 
 /**
@@ -865,16 +866,16 @@ std::pair<int, uint8_t> executeCmd17(SpiMasterProxy& spiMasterProxy, const uint3
  *
  * This is READ_MULTIPLE_BLOCK command.
  *
- * \param [in] spiMasterProxy is a reference to SpiMasterProxy object used for communication
+ * \param [in] spiMasterHandle is a reference to SpiMasterHandle object used for communication
  * \param [in] address is the address from which data will be read, bytes or blocks
  *
  * \return pair with return code (0 on success, error code otherwise) and R1 response; error codes:
  * - error codes returned by writeCmdReadR1();
  */
 
-std::pair<int, uint8_t> executeCmd18(SpiMasterProxy& spiMasterProxy, const uint32_t address)
+std::pair<int, uint8_t> executeCmd18(SpiMasterHandle& spiMasterHandle, const uint32_t address)
 {
-	return writeCmdReadR1(spiMasterProxy, 18, address);
+	return writeCmdReadR1(spiMasterHandle, 18, address);
 }
 
 /**
@@ -882,16 +883,16 @@ std::pair<int, uint8_t> executeCmd18(SpiMasterProxy& spiMasterProxy, const uint3
  *
  * This is WRITE_BLOCK command.
  *
- * \param [in] spiMasterProxy is a reference to SpiMasterProxy object used for communication
+ * \param [in] spiMasterHandle is a reference to SpiMasterHandle object used for communication
  * \param [in] address is the address to which data will be written, bytes or blocks
  *
  * \return pair with return code (0 on success, error code otherwise) and R1 response; error codes:
  * - error codes returned by writeCmdReadR1();
  */
 
-std::pair<int, uint8_t> executeCmd24(SpiMasterProxy& spiMasterProxy, const uint32_t address)
+std::pair<int, uint8_t> executeCmd24(SpiMasterHandle& spiMasterHandle, const uint32_t address)
 {
-	return writeCmdReadR1(spiMasterProxy, 24, address);
+	return writeCmdReadR1(spiMasterHandle, 24, address);
 }
 
 /**
@@ -899,16 +900,16 @@ std::pair<int, uint8_t> executeCmd24(SpiMasterProxy& spiMasterProxy, const uint3
  *
  * This is WRITE_MULTIPLE_BLOCK command.
  *
- * \param [in] spiMasterProxy is a reference to SpiMasterProxy object used for communication
+ * \param [in] spiMasterHandle is a reference to SpiMasterHandle object used for communication
  * \param [in] address is the address to which data will be written, bytes or blocks
  *
  * \return pair with return code (0 on success, error code otherwise) and R1 response; error codes:
  * - error codes returned by writeCmdReadR1();
  */
 
-std::pair<int, uint8_t> executeCmd25(SpiMasterProxy& spiMasterProxy, const uint32_t address)
+std::pair<int, uint8_t> executeCmd25(SpiMasterHandle& spiMasterHandle, const uint32_t address)
 {
-	return writeCmdReadR1(spiMasterProxy, 25, address);
+	return writeCmdReadR1(spiMasterHandle, 25, address);
 }
 
 /**
@@ -916,16 +917,16 @@ std::pair<int, uint8_t> executeCmd25(SpiMasterProxy& spiMasterProxy, const uint3
  *
  * This is ERASE_WR_BLK_START_ADDR command.
  *
- * \param [in] spiMasterProxy is a reference to SpiMasterProxy object used for communication
+ * \param [in] spiMasterHandle is a reference to SpiMasterHandle object used for communication
  * \param [in] address is the address of first block marked for erase, bytes or blocks
  *
  * \return pair with return code (0 on success, error code otherwise) and R1 response; error codes:
  * - error codes returned by writeCmdReadR1();
  */
 
-std::pair<int, uint8_t> executeCmd32(SpiMasterProxy& spiMasterProxy, const uint32_t address)
+std::pair<int, uint8_t> executeCmd32(SpiMasterHandle& spiMasterHandle, const uint32_t address)
 {
-	return writeCmdReadR1(spiMasterProxy, 32, address);
+	return writeCmdReadR1(spiMasterHandle, 32, address);
 }
 
 /**
@@ -933,16 +934,16 @@ std::pair<int, uint8_t> executeCmd32(SpiMasterProxy& spiMasterProxy, const uint3
  *
  * This is ERASE_WR_BLK_END_ADDR command.
  *
- * \param [in] spiMasterProxy is a reference to SpiMasterProxy object used for communication
+ * \param [in] spiMasterHandle is a reference to SpiMasterHandle object used for communication
  * \param [in] address is the address of last block marked for erase, bytes or blocks
  *
  * \return pair with return code (0 on success, error code otherwise) and R1 response; error codes:
  * - error codes returned by writeCmdReadR1();
  */
 
-std::pair<int, uint8_t> executeCmd33(SpiMasterProxy& spiMasterProxy, const uint32_t address)
+std::pair<int, uint8_t> executeCmd33(SpiMasterHandle& spiMasterHandle, const uint32_t address)
 {
-	return writeCmdReadR1(spiMasterProxy, 33, address);
+	return writeCmdReadR1(spiMasterHandle, 33, address);
 }
 
 /**
@@ -950,7 +951,7 @@ std::pair<int, uint8_t> executeCmd33(SpiMasterProxy& spiMasterProxy, const uint3
  *
  * This is ERASE command.
  *
- * \param [in] spiMasterProxy is a reference to SpiMasterProxy object used for communication
+ * \param [in] spiMasterHandle is a reference to SpiMasterHandle object used for communication
  * \param [in] duration is the duration of wait before giving up
  *
  * \return pair with return code (0 on success, error code otherwise) and R1 response; error codes:
@@ -958,13 +959,13 @@ std::pair<int, uint8_t> executeCmd33(SpiMasterProxy& spiMasterProxy, const uint3
  * - error codes returned by writeCmdReadR1();
  */
 
-std::pair<int, uint8_t> executeCmd38(SpiMasterProxy& spiMasterProxy, const distortos::TickClock::duration duration)
+std::pair<int, uint8_t> executeCmd38(SpiMasterHandle& spiMasterHandle, const distortos::TickClock::duration duration)
 {
-	const auto response = writeCmdReadR1(spiMasterProxy, 38);
+	const auto response = writeCmdReadR1(spiMasterHandle, 38);
 	if (response.first != 0)
 		return response;
 
-	const auto ret = waitWhileBusy(spiMasterProxy, duration);
+	const auto ret = waitWhileBusy(spiMasterHandle, duration);
 	return {ret, response.second};
 }
 
@@ -973,15 +974,15 @@ std::pair<int, uint8_t> executeCmd38(SpiMasterProxy& spiMasterProxy, const disto
  *
  * This is APP_CMD command.
  *
- * \param [in] spiMasterProxy is a reference to SpiMasterProxy object used for communication
+ * \param [in] spiMasterHandle is a reference to SpiMasterHandle object used for communication
  *
  * \return pair with return code (0 on success, error code otherwise) and R1 response; error codes:
  * - error codes returned by writeCmdReadR1();
  */
 
-std::pair<int, uint8_t> executeCmd55(SpiMasterProxy& spiMasterProxy)
+std::pair<int, uint8_t> executeCmd55(SpiMasterHandle& spiMasterHandle)
 {
-	return writeCmdReadR1(spiMasterProxy, 55);
+	return writeCmdReadR1(spiMasterHandle, 55);
 }
 
 /**
@@ -989,21 +990,21 @@ std::pair<int, uint8_t> executeCmd55(SpiMasterProxy& spiMasterProxy)
  *
  * This is READ_OCR command.
  *
- * \param [in] spiMasterProxy is a reference to SpiMasterProxy object used for communication
+ * \param [in] spiMasterHandle is a reference to SpiMasterHandle object used for communication
  *
  * \return pair with return code (0 on success, error code otherwise) and R3 response; error codes:
  * - error codes returned by writeCmdReadR3();
  */
 
-std::pair<int, R3Response> executeCmd58(SpiMasterProxy& spiMasterProxy)
+std::pair<int, R3Response> executeCmd58(SpiMasterHandle& spiMasterHandle)
 {
-	return writeCmdReadR3(spiMasterProxy, 58);
+	return writeCmdReadR3(spiMasterHandle, 58);
 }
 
 /**
  * \brief Writes application (ACMD) command to SD card connected via SPI.
  *
- * \param [in] spiMasterProxy is a reference to SpiMasterProxy object used for communication
+ * \param [in] spiMasterHandle is a reference to SpiMasterHandle object used for communication
  * \param [in] command is the command that will be written
  * \param [in] argument is the argument for command, default - 0
  * \param [in] crc7 is the value of CRC-7 appended to the transferred block, default - 0
@@ -1015,22 +1016,22 @@ std::pair<int, R3Response> executeCmd58(SpiMasterProxy& spiMasterProxy)
  * - error codes returned by writeCmd();
  */
 
-int writeAcmd(SpiMasterProxy& spiMasterProxy, const uint8_t command, const uint32_t argument = {},
+int writeAcmd(SpiMasterHandle& spiMasterHandle, const uint8_t command, const uint32_t argument = {},
 		const uint8_t crc7 = {}, const bool stuffByte = {})
 {
-	const auto ret = executeCmd55(spiMasterProxy);
+	const auto ret = executeCmd55(spiMasterHandle);
 	if (ret.first != 0)
 		return ret.first;
 	if (ret.second != 0 && ret.second != r1InIdleStateMask)
 		return EIO;
 
-	return writeCmd(spiMasterProxy, command, argument, crc7, stuffByte);
+	return writeCmd(spiMasterHandle, command, argument, crc7, stuffByte);
 }
 
 /**
  * \brief Writes application (ACMD) command and reads R1 response to/from SD card connected via SPI.
  *
- * \param [in] spiMasterProxy is a reference to SpiMasterProxy object used for communication
+ * \param [in] spiMasterHandle is a reference to SpiMasterHandle object used for communication
  * \param [in] command is the command that will be written
  * \param [in] argument is the argument for command, default - 0
  * \param [in] crc7 is the value of CRC-7 appended to the transferred block, default - 0
@@ -1041,20 +1042,20 @@ int writeAcmd(SpiMasterProxy& spiMasterProxy, const uint8_t command, const uint3
  * - error codes returned by writeAcmd();
  */
 
-std::pair<int, uint8_t> writeAcmdReadR1(SpiMasterProxy& spiMasterProxy, const uint8_t command,
+std::pair<int, uint8_t> writeAcmdReadR1(SpiMasterHandle& spiMasterHandle, const uint8_t command,
 		const uint32_t argument = {}, const uint8_t crc7 = {}, const bool stuffByte = {})
 {
-	const auto ret = writeAcmd(spiMasterProxy, command, argument, crc7, stuffByte);
+	const auto ret = writeAcmd(spiMasterHandle, command, argument, crc7, stuffByte);
 	if (ret != 0)
 		return {ret, {}};
 
-	return readR1(spiMasterProxy);
+	return readR1(spiMasterHandle);
 }
 
 /**
  * \brief Writes application (ACMD) command and reads R2 response to/from SD card connected via SPI.
  *
- * \param [in] spiMasterProxy is a reference to SpiMasterProxy object used for communication
+ * \param [in] spiMasterHandle is a reference to SpiMasterHandle object used for communication
  * \param [in] command is the command that will be written
  * \param [in] argument is the argument for command, default - 0
  * \param [in] crc7 is the value of CRC-7 appended to the transferred block, default - 0
@@ -1065,14 +1066,14 @@ std::pair<int, uint8_t> writeAcmdReadR1(SpiMasterProxy& spiMasterProxy, const ui
  * - error codes returned by writeAcmd();
  */
 
-std::pair<int, R2Response> writeAcmdReadR2(SpiMasterProxy& spiMasterProxy, const uint8_t command,
+std::pair<int, R2Response> writeAcmdReadR2(SpiMasterHandle& spiMasterHandle, const uint8_t command,
 		const uint32_t argument = {}, const uint8_t crc7 = {}, const bool stuffByte = {})
 {
-	const auto ret = writeAcmd(spiMasterProxy, command, argument, crc7, stuffByte);
+	const auto ret = writeAcmd(spiMasterHandle, command, argument, crc7, stuffByte);
 	if (ret != 0)
 		return {ret, {}};
 
-	return readR2(spiMasterProxy);
+	return readR2(spiMasterHandle);
 }
 
 /**
@@ -1080,7 +1081,7 @@ std::pair<int, R2Response> writeAcmdReadR2(SpiMasterProxy& spiMasterProxy, const
  *
  * This is SD_STATUS command.
  *
- * \param [in] spiMasterProxy is a reference to SpiMasterProxy object used for communication
+ * \param [in] spiMasterHandle is a reference to SpiMasterHandle object used for communication
  * \param [in] duration is the duration of wait before giving up
  *
  * \return tuple with return code (0 on success, error code otherwise), R2 response and array with raw data containing
@@ -1089,17 +1090,17 @@ std::pair<int, R2Response> writeAcmdReadR2(SpiMasterProxy& spiMasterProxy, const
  * - error codes returned by writeAcmdReadR2();
  */
 
-std::tuple<int, R2Response, std::array<uint8_t, 64>> executeAcmd13(SpiMasterProxy& spiMasterProxy,
+std::tuple<int, R2Response, std::array<uint8_t, 64>> executeAcmd13(SpiMasterHandle& spiMasterHandle,
 		const distortos::TickClock::duration duration)
 {
 	{
-		const auto ret = writeAcmdReadR2(spiMasterProxy, 13);
+		const auto ret = writeAcmdReadR2(spiMasterHandle, 13);
 		if (ret.first != 0 || ret.second.r1 != 0)
-			return decltype(executeAcmd13(spiMasterProxy, duration)){ret.first, ret.second, {}};
+			return decltype(executeAcmd13(spiMasterHandle, duration)){ret.first, ret.second, {}};
 	}
 	std::array<uint8_t, 64> sdStatusBuffer;
-	const auto ret = readDataBlock(spiMasterProxy, sdStatusBuffer.begin(), sdStatusBuffer.size(), duration);
-	return decltype(executeAcmd13(spiMasterProxy, duration)){ret.first, {}, sdStatusBuffer};
+	const auto ret = readDataBlock(spiMasterHandle, sdStatusBuffer.begin(), sdStatusBuffer.size(), duration);
+	return decltype(executeAcmd13(spiMasterHandle, duration)){ret.first, {}, sdStatusBuffer};
 }
 
 /**
@@ -1107,16 +1108,16 @@ std::tuple<int, R2Response, std::array<uint8_t, 64>> executeAcmd13(SpiMasterProx
  *
  * This is SET_WR_BLK_ERASE_COUNT command.
  *
- * \param [in] spiMasterProxy is a reference to SpiMasterProxy object used for communication
+ * \param [in] spiMasterHandle is a reference to SpiMasterHandle object used for communication
  * \param [in] blocksCount is the number of blocks to pre-erase with next multi-block write command
  *
  * \return pair with return code (0 on success, error code otherwise) and R1 response; error codes:
  * - error codes returned by writeAcmdReadR1();
  */
 
-std::pair<int, uint8_t> executeAcmd23(SpiMasterProxy& spiMasterProxy, const uint32_t blocksCount)
+std::pair<int, uint8_t> executeAcmd23(SpiMasterHandle& spiMasterHandle, const uint32_t blocksCount)
 {
-	return writeAcmdReadR1(spiMasterProxy, 23, blocksCount);
+	return writeAcmdReadR1(spiMasterHandle, 23, blocksCount);
 }
 
 /**
@@ -1124,7 +1125,7 @@ std::pair<int, uint8_t> executeAcmd23(SpiMasterProxy& spiMasterProxy, const uint
  *
  * This is SD_SEND_OP_COND command.
  *
- * \param [in] spiMasterProxy is a reference to SpiMasterProxy object used for communication
+ * \param [in] spiMasterHandle is a reference to SpiMasterHandle object used for communication
  * \param [in] hcs is the value of HCS (Host Capacity Support) bit sent to the SD card, which selects whether host
  * supports SDHC or SDXC cards
  *
@@ -1132,9 +1133,9 @@ std::pair<int, uint8_t> executeAcmd23(SpiMasterProxy& spiMasterProxy, const uint
  * - error codes returned by writeAcmdReadR1();
  */
 
-std::pair<int, uint8_t> executeAcmd41(SpiMasterProxy& spiMasterProxy, const bool hcs)
+std::pair<int, uint8_t> executeAcmd41(SpiMasterHandle& spiMasterHandle, const bool hcs)
 {
-	return writeAcmdReadR1(spiMasterProxy, 41, hcs << acmd41HcsPosition);
+	return writeAcmdReadR1(spiMasterHandle, 41, hcs << acmd41HcsPosition);
 }
 
 }	// namespace
@@ -1176,10 +1177,10 @@ int SdCardSpiBased::erase(const uint64_t address, const uint64_t size)
 	if (size == 0)
 		return {};
 
-	SpiMasterProxy spiMasterProxy {spiDeviceHandle};
+	SpiMasterHandle spiMasterHandle {spiDeviceHandle};
 
 	{
-		const auto ret = spiMasterProxy.configure(SpiMode::_0, clockFrequency_, 8, false, UINT32_MAX);
+		const auto ret = spiMasterHandle.configure(SpiMode::_0, clockFrequency_, 8, false, UINT32_MAX);
 		if (ret.first != 0)
 			return ret.first;
 	}
@@ -1192,32 +1193,32 @@ int SdCardSpiBased::erase(const uint64_t address, const uint64_t size)
 		const auto endAddress = std::min(address + size, beginAddress / auSize_ * auSize_ + auSize_);
 
 		{
-			const SelectGuard selectGuard {spiMasterProxy};
+			const SelectGuard selectGuard {spiMasterHandle};
 
 			const auto commandAddress = blockAddressing_ == true ? beginAddress / blockSize : beginAddress;
-			const auto ret = executeCmd32(spiMasterProxy, commandAddress);
+			const auto ret = executeCmd32(spiMasterHandle, commandAddress);
 			if (ret.first != 0)
 				return ret.first;
 			if (ret.second != 0)
 				return EIO;
 		}
 		{
-			const SelectGuard selectGuard {spiMasterProxy};
+			const SelectGuard selectGuard {spiMasterHandle};
 
 			const auto commandAddress = blockAddressing_ == true ? (endAddress - blockSize) / blockSize :
 					(endAddress - blockSize);
-			const auto ret = executeCmd33(spiMasterProxy, commandAddress);
+			const auto ret = executeCmd33(spiMasterHandle, commandAddress);
 			if (ret.first != 0)
 				return ret.first;
 			if (ret.second != 0)
 				return EIO;
 		}
 		{
-			const SelectGuard selectGuard {spiMasterProxy};
+			const SelectGuard selectGuard {spiMasterHandle};
 
 			const auto beginPartial = beginAddress % auSize_ != 0;
 			const auto endPartial = endAddress % auSize_ != 0;
-			const auto ret = executeCmd38(spiMasterProxy, std::chrono::milliseconds{eraseTimeoutMs_} +
+			const auto ret = executeCmd38(spiMasterHandle, std::chrono::milliseconds{eraseTimeoutMs_} +
 					std::chrono::milliseconds{250} * (beginPartial + endPartial));
 			if (ret.first != 0)
 				return ret.first;
@@ -1295,20 +1296,20 @@ int SdCardSpiBased::read(const uint64_t address, void* const buffer, const size_
 	if (size == 0)
 		return {};
 
-	SpiMasterProxy spiMasterProxy {spiDeviceHandle};
+	SpiMasterHandle spiMasterHandle {spiDeviceHandle};
 
 	{
-		const auto ret = spiMasterProxy.configure(SpiMode::_0, clockFrequency_, 8, false, UINT32_MAX);
+		const auto ret = spiMasterHandle.configure(SpiMode::_0, clockFrequency_, 8, false, UINT32_MAX);
 		if (ret.first != 0)
 			return ret.first;
 	}
 	{
-		const SelectGuard selectGuard {spiMasterProxy};
+		const SelectGuard selectGuard {spiMasterHandle};
 
 		{
 			const auto commandAddress = blockAddressing_ == true ? firstBlock : address;
-			const auto ret = blocks == 1 ? executeCmd17(spiMasterProxy, commandAddress) :
-					executeCmd18(spiMasterProxy, commandAddress);
+			const auto ret = blocks == 1 ? executeCmd17(spiMasterHandle, commandAddress) :
+					executeCmd18(spiMasterHandle, commandAddress);
 			if (ret.first != 0)
 				return ret.first;
 			if (ret.second != 0)
@@ -1318,7 +1319,7 @@ int SdCardSpiBased::read(const uint64_t address, void* const buffer, const size_
 		const auto bufferUint8 = static_cast<uint8_t*>(buffer);
 		for (size_t block {}; block < blocks; ++block)
 		{
-			const auto ret = readDataBlock(spiMasterProxy, bufferUint8 + block * blockSize, blockSize,
+			const auto ret = readDataBlock(spiMasterHandle, bufferUint8 + block * blockSize, blockSize,
 					std::chrono::milliseconds{readTimeoutMs_});
 			if (ret.first != 0)
 				return ret.first;
@@ -1327,9 +1328,9 @@ int SdCardSpiBased::read(const uint64_t address, void* const buffer, const size_
 
 	if (blocks != 1)
 	{
-		const SelectGuard selectGuard {spiMasterProxy};
+		const SelectGuard selectGuard {spiMasterHandle};
 
-		const auto ret = executeCmd12(spiMasterProxy, std::chrono::milliseconds{readTimeoutMs_});
+		const auto ret = executeCmd12(spiMasterHandle, std::chrono::milliseconds{readTimeoutMs_});
 		if (ret.first != 0)
 			return ret.first;
 		if (ret.second != 0)
@@ -1366,31 +1367,31 @@ int SdCardSpiBased::write(const uint64_t address, const void* const buffer, cons
 	if (size == 0)
 		return {};
 
-	SpiMasterProxy spiMasterProxy {spiDeviceHandle};
+	SpiMasterHandle spiMasterHandle {spiDeviceHandle};
 
 	{
-		const auto ret = spiMasterProxy.configure(SpiMode::_0, clockFrequency_, 8, false, UINT32_MAX);
+		const auto ret = spiMasterHandle.configure(SpiMode::_0, clockFrequency_, 8, false, UINT32_MAX);
 		if (ret.first != 0)
 			return ret.first;
 	}
 
 	if (blocks != 1)
 	{
-		const SelectGuard selectGuard {spiMasterProxy};
+		const SelectGuard selectGuard {spiMasterHandle};
 
-		const auto ret = executeAcmd23(spiMasterProxy, blocks);
+		const auto ret = executeAcmd23(spiMasterHandle, blocks);
 		if (ret.first != 0)
 			return ret.first;
 		if (ret.second != 0)
 			return EIO;
 	}
 
-	const SelectGuard selectGuard {spiMasterProxy};
+	const SelectGuard selectGuard {spiMasterHandle};
 
 	{
 		const auto commandAddress = blockAddressing_ == true ? firstBlock : address;
-		const auto ret = blocks == 1 ? executeCmd24(spiMasterProxy, commandAddress) :
-				executeCmd25(spiMasterProxy, commandAddress);
+		const auto ret = blocks == 1 ? executeCmd24(spiMasterHandle, commandAddress) :
+				executeCmd25(spiMasterHandle, commandAddress);
 		if (ret.first != 0)
 			return ret.first;
 		if (ret.second != 0)
@@ -1400,7 +1401,7 @@ int SdCardSpiBased::write(const uint64_t address, const void* const buffer, cons
 	const auto bufferUint8 = static_cast<const uint8_t*>(buffer);
 	for (size_t block {}; block < blocks; ++block)
 	{
-		const auto ret = writeDataBlock(spiMasterProxy, blocks == 1 ? startBlockToken : startBlockWriteToken,
+		const auto ret = writeDataBlock(spiMasterHandle, blocks == 1 ? startBlockToken : startBlockWriteToken,
 				bufferUint8 + block * blockSize, blockSize, std::chrono::milliseconds{writeTimeoutMs_});
 		if (ret.first != 0)
 			return ret.first;
@@ -1415,12 +1416,12 @@ int SdCardSpiBased::write(const uint64_t address, const void* const buffer, cons
 					0xff,
 			};
 			SpiMasterTransfer transfer {stopTransfer, nullptr, sizeof(stopTransfer)};
-			const auto ret = spiMasterProxy.executeTransaction(SpiMasterTransfersRange{transfer});
+			const auto ret = spiMasterHandle.executeTransaction(SpiMasterTransfersRange{transfer});
 			if (ret.first != 0)
 				return ret.first;
 		}
 		{
-			const auto ret = waitWhileBusy(spiMasterProxy, std::chrono::milliseconds{writeTimeoutMs_});
+			const auto ret = waitWhileBusy(spiMasterHandle, std::chrono::milliseconds{writeTimeoutMs_});
 			if (ret != 0)
 				return ret;
 		}
@@ -1445,40 +1446,40 @@ void SdCardSpiBased::deinitialize()
 
 int SdCardSpiBased::initialize(const SpiDeviceHandle& spiDeviceHandle)
 {
-	SpiMasterProxy spiMasterProxy {spiDeviceHandle};
+	SpiMasterHandle spiMasterHandle {spiDeviceHandle};
 
 	{
-		const auto ret = spiMasterProxy.configure(SpiMode::_0, 400000, 8, false, UINT32_MAX);
+		const auto ret = spiMasterHandle.configure(SpiMode::_0, 400000, 8, false, UINT32_MAX);
 		if (ret.first != 0)
 			return ret.first;
 	}
 	{
 		SpiMasterTransfer transfer {nullptr, nullptr, (74 + CHAR_BIT - 1) / CHAR_BIT};
-		const auto ret = spiMasterProxy.executeTransaction(SpiMasterTransfersRange{transfer});
+		const auto ret = spiMasterHandle.executeTransaction(SpiMasterTransfersRange{transfer});
 		if (ret.first != 0)
 			return ret.first;
 	}
 	{
-		const SelectGuard spiDeviceSelectGuard {spiMasterProxy};
+		const SelectGuard spiDeviceSelectGuard {spiMasterHandle};
 
 		// 3500 milliseconds - max time of single AU partial erase
-		const auto ret = waitWhileBusy(spiMasterProxy, std::chrono::milliseconds{3500});
+		const auto ret = waitWhileBusy(spiMasterHandle, std::chrono::milliseconds{3500});
 		if (ret != 0)
 			return ret;
 	}
 	{
-		const SelectGuard spiDeviceSelectGuard {spiMasterProxy};
+		const SelectGuard spiDeviceSelectGuard {spiMasterHandle};
 
-		const auto ret = executeCmd0(spiMasterProxy);
+		const auto ret = executeCmd0(spiMasterHandle);
 		if (ret.first != 0)
 			return ret.first;
 		if (ret.second != r1InIdleStateMask)
 			return EIO;
 	}
 	{
-		const SelectGuard spiDeviceSelectGuard {spiMasterProxy};
+		const SelectGuard spiDeviceSelectGuard {spiMasterHandle};
 
-		const auto ret = executeCmd8(spiMasterProxy);
+		const auto ret = executeCmd8(spiMasterHandle);
 		if (std::get<0>(ret) != 0)
 			return std::get<0>(ret);
 		if (std::get<1>(ret) != r1InIdleStateMask)
@@ -1491,9 +1492,9 @@ int SdCardSpiBased::initialize(const SpiDeviceHandle& spiDeviceHandle)
 		while (1)
 		{
 			{
-				const SelectGuard spiDeviceSelectGuard {spiMasterProxy};
+				const SelectGuard spiDeviceSelectGuard {spiMasterHandle};
 
-				const auto ret = executeAcmd41(spiMasterProxy, true);
+				const auto ret = executeAcmd41(spiMasterHandle, true);
 				if (ret.first != 0)
 					return ret.first;
 				if (ret.second == 0)
@@ -1509,15 +1510,15 @@ int SdCardSpiBased::initialize(const SpiDeviceHandle& spiDeviceHandle)
 	}
 
 	{
-		const auto ret = spiMasterProxy.configure(SpiMode::_0, clockFrequency_, 8, false, UINT32_MAX);
+		const auto ret = spiMasterHandle.configure(SpiMode::_0, clockFrequency_, 8, false, UINT32_MAX);
 		if (ret.first != 0)
 			return ret.first;
 	}
 
 	{
-		const SelectGuard spiDeviceSelectGuard {spiMasterProxy};
+		const SelectGuard spiDeviceSelectGuard {spiMasterHandle};
 
-		const auto ret = executeCmd58(spiMasterProxy);
+		const auto ret = executeCmd58(spiMasterHandle);
 		if (ret.first != 0)
 			return ret.first;
 		if (ret.second.r1 != 0)
@@ -1528,9 +1529,9 @@ int SdCardSpiBased::initialize(const SpiDeviceHandle& spiDeviceHandle)
 
 	if (blockAddressing_ == false)
 	{
-		const SelectGuard spiDeviceSelectGuard {spiMasterProxy};
+		const SelectGuard spiDeviceSelectGuard {spiMasterHandle};
 
-		const auto ret = executeCmd16(spiMasterProxy, blockSize);
+		const auto ret = executeCmd16(spiMasterHandle, blockSize);
 		if (ret.first != 0)
 			return ret.first;
 		if (ret.second != 0)
@@ -1538,9 +1539,9 @@ int SdCardSpiBased::initialize(const SpiDeviceHandle& spiDeviceHandle)
 	}
 
 	{
-		const SelectGuard spiDeviceSelectGuard {spiMasterProxy};
+		const SelectGuard spiDeviceSelectGuard {spiMasterHandle};
 
-		const auto ret = executeCmd9(spiMasterProxy);
+		const auto ret = executeCmd9(spiMasterHandle);
 		if (std::get<0>(ret) != 0)
 			return std::get<0>(ret);
 		if (std::get<1>(ret) != 0)
@@ -1568,9 +1569,9 @@ int SdCardSpiBased::initialize(const SpiDeviceHandle& spiDeviceHandle)
 			return EIO;	/// \todo add support for cards with ERASE_BLK_EN == 0 (sector erase granularity)
 	}
 	{
-		const SelectGuard spiDeviceSelectGuard {spiMasterProxy};
+		const SelectGuard spiDeviceSelectGuard {spiMasterHandle};
 
-		const auto ret = executeAcmd13(spiMasterProxy, std::chrono::milliseconds{readTimeoutMs_});
+		const auto ret = executeAcmd13(spiMasterHandle, std::chrono::milliseconds{readTimeoutMs_});
 		if (std::get<0>(ret) != 0)
 			return std::get<0>(ret);
 		if (std::get<1>(ret).r1 != 0 || std::get<1>(ret).r2 != 0)

@@ -32,7 +32,7 @@ class SpiMaster;
 
 class SpiDeviceHandle
 {
-	friend class SpiMasterProxy;
+	friend class SpiMasterHandle;
 
 public:
 

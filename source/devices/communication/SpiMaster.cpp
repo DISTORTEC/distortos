@@ -72,13 +72,13 @@ std::pair<int, size_t> SpiMaster::executeTransaction(SpiDevice& device, const Sp
 		return {EINVAL, {}};
 
 	const SpiDeviceHandle spiDeviceHandle {device};
-	SpiMasterProxy proxy {spiDeviceHandle};
+	SpiMasterHandle handle {spiDeviceHandle};
 
 	{
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 
-		const auto ret = proxy.configure(device.getMode(), device.getMaxClockFrequency(), device.getWordLength(),
+		const auto ret = handle.configure(device.getMode(), device.getMaxClockFrequency(), device.getWordLength(),
 				device.getLsbFirst(), {});
 
 #pragma GCC diagnostic pop
@@ -87,9 +87,9 @@ std::pair<int, size_t> SpiMaster::executeTransaction(SpiDevice& device, const Sp
 			return {ret.first, {}};
 	}
 
-	const SpiDeviceSelectGuard spiDeviceSelectGuard {proxy};
+	const SpiDeviceSelectGuard spiDeviceSelectGuard {handle};
 
-	return proxy.executeTransaction(transfersRange);
+	return handle.executeTransaction(transfersRange);
 }
 
 int SpiMaster::open()

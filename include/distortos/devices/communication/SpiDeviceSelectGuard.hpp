@@ -19,7 +19,7 @@ namespace devices
 {
 
 class SpiDevice;
-class SpiMasterProxy;
+class SpiMasterHandle;
 
 /**
  * SpiDeviceSelectGuard is a RAII-style class for selecting SpiDevice.
@@ -34,10 +34,10 @@ public:
 	/**
 	 * \brief SpiDeviceSelectGuard's constructor
 	 *
-	 * \param [in] spiMasterProxy is a reference to SpiMasterProxy associated with this select guard
+	 * \param [in] spiMasterHandle is a reference to SpiMasterHandle associated with this select guard
 	 */
 
-	explicit SpiDeviceSelectGuard(SpiMasterProxy& spiMasterProxy);
+	explicit SpiDeviceSelectGuard(SpiMasterHandle& spiMasterHandle);
 
 	/**
 	 * \brief SpiDeviceSelectGuard's destructor
@@ -51,12 +51,12 @@ public:
 protected:
 
 	/**
-	 * \return reference to SpiMasterProxy associated with this select guard
+	 * \return reference to SpiMasterHandle associated with this select guard
 	 */
 
-	SpiMasterProxy& getSpiMasterProxy() const
+	SpiMasterHandle& getSpiMasterHandle() const
 	{
-		return spiMasterProxy_;
+		return spiMasterHandle_;
 	}
 
 private:
@@ -67,8 +67,8 @@ private:
 
 	SpiDevice& getSpiDevice() const;
 
-	/// reference to SpiMasterProxy associated with this select guard
-	SpiMasterProxy& spiMasterProxy_;
+	/// reference to SpiMasterHandle associated with this select guard
+	SpiMasterHandle& spiMasterHandle_;
 };
 
 }	// namespace devices

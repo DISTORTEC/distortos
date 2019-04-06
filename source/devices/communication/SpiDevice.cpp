@@ -63,17 +63,17 @@ int SpiDevice::close()
 std::pair<int, size_t> SpiDevice::executeTransaction(const SpiMasterTransfersRange transfersRange)
 {
 	const SpiDeviceHandle handle {*this};
-	SpiMasterProxy spiMasterProxy {handle};
+	SpiMasterHandle spiMasterHandle {handle};
 
 	{
-		const auto ret = spiMasterProxy.configure(mode_, maxClockFrequency_, wordLength_, lsbFirst_, {});
+		const auto ret = spiMasterHandle.configure(mode_, maxClockFrequency_, wordLength_, lsbFirst_, {});
 		if (ret.first != 0)
 			return {ret.first, {}};
 	}
 
-	const SpiDeviceSelectGuard spiDeviceSelectGuard {spiMasterProxy};
+	const SpiDeviceSelectGuard spiDeviceSelectGuard {spiMasterHandle};
 
-	return spiMasterProxy.executeTransaction(transfersRange);
+	return spiMasterHandle.executeTransaction(transfersRange);
 }
 
 int SpiDevice::open()

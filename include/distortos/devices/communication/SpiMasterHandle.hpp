@@ -1,6 +1,6 @@
 /**
  * \file
- * \brief SpiMasterProxy class header
+ * \brief SpiMasterHandle class header
  *
  * \author Copyright (C) 2018-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
@@ -29,7 +29,7 @@ class SpiDeviceHandle;
 class SpiMaster;
 
 /**
- * SpiMasterProxy is a [std::lock_guard](https://en.cppreference.com/w/cpp/thread/lock_guard)-like class for locking
+ * SpiMasterHandle is a [std::lock_guard](https://en.cppreference.com/w/cpp/thread/lock_guard)-like class for locking
  * SpiMaster and for accessing its core functionality.
  *
  * \note Locks are recursive.
@@ -37,29 +37,29 @@ class SpiMaster;
  * \ingroup devices
  */
 
-class SpiMasterProxy : private SpiMasterBase
+class SpiMasterHandle : private SpiMasterBase
 {
 	friend class SpiDeviceSelectGuard;
 
 public:
 
 	/**
-	 * \brief SpiMasterProxy's constructor
+	 * \brief SpiMasterHandle's constructor
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
-	 * \param [in] spiDeviceHandle is a reference to SpiDeviceHandle associated with this proxy
+	 * \param [in] spiDeviceHandle is a reference to SpiDeviceHandle associated with this handle
 	 */
 
-	explicit SpiMasterProxy(const SpiDeviceHandle& spiDeviceHandle);
+	explicit SpiMasterHandle(const SpiDeviceHandle& spiDeviceHandle);
 
 	/**
-	 * \brief SpiMasterProxy's destructor
+	 * \brief SpiMasterHandle's destructor
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 */
 
-	~SpiMasterProxy() override;
+	~SpiMasterHandle() override;
 
 	/**
 	 * \brief Configures parameters of associated SPI master.
@@ -97,19 +97,19 @@ public:
 
 	std::pair<int, size_t> executeTransaction(SpiMasterTransfersRange transfersRange);
 
-	SpiMasterProxy(const SpiMasterProxy&) = delete;
-	SpiMasterProxy& operator=(const SpiMasterProxy&) = delete;
+	SpiMasterHandle(const SpiMasterHandle&) = delete;
+	SpiMasterHandle& operator=(const SpiMasterHandle&) = delete;
 
 private:
 
 	/**
-	 * \return reference to SpiDevice associated with this proxy
+	 * \return reference to SpiDevice associated with this handle
 	 */
 
 	SpiDevice& getSpiDevice() const;
 
 	/**
-	 * \return reference to SpiMaster associated with this proxy
+	 * \return reference to SpiMaster associated with this handle
 	 */
 
 	SpiMaster& getSpiMaster() const;
@@ -140,7 +140,7 @@ private:
 	/// range of transfers that are part of currently handled transaction
 	SpiMasterTransfersRange transfersRange_;
 
-	/// reference to SpiDeviceHandle associated with this proxy
+	/// reference to SpiDeviceHandle associated with this handle
 	const SpiDeviceHandle& spiDeviceHandle_;
 
 	/// error codes detected in transferCompleteEvent()

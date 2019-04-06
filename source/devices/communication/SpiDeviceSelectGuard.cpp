@@ -26,8 +26,8 @@ namespace devices
 | public functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-SpiDeviceSelectGuard::SpiDeviceSelectGuard(SpiMasterProxy& spiMasterProxy) :
-		spiMasterProxy_{spiMasterProxy}
+SpiDeviceSelectGuard::SpiDeviceSelectGuard(SpiMasterHandle& spiMasterHandle) :
+		spiMasterHandle_{spiMasterHandle}
 {
 	getSpiDevice().slaveSelectPin_.set(false);
 }
@@ -43,7 +43,7 @@ SpiDeviceSelectGuard::~SpiDeviceSelectGuard()
 
 SpiDevice& SpiDeviceSelectGuard::getSpiDevice() const
 {
-	return spiMasterProxy_.getSpiDevice();
+	return spiMasterHandle_.getSpiDevice();
 }
 
 }	// namespace devices

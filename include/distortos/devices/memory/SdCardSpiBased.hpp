@@ -98,7 +98,7 @@ public:
 	 * - error codes returned by executeCmd32();
 	 * - error codes returned by executeCmd33();
 	 * - error codes returned by executeCmd38();
-	 * - error codes returned by SpiMasterProxy::configure();
+	 * - error codes returned by SpiMasterHandle::configure();
 	 */
 
 	int erase(uint64_t address, uint64_t size) override;
@@ -165,7 +165,7 @@ public:
 	 * - error codes returned by executeCmd17();
 	 * - error codes returned by executeCmd18();
 	 * - error codes returned by readDataBlock();
-	 * - error codes returned by SpiMasterProxy::configure();
+	 * - error codes returned by SpiMasterHandle::configure();
 	 */
 
 	int read(uint64_t address, void* buffer, size_t size) override;
@@ -212,8 +212,8 @@ public:
 	 * - error codes returned by executeCmd25();
 	 * - error codes returned by waitWhileBusy();
 	 * - error codes returned by writeDataBlock();
-	 * - error codes returned by SpiMasterProxy::configure();
-	 * - error codes returned by SpiMasterProxy::executeTransaction();
+	 * - error codes returned by SpiMasterHandle::configure();
+	 * - error codes returned by SpiMasterHandle::executeTransaction();
 	 */
 
 	int write(uint64_t address, const void* buffer, size_t size) override;
@@ -243,8 +243,8 @@ private:
 	 * - error codes returned by executeCmd9();
 	 * - error codes returned by executeCmd16();
 	 * - error codes returned by executeCmd58();
-	 * - error codes returned by SpiMasterProxy::configure();
-	 * - error codes returned by SpiMasterProxy::executeTransaction();
+	 * - error codes returned by SpiMasterHandle::configure();
+	 * - error codes returned by SpiMasterHandle::executeTransaction();
 	 */
 
 	int initialize(const SpiDeviceHandle& spiDeviceHandle);

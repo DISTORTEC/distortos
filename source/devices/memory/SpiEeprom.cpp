@@ -272,18 +272,18 @@ std::pair<int, size_t> SpiEeprom::eraseOrWritePage(const SpiDeviceHandle& spiDev
 std::pair<int, size_t> SpiEeprom::executeTransaction(const SpiDeviceHandle& spiDeviceHandle,
 		const SpiMasterTransfersRange transfersRange) const
 {
-	SpiMasterProxy spiMasterProxy {spiDeviceHandle};
+	SpiMasterHandle spiMasterHandle {spiDeviceHandle};
 
 	{
 		// only datasheet for ST M95xxx series says that erased state is 0, assume this is true for all other devices
-		const auto ret = spiMasterProxy.configure(mode_, clockFrequency_, 8, false, {});
+		const auto ret = spiMasterHandle.configure(mode_, clockFrequency_, 8, false, {});
 		if (ret.first != 0)
 			return {ret.first, {}};
 	}
 
-	const SpiDeviceSelectGuard spiDeviceSelectGuard {spiMasterProxy};
+	const SpiDeviceSelectGuard spiDeviceSelectGuard {spiMasterHandle};
 
-	return spiMasterProxy.executeTransaction(transfersRange);
+	return spiMasterHandle.executeTransaction(transfersRange);
 }
 
 std::pair<int, bool> SpiEeprom::isWriteInProgress(const SpiDeviceHandle& spiDeviceHandle)

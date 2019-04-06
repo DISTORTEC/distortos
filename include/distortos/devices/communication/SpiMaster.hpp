@@ -33,7 +33,7 @@ class SpiMasterLowLevel;
 
 class SpiMaster
 {
-	friend class SpiMasterProxy;
+	friend class SpiMasterHandle;
 
 public:
 
@@ -82,7 +82,7 @@ public:
 	 * is selected and the transfers are executed. The transaction is finished when all transfers are complete or when
 	 * any error is detected - in either case the device is unselected and this function returns.
 	 *
-	 * \deprecated scheduled to be removed after v0.7.0, use SpiDeviceHandle, SpiMasterProxy and SpiDeviceSelectGuard
+	 * \deprecated scheduled to be removed after v0.7.0, use SpiDeviceHandle, SpiMasterHandle and SpiDeviceSelectGuard
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
@@ -92,11 +92,11 @@ public:
 	 * \return pair with return code (0 on success, error code otherwise) and number of successfully completed transfers
 	 * from \a transfersRange; error codes:
 	 * - EINVAL - \a transfersRange has no transfers;
-	 * - error codes returned by SpiMasterProxy::configure();
-	 * - error codes returned by SpiMasterProxy::executeTransaction();
+	 * - error codes returned by SpiMasterHandle::configure();
+	 * - error codes returned by SpiMasterHandle::executeTransaction();
 	 */
 
-	__attribute__ ((deprecated("Use SpiDeviceHandle, SpiMasterProxy and SpiDeviceSelectGuard")))
+	__attribute__ ((deprecated("Use SpiDeviceHandle, SpiMasterHandle and SpiDeviceSelectGuard")))
 	std::pair<int, size_t> executeTransaction(SpiDevice& device, SpiMasterTransfersRange transfersRange);
 
 	/**

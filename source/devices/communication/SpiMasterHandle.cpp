@@ -1,6 +1,6 @@
 /**
  * \file
- * \brief SpiMasterProxy class implementation
+ * \brief SpiMasterHandle class implementation
  *
  * \author Copyright (C) 2018-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
@@ -33,7 +33,7 @@ namespace devices
 | public functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-SpiMasterProxy::SpiMasterProxy(const SpiDeviceHandle& spiDeviceHandle) :
+SpiMasterHandle::SpiMasterHandle(const SpiDeviceHandle& spiDeviceHandle) :
 		transfersRange_{},
 		spiDeviceHandle_{spiDeviceHandle},
 		ret_{},
@@ -42,12 +42,12 @@ SpiMasterProxy::SpiMasterProxy(const SpiDeviceHandle& spiDeviceHandle) :
 	getSpiMaster().mutex_.lock();
 }
 
-SpiMasterProxy::~SpiMasterProxy()
+SpiMasterHandle::~SpiMasterHandle()
 {
 	getSpiMaster().mutex_.unlock();
 }
 
-std::pair<int, uint32_t> SpiMasterProxy::configure(const SpiMode mode, const uint32_t clockFrequency,
+std::pair<int, uint32_t> SpiMasterHandle::configure(const SpiMode mode, const uint32_t clockFrequency,
 		const uint8_t wordLength, const bool lsbFirst, const uint32_t dummyData) const
 {
 	auto& spiMaster = getSpiMaster();
@@ -57,7 +57,7 @@ std::pair<int, uint32_t> SpiMasterProxy::configure(const SpiMode mode, const uin
 	return spiMaster.spiMaster_.configure(mode, clockFrequency, wordLength, lsbFirst, dummyData);
 }
 
-std::pair<int, size_t> SpiMasterProxy::executeTransaction(const SpiMasterTransfersRange transfersRange)
+std::pair<int, size_t> SpiMasterHandle::executeTransaction(const SpiMasterTransfersRange transfersRange)
 {
 	CHECK_FUNCTION_CONTEXT();
 
@@ -97,17 +97,17 @@ std::pair<int, size_t> SpiMasterProxy::executeTransaction(const SpiMasterTransfe
 | private functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-SpiDevice& SpiMasterProxy::getSpiDevice() const
+SpiDevice& SpiMasterHandle::getSpiDevice() const
 {
 	return spiDeviceHandle_.spiDevice_;
 }
 
-SpiMaster& SpiMasterProxy::getSpiMaster() const
+SpiMaster& SpiMasterHandle::getSpiMaster() const
 {
 	return spiDeviceHandle_.getSpiMaster();
 }
 
-void SpiMasterProxy::notifyWaiter(const int ret)
+void SpiMasterHandle::notifyWaiter(const int ret)
 {
 	ret_ = ret;
 	const auto semaphore = semaphore_;
@@ -115,7 +115,7 @@ void SpiMasterProxy::notifyWaiter(const int ret)
 	semaphore->post();
 }
 
-void SpiMasterProxy::transferCompleteEvent(const size_t bytesTransfered)
+void SpiMasterHandle::transferCompleteEvent(const size_t bytesTransfered)
 {
 	assert(transfersRange_.size() != 0 && "Invalid range of transfers!");
 
