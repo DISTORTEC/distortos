@@ -24,7 +24,6 @@ namespace devices
 {
 
 class OutputPin;
-class SpiDeviceHandle;
 class SpiMaster;
 
 /**
@@ -39,9 +38,6 @@ class SpiDevice
 	friend class SpiDeviceSelectGuard;
 
 public:
-
-	/// import SpiDeviceHandle as SpiDevice::Handle
-	using Handle = SpiDeviceHandle;
 
 	/**
 	 * \brief SpiDevice's constructor

@@ -22,6 +22,8 @@ namespace distortos
 namespace devices
 {
 
+class SpiDeviceHandle;
+
 /**
  * SdCardSpiBased class is a SD card connected via SPI.
  *

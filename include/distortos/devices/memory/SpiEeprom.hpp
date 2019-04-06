@@ -22,6 +22,8 @@ namespace distortos
 namespace devices
 {
 
+class SpiDeviceHandle;
+
 /**
  * SpiEeprom class is a SPI EEPROM memory: Atmel AT25xxx, ON Semiconductor CAT25xxx, ST M95xxx, Microchip 25xxxxx or
  * similar.
