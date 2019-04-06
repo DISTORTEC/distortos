@@ -51,7 +51,7 @@ std::pair<int, uint32_t> SpiMasterHandle::configure(const SpiMode mode, const ui
 		const uint8_t wordLength, const bool lsbFirst, const uint32_t dummyData) const
 {
 	auto& spiMaster = getSpiMaster();
-	if (spiDeviceHandle_.isOpened() == false || spiMaster.openCount_ == 0)
+	if (spiMaster.openCount_ == 0)
 		return {EBADF, {}};
 
 	return spiMaster.spiMaster_.configure(mode, clockFrequency, wordLength, lsbFirst, dummyData);
@@ -65,7 +65,7 @@ std::pair<int, size_t> SpiMasterHandle::executeTransaction(const SpiMasterTransf
 		return {EINVAL, {}};
 
 	auto& spiMaster = getSpiMaster();
-	if (spiDeviceHandle_.isOpened() == false || spiMaster.openCount_ == 0)
+	if (spiMaster.openCount_ == 0)
 		return {EBADF, {}};
 
 	Semaphore semaphore {0};

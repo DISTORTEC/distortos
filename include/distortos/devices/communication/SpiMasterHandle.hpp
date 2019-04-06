@@ -70,7 +70,7 @@ public:
 	 * \param [in] dummyData is the dummy data that will be sent if write buffer of transfer is nullptr
 	 *
 	 * \return pair with return code (0 on success, error code otherwise) and real clock frequency; error codes:
-	 * - EBADF - associated SPI device or associated SPI master are not opened;
+	 * - EBADF - associated SPI master is not opened;
 	 * - error codes returned by SpiMasterLowLevel::configure();
 	 */
 
@@ -88,7 +88,7 @@ public:
 	 *
 	 * \return pair with return code (0 on success, error code otherwise) and number of successfully completed transfers
 	 * from \a transfersRange; error codes:
-	 * - EBADF - associated SPI device or associated SPI master are not opened;
+	 * - EBADF - associated SPI master is not opened;
 	 * - EINVAL - \a transfersRange has no transfers;
 	 * - EIO - failure detected by low-level SPI master driver;
 	 * - error codes returned by SpiMasterLowLevel::startTransfer();
