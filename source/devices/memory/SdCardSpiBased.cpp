@@ -211,8 +211,18 @@ class SelectGuard : public SpiDeviceSelectGuard
 {
 public:
 
-	/// import SpiDeviceSelectGuard's constructor
-	using SpiDeviceSelectGuard::SpiDeviceSelectGuard;
+	/**
+	 * \brief SelectGuard's constructor
+	 *
+	 * \param [in] spiMasterHandle is a reference to SpiMasterHandle associated with this select guard
+	 */
+
+	explicit SelectGuard(SpiMasterHandle& spiMasterHandle) :
+			SpiDeviceSelectGuard{spiMasterHandle},
+			spiMasterHandle_{spiMasterHandle}
+	{
+
+	}
 
 	/**
 	 * \brief SelectGuard's destructor
@@ -221,8 +231,13 @@ public:
 	~SelectGuard()
 	{
 		SpiMasterTransfer transfer {nullptr, nullptr, 1};
-		getSpiMasterHandle().executeTransaction(SpiMasterTransfersRange{transfer});
+		spiMasterHandle_.executeTransaction(SpiMasterTransfersRange{transfer});
 	}
+
+private:
+
+	/// reference to SpiMasterHandle associated with this select guard
+	SpiMasterHandle& spiMasterHandle_;
 };
 
 /*---------------------------------------------------------------------------------------------------------------------+
