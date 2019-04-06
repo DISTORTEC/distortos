@@ -25,7 +25,6 @@ namespace devices
 {
 
 class OutputPin;
-class SpiDeviceHandle;
 
 /**
  * SpiEeprom class is a SPI EEPROM memory: Atmel AT25xxx, ON Semiconductor CAT25xxx, ST M95xxx, Microchip 25xxxxx or
@@ -330,7 +329,7 @@ public:
 	 *
 	 * \return 0 on success, error code otherwise:
 	 * - error codes returned by executeTransaction();
-	 * - error codes returned by synchronize(const SpiDeviceHandle&);
+	 * - error codes returned by waitWhileWriteInProgress();
 	 */
 
 	int read(uint64_t address, void* buffer, size_t size) override;
@@ -343,7 +342,7 @@ public:
 	 * \pre Device is opened.
 	 *
 	 * \return 0 on success, error code otherwise:
-	 * - error codes returned by synchronize(const SpiDeviceHandle&);
+	 * - error codes returned by waitWhileWriteInProgress();
 	 */
 
 	int synchronize() override;
@@ -387,7 +386,6 @@ private:
 	 * \pre Device is opened.
 	 * \pre Selected range is within address space of device.
 	 *
-	 * \param [in] spiDeviceHandle is a reference to SpiDeviceHandle associated with this object
 	 * \param [in] address is the address of data that will be erased or written
 	 * \param [in] buffer is the buffer with data that will be written, nullptr to erase
 	 * \param [in] size is the size of erase (`buffer == nullptr`) or size of \a buffer (`buffer != nullptr`), bytes
@@ -396,25 +394,23 @@ private:
 	 * - error codes returned by eraseOrWritePage();
 	 */
 
-	int eraseOrWrite(const SpiDeviceHandle& spiDeviceHandle, uint64_t address, const void* buffer, uint64_t size);
+	int eraseOrWrite(uint64_t address, const void* buffer, uint64_t size);
 
 	/**
 	 * \brief Erases or writes single page.
 	 *
-	 * \param [in] spiDeviceHandle is a reference to SpiDeviceHandle associated with this object
 	 * \param [in] address is the address of data that will be erased or written, must be valid!
 	 * \param [in] buffer is the buffer with data that will be written, nullptr to erase
 	 * \param [in] size is the size of erase (`buffer == nullptr`) or size of \a buffer (`buffer != nullptr`), bytes
 	 *
 	 * \return pair with return code (0 on success, error code otherwise) and number of erased/written bytes (valid even
 	 * when error code is returned); error codes:
-	 * - error codes returned by synchronize();
+	 * - error codes returned by executeTransaction();
+	 * - error codes returned by waitWhileWriteInProgress();
 	 * - error codes returned by writeEnable();
-	 * - error codes returned by SpiDevice::executeTransaction();
 	 */
 
-	std::pair<int, size_t> eraseOrWritePage(const SpiDeviceHandle& spiDeviceHandle, uint32_t address,
-			const void* buffer, size_t size);
+	std::pair<int, size_t> eraseOrWritePage(uint32_t address, const void* buffer, size_t size);
 
 	/**
 	 * \brief Executes series of transfers as a single atomic transaction.
@@ -441,14 +437,12 @@ private:
 	/**
 	 * \brief Checks whether any write operation is currently in progress.
 	 *
-	 * \param [in] spiDeviceHandle is a reference to SpiDeviceHandle associated with this object
-	 *
 	 * \return pair with return code (0 on success, error code otherwise) and current status of device: false - device
 	 * is idle, true - write operation is in progress; error codes:
 	 * - error codes returned by readStatusRegister();
 	 */
 
-	std::pair<int, bool> isWriteInProgress(const SpiDeviceHandle& spiDeviceHandle);
+	std::pair<int, bool> isWriteInProgress();
 
 	/**
 	 * \brief Reads value of status register of SPI EEPROM.
@@ -461,16 +455,14 @@ private:
 	std::pair<int, uint8_t> readStatusRegister() const;
 
 	/**
-	 * \brief Internal implementation of synchronize()
-	 *
-	 * \param [in] spiDeviceHandle is a reference to SpiDeviceHandle associated with this object
+	 * \brief Waits while any write operation is currently in progress.
 	 *
 	 * \return 0 on success, error code otherwise:
-	 * - error codes returned by isWriteInProgress(const SpiDeviceHandle&);
+	 * - error codes returned by isWriteInProgress();
 	 * - error codes returned by ThisThread::sleepFor();
 	 */
 
-	int synchronize(const SpiDeviceHandle& spiDeviceHandle);
+	int waitWhileWriteInProgress();
 
 	/**
 	 * \brief Enables writes in SPI EEPROM.

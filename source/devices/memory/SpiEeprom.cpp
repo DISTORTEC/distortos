@@ -118,7 +118,7 @@ int SpiEeprom::erase(const uint64_t address, const uint64_t size)
 {
 	const SpiDeviceHandle spiDeviceHandle {spiDevice_};
 
-	return eraseOrWrite(spiDeviceHandle, address, nullptr, size);
+	return eraseOrWrite(address, nullptr, size);
 }
 
 size_t SpiEeprom::getBlockSize() const
@@ -158,7 +158,7 @@ int SpiEeprom::read(const uint64_t address, void* const buffer, const size_t siz
 		return {};
 
 	{
-		const auto ret = synchronize(spiDeviceHandle);
+		const auto ret = waitWhileWriteInProgress();
 		if (ret != 0)
 			return ret;
 	}
@@ -179,7 +179,7 @@ int SpiEeprom::synchronize()
 
 	assert(spiDevice_.isOpened() == true);
 
-	return synchronize(spiDeviceHandle);
+	return waitWhileWriteInProgress();
 }
 
 void SpiEeprom::unlock()
@@ -194,15 +194,14 @@ int SpiEeprom::write(const uint64_t address, const void* const buffer, const siz
 
 	assert(buffer != nullptr);
 
-	return eraseOrWrite(spiDeviceHandle, address, buffer, size);
+	return eraseOrWrite(address, buffer, size);
 }
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | private functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-int SpiEeprom::eraseOrWrite(const SpiDeviceHandle& spiDeviceHandle, const uint64_t address, const void* const buffer,
-		const uint64_t size)
+int SpiEeprom::eraseOrWrite(const uint64_t address, const void* const buffer, const uint64_t size)
 {
 	assert(spiDevice_.isOpened() == true);
 
@@ -217,7 +216,7 @@ int SpiEeprom::eraseOrWrite(const SpiDeviceHandle& spiDeviceHandle, const uint64
 	const auto bufferUint8 = static_cast<const uint8_t*>(buffer);
 	while (written < writeSize)
 	{
-		const auto ret = eraseOrWritePage(spiDeviceHandle, address + written,
+		const auto ret = eraseOrWritePage(address + written,
 				bufferUint8 != nullptr ? bufferUint8 + written : bufferUint8, writeSize - written);
 		written += ret.second;
 		if (ret.first != 0)
@@ -227,14 +226,13 @@ int SpiEeprom::eraseOrWrite(const SpiDeviceHandle& spiDeviceHandle, const uint64
 	return {};
 }
 
-std::pair<int, size_t> SpiEeprom::eraseOrWritePage(const SpiDeviceHandle& spiDeviceHandle, const uint32_t address,
-		const void* const buffer, const size_t size)
+std::pair<int, size_t> SpiEeprom::eraseOrWritePage(const uint32_t address, const void* const buffer, const size_t size)
 {
 	const auto capacity = getSize();
 	assert(address < capacity && "Invalid address!");
 
 	{
-		const auto ret = synchronize(spiDeviceHandle);
+		const auto ret = waitWhileWriteInProgress();
 		if (ret != 0)
 			return {ret, {}};
 	}
@@ -274,7 +272,7 @@ std::pair<int, size_t> SpiEeprom::executeTransaction(const SpiMasterTransfersRan
 	return spiMasterHandle.executeTransaction(transfersRange);
 }
 
-std::pair<int, bool> SpiEeprom::isWriteInProgress(const SpiDeviceHandle&)
+std::pair<int, bool> SpiEeprom::isWriteInProgress()
 {
 	const auto ret = readStatusRegister();
 	return {ret.first, (ret.second & statusRegisterWip) != 0};
@@ -288,11 +286,11 @@ std::pair<int, uint8_t> SpiEeprom::readStatusRegister() const
 	return {ret.first, buffer[1]};
 }
 
-int SpiEeprom::synchronize(const SpiDeviceHandle& spiDeviceHandle)
+int SpiEeprom::waitWhileWriteInProgress()
 {
-	decltype(isWriteInProgress(spiDeviceHandle).first) ret;
-	decltype(isWriteInProgress(spiDeviceHandle).second) writeInProgress;
-	while (std::tie(ret, writeInProgress) = isWriteInProgress(spiDeviceHandle), ret == 0 && writeInProgress == true)
+	decltype(isWriteInProgress().first) ret;
+	decltype(isWriteInProgress().second) writeInProgress;
+	while (std::tie(ret, writeInProgress) = isWriteInProgress(), ret == 0 && writeInProgress == true)
 	{
 		const auto sleepForRet = ThisThread::sleepFor(std::chrono::milliseconds{1});
 		if (sleepForRet != 0)
