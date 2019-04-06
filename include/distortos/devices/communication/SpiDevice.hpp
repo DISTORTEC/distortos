@@ -20,7 +20,6 @@ namespace distortos
 namespace devices
 {
 
-class OutputPin;
 class SpiMaster;
 
 /**
@@ -32,7 +31,6 @@ class SpiMaster;
 class SpiDevice
 {
 	friend class SpiDeviceHandle;
-	friend class SpiDeviceSelectGuard;
 
 public:
 
@@ -40,12 +38,10 @@ public:
 	 * \brief SpiDevice's constructor
 	 *
 	 * \param [in] spiMaster is a reference to SPI master to which this SPI slave device is connected
-	 * \param [in] slaveSelectPin is a reference to slave select pin of this SPI slave device
 	 */
 
-	constexpr SpiDevice(SpiMaster& spiMaster, OutputPin& slaveSelectPin) :
+	constexpr explicit SpiDevice(SpiMaster& spiMaster) :
 			mutex_{Mutex::Type::recursive, Mutex::Protocol::priorityInheritance},
-			slaveSelectPin_{slaveSelectPin},
 			spiMaster_{spiMaster},
 			openCount_{}
 	{
@@ -129,9 +125,6 @@ private:
 
 	/// mutex used to serialize access to this object
 	Mutex mutex_;
-
-	/// reference to slave select pin of this SPI slave device
-	OutputPin& slaveSelectPin_;
 
 	/// reference to SPI master to which this SPI slave device is connected
 	SpiMaster& spiMaster_;

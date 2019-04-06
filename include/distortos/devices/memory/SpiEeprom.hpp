@@ -24,6 +24,7 @@ namespace distortos
 namespace devices
 {
 
+class OutputPin;
 class SpiDeviceHandle;
 
 /**
@@ -223,7 +224,7 @@ public:
 
 	constexpr SpiEeprom(SpiMaster& spiMaster, OutputPin& slaveSelectPin, const Type type, const bool mode3 = {},
 			const uint32_t clockFrequency = 1000000) :
-					spiDevice_{spiMaster, slaveSelectPin},
+					spiDevice_{spiMaster},
 					clockFrequency_{clockFrequency},
 					slaveSelectPin_{slaveSelectPin},
 					mode_{mode3 == false ? SpiMode::_0 : SpiMode::_3},

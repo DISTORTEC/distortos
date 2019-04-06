@@ -22,6 +22,7 @@ namespace distortos
 namespace devices
 {
 
+class OutputPin;
 class SpiDeviceHandle;
 
 /**
@@ -49,7 +50,7 @@ public:
 
 	constexpr SdCardSpiBased(SpiMaster& spiMaster, OutputPin& slaveSelectPin,
 			const uint32_t clockFrequency = 25000000) :
-					spiDevice_{spiMaster, slaveSelectPin},
+					spiDevice_{spiMaster},
 					blocksCount_{},
 					auSize_{},
 					clockFrequency_{clockFrequency},
