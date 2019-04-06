@@ -2,7 +2,7 @@
  * \file
  * \brief SpiMaster class header
  *
- * \author Copyright (C) 2016-2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2016-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -12,19 +12,21 @@
 #ifndef INCLUDE_DISTORTOS_DEVICES_COMMUNICATION_SPIMASTER_HPP_
 #define INCLUDE_DISTORTOS_DEVICES_COMMUNICATION_SPIMASTER_HPP_
 
+#include "distortos/devices/communication/SpiMasterBase.hpp"
 #include "distortos/devices/communication/SpiMasterTransfersRange.hpp"
+#include "distortos/devices/communication/SpiMode.hpp"
 
 #include "distortos/Mutex.hpp"
 
 namespace distortos
 {
 
+class Semaphore;
+
 namespace devices
 {
 
-class SpiDevice;
 class SpiMasterLowLevel;
-class SpiMasterProxy;
 
 /**
  * SpiMaster class is a driver for SPI master
@@ -32,14 +34,11 @@ class SpiMasterProxy;
  * \ingroup devices
  */
 
-class SpiMaster
+class SpiMaster : private SpiMasterBase
 {
-	friend class SpiMasterProxy;
+	friend class SpiMasterHandle;
 
 public:
-
-	/// import SpiMasterProxy as SpiMaster::Proxy
-	using Proxy = SpiMasterProxy;
 
 	/**
 	 * \brief SpiMaster's constructor
@@ -49,6 +48,9 @@ public:
 
 	constexpr explicit SpiMaster(SpiMasterLowLevel& spiMaster) :
 			mutex_{Mutex::Type::recursive, Mutex::Protocol::priorityInheritance},
+			transfersRange_{},
+			ret_{},
+			semaphore_{},
 			spiMaster_{spiMaster},
 			openCount_{}
 	{
@@ -63,7 +65,9 @@ public:
 	 * \warning This function must not be called from interrupt context!
 	 */
 
-	~SpiMaster();
+	~SpiMaster() override;
+
+private:
 
 	/**
 	 * \brief Closes SPI master.
@@ -80,28 +84,62 @@ public:
 	int close();
 
 	/**
+	 * \brief Configures parameters of SPI master.
+	 *
+	 * \param [in] mode is the desired SPI mode
+	 * \param [in] clockFrequency is the desired clock frequency, Hz
+	 * \param [in] wordLength selects word length, bits, [1; 32]
+	 * \param [in] lsbFirst selects whether MSB (false) or LSB (true) is transmitted first
+	 * \param [in] dummyData is the dummy data that will be sent if write buffer of transfer is nullptr
+	 *
+	 * \return pair with return code (0 on success, error code otherwise) and real clock frequency; error codes:
+	 * - EBADF - associated SPI master is not opened;
+	 * - error codes returned by SpiMasterLowLevel::configure();
+	 */
+
+	std::pair<int, uint32_t> configure(SpiMode mode, uint32_t clockFrequency, uint8_t wordLength, bool lsbFirst,
+			uint32_t dummyData) const;
+
+	/**
 	 * \brief Executes series of transfers as a single atomic transaction.
 	 *
-	 * First SPI is configured to match parameters of SPI device (clock frequency, mode, format, ...). Then the device
-	 * is selected and the transfers are executed. The transaction is finished when all transfers are complete or when
-	 * any error is detected - in either case the device is unselected and this function returns.
-	 *
-	 * \deprecated scheduled to be removed after v0.7.0, use SpiDeviceProxy, SpiMasterProxy and SpiDeviceSelectGuard
+	 * The transaction is finished when all transfers are complete or when any error is detected.
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
-	 * \param [in] device is a reference to SPI device which is the target of the transaction
 	 * \param [in] transfersRange is the range of transfers that will be executed
 	 *
 	 * \return pair with return code (0 on success, error code otherwise) and number of successfully completed transfers
 	 * from \a transfersRange; error codes:
+	 * - EBADF - associated SPI master is not opened;
 	 * - EINVAL - \a transfersRange has no transfers;
-	 * - error codes returned by SpiMasterProxy::configure();
-	 * - error codes returned by SpiMasterProxy::executeTransaction();
+	 * - EIO - failure detected by low-level SPI master driver;
+	 * - error codes returned by SpiMasterLowLevel::startTransfer();
 	 */
 
-	__attribute__ ((deprecated("Use SpiDeviceProxy, SpiMasterProxy and SpiDeviceSelectGuard")))
-	std::pair<int, size_t> executeTransaction(SpiDevice& device, SpiMasterTransfersRange transfersRange);
+	std::pair<int, size_t> executeTransaction(SpiMasterTransfersRange transfersRange);
+
+	/**
+	 * \brief Locks SPI master for exclusive use by current thread.
+	 *
+	 * \note Locks are recursive.
+	 *
+	 * \warning This function must not be called from interrupt context!
+	 *
+	 * \pre The number of recursive locks of device is less than 65535.
+	 *
+	 * \post Device is locked.
+	 */
+
+	void lock();
+
+	/**
+	 * \brief Notifies waiting thread about completion of transaction.
+	 *
+	 * \param [in] ret is the last error code returned by transaction handling code
+	 */
+
+	void notifyWaiter(int ret);
 
 	/**
 	 * \brief Opens SPI master.
@@ -117,10 +155,44 @@ public:
 
 	int open();
 
-private:
+	/**
+	 * \brief "Transfer complete" event
+	 *
+	 * Called by low-level SPI master driver when the transfer is physically finished.
+	 *
+	 * Handles the next transfer from the currently handled transaction. If there are no more transfers, waiting thread
+	 * is notified about completion of transaction.
+	 *
+	 * \param [in] bytesTransfered is the number of bytes transferred by low-level SPI master driver (read from write
+	 * buffer and/or written to read buffer), may be unreliable if transfer error was detected (\a bytesTransfered is
+	 * not equal to size of transfer)
+	 */
+
+	void transferCompleteEvent(size_t bytesTransfered) override;
+
+	/**
+	 * \brief Unlocks SPI master which was previously locked by current thread.
+	 *
+	 * \note Locks are recursive.
+	 *
+	 * \warning This function must not be called from interrupt context!
+	 *
+	 * \pre This function is called by the thread that locked the device.
+	 */
+
+	void unlock();
 
 	/// mutex used to serialize access to this object
 	Mutex mutex_;
+
+	/// range of transfers that are part of currently handled transaction
+	SpiMasterTransfersRange transfersRange_;
+
+	/// error codes detected in transferCompleteEvent()
+	volatile int ret_;
+
+	/// pointer to semaphore used to notify waiting thread about completion of transaction
+	Semaphore* volatile semaphore_;
 
 	/// reference to low-level implementation of SpiMasterLowLevel interface
 	SpiMasterLowLevel& spiMaster_;

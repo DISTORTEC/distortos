@@ -12,15 +12,21 @@
 #ifndef INCLUDE_DISTORTOS_DEVICES_MEMORY_SPIEEPROM_HPP_
 #define INCLUDE_DISTORTOS_DEVICES_MEMORY_SPIEEPROM_HPP_
 
-#include "distortos/devices/communication/SpiDevice.hpp"
+#include "distortos/devices/communication/SpiMasterTransfersRange.hpp"
+#include "distortos/devices/communication/SpiMode.hpp"
 
 #include "distortos/devices/memory/BlockDevice.hpp"
+
+#include "distortos/Mutex.hpp"
 
 namespace distortos
 {
 
 namespace devices
 {
+
+class OutputPin;
+class SpiMaster;
 
 /**
  * SpiEeprom class is a SPI EEPROM memory: Atmel AT25xxx, ON Semiconductor CAT25xxx, ST M95xxx, Microchip 25xxxxx or
@@ -219,9 +225,12 @@ public:
 
 	constexpr SpiEeprom(SpiMaster& spiMaster, OutputPin& slaveSelectPin, const Type type, const bool mode3 = {},
 			const uint32_t clockFrequency = 1000000) :
-					spiDevice_{spiMaster, slaveSelectPin},
+					mutex_{Mutex::Type::recursive, Mutex::Protocol::priorityInheritance},
 					clockFrequency_{clockFrequency},
+					slaveSelectPin_{slaveSelectPin},
+					spiMaster_{spiMaster},
 					mode_{mode3 == false ? SpiMode::_0 : SpiMode::_3},
+					openCount_{},
 					type_{type}
 	{
 
@@ -243,7 +252,7 @@ public:
 	 * \pre Device is opened.
 	 *
 	 * \return 0 on success, error code otherwise:
-	 * - error codes returned by SpiDevice::close();
+	 * - error codes returned by SpiMasterHandle::close();
 	 */
 
 	int close() override;
@@ -273,49 +282,10 @@ public:
 	size_t getBlockSize() const override;
 
 	/**
-	 * \deprecated scheduled to be removed after v0.7.0, use SpiEeprom::getSize()
-	 *
-	 * \return total capacity of the device, bytes
-	 */
-
-	__attribute__ ((deprecated("Use SpiEeprom::getSize()")))
-	size_t getCapacity() const
-	{
-		return getSize();
-	}
-
-	/**
-	 * \deprecated scheduled to be made private after v0.7.0
-	 *
-	 * \return size of single page, bytes
-	 */
-
-	__attribute__ ((deprecated))
-	size_t getPageSize() const
-	{
-		return 8 * (1 << ((static_cast<uint8_t>(type_) & pageSizeMask_) >> pageSizeShift_));
-	}
-
-	/**
 	 * \return size of SPI EEPROM, bytes
 	 */
 
 	uint64_t getSize() const override;
-
-	/**
-	 * \brief Checks whether any write operation is currently in progress.
-	 *
-	 * \deprecated scheduled to be removed after v0.7.0, use SpiEeprom::synchronize()
-	 *
-	 * \warning This function must not be called from interrupt context!
-	 *
-	 * \return pair with return code (0 on success, error code otherwise) and current status of device: false - device
-	 * is idle, true - write operation is in progress; error codes:
-	 * - error codes returned by isWriteInProgress(const SpiDeviceProxy&);
-	 */
-
-	__attribute__ ((deprecated("Use SpiEeprom::synchronize()")))
-	std::pair<int, bool> isWriteInProgress();
 
 	/**
 	 * \brief Locks SPI EEPROM for exclusive use by current thread.
@@ -342,7 +312,7 @@ public:
 	 * \pre The number of times the device is opened is less than 255.
 	 *
 	 * \return 0 on success, error code otherwise:
-	 * - error codes returned by SpiDevice::open();
+	 * - error codes returned by SpiMasterHandle::open();
 	 */
 
 	int open() override;
@@ -362,7 +332,7 @@ public:
 	 *
 	 * \return 0 on success, error code otherwise:
 	 * - error codes returned by executeTransaction();
-	 * - error codes returned by synchronize(const SpiDeviceProxy&);
+	 * - error codes returned by waitWhileWriteInProgress();
 	 */
 
 	int read(uint64_t address, void* buffer, size_t size) override;
@@ -375,7 +345,7 @@ public:
 	 * \pre Device is opened.
 	 *
 	 * \return 0 on success, error code otherwise:
-	 * - error codes returned by synchronize(const SpiDeviceProxy&);
+	 * - error codes returned by waitWhileWriteInProgress();
 	 */
 
 	int synchronize() override;
@@ -391,23 +361,6 @@ public:
 	 */
 
 	void unlock() override;
-
-	/**
-	 * \brief Wrapper for synchronize()
-	 *
-	 * \deprecated scheduled to be removed after v0.7.0, use SpiEeprom::synchronize()
-	 *
-	 * \warning This function must not be called from interrupt context!
-	 *
-	 * \return 0 on success, error code otherwise:
-	 * - error codes returned by synchronize();
-	 */
-
-	__attribute__ ((deprecated("Use SpiEeprom::synchronize()")))
-	int waitWhileWriteInProgress()
-	{
-		return synchronize();
-	}
 
 	/**
 	 * \brief Writes data to SPI EEPROM.
@@ -444,7 +397,7 @@ private:
 	 * - error codes returned by eraseOrWritePage();
 	 */
 
-	int eraseOrWrite(const SpiDeviceProxy& spiDeviceProxy, uint64_t address, const void* buffer, uint64_t size);
+	int eraseOrWrite(uint64_t address, const void* buffer, uint64_t size);
 
 	/**
 	 * \brief Erases or writes single page.
@@ -455,13 +408,12 @@ private:
 	 *
 	 * \return pair with return code (0 on success, error code otherwise) and number of erased/written bytes (valid even
 	 * when error code is returned); error codes:
-	 * - error codes returned by synchronize();
+	 * - error codes returned by executeTransaction();
+	 * - error codes returned by waitWhileWriteInProgress();
 	 * - error codes returned by writeEnable();
-	 * - error codes returned by SpiDevice::executeTransaction();
 	 */
 
-	std::pair<int, size_t> eraseOrWritePage(const SpiDeviceProxy& spiDeviceProxy, uint32_t address,
-			const void* buffer, size_t size);
+	std::pair<int, size_t> eraseOrWritePage(uint32_t address, const void* buffer, size_t size);
 
 	/**
 	 * \brief Executes series of transfers as a single atomic transaction.
@@ -470,24 +422,30 @@ private:
 	 *
 	 * \return pair with return code (0 on success, error code otherwise) and number of successfully completed transfers
 	 * from \a transfersRange; error codes:
-	 * - error codes returned by SpiMasterProxy::configure();
-	 * - error codes returned by SpiMasterProxy::executeTransaction();
+	 * - error codes returned by SpiMasterHandle::configure();
+	 * - error codes returned by SpiMasterHandle::executeTransaction();
 	 */
 
-	std::pair<int, size_t> executeTransaction(const SpiDeviceProxy& spiDeviceProxy,
-			SpiMasterTransfersRange transfersRange) const;
+	std::pair<int, size_t> executeTransaction(SpiMasterTransfersRange transfersRange) const;
 
 	/**
-	 * \brief Internal implementation of isWriteInProgress()
-	 *
-	 * \param [in] spiDeviceProxy is a reference to SpiDeviceProxy associated with this object
+	 * \return size of single page, bytes
+	 */
+
+	size_t getPageSize() const
+	{
+		return 8 * (1 << ((static_cast<uint8_t>(type_) & pageSizeMask_) >> pageSizeShift_));
+	}
+
+	/**
+	 * \brief Checks whether any write operation is currently in progress.
 	 *
 	 * \return pair with return code (0 on success, error code otherwise) and current status of device: false - device
 	 * is idle, true - write operation is in progress; error codes:
 	 * - error codes returned by readStatusRegister();
 	 */
 
-	std::pair<int, bool> isWriteInProgress(const SpiDeviceProxy& spiDeviceProxy);
+	std::pair<int, bool> isWriteInProgress();
 
 	/**
 	 * \brief Reads value of status register of SPI EEPROM.
@@ -497,19 +455,17 @@ private:
 	 * - error codes returned by executeTransaction();
 	 */
 
-	std::pair<int, uint8_t> readStatusRegister(const SpiDeviceProxy& spiDeviceProxy) const;
+	std::pair<int, uint8_t> readStatusRegister() const;
 
 	/**
-	 * \brief Internal implementation of synchronize()
-	 *
-	 * \param [in] spiDeviceProxy is a reference to SpiDeviceProxy associated with this object
+	 * \brief Waits while any write operation is currently in progress.
 	 *
 	 * \return 0 on success, error code otherwise:
-	 * - error codes returned by isWriteInProgress(const SpiDeviceProxy&);
+	 * - error codes returned by isWriteInProgress();
 	 * - error codes returned by ThisThread::sleepFor();
 	 */
 
-	int synchronize(const SpiDeviceProxy& spiDeviceProxy);
+	int waitWhileWriteInProgress();
 
 	/**
 	 * \brief Enables writes in SPI EEPROM.
@@ -518,16 +474,25 @@ private:
 	 * - error codes returned by executeTransaction();
 	 */
 
-	int writeEnable(const SpiDeviceProxy& spiDeviceProxy) const;
+	int writeEnable() const;
 
-	/// internal SPI slave device
-	SpiDevice spiDevice_;
+	/// mutex used to serialize access to this object
+	Mutex mutex_;
 
 	/// desired clock frequency of SPI EEPROM, Hz
 	uint32_t clockFrequency_;
 
+	/// reference to slave select pin of this SPI EEPROM
+	OutputPin& slaveSelectPin_;
+
+	/// reference to SPI master to which this SPI EEPROM is connected
+	SpiMaster& spiMaster_;
+
 	/// SPI mode used by SPI EEPROM
 	SpiMode mode_;
+
+	/// number of times this device was opened but not yet closed
+	uint8_t openCount_;
 
 	/// type of SPI EEPROM
 	Type type_;

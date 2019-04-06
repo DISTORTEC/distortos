@@ -21,10 +21,9 @@ and *YAML* files, as well as unit tests of `distortos::chip::SdMmcCardLowLevel` 
 - Added `distortos::devices::BlockDevice` and `distortos::devices::MemoryTechnologyDevice` interface classes.
 - Added `distortos::devices::BlockDeviceToMemoryTechnologyDevice` class which wraps `distortos::devices::BlockDevice`
 object and exposes `distortos::devices::MemoryTechnologyDevice` interface.
-- Added `distortos::devices::SpiDeviceProxy`, `distortos::devices::SpiMasterProxy` and
-`distortos::devices::SpiDeviceSelectGuard`, which build new SPI-related API. These classes can be used for RAII-style
-locking/unlocking or selecting/deselecting of appropriate devices and also serve as proxies for accessing core
-functionalities of associated objects.
+- Added `distortos::devices::SpiMasterHandle` and `distortos::devices::SpiDeviceSelectGuard`, which build new
+SPI-related API. These classes can be used for RAII-style locking/unlocking or selecting/deselecting of appropriate
+devices and also serve as handles for accessing core functionalities of associated objects.
 - Added `distortos::devices::SdCard` and `distortos::devices::SdCardSpiBased` classes, both based on
 `distortos::devices::BlockDevice` interface, which can be used with *SD* cards connected via SDMMC or SPI respectively.
 This code handles only *SD version 2.0* cards, has no support for run-time detection of card insertion/removal and has
@@ -75,8 +74,8 @@ names were added, marked as deprecated and are scheduled to be removed after v0.
 `distortos::devices::SpiMasterLowLevel::startTransfer()` instead of `distortos::devices::SpiMasterLowLevel::start()`.
 - `distortos::devices::SpiMasterLowLevel::configure()` allows configuration of dummy data that will be sent if write
 buffer of transfer is `nullptr`.
-- `...::lock()` and `...::unlock()` functions in `distortos::devices::SpiDevice` and `distortos::devices::SpiEeprom`
-were changed to use recursive mutexes internally and thus take no arguments.
+- `...::lock()` and `...::unlock()` functions in `distortos::devices::SpiEeprom` were changed to use recursive mutexes
+internally and thus take no arguments.
 - `distortos::devices::SpiEeprom` implements `distortos::devices::BlockDevice` interface. This changes return type of
 `distortos::devices::SpiEeprom::read()` and `distortos::devices::SpiEeprom::write()` from `std::pair<int, size_t>` to
 just `int`.
@@ -111,22 +110,6 @@ to be removed after v0.7.0.
 - Improved performance of interrupt-based *STM32's* *SPIv1* and *SPIv2* drivers.
 - Update *CMSIS* to version 5.4.0.
 
-### Deprecated
-
-- Old variant of `distortos::devices::SpiMaster::executeTransaction()`, old variant of `distortos::devices::SpiDevice`
-constructor, `distortos::devices::SpiDevice::executeTransaction()`, `distortos::devices::SpiDevice::getLsbFirst()`,
-`distortos::devices::SpiDevice::getMaxClockFrequency()`, `distortos::devices::SpiDevice::getMode()`,
-`distortos::devices::SpiDevice::getSlaveSelectPin()` and `distortos::devices::SpiDevice::getWordLength()` were marked as
-deprecated and are scheduled to be removed after v0.7.0. Use functionality exposed by
-`distortos::devices::SpiDeviceProxy`, `distortos::devices::SpiMasterProxy` and
-`distortos::devices::SpiDeviceSelectGuard`.
-- `distortos::devices::SpiEeprom::getCapacity()` and `distortos::devices::SpiEeprom::waitWhileWriteInProgress()` were
-marked as deprecated and are scheduled to be removed after v0.7.0. Use functions inherited from
-`distortos::devices::BlockDevice` interface class -
-`distortos::devices::SpiEeprom::getSize()` and `distortos::devices::SpiEeprom::synchronize()`.
-- `distortos::devices::SpiEeprom::getPageSize()` and `distortos::devices::SpiEeprom::isWriteInProgress()` were marked as
-deprecated and are scheduled to be removed after v0.7.0.
-
 ### Fixed
 
 - Fixed `estd::ContiguousRange` to allow construction of `estd::ContiguousRange<const T>` from
@@ -145,6 +128,13 @@ usually causing a *Hard Fault* exception within several cycles.
 *XL density* and *connectivity line* *STM32F1* chips have *DMA2*. Some of them map *DMA2 channel 5* interrupt to either
 shared interrupt vector (with *DMA2 channel 4*) or to a separate interrupt vector, but enabling the latter has multiple
 unrelated side effects, so use the former one only.
+- Removed `distortos::devices::SpiEeprom::getCapacity()` and
+`distortos::devices::SpiEeprom::waitWhileWriteInProgress()`. Use functions inherited from
+`distortos::devices::BlockDevice` interface class - `distortos::devices::SpiEeprom::getSize()` and
+`distortos::devices::SpiEeprom::synchronize()`.
+- Removed `distortos::devices::SpiEeprom::getPageSize()` and `distortos::devices::SpiEeprom::isWriteInProgress()`.
+- Removed `distortos::devices::SpiDevice` class and whole public API of `distortos::devices::SpiMaster` class. Use
+functionality exposed by `distortos::devices::SpiMasterHandle` and `distortos::devices::SpiDeviceSelectGuard` classes.
 
 [0.6.0](https://github.com/DISTORTEC/distortos/compare/v0.5.0...v0.6.0) - 2018-07-01
 ------------------------------------------------------------------------------------

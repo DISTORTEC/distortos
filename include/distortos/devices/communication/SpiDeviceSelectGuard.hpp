@@ -2,7 +2,7 @@
  * \file
  * \brief SpiDeviceSelectGuard class header
  *
- * \author Copyright (C) 2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2018-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -12,17 +12,16 @@
 #ifndef INCLUDE_DISTORTOS_DEVICES_COMMUNICATION_SPIDEVICESELECTGUARD_HPP_
 #define INCLUDE_DISTORTOS_DEVICES_COMMUNICATION_SPIDEVICESELECTGUARD_HPP_
 
+#include "distortos/devices/io/OutputPin.hpp"
+
 namespace distortos
 {
 
 namespace devices
 {
 
-class SpiDevice;
-class SpiMasterProxy;
-
 /**
- * SpiDeviceSelectGuard is a RAII-style class for selecting SpiDevice.
+ * SpiDeviceSelectGuard is a RAII-style class for selecting SPI device.
  *
  * \ingroup devices
  */
@@ -34,41 +33,31 @@ public:
 	/**
 	 * \brief SpiDeviceSelectGuard's constructor
 	 *
-	 * \param [in] spiMasterProxy is a reference to SpiMasterProxy associated with this select guard
+	 * \param [in] slaveSelectPin is a reference to slave select pin of this SPI slave device
 	 */
 
-	explicit SpiDeviceSelectGuard(SpiMasterProxy& spiMasterProxy);
+	explicit SpiDeviceSelectGuard(OutputPin& slaveSelectPin) :
+			slaveSelectPin_{slaveSelectPin}
+	{
+		slaveSelectPin_.set(false);
+	}
 
 	/**
 	 * \brief SpiDeviceSelectGuard's destructor
 	 */
 
-	~SpiDeviceSelectGuard();
+	~SpiDeviceSelectGuard()
+	{
+		slaveSelectPin_.set(true);
+	}
 
 	SpiDeviceSelectGuard(const SpiDeviceSelectGuard&) = delete;
 	SpiDeviceSelectGuard& operator=(const SpiDeviceSelectGuard&) = delete;
 
-protected:
-
-	/**
-	 * \return reference to SpiMasterProxy associated with this select guard
-	 */
-
-	SpiMasterProxy& getSpiMasterProxy() const
-	{
-		return spiMasterProxy_;
-	}
-
 private:
 
-	/**
-	 * \return reference to SpiDevice associated with this select guard
-	 */
-
-	SpiDevice& getSpiDevice() const;
-
-	/// reference to SpiMasterProxy associated with this select guard
-	SpiMasterProxy& spiMasterProxy_;
+	/// reference to slave select pin of this SPI slave device
+	OutputPin& slaveSelectPin_;
 };
 
 }	// namespace devices

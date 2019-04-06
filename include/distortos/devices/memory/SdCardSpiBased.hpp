@@ -12,15 +12,18 @@
 #ifndef INCLUDE_DISTORTOS_DEVICES_MEMORY_SDCARDSPIBASED_HPP_
 #define INCLUDE_DISTORTOS_DEVICES_MEMORY_SDCARDSPIBASED_HPP_
 
-#include "distortos/devices/communication/SpiDevice.hpp"
-
 #include "distortos/devices/memory/BlockDevice.hpp"
+
+#include "distortos/Mutex.hpp"
 
 namespace distortos
 {
 
 namespace devices
 {
+
+class OutputPin;
+class SpiMaster;
 
 /**
  * SdCardSpiBased class is a SD card connected via SPI.
@@ -47,14 +50,17 @@ public:
 
 	constexpr SdCardSpiBased(SpiMaster& spiMaster, OutputPin& slaveSelectPin,
 			const uint32_t clockFrequency = 25000000) :
-					spiDevice_{spiMaster, slaveSelectPin},
+					mutex_{Mutex::Type::recursive, Mutex::Protocol::priorityInheritance},
 					blocksCount_{},
 					auSize_{},
 					clockFrequency_{clockFrequency},
+					slaveSelectPin_{slaveSelectPin},
+					spiMaster_{spiMaster},
 					eraseTimeoutMs_{},
 					readTimeoutMs_{},
 					writeTimeoutMs_{},
-					blockAddressing_{}
+					blockAddressing_{},
+					openCount_{}
 	{
 
 	}
@@ -75,7 +81,7 @@ public:
 	 * \pre Device is opened.
 	 *
 	 * \return 0 on success, error code otherwise:
-	 * - error codes returned by SpiDevice::close();
+	 * - error codes returned by SpiMasterHandle::close();
 	 */
 
 	int close() override;
@@ -96,7 +102,7 @@ public:
 	 * - error codes returned by executeCmd32();
 	 * - error codes returned by executeCmd33();
 	 * - error codes returned by executeCmd38();
-	 * - error codes returned by SpiMasterProxy::configure();
+	 * - error codes returned by SpiMasterHandle::configure();
 	 */
 
 	int erase(uint64_t address, uint64_t size) override;
@@ -139,7 +145,7 @@ public:
 	 *
 	 * \return 0 on success, error code otherwise:
 	 * - error codes returned by initialize();
-	 * - error codes returned by SpiDevice::open();
+	 * - error codes returned by SpiMasterHandle::open();
 	 */
 
 	int open() override;
@@ -163,7 +169,7 @@ public:
 	 * - error codes returned by executeCmd17();
 	 * - error codes returned by executeCmd18();
 	 * - error codes returned by readDataBlock();
-	 * - error codes returned by SpiMasterProxy::configure();
+	 * - error codes returned by SpiMasterHandle::configure();
 	 */
 
 	int read(uint64_t address, void* buffer, size_t size) override;
@@ -210,8 +216,8 @@ public:
 	 * - error codes returned by executeCmd25();
 	 * - error codes returned by waitWhileBusy();
 	 * - error codes returned by writeDataBlock();
-	 * - error codes returned by SpiMasterProxy::configure();
-	 * - error codes returned by SpiMasterProxy::executeTransaction();
+	 * - error codes returned by SpiMasterHandle::configure();
+	 * - error codes returned by SpiMasterHandle::executeTransaction();
 	 */
 
 	int write(uint64_t address, const void* buffer, size_t size) override;
@@ -230,8 +236,6 @@ private:
 	 * Algorithm is based on ChaN's
 	 * [How to Use MMC/SDC: Initialization Procedure for SPI Mode](http://elm-chan.org/docs/mmc/mmc_e.html#spiinit).
 	 *
-	 * \param [in] spiDeviceProxy is a reference to SpiDeviceProxy associated with this object
-	 *
 	 * \return 0 on success, error code otherwise:
 	 * - EIO - error during communication with SD card;
 	 * - ETIMEDOUT - timed-out while waiting for SD card to respond;
@@ -241,14 +245,14 @@ private:
 	 * - error codes returned by executeCmd9();
 	 * - error codes returned by executeCmd16();
 	 * - error codes returned by executeCmd58();
-	 * - error codes returned by SpiMasterProxy::configure();
-	 * - error codes returned by SpiMasterProxy::executeTransaction();
+	 * - error codes returned by SpiMasterHandle::configure();
+	 * - error codes returned by SpiMasterHandle::executeTransaction();
 	 */
 
-	int initialize(const SpiDeviceProxy& spiDeviceProxy);
+	int initialize();
 
-	/// internal SPI slave device
-	SpiDevice spiDevice_;
+	/// mutex used to serialize access to this object
+	Mutex mutex_;
 
 	/// number of blocks available on SD card
 	size_t blocksCount_;
@@ -258,6 +262,12 @@ private:
 
 	/// desired clock frequency of SD card, Hz
 	uint32_t clockFrequency_;
+
+	/// reference to slave select pin of this SD card
+	OutputPin& slaveSelectPin_;
+
+	/// reference to SPI master to which this SD card is connected
+	SpiMaster& spiMaster_;
 
 	/// timeout of erase operation of single AU, milliseconds
 	uint16_t eraseTimeoutMs_;
@@ -270,6 +280,9 @@ private:
 
 	/// selects whether card uses byte (false) or block (true) addressing
 	bool blockAddressing_;
+
+	/// number of times this device was opened but not yet closed
+	uint8_t openCount_;
 };
 
 }	// namespace devices
