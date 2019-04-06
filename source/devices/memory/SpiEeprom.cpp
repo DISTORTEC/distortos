@@ -110,9 +110,9 @@ int SpiEeprom::close()
 
 	assert(openCount_ != 0);
 
-	decltype(spiMaster_.close()) ret {};
+	int ret {};
 	if (openCount_ == 1)	// last close?
-		ret = spiMaster_.close();
+		ret = SpiMasterHandle{spiMaster_}.close();
 
 	--openCount_;
 	return ret;
@@ -149,7 +149,7 @@ int SpiEeprom::open()
 
 	if (openCount_ == 0)	// first open?
 	{
-		const auto ret = spiMaster_.open();
+		const auto ret = SpiMasterHandle{spiMaster_}.open();
 		if (ret != 0)
 			return ret;
 	}
