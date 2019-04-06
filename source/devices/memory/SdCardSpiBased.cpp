@@ -11,7 +11,7 @@
 
 #include "distortos/devices/memory/SdCardSpiBased.hpp"
 
-#include "distortos/devices/communication/SpiDeviceProxy.hpp"
+#include "distortos/devices/communication/SpiDeviceHandle.hpp"
 #include "distortos/devices/communication/SpiDeviceSelectGuard.hpp"
 #include "distortos/devices/communication/SpiMasterProxy.hpp"
 #include "distortos/devices/communication/SpiMasterTransfer.hpp"
