@@ -12,13 +12,13 @@
 #ifndef INCLUDE_DISTORTOS_DEVICES_COMMUNICATION_SPIDEVICESELECTGUARD_HPP_
 #define INCLUDE_DISTORTOS_DEVICES_COMMUNICATION_SPIDEVICESELECTGUARD_HPP_
 
+#include "distortos/devices/io/OutputPin.hpp"
+
 namespace distortos
 {
 
 namespace devices
 {
-
-class OutputPin;
 
 /**
  * SpiDeviceSelectGuard is a RAII-style class for selecting SpiDevice.
@@ -36,13 +36,20 @@ public:
 	 * \param [in] slaveSelectPin is a reference to slave select pin of this SPI slave device
 	 */
 
-	explicit SpiDeviceSelectGuard(OutputPin& slaveSelectPin);
+	explicit SpiDeviceSelectGuard(OutputPin& slaveSelectPin) :
+			slaveSelectPin_{slaveSelectPin}
+	{
+		slaveSelectPin_.set(false);
+	}
 
 	/**
 	 * \brief SpiDeviceSelectGuard's destructor
 	 */
 
-	~SpiDeviceSelectGuard();
+	~SpiDeviceSelectGuard()
+	{
+		slaveSelectPin_.set(true);
+	}
 
 	SpiDeviceSelectGuard(const SpiDeviceSelectGuard&) = delete;
 	SpiDeviceSelectGuard& operator=(const SpiDeviceSelectGuard&) = delete;
