@@ -280,49 +280,10 @@ public:
 	size_t getBlockSize() const override;
 
 	/**
-	 * \deprecated scheduled to be removed after v0.7.0, use SpiEeprom::getSize()
-	 *
-	 * \return total capacity of the device, bytes
-	 */
-
-	__attribute__ ((deprecated("Use SpiEeprom::getSize()")))
-	size_t getCapacity() const
-	{
-		return getSize();
-	}
-
-	/**
-	 * \deprecated scheduled to be made private after v0.7.0
-	 *
-	 * \return size of single page, bytes
-	 */
-
-	__attribute__ ((deprecated))
-	size_t getPageSize() const
-	{
-		return 8 * (1 << ((static_cast<uint8_t>(type_) & pageSizeMask_) >> pageSizeShift_));
-	}
-
-	/**
 	 * \return size of SPI EEPROM, bytes
 	 */
 
 	uint64_t getSize() const override;
-
-	/**
-	 * \brief Checks whether any write operation is currently in progress.
-	 *
-	 * \deprecated scheduled to be removed after v0.7.0, use SpiEeprom::synchronize()
-	 *
-	 * \warning This function must not be called from interrupt context!
-	 *
-	 * \return pair with return code (0 on success, error code otherwise) and current status of device: false - device
-	 * is idle, true - write operation is in progress; error codes:
-	 * - error codes returned by isWriteInProgress(const SpiDeviceHandle&);
-	 */
-
-	__attribute__ ((deprecated("Use SpiEeprom::synchronize()")))
-	std::pair<int, bool> isWriteInProgress();
 
 	/**
 	 * \brief Locks SPI EEPROM for exclusive use by current thread.
@@ -400,23 +361,6 @@ public:
 	void unlock() override;
 
 	/**
-	 * \brief Wrapper for synchronize()
-	 *
-	 * \deprecated scheduled to be removed after v0.7.0, use SpiEeprom::synchronize()
-	 *
-	 * \warning This function must not be called from interrupt context!
-	 *
-	 * \return 0 on success, error code otherwise:
-	 * - error codes returned by synchronize();
-	 */
-
-	__attribute__ ((deprecated("Use SpiEeprom::synchronize()")))
-	int waitWhileWriteInProgress()
-	{
-		return synchronize();
-	}
-
-	/**
 	 * \brief Writes data to SPI EEPROM.
 	 *
 	 * \warning This function must not be called from interrupt context!
@@ -486,7 +430,16 @@ private:
 	std::pair<int, size_t> executeTransaction(SpiMasterTransfersRange transfersRange) const;
 
 	/**
-	 * \brief Internal implementation of isWriteInProgress()
+	 * \return size of single page, bytes
+	 */
+
+	size_t getPageSize() const
+	{
+		return 8 * (1 << ((static_cast<uint8_t>(type_) & pageSizeMask_) >> pageSizeShift_));
+	}
+
+	/**
+	 * \brief Checks whether any write operation is currently in progress.
 	 *
 	 * \param [in] spiDeviceHandle is a reference to SpiDeviceHandle associated with this object
 	 *

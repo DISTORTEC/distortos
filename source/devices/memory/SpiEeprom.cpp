@@ -131,12 +131,6 @@ uint64_t SpiEeprom::getSize() const
 	return 128 * (1 << ((static_cast<uint8_t>(type_) & sizeMask_) >> sizeShift_));
 }
 
-std::pair<int, bool> SpiEeprom::isWriteInProgress()
-{
-	const SpiDeviceHandle spiDeviceHandle {spiDevice_};
-	return isWriteInProgress(spiDeviceHandle);
-}
-
 void SpiEeprom::lock()
 {
 	const auto ret = spiDevice_.lock();
@@ -250,12 +244,7 @@ std::pair<int, size_t> SpiEeprom::eraseOrWritePage(const SpiDeviceHandle& spiDev
 			return {ret, {}};
 	}
 
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-
 	const auto pageSize = getPageSize();
-
-#pragma GCC diagnostic pop
 
 	const auto pageOffset = address & (pageSize - 1);
 	const auto writeSize = pageOffset + size <= pageSize ? size : pageSize - pageOffset;
