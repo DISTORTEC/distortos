@@ -217,7 +217,7 @@ public:
 	 * \param [in] spiMasterHandle is a reference to SpiMasterHandle associated with this select guard
 	 */
 
-	SelectGuard(OutputPin& slaveSelectPin, SpiMasterHandle& spiMasterHandle) :
+	SelectGuard(OutputPin& slaveSelectPin, const SpiMasterHandle& spiMasterHandle) :
 			SpiDeviceSelectGuard{slaveSelectPin},
 			spiMasterHandle_{spiMasterHandle}
 	{
@@ -237,7 +237,7 @@ public:
 private:
 
 	/// reference to SpiMasterHandle associated with this select guard
-	SpiMasterHandle& spiMasterHandle_;
+	const SpiMasterHandle& spiMasterHandle_;
 };
 
 /*---------------------------------------------------------------------------------------------------------------------+
@@ -404,7 +404,7 @@ SdStatus decodeSdStatus(const std::array<uint8_t, 64>& buffer)
  */
 
 template<typename Functor>
-std::pair<int, uint8_t> waitWhile(SpiMasterHandle& spiMasterHandle, const distortos::TickClock::duration duration,
+std::pair<int, uint8_t> waitWhile(const SpiMasterHandle& spiMasterHandle, const distortos::TickClock::duration duration,
 		Functor functor)
 {
 	const auto deadline = distortos::TickClock::now() + duration;
@@ -432,7 +432,7 @@ std::pair<int, uint8_t> waitWhile(SpiMasterHandle& spiMasterHandle, const distor
  * - error codes returned by waitWhile();
  */
 
-int waitWhileBusy(SpiMasterHandle& spiMasterHandle, const distortos::TickClock::duration duration)
+int waitWhileBusy(const SpiMasterHandle& spiMasterHandle, const distortos::TickClock::duration duration)
 {
 	const auto ret = waitWhile(spiMasterHandle, duration,
 			[](const uint8_t& byte)
@@ -457,7 +457,7 @@ int waitWhileBusy(SpiMasterHandle& spiMasterHandle, const distortos::TickClock::
  * - error codes returned by SpiMasterHandle::executeTransaction();
  */
 
-std::pair<int, size_t> readDataBlock(SpiMasterHandle& spiMasterHandle, void* const buffer, const size_t size,
+std::pair<int, size_t> readDataBlock(const SpiMasterHandle& spiMasterHandle, void* const buffer, const size_t size,
 		const distortos::TickClock::duration duration)
 {
 	{
@@ -498,7 +498,7 @@ std::pair<int, size_t> readDataBlock(SpiMasterHandle& spiMasterHandle, void* con
  * - error codes returned by SpiMasterHandle::executeTransaction();
  */
 
-std::pair<int, size_t> writeDataBlock(SpiMasterHandle& spiMasterHandle, const uint8_t token,
+std::pair<int, size_t> writeDataBlock(const SpiMasterHandle& spiMasterHandle, const uint8_t token,
 		const void* const buffer, const size_t size, const distortos::TickClock::duration duration)
 {
 	uint8_t footer[3];	// crc + data response token
@@ -540,7 +540,7 @@ std::pair<int, size_t> writeDataBlock(SpiMasterHandle& spiMasterHandle, const ui
  * - error codes returned by SpiMasterHandle::executeTransaction();
  */
 
-int readResponse(SpiMasterHandle& spiMasterHandle, const Uint8Range buffer)
+int readResponse(const SpiMasterHandle& spiMasterHandle, const Uint8Range buffer)
 {
 	size_t bytesRead {};
 	size_t validBytesRead {};
@@ -587,7 +587,7 @@ int readResponse(SpiMasterHandle& spiMasterHandle, const Uint8Range buffer)
  * - error codes returned by readResponse();
  */
 
-std::pair<int, uint8_t> readR1(SpiMasterHandle& spiMasterHandle)
+std::pair<int, uint8_t> readR1(const SpiMasterHandle& spiMasterHandle)
 {
 	uint8_t r1;
 	const auto ret = readResponse(spiMasterHandle, Uint8Range{r1});
@@ -603,7 +603,7 @@ std::pair<int, uint8_t> readR1(SpiMasterHandle& spiMasterHandle)
  * - error codes returned by readResponse();
  */
 
-std::pair<int, R2Response> readR2(SpiMasterHandle& spiMasterHandle)
+std::pair<int, R2Response> readR2(const SpiMasterHandle& spiMasterHandle)
 {
 	uint8_t r2[2];
 	const auto ret = readResponse(spiMasterHandle, Uint8Range{r2});
@@ -619,7 +619,7 @@ std::pair<int, R2Response> readR2(SpiMasterHandle& spiMasterHandle)
  * - error codes returned by readResponse();
  */
 
-std::pair<int, R3Response> readR3(SpiMasterHandle& spiMasterHandle)
+std::pair<int, R3Response> readR3(const SpiMasterHandle& spiMasterHandle)
 {
 	uint8_t r3[5];
 	const auto ret = readResponse(spiMasterHandle, Uint8Range{r3});
@@ -638,7 +638,7 @@ std::pair<int, R3Response> readR3(SpiMasterHandle& spiMasterHandle)
  * - error codes returned by readResponse();
  */
 
-std::pair<int, R7Response> readR7(SpiMasterHandle& spiMasterHandle)
+std::pair<int, R7Response> readR7(const SpiMasterHandle& spiMasterHandle)
 {
 	uint8_t r7[5];
 	const auto ret = readResponse(spiMasterHandle, Uint8Range{r7});
@@ -664,7 +664,7 @@ std::pair<int, R7Response> readR7(SpiMasterHandle& spiMasterHandle)
  * - error codes returned by SpiMasterHandle::executeTransaction();
  */
 
-int writeCmd(SpiMasterHandle& spiMasterHandle, const uint8_t command, const uint32_t argument = {},
+int writeCmd(const SpiMasterHandle& spiMasterHandle, const uint8_t command, const uint32_t argument = {},
 		const uint8_t crc7 = {}, const bool stuffByte = {})
 {
 	const uint8_t buffer[]
@@ -697,7 +697,7 @@ int writeCmd(SpiMasterHandle& spiMasterHandle, const uint8_t command, const uint
  * - error codes returned by writeCmd();
  */
 
-std::pair<int, uint8_t> writeCmdReadR1(SpiMasterHandle& spiMasterHandle, const uint8_t command,
+std::pair<int, uint8_t> writeCmdReadR1(const SpiMasterHandle& spiMasterHandle, const uint8_t command,
 		const uint32_t argument = {}, const uint8_t crc7 = {}, const bool stuffByte = {})
 {
 	const auto ret = writeCmd(spiMasterHandle, command, argument, crc7, stuffByte);
@@ -721,7 +721,7 @@ std::pair<int, uint8_t> writeCmdReadR1(SpiMasterHandle& spiMasterHandle, const u
  * - error codes returned by writeCmd();
  */
 
-std::pair<int, R3Response> writeCmdReadR3(SpiMasterHandle& spiMasterHandle, const uint8_t command,
+std::pair<int, R3Response> writeCmdReadR3(const SpiMasterHandle& spiMasterHandle, const uint8_t command,
 		const uint32_t argument = {}, const uint8_t crc7 = {}, const bool stuffByte = {})
 {
 	const auto ret = writeCmd(spiMasterHandle, command, argument, crc7, stuffByte);
@@ -745,7 +745,7 @@ std::pair<int, R3Response> writeCmdReadR3(SpiMasterHandle& spiMasterHandle, cons
  * - error codes returned by writeCmd();
  */
 
-std::pair<int, R7Response> writeCmdReadR7(SpiMasterHandle& spiMasterHandle, const uint8_t command,
+std::pair<int, R7Response> writeCmdReadR7(const SpiMasterHandle& spiMasterHandle, const uint8_t command,
 		const uint32_t argument = {}, const uint8_t crc7 = {}, const bool stuffByte = {})
 {
 	const auto ret = writeCmd(spiMasterHandle, command, argument, crc7, stuffByte);
@@ -766,7 +766,7 @@ std::pair<int, R7Response> writeCmdReadR7(SpiMasterHandle& spiMasterHandle, cons
  * - error codes returned by writeCmdReadR1();
  */
 
-std::pair<int, uint8_t> executeCmd0(SpiMasterHandle& spiMasterHandle)
+std::pair<int, uint8_t> executeCmd0(const SpiMasterHandle& spiMasterHandle)
 {
 	return writeCmdReadR1(spiMasterHandle, 0, {}, 0x4a);
 }
@@ -783,7 +783,7 @@ std::pair<int, uint8_t> executeCmd0(SpiMasterHandle& spiMasterHandle)
  * - error codes returned by writeCmdReadR7();
  */
 
-std::tuple<int, uint8_t, bool> executeCmd8(SpiMasterHandle& spiMasterHandle)
+std::tuple<int, uint8_t, bool> executeCmd8(const SpiMasterHandle& spiMasterHandle)
 {
 	constexpr uint8_t supplyVoltage {1};	// 2.7 - 3.6 V
 	constexpr uint8_t checkPattern {0xaa};
@@ -805,7 +805,7 @@ std::tuple<int, uint8_t, bool> executeCmd8(SpiMasterHandle& spiMasterHandle)
  * - error codes returned by writeCmdReadR1();
  */
 
-std::tuple<int, uint8_t, std::array<uint8_t, 16>> executeCmd9(SpiMasterHandle& spiMasterHandle)
+std::tuple<int, uint8_t, std::array<uint8_t, 16>> executeCmd9(const SpiMasterHandle& spiMasterHandle)
 {
 	{
 		const auto ret = writeCmdReadR1(spiMasterHandle, 9);
@@ -832,7 +832,8 @@ std::tuple<int, uint8_t, std::array<uint8_t, 16>> executeCmd9(SpiMasterHandle& s
  * - error codes returned by writeCmdReadR1();
  */
 
-std::pair<int, uint8_t> executeCmd12(SpiMasterHandle& spiMasterHandle, const distortos::TickClock::duration duration)
+std::pair<int, uint8_t> executeCmd12(const SpiMasterHandle& spiMasterHandle,
+		const distortos::TickClock::duration duration)
 {
 	const auto response = writeCmdReadR1(spiMasterHandle, 12, {}, {}, true);
 	if (response.first != 0)
@@ -854,7 +855,7 @@ std::pair<int, uint8_t> executeCmd12(SpiMasterHandle& spiMasterHandle, const dis
  * - error codes returned by writeCmdReadR1();
  */
 
-std::pair<int, uint8_t> executeCmd16(SpiMasterHandle& spiMasterHandle, const uint32_t blockLength)
+std::pair<int, uint8_t> executeCmd16(const SpiMasterHandle& spiMasterHandle, const uint32_t blockLength)
 {
 	return writeCmdReadR1(spiMasterHandle, 16, blockLength);
 }
@@ -871,7 +872,7 @@ std::pair<int, uint8_t> executeCmd16(SpiMasterHandle& spiMasterHandle, const uin
  * - error codes returned by writeCmdReadR1();
  */
 
-std::pair<int, uint8_t> executeCmd17(SpiMasterHandle& spiMasterHandle, const uint32_t address)
+std::pair<int, uint8_t> executeCmd17(const SpiMasterHandle& spiMasterHandle, const uint32_t address)
 {
 	return writeCmdReadR1(spiMasterHandle, 17, address);
 }
@@ -888,7 +889,7 @@ std::pair<int, uint8_t> executeCmd17(SpiMasterHandle& spiMasterHandle, const uin
  * - error codes returned by writeCmdReadR1();
  */
 
-std::pair<int, uint8_t> executeCmd18(SpiMasterHandle& spiMasterHandle, const uint32_t address)
+std::pair<int, uint8_t> executeCmd18(const SpiMasterHandle& spiMasterHandle, const uint32_t address)
 {
 	return writeCmdReadR1(spiMasterHandle, 18, address);
 }
@@ -905,7 +906,7 @@ std::pair<int, uint8_t> executeCmd18(SpiMasterHandle& spiMasterHandle, const uin
  * - error codes returned by writeCmdReadR1();
  */
 
-std::pair<int, uint8_t> executeCmd24(SpiMasterHandle& spiMasterHandle, const uint32_t address)
+std::pair<int, uint8_t> executeCmd24(const SpiMasterHandle& spiMasterHandle, const uint32_t address)
 {
 	return writeCmdReadR1(spiMasterHandle, 24, address);
 }
@@ -922,7 +923,7 @@ std::pair<int, uint8_t> executeCmd24(SpiMasterHandle& spiMasterHandle, const uin
  * - error codes returned by writeCmdReadR1();
  */
 
-std::pair<int, uint8_t> executeCmd25(SpiMasterHandle& spiMasterHandle, const uint32_t address)
+std::pair<int, uint8_t> executeCmd25(const SpiMasterHandle& spiMasterHandle, const uint32_t address)
 {
 	return writeCmdReadR1(spiMasterHandle, 25, address);
 }
@@ -939,7 +940,7 @@ std::pair<int, uint8_t> executeCmd25(SpiMasterHandle& spiMasterHandle, const uin
  * - error codes returned by writeCmdReadR1();
  */
 
-std::pair<int, uint8_t> executeCmd32(SpiMasterHandle& spiMasterHandle, const uint32_t address)
+std::pair<int, uint8_t> executeCmd32(const SpiMasterHandle& spiMasterHandle, const uint32_t address)
 {
 	return writeCmdReadR1(spiMasterHandle, 32, address);
 }
@@ -956,7 +957,7 @@ std::pair<int, uint8_t> executeCmd32(SpiMasterHandle& spiMasterHandle, const uin
  * - error codes returned by writeCmdReadR1();
  */
 
-std::pair<int, uint8_t> executeCmd33(SpiMasterHandle& spiMasterHandle, const uint32_t address)
+std::pair<int, uint8_t> executeCmd33(const SpiMasterHandle& spiMasterHandle, const uint32_t address)
 {
 	return writeCmdReadR1(spiMasterHandle, 33, address);
 }
@@ -974,7 +975,8 @@ std::pair<int, uint8_t> executeCmd33(SpiMasterHandle& spiMasterHandle, const uin
  * - error codes returned by writeCmdReadR1();
  */
 
-std::pair<int, uint8_t> executeCmd38(SpiMasterHandle& spiMasterHandle, const distortos::TickClock::duration duration)
+std::pair<int, uint8_t> executeCmd38(const SpiMasterHandle& spiMasterHandle,
+		const distortos::TickClock::duration duration)
 {
 	const auto response = writeCmdReadR1(spiMasterHandle, 38);
 	if (response.first != 0)
@@ -995,7 +997,7 @@ std::pair<int, uint8_t> executeCmd38(SpiMasterHandle& spiMasterHandle, const dis
  * - error codes returned by writeCmdReadR1();
  */
 
-std::pair<int, uint8_t> executeCmd55(SpiMasterHandle& spiMasterHandle)
+std::pair<int, uint8_t> executeCmd55(const SpiMasterHandle& spiMasterHandle)
 {
 	return writeCmdReadR1(spiMasterHandle, 55);
 }
@@ -1011,7 +1013,7 @@ std::pair<int, uint8_t> executeCmd55(SpiMasterHandle& spiMasterHandle)
  * - error codes returned by writeCmdReadR3();
  */
 
-std::pair<int, R3Response> executeCmd58(SpiMasterHandle& spiMasterHandle)
+std::pair<int, R3Response> executeCmd58(const SpiMasterHandle& spiMasterHandle)
 {
 	return writeCmdReadR3(spiMasterHandle, 58);
 }
@@ -1031,7 +1033,7 @@ std::pair<int, R3Response> executeCmd58(SpiMasterHandle& spiMasterHandle)
  * - error codes returned by writeCmd();
  */
 
-int writeAcmd(SpiMasterHandle& spiMasterHandle, const uint8_t command, const uint32_t argument = {},
+int writeAcmd(const SpiMasterHandle& spiMasterHandle, const uint8_t command, const uint32_t argument = {},
 		const uint8_t crc7 = {}, const bool stuffByte = {})
 {
 	const auto ret = executeCmd55(spiMasterHandle);
@@ -1057,7 +1059,7 @@ int writeAcmd(SpiMasterHandle& spiMasterHandle, const uint8_t command, const uin
  * - error codes returned by writeAcmd();
  */
 
-std::pair<int, uint8_t> writeAcmdReadR1(SpiMasterHandle& spiMasterHandle, const uint8_t command,
+std::pair<int, uint8_t> writeAcmdReadR1(const SpiMasterHandle& spiMasterHandle, const uint8_t command,
 		const uint32_t argument = {}, const uint8_t crc7 = {}, const bool stuffByte = {})
 {
 	const auto ret = writeAcmd(spiMasterHandle, command, argument, crc7, stuffByte);
@@ -1081,7 +1083,7 @@ std::pair<int, uint8_t> writeAcmdReadR1(SpiMasterHandle& spiMasterHandle, const 
  * - error codes returned by writeAcmd();
  */
 
-std::pair<int, R2Response> writeAcmdReadR2(SpiMasterHandle& spiMasterHandle, const uint8_t command,
+std::pair<int, R2Response> writeAcmdReadR2(const SpiMasterHandle& spiMasterHandle, const uint8_t command,
 		const uint32_t argument = {}, const uint8_t crc7 = {}, const bool stuffByte = {})
 {
 	const auto ret = writeAcmd(spiMasterHandle, command, argument, crc7, stuffByte);
@@ -1105,7 +1107,7 @@ std::pair<int, R2Response> writeAcmdReadR2(SpiMasterHandle& spiMasterHandle, con
  * - error codes returned by writeAcmdReadR2();
  */
 
-std::tuple<int, R2Response, std::array<uint8_t, 64>> executeAcmd13(SpiMasterHandle& spiMasterHandle,
+std::tuple<int, R2Response, std::array<uint8_t, 64>> executeAcmd13(const SpiMasterHandle& spiMasterHandle,
 		const distortos::TickClock::duration duration)
 {
 	{
@@ -1130,7 +1132,7 @@ std::tuple<int, R2Response, std::array<uint8_t, 64>> executeAcmd13(SpiMasterHand
  * - error codes returned by writeAcmdReadR1();
  */
 
-std::pair<int, uint8_t> executeAcmd23(SpiMasterHandle& spiMasterHandle, const uint32_t blocksCount)
+std::pair<int, uint8_t> executeAcmd23(const SpiMasterHandle& spiMasterHandle, const uint32_t blocksCount)
 {
 	return writeAcmdReadR1(spiMasterHandle, 23, blocksCount);
 }
@@ -1148,7 +1150,7 @@ std::pair<int, uint8_t> executeAcmd23(SpiMasterHandle& spiMasterHandle, const ui
  * - error codes returned by writeAcmdReadR1();
  */
 
-std::pair<int, uint8_t> executeAcmd41(SpiMasterHandle& spiMasterHandle, const bool hcs)
+std::pair<int, uint8_t> executeAcmd41(const SpiMasterHandle& spiMasterHandle, const bool hcs)
 {
 	return writeAcmdReadR1(spiMasterHandle, 41, hcs << acmd41HcsPosition);
 }
@@ -1195,7 +1197,7 @@ int SdCardSpiBased::erase(const uint64_t address, const uint64_t size)
 	if (size == 0)
 		return {};
 
-	SpiMasterHandle spiMasterHandle {spiMaster_};
+	const SpiMasterHandle spiMasterHandle {spiMaster_};
 
 	{
 		const auto ret = spiMasterHandle.configure(SpiMode::_0, clockFrequency_, 8, false, UINT32_MAX);
@@ -1318,7 +1320,7 @@ int SdCardSpiBased::read(const uint64_t address, void* const buffer, const size_
 	if (size == 0)
 		return {};
 
-	SpiMasterHandle spiMasterHandle {spiMaster_};
+	const SpiMasterHandle spiMasterHandle {spiMaster_};
 
 	{
 		const auto ret = spiMasterHandle.configure(SpiMode::_0, clockFrequency_, 8, false, UINT32_MAX);
@@ -1389,7 +1391,7 @@ int SdCardSpiBased::write(const uint64_t address, const void* const buffer, cons
 	if (size == 0)
 		return {};
 
-	SpiMasterHandle spiMasterHandle {spiMaster_};
+	const SpiMasterHandle spiMasterHandle {spiMaster_};
 
 	{
 		const auto ret = spiMasterHandle.configure(SpiMode::_0, clockFrequency_, 8, false, UINT32_MAX);
@@ -1468,7 +1470,7 @@ void SdCardSpiBased::deinitialize()
 
 int SdCardSpiBased::initialize()
 {
-	SpiMasterHandle spiMasterHandle {spiMaster_};
+	const SpiMasterHandle spiMasterHandle {spiMaster_};
 
 	{
 		const auto ret = spiMasterHandle.configure(SpiMode::_0, 400000, 8, false, UINT32_MAX);

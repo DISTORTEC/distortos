@@ -273,7 +273,7 @@ std::pair<int, size_t> SpiEeprom::eraseOrWritePage(const uint32_t address, const
 
 std::pair<int, size_t> SpiEeprom::executeTransaction(const SpiMasterTransfersRange transfersRange) const
 {
-	SpiMasterHandle spiMasterHandle {spiMaster_};
+	const SpiMasterHandle spiMasterHandle {spiMaster_};
 
 	{
 		// only datasheet for ST M95xxx series says that erased state is 0, assume this is true for all other devices
