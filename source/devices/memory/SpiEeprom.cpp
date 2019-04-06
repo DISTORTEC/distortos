@@ -12,6 +12,7 @@
 #include "distortos/devices/memory/SpiEeprom.hpp"
 
 #include "distortos/devices/communication/SpiDeviceSelectGuard.hpp"
+#include "distortos/devices/communication/SpiMaster.hpp"
 #include "distortos/devices/communication/SpiMasterHandle.hpp"
 #include "distortos/devices/communication/SpiMasterTransfer.hpp"
 
@@ -101,16 +102,21 @@ SpiMasterTransfer getCommandWithAddress(const size_t capacity, const uint8_t com
 
 SpiEeprom::~SpiEeprom()
 {
-	assert(spiDevice_.isOpened() == false);
+	assert(openCount_ == 0);
 }
 
 int SpiEeprom::close()
 {
 	const std::lock_guard<Mutex> lockGuard {mutex_};
 
-	assert(spiDevice_.isOpened() == true);
+	assert(openCount_ != 0);
 
-	return spiDevice_.close();
+	decltype(spiMaster_.close()) ret {};
+	if (openCount_ == 1)	// last close?
+		ret = spiMaster_.close();
+
+	--openCount_;
+	return ret;
 }
 
 int SpiEeprom::erase(const uint64_t address, const uint64_t size)
@@ -140,16 +146,25 @@ int SpiEeprom::open()
 {
 	const std::lock_guard<Mutex> lockGuard {mutex_};
 
-	const auto ret = spiDevice_.open();
-	assert(ret != EMFILE);
-	return ret;
+	assert(openCount_ < std::numeric_limits<decltype(openCount_)>::max());
+
+	if (openCount_ == 0)	// first open?
+	{
+		const auto ret = spiMaster_.open();
+		if (ret != 0)
+			return ret;
+	}
+
+	++openCount_;
+
+	return {};
 }
 
 int SpiEeprom::read(const uint64_t address, void* const buffer, const size_t size)
 {
 	const std::lock_guard<Mutex> lockGuard {mutex_};
 
-	assert(spiDevice_.isOpened() == true);
+	assert(openCount_ != 0);
 	assert(buffer != nullptr);
 
 	const auto capacity = getSize();
@@ -178,7 +193,7 @@ int SpiEeprom::synchronize()
 {
 	const std::lock_guard<Mutex> lockGuard {mutex_};
 
-	assert(spiDevice_.isOpened() == true);
+	assert(openCount_ != 0);
 
 	return waitWhileWriteInProgress();
 }
@@ -204,7 +219,7 @@ int SpiEeprom::write(const uint64_t address, const void* const buffer, const siz
 
 int SpiEeprom::eraseOrWrite(const uint64_t address, const void* const buffer, const uint64_t size)
 {
-	assert(spiDevice_.isOpened() == true);
+	assert(openCount_ != 0);
 
 	const auto capacity = getSize();
 	assert(address + size <= capacity);

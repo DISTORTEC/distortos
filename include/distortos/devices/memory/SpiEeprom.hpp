@@ -12,11 +12,12 @@
 #ifndef INCLUDE_DISTORTOS_DEVICES_MEMORY_SPIEEPROM_HPP_
 #define INCLUDE_DISTORTOS_DEVICES_MEMORY_SPIEEPROM_HPP_
 
-#include "distortos/devices/communication/SpiDevice.hpp"
 #include "distortos/devices/communication/SpiMasterTransfersRange.hpp"
 #include "distortos/devices/communication/SpiMode.hpp"
 
 #include "distortos/devices/memory/BlockDevice.hpp"
+
+#include "distortos/Mutex.hpp"
 
 namespace distortos
 {
@@ -25,6 +26,7 @@ namespace devices
 {
 
 class OutputPin;
+class SpiMaster;
 
 /**
  * SpiEeprom class is a SPI EEPROM memory: Atmel AT25xxx, ON Semiconductor CAT25xxx, ST M95xxx, Microchip 25xxxxx or
@@ -224,11 +226,11 @@ public:
 	constexpr SpiEeprom(SpiMaster& spiMaster, OutputPin& slaveSelectPin, const Type type, const bool mode3 = {},
 			const uint32_t clockFrequency = 1000000) :
 					mutex_{Mutex::Type::recursive, Mutex::Protocol::priorityInheritance},
-					spiDevice_{spiMaster},
 					clockFrequency_{clockFrequency},
 					slaveSelectPin_{slaveSelectPin},
 					spiMaster_{spiMaster},
 					mode_{mode3 == false ? SpiMode::_0 : SpiMode::_3},
+					openCount_{},
 					type_{type}
 	{
 
@@ -250,7 +252,7 @@ public:
 	 * \pre Device is opened.
 	 *
 	 * \return 0 on success, error code otherwise:
-	 * - error codes returned by SpiDevice::close();
+	 * - error codes returned by SpiMaster::close();
 	 */
 
 	int close() override;
@@ -310,7 +312,7 @@ public:
 	 * \pre The number of times the device is opened is less than 255.
 	 *
 	 * \return 0 on success, error code otherwise:
-	 * - error codes returned by SpiDevice::open();
+	 * - error codes returned by SpiMaster::open();
 	 */
 
 	int open() override;
@@ -477,9 +479,6 @@ private:
 	/// mutex used to serialize access to this object
 	Mutex mutex_;
 
-	/// internal SPI slave device
-	SpiDevice spiDevice_;
-
 	/// desired clock frequency of SPI EEPROM, Hz
 	uint32_t clockFrequency_;
 
@@ -491,6 +490,9 @@ private:
 
 	/// SPI mode used by SPI EEPROM
 	SpiMode mode_;
+
+	/// number of times this device was opened but not yet closed
+	uint8_t openCount_;
 
 	/// type of SPI EEPROM
 	Type type_;
