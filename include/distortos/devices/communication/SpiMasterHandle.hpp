@@ -12,6 +12,7 @@
 #ifndef INCLUDE_DISTORTOS_DEVICES_COMMUNICATION_SPIMASTERHANDLE_HPP_
 #define INCLUDE_DISTORTOS_DEVICES_COMMUNICATION_SPIMASTERHANDLE_HPP_
 
+#include "distortos/devices/communication/SpiMaster.hpp"
 #include "distortos/devices/communication/SpiMasterBase.hpp"
 #include "distortos/devices/communication/SpiMasterTransfersRange.hpp"
 #include "distortos/devices/communication/SpiMode.hpp"
@@ -23,8 +24,6 @@ class Semaphore;
 
 namespace devices
 {
-
-class SpiMaster;
 
 /**
  * SpiMasterHandle is a [std::lock_guard](https://en.cppreference.com/w/cpp/thread/lock_guard)-like class for locking
@@ -47,7 +46,14 @@ public:
 	 * \param [in] spiMaster is a reference to SpiMaster associated with this handle
 	 */
 
-	explicit SpiMasterHandle(SpiMaster& spiMaster);
+	explicit SpiMasterHandle(SpiMaster& spiMaster) :
+			transfersRange_{},
+			ret_{},
+			semaphore_{},
+			spiMaster_{spiMaster}
+	{
+		spiMaster_.mutex_.lock();
+	}
 
 	/**
 	 * \brief SpiMasterHandle's destructor
@@ -55,7 +61,10 @@ public:
 	 * \warning This function must not be called from interrupt context!
 	 */
 
-	~SpiMasterHandle() override;
+	~SpiMasterHandle() override
+	{
+		spiMaster_.mutex_.unlock();
+	}
 
 	/**
 	 * \brief Configures parameters of associated SPI master.

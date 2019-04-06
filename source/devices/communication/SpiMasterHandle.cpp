@@ -11,7 +11,6 @@
 
 #include "distortos/devices/communication/SpiMasterHandle.hpp"
 
-#include "distortos/devices/communication/SpiMaster.hpp"
 #include "distortos/devices/communication/SpiMasterLowLevel.hpp"
 #include "distortos/devices/communication/SpiMasterTransfer.hpp"
 
@@ -31,20 +30,6 @@ namespace devices
 /*---------------------------------------------------------------------------------------------------------------------+
 | public functions
 +---------------------------------------------------------------------------------------------------------------------*/
-
-SpiMasterHandle::SpiMasterHandle(SpiMaster& spiMaster) :
-		transfersRange_{},
-		ret_{},
-		semaphore_{},
-		spiMaster_{spiMaster}
-{
-	spiMaster_.mutex_.lock();
-}
-
-SpiMasterHandle::~SpiMasterHandle()
-{
-	spiMaster_.mutex_.unlock();
-}
 
 std::pair<int, uint32_t> SpiMasterHandle::configure(const SpiMode mode, const uint32_t clockFrequency,
 		const uint8_t wordLength, const bool lsbFirst, const uint32_t dummyData) const
