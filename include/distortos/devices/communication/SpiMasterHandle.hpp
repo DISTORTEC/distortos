@@ -9,8 +9,8 @@
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#ifndef INCLUDE_DISTORTOS_DEVICES_COMMUNICATION_SPIMASTERPROXY_HPP_
-#define INCLUDE_DISTORTOS_DEVICES_COMMUNICATION_SPIMASTERPROXY_HPP_
+#ifndef INCLUDE_DISTORTOS_DEVICES_COMMUNICATION_SPIMASTERHANDLE_HPP_
+#define INCLUDE_DISTORTOS_DEVICES_COMMUNICATION_SPIMASTERHANDLE_HPP_
 
 #include "distortos/devices/communication/SpiMasterBase.hpp"
 #include "distortos/devices/communication/SpiMasterTransfersRange.hpp"
@@ -154,4 +154,4 @@ private:
 
 }	// namespace distortos
 
-#endif	// INCLUDE_DISTORTOS_DEVICES_COMMUNICATION_SPIMASTERPROXY_HPP_
+#endif	// INCLUDE_DISTORTOS_DEVICES_COMMUNICATION_SPIMASTERHANDLE_HPP_

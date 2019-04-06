@@ -2,7 +2,7 @@
  * \file
  * \brief SpiDeviceSelectGuard class implementation
  *
- * \author Copyright (C) 2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2018-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -12,7 +12,7 @@
 #include "distortos/devices/communication/SpiDeviceSelectGuard.hpp"
 
 #include "distortos/devices/communication/SpiDevice.hpp"
-#include "distortos/devices/communication/SpiMasterProxy.hpp"
+#include "distortos/devices/communication/SpiMasterHandle.hpp"
 
 #include "distortos/devices/io/OutputPin.hpp"
 

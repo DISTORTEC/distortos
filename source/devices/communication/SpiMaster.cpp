@@ -15,7 +15,7 @@
 #include "distortos/devices/communication/SpiDeviceHandle.hpp"
 #include "distortos/devices/communication/SpiDeviceSelectGuard.hpp"
 #include "distortos/devices/communication/SpiMasterLowLevel.hpp"
-#include "distortos/devices/communication/SpiMasterProxy.hpp"
+#include "distortos/devices/communication/SpiMasterHandle.hpp"
 #include "distortos/devices/communication/SpiMasterTransfer.hpp"
 
 #include "distortos/internal/CHECK_FUNCTION_CONTEXT.hpp"

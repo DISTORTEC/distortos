@@ -9,7 +9,7 @@
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#include "distortos/devices/communication/SpiMasterProxy.hpp"
+#include "distortos/devices/communication/SpiMasterHandle.hpp"
 
 #include "distortos/devices/communication/SpiDeviceHandle.hpp"
 #include "distortos/devices/communication/SpiMaster.hpp"
