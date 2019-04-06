@@ -19,7 +19,6 @@ namespace devices
 {
 
 class SpiDevice;
-class SpiMaster;
 
 /**
  * SpiDeviceHandle is a [std::lock_guard](https://en.cppreference.com/w/cpp/thread/lock_guard)-like class for locking
@@ -64,12 +63,6 @@ public:
 	SpiDeviceHandle& operator=(const SpiDeviceHandle&) = delete;
 
 private:
-
-	/**
-	 * \return reference to SpiMaster associated with this handle
-	 */
-
-	SpiMaster& getSpiMaster() const;
 
 	/// reference to SpiDevice associated with this handle
 	SpiDevice& spiDevice_;

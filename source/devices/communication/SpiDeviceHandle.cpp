@@ -39,15 +39,6 @@ bool SpiDeviceHandle::isOpened() const
 	return spiDevice_.openCount_ != 0;
 }
 
-/*---------------------------------------------------------------------------------------------------------------------+
-| private functions
-+---------------------------------------------------------------------------------------------------------------------*/
-
-SpiMaster& SpiDeviceHandle::getSpiMaster() const
-{
-	return spiDevice_.spiMaster_;
-}
-
 }	// namespace devices
 
 }	// namespace distortos
