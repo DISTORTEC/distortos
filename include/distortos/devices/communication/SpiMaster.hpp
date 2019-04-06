@@ -58,6 +58,8 @@ public:
 
 	~SpiMaster();
 
+private:
+
 	/**
 	 * \brief Closes SPI master.
 	 *
@@ -85,8 +87,6 @@ public:
 	 */
 
 	int open();
-
-private:
 
 	/// mutex used to serialize access to this object
 	Mutex mutex_;

@@ -41,10 +41,12 @@ SpiMaster::~SpiMaster()
 	spiMaster_.stop();
 }
 
+/*---------------------------------------------------------------------------------------------------------------------+
+| private functions
++---------------------------------------------------------------------------------------------------------------------*/
+
 int SpiMaster::close()
 {
-	const std::lock_guard<Mutex> lockGuard {mutex_};
-
 	if (openCount_ == 0)	// device is not open anymore?
 		return EBADF;
 
@@ -61,8 +63,6 @@ int SpiMaster::close()
 
 int SpiMaster::open()
 {
-	const std::lock_guard<Mutex> lockGuard {mutex_};
-
 	if (openCount_ == std::numeric_limits<decltype(openCount_)>::max())	// device is already opened too many times?
 		return EMFILE;
 
