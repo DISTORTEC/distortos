@@ -30,8 +30,6 @@ class SpiMaster;
 
 class SpiDevice
 {
-	friend class SpiDeviceHandle;
-
 public:
 
 	/**
