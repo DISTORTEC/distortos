@@ -2,7 +2,7 @@
  * \file
  * \brief SpiMasterLowLevel class header
  *
- * \author Copyright (C) 2016-2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2016-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -45,6 +45,8 @@ public:
 	/**
 	 * \brief Configures parameters of low-level SPI master driver.
 	 *
+	 * \pre \a mode, \a clockFrequency, \a wordLength and \a lsbFirst are valid for implementation of this interface.
+	 *
 	 * \param [in] mode is the desired SPI mode
 	 * \param [in] clockFrequency is the desired clock frequency, Hz
 	 * \param [in] wordLength selects word length, bits, [1; 32]
@@ -54,7 +56,6 @@ public:
 	 * \return pair with return code (0 on success, error code otherwise) and real clock frequency; error codes:
 	 * - EBADF - the driver is not started;
 	 * - EBUSY - transfer is in progress;
-	 * - EINVAL - selected mode and/or clock frequency and/or format are invalid;
 	 */
 
 	virtual std::pair<int, uint32_t> configure(SpiMode mode, uint32_t clockFrequency, uint8_t wordLength,
