@@ -94,8 +94,8 @@ int SpiMasterLowLevelInterruptBased::start()
 	return {};
 }
 
-int SpiMasterLowLevelInterruptBased::startTransfer(devices::SpiMasterBase& spiMasterBase, const void* const writeBuffer,
-		void* const readBuffer, const size_t size)
+void SpiMasterLowLevelInterruptBased::startTransfer(devices::SpiMasterBase& spiMasterBase,
+		const void* const writeBuffer, void* const readBuffer, const size_t size)
 {
 	assert(isStarted() == true);
 	assert(isTransferInProgress() == false);
@@ -110,8 +110,6 @@ int SpiMasterLowLevelInterruptBased::startTransfer(devices::SpiMasterBase& spiMa
 
 	spiPeripheral_.writeCr2(spiPeripheral_.readCr2() | SPI_CR2_RXNEIE);	// enable RXNE interrupt
 	writeNextItem();	// write first item to start the transfer
-
-	return 0;
 }
 
 void SpiMasterLowLevelInterruptBased::stop()

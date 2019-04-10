@@ -78,7 +78,7 @@ int SpiMasterLowLevelDmaBased::start()
 	return {};
 }
 
-int SpiMasterLowLevelDmaBased::startTransfer(devices::SpiMasterBase& spiMasterBase, const void* const writeBuffer,
+void SpiMasterLowLevelDmaBased::startTransfer(devices::SpiMasterBase& spiMasterBase, const void* const writeBuffer,
 		void* const readBuffer, const size_t size)
 {
 	assert(isStarted() == true);
@@ -111,8 +111,6 @@ int SpiMasterLowLevelDmaBased::startTransfer(devices::SpiMasterBase& spiMasterBa
 		txDmaChannelHandle_.startTransfer(memoryAddress, spiPeripheral_.getDrAddress(), transactions,
 				commonDmaFlags | txDmaFlags);
 	}
-
-	return 0;
 }
 
 void SpiMasterLowLevelDmaBased::stop()

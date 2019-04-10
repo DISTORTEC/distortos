@@ -96,10 +96,7 @@ std::pair<int, size_t> SpiMaster::executeTransaction(const SpiMasterTransfersRan
 
 	{
 		const auto transfer = transfersRange_.begin();
-		const auto ret = spiMaster_.startTransfer(*this, transfer->getWriteBuffer(), transfer->getReadBuffer(),
-				transfer->getSize());
-		if (ret != 0)
-			return {ret, {}};
+		spiMaster_.startTransfer(*this, transfer->getWriteBuffer(), transfer->getReadBuffer(), transfer->getSize());
 	}
 
 	while (semaphore.wait() != 0);
@@ -157,10 +154,8 @@ void SpiMaster::transferCompleteEvent(const size_t bytesTransfered)
 
 	{
 		const auto nextTransfer = transfersRange_.begin();
-		const auto ret = spiMaster_.startTransfer(*this, nextTransfer->getWriteBuffer(), nextTransfer->getReadBuffer(),
+		spiMaster_.startTransfer(*this, nextTransfer->getWriteBuffer(), nextTransfer->getReadBuffer(),
 				nextTransfer->getSize());
-		if (ret != 0)
-			notifyWaiter(ret);
 	}
 }
 

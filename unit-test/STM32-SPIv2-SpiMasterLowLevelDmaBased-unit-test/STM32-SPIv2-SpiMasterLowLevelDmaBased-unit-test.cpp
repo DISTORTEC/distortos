@@ -252,7 +252,7 @@ TEST_CASE("Testing startTransfer()", "[startTransfer]")
 								};
 						REQUIRE_CALL(txDmaChannelMock, startTransfer(_, drAddress, transferSize / dataSize,
 								txDmaFlags)).WITH(txAddressMatcher(_1)).IN_SEQUENCE(sequence);
-						REQUIRE(spi.startTransfer(masterMock, txBuffer, rxBuffer, transferSize) == 0);
+						spi.startTransfer(masterMock, txBuffer, rxBuffer, transferSize);
 
 						SECTION("Testing DMA TX error during transfer")
 						{

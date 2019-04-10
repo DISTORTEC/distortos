@@ -172,7 +172,7 @@ TEST_CASE("Testing startTransfer()", "[startTransfer]")
 				REQUIRE_CALL(peripheralMock, readCr2()).IN_SEQUENCE(sequence).RETURN(cr2);
 				REQUIRE_CALL(peripheralMock, writeCr2(cr2 | SPI_CR2_RXNEIE)).IN_SEQUENCE(sequence);
 				REQUIRE_CALL(peripheralMock, writeDr(wordLength, dummyData)).IN_SEQUENCE(sequence);
-				REQUIRE(spi.startTransfer(masterMock, nullptr, rxBuffer.begin(), sizeof(rxBuffer)) == 0);
+				spi.startTransfer(masterMock, nullptr, rxBuffer.begin(), sizeof(rxBuffer));
 
 				REQUIRE_CALL(peripheralMock, readDr(wordLength)).IN_SEQUENCE(sequence).RETURN(rxData[0]);
 				REQUIRE_CALL(peripheralMock, readCr2()).IN_SEQUENCE(sequence).RETURN(cr2 | SPI_CR2_RXNEIE);
@@ -191,7 +191,7 @@ TEST_CASE("Testing startTransfer()", "[startTransfer]")
 				REQUIRE_CALL(peripheralMock, readCr2()).IN_SEQUENCE(sequence).RETURN(cr2);
 				REQUIRE_CALL(peripheralMock, writeCr2(cr2 | SPI_CR2_RXNEIE)).IN_SEQUENCE(sequence);
 				REQUIRE_CALL(peripheralMock, writeDr(wordLength, txBuffer.front())).IN_SEQUENCE(sequence);
-				REQUIRE(spi.startTransfer(masterMock, txBuffer.begin(), rxBuffer.begin(), sizeof(rxBuffer)) == 0);
+				spi.startTransfer(masterMock, txBuffer.begin(), rxBuffer.begin(), sizeof(rxBuffer));
 
 				for (size_t i {}; i < txBuffer.size(); ++i)
 				{
@@ -237,7 +237,7 @@ TEST_CASE("Testing startTransfer()", "[startTransfer]")
 				REQUIRE_CALL(peripheralMock, readCr2()).IN_SEQUENCE(sequence).RETURN(cr2);
 				REQUIRE_CALL(peripheralMock, writeCr2(cr2 | SPI_CR2_RXNEIE)).IN_SEQUENCE(sequence);
 				REQUIRE_CALL(peripheralMock, writeDr(wordLength, dummyData)).IN_SEQUENCE(sequence);
-				REQUIRE(spi.startTransfer(masterMock, nullptr, rxBuffer.begin(), sizeof(rxBuffer)) == 0);
+				spi.startTransfer(masterMock, nullptr, rxBuffer.begin(), sizeof(rxBuffer));
 
 				REQUIRE_CALL(peripheralMock, readDr(wordLength)).IN_SEQUENCE(sequence).RETURN(rxData[0]);
 				REQUIRE_CALL(peripheralMock, readCr2()).IN_SEQUENCE(sequence).RETURN(cr2 | SPI_CR2_RXNEIE);
@@ -256,7 +256,7 @@ TEST_CASE("Testing startTransfer()", "[startTransfer]")
 				REQUIRE_CALL(peripheralMock, readCr2()).IN_SEQUENCE(sequence).RETURN(cr2);
 				REQUIRE_CALL(peripheralMock, writeCr2(cr2 | SPI_CR2_RXNEIE)).IN_SEQUENCE(sequence);
 				REQUIRE_CALL(peripheralMock, writeDr(wordLength, txBuffer.front())).IN_SEQUENCE(sequence);
-				REQUIRE(spi.startTransfer(masterMock, txBuffer.begin(), rxBuffer.begin(), sizeof(rxBuffer)) == 0);
+				spi.startTransfer(masterMock, txBuffer.begin(), rxBuffer.begin(), sizeof(rxBuffer));
 
 				for (size_t i {}; i < txBuffer.size(); ++i)
 				{

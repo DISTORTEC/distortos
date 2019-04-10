@@ -115,7 +115,6 @@ private:
 	 * - EBADF - associated SPI master is not opened;
 	 * - EINVAL - \a transfersRange has no transfers;
 	 * - EIO - failure detected by low-level SPI master driver;
-	 * - error codes returned by SpiMasterLowLevel::startTransfer();
 	 */
 
 	std::pair<int, size_t> executeTransaction(SpiMasterTransfersRange transfersRange);
