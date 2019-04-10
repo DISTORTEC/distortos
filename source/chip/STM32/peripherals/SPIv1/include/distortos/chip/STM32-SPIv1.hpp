@@ -31,6 +31,7 @@ class SpiPeripheral;
 /**
  * \brief Configures parameters of raw SPI peripheral.
  *
+ * \pre \a clockFrequency is greater than or equal to `spiPeripheral.getPeripheralFrequency() / 256`.
  * \pre \a wordLength is valid.
  *
  * \param [in] spiPeripheral is a reference to raw SPI peripheral

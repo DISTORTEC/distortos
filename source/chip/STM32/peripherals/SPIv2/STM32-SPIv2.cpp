@@ -17,8 +17,6 @@
 
 #include "estd/log2u.hpp"
 
-#include <cerrno>
-
 namespace distortos
 {
 
@@ -36,8 +34,7 @@ std::pair<int, uint32_t> configureSpi(const SpiPeripheral& spiPeripheral, const 
 
 	const auto peripheralFrequency = spiPeripheral.getPeripheralFrequency();
 	const auto divider = (peripheralFrequency + clockFrequency - 1) / clockFrequency;
-	if (divider > 256)
-		return {EINVAL, {}};
+	assert(divider <= 256);
 
 	const uint32_t br = divider <= 2 ? 0 : estd::log2u(divider - 1);
 	const auto cr1 = spiPeripheral.readCr1();

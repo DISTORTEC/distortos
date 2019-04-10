@@ -79,6 +79,7 @@ public:
 	/**
 	 * \brief Configures parameters of low-level SPI master driver.
 	 *
+	 * \pre \a clockFrequency is greater than or equal to `spiPeripheral_.getPeripheralFrequency() / 256`.
 	 * \pre \a wordLength is valid.
 	 *
 	 * \param [in] mode is the desired SPI mode

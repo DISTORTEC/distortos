@@ -75,7 +75,8 @@ public:
 	/**
 	 * \brief Configures parameters of associated SPI master.
 	 *
-	 * \pre \a wordLength is valid for associated low-level implementation of SpiMasterLowLevel interface.
+	 * \pre \a clockFrequency and \a wordLength are valid for associated low-level implementation of SpiMasterLowLevel
+	 * interface.
 	 *
 	 * \param [in] mode is the desired SPI mode
 	 * \param [in] clockFrequency is the desired clock frequency, Hz

@@ -42,12 +42,6 @@ TEST_CASE("Testing configure()", "[configure]")
 
 	ALLOW_CALL(peripheralMock, getPeripheralFrequency()).RETURN(peripheralFrequency);
 
-	SECTION("Trying to use clock frequency lower than `peripheral frequency / 256` should fail with EINVAL")
-	{
-		REQUIRE(distortos::chip::configureSpi(peripheralMock, {}, peripheralFrequency / 256 - 1, 8,
-				{}).first == EINVAL);
-	}
-
 	const distortos::devices::SpiMode modes[]
 	{
 			distortos::devices::SpiMode::_0,
