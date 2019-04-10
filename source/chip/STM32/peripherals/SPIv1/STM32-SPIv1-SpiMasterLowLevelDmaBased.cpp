@@ -42,8 +42,8 @@ SpiMasterLowLevelDmaBased::~SpiMasterLowLevelDmaBased()
 	spiPeripheral_.writeCr2({});
 }
 
-std::pair<int, uint32_t> SpiMasterLowLevelDmaBased::configure(const devices::SpiMode mode,
-		const uint32_t clockFrequency, const uint8_t wordLength, const bool lsbFirst, const uint32_t dummyData)
+uint32_t SpiMasterLowLevelDmaBased::configure(const devices::SpiMode mode, const uint32_t clockFrequency,
+		const uint8_t wordLength, const bool lsbFirst, const uint32_t dummyData)
 {
 	assert(isStarted() == true);
 	assert(isTransferInProgress() == false);
@@ -51,7 +51,7 @@ std::pair<int, uint32_t> SpiMasterLowLevelDmaBased::configure(const devices::Spi
 	const auto realClockFrequency = configureSpi(spiPeripheral_, mode, clockFrequency, wordLength, lsbFirst);
 	txDummyData_ = dummyData;
 	wordLength_ = wordLength;
-	return {{}, realClockFrequency};
+	return realClockFrequency;
 }
 
 int SpiMasterLowLevelDmaBased::start()

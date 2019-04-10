@@ -97,7 +97,6 @@ private:
 	 *
 	 * \return pair with return code (0 on success, error code otherwise) and real clock frequency; error codes:
 	 * - EBADF - associated SPI master is not opened;
-	 * - error codes returned by SpiMasterLowLevel::configure();
 	 */
 
 	std::pair<int, uint32_t> configure(SpiMode mode, uint32_t clockFrequency, uint8_t wordLength, bool lsbFirst,

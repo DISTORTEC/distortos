@@ -73,7 +73,8 @@ std::pair<int, uint32_t> SpiMaster::configure(const SpiMode mode, const uint32_t
 	if (openCount_ == 0)
 		return {EBADF, {}};
 
-	return spiMaster_.configure(mode, clockFrequency, wordLength, lsbFirst, dummyData);
+	const auto realClockFrequency = spiMaster_.configure(mode, clockFrequency, wordLength, lsbFirst, dummyData);
+	return {{}, realClockFrequency};
 }
 
 std::pair<int, size_t> SpiMaster::executeTransaction(const SpiMasterTransfersRange transfersRange)

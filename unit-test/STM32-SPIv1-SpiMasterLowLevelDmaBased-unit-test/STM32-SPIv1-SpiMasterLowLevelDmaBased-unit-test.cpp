@@ -164,8 +164,7 @@ TEST_CASE("Testing configure()", "[configure]")
 						REQUIRE_CALL(stm32Spiv1Spiv2Mock,
 								configureSpi(_, mode, clockFrequency, wordLength, lsbFirst))
 								.LR_WITH(&_1 == &peripheralMock).IN_SEQUENCE(sequence).RETURN(realClockFrequency);
-						REQUIRE(spi.configure(mode, clockFrequency, wordLength, lsbFirst,
-								{}) == std::make_pair(0, realClockFrequency));
+						REQUIRE(spi.configure(mode, clockFrequency, wordLength, lsbFirst, {}) == realClockFrequency);
 					}
 
 	{
@@ -218,7 +217,7 @@ TEST_CASE("Testing startTransfer()", "[startTransfer]")
 			constexpr uint16_t dummyData {0xfac5};
 			REQUIRE_CALL(stm32Spiv1Spiv2Mock, configureSpi(_, distortos::devices::SpiMode{}, uint32_t{}, wordLength,
 					bool{})).LR_WITH(&_1 == &peripheralMock).IN_SEQUENCE(sequence).RETURN(0);
-			REQUIRE(spi.configure({}, {}, wordLength, {}, dummyData).first == 0);
+			spi.configure({}, {}, wordLength, {}, dummyData);
 
 			if (wordLength == 16)
 				SECTION("Starting transfer with odd length when word length is 16 should fail with EINVAL")
