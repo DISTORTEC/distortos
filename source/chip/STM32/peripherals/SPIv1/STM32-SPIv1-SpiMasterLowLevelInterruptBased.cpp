@@ -100,12 +100,10 @@ int SpiMasterLowLevelInterruptBased::startTransfer(devices::SpiMasterBase& spiMa
 		void* const readBuffer, const size_t size)
 {
 	assert(isStarted() == true);
+	assert(isTransferInProgress() == false);
 
 	if (size == 0)
 		return EINVAL;
-
-	if (isTransferInProgress() == true)
-		return EBUSY;
 
 	if (size % (wordLength_ / 8) != 0)
 		return EINVAL;

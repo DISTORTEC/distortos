@@ -84,12 +84,10 @@ int SpiMasterLowLevelDmaBased::startTransfer(devices::SpiMasterBase& spiMasterBa
 		void* const readBuffer, const size_t size)
 {
 	assert(isStarted() == true);
+	assert(isTransferInProgress() == false);
 
 	if (size == 0)
 		return EINVAL;
-
-	if (isTransferInProgress() == true)
-		return EBUSY;
 
 	const auto dataSize = (wordLength_ + 8 - 1) / 8;
 	if (size % dataSize != 0)

@@ -265,9 +265,6 @@ TEST_CASE("Testing startTransfer()", "[startTransfer]")
 								txDmaFlags)).WITH(txAddressMatcher(_1)).IN_SEQUENCE(sequence);
 						REQUIRE(spi.startTransfer(masterMock, txBuffer, rxBuffer, transferSize) == 0);
 
-						// starting another transfer when the previous one is ongoing should fail with EBUSY
-						REQUIRE(spi.startTransfer(masterMock, txBuffer, rxBuffer, transferSize) == EBUSY);
-
 						SECTION("Testing DMA TX error during transfer")
 						{
 							REQUIRE_CALL(txDmaChannelMock, stopTransfer()).IN_SEQUENCE(sequence);

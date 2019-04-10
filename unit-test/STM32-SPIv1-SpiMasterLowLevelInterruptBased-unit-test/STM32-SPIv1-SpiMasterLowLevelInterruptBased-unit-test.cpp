@@ -173,9 +173,6 @@ TEST_CASE("Testing startTransfer()", "[startTransfer]")
 			REQUIRE_CALL(peripheralMock, writeDr(dummyData)).IN_SEQUENCE(sequence);
 			REQUIRE(spi.startTransfer(masterMock, nullptr, rxBuffer.begin(), sizeof(rxBuffer)) == 0);
 
-			// starting another transfer when the previous one is ongoing should fail with EBUSY
-			REQUIRE(spi.startTransfer(masterMock, nullptr, rxBuffer.begin(), sizeof(rxBuffer)) == EBUSY);
-
 			REQUIRE_CALL(peripheralMock, readDr()).IN_SEQUENCE(sequence).RETURN(rxData[0]);
 			REQUIRE_CALL(peripheralMock, readCr2()).IN_SEQUENCE(sequence).RETURN(initialCr2 | SPI_CR2_RXNEIE);
 			REQUIRE_CALL(peripheralMock, writeCr2(initialCr2)).IN_SEQUENCE(sequence);
@@ -194,9 +191,6 @@ TEST_CASE("Testing startTransfer()", "[startTransfer]")
 			REQUIRE_CALL(peripheralMock, writeCr2(initialCr2 | SPI_CR2_RXNEIE)).IN_SEQUENCE(sequence);
 			REQUIRE_CALL(peripheralMock, writeDr(txBuffer.front())).IN_SEQUENCE(sequence);
 			REQUIRE(spi.startTransfer(masterMock, txBuffer.begin(), rxBuffer.begin(), sizeof(rxBuffer)) == 0);
-
-			// starting another transfer when the previous one is ongoing should fail with EBUSY
-			REQUIRE(spi.startTransfer(masterMock, txBuffer.begin(), rxBuffer.begin(), sizeof(rxBuffer)) == EBUSY);
 
 			for (size_t i {}; i < txBuffer.size(); ++i)
 			{
@@ -241,9 +235,6 @@ TEST_CASE("Testing startTransfer()", "[startTransfer]")
 			REQUIRE_CALL(peripheralMock, writeDr(dummyData)).IN_SEQUENCE(sequence);
 			REQUIRE(spi.startTransfer(masterMock, nullptr, rxBuffer.begin(), sizeof(rxBuffer)) == 0);
 
-			// starting another transfer when the previous one is ongoing should fail with EBUSY
-			REQUIRE(spi.startTransfer(masterMock, nullptr, rxBuffer.begin(), sizeof(rxBuffer)) == EBUSY);
-
 			REQUIRE_CALL(peripheralMock, readDr()).IN_SEQUENCE(sequence).RETURN(rxData[0]);
 			REQUIRE_CALL(peripheralMock, readCr2()).IN_SEQUENCE(sequence).RETURN(initialCr2 | SPI_CR2_RXNEIE);
 			REQUIRE_CALL(peripheralMock, writeCr2(initialCr2)).IN_SEQUENCE(sequence);
@@ -262,9 +253,6 @@ TEST_CASE("Testing startTransfer()", "[startTransfer]")
 			REQUIRE_CALL(peripheralMock, writeCr2(initialCr2 | SPI_CR2_RXNEIE)).IN_SEQUENCE(sequence);
 			REQUIRE_CALL(peripheralMock, writeDr(txBuffer.front())).IN_SEQUENCE(sequence);
 			REQUIRE(spi.startTransfer(masterMock, txBuffer.begin(), rxBuffer.begin(), sizeof(rxBuffer)) == 0);
-
-			// starting another transfer when the previous one is ongoing should fail with EBUSY
-			REQUIRE(spi.startTransfer(masterMock, txBuffer.begin(), rxBuffer.begin(), sizeof(rxBuffer)) == EBUSY);
 
 			for (size_t i {}; i < txBuffer.size(); ++i)
 			{

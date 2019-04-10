@@ -108,6 +108,7 @@ public:
 	 * written and read or an error was detected), SpiMasterBase::transferCompleteEvent() will be executed.
 	 *
 	 * \pre Driver is started.
+	 * \pre No transfer is in progress.
 	 *
 	 * \param [in] spiMasterBase is a reference to SpiMasterBase object that will be notified about completed transfer
 	 * \param [in] writeBuffer is the buffer with data that will be written, nullptr to send dummy data
@@ -117,7 +118,6 @@ public:
 	 * by 4 if number of data bits is in range (24; 32]
 	 *
 	 * \return 0 on success, error code otherwise:
-	 * - EBUSY - transfer is in progress;
 	 * - EINVAL - \a size is invalid;
 	 */
 
