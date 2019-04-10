@@ -128,9 +128,7 @@ int SpiMasterLowLevelDmaBased::startTransfer(devices::SpiMasterBase& spiMasterBa
 int SpiMasterLowLevelDmaBased::stop()
 {
 	assert(isStarted() == true);
-
-	if (isTransferInProgress() == true)
-		return EBUSY;
+	assert(isTransferInProgress() == false);
 
 	rxDmaChannelHandle_.release();
 	txDmaChannelHandle_.release();

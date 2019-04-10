@@ -180,9 +180,6 @@ TEST_CASE("Testing startTransfer()", "[startTransfer]")
 			// starting another transfer when the previous one is ongoing should fail with EBUSY
 			REQUIRE(spi.startTransfer(masterMock, nullptr, rxBuffer.begin(), sizeof(rxBuffer)) == EBUSY);
 
-			// trying to stop the driver when a transfer is ongoing should fail with EBUSY
-			REQUIRE(spi.stop() == EBUSY);
-
 			REQUIRE_CALL(peripheralMock, readDr()).IN_SEQUENCE(sequence).RETURN(rxData[0]);
 			REQUIRE_CALL(peripheralMock, readCr2()).IN_SEQUENCE(sequence).RETURN(initialCr2 | SPI_CR2_RXNEIE);
 			REQUIRE_CALL(peripheralMock, writeCr2(initialCr2)).IN_SEQUENCE(sequence);
@@ -204,9 +201,6 @@ TEST_CASE("Testing startTransfer()", "[startTransfer]")
 
 			// starting another transfer when the previous one is ongoing should fail with EBUSY
 			REQUIRE(spi.startTransfer(masterMock, txBuffer.begin(), rxBuffer.begin(), sizeof(rxBuffer)) == EBUSY);
-
-			// trying to stop the driver when a transfer is ongoing should fail with EBUSY
-			REQUIRE(spi.stop() == EBUSY);
 
 			for (size_t i {}; i < txBuffer.size(); ++i)
 			{
@@ -254,9 +248,6 @@ TEST_CASE("Testing startTransfer()", "[startTransfer]")
 			// starting another transfer when the previous one is ongoing should fail with EBUSY
 			REQUIRE(spi.startTransfer(masterMock, nullptr, rxBuffer.begin(), sizeof(rxBuffer)) == EBUSY);
 
-			// trying to stop the driver when a transfer is ongoing should fail with EBUSY
-			REQUIRE(spi.stop() == EBUSY);
-
 			REQUIRE_CALL(peripheralMock, readDr()).IN_SEQUENCE(sequence).RETURN(rxData[0]);
 			REQUIRE_CALL(peripheralMock, readCr2()).IN_SEQUENCE(sequence).RETURN(initialCr2 | SPI_CR2_RXNEIE);
 			REQUIRE_CALL(peripheralMock, writeCr2(initialCr2)).IN_SEQUENCE(sequence);
@@ -278,9 +269,6 @@ TEST_CASE("Testing startTransfer()", "[startTransfer]")
 
 			// starting another transfer when the previous one is ongoing should fail with EBUSY
 			REQUIRE(spi.startTransfer(masterMock, txBuffer.begin(), rxBuffer.begin(), sizeof(rxBuffer)) == EBUSY);
-
-			// trying to stop the driver when a transfer is ongoing should fail with EBUSY
-			REQUIRE(spi.stop() == EBUSY);
 
 			for (size_t i {}; i < txBuffer.size(); ++i)
 			{

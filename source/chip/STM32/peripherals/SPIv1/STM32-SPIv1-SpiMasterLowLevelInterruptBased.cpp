@@ -127,9 +127,7 @@ int SpiMasterLowLevelInterruptBased::startTransfer(devices::SpiMasterBase& spiMa
 int SpiMasterLowLevelInterruptBased::stop()
 {
 	assert(isStarted() == true);
-
-	if (isTransferInProgress() == true)
-		return EBUSY;
+	assert(isTransferInProgress() == false);
 
 	// reset peripheral
 	spiPeripheral_.writeCr1({});

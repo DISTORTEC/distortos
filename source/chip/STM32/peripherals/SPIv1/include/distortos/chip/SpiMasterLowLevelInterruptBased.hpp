@@ -127,9 +127,9 @@ public:
 	 * \brief Stops low-level SPI master driver.
 	 *
 	 * \pre Driver is started.
+	 * \pre No transfer is in progress.
 	 *
-	 * \return 0 on success, error code otherwise:
-	 * - EBUSY - transfer is in progress;
+	 * \return 0 on success, error code otherwise
 	 */
 
 	int stop() override;

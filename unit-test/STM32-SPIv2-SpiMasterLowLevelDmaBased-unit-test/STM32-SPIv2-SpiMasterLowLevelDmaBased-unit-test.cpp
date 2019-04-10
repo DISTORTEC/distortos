@@ -272,9 +272,6 @@ TEST_CASE("Testing startTransfer()", "[startTransfer]")
 						// starting another transfer when the previous one is ongoing should fail with EBUSY
 						REQUIRE(spi.startTransfer(masterMock, txBuffer, rxBuffer, transferSize) == EBUSY);
 
-						// trying to stop the driver when a transfer is ongoing should fail with EBUSY
-						REQUIRE(spi.stop() == EBUSY);
-
 						SECTION("Testing DMA TX error during transfer")
 						{
 							REQUIRE_CALL(txDmaChannelMock, stopTransfer()).IN_SEQUENCE(sequence);
