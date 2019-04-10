@@ -44,12 +44,9 @@ std::pair<int, uint32_t> SpiMasterLowLevelInterruptBased::configure(const device
 		const uint32_t clockFrequency, const uint8_t wordLength, const bool lsbFirst, const uint32_t dummyData)
 {
 	assert(isStarted() == true);
-
-	if (isTransferInProgress() == true)
-		return {EBUSY, {}};
+	assert(isTransferInProgress() == false);
 
 	const auto realClockFrequency = configureSpi(spiPeripheral_, mode, clockFrequency, wordLength, lsbFirst);
-
 	dummyData_ = dummyData;
 	wordLength_ = wordLength;
 	return {{}, realClockFrequency};

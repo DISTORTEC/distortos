@@ -280,9 +280,6 @@ TEST_CASE("Testing startTransfer()", "[startTransfer]")
 						// starting another transfer when the previous one is ongoing should fail with EBUSY
 						REQUIRE(spi.startTransfer(masterMock, txBuffer, rxBuffer, transferSize) == EBUSY);
 
-						// trying to configure the driver when a transfer is ongoing should fail with EBUSY
-						REQUIRE(spi.configure({}, {}, 8, {}, dummyData).first == EBUSY);
-
 						// trying to stop the driver when a transfer is ongoing should fail with EBUSY
 						REQUIRE(spi.stop() == EBUSY);
 

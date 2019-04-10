@@ -80,6 +80,7 @@ public:
 	 * \brief Configures parameters of low-level SPI master driver.
 	 *
 	 * \pre Driver is started.
+	 * \pre No transfer is in progress.
 	 * \pre \a clockFrequency is greater than or equal to `spiPeripheral_.getPeripheralFrequency() / 256`.
 	 * \pre \a wordLength is valid.
 	 *
@@ -89,8 +90,7 @@ public:
 	 * \param [in] lsbFirst selects whether MSB (false) or LSB (true) is transmitted first
 	 * \param [in] dummyData is the dummy data that will be sent if write buffer of transfer is nullptr
 	 *
-	 * \return pair with return code (0 on success, error code otherwise) and real clock frequency; error codes:
-	 * - EBUSY - transfer is in progress;
+	 * \return pair with return code (0 on success, error code otherwise) and real clock frequency
 	 */
 
 	std::pair<int, uint32_t> configure(devices::SpiMode mode, uint32_t clockFrequency, uint8_t wordLength,
