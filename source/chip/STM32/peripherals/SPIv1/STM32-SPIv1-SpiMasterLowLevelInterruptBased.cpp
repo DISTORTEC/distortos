@@ -86,15 +86,14 @@ void SpiMasterLowLevelInterruptBased::interruptHandler()
 
 int SpiMasterLowLevelInterruptBased::start()
 {
-	if (isStarted() == true)
-		return EBADF;
+	assert(isStarted() == false);
 
 	wordLength_ = 8;
 	spiPeripheral_.writeCr1(SPI_CR1_SSM | SPI_CR1_SSI | SPI_CR1_SPE | SPI_CR1_BR | SPI_CR1_MSTR);
 	spiPeripheral_.writeCr2({});
 	started_ = true;
 
-	return 0;
+	return {};
 }
 
 int SpiMasterLowLevelInterruptBased::startTransfer(devices::SpiMasterBase& spiMasterBase, const void* const writeBuffer,

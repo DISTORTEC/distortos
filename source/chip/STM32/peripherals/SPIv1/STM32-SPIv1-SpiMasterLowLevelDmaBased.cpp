@@ -51,8 +51,7 @@ uint32_t SpiMasterLowLevelDmaBased::configure(const devices::SpiMode mode, const
 
 int SpiMasterLowLevelDmaBased::start()
 {
-	if (isStarted() == true)
-		return EBADF;
+	assert(isStarted() == false);
 
 	{
 		const auto ret = rxDmaChannelHandle_.reserve(rxDmaChannel_, rxDmaRequest_, rxDmaChannelFunctor_);
@@ -78,7 +77,7 @@ int SpiMasterLowLevelDmaBased::start()
 	spiPeripheral_.writeCr2(SPI_CR2_TXDMAEN | SPI_CR2_RXDMAEN);
 	started_ = true;
 
-	return 0;
+	return {};
 }
 
 int SpiMasterLowLevelDmaBased::startTransfer(devices::SpiMasterBase& spiMasterBase, const void* const writeBuffer,

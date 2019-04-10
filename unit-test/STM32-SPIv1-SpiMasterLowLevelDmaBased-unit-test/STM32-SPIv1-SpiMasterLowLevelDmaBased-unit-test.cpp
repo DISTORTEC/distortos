@@ -91,9 +91,6 @@ TEST_CASE("Testing start() & stop() interactions", "[start/stop]")
 		REQUIRE_CALL(peripheralMock, writeCr2(initialCr2)).IN_SEQUENCE(sequence);
 		REQUIRE(spi.start() == 0);
 
-		// starting started driver should fail with EBADF
-		REQUIRE(spi.start() == EBADF);
-
 		// stopping started driver should succeed
 		REQUIRE_CALL(rxDmaChannelMock, release()).IN_SEQUENCE(sequence);
 		REQUIRE_CALL(txDmaChannelMock, release()).IN_SEQUENCE(sequence);

@@ -94,8 +94,9 @@ public:
 	/**
 	 * \brief Starts low-level SPI master driver.
 	 *
-	 * \return 0 on success, error code otherwise:
-	 * - EBADF - the driver is not stopped;
+	 * \pre Driver is stopped.
+	 *
+	 * \return 0 on success, error code otherwise
 	 */
 
 	int start() override;
