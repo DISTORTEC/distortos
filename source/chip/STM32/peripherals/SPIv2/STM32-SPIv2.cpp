@@ -13,6 +13,8 @@
 
 #include "distortos/chip/STM32-SPIv2-SpiPeripheral.hpp"
 
+#include "distortos/assert.h"
+
 #include "estd/log2u.hpp"
 
 #include <cerrno>
@@ -30,8 +32,7 @@ namespace chip
 std::pair<int, uint32_t> configureSpi(const SpiPeripheral& spiPeripheral, const devices::SpiMode mode,
 		const uint32_t clockFrequency, const uint8_t wordLength, const bool lsbFirst)
 {
-	if (wordLength < minSpiWordLength || wordLength > maxSpiWordLength)
-		return {EINVAL, {}};
+	assert(wordLength >= minSpiWordLength && wordLength <= maxSpiWordLength);
 
 	const auto peripheralFrequency = spiPeripheral.getPeripheralFrequency();
 	const auto divider = (peripheralFrequency + clockFrequency - 1) / clockFrequency;

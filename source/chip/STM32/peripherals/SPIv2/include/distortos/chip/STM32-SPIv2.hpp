@@ -2,7 +2,7 @@
  * \file
  * \brief Header for SPIv2 functions for STM32
  *
- * \author Copyright (C) 2016-2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2016-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -40,6 +40,8 @@ constexpr static uint8_t maxSpiWordLength {16};
 
 /**
  * \brief Configures parameters of raw SPI peripheral.
+ *
+ * \pre \a wordLength is valid.
  *
  * \param [in] spiPeripheral is a reference to raw SPI peripheral
  * \param [in] mode is the desired SPI mode

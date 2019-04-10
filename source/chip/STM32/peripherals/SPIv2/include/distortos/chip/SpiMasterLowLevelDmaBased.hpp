@@ -79,6 +79,8 @@ public:
 	/**
 	 * \brief Configures parameters of low-level SPI master driver.
 	 *
+	 * \pre \a wordLength is valid.
+	 *
 	 * \param [in] mode is the desired SPI mode
 	 * \param [in] clockFrequency is the desired clock frequency, Hz
 	 * \param [in] wordLength selects word length, bits, [4; 16] or [minSpiWordLength; maxSpiWordLength]

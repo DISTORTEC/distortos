@@ -47,17 +47,6 @@ TEST_CASE("Testing distortos::chip::configureSpi()", "[configureSpi]")
 				{}).first == EINVAL);
 	}
 
-	for (uint8_t wordLength {}; wordLength <= 32; ++wordLength)
-	{
-		if (wordLength == 8 || wordLength == 16)
-			continue;
-
-		DYNAMIC_SECTION("Trying to use word length " << static_cast<int>(wordLength) << " should fail with EINVAL")
-		{
-			REQUIRE(distortos::chip::configureSpi(peripheralMock, {}, {}, wordLength, {}).first == EINVAL);
-		}
-	}
-
 	const distortos::devices::SpiMode modes[]
 	{
 			distortos::devices::SpiMode::_0,
