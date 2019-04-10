@@ -107,6 +107,8 @@ public:
 	 * This function returns immediately. When the transfer is physically finished (either expected number of bytes were
 	 * written and read or an error was detected), SpiMasterBase::transferCompleteEvent() will be executed.
 	 *
+	 * \pre Driver is started.
+	 *
 	 * \param [in] spiMasterBase is a reference to SpiMasterBase object that will be notified about completed transfer
 	 * \param [in] writeBuffer is the buffer with data that will be written, nullptr to send dummy data
 	 * \param [out] readBuffer is the buffer with data that will be read, nullptr to ignore received data
@@ -115,7 +117,6 @@ public:
 	 * by 4 if number of data bits is in range (24; 32]
 	 *
 	 * \return 0 on success, error code otherwise:
-	 * - EBADF - the driver is not started;
 	 * - EBUSY - transfer is in progress;
 	 * - EINVAL - \a size is invalid;
 	 */

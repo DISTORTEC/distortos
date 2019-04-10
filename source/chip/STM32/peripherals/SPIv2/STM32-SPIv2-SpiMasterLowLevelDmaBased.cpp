@@ -83,11 +83,10 @@ int SpiMasterLowLevelDmaBased::start()
 int SpiMasterLowLevelDmaBased::startTransfer(devices::SpiMasterBase& spiMasterBase, const void* const writeBuffer,
 		void* const readBuffer, const size_t size)
 {
+	assert(isStarted() == true);
+
 	if (size == 0)
 		return EINVAL;
-
-	if (isStarted() == false)
-		return EBADF;
 
 	if (isTransferInProgress() == true)
 		return EBUSY;
