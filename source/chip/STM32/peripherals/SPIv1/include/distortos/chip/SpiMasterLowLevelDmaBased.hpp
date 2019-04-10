@@ -79,6 +79,7 @@ public:
 	/**
 	 * \brief Configures parameters of low-level SPI master driver.
 	 *
+	 * \pre Driver is started.
 	 * \pre \a clockFrequency is greater than or equal to `spiPeripheral_.getPeripheralFrequency() / 256`.
 	 * \pre \a wordLength is valid.
 	 *
@@ -89,7 +90,6 @@ public:
 	 * \param [in] dummyData is the dummy data that will be sent if write buffer of transfer is nullptr
 	 *
 	 * \return pair with return code (0 on success, error code otherwise) and real clock frequency; error codes:
-	 * - EBADF - the driver is not started;
 	 * - EBUSY - transfer is in progress;
 	 */
 

@@ -45,8 +45,7 @@ SpiMasterLowLevelDmaBased::~SpiMasterLowLevelDmaBased()
 std::pair<int, uint32_t> SpiMasterLowLevelDmaBased::configure(const devices::SpiMode mode,
 		const uint32_t clockFrequency, const uint8_t wordLength, const bool lsbFirst, const uint32_t dummyData)
 {
-	if (isStarted() == false)
-		return {EBADF, {}};
+	assert(isStarted() == true);
 
 	if (isTransferInProgress() == true)
 		return {EBUSY, {}};

@@ -60,10 +60,6 @@ TEST_CASE("Testing start() & stop() interactions", "[start/stop]")
 	{
 		REQUIRE(spi.stop() == EBADF);
 	}
-	SECTION("Configuring stopped driver should fail with EBADF")
-	{
-		REQUIRE(spi.configure({}, {}, 8, {}, {}).first == EBADF);
-	}
 	SECTION("Starting transfer with stopped driver should fail with EBADF")
 	{
 		REQUIRE(spi.startTransfer(masterMock, nullptr, nullptr, 1) == EBADF);

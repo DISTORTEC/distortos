@@ -45,6 +45,7 @@ public:
 	/**
 	 * \brief Configures parameters of low-level SPI master driver.
 	 *
+	 * \pre Driver is started.
 	 * \pre \a mode, \a clockFrequency, \a wordLength and \a lsbFirst are valid for implementation of this interface.
 	 *
 	 * \param [in] mode is the desired SPI mode
@@ -54,7 +55,6 @@ public:
 	 * \param [in] dummyData is the dummy data that will be sent if write buffer of transfer is nullptr
 	 *
 	 * \return pair with return code (0 on success, error code otherwise) and real clock frequency; error codes:
-	 * - EBADF - the driver is not started;
 	 * - EBUSY - transfer is in progress;
 	 */
 
