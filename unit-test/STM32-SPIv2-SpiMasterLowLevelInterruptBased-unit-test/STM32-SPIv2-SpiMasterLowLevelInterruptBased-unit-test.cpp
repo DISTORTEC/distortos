@@ -56,10 +56,6 @@ TEST_CASE("Testing start() & stop() interactions", "[start/stop]")
 
 	distortos::chip::SpiMasterLowLevelInterruptBased spi {peripheralMock};
 
-	SECTION("Stopping stopped driver should fail with EBADF")
-	{
-		REQUIRE(spi.stop() == EBADF);
-	}
 	SECTION("Starting transfer with stopped driver should fail with EBADF")
 	{
 		REQUIRE(spi.startTransfer(masterMock, nullptr, nullptr, 1) == EBADF);

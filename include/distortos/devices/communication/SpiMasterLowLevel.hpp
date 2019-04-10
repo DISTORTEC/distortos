@@ -95,8 +95,9 @@ public:
 	/**
 	 * \brief Stops low-level SPI master driver.
 	 *
+	 * \pre Driver is started.
+	 *
 	 * \return 0 on success, error code otherwise:
-	 * - EBADF - the driver is not started;
 	 * - EBUSY - transfer is in progress;
 	 */
 

@@ -126,8 +126,7 @@ int SpiMasterLowLevelInterruptBased::startTransfer(devices::SpiMasterBase& spiMa
 
 int SpiMasterLowLevelInterruptBased::stop()
 {
-	if (isStarted() == false)
-		return EBADF;
+	assert(isStarted() == true);
 
 	if (isTransferInProgress() == true)
 		return EBUSY;
