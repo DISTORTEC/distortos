@@ -18,8 +18,6 @@
 
 #include "distortos/assert.h"
 
-#include <cerrno>
-
 namespace distortos
 {
 
@@ -101,12 +99,7 @@ int SpiMasterLowLevelInterruptBased::startTransfer(devices::SpiMasterBase& spiMa
 {
 	assert(isStarted() == true);
 	assert(isTransferInProgress() == false);
-
-	if (size == 0)
-		return EINVAL;
-
-	if (size % (wordLength_ / 8) != 0)
-		return EINVAL;
+	assert(size != 0 && size % (wordLength_ / 8) == 0);
 
 	spiMasterBase_ = &spiMasterBase;
 	readBuffer_ = static_cast<uint8_t*>(readBuffer);

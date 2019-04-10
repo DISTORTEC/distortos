@@ -150,11 +150,6 @@ TEST_CASE("Testing startTransfer()", "[startTransfer]")
 		REQUIRE(spi.start() == 0);
 	}
 
-	SECTION("Starting transfer with zero length should fail with EINVAL")
-	{
-		REQUIRE(spi.startTransfer(masterMock, nullptr, nullptr, 0) == EINVAL);
-	}
-
 	constexpr uint16_t dummyData {0xd515};
 
 	for (uint8_t wordLength {distortos::chip::minSpiWordLength}; wordLength <= 8; ++wordLength)
@@ -234,11 +229,6 @@ TEST_CASE("Testing startTransfer()", "[startTransfer]")
 					bool{})).LR_WITH(&_1 == &peripheralMock).IN_SEQUENCE(sequence).RETURN(0);
 			spi.configure({}, {}, wordLength, {}, dummyData);
 
-			DYNAMIC_SECTION("Starting transfer with odd length when word length is " << static_cast<int>(wordLength) <<
-					" bits should fail with EINVAL")
-			{
-				REQUIRE(spi.startTransfer(masterMock, nullptr, nullptr, 1) == EINVAL);
-			}
 			DYNAMIC_SECTION("Testing " << static_cast<int>(wordLength) << "-bit transfer of 1 item")
 			{
 				const std::array<uint16_t, 1> rxData {{0xad74}};

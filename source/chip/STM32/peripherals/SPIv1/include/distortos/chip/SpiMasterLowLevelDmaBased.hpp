@@ -115,16 +115,16 @@ public:
 	 *
 	 * \pre Driver is started.
 	 * \pre No transfer is in progress.
+	 * \pre \a size is valid.
 	 *
 	 * \param [in] spiMasterBase is a reference to SpiMasterBase object that will be notified about completed transfer
 	 * \param [in] writeBuffer is the buffer with data that will be written, nullptr to send dummy data
 	 * \param [out] readBuffer is the buffer with data that will be read, nullptr to ignore received data
-	 * \param [in] size is the size of transfer (size of \a writeBuffer and/or \a readBuffer), bytes, must be even if
-	 * number of data bits is in range (8; 16], divisible by 3 if number of data bits is in range (16; 24] or divisible
-	 * by 4 if number of data bits is in range (24; 32]
+	 * \param [in] size is the size of transfer (size of \a writeBuffer and/or \a readBuffer), bytes, most not be zero,
+	 * must be even if number of data bits is in range (8; 16], divisible by 3 if number of data bits is in range
+	 * (16; 24] or divisible by 4 if number of data bits is in range (24; 32]
 	 *
-	 * \return 0 on success, error code otherwise:
-	 * - EINVAL - \a size is invalid;
+	 * \return 0 on success, error code otherwise
 	 */
 
 	int startTransfer(devices::SpiMasterBase& spiMasterBase, const void* writeBuffer, void* readBuffer,

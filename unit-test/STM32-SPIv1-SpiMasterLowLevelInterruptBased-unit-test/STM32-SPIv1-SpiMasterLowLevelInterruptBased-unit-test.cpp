@@ -150,11 +150,6 @@ TEST_CASE("Testing startTransfer()", "[startTransfer]")
 		REQUIRE(spi.start() == 0);
 	}
 
-	SECTION("Starting transfer with zero length should fail with EINVAL")
-	{
-		REQUIRE(spi.startTransfer(masterMock, nullptr, nullptr, 0) == EINVAL);
-	}
-
 	constexpr uint16_t dummyData {0xd515};
 
 	SECTION("Testing 8-bit transfers")
@@ -221,10 +216,6 @@ TEST_CASE("Testing startTransfer()", "[startTransfer]")
 				bool{})).LR_WITH(&_1 == &peripheralMock).IN_SEQUENCE(sequence).RETURN(0);
 		spi.configure({}, {}, 16, {}, dummyData);
 
-		SECTION("Starting transfer with odd length when word length is 16 should fail with EINVAL")
-		{
-			REQUIRE(spi.startTransfer(masterMock, nullptr, nullptr, 1) == EINVAL);
-		}
 		SECTION("Testing 16-bit transfer of 1 item")
 		{
 			const std::array<uint16_t, 1> rxData {{0xad74}};

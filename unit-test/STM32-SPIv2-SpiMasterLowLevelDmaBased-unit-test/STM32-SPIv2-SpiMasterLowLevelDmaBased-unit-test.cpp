@@ -190,11 +190,6 @@ TEST_CASE("Testing startTransfer()", "[startTransfer]")
 		REQUIRE(spi.start() == 0);
 	}
 
-	SECTION("Starting transfer with zero length should fail with EINVAL")
-	{
-		REQUIRE(spi.startTransfer(masterMock, nullptr, nullptr, 0) == EINVAL);
-	}
-
 	for (auto wordLength {distortos::chip::minSpiWordLength}; wordLength <= distortos::chip::maxSpiWordLength;
 			++wordLength)
 		DYNAMIC_SECTION("Testing " << static_cast<int>(wordLength) << "-bit transfers")
@@ -203,12 +198,6 @@ TEST_CASE("Testing startTransfer()", "[startTransfer]")
 			REQUIRE_CALL(stm32Spiv1Spiv2Mock, configureSpi(_, distortos::devices::SpiMode{}, uint32_t{}, wordLength,
 					bool{})).LR_WITH(&_1 == &peripheralMock).IN_SEQUENCE(sequence).RETURN(0);
 			spi.configure({}, {}, wordLength, {}, dummyData);
-
-			if (wordLength == 16)
-				SECTION("Starting transfer with odd length when word length is 16 should fail with EINVAL")
-				{
-					REQUIRE(spi.startTransfer(masterMock, nullptr, nullptr, 1) == EINVAL);
-				}
 
 			constexpr size_t transferSize {6};
 			const uint8_t constBuffer[transferSize] {};

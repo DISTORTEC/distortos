@@ -20,8 +20,6 @@
 
 #include "estd/ScopeGuard.hpp"
 
-#include <cerrno>
-
 namespace distortos
 {
 
@@ -85,13 +83,8 @@ int SpiMasterLowLevelDmaBased::startTransfer(devices::SpiMasterBase& spiMasterBa
 {
 	assert(isStarted() == true);
 	assert(isTransferInProgress() == false);
-
-	if (size == 0)
-		return EINVAL;
-
 	const auto dataSize = wordLength_ / 8;
-	if (size % dataSize != 0)
-		return EINVAL;
+	assert(size != 0 && size % dataSize == 0);
 
 	spiMasterBase_ = &spiMasterBase;
 	size_ = size;
