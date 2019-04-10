@@ -78,7 +78,6 @@ private:
 	 *
 	 * \return 0 on success, error code otherwise:
 	 * - EBADF - the device is already completely closed;
-	 * - error codes returned by SpiMasterLowLevel::stop();
 	 */
 
 	int close();

@@ -69,7 +69,7 @@ TEST_CASE("Testing start() & stop() interactions", "[start/stop]")
 		// stopping started driver should succeed
 		REQUIRE_CALL(peripheralMock, writeCr1(0u)).IN_SEQUENCE(sequence);
 		REQUIRE_CALL(peripheralMock, writeCr2(0u)).IN_SEQUENCE(sequence);
-		REQUIRE(spi.stop() == 0);
+		spi.stop();
 	}
 }
 
@@ -135,7 +135,7 @@ TEST_CASE("Testing configure()", "[configure]")
 	{
 		REQUIRE_CALL(peripheralMock, writeCr1(0u)).IN_SEQUENCE(sequence);
 		REQUIRE_CALL(peripheralMock, writeCr2(0u)).IN_SEQUENCE(sequence);
-		REQUIRE(spi.stop() == 0);
+		spi.stop();
 	}
 }
 
@@ -297,6 +297,6 @@ TEST_CASE("Testing startTransfer()", "[startTransfer]")
 	{
 		REQUIRE_CALL(peripheralMock, writeCr1(0u)).IN_SEQUENCE(sequence);
 		REQUIRE_CALL(peripheralMock, writeCr2(0u)).IN_SEQUENCE(sequence);
-		REQUIRE(spi.stop() == 0);
+		spi.stop();
 	}
 }

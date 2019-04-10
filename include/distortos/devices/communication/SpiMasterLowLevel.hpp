@@ -98,10 +98,10 @@ public:
 	 * \pre Driver is started.
 	 * \pre No transfer is in progress.
 	 *
-	 * \return 0 on success, error code otherwise
+	 * \post Driver is stopped.
 	 */
 
-	virtual int stop() = 0;
+	virtual void stop() = 0;
 };
 
 }	// namespace devices

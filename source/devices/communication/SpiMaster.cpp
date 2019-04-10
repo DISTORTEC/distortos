@@ -57,11 +57,7 @@ int SpiMaster::close()
 		return EBADF;
 
 	if (openCount_ == 1)	// last close?
-	{
-		const auto ret = spiMaster_.stop();
-		if (ret != 0)
-			return ret;
-	}
+		spiMaster_.stop();
 
 	--openCount_;
 	return 0;

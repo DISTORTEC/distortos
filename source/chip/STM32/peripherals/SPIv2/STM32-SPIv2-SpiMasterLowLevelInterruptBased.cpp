@@ -124,7 +124,7 @@ int SpiMasterLowLevelInterruptBased::startTransfer(devices::SpiMasterBase& spiMa
 	return 0;
 }
 
-int SpiMasterLowLevelInterruptBased::stop()
+void SpiMasterLowLevelInterruptBased::stop()
 {
 	assert(isStarted() == true);
 	assert(isTransferInProgress() == false);
@@ -133,7 +133,6 @@ int SpiMasterLowLevelInterruptBased::stop()
 	spiPeripheral_.writeCr1({});
 	spiPeripheral_.writeCr2({});
 	started_ = false;
-	return 0;
 }
 
 /*---------------------------------------------------------------------------------------------------------------------+
