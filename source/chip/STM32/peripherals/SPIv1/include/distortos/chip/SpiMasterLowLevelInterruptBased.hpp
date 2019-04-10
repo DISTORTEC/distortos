@@ -78,7 +78,6 @@ public:
 	 * \return pair with return code (0 on success, error code otherwise) and real clock frequency; error codes:
 	 * - EBADF - the driver is not started;
 	 * - EBUSY - transfer is in progress;
-	 * - error codes returned by configureSpi();
 	 */
 
 	std::pair<int, uint32_t> configure(devices::SpiMode mode, uint32_t clockFrequency, uint8_t wordLength,

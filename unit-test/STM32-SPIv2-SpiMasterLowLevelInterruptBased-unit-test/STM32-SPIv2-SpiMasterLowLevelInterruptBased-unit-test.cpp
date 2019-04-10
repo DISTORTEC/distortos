@@ -129,22 +129,24 @@ TEST_CASE("Testing configure()", "[configure]")
 			false,
 			true,
 	};
-	const std::pair<int, uint32_t> rets[]
+	const uint32_t realClockFrequencies[]
 	{
-			{0x3a1d9630, 0x25c71169},
-			{0x093c3234, 0x28b081a1},
-			{0x4fc6f821, 0x362aea3e},
-			{0x2d09e9ba, 0x38de6b53},
+			0x25c71169,
+			0x28b081a1,
+			0x362aea3e,
+			0x38de6b53,
 	};
 	for (auto mode : modes)
 		for (auto clockFrequency : clockFrequencies)
 			for (auto wordLength : wordLengths)
 				for (auto lsbFirst : lsbFirsts)
-					for (auto ret : rets)
+					for (auto realClockFrequency : realClockFrequencies)
 					{
-						REQUIRE_CALL(stm32Spiv1Spiv2Mock, configureSpi(_, mode, clockFrequency, wordLength,
-								lsbFirst)).LR_WITH(&_1 == &peripheralMock).IN_SEQUENCE(sequence).RETURN(ret);
-						REQUIRE(spi.configure(mode, clockFrequency, wordLength, lsbFirst, {}) == ret);
+						REQUIRE_CALL(stm32Spiv1Spiv2Mock,
+								configureSpi(_, mode, clockFrequency, wordLength, lsbFirst))
+								.LR_WITH(&_1 == &peripheralMock).IN_SEQUENCE(sequence).RETURN(realClockFrequency);
+						REQUIRE(spi.configure(mode, clockFrequency, wordLength, lsbFirst,
+								{}) == std::make_pair(0, realClockFrequency));
 					}
 
 	{
@@ -185,7 +187,7 @@ TEST_CASE("Testing startTransfer()", "[startTransfer]")
 		DYNAMIC_SECTION("Testing " << static_cast<int>(wordLength) << "-bit transfers")
 		{
 			REQUIRE_CALL(stm32Spiv1Spiv2Mock, configureSpi(_, distortos::devices::SpiMode{}, uint32_t{}, wordLength,
-					bool{})).LR_WITH(&_1 == &peripheralMock).IN_SEQUENCE(sequence).RETURN(std::make_pair(0, 0));
+					bool{})).LR_WITH(&_1 == &peripheralMock).IN_SEQUENCE(sequence).RETURN(0);
 			REQUIRE(spi.configure({}, {}, wordLength, {}, dummyData).first == 0);
 
 			DYNAMIC_SECTION("Testing " << static_cast<int>(wordLength) << "-bit transfer of 1 item")
@@ -268,7 +270,7 @@ TEST_CASE("Testing startTransfer()", "[startTransfer]")
 		DYNAMIC_SECTION("Testing " << static_cast<int>(wordLength) << "-bit transfers")
 		{
 			REQUIRE_CALL(stm32Spiv1Spiv2Mock, configureSpi(_, distortos::devices::SpiMode{}, uint32_t{}, wordLength,
-					bool{})).LR_WITH(&_1 == &peripheralMock).IN_SEQUENCE(sequence).RETURN(std::make_pair(0, 0));
+					bool{})).LR_WITH(&_1 == &peripheralMock).IN_SEQUENCE(sequence).RETURN(0);
 			REQUIRE(spi.configure({}, {}, wordLength, {}, dummyData).first == 0);
 
 			DYNAMIC_SECTION("Starting transfer with odd length when word length is " << static_cast<int>(wordLength) <<

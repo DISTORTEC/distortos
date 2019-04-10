@@ -64,7 +64,7 @@ TEST_CASE("Testing distortos::chip::configureSpi()", "[configureSpi]")
 			REQUIRE_CALL(peripheralMock, readCr1()).IN_SEQUENCE(sequence).RETURN(oldCr1);
 			REQUIRE_CALL(peripheralMock, writeCr1(oldCr1 & ~SPI_CR1_SPE)).IN_SEQUENCE(sequence);
 			REQUIRE_CALL(peripheralMock, writeCr1(newCr1)).IN_SEQUENCE(sequence);
-			REQUIRE(distortos::chip::configureSpi(peripheralMock, mode, peripheralFrequency / 256, 8, {}).first == 0);
+			distortos::chip::configureSpi(peripheralMock, mode, peripheralFrequency / 256, 8, {});
 		}
 	}
 
@@ -118,8 +118,7 @@ TEST_CASE("Testing distortos::chip::configureSpi()", "[configureSpi]")
 			REQUIRE_CALL(peripheralMock, readCr1()).IN_SEQUENCE(sequence).RETURN(oldCr1);
 			REQUIRE_CALL(peripheralMock, writeCr1(oldCr1 & ~SPI_CR1_SPE)).IN_SEQUENCE(sequence);
 			REQUIRE_CALL(peripheralMock, writeCr1(newCr1)).IN_SEQUENCE(sequence);
-			REQUIRE(distortos::chip::configureSpi(peripheralMock, {}, clockFrequency, 8,
-					{}) == std::make_pair(0, realClockFrequency));
+			REQUIRE(distortos::chip::configureSpi(peripheralMock, {}, clockFrequency, 8, {}) == realClockFrequency);
 		}
 	}
 
@@ -138,8 +137,7 @@ TEST_CASE("Testing distortos::chip::configureSpi()", "[configureSpi]")
 			REQUIRE_CALL(peripheralMock, readCr1()).IN_SEQUENCE(sequence).RETURN(oldCr1);
 			REQUIRE_CALL(peripheralMock, writeCr1(oldCr1 & ~SPI_CR1_SPE)).IN_SEQUENCE(sequence);
 			REQUIRE_CALL(peripheralMock, writeCr1(newCr1)).IN_SEQUENCE(sequence);
-			REQUIRE(distortos::chip::configureSpi(peripheralMock, {}, peripheralFrequency / 256, wordLength,
-					{}).first == 0);
+			distortos::chip::configureSpi(peripheralMock, {}, peripheralFrequency / 256, wordLength, {});
 		}
 	}
 
@@ -158,8 +156,7 @@ TEST_CASE("Testing distortos::chip::configureSpi()", "[configureSpi]")
 			REQUIRE_CALL(peripheralMock, readCr1()).IN_SEQUENCE(sequence).RETURN(oldCr1);
 			REQUIRE_CALL(peripheralMock, writeCr1(oldCr1 & ~SPI_CR1_SPE)).IN_SEQUENCE(sequence);
 			REQUIRE_CALL(peripheralMock, writeCr1(newCr1)).IN_SEQUENCE(sequence);
-			REQUIRE(distortos::chip::configureSpi(peripheralMock, {}, peripheralFrequency / 256, 8,
-					lsbFirst).first == 0);
+			distortos::chip::configureSpi(peripheralMock, {}, peripheralFrequency / 256, 8, lsbFirst);
 		}
 	}
 }

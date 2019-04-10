@@ -2,7 +2,7 @@
  * \file
  * \brief SpiMasterLowLevelInterruptBased class implementation for SPIv1 in STM32
  *
- * \author Copyright (C) 2016-2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2016-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -49,13 +49,11 @@ std::pair<int, uint32_t> SpiMasterLowLevelInterruptBased::configure(const device
 	if (isTransferInProgress() == true)
 		return {EBUSY, {}};
 
-	const auto ret = configureSpi(spiPeripheral_, mode, clockFrequency, wordLength, lsbFirst);
-	if (ret.first != 0)
-		return ret;
+	const auto realClockFrequency = configureSpi(spiPeripheral_, mode, clockFrequency, wordLength, lsbFirst);
 
 	dummyData_ = dummyData;
 	wordLength_ = wordLength;
-	return ret;
+	return {{}, realClockFrequency};
 }
 
 void SpiMasterLowLevelInterruptBased::interruptHandler()

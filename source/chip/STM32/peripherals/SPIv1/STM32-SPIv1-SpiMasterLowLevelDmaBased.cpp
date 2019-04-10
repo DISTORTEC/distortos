@@ -51,13 +51,11 @@ std::pair<int, uint32_t> SpiMasterLowLevelDmaBased::configure(const devices::Spi
 	if (isTransferInProgress() == true)
 		return {EBUSY, {}};
 
-	const auto ret = configureSpi(spiPeripheral_, mode, clockFrequency, wordLength, lsbFirst);
-	if (ret.first != 0)
-		return ret;
+	const auto realClockFrequency = configureSpi(spiPeripheral_, mode, clockFrequency, wordLength, lsbFirst);
 
 	txDummyData_ = dummyData;
 	wordLength_ = wordLength;
-	return ret;
+	return {{}, realClockFrequency};
 }
 
 int SpiMasterLowLevelDmaBased::start()

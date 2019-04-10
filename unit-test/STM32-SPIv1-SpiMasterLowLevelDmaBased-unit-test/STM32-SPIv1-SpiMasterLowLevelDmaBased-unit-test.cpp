@@ -152,22 +152,24 @@ TEST_CASE("Testing configure()", "[configure]")
 			false,
 			true,
 	};
-	const std::pair<int, uint32_t> rets[]
+	const uint32_t realClockFrequencies[]
 	{
-			{0x1b200951, 0x9c0432b1},
-			{0x5b260efd, 0x1c24f633},
-			{0x6accba86, 0xa6eeadb6},
-			{0x49b4f5e0, 0x2e6dde22},
+			0x9c0432b1,
+			0x1c24f633,
+			0xa6eeadb6,
+			0x2e6dde22,
 	};
 	for (auto mode : modes)
 		for (auto clockFrequency : clockFrequencies)
 			for (auto wordLength : wordLengths)
 				for (auto lsbFirst : lsbFirsts)
-					for (auto ret : rets)
+					for (auto realClockFrequency : realClockFrequencies)
 					{
-						REQUIRE_CALL(stm32Spiv1Spiv2Mock, configureSpi(_, mode, clockFrequency, wordLength,
-								lsbFirst)).LR_WITH(&_1 == &peripheralMock).IN_SEQUENCE(sequence).RETURN(ret);
-						REQUIRE(spi.configure(mode, clockFrequency, wordLength, lsbFirst, {}) == ret);
+						REQUIRE_CALL(stm32Spiv1Spiv2Mock,
+								configureSpi(_, mode, clockFrequency, wordLength, lsbFirst))
+								.LR_WITH(&_1 == &peripheralMock).IN_SEQUENCE(sequence).RETURN(realClockFrequency);
+						REQUIRE(spi.configure(mode, clockFrequency, wordLength, lsbFirst,
+								{}) == std::make_pair(0, realClockFrequency));
 					}
 
 	{
@@ -219,7 +221,7 @@ TEST_CASE("Testing startTransfer()", "[startTransfer]")
 		{
 			constexpr uint16_t dummyData {0xfac5};
 			REQUIRE_CALL(stm32Spiv1Spiv2Mock, configureSpi(_, distortos::devices::SpiMode{}, uint32_t{}, wordLength,
-					bool{})).LR_WITH(&_1 == &peripheralMock).IN_SEQUENCE(sequence).RETURN(std::make_pair(0, 0));
+					bool{})).LR_WITH(&_1 == &peripheralMock).IN_SEQUENCE(sequence).RETURN(0);
 			REQUIRE(spi.configure({}, {}, wordLength, {}, dummyData).first == 0);
 
 			if (wordLength == 16)

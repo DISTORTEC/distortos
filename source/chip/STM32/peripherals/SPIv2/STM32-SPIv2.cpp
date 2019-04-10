@@ -27,8 +27,8 @@ namespace chip
 | global functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-std::pair<int, uint32_t> configureSpi(const SpiPeripheral& spiPeripheral, const devices::SpiMode mode,
-		const uint32_t clockFrequency, const uint8_t wordLength, const bool lsbFirst)
+uint32_t configureSpi(const SpiPeripheral& spiPeripheral, const devices::SpiMode mode, const uint32_t clockFrequency,
+		const uint8_t wordLength, const bool lsbFirst)
 {
 	assert(wordLength >= minSpiWordLength && wordLength <= maxSpiWordLength);
 
@@ -47,7 +47,7 @@ std::pair<int, uint32_t> configureSpi(const SpiPeripheral& spiPeripheral, const 
 			(wordLength <= 8) << SPI_CR2_FRXTH_Pos |
 			(wordLength - 1) << SPI_CR2_DS_Pos);
 
-	return {{}, peripheralFrequency / (1 << (br + 1))};
+	return peripheralFrequency / (1 << (br + 1));
 }
 
 }	// namespace chip

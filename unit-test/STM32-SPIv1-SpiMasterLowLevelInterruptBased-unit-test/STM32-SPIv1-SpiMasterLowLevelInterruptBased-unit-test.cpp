@@ -129,22 +129,24 @@ TEST_CASE("Testing configure()", "[configure]")
 			false,
 			true,
 	};
-	const std::pair<int, uint32_t> rets[]
+	const uint32_t realClockFrequencies[]
 	{
-			{0x558befc4, 0x08d543bf},
-			{0x051c780b, 0x1b8aa8ff},
-			{0x61093262, 0x3092c5a1},
-			{0x760d6032, 0xd29abd55},
+			0x08d543bf,
+			0x1b8aa8ff,
+			0x3092c5a1,
+			0xd29abd55,
 	};
 	for (auto mode : modes)
 		for (auto clockFrequency : clockFrequencies)
 			for (auto wordLength : wordLengths)
 				for (auto lsbFirst : lsbFirsts)
-					for (auto ret : rets)
+					for (auto realClockFrequency : realClockFrequencies)
 					{
-						REQUIRE_CALL(stm32Spiv1Spiv2Mock, configureSpi(_, mode, clockFrequency, wordLength,
-								lsbFirst)).LR_WITH(&_1 == &peripheralMock).IN_SEQUENCE(sequence).RETURN(ret);
-						REQUIRE(spi.configure(mode, clockFrequency, wordLength, lsbFirst, {}) == ret);
+						REQUIRE_CALL(stm32Spiv1Spiv2Mock,
+								configureSpi(_, mode, clockFrequency, wordLength, lsbFirst))
+								.LR_WITH(&_1 == &peripheralMock).IN_SEQUENCE(sequence).RETURN(realClockFrequency);
+						REQUIRE(spi.configure(mode, clockFrequency, wordLength, lsbFirst,
+								{}) == std::make_pair(0, realClockFrequency));
 					}
 
 	{
@@ -179,7 +181,7 @@ TEST_CASE("Testing startTransfer()", "[startTransfer]")
 	SECTION("Testing 8-bit transfers")
 	{
 		REQUIRE_CALL(stm32Spiv1Spiv2Mock, configureSpi(_, distortos::devices::SpiMode{}, uint32_t{}, 8,
-				bool{})).LR_WITH(&_1 == &peripheralMock).IN_SEQUENCE(sequence).RETURN(std::make_pair(0, 0));
+				bool{})).LR_WITH(&_1 == &peripheralMock).IN_SEQUENCE(sequence).RETURN(0);
 		REQUIRE(spi.configure({}, {}, 8, {}, dummyData).first == 0);
 
 		SECTION("Testing 8-bit transfer of 1 item")
@@ -255,7 +257,7 @@ TEST_CASE("Testing startTransfer()", "[startTransfer]")
 	SECTION("Testing 16-bit transfers")
 	{
 		REQUIRE_CALL(stm32Spiv1Spiv2Mock, configureSpi(_, distortos::devices::SpiMode{}, uint32_t{}, 16,
-				bool{})).LR_WITH(&_1 == &peripheralMock).IN_SEQUENCE(sequence).RETURN(std::make_pair(0, 0));
+				bool{})).LR_WITH(&_1 == &peripheralMock).IN_SEQUENCE(sequence).RETURN(0);
 		REQUIRE(spi.configure({}, {}, 16, {}, dummyData).first == 0);
 
 		SECTION("Starting transfer with odd length when word length is 16 should fail with EINVAL")
