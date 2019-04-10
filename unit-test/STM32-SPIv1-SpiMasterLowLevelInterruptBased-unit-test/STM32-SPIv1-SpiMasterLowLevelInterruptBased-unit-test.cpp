@@ -70,18 +70,13 @@ TEST_CASE("Testing start() & stop() interactions", "[start/stop]")
 		REQUIRE_CALL(peripheralMock, writeCr2(initialCr2)).IN_SEQUENCE(sequence);
 		REQUIRE(spi.start() == 0);
 
-		SECTION("Starting started driver should fail with EBADF")
-		{
-			REQUIRE(spi.start() == EBADF);
-			expectations.emplace_back(NAMED_REQUIRE_CALL(peripheralMock, writeCr1(0u)).IN_SEQUENCE(sequence));
-			expectations.emplace_back(NAMED_REQUIRE_CALL(peripheralMock, writeCr2(0u)).IN_SEQUENCE(sequence));
-		}
-		SECTION("Stopping started driver should succeed")
-		{
-			REQUIRE_CALL(peripheralMock, writeCr1(0u)).IN_SEQUENCE(sequence);
-			REQUIRE_CALL(peripheralMock, writeCr2(0u)).IN_SEQUENCE(sequence);
-			REQUIRE(spi.stop() == 0);
-		}
+		// starting started driver should fail with EBADF
+		REQUIRE(spi.start() == EBADF);
+
+		// stopping started driver should succeed
+		REQUIRE_CALL(peripheralMock, writeCr1(0u)).IN_SEQUENCE(sequence);
+		REQUIRE_CALL(peripheralMock, writeCr2(0u)).IN_SEQUENCE(sequence);
+		REQUIRE(spi.stop() == 0);
 	}
 }
 

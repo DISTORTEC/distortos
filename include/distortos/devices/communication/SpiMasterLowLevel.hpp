@@ -36,6 +36,8 @@ public:
 
 	/**
 	 * \brief SpiMasterLowLevel's destructor
+	 *
+	 * \pre Driver is stopped.
 	 */
 
 	virtual ~SpiMasterLowLevel() = default;

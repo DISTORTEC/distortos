@@ -58,7 +58,7 @@ public:
 	/**
 	 * \brief SpiMasterLowLevelInterruptBased's destructor
 	 *
-	 * Does nothing if driver is already stopped. If it's not, performs forced stop of operation.
+	 * \pre Driver is stopped.
 	 */
 
 	~SpiMasterLowLevelInterruptBased() override;

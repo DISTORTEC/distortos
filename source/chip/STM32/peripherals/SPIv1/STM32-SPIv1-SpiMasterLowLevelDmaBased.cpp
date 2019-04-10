@@ -34,12 +34,7 @@ namespace chip
 
 SpiMasterLowLevelDmaBased::~SpiMasterLowLevelDmaBased()
 {
-	if (isStarted() == false)
-		return;
-
-	// reset peripheral
-	spiPeripheral_.writeCr1({});
-	spiPeripheral_.writeCr2({});
+	assert(isStarted() == false);
 }
 
 uint32_t SpiMasterLowLevelDmaBased::configure(const devices::SpiMode mode, const uint32_t clockFrequency,

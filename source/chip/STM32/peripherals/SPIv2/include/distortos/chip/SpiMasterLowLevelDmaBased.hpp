@@ -71,7 +71,7 @@ public:
 	/**
 	 * \brief SpiMasterLowLevelDmaBased's destructor
 	 *
-	 * Does nothing if driver is already stopped. If it's not, performs forced stop of operation.
+	 * \pre Driver is stopped.
 	 */
 
 	~SpiMasterLowLevelDmaBased() override;
