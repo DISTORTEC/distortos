@@ -97,6 +97,7 @@ public:
 	 * \warning This function must not be called from interrupt context!
 	 *
 	 * \pre Associated SPI master is opened.
+	 * \pre \a transfersRange has at least one transfer.
 	 *
 	 * \param [in] transfersRange is the range of transfers that will be executed
 	 *
