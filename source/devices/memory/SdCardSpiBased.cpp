@@ -450,14 +450,13 @@ int waitWhileBusy(const SpiMasterHandle& spiMasterHandle, const distortos::TickC
  * \param [in] size is the size of data block that should be read, bytes
  * \param [in] duration is the duration of wait before giving up
  *
- * \return pair with return code (0 on success, error code otherwise) and number of read bytes (valid even when error
- * code is returned); error codes:
+ * \return 0 on success, error code otherwise:
  * - EIO - unexpected control token was read;
  * - error codes returned by waitWhile();
  * - error codes returned by SpiMasterHandle::executeTransaction();
  */
 
-std::pair<int, size_t> readDataBlock(const SpiMasterHandle& spiMasterHandle, void* const buffer, const size_t size,
+int readDataBlock(const SpiMasterHandle& spiMasterHandle, void* const buffer, const size_t size,
 		const distortos::TickClock::duration duration)
 {
 	{
@@ -467,9 +466,9 @@ std::pair<int, size_t> readDataBlock(const SpiMasterHandle& spiMasterHandle, voi
 					return byte == 0xff;
 				});
 		if (ret.first != 0)
-			return {ret.first, {}};
+			return ret.first;
 		if (ret.second != startBlockToken)
-			return {EIO, {}};
+			return EIO;
 	}
 
 	SpiMasterTransfer transfers[]
@@ -477,9 +476,7 @@ std::pair<int, size_t> readDataBlock(const SpiMasterHandle& spiMasterHandle, voi
 			{nullptr, buffer, size},
 			{nullptr, nullptr, 2},	// crc
 	};
-	const auto ret = spiMasterHandle.executeTransaction(SpiMasterTransfersRange{transfers});
-	const auto bytesRead = transfers[0].getBytesTransfered();
-	return {ret, bytesRead};
+	return spiMasterHandle.executeTransaction(SpiMasterTransfersRange{transfers});
 }
 
 /**
@@ -815,7 +812,7 @@ std::tuple<int, uint8_t, std::array<uint8_t, 16>> executeCmd9(const SpiMasterHan
 	// "7.2.6 Read CID/CSD Registers" of Physical Layer Simplified Specification Version 6.00 - use fixed read timeout
 	const auto ret =
 			readDataBlock(spiMasterHandle, csdBuffer.begin(), csdBuffer.size(), std::chrono::milliseconds{100});
-	return decltype(executeCmd9(spiMasterHandle)){ret.first, {}, csdBuffer};
+	return decltype(executeCmd9(spiMasterHandle)){ret, {}, csdBuffer};
 }
 
 /**
@@ -1116,7 +1113,7 @@ std::tuple<int, R2Response, std::array<uint8_t, 64>> executeAcmd13(const SpiMast
 	}
 	std::array<uint8_t, 64> sdStatusBuffer;
 	const auto ret = readDataBlock(spiMasterHandle, sdStatusBuffer.begin(), sdStatusBuffer.size(), duration);
-	return decltype(executeAcmd13(spiMasterHandle, duration)){ret.first, {}, sdStatusBuffer};
+	return decltype(executeAcmd13(spiMasterHandle, duration)){ret, {}, sdStatusBuffer};
 }
 
 /**
@@ -1334,8 +1331,8 @@ int SdCardSpiBased::read(const uint64_t address, void* const buffer, const size_
 		{
 			const auto ret = readDataBlock(spiMasterHandle, bufferUint8 + block * blockSize, blockSize,
 					std::chrono::milliseconds{readTimeoutMs_});
-			if (ret.first != 0)
-				return ret.first;
+			if (ret != 0)
+				return ret;
 		}
 	}
 
