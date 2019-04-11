@@ -50,19 +50,6 @@ public:
 	}
 
 	/**
-	 * \brief Finalizes transfer operation.
-	 *
-	 * \param [in] bytesTransfered is the number of bytes transferred by low-level SPI master driver (read from write
-	 * buffer and/or written to read buffer), may be unreliable if transfer error was detected (\a bytesTransfered is
-	 * not equal to size of transfer)
-	 */
-
-	void finalize(const size_t bytesTransfered)
-	{
-		bytesTransfered_ = bytesTransfered;
-	}
-
-	/**
 	 * \return buffer with data that will be read, nullptr to ignore received data
 	 */
 

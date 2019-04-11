@@ -124,8 +124,6 @@ void SpiMaster::transferCompleteEvent(const size_t bytesTransfered)
 	assert(transfersRange_.size() != 0);
 
 	const auto previousTransfer = transfersRange_.begin();
-	previousTransfer->finalize(bytesTransfered);
-
 	const auto success = previousTransfer->getSize() == bytesTransfered;
 	if (success == true)	// handling of last transfer successful?
 		transfersRange_ = {transfersRange_.begin() + 1, transfersRange_.end()};
