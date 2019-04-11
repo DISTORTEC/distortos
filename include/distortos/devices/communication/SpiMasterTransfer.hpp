@@ -43,8 +43,7 @@ public:
 	constexpr SpiMasterTransfer(const void* const writeBuffer, void* const readBuffer, const size_t size) :
 			readBuffer_{readBuffer},
 			writeBuffer_{writeBuffer},
-			size_{size},
-			bytesTransfered_{}
+			size_{size}
 	{
 
 	}
@@ -86,10 +85,6 @@ private:
 
 	/// size of transfer, bytes
 	size_t size_;
-
-	/// number of bytes transferred by low-level SPI master driver (read from \a writeBuffer_ and/or written to
-	/// \a readBuffer_), may be unreliable if \a errorSet_ is not empty (i.e. transfer error was detected)
-	size_t bytesTransfered_;
 };
 
 }	// namespace devices
