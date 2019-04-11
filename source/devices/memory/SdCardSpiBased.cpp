@@ -488,18 +488,16 @@ int readDataBlock(const SpiMasterHandle& spiMasterHandle, void* const buffer, co
  * \param [in] size is the size of data block that should be written, bytes
  * \param [in] duration is the duration of wait before giving up
  *
- * \return pair with return code (0 on success, error code otherwise) and number of written bytes (valid even when error
- * code is returned); error codes:
+ * \return 0 on success, error code otherwise:
  * - EIO - unexpected data response token was read;
  * - error codes returned by waitWhileBusy();
  * - error codes returned by SpiMasterHandle::executeTransaction();
  */
 
-std::pair<int, size_t> writeDataBlock(const SpiMasterHandle& spiMasterHandle, const uint8_t token,
-		const void* const buffer, const size_t size, const distortos::TickClock::duration duration)
+int writeDataBlock(const SpiMasterHandle& spiMasterHandle, const uint8_t token, const void* const buffer,
+		const size_t size, const distortos::TickClock::duration duration)
 {
 	uint8_t footer[3];	// crc + data response token
-	size_t bytesWritten {};
 	{
 		const uint8_t header[] {0xff, token};
 		SpiMasterTransfer transfers[]
@@ -509,21 +507,20 @@ std::pair<int, size_t> writeDataBlock(const SpiMasterHandle& spiMasterHandle, co
 				{nullptr, footer, sizeof(footer)},
 		};
 		const auto ret = spiMasterHandle.executeTransaction(SpiMasterTransfersRange{transfers});
-		bytesWritten = transfers[1].getBytesTransfered();
 		if (ret != 0)
-			return {ret, bytesWritten};
+			return ret;
 	}
 	{
 		const auto ret = waitWhileBusy(spiMasterHandle, duration);
 		if (ret != 0)
-			return {ret, bytesWritten};
+			return ret;
 	}
 
 	const auto dataResponseToken = footer[2];
 	if ((dataResponseToken & dataResponseTokenMask) != dataResponseTokenDataAccepted)
-		return {EIO, bytesWritten};
+		return EIO;
 
-	return {{}, bytesWritten};
+	return {};
 }
 
 /**
@@ -1408,8 +1405,8 @@ int SdCardSpiBased::write(const uint64_t address, const void* const buffer, cons
 	{
 		const auto ret = writeDataBlock(spiMasterHandle, blocks == 1 ? startBlockToken : startBlockWriteToken,
 				bufferUint8 + block * blockSize, blockSize, std::chrono::milliseconds{writeTimeoutMs_});
-		if (ret.first != 0)
-			return ret.first;
+		if (ret != 0)
+			return ret;
 	}
 
 	if (blocks != 1)
