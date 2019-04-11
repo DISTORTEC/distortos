@@ -72,7 +72,6 @@ int SpiMaster::executeTransaction(const SpiMasterTransfersRange transfersRange)
 	Semaphore semaphore {0};
 	semaphore_ = &semaphore;
 	transfersRange_ = transfersRange;
-	ret_ = {};
 	const auto cleanupScopeGuard = estd::makeScopeGuard(
 			[this]()
 			{
@@ -87,7 +86,7 @@ int SpiMaster::executeTransaction(const SpiMasterTransfersRange transfersRange)
 
 	while (semaphore.wait() != 0);
 
-	return ret_;
+	return success_ == true ? 0 : EIO;
 }
 
 void SpiMaster::lock()
@@ -96,9 +95,9 @@ void SpiMaster::lock()
 	assert(ret == 0);
 }
 
-void SpiMaster::notifyWaiter(const int ret)
+void SpiMaster::notifyWaiter(const bool success)
 {
-	ret_ = ret;
+	success_ = success;
 	const auto semaphore = semaphore_;
 	assert(semaphore != nullptr);
 	semaphore->post();
@@ -128,7 +127,7 @@ void SpiMaster::transferCompleteEvent(const bool success)
 
 	if (transfersRange_.size() == 0 || success == false)	// all transfers are done or handling of last one failed?
 	{
-		notifyWaiter(success == true ? 0 : EIO);
+		notifyWaiter(success);
 		return;
 	}
 

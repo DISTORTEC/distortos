@@ -49,10 +49,10 @@ public:
 	constexpr explicit SpiMaster(SpiMasterLowLevel& spiMaster) :
 			mutex_{Mutex::Type::recursive, Mutex::Protocol::priorityInheritance},
 			transfersRange_{},
-			ret_{},
 			semaphore_{},
 			spiMaster_{spiMaster},
-			openCount_{}
+			openCount_{},
+			success_{}
 	{
 
 	}
@@ -131,10 +131,10 @@ private:
 	/**
 	 * \brief Notifies waiting thread about completion of transaction.
 	 *
-	 * \param [in] ret is the last error code returned by transaction handling code
+	 * \param [in] success tells whether the transaction was successful (true) or not (false)
 	 */
 
-	void notifyWaiter(int ret);
+	void notifyWaiter(bool success);
 
 	/**
 	 * \brief Opens SPI master.
@@ -180,9 +180,6 @@ private:
 	/// range of transfers that are part of currently handled transaction
 	SpiMasterTransfersRange transfersRange_;
 
-	/// error codes detected in transferCompleteEvent()
-	volatile int ret_;
-
 	/// pointer to semaphore used to notify waiting thread about completion of transaction
 	Semaphore* volatile semaphore_;
 
@@ -191,6 +188,9 @@ private:
 
 	/// number of times this device was opened but not yet closed
 	uint8_t openCount_;
+
+	/// tells whether the transaction was successful (true) or not (false)
+	volatile bool success_;
 };
 
 }	// namespace devices
