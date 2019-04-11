@@ -82,12 +82,11 @@ public:
 	 * \param [in] lsbFirst selects whether MSB (false) or LSB (true) is transmitted first
 	 * \param [in] dummyData is the dummy data that will be sent if write buffer of transfer is nullptr
 	 *
-	 * \return pair with return code (0 on success, error code otherwise) and real clock frequency; error codes:
-	 * - error codes returned by SpiMaster::configure();
+	 * \return real clock frequency, Hz
 	 */
 
-	std::pair<int, uint32_t> configure(const SpiMode mode, const uint32_t clockFrequency, const uint8_t wordLength,
-			const bool lsbFirst,const uint32_t dummyData) const
+	uint32_t configure(const SpiMode mode, const uint32_t clockFrequency, const uint8_t wordLength, const bool lsbFirst,
+			const uint32_t dummyData) const
 	{
 		return spiMaster_.configure(mode, clockFrequency, wordLength, lsbFirst, dummyData);
 	}

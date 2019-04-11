@@ -90,10 +90,10 @@ private:
 	 * \param [in] lsbFirst selects whether MSB (false) or LSB (true) is transmitted first
 	 * \param [in] dummyData is the dummy data that will be sent if write buffer of transfer is nullptr
 	 *
-	 * \return pair with return code (0 on success, error code otherwise) and real clock frequency
+	 * \return real clock frequency, Hz
 	 */
 
-	std::pair<int, uint32_t> configure(SpiMode mode, uint32_t clockFrequency, uint8_t wordLength, bool lsbFirst,
+	uint32_t configure(SpiMode mode, uint32_t clockFrequency, uint8_t wordLength, bool lsbFirst,
 			uint32_t dummyData) const;
 
 	/**

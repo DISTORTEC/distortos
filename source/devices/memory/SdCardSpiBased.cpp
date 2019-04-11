@@ -1197,12 +1197,7 @@ int SdCardSpiBased::erase(const uint64_t address, const uint64_t size)
 		return {};
 
 	const SpiMasterHandle spiMasterHandle {spiMaster_};
-
-	{
-		const auto ret = spiMasterHandle.configure(SpiMode::_0, clockFrequency_, 8, false, UINT32_MAX);
-		if (ret.first != 0)
-			return ret.first;
-	}
+	spiMasterHandle.configure(SpiMode::_0, clockFrequency_, 8, false, UINT32_MAX);
 
 	uint64_t erased {};
 	while (erased < size)
@@ -1320,12 +1315,8 @@ int SdCardSpiBased::read(const uint64_t address, void* const buffer, const size_
 		return {};
 
 	const SpiMasterHandle spiMasterHandle {spiMaster_};
+	spiMasterHandle.configure(SpiMode::_0, clockFrequency_, 8, false, UINT32_MAX);
 
-	{
-		const auto ret = spiMasterHandle.configure(SpiMode::_0, clockFrequency_, 8, false, UINT32_MAX);
-		if (ret.first != 0)
-			return ret.first;
-	}
 	{
 		const SelectGuard selectGuard {slaveSelectPin_ ,spiMasterHandle};
 
@@ -1391,12 +1382,7 @@ int SdCardSpiBased::write(const uint64_t address, const void* const buffer, cons
 		return {};
 
 	const SpiMasterHandle spiMasterHandle {spiMaster_};
-
-	{
-		const auto ret = spiMasterHandle.configure(SpiMode::_0, clockFrequency_, 8, false, UINT32_MAX);
-		if (ret.first != 0)
-			return ret.first;
-	}
+	spiMasterHandle.configure(SpiMode::_0, clockFrequency_, 8, false, UINT32_MAX);
 
 	if (blocks != 1)
 	{
@@ -1470,12 +1456,8 @@ void SdCardSpiBased::deinitialize()
 int SdCardSpiBased::initialize()
 {
 	const SpiMasterHandle spiMasterHandle {spiMaster_};
+	spiMasterHandle.configure(SpiMode::_0, 400000, 8, false, UINT32_MAX);
 
-	{
-		const auto ret = spiMasterHandle.configure(SpiMode::_0, 400000, 8, false, UINT32_MAX);
-		if (ret.first != 0)
-			return ret.first;
-	}
 	{
 		SpiMasterTransfer transfer {nullptr, nullptr, (74 + CHAR_BIT - 1) / CHAR_BIT};
 		const auto ret = spiMasterHandle.executeTransaction(SpiMasterTransfersRange{transfer});
@@ -1532,11 +1514,7 @@ int SdCardSpiBased::initialize()
 		}
 	}
 
-	{
-		const auto ret = spiMasterHandle.configure(SpiMode::_0, clockFrequency_, 8, false, UINT32_MAX);
-		if (ret.first != 0)
-			return ret.first;
-	}
+	spiMasterHandle.configure(SpiMode::_0, clockFrequency_, 8, false, UINT32_MAX);
 
 	{
 		const SelectGuard selectGuard {slaveSelectPin_ ,spiMasterHandle};

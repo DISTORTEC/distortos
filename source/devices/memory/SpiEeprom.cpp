@@ -274,15 +274,10 @@ std::pair<int, size_t> SpiEeprom::executeTransaction(const SpiMasterTransfersRan
 {
 	const SpiMasterHandle spiMasterHandle {spiMaster_};
 
-	{
-		// only datasheet for ST M95xxx series says that erased state is 0, assume this is true for all other devices
-		const auto ret = spiMasterHandle.configure(mode_, clockFrequency_, 8, false, {});
-		if (ret.first != 0)
-			return {ret.first, {}};
-	}
+	// only datasheet for ST M95xxx series says that erased state is 0, assume this is true for all other devices
+	spiMasterHandle.configure(mode_, clockFrequency_, 8, false, {});
 
 	const SpiDeviceSelectGuard spiDeviceSelectGuard {slaveSelectPin_};
-
 	return spiMasterHandle.executeTransaction(transfersRange);
 }
 

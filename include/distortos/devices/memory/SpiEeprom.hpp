@@ -421,7 +421,6 @@ private:
 	 *
 	 * \return pair with return code (0 on success, error code otherwise) and number of successfully completed transfers
 	 * from \a transfersRange; error codes:
-	 * - error codes returned by SpiMasterHandle::configure();
 	 * - error codes returned by SpiMasterHandle::executeTransaction();
 	 */
 

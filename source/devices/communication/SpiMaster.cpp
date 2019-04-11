@@ -54,13 +54,12 @@ void SpiMaster::close()
 	--openCount_;
 }
 
-std::pair<int, uint32_t> SpiMaster::configure(const SpiMode mode, const uint32_t clockFrequency,
-		const uint8_t wordLength, const bool lsbFirst, const uint32_t dummyData) const
+uint32_t SpiMaster::configure(const SpiMode mode, const uint32_t clockFrequency, const uint8_t wordLength,
+		const bool lsbFirst, const uint32_t dummyData) const
 {
 	assert(openCount_ != 0);
 
-	const auto realClockFrequency = spiMaster_.configure(mode, clockFrequency, wordLength, lsbFirst, dummyData);
-	return {{}, realClockFrequency};
+	return spiMaster_.configure(mode, clockFrequency, wordLength, lsbFirst, dummyData);
 }
 
 std::pair<int, size_t> SpiMaster::executeTransaction(const SpiMasterTransfersRange transfersRange)
