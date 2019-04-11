@@ -122,7 +122,7 @@ int SpiMaster::open()
 
 void SpiMaster::transferCompleteEvent(const size_t bytesTransfered)
 {
-	assert(transfersRange_.size() != 0 && "Invalid range of transfers!");
+	assert(transfersRange_.size() != 0);
 
 	const auto previousTransfer = transfersRange_.begin();
 	previousTransfer->finalize(bytesTransfered);
