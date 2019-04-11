@@ -61,7 +61,7 @@ public:
 	/**
 	 * \brief Closes associated SPI master.
 	 *
-	 * \warning This function must not be called from interrupt context!
+	 * \pre Associated SPI master is opened.
 	 *
 	 * \return 0 on success, error code otherwise:
 	 * - error codes returned by SpiMaster::close();

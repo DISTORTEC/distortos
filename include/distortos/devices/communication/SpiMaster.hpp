@@ -72,10 +72,9 @@ private:
 	 *
 	 * Does nothing if any user still has this device opened. Otherwise low-level driver is stopped.
 	 *
-	 * \warning This function must not be called from interrupt context!
+	 * \pre Device is opened.
 	 *
-	 * \return 0 on success, error code otherwise:
-	 * - EBADF - the device is already completely closed;
+	 * \return 0 on success, error code otherwise
 	 */
 
 	int close();
