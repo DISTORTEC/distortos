@@ -231,9 +231,10 @@ int SpiEeprom::eraseOrWrite(const uint64_t address, const void* const buffer, co
 	{
 		const auto ret = eraseOrWritePage(address + written,
 				bufferUint8 != nullptr ? bufferUint8 + written : bufferUint8, writeSize - written);
-		written += ret.second;
 		if (ret.first != 0)
 			return ret.first;
+
+		written += ret.second;
 	}
 
 	return {};
@@ -266,7 +267,7 @@ std::pair<int, size_t> SpiEeprom::eraseOrWritePage(const uint32_t address, const
 			{buffer, nullptr, writeSize},
 	};
 	const auto ret = executeTransaction(SpiMasterTransfersRange{transfers});
-	return {ret, transfers[1].getBytesTransfered()};
+	return {ret, writeSize};
 }
 
 int SpiEeprom::executeTransaction(const SpiMasterTransfersRange transfersRange) const
