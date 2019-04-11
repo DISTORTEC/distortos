@@ -114,7 +114,7 @@ public:
 	/**
 	 * \brief Opens associated SPI master.
 	 *
-	 * \warning This function must not be called from interrupt context!
+	 * \pre The number of times the device is opened is less than 255.
 	 *
 	 * \return 0 on success, error code otherwise:
 	 * - error codes returned by SpiMaster::open();

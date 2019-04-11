@@ -107,8 +107,7 @@ void SpiMaster::notifyWaiter(const int ret)
 
 int SpiMaster::open()
 {
-	if (openCount_ == std::numeric_limits<decltype(openCount_)>::max())	// device is already opened too many times?
-		return EMFILE;
+	assert(openCount_ < std::numeric_limits<decltype(openCount_)>::max());
 
 	if (openCount_ == 0)	// first open?
 	{
