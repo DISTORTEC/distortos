@@ -103,11 +103,12 @@ private:
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
+	 * \pre Device is opened.
+	 *
 	 * \param [in] transfersRange is the range of transfers that will be executed
 	 *
 	 * \return pair with return code (0 on success, error code otherwise) and number of successfully completed transfers
 	 * from \a transfersRange; error codes:
-	 * - EBADF - associated SPI master is not opened;
 	 * - EINVAL - \a transfersRange has no transfers;
 	 * - EIO - failure detected by low-level SPI master driver;
 	 */

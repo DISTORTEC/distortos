@@ -66,11 +66,10 @@ std::pair<int, size_t> SpiMaster::executeTransaction(const SpiMasterTransfersRan
 {
 	CHECK_FUNCTION_CONTEXT();
 
+	assert(openCount_ != 0);
+
 	if (transfersRange.size() == 0)
 		return {EINVAL, {}};
-
-	if (openCount_ == 0)
-		return {EBADF, {}};
 
 	Semaphore semaphore {0};
 	semaphore_ = &semaphore;

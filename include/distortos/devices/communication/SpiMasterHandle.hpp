@@ -96,6 +96,8 @@ public:
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
+	 * \pre Associated SPI master is opened.
+	 *
 	 * \param [in] transfersRange is the range of transfers that will be executed
 	 *
 	 * \return pair with return code (0 on success, error code otherwise) and number of successfully completed transfers
