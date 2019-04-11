@@ -79,7 +79,7 @@ void SpiMasterLowLevelInterruptBased::interruptHandler()
 	writePosition_ = {};
 
 	assert(spiMasterBase != nullptr);
-	spiMasterBase->transferCompleteEvent(readPosition);
+	spiMasterBase->transferCompleteEvent(true);
 }
 
 int SpiMasterLowLevelInterruptBased::start()

@@ -33,7 +33,7 @@ class SpiMaster : public distortos::devices::SpiMasterBase
 {
 public:
 
-	MAKE_MOCK1(transferCompleteEvent, void(size_t));
+	MAKE_MOCK1(transferCompleteEvent, void(bool));
 };
 
 /*---------------------------------------------------------------------------------------------------------------------+
@@ -258,8 +258,7 @@ TEST_CASE("Testing startTransfer()", "[startTransfer]")
 						{
 							REQUIRE_CALL(txDmaChannelMock, stopTransfer()).IN_SEQUENCE(sequence);
 							REQUIRE_CALL(rxDmaChannelMock, stopTransfer()).IN_SEQUENCE(sequence);
-							REQUIRE_CALL(masterMock,
-									transferCompleteEvent(transferSize - dataSize)).IN_SEQUENCE(sequence);
+							REQUIRE_CALL(masterMock, transferCompleteEvent(false)).IN_SEQUENCE(sequence);
 							txDmaChannelFunctor->transferErrorEvent(1);
 						}
 						SECTION("Testing DMA RX error during transfer")
@@ -268,8 +267,7 @@ TEST_CASE("Testing startTransfer()", "[startTransfer]")
 
 							REQUIRE_CALL(txDmaChannelMock, stopTransfer()).IN_SEQUENCE(sequence);
 							REQUIRE_CALL(rxDmaChannelMock, stopTransfer()).IN_SEQUENCE(sequence);
-							REQUIRE_CALL(masterMock,
-									transferCompleteEvent(transferSize - dataSize)).IN_SEQUENCE(sequence);
+							REQUIRE_CALL(masterMock, transferCompleteEvent(false)).IN_SEQUENCE(sequence);
 							rxDmaChannelFunctor->transferErrorEvent(1);
 						}
 						SECTION("Testing successfully completed transfer")
@@ -278,7 +276,7 @@ TEST_CASE("Testing startTransfer()", "[startTransfer]")
 
 							REQUIRE_CALL(txDmaChannelMock, stopTransfer()).IN_SEQUENCE(sequence);
 							REQUIRE_CALL(rxDmaChannelMock, stopTransfer()).IN_SEQUENCE(sequence);
-							REQUIRE_CALL(masterMock, transferCompleteEvent(transferSize)).IN_SEQUENCE(sequence);
+							REQUIRE_CALL(masterMock, transferCompleteEvent(true)).IN_SEQUENCE(sequence);
 							rxDmaChannelFunctor->transferCompleteEvent();
 						}
 					}

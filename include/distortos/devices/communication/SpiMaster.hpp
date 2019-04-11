@@ -157,12 +157,10 @@ private:
 	 * Handles the next transfer from the currently handled transaction. If there are no more transfers, waiting thread
 	 * is notified about completion of transaction.
 	 *
-	 * \param [in] bytesTransfered is the number of bytes transferred by low-level SPI master driver (read from write
-	 * buffer and/or written to read buffer), may be unreliable if transfer error was detected (\a bytesTransfered is
-	 * not equal to size of transfer)
+	 * \param [in] success tells whether the transfer was successful (true) or not (false)
 	 */
 
-	void transferCompleteEvent(size_t bytesTransfered) override;
+	void transferCompleteEvent(bool success) override;
 
 	/**
 	 * \brief Unlocks SPI master which was previously locked by current thread.

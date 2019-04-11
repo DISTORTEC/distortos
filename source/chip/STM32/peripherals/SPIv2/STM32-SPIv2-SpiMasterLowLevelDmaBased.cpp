@@ -136,13 +136,12 @@ void SpiMasterLowLevelDmaBased::eventHandler(const size_t transactionsLeft)
 	txDmaChannelHandle_.stopTransfer();
 	rxDmaChannelHandle_.stopTransfer();
 
-	const auto bytesTransfered = size_ - transactionsLeft * ((wordLength_ + 8 - 1) / 8);
 	size_ = {};
 
 	const auto spiMasterBase = spiMasterBase_;
 	spiMasterBase_ = {};
 	assert(spiMasterBase != nullptr);
-	spiMasterBase->transferCompleteEvent(bytesTransfered);
+	spiMasterBase->transferCompleteEvent(transactionsLeft == 0);
 }
 
 /*---------------------------------------------------------------------------------------------------------------------+

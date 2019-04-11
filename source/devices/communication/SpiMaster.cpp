@@ -119,12 +119,10 @@ int SpiMaster::open()
 	return 0;
 }
 
-void SpiMaster::transferCompleteEvent(const size_t bytesTransfered)
+void SpiMaster::transferCompleteEvent(const bool success)
 {
 	assert(transfersRange_.size() != 0);
 
-	const auto previousTransfer = transfersRange_.begin();
-	const auto success = previousTransfer->getSize() == bytesTransfered;
 	if (success == true)	// handling of last transfer successful?
 		transfersRange_ = {transfersRange_.begin() + 1, transfersRange_.end()};
 

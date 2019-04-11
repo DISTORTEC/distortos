@@ -31,7 +31,7 @@ class SpiMaster : public distortos::devices::SpiMasterBase
 {
 public:
 
-	MAKE_MOCK1(transferCompleteEvent, void(size_t));
+	MAKE_MOCK1(transferCompleteEvent, void(bool));
 };
 
 /*---------------------------------------------------------------------------------------------------------------------+
@@ -177,7 +177,7 @@ TEST_CASE("Testing startTransfer()", "[startTransfer]")
 				REQUIRE_CALL(peripheralMock, readDr(wordLength)).IN_SEQUENCE(sequence).RETURN(rxData[0]);
 				REQUIRE_CALL(peripheralMock, readCr2()).IN_SEQUENCE(sequence).RETURN(cr2 | SPI_CR2_RXNEIE);
 				REQUIRE_CALL(peripheralMock, writeCr2(cr2)).IN_SEQUENCE(sequence);
-				REQUIRE_CALL(masterMock, transferCompleteEvent(sizeof(rxBuffer))).IN_SEQUENCE(sequence);
+				REQUIRE_CALL(masterMock, transferCompleteEvent(true)).IN_SEQUENCE(sequence);
 				spi.interruptHandler();
 
 				REQUIRE(rxData == rxBuffer);
@@ -208,7 +208,7 @@ TEST_CASE("Testing startTransfer()", "[startTransfer]")
 						expectations.emplace_back(NAMED_REQUIRE_CALL(peripheralMock,
 								writeCr2(cr2)).IN_SEQUENCE(sequence));
 						expectations.emplace_back(NAMED_REQUIRE_CALL(masterMock,
-								transferCompleteEvent(sizeof(rxBuffer))).IN_SEQUENCE(sequence));
+								transferCompleteEvent(true)).IN_SEQUENCE(sequence));
 					}
 					spi.interruptHandler();
 				}
@@ -242,7 +242,7 @@ TEST_CASE("Testing startTransfer()", "[startTransfer]")
 				REQUIRE_CALL(peripheralMock, readDr(wordLength)).IN_SEQUENCE(sequence).RETURN(rxData[0]);
 				REQUIRE_CALL(peripheralMock, readCr2()).IN_SEQUENCE(sequence).RETURN(cr2 | SPI_CR2_RXNEIE);
 				REQUIRE_CALL(peripheralMock, writeCr2(cr2)).IN_SEQUENCE(sequence);
-				REQUIRE_CALL(masterMock, transferCompleteEvent(sizeof(rxData))).IN_SEQUENCE(sequence);
+				REQUIRE_CALL(masterMock, transferCompleteEvent(true)).IN_SEQUENCE(sequence);
 				spi.interruptHandler();
 
 				REQUIRE(rxData == rxBuffer);
@@ -273,7 +273,7 @@ TEST_CASE("Testing startTransfer()", "[startTransfer]")
 						expectations.emplace_back(NAMED_REQUIRE_CALL(peripheralMock,
 								writeCr2(cr2)).IN_SEQUENCE(sequence));
 						expectations.emplace_back(NAMED_REQUIRE_CALL(masterMock,
-								transferCompleteEvent(sizeof(rxBuffer))).IN_SEQUENCE(sequence));
+								transferCompleteEvent(true)).IN_SEQUENCE(sequence));
 					}
 					spi.interruptHandler();
 				}
