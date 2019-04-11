@@ -1172,15 +1172,14 @@ int SdCardSpiBased::close()
 
 	assert(openCount_ != 0);
 
-	int ret {};
 	if (openCount_ == 1)	// last close?
 	{
-		ret = SpiMasterHandle{spiMaster_}.close();
+		SpiMasterHandle{spiMaster_}.close();
 		deinitialize();
 	}
 
 	--openCount_;
-	return ret;
+	return {};
 }
 
 int SdCardSpiBased::erase(const uint64_t address, const uint64_t size)

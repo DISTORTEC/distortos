@@ -44,7 +44,7 @@ SpiMaster::~SpiMaster()
 | private functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-int SpiMaster::close()
+void SpiMaster::close()
 {
 	assert(openCount_ != 0);
 
@@ -52,7 +52,6 @@ int SpiMaster::close()
 		spiMaster_.stop();
 
 	--openCount_;
-	return 0;
 }
 
 std::pair<int, uint32_t> SpiMaster::configure(const SpiMode mode, const uint32_t clockFrequency,

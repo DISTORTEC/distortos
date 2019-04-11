@@ -62,14 +62,11 @@ public:
 	 * \brief Closes associated SPI master.
 	 *
 	 * \pre Associated SPI master is opened.
-	 *
-	 * \return 0 on success, error code otherwise:
-	 * - error codes returned by SpiMaster::close();
 	 */
 
-	int close() const
+	void close() const
 	{
-		return spiMaster_.close();
+		spiMaster_.close();
 	}
 
 	/**

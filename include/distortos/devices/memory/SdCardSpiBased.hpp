@@ -80,8 +80,7 @@ public:
 	 *
 	 * \pre Device is opened.
 	 *
-	 * \return 0 on success, error code otherwise:
-	 * - error codes returned by SpiMasterHandle::close();
+	 * \return 0 on success, error code otherwise
 	 */
 
 	int close() override;

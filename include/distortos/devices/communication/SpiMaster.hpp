@@ -73,11 +73,9 @@ private:
 	 * Does nothing if any user still has this device opened. Otherwise low-level driver is stopped.
 	 *
 	 * \pre Device is opened.
-	 *
-	 * \return 0 on success, error code otherwise
 	 */
 
-	int close();
+	void close();
 
 	/**
 	 * \brief Configures parameters of SPI master.
