@@ -178,7 +178,7 @@ int SpiEeprom::read(const uint64_t address, void* const buffer, const size_t siz
 	}
 
 	CommandWithAddressBuffer commandBuffer;
-	SpiMasterTransfer transfers[]
+	const SpiMasterTransfer transfers[]
 	{
 			getCommandWithAddress(capacity, readCommand, address, commandBuffer),
 			{nullptr, buffer, address + size <= capacity ? size : static_cast<size_t>(capacity - address)},
@@ -261,7 +261,7 @@ std::pair<int, size_t> SpiEeprom::eraseOrWritePage(const uint32_t address, const
 	const auto pageOffset = address & (pageSize - 1);
 	const auto writeSize = pageOffset + size <= pageSize ? size : pageSize - pageOffset;
 	CommandWithAddressBuffer commandBuffer;
-	SpiMasterTransfer transfers[]
+	const SpiMasterTransfer transfers[]
 	{
 			getCommandWithAddress(capacity, writeCommand, address, commandBuffer),
 			{buffer, nullptr, writeSize},
@@ -290,7 +290,7 @@ std::pair<int, bool> SpiEeprom::isWriteInProgress()
 std::pair<int, uint8_t> SpiEeprom::readStatusRegister() const
 {
 	uint8_t buffer[2] {rdsrCommand, 0xff};
-	SpiMasterTransfer transfer {buffer, buffer, sizeof(buffer)};
+	const SpiMasterTransfer transfer {buffer, buffer, sizeof(buffer)};
 	const auto ret = executeTransaction(SpiMasterTransfersRange{transfer});
 	return {ret, buffer[1]};
 }
@@ -311,7 +311,7 @@ int SpiEeprom::waitWhileWriteInProgress()
 
 int SpiEeprom::writeEnable() const
 {
-	SpiMasterTransfer transfer {&wrenCommand, nullptr, sizeof(wrenCommand)};
+	static const SpiMasterTransfer transfer {&wrenCommand, nullptr, sizeof(wrenCommand)};
 	return executeTransaction(SpiMasterTransfersRange{transfer});
 }
 

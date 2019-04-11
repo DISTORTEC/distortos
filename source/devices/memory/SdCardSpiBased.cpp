@@ -230,7 +230,7 @@ public:
 
 	~SelectGuard()
 	{
-		SpiMasterTransfer transfer {nullptr, nullptr, 1};
+		static const SpiMasterTransfer transfer {nullptr, nullptr, 1};
 		spiMasterHandle_.executeTransaction(SpiMasterTransfersRange{transfer});
 	}
 
@@ -411,7 +411,7 @@ std::pair<int, uint8_t> waitWhile(const SpiMasterHandle& spiMasterHandle, const 
 	while (distortos::TickClock::now() < deadline)
 	{
 		uint8_t byte;
-		SpiMasterTransfer transfer {nullptr, &byte, sizeof(byte)};
+		const SpiMasterTransfer transfer {nullptr, &byte, sizeof(byte)};
 		const auto ret = spiMasterHandle.executeTransaction(SpiMasterTransfersRange{transfer});
 		if (ret != 0)
 			return {ret, {}};
@@ -471,7 +471,7 @@ int readDataBlock(const SpiMasterHandle& spiMasterHandle, void* const buffer, co
 			return EIO;
 	}
 
-	SpiMasterTransfer transfers[]
+	const SpiMasterTransfer transfers[]
 	{
 			{nullptr, buffer, size},
 			{nullptr, nullptr, 2},	// crc
@@ -500,7 +500,7 @@ int writeDataBlock(const SpiMasterHandle& spiMasterHandle, const uint8_t token, 
 	uint8_t footer[3];	// crc + data response token
 	{
 		const uint8_t header[] {0xff, token};
-		SpiMasterTransfer transfers[]
+		const SpiMasterTransfer transfers[]
 		{
 				{&header, nullptr, sizeof(header)},
 				{buffer, nullptr, size},
@@ -542,7 +542,7 @@ int readResponse(const SpiMasterHandle& spiMasterHandle, const Uint8Range buffer
 	while (bytesRead < maxBytesRead)
 	{
 		const auto readSize = buffer.size() - validBytesRead;
-		SpiMasterTransfer transfer {nullptr, buffer.begin() + validBytesRead, readSize};
+		const SpiMasterTransfer transfer {nullptr, buffer.begin() + validBytesRead, readSize};
 		const auto ret = spiMasterHandle.executeTransaction(SpiMasterTransfersRange{transfer});
 		if (ret != 0)
 			return ret;
@@ -672,7 +672,7 @@ int writeCmd(const SpiMasterHandle& spiMasterHandle, const uint8_t command, cons
 			static_cast<uint8_t>(crc7 << 1 | 1),
 			0xff,	// stuff byte
 	};
-	SpiMasterTransfer transfer {buffer, nullptr, sizeof(buffer) - !stuffByte};
+	const SpiMasterTransfer transfer {buffer, nullptr, sizeof(buffer) - !stuffByte};
 	return spiMasterHandle.executeTransaction(SpiMasterTransfersRange{transfer});
 }
 
@@ -1412,12 +1412,12 @@ int SdCardSpiBased::write(const uint64_t address, const void* const buffer, cons
 	if (blocks != 1)
 	{
 		{
-			const uint8_t stopTransfer[]
+			static const uint8_t stopTransfer[]
 			{
 					stopTranToken,
 					0xff,
 			};
-			SpiMasterTransfer transfer {stopTransfer, nullptr, sizeof(stopTransfer)};
+			static const SpiMasterTransfer transfer {stopTransfer, nullptr, sizeof(stopTransfer)};
 			const auto ret = spiMasterHandle.executeTransaction(SpiMasterTransfersRange{transfer});
 			if (ret != 0)
 				return ret;
@@ -1452,7 +1452,7 @@ int SdCardSpiBased::initialize()
 	spiMasterHandle.configure(SpiMode::_0, 400000, 8, false, UINT32_MAX);
 
 	{
-		SpiMasterTransfer transfer {nullptr, nullptr, (74 + CHAR_BIT - 1) / CHAR_BIT};
+		static const SpiMasterTransfer transfer {nullptr, nullptr, (74 + CHAR_BIT - 1) / CHAR_BIT};
 		const auto ret = spiMasterHandle.executeTransaction(SpiMasterTransfersRange{transfer});
 		if (ret != 0)
 			return ret;
