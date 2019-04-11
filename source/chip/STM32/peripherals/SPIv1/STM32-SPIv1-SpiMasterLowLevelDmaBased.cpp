@@ -87,7 +87,6 @@ void SpiMasterLowLevelDmaBased::startTransfer(devices::SpiMasterBase& spiMasterB
 	assert(size != 0 && size % dataSize == 0);
 
 	spiMasterBase_ = &spiMasterBase;
-	size_ = size;
 
 	const auto transactions = size / dataSize;
 	const auto commonDmaFlags = DmaChannel::Flags::peripheralFixed |
@@ -131,17 +130,15 @@ void SpiMasterLowLevelDmaBased::stop()
 | private functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-void SpiMasterLowLevelDmaBased::eventHandler(const size_t transactionsLeft)
+void SpiMasterLowLevelDmaBased::eventHandler(const bool success)
 {
 	txDmaChannelHandle_.stopTransfer();
 	rxDmaChannelHandle_.stopTransfer();
 
-	size_ = {};
-
 	const auto spiMasterBase = spiMasterBase_;
 	spiMasterBase_ = {};
 	assert(spiMasterBase != nullptr);
-	spiMasterBase->transferCompleteEvent(transactionsLeft == 0);
+	spiMasterBase->transferCompleteEvent(success);
 }
 
 /*---------------------------------------------------------------------------------------------------------------------+
@@ -150,21 +147,21 @@ void SpiMasterLowLevelDmaBased::eventHandler(const size_t transactionsLeft)
 
 void SpiMasterLowLevelDmaBased::RxDmaChannelFunctor::transferCompleteEvent()
 {
-	owner_.eventHandler(0);
+	owner_.eventHandler(true);
 }
 
-void SpiMasterLowLevelDmaBased::RxDmaChannelFunctor::transferErrorEvent(const size_t transactionsLeft)
+void SpiMasterLowLevelDmaBased::RxDmaChannelFunctor::transferErrorEvent(size_t)
 {
-	owner_.eventHandler(transactionsLeft);
+	owner_.eventHandler(false);
 }
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | SpiMasterLowLevelDmaBased::TxDmaChannelFunctor public functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-void SpiMasterLowLevelDmaBased::TxDmaChannelFunctor::transferErrorEvent(const size_t transactionsLeft)
+void SpiMasterLowLevelDmaBased::TxDmaChannelFunctor::transferErrorEvent(size_t)
 {
-	owner_.eventHandler(transactionsLeft);
+	owner_.eventHandler(false);
 }
 
 }	// namespace chip

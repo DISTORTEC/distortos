@@ -57,7 +57,6 @@ public:
 					rxDmaChannelFunctor_{*this},
 					txDmaChannelFunctor_{*this},
 					spiMasterBase_{},
-					size_{},
 					rxDummyData_{},
 					txDummyData_{},
 					rxDmaRequest_{rxDmaRequest},
@@ -220,10 +219,10 @@ private:
 	/**
 	 * \brief "Transfer complete" and "transfer error" event handler
 	 *
-	 * \param [in] transactionsLeft is the number of transactions left
+	 * \param [in] success tells whether the transfer was successful (true) or not (false)
 	 */
 
-	void eventHandler(size_t transactionsLeft);
+	void eventHandler(bool success);
 
 	/**
 	 * \return true if driver is started, false otherwise
@@ -240,7 +239,7 @@ private:
 
 	bool isTransferInProgress() const
 	{
-		return size_ != 0;
+		return spiMasterBase_ != nullptr;
 	}
 
 	/// reference to raw SPI peripheral
@@ -266,9 +265,6 @@ private:
 
 	/// pointer to SpiMasterBase object associated with this one
 	devices::SpiMasterBase* volatile spiMasterBase_;
-
-	/// size of transfer, bytes
-	volatile size_t size_;
 
 	/// object used as reception DMA target if read buffer of transfer is nullptr
 	uint16_t rxDummyData_;
