@@ -60,9 +60,7 @@ public:
 	/**
 	 * \brief SpiMaster's destructor
 	 *
-	 * Does nothing if all users already closed this device. If they did not, performs forced close of device.
-	 *
-	 * \warning This function must not be called from interrupt context!
+	 * \pre Device is closed.
 	 */
 
 	~SpiMaster() override;

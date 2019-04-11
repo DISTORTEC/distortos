@@ -37,14 +37,7 @@ namespace devices
 
 SpiMaster::~SpiMaster()
 {
-	CHECK_FUNCTION_CONTEXT();
-
-	if (openCount_ == 0)
-		return;
-
-	const std::lock_guard<Mutex> lockGuard {mutex_};
-
-	spiMaster_.stop();
+	assert(openCount_ == 0);
 }
 
 /*---------------------------------------------------------------------------------------------------------------------+
