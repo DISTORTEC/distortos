@@ -57,8 +57,7 @@ void SpiMaster::close()
 std::pair<int, uint32_t> SpiMaster::configure(const SpiMode mode, const uint32_t clockFrequency,
 		const uint8_t wordLength, const bool lsbFirst, const uint32_t dummyData) const
 {
-	if (openCount_ == 0)
-		return {EBADF, {}};
+	assert(openCount_ != 0);
 
 	const auto realClockFrequency = spiMaster_.configure(mode, clockFrequency, wordLength, lsbFirst, dummyData);
 	return {{}, realClockFrequency};

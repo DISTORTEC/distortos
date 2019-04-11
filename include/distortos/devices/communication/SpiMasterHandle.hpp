@@ -72,6 +72,7 @@ public:
 	/**
 	 * \brief Configures parameters of associated SPI master.
 	 *
+	 * \pre Associated SPI master is opened.
 	 * \pre \a clockFrequency and \a wordLength are valid for associated low-level implementation of SpiMasterLowLevel
 	 * interface.
 	 *
