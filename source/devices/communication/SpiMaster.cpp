@@ -62,7 +62,7 @@ uint32_t SpiMaster::configure(const SpiMode mode, const uint32_t clockFrequency,
 	return spiMaster_.configure(mode, clockFrequency, wordLength, lsbFirst, dummyData);
 }
 
-std::pair<int, size_t> SpiMaster::executeTransaction(const SpiMasterTransfersRange transfersRange)
+int SpiMaster::executeTransaction(const SpiMasterTransfersRange transfersRange)
 {
 	CHECK_FUNCTION_CONTEXT();
 
@@ -87,8 +87,7 @@ std::pair<int, size_t> SpiMaster::executeTransaction(const SpiMasterTransfersRan
 
 	while (semaphore.wait() != 0);
 
-	const auto handledTransfers = transfersRange_.begin() - transfersRange.begin();
-	return {ret_, handledTransfers};
+	return ret_;
 }
 
 void SpiMaster::lock()

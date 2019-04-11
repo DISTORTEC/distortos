@@ -183,8 +183,7 @@ int SpiEeprom::read(const uint64_t address, void* const buffer, const size_t siz
 			getCommandWithAddress(capacity, readCommand, address, commandBuffer),
 			{nullptr, buffer, address + size <= capacity ? size : static_cast<size_t>(capacity - address)},
 	};
-	const auto ret = executeTransaction(SpiMasterTransfersRange{transfers});
-	return ret.first;
+	return executeTransaction(SpiMasterTransfersRange{transfers});
 }
 
 int SpiEeprom::synchronize()
@@ -267,10 +266,10 @@ std::pair<int, size_t> SpiEeprom::eraseOrWritePage(const uint32_t address, const
 			{buffer, nullptr, writeSize},
 	};
 	const auto ret = executeTransaction(SpiMasterTransfersRange{transfers});
-	return {ret.first, transfers[1].getBytesTransfered()};
+	return {ret, transfers[1].getBytesTransfered()};
 }
 
-std::pair<int, size_t> SpiEeprom::executeTransaction(const SpiMasterTransfersRange transfersRange) const
+int SpiEeprom::executeTransaction(const SpiMasterTransfersRange transfersRange) const
 {
 	const SpiMasterHandle spiMasterHandle {spiMaster_};
 
@@ -292,7 +291,7 @@ std::pair<int, uint8_t> SpiEeprom::readStatusRegister() const
 	uint8_t buffer[2] {rdsrCommand, 0xff};
 	SpiMasterTransfer transfer {buffer, buffer, sizeof(buffer)};
 	const auto ret = executeTransaction(SpiMasterTransfersRange{transfer});
-	return {ret.first, buffer[1]};
+	return {ret, buffer[1]};
 }
 
 int SpiEeprom::waitWhileWriteInProgress()
@@ -312,8 +311,7 @@ int SpiEeprom::waitWhileWriteInProgress()
 int SpiEeprom::writeEnable() const
 {
 	SpiMasterTransfer transfer {&wrenCommand, nullptr, sizeof(wrenCommand)};
-	const auto ret = executeTransaction(SpiMasterTransfersRange{transfer});
-	return ret.first;
+	return executeTransaction(SpiMasterTransfersRange{transfer});
 }
 
 }	// namespace devices

@@ -101,12 +101,11 @@ public:
 	 *
 	 * \param [in] transfersRange is the range of transfers that will be executed
 	 *
-	 * \return pair with return code (0 on success, error code otherwise) and number of successfully completed transfers
-	 * from \a transfersRange; error codes:
+	 * \return 0 on success, error code otherwise:
 	 * - error codes returned by SpiMasterLowLevel::executeTransaction();
 	 */
 
-	std::pair<int, size_t> executeTransaction(const SpiMasterTransfersRange transfersRange) const
+	int executeTransaction(const SpiMasterTransfersRange transfersRange) const
 	{
 		return spiMaster_.executeTransaction(transfersRange);
 	}
