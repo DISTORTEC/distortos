@@ -81,14 +81,12 @@ public:
 	 * \param [in] wordLength selects word length, bits
 	 * \param [in] lsbFirst selects whether MSB (false) or LSB (true) is transmitted first
 	 * \param [in] dummyData is the dummy data that will be sent if write buffer of transfer is nullptr
-	 *
-	 * \return real clock frequency, Hz
 	 */
 
-	uint32_t configure(const SpiMode mode, const uint32_t clockFrequency, const uint8_t wordLength, const bool lsbFirst,
+	void configure(const SpiMode mode, const uint32_t clockFrequency, const uint8_t wordLength, const bool lsbFirst,
 			const uint32_t dummyData) const
 	{
-		return spiMaster_.configure(mode, clockFrequency, wordLength, lsbFirst, dummyData);
+		spiMaster_.configure(mode, clockFrequency, wordLength, lsbFirst, dummyData);
 	}
 
 	/**
