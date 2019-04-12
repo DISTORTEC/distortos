@@ -27,7 +27,7 @@ namespace chip
 | global functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-uint32_t configureSpi(const SpiPeripheral& spiPeripheral, const devices::SpiMode mode, const uint32_t clockFrequency,
+void configureSpi(const SpiPeripheral& spiPeripheral, const devices::SpiMode mode, const uint32_t clockFrequency,
 		const uint8_t wordLength, const bool lsbFirst)
 {
 	assert(wordLength == 8 || wordLength == 16);
@@ -51,8 +51,6 @@ uint32_t configureSpi(const SpiPeripheral& spiPeripheral, const devices::SpiMode
 			br << SPI_CR1_BR_Pos |
 			(mode == devices::SpiMode::cpol1cpha0 || mode == devices::SpiMode::cpol1cpha1) << SPI_CR1_CPOL_Pos |
 			(mode == devices::SpiMode::cpol0cpha1 || mode == devices::SpiMode::cpol1cpha1) << SPI_CR1_CPHA_Pos);
-
-	return peripheralFrequency / (1 << (br + 1));
 }
 
 }	// namespace chip

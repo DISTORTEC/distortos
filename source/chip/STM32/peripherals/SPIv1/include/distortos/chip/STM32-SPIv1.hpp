@@ -37,11 +37,9 @@ class SpiPeripheral;
  * \param [in] clockFrequency is the desired clock frequency, Hz
  * \param [in] wordLength selects word length, bits, {8, 16}
  * \param [in] lsbFirst selects whether MSB (false) or LSB (true) is transmitted first
- *
- * \return real clock frequency, Hz
  */
 
-uint32_t configureSpi(const SpiPeripheral& spiPeripheral, devices::SpiMode mode, uint32_t clockFrequency,
+void configureSpi(const SpiPeripheral& spiPeripheral, devices::SpiMode mode, uint32_t clockFrequency,
 		uint8_t wordLength, bool lsbFirst);
 
 }	// namespace chip

@@ -116,7 +116,7 @@ TEST_CASE("Testing configure()", "[configure]")
 				{
 					REQUIRE_CALL(stm32Spiv1Spiv2Mock,
 							configureSpi(_, mode, clockFrequency, wordLength, lsbFirst))
-							.LR_WITH(&_1 == &peripheralMock).IN_SEQUENCE(sequence).RETURN(0);
+							.LR_WITH(&_1 == &peripheralMock).IN_SEQUENCE(sequence);
 					spi.configure(mode, clockFrequency, wordLength, lsbFirst, {});
 				}
 
@@ -147,7 +147,7 @@ TEST_CASE("Testing startTransfer()", "[startTransfer]")
 	SECTION("Testing 8-bit transfers")
 	{
 		REQUIRE_CALL(stm32Spiv1Spiv2Mock, configureSpi(_, distortos::devices::SpiMode{}, uint32_t{}, 8,
-				bool{})).LR_WITH(&_1 == &peripheralMock).IN_SEQUENCE(sequence).RETURN(0);
+				bool{})).LR_WITH(&_1 == &peripheralMock).IN_SEQUENCE(sequence);
 		spi.configure({}, {}, 8, {}, dummyData);
 
 		SECTION("Testing 8-bit transfer of 1 item")
@@ -205,7 +205,7 @@ TEST_CASE("Testing startTransfer()", "[startTransfer]")
 	SECTION("Testing 16-bit transfers")
 	{
 		REQUIRE_CALL(stm32Spiv1Spiv2Mock, configureSpi(_, distortos::devices::SpiMode{}, uint32_t{}, 16,
-				bool{})).LR_WITH(&_1 == &peripheralMock).IN_SEQUENCE(sequence).RETURN(0);
+				bool{})).LR_WITH(&_1 == &peripheralMock).IN_SEQUENCE(sequence);
 		spi.configure({}, {}, 16, {}, dummyData);
 
 		SECTION("Testing 16-bit transfer of 1 item")

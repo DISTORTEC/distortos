@@ -144,7 +144,7 @@ TEST_CASE("Testing configure()", "[configure]")
 				{
 					REQUIRE_CALL(stm32Spiv1Spiv2Mock,
 							configureSpi(_, mode, clockFrequency, wordLength, lsbFirst))
-							.LR_WITH(&_1 == &peripheralMock).IN_SEQUENCE(sequence).RETURN(0);
+							.LR_WITH(&_1 == &peripheralMock).IN_SEQUENCE(sequence);
 					spi.configure(mode, clockFrequency, wordLength, lsbFirst, {});
 				}
 
@@ -188,7 +188,7 @@ TEST_CASE("Testing startTransfer()", "[startTransfer]")
 		{
 			constexpr uint16_t dummyData {0xaf5a};
 			REQUIRE_CALL(stm32Spiv1Spiv2Mock, configureSpi(_, distortos::devices::SpiMode{}, uint32_t{}, wordLength,
-					bool{})).LR_WITH(&_1 == &peripheralMock).IN_SEQUENCE(sequence).RETURN(0);
+					bool{})).LR_WITH(&_1 == &peripheralMock).IN_SEQUENCE(sequence);
 			spi.configure({}, {}, wordLength, {}, dummyData);
 
 			constexpr size_t transferSize {6};

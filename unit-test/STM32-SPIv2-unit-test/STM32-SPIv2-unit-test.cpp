@@ -115,13 +115,12 @@ TEST_CASE("Testing configure()", "[configure]")
 			const auto br = divider <= 2 ? 0 : estd::log2u(divider - 1);
 			const auto newCr1 = (initialCr1 & ~SPI_CR1_BR) | br << SPI_CR1_BR_Pos;
 			const auto oldCr1 = newCr1 ^ SPI_CR1_BR;
-			const auto realClockFrequency = peripheralFrequency / (1 << (br + 1));
 
 			REQUIRE_CALL(peripheralMock, readCr1()).IN_SEQUENCE(sequence).RETURN(oldCr1);
 			REQUIRE_CALL(peripheralMock, writeCr1(newCr1)).IN_SEQUENCE(sequence);
 			REQUIRE_CALL(peripheralMock, readCr2()).IN_SEQUENCE(sequence).RETURN(initialCr2);
 			REQUIRE_CALL(peripheralMock, writeCr2(initialCr2)).IN_SEQUENCE(sequence);
-			REQUIRE(distortos::chip::configureSpi(peripheralMock, {}, clockFrequency, 8, {}) == realClockFrequency);
+			distortos::chip::configureSpi(peripheralMock, {}, clockFrequency, 8, {});
 		}
 	}
 
