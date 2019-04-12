@@ -76,11 +76,9 @@ public:
 	 * \param [in] wordLength selects word length, bits, [4; 16] or [minSpiWordLength; maxSpiWordLength]
 	 * \param [in] lsbFirst selects whether MSB (false) or LSB (true) is transmitted first
 	 * \param [in] dummyData is the dummy data that will be sent if write buffer of transfer is nullptr
-	 *
-	 * \return real clock frequency, Hz
 	 */
 
-	uint32_t configure(devices::SpiMode mode, uint32_t clockFrequency, uint8_t wordLength, bool lsbFirst,
+	void configure(devices::SpiMode mode, uint32_t clockFrequency, uint8_t wordLength, bool lsbFirst,
 			uint32_t dummyData) override;
 
 	/**

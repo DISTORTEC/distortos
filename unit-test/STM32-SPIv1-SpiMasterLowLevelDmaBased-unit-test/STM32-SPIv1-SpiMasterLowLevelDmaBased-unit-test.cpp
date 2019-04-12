@@ -137,24 +137,16 @@ TEST_CASE("Testing configure()", "[configure]")
 			false,
 			true,
 	};
-	const uint32_t realClockFrequencies[]
-	{
-			0x9c0432b1,
-			0x1c24f633,
-			0xa6eeadb6,
-			0x2e6dde22,
-	};
 	for (auto mode : modes)
 		for (auto clockFrequency : clockFrequencies)
 			for (auto wordLength : wordLengths)
 				for (auto lsbFirst : lsbFirsts)
-					for (auto realClockFrequency : realClockFrequencies)
-					{
-						REQUIRE_CALL(stm32Spiv1Spiv2Mock,
-								configureSpi(_, mode, clockFrequency, wordLength, lsbFirst))
-								.LR_WITH(&_1 == &peripheralMock).IN_SEQUENCE(sequence).RETURN(realClockFrequency);
-						REQUIRE(spi.configure(mode, clockFrequency, wordLength, lsbFirst, {}) == realClockFrequency);
-					}
+				{
+					REQUIRE_CALL(stm32Spiv1Spiv2Mock,
+							configureSpi(_, mode, clockFrequency, wordLength, lsbFirst))
+							.LR_WITH(&_1 == &peripheralMock).IN_SEQUENCE(sequence).RETURN(0);
+					spi.configure(mode, clockFrequency, wordLength, lsbFirst, {});
+				}
 
 	{
 		REQUIRE_CALL(rxDmaChannelMock, release()).IN_SEQUENCE(sequence);
