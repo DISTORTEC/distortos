@@ -2,7 +2,7 @@
  * \file
  * \brief SpiMasterLowLevelInterruptBased class implementation for SPIv1 in STM32
  *
- * \author Copyright (C) 2016-2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2016-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -18,8 +18,6 @@
 
 #include "distortos/assert.h"
 
-#include <cerrno>
-
 namespace distortos
 {
 
@@ -32,30 +30,18 @@ namespace chip
 
 SpiMasterLowLevelInterruptBased::~SpiMasterLowLevelInterruptBased()
 {
-	if (isStarted() == false)
-		return;
-
-	// reset peripheral
-	spiPeripheral_.writeCr1({});
-	spiPeripheral_.writeCr2({});
+	assert(isStarted() == false);
 }
 
-std::pair<int, uint32_t> SpiMasterLowLevelInterruptBased::configure(const devices::SpiMode mode,
-		const uint32_t clockFrequency, const uint8_t wordLength, const bool lsbFirst, const uint32_t dummyData)
+void SpiMasterLowLevelInterruptBased::configure(const devices::SpiMode mode, const uint32_t clockFrequency,
+		const uint8_t wordLength, const bool lsbFirst, const uint32_t dummyData)
 {
-	if (isStarted() == false)
-		return {EBADF, {}};
-
-	if (isTransferInProgress() == true)
-		return {EBUSY, {}};
-
-	const auto ret = configureSpi(spiPeripheral_, mode, clockFrequency, wordLength, lsbFirst);
-	if (ret.first != 0)
-		return ret;
+	assert(isStarted() == true);
+	assert(isTransferInProgress() == false);
 
 	dummyData_ = dummyData;
 	wordLength_ = wordLength;
-	return ret;
+	configureSpi(spiPeripheral_, mode, clockFrequency, wordLength, lsbFirst);
 }
 
 void SpiMasterLowLevelInterruptBased::interruptHandler()
@@ -92,36 +78,27 @@ void SpiMasterLowLevelInterruptBased::interruptHandler()
 	writePosition_ = {};
 
 	assert(spiMasterBase != nullptr);
-	spiMasterBase->transferCompleteEvent(readPosition);
+	spiMasterBase->transferCompleteEvent(true);
 }
 
 int SpiMasterLowLevelInterruptBased::start()
 {
-	if (isStarted() == true)
-		return EBADF;
+	assert(isStarted() == false);
 
 	wordLength_ = 8;
 	spiPeripheral_.writeCr1(SPI_CR1_SSM | SPI_CR1_SSI | SPI_CR1_SPE | SPI_CR1_BR | SPI_CR1_MSTR);
 	spiPeripheral_.writeCr2({});
 	started_ = true;
 
-	return 0;
+	return {};
 }
 
-int SpiMasterLowLevelInterruptBased::startTransfer(devices::SpiMasterBase& spiMasterBase, const void* const writeBuffer,
-		void* const readBuffer, const size_t size)
+void SpiMasterLowLevelInterruptBased::startTransfer(devices::SpiMasterBase& spiMasterBase,
+		const void* const writeBuffer, void* const readBuffer, const size_t size)
 {
-	if (size == 0)
-		return EINVAL;
-
-	if (isStarted() == false)
-		return EBADF;
-
-	if (isTransferInProgress() == true)
-		return EBUSY;
-
-	if (size % (wordLength_ / 8) != 0)
-		return EINVAL;
+	assert(isStarted() == true);
+	assert(isTransferInProgress() == false);
+	assert(size != 0 && size % (wordLength_ / 8) == 0);
 
 	spiMasterBase_ = &spiMasterBase;
 	readBuffer_ = static_cast<uint8_t*>(readBuffer);
@@ -132,23 +109,17 @@ int SpiMasterLowLevelInterruptBased::startTransfer(devices::SpiMasterBase& spiMa
 
 	spiPeripheral_.writeCr2(spiPeripheral_.readCr2() | SPI_CR2_RXNEIE);	// enable RXNE interrupt
 	writeNextItem();	// write first item to start the transfer
-
-	return 0;
 }
 
-int SpiMasterLowLevelInterruptBased::stop()
+void SpiMasterLowLevelInterruptBased::stop()
 {
-	if (isStarted() == false)
-		return EBADF;
-
-	if (isTransferInProgress() == true)
-		return EBUSY;
+	assert(isStarted() == true);
+	assert(isTransferInProgress() == false);
 
 	// reset peripheral
 	spiPeripheral_.writeCr1({});
 	spiPeripheral_.writeCr2({});
 	started_ = false;
-	return 0;
 }
 
 /*---------------------------------------------------------------------------------------------------------------------+

@@ -2,7 +2,7 @@
  * \file
  * \brief SpiMasterBase class header
  *
- * \author Copyright (C) 2016-2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2016-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -11,8 +11,6 @@
 
 #ifndef INCLUDE_DISTORTOS_DEVICES_COMMUNICATION_SPIMASTERBASE_HPP_
 #define INCLUDE_DISTORTOS_DEVICES_COMMUNICATION_SPIMASTERBASE_HPP_
-
-#include <cstddef>
 
 namespace distortos
 {
@@ -42,12 +40,10 @@ public:
 	 *
 	 * Called by low-level SPI master driver when the transfer is physically finished.
 	 *
-	 * \param [in] bytesTransfered is the number of bytes transferred by low-level SPI master driver (read from write
-	 * buffer and/or written to read buffer), may be unreliable if transfer error was detected (\a bytesTransfered is
-	 * not equal to size of transfer)
+	 * \param [in] success tells whether the transfer was successful (true) or not (false)
 	 */
 
-	virtual void transferCompleteEvent(size_t bytesTransfered) = 0;
+	virtual void transferCompleteEvent(bool success) = 0;
 };
 
 }	// namespace devices

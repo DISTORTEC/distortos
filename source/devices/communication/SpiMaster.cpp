@@ -37,59 +37,41 @@ namespace devices
 
 SpiMaster::~SpiMaster()
 {
-	CHECK_FUNCTION_CONTEXT();
-
-	if (openCount_ == 0)
-		return;
-
-	const std::lock_guard<Mutex> lockGuard {mutex_};
-
-	spiMaster_.stop();
+	assert(openCount_ == 0);
 }
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | private functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-int SpiMaster::close()
+void SpiMaster::close()
 {
-	if (openCount_ == 0)	// device is not open anymore?
-		return EBADF;
+	assert(openCount_ != 0);
 
 	if (openCount_ == 1)	// last close?
-	{
-		const auto ret = spiMaster_.stop();
-		if (ret != 0)
-			return ret;
-	}
+		spiMaster_.stop();
 
 	--openCount_;
-	return 0;
 }
 
-std::pair<int, uint32_t> SpiMaster::configure(const SpiMode mode, const uint32_t clockFrequency,
-		const uint8_t wordLength, const bool lsbFirst, const uint32_t dummyData) const
+void SpiMaster::configure(const SpiMode mode, const uint32_t clockFrequency, const uint8_t wordLength,
+		const bool lsbFirst, const uint32_t dummyData) const
 {
-	if (openCount_ == 0)
-		return {EBADF, {}};
+	assert(openCount_ != 0);
 
-	return spiMaster_.configure(mode, clockFrequency, wordLength, lsbFirst, dummyData);
+	spiMaster_.configure(mode, clockFrequency, wordLength, lsbFirst, dummyData);
 }
 
-std::pair<int, size_t> SpiMaster::executeTransaction(const SpiMasterTransfersRange transfersRange)
+int SpiMaster::executeTransaction(const SpiMasterTransfersRange transfersRange)
 {
 	CHECK_FUNCTION_CONTEXT();
 
-	if (transfersRange.size() == 0)
-		return {EINVAL, {}};
-
-	if (openCount_ == 0)
-		return {EBADF, {}};
+	assert(openCount_ != 0);
+	assert(transfersRange.size() != 0);
 
 	Semaphore semaphore {0};
 	semaphore_ = &semaphore;
 	transfersRange_ = transfersRange;
-	ret_ = {};
 	const auto cleanupScopeGuard = estd::makeScopeGuard(
 			[this]()
 			{
@@ -99,16 +81,12 @@ std::pair<int, size_t> SpiMaster::executeTransaction(const SpiMasterTransfersRan
 
 	{
 		const auto transfer = transfersRange_.begin();
-		const auto ret = spiMaster_.startTransfer(*this, transfer->getWriteBuffer(), transfer->getReadBuffer(),
-				transfer->getSize());
-		if (ret != 0)
-			return {ret, {}};
+		spiMaster_.startTransfer(*this, transfer->getWriteBuffer(), transfer->getReadBuffer(), transfer->getSize());
 	}
 
 	while (semaphore.wait() != 0);
 
-	const auto handledTransfers = transfersRange_.begin() - transfersRange.begin();
-	return {ret_, handledTransfers};
+	return success_ == true ? 0 : EIO;
 }
 
 void SpiMaster::lock()
@@ -117,9 +95,9 @@ void SpiMaster::lock()
 	assert(ret == 0);
 }
 
-void SpiMaster::notifyWaiter(const int ret)
+void SpiMaster::notifyWaiter(const bool success)
 {
-	ret_ = ret;
+	success_ = success;
 	const auto semaphore = semaphore_;
 	assert(semaphore != nullptr);
 	semaphore->post();
@@ -127,8 +105,7 @@ void SpiMaster::notifyWaiter(const int ret)
 
 int SpiMaster::open()
 {
-	if (openCount_ == std::numeric_limits<decltype(openCount_)>::max())	// device is already opened too many times?
-		return EMFILE;
+	assert(openCount_ < std::numeric_limits<decltype(openCount_)>::max());
 
 	if (openCount_ == 0)	// first open?
 	{
@@ -141,29 +118,23 @@ int SpiMaster::open()
 	return 0;
 }
 
-void SpiMaster::transferCompleteEvent(const size_t bytesTransfered)
+void SpiMaster::transferCompleteEvent(const bool success)
 {
-	assert(transfersRange_.size() != 0 && "Invalid range of transfers!");
+	assert(transfersRange_.size() != 0);
 
-	const auto previousTransfer = transfersRange_.begin();
-	previousTransfer->finalize(bytesTransfered);
-
-	const auto success = previousTransfer->getSize() == bytesTransfered;
 	if (success == true)	// handling of last transfer successful?
 		transfersRange_ = {transfersRange_.begin() + 1, transfersRange_.end()};
 
 	if (transfersRange_.size() == 0 || success == false)	// all transfers are done or handling of last one failed?
 	{
-		notifyWaiter(success == true ? 0 : EIO);
+		notifyWaiter(success);
 		return;
 	}
 
 	{
 		const auto nextTransfer = transfersRange_.begin();
-		const auto ret = spiMaster_.startTransfer(*this, nextTransfer->getWriteBuffer(), nextTransfer->getReadBuffer(),
+		spiMaster_.startTransfer(*this, nextTransfer->getWriteBuffer(), nextTransfer->getReadBuffer(),
 				nextTransfer->getSize());
-		if (ret != 0)
-			notifyWaiter(ret);
 	}
 }
 

@@ -251,8 +251,7 @@ public:
 	 *
 	 * \pre Device is opened.
 	 *
-	 * \return 0 on success, error code otherwise:
-	 * - error codes returned by SpiMasterHandle::close();
+	 * \return 0 on success, error code otherwise
 	 */
 
 	int close() override;
@@ -406,8 +405,8 @@ private:
 	 * \param [in] buffer is the buffer with data that will be written, nullptr to erase
 	 * \param [in] size is the size of erase (`buffer == nullptr`) or size of \a buffer (`buffer != nullptr`), bytes
 	 *
-	 * \return pair with return code (0 on success, error code otherwise) and number of erased/written bytes (valid even
-	 * when error code is returned); error codes:
+	 * \return pair with return code (0 on success, error code otherwise) and number of erased/written bytes; error
+	 * codes:
 	 * - error codes returned by executeTransaction();
 	 * - error codes returned by waitWhileWriteInProgress();
 	 * - error codes returned by writeEnable();
@@ -420,13 +419,11 @@ private:
 	 *
 	 * \param [in] transfersRange is the range of transfers that will be executed
 	 *
-	 * \return pair with return code (0 on success, error code otherwise) and number of successfully completed transfers
-	 * from \a transfersRange; error codes:
-	 * - error codes returned by SpiMasterHandle::configure();
+	 * \return 0 on success, error code otherwise:
 	 * - error codes returned by SpiMasterHandle::executeTransaction();
 	 */
 
-	std::pair<int, size_t> executeTransaction(SpiMasterTransfersRange transfersRange) const;
+	int executeTransaction(SpiMasterTransfersRange transfersRange) const;
 
 	/**
 	 * \return size of single page, bytes

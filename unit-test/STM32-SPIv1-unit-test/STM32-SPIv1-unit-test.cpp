@@ -41,23 +41,6 @@ TEST_CASE("Testing distortos::chip::configureSpi()", "[configureSpi]")
 
 	ALLOW_CALL(peripheralMock, getPeripheralFrequency()).RETURN(peripheralFrequency);
 
-	SECTION("Trying to use clock frequency lower than `peripheral frequency / 256` should fail with EINVAL")
-	{
-		REQUIRE(distortos::chip::configureSpi(peripheralMock, {}, peripheralFrequency / 256 - 1, 8,
-				{}).first == EINVAL);
-	}
-
-	for (uint8_t wordLength {}; wordLength <= 32; ++wordLength)
-	{
-		if (wordLength == 8 || wordLength == 16)
-			continue;
-
-		DYNAMIC_SECTION("Trying to use word length " << static_cast<int>(wordLength) << " should fail with EINVAL")
-		{
-			REQUIRE(distortos::chip::configureSpi(peripheralMock, {}, {}, wordLength, {}).first == EINVAL);
-		}
-	}
-
 	const distortos::devices::SpiMode modes[]
 	{
 			distortos::devices::SpiMode::_0,
@@ -81,7 +64,7 @@ TEST_CASE("Testing distortos::chip::configureSpi()", "[configureSpi]")
 			REQUIRE_CALL(peripheralMock, readCr1()).IN_SEQUENCE(sequence).RETURN(oldCr1);
 			REQUIRE_CALL(peripheralMock, writeCr1(oldCr1 & ~SPI_CR1_SPE)).IN_SEQUENCE(sequence);
 			REQUIRE_CALL(peripheralMock, writeCr1(newCr1)).IN_SEQUENCE(sequence);
-			REQUIRE(distortos::chip::configureSpi(peripheralMock, mode, peripheralFrequency / 256, 8, {}).first == 0);
+			distortos::chip::configureSpi(peripheralMock, mode, peripheralFrequency / 256, 8, {});
 		}
 	}
 
@@ -130,13 +113,11 @@ TEST_CASE("Testing distortos::chip::configureSpi()", "[configureSpi]")
 			const auto br = divider <= 2 ? 0 : estd::log2u(divider - 1);
 			const auto newCr1 = (initialCr1 & ~SPI_CR1_BR) | br << SPI_CR1_BR_Pos;
 			const auto oldCr1 = newCr1 ^ SPI_CR1_BR;
-			const auto realClockFrequency = peripheralFrequency / (1 << (br + 1));
 
 			REQUIRE_CALL(peripheralMock, readCr1()).IN_SEQUENCE(sequence).RETURN(oldCr1);
 			REQUIRE_CALL(peripheralMock, writeCr1(oldCr1 & ~SPI_CR1_SPE)).IN_SEQUENCE(sequence);
 			REQUIRE_CALL(peripheralMock, writeCr1(newCr1)).IN_SEQUENCE(sequence);
-			REQUIRE(distortos::chip::configureSpi(peripheralMock, {}, clockFrequency, 8,
-					{}) == std::make_pair(0, realClockFrequency));
+			distortos::chip::configureSpi(peripheralMock, {}, clockFrequency, 8, {});
 		}
 	}
 
@@ -155,8 +136,7 @@ TEST_CASE("Testing distortos::chip::configureSpi()", "[configureSpi]")
 			REQUIRE_CALL(peripheralMock, readCr1()).IN_SEQUENCE(sequence).RETURN(oldCr1);
 			REQUIRE_CALL(peripheralMock, writeCr1(oldCr1 & ~SPI_CR1_SPE)).IN_SEQUENCE(sequence);
 			REQUIRE_CALL(peripheralMock, writeCr1(newCr1)).IN_SEQUENCE(sequence);
-			REQUIRE(distortos::chip::configureSpi(peripheralMock, {}, peripheralFrequency / 256, wordLength,
-					{}).first == 0);
+			distortos::chip::configureSpi(peripheralMock, {}, peripheralFrequency / 256, wordLength, {});
 		}
 	}
 
@@ -175,8 +155,7 @@ TEST_CASE("Testing distortos::chip::configureSpi()", "[configureSpi]")
 			REQUIRE_CALL(peripheralMock, readCr1()).IN_SEQUENCE(sequence).RETURN(oldCr1);
 			REQUIRE_CALL(peripheralMock, writeCr1(oldCr1 & ~SPI_CR1_SPE)).IN_SEQUENCE(sequence);
 			REQUIRE_CALL(peripheralMock, writeCr1(newCr1)).IN_SEQUENCE(sequence);
-			REQUIRE(distortos::chip::configureSpi(peripheralMock, {}, peripheralFrequency / 256, 8,
-					lsbFirst).first == 0);
+			distortos::chip::configureSpi(peripheralMock, {}, peripheralFrequency / 256, 8, lsbFirst);
 		}
 	}
 }

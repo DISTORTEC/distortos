@@ -20,8 +20,6 @@
 
 #include "estd/ScopeGuard.hpp"
 
-#include <cerrno>
-
 namespace distortos
 {
 
@@ -34,36 +32,23 @@ namespace chip
 
 SpiMasterLowLevelDmaBased::~SpiMasterLowLevelDmaBased()
 {
-	if (isStarted() == false)
-		return;
-
-	// reset peripheral
-	spiPeripheral_.writeCr1({});
-	spiPeripheral_.writeCr2({});
+	assert(isStarted() == false);
 }
 
-std::pair<int, uint32_t> SpiMasterLowLevelDmaBased::configure(const devices::SpiMode mode,
-		const uint32_t clockFrequency, const uint8_t wordLength, const bool lsbFirst, const uint32_t dummyData)
+void SpiMasterLowLevelDmaBased::configure(const devices::SpiMode mode, const uint32_t clockFrequency,
+		const uint8_t wordLength, const bool lsbFirst, const uint32_t dummyData)
 {
-	if (isStarted() == false)
-		return {EBADF, {}};
-
-	if (isTransferInProgress() == true)
-		return {EBUSY, {}};
-
-	const auto ret = configureSpi(spiPeripheral_, mode, clockFrequency, wordLength, lsbFirst);
-	if (ret.first != 0)
-		return ret;
+	assert(isStarted() == true);
+	assert(isTransferInProgress() == false);
 
 	txDummyData_ = dummyData;
 	wordLength_ = wordLength;
-	return ret;
+	configureSpi(spiPeripheral_, mode, clockFrequency, wordLength, lsbFirst);
 }
 
 int SpiMasterLowLevelDmaBased::start()
 {
-	if (isStarted() == true)
-		return EBADF;
+	assert(isStarted() == false);
 
 	{
 		const auto ret = rxDmaChannelHandle_.reserve(rxDmaChannel_, rxDmaRequest_, rxDmaChannelFunctor_);
@@ -89,27 +74,18 @@ int SpiMasterLowLevelDmaBased::start()
 	spiPeripheral_.writeCr2(SPI_CR2_TXDMAEN | SPI_CR2_RXDMAEN);
 	started_ = true;
 
-	return 0;
+	return {};
 }
 
-int SpiMasterLowLevelDmaBased::startTransfer(devices::SpiMasterBase& spiMasterBase, const void* const writeBuffer,
+void SpiMasterLowLevelDmaBased::startTransfer(devices::SpiMasterBase& spiMasterBase, const void* const writeBuffer,
 		void* const readBuffer, const size_t size)
 {
-	if (size == 0)
-		return EINVAL;
-
-	if (isStarted() == false)
-		return EBADF;
-
-	if (isTransferInProgress() == true)
-		return EBUSY;
-
+	assert(isStarted() == true);
+	assert(isTransferInProgress() == false);
 	const auto dataSize = wordLength_ / 8;
-	if (size % dataSize != 0)
-		return EINVAL;
+	assert(size != 0 && size % dataSize == 0);
 
 	spiMasterBase_ = &spiMasterBase;
-	size_ = size;
 
 	const auto transactions = size / dataSize;
 	const auto commonDmaFlags = DmaChannel::Flags::peripheralFixed |
@@ -133,17 +109,12 @@ int SpiMasterLowLevelDmaBased::startTransfer(devices::SpiMasterBase& spiMasterBa
 		txDmaChannelHandle_.startTransfer(memoryAddress, spiPeripheral_.getDrAddress(), transactions,
 				commonDmaFlags | txDmaFlags);
 	}
-
-	return 0;
 }
 
-int SpiMasterLowLevelDmaBased::stop()
+void SpiMasterLowLevelDmaBased::stop()
 {
-	if (isStarted() == false)
-		return EBADF;
-
-	if (isTransferInProgress() == true)
-		return EBUSY;
+	assert(isStarted() == true);
+	assert(isTransferInProgress() == false);
 
 	rxDmaChannelHandle_.release();
 	txDmaChannelHandle_.release();
@@ -152,25 +123,21 @@ int SpiMasterLowLevelDmaBased::stop()
 	spiPeripheral_.writeCr1({});
 	spiPeripheral_.writeCr2({});
 	started_ = false;
-	return 0;
 }
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | private functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-void SpiMasterLowLevelDmaBased::eventHandler(const size_t transactionsLeft)
+void SpiMasterLowLevelDmaBased::eventHandler(const bool success)
 {
 	txDmaChannelHandle_.stopTransfer();
 	rxDmaChannelHandle_.stopTransfer();
 
-	const auto bytesTransfered = size_ - transactionsLeft * (wordLength_ / 8);
-	size_ = {};
-
 	const auto spiMasterBase = spiMasterBase_;
 	spiMasterBase_ = {};
 	assert(spiMasterBase != nullptr);
-	spiMasterBase->transferCompleteEvent(bytesTransfered);
+	spiMasterBase->transferCompleteEvent(success);
 }
 
 /*---------------------------------------------------------------------------------------------------------------------+
@@ -179,21 +146,21 @@ void SpiMasterLowLevelDmaBased::eventHandler(const size_t transactionsLeft)
 
 void SpiMasterLowLevelDmaBased::RxDmaChannelFunctor::transferCompleteEvent()
 {
-	owner_.eventHandler(0);
+	owner_.eventHandler(true);
 }
 
-void SpiMasterLowLevelDmaBased::RxDmaChannelFunctor::transferErrorEvent(const size_t transactionsLeft)
+void SpiMasterLowLevelDmaBased::RxDmaChannelFunctor::transferErrorEvent(size_t)
 {
-	owner_.eventHandler(transactionsLeft);
+	owner_.eventHandler(false);
 }
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | SpiMasterLowLevelDmaBased::TxDmaChannelFunctor public functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-void SpiMasterLowLevelDmaBased::TxDmaChannelFunctor::transferErrorEvent(const size_t transactionsLeft)
+void SpiMasterLowLevelDmaBased::TxDmaChannelFunctor::transferErrorEvent(size_t)
 {
-	owner_.eventHandler(transactionsLeft);
+	owner_.eventHandler(false);
 }
 
 }	// namespace chip

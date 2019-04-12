@@ -13,9 +13,9 @@
 
 #include "distortos/chip/STM32-SPIv1-SpiPeripheral.hpp"
 
-#include "estd/log2u.hpp"
+#include "distortos/assert.h"
 
-#include <cerrno>
+#include "estd/log2u.hpp"
 
 namespace distortos
 {
@@ -27,16 +27,14 @@ namespace chip
 | global functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-std::pair<int, uint32_t> configureSpi(const SpiPeripheral& spiPeripheral, const devices::SpiMode mode,
-		const uint32_t clockFrequency, const uint8_t wordLength, const bool lsbFirst)
+void configureSpi(const SpiPeripheral& spiPeripheral, const devices::SpiMode mode, const uint32_t clockFrequency,
+		const uint8_t wordLength, const bool lsbFirst)
 {
-	if (wordLength != 8 && wordLength != 16)
-		return {EINVAL, {}};
+	assert(wordLength == 8 || wordLength == 16);
 
 	const auto peripheralFrequency = spiPeripheral.getPeripheralFrequency();
 	const auto divider = (peripheralFrequency + clockFrequency - 1) / clockFrequency;
-	if (divider > 256)
-		return {EINVAL, {}};
+	assert(divider <= 256);
 
 	const uint32_t br = divider <= 2 ? 0 : estd::log2u(divider - 1);
 
@@ -53,8 +51,6 @@ std::pair<int, uint32_t> configureSpi(const SpiPeripheral& spiPeripheral, const 
 			br << SPI_CR1_BR_Pos |
 			(mode == devices::SpiMode::cpol1cpha0 || mode == devices::SpiMode::cpol1cpha1) << SPI_CR1_CPOL_Pos |
 			(mode == devices::SpiMode::cpol0cpha1 || mode == devices::SpiMode::cpol1cpha1) << SPI_CR1_CPHA_Pos);
-
-	return {{}, peripheralFrequency / (1 << (br + 1))};
 }
 
 }	// namespace chip

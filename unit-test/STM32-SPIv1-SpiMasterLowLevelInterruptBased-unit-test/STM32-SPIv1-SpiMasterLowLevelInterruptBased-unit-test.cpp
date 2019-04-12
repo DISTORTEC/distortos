@@ -31,7 +31,7 @@ class SpiMaster : public distortos::devices::SpiMasterBase
 {
 public:
 
-	MAKE_MOCK1(transferCompleteEvent, void(size_t));
+	MAKE_MOCK1(transferCompleteEvent, void(bool));
 };
 
 /*---------------------------------------------------------------------------------------------------------------------+
@@ -56,36 +56,16 @@ TEST_CASE("Testing start() & stop() interactions", "[start/stop]")
 
 	distortos::chip::SpiMasterLowLevelInterruptBased spi {peripheralMock};
 
-	SECTION("Stopping stopped driver should fail with EBADF")
-	{
-		REQUIRE(spi.stop() == EBADF);
-	}
-	SECTION("Configuring stopped driver should fail with EBADF")
-	{
-		REQUIRE(spi.configure({}, {}, 8, {}, {}).first == EBADF);
-	}
-	SECTION("Starting transfer with stopped driver should fail with EBADF")
-	{
-		REQUIRE(spi.startTransfer(masterMock, nullptr, nullptr, 1) == EBADF);
-	}
 	SECTION("Starting stopped driver should succeed")
 	{
 		REQUIRE_CALL(peripheralMock, writeCr1(initialCr1)).IN_SEQUENCE(sequence);
 		REQUIRE_CALL(peripheralMock, writeCr2(initialCr2)).IN_SEQUENCE(sequence);
 		REQUIRE(spi.start() == 0);
 
-		SECTION("Starting started driver should fail with EBADF")
-		{
-			REQUIRE(spi.start() == EBADF);
-			expectations.emplace_back(NAMED_REQUIRE_CALL(peripheralMock, writeCr1(0u)).IN_SEQUENCE(sequence));
-			expectations.emplace_back(NAMED_REQUIRE_CALL(peripheralMock, writeCr2(0u)).IN_SEQUENCE(sequence));
-		}
-		SECTION("Stopping started driver should succeed")
-		{
-			REQUIRE_CALL(peripheralMock, writeCr1(0u)).IN_SEQUENCE(sequence);
-			REQUIRE_CALL(peripheralMock, writeCr2(0u)).IN_SEQUENCE(sequence);
-			REQUIRE(spi.stop() == 0);
-		}
+		// stopping started driver should succeed
+		REQUIRE_CALL(peripheralMock, writeCr1(0u)).IN_SEQUENCE(sequence);
+		REQUIRE_CALL(peripheralMock, writeCr2(0u)).IN_SEQUENCE(sequence);
+		spi.stop();
 	}
 }
 
@@ -129,28 +109,21 @@ TEST_CASE("Testing configure()", "[configure]")
 			false,
 			true,
 	};
-	const std::pair<int, uint32_t> rets[]
-	{
-			{0x558befc4, 0x08d543bf},
-			{0x051c780b, 0x1b8aa8ff},
-			{0x61093262, 0x3092c5a1},
-			{0x760d6032, 0xd29abd55},
-	};
 	for (auto mode : modes)
 		for (auto clockFrequency : clockFrequencies)
 			for (auto wordLength : wordLengths)
 				for (auto lsbFirst : lsbFirsts)
-					for (auto ret : rets)
-					{
-						REQUIRE_CALL(stm32Spiv1Spiv2Mock, configureSpi(_, mode, clockFrequency, wordLength,
-								lsbFirst)).LR_WITH(&_1 == &peripheralMock).IN_SEQUENCE(sequence).RETURN(ret);
-						REQUIRE(spi.configure(mode, clockFrequency, wordLength, lsbFirst, {}) == ret);
-					}
+				{
+					REQUIRE_CALL(stm32Spiv1Spiv2Mock,
+							configureSpi(_, mode, clockFrequency, wordLength, lsbFirst))
+							.LR_WITH(&_1 == &peripheralMock).IN_SEQUENCE(sequence);
+					spi.configure(mode, clockFrequency, wordLength, lsbFirst, {});
+				}
 
 	{
 		REQUIRE_CALL(peripheralMock, writeCr1(0u)).IN_SEQUENCE(sequence);
 		REQUIRE_CALL(peripheralMock, writeCr2(0u)).IN_SEQUENCE(sequence);
-		REQUIRE(spi.stop() == 0);
+		spi.stop();
 	}
 }
 
@@ -169,18 +142,13 @@ TEST_CASE("Testing startTransfer()", "[startTransfer]")
 		REQUIRE(spi.start() == 0);
 	}
 
-	SECTION("Starting transfer with zero length should fail with EINVAL")
-	{
-		REQUIRE(spi.startTransfer(masterMock, nullptr, nullptr, 0) == EINVAL);
-	}
-
 	constexpr uint16_t dummyData {0xd515};
 
 	SECTION("Testing 8-bit transfers")
 	{
 		REQUIRE_CALL(stm32Spiv1Spiv2Mock, configureSpi(_, distortos::devices::SpiMode{}, uint32_t{}, 8,
-				bool{})).LR_WITH(&_1 == &peripheralMock).IN_SEQUENCE(sequence).RETURN(std::make_pair(0, 0));
-		REQUIRE(spi.configure({}, {}, 8, {}, dummyData).first == 0);
+				bool{})).LR_WITH(&_1 == &peripheralMock).IN_SEQUENCE(sequence);
+		spi.configure({}, {}, 8, {}, dummyData);
 
 		SECTION("Testing 8-bit transfer of 1 item")
 		{
@@ -190,21 +158,12 @@ TEST_CASE("Testing startTransfer()", "[startTransfer]")
 			REQUIRE_CALL(peripheralMock, readCr2()).IN_SEQUENCE(sequence).RETURN(initialCr2);
 			REQUIRE_CALL(peripheralMock, writeCr2(initialCr2 | SPI_CR2_RXNEIE)).IN_SEQUENCE(sequence);
 			REQUIRE_CALL(peripheralMock, writeDr(dummyData)).IN_SEQUENCE(sequence);
-			REQUIRE(spi.startTransfer(masterMock, nullptr, rxBuffer.begin(), sizeof(rxBuffer)) == 0);
-
-			// starting another transfer when the previous one is ongoing should fail with EBUSY
-			REQUIRE(spi.startTransfer(masterMock, nullptr, rxBuffer.begin(), sizeof(rxBuffer)) == EBUSY);
-
-			// trying to configure the driver when a transfer is ongoing should fail with EBUSY
-			REQUIRE(spi.configure({}, {}, 8, {}, dummyData).first == EBUSY);
-
-			// trying to stop the driver when a transfer is ongoing should fail with EBUSY
-			REQUIRE(spi.stop() == EBUSY);
+			spi.startTransfer(masterMock, nullptr, rxBuffer.begin(), sizeof(rxBuffer));
 
 			REQUIRE_CALL(peripheralMock, readDr()).IN_SEQUENCE(sequence).RETURN(rxData[0]);
 			REQUIRE_CALL(peripheralMock, readCr2()).IN_SEQUENCE(sequence).RETURN(initialCr2 | SPI_CR2_RXNEIE);
 			REQUIRE_CALL(peripheralMock, writeCr2(initialCr2)).IN_SEQUENCE(sequence);
-			REQUIRE_CALL(masterMock, transferCompleteEvent(sizeof(rxBuffer))).IN_SEQUENCE(sequence);
+			REQUIRE_CALL(masterMock, transferCompleteEvent(true)).IN_SEQUENCE(sequence);
 			spi.interruptHandler();
 
 			REQUIRE(rxData == rxBuffer);
@@ -218,16 +177,7 @@ TEST_CASE("Testing startTransfer()", "[startTransfer]")
 			REQUIRE_CALL(peripheralMock, readCr2()).IN_SEQUENCE(sequence).RETURN(initialCr2);
 			REQUIRE_CALL(peripheralMock, writeCr2(initialCr2 | SPI_CR2_RXNEIE)).IN_SEQUENCE(sequence);
 			REQUIRE_CALL(peripheralMock, writeDr(txBuffer.front())).IN_SEQUENCE(sequence);
-			REQUIRE(spi.startTransfer(masterMock, txBuffer.begin(), rxBuffer.begin(), sizeof(rxBuffer)) == 0);
-
-			// starting another transfer when the previous one is ongoing should fail with EBUSY
-			REQUIRE(spi.startTransfer(masterMock, txBuffer.begin(), rxBuffer.begin(), sizeof(rxBuffer)) == EBUSY);
-
-			// trying to configure the driver when a transfer is ongoing should fail with EBUSY
-			REQUIRE(spi.configure({}, {}, 8, {}, dummyData).first == EBUSY);
-
-			// trying to stop the driver when a transfer is ongoing should fail with EBUSY
-			REQUIRE(spi.stop() == EBUSY);
+			spi.startTransfer(masterMock, txBuffer.begin(), rxBuffer.begin(), sizeof(rxBuffer));
 
 			for (size_t i {}; i < txBuffer.size(); ++i)
 			{
@@ -244,7 +194,7 @@ TEST_CASE("Testing startTransfer()", "[startTransfer]")
 					expectations.emplace_back(NAMED_REQUIRE_CALL(peripheralMock,
 							writeCr2(initialCr2)).IN_SEQUENCE(sequence));
 					expectations.emplace_back(NAMED_REQUIRE_CALL(masterMock,
-							transferCompleteEvent(sizeof(rxBuffer))).IN_SEQUENCE(sequence));
+							transferCompleteEvent(true)).IN_SEQUENCE(sequence));
 				}
 				spi.interruptHandler();
 			}
@@ -255,13 +205,9 @@ TEST_CASE("Testing startTransfer()", "[startTransfer]")
 	SECTION("Testing 16-bit transfers")
 	{
 		REQUIRE_CALL(stm32Spiv1Spiv2Mock, configureSpi(_, distortos::devices::SpiMode{}, uint32_t{}, 16,
-				bool{})).LR_WITH(&_1 == &peripheralMock).IN_SEQUENCE(sequence).RETURN(std::make_pair(0, 0));
-		REQUIRE(spi.configure({}, {}, 16, {}, dummyData).first == 0);
+				bool{})).LR_WITH(&_1 == &peripheralMock).IN_SEQUENCE(sequence);
+		spi.configure({}, {}, 16, {}, dummyData);
 
-		SECTION("Starting transfer with odd length when word length is 16 should fail with EINVAL")
-		{
-			REQUIRE(spi.startTransfer(masterMock, nullptr, nullptr, 1) == EINVAL);
-		}
 		SECTION("Testing 16-bit transfer of 1 item")
 		{
 			const std::array<uint16_t, 1> rxData {{0xad74}};
@@ -270,21 +216,12 @@ TEST_CASE("Testing startTransfer()", "[startTransfer]")
 			REQUIRE_CALL(peripheralMock, readCr2()).IN_SEQUENCE(sequence).RETURN(initialCr2);
 			REQUIRE_CALL(peripheralMock, writeCr2(initialCr2 | SPI_CR2_RXNEIE)).IN_SEQUENCE(sequence);
 			REQUIRE_CALL(peripheralMock, writeDr(dummyData)).IN_SEQUENCE(sequence);
-			REQUIRE(spi.startTransfer(masterMock, nullptr, rxBuffer.begin(), sizeof(rxBuffer)) == 0);
-
-			// starting another transfer when the previous one is ongoing should fail with EBUSY
-			REQUIRE(spi.startTransfer(masterMock, nullptr, rxBuffer.begin(), sizeof(rxBuffer)) == EBUSY);
-
-			// trying to configure the driver when a transfer is ongoing should fail with EBUSY
-			REQUIRE(spi.configure({}, {}, 16, {}, dummyData).first == EBUSY);
-
-			// trying to stop the driver when a transfer is ongoing should fail with EBUSY
-			REQUIRE(spi.stop() == EBUSY);
+			spi.startTransfer(masterMock, nullptr, rxBuffer.begin(), sizeof(rxBuffer));
 
 			REQUIRE_CALL(peripheralMock, readDr()).IN_SEQUENCE(sequence).RETURN(rxData[0]);
 			REQUIRE_CALL(peripheralMock, readCr2()).IN_SEQUENCE(sequence).RETURN(initialCr2 | SPI_CR2_RXNEIE);
 			REQUIRE_CALL(peripheralMock, writeCr2(initialCr2)).IN_SEQUENCE(sequence);
-			REQUIRE_CALL(masterMock, transferCompleteEvent(sizeof(rxData))).IN_SEQUENCE(sequence);
+			REQUIRE_CALL(masterMock, transferCompleteEvent(true)).IN_SEQUENCE(sequence);
 			spi.interruptHandler();
 
 			REQUIRE(rxData == rxBuffer);
@@ -298,16 +235,7 @@ TEST_CASE("Testing startTransfer()", "[startTransfer]")
 			REQUIRE_CALL(peripheralMock, readCr2()).IN_SEQUENCE(sequence).RETURN(initialCr2);
 			REQUIRE_CALL(peripheralMock, writeCr2(initialCr2 | SPI_CR2_RXNEIE)).IN_SEQUENCE(sequence);
 			REQUIRE_CALL(peripheralMock, writeDr(txBuffer.front())).IN_SEQUENCE(sequence);
-			REQUIRE(spi.startTransfer(masterMock, txBuffer.begin(), rxBuffer.begin(), sizeof(rxBuffer)) == 0);
-
-			// starting another transfer when the previous one is ongoing should fail with EBUSY
-			REQUIRE(spi.startTransfer(masterMock, txBuffer.begin(), rxBuffer.begin(), sizeof(rxBuffer)) == EBUSY);
-
-			// trying to configure the driver when a transfer is ongoing should fail with EBUSY
-			REQUIRE(spi.configure({}, {}, 16, {}, dummyData).first == EBUSY);
-
-			// trying to stop the driver when a transfer is ongoing should fail with EBUSY
-			REQUIRE(spi.stop() == EBUSY);
+			spi.startTransfer(masterMock, txBuffer.begin(), rxBuffer.begin(), sizeof(rxBuffer));
 
 			for (size_t i {}; i < txBuffer.size(); ++i)
 			{
@@ -324,7 +252,7 @@ TEST_CASE("Testing startTransfer()", "[startTransfer]")
 					expectations.emplace_back(NAMED_REQUIRE_CALL(peripheralMock,
 							writeCr2(initialCr2)).IN_SEQUENCE(sequence));
 					expectations.emplace_back(NAMED_REQUIRE_CALL(masterMock,
-							transferCompleteEvent(sizeof(rxBuffer))).IN_SEQUENCE(sequence));
+							transferCompleteEvent(true)).IN_SEQUENCE(sequence));
 				}
 				spi.interruptHandler();
 			}
@@ -336,6 +264,6 @@ TEST_CASE("Testing startTransfer()", "[startTransfer]")
 	{
 		REQUIRE_CALL(peripheralMock, writeCr1(0u)).IN_SEQUENCE(sequence);
 		REQUIRE_CALL(peripheralMock, writeCr2(0u)).IN_SEQUENCE(sequence);
-		REQUIRE(spi.stop() == 0);
+		spi.stop();
 	}
 }

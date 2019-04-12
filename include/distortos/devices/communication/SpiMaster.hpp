@@ -49,10 +49,10 @@ public:
 	constexpr explicit SpiMaster(SpiMasterLowLevel& spiMaster) :
 			mutex_{Mutex::Type::recursive, Mutex::Protocol::priorityInheritance},
 			transfersRange_{},
-			ret_{},
 			semaphore_{},
 			spiMaster_{spiMaster},
-			openCount_{}
+			openCount_{},
+			success_{}
 	{
 
 	}
@@ -60,9 +60,7 @@ public:
 	/**
 	 * \brief SpiMaster's destructor
 	 *
-	 * Does nothing if all users already closed this device. If they did not, performs forced close of device.
-	 *
-	 * \warning This function must not be called from interrupt context!
+	 * \pre Device is closed.
 	 */
 
 	~SpiMaster() override;
@@ -74,30 +72,26 @@ private:
 	 *
 	 * Does nothing if any user still has this device opened. Otherwise low-level driver is stopped.
 	 *
-	 * \warning This function must not be called from interrupt context!
-	 *
-	 * \return 0 on success, error code otherwise:
-	 * - EBADF - the device is already completely closed;
-	 * - error codes returned by SpiMasterLowLevel::stop();
+	 * \pre Device is opened.
 	 */
 
-	int close();
+	void close();
 
 	/**
 	 * \brief Configures parameters of SPI master.
 	 *
+	 * \pre Device is opened.
+	 * \pre \a clockFrequency and \a wordLength are valid for associated low-level implementation of SpiMasterLowLevel
+	 * interface.
+	 *
 	 * \param [in] mode is the desired SPI mode
 	 * \param [in] clockFrequency is the desired clock frequency, Hz
-	 * \param [in] wordLength selects word length, bits, [1; 32]
+	 * \param [in] wordLength selects word length, bits
 	 * \param [in] lsbFirst selects whether MSB (false) or LSB (true) is transmitted first
 	 * \param [in] dummyData is the dummy data that will be sent if write buffer of transfer is nullptr
-	 *
-	 * \return pair with return code (0 on success, error code otherwise) and real clock frequency; error codes:
-	 * - EBADF - associated SPI master is not opened;
-	 * - error codes returned by SpiMasterLowLevel::configure();
 	 */
 
-	std::pair<int, uint32_t> configure(SpiMode mode, uint32_t clockFrequency, uint8_t wordLength, bool lsbFirst,
+	void configure(SpiMode mode, uint32_t clockFrequency, uint8_t wordLength, bool lsbFirst,
 			uint32_t dummyData) const;
 
 	/**
@@ -107,17 +101,16 @@ private:
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
+	 * \pre Device is opened.
+	 * \pre \a transfersRange has at least one transfer.
+	 *
 	 * \param [in] transfersRange is the range of transfers that will be executed
 	 *
-	 * \return pair with return code (0 on success, error code otherwise) and number of successfully completed transfers
-	 * from \a transfersRange; error codes:
-	 * - EBADF - associated SPI master is not opened;
-	 * - EINVAL - \a transfersRange has no transfers;
+	 * \return 0 on success, error code otherwise:
 	 * - EIO - failure detected by low-level SPI master driver;
-	 * - error codes returned by SpiMasterLowLevel::startTransfer();
 	 */
 
-	std::pair<int, size_t> executeTransaction(SpiMasterTransfersRange transfersRange);
+	int executeTransaction(SpiMasterTransfersRange transfersRange);
 
 	/**
 	 * \brief Locks SPI master for exclusive use by current thread.
@@ -136,20 +129,19 @@ private:
 	/**
 	 * \brief Notifies waiting thread about completion of transaction.
 	 *
-	 * \param [in] ret is the last error code returned by transaction handling code
+	 * \param [in] success tells whether the transaction was successful (true) or not (false)
 	 */
 
-	void notifyWaiter(int ret);
+	void notifyWaiter(bool success);
 
 	/**
 	 * \brief Opens SPI master.
 	 *
 	 * Does nothing if any user already has this device opened. Otherwise low-level driver is started.
 	 *
-	 * \warning This function must not be called from interrupt context!
+	 * \pre The number of times the device is opened is less than 255.
 	 *
 	 * \return 0 on success, error code otherwise:
-	 * - EMFILE - this device is already opened too many times;
 	 * - error codes returned by SpiMasterLowLevel::start();
 	 */
 
@@ -163,12 +155,10 @@ private:
 	 * Handles the next transfer from the currently handled transaction. If there are no more transfers, waiting thread
 	 * is notified about completion of transaction.
 	 *
-	 * \param [in] bytesTransfered is the number of bytes transferred by low-level SPI master driver (read from write
-	 * buffer and/or written to read buffer), may be unreliable if transfer error was detected (\a bytesTransfered is
-	 * not equal to size of transfer)
+	 * \param [in] success tells whether the transfer was successful (true) or not (false)
 	 */
 
-	void transferCompleteEvent(size_t bytesTransfered) override;
+	void transferCompleteEvent(bool success) override;
 
 	/**
 	 * \brief Unlocks SPI master which was previously locked by current thread.
@@ -188,9 +178,6 @@ private:
 	/// range of transfers that are part of currently handled transaction
 	SpiMasterTransfersRange transfersRange_;
 
-	/// error codes detected in transferCompleteEvent()
-	volatile int ret_;
-
 	/// pointer to semaphore used to notify waiting thread about completion of transaction
 	Semaphore* volatile semaphore_;
 
@@ -199,6 +186,9 @@ private:
 
 	/// number of times this device was opened but not yet closed
 	uint8_t openCount_;
+
+	/// tells whether the transaction was successful (true) or not (false)
+	volatile bool success_;
 };
 
 }	// namespace devices

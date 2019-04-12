@@ -230,7 +230,7 @@ public:
 
 	~SelectGuard()
 	{
-		SpiMasterTransfer transfer {nullptr, nullptr, 1};
+		static const SpiMasterTransfer transfer {nullptr, nullptr, 1};
 		spiMasterHandle_.executeTransaction(SpiMasterTransfersRange{transfer});
 	}
 
@@ -411,10 +411,10 @@ std::pair<int, uint8_t> waitWhile(const SpiMasterHandle& spiMasterHandle, const 
 	while (distortos::TickClock::now() < deadline)
 	{
 		uint8_t byte;
-		SpiMasterTransfer transfer {nullptr, &byte, sizeof(byte)};
+		const SpiMasterTransfer transfer {nullptr, &byte, sizeof(byte)};
 		const auto ret = spiMasterHandle.executeTransaction(SpiMasterTransfersRange{transfer});
-		if (ret.first != 0)
-			return {ret.first, {}};
+		if (ret != 0)
+			return {ret, {}};
 		if (functor(byte) == false)
 			return {{}, byte};
 	}
@@ -450,14 +450,13 @@ int waitWhileBusy(const SpiMasterHandle& spiMasterHandle, const distortos::TickC
  * \param [in] size is the size of data block that should be read, bytes
  * \param [in] duration is the duration of wait before giving up
  *
- * \return pair with return code (0 on success, error code otherwise) and number of read bytes (valid even when error
- * code is returned); error codes:
+ * \return 0 on success, error code otherwise:
  * - EIO - unexpected control token was read;
  * - error codes returned by waitWhile();
  * - error codes returned by SpiMasterHandle::executeTransaction();
  */
 
-std::pair<int, size_t> readDataBlock(const SpiMasterHandle& spiMasterHandle, void* const buffer, const size_t size,
+int readDataBlock(const SpiMasterHandle& spiMasterHandle, void* const buffer, const size_t size,
 		const distortos::TickClock::duration duration)
 {
 	{
@@ -467,19 +466,17 @@ std::pair<int, size_t> readDataBlock(const SpiMasterHandle& spiMasterHandle, voi
 					return byte == 0xff;
 				});
 		if (ret.first != 0)
-			return {ret.first, {}};
+			return ret.first;
 		if (ret.second != startBlockToken)
-			return {EIO, {}};
+			return EIO;
 	}
 
-	SpiMasterTransfer transfers[]
+	const SpiMasterTransfer transfers[]
 	{
 			{nullptr, buffer, size},
 			{nullptr, nullptr, 2},	// crc
 	};
-	const auto ret = spiMasterHandle.executeTransaction(SpiMasterTransfersRange{transfers});
-	const auto bytesRead = transfers[0].getBytesTransfered();
-	return {ret.first, bytesRead};
+	return spiMasterHandle.executeTransaction(SpiMasterTransfersRange{transfers});
 }
 
 /**
@@ -491,42 +488,39 @@ std::pair<int, size_t> readDataBlock(const SpiMasterHandle& spiMasterHandle, voi
  * \param [in] size is the size of data block that should be written, bytes
  * \param [in] duration is the duration of wait before giving up
  *
- * \return pair with return code (0 on success, error code otherwise) and number of written bytes (valid even when error
- * code is returned); error codes:
+ * \return 0 on success, error code otherwise:
  * - EIO - unexpected data response token was read;
  * - error codes returned by waitWhileBusy();
  * - error codes returned by SpiMasterHandle::executeTransaction();
  */
 
-std::pair<int, size_t> writeDataBlock(const SpiMasterHandle& spiMasterHandle, const uint8_t token,
-		const void* const buffer, const size_t size, const distortos::TickClock::duration duration)
+int writeDataBlock(const SpiMasterHandle& spiMasterHandle, const uint8_t token, const void* const buffer,
+		const size_t size, const distortos::TickClock::duration duration)
 {
 	uint8_t footer[3];	// crc + data response token
-	size_t bytesWritten {};
 	{
 		const uint8_t header[] {0xff, token};
-		SpiMasterTransfer transfers[]
+		const SpiMasterTransfer transfers[]
 		{
 				{&header, nullptr, sizeof(header)},
 				{buffer, nullptr, size},
 				{nullptr, footer, sizeof(footer)},
 		};
 		const auto ret = spiMasterHandle.executeTransaction(SpiMasterTransfersRange{transfers});
-		bytesWritten = transfers[1].getBytesTransfered();
-		if (ret.first != 0)
-			return {ret.first, bytesWritten};
+		if (ret != 0)
+			return ret;
 	}
 	{
 		const auto ret = waitWhileBusy(spiMasterHandle, duration);
 		if (ret != 0)
-			return {ret, bytesWritten};
+			return ret;
 	}
 
 	const auto dataResponseToken = footer[2];
 	if ((dataResponseToken & dataResponseTokenMask) != dataResponseTokenDataAccepted)
-		return {EIO, bytesWritten};
+		return EIO;
 
-	return {{}, bytesWritten};
+	return {};
 }
 
 /**
@@ -548,10 +542,10 @@ int readResponse(const SpiMasterHandle& spiMasterHandle, const Uint8Range buffer
 	while (bytesRead < maxBytesRead)
 	{
 		const auto readSize = buffer.size() - validBytesRead;
-		SpiMasterTransfer transfer {nullptr, buffer.begin() + validBytesRead, readSize};
+		const SpiMasterTransfer transfer {nullptr, buffer.begin() + validBytesRead, readSize};
 		const auto ret = spiMasterHandle.executeTransaction(SpiMasterTransfersRange{transfer});
-		if (ret.first != 0)
-			return ret.first;
+		if (ret != 0)
+			return ret;
 
 		if (validBytesRead == 0)
 		{
@@ -678,9 +672,8 @@ int writeCmd(const SpiMasterHandle& spiMasterHandle, const uint8_t command, cons
 			static_cast<uint8_t>(crc7 << 1 | 1),
 			0xff,	// stuff byte
 	};
-	SpiMasterTransfer transfer {buffer, nullptr, sizeof(buffer) - !stuffByte};
-	const auto ret = spiMasterHandle.executeTransaction(SpiMasterTransfersRange{transfer});
-	return ret.first;
+	const SpiMasterTransfer transfer {buffer, nullptr, sizeof(buffer) - !stuffByte};
+	return spiMasterHandle.executeTransaction(SpiMasterTransfersRange{transfer});
 }
 
 /**
@@ -816,7 +809,7 @@ std::tuple<int, uint8_t, std::array<uint8_t, 16>> executeCmd9(const SpiMasterHan
 	// "7.2.6 Read CID/CSD Registers" of Physical Layer Simplified Specification Version 6.00 - use fixed read timeout
 	const auto ret =
 			readDataBlock(spiMasterHandle, csdBuffer.begin(), csdBuffer.size(), std::chrono::milliseconds{100});
-	return decltype(executeCmd9(spiMasterHandle)){ret.first, {}, csdBuffer};
+	return decltype(executeCmd9(spiMasterHandle)){ret, {}, csdBuffer};
 }
 
 /**
@@ -1117,7 +1110,7 @@ std::tuple<int, R2Response, std::array<uint8_t, 64>> executeAcmd13(const SpiMast
 	}
 	std::array<uint8_t, 64> sdStatusBuffer;
 	const auto ret = readDataBlock(spiMasterHandle, sdStatusBuffer.begin(), sdStatusBuffer.size(), duration);
-	return decltype(executeAcmd13(spiMasterHandle, duration)){ret.first, {}, sdStatusBuffer};
+	return decltype(executeAcmd13(spiMasterHandle, duration)){ret, {}, sdStatusBuffer};
 }
 
 /**
@@ -1172,15 +1165,14 @@ int SdCardSpiBased::close()
 
 	assert(openCount_ != 0);
 
-	int ret {};
 	if (openCount_ == 1)	// last close?
 	{
-		ret = SpiMasterHandle{spiMaster_}.close();
+		SpiMasterHandle{spiMaster_}.close();
 		deinitialize();
 	}
 
 	--openCount_;
-	return ret;
+	return {};
 }
 
 int SdCardSpiBased::erase(const uint64_t address, const uint64_t size)
@@ -1198,12 +1190,7 @@ int SdCardSpiBased::erase(const uint64_t address, const uint64_t size)
 		return {};
 
 	const SpiMasterHandle spiMasterHandle {spiMaster_};
-
-	{
-		const auto ret = spiMasterHandle.configure(SpiMode::_0, clockFrequency_, 8, false, UINT32_MAX);
-		if (ret.first != 0)
-			return ret.first;
-	}
+	spiMasterHandle.configure(SpiMode::_0, clockFrequency_, 8, false, UINT32_MAX);
 
 	uint64_t erased {};
 	while (erased < size)
@@ -1321,12 +1308,8 @@ int SdCardSpiBased::read(const uint64_t address, void* const buffer, const size_
 		return {};
 
 	const SpiMasterHandle spiMasterHandle {spiMaster_};
+	spiMasterHandle.configure(SpiMode::_0, clockFrequency_, 8, false, UINT32_MAX);
 
-	{
-		const auto ret = spiMasterHandle.configure(SpiMode::_0, clockFrequency_, 8, false, UINT32_MAX);
-		if (ret.first != 0)
-			return ret.first;
-	}
 	{
 		const SelectGuard selectGuard {slaveSelectPin_ ,spiMasterHandle};
 
@@ -1345,8 +1328,8 @@ int SdCardSpiBased::read(const uint64_t address, void* const buffer, const size_
 		{
 			const auto ret = readDataBlock(spiMasterHandle, bufferUint8 + block * blockSize, blockSize,
 					std::chrono::milliseconds{readTimeoutMs_});
-			if (ret.first != 0)
-				return ret.first;
+			if (ret != 0)
+				return ret;
 		}
 	}
 
@@ -1392,12 +1375,7 @@ int SdCardSpiBased::write(const uint64_t address, const void* const buffer, cons
 		return {};
 
 	const SpiMasterHandle spiMasterHandle {spiMaster_};
-
-	{
-		const auto ret = spiMasterHandle.configure(SpiMode::_0, clockFrequency_, 8, false, UINT32_MAX);
-		if (ret.first != 0)
-			return ret.first;
-	}
+	spiMasterHandle.configure(SpiMode::_0, clockFrequency_, 8, false, UINT32_MAX);
 
 	if (blocks != 1)
 	{
@@ -1427,22 +1405,22 @@ int SdCardSpiBased::write(const uint64_t address, const void* const buffer, cons
 	{
 		const auto ret = writeDataBlock(spiMasterHandle, blocks == 1 ? startBlockToken : startBlockWriteToken,
 				bufferUint8 + block * blockSize, blockSize, std::chrono::milliseconds{writeTimeoutMs_});
-		if (ret.first != 0)
-			return ret.first;
+		if (ret != 0)
+			return ret;
 	}
 
 	if (blocks != 1)
 	{
 		{
-			const uint8_t stopTransfer[]
+			static const uint8_t stopTransfer[]
 			{
 					stopTranToken,
 					0xff,
 			};
-			SpiMasterTransfer transfer {stopTransfer, nullptr, sizeof(stopTransfer)};
+			static const SpiMasterTransfer transfer {stopTransfer, nullptr, sizeof(stopTransfer)};
 			const auto ret = spiMasterHandle.executeTransaction(SpiMasterTransfersRange{transfer});
-			if (ret.first != 0)
-				return ret.first;
+			if (ret != 0)
+				return ret;
 		}
 		{
 			const auto ret = waitWhileBusy(spiMasterHandle, std::chrono::milliseconds{writeTimeoutMs_});
@@ -1471,17 +1449,13 @@ void SdCardSpiBased::deinitialize()
 int SdCardSpiBased::initialize()
 {
 	const SpiMasterHandle spiMasterHandle {spiMaster_};
+	spiMasterHandle.configure(SpiMode::_0, 400000, 8, false, UINT32_MAX);
 
 	{
-		const auto ret = spiMasterHandle.configure(SpiMode::_0, 400000, 8, false, UINT32_MAX);
-		if (ret.first != 0)
-			return ret.first;
-	}
-	{
-		SpiMasterTransfer transfer {nullptr, nullptr, (74 + CHAR_BIT - 1) / CHAR_BIT};
+		static const SpiMasterTransfer transfer {nullptr, nullptr, (74 + CHAR_BIT - 1) / CHAR_BIT};
 		const auto ret = spiMasterHandle.executeTransaction(SpiMasterTransfersRange{transfer});
-		if (ret.first != 0)
-			return ret.first;
+		if (ret != 0)
+			return ret;
 	}
 	{
 		const SelectGuard selectGuard {slaveSelectPin_ ,spiMasterHandle};
@@ -1533,11 +1507,7 @@ int SdCardSpiBased::initialize()
 		}
 	}
 
-	{
-		const auto ret = spiMasterHandle.configure(SpiMode::_0, clockFrequency_, 8, false, UINT32_MAX);
-		if (ret.first != 0)
-			return ret.first;
-	}
+	spiMasterHandle.configure(SpiMode::_0, clockFrequency_, 8, false, UINT32_MAX);
 
 	{
 		const SelectGuard selectGuard {slaveSelectPin_ ,spiMasterHandle};

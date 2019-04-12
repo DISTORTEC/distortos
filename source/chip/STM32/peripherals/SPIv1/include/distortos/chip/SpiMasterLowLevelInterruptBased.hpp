@@ -2,7 +2,7 @@
  * \file
  * \brief SpiMasterLowLevelInterruptBased class header for SPIv1 in STM32
  *
- * \author Copyright (C) 2016-2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2016-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -58,7 +58,7 @@ public:
 	/**
 	 * \brief SpiMasterLowLevelInterruptBased's destructor
 	 *
-	 * Does nothing if driver is already stopped. If it's not, performs forced stop of operation.
+	 * \pre Driver is stopped.
 	 */
 
 	~SpiMasterLowLevelInterruptBased() override;
@@ -66,20 +66,20 @@ public:
 	/**
 	 * \brief Configures parameters of low-level SPI master driver.
 	 *
+	 * \pre Driver is started.
+	 * \pre No transfer is in progress.
+	 * \pre \a clockFrequency is greater than or equal to `spiPeripheral_.getPeripheralFrequency() / 256`.
+	 * \pre \a wordLength is valid.
+	 *
 	 * \param [in] mode is the desired SPI mode
 	 * \param [in] clockFrequency is the desired clock frequency, Hz
 	 * \param [in] wordLength selects word length, bits, {8, 16}
 	 * \param [in] lsbFirst selects whether MSB (false) or LSB (true) is transmitted first
 	 * \param [in] dummyData is the dummy data that will be sent if write buffer of transfer is nullptr
-	 *
-	 * \return pair with return code (0 on success, error code otherwise) and real clock frequency; error codes:
-	 * - EBADF - the driver is not started;
-	 * - EBUSY - transfer is in progress;
-	 * - error codes returned by configureSpi();
 	 */
 
-	std::pair<int, uint32_t> configure(devices::SpiMode mode, uint32_t clockFrequency, uint8_t wordLength,
-			bool lsbFirst, uint32_t dummyData) override;
+	void configure(devices::SpiMode mode, uint32_t clockFrequency, uint8_t wordLength, bool lsbFirst,
+			uint32_t dummyData) override;
 
 	/**
 	 * \brief Interrupt handler
@@ -92,8 +92,9 @@ public:
 	/**
 	 * \brief Starts low-level SPI master driver.
 	 *
-	 * \return 0 on success, error code otherwise:
-	 * - EBADF - the driver is not stopped;
+	 * \pre Driver is stopped.
+	 *
+	 * \return 0 on success, error code otherwise
 	 */
 
 	int start() override;
@@ -104,31 +105,33 @@ public:
 	 * This function returns immediately. When the transfer is physically finished (either expected number of bytes were
 	 * written and read or an error was detected), SpiMasterBase::transferCompleteEvent() will be executed.
 	 *
+	 * \pre Driver is started.
+	 * \pre No transfer is in progress.
+	 * \pre \a size is valid.
+	 *
+	 * \post Transfer is in progress.
+	 *
 	 * \param [in] spiMasterBase is a reference to SpiMasterBase object that will be notified about completed transfer
 	 * \param [in] writeBuffer is the buffer with data that will be written, nullptr to send dummy data
 	 * \param [out] readBuffer is the buffer with data that will be read, nullptr to ignore received data
-	 * \param [in] size is the size of transfer (size of \a writeBuffer and/or \a readBuffer), bytes, must be even if
-	 * number of data bits is in range (8; 16], divisible by 3 if number of data bits is in range (16; 24] or divisible
-	 * by 4 if number of data bits is in range (24; 32]
-	 *
-	 * \return 0 on success, error code otherwise:
-	 * - EBADF - the driver is not started;
-	 * - EBUSY - transfer is in progress;
-	 * - EINVAL - \a size is invalid;
+	 * \param [in] size is the size of transfer (size of \a writeBuffer and/or \a readBuffer), bytes, most not be zero,
+	 * must be even if number of data bits is in range (8; 16], divisible by 3 if number of data bits is in range
+	 * (16; 24] or divisible by 4 if number of data bits is in range (24; 32]
 	 */
 
-	int startTransfer(devices::SpiMasterBase& spiMasterBase, const void* writeBuffer, void* readBuffer,
+	void startTransfer(devices::SpiMasterBase& spiMasterBase, const void* writeBuffer, void* readBuffer,
 			size_t size) override;
 
 	/**
 	 * \brief Stops low-level SPI master driver.
 	 *
-	 * \return 0 on success, error code otherwise:
-	 * - EBADF - the driver is not started;
-	 * - EBUSY - transfer is in progress;
+	 * \pre Driver is started.
+	 * \pre No transfer is in progress.
+	 *
+	 * \post Driver is stopped.
 	 */
 
-	int stop() override;
+	void stop() override;
 
 private:
 

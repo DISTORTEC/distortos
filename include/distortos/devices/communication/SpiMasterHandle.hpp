@@ -61,34 +61,32 @@ public:
 	/**
 	 * \brief Closes associated SPI master.
 	 *
-	 * \warning This function must not be called from interrupt context!
-	 *
-	 * \return 0 on success, error code otherwise:
-	 * - error codes returned by SpiMaster::close();
+	 * \pre Associated SPI master is opened.
 	 */
 
-	int close() const
+	void close() const
 	{
-		return spiMaster_.close();
+		spiMaster_.close();
 	}
 
 	/**
 	 * \brief Configures parameters of associated SPI master.
 	 *
+	 * \pre Associated SPI master is opened.
+	 * \pre \a clockFrequency and \a wordLength are valid for associated low-level implementation of SpiMasterLowLevel
+	 * interface.
+	 *
 	 * \param [in] mode is the desired SPI mode
 	 * \param [in] clockFrequency is the desired clock frequency, Hz
-	 * \param [in] wordLength selects word length, bits, [1; 32]
+	 * \param [in] wordLength selects word length, bits
 	 * \param [in] lsbFirst selects whether MSB (false) or LSB (true) is transmitted first
 	 * \param [in] dummyData is the dummy data that will be sent if write buffer of transfer is nullptr
-	 *
-	 * \return pair with return code (0 on success, error code otherwise) and real clock frequency; error codes:
-	 * - error codes returned by SpiMaster::configure();
 	 */
 
-	std::pair<int, uint32_t> configure(const SpiMode mode, const uint32_t clockFrequency, const uint8_t wordLength,
-			const bool lsbFirst,const uint32_t dummyData) const
+	void configure(const SpiMode mode, const uint32_t clockFrequency, const uint8_t wordLength, const bool lsbFirst,
+			const uint32_t dummyData) const
 	{
-		return spiMaster_.configure(mode, clockFrequency, wordLength, lsbFirst, dummyData);
+		spiMaster_.configure(mode, clockFrequency, wordLength, lsbFirst, dummyData);
 	}
 
 	/**
@@ -96,14 +94,16 @@ public:
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
+	 * \pre Associated SPI master is opened.
+	 * \pre \a transfersRange has at least one transfer.
+	 *
 	 * \param [in] transfersRange is the range of transfers that will be executed
 	 *
-	 * \return pair with return code (0 on success, error code otherwise) and number of successfully completed transfers
-	 * from \a transfersRange; error codes:
+	 * \return 0 on success, error code otherwise:
 	 * - error codes returned by SpiMasterLowLevel::executeTransaction();
 	 */
 
-	std::pair<int, size_t> executeTransaction(const SpiMasterTransfersRange transfersRange) const
+	int executeTransaction(const SpiMasterTransfersRange transfersRange) const
 	{
 		return spiMaster_.executeTransaction(transfersRange);
 	}
@@ -111,7 +111,7 @@ public:
 	/**
 	 * \brief Opens associated SPI master.
 	 *
-	 * \warning This function must not be called from interrupt context!
+	 * \pre The number of times the device is opened is less than 255.
 	 *
 	 * \return 0 on success, error code otherwise:
 	 * - error codes returned by SpiMaster::open();

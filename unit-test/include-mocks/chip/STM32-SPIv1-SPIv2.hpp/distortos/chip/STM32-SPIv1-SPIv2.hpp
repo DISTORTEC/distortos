@@ -42,8 +42,7 @@ public:
 		instance = {};
 	}
 
-	using ConfigureSpiRet = std::pair<int, uint32_t>;
-	MAKE_MOCK5(configureSpi, ConfigureSpiRet(const SpiPeripheral&, devices::SpiMode, uint32_t, uint8_t, bool));
+	MAKE_MOCK5(configureSpi, void(const SpiPeripheral&, devices::SpiMode, uint32_t, uint8_t, bool));
 
 	static Stm32Spiv1Spiv2Mock& getInstance()
 	{
@@ -61,10 +60,10 @@ private:
 	}
 };
 
-inline static std::pair<int, uint32_t> configureSpi(const SpiPeripheral& spiPeripheral, const devices::SpiMode mode,
+inline static void configureSpi(const SpiPeripheral& spiPeripheral, const devices::SpiMode mode,
 		const uint32_t clockFrequency, const uint8_t wordLength, const bool lsbFirst)
 {
-	return Stm32Spiv1Spiv2Mock::getInstance().configureSpi(spiPeripheral, mode, clockFrequency, wordLength, lsbFirst);
+	Stm32Spiv1Spiv2Mock::getInstance().configureSpi(spiPeripheral, mode, clockFrequency, wordLength, lsbFirst);
 }
 
 }	// namespace chip

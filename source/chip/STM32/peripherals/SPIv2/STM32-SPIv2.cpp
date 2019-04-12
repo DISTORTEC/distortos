@@ -13,9 +13,9 @@
 
 #include "distortos/chip/STM32-SPIv2-SpiPeripheral.hpp"
 
-#include "estd/log2u.hpp"
+#include "distortos/assert.h"
 
-#include <cerrno>
+#include "estd/log2u.hpp"
 
 namespace distortos
 {
@@ -27,16 +27,14 @@ namespace chip
 | global functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-std::pair<int, uint32_t> configureSpi(const SpiPeripheral& spiPeripheral, const devices::SpiMode mode,
-		const uint32_t clockFrequency, const uint8_t wordLength, const bool lsbFirst)
+void configureSpi(const SpiPeripheral& spiPeripheral, const devices::SpiMode mode, const uint32_t clockFrequency,
+		const uint8_t wordLength, const bool lsbFirst)
 {
-	if (wordLength < minSpiWordLength || wordLength > maxSpiWordLength)
-		return {EINVAL, {}};
+	assert(wordLength >= minSpiWordLength && wordLength <= maxSpiWordLength);
 
 	const auto peripheralFrequency = spiPeripheral.getPeripheralFrequency();
 	const auto divider = (peripheralFrequency + clockFrequency - 1) / clockFrequency;
-	if (divider > 256)
-		return {EINVAL, {}};
+	assert(divider <= 256);
 
 	const uint32_t br = divider <= 2 ? 0 : estd::log2u(divider - 1);
 	const auto cr1 = spiPeripheral.readCr1();
@@ -48,8 +46,6 @@ std::pair<int, uint32_t> configureSpi(const SpiPeripheral& spiPeripheral, const 
 	spiPeripheral.writeCr2((cr2 & ~(SPI_CR2_FRXTH | SPI_CR2_DS)) |
 			(wordLength <= 8) << SPI_CR2_FRXTH_Pos |
 			(wordLength - 1) << SPI_CR2_DS_Pos);
-
-	return {{}, peripheralFrequency / (1 << (br + 1))};
 }
 
 }	// namespace chip

@@ -2,7 +2,7 @@
  * \file
  * \brief SpiMasterTransfer class header
  *
- * \author Copyright (C) 2016-2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2016-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -43,33 +43,9 @@ public:
 	constexpr SpiMasterTransfer(const void* const writeBuffer, void* const readBuffer, const size_t size) :
 			readBuffer_{readBuffer},
 			writeBuffer_{writeBuffer},
-			size_{size},
-			bytesTransfered_{}
+			size_{size}
 	{
 
-	}
-
-	/**
-	 * \brief Finalizes transfer operation.
-	 *
-	 * \param [in] bytesTransfered is the number of bytes transferred by low-level SPI master driver (read from write
-	 * buffer and/or written to read buffer), may be unreliable if transfer error was detected (\a bytesTransfered is
-	 * not equal to size of transfer)
-	 */
-
-	void finalize(const size_t bytesTransfered)
-	{
-		bytesTransfered_ = bytesTransfered;
-	}
-
-	/**
-	 * \return number of bytes transferred by low-level SPI master driver (read from write buffer and/or written to read
-	 * buffer), may be unreliable if error set is not empty (i.e. transfer error was detected)
-	 */
-
-	size_t getBytesTransfered() const
-	{
-		return bytesTransfered_;
 	}
 
 	/**
@@ -109,10 +85,6 @@ private:
 
 	/// size of transfer, bytes
 	size_t size_;
-
-	/// number of bytes transferred by low-level SPI master driver (read from \a writeBuffer_ and/or written to
-	/// \a readBuffer_), may be unreliable if \a errorSet_ is not empty (i.e. transfer error was detected)
-	size_t bytesTransfered_;
 };
 
 }	// namespace devices
