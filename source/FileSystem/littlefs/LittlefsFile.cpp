@@ -61,8 +61,7 @@ std::pair<int, off_t> LittlefsFile::getSize()
 {
 	const std::lock_guard<LittlefsFile> lockGuard {*this};
 
-	if (opened_ == false)
-		return {EBADF, {}};
+	assert(opened_ == true);
 
 	const auto ret = lfs_file_size(&fileSystem_.fileSystem_, &file_);
 	if (ret < 0)

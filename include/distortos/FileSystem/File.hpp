@@ -77,8 +77,9 @@ public:
 	/**
 	 * \brief Returns size of file.
 	 *
-	 * \return pair with return code (0 on success, error code otherwise) and size of file, bytes; error codes:
-	 * - EBADF - the file is not opened;
+	 * \pre File is opened.
+	 *
+	 * \return pair with return code (0 on success, error code otherwise) and size of file, bytes
 	 */
 
 	virtual std::pair<int, off_t> getSize() = 0;
