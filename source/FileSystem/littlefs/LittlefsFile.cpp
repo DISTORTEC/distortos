@@ -91,9 +91,10 @@ std::pair<int, bool> LittlefsFile::isATerminal()
 	return {{}, {}};
 }
 
-int LittlefsFile::lock()
+void LittlefsFile::lock()
 {
-	return fileSystem_.lock();
+	const auto ret = fileSystem_.lock();
+	assert(ret == 0);
 }
 
 std::pair<int, size_t> LittlefsFile::read(void* const buffer, const size_t size)
