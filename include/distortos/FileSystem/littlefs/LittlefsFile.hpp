@@ -40,9 +40,7 @@ public:
 	/**
 	 * \brief LittlefsFile's destructor
 	 *
-	 * Closes file.
-	 *
-	 * \warning This function must not be called from interrupt context!
+	 * \pre File is closed.
 	 */
 
 	~LittlefsFile() override;
@@ -54,8 +52,11 @@ public:
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
-	 * \return 0 on success, error code otherwise:
-	 * - EBADF - the file is already closed;
+	 * \pre File is opened.
+	 *
+	 * \post File is closed.
+	 *
+	 * \return 0 on success, error code otherwise
 	 * - converted error codes returned by lfs_file_close();
 	 */
 
@@ -68,8 +69,9 @@ public:
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
+	 * \pre File is opened.
+	 *
 	 * \return pair with return code (0 on success, error code otherwise) and current file offset, bytes; error codes:
-	 * - EBADF - the file is not opened;
 	 * - converted error codes returned by lfs_file_tell();
 	 */
 
@@ -80,8 +82,9 @@ public:
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
+	 * \pre File is opened.
+	 *
 	 * \return pair with return code (0 on success, error code otherwise) and size of file, bytes; error codes:
-	 * - EBADF - the file is not opened;
 	 * - converted error codes returned by lfs_file_size();
 	 */
 
@@ -95,6 +98,8 @@ public:
 	 * `st_mode` and `st_size` fields are set in all cases. All other fields are zero-initialized.
 	 *
 	 * \warning This function must not be called from interrupt context!
+	 *
+	 * \pre File is opened.
 	 *
 	 * \return pair with return code (0 on success, error code otherwise) and status of file in `stat` struct; error
 	 * codes:
@@ -110,9 +115,10 @@ public:
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
+	 * \pre File is opened.
+	 *
 	 * \return pair with return code (0 on success, error code otherwise) and bool telling whether the file is a
-	 * terminal (true) or not (false); error codes:
-	 * - EBADF - the file is not opened;
+	 * terminal (true) or not (false)
 	 */
 
 	std::pair<int, bool> isATerminal() override;
@@ -127,11 +133,12 @@ public:
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
-	 * \return 0 on success, error code otherwise:
-	 * - error codes returned by LittlefsFileSystem::lock();
+	 * \pre The number of recursive locks of device is less than 65535.
+	 *
+	 * \post Device is locked.
 	 */
 
-	int lock() override;
+	void lock() override;
 
 	/**
 	 * \brief Reads data from file.
@@ -140,13 +147,14 @@ public:
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
-	 * \param [out] buffer is the buffer into which the data will be read
+	 * \pre File is opened.
+	 * \pre \a buffer is valid.
+	 *
+	 * \param [out] buffer is the buffer into which the data will be read, must be valid
 	 * \param [in] size is the size of \a buffer, bytes
 	 *
 	 * \return pair with return code (0 on success, error code otherwise) and number of read bytes (valid even when
 	 * error code is returned); error codes:
-	 * - EBADF - the file is not opened or opened only for writing;
-	 * - EINVAL - \a buffer is not valid;
 	 * - converted error codes returned by lfs_file_read();
 	 */
 
@@ -159,8 +167,9 @@ public:
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
+	 * \pre File is opened.
+	 *
 	 * \return 0 on success, error code otherwise:
-	 * - EBADF - the file is not opened;
 	 * - converted error codes returned by lfs_file_rewind();
 	 */
 
@@ -173,13 +182,14 @@ public:
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
+	 * \pre File is opened.
+	 *
 	 * \param [in] whence selects the mode of operation: `Whence::beginning` will set file offset to \a offset,
 	 * `Whence::current` will set file offset to its current value plus \a offset, `Whence::end` will set file offset to
 	 * the size of the file plus \a offset
 	 * \param [in] offset is the value of offset, bytes
 	 *
 	 * \return pair with return code (0 on success, error code otherwise) and current file offset, bytes; error codes:
-	 * - EBADF - the file is not opened;
 	 * - converted error codes returned by lfs_file_seek();
 	 */
 
@@ -192,8 +202,9 @@ public:
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
+	 * \pre File is opened.
+	 *
 	 * \return 0 on success, error code otherwise:
-	 * - EBADF - the file is not opened;
 	 * - converted error codes returned by lfs_file_sync();
 	 */
 
@@ -206,11 +217,10 @@ public:
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
-	 * \return 0 on success, error code otherwise:
-	 * - error codes returned by LittlefsFileSystem::unlock();
+	 * \pre This function is called by the thread that locked the device.
 	 */
 
-	int unlock() override;
+	void unlock() override;
 
 	/**
 	 * \brief Writes data to file.
@@ -219,13 +229,14 @@ public:
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
-	 * \param [in] buffer is the buffer with data that will be written
+	 * \pre File is opened.
+	 * \pre \a buffer is valid.
+	 *
+	 * \param [in] buffer is the buffer with data that will be written, must be valid
 	 * \param [in] size is the size of \a buffer, bytes
 	 *
 	 * \return pair with return code (0 on success, error code otherwise) and number of written bytes (valid even when
 	 * error code is returned); error codes:
-	 * - EBADF - the file is not opened or opened only for reading;
-	 * - EINVAL - \a buffer is not valid;
 	 * - converted error codes returned by lfs_file_write();
 	 */
 
@@ -252,12 +263,16 @@ private:
 	/**
 	 * \brief Opens file.
 	 *
-	 * \param [in] path is the path of file that will be opened
-	 * \param [in] flags are file status flags, for list of available flags and valid combinations see
+	 * \pre File is not opened.
+	 * \pre \a path is valid.
+	 * \pre \a flags are valid.
+	 *
+	 * \param [in] path is the path of file that will be opened, must be valid
+	 * \param [in] flags are file status flags, must be valid, for list of available flags and valid combinations see
 	 * [open()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/open.html)
 	 *
 	 * \return 0 on success, error code otherwise:
-	 * - EINVAL - \a path and/or \a flags are not valid;
+	 * - ENOMEM - unable to allocate memory for file;
 	 * - converted error codes returned by lfs_file_open();
 	 */
 

@@ -31,6 +31,8 @@ public:
 
 	/**
 	 * \brief Directory's destructor
+	 *
+	 * \pre Directory is closed.
 	 */
 
 	virtual ~Directory() = default;
@@ -40,8 +42,11 @@ public:
 	 *
 	 * Similar to [closedir()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/closedir.html)
 	 *
-	 * \return 0 on success, error code otherwise:
-	 * - EBADF - the directory is already closed;
+	 * \pre Directory is opened.
+	 *
+	 * \post Directory is closed.
+	 *
+	 * \return 0 on success, error code otherwise
 	 */
 
 	virtual int close() = 0;
@@ -51,9 +56,9 @@ public:
 	 *
 	 * Similar to [telldir()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/telldir.html)
 	 *
-	 * \return pair with return code (0 on success, error code otherwise) and current position in the directory; error
-	 * codes:
-	 * - EBADF - the directory is not opened;
+	 * \pre Directory is opened.
+	 *
+	 * \return pair with return code (0 on success, error code otherwise) and current position in the directory
 	 */
 
 	virtual std::pair<int, off_t> getPosition() = 0;
@@ -68,20 +73,21 @@ public:
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
-	 * \return 0 on success, error code otherwise:
-	 * - EAGAIN - the lock could not be acquired because the maximum number of recursive locks for directory has been
-	 * exceeded;
+	 * \pre The number of recursive locks of directory is less than 65535.
+	 *
+	 * \post Directory is locked.
 	 */
 
-	virtual int lock() = 0;
+	virtual void lock() = 0;
 
 	/**
 	 * \brief Reads next entry from directory.
 	 *
 	 * Similar to [readdir_r()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/readdir.html)
 	 *
+	 * \pre Directory is opened.
+	 *
 	 * \return pair with return code (0 on success, error code otherwise) and next entry from directory; error codes:
-	 * - EBADF - the directory is not opened;
 	 * - ENOENT - current position in the directory is invalid (i.e. end of the directory reached);
 	 */
 
@@ -92,8 +98,9 @@ public:
 	 *
 	 * Similar to [rewinddir()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/rewinddir.html)
 	 *
-	 * \return 0 on success, error code otherwise:
-	 * - EBADF - the directory is not opened;
+	 * \pre Directory is opened.
+	 *
+	 * \return 0 on success, error code otherwise
 	 */
 
 	virtual int rewind() = 0;
@@ -103,10 +110,11 @@ public:
 	 *
 	 * Similar to [seekdir()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/seekdir.html)
 	 *
+	 * \pre Directory is opened.
+	 *
 	 * \param [in] position is the value of position, must be a value previously returned by getPosition()!
 	 *
-	 * \return 0 on success, error code otherwise:
-	 * - EBADF - the directory is not opened;
+	 * \return 0 on success, error code otherwise
 	 */
 
 	virtual int seek(off_t position) = 0;
@@ -118,11 +126,10 @@ public:
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
-	 * \return 0 on success, error code otherwise:
-	 * - EPERM - current thread did not lock the directory;
+	 * \pre This function is called by the thread that locked the directory.
 	 */
 
-	virtual int unlock() = 0;
+	virtual void unlock() = 0;
 
 	Directory() = default;
 	Directory(const Directory&) = delete;

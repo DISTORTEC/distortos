@@ -37,6 +37,8 @@ public:
 
 	/**
 	 * \brief FileSystem's destructor
+	 *
+	 * \pre File system is unmounted.
 	 */
 
 	virtual ~FileSystem() = default;
@@ -44,8 +46,9 @@ public:
 	/**
 	 * \brief Formats associated device with the file system.
 	 *
-	 * \return 0 on success, error code otherwise:
-	 * - EBUSY - file system is mounted;
+	 * \pre File system is unmounted.
+	 *
+	 * \return 0 on success, error code otherwise
 	 */
 
 	virtual int format() = 0;
@@ -55,12 +58,13 @@ public:
 	 *
 	 * Similar to [stat()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/stat.html)
 	 *
-	 * \param [in] path is the path to file for which status should be returned
+	 * \pre File system is mounted.
+	 * \pre \a path is valid.
+	 *
+	 * \param [in] path is the path to file for which status should be returned, must be valid
 	 *
 	 * \return pair with return code (0 on success, error code otherwise) and status of file in `stat` struct; error
 	 * codes:
-	 * - EBADF - no file system mounted;
-	 * - EINVAL - \a path is not valid;
 	 * - ENAMETOOLONG - length of component of \a path and/or length of \a path are longer than allowed maximum;
 	 * - ENOENT - no such file or directory;
 	 * - ENOTDIR - component of \a path names an existing file where directory was expected;
@@ -73,9 +77,9 @@ public:
 	 *
 	 * Similar to [statvfs()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/statvfs.html)
 	 *
-	 * \return pair with return code (0 on success, error code otherwise) and status of file system in `statvfs` struct;
-	 * error codes:
-	 * - EBADF - no file system mounted;
+	 * \pre File system is mounted.
+	 *
+	 * \return pair with return code (0 on success, error code otherwise) and status of file system in `statvfs` struct
 	 */
 
 	virtual std::pair<int, struct statvfs> getStatus() = 0;
@@ -90,25 +94,26 @@ public:
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
-	 * \return 0 on success, error code otherwise:
-	 * - EAGAIN - the lock could not be acquired because the maximum number of recursive locks for file system has been
-	 * exceeded;
+	 * \pre The number of recursive locks of file system is less than 65535.
+	 *
+	 * \post File system is locked.
 	 */
 
-	virtual int lock() = 0;
+	virtual void lock() = 0;
 
 	/**
 	 * \brief Makes a directory.
 	 *
 	 * Similar to [mkdir()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/mkdir.html)
 	 *
-	 * \param [in] path is the path of the directory that will be created
+	 * \pre File system is mounted.
+	 * \pre \a path is valid.
+	 *
+	 * \param [in] path is the path of the directory that will be created, must be valid
 	 * \param [in] mode is the value of permission bits of the created directory
 	 *
 	 * \return 0 on success, error code otherwise:
-	 * - EBADF - no file system mounted;
 	 * - EEXIST - named file exists;
-	 * - EINVAL - \a path is not valid;
 	 * - ENAMETOOLONG - length of component of \a path and/or length of \a path are longer than allowed maximum;
 	 * - ENOENT - prefix component of \a path does not name an existing directory;
 	 * - ENOSPC - no space left on the device containing the file system;
@@ -121,8 +126,9 @@ public:
 	/**
 	 * \brief Mounts file system on associated device.
 	 *
+	 * \pre File system is unmounted.
+	 *
 	 * \return 0 on success, error code otherwise:
-	 * - EBUSY - file system is already mounted;
 	 * - EILSEQ - device does not contain valid file system;
 	 * - ENOMEM - unable to allocate memory for file system;
 	 */
@@ -134,12 +140,13 @@ public:
 	 *
 	 * Similar to [opendir()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/opendir.html)
 	 *
-	 * \param [in] path is the path of directory that will be opened
+	 * \pre File system is mounted.
+	 * \pre \a path is valid.
+	 *
+	 * \param [in] path is the path of directory that will be opened, must be valid
 	 *
 	 * \return pair with return code (0 on success, error code otherwise) and `std::unique_ptr` with opened directory;
 	 * error codes:
-	 * - EBADF - no file system mounted;
-	 * - EINVAL - \a path is not valid;
 	 * - ENAMETOOLONG - length of component of \a path and/or length of \a path are longer than allowed maximum;
 	 * - ENOENT - \a path does not name an existing directory;
 	 * - ENOMEM - unable to allocate memory for directory;
@@ -153,16 +160,18 @@ public:
 	 *
 	 * Similar to [open()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/open.html)
 	 *
-	 * \param [in] path is the path of file that will be opened
-	 * \param [in] flags are file status flags, for list of available flags and valid combinations see
+	 * \pre File system is mounted.
+	 * \pre \a path is valid.
+	 * \pre \a flags are valid.
+	 *
+	 * \param [in] path is the path of file that will be opened, must be valid
+	 * \param [in] flags are file status flags, must be valid, for list of available flags and valid combinations see
 	 * [open()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/open.html)
 	 *
 	 * \return pair with return code (0 on success, error code otherwise) and `std::unique_ptr` with opened file; error
 	 * codes:
-	 * - EBADF - no file system mounted;
 	 * - EEXIST - `O_CREAT` and `O_EXCL` are set, and file named by \a path exists;
 	 * - EISDIR - file named by \a path is a directory;
-	 * - EINVAL - \a path and/or \a flags are not valid;
 	 * - ENAMETOOLONG - length of component of \a path and/or length of \a path are longer than allowed maximum;
 	 * - ENOENT - `O_CREAT` is not set and \a path does not name an existing file or `O_CREAT` is set and prefix
 	 * component of \a path does not name an existing directory;
@@ -181,11 +190,12 @@ public:
 	 *
 	 * Similar to [remove()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/remove.html)
 	 *
-	 * \param [in] path is the path of file or directory that will be removed
+	 * \pre File system is mounted.
+	 * \pre \a path is valid.
+	 *
+	 * \param [in] path is the path of file or directory that will be removed, must be valid
 	 *
 	 * \return 0 on success, error code otherwise:
-	 * - EBADF - no file system mounted;
-	 * - EINVAL - \a path and/or \a newPath are not valid;
 	 * - ENAMETOOLONG - length of component of \a path and/or length of \a path are longer than allowed maximum;
 	 * - ENOENT - \a path does not name an existing file or directory;
 	 * - ENOTDIR - component of \a path names an existing file where directory was expected;
@@ -200,13 +210,14 @@ public:
 	 *
 	 * Similar to [rename()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/rename.html)
 	 *
-	 * \param [in] path is the path of file or directory that will be renamed
-	 * \param [in] newPath is the new path of file or directory
+	 * \pre File system is mounted.
+	 * \pre \a path and \a newPath are valid.
+	 *
+	 * \param [in] path is the path of file or directory that will be renamed, must be valid
+	 * \param [in] newPath is the new path of file or directory, must be valid
 	 *
 	 * \return 0 on success, error code otherwise:
-	 * - EBADF - no file system mounted;
 	 * - EEXIST - file or directory named by \a newPath exists;
-	 * - EINVAL - \a path and/or \a newPath are not valid;
 	 * - EISDIR - \a newPath points to a directory while \a path points to a file;
 	 * - ENAMETOOLONG - length of component of \a path and/or length of \a path and/or length of component of \a newPath
 	 * and/or length of \a newPath are longer than allowed maximum;
@@ -226,18 +237,19 @@ public:
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
-	 * \return 0 on success, error code otherwise:
-	 * - EPERM - current thread did not lock the file system;
+	 * \pre This function is called by the thread that locked the file system.
 	 */
 
-	virtual int unlock() = 0;
+	virtual void unlock() = 0;
 
 	/**
 	 * \brief Unmounts file system from associated device.
 	 *
-	 * \return 0 on success, error code otherwise:
-	 * - EBADF - no file system mounted;
-	 * - EBUSY - file system is busy;
+	 * \pre File system is mounted.
+	 *
+	 * \post File system is unmounted.
+	 *
+	 * \return 0 on success, error code otherwise
 	 */
 
 	virtual int unmount() = 0;

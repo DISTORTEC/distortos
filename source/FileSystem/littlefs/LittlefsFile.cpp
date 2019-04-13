@@ -30,15 +30,14 @@ namespace distortos
 
 LittlefsFile::~LittlefsFile()
 {
-	close();
+	assert(opened_ == false);
 }
 
 int LittlefsFile::close()
 {
 	const std::lock_guard<LittlefsFile> lockGuard {*this};
 
-	if (opened_ == false)
-		return EBADF;
+	assert(opened_ == true);
 
 	opened_ = {};
 	const auto ret = lfs_file_close(&fileSystem_.fileSystem_, &file_);
@@ -49,8 +48,7 @@ std::pair<int, off_t> LittlefsFile::getPosition()
 {
 	const std::lock_guard<LittlefsFile> lockGuard {*this};
 
-	if (opened_ == false)
-		return {EBADF, {}};
+	assert(opened_ == true);
 
 	const auto ret = lfs_file_tell(&fileSystem_.fileSystem_, &file_);
 	if (ret < 0)
@@ -63,8 +61,7 @@ std::pair<int, off_t> LittlefsFile::getSize()
 {
 	const std::lock_guard<LittlefsFile> lockGuard {*this};
 
-	if (opened_ == false)
-		return {EBADF, {}};
+	assert(opened_ == true);
 
 	const auto ret = lfs_file_size(&fileSystem_.fileSystem_, &file_);
 	if (ret < 0)
@@ -89,26 +86,22 @@ std::pair<int, bool> LittlefsFile::isATerminal()
 {
 	const std::lock_guard<LittlefsFile> lockGuard {*this};
 
-	if (opened_ == false)
-		return {EBADF, {}};
+	assert(opened_ == true);
 
 	return {{}, {}};
 }
 
-int LittlefsFile::lock()
+void LittlefsFile::lock()
 {
-	return fileSystem_.lock();
+	fileSystem_.lock();
 }
 
 std::pair<int, size_t> LittlefsFile::read(void* const buffer, const size_t size)
 {
 	const std::lock_guard<LittlefsFile> lockGuard {*this};
 
-	if (opened_ == false)
-		return {EBADF, {}};
-
-	if (buffer == nullptr && size != 0)
-		return {EINVAL, {}};
+	assert(opened_ == true);
+	assert(buffer != nullptr);
 
 	const auto ret = lfs_file_read(&fileSystem_.fileSystem_, &file_, buffer, size);
 	if (ret < 0)
@@ -121,8 +114,7 @@ int LittlefsFile::rewind()
 {
 	const std::lock_guard<LittlefsFile> lockGuard {*this};
 
-	if (opened_ == false)
-		return EBADF;
+	assert(opened_ == true);
 
 	const auto ret = lfs_file_rewind(&fileSystem_.fileSystem_, &file_);
 	return littlefsErrorToErrorCode(ret);
@@ -132,8 +124,7 @@ std::pair<int, off_t> LittlefsFile::seek(const Whence whence, const off_t offset
 {
 	const std::lock_guard<LittlefsFile> lockGuard {*this};
 
-	if (opened_ == false)
-		return {EBADF, {}};
+	assert(opened_ == true);
 
 	const auto ret = lfs_file_seek(&fileSystem_.fileSystem_, &file_, offset,
 			whence == Whence::beginning ? LFS_SEEK_SET : whence == Whence::current ? LFS_SEEK_CUR : LFS_SEEK_END);
@@ -148,27 +139,23 @@ int LittlefsFile::synchronize()
 {
 	const std::lock_guard<LittlefsFile> lockGuard {*this};
 
-	if (opened_ == false)
-		return EBADF;
+	assert(opened_ == true);
 
 	const auto ret = lfs_file_sync(&fileSystem_.fileSystem_, &file_);
 	return littlefsErrorToErrorCode(ret);
 }
 
-int LittlefsFile::unlock()
+void LittlefsFile::unlock()
 {
-	return fileSystem_.unlock();
+	fileSystem_.unlock();
 }
 
 std::pair<int, size_t> LittlefsFile::write(const void* const buffer, const size_t size)
 {
 	const std::lock_guard<LittlefsFile> lockGuard {*this};
 
-	if (opened_ == false)
-		return {EBADF, {}};
-
-	if (buffer == nullptr && size != 0)
-		return {EINVAL, {}};
+	assert(opened_ == true);
+	assert(buffer != nullptr);
 
 	const auto ret = lfs_file_write(&fileSystem_.fileSystem_, &file_, buffer, size);
 	if (ret < 0)
@@ -184,20 +171,22 @@ std::pair<int, size_t> LittlefsFile::write(const void* const buffer, const size_
 int LittlefsFile::open(const char* const path, const int flags)
 {
 	assert(opened_ == false);
+	assert(path != nullptr);
 
-	if (path == nullptr)
-		return EINVAL;
-
-	constexpr int mask {O_RDONLY | O_WRONLY | O_RDWR};
 	int convertedFlags;
-	if ((flags & mask) == O_RDONLY)
-		convertedFlags = LFS_O_RDONLY;
-	else if ((flags & mask) == O_WRONLY)
-		convertedFlags = LFS_O_WRONLY;
-	else if ((flags & mask) == O_RDWR)
-		convertedFlags = LFS_O_RDWR;
-	else
-		return EINVAL;
+	{
+		constexpr int mask {O_RDONLY | O_WRONLY | O_RDWR};
+		const auto readOnly = (flags & mask) == O_RDONLY;
+		const auto writeOnly = (flags & mask) == O_WRONLY;
+		const auto readWrite = (flags & mask) == O_RDWR;
+		assert(readOnly == true || writeOnly == true || readWrite == true);
+		if (readOnly == true)
+			convertedFlags = LFS_O_RDONLY;
+		else if (writeOnly == true)
+			convertedFlags = LFS_O_WRONLY;
+		else	// if (readWrite == true)
+			convertedFlags = LFS_O_RDWR;
+	}
 
 	if ((flags & O_CREAT) != 0)
 		convertedFlags |= LFS_O_CREAT;

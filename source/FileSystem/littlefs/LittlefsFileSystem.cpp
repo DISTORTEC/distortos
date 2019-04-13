@@ -194,15 +194,14 @@ int littlefsMemoryTechnologyDeviceSynchronize(const lfs_config* const configurat
 
 LittlefsFileSystem::~LittlefsFileSystem()
 {
-	unmount();
+	assert(mounted_ == false);
 }
 
 int LittlefsFileSystem::format()
 {
 	const std::lock_guard<LittlefsFileSystem> lockGuard {*this};
 
-	if (mounted_ == true)
-		return EBUSY;
+	assert(mounted_ == false);
 
 	{
 		const auto ret = memoryTechnologyDevice_.open();
@@ -261,8 +260,8 @@ std::pair<int, struct stat> LittlefsFileSystem::getFileStatus(const char* const 
 {
 	const std::lock_guard<LittlefsFileSystem> lockGuard {*this};
 
-	if (mounted_ == false)
-		return {EBADF, {}};
+	assert(mounted_ == true);
+	assert(path != nullptr);
 
 	lfs_info info;
 	{
@@ -282,8 +281,7 @@ std::pair<int, struct statvfs> LittlefsFileSystem::getStatus()
 {
 	const std::lock_guard<LittlefsFileSystem> lockGuard {*this};
 
-	if (mounted_ == false)
-		return {EBADF, {}};
+	assert(mounted_ == true);
 
 	size_t usedBlocks {};
 	{
@@ -302,17 +300,18 @@ std::pair<int, struct statvfs> LittlefsFileSystem::getStatus()
 	return {{}, status};
 }
 
-int LittlefsFileSystem::lock()
+void LittlefsFileSystem::lock()
 {
-	return mutex_.lock();
+	const auto ret = mutex_.lock();
+	assert(ret == 0);
 }
 
 int LittlefsFileSystem::makeDirectory(const char* const path, mode_t)
 {
 	const std::lock_guard<LittlefsFileSystem> lockGuard {*this};
 
-	if (mounted_ == false)
-		return EBADF;
+	assert(mounted_ == true);
+	assert(path != nullptr);
 
 	const auto ret = lfs_mkdir(&fileSystem_, path);
 	return littlefsErrorToErrorCode(ret);
@@ -322,8 +321,7 @@ int LittlefsFileSystem::mount()
 {
 	const std::lock_guard<LittlefsFileSystem> lockGuard {*this};
 
-	if (mounted_ == true)
-		return EBUSY;
+	assert(mounted_ == false);
 
 	{
 		const auto ret = memoryTechnologyDevice_.open();
@@ -390,8 +388,7 @@ std::pair<int, std::unique_ptr<Directory>> LittlefsFileSystem::openDirectory(con
 {
 	const std::lock_guard<LittlefsFileSystem> lockGuard {*this};
 
-	if (mounted_ == false)
-		return {EBADF, std::unique_ptr<LittlefsDirectory>{}};
+	assert(mounted_ == true);
 
 	std::unique_ptr<LittlefsDirectory> directory {new (std::nothrow) LittlefsDirectory{*this}};
 	if (directory == nullptr)
@@ -410,8 +407,7 @@ std::pair<int, std::unique_ptr<File>> LittlefsFileSystem::openFile(const char* c
 {
 	const std::lock_guard<LittlefsFileSystem> lockGuard {*this};
 
-	if (mounted_ == false)
-		return {EBADF, std::unique_ptr<LittlefsFile>{}};
+	assert(mounted_ == true);
 
 	std::unique_ptr<LittlefsFile> file {new (std::nothrow) LittlefsFile{*this}};
 	if (file == nullptr)
@@ -430,8 +426,8 @@ int LittlefsFileSystem::remove(const char* const path)
 {
 	const std::lock_guard<LittlefsFileSystem> lockGuard {*this};
 
-	if (mounted_ == false)
-		return EBADF;
+	assert(mounted_ == true);
+	assert(path != nullptr);
 
 	const auto ret = lfs_remove(&fileSystem_, path);
 	return littlefsErrorToErrorCode(ret);
@@ -441,24 +437,25 @@ int LittlefsFileSystem::rename(const char* const path, const char* const newPath
 {
 	const std::lock_guard<LittlefsFileSystem> lockGuard {*this};
 
-	if (mounted_ == false)
-		return EBADF;
+	assert(mounted_ == true);
+	assert(path != nullptr);
+	assert(newPath != nullptr);
 
 	const auto ret = lfs_rename(&fileSystem_, path, newPath);
 	return littlefsErrorToErrorCode(ret);
 }
 
-int LittlefsFileSystem::unlock()
+void LittlefsFileSystem::unlock()
 {
-	return mutex_.unlock();
+	const auto ret = mutex_.unlock();
+	assert(ret == 0);
 }
 
 int LittlefsFileSystem::unmount()
 {
 	const std::lock_guard<LittlefsFileSystem> lockGuard {*this};
 
-	if (mounted_ == false)
-		return EBADF;
+	assert(mounted_ == true);
 
 	const auto unmountRet = lfs_unmount(&fileSystem_);
 	const auto closeRet = memoryTechnologyDevice_.close();

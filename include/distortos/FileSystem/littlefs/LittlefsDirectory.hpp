@@ -36,9 +36,7 @@ public:
 	/**
 	 * \brief LittlefsDirectory's destructor
 	 *
-	 * Closes directory.
-	 *
-	 * \warning This function must not be called from interrupt context!
+	 * \pre Directory is closed.
 	 */
 
 	~LittlefsDirectory() override;
@@ -50,8 +48,11 @@ public:
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
+	 * \pre Directory is opened.
+	 *
+	 * \post Directory is closed.
+	 *
 	 * \return 0 on success, error code otherwise:
-	 * - EBADF - the directory is already closed;
 	 * - converted error codes returned by lfs_dir_close();
 	 */
 
@@ -64,9 +65,10 @@ public:
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
+	 * \pre Directory is opened.
+	 *
 	 * \return pair with return code (0 on success, error code otherwise) and current position in the directory; error
 	 * codes:
-	 * - EBADF - the directory is not opened;
 	 * - converted error codes returned by lfs_dir_tell();
 	 */
 
@@ -82,11 +84,12 @@ public:
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
-	 * \return 0 on success, error code otherwise:
-	 * - error codes returned by LittlefsFileSystem::lock();
+	 * \pre The number of recursive locks of directory is less than 65535.
+	 *
+	 * \post Directory is locked.
 	 */
 
-	int lock() override;
+	void lock() override;
 
 	/**
 	 * \brief Reads next entry from directory.
@@ -97,8 +100,9 @@ public:
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
+	 * \pre Directory is opened.
+	 *
 	 * \return pair with return code (0 on success, error code otherwise) and next entry from directory; error codes:
-	 * - EBADF - the directory is not opened;
 	 * - ENOENT - current position in the directory is invalid (i.e. end of the directory reached);
 	 * - converted error codes returned by lfs_dir_read();
 	 */
@@ -112,8 +116,9 @@ public:
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
+	 * \pre Directory is opened.
+	 *
 	 * \return 0 on success, error code otherwise:
-	 * - EBADF - the directory is not opened;
 	 * - converted error codes returned by lfs_dir_rewind();
 	 */
 
@@ -126,10 +131,11 @@ public:
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
+	 * \pre Directory is opened.
+	 *
 	 * \param [in] position is the value of position, must be a value previously returned by getPosition()!
 	 *
 	 * \return 0 on success, error code otherwise:
-	 * - EBADF - the directory is not opened;
 	 * - converted error codes returned by lfs_dir_seek();
 	 */
 
@@ -142,11 +148,10 @@ public:
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
-	 * \return 0 on success, error code otherwise:
-	 * - error codes returned by LittlefsFileSystem::unlock();
+	 * \pre This function is called by the thread that locked the directory.
 	 */
 
-	int unlock() override;
+	void unlock() override;
 
 private:
 
@@ -167,10 +172,12 @@ private:
 	/**
 	 * \brief Opens directory.
 	 *
-	 * \param [in] path is the path of directory that will be opened
+	 * \pre Directory is not opened.
+	 * \pre \a path is valid.
+	 *
+	 * \param [in] path is the path of directory that will be opened, must be valid
 	 *
 	 * \return 0 on success, error code otherwise:
-	 * - EINVAL - \path is not valid;
 	 * - converted error codes returned by lfs_dir_open();
 	 */
 

@@ -77,9 +77,9 @@ public:
 	/**
 	 * \brief LittlefsFileSystem's destructor
 	 *
-	 * Unmounts the file system.
-	 *
 	 * \warning This function must not be called from interrupt context!
+	 *
+	 * \pre File system is unmounted.
 	 */
 
 	~LittlefsFileSystem() override;
@@ -89,8 +89,10 @@ public:
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
+	 * \pre File system is unmounted.
+	 *
 	 * \return 0 on success, error code otherwise:
-	 * - EBUSY - file system is mounted;
+	 * - ENOMEM - unable to allocate memory for file system;
 	 * - converted error codes returned by lfs_format();
 	 * - error codes returned by MemoryTechnologyDevice::open();
 	 */
@@ -107,11 +109,13 @@ public:
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
-	 * \param [in] path is the path to file for which status should be returned
+	 * \pre File system is mounted.
+	 * \pre \a path is valid.
+	 *
+	 * \param [in] path is the path to file for which status should be returned, must be valid
 	 *
 	 * \return pair with return code (0 on success, error code otherwise) and status of file in `stat` struct; error
 	 * codes:
-	 * - EBADF - no file system mounted;
 	 * - converted error codes returned by lfs_stat();
 	 */
 
@@ -127,9 +131,10 @@ public:
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
+	 * \pre File system is mounted.
+	 *
 	 * \return pair with return code (0 on success, error code otherwise) and status of file system in `statvfs` struct;
 	 * error codes:
-	 * - EBADF - no file system mounted;
 	 * - converted error codes returned by lfs_traverse();
 	 */
 
@@ -145,11 +150,12 @@ public:
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
-	 * \return 0 on success, error code otherwise:
-	 * - error codes returned by Mutex::lock();
+	 * \pre The number of recursive locks of file system is less than 65535.
+	 *
+	 * \post File system is locked.
 	 */
 
-	int lock() override;
+	void lock() override;
 
 	/**
 	 * \brief Makes a directory.
@@ -158,11 +164,13 @@ public:
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
-	 * \param [in] path is the path of the directory that will be created
+	 * \pre File system is mounted.
+	 * \pre \a path is valid.
+	 *
+	 * \param [in] path is the path of the directory that will be created, must be valid
 	 * \param [in] mode is the value of permission bits of the created directory
 	 *
 	 * \return 0 on success, error code otherwise:
-	 * - EBADF - no file system mounted;
 	 * - converted error codes returned by lfs_mkdir();
 	 */
 
@@ -173,8 +181,10 @@ public:
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
+	 * \pre File system is unmounted.
+	 *
 	 * \return 0 on success, error code otherwise:
-	 * - EBUSY - file system is already mounted;
+	 * - ENOMEM - unable to allocate memory for file system;
 	 * - converted error codes returned by lfs_mount();
 	 * - error codes returned by MemoryTechnologyDevice::open();
 	 */
@@ -188,11 +198,13 @@ public:
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
-	 * \param [in] path is the path of directory that will be opened
+	 * \pre File system is mounted.
+	 * \pre \a path is valid.
+	 *
+	 * \param [in] path is the path of directory that will be opened, must be valid
 	 *
 	 * \return pair with return code (0 on success, error code otherwise) and `std::unique_ptr` with opened directory;
 	 * error codes:
-	 * - EBADF - no file system mounted;
 	 * - ENOMEM - unable to allocate memory for directory;
 	 * - error codes returned by LittlefsDirectory::open();
 	 */
@@ -206,13 +218,16 @@ public:
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
-	 * \param [in] path is the path of file that will be opened
-	 * \param [in] flags are file status flags, for list of available flags and valid combinations see
+	 * \pre File system is mounted.
+	 * \pre \a path is valid.
+	 * \pre \a flags are valid.
+	 *
+	 * \param [in] path is the path of file that will be opened, must be valid
+	 * \param [in] flags are file status flags, must be valid, for list of available flags and valid combinations see
 	 * [open()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/open.html)
 	 *
 	 * \return pair with return code (0 on success, error code otherwise) and `std::unique_ptr` with opened file; error
 	 * codes:
-	 * - EBADF - no file system mounted;
 	 * - ENOMEM - unable to allocate memory for file;
 	 * - error codes returned by LittlefsFile::open();
 	 */
@@ -226,10 +241,12 @@ public:
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
-	 * \param [in] path is the path of file or directory that will be removed
+	 * \pre File system is mounted.
+	 * \pre \a path is valid.
+	 *
+	 * \param [in] path is the path of file or directory that will be removed, must be valid
 	 *
 	 * \return 0 on success, error code otherwise:
-	 * - EBADF - no file system mounted;
 	 * - converted error codes returned by lfs_remove();
 	 */
 
@@ -242,11 +259,13 @@ public:
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
-	 * \param [in] path is the path of file or directory that will be renamed
-	 * \param [in] newPath is the new path of file or directory
+	 * \pre File system is mounted.
+	 * \pre \a path and \a newPath are valid.
+	 *
+	 * \param [in] path is the path of file or directory that will be renamed, must be valid
+	 * \param [in] newPath is the new path of file or directory, must be valid
 	 *
 	 * \return 0 on success, error code otherwise:
-	 * - EBADF - no file system mounted;
 	 * - converted error codes returned by lfs_rename();
 	 */
 
@@ -259,19 +278,21 @@ public:
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
-	 * \return 0 on success, error code otherwise:
-	 * - error codes returned by Mutex::lock();
+	 * \pre This function is called by the thread that locked the file system.
 	 */
 
-	int unlock() override;
+	void unlock() override;
 
 	/**
 	 * \brief Unmounts file system from associated device.
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
+	 * \pre File system is mounted.
+	 *
+	 * \post File system is unmounted.
+	 *
 	 * \return 0 on success, error code otherwise:
-	 * - EBADF - no file system mounted;
 	 * - converted error codes returned by lfs_unmount();
 	 * - error codes returned by MemoryTechnologyDevice::close();
 	 */

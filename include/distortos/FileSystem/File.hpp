@@ -42,6 +42,8 @@ public:
 
 	/**
 	 * \brief File's destructor
+	 *
+	 * \pre File is closed.
 	 */
 
 	virtual ~File() = default;
@@ -51,8 +53,11 @@ public:
 	 *
 	 * Similar to [close()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/close.html)
 	 *
-	 * \return 0 on success, error code otherwise:
-	 * - EBADF - the file is already closed;
+	 * \pre File is opened.
+	 *
+	 * \post File is closed.
+	 *
+	 * \return 0 on success, error code otherwise
 	 */
 
 	virtual int close() = 0;
@@ -62,8 +67,9 @@ public:
 	 *
 	 * Similar to [ftello()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/ftell.html)
 	 *
-	 * \return pair with return code (0 on success, error code otherwise) and current file offset, bytes; error codes:
-	 * - EBADF - the file is not opened;
+	 * \pre File is opened.
+	 *
+	 * \return pair with return code (0 on success, error code otherwise) and current file offset, bytes
 	 */
 
 	virtual std::pair<int, off_t> getPosition() = 0;
@@ -71,8 +77,9 @@ public:
 	/**
 	 * \brief Returns size of file.
 	 *
-	 * \return pair with return code (0 on success, error code otherwise) and size of file, bytes; error codes:
-	 * - EBADF - the file is not opened;
+	 * \pre File is opened.
+	 *
+	 * \return pair with return code (0 on success, error code otherwise) and size of file, bytes
 	 */
 
 	virtual std::pair<int, off_t> getSize() = 0;
@@ -82,9 +89,9 @@ public:
 	 *
 	 * Similar to [fstat()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/fstat.html)
 	 *
-	 * \return pair with return code (0 on success, error code otherwise) and status of file in `stat` struct; error
-	 * codes:
-	 * - EBADF - the file is not opened;
+	 * \pre File is opened.
+	 *
+	 * \return pair with return code (0 on success, error code otherwise) and status of file in `stat` struct
 	 */
 
 	virtual std::pair<int, struct stat> getStatus() = 0;
@@ -94,9 +101,10 @@ public:
 	 *
 	 * Similar to [isatty()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/isatty.html)
 	 *
+	 * \pre File is opened.
+	 *
 	 * \return pair with return code (0 on success, error code otherwise) and bool telling whether the file is a
-	 * terminal (true) or not (false); error codes:
-	 * - EBADF - the file is not opened;
+	 * terminal (true) or not (false)
 	 */
 
 	virtual std::pair<int, bool> isATerminal() = 0;
@@ -111,25 +119,26 @@ public:
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
-	 * \return 0 on success, error code otherwise:
-	 * - EAGAIN - the lock could not be acquired because the maximum number of recursive locks for file has been
-	 * exceeded;
+	 * \pre The number of recursive locks of file is less than 65535.
+	 *
+	 * \post File is locked.
 	 */
 
-	virtual int lock() = 0;
+	virtual void lock() = 0;
 
 	/**
 	 * \brief Reads data from file.
 	 *
 	 * Similar to [read()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/read.html)
 	 *
-	 * \param [out] buffer is the buffer into which the data will be read
+	 * \pre File is opened.
+	 * \pre \a buffer is valid.
+	 *
+	 * \param [out] buffer is the buffer into which the data will be read, must be valid
 	 * \param [in] size is the size of \a buffer, bytes
 	 *
 	 * \return pair with return code (0 on success, error code otherwise) and number of read bytes (valid even when
-	 * error code is returned); error codes:
-	 * - EBADF - the file is not opened or opened only for writing;
-	 * - EINVAL - \a buffer is not valid;
+	 * error code is returned)
 	 */
 
 	virtual std::pair<int, size_t> read(void* buffer, size_t size) = 0;
@@ -139,8 +148,9 @@ public:
 	 *
 	 * Similar to [rewind()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/rewind.html)
 	 *
-	 * \return 0 on success, error code otherwise:
-	 * - EBADF - the file is not opened;
+	 * \pre File is opened.
+	 *
+	 * \return 0 on success, error code otherwise
 	 */
 
 	virtual int rewind() = 0;
@@ -150,13 +160,14 @@ public:
 	 *
 	 * Similar to [lseek()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/lseek.html)
 	 *
+	 * \pre File is opened.
+	 *
 	 * \param [in] whence selects the mode of operation: `Whence::beginning` will set file offset to \a offset,
 	 * `Whence::current` will set file offset to its current value plus \a offset, `Whence::end` will set file offset to
 	 * the size of the file plus \a offset
 	 * \param [in] offset is the value of offset, bytes
 	 *
 	 * \return pair with return code (0 on success, error code otherwise) and current file offset, bytes; error codes:
-	 * - EBADF - the file is not opened;
 	 * - EINVAL - resulting file offset would be negative;
 	 */
 
@@ -167,8 +178,9 @@ public:
 	 *
 	 * Similar to [fsync()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/fsync.html)
 	 *
-	 * \return 0 on success, error code otherwise:
-	 * - EBADF - the file is not opened;
+	 * \pre File is opened.
+	 *
+	 * \return 0 on success, error code otherwise
 	 */
 
 	virtual int synchronize() = 0;
@@ -180,24 +192,24 @@ public:
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
-	 * \return 0 on success, error code otherwise:
-	 * - EPERM - current thread did not lock the file;
+	 * \pre This function is called by the thread that locked the file.
 	 */
 
-	virtual int unlock() = 0;
+	virtual void unlock() = 0;
 
 	/**
 	 * \brief Writes data to file.
 	 *
 	 * Similar to [write()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/write.html)
 	 *
-	 * \param [in] buffer is the buffer with data that will be written
+	 * \pre File is opened.
+	 * \pre \a buffer is valid.
+	 *
+	 * \param [in] buffer is the buffer with data that will be written, must be valid
 	 * \param [in] size is the size of \a buffer, bytes
 	 *
 	 * \return pair with return code (0 on success, error code otherwise) and number of written bytes (valid even when
 	 * error code is returned); error codes:
-	 * - EBADF - the file is not opened or opened only for reading;
-	 * - EINVAL - \a buffer is not valid;
 	 * - ENOSPC - no space left on the device containing the file;
 	 */
 

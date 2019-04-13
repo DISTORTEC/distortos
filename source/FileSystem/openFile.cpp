@@ -2,7 +2,7 @@
  * \file
  * \brief openFile() definition
  *
- * \author Copyright (C) 2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2018-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -16,6 +16,8 @@
 #include "distortos/FileSystem/FileSystem.hpp"
 
 #include "distortos/assert.h"
+
+#include "estd/ScopeGuard.hpp"
 
 #include <cerrno>
 
@@ -160,11 +162,12 @@ ssize_t fileWrite(void* const cookie, const char* const buffer, const size_t siz
 
 std::pair<int, FILE*> openFile(FileSystem& fileSystem, const char* const path, const char* const mode)
 {
+	assert(mode != nullptr);
+
 	int flags;
 	{
 		const auto ret = __sflags(_REENT, mode, &flags);
-		if (ret == 0)
-			return {EINVAL, {}};
+		assert(ret != 0);
 	}
 
 	std::unique_ptr<File> file;
@@ -177,10 +180,16 @@ std::pair<int, FILE*> openFile(FileSystem& fileSystem, const char* const path, c
 
 	assert(file != nullptr);
 
+	auto closeScopeGuard = estd::makeScopeGuard([&file]()
+			{
+				file->close();
+			});
+
 	const auto ret = fopencookie(file.get(), mode, {fileRead, fileWrite, fileSeek, fileClose});
 	if (ret == nullptr)
 		return {errno, {}};
 
+	closeScopeGuard.release();
 	file.release();
 	return {{}, ret};
 }

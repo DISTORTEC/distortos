@@ -30,15 +30,14 @@ namespace distortos
 
 LittlefsDirectory::~LittlefsDirectory()
 {
-	close();
+	assert(opened_ == false);
 }
 
 int LittlefsDirectory::close()
 {
 	const std::lock_guard<LittlefsDirectory> lockGuard {*this};
 
-	if (opened_ == false)
-		return EBADF;
+	assert(opened_ == true);
 
 	opened_ = {};
 	const auto ret = lfs_dir_close(&fileSystem_.fileSystem_, &directory_);
@@ -49,8 +48,7 @@ std::pair<int, off_t> LittlefsDirectory::getPosition()
 {
 	const std::lock_guard<LittlefsDirectory> lockGuard {*this};
 
-	if (opened_ == false)
-		return {EBADF, {}};
+	assert(opened_ == true);
 
 	const auto ret = lfs_dir_tell(&fileSystem_.fileSystem_, &directory_);
 	if (ret < 0)
@@ -59,17 +57,16 @@ std::pair<int, off_t> LittlefsDirectory::getPosition()
 	return {{}, ret};
 }
 
-int LittlefsDirectory::lock()
+void LittlefsDirectory::lock()
 {
-	return fileSystem_.lock();
+	fileSystem_.lock();
 }
 
 std::pair<int, struct dirent> LittlefsDirectory::read()
 {
 	const std::lock_guard<LittlefsDirectory> lockGuard {*this};
 
-	if (opened_ == false)
-		return {EBADF, {}};
+	assert(opened_ == true);
 
 	lfs_info info;
 	const auto ret = lfs_dir_read(&fileSystem_.fileSystem_, &directory_, &info);
@@ -90,8 +87,7 @@ int LittlefsDirectory::rewind()
 {
 	const std::lock_guard<LittlefsDirectory> lockGuard {*this};
 
-	if (opened_ == false)
-		return EBADF;
+	assert(opened_ == true);
 
 	const auto ret = lfs_dir_rewind(&fileSystem_.fileSystem_, &directory_);
 	return littlefsErrorToErrorCode(ret);
@@ -101,20 +97,18 @@ int LittlefsDirectory::seek(const off_t position)
 {
 	const std::lock_guard<LittlefsDirectory> lockGuard {*this};
 
-	if (opened_ == false)
-		return EBADF;
+	assert(opened_ == true);
 
 	const auto ret = lfs_dir_seek(&fileSystem_.fileSystem_, &directory_, position);
 	if (ret < 0)
 		return littlefsErrorToErrorCode(ret);
 
 	return ret;
-
 }
 
-int LittlefsDirectory::unlock()
+void LittlefsDirectory::unlock()
 {
-	return fileSystem_.unlock();
+	fileSystem_.unlock();
 }
 
 /*---------------------------------------------------------------------------------------------------------------------+
@@ -124,9 +118,7 @@ int LittlefsDirectory::unlock()
 int LittlefsDirectory::open(const char* const path)
 {
 	assert(opened_ == false);
-
-	if (path == nullptr)
-		return EINVAL;
+	assert(path != nullptr);
 
 	const auto ret = lfs_dir_open(&fileSystem_.fileSystem_, &directory_, path);
 	if (ret == LFS_ERR_OK)
