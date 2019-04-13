@@ -99,6 +99,8 @@ public:
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
+	 * \pre File is opened.
+	 *
 	 * \return pair with return code (0 on success, error code otherwise) and status of file in `stat` struct; error
 	 * codes:
 	 * - error codes returned by getSize();

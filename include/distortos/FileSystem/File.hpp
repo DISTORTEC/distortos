@@ -89,9 +89,9 @@ public:
 	 *
 	 * Similar to [fstat()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/fstat.html)
 	 *
-	 * \return pair with return code (0 on success, error code otherwise) and status of file in `stat` struct; error
-	 * codes:
-	 * - EBADF - the file is not opened;
+	 * \pre File is opened.
+	 *
+	 * \return pair with return code (0 on success, error code otherwise) and status of file in `stat` struct
 	 */
 
 	virtual std::pair<int, struct stat> getStatus() = 0;
