@@ -237,11 +237,10 @@ public:
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
-	 * \return 0 on success, error code otherwise:
-	 * - EPERM - current thread did not lock the file system;
+	 * \pre This function is called by the thread that locked the file system.
 	 */
 
-	virtual int unlock() = 0;
+	virtual void unlock() = 0;
 
 	/**
 	 * \brief Unmounts file system from associated device.

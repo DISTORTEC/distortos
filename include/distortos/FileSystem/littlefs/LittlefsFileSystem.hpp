@@ -278,11 +278,10 @@ public:
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
-	 * \return 0 on success, error code otherwise:
-	 * - error codes returned by Mutex::lock();
+	 * \pre This function is called by the thread that locked the file system.
 	 */
 
-	int unlock() override;
+	void unlock() override;
 
 	/**
 	 * \brief Unmounts file system from associated device.

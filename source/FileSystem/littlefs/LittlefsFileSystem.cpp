@@ -445,9 +445,10 @@ int LittlefsFileSystem::rename(const char* const path, const char* const newPath
 	return littlefsErrorToErrorCode(ret);
 }
 
-int LittlefsFileSystem::unlock()
+void LittlefsFileSystem::unlock()
 {
-	return mutex_.unlock();
+	const auto ret = mutex_.unlock();
+	assert(ret == 0);
 }
 
 int LittlefsFileSystem::unmount()
