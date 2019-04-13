@@ -53,6 +53,8 @@ public:
 	 *
 	 * Similar to [close()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/close.html)
 	 *
+	 * \note Even if error code is returned, the file must not be used.
+	 *
 	 * \pre %File is opened.
 	 *
 	 * \post %File is closed.
