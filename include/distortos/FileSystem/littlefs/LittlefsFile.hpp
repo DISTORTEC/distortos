@@ -230,13 +230,13 @@ public:
 	 * \warning This function must not be called from interrupt context!
 	 *
 	 * \pre File is opened.
+	 * \pre \a buffer is valid.
 	 *
-	 * \param [in] buffer is the buffer with data that will be written
+	 * \param [in] buffer is the buffer with data that will be written, must be valid
 	 * \param [in] size is the size of \a buffer, bytes
 	 *
 	 * \return pair with return code (0 on success, error code otherwise) and number of written bytes (valid even when
 	 * error code is returned); error codes:
-	 * - EINVAL - \a buffer is not valid;
 	 * - converted error codes returned by lfs_file_write();
 	 */
 
