@@ -260,8 +260,7 @@ std::pair<int, struct stat> LittlefsFileSystem::getFileStatus(const char* const 
 {
 	const std::lock_guard<LittlefsFileSystem> lockGuard {*this};
 
-	if (mounted_ == false)
-		return {EBADF, {}};
+	assert(mounted_ == true);
 
 	lfs_info info;
 	{

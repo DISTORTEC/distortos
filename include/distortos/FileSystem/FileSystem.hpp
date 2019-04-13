@@ -58,11 +58,12 @@ public:
 	 *
 	 * Similar to [stat()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/stat.html)
 	 *
+	 * \pre File system is mounted.
+	 *
 	 * \param [in] path is the path to file for which status should be returned
 	 *
 	 * \return pair with return code (0 on success, error code otherwise) and status of file in `stat` struct; error
 	 * codes:
-	 * - EBADF - no file system mounted;
 	 * - EINVAL - \a path is not valid;
 	 * - ENAMETOOLONG - length of component of \a path and/or length of \a path are longer than allowed maximum;
 	 * - ENOENT - no such file or directory;
