@@ -86,8 +86,7 @@ std::pair<int, bool> LittlefsFile::isATerminal()
 {
 	const std::lock_guard<LittlefsFile> lockGuard {*this};
 
-	if (opened_ == false)
-		return {EBADF, {}};
+	assert(opened_ == true);
 
 	return {{}, {}};
 }

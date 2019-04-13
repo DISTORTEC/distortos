@@ -101,9 +101,10 @@ public:
 	 *
 	 * Similar to [isatty()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/isatty.html)
 	 *
+	 * \pre File is opened.
+	 *
 	 * \return pair with return code (0 on success, error code otherwise) and bool telling whether the file is a
-	 * terminal (true) or not (false); error codes:
-	 * - EBADF - the file is not opened;
+	 * terminal (true) or not (false)
 	 */
 
 	virtual std::pair<int, bool> isATerminal() = 0;

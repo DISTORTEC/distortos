@@ -115,9 +115,10 @@ public:
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
+	 * \pre File is opened.
+	 *
 	 * \return pair with return code (0 on success, error code otherwise) and bool telling whether the file is a
-	 * terminal (true) or not (false); error codes:
-	 * - EBADF - the file is not opened;
+	 * terminal (true) or not (false)
 	 */
 
 	std::pair<int, bool> isATerminal() override;
