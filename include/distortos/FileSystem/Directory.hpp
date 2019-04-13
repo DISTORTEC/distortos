@@ -42,8 +42,11 @@ public:
 	 *
 	 * Similar to [closedir()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/closedir.html)
 	 *
-	 * \return 0 on success, error code otherwise:
-	 * - EBADF - the directory is already closed;
+	 * \pre Directory is opened.
+	 *
+	 * \post Directory is closed.
+	 *
+	 * \return 0 on success, error code otherwise
 	 */
 
 	virtual int close() = 0;

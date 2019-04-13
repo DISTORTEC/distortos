@@ -48,8 +48,11 @@ public:
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
+	 * \pre Directory is opened.
+	 *
+	 * \post Directory is closed.
+	 *
 	 * \return 0 on success, error code otherwise:
-	 * - EBADF - the directory is already closed;
 	 * - converted error codes returned by lfs_dir_close();
 	 */
 

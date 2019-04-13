@@ -37,8 +37,7 @@ int LittlefsDirectory::close()
 {
 	const std::lock_guard<LittlefsDirectory> lockGuard {*this};
 
-	if (opened_ == false)
-		return EBADF;
+	assert(opened_ == true);
 
 	opened_ = {};
 	const auto ret = lfs_dir_close(&fileSystem_.fileSystem_, &directory_);
