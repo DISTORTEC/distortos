@@ -173,11 +173,11 @@ private:
 	 * \brief Opens directory.
 	 *
 	 * \pre Directory is not opened.
+	 * \pre \a path is valid.
 	 *
-	 * \param [in] path is the path of directory that will be opened
+	 * \param [in] path is the path of directory that will be opened, must be valid
 	 *
 	 * \return 0 on success, error code otherwise:
-	 * - EINVAL - \path is not valid;
 	 * - converted error codes returned by lfs_dir_open();
 	 */
 
