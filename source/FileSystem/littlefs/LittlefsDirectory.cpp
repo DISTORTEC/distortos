@@ -88,8 +88,7 @@ int LittlefsDirectory::rewind()
 {
 	const std::lock_guard<LittlefsDirectory> lockGuard {*this};
 
-	if (opened_ == false)
-		return EBADF;
+	assert(opened_ == true);
 
 	const auto ret = lfs_dir_rewind(&fileSystem_.fileSystem_, &directory_);
 	return littlefsErrorToErrorCode(ret);

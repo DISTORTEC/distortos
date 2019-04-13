@@ -98,8 +98,9 @@ public:
 	 *
 	 * Similar to [rewinddir()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/rewinddir.html)
 	 *
-	 * \return 0 on success, error code otherwise:
-	 * - EBADF - the directory is not opened;
+	 * \pre Directory is opened.
+	 *
+	 * \return 0 on success, error code otherwise
 	 */
 
 	virtual int rewind() = 0;
