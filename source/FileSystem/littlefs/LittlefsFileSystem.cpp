@@ -388,8 +388,7 @@ std::pair<int, std::unique_ptr<Directory>> LittlefsFileSystem::openDirectory(con
 {
 	const std::lock_guard<LittlefsFileSystem> lockGuard {*this};
 
-	if (mounted_ == false)
-		return {EBADF, std::unique_ptr<LittlefsDirectory>{}};
+	assert(mounted_ == true);
 
 	std::unique_ptr<LittlefsDirectory> directory {new (std::nothrow) LittlefsDirectory{*this}};
 	if (directory == nullptr)

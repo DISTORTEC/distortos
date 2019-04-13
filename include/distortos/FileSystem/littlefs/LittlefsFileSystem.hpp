@@ -198,11 +198,12 @@ public:
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
+	 * \pre File system is mounted.
+	 *
 	 * \param [in] path is the path of directory that will be opened
 	 *
 	 * \return pair with return code (0 on success, error code otherwise) and `std::unique_ptr` with opened directory;
 	 * error codes:
-	 * - EBADF - no file system mounted;
 	 * - ENOMEM - unable to allocate memory for directory;
 	 * - error codes returned by LittlefsDirectory::open();
 	 */
