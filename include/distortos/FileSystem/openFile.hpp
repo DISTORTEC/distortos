@@ -26,10 +26,11 @@ class FileSystem;
  *
  * Similar to [fopen()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/fopen.html)
  *
- * \pre \a mode is valid.
+ * \pre \a fileSystem is mounted.
+ * \pre \a path and \a mode are valid.
  *
  * \param [in] fileSystem is a reference to file system used to open the file
- * \param [in] path is the path of file that will be opened
+ * \param [in] path is the path of file that will be opened, must be valid
  * \param [in] mode is the mode in which the file will be opened, must be valid, for list of available modes and valid
  * combinations see [fopen()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/fopen.html)
  *
