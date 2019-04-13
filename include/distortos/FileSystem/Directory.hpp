@@ -31,6 +31,8 @@ public:
 
 	/**
 	 * \brief Directory's destructor
+	 *
+	 * \pre Directory is closed.
 	 */
 
 	virtual ~Directory() = default;

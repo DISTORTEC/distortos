@@ -36,9 +36,7 @@ public:
 	/**
 	 * \brief LittlefsDirectory's destructor
 	 *
-	 * Closes directory.
-	 *
-	 * \warning This function must not be called from interrupt context!
+	 * \pre Directory is closed.
 	 */
 
 	~LittlefsDirectory() override;
