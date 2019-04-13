@@ -32,7 +32,7 @@ public:
 	/**
 	 * \brief Directory's destructor
 	 *
-	 * \pre Directory is closed.
+	 * \pre %Directory is closed.
 	 */
 
 	virtual ~Directory() = default;
@@ -42,9 +42,9 @@ public:
 	 *
 	 * Similar to [closedir()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/closedir.html)
 	 *
-	 * \pre Directory is opened.
+	 * \pre %Directory is opened.
 	 *
-	 * \post Directory is closed.
+	 * \post %Directory is closed.
 	 *
 	 * \return 0 on success, error code otherwise
 	 */
@@ -56,7 +56,7 @@ public:
 	 *
 	 * Similar to [telldir()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/telldir.html)
 	 *
-	 * \pre Directory is opened.
+	 * \pre %Directory is opened.
 	 *
 	 * \return pair with return code (0 on success, error code otherwise) and current position in the directory
 	 */
@@ -75,7 +75,7 @@ public:
 	 *
 	 * \pre The number of recursive locks of directory is less than 65535.
 	 *
-	 * \post Directory is locked.
+	 * \post %Directory is locked.
 	 */
 
 	virtual void lock() = 0;
@@ -85,7 +85,7 @@ public:
 	 *
 	 * Similar to [readdir_r()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/readdir.html)
 	 *
-	 * \pre Directory is opened.
+	 * \pre %Directory is opened.
 	 *
 	 * \return pair with return code (0 on success, error code otherwise) and next entry from directory; error codes:
 	 * - ENOENT - current position in the directory is invalid (i.e. end of the directory reached);
@@ -98,7 +98,7 @@ public:
 	 *
 	 * Similar to [rewinddir()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/rewinddir.html)
 	 *
-	 * \pre Directory is opened.
+	 * \pre %Directory is opened.
 	 *
 	 * \return 0 on success, error code otherwise
 	 */
@@ -110,7 +110,7 @@ public:
 	 *
 	 * Similar to [seekdir()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/seekdir.html)
 	 *
-	 * \pre Directory is opened.
+	 * \pre %Directory is opened.
 	 *
 	 * \param [in] position is the value of position, must be a value previously returned by getPosition()!
 	 *

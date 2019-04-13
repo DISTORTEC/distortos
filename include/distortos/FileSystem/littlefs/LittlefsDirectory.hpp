@@ -36,7 +36,7 @@ public:
 	/**
 	 * \brief LittlefsDirectory's destructor
 	 *
-	 * \pre Directory is closed.
+	 * \pre %Directory is closed.
 	 */
 
 	~LittlefsDirectory() override;
@@ -48,9 +48,9 @@ public:
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
-	 * \pre Directory is opened.
+	 * \pre %Directory is opened.
 	 *
-	 * \post Directory is closed.
+	 * \post %Directory is closed.
 	 *
 	 * \return 0 on success, error code otherwise:
 	 * - converted error codes returned by lfs_dir_close();
@@ -65,7 +65,7 @@ public:
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
-	 * \pre Directory is opened.
+	 * \pre %Directory is opened.
 	 *
 	 * \return pair with return code (0 on success, error code otherwise) and current position in the directory; error
 	 * codes:
@@ -86,7 +86,7 @@ public:
 	 *
 	 * \pre The number of recursive locks of directory is less than 65535.
 	 *
-	 * \post Directory is locked.
+	 * \post %Directory is locked.
 	 */
 
 	void lock() override;
@@ -100,7 +100,7 @@ public:
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
-	 * \pre Directory is opened.
+	 * \pre %Directory is opened.
 	 *
 	 * \return pair with return code (0 on success, error code otherwise) and next entry from directory; error codes:
 	 * - ENOENT - current position in the directory is invalid (i.e. end of the directory reached);
@@ -116,7 +116,7 @@ public:
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
-	 * \pre Directory is opened.
+	 * \pre %Directory is opened.
 	 *
 	 * \return 0 on success, error code otherwise:
 	 * - converted error codes returned by lfs_dir_rewind();
@@ -131,7 +131,7 @@ public:
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
-	 * \pre Directory is opened.
+	 * \pre %Directory is opened.
 	 *
 	 * \param [in] position is the value of position, must be a value previously returned by getPosition()!
 	 *
@@ -172,7 +172,7 @@ private:
 	/**
 	 * \brief Opens directory.
 	 *
-	 * \pre Directory is not opened.
+	 * \pre %Directory is not opened.
 	 * \pre \a path is valid.
 	 *
 	 * \param [in] path is the path of directory that will be opened, must be valid

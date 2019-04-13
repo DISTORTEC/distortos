@@ -38,7 +38,7 @@ public:
 	/**
 	 * \brief FileSystem's destructor
 	 *
-	 * \pre File system is unmounted.
+	 * \pre %File system is unmounted.
 	 */
 
 	virtual ~FileSystem() = default;
@@ -46,7 +46,7 @@ public:
 	/**
 	 * \brief Formats associated device with the file system.
 	 *
-	 * \pre File system is unmounted.
+	 * \pre %File system is unmounted.
 	 *
 	 * \return 0 on success, error code otherwise
 	 */
@@ -58,7 +58,7 @@ public:
 	 *
 	 * Similar to [stat()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/stat.html)
 	 *
-	 * \pre File system is mounted.
+	 * \pre %File system is mounted.
 	 * \pre \a path is valid.
 	 *
 	 * \param [in] path is the path to file for which status should be returned, must be valid
@@ -77,7 +77,7 @@ public:
 	 *
 	 * Similar to [statvfs()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/statvfs.html)
 	 *
-	 * \pre File system is mounted.
+	 * \pre %File system is mounted.
 	 *
 	 * \return pair with return code (0 on success, error code otherwise) and status of file system in `statvfs` struct
 	 */
@@ -96,7 +96,7 @@ public:
 	 *
 	 * \pre The number of recursive locks of file system is less than 65535.
 	 *
-	 * \post File system is locked.
+	 * \post %File system is locked.
 	 */
 
 	virtual void lock() = 0;
@@ -106,7 +106,7 @@ public:
 	 *
 	 * Similar to [mkdir()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/mkdir.html)
 	 *
-	 * \pre File system is mounted.
+	 * \pre %File system is mounted.
 	 * \pre \a path is valid.
 	 *
 	 * \param [in] path is the path of the directory that will be created, must be valid
@@ -126,7 +126,7 @@ public:
 	/**
 	 * \brief Mounts file system on associated device.
 	 *
-	 * \pre File system is unmounted.
+	 * \pre %File system is unmounted.
 	 *
 	 * \return 0 on success, error code otherwise:
 	 * - EILSEQ - device does not contain valid file system;
@@ -140,7 +140,7 @@ public:
 	 *
 	 * Similar to [opendir()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/opendir.html)
 	 *
-	 * \pre File system is mounted.
+	 * \pre %File system is mounted.
 	 * \pre \a path is valid.
 	 *
 	 * \param [in] path is the path of directory that will be opened, must be valid
@@ -160,7 +160,7 @@ public:
 	 *
 	 * Similar to [open()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/open.html)
 	 *
-	 * \pre File system is mounted.
+	 * \pre %File system is mounted.
 	 * \pre \a path is valid.
 	 * \pre \a flags are valid.
 	 *
@@ -190,7 +190,7 @@ public:
 	 *
 	 * Similar to [remove()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/remove.html)
 	 *
-	 * \pre File system is mounted.
+	 * \pre %File system is mounted.
 	 * \pre \a path is valid.
 	 *
 	 * \param [in] path is the path of file or directory that will be removed, must be valid
@@ -210,7 +210,7 @@ public:
 	 *
 	 * Similar to [rename()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/rename.html)
 	 *
-	 * \pre File system is mounted.
+	 * \pre %File system is mounted.
 	 * \pre \a path and \a newPath are valid.
 	 *
 	 * \param [in] path is the path of file or directory that will be renamed, must be valid
@@ -245,9 +245,9 @@ public:
 	/**
 	 * \brief Unmounts file system from associated device.
 	 *
-	 * \pre File system is mounted.
+	 * \pre %File system is mounted.
 	 *
-	 * \post File system is unmounted.
+	 * \post %File system is unmounted.
 	 *
 	 * \return 0 on success, error code otherwise
 	 */

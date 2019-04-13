@@ -40,7 +40,7 @@ public:
 	/**
 	 * \brief LittlefsFile's destructor
 	 *
-	 * \pre File is closed.
+	 * \pre %File is closed.
 	 */
 
 	~LittlefsFile() override;
@@ -52,9 +52,9 @@ public:
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
-	 * \pre File is opened.
+	 * \pre %File is opened.
 	 *
-	 * \post File is closed.
+	 * \post %File is closed.
 	 *
 	 * \return 0 on success, error code otherwise
 	 * - converted error codes returned by lfs_file_close();
@@ -69,7 +69,7 @@ public:
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
-	 * \pre File is opened.
+	 * \pre %File is opened.
 	 *
 	 * \return pair with return code (0 on success, error code otherwise) and current file offset, bytes; error codes:
 	 * - converted error codes returned by lfs_file_tell();
@@ -82,7 +82,7 @@ public:
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
-	 * \pre File is opened.
+	 * \pre %File is opened.
 	 *
 	 * \return pair with return code (0 on success, error code otherwise) and size of file, bytes; error codes:
 	 * - converted error codes returned by lfs_file_size();
@@ -99,7 +99,7 @@ public:
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
-	 * \pre File is opened.
+	 * \pre %File is opened.
 	 *
 	 * \return pair with return code (0 on success, error code otherwise) and status of file in `stat` struct; error
 	 * codes:
@@ -115,7 +115,7 @@ public:
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
-	 * \pre File is opened.
+	 * \pre %File is opened.
 	 *
 	 * \return pair with return code (0 on success, error code otherwise) and bool telling whether the file is a
 	 * terminal (true) or not (false)
@@ -147,7 +147,7 @@ public:
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
-	 * \pre File is opened.
+	 * \pre %File is opened.
 	 * \pre \a buffer is valid.
 	 *
 	 * \param [out] buffer is the buffer into which the data will be read, must be valid
@@ -167,7 +167,7 @@ public:
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
-	 * \pre File is opened.
+	 * \pre %File is opened.
 	 *
 	 * \return 0 on success, error code otherwise:
 	 * - converted error codes returned by lfs_file_rewind();
@@ -182,7 +182,7 @@ public:
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
-	 * \pre File is opened.
+	 * \pre %File is opened.
 	 *
 	 * \param [in] whence selects the mode of operation: `Whence::beginning` will set file offset to \a offset,
 	 * `Whence::current` will set file offset to its current value plus \a offset, `Whence::end` will set file offset to
@@ -202,7 +202,7 @@ public:
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
-	 * \pre File is opened.
+	 * \pre %File is opened.
 	 *
 	 * \return 0 on success, error code otherwise:
 	 * - converted error codes returned by lfs_file_sync();
@@ -229,7 +229,7 @@ public:
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
-	 * \pre File is opened.
+	 * \pre %File is opened.
 	 * \pre \a buffer is valid.
 	 *
 	 * \param [in] buffer is the buffer with data that will be written, must be valid
@@ -263,7 +263,7 @@ private:
 	/**
 	 * \brief Opens file.
 	 *
-	 * \pre File is not opened.
+	 * \pre %File is not opened.
 	 * \pre \a path is valid.
 	 * \pre \a flags are valid.
 	 *

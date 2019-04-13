@@ -79,7 +79,7 @@ public:
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
-	 * \pre File system is unmounted.
+	 * \pre %File system is unmounted.
 	 */
 
 	~LittlefsFileSystem() override;
@@ -89,7 +89,7 @@ public:
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
-	 * \pre File system is unmounted.
+	 * \pre %File system is unmounted.
 	 *
 	 * \return 0 on success, error code otherwise:
 	 * - ENOMEM - unable to allocate memory for file system;
@@ -109,7 +109,7 @@ public:
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
-	 * \pre File system is mounted.
+	 * \pre %File system is mounted.
 	 * \pre \a path is valid.
 	 *
 	 * \param [in] path is the path to file for which status should be returned, must be valid
@@ -131,7 +131,7 @@ public:
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
-	 * \pre File system is mounted.
+	 * \pre %File system is mounted.
 	 *
 	 * \return pair with return code (0 on success, error code otherwise) and status of file system in `statvfs` struct;
 	 * error codes:
@@ -152,7 +152,7 @@ public:
 	 *
 	 * \pre The number of recursive locks of file system is less than 65535.
 	 *
-	 * \post File system is locked.
+	 * \post %File system is locked.
 	 */
 
 	void lock() override;
@@ -164,7 +164,7 @@ public:
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
-	 * \pre File system is mounted.
+	 * \pre %File system is mounted.
 	 * \pre \a path is valid.
 	 *
 	 * \param [in] path is the path of the directory that will be created, must be valid
@@ -181,7 +181,7 @@ public:
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
-	 * \pre File system is unmounted.
+	 * \pre %File system is unmounted.
 	 *
 	 * \return 0 on success, error code otherwise:
 	 * - ENOMEM - unable to allocate memory for file system;
@@ -198,7 +198,7 @@ public:
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
-	 * \pre File system is mounted.
+	 * \pre %File system is mounted.
 	 * \pre \a path is valid.
 	 *
 	 * \param [in] path is the path of directory that will be opened, must be valid
@@ -218,7 +218,7 @@ public:
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
-	 * \pre File system is mounted.
+	 * \pre %File system is mounted.
 	 * \pre \a path is valid.
 	 * \pre \a flags are valid.
 	 *
@@ -241,7 +241,7 @@ public:
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
-	 * \pre File system is mounted.
+	 * \pre %File system is mounted.
 	 * \pre \a path is valid.
 	 *
 	 * \param [in] path is the path of file or directory that will be removed, must be valid
@@ -259,7 +259,7 @@ public:
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
-	 * \pre File system is mounted.
+	 * \pre %File system is mounted.
 	 * \pre \a path and \a newPath are valid.
 	 *
 	 * \param [in] path is the path of file or directory that will be renamed, must be valid
@@ -288,9 +288,9 @@ public:
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
-	 * \pre File system is mounted.
+	 * \pre %File system is mounted.
 	 *
-	 * \post File system is unmounted.
+	 * \post %File system is unmounted.
 	 *
 	 * \return 0 on success, error code otherwise:
 	 * - converted error codes returned by lfs_unmount();

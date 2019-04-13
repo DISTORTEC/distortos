@@ -43,7 +43,7 @@ public:
 	/**
 	 * \brief File's destructor
 	 *
-	 * \pre File is closed.
+	 * \pre %File is closed.
 	 */
 
 	virtual ~File() = default;
@@ -53,9 +53,9 @@ public:
 	 *
 	 * Similar to [close()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/close.html)
 	 *
-	 * \pre File is opened.
+	 * \pre %File is opened.
 	 *
-	 * \post File is closed.
+	 * \post %File is closed.
 	 *
 	 * \return 0 on success, error code otherwise
 	 */
@@ -67,7 +67,7 @@ public:
 	 *
 	 * Similar to [ftello()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/ftell.html)
 	 *
-	 * \pre File is opened.
+	 * \pre %File is opened.
 	 *
 	 * \return pair with return code (0 on success, error code otherwise) and current file offset, bytes
 	 */
@@ -77,7 +77,7 @@ public:
 	/**
 	 * \brief Returns size of file.
 	 *
-	 * \pre File is opened.
+	 * \pre %File is opened.
 	 *
 	 * \return pair with return code (0 on success, error code otherwise) and size of file, bytes
 	 */
@@ -89,7 +89,7 @@ public:
 	 *
 	 * Similar to [fstat()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/fstat.html)
 	 *
-	 * \pre File is opened.
+	 * \pre %File is opened.
 	 *
 	 * \return pair with return code (0 on success, error code otherwise) and status of file in `stat` struct
 	 */
@@ -101,7 +101,7 @@ public:
 	 *
 	 * Similar to [isatty()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/isatty.html)
 	 *
-	 * \pre File is opened.
+	 * \pre %File is opened.
 	 *
 	 * \return pair with return code (0 on success, error code otherwise) and bool telling whether the file is a
 	 * terminal (true) or not (false)
@@ -121,7 +121,7 @@ public:
 	 *
 	 * \pre The number of recursive locks of file is less than 65535.
 	 *
-	 * \post File is locked.
+	 * \post %File is locked.
 	 */
 
 	virtual void lock() = 0;
@@ -131,7 +131,7 @@ public:
 	 *
 	 * Similar to [read()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/read.html)
 	 *
-	 * \pre File is opened.
+	 * \pre %File is opened.
 	 * \pre \a buffer is valid.
 	 *
 	 * \param [out] buffer is the buffer into which the data will be read, must be valid
@@ -148,7 +148,7 @@ public:
 	 *
 	 * Similar to [rewind()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/rewind.html)
 	 *
-	 * \pre File is opened.
+	 * \pre %File is opened.
 	 *
 	 * \return 0 on success, error code otherwise
 	 */
@@ -160,7 +160,7 @@ public:
 	 *
 	 * Similar to [lseek()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/lseek.html)
 	 *
-	 * \pre File is opened.
+	 * \pre %File is opened.
 	 *
 	 * \param [in] whence selects the mode of operation: `Whence::beginning` will set file offset to \a offset,
 	 * `Whence::current` will set file offset to its current value plus \a offset, `Whence::end` will set file offset to
@@ -178,7 +178,7 @@ public:
 	 *
 	 * Similar to [fsync()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/fsync.html)
 	 *
-	 * \pre File is opened.
+	 * \pre %File is opened.
 	 *
 	 * \return 0 on success, error code otherwise
 	 */
@@ -202,7 +202,7 @@ public:
 	 *
 	 * Similar to [write()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/write.html)
 	 *
-	 * \pre File is opened.
+	 * \pre %File is opened.
 	 * \pre \a buffer is valid.
 	 *
 	 * \param [in] buffer is the buffer with data that will be written, must be valid
