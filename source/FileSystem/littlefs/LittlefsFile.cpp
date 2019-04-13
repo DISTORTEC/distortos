@@ -146,9 +146,10 @@ int LittlefsFile::synchronize()
 	return littlefsErrorToErrorCode(ret);
 }
 
-int LittlefsFile::unlock()
+void LittlefsFile::unlock()
 {
-	return fileSystem_.unlock();
+	const auto ret = fileSystem_.unlock();
+	assert(ret == 0);
 }
 
 std::pair<int, size_t> LittlefsFile::write(const void* const buffer, const size_t size)

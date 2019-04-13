@@ -217,11 +217,10 @@ public:
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
-	 * \return 0 on success, error code otherwise:
-	 * - error codes returned by LittlefsFileSystem::unlock();
+	 * \pre This function is called by the thread that locked the device.
 	 */
 
-	int unlock() override;
+	void unlock() override;
 
 	/**
 	 * \brief Writes data to file.
