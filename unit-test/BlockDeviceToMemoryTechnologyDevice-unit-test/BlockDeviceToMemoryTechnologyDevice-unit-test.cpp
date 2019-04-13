@@ -58,7 +58,6 @@ TEST_CASE("Testing get*BlockSize()", "[get*BlockSize]")
 {
 	BlockDevice blockDeviceMock;
 	trompeloeil::sequence sequence {};
-	std::vector<std::unique_ptr<trompeloeil::expectation>> expectations {};
 
 	distortos::devices::BlockDeviceToMemoryTechnologyDevice bd2Mtd {blockDeviceMock};
 
@@ -69,32 +68,24 @@ TEST_CASE("Testing get*BlockSize()", "[get*BlockSize]")
 	REQUIRE(bd2Mtd.getProgramBlockSize() == anotherBlockSize);
 	REQUIRE_CALL(blockDeviceMock, getBlockSize()).IN_SEQUENCE(sequence).RETURN(anotherBlockSize);
 	REQUIRE(bd2Mtd.getReadBlockSize() == anotherBlockSize);
-
-	expectations.emplace_back(NAMED_REQUIRE_CALL(blockDeviceMock, lock()).IN_SEQUENCE(sequence));
-	expectations.emplace_back(NAMED_REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence));
 }
 
 TEST_CASE("Testing getSize()", "[getSize]")
 {
 	BlockDevice blockDeviceMock;
 	trompeloeil::sequence sequence {};
-	std::vector<std::unique_ptr<trompeloeil::expectation>> expectations {};
 
 	distortos::devices::BlockDeviceToMemoryTechnologyDevice bd2Mtd {blockDeviceMock};
 
 	constexpr size_t size {0x028660de};
 	REQUIRE_CALL(blockDeviceMock, getSize()).IN_SEQUENCE(sequence).RETURN(size);
 	REQUIRE(bd2Mtd.getSize() == size);
-
-	expectations.emplace_back(NAMED_REQUIRE_CALL(blockDeviceMock, lock()).IN_SEQUENCE(sequence));
-	expectations.emplace_back(NAMED_REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence));
 }
 
 TEST_CASE("Testing open() & close()", "[open/close]")
 {
 	BlockDevice blockDeviceMock;
 	trompeloeil::sequence sequence {};
-	std::vector<std::unique_ptr<trompeloeil::expectation>> expectations {};
 
 	distortos::devices::BlockDeviceToMemoryTechnologyDevice bd2Mtd {blockDeviceMock};
 
@@ -188,16 +179,12 @@ TEST_CASE("Testing open() & close()", "[open/close]")
 			REQUIRE(bd2Mtd.close() == 0);
 		}
 	}
-
-	expectations.emplace_back(NAMED_REQUIRE_CALL(blockDeviceMock, lock()).IN_SEQUENCE(sequence));
-	expectations.emplace_back(NAMED_REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence));
 }
 
 TEST_CASE("Testing synchronize()", "[synchronize]")
 {
 	BlockDevice blockDeviceMock;
 	trompeloeil::sequence sequence {};
-	std::vector<std::unique_ptr<trompeloeil::expectation>> expectations {};
 
 	distortos::devices::BlockDeviceToMemoryTechnologyDevice bd2Mtd {blockDeviceMock};
 
@@ -216,9 +203,6 @@ TEST_CASE("Testing synchronize()", "[synchronize]")
 	REQUIRE_CALL(blockDeviceMock, close()).IN_SEQUENCE(sequence).RETURN(0);
 	REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence);
 	REQUIRE(bd2Mtd.close() == 0);
-
-	expectations.emplace_back(NAMED_REQUIRE_CALL(blockDeviceMock, lock()).IN_SEQUENCE(sequence));
-	expectations.emplace_back(NAMED_REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence));
 }
 
 TEST_CASE("Testing erase(), program() & read()", "[erase/program/read]")
@@ -573,7 +557,4 @@ TEST_CASE("Testing erase(), program() & read()", "[erase/program/read]")
 		REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence);
 		REQUIRE(bd2Mtd.close() == 0);
 	}
-
-	expectations.emplace_back(NAMED_REQUIRE_CALL(blockDeviceMock, lock()).IN_SEQUENCE(sequence));
-	expectations.emplace_back(NAMED_REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence));
 }

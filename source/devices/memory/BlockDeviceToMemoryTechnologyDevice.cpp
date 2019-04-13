@@ -42,8 +42,6 @@ static_assert(CONFIG_BLOCKDEVICE_BUFFER_ALIGNMENT <= CONFIG_MEMORYTECHNOLOGYDEVI
 
 BlockDeviceToMemoryTechnologyDevice::~BlockDeviceToMemoryTechnologyDevice()
 {
-	const std::lock_guard<BlockDeviceToMemoryTechnologyDevice> lockGuard {*this};
-
 	assert(openCount_ == 0);
 }
 
