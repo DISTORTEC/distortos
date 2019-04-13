@@ -407,8 +407,7 @@ std::pair<int, std::unique_ptr<File>> LittlefsFileSystem::openFile(const char* c
 {
 	const std::lock_guard<LittlefsFileSystem> lockGuard {*this};
 
-	if (mounted_ == false)
-		return {EBADF, std::unique_ptr<LittlefsFile>{}};
+	assert(mounted_ == true);
 
 	std::unique_ptr<LittlefsFile> file {new (std::nothrow) LittlefsFile{*this}};
 	if (file == nullptr)

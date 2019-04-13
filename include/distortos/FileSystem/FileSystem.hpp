@@ -160,13 +160,14 @@ public:
 	 *
 	 * Similar to [open()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/open.html)
 	 *
+	 * \pre File system is mounted.
+	 *
 	 * \param [in] path is the path of file that will be opened
 	 * \param [in] flags are file status flags, for list of available flags and valid combinations see
 	 * [open()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/open.html)
 	 *
 	 * \return pair with return code (0 on success, error code otherwise) and `std::unique_ptr` with opened file; error
 	 * codes:
-	 * - EBADF - no file system mounted;
 	 * - EEXIST - `O_CREAT` and `O_EXCL` are set, and file named by \a path exists;
 	 * - EISDIR - file named by \a path is a directory;
 	 * - EINVAL - \a path and/or \a flags are not valid;
