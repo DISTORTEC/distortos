@@ -125,8 +125,7 @@ std::pair<int, off_t> LittlefsFile::seek(const Whence whence, const off_t offset
 {
 	const std::lock_guard<LittlefsFile> lockGuard {*this};
 
-	if (opened_ == false)
-		return {EBADF, {}};
+	assert(opened_ == true);
 
 	const auto ret = lfs_file_seek(&fileSystem_.fileSystem_, &file_, offset,
 			whence == Whence::beginning ? LFS_SEEK_SET : whence == Whence::current ? LFS_SEEK_CUR : LFS_SEEK_END);

@@ -160,13 +160,14 @@ public:
 	 *
 	 * Similar to [lseek()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/lseek.html)
 	 *
+	 * \pre File is opened.
+	 *
 	 * \param [in] whence selects the mode of operation: `Whence::beginning` will set file offset to \a offset,
 	 * `Whence::current` will set file offset to its current value plus \a offset, `Whence::end` will set file offset to
 	 * the size of the file plus \a offset
 	 * \param [in] offset is the value of offset, bytes
 	 *
 	 * \return pair with return code (0 on success, error code otherwise) and current file offset, bytes; error codes:
-	 * - EBADF - the file is not opened;
 	 * - EINVAL - resulting file offset would be negative;
 	 */
 
