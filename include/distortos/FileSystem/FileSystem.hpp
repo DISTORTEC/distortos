@@ -106,11 +106,12 @@ public:
 	 *
 	 * Similar to [mkdir()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/mkdir.html)
 	 *
+	 * \pre File system is mounted.
+	 *
 	 * \param [in] path is the path of the directory that will be created
 	 * \param [in] mode is the value of permission bits of the created directory
 	 *
 	 * \return 0 on success, error code otherwise:
-	 * - EBADF - no file system mounted;
 	 * - EEXIST - named file exists;
 	 * - EINVAL - \a path is not valid;
 	 * - ENAMETOOLONG - length of component of \a path and/or length of \a path are longer than allowed maximum;
