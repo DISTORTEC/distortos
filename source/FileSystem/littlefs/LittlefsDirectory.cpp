@@ -59,8 +59,7 @@ std::pair<int, off_t> LittlefsDirectory::getPosition()
 
 void LittlefsDirectory::lock()
 {
-	const auto ret = fileSystem_.lock();
-	assert(ret == 0);
+	fileSystem_.lock();
 }
 
 std::pair<int, struct dirent> LittlefsDirectory::read()

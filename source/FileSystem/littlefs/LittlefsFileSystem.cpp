@@ -299,9 +299,10 @@ std::pair<int, struct statvfs> LittlefsFileSystem::getStatus()
 	return {{}, status};
 }
 
-int LittlefsFileSystem::lock()
+void LittlefsFileSystem::lock()
 {
-	return mutex_.lock();
+	const auto ret = mutex_.lock();
+	assert(ret == 0);
 }
 
 int LittlefsFileSystem::makeDirectory(const char* const path, mode_t)

@@ -149,11 +149,12 @@ public:
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
-	 * \return 0 on success, error code otherwise:
-	 * - error codes returned by Mutex::lock();
+	 * \pre The number of recursive locks of file system is less than 65535.
+	 *
+	 * \post File system is locked.
 	 */
 
-	int lock() override;
+	void lock() override;
 
 	/**
 	 * \brief Makes a directory.
