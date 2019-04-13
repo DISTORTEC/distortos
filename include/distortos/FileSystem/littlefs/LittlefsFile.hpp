@@ -263,6 +263,8 @@ private:
 	/**
 	 * \brief Opens file.
 	 *
+	 * \pre File is not opened.
+	 *
 	 * \param [in] path is the path of file that will be opened
 	 * \param [in] flags are file status flags, for list of available flags and valid combinations see
 	 * [open()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/open.html)
