@@ -101,8 +101,7 @@ std::pair<int, size_t> LittlefsFile::read(void* const buffer, const size_t size)
 {
 	const std::lock_guard<LittlefsFile> lockGuard {*this};
 
-	if (opened_ == false)
-		return {EBADF, {}};
+	assert(opened_ == true);
 
 	if (buffer == nullptr && size != 0)
 		return {EINVAL, {}};

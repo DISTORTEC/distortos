@@ -147,12 +147,13 @@ public:
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
+	 * \pre File is opened.
+	 *
 	 * \param [out] buffer is the buffer into which the data will be read
 	 * \param [in] size is the size of \a buffer, bytes
 	 *
 	 * \return pair with return code (0 on success, error code otherwise) and number of read bytes (valid even when
 	 * error code is returned); error codes:
-	 * - EBADF - the file is not opened or opened only for writing;
 	 * - EINVAL - \a buffer is not valid;
 	 * - converted error codes returned by lfs_file_read();
 	 */
