@@ -172,6 +172,8 @@ private:
 	/**
 	 * \brief Opens directory.
 	 *
+	 * \pre Directory is not opened.
+	 *
 	 * \param [in] path is the path of directory that will be opened
 	 *
 	 * \return 0 on success, error code otherwise:
