@@ -126,8 +126,9 @@ public:
 	/**
 	 * \brief Mounts file system on associated device.
 	 *
+	 * \pre File system is unmounted.
+	 *
 	 * \return 0 on success, error code otherwise:
-	 * - EBUSY - file system is already mounted;
 	 * - EILSEQ - device does not contain valid file system;
 	 * - ENOMEM - unable to allocate memory for file system;
 	 */

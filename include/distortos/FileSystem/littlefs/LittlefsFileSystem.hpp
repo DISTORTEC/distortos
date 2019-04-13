@@ -181,8 +181,9 @@ public:
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
+	 * \pre File system is unmounted.
+	 *
 	 * \return 0 on success, error code otherwise:
-	 * - EBUSY - file system is already mounted;
 	 * - ENOMEM - unable to allocate memory for file system;
 	 * - converted error codes returned by lfs_mount();
 	 * - error codes returned by MemoryTechnologyDevice::open();
