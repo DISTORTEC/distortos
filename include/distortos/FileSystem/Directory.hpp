@@ -110,10 +110,11 @@ public:
 	 *
 	 * Similar to [seekdir()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/seekdir.html)
 	 *
+	 * \pre Directory is opened.
+	 *
 	 * \param [in] position is the value of position, must be a value previously returned by getPosition()!
 	 *
-	 * \return 0 on success, error code otherwise:
-	 * - EBADF - the directory is not opened;
+	 * \return 0 on success, error code otherwise
 	 */
 
 	virtual int seek(off_t position) = 0;

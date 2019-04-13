@@ -98,15 +98,13 @@ int LittlefsDirectory::seek(const off_t position)
 {
 	const std::lock_guard<LittlefsDirectory> lockGuard {*this};
 
-	if (opened_ == false)
-		return EBADF;
+	assert(opened_ == true);
 
 	const auto ret = lfs_dir_seek(&fileSystem_.fileSystem_, &directory_, position);
 	if (ret < 0)
 		return littlefsErrorToErrorCode(ret);
 
 	return ret;
-
 }
 
 int LittlefsDirectory::unlock()
