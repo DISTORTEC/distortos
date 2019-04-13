@@ -42,6 +42,9 @@ public:
 	/**
 	 * \brief Closes device.
 	 *
+	 * \note Even if error code is returned, the device must not be used from the context which opened it (until it is
+	 * successfully opened again).
+	 *
 	 * \pre Device is opened.
 	 *
 	 * \return 0 on success, error code otherwise
