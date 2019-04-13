@@ -30,7 +30,7 @@ namespace distortos
 
 LittlefsFile::~LittlefsFile()
 {
-	close();
+	assert(opened_ == false);
 }
 
 int LittlefsFile::close()

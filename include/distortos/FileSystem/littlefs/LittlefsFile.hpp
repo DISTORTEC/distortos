@@ -40,9 +40,7 @@ public:
 	/**
 	 * \brief LittlefsFile's destructor
 	 *
-	 * Closes file.
-	 *
-	 * \warning This function must not be called from interrupt context!
+	 * \pre File is closed.
 	 */
 
 	~LittlefsFile() override;

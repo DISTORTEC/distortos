@@ -42,6 +42,8 @@ public:
 
 	/**
 	 * \brief File's destructor
+	 *
+	 * \pre File is closed.
 	 */
 
 	virtual ~File() = default;
