@@ -175,16 +175,20 @@ int LittlefsFile::open(const char* const path, const int flags)
 	assert(opened_ == false);
 	assert(path != nullptr);
 
-	constexpr int mask {O_RDONLY | O_WRONLY | O_RDWR};
 	int convertedFlags;
-	if ((flags & mask) == O_RDONLY)
-		convertedFlags = LFS_O_RDONLY;
-	else if ((flags & mask) == O_WRONLY)
-		convertedFlags = LFS_O_WRONLY;
-	else if ((flags & mask) == O_RDWR)
-		convertedFlags = LFS_O_RDWR;
-	else
-		return EINVAL;
+	{
+		constexpr int mask {O_RDONLY | O_WRONLY | O_RDWR};
+		const auto readOnly = (flags & mask) == O_RDONLY;
+		const auto writeOnly = (flags & mask) == O_WRONLY;
+		const auto readWrite = (flags & mask) == O_RDWR;
+		assert(readOnly == true || writeOnly == true || readWrite == true);
+		if (readOnly == true)
+			convertedFlags = LFS_O_RDONLY;
+		else if (writeOnly == true)
+			convertedFlags = LFS_O_WRONLY;
+		else	// if (readWrite == true)
+			convertedFlags = LFS_O_RDWR;
+	}
 
 	if ((flags & O_CREAT) != 0)
 		convertedFlags |= LFS_O_CREAT;
