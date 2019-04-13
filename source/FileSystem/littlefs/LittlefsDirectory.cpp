@@ -48,8 +48,7 @@ std::pair<int, off_t> LittlefsDirectory::getPosition()
 {
 	const std::lock_guard<LittlefsDirectory> lockGuard {*this};
 
-	if (opened_ == false)
-		return {EBADF, {}};
+	assert(opened_ == true);
 
 	const auto ret = lfs_dir_tell(&fileSystem_.fileSystem_, &directory_);
 	if (ret < 0)

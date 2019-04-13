@@ -56,9 +56,9 @@ public:
 	 *
 	 * Similar to [telldir()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/telldir.html)
 	 *
-	 * \return pair with return code (0 on success, error code otherwise) and current position in the directory; error
-	 * codes:
-	 * - EBADF - the directory is not opened;
+	 * \pre Directory is opened.
+	 *
+	 * \return pair with return code (0 on success, error code otherwise) and current position in the directory
 	 */
 
 	virtual std::pair<int, off_t> getPosition() = 0;
