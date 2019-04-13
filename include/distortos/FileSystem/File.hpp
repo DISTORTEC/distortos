@@ -178,8 +178,9 @@ public:
 	 *
 	 * Similar to [fsync()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/fsync.html)
 	 *
-	 * \return 0 on success, error code otherwise:
-	 * - EBADF - the file is not opened;
+	 * \pre File is opened.
+	 *
+	 * \return 0 on success, error code otherwise
 	 */
 
 	virtual int synchronize() = 0;

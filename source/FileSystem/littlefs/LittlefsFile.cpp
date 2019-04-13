@@ -140,8 +140,7 @@ int LittlefsFile::synchronize()
 {
 	const std::lock_guard<LittlefsFile> lockGuard {*this};
 
-	if (opened_ == false)
-		return EBADF;
+	assert(opened_ == true);
 
 	const auto ret = lfs_file_sync(&fileSystem_.fileSystem_, &file_);
 	return littlefsErrorToErrorCode(ret);
