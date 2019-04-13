@@ -14,7 +14,7 @@ ST,STM32-SDMMCv1
 `DMA` items
 -----------
 
-Each item corrensponding to a valid DMA configuration shall be a mapping:
+Each item corresponding to a valid DMA configuration shall be a mapping:
 - `controller`, required, reference, reference to DMA controller;
 - `channel`, required, integer, DMA channel identifier;
 - `request`, required, integer, DMA request identifier;

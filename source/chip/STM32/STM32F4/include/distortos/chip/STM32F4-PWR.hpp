@@ -76,7 +76,7 @@ int configureVoltageScaling(uint8_t voltageScale);
 /**
  * \brief Disables over-drive mode.
  *
- * \warning Over-drive mode can be enabied/disabled only when HSI or HSE is selected as source of system clock
+ * \warning Over-drive mode can be enabled/disabled only when HSI or HSE is selected as source of system clock
  */
 
 void disableOverDriveMode();
@@ -84,7 +84,7 @@ void disableOverDriveMode();
 /**
  * \brief Enables over-drive mode.
  *
- * \warning Over-drive mode can be enabied/disabled only when HSI or HSE is selected as source of system clock
+ * \warning Over-drive mode can be enabled/disabled only when HSI or HSE is selected as source of system clock
  */
 
 void enableOverDriveMode();

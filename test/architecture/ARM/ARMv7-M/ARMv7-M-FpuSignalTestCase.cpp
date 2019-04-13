@@ -200,7 +200,7 @@ int queueSignalFromThread(Thread& thread, const Stage& stage)
 | local constants
 +---------------------------------------------------------------------------------------------------------------------*/
 
-/// test phasese
+/// test phases
 const Phase phases[]
 {
 		{queueSignalFromInterrupt, 0},

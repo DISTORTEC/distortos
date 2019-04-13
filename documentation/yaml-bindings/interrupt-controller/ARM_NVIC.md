@@ -10,11 +10,11 @@ ARM,NVIC
 `core-vectors` and `chip-vectors` items
 ---------------------------------------
 
-Each item corrensponding to an implemented interrupt shall be a mapping:
+Each item corresponding to an implemented interrupt shall be a mapping:
 - `name`, required, string, vector name;
 - `subvectors`, optional, list of strings, names of subvectors;
 
-Each item corrensponding to an unimplemented interrupt shall be empty.
+Each item corresponding to an unimplemented interrupt shall be empty.
 
 Examples
 --------

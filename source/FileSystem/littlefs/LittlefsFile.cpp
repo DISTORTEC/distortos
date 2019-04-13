@@ -204,7 +204,7 @@ int LittlefsFile::open(const char* const path, const int flags)
 	if (buffer.get() == nullptr)
 		return ENOMEM;
 
-	// configuration_ is zeroed neither before use nor after failure - it is asumed that open() can be used only once
+	// configuration_ is zeroed neither before use nor after failure - it is assumed that open() can be used only once
 	// and only on a newly constructed object
 
 	configuration_.buffer = reinterpret_cast<void*>((reinterpret_cast<uintptr_t>(buffer.get()) + alignment - 1) /

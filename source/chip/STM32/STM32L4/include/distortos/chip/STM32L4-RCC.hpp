@@ -351,7 +351,7 @@ int enablePll(uint16_t plln, uint8_t pllp, uint8_t pllq, uint8_t pllr);
  * \warning Before disabling selected output of main PLL make sure that it is not used in any way (as core clock or as
  * source of peripheral clocks).
  *
- * \param [in] pllOutput selects the output which whill be enabled or disabled
+ * \param [in] pllOutput selects the output which will be enabled or disabled
  * \param [in] enable selects whether the output will be enabled (true) or disabled (false)
  */
 

@@ -113,7 +113,7 @@ public:
 	 *
 	 * Creates and starts a thread that executes signalingThreadFunction(). Then pure virtual block() is called and its
 	 * execution time is measured. After that the thread is joined, duration of block() execution is checked (must be 0)
-	 * and pure virtual postiondition() is called.
+	 * and pure virtual postcondition() is called.
 	 *
 	 * \param [in] sequenceAsserter is a reference to shared SequenceAsserter object
 	 *

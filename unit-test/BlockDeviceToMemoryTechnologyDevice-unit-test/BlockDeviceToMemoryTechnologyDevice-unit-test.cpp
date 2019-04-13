@@ -244,7 +244,7 @@ TEST_CASE("Testing erase(), program() & read()", "[erase/program/read]")
 				REQUIRE(bd2Mtd.read(address, buffer, {}) == 0);
 			}
 		}
-		SECTION("Overlaping and adjacent erases should be merged")
+		SECTION("Overlapping and adjacent erases should be merged")
 		{
 			struct Step
 			{

@@ -22,7 +22,7 @@ namespace distortos
 namespace internal
 {
 
-/// MemcpyPopQueueFunctor is a functor used for popping of data from the raw queue with memecpy()
+/// MemcpyPopQueueFunctor is a functor used for popping of data from the raw queue with memcpy()
 class MemcpyPopQueueFunctor : public QueueFunctor
 {
 public:

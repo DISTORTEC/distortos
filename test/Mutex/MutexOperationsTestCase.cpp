@@ -62,7 +62,7 @@ constexpr size_t testThreadStackSize {512};
  * Last operation is unlocking of the mutex, which is checked in the same way as locking. Result can be read from
  * sharedRet after this thread terminates.
  *
- * \param [in] mutex is a reference to mutex that will be locked and unlocked, mut be unlocked
+ * \param [in] mutex is a reference to mutex that will be locked and unlocked, must be unlocked
  * \param [out] sharedRet is a reference to variable used to return result of operations
  * \param [in] semaphoreMutex is a mutex used as semaphore, must be locked
  */

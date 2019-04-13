@@ -92,7 +92,7 @@ To get an idea about the format of the board YAML files, take a look at some of 
 `source/chip/STM32/STM32F4/chipYaml/ST_STM32F407VG.yaml` - which describes *STM32F407VG* chip used on this board. There
 is also some documentation about YAML bindings in `documentation/yaml-bindings`
 
-Assumming that you already have *distortos* either as part of your project or as a standalone folder, the basic
+Assuming that you already have *distortos* either as part of your project or as a standalone folder, the basic
 invocation of the board generator is just `path/to/distortos/scripts/generateBoard.py path/to/board.yaml` (or
 `python path/to/distortos/scripts/generateBoard.py path/to/board.yaml` on *Windows*), for example
 `./scripts/generateBoard.py source/board/ST_STM32F4DISCOVERY/ST_STM32F4DISCOVERY.yaml`. You may also generate so-called

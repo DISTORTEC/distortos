@@ -206,7 +206,7 @@ public:
 #define SDMMC_DCOUNT_DATACOUNT_Msk      (0x1FFFFFFU << SDMMC_DCOUNT_DATACOUNT_Pos) /*!< 0x01FFFFFF */
 #define SDMMC_DCOUNT_DATACOUNT          SDMMC_DCOUNT_DATACOUNT_Msk             /*!<Data count value */
 
-/******************  Bit definition for SDMMC_STA registe  ********************/
+/******************  Bit definition for SDMMC_STA register  ********************/
 #define SDMMC_STA_CCRCFAIL_Pos          (0U)
 #define SDMMC_STA_CCRCFAIL_Msk          (0x1U << SDMMC_STA_CCRCFAIL_Pos)       /*!< 0x00000001 */
 #define SDMMC_STA_CCRCFAIL              SDMMC_STA_CCRCFAIL_Msk                 /*!<Command response received (CRC check failed)  */

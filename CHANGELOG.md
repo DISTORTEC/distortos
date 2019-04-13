@@ -61,7 +61,7 @@ You will then be able to use new `coverage` target to generate detailed *HTML* c
 
 ### Changed
 
-- Implemended full support for configuring and building with *CMake*. The new *CMake* workflow does not need *Kconfig*
+- Implemented full support for configuring and building with *CMake*. The new *CMake* workflow does not need *Kconfig*
 or any shell tools - just *CMake* (version 3.7 or later), build tool (it is recommended to use *Ninja*) and
 *arm-none-eabi bleeding-edge-toolchain* (*GCC* version 5 or later). Check `README.md` for more details about usage.
 - Numerous changes to SPI-based devices and SPI APIs:
