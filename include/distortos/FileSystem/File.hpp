@@ -53,8 +53,11 @@ public:
 	 *
 	 * Similar to [close()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/close.html)
 	 *
-	 * \return 0 on success, error code otherwise:
-	 * - EBADF - the file is already closed;
+	 * \pre File is opened.
+	 *
+	 * \post File is closed.
+	 *
+	 * \return 0 on success, error code otherwise
 	 */
 
 	virtual int close() = 0;

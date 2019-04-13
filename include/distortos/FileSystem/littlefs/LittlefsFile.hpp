@@ -52,8 +52,11 @@ public:
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
-	 * \return 0 on success, error code otherwise:
-	 * - EBADF - the file is already closed;
+	 * \pre File is opened.
+	 *
+	 * \post File is closed.
+	 *
+	 * \return 0 on success, error code otherwise
 	 * - converted error codes returned by lfs_file_close();
 	 */
 
