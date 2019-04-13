@@ -162,11 +162,12 @@ ssize_t fileWrite(void* const cookie, const char* const buffer, const size_t siz
 
 std::pair<int, FILE*> openFile(FileSystem& fileSystem, const char* const path, const char* const mode)
 {
+	assert(mode != nullptr);
+
 	int flags;
 	{
 		const auto ret = __sflags(_REENT, mode, &flags);
-		if (ret == 0)
-			return {EINVAL, {}};
+		assert(ret != 0);
 	}
 
 	std::unique_ptr<File> file;
