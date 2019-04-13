@@ -201,8 +201,7 @@ int LittlefsFileSystem::format()
 {
 	const std::lock_guard<LittlefsFileSystem> lockGuard {*this};
 
-	if (mounted_ == true)
-		return EBUSY;
+	assert(mounted_ == false);
 
 	{
 		const auto ret = memoryTechnologyDevice_.open();

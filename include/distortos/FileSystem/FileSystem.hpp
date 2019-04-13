@@ -46,8 +46,9 @@ public:
 	/**
 	 * \brief Formats associated device with the file system.
 	 *
-	 * \return 0 on success, error code otherwise:
-	 * - EBUSY - file system is mounted;
+	 * \pre File system is unmounted.
+	 *
+	 * \return 0 on success, error code otherwise
 	 */
 
 	virtual int format() = 0;
