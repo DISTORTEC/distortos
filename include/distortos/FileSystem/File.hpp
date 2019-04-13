@@ -67,8 +67,9 @@ public:
 	 *
 	 * Similar to [ftello()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/ftell.html)
 	 *
-	 * \return pair with return code (0 on success, error code otherwise) and current file offset, bytes; error codes:
-	 * - EBADF - the file is not opened;
+	 * \pre File is opened.
+	 *
+	 * \return pair with return code (0 on success, error code otherwise) and current file offset, bytes
 	 */
 
 	virtual std::pair<int, off_t> getPosition() = 0;

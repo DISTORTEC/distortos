@@ -69,8 +69,9 @@ public:
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
+	 * \pre File is opened.
+	 *
 	 * \return pair with return code (0 on success, error code otherwise) and current file offset, bytes; error codes:
-	 * - EBADF - the file is not opened;
 	 * - converted error codes returned by lfs_file_tell();
 	 */
 
