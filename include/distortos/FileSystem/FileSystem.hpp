@@ -191,11 +191,11 @@ public:
 	 * Similar to [remove()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/remove.html)
 	 *
 	 * \pre File system is mounted.
+	 * \pre \a path is valid.
 	 *
-	 * \param [in] path is the path of file or directory that will be removed
+	 * \param [in] path is the path of file or directory that will be removed, must be valid
 	 *
 	 * \return 0 on success, error code otherwise:
-	 * - EINVAL - \a path and/or \a newPath are not valid;
 	 * - ENAMETOOLONG - length of component of \a path and/or length of \a path are longer than allowed maximum;
 	 * - ENOENT - \a path does not name an existing file or directory;
 	 * - ENOTDIR - component of \a path names an existing file where directory was expected;

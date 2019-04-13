@@ -242,8 +242,9 @@ public:
 	 * \warning This function must not be called from interrupt context!
 	 *
 	 * \pre File system is mounted.
+	 * \pre \a path is valid.
 	 *
-	 * \param [in] path is the path of file or directory that will be removed
+	 * \param [in] path is the path of file or directory that will be removed, must be valid
 	 *
 	 * \return 0 on success, error code otherwise:
 	 * - converted error codes returned by lfs_remove();

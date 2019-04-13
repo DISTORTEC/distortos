@@ -427,6 +427,7 @@ int LittlefsFileSystem::remove(const char* const path)
 	const std::lock_guard<LittlefsFileSystem> lockGuard {*this};
 
 	assert(mounted_ == true);
+	assert(path != nullptr);
 
 	const auto ret = lfs_remove(&fileSystem_, path);
 	return littlefsErrorToErrorCode(ret);
