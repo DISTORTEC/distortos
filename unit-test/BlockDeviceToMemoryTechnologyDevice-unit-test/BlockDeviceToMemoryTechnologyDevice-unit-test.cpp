@@ -113,14 +113,6 @@ TEST_CASE("Testing open() & close()", "[open/close]")
 		REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence);
 		REQUIRE(bd2Mtd.open() == 0);
 
-		SECTION("Block device close error should propagate error code to caller")
-		{
-			REQUIRE_CALL(blockDeviceMock, lock()).IN_SEQUENCE(sequence);
-			constexpr int ret {0x58516981};
-			REQUIRE_CALL(blockDeviceMock, close()).IN_SEQUENCE(sequence).RETURN(ret);
-			REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence);
-			REQUIRE(bd2Mtd.close() == ret);
-		}
 		SECTION("Opening device 255 times should succeed")
 		{
 			size_t openCount {1};
@@ -169,17 +161,32 @@ TEST_CASE("Testing open() & close()", "[open/close]")
 		REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence);
 		REQUIRE(bd2Mtd.close() == 0);
 
-		REQUIRE_CALL(blockDeviceMock, lock()).IN_SEQUENCE(sequence);
-		constexpr int ret {0x591eb333};
-		REQUIRE_CALL(blockDeviceMock, erase(address, size)).IN_SEQUENCE(sequence).RETURN(ret);
-		REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence);
-		REQUIRE(bd2Mtd.close() == ret);
-
-		REQUIRE_CALL(blockDeviceMock, lock()).IN_SEQUENCE(sequence);
-		REQUIRE_CALL(blockDeviceMock, erase(address, size)).IN_SEQUENCE(sequence).RETURN(0);
-		REQUIRE_CALL(blockDeviceMock, close()).IN_SEQUENCE(sequence).RETURN(0);
-		REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence);
-		REQUIRE(bd2Mtd.close() == 0);
+		SECTION("Block device erase error should propagate error code to caller and close the device anyway")
+		{
+			REQUIRE_CALL(blockDeviceMock, lock()).IN_SEQUENCE(sequence);
+			constexpr int ret {0x591eb333};
+			REQUIRE_CALL(blockDeviceMock, erase(address, size)).IN_SEQUENCE(sequence).RETURN(ret);
+			REQUIRE_CALL(blockDeviceMock, close()).IN_SEQUENCE(sequence).RETURN(0x65f8cf9c);
+			REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence);
+			REQUIRE(bd2Mtd.close() == ret);
+		}
+		SECTION("Block device close error should propagate error code to caller and close the device anyway")
+		{
+			REQUIRE_CALL(blockDeviceMock, lock()).IN_SEQUENCE(sequence);
+			constexpr int ret {0x3fa5c9b0};
+			REQUIRE_CALL(blockDeviceMock, erase(address, size)).IN_SEQUENCE(sequence).RETURN(0);
+			REQUIRE_CALL(blockDeviceMock, close()).IN_SEQUENCE(sequence).RETURN(ret);
+			REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence);
+			REQUIRE(bd2Mtd.close() == ret);
+		}
+		SECTION("Testing successful close")
+		{
+			REQUIRE_CALL(blockDeviceMock, lock()).IN_SEQUENCE(sequence);
+			REQUIRE_CALL(blockDeviceMock, erase(address, size)).IN_SEQUENCE(sequence).RETURN(0);
+			REQUIRE_CALL(blockDeviceMock, close()).IN_SEQUENCE(sequence).RETURN(0);
+			REQUIRE_CALL(blockDeviceMock, unlock()).IN_SEQUENCE(sequence);
+			REQUIRE(bd2Mtd.close() == 0);
+		}
 	}
 
 	expectations.emplace_back(NAMED_REQUIRE_CALL(blockDeviceMock, lock()).IN_SEQUENCE(sequence));
