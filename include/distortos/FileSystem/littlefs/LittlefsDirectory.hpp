@@ -148,11 +148,10 @@ public:
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
-	 * \return 0 on success, error code otherwise:
-	 * - error codes returned by LittlefsFileSystem::unlock();
+	 * \pre This function is called by the thread that locked the directory.
 	 */
 
-	int unlock() override;
+	void unlock() override;
 
 private:
 

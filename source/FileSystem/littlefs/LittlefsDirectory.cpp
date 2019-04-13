@@ -107,9 +107,10 @@ int LittlefsDirectory::seek(const off_t position)
 	return ret;
 }
 
-int LittlefsDirectory::unlock()
+void LittlefsDirectory::unlock()
 {
-	return fileSystem_.unlock();
+	const auto ret = fileSystem_.unlock();
+	assert(ret == 0);
 }
 
 /*---------------------------------------------------------------------------------------------------------------------+
