@@ -260,9 +260,10 @@ public:
 	 * \warning This function must not be called from interrupt context!
 	 *
 	 * \pre File system is mounted.
+	 * \pre \a path and \a newPath are valid.
 	 *
-	 * \param [in] path is the path of file or directory that will be renamed
-	 * \param [in] newPath is the new path of file or directory
+	 * \param [in] path is the path of file or directory that will be renamed, must be valid
+	 * \param [in] newPath is the new path of file or directory, must be valid
 	 *
 	 * \return 0 on success, error code otherwise:
 	 * - converted error codes returned by lfs_rename();

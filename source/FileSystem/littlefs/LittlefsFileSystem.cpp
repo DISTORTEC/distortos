@@ -438,6 +438,8 @@ int LittlefsFileSystem::rename(const char* const path, const char* const newPath
 	const std::lock_guard<LittlefsFileSystem> lockGuard {*this};
 
 	assert(mounted_ == true);
+	assert(path != nullptr);
+	assert(newPath != nullptr);
 
 	const auto ret = lfs_rename(&fileSystem_, path, newPath);
 	return littlefsErrorToErrorCode(ret);
