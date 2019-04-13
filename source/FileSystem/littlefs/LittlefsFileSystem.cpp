@@ -280,8 +280,7 @@ std::pair<int, struct statvfs> LittlefsFileSystem::getStatus()
 {
 	const std::lock_guard<LittlefsFileSystem> lockGuard {*this};
 
-	if (mounted_ == false)
-		return {EBADF, {}};
+	assert(mounted_ == true);
 
 	size_t usedBlocks {};
 	{

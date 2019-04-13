@@ -130,9 +130,10 @@ public:
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
+	 * \pre File system is mounted.
+	 *
 	 * \return pair with return code (0 on success, error code otherwise) and status of file system in `statvfs` struct;
 	 * error codes:
-	 * - EBADF - no file system mounted;
 	 * - converted error codes returned by lfs_traverse();
 	 */
 
