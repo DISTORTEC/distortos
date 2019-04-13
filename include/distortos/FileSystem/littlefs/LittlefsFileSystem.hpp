@@ -288,8 +288,11 @@ public:
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
+	 * \pre File system is mounted.
+	 *
+	 * \post File system is unmounted.
+	 *
 	 * \return 0 on success, error code otherwise:
-	 * - EBADF - no file system mounted;
 	 * - converted error codes returned by lfs_unmount();
 	 * - error codes returned by MemoryTechnologyDevice::close();
 	 */

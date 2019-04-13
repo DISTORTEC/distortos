@@ -455,8 +455,7 @@ int LittlefsFileSystem::unmount()
 {
 	const std::lock_guard<LittlefsFileSystem> lockGuard {*this};
 
-	if (mounted_ == false)
-		return EBADF;
+	assert(mounted_ == true);
 
 	const auto unmountRet = lfs_unmount(&fileSystem_);
 	const auto closeRet = memoryTechnologyDevice_.close();

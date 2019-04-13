@@ -245,9 +245,11 @@ public:
 	/**
 	 * \brief Unmounts file system from associated device.
 	 *
-	 * \return 0 on success, error code otherwise:
-	 * - EBADF - no file system mounted;
-	 * - EBUSY - file system is busy;
+	 * \pre File system is mounted.
+	 *
+	 * \post File system is unmounted.
+	 *
+	 * \return 0 on success, error code otherwise
 	 */
 
 	virtual int unmount() = 0;
