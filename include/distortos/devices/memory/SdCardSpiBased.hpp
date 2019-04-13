@@ -76,6 +76,9 @@ public:
 	/**
 	 * \brief Closes SD card connected via SPI.
 	 *
+	 * \note Even if error code is returned, the device must not be used from the context which opened it (until it is
+	 * successfully opened again).
+	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
 	 * \pre Device is opened.
