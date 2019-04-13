@@ -59,12 +59,12 @@ public:
 	 * Similar to [stat()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/stat.html)
 	 *
 	 * \pre File system is mounted.
+	 * \pre \a path is valid.
 	 *
-	 * \param [in] path is the path to file for which status should be returned
+	 * \param [in] path is the path to file for which status should be returned, must be valid
 	 *
 	 * \return pair with return code (0 on success, error code otherwise) and status of file in `stat` struct; error
 	 * codes:
-	 * - EINVAL - \a path is not valid;
 	 * - ENAMETOOLONG - length of component of \a path and/or length of \a path are longer than allowed maximum;
 	 * - ENOENT - no such file or directory;
 	 * - ENOTDIR - component of \a path names an existing file where directory was expected;

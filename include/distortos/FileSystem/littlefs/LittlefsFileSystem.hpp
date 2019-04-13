@@ -110,8 +110,9 @@ public:
 	 * \warning This function must not be called from interrupt context!
 	 *
 	 * \pre File system is mounted.
+	 * \pre \a path is valid.
 	 *
-	 * \param [in] path is the path to file for which status should be returned
+	 * \param [in] path is the path to file for which status should be returned, must be valid
 	 *
 	 * \return pair with return code (0 on success, error code otherwise) and status of file in `stat` struct; error
 	 * codes:

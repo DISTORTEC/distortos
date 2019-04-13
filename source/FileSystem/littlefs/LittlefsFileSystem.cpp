@@ -261,6 +261,7 @@ std::pair<int, struct stat> LittlefsFileSystem::getFileStatus(const char* const 
 	const std::lock_guard<LittlefsFileSystem> lockGuard {*this};
 
 	assert(mounted_ == true);
+	assert(path != nullptr);
 
 	lfs_info info;
 	{
