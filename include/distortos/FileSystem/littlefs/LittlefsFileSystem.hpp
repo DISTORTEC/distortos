@@ -199,8 +199,9 @@ public:
 	 * \warning This function must not be called from interrupt context!
 	 *
 	 * \pre File system is mounted.
+	 * \pre \a path is valid.
 	 *
-	 * \param [in] path is the path of directory that will be opened
+	 * \param [in] path is the path of directory that will be opened, must be valid
 	 *
 	 * \return pair with return code (0 on success, error code otherwise) and `std::unique_ptr` with opened directory;
 	 * error codes:
