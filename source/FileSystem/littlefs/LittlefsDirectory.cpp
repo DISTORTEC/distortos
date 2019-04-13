@@ -67,8 +67,7 @@ std::pair<int, struct dirent> LittlefsDirectory::read()
 {
 	const std::lock_guard<LittlefsDirectory> lockGuard {*this};
 
-	if (opened_ == false)
-		return {EBADF, {}};
+	assert(opened_ == true);
 
 	lfs_info info;
 	const auto ret = lfs_dir_read(&fileSystem_.fileSystem_, &directory_, &info);

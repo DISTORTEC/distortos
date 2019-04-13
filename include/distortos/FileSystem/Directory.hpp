@@ -85,8 +85,9 @@ public:
 	 *
 	 * Similar to [readdir_r()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/readdir.html)
 	 *
+	 * \pre Directory is opened.
+	 *
 	 * \return pair with return code (0 on success, error code otherwise) and next entry from directory; error codes:
-	 * - EBADF - the directory is not opened;
 	 * - ENOENT - current position in the directory is invalid (i.e. end of the directory reached);
 	 */
 
