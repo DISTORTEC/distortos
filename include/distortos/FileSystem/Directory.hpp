@@ -42,6 +42,8 @@ public:
 	 *
 	 * Similar to [closedir()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/closedir.html)
 	 *
+	 * \note Even if error code is returned, the directory must not be used.
+	 *
 	 * \pre %Directory is opened.
 	 *
 	 * \post %Directory is closed.

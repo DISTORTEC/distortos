@@ -42,8 +42,6 @@ static_assert(CONFIG_BLOCKDEVICE_BUFFER_ALIGNMENT <= CONFIG_MEMORYTECHNOLOGYDEVI
 
 BlockDeviceToMemoryTechnologyDevice::~BlockDeviceToMemoryTechnologyDevice()
 {
-	const std::lock_guard<BlockDeviceToMemoryTechnologyDevice> lockGuard {*this};
-
 	assert(openCount_ == 0);
 }
 
@@ -53,25 +51,24 @@ int BlockDeviceToMemoryTechnologyDevice::close()
 
 	assert(openCount_ != 0);
 
+	int ret {};
 	if (openCount_ == 1)	// last close?
 	{
+		int eraseRet {};
 		if (pendingEraseSize_ != 0)
 		{
-			const auto ret = blockDevice_.erase(pendingEraseAddress_, pendingEraseSize_);
-			if (ret != 0)
-				return ret;
-
+			eraseRet = blockDevice_.erase(pendingEraseAddress_, pendingEraseSize_);
 			pendingEraseAddress_ = {};
 			pendingEraseSize_ = {};
 		}
 
-		const auto ret = blockDevice_.close();
-		if (ret != 0)
-			return ret;
+		const auto closeRet = blockDevice_.close();
+
+		ret = eraseRet != 0 ? eraseRet : closeRet;
 	}
 
 	--openCount_;
-	return 0;
+	return ret;
 }
 
 int BlockDeviceToMemoryTechnologyDevice::erase(const uint64_t address, const uint64_t size)

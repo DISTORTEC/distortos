@@ -245,6 +245,8 @@ public:
 	/**
 	 * \brief Unmounts file system from associated device.
 	 *
+	 * \note Even if error code is returned, the file system must not be used (until it is successfully mounted again).
+	 *
 	 * \pre %File system is mounted.
 	 *
 	 * \post %File system is unmounted.

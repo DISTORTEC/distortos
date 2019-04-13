@@ -46,6 +46,8 @@ public:
 	 *
 	 * Similar to [closedir()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/closedir.html)
 	 *
+	 * \note Even if error code is returned, the directory must not be used.
+	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
 	 * \pre %Directory is opened.

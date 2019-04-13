@@ -1353,21 +1353,16 @@ int SdCard::close()
 
 	assert(openCount_ != 0);
 
+	int ret {};
 	if (openCount_ == 1)	// last close?
 	{
-		{
-			const auto ret = waitForTransferState(sdCard_, rca_, busyDeadline_);
-			if (ret != 0)
-				return ret;
-		}
-
+		ret = waitForTransferState(sdCard_, rca_, busyDeadline_);
 		sdCard_.stop();
-
 		deinitialize();
 	}
 
 	--openCount_;
-	return {};
+	return ret;
 }
 
 int SdCard::erase(const uint64_t address, const uint64_t size)
