@@ -194,7 +194,7 @@ int littlefsMemoryTechnologyDeviceSynchronize(const lfs_config* const configurat
 
 LittlefsFileSystem::~LittlefsFileSystem()
 {
-	unmount();
+	assert(mounted_ == false);
 }
 
 int LittlefsFileSystem::format()

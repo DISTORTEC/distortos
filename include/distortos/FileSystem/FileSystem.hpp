@@ -37,6 +37,8 @@ public:
 
 	/**
 	 * \brief FileSystem's destructor
+	 *
+	 * \pre File system is unmounted.
 	 */
 
 	virtual ~FileSystem() = default;

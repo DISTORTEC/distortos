@@ -77,9 +77,9 @@ public:
 	/**
 	 * \brief LittlefsFileSystem's destructor
 	 *
-	 * Unmounts the file system.
-	 *
 	 * \warning This function must not be called from interrupt context!
+	 *
+	 * \pre File system is unmounted.
 	 */
 
 	~LittlefsFileSystem() override;
