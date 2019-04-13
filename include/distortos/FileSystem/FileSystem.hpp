@@ -107,13 +107,13 @@ public:
 	 * Similar to [mkdir()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/mkdir.html)
 	 *
 	 * \pre File system is mounted.
+	 * \pre \a path is valid.
 	 *
-	 * \param [in] path is the path of the directory that will be created
+	 * \param [in] path is the path of the directory that will be created, must be valid
 	 * \param [in] mode is the value of permission bits of the created directory
 	 *
 	 * \return 0 on success, error code otherwise:
 	 * - EEXIST - named file exists;
-	 * - EINVAL - \a path is not valid;
 	 * - ENAMETOOLONG - length of component of \a path and/or length of \a path are longer than allowed maximum;
 	 * - ENOENT - prefix component of \a path does not name an existing directory;
 	 * - ENOSPC - no space left on the device containing the file system;

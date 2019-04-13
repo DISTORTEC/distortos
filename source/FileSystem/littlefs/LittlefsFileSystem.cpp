@@ -310,6 +310,7 @@ int LittlefsFileSystem::makeDirectory(const char* const path, mode_t)
 	const std::lock_guard<LittlefsFileSystem> lockGuard {*this};
 
 	assert(mounted_ == true);
+	assert(path != nullptr);
 
 	const auto ret = lfs_mkdir(&fileSystem_, path);
 	return littlefsErrorToErrorCode(ret);
