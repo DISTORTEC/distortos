@@ -173,9 +173,7 @@ std::pair<int, size_t> LittlefsFile::write(const void* const buffer, const size_
 int LittlefsFile::open(const char* const path, const int flags)
 {
 	assert(opened_ == false);
-
-	if (path == nullptr)
-		return EINVAL;
+	assert(path != nullptr);
 
 	constexpr int mask {O_RDONLY | O_WRONLY | O_RDWR};
 	int convertedFlags;

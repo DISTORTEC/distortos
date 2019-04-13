@@ -264,13 +264,14 @@ private:
 	 * \brief Opens file.
 	 *
 	 * \pre File is not opened.
+	 * \pre \a path is valid.
 	 *
-	 * \param [in] path is the path of file that will be opened
+	 * \param [in] path is the path of file that will be opened, must be valid
 	 * \param [in] flags are file status flags, for list of available flags and valid combinations see
 	 * [open()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/open.html)
 	 *
 	 * \return 0 on success, error code otherwise:
-	 * - EINVAL - \a path and/or \a flags are not valid;
+	 * - EINVAL - \a flags are not valid;
 	 * - converted error codes returned by lfs_file_open();
 	 */
 
