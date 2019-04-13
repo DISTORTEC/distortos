@@ -210,11 +210,12 @@ public:
 	 *
 	 * Similar to [rename()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/rename.html)
 	 *
+	 * \pre File system is mounted.
+	 *
 	 * \param [in] path is the path of file or directory that will be renamed
 	 * \param [in] newPath is the new path of file or directory
 	 *
 	 * \return 0 on success, error code otherwise:
-	 * - EBADF - no file system mounted;
 	 * - EEXIST - file or directory named by \a newPath exists;
 	 * - EINVAL - \a path and/or \a newPath are not valid;
 	 * - EISDIR - \a newPath points to a directory while \a path points to a file;
