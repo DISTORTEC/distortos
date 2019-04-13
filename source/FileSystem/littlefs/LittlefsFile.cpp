@@ -156,8 +156,7 @@ std::pair<int, size_t> LittlefsFile::write(const void* const buffer, const size_
 {
 	const std::lock_guard<LittlefsFile> lockGuard {*this};
 
-	if (opened_ == false)
-		return {EBADF, {}};
+	assert(opened_ == true);
 
 	if (buffer == nullptr && size != 0)
 		return {EINVAL, {}};
