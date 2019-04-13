@@ -190,10 +190,11 @@ public:
 	 *
 	 * Similar to [remove()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/remove.html)
 	 *
+	 * \pre File system is mounted.
+	 *
 	 * \param [in] path is the path of file or directory that will be removed
 	 *
 	 * \return 0 on success, error code otherwise:
-	 * - EBADF - no file system mounted;
 	 * - EINVAL - \a path and/or \a newPath are not valid;
 	 * - ENAMETOOLONG - length of component of \a path and/or length of \a path are longer than allowed maximum;
 	 * - ENOENT - \a path does not name an existing file or directory;

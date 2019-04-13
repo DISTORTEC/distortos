@@ -241,10 +241,11 @@ public:
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
+	 * \pre File system is mounted.
+	 *
 	 * \param [in] path is the path of file or directory that will be removed
 	 *
 	 * \return 0 on success, error code otherwise:
-	 * - EBADF - no file system mounted;
 	 * - converted error codes returned by lfs_remove();
 	 */
 
