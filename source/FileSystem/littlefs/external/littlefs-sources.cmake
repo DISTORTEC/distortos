@@ -10,9 +10,14 @@
 add_library(littlefs STATIC
 		${CMAKE_CURRENT_LIST_DIR}/littlefs/lfs_util.c
 		${CMAKE_CURRENT_LIST_DIR}/littlefs/lfs.c)
-set_target_properties(littlefs PROPERTIES
-		C_STANDARD 99
-		C_STANDARD_REQUIRED ON)
+if(CMAKE_VERSION VERSION_GREATER_EQUAL 3.8)
+	target_compile_features(littlefs PUBLIC
+			c_std_99)
+else()
+	# equivalent of C99 for earlier versions of CMake
+	target_compile_features(littlefs PUBLIC
+			c_restrict)
+endif()
 target_compile_definitions(littlefs PUBLIC
 		LFS_NO_DEBUG
 		LFS_NO_ERROR
