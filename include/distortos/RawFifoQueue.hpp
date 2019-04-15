@@ -2,7 +2,7 @@
  * \file
  * \brief RawFifoQueue class header
  *
- * \author Copyright (C) 2014-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -44,6 +44,24 @@ public:
 	 */
 
 	RawFifoQueue(StorageUniquePointer&& storageUniquePointer, size_t elementSize, size_t maxElements);
+
+	/**
+	 * \return maximum number of elements in queue
+	 */
+
+	size_t getCapacity() const
+	{
+		return fifoQueueBase_.getCapacity();
+	}
+
+	/**
+	 * \return size of single queue element, bytes
+	 */
+
+	size_t getElementSize() const
+	{
+		return fifoQueueBase_.getElementSize();
+	}
 
 	/**
 	 * \brief Pops the oldest (first) element from the queue.

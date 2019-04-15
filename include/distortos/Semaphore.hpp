@@ -2,7 +2,7 @@
  * \file
  * \brief Semaphore class header
  *
- * \author Copyright (C) 2014-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -63,6 +63,15 @@ public:
 	 */
 
 	~Semaphore() = default;
+
+	/**
+	 * \return max value of the semaphore
+	 */
+
+	Value getMaxValue() const
+	{
+		return maxValue_;
+	}
 
 	/**
 	 * \brief Gets current value of semaphore.

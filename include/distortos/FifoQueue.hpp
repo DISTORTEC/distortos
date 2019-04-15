@@ -2,7 +2,7 @@
  * \file
  * \brief FifoQueue class header
  *
- * \author Copyright (C) 2014-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -52,6 +52,9 @@ public:
 	using StorageUniquePointer =
 			std::unique_ptr<Storage[], internal::FifoQueueBase::StorageUniquePointer::deleter_type>;
 
+	/// type of data in queue
+	using ValueType = T;
+
 	/**
 	 * \brief FifoQueue's constructor
 	 *
@@ -95,6 +98,15 @@ public:
 	{
 		const internal::SemaphoreWaitFunctor semaphoreWaitFunctor;
 		return emplaceInternal(semaphoreWaitFunctor, std::forward<Args>(args)...);
+	}
+
+	/**
+	 * \return maximum number of elements in queue
+	 */
+
+	size_t getCapacity() const
+	{
+		return fifoQueueBase_.getCapacity();
 	}
 
 	/**

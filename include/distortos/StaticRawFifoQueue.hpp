@@ -2,7 +2,7 @@
  * \file
  * \brief StaticRawFifoQueue class header
  *
- * \author Copyright (C) 2015-2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2015-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -55,6 +55,24 @@ public:
 			RawFifoQueue{{storage_.data(), internal::dummyDeleter<uint8_t>}, ElementSize, QueueSize}
 	{
 
+	}
+
+	/**
+	 * \return maximum number of elements in queue
+	 */
+
+	constexpr static size_t getCapacity()
+	{
+		return QueueSize;
+	}
+
+	/**
+	 * \return size of single queue element, bytes
+	 */
+
+	constexpr static size_t getElementSize()
+	{
+		return ElementSize;
 	}
 
 private:
