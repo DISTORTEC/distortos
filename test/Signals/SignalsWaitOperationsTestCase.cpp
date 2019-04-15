@@ -2,7 +2,7 @@
  * \file
  * \brief SignalsWaitOperationsTestCase class implementation
  *
- * \author Copyright (C) 2015-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2015-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -15,7 +15,7 @@
 
 /// configuration required by SignalsWaitOperationsTestCase
 #define SIGNALS_WAIT_OPERATIONS_TEST_CASE_ENABLED \
-		CONFIG_SIGNALS_ENABLE == 1 && CONFIG_MAIN_THREAD_CAN_RECEIVE_SIGNALS == 1
+		CONFIG_SIGNALS_ENABLE == 1 && DISTORTOS_MAIN_THREAD_CAN_RECEIVE_SIGNALS == 1
 
 #if SIGNALS_WAIT_OPERATIONS_TEST_CASE_ENABLED == 1
 
@@ -105,7 +105,7 @@ int generateSignalWrapper(Thread& thread, const uint8_t signalNumber, int)
 	return thread.generateSignal(signalNumber);
 }
 
-#if defined(CONFIG_MAIN_THREAD_QUEUED_SIGNALS) && CONFIG_MAIN_THREAD_QUEUED_SIGNALS > 0
+#if defined(DISTORTOS_MAIN_THREAD_QUEUED_SIGNALS) && DISTORTOS_MAIN_THREAD_QUEUED_SIGNALS > 0
 
 /**
  * \brief Wrapper for Thread::queueSignal().
@@ -122,7 +122,7 @@ int queueSignalWrapper(Thread& thread, const uint8_t signalNumber, const int val
 	return thread.queueSignal(signalNumber, sigval{value});
 }
 
-#endif	// defined(CONFIG_MAIN_THREAD_QUEUED_SIGNALS) && CONFIG_MAIN_THREAD_QUEUED_SIGNALS > 0
+#endif	// defined(DISTORTOS_MAIN_THREAD_QUEUED_SIGNALS) && DISTORTOS_MAIN_THREAD_QUEUED_SIGNALS > 0
 
 /**
  * \brief Tests whether received SignalInformation object matches the signal that was generated.
@@ -140,7 +140,7 @@ bool testReceivedGeneratedSignal(const SignalInformation& signalInformation, con
 			signalInformation.getCode() == SignalInformation::Code::generated;
 }
 
-#if defined(CONFIG_MAIN_THREAD_QUEUED_SIGNALS) && CONFIG_MAIN_THREAD_QUEUED_SIGNALS > 0
+#if defined(DISTORTOS_MAIN_THREAD_QUEUED_SIGNALS) && DISTORTOS_MAIN_THREAD_QUEUED_SIGNALS > 0
 
 /**
  * \brief Tests whether received SignalInformation object matches the signal that was queued.
@@ -159,7 +159,7 @@ bool testReceivedQueuedSignal(const SignalInformation& signalInformation, const 
 			signalInformation.getValue().sival_int == value;
 }
 
-#endif	// defined(CONFIG_MAIN_THREAD_QUEUED_SIGNALS) && CONFIG_MAIN_THREAD_QUEUED_SIGNALS > 0
+#endif	// defined(DISTORTOS_MAIN_THREAD_QUEUED_SIGNALS) && DISTORTOS_MAIN_THREAD_QUEUED_SIGNALS > 0
 
 /**
  * \brief Tests whether no signals are pending for current thread.
@@ -597,7 +597,7 @@ bool phase3(const SendSignal& sendSignal, const TestReceivedSignalInformation&)
 
 bool phase4(const SendSignal& sendSignal, const TestReceivedSignalInformation&)
 {
-#if defined(CONFIG_MAIN_THREAD_SIGNAL_ACTIONS) && CONFIG_MAIN_THREAD_SIGNAL_ACTIONS > 0
+#if defined(DISTORTOS_MAIN_THREAD_SIGNAL_ACTIONS) && DISTORTOS_MAIN_THREAD_SIGNAL_ACTIONS > 0
 
 	constexpr uint8_t testSignalNumber {14};
 	if (testSelfSendSignal(sendSignal, testSignalNumber, {}) == false)
@@ -622,12 +622,12 @@ bool phase4(const SendSignal& sendSignal, const TestReceivedSignalInformation&)
 	std::tie(ret, std::ignore) = ThisThread::Signals::setSignalAction(testSignalNumber, setSignalActionResult.second);
 	return ret == 0;
 
-#else	// !defined(CONFIG_MAIN_THREAD_SIGNAL_ACTIONS) || CONFIG_MAIN_THREAD_SIGNAL_ACTIONS <= 0
+#else	// !defined(DISTORTOS_MAIN_THREAD_SIGNAL_ACTIONS) || DISTORTOS_MAIN_THREAD_SIGNAL_ACTIONS <= 0
 
 	static_cast<void>(sendSignal);	// suppress warning
 	return true;
 
-#endif	// !defined(CONFIG_MAIN_THREAD_SIGNAL_ACTIONS) || CONFIG_MAIN_THREAD_SIGNAL_ACTIONS <= 0
+#endif	// !defined(DISTORTOS_MAIN_THREAD_SIGNAL_ACTIONS) || DISTORTOS_MAIN_THREAD_SIGNAL_ACTIONS <= 0
 }
 
 /*---------------------------------------------------------------------------------------------------------------------+
@@ -635,19 +635,19 @@ bool phase4(const SendSignal& sendSignal, const TestReceivedSignalInformation&)
 +---------------------------------------------------------------------------------------------------------------------*/
 
 /// size of \a stages array
-#if defined(CONFIG_MAIN_THREAD_QUEUED_SIGNALS) && CONFIG_MAIN_THREAD_QUEUED_SIGNALS > 0
+#if defined(DISTORTOS_MAIN_THREAD_QUEUED_SIGNALS) && DISTORTOS_MAIN_THREAD_QUEUED_SIGNALS > 0
 constexpr size_t stagesSize {2};
-#else	// !defined(CONFIG_MAIN_THREAD_QUEUED_SIGNALS) || CONFIG_MAIN_THREAD_QUEUED_SIGNALS <= 0
+#else	// !defined(DISTORTOS_MAIN_THREAD_QUEUED_SIGNALS) || DISTORTOS_MAIN_THREAD_QUEUED_SIGNALS <= 0
 constexpr size_t stagesSize {1};
-#endif	// !defined(CONFIG_MAIN_THREAD_QUEUED_SIGNALS) || CONFIG_MAIN_THREAD_QUEUED_SIGNALS <= 0
+#endif	// !defined(DISTORTOS_MAIN_THREAD_QUEUED_SIGNALS) || DISTORTOS_MAIN_THREAD_QUEUED_SIGNALS <= 0
 
 /// test stages
 const std::array<Stage, stagesSize> stages
 {{
 		{generateSignalWrapper, testReceivedGeneratedSignal},
-#if defined(CONFIG_MAIN_THREAD_QUEUED_SIGNALS) && CONFIG_MAIN_THREAD_QUEUED_SIGNALS > 0
+#if defined(DISTORTOS_MAIN_THREAD_QUEUED_SIGNALS) && DISTORTOS_MAIN_THREAD_QUEUED_SIGNALS > 0
 		{queueSignalWrapper, testReceivedQueuedSignal},
-#endif	// defined(CONFIG_MAIN_THREAD_QUEUED_SIGNALS) && CONFIG_MAIN_THREAD_QUEUED_SIGNALS > 0
+#endif	// defined(DISTORTOS_MAIN_THREAD_QUEUED_SIGNALS) && DISTORTOS_MAIN_THREAD_QUEUED_SIGNALS > 0
 }};
 
 }	// namespace

@@ -2,7 +2,7 @@
  * \file
  * \brief SignalCatchingOperationsTestCase class implementation
  *
- * \author Copyright (C) 2015-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2015-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -25,8 +25,8 @@
 #include <cerrno>
 
 /// configuration required by first and second phase of SignalCatchingOperationsTestCase
-#define SIGNAL_CATCHING_OPERATIONS_TEST_CASE_PHASE_1_2_ENABLED CONFIG_MAIN_THREAD_SIGNAL_ACTIONS >= 1 && \
-		CONFIG_MAIN_THREAD_SIGNAL_ACTIONS <= 31
+#define SIGNAL_CATCHING_OPERATIONS_TEST_CASE_PHASE_1_2_ENABLED DISTORTOS_MAIN_THREAD_SIGNAL_ACTIONS >= 1 && \
+		DISTORTOS_MAIN_THREAD_SIGNAL_ACTIONS <= 31
 
 #endif	// CONFIG_SIGNALS_ENABLE == 1
 
@@ -73,20 +73,20 @@ constexpr decltype(statistics::getContextSwitchCount()) phase3ThreadContextSwitc
  * Tests various aspects of setting signal action, aiming for full coverage of execution paths through
  * SignalsCatcherControlBlock::setAssociation(). Following cases are tested:
  * - setting identical signal actions for multiple signal numbers must succeed as long as no more than
- * \a CONFIG_MAIN_THREAD_SIGNAL_ACTIONS different signal actions are used at the same time;
+ * \a DISTORTOS_MAIN_THREAD_SIGNAL_ACTIONS different signal actions are used at the same time;
  * - setting the same signal action as the one that is currently set must always succeed;
  * - clearing signal action must always succeed;
- * - trying to change signal action for signal number must fail with EAGAIN if \a CONFIG_MAIN_THREAD_SIGNAL_ACTIONS
+ * - trying to change signal action for signal number must fail with EAGAIN if \a DISTORTOS_MAIN_THREAD_SIGNAL_ACTIONS
  * different signal actions are already used and the one that is changed is used by multiple signal numbers;
- * - trying to set new signal action for signal number must fail with EAGAIN when \a CONFIG_MAIN_THREAD_SIGNAL_ACTIONS
- * different signal actions are already used;
+ * - trying to set new signal action for signal number must fail with EAGAIN when
+ * \a DISTORTOS_MAIN_THREAD_SIGNAL_ACTIONS different signal actions are already used;
  *
  * \return true if test succeeded, false otherwise
  */
 
 bool phase1()
 {
-	constexpr size_t mainThreadSignalActions {CONFIG_MAIN_THREAD_SIGNAL_ACTIONS};
+	constexpr size_t mainThreadSignalActions {DISTORTOS_MAIN_THREAD_SIGNAL_ACTIONS};
 
 	// the second to last iteration is used to set the same signal action as in the first iteration
 	// the last iteration is used to set the same signal action as the one that is currently set

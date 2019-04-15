@@ -77,7 +77,7 @@ distortosSetConfiguration(INTEGER
 		2048
 		MIN 1
 		HELP "Size (in bytes) of stack used by thread with main() function."
-		OUTPUT_NAME CONFIG_MAIN_THREAD_STACK_SIZE)
+		OUTPUT_NAME DISTORTOS_MAIN_THREAD_STACK_SIZE)
 
 distortosSetConfiguration(INTEGER
 		distortos_Scheduler_05_Main_thread_priority
@@ -85,7 +85,7 @@ distortosSetConfiguration(INTEGER
 		MIN 1
 		MAX 255
 		HELP "Initial priority of main thread."
-		OUTPUT_NAME CONFIG_MAIN_THREAD_PRIORITY)
+		OUTPUT_NAME DISTORTOS_MAIN_THREAD_PRIORITY)
 
 if(distortos_Scheduler_02_Support_for_signals)
 
@@ -93,7 +93,7 @@ if(distortos_Scheduler_02_Support_for_signals)
 			distortos_Scheduler_06_Reception_of_signals_by_main_thread
 			OFF
 			HELP "Enable reception of signals for main thread."
-			OUTPUT_NAME CONFIG_MAIN_THREAD_CAN_RECEIVE_SIGNALS)
+			OUTPUT_NAME DISTORTOS_MAIN_THREAD_CAN_RECEIVE_SIGNALS)
 
 	if(distortos_Scheduler_06_Reception_of_signals_by_main_thread)
 
@@ -102,16 +102,16 @@ if(distortos_Scheduler_02_Support_for_signals)
 				0
 				MIN 0
 				HELP "Maximal number of queued signals for main thread. 0 disables queuing of signals for main thread."
-				OUTPUT_NAME CONFIG_MAIN_THREAD_QUEUED_SIGNALS)
+				OUTPUT_NAME DISTORTOS_MAIN_THREAD_QUEUED_SIGNALS)
 
 		distortosSetConfiguration(INTEGER
 				distortos_Scheduler_08_SignalAction_objects_for_main_thread
 				0
 				MIN 0
 				MAX 32
-				HELP "Maximal number of different SignalAction objects for main thread. 0 disables catching of signals \
+				HELP "Maximal number of different SignalAction objects for main thread. 0 disables catching of signals
 				for main thread."
-				OUTPUT_NAME CONFIG_MAIN_THREAD_SIGNAL_ACTIONS)
+				OUTPUT_NAME DISTORTOS_MAIN_THREAD_SIGNAL_ACTIONS)
 
 	endif(distortos_Scheduler_06_Reception_of_signals_by_main_thread)
 

@@ -2,7 +2,7 @@
  * \file
  * \brief SignalsQueuedOperationsTestCase class implementation
  *
- * \author Copyright (C) 2015-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2015-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -59,7 +59,7 @@ constexpr size_t testThreadStackSize {512};
 
 bool phase1()
 {
-#if defined(CONFIG_MAIN_THREAD_QUEUED_SIGNALS) && CONFIG_MAIN_THREAD_QUEUED_SIGNALS > 0
+#if defined(DISTORTOS_MAIN_THREAD_QUEUED_SIGNALS) && DISTORTOS_MAIN_THREAD_QUEUED_SIGNALS > 0
 
 	constexpr uint8_t testSignalNumber {30};
 	int testValue {};
@@ -98,7 +98,7 @@ bool phase1()
 	if (ThisThread::Signals::getPendingSignalSet().getBitset().none() == false)
 		return false;
 
-#endif	// defined(CONFIG_MAIN_THREAD_QUEUED_SIGNALS) && CONFIG_MAIN_THREAD_QUEUED_SIGNALS > 0
+#endif	// defined(DISTORTOS_MAIN_THREAD_QUEUED_SIGNALS) && DISTORTOS_MAIN_THREAD_QUEUED_SIGNALS > 0
 
 	return true;
 }
