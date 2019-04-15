@@ -14,11 +14,11 @@
 
 #include "distortos/chip/CMSIS-proxy.h"
 
-#ifdef CONFIG_CHECK_STACK_POINTER_RANGE_CONTEXT_SWITCH_ENABLE
+#ifdef DISTORTOS_CHECK_STACK_POINTER_RANGE_CONTEXT_SWITCH_ENABLE
 
 #include "distortos/FATAL_ERROR.h"
 
-#endif	// def CONFIG_CHECK_STACK_POINTER_RANGE_CONTEXT_SWITCH_ENABLE
+#endif	// def DISTORTOS_CHECK_STACK_POINTER_RANGE_CONTEXT_SWITCH_ENABLE
 
 namespace distortos
 {
@@ -30,7 +30,7 @@ namespace
 | local functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-#ifdef CONFIG_CHECK_STACK_POINTER_RANGE_CONTEXT_SWITCH_ENABLE
+#ifdef DISTORTOS_CHECK_STACK_POINTER_RANGE_CONTEXT_SWITCH_ENABLE
 
 /**
  * \brief Wrapper for check of stack pointer range
@@ -46,7 +46,7 @@ void checkStackPointerWrapper(const void* const stackPointer)
 		FATAL_ERROR("Stack overflow detected!");
 }
 
-#endif	// def CONFIG_CHECK_STACK_POINTER_RANGE_CONTEXT_SWITCH_ENABLE
+#endif	// def DISTORTOS_CHECK_STACK_POINTER_RANGE_CONTEXT_SWITCH_ENABLE
 
 /**
  * \brief Wrapper for void* distortos::internal::getScheduler().switchContext(void*)
@@ -94,14 +94,14 @@ extern "C" __attribute__ ((naked)) void PendSV_Handler()
 			"													\n"
 #ifdef __ARM_ARCH_6M__
 			"	mrs			r0, psp								\n"
-#ifdef CONFIG_CHECK_STACK_POINTER_RANGE_CONTEXT_SWITCH_ENABLE
+#ifdef DISTORTOS_CHECK_STACK_POINTER_RANGE_CONTEXT_SWITCH_ENABLE
 			"	push		{r0, lr}							\n"
 			"	sub			r0, r0, #0x20						\n"
 			"	ldr			r1, =%[checkStackPointerWrapper]	\n"
 			"	blx			r1									\n"
 			"	pop			{r0, r1}							\n"
 			"	mov			lr, r1								\n"
-#endif	// def CONFIG_CHECK_STACK_POINTER_RANGE_CONTEXT_SWITCH_ENABLE
+#endif	// def DISTORTOS_CHECK_STACK_POINTER_RANGE_CONTEXT_SWITCH_ENABLE
 			"	sub			r0, #0x10							\n"
 			"	stmia		r0!, {r4-r7}						\n"	// save lower half of current thread's context
 			"	mov			r4, r8								\n"
@@ -126,7 +126,7 @@ extern "C" __attribute__ ((naked)) void PendSV_Handler()
 			"	msr			psp, r0								\n"
 #else	// !def __ARM_ARCH_6M__
 			"	mrs			r0, psp								\n"
-#ifdef CONFIG_CHECK_STACK_POINTER_RANGE_CONTEXT_SWITCH_ENABLE
+#ifdef DISTORTOS_CHECK_STACK_POINTER_RANGE_CONTEXT_SWITCH_ENABLE
 			"	push		{r0, lr}							\n"
 #if __FPU_PRESENT == 1 && __FPU_USED == 1
 			"	tst			lr, #1 << 4							\n"	// was floating-point used by the thread?
@@ -138,7 +138,7 @@ extern "C" __attribute__ ((naked)) void PendSV_Handler()
 #endif	// __FPU_PRESENT != 1 || __FPU_USED != 1
 			"	bl			%[checkStackPointerWrapper]			\n"
 			"	pop			{r0, lr}							\n"
-#endif	// def CONFIG_CHECK_STACK_POINTER_RANGE_CONTEXT_SWITCH_ENABLE
+#endif	// def DISTORTOS_CHECK_STACK_POINTER_RANGE_CONTEXT_SWITCH_ENABLE
 #if __FPU_PRESENT == 1 && __FPU_USED == 1
 			"	tst			lr, #1 << 4							\n"	// was floating-point used by the thread?
 			"	it			eq									\n"
@@ -179,9 +179,9 @@ extern "C" __attribute__ ((naked)) void PendSV_Handler()
 #if DISTORTOS_ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI != 0
 				[basepriValue] "i" (basepriValue),
 #endif	// DISTORTOS_ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI != 0
-#ifdef CONFIG_CHECK_STACK_POINTER_RANGE_CONTEXT_SWITCH_ENABLE
+#ifdef DISTORTOS_CHECK_STACK_POINTER_RANGE_CONTEXT_SWITCH_ENABLE
 				[checkStackPointerWrapper] "i" (checkStackPointerWrapper),
-#endif	// def CONFIG_CHECK_STACK_POINTER_RANGE_CONTEXT_SWITCH_ENABLE
+#endif	// def DISTORTOS_CHECK_STACK_POINTER_RANGE_CONTEXT_SWITCH_ENABLE
 				[schedulerSwitchContext] "i" (schedulerSwitchContextWrapper)
 	);
 

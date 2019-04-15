@@ -2,7 +2,7 @@
  * \file
  * \brief Scheduler class implementation
  *
- * \author Copyright (C) 2014-2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -244,12 +244,12 @@ void* Scheduler::switchContext(void* const stackPointer)
 
 	auto& stack = getCurrentThreadControlBlock().getStack();
 
-#ifdef CONFIG_CHECK_STACK_GUARD_CONTEXT_SWITCH_ENABLE
+#ifdef DISTORTOS_CHECK_STACK_GUARD_CONTEXT_SWITCH_ENABLE
 
 	if (stack.checkStackGuard() == false)
 		FATAL_ERROR("Stack overflow detected!");
 
-#endif	// def CONFIG_CHECK_STACK_GUARD_CONTEXT_SWITCH_ENABLE
+#endif	// def DISTORTOS_CHECK_STACK_GUARD_CONTEXT_SWITCH_ENABLE
 
 	stack.setStackPointer(stackPointer);
 	currentThreadControlBlock_ = runnableList_.begin();
@@ -261,12 +261,12 @@ bool Scheduler::tickInterruptHandler()
 {
 	const InterruptMaskingLock interruptMaskingLock;
 
-#ifdef CONFIG_CHECK_STACK_GUARD_SYSTEM_TICK_ENABLE
+#ifdef DISTORTOS_CHECK_STACK_GUARD_SYSTEM_TICK_ENABLE
 
 	if (getCurrentThreadControlBlock().getStack().checkStackGuard() == false)
 		FATAL_ERROR("Stack overflow detected!");
 
-#endif	// def CONFIG_CHECK_STACK_GUARD_SYSTEM_TICK_ENABLE
+#endif	// def DISTORTOS_CHECK_STACK_GUARD_SYSTEM_TICK_ENABLE
 
 	++tickCount_;
 

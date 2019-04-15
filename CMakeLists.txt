@@ -137,7 +137,7 @@ distortosSetConfiguration(BOOLEAN
 
 		Selecting this option enables context checks in all functions with such requirements. If any of them is used
 		from interrupt context, FATAL_ERROR() will be called."
-		OUTPUT_NAME CONFIG_CHECK_FUNCTION_CONTEXT_ENABLE)
+		OUTPUT_NAME DISTORTOS_CHECK_FUNCTION_CONTEXT_ENABLE)
 
 distortosSetConfiguration(BOOLEAN
 		distortos_Checks_01_Stack_pointer_range_during_context_switch
@@ -149,7 +149,7 @@ distortosSetConfiguration(BOOLEAN
 		pushed on thread's stack, but the size of this pending stack frame is accounted for - the intent is to detect a
 		stack overflow which is about to happen, before it can cause (further) data corrution. FATAL_ERROR() will be
 		called if the stack pointer is outside valid range."
-		OUTPUT_NAME CONFIG_CHECK_STACK_POINTER_RANGE_CONTEXT_SWITCH_ENABLE)
+		OUTPUT_NAME DISTORTOS_CHECK_STACK_POINTER_RANGE_CONTEXT_SWITCH_ENABLE)
 
 distortosSetConfiguration(BOOLEAN
 		distortos_Checks_02_Stack_pointer_range_during_system_tick
@@ -158,7 +158,7 @@ distortosSetConfiguration(BOOLEAN
 
 		Similar to \"distortos_Checks_01_Stack_pointer_range_during_context_switch\", but executed during every system
 		tick."
-		OUTPUT_NAME CONFIG_CHECK_STACK_POINTER_RANGE_SYSTEM_TICK_ENABLE)
+		OUTPUT_NAME DISTORTOS_CHECK_STACK_POINTER_RANGE_SYSTEM_TICK_ENABLE)
 
 distortosSetConfiguration(BOOLEAN
 		distortos_Checks_03_Stack_guard_contents_during_context_switch
@@ -176,7 +176,7 @@ distortosSetConfiguration(BOOLEAN
 		Be advised that uninitialized variables on stack which are larger than size of \"stack guard\" can create
 		\"holes\" in the stack, thus circumventing this detection mechanism. This especially applies to arrays used as
 		buffers."
-		OUTPUT_NAME CONFIG_CHECK_STACK_GUARD_CONTEXT_SWITCH_ENABLE)
+		OUTPUT_NAME DISTORTOS_CHECK_STACK_GUARD_CONTEXT_SWITCH_ENABLE)
 
 distortosSetConfiguration(BOOLEAN
 		distortos_Checks_04_Stack_guard_contents_during_system_tick
@@ -185,7 +185,7 @@ distortosSetConfiguration(BOOLEAN
 
 		Similar to \"distortos_Checks_03_Stack_guard_contents_during_context_switch\", but executed during every system
 		tick."
-		OUTPUT_NAME CONFIG_CHECK_STACK_GUARD_SYSTEM_TICK_ENABLE)
+		OUTPUT_NAME DISTORTOS_CHECK_STACK_GUARD_SYSTEM_TICK_ENABLE)
 
 if(distortos_Checks_03_Stack_guard_contents_during_context_switch OR
 		distortos_Checks_04_Stack_guard_contents_during_system_tick)

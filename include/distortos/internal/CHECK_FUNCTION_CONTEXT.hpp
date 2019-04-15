@@ -2,7 +2,7 @@
  * \file
  * \brief CHECK_FUNCTION_CONTEXT() macro
  *
- * \author Copyright (C) 2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2016-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -14,7 +14,7 @@
 
 #include "distortos/distortosConfiguration.h"
 
-#ifdef CONFIG_CHECK_FUNCTION_CONTEXT_ENABLE
+#ifdef DISTORTOS_CHECK_FUNCTION_CONTEXT_ENABLE
 
 #include "distortos/architecture/isInInterruptContext.hpp"
 
@@ -29,10 +29,10 @@
 #define CHECK_FUNCTION_CONTEXT()	(distortos::architecture::isInInterruptContext() == false ? static_cast<void>(0) : \
 		FATAL_ERROR("This function cannot be used from interrupt context!"))
 
-#else	/* !def CONFIG_CHECK_FUNCTION_CONTEXT_ENABLE */
+#else	/* !def DISTORTOS_CHECK_FUNCTION_CONTEXT_ENABLE */
 
 #define CHECK_FUNCTION_CONTEXT()
 
-#endif	/* !def CONFIG_CHECK_FUNCTION_CONTEXT_ENABLE */
+#endif	/* !def DISTORTOS_CHECK_FUNCTION_CONTEXT_ENABLE */
 
 #endif /* INCLUDE_DISTORTOS_INTERNAL_CHECK_FUNCTION_CONTEXT_HPP_ */
