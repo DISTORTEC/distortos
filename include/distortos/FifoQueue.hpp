@@ -101,6 +101,15 @@ public:
 	}
 
 	/**
+	 * \return maximum number of elements in queue
+	 */
+
+	size_t getCapacity() const
+	{
+		return fifoQueueBase_.getCapacity();
+	}
+
+	/**
 	 * \brief Pops the oldest (first) element from the queue.
 	 *
 	 * \warning This function must not be called from interrupt context!
