@@ -34,7 +34,7 @@ distortosSetConfiguration(INTEGER
 		MIN 1
 		MAX ${distortos_Scheduler_00_Tick_frequency}
 		HELP "Round-robin frequency, Hz."
-		OUTPUT_NAME CONFIG_ROUND_ROBIN_FREQUENCY)
+		OUTPUT_NAME DISTORTOS_ROUND_ROBIN_FREQUENCY)
 
 distortosSetConfiguration(BOOLEAN
 		distortos_Scheduler_02_Support_for_signals
