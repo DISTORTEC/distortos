@@ -2,7 +2,7 @@
  * \file
  * \brief DynamicThreadBase class header
  *
- * \author Copyright (C) 2015-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2015-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -206,11 +206,11 @@ private:
 
 	static Stack makeStack(const size_t stackSize)
 	{
-		static_assert(alignof(max_align_t) >= CONFIG_ARCHITECTURE_STACK_ALIGNMENT,
+		static_assert(alignof(max_align_t) >= DISTORTOS_ARCHITECTURE_STACK_ALIGNMENT,
 				"Alignment of dynamically allocated memory is too low!");
 
-		const auto adjustedStackSize = (stackSize + CONFIG_ARCHITECTURE_STACK_ALIGNMENT - 1) /
-				CONFIG_ARCHITECTURE_STACK_ALIGNMENT * CONFIG_ARCHITECTURE_STACK_ALIGNMENT;
+		const auto adjustedStackSize = (stackSize + DISTORTOS_ARCHITECTURE_STACK_ALIGNMENT - 1) /
+				DISTORTOS_ARCHITECTURE_STACK_ALIGNMENT * DISTORTOS_ARCHITECTURE_STACK_ALIGNMENT;
 		return {{new uint8_t[adjustedStackSize + stackGuardSize], storageDeleter<uint8_t>},
 				adjustedStackSize + stackGuardSize};
 	}

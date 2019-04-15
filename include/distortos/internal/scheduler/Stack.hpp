@@ -2,7 +2,7 @@
  * \file
  * \brief Stack class header
  *
- * \author Copyright (C) 2014-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -16,9 +16,9 @@
 
 #include <memory>
 
-#if defined(CONFIG_ARCHITECTURE_ASCENDING_STACK) || defined(CONFIG_ARCHITECTURE_EMPTY_STACK)
+#if defined(DISTORTOS_ARCHITECTURE_ASCENDING_STACK) || defined(DISTORTOS_ARCHITECTURE_EMPTY_STACK)
 #error "Support for \"empty ascending\", \"empty descending\" or \"full ascending\" stack not implemented!"
-#endif	// defined(CONFIG_ARCHITECTURE_ASCENDING_STACK) || defined(CONFIG_ARCHITECTURE_EMPTY_STACK)
+#endif	// defined(DISTORTOS_ARCHITECTURE_ASCENDING_STACK) || defined(DISTORTOS_ARCHITECTURE_EMPTY_STACK)
 
 namespace distortos
 {

@@ -2,7 +2,7 @@
  * \file
  * \brief stackGuardSize constant
  *
- * \author Copyright (C) 2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2017-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -23,8 +23,8 @@ namespace internal
 {
 
 /// size of "stack guard", bytes
-constexpr size_t stackGuardSize {(CONFIG_STACK_GUARD_SIZE + CONFIG_ARCHITECTURE_STACK_ALIGNMENT - 1) /
-		CONFIG_ARCHITECTURE_STACK_ALIGNMENT * CONFIG_ARCHITECTURE_STACK_ALIGNMENT};
+constexpr size_t stackGuardSize {(CONFIG_STACK_GUARD_SIZE + DISTORTOS_ARCHITECTURE_STACK_ALIGNMENT - 1) /
+		DISTORTOS_ARCHITECTURE_STACK_ALIGNMENT * DISTORTOS_ARCHITECTURE_STACK_ALIGNMENT};
 
 }	// namespace internal
 

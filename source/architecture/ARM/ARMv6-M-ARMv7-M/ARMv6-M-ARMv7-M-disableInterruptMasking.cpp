@@ -2,7 +2,7 @@
  * \file
  * \brief disableInterruptMasking() implementation for ARMv6-M and ARMv7-M
  *
- * \author Copyright (C) 2014-2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -25,19 +25,19 @@ namespace architecture
 
 InterruptMask disableInterruptMasking()
 {
-#if CONFIG_ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI != 0
+#if DISTORTOS_ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI != 0
 
 	const auto interruptMask = __get_BASEPRI();
 	__set_BASEPRI(0);
 	return interruptMask;
 
-#else	// CONFIG_ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI == 0
+#else	// DISTORTOS_ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI == 0
 
 	const auto interruptMask = __get_PRIMASK();
 	__enable_irq();
 	return interruptMask;
 
-#endif	// CONFIG_ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI == 0
+#endif	// DISTORTOS_ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI == 0
 }
 
 }	// namespace architecture

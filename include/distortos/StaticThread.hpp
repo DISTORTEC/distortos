@@ -2,7 +2,7 @@
  * \file
  * \brief StaticThread class header
  *
- * \author Copyright (C) 2014-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -97,14 +97,14 @@ protected:
 private:
 
 	/// size of stack adjusted to alignment requirements, bytes
-	constexpr static size_t adjustedStackSize {(StackSize + CONFIG_ARCHITECTURE_STACK_ALIGNMENT - 1) /
-			CONFIG_ARCHITECTURE_STACK_ALIGNMENT * CONFIG_ARCHITECTURE_STACK_ALIGNMENT};
+	constexpr static size_t adjustedStackSize {(StackSize + DISTORTOS_ARCHITECTURE_STACK_ALIGNMENT - 1) /
+			DISTORTOS_ARCHITECTURE_STACK_ALIGNMENT * DISTORTOS_ARCHITECTURE_STACK_ALIGNMENT};
 
 	/// stack buffer
-	alignas(CONFIG_ARCHITECTURE_STACK_ALIGNMENT)
+	alignas(DISTORTOS_ARCHITECTURE_STACK_ALIGNMENT)
 	typename std::aligned_storage<adjustedStackSize + internal::stackGuardSize>::type stack_;
 
-	static_assert(sizeof(stack_) % CONFIG_ARCHITECTURE_STACK_ALIGNMENT == 0, "Stack size is not aligned!");
+	static_assert(sizeof(stack_) % DISTORTOS_ARCHITECTURE_STACK_ALIGNMENT == 0, "Stack size is not aligned!");
 
 	/// bound function object
 	decltype(std::bind(std::declval<Function>(), std::declval<Args>()...)) boundFunction_;
