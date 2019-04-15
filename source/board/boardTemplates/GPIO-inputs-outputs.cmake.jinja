@@ -13,7 +13,7 @@ distortosSetConfiguration(BOOLEAN
 		distortos_{{ dictionaryKey }}
 		ON
 		HELP "Enable {{ dictionaryKey }}"
-		OUTPUT_NAME CONFIG_BOARD_{{ dictionaryKey | upper }}_ENABLE)
+		OUTPUT_NAME DISTORTOS_BOARD_{{ dictionaryKey | upper }}_ENABLE)
 
 if(distortos_{{ dictionaryKey }})
 {% for key, value in dictionary[dictionaryKey].items() if value is mapping %}
@@ -23,7 +23,7 @@ if(distortos_{{ dictionaryKey }})
 			ON
 			HELP "Enable {{ key }}
 			{%- if 'alternative-names' in value %} ({{ value['alternative-names'] | join(', ') }}){% endif %}"
-			OUTPUT_NAME CONFIG_BOARD_{{ dictionaryKey | upper }}_{{ key | upper }}_ENABLE)
+			OUTPUT_NAME DISTORTOS_BOARD_{{ dictionaryKey | upper }}_{{ key | upper }}_ENABLE)
 
 	if(distortos_{{ dictionaryKey }}_{{ key }})
 		list(APPEND {{ value['GPIO']['port']['compatible'][0].rpartition(',')[2] | sanitize('[^0-9A-Za-z]') | upper }}_

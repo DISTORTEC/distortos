@@ -10,7 +10,7 @@
 #
 
 distortosSetFixedConfiguration(STRING
-		CONFIG_BOARD
+		DISTORTOS_BOARD
 		"{{ board }}")
 {% for metadataRow in metadata if metadataRow[2].endswith('.cpp') %}
 {% if loop.first == True %}

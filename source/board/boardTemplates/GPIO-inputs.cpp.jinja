@@ -3,7 +3,7 @@
  * \file
  * \brief Definition of {{ dictionaryKey }} for {{ board }}
  *
- * \author Copyright (C) 2014-2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -15,7 +15,8 @@
 
 #include "distortos/board/{{ dictionaryKey }}.hpp"
 
-#if defined(CONFIG_BOARD_{{ dictionaryKey | upper }}_ENABLE) && DISTORTOS_BOARD_{{ dictionaryKey | upper }}_COUNT != 0
+#if defined(DISTORTOS_BOARD_{{ dictionaryKey | upper }}_ENABLE) && {# remove whitespace -#}
+DISTORTOS_BOARD_{{ dictionaryKey | upper }}_COUNT != 0
 
 #include "distortos/chip/ChipInputPin.hpp"
 
@@ -32,9 +33,9 @@ namespace board
 const chip::ChipInputPin {{ dictionaryKey }}[{{ dictionaryKey }}Count]
 {
 {% for key, value in dictionary[dictionaryKey].items() if value is mapping %}
-#ifdef CONFIG_BOARD_{{ dictionaryKey | upper }}_{{ key | upper }}_ENABLE
+#ifdef DISTORTOS_BOARD_{{ dictionaryKey | upper }}_{{ key | upper }}_ENABLE
 		{{ ChipInputPin.initializer(value['GPIO']) }},
-#endif	// def CONFIG_BOARD_{{ dictionaryKey | upper }}_{{ key | upper }}_ENABLE
+#endif	// def DISTORTOS_BOARD_{{ dictionaryKey | upper }}_{{ key | upper }}_ENABLE
 {% endfor %}
 };
 
@@ -42,5 +43,5 @@ const chip::ChipInputPin {{ dictionaryKey }}[{{ dictionaryKey }}Count]
 
 }	// namespace distortos
 
-#endif	// defined(CONFIG_BOARD_{{ dictionaryKey | upper }}_ENABLE) && {# remove whitespace -#}
+#endif	// defined(DISTORTOS_BOARD_{{ dictionaryKey | upper }}_ENABLE) && {# remove whitespace -#}
 DISTORTOS_BOARD_{{ dictionaryKey | upper }}_COUNT != 0

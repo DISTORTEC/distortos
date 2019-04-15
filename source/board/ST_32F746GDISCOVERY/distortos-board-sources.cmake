@@ -10,7 +10,7 @@
 #
 
 distortosSetFixedConfiguration(STRING
-		CONFIG_BOARD
+		DISTORTOS_BOARD
 		"ST,32F746GDISCOVERY")
 
 target_include_directories(distortos PUBLIC

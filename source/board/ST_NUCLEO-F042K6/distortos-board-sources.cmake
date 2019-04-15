@@ -10,7 +10,7 @@
 #
 
 distortosSetFixedConfiguration(STRING
-		CONFIG_BOARD
+		DISTORTOS_BOARD
 		"ST,NUCLEO-F042K6")
 
 target_include_directories(distortos PUBLIC
