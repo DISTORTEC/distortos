@@ -13,7 +13,7 @@
 
 #include "distortos/distortosConfiguration.h"
 
-#if CONFIG_SIGNALS_ENABLE == 1
+#if DISTORTOS_SIGNALS_ENABLE == 1
 
 #include "signalsTestSelfOneSignalPending.hpp"
 
@@ -22,7 +22,7 @@
 
 #include <cerrno>
 
-#endif	// CONFIG_SIGNALS_ENABLE == 1
+#endif	// DISTORTOS_SIGNALS_ENABLE == 1
 
 namespace distortos
 {
@@ -30,7 +30,7 @@ namespace distortos
 namespace test
 {
 
-#if CONFIG_SIGNALS_ENABLE == 1
+#if DISTORTOS_SIGNALS_ENABLE == 1
 
 namespace
 {
@@ -126,7 +126,7 @@ bool phase2()
 
 }	// namespace
 
-#endif	// CONFIG_SIGNALS_ENABLE == 1
+#endif	// DISTORTOS_SIGNALS_ENABLE == 1
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | private functions
@@ -134,7 +134,7 @@ bool phase2()
 
 bool SignalsQueuedOperationsTestCase::run_() const
 {
-#if CONFIG_SIGNALS_ENABLE == 1
+#if DISTORTOS_SIGNALS_ENABLE == 1
 
 	for (const auto& function : {phase1, phase2})
 	{
@@ -150,7 +150,7 @@ bool SignalsQueuedOperationsTestCase::run_() const
 	if (ThisThread::Signals::getPendingSignalSet().getBitset().none() == false)
 		return false;
 
-#endif	// CONFIG_SIGNALS_ENABLE == 1
+#endif	// DISTORTOS_SIGNALS_ENABLE == 1
 
 	return true;
 }

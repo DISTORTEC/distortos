@@ -53,7 +53,7 @@ distortosSetConfiguration(BOOLEAN
 		- StaticSignalsReceiver class;
 
 		When this options is not selected, these namespaces, functions and classes are not available at all."
-		OUTPUT_NAME CONFIG_SIGNALS_ENABLE)
+		OUTPUT_NAME DISTORTOS_SIGNALS_ENABLE)
 
 distortosSetConfiguration(BOOLEAN
 		distortos_Scheduler_03_Support_for_thread_detachment

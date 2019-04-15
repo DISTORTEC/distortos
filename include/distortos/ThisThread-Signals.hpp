@@ -2,7 +2,7 @@
  * \file
  * \brief ThisThread::Signals namespace header
  *
- * \author Copyright (C) 2015-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2015-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -14,7 +14,7 @@
 
 #include "distortos/distortosConfiguration.h"
 
-#if CONFIG_SIGNALS_ENABLE == 1
+#if DISTORTOS_SIGNALS_ENABLE == 1
 
 #include "distortos/SignalInformation.hpp"
 #include "distortos/TickClock.hpp"
@@ -290,6 +290,6 @@ std::pair<int, SignalInformation> wait(const SignalSet& signalSet);
 
 }	// namespace distortos
 
-#endif	// CONFIG_SIGNALS_ENABLE == 1
+#endif	// DISTORTOS_SIGNALS_ENABLE == 1
 
 #endif	// INCLUDE_DISTORTOS_THISTHREAD_SIGNALS_HPP_

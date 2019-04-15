@@ -13,7 +13,7 @@
 
 #include "distortos/distortosConfiguration.h"
 
-#if CONFIG_SIGNALS_ENABLE == 1
+#if DISTORTOS_SIGNALS_ENABLE == 1
 
 #include "abortSignalHandler.hpp"
 
@@ -28,7 +28,7 @@
 #define SIGNAL_CATCHING_OPERATIONS_TEST_CASE_PHASE_1_2_ENABLED DISTORTOS_MAIN_THREAD_SIGNAL_ACTIONS >= 1 && \
 		DISTORTOS_MAIN_THREAD_SIGNAL_ACTIONS <= 31
 
-#endif	// CONFIG_SIGNALS_ENABLE == 1
+#endif	// DISTORTOS_SIGNALS_ENABLE == 1
 
 namespace distortos
 {
@@ -36,7 +36,7 @@ namespace distortos
 namespace test
 {
 
-#if CONFIG_SIGNALS_ENABLE == 1
+#if DISTORTOS_SIGNALS_ENABLE == 1
 
 namespace
 {
@@ -266,7 +266,7 @@ bool phase3()
 
 }	// namespace
 
-#endif	// CONFIG_SIGNALS_ENABLE == 1
+#endif	// DISTORTOS_SIGNALS_ENABLE == 1
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | private functions
@@ -274,7 +274,7 @@ bool phase3()
 
 bool SignalCatchingOperationsTestCase::run_() const
 {
-#if CONFIG_SIGNALS_ENABLE == 1
+#if DISTORTOS_SIGNALS_ENABLE == 1
 
 	const auto contextSwitchCount = statistics::getContextSwitchCount();
 
@@ -304,7 +304,7 @@ bool SignalCatchingOperationsTestCase::run_() const
 	if (statistics::getContextSwitchCount() - contextSwitchCount != expectedContextSwitchCount)
 		return false;
 
-#endif	// CONFIG_SIGNALS_ENABLE == 1
+#endif	// DISTORTOS_SIGNALS_ENABLE == 1
 
 	return true;
 }

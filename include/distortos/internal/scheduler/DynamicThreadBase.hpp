@@ -215,12 +215,12 @@ private:
 				adjustedStackSize + stackGuardSize};
 	}
 
-#if CONFIG_SIGNALS_ENABLE == 1
+#if DISTORTOS_SIGNALS_ENABLE == 1
 
 	/// internal DynamicSignalsReceiver object
 	DynamicSignalsReceiver dynamicSignalsReceiver_;
 
-#endif	// CONFIG_SIGNALS_ENABLE == 1
+#endif	// DISTORTOS_SIGNALS_ENABLE == 1
 
 	/// bound function object
 	std::function<void()> boundFunction_;
@@ -233,7 +233,7 @@ private:
 #endif	// CONFIG_THREAD_DETACH_ENABLE == 1
 };
 
-#if CONFIG_SIGNALS_ENABLE == 1 && CONFIG_THREAD_DETACH_ENABLE == 1
+#if DISTORTOS_SIGNALS_ENABLE == 1 && CONFIG_THREAD_DETACH_ENABLE == 1
 
 template<typename Function, typename... Args>
 DynamicThreadBase::DynamicThreadBase(const size_t stackSize, const bool canReceiveSignals, const size_t queuedSignals,
@@ -249,7 +249,7 @@ DynamicThreadBase::DynamicThreadBase(const size_t stackSize, const bool canRecei
 
 }
 
-#elif CONFIG_SIGNALS_ENABLE == 1 && CONFIG_THREAD_DETACH_ENABLE != 1
+#elif DISTORTOS_SIGNALS_ENABLE == 1 && CONFIG_THREAD_DETACH_ENABLE != 1
 
 template<typename Function, typename... Args>
 DynamicThreadBase::DynamicThreadBase(const size_t stackSize, const bool canReceiveSignals, const size_t queuedSignals,
@@ -264,7 +264,7 @@ DynamicThreadBase::DynamicThreadBase(const size_t stackSize, const bool canRecei
 
 }
 
-#elif CONFIG_SIGNALS_ENABLE != 1 && CONFIG_THREAD_DETACH_ENABLE == 1
+#elif DISTORTOS_SIGNALS_ENABLE != 1 && CONFIG_THREAD_DETACH_ENABLE == 1
 
 template<typename Function, typename... Args>
 DynamicThreadBase::DynamicThreadBase(const size_t stackSize, bool, size_t, size_t, const uint8_t priority,
@@ -276,7 +276,7 @@ DynamicThreadBase::DynamicThreadBase(const size_t stackSize, bool, size_t, size_
 
 }
 
-#else	// CONFIG_SIGNALS_ENABLE != 1 && CONFIG_THREAD_DETACH_ENABLE != 1
+#else	// DISTORTOS_SIGNALS_ENABLE != 1 && CONFIG_THREAD_DETACH_ENABLE != 1
 
 template<typename Function, typename... Args>
 DynamicThreadBase::DynamicThreadBase(const size_t stackSize, bool, size_t, size_t, const uint8_t priority,
@@ -287,7 +287,7 @@ DynamicThreadBase::DynamicThreadBase(const size_t stackSize, bool, size_t, size_
 
 }
 
-#endif	// CONFIG_SIGNALS_ENABLE != 1 && CONFIG_THREAD_DETACH_ENABLE != 1
+#endif	// DISTORTOS_SIGNALS_ENABLE != 1 && CONFIG_THREAD_DETACH_ENABLE != 1
 
 }	// namespace internal
 
