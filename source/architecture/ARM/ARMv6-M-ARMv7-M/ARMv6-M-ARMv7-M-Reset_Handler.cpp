@@ -2,7 +2,7 @@
  * \file
  * \brief Reset_Handler() for ARMv6-M and ARMv7-M
  *
- * \author Copyright (C) 2014-2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -142,12 +142,12 @@ __attribute__ ((naked)) void Reset_Handler()
 				blx		r0
 
 	)"
-#if CONFIG_STATIC_DESTRUCTORS_ENABLE == 1
+#if DISTORTOS_STATIC_DESTRUCTORS_ENABLE == 1
 	R"(
 				ldr		r0, =__libc_fini_array						// call destructors for global and static objects
 				blx		r0
 	)"
-#endif	// CONFIG_STATIC_DESTRUCTORS_ENABLE == 1
+#endif	// DISTORTOS_STATIC_DESTRUCTORS_ENABLE == 1
 	R"(
 
 				b		.											// on return - loop till the end of the world

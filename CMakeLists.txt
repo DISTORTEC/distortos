@@ -19,7 +19,7 @@ distortosSetConfiguration(BOOLEAN
 
 		Enable destructors for objects with static storage duration. As embedded applications almost never \"exit\",
 		these destructors are usually never executed, wasting ROM."
-		OUTPUT_NAME CONFIG_STATIC_DESTRUCTORS_ENABLE)
+		OUTPUT_NAME DISTORTOS_STATIC_DESTRUCTORS_ENABLE)
 
 distortosSetConfiguration(INTEGER
 		distortos_Scheduler_00_Tick_frequency

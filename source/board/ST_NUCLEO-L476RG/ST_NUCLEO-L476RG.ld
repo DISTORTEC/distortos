@@ -242,7 +242,7 @@ SECTIONS
 
 		KEEP(*(SORT_NONE(.fini)));
 
-#if CONFIG_STATIC_DESTRUCTORS_ENABLE == 1
+#if DISTORTOS_STATIC_DESTRUCTORS_ENABLE == 1
 
 		PROVIDE(__fini_array_start = .);
 
@@ -251,7 +251,7 @@ SECTIONS
 
 		PROVIDE(__fini_array_end = .);
 
-#endif	/* CONFIG_STATIC_DESTRUCTORS_ENABLE == 1 */
+#endif	/* DISTORTOS_STATIC_DESTRUCTORS_ENABLE == 1 */
 
 		/* end of sub-sections: init, preinit_array, init_array and fini_array */
 
