@@ -58,6 +58,15 @@ public:
 	}
 
 	/**
+	 * \return maximum number of elements in queue
+	 */
+
+	constexpr static size_t getCapacity()
+	{
+		return QueueSize;
+	}
+
+	/**
 	 * \return size of single queue element, bytes
 	 */
 
