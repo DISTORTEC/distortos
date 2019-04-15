@@ -117,6 +117,15 @@ public:
 	}
 
 	/**
+	 * \return maximum number of elements in queue
+	 */
+
+	size_t getCapacity() const
+	{
+		return messageQueueBase_.getCapacity();
+	}
+
+	/**
 	 * \brief Pops oldest element with highest priority from the queue.
 	 *
 	 * Similar to mq_receive() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/mq_receive.html#
