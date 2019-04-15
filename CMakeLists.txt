@@ -197,7 +197,7 @@ if(distortos_Checks_03_Stack_guard_contents_during_context_switch OR
 			HELP "Size (in bytes) of \"stack guard\".
 
 			Any value which is not a multiple of stack alignment required by architecture, will be rounded up."
-			OUTPUT_NAME CONFIG_STACK_GUARD_SIZE)
+			OUTPUT_NAME DISTORTOS_STACK_GUARD_SIZE)
 
 endif(distortos_Checks_03_Stack_guard_contents_during_context_switch OR
 		distortos_Checks_04_Stack_guard_contents_during_system_tick)
@@ -510,9 +510,9 @@ foreach(line ${distortosConfiguration})
 endforeach()
 file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/include/distortos/distortosConfiguration.h
 		"\n"
-		"#ifndef CONFIG_STACK_GUARD_SIZE\n"
-		"	#define CONFIG_STACK_GUARD_SIZE 0\n"
-		"#endif	/* !def CONFIG_STACK_GUARD_SIZE */\n"
+		"#ifndef DISTORTOS_STACK_GUARD_SIZE\n"
+		"	#define DISTORTOS_STACK_GUARD_SIZE 0\n"
+		"#endif	/* !def DISTORTOS_STACK_GUARD_SIZE */\n"
 		"\n"
 		"#endif	/* INCLUDE_DISTORTOS_DISTORTOSCONFIGURATION_H_ */")
 

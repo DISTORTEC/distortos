@@ -23,7 +23,7 @@ namespace internal
 {
 
 /// size of "stack guard", bytes
-constexpr size_t stackGuardSize {(CONFIG_STACK_GUARD_SIZE + DISTORTOS_ARCHITECTURE_STACK_ALIGNMENT - 1) /
+constexpr size_t stackGuardSize {(DISTORTOS_STACK_GUARD_SIZE + DISTORTOS_ARCHITECTURE_STACK_ALIGNMENT - 1) /
 		DISTORTOS_ARCHITECTURE_STACK_ALIGNMENT * DISTORTOS_ARCHITECTURE_STACK_ALIGNMENT};
 
 }	// namespace internal
