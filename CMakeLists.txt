@@ -26,7 +26,7 @@ distortosSetConfiguration(INTEGER
 		1000
 		MIN 1
 		HELP "System's tick frequency, Hz."
-		OUTPUT_NAME CONFIG_TICK_FREQUENCY)
+		OUTPUT_NAME DISTORTOS_TICK_FREQUENCY)
 
 distortosSetConfiguration(INTEGER
 		distortos_Scheduler_01_Round_robin_frequency

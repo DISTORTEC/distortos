@@ -49,7 +49,7 @@ void startScheduling()
 	NVIC_SetPriority(SVCall_IRQn, svcallPriority);
 
 	// configure SysTick timer as the tick timer
-	constexpr uint32_t period {chip::ahbFrequency / CONFIG_TICK_FREQUENCY};
+	constexpr uint32_t period {chip::ahbFrequency / DISTORTOS_TICK_FREQUENCY};
 	constexpr uint32_t periodDividedBy8 {period / 8};
 	constexpr uint32_t maxSysTickPeriod {1 << 24};
 	constexpr bool divideBy8 {period > maxSysTickPeriod};

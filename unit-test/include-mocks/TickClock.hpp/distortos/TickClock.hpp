@@ -2,7 +2,7 @@
  * \file
  * \brief Mock of TickClock class
  *
- * \author Copyright (C) 2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2017-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -26,7 +26,7 @@ class TickClock
 public:
 
 	using rep = int64_t;
-	using period = std::ratio<1, CONFIG_TICK_FREQUENCY>;
+	using period = std::ratio<1, DISTORTOS_TICK_FREQUENCY>;
 	using duration = std::chrono::duration<rep, period>;
 	using time_point = std::chrono::time_point<TickClock>;
 
