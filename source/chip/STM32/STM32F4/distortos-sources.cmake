@@ -18,14 +18,14 @@ distortosSetConfiguration(BOOLEAN
 		If disabled, no clock configuration will be done during chip initialization. The values entered below
 		(frequencies, dividers, ...) will only be used to determine chip clocks. The user must configure the chip
 		manually to match these settings."
-		OUTPUT_NAME CONFIG_CHIP_STM32F4_STANDARD_CLOCK_CONFIGURATION_ENABLE)
+		OUTPUT_NAME DISTORTOS_CHIP_STM32F4_STANDARD_CLOCK_CONFIGURATION_ENABLE)
 
 if(distortos_Clocks_00_Standard_configuration_of_clocks)
 
-	if(CONFIG_CHIP MATCHES "STM32F401")
+	if(DISTORTOS_CHIP MATCHES "STM32F401")
 		set(min 2)
 		set(max 3)
-	elseif(CONFIG_CHIP MATCHES "STM32F4[01][57]")
+	elseif(DISTORTOS_CHIP MATCHES "STM32F4[01][57]")
 		set(min 1)
 		set(max 2)
 	else()
@@ -39,43 +39,43 @@ if(distortos_Clocks_00_Standard_configuration_of_clocks)
 			MIN ${min}
 			MAX ${max}
 			HELP "Select voltage scale mode."
-			OUTPUT_NAME CONFIG_CHIP_STM32F4_PWR_VOLTAGE_SCALE_MODE)
+			OUTPUT_NAME DISTORTOS_CHIP_STM32F4_PWR_VOLTAGE_SCALE_MODE)
 
 	if(distortos_Clocks_01_Voltage_scale_mode EQUAL 1 AND
-			CONFIG_CHIP_STM32F4_VDD_MV GREATER_EQUAL 2100 AND
-			CONFIG_CHIP MATCHES "STM32F42[79]|STM32F43|STM32F446|STM32F4[67]9")
+			DISTORTOS_CHIP_STM32F4_VDD_MV GREATER_EQUAL 2100 AND
+			DISTORTOS_CHIP MATCHES "STM32F42[79]|STM32F43|STM32F446|STM32F4[67]9")
 
 		distortosSetConfiguration(BOOLEAN
 				distortos_Clocks_02_Over_drive_mode
 				OFF
 				HELP "Enable over-drive mode."
-				OUTPUT_NAME CONFIG_CHIP_STM32F4_PWR_OVER_DRIVE_ENABLE)
+				OUTPUT_NAME DISTORTOS_CHIP_STM32F4_PWR_OVER_DRIVE_ENABLE)
 
 	endif(distortos_Clocks_01_Voltage_scale_mode EQUAL 1 AND
-			CONFIG_CHIP_STM32F4_VDD_MV GREATER_EQUAL 2100 AND
-			CONFIG_CHIP MATCHES "STM32F42[79]|STM32F43|STM32F446|STM32F4[67]9")
+			DISTORTOS_CHIP_STM32F4_VDD_MV GREATER_EQUAL 2100 AND
+			DISTORTOS_CHIP MATCHES "STM32F42[79]|STM32F43|STM32F446|STM32F4[67]9")
 
-	if(CONFIG_CHIP_STM32F4_RCC_HSE_FREQUENCY)
+	if(DISTORTOS_CHIP_STM32F4_RCC_HSE_FREQUENCY)
 
-		if(CONFIG_CHIP_STM32F4_RCC_HSE_CLOCK_BYPASS)
-			set(help "Enable HSE external user clock, ${CONFIG_CHIP_STM32F4_RCC_HSE_FREQUENCY} Hz.")
+		if(DISTORTOS_CHIP_STM32F4_RCC_HSE_CLOCK_BYPASS)
+			set(help "Enable HSE external user clock, ${DISTORTOS_CHIP_STM32F4_RCC_HSE_FREQUENCY} Hz.")
 		else()
-			set(help "Enable HSE crystal/ceramic resonator, ${CONFIG_CHIP_STM32F4_RCC_HSE_FREQUENCY} Hz.")
+			set(help "Enable HSE crystal/ceramic resonator, ${DISTORTOS_CHIP_STM32F4_RCC_HSE_FREQUENCY} Hz.")
 		endif()
 
 		distortosSetConfiguration(BOOLEAN
 				distortos_Clocks_03_HSE
 				OFF
 				HELP ${help}
-				OUTPUT_NAME CONFIG_CHIP_STM32F4_RCC_HSE_ENABLE)
+				OUTPUT_NAME DISTORTOS_CHIP_STM32F4_RCC_HSE_ENABLE)
 
-	endif(CONFIG_CHIP_STM32F4_RCC_HSE_FREQUENCY)
+	endif(DISTORTOS_CHIP_STM32F4_RCC_HSE_FREQUENCY)
 
 	distortosSetConfiguration(BOOLEAN
 			distortos_Clocks_04_PLL
 			ON
 			HELP "Enable PLL."
-			OUTPUT_NAME CONFIG_CHIP_STM32F4_RCC_PLL_ENABLE)
+			OUTPUT_NAME DISTORTOS_CHIP_STM32F4_RCC_PLL_ENABLE)
 
 	if(distortos_Clocks_04_PLL)
 
@@ -88,7 +88,7 @@ if(distortos_Clocks_00_Standard_configuration_of_clocks)
 				HSI
 				${pllClockSourceHse}
 				HELP "Select clock source of main and audio PLLs."
-				OUTPUT_NAME CONFIG_CHIP_STM32F4_RCC_PLLSRC
+				OUTPUT_NAME DISTORTOS_CHIP_STM32F4_RCC_PLLSRC
 				OUTPUT_TYPES BOOLEAN)
 
 		distortosSetConfiguration(INTEGER
@@ -102,9 +102,9 @@ if(distortos_Clocks_00_Standard_configuration_of_clocks)
 				be in the range [1 MHz; 2 MHz], 2 MHz is recommended to limit PLL jitter.
 
 				VCOin = PLLin / PLLM"
-				OUTPUT_NAME CONFIG_CHIP_STM32F4_RCC_PLLM)
+				OUTPUT_NAME DISTORTOS_CHIP_STM32F4_RCC_PLLM)
 
-		if(CONFIG_CHIP MATCHES "STM32F401")
+		if(DISTORTOS_CHIP MATCHES "STM32F401")
 			set(min 192)
 		else()
 			set(min 50)
@@ -123,9 +123,9 @@ if(distortos_Clocks_00_Standard_configuration_of_clocks)
 				- [100 MHz; 432 MHz] for other chips.
 
 				VCOout = VCOin * PLLN = PLLin / PLLM * PLLN"
-				OUTPUT_NAME CONFIG_CHIP_STM32F4_RCC_PLLN)
+				OUTPUT_NAME DISTORTOS_CHIP_STM32F4_RCC_PLLN)
 
-		if(CONFIG_CHIP MATCHES "STM32F401|STM32F41[0-3]|STM32F423")
+		if(DISTORTOS_CHIP MATCHES "STM32F401|STM32F41[0-3]|STM32F423")
 			set(default4 DEFAULT)
 		else()
 			unset(default4)
@@ -157,7 +157,7 @@ if(distortos_Clocks_00_Standard_configuration_of_clocks)
 				- 120 MHz in voltage scale 3 mode.
 
 				PLLout = VCOout / PLLP = PLLin / PLLM * PLLN / PLLP"
-				OUTPUT_NAME CONFIG_CHIP_STM32F4_RCC_PLLP
+				OUTPUT_NAME DISTORTOS_CHIP_STM32F4_RCC_PLLP
 				OUTPUT_TYPES INTEGER)
 
 		distortosSetConfiguration(INTEGER
@@ -172,9 +172,9 @@ if(distortos_Clocks_00_Standard_configuration_of_clocks)
 				lower than or equal to 48 MHz to work correctly.
 
 				PLLQout = VCOout / PLLQ = PLLin / PLLM * PLLN / PLLQ"
-				OUTPUT_NAME CONFIG_CHIP_STM32F4_RCC_PLLQ)
+				OUTPUT_NAME DISTORTOS_CHIP_STM32F4_RCC_PLLQ)
 
-		if(CONFIG_CHIP MATCHES "STM32F41[23]|STM32F423|STM32F446|STM32F4[67]9")
+		if(DISTORTOS_CHIP MATCHES "STM32F41[23]|STM32F423|STM32F446|STM32F4[67]9")
 
 			distortosSetConfiguration(INTEGER
 					distortos_Clocks_10_PLLR
@@ -188,9 +188,9 @@ if(distortos_Clocks_00_Standard_configuration_of_clocks)
 					STM32F412, STM32F413 or STM32F423).
 
 					PLLRout = VCOout / PLLR = PLLin / PLLM * PLLN / PLLR"
-					OUTPUT_NAME CONFIG_CHIP_STM32F4_RCC_PLLR)
+					OUTPUT_NAME DISTORTOS_CHIP_STM32F4_RCC_PLLR)
 
-		endif(CONFIG_CHIP MATCHES "STM32F41[23]|STM32F423|STM32F446|STM32F4[67]9")
+		endif(DISTORTOS_CHIP MATCHES "STM32F41[23]|STM32F423|STM32F446|STM32F4[67]9")
 
 	endif(distortos_Clocks_04_PLL)
 
@@ -199,7 +199,7 @@ if(distortos_Clocks_00_Standard_configuration_of_clocks)
 	endif()
 	if(distortos_Clocks_04_PLL)
 		set(systemClockSourcePll PLL DEFAULT)
-		if(CONFIG_CHIP MATCHES "STM32F446|STM32F4[67]9")
+		if(DISTORTOS_CHIP MATCHES "STM32F446|STM32F4[67]9")
 			set(systemClockSourcePllr PLLR)
 		endif()
 	endif()
@@ -211,16 +211,16 @@ if(distortos_Clocks_00_Standard_configuration_of_clocks)
 			${systemClockSourcePll}
 			${systemClockSourcePllr}
 			HELP "Select system clock source."
-			OUTPUT_NAME CONFIG_CHIP_STM32F4_RCC_SYSCLK
+			OUTPUT_NAME DISTORTOS_CHIP_STM32F4_RCC_SYSCLK
 			OUTPUT_TYPES BOOLEAN)
 
 else(distortos_Clocks_00_Standard_configuration_of_clocks)
 
-	if(CONFIG_CHIP MATCHES "STM32F401")
+	if(DISTORTOS_CHIP MATCHES "STM32F401")
 		set(max 84000000)
-	elseif(CONFIG_CHIP MATCHES "STM32F4[01][57]")
+	elseif(DISTORTOS_CHIP MATCHES "STM32F4[01][57]")
 		set(max 168000000)
-	elseif(CONFIG_CHIP MATCHES "STM32F41[0-3]|STM32F423")
+	elseif(DISTORTOS_CHIP MATCHES "STM32F41[0-3]|STM32F423")
 		set(max 100000000)
 	else()
 		set(max 180000000)
@@ -249,7 +249,7 @@ else(distortos_Clocks_00_Standard_configuration_of_clocks)
 			- 168 MHz in voltage scale 1 mode,
 			- 144 MHz in voltage scale 2 mode,
 			- 120 MHz in voltage scale 3 mode."
-			OUTPUT_NAME CONFIG_CHIP_STM32F4_RCC_SYSCLK_FREQUENCY)
+			OUTPUT_NAME DISTORTOS_CHIP_STM32F4_RCC_SYSCLK_FREQUENCY)
 
 endif(distortos_Clocks_00_Standard_configuration_of_clocks)
 
@@ -267,10 +267,10 @@ distortosSetConfiguration(STRING
 		HELP "AHB clock division factor.
 
 		AHBclk = SYSclk / AHBdivider"
-		OUTPUT_NAME CONFIG_CHIP_STM32F4_RCC_HPRE
+		OUTPUT_NAME DISTORTOS_CHIP_STM32F4_RCC_HPRE
 		OUTPUT_TYPES INTEGER)
 
-if(CONFIG_CHIP MATCHES "STM32F401|STM32F41[0-3]|STM32F423")
+if(DISTORTOS_CHIP MATCHES "STM32F401|STM32F41[0-3]|STM32F423")
 	set(default2 DEFAULT)
 	unset(default4)
 else()
@@ -293,10 +293,10 @@ distortosSetConfiguration(STRING
 		- 45 MHz (with over-drive mode) or 42 MHz (otherwise) for other chips.
 
 		APB1clk = AHBclk / APB1divider"
-		OUTPUT_NAME CONFIG_CHIP_STM32F4_RCC_PPRE1
+		OUTPUT_NAME DISTORTOS_CHIP_STM32F4_RCC_PPRE1
 		OUTPUT_TYPES INTEGER)
 
-if(CONFIG_CHIP MATCHES "STM32F401|STM32F41[0-3]|STM32F423")
+if(DISTORTOS_CHIP MATCHES "STM32F401|STM32F41[0-3]|STM32F423")
 	unset(default2)
 else()
 	set(default2 DEFAULT)
@@ -317,10 +317,10 @@ distortosSetConfiguration(STRING
 		- 90 MHz (with over-drive mode) or 84 MHz (otherwise) for other chips.
 
 		APB2clk = AHBclk / APB2divider"
-		OUTPUT_NAME CONFIG_CHIP_STM32F4_RCC_PPRE2
+		OUTPUT_NAME DISTORTOS_CHIP_STM32F4_RCC_PPRE2
 		OUTPUT_TYPES INTEGER)
 
-if(CONFIG_CHIP_STM32F4_VDD_MV GREATER_EQUAL 2100)
+if(DISTORTOS_CHIP_STM32F4_VDD_MV GREATER_EQUAL 2100)
 
 	distortosSetConfiguration(BOOLEAN
 			distortos_Memory_00_Flash_prefetch
@@ -330,21 +330,21 @@ if(CONFIG_CHIP_STM32F4_VDD_MV GREATER_EQUAL 2100)
 			Early revisions of older STM32F4 devices don't support this feature. Enabling this feature may also increase
 			noise of ADC. Check device errata sheet of selected chip to see whether it is affected by any of these
 			issues."
-			OUTPUT_NAME CONFIG_CHIP_STM32F4_FLASH_PREFETCH_ENABLE)
+			OUTPUT_NAME DISTORTOS_CHIP_STM32F4_FLASH_PREFETCH_ENABLE)
 
-endif(CONFIG_CHIP_STM32F4_VDD_MV GREATER_EQUAL 2100)
+endif(DISTORTOS_CHIP_STM32F4_VDD_MV GREATER_EQUAL 2100)
 
 distortosSetConfiguration(BOOLEAN
 		distortos_Memory_01_Flash_data_cache
 		ON
 		HELP "Enable flash data cache option in FLASH->ACR register."
-		OUTPUT_NAME CONFIG_CHIP_STM32F4_FLASH_DATA_CACHE_ENABLE)
+		OUTPUT_NAME DISTORTOS_CHIP_STM32F4_FLASH_DATA_CACHE_ENABLE)
 
 distortosSetConfiguration(BOOLEAN
 		distortos_Memory_02_Flash_instruction_cache
 		ON
 		HELP "Enable flash instruction cache option in FLASH->ACR register."
-		OUTPUT_NAME CONFIG_CHIP_STM32F4_FLASH_INSTRUCTION_CACHE_ENABLE)
+		OUTPUT_NAME DISTORTOS_CHIP_STM32F4_FLASH_INSTRUCTION_CACHE_ENABLE)
 
 target_include_directories(distortos PUBLIC
 		${CMAKE_CURRENT_LIST_DIR}/../include

@@ -18,31 +18,31 @@ distortosSetConfiguration(BOOLEAN
 		If disabled, no clock configuration will be done during chip initialization. The values entered below
 		(frequencies, dividers, ...) will only be used to determine chip clocks. The user must configure the chip
 		manually to match these settings."
-		OUTPUT_NAME CONFIG_CHIP_STM32F1_STANDARD_CLOCK_CONFIGURATION_ENABLE)
+		OUTPUT_NAME DISTORTOS_CHIP_STM32F1_STANDARD_CLOCK_CONFIGURATION_ENABLE)
 
 if(distortos_Clocks_00_Standard_configuration_of_clocks)
 
-	if(CONFIG_CHIP_STM32F1_RCC_HSE_FREQUENCY)
+	if(DISTORTOS_CHIP_STM32F1_RCC_HSE_FREQUENCY)
 
-		if(CONFIG_CHIP_STM32F1_RCC_HSE_CLOCK_BYPASS)
-			set(help "Enable HSE external user clock, ${CONFIG_CHIP_STM32F1_RCC_HSE_FREQUENCY} Hz.")
+		if(DISTORTOS_CHIP_STM32F1_RCC_HSE_CLOCK_BYPASS)
+			set(help "Enable HSE external user clock, ${DISTORTOS_CHIP_STM32F1_RCC_HSE_FREQUENCY} Hz.")
 		else()
-			set(help "Enable HSE crystal/ceramic resonator, ${CONFIG_CHIP_STM32F1_RCC_HSE_FREQUENCY} Hz.")
+			set(help "Enable HSE crystal/ceramic resonator, ${DISTORTOS_CHIP_STM32F1_RCC_HSE_FREQUENCY} Hz.")
 		endif()
 
 		distortosSetConfiguration(BOOLEAN
 				distortos_Clocks_01_HSE
 				OFF
 				HELP ${help}
-				OUTPUT_NAME CONFIG_CHIP_STM32F1_RCC_HSE_ENABLE)
+				OUTPUT_NAME DISTORTOS_CHIP_STM32F1_RCC_HSE_ENABLE)
 
-		if(distortos_Clocks_01_HSE AND CONFIG_CHIP MATCHES "STM32F10[57]")
+		if(distortos_Clocks_01_HSE AND DISTORTOS_CHIP MATCHES "STM32F10[57]")
 
 			distortosSetConfiguration(BOOLEAN
 					distortos_Clocks_02_PREDIV2_PLL2_PLL3
 					OFF
 					HELP "Enable PREDIV2, PLL2 and PLL3 configuration."
-					OUTPUT_NAME CONFIG_CHIP_STM32F1_RCC_PREDIV2_PLL2_PLL3_ENABLE)
+					OUTPUT_NAME DISTORTOS_CHIP_STM32F1_RCC_PREDIV2_PLL2_PLL3_ENABLE)
 
 			if(distortos_Clocks_02_PREDIV2_PLL2_PLL3)
 
@@ -57,13 +57,13 @@ if(distortos_Clocks_00_Standard_configuration_of_clocks)
 						(PLL23in) must be in the range [3 MHz; 5 MHz].
 
 						PLL23in = HSE / PREDIV2"
-						OUTPUT_NAME CONFIG_CHIP_STM32F1_RCC_PREDIV2)
+						OUTPUT_NAME DISTORTOS_CHIP_STM32F1_RCC_PREDIV2)
 
 				distortosSetConfiguration(BOOLEAN
 						distortos_Clocks_04_PLL2
 						OFF
 						HELP "Enable PLL2."
-						OUTPUT_NAME CONFIG_CHIP_STM32F1_RCC_PLL2_ENABLE)
+						OUTPUT_NAME DISTORTOS_CHIP_STM32F1_RCC_PLL2_ENABLE)
 
 				if(distortos_Clocks_04_PLL2)
 
@@ -84,7 +84,7 @@ if(distortos_Clocks_00_Standard_configuration_of_clocks)
 							frequency (PLL2out) must be in the range [40 MHz; 74 MHz].
 
 							PLL2out = PLL23in * PLL2MUL"
-							OUTPUT_NAME CONFIG_CHIP_STM32F1_RCC_PLL2MUL
+							OUTPUT_NAME DISTORTOS_CHIP_STM32F1_RCC_PLL2MUL
 							OUTPUT_TYPES INTEGER)
 
 				endif(distortos_Clocks_04_PLL2)
@@ -93,7 +93,7 @@ if(distortos_Clocks_00_Standard_configuration_of_clocks)
 						distortos_Clocks_06_PLL3
 						OFF
 						HELP "Enable PLL3."
-						OUTPUT_NAME CONFIG_CHIP_STM32F1_RCC_PLL3_ENABLE)
+						OUTPUT_NAME DISTORTOS_CHIP_STM32F1_RCC_PLL3_ENABLE)
 
 				if(distortos_Clocks_06_PLL3)
 
@@ -116,22 +116,22 @@ if(distortos_Clocks_00_Standard_configuration_of_clocks)
 
 							PLL3out = PLL23in * PLL3MUL
 							PLL3VCOout = 2 * PLL3out"
-							OUTPUT_NAME CONFIG_CHIP_STM32F1_RCC_PLL3MUL
+							OUTPUT_NAME DISTORTOS_CHIP_STM32F1_RCC_PLL3MUL
 							OUTPUT_TYPES INTEGER)
 
 				endif(distortos_Clocks_06_PLL3)
 
 			endif(distortos_Clocks_02_PREDIV2_PLL2_PLL3)
 
-		endif(distortos_Clocks_01_HSE AND CONFIG_CHIP MATCHES "STM32F10[57]")
+		endif(distortos_Clocks_01_HSE AND DISTORTOS_CHIP MATCHES "STM32F10[57]")
 
-	endif(CONFIG_CHIP_STM32F1_RCC_HSE_FREQUENCY)
+	endif(DISTORTOS_CHIP_STM32F1_RCC_HSE_FREQUENCY)
 
 	distortosSetConfiguration(BOOLEAN
 			distortos_Clocks_08_PLL
 			ON
 			HELP "Enable PLL."
-			OUTPUT_NAME CONFIG_CHIP_STM32F1_RCC_PLL_ENABLE)
+			OUTPUT_NAME DISTORTOS_CHIP_STM32F1_RCC_PLL_ENABLE)
 
 	if(distortos_Clocks_08_PLL)
 
@@ -149,12 +149,12 @@ if(distortos_Clocks_00_Standard_configuration_of_clocks)
 				- [1 MHz; 24 MHz] for STM32F100 chips,
 				- [3 MHz; 12 MHz] for STM32F105 and STM32F107 chips,
 				- [1 MHz; 25 MHz] for other chips."
-				OUTPUT_NAME CONFIG_CHIP_STM32F1_RCC_PLLSRC
+				OUTPUT_NAME DISTORTOS_CHIP_STM32F1_RCC_PLLSRC
 				OUTPUT_TYPES BOOLEAN)
 
 		if(distortos_Clocks_09_Clock_source_of_PLL STREQUAL PREDIV1)
 
-			if(CONFIG_CHIP MATCHES "STM32F10[57]")
+			if(DISTORTOS_CHIP MATCHES "STM32F10[57]")
 
 				if(distortos_Clocks_04_PLL2)
 					set(prediv1ClockSourcePll2 PLL2)
@@ -165,12 +165,12 @@ if(distortos_Clocks_00_Standard_configuration_of_clocks)
 						HSE
 						${prediv1ClockSourcePll2}
 						HELP "Select clock source of PREDIV1."
-						OUTPUT_NAME CONFIG_CHIP_STM32F1_RCC_PREDIV1SRC
+						OUTPUT_NAME DISTORTOS_CHIP_STM32F1_RCC_PREDIV1SRC
 						OUTPUT_TYPES BOOLEAN)
 
-			endif(CONFIG_CHIP MATCHES "STM32F10[57]")
+			endif(DISTORTOS_CHIP MATCHES "STM32F10[57]")
 
-			if(CONFIG_CHIP MATCHES "STM32F10[057]")
+			if(DISTORTOS_CHIP MATCHES "STM32F10[057]")
 				set(max 16)
 			else()
 				set(max 2)
@@ -187,11 +187,11 @@ if(distortos_Clocks_00_Standard_configuration_of_clocks)
 					selector.
 
 					PREDIV1out = PREDIV1in / PREDIV1"
-					OUTPUT_NAME CONFIG_CHIP_STM32F1_RCC_PREDIV1)
+					OUTPUT_NAME DISTORTOS_CHIP_STM32F1_RCC_PREDIV1)
 
 		endif(distortos_Clocks_09_Clock_source_of_PLL STREQUAL PREDIV1)
 
-		if(CONFIG_CHIP MATCHES "STM32F10[57]")
+		if(DISTORTOS_CHIP MATCHES "STM32F10[57]")
 			unset(pllmul2)
 			unset(pllmul3)
 			set(pllmul6_5 6.5)
@@ -214,17 +214,17 @@ if(distortos_Clocks_00_Standard_configuration_of_clocks)
 			set(pllmul15 15)
 			set(pllmul16 16)
 		endif()
-		if(CONFIG_CHIP MATCHES "STM32F100")
+		if(DISTORTOS_CHIP MATCHES "STM32F100")
 			set(default6 DEFAULT)
 			unset(default9)
 			unset(default12)
 			unset(default16)
-		elseif(CONFIG_CHIP MATCHES "STM32F10[157]")
+		elseif(DISTORTOS_CHIP MATCHES "STM32F10[157]")
 			unset(default6)
 			set(default9 DEFAULT)
 			unset(default12)
 			unset(default16)
-		elseif(CONFIG_CHIP MATCHES "STM32F102")
+		elseif(DISTORTOS_CHIP MATCHES "STM32F102")
 			unset(default6)
 			unset(default9)
 			set(default12 DEFAULT)
@@ -278,13 +278,13 @@ if(distortos_Clocks_00_Standard_configuration_of_clocks)
 		endif()
 
 		distortosSetFixedConfiguration(INTEGER
-				CONFIG_CHIP_STM32F1_RCC_PLLMUL_NUMERATOR
+				DISTORTOS_CHIP_STM32F1_RCC_PLLMUL_NUMERATOR
 				${numerator})
 		distortosSetFixedConfiguration(INTEGER
-				CONFIG_CHIP_STM32F1_RCC_PLLMUL_DENOMINATOR
+				DISTORTOS_CHIP_STM32F1_RCC_PLLMUL_DENOMINATOR
 				${denominator})
 		distortosSetFixedConfiguration(BOOLEAN
-				CONFIG_CHIP_STM32F1_RCC_PLLMUL6_5
+				DISTORTOS_CHIP_STM32F1_RCC_PLLMUL6_5
 				${pllmul6_5})
 
 	endif(distortos_Clocks_08_PLL)
@@ -302,15 +302,15 @@ if(distortos_Clocks_00_Standard_configuration_of_clocks)
 			${systemClockSourceHse}
 			${systemClockSourcePll}
 			HELP "Select system clock source."
-			OUTPUT_NAME CONFIG_CHIP_STM32F1_RCC_SYSCLK
+			OUTPUT_NAME DISTORTOS_CHIP_STM32F1_RCC_SYSCLK
 			OUTPUT_TYPES BOOLEAN)
 else(distortos_Clocks_00_Standard_configuration_of_clocks)
 
-	if(CONFIG_CHIP MATCHES "STM32F100")
+	if(DISTORTOS_CHIP MATCHES "STM32F100")
 		set(max 24000000)
-	elseif(CONFIG_CHIP MATCHES "STM32F101")
+	elseif(DISTORTOS_CHIP MATCHES "STM32F101")
 		set(max 36000000)
-	elseif(CONFIG_CHIP MATCHES "STM32F102")
+	elseif(DISTORTOS_CHIP MATCHES "STM32F102")
 		set(max 48000000)
 	else()
 		set(max 72000000)
@@ -324,7 +324,7 @@ else(distortos_Clocks_00_Standard_configuration_of_clocks)
 			HELP "Frequency of SYSCLK, Hz.
 
 			RCC must be configured by user to achieve that frequency."
-			OUTPUT_NAME CONFIG_CHIP_STM32F1_RCC_SYSCLK_FREQUENCY)
+			OUTPUT_NAME DISTORTOS_CHIP_STM32F1_RCC_SYSCLK_FREQUENCY)
 
 endif(distortos_Clocks_00_Standard_configuration_of_clocks)
 
@@ -342,10 +342,10 @@ distortosSetConfiguration(STRING
 		HELP "AHB clock division factor.
 
 		AHBclk = SYSclk / AHBdivider"
-		OUTPUT_NAME CONFIG_CHIP_STM32F1_RCC_HPRE
+		OUTPUT_NAME DISTORTOS_CHIP_STM32F1_RCC_HPRE
 		OUTPUT_TYPES INTEGER)
 
-if(CONFIG_CHIP MATCHES "STM32F10[01]")
+if(DISTORTOS_CHIP MATCHES "STM32F10[01]")
 	unset(default2)
 else()
 	set(default2 DEFAULT)
@@ -363,7 +363,7 @@ distortosSetConfiguration(STRING
 		APB1 clock must not exceed 36 MHz.
 
 		APB1clk = AHBclk / APB1divider"
-		OUTPUT_NAME CONFIG_CHIP_STM32F1_RCC_PPRE1
+		OUTPUT_NAME DISTORTOS_CHIP_STM32F1_RCC_PPRE1
 		OUTPUT_TYPES INTEGER)
 
 distortosSetConfiguration(STRING
@@ -378,10 +378,10 @@ distortosSetConfiguration(STRING
 		APB2 clock must not exceed 72 MHz.
 
 		APB2clk = AHBclk / APB2divider"
-		OUTPUT_NAME CONFIG_CHIP_STM32F1_RCC_PPRE2
+		OUTPUT_NAME DISTORTOS_CHIP_STM32F1_RCC_PPRE2
 		OUTPUT_TYPES INTEGER)
 
-if(NOT CONFIG_CHIP MATCHES "STM32F100")
+if(NOT DISTORTOS_CHIP MATCHES "STM32F100")
 
 	if(distortos_Clocks_14_HPRE STREQUAL 1)
 		unset(dependents)
@@ -394,9 +394,9 @@ if(NOT CONFIG_CHIP MATCHES "STM32F100")
 			ON
 			DEPENDENTS ${dependents}
 			HELP "Enable flash prefetch option in FLASH->ACR register. Has to be enabled when HPRE != 1."
-			OUTPUT_NAME CONFIG_CHIP_STM32F1_FLASH_PREFETCH_ENABLE)
+			OUTPUT_NAME DISTORTOS_CHIP_STM32F1_FLASH_PREFETCH_ENABLE)
 
-endif(NOT CONFIG_CHIP MATCHES "STM32F100")
+endif(NOT DISTORTOS_CHIP MATCHES "STM32F100")
 
 if(distortos_Clocks_14_HPRE STREQUAL 1)
 	unset(offDependents)
@@ -409,7 +409,7 @@ distortosSetConfiguration(BOOLEAN
 		OFF
 		OFF_DEPENDENTS ${offDependents}
 		HELP "Enable flash half cycle access option in FLASH->ACR register. Has to be disabled when HPRE != 1."
-		OUTPUT_NAME CONFIG_CHIP_STM32F1_FLASH_HALF_CYCLE_ACCESS_ENABLE)
+		OUTPUT_NAME DISTORTOS_CHIP_STM32F1_FLASH_HALF_CYCLE_ACCESS_ENABLE)
 
 target_include_directories(distortos PUBLIC
 		${CMAKE_CURRENT_LIST_DIR}/../include

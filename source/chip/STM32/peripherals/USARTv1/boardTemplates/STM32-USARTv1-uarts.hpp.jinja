@@ -3,7 +3,7 @@
  * \file
  * \brief Declarations of low-level UART drivers for USARTv1 in {{ board }} ({{ dictionary['chip']['compatible'][0] }} chip)
  *
- * \author Copyright (C) 2016-2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2016-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -31,12 +31,12 @@ class ChipUartLowLevel;
 +---------------------------------------------------------------------------------------------------------------------*/
 {% for key, uart in dictionary['UARTs'].items() if uart is mapping and 'ST,STM32-USART-v1' in uart['compatible'] %}
 
-#ifdef CONFIG_CHIP_STM32_USARTV1_{{ key | upper }}_ENABLE
+#ifdef DISTORTOS_CHIP_STM32_USARTV1_{{ key | upper }}_ENABLE
 
 /// UART low-level driver for {{ key }}
 extern ChipUartLowLevel {{ key | lower }};
 
-#endif	// def CONFIG_CHIP_STM32_USARTV1_{{ key | upper }}_ENABLE
+#endif	// def DISTORTOS_CHIP_STM32_USARTV1_{{ key | upper }}_ENABLE
 {% endfor %}
 
 }	// namespace chip

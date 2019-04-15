@@ -13,7 +13,7 @@ distortosSetConfiguration(BOOLEAN
 		distortos_Peripherals_SPI1
 		OFF
 		HELP "Enable SPI1 low-level driver."
-		OUTPUT_NAME CONFIG_CHIP_STM32_SPIV2_SPI1_ENABLE)
+		OUTPUT_NAME DISTORTOS_CHIP_STM32_SPIV2_SPI1_ENABLE)
 
 if(distortos_Peripherals_SPI1)
 
@@ -21,7 +21,7 @@ if(distortos_Peripherals_SPI1)
 			distortos_Peripherals_SPI1_00_Use_DMA
 			ON
 			HELP "Select whether SPI1 low-level driver uses DMA (true) or interrupts (false) for transfers."
-			OUTPUT_NAME CONFIG_CHIP_STM32_SPIV2_SPI1_DMA_BASED)
+			OUTPUT_NAME DISTORTOS_CHIP_STM32_SPIV2_SPI1_DMA_BASED)
 
 	if(distortos_Peripherals_SPI1_00_Use_DMA)
 
@@ -36,13 +36,13 @@ if(distortos_Peripherals_SPI1)
 				dummy
 				"${distortos_Peripherals_SPI1_01_RX_DMA}")
 		distortosSetFixedConfiguration(INTEGER
-				CONFIG_CHIP_STM32_SPIV2_SPI1_RX_DMA
+				DISTORTOS_CHIP_STM32_SPIV2_SPI1_RX_DMA
 				"${CMAKE_MATCH_1}")
 		distortosSetFixedConfiguration(INTEGER
-				CONFIG_CHIP_STM32_SPIV2_SPI1_RX_DMA_CHANNEL
+				DISTORTOS_CHIP_STM32_SPIV2_SPI1_RX_DMA_CHANNEL
 				"${CMAKE_MATCH_2}")
 		distortosSetFixedConfiguration(INTEGER
-				CONFIG_CHIP_STM32_SPIV2_SPI1_RX_DMA_REQUEST
+				DISTORTOS_CHIP_STM32_SPIV2_SPI1_RX_DMA_REQUEST
 				"${CMAKE_MATCH_3}")
 		list(APPEND STM32_DMA_V1_DMA${CMAKE_MATCH_1}_DEPENDENTS "SPI1 RX")
 		list(APPEND STM32_DMA_V1_DMA${CMAKE_MATCH_1}_CHANNEL${CMAKE_MATCH_2}_DEPENDENTS "SPI1 RX")
@@ -58,13 +58,13 @@ if(distortos_Peripherals_SPI1)
 				dummy
 				"${distortos_Peripherals_SPI1_02_TX_DMA}")
 		distortosSetFixedConfiguration(INTEGER
-				CONFIG_CHIP_STM32_SPIV2_SPI1_TX_DMA
+				DISTORTOS_CHIP_STM32_SPIV2_SPI1_TX_DMA
 				"${CMAKE_MATCH_1}")
 		distortosSetFixedConfiguration(INTEGER
-				CONFIG_CHIP_STM32_SPIV2_SPI1_TX_DMA_CHANNEL
+				DISTORTOS_CHIP_STM32_SPIV2_SPI1_TX_DMA_CHANNEL
 				"${CMAKE_MATCH_2}")
 		distortosSetFixedConfiguration(INTEGER
-				CONFIG_CHIP_STM32_SPIV2_SPI1_TX_DMA_REQUEST
+				DISTORTOS_CHIP_STM32_SPIV2_SPI1_TX_DMA_REQUEST
 				"${CMAKE_MATCH_3}")
 		list(APPEND STM32_DMA_V1_DMA${CMAKE_MATCH_1}_DEPENDENTS "SPI1 TX")
 		list(APPEND STM32_DMA_V1_DMA${CMAKE_MATCH_1}_CHANNEL${CMAKE_MATCH_2}_DEPENDENTS "SPI1 TX")
@@ -81,7 +81,7 @@ distortosSetConfiguration(BOOLEAN
 		distortos_Peripherals_SPI2
 		OFF
 		HELP "Enable SPI2 low-level driver."
-		OUTPUT_NAME CONFIG_CHIP_STM32_SPIV2_SPI2_ENABLE)
+		OUTPUT_NAME DISTORTOS_CHIP_STM32_SPIV2_SPI2_ENABLE)
 
 if(distortos_Peripherals_SPI2)
 
@@ -89,7 +89,7 @@ if(distortos_Peripherals_SPI2)
 			distortos_Peripherals_SPI2_00_Use_DMA
 			ON
 			HELP "Select whether SPI2 low-level driver uses DMA (true) or interrupts (false) for transfers."
-			OUTPUT_NAME CONFIG_CHIP_STM32_SPIV2_SPI2_DMA_BASED)
+			OUTPUT_NAME DISTORTOS_CHIP_STM32_SPIV2_SPI2_DMA_BASED)
 
 	if(distortos_Peripherals_SPI2_00_Use_DMA)
 
@@ -104,13 +104,13 @@ if(distortos_Peripherals_SPI2)
 				dummy
 				"${distortos_Peripherals_SPI2_01_RX_DMA}")
 		distortosSetFixedConfiguration(INTEGER
-				CONFIG_CHIP_STM32_SPIV2_SPI2_RX_DMA
+				DISTORTOS_CHIP_STM32_SPIV2_SPI2_RX_DMA
 				"${CMAKE_MATCH_1}")
 		distortosSetFixedConfiguration(INTEGER
-				CONFIG_CHIP_STM32_SPIV2_SPI2_RX_DMA_CHANNEL
+				DISTORTOS_CHIP_STM32_SPIV2_SPI2_RX_DMA_CHANNEL
 				"${CMAKE_MATCH_2}")
 		distortosSetFixedConfiguration(INTEGER
-				CONFIG_CHIP_STM32_SPIV2_SPI2_RX_DMA_REQUEST
+				DISTORTOS_CHIP_STM32_SPIV2_SPI2_RX_DMA_REQUEST
 				"${CMAKE_MATCH_3}")
 		list(APPEND STM32_DMA_V1_DMA${CMAKE_MATCH_1}_DEPENDENTS "SPI2 RX")
 		list(APPEND STM32_DMA_V1_DMA${CMAKE_MATCH_1}_CHANNEL${CMAKE_MATCH_2}_DEPENDENTS "SPI2 RX")
@@ -126,13 +126,13 @@ if(distortos_Peripherals_SPI2)
 				dummy
 				"${distortos_Peripherals_SPI2_02_TX_DMA}")
 		distortosSetFixedConfiguration(INTEGER
-				CONFIG_CHIP_STM32_SPIV2_SPI2_TX_DMA
+				DISTORTOS_CHIP_STM32_SPIV2_SPI2_TX_DMA
 				"${CMAKE_MATCH_1}")
 		distortosSetFixedConfiguration(INTEGER
-				CONFIG_CHIP_STM32_SPIV2_SPI2_TX_DMA_CHANNEL
+				DISTORTOS_CHIP_STM32_SPIV2_SPI2_TX_DMA_CHANNEL
 				"${CMAKE_MATCH_2}")
 		distortosSetFixedConfiguration(INTEGER
-				CONFIG_CHIP_STM32_SPIV2_SPI2_TX_DMA_REQUEST
+				DISTORTOS_CHIP_STM32_SPIV2_SPI2_TX_DMA_REQUEST
 				"${CMAKE_MATCH_3}")
 		list(APPEND STM32_DMA_V1_DMA${CMAKE_MATCH_1}_DEPENDENTS "SPI2 TX")
 		list(APPEND STM32_DMA_V1_DMA${CMAKE_MATCH_1}_CHANNEL${CMAKE_MATCH_2}_DEPENDENTS "SPI2 TX")

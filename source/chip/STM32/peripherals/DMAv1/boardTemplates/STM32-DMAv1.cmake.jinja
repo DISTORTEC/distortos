@@ -15,7 +15,7 @@ distortosSetConfiguration(BOOLEAN
 		OFF
 		DEPENDENTS ${STM32_DMA_V1_{{ key | upper }}_DEPENDENTS}
 		HELP "Enable {{ key | upper }} low-level driver."
-		OUTPUT_NAME CONFIG_CHIP_STM32_DMAV1_{{ key | upper }}_ENABLE)
+		OUTPUT_NAME DISTORTOS_CHIP_STM32_DMAV1_{{ key | upper }}_ENABLE)
 
 if(distortos_Peripherals_{{ key }})
 {% for vector in dma['interrupts']['vectors'] %}
@@ -25,7 +25,7 @@ if(distortos_Peripherals_{{ key }})
 			OFF
 			DEPENDENTS ${STM32_DMA_V1_{{ key | upper }}_CHANNEL{{ loop.index }}_DEPENDENTS}
 			HELP "Enable {{ key | upper }} channel {{ loop.index }} low-level driver."
-			OUTPUT_NAME CONFIG_CHIP_STM32_DMAV1_{{ key | upper }}_CHANNEL{{ loop.index }}_ENABLE)
+			OUTPUT_NAME DISTORTOS_CHIP_STM32_DMAV1_{{ key | upper }}_CHANNEL{{ loop.index }}_ENABLE)
 
 	list(LENGTH STM32_DMA_V1_{{ key | upper }}_CHANNEL{{ loop.index }}_DEPENDENTS length)
 	if(length GREATER 1)

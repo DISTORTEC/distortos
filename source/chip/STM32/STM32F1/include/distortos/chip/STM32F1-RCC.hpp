@@ -2,7 +2,7 @@
  * \file
  * \brief Header for RCC-related functions for STM32F1
  *
- * \author Copyright (C) 2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2016-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -42,20 +42,20 @@ enum class SystemClockSource : uint8_t
 +---------------------------------------------------------------------------------------------------------------------*/
 
 /// minimum allowed value for PLLMUL
-#if defined(CONFIG_CHIP_STM32F105) || defined(CONFIG_CHIP_STM32F107)
+#if defined(DISTORTOS_CHIP_STM32F105) || defined(DISTORTOS_CHIP_STM32F107)
 constexpr uint8_t minPllmul {4};
-#else	// !defined(CONFIG_CHIP_STM32F105) && !defined(CONFIG_CHIP_STM32F107)
+#else	// !defined(DISTORTOS_CHIP_STM32F105) && !defined(DISTORTOS_CHIP_STM32F107)
 constexpr uint8_t minPllmul {2};
-#endif	// !defined(CONFIG_CHIP_STM32F105) && !defined(CONFIG_CHIP_STM32F107)
+#endif	// !defined(DISTORTOS_CHIP_STM32F105) && !defined(DISTORTOS_CHIP_STM32F107)
 
 /// maximum allowed value for PLLMUL
-#if defined(CONFIG_CHIP_STM32F105) || defined(CONFIG_CHIP_STM32F107)
+#if defined(DISTORTOS_CHIP_STM32F105) || defined(DISTORTOS_CHIP_STM32F107)
 constexpr uint8_t maxPllmul {9};
-#else	// !defined(CONFIG_CHIP_STM32F105) && !defined(CONFIG_CHIP_STM32F107)
+#else	// !defined(DISTORTOS_CHIP_STM32F105) && !defined(DISTORTOS_CHIP_STM32F107)
 constexpr uint8_t maxPllmul {16};
-#endif	// !defined(CONFIG_CHIP_STM32F105) && !defined(CONFIG_CHIP_STM32F107)
+#endif	// !defined(DISTORTOS_CHIP_STM32F105) && !defined(DISTORTOS_CHIP_STM32F107)
 
-#if defined(CONFIG_CHIP_STM32F105) || defined(CONFIG_CHIP_STM32F107)
+#if defined(DISTORTOS_CHIP_STM32F105) || defined(DISTORTOS_CHIP_STM32F107)
 
 /// additional allowed value for PLLMUL - 6.5 (note: numeric value is not equal to logical value!)
 constexpr uint16_t pllmul6_5 {15};
@@ -72,17 +72,19 @@ constexpr uint16_t pll23Mul16 {16};
 /// second additional allowed value for PLL2MUL and PLL3MUL - 20
 constexpr uint16_t pll23Mul20 {20};
 
-#endif	// defined(CONFIG_CHIP_STM32F105) || defined(CONFIG_CHIP_STM32F107)
+#endif	// defined(DISTORTOS_CHIP_STM32F105) || defined(DISTORTOS_CHIP_STM32F107)
 
 /// minimum allowed value for PREDIV1 and PREDIV2
 constexpr uint8_t minPrediv {1};
 
 /// maximum allowed value for PREDIV1 and PREDIV2
-#if defined(CONFIG_CHIP_STM32F100) || defined(CONFIG_CHIP_STM32F105) || defined(CONFIG_CHIP_STM32F107)
+#if defined(DISTORTOS_CHIP_STM32F100) || defined(DISTORTOS_CHIP_STM32F105) || defined(DISTORTOS_CHIP_STM32F107)
 constexpr uint8_t maxPrediv {16};
-#else	// !defined(CONFIG_CHIP_STM32F100) && !defined(CONFIG_CHIP_STM32F105) && !defined(CONFIG_CHIP_STM32F107)
+#else	// !defined(DISTORTOS_CHIP_STM32F100) && !defined(DISTORTOS_CHIP_STM32F105) &&
+		// !defined(DISTORTOS_CHIP_STM32F107)
 constexpr uint8_t maxPrediv {2};
-#endif	// !defined(CONFIG_CHIP_STM32F100) && !defined(CONFIG_CHIP_STM32F105) && !defined(CONFIG_CHIP_STM32F107)
+#endif	// !defined(DISTORTOS_CHIP_STM32F100) && !defined(DISTORTOS_CHIP_STM32F105) &&
+		// !defined(DISTORTOS_CHIP_STM32F107)
 
 /// first allowed value for AHB divider - 1
 constexpr uint16_t hpreDiv1 {1};
@@ -168,7 +170,7 @@ int configureApbClockDivider(bool ppre2, uint8_t ppre);
 
 int configurePrediv1(uint8_t prediv1);
 
-#if defined(CONFIG_CHIP_STM32F105) || defined(CONFIG_CHIP_STM32F107)
+#if defined(DISTORTOS_CHIP_STM32F105) || defined(DISTORTOS_CHIP_STM32F107)
 
 /**
  * \brief Configures PREDIV1 clock source.
@@ -195,7 +197,7 @@ void configurePrediv1ClockSource(bool pll2);
 
 int configurePrediv2(uint8_t prediv2);
 
-#endif	// defined(CONFIG_CHIP_STM32F105) || defined(CONFIG_CHIP_STM32F107)
+#endif	// defined(DISTORTOS_CHIP_STM32F105) || defined(DISTORTOS_CHIP_STM32F107)
 
 /**
  * \brief Disables HSE clock.
@@ -215,7 +217,7 @@ void disableHse();
 
 void disablePll();
 
-#if defined(CONFIG_CHIP_STM32F105) || defined(CONFIG_CHIP_STM32F107)
+#if defined(DISTORTOS_CHIP_STM32F105) || defined(DISTORTOS_CHIP_STM32F107)
 
 /**
  * \brief Disables PLL2.
@@ -234,7 +236,7 @@ void disablePll2();
 
 void disablePll3();
 
-#endif	// defined(CONFIG_CHIP_STM32F105) || defined(CONFIG_CHIP_STM32F107)
+#endif	// defined(DISTORTOS_CHIP_STM32F105) || defined(DISTORTOS_CHIP_STM32F107)
 
 /**
  * \brief Enables HSE clock.
@@ -268,7 +270,7 @@ void enableHse(bool bypass);
 
 int enablePll(bool prediv1, uint8_t pllmul);
 
-#if defined(CONFIG_CHIP_STM32F105) || defined(CONFIG_CHIP_STM32F107)
+#if defined(DISTORTOS_CHIP_STM32F105) || defined(DISTORTOS_CHIP_STM32F107)
 
 /**
  * \brief Enables PLL2.
@@ -301,7 +303,7 @@ int enablePll2(uint8_t pll2Mul);
 
 int enablePll3(uint8_t pll3Mul);
 
-#endif	// defined(CONFIG_CHIP_STM32F105) || defined(CONFIG_CHIP_STM32F107)
+#endif	// defined(DISTORTOS_CHIP_STM32F105) || defined(DISTORTOS_CHIP_STM32F107)
 
 /**
  * \brief Switches system clock.

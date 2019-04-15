@@ -2,7 +2,7 @@
  * \file
  * \brief Implementation of PWR-related functions for STM32F4
  *
- * \author Copyright (C) 2015-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2015-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -35,8 +35,8 @@ int configureVoltageScaling(const uint8_t voltageScale)
 	return 0;
 }
 
-#if defined(CONFIG_CHIP_STM32F427) || defined(CONFIG_CHIP_STM32F429) || defined(CONFIG_CHIP_STM32F43) || \
-		defined(CONFIG_CHIP_STM32F446) || defined(CONFIG_CHIP_STM32F469) || defined(CONFIG_CHIP_STM32F479)
+#if defined(DISTORTOS_CHIP_STM32F427) || defined(DISTORTOS_CHIP_STM32F429) || defined(DISTORTOS_CHIP_STM32F43) || \
+		defined(DISTORTOS_CHIP_STM32F446) || defined(DISTORTOS_CHIP_STM32F469) || defined(DISTORTOS_CHIP_STM32F479)
 
 void disableOverDriveMode()
 {
@@ -52,8 +52,8 @@ void enableOverDriveMode()
 	while (STM32_BITBAND(PWR, CSR, ODSWRDY) == 0);
 }
 
-#endif	// defined(CONFIG_CHIP_STM32F427) || defined(CONFIG_CHIP_STM32F429) || defined(CONFIG_CHIP_STM32F43) ||
-		// defined(CONFIG_CHIP_STM32F446) || defined(CONFIG_CHIP_STM32F469) || defined(CONFIG_CHIP_STM32F479)
+#endif	// defined(DISTORTOS_CHIP_STM32F427) || defined(DISTORTOS_CHIP_STM32F429) || defined(DISTORTOS_CHIP_STM32F43) ||
+		// defined(DISTORTOS_CHIP_STM32F446) || defined(DISTORTOS_CHIP_STM32F469) || defined(DISTORTOS_CHIP_STM32F479)
 
 }	// namespace chip
 

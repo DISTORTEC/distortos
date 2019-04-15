@@ -2,7 +2,7 @@
  * \file
  * \brief Header for RCC-related functions for STM32L4
  *
- * \author Copyright (C) 2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2017-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -85,8 +85,8 @@ constexpr uint16_t minPlln {8};
 /// maximum allowed value for PLLN
 constexpr uint16_t maxPlln {86};
 
-#if defined(CONFIG_CHIP_STM32L43) || defined(CONFIG_CHIP_STM32L44) || defined(CONFIG_CHIP_STM32L45) || \
-		defined(CONFIG_CHIP_STM32L46) || defined(CONFIG_CHIP_STM32L496) || defined(CONFIG_CHIP_STM32L4A6)
+#if defined(DISTORTOS_CHIP_STM32L43) || defined(DISTORTOS_CHIP_STM32L44) || defined(DISTORTOS_CHIP_STM32L45) || \
+		defined(DISTORTOS_CHIP_STM32L46) || defined(DISTORTOS_CHIP_STM32L496) || defined(DISTORTOS_CHIP_STM32L4A6)
 
 /// minimum allowed value for PLLP
 constexpr uint16_t minPllp {2};
@@ -94,8 +94,9 @@ constexpr uint16_t minPllp {2};
 /// maximum allowed value for PLLP
 constexpr uint16_t maxPllp {31};
 
-#else	// !defined(CONFIG_CHIP_STM32L43) && !defined(CONFIG_CHIP_STM32L44) && !defined(CONFIG_CHIP_STM32L45) &&
-		// !defined(CONFIG_CHIP_STM32L46) && !defined(CONFIG_CHIP_STM32L496) && !defined(CONFIG_CHIP_STM32L4A6)
+#else	// !defined(DISTORTOS_CHIP_STM32L43) && !defined(DISTORTOS_CHIP_STM32L44) &&
+		// !defined(DISTORTOS_CHIP_STM32L45) && !defined(DISTORTOS_CHIP_STM32L46) &&
+		// !defined(DISTORTOS_CHIP_STM32L496) && !defined(DISTORTOS_CHIP_STM32L4A6)
 
 /// first allowed value for PLLP - 7
 constexpr uint8_t pllpDiv7 {7};
@@ -103,8 +104,9 @@ constexpr uint8_t pllpDiv7 {7};
 /// second allowed value for PLLP - 17
 constexpr uint8_t pllpDiv17 {17};
 
-#endif	// !defined(CONFIG_CHIP_STM32L43) && !defined(CONFIG_CHIP_STM32L44) && !defined(CONFIG_CHIP_STM32L45) &&
-		// !defined(CONFIG_CHIP_STM32L46) && !defined(CONFIG_CHIP_STM32L496) && !defined(CONFIG_CHIP_STM32L4A6)
+#endif	// !defined(DISTORTOS_CHIP_STM32L43) && !defined(DISTORTOS_CHIP_STM32L44) &&
+		// !defined(DISTORTOS_CHIP_STM32L45) && !defined(DISTORTOS_CHIP_STM32L46) &&
+		// !defined(DISTORTOS_CHIP_STM32L496) && !defined(DISTORTOS_CHIP_STM32L4A6)
 
 /// first allowed value for PLLQ - 2
 constexpr uint8_t pllqDiv2 {2};
@@ -300,8 +302,8 @@ void enableHsi16();
 
 int enableMsi(const uint8_t range);
 
-#if defined(CONFIG_CHIP_STM32L43) || defined(CONFIG_CHIP_STM32L44) || defined(CONFIG_CHIP_STM32L45) || \
-		defined(CONFIG_CHIP_STM32L46) || defined(CONFIG_CHIP_STM32L496) || defined(CONFIG_CHIP_STM32L4A6)
+#if defined(DISTORTOS_CHIP_STM32L43) || defined(DISTORTOS_CHIP_STM32L44) || defined(DISTORTOS_CHIP_STM32L45) || \
+		defined(DISTORTOS_CHIP_STM32L46) || defined(DISTORTOS_CHIP_STM32L496) || defined(DISTORTOS_CHIP_STM32L4A6)
 
 /**
  * \brief Enables main PLL.
@@ -320,8 +322,9 @@ int enableMsi(const uint8_t range);
  * - EINVAL - \a plln or \a pllp or \a pllq or \a pllr value is invalid;
  */
 
-#else	// !defined(CONFIG_CHIP_STM32L43) && !defined(CONFIG_CHIP_STM32L44) && !defined(CONFIG_CHIP_STM32L45) &&
-		// !defined(CONFIG_CHIP_STM32L46) && !defined(CONFIG_CHIP_STM32L496) && !defined(CONFIG_CHIP_STM32L4A6)
+#else	// !defined(DISTORTOS_CHIP_STM32L43) && !defined(DISTORTOS_CHIP_STM32L44) &&
+		// !defined(DISTORTOS_CHIP_STM32L45) && !defined(DISTORTOS_CHIP_STM32L46) &&
+		// !defined(DISTORTOS_CHIP_STM32L496) && !defined(DISTORTOS_CHIP_STM32L4A6)
 
 /**
  * \brief Enables main PLL.
@@ -340,8 +343,9 @@ int enableMsi(const uint8_t range);
  * - EINVAL - \a plln or \a pllp or \a pllq or \a pllr value is invalid;
  */
 
-#endif	// !defined(CONFIG_CHIP_STM32L43) && !defined(CONFIG_CHIP_STM32L44) && !defined(CONFIG_CHIP_STM32L45) &&
-		// !defined(CONFIG_CHIP_STM32L46) && !defined(CONFIG_CHIP_STM32L496) && !defined(CONFIG_CHIP_STM32L4A6)
+#endif	// !defined(DISTORTOS_CHIP_STM32L43) && !defined(DISTORTOS_CHIP_STM32L44) &&
+		// !defined(DISTORTOS_CHIP_STM32L45) && !defined(DISTORTOS_CHIP_STM32L46) &&
+		// !defined(DISTORTOS_CHIP_STM32L496) && !defined(DISTORTOS_CHIP_STM32L4A6)
 
 int enablePll(uint16_t plln, uint8_t pllp, uint8_t pllq, uint8_t pllr);
 

@@ -2,7 +2,7 @@
  * \file
  * \brief Declarations of low-level DMA channel drivers for DMAv1 in ST,NUCLEO-F091RC (ST,STM32F091RC chip)
  *
- * \author Copyright (C) 2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2018-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -29,89 +29,89 @@ class DmaChannel;
 | global objects
 +---------------------------------------------------------------------------------------------------------------------*/
 
-#ifdef CONFIG_CHIP_STM32_DMAV1_DMA1_CHANNEL1_ENABLE
+#ifdef DISTORTOS_CHIP_STM32_DMAV1_DMA1_CHANNEL1_ENABLE
 
 /// DMA1 channel 1 low-level driver
 extern DmaChannel dma1Channel1;
 
-#endif	// def CONFIG_CHIP_STM32_DMAV1_DMA1_CHANNEL1_ENABLE
+#endif	// def DISTORTOS_CHIP_STM32_DMAV1_DMA1_CHANNEL1_ENABLE
 
-#ifdef CONFIG_CHIP_STM32_DMAV1_DMA1_CHANNEL2_ENABLE
+#ifdef DISTORTOS_CHIP_STM32_DMAV1_DMA1_CHANNEL2_ENABLE
 
 /// DMA1 channel 2 low-level driver
 extern DmaChannel dma1Channel2;
 
-#endif	// def CONFIG_CHIP_STM32_DMAV1_DMA1_CHANNEL2_ENABLE
+#endif	// def DISTORTOS_CHIP_STM32_DMAV1_DMA1_CHANNEL2_ENABLE
 
-#ifdef CONFIG_CHIP_STM32_DMAV1_DMA1_CHANNEL3_ENABLE
+#ifdef DISTORTOS_CHIP_STM32_DMAV1_DMA1_CHANNEL3_ENABLE
 
 /// DMA1 channel 3 low-level driver
 extern DmaChannel dma1Channel3;
 
-#endif	// def CONFIG_CHIP_STM32_DMAV1_DMA1_CHANNEL3_ENABLE
+#endif	// def DISTORTOS_CHIP_STM32_DMAV1_DMA1_CHANNEL3_ENABLE
 
-#ifdef CONFIG_CHIP_STM32_DMAV1_DMA1_CHANNEL4_ENABLE
+#ifdef DISTORTOS_CHIP_STM32_DMAV1_DMA1_CHANNEL4_ENABLE
 
 /// DMA1 channel 4 low-level driver
 extern DmaChannel dma1Channel4;
 
-#endif	// def CONFIG_CHIP_STM32_DMAV1_DMA1_CHANNEL4_ENABLE
+#endif	// def DISTORTOS_CHIP_STM32_DMAV1_DMA1_CHANNEL4_ENABLE
 
-#ifdef CONFIG_CHIP_STM32_DMAV1_DMA1_CHANNEL5_ENABLE
+#ifdef DISTORTOS_CHIP_STM32_DMAV1_DMA1_CHANNEL5_ENABLE
 
 /// DMA1 channel 5 low-level driver
 extern DmaChannel dma1Channel5;
 
-#endif	// def CONFIG_CHIP_STM32_DMAV1_DMA1_CHANNEL5_ENABLE
+#endif	// def DISTORTOS_CHIP_STM32_DMAV1_DMA1_CHANNEL5_ENABLE
 
-#ifdef CONFIG_CHIP_STM32_DMAV1_DMA1_CHANNEL6_ENABLE
+#ifdef DISTORTOS_CHIP_STM32_DMAV1_DMA1_CHANNEL6_ENABLE
 
 /// DMA1 channel 6 low-level driver
 extern DmaChannel dma1Channel6;
 
-#endif	// def CONFIG_CHIP_STM32_DMAV1_DMA1_CHANNEL6_ENABLE
+#endif	// def DISTORTOS_CHIP_STM32_DMAV1_DMA1_CHANNEL6_ENABLE
 
-#ifdef CONFIG_CHIP_STM32_DMAV1_DMA1_CHANNEL7_ENABLE
+#ifdef DISTORTOS_CHIP_STM32_DMAV1_DMA1_CHANNEL7_ENABLE
 
 /// DMA1 channel 7 low-level driver
 extern DmaChannel dma1Channel7;
 
-#endif	// def CONFIG_CHIP_STM32_DMAV1_DMA1_CHANNEL7_ENABLE
+#endif	// def DISTORTOS_CHIP_STM32_DMAV1_DMA1_CHANNEL7_ENABLE
 
-#ifdef CONFIG_CHIP_STM32_DMAV1_DMA2_CHANNEL1_ENABLE
+#ifdef DISTORTOS_CHIP_STM32_DMAV1_DMA2_CHANNEL1_ENABLE
 
 /// DMA2 channel 1 low-level driver
 extern DmaChannel dma2Channel1;
 
-#endif	// def CONFIG_CHIP_STM32_DMAV1_DMA2_CHANNEL1_ENABLE
+#endif	// def DISTORTOS_CHIP_STM32_DMAV1_DMA2_CHANNEL1_ENABLE
 
-#ifdef CONFIG_CHIP_STM32_DMAV1_DMA2_CHANNEL2_ENABLE
+#ifdef DISTORTOS_CHIP_STM32_DMAV1_DMA2_CHANNEL2_ENABLE
 
 /// DMA2 channel 2 low-level driver
 extern DmaChannel dma2Channel2;
 
-#endif	// def CONFIG_CHIP_STM32_DMAV1_DMA2_CHANNEL2_ENABLE
+#endif	// def DISTORTOS_CHIP_STM32_DMAV1_DMA2_CHANNEL2_ENABLE
 
-#ifdef CONFIG_CHIP_STM32_DMAV1_DMA2_CHANNEL3_ENABLE
+#ifdef DISTORTOS_CHIP_STM32_DMAV1_DMA2_CHANNEL3_ENABLE
 
 /// DMA2 channel 3 low-level driver
 extern DmaChannel dma2Channel3;
 
-#endif	// def CONFIG_CHIP_STM32_DMAV1_DMA2_CHANNEL3_ENABLE
+#endif	// def DISTORTOS_CHIP_STM32_DMAV1_DMA2_CHANNEL3_ENABLE
 
-#ifdef CONFIG_CHIP_STM32_DMAV1_DMA2_CHANNEL4_ENABLE
+#ifdef DISTORTOS_CHIP_STM32_DMAV1_DMA2_CHANNEL4_ENABLE
 
 /// DMA2 channel 4 low-level driver
 extern DmaChannel dma2Channel4;
 
-#endif	// def CONFIG_CHIP_STM32_DMAV1_DMA2_CHANNEL4_ENABLE
+#endif	// def DISTORTOS_CHIP_STM32_DMAV1_DMA2_CHANNEL4_ENABLE
 
-#ifdef CONFIG_CHIP_STM32_DMAV1_DMA2_CHANNEL5_ENABLE
+#ifdef DISTORTOS_CHIP_STM32_DMAV1_DMA2_CHANNEL5_ENABLE
 
 /// DMA2 channel 5 low-level driver
 extern DmaChannel dma2Channel5;
 
-#endif	// def CONFIG_CHIP_STM32_DMAV1_DMA2_CHANNEL5_ENABLE
+#endif	// def DISTORTOS_CHIP_STM32_DMAV1_DMA2_CHANNEL5_ENABLE
 
 }	// namespace chip
 

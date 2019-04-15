@@ -31,12 +31,12 @@ class SdMmcCardLowLevel;
 +---------------------------------------------------------------------------------------------------------------------*/
 {% for key, sdmmc in dictionary['SDMMCs'].items() if sdmmc is mapping and 'ST,STM32-SDMMC-v1' in sdmmc['compatible'] %}
 
-#ifdef CONFIG_CHIP_STM32_SDMMCV1_{{ key | upper }}_ENABLE
+#ifdef DISTORTOS_CHIP_STM32_SDMMCV1_{{ key | upper }}_ENABLE
 
 /// SD/MMC card low-level driver for {{ key }}
 extern SdMmcCardLowLevel {{ key | lower }};
 
-#endif	// def CONFIG_CHIP_STM32_SDMMCV1_{{ key | upper }}_ENABLE
+#endif	// def DISTORTOS_CHIP_STM32_SDMMCV1_{{ key | upper }}_ENABLE
 {% endfor %}
 
 }	// namespace chip

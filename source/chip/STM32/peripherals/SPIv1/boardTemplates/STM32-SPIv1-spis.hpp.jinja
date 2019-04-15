@@ -32,16 +32,16 @@ class SpiMasterLowLevelInterruptBased;
 +---------------------------------------------------------------------------------------------------------------------*/
 {% for key, spi in dictionary['SPIs'].items() if spi is mapping and 'ST,STM32-SPI-v1' in spi['compatible'] %}
 
-#ifdef CONFIG_CHIP_STM32_SPIV1_{{ key | upper }}_ENABLE
+#ifdef DISTORTOS_CHIP_STM32_SPIV1_{{ key | upper }}_ENABLE
 
 /// SPI master low-level driver for {{ key }}
-#ifdef CONFIG_CHIP_STM32_SPIV1_{{ key | upper }}_DMA_BASED
+#ifdef DISTORTOS_CHIP_STM32_SPIV1_{{ key | upper }}_DMA_BASED
 extern SpiMasterLowLevelDmaBased {{ key | lower }};
-#else	// !def CONFIG_CHIP_STM32_SPIV1_{{ key | upper }}_DMA_BASED
+#else	// !def DISTORTOS_CHIP_STM32_SPIV1_{{ key | upper }}_DMA_BASED
 extern SpiMasterLowLevelInterruptBased {{ key | lower }};
-#endif	// !def CONFIG_CHIP_STM32_SPIV1_{{ key | upper }}_DMA_BASED
+#endif	// !def DISTORTOS_CHIP_STM32_SPIV1_{{ key | upper }}_DMA_BASED
 
-#endif	// def CONFIG_CHIP_STM32_SPIV1_{{ key | upper }}_ENABLE
+#endif	// def DISTORTOS_CHIP_STM32_SPIV1_{{ key | upper }}_ENABLE
 {% endfor %}
 
 }	// namespace chip

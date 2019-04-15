@@ -2,7 +2,7 @@
  * \file
  * \brief Implementation of RCC-related functions for STM32F1
  *
- * \author Copyright (C) 2016-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2016-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -46,20 +46,20 @@ int configurePrediv(const bool prediv2, const uint8_t prediv)
 	if (prediv < minPrediv || prediv > maxPrediv)
 		return EINVAL;
 
-#if defined(CONFIG_CHIP_STM32F100)
+#if defined(DISTORTOS_CHIP_STM32F100)
 	static_cast<void>(prediv2);	// suppress warning
 	RCC->CFGR2 = (RCC->CFGR2 & ~RCC_CFGR2_PREDIV1) | (prediv - 1) << RCC_CFGR2_PREDIV1_Pos;
-#elif defined(CONFIG_CHIP_STM32F105) || defined(CONFIG_CHIP_STM32F107)
+#elif defined(DISTORTOS_CHIP_STM32F105) || defined(DISTORTOS_CHIP_STM32F107)
 	RCC->CFGR2 = (RCC->CFGR2 & ~(prediv2 == true ? RCC_CFGR2_PREDIV2 : RCC_CFGR2_PREDIV1)) |
 			(prediv - 1) << (prediv2 == true ? RCC_CFGR2_PREDIV2_Pos : RCC_CFGR2_PREDIV1_Pos);
-#else	// !defined(CONFIG_CHIP_STM32F100) && !defined(CONFIG_CHIP_STM32F105) && !defined(CONFIG_CHIP_STM32F107)
+#else	// !defined(DISTORTOS_CHIP_STM32F100) && !defined(DISTORTOS_CHIP_STM32F105) && !defined(DISTORTOS_CHIP_STM32F107)
 	static_cast<void>(prediv2);	// suppress warning
 	STM32_BITBAND(RCC, CFGR, PLLXTPRE) = prediv == 2;
-#endif	// !defined(CONFIG_CHIP_STM32F100) && !defined(CONFIG_CHIP_STM32F105) && !defined(CONFIG_CHIP_STM32F107)
+#endif	// !defined(DISTORTOS_CHIP_STM32F100) && !defined(DISTORTOS_CHIP_STM32F105) && !defined(DISTORTOS_CHIP_STM32F107)
 	return 0;
 }
 
-#if defined(CONFIG_CHIP_STM32F105) || defined(CONFIG_CHIP_STM32F107)
+#if defined(DISTORTOS_CHIP_STM32F105) || defined(DISTORTOS_CHIP_STM32F107)
 
 /**
  * \brief Enables PLL2 or PLL3.
@@ -86,11 +86,12 @@ int enablePll23(const bool pll3, const uint8_t pll23Mul)
 	RCC->CFGR2 = (RCC->CFGR2 & ~(pll3 == true ? RCC_CFGR2_PLL3MUL : RCC_CFGR2_PLL2MUL)) |
 			convertedPll23Mul << (pll3 == true ? RCC_CFGR2_PLL3MUL_Pos : RCC_CFGR2_PLL2MUL_Pos);
 	(pll3 == true ? STM32_BITBAND(RCC, CR, PLL3ON) : STM32_BITBAND(RCC, CR, PLL2ON)) = 1;
-	while ((pll3 == true ? STM32_BITBAND(RCC, CR, PLL3RDY) : STM32_BITBAND(RCC, CR, PLL2RDY)) == 0);	// wait until PLL is stable
+	// wait until PLL is stable
+	while ((pll3 == true ? STM32_BITBAND(RCC, CR, PLL3RDY) : STM32_BITBAND(RCC, CR, PLL2RDY)) == 0);
 	return 0;
 }
 
-#endif	// defined(CONFIG_CHIP_STM32F105) || defined(CONFIG_CHIP_STM32F107)
+#endif	// defined(DISTORTOS_CHIP_STM32F105) || defined(DISTORTOS_CHIP_STM32F107)
 
 }	// namespace
 
@@ -150,7 +151,7 @@ int configurePrediv1(const uint8_t prediv1)
 	return configurePrediv(false, prediv1);
 }
 
-#if defined(CONFIG_CHIP_STM32F105) || defined(CONFIG_CHIP_STM32F107)
+#if defined(DISTORTOS_CHIP_STM32F105) || defined(DISTORTOS_CHIP_STM32F107)
 
 void configurePrediv1ClockSource(const bool pll2)
 {
@@ -162,7 +163,7 @@ int configurePrediv2(const uint8_t prediv2)
 	return configurePrediv(true, prediv2);
 }
 
-#endif	// defined(CONFIG_CHIP_STM32F105) || defined(CONFIG_CHIP_STM32F107)
+#endif	// defined(DISTORTOS_CHIP_STM32F105) || defined(DISTORTOS_CHIP_STM32F107)
 
 void disableHse()
 {
@@ -174,7 +175,7 @@ void disablePll()
 	STM32_BITBAND(RCC, CR, PLLON) = 0;
 }
 
-#if defined(CONFIG_CHIP_STM32F105) || defined(CONFIG_CHIP_STM32F107)
+#if defined(DISTORTOS_CHIP_STM32F105) || defined(DISTORTOS_CHIP_STM32F107)
 
 void disablePll2()
 {
@@ -186,7 +187,7 @@ void disablePll3()
 	STM32_BITBAND(RCC, CR, PLL3ON) = 0;
 }
 
-#endif	// defined(CONFIG_CHIP_STM32F105) || defined(CONFIG_CHIP_STM32F107)
+#endif	// defined(DISTORTOS_CHIP_STM32F105) || defined(DISTORTOS_CHIP_STM32F107)
 
 void enableHse(const bool bypass)
 {
@@ -197,17 +198,17 @@ void enableHse(const bool bypass)
 
 int enablePll(const bool prediv1, const uint8_t pllmul)
 {
-#if defined(CONFIG_CHIP_STM32F105) || defined(CONFIG_CHIP_STM32F107)
+#if defined(DISTORTOS_CHIP_STM32F105) || defined(DISTORTOS_CHIP_STM32F107)
 
 	if ((pllmul < minPllmul || pllmul > maxPllmul) && pllmul != pllmul6_5)
 		return EINVAL;
 
-#else	// !defined(CONFIG_CHIP_STM32F105) && !defined(CONFIG_CHIP_STM32F107)
+#else	// !defined(DISTORTOS_CHIP_STM32F105) && !defined(DISTORTOS_CHIP_STM32F107)
 
 	if (pllmul < minPllmul || pllmul > maxPllmul)
 		return EINVAL;
 
-#endif	// !defined(CONFIG_CHIP_STM32F105) && !defined(CONFIG_CHIP_STM32F107)
+#endif	// !defined(DISTORTOS_CHIP_STM32F105) && !defined(DISTORTOS_CHIP_STM32F107)
 
 	RCC->CFGR = (RCC->CFGR & ~(RCC_CFGR_PLLMULL | RCC_CFGR_PLLSRC)) | (pllmul - 2) << RCC_CFGR_PLLMULL_Pos |
 			prediv1 << RCC_CFGR_PLLSRC_Pos;
@@ -216,7 +217,7 @@ int enablePll(const bool prediv1, const uint8_t pllmul)
 	return 0;
 }
 
-#if defined(CONFIG_CHIP_STM32F105) || defined(CONFIG_CHIP_STM32F107)
+#if defined(DISTORTOS_CHIP_STM32F105) || defined(DISTORTOS_CHIP_STM32F107)
 
 int enablePll2(const uint8_t pll2Mul)
 {
@@ -228,7 +229,7 @@ int enablePll3(const uint8_t pll3Mul)
 	return enablePll23(true, pll3Mul);
 }
 
-#endif	// defined(CONFIG_CHIP_STM32F105) || defined(CONFIG_CHIP_STM32F107)
+#endif	// defined(DISTORTOS_CHIP_STM32F105) || defined(DISTORTOS_CHIP_STM32F107)
 
 void switchSystemClock(const SystemClockSource source)
 {

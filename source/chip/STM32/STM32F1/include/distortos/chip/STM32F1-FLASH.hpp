@@ -2,7 +2,7 @@
  * \file
  * \brief Header for FLASH-related functions for STM32F1
  *
- * \author Copyright (C) 2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2016-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -26,12 +26,12 @@ namespace chip
 | global constants
 +---------------------------------------------------------------------------------------------------------------------*/
 
-#ifndef CONFIG_CHIP_STM32F100
+#ifndef DISTORTOS_CHIP_STM32F100
 
 /// maximum allowed value of flash latency
 constexpr uint8_t maxFlashLatency {2};
 
-#endif	// !def CONFIG_CHIP_STM32F100
+#endif	// !def DISTORTOS_CHIP_STM32F100
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | global functions' declarations
@@ -45,7 +45,7 @@ constexpr uint8_t maxFlashLatency {2};
 
 void configureFlashHalfCycleAccess(bool enable);
 
-#ifndef CONFIG_CHIP_STM32F100
+#ifndef DISTORTOS_CHIP_STM32F100
 
 /**
  * \brief Configures flash latency.
@@ -66,7 +66,7 @@ int configureFlashLatency(uint8_t latency);
 
 void configurePrefetchBuffer(bool enable);
 
-#endif	// !def CONFIG_CHIP_STM32F100
+#endif	// !def DISTORTOS_CHIP_STM32F100
 
 }	// namespace chip
 
