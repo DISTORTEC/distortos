@@ -77,7 +77,7 @@ distortosSetConfiguration(STRING
 		"{{ key }}"
 {% endfor %}
 		HELP "Memory region for .text.vectorTable section in linker script"
-		OUTPUT_NAME CONFIG_LD_TEXT_VECTOR_TABLE_REGION
+		OUTPUT_NAME DISTORTOS_LD_TEXT_VECTOR_TABLE_REGION
 		OUTPUT_TYPES BOOLEAN)
 
 {% set context.counter = context.counter + 1 %}
@@ -88,7 +88,7 @@ distortosSetConfiguration(STRING
 		"{{ key }}"
 {% endfor %}
 		HELP "Memory region for .text section in linker script"
-		OUTPUT_NAME CONFIG_LD_TEXT_REGION
+		OUTPUT_NAME DISTORTOS_LD_TEXT_REGION
 		OUTPUT_TYPES BOOLEAN)
 
 {% set context.counter = context.counter + 1 %}
@@ -99,7 +99,7 @@ distortosSetConfiguration(STRING
 		"{{ key }}"
 {% endfor %}
 		HELP "Memory region for .ARM.exidx section in linker script"
-		OUTPUT_NAME CONFIG_LD_ARM_EXIDX_REGION
+		OUTPUT_NAME DISTORTOS_LD_ARM_EXIDX_REGION
 		OUTPUT_TYPES BOOLEAN)
 
 {% set context.counter = context.counter + 1 %}
@@ -110,7 +110,7 @@ distortosSetConfiguration(STRING
 		"{{ key }}"
 {% endfor %}
 		HELP "Memory region for main stack in linker script"
-		OUTPUT_NAME CONFIG_LD_MAIN_STACK_REGION
+		OUTPUT_NAME DISTORTOS_LD_MAIN_STACK_REGION
 		OUTPUT_TYPES BOOLEAN)
 
 {% set context.counter = context.counter + 1 %}
@@ -121,7 +121,7 @@ distortosSetConfiguration(STRING
 		"{{ key }}"
 {% endfor %}
 		HELP "Memory region for .bss section in linker script"
-		OUTPUT_NAME CONFIG_LD_BSS_REGION
+		OUTPUT_NAME DISTORTOS_LD_BSS_REGION
 		OUTPUT_TYPES BOOLEAN)
 
 {% set context.counter = context.counter + 1 %}
@@ -132,7 +132,7 @@ distortosSetConfiguration(STRING
 		"{{ key }}"
 {% endfor %}
 		HELP "VMA memory region for .data section in linker script"
-		OUTPUT_NAME CONFIG_LD_DATA_VMA_REGION
+		OUTPUT_NAME DISTORTOS_LD_DATA_VMA_REGION
 		OUTPUT_TYPES BOOLEAN)
 
 {% set context.counter = context.counter + 1 %}
@@ -143,7 +143,7 @@ distortosSetConfiguration(STRING
 		"{{ key }}"
 {% endfor %}
 		HELP "LMA memory region for .data section in linker script"
-		OUTPUT_NAME CONFIG_LD_DATA_LMA_REGION
+		OUTPUT_NAME DISTORTOS_LD_DATA_LMA_REGION
 		OUTPUT_TYPES BOOLEAN)
 
 {% set context.counter = context.counter + 1 %}
@@ -154,7 +154,7 @@ distortosSetConfiguration(STRING
 		"{{ key }}"
 {% endfor %}
 		HELP "Memory region for .noinit section in linker script"
-		OUTPUT_NAME CONFIG_LD_NOINIT_REGION
+		OUTPUT_NAME DISTORTOS_LD_NOINIT_REGION
 		OUTPUT_TYPES BOOLEAN)
 {% for ramKey, ramMemory in dictionary['memories'].items() if ramMemory is mapping and
 	'on-chip-RAM' in ramMemory['compatible'] and
@@ -169,7 +169,7 @@ distortosSetConfiguration(STRING
 		"{{ romKey }}"
 {% endfor %}
 		HELP "LMA memory region for .{{ ramKey }}.data section in linker script"
-		OUTPUT_NAME CONFIG_LD_{{ ramKey | upper }}_DATA_LMA_REGION
+		OUTPUT_NAME DISTORTOS_LD_{{ ramKey | upper }}_DATA_LMA_REGION
 		OUTPUT_TYPES BOOLEAN)
 {% endfor %}
 
@@ -181,7 +181,7 @@ distortosSetConfiguration(STRING
 		"{{ key }}"
 {% endfor %}
 		HELP "Memory region for process stack in linker script"
-		OUTPUT_NAME CONFIG_LD_PROCESS_STACK_REGION
+		OUTPUT_NAME DISTORTOS_LD_PROCESS_STACK_REGION
 		OUTPUT_TYPES BOOLEAN)
 
 {% set context.counter = context.counter + 1 %}
@@ -192,7 +192,7 @@ distortosSetConfiguration(STRING
 		"{{ key }}"
 {% endfor %}
 		HELP "Memory region for heap in linker script"
-		OUTPUT_NAME CONFIG_LD_HEAP_REGION
+		OUTPUT_NAME DISTORTOS_LD_HEAP_REGION
 		OUTPUT_TYPES BOOLEAN)
 {% if 'NVIC' in dictionary and 'ARM,NVIC' in dictionary['NVIC']['compatible'] %}
 {% for item in dictionary['NVIC']['chip-vectors'] if item %}
