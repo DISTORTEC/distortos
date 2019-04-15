@@ -59,6 +59,15 @@ public:
 
 	}
 
+	/**
+	 * \return size of single queue element, bytes
+	 */
+
+	constexpr static size_t getElementSize()
+	{
+		return ElementSize;
+	}
+
 private:
 
 	/// storage for queue's entries
