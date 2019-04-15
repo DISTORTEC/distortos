@@ -46,6 +46,15 @@ public:
 	RawFifoQueue(StorageUniquePointer&& storageUniquePointer, size_t elementSize, size_t maxElements);
 
 	/**
+	 * \return maximum number of elements in queue
+	 */
+
+	size_t getCapacity() const
+	{
+		return fifoQueueBase_.getCapacity();
+	}
+
+	/**
 	 * \return size of single queue element, bytes
 	 */
 
