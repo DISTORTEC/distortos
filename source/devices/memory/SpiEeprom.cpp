@@ -29,7 +29,7 @@ namespace devices
 namespace
 {
 
-static_assert(CONFIG_SPIMASTER_BUFFER_ALIGNMENT <= CONFIG_BLOCKDEVICE_BUFFER_ALIGNMENT,
+static_assert(DISTORTOS_SPIMASTER_BUFFER_ALIGNMENT <= DISTORTOS_BLOCKDEVICE_BUFFER_ALIGNMENT,
 		"Buffer alignment for SpiMaster is greater than for BlockDevice!");
 
 /*---------------------------------------------------------------------------------------------------------------------+

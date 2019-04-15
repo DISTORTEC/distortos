@@ -35,7 +35,7 @@ namespace
 +---------------------------------------------------------------------------------------------------------------------*/
 
 /// required buffer alignment of memory technology device
-constexpr size_t alignment {CONFIG_MEMORYTECHNOLOGYDEVICE_BUFFER_ALIGNMENT};
+constexpr size_t alignment {DISTORTOS_MEMORYTECHNOLOGYDEVICE_BUFFER_ALIGNMENT};
 
 /// margin between platform's biggest alignment and required buffer alignment
 constexpr size_t alignmentMargin {alignment > __BIGGEST_ALIGNMENT__ ? alignment - __BIGGEST_ALIGNMENT__ : 0};
