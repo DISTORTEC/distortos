@@ -70,7 +70,7 @@ distortosSetConfiguration(BOOLEAN
 		deletion. The thread will actually be deleted in idle thread, but only when two mutexes are successfully locked:
 		- mutex that protects dynamic memory allocator;
 		- mutex that synchronizes access to the list of threads pending for deferred deletion;"
-		OUTPUT_NAME CONFIG_THREAD_DETACH_ENABLE)
+		OUTPUT_NAME DISTORTOS_THREAD_DETACH_ENABLE)
 
 distortosSetConfiguration(INTEGER
 		distortos_Scheduler_04_Main_thread_stack_size

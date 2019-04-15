@@ -27,7 +27,7 @@ namespace distortos
  * and internal DynamicSignalsReceiver object.
  */
 
-#ifdef CONFIG_THREAD_DETACH_ENABLE
+#ifdef DISTORTOS_THREAD_DETACH_ENABLE
 
 class DynamicThread : public Thread
 {
@@ -270,7 +270,7 @@ private:
 	std::unique_ptr<internal::DynamicThreadBase> detachableThread_;
 };
 
-#else	// !def CONFIG_THREAD_DETACH_ENABLE
+#else	// !def DISTORTOS_THREAD_DETACH_ENABLE
 
 class DynamicThread : public internal::DynamicThreadBase
 {
@@ -279,7 +279,7 @@ public:
 	using internal::DynamicThreadBase::DynamicThreadBase;
 };
 
-#endif	// !def CONFIG_THREAD_DETACH_ENABLE
+#endif	// !def DISTORTOS_THREAD_DETACH_ENABLE
 
 /**
  * \brief Helper factory function to make DynamicThread object
@@ -391,7 +391,7 @@ DynamicThread makeAndStartDynamicThread(const DynamicThreadParameters parameters
 
 /// \}
 
-#ifdef CONFIG_THREAD_DETACH_ENABLE
+#ifdef DISTORTOS_THREAD_DETACH_ENABLE
 
 template<typename Function, typename... Args>
 DynamicThread::DynamicThread(const size_t stackSize, const bool canReceiveSignals, const size_t queuedSignals,
@@ -403,7 +403,7 @@ DynamicThread::DynamicThread(const size_t stackSize, const bool canReceiveSignal
 
 }
 
-#endif	// def CONFIG_THREAD_DETACH_ENABLE
+#endif	// def DISTORTOS_THREAD_DETACH_ENABLE
 
 }	// namespace distortos
 

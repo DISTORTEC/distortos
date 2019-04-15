@@ -11,7 +11,7 @@
 
 #include "distortos/DynamicThread.hpp"
 
-#ifdef CONFIG_THREAD_DETACH_ENABLE
+#ifdef DISTORTOS_THREAD_DETACH_ENABLE
 
 #include "distortos/internal/CHECK_FUNCTION_CONTEXT.hpp"
 
@@ -20,12 +20,12 @@
 
 #include <cerrno>
 
-#endif	// def CONFIG_THREAD_DETACH_ENABLE
+#endif	// def DISTORTOS_THREAD_DETACH_ENABLE
 
 namespace distortos
 {
 
-#ifdef CONFIG_THREAD_DETACH_ENABLE
+#ifdef DISTORTOS_THREAD_DETACH_ENABLE
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | public functions
@@ -213,6 +213,6 @@ int DynamicThread::start()
 	return detachableThread_->start();
 }
 
-#endif	// def CONFIG_THREAD_DETACH_ENABLE
+#endif	// def DISTORTOS_THREAD_DETACH_ENABLE
 
 }	// namespace distortos

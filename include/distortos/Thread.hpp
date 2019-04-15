@@ -41,7 +41,7 @@ public:
 
 	virtual ~Thread() = default;
 
-#ifdef CONFIG_THREAD_DETACH_ENABLE
+#ifdef DISTORTOS_THREAD_DETACH_ENABLE
 
 	/**
 	 * \brief Detaches the thread.
@@ -59,7 +59,7 @@ public:
 
 	virtual int detach() = 0;
 
-#endif	// def CONFIG_THREAD_DETACH_ENABLE
+#endif	// def DISTORTOS_THREAD_DETACH_ENABLE
 
 #if DISTORTOS_SIGNALS_ENABLE == 1
 
