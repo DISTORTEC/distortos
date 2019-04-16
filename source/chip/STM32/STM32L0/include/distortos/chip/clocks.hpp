@@ -74,74 +74,73 @@ constexpr uint32_t maxApb1Frequency {32000000};
 /// maximum allowed APB2 (high speed) frequency, Hz
 constexpr uint32_t maxApb2Frequency {32000000};
 
-#ifdef DISTORTOS_CHIP_STM32L0_STANDARD_CLOCK_CONFIGURATION_ENABLE
+#ifdef DISTORTOS_CHIP_STANDARD_CLOCK_CONFIGURATION_ENABLE
 
 /// voltage scale index for \a maxPllOutFrequencies array (maxPllOutFrequencies[voltageScaleIndex])
-constexpr uint8_t voltageScaleIndex {DISTORTOS_CHIP_STM32L0_PWR_VOLTAGE_SCALE_MODE - 1};
+constexpr uint8_t voltageScaleIndex {DISTORTOS_CHIP_PWR_VOLTAGE_SCALE_MODE - 1};
 
 /// maximum allowed value for PLL output frequency, Hz
 constexpr uint32_t maxPllOutFrequency {maxPllOutFrequencies[voltageScaleIndex]};
 
-#if defined(DISTORTOS_CHIP_STM32L0_RCC_MSI_ENABLE)
+#if defined(DISTORTOS_CHIP_RCC_MSI_ENABLE)
 /// voltage scale index for \a msiFrequencies array (maxPllOutFrequencies[msiRangeIndex])
-constexpr uint8_t msiRangeIndex {DISTORTOS_CHIP_STM32L0_RCC_MSIRANGE};
+constexpr uint8_t msiRangeIndex {DISTORTOS_CHIP_RCC_MSIRANGE};
 
 /// allowed value for MSI frequency, Hz
 constexpr uint32_t msiFrequency {msiFrequencies[msiRangeIndex]};
 
-#endif	// defined(DISTORTOS_CHIP_STM32L0_RCC_MSI_ENABLE)
+#endif	// defined(DISTORTOS_CHIP_RCC_MSI_ENABLE)
 
-#ifdef DISTORTOS_CHIP_STM32L0_RCC_PLL_ENABLE
+#ifdef DISTORTOS_CHIP_RCC_PLL_ENABLE
 
 /// PLL input frequency, Hz
-#if defined(DISTORTOS_CHIP_STM32L0_RCC_PLLSRC_HSI16)
+#if defined(DISTORTOS_CHIP_RCC_PLLSRC_HSI16)
 constexpr uint32_t pllInFrequency {hsi16Frequency};
-#elif defined(DISTORTOS_CHIP_STM32L0_RCC_PLLSRC_HSE)
-constexpr uint32_t pllInFrequency {DISTORTOS_CHIP_STM32L0_RCC_HSE_FREQUENCY};
-#endif	// defined(DISTORTOS_CHIP_STM32L0_RCC_PLLSRC_HSE)
+#elif defined(DISTORTOS_CHIP_RCC_PLLSRC_HSE)
+constexpr uint32_t pllInFrequency {DISTORTOS_CHIP_RCC_HSE_FREQUENCY};
+#endif	// defined(DISTORTOS_CHIP_RCC_PLLSRC_HSE)
 
 static_assert(minPllInFrequency <= pllInFrequency && pllInFrequency <= maxPllInFrequency,
 		"Invalid PLL input frequency!");
 
 /// PLL output frequency, Hz
-constexpr uint32_t pllOutFrequency {(pllInFrequency * DISTORTOS_CHIP_STM32L0_RCC_PLLMUL) /
-		DISTORTOS_CHIP_STM32L0_RCC_PLLDIV};
+constexpr uint32_t pllOutFrequency {(pllInFrequency * DISTORTOS_CHIP_RCC_PLLMUL) / DISTORTOS_CHIP_RCC_PLLDIV};
 
 static_assert(minPllOutFrequency <= pllOutFrequency && pllOutFrequency <= maxPllOutFrequency,
 		"Invalid PLL output frequency!");
 
-#endif	// def DISTORTOS_CHIP_STM32L0_RCC_PLL_ENABLE
+#endif	// def DISTORTOS_CHIP_RCC_PLL_ENABLE
 
 /// SYSCLK frequency, Hz
-#if defined(DISTORTOS_CHIP_STM32L0_RCC_SYSCLK_MSI)
+#if defined(DISTORTOS_CHIP_RCC_SYSCLK_MSI)
 constexpr uint32_t sysclkFrequency {msiFrequency};
-#elif defined(DISTORTOS_CHIP_STM32L0_RCC_SYSCLK_HSI16)
+#elif defined(DISTORTOS_CHIP_RCC_SYSCLK_HSI16)
 constexpr uint32_t sysclkFrequency {hsi16Frequency};
-#elif defined(DISTORTOS_CHIP_STM32L0_RCC_SYSCLK_HSE)
-constexpr uint32_t sysclkFrequency {DISTORTOS_CHIP_STM32L0_RCC_HSE_FREQUENCY};
-#elif defined(DISTORTOS_CHIP_STM32L0_RCC_SYSCLK_PLL)
+#elif defined(DISTORTOS_CHIP_RCC_SYSCLK_HSE)
+constexpr uint32_t sysclkFrequency {DISTORTOS_CHIP_RCC_HSE_FREQUENCY};
+#elif defined(DISTORTOS_CHIP_RCC_SYSCLK_PLL)
 constexpr uint32_t sysclkFrequency {pllOutFrequency};
 #else
 #error "All SYSCLK sources disabled!"
-#endif	// defined(DISTORTOS_CHIP_STM32L0_RCC_SYSCLK_PLL)
+#endif	// defined(DISTORTOS_CHIP_RCC_SYSCLK_PLL)
 
-#else	// !def DISTORTOS_CHIP_STM32L0_STANDARD_CLOCK_CONFIGURATION_ENABLE
+#else	// !def DISTORTOS_CHIP_STANDARD_CLOCK_CONFIGURATION_ENABLE
 
 /// SYSCLK frequency, Hz
-constexpr uint32_t sysclkFrequency {DISTORTOS_CHIP_STM32L0_RCC_SYSCLK_FREQUENCY};
+constexpr uint32_t sysclkFrequency {DISTORTOS_CHIP_RCC_SYSCLK_FREQUENCY};
 
-#endif	// !def DISTORTOS_CHIP_STM32L0_STANDARD_CLOCK_CONFIGURATION_ENABLE
+#endif	// !def DISTORTOS_CHIP_STANDARD_CLOCK_CONFIGURATION_ENABLE
 
 /// AHB frequency, Hz
-constexpr uint32_t ahbFrequency {sysclkFrequency / DISTORTOS_CHIP_STM32L0_RCC_HPRE};
+constexpr uint32_t ahbFrequency {sysclkFrequency / DISTORTOS_CHIP_RCC_HPRE};
 
 /// APB1 frequency, Hz
-constexpr uint32_t apb1Frequency {ahbFrequency / DISTORTOS_CHIP_STM32L0_RCC_PPRE1};
+constexpr uint32_t apb1Frequency {ahbFrequency / DISTORTOS_CHIP_RCC_PPRE1};
 
 static_assert(apb1Frequency <= maxApb1Frequency, "Invalid APB1 (low speed) frequency!");
 
 /// APB2 frequency, Hz
-constexpr uint32_t apb2Frequency {ahbFrequency / DISTORTOS_CHIP_STM32L0_RCC_PPRE2};
+constexpr uint32_t apb2Frequency {ahbFrequency / DISTORTOS_CHIP_RCC_PPRE2};
 
 static_assert(apb2Frequency <= maxApb2Frequency, "Invalid APB2 (high speed) frequency!");
 

@@ -38,7 +38,7 @@ distortosSetFixedConfiguration(STRING
 		"STM32L432KC")
 
 distortosSetFixedConfiguration(BOOLEAN
-		DISTORTOS_CHIP_STM32L4_RCC_HSE_CLOCK_BYPASS
+		DISTORTOS_CHIP_RCC_HSE_CLOCK_BYPASS
 		ON)
 
 include("${CMAKE_CURRENT_SOURCE_DIR}/source/chip/STM32/STM32L4/distortos-sources.cmake")

@@ -50,55 +50,55 @@ constexpr uint32_t minPllOutFrequency {16000000};
 /// maximum allowed value for PLL output frequency, Hz
 constexpr uint32_t maxPllOutFrequency {48000000};
 
-#ifdef DISTORTOS_CHIP_STM32F0_STANDARD_CLOCK_CONFIGURATION_ENABLE
+#ifdef DISTORTOS_CHIP_STANDARD_CLOCK_CONFIGURATION_ENABLE
 
-#ifdef DISTORTOS_CHIP_STM32F0_RCC_PLL_ENABLE
+#ifdef DISTORTOS_CHIP_RCC_PLL_ENABLE
 
 /// PLL input frequency, Hz
-#if defined(DISTORTOS_CHIP_STM32F0_RCC_PLLSRC_HSIDIV2)
+#if defined(DISTORTOS_CHIP_RCC_PLLSRC_HSIDIV2)
 constexpr uint32_t pllInFrequency {hsiFrequency / 2};
-#elif defined(DISTORTOS_CHIP_STM32F0_RCC_PLLSRC_HSIPREDIV)
-constexpr uint32_t pllInFrequency {hsiFrequency / DISTORTOS_CHIP_STM32F0_RCC_PREDIV};
-#elif defined(DISTORTOS_CHIP_STM32F0_RCC_PLLSRC_HSEPREDIV)
-constexpr uint32_t pllInFrequency {DISTORTOS_CHIP_STM32F0_RCC_HSE_FREQUENCY / DISTORTOS_CHIP_STM32F0_RCC_PREDIV};
-#elif defined(DISTORTOS_CHIP_STM32F0_RCC_PLLSRC_HSI48PREDIV)
-constexpr uint32_t pllInFrequency {hsi48Frequency / DISTORTOS_CHIP_STM32F0_RCC_PREDIV};
-#endif	// defined(DISTORTOS_CHIP_STM32F0_RCC_PLLSRC_HSI48PREDIV)
+#elif defined(DISTORTOS_CHIP_RCC_PLLSRC_HSIPREDIV)
+constexpr uint32_t pllInFrequency {hsiFrequency / DISTORTOS_CHIP_RCC_PREDIV};
+#elif defined(DISTORTOS_CHIP_RCC_PLLSRC_HSEPREDIV)
+constexpr uint32_t pllInFrequency {DISTORTOS_CHIP_RCC_HSE_FREQUENCY / DISTORTOS_CHIP_RCC_PREDIV};
+#elif defined(DISTORTOS_CHIP_RCC_PLLSRC_HSI48PREDIV)
+constexpr uint32_t pllInFrequency {hsi48Frequency / DISTORTOS_CHIP_RCC_PREDIV};
+#endif	// defined(DISTORTOS_CHIP_RCC_PLLSRC_HSI48PREDIV)
 
 static_assert(minPllInFrequency <= pllInFrequency && pllInFrequency <= maxPllInFrequency,
 		"Invalid PLL input frequency!");
 
 /// PLL output frequency, Hz
-constexpr uint32_t pllOutFrequency {pllInFrequency * DISTORTOS_CHIP_STM32F0_RCC_PLLMUL};
+constexpr uint32_t pllOutFrequency {pllInFrequency * DISTORTOS_CHIP_RCC_PLLMUL};
 
 static_assert(minPllOutFrequency <= pllOutFrequency && pllOutFrequency <= maxPllOutFrequency,
 		"Invalid PLL output frequency!");
 
-#endif	// def DISTORTOS_CHIP_STM32F0_RCC_PLL_ENABLE
+#endif	// def DISTORTOS_CHIP_RCC_PLL_ENABLE
 
 /// SYSCLK frequency, Hz
-#if defined(DISTORTOS_CHIP_STM32F0_RCC_SYSCLK_HSI)
+#if defined(DISTORTOS_CHIP_RCC_SYSCLK_HSI)
 constexpr uint32_t sysclkFrequency {hsiFrequency};
-#elif defined(DISTORTOS_CHIP_STM32F0_RCC_SYSCLK_HSE)
-constexpr uint32_t sysclkFrequency {DISTORTOS_CHIP_STM32F0_RCC_HSE_FREQUENCY};
-#elif defined(DISTORTOS_CHIP_STM32F0_RCC_SYSCLK_PLL)
+#elif defined(DISTORTOS_CHIP_RCC_SYSCLK_HSE)
+constexpr uint32_t sysclkFrequency {DISTORTOS_CHIP_RCC_HSE_FREQUENCY};
+#elif defined(DISTORTOS_CHIP_RCC_SYSCLK_PLL)
 constexpr uint32_t sysclkFrequency {pllOutFrequency};
-#elif defined(DISTORTOS_CHIP_STM32F0_RCC_SYSCLK_HSI48)
+#elif defined(DISTORTOS_CHIP_RCC_SYSCLK_HSI48)
 constexpr uint32_t sysclkFrequency {hsi48Frequency};
-#endif	// defined(DISTORTOS_CHIP_STM32F0_RCC_SYSCLK_HSI48)
+#endif	// defined(DISTORTOS_CHIP_RCC_SYSCLK_HSI48)
 
-#else	// !def DISTORTOS_CHIP_STM32F0_STANDARD_CLOCK_CONFIGURATION_ENABLE
+#else	// !def DISTORTOS_CHIP_STANDARD_CLOCK_CONFIGURATION_ENABLE
 
 /// SYSCLK frequency, Hz
-constexpr uint32_t sysclkFrequency {DISTORTOS_CHIP_STM32F0_RCC_SYSCLK_FREQUENCY};
+constexpr uint32_t sysclkFrequency {DISTORTOS_CHIP_RCC_SYSCLK_FREQUENCY};
 
-#endif	// !def DISTORTOS_CHIP_STM32F0_STANDARD_CLOCK_CONFIGURATION_ENABLE
+#endif	// !def DISTORTOS_CHIP_STANDARD_CLOCK_CONFIGURATION_ENABLE
 
 /// AHB frequency, Hz
-constexpr uint32_t ahbFrequency {sysclkFrequency / DISTORTOS_CHIP_STM32F0_RCC_HPRE};
+constexpr uint32_t ahbFrequency {sysclkFrequency / DISTORTOS_CHIP_RCC_HPRE};
 
 /// APB frequency, Hz
-constexpr uint32_t apbFrequency {ahbFrequency / DISTORTOS_CHIP_STM32F0_RCC_PPRE};
+constexpr uint32_t apbFrequency {ahbFrequency / DISTORTOS_CHIP_RCC_PPRE};
 
 }	// namespace chip
 

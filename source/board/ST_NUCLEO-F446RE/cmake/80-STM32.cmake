@@ -38,7 +38,7 @@ distortosSetFixedConfiguration(STRING
 		"STM32F446RE")
 
 distortosSetFixedConfiguration(INTEGER
-		DISTORTOS_CHIP_STM32F4_VDD_MV
+		DISTORTOS_CHIP_VDD_MV
 		3300)
 
 include("${CMAKE_CURRENT_SOURCE_DIR}/source/chip/STM32/STM32F4/distortos-sources.cmake")

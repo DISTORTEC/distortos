@@ -18,7 +18,7 @@ distortosSetConfiguration(BOOLEAN
 		If disabled, no clock configuration will be done during chip initialization. The values entered below
 		(frequencies, dividers, ...) will only be used to determine chip clocks. The user must configure the chip
 		manually to match these settings."
-		OUTPUT_NAME DISTORTOS_CHIP_STM32L4_STANDARD_CLOCK_CONFIGURATION_ENABLE)
+		OUTPUT_NAME DISTORTOS_CHIP_STANDARD_CLOCK_CONFIGURATION_ENABLE)
 
 if(distortos_Clocks_00_Standard_configuration_of_clocks)
 
@@ -28,35 +28,35 @@ if(distortos_Clocks_00_Standard_configuration_of_clocks)
 			MIN 1
 			MAX 2
 			HELP "Select voltage scaling range."
-			OUTPUT_NAME DISTORTOS_CHIP_STM32L4_PWR_VOLTAGE_SCALING_RANGE)
+			OUTPUT_NAME DISTORTOS_CHIP_PWR_VOLTAGE_SCALING_RANGE)
 
-	if(DISTORTOS_CHIP_STM32L4_RCC_HSE_FREQUENCY)
+	if(DISTORTOS_CHIP_RCC_HSE_FREQUENCY)
 
-		if(DISTORTOS_CHIP_STM32L4_RCC_HSE_CLOCK_BYPASS)
-			set(help "Enable HSE external user clock, ${DISTORTOS_CHIP_STM32L4_RCC_HSE_FREQUENCY} Hz.")
+		if(DISTORTOS_CHIP_RCC_HSE_CLOCK_BYPASS)
+			set(help "Enable HSE external user clock, ${DISTORTOS_CHIP_RCC_HSE_FREQUENCY} Hz.")
 		else()
-			set(help "Enable HSE crystal/ceramic resonator, ${DISTORTOS_CHIP_STM32L4_RCC_HSE_FREQUENCY} Hz.")
+			set(help "Enable HSE crystal/ceramic resonator, ${DISTORTOS_CHIP_RCC_HSE_FREQUENCY} Hz.")
 		endif()
 
 		distortosSetConfiguration(BOOLEAN
 				distortos_Clocks_02_HSE
 				OFF
 				HELP ${help}
-				OUTPUT_NAME DISTORTOS_CHIP_STM32L4_RCC_HSE_ENABLE)
+				OUTPUT_NAME DISTORTOS_CHIP_RCC_HSE_ENABLE)
 
-	endif(DISTORTOS_CHIP_STM32L4_RCC_HSE_FREQUENCY)
+	endif(DISTORTOS_CHIP_RCC_HSE_FREQUENCY)
 
 	distortosSetConfiguration(BOOLEAN
 			distortos_Clocks_03_HSI16
 			ON
 			HELP "Enable HSI16."
-			OUTPUT_NAME DISTORTOS_CHIP_STM32L4_RCC_HSI16_ENABLE)
+			OUTPUT_NAME DISTORTOS_CHIP_RCC_HSI16_ENABLE)
 
 	distortosSetConfiguration(BOOLEAN
 			distortos_Clocks_04_MSI
 			OFF
 			HELP "Enable MSI."
-			OUTPUT_NAME DISTORTOS_CHIP_STM32L4_RCC_MSI_ENABLE)
+			OUTPUT_NAME DISTORTOS_CHIP_RCC_MSI_ENABLE)
 
 	if(distortos_Clocks_04_MSI)
 
@@ -78,7 +78,7 @@ if(distortos_Clocks_00_Standard_configuration_of_clocks)
 				- range 9 around 24 MHz,
 				- range 10 around 32 MHz,
 				- range 11 around 48 MHz."
-				OUTPUT_NAME DISTORTOS_CHIP_STM32L4_RCC_MSI_RANGE)
+				OUTPUT_NAME DISTORTOS_CHIP_RCC_MSI_RANGE)
 
 	endif(distortos_Clocks_04_MSI)
 
@@ -88,7 +88,7 @@ if(distortos_Clocks_00_Standard_configuration_of_clocks)
 				distortos_Clocks_06_PLL
 				ON
 				HELP "Enable PLL."
-				OUTPUT_NAME DISTORTOS_CHIP_STM32L4_RCC_PLL_ENABLE)
+				OUTPUT_NAME DISTORTOS_CHIP_RCC_PLL_ENABLE)
 
 		if(distortos_Clocks_06_PLL)
 
@@ -108,7 +108,7 @@ if(distortos_Clocks_00_Standard_configuration_of_clocks)
 					${pllClockSourceHse}
 					${pllClockSourceMsi}
 					HELP "Select clock source of PLLs."
-					OUTPUT_NAME DISTORTOS_CHIP_STM32L4_RCC_PLLSRC
+					OUTPUT_NAME DISTORTOS_CHIP_RCC_PLLSRC
 					OUTPUT_TYPES BOOLEAN)
 
 			distortosSetConfiguration(INTEGER
@@ -122,7 +122,7 @@ if(distortos_Clocks_00_Standard_configuration_of_clocks)
 					must be in the range [4 MHz; 16 MHz].
 
 					VCOin = PLLin / PLLM"
-					OUTPUT_NAME DISTORTOS_CHIP_STM32L4_RCC_PLLM)
+					OUTPUT_NAME DISTORTOS_CHIP_RCC_PLLM)
 
 			distortosSetConfiguration(INTEGER
 					distortos_Clocks_09_PLLN
@@ -136,7 +136,7 @@ if(distortos_Clocks_00_Standard_configuration_of_clocks)
 					range 2.
 
 					VCOout = VCOin * PLLN = PLLin / PLLM * PLLN"
-					OUTPUT_NAME DISTORTOS_CHIP_STM32L4_RCC_PLLN)
+					OUTPUT_NAME DISTORTOS_CHIP_RCC_PLLN)
 
 			if(DISTORTOS_CHIP MATCHES "STM32L4[3-6]|STM32L4[9A]6")
 				set(pllp2_6 2 3 4 5 6)
@@ -162,7 +162,7 @@ if(distortos_Clocks_00_Standard_configuration_of_clocks)
 					range 1 or [2.0645 MHz; 26 MHz] in voltage scaling range 2.
 
 					PLLPout = VCOout / PLLP = PLLin / PLLM * PLLN / PLLP"
-					OUTPUT_NAME DISTORTOS_CHIP_STM32L4_RCC_PLLP
+					OUTPUT_NAME DISTORTOS_CHIP_RCC_PLLP
 					OUTPUT_TYPES INTEGER)
 
 			distortosSetConfiguration(STRING
@@ -178,7 +178,7 @@ if(distortos_Clocks_00_Standard_configuration_of_clocks)
 					scaling range 1 or [8 MHz; 26 MHz] in voltage scaling range 2.
 
 					PLLQout = VCOout / PLLQ = PLLin / PLLM * PLLN / PLLQ"
-					OUTPUT_NAME DISTORTOS_CHIP_STM32L4_RCC_PLLQ
+					OUTPUT_NAME DISTORTOS_CHIP_RCC_PLLQ
 					OUTPUT_TYPES INTEGER)
 
 			distortosSetConfiguration(STRING
@@ -194,7 +194,7 @@ if(distortos_Clocks_00_Standard_configuration_of_clocks)
 					[8 MHz; 26 MHz] in voltage scaling range 2.
 
 					PLLRout = VCOout / PLLR = PLLin / PLLM * PLLN / PLLR"
-					OUTPUT_NAME DISTORTOS_CHIP_STM32L4_RCC_PLLR
+					OUTPUT_NAME DISTORTOS_CHIP_RCC_PLLR
 					OUTPUT_TYPES INTEGER)
 
 
@@ -202,19 +202,19 @@ if(distortos_Clocks_00_Standard_configuration_of_clocks)
 					distortos_Clocks_13_PLLP_output
 					OFF
 					HELP "Enable PLL's \"P\" output."
-					OUTPUT_NAME DISTORTOS_CHIP_STM32L4_RCC_PLLP_ENABLE)
+					OUTPUT_NAME DISTORTOS_CHIP_RCC_PLLP_ENABLE)
 
 			distortosSetConfiguration(BOOLEAN
 					distortos_Clocks_14_PLLQ_output
 					OFF
 					HELP "Enable PLL's \"Q\" output."
-					OUTPUT_NAME DISTORTOS_CHIP_STM32L4_RCC_PLLQ_ENABLE)
+					OUTPUT_NAME DISTORTOS_CHIP_RCC_PLLQ_ENABLE)
 
 			distortosSetConfiguration(BOOLEAN
 					distortos_Clocks_15_PLLR_output
 					ON
 					HELP "Enable PLL's \"R\" output."
-					OUTPUT_NAME DISTORTOS_CHIP_STM32L4_RCC_PLLR_ENABLE)
+					OUTPUT_NAME DISTORTOS_CHIP_RCC_PLLR_ENABLE)
 
 		endif(distortos_Clocks_06_PLL)
 
@@ -240,7 +240,7 @@ if(distortos_Clocks_00_Standard_configuration_of_clocks)
 			${systemClockSourceMsi}
 			${systemClockSourcePll}
 			HELP "Select system clock source."
-			OUTPUT_NAME DISTORTOS_CHIP_STM32L4_RCC_SYSCLK
+			OUTPUT_NAME DISTORTOS_CHIP_RCC_SYSCLK
 			OUTPUT_TYPES BOOLEAN)
 
 else(distortos_Clocks_00_Standard_configuration_of_clocks)
@@ -255,7 +255,7 @@ else(distortos_Clocks_00_Standard_configuration_of_clocks)
 			RCC must be configured by user to achieve that frequency. SYSCLK frequency must not exceed:
 			- 80 MHz in voltage scale range 1,
 			- 26 MHz in voltage scale range 2."
-			OUTPUT_NAME DISTORTOS_CHIP_STM32L4_RCC_SYSCLK_FREQUENCY)
+			OUTPUT_NAME DISTORTOS_CHIP_RCC_SYSCLK_FREQUENCY)
 
 endif(distortos_Clocks_00_Standard_configuration_of_clocks)
 
@@ -273,7 +273,7 @@ distortosSetConfiguration(STRING
 		HELP "AHB clock division factor.
 
 		AHBclk = SYSclk / AHBdivider"
-		OUTPUT_NAME DISTORTOS_CHIP_STM32L4_RCC_HPRE
+		OUTPUT_NAME DISTORTOS_CHIP_RCC_HPRE
 		OUTPUT_TYPES INTEGER)
 
 distortosSetConfiguration(STRING
@@ -286,7 +286,7 @@ distortosSetConfiguration(STRING
 		HELP "APB1 (low speed) clock division factor.
 
 		APB1clk = AHBclk / APB1divider"
-		OUTPUT_NAME DISTORTOS_CHIP_STM32L4_RCC_PPRE1
+		OUTPUT_NAME DISTORTOS_CHIP_RCC_PPRE1
 		OUTPUT_TYPES INTEGER)
 
 distortosSetConfiguration(STRING
@@ -299,26 +299,26 @@ distortosSetConfiguration(STRING
 		HELP "APB2 (high speed) clock division factor.
 
 		APB2clk = AHBclk / APB2divider"
-		OUTPUT_NAME DISTORTOS_CHIP_STM32L4_RCC_PPRE2
+		OUTPUT_NAME DISTORTOS_CHIP_RCC_PPRE2
 		OUTPUT_TYPES INTEGER)
 
 distortosSetConfiguration(BOOLEAN
 		distortos_Memory_00_Flash_prefetch
 		ON
 		HELP "Enable flash prefetch option in FLASH->ACR register."
-		OUTPUT_NAME DISTORTOS_CHIP_STM32L4_FLASH_PREFETCH_ENABLE)
+		OUTPUT_NAME DISTORTOS_CHIP_FLASH_PREFETCH_ENABLE)
 
 distortosSetConfiguration(BOOLEAN
 		distortos_Memory_01_Flash_data_cache
 		ON
 		HELP "Enable flash data cache option in FLASH->ACR register."
-		OUTPUT_NAME DISTORTOS_CHIP_STM32L4_FLASH_DATA_CACHE_ENABLE)
+		OUTPUT_NAME DISTORTOS_CHIP_FLASH_DATA_CACHE_ENABLE)
 
 distortosSetConfiguration(BOOLEAN
 		distortos_Memory_02_Flash_instruction_cache
 		ON
 		HELP "Enable flash instruction cache option in FLASH->ACR register."
-		OUTPUT_NAME DISTORTOS_CHIP_STM32L4_FLASH_INSTRUCTION_CACHE_ENABLE)
+		OUTPUT_NAME DISTORTOS_CHIP_FLASH_INSTRUCTION_CACHE_ENABLE)
 
 target_include_directories(distortos PUBLIC
 		${CMAKE_CURRENT_LIST_DIR}/../include
