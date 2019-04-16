@@ -44,7 +44,7 @@ distortosSetConfiguration(INTEGER
 		1024
 		MIN 8
 		HELP "Size (in bytes) of \"main\" stack used by core exceptions and interrupts in Handler mode."
-		OUTPUT_NAME DISTORTOS_ARCHITECTURE_ARMV6_M_ARMV7_M_MAIN_STACK_SIZE)
+		OUTPUT_NAME DISTORTOS_ARCHITECTURE_MAIN_STACK_SIZE)
 
 distortosSetConfiguration(STRING
 		distortos_Memory_regions_00_text_vectorTable
