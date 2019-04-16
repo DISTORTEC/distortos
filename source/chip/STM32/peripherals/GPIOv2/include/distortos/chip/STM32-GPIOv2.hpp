@@ -500,7 +500,7 @@ enum class PinAlternateFunction : uint8_t
 		af6,
 		/// alternate function 7
 		af7,
-#ifdef DISTORTOS_CHIP_STM32_GPIOV2_HAS_4_AF_BITS
+#ifdef DISTORTOS_CHIP_GPIO_HAS_4_AF_BITS
 		/// alternate function 8
 		af8,
 		/// alternate function 9
@@ -517,7 +517,7 @@ enum class PinAlternateFunction : uint8_t
 		af14,
 		/// alternate function 15
 		af15,
-#endif	// def DISTORTOS_CHIP_STM32_GPIOV2_HAS_4_AF_BITS
+#endif	// def DISTORTOS_CHIP_GPIO_HAS_4_AF_BITS
 };
 
 /// all possible modes of pin
@@ -540,10 +540,10 @@ enum class PinOutputSpeed : uint8_t
 		low,
 		/// medium speed
 		medium,
-#ifdef DISTORTOS_CHIP_STM32_GPIOV2_HAS_HIGH_SPEED
+#ifdef DISTORTOS_CHIP_GPIO_HAS_HIGH_SPEED
 		/// high speed
 		high,
-#endif	// def DISTORTOS_CHIP_STM32_GPIOV2_HAS_HIGH_SPEED
+#endif	// def DISTORTOS_CHIP_GPIO_HAS_HIGH_SPEED
 		/// very high speed
 		veryHigh = 3,
 };
