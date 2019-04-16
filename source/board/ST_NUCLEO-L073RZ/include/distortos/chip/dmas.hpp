@@ -29,54 +29,54 @@ class DmaChannel;
 | global objects
 +---------------------------------------------------------------------------------------------------------------------*/
 
-#ifdef DISTORTOS_CHIP_STM32_DMAV1_DMA1_CHANNEL1_ENABLE
+#ifdef DISTORTOS_CHIP_DMA1_CHANNEL1_ENABLE
 
 /// DMA1 channel 1 low-level driver
 extern DmaChannel dma1Channel1;
 
-#endif	// def DISTORTOS_CHIP_STM32_DMAV1_DMA1_CHANNEL1_ENABLE
+#endif	// def DISTORTOS_CHIP_DMA1_CHANNEL1_ENABLE
 
-#ifdef DISTORTOS_CHIP_STM32_DMAV1_DMA1_CHANNEL2_ENABLE
+#ifdef DISTORTOS_CHIP_DMA1_CHANNEL2_ENABLE
 
 /// DMA1 channel 2 low-level driver
 extern DmaChannel dma1Channel2;
 
-#endif	// def DISTORTOS_CHIP_STM32_DMAV1_DMA1_CHANNEL2_ENABLE
+#endif	// def DISTORTOS_CHIP_DMA1_CHANNEL2_ENABLE
 
-#ifdef DISTORTOS_CHIP_STM32_DMAV1_DMA1_CHANNEL3_ENABLE
+#ifdef DISTORTOS_CHIP_DMA1_CHANNEL3_ENABLE
 
 /// DMA1 channel 3 low-level driver
 extern DmaChannel dma1Channel3;
 
-#endif	// def DISTORTOS_CHIP_STM32_DMAV1_DMA1_CHANNEL3_ENABLE
+#endif	// def DISTORTOS_CHIP_DMA1_CHANNEL3_ENABLE
 
-#ifdef DISTORTOS_CHIP_STM32_DMAV1_DMA1_CHANNEL4_ENABLE
+#ifdef DISTORTOS_CHIP_DMA1_CHANNEL4_ENABLE
 
 /// DMA1 channel 4 low-level driver
 extern DmaChannel dma1Channel4;
 
-#endif	// def DISTORTOS_CHIP_STM32_DMAV1_DMA1_CHANNEL4_ENABLE
+#endif	// def DISTORTOS_CHIP_DMA1_CHANNEL4_ENABLE
 
-#ifdef DISTORTOS_CHIP_STM32_DMAV1_DMA1_CHANNEL5_ENABLE
+#ifdef DISTORTOS_CHIP_DMA1_CHANNEL5_ENABLE
 
 /// DMA1 channel 5 low-level driver
 extern DmaChannel dma1Channel5;
 
-#endif	// def DISTORTOS_CHIP_STM32_DMAV1_DMA1_CHANNEL5_ENABLE
+#endif	// def DISTORTOS_CHIP_DMA1_CHANNEL5_ENABLE
 
-#ifdef DISTORTOS_CHIP_STM32_DMAV1_DMA1_CHANNEL6_ENABLE
+#ifdef DISTORTOS_CHIP_DMA1_CHANNEL6_ENABLE
 
 /// DMA1 channel 6 low-level driver
 extern DmaChannel dma1Channel6;
 
-#endif	// def DISTORTOS_CHIP_STM32_DMAV1_DMA1_CHANNEL6_ENABLE
+#endif	// def DISTORTOS_CHIP_DMA1_CHANNEL6_ENABLE
 
-#ifdef DISTORTOS_CHIP_STM32_DMAV1_DMA1_CHANNEL7_ENABLE
+#ifdef DISTORTOS_CHIP_DMA1_CHANNEL7_ENABLE
 
 /// DMA1 channel 7 low-level driver
 extern DmaChannel dma1Channel7;
 
-#endif	// def DISTORTOS_CHIP_STM32_DMAV1_DMA1_CHANNEL7_ENABLE
+#endif	// def DISTORTOS_CHIP_DMA1_CHANNEL7_ENABLE
 
 }	// namespace chip
 

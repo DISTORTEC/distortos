@@ -26,7 +26,7 @@ namespace distortos
 namespace chip
 {
 
-#ifdef DISTORTOS_CHIP_STM32_DMAV1_DMA1_ENABLE
+#ifdef DISTORTOS_CHIP_DMA1_ENABLE
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | DMA1
@@ -59,7 +59,7 @@ const DmaPeripheral dma1Peripheral {DMA1_BASE};
 
 }	// namespace
 
-#ifdef DISTORTOS_CHIP_STM32_DMAV1_DMA1_CHANNEL1_ENABLE
+#ifdef DISTORTOS_CHIP_DMA1_CHANNEL1_ENABLE
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | DMA1 channel 1
@@ -88,9 +88,9 @@ extern "C" void DMA1_Channel1_IRQHandler()
 	dma1Channel1.interruptHandler();
 }
 
-#endif	// def DISTORTOS_CHIP_STM32_DMAV1_DMA1_CHANNEL1_ENABLE
+#endif	// def DISTORTOS_CHIP_DMA1_CHANNEL1_ENABLE
 
-#ifdef DISTORTOS_CHIP_STM32_DMAV1_DMA1_CHANNEL2_ENABLE
+#ifdef DISTORTOS_CHIP_DMA1_CHANNEL2_ENABLE
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | DMA1 channel 2
@@ -119,9 +119,9 @@ extern "C" void DMA1_Channel2_IRQHandler()
 	dma1Channel2.interruptHandler();
 }
 
-#endif	// def DISTORTOS_CHIP_STM32_DMAV1_DMA1_CHANNEL2_ENABLE
+#endif	// def DISTORTOS_CHIP_DMA1_CHANNEL2_ENABLE
 
-#ifdef DISTORTOS_CHIP_STM32_DMAV1_DMA1_CHANNEL3_ENABLE
+#ifdef DISTORTOS_CHIP_DMA1_CHANNEL3_ENABLE
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | DMA1 channel 3
@@ -150,9 +150,9 @@ extern "C" void DMA1_Channel3_IRQHandler()
 	dma1Channel3.interruptHandler();
 }
 
-#endif	// def DISTORTOS_CHIP_STM32_DMAV1_DMA1_CHANNEL3_ENABLE
+#endif	// def DISTORTOS_CHIP_DMA1_CHANNEL3_ENABLE
 
-#ifdef DISTORTOS_CHIP_STM32_DMAV1_DMA1_CHANNEL4_ENABLE
+#ifdef DISTORTOS_CHIP_DMA1_CHANNEL4_ENABLE
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | DMA1 channel 4
@@ -181,9 +181,9 @@ extern "C" void DMA1_Channel4_IRQHandler()
 	dma1Channel4.interruptHandler();
 }
 
-#endif	// def DISTORTOS_CHIP_STM32_DMAV1_DMA1_CHANNEL4_ENABLE
+#endif	// def DISTORTOS_CHIP_DMA1_CHANNEL4_ENABLE
 
-#ifdef DISTORTOS_CHIP_STM32_DMAV1_DMA1_CHANNEL5_ENABLE
+#ifdef DISTORTOS_CHIP_DMA1_CHANNEL5_ENABLE
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | DMA1 channel 5
@@ -212,9 +212,9 @@ extern "C" void DMA1_Channel5_IRQHandler()
 	dma1Channel5.interruptHandler();
 }
 
-#endif	// def DISTORTOS_CHIP_STM32_DMAV1_DMA1_CHANNEL5_ENABLE
+#endif	// def DISTORTOS_CHIP_DMA1_CHANNEL5_ENABLE
 
-#ifdef DISTORTOS_CHIP_STM32_DMAV1_DMA1_CHANNEL6_ENABLE
+#ifdef DISTORTOS_CHIP_DMA1_CHANNEL6_ENABLE
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | DMA1 channel 6
@@ -243,9 +243,9 @@ extern "C" void DMA1_Channel6_IRQHandler()
 	dma1Channel6.interruptHandler();
 }
 
-#endif	// def DISTORTOS_CHIP_STM32_DMAV1_DMA1_CHANNEL6_ENABLE
+#endif	// def DISTORTOS_CHIP_DMA1_CHANNEL6_ENABLE
 
-#ifdef DISTORTOS_CHIP_STM32_DMAV1_DMA1_CHANNEL7_ENABLE
+#ifdef DISTORTOS_CHIP_DMA1_CHANNEL7_ENABLE
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | DMA1 channel 7
@@ -274,9 +274,9 @@ extern "C" void DMA1_Channel7_IRQHandler()
 	dma1Channel7.interruptHandler();
 }
 
-#endif	// def DISTORTOS_CHIP_STM32_DMAV1_DMA1_CHANNEL7_ENABLE
+#endif	// def DISTORTOS_CHIP_DMA1_CHANNEL7_ENABLE
 
-#endif	// def DISTORTOS_CHIP_STM32_DMAV1_DMA1_ENABLE
+#endif	// def DISTORTOS_CHIP_DMA1_ENABLE
 
 }	// namespace chip
 

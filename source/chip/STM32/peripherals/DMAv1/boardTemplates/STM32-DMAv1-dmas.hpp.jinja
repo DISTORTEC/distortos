@@ -33,12 +33,12 @@ class DmaChannel;
 {% for key, dma in dictionary['DMAs'].items() if dma is mapping and 'ST,STM32-DMA-v1' in dma['compatible'] %}
 {% for vector in dma['interrupts']['vectors'] %}
 
-#ifdef DISTORTOS_CHIP_STM32_DMAV1_{{ key | upper }}_CHANNEL{{ loop.index }}_ENABLE
+#ifdef DISTORTOS_CHIP_{{ key | upper }}_CHANNEL{{ loop.index }}_ENABLE
 
 /// {{ key }} channel {{ loop.index }} low-level driver
 extern DmaChannel {{ key | lower }}Channel{{ loop.index }};
 
-#endif	// def DISTORTOS_CHIP_STM32_DMAV1_{{ key | upper }}_CHANNEL{{ loop.index }}_ENABLE
+#endif	// def DISTORTOS_CHIP_{{ key | upper }}_CHANNEL{{ loop.index }}_ENABLE
 {% endfor %}
 {% endfor %}
 
