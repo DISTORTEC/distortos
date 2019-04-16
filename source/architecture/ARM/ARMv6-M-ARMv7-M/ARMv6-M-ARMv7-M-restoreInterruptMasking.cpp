@@ -25,7 +25,7 @@ namespace architecture
 
 void restoreInterruptMasking(const InterruptMask interruptMask)
 {
-#if DISTORTOS_ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI != 0
+#if DISTORTOS_ARCHITECTURE_KERNEL_BASEPRI != 0
 
 #ifdef DISTORTOS_ARCHITECTURE_ARM_CORTEX_M7_R0P1
 	__disable_irq();	// ARM Cortex-M7 r0p1 bug ID 837070
@@ -37,11 +37,11 @@ void restoreInterruptMasking(const InterruptMask interruptMask)
 	__enable_irq();	// ARM Cortex-M7 r0p1 bug ID 837070
 #endif	// def DISTORTOS_ARCHITECTURE_ARM_CORTEX_M7_R0P1
 
-#else	// DISTORTOS_ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI == 0
+#else	// DISTORTOS_ARCHITECTURE_KERNEL_BASEPRI == 0
 
 	__set_PRIMASK(interruptMask);
 
-#endif	// DISTORTOS_ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI == 0
+#endif	// DISTORTOS_ARCHITECTURE_KERNEL_BASEPRI == 0
 }
 
 }	// namespace architecture

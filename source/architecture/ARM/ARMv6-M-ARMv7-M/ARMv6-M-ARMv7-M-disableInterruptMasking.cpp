@@ -25,19 +25,19 @@ namespace architecture
 
 InterruptMask disableInterruptMasking()
 {
-#if DISTORTOS_ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI != 0
+#if DISTORTOS_ARCHITECTURE_KERNEL_BASEPRI != 0
 
 	const auto interruptMask = __get_BASEPRI();
 	__set_BASEPRI(0);
 	return interruptMask;
 
-#else	// DISTORTOS_ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI == 0
+#else	// DISTORTOS_ARCHITECTURE_KERNEL_BASEPRI == 0
 
 	const auto interruptMask = __get_PRIMASK();
 	__enable_irq();
 	return interruptMask;
 
-#endif	// DISTORTOS_ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI == 0
+#endif	// DISTORTOS_ARCHITECTURE_KERNEL_BASEPRI == 0
 }
 
 }	// namespace architecture

@@ -63,7 +63,7 @@ distortosSetConfiguration(INTEGER
 		with priorities between \"x\" and 255 (both inclusive) may use system's functions, while interrupts with
 		priorities between 0 and \"x - 1\" (both inclusive) may not. If 0 is chosen, then all interrupts (except
 		HardFault and NMI) are disabled during critical sections, so they may use system's functions."
-		OUTPUT_NAME DISTORTOS_ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI)
+		OUTPUT_NAME DISTORTOS_ARCHITECTURE_KERNEL_BASEPRI)
 
 distortosSetConfiguration(STRING
 		distortos_Memory_regions_00_text_vectorTable

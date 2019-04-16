@@ -41,11 +41,11 @@ void startScheduling()
 	NVIC_SetPriority(PendSV_IRQn, 0xff);
 
 	// SVCall - high priority
-#ifdef DISTORTOS_ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI
-	constexpr uint32_t svcallPriority {DISTORTOS_ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI};
-#else	// !def DISTORTOS_ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI
+#ifdef DISTORTOS_ARCHITECTURE_KERNEL_BASEPRI
+	constexpr uint32_t svcallPriority {DISTORTOS_ARCHITECTURE_KERNEL_BASEPRI};
+#else	// !def DISTORTOS_ARCHITECTURE_KERNEL_BASEPRI
 	constexpr uint32_t svcallPriority {};
-#endif	// !def DISTORTOS_ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI
+#endif	// !def DISTORTOS_ARCHITECTURE_KERNEL_BASEPRI
 	NVIC_SetPriority(SVCall_IRQn, svcallPriority);
 
 	// configure SysTick timer as the tick timer

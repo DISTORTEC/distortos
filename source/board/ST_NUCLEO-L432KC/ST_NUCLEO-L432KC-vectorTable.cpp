@@ -31,11 +31,11 @@ using ExceptionVector = void(*)();
 +---------------------------------------------------------------------------------------------------------------------*/
 
 /// priority of interrupts
-#if defined(DISTORTOS_ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI)
-constexpr uint8_t interruptPriority {DISTORTOS_ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI};
-#else	// !defined(DISTORTOS_ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI)
+#if defined(DISTORTOS_ARCHITECTURE_KERNEL_BASEPRI)
+constexpr uint8_t interruptPriority {DISTORTOS_ARCHITECTURE_KERNEL_BASEPRI};
+#else	// !defined(DISTORTOS_ARCHITECTURE_KERNEL_BASEPRI)
 constexpr uint8_t interruptPriority {};
-#endif	// !defined(DISTORTOS_ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI)
+#endif	// !defined(DISTORTOS_ARCHITECTURE_KERNEL_BASEPRI)
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | local functions

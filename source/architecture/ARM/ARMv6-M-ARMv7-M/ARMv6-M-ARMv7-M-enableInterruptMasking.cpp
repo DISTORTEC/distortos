@@ -25,12 +25,12 @@ namespace architecture
 
 InterruptMask enableInterruptMasking()
 {
-#if DISTORTOS_ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI != 0
+#if DISTORTOS_ARCHITECTURE_KERNEL_BASEPRI != 0
 
 	const auto interruptMask = __get_BASEPRI();
-	constexpr auto basepriValue = DISTORTOS_ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI << (8 - __NVIC_PRIO_BITS);
+	constexpr auto basepriValue = DISTORTOS_ARCHITECTURE_KERNEL_BASEPRI << (8 - __NVIC_PRIO_BITS);
 	static_assert(basepriValue > 0 && basepriValue <= UINT8_MAX,
-			"Invalid DISTORTOS_ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI value!");
+			"Invalid DISTORTOS_ARCHITECTURE_KERNEL_BASEPRI value!");
 
 #ifdef DISTORTOS_ARCHITECTURE_ARM_CORTEX_M7_R0P1
 	__disable_irq();	// ARM Cortex-M7 r0p1 bug ID 837070
@@ -44,13 +44,13 @@ InterruptMask enableInterruptMasking()
 
 	return interruptMask;
 
-#else	// DISTORTOS_ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI == 0
+#else	// DISTORTOS_ARCHITECTURE_KERNEL_BASEPRI == 0
 
 	const auto interruptMask = __get_PRIMASK();
 	__disable_irq();
 	return interruptMask;
 
-#endif	// DISTORTOS_ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI == 0
+#endif	// DISTORTOS_ARCHITECTURE_KERNEL_BASEPRI == 0
 }
 
 }	// namespace architecture
