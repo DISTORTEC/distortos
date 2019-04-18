@@ -35,7 +35,7 @@ namespace distortos
 namespace chip
 {
 
-#ifdef DISTORTOS_CHIP_STM32_SDMMCV1_SDMMC1_ENABLE
+#ifdef DISTORTOS_CHIP_SDMMC1_ENABLE
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | SDMMC1
@@ -69,8 +69,8 @@ const SdmmcPeripheral sdmmc1Peripheral {SDMMC1_BASE, sdmmc1clkFrequency};
 SdMmcCardLowLevel sdmmc1
 {
 		sdmmc1Peripheral,
-		DMA_CHANNEL(DISTORTOS_CHIP_STM32_SDMMCV1_SDMMC1_DMA, DISTORTOS_CHIP_STM32_SDMMCV1_SDMMC1_DMA_CHANNEL),
-		DISTORTOS_CHIP_STM32_SDMMCV1_SDMMC1_DMA_REQUEST
+		DMA_CHANNEL(DISTORTOS_CHIP_SDMMC1_DMA, DISTORTOS_CHIP_SDMMC1_DMA_CHANNEL),
+		DISTORTOS_CHIP_SDMMC1_DMA_REQUEST
 };
 
 /**
@@ -82,7 +82,7 @@ extern "C" void SDMMC1_IRQHandler()
 	sdmmc1.interruptHandler();
 }
 
-#endif	// def DISTORTOS_CHIP_STM32_SDMMCV1_SDMMC1_ENABLE
+#endif	// def DISTORTOS_CHIP_SDMMC1_ENABLE
 
 }	// namespace chip
 

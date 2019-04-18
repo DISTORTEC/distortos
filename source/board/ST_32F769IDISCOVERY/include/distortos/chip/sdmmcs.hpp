@@ -29,19 +29,19 @@ class SdMmcCardLowLevel;
 | global objects
 +---------------------------------------------------------------------------------------------------------------------*/
 
-#ifdef DISTORTOS_CHIP_STM32_SDMMCV1_SDMMC1_ENABLE
+#ifdef DISTORTOS_CHIP_SDMMC1_ENABLE
 
 /// SD/MMC card low-level driver for SDMMC1
 extern SdMmcCardLowLevel sdmmc1;
 
-#endif	// def DISTORTOS_CHIP_STM32_SDMMCV1_SDMMC1_ENABLE
+#endif	// def DISTORTOS_CHIP_SDMMC1_ENABLE
 
-#ifdef DISTORTOS_CHIP_STM32_SDMMCV1_SDMMC2_ENABLE
+#ifdef DISTORTOS_CHIP_SDMMC2_ENABLE
 
 /// SD/MMC card low-level driver for SDMMC2
 extern SdMmcCardLowLevel sdmmc2;
 
-#endif	// def DISTORTOS_CHIP_STM32_SDMMCV1_SDMMC2_ENABLE
+#endif	// def DISTORTOS_CHIP_SDMMC2_ENABLE
 
 }	// namespace chip
 
