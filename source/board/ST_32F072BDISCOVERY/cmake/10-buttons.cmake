@@ -24,7 +24,7 @@ if(distortos_buttons)
 			OUTPUT_NAME DISTORTOS_BOARD_BUTTONS_B1_ENABLE)
 
 	if(distortos_buttons_B1)
-		list(APPEND STM32_GPIO_V2_GPIOA_DEPENDENTS "buttons B1")
+		list(APPEND DISTORTOS_CHIP_GPIOA_DEPENDENTS "buttons B1")
 	endif()
 
 endif(distortos_buttons)

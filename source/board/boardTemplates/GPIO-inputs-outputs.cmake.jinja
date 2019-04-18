@@ -26,8 +26,7 @@ if(distortos_{{ dictionaryKey }})
 			OUTPUT_NAME DISTORTOS_BOARD_{{ dictionaryKey | upper }}_{{ key | upper }}_ENABLE)
 
 	if(distortos_{{ dictionaryKey }}_{{ key }})
-		list(APPEND {{ value['GPIO']['port']['compatible'][0].rpartition(',')[2] | sanitize('[^0-9A-Za-z]') | upper }}_
-				{{- value['GPIO']['port']['$path'][-1] }}_DEPENDENTS "{{ dictionaryKey }} {{ key }}")
+		list(APPEND DISTORTOS_CHIP_{{ value['GPIO']['port']['$path'][-1] }}_DEPENDENTS "{{ dictionaryKey }} {{ key }}")
 	endif()
 {% endfor %}
 

@@ -24,7 +24,7 @@ if(distortos_leds)
 			OUTPUT_NAME DISTORTOS_BOARD_LEDS_LD1_ENABLE)
 
 	if(distortos_leds_Ld1)
-		list(APPEND STM32_GPIO_V2_GPIOI_DEPENDENTS "leds Ld1")
+		list(APPEND DISTORTOS_CHIP_GPIOI_DEPENDENTS "leds Ld1")
 	endif()
 
 endif(distortos_leds)

@@ -13,7 +13,7 @@
 distortosSetConfiguration(BOOLEAN
 		distortos_Peripherals_{{ key }}
 		OFF
-		DEPENDENTS ${STM32_GPIO_V1_{{ key | upper }}_DEPENDENTS}
+		DEPENDENTS ${DISTORTOS_CHIP_{{ key | upper }}_DEPENDENTS}
 		HELP "Enable {{ key | upper }}."
 		OUTPUT_NAME DISTORTOS_CHIP_{{ key | upper }}_ENABLE)
 {% endfor %}

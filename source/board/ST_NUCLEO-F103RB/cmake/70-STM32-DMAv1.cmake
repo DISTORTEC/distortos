@@ -12,7 +12,7 @@
 distortosSetConfiguration(BOOLEAN
 		distortos_Peripherals_DMA1
 		OFF
-		DEPENDENTS ${STM32_DMA_V1_DMA1_DEPENDENTS}
+		DEPENDENTS ${DISTORTOS_CHIP_DMA1_DEPENDENTS}
 		HELP "Enable DMA1 low-level driver."
 		OUTPUT_NAME DISTORTOS_CHIP_DMA1_ENABLE)
 
@@ -21,13 +21,13 @@ if(distortos_Peripherals_DMA1)
 	distortosSetConfiguration(BOOLEAN
 			distortos_Peripherals_DMA1_channel_1
 			OFF
-			DEPENDENTS ${STM32_DMA_V1_DMA1_CHANNEL1_DEPENDENTS}
+			DEPENDENTS ${DISTORTOS_CHIP_DMA1_CHANNEL1_DEPENDENTS}
 			HELP "Enable DMA1 channel 1 low-level driver."
 			OUTPUT_NAME DISTORTOS_CHIP_DMA1_CHANNEL1_ENABLE)
 
-	list(LENGTH STM32_DMA_V1_DMA1_CHANNEL1_DEPENDENTS length)
+	list(LENGTH DISTORTOS_CHIP_DMA1_CHANNEL1_DEPENDENTS length)
 	if(length GREATER 1)
-		string(REPLACE ";" ", " dependents "${STM32_DMA_V1_DMA1_CHANNEL1_DEPENDENTS}")
+		string(REPLACE ";" ", " dependents "${DISTORTOS_CHIP_DMA1_CHANNEL1_DEPENDENTS}")
 		message(STATUS "Warning: DMA1 channel 1 has ${length} dependents: ${dependents}. "
 				"DMA channel cannot be used simultaneously by multiple drivers.")
 	endif()
@@ -39,13 +39,13 @@ if(distortos_Peripherals_DMA1)
 	distortosSetConfiguration(BOOLEAN
 			distortos_Peripherals_DMA1_channel_2
 			OFF
-			DEPENDENTS ${STM32_DMA_V1_DMA1_CHANNEL2_DEPENDENTS}
+			DEPENDENTS ${DISTORTOS_CHIP_DMA1_CHANNEL2_DEPENDENTS}
 			HELP "Enable DMA1 channel 2 low-level driver."
 			OUTPUT_NAME DISTORTOS_CHIP_DMA1_CHANNEL2_ENABLE)
 
-	list(LENGTH STM32_DMA_V1_DMA1_CHANNEL2_DEPENDENTS length)
+	list(LENGTH DISTORTOS_CHIP_DMA1_CHANNEL2_DEPENDENTS length)
 	if(length GREATER 1)
-		string(REPLACE ";" ", " dependents "${STM32_DMA_V1_DMA1_CHANNEL2_DEPENDENTS}")
+		string(REPLACE ";" ", " dependents "${DISTORTOS_CHIP_DMA1_CHANNEL2_DEPENDENTS}")
 		message(STATUS "Warning: DMA1 channel 2 has ${length} dependents: ${dependents}. "
 				"DMA channel cannot be used simultaneously by multiple drivers.")
 	endif()
@@ -57,13 +57,13 @@ if(distortos_Peripherals_DMA1)
 	distortosSetConfiguration(BOOLEAN
 			distortos_Peripherals_DMA1_channel_3
 			OFF
-			DEPENDENTS ${STM32_DMA_V1_DMA1_CHANNEL3_DEPENDENTS}
+			DEPENDENTS ${DISTORTOS_CHIP_DMA1_CHANNEL3_DEPENDENTS}
 			HELP "Enable DMA1 channel 3 low-level driver."
 			OUTPUT_NAME DISTORTOS_CHIP_DMA1_CHANNEL3_ENABLE)
 
-	list(LENGTH STM32_DMA_V1_DMA1_CHANNEL3_DEPENDENTS length)
+	list(LENGTH DISTORTOS_CHIP_DMA1_CHANNEL3_DEPENDENTS length)
 	if(length GREATER 1)
-		string(REPLACE ";" ", " dependents "${STM32_DMA_V1_DMA1_CHANNEL3_DEPENDENTS}")
+		string(REPLACE ";" ", " dependents "${DISTORTOS_CHIP_DMA1_CHANNEL3_DEPENDENTS}")
 		message(STATUS "Warning: DMA1 channel 3 has ${length} dependents: ${dependents}. "
 				"DMA channel cannot be used simultaneously by multiple drivers.")
 	endif()
@@ -75,13 +75,13 @@ if(distortos_Peripherals_DMA1)
 	distortosSetConfiguration(BOOLEAN
 			distortos_Peripherals_DMA1_channel_4
 			OFF
-			DEPENDENTS ${STM32_DMA_V1_DMA1_CHANNEL4_DEPENDENTS}
+			DEPENDENTS ${DISTORTOS_CHIP_DMA1_CHANNEL4_DEPENDENTS}
 			HELP "Enable DMA1 channel 4 low-level driver."
 			OUTPUT_NAME DISTORTOS_CHIP_DMA1_CHANNEL4_ENABLE)
 
-	list(LENGTH STM32_DMA_V1_DMA1_CHANNEL4_DEPENDENTS length)
+	list(LENGTH DISTORTOS_CHIP_DMA1_CHANNEL4_DEPENDENTS length)
 	if(length GREATER 1)
-		string(REPLACE ";" ", " dependents "${STM32_DMA_V1_DMA1_CHANNEL4_DEPENDENTS}")
+		string(REPLACE ";" ", " dependents "${DISTORTOS_CHIP_DMA1_CHANNEL4_DEPENDENTS}")
 		message(STATUS "Warning: DMA1 channel 4 has ${length} dependents: ${dependents}. "
 				"DMA channel cannot be used simultaneously by multiple drivers.")
 	endif()
@@ -93,13 +93,13 @@ if(distortos_Peripherals_DMA1)
 	distortosSetConfiguration(BOOLEAN
 			distortos_Peripherals_DMA1_channel_5
 			OFF
-			DEPENDENTS ${STM32_DMA_V1_DMA1_CHANNEL5_DEPENDENTS}
+			DEPENDENTS ${DISTORTOS_CHIP_DMA1_CHANNEL5_DEPENDENTS}
 			HELP "Enable DMA1 channel 5 low-level driver."
 			OUTPUT_NAME DISTORTOS_CHIP_DMA1_CHANNEL5_ENABLE)
 
-	list(LENGTH STM32_DMA_V1_DMA1_CHANNEL5_DEPENDENTS length)
+	list(LENGTH DISTORTOS_CHIP_DMA1_CHANNEL5_DEPENDENTS length)
 	if(length GREATER 1)
-		string(REPLACE ";" ", " dependents "${STM32_DMA_V1_DMA1_CHANNEL5_DEPENDENTS}")
+		string(REPLACE ";" ", " dependents "${DISTORTOS_CHIP_DMA1_CHANNEL5_DEPENDENTS}")
 		message(STATUS "Warning: DMA1 channel 5 has ${length} dependents: ${dependents}. "
 				"DMA channel cannot be used simultaneously by multiple drivers.")
 	endif()
@@ -111,13 +111,13 @@ if(distortos_Peripherals_DMA1)
 	distortosSetConfiguration(BOOLEAN
 			distortos_Peripherals_DMA1_channel_6
 			OFF
-			DEPENDENTS ${STM32_DMA_V1_DMA1_CHANNEL6_DEPENDENTS}
+			DEPENDENTS ${DISTORTOS_CHIP_DMA1_CHANNEL6_DEPENDENTS}
 			HELP "Enable DMA1 channel 6 low-level driver."
 			OUTPUT_NAME DISTORTOS_CHIP_DMA1_CHANNEL6_ENABLE)
 
-	list(LENGTH STM32_DMA_V1_DMA1_CHANNEL6_DEPENDENTS length)
+	list(LENGTH DISTORTOS_CHIP_DMA1_CHANNEL6_DEPENDENTS length)
 	if(length GREATER 1)
-		string(REPLACE ";" ", " dependents "${STM32_DMA_V1_DMA1_CHANNEL6_DEPENDENTS}")
+		string(REPLACE ";" ", " dependents "${DISTORTOS_CHIP_DMA1_CHANNEL6_DEPENDENTS}")
 		message(STATUS "Warning: DMA1 channel 6 has ${length} dependents: ${dependents}. "
 				"DMA channel cannot be used simultaneously by multiple drivers.")
 	endif()
@@ -129,13 +129,13 @@ if(distortos_Peripherals_DMA1)
 	distortosSetConfiguration(BOOLEAN
 			distortos_Peripherals_DMA1_channel_7
 			OFF
-			DEPENDENTS ${STM32_DMA_V1_DMA1_CHANNEL7_DEPENDENTS}
+			DEPENDENTS ${DISTORTOS_CHIP_DMA1_CHANNEL7_DEPENDENTS}
 			HELP "Enable DMA1 channel 7 low-level driver."
 			OUTPUT_NAME DISTORTOS_CHIP_DMA1_CHANNEL7_ENABLE)
 
-	list(LENGTH STM32_DMA_V1_DMA1_CHANNEL7_DEPENDENTS length)
+	list(LENGTH DISTORTOS_CHIP_DMA1_CHANNEL7_DEPENDENTS length)
 	if(length GREATER 1)
-		string(REPLACE ";" ", " dependents "${STM32_DMA_V1_DMA1_CHANNEL7_DEPENDENTS}")
+		string(REPLACE ";" ", " dependents "${DISTORTOS_CHIP_DMA1_CHANNEL7_DEPENDENTS}")
 		message(STATUS "Warning: DMA1 channel 7 has ${length} dependents: ${dependents}. "
 				"DMA channel cannot be used simultaneously by multiple drivers.")
 	endif()
