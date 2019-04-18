@@ -33,7 +33,7 @@ if(distortos_Peripherals_DMA1)
 	endif()
 
 	if(distortos_Peripherals_DMA1_channel_1)
-		set(ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_DMA1_CHANNEL1_ENABLE ON)
+		set(ARCHITECTURE_NVIC_DMA1_CHANNEL1_ENABLE ON)
 	endif(distortos_Peripherals_DMA1_channel_1)
 
 	distortosSetConfiguration(BOOLEAN
@@ -51,7 +51,7 @@ if(distortos_Peripherals_DMA1)
 	endif()
 
 	if(distortos_Peripherals_DMA1_channel_2)
-		set(ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_DMA1_CHANNEL2_ENABLE ON)
+		set(ARCHITECTURE_NVIC_DMA1_CHANNEL2_ENABLE ON)
 	endif(distortos_Peripherals_DMA1_channel_2)
 
 	distortosSetConfiguration(BOOLEAN
@@ -69,7 +69,7 @@ if(distortos_Peripherals_DMA1)
 	endif()
 
 	if(distortos_Peripherals_DMA1_channel_3)
-		set(ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_DMA1_CHANNEL3_ENABLE ON)
+		set(ARCHITECTURE_NVIC_DMA1_CHANNEL3_ENABLE ON)
 	endif(distortos_Peripherals_DMA1_channel_3)
 
 	distortosSetConfiguration(BOOLEAN
@@ -87,7 +87,7 @@ if(distortos_Peripherals_DMA1)
 	endif()
 
 	if(distortos_Peripherals_DMA1_channel_4)
-		set(ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_DMA1_CHANNEL4_ENABLE ON)
+		set(ARCHITECTURE_NVIC_DMA1_CHANNEL4_ENABLE ON)
 	endif(distortos_Peripherals_DMA1_channel_4)
 
 	distortosSetConfiguration(BOOLEAN
@@ -105,7 +105,7 @@ if(distortos_Peripherals_DMA1)
 	endif()
 
 	if(distortos_Peripherals_DMA1_channel_5)
-		set(ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_DMA1_CHANNEL5_ENABLE ON)
+		set(ARCHITECTURE_NVIC_DMA1_CHANNEL5_ENABLE ON)
 	endif(distortos_Peripherals_DMA1_channel_5)
 
 	distortosSetConfiguration(BOOLEAN
@@ -123,7 +123,7 @@ if(distortos_Peripherals_DMA1)
 	endif()
 
 	if(distortos_Peripherals_DMA1_channel_6)
-		set(ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_DMA1_CHANNEL6_ENABLE ON)
+		set(ARCHITECTURE_NVIC_DMA1_CHANNEL6_ENABLE ON)
 	endif(distortos_Peripherals_DMA1_channel_6)
 
 	distortosSetConfiguration(BOOLEAN
@@ -141,7 +141,7 @@ if(distortos_Peripherals_DMA1)
 	endif()
 
 	if(distortos_Peripherals_DMA1_channel_7)
-		set(ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_DMA1_CHANNEL7_ENABLE ON)
+		set(ARCHITECTURE_NVIC_DMA1_CHANNEL7_ENABLE ON)
 	endif(distortos_Peripherals_DMA1_channel_7)
 
 endif(distortos_Peripherals_DMA1)

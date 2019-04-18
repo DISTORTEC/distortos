@@ -33,7 +33,7 @@ if(distortos_Peripherals_DMA1)
 	endif()
 
 	if(distortos_Peripherals_DMA1_channel_0)
-		set(ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_DMA1_STREAM0_ENABLE ON)
+		set(ARCHITECTURE_NVIC_DMA1_STREAM0_ENABLE ON)
 	endif(distortos_Peripherals_DMA1_channel_0)
 
 	distortosSetConfiguration(BOOLEAN
@@ -51,7 +51,7 @@ if(distortos_Peripherals_DMA1)
 	endif()
 
 	if(distortos_Peripherals_DMA1_channel_1)
-		set(ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_DMA1_STREAM1_ENABLE ON)
+		set(ARCHITECTURE_NVIC_DMA1_STREAM1_ENABLE ON)
 	endif(distortos_Peripherals_DMA1_channel_1)
 
 	distortosSetConfiguration(BOOLEAN
@@ -69,7 +69,7 @@ if(distortos_Peripherals_DMA1)
 	endif()
 
 	if(distortos_Peripherals_DMA1_channel_2)
-		set(ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_DMA1_STREAM2_ENABLE ON)
+		set(ARCHITECTURE_NVIC_DMA1_STREAM2_ENABLE ON)
 	endif(distortos_Peripherals_DMA1_channel_2)
 
 	distortosSetConfiguration(BOOLEAN
@@ -87,7 +87,7 @@ if(distortos_Peripherals_DMA1)
 	endif()
 
 	if(distortos_Peripherals_DMA1_channel_3)
-		set(ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_DMA1_STREAM3_ENABLE ON)
+		set(ARCHITECTURE_NVIC_DMA1_STREAM3_ENABLE ON)
 	endif(distortos_Peripherals_DMA1_channel_3)
 
 	distortosSetConfiguration(BOOLEAN
@@ -105,7 +105,7 @@ if(distortos_Peripherals_DMA1)
 	endif()
 
 	if(distortos_Peripherals_DMA1_channel_4)
-		set(ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_DMA1_STREAM4_ENABLE ON)
+		set(ARCHITECTURE_NVIC_DMA1_STREAM4_ENABLE ON)
 	endif(distortos_Peripherals_DMA1_channel_4)
 
 	distortosSetConfiguration(BOOLEAN
@@ -123,7 +123,7 @@ if(distortos_Peripherals_DMA1)
 	endif()
 
 	if(distortos_Peripherals_DMA1_channel_5)
-		set(ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_DMA1_STREAM5_ENABLE ON)
+		set(ARCHITECTURE_NVIC_DMA1_STREAM5_ENABLE ON)
 	endif(distortos_Peripherals_DMA1_channel_5)
 
 	distortosSetConfiguration(BOOLEAN
@@ -141,7 +141,7 @@ if(distortos_Peripherals_DMA1)
 	endif()
 
 	if(distortos_Peripherals_DMA1_channel_6)
-		set(ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_DMA1_STREAM6_ENABLE ON)
+		set(ARCHITECTURE_NVIC_DMA1_STREAM6_ENABLE ON)
 	endif(distortos_Peripherals_DMA1_channel_6)
 
 	distortosSetConfiguration(BOOLEAN
@@ -159,7 +159,7 @@ if(distortos_Peripherals_DMA1)
 	endif()
 
 	if(distortos_Peripherals_DMA1_channel_7)
-		set(ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_DMA1_STREAM7_ENABLE ON)
+		set(ARCHITECTURE_NVIC_DMA1_STREAM7_ENABLE ON)
 	endif(distortos_Peripherals_DMA1_channel_7)
 
 endif(distortos_Peripherals_DMA1)
@@ -188,7 +188,7 @@ if(distortos_Peripherals_DMA2)
 	endif()
 
 	if(distortos_Peripherals_DMA2_channel_0)
-		set(ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_DMA2_STREAM0_ENABLE ON)
+		set(ARCHITECTURE_NVIC_DMA2_STREAM0_ENABLE ON)
 	endif(distortos_Peripherals_DMA2_channel_0)
 
 	distortosSetConfiguration(BOOLEAN
@@ -206,7 +206,7 @@ if(distortos_Peripherals_DMA2)
 	endif()
 
 	if(distortos_Peripherals_DMA2_channel_1)
-		set(ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_DMA2_STREAM1_ENABLE ON)
+		set(ARCHITECTURE_NVIC_DMA2_STREAM1_ENABLE ON)
 	endif(distortos_Peripherals_DMA2_channel_1)
 
 	distortosSetConfiguration(BOOLEAN
@@ -224,7 +224,7 @@ if(distortos_Peripherals_DMA2)
 	endif()
 
 	if(distortos_Peripherals_DMA2_channel_2)
-		set(ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_DMA2_STREAM2_ENABLE ON)
+		set(ARCHITECTURE_NVIC_DMA2_STREAM2_ENABLE ON)
 	endif(distortos_Peripherals_DMA2_channel_2)
 
 	distortosSetConfiguration(BOOLEAN
@@ -242,7 +242,7 @@ if(distortos_Peripherals_DMA2)
 	endif()
 
 	if(distortos_Peripherals_DMA2_channel_3)
-		set(ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_DMA2_STREAM3_ENABLE ON)
+		set(ARCHITECTURE_NVIC_DMA2_STREAM3_ENABLE ON)
 	endif(distortos_Peripherals_DMA2_channel_3)
 
 	distortosSetConfiguration(BOOLEAN
@@ -260,7 +260,7 @@ if(distortos_Peripherals_DMA2)
 	endif()
 
 	if(distortos_Peripherals_DMA2_channel_4)
-		set(ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_DMA2_STREAM4_ENABLE ON)
+		set(ARCHITECTURE_NVIC_DMA2_STREAM4_ENABLE ON)
 	endif(distortos_Peripherals_DMA2_channel_4)
 
 	distortosSetConfiguration(BOOLEAN
@@ -278,7 +278,7 @@ if(distortos_Peripherals_DMA2)
 	endif()
 
 	if(distortos_Peripherals_DMA2_channel_5)
-		set(ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_DMA2_STREAM5_ENABLE ON)
+		set(ARCHITECTURE_NVIC_DMA2_STREAM5_ENABLE ON)
 	endif(distortos_Peripherals_DMA2_channel_5)
 
 	distortosSetConfiguration(BOOLEAN
@@ -296,7 +296,7 @@ if(distortos_Peripherals_DMA2)
 	endif()
 
 	if(distortos_Peripherals_DMA2_channel_6)
-		set(ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_DMA2_STREAM6_ENABLE ON)
+		set(ARCHITECTURE_NVIC_DMA2_STREAM6_ENABLE ON)
 	endif(distortos_Peripherals_DMA2_channel_6)
 
 	distortosSetConfiguration(BOOLEAN
@@ -314,7 +314,7 @@ if(distortos_Peripherals_DMA2)
 	endif()
 
 	if(distortos_Peripherals_DMA2_channel_7)
-		set(ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_DMA2_STREAM7_ENABLE ON)
+		set(ARCHITECTURE_NVIC_DMA2_STREAM7_ENABLE ON)
 	endif(distortos_Peripherals_DMA2_channel_7)
 
 endif(distortos_Peripherals_DMA2)

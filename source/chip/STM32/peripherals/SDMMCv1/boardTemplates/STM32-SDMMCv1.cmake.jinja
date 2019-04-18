@@ -44,7 +44,7 @@ if(distortos_Peripherals_{{ key }})
 	list(APPEND {{ dmaVersion }}_DMA${CMAKE_MATCH_1}_DEPENDENTS "{{ key }}")
 	list(APPEND {{ dmaVersion }}_DMA${CMAKE_MATCH_1}_CHANNEL${CMAKE_MATCH_2}_DEPENDENTS "{{ key }}")
 
-	set(ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_{{ sdmmc['interrupt']['vector'] | upper }}_ENABLE ON)
+	set(ARCHITECTURE_NVIC_{{ sdmmc['interrupt']['vector'] | upper }}_ENABLE ON)
 
 endif(distortos_Peripherals_{{ key }})
 {% endfor %}

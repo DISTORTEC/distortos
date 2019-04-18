@@ -73,7 +73,7 @@ if(distortos_Peripherals_SPI1)
 
 	else(distortos_Peripherals_SPI1_00_Use_DMA)
 
-		set(ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_SPI1_ENABLE ON)
+		set(ARCHITECTURE_NVIC_SPI1_ENABLE ON)
 
 	endif(distortos_Peripherals_SPI1_00_Use_DMA)
 
@@ -141,7 +141,7 @@ if(distortos_Peripherals_SPI2)
 
 	else(distortos_Peripherals_SPI2_00_Use_DMA)
 
-		set(ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_SPI2_ENABLE ON)
+		set(ARCHITECTURE_NVIC_SPI2_ENABLE ON)
 
 	endif(distortos_Peripherals_SPI2_00_Use_DMA)
 
@@ -211,7 +211,7 @@ if(distortos_Peripherals_SPI3)
 
 	else(distortos_Peripherals_SPI3_00_Use_DMA)
 
-		set(ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_SPI3_ENABLE ON)
+		set(ARCHITECTURE_NVIC_SPI3_ENABLE ON)
 
 	endif(distortos_Peripherals_SPI3_00_Use_DMA)
 

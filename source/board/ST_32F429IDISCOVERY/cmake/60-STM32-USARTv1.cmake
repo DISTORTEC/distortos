@@ -20,7 +20,7 @@ distortosSetConfiguration(BOOLEAN
 		OUTPUT_NAME DISTORTOS_CHIP_USART1_ENABLE)
 
 if(distortos_Peripherals_USART1)
-	set(ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_USART1_ENABLE ON)
+	set(ARCHITECTURE_NVIC_USART1_ENABLE ON)
 endif()
 
 distortosSetConfiguration(BOOLEAN
@@ -30,7 +30,7 @@ distortosSetConfiguration(BOOLEAN
 		OUTPUT_NAME DISTORTOS_CHIP_USART2_ENABLE)
 
 if(distortos_Peripherals_USART2)
-	set(ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_USART2_ENABLE ON)
+	set(ARCHITECTURE_NVIC_USART2_ENABLE ON)
 endif()
 
 distortosSetConfiguration(BOOLEAN
@@ -40,7 +40,7 @@ distortosSetConfiguration(BOOLEAN
 		OUTPUT_NAME DISTORTOS_CHIP_USART3_ENABLE)
 
 if(distortos_Peripherals_USART3)
-	set(ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_USART3_ENABLE ON)
+	set(ARCHITECTURE_NVIC_USART3_ENABLE ON)
 endif()
 
 distortosSetConfiguration(BOOLEAN
@@ -50,7 +50,7 @@ distortosSetConfiguration(BOOLEAN
 		OUTPUT_NAME DISTORTOS_CHIP_UART4_ENABLE)
 
 if(distortos_Peripherals_UART4)
-	set(ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_UART4_ENABLE ON)
+	set(ARCHITECTURE_NVIC_UART4_ENABLE ON)
 endif()
 
 distortosSetConfiguration(BOOLEAN
@@ -60,7 +60,7 @@ distortosSetConfiguration(BOOLEAN
 		OUTPUT_NAME DISTORTOS_CHIP_UART5_ENABLE)
 
 if(distortos_Peripherals_UART5)
-	set(ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_UART5_ENABLE ON)
+	set(ARCHITECTURE_NVIC_UART5_ENABLE ON)
 endif()
 
 distortosSetConfiguration(BOOLEAN
@@ -70,7 +70,7 @@ distortosSetConfiguration(BOOLEAN
 		OUTPUT_NAME DISTORTOS_CHIP_USART6_ENABLE)
 
 if(distortos_Peripherals_USART6)
-	set(ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_USART6_ENABLE ON)
+	set(ARCHITECTURE_NVIC_USART6_ENABLE ON)
 endif()
 
 distortosSetConfiguration(BOOLEAN
@@ -80,7 +80,7 @@ distortosSetConfiguration(BOOLEAN
 		OUTPUT_NAME DISTORTOS_CHIP_UART7_ENABLE)
 
 if(distortos_Peripherals_UART7)
-	set(ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_UART7_ENABLE ON)
+	set(ARCHITECTURE_NVIC_UART7_ENABLE ON)
 endif()
 
 distortosSetConfiguration(BOOLEAN
@@ -90,7 +90,7 @@ distortosSetConfiguration(BOOLEAN
 		OUTPUT_NAME DISTORTOS_CHIP_UART8_ENABLE)
 
 if(distortos_Peripherals_UART8)
-	set(ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_UART8_ENABLE ON)
+	set(ARCHITECTURE_NVIC_UART8_ENABLE ON)
 endif()
 
 include("${CMAKE_CURRENT_SOURCE_DIR}/source/chip/STM32/peripherals/USARTv1/distortos-sources.cmake")

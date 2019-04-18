@@ -35,7 +35,7 @@ if(distortos_Peripherals_{{ key }})
 	endif()
 
 	if(distortos_Peripherals_{{ key }}_channel_{{ loop.index0 }})
-		set(ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_{{ vector | upper }}_ENABLE ON)
+		set(ARCHITECTURE_NVIC_{{ vector | upper }}_ENABLE ON)
 	endif(distortos_Peripherals_{{ key }}_channel_{{ loop.index0 }})
 {% endfor %}
 

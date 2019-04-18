@@ -57,10 +57,10 @@ constexpr uint8_t interruptPriority {};
 void nvicLowLevelInitializer()
 {
 {% for item in dictionary['NVIC']['chip-vectors'] if item %}
-#ifdef DISTORTOS_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_{{ item['name'] | upper }}_ENABLE
+#ifdef DISTORTOS_ARCHITECTURE_NVIC_{{ item['name'] | upper }}_ENABLE
 	NVIC_SetPriority({{ item['name'] }}_IRQn, interruptPriority);
 	NVIC_EnableIRQ({{ item['name'] }}_IRQn);
-#endif	// def DISTORTOS_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_{{ item['name'] | upper }}_ENABLE
+#endif	// def DISTORTOS_ARCHITECTURE_NVIC_{{ item['name'] | upper }}_ENABLE
 {% endfor %}
 }
 

@@ -20,7 +20,7 @@ distortosSetConfiguration(BOOLEAN
 		OUTPUT_NAME DISTORTOS_CHIP_USART1_ENABLE)
 
 if(distortos_Peripherals_USART1)
-	set(ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_USART1_ENABLE ON)
+	set(ARCHITECTURE_NVIC_USART1_ENABLE ON)
 endif()
 
 distortosSetConfiguration(BOOLEAN
@@ -30,7 +30,7 @@ distortosSetConfiguration(BOOLEAN
 		OUTPUT_NAME DISTORTOS_CHIP_USART2_ENABLE)
 
 if(distortos_Peripherals_USART2)
-	set(ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_USART2_ENABLE ON)
+	set(ARCHITECTURE_NVIC_USART2_ENABLE ON)
 endif()
 
 distortosSetConfiguration(BOOLEAN
@@ -40,7 +40,7 @@ distortosSetConfiguration(BOOLEAN
 		OUTPUT_NAME DISTORTOS_CHIP_USART4_ENABLE)
 
 if(distortos_Peripherals_USART4)
-	set(ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_USART4_ENABLE ON)
+	set(ARCHITECTURE_NVIC_USART4_ENABLE ON)
 endif()
 
 distortosSetConfiguration(BOOLEAN
@@ -50,7 +50,7 @@ distortosSetConfiguration(BOOLEAN
 		OUTPUT_NAME DISTORTOS_CHIP_USART5_ENABLE)
 
 if(distortos_Peripherals_USART5)
-	set(ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_USART5_ENABLE ON)
+	set(ARCHITECTURE_NVIC_USART5_ENABLE ON)
 endif()
 
 include("${CMAKE_CURRENT_SOURCE_DIR}/source/chip/STM32/peripherals/USARTv2/distortos-sources.cmake")

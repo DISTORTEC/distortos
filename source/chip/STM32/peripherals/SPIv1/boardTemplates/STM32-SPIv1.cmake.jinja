@@ -78,7 +78,7 @@ if(distortos_Peripherals_{{ key }})
 
 	else(distortos_Peripherals_{{ key }}_00_Use_DMA)
 
-		set(ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_{{ spi['interrupt']['vector'] | upper }}_ENABLE ON)
+		set(ARCHITECTURE_NVIC_{{ spi['interrupt']['vector'] | upper }}_ENABLE ON)
 
 	endif(distortos_Peripherals_{{ key }}_00_Use_DMA)
 

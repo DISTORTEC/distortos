@@ -198,16 +198,16 @@ distortosSetConfiguration(STRING
 {% for item in dictionary['NVIC']['chip-vectors'] if item %}
 {% for subvector in item.get('subvectors', []) %}
 
-if(ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_{{ subvector | upper }}_ENABLE)
-	set(ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_{{ item['name'] | upper }}_ENABLE ON)
-endif(ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_{{ subvector | upper }}_ENABLE)
+if(ARCHITECTURE_NVIC_{{ subvector | upper }}_ENABLE)
+	set(ARCHITECTURE_NVIC_{{ item['name'] | upper }}_ENABLE ON)
+endif(ARCHITECTURE_NVIC_{{ subvector | upper }}_ENABLE)
 {% endfor %}
 
-if(ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_{{ item['name'] | upper }}_ENABLE)
+if(ARCHITECTURE_NVIC_{{ item['name'] | upper }}_ENABLE)
 	distortosSetFixedConfiguration(BOOLEAN
-			DISTORTOS_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_{{ item['name'] | upper }}_ENABLE
+			DISTORTOS_ARCHITECTURE_NVIC_{{ item['name'] | upper }}_ENABLE
 			ON)
-endif(ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_{{ item['name'] | upper }}_ENABLE)
+endif(ARCHITECTURE_NVIC_{{ item['name'] | upper }}_ENABLE)
 {% endfor %}
 {% endif %}
 
