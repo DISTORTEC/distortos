@@ -16,7 +16,7 @@ distortosSetConfiguration(BOOLEAN
 		distortos_Peripherals_{{ key }}
 		OFF
 		HELP "Enable {{ key }} low-level driver."
-		OUTPUT_NAME DISTORTOS_CHIP_STM32_SPIV2_{{ key | upper }}_ENABLE)
+		OUTPUT_NAME DISTORTOS_CHIP_{{ key | upper }}_ENABLE)
 
 if(distortos_Peripherals_{{ key }})
 
@@ -24,7 +24,7 @@ if(distortos_Peripherals_{{ key }})
 			distortos_Peripherals_{{ key }}_00_Use_DMA
 			ON
 			HELP "Select whether {{ key }} low-level driver uses DMA (true) or interrupts (false) for transfers."
-			OUTPUT_NAME DISTORTOS_CHIP_STM32_SPIV2_{{ key | upper }}_DMA_BASED)
+			OUTPUT_NAME DISTORTOS_CHIP_{{ key | upper }}_DMA_BASED)
 
 	if(distortos_Peripherals_{{ key }}_00_Use_DMA)
 
@@ -41,13 +41,13 @@ if(distortos_Peripherals_{{ key }})
 				dummy
 				"${distortos_Peripherals_{{ key }}_01_RX_DMA}")
 		distortosSetFixedConfiguration(INTEGER
-				DISTORTOS_CHIP_STM32_SPIV2_{{ key | upper }}_RX_DMA
+				DISTORTOS_CHIP_{{ key | upper }}_RX_DMA
 				"${CMAKE_MATCH_1}")
 		distortosSetFixedConfiguration(INTEGER
-				DISTORTOS_CHIP_STM32_SPIV2_{{ key | upper }}_RX_DMA_CHANNEL
+				DISTORTOS_CHIP_{{ key | upper }}_RX_DMA_CHANNEL
 				"${CMAKE_MATCH_2}")
 		distortosSetFixedConfiguration(INTEGER
-				DISTORTOS_CHIP_STM32_SPIV2_{{ key | upper }}_RX_DMA_REQUEST
+				DISTORTOS_CHIP_{{ key | upper }}_RX_DMA_REQUEST
 				"${CMAKE_MATCH_3}")
 		list(APPEND {{ dmaVersion }}_DMA${CMAKE_MATCH_1}_DEPENDENTS "{{ key }} RX")
 		list(APPEND {{ dmaVersion }}_DMA${CMAKE_MATCH_1}_CHANNEL${CMAKE_MATCH_2}_DEPENDENTS "{{ key }} RX")
@@ -65,13 +65,13 @@ if(distortos_Peripherals_{{ key }})
 				dummy
 				"${distortos_Peripherals_{{ key }}_02_TX_DMA}")
 		distortosSetFixedConfiguration(INTEGER
-				DISTORTOS_CHIP_STM32_SPIV2_{{ key | upper }}_TX_DMA
+				DISTORTOS_CHIP_{{ key | upper }}_TX_DMA
 				"${CMAKE_MATCH_1}")
 		distortosSetFixedConfiguration(INTEGER
-				DISTORTOS_CHIP_STM32_SPIV2_{{ key | upper }}_TX_DMA_CHANNEL
+				DISTORTOS_CHIP_{{ key | upper }}_TX_DMA_CHANNEL
 				"${CMAKE_MATCH_2}")
 		distortosSetFixedConfiguration(INTEGER
-				DISTORTOS_CHIP_STM32_SPIV2_{{ key | upper }}_TX_DMA_REQUEST
+				DISTORTOS_CHIP_{{ key | upper }}_TX_DMA_REQUEST
 				"${CMAKE_MATCH_3}")
 		list(APPEND {{ dmaVersion }}_DMA${CMAKE_MATCH_1}_DEPENDENTS "{{ key }} TX")
 		list(APPEND {{ dmaVersion }}_DMA${CMAKE_MATCH_1}_CHANNEL${CMAKE_MATCH_2}_DEPENDENTS "{{ key }} TX")
