@@ -27,11 +27,11 @@ namespace chip
 +---------------------------------------------------------------------------------------------------------------------*/
 {% for key, uart in dictionary['UARTs'].items() if uart is mapping and 'ST,STM32-USART-v2' in uart['compatible'] %}
 
-#ifdef DISTORTOS_CHIP_STM32_USARTV2_{{ key | upper }}_ENABLE
+#ifdef DISTORTOS_CHIP_{{ key | upper }}_ENABLE
 
 ChipUartLowLevel {{ key | lower }} {ChipUartLowLevel::{{ key | lower }}Parameters};
 
-#endif	// def DISTORTOS_CHIP_STM32_USARTV2_{{ key | upper }}_ENABLE
+#endif	// def DISTORTOS_CHIP_{{ key | upper }}_ENABLE
 {% endfor %}
 
 /*---------------------------------------------------------------------------------------------------------------------+
@@ -39,7 +39,7 @@ ChipUartLowLevel {{ key | lower }} {ChipUartLowLevel::{{ key | lower }}Parameter
 +---------------------------------------------------------------------------------------------------------------------*/
 {% for key, uart in dictionary['UARTs'].items() if uart is mapping and 'ST,STM32-USART-v2' in uart['compatible'] %}
 
-#ifdef DISTORTOS_CHIP_STM32_USARTV2_{{ key | upper }}_ENABLE
+#ifdef DISTORTOS_CHIP_{{ key | upper }}_ENABLE
 
 /**
  * \brief {{ uart['interrupt']['vector'] }} interrupt handler
@@ -50,7 +50,7 @@ extern "C" void {{ uart['interrupt']['vector'] }}_IRQHandler()
 	{{ key | lower }}.interruptHandler();
 }
 
-#endif	// def DISTORTOS_CHIP_STM32_USARTV2_{{ key | upper }}_ENABLE
+#endif	// def DISTORTOS_CHIP_{{ key | upper }}_ENABLE
 {% endfor %}
 
 }	// namespace chip

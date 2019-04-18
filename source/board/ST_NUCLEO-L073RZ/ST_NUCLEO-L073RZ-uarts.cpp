@@ -26,35 +26,35 @@ namespace chip
 | global objects
 +---------------------------------------------------------------------------------------------------------------------*/
 
-#ifdef DISTORTOS_CHIP_STM32_USARTV2_USART1_ENABLE
+#ifdef DISTORTOS_CHIP_USART1_ENABLE
 
 ChipUartLowLevel usart1 {ChipUartLowLevel::usart1Parameters};
 
-#endif	// def DISTORTOS_CHIP_STM32_USARTV2_USART1_ENABLE
+#endif	// def DISTORTOS_CHIP_USART1_ENABLE
 
-#ifdef DISTORTOS_CHIP_STM32_USARTV2_USART2_ENABLE
+#ifdef DISTORTOS_CHIP_USART2_ENABLE
 
 ChipUartLowLevel usart2 {ChipUartLowLevel::usart2Parameters};
 
-#endif	// def DISTORTOS_CHIP_STM32_USARTV2_USART2_ENABLE
+#endif	// def DISTORTOS_CHIP_USART2_ENABLE
 
-#ifdef DISTORTOS_CHIP_STM32_USARTV2_USART4_ENABLE
+#ifdef DISTORTOS_CHIP_USART4_ENABLE
 
 ChipUartLowLevel usart4 {ChipUartLowLevel::usart4Parameters};
 
-#endif	// def DISTORTOS_CHIP_STM32_USARTV2_USART4_ENABLE
+#endif	// def DISTORTOS_CHIP_USART4_ENABLE
 
-#ifdef DISTORTOS_CHIP_STM32_USARTV2_USART5_ENABLE
+#ifdef DISTORTOS_CHIP_USART5_ENABLE
 
 ChipUartLowLevel usart5 {ChipUartLowLevel::usart5Parameters};
 
-#endif	// def DISTORTOS_CHIP_STM32_USARTV2_USART5_ENABLE
+#endif	// def DISTORTOS_CHIP_USART5_ENABLE
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | global functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-#ifdef DISTORTOS_CHIP_STM32_USARTV2_USART1_ENABLE
+#ifdef DISTORTOS_CHIP_USART1_ENABLE
 
 /**
  * \brief USART1 interrupt handler
@@ -65,9 +65,9 @@ extern "C" void USART1_IRQHandler()
 	usart1.interruptHandler();
 }
 
-#endif	// def DISTORTOS_CHIP_STM32_USARTV2_USART1_ENABLE
+#endif	// def DISTORTOS_CHIP_USART1_ENABLE
 
-#ifdef DISTORTOS_CHIP_STM32_USARTV2_USART2_ENABLE
+#ifdef DISTORTOS_CHIP_USART2_ENABLE
 
 /**
  * \brief USART2 interrupt handler
@@ -78,9 +78,9 @@ extern "C" void USART2_IRQHandler()
 	usart2.interruptHandler();
 }
 
-#endif	// def DISTORTOS_CHIP_STM32_USARTV2_USART2_ENABLE
+#endif	// def DISTORTOS_CHIP_USART2_ENABLE
 
-#ifdef DISTORTOS_CHIP_STM32_USARTV2_USART4_ENABLE
+#ifdef DISTORTOS_CHIP_USART4_ENABLE
 
 /**
  * \brief USART4 interrupt handler
@@ -91,9 +91,9 @@ extern "C" void USART4_IRQHandler()
 	usart4.interruptHandler();
 }
 
-#endif	// def DISTORTOS_CHIP_STM32_USARTV2_USART4_ENABLE
+#endif	// def DISTORTOS_CHIP_USART4_ENABLE
 
-#ifdef DISTORTOS_CHIP_STM32_USARTV2_USART5_ENABLE
+#ifdef DISTORTOS_CHIP_USART5_ENABLE
 
 /**
  * \brief USART5 interrupt handler
@@ -104,7 +104,7 @@ extern "C" void USART5_IRQHandler()
 	usart5.interruptHandler();
 }
 
-#endif	// def DISTORTOS_CHIP_STM32_USARTV2_USART5_ENABLE
+#endif	// def DISTORTOS_CHIP_USART5_ENABLE
 
 }	// namespace chip
 
