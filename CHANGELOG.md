@@ -124,6 +124,12 @@ each board. Data used to generate vector table is taken from chip *YAML* files, 
 `.text.vectorTable`.
 - Changed names of some interrupt vectors of *STM32F0*, *STM32F1*, *STM32L0* and *STM32L4* to be consistent with
 `..._IRQn` names of `IRQn_Type` enum.
+- Renamed all configuration `#define`s in `distortosConfiguration.h` from `CONFIG_...` to `DISTORTOS_...`. Some of them
+were also shortened and simplified by removing redundant parts like architecture name
+(e.g. `CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_MAIN_STACK_SIZE` -> `DISTORTOS_ARCHITECTURE_MAIN_STACK_SIZE`), chip family
+(e.g. `CONFIG_CHIP_STM32F0_RCC_HSE_FREQUENCY` -> `DISTORTOS_CHIP_RCC_HSE_FREQUENCY`) or peripheral version
+(e.g. `CONFIG_CHIP_STM32_SDMMCV1_SDMMC1_DMA` -> `DISTORTOS_CHIP_SDMMC1_DMA`). This change requires the board to be
+regenerated.
 - Update *CMSIS* to version 5.4.0.
 
 ### Fixed
