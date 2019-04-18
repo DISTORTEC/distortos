@@ -26,29 +26,29 @@ namespace chip
 | global objects
 +---------------------------------------------------------------------------------------------------------------------*/
 
-#ifdef DISTORTOS_CHIP_STM32_USARTV1_USART1_ENABLE
+#ifdef DISTORTOS_CHIP_USART1_ENABLE
 
 ChipUartLowLevel usart1 {ChipUartLowLevel::usart1Parameters};
 
-#endif	// def DISTORTOS_CHIP_STM32_USARTV1_USART1_ENABLE
+#endif	// def DISTORTOS_CHIP_USART1_ENABLE
 
-#ifdef DISTORTOS_CHIP_STM32_USARTV1_USART2_ENABLE
+#ifdef DISTORTOS_CHIP_USART2_ENABLE
 
 ChipUartLowLevel usart2 {ChipUartLowLevel::usart2Parameters};
 
-#endif	// def DISTORTOS_CHIP_STM32_USARTV1_USART2_ENABLE
+#endif	// def DISTORTOS_CHIP_USART2_ENABLE
 
-#ifdef DISTORTOS_CHIP_STM32_USARTV1_USART6_ENABLE
+#ifdef DISTORTOS_CHIP_USART6_ENABLE
 
 ChipUartLowLevel usart6 {ChipUartLowLevel::usart6Parameters};
 
-#endif	// def DISTORTOS_CHIP_STM32_USARTV1_USART6_ENABLE
+#endif	// def DISTORTOS_CHIP_USART6_ENABLE
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | global functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-#ifdef DISTORTOS_CHIP_STM32_USARTV1_USART1_ENABLE
+#ifdef DISTORTOS_CHIP_USART1_ENABLE
 
 /**
  * \brief USART1 interrupt handler
@@ -59,9 +59,9 @@ extern "C" void USART1_IRQHandler()
 	usart1.interruptHandler();
 }
 
-#endif	// def DISTORTOS_CHIP_STM32_USARTV1_USART1_ENABLE
+#endif	// def DISTORTOS_CHIP_USART1_ENABLE
 
-#ifdef DISTORTOS_CHIP_STM32_USARTV1_USART2_ENABLE
+#ifdef DISTORTOS_CHIP_USART2_ENABLE
 
 /**
  * \brief USART2 interrupt handler
@@ -72,9 +72,9 @@ extern "C" void USART2_IRQHandler()
 	usart2.interruptHandler();
 }
 
-#endif	// def DISTORTOS_CHIP_STM32_USARTV1_USART2_ENABLE
+#endif	// def DISTORTOS_CHIP_USART2_ENABLE
 
-#ifdef DISTORTOS_CHIP_STM32_USARTV1_USART6_ENABLE
+#ifdef DISTORTOS_CHIP_USART6_ENABLE
 
 /**
  * \brief USART6 interrupt handler
@@ -85,7 +85,7 @@ extern "C" void USART6_IRQHandler()
 	usart6.interruptHandler();
 }
 
-#endif	// def DISTORTOS_CHIP_STM32_USARTV1_USART6_ENABLE
+#endif	// def DISTORTOS_CHIP_USART6_ENABLE
 
 }	// namespace chip
 

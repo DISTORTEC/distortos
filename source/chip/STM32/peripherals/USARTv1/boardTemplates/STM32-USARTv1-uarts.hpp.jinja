@@ -31,12 +31,12 @@ class ChipUartLowLevel;
 +---------------------------------------------------------------------------------------------------------------------*/
 {% for key, uart in dictionary['UARTs'].items() if uart is mapping and 'ST,STM32-USART-v1' in uart['compatible'] %}
 
-#ifdef DISTORTOS_CHIP_STM32_USARTV1_{{ key | upper }}_ENABLE
+#ifdef DISTORTOS_CHIP_{{ key | upper }}_ENABLE
 
 /// UART low-level driver for {{ key }}
 extern ChipUartLowLevel {{ key | lower }};
 
-#endif	// def DISTORTOS_CHIP_STM32_USARTV1_{{ key | upper }}_ENABLE
+#endif	// def DISTORTOS_CHIP_{{ key | upper }}_ENABLE
 {% endfor %}
 
 }	// namespace chip

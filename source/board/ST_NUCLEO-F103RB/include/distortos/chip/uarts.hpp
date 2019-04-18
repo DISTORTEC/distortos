@@ -29,26 +29,26 @@ class ChipUartLowLevel;
 | global objects
 +---------------------------------------------------------------------------------------------------------------------*/
 
-#ifdef DISTORTOS_CHIP_STM32_USARTV1_USART1_ENABLE
+#ifdef DISTORTOS_CHIP_USART1_ENABLE
 
 /// UART low-level driver for USART1
 extern ChipUartLowLevel usart1;
 
-#endif	// def DISTORTOS_CHIP_STM32_USARTV1_USART1_ENABLE
+#endif	// def DISTORTOS_CHIP_USART1_ENABLE
 
-#ifdef DISTORTOS_CHIP_STM32_USARTV1_USART2_ENABLE
+#ifdef DISTORTOS_CHIP_USART2_ENABLE
 
 /// UART low-level driver for USART2
 extern ChipUartLowLevel usart2;
 
-#endif	// def DISTORTOS_CHIP_STM32_USARTV1_USART2_ENABLE
+#endif	// def DISTORTOS_CHIP_USART2_ENABLE
 
-#ifdef DISTORTOS_CHIP_STM32_USARTV1_USART3_ENABLE
+#ifdef DISTORTOS_CHIP_USART3_ENABLE
 
 /// UART low-level driver for USART3
 extern ChipUartLowLevel usart3;
 
-#endif	// def DISTORTOS_CHIP_STM32_USARTV1_USART3_ENABLE
+#endif	// def DISTORTOS_CHIP_USART3_ENABLE
 
 }	// namespace chip
 
