@@ -132,6 +132,7 @@ were also shortened and simplified by removing redundant parts like architecture
 regenerated.
 - Update *CMSIS* to version 5.5.1.
 - Update *CMSIS-STM32F0* to version 1.9.0.
+- Update *CMSIS-STM32F1* to version 1.7.0.
 
 ### Fixed
 
