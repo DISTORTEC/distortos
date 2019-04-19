@@ -5,7 +5,7 @@
  * The only purpose of this test is to ensure semaphore C-API can be used from C code and that whole application can be
  * linked correctly. It just uses all types, macros and functions from the tested header.
  *
- * \author Copyright (C) 2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2017-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -35,6 +35,7 @@ void compileLinkTest()
 	distortos_Semaphore_construct_1(NULL, 0, 0);
 	distortos_Semaphore_construct(NULL, 0);
 	distortos_Semaphore_destruct(NULL);
+	distortos_Semaphore_getMaxValue(NULL, NULL);
 	distortos_Semaphore_getValue(NULL, NULL);
 	distortos_Semaphore_post(NULL);
 	distortos_Semaphore_tryWait(NULL);
