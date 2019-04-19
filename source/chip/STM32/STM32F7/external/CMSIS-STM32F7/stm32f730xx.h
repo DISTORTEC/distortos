@@ -1,6 +1,6 @@
 /**
   ******************************************************************************
-  * @file    stm32f733xx.h
+  * @file    stm32f730xx.h
   * @author  MCD Application Team
   * @brief   CMSIS Cortex-M7 Device Peripheral Access Layer Header File.
   *
@@ -43,12 +43,12 @@
   * @{
   */
 
-/** @addtogroup stm32f733xx
+/** @addtogroup stm32f730xx
   * @{
   */
 
-#ifndef __STM32F733xx_H
-#define __STM32F733xx_H
+#ifndef __STM32F730xx_H
+#define __STM32F730xx_H
 
 #ifdef __cplusplus
  extern "C" {
@@ -979,8 +979,8 @@ typedef struct
   * @{
   */
 #define RAMITCM_BASE           0x00000000UL /*!< Base address of : 16KB RAM reserved for CPU execution/instruction accessible over ITCM  */
-#define FLASHITCM_BASE         0x00200000UL /*!< Base address of : (up to 512 KB) embedded FLASH memory  accessible over ITCM            */
-#define FLASHAXI_BASE          0x08000000UL /*!< Base address of : (up to 512 KB) embedded FLASH memory accessible over AXI              */
+#define FLASHITCM_BASE         0x00200000UL /*!< Base address of : (up to 64 KB) embedded FLASH memory  accessible over ITCM             */
+#define FLASHAXI_BASE          0x08000000UL /*!< Base address of : (up to 64 KB) embedded FLASH memory accessible over AXI               */
 #define RAMDTCM_BASE           0x20000000UL /*!< Base address of : 64KB system data RAM accessible over DTCM                             */
 #define PERIPH_BASE            0x40000000UL /*!< Base address of : AHB/ABP Peripherals                                                   */
 #define BKPSRAM_BASE           0x40024000UL /*!< Base address of : Backup SRAM(4 KB)                                                     */
@@ -989,7 +989,7 @@ typedef struct
 #define QSPI_R_BASE            0xA0001000UL /*!< Base address of : QSPI Control  registers                                               */
 #define SRAM1_BASE             0x20010000UL /*!< Base address of : 176KB RAM1 accessible over AXI/AHB                                    */
 #define SRAM2_BASE             0x2003C000UL /*!< Base address of : 16KB RAM2 accessible over AXI/AHB                                     */
-#define FLASH_END              0x0807FFFFUL /*!< FLASH end address */
+#define FLASH_END              0x0800FFFFUL /*!< FLASH end address */
 #define FLASH_OTP_BASE         0x1FF07800UL /*!< Base address of : (up to 528 Bytes) embedded FLASH OTP Area                             */
 #define FLASH_OTP_END          0x1FF07A0FUL /*!< End address of : (up to 528 Bytes) embedded FLASH OTP Area                              */
 
@@ -6589,7 +6589,7 @@ typedef struct
 /*
 * @brief FLASH Total Sectors Number
 */
-#define FLASH_SECTOR_TOTAL  8
+#define FLASH_SECTOR_TOTAL  4
 
 /*******************  Bits definition for FLASH_ACR register  *****************/
 #define FLASH_ACR_LATENCY_Pos         (0U)                                     
@@ -15511,7 +15511,7 @@ typedef struct
 }
 #endif /* __cplusplus */
 
-#endif /* __STM32F733xx_H */
+#endif /* __STM32F730xx_H */
 
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
