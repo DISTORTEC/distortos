@@ -136,6 +136,7 @@ regenerated.
 - Update *CMSIS-STM32F4* to version 1.24.0.
 - Update *CMSIS-STM32F7* to version 1.15.0.
 - Update *CMSIS-STM32L0* to version 1.11.0.
+- Update *CMSIS-STM32L4* to version 1.14.0.
 
 ### Fixed
 
