@@ -2,7 +2,7 @@
  * \file
  * \brief Implementation of C-API for distortos::Semaphore
  *
- * \author Copyright (C) 2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2017-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -44,6 +44,16 @@ int distortos_Semaphore_destruct(distortos_Semaphore* const semaphore)
 
 	auto& realSemaphore = distortos::fromCApi(*semaphore);
 	realSemaphore.~Semaphore();
+	return 0;
+}
+
+int distortos_Semaphore_getMaxValue(const struct distortos_Semaphore* const semaphore, unsigned int* const maxValue)
+{
+	if (semaphore == nullptr || maxValue == nullptr)
+		return EINVAL;
+
+	auto& realSemaphore = distortos::fromCApi(*semaphore);
+	*maxValue = realSemaphore.getMaxValue();
 	return 0;
 }
 

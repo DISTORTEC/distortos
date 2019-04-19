@@ -58,7 +58,7 @@ template to extract bit field from array of raw data.
 - Added option to test coverage in unit tests. Enable it by setting *CMake* variable `COVERAGE` of unit test subproject.
 You will then be able to use new `coverage` target to generate detailed *HTML* coverage reports with
 [gcovr](https://gcovr.com/) in build folder of unit test subproject.
-- Added `distortos::Semaphore::getMaxValue()` accessor.
+- Added `distortos::Semaphore::getMaxValue()` accessor and its C-API equivalent `distortos_Semaphore_getMaxValue()`.
 - Added `...::getCapacity()` accessor for all variants of FIFO and message queues. Added `...::getElementSize()`
 accessor for all raw variants of FIFO and message queues. In case of static queue variants, both of these accessors are
 also available as `constexpr static` member functions.

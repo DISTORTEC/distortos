@@ -5,7 +5,7 @@
  * This test checks whether semaphore objects instantiated with C-API macros and functions are binary identical to
  * constructed distortos::Semaphore objects.
  *
- * \author Copyright (C) 2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2017-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -24,8 +24,12 @@ namespace
 
 void testCommon(distortos_Semaphore& semaphore, const unsigned int value, const unsigned int maxValue = UINT_MAX)
 {
-	REQUIRE(semaphore.value == std::min(value, maxValue));
-	REQUIRE(semaphore.maxValue == maxValue);
+	unsigned int readValue;
+	REQUIRE(distortos_Semaphore_getValue(&semaphore, &readValue) == 0);
+	REQUIRE(readValue == std::min(value, maxValue));
+	unsigned int readMaxValue;
+	REQUIRE(distortos_Semaphore_getMaxValue(&semaphore, &readMaxValue) == 0);
+	REQUIRE(readMaxValue == maxValue);
 	distortos_Semaphore constructed;
 	memcpy(&constructed, &semaphore, sizeof(semaphore));
 	REQUIRE(distortos_Semaphore_destruct(&semaphore) == 0);
@@ -36,6 +40,7 @@ void testCommon(distortos_Semaphore& semaphore, const unsigned int value, const 
 
 	const auto realSemaphore = new (&semaphore) distortos::Semaphore {value, maxValue};
 	REQUIRE(realSemaphore->getValue() == std::min(value, maxValue));
+	REQUIRE(realSemaphore->getMaxValue() == maxValue);
 	REQUIRE(memcmp(&constructed, &semaphore, sizeof(semaphore)) == 0);
 	realSemaphore->~Semaphore();
 	REQUIRE(memcmp(&destructed, &semaphore, sizeof(semaphore)) == 0);

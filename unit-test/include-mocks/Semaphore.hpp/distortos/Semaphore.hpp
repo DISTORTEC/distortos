@@ -52,6 +52,7 @@ public:
 	}
 
 	MAKE_MOCK2(construct, void(Value, Value));
+	MAKE_CONST_MOCK0(getMaxValue, Value());
 	MAKE_CONST_MOCK0(getValue, Value());
 	MAKE_MOCK0(post, int());
 	MAKE_MOCK0(tryWait, int());

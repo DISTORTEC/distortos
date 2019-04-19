@@ -118,6 +118,25 @@ TEST_CASE("Testing distortos_Semaphore_destruct()", "[destruct]")
 	}
 }
 
+TEST_CASE("Testing distortos_Semaphore_getMaxValue()", "[getMaxValue]")
+{
+	constexpr unsigned int randomValue {0x5cf515c8};
+
+	distortos::FromCApiMock fromCApiMock;
+	distortos::Semaphore semaphoreMock;
+	const distortos_Semaphore semaphore {};
+	unsigned int maxValue;
+
+	REQUIRE(distortos_Semaphore_getMaxValue(nullptr, nullptr) == EINVAL);
+	REQUIRE(distortos_Semaphore_getMaxValue(nullptr, &maxValue) == EINVAL);
+	REQUIRE(distortos_Semaphore_getMaxValue(&semaphore, nullptr) == EINVAL);
+
+	REQUIRE_CALL(fromCApiMock, getConstSemaphore(_)).LR_WITH(&_1 == &semaphore).LR_RETURN(std::ref(semaphoreMock));
+	REQUIRE_CALL(semaphoreMock, getMaxValue()).RETURN(randomValue);
+	REQUIRE(distortos_Semaphore_getMaxValue(&semaphore, &maxValue) == 0);
+	REQUIRE(maxValue == randomValue);
+}
+
 TEST_CASE("Testing distortos_Semaphore_getValue()", "[getValue]")
 {
 	constexpr unsigned int randomValue {0x36e9ebac};
