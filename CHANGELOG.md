@@ -150,6 +150,8 @@ usually causing a *Hard Fault* exception within several cycles.
 *XL density* and *connectivity line* *STM32F1* chips have *DMA2*. Some of them map *DMA2 channel 5* interrupt to either
 shared interrupt vector (with *DMA2 channel 4*) or to a separate interrupt vector, but enabling the latter has multiple
 unrelated side effects, so use the former one only.
+- Removed deprecated files and aliases: `lowLevelInitialization.hpp`, `StaticRawFifoQueue2` and
+`StaticRawMessageQueue2`.
 
 [0.6.0](https://github.com/DISTORTEC/distortos/compare/v0.5.0...v0.6.0) - 2018-07-01
 ------------------------------------------------------------------------------------
