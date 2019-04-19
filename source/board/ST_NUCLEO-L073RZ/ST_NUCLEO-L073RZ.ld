@@ -26,10 +26,10 @@ OUTPUT_ARCH(arm);
 +---------------------------------------------------------------------------------------------------------------------*/
 
 PROVIDE(__main_stack_size =
-		ALIGN(CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_MAIN_STACK_SIZE, CONFIG_ARCHITECTURE_STACK_ALIGNMENT));
+		ALIGN(DISTORTOS_ARCHITECTURE_MAIN_STACK_SIZE, DISTORTOS_ARCHITECTURE_STACK_ALIGNMENT));
 
-PROVIDE(__process_stack_size = ALIGN(CONFIG_MAIN_THREAD_STACK_SIZE, CONFIG_ARCHITECTURE_STACK_ALIGNMENT) +
-		ALIGN(CONFIG_STACK_GUARD_SIZE, CONFIG_ARCHITECTURE_STACK_ALIGNMENT));
+PROVIDE(__process_stack_size = ALIGN(DISTORTOS_MAIN_THREAD_STACK_SIZE, DISTORTOS_ARCHITECTURE_STACK_ALIGNMENT) +
+		ALIGN(DISTORTOS_STACK_GUARD_SIZE, DISTORTOS_ARCHITECTURE_STACK_ALIGNMENT));
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | available memories
@@ -64,51 +64,51 @@ ENTRY(Reset_Handler);
 | put data in sections
 +---------------------------------------------------------------------------------------------------------------------*/
 
-#ifdef CONFIG_LD_TEXT_VECTOR_TABLE_REGION_FLASH
+#ifdef DISTORTOS_LD_TEXT_VECTOR_TABLE_REGION_FLASH
 REGION_ALIAS("textVectorTableVmaRegion", flash);
 REGION_ALIAS("textVectorTableLmaRegion", flash);
-#endif	/* CONFIG_LD_TEXT_VECTOR_TABLE_REGION_FLASH */
+#endif	/* DISTORTOS_LD_TEXT_VECTOR_TABLE_REGION_FLASH */
 
-#ifdef CONFIG_LD_TEXT_REGION_FLASH
+#ifdef DISTORTOS_LD_TEXT_REGION_FLASH
 REGION_ALIAS("textVmaRegion", flash);
 REGION_ALIAS("textLmaRegion", flash);
-#endif	/* CONFIG_LD_TEXT_REGION_FLASH */
+#endif	/* DISTORTOS_LD_TEXT_REGION_FLASH */
 
-#ifdef CONFIG_LD_ARM_EXIDX_REGION_FLASH
+#ifdef DISTORTOS_LD_ARM_EXIDX_REGION_FLASH
 REGION_ALIAS("armExidxVmaRegion", flash);
 REGION_ALIAS("armExidxLmaRegion", flash);
-#endif	/* CONFIG_LD_ARM_EXIDX_REGION_FLASH */
+#endif	/* DISTORTOS_LD_ARM_EXIDX_REGION_FLASH */
 
-#ifdef CONFIG_LD_MAIN_STACK_REGION_SRAM
+#ifdef DISTORTOS_LD_MAIN_STACK_REGION_SRAM
 REGION_ALIAS("mainStackVmaRegion", SRAM);
 REGION_ALIAS("mainStackLmaRegion", SRAM);
-#endif	/* CONFIG_LD_MAIN_STACK_REGION_SRAM */
+#endif	/* DISTORTOS_LD_MAIN_STACK_REGION_SRAM */
 
-#ifdef CONFIG_LD_BSS_REGION_SRAM
+#ifdef DISTORTOS_LD_BSS_REGION_SRAM
 REGION_ALIAS("bssVmaRegion", SRAM);
 REGION_ALIAS("bssLmaRegion", SRAM);
-#endif	/* CONFIG_LD_BSS_REGION_SRAM */
+#endif	/* DISTORTOS_LD_BSS_REGION_SRAM */
 
-#ifdef CONFIG_LD_DATA_VMA_REGION_SRAM
+#ifdef DISTORTOS_LD_DATA_VMA_REGION_SRAM
 REGION_ALIAS("dataVmaRegion", SRAM);
-#endif	/* CONFIG_LD_DATA_VMA_REGION_SRAM */
+#endif	/* DISTORTOS_LD_DATA_VMA_REGION_SRAM */
 
-#ifdef CONFIG_LD_DATA_LMA_REGION_FLASH
+#ifdef DISTORTOS_LD_DATA_LMA_REGION_FLASH
 REGION_ALIAS("dataLmaRegion", flash);
-#endif	/* CONFIG_LD_DATA_LMA_REGION_FLASH */
+#endif	/* DISTORTOS_LD_DATA_LMA_REGION_FLASH */
 
-#ifdef CONFIG_LD_NOINIT_REGION_SRAM
+#ifdef DISTORTOS_LD_NOINIT_REGION_SRAM
 REGION_ALIAS("noinitVmaRegion", SRAM);
 REGION_ALIAS("noinitLmaRegion", SRAM);
-#endif	/* CONFIG_LD_NOINIT_REGION_SRAM */
+#endif	/* DISTORTOS_LD_NOINIT_REGION_SRAM */
 
-#ifdef CONFIG_LD_SRAM_DATA_LMA_REGION_FLASH
+#ifdef DISTORTOS_LD_SRAM_DATA_LMA_REGION_FLASH
 REGION_ALIAS("SRAMDataLmaRegion", flash);
-#endif	/* CONFIG_LD_SRAM_DATA_LMA_REGION_FLASH */
+#endif	/* DISTORTOS_LD_SRAM_DATA_LMA_REGION_FLASH */
 
-#ifdef CONFIG_LD_PROCESS_STACK_REGION_SRAM
+#ifdef DISTORTOS_LD_PROCESS_STACK_REGION_SRAM
 PROVIDE(__process_stack_end = __SRAM_end / 8 * 8);
-#endif	/* def CONFIG_LD_PROCESS_STACK_REGION_SRAM */
+#endif	/* def DISTORTOS_LD_PROCESS_STACK_REGION_SRAM */
 
 PROVIDE(__process_stack_start = (__process_stack_end - __process_stack_size) / 8 * 8);
 
@@ -213,7 +213,7 @@ SECTIONS
 
 		KEEP(*(SORT_NONE(.fini)));
 
-#if CONFIG_STATIC_DESTRUCTORS_ENABLE == 1
+#if DISTORTOS_STATIC_DESTRUCTORS_ENABLE == 1
 
 		PROVIDE(__fini_array_start = .);
 
@@ -222,7 +222,7 @@ SECTIONS
 
 		PROVIDE(__fini_array_end = .);
 
-#endif	/* CONFIG_STATIC_DESTRUCTORS_ENABLE == 1 */
+#endif	/* DISTORTOS_STATIC_DESTRUCTORS_ENABLE == 1 */
 
 		/* end of sub-sections: init, preinit_array, init_array and fini_array */
 
@@ -362,14 +362,14 @@ SECTIONS
 	/DISCARD/ : { *(.note.GNU-stack); *(.gnu_debuglink); *(.gnu.lto_*); }
 }
 
-#ifdef CONFIG_LD_HEAP_REGION_SRAM
+#ifdef DISTORTOS_LD_HEAP_REGION_SRAM
 PROVIDE(__heap_start = ALIGN(__SRAM_noinit_end, 8));
-#ifdef CONFIG_LD_PROCESS_STACK_REGION_SRAM
+#ifdef DISTORTOS_LD_PROCESS_STACK_REGION_SRAM
 PROVIDE(__heap_end = __process_stack_start / 8 * 8);
-#else	/* !def CONFIG_LD_PROCESS_STACK_REGION_SRAM */
+#else	/* !def DISTORTOS_LD_PROCESS_STACK_REGION_SRAM */
 PROVIDE(__heap_end = __SRAM_end / 8 * 8);
-#endif	/* !def CONFIG_LD_PROCESS_STACK_REGION_SRAM */
-#endif	/* def CONFIG_LD_HEAP_REGION_SRAM */
+#endif	/* !def DISTORTOS_LD_PROCESS_STACK_REGION_SRAM */
+#endif	/* def DISTORTOS_LD_HEAP_REGION_SRAM */
 
 PROVIDE(__text_vectorTable_size = SIZEOF(.text.vectorTable));
 PROVIDE(__text_size = SIZEOF(.text));

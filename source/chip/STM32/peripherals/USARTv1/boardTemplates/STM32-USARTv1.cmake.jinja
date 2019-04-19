@@ -10,7 +10,7 @@
 #
 
 distortosSetFixedConfiguration(BOOLEAN
-		CONFIG_CHIP_STM32_USARTV1_HAS_CR1_OVER8_BIT
+		DISTORTOS_CHIP_USART_HAS_CR1_OVER8_BIT
 {{ '\t\t' }}{% if dictionary['UARTs']['has-CR1-OVER8-bit'] == True %}ON{% else %}OFF{% endif %})
 {% for key, uart in dictionary['UARTs'].items() if uart is mapping and 'ST,STM32-USART-v1' in uart['compatible'] %}
 
@@ -18,10 +18,10 @@ distortosSetConfiguration(BOOLEAN
 		distortos_Peripherals_{{ key }}
 		OFF
 		HELP "Enable {{ key | upper }} low-level driver."
-		OUTPUT_NAME CONFIG_CHIP_STM32_USARTV1_{{ key | upper }}_ENABLE)
+		OUTPUT_NAME DISTORTOS_CHIP_{{ key | upper }}_ENABLE)
 
 if(distortos_Peripherals_{{ key }})
-	set(ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_{{ uart['interrupt']['vector'] | upper }}_ENABLE ON)
+	set(ARCHITECTURE_NVIC_{{ uart['interrupt']['vector'] | upper }}_ENABLE ON)
 endif()
 {% endfor %}
 

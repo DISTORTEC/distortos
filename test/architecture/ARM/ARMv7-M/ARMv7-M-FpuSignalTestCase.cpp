@@ -2,7 +2,7 @@
  * \file
  * \brief FpuSignalTestCase class implementation for ARMv7-M
  *
- * \author Copyright (C) 2015-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2015-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -14,8 +14,8 @@
 #include "distortos/chip/CMSIS-proxy.h"
 
 /// configuration required by FpuSignalTestCase
-#define ARMV7_M_FPU_SIGNAL_TEST_CASE_ENABLED __FPU_PRESENT == 1 && __FPU_USED == 1 && CONFIG_SIGNALS_ENABLE == 1 && \
-		CONFIG_MAIN_THREAD_SIGNAL_ACTIONS > 0 && CONFIG_MAIN_THREAD_QUEUED_SIGNALS > 0
+#define ARMV7_M_FPU_SIGNAL_TEST_CASE_ENABLED __FPU_PRESENT == 1 && __FPU_USED == 1 && DISTORTOS_SIGNALS_ENABLE == 1 && \
+		DISTORTOS_MAIN_THREAD_SIGNAL_ACTIONS > 0 && DISTORTOS_MAIN_THREAD_QUEUED_SIGNALS > 0
 
 #if ARMV7_M_FPU_SIGNAL_TEST_CASE_ENABLED == 1
 

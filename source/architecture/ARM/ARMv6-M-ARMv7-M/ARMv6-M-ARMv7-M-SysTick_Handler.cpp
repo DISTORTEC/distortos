@@ -2,7 +2,7 @@
  * \file
  * \brief SysTick_Handler() for ARMv6-M and ARMv7-M
  *
- * \author Copyright (C) 2014-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -14,13 +14,13 @@
 
 #include "distortos/architecture/requestContextSwitch.hpp"
 
-#ifdef CONFIG_CHECK_STACK_POINTER_RANGE_SYSTEM_TICK_ENABLE
+#ifdef DISTORTOS_CHECK_STACK_POINTER_RANGE_SYSTEM_TICK_ENABLE
 
 #include "distortos/chip/CMSIS-proxy.h"
 
 #include "distortos/FATAL_ERROR.h"
 
-#endif	// def CONFIG_CHECK_STACK_POINTER_RANGE_SYSTEM_TICK_ENABLE
+#endif	// def DISTORTOS_CHECK_STACK_POINTER_RANGE_SYSTEM_TICK_ENABLE
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | global functions
@@ -37,13 +37,13 @@ extern "C" void SysTick_Handler()
 {
 	auto& scheduler = distortos::internal::getScheduler();
 
-#ifdef CONFIG_CHECK_STACK_POINTER_RANGE_SYSTEM_TICK_ENABLE
+#ifdef DISTORTOS_CHECK_STACK_POINTER_RANGE_SYSTEM_TICK_ENABLE
 
 	const auto stackPointer = reinterpret_cast<const void*>(__get_PSP());
 	if (scheduler.getCurrentThreadControlBlock().getStack().checkStackPointer(stackPointer) == false)
 		FATAL_ERROR("Stack overflow detected!");
 
-#endif	// def CONFIG_CHECK_STACK_POINTER_RANGE_SYSTEM_TICK_ENABLE
+#endif	// def DISTORTOS_CHECK_STACK_POINTER_RANGE_SYSTEM_TICK_ENABLE
 
 	const auto contextSwitchRequired = scheduler.tickInterruptHandler();
 	if (contextSwitchRequired == true)

@@ -37,7 +37,7 @@ namespace chip
 {
 {% for key, spi in dictionary['SPIs'].items() if spi is mapping and 'ST,STM32-SPI-v1' in spi['compatible'] %}
 
-#ifdef CONFIG_CHIP_STM32_SPIV1_{{ key | upper }}_ENABLE
+#ifdef DISTORTOS_CHIP_{{ key | upper }}_ENABLE
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | {{ key | upper }}
@@ -70,20 +70,18 @@ const SpiPeripheral {{ key | lower }}Peripheral {{ '{' }}{{ key | upper }}_BASE}
 
 }	// namespace
 
-#ifdef CONFIG_CHIP_STM32_SPIV1_{{ key | upper }}_DMA_BASED
+#ifdef DISTORTOS_CHIP_{{ key | upper }}_DMA_BASED
 
 SpiMasterLowLevelDmaBased {{ key | lower }}
 {
 		{{ key | lower }}Peripheral,
-		DMA_CHANNEL(CONFIG_CHIP_STM32_SPIV1_{{ key | upper }}_RX_DMA, {# remove whitespace -#}
-		CONFIG_CHIP_STM32_SPIV1_{{ key | upper }}_RX_DMA_CHANNEL),
-		CONFIG_CHIP_STM32_SPIV1_{{ key | upper }}_RX_DMA_REQUEST,
-		DMA_CHANNEL(CONFIG_CHIP_STM32_SPIV1_{{ key | upper }}_TX_DMA, {# remove whitespace -#}
-		CONFIG_CHIP_STM32_SPIV1_{{ key | upper }}_TX_DMA_CHANNEL),
-		CONFIG_CHIP_STM32_SPIV1_{{ key | upper }}_TX_DMA_REQUEST
+		DMA_CHANNEL(DISTORTOS_CHIP_{{ key | upper }}_RX_DMA, DISTORTOS_CHIP_{{ key | upper }}_RX_DMA_CHANNEL),
+		DISTORTOS_CHIP_{{ key | upper }}_RX_DMA_REQUEST,
+		DMA_CHANNEL(DISTORTOS_CHIP_{{ key | upper }}_TX_DMA, DISTORTOS_CHIP_{{ key | upper }}_TX_DMA_CHANNEL),
+		DISTORTOS_CHIP_{{ key | upper }}_TX_DMA_REQUEST
 };
 
-#else	// !def CONFIG_CHIP_STM32_SPIV1_{{ key | upper }}_DMA_BASED
+#else	// !def DISTORTOS_CHIP_{{ key | upper }}_DMA_BASED
 
 SpiMasterLowLevelInterruptBased {{ key | lower }} {{ '{' }}{{ key | lower }}Peripheral};
 
@@ -96,9 +94,9 @@ extern "C" void {{ spi['interrupt']['vector'] }}_IRQHandler()
 	{{ key | lower }}.interruptHandler();
 }
 
-#endif	// !def CONFIG_CHIP_STM32_SPIV1_{{ key | upper }}_DMA_BASED
+#endif	// !def DISTORTOS_CHIP_{{ key | upper }}_DMA_BASED
 
-#endif	// def CONFIG_CHIP_STM32_SPIV1_{{ key | upper }}_ENABLE
+#endif	// def DISTORTOS_CHIP_{{ key | upper }}_ENABLE
 {% endfor %}
 
 }	// namespace chip

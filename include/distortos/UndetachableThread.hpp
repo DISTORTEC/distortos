@@ -2,7 +2,7 @@
  * \file
  * \brief UndetachableThread class header
  *
- * \author Copyright (C) 2015-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2015-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -23,7 +23,7 @@ namespace distortos
  * \ingroup threads
  */
 
-#ifdef CONFIG_THREAD_DETACH_ENABLE
+#ifdef DISTORTOS_THREAD_DETACH_ENABLE
 
 class UndetachableThread : public internal::ThreadCommon
 {
@@ -46,11 +46,11 @@ public:
 	int detach() override;
 };
 
-#else	// !def CONFIG_THREAD_DETACH_ENABLE
+#else	// !def DISTORTOS_THREAD_DETACH_ENABLE
 
 using UndetachableThread = internal::ThreadCommon;
 
-#endif	// !def CONFIG_THREAD_DETACH_ENABLE
+#endif	// !def DISTORTOS_THREAD_DETACH_ENABLE
 
 }	// namespace distortos
 

@@ -2,7 +2,7 @@
  * \file
  * \brief Low-level architecture initializer for ARMv6-M and ARMv7-M
  *
- * \author Copyright (C) 2015-2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2015-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -34,9 +34,9 @@ namespace
 
 void architectureLowLevelInitializer()
 {
-#ifdef CONFIG_ARCHITECTURE_ARM_CORTEX_M3_R1P1
+#ifdef DISTORTOS_ARCHITECTURE_ARM_CORTEX_M3_R1P1
 	SCB->CCR |= SCB_CCR_STKALIGN_Msk;
-#endif	// def CONFIG_ARCHITECTURE_ARM_CORTEX_M3_R1P1
+#endif	// def DISTORTOS_ARCHITECTURE_ARM_CORTEX_M3_R1P1
 #if __FPU_PRESENT == 1 && __FPU_USED == 1
 	SCB->CPACR |= 3 << 10 * 2 | 3 << 11 * 2;	// full access to CP10 and CP11
 #endif	// __FPU_PRESENT == 1 && __FPU_USED == 1

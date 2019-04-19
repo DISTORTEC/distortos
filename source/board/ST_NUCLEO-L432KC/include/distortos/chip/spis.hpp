@@ -30,27 +30,27 @@ class SpiMasterLowLevelInterruptBased;
 | global objects
 +---------------------------------------------------------------------------------------------------------------------*/
 
-#ifdef CONFIG_CHIP_STM32_SPIV2_SPI1_ENABLE
+#ifdef DISTORTOS_CHIP_SPI1_ENABLE
 
 /// SPI master low-level driver for SPI1
-#ifdef CONFIG_CHIP_STM32_SPIV2_SPI1_DMA_BASED
+#ifdef DISTORTOS_CHIP_SPI1_DMA_BASED
 extern SpiMasterLowLevelDmaBased spi1;
-#else	// !def CONFIG_CHIP_STM32_SPIV2_SPI1_DMA_BASED
+#else	// !def DISTORTOS_CHIP_SPI1_DMA_BASED
 extern SpiMasterLowLevelInterruptBased spi1;
-#endif	// !def CONFIG_CHIP_STM32_SPIV2_SPI1_DMA_BASED
+#endif	// !def DISTORTOS_CHIP_SPI1_DMA_BASED
 
-#endif	// def CONFIG_CHIP_STM32_SPIV2_SPI1_ENABLE
+#endif	// def DISTORTOS_CHIP_SPI1_ENABLE
 
-#ifdef CONFIG_CHIP_STM32_SPIV2_SPI3_ENABLE
+#ifdef DISTORTOS_CHIP_SPI3_ENABLE
 
 /// SPI master low-level driver for SPI3
-#ifdef CONFIG_CHIP_STM32_SPIV2_SPI3_DMA_BASED
+#ifdef DISTORTOS_CHIP_SPI3_DMA_BASED
 extern SpiMasterLowLevelDmaBased spi3;
-#else	// !def CONFIG_CHIP_STM32_SPIV2_SPI3_DMA_BASED
+#else	// !def DISTORTOS_CHIP_SPI3_DMA_BASED
 extern SpiMasterLowLevelInterruptBased spi3;
-#endif	// !def CONFIG_CHIP_STM32_SPIV2_SPI3_DMA_BASED
+#endif	// !def DISTORTOS_CHIP_SPI3_DMA_BASED
 
-#endif	// def CONFIG_CHIP_STM32_SPIV2_SPI3_ENABLE
+#endif	// def DISTORTOS_CHIP_SPI3_ENABLE
 
 }	// namespace chip
 

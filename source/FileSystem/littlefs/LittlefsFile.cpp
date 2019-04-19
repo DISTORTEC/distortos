@@ -197,7 +197,7 @@ int LittlefsFile::open(const char* const path, const int flags)
 	if ((flags & O_APPEND) != 0)
 		convertedFlags |= LFS_O_APPEND;
 
-	constexpr size_t alignment {CONFIG_MEMORYTECHNOLOGYDEVICE_BUFFER_ALIGNMENT};
+	constexpr size_t alignment {DISTORTOS_MEMORYTECHNOLOGYDEVICE_BUFFER_ALIGNMENT};
 	constexpr size_t alignmentMargin {alignment > __BIGGEST_ALIGNMENT__ ? alignment - __BIGGEST_ALIGNMENT__ : 0};
 	const size_t bufferSize {fileSystem_.fileSystem_.cfg->prog_size + alignmentMargin};
 	std::unique_ptr<uint8_t[]> buffer {new (std::nothrow) uint8_t[bufferSize]};

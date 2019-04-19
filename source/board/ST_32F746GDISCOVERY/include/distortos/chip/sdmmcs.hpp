@@ -29,12 +29,12 @@ class SdMmcCardLowLevel;
 | global objects
 +---------------------------------------------------------------------------------------------------------------------*/
 
-#ifdef CONFIG_CHIP_STM32_SDMMCV1_SDMMC1_ENABLE
+#ifdef DISTORTOS_CHIP_SDMMC1_ENABLE
 
 /// SD/MMC card low-level driver for SDMMC1
 extern SdMmcCardLowLevel sdmmc1;
 
-#endif	// def CONFIG_CHIP_STM32_SDMMCV1_SDMMC1_ENABLE
+#endif	// def DISTORTOS_CHIP_SDMMC1_ENABLE
 
 }	// namespace chip
 

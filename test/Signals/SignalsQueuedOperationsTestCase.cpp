@@ -2,7 +2,7 @@
  * \file
  * \brief SignalsQueuedOperationsTestCase class implementation
  *
- * \author Copyright (C) 2015-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2015-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -13,7 +13,7 @@
 
 #include "distortos/distortosConfiguration.h"
 
-#if CONFIG_SIGNALS_ENABLE == 1
+#if DISTORTOS_SIGNALS_ENABLE == 1
 
 #include "signalsTestSelfOneSignalPending.hpp"
 
@@ -22,7 +22,7 @@
 
 #include <cerrno>
 
-#endif	// CONFIG_SIGNALS_ENABLE == 1
+#endif	// DISTORTOS_SIGNALS_ENABLE == 1
 
 namespace distortos
 {
@@ -30,7 +30,7 @@ namespace distortos
 namespace test
 {
 
-#if CONFIG_SIGNALS_ENABLE == 1
+#if DISTORTOS_SIGNALS_ENABLE == 1
 
 namespace
 {
@@ -59,7 +59,7 @@ constexpr size_t testThreadStackSize {512};
 
 bool phase1()
 {
-#if defined(CONFIG_MAIN_THREAD_QUEUED_SIGNALS) && CONFIG_MAIN_THREAD_QUEUED_SIGNALS > 0
+#if defined(DISTORTOS_MAIN_THREAD_QUEUED_SIGNALS) && DISTORTOS_MAIN_THREAD_QUEUED_SIGNALS > 0
 
 	constexpr uint8_t testSignalNumber {30};
 	int testValue {};
@@ -98,7 +98,7 @@ bool phase1()
 	if (ThisThread::Signals::getPendingSignalSet().getBitset().none() == false)
 		return false;
 
-#endif	// defined(CONFIG_MAIN_THREAD_QUEUED_SIGNALS) && CONFIG_MAIN_THREAD_QUEUED_SIGNALS > 0
+#endif	// defined(DISTORTOS_MAIN_THREAD_QUEUED_SIGNALS) && DISTORTOS_MAIN_THREAD_QUEUED_SIGNALS > 0
 
 	return true;
 }
@@ -126,7 +126,7 @@ bool phase2()
 
 }	// namespace
 
-#endif	// CONFIG_SIGNALS_ENABLE == 1
+#endif	// DISTORTOS_SIGNALS_ENABLE == 1
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | private functions
@@ -134,7 +134,7 @@ bool phase2()
 
 bool SignalsQueuedOperationsTestCase::run_() const
 {
-#if CONFIG_SIGNALS_ENABLE == 1
+#if DISTORTOS_SIGNALS_ENABLE == 1
 
 	for (const auto& function : {phase1, phase2})
 	{
@@ -150,7 +150,7 @@ bool SignalsQueuedOperationsTestCase::run_() const
 	if (ThisThread::Signals::getPendingSignalSet().getBitset().none() == false)
 		return false;
 
-#endif	// CONFIG_SIGNALS_ENABLE == 1
+#endif	// DISTORTOS_SIGNALS_ENABLE == 1
 
 	return true;
 }

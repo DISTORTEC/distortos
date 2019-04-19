@@ -10,31 +10,31 @@
 #
 
 distortosSetFixedConfiguration(BOOLEAN
-		CONFIG_CHIP_STM32
+		DISTORTOS_CHIP_STM32
 		ON)
 
 distortosSetFixedConfiguration(BOOLEAN
-		CONFIG_CHIP_STM32F1
+		DISTORTOS_CHIP_STM32F1
 		ON)
 
 distortosSetFixedConfiguration(BOOLEAN
-		CONFIG_CHIP_STM32F10
+		DISTORTOS_CHIP_STM32F10
 		ON)
 
 distortosSetFixedConfiguration(BOOLEAN
-		CONFIG_CHIP_STM32F103
+		DISTORTOS_CHIP_STM32F103
 		ON)
 
 distortosSetFixedConfiguration(BOOLEAN
-		CONFIG_CHIP_STM32F103R
+		DISTORTOS_CHIP_STM32F103R
 		ON)
 
 distortosSetFixedConfiguration(BOOLEAN
-		CONFIG_CHIP_STM32F103RB
+		DISTORTOS_CHIP_STM32F103RB
 		ON)
 
 distortosSetFixedConfiguration(STRING
-		CONFIG_CHIP
+		DISTORTOS_CHIP
 		"STM32F103RB")
 
 include("${CMAKE_CURRENT_SOURCE_DIR}/source/chip/STM32/STM32F1/distortos-sources.cmake")

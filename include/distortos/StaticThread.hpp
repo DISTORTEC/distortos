@@ -2,7 +2,7 @@
  * \file
  * \brief StaticThread class header
  *
- * \author Copyright (C) 2014-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -97,14 +97,14 @@ protected:
 private:
 
 	/// size of stack adjusted to alignment requirements, bytes
-	constexpr static size_t adjustedStackSize {(StackSize + CONFIG_ARCHITECTURE_STACK_ALIGNMENT - 1) /
-			CONFIG_ARCHITECTURE_STACK_ALIGNMENT * CONFIG_ARCHITECTURE_STACK_ALIGNMENT};
+	constexpr static size_t adjustedStackSize {(StackSize + DISTORTOS_ARCHITECTURE_STACK_ALIGNMENT - 1) /
+			DISTORTOS_ARCHITECTURE_STACK_ALIGNMENT * DISTORTOS_ARCHITECTURE_STACK_ALIGNMENT};
 
 	/// stack buffer
-	alignas(CONFIG_ARCHITECTURE_STACK_ALIGNMENT)
+	alignas(DISTORTOS_ARCHITECTURE_STACK_ALIGNMENT)
 	typename std::aligned_storage<adjustedStackSize + internal::stackGuardSize>::type stack_;
 
-	static_assert(sizeof(stack_) % CONFIG_ARCHITECTURE_STACK_ALIGNMENT == 0, "Stack size is not aligned!");
+	static_assert(sizeof(stack_) % DISTORTOS_ARCHITECTURE_STACK_ALIGNMENT == 0, "Stack size is not aligned!");
 
 	/// bound function object
 	decltype(std::bind(std::declval<Function>(), std::declval<Args>()...)) boundFunction_;
@@ -169,7 +169,7 @@ public:
 	StaticThread& operator=(StaticThread&&) = delete;
 };
 
-#if CONFIG_SIGNALS_ENABLE == 1
+#if DISTORTOS_SIGNALS_ENABLE == 1
 
 /**
  * \brief StaticThread class is a templated interface for thread that has automatic storage for stack and internal
@@ -232,7 +232,7 @@ private:
 	StaticSignalsReceiver<QueuedSignals, SignalActions> staticSignalsReceiver_;
 };
 
-#endif	// CONFIG_SIGNALS_ENABLE == 1
+#endif	// DISTORTOS_SIGNALS_ENABLE == 1
 
 /**
  * \brief Helper factory function to make StaticThread object with partially deduced template arguments
@@ -368,7 +368,7 @@ StaticThread(const uint8_t priority, const SchedulingPolicy schedulingPolicy, Fu
 
 }
 
-#if CONFIG_SIGNALS_ENABLE == 1
+#if DISTORTOS_SIGNALS_ENABLE == 1
 
 template<size_t StackSize, size_t QueuedSignals, size_t SignalActions, typename Function, typename... Args>
 StaticThread<StackSize, true, QueuedSignals, SignalActions, Function, Args...>::StaticThread(const uint8_t priority,
@@ -380,7 +380,7 @@ StaticThread<StackSize, true, QueuedSignals, SignalActions, Function, Args...>::
 
 }
 
-#endif	// CONFIG_SIGNALS_ENABLE == 1
+#endif	// DISTORTOS_SIGNALS_ENABLE == 1
 
 }	// namespace distortos
 

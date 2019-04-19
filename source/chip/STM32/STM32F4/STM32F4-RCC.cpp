@@ -2,7 +2,7 @@
  * \file
  * \brief Implementation of RCC-related functions for STM32F4
  *
- * \author Copyright (C) 2015-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2015-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -106,22 +106,24 @@ void enableHse(const bool bypass)
 	while (STM32_BITBAND(RCC, CR, HSERDY) == 0);	// wait until HSE oscillator is stable
 }
 
-#if defined(CONFIG_CHIP_STM32F412) || defined(CONFIG_CHIP_STM32F413) || defined(CONFIG_CHIP_STM32F423) || \
-		defined(CONFIG_CHIP_STM32F446) || defined(CONFIG_CHIP_STM32F469) || defined(CONFIG_CHIP_STM32F479)
+#if defined(DISTORTOS_CHIP_STM32F412) || defined(DISTORTOS_CHIP_STM32F413) || defined(DISTORTOS_CHIP_STM32F423) || \
+		defined(DISTORTOS_CHIP_STM32F446) || defined(DISTORTOS_CHIP_STM32F469) || defined(DISTORTOS_CHIP_STM32F479)
 int enablePll(const uint16_t plln, const uint8_t pllp, const uint8_t pllq, const uint8_t pllr)
-#else	// !defined(CONFIG_CHIP_STM32F412) && !defined(CONFIG_CHIP_STM32F413) && !defined(CONFIG_CHIP_STM32F423) &&
-		// !defined(CONFIG_CHIP_STM32F446) && !defined(CONFIG_CHIP_STM32F469) && !defined(CONFIG_CHIP_STM32F479)
+#else	// !defined(DISTORTOS_CHIP_STM32F412) && !defined(DISTORTOS_CHIP_STM32F413) &&
+		// !defined(DISTORTOS_CHIP_STM32F423) && !defined(DISTORTOS_CHIP_STM32F446) &&
+		// !defined(DISTORTOS_CHIP_STM32F469) && !defined(DISTORTOS_CHIP_STM32F479)
 int enablePll(const uint16_t plln, const uint8_t pllp, const uint8_t pllq)
-#endif	// !defined(CONFIG_CHIP_STM32F412) && !defined(CONFIG_CHIP_STM32F413) && !defined(CONFIG_CHIP_STM32F423) &&
-		// !defined(CONFIG_CHIP_STM32F446) && !defined(CONFIG_CHIP_STM32F469) && !defined(CONFIG_CHIP_STM32F479)
+#endif	// !defined(DISTORTOS_CHIP_STM32F412) && !defined(DISTORTOS_CHIP_STM32F413) &&
+		// !defined(DISTORTOS_CHIP_STM32F423) && !defined(DISTORTOS_CHIP_STM32F446) &&
+		// !defined(DISTORTOS_CHIP_STM32F469) && !defined(DISTORTOS_CHIP_STM32F479)
 {
 	if (plln < minPlln || plln > maxPlln ||
 			(pllp != pllpDiv2 && pllp != pllpDiv4 && pllp != pllpDiv6 && pllp != pllpDiv8) ||
 			pllq < minPllq || pllq > maxPllq)
 		return EINVAL;
 
-#if defined(CONFIG_CHIP_STM32F412) || defined(CONFIG_CHIP_STM32F413) || defined(CONFIG_CHIP_STM32F423) || \
-		defined(CONFIG_CHIP_STM32F446) || defined(CONFIG_CHIP_STM32F469) || defined(CONFIG_CHIP_STM32F479)
+#if defined(DISTORTOS_CHIP_STM32F412) || defined(DISTORTOS_CHIP_STM32F413) || defined(DISTORTOS_CHIP_STM32F423) || \
+		defined(DISTORTOS_CHIP_STM32F446) || defined(DISTORTOS_CHIP_STM32F469) || defined(DISTORTOS_CHIP_STM32F479)
 
 	if (pllr < minPllr || pllr > maxPllr)
 		return EINVAL;
@@ -130,14 +132,16 @@ int enablePll(const uint16_t plln, const uint8_t pllp, const uint8_t pllq)
 			plln << RCC_PLLCFGR_PLLN_Pos | (pllp / 2 - 1) << RCC_PLLCFGR_PLLP_Pos | pllq << RCC_PLLCFGR_PLLQ_Pos |
 			pllr << RCC_PLLCFGR_PLLR_Pos;
 
-#else	// !defined(CONFIG_CHIP_STM32F412) && !defined(CONFIG_CHIP_STM32F413) && !defined(CONFIG_CHIP_STM32F423) &&
-		// !defined(CONFIG_CHIP_STM32F446) && !defined(CONFIG_CHIP_STM32F469) && !defined(CONFIG_CHIP_STM32F479)
+#else	// !defined(DISTORTOS_CHIP_STM32F412) && !defined(DISTORTOS_CHIP_STM32F413) &&
+		// !defined(DISTORTOS_CHIP_STM32F423) && !defined(DISTORTOS_CHIP_STM32F446) &&
+		// !defined(DISTORTOS_CHIP_STM32F469) && !defined(DISTORTOS_CHIP_STM32F479)
 
 	RCC->PLLCFGR = (RCC->PLLCFGR & ~(RCC_PLLCFGR_PLLN | RCC_PLLCFGR_PLLP | RCC_PLLCFGR_PLLQ)) |
 			plln << RCC_PLLCFGR_PLLN_Pos | (pllp / 2 - 1) << RCC_PLLCFGR_PLLP_Pos | pllq << RCC_PLLCFGR_PLLQ_Pos;
 
-#endif	// !defined(CONFIG_CHIP_STM32F412) && !defined(CONFIG_CHIP_STM32F413) && !defined(CONFIG_CHIP_STM32F423) &&
-		// !defined(CONFIG_CHIP_STM32F446) && !defined(CONFIG_CHIP_STM32F469) && !defined(CONFIG_CHIP_STM32F479)
+#endif	// !defined(DISTORTOS_CHIP_STM32F412) && !defined(DISTORTOS_CHIP_STM32F413) &&
+		// !defined(DISTORTOS_CHIP_STM32F423) && !defined(DISTORTOS_CHIP_STM32F446) &&
+		// !defined(DISTORTOS_CHIP_STM32F469) && !defined(DISTORTOS_CHIP_STM32F479)
 
 	STM32_BITBAND(RCC, CR, PLLON) = 1;
 	while (STM32_BITBAND(RCC, CR, PLLRDY) == 0);	// wait until PLL is stable

@@ -2,7 +2,7 @@
  * \file
  * \brief Implementation of RCC-related functions for STM32L4
  *
- * \author Copyright (C) 2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2017-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -145,8 +145,8 @@ int enablePll(const uint16_t plln, const uint8_t pllp, const uint8_t pllq, const
 	if (pllr != pllrDiv2 && pllr != pllrDiv4 && pllr != pllrDiv6 && pllr != pllrDiv8)
 		return EINVAL;
 
-#if defined(CONFIG_CHIP_STM32L43) || defined(CONFIG_CHIP_STM32L44) || defined(CONFIG_CHIP_STM32L45) || \
-		defined(CONFIG_CHIP_STM32L46) || defined(CONFIG_CHIP_STM32L496) || defined(CONFIG_CHIP_STM32L4A6)
+#if defined(DISTORTOS_CHIP_STM32L43) || defined(DISTORTOS_CHIP_STM32L44) || defined(DISTORTOS_CHIP_STM32L45) || \
+		defined(DISTORTOS_CHIP_STM32L46) || defined(DISTORTOS_CHIP_STM32L496) || defined(DISTORTOS_CHIP_STM32L4A6)
 
 	if (pllp < minPllp || pllp > maxPllp)
 		return EINVAL;
@@ -155,8 +155,9 @@ int enablePll(const uint16_t plln, const uint8_t pllp, const uint8_t pllq, const
 			plln << RCC_PLLCFGR_PLLN_Pos | pllp << RCC_PLLCFGR_PLLPDIV_Pos |
 			(pllq / 2 - 1) << RCC_PLLCFGR_PLLQ_Pos | (pllr / 2 - 1) << RCC_PLLCFGR_PLLR_Pos;
 
-#else	// !defined(CONFIG_CHIP_STM32L43) && !defined(CONFIG_CHIP_STM32L44) && !defined(CONFIG_CHIP_STM32L45) &&
-		// !defined(CONFIG_CHIP_STM32L46) && !defined(CONFIG_CHIP_STM32L496) && !defined(CONFIG_CHIP_STM32L4A6)
+#else	// !defined(DISTORTOS_CHIP_STM32L43) && !defined(DISTORTOS_CHIP_STM32L44) &&
+		// !defined(DISTORTOS_CHIP_STM32L45) && !defined(DISTORTOS_CHIP_STM32L46) &&
+		// !defined(DISTORTOS_CHIP_STM32L496) && !defined(DISTORTOS_CHIP_STM32L4A6)
 
 	if (pllp != pllpDiv7 && pllp != pllpDiv17)
 		return EINVAL;
@@ -165,8 +166,9 @@ int enablePll(const uint16_t plln, const uint8_t pllp, const uint8_t pllq, const
 			plln << RCC_PLLCFGR_PLLN_Pos | (pllp == pllpDiv17 ? RCC_PLLCFGR_PLLP : 0) |
 			(pllq / 2 - 1) << RCC_PLLCFGR_PLLQ_Pos | (pllr / 2 - 1) << RCC_PLLCFGR_PLLR_Pos;
 
-#endif	// !defined(CONFIG_CHIP_STM32L43) && !defined(CONFIG_CHIP_STM32L44) && !defined(CONFIG_CHIP_STM32L45) &&
-		// !defined(CONFIG_CHIP_STM32L46) && !defined(CONFIG_CHIP_STM32L496) && !defined(CONFIG_CHIP_STM32L4A6)
+#endif	// !defined(DISTORTOS_CHIP_STM32L43) && !defined(DISTORTOS_CHIP_STM32L44) &&
+		// !defined(DISTORTOS_CHIP_STM32L45) && !defined(DISTORTOS_CHIP_STM32L46) &&
+		// !defined(DISTORTOS_CHIP_STM32L496) && !defined(DISTORTOS_CHIP_STM32L4A6)
 
 	STM32_BITBAND(RCC, CR, PLLON) = 1;
 	while (STM32_BITBAND(RCC, CR, PLLRDY) == 0);	// wait until PLL is stable

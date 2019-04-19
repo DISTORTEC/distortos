@@ -13,7 +13,7 @@ distortosSetConfiguration(BOOLEAN
 		distortos_leds
 		ON
 		HELP "Enable leds"
-		OUTPUT_NAME CONFIG_BOARD_LEDS_ENABLE)
+		OUTPUT_NAME DISTORTOS_BOARD_LEDS_ENABLE)
 
 if(distortos_leds)
 
@@ -21,20 +21,20 @@ if(distortos_leds)
 			distortos_leds_Ld3
 			ON
 			HELP "Enable Ld3 (Green)"
-			OUTPUT_NAME CONFIG_BOARD_LEDS_LD3_ENABLE)
+			OUTPUT_NAME DISTORTOS_BOARD_LEDS_LD3_ENABLE)
 
 	if(distortos_leds_Ld3)
-		list(APPEND STM32_GPIO_V2_GPIOG_DEPENDENTS "leds Ld3")
+		list(APPEND DISTORTOS_CHIP_GPIOG_DEPENDENTS "leds Ld3")
 	endif()
 
 	distortosSetConfiguration(BOOLEAN
 			distortos_leds_Ld4
 			ON
 			HELP "Enable Ld4 (Red)"
-			OUTPUT_NAME CONFIG_BOARD_LEDS_LD4_ENABLE)
+			OUTPUT_NAME DISTORTOS_BOARD_LEDS_LD4_ENABLE)
 
 	if(distortos_leds_Ld4)
-		list(APPEND STM32_GPIO_V2_GPIOG_DEPENDENTS "leds Ld4")
+		list(APPEND DISTORTOS_CHIP_GPIOG_DEPENDENTS "leds Ld4")
 	endif()
 
 endif(distortos_leds)

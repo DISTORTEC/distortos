@@ -2,7 +2,7 @@
  * \file
  * \brief main() thread definition and its low-level initializer
  *
- * \author Copyright (C) 2014-2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -111,17 +111,17 @@ std::aligned_storage<sizeof(MainThread), alignof(MainThread)>::type mainThreadSt
 /// main thread group
 ThreadGroupControlBlock mainThreadGroupControlBlock;
 
-#ifdef CONFIG_MAIN_THREAD_CAN_RECEIVE_SIGNALS
+#ifdef DISTORTOS_MAIN_THREAD_CAN_RECEIVE_SIGNALS
 
 /// type of StaticSignalsReceiver for main thread
 using MainThreadStaticSignalsReceiver =
-		StaticSignalsReceiver<CONFIG_MAIN_THREAD_QUEUED_SIGNALS, CONFIG_MAIN_THREAD_SIGNAL_ACTIONS>;
+		StaticSignalsReceiver<DISTORTOS_MAIN_THREAD_QUEUED_SIGNALS, DISTORTOS_MAIN_THREAD_SIGNAL_ACTIONS>;
 
 /// storage for instance of MainThreadStaticSignalsReceiver for main thread
 std::aligned_storage<sizeof(MainThreadStaticSignalsReceiver), alignof(MainThreadStaticSignalsReceiver)>::type
 		mainThreadStaticSignalsReceiverStorage;
 
-#endif	// def CONFIG_MAIN_THREAD_CAN_RECEIVE_SIGNALS
+#endif	// def DISTORTOS_MAIN_THREAD_CAN_RECEIVE_SIGNALS
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | public static functions
@@ -129,21 +129,21 @@ std::aligned_storage<sizeof(MainThreadStaticSignalsReceiver), alignof(MainThread
 
 void MainThread::lowLevelInitializer()
 {
-#ifdef CONFIG_MAIN_THREAD_CAN_RECEIVE_SIGNALS
+#ifdef DISTORTOS_MAIN_THREAD_CAN_RECEIVE_SIGNALS
 
 	auto& mainThreadStaticSignalsReceiver =
 			*new (&mainThreadStaticSignalsReceiverStorage) MainThreadStaticSignalsReceiver;
 	const auto mainThreadStaticSignalsReceiverPointer = &static_cast<SignalsReceiver&>(mainThreadStaticSignalsReceiver);
 
-#else	// !def CONFIG_MAIN_THREAD_CAN_RECEIVE_SIGNALS
+#else	// !def DISTORTOS_MAIN_THREAD_CAN_RECEIVE_SIGNALS
 
 	// nullptr - reception of signals is disabled for main thread
 	constexpr auto mainThreadStaticSignalsReceiverPointer = nullptr;
 
-#endif	// !def CONFIG_MAIN_THREAD_CAN_RECEIVE_SIGNALS
+#endif	// !def DISTORTOS_MAIN_THREAD_CAN_RECEIVE_SIGNALS
 
-	auto& mainThread = *new (&mainThreadStorage) MainThread {CONFIG_MAIN_THREAD_PRIORITY, mainThreadGroupControlBlock,
-			mainThreadStaticSignalsReceiverPointer};
+	auto& mainThread = *new (&mainThreadStorage) MainThread {DISTORTOS_MAIN_THREAD_PRIORITY,
+			mainThreadGroupControlBlock, mainThreadStaticSignalsReceiverPointer};
 	getScheduler().initialize(mainThread.getThreadControlBlock());	/// \todo error handling?
 	mainThread.getThreadControlBlock().switchedToHook();
 }

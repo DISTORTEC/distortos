@@ -2,7 +2,7 @@
  * \file
  * \brief Stack class implementation
  *
- * \author Copyright (C) 2014-2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -17,9 +17,9 @@
 
 #include <algorithm>
 
-#if CONFIG_ARCHITECTURE_STACK_ALIGNMENT <= 0
+#if DISTORTOS_ARCHITECTURE_STACK_ALIGNMENT <= 0
 #error "Stack alignment must be greater than 0!"
-#endif	// CONFIG_ARCHITECTURE_STACK_ALIGNMENT <= 0
+#endif	// DISTORTOS_ARCHITECTURE_STACK_ALIGNMENT <= 0
 
 namespace distortos
 {
@@ -35,7 +35,7 @@ namespace
 +---------------------------------------------------------------------------------------------------------------------*/
 
 /// alignment of stack, bytes
-constexpr size_t stackAlignment {CONFIG_ARCHITECTURE_STACK_ALIGNMENT};
+constexpr size_t stackAlignment {DISTORTOS_ARCHITECTURE_STACK_ALIGNMENT};
 
 /// sentinel used for stack usage/overflow detection
 constexpr uint32_t stackSentinel {0xed419f25};

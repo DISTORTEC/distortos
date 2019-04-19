@@ -19,14 +19,14 @@ distortosSetConfiguration(BOOLEAN
 
 		Enable destructors for objects with static storage duration. As embedded applications almost never \"exit\",
 		these destructors are usually never executed, wasting ROM."
-		OUTPUT_NAME CONFIG_STATIC_DESTRUCTORS_ENABLE)
+		OUTPUT_NAME DISTORTOS_STATIC_DESTRUCTORS_ENABLE)
 
 distortosSetConfiguration(INTEGER
 		distortos_Scheduler_00_Tick_frequency
 		1000
 		MIN 1
 		HELP "System's tick frequency, Hz."
-		OUTPUT_NAME CONFIG_TICK_FREQUENCY)
+		OUTPUT_NAME DISTORTOS_TICK_FREQUENCY)
 
 distortosSetConfiguration(INTEGER
 		distortos_Scheduler_01_Round_robin_frequency
@@ -34,7 +34,7 @@ distortosSetConfiguration(INTEGER
 		MIN 1
 		MAX ${distortos_Scheduler_00_Tick_frequency}
 		HELP "Round-robin frequency, Hz."
-		OUTPUT_NAME CONFIG_ROUND_ROBIN_FREQUENCY)
+		OUTPUT_NAME DISTORTOS_ROUND_ROBIN_FREQUENCY)
 
 distortosSetConfiguration(BOOLEAN
 		distortos_Scheduler_02_Support_for_signals
@@ -53,7 +53,7 @@ distortosSetConfiguration(BOOLEAN
 		- StaticSignalsReceiver class;
 
 		When this options is not selected, these namespaces, functions and classes are not available at all."
-		OUTPUT_NAME CONFIG_SIGNALS_ENABLE)
+		OUTPUT_NAME DISTORTOS_SIGNALS_ENABLE)
 
 distortosSetConfiguration(BOOLEAN
 		distortos_Scheduler_03_Support_for_thread_detachment
@@ -70,14 +70,14 @@ distortosSetConfiguration(BOOLEAN
 		deletion. The thread will actually be deleted in idle thread, but only when two mutexes are successfully locked:
 		- mutex that protects dynamic memory allocator;
 		- mutex that synchronizes access to the list of threads pending for deferred deletion;"
-		OUTPUT_NAME CONFIG_THREAD_DETACH_ENABLE)
+		OUTPUT_NAME DISTORTOS_THREAD_DETACH_ENABLE)
 
 distortosSetConfiguration(INTEGER
 		distortos_Scheduler_04_Main_thread_stack_size
 		2048
 		MIN 1
 		HELP "Size (in bytes) of stack used by thread with main() function."
-		OUTPUT_NAME CONFIG_MAIN_THREAD_STACK_SIZE)
+		OUTPUT_NAME DISTORTOS_MAIN_THREAD_STACK_SIZE)
 
 distortosSetConfiguration(INTEGER
 		distortos_Scheduler_05_Main_thread_priority
@@ -85,7 +85,7 @@ distortosSetConfiguration(INTEGER
 		MIN 1
 		MAX 255
 		HELP "Initial priority of main thread."
-		OUTPUT_NAME CONFIG_MAIN_THREAD_PRIORITY)
+		OUTPUT_NAME DISTORTOS_MAIN_THREAD_PRIORITY)
 
 if(distortos_Scheduler_02_Support_for_signals)
 
@@ -93,7 +93,7 @@ if(distortos_Scheduler_02_Support_for_signals)
 			distortos_Scheduler_06_Reception_of_signals_by_main_thread
 			OFF
 			HELP "Enable reception of signals for main thread."
-			OUTPUT_NAME CONFIG_MAIN_THREAD_CAN_RECEIVE_SIGNALS)
+			OUTPUT_NAME DISTORTOS_MAIN_THREAD_CAN_RECEIVE_SIGNALS)
 
 	if(distortos_Scheduler_06_Reception_of_signals_by_main_thread)
 
@@ -102,16 +102,16 @@ if(distortos_Scheduler_02_Support_for_signals)
 				0
 				MIN 0
 				HELP "Maximal number of queued signals for main thread. 0 disables queuing of signals for main thread."
-				OUTPUT_NAME CONFIG_MAIN_THREAD_QUEUED_SIGNALS)
+				OUTPUT_NAME DISTORTOS_MAIN_THREAD_QUEUED_SIGNALS)
 
 		distortosSetConfiguration(INTEGER
 				distortos_Scheduler_08_SignalAction_objects_for_main_thread
 				0
 				MIN 0
 				MAX 32
-				HELP "Maximal number of different SignalAction objects for main thread. 0 disables catching of signals \
+				HELP "Maximal number of different SignalAction objects for main thread. 0 disables catching of signals
 				for main thread."
-				OUTPUT_NAME CONFIG_MAIN_THREAD_SIGNAL_ACTIONS)
+				OUTPUT_NAME DISTORTOS_MAIN_THREAD_SIGNAL_ACTIONS)
 
 	endif(distortos_Scheduler_06_Reception_of_signals_by_main_thread)
 
@@ -137,7 +137,7 @@ distortosSetConfiguration(BOOLEAN
 
 		Selecting this option enables context checks in all functions with such requirements. If any of them is used
 		from interrupt context, FATAL_ERROR() will be called."
-		OUTPUT_NAME CONFIG_CHECK_FUNCTION_CONTEXT_ENABLE)
+		OUTPUT_NAME DISTORTOS_CHECK_FUNCTION_CONTEXT_ENABLE)
 
 distortosSetConfiguration(BOOLEAN
 		distortos_Checks_01_Stack_pointer_range_during_context_switch
@@ -149,7 +149,7 @@ distortosSetConfiguration(BOOLEAN
 		pushed on thread's stack, but the size of this pending stack frame is accounted for - the intent is to detect a
 		stack overflow which is about to happen, before it can cause (further) data corrution. FATAL_ERROR() will be
 		called if the stack pointer is outside valid range."
-		OUTPUT_NAME CONFIG_CHECK_STACK_POINTER_RANGE_CONTEXT_SWITCH_ENABLE)
+		OUTPUT_NAME DISTORTOS_CHECK_STACK_POINTER_RANGE_CONTEXT_SWITCH_ENABLE)
 
 distortosSetConfiguration(BOOLEAN
 		distortos_Checks_02_Stack_pointer_range_during_system_tick
@@ -158,7 +158,7 @@ distortosSetConfiguration(BOOLEAN
 
 		Similar to \"distortos_Checks_01_Stack_pointer_range_during_context_switch\", but executed during every system
 		tick."
-		OUTPUT_NAME CONFIG_CHECK_STACK_POINTER_RANGE_SYSTEM_TICK_ENABLE)
+		OUTPUT_NAME DISTORTOS_CHECK_STACK_POINTER_RANGE_SYSTEM_TICK_ENABLE)
 
 distortosSetConfiguration(BOOLEAN
 		distortos_Checks_03_Stack_guard_contents_during_context_switch
@@ -176,7 +176,7 @@ distortosSetConfiguration(BOOLEAN
 		Be advised that uninitialized variables on stack which are larger than size of \"stack guard\" can create
 		\"holes\" in the stack, thus circumventing this detection mechanism. This especially applies to arrays used as
 		buffers."
-		OUTPUT_NAME CONFIG_CHECK_STACK_GUARD_CONTEXT_SWITCH_ENABLE)
+		OUTPUT_NAME DISTORTOS_CHECK_STACK_GUARD_CONTEXT_SWITCH_ENABLE)
 
 distortosSetConfiguration(BOOLEAN
 		distortos_Checks_04_Stack_guard_contents_during_system_tick
@@ -185,7 +185,7 @@ distortosSetConfiguration(BOOLEAN
 
 		Similar to \"distortos_Checks_03_Stack_guard_contents_during_context_switch\", but executed during every system
 		tick."
-		OUTPUT_NAME CONFIG_CHECK_STACK_GUARD_SYSTEM_TICK_ENABLE)
+		OUTPUT_NAME DISTORTOS_CHECK_STACK_GUARD_SYSTEM_TICK_ENABLE)
 
 if(distortos_Checks_03_Stack_guard_contents_during_context_switch OR
 		distortos_Checks_04_Stack_guard_contents_during_system_tick)
@@ -197,7 +197,7 @@ if(distortos_Checks_03_Stack_guard_contents_during_context_switch OR
 			HELP "Size (in bytes) of \"stack guard\".
 
 			Any value which is not a multiple of stack alignment required by architecture, will be rounded up."
-			OUTPUT_NAME CONFIG_STACK_GUARD_SIZE)
+			OUTPUT_NAME DISTORTOS_STACK_GUARD_SIZE)
 
 endif(distortos_Checks_03_Stack_guard_contents_during_context_switch OR
 		distortos_Checks_04_Stack_guard_contents_during_system_tick)
@@ -305,7 +305,7 @@ endif(NOT distortos_Checks_06_Asserts)
 
 include(${DISTORTOS_BOARD_PATH}/distortos-board-sources.cmake)
 
-set(DISTORTOS_BOARD_VERSION_MIN 10)
+set(DISTORTOS_BOARD_VERSION_MIN 11)
 if(NOT DEFINED DISTORTOS_BOARD_VERSION OR NOT DISTORTOS_BOARD_VERSION EQUAL DISTORTOS_BOARD_VERSION_MIN)
 	if(NOT DEFINED DISTORTOS_BOARD_VERSION)
 		message(FATAL_ERROR "Generated board has no version information. "
@@ -510,9 +510,9 @@ foreach(line ${distortosConfiguration})
 endforeach()
 file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/include/distortos/distortosConfiguration.h
 		"\n"
-		"#ifndef CONFIG_STACK_GUARD_SIZE\n"
-		"	#define CONFIG_STACK_GUARD_SIZE 0\n"
-		"#endif	/* !def CONFIG_STACK_GUARD_SIZE */\n"
+		"#ifndef DISTORTOS_STACK_GUARD_SIZE\n"
+		"	#define DISTORTOS_STACK_GUARD_SIZE 0\n"
+		"#endif	/* !def DISTORTOS_STACK_GUARD_SIZE */\n"
 		"\n"
 		"#endif	/* INCLUDE_DISTORTOS_DISTORTOSCONFIGURATION_H_ */")
 

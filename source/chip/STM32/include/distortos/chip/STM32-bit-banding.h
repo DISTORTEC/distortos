@@ -2,7 +2,7 @@
  * \file
  * \brief Header with definitions for bit-banding for STM32
  *
- * \author Copyright (C) 2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2017-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -14,7 +14,7 @@
 
 #include "distortos/architecture/ARMv7-M-bit-banding.h"
 
-#if defined(CONFIG_ARCHITECTURE_ARM_CORTEX_M3) || defined(CONFIG_ARCHITECTURE_ARM_CORTEX_M4)
+#if defined(DISTORTOS_ARCHITECTURE_ARM_CORTEX_M3) || defined(DISTORTOS_ARCHITECTURE_ARM_CORTEX_M4)
 
 #include <stddef.h>
 
@@ -97,6 +97,6 @@
 		(*(volatile unsigned long*)STM32_BITBAND_IMPLEMENTATION(FLASH_R_BASE, FLASH_TypeDef, member, \
 		FLASH_ ## member ## _ ## bit))
 
-#endif	/* defined(CONFIG_ARCHITECTURE_ARM_CORTEX_M3) || defined(CONFIG_ARCHITECTURE_ARM_CORTEX_M4) */
+#endif	/* defined(DISTORTOS_ARCHITECTURE_ARM_CORTEX_M3) || defined(DISTORTOS_ARCHITECTURE_ARM_CORTEX_M4) */
 
 #endif	/* SOURCE_CHIP_STM32_INCLUDE_DISTORTOS_CHIP_STM32_BIT_BANDING_H_ */

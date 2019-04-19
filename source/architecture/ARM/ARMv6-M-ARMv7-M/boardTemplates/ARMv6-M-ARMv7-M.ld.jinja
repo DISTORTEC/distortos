@@ -31,10 +31,10 @@ OUTPUT_ARCH(arm);
 +---------------------------------------------------------------------------------------------------------------------*/
 
 PROVIDE(__main_stack_size =
-		ALIGN(CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_MAIN_STACK_SIZE, CONFIG_ARCHITECTURE_STACK_ALIGNMENT));
+		ALIGN(DISTORTOS_ARCHITECTURE_MAIN_STACK_SIZE, DISTORTOS_ARCHITECTURE_STACK_ALIGNMENT));
 
-PROVIDE(__process_stack_size = ALIGN(CONFIG_MAIN_THREAD_STACK_SIZE, CONFIG_ARCHITECTURE_STACK_ALIGNMENT) +
-		ALIGN(CONFIG_STACK_GUARD_SIZE, CONFIG_ARCHITECTURE_STACK_ALIGNMENT));
+PROVIDE(__process_stack_size = ALIGN(DISTORTOS_MAIN_THREAD_STACK_SIZE, DISTORTOS_ARCHITECTURE_STACK_ALIGNMENT) +
+		ALIGN(DISTORTOS_STACK_GUARD_SIZE, DISTORTOS_ARCHITECTURE_STACK_ALIGNMENT));
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | available memories
@@ -69,64 +69,64 @@ ENTRY(Reset_Handler);
 		'on-chip-flash' in memory['compatible'] and
 		'.text.vectorTable' in memory.get('sections', ['.text.vectorTable']) %}
 
-#ifdef CONFIG_LD_TEXT_VECTOR_TABLE_REGION_{{ key | upper }}
+#ifdef DISTORTOS_LD_TEXT_VECTOR_TABLE_REGION_{{ key | upper }}
 REGION_ALIAS("textVectorTableVmaRegion", {{ key }}{% if 'virtual-address' in memory %}Vma{% endif %});
 REGION_ALIAS("textVectorTableLmaRegion", {{ key }});
-#endif	/* CONFIG_LD_TEXT_VECTOR_TABLE_REGION_{{ key | upper }} */
+#endif	/* DISTORTOS_LD_TEXT_VECTOR_TABLE_REGION_{{ key | upper }} */
 {% endfor %}
 {% for key, memory in dictionary['memories'].items() if memory is mapping and
 		'on-chip-flash' in memory['compatible'] and '.text' in memory.get('sections', ['.text']) %}
 
-#ifdef CONFIG_LD_TEXT_REGION_{{ key | upper }}
+#ifdef DISTORTOS_LD_TEXT_REGION_{{ key | upper }}
 REGION_ALIAS("textVmaRegion", {{ key }}{% if 'virtual-address' in memory %}Vma{% endif %});
 REGION_ALIAS("textLmaRegion", {{ key }});
-#endif	/* CONFIG_LD_TEXT_REGION_{{ key | upper }} */
+#endif	/* DISTORTOS_LD_TEXT_REGION_{{ key | upper }} */
 {% endfor %}
 {% for key, memory in dictionary['memories'].items() if memory is mapping and
 		'on-chip-flash' in memory['compatible'] and '.ARM.exidx' in memory.get('sections', ['.ARM.exidx']) %}
 
-#ifdef CONFIG_LD_ARM_EXIDX_REGION_{{ key | upper }}
+#ifdef DISTORTOS_LD_ARM_EXIDX_REGION_{{ key | upper }}
 REGION_ALIAS("armExidxVmaRegion", {{ key }}{% if 'virtual-address' in memory %}Vma{% endif %});
 REGION_ALIAS("armExidxLmaRegion", {{ key }});
-#endif	/* CONFIG_LD_ARM_EXIDX_REGION_{{ key | upper }} */
+#endif	/* DISTORTOS_LD_ARM_EXIDX_REGION_{{ key | upper }} */
 {% endfor %}
 {% for key, memory in dictionary['memories'].items() if memory is mapping and
 		'on-chip-RAM' in memory['compatible'] and '.main_stack' in memory.get('sections', ['.main_stack']) %}
 
-#ifdef CONFIG_LD_MAIN_STACK_REGION_{{ key | upper }}
+#ifdef DISTORTOS_LD_MAIN_STACK_REGION_{{ key | upper }}
 REGION_ALIAS("mainStackVmaRegion", {{ key }}{% if 'virtual-address' in memory %}Vma{% endif %});
 REGION_ALIAS("mainStackLmaRegion", {{ key }});
-#endif	/* CONFIG_LD_MAIN_STACK_REGION_{{ key | upper }} */
+#endif	/* DISTORTOS_LD_MAIN_STACK_REGION_{{ key | upper }} */
 {% endfor %}
 {% for key, memory in dictionary['memories'].items() if memory is mapping and
 		'on-chip-RAM' in memory['compatible'] and '.bss' in memory.get('sections', ['.bss']) %}
 
-#ifdef CONFIG_LD_BSS_REGION_{{ key | upper }}
+#ifdef DISTORTOS_LD_BSS_REGION_{{ key | upper }}
 REGION_ALIAS("bssVmaRegion", {{ key }}{% if 'virtual-address' in memory %}Vma{% endif %});
 REGION_ALIAS("bssLmaRegion", {{ key }});
-#endif	/* CONFIG_LD_BSS_REGION_{{ key | upper }} */
+#endif	/* DISTORTOS_LD_BSS_REGION_{{ key | upper }} */
 {% endfor %}
 {% for key, memory in dictionary['memories'].items() if memory is mapping and
 		'on-chip-RAM' in memory['compatible'] and '.data' in memory.get('sections', ['.data']) %}
 
-#ifdef CONFIG_LD_DATA_VMA_REGION_{{ key | upper }}
+#ifdef DISTORTOS_LD_DATA_VMA_REGION_{{ key | upper }}
 REGION_ALIAS("dataVmaRegion", {{ key }}{% if 'virtual-address' in memory %}Vma{% endif %});
-#endif	/* CONFIG_LD_DATA_VMA_REGION_{{ key | upper }} */
+#endif	/* DISTORTOS_LD_DATA_VMA_REGION_{{ key | upper }} */
 {% endfor %}
 {% for key, memory in dictionary['memories'].items() if memory is mapping and
 		'on-chip-flash' in memory['compatible'] and '.data' in memory.get('sections', ['.data']) %}
 
-#ifdef CONFIG_LD_DATA_LMA_REGION_{{ key | upper }}
+#ifdef DISTORTOS_LD_DATA_LMA_REGION_{{ key | upper }}
 REGION_ALIAS("dataLmaRegion", {{ key }});
-#endif	/* CONFIG_LD_DATA_LMA_REGION_{{ key | upper }} */
+#endif	/* DISTORTOS_LD_DATA_LMA_REGION_{{ key | upper }} */
 {% endfor %}
 {% for key, memory in dictionary['memories'].items() if memory is mapping and
 		'on-chip-RAM' in memory['compatible'] and '.noinit' in memory.get('sections', ['.noinit']) %}
 
-#ifdef CONFIG_LD_NOINIT_REGION_{{ key | upper }}
+#ifdef DISTORTOS_LD_NOINIT_REGION_{{ key | upper }}
 REGION_ALIAS("noinitVmaRegion", {{ key }}{% if 'virtual-address' in memory %}Vma{% endif %});
 REGION_ALIAS("noinitLmaRegion", {{ key }});
-#endif	/* CONFIG_LD_NOINIT_REGION_{{ key | upper }} */
+#endif	/* DISTORTOS_LD_NOINIT_REGION_{{ key | upper }} */
 {% endfor %}
 {% for ramKey, ramMemory in dictionary['memories'].items() if ramMemory is mapping and
 		'on-chip-RAM' in ramMemory['compatible'] and
@@ -135,17 +135,17 @@ REGION_ALIAS("noinitLmaRegion", {{ key }});
 		'on-chip-flash' in romMemory['compatible'] and
 		'.{}.data'.format(ramKey) in ramMemory.get('sections', ['.{}.data'.format(ramKey)]) %}
 
-#ifdef CONFIG_LD_{{ ramKey | upper }}_DATA_LMA_REGION_{{ romKey | upper }}
+#ifdef DISTORTOS_LD_{{ ramKey | upper }}_DATA_LMA_REGION_{{ romKey | upper }}
 REGION_ALIAS("{{ ramKey }}DataLmaRegion", {{ romKey }});
-#endif	/* CONFIG_LD_{{ ramKey | upper }}_DATA_LMA_REGION_{{ romKey | upper }} */
+#endif	/* DISTORTOS_LD_{{ ramKey | upper }}_DATA_LMA_REGION_{{ romKey | upper }} */
 {% endfor %}
 {% endfor %}
 {% for key, memory in dictionary['memories'].items() if memory is mapping and
 		'on-chip-RAM' in memory['compatible'] and '.process_stack' in memory.get('sections', ['.process_stack']) %}
 
-#ifdef CONFIG_LD_PROCESS_STACK_REGION_{{ key | upper }}
+#ifdef DISTORTOS_LD_PROCESS_STACK_REGION_{{ key | upper }}
 PROVIDE(__process_stack_end = __{{ key }}_end / 8 * 8);
-#endif	/* def CONFIG_LD_PROCESS_STACK_REGION_{{ key | upper }} */
+#endif	/* def DISTORTOS_LD_PROCESS_STACK_REGION_{{ key | upper }} */
 {% endfor %}
 
 PROVIDE(__process_stack_start = (__process_stack_end - __process_stack_size) / 8 * 8);
@@ -260,7 +260,7 @@ LONG(ADDR(.{{ key }}.data) + SIZEOF(.{{ key }}.data));
 
 		KEEP(*(SORT_NONE(.fini)));
 
-#if CONFIG_STATIC_DESTRUCTORS_ENABLE == 1
+#if DISTORTOS_STATIC_DESTRUCTORS_ENABLE == 1
 
 		PROVIDE(__fini_array_start = .);
 
@@ -269,7 +269,7 @@ LONG(ADDR(.{{ key }}.data) + SIZEOF(.{{ key }}.data));
 
 		PROVIDE(__fini_array_end = .);
 
-#endif	/* CONFIG_STATIC_DESTRUCTORS_ENABLE == 1 */
+#endif	/* DISTORTOS_STATIC_DESTRUCTORS_ENABLE == 1 */
 
 		/* end of sub-sections: init, preinit_array, init_array and fini_array */
 
@@ -419,14 +419,14 @@ LONG(ADDR(.{{ key }}.data) + SIZEOF(.{{ key }}.data));
 {% for key, memory in dictionary['memories'].items() if memory is mapping and
 		'on-chip-RAM' in memory['compatible'] and '.heap' in memory.get('sections', ['.heap']) %}
 
-#ifdef CONFIG_LD_HEAP_REGION_{{ key | upper }}
+#ifdef DISTORTOS_LD_HEAP_REGION_{{ key | upper }}
 PROVIDE(__heap_start = ALIGN(__{{ key }}_noinit_end, 8));
-#ifdef CONFIG_LD_PROCESS_STACK_REGION_{{ key | upper }}
+#ifdef DISTORTOS_LD_PROCESS_STACK_REGION_{{ key | upper }}
 PROVIDE(__heap_end = __process_stack_start / 8 * 8);
-#else	/* !def CONFIG_LD_PROCESS_STACK_REGION_{{ key | upper }} */
+#else	/* !def DISTORTOS_LD_PROCESS_STACK_REGION_{{ key | upper }} */
 PROVIDE(__heap_end = __{{ key }}_end / 8 * 8);
-#endif	/* !def CONFIG_LD_PROCESS_STACK_REGION_{{ key | upper }} */
-#endif	/* def CONFIG_LD_HEAP_REGION_{{ key | upper }} */
+#endif	/* !def DISTORTOS_LD_PROCESS_STACK_REGION_{{ key | upper }} */
+#endif	/* def DISTORTOS_LD_HEAP_REGION_{{ key | upper }} */
 {% endfor %}
 
 PROVIDE(__text_vectorTable_size = SIZEOF(.text.vectorTable));

@@ -2,7 +2,7 @@
  * \file
  * \brief ThreadCommon class header
  *
- * \author Copyright (C) 2015-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2015-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -47,7 +47,7 @@ ThreadCommon::~ThreadCommon()
 
 }
 
-#if CONFIG_SIGNALS_ENABLE == 1
+#if DISTORTOS_SIGNALS_ENABLE == 1
 
 int ThreadCommon::generateSignal(const uint8_t signalNumber)
 {
@@ -59,7 +59,7 @@ int ThreadCommon::generateSignal(const uint8_t signalNumber)
 	return signalsReceiverControlBlock->generateSignal(signalNumber, threadControlBlock);
 }
 
-#endif	// CONFIG_SIGNALS_ENABLE == 1
+#endif	// DISTORTOS_SIGNALS_ENABLE == 1
 
 uint8_t ThreadCommon::getEffectivePriority() const
 {
@@ -72,7 +72,7 @@ ThreadIdentifier ThreadCommon::getIdentifier() const
 	return {threadControlBlock, threadControlBlock.getSequenceNumber()};
 }
 
-#if CONFIG_SIGNALS_ENABLE == 1
+#if DISTORTOS_SIGNALS_ENABLE == 1
 
 SignalSet ThreadCommon::getPendingSignalSet() const
 {
@@ -84,7 +84,7 @@ SignalSet ThreadCommon::getPendingSignalSet() const
 	return signalsReceiverControlBlock->getPendingSignalSet();
 }
 
-#endif	// CONFIG_SIGNALS_ENABLE == 1
+#endif	// DISTORTOS_SIGNALS_ENABLE == 1
 
 uint8_t ThreadCommon::getPriority() const
 {
@@ -123,7 +123,7 @@ int ThreadCommon::join()
 	return ret;
 }
 
-#if CONFIG_SIGNALS_ENABLE == 1
+#if DISTORTOS_SIGNALS_ENABLE == 1
 
 int ThreadCommon::queueSignal(const uint8_t signalNumber, const sigval value)
 {
@@ -135,7 +135,7 @@ int ThreadCommon::queueSignal(const uint8_t signalNumber, const sigval value)
 	return signalsReceiverControlBlock->queueSignal(signalNumber, value, threadControlBlock);
 }
 
-#endif	// CONFIG_SIGNALS_ENABLE == 1
+#endif	// DISTORTOS_SIGNALS_ENABLE == 1
 
 void ThreadCommon::setPriority(const uint8_t priority, const bool alwaysBehind)
 {

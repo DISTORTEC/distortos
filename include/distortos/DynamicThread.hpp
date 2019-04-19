@@ -2,7 +2,7 @@
  * \file
  * \brief DynamicThread class header
  *
- * \author Copyright (C) 2015-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2015-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -27,7 +27,7 @@ namespace distortos
  * and internal DynamicSignalsReceiver object.
  */
 
-#ifdef CONFIG_THREAD_DETACH_ENABLE
+#ifdef DISTORTOS_THREAD_DETACH_ENABLE
 
 class DynamicThread : public Thread
 {
@@ -100,7 +100,7 @@ public:
 
 	int detach() override;
 
-#if CONFIG_SIGNALS_ENABLE == 1
+#if DISTORTOS_SIGNALS_ENABLE == 1
 
 	/**
 	 * \brief Generates signal for thread.
@@ -121,7 +121,7 @@ public:
 
 	int generateSignal(uint8_t signalNumber) override;
 
-#endif	// CONFIG_SIGNALS_ENABLE == 1
+#endif	// DISTORTOS_SIGNALS_ENABLE == 1
 
 	/**
 	 * \return effective priority of thread
@@ -136,7 +136,7 @@ public:
 
 	ThreadIdentifier getIdentifier() const override;
 
-#if CONFIG_SIGNALS_ENABLE == 1
+#if DISTORTOS_SIGNALS_ENABLE == 1
 
 	/**
 	 * \brief Gets set of currently pending signals.
@@ -152,7 +152,7 @@ public:
 
 	SignalSet getPendingSignalSet() const override;
 
-#endif	// CONFIG_SIGNALS_ENABLE == 1
+#endif	// DISTORTOS_SIGNALS_ENABLE == 1
 
 	/**
 	 * \return priority of thread
@@ -204,7 +204,7 @@ public:
 
 	int join() override;
 
-#if CONFIG_SIGNALS_ENABLE == 1
+#if DISTORTOS_SIGNALS_ENABLE == 1
 
 	/**
 	 * \brief Queues signal for thread.
@@ -226,7 +226,7 @@ public:
 
 	int queueSignal(uint8_t signalNumber, sigval value) override;
 
-#endif	// CONFIG_SIGNALS_ENABLE == 1
+#endif	// DISTORTOS_SIGNALS_ENABLE == 1
 
 	/**
 	 * \brief Changes priority of thread.
@@ -270,7 +270,7 @@ private:
 	std::unique_ptr<internal::DynamicThreadBase> detachableThread_;
 };
 
-#else	// !def CONFIG_THREAD_DETACH_ENABLE
+#else	// !def DISTORTOS_THREAD_DETACH_ENABLE
 
 class DynamicThread : public internal::DynamicThreadBase
 {
@@ -279,7 +279,7 @@ public:
 	using internal::DynamicThreadBase::DynamicThreadBase;
 };
 
-#endif	// !def CONFIG_THREAD_DETACH_ENABLE
+#endif	// !def DISTORTOS_THREAD_DETACH_ENABLE
 
 /**
  * \brief Helper factory function to make DynamicThread object
@@ -391,7 +391,7 @@ DynamicThread makeAndStartDynamicThread(const DynamicThreadParameters parameters
 
 /// \}
 
-#ifdef CONFIG_THREAD_DETACH_ENABLE
+#ifdef DISTORTOS_THREAD_DETACH_ENABLE
 
 template<typename Function, typename... Args>
 DynamicThread::DynamicThread(const size_t stackSize, const bool canReceiveSignals, const size_t queuedSignals,
@@ -403,7 +403,7 @@ DynamicThread::DynamicThread(const size_t stackSize, const bool canReceiveSignal
 
 }
 
-#endif	// def CONFIG_THREAD_DETACH_ENABLE
+#endif	// def DISTORTOS_THREAD_DETACH_ENABLE
 
 }	// namespace distortos
 

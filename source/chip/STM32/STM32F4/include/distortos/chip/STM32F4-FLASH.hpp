@@ -2,7 +2,7 @@
  * \file
  * \brief Header for FLASH-related functions for STM32F4
  *
- * \author Copyright (C) 2015 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2015-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -27,8 +27,8 @@ namespace chip
 +---------------------------------------------------------------------------------------------------------------------*/
 
 /// maximum allowed value of flash latency
-#if defined(CONFIG_CHIP_STM32F405) || defined(CONFIG_CHIP_STM32F407) || defined(CONFIG_CHIP_STM32F415) || \
-		defined(CONFIG_CHIP_STM32F417)
+#if defined(DISTORTOS_CHIP_STM32F405) || defined(DISTORTOS_CHIP_STM32F407) || defined(DISTORTOS_CHIP_STM32F415) || \
+		defined(DISTORTOS_CHIP_STM32F417)
 constexpr uint8_t maxFlashLatency {7};
 #else
 constexpr uint8_t maxFlashLatency {15};

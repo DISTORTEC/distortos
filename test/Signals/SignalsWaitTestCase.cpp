@@ -2,7 +2,7 @@
  * \file
  * \brief SignalsWaitTestCase class implementation
  *
- * \author Copyright (C) 2015-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2015-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -13,7 +13,7 @@
 
 #include "distortos/distortosConfiguration.h"
 
-#if CONFIG_SIGNALS_ENABLE == 1
+#if DISTORTOS_SIGNALS_ENABLE == 1
 
 #include "priorityTestPhases.hpp"
 #include "SequenceAsserter.hpp"
@@ -23,7 +23,7 @@
 #include "distortos/ThisThread-Signals.hpp"
 #include "distortos/ThisThread.hpp"
 
-#endif	// CONFIG_SIGNALS_ENABLE == 1
+#endif	// DISTORTOS_SIGNALS_ENABLE == 1
 
 namespace distortos
 {
@@ -31,7 +31,7 @@ namespace distortos
 namespace test
 {
 
-#if CONFIG_SIGNALS_ENABLE == 1
+#if DISTORTOS_SIGNALS_ENABLE == 1
 
 namespace
 {
@@ -223,7 +223,7 @@ const std::array<Stage, 2> stages
 
 }	// namespace
 
-#endif	// CONFIG_SIGNALS_ENABLE == 1
+#endif	// DISTORTOS_SIGNALS_ENABLE == 1
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | private functions
@@ -231,7 +231,7 @@ const std::array<Stage, 2> stages
 
 bool SignalsWaitTestCase::run_() const
 {
-#if CONFIG_SIGNALS_ENABLE == 1
+#if DISTORTOS_SIGNALS_ENABLE == 1
 
 	// priority required for this whole test to work
 	static_assert(testCasePriority_ + 2 <= UINT8_MAX, "Invalid test case priority");
@@ -304,7 +304,7 @@ bool SignalsWaitTestCase::run_() const
 	if (statistics::getContextSwitchCount() - contextSwitchCount != totalContextSwitches)
 		return false;
 
-#endif	// CONFIG_SIGNALS_ENABLE == 1
+#endif	// DISTORTOS_SIGNALS_ENABLE == 1
 
 	return true;
 }

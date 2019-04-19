@@ -29,7 +29,7 @@ namespace devices
 namespace
 {
 
-static_assert(CONFIG_SDMMCCARD_BUFFER_ALIGNMENT <= CONFIG_BLOCKDEVICE_BUFFER_ALIGNMENT,
+static_assert(DISTORTOS_SDMMCCARD_BUFFER_ALIGNMENT <= DISTORTOS_BLOCKDEVICE_BUFFER_ALIGNMENT,
 		"Buffer alignment for SdCard is greater than for BlockDevice!");
 
 /*---------------------------------------------------------------------------------------------------------------------+
@@ -1244,7 +1244,7 @@ std::pair<int, R1Response> executeAcmd6(SynchronousSdMmcCardLowLevel& sdCard, co
 std::tuple<int, R1Response, SdStatus> executeAcmd13(SynchronousSdMmcCardLowLevel& sdCard, const uint16_t rca,
 		const uint16_t timeoutMs)
 {
-	SdStatus::RawSdStatus sdStatus __attribute__((aligned(CONFIG_SDMMCCARD_BUFFER_ALIGNMENT))) {};
+	SdStatus::RawSdStatus sdStatus __attribute__((aligned(DISTORTOS_SDMMCCARD_BUFFER_ALIGNMENT))) {};
 	const auto ret = executeAcmdWithR1Response(sdCard, rca, 13, {},
 			SdMmcCardLowLevel::ReadTransfer{sdStatus.data(), sizeof(sdStatus), sizeof(sdStatus), timeoutMs});
 	return std::make_tuple(ret.first, ret.second, SdStatus{sdStatus});

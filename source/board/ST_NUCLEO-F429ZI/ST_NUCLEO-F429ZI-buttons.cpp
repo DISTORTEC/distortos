@@ -2,7 +2,7 @@
  * \file
  * \brief Definition of buttons for ST,NUCLEO-F429ZI
  *
- * \author Copyright (C) 2014-2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -14,7 +14,7 @@
 
 #include "distortos/board/buttons.hpp"
 
-#if defined(CONFIG_BOARD_BUTTONS_ENABLE) && DISTORTOS_BOARD_BUTTONS_COUNT != 0
+#if defined(DISTORTOS_BOARD_BUTTONS_ENABLE) && DISTORTOS_BOARD_BUTTONS_COUNT != 0
 
 #include "distortos/chip/ChipInputPin.hpp"
 
@@ -30,13 +30,13 @@ namespace board
 
 const chip::ChipInputPin buttons[buttonsCount]
 {
-#ifdef CONFIG_BOARD_BUTTONS_B1_ENABLE
+#ifdef DISTORTOS_BOARD_BUTTONS_B1_ENABLE
 		chip::ChipInputPin{chip::Pin::pc13, chip::PinPull::none, false},
-#endif	// def CONFIG_BOARD_BUTTONS_B1_ENABLE
+#endif	// def DISTORTOS_BOARD_BUTTONS_B1_ENABLE
 };
 
 }	// namespace board
 
 }	// namespace distortos
 
-#endif	// defined(CONFIG_BOARD_BUTTONS_ENABLE) && DISTORTOS_BOARD_BUTTONS_COUNT != 0
+#endif	// defined(DISTORTOS_BOARD_BUTTONS_ENABLE) && DISTORTOS_BOARD_BUTTONS_COUNT != 0

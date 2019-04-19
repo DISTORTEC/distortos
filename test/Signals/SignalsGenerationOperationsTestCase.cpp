@@ -2,7 +2,7 @@
  * \file
  * \brief SignalsGenerationOperationsTestCase class implementation
  *
- * \author Copyright (C) 2015-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2015-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -15,7 +15,7 @@
 
 /// configuration required by SignalsGenerationOperationsTestCase
 #define SIGNALS_GENERATION_OPERATIONS_TEST_CASE_ENABLED \
-		CONFIG_SIGNALS_ENABLE == 1 && CONFIG_MAIN_THREAD_CAN_RECEIVE_SIGNALS == 1
+		DISTORTOS_SIGNALS_ENABLE == 1 && DISTORTOS_MAIN_THREAD_CAN_RECEIVE_SIGNALS == 1
 
 #if SIGNALS_GENERATION_OPERATIONS_TEST_CASE_ENABLED == 1
 

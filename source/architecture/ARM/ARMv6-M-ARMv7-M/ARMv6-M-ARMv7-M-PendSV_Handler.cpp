@@ -2,7 +2,7 @@
  * \file
  * \brief PendSV_Handler() for ARMv6-M and ARMv7-M
  *
- * \author Copyright (C) 2014-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -14,11 +14,11 @@
 
 #include "distortos/chip/CMSIS-proxy.h"
 
-#ifdef CONFIG_CHECK_STACK_POINTER_RANGE_CONTEXT_SWITCH_ENABLE
+#ifdef DISTORTOS_CHECK_STACK_POINTER_RANGE_CONTEXT_SWITCH_ENABLE
 
 #include "distortos/FATAL_ERROR.h"
 
-#endif	// def CONFIG_CHECK_STACK_POINTER_RANGE_CONTEXT_SWITCH_ENABLE
+#endif	// def DISTORTOS_CHECK_STACK_POINTER_RANGE_CONTEXT_SWITCH_ENABLE
 
 namespace distortos
 {
@@ -30,7 +30,7 @@ namespace
 | local functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-#ifdef CONFIG_CHECK_STACK_POINTER_RANGE_CONTEXT_SWITCH_ENABLE
+#ifdef DISTORTOS_CHECK_STACK_POINTER_RANGE_CONTEXT_SWITCH_ENABLE
 
 /**
  * \brief Wrapper for check of stack pointer range
@@ -46,7 +46,7 @@ void checkStackPointerWrapper(const void* const stackPointer)
 		FATAL_ERROR("Stack overflow detected!");
 }
 
-#endif	// def CONFIG_CHECK_STACK_POINTER_RANGE_CONTEXT_SWITCH_ENABLE
+#endif	// def DISTORTOS_CHECK_STACK_POINTER_RANGE_CONTEXT_SWITCH_ENABLE
 
 /**
  * \brief Wrapper for void* distortos::internal::getScheduler().switchContext(void*)
@@ -75,33 +75,33 @@ void* schedulerSwitchContextWrapper(void* const stackPointer)
 
 extern "C" __attribute__ ((naked)) void PendSV_Handler()
 {
-#if CONFIG_ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI != 0
+#if DISTORTOS_ARCHITECTURE_KERNEL_BASEPRI != 0
 
-	constexpr auto basepriValue = CONFIG_ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI << (8 - __NVIC_PRIO_BITS);
+	constexpr auto basepriValue = DISTORTOS_ARCHITECTURE_KERNEL_BASEPRI << (8 - __NVIC_PRIO_BITS);
 	static_assert(basepriValue > 0 && basepriValue <= UINT8_MAX,
-			"Invalid CONFIG_ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI value!");
+			"Invalid DISTORTOS_ARCHITECTURE_KERNEL_BASEPRI value!");
 
-#endif	// CONFIG_ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI != 0
+#endif	// DISTORTOS_ARCHITECTURE_KERNEL_BASEPRI != 0
 
 	asm volatile
 	(
-#if CONFIG_ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI != 0
+#if DISTORTOS_ARCHITECTURE_KERNEL_BASEPRI != 0
 			"	mov			r0, %[basepriValue]					\n"
 			"	msr			basepri, r0							\n"	// enable interrupt masking
-#else	// CONFIG_ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI == 0
+#else	// DISTORTOS_ARCHITECTURE_KERNEL_BASEPRI == 0
 			"	cpsid		i									\n"	// disable interrupts
-#endif	// CONFIG_ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI == 0
+#endif	// DISTORTOS_ARCHITECTURE_KERNEL_BASEPRI == 0
 			"													\n"
 #ifdef __ARM_ARCH_6M__
 			"	mrs			r0, psp								\n"
-#ifdef CONFIG_CHECK_STACK_POINTER_RANGE_CONTEXT_SWITCH_ENABLE
+#ifdef DISTORTOS_CHECK_STACK_POINTER_RANGE_CONTEXT_SWITCH_ENABLE
 			"	push		{r0, lr}							\n"
 			"	sub			r0, r0, #0x20						\n"
 			"	ldr			r1, =%[checkStackPointerWrapper]	\n"
 			"	blx			r1									\n"
 			"	pop			{r0, r1}							\n"
 			"	mov			lr, r1								\n"
-#endif	// def CONFIG_CHECK_STACK_POINTER_RANGE_CONTEXT_SWITCH_ENABLE
+#endif	// def DISTORTOS_CHECK_STACK_POINTER_RANGE_CONTEXT_SWITCH_ENABLE
 			"	sub			r0, #0x10							\n"
 			"	stmia		r0!, {r4-r7}						\n"	// save lower half of current thread's context
 			"	mov			r4, r8								\n"
@@ -126,7 +126,7 @@ extern "C" __attribute__ ((naked)) void PendSV_Handler()
 			"	msr			psp, r0								\n"
 #else	// !def __ARM_ARCH_6M__
 			"	mrs			r0, psp								\n"
-#ifdef CONFIG_CHECK_STACK_POINTER_RANGE_CONTEXT_SWITCH_ENABLE
+#ifdef DISTORTOS_CHECK_STACK_POINTER_RANGE_CONTEXT_SWITCH_ENABLE
 			"	push		{r0, lr}							\n"
 #if __FPU_PRESENT == 1 && __FPU_USED == 1
 			"	tst			lr, #1 << 4							\n"	// was floating-point used by the thread?
@@ -138,7 +138,7 @@ extern "C" __attribute__ ((naked)) void PendSV_Handler()
 #endif	// __FPU_PRESENT != 1 || __FPU_USED != 1
 			"	bl			%[checkStackPointerWrapper]			\n"
 			"	pop			{r0, lr}							\n"
-#endif	// def CONFIG_CHECK_STACK_POINTER_RANGE_CONTEXT_SWITCH_ENABLE
+#endif	// def DISTORTOS_CHECK_STACK_POINTER_RANGE_CONTEXT_SWITCH_ENABLE
 #if __FPU_PRESENT == 1 && __FPU_USED == 1
 			"	tst			lr, #1 << 4							\n"	// was floating-point used by the thread?
 			"	it			eq									\n"
@@ -164,24 +164,24 @@ extern "C" __attribute__ ((naked)) void PendSV_Handler()
 			"	msr			psp, r0								\n"
 #endif	// !def __ARM_ARCH_6M__
 			"													\n"
-#if CONFIG_ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI != 0
+#if DISTORTOS_ARCHITECTURE_KERNEL_BASEPRI != 0
 			"	mov			r0, #0								\n"
 			"	msr			basepri, r0							\n"	// disable interrupt masking
-#else	// CONFIG_ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI == 0
+#else	// DISTORTOS_ARCHITECTURE_KERNEL_BASEPRI == 0
 			"	cpsie		i									\n"	// enable interrupts
-#endif	// CONFIG_ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI == 0
+#endif	// DISTORTOS_ARCHITECTURE_KERNEL_BASEPRI == 0
 			"													\n"
 			"	bx			lr									\n"	// return to new thread
 			"													\n"
 			".ltorg												\n"	// force dumping of literal pool
 
 			::
-#if CONFIG_ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI != 0
+#if DISTORTOS_ARCHITECTURE_KERNEL_BASEPRI != 0
 				[basepriValue] "i" (basepriValue),
-#endif	// CONFIG_ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI != 0
-#ifdef CONFIG_CHECK_STACK_POINTER_RANGE_CONTEXT_SWITCH_ENABLE
+#endif	// DISTORTOS_ARCHITECTURE_KERNEL_BASEPRI != 0
+#ifdef DISTORTOS_CHECK_STACK_POINTER_RANGE_CONTEXT_SWITCH_ENABLE
 				[checkStackPointerWrapper] "i" (checkStackPointerWrapper),
-#endif	// def CONFIG_CHECK_STACK_POINTER_RANGE_CONTEXT_SWITCH_ENABLE
+#endif	// def DISTORTOS_CHECK_STACK_POINTER_RANGE_CONTEXT_SWITCH_ENABLE
 				[schedulerSwitchContext] "i" (schedulerSwitchContextWrapper)
 	);
 

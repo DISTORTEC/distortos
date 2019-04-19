@@ -2,7 +2,7 @@
  * \file
  * \brief ChipUartLowLevel class header for USARTv2 in STM32
  *
- * \author Copyright (C) 2016-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2016-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -33,100 +33,100 @@ class ChipUartLowLevel : public devices::UartLowLevel
 public:
 
 	/// minimum allowed value for UART character length
-#ifdef CONFIG_CHIP_STM32_USARTV2_HAS_CR1_M1_BIT
+#ifdef DISTORTOS_CHIP_USART_HAS_CR1_M1_BIT
 	constexpr static uint8_t minCharacterLength {6};
-#else	// !def CONFIG_CHIP_STM32_USARTV2_HAS_CR1_M1_BIT
+#else	// !def DISTORTOS_CHIP_USART_HAS_CR1_M1_BIT
 	constexpr static uint8_t minCharacterLength {7};
-#endif	// !def CONFIG_CHIP_STM32_USARTV2_HAS_CR1_M1_BIT
+#endif	// !def DISTORTOS_CHIP_USART_HAS_CR1_M1_BIT
 
 	/// maximum allowed value for UART character length
 	constexpr static uint8_t maxCharacterLength {9};
 
 	class Parameters;
 
-#ifdef CONFIG_CHIP_STM32_USARTV2_USART1_ENABLE
+#ifdef DISTORTOS_CHIP_USART1_ENABLE
 
 	/// parameters for construction of UART low-level driver for USART1
 	static const Parameters usart1Parameters;
 
-#endif	// def CONFIG_CHIP_STM32_USARTV2_USART1_ENABLE
+#endif	// def DISTORTOS_CHIP_USART1_ENABLE
 
-#ifdef CONFIG_CHIP_STM32_USARTV2_USART2_ENABLE
+#ifdef DISTORTOS_CHIP_USART2_ENABLE
 
 	/// parameters for construction of UART low-level driver for USART2
 	static const Parameters usart2Parameters;
 
-#endif	// def CONFIG_CHIP_STM32_USARTV2_USART2_ENABLE
+#endif	// def DISTORTOS_CHIP_USART2_ENABLE
 
-#ifdef CONFIG_CHIP_STM32_USARTV2_USART3_ENABLE
+#ifdef DISTORTOS_CHIP_USART3_ENABLE
 
 	/// parameters for construction of UART low-level driver for USART3
 	static const Parameters usart3Parameters;
 
-#endif	// def CONFIG_CHIP_STM32_USARTV2_USART3_ENABLE
+#endif	// def DISTORTOS_CHIP_USART3_ENABLE
 
-#ifdef CONFIG_CHIP_STM32_USARTV2_UART4_ENABLE
+#ifdef DISTORTOS_CHIP_UART4_ENABLE
 
 	/// parameters for construction of UART low-level driver for UART4
 	static const Parameters uart4Parameters;
 
-#endif	// def CONFIG_CHIP_STM32_USARTV2_UART4_ENABLE
+#endif	// def DISTORTOS_CHIP_UART4_ENABLE
 
-#ifdef CONFIG_CHIP_STM32_USARTV2_USART4_ENABLE
+#ifdef DISTORTOS_CHIP_USART4_ENABLE
 
 	/// parameters for construction of UART low-level driver for USART4
 	static const Parameters usart4Parameters;
 
-#endif	// def CONFIG_CHIP_STM32_USARTV2_USART4_ENABLE
+#endif	// def DISTORTOS_CHIP_USART4_ENABLE
 
-#ifdef CONFIG_CHIP_STM32_USARTV2_UART5_ENABLE
+#ifdef DISTORTOS_CHIP_UART5_ENABLE
 
 	/// parameters for construction of UART low-level driver for UART5
 	static const Parameters uart5Parameters;
 
-#endif	// def CONFIG_CHIP_STM32_USARTV2_UART5_ENABLE
+#endif	// def DISTORTOS_CHIP_UART5_ENABLE
 
-#ifdef CONFIG_CHIP_STM32_USARTV2_USART5_ENABLE
+#ifdef DISTORTOS_CHIP_USART5_ENABLE
 
 	/// parameters for construction of UART low-level driver for USART5
 	static const Parameters usart5Parameters;
 
-#endif	// def CONFIG_CHIP_STM32_USARTV2_USART5_ENABLE
+#endif	// def DISTORTOS_CHIP_USART5_ENABLE
 
-#ifdef CONFIG_CHIP_STM32_USARTV2_USART6_ENABLE
+#ifdef DISTORTOS_CHIP_USART6_ENABLE
 
 	/// parameters for construction of UART low-level driver for USART6
 	static const Parameters usart6Parameters;
 
-#endif	// def CONFIG_CHIP_STM32_USARTV2_USART6_ENABLE
+#endif	// def DISTORTOS_CHIP_USART6_ENABLE
 
-#ifdef CONFIG_CHIP_STM32_USARTV2_UART7_ENABLE
+#ifdef DISTORTOS_CHIP_UART7_ENABLE
 
 	/// parameters for construction of UART low-level driver for UART7
 	static const Parameters uart7Parameters;
 
-#endif	// def CONFIG_CHIP_STM32_USARTV2_UART7_ENABLE
+#endif	// def DISTORTOS_CHIP_UART7_ENABLE
 
-#ifdef CONFIG_CHIP_STM32_USARTV2_USART7_ENABLE
+#ifdef DISTORTOS_CHIP_USART7_ENABLE
 
 	/// parameters for construction of UART low-level driver for USART7
 	static const Parameters usart7Parameters;
 
-#endif	// def CONFIG_CHIP_STM32_USARTV2_USART7_ENABLE
+#endif	// def DISTORTOS_CHIP_USART7_ENABLE
 
-#ifdef CONFIG_CHIP_STM32_USARTV2_UART8_ENABLE
+#ifdef DISTORTOS_CHIP_UART8_ENABLE
 
 	/// parameters for construction of UART low-level driver for UART8
 	static const Parameters uart8Parameters;
 
-#endif	// def CONFIG_CHIP_STM32_USARTV2_UART8_ENABLE
+#endif	// def DISTORTOS_CHIP_UART8_ENABLE
 
-#ifdef CONFIG_CHIP_STM32_USARTV2_USART8_ENABLE
+#ifdef DISTORTOS_CHIP_USART8_ENABLE
 
 	/// parameters for construction of UART low-level driver for USART8
 	static const Parameters usart8Parameters;
 
-#endif	// def CONFIG_CHIP_STM32_USARTV2_USART8_ENABLE
+#endif	// def DISTORTOS_CHIP_USART8_ENABLE
 
 	/**
 	 * \brief ChipUartLowLevel's constructor

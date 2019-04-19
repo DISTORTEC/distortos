@@ -2,7 +2,7 @@
  * \file
  * \brief Header for RCC-related functions for STM32F0
  *
- * \author Copyright (C) 2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2016-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -16,13 +16,13 @@
 
 #include <cstdint>
 
-#if defined(CONFIG_CHIP_STM32F04) || defined(CONFIG_CHIP_STM32F071) || defined(CONFIG_CHIP_STM32F072) || \
-	defined(CONFIG_CHIP_STM32F078) || defined(CONFIG_CHIP_STM32F09)
+#if defined(DISTORTOS_CHIP_STM32F04) || defined(DISTORTOS_CHIP_STM32F071) || defined(DISTORTOS_CHIP_STM32F072) || \
+	defined(DISTORTOS_CHIP_STM32F078) || defined(DISTORTOS_CHIP_STM32F09)
 
 #define STM32F04_STM32F071_STM32F072_STM32F078_STM32F09_RCC_FEATURES
 
-#endif	// defined(CONFIG_CHIP_STM32F04) || defined(CONFIG_CHIP_STM32F071) || defined(CONFIG_CHIP_STM32F072) ||
-		// defined(CONFIG_CHIP_STM32F078) || defined(CONFIG_CHIP_STM32F09)
+#endif	// defined(DISTORTOS_CHIP_STM32F04) || defined(DISTORTOS_CHIP_STM32F071) || defined(DISTORTOS_CHIP_STM32F072) ||
+		// defined(DISTORTOS_CHIP_STM32F078) || defined(DISTORTOS_CHIP_STM32F09)
 
 namespace distortos
 {

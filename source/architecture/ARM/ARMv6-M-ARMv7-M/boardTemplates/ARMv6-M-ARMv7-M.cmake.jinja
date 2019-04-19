@@ -14,31 +14,31 @@
 set(DISTORTOS_RAW_LINKER_SCRIPT "{{ outputPath }}/{{ sanitizedBoard }}.ld")
 
 distortosSetFixedConfiguration(BOOLEAN
-		CONFIG_ARCHITECTURE_ASCENDING_STACK
+		DISTORTOS_ARCHITECTURE_ASCENDING_STACK
 		OFF)
 
 distortosSetFixedConfiguration(BOOLEAN
-		CONFIG_ARCHITECTURE_EMPTY_STACK
+		DISTORTOS_ARCHITECTURE_EMPTY_STACK
 		OFF)
 
 distortosSetFixedConfiguration(INTEGER
-		CONFIG_ARCHITECTURE_STACK_ALIGNMENT
+		DISTORTOS_ARCHITECTURE_STACK_ALIGNMENT
 		8)
 
 distortosSetFixedConfiguration(BOOLEAN
-		CONFIG_ARCHITECTURE_ARM
+		DISTORTOS_ARCHITECTURE_ARM
 		ON)
 
 distortosSetFixedConfiguration(BOOLEAN
-		CONFIG_ARCHITECTURE_{{ sanitizedArchitecture }}
+		DISTORTOS_ARCHITECTURE_{{ sanitizedArchitecture }}
 		ON)
 
 distortosSetFixedConfiguration(BOOLEAN
-		CONFIG_ARCHITECTURE_{{ sanitizedCpu }}
+		DISTORTOS_ARCHITECTURE_{{ sanitizedCpu }}
 		ON)
 
 distortosSetFixedConfiguration(BOOLEAN
-		CONFIG_ARCHITECTURE_{{ sanitizedCpu }}_{{ dictionary['CPUs'][0]['revision'] | upper }}
+		DISTORTOS_ARCHITECTURE_{{ sanitizedCpu }}_{{ dictionary['CPUs'][0]['revision'] | upper }}
 		ON)
 
 distortosSetConfiguration(INTEGER
@@ -46,7 +46,7 @@ distortosSetConfiguration(INTEGER
 		1024
 		MIN 8
 		HELP "Size (in bytes) of \"main\" stack used by core exceptions and interrupts in Handler mode."
-		OUTPUT_NAME CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_MAIN_STACK_SIZE)
+		OUTPUT_NAME DISTORTOS_ARCHITECTURE_MAIN_STACK_SIZE)
 {% if 'ARM,ARMv7-M' in dictionary['CPUs'][0]['compatible'] %}
 
 distortosSetConfiguration(INTEGER
@@ -66,7 +66,7 @@ distortosSetConfiguration(INTEGER
 		with priorities between \"x\" and 255 (both inclusive) may use system's functions, while interrupts with
 		priorities between 0 and \"x - 1\" (both inclusive) may not. If 0 is chosen, then all interrupts (except
 		HardFault and NMI) are disabled during critical sections, so they may use system's functions."
-		OUTPUT_NAME CONFIG_ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI)
+		OUTPUT_NAME DISTORTOS_ARCHITECTURE_KERNEL_BASEPRI)
 {% endif %}
 
 {% set context = namespace(counter = 0) %}
@@ -77,7 +77,7 @@ distortosSetConfiguration(STRING
 		"{{ key }}"
 {% endfor %}
 		HELP "Memory region for .text.vectorTable section in linker script"
-		OUTPUT_NAME CONFIG_LD_TEXT_VECTOR_TABLE_REGION
+		OUTPUT_NAME DISTORTOS_LD_TEXT_VECTOR_TABLE_REGION
 		OUTPUT_TYPES BOOLEAN)
 
 {% set context.counter = context.counter + 1 %}
@@ -88,7 +88,7 @@ distortosSetConfiguration(STRING
 		"{{ key }}"
 {% endfor %}
 		HELP "Memory region for .text section in linker script"
-		OUTPUT_NAME CONFIG_LD_TEXT_REGION
+		OUTPUT_NAME DISTORTOS_LD_TEXT_REGION
 		OUTPUT_TYPES BOOLEAN)
 
 {% set context.counter = context.counter + 1 %}
@@ -99,7 +99,7 @@ distortosSetConfiguration(STRING
 		"{{ key }}"
 {% endfor %}
 		HELP "Memory region for .ARM.exidx section in linker script"
-		OUTPUT_NAME CONFIG_LD_ARM_EXIDX_REGION
+		OUTPUT_NAME DISTORTOS_LD_ARM_EXIDX_REGION
 		OUTPUT_TYPES BOOLEAN)
 
 {% set context.counter = context.counter + 1 %}
@@ -110,7 +110,7 @@ distortosSetConfiguration(STRING
 		"{{ key }}"
 {% endfor %}
 		HELP "Memory region for main stack in linker script"
-		OUTPUT_NAME CONFIG_LD_MAIN_STACK_REGION
+		OUTPUT_NAME DISTORTOS_LD_MAIN_STACK_REGION
 		OUTPUT_TYPES BOOLEAN)
 
 {% set context.counter = context.counter + 1 %}
@@ -121,7 +121,7 @@ distortosSetConfiguration(STRING
 		"{{ key }}"
 {% endfor %}
 		HELP "Memory region for .bss section in linker script"
-		OUTPUT_NAME CONFIG_LD_BSS_REGION
+		OUTPUT_NAME DISTORTOS_LD_BSS_REGION
 		OUTPUT_TYPES BOOLEAN)
 
 {% set context.counter = context.counter + 1 %}
@@ -132,7 +132,7 @@ distortosSetConfiguration(STRING
 		"{{ key }}"
 {% endfor %}
 		HELP "VMA memory region for .data section in linker script"
-		OUTPUT_NAME CONFIG_LD_DATA_VMA_REGION
+		OUTPUT_NAME DISTORTOS_LD_DATA_VMA_REGION
 		OUTPUT_TYPES BOOLEAN)
 
 {% set context.counter = context.counter + 1 %}
@@ -143,7 +143,7 @@ distortosSetConfiguration(STRING
 		"{{ key }}"
 {% endfor %}
 		HELP "LMA memory region for .data section in linker script"
-		OUTPUT_NAME CONFIG_LD_DATA_LMA_REGION
+		OUTPUT_NAME DISTORTOS_LD_DATA_LMA_REGION
 		OUTPUT_TYPES BOOLEAN)
 
 {% set context.counter = context.counter + 1 %}
@@ -154,7 +154,7 @@ distortosSetConfiguration(STRING
 		"{{ key }}"
 {% endfor %}
 		HELP "Memory region for .noinit section in linker script"
-		OUTPUT_NAME CONFIG_LD_NOINIT_REGION
+		OUTPUT_NAME DISTORTOS_LD_NOINIT_REGION
 		OUTPUT_TYPES BOOLEAN)
 {% for ramKey, ramMemory in dictionary['memories'].items() if ramMemory is mapping and
 	'on-chip-RAM' in ramMemory['compatible'] and
@@ -169,7 +169,7 @@ distortosSetConfiguration(STRING
 		"{{ romKey }}"
 {% endfor %}
 		HELP "LMA memory region for .{{ ramKey }}.data section in linker script"
-		OUTPUT_NAME CONFIG_LD_{{ ramKey | upper }}_DATA_LMA_REGION
+		OUTPUT_NAME DISTORTOS_LD_{{ ramKey | upper }}_DATA_LMA_REGION
 		OUTPUT_TYPES BOOLEAN)
 {% endfor %}
 
@@ -181,7 +181,7 @@ distortosSetConfiguration(STRING
 		"{{ key }}"
 {% endfor %}
 		HELP "Memory region for process stack in linker script"
-		OUTPUT_NAME CONFIG_LD_PROCESS_STACK_REGION
+		OUTPUT_NAME DISTORTOS_LD_PROCESS_STACK_REGION
 		OUTPUT_TYPES BOOLEAN)
 
 {% set context.counter = context.counter + 1 %}
@@ -192,22 +192,22 @@ distortosSetConfiguration(STRING
 		"{{ key }}"
 {% endfor %}
 		HELP "Memory region for heap in linker script"
-		OUTPUT_NAME CONFIG_LD_HEAP_REGION
+		OUTPUT_NAME DISTORTOS_LD_HEAP_REGION
 		OUTPUT_TYPES BOOLEAN)
 {% if 'NVIC' in dictionary and 'ARM,NVIC' in dictionary['NVIC']['compatible'] %}
 {% for item in dictionary['NVIC']['chip-vectors'] if item %}
 {% for subvector in item.get('subvectors', []) %}
 
-if(ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_{{ subvector | upper }}_ENABLE)
-	set(ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_{{ item['name'] | upper }}_ENABLE ON)
-endif(ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_{{ subvector | upper }}_ENABLE)
+if(ARCHITECTURE_NVIC_{{ subvector | upper }}_ENABLE)
+	set(ARCHITECTURE_NVIC_{{ item['name'] | upper }}_ENABLE ON)
+endif(ARCHITECTURE_NVIC_{{ subvector | upper }}_ENABLE)
 {% endfor %}
 
-if(ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_{{ item['name'] | upper }}_ENABLE)
+if(ARCHITECTURE_NVIC_{{ item['name'] | upper }}_ENABLE)
 	distortosSetFixedConfiguration(BOOLEAN
-			CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_{{ item['name'] | upper }}_ENABLE
+			DISTORTOS_ARCHITECTURE_NVIC_{{ item['name'] | upper }}_ENABLE
 			ON)
-endif(ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_{{ item['name'] | upper }}_ENABLE)
+endif(ARCHITECTURE_NVIC_{{ item['name'] | upper }}_ENABLE)
 {% endfor %}
 {% endif %}
 

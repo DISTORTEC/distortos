@@ -2,7 +2,7 @@
  * \file
  * \brief DynamicThreadBase class header
  *
- * \author Copyright (C) 2015-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2015-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -24,11 +24,11 @@
 namespace distortos
 {
 
-#if CONFIG_THREAD_DETACH_ENABLE == 1
+#if DISTORTOS_THREAD_DETACH_ENABLE == 1
 
 class DynamicThread;
 
-#endif	// CONFIG_THREAD_DETACH_ENABLE == 1
+#endif	// DISTORTOS_THREAD_DETACH_ENABLE == 1
 
 namespace internal
 {
@@ -37,16 +37,16 @@ namespace internal
  * \brief DynamicThreadBase class is a type-erased interface for thread that has dynamic storage for bound function,
  * stack and - if signals are enabled - internal DynamicSignalsReceiver object.
  *
- * If thread detachment is enabled (CONFIG_THREAD_DETACH_ENABLE is defined) then this class is dynamically allocated by
- * DynamicThread - which allows it to be "detached". Otherwise - if thread detachment is disabled
- * (CONFIG_THREAD_DETACH_ENABLE is not defined) - DynamicThread just inherits from this class.
+ * If thread detachment is enabled (DISTORTOS_THREAD_DETACH_ENABLE is defined) then this class is dynamically allocated
+ * by DynamicThread - which allows it to be "detached". Otherwise - if thread detachment is disabled
+ * (DISTORTOS_THREAD_DETACH_ENABLE is not defined) - DynamicThread just inherits from this class.
  */
 
 class DynamicThreadBase : public ThreadCommon
 {
 public:
 
-#if CONFIG_THREAD_DETACH_ENABLE == 1
+#if DISTORTOS_THREAD_DETACH_ENABLE == 1
 
 	/**
 	 * \brief DynamicThreadBase's constructor
@@ -73,7 +73,7 @@ public:
 			uint8_t priority, SchedulingPolicy schedulingPolicy, DynamicThread& owner, Function&& function,
 			Args&&... args);
 
-#else	// CONFIG_THREAD_DETACH_ENABLE != 1
+#else	// DISTORTOS_THREAD_DETACH_ENABLE != 1
 
 	/**
 	 * \brief DynamicThreadBase's constructor
@@ -118,9 +118,9 @@ public:
 
 	}
 
-#endif	// CONFIG_THREAD_DETACH_ENABLE != 1
+#endif	// DISTORTOS_THREAD_DETACH_ENABLE != 1
 
-#if CONFIG_THREAD_DETACH_ENABLE == 1
+#if DISTORTOS_THREAD_DETACH_ENABLE == 1
 
 	/**
 	 * \brief Detaches the thread.
@@ -137,7 +137,7 @@ public:
 
 	int detach() override;
 
-#endif	// CONFIG_THREAD_DETACH_ENABLE == 1
+#endif	// DISTORTOS_THREAD_DETACH_ENABLE == 1
 
 	/**
 	 * \brief Starts the thread.
@@ -160,7 +160,7 @@ public:
 
 protected:
 
-#if CONFIG_THREAD_DETACH_ENABLE == 1
+#if DISTORTOS_THREAD_DETACH_ENABLE == 1
 
 	/**
 	 * \brief Thread's "exit 0" hook function
@@ -182,7 +182,7 @@ protected:
 
 	void exit1Hook() override;
 
-#endif	// CONFIG_THREAD_DETACH_ENABLE == 1
+#endif	// DISTORTOS_THREAD_DETACH_ENABLE == 1
 
 	/**
 	 * \brief Thread's "run" function
@@ -206,34 +206,34 @@ private:
 
 	static Stack makeStack(const size_t stackSize)
 	{
-		static_assert(alignof(max_align_t) >= CONFIG_ARCHITECTURE_STACK_ALIGNMENT,
+		static_assert(alignof(max_align_t) >= DISTORTOS_ARCHITECTURE_STACK_ALIGNMENT,
 				"Alignment of dynamically allocated memory is too low!");
 
-		const auto adjustedStackSize = (stackSize + CONFIG_ARCHITECTURE_STACK_ALIGNMENT - 1) /
-				CONFIG_ARCHITECTURE_STACK_ALIGNMENT * CONFIG_ARCHITECTURE_STACK_ALIGNMENT;
+		const auto adjustedStackSize = (stackSize + DISTORTOS_ARCHITECTURE_STACK_ALIGNMENT - 1) /
+				DISTORTOS_ARCHITECTURE_STACK_ALIGNMENT * DISTORTOS_ARCHITECTURE_STACK_ALIGNMENT;
 		return {{new uint8_t[adjustedStackSize + stackGuardSize], storageDeleter<uint8_t>},
 				adjustedStackSize + stackGuardSize};
 	}
 
-#if CONFIG_SIGNALS_ENABLE == 1
+#if DISTORTOS_SIGNALS_ENABLE == 1
 
 	/// internal DynamicSignalsReceiver object
 	DynamicSignalsReceiver dynamicSignalsReceiver_;
 
-#endif	// CONFIG_SIGNALS_ENABLE == 1
+#endif	// DISTORTOS_SIGNALS_ENABLE == 1
 
 	/// bound function object
 	std::function<void()> boundFunction_;
 
-#if CONFIG_THREAD_DETACH_ENABLE == 1
+#if DISTORTOS_THREAD_DETACH_ENABLE == 1
 
 	/// pointer to owner DynamicThread object, nullptr if thread is detached
 	DynamicThread* owner_;
 
-#endif	// CONFIG_THREAD_DETACH_ENABLE == 1
+#endif	// DISTORTOS_THREAD_DETACH_ENABLE == 1
 };
 
-#if CONFIG_SIGNALS_ENABLE == 1 && CONFIG_THREAD_DETACH_ENABLE == 1
+#if DISTORTOS_SIGNALS_ENABLE == 1 && DISTORTOS_THREAD_DETACH_ENABLE == 1
 
 template<typename Function, typename... Args>
 DynamicThreadBase::DynamicThreadBase(const size_t stackSize, const bool canReceiveSignals, const size_t queuedSignals,
@@ -249,7 +249,7 @@ DynamicThreadBase::DynamicThreadBase(const size_t stackSize, const bool canRecei
 
 }
 
-#elif CONFIG_SIGNALS_ENABLE == 1 && CONFIG_THREAD_DETACH_ENABLE != 1
+#elif DISTORTOS_SIGNALS_ENABLE == 1 && DISTORTOS_THREAD_DETACH_ENABLE != 1
 
 template<typename Function, typename... Args>
 DynamicThreadBase::DynamicThreadBase(const size_t stackSize, const bool canReceiveSignals, const size_t queuedSignals,
@@ -264,7 +264,7 @@ DynamicThreadBase::DynamicThreadBase(const size_t stackSize, const bool canRecei
 
 }
 
-#elif CONFIG_SIGNALS_ENABLE != 1 && CONFIG_THREAD_DETACH_ENABLE == 1
+#elif DISTORTOS_SIGNALS_ENABLE != 1 && DISTORTOS_THREAD_DETACH_ENABLE == 1
 
 template<typename Function, typename... Args>
 DynamicThreadBase::DynamicThreadBase(const size_t stackSize, bool, size_t, size_t, const uint8_t priority,
@@ -276,7 +276,7 @@ DynamicThreadBase::DynamicThreadBase(const size_t stackSize, bool, size_t, size_
 
 }
 
-#else	// CONFIG_SIGNALS_ENABLE != 1 && CONFIG_THREAD_DETACH_ENABLE != 1
+#else	// DISTORTOS_SIGNALS_ENABLE != 1 && DISTORTOS_THREAD_DETACH_ENABLE != 1
 
 template<typename Function, typename... Args>
 DynamicThreadBase::DynamicThreadBase(const size_t stackSize, bool, size_t, size_t, const uint8_t priority,
@@ -287,7 +287,7 @@ DynamicThreadBase::DynamicThreadBase(const size_t stackSize, bool, size_t, size_
 
 }
 
-#endif	// CONFIG_SIGNALS_ENABLE != 1 && CONFIG_THREAD_DETACH_ENABLE != 1
+#endif	// DISTORTOS_SIGNALS_ENABLE != 1 && DISTORTOS_THREAD_DETACH_ENABLE != 1
 
 }	// namespace internal
 

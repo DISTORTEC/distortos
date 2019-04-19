@@ -2,7 +2,7 @@
  * \file
  * \brief enableInterruptMasking() implementation for ARMv6-M and ARMv7-M
  *
- * \author Copyright (C) 2014-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -25,32 +25,32 @@ namespace architecture
 
 InterruptMask enableInterruptMasking()
 {
-#if CONFIG_ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI != 0
+#if DISTORTOS_ARCHITECTURE_KERNEL_BASEPRI != 0
 
 	const auto interruptMask = __get_BASEPRI();
-	constexpr auto basepriValue = CONFIG_ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI << (8 - __NVIC_PRIO_BITS);
+	constexpr auto basepriValue = DISTORTOS_ARCHITECTURE_KERNEL_BASEPRI << (8 - __NVIC_PRIO_BITS);
 	static_assert(basepriValue > 0 && basepriValue <= UINT8_MAX,
-			"Invalid CONFIG_ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI value!");
+			"Invalid DISTORTOS_ARCHITECTURE_KERNEL_BASEPRI value!");
 
-#ifdef CONFIG_ARCHITECTURE_ARM_CORTEX_M7_R0P1
+#ifdef DISTORTOS_ARCHITECTURE_ARM_CORTEX_M7_R0P1
 	__disable_irq();	// ARM Cortex-M7 r0p1 bug ID 837070
-#endif	// def CONFIG_ARCHITECTURE_ARM_CORTEX_M7_R0P1
+#endif	// def DISTORTOS_ARCHITECTURE_ARM_CORTEX_M7_R0P1
 
 	__set_BASEPRI(basepriValue);
 
-#ifdef CONFIG_ARCHITECTURE_ARM_CORTEX_M7_R0P1
+#ifdef DISTORTOS_ARCHITECTURE_ARM_CORTEX_M7_R0P1
 	__enable_irq();	// ARM Cortex-M7 r0p1 bug ID 837070
-#endif	// def CONFIG_ARCHITECTURE_ARM_CORTEX_M7_R0P1
+#endif	// def DISTORTOS_ARCHITECTURE_ARM_CORTEX_M7_R0P1
 
 	return interruptMask;
 
-#else	// CONFIG_ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI == 0
+#else	// DISTORTOS_ARCHITECTURE_KERNEL_BASEPRI == 0
 
 	const auto interruptMask = __get_PRIMASK();
 	__disable_irq();
 	return interruptMask;
 
-#endif	// CONFIG_ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI == 0
+#endif	// DISTORTOS_ARCHITECTURE_KERNEL_BASEPRI == 0
 }
 
 }	// namespace architecture

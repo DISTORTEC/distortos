@@ -2,7 +2,7 @@
  * \file
  * \brief Declaration of leds for ST,32F072BDISCOVERY
  *
- * \author Copyright (C) 2014-2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -19,29 +19,29 @@
 
 #include <cstddef>
 
-#ifdef CONFIG_BOARD_LEDS_LD3_ENABLE
+#ifdef DISTORTOS_BOARD_LEDS_LD3_ENABLE
 #define DISTORTOS_BOARD_LEDS_LD3_ENABLED	1
-#else	// !def CONFIG_BOARD_LEDS_LD3_ENABLE
+#else	// !def DISTORTOS_BOARD_LEDS_LD3_ENABLE
 #define DISTORTOS_BOARD_LEDS_LD3_ENABLED	0
-#endif	// !def CONFIG_BOARD_LEDS_LD3_ENABLE
+#endif	// !def DISTORTOS_BOARD_LEDS_LD3_ENABLE
 
-#ifdef CONFIG_BOARD_LEDS_LD4_ENABLE
+#ifdef DISTORTOS_BOARD_LEDS_LD4_ENABLE
 #define DISTORTOS_BOARD_LEDS_LD4_ENABLED	1
-#else	// !def CONFIG_BOARD_LEDS_LD4_ENABLE
+#else	// !def DISTORTOS_BOARD_LEDS_LD4_ENABLE
 #define DISTORTOS_BOARD_LEDS_LD4_ENABLED	0
-#endif	// !def CONFIG_BOARD_LEDS_LD4_ENABLE
+#endif	// !def DISTORTOS_BOARD_LEDS_LD4_ENABLE
 
-#ifdef CONFIG_BOARD_LEDS_LD5_ENABLE
+#ifdef DISTORTOS_BOARD_LEDS_LD5_ENABLE
 #define DISTORTOS_BOARD_LEDS_LD5_ENABLED	1
-#else	// !def CONFIG_BOARD_LEDS_LD5_ENABLE
+#else	// !def DISTORTOS_BOARD_LEDS_LD5_ENABLE
 #define DISTORTOS_BOARD_LEDS_LD5_ENABLED	0
-#endif	// !def CONFIG_BOARD_LEDS_LD5_ENABLE
+#endif	// !def DISTORTOS_BOARD_LEDS_LD5_ENABLE
 
-#ifdef CONFIG_BOARD_LEDS_LD6_ENABLE
+#ifdef DISTORTOS_BOARD_LEDS_LD6_ENABLE
 #define DISTORTOS_BOARD_LEDS_LD6_ENABLED	1
-#else	// !def CONFIG_BOARD_LEDS_LD6_ENABLE
+#else	// !def DISTORTOS_BOARD_LEDS_LD6_ENABLE
 #define DISTORTOS_BOARD_LEDS_LD6_ENABLED	0
-#endif	// !def CONFIG_BOARD_LEDS_LD6_ENABLE
+#endif	// !def DISTORTOS_BOARD_LEDS_LD6_ENABLE
 
 /// count of leds on the board
 #define DISTORTOS_BOARD_LEDS_COUNT	(DISTORTOS_BOARD_LEDS_LD3_ENABLED + \
@@ -49,7 +49,7 @@
 		DISTORTOS_BOARD_LEDS_LD5_ENABLED + \
 		DISTORTOS_BOARD_LEDS_LD6_ENABLED)
 
-#if defined(CONFIG_BOARD_LEDS_ENABLE) && DISTORTOS_BOARD_LEDS_COUNT != 0
+#if defined(DISTORTOS_BOARD_LEDS_ENABLE) && DISTORTOS_BOARD_LEDS_COUNT != 0
 
 namespace distortos
 {
@@ -73,55 +73,55 @@ constexpr size_t ledsCount {DISTORTOS_BOARD_LEDS_COUNT};
 
 enum
 {
-#ifdef CONFIG_BOARD_LEDS_LD3_ENABLE
+#ifdef DISTORTOS_BOARD_LEDS_LD3_ENABLE
 		/// index of Ld3 (Orange) from leds
 		ledsLd3Index,
-#endif	// def CONFIG_BOARD_LEDS_LD3_ENABLE
-#ifdef CONFIG_BOARD_LEDS_LD4_ENABLE
+#endif	// def DISTORTOS_BOARD_LEDS_LD3_ENABLE
+#ifdef DISTORTOS_BOARD_LEDS_LD4_ENABLE
 		/// index of Ld4 (Green) from leds
 		ledsLd4Index,
-#endif	// def CONFIG_BOARD_LEDS_LD4_ENABLE
-#ifdef CONFIG_BOARD_LEDS_LD5_ENABLE
+#endif	// def DISTORTOS_BOARD_LEDS_LD4_ENABLE
+#ifdef DISTORTOS_BOARD_LEDS_LD5_ENABLE
 		/// index of Ld5 (Red) from leds
 		ledsLd5Index,
-#endif	// def CONFIG_BOARD_LEDS_LD5_ENABLE
-#ifdef CONFIG_BOARD_LEDS_LD6_ENABLE
+#endif	// def DISTORTOS_BOARD_LEDS_LD5_ENABLE
+#ifdef DISTORTOS_BOARD_LEDS_LD6_ENABLE
 		/// index of Ld6 (Blue) from leds
 		ledsLd6Index,
-#endif	// def CONFIG_BOARD_LEDS_LD6_ENABLE
+#endif	// def DISTORTOS_BOARD_LEDS_LD6_ENABLE
 };
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | alternative indexes of leds
 +---------------------------------------------------------------------------------------------------------------------*/
 
-#ifdef CONFIG_BOARD_LEDS_LD3_ENABLE
+#ifdef DISTORTOS_BOARD_LEDS_LD3_ENABLE
 
 /// alternative index of Ld3 (Orange) from leds
 constexpr size_t ledsOrangeIndex {ledsLd3Index};
 
-#endif	// def CONFIG_BOARD_LEDS_LD3_ENABLE
+#endif	// def DISTORTOS_BOARD_LEDS_LD3_ENABLE
 
-#ifdef CONFIG_BOARD_LEDS_LD4_ENABLE
+#ifdef DISTORTOS_BOARD_LEDS_LD4_ENABLE
 
 /// alternative index of Ld4 (Green) from leds
 constexpr size_t ledsGreenIndex {ledsLd4Index};
 
-#endif	// def CONFIG_BOARD_LEDS_LD4_ENABLE
+#endif	// def DISTORTOS_BOARD_LEDS_LD4_ENABLE
 
-#ifdef CONFIG_BOARD_LEDS_LD5_ENABLE
+#ifdef DISTORTOS_BOARD_LEDS_LD5_ENABLE
 
 /// alternative index of Ld5 (Red) from leds
 constexpr size_t ledsRedIndex {ledsLd5Index};
 
-#endif	// def CONFIG_BOARD_LEDS_LD5_ENABLE
+#endif	// def DISTORTOS_BOARD_LEDS_LD5_ENABLE
 
-#ifdef CONFIG_BOARD_LEDS_LD6_ENABLE
+#ifdef DISTORTOS_BOARD_LEDS_LD6_ENABLE
 
 /// alternative index of Ld6 (Blue) from leds
 constexpr size_t ledsBlueIndex {ledsLd6Index};
 
-#endif	// def CONFIG_BOARD_LEDS_LD6_ENABLE
+#endif	// def DISTORTOS_BOARD_LEDS_LD6_ENABLE
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | indexed access to leds objects
@@ -134,6 +134,6 @@ extern chip::ChipOutputPin leds[ledsCount];
 
 }	// namespace distortos
 
-#endif	// defined(CONFIG_BOARD_LEDS_ENABLE) && DISTORTOS_BOARD_LEDS_COUNT != 0
+#endif	// defined(DISTORTOS_BOARD_LEDS_ENABLE) && DISTORTOS_BOARD_LEDS_COUNT != 0
 
 #endif	// SOURCE_BOARD_ST_32F072BDISCOVERY_INCLUDE_DISTORTOS_BOARD_LEDS_HPP_

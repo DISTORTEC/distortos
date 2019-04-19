@@ -36,7 +36,7 @@ namespace chip
 {
 {% for key, sdmmc in dictionary['SDMMCs'].items() if sdmmc is mapping and 'ST,STM32-SDMMC-v1' in sdmmc['compatible'] %}
 
-#ifdef CONFIG_CHIP_STM32_SDMMCV1_{{ key | upper }}_ENABLE
+#ifdef DISTORTOS_CHIP_{{ key | upper }}_ENABLE
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | {{ key | upper }}
@@ -70,9 +70,8 @@ const SdmmcPeripheral {{ key | lower }}Peripheral {{ '{' }}{{ key | upper }}_BAS
 SdMmcCardLowLevel {{ key | lower }}
 {
 		{{ key | lower }}Peripheral,
-		DMA_CHANNEL(CONFIG_CHIP_STM32_SDMMCV1_{{ key | upper }}_DMA, {# remove whitespace -#}
-		CONFIG_CHIP_STM32_SDMMCV1_{{ key | upper }}_DMA_CHANNEL),
-		CONFIG_CHIP_STM32_SDMMCV1_{{ key | upper }}_DMA_REQUEST
+		DMA_CHANNEL(DISTORTOS_CHIP_{{ key | upper }}_DMA, DISTORTOS_CHIP_{{ key | upper }}_DMA_CHANNEL),
+		DISTORTOS_CHIP_{{ key | upper }}_DMA_REQUEST
 };
 
 /**
@@ -84,7 +83,7 @@ extern "C" void {{ sdmmc['interrupt']['vector'] }}_IRQHandler()
 	{{ key | lower }}.interruptHandler();
 }
 
-#endif	// def CONFIG_CHIP_STM32_SDMMCV1_{{ key | upper }}_ENABLE
+#endif	// def DISTORTOS_CHIP_{{ key | upper }}_ENABLE
 {% endfor %}
 
 }	// namespace chip

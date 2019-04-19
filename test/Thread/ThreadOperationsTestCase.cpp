@@ -2,7 +2,7 @@
  * \file
  * \brief ThreadOperationsTestCase class implementation
  *
- * \author Copyright (C) 2015-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2015-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -150,7 +150,7 @@ bool phase2()
 
 bool phase3()
 {
-#ifdef CONFIG_THREAD_DETACH_ENABLE
+#ifdef DISTORTOS_THREAD_DETACH_ENABLE
 
 	const auto allocatedMemory = mallinfo().uordblks;
 	const auto lambda =
@@ -259,7 +259,7 @@ bool phase3()
 	if (mallinfo().uordblks != allocatedMemory)	// dynamic memory must be deallocated after each test phase
 		return false;
 
-#endif	// def CONFIG_THREAD_DETACH_ENABLE
+#endif	// def DISTORTOS_THREAD_DETACH_ENABLE
 
 	return true;
 }
@@ -295,7 +295,7 @@ bool phase4()
 	if (mallinfo().uordblks != allocatedMemory)	// dynamic memory must be deallocated after each test phase
 		return false;
 
-#ifdef CONFIG_THREAD_DETACH_ENABLE
+#ifdef DISTORTOS_THREAD_DETACH_ENABLE
 
 	{
 		SequenceAsserter sequenceAsserter;
@@ -318,7 +318,7 @@ bool phase4()
 	if (mallinfo().uordblks != allocatedMemory)	// dynamic memory must be deallocated after each test phase
 		return false;
 
-#endif	// def CONFIG_THREAD_DETACH_ENABLE
+#endif	// def DISTORTOS_THREAD_DETACH_ENABLE
 
 	return true;
 }
@@ -430,13 +430,13 @@ bool ThreadOperationsTestCase::run_() const
 {
 	constexpr auto phase1ExpectedContextSwitchCount = 2;
 	constexpr auto phase2ExpectedContextSwitchCount = 0;
-#ifdef CONFIG_THREAD_DETACH_ENABLE
+#ifdef DISTORTOS_THREAD_DETACH_ENABLE
 	constexpr auto phase3ExpectedContextSwitchCount = 11;
 	constexpr auto phase4ExpectedContextSwitchCount = 6;
-#else	// !def CONFIG_THREAD_DETACH_ENABLE
+#else	// !def DISTORTOS_THREAD_DETACH_ENABLE
 	constexpr auto phase3ExpectedContextSwitchCount = 0;
 	constexpr auto phase4ExpectedContextSwitchCount = 2;
-#endif	// !def CONFIG_THREAD_DETACH_ENABLE
+#endif	// !def DISTORTOS_THREAD_DETACH_ENABLE
 	constexpr auto phase5ExpectedContextSwitchCount = 8;
 	constexpr auto expectedContextSwitchCount = phase1ExpectedContextSwitchCount + phase2ExpectedContextSwitchCount +
 			phase3ExpectedContextSwitchCount + phase4ExpectedContextSwitchCount + phase5ExpectedContextSwitchCount;

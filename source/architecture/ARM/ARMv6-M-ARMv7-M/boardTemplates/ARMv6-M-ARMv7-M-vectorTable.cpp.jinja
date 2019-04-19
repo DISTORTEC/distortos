@@ -5,7 +5,7 @@
  * \file
  * \brief {{ board }} ({{ dictionary['chip']['compatible'][0] }} chip) vector table, default handlers and NVIC low-level initializer
  *
- * \author Copyright (C) 2014-2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -35,13 +35,13 @@ using ExceptionVector = void(*)();
 
 /// priority of interrupts
 {% if 'ARM,ARMv7-M' in dictionary['CPUs'][0]['compatible'] %}
-#if defined(CONFIG_ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI)
-constexpr uint8_t interruptPriority {CONFIG_ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI};
-#else	// !defined(CONFIG_ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI)
+#if defined(DISTORTOS_ARCHITECTURE_KERNEL_BASEPRI)
+constexpr uint8_t interruptPriority {DISTORTOS_ARCHITECTURE_KERNEL_BASEPRI};
+#else	// !defined(DISTORTOS_ARCHITECTURE_KERNEL_BASEPRI)
 {% endif %}
 constexpr uint8_t interruptPriority {};
 {% if 'ARM,ARMv7-M' in dictionary['CPUs'][0]['compatible'] %}
-#endif	// !defined(CONFIG_ARCHITECTURE_ARMV7_M_KERNEL_BASEPRI)
+#endif	// !defined(DISTORTOS_ARCHITECTURE_KERNEL_BASEPRI)
 {% endif %}
 
 /*---------------------------------------------------------------------------------------------------------------------+
@@ -57,10 +57,10 @@ constexpr uint8_t interruptPriority {};
 void nvicLowLevelInitializer()
 {
 {% for item in dictionary['NVIC']['chip-vectors'] if item %}
-#ifdef CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_{{ item['name'] | upper }}_ENABLE
+#ifdef DISTORTOS_ARCHITECTURE_NVIC_{{ item['name'] | upper }}_ENABLE
 	NVIC_SetPriority({{ item['name'] }}_IRQn, interruptPriority);
 	NVIC_EnableIRQ({{ item['name'] }}_IRQn);
-#endif	// def CONFIG_ARCHITECTURE_ARMV6_M_ARMV7_M_NVIC_{{ item['name'] | upper }}_ENABLE
+#endif	// def DISTORTOS_ARCHITECTURE_NVIC_{{ item['name'] | upper }}_ENABLE
 {% endfor %}
 }
 

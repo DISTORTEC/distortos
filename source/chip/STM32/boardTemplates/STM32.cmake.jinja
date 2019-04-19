@@ -1,4 +1,3 @@
-{% set chipFamily = dictionary['chip']['compatible'][1].rpartition(',')[2] %}
 {% set chip = dictionary['chip']['compatible'][0].rpartition(',')[2] %}
 #
 # file: {{ metadata[metadataIndex][2] }}
@@ -12,36 +11,36 @@
 #
 
 distortosSetFixedConfiguration(BOOLEAN
-		CONFIG_CHIP_{{ chip[:-6] }}
+		DISTORTOS_CHIP_{{ chip[:-6] }}
 		ON)
 
 distortosSetFixedConfiguration(BOOLEAN
-		CONFIG_CHIP_{{ chip[:-4] }}
+		DISTORTOS_CHIP_{{ chip[:-4] }}
 		ON)
 
 distortosSetFixedConfiguration(BOOLEAN
-		CONFIG_CHIP_{{ chip[:-3] }}
+		DISTORTOS_CHIP_{{ chip[:-3] }}
 		ON)
 
 distortosSetFixedConfiguration(BOOLEAN
-		CONFIG_CHIP_{{ chip[:-2] }}
+		DISTORTOS_CHIP_{{ chip[:-2] }}
 		ON)
 
 distortosSetFixedConfiguration(BOOLEAN
-		CONFIG_CHIP_{{ chip[:-1] }}
+		DISTORTOS_CHIP_{{ chip[:-1] }}
 		ON)
 
 distortosSetFixedConfiguration(BOOLEAN
-		CONFIG_CHIP_{{ chip }}
+		DISTORTOS_CHIP_{{ chip }}
 		ON)
 
 distortosSetFixedConfiguration(STRING
-		CONFIG_CHIP
+		DISTORTOS_CHIP
 		"{{ chip }}")
 {% if 'VDD' in dictionary['chip'] %}
 
 distortosSetFixedConfiguration(INTEGER
-		CONFIG_CHIP_{{ chipFamily }}_VDD_MV
+		DISTORTOS_CHIP_VDD_MV
 		{{ (dictionary['chip']['VDD']['output-voltage'] * 1000) | int }})
 {% endif %}
 {% if 'clocks' in dictionary %}
@@ -49,16 +48,17 @@ distortosSetFixedConfiguration(INTEGER
 {% if clock['frequency'] != 0 or clock.get('bypass', False) == True %}
 
 distortosSetFixedConfiguration(BOOLEAN
-		CONFIG_CHIP_{{ chipFamily }}_RCC_HSE_CLOCK_BYPASS
+		DISTORTOS_CHIP_RCC_HSE_CLOCK_BYPASS
 {{ '\t\t' }}{% if clock.get('bypass', False) == True %}ON{% else %}OFF{% endif %})
 {% endif %}
 {% if clock['frequency'] != 0 %}
 
 distortosSetFixedConfiguration(INTEGER
-		CONFIG_CHIP_{{ chipFamily }}_RCC_HSE_FREQUENCY
+		DISTORTOS_CHIP_RCC_HSE_FREQUENCY
 		{{ clock['frequency'] }})
 {% endif %}
 {% endfor %}
 {% endif %}
 
+{% set chipFamily = dictionary['chip']['compatible'][1].rpartition(',')[2] %}
 include("${CMAKE_CURRENT_SOURCE_DIR}/source/chip/STM32/{{ chipFamily }}/distortos-sources.cmake")

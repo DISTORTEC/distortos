@@ -2,7 +2,7 @@
  * \file
  * \brief Declaration of leds for ST,NUCLEO-F429ZI
  *
- * \author Copyright (C) 2014-2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -19,30 +19,30 @@
 
 #include <cstddef>
 
-#ifdef CONFIG_BOARD_LEDS_LD1_ENABLE
+#ifdef DISTORTOS_BOARD_LEDS_LD1_ENABLE
 #define DISTORTOS_BOARD_LEDS_LD1_ENABLED	1
-#else	// !def CONFIG_BOARD_LEDS_LD1_ENABLE
+#else	// !def DISTORTOS_BOARD_LEDS_LD1_ENABLE
 #define DISTORTOS_BOARD_LEDS_LD1_ENABLED	0
-#endif	// !def CONFIG_BOARD_LEDS_LD1_ENABLE
+#endif	// !def DISTORTOS_BOARD_LEDS_LD1_ENABLE
 
-#ifdef CONFIG_BOARD_LEDS_LD2_ENABLE
+#ifdef DISTORTOS_BOARD_LEDS_LD2_ENABLE
 #define DISTORTOS_BOARD_LEDS_LD2_ENABLED	1
-#else	// !def CONFIG_BOARD_LEDS_LD2_ENABLE
+#else	// !def DISTORTOS_BOARD_LEDS_LD2_ENABLE
 #define DISTORTOS_BOARD_LEDS_LD2_ENABLED	0
-#endif	// !def CONFIG_BOARD_LEDS_LD2_ENABLE
+#endif	// !def DISTORTOS_BOARD_LEDS_LD2_ENABLE
 
-#ifdef CONFIG_BOARD_LEDS_LD3_ENABLE
+#ifdef DISTORTOS_BOARD_LEDS_LD3_ENABLE
 #define DISTORTOS_BOARD_LEDS_LD3_ENABLED	1
-#else	// !def CONFIG_BOARD_LEDS_LD3_ENABLE
+#else	// !def DISTORTOS_BOARD_LEDS_LD3_ENABLE
 #define DISTORTOS_BOARD_LEDS_LD3_ENABLED	0
-#endif	// !def CONFIG_BOARD_LEDS_LD3_ENABLE
+#endif	// !def DISTORTOS_BOARD_LEDS_LD3_ENABLE
 
 /// count of leds on the board
 #define DISTORTOS_BOARD_LEDS_COUNT	(DISTORTOS_BOARD_LEDS_LD1_ENABLED + \
 		DISTORTOS_BOARD_LEDS_LD2_ENABLED + \
 		DISTORTOS_BOARD_LEDS_LD3_ENABLED)
 
-#if defined(CONFIG_BOARD_LEDS_ENABLE) && DISTORTOS_BOARD_LEDS_COUNT != 0
+#if defined(DISTORTOS_BOARD_LEDS_ENABLE) && DISTORTOS_BOARD_LEDS_COUNT != 0
 
 namespace distortos
 {
@@ -66,44 +66,44 @@ constexpr size_t ledsCount {DISTORTOS_BOARD_LEDS_COUNT};
 
 enum
 {
-#ifdef CONFIG_BOARD_LEDS_LD1_ENABLE
+#ifdef DISTORTOS_BOARD_LEDS_LD1_ENABLE
 		/// index of Ld1 (Green) from leds
 		ledsLd1Index,
-#endif	// def CONFIG_BOARD_LEDS_LD1_ENABLE
-#ifdef CONFIG_BOARD_LEDS_LD2_ENABLE
+#endif	// def DISTORTOS_BOARD_LEDS_LD1_ENABLE
+#ifdef DISTORTOS_BOARD_LEDS_LD2_ENABLE
 		/// index of Ld2 (Blue) from leds
 		ledsLd2Index,
-#endif	// def CONFIG_BOARD_LEDS_LD2_ENABLE
-#ifdef CONFIG_BOARD_LEDS_LD3_ENABLE
+#endif	// def DISTORTOS_BOARD_LEDS_LD2_ENABLE
+#ifdef DISTORTOS_BOARD_LEDS_LD3_ENABLE
 		/// index of Ld3 (Red) from leds
 		ledsLd3Index,
-#endif	// def CONFIG_BOARD_LEDS_LD3_ENABLE
+#endif	// def DISTORTOS_BOARD_LEDS_LD3_ENABLE
 };
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | alternative indexes of leds
 +---------------------------------------------------------------------------------------------------------------------*/
 
-#ifdef CONFIG_BOARD_LEDS_LD1_ENABLE
+#ifdef DISTORTOS_BOARD_LEDS_LD1_ENABLE
 
 /// alternative index of Ld1 (Green) from leds
 constexpr size_t ledsGreenIndex {ledsLd1Index};
 
-#endif	// def CONFIG_BOARD_LEDS_LD1_ENABLE
+#endif	// def DISTORTOS_BOARD_LEDS_LD1_ENABLE
 
-#ifdef CONFIG_BOARD_LEDS_LD2_ENABLE
+#ifdef DISTORTOS_BOARD_LEDS_LD2_ENABLE
 
 /// alternative index of Ld2 (Blue) from leds
 constexpr size_t ledsBlueIndex {ledsLd2Index};
 
-#endif	// def CONFIG_BOARD_LEDS_LD2_ENABLE
+#endif	// def DISTORTOS_BOARD_LEDS_LD2_ENABLE
 
-#ifdef CONFIG_BOARD_LEDS_LD3_ENABLE
+#ifdef DISTORTOS_BOARD_LEDS_LD3_ENABLE
 
 /// alternative index of Ld3 (Red) from leds
 constexpr size_t ledsRedIndex {ledsLd3Index};
 
-#endif	// def CONFIG_BOARD_LEDS_LD3_ENABLE
+#endif	// def DISTORTOS_BOARD_LEDS_LD3_ENABLE
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | indexed access to leds objects
@@ -116,6 +116,6 @@ extern chip::ChipOutputPin leds[ledsCount];
 
 }	// namespace distortos
 
-#endif	// defined(CONFIG_BOARD_LEDS_ENABLE) && DISTORTOS_BOARD_LEDS_COUNT != 0
+#endif	// defined(DISTORTOS_BOARD_LEDS_ENABLE) && DISTORTOS_BOARD_LEDS_COUNT != 0
 
 #endif	// SOURCE_BOARD_ST_NUCLEO_F429ZI_INCLUDE_DISTORTOS_BOARD_LEDS_HPP_

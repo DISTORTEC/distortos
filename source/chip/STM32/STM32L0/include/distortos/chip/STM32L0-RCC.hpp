@@ -2,7 +2,7 @@
  * \file
  * \brief Header for RCC-related functions for STM32L0
  *
- * \author Copyright (C) 2017-2018 Cezary Gapinski cezary.gapinski@gmail.com
+ * \author Copyright (C) 2017-2019 Cezary Gapinski cezary.gapinski@gmail.com
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -16,15 +16,16 @@
 
 #include <cstdint>
 
-#if defined(CONFIG_CHIP_STM32L052) || defined(CONFIG_CHIP_STM32L053) || defined(CONFIG_CHIP_STM32L062) || \
-		defined(CONFIG_CHIP_STM32L063) || defined(CONFIG_CHIP_STM32L072) || defined(CONFIG_CHIP_STM32L073) || \
-		defined(CONFIG_CHIP_STM32L082) || defined(CONFIG_CHIP_STM32L083)
+#if defined(DISTORTOS_CHIP_STM32L052) || defined(DISTORTOS_CHIP_STM32L053) || defined(DISTORTOS_CHIP_STM32L062) || \
+		defined(DISTORTOS_CHIP_STM32L063) || defined(DISTORTOS_CHIP_STM32L072) || defined(DISTORTOS_CHIP_STM32L073) || \
+		defined(DISTORTOS_CHIP_STM32L082) || defined(DISTORTOS_CHIP_STM32L083)
 
 #define STM32L0X2_STM32L0X3_RCC_FEATURES
 
-#endif	// defined(CONFIG_CHIP_STM32L052) || defined(CONFIG_CHIP_STM32L053) || defined(CONFIG_CHIP_STM32L062) ||
-		// defined(CONFIG_CHIP_STM32L063) || defined(CONFIG_CHIP_STM32L072) || defined(CONFIG_CHIP_STM32L073) ||
-		// defined(CONFIG_CHIP_STM32L082) || defined(CONFIG_CHIP_STM32L083)
+#endif	// defined(DISTORTOS_CHIP_STM32L052) || defined(DISTORTOS_CHIP_STM32L053) ||
+		// defined(DISTORTOS_CHIP_STM32L062) || defined(DISTORTOS_CHIP_STM32L063) ||
+		// defined(DISTORTOS_CHIP_STM32L072) || defined(DISTORTOS_CHIP_STM32L073) ||
+		// defined(DISTORTOS_CHIP_STM32L082) || defined(DISTORTOS_CHIP_STM32L083)
 
 namespace distortos
 {

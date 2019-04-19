@@ -10,7 +10,7 @@
 #
 
 distortosSetFixedConfiguration(STRING
-		CONFIG_BOARD
+		DISTORTOS_BOARD
 		"ST,NUCLEO-F429ZI")
 
 target_include_directories(distortos PUBLIC
@@ -37,4 +37,4 @@ include(${CMAKE_CURRENT_LIST_DIR}/cmake/90-ARMv6-M-ARMv7-M.cmake)
 
 include(${CMAKE_CURRENT_LIST_DIR}/distortos-board-sources.extension.cmake OPTIONAL)
 
-set(DISTORTOS_BOARD_VERSION 10)
+set(DISTORTOS_BOARD_VERSION 11)

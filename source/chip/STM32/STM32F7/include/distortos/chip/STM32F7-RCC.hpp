@@ -230,7 +230,7 @@ void disablePllsai();
 
 void enableHse(bool bypass);
 
-#if defined(CONFIG_CHIP_STM32F76) || defined(CONFIG_CHIP_STM32F77)
+#if defined(DISTORTOS_CHIP_STM32F76) || defined(DISTORTOS_CHIP_STM32F77)
 
 /**
  * \brief Enables main PLL.
@@ -251,7 +251,7 @@ void enableHse(bool bypass);
 
 int enablePll(uint16_t plln, uint8_t pllp, uint8_t pllq, uint8_t pllr);
 
-#else	// !defined(CONFIG_CHIP_STM32F76) && !defined(CONFIG_CHIP_STM32F77)
+#else	// !defined(DISTORTOS_CHIP_STM32F76) && !defined(DISTORTOS_CHIP_STM32F77)
 
 /**
  * \brief Enables main PLL.
@@ -271,9 +271,9 @@ int enablePll(uint16_t plln, uint8_t pllp, uint8_t pllq, uint8_t pllr);
 
 int enablePll(uint16_t plln, uint8_t pllp, uint8_t pllq);
 
-#endif	// !defined(CONFIG_CHIP_STM32F76) && !defined(CONFIG_CHIP_STM32F77)
+#endif	// !defined(DISTORTOS_CHIP_STM32F76) && !defined(DISTORTOS_CHIP_STM32F77)
 
-#if defined(CONFIG_CHIP_STM32F72) || defined(CONFIG_CHIP_STM32F73)
+#if defined(DISTORTOS_CHIP_STM32F72) || defined(DISTORTOS_CHIP_STM32F73)
 
 /**
  * \brief Enables PLLI2S.
@@ -293,7 +293,7 @@ int enablePll(uint16_t plln, uint8_t pllp, uint8_t pllq);
 
 int enablePlli2s(uint16_t plli2sn, uint8_t plli2sq, uint8_t plli2sr);
 
-#else	// !defined(CONFIG_CHIP_STM32F72) && !defined(CONFIG_CHIP_STM32F73)
+#else	// !defined(DISTORTOS_CHIP_STM32F72) && !defined(DISTORTOS_CHIP_STM32F73)
 
 /**
  * \brief Enables PLLI2S.
@@ -314,9 +314,9 @@ int enablePlli2s(uint16_t plli2sn, uint8_t plli2sq, uint8_t plli2sr);
 
 int enablePlli2s(uint16_t plli2sn, uint8_t plli2sp, uint8_t plli2sq, uint8_t plli2sr);
 
-#endif	// !defined(CONFIG_CHIP_STM32F72) && !defined(CONFIG_CHIP_STM32F73)
+#endif	// !defined(DISTORTOS_CHIP_STM32F72) && !defined(DISTORTOS_CHIP_STM32F73)
 
-#if defined(CONFIG_CHIP_STM32F72) || defined(CONFIG_CHIP_STM32F73)
+#if defined(DISTORTOS_CHIP_STM32F72) || defined(DISTORTOS_CHIP_STM32F73)
 
 /**
  * \brief Enables PLLSAI.
@@ -336,7 +336,7 @@ int enablePlli2s(uint16_t plli2sn, uint8_t plli2sp, uint8_t plli2sq, uint8_t pll
 
 int enablePllsai(uint16_t pllsain, uint8_t pllsaip, uint8_t pllsaiq);
 
-#else	// !defined(CONFIG_CHIP_STM32F72) && !defined(CONFIG_CHIP_STM32F73)
+#else	// !defined(DISTORTOS_CHIP_STM32F72) && !defined(DISTORTOS_CHIP_STM32F73)
 
 /**
  * \brief Enables PLLSAI.
@@ -357,7 +357,7 @@ int enablePllsai(uint16_t pllsain, uint8_t pllsaip, uint8_t pllsaiq);
 
 int enablePllsai(uint16_t pllsain, uint8_t pllsaip, uint8_t pllsaiq, uint8_t pllsair);
 
-#endif	// !defined(CONFIG_CHIP_STM32F72) && !defined(CONFIG_CHIP_STM32F73)
+#endif	// !defined(DISTORTOS_CHIP_STM32F72) && !defined(DISTORTOS_CHIP_STM32F73)
 
 /**
  * \brief Switches system clock.

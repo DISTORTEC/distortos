@@ -3,7 +3,7 @@
  * \file
  * \brief Declaration of {{ dictionaryKey }} for {{ board }}
  *
- * \author Copyright (C) 2014-2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -21,11 +21,11 @@
 #include <cstddef>
 {% for key, value in dictionary[dictionaryKey].items() if value is mapping %}
 
-#ifdef CONFIG_BOARD_{{ dictionaryKey | upper }}_{{ key | upper }}_ENABLE
+#ifdef DISTORTOS_BOARD_{{ dictionaryKey | upper }}_{{ key | upper }}_ENABLE
 #define DISTORTOS_BOARD_{{ dictionaryKey | upper }}_{{ key | upper }}_ENABLED	1
-#else	// !def CONFIG_BOARD_{{ dictionaryKey | upper }}_{{ key | upper }}_ENABLE
+#else	// !def DISTORTOS_BOARD_{{ dictionaryKey | upper }}_{{ key | upper }}_ENABLE
 #define DISTORTOS_BOARD_{{ dictionaryKey | upper }}_{{ key | upper }}_ENABLED	0
-#endif	// !def CONFIG_BOARD_{{ dictionaryKey | upper }}_{{ key | upper }}_ENABLE
+#endif	// !def DISTORTOS_BOARD_{{ dictionaryKey | upper }}_{{ key | upper }}_ENABLE
 {%endfor%}
 
 /// count of {{ dictionaryKey }} on the board
@@ -36,7 +36,8 @@ DISTORTOS_BOARD_{{ dictionaryKey | upper }}_{{ key | upper }}_ENABLED
 {%- if loop.last == False %} + \{% else %}){% endif %}{{ '' }}
 {% endfor %}
 
-#if defined(CONFIG_BOARD_{{ dictionaryKey | upper }}_ENABLE) && DISTORTOS_BOARD_{{ dictionaryKey | upper }}_COUNT != 0
+#if defined(DISTORTOS_BOARD_{{ dictionaryKey | upper }}_ENABLE) && {# remove whitespace -#}
+DISTORTOS_BOARD_{{ dictionaryKey | upper }}_COUNT != 0
 
 namespace distortos
 {
@@ -61,12 +62,12 @@ constexpr size_t {{ dictionaryKey }}Count {DISTORTOS_BOARD_{{ dictionaryKey | up
 enum
 {
 {% for key, value in dictionary[dictionaryKey].items() if value is mapping %}
-#ifdef CONFIG_BOARD_{{ dictionaryKey | upper }}_{{ key | upper }}_ENABLE
+#ifdef DISTORTOS_BOARD_{{ dictionaryKey | upper }}_{{ key | upper }}_ENABLE
 		/// index of {{ key -}}
 		{% if 'alternative-names' in value %} ({{ value['alternative-names'] | join(', ') }}){% endif -%}
 		{{ '' }} from {{ dictionaryKey }}
 		{{ dictionaryKey }}{{ key }}Index,
-#endif	// def CONFIG_BOARD_{{ dictionaryKey | upper }}_{{ key | upper }}_ENABLE
+#endif	// def DISTORTOS_BOARD_{{ dictionaryKey | upper }}_{{ key | upper }}_ENABLE
 {% endfor %}
 };
 {% for key, value in dictionary[dictionaryKey].items() if value is mapping and 'alternative-names' in value %}
@@ -80,14 +81,14 @@ enum
 {% endif%}
 {% if loop.first == True %}
 
-#ifdef CONFIG_BOARD_{{ dictionaryKey | upper }}_{{ key | upper }}_ENABLE
+#ifdef DISTORTOS_BOARD_{{ dictionaryKey | upper }}_{{ key | upper }}_ENABLE
 {% endif %}
 
 /// alternative index of {{ key }} ({{ alternativeName }}) from {{ dictionaryKey }}
 constexpr size_t {{ dictionaryKey }}{{ alternativeName }}Index {{ '{' }}{{ dictionaryKey }}{{ key }}Index};
 {% if loop.last == True %}
 
-#endif	// def CONFIG_BOARD_{{ dictionaryKey | upper }}_{{ key | upper }}_ENABLE
+#endif	// def DISTORTOS_BOARD_{{ dictionaryKey | upper }}_{{ key | upper }}_ENABLE
 {% endif %}
 {% endfor %}
 {% endfor %}
@@ -103,7 +104,7 @@ extern chip::ChipOutputPin {{ dictionaryKey }}[{{ dictionaryKey }}Count];
 
 }	// namespace distortos
 
-#endif	// defined(CONFIG_BOARD_{{ dictionaryKey | upper }}_ENABLE) && {# remove whitespace -#}
+#endif	// defined(DISTORTOS_BOARD_{{ dictionaryKey | upper }}_ENABLE) && {# remove whitespace -#}
 DISTORTOS_BOARD_{{ dictionaryKey | upper }}_COUNT != 0
 
 #endif	// {{ includeGuard }}

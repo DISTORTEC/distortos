@@ -2,7 +2,7 @@
  * \file
  * \brief Header with definitions for bit-banding for ARMv7-M
  *
- * \author Copyright (C) 2015-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2015-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -14,7 +14,7 @@
 
 #include "distortos/distortosConfiguration.h"
 
-#if defined(CONFIG_ARCHITECTURE_ARM_CORTEX_M3) || defined(CONFIG_ARCHITECTURE_ARM_CORTEX_M4)
+#if defined(DISTORTOS_ARCHITECTURE_ARM_CORTEX_M3) || defined(DISTORTOS_ARCHITECTURE_ARM_CORTEX_M4)
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | global defines
@@ -116,6 +116,6 @@ enum { bitbandPeripheralBase = 0x42000000 };
 
 #define BITBAND(address, bit)				(*(volatile unsigned long*)BITBAND_ADDRESS(address, bit))
 
-#endif	/* defined(CONFIG_ARCHITECTURE_ARM_CORTEX_M3) || defined(CONFIG_ARCHITECTURE_ARM_CORTEX_M4) */
+#endif	/* defined(DISTORTOS_ARCHITECTURE_ARM_CORTEX_M3) || defined(DISTORTOS_ARCHITECTURE_ARM_CORTEX_M4) */
 
 #endif	/* SOURCE_ARCHITECTURE_ARM_ARMV6_M_ARMV7_M_INCLUDE_DISTORTOS_ARCHITECTURE_ARMV7_M_BIT_BANDING_H_ */

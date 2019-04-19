@@ -120,18 +120,18 @@ void enableHse(const bool bypass)
 	while ((RCC->CR & RCC_CR_HSERDY) == 0);	// wait until HSE oscillator is stable
 }
 
-#if defined(CONFIG_CHIP_STM32F76) || defined(CONFIG_CHIP_STM32F77)
+#if defined(DISTORTOS_CHIP_STM32F76) || defined(DISTORTOS_CHIP_STM32F77)
 int enablePll(const uint16_t plln, const uint8_t pllp, const uint8_t pllq, const uint8_t pllr)
-#else	// !defined(CONFIG_CHIP_STM32F76) && !defined(CONFIG_CHIP_STM32F77)
+#else	// !defined(DISTORTOS_CHIP_STM32F76) && !defined(DISTORTOS_CHIP_STM32F77)
 int enablePll(const uint16_t plln, const uint8_t pllp, const uint8_t pllq)
-#endif	// !defined(CONFIG_CHIP_STM32F76) && !defined(CONFIG_CHIP_STM32F77)
+#endif	// !defined(DISTORTOS_CHIP_STM32F76) && !defined(DISTORTOS_CHIP_STM32F77)
 {
 	if (plln < minPlln || plln > maxPlln ||
 			(pllp != pllpDiv2 && pllp != pllpDiv4 && pllp != pllpDiv6 && pllp != pllpDiv8) ||
 			pllq < minPllq || pllq > maxPllq)
 		return EINVAL;
 
-#if defined(CONFIG_CHIP_STM32F76) || defined(CONFIG_CHIP_STM32F77)
+#if defined(DISTORTOS_CHIP_STM32F76) || defined(DISTORTOS_CHIP_STM32F77)
 
 	if (pllr < minPllr || pllr > maxPllr)
 		return EINVAL;
@@ -140,36 +140,36 @@ int enablePll(const uint16_t plln, const uint8_t pllp, const uint8_t pllq)
 			plln << RCC_PLLCFGR_PLLN_Pos | (pllp / 2 - 1) << RCC_PLLCFGR_PLLP_Pos | pllq << RCC_PLLCFGR_PLLQ_Pos |
 			pllr << RCC_PLLCFGR_PLLR_Pos;
 
-#else	// !defined(CONFIG_CHIP_STM32F76) && !defined(CONFIG_CHIP_STM32F77)
+#else	// !defined(DISTORTOS_CHIP_STM32F76) && !defined(DISTORTOS_CHIP_STM32F77)
 
 	RCC->PLLCFGR = (RCC->PLLCFGR & ~(RCC_PLLCFGR_PLLN | RCC_PLLCFGR_PLLP | RCC_PLLCFGR_PLLQ)) |
 			plln << RCC_PLLCFGR_PLLN_Pos | (pllp / 2 - 1) << RCC_PLLCFGR_PLLP_Pos | pllq << RCC_PLLCFGR_PLLQ_Pos;
 
-#endif	// !defined(CONFIG_CHIP_STM32F76) && !defined(CONFIG_CHIP_STM32F77)
+#endif	// !defined(DISTORTOS_CHIP_STM32F76) && !defined(DISTORTOS_CHIP_STM32F77)
 
 	RCC->CR |= RCC_CR_PLLON;
 	while ((RCC->CR & RCC_CR_PLLRDY) == 0);	// wait until PLL is stable
 	return 0;
 }
 
-#if defined(CONFIG_CHIP_STM32F72) || defined(CONFIG_CHIP_STM32F73)
+#if defined(DISTORTOS_CHIP_STM32F72) || defined(DISTORTOS_CHIP_STM32F73)
 int enablePlli2s(const uint16_t plli2sn, const uint8_t plli2sq, const uint8_t plli2sr)
-#else	// !defined(CONFIG_CHIP_STM32F72) && !defined(CONFIG_CHIP_STM32F73)
+#else	// !defined(DISTORTOS_CHIP_STM32F72) && !defined(DISTORTOS_CHIP_STM32F73)
 int enablePlli2s(const uint16_t plli2sn, const uint8_t plli2sp, const uint8_t plli2sq, const uint8_t plli2sr)
-#endif	// !defined(CONFIG_CHIP_STM32F72) && !defined(CONFIG_CHIP_STM32F73)
+#endif	// !defined(DISTORTOS_CHIP_STM32F72) && !defined(DISTORTOS_CHIP_STM32F73)
 {
 	if (plli2sn < minPlln || plli2sn > maxPlln || plli2sq < minPllq || plli2sq > maxPllq ||
 			plli2sr < minPllr || plli2sr > maxPllr)
 		return EINVAL;
 
-#if defined(CONFIG_CHIP_STM32F72) || defined(CONFIG_CHIP_STM32F73)
+#if defined(DISTORTOS_CHIP_STM32F72) || defined(DISTORTOS_CHIP_STM32F73)
 
 	RCC->PLLI2SCFGR = (RCC->PLLI2SCFGR & ~(RCC_PLLI2SCFGR_PLLI2SN | RCC_PLLI2SCFGR_PLLI2SQ | RCC_PLLI2SCFGR_PLLI2SR)) |
 			plli2sn << RCC_PLLI2SCFGR_PLLI2SN_Pos |
 			plli2sq << RCC_PLLI2SCFGR_PLLI2SQ_Pos |
 			plli2sr << RCC_PLLI2SCFGR_PLLI2SR_Pos;
 
-#else	// !defined(CONFIG_CHIP_STM32F72) && !defined(CONFIG_CHIP_STM32F73)
+#else	// !defined(DISTORTOS_CHIP_STM32F72) && !defined(DISTORTOS_CHIP_STM32F73)
 
 	if (plli2sp != pllpDiv2 && plli2sp != pllpDiv4 && plli2sp != pllpDiv6 && plli2sp != pllpDiv8)
 		return EINVAL;
@@ -181,32 +181,32 @@ int enablePlli2s(const uint16_t plli2sn, const uint8_t plli2sp, const uint8_t pl
 			plli2sq << RCC_PLLI2SCFGR_PLLI2SQ_Pos |
 			plli2sr << RCC_PLLI2SCFGR_PLLI2SR_Pos;
 
-#endif	// !defined(CONFIG_CHIP_STM32F72) && !defined(CONFIG_CHIP_STM32F73)
+#endif	// !defined(DISTORTOS_CHIP_STM32F72) && !defined(DISTORTOS_CHIP_STM32F73)
 
 	RCC->CR |= RCC_CR_PLLI2SON;
 	while ((RCC->CR & RCC_CR_PLLI2SRDY) == 0);	// wait until PLLI2S is stable
 	return 0;
 }
 
-#if defined(CONFIG_CHIP_STM32F72) || defined(CONFIG_CHIP_STM32F73)
+#if defined(DISTORTOS_CHIP_STM32F72) || defined(DISTORTOS_CHIP_STM32F73)
 int enablePllsai(const uint16_t pllsain, const uint8_t pllsaip, const uint8_t pllsaiq)
-#else	// !defined(CONFIG_CHIP_STM32F72) && !defined(CONFIG_CHIP_STM32F73)
+#else	// !defined(DISTORTOS_CHIP_STM32F72) && !defined(DISTORTOS_CHIP_STM32F73)
 int enablePllsai(const uint16_t pllsain, const uint8_t pllsaip, const uint8_t pllsaiq, const uint8_t pllsair)
-#endif	// !defined(CONFIG_CHIP_STM32F72) && !defined(CONFIG_CHIP_STM32F73)
+#endif	// !defined(DISTORTOS_CHIP_STM32F72) && !defined(DISTORTOS_CHIP_STM32F73)
 {
 	if (pllsain < minPlln || pllsain > maxPlln ||
 			(pllsaip != pllpDiv2 && pllsaip != pllpDiv4 && pllsaip != pllpDiv6 && pllsaip != pllpDiv8) ||
 			pllsaiq < minPllq || pllsaiq > maxPllq)
 		return EINVAL;
 
-#if defined(CONFIG_CHIP_STM32F72) || defined(CONFIG_CHIP_STM32F73)
+#if defined(DISTORTOS_CHIP_STM32F72) || defined(DISTORTOS_CHIP_STM32F73)
 
 	RCC->PLLSAICFGR = (RCC->PLLSAICFGR & ~(RCC_PLLSAICFGR_PLLSAIN | RCC_PLLSAICFGR_PLLSAIP | RCC_PLLSAICFGR_PLLSAIQ)) |
 			pllsain << RCC_PLLSAICFGR_PLLSAIN_Pos |
 			(pllsaip / 2 - 1) << RCC_PLLSAICFGR_PLLSAIP_Pos |
 			pllsaiq << RCC_PLLSAICFGR_PLLSAIQ_Pos;
 
-#else	// !defined(CONFIG_CHIP_STM32F72) && !defined(CONFIG_CHIP_STM32F73)
+#else	// !defined(DISTORTOS_CHIP_STM32F72) && !defined(DISTORTOS_CHIP_STM32F73)
 
 	if (pllsair < minPllr || pllsair > maxPllr)
 		return EINVAL;
@@ -218,7 +218,7 @@ int enablePllsai(const uint16_t pllsain, const uint8_t pllsaip, const uint8_t pl
 			pllsaiq << RCC_PLLSAICFGR_PLLSAIQ_Pos |
 			pllsair << RCC_PLLSAICFGR_PLLSAIR_Pos;
 
-#endif	// !defined(CONFIG_CHIP_STM32F72) && !defined(CONFIG_CHIP_STM32F73)
+#endif	// !defined(DISTORTOS_CHIP_STM32F72) && !defined(DISTORTOS_CHIP_STM32F73)
 
 	RCC->CR |= RCC_CR_PLLSAION;
 	while ((RCC->CR & RCC_CR_PLLSAIRDY) == 0);	// wait until PLLSAI is stable

@@ -13,7 +13,7 @@ distortosSetConfiguration(BOOLEAN
 		distortos_buttons
 		ON
 		HELP "Enable buttons"
-		OUTPUT_NAME CONFIG_BOARD_BUTTONS_ENABLE)
+		OUTPUT_NAME DISTORTOS_BOARD_BUTTONS_ENABLE)
 
 if(distortos_buttons)
 
@@ -21,10 +21,10 @@ if(distortos_buttons)
 			distortos_buttons_B1
 			ON
 			HELP "Enable B1 (User)"
-			OUTPUT_NAME CONFIG_BOARD_BUTTONS_B1_ENABLE)
+			OUTPUT_NAME DISTORTOS_BOARD_BUTTONS_B1_ENABLE)
 
 	if(distortos_buttons_B1)
-		list(APPEND STM32_GPIO_V2_GPIOC_DEPENDENTS "buttons B1")
+		list(APPEND DISTORTOS_CHIP_GPIOC_DEPENDENTS "buttons B1")
 	endif()
 
 endif(distortos_buttons)
