@@ -5,7 +5,7 @@
  * This test checks whether semaphore objects instantiated with C-API macros and functions are binary identical to
  * constructed distortos::Semaphore objects.
  *
- * \author Copyright (C) 2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2017-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -36,6 +36,7 @@ void testCommon(distortos_Semaphore& semaphore, const unsigned int value, const 
 
 	const auto realSemaphore = new (&semaphore) distortos::Semaphore {value, maxValue};
 	REQUIRE(realSemaphore->getValue() == std::min(value, maxValue));
+	REQUIRE(realSemaphore->getMaxValue() == maxValue);
 	REQUIRE(memcmp(&constructed, &semaphore, sizeof(semaphore)) == 0);
 	realSemaphore->~Semaphore();
 	REQUIRE(memcmp(&destructed, &semaphore, sizeof(semaphore)) == 0);
