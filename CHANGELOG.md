@@ -130,7 +130,7 @@ were also shortened and simplified by removing redundant parts like architecture
 (e.g. `CONFIG_CHIP_STM32F0_RCC_HSE_FREQUENCY` -> `DISTORTOS_CHIP_RCC_HSE_FREQUENCY`) or peripheral version
 (e.g. `CONFIG_CHIP_STM32_SDMMCV1_SDMMC1_DMA` -> `DISTORTOS_CHIP_SDMMC1_DMA`). This change requires the board to be
 regenerated.
-- Update *CMSIS* to version 5.4.0.
+- Update *CMSIS* to version 5.5.1.
 
 ### Fixed
 
