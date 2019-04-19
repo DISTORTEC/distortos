@@ -2,7 +2,7 @@
  * \file
  * \brief Implementation of GPIOv2 functions for STM32
  *
- * \author Copyright (C) 2016-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2016-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -13,11 +13,14 @@
 
 #include "distortos/InterruptMaskingLock.hpp"
 
+#if !defined(GPIO_AFRL_AFSEL0)
+#define GPIO_AFRL_AFSEL0						GPIO_AFRL_AFRL0
+#endif	// !defined(GPIO_AFRL_AFSEL0)
 #if !defined(GPIO_MODER_MODER0)
 #define GPIO_MODER_MODER0						GPIO_MODER_MODE0
 #endif	// !defined(GPIO_MODER_MODER0)
 #if !defined(GPIO_OSPEEDER_OSPEEDR0)
-#define GPIO_OSPEEDER_OSPEEDR0						GPIO_OSPEEDER_OSPEED0
+#define GPIO_OSPEEDER_OSPEEDR0					GPIO_OSPEEDER_OSPEED0
 #endif	// !defined(GPIO_OSPEEDER_OSPEEDR0)
 #if !defined(GPIO_PUPDR_PUPDR0)
 #define GPIO_PUPDR_PUPDR0						GPIO_PUPDR_PUPD0
@@ -48,7 +51,7 @@ void configurePin(const Pin pin, const PinMode mode, const bool openDrain, const
 	const auto shiftedOutputSpeed = static_cast<uint32_t>(outputSpeed) << (pinNumber * 2);
 	const auto pupdrInvertedMask = ~(GPIO_PUPDR_PUPDR0 << (pinNumber * 2));
 	const auto shiftedPull = static_cast<uint32_t>(pull) << (pinNumber * 2);
-	const auto afrInvertedMask = ~(GPIO_AFRL_AFRL0 << ((pinNumber * 4) % 32));
+	const auto afrInvertedMask = ~(GPIO_AFRL_AFSEL0 << ((pinNumber * 4) % 32));
 	const auto shiftedAlternateFunction = static_cast<uint32_t>(alternateFunction) << ((pinNumber * 4) % 32);
 
 	port.BSRR = 1 << (pinNumber + (initialState == false ? 16 : 0));
