@@ -24,8 +24,12 @@ namespace
 
 void testCommon(distortos_Semaphore& semaphore, const unsigned int value, const unsigned int maxValue = UINT_MAX)
 {
-	REQUIRE(semaphore.value == std::min(value, maxValue));
-	REQUIRE(semaphore.maxValue == maxValue);
+	unsigned int readValue;
+	REQUIRE(distortos_Semaphore_getValue(&semaphore, &readValue) == 0);
+	REQUIRE(readValue == std::min(value, maxValue));
+	unsigned int readMaxValue;
+	REQUIRE(distortos_Semaphore_getMaxValue(&semaphore, &readMaxValue) == 0);
+	REQUIRE(readMaxValue == maxValue);
 	distortos_Semaphore constructed;
 	memcpy(&constructed, &semaphore, sizeof(semaphore));
 	REQUIRE(distortos_Semaphore_destruct(&semaphore) == 0);
