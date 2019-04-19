@@ -2,7 +2,7 @@
  * \file
  * \brief Header of C-API for distortos::Semaphore
  *
- * \author Copyright (C) 2017-2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2017-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -149,6 +149,20 @@ static inline int distortos_Semaphore_construct(struct distortos_Semaphore* cons
  */
 
 int distortos_Semaphore_destruct(struct distortos_Semaphore* semaphore);
+
+/**
+ * \brief C-API equivalent of distortos::Semaphore::getMaxValue()
+ *
+ * \sa distortos::Semaphore::getMaxValue()
+ *
+ * \param [in] semaphore is a pointer to distortos_Semaphore object
+ * \param [out] maxValue is a pointer to variable into which semaphore's max value will be written
+ *
+ * \return 0 on success, error code otherwise:
+ * - EINVAL - \a semaphore and/or maxValue are invalid;
+ */
+
+int distortos_Semaphore_getMaxValue(const struct distortos_Semaphore* semaphore, unsigned int* maxValue);
 
 /**
  * \brief C-API equivalent of distortos::Semaphore::getValue()
