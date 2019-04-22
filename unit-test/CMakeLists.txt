@@ -7,8 +7,11 @@
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #
 
-cmake_minimum_required(VERSION 3.8)
+if(CMAKE_BINARY_DIR STREQUAL CMAKE_SOURCE_DIR)
+	message(FATAL_ERROR "In-source builds are not supported. Please use separate directory for build.")
+endif()
 
+cmake_minimum_required(VERSION 3.8)
 project(distortos-unit-test)
 
 # path to distortos
@@ -79,3 +82,21 @@ add_subdirectory(STM32-SPIv2-unit-test)
 add_subdirectory(STM32-SPIv2-SpiMasterLowLevelDmaBased-unit-test)
 add_subdirectory(STM32-SPIv2-SpiMasterLowLevelInterruptBased-unit-test)
 add_subdirectory(SynchronousSdMmcCardLowLevel-unit-test)
+
+#-----------------------------------------------------------------------------------------------------------------------
+# .gitignore for build directory
+#-----------------------------------------------------------------------------------------------------------------------
+
+message(STATUS "Generating ${CMAKE_BINARY_DIR}/.gitignore")
+
+file(WRITE ${CMAKE_BINARY_DIR}/.gitignore
+		"#\n"
+		"# \\file\n"
+		"# \\brief .gitignore for build directory\n"
+		"#\n"
+		"# \\warning\n"
+		"# Automatically generated file - do not edit!\n"
+		"#\n"
+		"\n"
+		"# ignore everything\n"
+		"*\n")

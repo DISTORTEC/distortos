@@ -9,6 +9,10 @@
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #
 
+if(CMAKE_BINARY_DIR STREQUAL CMAKE_SOURCE_DIR)
+	message(FATAL_ERROR "In-source builds are not supported. Please use separate directory for build.")
+endif()
+
 cmake_minimum_required(VERSION 3.7)
 project(distortos)
 
@@ -621,6 +625,24 @@ endif()
 get_filename_component(filenameComponent ${DISTORTOS_RAW_LINKER_SCRIPT} NAME)
 # force CMake to rerun if raw linker script changes
 configure_file(${DISTORTOS_RAW_LINKER_SCRIPT} ${filenameComponent} COPYONLY)
+
+#-----------------------------------------------------------------------------------------------------------------------
+# .gitignore for build directory
+#-----------------------------------------------------------------------------------------------------------------------
+
+message(STATUS "Generating ${CMAKE_BINARY_DIR}/.gitignore")
+
+file(WRITE ${CMAKE_BINARY_DIR}/.gitignore
+		"#\n"
+		"# \\file\n"
+		"# \\brief .gitignore for build directory\n"
+		"#\n"
+		"# \\warning\n"
+		"# Automatically generated file - do not edit!\n"
+		"#\n"
+		"\n"
+		"# ignore everything\n"
+		"*\n")
 
 #-----------------------------------------------------------------------------------------------------------------------
 # distortosTest application

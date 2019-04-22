@@ -1,14 +1,6 @@
-# build output
-output/
-
-# Eclipse project files
-.cproject
-.project
-.settings/
-*.launch
-
-# other
-.gdbinit
-__pycache__
+# Python's bytecode
+__pycache__/
 *.pyc
+
+# LibreOffice's lock-files
 .~lock.*
