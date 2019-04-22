@@ -7,8 +7,11 @@
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #
 
-cmake_minimum_required(VERSION 3.8)
+if(CMAKE_BINARY_DIR STREQUAL CMAKE_SOURCE_DIR)
+	message(FATAL_ERROR "In-source builds are not supported. Please use separate directory for build.")
+endif()
 
+cmake_minimum_required(VERSION 3.8)
 project(distortos-unit-test)
 
 # path to distortos
