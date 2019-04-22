@@ -1,9 +1,3 @@
-# Eclipse project files
-.cproject
-.project
-.settings/
-*.launch
-
 # other
 .gdbinit
 __pycache__
