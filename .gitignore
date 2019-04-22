@@ -1,5 +1,4 @@
 # other
-.gdbinit
 __pycache__
 *.pyc
 .~lock.*
