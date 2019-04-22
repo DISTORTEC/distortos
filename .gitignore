@@ -1,4 +1,6 @@
-# other
+# Python's bytecode
 __pycache__
 *.pyc
+
+# LibreOffice's lock-files
 .~lock.*
