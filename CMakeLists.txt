@@ -627,6 +627,24 @@ get_filename_component(filenameComponent ${DISTORTOS_RAW_LINKER_SCRIPT} NAME)
 configure_file(${DISTORTOS_RAW_LINKER_SCRIPT} ${filenameComponent} COPYONLY)
 
 #-----------------------------------------------------------------------------------------------------------------------
+# .gitignore for build directory
+#-----------------------------------------------------------------------------------------------------------------------
+
+message(STATUS "Generating ${CMAKE_BINARY_DIR}/.gitignore")
+
+file(WRITE ${CMAKE_BINARY_DIR}/.gitignore
+		"#\n"
+		"# \\file\n"
+		"# \\brief .gitignore for build directory\n"
+		"#\n"
+		"# \\warning\n"
+		"# Automatically generated file - do not edit!\n"
+		"#\n"
+		"\n"
+		"# ignore everything\n"
+		"*\n")
+
+#-----------------------------------------------------------------------------------------------------------------------
 # distortosTest application
 #-----------------------------------------------------------------------------------------------------------------------
 
