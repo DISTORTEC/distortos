@@ -1,6 +1,3 @@
-# build output
-output/
-
 # Eclipse project files
 .cproject
 .project
