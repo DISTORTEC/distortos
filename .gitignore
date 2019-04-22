@@ -1,5 +1,5 @@
 # Python's bytecode
-__pycache__
+__pycache__/
 *.pyc
 
 # LibreOffice's lock-files
