@@ -9,14 +9,14 @@
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#include "distortos/FileSystem/littlefs/LittlefsFileSystem.hpp"
+#include "distortos/FileSystem/littlefs1/LittlefsFileSystem.hpp"
 
 #include "littlefsErrorToErrorCode.hpp"
 
 #include "distortos/devices/memory/MemoryTechnologyDevice.hpp"
 
-#include "distortos/FileSystem/littlefs/LittlefsDirectory.hpp"
-#include "distortos/FileSystem/littlefs/LittlefsFile.hpp"
+#include "distortos/FileSystem/littlefs1/LittlefsDirectory.hpp"
+#include "distortos/FileSystem/littlefs1/LittlefsFile.hpp"
 
 #include "distortos/assert.h"
 
@@ -47,7 +47,7 @@ constexpr size_t alignmentMargin {alignment > __BIGGEST_ALIGNMENT__ ? alignment 
 /**
  * \brief Callback for lfs_traverse() that counts block used by file system.
  *
- * Idea from https://github.com/ARMmbed/littlefs/issues/1#issuecomment-355116984
+ * Idea from https://github.com/ARMmbed/littlefs1/issues/1#issuecomment-355116984
  *
  * \param [out] data is a pointer to size_t variable with number of used blocks
  *
