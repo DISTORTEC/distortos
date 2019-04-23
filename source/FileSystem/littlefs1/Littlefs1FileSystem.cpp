@@ -1,6 +1,6 @@
 /**
  * \file
- * \brief LittlefsFileSystem class implementation
+ * \brief Littlefs1FileSystem class implementation
  *
  * \author Copyright (C) 2018-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
@@ -63,14 +63,14 @@ int countUsedBlocks(void* const data, lfs_block_t)
 }
 
 /**
- * \brief Converts error code to littlefs error.
+ * \brief Converts error code to littlefs-v1 error.
  *
  * \param [in] errorCode is an error code
  *
- * \return \a errorCode converted to littlefs error
+ * \return \a errorCode converted to littlefs-v1 error
  */
 
-int errorCodeToLittlefsError(const int errorCode)
+int errorCodeToLittlefs1Error(const int errorCode)
 {
 	if (errorCode == 0)
 		return LFS_ERR_OK;
@@ -117,7 +117,7 @@ int littlefsMemoryTechnologyDeviceErase(const lfs_config* const configuration, c
 	assert(memoryTechnologyDevice != nullptr);
 	const auto ret = memoryTechnologyDevice->erase(static_cast<uint64_t>(block) * configuration->block_size,
 			configuration->block_size);
-	return errorCodeToLittlefsError(ret);
+	return errorCodeToLittlefs1Error(ret);
 }
 
 /**
@@ -141,7 +141,7 @@ int littlefsMemoryTechnologyDeviceProgram(const lfs_config* const configuration,
 	assert(memoryTechnologyDevice != nullptr);
 	const auto ret = memoryTechnologyDevice->program(static_cast<uint64_t>(block) * configuration->block_size + offset,
 			buffer, size);
-	return errorCodeToLittlefsError(ret);
+	return errorCodeToLittlefs1Error(ret);
 }
 
 /**
@@ -165,7 +165,7 @@ int littlefsMemoryTechnologyDeviceRead(const lfs_config* const configuration, co
 	assert(memoryTechnologyDevice != nullptr);
 	const auto ret = memoryTechnologyDevice->read(static_cast<uint64_t>(block) * configuration->block_size + offset,
 			buffer, size);
-	return errorCodeToLittlefsError(ret);
+	return errorCodeToLittlefs1Error(ret);
 }
 
 /**
@@ -183,7 +183,7 @@ int littlefsMemoryTechnologyDeviceSynchronize(const lfs_config* const configurat
 	const auto memoryTechnologyDevice = static_cast<devices::MemoryTechnologyDevice*>(configuration->context);
 	assert(memoryTechnologyDevice != nullptr);
 	const auto ret = memoryTechnologyDevice->synchronize();
-	return errorCodeToLittlefsError(ret);
+	return errorCodeToLittlefs1Error(ret);
 }
 
 }	// namespace
@@ -192,14 +192,14 @@ int littlefsMemoryTechnologyDeviceSynchronize(const lfs_config* const configurat
 | public functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-LittlefsFileSystem::~LittlefsFileSystem()
+Littlefs1FileSystem::~Littlefs1FileSystem()
 {
 	assert(mounted_ == false);
 }
 
-int LittlefsFileSystem::format()
+int Littlefs1FileSystem::format()
 {
-	const std::lock_guard<LittlefsFileSystem> lockGuard {*this};
+	const std::lock_guard<Littlefs1FileSystem> lockGuard {*this};
 
 	assert(mounted_ == false);
 
@@ -256,9 +256,9 @@ int LittlefsFileSystem::format()
 	return littlefs1ErrorToErrorCode(ret);
 }
 
-int LittlefsFileSystem::getFileStatus(const char* const path, struct stat& status)
+int Littlefs1FileSystem::getFileStatus(const char* const path, struct stat& status)
 {
-	const std::lock_guard<LittlefsFileSystem> lockGuard {*this};
+	const std::lock_guard<Littlefs1FileSystem> lockGuard {*this};
 
 	assert(mounted_ == true);
 	assert(path != nullptr);
@@ -277,9 +277,9 @@ int LittlefsFileSystem::getFileStatus(const char* const path, struct stat& statu
 	return {};
 }
 
-int LittlefsFileSystem::getStatus(struct statvfs& status)
+int Littlefs1FileSystem::getStatus(struct statvfs& status)
 {
-	const std::lock_guard<LittlefsFileSystem> lockGuard {*this};
+	const std::lock_guard<Littlefs1FileSystem> lockGuard {*this};
 
 	assert(mounted_ == true);
 
@@ -300,15 +300,15 @@ int LittlefsFileSystem::getStatus(struct statvfs& status)
 	return {};
 }
 
-void LittlefsFileSystem::lock()
+void Littlefs1FileSystem::lock()
 {
 	const auto ret = mutex_.lock();
 	assert(ret == 0);
 }
 
-int LittlefsFileSystem::makeDirectory(const char* const path, mode_t)
+int Littlefs1FileSystem::makeDirectory(const char* const path, mode_t)
 {
-	const std::lock_guard<LittlefsFileSystem> lockGuard {*this};
+	const std::lock_guard<Littlefs1FileSystem> lockGuard {*this};
 
 	assert(mounted_ == true);
 	assert(path != nullptr);
@@ -317,9 +317,9 @@ int LittlefsFileSystem::makeDirectory(const char* const path, mode_t)
 	return littlefs1ErrorToErrorCode(ret);
 }
 
-int LittlefsFileSystem::mount()
+int Littlefs1FileSystem::mount()
 {
-	const std::lock_guard<LittlefsFileSystem> lockGuard {*this};
+	const std::lock_guard<Littlefs1FileSystem> lockGuard {*this};
 
 	assert(mounted_ == false);
 
@@ -384,9 +384,9 @@ int LittlefsFileSystem::mount()
 	return 0;
 }
 
-std::pair<int, std::unique_ptr<Directory>> LittlefsFileSystem::openDirectory(const char* const path)
+std::pair<int, std::unique_ptr<Directory>> Littlefs1FileSystem::openDirectory(const char* const path)
 {
-	const std::lock_guard<LittlefsFileSystem> lockGuard {*this};
+	const std::lock_guard<Littlefs1FileSystem> lockGuard {*this};
 
 	assert(mounted_ == true);
 
@@ -403,9 +403,9 @@ std::pair<int, std::unique_ptr<Directory>> LittlefsFileSystem::openDirectory(con
 	return {{}, std::move(directory)};
 }
 
-std::pair<int, std::unique_ptr<File>> LittlefsFileSystem::openFile(const char* const path, const int flags)
+std::pair<int, std::unique_ptr<File>> Littlefs1FileSystem::openFile(const char* const path, const int flags)
 {
-	const std::lock_guard<LittlefsFileSystem> lockGuard {*this};
+	const std::lock_guard<Littlefs1FileSystem> lockGuard {*this};
 
 	assert(mounted_ == true);
 
@@ -422,9 +422,9 @@ std::pair<int, std::unique_ptr<File>> LittlefsFileSystem::openFile(const char* c
 	return {{}, std::move(file)};
 }
 
-int LittlefsFileSystem::remove(const char* const path)
+int Littlefs1FileSystem::remove(const char* const path)
 {
-	const std::lock_guard<LittlefsFileSystem> lockGuard {*this};
+	const std::lock_guard<Littlefs1FileSystem> lockGuard {*this};
 
 	assert(mounted_ == true);
 	assert(path != nullptr);
@@ -433,9 +433,9 @@ int LittlefsFileSystem::remove(const char* const path)
 	return littlefs1ErrorToErrorCode(ret);
 }
 
-int LittlefsFileSystem::rename(const char* const path, const char* const newPath)
+int Littlefs1FileSystem::rename(const char* const path, const char* const newPath)
 {
-	const std::lock_guard<LittlefsFileSystem> lockGuard {*this};
+	const std::lock_guard<Littlefs1FileSystem> lockGuard {*this};
 
 	assert(mounted_ == true);
 	assert(path != nullptr);
@@ -445,15 +445,15 @@ int LittlefsFileSystem::rename(const char* const path, const char* const newPath
 	return littlefs1ErrorToErrorCode(ret);
 }
 
-void LittlefsFileSystem::unlock()
+void Littlefs1FileSystem::unlock()
 {
 	const auto ret = mutex_.unlock();
 	assert(ret == 0);
 }
 
-int LittlefsFileSystem::unmount()
+int Littlefs1FileSystem::unmount()
 {
-	const std::lock_guard<LittlefsFileSystem> lockGuard {*this};
+	const std::lock_guard<Littlefs1FileSystem> lockGuard {*this};
 
 	assert(mounted_ == true);
 

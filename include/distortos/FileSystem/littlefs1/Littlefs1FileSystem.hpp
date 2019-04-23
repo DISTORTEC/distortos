@@ -1,6 +1,6 @@
 /**
  * \file
- * \brief LittlefsFileSystem class header
+ * \brief Littlefs1FileSystem class header
  *
  * \author Copyright (C) 2018-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
@@ -29,12 +29,12 @@ class MemoryTechnologyDevice;
 }	// namespace devices
 
 /**
- * LittlefsFileSystem class is an [littlefs](https://github.com/ARMmbed/littlefs) file system.
+ * Littlefs1FileSystem class is a [littlefs-v1](https://github.com/ARMmbed/littlefs) file system.
  *
  * \ingroup fileSystem
  */
 
-class LittlefsFileSystem : public FileSystem
+class Littlefs1FileSystem : public FileSystem
 {
 	friend class Littlefs1Directory;
 	friend class Littlefs1File;
@@ -42,7 +42,7 @@ class LittlefsFileSystem : public FileSystem
 public:
 
 	/**
-	 * \brief LittlefsFileSystem's constructor
+	 * \brief Littlefs1FileSystem's constructor
 	 *
 	 * \param [in] memoryTechnologyDevice is a reference to memory technology device on which the file system will be
 	 * mounted
@@ -54,7 +54,7 @@ public:
 	 * \param [in] lookahead is the number of blocks to lookahead during block allocation, default - 512
 	 */
 
-	constexpr explicit LittlefsFileSystem(devices::MemoryTechnologyDevice& memoryTechnologyDevice,
+	constexpr explicit Littlefs1FileSystem(devices::MemoryTechnologyDevice& memoryTechnologyDevice,
 			const size_t readBlockSize = {}, const size_t programBlockSize = {}, const size_t eraseBlockSize = {},
 			const size_t blocksCount = {}, const size_t lookahead = 32 * 16) :
 					configuration_{},
@@ -75,14 +75,14 @@ public:
 	}
 
 	/**
-	 * \brief LittlefsFileSystem's destructor
+	 * \brief Littlefs1FileSystem's destructor
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
 	 * \pre %File system is unmounted.
 	 */
 
-	~LittlefsFileSystem() override;
+	~Littlefs1FileSystem() override;
 
 	/**
 	 * \brief Formats associated device with the file system.

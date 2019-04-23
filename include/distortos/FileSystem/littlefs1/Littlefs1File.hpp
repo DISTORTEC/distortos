@@ -23,7 +23,7 @@
 namespace distortos
 {
 
-class LittlefsFileSystem;
+class Littlefs1FileSystem;
 
 /**
  * Littlefs1File class is a [littlefs-v1](https://github.com/ARMmbed/littlefs) file.
@@ -33,7 +33,7 @@ class LittlefsFileSystem;
 
 class Littlefs1File : public File
 {
-	friend class LittlefsFileSystem;
+	friend class Littlefs1FileSystem;
 
 public:
 
@@ -253,7 +253,7 @@ private:
 	 * \param [in] fileSystem is a reference to owner file system
 	 */
 
-	constexpr explicit Littlefs1File(LittlefsFileSystem& fileSystem) :
+	constexpr explicit Littlefs1File(Littlefs1FileSystem& fileSystem) :
 			buffer_{},
 			configuration_{},
 			file_{},
@@ -291,7 +291,7 @@ private:
 	lfs_file_t file_;
 
 	/// reference to owner file system
-	LittlefsFileSystem& fileSystem_;
+	Littlefs1FileSystem& fileSystem_;
 
 	/// true if file is opened, false otherwise
 	bool opened_;
