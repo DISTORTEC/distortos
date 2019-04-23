@@ -16,7 +16,7 @@
 #include "distortos/devices/memory/MemoryTechnologyDevice.hpp"
 
 #include "distortos/FileSystem/littlefs1/Littlefs1Directory.hpp"
-#include "distortos/FileSystem/littlefs1/LittlefsFile.hpp"
+#include "distortos/FileSystem/littlefs1/Littlefs1File.hpp"
 
 #include "distortos/assert.h"
 
