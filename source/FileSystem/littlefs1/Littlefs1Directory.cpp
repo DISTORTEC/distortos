@@ -9,7 +9,7 @@
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#include "distortos/FileSystem/littlefs1/LittlefsDirectory.hpp"
+#include "distortos/FileSystem/littlefs1/Littlefs1Directory.hpp"
 
 #include "littlefs1ErrorToErrorCode.hpp"
 
