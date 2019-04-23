@@ -16,4 +16,4 @@ target_sources(distortos PRIVATE
 doxygen(INCLUDE_PATH ${CMAKE_CURRENT_LIST_DIR}/external/littlefs1
 		EXCLUDE ${CMAKE_CURRENT_LIST_DIR}/external)
 
-include(${CMAKE_CURRENT_LIST_DIR}/external/littlefs-sources.cmake)
+include(${CMAKE_CURRENT_LIST_DIR}/external/littlefs1-sources.cmake)
