@@ -29,9 +29,9 @@ no support for detecting whether card is write-protected. Code was tested with 2
 and `distortos::Directory`.
 - Added global `distortos::openFile()`, taking `distortos::FileSystem` reference and returning a fully functional
 `FILE*` for use with `<stdio.h>` functions.
-- Added support for [littlefs](https://github.com/ARMmbed/littlefs) file system, provided by
-`distortos::LittlefsFileSystem`, `distortos::LittlefsFile` and `distortos::LittlefsDirectory` classes, which implement
-interface of `distortos::FileSystem`, `distortos::File` and `distortos::Directory` classes.
+- Added support for [littlefs-v1](https://github.com/ARMmbed/littlefs) file system, provided by
+`distortos::Littlefs1FileSystem`, `distortos::Littlefs1File` and `distortos::Littlefs1Directory` classes, which
+implement interface of `distortos::FileSystem`, `distortos::File` and `distortos::Directory` classes.
 - Added configuration of *STM32F7's* *PLLI2S*, *PLLSAI* and *PLL48CLK* to *CMake*.
 - Added `distortos::Mutex::try_lock()`, `distortos::Mutex::try_lock_for()` and `distortos::Mutex::try_lock_until()`
 wrappers, which implement APIs of [`std::mutex::try_lock()`](http://en.cppreference.com/w/cpp/thread/mutex/try_lock),
