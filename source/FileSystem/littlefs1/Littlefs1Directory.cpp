@@ -1,6 +1,6 @@
 /**
  * \file
- * \brief LittlefsDirectory class implementation
+ * \brief Littlefs1Directory class implementation
  *
  * \author Copyright (C) 2018-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
@@ -28,14 +28,14 @@ namespace distortos
 | public functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-LittlefsDirectory::~LittlefsDirectory()
+Littlefs1Directory::~Littlefs1Directory()
 {
 	assert(opened_ == false);
 }
 
-int LittlefsDirectory::close()
+int Littlefs1Directory::close()
 {
-	const std::lock_guard<LittlefsDirectory> lockGuard {*this};
+	const std::lock_guard<Littlefs1Directory> lockGuard {*this};
 
 	assert(opened_ == true);
 
@@ -44,9 +44,9 @@ int LittlefsDirectory::close()
 	return littlefs1ErrorToErrorCode(ret);
 }
 
-std::pair<int, off_t> LittlefsDirectory::getPosition()
+std::pair<int, off_t> Littlefs1Directory::getPosition()
 {
-	const std::lock_guard<LittlefsDirectory> lockGuard {*this};
+	const std::lock_guard<Littlefs1Directory> lockGuard {*this};
 
 	assert(opened_ == true);
 
@@ -57,14 +57,14 @@ std::pair<int, off_t> LittlefsDirectory::getPosition()
 	return {{}, ret};
 }
 
-void LittlefsDirectory::lock()
+void Littlefs1Directory::lock()
 {
 	fileSystem_.lock();
 }
 
-int LittlefsDirectory::read(dirent& entry)
+int Littlefs1Directory::read(dirent& entry)
 {
-	const std::lock_guard<LittlefsDirectory> lockGuard {*this};
+	const std::lock_guard<Littlefs1Directory> lockGuard {*this};
 
 	assert(opened_ == true);
 
@@ -83,9 +83,9 @@ int LittlefsDirectory::read(dirent& entry)
 	return {};
 }
 
-int LittlefsDirectory::rewind()
+int Littlefs1Directory::rewind()
 {
-	const std::lock_guard<LittlefsDirectory> lockGuard {*this};
+	const std::lock_guard<Littlefs1Directory> lockGuard {*this};
 
 	assert(opened_ == true);
 
@@ -93,9 +93,9 @@ int LittlefsDirectory::rewind()
 	return littlefs1ErrorToErrorCode(ret);
 }
 
-int LittlefsDirectory::seek(const off_t position)
+int Littlefs1Directory::seek(const off_t position)
 {
-	const std::lock_guard<LittlefsDirectory> lockGuard {*this};
+	const std::lock_guard<Littlefs1Directory> lockGuard {*this};
 
 	assert(opened_ == true);
 
@@ -106,7 +106,7 @@ int LittlefsDirectory::seek(const off_t position)
 	return ret;
 }
 
-void LittlefsDirectory::unlock()
+void Littlefs1Directory::unlock()
 {
 	fileSystem_.unlock();
 }
@@ -115,7 +115,7 @@ void LittlefsDirectory::unlock()
 | private functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-int LittlefsDirectory::open(const char* const path)
+int Littlefs1Directory::open(const char* const path)
 {
 	assert(opened_ == false);
 	assert(path != nullptr);

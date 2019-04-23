@@ -390,14 +390,14 @@ std::pair<int, std::unique_ptr<Directory>> LittlefsFileSystem::openDirectory(con
 
 	assert(mounted_ == true);
 
-	std::unique_ptr<LittlefsDirectory> directory {new (std::nothrow) LittlefsDirectory{*this}};
+	std::unique_ptr<Littlefs1Directory> directory {new (std::nothrow) Littlefs1Directory{*this}};
 	if (directory == nullptr)
-		return {ENOMEM, std::unique_ptr<LittlefsDirectory>{}};
+		return {ENOMEM, std::unique_ptr<Littlefs1Directory>{}};
 
 	{
 		const auto ret = directory->open(path);
 		if (ret != 0)
-			return {ret, std::unique_ptr<LittlefsDirectory>{}};
+			return {ret, std::unique_ptr<Littlefs1Directory>{}};
 	}
 
 	return {{}, std::move(directory)};

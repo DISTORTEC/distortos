@@ -36,7 +36,7 @@ class MemoryTechnologyDevice;
 
 class LittlefsFileSystem : public FileSystem
 {
-	friend class LittlefsDirectory;
+	friend class Littlefs1Directory;
 	friend class LittlefsFile;
 
 public:
@@ -207,7 +207,7 @@ public:
 	 * \return pair with return code (0 on success, error code otherwise) and `std::unique_ptr` with opened directory;
 	 * error codes:
 	 * - ENOMEM - unable to allocate memory for directory;
-	 * - error codes returned by LittlefsDirectory::open();
+	 * - error codes returned by Littlefs1Directory::open();
 	 */
 
 	std::pair<int, std::unique_ptr<Directory>> openDirectory(const char* path) override;
