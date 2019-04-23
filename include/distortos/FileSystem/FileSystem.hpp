@@ -79,10 +79,12 @@ public:
 	 *
 	 * \pre %File system is mounted.
 	 *
-	 * \return pair with return code (0 on success, error code otherwise) and status of file system in `statvfs` struct
+	 * \param [out] status is a reference to `statvfs` struct into which status of file system will be written
+	 *
+	 * \return 0 on success, error code otherwise
 	 */
 
-	virtual std::pair<int, struct statvfs> getStatus() = 0;
+	virtual int getStatus(struct statvfs& status) = 0;
 
 	/**
 	 * \brief Locks the file system for exclusive use by current thread.
