@@ -13,7 +13,7 @@
 
 #include "littlefs1ErrorToErrorCode.hpp"
 
-#include "distortos/FileSystem/littlefs1/LittlefsFileSystem.hpp"
+#include "distortos/FileSystem/littlefs1/Littlefs1FileSystem.hpp"
 
 #include "distortos/assert.h"
 
