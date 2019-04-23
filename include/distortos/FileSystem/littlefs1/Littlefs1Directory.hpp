@@ -14,7 +14,7 @@
 
 #include "distortos/FileSystem/Directory.hpp"
 
-#include "lfs.h"
+#include "lfs1.h"
 
 namespace distortos
 {
@@ -55,7 +55,7 @@ public:
 	 * \post %Directory is closed.
 	 *
 	 * \return 0 on success, error code otherwise:
-	 * - converted error codes returned by lfs_dir_close();
+	 * - converted error codes returned by lfs1_dir_close();
 	 */
 
 	int close() override;
@@ -71,7 +71,7 @@ public:
 	 *
 	 * \return pair with return code (0 on success, error code otherwise) and current position in the directory; error
 	 * codes:
-	 * - converted error codes returned by lfs_dir_tell();
+	 * - converted error codes returned by lfs1_dir_tell();
 	 */
 
 	std::pair<int, off_t> getPosition() override;
@@ -108,7 +108,7 @@ public:
 	 *
 	 * \return 0 on success, error code otherwise:
 	 * - ENOENT - current position in the directory is invalid (i.e. end of the directory reached);
-	 * - converted error codes returned by lfs_dir_read();
+	 * - converted error codes returned by lfs1_dir_read();
 	 */
 
 	int read(dirent& entry) override;
@@ -123,7 +123,7 @@ public:
 	 * \pre %Directory is opened.
 	 *
 	 * \return 0 on success, error code otherwise:
-	 * - converted error codes returned by lfs_dir_rewind();
+	 * - converted error codes returned by lfs1_dir_rewind();
 	 */
 
 	int rewind() override;
@@ -140,7 +140,7 @@ public:
 	 * \param [in] position is the value of position, must be a value previously returned by getPosition()!
 	 *
 	 * \return 0 on success, error code otherwise:
-	 * - converted error codes returned by lfs_dir_seek();
+	 * - converted error codes returned by lfs1_dir_seek();
 	 */
 
 	int seek(off_t position) override;
@@ -182,13 +182,13 @@ private:
 	 * \param [in] path is the path of directory that will be opened, must be valid
 	 *
 	 * \return 0 on success, error code otherwise:
-	 * - converted error codes returned by lfs_dir_open();
+	 * - converted error codes returned by lfs1_dir_open();
 	 */
 
 	int open(const char* path);
 
 	/// littlefs directory
-	lfs_dir_t directory_;
+	lfs1_dir_t directory_;
 
 	/// reference to owner file system
 	Littlefs1FileSystem& fileSystem_;

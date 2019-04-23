@@ -16,7 +16,7 @@
 
 #include "distortos/distortosConfiguration.h"
 
-#include "lfs.h"
+#include "lfs1.h"
 
 #include <memory>
 
@@ -59,7 +59,7 @@ public:
 	 * \post %File is closed.
 	 *
 	 * \return 0 on success, error code otherwise
-	 * - converted error codes returned by lfs_file_close();
+	 * - converted error codes returned by lfs1_file_close();
 	 */
 
 	int close() override;
@@ -74,7 +74,7 @@ public:
 	 * \pre %File is opened.
 	 *
 	 * \return pair with return code (0 on success, error code otherwise) and current file offset, bytes; error codes:
-	 * - converted error codes returned by lfs_file_tell();
+	 * - converted error codes returned by lfs1_file_tell();
 	 */
 
 	std::pair<int, off_t> getPosition() override;
@@ -87,7 +87,7 @@ public:
 	 * \pre %File is opened.
 	 *
 	 * \return pair with return code (0 on success, error code otherwise) and size of file, bytes; error codes:
-	 * - converted error codes returned by lfs_file_size();
+	 * - converted error codes returned by lfs1_file_size();
 	 */
 
 	std::pair<int, off_t> getSize() override;
@@ -158,7 +158,7 @@ public:
 	 *
 	 * \return pair with return code (0 on success, error code otherwise) and number of read bytes (valid even when
 	 * error code is returned); error codes:
-	 * - converted error codes returned by lfs_file_read();
+	 * - converted error codes returned by lfs1_file_read();
 	 */
 
 	std::pair<int, size_t> read(void* buffer, size_t size) override;
@@ -173,7 +173,7 @@ public:
 	 * \pre %File is opened.
 	 *
 	 * \return 0 on success, error code otherwise:
-	 * - converted error codes returned by lfs_file_rewind();
+	 * - converted error codes returned by lfs1_file_rewind();
 	 */
 
 	int rewind() override;
@@ -193,7 +193,7 @@ public:
 	 * \param [in] offset is the value of offset, bytes
 	 *
 	 * \return pair with return code (0 on success, error code otherwise) and current file offset, bytes; error codes:
-	 * - converted error codes returned by lfs_file_seek();
+	 * - converted error codes returned by lfs1_file_seek();
 	 */
 
 	std::pair<int, off_t> seek(Whence whence, off_t offset) override;
@@ -208,7 +208,7 @@ public:
 	 * \pre %File is opened.
 	 *
 	 * \return 0 on success, error code otherwise:
-	 * - converted error codes returned by lfs_file_sync();
+	 * - converted error codes returned by lfs1_file_sync();
 	 */
 
 	int synchronize() override;
@@ -240,7 +240,7 @@ public:
 	 *
 	 * \return pair with return code (0 on success, error code otherwise) and number of written bytes (valid even when
 	 * error code is returned); error codes:
-	 * - converted error codes returned by lfs_file_write();
+	 * - converted error codes returned by lfs1_file_write();
 	 */
 
 	std::pair<int, size_t> write(const void* buffer, size_t size) override;
@@ -276,7 +276,7 @@ private:
 	 *
 	 * \return 0 on success, error code otherwise:
 	 * - ENOMEM - unable to allocate memory for file;
-	 * - converted error codes returned by lfs_file_open();
+	 * - converted error codes returned by lfs1_file_open();
 	 */
 
 	int open(const char* path, int flags);
@@ -285,10 +285,10 @@ private:
 	std::unique_ptr<uint8_t[]> buffer_;
 
 	/// littlefs file configuration
-	lfs_file_config configuration_;
+	lfs1_file_config configuration_;
 
 	/// littlefs file
-	lfs_file_t file_;
+	lfs1_file_t file_;
 
 	/// reference to owner file system
 	Littlefs1FileSystem& fileSystem_;

@@ -40,7 +40,7 @@ int Littlefs1File::close()
 	assert(opened_ == true);
 
 	opened_ = {};
-	const auto ret = lfs_file_close(&fileSystem_.fileSystem_, &file_);
+	const auto ret = lfs1_file_close(&fileSystem_.fileSystem_, &file_);
 	return littlefs1ErrorToErrorCode(ret);
 }
 
@@ -50,7 +50,7 @@ std::pair<int, off_t> Littlefs1File::getPosition()
 
 	assert(opened_ == true);
 
-	const auto ret = lfs_file_tell(&fileSystem_.fileSystem_, &file_);
+	const auto ret = lfs1_file_tell(&fileSystem_.fileSystem_, &file_);
 	if (ret < 0)
 		return {littlefs1ErrorToErrorCode(ret), {}};
 
@@ -63,7 +63,7 @@ std::pair<int, off_t> Littlefs1File::getSize()
 
 	assert(opened_ == true);
 
-	const auto ret = lfs_file_size(&fileSystem_.fileSystem_, &file_);
+	const auto ret = lfs1_file_size(&fileSystem_.fileSystem_, &file_);
 	if (ret < 0)
 		return {littlefs1ErrorToErrorCode(ret), {}};
 
@@ -103,7 +103,7 @@ std::pair<int, size_t> Littlefs1File::read(void* const buffer, const size_t size
 	assert(opened_ == true);
 	assert(buffer != nullptr);
 
-	const auto ret = lfs_file_read(&fileSystem_.fileSystem_, &file_, buffer, size);
+	const auto ret = lfs1_file_read(&fileSystem_.fileSystem_, &file_, buffer, size);
 	if (ret < 0)
 		return {littlefs1ErrorToErrorCode(ret), {}};
 
@@ -116,7 +116,7 @@ int Littlefs1File::rewind()
 
 	assert(opened_ == true);
 
-	const auto ret = lfs_file_rewind(&fileSystem_.fileSystem_, &file_);
+	const auto ret = lfs1_file_rewind(&fileSystem_.fileSystem_, &file_);
 	return littlefs1ErrorToErrorCode(ret);
 }
 
@@ -126,8 +126,8 @@ std::pair<int, off_t> Littlefs1File::seek(const Whence whence, const off_t offse
 
 	assert(opened_ == true);
 
-	const auto ret = lfs_file_seek(&fileSystem_.fileSystem_, &file_, offset,
-			whence == Whence::beginning ? LFS_SEEK_SET : whence == Whence::current ? LFS_SEEK_CUR : LFS_SEEK_END);
+	const auto ret = lfs1_file_seek(&fileSystem_.fileSystem_, &file_, offset,
+			whence == Whence::beginning ? LFS1_SEEK_SET : whence == Whence::current ? LFS1_SEEK_CUR : LFS1_SEEK_END);
 	if (ret < 0)
 		return {littlefs1ErrorToErrorCode(ret), {}};
 
@@ -141,7 +141,7 @@ int Littlefs1File::synchronize()
 
 	assert(opened_ == true);
 
-	const auto ret = lfs_file_sync(&fileSystem_.fileSystem_, &file_);
+	const auto ret = lfs1_file_sync(&fileSystem_.fileSystem_, &file_);
 	return littlefs1ErrorToErrorCode(ret);
 }
 
@@ -157,7 +157,7 @@ std::pair<int, size_t> Littlefs1File::write(const void* const buffer, const size
 	assert(opened_ == true);
 	assert(buffer != nullptr);
 
-	const auto ret = lfs_file_write(&fileSystem_.fileSystem_, &file_, buffer, size);
+	const auto ret = lfs1_file_write(&fileSystem_.fileSystem_, &file_, buffer, size);
 	if (ret < 0)
 		return {littlefs1ErrorToErrorCode(ret), {}};
 
@@ -181,21 +181,21 @@ int Littlefs1File::open(const char* const path, const int flags)
 		const auto readWrite = (flags & mask) == O_RDWR;
 		assert(readOnly == true || writeOnly == true || readWrite == true);
 		if (readOnly == true)
-			convertedFlags = LFS_O_RDONLY;
+			convertedFlags = LFS1_O_RDONLY;
 		else if (writeOnly == true)
-			convertedFlags = LFS_O_WRONLY;
+			convertedFlags = LFS1_O_WRONLY;
 		else	// if (readWrite == true)
-			convertedFlags = LFS_O_RDWR;
+			convertedFlags = LFS1_O_RDWR;
 	}
 
 	if ((flags & O_CREAT) != 0)
-		convertedFlags |= LFS_O_CREAT;
+		convertedFlags |= LFS1_O_CREAT;
 	if ((flags & O_EXCL) != 0)
-		convertedFlags |= LFS_O_EXCL;
+		convertedFlags |= LFS1_O_EXCL;
 	if ((flags & O_TRUNC) != 0)
-		convertedFlags |= LFS_O_TRUNC;
+		convertedFlags |= LFS1_O_TRUNC;
 	if ((flags & O_APPEND) != 0)
-		convertedFlags |= LFS_O_APPEND;
+		convertedFlags |= LFS1_O_APPEND;
 
 	constexpr size_t alignment {DISTORTOS_MEMORYTECHNOLOGYDEVICE_BUFFER_ALIGNMENT};
 	constexpr size_t alignmentMargin {alignment > __BIGGEST_ALIGNMENT__ ? alignment - __BIGGEST_ALIGNMENT__ : 0};
@@ -210,8 +210,8 @@ int Littlefs1File::open(const char* const path, const int flags)
 	configuration_.buffer = reinterpret_cast<void*>((reinterpret_cast<uintptr_t>(buffer.get()) + alignment - 1) /
 			alignment * alignment);
 
-	const auto ret = lfs_file_opencfg(&fileSystem_.fileSystem_, &file_, path, convertedFlags, &configuration_);
-	if (ret != LFS_ERR_OK)
+	const auto ret = lfs1_file_opencfg(&fileSystem_.fileSystem_, &file_, path, convertedFlags, &configuration_);
+	if (ret != LFS1_ERR_OK)
 		return littlefs1ErrorToErrorCode(ret);
 
 	buffer_ = std::move(buffer);

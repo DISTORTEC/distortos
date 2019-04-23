@@ -16,7 +16,7 @@
 
 #include "distortos/Mutex.hpp"
 
-#include "lfs.h"
+#include "lfs1.h"
 
 namespace distortos
 {
@@ -93,7 +93,7 @@ public:
 	 *
 	 * \return 0 on success, error code otherwise:
 	 * - ENOMEM - unable to allocate memory for file system;
-	 * - converted error codes returned by lfs_format();
+	 * - converted error codes returned by lfs1_format();
 	 * - error codes returned by MemoryTechnologyDevice::open();
 	 */
 
@@ -116,7 +116,7 @@ public:
 	 * \param [out] status is a reference to `stat` struct into which status of file will be written
 	 *
 	 * \return 0 on success, error code otherwise:
-	 * - converted error codes returned by lfs_stat();
+	 * - converted error codes returned by lfs1_stat();
 	 */
 
 	int getFileStatus(const char* path, struct stat& status) override;
@@ -136,7 +136,7 @@ public:
 	 * \param [out] status is a reference to `statvfs` struct into which status of file system will be written
 	 *
 	 * \return 0 on success, error code otherwise:
-	 * - converted error codes returned by lfs_traverse();
+	 * - converted error codes returned by lfs1_traverse();
 	 */
 
 	int getStatus(struct statvfs& status) override;
@@ -172,7 +172,7 @@ public:
 	 * \param [in] mode is the value of permission bits of the created directory
 	 *
 	 * \return 0 on success, error code otherwise:
-	 * - converted error codes returned by lfs_mkdir();
+	 * - converted error codes returned by lfs1_mkdir();
 	 */
 
 	int makeDirectory(const char* path, mode_t mode) override;
@@ -186,7 +186,7 @@ public:
 	 *
 	 * \return 0 on success, error code otherwise:
 	 * - ENOMEM - unable to allocate memory for file system;
-	 * - converted error codes returned by lfs_mount();
+	 * - converted error codes returned by lfs1_mount();
 	 * - error codes returned by MemoryTechnologyDevice::open();
 	 */
 
@@ -248,7 +248,7 @@ public:
 	 * \param [in] path is the path of file or directory that will be removed, must be valid
 	 *
 	 * \return 0 on success, error code otherwise:
-	 * - converted error codes returned by lfs_remove();
+	 * - converted error codes returned by lfs1_remove();
 	 */
 
 	int remove(const char* path) override;
@@ -267,7 +267,7 @@ public:
 	 * \param [in] newPath is the new path of file or directory, must be valid
 	 *
 	 * \return 0 on success, error code otherwise:
-	 * - converted error codes returned by lfs_rename();
+	 * - converted error codes returned by lfs1_rename();
 	 */
 
 	int rename(const char* path, const char* newPath) override;
@@ -296,7 +296,7 @@ public:
 	 * \post %File system is unmounted.
 	 *
 	 * \return 0 on success, error code otherwise:
-	 * - converted error codes returned by lfs_unmount();
+	 * - converted error codes returned by lfs1_unmount();
 	 * - error codes returned by MemoryTechnologyDevice::close();
 	 */
 
@@ -305,10 +305,10 @@ public:
 private:
 
 	/// configuration of littlefs
-	lfs_config configuration_;
+	lfs1_config configuration_;
 
 	/// littlefs file system
-	lfs_t fileSystem_;
+	lfs1_t fileSystem_;
 
 	/// mutex for serializing access to the object
 	distortos::Mutex mutex_;

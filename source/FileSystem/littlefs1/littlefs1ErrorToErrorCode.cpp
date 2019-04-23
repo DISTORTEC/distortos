@@ -11,7 +11,7 @@
 
 #include "littlefs1ErrorToErrorCode.hpp"
 
-#include "lfs.h"
+#include "lfs1.h"
 
 #include <cerrno>
 
@@ -24,29 +24,29 @@ namespace distortos
 
 int littlefs1ErrorToErrorCode(const int littlefs1Error)
 {
-	if (littlefs1Error == LFS_ERR_OK)
+	if (littlefs1Error == LFS1_ERR_OK)
 		return 0;
-	if (littlefs1Error == LFS_ERR_IO)
+	if (littlefs1Error == LFS1_ERR_IO)
 		return EIO;
-	if (littlefs1Error == LFS_ERR_CORRUPT)
+	if (littlefs1Error == LFS1_ERR_CORRUPT)
 		return EILSEQ;
-	if (littlefs1Error == LFS_ERR_NOENT)
+	if (littlefs1Error == LFS1_ERR_NOENT)
 		return ENOENT;
-	if (littlefs1Error == LFS_ERR_EXIST)
+	if (littlefs1Error == LFS1_ERR_EXIST)
 		return EEXIST;
-	if (littlefs1Error == LFS_ERR_NOTDIR)
+	if (littlefs1Error == LFS1_ERR_NOTDIR)
 		return ENOTDIR;
-	if (littlefs1Error == LFS_ERR_ISDIR)
+	if (littlefs1Error == LFS1_ERR_ISDIR)
 		return EISDIR;
-	if (littlefs1Error == LFS_ERR_NOTEMPTY)
+	if (littlefs1Error == LFS1_ERR_NOTEMPTY)
 		return ENOTEMPTY;
-	if (littlefs1Error == LFS_ERR_BADF)
+	if (littlefs1Error == LFS1_ERR_BADF)
 		return EBADF;
-	if (littlefs1Error == LFS_ERR_INVAL)
+	if (littlefs1Error == LFS1_ERR_INVAL)
 		return EINVAL;
-	if (littlefs1Error == LFS_ERR_NOSPC)
+	if (littlefs1Error == LFS1_ERR_NOSPC)
 		return ENOSPC;
-	if (littlefs1Error == LFS_ERR_NOMEM)
+	if (littlefs1Error == LFS1_ERR_NOMEM)
 		return ENOMEM;
 
 	return -littlefs1Error;

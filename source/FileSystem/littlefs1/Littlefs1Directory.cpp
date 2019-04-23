@@ -40,7 +40,7 @@ int Littlefs1Directory::close()
 	assert(opened_ == true);
 
 	opened_ = {};
-	const auto ret = lfs_dir_close(&fileSystem_.fileSystem_, &directory_);
+	const auto ret = lfs1_dir_close(&fileSystem_.fileSystem_, &directory_);
 	return littlefs1ErrorToErrorCode(ret);
 }
 
@@ -50,7 +50,7 @@ std::pair<int, off_t> Littlefs1Directory::getPosition()
 
 	assert(opened_ == true);
 
-	const auto ret = lfs_dir_tell(&fileSystem_.fileSystem_, &directory_);
+	const auto ret = lfs1_dir_tell(&fileSystem_.fileSystem_, &directory_);
 	if (ret < 0)
 		return {littlefs1ErrorToErrorCode(ret), {}};
 
@@ -68,8 +68,8 @@ int Littlefs1Directory::read(dirent& entry)
 
 	assert(opened_ == true);
 
-	lfs_info info;
-	const auto ret = lfs_dir_read(&fileSystem_.fileSystem_, &directory_, &info);
+	lfs1_info info;
+	const auto ret = lfs1_dir_read(&fileSystem_.fileSystem_, &directory_, &info);
 	if (ret < 0)
 		return littlefs1ErrorToErrorCode(ret);
 
@@ -89,7 +89,7 @@ int Littlefs1Directory::rewind()
 
 	assert(opened_ == true);
 
-	const auto ret = lfs_dir_rewind(&fileSystem_.fileSystem_, &directory_);
+	const auto ret = lfs1_dir_rewind(&fileSystem_.fileSystem_, &directory_);
 	return littlefs1ErrorToErrorCode(ret);
 }
 
@@ -99,7 +99,7 @@ int Littlefs1Directory::seek(const off_t position)
 
 	assert(opened_ == true);
 
-	const auto ret = lfs_dir_seek(&fileSystem_.fileSystem_, &directory_, position);
+	const auto ret = lfs1_dir_seek(&fileSystem_.fileSystem_, &directory_, position);
 	if (ret < 0)
 		return littlefs1ErrorToErrorCode(ret);
 
@@ -120,8 +120,8 @@ int Littlefs1Directory::open(const char* const path)
 	assert(opened_ == false);
 	assert(path != nullptr);
 
-	const auto ret = lfs_dir_open(&fileSystem_.fileSystem_, &directory_, path);
-	if (ret == LFS_ERR_OK)
+	const auto ret = lfs1_dir_open(&fileSystem_.fileSystem_, &directory_, path);
+	if (ret == LFS1_ERR_OK)
 		opened_ = true;
 	return littlefs1ErrorToErrorCode(ret);
 }

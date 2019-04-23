@@ -45,7 +45,7 @@ constexpr size_t alignmentMargin {alignment > __BIGGEST_ALIGNMENT__ ? alignment 
 +---------------------------------------------------------------------------------------------------------------------*/
 
 /**
- * \brief Callback for lfs_traverse() that counts block used by file system.
+ * \brief Callback for lfs1_traverse() that counts block used by file system.
  *
  * Idea from https://github.com/ARMmbed/littlefs1/issues/1#issuecomment-355116984
  *
@@ -54,7 +54,7 @@ constexpr size_t alignmentMargin {alignment > __BIGGEST_ALIGNMENT__ ? alignment 
  * \return always 0
  */
 
-int countUsedBlocks(void* const data, lfs_block_t)
+int countUsedBlocks(void* const data, lfs1_block_t)
 {
 	assert(data != nullptr);
 	auto& usedBlocks = *static_cast<size_t*>(data);
@@ -73,29 +73,29 @@ int countUsedBlocks(void* const data, lfs_block_t)
 int errorCodeToLittlefs1Error(const int errorCode)
 {
 	if (errorCode == 0)
-		return LFS_ERR_OK;
+		return LFS1_ERR_OK;
 	if (errorCode == EIO)
-		return LFS_ERR_IO;
+		return LFS1_ERR_IO;
 	if (errorCode == EILSEQ)
-		return LFS_ERR_CORRUPT;
+		return LFS1_ERR_CORRUPT;
 	if (errorCode == ENOENT)
-		return LFS_ERR_NOENT;
+		return LFS1_ERR_NOENT;
 	if (errorCode == EEXIST)
-		return LFS_ERR_EXIST;
+		return LFS1_ERR_EXIST;
 	if (errorCode == ENOTDIR)
-		return LFS_ERR_NOTDIR;
+		return LFS1_ERR_NOTDIR;
 	if (errorCode == EISDIR)
-		return LFS_ERR_ISDIR;
+		return LFS1_ERR_ISDIR;
 	if (errorCode == ENOTEMPTY)
-		return LFS_ERR_NOTEMPTY;
+		return LFS1_ERR_NOTEMPTY;
 	if (errorCode == EBADF)
-		return LFS_ERR_BADF;
+		return LFS1_ERR_BADF;
 	if (errorCode == EINVAL)
-		return LFS_ERR_INVAL;
+		return LFS1_ERR_INVAL;
 	if (errorCode == ENOSPC)
-		return LFS_ERR_NOSPC;
+		return LFS1_ERR_NOSPC;
 	if (errorCode == ENOMEM)
-		return LFS_ERR_NOMEM;
+		return LFS1_ERR_NOMEM;
 
 	return -errorCode;
 }
@@ -106,11 +106,11 @@ int errorCodeToLittlefs1Error(const int errorCode)
  * \param [in] configuration is a pointer to littlefs configuration
  * \param [in] block is the index of block that will be erased
  *
- * \return LFS_ERR_OK on success, error code otherwise:
+ * \return LFS1_ERR_OK on success, error code otherwise:
  * - converted error codes returned by MemoryTechnologyDevice::erase();
  */
 
-int littlefsMemoryTechnologyDeviceErase(const lfs_config* const configuration, const lfs_block_t block)
+int littlefsMemoryTechnologyDeviceErase(const lfs1_config* const configuration, const lfs1_block_t block)
 {
 	assert(configuration != nullptr);
 	const auto memoryTechnologyDevice = static_cast<devices::MemoryTechnologyDevice*>(configuration->context);
@@ -129,12 +129,12 @@ int littlefsMemoryTechnologyDeviceErase(const lfs_config* const configuration, c
  * \param [in] buffer is the buffer with data that will be programmed
  * \param [in] size is the size of \a buffer, bytes
  *
- * \return LFS_ERR_OK on success, error code otherwise:
+ * \return LFS1_ERR_OK on success, error code otherwise:
  * - converted error codes returned by MemoryTechnologyDevice::program();
  */
 
-int littlefsMemoryTechnologyDeviceProgram(const lfs_config* const configuration, const lfs_block_t block,
-		const lfs_off_t offset, const void* const buffer, const lfs_size_t size)
+int littlefsMemoryTechnologyDeviceProgram(const lfs1_config* const configuration, const lfs1_block_t block,
+		const lfs1_off_t offset, const void* const buffer, const lfs1_size_t size)
 {
 	assert(configuration != nullptr);
 	const auto memoryTechnologyDevice = static_cast<devices::MemoryTechnologyDevice*>(configuration->context);
@@ -153,12 +153,12 @@ int littlefsMemoryTechnologyDeviceProgram(const lfs_config* const configuration,
  * \param [out] buffer is the buffer into which the data will be read
  * \param [in] size is the size of \a buffer, bytes
  *
- * \return LFS_ERR_OK on success, error code otherwise:
+ * \return LFS1_ERR_OK on success, error code otherwise:
  * - converted error codes returned by MemoryTechnologyDevice::read();
  */
 
-int littlefsMemoryTechnologyDeviceRead(const lfs_config* const configuration, const lfs_block_t block,
-		const lfs_off_t offset, void* const buffer, const lfs_size_t size)
+int littlefsMemoryTechnologyDeviceRead(const lfs1_config* const configuration, const lfs1_block_t block,
+		const lfs1_off_t offset, void* const buffer, const lfs1_size_t size)
 {
 	assert(configuration != nullptr);
 	const auto memoryTechnologyDevice = static_cast<devices::MemoryTechnologyDevice*>(configuration->context);
@@ -173,11 +173,11 @@ int littlefsMemoryTechnologyDeviceRead(const lfs_config* const configuration, co
  *
  * \param [in] configuration is a pointer to littlefs configuration
  *
- * \return LFS_ERR_OK on success, error code otherwise:
+ * \return LFS1_ERR_OK on success, error code otherwise:
  * - converted error codes returned by MemoryTechnologyDevice::synchronize();
  */
 
-int littlefsMemoryTechnologyDeviceSynchronize(const lfs_config* const configuration)
+int littlefsMemoryTechnologyDeviceSynchronize(const lfs1_config* const configuration)
 {
 	assert(configuration != nullptr);
 	const auto memoryTechnologyDevice = static_cast<devices::MemoryTechnologyDevice*>(configuration->context);
@@ -252,7 +252,7 @@ int Littlefs1FileSystem::format()
 			reinterpret_cast<void*>((reinterpret_cast<uintptr_t>(readBuffer.get()) + alignment - 1) /
 			alignment * alignment);
 
-	const auto ret = lfs_format(&fileSystem_, &configuration_);
+	const auto ret = lfs1_format(&fileSystem_, &configuration_);
 	return littlefs1ErrorToErrorCode(ret);
 }
 
@@ -263,16 +263,16 @@ int Littlefs1FileSystem::getFileStatus(const char* const path, struct stat& stat
 	assert(mounted_ == true);
 	assert(path != nullptr);
 
-	lfs_info info;
+	lfs1_info info;
 	{
-		const auto ret = lfs_stat(&fileSystem_, path, &info);
-		if (ret != LFS_ERR_OK)
+		const auto ret = lfs1_stat(&fileSystem_, path, &info);
+		if (ret != LFS1_ERR_OK)
 			littlefs1ErrorToErrorCode(ret);
 	}
 
 	status = {};
-	status.st_mode = info.type == LFS_TYPE_DIR ? S_IFDIR : S_IFREG;
-	if (info.type == LFS_TYPE_REG)
+	status.st_mode = info.type == LFS1_TYPE_DIR ? S_IFDIR : S_IFREG;
+	if (info.type == LFS1_TYPE_REG)
 		status.st_size = info.size;
 	return {};
 }
@@ -285,8 +285,8 @@ int Littlefs1FileSystem::getStatus(struct statvfs& status)
 
 	size_t usedBlocks {};
 	{
-		const auto ret = lfs_traverse(&fileSystem_, countUsedBlocks, &usedBlocks);
-		if (ret != LFS_ERR_OK)
+		const auto ret = lfs1_traverse(&fileSystem_, countUsedBlocks, &usedBlocks);
+		if (ret != LFS1_ERR_OK)
 			return littlefs1ErrorToErrorCode(ret);
 	}
 
@@ -296,7 +296,7 @@ int Littlefs1FileSystem::getStatus(struct statvfs& status)
 	status.f_blocks = configuration_.block_count;
 	status.f_bfree = status.f_blocks - usedBlocks;
 	status.f_bavail = status.f_bfree;
-	status.f_namemax = LFS_NAME_MAX;
+	status.f_namemax = LFS1_NAME_MAX;
 	return {};
 }
 
@@ -313,7 +313,7 @@ int Littlefs1FileSystem::makeDirectory(const char* const path, mode_t)
 	assert(mounted_ == true);
 	assert(path != nullptr);
 
-	const auto ret = lfs_mkdir(&fileSystem_, path);
+	const auto ret = lfs1_mkdir(&fileSystem_, path);
 	return littlefs1ErrorToErrorCode(ret);
 }
 
@@ -372,8 +372,8 @@ int Littlefs1FileSystem::mount()
 			reinterpret_cast<void*>((reinterpret_cast<uintptr_t>(readBuffer.get()) + alignment - 1) /
 			alignment * alignment);
 
-	const auto ret = lfs_mount(&fileSystem_, &configuration_);
-	if (ret != LFS_ERR_OK)
+	const auto ret = lfs1_mount(&fileSystem_, &configuration_);
+	if (ret != LFS1_ERR_OK)
 		return littlefs1ErrorToErrorCode(ret);
 
 	mounted_ = true;
@@ -429,7 +429,7 @@ int Littlefs1FileSystem::remove(const char* const path)
 	assert(mounted_ == true);
 	assert(path != nullptr);
 
-	const auto ret = lfs_remove(&fileSystem_, path);
+	const auto ret = lfs1_remove(&fileSystem_, path);
 	return littlefs1ErrorToErrorCode(ret);
 }
 
@@ -441,7 +441,7 @@ int Littlefs1FileSystem::rename(const char* const path, const char* const newPat
 	assert(path != nullptr);
 	assert(newPath != nullptr);
 
-	const auto ret = lfs_rename(&fileSystem_, path, newPath);
+	const auto ret = lfs1_rename(&fileSystem_, path, newPath);
 	return littlefs1ErrorToErrorCode(ret);
 }
 
@@ -457,14 +457,14 @@ int Littlefs1FileSystem::unmount()
 
 	assert(mounted_ == true);
 
-	const auto unmountRet = lfs_unmount(&fileSystem_);
+	const auto unmountRet = lfs1_unmount(&fileSystem_);
 	const auto closeRet = memoryTechnologyDevice_.close();
 	mounted_ = {};
 	lookaheadBuffer_.reset();
 	programBuffer_.reset();
 	readBuffer_.reset();
 
-	return unmountRet != LFS_ERR_OK ? littlefs1ErrorToErrorCode(unmountRet) : closeRet;
+	return unmountRet != LFS1_ERR_OK ? littlefs1ErrorToErrorCode(unmountRet) : closeRet;
 }
 
 }	// namespace distortos
