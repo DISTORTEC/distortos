@@ -8,8 +8,8 @@
 #
 
 add_library(littlefs STATIC
-		${CMAKE_CURRENT_LIST_DIR}/littlefs/lfs_util.c
-		${CMAKE_CURRENT_LIST_DIR}/littlefs/lfs.c)
+		${CMAKE_CURRENT_LIST_DIR}/littlefs1/lfs_util.c
+		${CMAKE_CURRENT_LIST_DIR}/littlefs1/lfs.c)
 if(CMAKE_VERSION VERSION_GREATER_EQUAL 3.8)
 	target_compile_features(littlefs PUBLIC
 			c_std_99)
@@ -24,4 +24,4 @@ target_compile_definitions(littlefs PUBLIC
 		LFS_NO_MALLOC
 		LFS_NO_WARN)
 target_include_directories(littlefs INTERFACE
-		${CMAKE_CURRENT_LIST_DIR}/littlefs)
+		${CMAKE_CURRENT_LIST_DIR}/littlefs1)
