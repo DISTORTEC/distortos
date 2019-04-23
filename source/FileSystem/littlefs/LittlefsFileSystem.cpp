@@ -256,7 +256,7 @@ int LittlefsFileSystem::format()
 	return littlefsErrorToErrorCode(ret);
 }
 
-std::pair<int, struct stat> LittlefsFileSystem::getFileStatus(const char* const path)
+int LittlefsFileSystem::getFileStatus(const char* const path, struct stat& status)
 {
 	const std::lock_guard<LittlefsFileSystem> lockGuard {*this};
 
@@ -267,17 +267,17 @@ std::pair<int, struct stat> LittlefsFileSystem::getFileStatus(const char* const 
 	{
 		const auto ret = lfs_stat(&fileSystem_, path, &info);
 		if (ret != LFS_ERR_OK)
-			return {littlefsErrorToErrorCode(ret), {}};
+			littlefsErrorToErrorCode(ret);
 	}
 
-	struct stat status {};
+	status = {};
 	status.st_mode = info.type == LFS_TYPE_DIR ? S_IFDIR : S_IFREG;
 	if (info.type == LFS_TYPE_REG)
 		status.st_size = info.size;
-	return {{}, status};
+	return {};
 }
 
-std::pair<int, struct statvfs> LittlefsFileSystem::getStatus()
+int LittlefsFileSystem::getStatus(struct statvfs& status)
 {
 	const std::lock_guard<LittlefsFileSystem> lockGuard {*this};
 
@@ -287,17 +287,17 @@ std::pair<int, struct statvfs> LittlefsFileSystem::getStatus()
 	{
 		const auto ret = lfs_traverse(&fileSystem_, countUsedBlocks, &usedBlocks);
 		if (ret != LFS_ERR_OK)
-			return {littlefsErrorToErrorCode(ret), {}};
+			return littlefsErrorToErrorCode(ret);
 	}
 
-	struct statvfs status {};
+	status = {};
 	status.f_bsize = configuration_.block_size;
 	status.f_frsize = status.f_bsize;
 	status.f_blocks = configuration_.block_count;
 	status.f_bfree = status.f_blocks - usedBlocks;
 	status.f_bavail = status.f_bfree;
 	status.f_namemax = LFS_NAME_MAX;
-	return {{}, status};
+	return {};
 }
 
 void LittlefsFileSystem::lock()

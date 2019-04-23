@@ -103,12 +103,13 @@ public:
 	 *
 	 * \pre %File is opened.
 	 *
-	 * \return pair with return code (0 on success, error code otherwise) and status of file in `stat` struct; error
-	 * codes:
+	 * \param [out] status is a reference to `stat` struct into which status of file will be written
+	 *
+	 * \return 0 on success, error code otherwise:
 	 * - error codes returned by getSize();
 	 */
 
-	std::pair<int, struct stat> getStatus() override;
+	int getStatus(struct stat& status) override;
 
 	/**
 	 * \brief Tells whether the file is a terminal.

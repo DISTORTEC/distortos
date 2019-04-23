@@ -2,7 +2,7 @@
  * \file
  * \brief LittlefsDirectory class implementation
  *
- * \author Copyright (C) 2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2018-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -62,7 +62,7 @@ void LittlefsDirectory::lock()
 	fileSystem_.lock();
 }
 
-std::pair<int, struct dirent> LittlefsDirectory::read()
+int LittlefsDirectory::read(dirent& entry)
 {
 	const std::lock_guard<LittlefsDirectory> lockGuard {*this};
 
@@ -71,16 +71,16 @@ std::pair<int, struct dirent> LittlefsDirectory::read()
 	lfs_info info;
 	const auto ret = lfs_dir_read(&fileSystem_.fileSystem_, &directory_, &info);
 	if (ret < 0)
-		return {littlefsErrorToErrorCode(ret), {}};
+		return littlefsErrorToErrorCode(ret);
 
 	if (ret == 0)
-		return {ENOENT, {}};
+		return ENOENT;
 
-	dirent entry {};
+	entry = {};
 	static_assert(sizeof(entry.d_name) >= sizeof(info.name),
 			"Size of entry.d_name must be greater than or equal to size of info.name to safely use strcpy()");
 	strcpy(entry.d_name, info.name);
-	return {{}, entry};
+	return {};
 }
 
 int LittlefsDirectory::rewind()

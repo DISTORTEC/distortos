@@ -113,13 +113,13 @@ public:
 	 * \pre \a path is valid.
 	 *
 	 * \param [in] path is the path to file for which status should be returned, must be valid
+	 * \param [out] status is a reference to `stat` struct into which status of file will be written
 	 *
-	 * \return pair with return code (0 on success, error code otherwise) and status of file in `stat` struct; error
-	 * codes:
+	 * \return 0 on success, error code otherwise:
 	 * - converted error codes returned by lfs_stat();
 	 */
 
-	std::pair<int, struct stat> getFileStatus(const char* path) override;
+	int getFileStatus(const char* path, struct stat& status) override;
 
 	/**
 	 * \brief Returns status of file system.
@@ -133,12 +133,13 @@ public:
 	 *
 	 * \pre %File system is mounted.
 	 *
-	 * \return pair with return code (0 on success, error code otherwise) and status of file system in `statvfs` struct;
-	 * error codes:
+	 * \param [out] status is a reference to `statvfs` struct into which status of file system will be written
+	 *
+	 * \return 0 on success, error code otherwise:
 	 * - converted error codes returned by lfs_traverse();
 	 */
 
-	std::pair<int, struct statvfs> getStatus() override;
+	int getStatus(struct statvfs& status) override;
 
 	/**
 	 * \brief Locks the file system for exclusive use by current thread.

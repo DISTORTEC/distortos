@@ -2,7 +2,7 @@
  * \file
  * \brief LittlefsDirectory class header
  *
- * \author Copyright (C) 2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2018-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -104,12 +104,14 @@ public:
 	 *
 	 * \pre %Directory is opened.
 	 *
-	 * \return pair with return code (0 on success, error code otherwise) and next entry from directory; error codes:
+	 * \param [out] entry is a reference to `dirent` struct into which next entry from directory will be written
+	 *
+	 * \return 0 on success, error code otherwise:
 	 * - ENOENT - current position in the directory is invalid (i.e. end of the directory reached);
 	 * - converted error codes returned by lfs_dir_read();
 	 */
 
-	std::pair<int, struct dirent> read() override;
+	int read(dirent& entry) override;
 
 	/**
 	 * \brief Resets current position in the directory.

@@ -2,7 +2,7 @@
  * \file
  * \brief File class header
  *
- * \author Copyright (C) 2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2018-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -93,10 +93,12 @@ public:
 	 *
 	 * \pre %File is opened.
 	 *
-	 * \return pair with return code (0 on success, error code otherwise) and status of file in `stat` struct
+	 * \param [out] status is a reference to `stat` struct into which status of file will be written
+	 *
+	 * \return 0 on success, error code otherwise
 	 */
 
-	virtual std::pair<int, struct stat> getStatus() = 0;
+	virtual int getStatus(struct stat& status) = 0;
 
 	/**
 	 * \brief Tells whether the file is a terminal.
