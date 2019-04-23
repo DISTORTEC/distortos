@@ -41,7 +41,7 @@ int LittlefsFile::close()
 
 	opened_ = {};
 	const auto ret = lfs_file_close(&fileSystem_.fileSystem_, &file_);
-	return littlefsErrorToErrorCode(ret);
+	return littlefs1ErrorToErrorCode(ret);
 }
 
 std::pair<int, off_t> LittlefsFile::getPosition()
@@ -52,7 +52,7 @@ std::pair<int, off_t> LittlefsFile::getPosition()
 
 	const auto ret = lfs_file_tell(&fileSystem_.fileSystem_, &file_);
 	if (ret < 0)
-		return {littlefsErrorToErrorCode(ret), {}};
+		return {littlefs1ErrorToErrorCode(ret), {}};
 
 	return {{}, ret};
 }
@@ -65,7 +65,7 @@ std::pair<int, off_t> LittlefsFile::getSize()
 
 	const auto ret = lfs_file_size(&fileSystem_.fileSystem_, &file_);
 	if (ret < 0)
-		return {littlefsErrorToErrorCode(ret), {}};
+		return {littlefs1ErrorToErrorCode(ret), {}};
 
 	return {{}, ret};
 }
@@ -105,7 +105,7 @@ std::pair<int, size_t> LittlefsFile::read(void* const buffer, const size_t size)
 
 	const auto ret = lfs_file_read(&fileSystem_.fileSystem_, &file_, buffer, size);
 	if (ret < 0)
-		return {littlefsErrorToErrorCode(ret), {}};
+		return {littlefs1ErrorToErrorCode(ret), {}};
 
 	return {{}, ret};
 }
@@ -117,7 +117,7 @@ int LittlefsFile::rewind()
 	assert(opened_ == true);
 
 	const auto ret = lfs_file_rewind(&fileSystem_.fileSystem_, &file_);
-	return littlefsErrorToErrorCode(ret);
+	return littlefs1ErrorToErrorCode(ret);
 }
 
 std::pair<int, off_t> LittlefsFile::seek(const Whence whence, const off_t offset)
@@ -129,7 +129,7 @@ std::pair<int, off_t> LittlefsFile::seek(const Whence whence, const off_t offset
 	const auto ret = lfs_file_seek(&fileSystem_.fileSystem_, &file_, offset,
 			whence == Whence::beginning ? LFS_SEEK_SET : whence == Whence::current ? LFS_SEEK_CUR : LFS_SEEK_END);
 	if (ret < 0)
-		return {littlefsErrorToErrorCode(ret), {}};
+		return {littlefs1ErrorToErrorCode(ret), {}};
 
 	return {{}, ret};
 
@@ -142,7 +142,7 @@ int LittlefsFile::synchronize()
 	assert(opened_ == true);
 
 	const auto ret = lfs_file_sync(&fileSystem_.fileSystem_, &file_);
-	return littlefsErrorToErrorCode(ret);
+	return littlefs1ErrorToErrorCode(ret);
 }
 
 void LittlefsFile::unlock()
@@ -159,7 +159,7 @@ std::pair<int, size_t> LittlefsFile::write(const void* const buffer, const size_
 
 	const auto ret = lfs_file_write(&fileSystem_.fileSystem_, &file_, buffer, size);
 	if (ret < 0)
-		return {littlefsErrorToErrorCode(ret), {}};
+		return {littlefs1ErrorToErrorCode(ret), {}};
 
 	return {{}, ret};
 }
@@ -212,7 +212,7 @@ int LittlefsFile::open(const char* const path, const int flags)
 
 	const auto ret = lfs_file_opencfg(&fileSystem_.fileSystem_, &file_, path, convertedFlags, &configuration_);
 	if (ret != LFS_ERR_OK)
-		return littlefsErrorToErrorCode(ret);
+		return littlefs1ErrorToErrorCode(ret);
 
 	buffer_ = std::move(buffer);
 	opened_ = true;

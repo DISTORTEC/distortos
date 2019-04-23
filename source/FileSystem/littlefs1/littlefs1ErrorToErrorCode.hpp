@@ -1,6 +1,6 @@
 /**
  * \file
- * \brief littlefsErrorToErrorCode() declaration
+ * \brief littlefs1ErrorToErrorCode() declaration
  *
  * \author Copyright (C) 2018-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
@@ -16,14 +16,14 @@ namespace distortos
 {
 
 /**
- * \brief Converts littlefs error to error code.
+ * \brief Converts littlefs-v1 error to error code.
  *
- * \param [in] littlefsError is an error returned by littlefs functions
+ * \param [in] littlefs1Error is an error returned by littlefs-v1 functions
  *
- * \return \a littlefsError converted to error code
+ * \return \a littlefs1Error converted to error code
  */
 
-int littlefsErrorToErrorCode(int littlefsError);
+int littlefs1ErrorToErrorCode(int littlefs1Error);
 
 }	// namespace distortos
 

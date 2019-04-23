@@ -1,6 +1,6 @@
 /**
  * \file
- * \brief littlefsErrorToErrorCode() implementation
+ * \brief littlefs1ErrorToErrorCode() implementation
  *
  * \author Copyright (C) 2018-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
@@ -22,34 +22,34 @@ namespace distortos
 | global functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-int littlefsErrorToErrorCode(const int littlefsError)
+int littlefs1ErrorToErrorCode(const int littlefs1Error)
 {
-	if (littlefsError == LFS_ERR_OK)
+	if (littlefs1Error == LFS_ERR_OK)
 		return 0;
-	if (littlefsError == LFS_ERR_IO)
+	if (littlefs1Error == LFS_ERR_IO)
 		return EIO;
-	if (littlefsError == LFS_ERR_CORRUPT)
+	if (littlefs1Error == LFS_ERR_CORRUPT)
 		return EILSEQ;
-	if (littlefsError == LFS_ERR_NOENT)
+	if (littlefs1Error == LFS_ERR_NOENT)
 		return ENOENT;
-	if (littlefsError == LFS_ERR_EXIST)
+	if (littlefs1Error == LFS_ERR_EXIST)
 		return EEXIST;
-	if (littlefsError == LFS_ERR_NOTDIR)
+	if (littlefs1Error == LFS_ERR_NOTDIR)
 		return ENOTDIR;
-	if (littlefsError == LFS_ERR_ISDIR)
+	if (littlefs1Error == LFS_ERR_ISDIR)
 		return EISDIR;
-	if (littlefsError == LFS_ERR_NOTEMPTY)
+	if (littlefs1Error == LFS_ERR_NOTEMPTY)
 		return ENOTEMPTY;
-	if (littlefsError == LFS_ERR_BADF)
+	if (littlefs1Error == LFS_ERR_BADF)
 		return EBADF;
-	if (littlefsError == LFS_ERR_INVAL)
+	if (littlefs1Error == LFS_ERR_INVAL)
 		return EINVAL;
-	if (littlefsError == LFS_ERR_NOSPC)
+	if (littlefs1Error == LFS_ERR_NOSPC)
 		return ENOSPC;
-	if (littlefsError == LFS_ERR_NOMEM)
+	if (littlefs1Error == LFS_ERR_NOMEM)
 		return ENOMEM;
 
-	return -littlefsError;
+	return -littlefs1Error;
 }
 
 }	// namespace distortos

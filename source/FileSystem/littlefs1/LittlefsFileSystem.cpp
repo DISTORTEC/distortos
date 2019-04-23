@@ -253,7 +253,7 @@ int LittlefsFileSystem::format()
 			alignment * alignment);
 
 	const auto ret = lfs_format(&fileSystem_, &configuration_);
-	return littlefsErrorToErrorCode(ret);
+	return littlefs1ErrorToErrorCode(ret);
 }
 
 int LittlefsFileSystem::getFileStatus(const char* const path, struct stat& status)
@@ -267,7 +267,7 @@ int LittlefsFileSystem::getFileStatus(const char* const path, struct stat& statu
 	{
 		const auto ret = lfs_stat(&fileSystem_, path, &info);
 		if (ret != LFS_ERR_OK)
-			littlefsErrorToErrorCode(ret);
+			littlefs1ErrorToErrorCode(ret);
 	}
 
 	status = {};
@@ -287,7 +287,7 @@ int LittlefsFileSystem::getStatus(struct statvfs& status)
 	{
 		const auto ret = lfs_traverse(&fileSystem_, countUsedBlocks, &usedBlocks);
 		if (ret != LFS_ERR_OK)
-			return littlefsErrorToErrorCode(ret);
+			return littlefs1ErrorToErrorCode(ret);
 	}
 
 	status = {};
@@ -314,7 +314,7 @@ int LittlefsFileSystem::makeDirectory(const char* const path, mode_t)
 	assert(path != nullptr);
 
 	const auto ret = lfs_mkdir(&fileSystem_, path);
-	return littlefsErrorToErrorCode(ret);
+	return littlefs1ErrorToErrorCode(ret);
 }
 
 int LittlefsFileSystem::mount()
@@ -374,7 +374,7 @@ int LittlefsFileSystem::mount()
 
 	const auto ret = lfs_mount(&fileSystem_, &configuration_);
 	if (ret != LFS_ERR_OK)
-		return littlefsErrorToErrorCode(ret);
+		return littlefs1ErrorToErrorCode(ret);
 
 	mounted_ = true;
 	lookaheadBuffer_ = std::move(lookaheadBuffer);
@@ -430,7 +430,7 @@ int LittlefsFileSystem::remove(const char* const path)
 	assert(path != nullptr);
 
 	const auto ret = lfs_remove(&fileSystem_, path);
-	return littlefsErrorToErrorCode(ret);
+	return littlefs1ErrorToErrorCode(ret);
 }
 
 int LittlefsFileSystem::rename(const char* const path, const char* const newPath)
@@ -442,7 +442,7 @@ int LittlefsFileSystem::rename(const char* const path, const char* const newPath
 	assert(newPath != nullptr);
 
 	const auto ret = lfs_rename(&fileSystem_, path, newPath);
-	return littlefsErrorToErrorCode(ret);
+	return littlefs1ErrorToErrorCode(ret);
 }
 
 void LittlefsFileSystem::unlock()
@@ -464,7 +464,7 @@ int LittlefsFileSystem::unmount()
 	programBuffer_.reset();
 	readBuffer_.reset();
 
-	return unmountRet != LFS_ERR_OK ? littlefsErrorToErrorCode(unmountRet) : closeRet;
+	return unmountRet != LFS_ERR_OK ? littlefs1ErrorToErrorCode(unmountRet) : closeRet;
 }
 
 }	// namespace distortos

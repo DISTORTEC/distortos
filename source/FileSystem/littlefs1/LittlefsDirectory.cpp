@@ -41,7 +41,7 @@ int LittlefsDirectory::close()
 
 	opened_ = {};
 	const auto ret = lfs_dir_close(&fileSystem_.fileSystem_, &directory_);
-	return littlefsErrorToErrorCode(ret);
+	return littlefs1ErrorToErrorCode(ret);
 }
 
 std::pair<int, off_t> LittlefsDirectory::getPosition()
@@ -52,7 +52,7 @@ std::pair<int, off_t> LittlefsDirectory::getPosition()
 
 	const auto ret = lfs_dir_tell(&fileSystem_.fileSystem_, &directory_);
 	if (ret < 0)
-		return {littlefsErrorToErrorCode(ret), {}};
+		return {littlefs1ErrorToErrorCode(ret), {}};
 
 	return {{}, ret};
 }
@@ -71,7 +71,7 @@ int LittlefsDirectory::read(dirent& entry)
 	lfs_info info;
 	const auto ret = lfs_dir_read(&fileSystem_.fileSystem_, &directory_, &info);
 	if (ret < 0)
-		return littlefsErrorToErrorCode(ret);
+		return littlefs1ErrorToErrorCode(ret);
 
 	if (ret == 0)
 		return ENOENT;
@@ -90,7 +90,7 @@ int LittlefsDirectory::rewind()
 	assert(opened_ == true);
 
 	const auto ret = lfs_dir_rewind(&fileSystem_.fileSystem_, &directory_);
-	return littlefsErrorToErrorCode(ret);
+	return littlefs1ErrorToErrorCode(ret);
 }
 
 int LittlefsDirectory::seek(const off_t position)
@@ -101,7 +101,7 @@ int LittlefsDirectory::seek(const off_t position)
 
 	const auto ret = lfs_dir_seek(&fileSystem_.fileSystem_, &directory_, position);
 	if (ret < 0)
-		return littlefsErrorToErrorCode(ret);
+		return littlefs1ErrorToErrorCode(ret);
 
 	return ret;
 }
@@ -123,7 +123,7 @@ int LittlefsDirectory::open(const char* const path)
 	const auto ret = lfs_dir_open(&fileSystem_.fileSystem_, &directory_, path);
 	if (ret == LFS_ERR_OK)
 		opened_ = true;
-	return littlefsErrorToErrorCode(ret);
+	return littlefs1ErrorToErrorCode(ret);
 }
 
 }	// namespace distortos
