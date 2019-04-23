@@ -409,14 +409,14 @@ std::pair<int, std::unique_ptr<File>> LittlefsFileSystem::openFile(const char* c
 
 	assert(mounted_ == true);
 
-	std::unique_ptr<LittlefsFile> file {new (std::nothrow) LittlefsFile{*this}};
+	std::unique_ptr<Littlefs1File> file {new (std::nothrow) Littlefs1File{*this}};
 	if (file == nullptr)
-		return {ENOMEM, std::unique_ptr<LittlefsFile>{}};
+		return {ENOMEM, std::unique_ptr<Littlefs1File>{}};
 
 	{
 		const auto ret = file->open(path, flags);
 		if (ret != 0)
-			return {ret, std::unique_ptr<LittlefsFile>{}};
+			return {ret, std::unique_ptr<Littlefs1File>{}};
 	}
 
 	return {{}, std::move(file)};

@@ -1,6 +1,6 @@
 /**
  * \file
- * \brief LittlefsFile class implementation
+ * \brief Littlefs1File class implementation
  *
  * \author Copyright (C) 2018-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
@@ -28,14 +28,14 @@ namespace distortos
 | public functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-LittlefsFile::~LittlefsFile()
+Littlefs1File::~Littlefs1File()
 {
 	assert(opened_ == false);
 }
 
-int LittlefsFile::close()
+int Littlefs1File::close()
 {
-	const std::lock_guard<LittlefsFile> lockGuard {*this};
+	const std::lock_guard<Littlefs1File> lockGuard {*this};
 
 	assert(opened_ == true);
 
@@ -44,9 +44,9 @@ int LittlefsFile::close()
 	return littlefs1ErrorToErrorCode(ret);
 }
 
-std::pair<int, off_t> LittlefsFile::getPosition()
+std::pair<int, off_t> Littlefs1File::getPosition()
 {
-	const std::lock_guard<LittlefsFile> lockGuard {*this};
+	const std::lock_guard<Littlefs1File> lockGuard {*this};
 
 	assert(opened_ == true);
 
@@ -57,9 +57,9 @@ std::pair<int, off_t> LittlefsFile::getPosition()
 	return {{}, ret};
 }
 
-std::pair<int, off_t> LittlefsFile::getSize()
+std::pair<int, off_t> Littlefs1File::getSize()
 {
-	const std::lock_guard<LittlefsFile> lockGuard {*this};
+	const std::lock_guard<Littlefs1File> lockGuard {*this};
 
 	assert(opened_ == true);
 
@@ -70,7 +70,7 @@ std::pair<int, off_t> LittlefsFile::getSize()
 	return {{}, ret};
 }
 
-int LittlefsFile::getStatus(struct stat& status)
+int Littlefs1File::getStatus(struct stat& status)
 {
 	const auto ret = getSize();
 	if (ret.first != 0)
@@ -82,23 +82,23 @@ int LittlefsFile::getStatus(struct stat& status)
 	return {};
 }
 
-std::pair<int, bool> LittlefsFile::isATerminal()
+std::pair<int, bool> Littlefs1File::isATerminal()
 {
-	const std::lock_guard<LittlefsFile> lockGuard {*this};
+	const std::lock_guard<Littlefs1File> lockGuard {*this};
 
 	assert(opened_ == true);
 
 	return {{}, {}};
 }
 
-void LittlefsFile::lock()
+void Littlefs1File::lock()
 {
 	fileSystem_.lock();
 }
 
-std::pair<int, size_t> LittlefsFile::read(void* const buffer, const size_t size)
+std::pair<int, size_t> Littlefs1File::read(void* const buffer, const size_t size)
 {
-	const std::lock_guard<LittlefsFile> lockGuard {*this};
+	const std::lock_guard<Littlefs1File> lockGuard {*this};
 
 	assert(opened_ == true);
 	assert(buffer != nullptr);
@@ -110,9 +110,9 @@ std::pair<int, size_t> LittlefsFile::read(void* const buffer, const size_t size)
 	return {{}, ret};
 }
 
-int LittlefsFile::rewind()
+int Littlefs1File::rewind()
 {
-	const std::lock_guard<LittlefsFile> lockGuard {*this};
+	const std::lock_guard<Littlefs1File> lockGuard {*this};
 
 	assert(opened_ == true);
 
@@ -120,9 +120,9 @@ int LittlefsFile::rewind()
 	return littlefs1ErrorToErrorCode(ret);
 }
 
-std::pair<int, off_t> LittlefsFile::seek(const Whence whence, const off_t offset)
+std::pair<int, off_t> Littlefs1File::seek(const Whence whence, const off_t offset)
 {
-	const std::lock_guard<LittlefsFile> lockGuard {*this};
+	const std::lock_guard<Littlefs1File> lockGuard {*this};
 
 	assert(opened_ == true);
 
@@ -135,9 +135,9 @@ std::pair<int, off_t> LittlefsFile::seek(const Whence whence, const off_t offset
 
 }
 
-int LittlefsFile::synchronize()
+int Littlefs1File::synchronize()
 {
-	const std::lock_guard<LittlefsFile> lockGuard {*this};
+	const std::lock_guard<Littlefs1File> lockGuard {*this};
 
 	assert(opened_ == true);
 
@@ -145,14 +145,14 @@ int LittlefsFile::synchronize()
 	return littlefs1ErrorToErrorCode(ret);
 }
 
-void LittlefsFile::unlock()
+void Littlefs1File::unlock()
 {
 	fileSystem_.unlock();
 }
 
-std::pair<int, size_t> LittlefsFile::write(const void* const buffer, const size_t size)
+std::pair<int, size_t> Littlefs1File::write(const void* const buffer, const size_t size)
 {
-	const std::lock_guard<LittlefsFile> lockGuard {*this};
+	const std::lock_guard<Littlefs1File> lockGuard {*this};
 
 	assert(opened_ == true);
 	assert(buffer != nullptr);
@@ -168,7 +168,7 @@ std::pair<int, size_t> LittlefsFile::write(const void* const buffer, const size_
 | private functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-int LittlefsFile::open(const char* const path, const int flags)
+int Littlefs1File::open(const char* const path, const int flags)
 {
 	assert(opened_ == false);
 	assert(path != nullptr);

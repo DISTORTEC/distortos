@@ -1,6 +1,6 @@
 /**
  * \file
- * \brief LittlefsFile class header
+ * \brief Littlefs1File class header
  *
  * \author Copyright (C) 2018-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
@@ -26,24 +26,24 @@ namespace distortos
 class LittlefsFileSystem;
 
 /**
- * LittlefsFile class is an [littlefs](https://github.com/ARMmbed/littlefs) file.
+ * Littlefs1File class is a [littlefs-v1](https://github.com/ARMmbed/littlefs) file.
  *
  * \ingroup fileSystem
  */
 
-class LittlefsFile : public File
+class Littlefs1File : public File
 {
 	friend class LittlefsFileSystem;
 
 public:
 
 	/**
-	 * \brief LittlefsFile's destructor
+	 * \brief Littlefs1File's destructor
 	 *
 	 * \pre %File is closed.
 	 */
 
-	~LittlefsFile() override;
+	~Littlefs1File() override;
 
 	/**
 	 * \brief Closes file.
@@ -248,12 +248,12 @@ public:
 private:
 
 	/**
-	 * \brief LittlefsFile's constructor
+	 * \brief Littlefs1File's constructor
 	 *
 	 * \param [in] fileSystem is a reference to owner file system
 	 */
 
-	constexpr explicit LittlefsFile(LittlefsFileSystem& fileSystem) :
+	constexpr explicit Littlefs1File(LittlefsFileSystem& fileSystem) :
 			buffer_{},
 			configuration_{},
 			file_{},
