@@ -11,7 +11,7 @@
 
 #include "distortos/FileSystem/littlefs1/LittlefsFileSystem.hpp"
 
-#include "littlefsErrorToErrorCode.hpp"
+#include "littlefs1ErrorToErrorCode.hpp"
 
 #include "distortos/devices/memory/MemoryTechnologyDevice.hpp"
 
