@@ -110,7 +110,7 @@ int errorCodeToLittlefs1Error(const int errorCode)
  * - converted error codes returned by MemoryTechnologyDevice::erase();
  */
 
-int littlefsMemoryTechnologyDeviceErase(const lfs1_config* const configuration, const lfs1_block_t block)
+int littlefs1MemoryTechnologyDeviceErase(const lfs1_config* const configuration, const lfs1_block_t block)
 {
 	assert(configuration != nullptr);
 	const auto memoryTechnologyDevice = static_cast<devices::MemoryTechnologyDevice*>(configuration->context);
@@ -133,7 +133,7 @@ int littlefsMemoryTechnologyDeviceErase(const lfs1_config* const configuration, 
  * - converted error codes returned by MemoryTechnologyDevice::program();
  */
 
-int littlefsMemoryTechnologyDeviceProgram(const lfs1_config* const configuration, const lfs1_block_t block,
+int littlefs1MemoryTechnologyDeviceProgram(const lfs1_config* const configuration, const lfs1_block_t block,
 		const lfs1_off_t offset, const void* const buffer, const lfs1_size_t size)
 {
 	assert(configuration != nullptr);
@@ -157,7 +157,7 @@ int littlefsMemoryTechnologyDeviceProgram(const lfs1_config* const configuration
  * - converted error codes returned by MemoryTechnologyDevice::read();
  */
 
-int littlefsMemoryTechnologyDeviceRead(const lfs1_config* const configuration, const lfs1_block_t block,
+int littlefs1MemoryTechnologyDeviceRead(const lfs1_config* const configuration, const lfs1_block_t block,
 		const lfs1_off_t offset, void* const buffer, const lfs1_size_t size)
 {
 	assert(configuration != nullptr);
@@ -177,7 +177,7 @@ int littlefsMemoryTechnologyDeviceRead(const lfs1_config* const configuration, c
  * - converted error codes returned by MemoryTechnologyDevice::synchronize();
  */
 
-int littlefsMemoryTechnologyDeviceSynchronize(const lfs1_config* const configuration)
+int littlefs1MemoryTechnologyDeviceSynchronize(const lfs1_config* const configuration)
 {
 	assert(configuration != nullptr);
 	const auto memoryTechnologyDevice = static_cast<devices::MemoryTechnologyDevice*>(configuration->context);
@@ -217,10 +217,10 @@ int Littlefs1FileSystem::format()
 	configuration_ = {};
 	fileSystem_ = {};
 	configuration_.context = &memoryTechnologyDevice_;
-	configuration_.read = littlefsMemoryTechnologyDeviceRead;
-	configuration_.prog = littlefsMemoryTechnologyDeviceProgram;
-	configuration_.erase = littlefsMemoryTechnologyDeviceErase;
-	configuration_.sync = littlefsMemoryTechnologyDeviceSynchronize;
+	configuration_.read = littlefs1MemoryTechnologyDeviceRead;
+	configuration_.prog = littlefs1MemoryTechnologyDeviceProgram;
+	configuration_.erase = littlefs1MemoryTechnologyDeviceErase;
+	configuration_.sync = littlefs1MemoryTechnologyDeviceSynchronize;
 	configuration_.read_size = readBlockSize_ != 0 ? readBlockSize_ : memoryTechnologyDevice_.getReadBlockSize();
 	configuration_.prog_size =
 			programBlockSize_ != 0 ? programBlockSize_ : memoryTechnologyDevice_.getProgramBlockSize();
@@ -337,10 +337,10 @@ int Littlefs1FileSystem::mount()
 	configuration_ = {};
 	fileSystem_ = {};
 	configuration_.context = &memoryTechnologyDevice_;
-	configuration_.read = littlefsMemoryTechnologyDeviceRead;
-	configuration_.prog = littlefsMemoryTechnologyDeviceProgram;
-	configuration_.erase = littlefsMemoryTechnologyDeviceErase;
-	configuration_.sync = littlefsMemoryTechnologyDeviceSynchronize;
+	configuration_.read = littlefs1MemoryTechnologyDeviceRead;
+	configuration_.prog = littlefs1MemoryTechnologyDeviceProgram;
+	configuration_.erase = littlefs1MemoryTechnologyDeviceErase;
+	configuration_.sync = littlefs1MemoryTechnologyDeviceSynchronize;
 	configuration_.read_size = readBlockSize_ != 0 ? readBlockSize_ : memoryTechnologyDevice_.getReadBlockSize();
 	configuration_.prog_size =
 			programBlockSize_ != 0 ? programBlockSize_ : memoryTechnologyDevice_.getProgramBlockSize();
