@@ -284,10 +284,10 @@ private:
 	/// file buffer
 	std::unique_ptr<uint8_t[]> buffer_;
 
-	/// littlefs file configuration
+	/// littlefs-v1 file configuration
 	lfs1_file_config configuration_;
 
-	/// littlefs file
+	/// littlefs-v1 file
 	lfs1_file_t file_;
 
 	/// reference to owner file system

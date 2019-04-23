@@ -187,7 +187,7 @@ private:
 
 	int open(const char* path);
 
-	/// littlefs directory
+	/// littlefs-v1 directory
 	lfs1_dir_t directory_;
 
 	/// reference to owner file system

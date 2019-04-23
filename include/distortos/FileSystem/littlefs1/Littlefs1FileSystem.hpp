@@ -307,7 +307,7 @@ private:
 	/// configuration of littlefs
 	lfs1_config configuration_;
 
-	/// littlefs file system
+	/// littlefs-v1 file system
 	lfs1_t fileSystem_;
 
 	/// mutex for serializing access to the object

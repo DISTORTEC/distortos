@@ -103,7 +103,7 @@ int errorCodeToLittlefs1Error(const int errorCode)
 /**
  * \brief Wrapper for MemoryTechnologyDevice::erase()
  *
- * \param [in] configuration is a pointer to littlefs configuration
+ * \param [in] configuration is a pointer to littlefs-v1 configuration
  * \param [in] block is the index of block that will be erased
  *
  * \return LFS1_ERR_OK on success, error code otherwise:
@@ -123,7 +123,7 @@ int littlefsMemoryTechnologyDeviceErase(const lfs1_config* const configuration, 
 /**
  * \brief Wrapper for MemoryTechnologyDevice::program()
  *
- * \param [in] configuration is a pointer to littlefs configuration
+ * \param [in] configuration is a pointer to littlefs-v1 configuration
  * \param [in] block is the index of block that will be programmed
  * \param [in] offset is the offset of area that will be programmed, bytes
  * \param [in] buffer is the buffer with data that will be programmed
@@ -147,7 +147,7 @@ int littlefsMemoryTechnologyDeviceProgram(const lfs1_config* const configuration
 /**
  * \brief Wrapper for MemoryTechnologyDevice::read()
  *
- * \param [in] configuration is a pointer to littlefs configuration
+ * \param [in] configuration is a pointer to littlefs-v1 configuration
  * \param [in] block is the index of block that will be read
  * \param [in] offset is the offset of area that will be read, bytes
  * \param [out] buffer is the buffer into which the data will be read
@@ -171,7 +171,7 @@ int littlefsMemoryTechnologyDeviceRead(const lfs1_config* const configuration, c
 /**
  * \brief Wrapper for MemoryTechnologyDevice::synchronize()
  *
- * \param [in] configuration is a pointer to littlefs configuration
+ * \param [in] configuration is a pointer to littlefs-v1 configuration
  *
  * \return LFS1_ERR_OK on success, error code otherwise:
  * - converted error codes returned by MemoryTechnologyDevice::synchronize();
