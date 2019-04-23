@@ -70,16 +70,16 @@ std::pair<int, off_t> LittlefsFile::getSize()
 	return {{}, ret};
 }
 
-std::pair<int, struct stat> LittlefsFile::getStatus()
+int LittlefsFile::getStatus(struct stat& status)
 {
 	const auto ret = getSize();
 	if (ret.first != 0)
-		return {ret.first, {}};
+		return ret.first;
 
-	struct stat status {};
+	status = {};
 	status.st_mode = S_IFREG;
 	status.st_size = ret.second;
-	return {{}, status};
+	return {};
 }
 
 std::pair<int, bool> LittlefsFile::isATerminal()
