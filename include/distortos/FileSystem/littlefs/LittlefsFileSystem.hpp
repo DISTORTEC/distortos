@@ -113,13 +113,13 @@ public:
 	 * \pre \a path is valid.
 	 *
 	 * \param [in] path is the path to file for which status should be returned, must be valid
+	 * \param [out] status is a reference to `stat` struct into which status of file will be written
 	 *
-	 * \return pair with return code (0 on success, error code otherwise) and status of file in `stat` struct; error
-	 * codes:
+	 * \return 0 on success, error code otherwise:
 	 * - converted error codes returned by lfs_stat();
 	 */
 
-	std::pair<int, struct stat> getFileStatus(const char* path) override;
+	int getFileStatus(const char* path, struct stat& status) override;
 
 	/**
 	 * \brief Returns status of file system.
