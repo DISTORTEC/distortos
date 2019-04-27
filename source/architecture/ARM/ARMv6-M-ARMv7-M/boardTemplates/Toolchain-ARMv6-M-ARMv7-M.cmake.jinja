@@ -80,7 +80,7 @@ set(CMAKE_CXX_FLAGS
 		"{{ ' '.join(['-fno-rtti', '-fno-exceptions'] + cCxxFlags) }}"
 		CACHE STRING "Flags used by the CXX compiler during all build types.")
 set(CMAKE_EXE_LINKER_FLAGS
-		"{{ ' '.join(['-Wl,--gc-sections'] + architectureFlags) }}"
+		"-Wl,--gc-sections"
 		CACHE STRING "Flags used by the linker during all build types.")
 
 set(CMAKE_C_FLAGS_DEBUG
@@ -135,6 +135,19 @@ if(DISTORTOS_CONFIGURATION_VERSION LESS 2)
 
 endif(DISTORTOS_CONFIGURATION_VERSION LESS 2)
 
+if(DISTORTOS_CONFIGURATION_VERSION LESS 3)
+
+	message(STATUS "Removing architecture flags (\"-m...\") from CMAKE_EXE_LINKER_FLAGS.")
+	message(STATUS "CMake uses CMAKE_{C,CXX}_FLAGS (which include architecture flags) during linking.")
+{% for architectureFlag in architectureFlags %}
+	distortosRemoveFlag(CMAKE_EXE_LINKER_FLAGS "{{ architectureFlag.partition('=')[0] }}")
+{% endfor %}
+{% if 'FPU' in dictionary['CPUs'][0] %}
+	distortosRemoveFlag(CMAKE_EXE_LINKER_FLAGS "-mfloat-abi")
+{% endif %}
+
+endif(DISTORTOS_CONFIGURATION_VERSION LESS 3)
+
 if(distortos_Build_00_Static_destructors)
 
 	distortosSetConfiguration(BOOLEAN
@@ -154,7 +167,6 @@ endif(distortos_Build_00_Static_destructors)
 
 distortosRemoveFlag(CMAKE_C_FLAGS "-mfloat-abi")
 distortosRemoveFlag(CMAKE_CXX_FLAGS "-mfloat-abi")
-distortosRemoveFlag(CMAKE_EXE_LINKER_FLAGS "-mfloat-abi")
 {% if 'FPU' in dictionary['CPUs'][0] %}
 
 distortosSetConfiguration(STRING
@@ -167,7 +179,6 @@ distortosSetConfiguration(STRING
 
 distortosAddFlag(CMAKE_C_FLAGS "-mfloat-abi=${distortos_Build_02_Floating_point_ABI}")
 distortosAddFlag(CMAKE_CXX_FLAGS "-mfloat-abi=${distortos_Build_02_Floating_point_ABI}")
-distortosAddFlag(CMAKE_EXE_LINKER_FLAGS "-mfloat-abi=${distortos_Build_02_Floating_point_ABI}")
 {% endif %}
 
 distortosRemoveFlag(CMAKE_CXX_FLAGS "-f(no-)?use-cxa-atexit")

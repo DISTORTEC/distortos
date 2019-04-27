@@ -46,7 +46,7 @@ set(CMAKE_CXX_FLAGS
 		"-fno-rtti -fno-exceptions -ffunction-sections -fdata-sections -Wall -Wextra -Wshadow -mcpu=cortex-m3 -mthumb"
 		CACHE STRING "Flags used by the CXX compiler during all build types.")
 set(CMAKE_EXE_LINKER_FLAGS
-		"-Wl,--gc-sections -mcpu=cortex-m3 -mthumb"
+		"-Wl,--gc-sections"
 		CACHE STRING "Flags used by the linker during all build types.")
 
 set(CMAKE_C_FLAGS_DEBUG
@@ -101,6 +101,15 @@ if(DISTORTOS_CONFIGURATION_VERSION LESS 2)
 
 endif(DISTORTOS_CONFIGURATION_VERSION LESS 2)
 
+if(DISTORTOS_CONFIGURATION_VERSION LESS 3)
+
+	message(STATUS "Removing architecture flags (\"-m...\") from CMAKE_EXE_LINKER_FLAGS.")
+	message(STATUS "CMake uses CMAKE_{C,CXX}_FLAGS (which include architecture flags) during linking.")
+	distortosRemoveFlag(CMAKE_EXE_LINKER_FLAGS "-mcpu")
+	distortosRemoveFlag(CMAKE_EXE_LINKER_FLAGS "-mthumb")
+
+endif(DISTORTOS_CONFIGURATION_VERSION LESS 3)
+
 if(distortos_Build_00_Static_destructors)
 
 	distortosSetConfiguration(BOOLEAN
@@ -120,7 +129,6 @@ endif(distortos_Build_00_Static_destructors)
 
 distortosRemoveFlag(CMAKE_C_FLAGS "-mfloat-abi")
 distortosRemoveFlag(CMAKE_CXX_FLAGS "-mfloat-abi")
-distortosRemoveFlag(CMAKE_EXE_LINKER_FLAGS "-mfloat-abi")
 
 distortosRemoveFlag(CMAKE_CXX_FLAGS "-f(no-)?use-cxa-atexit")
 if(NOT distortos_Build_00_Static_destructors OR NOT distortos_Build_01_Run_time_registration_of_static_destructors)

@@ -405,7 +405,7 @@ add_custom_target(distortos-doxygen
 # update distortos configuration
 #-----------------------------------------------------------------------------------------------------------------------
 
-set(newConfigurationVersion 2)
+set(newConfigurationVersion 3)
 
 if(DISTORTOS_CONFIGURATION_VERSION LESS newConfigurationVersion)
 	message(STATUS "Updated configuration from version ${DISTORTOS_CONFIGURATION_VERSION} to "

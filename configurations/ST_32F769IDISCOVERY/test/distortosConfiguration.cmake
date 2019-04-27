@@ -68,7 +68,7 @@ set("CMAKE_C_FLAGS_RELWITHDEBINFO"
 		"STRING"
 		"Flags used by the C compiler during RELWITHDEBINFO builds.")
 set("CMAKE_EXE_LINKER_FLAGS"
-		"-Wl,--gc-sections -mcpu=cortex-m7 -mfpu=fpv5-d16 -mthumb -mfloat-abi=hard"
+		"-Wl,--gc-sections"
 		CACHE
 		"STRING"
 		"Flags used by the linker during all build types.")
@@ -183,7 +183,7 @@ set("CMAKE_VERBOSE_MAKEFILE"
 		"BOOL"
 		"If this value is on, makefiles will be generated without the .SILENT directive, and all commands will be echoed to the console during the make.  This is useful for debugging only. With Visual Studio IDE projects all commands are done without /nologo.")
 set("DISTORTOS_CONFIGURATION_VERSION"
-		"2"
+		"3"
 		CACHE
 		"INTERNAL"
 		"")
