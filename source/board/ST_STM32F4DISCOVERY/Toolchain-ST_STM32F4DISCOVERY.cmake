@@ -63,30 +63,30 @@ set(CMAKE_C_FLAGS_RELWITHDEBINFO
 		CACHE STRING "Flags used by the C compiler during RELWITHDEBINFO builds.")
 
 set(CMAKE_CXX_FLAGS_DEBUG
-		"-Og -g -ggdb3" CACHE STRING
-		"Flags used by the CXX compiler during DEBUG builds.")
+		"-Og -g -ggdb3"
+		CACHE STRING "Flags used by the CXX compiler during DEBUG builds.")
 set(CMAKE_CXX_FLAGS_MINSIZEREL
-		"-Os" CACHE STRING
-		"Flags used by the CXX compiler during MINSIZEREL builds.")
+		"-Os"
+		CACHE STRING "Flags used by the CXX compiler during MINSIZEREL builds.")
 set(CMAKE_CXX_FLAGS_RELEASE
-		"-O2" CACHE STRING
-		"Flags used by the CXX compiler during RELEASE builds.")
+		"-O2"
+		CACHE STRING "Flags used by the CXX compiler during RELEASE builds.")
 set(CMAKE_CXX_FLAGS_RELWITHDEBINFO
-		"-O2 -g -ggdb3" CACHE STRING
-		"Flags used by the CXX compiler during RELWITHDEBINFO builds.")
+		"-O2 -g -ggdb3"
+		CACHE STRING "Flags used by the CXX compiler during RELWITHDEBINFO builds.")
 
 set(CMAKE_EXE_LINKER_FLAGS_DEBUG
-		"" CACHE STRING
-		"Flags used by the linker during DEBUG builds.")
+		""
+		CACHE STRING "Flags used by the linker during DEBUG builds.")
 set(CMAKE_EXE_LINKER_FLAGS_MINSIZEREL
-		"" CACHE STRING
-		"Flags used by the linker during MINSIZEREL builds.")
+		""
+		CACHE STRING "Flags used by the linker during MINSIZEREL builds.")
 set(CMAKE_EXE_LINKER_FLAGS_RELEASE
-		"" CACHE STRING
-		"Flags used by the linker during RELEASE builds.")
+		""
+		CACHE STRING "Flags used by the linker during RELEASE builds.")
 set(CMAKE_EXE_LINKER_FLAGS_RELWITHDEBINFO
-		"" CACHE STRING
-		"Flags used by the linker during RELWITHDEBINFO builds.")
+		""
+		CACHE STRING "Flags used by the linker during RELWITHDEBINFO builds.")
 
 if(DISTORTOS_CONFIGURATION_VERSION LESS 2)
 
