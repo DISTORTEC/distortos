@@ -43,7 +43,7 @@ set(CMAKE_C_FLAGS
 		"-ffunction-sections -fdata-sections -Wall -Wextra -Wshadow -mcpu=cortex-m3 -mthumb"
 		CACHE STRING "Flags used by the C compiler during all build types.")
 set(CMAKE_CXX_FLAGS
-		"-fno-rtti -fno-exceptions -ffunction-sections -fdata-sections -Wall -Wextra -Wshadow -mcpu=cortex-m3 -mthumb"
+		"-fno-rtti -fno-exceptions -ffunction-sections -fdata-sections -Wall -Wextra -Wshadow -Wno-psabi -mcpu=cortex-m3 -mthumb"
 		CACHE STRING "Flags used by the CXX compiler during all build types.")
 set(CMAKE_EXE_LINKER_FLAGS
 		"-Wl,--gc-sections"
@@ -109,6 +109,14 @@ if(DISTORTOS_CONFIGURATION_VERSION LESS 3)
 	distortosRemoveFlag(CMAKE_EXE_LINKER_FLAGS "-mthumb")
 
 endif(DISTORTOS_CONFIGURATION_VERSION LESS 3)
+
+if(DISTORTOS_CONFIGURATION_VERSION LESS 4)
+
+	message(STATUS "Adding \"-Wno-psabi\" to CMAKE_CXX_FLAGS.")
+	distortosRemoveFlag(CMAKE_CXX_FLAGS "-Wno-psabi")
+	distortosAddFlag(CMAKE_CXX_FLAGS "-Wno-psabi")
+
+endif(DISTORTOS_CONFIGURATION_VERSION LESS 4)
 
 if(distortos_Build_00_Static_destructors)
 

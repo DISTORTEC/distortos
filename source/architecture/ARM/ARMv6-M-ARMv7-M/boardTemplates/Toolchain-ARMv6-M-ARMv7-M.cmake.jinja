@@ -71,13 +71,15 @@ set(CMAKE_SIZE "${TARGET_TRIPLE}size")
 {% endif -%}
 
 {% set architectureFlags = architectureFlags + ['-mthumb'] -%}
-{% set cCxxFlags = ['-ffunction-sections', '-fdata-sections', '-Wall', '-Wextra', '-Wshadow'] + architectureFlags -%}
+{% set cCxxFlags = ['-ffunction-sections', '-fdata-sections', '-Wall', '-Wextra', '-Wshadow'] -%}
+{% set cFlags = cCxxFlags + architectureFlags -%}
+{% set cxxFlags = ['-fno-rtti', '-fno-exceptions'] + cCxxFlags + ['-Wno-psabi'] + architectureFlags -%}
 
 set(CMAKE_C_FLAGS
-		"{{ ' '.join(cCxxFlags) }}"
+		"{{ ' '.join(cFlags) }}"
 		CACHE STRING "Flags used by the C compiler during all build types.")
 set(CMAKE_CXX_FLAGS
-		"{{ ' '.join(['-fno-rtti', '-fno-exceptions'] + cCxxFlags) }}"
+		"{{ ' '.join(cxxFlags) }}"
 		CACHE STRING "Flags used by the CXX compiler during all build types.")
 set(CMAKE_EXE_LINKER_FLAGS
 		"-Wl,--gc-sections"
@@ -147,6 +149,14 @@ if(DISTORTOS_CONFIGURATION_VERSION LESS 3)
 {% endif %}
 
 endif(DISTORTOS_CONFIGURATION_VERSION LESS 3)
+
+if(DISTORTOS_CONFIGURATION_VERSION LESS 4)
+
+	message(STATUS "Adding \"-Wno-psabi\" to CMAKE_CXX_FLAGS.")
+	distortosRemoveFlag(CMAKE_CXX_FLAGS "-Wno-psabi")
+	distortosAddFlag(CMAKE_CXX_FLAGS "-Wno-psabi")
+
+endif(DISTORTOS_CONFIGURATION_VERSION LESS 4)
 
 if(distortos_Build_00_Static_destructors)
 

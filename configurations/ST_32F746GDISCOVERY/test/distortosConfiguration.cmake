@@ -18,7 +18,7 @@ set("CMAKE_BUILD_TYPE"
 		"STRING"
 		"Choose the type of build, options are: None Debug Release RelWithDebInfo MinSizeRel ...")
 set("CMAKE_CXX_FLAGS"
-		"-fno-rtti -fno-exceptions -ffunction-sections -fdata-sections -Wall -Wextra -Wshadow -mcpu=cortex-m7 -mfpu=fpv5-sp-d16 -mthumb -mfloat-abi=hard -fno-use-cxa-atexit"
+		"-fno-rtti -fno-exceptions -ffunction-sections -fdata-sections -Wall -Wextra -Wshadow -Wno-psabi -mcpu=cortex-m7 -mfpu=fpv5-sp-d16 -mthumb -mfloat-abi=hard -fno-use-cxa-atexit"
 		CACHE
 		"STRING"
 		"Flags used by the CXX compiler during all build types.")
@@ -183,7 +183,7 @@ set("CMAKE_VERBOSE_MAKEFILE"
 		"BOOL"
 		"If this value is on, makefiles will be generated without the .SILENT directive, and all commands will be echoed to the console during the make.  This is useful for debugging only. With Visual Studio IDE projects all commands are done without /nologo.")
 set("DISTORTOS_CONFIGURATION_VERSION"
-		"3"
+		"4"
 		CACHE
 		"INTERNAL"
 		"")
