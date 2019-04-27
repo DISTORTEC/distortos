@@ -174,10 +174,10 @@ if(distortos_Build_00_Static_destructors)
 			NO_OUTPUT)
 
 endif(distortos_Build_00_Static_destructors)
+{% if 'FPU' in dictionary['CPUs'][0] %}
 
 distortosRemoveFlag(CMAKE_C_FLAGS "-mfloat-abi")
 distortosRemoveFlag(CMAKE_CXX_FLAGS "-mfloat-abi")
-{% if 'FPU' in dictionary['CPUs'][0] %}
 
 distortosSetConfiguration(STRING
 		distortos_Build_02_Floating_point_ABI
