@@ -137,9 +137,6 @@ if(distortos_Build_00_Static_destructors)
 
 endif(distortos_Build_00_Static_destructors)
 
-distortosRemoveFlag(CMAKE_C_FLAGS "-mfloat-abi")
-distortosRemoveFlag(CMAKE_CXX_FLAGS "-mfloat-abi")
-
 distortosSetConfiguration(STRING
 		distortos_Build_02_Floating_point_ABI
 		hard
@@ -148,6 +145,8 @@ distortosSetConfiguration(STRING
 		HELP "Select floating-point ABI."
 		NO_OUTPUT)
 
+distortosRemoveFlag(CMAKE_C_FLAGS "-mfloat-abi")
+distortosRemoveFlag(CMAKE_CXX_FLAGS "-mfloat-abi")
 distortosAddFlag(CMAKE_C_FLAGS "-mfloat-abi=${distortos_Build_02_Floating_point_ABI}")
 distortosAddFlag(CMAKE_CXX_FLAGS "-mfloat-abi=${distortos_Build_02_Floating_point_ABI}")
 
