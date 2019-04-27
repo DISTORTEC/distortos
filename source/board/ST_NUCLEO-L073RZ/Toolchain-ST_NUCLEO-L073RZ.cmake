@@ -43,10 +43,10 @@ set(CMAKE_C_FLAGS
 		"-ffunction-sections -fdata-sections -Wall -Wextra -Wshadow -mcpu=cortex-m0plus -march=armv6s-m -mthumb"
 		CACHE STRING "Flags used by the C compiler during all build types.")
 set(CMAKE_CXX_FLAGS
-		"-fno-rtti -fno-exceptions -ffunction-sections -fdata-sections -Wall -Wextra -Wshadow -mcpu=cortex-m0plus -march=armv6s-m -mthumb"
+		"-fno-rtti -fno-exceptions -ffunction-sections -fdata-sections -Wall -Wextra -Wshadow -Wno-psabi -mcpu=cortex-m0plus -march=armv6s-m -mthumb"
 		CACHE STRING "Flags used by the CXX compiler during all build types.")
 set(CMAKE_EXE_LINKER_FLAGS
-		"-Wl,--gc-sections -mcpu=cortex-m0plus -march=armv6s-m -mthumb"
+		"-Wl,--gc-sections"
 		CACHE STRING "Flags used by the linker during all build types.")
 
 set(CMAKE_C_FLAGS_DEBUG
@@ -63,30 +63,30 @@ set(CMAKE_C_FLAGS_RELWITHDEBINFO
 		CACHE STRING "Flags used by the C compiler during RELWITHDEBINFO builds.")
 
 set(CMAKE_CXX_FLAGS_DEBUG
-		"-Og -g -ggdb3" CACHE STRING
-		"Flags used by the CXX compiler during DEBUG builds.")
+		"-Og -g -ggdb3"
+		CACHE STRING "Flags used by the CXX compiler during DEBUG builds.")
 set(CMAKE_CXX_FLAGS_MINSIZEREL
-		"-Os" CACHE STRING
-		"Flags used by the CXX compiler during MINSIZEREL builds.")
+		"-Os"
+		CACHE STRING "Flags used by the CXX compiler during MINSIZEREL builds.")
 set(CMAKE_CXX_FLAGS_RELEASE
-		"-O2" CACHE STRING
-		"Flags used by the CXX compiler during RELEASE builds.")
+		"-O2"
+		CACHE STRING "Flags used by the CXX compiler during RELEASE builds.")
 set(CMAKE_CXX_FLAGS_RELWITHDEBINFO
-		"-O2 -g -ggdb3" CACHE STRING
-		"Flags used by the CXX compiler during RELWITHDEBINFO builds.")
+		"-O2 -g -ggdb3"
+		CACHE STRING "Flags used by the CXX compiler during RELWITHDEBINFO builds.")
 
 set(CMAKE_EXE_LINKER_FLAGS_DEBUG
-		"" CACHE STRING
-		"Flags used by the linker during DEBUG builds.")
+		""
+		CACHE STRING "Flags used by the linker during DEBUG builds.")
 set(CMAKE_EXE_LINKER_FLAGS_MINSIZEREL
-		"" CACHE STRING
-		"Flags used by the linker during MINSIZEREL builds.")
+		""
+		CACHE STRING "Flags used by the linker during MINSIZEREL builds.")
 set(CMAKE_EXE_LINKER_FLAGS_RELEASE
-		"" CACHE STRING
-		"Flags used by the linker during RELEASE builds.")
+		""
+		CACHE STRING "Flags used by the linker during RELEASE builds.")
 set(CMAKE_EXE_LINKER_FLAGS_RELWITHDEBINFO
-		"" CACHE STRING
-		"Flags used by the linker during RELWITHDEBINFO builds.")
+		""
+		CACHE STRING "Flags used by the linker during RELWITHDEBINFO builds.")
 
 if(DISTORTOS_CONFIGURATION_VERSION LESS 2)
 
@@ -100,6 +100,24 @@ if(DISTORTOS_CONFIGURATION_VERSION LESS 2)
 	distortosRemoveFlag(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-DNDEBUG")
 
 endif(DISTORTOS_CONFIGURATION_VERSION LESS 2)
+
+if(DISTORTOS_CONFIGURATION_VERSION LESS 3)
+
+	message(STATUS "Removing architecture flags (\"-m...\") from CMAKE_EXE_LINKER_FLAGS.")
+	message(STATUS "CMake uses CMAKE_{C,CXX}_FLAGS (which include architecture flags) during linking.")
+	distortosRemoveFlag(CMAKE_EXE_LINKER_FLAGS "-mcpu")
+	distortosRemoveFlag(CMAKE_EXE_LINKER_FLAGS "-march")
+	distortosRemoveFlag(CMAKE_EXE_LINKER_FLAGS "-mthumb")
+
+endif(DISTORTOS_CONFIGURATION_VERSION LESS 3)
+
+if(DISTORTOS_CONFIGURATION_VERSION LESS 4)
+
+	message(STATUS "Adding \"-Wno-psabi\" to CMAKE_CXX_FLAGS.")
+	distortosRemoveFlag(CMAKE_CXX_FLAGS "-Wno-psabi")
+	distortosAddFlag(CMAKE_CXX_FLAGS "-Wno-psabi")
+
+endif(DISTORTOS_CONFIGURATION_VERSION LESS 4)
 
 if(distortos_Build_00_Static_destructors)
 
@@ -117,10 +135,6 @@ if(distortos_Build_00_Static_destructors)
 			NO_OUTPUT)
 
 endif(distortos_Build_00_Static_destructors)
-
-distortosRemoveFlag(CMAKE_C_FLAGS "-mfloat-abi")
-distortosRemoveFlag(CMAKE_CXX_FLAGS "-mfloat-abi")
-distortosRemoveFlag(CMAKE_EXE_LINKER_FLAGS "-mfloat-abi")
 
 distortosRemoveFlag(CMAKE_CXX_FLAGS "-f(no-)?use-cxa-atexit")
 if(NOT distortos_Build_00_Static_destructors OR NOT distortos_Build_01_Run_time_registration_of_static_destructors)
