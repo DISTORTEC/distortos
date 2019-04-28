@@ -269,10 +269,12 @@ SECTIONS
 
 	.noinit (NOLOAD) :
 	{
+		. = ALIGN(4);
 		PROVIDE(__noinit_start = .);
 
 		*(.noinit);
 
+		. = ALIGN(4);
 		PROVIDE(__noinit_end = .);
 	} > noinitVmaRegion AT > noinitLmaRegion
 
@@ -301,10 +303,12 @@ SECTIONS
 
 	.SRAM.noinit (NOLOAD) :
 	{
+		. = ALIGN(4);
 		PROVIDE(__SRAM_noinit_start = .);
 
 		*(.SRAM.noinit);
 
+		. = ALIGN(4);
 		PROVIDE(__SRAM_noinit_end = .);
 	} > SRAM AT > SRAM
 

@@ -322,10 +322,12 @@ LONG(ADDR(.{{ key }}.data) + SIZEOF(.{{ key }}.data));
 
 	.noinit (NOLOAD) :
 	{
+		. = ALIGN(4);
 		PROVIDE(__noinit_start = .);
 
 		*(.noinit);
 
+		. = ALIGN(4);
 		PROVIDE(__noinit_end = .);
 	} > noinitVmaRegion AT > noinitLmaRegion
 {% for key, memory in dictionary['memories'].items() if memory is mapping and 'on-chip-RAM' in memory['compatible'] %}
@@ -360,10 +362,12 @@ LONG(ADDR(.{{ key }}.data) + SIZEOF(.{{ key }}.data));
 
 	.{{ key }}.noinit (NOLOAD) :
 	{
+		. = ALIGN(4);
 		PROVIDE(__{{ key }}_noinit_start = .);
 
 		*(.{{ key }}.noinit);
 
+		. = ALIGN(4);
 		PROVIDE(__{{ key }}_noinit_end = .);
 	} > {{ key }} AT > {{ key }}
 {% endif %}
