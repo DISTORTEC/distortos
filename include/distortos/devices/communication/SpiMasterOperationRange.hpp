@@ -1,9 +1,9 @@
 /**
  * \file
  * \brief SpiMasterOperationRange type alias header
- * \deprecated scheduled to be removed after v0.7.0, use SpiMasterTransfersRange
+ * \deprecated scheduled to be removed after v0.7.0, use distortos/devices/communication/SpiMasterTransfersRange.hpp
  *
- * \author Copyright (C) 2016-2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2016-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -26,7 +26,7 @@ namespace devices
 /**
  * SpiMasterOperationRange is an alias for ContiguousRange of SpiMasterOperation elements
  *
- * \deprecated scheduled to be removed after v0.7.0, use SpiMasterTransfersRange
+ * \deprecated scheduled to be removed after v0.7.0, use distortos::devices::SpiMasterTransfersRange
  */
 
 using SpiMasterOperationRange __attribute__ ((deprecated("Use SpiMasterTransfersRange"))) = SpiMasterTransfersRange;

@@ -49,6 +49,7 @@ public:
 	template<typename T>
 	using ValueStorage = internal::MessageQueueBase::ValueStorage<T>;
 
+	/// unique_ptr (with deleter) to storage for value
 	using ValueStorageUniquePointer = internal::MessageQueueBase::ValueStorageUniquePointer;
 
 	/**

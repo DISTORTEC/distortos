@@ -52,13 +52,13 @@ struct CsdV1
 	/// C_SIZE, device size
 	uint16_t cSize;
 
-	/// VDD_R_CURR_MIN, max. read current @VDD min
+	/// VDD_R_CURR_MIN, max. read current VDD min
 	uint8_t vddRCurrMin;
-	/// VDD_R_CURR_MAX, max. read current @VDD max
+	/// VDD_R_CURR_MAX, max. read current VDD max
 	uint8_t vddRCurrMax;
-	/// VDD_W_CURR_MIN, max. write current @VDD min
+	/// VDD_W_CURR_MIN, max. write current VDD min
 	uint8_t vddWCurrMin;
-	/// VDD_W_CURR_MAX, max. write current @VDD max
+	/// VDD_W_CURR_MAX, max. write current VDD max
 	uint8_t vddWCurrMax;
 	/// C_SIZE_MULT, device size multiplier
 	uint8_t cSizeMult;

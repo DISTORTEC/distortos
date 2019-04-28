@@ -1,9 +1,9 @@
 /**
  * \file
  * \brief SpiMasterOperation type alias header
- * \deprecated scheduled to be removed after v0.7.0, use SpiMasterTransfer
+ * \deprecated scheduled to be removed after v0.7.0, use distortos/devices/communication/SpiMasterTransfer.hpp
  *
- * \author Copyright (C) 2016-2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2016-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -26,7 +26,7 @@ namespace devices
 /**
  * SpiMasterOperation is an alias for SpiMasterTransfer.
  *
- * \deprecated scheduled to be removed after v0.7.0, use SpiMasterTransfer
+ * \deprecated scheduled to be removed after v0.7.0, use distortos::devices::SpiMasterTransfer
  */
 
 using SpiMasterOperation __attribute__ ((deprecated("Use SpiMasterTransfer"))) = SpiMasterTransfer;

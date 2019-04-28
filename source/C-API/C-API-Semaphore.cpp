@@ -57,7 +57,7 @@ int distortos_Semaphore_getMaxValue(const struct distortos_Semaphore* const sema
 	return 0;
 }
 
-int distortos_Semaphore_getValue(const distortos_Semaphore* const semaphore, unsigned int* const value)
+int distortos_Semaphore_getValue(const struct distortos_Semaphore* const semaphore, unsigned int* const value)
 {
 	if (semaphore == nullptr || value == nullptr)
 		return EINVAL;
