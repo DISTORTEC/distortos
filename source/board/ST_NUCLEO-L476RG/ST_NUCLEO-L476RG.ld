@@ -258,7 +258,7 @@ SECTIONS
 		PROVIDE(__text_end = .);
 	} > textVmaRegion AT > textLmaRegion
 
-	.ARM.exidx :
+	.ARM.exidx : ALIGN_WITH_INPUT
 	{
 		PROVIDE(__exidx_start = .);
 
