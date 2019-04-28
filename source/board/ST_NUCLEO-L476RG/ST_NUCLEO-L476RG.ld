@@ -258,7 +258,7 @@ SECTIONS
 		PROVIDE(__text_end = .);
 	} > textVmaRegion AT > textLmaRegion
 
-	.ARM.exidx :
+	.ARM.exidx : ALIGN_WITH_INPUT
 	{
 		PROVIDE(__exidx_start = .);
 
@@ -304,10 +304,12 @@ SECTIONS
 
 	.noinit (NOLOAD) :
 	{
+		. = ALIGN(4);
 		PROVIDE(__noinit_start = .);
 
 		*(.noinit);
 
+		. = ALIGN(4);
 		PROVIDE(__noinit_end = .);
 	} > noinitVmaRegion AT > noinitLmaRegion
 
@@ -336,10 +338,12 @@ SECTIONS
 
 	.SRAM1.noinit (NOLOAD) :
 	{
+		. = ALIGN(4);
 		PROVIDE(__SRAM1_noinit_start = .);
 
 		*(.SRAM1.noinit);
 
+		. = ALIGN(4);
 		PROVIDE(__SRAM1_noinit_end = .);
 	} > SRAM1 AT > SRAM1
 
@@ -368,10 +372,12 @@ SECTIONS
 
 	.SRAM2.noinit (NOLOAD) :
 	{
+		. = ALIGN(4);
 		PROVIDE(__SRAM2_noinit_start = .);
 
 		*(.SRAM2.noinit);
 
+		. = ALIGN(4);
 		PROVIDE(__SRAM2_noinit_end = .);
 	} > SRAM2 AT > SRAM2
 
