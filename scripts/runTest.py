@@ -126,7 +126,7 @@ def cmake(configurationFilename, pairs, environment):
 def distclean():
 	"""Removes build output."""
 
-	shutil.rmtree('output/')
+	shutil.rmtree('output/', ignore_errors = True)
 
 def gdb():
 	"""Starts debugging session with GDB.
