@@ -1,9 +1,9 @@
 /**
  * \file
  * \brief ChipSpiMasterLowLevel class header for SPIv2 in STM32
- * \deprecated scheduled to be removed after v0.7.0, use SpiMasterLowLevelInterruptBased
+ * \deprecated scheduled to be removed after v0.7.0, use distortos/chip/SpiMasterLowLevelInterruptBased.hpp
  *
- * \author Copyright (C) 2016-2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2016-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -26,7 +26,7 @@ namespace chip
 /**
  * ChipSpiMasterLowLevel is an alias for SpiMasterLowLevelInterruptBased.
  *
- * \deprecated scheduled to be removed after v0.7.0, use SpiMasterLowLevelInterruptBased
+ * \deprecated scheduled to be removed after v0.7.0, use distortos::chip::SpiMasterLowLevelInterruptBased
  */
 
 class __attribute__ ((deprecated("Use SpiMasterLowLevelInterruptBased"))) ChipSpiMasterLowLevel :
