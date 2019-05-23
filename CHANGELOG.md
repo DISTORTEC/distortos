@@ -4,6 +4,12 @@ Change Log
 All notable changes to this project will be documented in this file. This project adheres to
 [Semantic Versioning](http://semver.org/).
 
+[Unreleased](https://github.com/DISTORTEC/distortos/compare/v0.7.0...HEAD)
+--------------------------------------------------------------------------
+
+- Added support for [NUCLEO-F767ZI](https://www.st.com/en/evaluation-tools/nucleo-f767zi.html) board with *STM32F7*
+chip.
+
 [0.7.0](https://github.com/DISTORTEC/distortos/compare/v0.6.0...v0.7.0) - 2019-05-05
 ------------------------------------------------------------------------------------
 
