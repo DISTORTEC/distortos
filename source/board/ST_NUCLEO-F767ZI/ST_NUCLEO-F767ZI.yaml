@@ -1,0 +1,58 @@
+#
+# file: ST_NUCLEO-F767ZI.yaml
+#
+# author: Copyright (C) 2017-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+#
+# This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
+# distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+#
+
+$extends:
+- 'source/chip/STM32/STM32F7/chipYaml/ST_STM32F767ZI.yaml'
+board:
+  compatible:
+  - ST,NUCLEO-F767ZI
+  model: STMicroelectronics ST,NUCLEO-F767ZI
+chip:
+  VDD: !Reference {label: VDD}
+buttons:
+  compatible:
+  - GPIO-inputs
+  B1:
+    GPIO:
+      port: !Reference {label: GPIOC}
+      pin: 13
+    alternative-names:
+    - User
+leds:
+  compatible:
+  - GPIO-outputs
+  Ld1:
+    GPIO:
+      port: !Reference {label: GPIOB}
+      pin: 0
+    alternative-names:
+    - Green
+  Ld2:
+    GPIO:
+      port: !Reference {label: GPIOB}
+      pin: 7
+    alternative-names:
+    - Blue
+  Ld3:
+    GPIO:
+      port: !Reference {label: GPIOB}
+      pin: 14
+    alternative-names:
+    - Red
+regulators:
+  VDD:
+    compatible:
+    - fixed-regulator
+    always-on: true
+    output-voltage: 3.3
+    $labels:
+    - VDD
+!Reference {label: HSE}:
+  frequency: 8000000
+  bypass: true
