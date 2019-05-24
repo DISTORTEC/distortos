@@ -9,6 +9,10 @@
 # Automatically generated file - do not edit!
 #
 
+distortosSetFixedConfiguration(BOOLEAN
+		DISTORTOS_BOARD_ST_32F072BDISCOVERY
+		ON)
+
 distortosSetFixedConfiguration(STRING
 		DISTORTOS_BOARD
 		"ST,32F072BDISCOVERY")

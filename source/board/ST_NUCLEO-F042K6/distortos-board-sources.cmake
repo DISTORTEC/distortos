@@ -9,6 +9,10 @@
 # Automatically generated file - do not edit!
 #
 
+distortosSetFixedConfiguration(BOOLEAN
+		DISTORTOS_BOARD_ST_NUCLEO_F042K6
+		ON)
+
 distortosSetFixedConfiguration(STRING
 		DISTORTOS_BOARD
 		"ST,NUCLEO-F042K6")

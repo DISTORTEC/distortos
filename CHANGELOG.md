@@ -9,6 +9,8 @@ All notable changes to this project will be documented in this file. This projec
 
 - Added support and test configuration for [NUCLEO-F767ZI](https://www.st.com/en/evaluation-tools/nucleo-f767zi.html)
 board with *STM32F7* chip.
+- Added boolean `#define` in `distortosConfiguration.h` which specifies selected board, e.g.
+`#define DISTORTOS_BOARD_ST_NUCLEO_F767ZI 1` for *NUCLEO-F767ZI* board.
 
 [0.7.0](https://github.com/DISTORTEC/distortos/compare/v0.6.0...v0.7.0) - 2019-05-05
 ------------------------------------------------------------------------------------
