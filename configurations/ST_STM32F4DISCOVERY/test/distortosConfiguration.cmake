@@ -281,7 +281,7 @@ set("distortos_Clocks_08_PLLP"
 		"2"
 		CACHE
 		"STRING"
-		"PLLP value for main PLL.\n\nIt is used to divide VCO output frequency (VCOout). PLL output frequency (PLLout) must not exceed: * for STM32F401 chips:\n- 84 MHz in voltage scale 2 mode,\n- 60 MHz in voltage scale 3 mode, * for STM32F405, STM32F407, STM32F415 and STM32F417 chips:\n- 168 MHz in voltage scale 1 mode,\n- 144 MHz in voltage scale 2 mode, * for STM32F410, STM32F411, STM32F412, STM32F413 and STM32F423 chips:\n- 100 MHz in voltage scale 1 mode,\n- 84 MHz in voltage scale 2 mode,\n- 64 MHz in voltage scale 3 mode, * for other chips:\n- 180 MHz in voltage scale 1 mode with over-drive mode,\n- 168 MHz in voltage scale 1 mode,\n- 144 MHz in voltage scale 2 mode,\n- 120 MHz in voltage scale 3 mode.\n\nPLLout = VCOout / PLLP = PLLin / PLLM * PLLN / PLLP")
+		"PLLP value for main PLL.\n\nIt is used to divide VCO output frequency (VCOout). PLL output frequency (PLLout) must not exceed:\n* for STM32F401 chips:\n- 84 MHz in voltage scale 2 mode,\n- 60 MHz in voltage scale 3 mode,\n* for STM32F405, STM32F407, STM32F415 and STM32F417 chips:\n- 168 MHz in voltage scale 1 mode,\n- 144 MHz in voltage scale 2 mode,\n* for STM32F410, STM32F411, STM32F412, STM32F413 and STM32F423 chips:\n- 100 MHz in voltage scale 1 mode,\n- 84 MHz in voltage scale 2 mode,\n- 64 MHz in voltage scale 3 mode,\n* for other chips:\n- 180 MHz in voltage scale 1 mode with over-drive mode,\n- 168 MHz in voltage scale 1 mode,\n- 144 MHz in voltage scale 2 mode,\n- 120 MHz in voltage scale 3 mode.\n\nPLLout = VCOout / PLLP = PLLin / PLLM * PLLN / PLLP")
 set("distortos_Clocks_09_PLLQ"
 		"7"
 		CACHE
