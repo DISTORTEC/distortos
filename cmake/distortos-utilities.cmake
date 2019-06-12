@@ -333,6 +333,10 @@ function(distortosSetConfiguration type name)
 	if(NOT once)
 		set_property(GLOBAL PROPERTY DISTORTOS_SET_CONFIGURATION_ONCE ON)
 
+		foreach(name ${DISTORTOS_ACTIVE_CONFIGURATION_NAMES})
+			set_property(CACHE "${name}" PROPERTY TYPE INTERNAL)
+		endforeach()
+
 		unset(DISTORTOS_ACTIVE_CONFIGURATION_NAMES CACHE)
 	endif()
 

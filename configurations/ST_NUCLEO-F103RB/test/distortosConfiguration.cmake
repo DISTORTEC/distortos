@@ -182,26 +182,56 @@ set("CMAKE_VERBOSE_MAKEFILE"
 		CACHE
 		"BOOL"
 		"If this value is on, makefiles will be generated without the .SILENT directive, and all commands will be echoed to the console during the make.  This is useful for debugging only. With Visual Studio IDE projects all commands are done without /nologo.")
-set("DISTORTOS_CONFIGURATION_VERSION"
-		"4"
-		CACHE
-		"INTERNAL"
-		"")
-set("distortos_Architecture_00_Interrupt_stack_size"
-		"1024"
-		CACHE
-		"STRING"
-		"Size (in bytes) of \"main\" stack used by core exceptions and interrupts in Handler mode.\n\nAllowed range: [8; 2147483647]")
-set("distortos_Architecture_01_Interrupt_priority_disabled_in_critical_sections"
-		"0"
-		CACHE
-		"STRING"
-		"Interrupt priority disabled in critical sections.\n\nMinimal numerical priority (inclusive) of interrupt handlers that can use system's functions.\n\nDuring critical sections all interrupts with numerical priority above or equal to this value will be disabled. Interrupts with numerical priority below this value are never disabled, but they may not use any system's functions.\n\nNote - \"lower\" logical priority has \"higher\" numeric value! If this option is set to \"x\", then interrupts with priorities between \"x\" and 255 (both inclusive) may use system's functions, while interrupts with priorities between 0 and \"x - 1\" (both inclusive) may not. If 0 is chosen, then all interrupts (except HardFault and NMI) are disabled during critical sections, so they may use system's functions.\n\nAllowed range: [0; 15]")
 set("distortos_Build_00_Static_destructors"
 		"OFF"
 		CACHE
 		"BOOL"
 		"Enable static destructors.\n\nEnable destructors for objects with static storage duration. As embedded applications almost never \"exit\", these destructors are usually never executed, wasting ROM.")
+set("distortos_Scheduler_00_Tick_frequency"
+		"1000"
+		CACHE
+		"STRING"
+		"System's tick frequency, Hz.\n\nAllowed range: [1; 2147483647]")
+set("distortos_Scheduler_01_Round_robin_frequency"
+		"10"
+		CACHE
+		"STRING"
+		"Round-robin frequency, Hz.\n\nAllowed range: [1; 1000]")
+set("distortos_Scheduler_02_Support_for_signals"
+		"ON"
+		CACHE
+		"BOOL"
+		"Enable support for signals.\n\nEnable namespaces, functions and classes related to signals:\n- ThisThread::Signals namespace;\n- Thread::generateSignal();\n- Thread::getPendingSignalSet();\n- Thread::queueSignal();\n- DynamicSignalsReceiver class;\n- SignalInformationQueueWrapper class;\n- SignalsCatcher class;\n- SignalsReceiver class;\n- StaticSignalsReceiver class;\n\nWhen this options is not selected, these namespaces, functions and classes are not available at all.")
+set("distortos_Scheduler_03_Support_for_thread_detachment"
+		"ON"
+		CACHE
+		"BOOL"
+		"Enable support for thread detachment.\n\nEnable functions that \"detach\" dynamic threads:\n- ThisThread::detach();\n- Thread::detach();\n\nWhen this options is not selected, these functions are not available at all.\n\nWhen dynamic and detached thread terminates, it will be added to the global list of threads pending for deferred deletion. The thread will actually be deleted in idle thread, but only when two mutexes are successfully locked:\n- mutex that protects dynamic memory allocator;\n- mutex that synchronizes access to the list of threads pending for deferred deletion;")
+set("distortos_Scheduler_04_Main_thread_stack_size"
+		"4096"
+		CACHE
+		"STRING"
+		"Size (in bytes) of stack used by thread with main() function.\n\nAllowed range: [1; 2147483647]")
+set("distortos_Scheduler_05_Main_thread_priority"
+		"127"
+		CACHE
+		"STRING"
+		"Initial priority of main thread.\n\nAllowed range: [1; 255]")
+set("distortos_Scheduler_06_Reception_of_signals_by_main_thread"
+		"ON"
+		CACHE
+		"BOOL"
+		"Enable reception of signals for main thread.")
+set("distortos_Scheduler_07_Queued_signals_for_main_thread"
+		"8"
+		CACHE
+		"STRING"
+		"Maximal number of queued signals for main thread. 0 disables queuing of signals for main thread.\n\nAllowed range: [0; 2147483647]")
+set("distortos_Scheduler_08_SignalAction_objects_for_main_thread"
+		"8"
+		CACHE
+		"STRING"
+		"Maximal number of different SignalAction objects for main thread. 0 disables catching of signals for main thread.\n\nAllowed range: [0; 32]")
 set("distortos_Checks_00_Context_of_functions"
 		"ON"
 		CACHE
@@ -237,6 +267,76 @@ set("distortos_Checks_06_Asserts"
 		CACHE
 		"BOOL"
 		"Enable asserts.\n\nSome errors, which are clearly program bugs, are never reported using error codes. When this option is enabled, these preconditions, postconditions, invariants and assertions are checked with assert() macro. On the other hand - with this option disabled, they are completely ignored.\n\nIt is highly recommended to keep this option enabled until the application is thoroughly tested.")
+set("distortos_buttons"
+		"ON"
+		CACHE
+		"BOOL"
+		"Enable buttons")
+set("distortos_buttons_B1"
+		"ON"
+		CACHE
+		"BOOL"
+		"Enable B1 (User)")
+set("distortos_leds"
+		"ON"
+		CACHE
+		"BOOL"
+		"Enable leds")
+set("distortos_leds_Ld2"
+		"ON"
+		CACHE
+		"BOOL"
+		"Enable Ld2 (Green)")
+set("distortos_Peripherals_GPIOA"
+		"ON"
+		CACHE
+		"BOOL"
+		"Enable GPIOA.")
+set("distortos_Peripherals_GPIOB"
+		"OFF"
+		CACHE
+		"BOOL"
+		"Enable GPIOB.")
+set("distortos_Peripherals_GPIOC"
+		"ON"
+		CACHE
+		"BOOL"
+		"Enable GPIOC.")
+set("distortos_Peripherals_GPIOD"
+		"OFF"
+		CACHE
+		"BOOL"
+		"Enable GPIOD.")
+set("distortos_Peripherals_SPI1"
+		"OFF"
+		CACHE
+		"BOOL"
+		"Enable SPI1 low-level driver.")
+set("distortos_Peripherals_SPI2"
+		"OFF"
+		CACHE
+		"BOOL"
+		"Enable SPI2 low-level driver.")
+set("distortos_Peripherals_USART1"
+		"OFF"
+		CACHE
+		"BOOL"
+		"Enable USART1 low-level driver.")
+set("distortos_Peripherals_USART2"
+		"OFF"
+		CACHE
+		"BOOL"
+		"Enable USART2 low-level driver.")
+set("distortos_Peripherals_USART3"
+		"OFF"
+		CACHE
+		"BOOL"
+		"Enable USART3 low-level driver.")
+set("distortos_Peripherals_DMA1"
+		"OFF"
+		CACHE
+		"BOOL"
+		"Enable DMA1 low-level driver.")
 set("distortos_Clocks_00_Standard_configuration_of_clocks"
 		"ON"
 		CACHE
@@ -287,6 +387,16 @@ set("distortos_Memory_01_Flash_half_cycle_access"
 		CACHE
 		"BOOL"
 		"Enable flash half cycle access option in FLASH->ACR register. Has to be disabled when HPRE != 1.")
+set("distortos_Architecture_00_Interrupt_stack_size"
+		"1024"
+		CACHE
+		"STRING"
+		"Size (in bytes) of \"main\" stack used by core exceptions and interrupts in Handler mode.\n\nAllowed range: [8; 2147483647]")
+set("distortos_Architecture_01_Interrupt_priority_disabled_in_critical_sections"
+		"0"
+		CACHE
+		"STRING"
+		"Interrupt priority disabled in critical sections.\n\nMinimal numerical priority (inclusive) of interrupt handlers that can use system's functions.\n\nDuring critical sections all interrupts with numerical priority above or equal to this value will be disabled. Interrupts with numerical priority below this value are never disabled, but they may not use any system's functions.\n\nNote - \"lower\" logical priority has \"higher\" numeric value! If this option is set to \"x\", then interrupts with priorities between \"x\" and 255 (both inclusive) may use system's functions, while interrupts with priorities between 0 and \"x - 1\" (both inclusive) may not. If 0 is chosen, then all interrupts (except HardFault and NMI) are disabled during critical sections, so they may use system's functions.\n\nAllowed range: [0; 15]")
 set("distortos_Memory_regions_00_text_vectorTable"
 		"flash"
 		CACHE
@@ -342,121 +452,11 @@ set("distortos_Memory_regions_10_Heap"
 		CACHE
 		"STRING"
 		"Memory region for heap in linker script")
-set("distortos_Peripherals_DMA1"
-		"OFF"
+set("DISTORTOS_CONFIGURATION_VERSION"
+		"4"
 		CACHE
-		"BOOL"
-		"Enable DMA1 low-level driver.")
-set("distortos_Peripherals_GPIOA"
-		"ON"
-		CACHE
-		"BOOL"
-		"Enable GPIOA.")
-set("distortos_Peripherals_GPIOB"
-		"OFF"
-		CACHE
-		"BOOL"
-		"Enable GPIOB.")
-set("distortos_Peripherals_GPIOC"
-		"ON"
-		CACHE
-		"BOOL"
-		"Enable GPIOC.")
-set("distortos_Peripherals_GPIOD"
-		"OFF"
-		CACHE
-		"BOOL"
-		"Enable GPIOD.")
-set("distortos_Peripherals_SPI1"
-		"OFF"
-		CACHE
-		"BOOL"
-		"Enable SPI1 low-level driver.")
-set("distortos_Peripherals_SPI2"
-		"OFF"
-		CACHE
-		"BOOL"
-		"Enable SPI2 low-level driver.")
-set("distortos_Peripherals_USART1"
-		"OFF"
-		CACHE
-		"BOOL"
-		"Enable USART1 low-level driver.")
-set("distortos_Peripherals_USART2"
-		"OFF"
-		CACHE
-		"BOOL"
-		"Enable USART2 low-level driver.")
-set("distortos_Peripherals_USART3"
-		"OFF"
-		CACHE
-		"BOOL"
-		"Enable USART3 low-level driver.")
-set("distortos_Scheduler_00_Tick_frequency"
-		"1000"
-		CACHE
-		"STRING"
-		"System's tick frequency, Hz.\n\nAllowed range: [1; 2147483647]")
-set("distortos_Scheduler_01_Round_robin_frequency"
-		"10"
-		CACHE
-		"STRING"
-		"Round-robin frequency, Hz.\n\nAllowed range: [1; 1000]")
-set("distortos_Scheduler_02_Support_for_signals"
-		"ON"
-		CACHE
-		"BOOL"
-		"Enable support for signals.\n\nEnable namespaces, functions and classes related to signals:\n- ThisThread::Signals namespace;\n- Thread::generateSignal();\n- Thread::getPendingSignalSet();\n- Thread::queueSignal();\n- DynamicSignalsReceiver class;\n- SignalInformationQueueWrapper class;\n- SignalsCatcher class;\n- SignalsReceiver class;\n- StaticSignalsReceiver class;\n\nWhen this options is not selected, these namespaces, functions and classes are not available at all.")
-set("distortos_Scheduler_03_Support_for_thread_detachment"
-		"ON"
-		CACHE
-		"BOOL"
-		"Enable support for thread detachment.\n\nEnable functions that \"detach\" dynamic threads:\n- ThisThread::detach();\n- Thread::detach();\n\nWhen this options is not selected, these functions are not available at all.\n\nWhen dynamic and detached thread terminates, it will be added to the global list of threads pending for deferred deletion. The thread will actually be deleted in idle thread, but only when two mutexes are successfully locked:\n- mutex that protects dynamic memory allocator;\n- mutex that synchronizes access to the list of threads pending for deferred deletion;")
-set("distortos_Scheduler_04_Main_thread_stack_size"
-		"4096"
-		CACHE
-		"STRING"
-		"Size (in bytes) of stack used by thread with main() function.\n\nAllowed range: [1; 2147483647]")
-set("distortos_Scheduler_05_Main_thread_priority"
-		"127"
-		CACHE
-		"STRING"
-		"Initial priority of main thread.\n\nAllowed range: [1; 255]")
-set("distortos_Scheduler_06_Reception_of_signals_by_main_thread"
-		"ON"
-		CACHE
-		"BOOL"
-		"Enable reception of signals for main thread.")
-set("distortos_Scheduler_07_Queued_signals_for_main_thread"
-		"8"
-		CACHE
-		"STRING"
-		"Maximal number of queued signals for main thread. 0 disables queuing of signals for main thread.\n\nAllowed range: [0; 2147483647]")
-set("distortos_Scheduler_08_SignalAction_objects_for_main_thread"
-		"8"
-		CACHE
-		"STRING"
-		"Maximal number of different SignalAction objects for main thread. 0 disables catching of signals for main thread.\n\nAllowed range: [0; 32]")
-set("distortos_buttons"
-		"ON"
-		CACHE
-		"BOOL"
-		"Enable buttons")
-set("distortos_buttons_B1"
-		"ON"
-		CACHE
-		"BOOL"
-		"Enable B1 (User)")
-set("distortos_leds"
-		"ON"
-		CACHE
-		"BOOL"
-		"Enable leds")
-set("distortos_leds_Ld2"
-		"ON"
-		CACHE
-		"BOOL"
-		"Enable Ld2 (Green)")
+		"INTERNAL"
+		"")
 set("DISTORTOS_CONFIGURATION_NAMES"
 		"DISTORTOS_CONFIGURATION_VERSION;distortos_Architecture_00_Interrupt_stack_size;distortos_Architecture_01_Interrupt_priority_disabled_in_critical_sections;distortos_Build_00_Static_destructors;distortos_Checks_00_Context_of_functions;distortos_Checks_01_Stack_pointer_range_during_context_switch;distortos_Checks_02_Stack_pointer_range_during_system_tick;distortos_Checks_03_Stack_guard_contents_during_context_switch;distortos_Checks_04_Stack_guard_contents_during_system_tick;distortos_Checks_05_Stack_guard_size;distortos_Checks_06_Asserts;distortos_Clocks_00_Standard_configuration_of_clocks;distortos_Clocks_08_PLL;distortos_Clocks_09_Clock_source_of_PLL;distortos_Clocks_12_PLLMUL;distortos_Clocks_13_System_clock_source;distortos_Clocks_14_HPRE;distortos_Clocks_15_PPRE1;distortos_Clocks_16_PPRE2;distortos_Memory_00_Flash_prefetch;distortos_Memory_01_Flash_half_cycle_access;distortos_Memory_regions_00_text_vectorTable;distortos_Memory_regions_01_text;distortos_Memory_regions_02_ARM_exidx;distortos_Memory_regions_03_Main_stack;distortos_Memory_regions_04_bss;distortos_Memory_regions_05_data_VMA;distortos_Memory_regions_06_data_LMA;distortos_Memory_regions_07_noinit;distortos_Memory_regions_08_SRAM_data_LMA;distortos_Memory_regions_09_Process_stack;distortos_Memory_regions_10_Heap;distortos_Peripherals_DMA1;distortos_Peripherals_GPIOA;distortos_Peripherals_GPIOB;distortos_Peripherals_GPIOC;distortos_Peripherals_GPIOD;distortos_Peripherals_SPI1;distortos_Peripherals_SPI2;distortos_Peripherals_USART1;distortos_Peripherals_USART2;distortos_Peripherals_USART3;distortos_Scheduler_00_Tick_frequency;distortos_Scheduler_01_Round_robin_frequency;distortos_Scheduler_02_Support_for_signals;distortos_Scheduler_03_Support_for_thread_detachment;distortos_Scheduler_04_Main_thread_stack_size;distortos_Scheduler_05_Main_thread_priority;distortos_Scheduler_06_Reception_of_signals_by_main_thread;distortos_Scheduler_07_Queued_signals_for_main_thread;distortos_Scheduler_08_SignalAction_objects_for_main_thread;distortos_buttons;distortos_buttons_B1;distortos_leds;distortos_leds_Ld2"
 		CACHE
