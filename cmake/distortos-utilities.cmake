@@ -29,13 +29,13 @@ function(distortosBin target binFilename)
 endfunction()
 
 #
-# Checks whether `boolean` value is a proper boolean. If it's not, a fatal error message is displayed with `name` as a
+# Checks whether `boolean` value is a proper boolean. If it's not, an error message is displayed with `name` as a
 # prefix.
 #
 
 function(distortosCheckBoolean name boolean)
 	if(NOT (boolean STREQUAL ON OR boolean STREQUAL OFF))
-		message(FATAL_ERROR "\"${name}\": \"${boolean}\" is not a valid boolean")
+		message(SEND_ERROR "\"${name}\": \"${boolean}\" is not a valid boolean")
 	endif()
 endfunction()
 
