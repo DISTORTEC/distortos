@@ -175,10 +175,7 @@ function(distortosSetBooleanConfiguration name help)
 
 	set("${name}" "${defaultValue}" CACHE ${type} "" ${force})
 	set_property(CACHE "${name}" PROPERTY HELPSTRING "${help}")
-	get_property(currentType CACHE "${name}" PROPERTY TYPE)
-	if(NOT currentType STREQUAL type)
-		set_property(CACHE "${name}" PROPERTY TYPE ${type})
-	endif()
+	set_property(CACHE "${name}" PROPERTY TYPE ${type})
 
 	# verify currently set value
 	set(currentValue ${${name}})
@@ -230,10 +227,7 @@ function(distortosSetIntegerConfiguration name help)
 
 	set("${name}" "${defaultValue}" CACHE ${type} "" ${force})
 	set_property(CACHE "${name}" PROPERTY HELPSTRING "${help}")
-	get_property(currentType CACHE "${name}" PROPERTY TYPE)
-	if(NOT currentType STREQUAL type)
-		set_property(CACHE "${name}" PROPERTY TYPE ${type})
-	endif()
+	set_property(CACHE "${name}" PROPERTY TYPE ${type})
 
 	# verify currently set value
 	set(currentValue "${${name}}")
@@ -279,10 +273,7 @@ function(distortosSetStringConfiguration name help)
 	set("${name}" "${defaultValue}" CACHE ${type} "" ${force})
 	set_property(CACHE "${name}" PROPERTY HELPSTRING "${help}")
 	set_property(CACHE "${name}" PROPERTY STRINGS "${STRING_UNPARSED_ARGUMENTS}")
-	get_property(currentType CACHE "${name}" PROPERTY TYPE)
-	if(NOT currentType STREQUAL type)
-		set_property(CACHE "${name}" PROPERTY TYPE ${type})
-	endif()
+	set_property(CACHE "${name}" PROPERTY TYPE ${type})
 
 	# verify currently set value
 	set(currentValue ${${name}})
