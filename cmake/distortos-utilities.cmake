@@ -329,6 +329,13 @@ endfunction()
 #
 
 function(distortosSetConfiguration type name)
+	get_property(once GLOBAL PROPERTY DISTORTOS_SET_CONFIGURATION_ONCE)
+	if(NOT once)
+		set_property(GLOBAL PROPERTY DISTORTOS_SET_CONFIGURATION_ONCE ON)
+
+		unset(DISTORTOS_ACTIVE_CONFIGURATION_NAMES CACHE)
+	endif()
+
 	list(FIND DISTORTOS_ACTIVE_CONFIGURATION_NAMES "${name}" index)
 	if(NOT index EQUAL -1)
 		message(FATAL_ERROR "Configuration variable \"${name}\" is already set")
@@ -361,8 +368,7 @@ function(distortosSetConfiguration type name)
 		message(FATAL_ERROR "\"${type}\" is not a valid type")
 	endif()
 
-	list(APPEND DISTORTOS_ACTIVE_CONFIGURATION_NAMES "${name}")
-	set(DISTORTOS_ACTIVE_CONFIGURATION_NAMES ${DISTORTOS_ACTIVE_CONFIGURATION_NAMES} PARENT_SCOPE)
+	set(DISTORTOS_ACTIVE_CONFIGURATION_NAMES ${DISTORTOS_ACTIVE_CONFIGURATION_NAMES} ${name} CACHE INTERNAL "")
 	set(${name}_TYPE ${type} PARENT_SCOPE)
 	set(${name}_OUTPUT_NAME ${PREFIX_OUTPUT_NAME} PARENT_SCOPE)
 	set(${name}_OUTPUT_TYPES ${PREFIX_OUTPUT_TYPES} PARENT_SCOPE)
