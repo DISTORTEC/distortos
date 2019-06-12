@@ -288,7 +288,7 @@ function(distortosSetStringConfiguration name help)
 	set(currentValue ${${name}})
 	list(FIND STRING_UNPARSED_ARGUMENTS "${currentValue}" index)
 	if(index EQUAL -1)
-		message(FATAL_ERROR "\"${name}\": \"${currentValue}\" is not an allowed value")
+		message(SEND_ERROR "\"${name}\": \"${currentValue}\" is not an allowed value")
 	endif()
 endfunction()
 
