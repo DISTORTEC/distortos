@@ -40,16 +40,16 @@ function(distortosCheckBoolean name boolean)
 endfunction()
 
 #
-# Checks whether `integer` value is a proper integer that is in [`min`; `max`] range. If it's not, a fatal error message
-# is displayed with `name` as a prefix.
+# Checks whether `integer` value is a proper integer that is in [`min`; `max`] range. If it's not, an error message is
+# displayed with `name` as a prefix.
 #
 
 function(distortosCheckInteger name integer min max)
 	if(NOT integer MATCHES "^-?[0-9]+$")
-		message(FATAL_ERROR "\"${name}\": \"${integer}\" is not a valid integer")
+		message(SEND_ERROR "\"${name}\": \"${integer}\" is not a valid integer")
 	endif()
 	if(integer LESS min OR integer GREATER max)
-		message(FATAL_ERROR "\"${name}\": ${integer} is not in [${min}; ${max}] range")
+		message(SEND_ERROR "\"${name}\": ${integer} is not in [${min}; ${max}] range")
 	endif()
 endfunction()
 
