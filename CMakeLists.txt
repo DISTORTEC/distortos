@@ -479,16 +479,12 @@ file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/include/distortos/distortosConfiguration.
 		" * \\date ${timestamp}\n"
 		" */\n"
 		"\n"
-		"#ifndef INCLUDE_DISTORTOS_DISTORTOSCONFIGURATION_H_\n"
-		"#define INCLUDE_DISTORTOS_DISTORTOSCONFIGURATION_H_\n"
+		"#pragma once\n"
 		"\n")
 list(SORT distortosConfiguration)
 foreach(line ${distortosConfiguration})
 	file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/include/distortos/distortosConfiguration.h "${line}\n")
 endforeach()
-file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/include/distortos/distortosConfiguration.h
-		"\n"
-		"#endif	/* INCLUDE_DISTORTOS_DISTORTOSCONFIGURATION_H_ */")
 
 #-----------------------------------------------------------------------------------------------------------------------
 # distortosConfiguration.cmake
