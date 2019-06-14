@@ -203,8 +203,13 @@ if(distortos_Checks_03_Stack_guard_contents_during_context_switch OR
 			Any value which is not a multiple of stack alignment required by architecture, will be rounded up."
 			OUTPUT_NAME DISTORTOS_STACK_GUARD_SIZE)
 
-endif(distortos_Checks_03_Stack_guard_contents_during_context_switch OR
-		distortos_Checks_04_Stack_guard_contents_during_system_tick)
+else()
+
+	distortosSetFixedConfiguration(INTEGER
+			DISTORTOS_STACK_GUARD_SIZE
+			0)
+
+endif()
 
 distortosSetConfiguration(BOOLEAN
 		distortos_Checks_06_Asserts
@@ -482,10 +487,6 @@ foreach(line ${distortosConfiguration})
 	file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/include/distortos/distortosConfiguration.h "${line}\n")
 endforeach()
 file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/include/distortos/distortosConfiguration.h
-		"\n"
-		"#ifndef DISTORTOS_STACK_GUARD_SIZE\n"
-		"	#define DISTORTOS_STACK_GUARD_SIZE 0\n"
-		"#endif	/* !def DISTORTOS_STACK_GUARD_SIZE */\n"
 		"\n"
 		"#endif	/* INCLUDE_DISTORTOS_DISTORTOSCONFIGURATION_H_ */")
 
