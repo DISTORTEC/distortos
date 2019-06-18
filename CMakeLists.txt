@@ -425,68 +425,6 @@ distortosSetConfiguration(INTEGER
 		NO_OUTPUT)
 
 #-----------------------------------------------------------------------------------------------------------------------
-# distortosConfiguration.h
-#-----------------------------------------------------------------------------------------------------------------------
-
-message(STATUS "Generating ${CMAKE_CURRENT_BINARY_DIR}/include/distortos/distortosConfiguration.h")
-
-unset(distortosConfiguration)
-foreach(name ${DISTORTOS_ACTIVE_CONFIGURATION_NAMES} ${DISTORTOS_FIXED_CONFIGURATION_NAMES})
-
-	set(type ${${name}_TYPE})
-	set(outputName ${${name}_OUTPUT_NAME})
-	set(outputTypes ${${name}_OUTPUT_TYPES})
-	set(value ${${name}})
-
-	foreach(outputType ${outputTypes})
-
-		if(outputType STREQUAL type)
-			set(configurationName ${outputName})
-			set(configurationValue ${value})
-		elseif(outputType STREQUAL BOOLEAN)
-			string(TOUPPER ${outputName}_${value} configurationName)
-			set(configurationValue ON)
-		elseif(outputType STREQUAL INTEGER)
-			distortosCheckInteger("${name}" "${value}" -2147483648 2147483647)
-			set(configurationName ${outputName})
-			set(configurationValue ${value})
-		else()
-			message(FATAL_ERROR "Conversion from \"${type}\" to \"${outputType}\" is not implemented/possible")
-		endif()
-
-		if(outputType STREQUAL BOOLEAN)
-			if(configurationValue)
-				list(APPEND distortosConfiguration "#define ${configurationName} 1")
-			endif()
-		elseif(outputType STREQUAL INTEGER)
-			list(APPEND distortosConfiguration "#define ${configurationName} ${configurationValue}")
-		elseif(outputType STREQUAL STRING)
-			list(APPEND distortosConfiguration "#define ${configurationName} \"${configurationValue}\"")
-		endif()
-
-	endforeach()
-endforeach()
-
-string(TIMESTAMP timestamp "%Y-%m-%d %H:%M:%S")
-file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/include/distortos/distortosConfiguration.h
-		"/**\n"
-		" * \\file\n"
-		" * \\brief distortos configuration\n"
-		" *\n"
-		" * \\warning\n"
-		" * Automatically generated file - do not edit!\n"
-		" *\n"
-		" * \\date ${timestamp}\n"
-		" */\n"
-		"\n"
-		"#pragma once\n"
-		"\n")
-list(SORT distortosConfiguration)
-foreach(line ${distortosConfiguration})
-	file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/include/distortos/distortosConfiguration.h "${line}\n")
-endforeach()
-
-#-----------------------------------------------------------------------------------------------------------------------
 # distortosConfiguration.cmake
 #-----------------------------------------------------------------------------------------------------------------------
 

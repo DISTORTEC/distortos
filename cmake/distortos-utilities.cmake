@@ -16,6 +16,82 @@ function(distortosAddFlag variable flag)
 endfunction()
 
 #
+# Appends one or more `#define`s with distortos configuration named `name` with type `type` to generated header.
+#
+# Each `#define` is written using `outputName` as name and `outputTypes` (a list) as types. `type` is the same as
+# supported by distortosSetConfiguration() and distortosSetFixedConfiguration().
+#
+
+function(distortosAppendToHeader name type value outputName outputTypes)
+	if(CMAKE_PROJECT_NAME STREQUAL "CMAKE_TRY_COMPILE")	# do nothing during compiler identification and checking
+		return()
+	endif()
+
+	unset(lines)
+
+	foreach(outputType ${outputTypes})
+
+		if(outputType STREQUAL type)
+			set(configurationName ${outputName})
+			set(configurationValue ${value})
+		elseif(outputType STREQUAL BOOLEAN)
+			string(TOUPPER ${outputName}_${value} configurationName)
+			set(configurationValue ON)
+		elseif(outputType STREQUAL INTEGER)
+			distortosCheckInteger("${name}" "${value}" -2147483648 2147483647)
+			set(configurationName ${outputName})
+			set(configurationValue ${value})
+		else()
+			message(FATAL_ERROR "Conversion from \"${type}\" to \"${outputType}\" is not implemented/possible")
+		endif()
+
+		if(outputType STREQUAL BOOLEAN)
+			if(configurationValue)
+				set(line "#define ${configurationName} 1\n")
+			endif()
+		elseif(outputType STREQUAL INTEGER)
+			set(line "#define ${configurationName} ${configurationValue}\n")
+		elseif(outputType STREQUAL STRING)
+			set(line "#define ${configurationName} \"${configurationValue}\"\n")
+		endif()
+
+		string(APPEND lines "${line}")
+	endforeach()
+
+	if(NOT DEFINED distortos_BINARY_DIR)
+		set_property(GLOBAL APPEND_STRING PROPERTY DISTORTOS_APPEND_TO_HEADER_DEFERRED_LINES "${lines}")
+		return()
+	endif()
+
+	set(distortosConfiguration "${distortos_BINARY_DIR}/include/distortos/distortosConfiguration.h")
+
+	get_property(once GLOBAL PROPERTY DISTORTOS_APPEND_TO_HEADER_ONCE)
+	if(NOT once)
+		set_property(GLOBAL PROPERTY DISTORTOS_APPEND_TO_HEADER_ONCE ON)
+
+		message(STATUS "Generating ${distortosConfiguration}")
+		string(TIMESTAMP timestamp "%Y-%m-%d %H:%M:%S")
+		get_property(deferredLines GLOBAL PROPERTY DISTORTOS_APPEND_TO_HEADER_DEFERRED_LINES)
+		file(WRITE ${distortosConfiguration}
+				"/**\n"
+				" * \\file\n"
+				" * \\brief distortos configuration\n"
+				" *\n"
+				" * \\warning\n"
+				" * Automatically generated file - do not edit!\n"
+				" *\n"
+				" * \\date ${timestamp}\n"
+				" */\n"
+				"\n"
+				"#pragma once\n"
+				"\n"
+				"${deferredLines}")
+	endif()
+
+	file(APPEND ${distortosConfiguration} "${lines}")
+endfunction()
+
+#
 # Converts output file of `target` to binary file named `binFilename`.
 #
 # All additional arguments are passed to ${CMAKE_OBJCOPY}.
@@ -364,9 +440,8 @@ function(distortosSetConfiguration type name)
 	endif()
 
 	set(DISTORTOS_ACTIVE_CONFIGURATION_NAMES ${DISTORTOS_ACTIVE_CONFIGURATION_NAMES} ${name} CACHE INTERNAL "")
-	set(${name}_TYPE ${type} PARENT_SCOPE)
-	set(${name}_OUTPUT_NAME ${PREFIX_OUTPUT_NAME} PARENT_SCOPE)
-	set(${name}_OUTPUT_TYPES ${PREFIX_OUTPUT_TYPES} PARENT_SCOPE)
+
+	distortosAppendToHeader("${name}" "${type}" "${${name}}" "${PREFIX_OUTPUT_NAME}" "${PREFIX_OUTPUT_TYPES}")
 endfunction()
 
 #
@@ -402,9 +477,8 @@ function(distortosSetFixedConfiguration type name value)
 
 	list(APPEND DISTORTOS_FIXED_CONFIGURATION_NAMES "${name}")
 	set(DISTORTOS_FIXED_CONFIGURATION_NAMES ${DISTORTOS_FIXED_CONFIGURATION_NAMES} PARENT_SCOPE)
-	set("${name}_TYPE" "${type}" PARENT_SCOPE)
-	set("${name}_OUTPUT_NAME" "${name}" PARENT_SCOPE)
-	set("${name}_OUTPUT_TYPES" "${type}" PARENT_SCOPE)
+
+	distortosAppendToHeader("${name}" "${type}" "${value}" "${name}" "${type}")
 endfunction()
 
 #
