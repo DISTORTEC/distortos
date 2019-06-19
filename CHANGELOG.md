@@ -14,6 +14,12 @@ board with *STM32F7* chip.
 - Added boolean `#define` in `distortosConfiguration.h` which specifies selected board, e.g.
 `#define DISTORTOS_BOARD_ST_NUCLEO_F767ZI 1` for *NUCLEO-F767ZI* board.
 
+### Fixed
+
+- Fixed mechanism of generating `distortosConfiguration.h` header and `distortosConfiguration.cmake` saved
+configuration. These files now also include configuration variables added "outside" of *distortos* itself, for example
+in another submodule (beside *distortos*) of an application.
+
 ### Removed
 
 - Removed `cmake/Toolchain-arm-none-eabi.cmake`. Board-specific toolchain files should be used exclusively.
