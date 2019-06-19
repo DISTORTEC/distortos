@@ -424,10 +424,8 @@ distortosSetConfiguration(INTEGER
 		NO_OUTPUT)
 
 #-----------------------------------------------------------------------------------------------------------------------
-# distortosConfiguration.cmake
+# Append selected CMake configuration variables to saved configuration
 #-----------------------------------------------------------------------------------------------------------------------
-
-message(STATUS "Generating ${CMAKE_CURRENT_BINARY_DIR}/distortosConfiguration.cmake")
 
 set(cmakeConfigurationNames
 		CMAKE_BUILD_TYPE
@@ -465,40 +463,8 @@ set(cmakeConfigurationNames
 		CMAKE_TOOLCHAIN_FILE
 		CMAKE_VERBOSE_MAKEFILE)
 
-file(RELATIVE_PATH distortosPath "${CMAKE_BINARY_DIR}" "${CMAKE_CURRENT_SOURCE_DIR}")
-file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/distortosConfiguration.cmake
-		"#\n"
-		"# \\file\n"
-		"# \\brief distortos configuration\n"
-		"#\n"
-		"# \\warning\n"
-		"# Automatically generated file - do not edit!\n"
-		"#\n"
-		"\n"
-		"if(DEFINED ENV{DISTORTOS_PATH})\n"
-		"	set(DISTORTOS_PATH \"\$ENV{DISTORTOS_PATH}\")\n"
-		"else()\n"
-		"	set(DISTORTOS_PATH \"${distortosPath}\")\n"
-		"endif()\n"
-		"\n")
-foreach(cacheVariable ${cmakeConfigurationNames} ${DISTORTOS_ACTIVE_CONFIGURATION_NAMES} DISTORTOS_CONFIGURATION_NAMES)
-	get_property(helpstring CACHE "${cacheVariable}" PROPERTY HELPSTRING)
-	string(REPLACE "\n" "\\n" helpstring "${helpstring}")
-	string(REPLACE "\"" "\\\"" helpstring "${helpstring}")
-	get_property(type CACHE "${cacheVariable}" PROPERTY TYPE)
-	set(value "${${cacheVariable}}")
-
-	if(type STREQUAL FILEPATH)
-		file(RELATIVE_PATH value "${CMAKE_CURRENT_SOURCE_DIR}" "${value}")
-		set(value "\${DISTORTOS_PATH}/${value}")
-	endif()
-
-	file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/distortosConfiguration.cmake
-			"set(\"${cacheVariable}\"\n"
-			"		\"${value}\"\n"
-			"		CACHE\n"
-			"		\"${type}\"\n"
-			"		\"${helpstring}\")\n")
+foreach(cmakeConfigurationName ${cmakeConfigurationNames})
+	distortosAppendToSavedConfiguration("${cmakeConfigurationName}")
 endforeach()
 
 #-----------------------------------------------------------------------------------------------------------------------

@@ -92,6 +92,65 @@ function(distortosAppendToHeader name type value outputName outputTypes)
 endfunction()
 
 #
+# Appends one CMake cache variable with distortos configuration named `name` to saved configuration.
+#
+
+function(distortosAppendToSavedConfiguration name)
+	if(CMAKE_PROJECT_NAME STREQUAL "CMAKE_TRY_COMPILE")	# do nothing during compiler identification and checking
+		return()
+	endif()
+
+	get_property(helpstring CACHE "${name}" PROPERTY HELPSTRING)
+	string(REPLACE "\n" "\\n" helpstring "${helpstring}")
+	string(REPLACE "\"" "\\\"" helpstring "${helpstring}")
+	get_property(type CACHE "${name}" PROPERTY TYPE)
+	set(value "${${name}}")
+
+	# this will work only if distortos_SOURCE_DIR is already defined and fail otherwise, however it is acutally used
+	# only for CMAKE_TOOLCHAIN_FILE
+	if(type STREQUAL FILEPATH)
+		file(RELATIVE_PATH value "${distortos_SOURCE_DIR}" "${value}")
+		set(value "\${DISTORTOS_PATH}/${value}")
+	endif()
+
+	set(entry "set(\"${name}\"\n\t\t\"${value}\"\n\t\tCACHE\n\t\t\"${type}\"\n\t\t\"${helpstring}\")\n")
+
+	if(NOT DEFINED distortos_BINARY_DIR)
+		set_property(GLOBAL APPEND_STRING PROPERTY DISTORTOS_APPEND_TO_SAVED_CONFIGURATION_DEFERRED_ENTRIES "${entry}")
+		return()
+	endif()
+
+	set(distortosConfiguration "${distortos_BINARY_DIR}/distortosConfiguration.cmake")
+	file(RELATIVE_PATH distortosPath "${CMAKE_BINARY_DIR}" "${distortos_SOURCE_DIR}")
+
+	get_property(once GLOBAL PROPERTY DISTORTOS_APPEND_TO_SAVED_CONFIGURATION_ONCE)
+	if(NOT once)
+		set_property(GLOBAL PROPERTY DISTORTOS_APPEND_TO_SAVED_CONFIGURATION_ONCE ON)
+
+		message(STATUS "Generating ${distortosConfiguration}")
+		get_property(deferredEntries GLOBAL PROPERTY DISTORTOS_APPEND_TO_SAVED_CONFIGURATION_DEFERRED_ENTRIES)
+		file(WRITE ${distortosConfiguration}
+				"#\n"
+				"# \\file\n"
+				"# \\brief distortos configuration\n"
+				"#\n"
+				"# \\warning\n"
+				"# Automatically generated file - do not edit!\n"
+				"#\n"
+				"\n"
+				"if(DEFINED ENV{DISTORTOS_PATH})\n"
+				"	set(DISTORTOS_PATH \"\$ENV{DISTORTOS_PATH}\")\n"
+				"else()\n"
+				"	set(DISTORTOS_PATH \"${distortosPath}\")\n"
+				"endif()\n"
+				"\n"
+				"${deferredEntries}")
+	endif()
+
+	file(APPEND ${distortosConfiguration} "${entry}")
+endfunction()
+
+#
 # Converts output file of `target` to binary file named `binFilename`.
 #
 # All additional arguments are passed to ${CMAKE_OBJCOPY}.
@@ -256,6 +315,8 @@ function(distortosSetBooleanConfiguration name help)
 	# verify currently set value
 	set(currentValue ${${name}})
 	distortosCheckBoolean("${name}" ${currentValue})
+
+	distortosAppendToSavedConfiguration("${name}")
 endfunction()
 
 #
@@ -308,6 +369,8 @@ function(distortosSetIntegerConfiguration name help)
 	# verify currently set value
 	set(currentValue "${${name}}")
 	distortosCheckInteger("${name}" "${currentValue}" ${INTEGER_MIN} ${INTEGER_MAX})
+
+	distortosAppendToSavedConfiguration("${name}")
 endfunction()
 
 #
@@ -357,6 +420,8 @@ function(distortosSetStringConfiguration name help)
 	if(index EQUAL -1)
 		message(SEND_ERROR "\"${name}\": \"${currentValue}\" is not an allowed value")
 	endif()
+
+	distortosAppendToSavedConfiguration("${name}")
 endfunction()
 
 #
