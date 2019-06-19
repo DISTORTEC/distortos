@@ -314,7 +314,7 @@ endif(NOT distortos_Checks_06_Asserts)
 
 include(${DISTORTOS_BOARD_PATH}/distortos-board-sources.cmake)
 
-set(DISTORTOS_BOARD_VERSION_MIN 12)
+set(DISTORTOS_BOARD_VERSION_MIN 13)
 if(NOT DEFINED DISTORTOS_BOARD_VERSION OR NOT DISTORTOS_BOARD_VERSION EQUAL DISTORTOS_BOARD_VERSION_MIN)
 	if(NOT DEFINED DISTORTOS_BOARD_VERSION)
 		message(FATAL_ERROR "Generated board has no version information. "
@@ -412,12 +412,11 @@ add_custom_target(distortos-doxygen
 
 set(newConfigurationVersion 4)
 
-if(DISTORTOS_CONFIGURATION_VERSION LESS newConfigurationVersion)
+if(DEFINED DISTORTOS_CONFIGURATION_VERSION AND DISTORTOS_CONFIGURATION_VERSION LESS newConfigurationVersion)
 	message(STATUS "Updated configuration from version ${DISTORTOS_CONFIGURATION_VERSION} to "
 			"${newConfigurationVersion}")
-endif(DISTORTOS_CONFIGURATION_VERSION LESS newConfigurationVersion)
+endif()
 
-unset(DISTORTOS_CONFIGURATION_VERSION)
 distortosSetConfiguration(INTEGER
 		DISTORTOS_CONFIGURATION_VERSION
 		${newConfigurationVersion}

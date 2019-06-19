@@ -22,16 +22,6 @@ set(CMAKE_SYSTEM_NAME distortos)
 set(CMAKE_SYSTEM_VERSION 1)
 set(CMAKE_SYSTEM_PROCESSOR arm)
 
-if(NOT DEFINED DISTORTOS_CONFIGURATION_VERSION)
-	if(NOT DEFINED DISTORTOS_CONFIGURATION_NAMES)
-		# completely new configuration - no need to update anything
-		set(DISTORTOS_CONFIGURATION_VERSION 2147483647)
-	else()
-		# existing configuration, without defined configuration version - full update required
-		set(DISTORTOS_CONFIGURATION_VERSION 0)
-	endif()
-endif()
-
 set(TARGET_TRIPLE "arm-none-eabi-")
 set(CMAKE_C_COMPILER "${TARGET_TRIPLE}gcc")
 set(CMAKE_CXX_COMPILER "${TARGET_TRIPLE}g++")
@@ -88,7 +78,7 @@ set(CMAKE_EXE_LINKER_FLAGS_RELWITHDEBINFO
 		""
 		CACHE STRING "Flags used by the linker during RELWITHDEBINFO builds.")
 
-if(DISTORTOS_CONFIGURATION_VERSION LESS 2)
+if(DEFINED DISTORTOS_CONFIGURATION_VERSION AND DISTORTOS_CONFIGURATION_VERSION LESS 2)
 
 	message(STATUS "Removing \"-DNDEBUG\" from CMAKE_{C,CXX}_FLAGS_{MINSIZEREL,RELEASE,RELWITHDEBINFO}.")
 	message(STATUS "Assertions are now configured with distortos_Checks_..._Asserts option.")
@@ -99,24 +89,24 @@ if(DISTORTOS_CONFIGURATION_VERSION LESS 2)
 	distortosRemoveFlag(CMAKE_CXX_FLAGS_RELEASE "-DNDEBUG")
 	distortosRemoveFlag(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-DNDEBUG")
 
-endif(DISTORTOS_CONFIGURATION_VERSION LESS 2)
+endif()
 
-if(DISTORTOS_CONFIGURATION_VERSION LESS 3)
+if(DEFINED DISTORTOS_CONFIGURATION_VERSION AND DISTORTOS_CONFIGURATION_VERSION LESS 3)
 
 	message(STATUS "Removing architecture flags (\"-m...\") from CMAKE_EXE_LINKER_FLAGS.")
 	message(STATUS "CMake uses CMAKE_{C,CXX}_FLAGS (which include architecture flags) during linking.")
 	distortosRemoveFlag(CMAKE_EXE_LINKER_FLAGS "-mcpu")
 	distortosRemoveFlag(CMAKE_EXE_LINKER_FLAGS "-mthumb")
 
-endif(DISTORTOS_CONFIGURATION_VERSION LESS 3)
+endif()
 
-if(DISTORTOS_CONFIGURATION_VERSION LESS 4)
+if(DEFINED DISTORTOS_CONFIGURATION_VERSION AND DISTORTOS_CONFIGURATION_VERSION LESS 4)
 
 	message(STATUS "Adding \"-Wno-psabi\" to CMAKE_CXX_FLAGS.")
 	distortosRemoveFlag(CMAKE_CXX_FLAGS "-Wno-psabi")
 	distortosAddFlag(CMAKE_CXX_FLAGS "-Wno-psabi")
 
-endif(DISTORTOS_CONFIGURATION_VERSION LESS 4)
+endif()
 
 if(distortos_Build_00_Static_destructors)
 
