@@ -203,8 +203,13 @@ if(distortos_Checks_03_Stack_guard_contents_during_context_switch OR
 			Any value which is not a multiple of stack alignment required by architecture, will be rounded up."
 			OUTPUT_NAME DISTORTOS_STACK_GUARD_SIZE)
 
-endif(distortos_Checks_03_Stack_guard_contents_during_context_switch OR
-		distortos_Checks_04_Stack_guard_contents_during_system_tick)
+else()
+
+	distortosSetFixedConfiguration(INTEGER
+			DISTORTOS_STACK_GUARD_SIZE
+			0)
+
+endif()
 
 distortosSetConfiguration(BOOLEAN
 		distortos_Checks_06_Asserts
@@ -309,7 +314,7 @@ endif(NOT distortos_Checks_06_Asserts)
 
 include(${DISTORTOS_BOARD_PATH}/distortos-board-sources.cmake)
 
-set(DISTORTOS_BOARD_VERSION_MIN 12)
+set(DISTORTOS_BOARD_VERSION_MIN 13)
 if(NOT DEFINED DISTORTOS_BOARD_VERSION OR NOT DISTORTOS_BOARD_VERSION EQUAL DISTORTOS_BOARD_VERSION_MIN)
 	if(NOT DEFINED DISTORTOS_BOARD_VERSION)
 		message(FATAL_ERROR "Generated board has no version information. "
@@ -407,12 +412,11 @@ add_custom_target(distortos-doxygen
 
 set(newConfigurationVersion 4)
 
-if(DISTORTOS_CONFIGURATION_VERSION LESS newConfigurationVersion)
+if(DEFINED DISTORTOS_CONFIGURATION_VERSION AND DISTORTOS_CONFIGURATION_VERSION LESS newConfigurationVersion)
 	message(STATUS "Updated configuration from version ${DISTORTOS_CONFIGURATION_VERSION} to "
 			"${newConfigurationVersion}")
-endif(DISTORTOS_CONFIGURATION_VERSION LESS newConfigurationVersion)
+endif()
 
-unset(DISTORTOS_CONFIGURATION_VERSION)
 distortosSetConfiguration(INTEGER
 		DISTORTOS_CONFIGURATION_VERSION
 		${newConfigurationVersion}
@@ -420,111 +424,8 @@ distortosSetConfiguration(INTEGER
 		NO_OUTPUT)
 
 #-----------------------------------------------------------------------------------------------------------------------
-# cleanup distortos configuration
+# Append selected CMake configuration variables to saved configuration
 #-----------------------------------------------------------------------------------------------------------------------
-
-if(DISTORTOS_CONFIGURATION_NAMES)
-	set(namesToUnset ${DISTORTOS_CONFIGURATION_NAMES})
-	list(REMOVE_ITEM namesToUnset ${DISTORTOS_ACTIVE_CONFIGURATION_NAMES})
-endif()
-
-list(SORT DISTORTOS_ACTIVE_CONFIGURATION_NAMES)
-set(DISTORTOS_CONFIGURATION_NAMES ${DISTORTOS_ACTIVE_CONFIGURATION_NAMES} CACHE INTERNAL "")
-
-get_cmake_property(variables VARIABLES)
-foreach(variable ${variables})
-	get_property(type CACHE ${variable} PROPERTY TYPE)
-	if(type AND NOT type STREQUAL STATIC AND variable MATCHES "^distortos_.+" AND
-			NOT variable IN_LIST DISTORTOS_ACTIVE_CONFIGURATION_NAMES AND
-			NOT variable IN_LIST namesToUnset)
-		# unset unknown cache variables which are prefixed with "distortos_", excluding CMake's "STATIC" variables
-		list(APPEND namesToUnset ${variable})
-	endif()
-endforeach()
-
-if(namesToUnset)
-	message(STATUS "Unsetting removed configuration variables:")
-	foreach(nameToUnset ${namesToUnset})
-		message(STATUS "${nameToUnset} = ${${nameToUnset}}")
-		unset(${nameToUnset} CACHE)
-	endforeach()
-endif()
-
-#-----------------------------------------------------------------------------------------------------------------------
-# distortosConfiguration.h
-#-----------------------------------------------------------------------------------------------------------------------
-
-message(STATUS "Generating ${CMAKE_CURRENT_BINARY_DIR}/include/distortos/distortosConfiguration.h")
-
-unset(distortosConfiguration)
-foreach(name ${DISTORTOS_ACTIVE_CONFIGURATION_NAMES} ${DISTORTOS_FIXED_CONFIGURATION_NAMES})
-
-	set(type ${${name}_TYPE})
-	set(outputName ${${name}_OUTPUT_NAME})
-	set(outputTypes ${${name}_OUTPUT_TYPES})
-	set(value ${${name}})
-
-	foreach(outputType ${outputTypes})
-
-		if(outputType STREQUAL type)
-			set(configurationName ${outputName})
-			set(configurationValue ${value})
-		elseif(outputType STREQUAL BOOLEAN)
-			string(TOUPPER ${outputName}_${value} configurationName)
-			set(configurationValue ON)
-		elseif(outputType STREQUAL INTEGER)
-			distortosCheckInteger("${name}" "${value}" -2147483648 2147483647)
-			set(configurationName ${outputName})
-			set(configurationValue ${value})
-		else()
-			message(FATAL_ERROR "Conversion from \"${type}\" to \"${outputType}\" is not implemented/possible")
-		endif()
-
-		if(outputType STREQUAL BOOLEAN)
-			if(configurationValue)
-				list(APPEND distortosConfiguration "#define ${configurationName} 1")
-			endif()
-		elseif(outputType STREQUAL INTEGER)
-			list(APPEND distortosConfiguration "#define ${configurationName} ${configurationValue}")
-		elseif(outputType STREQUAL STRING)
-			list(APPEND distortosConfiguration "#define ${configurationName} \"${configurationValue}\"")
-		endif()
-
-	endforeach()
-endforeach()
-
-string(TIMESTAMP timestamp "%Y-%m-%d %H:%M:%S")
-file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/include/distortos/distortosConfiguration.h
-		"/**\n"
-		" * \\file\n"
-		" * \\brief distortos configuration\n"
-		" *\n"
-		" * \\warning\n"
-		" * Automatically generated file - do not edit!\n"
-		" *\n"
-		" * \\date ${timestamp}\n"
-		" */\n"
-		"\n"
-		"#ifndef INCLUDE_DISTORTOS_DISTORTOSCONFIGURATION_H_\n"
-		"#define INCLUDE_DISTORTOS_DISTORTOSCONFIGURATION_H_\n"
-		"\n")
-list(SORT distortosConfiguration)
-foreach(line ${distortosConfiguration})
-	file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/include/distortos/distortosConfiguration.h "${line}\n")
-endforeach()
-file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/include/distortos/distortosConfiguration.h
-		"\n"
-		"#ifndef DISTORTOS_STACK_GUARD_SIZE\n"
-		"	#define DISTORTOS_STACK_GUARD_SIZE 0\n"
-		"#endif	/* !def DISTORTOS_STACK_GUARD_SIZE */\n"
-		"\n"
-		"#endif	/* INCLUDE_DISTORTOS_DISTORTOSCONFIGURATION_H_ */")
-
-#-----------------------------------------------------------------------------------------------------------------------
-# distortosConfiguration.cmake
-#-----------------------------------------------------------------------------------------------------------------------
-
-message(STATUS "Generating ${CMAKE_CURRENT_BINARY_DIR}/distortosConfiguration.cmake")
 
 set(cmakeConfigurationNames
 		CMAKE_BUILD_TYPE
@@ -562,40 +463,8 @@ set(cmakeConfigurationNames
 		CMAKE_TOOLCHAIN_FILE
 		CMAKE_VERBOSE_MAKEFILE)
 
-file(RELATIVE_PATH distortosPath "${CMAKE_BINARY_DIR}" "${CMAKE_CURRENT_SOURCE_DIR}")
-file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/distortosConfiguration.cmake
-		"#\n"
-		"# \\file\n"
-		"# \\brief distortos configuration\n"
-		"#\n"
-		"# \\warning\n"
-		"# Automatically generated file - do not edit!\n"
-		"#\n"
-		"\n"
-		"if(DEFINED ENV{DISTORTOS_PATH})\n"
-		"	set(DISTORTOS_PATH \"\$ENV{DISTORTOS_PATH}\")\n"
-		"else()\n"
-		"	set(DISTORTOS_PATH \"${distortosPath}\")\n"
-		"endif()\n"
-		"\n")
-foreach(cacheVariable ${cmakeConfigurationNames} ${DISTORTOS_ACTIVE_CONFIGURATION_NAMES} DISTORTOS_CONFIGURATION_NAMES)
-	get_property(helpstring CACHE "${cacheVariable}" PROPERTY HELPSTRING)
-	string(REPLACE "\n" "\\n" helpstring "${helpstring}")
-	string(REPLACE "\"" "\\\"" helpstring "${helpstring}")
-	get_property(type CACHE "${cacheVariable}" PROPERTY TYPE)
-	set(value "${${cacheVariable}}")
-
-	if(type STREQUAL FILEPATH)
-		file(RELATIVE_PATH value "${CMAKE_CURRENT_SOURCE_DIR}" "${value}")
-		set(value "\${DISTORTOS_PATH}/${value}")
-	endif()
-
-	file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/distortosConfiguration.cmake
-			"set(\"${cacheVariable}\"\n"
-			"		\"${value}\"\n"
-			"		CACHE\n"
-			"		\"${type}\"\n"
-			"		\"${helpstring}\")\n")
+foreach(cmakeConfigurationName ${cmakeConfigurationNames})
+	distortosAppendToSavedConfiguration("${cmakeConfigurationName}")
 endforeach()
 
 #-----------------------------------------------------------------------------------------------------------------------

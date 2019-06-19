@@ -16,6 +16,141 @@ function(distortosAddFlag variable flag)
 endfunction()
 
 #
+# Appends one or more `#define`s with distortos configuration named `name` with type `type` to generated header.
+#
+# Each `#define` is written using `outputName` as name and `outputTypes` (a list) as types. `type` is the same as
+# supported by distortosSetConfiguration() and distortosSetFixedConfiguration().
+#
+
+function(distortosAppendToHeader name type value outputName outputTypes)
+	if(CMAKE_PROJECT_NAME STREQUAL "CMAKE_TRY_COMPILE")	# do nothing during compiler identification and checking
+		return()
+	endif()
+
+	unset(lines)
+
+	foreach(outputType ${outputTypes})
+
+		if(outputType STREQUAL type)
+			set(configurationName ${outputName})
+			set(configurationValue ${value})
+		elseif(outputType STREQUAL BOOLEAN)
+			string(TOUPPER ${outputName}_${value} configurationName)
+			set(configurationValue ON)
+		elseif(outputType STREQUAL INTEGER)
+			distortosCheckInteger("${name}" "${value}" -2147483648 2147483647)
+			set(configurationName ${outputName})
+			set(configurationValue ${value})
+		else()
+			message(FATAL_ERROR "Conversion from \"${type}\" to \"${outputType}\" is not implemented/possible")
+		endif()
+
+		if(outputType STREQUAL BOOLEAN)
+			if(configurationValue)
+				set(line "#define ${configurationName} 1\n")
+			endif()
+		elseif(outputType STREQUAL INTEGER)
+			set(line "#define ${configurationName} ${configurationValue}\n")
+		elseif(outputType STREQUAL STRING)
+			set(line "#define ${configurationName} \"${configurationValue}\"\n")
+		endif()
+
+		string(APPEND lines "${line}")
+	endforeach()
+
+	if(NOT DEFINED distortos_BINARY_DIR)
+		set_property(GLOBAL APPEND_STRING PROPERTY DISTORTOS_APPEND_TO_HEADER_DEFERRED_LINES "${lines}")
+		return()
+	endif()
+
+	set(distortosConfiguration "${distortos_BINARY_DIR}/include/distortos/distortosConfiguration.h")
+
+	get_property(once GLOBAL PROPERTY DISTORTOS_APPEND_TO_HEADER_ONCE)
+	if(NOT once)
+		set_property(GLOBAL PROPERTY DISTORTOS_APPEND_TO_HEADER_ONCE ON)
+
+		message(STATUS "Generating ${distortosConfiguration}")
+		string(TIMESTAMP timestamp "%Y-%m-%d %H:%M:%S")
+		get_property(deferredLines GLOBAL PROPERTY DISTORTOS_APPEND_TO_HEADER_DEFERRED_LINES)
+		file(WRITE ${distortosConfiguration}
+				"/**\n"
+				" * \\file\n"
+				" * \\brief distortos configuration\n"
+				" *\n"
+				" * \\warning\n"
+				" * Automatically generated file - do not edit!\n"
+				" *\n"
+				" * \\date ${timestamp}\n"
+				" */\n"
+				"\n"
+				"#pragma once\n"
+				"\n"
+				"${deferredLines}")
+	endif()
+
+	file(APPEND ${distortosConfiguration} "${lines}")
+endfunction()
+
+#
+# Appends one CMake cache variable with distortos configuration named `name` to saved configuration.
+#
+
+function(distortosAppendToSavedConfiguration name)
+	if(CMAKE_PROJECT_NAME STREQUAL "CMAKE_TRY_COMPILE")	# do nothing during compiler identification and checking
+		return()
+	endif()
+
+	get_property(helpstring CACHE "${name}" PROPERTY HELPSTRING)
+	string(REPLACE "\n" "\\n" helpstring "${helpstring}")
+	string(REPLACE "\"" "\\\"" helpstring "${helpstring}")
+	get_property(type CACHE "${name}" PROPERTY TYPE)
+	set(value "${${name}}")
+
+	# this will work only if distortos_SOURCE_DIR is already defined and fail otherwise, however it is acutally used
+	# only for CMAKE_TOOLCHAIN_FILE
+	if(type STREQUAL FILEPATH)
+		file(RELATIVE_PATH value "${distortos_SOURCE_DIR}" "${value}")
+		set(value "\${DISTORTOS_PATH}/${value}")
+	endif()
+
+	set(entry "set(\"${name}\"\n\t\t\"${value}\"\n\t\tCACHE\n\t\t\"${type}\"\n\t\t\"${helpstring}\")\n")
+
+	if(NOT DEFINED distortos_BINARY_DIR)
+		set_property(GLOBAL APPEND_STRING PROPERTY DISTORTOS_APPEND_TO_SAVED_CONFIGURATION_DEFERRED_ENTRIES "${entry}")
+		return()
+	endif()
+
+	set(distortosConfiguration "${distortos_BINARY_DIR}/distortosConfiguration.cmake")
+	file(RELATIVE_PATH distortosPath "${CMAKE_BINARY_DIR}" "${distortos_SOURCE_DIR}")
+
+	get_property(once GLOBAL PROPERTY DISTORTOS_APPEND_TO_SAVED_CONFIGURATION_ONCE)
+	if(NOT once)
+		set_property(GLOBAL PROPERTY DISTORTOS_APPEND_TO_SAVED_CONFIGURATION_ONCE ON)
+
+		message(STATUS "Generating ${distortosConfiguration}")
+		get_property(deferredEntries GLOBAL PROPERTY DISTORTOS_APPEND_TO_SAVED_CONFIGURATION_DEFERRED_ENTRIES)
+		file(WRITE ${distortosConfiguration}
+				"#\n"
+				"# \\file\n"
+				"# \\brief distortos configuration\n"
+				"#\n"
+				"# \\warning\n"
+				"# Automatically generated file - do not edit!\n"
+				"#\n"
+				"\n"
+				"if(DEFINED ENV{DISTORTOS_PATH})\n"
+				"	set(DISTORTOS_PATH \"\$ENV{DISTORTOS_PATH}\")\n"
+				"else()\n"
+				"	set(DISTORTOS_PATH \"${distortosPath}\")\n"
+				"endif()\n"
+				"\n"
+				"${deferredEntries}")
+	endif()
+
+	file(APPEND ${distortosConfiguration} "${entry}")
+endfunction()
+
+#
 # Converts output file of `target` to binary file named `binFilename`.
 #
 # All additional arguments are passed to ${CMAKE_OBJCOPY}.
@@ -29,27 +164,27 @@ function(distortosBin target binFilename)
 endfunction()
 
 #
-# Checks whether `boolean` value is a proper boolean. If it's not, a fatal error message is displayed with `name` as a
+# Checks whether `boolean` value is a proper boolean. If it's not, an error message is displayed with `name` as a
 # prefix.
 #
 
 function(distortosCheckBoolean name boolean)
 	if(NOT (boolean STREQUAL ON OR boolean STREQUAL OFF))
-		message(FATAL_ERROR "\"${name}\": \"${boolean}\" is not a valid boolean")
+		message(SEND_ERROR "\"${name}\": \"${boolean}\" is not a valid boolean")
 	endif()
 endfunction()
 
 #
-# Checks whether `integer` value is a proper integer that is in [`min`; `max`] range. If it's not, a fatal error message
-# is displayed with `name` as a prefix.
+# Checks whether `integer` value is a proper integer that is in [`min`; `max`] range. If it's not, an error message is
+# displayed with `name` as a prefix.
 #
 
 function(distortosCheckInteger name integer min max)
 	if(NOT integer MATCHES "^-?[0-9]+$")
-		message(FATAL_ERROR "\"${name}\": \"${integer}\" is not a valid integer")
+		message(SEND_ERROR "\"${name}\": \"${integer}\" is not a valid integer")
 	endif()
 	if(integer LESS min OR integer GREATER max)
-		message(FATAL_ERROR "\"${name}\": ${integer} is not in [${min}; ${max}] range")
+		message(SEND_ERROR "\"${name}\": ${integer} is not in [${min}; ${max}] range")
 	endif()
 endfunction()
 
@@ -175,14 +310,13 @@ function(distortosSetBooleanConfiguration name help)
 
 	set("${name}" "${defaultValue}" CACHE ${type} "" ${force})
 	set_property(CACHE "${name}" PROPERTY HELPSTRING "${help}")
-	get_property(currentType CACHE "${name}" PROPERTY TYPE)
-	if(NOT currentType STREQUAL type)
-		set_property(CACHE "${name}" PROPERTY TYPE ${type})
-	endif()
+	set_property(CACHE "${name}" PROPERTY TYPE ${type})
 
 	# verify currently set value
 	set(currentValue ${${name}})
 	distortosCheckBoolean("${name}" ${currentValue})
+
+	distortosAppendToSavedConfiguration("${name}")
 endfunction()
 
 #
@@ -230,14 +364,13 @@ function(distortosSetIntegerConfiguration name help)
 
 	set("${name}" "${defaultValue}" CACHE ${type} "" ${force})
 	set_property(CACHE "${name}" PROPERTY HELPSTRING "${help}")
-	get_property(currentType CACHE "${name}" PROPERTY TYPE)
-	if(NOT currentType STREQUAL type)
-		set_property(CACHE "${name}" PROPERTY TYPE ${type})
-	endif()
+	set_property(CACHE "${name}" PROPERTY TYPE ${type})
 
 	# verify currently set value
 	set(currentValue "${${name}}")
 	distortosCheckInteger("${name}" "${currentValue}" ${INTEGER_MIN} ${INTEGER_MAX})
+
+	distortosAppendToSavedConfiguration("${name}")
 endfunction()
 
 #
@@ -279,17 +412,16 @@ function(distortosSetStringConfiguration name help)
 	set("${name}" "${defaultValue}" CACHE ${type} "" ${force})
 	set_property(CACHE "${name}" PROPERTY HELPSTRING "${help}")
 	set_property(CACHE "${name}" PROPERTY STRINGS "${STRING_UNPARSED_ARGUMENTS}")
-	get_property(currentType CACHE "${name}" PROPERTY TYPE)
-	if(NOT currentType STREQUAL type)
-		set_property(CACHE "${name}" PROPERTY TYPE ${type})
-	endif()
+	set_property(CACHE "${name}" PROPERTY TYPE ${type})
 
 	# verify currently set value
 	set(currentValue ${${name}})
 	list(FIND STRING_UNPARSED_ARGUMENTS "${currentValue}" index)
 	if(index EQUAL -1)
-		message(FATAL_ERROR "\"${name}\": \"${currentValue}\" is not an allowed value")
+		message(SEND_ERROR "\"${name}\": \"${currentValue}\" is not an allowed value")
 	endif()
+
+	distortosAppendToSavedConfiguration("${name}")
 endfunction()
 
 #
@@ -329,6 +461,17 @@ endfunction()
 #
 
 function(distortosSetConfiguration type name)
+	get_property(once GLOBAL PROPERTY DISTORTOS_SET_CONFIGURATION_ONCE)
+	if(NOT once)
+		set_property(GLOBAL PROPERTY DISTORTOS_SET_CONFIGURATION_ONCE ON)
+
+		foreach(name ${DISTORTOS_ACTIVE_CONFIGURATION_NAMES})
+			set_property(CACHE "${name}" PROPERTY TYPE INTERNAL)
+		endforeach()
+
+		unset(DISTORTOS_ACTIVE_CONFIGURATION_NAMES CACHE)
+	endif()
+
 	list(FIND DISTORTOS_ACTIVE_CONFIGURATION_NAMES "${name}" index)
 	if(NOT index EQUAL -1)
 		message(FATAL_ERROR "Configuration variable \"${name}\" is already set")
@@ -361,11 +504,9 @@ function(distortosSetConfiguration type name)
 		message(FATAL_ERROR "\"${type}\" is not a valid type")
 	endif()
 
-	list(APPEND DISTORTOS_ACTIVE_CONFIGURATION_NAMES "${name}")
-	set(DISTORTOS_ACTIVE_CONFIGURATION_NAMES ${DISTORTOS_ACTIVE_CONFIGURATION_NAMES} PARENT_SCOPE)
-	set(${name}_TYPE ${type} PARENT_SCOPE)
-	set(${name}_OUTPUT_NAME ${PREFIX_OUTPUT_NAME} PARENT_SCOPE)
-	set(${name}_OUTPUT_TYPES ${PREFIX_OUTPUT_TYPES} PARENT_SCOPE)
+	set(DISTORTOS_ACTIVE_CONFIGURATION_NAMES ${DISTORTOS_ACTIVE_CONFIGURATION_NAMES} ${name} CACHE INTERNAL "")
+
+	distortosAppendToHeader("${name}" "${type}" "${${name}}" "${PREFIX_OUTPUT_NAME}" "${PREFIX_OUTPUT_TYPES}")
 endfunction()
 
 #
@@ -401,9 +542,8 @@ function(distortosSetFixedConfiguration type name value)
 
 	list(APPEND DISTORTOS_FIXED_CONFIGURATION_NAMES "${name}")
 	set(DISTORTOS_FIXED_CONFIGURATION_NAMES ${DISTORTOS_FIXED_CONFIGURATION_NAMES} PARENT_SCOPE)
-	set("${name}_TYPE" "${type}" PARENT_SCOPE)
-	set("${name}_OUTPUT_NAME" "${name}" PARENT_SCOPE)
-	set("${name}_OUTPUT_TYPES" "${type}" PARENT_SCOPE)
+
+	distortosAppendToHeader("${name}" "${type}" "${value}" "${name}" "${type}")
 endfunction()
 
 #
