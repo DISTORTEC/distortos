@@ -10,14 +10,8 @@
 add_library(littlefs1 STATIC
 		${CMAKE_CURRENT_LIST_DIR}/littlefs1/lfs1_util.c
 		${CMAKE_CURRENT_LIST_DIR}/littlefs1/lfs1.c)
-if(CMAKE_VERSION VERSION_GREATER_EQUAL 3.8)
-	target_compile_features(littlefs1 PUBLIC
-			c_std_99)
-else()
-	# equivalent of C99 for earlier versions of CMake
-	target_compile_features(littlefs1 PUBLIC
-			c_restrict)
-endif()
+target_compile_features(littlefs1 PUBLIC
+		c_std_99)
 target_compile_definitions(littlefs1 PUBLIC
 		LFS1_NO_DEBUG
 		LFS1_NO_ERROR

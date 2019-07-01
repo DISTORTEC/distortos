@@ -13,7 +13,7 @@ if(CMAKE_BINARY_DIR STREQUAL CMAKE_SOURCE_DIR)
 	message(FATAL_ERROR "In-source builds are not supported. Please use separate directory for build.")
 endif()
 
-cmake_minimum_required(VERSION 3.7)
+cmake_minimum_required(VERSION 3.8)
 project(distortos)
 
 distortosSetConfiguration(BOOLEAN
@@ -291,16 +291,9 @@ endfunction()
 #-----------------------------------------------------------------------------------------------------------------------
 
 add_library(distortos STATIC "")
-if(CMAKE_VERSION VERSION_GREATER_EQUAL 3.8)
-	target_compile_features(distortos PUBLIC
-			cxx_std_11
-			c_std_99)
-else()
-	# equivalents of C++11 and C99 for earlier versions of CMake
-	target_compile_features(distortos PUBLIC
-			cxx_constexpr
-			c_restrict)
-endif()
+target_compile_features(distortos PUBLIC
+		cxx_std_11
+		c_std_99)
 target_include_directories(distortos PUBLIC
 		${CMAKE_CURRENT_BINARY_DIR}/include
 		include)
