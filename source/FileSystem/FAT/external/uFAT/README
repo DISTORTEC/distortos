@@ -1,0 +1,182 @@
+uFAT
+====
+
+uFAT is small but feature-complete VFAT/FAT32 implementation. It
+supports all basic filesystem operations and has minimal memory
+requirements. Its key features are:
+
+  * No global data: can be used to access multiple filesystems
+    simultaneously without issue.
+
+  * Small memory footprint: only a few kB required for metadata
+    caching and long filename parsing (the cache size is configurable
+    and can be as low as 512 bytes).
+
+  * No heap allocation is used.
+
+  * Highly portable: no external dependencies except for a few
+    easily-implementable ANSI C functions (memcpy, memset, atoi).
+
+  * Unicode filenames are supported (via translation to and from UTF-8
+    for function call arguments).
+
+  * Supports reading, writing and creating FAT12, FAT16 and FAT32,
+    including long filenames.
+
+Using uFAT as a library
+-----------------------
+
+The interface to the underlying block device is abstract and specified
+though a structure containing some key parameters and access functions:
+
+    typedef unsigned long long ufat_block_t;
+
+    struct ufat_device {
+      unsigned int  log2_block_size;
+      int   (*read)(const struct ufat_device *dev, ufat_block_t start,
+            ufat_block_t count, void *buffer);
+      int   (*write)(const struct ufat_device *dev, ufat_block_t start,
+            ufat_block_t count, const void *buffer);
+    };
+
+A pointer to the ``struct ufat_device`` is passed with each call to
+``read`` or ``write``, so driver-private data can be kept by embedding
+the structure in a larger structure.
+
+All ``ufat_block_t`` arguments are block indices relative to the
+beginning of the partition. ``log2_block_size`` should be the base-2
+logarithm of the block size (that is, ``1 << log2_block_size`` is the
+actual block size in bytes). Having filled out a ``struct
+ufat_device`` for the partition/device you want to access, Use
+``ufat_open``/``ufat_close`` to open and close the filesystem:
+
+    struct ufat_device dev;
+    struct ufat uf;
+    int err;
+
+    dev.log2_block_size = 9;
+    dev.read = my_read;
+    dev.write = my_write;
+
+    err = ufat_open(&uf, &dev);
+    if (err < 0) {
+      fprintf(stderr, "Error: %s\n", ufat_strerror(err));
+      return -1;
+    }
+
+    /* ... */
+
+    ufat_close(&uf);
+
+No memory is allocated when a filesystem is opened, but ``ufat_close``
+must be called to flush caches if the filesystem has been modified.
+
+There are three basic objects used by the filesystem implementation:
+
+``struct ufat_dirent``
+
+  ~ This represents a directory entry. It holds information on a file or
+    directory and contains the location of the entry on the underlying
+    device, attributes and file size (for regular files).
+
+``struct ufat_directory``
+
+  ~ This structure is a directory iterator. There are two ways to
+    construct this object: either by opening the root directory, or by
+    opening a subdirectory represented by a ``ufat_dirent`` using
+    ``ufat_open_subdir``. Iterating through the contents of a
+    directory returns a series of ``ufat_dirent`` structures.
+
+``struct ufat_file``
+
+  ~ This structure represents an open file. It is constructed from a
+    ``ufat_dirent`` via a call to ``ufat_open_file``.
+
+Functions for manipulating the filesystem and the associated objects
+are detailed in the ``ufat.h`` header file. Examples may be found in
+the included image-manipulation program (``main.c`` in the source
+distribution).
+
+All functions with ``int`` return types will return 0 on success or a
+negative error code if there is a problem with the underlying
+filesystem or device. These error codes can be translated into
+human-readable strings with ``ufat_strerror``. Error codes are
+declared as values for the enum ``ufat_error_t``.
+
+Directories may be traversed by a series of
+``ufat_open_subdir``/``ufat_dir_find`` calls. For cases where a full
+slash-separated path is known, the following function is useful:
+
+    int ufat_dir_find_path(struct ufat_directory *dir,
+              const char *path, struct ufat_dirent *inf,
+              const char **path_out);
+
+Its arguments are:
+
+``dir``
+
+  ~ An open directory from which to start the search. This will in
+    most cases be the root directory, but it can be any subdirectory,
+    and the path given will be treated as relative to the initial
+    directory.
+
+``path``
+
+  ~ A slash-separated path, relative to the starting directory. Path
+    components may be separated by either a forward-slash or a
+    backslash. This path should be UTF-8 encoded.
+
+``inf``
+
+  ~ A pointer to a ``ufat_dirent`` which will be filled out with the
+    details of the file/directory found.
+
+``path_out``
+
+  ~ A pointer to the remainder of the path not processed if the file
+    could not be found.
+
+If an IO or filesystem error occurs, a negative error code is
+returned. When the given path identifies an existing file or
+directory, the structure pointed to ``inf`` is filled out and the
+function returns 0.
+
+If the given path doesn't name an existing file or directory, 1 is
+returned. In this case, ``inf`` is not filled out, but the pointer
+pointed to by ``path_out`` will be filled out with a pointer to the
+remainder of ``path`` which was not processed.
+
+In all cases, ``dir`` will be reinitialized to be an iterator for the
+directory where the search terminated.
+
+Copyright
+---------
+
+Copyright (C) 2012 TracMap Holdings Ltd
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are
+met:
+
+1. Redistributions of source code must retain the above copyright
+notice, this list of conditions and the following disclaimer.
+
+2. Redistributions in binary form must reproduce the above copyright
+notice, this list of conditions and the following disclaimer in the
+documentation and/or other materials provided with the distribution.
+
+3. Neither the name of the copyright holder nor the names of its
+contributors may be used to endorse or promote products derived from
+this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
+IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
+TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
+PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED
+TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
