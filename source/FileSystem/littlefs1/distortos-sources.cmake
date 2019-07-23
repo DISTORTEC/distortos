@@ -17,3 +17,6 @@ doxygen(INCLUDE_PATH ${CMAKE_CURRENT_LIST_DIR}/external/littlefs1
 		EXCLUDE ${CMAKE_CURRENT_LIST_DIR}/external)
 
 include(${CMAKE_CURRENT_LIST_DIR}/external/littlefs1-sources.cmake)
+
+target_link_libraries(distortos PUBLIC
+		littlefs1)
