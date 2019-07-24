@@ -7,6 +7,9 @@
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #
 
+target_sources(distortos PRIVATE
+		${CMAKE_CURRENT_LIST_DIR}/ufatErrorToErrorCode.cpp)
+
 doxygen(INCLUDE_PATH ${CMAKE_CURRENT_LIST_DIR}/external/uFAT
 		EXCLUDE ${CMAKE_CURRENT_LIST_DIR}/external)
 
