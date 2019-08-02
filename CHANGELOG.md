@@ -13,6 +13,8 @@ All notable changes to this project will be documented in this file. This projec
 board with *STM32F7* chip.
 - Added boolean `#define` in `distortosConfiguration.h` which specifies selected board, e.g.
 `#define DISTORTOS_BOARD_ST_NUCLEO_F767ZI 1` for *NUCLEO-F767ZI* board.
+- Added `distortos::devices::AligningBlockDevice` class, which can be used as a proxy between a file system and a block
+device requiring specific alignment.
 
 ### Fixed
 
