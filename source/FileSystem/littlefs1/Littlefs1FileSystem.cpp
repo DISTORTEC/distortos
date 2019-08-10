@@ -30,16 +30,6 @@ namespace
 {
 
 /*---------------------------------------------------------------------------------------------------------------------+
-| local objects
-+---------------------------------------------------------------------------------------------------------------------*/
-
-/// required buffer alignment of memory technology device
-constexpr size_t alignment {DISTORTOS_MEMORYTECHNOLOGYDEVICE_BUFFER_ALIGNMENT};
-
-/// margin between platform's biggest alignment and required buffer alignment
-constexpr size_t alignmentMargin {alignment > __BIGGEST_ALIGNMENT__ ? alignment - __BIGGEST_ALIGNMENT__ : 0};
-
-/*---------------------------------------------------------------------------------------------------------------------+
 | local functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
@@ -233,23 +223,19 @@ int Littlefs1FileSystem::format()
 	if (lookaheadBuffer.get() == nullptr)
 		return ENOMEM;
 
-	const size_t programBufferSize {configuration_.prog_size + alignmentMargin};
+	const size_t programBufferSize {configuration_.prog_size};
 	const std::unique_ptr<uint8_t[]> programBuffer {new (std::nothrow) uint8_t[programBufferSize]};
 	if (programBuffer.get() == nullptr)
 		return ENOMEM;
 
-	const size_t readBufferSize {configuration_.read_size + alignmentMargin};
+	const size_t readBufferSize {configuration_.read_size};
 	const std::unique_ptr<uint8_t[]> readBuffer {new (std::nothrow) uint8_t[readBufferSize]};
 	if (readBuffer.get() == nullptr)
 		return ENOMEM;
 
 	configuration_.lookahead_buffer = lookaheadBuffer.get();
-	configuration_.prog_buffer =
-			reinterpret_cast<void*>((reinterpret_cast<uintptr_t>(programBuffer.get()) + alignment - 1) /
-			alignment * alignment);
-	configuration_.read_buffer =
-			reinterpret_cast<void*>((reinterpret_cast<uintptr_t>(readBuffer.get()) + alignment - 1) /
-			alignment * alignment);
+	configuration_.prog_buffer = programBuffer.get();
+	configuration_.read_buffer = readBuffer.get();
 
 	const auto ret = lfs1_format(&fileSystem_, &configuration_);
 	return littlefs1ErrorToErrorCode(ret);
@@ -353,23 +339,19 @@ int Littlefs1FileSystem::mount()
 	if (lookaheadBuffer.get() == nullptr)
 		return ENOMEM;
 
-	const size_t programBufferSize {configuration_.prog_size + alignmentMargin};
+	const size_t programBufferSize {configuration_.prog_size};
 	std::unique_ptr<uint8_t[]> programBuffer {new (std::nothrow) uint8_t[programBufferSize]};
 	if (programBuffer.get() == nullptr)
 		return ENOMEM;
 
-	const size_t readBufferSize {configuration_.read_size + alignmentMargin};
+	const size_t readBufferSize {configuration_.read_size};
 	std::unique_ptr<uint8_t[]> readBuffer {new (std::nothrow) uint8_t[readBufferSize]};
 	if (readBuffer.get() == nullptr)
 		return ENOMEM;
 
 	configuration_.lookahead_buffer = lookaheadBuffer.get();
-	configuration_.prog_buffer =
-			reinterpret_cast<void*>((reinterpret_cast<uintptr_t>(programBuffer.get()) + alignment - 1) /
-			alignment * alignment);
-	configuration_.read_buffer =
-			reinterpret_cast<void*>((reinterpret_cast<uintptr_t>(readBuffer.get()) + alignment - 1) /
-			alignment * alignment);
+	configuration_.prog_buffer = programBuffer.get();
+	configuration_.read_buffer = readBuffer.get();
 
 	const auto ret = lfs1_mount(&fileSystem_, &configuration_);
 	if (ret != LFS1_ERR_OK)
