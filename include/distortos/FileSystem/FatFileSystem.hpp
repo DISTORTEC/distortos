@@ -36,6 +36,8 @@ class BlockDevice;
 
 class FatFileSystem : public FileSystem
 {
+	friend class FatDirectory;
+
 public:
 
 	/// UfatDevice binds ufat_device struct with a reference to block device
