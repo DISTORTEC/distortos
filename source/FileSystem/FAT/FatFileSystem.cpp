@@ -12,6 +12,7 @@
 #include "distortos/FileSystem/FatFileSystem.hpp"
 
 #include "FatDirectory.hpp"
+#include "FatFile.hpp"
 #include "ufatErrorToErrorCode.hpp"
 
 #include "distortos/devices/memory/BlockDevice.hpp"
@@ -252,6 +253,23 @@ std::pair<int, std::unique_ptr<Directory>> FatFileSystem::openDirectory(const ch
 		return {ret, std::unique_ptr<FatDirectory>{}};
 
 	return {{}, std::move(directory)};
+}
+
+std::pair<int, std::unique_ptr<File>> FatFileSystem::openFile(const char* const path, const int flags)
+{
+	const std::lock_guard<FatFileSystem> lockGuard {*this};
+
+	assert(mounted_ == true);
+
+	std::unique_ptr<FatFile> file {new (std::nothrow) FatFile{*this}};
+	if (file == nullptr)
+		return {ENOMEM, std::unique_ptr<FatFile>{}};
+
+	const auto ret = file->open(path, flags);
+	if (ret != 0)
+		return {ret, std::unique_ptr<FatFile>{}};
+
+	return {{}, std::move(file)};
 }
 
 int FatFileSystem::remove(const char* const path)

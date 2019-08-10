@@ -215,6 +215,29 @@ public:
 	std::pair<int, std::unique_ptr<Directory>> openDirectory(const char* path) override;
 
 	/**
+	 * \brief Opens file.
+	 *
+	 * Similar to [open()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/open.html)
+	 *
+	 * \warning This function must not be called from interrupt context!
+	 *
+	 * \pre %File system is mounted.
+	 * \pre \a path is valid.
+	 * \pre \a flags are valid.
+	 *
+	 * \param [in] path is the path of file that will be opened, must be valid
+	 * \param [in] flags are file status flags, must be valid, for list of available flags and valid combinations see
+	 * [open()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/open.html)
+	 *
+	 * \return pair with return code (0 on success, error code otherwise) and `std::unique_ptr` with opened file; error
+	 * codes:
+	 * - ENOMEM - unable to allocate memory for file;
+	 * - error codes returned by FatFile::open();
+	 */
+
+	std::pair<int, std::unique_ptr<File>> openFile(const char* path, int flags) override;
+
+	/**
 	 * \brief Removes file or directory.
 	 *
 	 * Similar to [remove()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/remove.html)
