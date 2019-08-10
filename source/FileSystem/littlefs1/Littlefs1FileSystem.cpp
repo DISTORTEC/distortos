@@ -230,11 +230,9 @@ int Littlefs1FileSystem::getFileStatus(const char* const path, struct stat& stat
 	assert(path != nullptr);
 
 	lfs1_info info;
-	{
-		const auto ret = lfs1_stat(&fileSystem_, path, &info);
-		if (ret != LFS1_ERR_OK)
-			littlefs1ErrorToErrorCode(ret);
-	}
+	const auto ret = lfs1_stat(&fileSystem_, path, &info);
+	if (ret != LFS1_ERR_OK)
+		littlefs1ErrorToErrorCode(ret);
 
 	status = {};
 	status.st_mode = info.type == LFS1_TYPE_DIR ? S_IFDIR : S_IFREG;
@@ -250,11 +248,9 @@ int Littlefs1FileSystem::getStatus(struct statvfs& status)
 	assert(mounted_ == true);
 
 	size_t usedBlocks {};
-	{
-		const auto ret = lfs1_traverse(&fileSystem_, countUsedBlocks, &usedBlocks);
-		if (ret != LFS1_ERR_OK)
-			return littlefs1ErrorToErrorCode(ret);
-	}
+	const auto ret = lfs1_traverse(&fileSystem_, countUsedBlocks, &usedBlocks);
+	if (ret != LFS1_ERR_OK)
+		return littlefs1ErrorToErrorCode(ret);
 
 	status = {};
 	status.f_bsize = configuration_.block_size;
@@ -334,11 +330,9 @@ std::pair<int, std::unique_ptr<Directory>> Littlefs1FileSystem::openDirectory(co
 	if (directory == nullptr)
 		return {ENOMEM, std::unique_ptr<Littlefs1Directory>{}};
 
-	{
-		const auto ret = directory->open(path);
-		if (ret != 0)
-			return {ret, std::unique_ptr<Littlefs1Directory>{}};
-	}
+	const auto ret = directory->open(path);
+	if (ret != 0)
+		return {ret, std::unique_ptr<Littlefs1Directory>{}};
 
 	return {{}, std::move(directory)};
 }
@@ -353,11 +347,9 @@ std::pair<int, std::unique_ptr<File>> Littlefs1FileSystem::openFile(const char* 
 	if (file == nullptr)
 		return {ENOMEM, std::unique_ptr<Littlefs1File>{}};
 
-	{
-		const auto ret = file->open(path, flags);
-		if (ret != 0)
-			return {ret, std::unique_ptr<Littlefs1File>{}};
-	}
+	const auto ret = file->open(path, flags);
+	if (ret != 0)
+		return {ret, std::unique_ptr<Littlefs1File>{}};
 
 	return {{}, std::move(file)};
 }
