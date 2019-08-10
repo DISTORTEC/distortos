@@ -125,20 +125,10 @@ int Littlefs1File::open(const char* const path, const int flags)
 	if ((flags & O_APPEND) != 0)
 		convertedFlags |= LFS1_O_APPEND;
 
-	const size_t bufferSize {fileSystem_.fileSystem_.cfg->prog_size};
-	std::unique_ptr<uint8_t[]> buffer {new (std::nothrow) uint8_t[bufferSize]};
-	if (buffer.get() == nullptr)
-		return ENOMEM;
-
-	// configuration_ is zeroed neither before use nor after failure - it is assumed that open() can be used only once
-	// and only on a newly constructed object
-	configuration_.buffer = buffer.get();
-
-	const auto ret = lfs1_file_opencfg(&fileSystem_.fileSystem_, &file_, path, convertedFlags, &configuration_);
+	const auto ret = lfs1_file_open(&fileSystem_.fileSystem_, &file_, path, convertedFlags);
 	if (ret != LFS1_ERR_OK)
 		return littlefs1ErrorToErrorCode(ret);
 
-	buffer_ = std::move(buffer);
 	opened_ = true;
 	return {};
 }

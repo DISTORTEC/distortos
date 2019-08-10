@@ -14,11 +14,7 @@
 
 #include "distortos/FileSystem/File.hpp"
 
-#include "distortos/distortosConfiguration.h"
-
 #include "lfs1.h"
-
-#include <memory>
 
 namespace distortos
 {
@@ -42,8 +38,6 @@ public:
 	 */
 
 	constexpr explicit Littlefs1File(Littlefs1FileSystem& fileSystem) :
-			buffer_{},
-			configuration_{},
 			file_{},
 			fileSystem_{fileSystem},
 			opened_{}
@@ -278,12 +272,6 @@ public:
 	std::pair<int, size_t> write(const void* buffer, size_t size) override;
 
 private:
-
-	/// file buffer
-	std::unique_ptr<uint8_t[]> buffer_;
-
-	/// littlefs-v1 file configuration
-	lfs1_file_config configuration_;
 
 	/// littlefs-v1 file
 	lfs1_file_t file_;
