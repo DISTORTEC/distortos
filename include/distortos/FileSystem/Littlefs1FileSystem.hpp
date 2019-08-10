@@ -89,7 +89,6 @@ public:
 	 * \pre %File system is unmounted.
 	 *
 	 * \return 0 on success, error code otherwise:
-	 * - ENOMEM - unable to allocate memory for file system;
 	 * - converted error codes returned by lfs1_format();
 	 * - error codes returned by MemoryTechnologyDevice::open();
 	 */
@@ -182,7 +181,6 @@ public:
 	 * \pre %File system is unmounted.
 	 *
 	 * \return 0 on success, error code otherwise:
-	 * - ENOMEM - unable to allocate memory for file system;
 	 * - converted error codes returned by lfs1_mount();
 	 * - error codes returned by MemoryTechnologyDevice::open();
 	 */

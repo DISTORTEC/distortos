@@ -163,7 +163,6 @@ public:
 	 * [open()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/open.html)
 	 *
 	 * \return 0 on success, error code otherwise:
-	 * - ENOMEM - unable to allocate memory for file;
 	 * - converted error codes returned by lfs1_file_open();
 	 */
 
