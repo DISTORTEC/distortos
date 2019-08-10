@@ -9,6 +9,7 @@
 
 target_sources(distortos PRIVATE
 		${CMAKE_CURRENT_LIST_DIR}/FatDirectory.cpp
+		${CMAKE_CURRENT_LIST_DIR}/FatFile.cpp
 		${CMAKE_CURRENT_LIST_DIR}/FatFileSystem.cpp
 		${CMAKE_CURRENT_LIST_DIR}/ufatErrorToErrorCode.cpp)
 

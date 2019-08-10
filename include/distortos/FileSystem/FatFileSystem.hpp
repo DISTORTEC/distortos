@@ -37,6 +37,7 @@ class BlockDevice;
 class FatFileSystem : public FileSystem
 {
 	friend class FatDirectory;
+	friend class FatFile;
 
 public:
 
