@@ -125,18 +125,14 @@ int Littlefs1File::open(const char* const path, const int flags)
 	if ((flags & O_APPEND) != 0)
 		convertedFlags |= LFS1_O_APPEND;
 
-	constexpr size_t alignment {DISTORTOS_MEMORYTECHNOLOGYDEVICE_BUFFER_ALIGNMENT};
-	constexpr size_t alignmentMargin {alignment > __BIGGEST_ALIGNMENT__ ? alignment - __BIGGEST_ALIGNMENT__ : 0};
-	const size_t bufferSize {fileSystem_.fileSystem_.cfg->prog_size + alignmentMargin};
+	const size_t bufferSize {fileSystem_.fileSystem_.cfg->prog_size};
 	std::unique_ptr<uint8_t[]> buffer {new (std::nothrow) uint8_t[bufferSize]};
 	if (buffer.get() == nullptr)
 		return ENOMEM;
 
 	// configuration_ is zeroed neither before use nor after failure - it is assumed that open() can be used only once
 	// and only on a newly constructed object
-
-	configuration_.buffer = reinterpret_cast<void*>((reinterpret_cast<uintptr_t>(buffer.get()) + alignment - 1) /
-			alignment * alignment);
+	configuration_.buffer = buffer.get();
 
 	const auto ret = lfs1_file_opencfg(&fileSystem_.fileSystem_, &file_, path, convertedFlags, &configuration_);
 	if (ret != LFS1_ERR_OK)
