@@ -218,25 +218,6 @@ int Littlefs1FileSystem::format()
 			blocksCount_ != 0 ? blocksCount_ : (memoryTechnologyDevice_.getSize() / configuration_.block_size);
 	configuration_.lookahead = (std::max(lookahead_, 1u) + 31) / 32 * 32;
 
-	const size_t lookaheadBufferSize {configuration_.lookahead / CHAR_BIT};
-	const std::unique_ptr<uint8_t[]> lookaheadBuffer {new (std::nothrow) uint8_t[lookaheadBufferSize]};
-	if (lookaheadBuffer.get() == nullptr)
-		return ENOMEM;
-
-	const size_t programBufferSize {configuration_.prog_size};
-	const std::unique_ptr<uint8_t[]> programBuffer {new (std::nothrow) uint8_t[programBufferSize]};
-	if (programBuffer.get() == nullptr)
-		return ENOMEM;
-
-	const size_t readBufferSize {configuration_.read_size};
-	const std::unique_ptr<uint8_t[]> readBuffer {new (std::nothrow) uint8_t[readBufferSize]};
-	if (readBuffer.get() == nullptr)
-		return ENOMEM;
-
-	configuration_.lookahead_buffer = lookaheadBuffer.get();
-	configuration_.prog_buffer = programBuffer.get();
-	configuration_.read_buffer = readBuffer.get();
-
 	const auto ret = lfs1_format(&fileSystem_, &configuration_);
 	return littlefs1ErrorToErrorCode(ret);
 }
@@ -334,33 +315,11 @@ int Littlefs1FileSystem::mount()
 			blocksCount_ != 0 ? blocksCount_ : (memoryTechnologyDevice_.getSize() / configuration_.block_size);
 	configuration_.lookahead = (std::max(lookahead_, 1u) + 31) / 32 * 32;
 
-	const size_t lookaheadBufferSize {configuration_.lookahead / CHAR_BIT};
-	std::unique_ptr<uint8_t[]> lookaheadBuffer {new (std::nothrow) uint8_t[lookaheadBufferSize]};
-	if (lookaheadBuffer.get() == nullptr)
-		return ENOMEM;
-
-	const size_t programBufferSize {configuration_.prog_size};
-	std::unique_ptr<uint8_t[]> programBuffer {new (std::nothrow) uint8_t[programBufferSize]};
-	if (programBuffer.get() == nullptr)
-		return ENOMEM;
-
-	const size_t readBufferSize {configuration_.read_size};
-	std::unique_ptr<uint8_t[]> readBuffer {new (std::nothrow) uint8_t[readBufferSize]};
-	if (readBuffer.get() == nullptr)
-		return ENOMEM;
-
-	configuration_.lookahead_buffer = lookaheadBuffer.get();
-	configuration_.prog_buffer = programBuffer.get();
-	configuration_.read_buffer = readBuffer.get();
-
 	const auto ret = lfs1_mount(&fileSystem_, &configuration_);
 	if (ret != LFS1_ERR_OK)
 		return littlefs1ErrorToErrorCode(ret);
 
 	mounted_ = true;
-	lookaheadBuffer_ = std::move(lookaheadBuffer);
-	programBuffer_ = std::move(programBuffer);
-	readBuffer_ = std::move(readBuffer);
 	closeScopeGuard.release();
 	return 0;
 }
@@ -441,9 +400,6 @@ int Littlefs1FileSystem::unmount()
 	const auto unmountRet = lfs1_unmount(&fileSystem_);
 	const auto closeRet = memoryTechnologyDevice_.close();
 	mounted_ = {};
-	lookaheadBuffer_.reset();
-	programBuffer_.reset();
-	readBuffer_.reset();
 
 	return unmountRet != LFS1_ERR_OK ? littlefs1ErrorToErrorCode(unmountRet) : closeRet;
 }
