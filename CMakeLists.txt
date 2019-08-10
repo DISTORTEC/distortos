@@ -297,8 +297,6 @@ target_compile_features(distortos PUBLIC
 target_include_directories(distortos PUBLIC
 		${CMAKE_CURRENT_BINARY_DIR}/include
 		include)
-target_link_libraries(distortos PUBLIC
-		littlefs1)
 
 if(NOT distortos_Checks_06_Asserts)
 	target_compile_definitions(distortos PUBLIC
