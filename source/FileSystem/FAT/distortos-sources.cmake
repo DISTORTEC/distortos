@@ -8,6 +8,7 @@
 #
 
 target_sources(distortos PRIVATE
+		${CMAKE_CURRENT_LIST_DIR}/FatFileSystem.cpp
 		${CMAKE_CURRENT_LIST_DIR}/ufatErrorToErrorCode.cpp)
 
 doxygen(INCLUDE_PATH ${CMAKE_CURRENT_LIST_DIR}/external/uFAT
