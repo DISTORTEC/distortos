@@ -16,6 +16,19 @@ board with *STM32F7* chip.
 - Added `distortos::devices::AligningBlockDevice` class, which can be used as a proxy between a file system and a block
 device requiring specific alignment.
 
+### Changed
+
+- Changed various aspects related to [littlefs-v1](https://github.com/ARMmbed/littlefs) file system integration:
+  - Headers which declare `distortos::Littlefs1File` and `distortos::Littlefs1Directory` classes are no longer
+  acceessible by the application code - these classes are never used directly, only via `distortos::File` and
+  `distortos::Directory` interfaces;
+  - Moved `distortos/FileSystem/littlefs1/Littlefs1FileSystem.hpp` one level up, to
+  `distortos/FileSystem/Littlefs1FileSystem.hpp`;
+  - `distortos::Littlefs1FileSystem`, `distortos::Littlefs1File` and [littlefs-v1](https://github.com/ARMmbed/littlefs)
+  itself no longer deal with buffer alignment - `distortos::Littlefs1FileSystem` should be used only with a driver which
+  either doesn't care about alignment or deals with it itself (for example via proxy
+  `distortos::devices::AligningBlockDevice`).
+
 ### Fixed
 
 - Fixed mechanism of generating `distortosConfiguration.h` header and `distortosConfiguration.cmake` saved
