@@ -11,12 +11,11 @@
 
 #include "distortos/FileSystem/littlefs1/Littlefs1FileSystem.hpp"
 
+#include "Littlefs1Directory.hpp"
 #include "littlefs1ErrorToErrorCode.hpp"
+#include "Littlefs1File.hpp"
 
 #include "distortos/devices/memory/MemoryTechnologyDevice.hpp"
-
-#include "distortos/FileSystem/littlefs1/Littlefs1Directory.hpp"
-#include "distortos/FileSystem/littlefs1/Littlefs1File.hpp"
 
 #include "distortos/assert.h"
 
