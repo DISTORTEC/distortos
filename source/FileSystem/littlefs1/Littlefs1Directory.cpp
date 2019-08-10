@@ -62,6 +62,17 @@ void Littlefs1Directory::lock()
 	fileSystem_.lock();
 }
 
+int Littlefs1Directory::open(const char* const path)
+{
+	assert(opened_ == false);
+	assert(path != nullptr);
+
+	const auto ret = lfs1_dir_open(&fileSystem_.fileSystem_, &directory_, path);
+	if (ret == LFS1_ERR_OK)
+		opened_ = true;
+	return littlefs1ErrorToErrorCode(ret);
+}
+
 int Littlefs1Directory::read(dirent& entry)
 {
 	const std::lock_guard<Littlefs1Directory> lockGuard {*this};
@@ -109,21 +120,6 @@ int Littlefs1Directory::seek(const off_t position)
 void Littlefs1Directory::unlock()
 {
 	fileSystem_.unlock();
-}
-
-/*---------------------------------------------------------------------------------------------------------------------+
-| private functions
-+---------------------------------------------------------------------------------------------------------------------*/
-
-int Littlefs1Directory::open(const char* const path)
-{
-	assert(opened_ == false);
-	assert(path != nullptr);
-
-	const auto ret = lfs1_dir_open(&fileSystem_.fileSystem_, &directory_, path);
-	if (ret == LFS1_ERR_OK)
-		opened_ = true;
-	return littlefs1ErrorToErrorCode(ret);
 }
 
 }	// namespace distortos
