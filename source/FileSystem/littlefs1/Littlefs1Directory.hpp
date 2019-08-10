@@ -9,8 +9,8 @@
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#ifndef INCLUDE_DISTORTOS_FILESYSTEM_LITTLEFS1_LITTLEFS1DIRECTORY_HPP_
-#define INCLUDE_DISTORTOS_FILESYSTEM_LITTLEFS1_LITTLEFS1DIRECTORY_HPP_
+#ifndef SOURCE_FILESYSTEM_LITTLEFS1_LITTLEFS1DIRECTORY_HPP_
+#define SOURCE_FILESYSTEM_LITTLEFS1_LITTLEFS1DIRECTORY_HPP_
 
 #include "distortos/FileSystem/Directory.hpp"
 
@@ -29,9 +29,21 @@ class Littlefs1FileSystem;
 
 class Littlefs1Directory : public Directory
 {
-	friend class Littlefs1FileSystem;
-
 public:
+
+	/**
+	 * \brief Littlefs1Directory's constructor
+	 *
+	 * \param [in] fileSystem is a reference to owner file system
+	 */
+
+	constexpr explicit Littlefs1Directory(Littlefs1FileSystem& fileSystem) :
+			directory_{},
+			fileSystem_{fileSystem},
+			opened_{}
+	{
+
+	}
 
 	/**
 	 * \brief Littlefs1Directory's destructor
@@ -92,6 +104,20 @@ public:
 	 */
 
 	void lock() override;
+
+	/**
+	 * \brief Opens directory.
+	 *
+	 * \pre %Directory is not opened.
+	 * \pre \a path is valid.
+	 *
+	 * \param [in] path is the path of directory that will be opened, must be valid
+	 *
+	 * \return 0 on success, error code otherwise:
+	 * - converted error codes returned by lfs1_dir_open();
+	 */
+
+	int open(const char* path);
 
 	/**
 	 * \brief Reads next entry from directory.
@@ -159,34 +185,6 @@ public:
 
 private:
 
-	/**
-	 * \brief Littlefs1Directory's constructor
-	 *
-	 * \param [in] fileSystem is a reference to owner file system
-	 */
-
-	constexpr explicit Littlefs1Directory(Littlefs1FileSystem& fileSystem) :
-			directory_{},
-			fileSystem_{fileSystem},
-			opened_{}
-	{
-
-	}
-
-	/**
-	 * \brief Opens directory.
-	 *
-	 * \pre %Directory is not opened.
-	 * \pre \a path is valid.
-	 *
-	 * \param [in] path is the path of directory that will be opened, must be valid
-	 *
-	 * \return 0 on success, error code otherwise:
-	 * - converted error codes returned by lfs1_dir_open();
-	 */
-
-	int open(const char* path);
-
 	/// littlefs-v1 directory
 	lfs1_dir_t directory_;
 
@@ -199,4 +197,4 @@ private:
 
 }	// namespace distortos
 
-#endif	// INCLUDE_DISTORTOS_FILESYSTEM_LITTLEFS1_LITTLEFS1DIRECTORY_HPP_
+#endif	// SOURCE_FILESYSTEM_LITTLEFS1_LITTLEFS1DIRECTORY_HPP_

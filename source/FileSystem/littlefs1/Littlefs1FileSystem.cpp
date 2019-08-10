@@ -9,14 +9,13 @@
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#include "distortos/FileSystem/littlefs1/Littlefs1FileSystem.hpp"
+#include "distortos/FileSystem/Littlefs1FileSystem.hpp"
 
+#include "Littlefs1Directory.hpp"
 #include "littlefs1ErrorToErrorCode.hpp"
+#include "Littlefs1File.hpp"
 
 #include "distortos/devices/memory/MemoryTechnologyDevice.hpp"
-
-#include "distortos/FileSystem/littlefs1/Littlefs1Directory.hpp"
-#include "distortos/FileSystem/littlefs1/Littlefs1File.hpp"
 
 #include "distortos/assert.h"
 
@@ -29,16 +28,6 @@ namespace distortos
 
 namespace
 {
-
-/*---------------------------------------------------------------------------------------------------------------------+
-| local objects
-+---------------------------------------------------------------------------------------------------------------------*/
-
-/// required buffer alignment of memory technology device
-constexpr size_t alignment {DISTORTOS_MEMORYTECHNOLOGYDEVICE_BUFFER_ALIGNMENT};
-
-/// margin between platform's biggest alignment and required buffer alignment
-constexpr size_t alignmentMargin {alignment > __BIGGEST_ALIGNMENT__ ? alignment - __BIGGEST_ALIGNMENT__ : 0};
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | local functions
@@ -229,29 +218,6 @@ int Littlefs1FileSystem::format()
 			blocksCount_ != 0 ? blocksCount_ : (memoryTechnologyDevice_.getSize() / configuration_.block_size);
 	configuration_.lookahead = (std::max(lookahead_, 1u) + 31) / 32 * 32;
 
-	const size_t lookaheadBufferSize {configuration_.lookahead / CHAR_BIT};
-	const std::unique_ptr<uint8_t[]> lookaheadBuffer {new (std::nothrow) uint8_t[lookaheadBufferSize]};
-	if (lookaheadBuffer.get() == nullptr)
-		return ENOMEM;
-
-	const size_t programBufferSize {configuration_.prog_size + alignmentMargin};
-	const std::unique_ptr<uint8_t[]> programBuffer {new (std::nothrow) uint8_t[programBufferSize]};
-	if (programBuffer.get() == nullptr)
-		return ENOMEM;
-
-	const size_t readBufferSize {configuration_.read_size + alignmentMargin};
-	const std::unique_ptr<uint8_t[]> readBuffer {new (std::nothrow) uint8_t[readBufferSize]};
-	if (readBuffer.get() == nullptr)
-		return ENOMEM;
-
-	configuration_.lookahead_buffer = lookaheadBuffer.get();
-	configuration_.prog_buffer =
-			reinterpret_cast<void*>((reinterpret_cast<uintptr_t>(programBuffer.get()) + alignment - 1) /
-			alignment * alignment);
-	configuration_.read_buffer =
-			reinterpret_cast<void*>((reinterpret_cast<uintptr_t>(readBuffer.get()) + alignment - 1) /
-			alignment * alignment);
-
 	const auto ret = lfs1_format(&fileSystem_, &configuration_);
 	return littlefs1ErrorToErrorCode(ret);
 }
@@ -349,37 +315,11 @@ int Littlefs1FileSystem::mount()
 			blocksCount_ != 0 ? blocksCount_ : (memoryTechnologyDevice_.getSize() / configuration_.block_size);
 	configuration_.lookahead = (std::max(lookahead_, 1u) + 31) / 32 * 32;
 
-	const size_t lookaheadBufferSize {configuration_.lookahead / CHAR_BIT};
-	std::unique_ptr<uint8_t[]> lookaheadBuffer {new (std::nothrow) uint8_t[lookaheadBufferSize]};
-	if (lookaheadBuffer.get() == nullptr)
-		return ENOMEM;
-
-	const size_t programBufferSize {configuration_.prog_size + alignmentMargin};
-	std::unique_ptr<uint8_t[]> programBuffer {new (std::nothrow) uint8_t[programBufferSize]};
-	if (programBuffer.get() == nullptr)
-		return ENOMEM;
-
-	const size_t readBufferSize {configuration_.read_size + alignmentMargin};
-	std::unique_ptr<uint8_t[]> readBuffer {new (std::nothrow) uint8_t[readBufferSize]};
-	if (readBuffer.get() == nullptr)
-		return ENOMEM;
-
-	configuration_.lookahead_buffer = lookaheadBuffer.get();
-	configuration_.prog_buffer =
-			reinterpret_cast<void*>((reinterpret_cast<uintptr_t>(programBuffer.get()) + alignment - 1) /
-			alignment * alignment);
-	configuration_.read_buffer =
-			reinterpret_cast<void*>((reinterpret_cast<uintptr_t>(readBuffer.get()) + alignment - 1) /
-			alignment * alignment);
-
 	const auto ret = lfs1_mount(&fileSystem_, &configuration_);
 	if (ret != LFS1_ERR_OK)
 		return littlefs1ErrorToErrorCode(ret);
 
 	mounted_ = true;
-	lookaheadBuffer_ = std::move(lookaheadBuffer);
-	programBuffer_ = std::move(programBuffer);
-	readBuffer_ = std::move(readBuffer);
 	closeScopeGuard.release();
 	return 0;
 }
@@ -460,9 +400,6 @@ int Littlefs1FileSystem::unmount()
 	const auto unmountRet = lfs1_unmount(&fileSystem_);
 	const auto closeRet = memoryTechnologyDevice_.close();
 	mounted_ = {};
-	lookaheadBuffer_.reset();
-	programBuffer_.reset();
-	readBuffer_.reset();
 
 	return unmountRet != LFS1_ERR_OK ? littlefs1ErrorToErrorCode(unmountRet) : closeRet;
 }

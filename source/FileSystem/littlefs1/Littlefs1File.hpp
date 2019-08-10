@@ -9,16 +9,12 @@
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#ifndef INCLUDE_DISTORTOS_FILESYSTEM_LITTLEFS1_LITTLEFS1FILE_HPP_
-#define INCLUDE_DISTORTOS_FILESYSTEM_LITTLEFS1_LITTLEFS1FILE_HPP_
+#ifndef SOURCE_FILESYSTEM_LITTLEFS1_LITTLEFS1FILE_HPP_
+#define SOURCE_FILESYSTEM_LITTLEFS1_LITTLEFS1FILE_HPP_
 
 #include "distortos/FileSystem/File.hpp"
 
-#include "distortos/distortosConfiguration.h"
-
 #include "lfs1.h"
-
-#include <memory>
 
 namespace distortos
 {
@@ -33,9 +29,21 @@ class Littlefs1FileSystem;
 
 class Littlefs1File : public File
 {
-	friend class Littlefs1FileSystem;
-
 public:
+
+	/**
+	 * \brief Littlefs1File's constructor
+	 *
+	 * \param [in] fileSystem is a reference to owner file system
+	 */
+
+	constexpr explicit Littlefs1File(Littlefs1FileSystem& fileSystem) :
+			file_{},
+			fileSystem_{fileSystem},
+			opened_{}
+	{
+
+	}
 
 	/**
 	 * \brief Littlefs1File's destructor
@@ -144,6 +152,24 @@ public:
 	void lock() override;
 
 	/**
+	 * \brief Opens file.
+	 *
+	 * \pre %File is not opened.
+	 * \pre \a path is valid.
+	 * \pre \a flags are valid.
+	 *
+	 * \param [in] path is the path of file that will be opened, must be valid
+	 * \param [in] flags are file status flags, must be valid, for list of available flags and valid combinations see
+	 * [open()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/open.html)
+	 *
+	 * \return 0 on success, error code otherwise:
+	 * - ENOMEM - unable to allocate memory for file;
+	 * - converted error codes returned by lfs1_file_open();
+	 */
+
+	int open(const char* path, int flags);
+
+	/**
 	 * \brief Reads data from file.
 	 *
 	 * Similar to [read()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/read.html)
@@ -247,46 +273,6 @@ public:
 
 private:
 
-	/**
-	 * \brief Littlefs1File's constructor
-	 *
-	 * \param [in] fileSystem is a reference to owner file system
-	 */
-
-	constexpr explicit Littlefs1File(Littlefs1FileSystem& fileSystem) :
-			buffer_{},
-			configuration_{},
-			file_{},
-			fileSystem_{fileSystem},
-			opened_{}
-	{
-
-	}
-
-	/**
-	 * \brief Opens file.
-	 *
-	 * \pre %File is not opened.
-	 * \pre \a path is valid.
-	 * \pre \a flags are valid.
-	 *
-	 * \param [in] path is the path of file that will be opened, must be valid
-	 * \param [in] flags are file status flags, must be valid, for list of available flags and valid combinations see
-	 * [open()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/open.html)
-	 *
-	 * \return 0 on success, error code otherwise:
-	 * - ENOMEM - unable to allocate memory for file;
-	 * - converted error codes returned by lfs1_file_open();
-	 */
-
-	int open(const char* path, int flags);
-
-	/// file buffer
-	std::unique_ptr<uint8_t[]> buffer_;
-
-	/// littlefs-v1 file configuration
-	lfs1_file_config configuration_;
-
 	/// littlefs-v1 file
 	lfs1_file_t file_;
 
@@ -299,4 +285,4 @@ private:
 
 }	// namespace distortos
 
-#endif	// INCLUDE_DISTORTOS_FILESYSTEM_LITTLEFS1_LITTLEFS1FILE_HPP_
+#endif	// SOURCE_FILESYSTEM_LITTLEFS1_LITTLEFS1FILE_HPP_

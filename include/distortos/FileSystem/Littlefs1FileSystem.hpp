@@ -9,8 +9,8 @@
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#ifndef INCLUDE_DISTORTOS_FILESYSTEM_LITTLEFS1_LITTLEFS1FILESYSTEM_HPP_
-#define INCLUDE_DISTORTOS_FILESYSTEM_LITTLEFS1_LITTLEFS1FILESYSTEM_HPP_
+#ifndef INCLUDE_DISTORTOS_FILESYSTEM_LITTLEFS1FILESYSTEM_HPP_
+#define INCLUDE_DISTORTOS_FILESYSTEM_LITTLEFS1FILESYSTEM_HPP_
 
 #include "distortos/FileSystem/FileSystem.hpp"
 
@@ -60,9 +60,6 @@ public:
 					configuration_{},
 					fileSystem_{},
 					mutex_{Mutex::Type::recursive, Mutex::Protocol::priorityInheritance},
-					lookaheadBuffer_{},
-					programBuffer_{},
-					readBuffer_{},
 					memoryTechnologyDevice_{memoryTechnologyDevice},
 					readBlockSize_{readBlockSize},
 					programBlockSize_{programBlockSize},
@@ -313,15 +310,6 @@ private:
 	/// mutex for serializing access to the object
 	distortos::Mutex mutex_;
 
-	/// lookahead buffer
-	std::unique_ptr<uint8_t[]> lookaheadBuffer_;
-
-	/// program buffer
-	std::unique_ptr<uint8_t[]> programBuffer_;
-
-	/// read buffer
-	std::unique_ptr<uint8_t[]> readBuffer_;
-
 	/// reference to associated memory technology device
 	devices::MemoryTechnologyDevice& memoryTechnologyDevice_;
 
@@ -346,4 +334,4 @@ private:
 
 }	// namespace distortos
 
-#endif	// INCLUDE_DISTORTOS_FILESYSTEM_LITTLEFS1_LITTLEFS1FILESYSTEM_HPP_
+#endif	// INCLUDE_DISTORTOS_FILESYSTEM_LITTLEFS1FILESYSTEM_HPP_

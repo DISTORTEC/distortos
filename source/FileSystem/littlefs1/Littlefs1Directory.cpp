@@ -9,11 +9,11 @@
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#include "distortos/FileSystem/littlefs1/Littlefs1Directory.hpp"
+#include "Littlefs1Directory.hpp"
 
 #include "littlefs1ErrorToErrorCode.hpp"
 
-#include "distortos/FileSystem/littlefs1/Littlefs1FileSystem.hpp"
+#include "distortos/FileSystem/Littlefs1FileSystem.hpp"
 
 #include "distortos/assert.h"
 
@@ -60,6 +60,17 @@ std::pair<int, off_t> Littlefs1Directory::getPosition()
 void Littlefs1Directory::lock()
 {
 	fileSystem_.lock();
+}
+
+int Littlefs1Directory::open(const char* const path)
+{
+	assert(opened_ == false);
+	assert(path != nullptr);
+
+	const auto ret = lfs1_dir_open(&fileSystem_.fileSystem_, &directory_, path);
+	if (ret == LFS1_ERR_OK)
+		opened_ = true;
+	return littlefs1ErrorToErrorCode(ret);
 }
 
 int Littlefs1Directory::read(dirent& entry)
@@ -109,21 +120,6 @@ int Littlefs1Directory::seek(const off_t position)
 void Littlefs1Directory::unlock()
 {
 	fileSystem_.unlock();
-}
-
-/*---------------------------------------------------------------------------------------------------------------------+
-| private functions
-+---------------------------------------------------------------------------------------------------------------------*/
-
-int Littlefs1Directory::open(const char* const path)
-{
-	assert(opened_ == false);
-	assert(path != nullptr);
-
-	const auto ret = lfs1_dir_open(&fileSystem_.fileSystem_, &directory_, path);
-	if (ret == LFS1_ERR_OK)
-		opened_ = true;
-	return littlefs1ErrorToErrorCode(ret);
 }
 
 }	// namespace distortos

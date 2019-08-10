@@ -15,7 +15,6 @@ target_compile_features(littlefs1 PUBLIC
 target_compile_definitions(littlefs1 PUBLIC
 		LFS1_NO_DEBUG
 		LFS1_NO_ERROR
-		LFS1_NO_MALLOC
 		LFS1_NO_WARN)
 target_include_directories(littlefs1 INTERFACE
 		${CMAKE_CURRENT_LIST_DIR}/littlefs1)
