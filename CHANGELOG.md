@@ -15,6 +15,9 @@ board with *STM32F7* chip.
 `#define DISTORTOS_BOARD_ST_NUCLEO_F767ZI 1` for *NUCLEO-F767ZI* board.
 - Added `distortos::devices::AligningBlockDevice` class, which can be used as a proxy between a file system and a block
 device requiring specific alignment.
+- Added support for [FAT](https://en.wikipedia.org/wiki/File_Allocation_Table) file system (using
+[uFAT](https://github.com/dlbeer/ufat) library) in the form of `distortos::FatFileSystem` class, which is available from
+`distortos/FileSystem/FatFileSystem.hpp` header.
 
 ### Changed
 
