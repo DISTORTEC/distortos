@@ -27,7 +27,7 @@ set(INCLUDE_MOCKS ${CMAKE_SOURCE_DIR}/include-mocks)
 set(CMAKE_C_STANDARD 99)
 
 # use C++14 in all cases
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
 
 # standard include folders - valid in all cases
 include_directories(
