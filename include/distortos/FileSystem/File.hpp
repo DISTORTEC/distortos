@@ -16,6 +16,8 @@
 
 #include <utility>
 
+#include <cstddef>
+
 namespace distortos
 {
 
