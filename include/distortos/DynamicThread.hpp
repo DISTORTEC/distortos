@@ -360,7 +360,7 @@ DynamicThread makeAndStartDynamicThread(const size_t stackSize, const bool canRe
 			schedulingPolicy, std::forward<Function>(function), std::forward<Args>(args)...);
 	{
 		const auto ret = thread.start();
-		assert(ret == 0 && "Could not start thread!");
+		assert(ret == 0);
 	}
 	return thread;
 }
@@ -384,7 +384,7 @@ DynamicThread makeAndStartDynamicThread(const DynamicThreadParameters parameters
 	auto thread = makeDynamicThread(parameters, std::forward<Function>(function), std::forward<Args>(args)...);
 	{
 		const auto ret = thread.start();
-		assert(ret == 0 && "Could not start thread!");
+		assert(ret == 0);
 	}
 	return thread;
 }

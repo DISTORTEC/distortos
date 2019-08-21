@@ -146,7 +146,7 @@ void deliverSignals()
 				SignalSet newSignalMask {signalMask.getBitset() | signalAction.getSignalMask().getBitset()};
 				{
 					const auto addRet = newSignalMask.add(signalNumber);	// signalNumber is valid (checked above)
-					assert(addRet == 0 && "Invalid signal number!");
+					assert(addRet == 0);
 				}
 				{
 					// this call should not fail, because SignalsReceiverControlBlock that is used here must support
@@ -154,13 +154,13 @@ void deliverSignals()
 					// SignalsReceiverControlBlock::getSignalAction() above would fail; no other error is expected, as
 					// signal delivery is not requested
 					const auto setSignalMaskRet = signalsReceiverControlBlock->setSignalMask(newSignalMask, false);
-					assert(setSignalMaskRet == 0 && "Setting signal mask failed!");
+					assert(setSignalMaskRet == 0);
 				}
 				(*handler)(signalInformation);
 				{
 					// restore previous signal mask
 					const auto setSignalMaskRet = signalsReceiverControlBlock->setSignalMask(signalMask, false);
-					assert(setSignalMaskRet == 0 && "Setting signal mask failed!");
+					assert(setSignalMaskRet == 0);
 				}
 			}
 		}

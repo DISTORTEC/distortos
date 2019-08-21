@@ -151,7 +151,7 @@ int SignalsReceiverControlBlock::queueSignal(const uint8_t signalNumber, const s
 		}
 		{
 			const auto ret = signalInformationQueue_->queueSignal(signalNumber, value);
-			assert(ret == 0 && "Queuing failed!");
+			assert(ret == 0);
 		}
 
 		afterGenerateQueueLocked(signalNumber, threadControlBlock);
@@ -197,7 +197,7 @@ int SignalsReceiverControlBlock::setSignalMask(const SignalSet signalMask, const
 void SignalsReceiverControlBlock::afterGenerateQueueLocked(const uint8_t signalNumber,
 		ThreadControlBlock& threadControlBlock) const
 {
-	assert(signalNumber < SignalSet::Bitset{}.size() && "Invalid signal number!");
+	assert(signalNumber < SignalSet::Bitset{}.size());
 
 	if (signalsCatcherControlBlock_ != nullptr)
 	{
@@ -220,7 +220,7 @@ void SignalsReceiverControlBlock::afterGenerateQueueLocked(const uint8_t signalN
 void SignalsReceiverControlBlock::afterGenerateQueueUnlocked(const uint8_t signalNumber,
 		ThreadControlBlock& threadControlBlock) const
 {
-	assert(signalNumber < SignalSet::Bitset{}.size() && "Invalid signal number!");
+	assert(signalNumber < SignalSet::Bitset{}.size());
 
 	if (signalsCatcherControlBlock_ == nullptr)
 		return;
@@ -235,7 +235,7 @@ void SignalsReceiverControlBlock::afterGenerateQueueUnlocked(const uint8_t signa
 int SignalsReceiverControlBlock::beforeGenerateQueue(const uint8_t signalNumber,
 		ThreadControlBlock& threadControlBlock) const
 {
-	assert(signalNumber < SignalSet::Bitset{}.size() && "Invalid signal number!");
+	assert(signalNumber < SignalSet::Bitset{}.size());
 
 	if (signalsCatcherControlBlock_ == nullptr)
 		return 0;

@@ -319,7 +319,7 @@ makeAndStartStaticThread(const uint8_t priority, const SchedulingPolicy scheduli
 			schedulingPolicy, std::forward<Function>(function), std::forward<Args>(args)...);
 	{
 		const auto ret = thread.start();
-		assert(ret == 0 && "Could not start thread!");
+		assert(ret == 0);
 	}
 	return thread;
 }
@@ -352,7 +352,7 @@ makeAndStartStaticThread(const uint8_t priority, Function&& function, Args&&... 
 			std::forward<Function>(function), std::forward<Args>(args)...);
 	{
 		const auto ret = thread.start();
-		assert(ret == 0 && "Could not start thread!");
+		assert(ret == 0);
 	}
 	return thread;
 }

@@ -2,7 +2,7 @@
  * \file
  * \brief MutexPriorityProtectOperationsTestCase class implementation
  *
- * \author Copyright (C) 2014-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -182,7 +182,7 @@ bool testPriorityChanges(const Mutex::Type type)
 	{
 		const auto function = std::get<0>(operation);
 		const auto index = std::get<1>(operation);
-		assert(index < sizeof(mutexes) / sizeof(*mutexes) && "Invalid index of mutex!");
+		assert(index < sizeof(mutexes) / sizeof(*mutexes));
 		const auto expectedEffectivePriority = std::get<2>(operation);
 		const auto ret = (mutexes[index].*function)();
 		if (ret != 0 || ThisThread::getEffectivePriority() != expectedEffectivePriority)

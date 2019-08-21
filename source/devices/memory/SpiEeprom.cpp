@@ -243,7 +243,7 @@ int SpiEeprom::eraseOrWrite(const uint64_t address, const void* const buffer, co
 std::pair<int, size_t> SpiEeprom::eraseOrWritePage(const uint32_t address, const void* const buffer, const size_t size)
 {
 	const auto capacity = getSize();
-	assert(address < capacity && "Invalid address!");
+	assert(address < capacity);
 
 	{
 		const auto ret = waitWhileWriteInProgress();
