@@ -1,43 +1,57 @@
 /**
  * \file
- * \brief Directory class header
+ * \brief FatDirectory class header
  *
- * \author Copyright (C) 2018-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#ifndef INCLUDE_DISTORTOS_FILESYSTEM_DIRECTORY_HPP_
-#define INCLUDE_DISTORTOS_FILESYSTEM_DIRECTORY_HPP_
+#ifndef SOURCE_FILESYSTEM_FAT_FATDIRECTORY_HPP_
+#define SOURCE_FILESYSTEM_FAT_FATDIRECTORY_HPP_
 
-#include <dirent.h>
+#include "distortos/FileSystem/Directory.hpp"
 
-#include <utility>
-
-#include <cstdio>
+#include "ufat.h"
 
 namespace distortos
 {
 
+class FatFileSystem;
+
 /**
- * Directory class is an interface for a directory.
+ * FatDirectory class is a [FAT](https://en.wikipedia.org/wiki/File_Allocation_Table) directory.
  *
  * \ingroup fileSystem
  */
 
-class Directory
+class FatDirectory : public Directory
 {
 public:
 
 	/**
-	 * \brief Directory's destructor
+	 * \brief FatDirectory's constructor
+	 *
+	 * \param [in] fileSystem is a reference to owner file system
+	 */
+
+	constexpr explicit FatDirectory(FatFileSystem& fileSystem) :
+			directory_{},
+			fileSystem_{fileSystem},
+			opened_{}
+	{
+
+	}
+
+	/**
+	 * \brief FatDirectory's destructor
 	 *
 	 * \pre %Directory is closed.
 	 */
 
-	virtual ~Directory() = default;
+	~FatDirectory() override;
 
 	/**
 	 * \brief Closes directory.
@@ -46,6 +60,8 @@ public:
 	 *
 	 * \note Even if error code is returned, the directory must not be used.
 	 *
+	 * \warning This function must not be called from interrupt context!
+	 *
 	 * \pre %Directory is opened.
 	 *
 	 * \post %Directory is closed.
@@ -53,19 +69,21 @@ public:
 	 * \return 0 on success, error code otherwise
 	 */
 
-	virtual int close() = 0;
+	int close() override;
 
 	/**
 	 * \brief Returns current position in the directory.
 	 *
 	 * Similar to [telldir()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/telldir.html)
 	 *
+	 * \warning This function must not be called from interrupt context!
+	 *
 	 * \pre %Directory is opened.
 	 *
 	 * \return pair with return code (0 on success, error code otherwise) and current position in the directory
 	 */
 
-	virtual std::pair<int, off_t> getPosition() = 0;
+	std::pair<int, off_t> getPosition() override;
 
 	/**
 	 * \brief Locks the directory for exclusive use by current thread.
@@ -82,12 +100,32 @@ public:
 	 * \post %Directory is locked.
 	 */
 
-	virtual void lock() = 0;
+	void lock() override;
+
+	/**
+	 * \brief Opens directory.
+	 *
+	 * \pre %Directory is not opened.
+	 * \pre \a path is valid.
+	 *
+	 * \param [in] path is the path of directory that will be opened, must be valid
+	 *
+	 * \return 0 on success, error code otherwise:
+	 * - ENOENT - \a path does not name an existing directory;
+	 * - ENOTDIR - component of \a path names an existing file where directory was expected;
+	 * - converted error codes returned by ufat_dir_find_path();
+	 */
+
+	int open(const char* path);
 
 	/**
 	 * \brief Reads next entry from directory.
 	 *
 	 * Similar to [readdir_r()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/readdir.html)
+	 *
+	 * `d_name` field is set in all cases. All other fields are zero-initialized.
+	 *
+	 * \warning This function must not be called from interrupt context!
 	 *
 	 * \pre %Directory is opened.
 	 *
@@ -95,35 +133,42 @@ public:
 	 *
 	 * \return 0 on success, error code otherwise:
 	 * - ENOENT - current position in the directory is invalid (i.e. end of the directory reached);
+	 * - converted error codes returned by ufat_dir_read();
 	 */
 
-	virtual int read(dirent& entry) = 0;
+	int read(dirent& entry) override;
 
 	/**
 	 * \brief Resets current position in the directory.
 	 *
 	 * Similar to [rewinddir()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/rewinddir.html)
 	 *
+	 * \warning This function must not be called from interrupt context!
+	 *
 	 * \pre %Directory is opened.
 	 *
 	 * \return 0 on success, error code otherwise
 	 */
 
-	virtual int rewind() = 0;
+	int rewind() override;
 
 	/**
 	 * \brief Moves position in the directory.
 	 *
 	 * Similar to [seekdir()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/seekdir.html)
 	 *
+	 * \warning This function must not be called from interrupt context!
+	 *
 	 * \pre %Directory is opened.
 	 *
 	 * \param [in] position is the value of position, must be a value previously returned by getPosition()!
 	 *
-	 * \return 0 on success, error code otherwise
+	 * \return 0 on success, error code otherwise:
+	 * - ENOENT - \a position is invalid (i.e. end of the directory reached);
+	 * - converted error codes returned by ufat_dir_read();
 	 */
 
-	virtual int seek(off_t position) = 0;
+	int seek(off_t position) override;
 
 	/**
 	 * \brief Unlocks the directory which was previously locked by current thread.
@@ -135,13 +180,20 @@ public:
 	 * \pre This function is called by the thread that locked the directory.
 	 */
 
-	virtual void unlock() = 0;
+	void unlock() override;
 
-	Directory() = default;
-	Directory(const Directory&) = delete;
-	Directory& operator=(const Directory&) = delete;
+private:
+
+	/// uFAT directory
+	ufat_directory directory_;
+
+	/// reference to owner file system
+	FatFileSystem& fileSystem_;
+
+	/// true if directory is opened, false otherwise
+	bool opened_;
 };
 
 }	// namespace distortos
 
-#endif	// INCLUDE_DISTORTOS_FILESYSTEM_DIRECTORY_HPP_
+#endif	// SOURCE_FILESYSTEM_FAT_FATDIRECTORY_HPP_

@@ -27,7 +27,7 @@ set(INCLUDE_MOCKS ${CMAKE_SOURCE_DIR}/include-mocks)
 set(CMAKE_C_STANDARD 99)
 
 # use C++14 in all cases
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
 
 # standard include folders - valid in all cases
 include_directories(
@@ -72,6 +72,7 @@ add_subdirectory(C-API-ConditionVariable-unit-test)
 add_subdirectory(C-API-Mutex-unit-test)
 add_subdirectory(C-API-Semaphore-unit-test)
 add_subdirectory(estd-ContiguousRange-unit-test)
+add_subdirectory(FatFileSystem-unit-test)
 add_subdirectory(SdCard-unit-test)
 add_subdirectory(STM32-DMAv1-DmaChannel-unit-test)
 add_subdirectory(STM32-DMAv2-DmaChannel-unit-test)
