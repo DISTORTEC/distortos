@@ -62,13 +62,16 @@ int FatDirectory::open(const char* const path)
 
 	ufat_open_root(&fileSystem_.fileSystem_, &directory_);
 	ufat_dirent directoryEntry {};
-	const auto ret = ufat_dir_find_path(&directory_, path, &directoryEntry, {});
+	{
+		const auto ret = ufat_dir_find_path(&directory_, path, &directoryEntry, {});
+		if (ret < 0)
+			return ufatErrorToErrorCode(ret);
+		if (ret > 0)
+			return ENOENT;
+	}
+	const auto ret = ufat_open_subdir(&fileSystem_.fileSystem_, &directory_, &directoryEntry);
 	if (ret < 0)
 		return ufatErrorToErrorCode(ret);
-	if (ret > 0)
-		return ENOENT;
-	if ((directoryEntry.attributes & UFAT_ATTR_DIRECTORY) == 0)
-		return ENOTDIR;
 
 	opened_ = true;
 	return {};
