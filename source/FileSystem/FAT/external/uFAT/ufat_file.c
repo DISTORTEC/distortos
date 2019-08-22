@@ -201,16 +201,16 @@ int ufat_file_read(struct ufat_file *f, void *buf, ufat_size_t size)
 
 	/* Read contiguous blocks within a cluster */
 	for (;;) {
-		int ret = read_blocks(f, buf, size);
+		len = read_blocks(f, buf, size);
 
-		if (ret < 0)
-			return ret;
+		if (len < 0)
+			return len;
 
-		if (!ret)
+		if (!len)
 			break;
 
 		buf = (char*)buf + len;
-		size -= ret;
+		size -= len;
 	}
 
 	/* Read remaining block fragment */
