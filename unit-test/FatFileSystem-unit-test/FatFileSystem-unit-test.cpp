@@ -83,6 +83,7 @@ public:
 	MAKE_MOCK3(ufat_move, int(ufat_dirent*, ufat_directory*, const char*));
 	MAKE_MOCK3(ufat_open_file, int(ufat*, ufat_file*, const ufat_dirent*));
 	MAKE_MOCK2(ufat_open_root, void(ufat*, ufat_directory*));
+	MAKE_MOCK3(ufat_open_subdir, int(ufat*, ufat_directory*, const ufat_dirent*));
 	MAKE_MOCK2(ufat_open, int(ufat*, const ufat_device*));
 	MAKE_MOCK1(ufat_sync, int(ufat*));
 
@@ -200,6 +201,12 @@ extern "C" int ufat_open_file(ufat* const fileSystem, ufat_file* const file, con
 extern "C" void ufat_open_root(ufat* const fileSystem, ufat_directory* const directory)
 {
 	return UfatMock::getInstance().ufat_open_root(fileSystem, directory);
+}
+
+extern "C" int ufat_open_subdir(ufat* const fileSystem, ufat_directory* const directory,
+		const ufat_dirent* const directoryEntry)
+{
+	return UfatMock::getInstance().ufat_open_subdir(fileSystem, directory, directoryEntry);
 }
 
 extern "C" int ufat_open(ufat* const fileSystem, const ufat_device* const device)
@@ -867,9 +874,10 @@ TEST_CASE("Testing openDirectory()", "[openDirectory]")
 		REQUIRE(ret == ENOENT);
 		REQUIRE(directory == nullptr);
 	}
-	SECTION("Using path to existing file should fail with ENOTDIR")
+	SECTION("ufat_open_subdir() error should propagate converted error code to caller")
 	{
 		ufat_directory* ufatDirectory {};
+		ufat_dirent* ufatDirectoryEntry {};
 
 		const char* const path {"some/path"};
 
@@ -877,15 +885,18 @@ TEST_CASE("Testing openDirectory()", "[openDirectory]")
 		REQUIRE_CALL(ufatMock, ufat_open_root(ufatFileSystem, ne(nullptr))).IN_SEQUENCE(sequence)
 				.LR_SIDE_EFFECT(ufatDirectory = _2);
 		REQUIRE_CALL(ufatMock, ufat_dir_find_path(_, path, ne(nullptr), nullptr)).LR_WITH(_1 == ufatDirectory)
-				.IN_SEQUENCE(sequence).SIDE_EFFECT(_3->attributes = {}).RETURN(0);
+				.IN_SEQUENCE(sequence).LR_SIDE_EFFECT(ufatDirectoryEntry = _3).RETURN(0);
+		REQUIRE_CALL(ufatMock, ufat_open_subdir(ufatFileSystem, _, _)).LR_WITH(_2 == ufatDirectory)
+				.LR_WITH(_3 == ufatDirectoryEntry).IN_SEQUENCE(sequence).RETURN(-UFAT_ERR_DIRECTORY_NOT_EMPTY);
 		REQUIRE_CALL(mutexMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
 		const auto [ret, directory] = ffs.openDirectory(path);
-		REQUIRE(ret == ENOTDIR);
+		REQUIRE(ret == ENOTEMPTY);
 		REQUIRE(directory == nullptr);
 	}
 	SECTION("Testing successful openDirectory()")
 	{
 		ufat_directory* ufatDirectory {};
+		ufat_dirent* ufatDirectoryEntry {};
 
 		const char* const path {"some/path"};
 
@@ -893,7 +904,9 @@ TEST_CASE("Testing openDirectory()", "[openDirectory]")
 		REQUIRE_CALL(ufatMock, ufat_open_root(ufatFileSystem, ne(nullptr))).IN_SEQUENCE(sequence)
 				.LR_SIDE_EFFECT(ufatDirectory = _2);
 		REQUIRE_CALL(ufatMock, ufat_dir_find_path(_, path, ne(nullptr), nullptr)).LR_WITH(_1 == ufatDirectory)
-				.IN_SEQUENCE(sequence).SIDE_EFFECT(_3->attributes = UFAT_ATTR_DIRECTORY).RETURN(0);
+				.IN_SEQUENCE(sequence).LR_SIDE_EFFECT(ufatDirectoryEntry = _3).RETURN(0);
+		REQUIRE_CALL(ufatMock, ufat_open_subdir(ufatFileSystem, _, _)).LR_WITH(_2 == ufatDirectory)
+				.LR_WITH(_3 == ufatDirectoryEntry).IN_SEQUENCE(sequence).RETURN(0);
 		REQUIRE_CALL(mutexMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
 		const auto [openRet, directory] = ffs.openDirectory(path);
 		REQUIRE(openRet == 0);
