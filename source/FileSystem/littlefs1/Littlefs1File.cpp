@@ -132,6 +132,7 @@ std::pair<int, size_t> Littlefs1File::read(void* const buffer, const size_t size
 	const std::lock_guard<Littlefs1File> lockGuard {*this};
 
 	assert(opened_ == true);
+	assert(readable_ == true);
 	assert(buffer != nullptr);
 
 	const auto ret = lfs1_file_read(&fileSystem_.fileSystem_, &file_, buffer, size);

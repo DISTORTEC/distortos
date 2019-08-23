@@ -177,7 +177,7 @@ public:
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
-	 * \pre %File is opened.
+	 * \pre %File is opened for reading.
 	 * \pre \a buffer is valid.
 	 *
 	 * \param [out] buffer is the buffer into which the data will be read, must be valid
