@@ -106,6 +106,8 @@ int Littlefs1File::open(const char* const path, const int flags)
 	const auto writeOnly = (flags & mask) == O_WRONLY;
 	const auto readWrite = (flags & mask) == O_RDWR;
 	assert(readOnly == true || writeOnly == true || readWrite == true);
+	readable_ = readOnly == true || readWrite == true;
+	writable_ = writeOnly == true || readWrite == true;
 	int convertedFlags {readOnly == true ? LFS1_O_RDONLY : writeOnly == true ? LFS1_O_WRONLY : LFS1_O_RDWR};
 
 	if ((flags & O_CREAT) != 0)

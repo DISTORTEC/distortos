@@ -40,7 +40,9 @@ public:
 	constexpr explicit Littlefs1File(Littlefs1FileSystem& fileSystem) :
 			file_{},
 			fileSystem_{fileSystem},
-			opened_{}
+			opened_{},
+			readable_{},
+			writable_{}
 	{
 
 	}
@@ -280,6 +282,12 @@ private:
 
 	/// true if file is opened, false otherwise
 	bool opened_;
+
+	/// true if file is opened for reading, false otherwise
+	bool readable_;
+
+	/// true if file is opened for writing, false otherwise
+	bool writable_;
 };
 
 }	// namespace distortos
