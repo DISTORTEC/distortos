@@ -40,7 +40,9 @@ public:
 	constexpr explicit Littlefs1File(Littlefs1FileSystem& fileSystem) :
 			file_{},
 			fileSystem_{fileSystem},
-			opened_{}
+			opened_{},
+			readable_{},
+			writable_{}
 	{
 
 	}
@@ -175,7 +177,7 @@ public:
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
-	 * \pre %File is opened.
+	 * \pre %File is opened for reading.
 	 * \pre \a buffer is valid.
 	 *
 	 * \param [out] buffer is the buffer into which the data will be read, must be valid
@@ -257,7 +259,7 @@ public:
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
-	 * \pre %File is opened.
+	 * \pre %File is opened for writing.
 	 * \pre \a buffer is valid.
 	 *
 	 * \param [in] buffer is the buffer with data that will be written, must be valid
@@ -280,6 +282,12 @@ private:
 
 	/// true if file is opened, false otherwise
 	bool opened_;
+
+	/// true if file is opened for reading, false otherwise
+	bool readable_;
+
+	/// true if file is opened for writing, false otherwise
+	bool writable_;
 };
 
 }	// namespace distortos

@@ -299,7 +299,7 @@ public:
 
 private:
 
-	/// configuration of littlefs
+	/// configuration of littlefs-v1
 	lfs1_config configuration_;
 
 	/// littlefs-v1 file system

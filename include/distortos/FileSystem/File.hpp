@@ -137,7 +137,7 @@ public:
 	 *
 	 * Similar to [read()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/read.html)
 	 *
-	 * \pre %File is opened.
+	 * \pre %File is opened for reading.
 	 * \pre \a buffer is valid.
 	 *
 	 * \param [out] buffer is the buffer into which the data will be read, must be valid
@@ -208,7 +208,7 @@ public:
 	 *
 	 * Similar to [write()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/write.html)
 	 *
-	 * \pre %File is opened.
+	 * \pre %File is opened for writing.
 	 * \pre \a buffer is valid.
 	 *
 	 * \param [in] buffer is the buffer with data that will be written, must be valid

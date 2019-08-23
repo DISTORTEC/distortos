@@ -106,14 +106,22 @@ int Littlefs1File::open(const char* const path, const int flags)
 	const auto writeOnly = (flags & mask) == O_WRONLY;
 	const auto readWrite = (flags & mask) == O_RDWR;
 	assert(readOnly == true || writeOnly == true || readWrite == true);
+	readable_ = readOnly == true || readWrite == true;
+	writable_ = writeOnly == true || readWrite == true;
 	int convertedFlags {readOnly == true ? LFS1_O_RDONLY : writeOnly == true ? LFS1_O_WRONLY : LFS1_O_RDWR};
 
 	if ((flags & O_CREAT) != 0)
 		convertedFlags |= LFS1_O_CREAT;
 	if ((flags & O_EXCL) != 0)
+	{
+		assert((flags & O_CREAT) != 0);	// result is undefined if O_EXCL is set and O_CREAT is not set
 		convertedFlags |= LFS1_O_EXCL;
+	}
 	if ((flags & O_TRUNC) != 0)
+	{
+		assert(writable_ == true);	// result is undefined if O_TRUNC is set and O_WRONLY or O_RDWR are not set
 		convertedFlags |= LFS1_O_TRUNC;
+	}
 	if ((flags & O_APPEND) != 0)
 		convertedFlags |= LFS1_O_APPEND;
 
@@ -130,6 +138,7 @@ std::pair<int, size_t> Littlefs1File::read(void* const buffer, const size_t size
 	const std::lock_guard<Littlefs1File> lockGuard {*this};
 
 	assert(opened_ == true);
+	assert(readable_ == true);
 	assert(buffer != nullptr);
 
 	const auto ret = lfs1_file_read(&fileSystem_.fileSystem_, &file_, buffer, size);
@@ -184,6 +193,7 @@ std::pair<int, size_t> Littlefs1File::write(const void* const buffer, const size
 	const std::lock_guard<Littlefs1File> lockGuard {*this};
 
 	assert(opened_ == true);
+	assert(writable_ == true);
 	assert(buffer != nullptr);
 
 	const auto ret = lfs1_file_write(&fileSystem_.fileSystem_, &file_, buffer, size);

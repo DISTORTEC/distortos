@@ -1338,20 +1338,7 @@ TEST_CASE("Testing openFile()", "[openFile]")
 				const auto writable = writeOnly == true || readWrite == true;
 				const auto appendMode = (flags & O_APPEND) != 0;
 
-				if (readable == false)
-				{
-					SECTION("Reading write-only file should fail with EBADF")
-					{
-						uint8_t buffer[13] {};
-
-						REQUIRE_CALL(mutexMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
-						REQUIRE_CALL(mutexMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
-						const auto [ret, bytesRead] = file->read(buffer, sizeof(buffer));
-						REQUIRE(ret == EBADF);
-						REQUIRE(bytesRead == 0);
-					}
-				}
-				else
+				if (readable == true)
 				{
 					SECTION("ufat_file_read() error should propagate converted error code to caller")
 					{
@@ -1380,20 +1367,7 @@ TEST_CASE("Testing openFile()", "[openFile]")
 					}
 				}
 
-				if (writable == false)
-				{
-					SECTION("Writing read-only file should fail with EBADF")
-					{
-						const uint8_t buffer[123] {};
-
-						REQUIRE_CALL(mutexMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
-						REQUIRE_CALL(mutexMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
-						const auto [ret, bytesWritten] = file->write(buffer, sizeof(buffer));
-						REQUIRE(ret == EBADF);
-						REQUIRE(bytesWritten == 0);
-					}
-				}
-				else
+				if (writable == true)
 				{
 					if (appendMode == true)
 					{

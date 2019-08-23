@@ -68,9 +68,11 @@ int Littlefs1Directory::open(const char* const path)
 	assert(path != nullptr);
 
 	const auto ret = lfs1_dir_open(&fileSystem_.fileSystem_, &directory_, path);
-	if (ret == LFS1_ERR_OK)
-		opened_ = true;
-	return littlefs1ErrorToErrorCode(ret);
+	if (ret < 0)
+		return littlefs1ErrorToErrorCode(ret);
+
+	opened_ = true;
+	return {};
 }
 
 int Littlefs1Directory::read(dirent& entry)
