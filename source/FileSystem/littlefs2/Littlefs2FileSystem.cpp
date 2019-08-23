@@ -13,6 +13,7 @@
 
 #include "Littlefs2Directory.hpp"
 #include "littlefs2ErrorToErrorCode.hpp"
+#include "Littlefs2File.hpp"
 
 #include "distortos/devices/memory/MemoryTechnologyDevice.hpp"
 
@@ -333,6 +334,23 @@ std::pair<int, std::unique_ptr<Directory>> Littlefs2FileSystem::openDirectory(co
 		return {ret, std::unique_ptr<Littlefs2Directory>{}};
 
 	return {{}, std::move(directory)};
+}
+
+std::pair<int, std::unique_ptr<File>> Littlefs2FileSystem::openFile(const char* const path, const int flags)
+{
+	const std::lock_guard<Littlefs2FileSystem> lockGuard {*this};
+
+	assert(mounted_ == true);
+
+	std::unique_ptr<Littlefs2File> file {new (std::nothrow) Littlefs2File{*this}};
+	if (file == nullptr)
+		return {ENOMEM, std::unique_ptr<Littlefs2File>{}};
+
+	const auto ret = file->open(path, flags);
+	if (ret != 0)
+		return {ret, std::unique_ptr<Littlefs2File>{}};
+
+	return {{}, std::move(file)};
 }
 
 int Littlefs2FileSystem::remove(const char* const path)
