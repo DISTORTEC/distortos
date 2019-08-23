@@ -31,6 +31,8 @@ device requiring specific alignment.
   itself no longer deal with buffer alignment - `distortos::Littlefs1FileSystem` should be used only with a driver which
   either doesn't care about alignment or deals with it itself (for example via proxy
   `distortos::devices::AligningBlockDevice`).
+- All implementations of `distortos::File::read()` and `distortos::File::write()` assert that file is opened for reading
+or writing respectively, instead of returning `EBADF`.
 
 ### Fixed
 
