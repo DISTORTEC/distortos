@@ -18,6 +18,8 @@ device requiring specific alignment.
 - Added support for [FAT](https://en.wikipedia.org/wiki/File_Allocation_Table) file system (using
 [uFAT](https://github.com/dlbeer/ufat) library) in the form of `distortos::FatFileSystem` class, which is available from
 `distortos/FileSystem/FatFileSystem.hpp` header.
+- Added `distortos/FileSystem/Littlefs2FileSystem.hpp` header with `distortos::Littlefs2FileSystem` class, which
+provides support for [littlefs-v2](https://github.com/ARMmbed/littlefs) file system.
 
 ### Changed
 

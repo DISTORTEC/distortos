@@ -12,3 +12,4 @@ target_sources(distortos PRIVATE
 
 include(${CMAKE_CURRENT_LIST_DIR}/FAT/distortos-sources.cmake)
 include(${CMAKE_CURRENT_LIST_DIR}/littlefs1/distortos-sources.cmake)
+include(${CMAKE_CURRENT_LIST_DIR}/littlefs2/distortos-sources.cmake)
