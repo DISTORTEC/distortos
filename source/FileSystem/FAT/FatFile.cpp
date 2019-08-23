@@ -236,10 +236,8 @@ std::pair<int, size_t> FatFile::write(const void* const buffer, const size_t siz
 	const std::lock_guard<FatFile> lockGuard {*this};
 
 	assert(opened_ == true);
+	assert(writable_ == true);
 	assert(buffer != nullptr);
-
-	if (writable_ == false)
-		return {EBADF, {}};
 
 	if (appendMode_ == true)
 	{
