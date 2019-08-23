@@ -115,7 +115,10 @@ int Littlefs1File::open(const char* const path, const int flags)
 	if ((flags & O_EXCL) != 0)
 		convertedFlags |= LFS1_O_EXCL;
 	if ((flags & O_TRUNC) != 0)
+	{
+		assert(writable_ == true);	// result is undefined if O_TRUNC is set and O_WRONLY or O_RDWR are not set
 		convertedFlags |= LFS1_O_TRUNC;
+	}
 	if ((flags & O_APPEND) != 0)
 		convertedFlags |= LFS1_O_APPEND;
 
