@@ -11,6 +11,7 @@
 
 #include "distortos/FileSystem/Littlefs2FileSystem.hpp"
 
+#include "Littlefs2Directory.hpp"
 #include "littlefs2ErrorToErrorCode.hpp"
 
 #include "distortos/devices/memory/MemoryTechnologyDevice.hpp"
@@ -315,6 +316,23 @@ int Littlefs2FileSystem::mount()
 	mounted_ = true;
 	closeScopeGuard.release();
 	return 0;
+}
+
+std::pair<int, std::unique_ptr<Directory>> Littlefs2FileSystem::openDirectory(const char* const path)
+{
+	const std::lock_guard<Littlefs2FileSystem> lockGuard {*this};
+
+	assert(mounted_ == true);
+
+	std::unique_ptr<Littlefs2Directory> directory {new (std::nothrow) Littlefs2Directory{*this}};
+	if (directory == nullptr)
+		return {ENOMEM, std::unique_ptr<Littlefs2Directory>{}};
+
+	const auto ret = directory->open(path);
+	if (ret != 0)
+		return {ret, std::unique_ptr<Littlefs2Directory>{}};
+
+	return {{}, std::move(directory)};
 }
 
 int Littlefs2FileSystem::remove(const char* const path)

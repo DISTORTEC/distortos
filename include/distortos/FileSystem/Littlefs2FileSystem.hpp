@@ -36,6 +36,8 @@ class MemoryTechnologyDevice;
 
 class Littlefs2FileSystem : public FileSystem
 {
+	friend class Littlefs2Directory;
+
 public:
 
 	/**
@@ -203,6 +205,26 @@ public:
 	 */
 
 	int mount() override;
+
+	/**
+	 * \brief Opens directory.
+	 *
+	 * Similar to [opendir()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/opendir.html)
+	 *
+	 * \warning This function must not be called from interrupt context!
+	 *
+	 * \pre %File system is mounted.
+	 * \pre \a path is valid.
+	 *
+	 * \param [in] path is the path of directory that will be opened, must be valid
+	 *
+	 * \return pair with return code (0 on success, error code otherwise) and `std::unique_ptr` with opened directory;
+	 * error codes:
+	 * - ENOMEM - unable to allocate memory for directory;
+	 * - error codes returned by Littlefs2Directory::open();
+	 */
+
+	std::pair<int, std::unique_ptr<Directory>> openDirectory(const char* path) override;
 
 	/**
 	 * \brief Removes file or directory.
