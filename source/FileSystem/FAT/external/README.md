@@ -1,7 +1,7 @@
 uFAT
 ====
 
-- link: [uFAT](https://github.com/FreddieChopin/ufat)
-- branch: fix-file-read-bug
-- commit hash: 485f095e809b80bf20372c6a4427aa28b8adb070
-- download date: 2019-08-22
+- link: [uFAT](https://github.com/dlbeer/ufat)
+- branch: master
+- commit hash: 2d0ad69e56c44e9287adc489970b2c8fb8c6bae8
+- download date: 2019-08-23
