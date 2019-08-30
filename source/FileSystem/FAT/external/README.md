@@ -1,7 +1,7 @@
 uFAT
 ====
 
-- link: [uFAT](https://github.com/dlbeer/ufat)
-- branch: master
-- commit hash: 2d0ad69e56c44e9287adc489970b2c8fb8c6bae8
-- download date: 2019-08-23
+- link: [uFAT](https://github.com/FreddieChopin/ufat)
+- branch: mkfs-improvements
+- commit hash: aaa1e13a994890dcf84df21fcc5b7f5b1e209d5d
+- download date: 2019-08-30
