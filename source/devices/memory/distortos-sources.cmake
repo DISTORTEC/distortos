@@ -8,8 +8,8 @@
 #
 
 target_sources(distortos PRIVATE
-		${CMAKE_CURRENT_LIST_DIR}/AligningBlockDevice.cpp
 		${CMAKE_CURRENT_LIST_DIR}/BlockDeviceToMemoryTechnologyDevice.cpp
+		${CMAKE_CURRENT_LIST_DIR}/BufferingBlockDevice.cpp
 		${CMAKE_CURRENT_LIST_DIR}/SdCard.cpp
 		${CMAKE_CURRENT_LIST_DIR}/SdCardSpiBased.cpp
 		${CMAKE_CURRENT_LIST_DIR}/SpiEeprom.cpp

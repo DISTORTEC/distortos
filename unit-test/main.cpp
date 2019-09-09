@@ -5,7 +5,7 @@
 namespace trompeloeil
 {
 
-template <>
+template<>
 void reporter<specialized>::send(const severity severity, const char* const file, const unsigned long line,
 		const char* const message)
 {
