@@ -67,7 +67,6 @@ if(COVERAGE)
 endif(COVERAGE)
 
 add_subdirectory(AddressRange-unit-test)
-add_subdirectory(AligningBlockDevice-unit-test)
 add_subdirectory(BlockDeviceToMemoryTechnologyDevice-unit-test)
 add_subdirectory(BufferingBlockDevice-unit-test)
 add_subdirectory(C-API-ConditionVariable-unit-test)
