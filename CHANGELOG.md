@@ -13,8 +13,6 @@ All notable changes to this project will be documented in this file. This projec
 board with *STM32F7* chip.
 - Added boolean `#define` in `distortosConfiguration.h` which specifies selected board, e.g.
 `#define DISTORTOS_BOARD_ST_NUCLEO_F767ZI 1` for *NUCLEO-F767ZI* board.
-- Added `distortos::devices::AligningBlockDevice` class, which can be used as a proxy between a file system and a block
-device requiring specific alignment.
 - Added `distortos::devices::BufferingBlockDevice` class. This class tries to minimize amount of block device operations
 by buffering both reads and writes. Such buffering can give signigicant gain in case of devices like *SD* cards, where
 each operation may cause the device to become "busy" for a noticeable amount of time. With this class several adjacent
@@ -38,7 +36,7 @@ provides support for [littlefs-v2](https://github.com/ARMmbed/littlefs) file sys
   - `distortos::Littlefs1FileSystem`, `distortos::Littlefs1File` and [littlefs-v1](https://github.com/ARMmbed/littlefs)
   itself no longer deal with buffer alignment - `distortos::Littlefs1FileSystem` should be used only with a driver which
   either doesn't care about alignment or deals with it itself (for example via proxy
-  `distortos::devices::AligningBlockDevice`).
+  `distortos::devices::BufferingBlockDevice`).
 - All implementations of `distortos::File::read()` and `distortos::File::write()` assert that file is opened for reading
 or writing respectively, instead of returning `EBADF`.
 
