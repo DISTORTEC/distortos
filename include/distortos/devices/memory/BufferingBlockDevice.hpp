@@ -25,10 +25,10 @@ class BlockDevice;
 /**
  * BufferingBlockDevice class is a buffering wrapper for BlockDevice.
  *
- * This class tries to minimize amount of BlockDevice operations by buffering both reads and writes. This can give
- * signigicant gain in case of devices like SD cards, where each operation may cause the device to become "busy" for a
- * noticeable amount of time. With this class several adjacent reads or writes can be combined into a single larger
- * operation, which is much faster overall when you also include the waits for the SD card to become "idle".
+ * This class tries to minimize amount of BlockDevice operations by buffering both reads and writes. Such buffering can
+ * give signigicant gain in case of devices like SD cards, where each operation may cause the device to become "busy"
+ * for a noticeable amount of time. With this class several adjacent reads or writes can be combined into a single
+ * larger operation, which is much faster overall when you also include the waits for the SD card to become "idle".
  *
  * Another use for this class is as a proxy between a file system and a block device which requires specific alignment.
  *
