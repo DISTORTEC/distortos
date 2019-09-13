@@ -128,7 +128,7 @@ size_t getStackSize();
 void setPriority(uint8_t priority, bool alwaysBehind = {});
 
 /**
- * param [in] schedulingPolicy is the new scheduling policy of calling (current) thread
+ * \param [in] schedulingPolicy is the new scheduling policy of calling (current) thread
  */
 
 void setSchedulingPolicy(SchedulingPolicy schedulingPolicy);

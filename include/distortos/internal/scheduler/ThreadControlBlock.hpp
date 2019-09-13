@@ -221,7 +221,7 @@ public:
 	}
 
 	/**
-	 * param [in] schedulingPolicy is the new scheduling policy of the thread
+	 * \param [in] schedulingPolicy is the new scheduling policy of the thread
 	 */
 
 	void setSchedulingPolicy(SchedulingPolicy schedulingPolicy);

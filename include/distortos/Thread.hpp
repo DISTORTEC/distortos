@@ -206,7 +206,7 @@ public:
 	virtual void setPriority(uint8_t priority, bool alwaysBehind = {}) = 0;
 
 	/**
-	 * param [in] schedulingPolicy is the new scheduling policy of the thread
+	 * \param [in] schedulingPolicy is the new scheduling policy of the thread
 	 */
 
 	virtual void setSchedulingPolicy(SchedulingPolicy schedulingPolicy) = 0;
