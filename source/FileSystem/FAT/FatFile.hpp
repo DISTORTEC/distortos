@@ -22,7 +22,7 @@ namespace distortos
 class FatFileSystem;
 
 /**
- * FatFile class is a [FAT](https://en.wikipedia.org/wiki/File_Allocation_Table) file.
+ * \brief FatFile class is a [FAT](https://en.wikipedia.org/wiki/File_Allocation_Table) file.
  *
  * \ingroup fileSystem
  */

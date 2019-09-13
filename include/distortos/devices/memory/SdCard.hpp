@@ -26,7 +26,7 @@ namespace devices
 class SdMmcCardLowLevel;
 
 /**
- * SdCard class is a SD card.
+ * \brief SdCard class is a SD card.
  *
  * This class supports SD version 2.0 cards only.
  *

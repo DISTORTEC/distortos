@@ -21,7 +21,8 @@ namespace devices
 {
 
 /**
- * SpiMasterTransfer class is a single transfer operation that can be executed by SPI master as part of a transaction.
+ * \brief SpiMasterTransfer class is a single transfer operation that can be executed by SPI master as part of a
+ * transaction.
  *
  * \ingroup devices
  */

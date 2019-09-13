@@ -21,7 +21,7 @@ namespace chip
 {
 
 /**
- * DmaChannelHandle class can be used to access DmaChannel's functionality.
+ * \brief DmaChannelHandle class can be used to access DmaChannel's functionality.
  *
  * \ingroup devices
  */

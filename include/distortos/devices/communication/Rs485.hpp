@@ -23,7 +23,7 @@ namespace devices
 class OutputPin;
 
 /**
- * Rs485 class is a RS-485 variant of serial port with an interface similar to standard files
+ * \brief Rs485 class is a RS-485 variant of serial port with an interface similar to standard files.
  *
  * \ingroup devices
  */

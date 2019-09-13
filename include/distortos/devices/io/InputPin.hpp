@@ -19,7 +19,7 @@ namespace devices
 {
 
 /**
- * InputPin class is an interface for single input pin
+ * \brief InputPin class is an interface for single input pin.
  *
  * \ingroup devices
  */

@@ -22,7 +22,7 @@ namespace distortos
 class Littlefs1FileSystem;
 
 /**
- * Littlefs1Directory class is a [littlefs-v1](https://github.com/ARMmbed/littlefs) directory.
+ * \brief Littlefs1Directory class is a [littlefs-v1](https://github.com/ARMmbed/littlefs) directory.
  *
  * \ingroup fileSystem
  */

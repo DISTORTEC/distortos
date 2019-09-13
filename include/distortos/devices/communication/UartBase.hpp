@@ -21,8 +21,8 @@ namespace devices
 {
 
 /**
- * UartBase class is an interface with callbacks for low-level UART driver, which can serve as a base for high-level
- * UART drivers
+ * \brief UartBase class is an interface with callbacks for low-level UART driver, which can serve as a base for
+ * high-level UART drivers.
  *
  * \ingroup devices
  */

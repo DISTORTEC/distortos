@@ -24,7 +24,7 @@ namespace devices
 {
 
 /**
- * SpiMasterOperation is an alias for SpiMasterTransfer.
+ * \brief SpiMasterOperation is an alias for SpiMasterTransfer.
  *
  * \deprecated scheduled to be removed after v0.7.0, use distortos::devices::SpiMasterTransfer
  */

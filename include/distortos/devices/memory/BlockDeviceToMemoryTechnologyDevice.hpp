@@ -23,7 +23,7 @@ namespace devices
 class BlockDevice;
 
 /**
- * BlockDeviceToMemoryTechnologyDevice class is a wrapper for BlockDevice which implements MemoryTechnologyDevice
+ * \brief BlockDeviceToMemoryTechnologyDevice class is a wrapper for BlockDevice which implements MemoryTechnologyDevice
  * interface by buffering erase operations.
  *
  * \ingroup devices

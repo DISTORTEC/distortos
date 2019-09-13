@@ -22,7 +22,7 @@ namespace distortos
 class Littlefs2FileSystem;
 
 /**
- * Littlefs2File class is a [littlefs-v2](https://github.com/ARMmbed/littlefs) file.
+ * \brief Littlefs2File class is a [littlefs-v2](https://github.com/ARMmbed/littlefs) file.
  *
  * \ingroup fileSystem
  */

@@ -27,7 +27,7 @@ namespace devices
 class UartBase;
 
 /**
- * UartLowLevel class is an interface for low-level UART driver
+ * \brief UartLowLevel class is an interface for low-level UART driver.
  *
  * \ingroup devices
  */

@@ -23,7 +23,7 @@ namespace devices
 class SdMmcCardBase;
 
 /**
- * SdMmcCardLowLevel class is an interface for low-level SD/MMC card driver.
+ * \brief SdMmcCardLowLevel class is an interface for low-level SD/MMC card driver.
  *
  * \ingroup devices
  */

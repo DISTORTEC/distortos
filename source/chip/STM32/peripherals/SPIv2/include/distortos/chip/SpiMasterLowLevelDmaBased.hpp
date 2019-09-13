@@ -26,7 +26,7 @@ namespace chip
 class SpiPeripheral;
 
 /**
- * SpiMasterLowLevelDmaBased class is a low-level SPI master driver for SPIv2 in STM32.
+ * \brief SpiMasterLowLevelDmaBased class is a low-level SPI master driver for SPIv2 in STM32.
  *
  * This driver uses DMA for data transfers.
  *

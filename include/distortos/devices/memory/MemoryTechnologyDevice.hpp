@@ -22,7 +22,7 @@ namespace devices
 {
 
 /**
- * MemoryTechnologyDevice class is an interface for a memory technology device (flash memory).
+ * \brief MemoryTechnologyDevice class is an interface for a memory technology device (flash memory).
  *
  * \ingroup devices
  */

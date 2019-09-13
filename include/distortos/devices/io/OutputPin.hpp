@@ -21,7 +21,7 @@ namespace devices
 {
 
 /**
- * OutputPin class is an interface for single output pin
+ * \brief OutputPin class is an interface for single output pin.
  *
  * \ingroup devices
  */

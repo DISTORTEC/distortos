@@ -22,7 +22,7 @@ namespace devices
 {
 
 /**
- * BlockDevice class is an interface for a block device.
+ * \brief BlockDevice class is an interface for a block device.
  *
  * \ingroup devices
  */

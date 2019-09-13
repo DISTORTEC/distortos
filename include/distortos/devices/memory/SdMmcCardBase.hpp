@@ -21,8 +21,8 @@ namespace devices
 {
 
 /**
- * SdMmcCardBase class is an interface with callbacks for low-level SD/MMC card driver, which can serve as a base for
- * high-level SD/MMC card drivers.
+ * \brief SdMmcCardBase class is an interface with callbacks for low-level SD/MMC card driver, which can serve as a base
+ * for high-level SD/MMC card drivers.
  *
  * \ingroup devices
  */

@@ -23,7 +23,7 @@ namespace devices
 class SpiMasterTransfer;
 
 /**
- * SpiMasterTransfersRange is an alias for ContiguousRange of SpiMasterTransfer elements.
+ * \brief SpiMasterTransfersRange is an alias for ContiguousRange of SpiMasterTransfer elements.
  *
  * \ingroup devices
  */

@@ -115,7 +115,7 @@ size_t getStackHighWaterMark();
 size_t getStackSize();
 
 /**
- * Changes priority of calling (current) thread.
+ * \brief Changes priority of calling (current) thread.
  *
  * \warning This function must not be called from interrupt context!
  *

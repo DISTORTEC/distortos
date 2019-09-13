@@ -22,7 +22,7 @@ namespace distortos
 {
 
 /**
- * File class is an interface for a file.
+ * \brief File class is an interface for a file.
  *
  * \ingroup fileSystem
  */

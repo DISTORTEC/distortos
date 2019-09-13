@@ -67,7 +67,7 @@ public:
 	using EntryStorageUniquePointer = std::unique_ptr<EntryStorage[], void(&)(EntryStorage*)>;
 
 	/**
-	 * type of uninitialized storage for value
+	 * \brief type of uninitialized storage for value
 	 *
 	 * \tparam T is the type of data in queue
 	 */

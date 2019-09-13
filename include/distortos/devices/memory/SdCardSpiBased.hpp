@@ -26,7 +26,7 @@ class OutputPin;
 class SpiMaster;
 
 /**
- * SdCardSpiBased class is a SD card connected via SPI.
+ * \brief SdCardSpiBased class is a SD card connected via SPI.
  *
  * This class supports SD version 2.0 cards only.
  *

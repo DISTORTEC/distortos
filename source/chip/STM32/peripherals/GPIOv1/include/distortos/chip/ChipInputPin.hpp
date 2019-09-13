@@ -23,7 +23,7 @@ namespace chip
 {
 
 /**
- * ChipInputPin class is a single input pin of GPIOv1 in STM32
+ * \brief ChipInputPin class is a single input pin of GPIOv1 in STM32.
  *
  * \ingroup devices
  */

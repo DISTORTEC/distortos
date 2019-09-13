@@ -109,7 +109,7 @@ class DmaChannelPeripheral;
 class DmaPeripheral;
 
 /**
- * DmaChannel class is a low-level DMA channel driver for DMAv1 in STM32
+ * \brief DmaChannel class is a low-level DMA channel driver for DMAv1 in STM32.
  *
  * \ingroup devices
  */

@@ -29,8 +29,8 @@ class OutputPin;
 class SpiMaster;
 
 /**
- * SpiEeprom class is a SPI EEPROM memory: Atmel AT25xxx, ON Semiconductor CAT25xxx, ST M95xxx, Microchip 25xxxxx or
- * similar.
+ * \brief SpiEeprom class is a SPI EEPROM memory: Atmel AT25xxx, ON Semiconductor CAT25xxx, ST M95xxx, Microchip 25xxxxx
+ * or similar.
  *
  * \ingroup devices
  */

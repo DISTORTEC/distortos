@@ -22,7 +22,7 @@ namespace distortos
 {
 
 /**
- * Directory class is an interface for a directory.
+ * \brief Directory class is an interface for a directory.
  *
  * \ingroup fileSystem
  */

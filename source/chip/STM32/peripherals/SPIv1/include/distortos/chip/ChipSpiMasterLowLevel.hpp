@@ -24,7 +24,7 @@ namespace chip
 {
 
 /**
- * ChipSpiMasterLowLevel is an alias for SpiMasterLowLevelInterruptBased.
+ * \brief ChipSpiMasterLowLevel is an alias for SpiMasterLowLevelInterruptBased.
  *
  * \deprecated scheduled to be removed after v0.7.0, use distortos::chip::SpiMasterLowLevelInterruptBased
  */

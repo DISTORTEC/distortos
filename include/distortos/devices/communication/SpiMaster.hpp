@@ -29,7 +29,7 @@ namespace devices
 class SpiMasterLowLevel;
 
 /**
- * SpiMaster class is a driver for SPI master
+ * \brief SpiMaster class is a driver for SPI master.
  *
  * \ingroup devices
  */

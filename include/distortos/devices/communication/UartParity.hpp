@@ -21,7 +21,7 @@ namespace devices
 {
 
 /**
- * UART parity
+ * \brief UART parity
  *
  * \ingroup devices
  */

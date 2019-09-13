@@ -41,7 +41,7 @@ public:
 	using EntryStorageUniquePointer = internal::MessageQueueBase::EntryStorageUniquePointer;
 
 	/**
-	 * type of uninitialized storage for value
+	 * \brief type of uninitialized storage for value
 	 *
 	 * \tparam T is the type of data in queue
 	 */

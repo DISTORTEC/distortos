@@ -23,7 +23,7 @@ namespace internal
 {
 
 /**
- * MoveConstructQueueFunctor is a functor used for pushing of data to the queue using move-construction
+ * \brief MoveConstructQueueFunctor is a functor used for pushing of data to the queue using move-construction.
  *
  * \tparam T is the type of data pushed to the queue
  */

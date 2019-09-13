@@ -23,7 +23,7 @@ namespace internal
 {
 
 /**
- * SwapPopQueueFunctor is a functor used for popping of data from the queue using swap
+ * \brief SwapPopQueueFunctor is a functor used for popping of data from the queue using swap.
  *
  * \tparam T is the type of data popped from the queue
  */

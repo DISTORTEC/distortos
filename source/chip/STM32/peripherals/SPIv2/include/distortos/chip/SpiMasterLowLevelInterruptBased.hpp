@@ -23,7 +23,7 @@ namespace chip
 class SpiPeripheral;
 
 /**
- * SpiMasterLowLevelInterruptBased class is a low-level SPI master driver for SPIv2 in STM32.
+ * \brief SpiMasterLowLevelInterruptBased class is a low-level SPI master driver for SPIv2 in STM32.
  *
  * This driver uses interrupts for data transfers.
  *

@@ -23,7 +23,7 @@ namespace chip
 {
 
 /**
- * ChipUartLowLevel class is a low-level UART driver for USARTv1 in STM32
+ * \brief ChipUartLowLevel class is a low-level UART driver for USARTv1 in STM32.
  *
  * \ingroup devices
  */

@@ -19,8 +19,8 @@ namespace devices
 {
 
 /**
- * SpiMasterBase class is an interface with callbacks for low-level SPI master driver, which can serve as a base for
- * high-level SPI master drivers
+ * \brief SpiMasterBase class is an interface with callbacks for low-level SPI master driver, which can serve as a base
+ * for high-level SPI master drivers.
  *
  * \ingroup devices
  */

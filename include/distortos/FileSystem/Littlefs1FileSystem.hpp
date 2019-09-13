@@ -29,7 +29,7 @@ class MemoryTechnologyDevice;
 }	// namespace devices
 
 /**
- * Littlefs1FileSystem class is a [littlefs-v1](https://github.com/ARMmbed/littlefs) file system.
+ * \brief Littlefs1FileSystem class is a [littlefs-v1](https://github.com/ARMmbed/littlefs) file system.
  *
  * \ingroup fileSystem
  */

@@ -21,7 +21,7 @@ namespace devices
 {
 
 /**
- * SpiDeviceSelectGuard is a RAII-style class for selecting SPI device.
+ * \brief SpiDeviceSelectGuard is a RAII-style class for selecting SPI device.
  *
  * \ingroup devices
  */

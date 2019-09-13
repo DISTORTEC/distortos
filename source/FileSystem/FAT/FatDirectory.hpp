@@ -22,7 +22,7 @@ namespace distortos
 class FatFileSystem;
 
 /**
- * FatDirectory class is a [FAT](https://en.wikipedia.org/wiki/File_Allocation_Table) directory.
+ * \brief FatDirectory class is a [FAT](https://en.wikipedia.org/wiki/File_Allocation_Table) directory.
  *
  * \ingroup fileSystem
  */

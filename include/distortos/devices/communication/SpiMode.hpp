@@ -21,7 +21,7 @@ namespace devices
 {
 
 /**
- * SPI mode
+ * \brief SPI mode
  *
  * \ingroup devices
  */

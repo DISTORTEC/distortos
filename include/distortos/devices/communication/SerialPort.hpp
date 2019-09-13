@@ -28,7 +28,7 @@ namespace devices
 class UartLowLevel;
 
 /**
- * SerialPort class is a serial port with an interface similar to standard files
+ * \brief SerialPort class is a serial port with an interface similar to standard files.
  *
  * \ingroup devices
  */

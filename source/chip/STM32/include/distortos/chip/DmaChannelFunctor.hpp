@@ -21,7 +21,7 @@ namespace chip
 {
 
 /**
- * DmaChannelFunctor class is a functor for low-level DMA channel driver in STM32
+ * \brief DmaChannelFunctor class is a functor for low-level DMA channel driver in STM32.
  *
  * \ingroup devices
  */

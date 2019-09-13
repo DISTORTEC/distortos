@@ -21,7 +21,7 @@ namespace chip
 {
 
 /**
- * DmaChannelFunctorCommon class is a DmaChannelFunctor with empty implementations for optional event handlers.
+ * \brief DmaChannelFunctorCommon class is a DmaChannelFunctor with empty implementations for optional event handlers.
  *
  * \ingroup devices
  */

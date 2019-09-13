@@ -21,8 +21,8 @@ namespace devices
 {
 
 /**
- * SpiMasterHandle is a [std::lock_guard](https://en.cppreference.com/w/cpp/thread/lock_guard)-like class for locking
- * SpiMaster and for accessing its core functionality.
+ * \brief SpiMasterHandle is a [std::lock_guard](https://en.cppreference.com/w/cpp/thread/lock_guard)-like class for
+ * locking SpiMaster and for accessing its core functionality.
  *
  * \note Locks are recursive.
  *

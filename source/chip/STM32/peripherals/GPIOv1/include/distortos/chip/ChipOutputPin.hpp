@@ -23,7 +23,7 @@ namespace chip
 {
 
 /**
- * ChipOutputPin class is a single output pin of GPIOv1 in STM32
+ * \brief ChipOutputPin class is a single output pin of GPIOv1 in STM32.
  *
  * \ingroup devices
  */

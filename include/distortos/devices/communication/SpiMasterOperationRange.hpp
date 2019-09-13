@@ -24,7 +24,7 @@ namespace devices
 {
 
 /**
- * SpiMasterOperationRange is an alias for ContiguousRange of SpiMasterOperation elements
+ * \brief SpiMasterOperationRange is an alias for ContiguousRange of SpiMasterOperation elements.
  *
  * \deprecated scheduled to be removed after v0.7.0, use distortos::devices::SpiMasterTransfersRange
  */

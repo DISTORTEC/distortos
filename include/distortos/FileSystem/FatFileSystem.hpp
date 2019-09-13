@@ -29,7 +29,7 @@ class BlockDevice;
 }	// namespace devices
 
 /**
- * FatFileSystem class is a [FAT](https://en.wikipedia.org/wiki/File_Allocation_Table) file system.
+ * \brief FatFileSystem class is a [FAT](https://en.wikipedia.org/wiki/File_Allocation_Table) file system.
  *
  * \ingroup fileSystem
  */

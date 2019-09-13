@@ -21,7 +21,7 @@ namespace internal
 {
 
 /**
- * CopyConstructQueueFunctor is a functor used for pushing of data to the queue using copy-construction
+ * \brief CopyConstructQueueFunctor is a functor used for pushing of data to the queue using copy-construction.
  *
  * \tparam T is the type of data pushed to the queue
  */

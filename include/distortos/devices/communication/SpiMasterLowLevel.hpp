@@ -25,7 +25,7 @@ namespace devices
 class SpiMasterBase;
 
 /**
- * SpiMasterLowLevel class is an interface for low-level SPI master driver
+ * \brief SpiMasterLowLevel class is an interface for low-level SPI master driver.
  *
  * \ingroup devices
  */

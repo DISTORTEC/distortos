@@ -26,7 +26,7 @@ class Directory;
 class File;
 
 /**
- * FileSystem class is an interface for a file system.
+ * \brief FileSystem class is an interface for a file system.
  *
  * \ingroup fileSystem
  */

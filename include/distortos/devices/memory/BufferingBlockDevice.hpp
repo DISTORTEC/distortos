@@ -23,7 +23,7 @@ namespace devices
 class BlockDevice;
 
 /**
- * BufferingBlockDevice class is a buffering wrapper for BlockDevice.
+ * \brief BufferingBlockDevice class is a buffering wrapper for BlockDevice.
  *
  * This class tries to minimize amount of BlockDevice operations by buffering both reads and writes. Such buffering can
  * give signigicant gain in case of devices like SD cards, where each operation may cause the device to become "busy"

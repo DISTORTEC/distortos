@@ -26,7 +26,7 @@ namespace chip
 class SdmmcPeripheral;
 
 /**
- * SdMmcCardLowLevel class is a low-level SD/MMC card driver for SDMMCv1 in STM32.
+ * \brief SdMmcCardLowLevel class is a low-level SD/MMC card driver for SDMMCv1 in STM32.
  *
  * \ingroup devices
  */
