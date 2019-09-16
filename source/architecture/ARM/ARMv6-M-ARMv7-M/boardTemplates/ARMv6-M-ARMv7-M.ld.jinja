@@ -30,11 +30,10 @@ OUTPUT_ARCH(arm);
 | stacks sizes
 +---------------------------------------------------------------------------------------------------------------------*/
 
-PROVIDE(__main_stack_size =
-		ALIGN(DISTORTOS_ARCHITECTURE_MAIN_STACK_SIZE, DISTORTOS_ARCHITECTURE_STACK_ALIGNMENT));
+__main_stack_size = ALIGN(DISTORTOS_ARCHITECTURE_MAIN_STACK_SIZE, DISTORTOS_ARCHITECTURE_STACK_ALIGNMENT);
 
-PROVIDE(__process_stack_size = ALIGN(DISTORTOS_MAIN_THREAD_STACK_SIZE, DISTORTOS_ARCHITECTURE_STACK_ALIGNMENT) +
-		ALIGN(DISTORTOS_STACK_GUARD_SIZE, DISTORTOS_ARCHITECTURE_STACK_ALIGNMENT));
+__process_stack_size = ALIGN(DISTORTOS_MAIN_THREAD_STACK_SIZE, DISTORTOS_ARCHITECTURE_STACK_ALIGNMENT) +
+		ALIGN(DISTORTOS_STACK_GUARD_SIZE, DISTORTOS_ARCHITECTURE_STACK_ALIGNMENT);
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | available memories
@@ -51,14 +50,14 @@ MEMORY
 }
 {% for key, memory in dictionary['memories'].items() if memory is mapping %}
 
-PROVIDE(__{{ key }}_start = ORIGIN({{ key }}));
-PROVIDE(__{{ key }}_size = LENGTH({{ key }}));
-PROVIDE(__{{ key }}_end = ORIGIN({{ key }}) + LENGTH({{ key }}));
+__{{ key }}_start = ORIGIN({{ key }});
+__{{ key }}_size = LENGTH({{ key }});
+__{{ key }}_end = ORIGIN({{ key }}) + LENGTH({{ key }});
 {% if 'virtual-address' in memory %}
 
-PROVIDE(__{{ key }}Vma_start = ORIGIN({{ key }}Vma));
-PROVIDE(__{{ key }}Vma_size = LENGTH({{ key }}Vma));
-PROVIDE(__{{ key }}Vma_end = ORIGIN({{ key }}Vma) + LENGTH({{ key }}Vma));
+__{{ key }}Vma_start = ORIGIN({{ key }}Vma);
+__{{ key }}Vma_size = LENGTH({{ key }}Vma);
+__{{ key }}Vma_end = ORIGIN({{ key }}Vma) + LENGTH({{ key }}Vma);
 {% endif %}
 {% endfor %}
 
@@ -150,26 +149,26 @@ REGION_ALIAS("{{ ramKey }}DataLmaRegion", {{ romKey }});
 		'on-chip-RAM' in memory['compatible'] and '.process_stack' in memory.get('sections', ['.process_stack']) %}
 
 #ifdef DISTORTOS_LD_PROCESS_STACK_REGION_{{ key | upper }}
-PROVIDE(__process_stack_end = __{{ key }}_end / 8 * 8);
+__process_stack_end = __{{ key }}_end / 8 * 8;
 #endif	/* def DISTORTOS_LD_PROCESS_STACK_REGION_{{ key | upper }} */
 {% endfor %}
 
-PROVIDE(__process_stack_start = (__process_stack_end - __process_stack_size) / 8 * 8);
+__process_stack_start = (__process_stack_end - __process_stack_size) / 8 * 8;
 
 SECTIONS
 {
 	.text.vectorTable : ALIGN_WITH_INPUT
 	{
-		PROVIDE(__text_vectorTable_start = .);
+		__text_vectorTable_start = .;
 
 		KEEP(*(.vectorTable));
 
-		PROVIDE(__text_vectorTable_end = .);
+		__text_vectorTable_end = .;
 	} > textVectorTableVmaRegion AT > textVectorTableLmaRegion
 
 	.text : ALIGN_WITH_INPUT
 	{
-		PROVIDE(__text_start = .);
+		__text_start = .;
 
 		*(.text.unlikely .text.*_unlikely .text.unlikely.*);
 		*(.text.exit .text.exit.*);
@@ -193,7 +192,7 @@ SECTIONS
 		/* sub-section: data_initializers */
 
 		. = ALIGN(4);
-		PROVIDE(__data_initializers_start = .);
+		__data_initializers_start = .;
 
 		LONG(LOADADDR(.data)); LONG(ADDR(.data)); LONG(ADDR(.data) + SIZEOF(.data));
 {% for key, memory in dictionary['memories'].items() if memory is mapping and
@@ -204,14 +203,14 @@ LONG(ADDR(.{{ key }}.data) + SIZEOF(.{{ key }}.data));
 {% endfor %}
 
 		. = ALIGN(4);
-		PROVIDE(__data_initializers_end = .);
+		__data_initializers_end = .;
 
 		/* end of sub-section: data_initializers */
 
 		/* sub-section: bss_initializers */
 
 		. = ALIGN(4);
-		PROVIDE(__bss_initializers_start = .);
+		__bss_initializers_start = .;
 
 		LONG(0); LONG(ADDR(.bss)); LONG(ADDR(.bss) + SIZEOF(.bss));
 		LONG(0xed419f25); LONG(ADDR(.main_stack)); LONG(ADDR(.main_stack) + SIZEOF(.main_stack));
@@ -223,27 +222,27 @@ LONG(ADDR(.{{ key }}.data) + SIZEOF(.{{ key }}.data));
 {% endfor %}
 
 		. = ALIGN(4);
-		PROVIDE(__bss_initializers_end = .);
+		__bss_initializers_end = .;
 
 		/* end of sub-section: bss_initializers */
 
 		/* sub-sections: low_level_preinitializers, low_level_initializers */
 
 		. = ALIGN(4);
-		PROVIDE(__low_level_preinitializers_start = .);
+		__low_level_preinitializers_start = .;
 
 		KEEP(*(SORT(.low_level_preinitializers.*)));
 
 		. = ALIGN(4);
-		PROVIDE(__low_level_preinitializers_end = .);
+		__low_level_preinitializers_end = .;
 
 		. = ALIGN(4);
-		PROVIDE(__low_level_initializers_start = .);
+		__low_level_initializers_start = .;
 
 		KEEP(*(SORT(.low_level_initializers.*)));
 
 		. = ALIGN(4);
-		PROVIDE(__low_level_initializers_end = .);
+		__low_level_initializers_end = .;
 
 		/* end of sub-sections: low_level_preinitializers, low_level_initializers */
 
@@ -251,90 +250,90 @@ LONG(ADDR(.{{ key }}.data) + SIZEOF(.{{ key }}.data));
 
 		KEEP(*(SORT_NONE(.init)));
 
-		PROVIDE(__preinit_array_start = .);
+		__preinit_array_start = .;
 
 		KEEP(*(.preinit_array));
 
-		PROVIDE(__preinit_array_end = .);
+		__preinit_array_end = .;
 
-		PROVIDE(__init_array_start = .);
+		__init_array_start = .;
 
 		KEEP(*(SORT_BY_INIT_PRIORITY(.init_array.*)));
 		KEEP(*(.init_array));
 
-		PROVIDE(__init_array_end = .);
+		__init_array_end = .;
 
 		KEEP(*(SORT_NONE(.fini)));
 
 #if DISTORTOS_STATIC_DESTRUCTORS_ENABLE == 1
 
-		PROVIDE(__fini_array_start = .);
+		__fini_array_start = .;
 
 		KEEP(*(SORT_BY_INIT_PRIORITY(.fini_array.*)));
 		KEEP(*(.fini_array));
 
-		PROVIDE(__fini_array_end = .);
+		__fini_array_end = .;
 
 #endif	/* DISTORTOS_STATIC_DESTRUCTORS_ENABLE == 1 */
 
 		/* end of sub-sections: init, preinit_array, init_array and fini_array */
 
-		PROVIDE(__text_end = .);
+		__text_end = .;
 	} > textVmaRegion AT > textLmaRegion
 
 	.ARM.exidx : ALIGN_WITH_INPUT
 	{
-		PROVIDE(__exidx_start = .);
+		__exidx_start = .;
 
 		*(.ARM.exidx* .gnu.linkonce.armexidx.*);	/* index entries for section unwinding */
 
-		PROVIDE(__exidx_end = .);
+		__exidx_end = .;
 	} > armExidxVmaRegion AT > armExidxLmaRegion
 
 	.main_stack :
 	{
 		. = ALIGN(8);
-		PROVIDE(__main_stack_start = .);
+		__main_stack_start = .;
 
 		. += __main_stack_size;
 
 		. = ALIGN(8);
-		PROVIDE(__main_stack_end = .);
+		__main_stack_end = .;
 	} > mainStackVmaRegion AT > mainStackLmaRegion
 
 	.bss (NOLOAD) :
 	{
 		. = ALIGN(4);
-		PROVIDE(__bss_start = .);
+		__bss_start = .;
 
 		*(.bss .bss.* .gnu.linkonce.b.*);
 		*(COMMON);
 
 		. = ALIGN(4);
-		PROVIDE(__bss_end = .);
+		__bss_end = .;
 	} > bssVmaRegion AT > bssLmaRegion
 
 	.data :
 	{
 		. = ALIGN(4);
-		PROVIDE(__data_init_start = LOADADDR(.data));
-		PROVIDE(__data_start = .);
+		__data_init_start = LOADADDR(.data);
+		__data_start = .;
 
 		*(.data .data.* .gnu.linkonce.d.*);
 
 		. = ALIGN(4);
-		PROVIDE(__data_end = .);
+		__data_end = .;
 	} > dataVmaRegion AT > dataLmaRegion
 
 	.noinit (NOLOAD) :
 	{
 		. = ALIGN(4);
-		PROVIDE(__noinit_start = .);
+		__noinit_start = .;
 
 		*(.noinit);
 
 		. = ALIGN(4);
-		PROVIDE(__noinit_end = .);
+		__noinit_end = .;
 	} > noinitVmaRegion AT > noinitLmaRegion
 {% for key, memory in dictionary['memories'].items() if memory is mapping and 'on-chip-RAM' in memory['compatible'] %}
 {% if '.{}.bss'.format(key) in memory.get('sections', ['.{}.bss'.format(key)]) %}
@@ -342,12 +341,12 @@ LONG(ADDR(.{{ key }}.data) + SIZEOF(.{{ key }}.data));
 	.{{ key }}.bss (NOLOAD) :
 	{
 		. = ALIGN(4);
-		PROVIDE(__{{ key }}_bss_start = .);
+		__{{ key }}_bss_start = .;
 
 		*(.{{ key }}.bss);
 
 		. = ALIGN(4);
-		PROVIDE(__{{ key }}_bss_end = .);
+		__{{ key }}_bss_end = .;
 	} > {{ key }} AT > {{ key }}
 {% endif %}
 {% if '.{}.data'.format(key) in memory.get('sections', ['.{}.data'.format(key)]) %}
@@ -355,13 +354,13 @@ LONG(ADDR(.{{ key }}.data) + SIZEOF(.{{ key }}.data));
 	.{{ key }}.data :
 	{
 		. = ALIGN(4);
-		PROVIDE(__{{ key }}_data_init_start = LOADADDR(.{{ key }}.data));
-		PROVIDE(__{{ key }}_data_start = .);
+		__{{ key }}_data_init_start = LOADADDR(.{{ key }}.data);
+		__{{ key }}_data_start = .;
 
 		*(.{{ key }}.data);
 
 		. = ALIGN(4);
-		PROVIDE(__{{ key }}_data_end = .);
+		__{{ key }}_data_end = .;
 	} > {{ key }} AT > {{ key }}DataLmaRegion
 {% endif %}
 {% if '.{}.noinit'.format(key) in memory.get('sections', ['.{}.noinit'.format(key)]) %}
@@ -369,12 +368,12 @@ LONG(ADDR(.{{ key }}.data) + SIZEOF(.{{ key }}.data));
 	.{{ key }}.noinit (NOLOAD) :
 	{
 		. = ALIGN(4);
-		PROVIDE(__{{ key }}_noinit_start = .);
+		__{{ key }}_noinit_start = .;
 
 		*(.{{ key }}.noinit);
 
 		. = ALIGN(4);
-		PROVIDE(__{{ key }}_noinit_end = .);
+		__{{ key }}_noinit_end = .;
 	} > {{ key }} AT > {{ key }}
 {% endif %}
 {% endfor %}
@@ -430,32 +429,32 @@ LONG(ADDR(.{{ key }}.data) + SIZEOF(.{{ key }}.data));
 		'on-chip-RAM' in memory['compatible'] and '.heap' in memory.get('sections', ['.heap']) %}
 
 #ifdef DISTORTOS_LD_HEAP_REGION_{{ key | upper }}
-PROVIDE(__heap_start = ALIGN(__{{ key }}_noinit_end, 8));
+__heap_start = ALIGN(__{{ key }}_noinit_end, 8);
 #ifdef DISTORTOS_LD_PROCESS_STACK_REGION_{{ key | upper }}
-PROVIDE(__heap_end = __process_stack_start / 8 * 8);
+__heap_end = __process_stack_start / 8 * 8;
 #else	/* !def DISTORTOS_LD_PROCESS_STACK_REGION_{{ key | upper }} */
-PROVIDE(__heap_end = __{{ key }}_end / 8 * 8);
+__heap_end = __{{ key }}_end / 8 * 8;
 #endif	/* !def DISTORTOS_LD_PROCESS_STACK_REGION_{{ key | upper }} */
 #endif	/* def DISTORTOS_LD_HEAP_REGION_{{ key | upper }} */
 {% endfor %}
 
-PROVIDE(__text_vectorTable_size = SIZEOF(.text.vectorTable));
-PROVIDE(__text_size = SIZEOF(.text));
-PROVIDE(__exidx_size = SIZEOF(.ARM.exidx));
-PROVIDE(__bss_size = SIZEOF(.bss));
-PROVIDE(__data_size = SIZEOF(.data));
-PROVIDE(__noinit_size = SIZEOF(.noinit));
+__text_vectorTable_size = SIZEOF(.text.vectorTable);
+__text_size = SIZEOF(.text);
+__exidx_size = SIZEOF(.ARM.exidx);
+__bss_size = SIZEOF(.bss);
+__data_size = SIZEOF(.data);
+__noinit_size = SIZEOF(.noinit);
 {% for key, memory in dictionary['memories'].items() if memory is mapping and 'on-chip-RAM' in memory['compatible'] %}
 {% if '.{}.bss'.format(key) in memory.get('sections', ['.{}.bss'.format(key)]) %}
-PROVIDE(__{{ key }}_bss_size = SIZEOF(.{{ key }}.bss));
+__{{ key }}_bss_size = SIZEOF(.{{ key }}.bss);
 {% endif %}
 {% if '.{}.data'.format(key) in memory.get('sections', ['.{}.data'.format(key)]) %}
-PROVIDE(__{{ key }}_data_size = SIZEOF(.{{ key }}.data));
+__{{ key }}_data_size = SIZEOF(.{{ key }}.data);
 {% endif %}
 {% if '.{}.noinit'.format(key) in memory.get('sections', ['.{}.noinit'.format(key)]) %}
-PROVIDE(__{{ key }}_noinit_size = SIZEOF(.{{ key }}.noinit));
+__{{ key }}_noinit_size = SIZEOF(.{{ key }}.noinit);
 {% endif %}
 {% endfor %}
 
-PROVIDE(__bss_start__ = __bss_start);
-PROVIDE(__bss_end__ = __bss_end);
+__bss_start__ = __bss_start;
+__bss_end__ = __bss_end;

@@ -24,11 +24,10 @@ OUTPUT_ARCH(arm);
 | stacks sizes
 +---------------------------------------------------------------------------------------------------------------------*/
 
-PROVIDE(__main_stack_size =
-		ALIGN(DISTORTOS_ARCHITECTURE_MAIN_STACK_SIZE, DISTORTOS_ARCHITECTURE_STACK_ALIGNMENT));
+__main_stack_size = ALIGN(DISTORTOS_ARCHITECTURE_MAIN_STACK_SIZE, DISTORTOS_ARCHITECTURE_STACK_ALIGNMENT);
 
-PROVIDE(__process_stack_size = ALIGN(DISTORTOS_MAIN_THREAD_STACK_SIZE, DISTORTOS_ARCHITECTURE_STACK_ALIGNMENT) +
-		ALIGN(DISTORTOS_STACK_GUARD_SIZE, DISTORTOS_ARCHITECTURE_STACK_ALIGNMENT));
+__process_stack_size = ALIGN(DISTORTOS_MAIN_THREAD_STACK_SIZE, DISTORTOS_ARCHITECTURE_STACK_ALIGNMENT) +
+		ALIGN(DISTORTOS_STACK_GUARD_SIZE, DISTORTOS_ARCHITECTURE_STACK_ALIGNMENT);
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | available memories
@@ -40,13 +39,13 @@ MEMORY
 	SRAM : org = 0x20000000, len = 20480
 }
 
-PROVIDE(__flash_start = ORIGIN(flash));
-PROVIDE(__flash_size = LENGTH(flash));
-PROVIDE(__flash_end = ORIGIN(flash) + LENGTH(flash));
+__flash_start = ORIGIN(flash);
+__flash_size = LENGTH(flash);
+__flash_end = ORIGIN(flash) + LENGTH(flash);
 
-PROVIDE(__SRAM_start = ORIGIN(SRAM));
-PROVIDE(__SRAM_size = LENGTH(SRAM));
-PROVIDE(__SRAM_end = ORIGIN(SRAM) + LENGTH(SRAM));
+__SRAM_start = ORIGIN(SRAM);
+__SRAM_size = LENGTH(SRAM);
+__SRAM_end = ORIGIN(SRAM) + LENGTH(SRAM);
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | entry point
@@ -101,25 +100,25 @@ REGION_ALIAS("SRAMDataLmaRegion", flash);
 #endif	/* DISTORTOS_LD_SRAM_DATA_LMA_REGION_FLASH */
 
 #ifdef DISTORTOS_LD_PROCESS_STACK_REGION_SRAM
-PROVIDE(__process_stack_end = __SRAM_end / 8 * 8);
+__process_stack_end = __SRAM_end / 8 * 8;
 #endif	/* def DISTORTOS_LD_PROCESS_STACK_REGION_SRAM */
 
-PROVIDE(__process_stack_start = (__process_stack_end - __process_stack_size) / 8 * 8);
+__process_stack_start = (__process_stack_end - __process_stack_size) / 8 * 8;
 
 SECTIONS
 {
 	.text.vectorTable : ALIGN_WITH_INPUT
 	{
-		PROVIDE(__text_vectorTable_start = .);
+		__text_vectorTable_start = .;
 
 		KEEP(*(.vectorTable));
 
-		PROVIDE(__text_vectorTable_end = .);
+		__text_vectorTable_end = .;
 	} > textVectorTableVmaRegion AT > textVectorTableLmaRegion
 
 	.text : ALIGN_WITH_INPUT
 	{
-		PROVIDE(__text_start = .);
+		__text_start = .;
 
 		*(.text.unlikely .text.*_unlikely .text.unlikely.*);
 		*(.text.exit .text.exit.*);
@@ -143,20 +142,20 @@ SECTIONS
 		/* sub-section: data_initializers */
 
 		. = ALIGN(4);
-		PROVIDE(__data_initializers_start = .);
+		__data_initializers_start = .;
 
 		LONG(LOADADDR(.data)); LONG(ADDR(.data)); LONG(ADDR(.data) + SIZEOF(.data));
 		LONG(LOADADDR(.SRAM.data)); LONG(ADDR(.SRAM.data)); LONG(ADDR(.SRAM.data) + SIZEOF(.SRAM.data));
 
 		. = ALIGN(4);
-		PROVIDE(__data_initializers_end = .);
+		__data_initializers_end = .;
 
 		/* end of sub-section: data_initializers */
 
 		/* sub-section: bss_initializers */
 
 		. = ALIGN(4);
-		PROVIDE(__bss_initializers_start = .);
+		__bss_initializers_start = .;
 
 		LONG(0); LONG(ADDR(.bss)); LONG(ADDR(.bss) + SIZEOF(.bss));
 		LONG(0xed419f25); LONG(ADDR(.main_stack)); LONG(ADDR(.main_stack) + SIZEOF(.main_stack));
@@ -164,27 +163,27 @@ SECTIONS
 		LONG(0); LONG(ADDR(.SRAM.bss)); LONG(ADDR(.SRAM.bss) + SIZEOF(.SRAM.bss));
 
 		. = ALIGN(4);
-		PROVIDE(__bss_initializers_end = .);
+		__bss_initializers_end = .;
 
 		/* end of sub-section: bss_initializers */
 
 		/* sub-sections: low_level_preinitializers, low_level_initializers */
 
 		. = ALIGN(4);
-		PROVIDE(__low_level_preinitializers_start = .);
+		__low_level_preinitializers_start = .;
 
 		KEEP(*(SORT(.low_level_preinitializers.*)));
 
 		. = ALIGN(4);
-		PROVIDE(__low_level_preinitializers_end = .);
+		__low_level_preinitializers_end = .;
 
 		. = ALIGN(4);
-		PROVIDE(__low_level_initializers_start = .);
+		__low_level_initializers_start = .;
 
 		KEEP(*(SORT(.low_level_initializers.*)));
 
 		. = ALIGN(4);
-		PROVIDE(__low_level_initializers_end = .);
+		__low_level_initializers_end = .;
 
 		/* end of sub-sections: low_level_preinitializers, low_level_initializers */
 
@@ -192,124 +191,124 @@ SECTIONS
 
 		KEEP(*(SORT_NONE(.init)));
 
-		PROVIDE(__preinit_array_start = .);
+		__preinit_array_start = .;
 
 		KEEP(*(.preinit_array));
 
-		PROVIDE(__preinit_array_end = .);
+		__preinit_array_end = .;
 
-		PROVIDE(__init_array_start = .);
+		__init_array_start = .;
 
 		KEEP(*(SORT_BY_INIT_PRIORITY(.init_array.*)));
 		KEEP(*(.init_array));
 
-		PROVIDE(__init_array_end = .);
+		__init_array_end = .;
 
 		KEEP(*(SORT_NONE(.fini)));
 
 #if DISTORTOS_STATIC_DESTRUCTORS_ENABLE == 1
 
-		PROVIDE(__fini_array_start = .);
+		__fini_array_start = .;
 
 		KEEP(*(SORT_BY_INIT_PRIORITY(.fini_array.*)));
 		KEEP(*(.fini_array));
 
-		PROVIDE(__fini_array_end = .);
+		__fini_array_end = .;
 
 #endif	/* DISTORTOS_STATIC_DESTRUCTORS_ENABLE == 1 */
 
 		/* end of sub-sections: init, preinit_array, init_array and fini_array */
 
-		PROVIDE(__text_end = .);
+		__text_end = .;
 	} > textVmaRegion AT > textLmaRegion
 
 	.ARM.exidx : ALIGN_WITH_INPUT
 	{
-		PROVIDE(__exidx_start = .);
+		__exidx_start = .;
 
 		*(.ARM.exidx* .gnu.linkonce.armexidx.*);	/* index entries for section unwinding */
 
-		PROVIDE(__exidx_end = .);
+		__exidx_end = .;
 	} > armExidxVmaRegion AT > armExidxLmaRegion
 
 	.main_stack :
 	{
 		. = ALIGN(8);
-		PROVIDE(__main_stack_start = .);
+		__main_stack_start = .;
 
 		. += __main_stack_size;
 
 		. = ALIGN(8);
-		PROVIDE(__main_stack_end = .);
+		__main_stack_end = .;
 	} > mainStackVmaRegion AT > mainStackLmaRegion
 
 	.bss (NOLOAD) :
 	{
 		. = ALIGN(4);
-		PROVIDE(__bss_start = .);
+		__bss_start = .;
 
 		*(.bss .bss.* .gnu.linkonce.b.*);
 		*(COMMON);
 
 		. = ALIGN(4);
-		PROVIDE(__bss_end = .);
+		__bss_end = .;
 	} > bssVmaRegion AT > bssLmaRegion
 
 	.data :
 	{
 		. = ALIGN(4);
-		PROVIDE(__data_init_start = LOADADDR(.data));
-		PROVIDE(__data_start = .);
+		__data_init_start = LOADADDR(.data);
+		__data_start = .;
 
 		*(.data .data.* .gnu.linkonce.d.*);
 
 		. = ALIGN(4);
-		PROVIDE(__data_end = .);
+		__data_end = .;
 	} > dataVmaRegion AT > dataLmaRegion
 
 	.noinit (NOLOAD) :
 	{
 		. = ALIGN(4);
-		PROVIDE(__noinit_start = .);
+		__noinit_start = .;
 
 		*(.noinit);
 
 		. = ALIGN(4);
-		PROVIDE(__noinit_end = .);
+		__noinit_end = .;
 	} > noinitVmaRegion AT > noinitLmaRegion
 
 	.SRAM.bss (NOLOAD) :
 	{
 		. = ALIGN(4);
-		PROVIDE(__SRAM_bss_start = .);
+		__SRAM_bss_start = .;
 
 		*(.SRAM.bss);
 
 		. = ALIGN(4);
-		PROVIDE(__SRAM_bss_end = .);
+		__SRAM_bss_end = .;
 	} > SRAM AT > SRAM
 
 	.SRAM.data :
 	{
 		. = ALIGN(4);
-		PROVIDE(__SRAM_data_init_start = LOADADDR(.SRAM.data));
-		PROVIDE(__SRAM_data_start = .);
+		__SRAM_data_init_start = LOADADDR(.SRAM.data);
+		__SRAM_data_start = .;
 
 		*(.SRAM.data);
 
 		. = ALIGN(4);
-		PROVIDE(__SRAM_data_end = .);
+		__SRAM_data_end = .;
 	} > SRAM AT > SRAMDataLmaRegion
 
 	.SRAM.noinit (NOLOAD) :
 	{
 		. = ALIGN(4);
-		PROVIDE(__SRAM_noinit_start = .);
+		__SRAM_noinit_start = .;
 
 		*(.SRAM.noinit);
 
 		. = ALIGN(4);
-		PROVIDE(__SRAM_noinit_end = .);
+		__SRAM_noinit_end = .;
 	} > SRAM AT > SRAM
 
 	.process_stack __process_stack_start : AT(__process_stack_start)
@@ -361,23 +360,23 @@ SECTIONS
 }
 
 #ifdef DISTORTOS_LD_HEAP_REGION_SRAM
-PROVIDE(__heap_start = ALIGN(__SRAM_noinit_end, 8));
+__heap_start = ALIGN(__SRAM_noinit_end, 8);
 #ifdef DISTORTOS_LD_PROCESS_STACK_REGION_SRAM
-PROVIDE(__heap_end = __process_stack_start / 8 * 8);
+__heap_end = __process_stack_start / 8 * 8;
 #else	/* !def DISTORTOS_LD_PROCESS_STACK_REGION_SRAM */
-PROVIDE(__heap_end = __SRAM_end / 8 * 8);
+__heap_end = __SRAM_end / 8 * 8;
 #endif	/* !def DISTORTOS_LD_PROCESS_STACK_REGION_SRAM */
 #endif	/* def DISTORTOS_LD_HEAP_REGION_SRAM */
 
-PROVIDE(__text_vectorTable_size = SIZEOF(.text.vectorTable));
-PROVIDE(__text_size = SIZEOF(.text));
-PROVIDE(__exidx_size = SIZEOF(.ARM.exidx));
-PROVIDE(__bss_size = SIZEOF(.bss));
-PROVIDE(__data_size = SIZEOF(.data));
-PROVIDE(__noinit_size = SIZEOF(.noinit));
-PROVIDE(__SRAM_bss_size = SIZEOF(.SRAM.bss));
-PROVIDE(__SRAM_data_size = SIZEOF(.SRAM.data));
-PROVIDE(__SRAM_noinit_size = SIZEOF(.SRAM.noinit));
+__text_vectorTable_size = SIZEOF(.text.vectorTable);
+__text_size = SIZEOF(.text);
+__exidx_size = SIZEOF(.ARM.exidx);
+__bss_size = SIZEOF(.bss);
+__data_size = SIZEOF(.data);
+__noinit_size = SIZEOF(.noinit);
+__SRAM_bss_size = SIZEOF(.SRAM.bss);
+__SRAM_data_size = SIZEOF(.SRAM.data);
+__SRAM_noinit_size = SIZEOF(.SRAM.noinit);
 
-PROVIDE(__bss_start__ = __bss_start);
-PROVIDE(__bss_end__ = __bss_end);
+__bss_start__ = __bss_start;
+__bss_end__ = __bss_end;
