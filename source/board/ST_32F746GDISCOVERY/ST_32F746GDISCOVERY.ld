@@ -49,6 +49,10 @@ PROVIDE(__flash_start = ORIGIN(flash));
 PROVIDE(__flash_size = LENGTH(flash));
 PROVIDE(__flash_end = ORIGIN(flash) + LENGTH(flash));
 
+PROVIDE(__flashVma_start = ORIGIN(flashVma));
+PROVIDE(__flashVma_size = LENGTH(flashVma));
+PROVIDE(__flashVma_end = ORIGIN(flashVma) + LENGTH(flashVma));
+
 PROVIDE(__SRAM_start = ORIGIN(SRAM));
 PROVIDE(__SRAM_size = LENGTH(SRAM));
 PROVIDE(__SRAM_end = ORIGIN(SRAM) + LENGTH(SRAM));

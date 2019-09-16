@@ -54,6 +54,12 @@ MEMORY
 PROVIDE(__{{ key }}_start = ORIGIN({{ key }}));
 PROVIDE(__{{ key }}_size = LENGTH({{ key }}));
 PROVIDE(__{{ key }}_end = ORIGIN({{ key }}) + LENGTH({{ key }}));
+{% if 'virtual-address' in memory %}
+
+PROVIDE(__{{ key }}Vma_start = ORIGIN({{ key }}Vma));
+PROVIDE(__{{ key }}Vma_size = LENGTH({{ key }}Vma));
+PROVIDE(__{{ key }}Vma_end = ORIGIN({{ key }}Vma) + LENGTH({{ key }}Vma));
+{% endif %}
 {% endfor %}
 
 /*---------------------------------------------------------------------------------------------------------------------+
