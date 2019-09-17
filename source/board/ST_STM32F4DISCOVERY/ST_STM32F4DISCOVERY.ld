@@ -45,19 +45,19 @@ MEMORY
 
 __flash_start = ORIGIN(flash);
 __flash_size = LENGTH(flash);
-__flash_end = ORIGIN(flash) + LENGTH(flash);
+__flash_end = __flash_start + __flash_size;
 
 __SRAM_start = ORIGIN(SRAM);
 __SRAM_size = LENGTH(SRAM);
-__SRAM_end = ORIGIN(SRAM) + LENGTH(SRAM);
+__SRAM_end = __SRAM_start + __SRAM_size;
 
 __CCM_start = ORIGIN(CCM);
 __CCM_size = LENGTH(CCM);
-__CCM_end = ORIGIN(CCM) + LENGTH(CCM);
+__CCM_end = __CCM_start + __CCM_size;
 
 __BKPSRAM_start = ORIGIN(BKPSRAM);
 __BKPSRAM_size = LENGTH(BKPSRAM);
-__BKPSRAM_end = ORIGIN(BKPSRAM) + LENGTH(BKPSRAM);
+__BKPSRAM_end = __BKPSRAM_start + __BKPSRAM_size;
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | entry point
@@ -188,9 +188,9 @@ SECTIONS
 		. = ALIGN(4);
 		__data_initializers_start = .;
 
-		LONG(LOADADDR(.data)); LONG(ADDR(.data)); LONG(ADDR(.data) + SIZEOF(.data));
-		LONG(LOADADDR(.SRAM.data)); LONG(ADDR(.SRAM.data)); LONG(ADDR(.SRAM.data) + SIZEOF(.SRAM.data));
-		LONG(LOADADDR(.CCM.data)); LONG(ADDR(.CCM.data)); LONG(ADDR(.CCM.data) + SIZEOF(.CCM.data));
+		LONG(__data_init_start); LONG(__data_start); LONG(__data_end);
+		LONG(__SRAM_data_init_start); LONG(__SRAM_data_start); LONG(__SRAM_data_end);
+		LONG(__CCM_data_init_start); LONG(__CCM_data_start); LONG(__CCM_data_end);
 
 		. = ALIGN(4);
 		__data_initializers_end = .;
@@ -202,11 +202,11 @@ SECTIONS
 		. = ALIGN(4);
 		__bss_initializers_start = .;
 
-		LONG(0); LONG(ADDR(.bss)); LONG(ADDR(.bss) + SIZEOF(.bss));
-		LONG(0xed419f25); LONG(ADDR(.main_stack)); LONG(ADDR(.main_stack) + SIZEOF(.main_stack));
-		LONG(0xed419f25); LONG(ADDR(.process_stack)); LONG(ADDR(.process_stack) + SIZEOF(.process_stack));
-		LONG(0); LONG(ADDR(.SRAM.bss)); LONG(ADDR(.SRAM.bss) + SIZEOF(.SRAM.bss));
-		LONG(0); LONG(ADDR(.CCM.bss)); LONG(ADDR(.CCM.bss) + SIZEOF(.CCM.bss));
+		LONG(0); LONG(__bss_start); LONG(__bss_end);
+		LONG(0xed419f25); LONG(__main_stack_start); LONG(__main_stack_end);
+		LONG(0xed419f25); LONG(__process_stack_start); LONG(__process_stack_end);
+		LONG(0); LONG(__SRAM_bss_start); LONG(__SRAM_bss_end);
+		LONG(0); LONG(__CCM_bss_start); LONG(__CCM_bss_end);
 
 		. = ALIGN(4);
 		__bss_initializers_end = .;

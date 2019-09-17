@@ -43,15 +43,15 @@ MEMORY
 
 __flash_start = ORIGIN(flash);
 __flash_size = LENGTH(flash);
-__flash_end = ORIGIN(flash) + LENGTH(flash);
+__flash_end = __flash_start + __flash_size;
 
 __SRAM1_start = ORIGIN(SRAM1);
 __SRAM1_size = LENGTH(SRAM1);
-__SRAM1_end = ORIGIN(SRAM1) + LENGTH(SRAM1);
+__SRAM1_end = __SRAM1_start + __SRAM1_size;
 
 __SRAM2_start = ORIGIN(SRAM2);
 __SRAM2_size = LENGTH(SRAM2);
-__SRAM2_end = ORIGIN(SRAM2) + LENGTH(SRAM2);
+__SRAM2_end = __SRAM2_start + __SRAM2_size;
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | entry point
@@ -177,9 +177,9 @@ SECTIONS
 		. = ALIGN(4);
 		__data_initializers_start = .;
 
-		LONG(LOADADDR(.data)); LONG(ADDR(.data)); LONG(ADDR(.data) + SIZEOF(.data));
-		LONG(LOADADDR(.SRAM1.data)); LONG(ADDR(.SRAM1.data)); LONG(ADDR(.SRAM1.data) + SIZEOF(.SRAM1.data));
-		LONG(LOADADDR(.SRAM2.data)); LONG(ADDR(.SRAM2.data)); LONG(ADDR(.SRAM2.data) + SIZEOF(.SRAM2.data));
+		LONG(__data_init_start); LONG(__data_start); LONG(__data_end);
+		LONG(__SRAM1_data_init_start); LONG(__SRAM1_data_start); LONG(__SRAM1_data_end);
+		LONG(__SRAM2_data_init_start); LONG(__SRAM2_data_start); LONG(__SRAM2_data_end);
 
 		. = ALIGN(4);
 		__data_initializers_end = .;
@@ -191,11 +191,11 @@ SECTIONS
 		. = ALIGN(4);
 		__bss_initializers_start = .;
 
-		LONG(0); LONG(ADDR(.bss)); LONG(ADDR(.bss) + SIZEOF(.bss));
-		LONG(0xed419f25); LONG(ADDR(.main_stack)); LONG(ADDR(.main_stack) + SIZEOF(.main_stack));
-		LONG(0xed419f25); LONG(ADDR(.process_stack)); LONG(ADDR(.process_stack) + SIZEOF(.process_stack));
-		LONG(0); LONG(ADDR(.SRAM1.bss)); LONG(ADDR(.SRAM1.bss) + SIZEOF(.SRAM1.bss));
-		LONG(0); LONG(ADDR(.SRAM2.bss)); LONG(ADDR(.SRAM2.bss) + SIZEOF(.SRAM2.bss));
+		LONG(0); LONG(__bss_start); LONG(__bss_end);
+		LONG(0xed419f25); LONG(__main_stack_start); LONG(__main_stack_end);
+		LONG(0xed419f25); LONG(__process_stack_start); LONG(__process_stack_end);
+		LONG(0); LONG(__SRAM1_bss_start); LONG(__SRAM1_bss_end);
+		LONG(0); LONG(__SRAM2_bss_start); LONG(__SRAM2_bss_end);
 
 		. = ALIGN(4);
 		__bss_initializers_end = .;

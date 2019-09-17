@@ -52,12 +52,12 @@ MEMORY
 
 __{{ key }}_start = ORIGIN({{ key }});
 __{{ key }}_size = LENGTH({{ key }});
-__{{ key }}_end = ORIGIN({{ key }}) + LENGTH({{ key }});
+__{{ key }}_end = __{{ key }}_start + __{{ key }}_size;
 {% if 'virtual-address' in memory %}
 
 __{{ key }}Vma_start = ORIGIN({{ key }}Vma);
 __{{ key }}Vma_size = LENGTH({{ key }}Vma);
-__{{ key }}Vma_end = ORIGIN({{ key }}Vma) + LENGTH({{ key }}Vma);
+__{{ key }}Vma_end = __{{ key }}Vma_start + __{{ key }}Vma_size;
 {% endif %}
 {% endfor %}
 
@@ -194,12 +194,11 @@ SECTIONS
 		. = ALIGN(4);
 		__data_initializers_start = .;
 
-		LONG(LOADADDR(.data)); LONG(ADDR(.data)); LONG(ADDR(.data) + SIZEOF(.data));
+		LONG(__data_init_start); LONG(__data_start); LONG(__data_end);
 {% for key, memory in dictionary['memories'].items() if memory is mapping and
 		'on-chip-RAM' in memory['compatible'] and
 		'.{}.data'.format(key) in memory.get('sections', ['.{}.data'.format(key)]) %}
-		LONG(LOADADDR(.{{ key }}.data)); LONG(ADDR(.{{ key }}.data)); {# remove whitespace -#}
-LONG(ADDR(.{{ key }}.data) + SIZEOF(.{{ key }}.data));
+		LONG(__{{ key }}_data_init_start); LONG(__{{ key }}_data_start); LONG(__{{ key }}_data_end);
 {% endfor %}
 
 		. = ALIGN(4);
@@ -212,13 +211,13 @@ LONG(ADDR(.{{ key }}.data) + SIZEOF(.{{ key }}.data));
 		. = ALIGN(4);
 		__bss_initializers_start = .;
 
-		LONG(0); LONG(ADDR(.bss)); LONG(ADDR(.bss) + SIZEOF(.bss));
-		LONG(0xed419f25); LONG(ADDR(.main_stack)); LONG(ADDR(.main_stack) + SIZEOF(.main_stack));
-		LONG(0xed419f25); LONG(ADDR(.process_stack)); LONG(ADDR(.process_stack) + SIZEOF(.process_stack));
+		LONG(0); LONG(__bss_start); LONG(__bss_end);
+		LONG(0xed419f25); LONG(__main_stack_start); LONG(__main_stack_end);
+		LONG(0xed419f25); LONG(__process_stack_start); LONG(__process_stack_end);
 {% for key, memory in dictionary['memories'].items() if memory is mapping and
 		'on-chip-RAM' in memory['compatible'] and
 		'.{}.bss'.format(key) in memory.get('sections', ['.{}.bss'.format(key)]) %}
-		LONG(0); LONG(ADDR(.{{ key }}.bss)); LONG(ADDR(.{{ key }}.bss) + SIZEOF(.{{ key }}.bss));
+		LONG(0); LONG(__{{ key }}_bss_start); LONG(__{{ key }}_bss_end);
 {% endfor %}
 
 		. = ALIGN(4);
