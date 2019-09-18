@@ -27,6 +27,9 @@ provides support for [littlefs-v2](https://github.com/ARMmbed/littlefs) file sys
 
 ### Changed
 
+- Simplified generated linker scripts. This change causes the build to fail at link stage with
+`ld: invalid data statement` when using *binutils* version 2.27 or earlier. There is no error when using *binutils*
+version 2.28 (released on 2nd March 2017) or later, so in case of problems please update your toolchain.
 - Changed various aspects related to [littlefs-v1](https://github.com/ARMmbed/littlefs) file system integration:
   - Headers which declare `distortos::Littlefs1File` and `distortos::Littlefs1Directory` classes are no longer
   acceessible by the application code - these classes are never used directly, only via `distortos::File` and

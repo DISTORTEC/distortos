@@ -20,7 +20,6 @@ language: python
 
 matrix:
     include:
-        - env: SUBSTAGE="build 5"
         - env: SUBSTAGE="build 6"
         - env: SUBSTAGE="build 7"
         - env: SUBSTAGE="build 8"

@@ -22,20 +22,8 @@ if [ "${2}" = 'build' ] && [ ${#} -lt 3 ]; then
 	exit 2
 fi
 
-# "install build 5" phase
-installBuild5() {
-	echo 'Downloading gcc-arm-none-eabi-5_3-160412-linux-x64.tar.xz...'
-	wget http://www.freddiechopin.info/en/download/category/11-bleeding-edge-toolchain?download=143%3Ableeding-edge-toolchain-160412-64-bit-linux -O gcc-arm-none-eabi-5_3-160412-linux-x64.tar.xz
-	echo 'Extracting gcc-arm-none-eabi-5_3-160412-linux-x64.tar.xz...'
-	tar -xf gcc-arm-none-eabi-5_3-160412-linux-x64.tar.xz
-	cat > arm-none-eabi-gcc-5.3.1.sh <<- EOF
-	export LD_LIBRARY_PATH="$(pwd)/gcc-arm-none-eabi-5_3-160412/bin/lib"
-	export PATH="$(pwd)/gcc-arm-none-eabi-5_3-160412/bin:\${PATH-}"
-	EOF
-}
-
-# "install build 6", "install build 7", "install build 8" and "install build 9" phase
-installBuild6789() {
+# toolchain installation phase
+installToolchain() {
 	local gccVersion="${1}"
 	local buildDate="${2}"
 	echo "Downloading arm-none-eabi-gcc-${gccVersion}-${buildDate}.tar.xz..."
@@ -53,20 +41,17 @@ installBuild() {
 	cd "${HOME}/toolchain"
 
 	case "${1}" in
-		5)
-			installBuild5
-			;;
 		6)
-			installBuild6789 '6.3.0' '170821'
+			installToolchain '6.3.0' '170821'
 			;;
 		7)
-			installBuild6789 '7.3.0' '180127'
+			installToolchain '7.3.0' '180127'
 			;;
 		8)
-			installBuild6789 '8.3.0' '190223'
+			installToolchain '8.3.0' '190223'
 			;;
 		9)
-			installBuild6789 '9.1.0' '190503'
+			installToolchain '9.1.0' '190503'
 			;;
 		*)
 			echo "\"${1}\" is not a valid argument!" >&2
