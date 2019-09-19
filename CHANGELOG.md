@@ -48,6 +48,8 @@ or writing respectively, instead of returning `EBADF`.
 - Fixed mechanism of generating `distortosConfiguration.h` header and `distortosConfiguration.cmake` saved
 configuration. These files now also include configuration variables added "outside" of *distortos* itself, for example
 in another submodule (beside *distortos*) of an application.
+- Fixed definition of `DIR` in `sys/dirent.h`, which was valid only for C++ code. `DIR` has to be a `typedef`, not a
+`struct`.
 
 ### Removed
 

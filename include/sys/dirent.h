@@ -27,8 +27,11 @@ extern "C"
 | global types
 +---------------------------------------------------------------------------------------------------------------------*/
 
+/** directory stream struct */
+struct DirStruct;
+
 /** directory stream */
-struct DIR;
+typedef struct DirStruct DIR;
 
 /** directory entry information structure */
 struct dirent
