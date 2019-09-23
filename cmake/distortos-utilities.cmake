@@ -100,6 +100,10 @@ function(distortosAppendToSavedConfiguration name)
 		return()
 	endif()
 
+	if(NOT DEFINED "${name}")	# do nothing if variable is not defined
+		return()
+	endif()
+
 	get_property(helpstring CACHE "${name}" PROPERTY HELPSTRING)
 	string(REPLACE "\n" "\\n" helpstring "${helpstring}")
 	string(REPLACE "\"" "\\\"" helpstring "${helpstring}")
