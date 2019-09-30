@@ -119,7 +119,10 @@ int FatFileSystem::format()
 	const auto blocksCount = blocksCount_ != 0 ? blocksCount_ : device_.blockDevice.getSize() / blockSize;
 
 	const auto ret = ufat_mkfs(&device_.device, blocksCount);
-	return ufatErrorToErrorCode(ret);
+	if (ret < 0)
+		return ufatErrorToErrorCode(ret);
+
+	return device_.blockDevice.synchronize();
 }
 
 int FatFileSystem::getFileStatus(const char* const path, struct stat& status)

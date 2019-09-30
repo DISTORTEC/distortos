@@ -93,6 +93,7 @@ public:
 	 * - EINVAL - block size is not a power of 2;
 	 * - converted error codes returned by ufat_mkfs();
 	 * - error codes returned by BlockDevice::open();
+	 * - error codes returned by BlockDevice::synchronize();
 	 */
 
 	int format() override;

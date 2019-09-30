@@ -293,6 +293,23 @@ TEST_CASE("Testing format()", "[format]")
 			}
 		}
 	}
+
+	SECTION("Block device synchronize error should propagate error code to caller")
+	{
+		distortos::FatFileSystem ffs {blockDeviceMock};
+
+		REQUIRE_CALL(mutexMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
+		REQUIRE_CALL(blockDeviceMock, open()).IN_SEQUENCE(sequence).RETURN(0);
+		REQUIRE_CALL(blockDeviceMock, getBlockSize()).IN_SEQUENCE(sequence).RETURN(defaultBlockSize);
+		REQUIRE_CALL(blockDeviceMock, getSize()).IN_SEQUENCE(sequence)
+				.RETURN(static_cast<uint64_t>(defaultBlockSize) * defaultBlocksCount);
+		REQUIRE_CALL(ufatMock, ufat_mkfs(ne(nullptr), defaultBlocksCount)).IN_SEQUENCE(sequence).RETURN(0);
+		constexpr int ret {0x47ea866b};
+		REQUIRE_CALL(blockDeviceMock, synchronize()).IN_SEQUENCE(sequence).RETURN(ret);
+		REQUIRE_CALL(blockDeviceMock, close()).IN_SEQUENCE(sequence).RETURN(0);
+		REQUIRE_CALL(mutexMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
+		REQUIRE(ffs.format() == ret);
+	}
 }
 
 TEST_CASE("Testing mount() & unmount()", "[mount/unmount]")
