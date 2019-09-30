@@ -119,7 +119,10 @@ int FatFileSystem::format()
 	const auto blocksCount = blocksCount_ != 0 ? blocksCount_ : device_.blockDevice.getSize() / blockSize;
 
 	const auto ret = ufat_mkfs(&device_.device, blocksCount);
-	return ufatErrorToErrorCode(ret);
+	if (ret < 0)
+		return ufatErrorToErrorCode(ret);
+
+	return device_.blockDevice.synchronize();
 }
 
 int FatFileSystem::getFileStatus(const char* const path, struct stat& status)
@@ -196,9 +199,19 @@ int FatFileSystem::makeDirectory(const char* const path, mode_t)
 	if (strpbrk(pathRemainder, "/\\") != nullptr)
 		return ENOENT;
 
-	directoryEntry = {};
-	const auto ret = ufat_dir_create(&directory, &directoryEntry, pathRemainder);
-	return ufatErrorToErrorCode(ret);
+	{
+		directoryEntry = {};
+		const auto ret = ufat_dir_create(&directory, &directoryEntry, pathRemainder);
+		if (ret < 0)
+			return ufatErrorToErrorCode(ret);
+	}
+	{
+		const auto ret = ufat_sync(&fileSystem_);
+		if (ret < 0)
+			return ufatErrorToErrorCode(ret);
+	}
+
+	return device_.blockDevice.synchronize();
 }
 
 int FatFileSystem::mount()
@@ -290,8 +303,18 @@ int FatFileSystem::remove(const char* const path)
 			return ENOENT;
 	}
 
-	const auto ret = ufat_dir_delete(&fileSystem_, &directoryEntry);
-	return ufatErrorToErrorCode(ret);
+	{
+		const auto ret = ufat_dir_delete(&fileSystem_, &directoryEntry);
+		if (ret < 0)
+			return ufatErrorToErrorCode(ret);
+	}
+	{
+		const auto ret = ufat_sync(&fileSystem_);
+		if (ret < 0)
+			return ufatErrorToErrorCode(ret);
+	}
+
+	return device_.blockDevice.synchronize();
 }
 
 int FatFileSystem::rename(const char* const path, const char* const newPath)
@@ -327,8 +350,18 @@ int FatFileSystem::rename(const char* const path, const char* const newPath)
 	if (strpbrk(newPathRemainder, "/\\") != nullptr)
 		return ENOENT;
 
-	const auto ret = ufat_move(&directoryEntry, &newDirectory, newPathRemainder);
-	return ufatErrorToErrorCode(ret);
+	{
+		const auto ret = ufat_move(&directoryEntry, &newDirectory, newPathRemainder);
+		if (ret < 0)
+			return ufatErrorToErrorCode(ret);
+	}
+	{
+		const auto ret = ufat_sync(&fileSystem_);
+		if (ret < 0)
+			return ufatErrorToErrorCode(ret);
+	}
+
+	return device_.blockDevice.synchronize();
 }
 
 void FatFileSystem::unlock()

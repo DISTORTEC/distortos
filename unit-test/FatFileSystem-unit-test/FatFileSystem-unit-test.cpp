@@ -293,6 +293,23 @@ TEST_CASE("Testing format()", "[format]")
 			}
 		}
 	}
+
+	SECTION("Block device synchronize error should propagate error code to caller")
+	{
+		distortos::FatFileSystem ffs {blockDeviceMock};
+
+		REQUIRE_CALL(mutexMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
+		REQUIRE_CALL(blockDeviceMock, open()).IN_SEQUENCE(sequence).RETURN(0);
+		REQUIRE_CALL(blockDeviceMock, getBlockSize()).IN_SEQUENCE(sequence).RETURN(defaultBlockSize);
+		REQUIRE_CALL(blockDeviceMock, getSize()).IN_SEQUENCE(sequence)
+				.RETURN(static_cast<uint64_t>(defaultBlockSize) * defaultBlocksCount);
+		REQUIRE_CALL(ufatMock, ufat_mkfs(ne(nullptr), defaultBlocksCount)).IN_SEQUENCE(sequence).RETURN(0);
+		constexpr int ret {0x47ea866b};
+		REQUIRE_CALL(blockDeviceMock, synchronize()).IN_SEQUENCE(sequence).RETURN(ret);
+		REQUIRE_CALL(blockDeviceMock, close()).IN_SEQUENCE(sequence).RETURN(0);
+		REQUIRE_CALL(mutexMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
+		REQUIRE(ffs.format() == ret);
+	}
 }
 
 TEST_CASE("Testing mount() & unmount()", "[mount/unmount]")
@@ -600,6 +617,48 @@ TEST_CASE("Testing makeDirectory()", "[makeDirectory]")
 		REQUIRE_CALL(mutexMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
 		REQUIRE(ffs.makeDirectory(path, {}) == EFAULT);
 	}
+	SECTION("ufat_sync() error should propagate converted error code to caller")
+	{
+		ufat_directory* ufatDirectory {};
+		ufat_dirent* ufatDirectoryEntry {};
+		const char** pathRemainder {};
+
+		const char* const path {"some/path"};
+
+		REQUIRE_CALL(mutexMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
+		REQUIRE_CALL(ufatMock, ufat_open_root(ufatFileSystem, ne(nullptr))).IN_SEQUENCE(sequence)
+				.LR_SIDE_EFFECT(ufatDirectory = _2);
+		REQUIRE_CALL(ufatMock, ufat_dir_find_path(_, path, ne(nullptr), ne(nullptr))).LR_WITH(_1 == ufatDirectory)
+				.IN_SEQUENCE(sequence).LR_SIDE_EFFECT(ufatDirectoryEntry = _3).LR_SIDE_EFFECT(pathRemainder = _4)
+				.SIDE_EFFECT(*_4 = strrchr(path, '/') + 1).RETURN(1);
+		REQUIRE_CALL(ufatMock, ufat_dir_create(_, _, _)).LR_WITH(_1 == ufatDirectory).LR_WITH(_2 == ufatDirectoryEntry)
+				.LR_WITH(_3 == *pathRemainder).IN_SEQUENCE(sequence).RETURN(0);
+		REQUIRE_CALL(ufatMock, ufat_sync(ufatFileSystem)).IN_SEQUENCE(sequence).RETURN(-UFAT_ERR_ILLEGAL_NAME);
+		REQUIRE_CALL(mutexMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
+		REQUIRE(ffs.makeDirectory(path, {}) == EINVAL);
+	}
+	SECTION("Block device synchronize error should propagate error code to caller")
+	{
+		ufat_directory* ufatDirectory {};
+		ufat_dirent* ufatDirectoryEntry {};
+		const char** pathRemainder {};
+
+		const char* const path {"some/path"};
+
+		REQUIRE_CALL(mutexMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
+		REQUIRE_CALL(ufatMock, ufat_open_root(ufatFileSystem, ne(nullptr))).IN_SEQUENCE(sequence)
+				.LR_SIDE_EFFECT(ufatDirectory = _2);
+		REQUIRE_CALL(ufatMock, ufat_dir_find_path(_, path, ne(nullptr), ne(nullptr))).LR_WITH(_1 == ufatDirectory)
+				.IN_SEQUENCE(sequence).LR_SIDE_EFFECT(ufatDirectoryEntry = _3).LR_SIDE_EFFECT(pathRemainder = _4)
+				.SIDE_EFFECT(*_4 = strrchr(path, '/') + 1).RETURN(1);
+		REQUIRE_CALL(ufatMock, ufat_dir_create(_, _, _)).LR_WITH(_1 == ufatDirectory).LR_WITH(_2 == ufatDirectoryEntry)
+				.LR_WITH(_3 == *pathRemainder).IN_SEQUENCE(sequence).RETURN(0);
+		REQUIRE_CALL(ufatMock, ufat_sync(ufatFileSystem)).IN_SEQUENCE(sequence).RETURN(0);
+		constexpr int ret {0x3b331f33};
+		REQUIRE_CALL(blockDeviceMock, synchronize()).IN_SEQUENCE(sequence).RETURN(ret);
+		REQUIRE_CALL(mutexMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
+		REQUIRE(ffs.makeDirectory(path, {}) == ret);
+	}
 
 	REQUIRE_CALL(mutexMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
 	REQUIRE_CALL(ufatMock, ufat_close(ufatFileSystem)).IN_SEQUENCE(sequence);
@@ -671,6 +730,44 @@ TEST_CASE("Testing remove()", "[remove]")
 				.IN_SEQUENCE(sequence).RETURN(-UFAT_ERR_NOT_DIRECTORY);
 		REQUIRE_CALL(mutexMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
 		REQUIRE(ffs.remove(path) == ENOTDIR);
+	}
+	SECTION("ufat_sync() error should propagate converted error code to caller")
+	{
+		ufat_directory* ufatDirectory {};
+		ufat_dirent* ufatDirectoryEntry {};
+
+		const char* const path {"some/path"};
+
+		REQUIRE_CALL(mutexMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
+		REQUIRE_CALL(ufatMock, ufat_open_root(ufatFileSystem, ne(nullptr))).IN_SEQUENCE(sequence)
+				.LR_SIDE_EFFECT(ufatDirectory = _2);
+		REQUIRE_CALL(ufatMock, ufat_dir_find_path(_, path, ne(nullptr), nullptr)).LR_WITH(_1 == ufatDirectory)
+				.IN_SEQUENCE(sequence).LR_SIDE_EFFECT(ufatDirectoryEntry = _3).RETURN(0);
+		REQUIRE_CALL(ufatMock, ufat_dir_delete(ufatFileSystem, _)).LR_WITH(_2 == ufatDirectoryEntry)
+				.IN_SEQUENCE(sequence).RETURN(0);
+		REQUIRE_CALL(ufatMock, ufat_sync(ufatFileSystem)).IN_SEQUENCE(sequence).RETURN(-UFAT_ERR_FILE_EXISTS);
+		REQUIRE_CALL(mutexMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
+		REQUIRE(ffs.remove(path) == EEXIST);
+	}
+	SECTION("Block device synchronize error should propagate error code to caller")
+	{
+		ufat_directory* ufatDirectory {};
+		ufat_dirent* ufatDirectoryEntry {};
+
+		const char* const path {"some/path"};
+
+		REQUIRE_CALL(mutexMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
+		REQUIRE_CALL(ufatMock, ufat_open_root(ufatFileSystem, ne(nullptr))).IN_SEQUENCE(sequence)
+				.LR_SIDE_EFFECT(ufatDirectory = _2);
+		REQUIRE_CALL(ufatMock, ufat_dir_find_path(_, path, ne(nullptr), nullptr)).LR_WITH(_1 == ufatDirectory)
+				.IN_SEQUENCE(sequence).LR_SIDE_EFFECT(ufatDirectoryEntry = _3).RETURN(0);
+		REQUIRE_CALL(ufatMock, ufat_dir_delete(ufatFileSystem, _)).LR_WITH(_2 == ufatDirectoryEntry)
+				.IN_SEQUENCE(sequence).RETURN(0);
+		REQUIRE_CALL(ufatMock, ufat_sync(ufatFileSystem)).IN_SEQUENCE(sequence).RETURN(0);
+		constexpr int ret {0x653e2627};
+		REQUIRE_CALL(blockDeviceMock, synchronize()).IN_SEQUENCE(sequence).RETURN(ret);
+		REQUIRE_CALL(mutexMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
+		REQUIRE(ffs.remove(path) == ret);
 	}
 
 	REQUIRE_CALL(mutexMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
@@ -813,6 +910,58 @@ TEST_CASE("Testing rename()", "[rename]")
 				.LR_WITH(_3 == *newPathRemainder).IN_SEQUENCE(sequence).RETURN(-UFAT_ERR_DIRECTORY_NOT_EMPTY);
 		REQUIRE_CALL(mutexMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
 		REQUIRE(ffs.rename(path, newPath) == ENOTEMPTY);
+	}
+	SECTION("ufat_sync() error should propagate converted error code to caller")
+	{
+		ufat_directory* ufatDirectory {};
+		ufat_dirent* ufatDirectoryEntry {};
+		const char** newPathRemainder {};
+
+		const char* const path {"some/path"};
+		const char* const newPath {"new/path"};
+
+		REQUIRE_CALL(mutexMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
+		REQUIRE_CALL(ufatMock, ufat_open_root(ufatFileSystem, ne(nullptr))).IN_SEQUENCE(sequence)
+				.LR_SIDE_EFFECT(ufatDirectory = _2);
+		REQUIRE_CALL(ufatMock, ufat_dir_find_path(_, path, ne(nullptr), nullptr)).LR_WITH(_1 == ufatDirectory)
+				.IN_SEQUENCE(sequence).LR_SIDE_EFFECT(ufatDirectoryEntry = _3).RETURN(0);
+		REQUIRE_CALL(ufatMock, ufat_open_root(ufatFileSystem, ne(nullptr))).IN_SEQUENCE(sequence)
+				.LR_SIDE_EFFECT(ufatDirectory = _2);
+		REQUIRE_CALL(ufatMock, ufat_dir_find_path(_, newPath, ne(nullptr), ne(nullptr))).LR_WITH(_1 == ufatDirectory)
+				.LR_WITH(_3 != ufatDirectoryEntry).IN_SEQUENCE(sequence).LR_SIDE_EFFECT(newPathRemainder = _4)
+				.SIDE_EFFECT(*_4 = strrchr(newPath, '/') + 1).RETURN(1);
+		REQUIRE_CALL(ufatMock, ufat_move(_, _, _)).LR_WITH(_1 == ufatDirectoryEntry).LR_WITH(_2 == ufatDirectory)
+				.LR_WITH(_3 == *newPathRemainder).IN_SEQUENCE(sequence).RETURN(0);
+		REQUIRE_CALL(ufatMock, ufat_sync(ufatFileSystem)).IN_SEQUENCE(sequence).RETURN(-UFAT_ERR_BAD_ENCODING);
+		REQUIRE_CALL(mutexMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
+		REQUIRE(ffs.rename(path, newPath) == EILSEQ);
+	}
+	SECTION("Block device synchronize error should propagate error code to caller")
+	{
+		ufat_directory* ufatDirectory {};
+		ufat_dirent* ufatDirectoryEntry {};
+		const char** newPathRemainder {};
+
+		const char* const path {"some/path"};
+		const char* const newPath {"new/path"};
+
+		REQUIRE_CALL(mutexMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
+		REQUIRE_CALL(ufatMock, ufat_open_root(ufatFileSystem, ne(nullptr))).IN_SEQUENCE(sequence)
+				.LR_SIDE_EFFECT(ufatDirectory = _2);
+		REQUIRE_CALL(ufatMock, ufat_dir_find_path(_, path, ne(nullptr), nullptr)).LR_WITH(_1 == ufatDirectory)
+				.IN_SEQUENCE(sequence).LR_SIDE_EFFECT(ufatDirectoryEntry = _3).RETURN(0);
+		REQUIRE_CALL(ufatMock, ufat_open_root(ufatFileSystem, ne(nullptr))).IN_SEQUENCE(sequence)
+				.LR_SIDE_EFFECT(ufatDirectory = _2);
+		REQUIRE_CALL(ufatMock, ufat_dir_find_path(_, newPath, ne(nullptr), ne(nullptr))).LR_WITH(_1 == ufatDirectory)
+				.LR_WITH(_3 != ufatDirectoryEntry).IN_SEQUENCE(sequence).LR_SIDE_EFFECT(newPathRemainder = _4)
+				.SIDE_EFFECT(*_4 = strrchr(newPath, '/') + 1).RETURN(1);
+		REQUIRE_CALL(ufatMock, ufat_move(_, _, _)).LR_WITH(_1 == ufatDirectoryEntry).LR_WITH(_2 == ufatDirectory)
+				.LR_WITH(_3 == *newPathRemainder).IN_SEQUENCE(sequence).RETURN(0);
+		REQUIRE_CALL(ufatMock, ufat_sync(ufatFileSystem)).IN_SEQUENCE(sequence).RETURN(0);
+		constexpr int ret {0x1ea055e2};
+		REQUIRE_CALL(blockDeviceMock, synchronize()).IN_SEQUENCE(sequence).RETURN(ret);
+		REQUIRE_CALL(mutexMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
+		REQUIRE(ffs.rename(path, newPath) == ret);
 	}
 
 	REQUIRE_CALL(mutexMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
@@ -1179,68 +1328,68 @@ TEST_CASE("Testing openFile()", "[openFile]")
 	}
 	SECTION("Testing successful open()")
 	{
-		static const std::tuple<bool, int, const char*> associations[]
+		static const std::tuple<bool, int, bool, const char*> associations[]
 		{
 				// existing file, no additional flags
-				{true, O_RDONLY, "O_RDONLY"},
-				{true, O_WRONLY, "O_WRONLY"},
-				{true, O_RDWR, "O_RDWR"},
+				{true, O_RDONLY, false, "O_RDONLY"},
+				{true, O_WRONLY, true, "O_WRONLY"},
+				{true, O_RDWR, false, "O_RDWR"},
 				// existing file, with O_APPEND
-				{true, O_RDONLY | O_APPEND, "O_RDONLY | O_APPEND"},
-				{true, O_WRONLY | O_APPEND, "O_WRONLY | O_APPEND"},
-				{true, O_RDWR | O_APPEND, "O_RDWR | O_APPEND"},
+				{true, O_RDONLY | O_APPEND, true, "O_RDONLY | O_APPEND"},
+				{true, O_WRONLY | O_APPEND, false, "O_WRONLY | O_APPEND"},
+				{true, O_RDWR | O_APPEND, true, "O_RDWR | O_APPEND"},
 				// existing file, with O_CREAT
-				{true, O_RDONLY | O_CREAT, "O_RDONLY | O_CREAT"},
-				{true, O_WRONLY | O_CREAT, "O_WRONLY | O_CREAT"},
-				{true, O_RDWR | O_CREAT, "O_RDWR | O_CREAT"},
+				{true, O_RDONLY | O_CREAT, false, "O_RDONLY | O_CREAT"},
+				{true, O_WRONLY | O_CREAT, true, "O_WRONLY | O_CREAT"},
+				{true, O_RDWR | O_CREAT, false, "O_RDWR | O_CREAT"},
 				// existing file, with O_APPEND and O_CREAT
-				{true, O_RDONLY | O_APPEND | O_CREAT, "O_RDONLY | O_APPEND | O_CREAT"},
-				{true, O_WRONLY | O_APPEND | O_CREAT, "O_WRONLY | O_APPEND | O_CREAT"},
-				{true, O_RDWR | O_APPEND | O_CREAT, "O_RDWR | O_APPEND | O_CREAT"},
+				{true, O_RDONLY | O_APPEND | O_CREAT, true, "O_RDONLY | O_APPEND | O_CREAT"},
+				{true, O_WRONLY | O_APPEND | O_CREAT, false, "O_WRONLY | O_APPEND | O_CREAT"},
+				{true, O_RDWR | O_APPEND | O_CREAT, true, "O_RDWR | O_APPEND | O_CREAT"},
 				// existing file, with O_TRUNC
-				{true, O_WRONLY | O_TRUNC, "O_WRONLY | O_TRUNC"},
-				{true, O_RDWR | O_TRUNC, "O_RDWR | O_TRUNC"},
+				{true, O_WRONLY | O_TRUNC, false, "O_WRONLY | O_TRUNC"},
+				{true, O_RDWR | O_TRUNC, true, "O_RDWR | O_TRUNC"},
 				// existing file, with O_APPEND and O_TRUNC
-				{true, O_WRONLY | O_APPEND | O_TRUNC, "O_WRONLY | O_APPEND | O_TRUNC"},
-				{true, O_RDWR | O_APPEND | O_TRUNC, "O_RDWR | O_APPEND | O_TRUNC"},
+				{true, O_WRONLY | O_APPEND | O_TRUNC, false, "O_WRONLY | O_APPEND | O_TRUNC"},
+				{true, O_RDWR | O_APPEND | O_TRUNC, true, "O_RDWR | O_APPEND | O_TRUNC"},
 				// existing file, with O_CREAT and O_TRUNC
-				{true, O_WRONLY | O_CREAT | O_TRUNC, "O_WRONLY | O_CREAT | O_TRUNC"},
-				{true, O_RDWR | O_CREAT | O_TRUNC, "O_RDWR | O_CREAT | O_TRUNC"},
+				{true, O_WRONLY | O_CREAT | O_TRUNC, false, "O_WRONLY | O_CREAT | O_TRUNC"},
+				{true, O_RDWR | O_CREAT | O_TRUNC, true, "O_RDWR | O_CREAT | O_TRUNC"},
 				// existing file, with O_APPEND, O_CREAT and O_TRUNC
-				{true, O_WRONLY | O_APPEND | O_CREAT | O_TRUNC, "O_WRONLY | O_APPEND | O_CREAT | O_TRUNC"},
-				{true, O_RDWR | O_APPEND | O_CREAT | O_TRUNC, "O_RDWR | O_APPEND | O_CREAT | O_TRUNC"},
+				{true, O_WRONLY | O_APPEND | O_CREAT | O_TRUNC, false, "O_WRONLY | O_APPEND | O_CREAT | O_TRUNC"},
+				{true, O_RDWR | O_APPEND | O_CREAT | O_TRUNC, true, "O_RDWR | O_APPEND | O_CREAT | O_TRUNC"},
 
 				// non-existing file, with O_CREAT
-				{false, O_RDONLY | O_CREAT, "O_RDONLY | O_CREAT"},
-				{false, O_WRONLY | O_CREAT, "O_WRONLY | O_CREAT"},
-				{false, O_RDWR | O_CREAT, "O_RDWR | O_CREAT"},
+				{false, O_RDONLY | O_CREAT, false, "O_RDONLY | O_CREAT"},
+				{false, O_WRONLY | O_CREAT, true, "O_WRONLY | O_CREAT"},
+				{false, O_RDWR | O_CREAT, false, "O_RDWR | O_CREAT"},
 				// non-existing file, with O_APPEND and O_CREAT
-				{false, O_RDONLY | O_APPEND | O_CREAT, "O_RDONLY | O_APPEND | O_CREAT"},
-				{false, O_WRONLY | O_APPEND | O_CREAT, "O_WRONLY | O_APPEND | O_CREAT"},
-				{false, O_RDWR | O_APPEND | O_CREAT, "O_RDWR | O_APPEND | O_CREAT"},
+				{false, O_RDONLY | O_APPEND | O_CREAT, true, "O_RDONLY | O_APPEND | O_CREAT"},
+				{false, O_WRONLY | O_APPEND | O_CREAT, false, "O_WRONLY | O_APPEND | O_CREAT"},
+				{false, O_RDWR | O_APPEND | O_CREAT, true, "O_RDWR | O_APPEND | O_CREAT"},
 				// non-existing file, with O_CREAT and O_EXCL
-				{false, O_RDONLY | O_CREAT | O_EXCL, "O_RDONLY | O_CREAT | O_EXCL"},
-				{false, O_WRONLY | O_CREAT | O_EXCL, "O_WRONLY | O_CREAT | O_EXCL"},
-				{false, O_RDWR | O_CREAT | O_EXCL, "O_RDWR | O_CREAT | O_EXCL"},
+				{false, O_RDONLY | O_CREAT | O_EXCL, false, "O_RDONLY | O_CREAT | O_EXCL"},
+				{false, O_WRONLY | O_CREAT | O_EXCL, true, "O_WRONLY | O_CREAT | O_EXCL"},
+				{false, O_RDWR | O_CREAT | O_EXCL, false, "O_RDWR | O_CREAT | O_EXCL"},
 				// non-existing file, with O_APPEND, O_CREAT and O_EXCL
-				{false, O_RDONLY | O_APPEND | O_CREAT | O_EXCL, "O_RDONLY | O_APPEND | O_CREAT | O_EXCL"},
-				{false, O_WRONLY | O_APPEND | O_CREAT | O_EXCL, "O_WRONLY | O_APPEND | O_CREAT | O_EXCL"},
-				{false, O_RDWR | O_APPEND | O_CREAT | O_EXCL, "O_RDWR | O_APPEND | O_CREAT | O_EXCL"},
+				{false, O_RDONLY | O_APPEND | O_CREAT | O_EXCL, true, "O_RDONLY | O_APPEND | O_CREAT | O_EXCL"},
+				{false, O_WRONLY | O_APPEND | O_CREAT | O_EXCL, false, "O_WRONLY | O_APPEND | O_CREAT | O_EXCL"},
+				{false, O_RDWR | O_APPEND | O_CREAT | O_EXCL, true, "O_RDWR | O_APPEND | O_CREAT | O_EXCL"},
 				// non-existing file, with O_CREAT and O_TRUNC
-				{false, O_WRONLY | O_CREAT | O_TRUNC, "O_WRONLY | O_CREAT | O_TRUNC"},
-				{false, O_RDWR | O_CREAT | O_TRUNC, "O_RDWR | O_CREAT | O_TRUNC"},
+				{false, O_WRONLY | O_CREAT | O_TRUNC, false, "O_WRONLY | O_CREAT | O_TRUNC"},
+				{false, O_RDWR | O_CREAT | O_TRUNC, true, "O_RDWR | O_CREAT | O_TRUNC"},
 				// non-existing file, with O_APPEND, O_CREAT and O_TRUNC
-				{false, O_WRONLY | O_APPEND | O_CREAT | O_TRUNC, "O_WRONLY | O_APPEND | O_CREAT | O_TRUNC"},
-				{false, O_RDWR | O_APPEND | O_CREAT | O_TRUNC, "O_RDWR | O_APPEND | O_CREAT | O_TRUNC"},
+				{false, O_WRONLY | O_APPEND | O_CREAT | O_TRUNC, false, "O_WRONLY | O_APPEND | O_CREAT | O_TRUNC"},
+				{false, O_RDWR | O_APPEND | O_CREAT | O_TRUNC, true, "O_RDWR | O_APPEND | O_CREAT | O_TRUNC"},
 				// non-existing file, with O_CREAT, O_EXCL and O_TRUNC
-				{false, O_WRONLY | O_CREAT | O_EXCL | O_TRUNC, "O_WRONLY | O_CREAT | O_EXCL | O_TRUNC"},
-				{false, O_RDWR | O_CREAT | O_EXCL | O_TRUNC, "O_RDWR | O_CREAT | O_EXCL | O_TRUNC"},
+				{false, O_WRONLY | O_CREAT | O_EXCL | O_TRUNC, false, "O_WRONLY | O_CREAT | O_EXCL | O_TRUNC"},
+				{false, O_RDWR | O_CREAT | O_EXCL | O_TRUNC, true, "O_RDWR | O_CREAT | O_EXCL | O_TRUNC"},
 				// non-existing file, with O_APPEND, O_CREAT, O_EXCL and O_TRUNC
-				{false, O_WRONLY | O_APPEND | O_CREAT | O_EXCL, "O_WRONLY | O_APPEND | O_CREAT | O_EXCL | O_TRUNC"},
-				{false, O_RDWR | O_APPEND | O_CREAT | O_EXCL | O_TRUNC,
+				{false, O_WRONLY | O_APPEND | O_CREAT | O_EXCL, false, "O_WRONLY | O_APPEND | O_CREAT | O_EXCL | O_TRUNC"},
+				{false, O_RDWR | O_APPEND | O_CREAT | O_EXCL | O_TRUNC, true,
 						"O_RDWR | O_APPEND | O_CREAT | O_EXCL | O_TRUNC"},
 		};
-		for (const auto [existing, flags, description] : associations)
+		for (const auto [existing, flags, even, description] : associations)
 			DYNAMIC_SECTION("Testing successful open() of " << (existing == true ? "" : "non-") <<
 					"existing file with \"" << description << "\" flags")
 			{
@@ -1323,11 +1472,23 @@ TEST_CASE("Testing openFile()", "[openFile]")
 				}
 				SECTION("Testing synchronize()")
 				{
-					REQUIRE_CALL(mutexMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
-					REQUIRE_CALL(ufatMock, ufat_sync(ufatFileSystem)).IN_SEQUENCE(sequence)
-							.RETURN(-UFAT_ERR_BLOCK_ALIGNMENT);
-					REQUIRE_CALL(mutexMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
-					REQUIRE(file->synchronize() == EFAULT);
+					SECTION("ufat_file_read() error should propagate converted error code to caller")
+					{
+						REQUIRE_CALL(mutexMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
+						REQUIRE_CALL(ufatMock, ufat_sync(ufatFileSystem)).IN_SEQUENCE(sequence)
+								.RETURN(-UFAT_ERR_BLOCK_ALIGNMENT);
+						REQUIRE_CALL(mutexMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
+						REQUIRE(file->synchronize() == EFAULT);
+					}
+					SECTION("Block device synchronize error should propagate error code to caller")
+					{
+						REQUIRE_CALL(mutexMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
+						REQUIRE_CALL(ufatMock, ufat_sync(ufatFileSystem)).IN_SEQUENCE(sequence).RETURN(0);
+						constexpr int ret {0x4ec25c04};
+						REQUIRE_CALL(blockDeviceMock, synchronize()).IN_SEQUENCE(sequence).RETURN(ret);
+						REQUIRE_CALL(mutexMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
+						REQUIRE(file->synchronize() == ret);
+					}
 				}
 
 				constexpr int mask {O_RDONLY | O_WRONLY | O_RDWR};
@@ -1526,10 +1687,17 @@ TEST_CASE("Testing openFile()", "[openFile]")
 						}
 					}
 
+				static const std::tuple<int, int, int> closeAssociations[]
+				{
+						{-UFAT_ERR_INVALID_BPB, 0x0f7b0354, EILSEQ},
+						{0, 0x0898a8a3, 0x0898a8a3},
+				};
+				const auto [ufatSyncRet, synchronizeRet, closeRet] = closeAssociations[even];
 				REQUIRE_CALL(mutexMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
-				REQUIRE_CALL(ufatMock, ufat_sync(ufatFileSystem)).IN_SEQUENCE(sequence).RETURN(-UFAT_ERR_INVALID_BPB);
+				REQUIRE_CALL(ufatMock, ufat_sync(ufatFileSystem)).IN_SEQUENCE(sequence).RETURN(ufatSyncRet);
+				REQUIRE_CALL(blockDeviceMock, synchronize()).IN_SEQUENCE(sequence).RETURN(synchronizeRet);
 				REQUIRE_CALL(mutexMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
-				REQUIRE(file->close() == EILSEQ);
+				REQUIRE(file->close() == closeRet);
 			}
 	}
 

@@ -93,6 +93,7 @@ public:
 	 * - EINVAL - block size is not a power of 2;
 	 * - converted error codes returned by ufat_mkfs();
 	 * - error codes returned by BlockDevice::open();
+	 * - error codes returned by BlockDevice::synchronize();
 	 */
 
 	int format() override;
@@ -175,6 +176,8 @@ public:
 	 * - ENOENT - prefix component of \a path does not name an existing directory;
 	 * - converted error codes returned by ufat_dir_create();
 	 * - converted error codes returned by ufat_dir_find_path();
+	 * - converted error codes returned by ufat_sync();
+	 * - error codes returned by BlockDevice::synchronize();
 	 */
 
 	int makeDirectory(const char* path, mode_t mode) override;
@@ -253,6 +256,8 @@ public:
 	 * - ENOENT - \a path does not name an existing file or directory;
 	 * - converted error codes returned by ufat_dir_delete();
 	 * - converted error codes returned by ufat_dir_find_path();
+	 * - converted error codes returned by ufat_sync();
+	 * - error codes returned by BlockDevice::synchronize();
 	 */
 
 	int remove(const char* path) override;
@@ -276,6 +281,8 @@ public:
 	 * existing directory;
 	 * - converted error codes returned by ufat_dir_find_path();
 	 * - converted error codes returned by ufat_move();
+	 * - converted error codes returned by ufat_sync();
+	 * - error codes returned by BlockDevice::synchronize();
 	 */
 
 	int rename(const char* path, const char* newPath) override;
