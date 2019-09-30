@@ -303,8 +303,18 @@ int FatFileSystem::remove(const char* const path)
 			return ENOENT;
 	}
 
-	const auto ret = ufat_dir_delete(&fileSystem_, &directoryEntry);
-	return ufatErrorToErrorCode(ret);
+	{
+		const auto ret = ufat_dir_delete(&fileSystem_, &directoryEntry);
+		if (ret < 0)
+			return ufatErrorToErrorCode(ret);
+	}
+	{
+		const auto ret = ufat_sync(&fileSystem_);
+		if (ret < 0)
+			return ufatErrorToErrorCode(ret);
+	}
+
+	return device_.blockDevice.synchronize();
 }
 
 int FatFileSystem::rename(const char* const path, const char* const newPath)

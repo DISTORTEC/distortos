@@ -256,6 +256,8 @@ public:
 	 * - ENOENT - \a path does not name an existing file or directory;
 	 * - converted error codes returned by ufat_dir_delete();
 	 * - converted error codes returned by ufat_dir_find_path();
+	 * - converted error codes returned by ufat_sync();
+	 * - error codes returned by BlockDevice::synchronize();
 	 */
 
 	int remove(const char* path) override;
