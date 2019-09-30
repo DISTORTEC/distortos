@@ -44,8 +44,9 @@ int FatFile::close()
 	assert(opened_ == true);
 
 	opened_ = {};
-	const auto ret = ufat_sync(&fileSystem_.fileSystem_);
-	return ufatErrorToErrorCode(ret);
+	const auto ret0 = ufat_sync(&fileSystem_.fileSystem_);
+	const auto ret1 = fileSystem_.device_.blockDevice.synchronize();
+	return ret0 < 0 ? ufatErrorToErrorCode(ret0) : ret1;
 }
 
 std::pair<int, off_t> FatFile::getPosition()

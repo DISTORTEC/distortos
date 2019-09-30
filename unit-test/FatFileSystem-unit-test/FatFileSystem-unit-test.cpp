@@ -1179,68 +1179,68 @@ TEST_CASE("Testing openFile()", "[openFile]")
 	}
 	SECTION("Testing successful open()")
 	{
-		static const std::tuple<bool, int, const char*> associations[]
+		static const std::tuple<bool, int, bool, const char*> associations[]
 		{
 				// existing file, no additional flags
-				{true, O_RDONLY, "O_RDONLY"},
-				{true, O_WRONLY, "O_WRONLY"},
-				{true, O_RDWR, "O_RDWR"},
+				{true, O_RDONLY, false, "O_RDONLY"},
+				{true, O_WRONLY, true, "O_WRONLY"},
+				{true, O_RDWR, false, "O_RDWR"},
 				// existing file, with O_APPEND
-				{true, O_RDONLY | O_APPEND, "O_RDONLY | O_APPEND"},
-				{true, O_WRONLY | O_APPEND, "O_WRONLY | O_APPEND"},
-				{true, O_RDWR | O_APPEND, "O_RDWR | O_APPEND"},
+				{true, O_RDONLY | O_APPEND, true, "O_RDONLY | O_APPEND"},
+				{true, O_WRONLY | O_APPEND, false, "O_WRONLY | O_APPEND"},
+				{true, O_RDWR | O_APPEND, true, "O_RDWR | O_APPEND"},
 				// existing file, with O_CREAT
-				{true, O_RDONLY | O_CREAT, "O_RDONLY | O_CREAT"},
-				{true, O_WRONLY | O_CREAT, "O_WRONLY | O_CREAT"},
-				{true, O_RDWR | O_CREAT, "O_RDWR | O_CREAT"},
+				{true, O_RDONLY | O_CREAT, false, "O_RDONLY | O_CREAT"},
+				{true, O_WRONLY | O_CREAT, true, "O_WRONLY | O_CREAT"},
+				{true, O_RDWR | O_CREAT, false, "O_RDWR | O_CREAT"},
 				// existing file, with O_APPEND and O_CREAT
-				{true, O_RDONLY | O_APPEND | O_CREAT, "O_RDONLY | O_APPEND | O_CREAT"},
-				{true, O_WRONLY | O_APPEND | O_CREAT, "O_WRONLY | O_APPEND | O_CREAT"},
-				{true, O_RDWR | O_APPEND | O_CREAT, "O_RDWR | O_APPEND | O_CREAT"},
+				{true, O_RDONLY | O_APPEND | O_CREAT, true, "O_RDONLY | O_APPEND | O_CREAT"},
+				{true, O_WRONLY | O_APPEND | O_CREAT, false, "O_WRONLY | O_APPEND | O_CREAT"},
+				{true, O_RDWR | O_APPEND | O_CREAT, true, "O_RDWR | O_APPEND | O_CREAT"},
 				// existing file, with O_TRUNC
-				{true, O_WRONLY | O_TRUNC, "O_WRONLY | O_TRUNC"},
-				{true, O_RDWR | O_TRUNC, "O_RDWR | O_TRUNC"},
+				{true, O_WRONLY | O_TRUNC, false, "O_WRONLY | O_TRUNC"},
+				{true, O_RDWR | O_TRUNC, true, "O_RDWR | O_TRUNC"},
 				// existing file, with O_APPEND and O_TRUNC
-				{true, O_WRONLY | O_APPEND | O_TRUNC, "O_WRONLY | O_APPEND | O_TRUNC"},
-				{true, O_RDWR | O_APPEND | O_TRUNC, "O_RDWR | O_APPEND | O_TRUNC"},
+				{true, O_WRONLY | O_APPEND | O_TRUNC, false, "O_WRONLY | O_APPEND | O_TRUNC"},
+				{true, O_RDWR | O_APPEND | O_TRUNC, true, "O_RDWR | O_APPEND | O_TRUNC"},
 				// existing file, with O_CREAT and O_TRUNC
-				{true, O_WRONLY | O_CREAT | O_TRUNC, "O_WRONLY | O_CREAT | O_TRUNC"},
-				{true, O_RDWR | O_CREAT | O_TRUNC, "O_RDWR | O_CREAT | O_TRUNC"},
+				{true, O_WRONLY | O_CREAT | O_TRUNC, false, "O_WRONLY | O_CREAT | O_TRUNC"},
+				{true, O_RDWR | O_CREAT | O_TRUNC, true, "O_RDWR | O_CREAT | O_TRUNC"},
 				// existing file, with O_APPEND, O_CREAT and O_TRUNC
-				{true, O_WRONLY | O_APPEND | O_CREAT | O_TRUNC, "O_WRONLY | O_APPEND | O_CREAT | O_TRUNC"},
-				{true, O_RDWR | O_APPEND | O_CREAT | O_TRUNC, "O_RDWR | O_APPEND | O_CREAT | O_TRUNC"},
+				{true, O_WRONLY | O_APPEND | O_CREAT | O_TRUNC, false, "O_WRONLY | O_APPEND | O_CREAT | O_TRUNC"},
+				{true, O_RDWR | O_APPEND | O_CREAT | O_TRUNC, true, "O_RDWR | O_APPEND | O_CREAT | O_TRUNC"},
 
 				// non-existing file, with O_CREAT
-				{false, O_RDONLY | O_CREAT, "O_RDONLY | O_CREAT"},
-				{false, O_WRONLY | O_CREAT, "O_WRONLY | O_CREAT"},
-				{false, O_RDWR | O_CREAT, "O_RDWR | O_CREAT"},
+				{false, O_RDONLY | O_CREAT, false, "O_RDONLY | O_CREAT"},
+				{false, O_WRONLY | O_CREAT, true, "O_WRONLY | O_CREAT"},
+				{false, O_RDWR | O_CREAT, false, "O_RDWR | O_CREAT"},
 				// non-existing file, with O_APPEND and O_CREAT
-				{false, O_RDONLY | O_APPEND | O_CREAT, "O_RDONLY | O_APPEND | O_CREAT"},
-				{false, O_WRONLY | O_APPEND | O_CREAT, "O_WRONLY | O_APPEND | O_CREAT"},
-				{false, O_RDWR | O_APPEND | O_CREAT, "O_RDWR | O_APPEND | O_CREAT"},
+				{false, O_RDONLY | O_APPEND | O_CREAT, true, "O_RDONLY | O_APPEND | O_CREAT"},
+				{false, O_WRONLY | O_APPEND | O_CREAT, false, "O_WRONLY | O_APPEND | O_CREAT"},
+				{false, O_RDWR | O_APPEND | O_CREAT, true, "O_RDWR | O_APPEND | O_CREAT"},
 				// non-existing file, with O_CREAT and O_EXCL
-				{false, O_RDONLY | O_CREAT | O_EXCL, "O_RDONLY | O_CREAT | O_EXCL"},
-				{false, O_WRONLY | O_CREAT | O_EXCL, "O_WRONLY | O_CREAT | O_EXCL"},
-				{false, O_RDWR | O_CREAT | O_EXCL, "O_RDWR | O_CREAT | O_EXCL"},
+				{false, O_RDONLY | O_CREAT | O_EXCL, false, "O_RDONLY | O_CREAT | O_EXCL"},
+				{false, O_WRONLY | O_CREAT | O_EXCL, true, "O_WRONLY | O_CREAT | O_EXCL"},
+				{false, O_RDWR | O_CREAT | O_EXCL, false, "O_RDWR | O_CREAT | O_EXCL"},
 				// non-existing file, with O_APPEND, O_CREAT and O_EXCL
-				{false, O_RDONLY | O_APPEND | O_CREAT | O_EXCL, "O_RDONLY | O_APPEND | O_CREAT | O_EXCL"},
-				{false, O_WRONLY | O_APPEND | O_CREAT | O_EXCL, "O_WRONLY | O_APPEND | O_CREAT | O_EXCL"},
-				{false, O_RDWR | O_APPEND | O_CREAT | O_EXCL, "O_RDWR | O_APPEND | O_CREAT | O_EXCL"},
+				{false, O_RDONLY | O_APPEND | O_CREAT | O_EXCL, true, "O_RDONLY | O_APPEND | O_CREAT | O_EXCL"},
+				{false, O_WRONLY | O_APPEND | O_CREAT | O_EXCL, false, "O_WRONLY | O_APPEND | O_CREAT | O_EXCL"},
+				{false, O_RDWR | O_APPEND | O_CREAT | O_EXCL, true, "O_RDWR | O_APPEND | O_CREAT | O_EXCL"},
 				// non-existing file, with O_CREAT and O_TRUNC
-				{false, O_WRONLY | O_CREAT | O_TRUNC, "O_WRONLY | O_CREAT | O_TRUNC"},
-				{false, O_RDWR | O_CREAT | O_TRUNC, "O_RDWR | O_CREAT | O_TRUNC"},
+				{false, O_WRONLY | O_CREAT | O_TRUNC, false, "O_WRONLY | O_CREAT | O_TRUNC"},
+				{false, O_RDWR | O_CREAT | O_TRUNC, true, "O_RDWR | O_CREAT | O_TRUNC"},
 				// non-existing file, with O_APPEND, O_CREAT and O_TRUNC
-				{false, O_WRONLY | O_APPEND | O_CREAT | O_TRUNC, "O_WRONLY | O_APPEND | O_CREAT | O_TRUNC"},
-				{false, O_RDWR | O_APPEND | O_CREAT | O_TRUNC, "O_RDWR | O_APPEND | O_CREAT | O_TRUNC"},
+				{false, O_WRONLY | O_APPEND | O_CREAT | O_TRUNC, false, "O_WRONLY | O_APPEND | O_CREAT | O_TRUNC"},
+				{false, O_RDWR | O_APPEND | O_CREAT | O_TRUNC, true, "O_RDWR | O_APPEND | O_CREAT | O_TRUNC"},
 				// non-existing file, with O_CREAT, O_EXCL and O_TRUNC
-				{false, O_WRONLY | O_CREAT | O_EXCL | O_TRUNC, "O_WRONLY | O_CREAT | O_EXCL | O_TRUNC"},
-				{false, O_RDWR | O_CREAT | O_EXCL | O_TRUNC, "O_RDWR | O_CREAT | O_EXCL | O_TRUNC"},
+				{false, O_WRONLY | O_CREAT | O_EXCL | O_TRUNC, false, "O_WRONLY | O_CREAT | O_EXCL | O_TRUNC"},
+				{false, O_RDWR | O_CREAT | O_EXCL | O_TRUNC, true, "O_RDWR | O_CREAT | O_EXCL | O_TRUNC"},
 				// non-existing file, with O_APPEND, O_CREAT, O_EXCL and O_TRUNC
-				{false, O_WRONLY | O_APPEND | O_CREAT | O_EXCL, "O_WRONLY | O_APPEND | O_CREAT | O_EXCL | O_TRUNC"},
-				{false, O_RDWR | O_APPEND | O_CREAT | O_EXCL | O_TRUNC,
+				{false, O_WRONLY | O_APPEND | O_CREAT | O_EXCL, false, "O_WRONLY | O_APPEND | O_CREAT | O_EXCL | O_TRUNC"},
+				{false, O_RDWR | O_APPEND | O_CREAT | O_EXCL | O_TRUNC, true,
 						"O_RDWR | O_APPEND | O_CREAT | O_EXCL | O_TRUNC"},
 		};
-		for (const auto [existing, flags, description] : associations)
+		for (const auto [existing, flags, even, description] : associations)
 			DYNAMIC_SECTION("Testing successful open() of " << (existing == true ? "" : "non-") <<
 					"existing file with \"" << description << "\" flags")
 			{
@@ -1538,10 +1538,17 @@ TEST_CASE("Testing openFile()", "[openFile]")
 						}
 					}
 
+				static const std::tuple<int, int, int> closeAssociations[]
+				{
+						{-UFAT_ERR_INVALID_BPB, 0x0f7b0354, EILSEQ},
+						{0, 0x0898a8a3, 0x0898a8a3},
+				};
+				const auto [ufatSyncRet, synchronizeRet, closeRet] = closeAssociations[even];
 				REQUIRE_CALL(mutexMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
-				REQUIRE_CALL(ufatMock, ufat_sync(ufatFileSystem)).IN_SEQUENCE(sequence).RETURN(-UFAT_ERR_INVALID_BPB);
+				REQUIRE_CALL(ufatMock, ufat_sync(ufatFileSystem)).IN_SEQUENCE(sequence).RETURN(ufatSyncRet);
+				REQUIRE_CALL(blockDeviceMock, synchronize()).IN_SEQUENCE(sequence).RETURN(synchronizeRet);
 				REQUIRE_CALL(mutexMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
-				REQUIRE(file->close() == EILSEQ);
+				REQUIRE(file->close() == closeRet);
 			}
 	}
 
