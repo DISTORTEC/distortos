@@ -13,6 +13,8 @@
 
 #include "ufatErrorToErrorCode.hpp"
 
+#include "distortos/devices/memory/BlockDevice.hpp"
+
 #include "distortos/FileSystem/FatFileSystem.hpp"
 
 #include "distortos/assert.h"
@@ -223,7 +225,10 @@ int FatFile::synchronize()
 	assert(opened_ == true);
 
 	const auto ret = ufat_sync(&fileSystem_.fileSystem_);
-	return ufatErrorToErrorCode(ret);
+	if (ret < 0)
+		return ufatErrorToErrorCode(ret);
+
+	return fileSystem_.device_.blockDevice.synchronize();
 }
 
 void FatFile::unlock()

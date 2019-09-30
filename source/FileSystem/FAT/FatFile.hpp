@@ -242,6 +242,7 @@ public:
 	 *
 	 * \return 0 on success, error code otherwise:
 	 * - converted error codes returned by ufat_sync();
+	 * - error codes returned by BlockDevice::synchronize();
 	 */
 
 	int synchronize() override;
