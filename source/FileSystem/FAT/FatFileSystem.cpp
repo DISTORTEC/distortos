@@ -350,8 +350,18 @@ int FatFileSystem::rename(const char* const path, const char* const newPath)
 	if (strpbrk(newPathRemainder, "/\\") != nullptr)
 		return ENOENT;
 
-	const auto ret = ufat_move(&directoryEntry, &newDirectory, newPathRemainder);
-	return ufatErrorToErrorCode(ret);
+	{
+		const auto ret = ufat_move(&directoryEntry, &newDirectory, newPathRemainder);
+		if (ret < 0)
+			return ufatErrorToErrorCode(ret);
+	}
+	{
+		const auto ret = ufat_sync(&fileSystem_);
+		if (ret < 0)
+			return ufatErrorToErrorCode(ret);
+	}
+
+	return device_.blockDevice.synchronize();
 }
 
 void FatFileSystem::unlock()

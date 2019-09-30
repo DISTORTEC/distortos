@@ -281,6 +281,8 @@ public:
 	 * existing directory;
 	 * - converted error codes returned by ufat_dir_find_path();
 	 * - converted error codes returned by ufat_move();
+	 * - converted error codes returned by ufat_sync();
+	 * - error codes returned by BlockDevice::synchronize();
 	 */
 
 	int rename(const char* path, const char* newPath) override;

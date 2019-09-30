@@ -911,6 +911,58 @@ TEST_CASE("Testing rename()", "[rename]")
 		REQUIRE_CALL(mutexMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
 		REQUIRE(ffs.rename(path, newPath) == ENOTEMPTY);
 	}
+	SECTION("ufat_sync() error should propagate converted error code to caller")
+	{
+		ufat_directory* ufatDirectory {};
+		ufat_dirent* ufatDirectoryEntry {};
+		const char** newPathRemainder {};
+
+		const char* const path {"some/path"};
+		const char* const newPath {"new/path"};
+
+		REQUIRE_CALL(mutexMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
+		REQUIRE_CALL(ufatMock, ufat_open_root(ufatFileSystem, ne(nullptr))).IN_SEQUENCE(sequence)
+				.LR_SIDE_EFFECT(ufatDirectory = _2);
+		REQUIRE_CALL(ufatMock, ufat_dir_find_path(_, path, ne(nullptr), nullptr)).LR_WITH(_1 == ufatDirectory)
+				.IN_SEQUENCE(sequence).LR_SIDE_EFFECT(ufatDirectoryEntry = _3).RETURN(0);
+		REQUIRE_CALL(ufatMock, ufat_open_root(ufatFileSystem, ne(nullptr))).IN_SEQUENCE(sequence)
+				.LR_SIDE_EFFECT(ufatDirectory = _2);
+		REQUIRE_CALL(ufatMock, ufat_dir_find_path(_, newPath, ne(nullptr), ne(nullptr))).LR_WITH(_1 == ufatDirectory)
+				.LR_WITH(_3 != ufatDirectoryEntry).IN_SEQUENCE(sequence).LR_SIDE_EFFECT(newPathRemainder = _4)
+				.SIDE_EFFECT(*_4 = strrchr(newPath, '/') + 1).RETURN(1);
+		REQUIRE_CALL(ufatMock, ufat_move(_, _, _)).LR_WITH(_1 == ufatDirectoryEntry).LR_WITH(_2 == ufatDirectory)
+				.LR_WITH(_3 == *newPathRemainder).IN_SEQUENCE(sequence).RETURN(0);
+		REQUIRE_CALL(ufatMock, ufat_sync(ufatFileSystem)).IN_SEQUENCE(sequence).RETURN(-UFAT_ERR_BAD_ENCODING);
+		REQUIRE_CALL(mutexMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
+		REQUIRE(ffs.rename(path, newPath) == EILSEQ);
+	}
+	SECTION("Block device synchronize error should propagate error code to caller")
+	{
+		ufat_directory* ufatDirectory {};
+		ufat_dirent* ufatDirectoryEntry {};
+		const char** newPathRemainder {};
+
+		const char* const path {"some/path"};
+		const char* const newPath {"new/path"};
+
+		REQUIRE_CALL(mutexMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
+		REQUIRE_CALL(ufatMock, ufat_open_root(ufatFileSystem, ne(nullptr))).IN_SEQUENCE(sequence)
+				.LR_SIDE_EFFECT(ufatDirectory = _2);
+		REQUIRE_CALL(ufatMock, ufat_dir_find_path(_, path, ne(nullptr), nullptr)).LR_WITH(_1 == ufatDirectory)
+				.IN_SEQUENCE(sequence).LR_SIDE_EFFECT(ufatDirectoryEntry = _3).RETURN(0);
+		REQUIRE_CALL(ufatMock, ufat_open_root(ufatFileSystem, ne(nullptr))).IN_SEQUENCE(sequence)
+				.LR_SIDE_EFFECT(ufatDirectory = _2);
+		REQUIRE_CALL(ufatMock, ufat_dir_find_path(_, newPath, ne(nullptr), ne(nullptr))).LR_WITH(_1 == ufatDirectory)
+				.LR_WITH(_3 != ufatDirectoryEntry).IN_SEQUENCE(sequence).LR_SIDE_EFFECT(newPathRemainder = _4)
+				.SIDE_EFFECT(*_4 = strrchr(newPath, '/') + 1).RETURN(1);
+		REQUIRE_CALL(ufatMock, ufat_move(_, _, _)).LR_WITH(_1 == ufatDirectoryEntry).LR_WITH(_2 == ufatDirectory)
+				.LR_WITH(_3 == *newPathRemainder).IN_SEQUENCE(sequence).RETURN(0);
+		REQUIRE_CALL(ufatMock, ufat_sync(ufatFileSystem)).IN_SEQUENCE(sequence).RETURN(0);
+		constexpr int ret {0x1ea055e2};
+		REQUIRE_CALL(blockDeviceMock, synchronize()).IN_SEQUENCE(sequence).RETURN(ret);
+		REQUIRE_CALL(mutexMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
+		REQUIRE(ffs.rename(path, newPath) == ret);
+	}
 
 	REQUIRE_CALL(mutexMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
 	REQUIRE_CALL(ufatMock, ufat_close(ufatFileSystem)).IN_SEQUENCE(sequence);
