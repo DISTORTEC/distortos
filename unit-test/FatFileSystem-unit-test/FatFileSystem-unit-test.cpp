@@ -617,6 +617,48 @@ TEST_CASE("Testing makeDirectory()", "[makeDirectory]")
 		REQUIRE_CALL(mutexMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
 		REQUIRE(ffs.makeDirectory(path, {}) == EFAULT);
 	}
+	SECTION("ufat_sync() error should propagate converted error code to caller")
+	{
+		ufat_directory* ufatDirectory {};
+		ufat_dirent* ufatDirectoryEntry {};
+		const char** pathRemainder {};
+
+		const char* const path {"some/path"};
+
+		REQUIRE_CALL(mutexMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
+		REQUIRE_CALL(ufatMock, ufat_open_root(ufatFileSystem, ne(nullptr))).IN_SEQUENCE(sequence)
+				.LR_SIDE_EFFECT(ufatDirectory = _2);
+		REQUIRE_CALL(ufatMock, ufat_dir_find_path(_, path, ne(nullptr), ne(nullptr))).LR_WITH(_1 == ufatDirectory)
+				.IN_SEQUENCE(sequence).LR_SIDE_EFFECT(ufatDirectoryEntry = _3).LR_SIDE_EFFECT(pathRemainder = _4)
+				.SIDE_EFFECT(*_4 = strrchr(path, '/') + 1).RETURN(1);
+		REQUIRE_CALL(ufatMock, ufat_dir_create(_, _, _)).LR_WITH(_1 == ufatDirectory).LR_WITH(_2 == ufatDirectoryEntry)
+				.LR_WITH(_3 == *pathRemainder).IN_SEQUENCE(sequence).RETURN(0);
+		REQUIRE_CALL(ufatMock, ufat_sync(ufatFileSystem)).IN_SEQUENCE(sequence).RETURN(-UFAT_ERR_ILLEGAL_NAME);
+		REQUIRE_CALL(mutexMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
+		REQUIRE(ffs.makeDirectory(path, {}) == EINVAL);
+	}
+	SECTION("Block device synchronize error should propagate error code to caller")
+	{
+		ufat_directory* ufatDirectory {};
+		ufat_dirent* ufatDirectoryEntry {};
+		const char** pathRemainder {};
+
+		const char* const path {"some/path"};
+
+		REQUIRE_CALL(mutexMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
+		REQUIRE_CALL(ufatMock, ufat_open_root(ufatFileSystem, ne(nullptr))).IN_SEQUENCE(sequence)
+				.LR_SIDE_EFFECT(ufatDirectory = _2);
+		REQUIRE_CALL(ufatMock, ufat_dir_find_path(_, path, ne(nullptr), ne(nullptr))).LR_WITH(_1 == ufatDirectory)
+				.IN_SEQUENCE(sequence).LR_SIDE_EFFECT(ufatDirectoryEntry = _3).LR_SIDE_EFFECT(pathRemainder = _4)
+				.SIDE_EFFECT(*_4 = strrchr(path, '/') + 1).RETURN(1);
+		REQUIRE_CALL(ufatMock, ufat_dir_create(_, _, _)).LR_WITH(_1 == ufatDirectory).LR_WITH(_2 == ufatDirectoryEntry)
+				.LR_WITH(_3 == *pathRemainder).IN_SEQUENCE(sequence).RETURN(0);
+		REQUIRE_CALL(ufatMock, ufat_sync(ufatFileSystem)).IN_SEQUENCE(sequence).RETURN(0);
+		constexpr int ret {0x3b331f33};
+		REQUIRE_CALL(blockDeviceMock, synchronize()).IN_SEQUENCE(sequence).RETURN(ret);
+		REQUIRE_CALL(mutexMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
+		REQUIRE(ffs.makeDirectory(path, {}) == ret);
+	}
 
 	REQUIRE_CALL(mutexMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
 	REQUIRE_CALL(ufatMock, ufat_close(ufatFileSystem)).IN_SEQUENCE(sequence);

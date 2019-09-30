@@ -199,9 +199,19 @@ int FatFileSystem::makeDirectory(const char* const path, mode_t)
 	if (strpbrk(pathRemainder, "/\\") != nullptr)
 		return ENOENT;
 
-	directoryEntry = {};
-	const auto ret = ufat_dir_create(&directory, &directoryEntry, pathRemainder);
-	return ufatErrorToErrorCode(ret);
+	{
+		directoryEntry = {};
+		const auto ret = ufat_dir_create(&directory, &directoryEntry, pathRemainder);
+		if (ret < 0)
+			return ufatErrorToErrorCode(ret);
+	}
+	{
+		const auto ret = ufat_sync(&fileSystem_);
+		if (ret < 0)
+			return ufatErrorToErrorCode(ret);
+	}
+
+	return device_.blockDevice.synchronize();
 }
 
 int FatFileSystem::mount()

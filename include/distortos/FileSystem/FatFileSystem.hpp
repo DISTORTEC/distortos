@@ -176,6 +176,8 @@ public:
 	 * - ENOENT - prefix component of \a path does not name an existing directory;
 	 * - converted error codes returned by ufat_dir_create();
 	 * - converted error codes returned by ufat_dir_find_path();
+	 * - converted error codes returned by ufat_sync();
+	 * - error codes returned by BlockDevice::synchronize();
 	 */
 
 	int makeDirectory(const char* path, mode_t mode) override;
