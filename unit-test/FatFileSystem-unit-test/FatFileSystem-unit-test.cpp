@@ -1513,7 +1513,7 @@ TEST_CASE("Testing openFile()", "[openFile]")
 
 						REQUIRE_CALL(mutexMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
 						REQUIRE_CALL(ufatMock, ufat_file_read(ufatFile, buffer, sizeof(buffer))).IN_SEQUENCE(sequence)
-								.RETURN(expectedBytesRead);
+								.SIDE_EFFECT(_1->cur_pos += expectedBytesRead).RETURN(expectedBytesRead);
 						REQUIRE_CALL(mutexMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
 						const auto [ret, bytesRead] = file->read(buffer, sizeof(buffer));
 						REQUIRE(ret == 0);
@@ -1556,7 +1556,8 @@ TEST_CASE("Testing openFile()", "[openFile]")
 						REQUIRE_CALL(mutexMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
 						if (appendMode == true)
 							expectations.emplace_back(NAMED_REQUIRE_CALL(ufatMock,
-									ufat_file_advance(ufatFile, size - position)).IN_SEQUENCE(sequence).RETURN(0));
+									ufat_file_advance(ufatFile, size - position)).IN_SEQUENCE(sequence)
+									.SIDE_EFFECT(_1->cur_pos += _2).RETURN(0));
 						REQUIRE_CALL(ufatMock, ufat_file_write(ufatFile, buffer, sizeof(buffer))).IN_SEQUENCE(sequence)
 								.RETURN(-UFAT_ERR_NOT_DIRECTORY);
 						REQUIRE_CALL(mutexMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
@@ -1577,9 +1578,10 @@ TEST_CASE("Testing openFile()", "[openFile]")
 						REQUIRE_CALL(mutexMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
 						if (appendMode == true)
 							expectations.emplace_back(NAMED_REQUIRE_CALL(ufatMock,
-									ufat_file_advance(ufatFile, size - position)).IN_SEQUENCE(sequence).RETURN(0));
+									ufat_file_advance(ufatFile, size - position)).IN_SEQUENCE(sequence)
+									.SIDE_EFFECT(_1->cur_pos += _2).RETURN(0));
 						REQUIRE_CALL(ufatMock, ufat_file_write(ufatFile, buffer, sizeof(buffer))).IN_SEQUENCE(sequence)
-								.RETURN(expectedBytesWritten);
+								.SIDE_EFFECT(_1->cur_pos += _3).RETURN(expectedBytesWritten);
 						REQUIRE_CALL(mutexMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
 						const auto [ret, bytesWritten] = file->write(buffer, sizeof(buffer));
 						REQUIRE(ret == 0);
@@ -1637,7 +1639,8 @@ TEST_CASE("Testing openFile()", "[openFile]")
 									whence == Whence::current ? -off_t{position} + 1 : -off_t{size} + 1;
 
 							REQUIRE_CALL(mutexMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
-							REQUIRE_CALL(ufatMock, ufat_file_rewind(ufatFile)).IN_SEQUENCE(sequence);
+							REQUIRE_CALL(ufatMock, ufat_file_rewind(ufatFile)).IN_SEQUENCE(sequence)
+									.SIDE_EFFECT(_1->cur_pos = {});
 							REQUIRE_CALL(ufatMock, ufat_file_advance(ufatFile, 1u)).IN_SEQUENCE(sequence)
 									.RETURN(-UFAT_ERR_NOT_FILE);
 							REQUIRE_CALL(mutexMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
@@ -1651,7 +1654,7 @@ TEST_CASE("Testing openFile()", "[openFile]")
 
 								REQUIRE_CALL(mutexMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
 								REQUIRE_CALL(ufatMock, ufat_file_advance(ufatFile, size - position))
-										.IN_SEQUENCE(sequence).RETURN(0);
+										.IN_SEQUENCE(sequence).SIDE_EFFECT(_1->cur_pos += _2).RETURN(0);
 								REQUIRE_CALL(ufatMock, ufat_file_write(ufatFile, ne(nullptr), 1u))
 										.WITH(*reinterpret_cast<const uint8_t*>(_2) == 0).IN_SEQUENCE(sequence)
 										.RETURN(-UFAT_ERR_IMMUTABLE);
@@ -1666,12 +1669,12 @@ TEST_CASE("Testing openFile()", "[openFile]")
 
 							REQUIRE_CALL(mutexMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
 							REQUIRE_CALL(ufatMock, ufat_file_advance(ufatFile, size - position)).IN_SEQUENCE(sequence)
-									.RETURN(0);
+									.SIDE_EFFECT(_1->cur_pos += _2).RETURN(0);
 							for (off_t i {}; i < pastTheEnd; ++i)
 								expectations.emplace_back(NAMED_REQUIRE_CALL(ufatMock,
 										ufat_file_write(ufatFile, ne(nullptr), 1u))
 										.WITH(*reinterpret_cast<const uint8_t*>(_2) == 0).IN_SEQUENCE(sequence)
-										.RETURN(_3));
+										.SIDE_EFFECT(_1->cur_pos += _3).RETURN(_3));
 							REQUIRE_CALL(mutexMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
 							const auto [ret, newPosition] = file->seek(whence, offset + pastTheEnd);
 							REQUIRE(ret == 0);
@@ -1680,7 +1683,8 @@ TEST_CASE("Testing openFile()", "[openFile]")
 						SECTION("Testing rewind()")
 						{
 							REQUIRE_CALL(mutexMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
-							REQUIRE_CALL(ufatMock, ufat_file_rewind(ufatFile)).IN_SEQUENCE(sequence);
+							REQUIRE_CALL(ufatMock, ufat_file_rewind(ufatFile)).IN_SEQUENCE(sequence)
+									.SIDE_EFFECT(_1->cur_pos = {});
 							REQUIRE_CALL(mutexMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
 							REQUIRE(file->rewind() == 0);
 						}
