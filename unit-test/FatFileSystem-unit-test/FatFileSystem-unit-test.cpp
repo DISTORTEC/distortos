@@ -1657,8 +1657,7 @@ TEST_CASE("Testing openFile()", "[openFile]")
 										whence == Whence::current ? off_t{size - position} : off_t{}) + 1;
 
 								REQUIRE_CALL(mutexMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
-								REQUIRE_CALL(ufatMock, ufat_file_rewind(ufatFile)).IN_SEQUENCE(sequence);
-								REQUIRE_CALL(ufatMock, ufat_file_advance(ufatFile, size))
+								REQUIRE_CALL(ufatMock, ufat_file_advance(ufatFile, size - position))
 										.IN_SEQUENCE(sequence).RETURN(0);
 								REQUIRE_CALL(ufatMock, ufat_file_write(ufatFile, ne(nullptr), 1u))
 										.WITH(*reinterpret_cast<const uint8_t*>(_2) == 0).IN_SEQUENCE(sequence)
@@ -1673,8 +1672,8 @@ TEST_CASE("Testing openFile()", "[openFile]")
 							const decltype(offset) pastTheEnd {5 * writable};
 
 							REQUIRE_CALL(mutexMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
-							REQUIRE_CALL(ufatMock, ufat_file_rewind(ufatFile)).IN_SEQUENCE(sequence);
-							REQUIRE_CALL(ufatMock, ufat_file_advance(ufatFile, size)).IN_SEQUENCE(sequence).RETURN(0);
+							REQUIRE_CALL(ufatMock, ufat_file_advance(ufatFile, size - position)).IN_SEQUENCE(sequence)
+									.RETURN(0);
 							for (off_t i {}; i < pastTheEnd; ++i)
 								expectations.emplace_back(NAMED_REQUIRE_CALL(ufatMock,
 										ufat_file_write(ufatFile, ne(nullptr), 1u))

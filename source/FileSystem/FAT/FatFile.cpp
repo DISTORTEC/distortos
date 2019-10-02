@@ -198,10 +198,12 @@ std::pair<int, off_t> FatFile::seek(const Whence whence, const off_t offset)
 	if (newPosition > advancePosition && writable_ == false)
 		return {EBADF, {}};
 
-	ufat_file_rewind(&file_);
+	const auto forward = newPosition > currentPosition;
+	if (forward == false)
+		ufat_file_rewind(&file_);
 
 	{
-		const auto ret = ufat_file_advance(&file_, advancePosition);
+		const auto ret = ufat_file_advance(&file_, advancePosition - forward * currentPosition);
 		if (ret < 0)
 			return {ufatErrorToErrorCode(ret), {}};
 	}
