@@ -51,7 +51,7 @@ installBuild() {
 			installToolchain '8.3.0' '190223'
 			;;
 		9)
-			installToolchain '9.1.0' '190503'
+			installToolchain '9.2.0' '191002'
 			;;
 		*)
 			echo "\"${1}\" is not a valid argument!" >&2
