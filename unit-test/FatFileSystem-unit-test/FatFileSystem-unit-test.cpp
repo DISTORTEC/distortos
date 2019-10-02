@@ -1463,13 +1463,6 @@ TEST_CASE("Testing openFile()", "[openFile]")
 					REQUIRE(ret == 0);
 					REQUIRE(isATerminal == false);
 				}
-				SECTION("Testing rewind()")
-				{
-					REQUIRE_CALL(mutexMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
-					REQUIRE_CALL(ufatMock, ufat_file_rewind(ufatFile)).IN_SEQUENCE(sequence);
-					REQUIRE_CALL(mutexMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
-					REQUIRE(file->rewind() == 0);
-				}
 				SECTION("Testing synchronize()")
 				{
 					SECTION("ufat_file_read() error should propagate converted error code to caller")
@@ -1683,6 +1676,13 @@ TEST_CASE("Testing openFile()", "[openFile]")
 							const auto [ret, newPosition] = file->seek(whence, offset + pastTheEnd);
 							REQUIRE(ret == 0);
 							REQUIRE(newPosition == size + pastTheEnd);
+						}
+						SECTION("Testing rewind()")
+						{
+							REQUIRE_CALL(mutexMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
+							REQUIRE_CALL(ufatMock, ufat_file_rewind(ufatFile)).IN_SEQUENCE(sequence);
+							REQUIRE_CALL(mutexMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
+							REQUIRE(file->rewind() == 0);
 						}
 					}
 
