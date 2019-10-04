@@ -55,7 +55,7 @@ std::pair<int, off_t> FatFile::getPosition()
 
 	assert(opened_ == true);
 
-	return {{}, file_.cur_pos};
+	return {{}, position_};
 }
 
 std::pair<int, off_t> FatFile::getSize()
@@ -163,6 +163,7 @@ std::pair<int, size_t> FatFile::read(void* const buffer, const size_t size)
 	assert(buffer != nullptr);
 
 	const auto ret = ufat_file_read(&file_, buffer, size);
+	position_ = file_.cur_pos;
 	if (ret < 0)
 		return {ufatErrorToErrorCode(ret), {}};
 
@@ -176,6 +177,7 @@ int FatFile::rewind()
 	assert(opened_ == true);
 
 	ufat_file_rewind(&file_);
+	position_ = file_.cur_pos;
 	return {};
 }
 
@@ -185,10 +187,10 @@ std::pair<int, off_t> FatFile::seek(const Whence whence, const off_t offset)
 
 	assert(opened_ == true);
 
-	const auto size = file_.file_size;
-	const auto currentPosition = file_.cur_pos;
+	const auto currentPosition = position_;
+	decltype(currentPosition) size = file_.file_size;
 	const auto basePosition = whence == Whence::beginning ? decltype(currentPosition){} :
-			whence == Whence::current ? currentPosition: size;
+			whence == Whence::current ? currentPosition : size;
 	if (offset < 0 && static_cast<std::decay<decltype(basePosition)>::type>(-offset) > basePosition)
 		return {EINVAL, {}};
 	decltype(basePosition) newPosition = basePosition + offset;
@@ -198,12 +200,15 @@ std::pair<int, off_t> FatFile::seek(const Whence whence, const off_t offset)
 	if (newPosition > advancePosition && writable_ == false)
 		return {EBADF, {}};
 
-	const auto forward = newPosition > currentPosition;
-	if (forward == false)
+	if (newPosition < currentPosition)
+	{
 		ufat_file_rewind(&file_);
+		position_ = file_.cur_pos;
+	}
 
 	{
-		const auto ret = ufat_file_advance(&file_, advancePosition - forward * currentPosition);
+		const auto ret = ufat_file_advance(&file_, advancePosition - position_);
+		position_ = file_.cur_pos;
 		if (ret < 0)
 			return {ufatErrorToErrorCode(ret), {}};
 	}
@@ -212,13 +217,13 @@ std::pair<int, off_t> FatFile::seek(const Whence whence, const off_t offset)
 	{
 		const uint8_t zero {};
 		const auto ret = ufat_file_write(&file_, &zero, sizeof(zero));
+		position_ = file_.cur_pos;
 		if (ret < 0)
 			return {ufatErrorToErrorCode(ret), {}};
 		assert(ret == sizeof(zero));
 	}
 
-	return {{}, newPosition};
-
+	return {{}, position_};
 }
 
 int FatFile::synchronize()
@@ -250,11 +255,13 @@ std::pair<int, size_t> FatFile::write(const void* const buffer, const size_t siz
 	if (appendMode_ == true)
 	{
 		const auto ret = ufat_file_advance(&file_, file_.file_size - file_.cur_pos);
+		position_ = file_.cur_pos;
 		if (ret < 0)
 			return {ufatErrorToErrorCode(ret), {}};
 	}
 
 	const auto ret = ufat_file_write(&file_, buffer, size);
+	position_ = file_.cur_pos;
 	if (ret < 0)
 		return {ufatErrorToErrorCode(ret), {}};
 

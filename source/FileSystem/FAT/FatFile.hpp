@@ -40,6 +40,7 @@ public:
 	constexpr explicit FatFile(FatFileSystem& fileSystem) :
 			file_{},
 			fileSystem_{fileSystem},
+			position_{},
 			appendMode_{},
 			opened_{},
 			readable_{},
@@ -288,6 +289,9 @@ private:
 
 	/// reference to owner file system
 	FatFileSystem& fileSystem_;
+
+	/// current position in file
+	off_t position_;
 
 	/// true if file is opened in append mode, false otherwise
 	bool appendMode_;
