@@ -1465,7 +1465,7 @@ TEST_CASE("Testing openFile()", "[openFile]")
 				}
 				SECTION("Testing synchronize()")
 				{
-					SECTION("ufat_file_read() error should propagate converted error code to caller")
+					SECTION("ufat_sync() error should propagate converted error code to caller")
 					{
 						REQUIRE_CALL(mutexMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
 						REQUIRE_CALL(ufatMock, ufat_sync(ufatFileSystem)).IN_SEQUENCE(sequence)
