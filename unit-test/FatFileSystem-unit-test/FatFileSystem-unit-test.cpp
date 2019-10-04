@@ -1424,9 +1424,17 @@ TEST_CASE("Testing openFile()", "[openFile]")
 				constexpr uint32_t initialPosition {0x1cfc16d0};
 				constexpr uint32_t fileSize {0x2f35d42d};
 
-				ufatFile->cur_pos = initialPosition;
 				ufatFile->file_size = fileSize;
 
+				{
+					REQUIRE_CALL(mutexMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
+					REQUIRE_CALL(ufatMock, ufat_file_advance(ufatFile, initialPosition)).IN_SEQUENCE(sequence)
+							.SIDE_EFFECT(_1->cur_pos += _2).RETURN(0);
+					REQUIRE_CALL(mutexMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
+					const auto [ret, newPosition] = file->seek(Whence::beginning, initialPosition);
+					REQUIRE(ret == 0);
+					REQUIRE(newPosition == initialPosition);
+				}
 				{
 					REQUIRE_CALL(mutexMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
 					REQUIRE_CALL(mutexMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
