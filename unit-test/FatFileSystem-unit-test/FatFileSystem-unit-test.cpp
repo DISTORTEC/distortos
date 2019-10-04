@@ -1421,17 +1421,6 @@ TEST_CASE("Testing openFile()", "[openFile]")
 				REQUIRE(openRet == 0);
 				REQUIRE(file != nullptr);
 
-				SECTION("Testing getPosition()")
-				{
-					constexpr uint32_t expectedPosition {0x0a8df6ab};
-					ufatFile->cur_pos = expectedPosition;
-
-					REQUIRE_CALL(mutexMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
-					REQUIRE_CALL(mutexMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
-					const auto [ret, position] = file->getPosition();
-					REQUIRE(ret == 0);
-					REQUIRE(position == expectedPosition);
-				}
 				SECTION("Testing getSize()")
 				{
 					constexpr uint32_t expectedSize {0x58bdc8a9};
@@ -1511,13 +1500,23 @@ TEST_CASE("Testing openFile()", "[openFile]")
 						uint8_t buffer[15] {};
 						constexpr size_t expectedBytesRead {sizeof(buffer) / 2};
 
-						REQUIRE_CALL(mutexMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
-						REQUIRE_CALL(ufatMock, ufat_file_read(ufatFile, buffer, sizeof(buffer))).IN_SEQUENCE(sequence)
-								.SIDE_EFFECT(_1->cur_pos += expectedBytesRead).RETURN(expectedBytesRead);
-						REQUIRE_CALL(mutexMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
-						const auto [ret, bytesRead] = file->read(buffer, sizeof(buffer));
-						REQUIRE(ret == 0);
-						REQUIRE(bytesRead == expectedBytesRead);
+						{
+							REQUIRE_CALL(mutexMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
+							REQUIRE_CALL(ufatMock, ufat_file_read(ufatFile, buffer, sizeof(buffer)))
+									.IN_SEQUENCE(sequence).SIDE_EFFECT(_1->cur_pos += expectedBytesRead)
+									.RETURN(expectedBytesRead);
+							REQUIRE_CALL(mutexMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
+							const auto [ret, bytesRead] = file->read(buffer, sizeof(buffer));
+							REQUIRE(ret == 0);
+							REQUIRE(bytesRead == expectedBytesRead);
+						}
+						{
+							REQUIRE_CALL(mutexMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
+							REQUIRE_CALL(mutexMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
+							const auto [ret, currentPosition] = file->getPosition();
+							REQUIRE(ret == 0);
+							REQUIRE(currentPosition == expectedBytesRead);
+						}
 					}
 				}
 
@@ -1527,43 +1526,63 @@ TEST_CASE("Testing openFile()", "[openFile]")
 					{
 						SECTION("ufat_file_advance() error should propagate converted error code to caller")
 						{
-							const uint8_t buffer[125] {};
 							constexpr uint32_t position {0x1cfc16d0};
-							constexpr uint32_t size {0x2f35d42d};
 
-							ufatFile->cur_pos = position;
-							ufatFile->file_size = size;
+							{
+								const uint8_t buffer[125] {};
+								constexpr uint32_t size {0x2f35d42d};
 
-							REQUIRE_CALL(mutexMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
-							REQUIRE_CALL(ufatMock, ufat_file_advance(ufatFile, size - position)).IN_SEQUENCE(sequence)
-									.RETURN(-UFAT_ERR_NAME_TOO_LONG);
-							REQUIRE_CALL(mutexMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
-							const auto [ret, bytesWritten] = file->write(buffer, sizeof(buffer));
-							REQUIRE(ret == ENAMETOOLONG);
-							REQUIRE(bytesWritten == 0);
+								ufatFile->cur_pos = position;
+								ufatFile->file_size = size;
+
+								REQUIRE_CALL(mutexMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
+								REQUIRE_CALL(ufatMock, ufat_file_advance(ufatFile, size - position))
+										.IN_SEQUENCE(sequence).RETURN(-UFAT_ERR_NAME_TOO_LONG);
+								REQUIRE_CALL(mutexMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
+								const auto [ret, bytesWritten] = file->write(buffer, sizeof(buffer));
+								REQUIRE(ret == ENAMETOOLONG);
+								REQUIRE(bytesWritten == 0);
+							}
+							{
+								REQUIRE_CALL(mutexMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
+								REQUIRE_CALL(mutexMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
+								const auto [ret, currentPosition] = file->getPosition();
+								REQUIRE(ret == 0);
+								REQUIRE(currentPosition == position);
+							}
 						}
 					}
 
 					SECTION("ufat_file_write() error should propagate converted error code to caller")
 					{
-						const uint8_t buffer[120] {};
 						constexpr uint32_t position {0x83af6cb4};
 						constexpr uint32_t size {0xc7992345};
 
-						ufatFile->cur_pos = position;
-						ufatFile->file_size = size;
+						{
+							const uint8_t buffer[120] {};
 
-						REQUIRE_CALL(mutexMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
-						if (appendMode == true)
-							expectations.emplace_back(NAMED_REQUIRE_CALL(ufatMock,
-									ufat_file_advance(ufatFile, size - position)).IN_SEQUENCE(sequence)
-									.SIDE_EFFECT(_1->cur_pos += _2).RETURN(0));
-						REQUIRE_CALL(ufatMock, ufat_file_write(ufatFile, buffer, sizeof(buffer))).IN_SEQUENCE(sequence)
-								.RETURN(-UFAT_ERR_NOT_DIRECTORY);
-						REQUIRE_CALL(mutexMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
-						const auto [ret, bytesWritten] = file->write(buffer, sizeof(buffer));
-						REQUIRE(ret == ENOTDIR);
-						REQUIRE(bytesWritten == 0);
+							ufatFile->cur_pos = position;
+							ufatFile->file_size = size;
+
+							REQUIRE_CALL(mutexMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
+							if (appendMode == true)
+								expectations.emplace_back(NAMED_REQUIRE_CALL(ufatMock,
+										ufat_file_advance(ufatFile, size - position)).IN_SEQUENCE(sequence)
+										.SIDE_EFFECT(_1->cur_pos += _2).RETURN(0));
+							REQUIRE_CALL(ufatMock, ufat_file_write(ufatFile, buffer, sizeof(buffer)))
+									.IN_SEQUENCE(sequence).RETURN(-UFAT_ERR_NOT_DIRECTORY);
+							REQUIRE_CALL(mutexMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
+							const auto [ret, bytesWritten] = file->write(buffer, sizeof(buffer));
+							REQUIRE(ret == ENOTDIR);
+							REQUIRE(bytesWritten == 0);
+						}
+						{
+							REQUIRE_CALL(mutexMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
+							REQUIRE_CALL(mutexMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
+							const auto [ret, currentPosition] = file->getPosition();
+							REQUIRE(ret == 0);
+							REQUIRE(currentPosition == (appendMode == true ? size : position));
+						}
 					}
 					SECTION("Testing successful write()")
 					{
@@ -1572,20 +1591,30 @@ TEST_CASE("Testing openFile()", "[openFile]")
 						constexpr uint32_t size {0xf0bbcf3f};
 						constexpr size_t expectedBytesWritten {sizeof(buffer) / 2};
 
-						ufatFile->cur_pos = position;
-						ufatFile->file_size = size;
+						{
+							ufatFile->cur_pos = position;
+							ufatFile->file_size = size;
 
-						REQUIRE_CALL(mutexMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
-						if (appendMode == true)
-							expectations.emplace_back(NAMED_REQUIRE_CALL(ufatMock,
-									ufat_file_advance(ufatFile, size - position)).IN_SEQUENCE(sequence)
-									.SIDE_EFFECT(_1->cur_pos += _2).RETURN(0));
-						REQUIRE_CALL(ufatMock, ufat_file_write(ufatFile, buffer, sizeof(buffer))).IN_SEQUENCE(sequence)
-								.SIDE_EFFECT(_1->cur_pos += _3).RETURN(expectedBytesWritten);
-						REQUIRE_CALL(mutexMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
-						const auto [ret, bytesWritten] = file->write(buffer, sizeof(buffer));
-						REQUIRE(ret == 0);
-						REQUIRE(bytesWritten == expectedBytesWritten);
+							REQUIRE_CALL(mutexMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
+							if (appendMode == true)
+								expectations.emplace_back(NAMED_REQUIRE_CALL(ufatMock,
+										ufat_file_advance(ufatFile, size - position)).IN_SEQUENCE(sequence)
+										.SIDE_EFFECT(_1->cur_pos += _2).RETURN(0));
+							REQUIRE_CALL(ufatMock, ufat_file_write(ufatFile, buffer, sizeof(buffer)))
+									.IN_SEQUENCE(sequence).SIDE_EFFECT(_1->cur_pos += expectedBytesWritten)
+									.RETURN(expectedBytesWritten);
+							REQUIRE_CALL(mutexMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
+							const auto [ret, bytesWritten] = file->write(buffer, sizeof(buffer));
+							REQUIRE(ret == 0);
+							REQUIRE(bytesWritten == expectedBytesWritten);
+						}
+						{
+							REQUIRE_CALL(mutexMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
+							REQUIRE_CALL(mutexMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
+							const auto [ret, currentPosition] = file->getPosition();
+							REQUIRE(ret == 0);
+							REQUIRE(currentPosition == (appendMode == true ? size : position) + expectedBytesWritten);
+						}
 					}
 				}
 				static const std::pair<Whence, const char*> whenceAssociations[]
@@ -1603,90 +1632,162 @@ TEST_CASE("Testing openFile()", "[openFile]")
 						ufatFile->cur_pos = position;
 						ufatFile->file_size = size;
 
-						SECTION("seek() which ends at negative position should fail with EINVAL")
 						{
-							const auto offset = -(whence == Whence::beginning ? off_t{} :
-									whence == Whence::current ? off_t{position} : off_t{size}) - 1;
-
 							REQUIRE_CALL(mutexMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
 							REQUIRE_CALL(mutexMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
-							REQUIRE(file->seek(whence, offset).first == EINVAL);
+							const auto [ret, currentPosition] = file->getPosition();
+							REQUIRE(ret == 0);
+							REQUIRE(currentPosition == position);
+						}
+
+						SECTION("seek() which ends at negative position should fail with EINVAL")
+						{
+							{
+								const auto offset = -(whence == Whence::beginning ? off_t{} :
+										whence == Whence::current ? off_t{position} : off_t{size}) - 1;
+
+								REQUIRE_CALL(mutexMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
+								REQUIRE_CALL(mutexMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
+								REQUIRE(file->seek(whence, offset).first == EINVAL);
+							}
+							{
+								REQUIRE_CALL(mutexMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
+								REQUIRE_CALL(mutexMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
+								const auto [ret, currentPosition] = file->getPosition();
+								REQUIRE(ret == 0);
+								REQUIRE(currentPosition == position);
+							}
 						}
 						SECTION("seek() to current position should perform no action")
 						{
-							const auto offset = whence == Whence::beginning ? off_t{position} :
-									whence == Whence::current ? off_t{} : -off_t{size - position};
+							{
+								const auto offset = whence == Whence::beginning ? off_t{position} :
+										whence == Whence::current ? off_t{} : -off_t{size - position};
 
-							REQUIRE_CALL(mutexMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
-							REQUIRE_CALL(mutexMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
-							const auto [ret, newPosition] = file->seek(whence, offset);
-							REQUIRE(ret == 0);
-							REQUIRE(newPosition == position);
+								REQUIRE_CALL(mutexMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
+								REQUIRE_CALL(mutexMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
+								const auto [ret, newPosition] = file->seek(whence, offset);
+								REQUIRE(ret == 0);
+								REQUIRE(newPosition == position);
+							}
+							{
+								REQUIRE_CALL(mutexMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
+								REQUIRE_CALL(mutexMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
+								const auto [ret, currentPosition] = file->getPosition();
+								REQUIRE(ret == 0);
+								REQUIRE(currentPosition == position);
+							}
 						}
 						if (writable == false)
 							SECTION("seek() past the end-of-file should fail with EBADF")
 							{
-								const auto offset = (whence == Whence::beginning ? off_t{size} :
-										whence == Whence::current ? off_t{size - position} : off_t{}) + 1;
+								{
+									const auto offset = (whence == Whence::beginning ? off_t{size} :
+											whence == Whence::current ? off_t{size - position} : off_t{}) + 1;
 
-								REQUIRE_CALL(mutexMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
-								REQUIRE_CALL(mutexMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
-								REQUIRE(file->seek(whence, offset).first == EBADF);
+									REQUIRE_CALL(mutexMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
+									REQUIRE_CALL(mutexMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
+									REQUIRE(file->seek(whence, offset).first == EBADF);
+								}
+								{
+									REQUIRE_CALL(mutexMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
+									REQUIRE_CALL(mutexMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
+									const auto [ret, currentPosition] = file->getPosition();
+									REQUIRE(ret == 0);
+									REQUIRE(currentPosition == position);
+								}
 							}
 						SECTION("ufat_file_advance() error should propagate converted error code to caller")
 						{
-							const auto offset = whence == Whence::beginning ? off_t{1} :
-									whence == Whence::current ? -off_t{position} + 1 : -off_t{size} + 1;
+							{
+								const auto offset = whence == Whence::beginning ? off_t{1} :
+										whence == Whence::current ? -off_t{position} + 1 : -off_t{size} + 1;
 
-							REQUIRE_CALL(mutexMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
-							REQUIRE_CALL(ufatMock, ufat_file_rewind(ufatFile)).IN_SEQUENCE(sequence)
-									.SIDE_EFFECT(_1->cur_pos = {});
-							REQUIRE_CALL(ufatMock, ufat_file_advance(ufatFile, 1u)).IN_SEQUENCE(sequence)
-									.RETURN(-UFAT_ERR_NOT_FILE);
-							REQUIRE_CALL(mutexMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
-							REQUIRE(file->seek(whence, offset).first == EISDIR);
+								REQUIRE_CALL(mutexMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
+								REQUIRE_CALL(ufatMock, ufat_file_rewind(ufatFile)).IN_SEQUENCE(sequence)
+										.SIDE_EFFECT(_1->cur_pos = {});
+								REQUIRE_CALL(ufatMock, ufat_file_advance(ufatFile, 1u)).IN_SEQUENCE(sequence)
+										.RETURN(-UFAT_ERR_NOT_FILE);
+								REQUIRE_CALL(mutexMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
+								REQUIRE(file->seek(whence, offset).first == EISDIR);
+							}
+							{
+								REQUIRE_CALL(mutexMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
+								REQUIRE_CALL(mutexMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
+								const auto [ret, currentPosition] = file->getPosition();
+								REQUIRE(ret == 0);
+								REQUIRE(currentPosition == 0);
+							}
 						}
 						if (writable == true)
 							SECTION("ufat_file_write() error should propagate converted error code to caller")
 							{
-								const auto offset = (whence == Whence::beginning ? off_t{size} :
-										whence == Whence::current ? off_t{size - position} : off_t{}) + 1;
+								{
+									const auto offset = (whence == Whence::beginning ? off_t{size} :
+											whence == Whence::current ? off_t{size - position} : off_t{}) + 1;
 
-								REQUIRE_CALL(mutexMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
-								REQUIRE_CALL(ufatMock, ufat_file_advance(ufatFile, size - position))
-										.IN_SEQUENCE(sequence).SIDE_EFFECT(_1->cur_pos += _2).RETURN(0);
-								REQUIRE_CALL(ufatMock, ufat_file_write(ufatFile, ne(nullptr), 1u))
-										.WITH(*reinterpret_cast<const uint8_t*>(_2) == 0).IN_SEQUENCE(sequence)
-										.RETURN(-UFAT_ERR_IMMUTABLE);
-								REQUIRE_CALL(mutexMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
-								REQUIRE(file->seek(whence, offset).first == EACCES);
+									REQUIRE_CALL(mutexMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
+									REQUIRE_CALL(ufatMock, ufat_file_advance(ufatFile, size - position))
+											.IN_SEQUENCE(sequence).SIDE_EFFECT(_1->cur_pos += _2).RETURN(0);
+									REQUIRE_CALL(ufatMock, ufat_file_write(ufatFile, ne(nullptr), 1u))
+											.WITH(*reinterpret_cast<const uint8_t*>(_2) == 0).IN_SEQUENCE(sequence)
+											.RETURN(-UFAT_ERR_IMMUTABLE);
+									REQUIRE_CALL(mutexMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
+									REQUIRE(file->seek(whence, offset).first == EACCES);
+								}
+								{
+									REQUIRE_CALL(mutexMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
+									REQUIRE_CALL(mutexMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
+									const auto [ret, currentPosition] = file->getPosition();
+									REQUIRE(ret == 0);
+									REQUIRE(currentPosition == size);
+								}
 							}
 						SECTION("Testing successful seek()")
 						{
-							const auto offset = whence == Whence::beginning ? off_t{size} :
-									whence == Whence::current ? off_t{size - position} : off_t{};
-							const decltype(offset) pastTheEnd {5 * writable};
+							const off_t pastTheEnd {5 * writable};
 
-							REQUIRE_CALL(mutexMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
-							REQUIRE_CALL(ufatMock, ufat_file_advance(ufatFile, size - position)).IN_SEQUENCE(sequence)
-									.SIDE_EFFECT(_1->cur_pos += _2).RETURN(0);
-							for (off_t i {}; i < pastTheEnd; ++i)
-								expectations.emplace_back(NAMED_REQUIRE_CALL(ufatMock,
-										ufat_file_write(ufatFile, ne(nullptr), 1u))
-										.WITH(*reinterpret_cast<const uint8_t*>(_2) == 0).IN_SEQUENCE(sequence)
-										.SIDE_EFFECT(_1->cur_pos += _3).RETURN(_3));
-							REQUIRE_CALL(mutexMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
-							const auto [ret, newPosition] = file->seek(whence, offset + pastTheEnd);
-							REQUIRE(ret == 0);
-							REQUIRE(newPosition == size + pastTheEnd);
+							{
+								const auto offset = whence == Whence::beginning ? off_t{size} :
+										whence == Whence::current ? off_t{size - position} : off_t{};
+
+								REQUIRE_CALL(mutexMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
+								REQUIRE_CALL(ufatMock, ufat_file_advance(ufatFile, size - position)).IN_SEQUENCE(sequence)
+										.SIDE_EFFECT(_1->cur_pos += _2).RETURN(0);
+								for (off_t i {}; i < pastTheEnd; ++i)
+									expectations.emplace_back(NAMED_REQUIRE_CALL(ufatMock,
+											ufat_file_write(ufatFile, ne(nullptr), 1u))
+											.WITH(*reinterpret_cast<const uint8_t*>(_2) == 0).IN_SEQUENCE(sequence)
+											.SIDE_EFFECT(_1->cur_pos += _3).RETURN(_3));
+								REQUIRE_CALL(mutexMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
+								const auto [ret, newPosition] = file->seek(whence, offset + pastTheEnd);
+								REQUIRE(ret == 0);
+								REQUIRE(newPosition == size + pastTheEnd);
+							}
+							{
+								REQUIRE_CALL(mutexMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
+								REQUIRE_CALL(mutexMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
+								const auto [ret, currentPosition] = file->getPosition();
+								REQUIRE(ret == 0);
+								REQUIRE(currentPosition == size + pastTheEnd);
+							}
 						}
 						SECTION("Testing rewind()")
 						{
-							REQUIRE_CALL(mutexMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
-							REQUIRE_CALL(ufatMock, ufat_file_rewind(ufatFile)).IN_SEQUENCE(sequence)
-									.SIDE_EFFECT(_1->cur_pos = {});
-							REQUIRE_CALL(mutexMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
-							REQUIRE(file->rewind() == 0);
+							{
+								REQUIRE_CALL(mutexMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
+								REQUIRE_CALL(ufatMock, ufat_file_rewind(ufatFile)).IN_SEQUENCE(sequence)
+										.SIDE_EFFECT(_1->cur_pos = {});
+								REQUIRE_CALL(mutexMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
+								REQUIRE(file->rewind() == 0);
+							}
+							{
+								REQUIRE_CALL(mutexMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
+								REQUIRE_CALL(mutexMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
+								const auto [ret, currentPosition] = file->getPosition();
+								REQUIRE(ret == 0);
+								REQUIRE(currentPosition == 0);
+							}
 						}
 					}
 
