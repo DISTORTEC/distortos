@@ -225,10 +225,8 @@ public:
 	 * \param [in] offset is the value of offset, bytes
 	 *
 	 * \return pair with return code (0 on success, error code otherwise) and current file offset, bytes; error codes:
-	 * - EBADF - resulting file offset would be past the end of file and file is not opened for writing;
 	 * - EINVAL - resulting file offset would be negative;
 	 * - converted error codes returned by ufat_file_advance();
-	 * - converted error codes returned by ufat_file_write();
 	 */
 
 	std::pair<int, off_t> seek(Whence whence, off_t offset) override;

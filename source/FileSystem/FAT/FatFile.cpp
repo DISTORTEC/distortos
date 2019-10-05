@@ -196,9 +196,6 @@ std::pair<int, off_t> FatFile::seek(const Whence whence, const off_t offset)
 	decltype(basePosition) newPosition = basePosition + offset;
 	if (newPosition == currentPosition)
 		return {{}, currentPosition};
-	const auto advancePosition = std::min(newPosition, size);
-	if (newPosition > advancePosition && writable_ == false)
-		return {EBADF, {}};
 
 	if (newPosition < currentPosition)
 	{
@@ -206,23 +203,12 @@ std::pair<int, off_t> FatFile::seek(const Whence whence, const off_t offset)
 		position_ = file_.cur_pos;
 	}
 
-	{
-		const auto ret = ufat_file_advance(&file_, advancePosition - position_);
-		position_ = file_.cur_pos;
-		if (ret < 0)
-			return {ufatErrorToErrorCode(ret), {}};
-	}
+	const auto ret = ufat_file_advance(&file_, std::min(newPosition, size) - position_);
+	position_ = file_.cur_pos;
+	if (ret < 0)
+		return {ufatErrorToErrorCode(ret), {}};
 
-	for (auto i = advancePosition; i < newPosition; ++i)
-	{
-		const uint8_t zero {};
-		const auto ret = ufat_file_write(&file_, &zero, sizeof(zero));
-		position_ = file_.cur_pos;
-		if (ret < 0)
-			return {ufatErrorToErrorCode(ret), {}};
-		assert(ret == sizeof(zero));
-	}
-
+	position_ = newPosition;
 	return {{}, position_};
 }
 
@@ -258,6 +244,18 @@ std::pair<int, size_t> FatFile::write(const void* const buffer, const size_t siz
 		position_ = file_.cur_pos;
 		if (ret < 0)
 			return {ufatErrorToErrorCode(ret), {}};
+	}
+
+	assert(static_cast<decltype(file_.cur_pos)>(position_) >= file_.cur_pos);
+	const size_t fillSize = position_ - file_.cur_pos;
+	for (size_t i {}; i < fillSize; ++i)
+	{
+		const uint8_t zero {};
+		const auto ret = ufat_file_write(&file_, &zero, sizeof(zero));
+		position_ = file_.cur_pos;
+		if (ret < 0)
+			return {ufatErrorToErrorCode(ret), {}};
+		assert(ret == sizeof(zero));
 	}
 
 	const auto ret = ufat_file_write(&file_, buffer, size);
