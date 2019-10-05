@@ -134,6 +134,7 @@ int FatFile::open(const char* const path, const int flags)
 		if (strpbrk(pathRemainder, "/\\") != nullptr)
 			return ENOENT;
 		const auto ret = ufat_dir_mkfile(&directory, &directoryEntry, pathRemainder);
+		dirty_ = true;
 		if (ret < 0)
 			return ufatErrorToErrorCode(ret);
 	}
@@ -146,6 +147,7 @@ int FatFile::open(const char* const path, const int flags)
 	{
 		assert(writable_ == true);	// result is undefined if O_TRUNC is set and O_WRONLY or O_RDWR are not set
 		const auto ret = ufat_file_truncate(&file_);
+		dirty_ = true;
 		if (ret < 0)
 			return ufatErrorToErrorCode(ret);
 	}
@@ -218,11 +220,19 @@ int FatFile::synchronize()
 
 	assert(opened_ == true);
 
-	const auto ret = ufat_sync(&fileSystem_.fileSystem_);
-	if (ret < 0)
-		return ufatErrorToErrorCode(ret);
+	{
+		const auto ret = ufat_sync(&fileSystem_.fileSystem_);
+		if (ret < 0)
+			return ufatErrorToErrorCode(ret);
+	}
+	{
+		const auto ret = fileSystem_.device_.blockDevice.synchronize();
+		if (ret != 0)
+			return ret;
+	}
 
-	return fileSystem_.device_.blockDevice.synchronize();
+	dirty_ = {};
+	return {};
 }
 
 void FatFile::unlock()
@@ -252,6 +262,7 @@ std::pair<int, size_t> FatFile::write(const void* const buffer, const size_t siz
 	{
 		const uint8_t zero {};
 		const auto ret = ufat_file_write(&file_, &zero, sizeof(zero));
+		dirty_ = true;
 		position_ = file_.cur_pos;
 		if (ret < 0)
 			return {ufatErrorToErrorCode(ret), {}};
@@ -259,6 +270,7 @@ std::pair<int, size_t> FatFile::write(const void* const buffer, const size_t siz
 	}
 
 	const auto ret = ufat_file_write(&file_, buffer, size);
+	dirty_ = true;
 	position_ = file_.cur_pos;
 	if (ret < 0)
 		return {ufatErrorToErrorCode(ret), {}};
