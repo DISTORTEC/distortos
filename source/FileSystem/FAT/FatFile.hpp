@@ -42,6 +42,7 @@ public:
 			fileSystem_{fileSystem},
 			position_{},
 			appendMode_{},
+			dirty_{},
 			opened_{},
 			readable_{},
 			writable_{}
@@ -293,6 +294,9 @@ private:
 
 	/// true if file is opened in append mode, false otherwise
 	bool appendMode_;
+
+	/// true if file needs to be synchronized, false otherwise
+	bool dirty_;
 
 	/// true if file is opened, false otherwise
 	bool opened_;

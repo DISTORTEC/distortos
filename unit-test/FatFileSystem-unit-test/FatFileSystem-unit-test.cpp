@@ -1397,6 +1397,7 @@ TEST_CASE("Testing openFile()", "[openFile]")
 				ufat_dirent* ufatDirectoryEntry {};
 				const char** pathRemainder {};
 				ufat_file* ufatFile {};
+				auto dirty = existing == false || (flags & O_TRUNC) != 0;
 
 				const char* const path {"some/path"};
 
@@ -1471,22 +1472,40 @@ TEST_CASE("Testing openFile()", "[openFile]")
 				}
 				SECTION("Testing synchronize()")
 				{
-					SECTION("ufat_sync() error should propagate converted error code to caller")
+					if (dirty == true)
 					{
-						REQUIRE_CALL(mutexMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
-						REQUIRE_CALL(ufatMock, ufat_sync(ufatFileSystem)).IN_SEQUENCE(sequence)
-								.RETURN(-UFAT_ERR_BLOCK_ALIGNMENT);
-						REQUIRE_CALL(mutexMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
-						REQUIRE(file->synchronize() == EFAULT);
+						SECTION("ufat_sync() error should propagate converted error code to caller")
+						{
+							REQUIRE_CALL(mutexMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
+							REQUIRE_CALL(ufatMock, ufat_sync(ufatFileSystem)).IN_SEQUENCE(sequence)
+									.RETURN(-UFAT_ERR_BLOCK_ALIGNMENT);
+							REQUIRE_CALL(mutexMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
+							REQUIRE(file->synchronize() == EFAULT);
+						}
+						SECTION("Block device synchronize error should propagate error code to caller")
+						{
+							REQUIRE_CALL(mutexMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
+							REQUIRE_CALL(ufatMock, ufat_sync(ufatFileSystem)).IN_SEQUENCE(sequence).RETURN(0);
+							constexpr int ret {0x4ec25c04};
+							REQUIRE_CALL(blockDeviceMock, synchronize()).IN_SEQUENCE(sequence).RETURN(ret);
+							REQUIRE_CALL(mutexMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
+							REQUIRE(file->synchronize() == ret);
+						}
 					}
-					SECTION("Block device synchronize error should propagate error code to caller")
+					SECTION("Testing successful synchronize()")
 					{
 						REQUIRE_CALL(mutexMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
-						REQUIRE_CALL(ufatMock, ufat_sync(ufatFileSystem)).IN_SEQUENCE(sequence).RETURN(0);
-						constexpr int ret {0x4ec25c04};
-						REQUIRE_CALL(blockDeviceMock, synchronize()).IN_SEQUENCE(sequence).RETURN(ret);
+						if (dirty == true)
+						{
+							expectations.emplace_back(NAMED_REQUIRE_CALL(ufatMock, ufat_sync(ufatFileSystem))
+									.IN_SEQUENCE(sequence).RETURN(0));
+							expectations.emplace_back(NAMED_REQUIRE_CALL(blockDeviceMock, synchronize())
+									.IN_SEQUENCE(sequence).RETURN(0));
+						}
 						REQUIRE_CALL(mutexMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
-						REQUIRE(file->synchronize() == ret);
+						REQUIRE(file->synchronize() == 0);
+
+						dirty = {};
 					}
 				}
 
@@ -1588,6 +1607,8 @@ TEST_CASE("Testing openFile()", "[openFile]")
 							REQUIRE(ret == 0);
 							REQUIRE(currentPosition == (appendMode == true ? fileSize : initialPosition));
 						}
+
+						dirty = true;
 					}
 					SECTION("Testing successful write()")
 					{
@@ -1618,6 +1639,8 @@ TEST_CASE("Testing openFile()", "[openFile]")
 							REQUIRE(ret == 0);
 							REQUIRE(currentPosition == expectedPosition);
 						}
+
+						dirty = true;
 					}
 				}
 				static const std::pair<Whence, const char*> whenceAssociations[]
@@ -1740,6 +1763,8 @@ TEST_CASE("Testing openFile()", "[openFile]")
 												REQUIRE(ret == 0);
 												REQUIRE(currentPosition == fileSize);
 											}
+
+											dirty = true;
 										}
 									SECTION("Testing successful write()")
 									{
@@ -1777,6 +1802,8 @@ TEST_CASE("Testing openFile()", "[openFile]")
 											REQUIRE(ret == 0);
 											REQUIRE(currentPosition == expectedPosition);
 										}
+
+										dirty = true;
 									}
 								}
 							}
@@ -1805,10 +1832,16 @@ TEST_CASE("Testing openFile()", "[openFile]")
 						{-UFAT_ERR_INVALID_BPB, 0x0f7b0354, EILSEQ},
 						{0, 0x0898a8a3, 0x0898a8a3},
 				};
-				const auto [ufatSyncRet, synchronizeRet, closeRet] = closeAssociations[even];
+				const auto [ufatSyncRet, synchronizeRet, closeRet] = dirty == true ? closeAssociations[even] :
+						std::tuple<int, int, int>{};
 				REQUIRE_CALL(mutexMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
-				REQUIRE_CALL(ufatMock, ufat_sync(ufatFileSystem)).IN_SEQUENCE(sequence).RETURN(ufatSyncRet);
-				REQUIRE_CALL(blockDeviceMock, synchronize()).IN_SEQUENCE(sequence).RETURN(synchronizeRet);
+				if (dirty == true)
+				{
+					expectations.emplace_back(NAMED_REQUIRE_CALL(ufatMock, ufat_sync(ufatFileSystem))
+							.IN_SEQUENCE(sequence).RETURN(ufatSyncRet));
+					expectations.emplace_back(NAMED_REQUIRE_CALL(blockDeviceMock, synchronize()).IN_SEQUENCE(sequence)
+							.RETURN(synchronizeRet));
+				}
 				REQUIRE_CALL(mutexMock, unlock()).IN_SEQUENCE(sequence).RETURN(0);
 				REQUIRE(file->close() == closeRet);
 			}
