@@ -177,6 +177,11 @@ memories:
     - .noinit
     $labels:
     - BKPSRAM
+device-electronic-signature:
+  compatible:
+  - ST,STM32-device-electronic-signature
+  unique-device-ID:
+    fragmented: false
 DMAs:
   compatible:
   - ST,STM32-DMAs-v2-group

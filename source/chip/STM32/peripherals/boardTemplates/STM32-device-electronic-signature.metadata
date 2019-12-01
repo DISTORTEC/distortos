@@ -1,0 +1,12 @@
+{% if 'device-electronic-signature' in dictionary %}
+{% if 'ST,STM32-device-electronic-signature' in dictionary['device-electronic-signature']['compatible'] %}
+('source/chip/STM32/peripherals/boardTemplates/STM32-device-electronic-signature.cmake.jinja',
+		{},
+		'cmake/60-STM32-device-electronic-signature.cmake'),
+{% if 'unique-device-ID' in dictionary['device-electronic-signature'] %}
+('source/chip/STM32/peripherals/boardTemplates/uniqueDeviceId.hpp.jinja',
+		{},
+		'include/distortos/chip/uniqueDeviceId.hpp'),
+{% endif %}
+{% endif %}
+{% endif %}
