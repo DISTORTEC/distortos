@@ -24,6 +24,8 @@ device which requires specific alignment.
 `distortos/FileSystem/FatFileSystem.hpp` header.
 - Added `distortos/FileSystem/Littlefs2FileSystem.hpp` header with `distortos::Littlefs2FileSystem` class, which
 provides support for [littlefs-v2](https://github.com/ARMmbed/littlefs) file system.
+- Added support for *STM32's* 96-bit *unique device ID*, which consists of appropriate data in *CSV* / *YAML* files for
+each supported chip and `distortos/chip/uniqueDeviceId.hpp` header created by board generator.
 
 ### Changed
 
