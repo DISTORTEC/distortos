@@ -166,6 +166,11 @@ memories:
     size: 262144
     $labels:
     - SRAM
+device-electronic-signature:
+  compatible:
+  - ST,STM32-device-electronic-signature
+  unique-device-ID:
+    fragmented: false
 DMAs:
   compatible:
   - ST,STM32-DMAs-v2-group
