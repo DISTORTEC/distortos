@@ -2,7 +2,7 @@
  * \file
  * \brief SerialPort class implementation
  *
- * \author Copyright (C) 2016-2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2016-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -39,15 +39,15 @@ namespace
 +---------------------------------------------------------------------------------------------------------------------*/
 
 /**
- * \brief Copies single block from one circular buffer to another.
+ * \brief Copies single block from one raw circular buffer to another.
  *
- * \param [in] source is a reference to circular buffer from which the data will be read
- * \param [out] destination is a reference to circular buffer to which the data will be written
+ * \param [in] source is a reference to raw circular buffer from which the data will be read
+ * \param [out] destination is a reference to raw circular buffer to which the data will be written
  *
  * \return number of bytes read from \a source and written to \a destination
  */
 
-size_t copySingleBlock(SerialPort::CircularBuffer& source, SerialPort::CircularBuffer& destination)
+size_t copySingleBlock(SerialPort::RawCircularBuffer& source, SerialPort::RawCircularBuffer& destination)
 {
 	const auto readBlock = source.getReadBlock();
 	if (readBlock.second == 0)
@@ -66,10 +66,10 @@ size_t copySingleBlock(SerialPort::CircularBuffer& source, SerialPort::CircularB
 }	// namespace
 
 /*---------------------------------------------------------------------------------------------------------------------+
-| SerialPort::CircularBuffer public functions
+| SerialPort::RawCircularBuffer public functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-std::pair<const uint8_t*, size_t> SerialPort::CircularBuffer::getReadBlock() const
+std::pair<const uint8_t*, size_t> SerialPort::RawCircularBuffer::getReadBlock() const
 {
 	const auto readPosition = readPosition_ ;
 	const auto writePosition = writePosition_;
@@ -78,7 +78,7 @@ std::pair<const uint8_t*, size_t> SerialPort::CircularBuffer::getReadBlock() con
 	return getBlock(readPosition, writePosition);
 }
 
-std::pair<uint8_t*, size_t> SerialPort::CircularBuffer::getWriteBlock() const
+std::pair<uint8_t*, size_t> SerialPort::RawCircularBuffer::getWriteBlock() const
 {
 	if (isReadOnly() == true)
 		return {{}, {}};
@@ -216,7 +216,7 @@ std::pair<int, size_t> SerialPort::read(void* const buffer, const size_t size, c
 	if (characterLength_ > 8 && size % 2 != 0)
 		return {EINVAL, {}};
 
-	CircularBuffer localReadBuffer {buffer, size};
+	RawCircularBuffer localReadBuffer {buffer, size};
 	const auto ret = readImplementation(localReadBuffer, minSize, timePoint);
 	const auto bytesRead = localReadBuffer.getSize();
 	return {ret != 0 || bytesRead != 0 ? ret : EAGAIN, bytesRead};
@@ -245,7 +245,7 @@ std::pair<int, size_t> SerialPort::write(const void* const buffer, const size_t 
 	if (characterLength_ > 8 && size % 2 != 0)
 		return {EINVAL, {}};
 
-	CircularBuffer localWriteBuffer {buffer, size};	// local buffer is read-only
+	RawCircularBuffer localWriteBuffer {buffer, size};	// local buffer is read-only
 	localWriteBuffer.increaseWritePosition(size);	// make the buffer "full"
 	const auto ret = writeImplementation(localWriteBuffer, minSize, timePoint);
 	const auto bytesWritten = localWriteBuffer.getCapacity() - localWriteBuffer.getSize();
@@ -342,7 +342,7 @@ void SerialPort::writeCompleteEvent(const size_t bytesWritten)
 | private functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-int SerialPort::readFromCircularBufferAndStartRead(CircularBuffer& buffer)
+int SerialPort::readFromRawCircularBufferAndStartRead(RawCircularBuffer& buffer)
 {
 	while (copySingleBlock(readBuffer_, buffer) != 0)
 	{
@@ -354,16 +354,16 @@ int SerialPort::readFromCircularBufferAndStartRead(CircularBuffer& buffer)
 	return 0;
 }
 
-int SerialPort::readImplementation(CircularBuffer& buffer, const size_t minSize,
+int SerialPort::readImplementation(RawCircularBuffer& buffer, const size_t minSize,
 		const TickClock::time_point* const timePoint)
 {
 	// when character length is greater than 8 bits, round up "minSize" value
 	const auto adjustedMinSize =
 			std::min(buffer.getCapacity(), characterLength_ <= 8 ? minSize : ((minSize + 1) / 2) * 2);
 
-	// initially try to read as much data as possible from circular buffer with no blocking
+	// initially try to read as much data as possible from raw circular buffer with no blocking
 	{
-		const auto ret = readFromCircularBufferAndStartRead(buffer);
+		const auto ret = readFromRawCircularBufferAndStartRead(buffer);
 		if (ret != 0 || buffer.isFull() == true)
 			return ret;
 	}
@@ -392,11 +392,12 @@ int SerialPort::readImplementation(CircularBuffer& buffer, const size_t minSize,
 		decltype(buffer.getWriteBlock()) writeBlock {};
 		decltype(startReadWrapper()) startReadRet {};
 		{
-			// Full buffer could not be read from circular buffer? The current read transfer (if any) must be stopped
-			// for a short moment to get the amount of data available in the circular buffer (interrupts are masked to
-			// prevent preemption, which could make this "short moment" very long). By subtracting this value from the
-			// minimum amount of data required for reading we get size limit of read operation. Notification after
-			// exactly that number of bytes will mean that the buffer has enough data to satisfy requested minimum size.
+			// Full buffer could not be read from raw circular buffer? The current read transfer (if any) must be
+			// stopped for a short moment to get the amount of data available in the raw circular buffer (interrupts are
+			// masked to prevent preemption, which could make this "short moment" very long). By subtracting this value
+			// from the minimum amount of data required for reading we get size limit of read operation. Notification
+			// after exactly that number of bytes will mean that the buffer has enough data to satisfy requested minimum
+			// size.
 			const InterruptMaskingLock interruptMaskingLock;
 			stopReadWrapper();
 			writeBlock = buffer.getWriteBlock();
@@ -416,10 +417,10 @@ int SerialPort::readImplementation(CircularBuffer& buffer, const size_t minSize,
 			startReadRet = startReadWrapper();
 		}
 
-		CircularBuffer subBuffer {writeBlock.first, writeBlock.second};
+		RawCircularBuffer subBuffer {writeBlock.first, writeBlock.second};
 		{
 			// read the data that was "released" by stopping and staring read operation
-			const auto ret = readFromCircularBufferAndStartRead(subBuffer);
+			const auto ret = readFromRawCircularBufferAndStartRead(subBuffer);
 			if (startReadRet != 0 || ret != 0 || buffer.getSize() >= adjustedMinSize)
 				return startReadRet != 0 ? startReadRet : ret;
 		}
@@ -488,7 +489,7 @@ size_t SerialPort::stopWriteWrapper()
 	return bytesWritten;
 }
 
-int SerialPort::writeImplementation(CircularBuffer& buffer, const size_t minSize,
+int SerialPort::writeImplementation(RawCircularBuffer& buffer, const size_t minSize,
 		const TickClock::time_point* const timePoint)
 {
 	// when character length is greater than 8 bits, round up "minSize" value
@@ -516,8 +517,8 @@ int SerialPort::writeImplementation(CircularBuffer& buffer, const size_t minSize
 		bool block {};
 		{
 			// Current write transfer (if any) must be stopped for a short moment to get the amount of free space in the
-			// circular buffer (interrupts are masked to prevent preemption, which could make this "short moment" very
-			// long). By subtracting this value from the minimum amount of data to write we get size limit of write
+			// raw circular buffer (interrupts are masked to prevent preemption, which could make this "short moment"
+			// very long). By subtracting this value from the minimum amount of data to write we get size limit of write
 			// operation. Notification after exactly that number of bytes will mean that the buffer is "empty enough" to
 			// receive everything that is left to write.
 			const InterruptMaskingLock interruptMaskingLock;
@@ -544,11 +545,11 @@ int SerialPort::writeImplementation(CircularBuffer& buffer, const size_t minSize
 			semaphoreRet = timePoint != nullptr ? semaphore.tryWaitUntil(*timePoint) : semaphore.wait();
 	}
 
-	const auto ret = writeToCircularBufferAndStartWrite(buffer);
+	const auto ret = writeToRawCircularBufferAndStartWrite(buffer);
 	return scopeGuardRet != 0 ? scopeGuardRet : semaphoreRet != 0 ? semaphoreRet : ret;
 }
 
-int SerialPort::writeToCircularBufferAndStartWrite(CircularBuffer& buffer)
+int SerialPort::writeToRawCircularBufferAndStartWrite(RawCircularBuffer& buffer)
 {
 	while (copySingleBlock(buffer, writeBuffer_) != 0)
 	{

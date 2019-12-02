@@ -2,7 +2,7 @@
  * \file
  * \brief SerialPort class header
  *
- * \author Copyright (C) 2016-2017 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2016-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -38,25 +38,25 @@ class SerialPort : private UartBase
 public:
 
 	/**
-	 * \brief Thread-safe, lock-free circular buffer for one-producer and one-consumer
+	 * \brief Thread-safe, lock-free raw circular buffer for single-producer and single-consumer
 	 *
 	 * Distinction between empty and full buffer is possible because most significant bits of read and write positions
 	 * are used as single-bit counters or wrap-arounds. This limits the size of buffer to SIZE_MAX / 2, but allows full
 	 * utilization of storage (no free slot is needed).
 	 */
 
-	class CircularBuffer
+	class RawCircularBuffer
 	{
 	public:
 
 		/**
-		 * \brief CircularBuffer's constructor
+		 * \brief RawCircularBuffer's constructor
 		 *
 		 * \param [in] buffer is a buffer for data
 		 * \param [in] size is the size of \a buffer, bytes, must be less than or equal to SIZE_MAX / 2
 		 */
 
-		constexpr CircularBuffer(void* const buffer, const size_t size) :
+		constexpr RawCircularBuffer(void* const buffer, const size_t size) :
 				buffer_{static_cast<uint8_t*>(buffer)},
 				size_{size & sizeMask_},
 				readPosition_{},
@@ -66,13 +66,13 @@ public:
 		}
 
 		/**
-		 * \brief CircularBuffer's constructor, read-only variant
+		 * \brief RawCircularBuffer's constructor, read-only variant
 		 *
 		 * \param [in] buffer is a read-only buffer with data
 		 * \param [in] size is the size of \a buffer, bytes, must be less than or equal to SIZE_MAX / 2
 		 */
 
-		constexpr CircularBuffer(const void* const buffer, const size_t size) :
+		constexpr RawCircularBuffer(const void* const buffer, const size_t size) :
 				buffer_{static_cast<uint8_t*>(const_cast<void*>(buffer))},
 				size_{(size & sizeMask_) | readOnlyMask_},
 				readPosition_{},
@@ -82,7 +82,7 @@ public:
 		}
 
 		/**
-		 * \brief Clears circular buffer
+		 * \brief Clears raw circular buffer
 		 */
 
 		void clear()
@@ -92,7 +92,7 @@ public:
 		}
 
 		/**
-		 * \return total capacity of circular buffer, bytes
+		 * \return total capacity of raw circular buffer, bytes
 		 */
 
 		size_t getCapacity() const
@@ -107,7 +107,7 @@ public:
 		std::pair<const uint8_t*, size_t> getReadBlock() const;
 
 		/**
-		 * \return total amount of valid data in circular buffer, bytes
+		 * \return total amount of valid data in raw circular buffer, bytes
 		 */
 
 		size_t getSize() const
@@ -153,7 +153,7 @@ public:
 		}
 
 		/**
-		 * \return true if circular buffer is empty, false otherwise
+		 * \return true if raw circular buffer is empty, false otherwise
 		 */
 
 		bool isEmpty() const
@@ -162,7 +162,7 @@ public:
 		}
 
 		/**
-		 * \return true if circular buffer is full, false otherwise
+		 * \return true if raw circular buffer is full, false otherwise
 		 */
 
 		bool isFull() const
@@ -171,7 +171,7 @@ public:
 		}
 
 		/**
-		 * \return true if circular buffer is read-only, false otherwise
+		 * \return true if raw circular buffer is read-only, false otherwise
 		 */
 
 		bool isReadOnly() const
@@ -219,14 +219,14 @@ public:
 		}
 
 		/**
-		 * \brief Tests for empty circular buffer.
+		 * \brief Tests for empty raw circular buffer.
 		 *
 		 * The buffer is empty if read and write positions are equal, including their MSBs.
 		 *
 		 * \param [in] readPosition is the value of \a readPosition_
 		 * \param [in] writePosition is the value of \a writePosition_
 		 *
-		 * \return true if circular buffer is empty, false otherwise
+		 * \return true if raw circular buffer is empty, false otherwise
 		 */
 
 		constexpr static bool isEmpty(const size_t readPosition, const size_t writePosition)
@@ -235,14 +235,14 @@ public:
 		}
 
 		/**
-		 * \brief Tests for full circular buffer.
+		 * \brief Tests for full raw circular buffer.
 		 *
 		 * The buffer is full if masked read and write positions are equal, but their MSBs are different.
 		 *
 		 * \param [in] readPosition is the value of \a readPosition_
 		 * \param [in] writePosition is the value of \a writePosition_
 		 *
-		 * \return true if circular buffer is full, false otherwise
+		 * \return true if raw circular buffer is full, false otherwise
 		 */
 
 		constexpr static bool isFull(const size_t readPosition, const size_t writePosition)
@@ -676,7 +676,7 @@ protected:
 	 *
 	 * Called by low-level UART driver when whole read buffer is filled.
 	 *
-	 * - updates position of read circular buffer;
+	 * - updates position of raw read circular buffer;
 	 * - changes current buffer to next one (if there is any next buffer and if current one is full);
 	 * - updates size limit of read operations;
 	 * - notifies any thread waiting for this event (if size limit of read operations reached 0);
@@ -727,7 +727,7 @@ protected:
 	 * Called by low-level UART driver when whole write buffer was transferred - the transmission may still be in
 	 * progress.
 	 *
-	 * - updates position of write circular buffer;
+	 * - updates position of raw write circular buffer;
 	 * - changes current buffer to next one (if there is any next buffer and if current one is empty);
 	 * - updates size limit of write operations;
 	 * - clears "write in progress" flag;
@@ -742,20 +742,20 @@ protected:
 private:
 
 	/**
-	 * \brief Reads data from circular buffer and calls startReadWrapper().
+	 * \brief Reads data from raw circular buffer and calls startReadWrapper().
 	 *
-	 * \param [out] buffer is a reference to circular buffer to which the data will be written
+	 * \param [out] buffer is a reference to raw circular buffer to which the data will be written
 	 *
 	 * \return 0 on success, error code otherwise:
 	 * - error codes returned by startReadWrapper();
 	 */
 
-	int readFromCircularBufferAndStartRead(CircularBuffer& buffer);
+	int readFromRawCircularBufferAndStartRead(RawCircularBuffer& buffer);
 
 	/**
 	 * \brief Implementation of basic read() functionality
 	 *
-	 * \param [out] buffer is a reference to circular buffer to which the data will be written
+	 * \param [out] buffer is a reference to raw circular buffer to which the data will be written
 	 * \param [in] minSize is the minimum size of read, bytes
 	 * \param [in] timePoint is a pointer to the time point at which the wait will be terminated without reading
 	 * \a minSize, nullptr to wait indefinitely
@@ -766,15 +766,15 @@ private:
 	 * - error codes returned by UartLowLevel::startRead();
 	 */
 
-	int readImplementation(CircularBuffer& buffer, size_t minSize, const TickClock::time_point* timePoint);
+	int readImplementation(RawCircularBuffer& buffer, size_t minSize, const TickClock::time_point* timePoint);
 
 	/**
 	 * \brief Wrapper for UartLowLevel::startRead()
 	 *
-	 * Does nothing if read is already in progress or if read circular buffer is full. Otherwise sets "read in progress"
-	 * flag, starts read operation with size that is the smallest of: size of first available write block, half the size
-	 * of read circular buffer (only for internal buffer) and current size limit of read operations (only if it's not
-	 * equal to 0).
+	 * Does nothing if read is already in progress or if raw read circular buffer is full. Otherwise sets "read in
+	 * progress" flag, starts read operation with size that is the smallest of: size of first available write block,
+	 * half the size of raw read circular buffer (only for internal buffer) and current size limit of read operations
+	 * (only if it's not equal to 0).
 	 *
 	 * \return 0 on success, error code otherwise:
 	 * - error codes returned by UartLowLevel::startRead();
@@ -785,9 +785,9 @@ private:
 	/**
 	 * \brief Wrapper for UartLowLevel::startWrite()
 	 *
-	 * Does nothing if write is already in progress or if write circular buffer is empty. Otherwise sets "write in
+	 * Does nothing if write is already in progress or if raw write circular buffer is empty. Otherwise sets "write in
 	 * progress" flag, starts write operation with size that is the smallest of: size of first available read block,
-	 * half the size of write circular buffer (only for internal buffer) and current size limit of write operations
+	 * half the size of raw write circular buffer (only for internal buffer) and current size limit of write operations
 	 * (only if it's not equal to 0).
 	 *
 	 * \return 0 on success, error code otherwise:
@@ -799,8 +799,8 @@ private:
 	/**
 	 * \brief Wrapper for UartLowLevel::stopRead()
 	 *
-	 * Stops read operation, updates position of read circular buffer, updates size limit of read operations and clears
-	 * "read in progress" flag.
+	 * Stops read operation, updates position of raw read circular buffer, updates size limit of read operations and
+	 * clears "read in progress" flag.
 	 *
 	 * \return values returned by UartLowLevel::stopRead();
 	 */
@@ -810,7 +810,7 @@ private:
 	/**
 	 * \brief Wrapper for UartLowLevel::stopWrite()
 	 *
-	 * Stops write operation, updates position of write circular buffer, updates size limit of write operations and
+	 * Stops write operation, updates position of raw write circular buffer, updates size limit of write operations and
 	 * clears "write in progress" flag.
 	 *
 	 * \return values returned by UartLowLevel::stopWrite();
@@ -821,7 +821,7 @@ private:
 	/**
 	 * \brief Implementation of basic write() functionality
 	 *
-	 * \param [in] buffer is a reference to circular buffer from which the data will be read
+	 * \param [in] buffer is a reference to raw circular buffer from which the data will be read
 	 * \param [in] minSize is the minimum size of write, bytes
 	 * \param [in] timePoint is a pointer to the time point at which the wait will be terminated without writing
 	 * \a minSize, nullptr to wait indefinitely
@@ -832,18 +832,18 @@ private:
 	 * - error codes returned by UartLowLevel::startWrite();
 	 */
 
-	int writeImplementation(CircularBuffer& buffer, size_t minSize, const TickClock::time_point* timePoint);
+	int writeImplementation(RawCircularBuffer& buffer, size_t minSize, const TickClock::time_point* timePoint);
 
 	/**
-	 * \brief Writes data to circular buffer and calls startWriteWrapper().
+	 * \brief Writes data to raw circular buffer and calls startWriteWrapper().
 	 *
-	 * \param [in] buffer is a reference to circular buffer from which the data will be read
+	 * \param [in] buffer is a reference to raw circular buffer from which the data will be read
 	 *
 	 * \return 0 on success, error code otherwise:
 	 * - error codes returned by startWriteWrapper();
 	 */
 
-	int writeToCircularBufferAndStartWrite(CircularBuffer& buffer);
+	int writeToRawCircularBufferAndStartWrite(RawCircularBuffer& buffer);
 
 	/// mutex used to serialize access to read(), close() and open()
 	Mutex readMutex_;
@@ -851,23 +851,23 @@ private:
 	/// mutex used to serialize access to write(), close() and open()
 	Mutex writeMutex_;
 
-	/// internal instance of circular buffer for read operations
-	CircularBuffer readBuffer_;
+	/// internal instance of raw circular buffer for read operations
+	RawCircularBuffer readBuffer_;
 
-	/// internal instance of circular buffer for write operations
-	CircularBuffer writeBuffer_;
+	/// internal instance of raw circular buffer for write operations
+	RawCircularBuffer writeBuffer_;
 
-	/// pointer to current circular buffer for read operations, always valid
-	CircularBuffer* volatile currentReadBuffer_;
+	/// pointer to current raw circular buffer for read operations, always valid
+	RawCircularBuffer* volatile currentReadBuffer_;
 
-	/// pointer to current circular buffer for write operations, always valid
-	CircularBuffer* volatile currentWriteBuffer_;
+	/// pointer to current raw circular buffer for write operations, always valid
+	RawCircularBuffer* volatile currentWriteBuffer_;
 
-	/// pointer to next circular buffer for read operations, used when \a currentReadBuffer_ becomes full
-	CircularBuffer* volatile nextReadBuffer_;
+	/// pointer to next raw circular buffer for read operations, used when \a currentReadBuffer_ becomes full
+	RawCircularBuffer* volatile nextReadBuffer_;
 
-	/// pointer to next circular buffer for write operations, used when \a currentWriteBuffer_ becomes empty
-	CircularBuffer* volatile nextWriteBuffer_;
+	/// pointer to next raw circular buffer for write operations, used when \a currentWriteBuffer_ becomes empty
+	RawCircularBuffer* volatile nextWriteBuffer_;
 
 	/// pointer to semaphore used for "read complete" event notifications
 	Semaphore* volatile readSemaphore_;
