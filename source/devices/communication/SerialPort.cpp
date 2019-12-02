@@ -47,7 +47,7 @@ namespace
  * \return number of bytes read from \a source and written to \a destination
  */
 
-size_t copySingleBlock(SerialPort::RawCircularBuffer& source, SerialPort::RawCircularBuffer& destination)
+size_t copySingleBlock(estd::RawCircularBuffer& source, estd::RawCircularBuffer& destination)
 {
 	const auto readBlock = source.getReadBlock();
 	if (readBlock.second == 0)
@@ -64,31 +64,6 @@ size_t copySingleBlock(SerialPort::RawCircularBuffer& source, SerialPort::RawCir
 }
 
 }	// namespace
-
-/*---------------------------------------------------------------------------------------------------------------------+
-| SerialPort::RawCircularBuffer public functions
-+---------------------------------------------------------------------------------------------------------------------*/
-
-std::pair<const void*, size_t> SerialPort::RawCircularBuffer::getReadBlock() const
-{
-	const auto readPosition = readPosition_ ;
-	const auto writePosition = writePosition_;
-	if (isEmpty(readPosition, writePosition) == true)
-		return {{}, {}};
-	return getBlock(readPosition, writePosition);
-}
-
-std::pair<void*, size_t> SerialPort::RawCircularBuffer::getWriteBlock() const
-{
-	if (isReadOnly() == true)
-		return {{}, {}};
-
-	const auto readPosition = readPosition_ ;
-	const auto writePosition = writePosition_;
-	if (isFull(readPosition, writePosition) == true)
-		return {{}, {}};
-	return getBlock(writePosition, readPosition);
-}
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | public functions
@@ -216,7 +191,7 @@ std::pair<int, size_t> SerialPort::read(void* const buffer, const size_t size, c
 	if (characterLength_ > 8 && size % 2 != 0)
 		return {EINVAL, {}};
 
-	RawCircularBuffer localReadBuffer {buffer, size};
+	estd::RawCircularBuffer localReadBuffer {buffer, size};
 	const auto ret = readImplementation(localReadBuffer, minSize, timePoint);
 	const auto bytesRead = localReadBuffer.getSize();
 	return {ret != 0 || bytesRead != 0 ? ret : EAGAIN, bytesRead};
@@ -245,7 +220,7 @@ std::pair<int, size_t> SerialPort::write(const void* const buffer, const size_t 
 	if (characterLength_ > 8 && size % 2 != 0)
 		return {EINVAL, {}};
 
-	RawCircularBuffer localWriteBuffer {buffer, size};	// local buffer is read-only
+	estd::RawCircularBuffer localWriteBuffer {buffer, size};	// local buffer is read-only
 	localWriteBuffer.increaseWritePosition(size);	// make the buffer "full"
 	const auto ret = writeImplementation(localWriteBuffer, minSize, timePoint);
 	const auto bytesWritten = localWriteBuffer.getCapacity() - localWriteBuffer.getSize();
@@ -342,7 +317,7 @@ void SerialPort::writeCompleteEvent(const size_t bytesWritten)
 | private functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-int SerialPort::readFromRawCircularBufferAndStartRead(RawCircularBuffer& buffer)
+int SerialPort::readFromRawCircularBufferAndStartRead(estd::RawCircularBuffer& buffer)
 {
 	while (copySingleBlock(readBuffer_, buffer) != 0)
 	{
@@ -354,7 +329,7 @@ int SerialPort::readFromRawCircularBufferAndStartRead(RawCircularBuffer& buffer)
 	return 0;
 }
 
-int SerialPort::readImplementation(RawCircularBuffer& buffer, const size_t minSize,
+int SerialPort::readImplementation(estd::RawCircularBuffer& buffer, const size_t minSize,
 		const TickClock::time_point* const timePoint)
 {
 	// when character length is greater than 8 bits, round up "minSize" value
@@ -417,7 +392,7 @@ int SerialPort::readImplementation(RawCircularBuffer& buffer, const size_t minSi
 			startReadRet = startReadWrapper();
 		}
 
-		RawCircularBuffer subBuffer {writeBlock.first, writeBlock.second};
+		estd::RawCircularBuffer subBuffer {writeBlock.first, writeBlock.second};
 		{
 			// read the data that was "released" by stopping and staring read operation
 			const auto ret = readFromRawCircularBufferAndStartRead(subBuffer);
@@ -489,7 +464,7 @@ size_t SerialPort::stopWriteWrapper()
 	return bytesWritten;
 }
 
-int SerialPort::writeImplementation(RawCircularBuffer& buffer, const size_t minSize,
+int SerialPort::writeImplementation(estd::RawCircularBuffer& buffer, const size_t minSize,
 		const TickClock::time_point* const timePoint)
 {
 	// when character length is greater than 8 bits, round up "minSize" value
@@ -549,7 +524,7 @@ int SerialPort::writeImplementation(RawCircularBuffer& buffer, const size_t minS
 	return scopeGuardRet != 0 ? scopeGuardRet : semaphoreRet != 0 ? semaphoreRet : ret;
 }
 
-int SerialPort::writeToRawCircularBufferAndStartWrite(RawCircularBuffer& buffer)
+int SerialPort::writeToRawCircularBufferAndStartWrite(estd::RawCircularBuffer& buffer)
 {
 	while (copySingleBlock(buffer, writeBuffer_) != 0)
 	{
