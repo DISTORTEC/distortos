@@ -78,7 +78,7 @@ std::pair<const void*, size_t> SerialPort::RawCircularBuffer::getReadBlock() con
 	return getBlock(readPosition, writePosition);
 }
 
-std::pair<uint8_t*, size_t> SerialPort::RawCircularBuffer::getWriteBlock() const
+std::pair<void*, size_t> SerialPort::RawCircularBuffer::getWriteBlock() const
 {
 	if (isReadOnly() == true)
 		return {{}, {}};

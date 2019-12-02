@@ -126,7 +126,7 @@ public:
 		 * \return first contiguous block (as a pair with pointer and size) available for writing
 		 */
 
-		std::pair<uint8_t*, size_t> getWriteBlock() const;
+		std::pair<void*, size_t> getWriteBlock() const;
 
 		/**
 		 * \brief Increases read position by given value.
