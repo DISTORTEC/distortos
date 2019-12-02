@@ -69,7 +69,7 @@ size_t copySingleBlock(SerialPort::RawCircularBuffer& source, SerialPort::RawCir
 | SerialPort::RawCircularBuffer public functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-std::pair<const uint8_t*, size_t> SerialPort::RawCircularBuffer::getReadBlock() const
+std::pair<const void*, size_t> SerialPort::RawCircularBuffer::getReadBlock() const
 {
 	const auto readPosition = readPosition_ ;
 	const auto writePosition = writePosition_;

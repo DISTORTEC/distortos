@@ -104,7 +104,7 @@ public:
 		 * \return first contiguous block (as a pair with pointer and size) available for reading
 		 */
 
-		std::pair<const uint8_t*, size_t> getReadBlock() const;
+		std::pair<const void*, size_t> getReadBlock() const;
 
 		/**
 		 * \return total amount of valid data in raw circular buffer, bytes
