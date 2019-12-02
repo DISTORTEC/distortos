@@ -24,7 +24,7 @@ namespace estd
  * \brief Thread-safe, lock-free raw circular buffer for single-producer and single-consumer
  *
  * Distinction between empty and full buffer is possible because most significant bits of read and write positions are
- * used as single-bit counters or wrap-arounds. This limits the size of buffer to SIZE_MAX / 2, but allows full
+ * used as single-bit counters of wrap-arounds. This limits the size of buffer to SIZE_MAX / 2, but allows full
  * utilization of storage (no free slot is needed).
  */
 
@@ -204,8 +204,8 @@ private:
 	 * \brief Increases given position by given value.
 	 *
 	 * \param [in] position is the position that will be incremented
-	 * \param [in] value is the value which will be added to \a position, must come from previous call to
-	 * getReadBlock() / getWriteBlock()
+	 * \param [in] value is the value which will be added to \a position, must be less than or equal to the value from
+	 * last call to getReadBlock() / getWriteBlock()
 	 *
 	 * \return \a position incremented by \a value
 	 */
