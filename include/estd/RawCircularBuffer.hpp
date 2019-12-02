@@ -66,6 +66,8 @@ public:
 
 	/**
 	 * \brief Clears raw circular buffer
+	 *
+	 * \warning This operation is not thread-safe!
 	 */
 
 	void clear()
