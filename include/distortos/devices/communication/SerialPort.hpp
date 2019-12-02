@@ -131,8 +131,8 @@ public:
 		/**
 		 * \brief Increases read position by given value.
 		 *
-		 * \param [in] value is the value which will be added to read position, must come from previous call to
-		 * getReadBlock()
+		 * \param [in] value is the value which will be added to read position, must be less than or equal to the value
+		 * from last call to getReadBlock()
 		 */
 
 		void increaseReadPosition(const size_t value)
@@ -143,8 +143,8 @@ public:
 		/**
 		 * \brief Increases write position by given value.
 		 *
-		 * \param [in] value is the value which will be added to write position, must come from previous call to
-		 * getWriteBlock()
+		 * \param [in] value is the value which will be added to write position, must be less than or equal to the value
+		 * from last call to getWriteBlock()
 		 */
 
 		void increaseWritePosition(const size_t value)
