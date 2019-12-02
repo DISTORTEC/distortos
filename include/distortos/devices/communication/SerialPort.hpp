@@ -193,7 +193,7 @@ public:
 		 * or end of buffer
 		 */
 
-		std::pair<uint8_t*, size_t> getBlock(const size_t begin, const size_t end) const
+		std::pair<void*, size_t> getBlock(const size_t begin, const size_t end) const
 		{
 			const auto maskedBegin = begin & positionMask_;
 			const auto maskedEnd = end & positionMask_;
