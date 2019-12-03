@@ -44,6 +44,8 @@ version 2.28 (released on 2nd March 2017) or later, so in case of problems pleas
   `distortos::devices::BufferingBlockDevice`).
 - All implementations of `distortos::File::read()` and `distortos::File::write()` assert that file is opened for reading
 or writing respectively, instead of returning `EBADF`.
+- Extracted internal `distortos::devices::SerialPort::CircularBuffer` to `estd::RawCircularBuffer`. It is  a generic,
+thread-safe, lock-free raw circular buffer for single-producer and single-consumer scenarios.
 
 ### Fixed
 
