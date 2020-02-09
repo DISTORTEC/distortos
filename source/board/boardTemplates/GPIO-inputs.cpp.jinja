@@ -1,9 +1,9 @@
-{% import chipInputPinImport as ChipInputPin %}
+{% import inputPinImport as InputPin %}
 /**
  * \file
  * \brief Definition of {{ dictionaryKey }} for {{ board }}
  *
- * \author Copyright (C) 2014-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2020 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -18,7 +18,7 @@
 #if defined(DISTORTOS_BOARD_{{ dictionaryKey | upper }}_ENABLE) && {# remove whitespace -#}
 DISTORTOS_BOARD_{{ dictionaryKey | upper }}_COUNT != 0
 
-#include "distortos/chip/ChipInputPin.hpp"
+#include "distortos/chip/InputPin.hpp"
 
 namespace distortos
 {
@@ -30,11 +30,11 @@ namespace board
 | global objects
 +---------------------------------------------------------------------------------------------------------------------*/
 
-const chip::ChipInputPin {{ dictionaryKey }}[{{ dictionaryKey }}Count]
+const chip::InputPin {{ dictionaryKey }}[{{ dictionaryKey }}Count]
 {
 {% for key, value in dictionary[dictionaryKey].items() if value is mapping %}
 #ifdef DISTORTOS_BOARD_{{ dictionaryKey | upper }}_{{ key | upper }}_ENABLE
-		{{ ChipInputPin.initializer(value['GPIO']) }},
+		{{ InputPin.initializer(value['GPIO']) }},
 #endif	// def DISTORTOS_BOARD_{{ dictionaryKey | upper }}_{{ key | upper }}_ENABLE
 {% endfor %}
 };

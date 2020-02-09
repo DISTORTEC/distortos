@@ -2,7 +2,7 @@
  * \file
  * \brief Declaration of buttons for ST,NUCLEO-F401RE
  *
- * \author Copyright (C) 2014-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2020 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -36,7 +36,7 @@ namespace distortos
 namespace chip
 {
 
-class ChipInputPin;
+class InputPin;
 
 }	// namespace chip
 
@@ -74,7 +74,7 @@ constexpr size_t buttonsUserIndex {buttonsB1Index};
 +---------------------------------------------------------------------------------------------------------------------*/
 
 /// array with all buttons objects
-extern const chip::ChipInputPin buttons[buttonsCount];
+extern const chip::InputPin buttons[buttonsCount];
 
 }	// namespace board
 
