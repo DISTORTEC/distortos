@@ -5,8 +5,8 @@
 {% for key, value in dictionary.items() if 'compatible' in value and 'GPIO-outputs' in value['compatible'] %}
 ('source/board/boardTemplates/GPIO-outputs.cpp.jinja',
 		{'dictionaryKey': '{{ key }}',
-				'chipOutputPinImport':
-						'source/chip/STM32/peripherals/GPIO{{ gpioVersion }}/boardTemplates/ChipOutputPin.jinja'},
+				'outputPinImport':
+						'source/chip/STM32/peripherals/GPIO{{ gpioVersion }}/boardTemplates/OutputPin.jinja'},
 		'{{ sanitizedBoard }}-{{ key }}.cpp'),
 {% endfor %}
 {% endfor %}

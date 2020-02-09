@@ -18,7 +18,7 @@
 
 #include "distortos/board/leds.hpp"
 
-#include "distortos/chip/ChipOutputPin.hpp"
+#include "distortos/chip/OutputPin.hpp"
 
 #endif	// def DISTORTOS_BOARD_LEDS_ENABLE
 
