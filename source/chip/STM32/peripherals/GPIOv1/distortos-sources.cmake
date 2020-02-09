@@ -11,7 +11,7 @@ target_include_directories(distortos PUBLIC
 		${CMAKE_CURRENT_LIST_DIR}/include)
 
 target_sources(distortos PRIVATE
-		${CMAKE_CURRENT_LIST_DIR}/STM32-GPIOv1-ChipInputPin.cpp
+		${CMAKE_CURRENT_LIST_DIR}/STM32-GPIOv1-InputPin.cpp
 		${CMAKE_CURRENT_LIST_DIR}/STM32-GPIOv1-OutputPin.cpp
 		${CMAKE_CURRENT_LIST_DIR}/STM32-GPIOv1.cpp)
 
