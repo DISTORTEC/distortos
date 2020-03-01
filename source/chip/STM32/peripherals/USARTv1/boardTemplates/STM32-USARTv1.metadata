@@ -7,5 +7,5 @@
 		'include/distortos/chip/uarts.hpp'),
 ('source/chip/STM32/peripherals/USARTv1/boardTemplates/STM32-USARTv1.cmake.jinja',
 		{},
-		'cmake/60-STM32-USARTv1.cmake'),
+		'cmake/50-STM32-USARTv1.cmake'),
 {% endif %}

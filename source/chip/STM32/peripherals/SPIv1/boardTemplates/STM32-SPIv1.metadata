@@ -7,5 +7,5 @@
 		'include/distortos/chip/spis.hpp'),
 ('source/chip/STM32/peripherals/SPIv1/boardTemplates/STM32-SPIv1.cmake.jinja',
 		{},
-		'cmake/60-STM32-SPIv1.cmake'),
+		'cmake/50-STM32-SPIv1.cmake'),
 {% endif %}

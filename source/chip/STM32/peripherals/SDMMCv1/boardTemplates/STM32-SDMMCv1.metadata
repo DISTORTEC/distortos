@@ -7,5 +7,5 @@
 		'include/distortos/chip/sdmmcs.hpp'),
 ('source/chip/STM32/peripherals/SDMMCv1/boardTemplates/STM32-SDMMCv1.cmake.jinja',
 		{},
-		'cmake/60-STM32-SDMMCv1.cmake'),
+		'cmake/50-STM32-SDMMCv1.cmake'),
 {% endif %}
