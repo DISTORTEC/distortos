@@ -26,6 +26,10 @@ device which requires specific alignment.
 provides support for [littlefs-v2](https://github.com/ARMmbed/littlefs) file system.
 - Added support for *STM32's* 96-bit *unique device ID*, which consists of appropriate data in *CSV* / *YAML* files for
 each supported chip and `distortos/chip/uniqueDeviceId.hpp` header created by board generator.
+- Added `distortos/chip/PinInitializer.hpp` header with `distortos::chip::PinInitializer` functor,
+`distortos::chip::makeAlternateFunctionPinInitializer()`, `distortos::chip::makeAnalogPinInitializer()`,
+`distortos::chip::makeInputPinInitializer()` and `distortos::chip::makeOutputPinInitializer()` helper functions, both
+for *STM32's* *GPIOv1* and *GPIOv2*.
 
 ### Changed
 
@@ -46,6 +50,9 @@ version 2.28 (released on 2nd March 2017) or later, so in case of problems pleas
 or writing respectively, instead of returning `EBADF`.
 - Extracted internal `distortos::devices::SerialPort::CircularBuffer` to `estd::RawCircularBuffer`. It is  a generic,
 thread-safe, lock-free raw circular buffer for single-producer and single-consumer scenarios.
+- Renamed `distortos::chip::ChipInputPin` and `distortos::chip::ChipOutputPin` to `distortos::chip::InputPin` and
+`distortos::chip::OutputPin` respectively. Aliases for old names were added, marked as deprecated and are scheduled to
+be removed after v0.8.0.
 
 ### Fixed
 
