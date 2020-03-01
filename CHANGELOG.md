@@ -65,6 +65,8 @@ in another submodule (beside *distortos*) of an application.
 ### Removed
 
 - Removed `cmake/Toolchain-arm-none-eabi.cmake`. Board-specific toolchain files should be used exclusively.
+- Removed deprecated files: `distortos/devices/communication/SpiMasterOperation.hpp`,
+`distortos/devices/communication/SpiMasterOperationRange.hpp` and `distortos/chip/ChipSpiMasterLowLevel.hpp`.
 
 [0.7.0](https://github.com/DISTORTEC/distortos/compare/v0.6.0...v0.7.0) - 2019-05-05
 ------------------------------------------------------------------------------------
