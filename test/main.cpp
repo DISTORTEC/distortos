@@ -2,7 +2,7 @@
  * \file
  * \brief Main code block.
  *
- * \author Copyright (C) 2014-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2020 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -18,7 +18,7 @@
 
 #include "distortos/board/leds.hpp"
 
-#include "distortos/chip/ChipOutputPin.hpp"
+#include "distortos/chip/OutputPin.hpp"
 
 #endif	// def DISTORTOS_BOARD_LEDS_ENABLE
 

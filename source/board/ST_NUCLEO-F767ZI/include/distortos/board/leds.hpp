@@ -2,7 +2,7 @@
  * \file
  * \brief Declaration of leds for ST,NUCLEO-F767ZI
  *
- * \author Copyright (C) 2014-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2020 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -50,7 +50,7 @@ namespace distortos
 namespace chip
 {
 
-class ChipOutputPin;
+class OutputPin;
 
 }	// namespace chip
 
@@ -110,7 +110,7 @@ constexpr size_t ledsRedIndex {ledsLd3Index};
 +---------------------------------------------------------------------------------------------------------------------*/
 
 /// array with all leds objects
-extern chip::ChipOutputPin leds[ledsCount];
+extern chip::OutputPin leds[ledsCount];
 
 }	// namespace board
 

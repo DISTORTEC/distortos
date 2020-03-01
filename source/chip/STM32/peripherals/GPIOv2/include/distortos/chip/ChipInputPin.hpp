@@ -1,8 +1,9 @@
 /**
  * \file
  * \brief ChipInputPin class header for GPIOv2 in STM32
+ * \deprecated scheduled to be removed after v0.8.0, use distortos/chip/InputPin.hpp
  *
- * \author Copyright (C) 2016 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2016-2020 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -12,9 +13,9 @@
 #ifndef SOURCE_CHIP_STM32_PERIPHERALS_GPIOV2_INCLUDE_DISTORTOS_CHIP_CHIPINPUTPIN_HPP_
 #define SOURCE_CHIP_STM32_PERIPHERALS_GPIOV2_INCLUDE_DISTORTOS_CHIP_CHIPINPUTPIN_HPP_
 
-#include "distortos/chip/STM32-GPIOv2.hpp"
+#warning "'distortos/chip/ChipInputPin.hpp' is deprecated: Use InputPin"
 
-#include "distortos/devices/io/InputPin.hpp"
+#include "distortos/chip/InputPin.hpp"
 
 namespace distortos
 {
@@ -23,61 +24,16 @@ namespace chip
 {
 
 /**
- * \brief ChipInputPin class is a single input pin of GPIOv2 in STM32.
+ * \brief ChipInputPin is an alias for InputPin
  *
- * \ingroup devices
+ * \deprecated scheduled to be removed after v0.8.0, use distortos::chip::InputPin
  */
 
-class ChipInputPin : public devices::InputPin
+class __attribute__ ((deprecated("Use InputPin"))) ChipInputPin : public InputPin
 {
 public:
 
-	/**
-	 * \brief ChipInputPin's constructor
-	 *
-	 * \param [in] pin is the identifier of pin
-	 * \param [in] pull is the desired pull-up/pull-down configuration of pin, default - PinPull::none
-	 * \param [in] inverted selects whether the pin is inverted (true) - get() returns true when GPIO state is low and
-	 * false when GPIO state is high - or not (false), default - false, not inverted
-	 */
-
-	explicit ChipInputPin(Pin pin, PinPull pull = {}, bool inverted = {});
-
-	/**
-	 * \return current state of pin
-	 */
-
-	bool get() const override;
-
-protected:
-
-	/**
-	 * \return true if inverted mode is enabled, false otherwise
-	 */
-
-	bool getInvertedMode() const
-	{
-		return inverted_;
-	}
-
-	/**
-	 * \brief Enables or disables inverted mode.
-	 *
-	 * \param [in] inverted selects whether the pin is inverted (true) or not (false)
-	 */
-
-	void setInvertedMode(const bool inverted)
-	{
-		inverted_ = inverted;
-	}
-
-private:
-
-	/// identifier of pin
-	Pin pin_;
-
-	/// selects whether the pin is inverted (true) or not (false)
-	bool inverted_;
+	using InputPin::InputPin;
 };
 
 }	// namespace chip

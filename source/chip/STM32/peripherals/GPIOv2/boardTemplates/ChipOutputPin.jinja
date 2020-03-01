@@ -1,4 +1,0 @@
-{% macro initializer(gpio) %}
-chip::ChipOutputPin{chip::Pin::p{{ gpio['port']['$path'][-1][4] | lower }}{{ gpio['pin'] }}, {# remove whitespace -#}
-false, chip::PinOutputSpeed::low, chip::PinPull::none, false, {{ gpio.get('active-low', False) | lower }}}
-{%- endmacro %}
