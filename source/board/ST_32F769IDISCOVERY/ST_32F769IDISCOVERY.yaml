@@ -1,7 +1,7 @@
 #
 # file: ST_32F769IDISCOVERY.yaml
 #
-# author: Copyright (C) 2017-2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+# author: Copyright (C) 2017-2020 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
 #
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -50,3 +50,40 @@ regulators:
 !Reference {label: HSE}:
   frequency: 25000000
   bypass: true
+!Reference {label: SDMMC2}:
+  CK:
+    port: !Reference {label: GPIOD}
+    pin: 6
+    mode: alternate-function
+    alternate-function: 11
+    output-speed: very-high
+  CMD:
+    port: !Reference {label: GPIOD}
+    pin: 7
+    mode: alternate-function
+    alternate-function: 11
+    output-speed: very-high
+  D0:
+    port: !Reference {label: GPIOG}
+    pin: 9
+    mode: alternate-function
+    alternate-function: 11
+    output-speed: very-high
+  D1:
+    port: !Reference {label: GPIOG}
+    pin: 10
+    mode: alternate-function
+    alternate-function: 11
+    output-speed: very-high
+  D2:
+    port: !Reference {label: GPIOB}
+    pin: 3
+    mode: alternate-function
+    alternate-function: 10
+    output-speed: very-high
+  D3:
+    port: !Reference {label: GPIOB}
+    pin: 4
+    mode: alternate-function
+    alternate-function: 10
+    output-speed: very-high

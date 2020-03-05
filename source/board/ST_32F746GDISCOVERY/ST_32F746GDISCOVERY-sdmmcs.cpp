@@ -45,6 +45,47 @@ namespace chip
 namespace
 {
 
+/// pin initializers for SDMMC1
+const PinInitializer sdmmc1PinInitializers[]
+{
+		// SDMMC1 CK
+		makeAlternateFunctionPinInitializer(Pin::pc12,
+				PinAlternateFunction::af12,
+				false,
+				PinOutputSpeed::veryHigh,
+				PinPull::none),
+		// SDMMC1 CMD
+		makeAlternateFunctionPinInitializer(Pin::pd2,
+				PinAlternateFunction::af12,
+				false,
+				PinOutputSpeed::veryHigh,
+				PinPull::none),
+		// SDMMC1 D0
+		makeAlternateFunctionPinInitializer(Pin::pc8,
+				PinAlternateFunction::af12,
+				false,
+				PinOutputSpeed::veryHigh,
+				PinPull::none),
+		// SDMMC1 D1
+		makeAlternateFunctionPinInitializer(Pin::pc9,
+				PinAlternateFunction::af12,
+				false,
+				PinOutputSpeed::veryHigh,
+				PinPull::none),
+		// SDMMC1 D2
+		makeAlternateFunctionPinInitializer(Pin::pc10,
+				PinAlternateFunction::af12,
+				false,
+				PinOutputSpeed::veryHigh,
+				PinPull::none),
+		// SDMMC1 D3
+		makeAlternateFunctionPinInitializer(Pin::pc11,
+				PinAlternateFunction::af12,
+				false,
+				PinOutputSpeed::veryHigh,
+				PinPull::none),
+};
+
 /**
  * \brief Low-level chip initializer for SDMMC1
  *
@@ -58,6 +99,9 @@ void sdmmc1LowLevelInitializer()
 #else
 	#error "Unsupported bus for SDMMC1!"
 #endif
+
+	for (auto& pinInitializer : sdmmc1PinInitializers)
+		pinInitializer();
 }
 
 BIND_LOW_LEVEL_INITIALIZER(50, sdmmc1LowLevelInitializer);
