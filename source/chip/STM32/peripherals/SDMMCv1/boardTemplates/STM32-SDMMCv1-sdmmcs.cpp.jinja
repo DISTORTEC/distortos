@@ -1,8 +1,9 @@
+{% from pinInitializerImport import makePinInitializer as makePinInitializer %}
 /**
  * \file
  * \brief Definitions of low-level SD/MMC card drivers for SDMMCv1 in {{ board }} ({{ dictionary['chip']['compatible'][0] }} chip)
  *
- * \author Copyright (C) 2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2019-2020 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -15,6 +16,7 @@
 #include "distortos/chip/sdmmcs.hpp"
 
 #include "distortos/chip/dmas.hpp"
+#include "distortos/chip/PinInitializer.hpp"
 #include "distortos/chip/SdMmcCardLowLevel.hpp"
 #include "distortos/chip/STM32-SDMMCv1-SdmmcPeripheral.hpp"
 
@@ -45,6 +47,30 @@ namespace chip
 namespace
 {
 
+{% set ckPresent = 'CK' in sdmmc %}
+{% set cmdPresent = 'CMD' in sdmmc %}
+{% set d0Present = 'D0' in sdmmc %}
+{% set d1Present = 'D1' in sdmmc %}
+{% set d2Present = 'D2' in sdmmc %}
+{% set d3Present = 'D3' in sdmmc %}
+{% set pinSum0 = ckPresent + cmdPresent + d0Present %}
+{% set pinSum1 = pinSum0 + d1Present + d2Present + d3Present %}
+{% if (pinSum0 != 0 and pinSum0 != 3) or (pinSum1 != 0 and pinSum1 != 3 and pinSum1 != 6) %}
+{% raise 'Allowed combinations of pins for {}: none, {{CK, CMD, D0}} or {{CK, CMD, D[0-3]}}'.format(key) %}
+{% endif %}
+{% for pinKey in ['CK', 'CMD', 'D0', 'D1', 'D2', 'D3'] if pinKey in sdmmc %}
+{% if loop.first == True %}
+/// pin initializers for {{ key | upper }}
+const PinInitializer {{ key | lower }}PinInitializers[]
+{
+{% endif %}
+		// {{ key | upper }} {{ pinKey }}
+		{{ makePinInitializer(sdmmc[pinKey]) | indent(8) | replace('    ', '\t') }}
+{% if loop.last == True %}
+};
+
+{% endif %}
+{% endfor %}
 /**
  * \brief Low-level chip initializer for {{ key | upper }}
  *
@@ -58,6 +84,11 @@ void {{ key | lower }}LowLevelInitializer()
 #else
 	#error "Unsupported bus for {{ key | upper }}!"
 #endif
+{% if pinSum1 != 0 %}
+
+	for (auto& pinInitializer : {{ key | lower }}PinInitializers)
+		pinInitializer();
+{% endif %}
 }
 
 BIND_LOW_LEVEL_INITIALIZER(50, {{ key | lower }}LowLevelInitializer);

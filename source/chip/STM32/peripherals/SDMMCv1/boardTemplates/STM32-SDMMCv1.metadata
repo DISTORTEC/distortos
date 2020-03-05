@@ -1,6 +1,8 @@
 {% if 'SDMMCs' in dictionary and 'ST,STM32-SDMMCs-v1-group' in dictionary['SDMMCs']['compatible'] %}
+{% set gpioVersion = dictionary['pin-controller']['compatible'][0].split(',')[1].split('-')[2] %}
 ('source/chip/STM32/peripherals/SDMMCv1/boardTemplates/STM32-SDMMCv1-sdmmcs.cpp.jinja',
-		{},
+		{'pinInitializerImport':
+				'source/chip/STM32/peripherals/GPIO{{ gpioVersion }}/boardTemplates/PinInitializer.jinja'},
 		'{{ sanitizedBoard }}-sdmmcs.cpp'),
 ('source/chip/STM32/peripherals/SDMMCv1/boardTemplates/STM32-SDMMCv1-sdmmcs.hpp.jinja',
 		{},
