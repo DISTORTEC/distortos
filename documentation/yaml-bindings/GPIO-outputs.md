@@ -7,7 +7,8 @@ may be any number of `GPIO-outputs` mappings.
 - `compatible`, required, list of strings:
   - [0], required, string, `GPIO-outputs`;
 - `<GPIO-output-name>` (`<GPIO-output-name>` - string), optional - zero or more, mapping:
-  - `GPIO`, required, mapping, all key-value pairs are specific to particular GPIO implementation;
+  - `GPIO`, required, mapping, all key-value pairs are specific to particular GPIO implementation, legacy "output" mode
+  of GPIO mapping is expected;
   - `alternative-names`, optional, list of strings, one or more alternative names of output;
 
 Examples

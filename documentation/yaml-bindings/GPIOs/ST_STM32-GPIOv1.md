@@ -36,10 +36,10 @@ GPIOs:
     - GPIOD
 ```
 
-`GPIO` mapping for ST,STM32-GPIOv1
-==================================
+GPIO mapping for ST,STM32-GPIOv1, input and output modes (legacy)
+=================================================================
 
-- `port`, required, reference, reference to GPIO port to which this input/output is connected ;
+- `port`, required, reference, reference to GPIO port to which this input/output is connected;
 - `pin`, required, integer, number of pin to which this input/output is connected;
 - `active-low`, optional, boolean, selects whether this input/output is "active high" (`false`) or "active low"
 (`true`);
