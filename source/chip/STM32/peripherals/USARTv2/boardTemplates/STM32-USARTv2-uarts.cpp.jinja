@@ -1,3 +1,4 @@
+{% from pinInitializerImport import makePinInitializer as makePinInitializer %}
 /**
  * \file
  * \brief Definitions of low-level UART drivers for USARTv2 in {{ board }} ({{ dictionary['chip']['compatible'][0] }} chip)
@@ -15,6 +16,9 @@
 #include "distortos/chip/uarts.hpp"
 
 #include "distortos/chip/ChipUartLowLevel.hpp"
+#include "distortos/chip/PinInitializer.hpp"
+
+#include "distortos/BIND_LOW_LEVEL_INITIALIZER.h"
 
 namespace distortos
 {
@@ -28,6 +32,38 @@ namespace chip
 /*---------------------------------------------------------------------------------------------------------------------+
 | {{ key | upper }}
 +---------------------------------------------------------------------------------------------------------------------*/
+{% for pinKey in ['RX', 'TX'] if pinKey in uart %}
+{% if loop.first == True %}
+
+namespace
+{
+
+/// pin initializers for {{ key | upper }}
+const PinInitializer {{ key | lower }}PinInitializers[]
+{
+{% endif %}
+		// {{ key | upper }} {{ pinKey }}
+		{{ makePinInitializer(uart[pinKey]) | indent(8) | replace('    ', '\t') }}
+{% if loop.last == True %}
+};
+
+/**
+ * \brief Low-level chip initializer for {{ key | upper }}
+ *
+ * This function is called before constructors for global and static objects via BIND_LOW_LEVEL_INITIALIZER().
+ */
+
+void {{ key | lower }}LowLevelInitializer()
+{
+	for (auto& pinInitializer : {{ key | lower }}PinInitializers)
+		pinInitializer();
+}
+
+BIND_LOW_LEVEL_INITIALIZER(50, {{ key | lower }}LowLevelInitializer);
+
+}	// namespace
+{% endif %}
+{% endfor %}
 
 ChipUartLowLevel {{ key | lower }} {ChipUartLowLevel::{{ key | lower }}Parameters};
 

@@ -1,7 +1,7 @@
 #
 # file: cmake/50-STM32-USARTv1.cmake
 #
-# author: Copyright (C) 2018-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+# author: Copyright (C) 2018-2020 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
 #
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -20,7 +20,9 @@ distortosSetConfiguration(BOOLEAN
 		OUTPUT_NAME DISTORTOS_CHIP_USART1_ENABLE)
 
 if(distortos_Peripherals_USART1)
+
 	set(ARCHITECTURE_NVIC_USART1_ENABLE ON)
+
 endif()
 
 distortosSetConfiguration(BOOLEAN
@@ -30,7 +32,9 @@ distortosSetConfiguration(BOOLEAN
 		OUTPUT_NAME DISTORTOS_CHIP_USART2_ENABLE)
 
 if(distortos_Peripherals_USART2)
+
 	set(ARCHITECTURE_NVIC_USART2_ENABLE ON)
+
 endif()
 
 distortosSetConfiguration(BOOLEAN
@@ -40,7 +44,9 @@ distortosSetConfiguration(BOOLEAN
 		OUTPUT_NAME DISTORTOS_CHIP_USART3_ENABLE)
 
 if(distortos_Peripherals_USART3)
+
 	set(ARCHITECTURE_NVIC_USART3_ENABLE ON)
+
 endif()
 
 include("${CMAKE_CURRENT_SOURCE_DIR}/source/chip/STM32/peripherals/USARTv1/distortos-sources.cmake")

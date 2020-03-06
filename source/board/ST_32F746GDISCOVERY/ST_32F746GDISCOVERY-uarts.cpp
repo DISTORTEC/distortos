@@ -15,6 +15,9 @@
 #include "distortos/chip/uarts.hpp"
 
 #include "distortos/chip/ChipUartLowLevel.hpp"
+#include "distortos/chip/PinInitializer.hpp"
+
+#include "distortos/BIND_LOW_LEVEL_INITIALIZER.h"
 
 namespace distortos
 {
