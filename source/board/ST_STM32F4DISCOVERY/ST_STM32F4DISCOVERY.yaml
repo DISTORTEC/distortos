@@ -1,7 +1,7 @@
 #
 # file: ST_STM32F4DISCOVERY.yaml
 #
-# author: Copyright (C) 2017-2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+# author: Copyright (C) 2017-2020 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
 #
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -61,3 +61,23 @@ regulators:
     - VDD
 !Reference {label: HSE}:
   frequency: 8000000
+!Reference {label: SPI1}:
+  MISO:
+    port: !Reference {label: GPIOA}
+    pin: 6
+    mode: alternate-function
+    alternate-function: 5
+    output-speed: very-high
+    pull: up
+  MOSI:
+    port: !Reference {label: GPIOA}
+    pin: 7
+    mode: alternate-function
+    alternate-function: 5
+    output-speed: very-high
+  SCK:
+    port: !Reference {label: GPIOA}
+    pin: 5
+    mode: alternate-function
+    alternate-function: 5
+    output-speed: very-high

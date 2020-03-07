@@ -46,6 +46,29 @@ namespace chip
 namespace
 {
 
+/// pin initializers for SPI1
+const PinInitializer spi1PinInitializers[]
+{
+		// SPI1 MISO
+		makeAlternateFunctionPinInitializer(Pin::pa6,
+				PinAlternateFunction::af5,
+				false,
+				PinOutputSpeed::veryHigh,
+				PinPull::up),
+		// SPI1 MOSI
+		makeAlternateFunctionPinInitializer(Pin::pa7,
+				PinAlternateFunction::af5,
+				false,
+				PinOutputSpeed::veryHigh,
+				PinPull::none),
+		// SPI1 SCK
+		makeAlternateFunctionPinInitializer(Pin::pa5,
+				PinAlternateFunction::af5,
+				false,
+				PinOutputSpeed::veryHigh,
+				PinPull::none),
+};
+
 /**
  * \brief Low-level chip initializer for SPI1
  *
@@ -61,6 +84,9 @@ void spi1LowLevelInitializer()
 #else
 	#error "Unsupported bus for SPI1!"
 #endif
+
+	for (auto& pinInitializer : spi1PinInitializers)
+		pinInitializer();
 }
 
 BIND_LOW_LEVEL_INITIALIZER(50, spi1LowLevelInitializer);

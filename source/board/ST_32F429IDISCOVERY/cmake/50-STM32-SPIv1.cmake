@@ -355,6 +355,10 @@ if(distortos_Peripherals_SPI5)
 
 	endif(distortos_Peripherals_SPI5_00_Use_DMA)
 
+	list(APPEND DISTORTOS_CHIP_GPIOF_DEPENDENTS "SPI5 MISO")
+	list(APPEND DISTORTOS_CHIP_GPIOF_DEPENDENTS "SPI5 MOSI")
+	list(APPEND DISTORTOS_CHIP_GPIOF_DEPENDENTS "SPI5 SCK")
+
 endif(distortos_Peripherals_SPI5)
 
 distortosSetConfiguration(BOOLEAN

@@ -290,6 +290,29 @@ extern "C" void SPI4_IRQHandler()
 namespace
 {
 
+/// pin initializers for SPI5
+const PinInitializer spi5PinInitializers[]
+{
+		// SPI5 MISO
+		makeAlternateFunctionPinInitializer(Pin::pf8,
+				PinAlternateFunction::af5,
+				false,
+				PinOutputSpeed::veryHigh,
+				PinPull::up),
+		// SPI5 MOSI
+		makeAlternateFunctionPinInitializer(Pin::pf9,
+				PinAlternateFunction::af5,
+				false,
+				PinOutputSpeed::veryHigh,
+				PinPull::none),
+		// SPI5 SCK
+		makeAlternateFunctionPinInitializer(Pin::pf7,
+				PinAlternateFunction::af5,
+				false,
+				PinOutputSpeed::veryHigh,
+				PinPull::none),
+};
+
 /**
  * \brief Low-level chip initializer for SPI5
  *
@@ -305,6 +328,9 @@ void spi5LowLevelInitializer()
 #else
 	#error "Unsupported bus for SPI5!"
 #endif
+
+	for (auto& pinInitializer : spi5PinInitializers)
+		pinInitializer();
 }
 
 BIND_LOW_LEVEL_INITIALIZER(50, spi5LowLevelInitializer);

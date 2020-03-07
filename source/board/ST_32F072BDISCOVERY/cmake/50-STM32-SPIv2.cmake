@@ -143,6 +143,10 @@ if(distortos_Peripherals_SPI2)
 
 	endif(distortos_Peripherals_SPI2_00_Use_DMA)
 
+	list(APPEND DISTORTOS_CHIP_GPIOB_DEPENDENTS "SPI2 MISO")
+	list(APPEND DISTORTOS_CHIP_GPIOB_DEPENDENTS "SPI2 MOSI")
+	list(APPEND DISTORTOS_CHIP_GPIOB_DEPENDENTS "SPI2 SCK")
+
 endif(distortos_Peripherals_SPI2)
 
 include("${CMAKE_CURRENT_SOURCE_DIR}/source/chip/STM32/peripherals/SPIv2/distortos-sources.cmake")

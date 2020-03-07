@@ -109,6 +109,29 @@ extern "C" void SPI1_IRQHandler()
 namespace
 {
 
+/// pin initializers for SPI2
+const PinInitializer spi2PinInitializers[]
+{
+		// SPI2 MISO
+		makeAlternateFunctionPinInitializer(Pin::pb14,
+				PinAlternateFunction::af0,
+				false,
+				PinOutputSpeed::veryHigh,
+				PinPull::up),
+		// SPI2 MOSI
+		makeAlternateFunctionPinInitializer(Pin::pb15,
+				PinAlternateFunction::af0,
+				false,
+				PinOutputSpeed::veryHigh,
+				PinPull::none),
+		// SPI2 SCK
+		makeAlternateFunctionPinInitializer(Pin::pb13,
+				PinAlternateFunction::af0,
+				false,
+				PinOutputSpeed::veryHigh,
+				PinPull::none),
+};
+
 /**
  * \brief Low-level chip initializer for SPI2
  *
@@ -126,6 +149,9 @@ void spi2LowLevelInitializer()
 #else
 	#error "Unsupported bus for SPI2!"
 #endif
+
+	for (auto& pinInitializer : spi2PinInitializers)
+		pinInitializer();
 }
 
 BIND_LOW_LEVEL_INITIALIZER(50, spi2LowLevelInitializer);

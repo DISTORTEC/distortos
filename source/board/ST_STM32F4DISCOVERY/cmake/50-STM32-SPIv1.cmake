@@ -77,6 +77,10 @@ if(distortos_Peripherals_SPI1)
 
 	endif(distortos_Peripherals_SPI1_00_Use_DMA)
 
+	list(APPEND DISTORTOS_CHIP_GPIOA_DEPENDENTS "SPI1 MISO")
+	list(APPEND DISTORTOS_CHIP_GPIOA_DEPENDENTS "SPI1 MOSI")
+	list(APPEND DISTORTOS_CHIP_GPIOA_DEPENDENTS "SPI1 SCK")
+
 endif(distortos_Peripherals_SPI1)
 
 distortosSetConfiguration(BOOLEAN
