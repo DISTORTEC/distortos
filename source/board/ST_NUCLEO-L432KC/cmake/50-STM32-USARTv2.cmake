@@ -35,6 +35,9 @@ if(distortos_Peripherals_USART2)
 
 	set(ARCHITECTURE_NVIC_USART2_ENABLE ON)
 
+	list(APPEND DISTORTOS_CHIP_GPIOA_DEPENDENTS "USART2 RX")
+	list(APPEND DISTORTOS_CHIP_GPIOA_DEPENDENTS "USART2 TX")
+
 endif()
 
 include("${CMAKE_CURRENT_SOURCE_DIR}/source/chip/STM32/peripherals/USARTv2/distortos-sources.cmake")

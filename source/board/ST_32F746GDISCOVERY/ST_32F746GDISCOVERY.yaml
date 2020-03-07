@@ -81,3 +81,17 @@ regulators:
     mode: alternate-function
     alternate-function: 12
     output-speed: very-high
+!Reference {label: USART1}:
+  RX:
+    port: !Reference {label: GPIOB}
+    pin: 7
+    mode: alternate-function
+    alternate-function: 7
+    output-speed: very-high
+    pull: up
+  TX:
+    port: !Reference {label: GPIOA}
+    pin: 9
+    mode: alternate-function
+    alternate-function: 7
+    output-speed: very-high

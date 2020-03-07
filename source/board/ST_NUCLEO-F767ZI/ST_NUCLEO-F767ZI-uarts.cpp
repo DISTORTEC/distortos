@@ -69,6 +69,42 @@ extern "C" void USART2_IRQHandler()
 | USART3
 +---------------------------------------------------------------------------------------------------------------------*/
 
+namespace
+{
+
+/// pin initializers for USART3
+const PinInitializer usart3PinInitializers[]
+{
+		// USART3 RX
+		makeAlternateFunctionPinInitializer(Pin::pd9,
+				PinAlternateFunction::af7,
+				false,
+				PinOutputSpeed::veryHigh,
+				PinPull::up),
+		// USART3 TX
+		makeAlternateFunctionPinInitializer(Pin::pd8,
+				PinAlternateFunction::af7,
+				false,
+				PinOutputSpeed::veryHigh,
+				PinPull::none),
+};
+
+/**
+ * \brief Low-level chip initializer for USART3
+ *
+ * This function is called before constructors for global and static objects via BIND_LOW_LEVEL_INITIALIZER().
+ */
+
+void usart3LowLevelInitializer()
+{
+	for (auto& pinInitializer : usart3PinInitializers)
+		pinInitializer();
+}
+
+BIND_LOW_LEVEL_INITIALIZER(50, usart3LowLevelInitializer);
+
+}	// namespace
+
 ChipUartLowLevel usart3 {ChipUartLowLevel::usart3Parameters};
 
 /**

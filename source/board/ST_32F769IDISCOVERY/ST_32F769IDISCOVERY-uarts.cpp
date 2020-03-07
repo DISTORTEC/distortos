@@ -31,6 +31,42 @@ namespace chip
 | USART1
 +---------------------------------------------------------------------------------------------------------------------*/
 
+namespace
+{
+
+/// pin initializers for USART1
+const PinInitializer usart1PinInitializers[]
+{
+		// USART1 RX
+		makeAlternateFunctionPinInitializer(Pin::pa10,
+				PinAlternateFunction::af7,
+				false,
+				PinOutputSpeed::veryHigh,
+				PinPull::up),
+		// USART1 TX
+		makeAlternateFunctionPinInitializer(Pin::pa9,
+				PinAlternateFunction::af7,
+				false,
+				PinOutputSpeed::veryHigh,
+				PinPull::none),
+};
+
+/**
+ * \brief Low-level chip initializer for USART1
+ *
+ * This function is called before constructors for global and static objects via BIND_LOW_LEVEL_INITIALIZER().
+ */
+
+void usart1LowLevelInitializer()
+{
+	for (auto& pinInitializer : usart1PinInitializers)
+		pinInitializer();
+}
+
+BIND_LOW_LEVEL_INITIALIZER(50, usart1LowLevelInitializer);
+
+}	// namespace
+
 ChipUartLowLevel usart1 {ChipUartLowLevel::usart1Parameters};
 
 /**
