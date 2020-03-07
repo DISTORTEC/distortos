@@ -1,8 +1,9 @@
+{% from pinInitializerImport import makePinInitializer as makePinInitializer %}
 /**
  * \file
  * \brief Definitions of low-level SPI master drivers for SPIv2 in {{ board }} ({{ dictionary['chip']['compatible'][0] }} chip)
  *
- * \author Copyright (C) 2016-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2016-2020 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -15,6 +16,7 @@
 #include "distortos/chip/spis.hpp"
 
 #include "distortos/chip/dmas.hpp"
+#include "distortos/chip/PinInitializer.hpp"
 #include "distortos/chip/SpiMasterLowLevelDmaBased.hpp"
 #include "distortos/chip/SpiMasterLowLevelInterruptBased.hpp"
 #include "distortos/chip/STM32-SPIv2-SpiPeripheral.hpp"
@@ -46,6 +48,25 @@ namespace chip
 namespace
 {
 
+{% set misoPresent = 'MISO' in spi %}
+{% set mosiPresent = 'MOSI' in spi %}
+{% set sckPresent = 'SCK' in spi %}
+{% if sckPresent != (misoPresent == True or mosiPresent == True) %}
+{% raise 'Allowed combinations of pins for {}: none, {{MISO, SCK}}, {{MOSI, SCK}} or {{MISO, MOSI, SCK}}'.format(key) %}
+{% endif %}
+{% for pinKey in ['MISO', 'MOSI', 'SCK'] if pinKey in spi %}
+{% if loop.first == True %}
+/// pin initializers for {{ key | upper }}
+const PinInitializer {{ key | lower }}PinInitializers[]
+{
+{% endif %}
+		// {{ key | upper }} {{ pinKey }}
+		{{ makePinInitializer(spi[pinKey]) | indent(8) | replace('    ', '\t') }}
+{% if loop.last == True %}
+};
+
+{% endif %}
+{% endfor %}
 /**
  * \brief Low-level chip initializer for {{ key | upper }}
  *
@@ -63,6 +84,11 @@ void {{ key | lower }}LowLevelInitializer()
 #else
 	#error "Unsupported bus for {{ key | upper }}!"
 #endif
+{% if sckPresent == True %}
+
+	for (auto& pinInitializer : {{ key | lower }}PinInitializers)
+		pinInitializer();
+{% endif %}
 }
 
 BIND_LOW_LEVEL_INITIALIZER(50, {{ key | lower }}LowLevelInitializer);
