@@ -11,6 +11,9 @@ ST,STM32-SPIv1
     - `vector`, required, string, name of interrupt (sub)vector used by this peripheral;
   - `RX-DMA`, required, list;
   - `TX-DMA`, required, list;
+  - `MISO`, `MOSI`, `SCK`, optional, mapping, all key-value pairs are specific to particular GPIO implementation;
+  selects configuration of pins; allowed combinations are: none, {`MISO`, `SCK`}, {`MOSI`, `SCK`} or
+  {`MISO`, `MOSI`, `SCK`};
 
 `RX-DMA` and `TX-DMA` items
 ---------------------------
@@ -73,4 +76,24 @@ SPIs:
       request: 0
     $labels:
     - SPI2
+!Reference {label: SPI2}:
+  MISO:
+    port: !Reference {label: GPIOB}
+    pin: 14
+    mode: alternate-function
+    alternate-function: 0
+    output-speed: very-high
+    pull: up
+  MOSI:
+    port: !Reference {label: GPIOB}
+    pin: 15
+    mode: alternate-function
+    alternate-function: 0
+    output-speed: very-high
+  SCK:
+    port: !Reference {label: GPIOB}
+    pin: 13
+    mode: alternate-function
+    alternate-function: 0
+    output-speed: very-high
 ```
