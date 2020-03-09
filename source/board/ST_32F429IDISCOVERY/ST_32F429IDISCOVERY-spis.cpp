@@ -2,7 +2,7 @@
  * \file
  * \brief Definitions of low-level SPI master drivers for SPIv1 in ST,32F429IDISCOVERY (ST,STM32F429ZI chip)
  *
- * \author Copyright (C) 2016-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2016-2020 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -15,6 +15,7 @@
 #include "distortos/chip/spis.hpp"
 
 #include "distortos/chip/dmas.hpp"
+#include "distortos/chip/PinInitializer.hpp"
 #include "distortos/chip/SpiMasterLowLevelDmaBased.hpp"
 #include "distortos/chip/SpiMasterLowLevelInterruptBased.hpp"
 #include "distortos/chip/STM32-SPIv1-SpiPeripheral.hpp"
@@ -289,6 +290,29 @@ extern "C" void SPI4_IRQHandler()
 namespace
 {
 
+/// pin initializers for SPI5
+const PinInitializer spi5PinInitializers[]
+{
+		// SPI5 MISO
+		makeAlternateFunctionPinInitializer(Pin::pf8,
+				PinAlternateFunction::af5,
+				false,
+				PinOutputSpeed::veryHigh,
+				PinPull::up),
+		// SPI5 MOSI
+		makeAlternateFunctionPinInitializer(Pin::pf9,
+				PinAlternateFunction::af5,
+				false,
+				PinOutputSpeed::veryHigh,
+				PinPull::none),
+		// SPI5 SCK
+		makeAlternateFunctionPinInitializer(Pin::pf7,
+				PinAlternateFunction::af5,
+				false,
+				PinOutputSpeed::veryHigh,
+				PinPull::none),
+};
+
 /**
  * \brief Low-level chip initializer for SPI5
  *
@@ -304,6 +328,9 @@ void spi5LowLevelInitializer()
 #else
 	#error "Unsupported bus for SPI5!"
 #endif
+
+	for (auto& pinInitializer : spi5PinInitializers)
+		pinInitializer();
 }
 
 BIND_LOW_LEVEL_INITIALIZER(50, spi5LowLevelInitializer);

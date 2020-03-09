@@ -1,7 +1,7 @@
 #
 # file: {{ metadata[metadataIndex][2] }}
 #
-# author: Copyright (C) 2018-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+# author: Copyright (C) 2018-2020 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
 #
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -21,7 +21,15 @@ distortosSetConfiguration(BOOLEAN
 		OUTPUT_NAME DISTORTOS_CHIP_{{ key | upper }}_ENABLE)
 
 if(distortos_Peripherals_{{ key }})
+
 	set(ARCHITECTURE_NVIC_{{ uart['interrupt']['vector'] | upper }}_ENABLE ON)
+{% for pinKey in ['RX', 'TX'] if pinKey in uart %}
+{% if loop.first == True %}
+
+{% endif %}
+	list(APPEND DISTORTOS_CHIP_{{ uart[pinKey]['port']['$path'][-1] }}_DEPENDENTS "{{ key }} {{ pinKey }}")
+{% endfor %}
+
 endif()
 {% endfor %}
 

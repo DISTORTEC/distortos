@@ -2,7 +2,7 @@
  * \file
  * \brief Definitions of low-level SD/MMC card drivers for SDMMCv1 in ST,32F769IDISCOVERY (ST,STM32F769NI chip)
  *
- * \author Copyright (C) 2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2019-2020 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -15,6 +15,7 @@
 #include "distortos/chip/sdmmcs.hpp"
 
 #include "distortos/chip/dmas.hpp"
+#include "distortos/chip/PinInitializer.hpp"
 #include "distortos/chip/SdMmcCardLowLevel.hpp"
 #include "distortos/chip/STM32-SDMMCv1-SdmmcPeripheral.hpp"
 
@@ -93,6 +94,47 @@ extern "C" void SDMMC1_IRQHandler()
 namespace
 {
 
+/// pin initializers for SDMMC2
+const PinInitializer sdmmc2PinInitializers[]
+{
+		// SDMMC2 CK
+		makeAlternateFunctionPinInitializer(Pin::pd6,
+				PinAlternateFunction::af11,
+				false,
+				PinOutputSpeed::veryHigh,
+				PinPull::none),
+		// SDMMC2 CMD
+		makeAlternateFunctionPinInitializer(Pin::pd7,
+				PinAlternateFunction::af11,
+				false,
+				PinOutputSpeed::veryHigh,
+				PinPull::none),
+		// SDMMC2 D0
+		makeAlternateFunctionPinInitializer(Pin::pg9,
+				PinAlternateFunction::af11,
+				false,
+				PinOutputSpeed::veryHigh,
+				PinPull::none),
+		// SDMMC2 D1
+		makeAlternateFunctionPinInitializer(Pin::pg10,
+				PinAlternateFunction::af11,
+				false,
+				PinOutputSpeed::veryHigh,
+				PinPull::none),
+		// SDMMC2 D2
+		makeAlternateFunctionPinInitializer(Pin::pb3,
+				PinAlternateFunction::af10,
+				false,
+				PinOutputSpeed::veryHigh,
+				PinPull::none),
+		// SDMMC2 D3
+		makeAlternateFunctionPinInitializer(Pin::pb4,
+				PinAlternateFunction::af10,
+				false,
+				PinOutputSpeed::veryHigh,
+				PinPull::none),
+};
+
 /**
  * \brief Low-level chip initializer for SDMMC2
  *
@@ -106,6 +148,9 @@ void sdmmc2LowLevelInitializer()
 #else
 	#error "Unsupported bus for SDMMC2!"
 #endif
+
+	for (auto& pinInitializer : sdmmc2PinInitializers)
+		pinInitializer();
 }
 
 BIND_LOW_LEVEL_INITIALIZER(50, sdmmc2LowLevelInitializer);

@@ -10,6 +10,9 @@ ST,STM32-SDMMCv1
     - `controller`, required, reference, reference to interrupt controller;
     - `vector`, required, string, name of interrupt (sub)vector used by this peripheral;
   - `DMA`, required, list;
+  - `CK`, `CMD`, `D0`, `D1`, `D2`, `D3`, optional, mapping, all key-value pairs are specific to particular GPIO
+  implementation; selects configuration of pins; allowed combinations are: none, {`CK`, `CMD`, `D0`} or
+  {`CK`, `CMD`, `D[0-3]`};
 
 `DMA` items
 -----------
@@ -62,4 +65,60 @@ SDMMCs:
       request: 11
     $labels:
     - SDMMC2
+!Reference {label: SDMMC1}:
+  CK:
+    port: !Reference {label: GPIOC}
+    pin: 12
+    mode: alternate-function
+    alternate-function: 12
+    output-speed: very-high
+  CMD:
+    port: !Reference {label: GPIOD}
+    pin: 2
+    mode: alternate-function
+    alternate-function: 12
+    output-speed: very-high
+  D0:
+    port: !Reference {label: GPIOC}
+    pin: 8
+    mode: alternate-function
+    alternate-function: 12
+    output-speed: very-high
+  D1:
+    port: !Reference {label: GPIOC}
+    pin: 9
+    mode: alternate-function
+    alternate-function: 12
+    output-speed: very-high
+  D2:
+    port: !Reference {label: GPIOC}
+    pin: 10
+    mode: alternate-function
+    alternate-function: 12
+    output-speed: very-high
+  D3:
+    port: !Reference {label: GPIOC}
+    pin: 11
+    mode: alternate-function
+    alternate-function: 12
+    output-speed: very-high
+!Reference {label: SDMMC2}:
+  CK:
+    port: !Reference {label: GPIOD}
+    pin: 6
+    mode: alternate-function
+    alternate-function: 11
+    output-speed: very-high
+  CMD:
+    port: !Reference {label: GPIOD}
+    pin: 7
+    mode: alternate-function
+    alternate-function: 11
+    output-speed: very-high
+  D0:
+    port: !Reference {label: GPIOG}
+    pin: 9
+    mode: alternate-function
+    alternate-function: 11
+    output-speed: very-high
 ```

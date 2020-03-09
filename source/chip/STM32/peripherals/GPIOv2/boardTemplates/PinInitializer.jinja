@@ -1,0 +1,48 @@
+{% macro makeAlternateFunctionPinInitializer(gpio) %}
+{% set alternateFunction = gpio['alternate-function'] %}
+{% if alternateFunction is not integer %}
+{% raise '\'alternate-function\' of {} must be an integer, got \'{}\''.format(gpio['$path'], alternateFunction) %}
+{% endif %}
+{% set openDrain = gpio.get('open-drain', False) %}
+{% if openDrain is not boolean %}
+{% raise '\'open-drain\' of {} must be a boolean, got \'{}\''.format(gpio['$path'], openDrain) %}
+{% endif %}
+{% set outputSpeed = gpio['output-speed'] %}
+{% set outputSpeeds = ['low', 'medium', 'high', 'very-high'] %}
+{% if outputSpeed is not in outputSpeeds %}
+{% raise '\'output-speed\' of {} must be one of {}, got \'{}\''.format(gpio['$path'], outputSpeeds, outputSpeed) %}
+{% endif %}
+{% set pin = gpio['pin'] %}
+{% if pin is not integer %}
+{% raise '\'pin\' of {} must be an integer, got \'{}\''.format(gpio['$path'], pin) %}
+{% endif %}
+{% set port = gpio['port'] %}
+{% if 'compatible' not in port %}
+{% raise '\'port\' of {} must contain \'compatible\' key, got {}'.format(gpio['$path'], port | pprint) %}
+{% endif %}
+{% if 'ST,STM32-GPIO-v2' not in port['compatible'] %}
+{% raise '[\'port\', \'compatible\'] of {} must contain \'ST,STM32-GPIO-v2\', got {}'.format(gpio['$path'],
+		port['compatible']) %}
+{% endif %}
+{% set pull = gpio.get('pull', 'none') %}
+{% set pulls = ['none', 'up', 'down'] %}
+{% if pull is not in pulls %}
+{% raise '\'pull\' of {} must be one of {}, got \'{}\''.format(gpio['$path'], pulls, pull) %}
+{% endif %}
+{% set outputSpeedAssociations = ['low', 'medium', 'high', 'veryHigh'] %}
+makeAlternateFunctionPinInitializer(Pin::p{{ port['$path'][-1][4] | lower }}{{ pin }},
+		PinAlternateFunction::af{{ alternateFunction }},
+		{{ openDrain | lower }},
+		PinOutputSpeed::{{ outputSpeedAssociations[outputSpeeds.index(outputSpeed)] }},
+		PinPull::{{ pull }}),
+{%- endmacro %}
+{% macro makePinInitializer(gpio) %}
+{% set mode = gpio['mode'] %}
+{% set modes = ['alternate-function'] %}
+{% if mode is not in modes %}
+{% raise '\'mode\' of {} must be one of {}, got \'{}\''.format(gpio['$path'], modes, mode) %}
+{% endif %}
+{% if mode == 'alternate-function' %}
+{{ makeAlternateFunctionPinInitializer(gpio) -}}
+{% endif %}
+{% endmacro %}

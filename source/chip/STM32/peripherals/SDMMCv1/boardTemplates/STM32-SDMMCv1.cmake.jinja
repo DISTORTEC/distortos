@@ -1,7 +1,7 @@
 #
 # file: {{ metadata[metadataIndex][2] }}
 #
-# author: Copyright (C) 2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+# author: Copyright (C) 2019-2020 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
 #
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -41,6 +41,12 @@ if(distortos_Peripherals_{{ key }})
 			"${CMAKE_MATCH_3}")
 	list(APPEND DISTORTOS_CHIP_DMA${CMAKE_MATCH_1}_DEPENDENTS "{{ key }}")
 	list(APPEND DISTORTOS_CHIP_DMA${CMAKE_MATCH_1}_CHANNEL${CMAKE_MATCH_2}_DEPENDENTS "{{ key }}")
+{% for pinKey in ['CK', 'CMD', 'D0', 'D1', 'D2', 'D3'] if pinKey in sdmmc %}
+{% if loop.first == True %}
+
+{% endif %}
+	list(APPEND DISTORTOS_CHIP_{{ sdmmc[pinKey]['port']['$path'][-1] }}_DEPENDENTS "{{ key }} {{ pinKey }}")
+{% endfor %}
 
 	set(ARCHITECTURE_NVIC_{{ sdmmc['interrupt']['vector'] | upper }}_ENABLE ON)
 

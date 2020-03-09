@@ -2,7 +2,7 @@
  * \file
  * \brief Definitions of low-level SPI master drivers for SPIv2 in ST,32F072BDISCOVERY (ST,STM32F072RB chip)
  *
- * \author Copyright (C) 2016-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2016-2020 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -15,6 +15,7 @@
 #include "distortos/chip/spis.hpp"
 
 #include "distortos/chip/dmas.hpp"
+#include "distortos/chip/PinInitializer.hpp"
 #include "distortos/chip/SpiMasterLowLevelDmaBased.hpp"
 #include "distortos/chip/SpiMasterLowLevelInterruptBased.hpp"
 #include "distortos/chip/STM32-SPIv2-SpiPeripheral.hpp"
@@ -108,6 +109,29 @@ extern "C" void SPI1_IRQHandler()
 namespace
 {
 
+/// pin initializers for SPI2
+const PinInitializer spi2PinInitializers[]
+{
+		// SPI2 MISO
+		makeAlternateFunctionPinInitializer(Pin::pb14,
+				PinAlternateFunction::af0,
+				false,
+				PinOutputSpeed::veryHigh,
+				PinPull::up),
+		// SPI2 MOSI
+		makeAlternateFunctionPinInitializer(Pin::pb15,
+				PinAlternateFunction::af0,
+				false,
+				PinOutputSpeed::veryHigh,
+				PinPull::none),
+		// SPI2 SCK
+		makeAlternateFunctionPinInitializer(Pin::pb13,
+				PinAlternateFunction::af0,
+				false,
+				PinOutputSpeed::veryHigh,
+				PinPull::none),
+};
+
 /**
  * \brief Low-level chip initializer for SPI2
  *
@@ -125,6 +149,9 @@ void spi2LowLevelInitializer()
 #else
 	#error "Unsupported bus for SPI2!"
 #endif
+
+	for (auto& pinInitializer : spi2PinInitializers)
+		pinInitializer();
 }
 
 BIND_LOW_LEVEL_INITIALIZER(50, spi2LowLevelInitializer);

@@ -1,7 +1,7 @@
 #
 # file: ST_NUCLEO-F767ZI.yaml
 #
-# author: Copyright (C) 2017-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+# author: Copyright (C) 2017-2020 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
 #
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -56,3 +56,17 @@ regulators:
 !Reference {label: HSE}:
   frequency: 8000000
   bypass: true
+!Reference {label: USART3}:
+  RX:
+    port: !Reference {label: GPIOD}
+    pin: 9
+    mode: alternate-function
+    alternate-function: 7
+    output-speed: very-high
+    pull: up
+  TX:
+    port: !Reference {label: GPIOD}
+    pin: 8
+    mode: alternate-function
+    alternate-function: 7
+    output-speed: very-high

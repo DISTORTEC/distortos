@@ -30,6 +30,7 @@ each supported chip and `distortos/chip/uniqueDeviceId.hpp` header created by bo
 `distortos::chip::makeAlternateFunctionPinInitializer()`, `distortos::chip::makeAnalogPinInitializer()`,
 `distortos::chip::makeInputPinInitializer()` and `distortos::chip::makeOutputPinInitializer()` helper functions, both
 for *STM32's* *GPIOv1* and *GPIOv2*.
+- Extended *Jinja2* board templates with ability to generate pin initializers for *STM32's* *SDMMC*, *SPI* and *USART*.
 
 ### Changed
 
@@ -48,7 +49,7 @@ version 2.28 (released on 2nd March 2017) or later, so in case of problems pleas
   `distortos::devices::BufferingBlockDevice`).
 - All implementations of `distortos::File::read()` and `distortos::File::write()` assert that file is opened for reading
 or writing respectively, instead of returning `EBADF`.
-- Extracted internal `distortos::devices::SerialPort::CircularBuffer` to `estd::RawCircularBuffer`. It is  a generic,
+- Extracted internal `distortos::devices::SerialPort::CircularBuffer` to `estd::RawCircularBuffer`. It is a generic,
 thread-safe, lock-free raw circular buffer for single-producer and single-consumer scenarios.
 - Renamed `distortos::chip::ChipInputPin` and `distortos::chip::ChipOutputPin` to `distortos::chip::InputPin` and
 `distortos::chip::OutputPin` respectively. Aliases for old names were added, marked as deprecated and are scheduled to

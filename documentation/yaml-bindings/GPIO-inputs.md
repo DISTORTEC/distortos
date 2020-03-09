@@ -7,7 +7,8 @@ be any number of `GPIO-inputs` mappings.
 - `compatible`, required, list of strings:
   - [0], required, string, `GPIO-inputs`;
 - `<GPIO-input-name>` (`<GPIO-input-name>` - string), optional - zero or more, mapping:
-  - `GPIO`, required, mapping, all key-value pairs are specific to particular GPIO implementation;
+  - `GPIO`, required, mapping, all key-value pairs are specific to particular GPIO implementation, legacy "input" mode
+  of GPIO mapping is expected;
   - `alternative-names`, optional, list of strings, one or more alternative names of input;
 
 Examples
