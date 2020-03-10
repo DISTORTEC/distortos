@@ -1,4 +1,4 @@
-ST,STM32-GPIOv2-pin-controller
+ST,STM32-GPIOv1-pin-controller
 ==============================
 
 - `compatible`, required, list of strings:

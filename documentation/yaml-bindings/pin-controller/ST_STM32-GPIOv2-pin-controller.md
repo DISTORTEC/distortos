@@ -14,7 +14,7 @@ Examples
 ```
 pin-controller:
   compatible:
-  - ST,STM32-GPIOv2-pin-controller
+  - ST,STM32-GPIO-v2-pin-controller
   AF-bits: 3
   has-high-speed: false
 ```
