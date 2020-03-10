@@ -62,6 +62,7 @@ configuration. These files now also include configuration variables added "outsi
 in another submodule (beside *distortos*) of an application.
 - Fixed definition of `DIR` in `sys/dirent.h`, which was valid only for C++ code. `DIR` has to be a `typedef`, not a
 `struct`.
+- Fixed incorrect `compatible` key for `pin-controller` in `ST_STM32F030C6.yaml`.
 
 ### Removed
 
