@@ -2,7 +2,7 @@
  * \file
  * \brief SdmmcPeripheral class header for SDMMCv1 in STM32
  *
- * \author Copyright (C) 2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2019-2020 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -20,16 +20,23 @@ namespace distortos
 namespace chip
 {
 
-/// SdmmcPeripheral class is a raw SDMMC peripheral for SDMMCv1 in STM32
+/// SdmmcPeripheral class is a raw SDMMC / SDIO peripheral for SDMMCv1 in STM32
 class SdmmcPeripheral
 {
 public:
 
+#ifdef DISTORTOS_CHIP_SDMMC_SDIO_VARIANT
+
+	/// type alias for SDIO variant
+	using SDMMC_TypeDef = SDIO_TypeDef;
+
+#endif
+
 	/**
 	 * \brief SdmmcPeripheral's constructor
 	 *
-	 * \param [in] sdmmcBase is a base address of SDMMC peripheral
-	 * \param [in] adapterFrequency is the SDMMC adapter clock frequency, Hz
+	 * \param [in] sdmmcBase is a base address of SDMMC / SDIO peripheral
+	 * \param [in] adapterFrequency is the SDMMC / SDIO adapter clock frequency, Hz
 	 */
 
 	constexpr SdmmcPeripheral(const uintptr_t sdmmcBase, const uint32_t adapterFrequency) :
@@ -350,7 +357,7 @@ private:
 		return *reinterpret_cast<SDMMC_TypeDef*>(sdmmcBase_);
 	}
 
-	/// base address of SDMMC peripheral
+	/// base address of SDMMC / SDIO peripheral
 	uintptr_t sdmmcBase_;
 
 	/// adapter clock frequency, Hz
