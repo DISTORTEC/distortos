@@ -8,7 +8,16 @@
 #
 # Automatically generated file - do not edit!
 #
-{% for key, sdmmc in dictionary['SDMMCs'].items() if sdmmc is mapping and 'ST,STM32-SDMMC-v1' in sdmmc['compatible'] %}
+
+{% set sdmmcs = dictionary['SDMMCs'] %}
+{% set sdioVariant = sdmmcs.get('SDIO-variant', False) %}
+{% if sdioVariant is not boolean %}
+{% raise '\'SDIO-variant\' of {} must be a boolean, got \'{}\''.format(sdmmcs['$path'], sdioVariant) %}
+{% endif %}
+distortosSetFixedConfiguration(BOOLEAN
+		DISTORTOS_CHIP_SDMMC_SDIO_VARIANT
+{{ '\t\t' }}{% if sdioVariant == True %}ON{% else %}OFF{% endif %})
+{% for key, sdmmc in sdmmcs.items() if sdmmc is mapping and 'ST,STM32-SDMMC-v1' in sdmmc['compatible'] %}
 
 distortosSetConfiguration(BOOLEAN
 		distortos_Peripherals_{{ key }}

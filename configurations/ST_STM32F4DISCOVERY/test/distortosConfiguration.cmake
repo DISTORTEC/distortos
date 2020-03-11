@@ -137,36 +137,11 @@ set("distortos_leds_Ld6"
 		CACHE
 		"BOOL"
 		"Enable Ld6 (Blue)")
-set("distortos_Peripherals_GPIOA"
-		"ON"
-		CACHE
-		"BOOL"
-		"Enable GPIOA.")
-set("distortos_Peripherals_GPIOB"
+set("distortos_Peripherals_SDIO"
 		"OFF"
 		CACHE
 		"BOOL"
-		"Enable GPIOB.")
-set("distortos_Peripherals_GPIOC"
-		"OFF"
-		CACHE
-		"BOOL"
-		"Enable GPIOC.")
-set("distortos_Peripherals_GPIOD"
-		"ON"
-		CACHE
-		"BOOL"
-		"Enable GPIOD.")
-set("distortos_Peripherals_GPIOE"
-		"OFF"
-		CACHE
-		"BOOL"
-		"Enable GPIOE.")
-set("distortos_Peripherals_GPIOH"
-		"OFF"
-		CACHE
-		"BOOL"
-		"Enable GPIOH.")
+		"Enable SDIO low-level driver.")
 set("distortos_Peripherals_SPI1"
 		"OFF"
 		CACHE
@@ -212,6 +187,36 @@ set("distortos_Peripherals_USART6"
 		CACHE
 		"BOOL"
 		"Enable USART6 low-level driver.")
+set("distortos_Peripherals_GPIOA"
+		"ON"
+		CACHE
+		"BOOL"
+		"Enable GPIOA.")
+set("distortos_Peripherals_GPIOB"
+		"OFF"
+		CACHE
+		"BOOL"
+		"Enable GPIOB.")
+set("distortos_Peripherals_GPIOC"
+		"OFF"
+		CACHE
+		"BOOL"
+		"Enable GPIOC.")
+set("distortos_Peripherals_GPIOD"
+		"ON"
+		CACHE
+		"BOOL"
+		"Enable GPIOD.")
+set("distortos_Peripherals_GPIOE"
+		"OFF"
+		CACHE
+		"BOOL"
+		"Enable GPIOE.")
+set("distortos_Peripherals_GPIOH"
+		"OFF"
+		CACHE
+		"BOOL"
+		"Enable GPIOH.")
 set("distortos_Peripherals_DMA1"
 		"OFF"
 		CACHE

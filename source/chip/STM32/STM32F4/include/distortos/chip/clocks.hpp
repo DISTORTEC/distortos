@@ -2,7 +2,7 @@
  * \file
  * \brief Definitions of clocks for STM32F4
  *
- * \author Copyright (C) 2016-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2016-2020 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -136,6 +136,9 @@ constexpr uint32_t maxApb2Frequencies[2] {84000000, 90000000};
 		// !defined(DISTORTOS_CHIP_STM32F413) && !defined(DISTORTOS_CHIP_STM32F415) &&
 		// !defined(DISTORTOS_CHIP_STM32F417) && !defined(DISTORTOS_CHIP_STM32F423)
 
+/// maximum allowed value for SDIO adapter clock frequency, Hz
+constexpr uint32_t maxSdioFrequency {48000000};
+
 #ifdef DISTORTOS_CHIP_STANDARD_CLOCK_CONFIGURATION_ENABLE
 
 #if (defined(DISTORTOS_CHIP_STM32F427) || defined(DISTORTOS_CHIP_STM32F429) || defined(DISTORTOS_CHIP_STM32F43) || \
@@ -225,10 +228,26 @@ constexpr uint32_t sysclkFrequency {pllOutFrequency};
 constexpr uint32_t sysclkFrequency {pllrOutFrequency};
 #endif	// defined(DISTORTOS_CHIP_RCC_SYSCLK_PLLR)
 
+#if !defined(DISTORTOS_CHIP_STM32F410)
+
+/// SDIO adapter clock frequency, Hz
+constexpr uint32_t sdioclkFrequency {pllqOutFrequency};
+
+static_assert(sdioclkFrequency <= maxSdioFrequency, "Invalid SDIO adapter clock frequency!");
+
+#endif	// !defined(DISTORTOS_CHIP_STM32F410)
+
 #else	// !def DISTORTOS_CHIP_STANDARD_CLOCK_CONFIGURATION_ENABLE
 
 /// SYSCLK frequency, Hz
 constexpr uint32_t sysclkFrequency {DISTORTOS_CHIP_RCC_SYSCLK_FREQUENCY};
+
+#if DISTORTOS_CHIP_RCC_SDIOCLK_FREQUENCY != 0
+
+/// SDIO adapter clock frequency, Hz
+constexpr uint32_t sdioclkFrequency {DISTORTOS_CHIP_RCC_SDIOCLK_FREQUENCY};
+
+#endif	// DISTORTOS_CHIP_RCC_SDIOCLK_FREQUENCY != 0
 
 /// maximum allowed APB1 (low speed) frequency, Hz
 constexpr uint32_t maxApb1Frequency {maxApb1Frequencies[1]};
