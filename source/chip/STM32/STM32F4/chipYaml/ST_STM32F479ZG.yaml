@@ -1,7 +1,7 @@
 #
 # file: ST_STM32F479ZG.yaml
 #
-# author: Copyright (C) 2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+# author: Copyright (C) 2020 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
 #
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -269,6 +269,28 @@ GPIOs:
     - ST,STM32-GPIO-v2
     $labels:
     - GPIOH
+SDMMCs:
+  compatible:
+  - ST,STM32-SDMMCs-v1-group
+  SDIO-variant: true
+  SDIO:
+    compatible:
+    - ST,STM32-SDMMC-v1
+    interrupt:
+      controller: !Reference
+        label: NVIC
+      vector: SDIO
+    DMA:
+    - controller: !Reference
+        label: DMA2
+      channel: 3
+      request: 4
+    - controller: !Reference
+        label: DMA2
+      channel: 6
+      request: 4
+    $labels:
+    - SDIO
 SPIs:
   compatible:
   - ST,STM32-SPIs-v1-group
