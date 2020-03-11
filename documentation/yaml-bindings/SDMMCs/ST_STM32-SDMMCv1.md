@@ -3,6 +3,8 @@ ST,STM32-SDMMCv1
 
 - `compatible`, required, list of strings:
   - [0], required, string, `ST,STM32-SDMMCs-v1-group`;
+- `SDIO-variant`, optional, boolean, selects "SDMMC" (`false`) or "SDIO" (`true`) variant of the driver; default -
+`false`;
 - `SDMMCx` (`x` - integer), optional - zero or more, mapping:
   - `compatible`, required, list of strings:
     - [0], required, string, `ST,STM32-SDMMC-v1`;
