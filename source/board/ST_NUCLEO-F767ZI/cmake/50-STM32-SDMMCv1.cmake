@@ -9,6 +9,10 @@
 # Automatically generated file - do not edit!
 #
 
+distortosSetFixedConfiguration(BOOLEAN
+		DISTORTOS_CHIP_SDMMC_SDIO_VARIANT
+		OFF)
+
 distortosSetConfiguration(BOOLEAN
 		distortos_Peripherals_SDMMC1
 		OFF
