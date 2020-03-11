@@ -1,7 +1,7 @@
 #
 # file: distortos-sources.cmake
 #
-# author: Copyright (C) 2018-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+# author: Copyright (C) 2018-2020 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
 #
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -319,6 +319,25 @@ distortosSetConfiguration(STRING
 		APB2clk = AHBclk / APB2divider"
 		OUTPUT_NAME DISTORTOS_CHIP_RCC_PPRE2
 		OUTPUT_TYPES INTEGER)
+
+if(NOT distortos_Clocks_00_Standard_configuration_of_clocks)
+
+	if(NOT DISTORTOS_CHIP MATCHES "STM32F410")
+
+		distortosSetConfiguration(INTEGER
+				distortos_Clocks_15_SDIOCLK_frequency
+				0
+				MIN 0
+				MAX 48000000
+				HELP "Frequency of SDIOCLK, Hz.
+
+				RCC must be configured by user to achieve that frequency. SDIOCLK frequency must not exceed 48 MHz. Set
+				to 0 if SDIOCLK is not available."
+				OUTPUT_NAME DISTORTOS_CHIP_RCC_SDIOCLK_FREQUENCY)
+
+	endif(NOT DISTORTOS_CHIP MATCHES "STM32F410")
+
+endif(NOT distortos_Clocks_00_Standard_configuration_of_clocks)
 
 if(DISTORTOS_CHIP_VDD_MV GREATER_EQUAL 2100)
 
