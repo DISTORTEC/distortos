@@ -31,6 +31,9 @@ each supported chip and `distortos/chip/uniqueDeviceId.hpp` header created by bo
 `distortos::chip::makeInputPinInitializer()` and `distortos::chip::makeOutputPinInitializer()` helper functions, both
 for *STM32's* *GPIOv1* and *GPIOv2*.
 - Extended *Jinja2* board templates with ability to generate pin initializers for *STM32's* *SDMMC*, *SPI* and *USART*.
+- Added support for *SDIO* variant to *STM32's* *SDMMCv1* driver.
+- Enabled *STM32's* *SDMMCv1* driver (in *SDIO* variant) for *STM32F4* chip family. Added necessary data to *CSV* and
+*YAML* files of *STM32F4* chips.
 
 ### Changed
 
