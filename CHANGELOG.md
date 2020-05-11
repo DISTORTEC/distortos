@@ -30,6 +30,10 @@ each supported chip and `distortos/chip/uniqueDeviceId.hpp` header created by bo
 `distortos::chip::makeAlternateFunctionPinInitializer()`, `distortos::chip::makeAnalogPinInitializer()`,
 `distortos::chip::makeInputPinInitializer()` and `distortos::chip::makeOutputPinInitializer()` helper functions, both
 for *STM32's* *GPIOv1* and *GPIOv2*.
+- Added initial version of `distortos::devices::QspiNorFlashSpiBased`, based on
+`distortos::devices::MemoryTechnologyDevice` interface, which can be used with *QSPI* *NOR* flashes connected via SPI.
+This class supports chips which implement *SFDP* from *JESD216* standard. At this moment it has several limitations and
+was tested only with *Cypress* *S25FL127S*.
 - Extended *Jinja2* board templates with ability to generate pin initializers for *STM32's* *SDMMC*, *SPI* and *USART*.
 - Added support for *SDIO* variant to *STM32's* *SDMMCv1* driver.
 - Enabled *STM32's* *SDMMCv1* driver (in *SDIO* variant) for *STM32F4* chip family. Added necessary data to *CSV* and
