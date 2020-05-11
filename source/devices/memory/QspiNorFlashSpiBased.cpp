@@ -876,7 +876,8 @@ std::pair<int, BasicFlashParameters> parseBasicFlashParameterTable(const SpiMast
 		OutputPin& slaveSelectPin, const ParameterHeader& header)
 {
 	const auto revision = header.getTableRevisionNumber();
-	static const std::pair<uint16_t, uint8_t> expectedLengths[]
+	using RevisionExpectedLength = std::pair<uint16_t, uint8_t>;	// revision + expected length
+	static const RevisionExpectedLength expectedLengths[]
 	{
 			{0x0107, 20},	// JESD216C & JESD216D (revision 1.7)
 			{0x0106, 16},	// JESD216B (revision 1.6)
@@ -884,7 +885,7 @@ std::pair<int, BasicFlashParameters> parseBasicFlashParameterTable(const SpiMast
 			{0x0100, 9},	// JESD216 (revision 1.0)
 	};
 	const auto iterator = std::find_if(std::begin(expectedLengths), std::end(expectedLengths),
-			[&revision](const auto& entry)
+			[&revision](const RevisionExpectedLength& entry)
 			{
 				return revision >= entry.first;
 			});
