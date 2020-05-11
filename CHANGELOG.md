@@ -67,6 +67,8 @@ in another submodule (beside *distortos*) of an application.
 `struct`.
 - Fixed incorrect `compatible` key for `pin-controller` in `ST_STM32F030C6.yaml`.
 - Some minor fixes required for *GCC 10*.
+- Fixed "left shift count >= width of type" warning in `estd::extractBitField()` for field sizes equal to array element
+size.
 
 ### Removed
 

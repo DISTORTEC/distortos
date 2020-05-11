@@ -2,7 +2,7 @@
  * \file
  * \brief extractBitField() header
  *
- * \author Copyright (C) 2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2019-2020 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -60,7 +60,8 @@ inline static Ret extractBitField(const std::array<T, arraySize>& array)
 			value |= element >> -shift;
 	}
 
-	value &= (Ret{1} << size) - 1;
+	if (size < sizeof(Ret) * CHAR_BIT)
+		value &= (Ret{1} << size) - 1;
 	return value;
 }
 
