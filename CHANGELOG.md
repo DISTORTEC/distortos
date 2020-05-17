@@ -61,6 +61,12 @@ thread-safe, lock-free raw circular buffer for single-producer and single-consum
 - Renamed `distortos::chip::ChipInputPin` and `distortos::chip::ChipOutputPin` to `distortos::chip::InputPin` and
 `distortos::chip::OutputPin` respectively. Aliases for old names were added, marked as deprecated and are scheduled to
 be removed after v0.8.0.
+- Renamed symbols for each memory's start, end and size in generated linker scripts from `__..._start`, `__..._end` and
+`__..._size` to `__..._memory_start`, `__..._memory_end` and `__..._memory_size`. This way the chance of collision with
+symbols generated for sections is significantly reduced. Such collision could result from an unfortunate naming of
+custom memory region. For example, designating part of flash memory with name "data" would result in a very hard to
+debug behaviour, where the `.data` section in RAM would not be initilized at all, because `__data_start_` and
+`__data_end` symbols for part of flash memory would collide with identically named symbols for the `.data` section.
 
 ### Fixed
 

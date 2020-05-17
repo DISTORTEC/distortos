@@ -5,7 +5,7 @@
  * - 128.0 KiB of SRAM at 0x20000000;
  * - 4.0 KiB of BKPSRAM at 0x40024000;
  *
- * \author Copyright (C) 2014-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2020 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -41,17 +41,17 @@ MEMORY
 	BKPSRAM : org = 0x40024000, len = 4096
 }
 
-__flash_start = ORIGIN(flash);
-__flash_size = LENGTH(flash);
-__flash_end = __flash_start + __flash_size;
+__flash_memory_start = ORIGIN(flash);
+__flash_memory_size = LENGTH(flash);
+__flash_memory_end = __flash_memory_start + __flash_memory_size;
 
-__SRAM_start = ORIGIN(SRAM);
-__SRAM_size = LENGTH(SRAM);
-__SRAM_end = __SRAM_start + __SRAM_size;
+__SRAM_memory_start = ORIGIN(SRAM);
+__SRAM_memory_size = LENGTH(SRAM);
+__SRAM_memory_end = __SRAM_memory_start + __SRAM_memory_size;
 
-__BKPSRAM_start = ORIGIN(BKPSRAM);
-__BKPSRAM_size = LENGTH(BKPSRAM);
-__BKPSRAM_end = __BKPSRAM_start + __BKPSRAM_size;
+__BKPSRAM_memory_start = ORIGIN(BKPSRAM);
+__BKPSRAM_memory_size = LENGTH(BKPSRAM);
+__BKPSRAM_memory_end = __BKPSRAM_memory_start + __BKPSRAM_memory_size;
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | entry point
@@ -111,7 +111,7 @@ REGION_ALIAS("SRAMDataLmaRegion", flash);
 #endif	/* DISTORTOS_LD_SRAM_DATA_LMA_REGION_FLASH */
 
 #ifdef DISTORTOS_LD_PROCESS_STACK_REGION_SRAM
-__process_stack_end = __SRAM_end / 8 * 8;
+__process_stack_end = __SRAM_memory_end / 8 * 8;
 #endif	/* def DISTORTOS_LD_PROCESS_STACK_REGION_SRAM */
 
 __process_stack_start = (__process_stack_end - __process_stack_size) / 8 * 8;
@@ -386,7 +386,7 @@ __heap_start = ALIGN(__SRAM_noinit_end, 8);
 #ifdef DISTORTOS_LD_PROCESS_STACK_REGION_SRAM
 __heap_end = __process_stack_start / 8 * 8;
 #else	/* !def DISTORTOS_LD_PROCESS_STACK_REGION_SRAM */
-__heap_end = __SRAM_end / 8 * 8;
+__heap_end = __SRAM_memory_end / 8 * 8;
 #endif	/* !def DISTORTOS_LD_PROCESS_STACK_REGION_SRAM */
 #endif	/* def DISTORTOS_LD_HEAP_REGION_SRAM */
 

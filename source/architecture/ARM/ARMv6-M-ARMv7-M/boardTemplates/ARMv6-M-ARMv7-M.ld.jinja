@@ -10,7 +10,7 @@
 ;
 {% endfor %}
  *
- * \author Copyright (C) 2014-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2014-2020 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -50,14 +50,14 @@ MEMORY
 }
 {% for key, memory in dictionary['memories'].items() if memory is mapping %}
 
-__{{ key }}_start = ORIGIN({{ key }});
-__{{ key }}_size = LENGTH({{ key }});
-__{{ key }}_end = __{{ key }}_start + __{{ key }}_size;
+__{{ key }}_memory_start = ORIGIN({{ key }});
+__{{ key }}_memory_size = LENGTH({{ key }});
+__{{ key }}_memory_end = __{{ key }}_memory_start + __{{ key }}_memory_size;
 {% if 'virtual-address' in memory %}
 
-__{{ key }}Vma_start = ORIGIN({{ key }}Vma);
-__{{ key }}Vma_size = LENGTH({{ key }}Vma);
-__{{ key }}Vma_end = __{{ key }}Vma_start + __{{ key }}Vma_size;
+__{{ key }}Vma_memory_start = ORIGIN({{ key }}Vma);
+__{{ key }}Vma_memory_size = LENGTH({{ key }}Vma);
+__{{ key }}Vma_memory_end = __{{ key }}Vma_memory_start + __{{ key }}Vma_memory_size;
 {% endif %}
 {% endfor %}
 
@@ -149,7 +149,7 @@ REGION_ALIAS("{{ ramKey }}DataLmaRegion", {{ romKey }});
 		'on-chip-RAM' in memory['compatible'] and '.process_stack' in memory.get('sections', ['.process_stack']) %}
 
 #ifdef DISTORTOS_LD_PROCESS_STACK_REGION_{{ key | upper }}
-__process_stack_end = __{{ key }}_end / 8 * 8;
+__process_stack_end = __{{ key }}_memory_end / 8 * 8;
 #endif	/* def DISTORTOS_LD_PROCESS_STACK_REGION_{{ key | upper }} */
 {% endfor %}
 
@@ -432,7 +432,7 @@ __heap_start = ALIGN(__{{ key }}_noinit_end, 8);
 #ifdef DISTORTOS_LD_PROCESS_STACK_REGION_{{ key | upper }}
 __heap_end = __process_stack_start / 8 * 8;
 #else	/* !def DISTORTOS_LD_PROCESS_STACK_REGION_{{ key | upper }} */
-__heap_end = __{{ key }}_end / 8 * 8;
+__heap_end = __{{ key }}_memory_end / 8 * 8;
 #endif	/* !def DISTORTOS_LD_PROCESS_STACK_REGION_{{ key | upper }} */
 #endif	/* def DISTORTOS_LD_HEAP_REGION_{{ key | upper }} */
 {% endfor %}
