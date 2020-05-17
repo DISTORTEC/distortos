@@ -53,6 +53,9 @@ installBuild() {
 		9)
 			installToolchain '9.3.0' '200323'
 			;;
+		10)
+			installToolchain '10.1.0' '200517'
+			;;
 		*)
 			echo "\"${1}\" is not a valid argument!" >&2
 			exit 3
