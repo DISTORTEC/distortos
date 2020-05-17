@@ -220,7 +220,7 @@ if __name__ == '__main__':
 		outputFilename = posixpath.normpath(posixpath.join(arguments.outputPath, outputFilename))
 
 		outputDirectory = posixpath.dirname(outputFilename)
-		if posixpath.exists(outputDirectory) == False:
+		if outputDirectory and posixpath.exists(outputDirectory) == False:
 			os.makedirs(outputDirectory)
 
 		templateFile = jinjaEnvironment.get_template(templateFilename)

@@ -73,6 +73,10 @@ in another submodule (beside *distortos*) of an application.
 - Some minor fixes required for *GCC 10*.
 - Fixed "left shift count >= width of type" warning in `estd::extractBitField()` for field sizes equal to array element
 size.
+- Fixed `FileNotFoundError: [Errno 2] No such file or directory: ''` error in `scripts/generateBoard.py` when generating
+files directly into current directory. Please note that recommended scenario is to generate board files into a dedicated
+subdirectory, as this way the files are easier to maintain and also because there is lower chance of generator
+overwriting some user-created files.
 
 ### Removed
 
