@@ -12,5 +12,6 @@ target_sources(distortos PRIVATE
 		${CMAKE_CURRENT_LIST_DIR}/close_r.cpp
 		${CMAKE_CURRENT_LIST_DIR}/locking.cpp
 		${CMAKE_CURRENT_LIST_DIR}/open_r.cpp
+		${CMAKE_CURRENT_LIST_DIR}/read_r.cpp
 		${CMAKE_CURRENT_LIST_DIR}/sbrk_r.cpp
 		${CMAKE_CURRENT_LIST_DIR}/syscallsStubs.cpp)
