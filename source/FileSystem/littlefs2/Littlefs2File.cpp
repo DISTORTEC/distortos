@@ -195,8 +195,10 @@ std::pair<int, size_t> Littlefs2File::write(const void* const buffer, const size
 	const std::lock_guard<Littlefs2File> lockGuard {*this};
 
 	assert(opened_ == true);
-	assert(writable_ == true);
 	assert(buffer != nullptr);
+
+	if (writable_ == false)
+		return {EBADF, {}};
 
 	const auto ret = lfs2_file_write(&fileSystem_.fileSystem_, &file_, buffer, size);
 	if (ret < 0)
