@@ -2,7 +2,7 @@
  * \file
  * \brief Littlefs1File class header
  *
- * \author Copyright (C) 2018-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2018-2020 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -177,7 +177,6 @@ public:
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
-	 * \pre %File is opened for reading.
 	 * \pre \a buffer is valid.
 	 *
 	 * \param [out] buffer is the buffer into which the data will be read, must be valid
@@ -185,6 +184,7 @@ public:
 	 *
 	 * \return pair with return code (0 on success, error code otherwise) and number of read bytes (valid even when
 	 * error code is returned); error codes:
+	 * - EBADF - file is not opened for reading;
 	 * - converted error codes returned by lfs1_file_read();
 	 */
 
@@ -259,7 +259,6 @@ public:
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
-	 * \pre %File is opened for writing.
 	 * \pre \a buffer is valid.
 	 *
 	 * \param [in] buffer is the buffer with data that will be written, must be valid
@@ -267,6 +266,7 @@ public:
 	 *
 	 * \return pair with return code (0 on success, error code otherwise) and number of written bytes (valid even when
 	 * error code is returned); error codes:
+	 * - EBADF - file is not opened for writing;
 	 * - converted error codes returned by lfs1_file_write();
 	 */
 

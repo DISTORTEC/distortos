@@ -2,7 +2,7 @@
  * \file
  * \brief File class header
  *
- * \author Copyright (C) 2018-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2018-2020 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -137,14 +137,14 @@ public:
 	 *
 	 * Similar to [read()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/read.html)
 	 *
-	 * \pre %File is opened for reading.
 	 * \pre \a buffer is valid.
 	 *
 	 * \param [out] buffer is the buffer into which the data will be read, must be valid
 	 * \param [in] size is the size of \a buffer, bytes
 	 *
 	 * \return pair with return code (0 on success, error code otherwise) and number of read bytes (valid even when
-	 * error code is returned)
+	 * error code is returned); error codes:
+	 * - EBADF - file is not opened for reading;
 	 */
 
 	virtual std::pair<int, size_t> read(void* buffer, size_t size) = 0;
@@ -208,7 +208,6 @@ public:
 	 *
 	 * Similar to [write()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/write.html)
 	 *
-	 * \pre %File is opened for writing.
 	 * \pre \a buffer is valid.
 	 *
 	 * \param [in] buffer is the buffer with data that will be written, must be valid
@@ -216,6 +215,7 @@ public:
 	 *
 	 * \return pair with return code (0 on success, error code otherwise) and number of written bytes (valid even when
 	 * error code is returned); error codes:
+	 * - EBADF - file is not opened for writing;
 	 * - ENOSPC - no space left on the device containing the file;
 	 */
 

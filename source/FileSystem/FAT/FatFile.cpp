@@ -2,7 +2,7 @@
  * \file
  * \brief FatFile class implementation
  *
- * \author Copyright (C) 2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2019-2020 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -165,8 +165,10 @@ std::pair<int, size_t> FatFile::read(void* const buffer, const size_t size)
 	const std::lock_guard<FatFile> lockGuard {*this};
 
 	assert(opened_ == true);
-	assert(readable_ == true);
 	assert(buffer != nullptr);
+
+	if (readable_ == false)
+		return {EBADF, {}};
 
 	const auto ret = ufat_file_read(&file_, buffer, size);
 	position_ = file_.cur_pos;
@@ -252,8 +254,10 @@ std::pair<int, size_t> FatFile::write(const void* const buffer, const size_t siz
 	const std::lock_guard<FatFile> lockGuard {*this};
 
 	assert(opened_ == true);
-	assert(writable_ == true);
 	assert(buffer != nullptr);
+
+	if (writable_ == false)
+		return {EBADF, {}};
 
 	if (appendMode_ == true)
 	{

@@ -2,7 +2,7 @@
  * \file
  * \brief Littlefs2File class implementation
  *
- * \author Copyright (C) 2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2019-2020 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -138,8 +138,10 @@ std::pair<int, size_t> Littlefs2File::read(void* const buffer, const size_t size
 	const std::lock_guard<Littlefs2File> lockGuard {*this};
 
 	assert(opened_ == true);
-	assert(readable_ == true);
 	assert(buffer != nullptr);
+
+	if (readable_ == false)
+		return {EBADF, {}};
 
 	const auto ret = lfs2_file_read(&fileSystem_.fileSystem_, &file_, buffer, size);
 	if (ret < 0)
@@ -193,8 +195,10 @@ std::pair<int, size_t> Littlefs2File::write(const void* const buffer, const size
 	const std::lock_guard<Littlefs2File> lockGuard {*this};
 
 	assert(opened_ == true);
-	assert(writable_ == true);
 	assert(buffer != nullptr);
+
+	if (writable_ == false)
+		return {EBADF, {}};
 
 	const auto ret = lfs2_file_write(&fileSystem_.fileSystem_, &file_, buffer, size);
 	if (ret < 0)
