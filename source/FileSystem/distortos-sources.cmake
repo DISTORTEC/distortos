@@ -28,7 +28,8 @@ distortosSetConfiguration(BOOLEAN
 
 target_sources(distortos PRIVATE
 		${CMAKE_CURRENT_LIST_DIR}/MountPoint.cpp
-		${CMAKE_CURRENT_LIST_DIR}/openFile.cpp)
+		${CMAKE_CURRENT_LIST_DIR}/openFile.cpp
+		${CMAKE_CURRENT_LIST_DIR}/VirtualFileSystem.cpp)
 
 include(${CMAKE_CURRENT_LIST_DIR}/FAT/distortos-sources.cmake)
 include(${CMAKE_CURRENT_LIST_DIR}/littlefs1/distortos-sources.cmake)

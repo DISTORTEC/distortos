@@ -1,0 +1,155 @@
+/**
+ * \file
+ * \brief VirtualFileSystem class implementation
+ *
+ * \author Copyright (C) 2020 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ *
+ * \par License
+ * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
+ * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
+#include "distortos/internal/FileSystem/VirtualFileSystem.hpp"
+
+#if DISTORTOS_FILESYSTEMS_STANDARD_LIBRARY_INTEGRATION_ENABLE == 1
+
+#include "distortos/FileSystem/FileSystem.hpp"
+
+#include "estd/ContiguousRange.hpp"
+#include "estd/ScopeGuard.hpp"
+
+#include <mutex>
+
+#include <cstring>
+
+namespace distortos
+{
+
+namespace internal
+{
+
+namespace
+{
+
+/*---------------------------------------------------------------------------------------------------------------------+
+| local functions
++---------------------------------------------------------------------------------------------------------------------*/
+
+/**
+ * \brief Splits path into a mount point name and the remaining suffix (with initial slashes skipped).
+ *
+ * \pre \a path is valid.
+ *
+ * \param [in] path is the path that will be split, must be valid
+ *
+ * \return pair with mount point name (as contiguous range) and remaining suffix
+ */
+
+std::pair<estd::ContiguousRange<const char>, const char*> splitPath(const char* const path)
+{
+	assert(path != nullptr);
+
+	auto nameBegin = path;
+	while (*nameBegin == '/')
+		++nameBegin;
+
+	auto suffixBegin = strchr(nameBegin, '/');
+	if (suffixBegin == nullptr)
+		return {{nameBegin, strlen(nameBegin)}, ""};	// path consists of just the mount point name
+
+	const estd::ContiguousRange<const char> nameRange {nameBegin, suffixBegin};
+
+	while (*suffixBegin == '/')
+		++suffixBegin;
+
+	return {nameRange, suffixBegin};
+}
+
+}	// namespace
+
+/*---------------------------------------------------------------------------------------------------------------------+
+| public functions
++---------------------------------------------------------------------------------------------------------------------*/
+
+int VirtualFileSystem::mount(FileSystem& fileSystem, const char* const path)
+{
+	estd::ContiguousRange<const char> nameRange;
+	const char* suffix;
+	std::tie(nameRange, suffix) = splitPath(path);
+
+	assert(*suffix == '\0');
+
+	const auto name = nameRange.begin();
+	const auto length = nameRange.size();
+	assert(length <= MountPoint::maxNameLength);
+	for (size_t i {}; i < length; ++i)
+		assert(std::isalnum(name[i]) != 0);
+
+	{
+		const auto ret = fileSystem.mount();
+		if (ret != 0)
+			return ret;
+	}
+
+	auto unmountScopeGuard = estd::makeScopeGuard(
+			[&fileSystem]()
+			{
+				fileSystem.unmount();
+			});
+
+	std::unique_ptr<MountPoint> mountPoint {new (std::nothrow) MountPoint{fileSystem, name, length}};
+	if (mountPoint == nullptr)
+		return ENOMEM;
+
+	std::unique_ptr<MountPointListNode> node {new (std::nothrow) MountPointListNode{std::move(mountPoint)}};
+	if (node == nullptr)
+		return ENOMEM;
+
+	{
+		const std::lock_guard<Mutex> lockGuard {mutex_};
+		mountPoints_.push_back(*node.release());
+	}
+
+	unmountScopeGuard.release();
+	return {};
+}
+
+int VirtualFileSystem::unmount(const char* const path, const bool detach)
+{
+	estd::ContiguousRange<const char> nameRange;
+	const char* suffix;
+	std::tie(nameRange, suffix) = splitPath(path);
+
+	assert(*suffix == '\0');
+
+	const auto name = nameRange.begin();
+	const auto length = nameRange.size();
+
+	std::unique_ptr<MountPointListNode> node;
+
+	{
+		const std::lock_guard<Mutex> lockGuard {mutex_};
+
+		const auto iterator = std::find_if(mountPoints_.begin(), mountPoints_.end(),
+				[name, length](const MountPointSharedPointer& entry) -> bool
+				{
+					const auto entryName = entry->getName();
+					return strlen(entryName) == length && memcmp(entryName, name, length) == 0;
+				});
+
+		assert(iterator != mountPoints_.end());
+		if (detach == false && iterator->get()->getReferenceCount() != 1)
+			return EBUSY;
+
+		mountPoints_.erase(iterator);
+		node.reset(&*iterator);
+	}
+
+	return {};
+}
+
+}	// namespace internal
+
+}	// namespace distortos
+
+#endif	// DISTORTOS_FILESYSTEMS_STANDARD_LIBRARY_INTEGRATION_ENABLE == 1
