@@ -71,7 +71,7 @@ public:
 	 *
 	 * \post %File is closed.
 	 *
-	 * \return 0 on success, error code otherwise
+	 * \return 0 on success, error code otherwise:
 	 * - converted error codes returned by ufat_sync();
 	 * - error codes returned by BlockDevice::synchronize();
 	 */
@@ -147,9 +147,9 @@ public:
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
-	 * \pre The number of recursive locks of device is less than 65535.
+	 * \pre The number of recursive locks of file is less than 65535.
 	 *
-	 * \post Device is locked.
+	 * \post %File is locked.
 	 */
 
 	void lock() override;
@@ -255,7 +255,7 @@ public:
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
-	 * \pre This function is called by the thread that locked the device.
+	 * \pre This function is called by the thread that locked the file.
 	 */
 
 	void unlock() override;
