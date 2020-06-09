@@ -88,6 +88,24 @@ public:
 	std::pair<int, std::unique_ptr<File>> openFile(const char* path, int flags);
 
 	/**
+	 * \brief Removes file or directory.
+	 *
+	 * Similar to [remove()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/remove.html)
+	 *
+	 * \warning This function must not be called from interrupt context!
+	 *
+	 * \pre \a path is valid.
+	 *
+	 * \param [in] path is the path of file or directory that will be removed, must be valid
+	 *
+	 * \return 0 on success, error code otherwise:
+	 * - ENOENT - \a path does not name an existing file or directory;
+	 * - error codes returned by FileSystem::remove();
+	 */
+
+	int remove(const char* path);
+
+	/**
 	 * \brief Unmounts file system from mount point with given name.
 	 *
 	 * Similar to [umount2()](https://linux.die.net/man/2/umount)

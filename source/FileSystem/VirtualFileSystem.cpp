@@ -145,6 +145,21 @@ std::pair<int, std::unique_ptr<File>> VirtualFileSystem::openFile(const char* co
 	return {{}, std::move(virtualFile)};
 }
 
+int VirtualFileSystem::remove(const char* const path)
+{
+	estd::ContiguousRange<const char> nameRange;
+	const char* suffix;
+	std::tie(nameRange, suffix) = splitPath(path);
+	if (*suffix == '\0')	// there is just the mount point name, so no file can be removed anyway
+		return ENOENT;
+
+	const auto mountPointSharedPointer = getMountPointSharedPointer(nameRange.begin(), nameRange.size());
+	if (mountPointSharedPointer == false)
+		return ENOENT;
+
+	return mountPointSharedPointer->getFileSystem().remove(suffix);
+}
+
 int VirtualFileSystem::unmount(const char* const path, const bool detach)
 {
 	estd::ContiguousRange<const char> nameRange;
