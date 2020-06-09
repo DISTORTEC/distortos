@@ -73,6 +73,21 @@ std::pair<estd::ContiguousRange<const char>, const char*> splitPath(const char* 
 | public functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
+int VirtualFileSystem::makeDirectory(const char* const path, const mode_t mode)
+{
+	estd::ContiguousRange<const char> nameRange;
+	const char* suffix;
+	std::tie(nameRange, suffix) = splitPath(path);
+	if (*suffix == '\0')	// there is just the mount point name, so no directory can be created anyway
+		return ENOENT;
+
+	const auto mountPointSharedPointer = getMountPointSharedPointer(nameRange.begin(), nameRange.size());
+	if (mountPointSharedPointer == false)
+		return ENOENT;
+
+	return mountPointSharedPointer->getFileSystem().makeDirectory(suffix, mode);
+}
+
 int VirtualFileSystem::mount(FileSystem& fileSystem, const char* const path)
 {
 	estd::ContiguousRange<const char> nameRange;

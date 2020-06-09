@@ -43,6 +43,25 @@ public:
 	}
 
 	/**
+	 * \brief Makes a directory.
+	 *
+	 * Similar to [mkdir()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/mkdir.html)
+	 *
+	 * \warning This function must not be called from interrupt context!
+	 *
+	 * \pre \a path is valid.
+	 *
+	 * \param [in] path is the path of the directory that will be created, must be valid
+	 * \param [in] mode is the value of permission bits of the created directory
+	 *
+	 * \return 0 on success, error code otherwise:
+	 * - ENOENT - prefix component of \a path does not name an existing directory;
+	 * - error codes returned by FileSystem::makeDirectory();
+	 */
+
+	int makeDirectory(const char* path, mode_t mode);
+
+	/**
 	 * \brief Mounts file system at mount point with given name.
 	 *
 	 * Similar to [mount()](https://linux.die.net/man/2/mount)
