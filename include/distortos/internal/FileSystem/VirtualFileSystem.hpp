@@ -18,6 +18,8 @@
 
 #include "distortos/internal/FileSystem/MountPointSharedPointer.hpp"
 
+struct stat;
+
 namespace distortos
 {
 
@@ -42,6 +44,25 @@ public:
 	{
 
 	}
+
+	/**
+	 * \brief Returns status of file.
+	 *
+	 * Similar to [stat()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/stat.html)
+	 *
+	 * \warning This function must not be called from interrupt context!
+	 *
+	 * \pre \a path is valid.
+	 *
+	 * \param [in] path is the path to file for which status should be returned, must be valid
+	 * \param [out] status is a reference to `stat` struct into which status of file will be written
+	 *
+	 * \return 0 on success, error code otherwise:
+	 * - ENOENT - no such file or directory;
+	 * - error codes returned by FileSystem::getFileStatus();
+	 */
+
+	int getFileStatus(const char* path, struct stat& status);
 
 	/**
 	 * \brief Makes a directory.

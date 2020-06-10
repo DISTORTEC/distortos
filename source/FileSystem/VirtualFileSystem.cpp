@@ -74,6 +74,21 @@ std::pair<estd::ContiguousRange<const char>, const char*> splitPath(const char* 
 | public functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
+int VirtualFileSystem::getFileStatus(const char* const path, struct stat& status)
+{
+	estd::ContiguousRange<const char> nameRange;
+	const char* suffix;
+	std::tie(nameRange, suffix) = splitPath(path);
+	if (*suffix == '\0')	// there is just the mount point name, so no status can be returned anyway
+		return ENOENT;
+
+	const auto mountPointSharedPointer = getMountPointSharedPointer(nameRange.begin(), nameRange.size());
+	if (mountPointSharedPointer == false)
+		return ENOENT;
+
+	return mountPointSharedPointer->getFileSystem().getFileStatus(suffix, status);
+}
+
 int VirtualFileSystem::makeDirectory(const char* const path, const mode_t mode)
 {
 	estd::ContiguousRange<const char> nameRange;
