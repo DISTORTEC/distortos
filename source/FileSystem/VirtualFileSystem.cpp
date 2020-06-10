@@ -13,6 +13,7 @@
 
 #if DISTORTOS_FILESYSTEMS_STANDARD_LIBRARY_INTEGRATION_ENABLE == 1
 
+#include "VirtualDirectory2.hpp"
 #include "VirtualFile.hpp"
 
 #include "distortos/FileSystem/FileSystem.hpp"
@@ -129,6 +130,33 @@ int VirtualFileSystem::mount(FileSystem& fileSystem, const char* const path)
 
 	unmountScopeGuard.release();
 	return {};
+}
+
+std::pair<int, std::unique_ptr<Directory>> VirtualFileSystem::openDirectory(const char* const path)
+{
+	estd::ContiguousRange<const char> nameRange;
+	const char* suffix;
+	std::tie(nameRange, suffix) = splitPath(path);
+
+	auto mountPointSharedPointer = getMountPointSharedPointer(nameRange.begin(), nameRange.size());
+	if (mountPointSharedPointer == false)
+		return {ENOENT, std::unique_ptr<Directory>{}};
+
+	std::unique_ptr<Directory> directory;
+
+	{
+		int ret;
+		std::tie(ret, directory) = mountPointSharedPointer->getFileSystem().openDirectory(suffix);
+		if (ret != 0)
+			return {ret, std::unique_ptr<Directory>{}};
+	}
+
+	std::unique_ptr<Directory> virtualDirectory2 {new (std::nothrow) VirtualDirectory2{std::move(directory),
+			std::move(mountPointSharedPointer)}};
+	if (virtualDirectory2 == nullptr)
+		return {ENOMEM, std::unique_ptr<Directory>{}};
+
+	return {{}, std::move(virtualDirectory2)};
 }
 
 std::pair<int, std::unique_ptr<File>> VirtualFileSystem::openFile(const char* const path, const int flags)
