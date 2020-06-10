@@ -74,6 +74,11 @@ std::pair<estd::ContiguousRange<const char>, const char*> splitPath(const char* 
 | public functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
+VirtualFileSystem::~VirtualFileSystem()
+{
+	assert(mountPoints_.empty() == true);
+}
+
 int VirtualFileSystem::getFileStatus(const char* const path, struct stat& status)
 {
 	estd::ContiguousRange<const char> nameRange;

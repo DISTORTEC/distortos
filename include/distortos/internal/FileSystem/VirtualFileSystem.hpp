@@ -47,6 +47,14 @@ public:
 	}
 
 	/**
+	 * \brief VirtualFileSystem's destructor
+	 *
+	 * \pre All underlying file systems are unmounted.
+	 */
+
+	~VirtualFileSystem();
+
+	/**
 	 * \brief Returns status of file.
 	 *
 	 * Similar to [stat()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/stat.html)
