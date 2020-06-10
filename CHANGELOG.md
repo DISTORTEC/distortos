@@ -9,6 +9,33 @@ All notable changes to this project will be documented in this file. This projec
 
 ### Added
 
+- Added preliminary functionality for accessing multiple `distortos::FileSystem` objects via functions from standard
+library headers. Whole integration can be enabled or disabled by new *CMake* option -
+`distortos_FileSystems_00_Integration_with_standard_library`. When this option is enabled, following features are
+enabled:
+  - global functions `distortos::mount()` and `distortos::unmount()` (which supports deferred unmount of busy file
+  system);
+  - support for (most likely) all functions from `<stdio.h>` header, like `fopen()`, `fclose()`, `fread()`, `fwrite()`,
+  `fprintf()`, `fscanf()` and so on;
+  - support for selected I/O-related functions from `<fcntl.h>`, `<unistd.h>` and `<sys/stat.h>` headers: `open()`,
+  `close()`, `read()`, `write()`, `isatty()`, `lseek()`, `fstat()`, `mkdir()`, `stat()` and `unlink()` (which supports
+  both files and directories);
+  - support for selected functions from `<dirent.h>` header: `opendir()`, `closedir()`, `readdir_r()`, `rewinddir()`,
+  `seekdir()` and `telldir()`;
+  - support for `statvfs()` function from `<sys/statvfs.h>` header;
+  - all features mentioned above currently have some limitations, some of which may be changed in the future and some
+  may stay as-is:
+    - root file system is strictly read-only;
+    - path of mount point has to consist of one component only, which has to consist of no more than 31 alphanumeric
+    characters;
+    - using the same file descriptor concurrently from multiple threads without external synchronization (e.g. a mutex)
+    is not supported (note that `FILE*` and functions from `<stdio.h>` are thread-safe by design);
+    - paths support forward-slashes only;
+    - no more than 20 file descriptors may be opened simultaneously;
+    - components such as `..` or `.` inside the paths are not supported and will most likely cause errors;
+    - most of the functions will fail to operate at the root of file system (e.g. currently it is not possible to do
+    `opendir("/")` or `stat("/someMountPoint", &status)`);
+    - 3 standard streams (`stdin`, `stdout` and `stderr`), as well as 3 standard file descriptors (0-2), are not handled automatically;
 - Added support and test configuration for [NUCLEO-F767ZI](https://www.st.com/en/evaluation-tools/nucleo-f767zi.html)
 board with *STM32F7* chip.
 - Added boolean `#define` in `distortosConfiguration.h` which specifies selected board, e.g.
