@@ -40,6 +40,7 @@ target_sources(distortos PRIVATE
 		${CMAKE_CURRENT_LIST_DIR}/seekdir.cpp
 		${CMAKE_CURRENT_LIST_DIR}/statvfs.cpp
 		${CMAKE_CURRENT_LIST_DIR}/telldir.cpp
+		${CMAKE_CURRENT_LIST_DIR}/unmount.cpp
 		${CMAKE_CURRENT_LIST_DIR}/VirtualDirectory2.cpp
 		${CMAKE_CURRENT_LIST_DIR}/VirtualFile.cpp
 		${CMAKE_CURRENT_LIST_DIR}/VirtualFileSystem.cpp)
