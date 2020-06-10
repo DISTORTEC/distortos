@@ -18,6 +18,8 @@
 
 #include "distortos/FileSystem/FileSystem.hpp"
 
+#include "distortos/assert.h"
+
 #include "estd/ContiguousRange.hpp"
 #include "estd/ScopeGuard.hpp"
 

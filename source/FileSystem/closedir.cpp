@@ -15,7 +15,11 @@
 
 #include "distortos/FileSystem/Directory.hpp"
 
+#include "distortos/assert.h"
+
 #include <memory>
+
+#include <cerrno>
 
 namespace distortos
 {

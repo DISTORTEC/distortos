@@ -16,6 +16,8 @@
 #include "distortos/internal/FileSystem/rootFileSystem.hpp"
 #include "distortos/internal/FileSystem/VirtualFileSystem.hpp"
 
+#include "distortos/assert.h"
+
 namespace distortos
 {
 

@@ -15,6 +15,8 @@
 
 #include "distortos/FileSystem/Directory.hpp"
 
+#include "distortos/assert.h"
+
 #include <cerrno>
 
 namespace distortos

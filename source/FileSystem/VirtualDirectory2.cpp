@@ -13,6 +13,8 @@
 
 #if DISTORTOS_FILESYSTEMS_STANDARD_LIBRARY_INTEGRATION_ENABLE == 1
 
+#include "distortos/assert.h"
+
 namespace distortos
 {
 

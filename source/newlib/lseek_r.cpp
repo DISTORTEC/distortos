@@ -17,6 +17,9 @@
 
 #include "distortos/FileSystem/File.hpp"
 
+#include <cerrno>
+#include <cstdio>
+
 namespace distortos
 {
 

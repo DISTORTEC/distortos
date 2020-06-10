@@ -19,6 +19,8 @@
 
 #include "distortos/assert.h"
 
+#include <cerrno>
+
 namespace distortos
 {
 
