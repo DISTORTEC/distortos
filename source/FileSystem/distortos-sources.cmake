@@ -30,6 +30,7 @@ target_sources(distortos PRIVATE
 		${CMAKE_CURRENT_LIST_DIR}/fileDescriptions.cpp
 		${CMAKE_CURRENT_LIST_DIR}/mkdir.cpp
 		${CMAKE_CURRENT_LIST_DIR}/MountPoint.cpp
+		${CMAKE_CURRENT_LIST_DIR}/opendir.cpp
 		${CMAKE_CURRENT_LIST_DIR}/openFile.cpp
 		${CMAKE_CURRENT_LIST_DIR}/rootFileSystem.cpp
 		${CMAKE_CURRENT_LIST_DIR}/VirtualDirectory2.cpp
