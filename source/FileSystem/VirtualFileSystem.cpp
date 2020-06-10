@@ -89,6 +89,18 @@ int VirtualFileSystem::getFileStatus(const char* const path, struct stat& status
 	return mountPointSharedPointer->getFileSystem().getFileStatus(suffix, status);
 }
 
+int VirtualFileSystem::getStatus(const char* const path, struct statvfs& status)
+{
+	estd::ContiguousRange<const char> nameRange;
+	std::tie(nameRange, std::ignore) = splitPath(path);
+
+	const auto mountPointSharedPointer = getMountPointSharedPointer(nameRange.begin(), nameRange.size());
+	if (mountPointSharedPointer == false)
+		return ENOENT;
+
+	return mountPointSharedPointer->getFileSystem().getStatus(status);
+}
+
 int VirtualFileSystem::makeDirectory(const char* const path, const mode_t mode)
 {
 	estd::ContiguousRange<const char> nameRange;

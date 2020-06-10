@@ -19,6 +19,7 @@
 #include "distortos/internal/FileSystem/MountPointSharedPointer.hpp"
 
 struct stat;
+struct statvfs;
 
 namespace distortos
 {
@@ -63,6 +64,23 @@ public:
 	 */
 
 	int getFileStatus(const char* path, struct stat& status);
+
+	/**
+	 * \brief Returns status of file system.
+	 *
+	 * Similar to [statvfs()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/statvfs.html)
+	 *
+	 * \warning This function must not be called from interrupt context!
+	 *
+	 * \param [in] path is a path to file or directory contained on file system which should be accessed
+	 * \param [out] status is a reference to `statvfs` struct into which status of file system will be written
+	 *
+	 * \return 0 on success, error code otherwise:
+	 * - ENOENT - no such file or directory;
+	 * - error codes returned by FileSystem::getStatus();
+	 */
+
+	int getStatus(const char* path, struct statvfs& status);
 
 	/**
 	 * \brief Makes a directory.
