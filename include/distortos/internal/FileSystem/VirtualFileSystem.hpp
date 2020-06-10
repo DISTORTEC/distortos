@@ -21,6 +21,8 @@
 namespace distortos
 {
 
+class File;
+
 namespace internal
 {
 
@@ -62,6 +64,30 @@ public:
 	int mount(FileSystem& fileSystem, const char* path);
 
 	/**
+	 * \brief Opens file.
+	 *
+	 * Similar to [open()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/open.html)
+	 *
+	 * \warning This function must not be called from interrupt context!
+	 *
+	 * \pre \a path is valid.
+	 * \pre \a flags are valid.
+	 *
+	 * \param [in] path is the path of file that will be opened, must be valid
+	 * \param [in] flags are file status flags, must be valid, for list of available flags and valid combinations see
+	 * [open()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/open.html)
+	 *
+	 * \return pair with return code (0 on success, error code otherwise) and `std::unique_ptr` with opened file; error
+	 * codes:
+	 * - ENOENT - `O_CREAT` is not set and \a path does not name an existing file or `O_CREAT` is set and prefix
+	 * component of \a path does not name an existing directory;
+	 * - ENOMEM - unable to allocate memory for file;
+	 * - error codes returned by FileSystem::openFile();
+	 */
+
+	std::pair<int, std::unique_ptr<File>> openFile(const char* path, int flags);
+
+	/**
 	 * \brief Unmounts file system from mount point with given name.
 	 *
 	 * Similar to [umount2()](https://linux.die.net/man/2/umount)
@@ -94,6 +120,20 @@ private:
 		/// node for intrusive list
 		estd::IntrusiveListNode node;
 	};
+
+	/**
+	 * \brief Gets shared pointer to mount point associated with provided name.
+	 *
+	 * \pre \a name is valid.
+	 *
+ 	 * \param [in] name is the name of requested mount point, must be valid
+	 * \param [in] length is the length of \a name
+	 *
+	 * \return shared pointer to mount point associated with \a nameRange, the object may be empty if no mount point was
+	 * found
+	 */
+
+	MountPointSharedPointer getMountPointSharedPointer(const char* name, size_t length);
 
 	/// list of mount points
 	estd::IntrusiveList<MountPointListNode, &MountPointListNode::node> mountPoints_;

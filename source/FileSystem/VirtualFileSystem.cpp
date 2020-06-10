@@ -13,6 +13,8 @@
 
 #if DISTORTOS_FILESYSTEMS_STANDARD_LIBRARY_INTEGRATION_ENABLE == 1
 
+#include "VirtualFile.hpp"
+
 #include "distortos/FileSystem/FileSystem.hpp"
 
 #include "estd/ContiguousRange.hpp"
@@ -114,6 +116,35 @@ int VirtualFileSystem::mount(FileSystem& fileSystem, const char* const path)
 	return {};
 }
 
+std::pair<int, std::unique_ptr<File>> VirtualFileSystem::openFile(const char* const path, const int flags)
+{
+	estd::ContiguousRange<const char> nameRange;
+	const char* suffix;
+	std::tie(nameRange, suffix) = splitPath(path);
+	if (*suffix == '\0')	// there is just the mount point name, so no file can be opened anyway
+		return {ENOENT, std::unique_ptr<File>{}};
+
+	auto mountPointSharedPointer = getMountPointSharedPointer(nameRange.begin(), nameRange.size());
+	if (mountPointSharedPointer == false)
+		return {ENOENT, std::unique_ptr<File>{}};
+
+	std::unique_ptr<File> file;
+
+	{
+		int ret;
+		std::tie(ret, file) = mountPointSharedPointer->getFileSystem().openFile(suffix, flags);
+		if (ret != 0)
+			return {ret, std::unique_ptr<File>{}};
+	}
+
+	std::unique_ptr<File> virtualFile {new (std::nothrow) VirtualFile{std::move(file),
+			std::move(mountPointSharedPointer)}};
+	if (virtualFile == nullptr)
+		return {ENOMEM, std::unique_ptr<File>{}};
+
+	return {{}, std::move(virtualFile)};
+}
+
 int VirtualFileSystem::unmount(const char* const path, const bool detach)
 {
 	estd::ContiguousRange<const char> nameRange;
@@ -146,6 +177,29 @@ int VirtualFileSystem::unmount(const char* const path, const bool detach)
 	}
 
 	return {};
+}
+
+/*---------------------------------------------------------------------------------------------------------------------+
+| private functions
++---------------------------------------------------------------------------------------------------------------------*/
+
+MountPointSharedPointer VirtualFileSystem::getMountPointSharedPointer(const char* const name, const size_t length)
+{
+	assert(name != nullptr);
+
+	const std::lock_guard<Mutex> lockGuard {mutex_};
+
+	const auto iterator = std::find_if(mountPoints_.begin(), mountPoints_.end(),
+			[name, length](const MountPointSharedPointer& entry) -> bool
+			{
+				const auto entryName = entry->getName();
+				return strlen(entryName) == length && memcmp(entryName, name, length) == 0;
+			});
+
+	if (iterator == mountPoints_.end())
+		return {};
+
+	return *iterator;
 }
 
 }	// namespace internal
