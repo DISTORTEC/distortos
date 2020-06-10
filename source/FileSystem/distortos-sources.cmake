@@ -27,6 +27,7 @@ distortosSetConfiguration(BOOLEAN
 		OUTPUT_NAME DISTORTOS_FILESYSTEMS_STANDARD_LIBRARY_INTEGRATION_ENABLE)
 
 target_sources(distortos PRIVATE
+		${CMAKE_CURRENT_LIST_DIR}/closedir.cpp
 		${CMAKE_CURRENT_LIST_DIR}/fileDescriptions.cpp
 		${CMAKE_CURRENT_LIST_DIR}/mkdir.cpp
 		${CMAKE_CURRENT_LIST_DIR}/MountPoint.cpp
