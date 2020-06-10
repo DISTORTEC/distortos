@@ -377,6 +377,11 @@ set("distortos_Memory_regions_11_Heap"
 		CACHE
 		"STRING"
 		"Memory region for heap in linker script")
+set("distortos_FileSystems_00_Integration_with_standard_library"
+		"ON"
+		CACHE
+		"BOOL"
+		"Enable integration of file systems with standard library.\n\nEnables functionality for accessing multiple distortos::FileSystem objects via functions from standard library headers. When this option is enabled, following features are enabled:\n- global functions distortos::mount() and distortos::unmount() (which supports deferred unmount of busy file system);\n- support for (most likely) all functions from <stdio.h> header, like fopen(), fclose(), fread(), fwrite(), fprintf(), fscanf() and so on;\n- support for selected I/O-related functions from <fcntl.h>, <unistd.h> and <sys/stat.h> headers: open(), close(), read(), write(), isatty(), lseek(), fstat(), mkdir(), stat() and unlink() (which supports both files and directories);\n- support for selected functions from <dirent.h> header: opendir(), closedir(), readdir_r(), rewinddir(), seekdir() and telldir();\n- support for statvfs() function from <sys/statvfs.h> header;")
 set("DISTORTOS_CONFIGURATION_VERSION"
 		"4"
 		CACHE

@@ -1,62 +1,57 @@
 /**
  * \file
- * \brief FatFile class header
+ * \brief VirtualFile class header
  *
- * \author Copyright (C) 2019-2020 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2020 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#ifndef SOURCE_FILESYSTEM_FAT_FATFILE_HPP_
-#define SOURCE_FILESYSTEM_FAT_FATFILE_HPP_
+#ifndef INCLUDE_DISTORTOS_INTERNAL_FILESYSTEM_VIRTUALFILE_HPP_
+#define INCLUDE_DISTORTOS_INTERNAL_FILESYSTEM_VIRTUALFILE_HPP_
+
+#include "distortos/distortosConfiguration.h"
+
+#if DISTORTOS_FILESYSTEMS_STANDARD_LIBRARY_INTEGRATION_ENABLE == 1
+
+#include "distortos/internal/FileSystem/MountPointSharedPointer.hpp"
 
 #include "distortos/FileSystem/File.hpp"
-
-#include "ufat.h"
 
 namespace distortos
 {
 
-class FatFileSystem;
+namespace internal
+{
 
-/**
- * \brief FatFile class is a [FAT](https://en.wikipedia.org/wiki/File_Allocation_Table) file.
- *
- * \ingroup fileSystem
- */
-
-class FatFile : public File
+/// VirtualFile class is a wrapper for File and shared pointer to its mount point
+class VirtualFile : public File
 {
 public:
 
 	/**
-	 * \brief FatFile's constructor
+	 * \brief VirtualFile's constructor
 	 *
-	 * \param [in] fileSystem is a reference to owner file system
+	 * \param [in] file is a rvalue reference to unique_ptr to file
+	 * \param [in] mountPointSharedPointer is a rvalue reference to shared pointer to mount point
 	 */
 
-	constexpr explicit FatFile(FatFileSystem& fileSystem) :
-			file_{},
-			fileSystem_{fileSystem},
-			position_{},
-			appendMode_{},
-			dirty_{},
-			opened_{},
-			readable_{},
-			writable_{}
+	VirtualFile(std::unique_ptr<File>&& file, MountPointSharedPointer&& mountPointSharedPointer) :
+			file_{std::move(file)},
+			mountPointSharedPointer_{std::move(mountPointSharedPointer)}
 	{
 
 	}
 
 	/**
-	 * \brief FatFile's destructor
+	 * \brief VirtualFile's destructor
 	 *
 	 * \pre %File is closed.
 	 */
 
-	~FatFile() override;
+	~VirtualFile() override;
 
 	/**
 	 * \brief Closes file.
@@ -65,15 +60,12 @@ public:
 	 *
 	 * \note Even if error code is returned, the file must not be used.
 	 *
-	 * \warning This function must not be called from interrupt context!
-	 *
 	 * \pre %File is opened.
 	 *
 	 * \post %File is closed.
 	 *
 	 * \return 0 on success, error code otherwise:
-	 * - converted error codes returned by ufat_sync();
-	 * - error codes returned by BlockDevice::synchronize();
+	 * - error codes returned by File::close();
 	 */
 
 	int close() override;
@@ -83,11 +75,10 @@ public:
 	 *
 	 * Similar to [ftello()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/ftell.html)
 	 *
-	 * \warning This function must not be called from interrupt context!
-	 *
 	 * \pre %File is opened.
 	 *
-	 * \return pair with return code (0 on success, error code otherwise) and current file offset, bytes
+	 * \return pair with return code (0 on success, error code otherwise) and current file offset, bytes; error codes:
+	 * - error codes returned by File::getPosition();
 	 */
 
 	std::pair<int, off_t> getPosition() override;
@@ -95,11 +86,10 @@ public:
 	/**
 	 * \brief Returns size of file.
 	 *
-	 * \warning This function must not be called from interrupt context!
-	 *
 	 * \pre %File is opened.
 	 *
-	 * \return pair with return code (0 on success, error code otherwise) and size of file, bytes
+	 * \return pair with return code (0 on success, error code otherwise) and size of file, bytes; error codes:
+	 * - error codes returned by File::getSize();
 	 */
 
 	std::pair<int, off_t> getSize() override;
@@ -109,15 +99,12 @@ public:
 	 *
 	 * Similar to [fstat()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/fstat.html)
 	 *
-	 * `st_mode` and `st_size` fields are set in all cases. All other fields are zero-initialized.
-	 *
-	 * \warning This function must not be called from interrupt context!
-	 *
 	 * \pre %File is opened.
 	 *
 	 * \param [out] status is a reference to `stat` struct into which status of file will be written
 	 *
-	 * \return 0 on success, error code otherwise
+	 * \return 0 on success, error code otherwise:
+	 * - error codes returned by File::getStatus();
 	 */
 
 	int getStatus(struct stat& status) override;
@@ -127,12 +114,11 @@ public:
 	 *
 	 * Similar to [isatty()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/isatty.html)
 	 *
-	 * \warning This function must not be called from interrupt context!
-	 *
 	 * \pre %File is opened.
 	 *
 	 * \return pair with return code (0 on success, error code otherwise) and bool telling whether the file is a
-	 * terminal (true) or not (false)
+	 * terminal (true) or not (false); error codes:
+	 * - error codes returned by File::isATerminal();
 	 */
 
 	std::pair<int, bool> isATerminal() override;
@@ -155,34 +141,9 @@ public:
 	void lock() override;
 
 	/**
-	 * \brief Opens file.
-	 *
-	 * \pre %File is not opened.
-	 * \pre \a path is valid.
-	 * \pre \a flags are valid.
-	 *
-	 * \param [in] path is the path of file that will be opened, must be valid
-	 * \param [in] flags are file status flags, must be valid, for list of available flags and valid combinations see
-	 * [open()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/open.html)
-	 *
-	 * \return 0 on success, error code otherwise:
-	 * - EEXIST - `O_CREAT` and `O_EXCL` are set, and file named by \a path exists;
-	 * - ENOENT - `O_CREAT` is not set and \a path does not name an existing file or `O_CREAT` is set and prefix
-	 * component of \a path does not name an existing directory;
-	 * - converted error codes returned by ufat_dir_find_path();
-	 * - converted error codes returned by ufat_dir_mkfile();
-	 * - converted error codes returned by ufat_file_truncate();
-	 * - converted error codes returned by ufat_open_file();
-	 */
-
-	int open(const char* path, int flags);
-
-	/**
 	 * \brief Reads data from file.
 	 *
 	 * Similar to [read()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/read.html)
-	 *
-	 * \warning This function must not be called from interrupt context!
 	 *
 	 * \pre \a buffer is valid.
 	 *
@@ -191,8 +152,7 @@ public:
 	 *
 	 * \return pair with return code (0 on success, error code otherwise) and number of read bytes (valid even when
 	 * error code is returned); error codes:
-	 * - EBADF - file is not opened for reading;
-	 * - converted error codes returned by ufat_file_read();
+	 * - error codes returned by File::read();
 	 */
 
 	std::pair<int, size_t> read(void* buffer, size_t size) override;
@@ -202,11 +162,10 @@ public:
 	 *
 	 * Similar to [rewind()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/rewind.html)
 	 *
-	 * \warning This function must not be called from interrupt context!
-	 *
 	 * \pre %File is opened.
 	 *
-	 * \return 0 on success, error code otherwise
+	 * \return 0 on success, error code otherwise:
+	 * - error codes returned by File::rewind();
 	 */
 
 	int rewind() override;
@@ -216,8 +175,6 @@ public:
 	 *
 	 * Similar to [lseek()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/lseek.html)
 	 *
-	 * \warning This function must not be called from interrupt context!
-	 *
 	 * \pre %File is opened.
 	 *
 	 * \param [in] whence selects the mode of operation: `Whence::beginning` will set file offset to \a offset,
@@ -226,8 +183,7 @@ public:
 	 * \param [in] offset is the value of offset, bytes
 	 *
 	 * \return pair with return code (0 on success, error code otherwise) and current file offset, bytes; error codes:
-	 * - EINVAL - resulting file offset would be negative;
-	 * - converted error codes returned by ufat_file_advance();
+	 * - error codes returned by File::seek();
 	 */
 
 	std::pair<int, off_t> seek(Whence whence, off_t offset) override;
@@ -237,13 +193,10 @@ public:
 	 *
 	 * Similar to [fsync()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/fsync.html)
 	 *
-	 * \warning This function must not be called from interrupt context!
-	 *
 	 * \pre %File is opened.
 	 *
 	 * \return 0 on success, error code otherwise:
-	 * - converted error codes returned by ufat_sync();
-	 * - error codes returned by BlockDevice::synchronize();
+	 * - error codes returned by File::synchronize();
 	 */
 
 	int synchronize() override;
@@ -265,8 +218,6 @@ public:
 	 *
 	 * Similar to [write()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/write.html)
 	 *
-	 * \warning This function must not be called from interrupt context!
-	 *
 	 * \pre \a buffer is valid.
 	 *
 	 * \param [in] buffer is the buffer with data that will be written, must be valid
@@ -274,40 +225,33 @@ public:
 	 *
 	 * \return pair with return code (0 on success, error code otherwise) and number of written bytes (valid even when
 	 * error code is returned); error codes:
-	 * - EBADF - file is not opened for writing;
-	 * - converted error codes returned by ufat_file_advance();
-	 * - converted error codes returned by ufat_file_write();
+	 * - error codes returned by File::write();
 	 */
 
 	std::pair<int, size_t> write(const void* buffer, size_t size) override;
 
 private:
 
-	/// uFAT file
-	ufat_file file_;
+	/**
+	 * \return true if file is opened, false otherwise
+	 */
 
-	/// reference to owner file system
-	FatFileSystem& fileSystem_;
+	bool isOpened() const
+	{
+		return file_ != nullptr && mountPointSharedPointer_ == true;
+	}
 
-	/// current position in file
-	off_t position_;
+	/// unique_ptr to file
+	std::unique_ptr<File> file_;
 
-	/// true if file is opened in append mode, false otherwise
-	bool appendMode_;
-
-	/// true if file needs to be synchronized, false otherwise
-	bool dirty_;
-
-	/// true if file is opened, false otherwise
-	bool opened_;
-
-	/// true if file is opened for reading, false otherwise
-	bool readable_;
-
-	/// true if file is opened for writing, false otherwise
-	bool writable_;
+	/// shared pointer to mount point
+	MountPointSharedPointer mountPointSharedPointer_;
 };
+
+}	// namespace internal
 
 }	// namespace distortos
 
-#endif	// SOURCE_FILESYSTEM_FAT_FATFILE_HPP_
+#endif	// DISTORTOS_FILESYSTEMS_STANDARD_LIBRARY_INTEGRATION_ENABLE == 1
+
+#endif	// INCLUDE_DISTORTOS_INTERNAL_FILESYSTEM_VIRTUALFILE_HPP_
