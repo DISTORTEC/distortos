@@ -113,12 +113,16 @@ int VirtualFileSystem::makeDirectory(const char* const path, const mode_t mode)
 	estd::ContiguousRange<const char> nameRange;
 	const char* suffix;
 	std::tie(nameRange, suffix) = splitPath(path);
-	if (*suffix == '\0')	// there is just the mount point name, so no directory can be created anyway
-		return ENOENT;
-
 	const auto mountPointSharedPointer = getMountPointSharedPointer(nameRange.begin(), nameRange.size());
 	if (mountPointSharedPointer == false)
-		return ENOENT;
+	{
+		if (*suffix == '\0')
+			return EROFS;	// request to create directory in virtual file system, which is read-only
+
+		return ENOENT;	// name was not matched to an existing mount point
+	}
+	if (*suffix == '\0')
+		return EEXIST;	// path consists of just the mount point name and it was matched to an existing mount point
 
 	return mountPointSharedPointer->getFileSystem().makeDirectory(suffix, mode);
 }

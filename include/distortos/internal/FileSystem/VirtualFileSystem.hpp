@@ -103,7 +103,9 @@ public:
 	 * \param [in] mode is the value of permission bits of the created directory
 	 *
 	 * \return 0 on success, error code otherwise:
+	 * - EEXIST - named file exists;
 	 * - ENOENT - prefix component of \a path does not name an existing directory;
+	 * - EROFS - parent directory resides on a read-only file system;
 	 * - error codes returned by FileSystem::makeDirectory();
 	 */
 
