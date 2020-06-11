@@ -3,7 +3,7 @@
  * \brief Standard [sys/statvfs.h](http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/sys_statvfs.h.html), which
  * is not provided by newlib.
  *
- * \author Copyright (C) 2018 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2018-2020 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -88,6 +88,27 @@ struct statvfs
 	/** maximum filename length */
 	unsigned long f_namemax;
 };
+
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wshadow"
+
+/**
+ * \brief Returns status of file system.
+ *
+ * See [statvfs()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/statvfs.html)
+ *
+ * \pre \a path is valid.
+ *
+ * \param [in] path is a path to file or directory contained on file system which should be accessed
+ * \param [out] status is a reference to `statvfs` struct into which status of file system will be written
+ *
+ * \return 0 on success, -1 otherwise; error codes (via errno):
+ * - error codes returned by VirtualFileSystem::getStatus();
+ */
+
+int statvfs(const char* path, struct statvfs* status);
+
+#pragma GCC diagnostic pop
 
 #ifdef __cplusplus
 }	/* extern "C" */
