@@ -110,6 +110,8 @@ size.
 files directly into current directory. Please note that recommended scenario is to generate board files into a dedicated
 subdirectory, as this way the files are easier to maintain and also because there is lower chance of generator
 overwriting some user-created files.
+- Fixed broken logic in loop inside `distortos::chip::configureVoltageScaling()` for *STM32L0*, which also caused a
+warning for *GCC 9* and *GCC 10*.
 
 ### Removed
 
