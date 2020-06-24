@@ -40,6 +40,7 @@ template<size_t index, size_t size, bool reverse = {}, typename Ret = TypeFromSi
 		typename T, size_t arraySize>
 inline static Ret extractBitField(const std::array<T, arraySize>& array)
 {
+	static_assert(size > 0, "`size` must not be 0!");
 	static_assert(size <= sizeof(Ret) * CHAR_BIT, "`Ret` is too small to fit `size` bits!");
 	static_assert(index + size <= sizeof(array) * CHAR_BIT, "Bit field is out of `array` bounds!");
 
@@ -60,8 +61,7 @@ inline static Ret extractBitField(const std::array<T, arraySize>& array)
 			value |= element >> -shift;
 	}
 
-	if (size < sizeof(Ret) * CHAR_BIT)
-		value &= (Ret{1} << size) - 1;
+	value &= std::numeric_limits<Ret>::max() >> (sizeof(Ret) * CHAR_BIT - size);
 	return value;
 }
 
