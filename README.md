@@ -75,7 +75,7 @@ Generating board
 
 To generate a board you need:
 - [Python](https://www.python.org/) (version 2.7, version 3.6 or later);
-- [Jinja2](http://jinja.pocoo.org/) template engine for *Python* (version 2.10 or later);
+- [Jinja2](https://palletsprojects.com/p/jinja/) template engine for *Python* (version 2.10 or later);
 - [ruamel.yaml](https://bitbucket.org/ruamel/yaml) YAML loader/dumper package for *Python*;
 
 Both *Jinja2* and *ruamel.yaml* can be easily installed with `pip install jinja2 && pip install ruamel.yaml` (or
