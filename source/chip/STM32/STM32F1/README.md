@@ -1,7 +1,7 @@
 STM32F1
 =======
 
-This folder covers [STM32F1](http://www.st.com/stm32f1) devices as described in following places:
+This folder covers [STM32F1](https://www.st.com/stm32f1) devices as described in following places:
 - RM0041 reference manual (STM32F100), Revision 4, 2011-07-21;
 - RM0008 reference manual (STM32F101, STM32F102, STM32F103, STM32F105 and STM32F107), Revision 16, 2015-11-26;
 - PM0063 programming manual (STM32F100 value line), Revision 2, 2010-10-12;

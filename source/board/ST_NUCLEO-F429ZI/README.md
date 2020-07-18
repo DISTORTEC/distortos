@@ -1,7 +1,7 @@
 NUCLEO-F429ZI
 =============
 
-This folder provides support for [NUCLEO-F429ZI](http://www.st.com/en/evaluation-tools/nucleo-f429zi.html) board. This
+This folder provides support for [NUCLEO-F429ZI](https://www.st.com/en/evaluation-tools/nucleo-f429zi.html) board. This
 board features a *STM32F429ZI* chip in *LQFP144* package:
 - *ARM Cortex-M4* (*ARMv7-M*) core;
 - single precision FPU;

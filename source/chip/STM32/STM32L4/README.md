@@ -1,7 +1,7 @@
 STM32L4
 =======
 
-This folder covers [STM32L4](http://www.st.com/stm32l4) devices as described in following places:
+This folder covers [STM32L4](https://www.st.com/stm32l4) devices as described in following places:
 - RM0392 reference manual (STM32L471), Revision 2, 2016-05-04;
 - RM0351 reference manual (STM32L475, STM32L476, STM32L486, STM32L496 and STM32L4A6), Revision 5, 2017-02-27;
 - RM0394 reference manual (STM32L43, STM32L44, STM32L45 and STM32L46), Revision 3, 2017-04-20;

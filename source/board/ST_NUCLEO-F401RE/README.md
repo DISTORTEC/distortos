@@ -1,7 +1,7 @@
 NUCLEO-F401RE
 =============
 
-This folder provides support for [NUCLEO-F401RE](http://www.st.com/en/evaluation-tools/nucleo-f401re.html) board. This
+This folder provides support for [NUCLEO-F401RE](https://www.st.com/en/evaluation-tools/nucleo-f401re.html) board. This
 board features a *STM32F401RE* chip in *LQFP64* package:
 - *ARM Cortex-M4* (*ARMv7-M*) core;
 - single precision FPU;

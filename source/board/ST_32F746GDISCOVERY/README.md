@@ -1,7 +1,7 @@
 32F746GDISCOVERY
 ================
 
-This folder provides support for [32F746GDISCOVERY](http://www.st.com/en/evaluation-tools/32f746gdiscovery.html) board,
+This folder provides support for [32F746GDISCOVERY](https://www.st.com/en/evaluation-tools/32f746gdiscovery.html) board,
 also known as *STM32F746G-DISCO*. This board features a *STM32F746NG* chip in *BGA216* package:
 - *ARM Cortex-M7* (*ARMv7-M*) core;
 - single precision FPU;

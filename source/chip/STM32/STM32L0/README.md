@@ -1,7 +1,7 @@
 STM32L0
 =======
 
-This folder covers [STM32L0](http://www.st.com/stm32l0) devices as described in following places:
+This folder covers [STM32L0](https://www.st.com/stm32l0) devices as described in following places:
 - RM0377 reference manual (STM32L0x1), Revision 7, 2016-11-14;
 - RM0376 reference manual (STM32L0x2), Revision 4, 2016-11-14;
 - RM0367 reference manual (STM32L0x3), Revision 5, 2016-11-14;

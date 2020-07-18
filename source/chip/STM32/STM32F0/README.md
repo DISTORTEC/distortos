@@ -1,7 +1,7 @@
 STM32F0
 =======
 
-This folder covers [STM32F0](http://www.st.com/stm32f0) devices as described in following places:
+This folder covers [STM32F0](https://www.st.com/stm32f0) devices as described in following places:
 - RM0091 reference manual (STM32F0x1, STM32F0x2, STM32F0x8), Revision 8, 2015-07-29;
 - RM0360 reference manual (STM32F030x4/6/8/C, STM32F070x6/B), Revision 3, 2015-05-19;
 - STM32F030x4, STM32F030x6, STM32F030x8, STM32F030xC datasheet, Revision 2, 2015-01-15;

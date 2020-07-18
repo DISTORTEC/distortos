@@ -279,10 +279,10 @@ unrelated side effects, so use the former one only.
 
 ### Added
 
-- Support for all 81 [STM32L4](http://www.st.com/stm32l4) devices.
-- Support and test configurations for [NUCLEO-L432KC](http://www.st.com/en/evaluation-tools/nucleo-l432kc.html) and
-[NUCLEO-L476RG](http://www.st.com/en/evaluation-tools/nucleo-l476rg.html) boards with *STM32L4* chips.
-- Support and test configuration for [NUCLEO-F446RE](http://www.st.com/en/evaluation-tools/nucleo-f446re.html) board
+- Support for all 81 [STM32L4](https://www.st.com/stm32l4) devices.
+- Support and test configurations for [NUCLEO-L432KC](https://www.st.com/en/evaluation-tools/nucleo-l432kc.html) and
+[NUCLEO-L476RG](https://www.st.com/en/evaluation-tools/nucleo-l476rg.html) boards with *STM32L4* chips.
+- Support and test configuration for [NUCLEO-F446RE](https://www.st.com/en/evaluation-tools/nucleo-f446re.html) board
 with *STM32F4* chip.
 - `distortos/C-API/ConditionVariable.h` - C-API for condition variables, implemented as wrappers for
 `distortos::ConditionVariable` member functions.
@@ -383,10 +383,10 @@ preinitializers should use `BIND_LOW_LEVEL_PREINITIALIZER()` macro.
 
 ### Added
 
-- Support for whole [STM32L0](http://www.st.com/stm32l0) chip family.
-- Support and test configuration for [NUCLEO-L073RZ](http://www.st.com/en/evaluation-tools/nucleo-l073rz.html) board
+- Support for whole [STM32L0](https://www.st.com/stm32l0) chip family.
+- Support and test configuration for [NUCLEO-L073RZ](https://www.st.com/en/evaluation-tools/nucleo-l073rz.html) board
 with *STM32L0* chip.
-- Support and test configuration for [32F769IDISCOVERY](http://www.st.com/en/evaluation-tools/32f769idiscovery.html)
+- Support and test configuration for [32F769IDISCOVERY](https://www.st.com/en/evaluation-tools/32f769idiscovery.html)
 board with *STM32F7* chip.
 - Test of `Thread::generateSignal()` and `Thread::queueSignal()` returning `ENOSPC` when the amount of target thread's
 free stack is too small to request signal delivery.
@@ -504,8 +504,8 @@ finally allows global objects' initialization to be greatly simplified. This pro
 
 ### Added
 
-- Support for all 78 [STM32F7](http://www.st.com/stm32f7) chips.
-- Support and test configuration for [32F746GDISCOVERY](http://www.st.com/en/evaluation-tools/32f746gdiscovery.html)
+- Support for all 78 [STM32F7](https://www.st.com/stm32f7) chips.
+- Support and test configuration for [32F746GDISCOVERY](https://www.st.com/en/evaluation-tools/32f746gdiscovery.html)
 board with *STM32F7* chip.
 - Set `STKALIGN` bit in `SCB->CCR` for *ARM Cortex-M3 r1p1* (like *STM32F1*). Thanks to that, stack will be
 automatically aligned to 8-bytes on exception entry, which is required by *AAPCS*. This bit is set by default on all
@@ -682,11 +682,11 @@ constant expressions.
 ### Added
 
 - Support for *ARMv6-M* (*ARM Cortex-M0*, *ARM Cortex-M0+* and *ARM Cortex-M1*) architecture.
-- Support for all 72 [STM32F0](http://www.st.com/stm32f0) chips.
-- Support for all 94 [STM32F1](http://www.st.com/stm32f1) chips.
-- Support and test configurations for [NUCLEO-F091RC](http://www.st.com/web/catalog/tools/PF260944) board with *STM32F0*
-chip, [NUCLEO-F103RB](http://www.st.com/nucleoF103RB-pr) board with *STM32F1* chip and
-[NUCLEO-F429ZI](http://www.st.com/web/catalog/tools/PF262637) board with *STM32F4* chip.
+- Support for all 72 [STM32F0](https://www.st.com/stm32f0) chips.
+- Support for all 94 [STM32F1](https://www.st.com/stm32f1) chips.
+- Support and test configurations for [NUCLEO-F091RC](https://www.st.com/web/catalog/tools/PF260944) board with
+*STM32F0* chip, [NUCLEO-F103RB](https://www.st.com/nucleoF103RB-pr) board with *STM32F1* chip and
+[NUCLEO-F429ZI](https://www.st.com/web/catalog/tools/PF262637) board with *STM32F4* chip.
 - `make oldconfig` target, which can be used to update currently selected configuration asking about new options.
 - `make olddefconfig` target, which can be used to update currently selected configuration with default values of new
 options.
@@ -776,10 +776,10 @@ functor, lambda) with any number of arguments of any type.
 - Basic device drivers for input and output pin.
 - Support for *ARMv7-M* (*ARM Cortex-M3* and *ARM Cortex-M4(F)*) architecture. FPU can be used in any number of threads
 and interrupt handlers at the same time.
-- Support for [STM32F4](http://www.st.com/stm32f4) chips.
+- Support for [STM32F4](https://www.st.com/stm32f4) chips.
 - Support and test configurations for 3 boards with *STM32F4* chips:
-[32F429IDISCOVERY](http://www.st.com/web/catalog/tools/PF259090), [NUCLEO-F401RE](http://www.st.com/nucleoF401RE-pr) and
-[STM32F4DISCOVERY](http://www.st.com/web/catalog/tools/PF252419).
+[32F429IDISCOVERY](https://www.st.com/web/catalog/tools/PF259090), [NUCLEO-F401RE](https://www.st.com/nucleoF401RE-pr)
+and [STM32F4DISCOVERY](https://www.st.com/web/catalog/tools/PF252419).
 - Extensive functional tests for all implemented functionalities.
 - Configuration with mconf tool from [kconfig-frontends](http://ymorin.is-a-geek.org/projects/kconfig-frontends).
 - `README.md` file with introduction and information about configuration & building.

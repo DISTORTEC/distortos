@@ -1,7 +1,7 @@
 STM32F7
 =======
 
-This folder covers [STM32F7](http://www.st.com/stm32f7) devices as described in following places:
+This folder covers [STM32F7](https://www.st.com/stm32f7) devices as described in following places:
 - RM0431 reference manual (STM32F72 and STM32F73), Revision 1, 2017-01-17;
 - RM0385 reference manual (STM32F74 and STM32F75), Revision 6, 2016-10-05;
 - RM0410 reference manual (STM32F76 and STM32F77), Revision 2, 2016-04-24;

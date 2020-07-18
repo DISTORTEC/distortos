@@ -1,7 +1,7 @@
 32F769IDISCOVERY (STM32F769I-DISCO)
 ================
 
-This folder provides support for [32F769IDISCOVERY](http://www.st.com/en/evaluation-tools/32f769idiscovery.html) board,
+This folder provides support for [32F769IDISCOVERY](https://www.st.com/en/evaluation-tools/32f769idiscovery.html) board,
 also known as *STM32F769I-DISCO*. This board features a *STM32F769I* chip in *BGA216* package:
 - *ARM Cortex-M7* (*ARMv7-M*) core;
 - double precision FPU (fpv5-d16);

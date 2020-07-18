@@ -1,7 +1,7 @@
 NUCLEO-L432KC
 =============
 
-This folder provides support for [NUCLEO-L432KC](http://www.st.com/en/evaluation-tools/nucleo-l432kc.html) board. This
+This folder provides support for [NUCLEO-L432KC](https://www.st.com/en/evaluation-tools/nucleo-l432kc.html) board. This
 board features a *STM32L432KC* chip in *QFN32* package:
 - *ARM Cortex-M4* (*ARMv7-M*) core;
 - single precision FPU;

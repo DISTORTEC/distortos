@@ -1,7 +1,7 @@
 STM32F4
 =======
 
-This folder covers [STM32F4](http://www.st.com/stm32f4) devices as described in following places:
+This folder covers [STM32F4](https://www.st.com/stm32f4) devices as described in following places:
 - RM0368 reference manual (STM32F401xB/C and STM32F401xD/E), Revision 4, 2015-05-04;
 - RM0090 reference manual (STM32F405/415, STM32F407/417, STM32F427/437 and STM32F429/439), Revision 12, 2016-05-17;
 - RM0401 reference manual (STM32F410), Revision 2, 2015-10-26;
