@@ -3,8 +3,8 @@ distortos [![Build Status](https://travis-ci.org/DISTORTEC/distortos.svg)](https
 
 object-oriented C++ RTOS for microcontrollers
 
-[Homepage](http://distortos.org/)<br/>
-[Documentation](http://distortos.org/documentation/)<br/>
+[Homepage](https://distortos.org/)<br/>
+[Documentation](https://distortos.org/documentation/)<br/>
 [Source Code @ GitHub](https://github.com/DISTORTEC/distortos)<br/>
 [Forum](https://groups.google.com/d/forum/distortos)<br/>
 

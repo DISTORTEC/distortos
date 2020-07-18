@@ -27,7 +27,7 @@ installToolchain() {
 	local gccVersion="${1}"
 	local buildDate="${2}"
 	echo "Downloading arm-none-eabi-gcc-${gccVersion}-${buildDate}.tar.xz..."
-	wget http://distortos.org/files/travis-ci/arm-none-eabi-gcc-${gccVersion}-${buildDate}.tar.xz
+	wget https://distortos.org/files/travis-ci/arm-none-eabi-gcc-${gccVersion}-${buildDate}.tar.xz
 	echo "Extracting arm-none-eabi-gcc-${gccVersion}-${buildDate}.tar.xz..."
 	tar -xf arm-none-eabi-gcc-${gccVersion}-${buildDate}.tar.xz
 	cat > "arm-none-eabi-gcc-${gccVersion}.sh" <<- EOF
