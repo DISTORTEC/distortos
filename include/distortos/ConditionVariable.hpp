@@ -26,7 +26,7 @@ class Mutex;
 /**
  * \brief ConditionVariable is an advanced synchronization primitive
  *
- * Similar to std::condition_variable - http://en.cppreference.com/w/cpp/thread/condition_variable
+ * Similar to std::condition_variable - https://en.cppreference.com/w/cpp/thread/condition_variable
  * Similar to POSIX pthread_cond_t
  *
  * \ingroup synchronization
@@ -40,7 +40,7 @@ public:
 	 * \brief ConditionVariable's constructor
 	 *
 	 * Similar to std::condition_variable::condition_variable() -
-	 * http://en.cppreference.com/w/cpp/thread/condition_variable/condition_variable
+	 * https://en.cppreference.com/w/cpp/thread/condition_variable/condition_variable
 	 * Similar to pthread_cond_init() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_cond_init.html
 	 */
 
@@ -54,7 +54,7 @@ public:
 	 * \brief ConditionVariable's destructor
 	 *
 	 * Similar to std::condition_variable::~condition_variable() -
-	 * http://en.cppreference.com/w/cpp/thread/condition_variable/~condition_variable
+	 * https://en.cppreference.com/w/cpp/thread/condition_variable/~condition_variable
 	 * Similar to pthread_cond_destroy() -
 	 * http://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_cond_destroy.html
 	 *
@@ -69,7 +69,7 @@ public:
 	 * \brief Notifies all waiting threads.
 	 *
 	 * Similar to std::condition_variable::notify_all() -
-	 * http://en.cppreference.com/w/cpp/thread/condition_variable/notify_all
+	 * https://en.cppreference.com/w/cpp/thread/condition_variable/notify_all
 	 * Similar to pthread_cond_broadcast() -
 	 * http://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_cond_signal.html
 	 *
@@ -83,7 +83,7 @@ public:
 	 * \brief Notifies one waiting thread.
 	 *
 	 * Similar to std::condition_variable::notify_one() -
-	 * http://en.cppreference.com/w/cpp/thread/condition_variable/notify_one
+	 * https://en.cppreference.com/w/cpp/thread/condition_variable/notify_one
 	 * Similar to pthread_cond_signal() -
 	 * http://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_cond_signal.html
 	 *
@@ -96,7 +96,7 @@ public:
 	/**
 	 * \brief Waits for notification.
 	 *
-	 * Similar to std::condition_variable::wait() - http://en.cppreference.com/w/cpp/thread/condition_variable/wait
+	 * Similar to std::condition_variable::wait() - https://en.cppreference.com/w/cpp/thread/condition_variable/wait
 	 * Similar to pthread_cond_wait() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_cond_wait.html
 	 *
 	 * Atomically releases supplied mutex and blocks current thread until the condition variable is notified. The thread
@@ -116,7 +116,7 @@ public:
 	/**
 	 * \brief Waits for predicate to become true.
 	 *
-	 * Similar to std::condition_variable::wait() - http://en.cppreference.com/w/cpp/thread/condition_variable/wait
+	 * Similar to std::condition_variable::wait() - https://en.cppreference.com/w/cpp/thread/condition_variable/wait
 	 * Similar to pthread_cond_wait() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_cond_wait.html
 	 *
 	 * Overload for wait() which also checks the predicate. This function will return only if the predicate is true.
@@ -139,7 +139,7 @@ public:
 	 * \brief Waits for notification for given duration of time.
 	 *
 	 * Similar to std::condition_variable::wait_for() -
-	 * http://en.cppreference.com/w/cpp/thread/condition_variable/wait_for
+	 * https://en.cppreference.com/w/cpp/thread/condition_variable/wait_for
 	 * Similar to pthread_cond_timedwait() -
 	 * http://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_cond_timedwait.html#
 	 *
@@ -163,7 +163,7 @@ public:
 	 * \brief Waits for notification for given duration of time.
 	 *
 	 * Similar to std::condition_variable::wait_for() -
-	 * http://en.cppreference.com/w/cpp/thread/condition_variable/wait_for
+	 * https://en.cppreference.com/w/cpp/thread/condition_variable/wait_for
 	 * Similar to pthread_cond_timedwait() -
 	 * http://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_cond_timedwait.html#
 	 *
@@ -192,7 +192,7 @@ public:
 	 * \brief Waits for predicate to become true for given duration of time.
 	 *
 	 * Similar to std::condition_variable::wait_for() -
-	 * http://en.cppreference.com/w/cpp/thread/condition_variable/wait_for
+	 * https://en.cppreference.com/w/cpp/thread/condition_variable/wait_for
 	 * Similar to pthread_cond_timedwait() -
 	 * http://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_cond_timedwait.html#
 	 *
@@ -224,7 +224,7 @@ public:
 	 * \brief Waits for notification until given time point.
 	 *
 	 * Similar to std::condition_variable::wait_until() -
-	 * http://en.cppreference.com/w/cpp/thread/condition_variable/wait_until
+	 * https://en.cppreference.com/w/cpp/thread/condition_variable/wait_until
 	 * Similar to pthread_cond_timedwait() -
 	 * http://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_cond_timedwait.html#
 	 *
@@ -248,7 +248,7 @@ public:
 	 * \brief Waits for notification until given time point.
 	 *
 	 * Similar to std::condition_variable::wait_until() -
-	 * http://en.cppreference.com/w/cpp/thread/condition_variable/wait_until
+	 * https://en.cppreference.com/w/cpp/thread/condition_variable/wait_until
 	 * Similar to pthread_cond_timedwait() -
 	 * http://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_cond_timedwait.html#
 	 *
@@ -276,7 +276,7 @@ public:
 	 * \brief Waits for predicate to become true until given time point.
 	 *
 	 * Similar to std::condition_variable::wait_until() -
-	 * http://en.cppreference.com/w/cpp/thread/condition_variable/wait_until
+	 * https://en.cppreference.com/w/cpp/thread/condition_variable/wait_until
 	 * Similar to pthread_cond_timedwait() -
 	 * http://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_cond_timedwait.html#
 	 *

@@ -404,11 +404,11 @@ namespace trompeloeil
      * Minor changes to capitalize template parameter `bool B` has been made.
      *
      * See also:
-     * http://en.cppreference.com/w/cpp/types/conditional
-     * http://en.cppreference.com/w/cpp/types/decay
-     * http://en.cppreference.com/w/cpp/types/enable_if
-     * http://en.cppreference.com/w/cpp/types/remove_pointer
-     * http://en.cppreference.com/w/cpp/types/remove_reference
+     * https://en.cppreference.com/w/cpp/types/conditional
+     * https://en.cppreference.com/w/cpp/types/decay
+     * https://en.cppreference.com/w/cpp/types/enable_if
+     * https://en.cppreference.com/w/cpp/types/remove_pointer
+     * https://en.cppreference.com/w/cpp/types/remove_reference
      * Accessed: 17 May 2017
      */
     template <bool B, typename T, typename F>
@@ -436,7 +436,7 @@ namespace trompeloeil
      * Accessed: 2 November 2017
      *
      * See also:
-     * http://en.cppreference.com/w/cpp/utility/exchange
+     * https://en.cppreference.com/w/cpp/utility/exchange
      * Accessed: 17 May 2017
      */
     template<class T, class U = T>
@@ -459,7 +459,7 @@ namespace trompeloeil
      * Accessed: 2 November 2017
      *
      * See also:
-     * http://en.cppreference.com/w/cpp/utility/integer_sequence
+     * https://en.cppreference.com/w/cpp/utility/integer_sequence
      * Accessed: 17 May 2017
      */
     template <typename T, T... I>

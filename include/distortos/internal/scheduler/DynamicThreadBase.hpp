@@ -125,7 +125,7 @@ public:
 	/**
 	 * \brief Detaches the thread.
 	 *
-	 * Similar to std::thread::detach() - http://en.cppreference.com/w/cpp/thread/thread/detach
+	 * Similar to std::thread::detach() - https://en.cppreference.com/w/cpp/thread/thread/detach
 	 * Similar to POSIX pthread_detach() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_detach.html
 	 *
 	 * Detaches the executing thread from the Thread object, allowing execution to continue independently. All resources

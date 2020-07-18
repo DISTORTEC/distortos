@@ -20,7 +20,7 @@ namespace distortos
 /**
  * \brief Mutex is the basic synchronization primitive
  *
- * Similar to std::mutex - http://en.cppreference.com/w/cpp/thread/mutex
+ * Similar to std::mutex - https://en.cppreference.com/w/cpp/thread/mutex
  * Similar to POSIX pthread_mutex_t -
  * http://pubs.opengroup.org/onlinepubs/9699919799/functions/V2_chap02.html#tag_15_09 -> 2.9.3 Thread Mutexes
  *
@@ -56,7 +56,7 @@ public:
 	/**
 	 * \brief Mutex's constructor
 	 *
-	 * Similar to std::mutex::mutex() - http://en.cppreference.com/w/cpp/thread/mutex/mutex
+	 * Similar to std::mutex::mutex() - https://en.cppreference.com/w/cpp/thread/mutex/mutex
 	 * Similar to pthread_mutex_init() -
 	 * http://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_mutex_init.html
 	 *
@@ -76,7 +76,7 @@ public:
 	/**
 	 * \brief Mutex's constructor, overload for "normal" type
 	 *
-	 * Similar to std::mutex::mutex() - http://en.cppreference.com/w/cpp/thread/mutex/mutex
+	 * Similar to std::mutex::mutex() - https://en.cppreference.com/w/cpp/thread/mutex/mutex
 	 * Similar to pthread_mutex_init() -
 	 * http://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_mutex_init.html
 	 *
@@ -94,7 +94,7 @@ public:
 	/**
 	 * \brief Mutex's destructor
 	 *
-	 * Similar to std::mutex::~mutex() - http://en.cppreference.com/w/cpp/thread/mutex/~mutex
+	 * Similar to std::mutex::~mutex() - https://en.cppreference.com/w/cpp/thread/mutex/~mutex
 	 * Similar to pthread_mutex_destroy() -
 	 * http://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_mutex_destroy.html
 	 *
@@ -108,7 +108,7 @@ public:
 	/**
 	 * \brief Locks the mutex.
 	 *
-	 * Similar to std::mutex::lock() - http://en.cppreference.com/w/cpp/thread/mutex/lock
+	 * Similar to std::mutex::lock() - https://en.cppreference.com/w/cpp/thread/mutex/lock
 	 * Similar to pthread_mutex_lock() -
 	 * http://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_mutex_lock.html#
 	 *
@@ -131,7 +131,7 @@ public:
 	/**
 	 * \brief Tries to lock the mutex.
 	 *
-	 * Similar to std::mutex::try_lock() - http://en.cppreference.com/w/cpp/thread/mutex/try_lock
+	 * Similar to std::mutex::try_lock() - https://en.cppreference.com/w/cpp/thread/mutex/try_lock
 	 * Similar to pthread_mutex_trylock() -
 	 * http://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_mutex_lock.html#
 	 *
@@ -153,7 +153,7 @@ public:
 	/**
 	 * \brief Tries to lock the mutex for given duration of time.
 	 *
-	 * Similar to std::timed_mutex::try_lock_for() - http://en.cppreference.com/w/cpp/thread/timed_mutex/try_lock_for
+	 * Similar to std::timed_mutex::try_lock_for() - https://en.cppreference.com/w/cpp/thread/timed_mutex/try_lock_for
 	 * Similar to pthread_mutex_timedlock() -
 	 * http://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_mutex_timedlock.html#
 	 *
@@ -210,7 +210,7 @@ public:
 	 * \brief Tries to lock the mutex until given time point.
 	 *
 	 * Similar to std::timed_mutex::try_lock_until() -
-	 * http://en.cppreference.com/w/cpp/thread/timed_mutex/try_lock_until
+	 * https://en.cppreference.com/w/cpp/thread/timed_mutex/try_lock_until
 	 * Similar to pthread_mutex_timedlock() -
 	 * http://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_mutex_timedlock.html#
 	 *
@@ -266,7 +266,7 @@ public:
 	 * \brief Tries to lock the mutex.
 	 *
 	 * Wrapper for tryLock() which implements
-	 * [std::mutex::try_lock()](http://en.cppreference.com/w/cpp/thread/mutex/try_lock) API.
+	 * [std::mutex::try_lock()](https://en.cppreference.com/w/cpp/thread/mutex/try_lock) API.
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
@@ -282,7 +282,7 @@ public:
 	 * \brief Tries to lock the mutex for given duration of time.
 	 *
 	 * Wrapper for tryLockFor() which implements
-	 * [std::timed_mutex::try_lock_for()](http://en.cppreference.com/w/cpp/thread/timed_mutex/try_lock_for) API.
+	 * [std::timed_mutex::try_lock_for()](https://en.cppreference.com/w/cpp/thread/timed_mutex/try_lock_for) API.
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
@@ -304,7 +304,7 @@ public:
 	 * \brief Tries to lock the mutex until given time point.
 	 *
 	 * Wrapper for tryLockUntil() which implements
-	 * [std::timed_mutex::try_lock_until()](http://en.cppreference.com/w/cpp/thread/timed_mutex/try_lock_until) API.
+	 * [std::timed_mutex::try_lock_until()](https://en.cppreference.com/w/cpp/thread/timed_mutex/try_lock_until) API.
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
@@ -324,7 +324,7 @@ public:
 	/**
 	 * \brief Unlocks the mutex.
 	 *
-	 * Similar to std::mutex::unlock() - http://en.cppreference.com/w/cpp/thread/mutex/unlock
+	 * Similar to std::mutex::unlock() - https://en.cppreference.com/w/cpp/thread/mutex/unlock
 	 * Similar to pthread_mutex_unlock() -
 	 * http://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_mutex_lock.html#
 	 *

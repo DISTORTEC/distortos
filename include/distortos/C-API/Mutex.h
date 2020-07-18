@@ -33,7 +33,7 @@ extern "C"
 /**
  * \brief C-API equivalent of distortos::Mutex
  *
- * Similar to std::mutex - http://en.cppreference.com/w/cpp/thread/mutex
+ * Similar to std::mutex - https://en.cppreference.com/w/cpp/thread/mutex
  * Similar to POSIX pthread_mutex_t -
  * http://pubs.opengroup.org/onlinepubs/9699919799/functions/V2_chap02.html#tag_15_09 -> 2.9.3 Thread Mutexes
  *
@@ -218,7 +218,7 @@ enum
 /**
  * \brief C-API equivalent of distortos::Mutex's constructor
  *
- * Similar to std::mutex::mutex() - http://en.cppreference.com/w/cpp/thread/mutex/mutex
+ * Similar to std::mutex::mutex() - https://en.cppreference.com/w/cpp/thread/mutex/mutex
  * Similar to pthread_mutex_init() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_mutex_init.html
  *
  * \sa distortos::Mutex::Mutex()
@@ -240,7 +240,7 @@ int distortos_Mutex_construct_3(struct distortos_Mutex* mutex, uint8_t type, uin
 /**
  * \brief C-API equivalent of distortos::Mutex's constructor, type = distortos_Mutex_Type_normal
  *
- * Similar to std::mutex::mutex() - http://en.cppreference.com/w/cpp/thread/mutex/mutex
+ * Similar to std::mutex::mutex() - https://en.cppreference.com/w/cpp/thread/mutex/mutex
  * Similar to pthread_mutex_init() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_mutex_init.html
  *
  * \sa distortos::Mutex::Mutex()
@@ -264,7 +264,7 @@ static inline int distortos_Mutex_construct_2pc(struct distortos_Mutex* const mu
 /**
  * \brief C-API equivalent of distortos::Mutex's constructor, priorityCeiling = 0
  *
- * Similar to std::mutex::mutex() - http://en.cppreference.com/w/cpp/thread/mutex/mutex
+ * Similar to std::mutex::mutex() - https://en.cppreference.com/w/cpp/thread/mutex/mutex
  * Similar to pthread_mutex_init() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_mutex_init.html
  *
  * \sa distortos::Mutex::Mutex()
@@ -288,7 +288,7 @@ static inline int distortos_Mutex_construct_2tp(struct distortos_Mutex* const mu
 /**
  * \brief C-API equivalent of distortos::Mutex's constructor, type = distortos_Mutex_Type_normal, priorityCeiling = 0
  *
- * Similar to std::mutex::mutex() - http://en.cppreference.com/w/cpp/thread/mutex/mutex
+ * Similar to std::mutex::mutex() - https://en.cppreference.com/w/cpp/thread/mutex/mutex
  * Similar to pthread_mutex_init() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_mutex_init.html
  *
  * \sa distortos::Mutex::Mutex()
@@ -310,7 +310,7 @@ static inline int distortos_Mutex_construct_1p(struct distortos_Mutex* const mut
  * \brief C-API equivalent of distortos::Mutex's constructor, protocol = distortos_Mutex_Protocol_none,
  * priorityCeiling = 0
  *
- * Similar to std::mutex::mutex() - http://en.cppreference.com/w/cpp/thread/mutex/mutex
+ * Similar to std::mutex::mutex() - https://en.cppreference.com/w/cpp/thread/mutex/mutex
  * Similar to pthread_mutex_init() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_mutex_init.html
  *
  * \sa distortos::Mutex::Mutex()
@@ -332,7 +332,7 @@ static inline int distortos_Mutex_construct_1t(struct distortos_Mutex* const mut
  * \brief C-API equivalent of distortos::Mutex's constructor, type = distortos_Mutex_Type_normal,
  * protocol = distortos_Mutex_Protocol_none, priorityCeiling = 0
  *
- * Similar to std::mutex::mutex() - http://en.cppreference.com/w/cpp/thread/mutex/mutex
+ * Similar to std::mutex::mutex() - https://en.cppreference.com/w/cpp/thread/mutex/mutex
  * Similar to pthread_mutex_init() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_mutex_init.html
  *
  * \sa distortos::Mutex::Mutex()
@@ -351,7 +351,7 @@ static inline int distortos_Mutex_construct(struct distortos_Mutex* const mutex)
 /**
  * \brief C-API equivalent of distortos::Mutex's destructor
  *
- * Similar to std::mutex::~mutex() - http://en.cppreference.com/w/cpp/thread/mutex/~mutex
+ * Similar to std::mutex::~mutex() - https://en.cppreference.com/w/cpp/thread/mutex/~mutex
  * Similar to pthread_mutex_destroy() -
  * http://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_mutex_destroy.html
  *
@@ -368,7 +368,7 @@ int distortos_Mutex_destruct(struct distortos_Mutex* mutex);
 /**
  * \brief C-API equivalent of distortos::Mutex::lock()
  *
- * Similar to std::mutex::lock() - http://en.cppreference.com/w/cpp/thread/mutex/lock
+ * Similar to std::mutex::lock() - https://en.cppreference.com/w/cpp/thread/mutex/lock
  * Similar to pthread_mutex_lock() -
  * http://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_mutex_lock.html#
  *
@@ -392,7 +392,7 @@ int distortos_Mutex_lock(struct distortos_Mutex* mutex);
 /**
  * \brief C-API equivalent of distortos::Mutex::tryLock()
  *
- * Similar to std::mutex::try_lock() - http://en.cppreference.com/w/cpp/thread/mutex/try_lock
+ * Similar to std::mutex::try_lock() - https://en.cppreference.com/w/cpp/thread/mutex/try_lock
  * Similar to pthread_mutex_trylock() -
  * http://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_mutex_lock.html#
  *
@@ -416,7 +416,7 @@ int distortos_Mutex_tryLock(struct distortos_Mutex* mutex);
 /**
  * \brief C-API equivalent of distortos::Mutex::tryLockFor()
  *
- * Similar to std::timed_mutex::try_lock_for() - http://en.cppreference.com/w/cpp/thread/timed_mutex/try_lock_for
+ * Similar to std::timed_mutex::try_lock_for() - https://en.cppreference.com/w/cpp/thread/timed_mutex/try_lock_for
  * Similar to pthread_mutex_timedlock() -
  * http://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_mutex_timedlock.html#
  *
@@ -444,7 +444,7 @@ int distortos_Mutex_tryLockFor(struct distortos_Mutex* mutex, int64_t duration);
  * \brief C-API equivalent of distortos::Mutex::tryLockUntil()
  *
  * Similar to std::timed_mutex::try_lock_until() -
- * http://en.cppreference.com/w/cpp/thread/timed_mutex/try_lock_until
+ * https://en.cppreference.com/w/cpp/thread/timed_mutex/try_lock_until
  * Similar to pthread_mutex_timedlock() -
  * http://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_mutex_timedlock.html#
  *
@@ -471,7 +471,7 @@ int distortos_Mutex_tryLockUntil(struct distortos_Mutex* mutex, int64_t timePoin
 /**
  * \brief C-API equivalent of distortos::Mutex::unlock()
  *
- * Similar to std::mutex::unlock() - http://en.cppreference.com/w/cpp/thread/mutex/unlock
+ * Similar to std::mutex::unlock() - https://en.cppreference.com/w/cpp/thread/mutex/unlock
  * Similar to pthread_mutex_unlock() -
  * http://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_mutex_lock.html#
  *

@@ -149,9 +149,9 @@ and `distortos::Directory`.
 implement interface of `distortos::FileSystem`, `distortos::File` and `distortos::Directory` classes.
 - Added configuration of *STM32F7's* *PLLI2S*, *PLLSAI* and *PLL48CLK* to *CMake*.
 - Added `distortos::Mutex::try_lock()`, `distortos::Mutex::try_lock_for()` and `distortos::Mutex::try_lock_until()`
-wrappers, which implement APIs of [`std::mutex::try_lock()`](http://en.cppreference.com/w/cpp/thread/mutex/try_lock),
-[`std::timed_mutex::try_lock_for()`](http://en.cppreference.com/w/cpp/thread/timed_mutex/try_lock_for) and
-[`std::timed_mutex::try_lock_until()`](http://en.cppreference.com/w/cpp/thread/timed_mutex/try_lock_until) respectively.
+wrappers, which implement APIs of [`std::mutex::try_lock()`](https://en.cppreference.com/w/cpp/thread/mutex/try_lock),
+[`std::timed_mutex::try_lock_for()`](https://en.cppreference.com/w/cpp/thread/timed_mutex/try_lock_for) and
+[`std::timed_mutex::try_lock_until()`](https://en.cppreference.com/w/cpp/thread/timed_mutex/try_lock_until) respectively.
 This allows using `distortos::Mutex` with all mutex helpers from
 [`<mutex>` header](https://en.cppreference.com/w/cpp/header/mutex):
 [`std::lock_guard`](https://en.cppreference.com/w/cpp/thread/lock_guard),

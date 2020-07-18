@@ -139,7 +139,7 @@ public:
 	/**
 	 * \brief Waits for thread termination.
 	 *
-	 * Similar to std::thread::join() - http://en.cppreference.com/w/cpp/thread/thread/join
+	 * Similar to std::thread::join() - https://en.cppreference.com/w/cpp/thread/thread/join
 	 * Similar to POSIX pthread_join() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_join.html
 	 *
 	 * Blocks current thread until this thread finishes its execution. The results of multiple simultaneous calls to

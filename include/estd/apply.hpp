@@ -48,7 +48,7 @@ constexpr auto apply(Function&& function, Tuple&& tuple, estd::IndexSequence<Ind
 /**
  * \brief Invokes callable object with a tuple of arguments.
  *
- * Implementation inspired by http://en.cppreference.com/w/cpp/experimental/apply
+ * Implementation inspired by https://en.cppreference.com/w/cpp/experimental/apply
  *
  * \tparam Function is the function object that will be invoked
  * \tparam Tuple is the type of tuple of arguments

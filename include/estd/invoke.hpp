@@ -124,7 +124,7 @@ inline auto invoke(DataMember dataMember, Pointer&& pointer) -> decltype((*std::
 /**
  * \brief Invokes callable object in an appropriate way.
  *
- * Implementation inspired by http://en.cppreference.com/w/cpp/utility/functional/invoke
+ * Implementation inspired by https://en.cppreference.com/w/cpp/utility/functional/invoke
  *
  * \tparam Function is the function object that will be executed
  * \tparam Args are the arguments for \a Function

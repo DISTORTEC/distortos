@@ -20,7 +20,7 @@ namespace estd
 /**
  * \brief Compile-time sequence of integers
  *
- * Similar to std::integer_sequence from C++14 - http://en.cppreference.com/w/cpp/utility/integer_sequence
+ * Similar to std::integer_sequence from C++14 - https://en.cppreference.com/w/cpp/utility/integer_sequence
  *
  * \tparam T is an integer type to use for the elements of the sequence
  * \tparam Integers is a non-type parameter pack representing the sequence
@@ -47,7 +47,7 @@ public:
 /**
  * \brief Compile-time sequence of std::size_t elements
  *
- * Similar to std::index_sequence from C++14 - http://en.cppreference.com/w/cpp/utility/integer_sequence
+ * Similar to std::index_sequence from C++14 - https://en.cppreference.com/w/cpp/utility/integer_sequence
  *
  * \tparam Indexes is a non-type parameter pack representing the sequence
  */
@@ -185,7 +185,7 @@ struct MakeIntegerSequenceImplementationWrapper :
 /**
  * \brief Generator of IntegerSequence types
  *
- * Similar to std::make_integer_sequence from C++14 - http://en.cppreference.com/w/cpp/utility/integer_sequence
+ * Similar to std::make_integer_sequence from C++14 - https://en.cppreference.com/w/cpp/utility/integer_sequence
  *
  * Whole implementation is based on code from http://stackoverflow.com/a/20101039/157344
  *
@@ -201,7 +201,7 @@ using MakeIntegerSequence = typename internal::MakeIntegerSequenceImplementation
 /**
  * \brief Generator of IndexSequence types
  *
- * Similar to std::make_index_sequence from C++14 - http://en.cppreference.com/w/cpp/utility/integer_sequence
+ * Similar to std::make_index_sequence from C++14 - https://en.cppreference.com/w/cpp/utility/integer_sequence
  *
  * Generates IndexSequence<0, 1, ..., N - 1> type.
  *
@@ -214,7 +214,7 @@ using MakeIndexSequence = MakeIntegerSequence<std::size_t, N>;
 /**
  * \brief Generator of IndexSequence types
  *
- * Similar to std::index_sequence_for from C++14 - http://en.cppreference.com/w/cpp/utility/integer_sequence
+ * Similar to std::index_sequence_for from C++14 - https://en.cppreference.com/w/cpp/utility/integer_sequence
  *
  * Generates IndexSequence<0, 1, ..., sizeof...(T) - 1> type.
  *

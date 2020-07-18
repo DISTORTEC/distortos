@@ -29,7 +29,7 @@ class ThreadControlBlock;
 /**
  * \brief ThreadIdentifier class is an identifier of thread
  *
- * Similar to std::thread::id - http://en.cppreference.com/w/cpp/thread/thread/id
+ * Similar to std::thread::id - https://en.cppreference.com/w/cpp/thread/thread/id
  * Similar to POSIX pthread_t - http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/sys_types.h.html
  *
  * It is true that the address of a thread object (`DynamicThread` or `StaticThread`) can be used as an identifier in
@@ -56,7 +56,7 @@ public:
 	/**
 	 * \brief ThreadIdentifier's constructor
 	 *
-	 * Similar to std::thread::id::id() - http://en.cppreference.com/w/cpp/thread/thread/id/id
+	 * Similar to std::thread::id::id() - https://en.cppreference.com/w/cpp/thread/thread/id/id
 	 *
 	 * Default-constructed identifier does not represent valid thread.
 	 */
@@ -104,7 +104,7 @@ private:
  * \brief ThreadIdentifier's equality comparison operator
  *
  * Similar to std::operator==(std::thread::id, std::thread::id) -
- * http://en.cppreference.com/w/cpp/thread/thread/id/operator_cmp
+ * https://en.cppreference.com/w/cpp/thread/thread/id/operator_cmp
  * Similar to pthread_equal() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_equal.html
  *
  * \relates ThreadIdentifier
@@ -124,7 +124,7 @@ inline bool operator==(const ThreadIdentifier& left, const ThreadIdentifier& rig
  * \brief ThreadIdentifier's inequality comparison operator
  *
  * Similar to std::operator!=(std::thread::id, std::thread::id) -
- * http://en.cppreference.com/w/cpp/thread/thread/id/operator_cmp
+ * https://en.cppreference.com/w/cpp/thread/thread/id/operator_cmp
  *
  * \relates ThreadIdentifier
  *
@@ -143,7 +143,7 @@ inline bool operator!=(const ThreadIdentifier& left, const ThreadIdentifier& rig
  * \brief ThreadIdentifier's less-than comparison operator
  *
  * Similar to std::operator<(std::thread::id, std::thread::id) -
- * http://en.cppreference.com/w/cpp/thread/thread/id/operator_cmp
+ * https://en.cppreference.com/w/cpp/thread/thread/id/operator_cmp
  *
  * \relates ThreadIdentifier
  *
@@ -162,7 +162,7 @@ inline bool operator<(const ThreadIdentifier& left, const ThreadIdentifier& righ
  * \brief ThreadIdentifier's greater-than comparison operator
  *
  * Similar to std::operator>(std::thread::id, std::thread::id) -
- * http://en.cppreference.com/w/cpp/thread/thread/id/operator_cmp
+ * https://en.cppreference.com/w/cpp/thread/thread/id/operator_cmp
  *
  * \relates ThreadIdentifier
  *
@@ -181,7 +181,7 @@ inline bool operator>(const ThreadIdentifier& left, const ThreadIdentifier& righ
  * \brief ThreadIdentifier's less-than-or-equal comparison operator
  *
  * Similar to std::operator<=(std::thread::id, std::thread::id) -
- * http://en.cppreference.com/w/cpp/thread/thread/id/operator_cmp
+ * https://en.cppreference.com/w/cpp/thread/thread/id/operator_cmp
  *
  * \relates ThreadIdentifier
  *
@@ -200,7 +200,7 @@ inline bool operator<=(const ThreadIdentifier& left, const ThreadIdentifier& rig
  * \brief ThreadIdentifier's greater-than-or-equal comparison operator
  *
  * Similar to std::operator>=(std::thread::id, std::thread::id) -
- * http://en.cppreference.com/w/cpp/thread/thread/id/operator_cmp
+ * https://en.cppreference.com/w/cpp/thread/thread/id/operator_cmp
  *
  * \relates ThreadIdentifier
  *
