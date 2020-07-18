@@ -2,7 +2,7 @@ Change Log
 ==========
 
 All notable changes to this project will be documented in this file. This project adheres to
-[Semantic Versioning](http://semver.org/).
+[Semantic Versioning](https://semver.org/).
 
 [Unreleased](https://github.com/DISTORTEC/distortos/compare/v0.7.0...HEAD)
 --------------------------------------------------------------------------
