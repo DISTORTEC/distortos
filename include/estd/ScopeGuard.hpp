@@ -21,7 +21,7 @@ namespace estd
  * \brief ScopeGuard template class is a idiom introduced by Andrei Alexandrescu and proposed for C++14 in N3949.
  *
  * http://www.open-std.org/jtc1/sc22/WG21/docs/papers/2014/n3949.pdf
- * http://channel9.msdn.com/Shows/Going+Deep/C-and-Beyond-2012-Andrei-Alexandrescu-Systematic-Error-Handling-in-C
+ * https://channel9.msdn.com/Shows/Going+Deep/C-and-Beyond-2012-Andrei-Alexandrescu-Systematic-Error-Handling-in-C
  *
  * \tparam Function is the type of function executed on scope exit
  */
