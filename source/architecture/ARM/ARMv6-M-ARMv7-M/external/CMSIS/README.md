@@ -2,7 +2,7 @@ CMSIS
 =====
 
 - link: [CMSIS - Cortex Microcontroller Software Interface
-Standard](http://www.arm.com/products/processors/cortex-m/cortex-microcontroller-software-interface-standard.php)
+Standard](https://developer.arm.com/tools-and-software/embedded/cmsis)
 - package name: CMSIS_5-5.5.1
 - package version: 5.5.1
 - download date: 2019-04-19
