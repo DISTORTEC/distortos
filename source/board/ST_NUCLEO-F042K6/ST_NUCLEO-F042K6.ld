@@ -4,7 +4,7 @@
  * - 32.0 KiB of flash at 0x8000000;
  * - 6.0 KiB of SRAM at 0x20000000;
  *
- * \author Copyright (C) 2014-2020 Kamil Szczygiel http://www.distortec.com https://freddiechopin.info
+ * \author Copyright (C) 2014-2020 Kamil Szczygiel https://distortec.com https://freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not

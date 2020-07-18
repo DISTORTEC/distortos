@@ -2,7 +2,7 @@
  * \file
  * \brief Definitions of low-level UART drivers for USARTv2 in ST,NUCLEO-L476RG (ST,STM32L476RG chip)
  *
- * \author Copyright (C) 2016-2020 Kamil Szczygiel http://www.distortec.com https://freddiechopin.info
+ * \author Copyright (C) 2016-2020 Kamil Szczygiel https://distortec.com https://freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not

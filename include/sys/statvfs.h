@@ -3,7 +3,7 @@
  * \brief Standard [sys/statvfs.h](http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/sys_statvfs.h.html), which
  * is not provided by newlib.
  *
- * \author Copyright (C) 2018-2020 Kamil Szczygiel http://www.distortec.com https://freddiechopin.info
+ * \author Copyright (C) 2018-2020 Kamil Szczygiel https://distortec.com https://freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not

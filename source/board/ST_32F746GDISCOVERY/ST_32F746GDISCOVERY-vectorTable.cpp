@@ -2,7 +2,7 @@
  * \file
  * \brief ST,32F746GDISCOVERY (ST,STM32F746NG chip) vector table, default handlers and NVIC low-level initializer
  *
- * \author Copyright (C) 2014-2019 Kamil Szczygiel http://www.distortec.com https://freddiechopin.info
+ * \author Copyright (C) 2014-2019 Kamil Szczygiel https://distortec.com https://freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not

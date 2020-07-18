@@ -2,7 +2,7 @@
  * \file
  * \brief Definitions of low-level UART drivers for USARTv1 in ST,NUCLEO-F446RE (ST,STM32F446RE chip)
  *
- * \author Copyright (C) 2016-2020 Kamil Szczygiel http://www.distortec.com https://freddiechopin.info
+ * \author Copyright (C) 2016-2020 Kamil Szczygiel https://distortec.com https://freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not

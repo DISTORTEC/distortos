@@ -5,7 +5,7 @@
  * This test checks whether mutex objects instantiated with C-API macros and functions are binary identical to
  * constructed distortos::Mutex objects.
  *
- * \author Copyright (C) 2017 Kamil Szczygiel http://www.distortec.com https://freddiechopin.info
+ * \author Copyright (C) 2017 Kamil Szczygiel https://distortec.com https://freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
