@@ -187,7 +187,7 @@ struct MakeIntegerSequenceImplementationWrapper :
  *
  * Similar to std::make_integer_sequence from C++14 - https://en.cppreference.com/w/cpp/utility/integer_sequence
  *
- * Whole implementation is based on code from http://stackoverflow.com/a/20101039/157344
+ * Whole implementation is based on code from https://stackoverflow.com/a/20101039/157344
  *
  * Generates IntegerSequence<T, 0, 1, ..., N - 1> type.
  *
