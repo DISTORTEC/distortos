@@ -2,7 +2,7 @@
  * \file
  * \brief Declarations of low-level DMA channel drivers for DMAv2 in ST,STM32F4DISCOVERY (ST,STM32F407VG chip)
  *
- * \author Copyright (C) 2018-2019 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2018-2019 Kamil Szczygiel http://www.distortec.com https://freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not

@@ -3,7 +3,7 @@
  * \brief Implementation of PWR-related functions for STM32L0
  *
  * \author Copyright (C) 2017-2018 Cezary Gapinski cezary.gapinski@gmail.com
- * \author Copyright (C) 2020 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2020 Kamil Szczygiel http://www.distortec.com https://freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not

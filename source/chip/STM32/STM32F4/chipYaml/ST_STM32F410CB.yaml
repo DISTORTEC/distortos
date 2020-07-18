@@ -1,7 +1,7 @@
 #
 # file: ST_STM32F410CB.yaml
 #
-# author: Copyright (C) 2020 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+# author: Copyright (C) 2020 Kamil Szczygiel http://www.distortec.com https://freddiechopin.info
 #
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -34,13 +34,13 @@ NVIC:
   - name: MemManage
   - name: BusFault
   - name: UsageFault
-  - 
-  - 
-  - 
-  - 
+  -
+  -
+  -
+  -
   - name: SVC
   - name: DebugMon
-  - 
+  -
   - name: PendSV
   - name: SysTick
   chip-vectors:
@@ -63,18 +63,18 @@ NVIC:
   - name: DMA1_Stream5
   - name: DMA1_Stream6
   - name: ADC
-  - 
-  - 
-  - 
-  - 
+  -
+  -
+  -
+  -
   - name: EXTI9_5
   - name: TIM1_BRK_TIM9
   - name: TIM1_UP
   - name: TIM1_TRG_COM_TIM11
   - name: TIM1_CC
-  - 
-  - 
-  - 
+  -
+  -
+  -
   - name: I2C1_EV
   - name: I2C1_ER
   - name: I2C2_EV
@@ -83,62 +83,62 @@ NVIC:
   - name: SPI2
   - name: USART1
   - name: USART2
-  - 
+  -
   - name: EXTI15_10
   - name: RTC_Alarm
-  - 
-  - 
-  - 
-  - 
-  - 
+  -
+  -
+  -
+  -
+  -
   - name: DMA1_Stream7
-  - 
-  - 
+  -
+  -
   - name: TIM5
-  - 
-  - 
-  - 
+  -
+  -
+  -
   - name: TIM6_DAC
-  - 
+  -
   - name: DMA2_Stream0
   - name: DMA2_Stream1
   - name: DMA2_Stream2
   - name: DMA2_Stream3
   - name: DMA2_Stream4
-  - 
+  -
   - name: EXTI19
-  - 
-  - 
-  - 
-  - 
-  - 
+  -
+  -
+  -
+  -
+  -
   - name: DMA2_Stream5
   - name: DMA2_Stream6
   - name: DMA2_Stream7
   - name: USART6
-  - 
-  - 
-  - 
-  - 
+  -
+  -
+  -
+  -
   - name: EXTI20
-  - 
-  - 
-  - 
+  -
+  -
+  -
   - name: RNG
   - name: FPU
-  - 
-  - 
-  - 
+  -
+  -
+  -
   - name: SPI5
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
+  -
+  -
+  -
+  -
+  -
+  -
+  -
+  -
+  -
   - name: FMPI2C1_EV
   - name: FMPI2C1_ER
   - name: LPTIM1

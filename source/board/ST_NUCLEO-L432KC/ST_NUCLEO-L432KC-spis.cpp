@@ -2,7 +2,7 @@
  * \file
  * \brief Definitions of low-level SPI master drivers for SPIv2 in ST,NUCLEO-L432KC (ST,STM32L432KC chip)
  *
- * \author Copyright (C) 2016-2020 Kamil Szczygiel http://www.distortec.com http://www.freddiechopin.info
+ * \author Copyright (C) 2016-2020 Kamil Szczygiel http://www.distortec.com https://freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
