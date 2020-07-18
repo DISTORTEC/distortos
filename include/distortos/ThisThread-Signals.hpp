@@ -41,7 +41,7 @@ namespace Signals
 /**
  * \brief Generates signal for current thread.
  *
- * Similar to raise() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/raise.html
+ * Similar to raise() - https://pubs.opengroup.org/onlinepubs/9699919799/functions/raise.html
  *
  * Adds the signalNumber to set of pending signals of current thread.
  *
@@ -58,7 +58,7 @@ int generateSignal(uint8_t signalNumber);
 /**
  * \brief Gets set of currently pending signals for current thread.
  *
- * Similar to sigpending() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/sigpending.html
+ * Similar to sigpending() - https://pubs.opengroup.org/onlinepubs/9699919799/functions/sigpending.html
  *
  * This function shall return the set of signals that are blocked from delivery and are pending on the current thread.
  *
@@ -72,7 +72,7 @@ SignalSet getPendingSignalSet();
 /**
  * \brief Gets SignalAction associated with given signal number.
  *
- * Similar to sigaction() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/sigaction.html
+ * Similar to sigaction() - https://pubs.opengroup.org/onlinepubs/9699919799/functions/sigaction.html
  *
  * \warning This function must not be called from interrupt context!
  *
@@ -89,7 +89,7 @@ std::pair<int, SignalAction> getSignalAction(uint8_t signalNumber);
 /**
  * \brief Gets signal mask for current thread.
  *
- * Similar to pthread_sigmask() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_sigmask.html#
+ * Similar to pthread_sigmask() - https://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_sigmask.html#
  *
  * \warning This function must not be called from interrupt context!
  *
@@ -101,7 +101,7 @@ SignalSet getSignalMask();
 /**
  * \brief Queues signal for current thread.
  *
- * Similar to sigqueue() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/sigqueue.html
+ * Similar to sigqueue() - https://pubs.opengroup.org/onlinepubs/9699919799/functions/sigqueue.html
  *
  * Adds the signalNumber and signal value (sigval union) to queue of SignalInformation objects.
  *
@@ -119,7 +119,7 @@ int queueSignal(uint8_t signalNumber, sigval value);
 /**
  * \brief Sets association for given signal number.
  *
- * Similar to sigaction() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/sigaction.html
+ * Similar to sigaction() - https://pubs.opengroup.org/onlinepubs/9699919799/functions/sigaction.html
  *
  * \warning This function must not be called from interrupt context!
  *
@@ -138,7 +138,7 @@ std::pair<int, SignalAction> setSignalAction(uint8_t signalNumber, const SignalA
 /**
  * \brief Sets signal mask for current thread.
  *
- * Similar to pthread_sigmask() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_sigmask.html#
+ * Similar to pthread_sigmask() - https://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_sigmask.html#
  *
  * \warning This function must not be called from interrupt context!
  *
@@ -154,7 +154,7 @@ int setSignalMask(SignalSet signalMask);
 /**
  * \brief Tries to accept pending signals.
  *
- * Similar to sigtimedwait() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/sigtimedwait.html
+ * Similar to sigtimedwait() - https://pubs.opengroup.org/onlinepubs/9699919799/functions/sigtimedwait.html
  *
  * This function shall select the lowest pending signal from provided set, atomically clear it from current thread's set
  * of pending signals and return that signal number. If no signal in provided set is pending at the time of the call,
@@ -174,7 +174,7 @@ std::pair<int, SignalInformation> tryWait(const SignalSet& signalSet);
 /**
  * \brief Tries to wait for signals for given duration of time.
  *
- * Similar to sigtimedwait() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/sigtimedwait.html
+ * Similar to sigtimedwait() - https://pubs.opengroup.org/onlinepubs/9699919799/functions/sigtimedwait.html
  *
  * This function shall select the lowest pending signal from provided set, atomically clear it from current thread's set
  * of pending signals and return that signal number. If no signal in provided set is pending at the time of the call,
@@ -220,7 +220,7 @@ std::pair<int, SignalInformation> tryWaitFor(const SignalSet& signalSet,
 /**
  * \brief Tries to wait for signals until given time point.
  *
- * Similar to sigtimedwait() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/sigtimedwait.html
+ * Similar to sigtimedwait() - https://pubs.opengroup.org/onlinepubs/9699919799/functions/sigtimedwait.html
  *
  * This function shall select the lowest pending signal from provided set, atomically clear it from current thread's set
  * of pending signals and return that signal number. If no signal in provided set is pending at the time of the call,
@@ -265,7 +265,7 @@ std::pair<int, SignalInformation> tryWaitUntil(const SignalSet& signalSet,
 /**
  * \brief Waits for signals.
  *
- * Similar to sigwait() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/sigwait.html
+ * Similar to sigwait() - https://pubs.opengroup.org/onlinepubs/9699919799/functions/sigwait.html
  *
  * This function shall select the lowest pending signal from provided set, atomically clear it from current thread's set
  * of pending signals and return that signal number. If no signal in provided set is pending at the time of the call,

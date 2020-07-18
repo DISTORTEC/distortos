@@ -42,7 +42,7 @@ public:
 	/**
 	 * \brief Closes directory.
 	 *
-	 * Similar to [closedir()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/closedir.html)
+	 * Similar to [closedir()](https://pubs.opengroup.org/onlinepubs/9699919799/functions/closedir.html)
 	 *
 	 * \note Even if error code is returned, the directory must not be used.
 	 *
@@ -58,7 +58,7 @@ public:
 	/**
 	 * \brief Returns current position in the directory.
 	 *
-	 * Similar to [telldir()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/telldir.html)
+	 * Similar to [telldir()](https://pubs.opengroup.org/onlinepubs/9699919799/functions/telldir.html)
 	 *
 	 * \pre %Directory is opened.
 	 *
@@ -87,7 +87,7 @@ public:
 	/**
 	 * \brief Reads next entry from directory.
 	 *
-	 * Similar to [readdir_r()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/readdir.html)
+	 * Similar to [readdir_r()](https://pubs.opengroup.org/onlinepubs/9699919799/functions/readdir.html)
 	 *
 	 * \pre %Directory is opened.
 	 *
@@ -102,7 +102,7 @@ public:
 	/**
 	 * \brief Resets current position in the directory.
 	 *
-	 * Similar to [rewinddir()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/rewinddir.html)
+	 * Similar to [rewinddir()](https://pubs.opengroup.org/onlinepubs/9699919799/functions/rewinddir.html)
 	 *
 	 * \pre %Directory is opened.
 	 *
@@ -114,7 +114,7 @@ public:
 	/**
 	 * \brief Moves position in the directory.
 	 *
-	 * Similar to [seekdir()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/seekdir.html)
+	 * Similar to [seekdir()](https://pubs.opengroup.org/onlinepubs/9699919799/functions/seekdir.html)
 	 *
 	 * \pre %Directory is opened.
 	 *

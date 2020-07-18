@@ -20,7 +20,7 @@ namespace distortos
 /**
  * \brief SignalSet class is used as a set of signals.
  *
- * Similar to POSIX sigset_t - http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/signal.h.html
+ * Similar to POSIX sigset_t - https://pubs.opengroup.org/onlinepubs/9699919799/basedefs/signal.h.html
  *
  * \ingroup signals
  */
@@ -79,7 +79,7 @@ public:
 	 *
 	 * Constructs empty SignalSet.
 	 *
-	 * Similar to sigemptyset() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/sigemptyset.html#
+	 * Similar to sigemptyset() - https://pubs.opengroup.org/onlinepubs/9699919799/functions/sigemptyset.html#
 	 */
 
 	constexpr explicit SignalSet(const Empty&) :
@@ -93,7 +93,7 @@ public:
 	 *
 	 * Constructs full SignalSet.
 	 *
-	 * Similar to sigfillset() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/sigfillset.html#
+	 * Similar to sigfillset() - https://pubs.opengroup.org/onlinepubs/9699919799/functions/sigfillset.html#
 	 */
 
 	constexpr explicit SignalSet(const Full&) :
@@ -105,7 +105,7 @@ public:
 	/**
 	 * \brief Sets single bit.
 	 *
-	 * Similar to sigaddset() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/sigaddset.html#
+	 * Similar to sigaddset() - https://pubs.opengroup.org/onlinepubs/9699919799/functions/sigaddset.html#
 	 *
 	 * \param [in] signalNumber is the bit position that will be set, [0; 31]
 	 *
@@ -130,7 +130,7 @@ public:
 	/**
 	 * \brief Clears single bit.
 	 *
-	 * Similar to sigdelset() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/sigdelset.html#
+	 * Similar to sigdelset() - https://pubs.opengroup.org/onlinepubs/9699919799/functions/sigdelset.html#
 	 *
 	 * \param [in] signalNumber is the bit position that will be cleared, [0; 31]
 	 *
@@ -146,7 +146,7 @@ public:
 	/**
 	 * \brief Tests whether the bit is set.
 	 *
-	 * Similar to sigismember() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/sigismember.html#
+	 * Similar to sigismember() - https://pubs.opengroup.org/onlinepubs/9699919799/functions/sigismember.html#
 	 *
 	 * \param [in] signalNumber is the bit position that will be tested, [0; 31]
 	 *

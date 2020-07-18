@@ -33,7 +33,7 @@ extern "C"
 /**
  * \brief Moves position in the directory.
  *
- * See [seekdir()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/seekdir.html)
+ * See [seekdir()](https://pubs.opengroup.org/onlinepubs/9699919799/functions/seekdir.html)
  *
  * \pre %Directory is opened.
  * \pre \a dir is valid.

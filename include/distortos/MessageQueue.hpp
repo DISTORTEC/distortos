@@ -35,7 +35,7 @@ namespace distortos
  * communication. It supports multiple readers and multiple writers. It is implemented as a wrapper for
  * internal::MessageQueueBase.
  *
- * Similar to POSIX mqd_t - http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/mqueue.h.html
+ * Similar to POSIX mqd_t - https://pubs.opengroup.org/onlinepubs/9699919799/basedefs/mqueue.h.html
  *
  * \tparam T is the type of data in queue
  *
@@ -93,7 +93,7 @@ public:
 	/**
 	 * \brief Emplaces the element in the queue.
 	 *
-	 * Similar to mq_send() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/mq_send.html#
+	 * Similar to mq_send() - https://pubs.opengroup.org/onlinepubs/9699919799/functions/mq_send.html#
 	 *
 	 * \note This function requires GCC 4.9.
 	 *
@@ -128,7 +128,7 @@ public:
 	/**
 	 * \brief Pops oldest element with highest priority from the queue.
 	 *
-	 * Similar to mq_receive() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/mq_receive.html#
+	 * Similar to mq_receive() - https://pubs.opengroup.org/onlinepubs/9699919799/functions/mq_receive.html#
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
@@ -150,7 +150,7 @@ public:
 	/**
 	 * \brief Pushes the element to the queue.
 	 *
-	 * Similar to mq_send() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/mq_send.html#
+	 * Similar to mq_send() - https://pubs.opengroup.org/onlinepubs/9699919799/functions/mq_send.html#
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
@@ -171,7 +171,7 @@ public:
 	/**
 	 * \brief Pushes the element to the queue.
 	 *
-	 * Similar to mq_send() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/mq_send.html#
+	 * Similar to mq_send() - https://pubs.opengroup.org/onlinepubs/9699919799/functions/mq_send.html#
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
@@ -193,7 +193,7 @@ public:
 	/**
 	 * \brief Tries to emplace the element in the queue.
 	 *
-	 * Similar to mq_send() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/mq_send.html#
+	 * Similar to mq_send() - https://pubs.opengroup.org/onlinepubs/9699919799/functions/mq_send.html#
 	 *
 	 * \note This function requires GCC 4.9.
 	 *
@@ -217,7 +217,7 @@ public:
 	/**
 	 * \brief Tries to emplace the element in the queue for a given duration of time.
 	 *
-	 * Similar to mq_timedsend() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/mq_send.html#
+	 * Similar to mq_timedsend() - https://pubs.opengroup.org/onlinepubs/9699919799/functions/mq_send.html#
 	 *
 	 * \note This function requires GCC 4.9.
 	 *
@@ -273,7 +273,7 @@ public:
 	/**
 	 * \brief Tries to emplace the element in the queue until a given time point.
 	 *
-	 * Similar to mq_timedsend() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/mq_send.html#
+	 * Similar to mq_timedsend() - https://pubs.opengroup.org/onlinepubs/9699919799/functions/mq_send.html#
 	 *
 	 * \note This function requires GCC 4.9.
 	 *
@@ -329,7 +329,7 @@ public:
 	/**
 	 * \brief Tries to pop oldest element with highest priority from the queue.
 	 *
-	 * Similar to mq_receive() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/mq_receive.html#
+	 * Similar to mq_receive() - https://pubs.opengroup.org/onlinepubs/9699919799/functions/mq_receive.html#
 	 *
 	 * \param [out] priority is a reference to variable that will be used to return priority of popped value
 	 * \param [out] value is a reference to object that will be used to return popped value, its contents are swapped
@@ -349,7 +349,7 @@ public:
 	/**
 	 * \brief Tries to pop oldest element with highest priority from the queue for a given duration of time.
 	 *
-	 * Similar to mq_timedreceive() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/mq_receive.html#
+	 * Similar to mq_timedreceive() - https://pubs.opengroup.org/onlinepubs/9699919799/functions/mq_receive.html#
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
@@ -398,7 +398,7 @@ public:
 	/**
 	 * \brief Tries to pop oldest element with highest priority from the queue until a given time point.
 	 *
-	 * Similar to mq_timedreceive() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/mq_receive.html#
+	 * Similar to mq_timedreceive() - https://pubs.opengroup.org/onlinepubs/9699919799/functions/mq_receive.html#
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
@@ -446,7 +446,7 @@ public:
 	/**
 	 * \brief Tries to push the element to the queue.
 	 *
-	 * Similar to mq_send() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/mq_send.html#
+	 * Similar to mq_send() - https://pubs.opengroup.org/onlinepubs/9699919799/functions/mq_send.html#
 	 *
 	 * \param [in] priority is the priority of new element
 	 * \param [in] value is a reference to object that will be pushed, value in queue's storage is copy-constructed
@@ -465,7 +465,7 @@ public:
 	/**
 	 * \brief Tries to push the element to the queue.
 	 *
-	 * Similar to mq_send() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/mq_send.html#
+	 * Similar to mq_send() - https://pubs.opengroup.org/onlinepubs/9699919799/functions/mq_send.html#
 	 *
 	 * \param [in] priority is the priority of new element
 	 * \param [in] value is a rvalue reference to object that will be pushed, value in queue's storage is
@@ -485,7 +485,7 @@ public:
 	/**
 	 * \brief Tries to push the element to the queue for a given duration of time.
 	 *
-	 * Similar to mq_timedsend() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/mq_send.html#
+	 * Similar to mq_timedsend() - https://pubs.opengroup.org/onlinepubs/9699919799/functions/mq_send.html#
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
@@ -532,7 +532,7 @@ public:
 	/**
 	 * \brief Tries to push the element to the queue for a given duration of time.
 	 *
-	 * Similar to mq_timedsend() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/mq_send.html#
+	 * Similar to mq_timedsend() - https://pubs.opengroup.org/onlinepubs/9699919799/functions/mq_send.html#
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
@@ -581,7 +581,7 @@ public:
 	/**
 	 * \brief Tries to push the element to the queue until a given time point.
 	 *
-	 * Similar to mq_timedsend() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/mq_send.html#
+	 * Similar to mq_timedsend() - https://pubs.opengroup.org/onlinepubs/9699919799/functions/mq_send.html#
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
@@ -628,7 +628,7 @@ public:
 	/**
 	 * \brief Tries to push the element to the queue until a given time point.
 	 *
-	 * Similar to mq_timedsend() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/mq_send.html#
+	 * Similar to mq_timedsend() - https://pubs.opengroup.org/onlinepubs/9699919799/functions/mq_send.html#
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *

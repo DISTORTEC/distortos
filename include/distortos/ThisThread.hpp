@@ -33,7 +33,7 @@ namespace ThisThread
  * \brief Detaches calling (current) thread.
  *
  * Similar to std::thread::detach() - https://en.cppreference.com/w/cpp/thread/thread/detach
- * Similar to POSIX pthread_detach() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_detach.html
+ * Similar to POSIX pthread_detach() - https://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_detach.html
  *
  * Detaches calling (current) thread from its Thread object, allowing execution to continue independently. All resources
  * allocated for the thread will be deallocated when the thread terminates.
@@ -52,7 +52,7 @@ int detach();
 /**
  * \brief Exits calling (current) thread.
  *
- * Similar to POSIX pthread_exit() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_exit.html
+ * Similar to POSIX pthread_exit() - https://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_exit.html
  *
  * \warning This function must not be called from interrupt context!
  */

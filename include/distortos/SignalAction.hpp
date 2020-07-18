@@ -22,7 +22,7 @@ class SignalInformation;
 /**
  * \brief SignalAction class contains information needed to handle signal that was caught
  *
- * Similar to \a sigaction - http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/signal.h.html
+ * Similar to \a sigaction - https://pubs.opengroup.org/onlinepubs/9699919799/basedefs/signal.h.html
  *
  * \ingroup signals
  */

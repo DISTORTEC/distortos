@@ -21,7 +21,7 @@ namespace distortos
 /**
  * \brief SignalInformation class contains information about queued signal
  *
- * Similar to siginfo_t - http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/signal.h.html
+ * Similar to siginfo_t - https://pubs.opengroup.org/onlinepubs/9699919799/basedefs/signal.h.html
  *
  * \ingroup signals
  */

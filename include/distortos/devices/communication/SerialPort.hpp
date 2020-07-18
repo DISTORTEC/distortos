@@ -134,7 +134,7 @@ public:
 	/**
 	 * \brief Reads data from SerialPort.
 	 *
-	 * Similar to POSIX read() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/read.html#
+	 * Similar to POSIX read() - https://pubs.opengroup.org/onlinepubs/9699919799/functions/read.html#
 	 *
 	 * This function will block until at least \a minSize bytes can be read (but no more than \a size). When \a minSize
 	 * is equal to 1 (or 2 when character length is greater than 8 bits) - which is the default value - the behavior of
@@ -403,7 +403,7 @@ public:
 	/**
 	 * \brief Writes data to SerialPort.
 	 *
-	 * Similar to POSIX write() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/write.html#
+	 * Similar to POSIX write() - https://pubs.opengroup.org/onlinepubs/9699919799/functions/write.html#
 	 *
 	 * This function will block until at least \a minSize bytes can be written (but no more than \a size). When
 	 * \a minSize is greater than or equal to \a size - for example \a SIZE_MAX, which is the default value - the

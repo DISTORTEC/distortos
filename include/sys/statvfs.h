@@ -1,6 +1,6 @@
 /**
  * \file
- * \brief Standard [sys/statvfs.h](http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/sys_statvfs.h.html), which
+ * \brief Standard [sys/statvfs.h](https://pubs.opengroup.org/onlinepubs/9699919799/basedefs/sys_statvfs.h.html), which
  * is not provided by newlib.
  *
  * \author Copyright (C) 2018-2020 Kamil Szczygiel https://distortec.com https://freddiechopin.info
@@ -95,7 +95,7 @@ struct statvfs
 /**
  * \brief Returns status of file system.
  *
- * See [statvfs()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/statvfs.html)
+ * See [statvfs()](https://pubs.opengroup.org/onlinepubs/9699919799/functions/statvfs.html)
  *
  * \pre \a path is valid.
  *

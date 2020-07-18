@@ -33,7 +33,7 @@ extern "C"
 /**
  * \brief Resets current position in the directory.
  *
- * See [rewinddir()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/rewinddir.html)
+ * See [rewinddir()](https://pubs.opengroup.org/onlinepubs/9699919799/functions/rewinddir.html)
  *
  * \pre %Directory is opened.
  * \pre \a dir is valid.

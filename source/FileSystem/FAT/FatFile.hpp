@@ -61,7 +61,7 @@ public:
 	/**
 	 * \brief Closes file.
 	 *
-	 * Similar to [close()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/close.html)
+	 * Similar to [close()](https://pubs.opengroup.org/onlinepubs/9699919799/functions/close.html)
 	 *
 	 * \note Even if error code is returned, the file must not be used.
 	 *
@@ -81,7 +81,7 @@ public:
 	/**
 	 * \brief Returns current file offset.
 	 *
-	 * Similar to [ftello()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/ftell.html)
+	 * Similar to [ftello()](https://pubs.opengroup.org/onlinepubs/9699919799/functions/ftell.html)
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
@@ -107,7 +107,7 @@ public:
 	/**
 	 * \brief Returns status of file.
 	 *
-	 * Similar to [fstat()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/fstat.html)
+	 * Similar to [fstat()](https://pubs.opengroup.org/onlinepubs/9699919799/functions/fstat.html)
 	 *
 	 * `st_mode` and `st_size` fields are set in all cases. All other fields are zero-initialized.
 	 *
@@ -125,7 +125,7 @@ public:
 	/**
 	 * \brief Tells whether the file is a terminal.
 	 *
-	 * Similar to [isatty()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/isatty.html)
+	 * Similar to [isatty()](https://pubs.opengroup.org/onlinepubs/9699919799/functions/isatty.html)
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
@@ -163,7 +163,7 @@ public:
 	 *
 	 * \param [in] path is the path of file that will be opened, must be valid
 	 * \param [in] flags are file status flags, must be valid, for list of available flags and valid combinations see
-	 * [open()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/open.html)
+	 * [open()](https://pubs.opengroup.org/onlinepubs/9699919799/functions/open.html)
 	 *
 	 * \return 0 on success, error code otherwise:
 	 * - EEXIST - `O_CREAT` and `O_EXCL` are set, and file named by \a path exists;
@@ -180,7 +180,7 @@ public:
 	/**
 	 * \brief Reads data from file.
 	 *
-	 * Similar to [read()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/read.html)
+	 * Similar to [read()](https://pubs.opengroup.org/onlinepubs/9699919799/functions/read.html)
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
@@ -200,7 +200,7 @@ public:
 	/**
 	 * \brief Resets current file offset.
 	 *
-	 * Similar to [rewind()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/rewind.html)
+	 * Similar to [rewind()](https://pubs.opengroup.org/onlinepubs/9699919799/functions/rewind.html)
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
@@ -214,7 +214,7 @@ public:
 	/**
 	 * \brief Moves file offset.
 	 *
-	 * Similar to [lseek()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/lseek.html)
+	 * Similar to [lseek()](https://pubs.opengroup.org/onlinepubs/9699919799/functions/lseek.html)
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
@@ -235,7 +235,7 @@ public:
 	/**
 	 * \brief Synchronizes state of a file, ensuring all cached writes are finished.
 	 *
-	 * Similar to [fsync()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/fsync.html)
+	 * Similar to [fsync()](https://pubs.opengroup.org/onlinepubs/9699919799/functions/fsync.html)
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
@@ -263,7 +263,7 @@ public:
 	/**
 	 * \brief Writes data to file.
 	 *
-	 * Similar to [write()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/write.html)
+	 * Similar to [write()](https://pubs.opengroup.org/onlinepubs/9699919799/functions/write.html)
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *

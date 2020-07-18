@@ -56,7 +56,7 @@ public:
 	/**
 	 * \brief Closes directory.
 	 *
-	 * Similar to [closedir()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/closedir.html)
+	 * Similar to [closedir()](https://pubs.opengroup.org/onlinepubs/9699919799/functions/closedir.html)
 	 *
 	 * \note Even if error code is returned, the directory must not be used.
 	 *
@@ -75,7 +75,7 @@ public:
 	/**
 	 * \brief Returns current position in the directory.
 	 *
-	 * Similar to [telldir()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/telldir.html)
+	 * Similar to [telldir()](https://pubs.opengroup.org/onlinepubs/9699919799/functions/telldir.html)
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
@@ -122,7 +122,7 @@ public:
 	/**
 	 * \brief Reads next entry from directory.
 	 *
-	 * Similar to [readdir_r()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/readdir.html)
+	 * Similar to [readdir_r()](https://pubs.opengroup.org/onlinepubs/9699919799/functions/readdir.html)
 	 *
 	 * `d_name` field is set in all cases. All other fields are zero-initialized.
 	 *
@@ -142,7 +142,7 @@ public:
 	/**
 	 * \brief Resets current position in the directory.
 	 *
-	 * Similar to [rewinddir()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/rewinddir.html)
+	 * Similar to [rewinddir()](https://pubs.opengroup.org/onlinepubs/9699919799/functions/rewinddir.html)
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
@@ -157,7 +157,7 @@ public:
 	/**
 	 * \brief Moves position in the directory.
 	 *
-	 * Similar to [seekdir()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/seekdir.html)
+	 * Similar to [seekdir()](https://pubs.opengroup.org/onlinepubs/9699919799/functions/seekdir.html)
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *

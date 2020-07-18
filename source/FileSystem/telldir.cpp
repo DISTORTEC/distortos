@@ -35,7 +35,7 @@ extern "C"
 /**
  * \brief Returns current position in the directory.
  *
- * See [telldir()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/telldir.html)
+ * See [telldir()](https://pubs.opengroup.org/onlinepubs/9699919799/functions/telldir.html)
  *
  * \pre %Directory is opened.
  * \pre \a dir is valid.

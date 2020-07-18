@@ -34,7 +34,7 @@ extern "C"
 /**
  * \brief C-API equivalent of distortos::Semaphore
  *
- * Similar to POSIX semaphores - http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap04.html#tag_04_16
+ * Similar to POSIX semaphores - https://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap04.html#tag_04_16
  *
  * \sa distortos::Semaphore
  */
@@ -101,7 +101,7 @@ struct distortos_Semaphore
 /**
  * \brief C-API equivalent of distortos::Semaphore's constructor
  *
- * Similar to sem_init() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/sem_init.html#
+ * Similar to sem_init() - https://pubs.opengroup.org/onlinepubs/9699919799/functions/sem_init.html#
  *
  * \sa distortos::Semaphore::Semaphore()
  *
@@ -119,7 +119,7 @@ int distortos_Semaphore_construct_1(struct distortos_Semaphore* semaphore, unsig
 /**
  * \brief C-API equivalent of distortos::Semaphore's constructor, maxValue == UINT_MAX
  *
- * Similar to sem_init() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/sem_init.html#
+ * Similar to sem_init() - https://pubs.opengroup.org/onlinepubs/9699919799/functions/sem_init.html#
  *
  * \sa distortos::Semaphore::Semaphore()
  *
@@ -138,7 +138,7 @@ static inline int distortos_Semaphore_construct(struct distortos_Semaphore* cons
 /**
  * \brief C-API equivalent of distortos::Semaphore's destructor
  *
- * Similar to sem_destroy() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/sem_destroy.html#
+ * Similar to sem_destroy() - https://pubs.opengroup.org/onlinepubs/9699919799/functions/sem_destroy.html#
  *
  * \sa distortos::Semaphore::~Semaphore()
  *
@@ -167,7 +167,7 @@ int distortos_Semaphore_getMaxValue(const struct distortos_Semaphore* semaphore,
 /**
  * \brief C-API equivalent of distortos::Semaphore::getValue()
  *
- * Similar to sem_getvalue() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/sem_getvalue.html#
+ * Similar to sem_getvalue() - https://pubs.opengroup.org/onlinepubs/9699919799/functions/sem_getvalue.html#
  *
  * \sa distortos::Semaphore::getValue()
  *
@@ -183,7 +183,7 @@ int distortos_Semaphore_getValue(const struct distortos_Semaphore* semaphore, un
 /**
  * \brief C-API equivalent of distortos::Semaphore::post()
  *
- * Similar to sem_post() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/sem_post.html#
+ * Similar to sem_post() - https://pubs.opengroup.org/onlinepubs/9699919799/functions/sem_post.html#
  *
  * \sa distortos::Semaphore::post()
  *
@@ -199,7 +199,7 @@ int distortos_Semaphore_post(struct distortos_Semaphore* semaphore);
 /**
  * \brief C-API equivalent of distortos::Semaphore::tryWait()
  *
- * Similar to sem_trywait() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/sem_trywait.html#
+ * Similar to sem_trywait() - https://pubs.opengroup.org/onlinepubs/9699919799/functions/sem_trywait.html#
  *
  * \sa distortos::Semaphore::tryWait()
  *
@@ -216,7 +216,7 @@ int distortos_Semaphore_tryWait(struct distortos_Semaphore* semaphore);
 /**
  * \brief C-API equivalent of distortos::Semaphore::tryWaitFor()
  *
- * Similar to sem_timedwait() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/sem_timedwait.html#
+ * Similar to sem_timedwait() - https://pubs.opengroup.org/onlinepubs/9699919799/functions/sem_timedwait.html#
  *
  * \sa distortos::Semaphore::tryWaitFor()
  *
@@ -237,7 +237,7 @@ int distortos_Semaphore_tryWaitFor(struct distortos_Semaphore* semaphore, int64_
 /**
  * \brief C-API equivalent of distortos::Semaphore::tryWaitUntil()
  *
- * Similar to sem_timedwait() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/sem_timedwait.html#
+ * Similar to sem_timedwait() - https://pubs.opengroup.org/onlinepubs/9699919799/functions/sem_timedwait.html#
  *
  * \sa distortos::Semaphore::tryWaitUntil()
  *
@@ -258,7 +258,7 @@ int distortos_Semaphore_tryWaitUntil(struct distortos_Semaphore* semaphore, int6
 /**
  * \brief C-API equivalent of distortos::Semaphore::wait()
  *
- * Similar to sem_wait() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/sem_trywait.html#
+ * Similar to sem_wait() - https://pubs.opengroup.org/onlinepubs/9699919799/functions/sem_trywait.html#
  *
  * \sa distortos::Semaphore::wait()
  *

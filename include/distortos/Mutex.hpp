@@ -22,7 +22,7 @@ namespace distortos
  *
  * Similar to std::mutex - https://en.cppreference.com/w/cpp/thread/mutex
  * Similar to POSIX pthread_mutex_t -
- * http://pubs.opengroup.org/onlinepubs/9699919799/functions/V2_chap02.html#tag_15_09 -> 2.9.3 Thread Mutexes
+ * https://pubs.opengroup.org/onlinepubs/9699919799/functions/V2_chap02.html#tag_15_09 -> 2.9.3 Thread Mutexes
  *
  * \ingroup synchronization
  */
@@ -58,7 +58,7 @@ public:
 	 *
 	 * Similar to std::mutex::mutex() - https://en.cppreference.com/w/cpp/thread/mutex/mutex
 	 * Similar to pthread_mutex_init() -
-	 * http://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_mutex_init.html
+	 * https://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_mutex_init.html
 	 *
 	 * \param [in] type is the type of mutex, default - Type::normal
 	 * \param [in] protocol is the mutex protocol, default - Protocol::none
@@ -78,7 +78,7 @@ public:
 	 *
 	 * Similar to std::mutex::mutex() - https://en.cppreference.com/w/cpp/thread/mutex/mutex
 	 * Similar to pthread_mutex_init() -
-	 * http://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_mutex_init.html
+	 * https://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_mutex_init.html
 	 *
 	 * \param [in] protocol is the mutex protocol
 	 * \param [in] priorityCeiling is the priority ceiling of mutex, ignored when protocol != Protocol::priorityProtect,
@@ -96,7 +96,7 @@ public:
 	 *
 	 * Similar to std::mutex::~mutex() - https://en.cppreference.com/w/cpp/thread/mutex/~mutex
 	 * Similar to pthread_mutex_destroy() -
-	 * http://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_mutex_destroy.html
+	 * https://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_mutex_destroy.html
 	 *
 	 * It shall be safe to destroy an initialized mutex that is unlocked. Attempting to destroy a locked mutex, or a
 	 * mutex that another thread is attempting to lock, or a mutex that is currently being used by a condition variable
@@ -110,7 +110,7 @@ public:
 	 *
 	 * Similar to std::mutex::lock() - https://en.cppreference.com/w/cpp/thread/mutex/lock
 	 * Similar to pthread_mutex_lock() -
-	 * http://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_mutex_lock.html#
+	 * https://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_mutex_lock.html#
 	 *
 	 * If the mutex is already locked by another thread, the calling thread shall block until the mutex becomes
 	 * available. This function shall return with the mutex in the locked state with the calling thread as its owner. If
@@ -133,7 +133,7 @@ public:
 	 *
 	 * Similar to std::mutex::try_lock() - https://en.cppreference.com/w/cpp/thread/mutex/try_lock
 	 * Similar to pthread_mutex_trylock() -
-	 * http://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_mutex_lock.html#
+	 * https://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_mutex_lock.html#
 	 *
 	 * This function shall be equivalent to lock(), except that if the mutex is currently locked (by any thread,
 	 * including the current thread), the call shall return immediately.
@@ -155,7 +155,7 @@ public:
 	 *
 	 * Similar to std::timed_mutex::try_lock_for() - https://en.cppreference.com/w/cpp/thread/timed_mutex/try_lock_for
 	 * Similar to pthread_mutex_timedlock() -
-	 * http://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_mutex_timedlock.html#
+	 * https://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_mutex_timedlock.html#
 	 *
 	 * If the mutex is already locked, the calling thread shall block until the mutex becomes available as in lock()
 	 * function. If the mutex cannot be locked without waiting for another thread to unlock the mutex, this wait shall
@@ -212,7 +212,7 @@ public:
 	 * Similar to std::timed_mutex::try_lock_until() -
 	 * https://en.cppreference.com/w/cpp/thread/timed_mutex/try_lock_until
 	 * Similar to pthread_mutex_timedlock() -
-	 * http://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_mutex_timedlock.html#
+	 * https://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_mutex_timedlock.html#
 	 *
 	 * If the mutex is already locked, the calling thread shall block until the mutex becomes available as in lock()
 	 * function. If the mutex cannot be locked without waiting for another thread to unlock the mutex, this wait shall
@@ -326,7 +326,7 @@ public:
 	 *
 	 * Similar to std::mutex::unlock() - https://en.cppreference.com/w/cpp/thread/mutex/unlock
 	 * Similar to pthread_mutex_unlock() -
-	 * http://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_mutex_lock.html#
+	 * https://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_mutex_lock.html#
 	 *
 	 * The mutex must be locked by the current thread, otherwise, the behavior is undefined. If there are threads
 	 * blocked on this mutex, the highest priority waiting thread shall be unblocked, and if there is more than one

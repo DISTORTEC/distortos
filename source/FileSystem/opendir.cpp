@@ -34,7 +34,7 @@ extern "C"
 /**
  * \brief Opens directory.
  *
- * See [opendir()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/opendir.html)
+ * See [opendir()](https://pubs.opengroup.org/onlinepubs/9699919799/functions/opendir.html)
  *
  * \pre \a path is valid.
  *

@@ -32,7 +32,7 @@ extern "C"
 /**
  * \brief Makes a directory.
  *
- * See [mkdir()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/mkdir.html)
+ * See [mkdir()](https://pubs.opengroup.org/onlinepubs/9699919799/functions/mkdir.html)
  *
  * \pre \a path is valid.
  *

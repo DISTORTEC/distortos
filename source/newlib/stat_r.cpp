@@ -34,7 +34,7 @@ extern "C"
 /**
  * \brief Returns status of file.
  *
- * See [stat()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/stat.html)
+ * See [stat()](https://pubs.opengroup.org/onlinepubs/9699919799/functions/stat.html)
  *
  * \pre \a path is valid.
  * \pre \a status is valid.

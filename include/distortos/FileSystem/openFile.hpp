@@ -24,7 +24,7 @@ class FileSystem;
 /**
  * \brief Opens file from given file system.
  *
- * Similar to [fopen()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/fopen.html)
+ * Similar to [fopen()](https://pubs.opengroup.org/onlinepubs/9699919799/functions/fopen.html)
  *
  * \pre \a fileSystem is mounted.
  * \pre \a path and \a mode are valid.
@@ -32,7 +32,7 @@ class FileSystem;
  * \param [in] fileSystem is a reference to file system used to open the file
  * \param [in] path is the path of file that will be opened, must be valid
  * \param [in] mode is the mode in which the file will be opened, must be valid, for list of available modes and valid
- * combinations see [fopen()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/fopen.html)
+ * combinations see [fopen()](https://pubs.opengroup.org/onlinepubs/9699919799/functions/fopen.html)
  *
  * \return pair with return code (0 on success, error code otherwise) and `FILE*` with opened file; error codes:
  * - error codes returned by FileSystem::openFile();

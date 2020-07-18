@@ -27,7 +27,7 @@ namespace distortos
  * \brief Executes the callable object exactly once, even if called from multiple threads.
  *
  * Similar to std::call_once() - https://en.cppreference.com/w/cpp/thread/call_once
- * Similar to POSIX pthread_once() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_once.html#
+ * Similar to POSIX pthread_once() - https://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_once.html#
  *
  * \warning This function must not be called from interrupt context!
  *

@@ -87,7 +87,7 @@ public:
 	/**
 	 * \brief Generates signal for associated thread.
 	 *
-	 * Similar to pthread_kill() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_kill.html
+	 * Similar to pthread_kill() - https://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_kill.html
 	 *
 	 * Adds the signalNumber to set of pending signals. If associated thread is currently waiting for this signal, it
 	 * will be unblocked.
@@ -112,7 +112,7 @@ public:
 	/**
 	 * \brief Gets SignalAction associated with given signal number.
 	 *
-	 * Similar to sigaction() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/sigaction.html
+	 * Similar to sigaction() - https://pubs.opengroup.org/onlinepubs/9699919799/functions/sigaction.html
 	 *
 	 * \param [in] signalNumber is the signal for which the association is requested, [0; 31]
 	 *
@@ -127,7 +127,7 @@ public:
 	/**
 	 * \brief Gets signal mask for associated thread.
 	 *
-	 * Similar to pthread_sigmask() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_sigmask.html#
+	 * Similar to pthread_sigmask() - https://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_sigmask.html#
 	 *
 	 * \return SignalSet with signal mask for associated thread
 	 */
@@ -137,7 +137,7 @@ public:
 	/**
 	 * \brief Queues signal for associated thread.
 	 *
-	 * Similar to sigqueue() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/sigqueue.html
+	 * Similar to sigqueue() - https://pubs.opengroup.org/onlinepubs/9699919799/functions/sigqueue.html
 	 *
 	 * Queues the signalNumber and signal value (sigval union) in associated SignalInformationQueue object. If
 	 * associated thread is currently waiting for this signal, it will be unblocked.
@@ -160,7 +160,7 @@ public:
 	/**
 	 * \brief Sets association for given signal number.
 	 *
-	 * Similar to sigaction() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/sigaction.html
+	 * Similar to sigaction() - https://pubs.opengroup.org/onlinepubs/9699919799/functions/sigaction.html
 	 *
 	 * \param [in] signalNumber is the signal for which the association will be set, [0; 31]
 	 * \param [in] signalAction is a reference to SignalAction that will be associated with given signal number, object
@@ -178,7 +178,7 @@ public:
 	/**
 	 * \brief Sets signal mask for associated thread.
 	 *
-	 * Similar to pthread_sigmask() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_sigmask.html#
+	 * Similar to pthread_sigmask() - https://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_sigmask.html#
 	 *
 	 * \param [in] signalMask is the SignalSet with new signal mask for associated thread
 	 * \param [in] deliver selects whether pending and unblocked signals will be delivered (true) or not (false)

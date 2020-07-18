@@ -101,7 +101,7 @@ public:
 	/**
 	 * \brief Returns status of file.
 	 *
-	 * Similar to [stat()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/stat.html)
+	 * Similar to [stat()](https://pubs.opengroup.org/onlinepubs/9699919799/functions/stat.html)
 	 *
 	 * `st_mode` field is set in all cases, `st_size` field is set only for regular files. All other fields are
 	 * zero-initialized.
@@ -124,7 +124,7 @@ public:
 	/**
 	 * \brief Returns status of file system.
 	 *
-	 * Similar to [statvfs()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/statvfs.html)
+	 * Similar to [statvfs()](https://pubs.opengroup.org/onlinepubs/9699919799/functions/statvfs.html)
 	 *
 	 * `f_bsize`, `f_frsize`, `f_blocks`, `f_bfree`, `f_bavail` and `f_namemax` fields are set in all cases. All other
 	 * fields are zero-initialized.
@@ -161,7 +161,7 @@ public:
 	/**
 	 * \brief Makes a directory.
 	 *
-	 * Similar to [mkdir()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/mkdir.html)
+	 * Similar to [mkdir()](https://pubs.opengroup.org/onlinepubs/9699919799/functions/mkdir.html)
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
@@ -200,7 +200,7 @@ public:
 	/**
 	 * \brief Opens directory.
 	 *
-	 * Similar to [opendir()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/opendir.html)
+	 * Similar to [opendir()](https://pubs.opengroup.org/onlinepubs/9699919799/functions/opendir.html)
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
@@ -220,7 +220,7 @@ public:
 	/**
 	 * \brief Opens file.
 	 *
-	 * Similar to [open()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/open.html)
+	 * Similar to [open()](https://pubs.opengroup.org/onlinepubs/9699919799/functions/open.html)
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
@@ -230,7 +230,7 @@ public:
 	 *
 	 * \param [in] path is the path of file that will be opened, must be valid
 	 * \param [in] flags are file status flags, must be valid, for list of available flags and valid combinations see
-	 * [open()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/open.html)
+	 * [open()](https://pubs.opengroup.org/onlinepubs/9699919799/functions/open.html)
 	 *
 	 * \return pair with return code (0 on success, error code otherwise) and `std::unique_ptr` with opened file; error
 	 * codes:
@@ -243,7 +243,7 @@ public:
 	/**
 	 * \brief Removes file or directory.
 	 *
-	 * Similar to [remove()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/remove.html)
+	 * Similar to [remove()](https://pubs.opengroup.org/onlinepubs/9699919799/functions/remove.html)
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *
@@ -265,7 +265,7 @@ public:
 	/**
 	 * \brief Renames file or directory.
 	 *
-	 * Similar to [rename()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/rename.html)
+	 * Similar to [rename()](https://pubs.opengroup.org/onlinepubs/9699919799/functions/rename.html)
 	 *
 	 * \warning This function must not be called from interrupt context!
 	 *

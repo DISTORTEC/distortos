@@ -35,7 +35,7 @@ extern "C"
 /**
  * \brief Reads next entry from directory.
  *
- * See [readdir_r()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/readdir.html)
+ * See [readdir_r()](https://pubs.opengroup.org/onlinepubs/9699919799/functions/readdir.html)
  *
  * \pre %Directory is opened.
  * \pre \a dir is valid.

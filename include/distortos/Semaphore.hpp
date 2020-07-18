@@ -22,7 +22,7 @@ namespace distortos
 /**
  * \brief Semaphore is the basic synchronization primitive
  *
- * Similar to POSIX semaphores - http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap04.html#tag_04_16
+ * Similar to POSIX semaphores - https://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap04.html#tag_04_16
  *
  * \ingroup synchronization
  */
@@ -37,7 +37,7 @@ public:
 	/**
 	 * \brief Semaphore's constructor
 	 *
-	 * Similar to sem_init() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/sem_init.html#
+	 * Similar to sem_init() - https://pubs.opengroup.org/onlinepubs/9699919799/functions/sem_init.html#
 	 *
 	 * \param [in] value is the initial value of the semaphore, if this value is greater than maxValue, it will be
 	 * truncated
@@ -56,7 +56,7 @@ public:
 	/**
 	 * \brief Semaphore's destructor
 	 *
-	 * Similar to sem_destroy() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/sem_destroy.html#
+	 * Similar to sem_destroy() - https://pubs.opengroup.org/onlinepubs/9699919799/functions/sem_destroy.html#
 	 *
 	 * It is safe to destroy a semaphore upon which no threads are currently blocked. The effect of destroying a
 	 * semaphore upon which other threads are currently blocked is system error.
@@ -76,7 +76,7 @@ public:
 	/**
 	 * \brief Gets current value of semaphore.
 	 *
-	 * Similar to sem_getvalue() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/sem_getvalue.html#
+	 * Similar to sem_getvalue() - https://pubs.opengroup.org/onlinepubs/9699919799/functions/sem_getvalue.html#
 	 *
 	 * \return current value of semaphore, positive value if semaphore is not locked, 0 otherwise
 	 */
@@ -89,7 +89,7 @@ public:
 	/**
 	 * \brief Unlocks the semaphore.
 	 *
-	 * Similar to sem_post() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/sem_post.html#
+	 * Similar to sem_post() - https://pubs.opengroup.org/onlinepubs/9699919799/functions/sem_post.html#
 	 *
 	 * This function shall unlock the semaphore by performing a semaphore unlock operation. If the semaphore value
 	 * resulting from this operation is positive, then no threads were blocked waiting for the semaphore to become
@@ -107,7 +107,7 @@ public:
 	/**
 	 * \brief Tries to lock the semaphore.
 	 *
-	 * Similar to sem_trywait() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/sem_trywait.html#
+	 * Similar to sem_trywait() - https://pubs.opengroup.org/onlinepubs/9699919799/functions/sem_trywait.html#
 	 *
 	 * This function shall lock the semaphore only if the semaphore is currently not locked; that is, if the semaphore
 	 * value is currently positive. Otherwise, it shall not lock the semaphore. Upon successful return, the state of the
@@ -122,7 +122,7 @@ public:
 	/**
 	 * \brief Tries to lock the semaphore for given duration of time.
 	 *
-	 * Similar to sem_timedwait() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/sem_timedwait.html#
+	 * Similar to sem_timedwait() - https://pubs.opengroup.org/onlinepubs/9699919799/functions/sem_timedwait.html#
 	 *
 	 * If the semaphore is already locked, the calling thread shall block until the semaphore becomes available as in
 	 * wait() function. If the semaphore cannot be locked without waiting for another thread to unlock the semaphore,
@@ -168,7 +168,7 @@ public:
 	/**
 	 * \brief Tries to lock the semaphore until given time point.
 	 *
-	 * Similar to sem_timedwait() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/sem_timedwait.html#
+	 * Similar to sem_timedwait() - https://pubs.opengroup.org/onlinepubs/9699919799/functions/sem_timedwait.html#
 	 *
 	 * If the semaphore is already locked, the calling thread shall block until the semaphore becomes available as in
 	 * wait() function. If the semaphore cannot be locked without waiting for another thread to unlock the semaphore,
@@ -213,7 +213,7 @@ public:
 	/**
 	 * \brief Locks the semaphore.
 	 *
-	 * Similar to sem_wait() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/sem_trywait.html#
+	 * Similar to sem_wait() - https://pubs.opengroup.org/onlinepubs/9699919799/functions/sem_trywait.html#
 	 *
 	 * This function shall lock the semaphore by performing a semaphore lock operation on that semaphore. If the
 	 * semaphore value is currently zero, then the calling thread shall not return from the call to lock() until it

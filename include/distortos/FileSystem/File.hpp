@@ -53,7 +53,7 @@ public:
 	/**
 	 * \brief Closes file.
 	 *
-	 * Similar to [close()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/close.html)
+	 * Similar to [close()](https://pubs.opengroup.org/onlinepubs/9699919799/functions/close.html)
 	 *
 	 * \note Even if error code is returned, the file must not be used.
 	 *
@@ -69,7 +69,7 @@ public:
 	/**
 	 * \brief Returns current file offset.
 	 *
-	 * Similar to [ftello()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/ftell.html)
+	 * Similar to [ftello()](https://pubs.opengroup.org/onlinepubs/9699919799/functions/ftell.html)
 	 *
 	 * \pre %File is opened.
 	 *
@@ -91,7 +91,7 @@ public:
 	/**
 	 * \brief Returns status of file.
 	 *
-	 * Similar to [fstat()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/fstat.html)
+	 * Similar to [fstat()](https://pubs.opengroup.org/onlinepubs/9699919799/functions/fstat.html)
 	 *
 	 * \pre %File is opened.
 	 *
@@ -105,7 +105,7 @@ public:
 	/**
 	 * \brief Tells whether the file is a terminal.
 	 *
-	 * Similar to [isatty()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/isatty.html)
+	 * Similar to [isatty()](https://pubs.opengroup.org/onlinepubs/9699919799/functions/isatty.html)
 	 *
 	 * \pre %File is opened.
 	 *
@@ -135,7 +135,7 @@ public:
 	/**
 	 * \brief Reads data from file.
 	 *
-	 * Similar to [read()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/read.html)
+	 * Similar to [read()](https://pubs.opengroup.org/onlinepubs/9699919799/functions/read.html)
 	 *
 	 * \pre \a buffer is valid.
 	 *
@@ -152,7 +152,7 @@ public:
 	/**
 	 * \brief Resets current file offset.
 	 *
-	 * Similar to [rewind()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/rewind.html)
+	 * Similar to [rewind()](https://pubs.opengroup.org/onlinepubs/9699919799/functions/rewind.html)
 	 *
 	 * \pre %File is opened.
 	 *
@@ -164,7 +164,7 @@ public:
 	/**
 	 * \brief Moves file offset.
 	 *
-	 * Similar to [lseek()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/lseek.html)
+	 * Similar to [lseek()](https://pubs.opengroup.org/onlinepubs/9699919799/functions/lseek.html)
 	 *
 	 * \pre %File is opened.
 	 *
@@ -182,7 +182,7 @@ public:
 	/**
 	 * \brief Synchronizes state of a file, ensuring all cached writes are finished.
 	 *
-	 * Similar to [fsync()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/fsync.html)
+	 * Similar to [fsync()](https://pubs.opengroup.org/onlinepubs/9699919799/functions/fsync.html)
 	 *
 	 * \pre %File is opened.
 	 *
@@ -206,7 +206,7 @@ public:
 	/**
 	 * \brief Writes data to file.
 	 *
-	 * Similar to [write()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/write.html)
+	 * Similar to [write()](https://pubs.opengroup.org/onlinepubs/9699919799/functions/write.html)
 	 *
 	 * \pre \a buffer is valid.
 	 *

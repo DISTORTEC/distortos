@@ -1,6 +1,6 @@
 /**
  * \file
- * \brief [dirent.h](http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/dirent.h.html), suitable for newlib, which
+ * \brief [dirent.h](https://pubs.opengroup.org/onlinepubs/9699919799/basedefs/dirent.h.html), suitable for newlib, which
  * does not provide one.
  *
  * \author Copyright (C) 2018-2019 Kamil Szczygiel https://distortec.com https://freddiechopin.info

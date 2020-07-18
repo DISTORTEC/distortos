@@ -81,7 +81,7 @@ struct distortos_ConditionVariable
  *
  * Similar to std::condition_variable::condition_variable() -
  * https://en.cppreference.com/w/cpp/thread/condition_variable/condition_variable
- * Similar to pthread_cond_init() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_cond_init.html
+ * Similar to pthread_cond_init() - https://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_cond_init.html
  *
  * \sa distortos::ConditionVariable::ConditionVariable()
  *
@@ -99,7 +99,7 @@ int distortos_ConditionVariable_construct(struct distortos_ConditionVariable* co
  * Similar to std::condition_variable::~condition_variable() -
  * https://en.cppreference.com/w/cpp/thread/condition_variable/~condition_variable
  * Similar to pthread_cond_destroy() -
- * http://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_cond_destroy.html
+ * https://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_cond_destroy.html
  *
  * \sa distortos::ConditionVariable::~ConditionVariable()
  *
@@ -117,7 +117,7 @@ int distortos_ConditionVariable_destruct(struct distortos_ConditionVariable* con
  * Similar to std::condition_variable::notify_all() -
  * https://en.cppreference.com/w/cpp/thread/condition_variable/notify_all
  * Similar to pthread_cond_broadcast() -
- * http://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_cond_signal.html
+ * https://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_cond_signal.html
  *
  * \sa distortos::ConditionVariable::notifyAll()
  *
@@ -135,7 +135,7 @@ int distortos_ConditionVariable_notifyAll(struct distortos_ConditionVariable* co
  * Similar to std::condition_variable::notify_one() -
  * https://en.cppreference.com/w/cpp/thread/condition_variable/notify_one
  * Similar to pthread_cond_signal() -
- * http://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_cond_signal.html
+ * https://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_cond_signal.html
  *
  * \sa distortos::ConditionVariable::notifyOne()
  *
@@ -151,7 +151,7 @@ int distortos_ConditionVariable_notifyOne(struct distortos_ConditionVariable* co
  * \brief C-API equivalent of distortos::ConditionVariable::wait()
  *
  * Similar to std::condition_variable::wait() - https://en.cppreference.com/w/cpp/thread/condition_variable/wait
- * Similar to pthread_cond_wait() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_cond_wait.html
+ * Similar to pthread_cond_wait() - https://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_cond_wait.html
  *
  * \sa distortos::ConditionVariable::wait()
  *
@@ -174,7 +174,7 @@ int distortos_ConditionVariable_wait(struct distortos_ConditionVariable* conditi
  * Similar to std::condition_variable::wait_for() -
  * https://en.cppreference.com/w/cpp/thread/condition_variable/wait_for
  * Similar to pthread_cond_timedwait() -
- * http://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_cond_timedwait.html#
+ * https://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_cond_timedwait.html#
  *
  * \sa distortos::ConditionVariable::waitFor()
  *
@@ -199,7 +199,7 @@ int distortos_ConditionVariable_waitFor(struct distortos_ConditionVariable* cond
  * Similar to std::condition_variable::wait_until() -
  * https://en.cppreference.com/w/cpp/thread/condition_variable/wait_until
  * Similar to pthread_cond_timedwait() -
- * http://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_cond_timedwait.html#
+ * https://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_cond_timedwait.html#
  *
  * \sa distortos::ConditionVariable::waitUntil()
  *

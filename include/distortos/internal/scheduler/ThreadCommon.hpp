@@ -57,7 +57,7 @@ public:
 	/**
 	 * \brief Generates signal for thread.
 	 *
-	 * Similar to pthread_kill() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_kill.html
+	 * Similar to pthread_kill() - https://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_kill.html
 	 *
 	 * Adds the signalNumber to set of pending signals. If this thread is currently waiting for this signal, it will be
 	 * unblocked.
@@ -93,7 +93,7 @@ public:
 	/**
 	 * \brief Gets set of currently pending signals.
 	 *
-	 * Similar to sigpending() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/sigpending.html
+	 * Similar to sigpending() - https://pubs.opengroup.org/onlinepubs/9699919799/functions/sigpending.html
 	 *
 	 * This function shall return the set of signals that are blocked from delivery and are pending on the thread.
 	 *
@@ -140,7 +140,7 @@ public:
 	 * \brief Waits for thread termination.
 	 *
 	 * Similar to std::thread::join() - https://en.cppreference.com/w/cpp/thread/thread/join
-	 * Similar to POSIX pthread_join() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_join.html
+	 * Similar to POSIX pthread_join() - https://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_join.html
 	 *
 	 * Blocks current thread until this thread finishes its execution. The results of multiple simultaneous calls to
 	 * join() on the same target thread are undefined.
@@ -161,7 +161,7 @@ public:
 	/**
 	 * \brief Queues signal for thread.
 	 *
-	 * Similar to sigqueue() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/sigqueue.html
+	 * Similar to sigqueue() - https://pubs.opengroup.org/onlinepubs/9699919799/functions/sigqueue.html
 	 *
 	 * Adds the signalNumber and signal value (sigval union) to queue of SignalInformation objects. If this thread is
 	 * currently waiting for this signal, it will be unblocked.

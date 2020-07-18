@@ -41,7 +41,7 @@ public:
 	 *
 	 * Similar to std::condition_variable::condition_variable() -
 	 * https://en.cppreference.com/w/cpp/thread/condition_variable/condition_variable
-	 * Similar to pthread_cond_init() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_cond_init.html
+	 * Similar to pthread_cond_init() - https://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_cond_init.html
 	 */
 
 	constexpr ConditionVariable() :
@@ -56,7 +56,7 @@ public:
 	 * Similar to std::condition_variable::~condition_variable() -
 	 * https://en.cppreference.com/w/cpp/thread/condition_variable/~condition_variable
 	 * Similar to pthread_cond_destroy() -
-	 * http://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_cond_destroy.html
+	 * https://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_cond_destroy.html
 	 *
 	 * It shall be safe to destroy an initialized condition variable upon which no threads are currently blocked.
 	 * Attempting to destroy a condition variable upon which other threads are currently blocked results in undefined
@@ -71,7 +71,7 @@ public:
 	 * Similar to std::condition_variable::notify_all() -
 	 * https://en.cppreference.com/w/cpp/thread/condition_variable/notify_all
 	 * Similar to pthread_cond_broadcast() -
-	 * http://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_cond_signal.html
+	 * https://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_cond_signal.html
 	 *
 	 * Unblocks all threads waiting on this condition variable. The notifying thread does not need to hold the same
 	 * mutex as the one held by the waiting thread(s).
@@ -85,7 +85,7 @@ public:
 	 * Similar to std::condition_variable::notify_one() -
 	 * https://en.cppreference.com/w/cpp/thread/condition_variable/notify_one
 	 * Similar to pthread_cond_signal() -
-	 * http://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_cond_signal.html
+	 * https://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_cond_signal.html
 	 *
 	 * Unblocks one thread waiting on this condition variable. The notifying thread does not need to hold the same
 	 * mutex as the one held by the waiting thread(s).
@@ -97,7 +97,7 @@ public:
 	 * \brief Waits for notification.
 	 *
 	 * Similar to std::condition_variable::wait() - https://en.cppreference.com/w/cpp/thread/condition_variable/wait
-	 * Similar to pthread_cond_wait() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_cond_wait.html
+	 * Similar to pthread_cond_wait() - https://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_cond_wait.html
 	 *
 	 * Atomically releases supplied mutex and blocks current thread until the condition variable is notified. The thread
 	 * will be unblocked when notifyAll() or notifyOne() is executed. It may also be unblocked spuriously. When
@@ -117,7 +117,7 @@ public:
 	 * \brief Waits for predicate to become true.
 	 *
 	 * Similar to std::condition_variable::wait() - https://en.cppreference.com/w/cpp/thread/condition_variable/wait
-	 * Similar to pthread_cond_wait() - http://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_cond_wait.html
+	 * Similar to pthread_cond_wait() - https://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_cond_wait.html
 	 *
 	 * Overload for wait() which also checks the predicate. This function will return only if the predicate is true.
 	 *
@@ -141,7 +141,7 @@ public:
 	 * Similar to std::condition_variable::wait_for() -
 	 * https://en.cppreference.com/w/cpp/thread/condition_variable/wait_for
 	 * Similar to pthread_cond_timedwait() -
-	 * http://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_cond_timedwait.html#
+	 * https://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_cond_timedwait.html#
 	 *
 	 * Atomically releases supplied mutex and blocks current thread until the condition variable is notified. The thread
 	 * will be unblocked when notifyAll() or notifyOne() is executed or when given duration of time expires. It may also
@@ -165,7 +165,7 @@ public:
 	 * Similar to std::condition_variable::wait_for() -
 	 * https://en.cppreference.com/w/cpp/thread/condition_variable/wait_for
 	 * Similar to pthread_cond_timedwait() -
-	 * http://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_cond_timedwait.html#
+	 * https://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_cond_timedwait.html#
 	 *
 	 * Template variant of waitFor(Mutex& mutex, TickClock::duration duration).
 	 *
@@ -194,7 +194,7 @@ public:
 	 * Similar to std::condition_variable::wait_for() -
 	 * https://en.cppreference.com/w/cpp/thread/condition_variable/wait_for
 	 * Similar to pthread_cond_timedwait() -
-	 * http://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_cond_timedwait.html#
+	 * https://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_cond_timedwait.html#
 	 *
 	 * Overload for waitFor() which also checks the predicate. This function will return only if the predicate is true
 	 * or when given duration of time expires.
@@ -226,7 +226,7 @@ public:
 	 * Similar to std::condition_variable::wait_until() -
 	 * https://en.cppreference.com/w/cpp/thread/condition_variable/wait_until
 	 * Similar to pthread_cond_timedwait() -
-	 * http://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_cond_timedwait.html#
+	 * https://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_cond_timedwait.html#
 	 *
 	 * Atomically releases supplied mutex and blocks current thread until the condition variable is notified. The thread
 	 * will be unblocked when notifyAll() or notifyOne() is executed or when given time point is reached. It may also be
@@ -250,7 +250,7 @@ public:
 	 * Similar to std::condition_variable::wait_until() -
 	 * https://en.cppreference.com/w/cpp/thread/condition_variable/wait_until
 	 * Similar to pthread_cond_timedwait() -
-	 * http://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_cond_timedwait.html#
+	 * https://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_cond_timedwait.html#
 	 *
 	 * Template variant of waitUntil(Mutex& mutex, TickClock::time_point timePoint).
 	 *
@@ -278,7 +278,7 @@ public:
 	 * Similar to std::condition_variable::wait_until() -
 	 * https://en.cppreference.com/w/cpp/thread/condition_variable/wait_until
 	 * Similar to pthread_cond_timedwait() -
-	 * http://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_cond_timedwait.html#
+	 * https://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_cond_timedwait.html#
 	 *
 	 * Overload for waitUntil() which also checks the predicate. This function will return only if the predicate is true
 	 * or when given time point is reached.

@@ -21,7 +21,7 @@ namespace distortos
  * \brief OnceFlag is a helper class for callOnce().
  *
  * Similar to std::once_flag - https://en.cppreference.com/w/cpp/thread/once_flag
- * Similar to POSIX pthread_once_t - http://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_once.html#
+ * Similar to POSIX pthread_once_t - https://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_once.html#
  *
  * \ingroup synchronization
  */

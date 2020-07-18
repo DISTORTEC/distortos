@@ -37,7 +37,7 @@ extern "C"
 /**
  * \brief Closes directory.
  *
- * See [closedir()](http://pubs.opengroup.org/onlinepubs/9699919799/functions/closedir.html)
+ * See [closedir()](https://pubs.opengroup.org/onlinepubs/9699919799/functions/closedir.html)
  *
  * \note Even if error code is returned, the directory must not be used.
  *
