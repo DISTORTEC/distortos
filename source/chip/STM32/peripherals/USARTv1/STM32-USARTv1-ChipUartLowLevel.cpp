@@ -2,7 +2,7 @@
  * \file
  * \brief ChipUartLowLevel class implementation for USARTv1 in STM32
  *
- * \author Copyright (C) 2016-2019 Kamil Szczygiel https://distortec.com https://freddiechopin.info
+ * \author Copyright (C) 2016-2020 Kamil Szczygiel https://distortec.com https://freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -321,7 +321,8 @@ void ChipUartLowLevel::interruptHandler()
 }
 
 std::pair<int, uint32_t> ChipUartLowLevel::start(devices::UartBase& uartBase, const uint32_t baudRate,
-		const uint8_t characterLength, const devices::UartParity parity, const bool _2StopBits)
+		const uint8_t characterLength, const devices::UartParity parity, const bool _2StopBits,
+		const bool hardwareFlowControl)
 {
 	if (isStarted() == true)
 		return {EBADF, {}};
@@ -349,6 +350,8 @@ std::pair<int, uint32_t> ChipUartLowLevel::start(devices::UartBase& uartBase, co
 	uartBase_ = &uartBase;
 	auto& uart = parameters_.getUart();
 	uart.BRR = mantissa << USART_BRR_DIV_Mantissa_Pos | fraction << USART_BRR_DIV_Fraction_Pos;
+	if (hardwareFlowControl == true)
+		uart.CR3 = USART_CR3_CTSE | USART_CR3_RTSE;
 	uart.CR2 = _2StopBits << (USART_CR2_STOP_Pos + 1);
 	uart.CR1 = USART_CR1_RE | USART_CR1_TE | USART_CR1_UE |
 #ifdef DISTORTOS_CHIP_USART_HAS_CR1_OVER8_BIT

@@ -2,7 +2,7 @@
  * \file
  * \brief SerialPort class implementation
  *
- * \author Copyright (C) 2016-2019 Kamil Szczygiel https://distortec.com https://freddiechopin.info
+ * \author Copyright (C) 2016-2020 Kamil Szczygiel https://distortec.com https://freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -141,7 +141,7 @@ int SerialPort::open(const uint32_t baudRate, const uint8_t characterLength, con
 			return ENOBUFS;
 
 		{
-			const auto ret = uart_.start(*this, baudRate, characterLength, parity, _2StopBits);
+			const auto ret = uart_.start(*this, baudRate, characterLength, parity, _2StopBits, false);
 			if (ret.first != 0)
 				return ret.first;
 		}
