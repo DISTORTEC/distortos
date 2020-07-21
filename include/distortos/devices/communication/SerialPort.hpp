@@ -2,7 +2,7 @@
  * \file
  * \brief SerialPort class header
  *
- * \author Copyright (C) 2016-2019 Kamil Szczygiel https://distortec.com https://freddiechopin.info
+ * \author Copyright (C) 2016-2020 Kamil Szczygiel https://distortec.com https://freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -120,6 +120,8 @@ public:
 	 * \param [in] characterLength selects character length, bits
 	 * \param [in] parity selects parity
 	 * \param [in] _2StopBits selects whether 1 (false) or 2 (true) stop bits are used
+	 * \param [in] hardwareFlowControl selects whether hardware flow control is disabled (false) or enabled (true);
+	 * default - disabled (false)
 	 *
 	 * \return 0 on success, error code otherwise:
 	 * - EINVAL - provided arguments don't match current configuration of already opened device;
@@ -129,7 +131,8 @@ public:
 	 * - error codes returned by UartLowLevel::startRead();
 	 */
 
-	int open(uint32_t baudRate, uint8_t characterLength, UartParity parity, bool _2StopBits);
+	int open(uint32_t baudRate, uint8_t characterLength, UartParity parity, bool _2StopBits,
+			bool hardwareFlowControl = {});
 
 	/**
 	 * \brief Reads data from SerialPort.

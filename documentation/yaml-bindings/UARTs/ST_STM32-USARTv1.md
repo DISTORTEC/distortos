@@ -11,8 +11,8 @@ U(S)ART's `CR1` register;
   - `interrupt`, required, mapping:
     - `controller`, required, reference, reference to interrupt controller;
     - `vector`, required, string, name of interrupt (sub)vector used by this peripheral;
-  - `RX`, `TX`, optional, mapping, all key-value pairs are specific to particular GPIO implementation; selects
-  configuration of pins;
+  - `CTS`, `RTS`, `RX`, `TX`, optional, mapping, all key-value pairs are specific to particular GPIO implementation;
+  selects configuration of pins;
 
 Examples
 --------
@@ -68,6 +68,19 @@ UARTs:
     $labels:
     - UART5
 !Reference {label: USART3}:
+  CTS:
+    port: !Reference {label: GPIOD}
+    pin: 11
+    mode: alternate-function
+    alternate-function: 7
+    output-speed: very-high
+    pull: up
+  RTS:
+    port: !Reference {label: GPIOD}
+    pin: 12
+    mode: alternate-function
+    alternate-function: 7
+    output-speed: very-high
   RX:
     port: !Reference {label: GPIOD}
     pin: 9

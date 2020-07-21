@@ -23,7 +23,7 @@ distortosSetConfiguration(BOOLEAN
 if(distortos_Peripherals_{{ key }})
 
 	set(ARCHITECTURE_NVIC_{{ uart['interrupt']['vector'] | upper }}_ENABLE ON)
-{% for pinKey in ['RX', 'TX'] if pinKey in uart %}
+{% for pinKey in ['CTS', 'RTS', 'RX', 'TX'] if pinKey in uart %}
 {% if loop.first == True %}
 
 {% endif %}
