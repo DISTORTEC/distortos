@@ -61,6 +61,9 @@ for *STM32's* *GPIOv1* and *GPIOv2*.
 `distortos::devices::MemoryTechnologyDevice` interface, which can be used with *QSPI* *NOR* flashes connected via SPI.
 This class supports chips which implement *SFDP* from *JESD216* standard. At this moment it has several limitations and
 was tested only with *Cypress* *S25FL127S*.
+- Added support for hardware flow control to `distortos::devices::SerialPort` class and implemented required changes in
+*STM32's* *USARTv1* and *USARTv2* low-level drivers. New argument was added to `distortos::devices::SerialPort::open()`
+(with default value) and to `distortos::devices::UartLowLevel::start()`.
 - Extended *Jinja2* board templates with ability to generate pin initializers for *STM32's* *SDMMC*, *SPI* and *USART*.
 - Added support for *SDIO* variant to *STM32's* *SDMMCv1* driver.
 - Enabled *STM32's* *SDMMCv1* driver (in *SDIO* variant) for *STM32F4* chip family. Added necessary data to *CSV* and
