@@ -127,7 +127,7 @@ int SerialPort::close()
 }
 
 int SerialPort::open(const uint32_t baudRate, const uint8_t characterLength, const UartParity parity,
-			const bool _2StopBits)
+			const bool _2StopBits, const bool hardwareFlowControl)
 {
 	const std::lock_guard<Mutex> readLockGuard {readMutex_};
 	const std::lock_guard<Mutex> writeLockGuard {writeMutex_};
@@ -141,7 +141,7 @@ int SerialPort::open(const uint32_t baudRate, const uint8_t characterLength, con
 			return ENOBUFS;
 
 		{
-			const auto ret = uart_.start(*this, baudRate, characterLength, parity, _2StopBits, false);
+			const auto ret = uart_.start(*this, baudRate, characterLength, parity, _2StopBits, hardwareFlowControl);
 			if (ret.first != 0)
 				return ret.first;
 		}
