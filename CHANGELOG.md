@@ -68,6 +68,9 @@ was tested only with *Cypress* *S25FL127S*.
 - Added support for *SDIO* variant to *STM32's* *SDMMCv1* driver.
 - Enabled *STM32's* *SDMMCv1* driver (in *SDIO* variant) for *STM32F4* chip family. Added necessary data to *CSV* and
 *YAML* files of *STM32F4* chips.
+- Added `estd::DynamicCircularBuffer` and `estd::StaticCircularBuffer` template classes, which implement a circular
+buffer suitable for use with objects (i.e. types that have non-trivial constructors and destructors). These classes are
+thread-safe and lock-free for a single-producer and single-consumer scenario.
 
 ### Changed
 

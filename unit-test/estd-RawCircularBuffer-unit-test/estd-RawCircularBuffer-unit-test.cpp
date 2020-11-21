@@ -1,10 +1,10 @@
 /**
  * \file
- * \brief BufferingBlockDevice test cases
+ * \brief RawCircularBuffer test cases
  *
- * This test checks whether BufferingBlockDevice perform all operations properly and in correct order.
+ * This test checks whether RawCircularBuffer perform all operations properly and in correct order.
  *
- * \author Copyright (C) 2019 Kamil Szczygiel https://distortec.com https://freddiechopin.info
+ * \author Copyright (C) 2019-2020 Kamil Szczygiel https://distortec.com https://freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -19,7 +19,7 @@
 | global test cases
 +---------------------------------------------------------------------------------------------------------------------*/
 
-TEST_CASE("Testing read/write RawCircularBuffer()", "[read/write]")
+TEST_CASE("Testing read/write RawCircularBuffer", "[read/write]")
 {
 	uint8_t buffer[9];
 	estd::RawCircularBuffer rcb {buffer, sizeof(buffer)};
@@ -298,7 +298,7 @@ TEST_CASE("Testing read/write RawCircularBuffer()", "[read/write]")
 	}
 }
 
-TEST_CASE("Testing read-only RawCircularBuffer()", "[read-only]")
+TEST_CASE("Testing read-only RawCircularBuffer", "[read-only]")
 {
 	const uint8_t buffer[7] {};
 	estd::RawCircularBuffer rcb {buffer, sizeof(buffer)};
