@@ -94,12 +94,23 @@ public:
 	/**
 	 * \pre Circular buffer is not empty.
 	 *
+	 * \return reference to first element on the list
+	 */
+
+	T& front()
+	{
+		return *reinterpret_cast<T*>(getStorage(readPosition_));
+	}
+
+	/**
+	 * \pre Circular buffer is not empty.
+	 *
 	 * \return const reference to first element on the list
 	 */
 
 	const T& front() const
 	{
-		return *reinterpret_cast<T*>(getStorage(readPosition_));
+		return *reinterpret_cast<const T*>(getStorage(readPosition_));
 	}
 
 	/**
