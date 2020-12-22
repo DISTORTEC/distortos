@@ -2,7 +2,7 @@
  * \file
  * \brief CMSIS proxy header for STM32F0
  *
- * \author Copyright (C) 2016-2019 Kamil Szczygiel https://distortec.com https://freddiechopin.info
+ * \author Copyright (C) 2016-2020 Kamil Szczygiel https://distortec.com https://freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -27,7 +27,7 @@
 #elif defined(DISTORTOS_CHIP_STM32F042)
 	#define STM32F042x6
 #elif defined(DISTORTOS_CHIP_STM32F048)
-	#define STM32F048x6
+	#define STM32F048xx
 #elif defined(DISTORTOS_CHIP_STM32F051)
 	#define STM32F051x8
 #elif defined(DISTORTOS_CHIP_STM32F058)

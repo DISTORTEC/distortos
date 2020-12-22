@@ -100,6 +100,13 @@ symbols generated for sections is significantly reduced. Such collision could re
 custom memory region. For example, designating part of flash memory with name "data" would result in a very hard to
 debug behaviour, where the `.data` section in RAM would not be initilized at all, because `__data_start_` and
 `__data_end` symbols for part of flash memory would collide with identically named symbols for the `.data` section.
+- Update *CMSIS* to version 5.7.0.
+- Update *CMSIS-STM32F0* to version 1.11.2.
+- Update *CMSIS-STM32F1* to version 1.8.3.
+- Update *CMSIS-STM32F4* to version 1.25.2.
+- Update *CMSIS-STM32F7* to version 1.16.0.
+- Update *CMSIS-STM32L0* to version 1.12.0.
+- Update *CMSIS-STM32L4* to version 1.16.0.
 
 ### Fixed
 
