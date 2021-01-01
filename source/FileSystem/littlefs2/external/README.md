@@ -1,7 +1,7 @@
 littlefs-v2
 ===========
 
-- link: [littlefs](https://github.com/ARMmbed/littlefs)
+- link: [littlefs](https://github.com/littlefs-project/littlefs)
 - version: v2-prefix
-- commit hash: f3608e84c7739ae9eeac3d5a4f44bbb4b0767948
-- download date: 2019-08-23
+- commit hash: c40271bcf36e96b04e728e6102ceae3c9e488757
+- download date: 2021-01-01

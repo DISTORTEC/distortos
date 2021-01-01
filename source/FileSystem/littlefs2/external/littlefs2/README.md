@@ -53,6 +53,7 @@ const struct lfs2_config cfg = {
     .block_count = 128,
     .cache_size = 16,
     .lookahead_size = 16,
+    .block_cycles = 500,
 };
 
 // entry point
@@ -109,10 +110,13 @@ directory functions, with the deviation that the allocation of filesystem
 structures must be provided by the user.
 
 All POSIX operations, such as remove and rename, are atomic, even in event
-of power-loss. Additionally, no file updates are not actually committed to
+of power-loss. Additionally, file updates are not actually committed to
 the filesystem until sync or close is called on the file.
 
 ## Other notes
+
+Littlefs is written in C, and specifically should compile with any compiler
+that conforms to the `C99` standard.
 
 All littlefs calls have the potential to return a negative error code. The
 errors can be either one of those found in the `enum lfs2_error` in
@@ -217,6 +221,11 @@ License Identifiers that are here available: http://spdx.org/licenses/
 - [littlefs-js] - A javascript wrapper for littlefs. I'm not sure why you would
   want this, but it is handy for demos.  You can see it in action
   [here][littlefs-js-demo].
+  
+- [littlefs-python] - A Python wrapper for littlefs. The project allows you
+  to create images of the filesystem on your PC. Check if littlefs will fit
+  your needs, create images for a later download to the target memory or
+  inspect the content of a binary image of the target memory.
 
 - [mklfs] - A command line tool built by the [Lua RTOS] guys for making
   littlefs images from a host PC. Supports Windows, Mac OS, and Linux.
@@ -246,3 +255,4 @@ License Identifiers that are here available: http://spdx.org/licenses/
 [LittleFileSystem]: https://os.mbed.com/docs/mbed-os/v5.12/apis/littlefilesystem.html
 [SPIFFS]: https://github.com/pellepl/spiffs
 [Dhara]: https://github.com/dlbeer/dhara
+[littlefs-python]: https://pypi.org/project/littlefs-python/
