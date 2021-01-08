@@ -3,7 +3,7 @@
 #
 # file: travis-ci.sh
 #
-# author: Copyright (C) 2016-2020 Kamil Szczygiel https://distortec.com https://freddiechopin.info
+# author: Copyright (C) 2016-2021 Kamil Szczygiel https://distortec.com https://freddiechopin.info
 #
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -81,8 +81,6 @@ install() {
 			shift
 			installGenerateBoard "${@}"
 			;;
-		unit-test)
-			;;
 		*)
 			echo "\"${1}\" is not a valid argument!" >&2
 			exit 4
@@ -117,13 +115,6 @@ scriptGenerateBoard() {
 	done
 }
 
-unitTest() {
-	mkdir output
-	cd output
-	cmake -G Ninja ../unit-test
-	ninja all run
-}
-
 # "script" phase
 script() {
 	case "${1}" in
@@ -134,10 +125,6 @@ script() {
 		generateBoard)
 			shift
 			scriptGenerateBoard "${@}"
-			;;
-		unit-test)
-			shift
-			unitTest "${@}"
 			;;
 		*)
 			echo "\"${1}\" is not a valid argument!" >&2
